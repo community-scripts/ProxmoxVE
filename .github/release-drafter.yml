@@ -1,0 +1,55 @@
+name-template: 'v$RESOLVED_VERSION'
+tag-template: 'v$RESOLVED_VERSION'
+template: |
+  ## What’s Changed
+
+  $CHANGES
+
+  **Full Changelog**: https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION
+categories:
+  - title: '💥 Breaking Changes'
+    label: 'breaking change'
+  - title: '✨ New Scripts'
+    label: 'new script'
+  - title: '🚀 Updated Scripts'
+    label: 'update script'
+  - title: '🐛 Bug Fixes'
+    label: 'bug fix'
+  - title: '🧰 Maintenance'
+    label: 'chore'
+change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
+change-title-escapes: '\<*_&' # You can add # and @ to disable mentions, and add ` to disable code blocks.
+version-resolver:
+  major:
+    labels:
+      - 'breaking change'
+  minor:
+    labels:
+      - 'new script'
+      - 'update script'
+  patch:
+    labels:
+      - 'bug fix'
+      - 'chore'
+  default: patch
+# autolabeler:
+#   - label: 'new script'
+#     title:
+#       - '/new script/i'
+#   - label: 'update script'
+#     title:
+#       - '/update script/i'
+#   - label: 'breaking change'
+#     title:
+#       - '/breaking change/i'
+#   - label: 'bug fix'
+#     title:
+#       - '/bug fix/i'
+#   - label: 'chore'
+#     files:
+#       - '*.md'
+#       - '*.yml'
+#   - label: 'high risk'
+#     files:
+#       - '**/build.func'
+#       - '**/install.func'
