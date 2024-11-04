@@ -1,0 +1,58 @@
+name: Deploy to GitHub Pages
+on:
+  push:
+    branches:
+      - main
+
+    paths:
+      - docs/**
+      - frontend/**
+
+permissions:
+  contents: write  # Needed to push changes to gh-pages branch
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'  # Specify the Node.js version you need
+
+      - name: Install dependencies
+        run: |
+          cd frontend
+          npm install
+
+      - name: Build app
+        run: |
+          cd frontend
+          npm run build
+
+      - name: Deploy to GitHub Pages
+        run: |
+          # Set up deployment directory
+          mkdir -p ../deployment
+          cp -r frontend/dist/* ../deployment/
+
+          # Check out the gh-pages branch
+          git fetch origin gh-pages
+          git checkout gh-pages || git checkout --orphan gh-pages
+
+          # Copy new build files into the gh-pages branch
+          rm -rf *
+          cp -r ../deployment/* .
+
+          # Commit and push changes without force
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+          git add .
+          git commit -m "Deploy to GitHub Pages"
+          git push origin gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
