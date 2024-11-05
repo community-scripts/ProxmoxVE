@@ -19,6 +19,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 - **Bookstack LXC** [(View Source)](https://github.com/community-scripts/ProxmoxVE/blob/main/install/bookstack-install.sh)
   - NEW Script
+- **Vikunja LXC** [(View Source)](https://github.com/community-scripts/ProxmoxVE/blob/main/install/vikunja-install.sh)
+  - NEW Script
 
 ## 2024-11-04
 
