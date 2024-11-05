@@ -1,0 +1,34 @@
+{
+    "name": "Nextcloud",
+    "slug": "nextcloudpi",
+    "categories": [
+        12
+    ],
+    "date_created": "2024-05-02",
+    "type": "ct",
+    "updateable": false,
+    "privileged": false,
+    "interface_port": "433",
+    "documentation": null,
+    "website": "https://www.turnkeylinux.org/nextcloud",
+    "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/nextcloud.svg",
+    "description": "NextCloudPi is a popular self-hosted solution for file collaboration and data storage. It is built on the NextCloud software, which is an open-source platform for data management.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/nextcloudpi.sh",
+            "resources": {
+                "cpu": "2",
+                "ram": "2048",
+                "hdd": "8",
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": []
+}

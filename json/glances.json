@@ -1,0 +1,39 @@
+{
+    "name": "Glances",
+    "slug": "glances",
+    "categories": [
+        7
+    ],
+    "date_created": "2024-05-02",
+    "type": "misc",
+    "updateable": false,
+    "privileged": false,
+    "interface_port": "61208",
+    "documentation": null,
+    "website": "https://nicolargo.github.io/glances/",
+    "logo": "https://raw.githubusercontent.com/nicolargo/glances/develop/docs/_static/Glances%20Logo.svg",
+    "description": "Glances is an open-source system cross-platform monitoring tool. It allows real-time monitoring of various aspects of your system such as CPU, memory, disk, network usage etc.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "misc/glances.sh",
+            "resources": {
+                "cpu": null,
+                "ram": null,
+                "hdd": null,
+                "os": null,
+                "version": null
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": [
+        {
+            "text": "Execute within an existing LXC Console",
+            "type": "warning"
+        }
+    ]
+}

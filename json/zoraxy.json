@@ -1,0 +1,34 @@
+{
+    "name": "Zoraxy",
+    "slug": "zoraxy",
+    "categories": [
+        11
+    ],
+    "date_created": "2024-05-02",
+    "type": "ct",
+    "updateable": false,
+    "privileged": false,
+    "interface_port": "8000",
+    "documentation": null,
+    "website": "https://zoraxy.arozos.com/",
+    "logo": "https://raw.githubusercontent.com/tobychui/zoraxy/refs/heads/main/docs/favicon.png",
+    "description": "Zoraxy is an all in one homelab network routing solution.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/zoraxy.sh",
+            "resources": {
+                "cpu": "2",
+                "ram": "2048",
+                "hdd": "6",
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": []
+}

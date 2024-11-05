@@ -1,0 +1,34 @@
+{
+    "name": "Overseerr",
+    "slug": "overseerr",
+    "categories": [
+        12
+    ],
+    "date_created": "2024-05-02",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": "5055",
+    "documentation": null,
+    "website": "https://overseerr.dev/",
+    "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/overseerr.svg",
+    "description": "Overseerr is a request management and media discovery tool built to work with your existing Plex ecosystem.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/overseerr.sh",
+            "resources": {
+                "cpu": "2",
+                "ram": "2048",
+                "hdd": "8",
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": []
+}

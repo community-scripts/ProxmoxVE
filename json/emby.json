@@ -1,0 +1,39 @@
+{
+    "name": "Emby Media Server",
+    "slug": "emby",
+    "categories": [
+        12
+    ],
+    "date_created": "2024-05-02",
+    "type": "ct",
+    "updateable": false,
+    "privileged": false,
+    "interface_port": "8096",
+    "documentation": null,
+    "website": "https://emby.media/",
+    "logo": "https://github.com/home-assistant/brands/blob/master/core_integrations/emby/icon.png?raw=true",
+    "description": "Emby brings together your personal videos, music, photos, and live television.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/emby.sh",
+            "resources": {
+                "cpu": "2",
+                "ram": "2048",
+                "hdd": "8",
+                "os": "ubuntu",
+                "version": "22.04"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": [
+        {
+            "text": "With Privileged/Unprivileged Hardware Acceleration Support",
+            "type": "warning"
+        }
+    ]
+}

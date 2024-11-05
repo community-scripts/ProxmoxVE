@@ -1,0 +1,39 @@
+{
+    "name": "Node-Red",
+    "slug": "node-red",
+    "categories": [
+        3
+    ],
+    "date_created": "2024-05-02",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": "1880",
+    "documentation": null,
+    "website": "https://nodered.org/",
+    "logo": "https://github.com/home-assistant/brands/blob/master/custom_integrations/nodered/icon.png?raw=true",
+    "description": "Node-RED is a visual programming tool that allows developers and non-developers alike to easily wire together hardware devices, APIs, and online services to create custom applications. It provides a visual interface for building workflows, making it easy to create and modify complex integrations without having to write any code. Node-RED is used in a wide range of applications, from simple automations to complex integrations, and is known for its simplicity, versatility, and ease of use.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/node-red.sh",
+            "resources": {
+                "cpu": "1",
+                "ram": "1024",
+                "hdd": "4",
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": [
+        {
+            "text": "To install themes, type `update` in the LXC console.",
+            "type": "warning"
+        }
+    ]
+}

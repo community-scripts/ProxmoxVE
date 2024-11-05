@@ -1,0 +1,43 @@
+{
+    "name": "Dockge",
+    "slug": "dockge",
+    "categories": [
+        8
+    ],
+    "date_created": "2024-05-02",
+    "type": "ct",
+    "updateable": false,
+    "privileged": false,
+    "interface_port": "5001",
+    "documentation": null,
+    "website": "https://github.com/louislam/dockge",
+    "logo": "https://raw.githubusercontent.com/louislam/dockge/master/frontend/public/icon.svg",
+    "description": "Dockge is a fancy, easy-to-use and reactive self-hosted docker compose.yaml stack-oriented manager.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/dockge.sh",
+            "resources": {
+                "cpu": "2",
+                "ram": "2048",
+                "hdd": "18",
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": [
+        {
+            "text": "Options to add Immich and/or Home Assistant",
+            "type": "warning"
+        },
+        {
+            "text": "If the LXC is created Privileged, the script will automatically set up USB passthrough.",
+            "type": "warning"
+        }
+    ]
+}

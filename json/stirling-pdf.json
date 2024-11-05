@@ -1,0 +1,34 @@
+{
+    "name": "Stirling-PDF",
+    "slug": "stirling-pdf",
+    "categories": [
+        14
+    ],
+    "date_created": "2024-05-02",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": "8080",
+    "documentation": null,
+    "website": "https://github.com/Stirling-Tools/Stirling-PDF",
+    "logo": "https://raw.githubusercontent.com/Stirling-Tools/Stirling-PDF/main/docs/stirling-pdf.png",
+    "description": "Stirling-PDF is a powerful locally hosted web based PDF manipulation tool that allows you to perform various operations on PDF files, such as splitting merging, converting, reorganizing, adding images, rotating, compressing, and more.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/stirling-pdf.sh",
+            "resources": {
+                "cpu": "2",
+                "ram": "2048",
+                "hdd": "8",
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": []
+}

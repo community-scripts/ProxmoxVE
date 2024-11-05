@@ -1,0 +1,34 @@
+{
+    "name": "ioBroker",
+    "slug": "iobroker",
+    "categories": [
+        3
+    ],
+    "date_created": "2024-05-02",
+    "type": "ct",
+    "updateable": false,
+    "privileged": false,
+    "interface_port": "8081",
+    "documentation": null,
+    "website": "https://www.iobroker.net/#en/intro",
+    "logo": "https://raw.githubusercontent.com/ioBroker/ioBroker/master/img/logos/ioBroker_Logo_256px.png",
+    "description": "ioBroker is an open-source platform for building and managing smart home automation systems. It provides a centralized control and management interface for connected devices, sensors, and other IoT devices. ioBroker integrates with a wide range of popular smart home systems, devices, and services, making it easy to automate tasks and processes, monitor and control devices, and collect and analyze data from a variety of sources. With its flexible architecture and easy-to-use interface, ioBroker is designed to make it simple for users to build and customize their own smart home automation systems, regardless of their technical background or experience.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/iobroker.sh",
+            "resources": {
+                "cpu": "2",
+                "ram": "2048",
+                "hdd": "8",
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": []
+}

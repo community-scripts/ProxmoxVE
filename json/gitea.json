@@ -1,0 +1,34 @@
+{
+    "name": "Gitea",
+    "slug": "gitea",
+    "categories": [
+        16
+    ],
+    "date_created": "2024-07-26",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": "3000",
+    "documentation": null,
+    "website": "https://gitea.com",
+    "logo": "https://gitea.com/gitea/design/raw/branch/main/logo/logo.svg",
+    "description": "Gitea is a self-hosted Git service. It provides a lightweight and easy-to-install solution for managing Git repositories. Users can collaborate on code, track issues, and manage project tasks. Gitea includes features like pull requests, code reviews, wiki, and project management tools. It is suitable for small to medium-sized teams seeking control over their Git hosting.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/gitea.sh",
+            "resources": {
+                "cpu": "1",
+                "ram": "1024",
+                "hdd": "8",
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": []
+}

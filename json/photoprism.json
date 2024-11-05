@@ -1,0 +1,39 @@
+{
+    "name": "PhotoPrism",
+    "slug": "photoprism",
+    "categories": [
+        12
+    ],
+    "date_created": "2024-05-02",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": "2342",
+    "documentation": null,
+    "website": "https://photoprism.app/",
+    "logo": "https://github.com/tteck/Proxmox/blob/main/misc/images/photoprism.png?raw=true",
+    "description": "PhotoPrism is an AI-Powered Photos App for the Decentralized Web. It makes use of the latest technologies to tag and find pictures automatically without getting in your way.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/photoprism.sh",
+            "resources": {
+                "cpu": "2",
+                "ram": "2048",
+                "hdd": "8",
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": "admin",
+        "password": "changeme"
+    },
+    "notes": [
+        {
+            "text": "Please note that Ubuntu 22.04 and Debian 12 are supported, while older Linux distributions may not be compatible.",
+            "type": "warning"
+        }
+    ]
+}

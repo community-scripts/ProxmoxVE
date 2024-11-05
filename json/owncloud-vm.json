@@ -1,0 +1,34 @@
+{
+    "name": "ownCloud",
+    "slug": "owncloud-vm",
+    "categories": [
+        12
+    ],
+    "date_created": "2024-05-02",
+    "type": "vm",
+    "updateable": false,
+    "privileged": false,
+    "interface_port": "80",
+    "documentation": null,
+    "website": "https://www.turnkeylinux.org/owncloud",
+    "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/owncloud.svg",
+    "description": "TurnKey ownCloud is an open-source file sharing server and collaboration platform that can store your personal content, like documents and pictures, in a centralized location.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "vm/owncloud-vm.sh",
+            "resources": {
+                "cpu": "2",
+                "ram": "2048",
+                "hdd": "12G",
+                "os": null,
+                "version": null
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": []
+}

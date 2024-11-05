@@ -1,0 +1,34 @@
+{
+    "name": "Owncast",
+    "slug": "owncast",
+    "categories": [
+        12
+    ],
+    "date_created": "2024-05-02",
+    "type": "ct",
+    "updateable": false,
+    "privileged": false,
+    "interface_port": "8080",
+    "documentation": null,
+    "website": "https://owncast.online/",
+    "logo": "https://raw.githubusercontent.com/owncast/owncast/develop/web/public/img/favicon/android-icon-144x144.png",
+    "description": "Owncast is a free and open source live video and web chat server for use with existing popular broadcasting software.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/owncast.sh",
+            "resources": {
+                "cpu": "2",
+                "ram": "2048",
+                "hdd": "2",
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": "admin",
+        "password": "abc123"
+    },
+    "notes": []
+}

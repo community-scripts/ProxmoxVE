@@ -1,0 +1,34 @@
+{
+    "name": "Debian 12",
+    "slug": "debian-vm",
+    "categories": [
+        9
+    ],
+    "date_created": "2024-05-02",
+    "type": "vm",
+    "updateable": false,
+    "privileged": false,
+    "interface_port": null,
+    "documentation": null,
+    "website": "https://www.debian.org/",
+    "logo": "https://seeklogo.com/images/D/debian-logo-C136FDAF9E-seeklogo.com.png",
+    "description": "Debian Linux is a distribution that emphasizes free software. It supports many hardware platforms",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "vm/debian-vm.sh",
+            "resources": {
+                "cpu": "2",
+                "ram": "2048",
+                "hdd": "2G",
+                "os": null,
+                "version": null
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": []
+}

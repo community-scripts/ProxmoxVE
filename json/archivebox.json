@@ -1,0 +1,34 @@
+{
+    "name": "ArchiveBox",
+    "slug": "archivebox",
+    "categories": [
+        0
+    ],
+    "date_created": "2024-10-19",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": null,
+    "documentation": null,
+    "website": "https://archivebox.io/",
+    "logo": "https://raw.githubusercontent.com/ArchiveBox/ArchiveBox/refs/heads/dev/website/icon.png",
+    "description": "ArchiveBox is an open source tool that lets organizations & individuals archive both public & private web content while retaining control over their data. It can be used to save copies of bookmarks, preserve evidence for legal cases, backup photos from FB/Insta/Flickr or media from YT/Soundcloud/etc., save research papers, and more...",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/archivebox.sh",
+            "resources": {
+                "cpu": "2",
+                "ram": "1024",
+                "hdd": "8",
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": "archivebox",
+        "password": "helper-scripts.com"
+    },
+    "notes": []
+}

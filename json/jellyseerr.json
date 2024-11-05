@@ -1,0 +1,34 @@
+{
+    "name": "Jellyseerr",
+    "slug": "jellyseerr",
+    "categories": [
+        12
+    ],
+    "date_created": "2024-05-02",
+    "type": "ct",
+    "updateable": false,
+    "privileged": false,
+    "interface_port": "5055",
+    "documentation": null,
+    "website": "https://github.com/Fallenbagel/jellyseerr",
+    "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/jellyseerr.svg",
+    "description": "Jellyseerr is a free and open source software application for managing requests for your media library. It is a a fork of Overseerr built to bring support for Jellyfin & Emby media servers.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/jellyseerr.sh",
+            "resources": {
+                "cpu": "4",
+                "ram": "4096",
+                "hdd": "8",
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": []
+}

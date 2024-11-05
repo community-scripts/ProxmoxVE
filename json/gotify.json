@@ -1,0 +1,43 @@
+{
+    "name": "Gotify",
+    "slug": "gotify",
+    "categories": [
+        0
+    ],
+    "date_created": "2024-05-02",
+    "type": "ct",
+    "updateable": false,
+    "privileged": false,
+    "interface_port": "80",
+    "documentation": null,
+    "website": "https://gotify.net/",
+    "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/gotify.svg",
+    "description": "Gotify is a simple server for sending and receiving messages",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/gotify.sh",
+            "resources": {
+                "cpu": "1",
+                "ram": "512",
+                "hdd": "2",
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": "admin",
+        "password": "admin"
+    },
+    "notes": [
+        {
+            "text": "password: `admin`",
+            "type": "warning"
+        },
+        {
+            "text": "username: `admin`",
+            "type": "warning"
+        }
+    ]
+}

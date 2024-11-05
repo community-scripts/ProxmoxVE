@@ -1,0 +1,39 @@
+{
+    "name": "VS Code Server",
+    "slug": "code-server",
+    "categories": [
+        16
+    ],
+    "date_created": "2024-05-02",
+    "type": "misc",
+    "updateable": false,
+    "privileged": false,
+    "interface_port": "8680",
+    "documentation": null,
+    "website": null,
+    "logo": "https://user-images.githubusercontent.com/674621/71187801-14e60a80-2280-11ea-94c9-e56576f76baf.png",
+    "description": "VS Code Server is a service you can run on a remote development machine, like your desktop PC or a virtual machine (VM). It allows you to securely connect to that remote machine from anywhere through a vscode.dev URL, without the requirement of SSH.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "misc/code-server.sh",
+            "resources": {
+                "cpu": null,
+                "ram": null,
+                "hdd": null,
+                "os": null,
+                "version": null
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": [
+        {
+            "text": "Execute within an existing LXC Console",
+            "type": "warning"
+        }
+    ]
+}

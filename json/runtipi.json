@@ -1,0 +1,34 @@
+{
+    "name": "Runtipi",
+    "slug": "runtipi",
+    "categories": [
+        8
+    ],
+    "date_created": "2024-05-02",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": "80",
+    "documentation": null,
+    "website": "https://runtipi.io/",
+    "logo": "https://runtipi.io/_next/static/media/tipi.c0b9b68e.png",
+    "description": "Runtipi lets you install all your favorite self-hosted apps without the hassle of configuring and managing each service. One-click installs and updates for more than 180 popular apps.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/runtipi.sh",
+            "resources": {
+                "cpu": "2",
+                "ram": "2048",
+                "hdd": "8",
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": []
+}

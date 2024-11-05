@@ -1,0 +1,34 @@
+{
+    "name": "Wallos",
+    "slug": "wallos",
+    "categories": [
+        0
+    ],
+    "date_created": "2024-10-24",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": null,
+    "documentation": null,
+    "website": null,
+    "logo": "https://raw.githubusercontent.com/ellite/Wallos/refs/heads/main/images/icon/android-chrome-192x192.png",
+    "description": "Wallos is a personal finance and budgeting tool that provides an intuitive interface for tracking expenses, managing subscriptions, and monitoring financial health. It features APIs for categories, notifications, payments, and user settings, making it suitable for automation and custom integrations. Additionally, it supports multi-language functionality.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/wallos.sh",
+            "resources": {
+                "cpu": "1",
+                "ram": "1024",
+                "hdd": "5",
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": []
+}

@@ -1,0 +1,34 @@
+{
+    "name": "Homarr",
+    "slug": "homarr",
+    "categories": [
+        15
+    ],
+    "date_created": "2024-05-02",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": "3000",
+    "documentation": null,
+    "website": "https://homarr.dev/",
+    "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/homarr.svg",
+    "description": "Homarr is a sleek, modern dashboard that puts all of your apps and services at your fingertips.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/homarr.sh",
+            "resources": {
+                "cpu": "2",
+                "ram": "2048",
+                "hdd": "8",
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": []
+}

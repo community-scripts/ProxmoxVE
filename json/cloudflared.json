@@ -1,0 +1,34 @@
+{
+    "name": "Cloudflared",
+    "slug": "cloudflared",
+    "categories": [
+        11
+    ],
+    "date_created": "2024-05-02",
+    "type": "ct",
+    "updateable": false,
+    "privileged": false,
+    "interface_port": null,
+    "documentation": null,
+    "website": "https://www.cloudflare.com/",
+    "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/cloudflare.svg",
+    "description": "Cloudflared is a command-line tool that allows you to securely access resources on the Cloudflare network, such as websites and APIs, from your local computer. It works by creating a secure tunnel between your computer and the Cloudflare network, allowing you to access resources as if they were on your local network.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/cloudflared.sh",
+            "resources": {
+                "cpu": "1",
+                "ram": "512",
+                "hdd": "2",
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": []
+}
