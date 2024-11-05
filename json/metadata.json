@@ -1,0 +1,23 @@
+{
+    "categories":
+    [
+        {"name": "Miscellaneous", "id": 0, "sort_order": 99.0},
+        {"name": "Proxmox VE Tools", "id": 1, "sort_order": 1.0},
+        {"name": "Home Assistant", "id": 2, "sort_order": 2.0},
+        {"name": "Automation", "id": 3, "sort_order": 3.0},
+        {"name": "MQTT", "id": 4, "sort_order": 4.0},
+        {"name": "Database", "id": 5, "sort_order": 5.0},
+        {"name": "Zigbee - Zwave", "id": 6, "sort_order": 6.0},
+        {"name": "Monitoring - Analytics", "id": 7, "sort_order": 7.0},
+        {"name": "Docker - Kubernetes", "id": 8, "sort_order": 8.0},
+        {"name": "Operating System", "id": 9, "sort_order": 9.0},
+        {"name": "TurnKey", "id": 10, "sort_order": 10.0},
+        {"name": "Server - Networking", "id": 11, "sort_order": 11.0},
+        {"name": "Media - Photo", "id": 12, "sort_order": 12.0},
+        {"name": "AdBlocker - DNS", "id": 13, "sort_order": 13.0},
+        {"name": "Document - Notes", "id": 14, "sort_order": 14.0},
+        {"name": "Dashboards", "id": 15, "sort_order": 15.0},
+        {"name": "File - Code", "id": 16, "sort_order": 16.0},
+        {"name": "NVR - DVR", "id": 17, "sort_order": 17.0}
+    ]
+}
