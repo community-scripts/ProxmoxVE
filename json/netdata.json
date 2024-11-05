@@ -1,0 +1,38 @@
+{
+    "name": "Proxmox VE Netdata",
+    "slug": "netdata",
+    "categories": [
+        "Proxmox VE Tools"
+    ],
+    "date_created": "2024-04-29",
+    "type": "misc",
+    "updateable": 0,
+    "privileged": 0,
+    "interface_port": "0",
+    "documentation": "",
+    "website": "https://www.netdata.cloud/",
+    "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/netdata.svg",
+    "description": "Netdata is an open-source, real-time performance monitoring tool designed to provide insights into the performance and health of systems and applications. It is often used by system administrators, DevOps professionals, and developers to monitor and troubleshoot issues on servers and other devices.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "misc/netdata.sh",
+            "resources": {
+                "cpu": "",
+                "ram": "",
+                "hdd": "",
+                "os": "",
+                "version": ""
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": "",
+        "password": ""
+    },
+    "alerts": [
+        {
+            "alert": "Execute within the Proxmox shell"
+        }
+    ]
+}

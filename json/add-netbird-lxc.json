@@ -1,0 +1,41 @@
+{
+    "name": "NetBird",
+    "slug": "add-netbird-lxc",
+    "categories": [
+        "Server - Networking"
+    ],
+    "date_created": "2024-05-19",
+    "type": "misc",
+    "updateable": 0,
+    "privileged": 0,
+    "interface_port": "0",
+    "documentation": "https://docs.netbird.io/",
+    "website": "https://netbird.io/",
+    "logo": "https://avatars.githubusercontent.com/u/100464677?s=400&v=4",
+    "description": "NetBird combines a configuration-free peer-to-peer private network and a centralized access control system in a single platform, making it easy to create secure private networks for your organization or home.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "misc/add-netbird-lxc.sh",
+            "resources": {
+                "cpu": "",
+                "ram": "",
+                "hdd": "",
+                "os": "",
+                "version": ""
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": "",
+        "password": ""
+    },
+    "alerts": [
+        {
+            "alert": "After the script finishes, reboot the LXC then run `netbird up` in the LXC console"
+        },
+        {
+            "alert": "Execute within the Proxmox shell"
+        }
+    ]
+}

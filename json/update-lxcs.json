@@ -1,0 +1,38 @@
+{
+    "name": "Proxmox VE LXC Updater",
+    "slug": "update-lxcs",
+    "categories": [
+        "Proxmox VE Tools"
+    ],
+    "date_created": "2024-04-29",
+    "type": "misc",
+    "updateable": 0,
+    "privileged": 0,
+    "interface_port": "0",
+    "documentation": "",
+    "website": "",
+    "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/lxc.svg",
+    "description": "This script has been created to simplify and speed up the process of updating all LXC containers across various Linux distributions, such as Ubuntu, Debian, Devuan, Alpine Linux, CentOS-Rocky-Alma, Fedora, and ArchLinux. It's designed to automatically skip templates and specific containers during the update, enhancing its convenience and usability.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "misc/update-lxcs.sh",
+            "resources": {
+                "cpu": "",
+                "ram": "",
+                "hdd": "",
+                "os": "",
+                "version": ""
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": "",
+        "password": ""
+    },
+    "alerts": [
+        {
+            "alert": "Execute within the Proxmox shell"
+        }
+    ]
+}

@@ -1,0 +1,38 @@
+{
+    "name": "Proxmox VE Kernel Pin",
+    "slug": "kernel-pin",
+    "categories": [
+        "Proxmox VE Tools"
+    ],
+    "date_created": "2024-05-08",
+    "type": "misc",
+    "updateable": 0,
+    "privileged": 0,
+    "interface_port": "0",
+    "documentation": "",
+    "website": "",
+    "logo": "https://raw.githubusercontent.com/home-assistant/brands/master/core_integrations/proxmoxve/icon.png",
+    "description": "Kernel Pin is an essential tool for effortlessly managing kernel pinning and unpinning.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "misc/kernel-pin.sh",
+            "resources": {
+                "cpu": "",
+                "ram": "",
+                "hdd": "",
+                "os": "",
+                "version": ""
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": "",
+        "password": ""
+    },
+    "alerts": [
+        {
+            "alert": "Execute within the Proxmox shell"
+        }
+    ]
+}

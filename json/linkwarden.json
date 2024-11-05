@@ -1,0 +1,38 @@
+{
+    "name": "Linkwarden",
+    "slug": "linkwarden",
+    "categories": [
+        "Dashboards"
+    ],
+    "date_created": "2024-05-02",
+    "type": "ct",
+    "updateable": 0,
+    "privileged": 0,
+    "interface_port": "3000",
+    "documentation": "",
+    "website": "https://linkwarden.app/",
+    "logo": "https://raw.githubusercontent.com/linkwarden/linkwarden/main/assets/logo.png",
+    "description": "Linkwarden is a fully self-hostable, open-source collaborative bookmark manager to collect, organize and archive webpages.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/linkwarden.sh",
+            "resources": {
+                "cpu": "2",
+                "ram": "2048",
+                "hdd": "8",
+                "os": "ubuntu",
+                "version": "22.04"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": "",
+        "password": ""
+    },
+    "alerts": [
+        {
+            "alert": "Show Database/Adminer Credentials: `cat linkwarden.creds`"
+        }
+    ]
+}

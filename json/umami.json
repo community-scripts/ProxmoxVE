@@ -1,0 +1,38 @@
+{
+    "name": "Umami",
+    "slug": "umami",
+    "categories": [
+        "Monitoring - Analytics"
+    ],
+    "date_created": "2024-05-09",
+    "type": "ct",
+    "updateable": 0,
+    "privileged": 0,
+    "interface_port": "3000",
+    "documentation": "",
+    "website": "https://umami.is/",
+    "logo": "https://raw.githubusercontent.com/umami-software/umami/master/public/android-chrome-512x512.png",
+    "description": "Umami makes it easy to collect, analyze, and understand your web data while maintaining visitor privacy and data ownership.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/umami.sh",
+            "resources": {
+                "cpu": "2",
+                "ram": "2048",
+                "hdd": "12",
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": "admin",
+        "password": "umami"
+    },
+    "alerts": [
+        {
+            "alert": "To view the database credentials : `cat umami.creds`"
+        }
+    ]
+}
