@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies (Patience)"
+msg_info "Installing Dependencies"
 $STD apt-get install -y \
   curl \
   sudo \
@@ -26,6 +26,7 @@ cd /opt
 RELEASE=$(curl -s https://dl.vikunja.io/vikunja/ | grep -oP 'href="/vikunja/\K[0-9]+\.[0-9]+\.[0-9]+' | sort -V | tail -n 1)
 wget -q "https://dl.vikunja.io/vikunja/$RELEASE/vikunja-$RELEASE-amd64.deb"
 $STD dpkg -i vikunja-$RELEASE-amd64.deb
+sudo sed -i 's/^  timezone: .*/  timezone: UTC/' /etc/vikunja/config.yml
 systemctl start vikunja.service
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Installed Vikunja"
