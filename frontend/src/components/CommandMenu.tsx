@@ -14,24 +14,6 @@ import React, { useEffect } from "react";
 import { Button } from "./ui/button";
 import { DialogTitle } from "./ui/dialog";
 
-const sortCategories = (categories: Category[]): Category[] => {
-  return categories.sort((a: Category, b: Category) => {
-    if (
-      a.catagoryName === "Proxmox VE Tools" &&
-      b.catagoryName !== "Proxmox VE Tools"
-    ) {
-      return -1;
-    } else if (
-      a.catagoryName !== "Proxmox VE Tools" &&
-      b.catagoryName === "Proxmox VE Tools"
-    ) {
-      return 1;
-    } else {
-      return a.catagoryName.localeCompare(b.catagoryName);
-    }
-  });
-};
-
 export default function CommandMenu() {
   const [open, setOpen] = React.useState(false);
   const [links, setLinks] = React.useState<Category[]>([]);
@@ -57,8 +39,7 @@ export default function CommandMenu() {
       )
         .then((response) => response.json())
         .then((categories) => {
-          const sortedCategories = sortCategories(categories);
-          setLinks(sortedCategories);
+          setLinks(categories);
           setIsLoading(false);
         })
         .catch((error) => {
@@ -91,21 +72,21 @@ export default function CommandMenu() {
           <CommandEmpty>{isLoading ? "Loading..." : "No scripts found."}</CommandEmpty>
           {links.map((category) => (
             <CommandGroup
-              key={"category:" + category.catagoryName}
-              heading={category.catagoryName}
+              key={"category:" + category.name}
+              heading={category.name}
             >
-              {category.expand.items.map((script) => (
+              {category.scripts.map((script) => (
                 <CommandItem
-                  key={"script:" + script.id}
-                  value={script.title}
+                  key={"script:" + script.name}
+                  value={script.name}
                   onSelect={() => {
                     setOpen(false);
-                    router.push(`/scripts?id=${script.title}`);
+                    router.push(`/scripts?id=${script.name}`);
                   }}
                 >
                   <div className="flex gap-2" onClick={() => setOpen(false)}>
                     <Image
-                      src={script.logo}
+                      src={script.logo || "/logo.png"}
                       unoptimized
                       height={16}
                       onError={(e) =>
@@ -116,9 +97,9 @@ export default function CommandMenu() {
                       alt=""
                       className="h-5 w-5"
                     />
-                    <span>{script.title}</span>
+                    <span>{script.name}</span>
                     <span className="text-sm text-muted-foreground">
-                      {script.item_type}
+                      {script.type}
                     </span>
                   </div>
                 </CommandItem>
