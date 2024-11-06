@@ -69,7 +69,6 @@ export default function ScriptAccordion({
           <AccordionTrigger
             className={cn(
               "duration-250 rounded-lg transition ease-in-out hover:-translate-y-1 hover:scale-105 hover:bg-accent",
-              { "": expandedItem === category.name },
             )}
           >
             <div className="mr-2 flex w-full items-center justify-between">
