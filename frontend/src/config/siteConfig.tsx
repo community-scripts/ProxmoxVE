@@ -21,3 +21,9 @@ export const navbarLinks = [
     text: "Discussions",
   },
 ];
+
+export const mostPopularScripts = [
+  "Proxmox VE Post Install",
+  "Docker",
+  "Home Assistant OS",
+];

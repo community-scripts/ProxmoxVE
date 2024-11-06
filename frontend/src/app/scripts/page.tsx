@@ -10,7 +10,7 @@ import Sidebar from "./_components/Sidebar";
 import { useQueryState } from "nuqs";
 import {
   LatestScripts,
-  // MostViewedScripts,
+  MostViewedScripts,
 } from "./_components/ScriptInfoBlocks";
 import { fetchCategories } from "@/lib/pocketbase";
 
@@ -53,7 +53,7 @@ function ScriptContent() {
           ) : (
             <div className="flex w-full flex-col gap-5">
               <LatestScripts items={links} />
-              {/* <MostViewedScripts items={links} /> */}
+              <MostViewedScripts items={links} />
             </div>
           )}
         </div>
