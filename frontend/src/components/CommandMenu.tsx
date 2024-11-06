@@ -6,11 +6,12 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import { fetchCategories } from "@/lib/pocketbase";
 import { Category } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import React from "react";
 import { Button } from "./ui/button";
 import { DialogTitle } from "./ui/dialog";
 
@@ -32,20 +33,17 @@ export default function CommandMenu() {
     return () => document.removeEventListener("keydown", down);
   }, []);
 
-  const fetchCategories = async () => {
+  const fetchSortedCategories = () => {
     setIsLoading(true);
-      fetch(
-        `api/categories?_=${process.env.NEXT_PUBLIC_BUILD_TIME || Date.now()}`,
-      )
-        .then((response) => response.json())
-        .then((categories) => {
-          setLinks(categories);
-          setIsLoading(false);
-        })
-        .catch((error) => {
-          setIsLoading(false);
-          console.error(error);
-        });
+    fetchCategories()
+      .then((categories) => {
+        setLinks(categories);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        setIsLoading(false);
+        console.error(error);
+      });
   };
 
   return (
@@ -56,7 +54,7 @@ export default function CommandMenu() {
           "relative h-9 w-full justify-start rounded-[0.5rem] bg-muted/50 text-sm font-normal text-muted-foreground shadow-none sm:pr-12 md:w-40 lg:w-64",
         )}
         onClick={() => {
-          fetchCategories();
+          fetchSortedCategories();
           setOpen(true)
         }}
       >

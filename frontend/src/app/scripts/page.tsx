@@ -12,6 +12,7 @@ import {
   LatestScripts,
   // MostViewedScripts,
 } from "./_components/ScriptInfoBlocks";
+import { fetchCategories } from "@/lib/pocketbase";
 
 function ScriptContent() {
   const [selectedScript, setSelectedScript] = useQueryState("id");
@@ -29,14 +30,11 @@ function ScriptContent() {
   }, [selectedScript, links]);
 
   useEffect(() => {
-      fetch(
-        `api/categories`,
-      )
-        .then((response) => response.json())
-        .then((categories) => {
-          setLinks(categories);
-        })
-        .catch((error) => console.error(error));
+    fetchCategories()
+      .then((categories) => {
+        setLinks(categories);
+      })
+      .catch((error) => console.error(error));
   }, []);
 
   return (
