@@ -27,7 +27,7 @@
         },
         {
             "type": "alpine",
-            "script": "alpine-zigbee2mqtt.sh",
+            "script": "ct/alpine-zigbee2mqtt.sh",
             "resources": {
                 "cpu": "1",
                 "ram": "256",
