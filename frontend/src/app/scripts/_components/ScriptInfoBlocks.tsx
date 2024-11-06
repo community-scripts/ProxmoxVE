@@ -17,7 +17,7 @@ import { useMemo, useState } from "react";
 
 const ITEMS_PER_PAGE = 3;
 
-export const getCorrectTypeNaming = (type: string) => {
+export const getDisplayValueFromType = (type: string) => {
   switch (type) {
     case "ct":
       return "LXC";
