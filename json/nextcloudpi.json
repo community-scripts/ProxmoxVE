@@ -27,7 +27,7 @@
         },
         {
             "type": "alpine",
-            "script": "alpine-nextcloud.sh",
+            "script": "ct/alpine-nextcloud.sh",
             "resources": {
                 "cpu": "2",
                 "ram": "1024",
