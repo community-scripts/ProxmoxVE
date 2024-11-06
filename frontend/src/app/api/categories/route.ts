@@ -12,7 +12,7 @@ const fetchCategories = async (): Category[] => {
   return data.categories;
 }
 
-const fetchAllMetaDataFiles = async () => {
+const fetchScripts = async (): Script[] => {
   const response = await fetch(
     `https://api.github.com/repos/community-scripts/${basePath}/contents/json`,
   );
