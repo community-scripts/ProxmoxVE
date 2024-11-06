@@ -13,6 +13,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { Badge } from "../../../components/ui/badge";
+import { formattedBadge } from "@/components/CommandMenu";
 
 export default function ScriptAccordion({
   items,
@@ -122,19 +123,7 @@ export default function ScriptAccordion({
                         {script.name}
                       </span>
                     </div>
-                    <Badge
-                      className={cn(
-                        "ml-auto w-[37.69px] justify-center text-center",
-                        {
-                          "text-primary/75": script.type === "vm",
-                          "text-yellow-500/75": script.type === "ct",
-                          "border-none": script.type === "misc",
-                          hidden: !["VM", "LXC", ""].includes(script.type),
-                        },
-                      )}
-                    >
-                      {script.type}
-                    </Badge>
+                    {formattedBadge(script.type)}
                   </Link>
                 </div>
               ))}

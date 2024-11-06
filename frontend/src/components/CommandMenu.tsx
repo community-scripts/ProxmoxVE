@@ -7,13 +7,27 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { fetchCategories } from "@/lib/pocketbase";
-import { Category } from "@/lib/types";
+import { Category, Script } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { Button } from "./ui/button";
 import { DialogTitle } from "./ui/dialog";
+import { Badge } from "./ui/badge";
+
+export const formattedBadge = (type: string) => {
+  switch (type) {
+    case "vm":
+      return <Badge className="text-blue-500/75 border-blue-500/75">VM</Badge>;
+    case "ct":
+      return (
+        <Badge className="text-yellow-500/75 border-yellow-500/75">LXC</Badge>
+      );
+    case "misc":
+      return <Badge className="text-red-500/75 border-red-500/75">MISC</Badge>;
+  }
+};
 
 export default function CommandMenu() {
   const [open, setOpen] = React.useState(false);
@@ -55,7 +69,7 @@ export default function CommandMenu() {
         )}
         onClick={() => {
           fetchSortedCategories();
-          setOpen(true)
+          setOpen(true);
         }}
       >
         <span className="inline-flex">Search scripts...</span>
@@ -64,10 +78,12 @@ export default function CommandMenu() {
         </kbd>
       </Button>
       <CommandDialog open={open} onOpenChange={setOpen}>
-          <DialogTitle className="sr-only">Search scripts</DialogTitle>
-        <CommandInput placeholder="search for a script..." />
+        <DialogTitle className="sr-only">Search scripts</DialogTitle>
+        <CommandInput placeholder="Search for a script..." />
         <CommandList>
-          <CommandEmpty>{isLoading ? "Loading..." : "No scripts found."}</CommandEmpty>
+          <CommandEmpty>
+            {isLoading ? "Loading..." : "No scripts found."}
+          </CommandEmpty>
           {links.map((category) => (
             <CommandGroup
               key={"category:" + category.name}
@@ -96,9 +112,7 @@ export default function CommandMenu() {
                       className="h-5 w-5"
                     />
                     <span>{script.name}</span>
-                    <span className="text-sm text-muted-foreground">
-                      {script.type}
-                    </span>
+                    <span className="">{formattedBadge(script.type)}</span>
                   </div>
                 </CommandItem>
               ))}
