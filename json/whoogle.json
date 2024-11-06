@@ -11,7 +11,7 @@
     "interface_port": "5000",
     "documentation": null,
     "website": null,
-    "logo": "https://github.com/tteck/Proxmox/blob/main/misc/images/whoogle.png?raw=true",
+    "logo": "https://github.com/community-scripts/ProxmoxVE/blob/main/misc/images/whoogle.png?raw=true",
     "description": "Get Google search results, but without any ads, javascript, AMP links, cookies, or IP address tracking.",
     "install_methods": [
         {
