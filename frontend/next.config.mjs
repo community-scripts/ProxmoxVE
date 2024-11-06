@@ -1,5 +1,3 @@
-import { basePath } from '@/config/siteConfig';
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   webpack: (config) => {
@@ -17,7 +15,6 @@ const nextConfig = {
   },
 
   output: "export",
-  basePath: basePath,
 };
 
 export default nextConfig;
