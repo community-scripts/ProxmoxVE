@@ -91,7 +91,7 @@ export default function CommandMenu() {
             >
               {category.scripts.map((script) => (
                 <CommandItem
-                  key={"script:" + script.name}
+                  key=´script:${script.name}´
                   value={script.name}
                   onSelect={() => {
                     setOpen(false);
