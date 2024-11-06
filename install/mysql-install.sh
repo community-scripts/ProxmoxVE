@@ -24,9 +24,32 @@ $STD apt-get install -y \
   mc
 msg_ok "Installed Dependencies"
 
+PS3="Please select a Major Release: "
+RELEASES=("8.0" "8.4 - LTS" "9.1 - Innovation")
+select RELEASE in "${RELEASES[@]}"; do
+  case ${RELEASE} in
+    "8.0")
+      RELEASE_REPO="mysql-8.0"
+      RELEASE_AUTH="mysql_native_password"
+      break
+      ;;
+    "8.4 - LTS")
+      RELEASE_REPO="mysql-8.4-lts"
+      RELEASE_AUTH="caching_sha2_password"
+      break
+      ;;
+    "9.1 - Innovation")
+      RELEASE_REPO="mysql-innovation"
+      RELEASE_AUTH="caching_sha2_password"
+      break
+      ;;
+    *) echo "invalid selection";;
+  esac
+done
+
 msg_info "Installing MySQL"
 curl -fsSL https://repo.mysql.com/RPM-GPG-KEY-mysql-2023 | gpg --dearmor  -o /usr/share/keyrings/mysql.gpg
-echo "deb [signed-by=/usr/share/keyrings/mysql.gpg] http://repo.mysql.com/apt/debian $(lsb_release -sc) mysql-8.0" >/etc/apt/sources.list.d/mysql.list
+echo "deb [signed-by=/usr/share/keyrings/mysql.gpg] http://repo.mysql.com/apt/debian $(lsb_release -sc) ${RELEASE_REPO}" >/etc/apt/sources.list.d/mysql.list
 $STD apt-get update
 export DEBIAN_FRONTEND=noninteractive
 $STD apt-get install -y \
@@ -36,7 +59,7 @@ msg_ok "Installed MySQL"
 
 msg_info "Configure MySQL Server"
 ADMIN_PASS="$(openssl rand -base64 18 | cut -c1-13)"
-$STD mysql -uroot -p"$ADMIN_PASS" -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '$ADMIN_PASS'; FLUSH PRIVILEGES;"
+$STD mysql -uroot -p"$ADMIN_PASS" -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH $RELEASE_AUTH BY '$ADMIN_PASS'; FLUSH PRIVILEGES;"
 echo "" >~/mysql.creds
 echo -e "MySQL user: root" >>~/mysql.creds
 echo -e "MySQL password: $ADMIN_PASS" >>~/mysql.creds
@@ -53,8 +76,8 @@ if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
     php-zip \
     php-gd \
     php-json \
-    php-curl 
-	
+    php-curl
+
 	wget -q "https://files.phpmyadmin.net/phpMyAdmin/5.2.1/phpMyAdmin-5.2.1-all-languages.tar.gz"
 	mkdir -p /var/www/html/phpMyAdmin
 	tar xf phpMyAdmin-5.2.1-all-languages.tar.gz --strip-components=1 -C /var/www/html/phpMyAdmin
