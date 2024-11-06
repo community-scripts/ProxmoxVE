@@ -6,7 +6,7 @@ export default function DefaultSettings({ item }: { item: Script }) {
   );
 
   const defaultSettingsAvailable =
-    defaultSettings?.resources.cpu !== null ||
+    defaultSettings?.resources.cpu ||
     defaultSettings?.resources.ram !== null ||
     defaultSettings?.resources.hdd !== null;
 
