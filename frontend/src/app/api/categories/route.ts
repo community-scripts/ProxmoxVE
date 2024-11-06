@@ -33,7 +33,7 @@ const fetchAllMetaDataFiles = async () => {
 export async function GET() {
   try {
     const categories: Category[] = await fetchCategories();
-    const scripts: Script[] = await fetchAllMetaDataFiles();
+    const scripts = await fetchScripts();
     for (const category of categories) {
       category.scripts = scripts.filter((script) => script.categories.includes(category.id));
     }
