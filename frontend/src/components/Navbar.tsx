@@ -8,7 +8,7 @@ import { navbarLinks } from "@/config/siteConfig";
 
 import CommandMenu from "./CommandMenu";
 import StarOnGithubButton from "./ui/star-on-github-button";
-import { ModeToggle } from "./ui/theme-toggle";
+import { ThemeToggle } from "./ui/theme-toggle";
 import {
   Tooltip,
   TooltipContent,
@@ -77,7 +77,7 @@ function Navbar() {
                 </Tooltip>
               </TooltipProvider>
             ))}
-            <ModeToggle />
+            <ThemeToggle />
           </div>
         </div>
       </div>
