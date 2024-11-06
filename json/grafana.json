@@ -27,7 +27,7 @@
         },
         {
             "type": "alpine",
-            "script": "alpine-grafana.sh",
+            "script": "ct/alpine-grafana.sh",
             "resources": {
                 "cpu": "1",
                 "ram": "256",
