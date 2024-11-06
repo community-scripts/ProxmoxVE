@@ -4,7 +4,7 @@ import { basePath } from "@/config/siteConfig";
 import { Script } from "@/lib/types";
 
 const getInstallCommand = (scriptPath?: string) => {
-  return `bash -c "$(wget -qLO - https://github.com/community-scripts/${basePath}/raw/main/${script})"`;
+  return `bash -c "$(wget -qLO - https://github.com/community-scripts/${basePath}/raw/main/${scriptPath})"`;
 }
 
 export default function InstallCommand({ item }: { item: Script }) {
@@ -54,12 +54,12 @@ export default function InstallCommand({ item }: { item: Script }) {
           </TabsList>
           <TabsContent value="default">
             {renderInstructions()}
-            <CodeCopyButton>{generateInstallCommand(defaultScript?.script)}</CodeCopyButton>
+            <CodeCopyButton>{getInstallCommand(defaultScript?.script)}</CodeCopyButton>
           </TabsContent>
           <TabsContent value="alpine">
             {renderInstructions(true)}
             <CodeCopyButton>
-              {generateInstallCommand(alpineScript.script)}
+              {getInstallCommand(alpineScript.script)}
             </CodeCopyButton>
           </TabsContent>
         </Tabs>
@@ -67,7 +67,7 @@ export default function InstallCommand({ item }: { item: Script }) {
         <>
           {renderInstructions()}
           <CodeCopyButton>
-            {generateInstallCommand(defaultScript.script)}
+            {getInstallCommand(defaultScript.script)}
           </CodeCopyButton>
         </>
       ) : null}
