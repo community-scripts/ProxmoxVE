@@ -15,10 +15,10 @@ export default function DefaultSettings({ item }: { item: Script }) {
   );
 
   const getDisplayValueFromRAM = (ram: number) => {
-    if (value >= 1024) {
-      return (value / 1024).toFixed(0) + "GB";
+    if (ram >= 1024) {
+      return (ram / 1024).toFixed(0) + "GB";
     }
-    return value + "MB";
+    return ram + "MB";
   };
 
   return (
@@ -30,7 +30,7 @@ export default function DefaultSettings({ item }: { item: Script }) {
             CPU: {defaultSettings?.resources.cpu}vCPU
           </p>
           <p className="text-sm text-muted-foreground">
-            RAM: {convertMBtoGB(defaultSettings?.resources.ram ?? 0)}
+            RAM: {getDisplayValueFromRAM(defaultSettings?.resources.ram ?? 0)}
           </p>
           <p className="text-sm text-muted-foreground">
             HDD: {defaultSettings?.resources.hdd}GB
@@ -44,7 +44,7 @@ export default function DefaultSettings({ item }: { item: Script }) {
             CPU: {defaultAlpineSettings?.resources.cpu}vCPU
           </p>
           <p className="text-sm text-muted-foreground">
-            RAM: {convertMBtoGB(defaultAlpineSettings?.resources.ram ?? 0)}
+            RAM: {getDisplayValueFromRAM(defaultAlpineSettings?.resources.ram ?? 0)}
           </p>
           <p className="text-sm text-muted-foreground">
             HDD: {defaultAlpineSettings?.resources.hdd}GB
