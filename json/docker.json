@@ -27,7 +27,7 @@
         },
         {
             "type": "alpine",
-            "script": "alpine-docker.sh",
+            "script": "ct/alpine-docker.sh",
             "resources": {
                 "cpu": "1",
                 "ram": "1024",
