@@ -17,7 +17,11 @@ const fetchAllMetaDataFiles = async () => {
     `https://api.github.com/repos/community-scripts/${basePath}/contents/json`,
   );
   const files = await response.json();
-  const scripts: Script[] = [];
+  const scripts = files.map(async (file) => {
+     const response = await fetch(file.download_url);
+     const script = await response.json();
+     return script
+  })
   for (const file of files) {
     const response = await fetch(file.download_url);
     const script = await response.json();
