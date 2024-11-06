@@ -1,3 +1,4 @@
+import { basePath } from "@/config/siteConfig";
 import type { MetadataRoute } from "next";
 import { headers } from "next/headers";
 
@@ -9,11 +10,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let protocol = "https";
   return [
     {
-      url: `${protocol}://${domain}/${process.env.BASE_PATH}`,
+      url: `${protocol}://${domain}/${basePath}`,
       lastModified: new Date(),
     },
     {
-      url: `${protocol}://${domain}/${process.env.BASE_PATH}/scripts`,
+      url: `${protocol}://${domain}/${basePath}/scripts`,
       lastModified: new Date(),
     },
   ];
