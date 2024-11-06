@@ -17,7 +17,6 @@ const fetchAllMetaDataFiles = async () => {
   const scripts: Script[] = [];
   for (const file of files) {
     const response = await fetch(file.download_url);
-    console.log(file.name);
     const script = await response.json();
     scripts.push(script);
   }
