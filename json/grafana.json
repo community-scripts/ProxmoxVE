@@ -24,6 +24,17 @@
                 "os": "debian",
                 "version": "12"
             }
+        },
+        {
+            "type": "alpine",
+            "script": "alpine-grafana.sh",
+            "resources": {
+                "cpu": "1",
+                "ram": "256",
+                "hdd": "1",
+                "os": "alpine",
+                "version": "3.19"
+            }
         }
     ],
     "default_credentials": {

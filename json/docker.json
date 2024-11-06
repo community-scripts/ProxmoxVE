@@ -24,6 +24,17 @@
                 "os": "debian",
                 "version": "12"
             }
+        },
+        {
+            "type": "alpine",
+            "script": "alpine-docker.sh",
+            "resources": {
+                "cpu": "1",
+                "ram": "1024",
+                "hdd": "2",
+                "os": "alpine",
+                "version": "3.19"
+            }
         }
     ],
     "default_credentials": {

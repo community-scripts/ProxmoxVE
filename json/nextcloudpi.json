@@ -18,11 +18,11 @@
             "type": "default",
             "script": "ct/nextcloudpi.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "2048",
-                "hdd": "8",
-                "os": "debian",
-                "version": "12"
+                "cpu": null,
+                "ram": null,
+                "hdd": null,
+                "os": null,
+                "version": null
             }
         }
     ],

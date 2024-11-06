@@ -24,6 +24,17 @@
                 "os": "debian",
                 "version": "12"
             }
+        },
+        {
+            "type": "alpine",
+            "script": "alpine-zigbee2mqtt.sh",
+            "resources": {
+                "cpu": "1",
+                "ram": "256",
+                "hdd": "0.3",
+                "os": "alpine",
+                "version": "3.19"
+            }
         }
     ],
     "default_credentials": {
