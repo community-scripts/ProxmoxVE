@@ -1,33 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { Script } from "@/lib/types";
-import { BookOpenText, Code, ExternalLink, Globe } from "lucide-react";
+import { BookOpenText, Code, Globe } from "lucide-react";
 import Link from "next/link";
-import { useMemo } from "react";
+
+const generateSourceUrl = (slug: string, type: string) => {
+  if (type === "ct") {
+    return `https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/install/${slug}-install.sh`;
+  } else {
+    return `https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/${type}/${slug}.sh`;
+  }
+};
 
 export default function Buttons({ item }: { item: Script }) {
-  const pattern = useMemo(
-    () =>
-      /(https:\/\/github\.com\/community-scripts\/ProxmoxVE\/raw\/main\/(ct|misc|vm)\/([^\/]+)\.sh)/,
-    [],
-  );
-
-    const transformUrlToInstallScript = (url: string): string => {
-      if (url.includes("/pve/")) {
-        return url;
-      } else if (url.includes("/ct/")) {
-        return url.replace("/ct/", "/install/").replace(/\.sh$/, "-install.sh");
-      }
-      return url;
-    };
-
-  const sourceUrl = useMemo(() => {
-    if (item.install_methods[0]?.script) {
-      const match = item.install_methods[0].script.match(pattern);
-      return match ? transformUrlToInstallScript(match[0]) : null;
-    }
-    return null;
-  }, [item.install_methods, pattern]);
-
   return (
     <div className="flex flex-wrap justify-end gap-2">
       {item.website && (
@@ -49,16 +33,16 @@ export default function Buttons({ item }: { item: Script }) {
           </Link>
         </Button>
       )}
-      {item.install_methods[0]?.script && sourceUrl && (
+      {
         <Button variant="secondary" asChild>
-          <Link target="_blank" href={transformUrlToInstallScript(sourceUrl)}>
+          <Link target="_blank" href={generateSourceUrl(item.slug, item.type)}>
             <span className="flex items-center gap-2">
               <Code className="h-4 w-4" />
               Source Code
             </span>
           </Link>
         </Button>
-      )}
+      }
     </div>
   );
 }
