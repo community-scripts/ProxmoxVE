@@ -14,7 +14,7 @@ export default function DefaultSettings({ item }: { item: Script }) {
     (method) => method.type === "alpine",
   );
 
-  const convertMBtoGB = (value: number) => {
+  const getDisplayValueFromRAM = (ram: number) => {
     if (value >= 1024) {
       return (value / 1024).toFixed(0) + "GB";
     }

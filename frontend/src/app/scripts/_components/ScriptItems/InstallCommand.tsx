@@ -3,7 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { basePath } from "@/config/siteConfig";
 import { Script } from "@/lib/types";
 
-const generateInstallCommand = (script?: string) => {
+const getInstallCommand = (scriptPath?: string) => {
   return `bash -c "$(wget -qLO - https://github.com/community-scripts/${basePath}/raw/main/${script})"`;
 }
 
