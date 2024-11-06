@@ -8,7 +8,7 @@ export default function DefaultSettings({ item }: { item: Script }) {
   const defaultSettingsAvailable =
     defaultSettings?.resources.cpu ||
     defaultSettings?.resources.ram !== null ||
-    defaultSettings?.resources.hdd !== null;
+    defaultSettings?.resources.hdd;
 
   const defaultAlpineSettings = item.install_methods.find(
     (method) => method.type === "alpine",
