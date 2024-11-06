@@ -6,6 +6,7 @@ import "@/styles/globals.css";
 import { Inter } from "next/font/google";
 import React from "react";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { analytics } from "@/config/siteConfig";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -60,8 +61,8 @@ export default function RootLayout({
       <head>
         <script
           defer
-          src={`https://${process.env.NEXT_PUBLIC_ANALYTICS_URL}/script.js`}
-          data-website-id={process.env.NEXT_PUBLIC_ANALYTICS_TOKEN}
+          src={`https://${analytics.url}/script.js`}
+          data-website-id={analytics.token}
         ></script>
         <link rel="manifest" href="manifest.webmanifest" />
         <link rel="preconnect" href={process.env.NEXT_PUBLIC_POCKETBASE_URL} />
