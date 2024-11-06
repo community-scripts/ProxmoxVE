@@ -1,13 +1,14 @@
 import { Button } from "@/components/ui/button";
+import { basePath } from "@/config/siteConfig";
 import { Script } from "@/lib/types";
 import { BookOpenText, Code, Globe } from "lucide-react";
 import Link from "next/link";
 
 const generateSourceUrl = (slug: string, type: string) => {
   if (type === "ct") {
-    return `https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/install/${slug}-install.sh`;
+    return `https://raw.githubusercontent.com/community-scripts/${basePath}/main/install/${slug}-install.sh`;
   } else {
-    return `https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/${type}/${slug}.sh`;
+    return `https://raw.githubusercontent.com/community-scripts/${basePath}/main/${type}/${slug}.sh`;
   }
 };
 

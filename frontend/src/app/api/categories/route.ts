@@ -1,17 +1,20 @@
+import { basePath } from "@/config/siteConfig";
 import { Category, Script } from "@/lib/types";
 import { NextResponse } from "next/server";
 
 export const dynamic = "force-static";
 
 const fetchCategories = async () => {
-  const response = await fetch("https://raw.githubusercontent.com/community-scripts/ProxmoxVE/refs/heads/main/json/metadata.json");
+  const response = await fetch(
+    `https://raw.githubusercontent.com/community-scripts/${basePath}/refs/heads/main/json/metadata.json`,
+  );
   const data = await response.json();
   return data.categories;
 }
 
 const fetchAllMetaDataFiles = async () => {
   const response = await fetch(
-    "https://api.github.com/repos/community-scripts/ProxmoxVE/contents/json",
+    `https://api.github.com/repos/community-scripts/${basePath}/contents/json`,
   );
   const files = await response.json();
   const scripts: Script[] = [];

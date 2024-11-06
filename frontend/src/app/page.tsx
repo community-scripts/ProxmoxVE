@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { CardFooter } from "@/components/ui/card";
 import { FaGithub } from "react-icons/fa";
+import { basePath } from "@/config/siteConfig";
 
 function CustomArrowRightIcon() {
   return <ArrowRightIcon className="h-4 w-4" width={1} />;
@@ -80,7 +81,7 @@ export default function Page() {
                 </Button>
                 <Button className="w-full" asChild>
                   <a
-                    href="https://github.com/community-scripts/ProxmoxVE"
+                    href={`https://github.com/community-scripts/${basePath}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-center"
