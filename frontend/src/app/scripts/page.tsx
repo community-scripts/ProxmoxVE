@@ -12,7 +12,7 @@ import {
   LatestScripts,
   MostViewedScripts,
 } from "./_components/ScriptInfoBlocks";
-import { fetchCategories } from "@/lib/pocketbase";
+import { fetchCategories } from "@/lib/data";
 
 function ScriptContent() {
   const [selectedScript, setSelectedScript] = useQueryState("id");

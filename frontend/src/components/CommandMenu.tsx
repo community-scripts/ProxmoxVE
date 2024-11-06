@@ -6,7 +6,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { fetchCategories } from "@/lib/pocketbase";
+import { fetchCategories } from "@/lib/data";
 import { Category, Script } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
