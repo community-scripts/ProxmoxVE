@@ -14,6 +14,13 @@ export default function DefaultSettings({ item }: { item: Script }) {
     (method) => method.type === "alpine",
   );
 
+  const convertMBtoGB = (value: number) => {
+    if (value >= 1024) {
+      return (value / 1024).toFixed(0) + "GB";
+    }
+    return value + "MB";
+  };
+
   return (
     <>
       {defaultSettingsAvailable && (
@@ -23,7 +30,7 @@ export default function DefaultSettings({ item }: { item: Script }) {
             CPU: {defaultSettings?.resources.cpu}vCPU
           </p>
           <p className="text-sm text-muted-foreground">
-            RAM: {defaultSettings?.resources.ram}MB
+            RAM: {convertMBtoGB(defaultSettings?.resources.ram ?? 0)}
           </p>
           <p className="text-sm text-muted-foreground">
             HDD: {defaultSettings?.resources.hdd}GB
@@ -37,7 +44,7 @@ export default function DefaultSettings({ item }: { item: Script }) {
             CPU: {defaultAlpineSettings?.resources.cpu}vCPU
           </p>
           <p className="text-sm text-muted-foreground">
-            RAM: {defaultAlpineSettings?.resources.ram}MB
+            RAM: {convertMBtoGB(defaultAlpineSettings?.resources.ram ?? 0)}
           </p>
           <p className="text-sm text-muted-foreground">
             HDD: {defaultAlpineSettings?.resources.hdd}GB
