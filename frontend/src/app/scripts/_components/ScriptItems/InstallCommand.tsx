@@ -2,7 +2,7 @@ import CodeCopyButton from "@/components/ui/code-copy-button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Script } from "@/lib/types";
 
-const generateInstallCommand = (script: string) => {
+const generateInstallCommand = (script?: string) => {
   return `bash -c "$(wget -qLO - https://github.com/community-scripts/ProxmoxVE/raw/main/${script})"`;
 }
 
@@ -53,7 +53,7 @@ export default function InstallCommand({ item }: { item: Script }) {
           </TabsList>
           <TabsContent value="default">
             {renderInstructions()}
-            <CodeCopyButton>{defaultScript?.script}</CodeCopyButton>
+            <CodeCopyButton>{generateInstallCommand(defaultScript?.script)}</CodeCopyButton>
           </TabsContent>
           <TabsContent value="alpine">
             {renderInstructions(true)}
