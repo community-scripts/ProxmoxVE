@@ -32,7 +32,7 @@ const fetchScripts = async (): Script[] => {
 
 export async function GET() {
   try {
-    const categories: Category[] = await fetchCategories();
+    const categories = await fetchCategories();
     const scripts = await fetchScripts();
     for (const category of categories) {
       category.scripts = scripts.filter((script) => script.categories.includes(category.id));
