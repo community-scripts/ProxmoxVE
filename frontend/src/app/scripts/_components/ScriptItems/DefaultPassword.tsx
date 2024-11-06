@@ -4,7 +4,7 @@ import handleCopy from "@/components/handleCopy";
 import { Script } from "@/lib/types";
 
 export default function DefaultPassword({ item }: { item: Script }) {
-  const hasDefaultLogin = item?.expand?.default_login !== undefined;
+  const hasDefaultLogin = item.default_credentials.username != null && item.default_credentials.password != null;
 
   return (
     <div>
@@ -17,7 +17,7 @@ export default function DefaultPassword({ item }: { item: Script }) {
           <div className="flex flex-col gap-2 p-4">
             <p className="mb-2 text-sm">
               You can use the following credentials to login to the {""}
-              {item.title} {item.item_type}.
+              {item.name} {item.type}.
             </p>
             <div className="text-sm">
               Username:{" "}
@@ -25,10 +25,10 @@ export default function DefaultPassword({ item }: { item: Script }) {
                 variant={"secondary"}
                 size={"null"}
                 onClick={() =>
-                  handleCopy("username", item.expand.default_login.username)
+                  handleCopy("username", item.default_credentials.username ?? "")
                 }
               >
-                {item.expand.default_login.username}
+                {item.default_credentials.username}
               </Button>
             </div>
             <div className="text-sm">
@@ -37,10 +37,10 @@ export default function DefaultPassword({ item }: { item: Script }) {
                 variant={"secondary"}
                 size={"null"}
                 onClick={() =>
-                  handleCopy("password", item.expand.default_login.password)
+                  handleCopy("password", item.default_credentials.password ?? "")
                 }
               >
-                {item.expand.default_login.password}
+                {item.default_credentials.password}
               </Button>
             </div>
           </div>

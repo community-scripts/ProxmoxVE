@@ -37,11 +37,11 @@ export default function Tooltips({ item }: { item: Script }) {
           content="This script will be run in a privileged LXC"
         />
       )}
-      {item.isUpdateable && (
+      {item.updateable && (
         <TooltipBadge
           variant="success"
           label="Updateable"
-          content={`To Update ${item.title}, run the command below (or type update) in the LXC Console.`}
+          content={`To Update ${item.name}, run the command below (or type update) in the LXC Console.`}
         />
       )}
     </div>

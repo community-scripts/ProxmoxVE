@@ -10,7 +10,7 @@ import Sidebar from "./_components/Sidebar";
 import { useQueryState } from "nuqs";
 import {
   LatestScripts,
-  MostViewedScripts,
+  // MostViewedScripts,
 } from "./_components/ScriptInfoBlocks";
 
 function ScriptContent() {
@@ -21,39 +21,20 @@ function ScriptContent() {
   useEffect(() => {
     if (selectedScript && links.length > 0) {
       const script = links
-        .map((category) => category.expand.items)
+        .map((category) => category.scripts)
         .flat()
-        .find((script) => script.title === selectedScript);
+        .find((script) => script.name === selectedScript);
       setItem(script);
     }
   }, [selectedScript, links]);
 
-  const sortCategories = (categories: Category[]): Category[] => {
-    return categories.sort((a: Category, b: Category) => {
-      if (
-        a.catagoryName === "Proxmox VE Tools" &&
-        b.catagoryName !== "Proxmox VE Tools"
-      ) {
-        return -1;
-      } else if (
-        a.catagoryName !== "Proxmox VE Tools" &&
-        b.catagoryName === "Proxmox VE Tools"
-      ) {
-        return 1;
-      } else {
-        return a.catagoryName.localeCompare(b.catagoryName);
-      }
-    });
-  };
-
   useEffect(() => {
       fetch(
-        `api/categories?_=${process.env.NEXT_PUBLIC_BUILD_TIME || Date.now()}`,
+        `api/categories`,
       )
         .then((response) => response.json())
         .then((categories) => {
-          const sortedCategories = sortCategories(categories);
-          setLinks(sortedCategories);
+          setLinks(categories);
         })
         .catch((error) => console.error(error));
   }, []);
@@ -74,7 +55,7 @@ function ScriptContent() {
           ) : (
             <div className="flex w-full flex-col gap-5">
               <LatestScripts items={links} />
-              <MostViewedScripts items={links} />
+              {/* <MostViewedScripts items={links} /> */}
             </div>
           )}
         </div>

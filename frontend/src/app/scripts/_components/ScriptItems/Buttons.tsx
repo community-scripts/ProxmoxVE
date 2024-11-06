@@ -21,12 +21,12 @@ export default function Buttons({ item }: { item: Script }) {
     };
 
   const sourceUrl = useMemo(() => {
-    if (item.installCommand) {
-      const match = item.installCommand.match(pattern);
+    if (item.install_methods[0]?.script) {
+      const match = item.install_methods[0].script.match(pattern);
       return match ? transformUrlToInstallScript(match[0]) : null;
     }
     return null;
-  }, [item.installCommand, pattern]);
+  }, [item.install_methods, pattern]);
 
   return (
     <div className="flex flex-wrap justify-end gap-2">
@@ -49,17 +49,7 @@ export default function Buttons({ item }: { item: Script }) {
           </Link>
         </Button>
       )}
-      {item.post_install && (
-        <Button variant="secondary" asChild>
-          <Link target="_blank" href={item.post_install}>
-            <span className="flex items-center gap-2">
-              <ExternalLink className="h-4 w-4" />
-              Post Install
-            </span>
-          </Link>
-        </Button>
-      )}
-      {item.installCommand && sourceUrl && (
+      {item.install_methods[0]?.script && sourceUrl && (
         <Button variant="secondary" asChild>
           <Link target="_blank" href={transformUrlToInstallScript(sourceUrl)}>
             <span className="flex items-center gap-2">

@@ -39,21 +39,21 @@ function ScriptItem({
               <div className="flex">
                 <Image
                   className="h-32 w-32 rounded-lg bg-accent/60 object-contain p-3 shadow-md"
-                  src={item.logo}
+                  src={item.logo || "/logo.png"}
                   width={400}
                   onError={(e) =>
                     ((e.currentTarget as HTMLImageElement).src = "/logo.png")
                   }
                   height={400}
-                  alt={item.title}
+                  alt={item.name}
                   unoptimized
                 />
                 <div className="ml-4 flex flex-col justify-between">
                   <div className="flex h-full w-full flex-col justify-between">
                     <div>
-                      <h1 className="text-lg font-semibold">{item.title}</h1>
+                      <h1 className="text-lg font-semibold">{item.name}</h1>
                       <p className="w-full text-sm text-muted-foreground">
-                        Date added: {extractDate(item.created)}
+                        Date added: {extractDate(item.date_created)}
                       </p>
                     </div>
                     <div className="flex gap-5">
@@ -76,7 +76,7 @@ function ScriptItem({
               <div className="mt-4 rounded-lg border bg-accent/50">
                 <div className="flex gap-3 px-4 py-2">
                   <h2 className="text-lg font-semibold">
-                    How to {item.item_type ? "install" : "use"}
+                    How to {item.type ? "install" : "use"}
                   </h2>
                   <Tooltips item={item} />
                 </div>

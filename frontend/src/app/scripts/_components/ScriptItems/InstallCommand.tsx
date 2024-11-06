@@ -2,32 +2,41 @@ import CodeCopyButton from "@/components/ui/code-copy-button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Script } from "@/lib/types";
 
+const generateInstallCommand = (script: string) => {
+  return `bash -c "$(wget -qLO - https://github.com/community-scripts/ProxmoxVE/raw/main/${script})"`;
+}
+
 export default function InstallCommand({ item }: { item: Script }) {
-  const { title, item_type, installCommand, expand } = item;
-  const hasAlpineScript = expand?.alpine_script !== undefined;
+  const alpineScript = item.install_methods.find(
+    (method) => method.type === "alpine",
+  );
+
+  const defaultScript = item.install_methods.find(
+    (method) => method.type === "default"
+  );
 
   const renderInstructions = (isAlpine = false) => (
     <>
       <p className="text-sm mt-2">
         {isAlpine ? (
           <>
-            As an alternative option, you can use Alpine Linux and the {title}{" "}
-            package to create a {title} {item_type} container with faster
+            As an alternative option, you can use Alpine Linux and the {item.name}{" "}
+            package to create a {item.name} {item.type} container with faster
             creation time and minimal system resource usage. You are also
             obliged to adhere to updates provided by the package maintainer.
           </>
-        ) : item_type ? (
+        ) : item.type ? (
           <>
-            To create a new Proxmox VE {title} {item_type}, run the command
+            To create a new Proxmox VE {item.name} {item.type}, run the command
             below in the Proxmox VE Shell.
           </>
         ) : (
-          <>To use the {title} script, run the command below in the shell.</>
+          <>To use the {item.name} script, run the command below in the shell.</>
         )}
       </p>
       {isAlpine && (
         <p className="mt-2 text-sm">
-          To create a new Proxmox VE Alpine-{title} {item_type}, run the command
+          To create a new Proxmox VE Alpine-{item.name} {item.type}, run the command
           below in the Proxmox VE Shell
         </p>
       )}
@@ -36,7 +45,7 @@ export default function InstallCommand({ item }: { item: Script }) {
 
   return (
     <div className="p-4">
-      {hasAlpineScript ? (
+      {alpineScript ? (
         <Tabs defaultValue="default" className="mt-2 w-full max-w-4xl">
           <TabsList>
             <TabsTrigger value="default">Default</TabsTrigger>
@@ -44,25 +53,23 @@ export default function InstallCommand({ item }: { item: Script }) {
           </TabsList>
           <TabsContent value="default">
             {renderInstructions()}
-            <CodeCopyButton>{installCommand}</CodeCopyButton>
+            <CodeCopyButton>{defaultScript?.script}</CodeCopyButton>
           </TabsContent>
           <TabsContent value="alpine">
-            {expand.alpine_script && (
-              <>
-                {renderInstructions(true)}
-                <CodeCopyButton>
-                  {expand.alpine_script.installCommand}
-                </CodeCopyButton>
-              </>
-            )}
+            {renderInstructions(true)}
+            <CodeCopyButton>
+              {generateInstallCommand(alpineScript.script)}
+            </CodeCopyButton>
           </TabsContent>
         </Tabs>
-      ) : (
+      ) : defaultScript?.script ? (
         <>
           {renderInstructions()}
-          {installCommand && <CodeCopyButton>{installCommand}</CodeCopyButton>}
+          <CodeCopyButton>
+            {generateInstallCommand(defaultScript.script)}
+          </CodeCopyButton>
         </>
-      )}
+      ) : null}
     </div>
   );
 }

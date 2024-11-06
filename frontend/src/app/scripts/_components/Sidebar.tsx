@@ -18,7 +18,7 @@ const Sidebar = ({
         <h1 className="text-xl font-bold">Categories</h1>
         <p className="text-xs italic text-muted-foreground">
           {items.reduce(
-            (acc, category) => acc + category.expand.items.length,
+            (acc, category) => acc + category.scripts.length,
             0,
           )}{" "}
           Total scripts

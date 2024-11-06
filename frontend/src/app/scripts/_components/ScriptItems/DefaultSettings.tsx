@@ -1,35 +1,41 @@
 import { Script } from "@/lib/types";
 
 export default function DefaultSettings({ item }: { item: Script }) {
-  const hasAlpineScript = item?.expand?.alpine_script !== undefined;
+  const defaultSettings = item.install_methods.find(
+    (method) => method.type === "default",
+  );
+
+  const defaultAlpineSettings = item.install_methods.find(
+    (method) => method.type === "alpine",
+  );
 
   return (
     <>
-      {item.default_cpu && (
+      {defaultSettings && (
         <div>
           <h2 className="text-md font-semibold">Default settings</h2>
           <p className="text-sm text-muted-foreground">
-            CPU: {item.default_cpu}
+            CPU: {defaultSettings.resources.cpu}vCPU
           </p>
           <p className="text-sm text-muted-foreground">
-            RAM: {item.default_ram}
+            RAM: {defaultSettings.resources.ram}MB
           </p>
           <p className="text-sm text-muted-foreground">
-            HDD: {item.default_hdd}
+            HDD: {defaultSettings.resources.hdd}GB
           </p>
         </div>
       )}
-      {hasAlpineScript && (
+      {defaultAlpineSettings && (
         <div>
           <h2 className="text-md font-semibold">Default Alpine settings</h2>
           <p className="text-sm text-muted-foreground">
-            CPU: {item.expand.alpine_script.default_cpu}
+            CPU: {defaultAlpineSettings?.resources.cpu}vCPU
           </p>
           <p className="text-sm text-muted-foreground">
-            RAM: {item.expand.alpine_script.default_ram}
+            RAM: {defaultAlpineSettings?.resources.ram}MB
           </p>
           <p className="text-sm text-muted-foreground">
-            HDD: {item.expand.alpine_script.default_hdd}
+            HDD: {defaultAlpineSettings?.resources.hdd}GB
           </p>
         </div>
       )}
