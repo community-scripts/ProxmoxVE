@@ -43,7 +43,7 @@ fi
 ldconfig
 cat <<EOF >/opt/photoprism/config/.env
 PHOTOPRISM_AUTH_MODE='password'
-PHOTOPRISM_ADMIN_PASSWORD='helper-scripts.com'
+PHOTOPRISM_ADMIN_PASSWORD='changeme'
 PHOTOPRISM_HTTP_HOST='0.0.0.0'
 PHOTOPRISM_HTTP_PORT='2342'
 PHOTOPRISM_SITE_CAPTION='https://Helper-Scripts.com'
