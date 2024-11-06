@@ -5,23 +5,28 @@ export default function DefaultSettings({ item }: { item: Script }) {
     (method) => method.type === "default",
   );
 
+  const defaultSettingsAvailable =
+    defaultSettings?.resources.cpu !== null ||
+    defaultSettings?.resources.ram !== null ||
+    defaultSettings?.resources.hdd !== null;
+
   const defaultAlpineSettings = item.install_methods.find(
     (method) => method.type === "alpine",
   );
 
   return (
     <>
-      {defaultSettings && (
+      {defaultSettingsAvailable && (
         <div>
           <h2 className="text-md font-semibold">Default settings</h2>
           <p className="text-sm text-muted-foreground">
-            CPU: {defaultSettings.resources.cpu}vCPU
+            CPU: {defaultSettings?.resources.cpu}vCPU
           </p>
           <p className="text-sm text-muted-foreground">
-            RAM: {defaultSettings.resources.ram}MB
+            RAM: {defaultSettings?.resources.ram}MB
           </p>
           <p className="text-sm text-muted-foreground">
-            HDD: {defaultSettings.resources.hdd}GB
+            HDD: {defaultSettings?.resources.hdd}GB
           </p>
         </div>
       )}
