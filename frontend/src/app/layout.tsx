@@ -68,7 +68,12 @@ export default function RootLayout({
         <link rel="preconnect" href="https://api.github.com" />
       </head>
       <body className={inter.className}>
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
           <div className="flex w-full flex-col justify-center">
             <Navbar />
             <div className="flex min-h-screen flex-col justify-center">
