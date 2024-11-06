@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 export const dynamic = "force-static";
 
-const fetchCategories = async () => {
+const fetchCategories = async (): Category[] => {
   const response = await fetch(
     `https://raw.githubusercontent.com/community-scripts/${basePath}/refs/heads/main/json/metadata.json`,
   );
