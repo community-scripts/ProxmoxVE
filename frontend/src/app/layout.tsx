@@ -6,7 +6,7 @@ import "@/styles/globals.css";
 import { Inter } from "next/font/google";
 import React from "react";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
-import { analytics } from "@/config/siteConfig";
+import { analytics, basePath } from "@/config/siteConfig";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -35,7 +35,7 @@ export const metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL("https://community-scripts.github.io/Proxmox/"),
+  metadataBase: new URL(`https://community-scripts.github.io/${basePath}/`),
   openGraph: {
     title: "Proxmox VE Helper-Scripts",
     description:
@@ -43,7 +43,7 @@ export const metadata = {
     url: "/defaultimg.png",
     images: [
       {
-        url: "https://community-scripts.github.io/Proxmox/defaultimg.png",
+        url: `https://community-scripts.github.io/${basePath}/defaultimg.png`,
       },
     ],
     locale: "en_US",
