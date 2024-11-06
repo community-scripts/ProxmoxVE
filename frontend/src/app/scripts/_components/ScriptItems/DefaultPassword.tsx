@@ -4,7 +4,7 @@ import handleCopy from "@/components/handleCopy";
 import { Script } from "@/lib/types";
 
 export default function DefaultPassword({ item }: { item: Script }) {
-  const hasDefaultLogin = item.default_credentials.username != null && item.default_credentials.password != null;
+  const hasDefaultLogin = item.default_credentials.username && item.default_credentials.password;
 
   return (
     <div>
