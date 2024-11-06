@@ -1,7 +1,7 @@
 import { MessagesSquare, Scroll } from "lucide-react";
 import { FaGithub } from "react-icons/fa";
 
-export const basePath = "ProxmoxVE"; 
+export const basePath = process.env.BASE_PATH; 
 
 export const navbarLinks = [
   {
