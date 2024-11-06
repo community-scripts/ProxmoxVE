@@ -102,7 +102,7 @@ export function LatestScripts({ items }: { items: Category[] }) {
                 </div>
                 <div className="flex flex-col">
                   <p className="text-lg line-clamp-1">
-                    {script.name} {getCorrectTypeNaming(script.type)}
+                    {script.name} {getDisplayValueFromType(script.type)}
                   </p>
                   <p className="text-sm text-muted-foreground flex items-center gap-1">
                     <CalendarPlus className="h-4 w-4" />
@@ -171,7 +171,7 @@ export function MostViewedScripts({ items }: { items: Category[] }) {
                 </div>
                 <div className="flex flex-col">
                   <p className="line-clamp-1 text-lg">
-                    {script.name} {getCorrectTypeNaming(script.type)}
+                    {script.name} {getDisplayValueFromType(script.type)}
                   </p>
                   <p className="flex items-center gap-1 text-sm text-muted-foreground">
                     <CalendarPlus className="h-4 w-4" />
