@@ -86,7 +86,7 @@ export default function CommandMenu() {
           </CommandEmpty>
           {links.map((category) => (
             <CommandGroup
-              key={"category:" + category.name}
+              key=`category:${category.name}`
               heading={category.name}
             >
               {category.scripts.map((script) => (
