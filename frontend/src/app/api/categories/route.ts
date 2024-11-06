@@ -4,31 +4,28 @@ import { NextResponse } from "next/server";
 
 export const dynamic = "force-static";
 
-const fetchCategories = async (): Category[] => {
+const fetchCategories = async (): Promise<Category[]> => {
   const response = await fetch(
     `https://raw.githubusercontent.com/community-scripts/${basePath}/refs/heads/main/json/metadata.json`,
   );
   const data = await response.json();
   return data.categories;
-}
+};
 
-const fetchScripts = async (): Script[] => {
+const fetchScripts = async (): Promise<Script[]> => {
   const response = await fetch(
     `https://api.github.com/repos/community-scripts/${basePath}/contents/json`,
   );
-  const files = await response.json();
-  const scripts = files.map(async (file) => {
-     const response = await fetch(file.download_url);
-     const script = await response.json();
-     return script
-  })
-  for (const file of files) {
-    const response = await fetch(file.download_url);
-    const script = await response.json();
-    scripts.push(script);
-  }
+  const files: { download_url: string }[] = await response.json();
+  const scripts = await Promise.all(
+    files.map(async (file) => {
+      const response = await fetch(file.download_url);
+      const script = await response.json();
+      return script as Script;
+    })
+  );
   return scripts;
-}
+};
 
 export async function GET() {
   try {
