@@ -14,8 +14,12 @@ Please check the relevant option(s):
 - [ ] New feature (non-breaking change that adds functionality)
 - [ ] Breaking change (a fix or feature that would cause existing functionality to change unexpectedly)
 - [ ] New script (a fully functional and thoroughly tested script or set of scripts.)
-- [ ] Self-review performed (I have reviewed my code, ensuring it follows established patterns and conventions)
 - [ ] Documentation update required (this change requires an update to the documentation)
+
+## Prerequisites
+The following efforts must be made for the PR to be considered. Please check when completed:
+- [ ] Self-review performed (I have reviewed my code, ensuring it follows established patterns and conventions)
+- [ ] Testing performed (I have tested my changes, ensuring everything works as expected)
 
 ## Additional Information (optional)
 Provide any additional context or screenshots about the feature or fix here.
