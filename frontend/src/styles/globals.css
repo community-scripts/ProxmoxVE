@@ -82,10 +82,8 @@
     --chart-5: 340 75% 55%;
   }
 
-  
-
   ::view-transition-group(root) {
-    animation-duration: 0.7s;
+    animation-duration: 0.7bun s;
     animation-timing-function: var(--expo-out);
   }
 
