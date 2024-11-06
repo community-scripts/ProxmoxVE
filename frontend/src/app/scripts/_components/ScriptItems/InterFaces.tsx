@@ -24,7 +24,7 @@ export default function InterFaces({item} : {item : Script}) {
 
   return (
     <div className="flex flex-col gap-2">
-      {item.interface_port != null ? (
+      {item.interface_port !== null ? (
         <div className="flex items-center justify-end">
           <h2 className="mr-2 text-end text-lg font-semibold">
             {"Default Interface:"}
