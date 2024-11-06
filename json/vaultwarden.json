@@ -27,7 +27,7 @@
         },
         {
             "type": "alpine",
-            "script": "alpine-vaultwarden.sh",
+            "script": "ct/alpine-vaultwarden.sh",
             "resources": {
                 "cpu": "1",
                 "ram": "256",
