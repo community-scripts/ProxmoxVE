@@ -136,13 +136,12 @@ export function LatestScripts({ items }: { items: Category[] }) {
 }
 
 export function MostViewedScripts({ items }: { items: Category[] }) {
-  const mostViewedScripts = items.reduce((acc, category) => {
+  const mostViewedScripts = items.reduce((acc: Script[], category) => {
     const foundScripts = category.scripts.filter((script) =>
       mostPopularScripts.includes(script.name),
     );
-    acc.push(...foundScripts);
-    return acc;
-  }, [] as Script[]);
+    return acc.concat(foundScripts);
+  }, []);
 
   return (
     <div className="">
