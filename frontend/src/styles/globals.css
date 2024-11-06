@@ -85,7 +85,7 @@
   
 
   ::view-transition-group(root) {
-    animation-duration: 0.7s;
+    animation-duration: 1.2s;
     animation-timing-function: var(--expo-out);
   }
 
