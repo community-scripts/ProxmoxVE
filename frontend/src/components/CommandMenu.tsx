@@ -7,14 +7,14 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { fetchCategories } from "@/lib/data";
-import { Category, Script } from "@/lib/types";
+import { Category } from "@/lib/types"; // Removed unused Script import
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React from "react";
+import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { DialogTitle } from "./ui/dialog";
-import { Badge } from "./ui/badge";
 
 export const formattedBadge = (type: string) => {
   switch (type) {
@@ -27,6 +27,7 @@ export const formattedBadge = (type: string) => {
     case "misc":
       return <Badge className="text-red-500/75 border-red-500/75">MISC</Badge>;
   }
+  return null;
 };
 
 export default function CommandMenu() {
@@ -86,12 +87,12 @@ export default function CommandMenu() {
           </CommandEmpty>
           {links.map((category) => (
             <CommandGroup
-              key=`category:${category.name}`
+              key={`category:${category.name}`}
               heading={category.name}
             >
               {category.scripts.map((script) => (
                 <CommandItem
-                  key=´script:${script.name}´
+                  key={`script:${script.name}`}
                   value={script.name}
                   onSelect={() => {
                     setOpen(false);
@@ -101,18 +102,17 @@ export default function CommandMenu() {
                   <div className="flex gap-2" onClick={() => setOpen(false)}>
                     <Image
                       src={script.logo || "/logo.png"}
-                      unoptimized
-                      height={16}
                       onError={(e) =>
                         ((e.currentTarget as HTMLImageElement).src =
                           "/logo.png")
                       }
                       width={16}
+                      height={16}
                       alt=""
                       className="h-5 w-5"
                     />
                     <span>{script.name}</span>
-                    <span className="">{formattedBadge(script.type)}</span>
+                    <span>{formattedBadge(script.type)}</span>
                   </div>
                 </CommandItem>
               ))}
