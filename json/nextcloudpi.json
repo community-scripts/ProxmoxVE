@@ -18,11 +18,22 @@
             "type": "default",
             "script": "ct/nextcloudpi.sh",
             "resources": {
-                "cpu": null,
-                "ram": null,
-                "hdd": null,
-                "os": null,
-                "version": null
+                "cpu": "2",
+                "ram": "2048",
+                "hdd": "8",
+                "os": "debian",
+                "version": "12"
+            }
+        },
+        {
+            "type": "alpine",
+            "script": "alpine-nextcloud.sh",
+            "resources": {
+                "cpu": "2",
+                "ram": "1024",
+                "hdd": "2",
+                "os": "alpine",
+                "version": "3.19"
             }
         }
     ],
