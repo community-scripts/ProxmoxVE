@@ -30,7 +30,7 @@ export default function InterFaces({item} : {item : Script}) {
             {"Default Interface:"}
           </h2>{" "}
           <CopyButton
-            label={"default interface"}
+            label="default interface"
             value={item.interface_port}
           />
         </div>
