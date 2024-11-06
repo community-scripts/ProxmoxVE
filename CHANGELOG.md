@@ -1,6 +1,6 @@
 <div align="center">
   <a href="#">
-    <img src="https://raw.githubusercontent.com/tteck/Proxmox/main/misc/images/logo.png" height="100px" />
+    <img src="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/images/logo.png" height="100px" />
  </a>
 </div>
 <h1 align="center">Changelog</h1>
@@ -13,6 +13,15 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 > [!NOTE]
 All LXC instances created using this repository come pre-installed with Midnight Commander, which is a command-line tool (`mc`) that offers a user-friendly file and directory management interface for the terminal environment.
 
+## 2024-11-05
+
+### Changed
+
+- **Bookstack LXC** [(View Source)](https://github.com/community-scripts/ProxmoxVE/blob/main/install/bookstack-install.sh)
+  - NEW Script
+- **Vikunja LXC** [(View Source)](https://github.com/community-scripts/ProxmoxVE/blob/main/install/vikunja-install.sh)
+  - NEW Script
+
 ## 2024-11-04
 
 ### Breaking Change
@@ -21,25 +30,34 @@ All LXC instances created using this repository come pre-installed with Midnight
   ```bash
   bash -c "$(wget -qLO - https://github.com/community-scripts/ProxmoxVE/raw/main/misc/update-repo.sh)"
 
+## 2024-10-31
+
+### Changed
+
+- **NZBGet LXC** [(View Source)](https://github.com/community-scripts/ProxmoxVE/blob/main/install/nzbget-install.sh)
+  - NEW Script
+- **Memos LXC** [(View Source)](https://github.com/community-scripts/ProxmoxVE/blob/main/install/memos-install.sh)
+  - NEW Script
+
 ## 2024-10-27
 
 ### Changed
 
-- **Open WebUI LXC** [(Commit)](https://github.com/tteck/Proxmox/commit/8a21f6e7f025a911865395d4c0fa9a001bd0d512)
+- **Open WebUI LXC** [(Commit)](https://github.com/community-scripts/ProxmoxVE/commit/8a21f6e7f025a911865395d4c0fa9a001bd0d512)
   - Refactor Script to add an option to install Ollama.
 
 ## 2024-10-26
 
 ### Changed
 
-- **AdventureLog LXC** [(View Source)](https://github.com/tteck/Proxmox/blob/main/install/adventurelog-install.sh)
+- **AdventureLog LXC** [(View Source)](https://github.com/community-scripts/ProxmoxVE/blob/main/install/adventurelog-install.sh)
   - NEW Script
 
 ## 2024-10-25
 
 ### Changed
 
-- **Zoraxy LXC** [(Commit)](https://github.com/tteck/Proxmox/commit/468a5d367ded4cf453a1507452e112ac3e234e2a)
+- **Zoraxy LXC** [(Commit)](https://github.com/community-scripts/ProxmoxVE/commit/468a5d367ded4cf453a1507452e112ac3e234e2a)
   - Switch built from source to a pre-compiled binary version.
   - Breaking Change
 
@@ -47,41 +65,41 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### Changed
 
-- **Wallos LXC** [(View Source)](https://github.com/tteck/Proxmox/blob/main/install/wallos-install.sh)
+- **Wallos LXC** [(View Source)](https://github.com/community-scripts/ProxmoxVE/blob/main/install/wallos-install.sh)
   - NEW Script
-- **Open WebUI LXC** [(View Source)](https://github.com/tteck/Proxmox/blob/main/install/openwebui-install.sh)
+- **Open WebUI LXC** [(View Source)](https://github.com/community-scripts/ProxmoxVE/blob/main/install/openwebui-install.sh)
   - NEW Script
 
 ## 2024-10-19
 
 ### Changed
 
-- **Cockpit LXC** [(View Source)](https://github.com/tteck/Proxmox/blob/main/install/cockpit-install.sh)
+- **Cockpit LXC** [(View Source)](https://github.com/community-scripts/ProxmoxVE/blob/main/install/cockpit-install.sh)
   - NEW Script
-- **Neo4j LXC** [(View Source)](https://github.com/tteck/Proxmox/blob/main/install/neo4j-install.sh)
+- **Neo4j LXC** [(View Source)](https://github.com/community-scripts/ProxmoxVE/blob/main/install/neo4j-install.sh)
   - NEW Script
 
 ## 2024-10-18
 
 ### Changed
 
-- **ArchiveBox LXC** [(View Source)](https://github.com/tteck/Proxmox/blob/main/install/archivebox-install.sh)
+- **ArchiveBox LXC** [(View Source)](https://github.com/community-scripts/ProxmoxVE/blob/main/install/archivebox-install.sh)
   - NEW Script
 
 ## 2024-10-15
 
 ### Changed
 
-- **evcc LXC** [(View Source)](https://github.com/tteck/Proxmox/blob/main/install/evcc-install.sh)
+- **evcc LXC** [(View Source)](https://github.com/community-scripts/ProxmoxVE/blob/main/install/evcc-install.sh)
   - NEW Script
 
 ## 2024-10-10
 
 ### Changed
 
-- **MySQL LXC** [(View Source)](https://github.com/tteck/Proxmox/blob/main/install/mysql-install.sh)
+- **MySQL LXC** [(View Source)](https://github.com/community-scripts/ProxmoxVE/blob/main/install/mysql-install.sh)
   - NEW Script
-- **Tianji LXC** [(Commit)](https://github.com/tteck/Proxmox/commit/4c83a790ac9b040da1f11ad2cbe13d3fc5f480e9)
+- **Tianji LXC** [(Commit)](https://github.com/community-scripts/ProxmoxVE/commit/4c83a790ac9b040da1f11ad2cbe13d3fc5f480e9)
   - Breaking Change
   - Switch from `pm2` process management to `systemd`
 
@@ -89,7 +107,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### Changed
 
-- **Home Assistant Core LXC** [(Commit)](https://github.com/tteck/Proxmox/commit/f2937febe69b2bad8b3a14eb84aa562a8f14cc6a) [(Commit)](https://github.com/tteck/Proxmox/commit/f2966ced7f457fd506f865f7f5b70ea12c4b0049)
+- **Home Assistant Core LXC** [(Commit)](https://github.com/community-scripts/ProxmoxVE/commit/f2937febe69b2bad8b3a14eb84aa562a8f14cc6a) [(Commit)](https://github.com/community-scripts/ProxmoxVE/commit/f2966ced7f457fd506f865f7f5b70ea12c4b0049)
   - Refactor Code
   - Breaking Change
   - Home Assistant has transitioned to using `uv` for managing the virtual environment and installing additional modules.
@@ -98,23 +116,23 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### Changed
 
-- **HomeBox LXC** [(View Source)](https://github.com/tteck/Proxmox/blob/main/install/homebox-install.sh)
+- **HomeBox LXC** [(View Source)](https://github.com/community-scripts/ProxmoxVE/blob/main/install/homebox-install.sh)
   - NEW Script
-- **Zipline LXC** [(View Source)](https://github.com/tteck/Proxmox/blob/main/install/zipline-install.sh)
+- **Zipline LXC** [(View Source)](https://github.com/community-scripts/ProxmoxVE/blob/main/install/zipline-install.sh)
   - NEW Script
 
 ## 2024-09-13
 
 ### Changed
 
-- **Tianji LXC** [(View Source)](https://github.com/tteck/Proxmox/blob/main/install/tianji-install.sh)
+- **Tianji LXC** [(View Source)](https://github.com/community-scripts/ProxmoxVE/blob/main/install/tianji-install.sh)
   - NEW Script
 
 ## 2024-08-21
 
 ### Changed
 
-- **WireGuard LXC** [(Commit)](https://github.com/tteck/Proxmox/commit/723365a79df7cc0fd29b1af8f7ef200a7e0921b1)
+- **WireGuard LXC** [(Commit)](https://github.com/community-scripts/ProxmoxVE/commit/723365a79df7cc0fd29b1af8f7ef200a7e0921b1)
   - Refactor Code
   - Breaking Change
 
@@ -122,7 +140,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### Changed
 
-- **CommaFeed LXC** [(Commit)](https://github.com/tteck/Proxmox/commit/0a33d1739ec3a49011411929bd46a260e92e99f9)
+- **CommaFeed LXC** [(Commit)](https://github.com/community-scripts/ProxmoxVE/commit/0a33d1739ec3a49011411929bd46a260e92e99f9)
   - Refactor Code
   - Breaking Change
 
@@ -130,30 +148,30 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### Changed
 
-- **lldap LXC** [(View Source)](https://github.com/tteck/Proxmox/blob/main/install/lldap-install.sh)
+- **lldap LXC** [(View Source)](https://github.com/community-scripts/ProxmoxVE/blob/main/install/lldap-install.sh)
   - NEW Script
 
 ## 2024-07-26
 
 ### Changed
 
-- **Gitea LXC** [(View Source)](https://github.com/tteck/Proxmox/blob/main/install/gitea-install.sh)
+- **Gitea LXC** [(View Source)](https://github.com/community-scripts/ProxmoxVE/blob/main/install/gitea-install.sh)
   - NEW Script
 
 ## 2024-06-30
 
 ### Changed
 
-- **All Scripts** [(Commit)](https://github.com/tteck/Proxmox/commit/39ea1d4a20b83c07d084ebafdc811eec3548f289)
+- **All Scripts** [(Commit)](https://github.com/community-scripts/ProxmoxVE/commit/39ea1d4a20b83c07d084ebafdc811eec3548f289)
   - Requires Proxmox Virtual Environment version 8.1 or later.
 
 ## 2024-06-27
 
 ### Changed
 
-- **Kubo LXC** [(View Source)](https://github.com/tteck/Proxmox/blob/main/install/kubo-install.sh)
+- **Kubo LXC** [(View Source)](https://github.com/community-scripts/ProxmoxVE/blob/main/install/kubo-install.sh)
   - NEW Script
-- **RabbitMQ LXC** [(View Source)](https://github.com/tteck/Proxmox/blob/main/install/rabbitmq-install.sh)
+- **RabbitMQ LXC** [(View Source)](https://github.com/community-scripts/ProxmoxVE/blob/main/install/rabbitmq-install.sh)
   - NEW Script
 - **Scrutiny LXC**
   - Removed from website, broken.
@@ -169,27 +187,27 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### Changed
 
-- **MySpeed LXC** [(View Source)](https://github.com/tteck/Proxmox/blob/main/install/myspeed-install.sh)
+- **MySpeed LXC** [(View Source)](https://github.com/community-scripts/ProxmoxVE/blob/main/install/myspeed-install.sh)
   - NEW Script
 
 ## 2024-06-13
 
 ### Changed
 
-- **PeaNUT LXC** [(View Source)](https://github.com/tteck/Proxmox/blob/main/install/peanut-install.sh)
+- **PeaNUT LXC** [(View Source)](https://github.com/community-scripts/ProxmoxVE/blob/main/install/peanut-install.sh)
   - NEW Script
 - **Website**
   - If the Changelog has changed recently, the link on the website will pulse.
-- **Spoolman LXC** [(View Source)](https://github.com/tteck/Proxmox/blob/main/install/spoolman-install.sh)
+- **Spoolman LXC** [(View Source)](https://github.com/community-scripts/ProxmoxVE/blob/main/install/spoolman-install.sh)
   - NEW Script
 
 ## 2024-06-12
 
 ### Changed
 
-- **MeTube LXC** [(View Source)](https://github.com/tteck/Proxmox/blob/main/install/metube-install.sh)
+- **MeTube LXC** [(View Source)](https://github.com/community-scripts/ProxmoxVE/blob/main/install/metube-install.sh)
   - NEW Script
-- **Matterbridge LXC** [(View Source)](https://github.com/tteck/Proxmox/blob/main/install/matterbridge-install.sh)
+- **Matterbridge LXC** [(View Source)](https://github.com/community-scripts/ProxmoxVE/blob/main/install/matterbridge-install.sh)
   - NEW Script
 - **Website**
   - Reopen the gh-pages site (https://tteck.github.io/Proxmox/) 
@@ -198,14 +216,14 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### Changed
 
-- **Zabbix LXC** [(View Source)](https://github.com/tteck/Proxmox/blob/main/install/zabbix-install.sh)
+- **Zabbix LXC** [(View Source)](https://github.com/community-scripts/ProxmoxVE/blob/main/install/zabbix-install.sh)
   - NEW Script
 
 ## 2024-06-06
 
 ### Changed
 
-- **Petio LXC** [(View Source)](https://github.com/tteck/Proxmox/blob/main/install/petio-install.sh)
+- **Petio LXC** [(View Source)](https://github.com/community-scripts/ProxmoxVE/blob/main/install/petio-install.sh)
   - NEW Script
 - **Website**
   - Important notices will now be displayed on the landing page.
@@ -214,14 +232,14 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### Changed
 
-- **FlareSolverr LXC** [(View Source)](https://github.com/tteck/Proxmox/blob/main/install/flaresolverr-install.sh)
+- **FlareSolverr LXC** [(View Source)](https://github.com/community-scripts/ProxmoxVE/blob/main/install/flaresolverr-install.sh)
   - NEW Script
 
 ## 2024-05-31
 
 ### Changed
 
-- **Advanced Settings** [(Commit)](https://github.com/tteck/Proxmox/commit/fc9dff220b4ea426d3a75178ad8accacae4683ca)
+- **Advanced Settings** [(Commit)](https://github.com/community-scripts/ProxmoxVE/commit/fc9dff220b4ea426d3a75178ad8accacae4683ca)
   - Passwords are now masked
 
 ## 2024-05-30
@@ -1049,7 +1067,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 ### Changed
 
 - **Proxmox VE Monitor-All**
-  - Skip instances based on onboot and templates. [8c2a3cc](https://github.com/tteck/Proxmox/commit/8c2a3cc4d774fa13d17f695d6bdf9a4deedb1372). 
+  - Skip instances based on onboot and templates. [8c2a3cc](https://github.com/community-scripts/ProxmoxVE/commit/8c2a3cc4d774fa13d17f695d6bdf9a4deedb1372). 
 
 ## 2023-06-12
 
@@ -1185,7 +1203,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 - **InfluxDB LXC**
   - Choosing InfluxDB v1 will result in Chronograf being installed automatically.
-- **[User Submitted Guides](https://github.com/tteck/Proxmox/blob/main/USER_SUBMITTED_GUIDES.md)**
+- **[User Submitted Guides](https://github.com/community-scripts/ProxmoxVE/blob/main/USER_SUBMITTED_GUIDES.md)**
   -  Informative guides that demonstrate how to install various software packages using Proxmox VE Helper Scripts.
 
 ## 2023-04-14
@@ -1579,7 +1597,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 ### Changed
 
 - **Proxmox LXC Updater** 
-  - Now updates Ubuntu, Debian, Devuan, Alpine Linux, CentOS-Rocky-Alma, Fedora, ArchLinux [(@Uruknara)](https://github.com/tteck/Proxmox/commits?author=Uruknara)
+  - Now updates Ubuntu, Debian, Devuan, Alpine Linux, CentOS-Rocky-Alma, Fedora, ArchLinux [(@Uruknara)](https://github.com/community-scripts/ProxmoxVE/commits?author=Uruknara)
 
 ## 2022-11-13
 
@@ -2282,28 +2300,28 @@ All LXC instances created using this repository come pre-installed with Midnight
 ### Changed
 
 - **Node-Red LXC**
-  - Add Install [Themes Script](https://raw.githubusercontent.com/tteck/Proxmox/main/misc/images/node-red-themes.png)
+  - Add Install Themes Script
 
 ## 2022-02-16
 
 ### Changed
 
 - **Home Assistant Container LXC**
-  - Add Options to [Update Menu](https://raw.githubusercontent.com/tteck/Proxmox/main/misc/images/update-menu.png)
+  - Add Options to Update Menu
 
 ## 2022-02-14
 
 ### Changed
 
 - **Home Assistant Container LXC**
-  - Add [Update Menu](https://raw.githubusercontent.com/tteck/Proxmox/main/misc/images/update-menu.png)
+  - Add Update Menu
 
 ## 2022-02-13
 
 ### Changed
 
 - **Mariadb LXC**
-  - Add [Adminer](https://raw.githubusercontent.com/tteck/Proxmox/main/misc/images/adminer.png) (formerly phpMinAdmin), a full-featured database management tool
+  - Add Adminer (formerly phpMinAdmin), a full-featured database management tool
 
 ## 2022-02-12
 
@@ -2395,7 +2413,7 @@ All LXC instances created using this repository come pre-installed with Midnight
   - `va-driver-all` is preinstalled
   - now using Ubuntu 21.10
 - **misc**
-  - new GUI script [(Screenshot)](https://raw.githubusercontent.com/tteck/Proxmox/main/misc/images/pms-copy-data.png) to copy data from one Plex Media Server LXC to another Plex Media Server LXC 
+  - new GUI script to copy data from one Plex Media Server LXC to another Plex Media Server LXC
 
 
 ## Initial Catch up - 2022-01-23

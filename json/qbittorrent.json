@@ -1,0 +1,34 @@
+{
+    "name": "qBittorrent",
+    "slug": "qbittorrent",
+    "categories": [
+        16
+    ],
+    "date_created": "2024-05-02",
+    "type": "ct",
+    "updateable": false,
+    "privileged": false,
+    "interface_port": "8090",
+    "documentation": null,
+    "website": "https://www.qbittorrent.org/",
+    "logo": "https://raw.githubusercontent.com/qbittorrent/qBittorrent/master/src/icons/qbittorrent.ico",
+    "description": "qBittorrent offers a user-friendly interface that allows users to search for and download torrent files easily. It also supports magnet links, which allow users to start downloading files without the need for a torrent file.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/qbittorrent.sh",
+            "resources": {
+                "cpu": "2",
+                "ram": "2048",
+                "hdd": "8",
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": "admin",
+        "password": "changeme"
+    },
+    "notes": []
+}

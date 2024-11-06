@@ -1,0 +1,34 @@
+{
+    "name": "Change Detection",
+    "slug": "changedetection",
+    "categories": [
+        7
+    ],
+    "date_created": "2024-05-02",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": "5000",
+    "documentation": null,
+    "website": "https://changedetection.io/",
+    "logo": "https://github.com/dgtlmoon/changedetection.io/blob/master/changedetectionio/static/images/avatar-256x256.png?raw=true",
+    "description": "Change Detection is a service that allows you to monitor changes to web pages and receive notifications when changes occur. It can be used for a variety of purposes such as keeping track of online price changes, monitoring news websites for updates, or tracking changes to online forums.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/changedetection.sh",
+            "resources": {
+                "cpu": "2",
+                "ram": "1024",
+                "hdd": "8",
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": []
+}

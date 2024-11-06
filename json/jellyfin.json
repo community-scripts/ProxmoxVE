@@ -1,0 +1,43 @@
+{
+    "name": "Jellyfin Media Server",
+    "slug": "jellyfin",
+    "categories": [
+        12
+    ],
+    "date_created": "2024-05-02",
+    "type": "ct",
+    "updateable": false,
+    "privileged": false,
+    "interface_port": "8096",
+    "documentation": null,
+    "website": null,
+    "logo": "https://github.com/home-assistant/brands/blob/master/core_integrations/jellyfin/icon.png?raw=true",
+    "description": null,
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/jellyfin.sh",
+            "resources": {
+                "cpu": "2",
+                "ram": "2048",
+                "hdd": "8",
+                "os": "ubuntu",
+                "version": "22.04"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": [
+        {
+            "text": "With Privileged/Unprivileged Hardware Acceleration Support",
+            "type": "warning"
+        },
+        {
+            "text": "FFmpeg path: /usr/lib/jellyfin-ffmpeg/ffmpeg",
+            "type": "warning"
+        }
+    ]
+}

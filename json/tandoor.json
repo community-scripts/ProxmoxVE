@@ -1,0 +1,34 @@
+{
+    "name": "Tandoor Recipes",
+    "slug": "tandoor",
+    "categories": [
+        0
+    ],
+    "date_created": "2024-05-02",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": "8002",
+    "documentation": null,
+    "website": "https://tandoor.dev/",
+    "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/tandoor.svg",
+    "description": "Tandoor Recipes is an application for managing recipes, planning meals, building shopping lists and much much more!",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/tandoor.sh",
+            "resources": {
+                "cpu": "4",
+                "ram": "4096",
+                "hdd": "10",
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": []
+}

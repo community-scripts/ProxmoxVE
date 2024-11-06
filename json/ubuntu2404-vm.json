@@ -1,0 +1,34 @@
+{
+    "name": "Ubuntu 24.04",
+    "slug": "ubuntu2404-vm",
+    "categories": [
+        9
+    ],
+    "date_created": "2024-05-02",
+    "type": "vm",
+    "updateable": false,
+    "privileged": false,
+    "interface_port": null,
+    "documentation": null,
+    "website": "https://ubuntu.com/",
+    "logo": "https://assets.ubuntu.com/v1/29985a98-ubuntu-logo32.png",
+    "description": "Ubuntu is a distribution based on Debian, designed to have regular releases and a consistent user experience.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "vm/ubuntu2404-vm.sh",
+            "resources": {
+                "cpu": "2",
+                "ram": "2048",
+                "hdd": "2G",
+                "os": null,
+                "version": null
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": []
+}

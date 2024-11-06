@@ -1,0 +1,34 @@
+{
+    "name": "Channels DVR Server",
+    "slug": "channels",
+    "categories": [
+        17
+    ],
+    "date_created": "2024-05-02",
+    "type": "ct",
+    "updateable": false,
+    "privileged": true,
+    "interface_port": "8089",
+    "documentation": null,
+    "website": "https://getchannels.com/dvr-server/",
+    "logo": "https://getchannels.com/a/images/channels-logo.svg",
+    "description": "Channels DVR Server runs on your computer or NAS device at home. There's no cloud to worry about. Your tv shows and movies will always be available.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/channels.sh",
+            "resources": {
+                "cpu": "2",
+                "ram": "1024",
+                "hdd": "8",
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": []
+}

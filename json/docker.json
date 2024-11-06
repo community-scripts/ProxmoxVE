@@ -1,0 +1,47 @@
+{
+    "name": "Docker",
+    "slug": "docker",
+    "categories": [
+        8
+    ],
+    "date_created": "2024-05-02",
+    "type": "ct",
+    "updateable": false,
+    "privileged": false,
+    "interface_port": null,
+    "documentation": null,
+    "website": "https://www.docker.com/",
+    "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/docker.svg",
+    "description": "Docker is an open-source project for automating the deployment of applications as portable, self-sufficient containers.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/docker.sh",
+            "resources": {
+                "cpu": "2",
+                "ram": "2048",
+                "hdd": "4",
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": [
+        {
+            "text": "If the LXC is created Privileged, the script will automatically set up USB passthrough.",
+            "type": "warning"
+        },
+        {
+            "text": "Run Compose V2 by replacing the hyphen (-) with a space, using `docker compose`, instead of `docker-compose`.",
+            "type": "warning"
+        },
+        {
+            "text": "Options to Install Portainer and/or Docker Compose V2",
+            "type": "warning"
+        }
+    ]
+}

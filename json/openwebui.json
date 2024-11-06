@@ -1,0 +1,34 @@
+{
+    "name": "Open WebUI",
+    "slug": "openwebui",
+    "categories": [
+        0
+    ],
+    "date_created": "2024-10-24",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": "8080",
+    "documentation": null,
+    "website": "https://openwebui.com/",
+    "logo": "https://raw.githubusercontent.com/open-webui/open-webui/refs/heads/main/static/favicon.png",
+    "description": "OpenWebUI is a self-hosted, web-based interface that allows you to run AI models entirely offline. It integrates with various LLM runners, such as OpenAI and Ollama, and supports features like markdown and LaTeX rendering, model management, and voice/video calls. It also offers multilingual support and the ability to generate images using APIs like DALL-E or ComfyUI",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/openwebui.sh",
+            "resources": {
+                "cpu": "4",
+                "ram": "4096",
+                "hdd": "16",
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": []
+}

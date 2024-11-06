@@ -1,0 +1,39 @@
+{
+    "name": "Proxmox VE Cron LXC Updater",
+    "slug": "cron-update-lxcs",
+    "categories": [
+        1
+    ],
+    "date_created": "2024-04-29",
+    "type": "misc",
+    "updateable": false,
+    "privileged": false,
+    "interface_port": null,
+    "documentation": null,
+    "website": null,
+    "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/lxc.svg",
+    "description": "This script will add/remove a crontab schedule that updates all LXCs every Sunday at midnight.\r\nTo exclude LXCs from updating, edit crontab (crontab -e) and add CTID as shown in the example below:",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "misc/cron-update-lxcs.sh",
+            "resources": {
+                "cpu": null,
+                "ram": null,
+                "hdd": null,
+                "os": null,
+                "version": null
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": [
+        {
+            "text": "Execute within the Proxmox shell",
+            "type": "warning"
+        }
+    ]
+}

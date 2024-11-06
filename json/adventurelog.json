@@ -1,0 +1,34 @@
+{
+    "name": "AdventureLog",
+    "slug": "adventurelog",
+    "categories": [
+        0
+    ],
+    "date_created": "2024-10-26",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": "3000",
+    "documentation": null,
+    "website": "https://adventurelog.app/",
+    "logo": "https://raw.githubusercontent.com/seanmorley15/AdventureLog/refs/heads/main/documentation/static/img/favicon.png",
+    "description": "Adventure Log is an app designed to track outdoor activities and personal achievements, allowing users to log their adventures with photos, notes, and location data. It focuses on enhancing outdoor experiences by preserving memories and sharing them with others.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/adventurelog.sh",
+            "resources": {
+                "cpu": "2",
+                "ram": "2048",
+                "hdd": "7",
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": []
+}

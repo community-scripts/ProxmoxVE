@@ -423,4 +423,4 @@ if [ "$START_VM" == "yes" ]; then
   msg_ok "Started Debian 12 VM"
 fi
 msg_ok "Completed Successfully!\n"
-echo "More Info at https://github.com/community-scripts/ProxmoxVE/discussions/1988"
+echo "More Info at https://github.com/tteck/Proxmox/discussions/1988"

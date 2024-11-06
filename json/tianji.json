@@ -1,0 +1,34 @@
+{
+    "name": "Tianji",
+    "slug": "tianji",
+    "categories": [
+        7
+    ],
+    "date_created": "2024-09-14",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": "12345",
+    "documentation": null,
+    "website": "https://tianji.msgbyte.com/",
+    "logo": "https://tianji.msgbyte.com/img/logo.svg",
+    "description": "Tianji is an open-source tool for website analytics, uptime monitoring, and server status tracking, all in one. It\u2019s lightweight, privacy-focused, and helps teams monitor web traffic, server health, and gather user interaction data",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/tianji.sh",
+            "resources": {
+                "cpu": "4",
+                "ram": "4096",
+                "hdd": "12",
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": "admin",
+        "password": "admin"
+    },
+    "notes": []
+}

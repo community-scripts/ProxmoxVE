@@ -1,0 +1,47 @@
+{
+    "name": "Home Assistant Core",
+    "slug": "homeassistant-core",
+    "categories": [
+        2
+    ],
+    "date_created": "2024-04-29",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": "8123",
+    "documentation": "https://www.home-assistant.io/docs/",
+    "website": "https://www.home-assistant.io/",
+    "logo": "https://avatars.githubusercontent.com/u/13844975?s=200&v=4",
+    "description": "A standalone installation of Home Assistant Core refers to a setup where the Home Assistant Core software is installed directly on a device or operating system, without the use of Docker containers. This provides a simpler, but less flexible and scalable solution, as the software is tightly coupled with the underlying system.\r\n\r\n\ud83d\udec8 If the LXC is created Privileged, the script will automatically set up USB passthrough.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/homeassistant-core.sh",
+            "resources": {
+                "cpu": "2",
+                "ram": "1024",
+                "hdd": "8",
+                "os": "ubuntu",
+                "version": "24.04"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": [
+        {
+            "text": "config path: `/root/.homeassistant`",
+            "type": "warning"
+        },
+        {
+            "text": "Requires `6.8.4-3-pve` or newer kernel",
+            "type": "warning"
+        },
+        {
+            "text": "Use Ubuntu 24.04 ONLY",
+            "type": "warning"
+        }
+    ]
+}

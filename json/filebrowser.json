@@ -1,0 +1,39 @@
+{
+    "name": "File Browser",
+    "slug": "filebrowser",
+    "categories": [
+        16
+    ],
+    "date_created": "2024-05-02",
+    "type": "misc",
+    "updateable": false,
+    "privileged": false,
+    "interface_port": "8080",
+    "documentation": null,
+    "website": "https://filebrowser.org/features",
+    "logo": "https://github.com/tteck/Proxmox/blob/main/misc/images/filebrowser.png?raw=true",
+    "description": "File Browser offers a user-friendly web interface for managing files within a designated directory. It allows you to perform various actions such as uploading, deleting, previewing, renaming, and editing files.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "misc/filebrowser.sh",
+            "resources": {
+                "cpu": null,
+                "ram": null,
+                "hdd": null,
+                "os": null,
+                "version": null
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": "admin",
+        "password": "changeme"
+    },
+    "notes": [
+        {
+            "text": "Execute within an existing LXC Console",
+            "type": "warning"
+        }
+    ]
+}

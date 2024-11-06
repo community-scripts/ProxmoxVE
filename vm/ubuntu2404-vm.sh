@@ -410,4 +410,4 @@ qm set $VMID \
 msg_ok "Created a Ubuntu 24.04 VM ${CL}${BL}(${HN})"
 msg_ok "Completed Successfully!\n"
 echo -e "Setup Cloud-Init before starting \n
-More info at https://github.com/community-scripts/ProxmoxVE/discussions/2072 \n"
+More info at https://github.com/tteck/Proxmox/discussions/2072 \n"

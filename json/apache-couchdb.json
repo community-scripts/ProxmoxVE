@@ -1,0 +1,39 @@
+{
+    "name": "Apache-CouchDB",
+    "slug": "apache-couchdb",
+    "categories": [
+        5
+    ],
+    "date_created": "2024-05-02",
+    "type": "ct",
+    "updateable": false,
+    "privileged": false,
+    "interface_port": "5984",
+    "documentation": null,
+    "website": "https://couchdb.apache.org/",
+    "logo": "https://couchdb.apache.org/image/couch@2x.png",
+    "description": "Apache-CouchDB Seamless multi-master sync, that scales from Big Data to Mobile, with an Intuitive HTTP/JSON API and designed for Reliability.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/apache-couchdb.sh",
+            "resources": {
+                "cpu": "2",
+                "ram": "4096",
+                "hdd": "10",
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": [
+        {
+            "text": "Show Login Credentials: `cat CouchDB.creds`",
+            "type": "warning"
+        }
+    ]
+}

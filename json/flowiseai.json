@@ -1,0 +1,34 @@
+{
+    "name": "FlowiseAI",
+    "slug": "flowiseai",
+    "categories": [
+        0
+    ],
+    "date_created": "2024-05-02",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": "3000",
+    "documentation": null,
+    "website": "https://flowiseai.com/",
+    "logo": "https://flowiseai.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo-color-high.e60de2f8.png&w=256&q=75",
+    "description": "FlowiseAI is an open source low-code tool for developers to build customized LLM orchestration flow & AI agents",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/flowiseai.sh",
+            "resources": {
+                "cpu": "4",
+                "ram": "4096",
+                "hdd": "10",
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": []
+}

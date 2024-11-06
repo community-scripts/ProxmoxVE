@@ -56,6 +56,7 @@ function default_settings() {
 function update_script() {
   header_info
   if [[ ! -d /opt/tandoor ]]; then msg_error "No ${APP} Installation Found!"; exit; fi 
+  whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox --title "SET RESOURCES" "Please set the resources in your ${APP} LXC to ${var_cpu}vCPU and ${var_ram}RAM for the build process before continuing" 10 75
   if cd /opt/tandoor && git pull | grep -q 'Already up to date'; then
     msg_ok "There is currently no update available."
   else

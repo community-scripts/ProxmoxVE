@@ -1,0 +1,34 @@
+{
+    "name": "Forgejo",
+    "slug": "forgejo",
+    "categories": [
+        16
+    ],
+    "date_created": "2024-06-12",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": "3000",
+    "documentation": null,
+    "website": "https://forgejo.org/",
+    "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/forgejo.svg",
+    "description": "Forgejo is an open-source, self-hosted Git service that allows individuals and teams to manage their code repositories.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/forgejo.sh",
+            "resources": {
+                "cpu": "2",
+                "ram": "2048",
+                "hdd": "10",
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": []
+}

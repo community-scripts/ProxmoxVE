@@ -1,0 +1,34 @@
+{
+    "name": "CasaOS",
+    "slug": "casaos",
+    "categories": [
+        8
+    ],
+    "date_created": "2024-05-02",
+    "type": "ct",
+    "updateable": false,
+    "privileged": false,
+    "interface_port": "80",
+    "documentation": null,
+    "website": "https://www.casaos.io/",
+    "logo": "https://wiki.casaos.io/_assets/casaos-no-text.svg",
+    "description": "CasaOS is a software that aims to make it easy for users to create a personal cloud system at home. It uses the Docker ecosystem to provide a simple, user-friendly experience for managing various applications and services.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/casaos.sh",
+            "resources": {
+                "cpu": "2",
+                "ram": "2048",
+                "hdd": "8",
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": []
+}

@@ -1,0 +1,39 @@
+{
+    "name": "Homepage",
+    "slug": "homepage",
+    "categories": [
+        15
+    ],
+    "date_created": "2024-05-02",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": "3000",
+    "documentation": "https://gethomepage.dev/latest/configs/",
+    "website": "https://github.com/benphelps/homepage",
+    "logo": "https://avatars.githubusercontent.com/u/122929872?v=4",
+    "description": "Homepage is a self-hosted dashboard solution for centralizing and organizing data and information.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/homepage.sh",
+            "resources": {
+                "cpu": "2",
+                "ram": "1024",
+                "hdd": "3",
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": [
+        {
+            "text": "Configuration (bookmarks.yaml, services.yaml, widgets.yaml) path: `/opt/homepage/config/`",
+            "type": "warning"
+        }
+    ]
+}

@@ -1,0 +1,34 @@
+{
+    "name": "Kavita",
+    "slug": "kavita",
+    "categories": [
+        14
+    ],
+    "date_created": "2024-05-02",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": "5000",
+    "documentation": null,
+    "website": "https://www.kavitareader.com/",
+    "logo": "https://raw.githubusercontent.com/Kareadita/Kavita/develop/Logo/kavita.svg",
+    "description": "Kavita is a fast, feature rich, cross platform reading server. Built with a focus for manga, and the goal of being a full solution for all your reading needs.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/kavita.sh",
+            "resources": {
+                "cpu": "2",
+                "ram": "2048",
+                "hdd": "8",
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": []
+}

@@ -58,6 +58,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox --title "SET RESOURCES" "Please set the resources in your ${APP} LXC to ${var_cpu}vCPU and ${var_ram}RAM for the build process before continuing" 10 75
   header_info
   msg_info "Updating $APP LXC"
   systemctl stop cps

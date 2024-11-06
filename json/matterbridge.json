@@ -1,0 +1,39 @@
+{
+    "name": "Matterbridge",
+    "slug": "matterbridge",
+    "categories": [
+        6
+    ],
+    "date_created": "2024-06-12",
+    "type": "ct",
+    "updateable": false,
+    "privileged": false,
+    "interface_port": "8283",
+    "documentation": null,
+    "website": "https://github.com/Luligu/matterbridge",
+    "logo": "https://raw.githubusercontent.com/Luligu/matterbridge/main/frontend/public/matterbridge%20624x624.png",
+    "description": "Matterbridge allows you to have all your Matter devices up and running in a couple of minutes without having to deal with the pairing process of each single device.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/matterbridge.sh",
+            "resources": {
+                "cpu": "1",
+                "ram": "1024",
+                "hdd": "4",
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": [
+        {
+            "text": "If the LXC is created Privileged, the script will automatically set up USB passthrough.",
+            "type": "warning"
+        }
+    ]
+}

@@ -1,0 +1,34 @@
+{
+    "name": "PiMox HAOS",
+    "slug": "pimox-haos-vm",
+    "categories": [
+        2
+    ],
+    "date_created": "2024-04-29",
+    "type": "vm",
+    "updateable": false,
+    "privileged": false,
+    "interface_port": "8123",
+    "documentation": null,
+    "website": "https://github.com/jiangcuo/Proxmox-Port",
+    "logo": "https://github.com/tteck/Proxmox/blob/main/misc/images/pimox.png?raw=true",
+    "description": "The script automates the manual process of finding, downloading and extracting the aarch64 (qcow2) disk image provided by the Home Assistant Team, creating a VM with user defined settings, importing and attaching the disk, setting the boot order and starting the VM.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "vm/pimox-haos-vm.sh",
+            "resources": {
+                "cpu": "2",
+                "ram": "4096",
+                "hdd": "32G",
+                "os": null,
+                "version": null
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": []
+}

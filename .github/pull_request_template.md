@@ -24,6 +24,4 @@ Provide any additional context or screenshots about the feature or fix here.
 ## Related Pull Requests / Discussions
 
 If there are other pull requests or discussions related to this change, please link them here:
-- Related PR #1
-- Related PR #2
-
+- Related PR #

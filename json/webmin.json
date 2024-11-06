@@ -1,0 +1,39 @@
+{
+    "name": "Webmin System Administration",
+    "slug": "webmin",
+    "categories": [
+        16
+    ],
+    "date_created": "2024-05-02",
+    "type": "misc",
+    "updateable": false,
+    "privileged": false,
+    "interface_port": "10000",
+    "documentation": null,
+    "website": "https://webmin.com/",
+    "logo": "https://user-images.githubusercontent.com/4426533/218263860-f7baf9d6-cb19-4ddc-86dc-ac1b7a3c3a8a.png?raw=true",
+    "description": "Webmin provides a graphical user interface (GUI) for tasks such as user account management, package management, file system configuration, network configuration, and more.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "misc/webmin.sh",
+            "resources": {
+                "cpu": null,
+                "ram": null,
+                "hdd": null,
+                "os": null,
+                "version": null
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": "root",
+        "password": "root"
+    },
+    "notes": [
+        {
+            "text": "Execute within an existing LXC Console",
+            "type": "warning"
+        }
+    ]
+}
