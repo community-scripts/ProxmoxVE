@@ -18,11 +18,11 @@ const fetchScripts = async (): Promise<Script[]> => {
   );
   const files: { download_url: string }[] = await response.json();
   const scripts = await Promise.all(
-    files.map(async (file) => {
+    files.map(async (file): Promise<Script> => {
       const response = await fetch(file.download_url);
       const script = await response.json();
-      return script as Script;
-    })
+      return script;
+    }),
   );
   return scripts;
 };
