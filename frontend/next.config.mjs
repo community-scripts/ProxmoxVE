@@ -1,3 +1,5 @@
+import { basePath } from '@/config/siteConfig';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   webpack: (config) => {
@@ -14,12 +16,8 @@ const nextConfig = {
     ],
   },
 
-  env: {
-    NEXT_PUBLIC_BUILD_TIME: `${Date.now()}`,
-  },
-
   output: "export",
-  basePath: "/ProxmoxVE",
+  basePath: basePath,
 };
 
 export default nextConfig;

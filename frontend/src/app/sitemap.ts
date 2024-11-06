@@ -1,20 +1,20 @@
 import type { MetadataRoute } from "next";
+import { headers } from "next/headers";
 
 export const dynamic = "force-static";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const headersList = await headers();
+  let domain = headersList.get("host") as string;
+  let protocol = "https";
   return [
     {
-      url: "https://community-scripts.github.io/Proxmox/",
+      url: `${protocol}://${domain}/${process.env.BASE_PATH}`,
       lastModified: new Date(),
-      changeFrequency: "yearly",
-      priority: 0.8,
     },
     {
-      url: "https://community-scripts.github.io/Proxmox/scripts",
+      url: `${protocol}://${domain}/${process.env.BASE_PATH}/scripts`,
       lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 1,
     },
   ];
 }
