@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 # Copyright (c) 2021-2024 tteck
-# Author: MickLesk (Canbiz)
+# Author: tteck (tteckster)
+# Co-Author: MickLesk (Canbiz)
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/ajnart/homarr
