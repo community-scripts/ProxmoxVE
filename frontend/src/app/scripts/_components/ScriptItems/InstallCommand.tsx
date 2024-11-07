@@ -2,6 +2,7 @@ import CodeCopyButton from "@/components/ui/code-copy-button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { basePath } from "@/config/siteConfig";
 import { Script } from "@/lib/types";
+import { getDisplayValueFromType } from "../ScriptInfoBlocks";
 
 const getInstallCommand = (scriptPath?: string) => {
   return `bash -c "$(wget -qLO - https://github.com/community-scripts/${basePath}/raw/main/${scriptPath})"`;
@@ -21,24 +22,29 @@ export default function InstallCommand({ item }: { item: Script }) {
       <p className="text-sm mt-2">
         {isAlpine ? (
           <>
-            As an alternative option, you can use Alpine Linux and the {item.name}{" "}
-            package to create a {item.name} {item.type} container with faster
-            creation time and minimal system resource usage. You are also
-            obliged to adhere to updates provided by the package maintainer.
+            As an alternative option, you can use Alpine Linux and the{" "}
+            {item.name} package to create a {item.name}{" "}
+            {getDisplayValueFromType(item.type)} container with faster creation
+            time and minimal system resource usage. You are also obliged to
+            adhere to updates provided by the package maintainer.
           </>
         ) : item.type ? (
           <>
-            To create a new Proxmox VE {item.name} {item.type}, run the command
-            below in the Proxmox VE Shell.
+            To create a new Proxmox VE {item.name}{" "}
+            {getDisplayValueFromType(item.type)}, run the command below in the
+            Proxmox VE Shell.
           </>
         ) : (
-          <>To use the {item.name} script, run the command below in the shell.</>
+          <>
+            To use the {item.name} script, run the command below in the shell.
+          </>
         )}
       </p>
       {isAlpine && (
         <p className="mt-2 text-sm">
-          To create a new Proxmox VE Alpine-{item.name} {item.type}, run the command
-          below in the Proxmox VE Shell
+          To create a new Proxmox VE Alpine-{item.name}{" "}
+          {getDisplayValueFromType(item.type)}, run the command below in the
+          Proxmox VE Shell
         </p>
       )}
     </>
