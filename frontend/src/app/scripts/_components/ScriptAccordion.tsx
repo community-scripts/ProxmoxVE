@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef } from "react";
 
+import { formattedBadge } from "@/components/CommandMenu";
 import {
   Accordion,
   AccordionContent,
@@ -8,12 +9,9 @@ import {
 } from "@/components/ui/accordion";
 import { Category } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { Badge } from "../../../components/ui/badge";
-import { formattedBadge } from "@/components/CommandMenu";
 
 export default function ScriptAccordion({
   items,
@@ -57,6 +55,7 @@ export default function ScriptAccordion({
       value={expandedItem}
       onValueChange={handleAccordionChange}
       collapsible
+      className="overflow-y-scroll max-h-[calc(100vh-210px)] overflow-x-hidden pb-4"
     >
       {items.map((category) => (
         <AccordionItem
@@ -79,9 +78,7 @@ export default function ScriptAccordion({
             </div>{" "}
           </AccordionTrigger>
           <AccordionContent
-            data-state={
-              expandedItem === category.name ? "open" : "closed"
-            }
+            data-state={expandedItem === category.name ? "open" : "closed"}
             className="pt-0"
           >
             {category.scripts
@@ -92,7 +89,7 @@ export default function ScriptAccordion({
                   <Link
                     href={{
                       pathname: "/scripts",
-                      query: { id: script.name},
+                      query: { id: script.name },
                     }}
                     prefetch={false}
                     className={`flex cursor-pointer items-center justify-between gap-1 px-1 py-1 text-muted-foreground hover:rounded-lg hover:bg-accent/60 hover:dark:bg-accent/20 ${
