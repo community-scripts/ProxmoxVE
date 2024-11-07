@@ -36,7 +36,6 @@ $STD npm install -g yarn
 msg_ok "Installed Node.js/Yarn"
 
 msg_info "Installing Homarr (Patience)"
-cd /opt
 RELEASE=$(curl -s https://api.github.com/repos/ajnart/homarr/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 wget -q "https://github.com/ajnart/homarr/archive/refs/tags/v${RELEASE}.zip"
 unzip -q v${RELEASE}.zip
