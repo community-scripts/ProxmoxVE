@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2024 tteck
-# Author: tteck (tteckster)
+# Author: MickLesk (Canbiz)
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
@@ -54,20 +54,38 @@ function default_settings() {
 
 function update_script() {
 header_info
-if [[ ! -d /opt/homarr ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
-msg_info "Updating $APP (Patience)"
-systemctl stop homarr
-cd /opt/homarr
-if ! git pull; then
-  echo "Already up to date."
-  systemctl start homarr
-  echo "No update required."
-  exit
+if [[ ! -d /opt/adventurelog ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
+if (( $(df /boot | awk 'NR==2{gsub("%","",$5); print $5}') > 80 )); then
+  read -r -p "Warning: Storage is dangerously low, continue anyway? <y/N> " prompt
+  [[ ${prompt,,} =~ ^(y|yes)$ ]] || exit
 fi
-yarn install
-yarn build
-systemctl start homarr
-msg_ok "Updated $APP"
+RELEASE=$(curl -s https://api.github.com/repos/ajnart/homarr/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+  msg_info "Stopping Services"
+  systemctl stop homarr
+  msg_ok "Services Stopped"
+
+  msg_info "Updating ${APP} to ${RELEASE}"
+  cp /opt/homarr/.env /opt/.env
+  wget -q "https://github.com/ajnart/homarr/archive/refs/tags/v${RELEASE}.zip"
+  unzip -q v${RELEASE}.zip
+  mv homarr-${RELEASE} /opt/homarr
+  mv /opt/.env /opt/homarr/.env
+  yarn install
+  yarn build
+  yarn db:migrate
+
+  msg_info "Starting Services"
+  systemctl start homarr
+  msg_ok "Started Services"
+
+  msg_info "Cleaning Up"
+  rm -rf v${RELEASE}.zip
+  msg_ok "Cleaned"
+  msg_ok "Updated Successfully"
+else
+  msg_ok "No update required. ${APP} is already at ${RELEASE}"
+fi
 exit
 }
 
