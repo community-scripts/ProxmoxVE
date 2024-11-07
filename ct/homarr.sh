@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+c#!/usr/bin/env bash
 source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2024 tteck
 # Author: tteck (tteckster)
@@ -68,13 +68,16 @@ if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_v
 
   msg_info "Updating ${APP} to ${RELEASE}"
   cp /opt/homarr/.env /opt/.env
+  cp -a /opt/homarr/data /opt/
+  rm -rf /opt/homarr
   wget -q "https://github.com/ajnart/homarr/archive/refs/tags/v${RELEASE}.zip"
   unzip -q v${RELEASE}.zip
   mv homarr-${RELEASE} /opt/homarr
   mv /opt/.env /opt/homarr/.env
-  yarn install
-  yarn build
-  yarn db:migrate
+  mv /opt/data /opt/homarr/
+  yarn install &>/dev/null
+  yarn build &>/dev/null
+  yarn db:migrate &>/dev/null
   echo "${RELEASE}" >/opt/${APP}_version.txt
   msg_ok "Updated ${APP}"
 
