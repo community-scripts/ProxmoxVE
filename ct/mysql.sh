@@ -64,6 +64,27 @@ exit
 }
 
 start
+
+RELEASE_REPO=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "Release Repository" --radiolist --cancel-button Exit-Script "Please select a Release Repository" 15 58 3 \
+  "mysql-8.0" "" OFF \
+  "mysql-8.4-lts" "" OFF \
+  "mysql-innovation" "" OFF \
+  3>&1 1>&2 2>&3)
+
+case $RELEASE_REPO in
+  "mysql-8.0")
+    RELEASE_AUTH="mysql_native_password"
+    ;;
+  "mysql-8.4-lts" | "mysql-innovation")
+    RELEASE_AUTH="caching_sha2_password"
+    ;;
+esac
+
+msg_ok "Using Release Repository ${BL}${RELEASE_REPO}${CL}"
+
+export RELEASE_REPO
+export RELEASE_AUTH
+
 build_container
 description
 
