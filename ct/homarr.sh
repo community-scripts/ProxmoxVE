@@ -75,6 +75,8 @@ if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_v
   yarn install
   yarn build
   yarn db:migrate
+  echo "${RELEASE}" >/opt/${APP}_version.txt
+  msg_ok "Updated ${APP}"
 
   msg_info "Starting Services"
   systemctl start homarr
