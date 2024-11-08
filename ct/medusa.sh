@@ -55,12 +55,23 @@ function default_settings() {
 function update_script() {
 header_info
 if [[ ! -d /opt/medusa ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
+msg_info "Stopping ${APP}"
+systemctl stop medusa
+msg_ok "Stopped ${APP}"
+
 msg_info "Updating ${APP}"
-systemctl stop medusa.service
-/opt/medusa
-git pull
-systemctl start medusa.service
-msg_ok "Successfully Updated ${APP}"
+cd /opt/medusa
+output=$(git pull --no-rebase)
+if echo "$output" | grep -q "Already up to date."
+then
+  msg_ok "$APP is already up to date."
+  exit
+fi
+msg_ok "Updated Successfully"
+
+msg_info "Starting ${APP}"
+systemctl start medusa
+msg_ok "Started ${APP}"
 exit
 }
 
