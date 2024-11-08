@@ -20,17 +20,7 @@ $STD apt-get install -y mc
 msg_ok "Installed Dependencies"
 
 msg_info "Installing NextCloudPi (Patience)"
-$STD apt-get install -y systemd-resolved
-systemctl enable -q --now systemd-resolved
-cat <<'EOF' >/etc/systemd/resolved.conf
-[Resolve]
-DNS=8.8.8.8
-FallbackDNS=8.8.4.4
-EOF
-systemctl restart systemd-resolved
 $STD bash <(curl -fsSL https://raw.githubusercontent.com/nextcloud/nextcloudpi/master/install.sh)
-systemctl disable -q --now systemd-resolved
-$STD apt-get remove -y systemd-resolved
 msg_ok "Installed NextCloudPi"
 
 motd_ssh
