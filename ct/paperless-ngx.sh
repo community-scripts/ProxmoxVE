@@ -68,7 +68,7 @@ function update_script() {
   if [ "$UPD" == "1" ]; then
     if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
 	  if [[ "$(gs --version 2>/dev/null)" != "10.04.0" ]]; then
-        msg_info "Updating Ghostscript"
+        msg_info "Updating Ghostscript (Patience)"
         cd /tmp
         wget -q https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs10040/ghostscript-10.04.0.tar.gz
         tar -xzf ghostscript-10.04.0.tar.gz
