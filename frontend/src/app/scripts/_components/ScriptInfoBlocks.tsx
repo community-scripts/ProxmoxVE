@@ -85,7 +85,7 @@ export function LatestScripts({ items }: { items: Category[] }) {
       <div className="min-w flex w-full flex-row flex-wrap gap-4">
         {latestScripts.slice(startIndex, endIndex).map((script) => (
           <Card
-            key={script.name}
+            key={script.slug}
             className="min-w-[250px] flex-1 flex-grow bg-accent/30"
           >
             <CardHeader>
@@ -121,7 +121,7 @@ export function LatestScripts({ items }: { items: Category[] }) {
                 <Link
                   href={{
                     pathname: "/scripts",
-                    query: { id: script.name },
+                    query: { id: script.slug },
                   }}
                 >
                   View Script
@@ -153,7 +153,7 @@ export function MostViewedScripts({ items }: { items: Category[] }) {
       <div className="min-w flex w-full flex-row flex-wrap gap-4">
         {mostViewedScripts.map((script) => (
           <Card
-            key={script.name}
+            key={script.slug}
             className="min-w-[250px] flex-1 flex-grow bg-accent/30"
           >
             <CardHeader>
@@ -189,7 +189,7 @@ export function MostViewedScripts({ items }: { items: Category[] }) {
                 <Link
                   href={{
                     pathname: "/scripts",
-                    query: { id: script.name },
+                    query: { id: script.slug },
                   }}
                   prefetch={false}
                 >

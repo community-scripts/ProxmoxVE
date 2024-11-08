@@ -26,14 +26,14 @@ export default function ScriptAccordion({
     undefined,
   );
   const linkRefs = useRef<{ [key: string]: HTMLAnchorElement | null }>({});
-  
+
   const handleAccordionChange = (value: string | undefined) => {
     setExpandedItem(value);
   };
 
   const handleSelected = useCallback(
-    (title: string) => {
-      setSelectedScript(title);
+    (slug: string) => {
+      setSelectedScript(slug);
     },
     [setSelectedScript],
   );
@@ -41,7 +41,7 @@ export default function ScriptAccordion({
   useEffect(() => {
     if (selectedScript) {
       const category = items.find((category) =>
-        category.scripts.some((script) => script.name === selectedScript),
+        category.scripts.some((script) => script.slug === selectedScript),
       );
       if (category) {
         setExpandedItem(category.name);
@@ -89,17 +89,17 @@ export default function ScriptAccordion({
                   <Link
                     href={{
                       pathname: "/scripts",
-                      query: { id: script.name },
+                      query: { id: script.slug },
                     }}
                     prefetch={false}
                     className={`flex cursor-pointer items-center justify-between gap-1 px-1 py-1 text-muted-foreground hover:rounded-lg hover:bg-accent/60 hover:dark:bg-accent/20 ${
-                      selectedScript === script.name
+                      selectedScript === script.slug
                         ? "rounded-lg bg-accent font-semibold dark:bg-accent/30 dark:text-white"
                         : ""
                     }`}
-                    onClick={() => handleSelected(script.name)}
+                    onClick={() => handleSelected(script.slug)}
                     ref={(el) => {
-                      linkRefs.current[script.name] = el;
+                      linkRefs.current[script.slug] = el;
                     }}
                   >
                     <div className="flex items-center">

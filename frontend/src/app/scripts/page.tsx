@@ -3,16 +3,16 @@
 export const dynamic = "force-static";
 
 import ScriptItem from "@/app/scripts/_components/ScriptItem";
+import { fetchCategories } from "@/lib/data";
 import { Category, Script } from "@/lib/types";
 import { Loader2 } from "lucide-react";
-import { Suspense, useEffect, useState } from "react";
-import Sidebar from "./_components/Sidebar";
 import { useQueryState } from "nuqs";
+import { Suspense, useEffect, useState } from "react";
 import {
   LatestScripts,
   MostViewedScripts,
 } from "./_components/ScriptInfoBlocks";
-import { fetchCategories } from "@/lib/data";
+import Sidebar from "./_components/Sidebar";
 
 function ScriptContent() {
   const [selectedScript, setSelectedScript] = useQueryState("id");
@@ -24,7 +24,7 @@ function ScriptContent() {
       const script = links
         .map((category) => category.scripts)
         .flat()
-        .find((script) => script.name === selectedScript);
+        .find((script) => script.slug === selectedScript);
       setItem(script);
     }
   }, [selectedScript, links]);

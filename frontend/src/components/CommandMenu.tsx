@@ -92,11 +92,11 @@ export default function CommandMenu() {
             >
               {category.scripts.map((script) => (
                 <CommandItem
-                  key={`script:${script.name}`}
-                  value={script.name}
+                  key={`script:${script.slug}`}
+                  value={script.slug}
                   onSelect={() => {
                     setOpen(false);
-                    router.push(`/scripts?id=${script.name}`);
+                    router.push(`/scripts?id=${script.slug}`);
                   }}
                 >
                   <div className="flex gap-2" onClick={() => setOpen(false)}>

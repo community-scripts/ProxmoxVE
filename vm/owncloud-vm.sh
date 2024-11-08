@@ -19,7 +19,7 @@ header_info
 echo -e "\n Loading..."
 GEN_MAC=02:$(openssl rand -hex 5 | awk '{print toupper($0)}' | sed 's/\(..\)/\1:/g; s/.$//')
 NEXTID=$(pvesh get /cluster/nextid)
-
+NAME="TurnKey ownCloud VM"
 YW=$(echo "\033[33m")
 BL=$(echo "\033[36m")
 HA=$(echo "\033[1;34m")
@@ -32,7 +32,7 @@ BFR="\\r\\033[K"
 HOLD="-"
 CM="${GN}✓${CL}"
 CROSS="${RD}✗${CL}"
-THIN="discard=on,ssd=1,"
+THIN="discard=on,ssd=1"
 set -e
 trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
 trap cleanup EXIT
@@ -59,7 +59,7 @@ function cleanup() {
 
 TEMP_DIR=$(mktemp -d)
 pushd $TEMP_DIR >/dev/null
-if whiptail --backtitle "Proxmox VE Helper Scripts" --title "TurnKey-ownCloud VM" --yesno "This will create a New TurnKey-ownCloud VM. Proceed?" 10 58; then
+if whiptail --backtitle "Proxmox VE Helper Scripts" --title "$NAME" --yesno "This will create a New $NAME. Proceed?" 10 58; then
   :
 else
   header_info && echo -e "⚠ User exited script \n" && exit
@@ -154,7 +154,7 @@ function default_settings() {
   echo -e "${DGN}Using VLAN: ${BGN}Default${CL}"
   echo -e "${DGN}Using Interface MTU Size: ${BGN}Default${CL}"
   echo -e "${DGN}Start VM when completed: ${BGN}no${CL}"
-  echo -e "${BL}Creating a TurnKey ownCloud VM using the above default settings${CL}"
+  echo -e "${BL}Creating a $NAME using the above default settings${CL}"
 }
 
 function advanced_settings() {
@@ -313,8 +313,8 @@ function advanced_settings() {
     START_VM="no"
   fi
 
-  if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "ADVANCED SETTINGS COMPLETE" --yesno "Ready to create a TurnKey ownCloud VM?" --no-button Do-Over 10 58); then
-    echo -e "${RD}Creating a TurnKey ownCloud VM using the above advanced settings${CL}"
+  if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "ADVANCED SETTINGS COMPLETE" --yesno "Ready to create a $NAME?" --no-button Do-Over 10 58); then
+    echo -e "${RD}Creating a $NAME using the above advanced settings${CL}"
   else
     header_info
     echo -e "${RD}Using Advanced Settings${CL}"
@@ -368,7 +368,7 @@ else
 fi
 msg_ok "Using ${CL}${BL}$STORAGE${CL} ${GN}for Storage Location."
 msg_ok "Virtual Machine ID is ${CL}${BL}$VMID${CL}."
-msg_info "Retrieving the URL for the TurnKey ownCloud ISO Disk Image"
+msg_info "Retrieving the URL for the $NAME Disk Image"
 URL=http://mirror.turnkeylinux.org/turnkeylinux/images/iso/turnkey-owncloud-18.0-bookworm-amd64.iso
 sleep 2
 msg_ok "${CL}${BL}${URL}${CL}"
@@ -393,31 +393,33 @@ btrfs)
   THIN=""
   ;;
 esac
-for i in {0,1}; do
+for i in {0,1,2}; do
   disk="DISK$i"
   eval DISK${i}=vm-${VMID}-disk-${i}${DISK_EXT:-}
   eval DISK${i}_REF=${STORAGE}:${DISK_REF:-}${!disk}
 done
 
-msg_info "Creating a TurnKey ownCloud VM"
+msg_info "Creating a $NAME"
 qm create $VMID -agent 1${MACHINE} -tablet 0 -localtime 1 -bios seabios${CPU_TYPE} -cores $CORE_COUNT -memory $RAM_SIZE \
   -name $HN -tags proxmox-helper-scripts -net0 virtio,bridge=$BRG,macaddr=$MAC$VLAN$MTU -onboot 1 -ostype l26 -scsihw virtio-scsi-pci
 pvesm alloc $STORAGE $VMID $DISK0 4M 1>&/dev/null
+pvesm alloc $STORAGE $VMID $DISK1 12G 1>&/dev/null
 qm importdisk $VMID ${FILE} $STORAGE ${DISK_IMPORT:-} 1>&/dev/null
 qm set $VMID \
   -efidisk0 ${DISK0_REF}${FORMAT} \
-  -scsi0 ${DISK1_REF},${DISK_CACHE}${THIN}size=12G \
-  -boot order=scsi0 \
+  -scsi0 ${DISK1_REF},${DISK_CACHE}${THIN} \
+  -scsi1 ${DISK2_REF},${DISK_CACHE}${THIN} \
+  -boot order='scsi1;scsi0' \
   -description "<div align='center'><a href='https://Helper-Scripts.com'><img src='https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/images/logo-81x112.png'/></a>
 
-  # TurnKey ownCloud VM
+  # $NAME
 
   <a href='https://ko-fi.com/D1D7EP4GF'><img src='https://img.shields.io/badge/&#x2615;-Buy me a coffee-blue' /></a>
   </div>" >/dev/null
-msg_ok "Created a TurnKey ownCloud VM ${CL}${BL}(${HN})"
+msg_ok "Created a $NAME ${CL}${BL}(${HN})"
 if [ "$START_VM" == "yes" ]; then
-  msg_info "Starting TurnKey ownCloud VM"
+  msg_info "Starting $NAME"
   qm start $VMID
-  msg_ok "Started TurnKey ownCloud VM"
+  msg_ok "Started $NAME"
 fi
 msg_ok "Completed Successfully!\n"
