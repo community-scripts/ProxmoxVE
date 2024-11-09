@@ -55,7 +55,7 @@ export default function ScriptAccordion({
       value={expandedItem}
       onValueChange={handleAccordionChange}
       collapsible
-      className="overflow-y-scroll max-h-[calc(100vh-210px)] overflow-x-hidden pb-4"
+      className="overflow-y-scroll max-h-[calc(100vh-210px)] overflow-x-hidden mt-3 p-2"
     >
       {items.map((category) => (
         <AccordionItem
