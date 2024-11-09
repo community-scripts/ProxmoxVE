@@ -106,6 +106,7 @@ export default function CommandMenu() {
                         ((e.currentTarget as HTMLImageElement).src =
                           "/logo.png")
                       }
+                      unoptimized
                       width={16}
                       height={16}
                       alt=""
