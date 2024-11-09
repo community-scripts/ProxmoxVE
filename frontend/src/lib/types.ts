@@ -26,19 +26,21 @@ export type Script = {
     username: string | null;
     password: string | null;
   };
-  notes: [{
-    text: string;
-    type: string;
-  }]
-}
+  notes: [
+    {
+      text: string;
+      type: string;
+    },
+  ];
+};
 
 export type Category = {
   name: string;
   id: number;
   sort_order: number;
   scripts: Script[];
-}
+};
 
-export type ScriptList = {
+export type Metadata = {
   categories: Category[];
-}
+};

@@ -1,10 +1,11 @@
+import handleCopy from "@/components/handleCopy";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import handleCopy from "@/components/handleCopy";
 import { Script } from "@/lib/types";
 
 export default function DefaultPassword({ item }: { item: Script }) {
-  const hasDefaultLogin = item.default_credentials.username && item.default_credentials.password;
+  const hasDefaultLogin =
+    item.default_credentials.username && item.default_credentials.password;
 
   return (
     <div>
@@ -25,7 +26,10 @@ export default function DefaultPassword({ item }: { item: Script }) {
                 variant={"secondary"}
                 size={"null"}
                 onClick={() =>
-                  handleCopy("username", item.default_credentials.username ?? "")
+                  handleCopy(
+                    "username",
+                    item.default_credentials.username ?? "",
+                  )
                 }
               >
                 {item.default_credentials.username}
@@ -37,7 +41,10 @@ export default function DefaultPassword({ item }: { item: Script }) {
                 variant={"secondary"}
                 size={"null"}
                 onClick={() =>
-                  handleCopy("password", item.default_credentials.password ?? "")
+                  handleCopy(
+                    "password",
+                    item.default_credentials.password ?? "",
+                  )
                 }
               >
                 {item.default_credentials.password}

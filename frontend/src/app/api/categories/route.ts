@@ -1,26 +1,30 @@
-import { basePath } from "@/config/siteConfig";
-import { Category, Script } from "@/lib/types";
+import { Metadata, Script } from "@/lib/types";
+import { promises as fs } from "fs";
 import { NextResponse } from "next/server";
+import path from "path";
 
 export const dynamic = "force-static";
 
-const fetchCategories = async (): Promise<Category[]> => {
-  const response = await fetch(
-    `https://raw.githubusercontent.com/community-scripts/${basePath}/refs/heads/main/json/metadata.json`,
-  );
-  const data = await response.json();
-  return data.categories;
+const jsonDir = "public/json";
+const metadataFileName = "metadata.json";
+const encoding = "utf-8";
+
+const getMetadata = async () => {
+  const filePath = path.resolve(jsonDir, metadataFileName);
+  const fileContent = await fs.readFile(filePath, encoding);
+  const metadata: Metadata = JSON.parse(fileContent);
+  return metadata;
 };
 
-const fetchScripts = async (): Promise<Script[]> => {
-  const response = await fetch(
-    `https://api.github.com/repos/community-scripts/${basePath}/contents/json`,
-  );
-  const files: { download_url: string }[] = await response.json();
+const getScripts = async () => {
+  const filePaths = (await fs.readdir(jsonDir))
+    .filter((fileName) => fileName !== metadataFileName)
+    .map((fileName) => path.resolve(jsonDir, fileName));
+
   const scripts = await Promise.all(
-    files.map(async (file) : Promise<Script> => {
-      const response = await fetch(file.download_url);
-      const script = await response.json();
+    filePaths.map(async (filePath) => {
+      const fileContent = await fs.readFile(filePath, encoding);
+      const script: Script = JSON.parse(fileContent);
       return script;
     }),
   );
@@ -29,11 +33,18 @@ const fetchScripts = async (): Promise<Script[]> => {
 
 export async function GET() {
   try {
-    const categories = await fetchCategories();
-    const scripts = await fetchScripts();
-    for (const category of categories) {
-      category.scripts = scripts.filter((script) => script.categories.includes(category.id));
-    }
+    const metadata = await getMetadata();
+    const scripts = await getScripts();
+
+    const categories = metadata.categories
+      .map((category) => {
+        category.scripts = scripts.filter((script) =>
+          script.categories.includes(category.id),
+        );
+        return category;
+      })
+      .sort((a, b) => a.sort_order - b.sort_order);
+
     return NextResponse.json(categories);
   } catch (error) {
     console.error(error as Error);

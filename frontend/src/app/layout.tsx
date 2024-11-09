@@ -2,11 +2,11 @@ import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { analytics, basePath } from "@/config/siteConfig";
 import "@/styles/globals.css";
 import { Inter } from "next/font/google";
-import React from "react";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
-import { analytics, basePath } from "@/config/siteConfig";
+import React from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -65,7 +65,6 @@ export default function RootLayout({
           data-website-id={analytics.token}
         ></script>
         <link rel="manifest" href="manifest.webmanifest" />
-        <link rel="preconnect" href={process.env.NEXT_PUBLIC_POCKETBASE_URL} />
         <link rel="preconnect" href="https://api.github.com" />
       </head>
       <body className={inter.className}>

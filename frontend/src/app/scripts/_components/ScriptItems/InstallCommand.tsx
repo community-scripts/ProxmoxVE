@@ -6,7 +6,7 @@ import { getDisplayValueFromType } from "../ScriptInfoBlocks";
 
 const getInstallCommand = (scriptPath?: string) => {
   return `bash -c "$(wget -qLO - https://github.com/community-scripts/${basePath}/raw/main/${scriptPath})"`;
-}
+};
 
 export default function InstallCommand({ item }: { item: Script }) {
   const alpineScript = item.install_methods.find(
@@ -14,7 +14,7 @@ export default function InstallCommand({ item }: { item: Script }) {
   );
 
   const defaultScript = item.install_methods.find(
-    (method) => method.type === "default"
+    (method) => method.type === "default",
   );
 
   const renderInstructions = (isAlpine = false) => (
@@ -60,7 +60,9 @@ export default function InstallCommand({ item }: { item: Script }) {
           </TabsList>
           <TabsContent value="default">
             {renderInstructions()}
-            <CodeCopyButton>{getInstallCommand(defaultScript?.script)}</CodeCopyButton>
+            <CodeCopyButton>
+              {getInstallCommand(defaultScript?.script)}
+            </CodeCopyButton>
           </TabsContent>
           <TabsContent value="alpine">
             {renderInstructions(true)}

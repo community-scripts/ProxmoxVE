@@ -1,5 +1,6 @@
 "use client";
 
+import { basePath } from "@/config/siteConfig";
 import { cn } from "@/lib/utils";
 import { cva, type VariantProps } from "class-variance-authority";
 import { Clipboard, Copy } from "lucide-react";
@@ -8,7 +9,6 @@ import * as React from "react";
 import { toast } from "sonner";
 import { Button } from "./button";
 import { Separator } from "./separator";
-import { basePath } from "@/config/siteConfig";
 
 const buttonVariants = cva(
   "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
@@ -135,4 +135,4 @@ const CodeBlock = React.forwardRef<HTMLDivElement, CodeBlockProps>(
 );
 CodeBlock.displayName = "CodeBlock";
 
-export { CodeBlock, buttonVariants };
+export { buttonVariants, CodeBlock };

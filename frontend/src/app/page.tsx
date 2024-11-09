@@ -1,17 +1,24 @@
 "use client";
 import AnimatedGradientText from "@/components/ui/animated-gradient-text";
-import Particles from "@/components/ui/particles";
 import { Button } from "@/components/ui/button";
+import { CardFooter } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import Particles from "@/components/ui/particles";
 import { Separator } from "@/components/ui/separator";
+import { basePath } from "@/config/siteConfig";
 import { cn } from "@/lib/utils";
 import { ArrowRightIcon, ExternalLink } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { CardFooter } from "@/components/ui/card";
 import { FaGithub } from "react-icons/fa";
-import { basePath } from "@/config/siteConfig";
 
 function CustomArrowRightIcon() {
   return <ArrowRightIcon className="h-4 w-4" width={1} />;

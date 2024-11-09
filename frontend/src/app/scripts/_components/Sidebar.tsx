@@ -17,15 +17,16 @@ const Sidebar = ({
       <div className="flex items-end justify-between pb-4">
         <h1 className="text-xl font-bold">Categories</h1>
         <p className="text-xs italic text-muted-foreground">
-          {items.reduce(
-            (acc, category) => acc + category.scripts.length,
-            0,
-          )}{" "}
+          {items.reduce((acc, category) => acc + category.scripts.length, 0)}{" "}
           Total scripts
         </p>
       </div>
       <div className="rounded-lg">
-        <ScriptAccordion items={items} selectedScript={selectedScript} setSelectedScript={setSelectedScript} />
+        <ScriptAccordion
+          items={items}
+          selectedScript={selectedScript}
+          setSelectedScript={setSelectedScript}
+        />
       </div>
     </div>
   );

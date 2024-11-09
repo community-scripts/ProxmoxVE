@@ -44,7 +44,8 @@ export default function DefaultSettings({ item }: { item: Script }) {
             CPU: {defaultAlpineSettings?.resources.cpu}vCPU
           </p>
           <p className="text-sm text-muted-foreground">
-            RAM: {getDisplayValueFromRAM(defaultAlpineSettings?.resources.ram ?? 0)}
+            RAM:{" "}
+            {getDisplayValueFromRAM(defaultAlpineSettings?.resources.ram ?? 0)}
           </p>
           <p className="text-sm text-muted-foreground">
             HDD: {defaultAlpineSettings?.resources.hdd}GB

@@ -52,7 +52,9 @@ function ScriptItem({
                 <div className="ml-4 flex flex-col justify-between">
                   <div className="flex h-full w-full flex-col justify-between">
                     <div>
-                      <h1 className="text-lg font-semibold">{item.name} {getDisplayValueFromType(item.type)}</h1>
+                      <h1 className="text-lg font-semibold">
+                        {item.name} {getDisplayValueFromType(item.type)}
+                      </h1>
                       <p className="w-full text-sm text-muted-foreground">
                         Date added: {extractDate(item.date_created)}
                       </p>

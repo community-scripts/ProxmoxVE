@@ -1,10 +1,10 @@
+import { basePath } from "@/config/siteConfig";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FaGithub, FaStar } from "react-icons/fa";
-import NumberTicker from "./number-ticker";
 import { buttonVariants } from "./button";
-import { basePath } from "@/config/siteConfig";
+import NumberTicker from "./number-ticker";
 
 export default function StarOnGithubButton() {
   const [stars, setStars] = useState(0);
@@ -12,9 +12,12 @@ export default function StarOnGithubButton() {
   useEffect(() => {
     const fetchStars = async () => {
       try {
-        const res = await fetch(`https://api.github.com/repos/community-scripts/${basePath}`, {
-          next: { revalidate: 60 * 60 * 24 },
-        });
+        const res = await fetch(
+          `https://api.github.com/repos/community-scripts/${basePath}`,
+          {
+            next: { revalidate: 60 * 60 * 24 },
+          },
+        );
 
         if (res.ok) {
           const data = await res.json();
