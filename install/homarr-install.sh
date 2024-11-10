@@ -39,6 +39,7 @@ msg_info "Installing Homarr (Patience)"
 RELEASE=$(curl -s https://api.github.com/repos/ajnart/homarr/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 wget -q "https://github.com/ajnart/homarr/archive/refs/tags/v${RELEASE}.zip"
 unzip -q v${RELEASE}.zip
+rm -rf v${RELEASE}.zip
 mv homarr-${RELEASE} /opt/homarr
 cat <<EOF >/opt/homarr/.env
 DATABASE_URL="file:./database/db.sqlite"
@@ -76,7 +77,6 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -rf v${RELEASE}.zip
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"

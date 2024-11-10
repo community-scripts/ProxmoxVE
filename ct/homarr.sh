@@ -66,29 +66,37 @@ if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_v
   systemctl stop homarr
   msg_ok "Services Stopped"
 
+  msg_info "Backing up Data"
+  mkdir -p /opt/homarr-data-backup
+  cp /opt/homarr/.env /opt/homarr-data-backup/.env
+  cp /opt/homarr/database/db.sqlite /opt/homarr-data-backup/db.sqlite
+  cp -r /opt/homarr/data/configs /opt/homarr-data-backup/configs
+  msg_ok "Backed up Data"
+
   msg_info "Updating ${APP} to ${RELEASE}"
-  cp /opt/homarr/.env /opt/.env
-  cp -a /opt/homarr/data /opt/
-  rm -rf /opt/homarr
   wget -q "https://github.com/ajnart/homarr/archive/refs/tags/v${RELEASE}.zip"
   unzip -q v${RELEASE}.zip
+  rm -rf v${RELEASE}.zip
+  rm -rf /opt/homarr
   mv homarr-${RELEASE} /opt/homarr
-  mv /opt/.env /opt/homarr/.env
-  rm -rf /opt/homarr/data
-  mv /opt/data /opt/homarr/
+  mv /opt/homarr-data-backup/.env /opt/homarr/.env
+  cd /opt/homarr
   yarn install &>/dev/null
   yarn build &>/dev/null
-  yarn db:migrate &>/dev/null
   echo "${RELEASE}" >/opt/${APP}_version.txt
   msg_ok "Updated ${APP}"
+
+  msg_info "Restoring Data"
+  rm -rf /opt/homarr/data/configs
+  mv /opt/homarr-data-backup/configs /opt/homarr/data/configs
+  mv /opt/homarr-data-backup/db.sqlite /opt/homarr/database/db.sqlite
+  yarn db:migrate &>/dev/null
+  rm -rf /opt/homarr-data-backup
+  msg_ok "Restored Data"
 
   msg_info "Starting Services"
   systemctl start homarr
   msg_ok "Started Services"
-
-  msg_info "Cleaning Up"
-  rm -rf v${RELEASE}.zip
-  msg_ok "Cleaned"
   msg_ok "Updated Successfully"
 else
   msg_ok "No update required. ${APP} is already at ${RELEASE}"
