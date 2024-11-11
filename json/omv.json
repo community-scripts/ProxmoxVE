@@ -32,7 +32,7 @@
     },
     "notes": [
         {
-            "text": "Running OVM in a LXC container <a href='https://github.com/tteck/Proxmox/discussions/1075'>may require a complicated disk setup</a>. Consider using a VM instead.",
+            "text": "Running OVM in a LXC container may require a complicated disk setup, consider using a VM instead. More info: `https://github.com/tteck/Proxmox/discussions/1075`",
             "type": "warning"
         }
     ]
