@@ -640,12 +640,45 @@ EOF'
 # This function sets the description of the container.
 description() {
   IP=$(pct exec "$CTID" ip a s dev eth0 | awk '/inet / {print $2}' | cut -d/ -f1)
-  pct set "$CTID" -description "<div align='center'><a href='https://Helper-Scripts.com' target='_blank' rel='noopener noreferrer'><img src='https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/images/logo-81x112.png'/></a>
+  
+  # Get ContainerName
+  CT_NAME=$(pct config "$CTID" | grep '^hostname' | awk '{print $2}')
 
-  # ${APP} LXC
+  # Generate LXC Description
+  DESCRIPTION=$(cat <<EOF
+<div align='center'>
+  <a href='https://Helper-Scripts.com' target='_blank' rel='noopener noreferrer'>
+    <img src='https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/images/logo-81x112.png' alt='Logo' style='width:81px;height:112px;'/>
+  </a>
+  <h2>${CT_NAME} LXC</h2>
 
-  <a href='https://ko-fi.com/proxmoxhelperscripts'><img src='https://img.shields.io/badge/&#x2615;-Buy me a coffee-blue' /></a>
-  </div>"
+  <p>
+    <a href='https://ko-fi.com/community_scripts' target='_blank' rel='noopener noreferrer'>
+      <img src='https://img.shields.io/badge/&#x2615;-Buy us a coffee-blue' alt='spend Coffee' />
+    </a>
+  </p>
+  
+  <p>
+    <a href='https://github.com/community-scripts/ProxmoxVE' target='_blank' rel='noopener noreferrer'>
+      <img src='https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/images/github.png' alt='GitHub' style='width:20px;height:20px;' />
+      GitHub Repository
+    </a> |
+    <a href='https://github.com/community-scripts/ProxmoxVE/discussions' target='_blank' rel='noopener noreferrer'>
+      <img src='https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/images/discussion.png' alt='Discussions' style='width:20px;height:20px;' />
+      Discussions
+    </a> |
+    <a href='https://github.com/community-scripts/ProxmoxVE/issues' target='_blank' rel='noopener noreferrer'>
+      <img src='https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/images/bug.png' alt='Issues' style='width:20px;height:20px;' />
+      Issues
+    </a>
+  </p>
+</div>
+EOF
+)
+
+  # Set Description in LXC
+  pct set "$CTID" -description "$DESCRIPTION"
+
   if [[ -f /etc/systemd/system/ping-instances.service ]]; then
     systemctl start ping-instances.service
   fi
