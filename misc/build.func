@@ -660,15 +660,15 @@ description() {
   
   <p>
     <a href='https://github.com/community-scripts/ProxmoxVE' target='_blank' rel='noopener noreferrer'>
-      <img src='https://raw.githubusercontent.com/community-scripts/ProxmoxVE/refs/heads/MickLesk_Dev/misc/images/github.png' alt='GitHub' style='width:20px;height:20px;' />
+      <img src='https://raw.githubusercontent.com/community-scripts/ProxmoxVE/refs/heads/MickLesk_Dev/misc/images/github.svg' alt='GitHub'/>
       GitHub Repository
     </a> |
     <a href='https://github.com/community-scripts/ProxmoxVE/discussions' target='_blank' rel='noopener noreferrer'>
-      <img src='https://raw.githubusercontent.com/community-scripts/ProxmoxVE/refs/heads/MickLesk_Dev/misc/images/discussion.png' alt='Discussions' style='width:20px;height:20px;' />
+      <img src='https://raw.githubusercontent.com/community-scripts/ProxmoxVE/refs/heads/MickLesk_Dev/misc/images/discussions.svg' alt='Discussions'/>
       Discussions
     </a> |
     <a href='https://github.com/community-scripts/ProxmoxVE/issues' target='_blank' rel='noopener noreferrer'>
-      <img src='https://raw.githubusercontent.com/community-scripts/ProxmoxVE/refs/heads/MickLesk_Dev/misc/images/bug.png' alt='Issues' style='width:20px;height:20px;' />
+      <img src='https://raw.githubusercontent.com/community-scripts/ProxmoxVE/refs/heads/MickLesk_Dev/misc/images/issues.svg' alt='Issues'/>
       Issues
     </a>
   </p>
