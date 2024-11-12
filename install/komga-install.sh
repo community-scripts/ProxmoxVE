@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 # Copyright (c) 2021-2024 tteck
-# Author: tteck (tteckster)
-# Co-Author: madelyn (DysfunctionalProgramming)
+# Copyright (c) 2024 madelyn
+# Author: madelyn (DysfunctionalProgramming)
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
