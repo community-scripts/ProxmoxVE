@@ -640,9 +640,6 @@ EOF'
 # This function sets the description of the container.
 description() {
   IP=$(pct exec "$CTID" ip a s dev eth0 | awk '/inet / {print $2}' | cut -d/ -f1)
-  
-  # Get ContainerName
-  CT_NAME=$(pct config "$CTID" | grep '^hostname' | awk '{print $2}')
 
   # Generate LXC Description
   DESCRIPTION=$(cat <<EOF
