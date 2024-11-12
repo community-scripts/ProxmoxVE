@@ -110,7 +110,3 @@ This project is licensed under the terms of the [MIT License](LICENSE).
 ## 📢&nbsp; Acknowledgments
 
 A special thank you to [tteck](https://github.com/tteck) for his foundational work, which has allowed the Proxmox community to thrive. We’re dedicated to keeping his vision alive and expanding upon it with the continued support of this vibrant community.
-
-## 📢&nbsp; Acknowledgments
-
-A special thank you to [tteck](https://github.com/tteck) for his foundational work, which has allowed the Proxmox community to thrive. We’re dedicated to keeping his vision alive and expanding upon it with the continued support of this vibrant community.
