@@ -54,10 +54,10 @@ function default_settings() {
 
 function update_script() {
 header_info
-if [[ ! -d /opt/Stirling-PDF ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
+if [[ ! -d /opt/komga ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
 msg_info "Updating ${APP}"
 RELEASE=$(curl -s https://api.github.com/repos/gotson/komga/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-if [[ ! -d /opt/komga/komga-${RELEASE} ]].jar; then
+if [[ ! -d /opt/komga/komga-${RELEASE}.jar ]]; then
   systemctl stop komga
   msg_info "Downloading ${APP} v$RELEASE"
   wget -q "https://github.com/gotson/komga/releases/download/v$RELEASE/komga-${RELEASE}.jar"
