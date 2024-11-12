@@ -650,7 +650,7 @@ description() {
   <a href='https://Helper-Scripts.com' target='_blank' rel='noopener noreferrer'>
     <img src='https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/images/logo-81x112.png' alt='Logo' style='width:81px;height:112px;'/>
   </a>
-  <h2>${CT_NAME} LXC</h2>
+  <h2>${APP} LXC</h2>
 
   <p>
     <a href='https://ko-fi.com/community_scripts' target='_blank' rel='noopener noreferrer'>
