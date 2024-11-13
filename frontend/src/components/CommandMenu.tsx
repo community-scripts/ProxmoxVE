@@ -103,10 +103,10 @@ export default function CommandMenu() {
                 >
                   <div className="flex gap-2" onClick={() => setOpen(false)}>
                     <Image
-                      src={script.logo || `${basePath}/logo.png`}
+                      src={script.logo || `/${basePath}/logo.png`}
                       onError={(e) =>
                         ((e.currentTarget as HTMLImageElement).src =
-                          `${basePath}/logo.png`)
+                          `/${basePath}/logo.png`)
                       }
                       unoptimized
                       width={16}

@@ -105,13 +105,13 @@ export default function ScriptAccordion({
                   >
                     <div className="flex items-center">
                       <Image
-                        src={script.logo || `${basePath}/logo.png`}
+                        src={script.logo || `/${basePath}/logo.png`}
                         height={16}
                         width={16}
                         unoptimized
                         onError={(e) =>
                           ((e.currentTarget as HTMLImageElement).src =
-                            `${basePath}/logo.png`)
+                            `/${basePath}/logo.png`)
                         }
                         alt={script.name}
                         className="mr-1 w-4 h-4 rounded-full"
