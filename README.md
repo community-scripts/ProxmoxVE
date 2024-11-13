@@ -55,7 +55,7 @@ To install the Proxmox Helper Scripts, simply follow these steps:
 2. Search for the desired script, e.g. **"Home Assistant OS VM"**.
 3. In the **"How To Install"** section, copy the provided **Bash command**.
 4. Open the Proxmox shell on your **main node**.
-5. Paste the command into the console and let's start! 🚀
+5. Paste the command into the console, hit enter, and you are away! 🚀
 
 For detailed instructions, check out our [official guides](https://github.com/community-scripts/ProxmoxVE/blob/main/USER_SUBMITTED_GUIDES.md).
 
@@ -63,16 +63,14 @@ For detailed instructions, check out our [official guides](https://github.com/co
 
 ## ❤️&nbsp; Community and Contributions
 
-The Proxmox Helper Scripts project is community-driven, and we highly appreciate any contributions—whether it's through reporting bugs, suggesting features, improving documentation, or spreading the word. We are committed to maintaining transparency and sustainability in this open-source effort.
+The Proxmox Helper Scripts project is community-driven, and we highly appreciate any contributions — whether it's through reporting bugs, suggesting features, improving documentation, or spreading the word. We are committed to maintaining transparency and sustainability in this open-source effort.
 
-### 💖&nbsp; Donate to Support the Project
+### 💖&nbsp; Donate to Support the Project (DRAFT)
 
 We offer two donation options to help maintain and grow this project:
 
-- **Ko-Fi for tteck**: [Donate to tteck](https://ko-fi.com/proxmoxhelperscripts) - All donations will go directly to support tteck’s legacy and help fund ongoing maintenance of the scripts.
-- **Ko-Fi for Community Edition**: [Donate to Community Edition](https://ko-fi.com/community_scripts) - This is a nonprofit organization. All funds will go towards script maintenance, infrastructure, and server costs. Any remaining funds will be donated annually to 2-4 causes (e.g., cancer research, hospice care, etc.).
-
-Your contributions help keep the project running and support important charitable causes.
+- **Ko-Fi for tteck**: [Donate to tteck](https://ko-fi.com/proxmoxhelperscripts) - All donations will go directly to support tteck, the founder of this project.
+- **Ko-Fi for Community Edition**: [Donate to this project](https://ko-fi.com/community_scripts) - Donate to this project. All funds will go towards script maintenance infrastructure and server costs. **Our most immediate need is funding testing infrastructure**.  Your contributions help keep the project running. To honor tteck's legacy this project will also raise money for charity (cancer research, hospice care). Of the money donated to this project, 30% will be donated to charity. Income, expenditure and charitable donations will be disclosed annually in a transparent manner. 
 
 <hr>
 
@@ -110,3 +108,5 @@ This project is licensed under the terms of the [MIT License](LICENSE).
 ## 📢&nbsp; Acknowledgments
 
 A special thank you to [tteck](https://github.com/tteck) for his foundational work, which has allowed the Proxmox community to thrive. We’re dedicated to keeping his vision alive and expanding upon it with the continued support of this vibrant community.
+
+Proxmox® is a registered trademark of [Proxmox Server Solutions GmbH](https://www.proxmox.com/en/about/company).
