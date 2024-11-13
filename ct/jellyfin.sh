@@ -59,6 +59,7 @@ if [[ ! -d /usr/lib/jellyfin ]]; then msg_error "No ${APP} Installation Found!";
 msg_info "Updating ${APP} LXC"
 apt-get update &>/dev/null
 apt-get -y upgrade &>/dev/null
+apt-get --with-new-pkgs upgrade jellyfin jellyfin-server &>/dev/null
 msg_ok "Updated ${APP} LXC"
 exit
 }
