@@ -1,8 +1,10 @@
 import { z } from "zod";
 
 const InstallMethodSchema = z.object({
-  type: z.enum(["default", "alpine"]),
-  script: z.string().min(1),
+  type: z.enum(["default", "alpine"], {
+    errorMap: () => ({ message: "Type must be either 'default' or 'alpine'" })
+  }),
+  script: z.string().min(1, "Script content cannot be empty"),
   resources: z.object({
     cpu: z.number().nullable(),
     ram: z.number().nullable(),
@@ -13,24 +15,26 @@ const InstallMethodSchema = z.object({
 });
 
 const NoteSchema = z.object({
-  text: z.string().min(1),
-  type: z.string().min(1),
+  text: z.string().min(1, "Note text cannot be empty"),
+  type: z.string().min(1, "Note type cannot be empty"),
 });
 
 export const ScriptSchema = z.object({
-  name: z.string().min(1),
-  slug: z.string().min(1),
+  name: z.string().min(1, "Name is required"),
+  slug: z.string().min(1, "Slug is required"),
   categories: z.array(z.number()),
-  date_created: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-  type: z.enum(["vm", "ct", "misc"]),
+  date_created: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be in YYYY-MM-DD format").min(1, "Date is required"),
+  type: z.enum(["vm", "ct", "misc"], {
+    errorMap: () => ({ message: "Type must be either 'vm', 'ct', or 'misc'" })
+  }),
   updateable: z.boolean(),
   privileged: z.boolean(),
   interface_port: z.number().nullable(),
   documentation: z.string().nullable(),
   website: z.string().url().nullable(),
   logo: z.string().url().nullable(),
-  description: z.string().min(1),
-  install_methods: z.array(InstallMethodSchema),
+  description: z.string().min(1, "Description is required"),
+  install_methods: z.array(InstallMethodSchema).min(1, "At least one install method is required"),
   default_credentials: z.object({
     username: z.string().nullable(),
     password: z.string().nullable(),

@@ -53,6 +53,7 @@ export default function JSONGenerator() {
 
   const [isValid, setIsValid] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [zodErrors, setZodErrors] = useState<z.ZodError | null>(null);
 
   useEffect(() => {
     fetchCategories()
@@ -79,6 +80,11 @@ export default function JSONGenerator() {
 
       const result = ScriptSchema.safeParse(updated);
       setIsValid(result.success);
+      if (!result.success) {
+        setZodErrors(result.error);
+      } else {
+        setZodErrors(null);
+      }
       return updated;
     });
   };
@@ -143,6 +149,11 @@ export default function JSONGenerator() {
 
       const result = ScriptSchema.safeParse(updated);
       setIsValid(result.success);
+      if (!result.success) {
+        setZodErrors(result.error);
+      } else {
+        setZodErrors(null);
+      }
       return updated;
     });
   };
@@ -175,6 +186,11 @@ export default function JSONGenerator() {
       };
       const result = ScriptSchema.safeParse(updated);
       setIsValid(result.success);
+      if (!result.success) {
+        setZodErrors(result.error);
+      } else {
+        setZodErrors(null);
+      }
       return updated;
     });
   };
@@ -549,6 +565,15 @@ export default function JSONGenerator() {
               ? "The current JSON is valid according to the schema."
               : "The current JSON does not match the required schema."}
           </AlertDescription>
+          {zodErrors && (
+            <div className="mt-2 space-y-1">
+              {zodErrors.errors.map((error, index) => (
+                <AlertDescription key={index} className="p-1 text-red-500">
+                  {error.path.join(".")} - {error.message}
+                </AlertDescription>
+              ))}
+            </div>
+          )}
         </Alert>
         <div className="relative">
           <Button
