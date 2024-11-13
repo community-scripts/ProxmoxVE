@@ -105,8 +105,6 @@ amd() {
   echo -e "\nIn order to apply the changes, a system reboot will be necessary.\n"
 }
 
-if ! command -v pveversion >/dev/null 2>&1; then header_info; msg_error "No PVE Detected!"; exit; fi
-
 whiptail --backtitle "Proxmox VE Helper Scripts" --title "Proxmox VE Processor Microcode" --yesno "This will check for CPU microcode packages with the option to install. Proceed?" 10 58 || exit
 
 msg_info "Checking CPU Vendor"
