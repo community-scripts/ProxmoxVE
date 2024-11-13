@@ -24,7 +24,7 @@ import { z } from "zod";
 import { format } from "date-fns";
 import { Label } from "@/components/ui/label";
 import { AlertColors } from "@/config/siteConfig";
-import { ScriptSchema } from "./_schemas/schemas";
+import { InstallMethodSchema, ScriptSchema } from "./_schemas/schemas";
 
 type Script = z.infer<typeof ScriptSchema>;
 
@@ -91,17 +91,7 @@ export default function JSONGenerator() {
 
   const addInstallMethod = () => {
     setScript((prev) => {
-      const method: {
-        type: "default" | "alpine";
-        script: string;
-        resources: {
-          cpu: number | null;
-          ram: number | null;
-          hdd: number | null;
-          os: string | null;
-          version: number | null;
-        };
-      } = {
+      const method = InstallMethodSchema.parse({
         type: "default",
         script: `/${prev.type}/${prev.slug}.sh`,
         resources: {
@@ -111,7 +101,7 @@ export default function JSONGenerator() {
           os: null,
           version: null,
         },
-      };
+      });
       return {
         ...prev,
         install_methods: [...prev.install_methods, method],

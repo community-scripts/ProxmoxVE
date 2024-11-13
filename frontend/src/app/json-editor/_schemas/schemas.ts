@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const InstallMethodSchema = z.object({
+export const InstallMethodSchema = z.object({
   type: z.enum(["default", "alpine"], {
     errorMap: () => ({ message: "Type must be either 'default' or 'alpine'" })
   }),
