@@ -25,7 +25,24 @@ import { format } from "date-fns";
 import { Label } from "@/components/ui/label";
 import { AlertColors } from "@/config/siteConfig";
 
-const scriptSchema = z.object({
+const InstallMethodSchema = z.object({
+  type: z.enum(["default", "alpine"]),
+  script: z.string().min(1),
+  resources: z.object({
+    cpu: z.number().nullable(),
+    ram: z.number().nullable(),
+    hdd: z.number().nullable(),
+    os: z.string().nullable(),
+    version: z.number().nullable(),
+  }),
+});
+
+const NoteSchema = z.object({
+  text: z.string().min(1),
+  type: z.string().min(1),
+});
+
+const ScriptSchema = z.object({
   name: z.string().min(1),
   slug: z.string().min(1),
   categories: z.array(z.number()),
@@ -38,32 +55,15 @@ const scriptSchema = z.object({
   website: z.string().url().nullable(),
   logo: z.string().url().nullable(),
   description: z.string().min(1),
-  install_methods: z.array(
-    z.object({
-      type: z.enum(["default", "alpine"]),
-      script: z.string().min(1),
-      resources: z.object({
-        cpu: z.number().nullable(),
-        ram: z.number().nullable(),
-        hdd: z.number().nullable(),
-        os: z.string().nullable(),
-        version: z.number().nullable(),
-      }),
-    }),
-  ),
+  install_methods: z.array(InstallMethodSchema),
   default_credentials: z.object({
     username: z.string().nullable(),
     password: z.string().nullable(),
   }),
-  notes: z.array(
-    z.object({
-      text: z.string().min(1),
-      type: z.string().min(1),
-    }),
-  ),
+  notes: z.array(NoteSchema),
 });
 
-type Script = z.infer<typeof scriptSchema>;
+type Script = z.infer<typeof ScriptSchema>;
 
 export default function JSONGenerator() {
   const [script, setScript] = useState<Script>({
@@ -114,7 +114,7 @@ export default function JSONGenerator() {
         }));
       }
 
-      const result = scriptSchema.safeParse(updated);
+      const result = ScriptSchema.safeParse(updated);
       setIsValid(result.success);
       return updated;
     });
@@ -178,7 +178,7 @@ export default function JSONGenerator() {
         install_methods: updatedMethods,
       };
 
-      const result = scriptSchema.safeParse(updated);
+      const result = ScriptSchema.safeParse(updated);
       setIsValid(result.success);
       return updated;
     });
@@ -210,7 +210,7 @@ export default function JSONGenerator() {
           i === index ? { ...note, [key]: value } : note,
         ),
       };
-      const result = scriptSchema.safeParse(updated);
+      const result = ScriptSchema.safeParse(updated);
       setIsValid(result.success);
       return updated;
     });
