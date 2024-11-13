@@ -4,6 +4,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   Select,
@@ -17,17 +18,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { fetchCategories } from "@/lib/data";
 import { Category } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { AlertCircle, CalendarIcon, Check, Clipboard, PlusCircle, Trash2 } from "lucide-react";
+import { format } from "date-fns";
+import { CalendarIcon, Check, Clipboard } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
-import { format } from "date-fns";
-import { Label } from "@/components/ui/label";
-import { AlertColors } from "@/config/siteConfig";
-import { InstallMethodSchema, ScriptSchema } from "./_schemas/schemas";
+import Categories from "./_components/Categories";
 import InstallMethod from "./_components/InstallMethod";
 import Note from "./_components/Note";
-import Categories from "./_components/Categories";
+import { ScriptSchema } from "./_schemas/schemas";
 
 type Script = z.infer<typeof ScriptSchema>;
 
