@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { basePath } from "@/config/siteConfig";
 
 export default function ScriptAccordion({
   items,
@@ -104,13 +105,13 @@ export default function ScriptAccordion({
                   >
                     <div className="flex items-center">
                       <Image
-                        src={script.logo || "/logo.png"}
+                        src={script.logo || `/${basePath}/logo.png`}
                         height={16}
                         width={16}
                         unoptimized
                         onError={(e) =>
                           ((e.currentTarget as HTMLImageElement).src =
-                            "/logo.png")
+                            `/${basePath}/logo.png`)
                         }
                         alt={script.name}
                         className="mr-1 w-4 h-4 rounded-full"
