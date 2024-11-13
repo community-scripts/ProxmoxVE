@@ -65,7 +65,7 @@ For detailed instructions, check out our [official guides](https://github.com/co
 
 The Proxmox Helper Scripts project is community-driven, and we highly appreciate any contributions — whether it's through reporting bugs, suggesting features, improving documentation, or spreading the word. We are committed to maintaining transparency and sustainability in this open-source effort.
 
-### 💖&nbsp; Donate to Support the Project (DRAFT)
+### 💖&nbsp; Donate to Support the Project
 
 We offer two donation options to help maintain and grow this project:
 
