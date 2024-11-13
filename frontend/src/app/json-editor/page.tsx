@@ -17,7 +17,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { fetchCategories } from "@/lib/data";
 import { Category } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { CalendarIcon, Check, Clipboard, PlusCircle, Trash2 } from "lucide-react";
+import { AlertCircle, CalendarIcon, Check, Clipboard, PlusCircle, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -25,6 +25,9 @@ import { format } from "date-fns";
 import { Label } from "@/components/ui/label";
 import { AlertColors } from "@/config/siteConfig";
 import { InstallMethodSchema, ScriptSchema } from "./_schemas/schemas";
+import InstallMethod from "./_components/InstallMethod";
+import Note from "./_components/Note";
+import Categories from "./_components/Categories";
 
 type Script = z.infer<typeof ScriptSchema>;
 
@@ -34,7 +37,7 @@ export default function JSONGenerator() {
     slug: "",
     categories: [],
     date_created: "",
-    type: "vm",
+    type: "ct",
     updateable: false,
     privileged: false,
     interface_port: null,
@@ -89,203 +92,58 @@ export default function JSONGenerator() {
     });
   };
 
-  const addInstallMethod = () => {
-    setScript((prev) => {
-      const method = InstallMethodSchema.parse({
-        type: "default",
-        script: `/${prev.type}/${prev.slug}.sh`,
-        resources: {
-          cpu: null,
-          ram: null,
-          hdd: null,
-          os: null,
-          version: null,
-        },
-      });
-      return {
-        ...prev,
-        install_methods: [...prev.install_methods, method],
-      };
-    });
-  };
-
-  const updateInstallMethod = (
-    index: number,
-    key: keyof Script["install_methods"][number],
-    value: Script["install_methods"][number][keyof Script["install_methods"][number]],
-  ) => {
-    setScript((prev) => {
-      const updatedMethods = prev.install_methods.map((method, i) => {
-        if (i === index) {
-          const updatedMethod = { ...method, [key]: value };
-
-          // Update script path if `type` of the install method changes
-          if (key === "type") {
-            updatedMethod.script =
-              value === "alpine"
-                ? `/${prev.type}/alpine-${prev.slug}.sh`
-                : `/${prev.type}/${prev.slug}.sh`;
-          }
-
-          return updatedMethod;
-        }
-        return method;
-      });
-
-      const updated = {
-        ...prev,
-        install_methods: updatedMethods,
-      };
-
-      const result = ScriptSchema.safeParse(updated);
-      setIsValid(result.success);
-      if (!result.success) {
-        setZodErrors(result.error);
-      } else {
-        setZodErrors(null);
-      }
-      return updated;
-    });
-  };
-
-  const removeInstallMethod = (index: number) => {
-    setScript((prev) => ({
-      ...prev,
-      install_methods: prev.install_methods.filter((_, i) => i !== index),
-    }));
-  };
-
-  const addNote = () => {
-    setScript((prev) => ({
-      ...prev,
-      notes: [...prev.notes, { text: "", type: "" }],
-    }));
-  };
-
-  const updateNote = (
-    index: number,
-    key: keyof Script["notes"][number],
-    value: string,
-  ) => {
-    setScript((prev) => {
-      const updated = {
-        ...prev,
-        notes: prev.notes.map((note, i) =>
-          i === index ? { ...note, [key]: value } : note,
-        ),
-      };
-      const result = ScriptSchema.safeParse(updated);
-      setIsValid(result.success);
-      if (!result.success) {
-        setZodErrors(result.error);
-      } else {
-        setZodErrors(null);
-      }
-      return updated;
-    });
-  };
-
-  const removeNote = (index: number) => {
-    setScript((prev) => ({
-      ...prev,
-      notes: prev.notes.filter((_, i) => i !== index),
-    }));
-  };
-
-  const addCategory = (categoryId: number) => {
-    setScript((prev) => ({
-      ...prev,
-      categories: [...new Set([...prev.categories, categoryId])],
-    }));
-  };
-
-  const removeCategory = (categoryId: number) => {
-    setScript((prev) => ({
-      ...prev,
-      categories: prev.categories.filter((id) => id !== categoryId),
-    }));
-  };
-
   return (
     <div className="flex h-screen mt-20">
       <div className="w-1/2 p-4 overflow-y-auto">
         <h2 className="text-2xl font-bold mb-4">JSON Generator</h2>
         <form className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
-            <Input
-              placeholder="Name"
-              value={script.name}
-              onChange={(e) => updateScript("name", e.target.value)}
-            />
-            <Input
-              placeholder="Slug"
-              value={script.slug}
-              onChange={(e) => updateScript("slug", e.target.value)}
-            />
-          </div>
-          <Input
-            placeholder="Logo URL"
-            value={script.logo || ""}
-            onChange={(e) => updateScript("logo", e.target.value || null)}
-          />
-          <Textarea
-            placeholder="Description"
-            value={script.description}
-            onChange={(e) => updateScript("description", e.target.value)}
-          />
-          <div>
-            <Select onValueChange={(value) => addCategory(Number(value))}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select a category" />
-              </SelectTrigger>
-              <SelectContent>
-                {categories.map((category) => (
-                  <SelectItem key={category.id} value={category.id.toString()}>
-                    {category.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <div
-              className={cn(
-                "flex flex-wrap gap-2",
-                script.categories.length !== 0 && "mt-2",
-              )}
-            >
-              {script.categories.map((categoryId) => {
-                const category = categories.find((c) => c.id === categoryId);
-                return category ? (
-                  <span
-                    key={categoryId}
-                    className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
-                  >
-                    {category.name}
-                    <button
-                      type="button"
-                      className="ml-1 inline-flex text-blue-400 hover:text-blue-600"
-                      onClick={() => removeCategory(categoryId)}
-                    >
-                      <span className="sr-only">Remove</span>
-                      <svg
-                        className="h-3 w-3"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M6 18L18 6M6 6l12 12"
-                        />
-                      </svg>
-                    </button>
-                  </span>
-                ) : null;
-              })}
+            <div>
+              <Label>
+                Name <span className="text-red-500">*</span>
+              </Label>
+              <Input
+                placeholder="Example"
+                value={script.name}
+                onChange={(e) => updateScript("name", e.target.value)}
+              />
+            </div>
+            <div>
+              <Label>
+                Slug <span className="text-red-500">*</span>
+              </Label>
+              <Input
+                placeholder="example"
+                value={script.slug}
+                onChange={(e) => updateScript("slug", e.target.value)}
+              />
             </div>
           </div>
+          <div>
+            <Label>
+              Logo <span className="text-red-500">*</span>
+            </Label>
+            <Input
+              placeholder="Full logo URL"
+              value={script.logo || ""}
+              onChange={(e) => updateScript("logo", e.target.value || null)}
+            />
+          </div>
+          <div>
+            <Label>
+              Description <span className="text-red-500">*</span>
+            </Label>
+            <Textarea
+              placeholder="Example"
+              value={script.description}
+              onChange={(e) => updateScript("description", e.target.value)}
+            />
+          </div>
+          <Categories
+            script={script}
+            setScript={setScript}
+            categories={categories}
+          />
           <div className="flex gap-2">
             <div className="flex flex-col gap-2 w-full">
               <Label>Date Created</Label>
@@ -331,8 +189,8 @@ export default function JSONGenerator() {
                   <SelectValue placeholder="Type" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="vm">Virtual Machine</SelectItem>
                   <SelectItem value="ct">LXC Container</SelectItem>
+                  <SelectItem value="vm">Virtual Machine</SelectItem>
                   <SelectItem value="misc">Miscellaneous</SelectItem>
                 </SelectContent>
               </Select>
@@ -383,99 +241,12 @@ export default function JSONGenerator() {
               }
             />
           </div>
-          <h3 className="text-xl font-semibold">Install Methods</h3>
-          {script.install_methods.map((method, index) => (
-            <div key={index} className="space-y-2 border p-4 rounded">
-              <Select
-                value={method.type}
-                onValueChange={(value) =>
-                  updateInstallMethod(index, "type", value)
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="default">Default</SelectItem>
-                  <SelectItem value="alpine">Alpine</SelectItem>
-                </SelectContent>
-              </Select>
-              <div className="flex gap-2">
-                <Input
-                  placeholder="CPU in Cores"
-                  type="number"
-                  value={method.resources.cpu || ""}
-                  onChange={(e) =>
-                    updateInstallMethod(index, "resources", {
-                      ...method.resources,
-                      cpu: e.target.value ? Number(e.target.value) : null,
-                    })
-                  }
-                />
-                <Input
-                  placeholder="RAM in MB"
-                  type="number"
-                  value={method.resources.ram || ""}
-                  onChange={(e) =>
-                    updateInstallMethod(index, "resources", {
-                      ...method.resources,
-                      ram: e.target.value ? Number(e.target.value) : null,
-                    })
-                  }
-                />
-                <Input
-                  placeholder="HDD in GB"
-                  type="number"
-                  value={method.resources.hdd || ""}
-                  onChange={(e) =>
-                    updateInstallMethod(index, "resources", {
-                      ...method.resources,
-                      hdd: e.target.value ? Number(e.target.value) : null,
-                    })
-                  }
-                />
-              </div>
-              <div className="flex gap-2">
-                <Input
-                  placeholder="OS"
-                  value={method.resources.os || ""}
-                  onChange={(e) =>
-                    updateInstallMethod(index, "resources", {
-                      ...method.resources,
-                      os: e.target.value || null,
-                    })
-                  }
-                />
-                <Input
-                  placeholder="Version"
-                  type="number"
-                  value={method.resources.version || ""}
-                  onChange={(e) =>
-                    updateInstallMethod(index, "resources", {
-                      ...method.resources,
-                      version: e.target.value ? Number(e.target.value) : null,
-                    })
-                  }
-                />
-              </div>
-              <Button
-                variant="destructive"
-                size={"sm"}
-                type="button"
-                onClick={() => removeInstallMethod(index)}
-              >
-                <Trash2 className="mr-2 h-4 w-4" /> Remove Install Method
-              </Button>
-            </div>
-          ))}
-          <Button
-            type="button"
-            size={"sm"}
-            disabled={script.install_methods.length >= 2}
-            onClick={addInstallMethod}
-          >
-            <PlusCircle className="mr-2 h-4 w-4" /> Add Install Method
-          </Button>
+          <InstallMethod
+            script={script}
+            setScript={setScript}
+            setIsValid={setIsValid}
+            setZodErrors={setZodErrors}
+          />
           <h3 className="text-xl font-semibold">Default Credentials</h3>
           <Input
             placeholder="Username"
@@ -497,52 +268,12 @@ export default function JSONGenerator() {
               })
             }
           />
-          <h3 className="text-xl font-semibold">Notes</h3>
-          {script.notes.map((note, index) => (
-            <div key={index} className="space-y-2 border p-4 rounded">
-              <Input
-                placeholder="Note Text"
-                value={note.text}
-                onChange={(e) => updateNote(index, "text", e.target.value)}
-              />
-              <Select
-                value={note.type}
-                onValueChange={(value: string) =>
-                  updateNote(index, "type", value)
-                }
-              >
-                <SelectTrigger className="flex-1">
-                  <SelectValue placeholder="Type" />
-                </SelectTrigger>
-                <SelectContent>
-                  {Object.keys(AlertColors).map((type) => (
-                    <SelectItem key={type} value={type}>
-                      <span className="flex items-center gap-2">
-                        {type.charAt(0).toUpperCase() + type.slice(1)}{" "}
-                        <div
-                          className={cn(
-                            "size-4 rounded-full border",
-                            AlertColors[type as keyof typeof AlertColors],
-                          )}
-                        />
-                      </span>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Button
-                size={"sm"}
-                variant="destructive"
-                type="button"
-                onClick={() => removeNote(index)}
-              >
-                <Trash2 className="mr-2 h-4 w-4" /> Remove Note
-              </Button>
-            </div>
-          ))}
-          <Button type="button" size={"sm"} onClick={addNote}>
-            <PlusCircle className="mr-2 h-4 w-4" /> Add Note
-          </Button>
+          <Note
+            script={script}
+            setScript={setScript}
+            setIsValid={setIsValid}
+            setZodErrors={setZodErrors}
+          />
         </form>
       </div>
       <div className="w-1/2 p-4 bg-background overflow-y-auto">
