@@ -547,10 +547,7 @@ export default function JSONGenerator() {
                 </SelectTrigger>
                 <SelectContent>
                   {Object.keys(AlertColors).map((type) => (
-                    <SelectItem
-                      key={type}
-                      value={type}
-                    >
+                    <SelectItem key={type} value={type}>
                       <span className="flex items-center gap-2">
                         {type.charAt(0).toUpperCase() + type.slice(1)}{" "}
                         <div
@@ -590,7 +587,7 @@ export default function JSONGenerator() {
               : "The current JSON does not match the required schema."}
           </AlertDescription>
         </Alert>
-        <pre className="mt-4 p-4 relative bg-secondary rounded shadow">
+        <div className="relative">
           <Button
             className="absolute right-2 top-2"
             size="icon"
@@ -608,8 +605,10 @@ export default function JSONGenerator() {
               <Clipboard className="h-4 w-4" />
             )}
           </Button>
-          {JSON.stringify(script, null, 2)}
-        </pre>
+          <pre className="mt-4 p-4 bg-secondary rounded shadow overflow-x-scroll">
+            {JSON.stringify(script, null, 2)}
+          </pre>
+        </div>
       </div>
     </div>
   );
