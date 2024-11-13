@@ -102,10 +102,10 @@ export default function CommandMenu() {
                 >
                   <div className="flex gap-2" onClick={() => setOpen(false)}>
                     <Image
-                      src={script.logo || "logo.png"}
+                      src={script.logo || "/ProxmoxVE/logo.png"}
                       onError={(e) =>
                         ((e.currentTarget as HTMLImageElement).src =
-                          "logo.png")
+                          "/ProxmoxVE/logo.png")
                       }
                       unoptimized
                       width={16}

@@ -92,11 +92,15 @@ export function LatestScripts({ items }: { items: Category[] }) {
               <CardTitle className="flex items-center gap-3">
                 <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-accent p-1">
                   <Image
-                    src={script.logo || "logo.png"}
+                    src={script.logo || "/ProxmoxVE/logo.png"}
                     unoptimized
                     height={64}
                     width={64}
                     alt=""
+                    onError={(e) =>
+                      ((e.currentTarget as HTMLImageElement).src =
+                        "/ProxmoxVE/logo.png")
+                    }
                     className="h-11 w-11 object-contain"
                   />
                 </div>
@@ -161,10 +165,14 @@ export function MostViewedScripts({ items }: { items: Category[] }) {
                 <div className="flex max-h-16 min-h-16 min-w-16 max-w-16 items-center justify-center rounded-lg bg-accent p-1">
                   <Image
                     unoptimized
-                    src={script.logo || "logo.png"}
+                    src={script.logo || "/ProxmoxVE/logo.png"}
                     height={64}
                     width={64}
                     alt=""
+                    onError={(e) =>
+                      ((e.currentTarget as HTMLImageElement).src =
+                        "/ProxmoxVE/logo.png")
+                    }
                     className="h-11 w-11 object-contain"
                   />
                 </div>
