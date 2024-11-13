@@ -70,7 +70,7 @@ The Proxmox Helper Scripts project is community-driven, and we highly appreciate
 We offer two donation options to help maintain and grow this project:
 
 - **Ko-Fi for tteck**: [Donate to tteck](https://ko-fi.com/proxmoxhelperscripts) - All donations will go directly to support tteck, the founder of this project.
-- **Ko-Fi for Community Edition**: [Donate to this project](https://ko-fi.com/community_scripts) - Donate to this project. All funds will go towards script maintenance infrastructure and server costs. **Our most immediate need is funding testing infrastructure**.  Your contributions help keep the project running. To honor tteck's legacy this project will also raise money for charity (cancer research, hospice care). Of the money donated to this project, 30% will be donated to charity. Income, expenditure and charitable donations will be disclosed annually in a transparent manner. 
+- **Ko-Fi for Community Edition**: [Donate to this project](https://ko-fi.com/community_scripts) -  All funds will go towards script maintenance infrastructure and server costs. **Our most immediate need is funding testing infrastructure**.  Your contributions help keep the project running. To honor tteck's legacy this project will also raise money for charity (cancer research, hospice care). Of the money donated to this project, 30% will be donated to charity. Income, expenditure and charitable donations will be disclosed annually in a transparent manner. 
 
 <hr>
 
