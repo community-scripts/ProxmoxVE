@@ -23,6 +23,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { format } from "date-fns";
 import { Label } from "@/components/ui/label";
+import { AlertColors } from "@/config/siteConfig";
 
 const scriptSchema = z.object({
   name: z.string().min(1),
@@ -78,31 +79,14 @@ export default function JSONGenerator() {
     website: null,
     logo: null,
     description: "",
-    install_methods: [
-      {
-        type: "default",
-        script: "",
-        resources: {
-          cpu: null,
-          ram: null,
-          hdd: null,
-          os: null,
-          version: null,
-        },
-      },
-    ],
+    install_methods: [],
     default_credentials: {
       username: null,
       password: null,
     },
-    notes: [
-      {
-        text: "",
-        type: "",
-      },
-    ],
+    notes: [],
   });
-  const [isCopied, setIsCopied] = useState(false)
+  const [isCopied, setIsCopied] = useState(false);
 
   const [isValid, setIsValid] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -138,9 +122,19 @@ export default function JSONGenerator() {
 
   const addInstallMethod = () => {
     setScript((prev) => {
-      const method = {
-        type: "default" as "default", // Ensure type matches the union type
-        script: `/${prev.type}/${prev.slug}.sh`, // Default script path
+      const method: {
+        type: "default" | "alpine";
+        script: string;
+        resources: {
+          cpu: number | null;
+          ram: number | null;
+          hdd: number | null;
+          os: string | null;
+          version: number | null;
+        };
+      } = {
+        type: "default",
+        script: `/${prev.type}/${prev.slug}.sh`,
         resources: {
           cpu: null,
           ram: null,
@@ -497,13 +491,20 @@ export default function JSONGenerator() {
               </div>
               <Button
                 variant="destructive"
+                size={"sm"}
+                type="button"
                 onClick={() => removeInstallMethod(index)}
               >
                 <Trash2 className="mr-2 h-4 w-4" /> Remove Install Method
               </Button>
             </div>
           ))}
-          <Button onClick={addInstallMethod}>
+          <Button
+            type="button"
+            size={"sm"}
+            disabled={script.install_methods.length >= 2}
+            onClick={addInstallMethod}
+          >
             <PlusCircle className="mr-2 h-4 w-4" /> Add Install Method
           </Button>
           <h3 className="text-xl font-semibold">Default Credentials</h3>
@@ -535,17 +536,32 @@ export default function JSONGenerator() {
                 value={note.text}
                 onChange={(e) => updateNote(index, "text", e.target.value)}
               />
-              <Input
-                placeholder="Note Type"
+              <Select
                 value={note.type}
-                onChange={(e) => updateNote(index, "type", e.target.value)}
-              />
-              <Button variant="destructive" onClick={() => removeNote(index)}>
+                onValueChange={(value: string) => updateNote(index, "type", value)}
+              >
+                <SelectTrigger className="flex-1">
+                  <SelectValue placeholder="Type" />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.keys(AlertColors).map((type) => (
+                    <SelectItem key={type} value={type}>
+                      {type.charAt(0).toUpperCase() + type.slice(1)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Button
+                size={"sm"}
+                variant="destructive"
+                type="button"
+                onClick={() => removeNote(index)}
+              >
                 <Trash2 className="mr-2 h-4 w-4" /> Remove Note
               </Button>
             </div>
           ))}
-          <Button onClick={addNote}>
+          <Button type="button" size={"sm"} onClick={addNote}>
             <PlusCircle className="mr-2 h-4 w-4" /> Add Note
           </Button>
         </form>
