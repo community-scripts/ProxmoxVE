@@ -538,15 +538,28 @@ export default function JSONGenerator() {
               />
               <Select
                 value={note.type}
-                onValueChange={(value: string) => updateNote(index, "type", value)}
+                onValueChange={(value: string) =>
+                  updateNote(index, "type", value)
+                }
               >
                 <SelectTrigger className="flex-1">
                   <SelectValue placeholder="Type" />
                 </SelectTrigger>
                 <SelectContent>
                   {Object.keys(AlertColors).map((type) => (
-                    <SelectItem key={type} value={type}>
-                      {type.charAt(0).toUpperCase() + type.slice(1)}
+                    <SelectItem
+                      key={type}
+                      value={type}
+                    >
+                      <span className="flex items-center gap-2">
+                        {type.charAt(0).toUpperCase() + type.slice(1)}{" "}
+                        <div
+                          className={cn(
+                            "size-4 rounded-full border",
+                            AlertColors[type as keyof typeof AlertColors],
+                          )}
+                        />
+                      </span>
                     </SelectItem>
                   ))}
                 </SelectContent>
