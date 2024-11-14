@@ -1,14 +1,10 @@
 #!/usr/bin/env bash
 
-source <(curl -s ../misc/build.func)
+source <(curl -s https://raw.githubusercontent.com/ItsSujee/ProxmoxVE/refs/heads/bluesky-pds/misc/build.func)
 # Copyright (c) 2024 tteck
 # Author: itssujee
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-
-start
-build_container
-description
 
 function header_info {
 clear
@@ -56,6 +52,10 @@ function default_settings() {
   VERB="no"
   echo_default
 }
+
+start
+build_container
+description
 
 msg_ok "Completed Successfully!\n"
 echo -e "${APP} should be reachable by going to the following URL. http://${IP} \n" 
