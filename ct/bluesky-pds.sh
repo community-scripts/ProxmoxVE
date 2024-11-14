@@ -20,7 +20,7 @@ EOF
 header_info
 echo -e "Loading..."
 APP="BlueSky-PDS"
-var_disk="20"
+var_disk="2"
 var_cpu="1"
 var_ram="2048"
 var_os="ubuntu"

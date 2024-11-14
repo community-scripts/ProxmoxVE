@@ -17,6 +17,13 @@ msg_info "Installing Dependencies"
 $STD apt-get install -y curl
 $STD apt-get install -y sudo
 $STD apt-get install -y mc
+$STD apt-get install -y gnupg
+$STD apt-get install -y jq
+$STD apt-get install -y ca-certificates
+$STD apt-get install -y lsb-release
+$STD apt-get install -y openssl
+$STD apt-get install -y sqlite3
+$STD apt-get install -y xxd
 msg_ok "Installed Dependencies"
 
 msg_info "Installing BlueSky PDS"
