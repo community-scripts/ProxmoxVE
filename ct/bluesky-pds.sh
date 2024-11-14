@@ -19,7 +19,7 @@ EOF
 }
 header_info
 echo -e "Loading..."
-APP="BlueSky PDS"
+APP="BlueSky-PDS"
 var_disk="20"
 var_cpu="1"
 var_ram="2048"
