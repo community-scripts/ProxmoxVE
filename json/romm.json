@@ -1,0 +1,47 @@
+{
+    "name": "RomM",
+    "slug": "romm",
+    "categories": [
+        12
+    ],
+    "date_created": "2024-11-14",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": "80",
+    "documentation": null,
+    "website": "https://romm.app/",
+    "logo": "https://github.com/rommapp/romm/raw/release/.github/resources/romm_complete.png",
+    "description": "RomM (ROM Manager) allows you to scan, enrich, and browse your game collection with a clean and responsive interface. With support for multiple platforms, various naming schemes, and custom tags, RomM is a must-have for anyone who plays on emulators.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/romm.sh",
+            "resources": {
+                "cpu": "2",
+                "ram": "2048",
+                "hdd": "30",
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": [
+        {
+            "text": "docker compose path: `/opt/romm/compose.yaml`",
+            "type": "info"
+        },
+        {
+            "text": "config path: `/opt/romm/config/config.yml`",
+            "type": "info"
+        },
+        {
+            "text": "rom path: `/opt/romm/library`\nMake sure you use the folder structure outlined here: https://github.com/rommapp/romm#folder-structure",
+            "type": "info"
+        }
+    ]
+}
