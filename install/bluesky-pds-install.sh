@@ -21,9 +21,6 @@ msg_ok "Installed Dependencies"
 
 msg_info "Installing BlueSky PDS"
 $STD sh <(curl -sSL https://raw.githubusercontent.com/bluesky-social/pds/main/installer.sh)
-systemctl stop pds
-sudo pdsadmin update
-systemctl start pds
 msg_ok "Installed BlueSky PDS"
 
 motd_ssh
