@@ -23,8 +23,8 @@ APP="BlueSky-PDS"
 var_disk="20"
 var_cpu="1"
 var_ram="2048"
-var_os="debian"
-var_version="12"
+var_os="ubuntu"
+var_version="22.04"
 variables
 color
 catch_errors
