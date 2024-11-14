@@ -522,7 +522,7 @@ check_container_resources() {
   fi
 }
 
-check_storage() {
+check_container_storage() {
   # Check if the /boot partition is more than 80% full
   if (( $(df /boot | awk 'NR==2{gsub("%","",$5); print $5}') > 80 )); then
     # Prompt the user for confirmation to continue
