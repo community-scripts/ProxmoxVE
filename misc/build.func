@@ -502,7 +502,7 @@ install_script() {
   fi
 }
 
-check_container_ressources() {
+check_container_resources() {
   local required_ram="$var_ram"  # Expected RAM in MB
   local required_cpu="$var_cpu"  # Expected number of Cores
   local app_name="${APP}"        # Name of App
