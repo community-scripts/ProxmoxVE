@@ -1,0 +1,148 @@
+name: Create Release Draft
+
+on:
+  push:
+    branches: ["main"]
+  
+  workflow_dispatch:
+
+jobs:
+  build-release-draft:
+    runs-on: ubuntu-latest
+    outputs:
+      releaseTag: ${{ steps.get-release-tag.outputs.result }}
+      releaseNotes: ${{ steps.get-release-notes.outputs.result }}
+    env:
+      CONFIG_PATH: .github/release-draft-config.json
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-tags: true
+
+      - name: Get previous release tag and its date
+        id: previous-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PREVIOUS_RELEASE=$(gh release list --limit 1 --exclude-drafts --exclude-pre-releases --json tagName,createdAt)
+          PREVIOUS_TAG=$(echo "$PREVIOUS_RELEASE" | jq -r '.[0].tagName')
+          PREVIOUS_TAG_DATE=$(echo "$PREVIOUS_RELEASE" | jq -r '.[0].createdAt')
+          echo "PREVIOUS_TAG=$PREVIOUS_TAG" >> $GITHUB_ENV
+          echo "PREVIOUS_TAG_DATE=$PREVIOUS_TAG_DATE" >> $GITHUB_ENV
+
+      - name: Get categorized pull requests
+        id: get-categorized-prs
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs').promises;
+            const path = require('path');
+
+            const configPath = path.resolve(process.env.CONFIG_PATH);
+            const fileContent = await fs.readFile(configPath, 'utf-8');
+            const releaseDraftConfig = JSON.parse(fileContent);
+            const categorizedPRs = releaseDraftConfig.map((obj) => ({ ...obj, notes: [] }));
+
+            const { data: pulls } = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: "closed",
+              sort: "updated",
+              direction: "desc",
+              per_page: 100,
+            });
+
+            pulls.filter((pr) => 
+              pr.merged_at && new Date(pr.merged_at) > new Date(process.env.PREVIOUS_TAG_DATE)
+            ).forEach((pr) => {
+              const prLabels = pr.labels.map((label) => label.name.toLowerCase());
+              const prNote = `- ${pr.title} @${pr.user.login} (#${pr.number})`;
+
+              for (const { labels, notes } of categorizedPRs) {
+                if (labels.some((label) => prLabels.includes(label)) || labels.length === 0) {
+                  notes.push(prNote);
+                  break;
+                }
+              };
+            });
+
+            return categorizedPRs;
+
+      - name: Get release tag
+        id: get-release-tag
+        uses: actions/github-script@v7
+        with:
+          result-encoding: string
+          script: |
+            const categorizedPRs = ${{ steps.get-categorized-prs.outputs.result }};
+            const previousTag = process.env.PREVIOUS_TAG;
+
+            let [major, minor, patch] = previousTag.replace(/^v/, "").split(".").map(Number);
+
+            const versionIncrements = categorizedPRs
+              .filter(({ notes }) => notes.length > 0)
+              .map(({ versionIncrement }) => versionIncrement);
+
+            if (versionIncrements.includes("major")) {
+              major += 1;
+              minor = 0;
+              patch = 0;
+            } else if (versionIncrements.includes("minor")) {
+              minor += 1;
+              patch = 0;
+            } else {
+              patch += 1;
+            }
+
+            const releaseTag = `v${major}.${minor}.${patch}`;
+            return releaseTag;
+
+      - name: Get release notes
+        id: get-release-notes
+        uses: actions/github-script@v7
+        with:
+          result-encoding: string
+          script: |
+            const previousTag = process.env.PREVIOUS_TAG;
+            const newTag = "${{ steps.get-release-tag.outputs.result }}";
+            const categorizedPRs = ${{ steps.get-categorized-prs.outputs.result }};
+            
+            let releaseNotes = "\n\n## What's Changed\n\n";
+            for (const { title, notes } of categorizedPRs) {
+              if (notes.length > 0) {
+                releaseNotes += `### ${title}\n\n${notes.join("\n")}\n\n`;
+              }
+            }
+            releaseNotes += `\n\n**Full Changelog**: https://github.com/${context.repo.owner}/${context.repo.repo}/compare/${previousTag}...${newTag}`
+            
+            return releaseNotes.trim();
+
+  create-release-draft:
+    runs-on: ubuntu-latest
+    needs: build-release-draft
+    permissions:
+      contents: write # write permission is required to create a github release
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: release-draft
+
+      - name: Delete all existing draft releases
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release list --json tagName,isDraft -q '.[] | select(.isDraft == true) | .tagName' | while read -r tagName; do
+            gh release delete "$tagName" --yes
+          done
+
+      - name: Create draft release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ needs.build-release-draft.outputs.releaseTag }}" \
+            --draft \
+            --title "${{ needs.build-release-draft.outputs.releaseTag }}" \
+            --notes "${{ needs.build-release-draft.outputs.releaseNotes }}"
