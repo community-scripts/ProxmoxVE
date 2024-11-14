@@ -531,7 +531,7 @@ check_storage() {
     read -r -p "" prompt  
     # Check if the input is 'y' or 'yes', otherwise exit with status 1
     if [[ ! ${prompt,,} =~ ^(y|yes)$ ]]; then
-      echo -e "❌${HOLD} ${YWB}Exiting based on incorrect user input.${CL}"
+      echo -e "❌${HOLD} ${YWB}Exiting based on user input.${CL}"
       exit 1
     fi
   fi
