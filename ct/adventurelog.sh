@@ -68,7 +68,7 @@ if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_v
 
   msg_info "Updating ${APP} to ${RELEASE}"
   cp /opt/adventurelog/backend/server/.env /opt/server.env
-  cp /opt/adventurelog/frontend/env /opt/frontend.env
+  cp /opt/adventurelog/frontend/.env /opt/frontend.env
   wget -q "https://github.com/seanmorley15/AdventureLog/archive/refs/tags/v${RELEASE}.zip"
   unzip -q v${RELEASE}.zip
   mv AdventureLog-${RELEASE} /opt/adventurelog

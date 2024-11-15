@@ -1,0 +1,71 @@
+
+{
+  "breaking change": [
+    {
+      "fileStatus": "renamed",
+      "includeGlobs": ["ct/**", "install/**", "misc/**", "turnkey/**", "vm/**"],
+      "excludeGlobs": []
+    },
+    {
+      "fileStatus": "removed", 
+      "includeGlobs": ["ct/**", "install/**", "misc/**", "turnkey/**", "vm/**"],
+      "excludeGlobs": []
+    }
+  ],
+  "new script": [
+    {
+      "fileStatus": "added",
+      "includeGlobs": ["ct/**", "install/**", "misc/**", "turnkey/**", "vm/**"],
+      "excludeGlobs": []
+    }
+  ],
+  "update script": [
+    {
+      "fileStatus": "modified",
+      "includeGlobs": ["ct/**", "install/**", "misc/**", "turnkey/**", "vm/**"],
+      "excludeGlobs": ["misc/build.func", "misc/install.func"]
+    }
+  ],
+  "delete script": [
+    {
+      "fileStatus": "removed", 
+      "includeGlobs": ["ct/**", "install/**", "misc/**", "turnkey/**", "vm/**"],
+      "excludeGlobs": []
+    }
+  ],
+  "rename script": [
+    {
+      "fileStatus": "renamed", 
+      "includeGlobs": ["ct/**", "install/**", "misc/**", "turnkey/**", "vm/**"],
+      "excludeGlobs": []
+    }
+  ],
+  "frontend": [
+    {
+      "fileStatus": null,
+      "includeGlobs": ["frontend/**"],
+      "excludeGlobs": []
+    }
+  ],
+  "documentation": [
+    {
+      "fileStatus": null,
+      "includeGlobs": ["json/**"],
+      "excludeGlobs": []
+    }
+  ],
+  "maintenance": [
+    {
+      "fileStatus": null,
+      "includeGlobs": ["*.md", ".github/**"],
+      "excludeGlobs": []
+    }
+  ],
+  "high risk": [
+    {
+      "fileStatus": null,
+      "includeGlobs": ["misc/build.func", "misc/install.func"],
+      "excludeGlobs": []
+    }
+  ]
+}

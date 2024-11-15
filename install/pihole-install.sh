@@ -44,6 +44,7 @@ msg_ok "Installed Pi-hole"
 
 read -r -p "Would you like to add Unbound? <y/N> " prompt
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
+  read -r -p "Unbound is configured as a recursive DNS server by default, would you like it to be configured as a forwarding DNS server (using DNS-over-TLS (DoT)) instead? <y/N> " prompt
   msg_info "Installing Unbound"
   $STD apt-get install -y unbound
   cat <<EOF >/etc/unbound/unbound.conf.d/pi-hole.conf
@@ -73,7 +74,6 @@ server:
   infra-cache-slabs: 8
   key-cache-slabs: 8
   serve-expired: yes
-  root-hints: /var/lib/unbound/root.hints
   serve-expired-ttl: 3600
   edns-buffer-size: 1232
   prefetch: yes
@@ -94,8 +94,34 @@ EOF
   cat <<EOF >/etc/dnsmasq.d/99-edns.conf
 edns-packet-max=1232
 EOF
-  wget -qO /var/lib/unbound/root.hints https://www.internic.net/domain/named.root
-  sed -i -e 's/PIHOLE_DNS_1=8.8.8.8/PIHOLE_DNS_1=127.0.0.1#5335/' -e 's/PIHOLE_DNS_2=8.8.4.4/#PIHOLE_DNS_2=8.8.4.4/' /etc/pihole/setupVars.conf
+
+  if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
+    cat <<EOF >>/etc/unbound/unbound.conf.d/pi-hole.conf
+  tls-cert-bundle: "/etc/ssl/certs/ca-certificates.crt"
+forward-zone:
+  name: "."
+  forward-tls-upstream: yes
+  forward-first: no
+
+  forward-addr: 8.8.8.8@853#dns.google
+  forward-addr: 8.8.4.4@853#dns.google
+  forward-addr: 2001:4860:4860::8888@853#dns.google
+  forward-addr: 2001:4860:4860::8844@853#dns.google
+
+  #forward-addr: 1.1.1.1@853#cloudflare-dns.com
+  #forward-addr: 1.0.0.1@853#cloudflare-dns.com
+  #forward-addr: 2606:4700:4700::1111@853#cloudflare-dns.com
+  #forward-addr: 2606:4700:4700::1001@853#cloudflare-dns.com
+
+  #forward-addr: 9.9.9.9@853#dns.quad9.net
+  #forward-addr: 149.112.112.112@853#dns.quad9.net
+  #forward-addr: 2620:fe::fe@853#dns.quad9.net
+  #forward-addr: 2620:fe::9@853#dns.quad9.net
+EOF
+  fi
+
+  sed -i -e 's/PIHOLE_DNS_1=8.8.8.8/PIHOLE_DNS_1=127.0.0.1#5335/' -e '/PIHOLE_DNS_2=8.8.4.4/d' /etc/pihole/setupVars.conf
+  sed -i -e 's/server=8.8.8.8/server=127.0.0.1#5335/' -e '/server=8.8.4.4/d' /etc/dnsmasq.d/01-pihole.conf
   systemctl enable -q --now unbound
   systemctl restart pihole-FTL.service
   msg_ok "Installed Unbound"

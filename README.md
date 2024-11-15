@@ -9,7 +9,7 @@
 <div style="border: 2px solid #d1d5db; padding: 20px; border-radius: 8px; background-color: #f9fafb;">
   <h2 align="center">Proxmox VE Helper-Scripts: A Community Legacy</h2>
   <p>Dear Community,</p>
-  <p>In agreement with <a href="https://github.com/tteck">tteck</a> and <a href="https://github.com/community-scripts">Community-Scripts</a>, this project has now transitioned into a community-driven effort. We aim to continue his work, building on the foundation he laid to support Proxmox users worldwide.</p>
+  <p>In agreement with <a href="https://github.com/tteck">tteck</a> and <a href="https://github.com/community-scripts">Community-Scripts</a>, this project has now transitioned into a community-driven effort. We aim to continue his work, building on the foundation he laid to support Proxmox users worldwide. Tteck sadly <a href="https://github.com/community-scripts/ProxmoxVE/discussions/237">passed away in early November 2024</a>. This project will be a memorial for his incredible contribution to the community.</p>
 
 <p align="center">
   <a href="https://helper-scripts.com">
@@ -69,7 +69,7 @@ The Proxmox Helper Scripts project is community-driven, and we highly appreciate
 
 We offer two donation options to help maintain and grow this project:
 
-- **Ko-Fi for tteck**: [Donate to tteck](https://ko-fi.com/proxmoxhelperscripts) - All donations will go directly to support tteck, the founder of this project.
+- **Ko-Fi for tteck**: [Donate to tteck's wife](https://ko-fi.com/proxmoxhelperscripts) - All donations will go directly to Angie, wife of the founder of this project [who passed away in early November 2024](https://github.com/community-scripts/ProxmoxVE/discussions/237).
 - **Ko-Fi for Community Edition**: [Donate to this project](https://ko-fi.com/community_scripts) -  All funds will go towards script maintenance infrastructure and server costs. **Our most immediate need is funding testing infrastructure**.  Your contributions help keep the project running. To honor tteck's legacy this project will also raise money for charity (cancer research, hospice care). Of the money donated to this project, 30% will be donated to charity. Income, expenditure and charitable donations will be disclosed annually in a transparent manner. 
 
 <hr>
@@ -107,6 +107,6 @@ This project is licensed under the terms of the [MIT License](LICENSE).
 
 ## 📢&nbsp; Acknowledgments
 
-A special thank you to [tteck](https://github.com/tteck) for his foundational work, which has allowed the Proxmox community to thrive. We’re dedicated to keeping his vision alive and expanding upon it with the continued support of this vibrant community.
+This community project is a memorial to the memory of [tteck](https://github.com/tteck). His foundational work created a thriving Proxmox community. Tteck worked on this project right until the end, even while in hospice. We are dedicated to keeping his vision alive and expanding upon it with the continued support of this vibrant community.
 
 Proxmox® is a registered trademark of [Proxmox Server Solutions GmbH](https://www.proxmox.com/en/about/company).

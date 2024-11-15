@@ -75,6 +75,9 @@ then
   exit
 fi
 systemctl stop jellyseerr
+rm -rf dist
+rm -rf .next 
+rm -rf node_modules 
 export CYPRESS_INSTALL_BINARY=0 
 pnpm install --frozen-lockfile &>/dev/null
 export NODE_OPTIONS="--max-old-space-size=3072"
