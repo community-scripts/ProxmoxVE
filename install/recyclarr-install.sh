@@ -31,7 +31,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
+rm -rf recyclarr*.tar.xz
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
-rm -rf recyclarr*.tar.xz
 msg_ok "Cleaned"
