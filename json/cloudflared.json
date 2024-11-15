@@ -32,7 +32,7 @@
     },
     "notes": [
         {
-            "text": "With an option to configure cloudflared as a DNS-over-HTTPS (DoH) proxy"
+            "text": "With an option to configure cloudflared as a DNS-over-HTTPS (DoH) proxy",
             "type": "info"
         }
     ]
