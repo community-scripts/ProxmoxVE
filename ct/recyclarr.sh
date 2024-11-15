@@ -56,9 +56,6 @@ function default_settings() {
 function update_script() {
 header_info
 if [[ ! -f /root/.config/recyclarr/recyclarr.yml ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
-msg_info "Stopping ${APP}"
-systemctl stop recyclarr.service
-msg_ok "Stopped ${APP}"
 
 msg_info "Updating ${APP}"
 wget -q $(curl -s https://api.github.com/repos/recyclarr/recyclarr/releases/latest | grep download | grep linux-x64 | cut -d\" -f4)
