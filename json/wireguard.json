@@ -36,7 +36,6 @@
       "type": "info"
     },
     {
-      "text": "You can find an Example-Configuration here: nano /etc/wireguard/wg0.conf",
       "type": "info"
     }
   ]
