@@ -32,7 +32,7 @@
     },
   "notes": [
     {
-      "text": "WGDashboard and Wireguard are not the same thing! Issues with Wireguard do not relate to WGDashboard.",
+      "text": "Wireguard and WGDashboard are not the same thing. Issues with Wireguard do not relate to WGDashboard.",
       "type": "info"
     },
     {
