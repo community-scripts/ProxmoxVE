@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2024 tteck
-# Author: tteck
-# Co-Author: MrYadro
+# Copyright (c) 2021-2024 community-scripts ORG
+# Author: MrYadro
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
@@ -57,20 +56,16 @@ function default_settings() {
 function update_script() {
 header_info
 if [[ ! -f /root/.config/recyclarr/recyclarr.yml ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
-msg_info "Stopping ${APP} LXC"
+msg_info "Stopping ${APP}"
 systemctl stop recyclarr.service
-msg_ok "Stopped ${APP} LXC"
+msg_ok "Stopped ${APP}"
 
-msg_info "Updating ${APP} LXC"
-rm -rf /usr/local/bin/*
+msg_info "Updating ${APP}"
 wget -q $(curl -s https://api.github.com/repos/recyclarr/recyclarr/releases/latest | grep download | grep linux-x64 | cut -d\" -f4)
 tar -C /usr/local/bin -xJf recyclarr*.tar.xz
 rm -rf recyclarr*.tar.xz
-msg_ok "Updated ${APP} LXC"
+msg_ok "Updated ${APP}"
 
-msg_info "Starting ${APP} LXC"
-systemctl start recyclarr.service
-msg_ok "Started ${APP} LXC"
 msg_ok "Updated Successfully"
 exit
 }
@@ -80,5 +75,3 @@ build_container
 description
 
 msg_ok "Completed Successfully!\n"
-echo -e "Finish installation of ${APP} by editing /root/.config/recyclarr/recylcarr.yml
-         ${BL}https://recyclarr.dev/wiki/getting-started/${CL} \n"
