@@ -32,7 +32,7 @@
     },
     "notes": [
         {
-            "text": "Database credentials are saved in: `~/wavelog.creds`",
+            "text": "Database credentials: `cat wavelog.creds`",
             "type": "info"
         }
     ]
