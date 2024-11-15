@@ -36,7 +36,7 @@ echo "net.ipv4.ip_forward=1" >>/etc/sysctl.conf
 $STD sysctl -p /etc/sysctl.conf
 msg_ok "Installed WGDashboard"
 
-msg_info "Setup Example Config for WGDashboard"
+msg_info "Create Example Config for WGDashboard"
 private_key=$(wg genkey)
 cat <<EOF >/etc/wireguard/wg0.conf 
 [Interface]
