@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2024 tteck
+# Copyright (c) 2021-2024 community-scripts ORG
 # Author: Don Locke (DonLocke)
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -48,9 +48,7 @@ msg_info "Installing Wavelog"
 RELEASE=$(curl -s https://api.github.com/repos/wavelog/wavelog/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 wget -q "https://github.com/wavelog/wavelog/archive/refs/tags/${RELEASE}.zip"
 unzip -q ${RELEASE}.zip
-mkdir -p /opt/wavelog
-mv wavelog-${RELEASE}/* /opt/wavelog/
-rm -rf wavelog-${RELEASE}
+mv wavelog-${RELEASE}/ /opt/wavelog
 chown -R www-data:www-data /opt/wavelog/
 find /opt/wavelog/ -type d -exec chmod 755 {} \;
 find /opt/wavelog/ -type f -exec chmod 664 {} \;
@@ -82,6 +80,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
+rm -f ${RELEASE}.zip
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
