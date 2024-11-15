@@ -10,7 +10,6 @@ import { PlusCircle, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { z } from "zod";
 import { InstallMethodSchema, ScriptSchema } from "../_schemas/schemas";
-import { memo, useCallback } from "react";
 
 type Script = z.infer<typeof ScriptSchema>;
 
@@ -21,13 +20,13 @@ type InstallMethodProps = {
   setZodErrors: (zodErrors: z.ZodError | null) => void;
 };
 
-function InstallMethod({
+export default function InstallMethod({
   script,
   setScript,
   setIsValid,
   setZodErrors,
 }: InstallMethodProps) {
-  const addInstallMethod = useCallback(() => {
+  const addInstallMethod = () => {
     setScript((prev) => {
       const method = InstallMethodSchema.parse({
         type: "default",
@@ -45,9 +44,9 @@ function InstallMethod({
         install_methods: [...prev.install_methods, method],
       };
     });
-  }, [setScript]);
+  };
 
-  const updateInstallMethod = useCallback((
+  const updateInstallMethod = (
     index: number,
     key: keyof Script["install_methods"][number],
     value: Script["install_methods"][number][keyof Script["install_methods"][number]],
@@ -83,35 +82,14 @@ function InstallMethod({
       }
       return updated;
     });
-  }, [setScript, setIsValid, setZodErrors]);
+  };
 
-  const removeInstallMethod = useCallback((index: number) => {
+  const removeInstallMethod = (index: number) => {
     setScript((prev) => ({
       ...prev,
       install_methods: prev.install_methods.filter((_, i) => i !== index),
     }));
-  }, [setScript]);
-
-  const ResourceInput = memo(({ 
-    placeholder,
-    value,
-    onChange,
-    type = "text"
-  }: {
-    placeholder: string;
-    value: string | number | null;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    type?: string;
-  }) => (
-    <Input
-      placeholder={placeholder}
-      type={type}
-      value={value || ""}
-      onChange={onChange}
-    />
-  ));
-
-  ResourceInput.displayName = 'ResourceInput';
+  };
 
   return (
     <>
@@ -131,33 +109,33 @@ function InstallMethod({
             </SelectContent>
           </Select>
           <div className="flex gap-2">
-            <ResourceInput
+            <Input
               placeholder="CPU in Cores"
               type="number"
-              value={method.resources.cpu}
-              onChange={(e) =>
+              value={method.resources.cpu || ""}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 updateInstallMethod(index, "resources", {
                   ...method.resources,
                   cpu: e.target.value ? Number(e.target.value) : null,
                 })
               }
             />
-            <ResourceInput
+            <Input
               placeholder="RAM in MB"
               type="number"
-              value={method.resources.ram}
-              onChange={(e) =>
+              value={method.resources.ram || ""}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 updateInstallMethod(index, "resources", {
                   ...method.resources,
                   ram: e.target.value ? Number(e.target.value) : null,
                 })
               }
             />
-            <ResourceInput
-              placeholder="HDD in GB" 
+            <Input
+              placeholder="HDD in GB"
               type="number"
-              value={method.resources.hdd}
-              onChange={(e) =>
+              value={method.resources.hdd || ""}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 updateInstallMethod(index, "resources", {
                   ...method.resources,
                   hdd: e.target.value ? Number(e.target.value) : null,
@@ -166,21 +144,21 @@ function InstallMethod({
             />
           </div>
           <div className="flex gap-2">
-            <ResourceInput
+            <Input
               placeholder="OS"
-              value={method.resources.os}
-              onChange={(e) =>
+              value={method.resources.os || ""}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 updateInstallMethod(index, "resources", {
                   ...method.resources,
                   os: e.target.value || null,
                 })
               }
             />
-            <ResourceInput
+            <Input
               placeholder="Version"
               type="number"
-              value={method.resources.version}
-              onChange={(e) =>
+              value={method.resources.version || ""}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 updateInstallMethod(index, "resources", {
                   ...method.resources,
                   version: e.target.value ? Number(e.target.value) : null,
@@ -190,7 +168,7 @@ function InstallMethod({
           </div>
           <Button
             variant="destructive"
-            size="sm"
+            size={"sm"}
             type="button"
             onClick={() => removeInstallMethod(index)}
           >
@@ -200,7 +178,7 @@ function InstallMethod({
       ))}
       <Button
         type="button"
-        size="sm"
+        size={"sm"}
         disabled={script.install_methods.length >= 2}
         onClick={addInstallMethod}
       >
@@ -209,5 +187,3 @@ function InstallMethod({
     </>
   );
 }
-
-export default memo(InstallMethod);
