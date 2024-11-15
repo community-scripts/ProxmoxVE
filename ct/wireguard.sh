@@ -68,4 +68,4 @@ description
 
 msg_ok "Completed Successfully!\n"
 echo -e "WGDashboard should be reachable by going to the following URL.
-         ${BL}http://${IP}:10086${CL} admin|admin \n"
+         ${BL}http://${IP}:10086${CL} \n"
