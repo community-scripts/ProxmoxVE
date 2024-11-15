@@ -9,8 +9,8 @@
     "updateable": true,
     "privileged": false,
     "interface_port": null,
-    "documentation": null,
-    "website": null,
+    "documentation": "https://dev.mysql.com/doc/",
+    "website": "https://www.mysql.com/",
     "logo": "https://1000logos.net/wp-content/uploads/2020/08/MySQL-Logo.png",
     "description": "MySQL is an open-source relational database management system (RDBMS) that uses SQL for managing and manipulating data. It is known for its scalability, reliability, and high performance, making it suitable for small to large-scale applications. Key features include support for ACID transactions, data replication for high availability, and compatibility with various programming languages like Python, PHP, and Java.",
     "install_methods": [
@@ -34,6 +34,10 @@
         {
             "text": "Database credentials: `cat mysql.creds`",
             "type": "warning"
+        },
+        {
+            "text": "With an option to install the MySQL 8.4 LTS release instead of MySQL 8.0",
+            "type": "info"
         }
     ]
 }
