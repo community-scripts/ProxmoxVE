@@ -9,7 +9,7 @@
     "updateable": true,
     "privileged": false,
     "interface_port": "10086",
-    "documentation": null,
+    "documentation": "https://github.com/community-scripts/ProxmoxVE/wiki/WireGuard-vs.-WGDashboard",
     "website": "https://www.wireguard.com/",
     "logo": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn.icon-icons.com%2Ficons2%2F2699%2FPNG%2F512%2Fwireguard_logo_icon_168760.png&f=1&nofb=1",
     "description": "WireGuard is a free and open-source virtual private network (VPN) software that uses modern cryptography to secure the data transmitted over a network. It is designed to be fast, secure, and easy to use. WireGuard supports various operating systems, including Linux, Windows, macOS, Android, and iOS. It operates at the network layer and is capable of being used with a wide range of protocols and configurations. Unlike other VPN protocols, WireGuard is designed to be simple and fast, with a focus on security and speed. It is known for its ease of setup and configuration, making it a popular choice for personal and commercial use.",
@@ -30,5 +30,14 @@
         "username": "admin",
         "password": "admin"
     },
-    "notes": []
+  "notes": [
+    {
+      "text": "WGDashboard and Wireguard are not the same thing! Issues with Wireguard do not relate to WGDashboard.",
+      "type": "info"
+    },
+    {
+      "text": "You can find an Example-Configuration here: nano /etc/wireguard/wg0.conf",
+      "type": "info"
+    }
+  ]
 }
