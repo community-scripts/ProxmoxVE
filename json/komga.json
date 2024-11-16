@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/komga.sh",
             "resources": {
-                "cpu": "2",
+                "cpu": "1",
                 "ram": "2048",
-                "hdd": "4",
+                "hdd": "2",
                 "os": "debian",
                 "version": "12"
             }
