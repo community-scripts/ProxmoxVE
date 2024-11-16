@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2024 tteck
 # Copyright (c) 2024 madelyn
 # Author: madelyn (DysfunctionalProgramming)
 # License: MIT
@@ -23,8 +22,9 @@ RELEASE=$(curl -s https://api.github.com/repos/gotson/komga/releases/latest | gr
 
 msg_info "Installing Komga"
 wget -q https://github.com/gotson/komga/releases/download/${RELEASE}/komga-${RELEASE}.jar
-mv https://github.com/gotson/komga/releases/download/${RELEASE}/komga-${RELEASE}.jar /opt/komga
-msg_ok "Installed TriliumNext"
+mkdir -p /opt/komga
+mv -f komga-${RELEASE}.jar /opt/komga/komga-${RELEASE}.jar
+msg_ok "Installed Komga 😊"
 
 msg_info "Creating Service"
 service_path="/etc/systemd/system/komga.service"

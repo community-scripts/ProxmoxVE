@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/DysfunctionalProgramming/ProxmoxVE/main/misc/build.func)
+source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2024 madelyn
 # Author: madelyn (DysfunctionalProgramming)
 # License: MIT
@@ -19,7 +19,7 @@ EOF
 header_info
 echo -e "Loading..."
 APP="Komga"
-var_disk="2"
+var_disk="4"
 var_cpu="1"
 var_ram="2048"
 var_os="debian"
@@ -56,12 +56,13 @@ function update_script() {
 header_info
 if [[ ! -d /opt/komga ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
 msg_info "Updating ${APP}"
-RELEASE=$(curl -s https://api.github.com/repos/gotson/komga/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+RELEASE=$(curl -s https://api.github.com/repos/gotson/komga/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 if [[ ! -d /opt/komga/komga-${RELEASE}.jar ]]; then
   systemctl stop komga
   msg_info "Downloading ${APP} v$RELEASE"
   wget -q "https://github.com/gotson/komga/releases/download/v$RELEASE/komga-${RELEASE}.jar"
-  mv komga-${RELEASE}.jar /opt/komga/komga-${RELEASE}.jar
+  mkdir -p /opt/komga
+  mv -f komga-${RELEASE}.jar /opt/komga/komga-${RELEASE}.jar
   systemctl start komga
 fi
 msg_ok "Updated ${APP} to v$RELEASE"
