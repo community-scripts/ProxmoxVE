@@ -14,12 +14,15 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y curl mc sudo openjdk-17-jre
+$STD apt-get install -y \
+curl \
+mc \
+sudo \
+openjdk-17-jre
 msg_ok "Installed Dependencies"
 
-RELEASE=$(curl -s https://api.github.com/repos/gotson/komga/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-
 msg_info "Installing Komga"
+RELEASE=$(curl -s https://api.github.com/repos/gotson/komga/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 wget -q https://github.com/gotson/komga/releases/download/${RELEASE}/komga-${RELEASE}.jar
 mkdir -p /opt/komga
 mv -f komga-${RELEASE}.jar /opt/komga/komga.jar
@@ -42,7 +45,6 @@ Restart=on-failure
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl -q daemon-reload
 systemctl enable --now -q komga
 msg_ok "Created Service"
 
