@@ -19,7 +19,7 @@
             "script": "ct/vaultwarden.sh",
             "resources": {
                 "cpu": "4",
-                "ram": "5120",
+                "ram": "6144",
                 "hdd": "6",
                 "os": "debian",
                 "version": "12"
