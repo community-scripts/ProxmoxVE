@@ -20,7 +20,7 @@ $STD apt-get install -y \
   libapache2-mod-php \
   mariadb-server \
   mc \
-  php8.2-{curl,mbstring,mysql,xml,zip} \
+  php8.2-{curl,mbstring,mysql,xml,zip,gd} \
   sudo \
   unzip
 msg_ok "Installed Dependencies"
