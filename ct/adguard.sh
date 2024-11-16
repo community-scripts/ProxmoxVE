@@ -52,35 +52,10 @@ function default_settings() {
   VERB="no"
   echo_default
 }
-
 function update_script() {
 header_info
 if [[ ! -d /opt/AdGuardHome ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
-if (( $(df /boot | awk 'NR==2{gsub("%","",$5); print $5}') > 80 )); then
-  read -r -p "Warning: Storage is dangerously low, continue anyway? <y/N> " prompt
-  [[ ${prompt,,} =~ ^(y|yes)$ ]] || exit
-fi
-wget -qL https://static.adguard.com/adguardhome/release/AdGuardHome_linux_amd64.tar.gz
-msg_info "Stopping AdguardHome"
-systemctl stop AdGuardHome
-msg_ok "Stopped AdguardHome"
-
-msg_info "Updating AdguardHome"
-tar -xvf AdGuardHome_linux_amd64.tar.gz &>/dev/null
-mkdir -p adguard-backup
-cp -r /opt/AdGuardHome/AdGuardHome.yaml /opt/AdGuardHome/data adguard-backup/
-cp AdGuardHome/AdGuardHome /opt/AdGuardHome/AdGuardHome
-cp -r adguard-backup/* /opt/AdGuardHome/
-msg_ok "Updated AdguardHome"
-
-msg_info "Starting AdguardHome"
-systemctl start AdGuardHome
-msg_ok "Started AdguardHome"
-
-msg_info "Cleaning Up"
-rm -rf AdGuardHome_linux_amd64.tar.gz AdGuardHome adguard-backup
-msg_ok "Cleaned"
-msg_ok "Updated Successfully"
+msg_error "Adguard Home should be updated via the user interface."
 exit
 }
 

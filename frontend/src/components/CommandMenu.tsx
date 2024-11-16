@@ -15,6 +15,7 @@ import React from "react";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { DialogTitle } from "./ui/dialog";
+import { basePath } from "@/config/siteConfig";
 
 export const formattedBadge = (type: string) => {
   switch (type) {
@@ -102,10 +103,10 @@ export default function CommandMenu() {
                 >
                   <div className="flex gap-2" onClick={() => setOpen(false)}>
                     <Image
-                      src={script.logo || "/logo.png"}
+                      src={script.logo || `/${basePath}/logo.png`}
                       onError={(e) =>
                         ((e.currentTarget as HTMLImageElement).src =
-                          "/logo.png")
+                          `/${basePath}/logo.png`)
                       }
                       unoptimized
                       width={16}

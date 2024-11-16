@@ -30,5 +30,10 @@
         "username": null,
         "password": null
     },
-    "notes": []
+    "notes": [
+        {
+            "text": "Adguard Home can be updated via the user interface.",
+            "type": "warning"
+        }
+    ]
 }

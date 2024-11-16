@@ -45,6 +45,10 @@
         {
             "text": "Vaultwarden needs to be behind a proxy (Nginx Proxy Manager) to obtain HTTPS and to allow clients to connect.",
             "type": "warning"
+        },
+        {
+            "text": "Build Settings for normal LXC: 4GB RAM - 6GB Storage - 4vCPU",
+            "type": "info"
         }
     ]
 }

@@ -1,3 +1,5 @@
+import { AlertColors } from "@/config/siteConfig";
+
 export type Script = {
   name: string;
   slug: string;
@@ -29,7 +31,7 @@ export type Script = {
   notes: [
     {
       text: string;
-      type: string;
+      type: keyof typeof AlertColors;
     },
   ];
 };
