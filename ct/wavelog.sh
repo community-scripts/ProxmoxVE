@@ -70,8 +70,8 @@ if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_v
   fi
   wget -q "https://github.com/wavelog/wavelog/archive/refs/tags/${RELEASE}.zip"
   unzip -q ${RELEASE}.zip
-  cp -r wavelog-${RELEASE}/* /opt/wavelog
-  rm -rf wavelog-${RELEASE}
+  rm -rf /opt/wavelog
+  mv wavelog-${RELEASE}/ /opt/wavelog
   rm -rf /opt/wavelog/install
   mv /opt/config.php /opt/wavelog/application/config/config.php
   mv /opt/database.php /opt/wavelog/application/config/database.php
