@@ -2,7 +2,7 @@ import TextCopyBlock from "@/components/TextCopyBlock";
 import { AlertColors } from "@/config/siteConfig";
 import { Script } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { Info } from "lucide-react";
+import { AlertCircle, Info, NotepadText, Pen } from "lucide-react";
 
 type NoteProps = {
   text: string;
@@ -21,7 +21,11 @@ export default function Alerts({ item }: { item: Script }) {
                 AlertColors[note.type],
               )}
             >
-              <Info className="h-4 min-h-4 w-4 min-w-4" />
+              {note.type == "info" ? (
+                <NotepadText className="h-4 min-h-4 w-4 min-w-4" />
+              ) : (
+                <AlertCircle className="h-4 min-h-4 w-4 min-w-4" />
+              )}
               <span>{TextCopyBlock(note.text)}</span>
             </p>
           </div>
