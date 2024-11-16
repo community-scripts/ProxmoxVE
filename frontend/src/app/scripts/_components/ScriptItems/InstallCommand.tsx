@@ -4,8 +4,8 @@ import { basePath } from "@/config/siteConfig";
 import { Script } from "@/lib/types";
 import { getDisplayValueFromType } from "../ScriptInfoBlocks";
 
-const getInstallCommand = (scriptPath?: string) => {
-  return `bash -c "$(wget -qLO - https://github.com/community-scripts/${basePath}/raw/main/${scriptPath})"`;
+const getInstallCommand = (scriptPath?: string, isAlpine = false) => {
+  return `bash -c "$(wget -q${isAlpine ? "" : "L"}O - https://github.com/community-scripts/${basePath}/raw/main/${scriptPath})"`;
 };
 
 export default function InstallCommand({ item }: { item: Script }) {
@@ -67,7 +67,7 @@ export default function InstallCommand({ item }: { item: Script }) {
           <TabsContent value="alpine">
             {renderInstructions(true)}
             <CodeCopyButton>
-              {getInstallCommand(alpineScript.script)}
+              {getInstallCommand(alpineScript.script, true)}
             </CodeCopyButton>
           </TabsContent>
         </Tabs>
