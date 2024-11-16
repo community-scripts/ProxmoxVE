@@ -37,5 +37,5 @@ export const analytics = {
 
 export const AlertColors = {
   warning: "border-red-500/25 bg-destructive/25",
-  info: "border-cyan-500/25 bg-cyan-50 dark:border-cyan-900/25 dark:bg-cyan-900",
+  info: "border-cyan-500/25 bg-cyan-50 dark:border-cyan-900 dark:bg-cyan-900/25",
 };
