@@ -2,7 +2,7 @@ import TextCopyBlock from "@/components/TextCopyBlock";
 import { AlertColors } from "@/config/siteConfig";
 import { Script } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { AlertCircle, Info, NotepadText, Pen } from "lucide-react";
+import { AlertCircle, NotepadText } from "lucide-react";
 
 type NoteProps = {
   text: string;
