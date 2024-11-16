@@ -21,7 +21,7 @@ echo -e "Loading..."
 APP="Vaultwarden"
 var_disk="6"
 var_cpu="4"
-var_ram="5120"
+var_ram="6144"
 var_os="debian"
 var_version="12"
 variables
@@ -72,6 +72,8 @@ function update_script() {
     3>&1 1>&2 2>&3)
 
   header_info
+  check_container_storage
+  check_container_resources
   if [ "$UPD" == "1" ]; then
     whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox --title "SET RESOURCES" "Please set the resources in your ${APP} LXC to ${var_cpu}vCPU and ${var_ram}RAM for the build process before continuing" 10 75
     msg_info "Stopping Vaultwarden"
