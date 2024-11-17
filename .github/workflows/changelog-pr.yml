@@ -37,19 +37,6 @@ jobs:
             echo "LATEST_DATE=$LATEST_DATE" >> $GITHUB_ENV
           fi
 
-      - name: Check if CHANGELOG.md was modified
-        id: changelog-check
-        run: |
-          CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
-          echo "Changed files: $CHANGED_FILES"
-          if echo "$CHANGED_FILES" | grep -q 'CHANGELOG.md'; then
-            echo "Changes detected in CHANGELOG.md, skipping additional checks."
-            echo "changelog_modified=true" >> $GITHUB_ENV
-          else
-            echo "No changes to CHANGELOG.md, continuing with protection checks."
-            echo "changelog_modified=false" >> $GITHUB_ENV
-          fi
-
       - name: Get categorized pull requests
         id: get-categorized-prs
         uses: actions/github-script@v7
@@ -123,9 +110,14 @@ jobs:
 
             const newChangelogContent = changelogContent.replace(regex, newReleaseNotes)
             await fs.writeFile(changelogPath, newChangelogContent);
-            
+
+      - name: Check if there are any changes
+        id: verify-diff
+        run: |
+          git diff --quiet . || echo "changed=true" >> $GITHUB_OUTPUT
 
       - name: Commit and push changes to separate branch
+        if: steps.verify-diff.outputs.changed == 'true'
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
@@ -135,6 +127,7 @@ jobs:
           git push origin $BRANCH_NAME --force
 
       - name: Create pull request if not exists
+        if: steps.verify-diff.outputs.changed == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
