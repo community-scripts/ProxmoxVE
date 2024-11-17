@@ -2,6 +2,7 @@
 
 # Copyright (c) 2021-2024 tteck
 # Author: tteck (tteckster)
+# Co-Author: MickLesk (Canbiz)
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
@@ -14,12 +15,13 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y curl
-$STD apt-get install -y sudo
-$STD apt-get install -y mc
-$STD apt-get install -y git
-$STD apt-get install -y gpg
-$STD apt-get install -y postgresql
+$STD apt-get install -y \
+  curl \
+  sudo \
+  mc \
+  make \
+  postgresql \
+  cargo
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up Node.js Repository"
@@ -34,22 +36,28 @@ $STD apt-get install -y nodejs
 $STD npm install -g yarn
 msg_ok "Installed Node.js/Yarn"
 
-msg_info "Clone Linkwarden Repository"
-$STD git clone https://github.com/linkwarden/linkwarden.git /opt/linkwarden
-cd /opt/linkwarden
-msg_ok "Cloned Linkwarden Repository"
+msg_info "Installing Monolith"
+$STD cargo install monolith
+echo 'export PATH=~/.cargo/bin:$PATH' >>~/.bashrc
+export PATH=~/.cargo/bin:$PATH
+msg_ok "Installed Monolith"
 
 msg_info "Setting up PostgreSQL DB"
 DB_NAME=linkwardendb
 DB_USER=linkwarden
 DB_PASS="$(openssl rand -base64 18 | tr -d '/' | cut -c1-13)"
 $STD sudo -u postgres psql -c "CREATE ROLE $DB_USER WITH LOGIN PASSWORD '$DB_PASS';"
-$STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER TEMPLATE template0;"
-
-echo "" >>~/linkwarden.creds
-echo -e "Linkwarden Database User: \e[32m$DB_USER\e[0m" >>~/linkwarden.creds
-echo -e "Linkwarden Database Password: \e[32m$DB_PASS\e[0m" >>~/linkwarden.creds
-echo -e "Linkwarden Database Name: \e[32m$DB_NAME\e[0m" >>~/linkwarden.creds
+$STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER ENCODING 'UTF8' TEMPLATE template0;"
+$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET client_encoding TO 'utf8';"
+$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET default_transaction_isolation TO 'read committed';"
+$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET timezone TO 'UTC';"
+{
+    echo "Linkwarden-Credentials"
+    echo "Linkwarden Database User: $DB_USER"
+    echo "Linkwarden Database Password: $DB_PASS"
+    echo "Linkwarden Database Name: $DB_NAME"
+    echo "Linkwarden Secret: $SECRET_KEY"
+} >> ~/linkwarden.creds
 msg_ok "Set up PostgreSQL DB"
 
 read -r -p "Would you like to add Adminer? <y/N> " prompt
@@ -66,12 +74,24 @@ if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
   echo -e "Adminer Username: \e[32m$DB_USER\e[0m" >>~/linkwarden.creds
   echo -e "Adminer Password: \e[32m$DB_PASS\e[0m" >>~/linkwarden.creds
   echo -e "Adminer Database: \e[32m$DB_NAME\e[0m" >>~/linkwarden.creds
+  {
+    echo ""
+    echo "Adminer-Credentials"
+    echo "Adminer WebUI: $IP/adminer/"
+    echo "Adminer Database User: $DB_USER"
+    echo "Adminer Database Password: $DB_PASS"
+    echo "Adminer Database Name: $DB_NAME"
+} >> ~/linkwarden.creds
   msg_ok "Installed Adminer"
 fi
 
 msg_info "Installing Linkwarden (Patience)"
+cd /opt
 RELEASE=$(curl -s https://api.github.com/repos/linkwarden/linkwarden/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
+wget -q "https://github.com/linkwarden/linkwarden/archive/refs/tags/${RELEASE}.zip"
+unzip -q ${RELEASE}.zip
+mv linkwarden-${RELEASE:1} /opt/linkwarden
+cd /opt/linkwarden
 $STD yarn
 $STD npx playwright install-deps
 $STD yarn playwright install
@@ -85,6 +105,7 @@ DATABASE_URL=postgresql://${DB_USER}:${DB_PASS}@localhost:5432/${DB_NAME}
 " >$env_path
 $STD yarn build
 $STD yarn prisma migrate deploy
+echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Installed Linkwarden"
 
 msg_info "Creating Service"
@@ -108,6 +129,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
+rm -rf /opt/${RELEASE}.zip
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
