@@ -16,11 +16,40 @@ cat <<"EOF"
  
 EOF
 }
+
+function run_avx_check {
+  if grep -q 'avx' /proc/cpuinfo; then
+    echo "AVX is supported. Proceeding with LXC setup."
+  else
+    echo "AVX instructions supported on this CPU. Would you like to explore alternatives?"
+    read -p "(y/n): " avx_response
+    if [[ "$avx_response" =~ ^[Yy]$ ]]; then
+      handle_avx_alternatives
+    else
+      echo "Exiting setup due to lack of AVX support."
+      exit 1
+    fi
+  fi
+}
+
+function handle_avx_alternatives {
+  echo "Choose an alternative installation method:"
+  echo "1) Install MongoDB 4.2 on LXC container"
+  echo "2) Install UniFi on Debian 12 VM (Coming Soon!)"
+  read -p "Enter your choice (1): " alt_choice
+  if [[ "$alt_choice" == "1" ]]; then
+    echo "Proceeding with MongoDB 4.2 installation on LXC..."
+    # Set a flag for the installer script
+    export MONGO_VERSION="4.2"
+  else
+    echo "Invalid choice. Only option 1 is currently available."
+    echo "VM installation option coming soon!"
+    exit 1
+  fi
+}
+
 header_info
-if ! grep -q -m1 'avx[^ ]*' /proc/cpuinfo; then
-  echo "AVX instruction set is not supported on this CPU."
-  exit
-fi
+run_avx_check
 echo -e "Loading..."
 APP="Unifi"
 var_disk="8"

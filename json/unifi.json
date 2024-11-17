@@ -32,8 +32,12 @@
     },
     "notes": [
         {
-            "text": "CPU with AVX Instruction Set required",
-            "type": "warning"
+            "text": "CPU with AVX Instruction Set recommended",
+            "type": "note"
+        },
+        {
+            "text": "For non-AVX CPUs, an alternative installation using MongoDB 4.2 is available. Please note this is a legacy solution that may present security risks and could become unsupported in future updates.",
+            "type": "attention"
         }
     ]
 }
