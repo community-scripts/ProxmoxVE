@@ -66,7 +66,6 @@ if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_v
   tar -xf prometheus-${RELEASE}.linux-amd64.tar.gz
   cd prometheus-${RELEASE}.linux-amd64
   cp -rf prometheus promtool /usr/local/bin/
-  cp -rf consoles/ console_libraries/ /etc/prometheus/
   cd ~
   rm -rf prometheus-${RELEASE}.linux-amd64 prometheus-${RELEASE}.linux-amd64.tar.gz
   echo "${RELEASE}" >/opt/${APP}_version.txt
