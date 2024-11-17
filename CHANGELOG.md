@@ -27,6 +27,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- Tweak: Patch Prometheus for v.3.0.0 [@MickLesk](https://github.com/MickLesk) ([#300](https://github.com/community-scripts/ProxmoxVE/pull/300))
 - Wavelog - Small Adjustment [@HB9HIL](https://github.com/HB9HIL) ([#292](https://github.com/community-scripts/ProxmoxVE/pull/292))
 
 ### 🌐 Website
