@@ -43,6 +43,7 @@ ExecStart=/usr/bin/java -jar -Xmx2g komga.jar
 TimeoutStopSec=20
 KillMode=process
 Restart=on-failure
+
 [Install]
 WantedBy=multi-user.target
 EOF
