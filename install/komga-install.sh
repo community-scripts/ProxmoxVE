@@ -36,7 +36,6 @@ Description=Komga
 After=syslog.target network.target
 
 [Service]
-UMask=0002
 Type=simple
 WorkingDirectory=/opt/komga/
 ExecStart=/usr/bin/java -jar -Xmx2g komga.jar
