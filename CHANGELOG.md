@@ -16,6 +16,28 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
+
+## 2024-11-17
+
+### Changed
+
+### ✨ New Scripts
+
+- Add Komga LXC [@DysfunctionalProgramming](https://github.com/DysfunctionalProgramming) ([#275](https://github.com/community-scripts/ProxmoxVE/pull/275))
+
+### 🚀 Updated Scripts
+
+- Wavelog - Small Adjustment [@HB9HIL](https://github.com/HB9HIL) ([#292](https://github.com/community-scripts/ProxmoxVE/pull/292))
+
+### 🌐 Website
+
+- Fix Komga logo [@havardthom](https://github.com/havardthom) ([#298](https://github.com/community-scripts/ProxmoxVE/pull/298))
+
+### 🧰 Maintenance
+
+- Add github workflow for automatic changelog PR  [@havardthom](https://github.com/havardthom) ([#299](https://github.com/community-scripts/ProxmoxVE/pull/299))
+- Use website label in autolabeler [@havardthom](https://github.com/havardthom) ([#297](https://github.com/community-scripts/ProxmoxVE/pull/297))
+
 ## 2024-11-16
 
 ### Changed
