@@ -8,17 +8,17 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 function header_info {
 clear
 cat <<"EOF"
-               __  __              
-   ____  ___  / /_/ /_  ____  _  __
-  / __ \/ _ \/ __/ __ \/ __ \| |/_/
- / / / /  __/ /_/ /_/ / /_/ />  <  
-/_/ /_/\___/\__/_.___/\____/_/|_|  
+    _   __     __  ____            
+   / | / /__  / /_/ __ )____  _  __
+  /  |/ / _ \/ __/ __  / __ \| |/_/
+ / /|  /  __/ /_/ /_/ / /_/ />  <  
+/_/ |_/\___/\__/_____/\____/_/|_|  
                                    
 EOF
 }
 header_info
 echo -e "Loading..."
-APP="Netbox"
+APP="NetBox"
 var_disk="4"
 var_cpu="2"
 var_ram="2048"
@@ -54,39 +54,53 @@ function default_settings() {
 
 function update_script() {
 header_info
-if [[ ! -f /opt/netbox/netbox/netbox/configuration.py ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
+check_container_storage
+check_container_resources
+if [[ ! -f /etc/systemd/system/netbox.service ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
+
 RELEASE=$(curl -s https://api.github.com/repos/netbox-community/netbox/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-if [ ! -d "/opt/netbox-${RELEASE}" ]; then
-  msg_info "Updating $APP LXC"
-  apt-get update &>/dev/null
-  apt-get -y upgrade &>/dev/null
-  
-  OLD_VERSION_PATH=$(ls -d /opt/netbox-*/)
-  wget -q "https://github.com/netbox-community/netbox/archive/refs/tags/v${RELEASE}.tar.gz"
-  tar -xzf "v${RELEASE}.tar.gz" -C /opt
-  ln -sfn "/opt/netbox-${RELEASE}/" /opt/netbox
-  rm "v${RELEASE}.tar.gz"
-  
-  cp "${OLD_VERSION_PATH}netbox/netbox/configuration.py" /opt/netbox/netbox/netbox/
-  cp -pr "${OLD_VERSION_PATH}netbox/media/" /opt/netbox/netbox/
-  cp -r "${OLD_VERSION_PATH}netbox/scripts" /opt/netbox/netbox/
-  cp -r "${OLD_VERSION_PATH}netbox/reports" /opt/netbox/netbox/
-  cp "${OLD_VERSION_PATH}gunicorn.py" /opt/netbox/
+if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
 
-  if [ -d "${OLD_VERSION_PATH}local_requirements.txt" ]; then
-    cp "${OLD_VERSION_PATH}local_requirements.txt" /opt/netbox/
+  msg_info "Stopping ${APP}"
+  systemctl stop netbox netbox-rq
+  msg_ok "Stopped ${APP}"
+
+  msg_info "Updating $APP to v${RELEASE}"
+  mv /opt/netbox/ /opt/netbod-oldversion
+  cd /opt
+  wget -q "https://github.com/netbox-community/netbox/archive/refs/tags/v${RELEASE}.zip"
+  unzip -q "v${RELEASE}.zip"
+  mv /opt/netbox-${RELEASE}/ /opt/netbox/
+  
+  cp -r /opt/netbod-oldversion/netbox/netbox/configuration.py /opt/netbox/netbox/netbox/
+  cp -r /opt/netbod-oldversion/netbox/media/ /opt/netbox/netbox/
+  cp -r /opt/netbod-oldversion/netbox/scripts /opt/netbox/netbox/
+  cp -r /opt/netbod-oldversion/netbox/reports /opt/netbox/netbox/
+  cp -r /opt/netbod-oldversion/gunicorn.py /opt/netbox/
+
+  if [ -d /opt/netbod-oldversion/local_requirements.txt ]; then
+    cp -r /opt/netbod-oldversion/local_requirements.txt /opt/netbox/
   fi
 
-  if [ -d "${OLD_VERSION_PATH}netbox/netbox/ldap_config.py" ]; then
-    cp "${OLD_VERSION_PATH}netbox/netbox/ldap_config.py" /opt/netbox/netbox/netbox/
+  if [ -d /opt/netbod-oldversion/netbox/netbox/ldap_config.py ]; then
+    cp -r /opt/netbod-oldversion/netbox/netbox/ldap_config.py /opt/netbox/netbox/netbox/
   fi
-
-  rm -r "${OLD_VERSION_PATH}"
+  
   /opt/netbox/upgrade.sh &>/dev/null
-  systemctl restart --now netbox netbox-rq
-  msg_ok "Updated $APP LXC"
+  echo "${RELEASE}" >/opt/${APP}_version.txt
+  msg_ok "Updated $APP to v${RELEASE}"
+
+  msg_info "Starting ${APP}"
+  systemctl start netbox netbox-rq
+  msg_ok "Started ${APP}"
+
+  msg_info "Cleaning up"
+  rm -r "/opt/v${RELEASE}.zip"
+  rm -r /opt/netbod-oldversion
+  msg_ok "Cleaned"
+  msg_ok "Updated Successfully"
 else
-  msg_ok "No update required. ${APP} is already at ${RELEASE}"
+  msg_ok "No update required. ${APP} is already at v${RELEASE}"
 fi
 exit
 }
