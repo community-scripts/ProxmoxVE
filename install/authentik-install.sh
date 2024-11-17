@@ -15,10 +15,27 @@ network_check
 update_os
 
 msg_info "Installing Dependencies (Patience)"
-$STD apt-get install -y {curl,sudo,mc}
-$STD apt-get install -y gpg pkg-config libffi-dev
-$STD apt-get install -y --no-install-recommends build-essential libpq-dev libkrb5-dev
-$STD apt-get install -y libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev pkg-config libffi-dev zlib1g-dev libxmlsec1 libxmlsec1-dev libxmlsec1-openssl libmaxminddb0
+$STD apt-get install -y --no-install-recommends \
+  curl \
+  sudo \
+  mc \
+  gpg \
+  pkg-config \
+  libffi-dev \
+  build-essential \
+  libpq-dev \
+  libkrb5-dev \
+  libssl-dev \
+  libsqlite3-dev \
+  tk-dev \
+  libgdbm-dev \
+  libc6-dev \
+  libbz2-dev \
+  zlib1g-dev \
+  libxmlsec1 \
+  libxmlsec1-dev \
+  libxmlsec1-openssl \
+  libmaxminddb0
 msg_ok "Installed Dependencies"
 
 msg_info "Installing yq"
@@ -48,6 +65,18 @@ $STD apt-get update
 $STD apt-get install -y nodejs
 msg_ok "Installed Node.js ${NODE_VER}"
 
+msg_info "Installing Golang"
+cd ~
+set +o pipefail
+GO_RELEASE=$(curl -s https://go.dev/dl/ | grep -o -m 1 "go.*\linux-amd64.tar.gz")
+$STD wget -q https://golang.org/dl/${GO_RELEASE}
+tar -xzf ${GO_RELEASE} -C /usr/local
+$STD ln -s /usr/local/go/bin/go /usr/bin/go
+rm -rf go/
+rm -rf ${GO_RELEASE}
+set -o pipefail
+msg_ok "Installed Golang"
+
 msg_info "Building Authentik website"
 RELEASE=$(curl -s https://api.github.com/repos/goauthentik/authentik/releases/latest | grep "tarball_url" | awk '{print substr($2, 2, length($2)-3)}')
 mkdir -p /opt/authentik
@@ -62,18 +91,6 @@ $STD npm install
 $STD npm run build
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Built Authentik website"
-
-msg_info "Installing Golang"
-cd ~
-set +o pipefail
-GO_RELEASE=$(curl -s https://go.dev/dl/ | grep -o -m 1 "go.*\linux-amd64.tar.gz")
-$STD wget -q https://golang.org/dl/${GO_RELEASE}
-tar -xzf ${GO_RELEASE} -C /usr/local
-$STD ln -s /usr/local/go/bin/go /usr/bin/go
-rm -rf go/
-rm -rf ${GO_RELEASE}
-set -o pipefail
-msg_ok "Installed Golang"
 
 msg_info "Building Go Proxy"
 cd /opt/authentik

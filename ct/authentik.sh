@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2024 tteck
-# Author: tteck (tteckster)
-# Co-Author: remz1337
+# Copyright (c) 2021-2024 community-scripts ORG
+# Author: remz1337
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
@@ -98,7 +97,6 @@ if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}
   systemctl start authentik-server
   systemctl start authentik-worker
   msg_ok "Started Authentik"
-  echo -e "\n ⚠️  Ensure you set resources back to normal settings \n"
 else
   msg_ok "No update required. ${APP} is already at ${RELEASE}"
 fi
@@ -109,10 +107,6 @@ start
 build_container
 description
 
-msg_info "Setting Container to Normal Resources"
-pct set $CTID -memory 1024
-pct set $CTID -cores 2
-msg_ok "Set Container to Normal Resources"
 msg_ok "Completed Successfully!\n"
 echo -e "${APP} should be reachable by going to the following URL.
          ${BL}http://${IP}:9000/if/flow/initial-setup/${CL} \n"
