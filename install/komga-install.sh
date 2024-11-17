@@ -34,6 +34,7 @@ cat <<EOF >/etc/systemd/system/komga.service
 [Unit]
 Description=Komga
 After=syslog.target network.target
+
 [Service]
 UMask=0002
 Type=simple
