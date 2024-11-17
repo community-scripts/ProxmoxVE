@@ -74,7 +74,7 @@ if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}
   yarn &>/dev/null
   npx playwright install-deps &>/dev/null
   yarn playwright install &>/dev/null
-  yarn prisma generate &>/dev/null
+  cp /opt/linkwarden_bak/.env /opt/linkwarden/.env
   yarn build &>/dev/null
   yarn prisma migrate deploy &>/dev/null
   echo "${RELEASE}" >/opt/${APP}_version.txt
@@ -84,7 +84,7 @@ if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}
   systemctl start linkwarden
   msg_ok "Started ${APP}"
   msg_info "Cleaning up"
-  rm -R /opt/v${RELEASE}.zip
+  rm -rf /opt/${RELEASE}.zip
   rm -rf /opt/linkwarden_bak
   msg_ok "Cleaned"
   msg_ok "Updated Successfully"
