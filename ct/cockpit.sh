@@ -80,10 +80,9 @@ if [ "$UPD" == "2" ]; then
   apt-get install -y gawk &>/dev/null
   msg_ok "Installed dependencies"
   msg_info "Installing Cockpit file sharing"
-  LATEST=$(curl -s https://api.github.com/repos/45Drives/cockpit-file-sharing/releases/latest  | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  wget -q https://github.com/45Drives/cockpit-file-sharing/releases/download/v${LATEST}/cockpit-file-sharing_${LATEST}-1focal_all.deb
-  dpkg -i cockpit-file-sharing_${LATEST}-1focal_all.deb &>/dev/null
-  rm cockpit-file-sharing_${LATEST}-1focal_all.deb
+  wget -q $(curl -s https://api.github.com/repos/45Drives/cockpit-file-sharing/releases/latest | grep download | grep focal_all.deb | cut -d\" -f4)
+  dpkg -i cockpit-file-sharing_*focal_all.deb &>/dev/null
+  rm cockpit-file-sharing_*focal_all.deb
   msg_ok "Installed Cockpit file sharing"
   exit
 fi
@@ -94,10 +93,9 @@ if [ "$UPD" == "3" ]; then
   apt-get install -y samba-common-bin &>/dev/null
   msg_ok "Installed dependencies"
   msg_info "Installing Cockpit identities"
-  LATEST=$(curl -s https://api.github.com/repos/45Drives/cockpit-identities/releases/latest  | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  wget -q https://github.com/45Drives/cockpit-identities/releases/download/v${LATEST}/cockpit-identities_${LATEST}-1focal_all.deb
-  dpkg -i cockpit-identities_${LATEST}-1focal_all.deb &>/dev/null
-  rm cockpit-identities_${LATEST}-1focal_all.deb
+  wget -q $(curl -s https://api.github.com/repos/45Drives/cockpit-identities/releases/latest | grep download | grep focal_all.deb | cut -d\" -f4)
+  dpkg -i cockpit-identities_*focal_all.deb &>/dev/null
+  rm cockpit-identities_*focal_all.deb
   msg_ok "Installed Cockpit identities"
   exit
 fi
@@ -107,10 +105,9 @@ if [ "$UPD" == "4" ]; then
   apt-get install -y zip &>/dev/null
   msg_ok "Installed dependencies"
   msg_info "Installing Cockpit navigator"
-  LATEST=$(curl -s https://api.github.com/repos/45Drives/cockpit-navigator/releases/latest  | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  wget -q https://github.com/45Drives/cockpit-navigator/releases/download/v${LATEST}/cockpit-navigator_${LATEST}-1focal_all.deb
-  dpkg -i cockpit-navigator_${LATEST}-1focal_all.deb &>/dev/null
-  rm cockpit-navigator_${LATEST}-1focal_all.deb
+  wget -q $(curl -s https://api.github.com/repos/45Drives/cockpit-navigator/releases/latest | grep download | grep focal_all.deb | cut -d\" -f4)
+  dpkg -i cockpit-navigator_*focal_all.deb &>/dev/null
+  rm cockpit-navigator_*focal_all.deb
   msg_ok "Installed Cockpit navigator"
   exit
 fi
