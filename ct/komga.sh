@@ -17,7 +17,6 @@ cat <<"EOF"
 EOF
 }
 header_info
-check_container_resources
 echo -e "Loading..."
 APP="Komga"
 var_disk="4"
