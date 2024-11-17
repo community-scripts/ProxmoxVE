@@ -40,17 +40,10 @@
       "excludeGlobs": []
     }
   ],
-  "frontend": [
+  "website": [
     {
       "fileStatus": null,
-      "includeGlobs": ["frontend/**"],
-      "excludeGlobs": []
-    }
-  ],
-  "documentation": [
-    {
-      "fileStatus": null,
-      "includeGlobs": ["json/**"],
+      "includeGlobs": ["frontend/**", "json/**"],
       "excludeGlobs": []
     }
   ],
