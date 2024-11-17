@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt-get install -y \
   curl \
   mc \
-sudo \
+  sudo \
 openjdk-17-jre
 msg_ok "Installed Dependencies"
 
