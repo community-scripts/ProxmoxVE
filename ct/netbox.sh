@@ -66,24 +66,24 @@ if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_v
   msg_ok "Stopped ${APP}"
 
   msg_info "Updating $APP to v${RELEASE}"
-  mv /opt/netbox/ /opt/netbod-oldversion
+  mv /opt/netbox/ /opt/netbox-backup
   cd /opt
   wget -q "https://github.com/netbox-community/netbox/archive/refs/tags/v${RELEASE}.zip"
   unzip -q "v${RELEASE}.zip"
   mv /opt/netbox-${RELEASE}/ /opt/netbox/
   
-  cp -r /opt/netbod-oldversion/netbox/netbox/configuration.py /opt/netbox/netbox/netbox/
-  cp -r /opt/netbod-oldversion/netbox/media/ /opt/netbox/netbox/
-  cp -r /opt/netbod-oldversion/netbox/scripts /opt/netbox/netbox/
-  cp -r /opt/netbod-oldversion/netbox/reports /opt/netbox/netbox/
-  cp -r /opt/netbod-oldversion/gunicorn.py /opt/netbox/
+  cp -r /opt/netbox-backup/netbox/netbox/configuration.py /opt/netbox/netbox/netbox/
+  cp -r /opt/netbox-backup/netbox/media/ /opt/netbox/netbox/
+  cp -r /opt/netbox-backup/netbox/scripts /opt/netbox/netbox/
+  cp -r /opt/netbox-backup/netbox/reports /opt/netbox/netbox/
+  cp -r /opt/netbox-backup/gunicorn.py /opt/netbox/
 
-  if [ -d /opt/netbod-oldversion/local_requirements.txt ]; then
-    cp -r /opt/netbod-oldversion/local_requirements.txt /opt/netbox/
+  if [ -f /opt/netbox-backup/local_requirements.txt ]; then
+    cp -r /opt/netbox-backup/local_requirements.txt /opt/netbox/
   fi
 
-  if [ -d /opt/netbod-oldversion/netbox/netbox/ldap_config.py ]; then
-    cp -r /opt/netbod-oldversion/netbox/netbox/ldap_config.py /opt/netbox/netbox/netbox/
+  if [ -f /opt/netbox-backup/netbox/netbox/ldap_config.py ]; then
+    cp -r /opt/netbox-backup/netbox/netbox/ldap_config.py /opt/netbox/netbox/netbox/
   fi
   
   /opt/netbox/upgrade.sh &>/dev/null
@@ -96,7 +96,7 @@ if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_v
 
   msg_info "Cleaning up"
   rm -r "/opt/v${RELEASE}.zip"
-  rm -r /opt/netbod-oldversion
+  rm -r /opt/netbox-backup
   msg_ok "Cleaned"
   msg_ok "Updated Successfully"
 else

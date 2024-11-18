@@ -48,7 +48,7 @@ echo -e "Netbox Database Name: \e[32m$DB_NAME\e[0m"
 } >> ~/netbox.creds
 msg_ok "Set up PostgreSQL"
 
-msg_info "Installing NetBox"
+msg_info "Installing NetBox (Patience)"
 cd /opt
 RELEASE=$(curl -s https://api.github.com/repos/netbox-community/netbox/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 wget -q "https://github.com/netbox-community/netbox/archive/refs/tags/v${RELEASE}.zip"
@@ -85,10 +85,7 @@ systemctl daemon-reload
 systemctl enable -q --now netbox netbox-rq
 
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
-{
-echo -e "Netbox Secret: \e[32m$SECRET_KEY\e[0m"
-} >> ~/netbox.creds
-msg_ok "Set up PostgreSQL"
+echo -e "Netbox Secret: \e[32m$SECRET_KEY\e[0m" >> ~/netbox.creds
 msg_ok "Installed NetBox"
 
 msg_info "Setting up Django Admin"
