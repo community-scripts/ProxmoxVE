@@ -129,6 +129,37 @@ ssh_check() {
   fi
 }
 
+# This function allows to centralize all common options so that services only need to define settings that need to be overridden (Avoid duplication of information)
+base_settings() {
+  CT_TYPE="1"
+  PW=""
+  CT_ID=$NEXTID
+  HN=$NSAPP
+  DISK_SIZE="4"
+  CORE_COUNT="1"
+  RAM_SIZE="512"
+  BRG="vmbr0"
+  NET="dhcp"
+  GATE=""
+  APT_CACHER=""
+  APT_CACHER_IP=""
+  DISABLEIP6="no"
+  MTU=""
+  SD=""
+  NS=""
+  MAC=""
+  VLAN=""
+  SSH="no"
+  VERB="no"
+  # Since these 2 are defined outside of default_settings function, avoid overwriting them. To align everything, they should use another constant variable (say OSTYPE), but that would require updating the default_settings function for all existing scripts
+  if [ -z "$var_os" ]; then
+    var_os="debian"
+  fi
+  if [ -z "$var_version" ]; then
+    var_version="12"
+  fi
+}
+
 # This function displays the default values for various settings.
 echo_default() {
   echo -e "${DGN}Using Distribution: ${BGN}$var_os${CL}"
@@ -491,6 +522,7 @@ install_script() {
   NEXTID=$(pvesh get /cluster/nextid)
   timezone=$(cat /etc/timezone)
   header_info
+  base_settings
   if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "SETTINGS" --yesno "Use Default Settings?" --no-button Advanced 10 58); then
     header_info
     echo -e "${BL}Using Default Settings${CL}"
