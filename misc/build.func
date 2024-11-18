@@ -99,8 +99,13 @@ pve_check() {
   if ! pveversion | grep -Eq "pve-manager/8.[1-3]"; then
     msg_error "This version of Proxmox Virtual Environment is not supported"
     echo -e "Requires Proxmox Virtual Environment Version 8.1 or later."
-    echo -e "Exiting..."
-    sleep 2
+    if whiptail --backtitle "Proxmox VE Helper Scripts" --defaultno --title "UNSUPPORTED VERSION DETECTED" --yesno "This version of PVE is not supported. Running an installation script on unsupported PVE version might not work. Proceed using with installation anyway?" 10 72; then
+      echo -e "\nProceeding with installation on unsupported PVE version..."
+    else
+      echo -e "Exiting..."
+      sleep 2
+      exit
+    fi
     exit
 fi
 }
