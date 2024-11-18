@@ -73,6 +73,7 @@ if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_v
   mv /opt/images/uploads /opt/wallos/images/uploads
   chown -R www-data:www-data /opt/wallos
   chmod -R 755 /opt/wallos
+  mkdir -p /var/log/cron
   curl http://localhost/endpoints/db/migrate.php &>/dev/null
   echo "${RELEASE}" >/opt/${APP}_version.txt
   msg_ok "Updated ${APP}"
