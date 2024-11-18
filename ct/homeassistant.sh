@@ -64,6 +64,8 @@ function update_script() {
     "4" "Install FileBrowser" OFF \
     3>&1 1>&2 2>&3)
   header_info
+  check_container_storage
+  check_container_resources
   if [ "$UPD" == "1" ]; then
     msg_info "Updating All Containers"
     CONTAINER_LIST="${1:-$(docker ps -q)}"

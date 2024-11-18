@@ -54,6 +54,9 @@ function default_settings() {
 }
 
 function update_script() {
+  header_info
+  check_container_storage
+  check_container_resources
   if [[ ! -f /etc/systemd/system/frigate.service ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
   msg_error "To update Frigate, create a new container and transfer your configuration."
   exit  
@@ -63,9 +66,6 @@ start
 build_container
 description
 
-msg_info "Setting Container to Normal Resources"
-pct set $CTID -memory 1024
-msg_ok "Set Container to Normal Resources"
 msg_ok "Completed Successfully!\n"
 echo -e "${APP} should be reachable by going to the following URL.
          ${BL}http://${IP}:5000${CL} \n"

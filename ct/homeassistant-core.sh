@@ -65,6 +65,8 @@ function update_script() {
     "3" "Install FileBrowser" OFF \
     3>&1 1>&2 2>&3)
   header_info
+  check_container_storage
+  check_container_resources
   if [ "$UPD" == "1" ]; then
     if (whiptail --backtitle "Proxmox VE Helper Scripts" --defaultno --title "SELECT BRANCH" --yesno "Use Beta Branch?" 10 58); then
       clear

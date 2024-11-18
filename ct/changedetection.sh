@@ -54,6 +54,8 @@ function default_settings() {
 
 function update_script() {
 header_info
+check_container_storage
+check_container_resources
 if [[ ! -f /etc/systemd/system/changedetection.service ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
 msg_info "Updating ${APP} LXC"
 if ! dpkg -s libjpeg-dev >/dev/null 2>&1; then

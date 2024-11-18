@@ -59,6 +59,8 @@ UPD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "SUPPORT" --radio
   "2" "Install Themes" OFF \
   3>&1 1>&2 2>&3)
 header_info
+check_container_storage
+check_container_resources
 if [ "$UPD" == "1" ]; then
   if [[ "$(node -v | cut -d 'v' -f 2)" == "18."* ]]; then
     if ! command -v npm >/dev/null 2>&1; then

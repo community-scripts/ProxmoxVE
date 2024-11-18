@@ -55,8 +55,9 @@ function default_settings() {
 
 function update_script() {
   header_info
+  check_container_storage
+  check_container_resources
   if [[ ! -d /opt/tandoor ]]; then msg_error "No ${APP} Installation Found!"; exit; fi 
-  whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox --title "SET RESOURCES" "Please set the resources in your ${APP} LXC to ${var_cpu}vCPU and ${var_ram}RAM for the build process before continuing" 10 75
   if cd /opt/tandoor && git pull | grep -q 'Already up to date'; then
     msg_ok "There is currently no update available."
   else
@@ -79,11 +80,6 @@ function update_script() {
 start
 build_container
 description
-
-msg_info "Setting Container to Normal Resources"
-pct set $CTID -memory 2048
-pct set $CTID -cores 2
-msg_ok "Set Container to Normal Resources"
 
 msg_ok "Completed Successfully!\n"
 echo -e "${APP} Setup should be reachable by going to the following URL.

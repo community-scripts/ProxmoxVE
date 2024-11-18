@@ -65,7 +65,7 @@ if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}
 
   msg_info "Updating ${APP} to ${RELEASE}"
   cd /opt
-  mv /opt/linkwarden /opt/linkwarden_bak
+  mv /opt/linkwarden/.env /opt/.env
   RELEASE=$(curl -s https://api.github.com/repos/linkwarden/linkwarden/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
   wget -q "https://github.com/linkwarden/linkwarden/archive/refs/tags/${RELEASE}.zip"
   unzip -q ${RELEASE}.zip
@@ -74,7 +74,7 @@ if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}
   yarn &>/dev/null
   npx playwright install-deps &>/dev/null
   yarn playwright install &>/dev/null
-  cp /opt/linkwarden_bak/.env /opt/linkwarden/.env
+  cp /opt/.env /opt/linkwarden/.env
   yarn build &>/dev/null
   yarn prisma migrate deploy &>/dev/null
   echo "${RELEASE}" >/opt/${APP}_version.txt

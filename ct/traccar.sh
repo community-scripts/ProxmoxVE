@@ -54,6 +54,8 @@ function default_settings() {
 
 function update_script() {
 header_info
+check_container_storage
+check_container_resources
 if [[ ! -d /opt/traccar ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
 msg_error "There is currently no update path available."
 exit

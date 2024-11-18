@@ -63,6 +63,8 @@ UPD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "SUPPORT" --radio
   3>&1 1>&2 2>&3)
 
 header_info
+check_container_storage
+check_container_resources
 if [ "$UPD" == "1" ]; then
   msg_info "Updating ${APP} LXC"
   apt-get update &>/dev/null

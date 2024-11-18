@@ -55,6 +55,8 @@ function default_settings() {
 
 function update_script() {
 header_info
+check_container_storage
+check_container_resources
 if [[ ! -f /etc/systemd/system/n8n.service ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
   if [[ "$(node -v | cut -d 'v' -f 2)" == "18."* ]]; then
     if ! command -v npm >/dev/null 2>&1; then

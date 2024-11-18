@@ -54,6 +54,8 @@ function default_settings() {
 
 function update_script() {
 header_info
+check_container_storage
+check_container_resources
 if [[ ! -d /opt/dashy/public/ ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
 
 RELEASE=$(curl -sL https://api.github.com/repos/Lissy93/dashy/releases/latest | grep '"tag_name":' | cut -d'"' -f4)
