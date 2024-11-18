@@ -54,13 +54,13 @@ function default_settings() {
 }
 
 function update_script() {
+  header_info
+  check_container_storage
+  check_container_resources
   if [[ ! -f /etc/systemd/system/cps.service ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  header_info
-  check_container_storage
-  check_container_resources
   msg_info "Updating $APP LXC"
   systemctl stop cps
   cd /opt/kepubify
