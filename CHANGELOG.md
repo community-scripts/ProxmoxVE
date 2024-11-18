@@ -22,9 +22,28 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### Changed
 
+### 💥 Breaking Changes
+
+- Massive Update - Remove old storage check, add new storage and resource check to all scripts - Remove downscaling with pct set [@MickLesk](https://github.com/MickLesk) ([#333](https://github.com/community-scripts/ProxmoxVE/pull/333))
+
+### ✨ New Scripts
+
+- new scripts for NetBox [@bvdberg01](https://github.com/bvdberg01) ([#308](https://github.com/community-scripts/ProxmoxVE/pull/308))
+
 ### 🚀 Updated Scripts
 
+- Support SSE 4.2 in Frigate script [@anishp55](https://github.com/anishp55) ([#328](https://github.com/community-scripts/ProxmoxVE/pull/328))
+- Bugfix: Wallos Patch (Cron Log & Media Backup)  [@MickLesk](https://github.com/MickLesk) ([#331](https://github.com/community-scripts/ProxmoxVE/pull/331))
+- Linkwarden - Harmonize Script, Add Monolith & Bugfixing [@MickLesk](https://github.com/MickLesk) ([#306](https://github.com/community-scripts/ProxmoxVE/pull/306))
 - Fix optional installs in Cockpit LXC [@havardthom](https://github.com/havardthom) ([#317](https://github.com/community-scripts/ProxmoxVE/pull/317))
+
+### 🌐 Website
+
+- Added additional instructions to nginxproxymanager [@newzealandpaul](https://github.com/newzealandpaul) ([#329](https://github.com/community-scripts/ProxmoxVE/pull/329))
+
+### 🧰 Maintenance
+
+- Verify changes before commit in changelog-pr.yml [@havardthom](https://github.com/havardthom) ([#310](https://github.com/community-scripts/ProxmoxVE/pull/310))
 
 ## 2024-11-17
 
