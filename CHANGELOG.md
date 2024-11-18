@@ -17,6 +17,15 @@ All LXC instances created using this repository come pre-installed with Midnight
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
 
+
+## 2024-11-18
+
+### Changed
+
+### 🚀 Updated Scripts
+
+- Fix optional installs in Cockpit LXC [@havardthom](https://github.com/havardthom) ([#317](https://github.com/community-scripts/ProxmoxVE/pull/317))
+
 ## 2024-11-17
 
 ### Changed
