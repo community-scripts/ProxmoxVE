@@ -18,6 +18,16 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 
 
+
+## 2024-11-19
+
+### Changed
+
+### 🚀 Updated Scripts
+
+- Fix Wallos Update [@MickLesk](https://github.com/MickLesk) ([#339](https://github.com/community-scripts/ProxmoxVE/pull/339))
+- Fix: add gnupg to installed dependencies [@erfansamandarian](https://github.com/erfansamandarian) ([#349](https://github.com/community-scripts/ProxmoxVE/pull/349))
+
 ## 2024-11-18
 
 ### Changed
