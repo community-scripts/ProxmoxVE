@@ -31,6 +31,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🧰 Maintenance
 
+- [github]: add new Frontend_Report / Issue_Report & optimize config.yml [@MickLesk](https://github.com/MickLesk) ([#226](https://github.com/community-scripts/ProxmoxVE/pull/226))
 - [chore] Update FUNDING.yml [@MickLesk](https://github.com/MickLesk) ([#352](https://github.com/community-scripts/ProxmoxVE/pull/352))
 
 ## 2024-11-18
