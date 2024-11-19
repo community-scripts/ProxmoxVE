@@ -25,9 +25,14 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- Fix Wallos Update [@MickLesk](https://github.com/MickLesk) ([#339](https://github.com/community-scripts/ProxmoxVE/pull/339))
 - Linkwarden: Move Secret Key above in install.sh [@MickLesk](https://github.com/MickLesk) ([#356](https://github.com/community-scripts/ProxmoxVE/pull/356))
 - Linkwarden: add gnupg to installed dependencies [@erfansamandarian](https://github.com/erfansamandarian) ([#349](https://github.com/community-scripts/ProxmoxVE/pull/349))
-- Fix Wallos Update [@MickLesk](https://github.com/MickLesk) ([#339](https://github.com/community-scripts/ProxmoxVE/pull/339))
+
+### 🌐 Website
+
+- Add *Arr Suite category for Website [@MickLesk](https://github.com/MickLesk) ([#370](https://github.com/community-scripts/ProxmoxVE/pull/370))
+- Refactor Buttons component to use a ButtonLink for cleaner code, simplifying the source URL generation and layout [@BramSuurdje](https://github.com/BramSuurdje) ([#371](https://github.com/community-scripts/ProxmoxVE/pull/371))
 
 ### 🧰 Maintenance
 
