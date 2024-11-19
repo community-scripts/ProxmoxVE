@@ -29,6 +29,10 @@ chmod +x /opt/homebox
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Installed Homebox"
 
+msg_info "Creating Blank ENV File"
+touch /opt/.env
+msg_info "Created Blank ENV File"
+
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/homebox.service
 [Unit]
@@ -37,7 +41,29 @@ After=network.target
 
 [Service]
 WorkingDirectory=/opt
-ExecStart=/opt/homebox
+ExecStart=/opt/homebox \\
+  --mode/\$HBOX_MODE \\
+  --web-port/\$HBOX_WEB_PORT \\
+  --web-host/\$HBOX_WEB_HOST \\
+  --web-max-upload-size/\$HBOX_WEB_MAX_UPLOAD_SIZE \\
+  --storage-data/\$HBOX_STORAGE_DATA \\
+  --storage-sqlite-url/\$HBOX_STORAGE_SQLITE_URL \\
+  --log-level/\$HBOX_LOG_LEVEL \\
+  --log-format/\$HBOX_LOG_FORMAT \\
+  --mailer-host/\$HBOX_MAILER_HOST \\
+  --mailer-port/\$HBOX_MAILER_PORT \\
+  --mailer-username/\$HBOX_MAILER_USERNAME \\
+  --mailer-password/\$HBOX_MAILER_PASSWORD \\
+  --mailer-from/\$HBOX_MAILER_FROM \\
+  --swagger-host/\$HBOX_SWAGGER_HOST \\
+  --swagger-scheme/\$HBOX_SWAGGER_SCHEME \\
+  --demo/\$HBOX_DEMO \\
+  --debug-enabled/\$HBOX_DEBUG_ENABLED \\
+  --debug-port/\$HBOX_DEBUG_PORT \\
+  --options-allow-registration/\$HBOX_OPTIONS_ALLOW_REGISTRATION \\
+  --options-auto-increment-asset-id/\$HBOX_OPTIONS_AUTO_INCREMENT_ASSET_ID \\
+  --options-currency-config/\$HBOX_OPTIONS_CURRENCY_CONFIG
+EnvironmentFile=/opt/.env
 Restart=on-failure
 
 [Install]
