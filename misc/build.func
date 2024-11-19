@@ -151,7 +151,7 @@ base_settings() {
   VLAN=""
   SSH="no"
   VERB="no"
-  # Since these 2 are defined outside of default_settings function, avoid overwriting them. To align everything, they should use another constant variable (say OSTYPE), but that would require updating the default_settings function for all existing scripts
+  # Since these 2 are only defined outside of default_settings function, we add a temporary fallback. TODO: To align everything, we should add these as constant variables (e.g. OSTYPE and OSVERSION), but that would currently require updating the default_settings function for all existing scripts
   if [ -z "$var_os" ]; then
     var_os="debian"
   fi
