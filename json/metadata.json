@@ -17,7 +17,8 @@
         {"name": "Operating System", "id": 9, "sort_order": 14.0},
         {"name": "Server - Networking", "id": 11, "sort_order": 15.0},
         {"name": "TurnKey", "id": 10, "sort_order": 16.0},
-        {"name": "Zigbee - Zwave", "id": 6, "sort_order": 17.0},
+        {"name": "Matter/Zigbee/ZWave", "id": 6, "sort_order": 17.0},
+        {"name": "*arr Suite", "id": 18, "sort_order": 18.0},
         {"name": "Miscellaneous", "id": 0, "sort_order": 99.0}
     ]
 }
