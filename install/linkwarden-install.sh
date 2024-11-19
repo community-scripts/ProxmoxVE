@@ -47,6 +47,7 @@ msg_info "Setting up PostgreSQL DB"
 DB_NAME=linkwardendb
 DB_USER=linkwarden
 DB_PASS="$(openssl rand -base64 18 | tr -d '/' | cut -c1-13)"
+SECRET_KEY="$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32)"
 $STD sudo -u postgres psql -c "CREATE ROLE $DB_USER WITH LOGIN PASSWORD '$DB_PASS';"
 $STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER ENCODING 'UTF8' TEMPLATE template0;"
 $STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET client_encoding TO 'utf8';"
@@ -97,7 +98,6 @@ $STD yarn
 $STD npx playwright install-deps
 $STD yarn playwright install
 IP=$(hostname -I | awk '{print $1}')
-SECRET_KEY="$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32)"
 env_path="/opt/linkwarden/.env"
 echo " 
 NEXTAUTH_SECRET=${SECRET_KEY}
