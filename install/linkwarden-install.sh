@@ -21,7 +21,8 @@ $STD apt-get install -y \
   mc \
   make \
   postgresql \
-  cargo
+  cargo \
+  gnupg
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up Node.js Repository"
