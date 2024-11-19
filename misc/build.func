@@ -129,7 +129,7 @@ ssh_check() {
   fi
 }
 
-# This function allows to centralize all common options so that services only need to define settings that need to be overridden (Avoid duplication of information)
+# This function sets base settings which are common for all scripts. The settings can be overriden in default_settings or advanced_settings which are defined in each script
 base_settings() {
   CT_TYPE="1"
   PW=""
