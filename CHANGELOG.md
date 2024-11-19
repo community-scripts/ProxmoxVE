@@ -25,8 +25,13 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- Linkwarden: Move Secret Key above in install.sh [@MickLesk](https://github.com/MickLesk) ([#356](https://github.com/community-scripts/ProxmoxVE/pull/356))
 - Linkwarden: add gnupg to installed dependencies [@erfansamandarian](https://github.com/erfansamandarian) ([#349](https://github.com/community-scripts/ProxmoxVE/pull/349))
 - Fix Wallos Update [@MickLesk](https://github.com/MickLesk) ([#339](https://github.com/community-scripts/ProxmoxVE/pull/339))
+
+### 🧰 Maintenance
+
+- [chore] Update FUNDING.yml [@MickLesk](https://github.com/MickLesk) ([#352](https://github.com/community-scripts/ProxmoxVE/pull/352))
 
 ## 2024-11-18
 
