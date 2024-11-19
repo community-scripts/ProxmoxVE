@@ -30,6 +30,7 @@ body:
         - Bug
         - Optimization
         - Documentation
+        - Other
   
   - type: textarea
     id: bug_description
