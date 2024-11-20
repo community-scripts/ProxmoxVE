@@ -53,6 +53,9 @@ function default_settings() {
 }
 
 function update_script() {
+  header_info
+  check_container_storage
+  check_container_resources
   if [[ ! -f /etc/systemd/system/vaultwarden.service ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
@@ -71,9 +74,6 @@ function update_script() {
     "3" "Set Admin Token" OFF \
     3>&1 1>&2 2>&3)
 
-  header_info
-  check_container_storage
-  check_container_resources
   if [ "$UPD" == "1" ]; then
     msg_info "Stopping Vaultwarden"
     systemctl stop vaultwarden.service
@@ -101,7 +101,6 @@ function update_script() {
     msg_ok "Started Vaultwarden"
 
     msg_ok "$VAULT Update Successful"
-    echo -e "\n ⚠️  Ensure you set resources back to normal settings \n"
     exit
   fi
   if [ "$UPD" == "2" ]; then
