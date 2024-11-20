@@ -19,6 +19,20 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 
 
+
+## 2024-11-20
+
+### Changed
+
+### 🚀 Updated Scripts
+
+- LinkWarden: Moved PATH into service [@newzealandpaul](https://github.com/newzealandpaul) ([#376](https://github.com/community-scripts/ProxmoxVE/pull/376))
+
+### 🌐 Website
+
+- Replace dash "-" with "/" in metadata [@newzealandpaul](https://github.com/newzealandpaul) ([#374](https://github.com/community-scripts/ProxmoxVE/pull/374))
+- Proxmox VE Cron LXC Updater: Add tteck's notes. [@newzealandpaul](https://github.com/newzealandpaul) ([#378](https://github.com/community-scripts/ProxmoxVE/pull/378))
+
 ## 2024-11-19
 
 ### Changed
