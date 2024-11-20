@@ -61,7 +61,7 @@ RELEASE=$(curl -s https://api.github.com/repos/kimai/kimai/releases/latest | gre
 if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
   msg_info "Stopping Apache2"
   systemctl stop apache2
-  msg_ok "Services Stopped"
+  msg_ok "Stopped Apache2"
 
   msg_info "Updating ${APP} to ${RELEASE}"
   cp /opt/kimai/.env /opt/.env
