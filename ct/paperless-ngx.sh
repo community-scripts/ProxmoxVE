@@ -65,6 +65,8 @@ function update_script() {
     "2" "Paperless-ngx Credentials" OFF \
     3>&1 1>&2 2>&3)
   header_info
+  check_container_storage
+  check_container_resources
   if [ "$UPD" == "1" ]; then
     if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
 	  if [[ "$(gs --version 2>/dev/null)" != "10.04.0" ]]; then

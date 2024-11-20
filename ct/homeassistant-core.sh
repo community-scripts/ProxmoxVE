@@ -53,6 +53,9 @@ function default_settings() {
 }
 
 function update_script() {
+  header_info
+  check_container_storage
+  check_container_resources
   if [[ ! -d /srv/homeassistant ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
@@ -64,7 +67,6 @@ function update_script() {
     "2" "Install HACS" OFF \
     "3" "Install FileBrowser" OFF \
     3>&1 1>&2 2>&3)
-  header_info
   if [ "$UPD" == "1" ]; then
     if (whiptail --backtitle "Proxmox VE Helper Scripts" --defaultno --title "SELECT BRANCH" --yesno "Use Beta Branch?" 10 58); then
       clear

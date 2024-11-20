@@ -54,12 +54,9 @@ function default_settings() {
 
 function update_script() {
 header_info
+check_container_storage
+check_container_resources
 if [[ ! -d /opt/jellyseerr ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
-if (( $(df /boot | awk 'NR==2{gsub("%","",$5); print $5}') > 80 )); then
-  read -r -p "Warning: Storage is dangerously low, continue anyway? <y/N> " prompt
-  [[ ${prompt,,} =~ ^(y|yes)$ ]] || exit
-fi
-whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox --title "SET RESOURCES" "Please set the resources in your Jellyseerr LXC to 4vcpu and 4096RAM for the build process before continuing" 10 75
 if ! command -v pnpm &> /dev/null; then
     msg_error "pnpm not found. Installing..."
     npm install -g pnpm &>/dev/null
@@ -106,11 +103,6 @@ exit
 start
 build_container
 description
-
-msg_info "Setting Container to Normal Resources"
-pct set $CTID -memory 2048
-pct set $CTID -cores 2
-msg_ok "Set Container to Normal Resources"
 
 msg_ok "Completed Successfully!\n"
 echo -e "${APP} should be reachable by going to the following URL.

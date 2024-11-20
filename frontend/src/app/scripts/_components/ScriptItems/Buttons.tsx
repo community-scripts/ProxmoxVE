@@ -5,45 +5,53 @@ import { BookOpenText, Code, Globe } from "lucide-react";
 import Link from "next/link";
 
 const generateSourceUrl = (slug: string, type: string) => {
-  if (type === "ct") {
-    return `https://raw.githubusercontent.com/community-scripts/${basePath}/main/install/${slug}-install.sh`;
-  } else {
-    return `https://raw.githubusercontent.com/community-scripts/${basePath}/main/${type}/${slug}.sh`;
-  }
+  const baseUrl = `https://raw.githubusercontent.com/community-scripts/${basePath}/main`;
+  return type === "ct"
+    ? `${baseUrl}/install/${slug}-install.sh`
+    : `${baseUrl}/${type}/${slug}.sh`;
 };
 
+interface ButtonLinkProps {
+  href: string;
+  icon: React.ReactNode;
+  text: string;
+}
+
+const ButtonLink = ({ href, icon, text }: ButtonLinkProps) => (
+  <Button variant="secondary" asChild>
+    <Link target="_blank" href={href}>
+      <span className="flex items-center gap-2">
+        {icon}
+        {text}
+      </span>
+    </Link>
+  </Button>
+);
+
 export default function Buttons({ item }: { item: Script }) {
+  const buttons = [
+    item.website && {
+      href: item.website,
+      icon: <Globe className="h-4 w-4" />,
+      text: "Website",
+    },
+    item.documentation && {
+      href: item.documentation,
+      icon: <BookOpenText className="h-4 w-4" />,
+      text: "Documentation",
+    },
+    {
+      href: generateSourceUrl(item.slug, item.type),
+      icon: <Code className="h-4 w-4" />,
+      text: "Source Code",
+    },
+  ].filter(Boolean) as ButtonLinkProps[];
+
   return (
     <div className="flex flex-wrap justify-end gap-2">
-      {item.website && (
-        <Button variant="secondary" asChild>
-          <Link target="_blank" href={item.website}>
-            <span className="flex items-center gap-2">
-              <Globe className="h-4 w-4" /> Website
-            </span>
-          </Link>
-        </Button>
-      )}
-      {item.documentation && (
-        <Button variant="secondary" asChild>
-          <Link target="_blank" href={item.documentation}>
-            <span className="flex items-center gap-2">
-              <BookOpenText className="h-4 w-4" />
-              Documentation
-            </span>
-          </Link>
-        </Button>
-      )}
-      {
-        <Button variant="secondary" asChild>
-          <Link target="_blank" href={generateSourceUrl(item.slug, item.type)}>
-            <span className="flex items-center gap-2">
-              <Code className="h-4 w-4" />
-              Source Code
-            </span>
-          </Link>
-        </Button>
-      }
+      {buttons.map((props, index) => (
+        <ButtonLink key={index} {...props} />
+      ))}
     </div>
   );
 }

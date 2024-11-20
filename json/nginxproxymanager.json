@@ -32,7 +32,7 @@
     },
     "notes": [
         {
-            "text": "Since there are hundreds of Certbot instances, it's necessary to install the specific Certbot of your preference.",
+            "text": "Since there are hundreds of Certbot instances, it's necessary to install the specific Certbot of your preference. Running `/app/scripts/install-certbot-plugins` within the nginxproxymanager LXC shell will install many additional plugins.",
             "type": "warning"
         }
     ]

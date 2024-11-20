@@ -57,6 +57,9 @@ function default_settings() {
 }
 
 function update_script() {
+header_info
+check_container_storage
+check_container_resources
   if [[ ! -f /etc/systemd/system/homeassistant.service ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
   UPD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "UPDATE" --radiolist --cancel-button Exit-Script "Spacebar = Select" 11 58 4 \
   "1" "Update system and containers" ON \
@@ -64,7 +67,7 @@ function update_script() {
   "3" "Install FileBrowser" OFF \
   "4" "Remove ALL Unused Images" OFF \
   3>&1 1>&2 2>&3)
-header_info
+
 if [ "$UPD" == "1" ]; then
   msg_info "Updating ${APP} LXC"
   apt-get update &>/dev/null

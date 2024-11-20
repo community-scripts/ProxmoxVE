@@ -55,24 +55,26 @@ function default_settings() {
 
 function update_script() {
 header_info
+check_container_storage
+check_container_resources
 if [[ ! -d /opt/wallos ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
-if (( $(df /boot | awk 'NR==2{gsub("%","",$5); print $5}') > 80 )); then
-  read -r -p "Warning: Storage is dangerously low, continue anyway? <y/N> " prompt
-  [[ ${prompt,,} =~ ^(y|yes)$ ]] || exit
-fi
 RELEASE=$(curl -s https://api.github.com/repos/ellite/Wallos/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
   msg_info "Updating ${APP} to ${RELEASE}"
   cd /opt
   wget -q "https://github.com/ellite/Wallos/archive/refs/tags/v${RELEASE}.zip"
+  mkdir -p /opt/logos
   mv /opt/wallos/db/wallos.db /opt/wallos.db
+  mv /opt/wallos/images/uploads/logos /opt/logos/
   unzip -q v${RELEASE}.zip
   rm -rf /opt/wallos
   mv Wallos-${RELEASE} /opt/wallos
   rm -rf /opt/wallos/db/wallos.empty.db
   mv /opt/wallos.db /opt/wallos/db/wallos.db
+  mv /opt/logos/* /opt/wallos/images/uploads/logos
   chown -R www-data:www-data /opt/wallos
   chmod -R 755 /opt/wallos
+  mkdir -p /var/log/cron
   curl http://localhost/endpoints/db/migrate.php &>/dev/null
   echo "${RELEASE}" >/opt/${APP}_version.txt
   msg_ok "Updated ${APP}"
