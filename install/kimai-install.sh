@@ -29,7 +29,7 @@ $STD apt-get install -y \
   php8.2-{mbstring,gd,intl,pdo,mysql,tokenizer,zip,xml} 
 msg_ok "Installed Dependencies"
 
-msg_info "Setting up Database"
+msg_info "Setting up database"
 DB_NAME=kimai_db
 DB_USER=kimai
 DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
