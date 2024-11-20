@@ -52,6 +52,7 @@ function default_settings() {
   VERB="no"
   echo_default
 }
+
 function update_script() {
 header_info
 check_container_storage
