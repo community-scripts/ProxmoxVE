@@ -27,7 +27,7 @@ $STD apt-get install -y xxd
 msg_ok "Installed Dependencies"
 
 msg_info "Installing BlueSky PDS"
-$STD sh <(curl -sSL https://raw.githubusercontent.com/bluesky-social/pds/main/installer.sh)
+$STD bash <(curl -fsSL https://raw.githubusercontent.com/bluesky-social/pds/main/installer.sh)
 msg_ok "Installed BlueSky PDS"
 
 motd_ssh
