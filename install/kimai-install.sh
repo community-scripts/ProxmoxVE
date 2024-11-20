@@ -96,7 +96,7 @@ EOF
 $STD a2ensite kimai.conf
 $STD a2dissite 000-default.conf  
 $STD systemctl reload apache2
-msg_ok "Created Services"
+msg_ok "Created Service"
 
 motd_ssh
 customize
