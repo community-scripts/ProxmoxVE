@@ -33,7 +33,7 @@
     "notes": [
         {
             "text": "env file location: `/opt/.env`",
-            "type": "warning"
+            "type": "info"
         }
     ]
 }
