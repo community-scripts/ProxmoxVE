@@ -45,7 +45,7 @@ sudo mysql -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH 
 } >> ~/kimai.creds
 msg_ok "Set up database"
 
-msg_info "Setup Kimai (Patience)"
+msg_info "Installing Kimai (Patience)"
 RELEASE=$(curl -s https://api.github.com/repos/kimai/kimai/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 wget -q "https://github.com/kimai/kimai/archive/refs/tags/${RELEASE}.zip"
 unzip -q ${RELEASE}.zip
