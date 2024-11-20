@@ -12,7 +12,6 @@ catch_errors
 setting_up_container
 network_check
 update_os
-#add_core_dependencies
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
