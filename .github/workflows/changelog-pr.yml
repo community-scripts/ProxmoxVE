@@ -16,6 +16,13 @@ jobs:
       contents: write
       pull-requests: write
     steps:
+      - name: Generate a token
+        id: generate-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
       - name: Checkout code
         uses: actions/checkout@v4
         with:
@@ -129,7 +136,7 @@ jobs:
       - name: Create pull request if not exists
         if: steps.verify-diff.outputs.changed == 'true'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
         run: |
           PR_EXISTS=$(gh pr list --head "${BRANCH_NAME}" --json number --jq '.[].number')
           if [ -z "$PR_EXISTS" ]; then
@@ -138,4 +145,14 @@ jobs:
                          --head $BRANCH_NAME \
                          --base main \
                          --label "$AUTOMATED_PR_LABEL"
+          fi
+
+      - name: Approve pull request
+        if: steps.verify-diff.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_NUMBER=$(gh pr list --head "${BRANCH_NAME}" --json number --jq '.[].number')
+          if [ -n "$PR_NUMBER" ]; then
+            gh pr review $PR_NUMBER --approve
           fi
