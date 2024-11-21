@@ -54,17 +54,33 @@ function default_settings() {
 
 function update_script() {
 header_info
+check_container_storage
+check_container_resources
 if [[ ! -d /opt/rdtc/ ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
-msg_info "Updating $APP"
+msg_info "Stopping ${APP}"
 systemctl stop rdtc
+msg_ok "Stopped ${APP}"
+
+msg_info "Updating ${APP}"
+if dpkg-query -W dotnet-sdk-8.0 >/dev/null 2>&1; then
+    apt-get remove --purge -y dotnet-sdk-8.0 &>/dev/null
+    apt-get install -y dotnet-sdk-9.0 &>/dev/null
+fi
 mkdir -p rdtc-backup
 cp -R /opt/rdtc/appsettings.json rdtc-backup/
 wget -q https://github.com/rogerfar/rdt-client/releases/latest/download/RealDebridClient.zip
 unzip -oqq RealDebridClient.zip -d /opt/rdtc
 cp -R rdtc-backup/appsettings.json /opt/rdtc/
-rm -rf rdtc-backup RealDebridClient.zip
+msg_ok "Updated ${APP}"
+
+msg_info "Starting ${APP}"
 systemctl start rdtc
-msg_ok "Updated $APP"
+msg_ok "Started ${APP}"
+
+msg_info "Cleaning Up"
+rm -rf rdtc-backup RealDebridClient.zip
+msg_ok "Cleaned"
+msg_ok "Updated Successfully"
 exit
 }
 
