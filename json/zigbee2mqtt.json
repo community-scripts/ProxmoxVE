@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": true,
-    "interface_port": 9442,
+    "interface_port": 8080,
     "documentation": "https://www.zigbee2mqtt.io/guide/getting-started/",
     "website": "https://www.zigbee2mqtt.io/",
     "logo": "https://github.com/Koenkk/zigbee2mqtt/blob/master/images/logo_bee_only.png?raw=true",
