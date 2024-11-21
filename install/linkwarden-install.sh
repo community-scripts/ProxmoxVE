@@ -39,7 +39,6 @@ msg_ok "Installed Node.js/Yarn"
 
 msg_info "Installing Monolith"
 $STD cargo install monolith
-echo 'export PATH=~/.cargo/bin:$PATH' >>~/.bashrc
 export PATH=~/.cargo/bin:$PATH
 msg_ok "Installed Monolith"
 
@@ -117,6 +116,7 @@ After=network.target
 
 [Service]
 Type=exec
+Environment=PATH=$PATH
 WorkingDirectory=/opt/linkwarden
 ExecStart=/usr/bin/yarn start
 

@@ -19,18 +19,38 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 
 
+
+## 2024-11-20
+
+### Changed
+
+### 🚀 Updated Scripts
+
+- LinkWarden: Moved PATH into service [@newzealandpaul](https://github.com/newzealandpaul) ([#376](https://github.com/community-scripts/ProxmoxVE/pull/376))
+
+### 🌐 Website
+
+- Replace dash "-" with "/" in metadata [@newzealandpaul](https://github.com/newzealandpaul) ([#374](https://github.com/community-scripts/ProxmoxVE/pull/374))
+- Proxmox VE Cron LXC Updater: Add tteck's notes. [@newzealandpaul](https://github.com/newzealandpaul) ([#378](https://github.com/community-scripts/ProxmoxVE/pull/378))
+
 ## 2024-11-19
 
 ### Changed
 
 ### 🚀 Updated Scripts
 
+- Fix Wallos Update [@MickLesk](https://github.com/MickLesk) ([#339](https://github.com/community-scripts/ProxmoxVE/pull/339))
 - Linkwarden: Move Secret Key above in install.sh [@MickLesk](https://github.com/MickLesk) ([#356](https://github.com/community-scripts/ProxmoxVE/pull/356))
 - Linkwarden: add gnupg to installed dependencies [@erfansamandarian](https://github.com/erfansamandarian) ([#349](https://github.com/community-scripts/ProxmoxVE/pull/349))
-- Fix Wallos Update [@MickLesk](https://github.com/MickLesk) ([#339](https://github.com/community-scripts/ProxmoxVE/pull/339))
+
+### 🌐 Website
+
+- Add *Arr Suite category for Website [@MickLesk](https://github.com/MickLesk) ([#370](https://github.com/community-scripts/ProxmoxVE/pull/370))
+- Refactor Buttons component to use a ButtonLink for cleaner code, simplifying the source URL generation and layout [@BramSuurdje](https://github.com/BramSuurdje) ([#371](https://github.com/community-scripts/ProxmoxVE/pull/371))
 
 ### 🧰 Maintenance
 
+- [github]: add new Frontend_Report / Issue_Report & optimize config.yml [@MickLesk](https://github.com/MickLesk) ([#226](https://github.com/community-scripts/ProxmoxVE/pull/226))
 - [chore] Update FUNDING.yml [@MickLesk](https://github.com/MickLesk) ([#352](https://github.com/community-scripts/ProxmoxVE/pull/352))
 
 ## 2024-11-18
