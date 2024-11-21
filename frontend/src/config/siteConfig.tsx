@@ -19,13 +19,13 @@ export const navbarLinks = [
   {
     href: `https://github.com/community-scripts/${basePath}/blob/main/CHANGELOG.md`,
     event: "Change Log",
-    icon: <Scroll className="h-4 w-4" />,
+    icon: <Scroll className="h-4 w-4 hidden sm:block" />,
     text: "Change Log",
   },
   {
     href: `https://github.com/community-scripts/${basePath}/discussions`,
     event: "Discussions",
-    icon: <MessagesSquare className="h-4 w-4" />,
+    icon: <MessagesSquare className="h-4 w-4 hidden sm:block" />,
     text: "Discussions",
   },
 ];
