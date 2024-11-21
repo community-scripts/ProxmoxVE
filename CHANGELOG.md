@@ -32,6 +32,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- Add .env file support for HomeBox [@404invalid-user](https://github.com/404invalid-user) ([#383](https://github.com/community-scripts/ProxmoxVE/pull/383))
 - RDTClient Remove .NET 8.0 | Add .NET 9.0 [@MickLesk](https://github.com/MickLesk) ([#413](https://github.com/community-scripts/ProxmoxVE/pull/413))
 - Remove old resource message from vaultwarden [@havardthom](https://github.com/havardthom) ([#402](https://github.com/community-scripts/ProxmoxVE/pull/402))
 
