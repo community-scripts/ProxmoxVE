@@ -79,7 +79,7 @@ if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_v
   sudo chown -R www-data:www-data /opt/kimai
   sudo chmod -R 755 /opt/kimai
   echo "${RELEASE}" >/opt/${APP}_version.txt
-  msg_ok "Updated ${APP}"
+  msg_ok "Updated ${APP} to ${RELEASE}"
 
   msg_info "Starting Apache2"
   systemctl start apache2
