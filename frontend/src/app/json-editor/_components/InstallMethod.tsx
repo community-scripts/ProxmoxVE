@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -6,11 +7,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { OperatingSystems } from "@/config/siteConfig";
 import { PlusCircle, Trash2 } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { memo, useCallback, useEffect, useRef } from "react";
 import { z } from "zod";
 import { InstallMethodSchema, ScriptSchema } from "../_schemas/schemas";
-import { memo, useCallback } from "react";
 
 type Script = z.infer<typeof ScriptSchema>;
 
@@ -27,6 +28,10 @@ function InstallMethod({
   setIsValid,
   setZodErrors,
 }: InstallMethodProps) {
+  const cpuRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const ramRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const hddRefs = useRef<(HTMLInputElement | null)[]>([]);
+
   const addInstallMethod = useCallback(() => {
     setScript((prev) => {
       const method = InstallMethodSchema.parse({
@@ -47,71 +52,62 @@ function InstallMethod({
     });
   }, [setScript]);
 
-  const updateInstallMethod = useCallback((
-    index: number,
-    key: keyof Script["install_methods"][number],
-    value: Script["install_methods"][number][keyof Script["install_methods"][number]],
-  ) => {
-    setScript((prev) => {
-      const updatedMethods = prev.install_methods.map((method, i) => {
-        if (i === index) {
-          const updatedMethod = { ...method, [key]: value };
+  const updateInstallMethod = useCallback(
+    (
+      index: number,
+      key: keyof Script["install_methods"][number],
+      value: Script["install_methods"][number][keyof Script["install_methods"][number]],
+    ) => {
+      setScript((prev) => {
+        const updatedMethods = prev.install_methods.map((method, i) => {
+          if (i === index) {
+            const updatedMethod = { ...method, [key]: value };
 
-          if (key === "type") {
-            updatedMethod.script =
-              value === "alpine"
-                ? `/${prev.type}/alpine-${prev.slug}.sh`
-                : `/${prev.type}/${prev.slug}.sh`;
+            if (key === "type") {
+              updatedMethod.script =
+                value === "alpine"
+                  ? `/${prev.type}/alpine-${prev.slug}.sh`
+                  : `/${prev.type}/${prev.slug}.sh`;
+
+              // Set OS to Alpine and reset version if type is alpine
+              if (value === "alpine") {
+                updatedMethod.resources.os = "Alpine";
+                updatedMethod.resources.version = null;
+              }
+            }
+
+            return updatedMethod;
           }
+          return method;
+        });
 
-          return updatedMethod;
+        const updated = {
+          ...prev,
+          install_methods: updatedMethods,
+        };
+
+        const result = ScriptSchema.safeParse(updated);
+        setIsValid(result.success);
+        if (!result.success) {
+          setZodErrors(result.error);
+        } else {
+          setZodErrors(null);
         }
-        return method;
+        return updated;
       });
+    },
+    [setScript, setIsValid, setZodErrors],
+  );
 
-      const updated = {
+  const removeInstallMethod = useCallback(
+    (index: number) => {
+      setScript((prev) => ({
         ...prev,
-        install_methods: updatedMethods,
-      };
-
-      const result = ScriptSchema.safeParse(updated);
-      setIsValid(result.success);
-      if (!result.success) {
-        setZodErrors(result.error);
-      } else {
-        setZodErrors(null);
-      }
-      return updated;
-    });
-  }, [setScript, setIsValid, setZodErrors]);
-
-  const removeInstallMethod = useCallback((index: number) => {
-    setScript((prev) => ({
-      ...prev,
-      install_methods: prev.install_methods.filter((_, i) => i !== index),
-    }));
-  }, [setScript]);
-
-  const ResourceInput = memo(({ 
-    placeholder,
-    value,
-    onChange,
-    type = "text"
-  }: {
-    placeholder: string;
-    value: string | number | null;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    type?: string;
-  }) => (
-    <Input
-      placeholder={placeholder}
-      type={type}
-      value={value || ""}
-      onChange={onChange}
-    />
-  ));
-
-  ResourceInput.displayName = 'ResourceInput';
+        install_methods: prev.install_methods.filter((_, i) => i !== index),
+      }));
+    },
+    [setScript],
+  );
 
   return (
     <>
@@ -131,10 +127,13 @@ function InstallMethod({
             </SelectContent>
           </Select>
           <div className="flex gap-2">
-            <ResourceInput
+            <Input
+              ref={(el) => {
+                cpuRefs.current[index] = el;
+              }}
               placeholder="CPU in Cores"
               type="number"
-              value={method.resources.cpu}
+              value={method.resources.cpu || ""}
               onChange={(e) =>
                 updateInstallMethod(index, "resources", {
                   ...method.resources,
@@ -142,10 +141,13 @@ function InstallMethod({
                 })
               }
             />
-            <ResourceInput
+            <Input
+              ref={(el) => {
+                ramRefs.current[index] = el;
+              }}
               placeholder="RAM in MB"
               type="number"
-              value={method.resources.ram}
+              value={method.resources.ram || ""}
               onChange={(e) =>
                 updateInstallMethod(index, "resources", {
                   ...method.resources,
@@ -153,10 +155,13 @@ function InstallMethod({
                 })
               }
             />
-            <ResourceInput
-              placeholder="HDD in GB" 
+            <Input
+              ref={(el) => {
+                hddRefs.current[index] = el;
+              }}
+              placeholder="HDD in GB"
               type="number"
-              value={method.resources.hdd}
+              value={method.resources.hdd || ""}
               onChange={(e) =>
                 updateInstallMethod(index, "resources", {
                   ...method.resources,
@@ -166,27 +171,51 @@ function InstallMethod({
             />
           </div>
           <div className="flex gap-2">
-            <ResourceInput
-              placeholder="OS"
-              value={method.resources.os}
-              onChange={(e) =>
+            <Select
+              value={method.resources.os || undefined}
+              onValueChange={(value) =>
                 updateInstallMethod(index, "resources", {
                   ...method.resources,
-                  os: e.target.value || null,
+                  os: value || null,
+                  version: null, // Reset version when OS changes
                 })
               }
-            />
-            <ResourceInput
-              placeholder="Version"
-              type="number"
-              value={method.resources.version}
-              onChange={(e) =>
+              disabled={method.type === "alpine"}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="OS" />
+              </SelectTrigger>
+              <SelectContent>
+                {OperatingSystems.map((os) => (
+                  <SelectItem key={os.name} value={os.name}>
+                    {os.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select
+              value={method.resources.version ? String(method.resources.version) : undefined}
+              onValueChange={(value) =>
                 updateInstallMethod(index, "resources", {
                   ...method.resources,
-                  version: e.target.value ? Number(e.target.value) : null,
+                  version: value ? Number(value) : null,
                 })
               }
-            />
+              disabled={method.type === "alpine"}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Version" />
+              </SelectTrigger>
+              <SelectContent>
+                {OperatingSystems.find(
+                  (os) => os.name === method.resources.os,
+                )?.versions.map((version) => (
+                  <SelectItem key={version.slug} value={version.name}>
+                    {version.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <Button
             variant="destructive"

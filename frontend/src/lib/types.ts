@@ -46,3 +46,13 @@ export type Category = {
 export type Metadata = {
   categories: Category[];
 };
+
+export interface Version {
+  name: string;
+  slug: string;
+}
+
+export interface OperatingSystem {
+  name: string;
+  versions: Version[];
+}
