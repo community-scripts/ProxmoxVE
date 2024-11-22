@@ -12,7 +12,7 @@
     "documentation": null,
     "website": "https://openwrt.org/",
     "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/openwrt.svg",
-    "description": "OpenWrtis a powerful open-source firmware that can transform a wide range of networking devices into highly customizable and feature-rich routers, providing users with greater control and flexibility over their network infrastructure.",
+    "description": "OpenWrt is a powerful open-source firmware that can transform a wide range of networking devices into highly customizable and feature-rich routers, providing users with greater control and flexibility over their network infrastructure.",
     "install_methods": [
         {
             "type": "default",
