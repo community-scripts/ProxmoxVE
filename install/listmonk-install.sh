@@ -27,7 +27,7 @@ DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)
 $STD sudo -u postgres psql -c "CREATE ROLE $DB_USER WITH LOGIN PASSWORD '$DB_PASS';"
 $STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER TEMPLATE template0;"
 {
-echo "listmonk Database Credentials"
+echo "listmonk-Credentials"
 echo -e "listmonk Database User: \e[32m$DB_USER\e[0m"
 echo -e "listmonk Database Password: \e[32m$DB_PASS\e[0m"
 echo -e "listmonk Database Name: \e[32m$DB_NAME\e[0m"
@@ -42,8 +42,7 @@ wget -q "https://github.com/knadh/listmonk/releases/download/v${RELEASE}/listmon
 tar -xzf "listmonk_${RELEASE}_linux_amd64.tar.gz" -C /opt/listmonk
 
 $STD /opt/listmonk/listmonk --new-config --config /opt/listmonk/config.toml
-sed -i 's/address = "localhost:9000"/address = "0.0.0.0:9000"/' /opt/listmonk/config.toml
-sed -i 's/^password = ".*"/password = "'"$DB_PASS"'"/' /opt/listmonk/config.toml
+sed -i -e 's/address = "localhost:9000"/address = "0.0.0.0:9000"/' -e 's/^password = ".*"/password = "'"$DB_PASS"'"/' /opt/listmonk/config.toml
 $STD /opt/listmonk/listmonk --install --yes --config /opt/listmonk/config.toml
 
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
@@ -72,7 +71,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -r "/opt/listmonk_${RELEASE}_linux_amd64.tar.gz"
+rm -rf "/opt/listmonk_${RELEASE}_linux_amd64.tar.gz"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"

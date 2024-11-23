@@ -60,12 +60,11 @@ if [[ ! -f /etc/systemd/system/listmonk.service ]]; then msg_error "No ${APP} In
 
 RELEASE=$(curl -s https://api.github.com/repos/knadh/listmonk/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
-
   msg_info "Stopping ${APP}"
   systemctl stop listmonk
   msg_ok "Stopped ${APP}"
 
-  msg_info "Updating $APP to v${RELEASE}"
+  msg_info "Updating ${APP} to v${RELEASE}"
   cd /opt
   wget -q "https://github.com/knadh/listmonk/releases/download/v${RELEASE}/listmonk_${RELEASE}_linux_amd64.tar.gz"
   tar -xzf "listmonk_${RELEASE}_linux_amd64.tar.gz" -C /opt/listmonk
@@ -78,7 +77,7 @@ if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_v
   msg_ok "Started ${APP}"
 
   msg_info "Cleaning up"
-  rm -r "/opt/listmonk_${RELEASE}_linux_amd64.tar.gz"
+  rm -rf "/opt/listmonk_${RELEASE}_linux_amd64.tar.gz"
   msg_ok "Cleaned"
 
   msg_ok "Updated Successfully"
