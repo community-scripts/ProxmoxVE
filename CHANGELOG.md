@@ -21,6 +21,21 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 
 
+
+## 2024-11-23
+
+### Changed
+
+### 🚀 Updated Scripts
+
+- Fix Vikunja Update [@MickLesk](https://github.com/MickLesk) ([#440](https://github.com/community-scripts/ProxmoxVE/pull/440))
+- Patch PostInstall-Script to PVE 8.3 | Add PVE 8.3 in Security [@MickLesk](https://github.com/MickLesk) ([#431](https://github.com/community-scripts/ProxmoxVE/pull/431))
+
+### 🌐 Website
+
+- Frontend: fix reported issue with json-editor page and add OS select in installmethod [@BramSuurdje](https://github.com/BramSuurdje) ([#426](https://github.com/community-scripts/ProxmoxVE/pull/426))
+- Fixed Typo [@BenBakDev](https://github.com/BenBakDev) ([#441](https://github.com/community-scripts/ProxmoxVE/pull/441))
+
 ## 2024-11-21
 
 ### Changed
