@@ -33,7 +33,6 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 - Remove newline in changelog-pr action [@havardthom](https://github.com/havardthom) ([#461](https://github.com/community-scripts/ProxmoxVE/pull/461))
 - Add action that creates github release based on CHANGELOG.md [@havardthom](https://github.com/havardthom) ([#462](https://github.com/community-scripts/ProxmoxVE/pull/462))
-
 ## 2024-11-23
 
 ### Changed
