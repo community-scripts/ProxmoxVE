@@ -35,7 +35,7 @@ jobs:
 
           LATEST_DATE=$(echo "$DATES" | sed -n '1p')
           SECOND_LATEST_DATE=$(echo "$DATES" | sed -n '2p')
-          TODAY=$(date +%Y-%m-%d)
+          TODAY=$(date -u +%Y-%m-%d)
 
           echo "TODAY=$TODAY" >> $GITHUB_ENV
           if [ "$LATEST_DATE" == "$TODAY" ]; then
@@ -100,7 +100,7 @@ jobs:
             const changelogPath = path.resolve('CHANGELOG.md');
             const categorizedPRs = ${{ steps.get-categorized-prs.outputs.result }};
 
-            let newReleaseNotes = `\n## ${today}\n\n### Changed\n\n`;
+            let newReleaseNotes = `## ${today}\n\n### Changed\n\n`;
             for (const { title, notes } of categorizedPRs) {
               if (notes.length > 0) {
                 newReleaseNotes += `### ${title}\n\n${notes.join("\n")}\n\n`;
