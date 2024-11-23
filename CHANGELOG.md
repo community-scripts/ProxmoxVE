@@ -37,6 +37,11 @@ Do not break established syntax in this file, as it is automatically updated by 
 - Frontend: fix reported issue with json-editor page and add OS select in installmethod [@BramSuurdje](https://github.com/BramSuurdje) ([#426](https://github.com/community-scripts/ProxmoxVE/pull/426))
 - Fixed Typo [@BenBakDev](https://github.com/BenBakDev) ([#441](https://github.com/community-scripts/ProxmoxVE/pull/441))
 
+### 🧰 Maintenance
+
+- Remove newline in changelog-pr action [@havardthom](https://github.com/havardthom) ([#461](https://github.com/community-scripts/ProxmoxVE/pull/461))
+- Add action that creates github release based on CHANGELOG.md [@havardthom](https://github.com/havardthom) ([#462](https://github.com/community-scripts/ProxmoxVE/pull/462))
+
 ## 2024-11-21
 
 ### Changed
