@@ -1,0 +1,25 @@
+name: Create new release
+
+on:
+  schedule:
+    # Runs "At 00:01 every night" (UTC)
+    - cron: '1 0 * * *'
+
+jobs:
+  create-new-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Parse CHANGELOG.md for yesterday's entries and create a new release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          YESTERDAY=$(date -u --date="yesterday" +%Y-%m-%d)
+          YESTERDAY_CHANGELOG_NOTES=$(awk '/^## '"$YESTERDAY"'/ {f=1; next} f && /^## [0-9]{4}-[0-9]{2}-[0-9]{2}/ {f=0} f && !/^## / {print}' CHANGELOG.md)
+          
+          if [ -n "$YESTERDAY_CHANGELOG_NOTES" ]; then
+            gh release create "$YESTERDAY" -n "$YESTERDAY_CHANGELOG_NOTES" --latest
+          fi
