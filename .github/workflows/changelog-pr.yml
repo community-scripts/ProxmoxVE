@@ -112,7 +112,7 @@ jobs:
 
             // Replace todays release notes or insert release notes above previous release notes
             const regex = changelogIncludesTodaysReleaseNotes ? 
-              new RegExp(`\n## ${today}.*(?=## ${latestDateInChangelog})`, "gs") :
+              new RegExp(`## ${today}.*(?=## ${latestDateInChangelog})`, "gs") :
               new RegExp(`(?=## ${latestDateInChangelog})`, "gs");
 
             const newChangelogContent = changelogContent.replace(regex, newReleaseNotes)
