@@ -1,0 +1,47 @@
+{
+    "name": "Outline",
+    "slug": "outline",
+    "categories": [
+        14
+    ],
+    "date_created": "2024-11-23",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": "3000",
+    "documentation": "https://docs.getoutline.com/s/guide",
+    "website": "https://www.getoutline.com/",
+    "logo": "https://raw.githubusercontent.com/outline/outline/refs/heads/main/public/images/icon-192.png",
+    "description": "Outline is the fastest knowledge base for growing teams. Beautiful, realtime collaborative, feature packed, and markdown compatible.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/outline.sh",
+            "resources": {
+                "cpu": "2",
+                "ram": "4096",
+                "hdd": "8",
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": [
+        {
+            "text": "Outline needs to be behind a reverse proxy (e.g., Nginx Proxy Manager) to obtain HTTPS and to allow clients to connect. The https URL on which Outline should be reached, is prompted in the script and might not be trivial to change after installation!",
+            "type": "warning"
+        },
+        {
+            "text": "At least one identity provider from `https://docs.getoutline.com/s/hosting/doc/authentication-7ViKRmRY5o` needs to be added to `/opt/outline/.env` to allow users to login,  also SMTP can be configured here (look at `/opt/outline/.env.sample` for the correct ENV vars). After editing, restart outline with `systemctl restart outline`.",
+            "type": "warning"
+        },
+        {
+            "text": "Show database credentials: `cat ~/outline.creds`",
+            "type": "info"
+        }
+    ]
+}
