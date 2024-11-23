@@ -28,6 +28,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- Fix Actual Budget install missing build tools [@cour64](https://github.com/cour64) ([#455](https://github.com/community-scripts/ProxmoxVE/pull/455))
 - Fix Vikunja Update [@MickLesk](https://github.com/MickLesk) ([#440](https://github.com/community-scripts/ProxmoxVE/pull/440))
 - Patch PostInstall-Script to PVE 8.3 | Add PVE 8.3 in Security [@MickLesk](https://github.com/MickLesk) ([#431](https://github.com/community-scripts/ProxmoxVE/pull/431))
 
