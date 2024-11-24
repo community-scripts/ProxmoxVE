@@ -53,6 +53,7 @@ msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/listmonk.service
 [Unit]
 Description=Listmonk Service
+Wants=network.target
 After=postgresql.service
 
 [Service]
