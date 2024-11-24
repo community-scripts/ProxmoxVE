@@ -6,7 +6,7 @@
     ],
     "date_created": "2024-11-06",
     "type": "ct",
-    "updateable": false,
+    "updateable": true,
     "privileged": false,
     "interface_port": "9000",
     "documentation": "https://docs.goauthentik.io/docs/",
