@@ -133,7 +133,7 @@ msg_ok "Installed $APPLICATION"
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/outline.service
 [Unit]
-Description=Linkwarden Service
+Description=Outline Service
 After=network.target
 
 [Service]
