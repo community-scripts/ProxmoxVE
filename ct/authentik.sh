@@ -76,7 +76,7 @@ if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}
   cd /opt/authentik/web
   npm install >/dev/null 2>&1
   npm run build >/dev/null 2>&1
-  msg_ok "Built Authentik website"
+  msg_ok "Built ${APP} website"
 
   msg_info "Installing Python Dependencies"
   cd /opt/authentik
