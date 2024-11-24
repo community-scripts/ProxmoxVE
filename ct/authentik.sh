@@ -65,7 +65,7 @@ if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}
   systemctl stop authentik-worker
   msg_ok "Stopped ${APP}"
 
-  msg_info "Building Authentik website"
+  msg_info "Building ${APP} website"
   mkdir -p /opt/authentik
   wget -qO authentik.tar.gz "${RELEASE}"
   tar -xzf authentik.tar.gz -C /opt/authentik --strip-components 1 --overwrite
