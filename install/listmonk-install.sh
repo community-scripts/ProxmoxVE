@@ -17,6 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt-get install -y \
   curl \
   sudo \
+  mc \
   postgresql
 msg_ok "Installed Dependencies"
 
@@ -34,7 +35,7 @@ echo -e "listmonk Database Name: \e[32m$DB_NAME\e[0m"
 } >> ~/listmonk.creds
 msg_ok "Set up PostgreSQL"
 
-msg_info "Installing ${APPLICATION}"
+msg_info "Installing listmonk"
 cd /opt
 mkdir /opt/listmonk
 RELEASE=$(curl -s https://api.github.com/repos/knadh/listmonk/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
@@ -46,9 +47,9 @@ sed -i -e 's/address = "localhost:9000"/address = "0.0.0.0:9000"/' -e 's/^passwo
 $STD /opt/listmonk/listmonk --install --yes --config /opt/listmonk/config.toml
 
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
-msg_ok "Installed ${APPLICATION}"
+msg_ok "Installed listmonk"
 
-msg_info "Creating Services"
+msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/listmonk.service
 [Unit]
 Description=Listmonk Service
@@ -65,7 +66,7 @@ WorkingDirectory=/opt/listmonk
 WantedBy=multi-user.target
 EOF
 systemctl enable -q --now listmonk
-msg_ok "Configured Services"
+msg_ok "Created Service"
 
 motd_ssh
 customize
