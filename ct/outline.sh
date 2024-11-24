@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/burgerga/ProxmoxVE/add_outline/misc/build.func)
+source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2024 community-scripts ORG
 # Author: Gerhard Burger (burgerga)
 # License: MIT
