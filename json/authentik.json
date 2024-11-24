@@ -33,7 +33,7 @@
     "notes": [
         {
             "text": "Initial configuration at http://<IP>:9000/if/flow/initial-setup/",
-            "type": "warning"
+            "type": "info"
         }
     ]
 }
