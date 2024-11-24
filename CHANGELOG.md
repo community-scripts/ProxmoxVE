@@ -24,6 +24,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 - New script: listmonk LXC [@bvdberg01](https://github.com/bvdberg01) ([#442](https://github.com/community-scripts/ProxmoxVE/pull/442))
 
+### 🧰 Maintenance
+
+- Add release title to github-release.yml [@havardthom](https://github.com/havardthom) ([#481](https://github.com/community-scripts/ProxmoxVE/pull/481))
+
 ## 2024-11-23
 
 ### Changed
