@@ -82,9 +82,6 @@ network_check() {
     msg_ok "IPv4 Internet Connected";
     ipv4_connected=true
   else
-    msg_ok "Internet Connected"; 
-  else
-  
     msg_error "Internet NOT Connected"
     read -r -p "Would you like to continue anyway? <y/N> " prompt
     if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
