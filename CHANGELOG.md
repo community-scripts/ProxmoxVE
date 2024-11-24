@@ -16,6 +16,14 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
+## 2024-11-24
+
+### Changed
+
+### ✨ New Scripts
+
+- New script: listmonk LXC [@bvdberg01](https://github.com/bvdberg01) ([#442](https://github.com/community-scripts/ProxmoxVE/pull/442))
+
 ## 2024-11-23
 
 ### Changed
