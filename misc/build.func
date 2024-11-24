@@ -74,7 +74,7 @@ msg_error() {
 
 # Check if the shell is using bash
 shell_check() {
-  if [[ "$(basename "$SHELL")" != "bash" ]]; then
+  if [[ "$(basename "$BASH")" != "bash" ]]; then
     clear
     msg_error "Your default shell is currently not set to Bash. To use these scripts, please switch to the Bash shell."
     echo -e "\nExiting..."
