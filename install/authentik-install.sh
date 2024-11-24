@@ -186,6 +186,7 @@ WorkingDirectory=/opt/authentik/authentik
 #Group=authentik
 Restart=always
 RestartSec=5
+
 [Install]
 WantedBy=multi-user.target
 EOF
