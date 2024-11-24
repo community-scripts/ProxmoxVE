@@ -191,7 +191,6 @@ RestartSec=5
 WantedBy=multi-user.target
 EOF
 systemctl enable -q --now authentik-worker
-sleep 5
 msg_ok "Configured Services"
 
 motd_ssh
