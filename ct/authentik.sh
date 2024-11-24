@@ -63,7 +63,7 @@ if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}
   msg_info "Stopping ${APP}"
   systemctl stop authentik-server
   systemctl stop authentik-worker
-  msg_ok "Stopped Authentik"
+  msg_ok "Stopped ${APP}"
 
   msg_info "Building Authentik website"
   mkdir -p /opt/authentik
