@@ -31,7 +31,6 @@ msg_ok "Installed Eclipse Temurin JRE"
 if grep -q 'avx' /proc/cpuinfo; then
   msg_ok "No AVX Support Detected"
   msg_info "Installing MongoDB 4.2"
-  # Check for libssl1.1 and install if missing
   if ! dpkg -l | grep -q "libssl1.1"; then
     msg_info "libssl1.1 not found. Installing..."
     wget http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.1_1.1.1n-0+deb10u6_amd64.deb
