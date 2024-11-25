@@ -36,7 +36,6 @@ if grep -q 'avx' /proc/cpuinfo; then
     dpkg -i libssl1.1_1.1.1n-0+deb10u6_amd64.deb
     apt-get install -f -y  # Fix any broken dependencies
   else
-    msg_ok "libssl1.1 already installed"
   fi
   wget -qO- https://www.mongodb.org/static/pgp/server-4.2.asc | gpg --dearmor > /usr/share/keyrings/mongodb-server-4.2.gpg
   echo "deb [signed-by=/usr/share/keyrings/mongodb-server-4.2.gpg] https://repo.mongodb.org/apt/debian buster/mongodb-org/4.2 main" >/etc/apt/sources.list.d/mongodb-org-4.2.list
