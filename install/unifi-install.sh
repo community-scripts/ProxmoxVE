@@ -32,7 +32,7 @@ if grep -q 'avx' /proc/cpuinfo; then
   msg_ok "No AVX Support Detected"
   msg_info "Installing MongoDB 4.2"
   if ! dpkg -l | grep -q "libssl1.1"; then
-    wget http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.1_1.1.1n-0+deb10u6_amd64.deb
+    wget -q http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.1_1.1.1n-0+deb10u6_amd64.deb
     $STD dpkg -i libssl1.1_1.1.1n-0+deb10u6_amd64.deb
     $STD apt-get install -f -y  # Fix any broken dependencies
   else
