@@ -32,7 +32,6 @@
     },
     "notes": [
         {
-            "text": "CPU with AVX Instruction Set recommended",
             "type": "note"
         },
         {
