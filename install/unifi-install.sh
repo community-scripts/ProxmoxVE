@@ -35,7 +35,6 @@ if grep -q 'avx' /proc/cpuinfo; then
     wget http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.1_1.1.1n-0+deb10u6_amd64.deb
     dpkg -i libssl1.1_1.1.1n-0+deb10u6_amd64.deb
     apt-get install -f -y  # Fix any broken dependencies
-    msg_ok "Installed libssl1.1"
   else
     msg_ok "libssl1.1 already installed"
   fi
