@@ -22,7 +22,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 💥 Breaking Changes
 
-- Remove Scrypted [@MickLesk](https://github.com/MickLesk) ([#511](https://github.com/community-scripts/ProxmoxVE/pull/511))
+- Remove Scrypted script [@MickLesk](https://github.com/MickLesk) ([#511](https://github.com/community-scripts/ProxmoxVE/pull/511))
 
 ### 🚀 Updated Scripts
 
