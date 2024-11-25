@@ -20,6 +20,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### Changed
 
+### 💥 Breaking Changes
+
+- Remove Scrypted [@MickLesk](https://github.com/MickLesk) ([#511](https://github.com/community-scripts/ProxmoxVE/pull/511))
+
 ### 🚀 Updated Scripts
 
 - Fix upload folder in listmonk LXC [@bvdberg01](https://github.com/bvdberg01) ([#515](https://github.com/community-scripts/ProxmoxVE/pull/515))
