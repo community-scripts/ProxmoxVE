@@ -28,7 +28,9 @@ $STD apt-get update
 $STD apt-get install -y temurin-17-jre
 msg_ok "Installed Eclipse Temurin JRE"
 
-if [ "$MONGO_VERSION" = "4.2" ]; then
+if grep -q 'avx' /proc/cpuinfo; then
+  msg_ok "No AVX Support Detected"
+  msg_info "Installing MongoDB 4.2"
   # Check for libssl1.1 and install if missing
   if ! dpkg -l | grep -q "libssl1.1"; then
     msg_info "libssl1.1 not found. Installing..."
