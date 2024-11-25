@@ -28,7 +28,6 @@ $STD apt-get update
 $STD apt-get install -y temurin-17-jre
 msg_ok "Installed Eclipse Temurin JRE"
 
-msg_info "Installing MongoDB"
 if [ "$MONGO_VERSION" = "4.2" ]; then
   # Check for libssl1.1 and install if missing
   if ! dpkg -l | grep -q "libssl1.1"; then
