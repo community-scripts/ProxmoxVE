@@ -55,9 +55,9 @@ chown -R jellyfin:adm /etc/jellyfin
 sleep 10
 systemctl restart jellyfin
 if [[ "$CTTYPE" == "0" ]]; then
-  sed -i -e 's/^ssl-cert:x:104:$/render:x:104:root,jellyfin/' -e 's/^render:x:108:root,jellyfin$/ssl-cert:x:108:/' /etc/group
+  sed -i -e 's/^_ssh:x:104:$/render:x:104:root,jellyfin/' -e 's/^render:x:993:root,jellyfin$/_ssh:x:993:/' /etc/group
 else
-  sed -i -e 's/^ssl-cert:x:104:$/render:x:104:jellyfin/' -e 's/^render:x:108:jellyfin$/ssl-cert:x:108:/' /etc/group
+  sed -i -e 's/^_ssh:x:104:$/render:x:104:jellyfin/' -e 's/^render:x:993:jellyfin$/_ssh:x:993:/' /etc/group
 fi
 msg_ok "Installed Jellyfin"
 
