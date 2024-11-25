@@ -26,6 +26,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- Fix bugs in Calibre-Web update [@havardthom](https://github.com/havardthom) ([#517](https://github.com/community-scripts/ProxmoxVE/pull/517))
 - Fix upload folder in listmonk LXC [@bvdberg01](https://github.com/bvdberg01) ([#515](https://github.com/community-scripts/ProxmoxVE/pull/515))
 
 ### 🌐 Website
