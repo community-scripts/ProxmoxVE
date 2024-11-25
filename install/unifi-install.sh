@@ -45,7 +45,7 @@ if grep -q 'avx' /proc/cpuinfo; then
   $STD apt-get update
   $STD apt-get install -y mongodb-org=4.2.17
 else
-  # Default to MongoDB 7.0 installation
+   msg_info "Installing MongoDB 7.0"
   wget -qO- https://www.mongodb.org/static/pgp/server-7.0.asc | gpg --dearmor >/usr/share/keyrings/mongodb-server-7.0.gpg
   echo "deb [ signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] http://repo.mongodb.org/apt/debian bookworm/mongodb-org/7.0 main" >/etc/apt/sources.list.d/mongodb-org-7.0.list
   $STD apt-get update
