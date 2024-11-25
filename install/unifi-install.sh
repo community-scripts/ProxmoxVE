@@ -40,7 +40,6 @@ if grep -q 'avx' /proc/cpuinfo; then
   else
     msg_ok "libssl1.1 already installed"
   fi
-  # Proceed with MongoDB 4.2 installation
   wget -qO- https://www.mongodb.org/static/pgp/server-4.2.asc | gpg --dearmor > /usr/share/keyrings/mongodb-server-4.2.gpg
   echo "deb [signed-by=/usr/share/keyrings/mongodb-server-4.2.gpg] https://repo.mongodb.org/apt/debian buster/mongodb-org/4.2 main" >/etc/apt/sources.list.d/mongodb-org-4.2.list
   $STD apt-get update
