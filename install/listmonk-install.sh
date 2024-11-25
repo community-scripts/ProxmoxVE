@@ -38,6 +38,7 @@ msg_ok "Set up PostgreSQL"
 msg_info "Installing listmonk"
 cd /opt
 mkdir /opt/listmonk
+mkdir /opt/listmonk/uploads
 RELEASE=$(curl -s https://api.github.com/repos/knadh/listmonk/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 wget -q "https://github.com/knadh/listmonk/releases/download/v${RELEASE}/listmonk_${RELEASE}_linux_amd64.tar.gz"
 tar -xzf "listmonk_${RELEASE}_linux_amd64.tar.gz" -C /opt/listmonk
