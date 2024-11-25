@@ -34,7 +34,7 @@ if grep -q 'avx' /proc/cpuinfo; then
   if ! dpkg -l | grep -q "libssl1.1"; then
     wget http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.1_1.1.1n-0+deb10u6_amd64.deb
     $STD dpkg -i libssl1.1_1.1.1n-0+deb10u6_amd64.deb
-    apt-get install -f -y  # Fix any broken dependencies
+    $STD apt-get install -f -y  # Fix any broken dependencies
   else
   fi
   wget -qO- https://www.mongodb.org/static/pgp/server-4.2.asc | gpg --dearmor > /usr/share/keyrings/mongodb-server-4.2.gpg
