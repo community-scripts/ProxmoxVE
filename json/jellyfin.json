@@ -22,7 +22,7 @@
                 "ram": "2048",
                 "hdd": "8",
                 "os": "ubuntu",
-                "version": "22.04"
+                "version": "24.04"
             }
         }
     ],
