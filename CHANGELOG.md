@@ -20,6 +20,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### Changed
 
+### 🚀 Updated Scripts
+
+- Fix upload folder in listmonk LXC [@bvdberg01](https://github.com/bvdberg01) ([#515](https://github.com/community-scripts/ProxmoxVE/pull/515))
+
 ### 🌐 Website
 
 - Fix website url in Zoraxy documentation [@miggi92](https://github.com/miggi92) ([#506](https://github.com/community-scripts/ProxmoxVE/pull/506))
