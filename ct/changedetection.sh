@@ -58,6 +58,11 @@ check_container_storage
 check_container_resources
 if [[ ! -f /etc/systemd/system/changedetection.service ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
 msg_info "Updating ${APP} LXC"
+# Somehow the /EXTERNALLY-MANAGED file came back for me
+if ls /usr/lib/python3.*/EXTERNALLY-MANAGED 1> /dev/null 2>&1; then
+#  Remove it again
+   rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
+fi
 if ! dpkg -s libjpeg-dev >/dev/null 2>&1; then
   apt-get update
   apt-get install -y libjpeg-dev
