@@ -6,10 +6,10 @@
     ],
     "date_created": "2024-06-12",
     "type": "ct",
-    "updateable": false,
+    "updateable": true,
     "privileged": false,
-    "interface_port": "5454",
-    "documentation": null,
+    "interface_port": "",
+    "documentation": "https://www.zabbix.com/documentation/current/en/manual",
     "website": "https://www.zabbix.com/",
     "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/zabbix.svg",
     "description": "Zabbix is an all-in-one monitoring solution with a variety of enterprise-grade features available right out of the box.",
@@ -33,7 +33,11 @@
     "notes": [
         {
             "text": "Database credentials: `cat zabbix.creds`",
-            "type": "warning"
+            "type": "info"
+        }
+        {
+            "text": "Zabbix is running in these LXC as standard with Zabbix-Agent2",
+            "type": "info"
         }
     ]
 }
