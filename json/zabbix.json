@@ -36,7 +36,7 @@
             "type": "info"
         }
         {
-            "text": "Zabbix is running in these LXC as standard with Zabbix-Agent2",
+            "text": "Zabbix agent 2 is used by default",
             "type": "info"
         }
     ]
