@@ -33,10 +33,14 @@
     "notes": [
         {
             "text": "After the script finishes, reboot the LXC then run `netbird up` in the LXC console",
-            "type": "warning"
+            "type": "info"
         },
         {
-            "text": "Execute within the Proxmox shell",
+            "text": "Execute within the Proxmox main shell",
+            "type": "info"
+        }
+        {
+            "text": "The script only works in Debian/Ubuntu, not in Alpine!",
             "type": "warning"
         }
     ]
