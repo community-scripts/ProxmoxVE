@@ -31,6 +31,8 @@ Do not break established syntax in this file, as it is automatically updated by 
 ### 💥 Breaking Changes
 
 - Remove Scrypted script [@MickLesk](https://github.com/MickLesk) ([#511](https://github.com/community-scripts/ProxmoxVE/pull/511))
+  - Because of request from Scrypted maintainer: [#494](https://github.com/community-scripts/ProxmoxVE/issues/494)
+  - Official Scrypted script can be used instead: https://docs.scrypted.app/installation.html#proxmox-ve
 
 ### 🚀 Updated Scripts
 
