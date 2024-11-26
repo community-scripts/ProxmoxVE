@@ -61,11 +61,14 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  msg_info "Updating $APP LXC"
+  msg_info "Stopping ${APP}"
   systemctl stop cps
+  msg_ok "Stopped ${APP}"
+
+  msg_info "Updating ${APP}"
   cd /opt/kepubify
-  rm kepubify-linux-64bit
-  curl -fsSLO https://github.com/pgaskin/kepubify/releases/latest/download/kepubify-linux-64bit &>/dev/null
+  rm -rf kepubify-linux-64bit
+  curl -fsSLO https://github.com/pgaskin/kepubify/releases/latest/download/kepubify-linux-64bit
   chmod +x kepubify-linux-64bit
   menu_array=("1" "Enables gdrive as storage backend for your ebooks" OFF \
     "2" "Enables sending emails via a googlemail account without enabling insecure apps" OFF \
@@ -140,16 +143,19 @@ function update_script() {
       esac
     done
   fi
-  if [ ! -z "$options" ] && [ ${#options[@]} -gt 0 ]; then
+  if [ ${#options[@]} -gt 0 ]; then
     cps_options=$(IFS=, ; echo "${options[*]}")
     echo $cps_options > /opt/calibre-web/options.txt
-    pip install --upgrade calibreweb[$cps_options]
+    pip install --upgrade calibreweb[$cps_options] &>/dev/null
   else
-    rm /opt/calibre-web/options.txt 2> /dev/null
-    pip install --upgrade calibreweb
+    rm -rf /opt/calibre-web/options.txt
+    pip install --upgrade calibreweb &>/dev/null
   fi
+  
+  msg_info "Starting ${APP}"
   systemctl start cps
-  msg_ok "Updated $APP LXC"
+  msg_ok "Started ${APP}"
+  msg_ok "Updated Successfully"
   exit
 }
 
