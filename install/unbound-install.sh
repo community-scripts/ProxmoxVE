@@ -13,8 +13,18 @@ setting_up_container
 network_check
 update_os
 
+msg_info "Installing Dependencies"
+$STD apt-get install -y \
+  sudo \
+  curl \
+  mc 
+msg_ok "Installed Dependencies"
+
 msg_info "Installing Unbound"
-$STD apt-get install -y unbound unbound-host
+$STD apt-get install -y \
+  unbound \
+  unbound-host
+msg_info "Installed Unbound"
 
 cat <<EOF >/etc/unbound/unbound.conf.d/unbound-lxe.conf
 server:
@@ -71,7 +81,9 @@ server:
   harden-below-nxdomain: yes
 EOF
 
+# Update Root hints from Internic (This file holds the information on root name servers needed to initialize cache of Internet domain name servers)
 wget -qO /var/lib/unbound/root.hints https://www.internic.net/domain/named.root
+# Set unbound user as owner of the root hints file
 chown unbound:unbound /var/lib/unbound/root.hints
 
 touch /var/log/unbound.log
@@ -100,6 +112,7 @@ EOF
 
 msg_info "Restarting Logrotate"
 systemctl restart logrotate
+msg_ok "Restarted Logrotate"
 
 motd_ssh
 customize
