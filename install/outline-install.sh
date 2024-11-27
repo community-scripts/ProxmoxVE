@@ -77,6 +77,7 @@ if [[ "${adminer_prompt,,}" =~ ^(y|yes)$ ]]; then
   systemctl reload apache2
   IP=$(hostname -I | awk '{print $1}')
 cat <<EOF >>~/outline.creds
+
 Adminer Interface: $IP/adminer/
 Adminer System: PostgreSQL
 Adminer Server: localhost:5432
