@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -s https://raw.githubusercontent.com/cospeedster/ProxmoxVE/refs/heads/patch-1/misc/build.func)
 # Copyright (c) 2021-2024 tteck
 # Author: tteck
 # Co-Author: MickLesk (Canbiz)
@@ -9,12 +9,12 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 function header_info {
 clear
 cat <<"EOF"
- _____   _       ___          
-/__  /  (_)___  / (_)___  ___ 
+ _____   _       ___
+/__  /  (_)___  / (_)___  ___
   / /  / / __ \/ / / __ \/ _ \
  / /__/ / /_/ / / / / / /  __/
-/____/_/ .___/_/_/_/ /_/\___/ 
-      /_/                                                  
+/____/_/ .___/_/_/_/ /_/\___/
+      /_/
 EOF
 }
 header_info

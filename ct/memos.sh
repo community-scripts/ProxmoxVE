@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -s https://raw.githubusercontent.com/cospeedster/ProxmoxVE/refs/heads/patch-1/misc/build.func)
 # Copyright (c) 2021-2024 tteck
 # Author: tteck
 # Co-Author: MickLesk (Canbiz)
@@ -9,12 +9,12 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 function header_info {
 clear
 cat <<"EOF"
-    __  ___                         
+    __  ___
    /  |/  /__  ____ ___  ____  _____
   / /|_/ / _ \/ __ `__ \/ __ \/ ___/
- / /  / /  __/ / / / / / /_/ (__  ) 
-/_/  /_/\___/_/ /_/ /_/\____/____/  
-                                    
+ / /  / /  __/ / / / / / /_/ (__  )
+/_/  /_/\___/_/ /_/ /_/\____/____/
+
 EOF
 }
 header_info
@@ -67,13 +67,13 @@ then
   exit
 fi
 systemctl stop memos
-cd /opt/memos/web 
+cd /opt/memos/web
 pnpm i --frozen-lockfile &>/dev/null
 pnpm build &>/dev/null
 cd /opt/memos
 mkdir -p /opt/memos/server/dist
 cp -r web/dist/* /opt/memos/server/dist/
-cp -r web/dist/* /opt/memos/server/router/frontend/dist/ 
+cp -r web/dist/* /opt/memos/server/router/frontend/dist/
 go build -o /opt/memos/memos -tags=embed bin/memos/main.go &>/dev/null
 systemctl start memos
 msg_ok "Updated $APP"

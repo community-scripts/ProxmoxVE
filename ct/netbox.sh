@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -s https://raw.githubusercontent.com/cospeedster/ProxmoxVE/refs/heads/patch-1/misc/build.func)
 # Copyright (c) 2021-2024 community-scripts ORG
 # Author: bvdberg01
 # License: MIT
@@ -8,12 +8,12 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 function header_info {
 clear
 cat <<"EOF"
-    _   __     __  ____            
+    _   __     __  ____
    / | / /__  / /_/ __ )____  _  __
   /  |/ / _ \/ __/ __  / __ \| |/_/
- / /|  /  __/ /_/ /_/ / /_/ />  <  
-/_/ |_/\___/\__/_____/\____/_/|_|  
-                                   
+ / /|  /  __/ /_/ /_/ / /_/ />  <
+/_/ |_/\___/\__/_____/\____/_/|_|
+
 EOF
 }
 header_info
@@ -71,7 +71,7 @@ if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_v
   wget -q "https://github.com/netbox-community/netbox/archive/refs/tags/v${RELEASE}.zip"
   unzip -q "v${RELEASE}.zip"
   mv /opt/netbox-${RELEASE}/ /opt/netbox/
-  
+
   cp -r /opt/netbox-backup/netbox/netbox/configuration.py /opt/netbox/netbox/netbox/
   cp -r /opt/netbox-backup/netbox/media/ /opt/netbox/netbox/
   cp -r /opt/netbox-backup/netbox/scripts /opt/netbox/netbox/
@@ -85,7 +85,7 @@ if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_v
   if [ -f /opt/netbox-backup/netbox/netbox/ldap_config.py ]; then
     cp -r /opt/netbox-backup/netbox/netbox/ldap_config.py /opt/netbox/netbox/netbox/
   fi
-  
+
   /opt/netbox/upgrade.sh &>/dev/null
   echo "${RELEASE}" >/opt/${APP}_version.txt
   msg_ok "Updated $APP to v${RELEASE}"

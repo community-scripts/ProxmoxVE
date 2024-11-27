@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -s https://raw.githubusercontent.com/cospeedster/ProxmoxVE/refs/heads/patch-1/misc/build.func)
 # Copyright (c) 2021-2024 tteck
 # Author: tteck
 # Co-Author: MickLesk (Canbiz)
@@ -9,12 +9,12 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 function header_info {
 clear
 cat <<"EOF"
-  _______               _ _ 
+  _______               _ _
  /_  __(_)___ _____    (_|_)
-  / / / / __ `/ __ \  / / / 
- / / / / /_/ / / / / / / /  
-/_/ /_/\__,_/_/ /_/_/ /_/   
-                 /___/      
+  / / / / __ `/ __ \  / / /
+ / / / / /_/ / / / / / / /
+/_/ /_/\__,_/_/ /_/_/ /_/
+                 /___/
 EOF
 }
 header_info
@@ -76,7 +76,7 @@ if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_v
   mkdir -p ./src/server/public >/dev/null 2>&1
   cp -r ./geo ./src/server/public >/dev/null 2>&1
   pnpm build:server >/dev/null 2>&1
-  mv /opt/.env /opt/tianji/src/server/.env 
+  mv /opt/.env /opt/tianji/src/server/.env
   cd src/server
   pnpm db:migrate:apply >/dev/null 2>&1
   echo "${RELEASE}" >/opt/${APP}_version.txt

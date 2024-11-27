@@ -125,4 +125,4 @@ info "Successfully Transferred Data."
 
 # Use to copy all data from one Zigbee2MQTT LXC to another
 # run from the Proxmox Shell
-# bash -c "$(wget -qLO - https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/copy-data/z2m-copy-data-z2m.sh)"
+# bash -c "$(wget -qLO - https://raw.githubusercontent.com/cospeedster/ProxmoxVE/refs/heads/patch-1/misc/copy-data/z2m-copy-data-z2m.sh)"

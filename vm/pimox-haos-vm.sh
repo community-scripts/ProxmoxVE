@@ -7,16 +7,16 @@
 
 function header_info {
   cat <<"EOF"
-                                      ____  _ __  ___                                        
-                                    / __ \(_)  |/  /___  _  __                              
-                                   / /_/ / / /|_/ / __ \| |/_/                              
-                                  / ____/ / /  / / /_/ />  <                                
+                                      ____  _ __  ___
+                                    / __ \(_)  |/  /___  _  __
+                                   / /_/ / / /|_/ / __ \| |/_/
+                                  / ____/ / /  / / /_/ />  <
     __  __                       /_/_  /_/_/  /_/\____/_/|_|              __     ____  _____
    / / / /___  ____ ___  ___     /   |  __________(_)____/ /_____ _____  / /_   / __ \/ ___/
-  / /_/ / __ \/ __ `__ \/ _ \   / /| | / ___/ ___/ / ___/ __/ __ `/ __ \/ __/  / / / /\__ \ 
- / __  / /_/ / / / / / /  __/  / ___ |(__  |__  ) (__  ) /_/ /_/ / / / / /_   / /_/ /___/ / 
-/_/ /_/\____/_/ /_/ /_/\___/  /_/  |_/____/____/_/____/\__/\__,_/_/ /_/\__/   \____//____/  
-                                                                                            
+  / /_/ / __ \/ __ `__ \/ _ \   / /| | / ___/ ___/ / ___/ __/ __ `/ __ \/ __/  / / / /\__ \
+ / __  / /_/ / / / / / /  __/  / ___ |(__  |__  ) (__  ) /_/ /_/ / / / / /_   / /_/ /___/ /
+/_/ /_/\____/_/ /_/ /_/\___/  /_/  |_/____/____/_/____/\__/\__,_/_/ /_/\__/   \____//____/
+
 EOF
 }
 clear
@@ -310,7 +310,7 @@ qm set $VMID \
   -scsi0 ${DISK1_REF},size=32G >/dev/null
 qm set $VMID \
   -boot order=scsi0 \
-  -description "<div align='center'><a href='https://Helper-Scripts.com'><img src='https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/images/logo-81x112.png'/></a>
+  -description "<div align='center'><a href='https://Helper-Scripts.com'><img src='https://raw.githubusercontent.com/cospeedster/ProxmoxVE/refs/heads/patch-1/misc/images/logo-81x112.png'/></a>
 
   # Home Assistant OS
 

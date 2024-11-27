@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -s https://raw.githubusercontent.com/cospeedster/ProxmoxVE/refs/heads/patch-1/misc/build.func)
 # Copyright (c) 2021-2024 tteck
 # Author: tteck (tteckster)
 # License: MIT
@@ -8,16 +8,16 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 function header_info {
 clear
 cat <<"EOF"
-                     ____            __                                      
-                    / __ \____  ____/ /___ ___  ____ _____                   
-                   / /_/ / __ \/ __  / __  __ \/ __  / __ \                  
-                  / ____/ /_/ / /_/ / / / / / / /_/ / / / /                  
-    __  __       /_/    \____/\__,_/_/ /_/ /_/\__,_/_/ /_/__              __ 
+                     ____            __
+                    / __ \____  ____/ /___ ___  ____ _____
+                   / /_/ / __ \/ __  / __  __ \/ __  / __ \
+                  / ____/ /_/ / /_/ / / / / / / /_/ / / / /
+    __  __       /_/    \____/\__,_/_/ /_/ /_/\__,_/_/ /_/__              __
    / / / /___  ____ ___  ___     /   |  __________(_)____/ /_____ _____  / /_
   / /_/ / __ \/ __  __ \/ _ \   / /| | / ___/ ___/ / ___/ __/ __  / __ \/ __/
- / __  / /_/ / / / / / /  __/  / ___ |(__  |__  ) (__  ) /_/ /_/ / / / / /_  
-/_/ /_/\____/_/ /_/ /_/\___/  /_/  |_/____/____/_/____/\__/\__,_/_/ /_/\__/  
- 
+ / __  / /_/ / / / / / /  __/  / ___ |(__  |__  ) (__  ) /_/ /_/ / / / / /_
+/_/ /_/\____/_/ /_/ /_/\___/  /_/  |_/____/____/_/____/\__/\__,_/_/ /_/\__/
+
 EOF
 }
 header_info
@@ -100,7 +100,7 @@ if [ "$UPD" == "2" ]; then
   exit
 fi
 if [ "$UPD" == "3" ]; then
-  IP=$(hostname -I | awk '{print $1}') 
+  IP=$(hostname -I | awk '{print $1}')
   msg_info "Installing FileBrowser"
   curl -fsSL https://raw.githubusercontent.com/filebrowser/get/master/get.sh | bash &>/dev/null
   filebrowser config init -a '0.0.0.0' &>/dev/null

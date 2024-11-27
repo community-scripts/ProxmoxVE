@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -s https://raw.githubusercontent.com/cospeedster/ProxmoxVE/refs/heads/patch-1/misc/build.func)
 # Copyright (c) 2021-2024 tteck
 # Author: tteck (tteckster)
 # License: MIT
@@ -8,12 +8,12 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 function header_info {
   clear
   cat <<"EOF"
-                                _           _     _              _       ___               
-  /\  /\___  _ __ ___   ___    /_\  ___ ___(_)___| |_ __ _ _ __ | |_    / __\___  _ __ ___ 
+                                _           _     _              _       ___
+  /\  /\___  _ __ ___   ___    /_\  ___ ___(_)___| |_ __ _ _ __ | |_    / __\___  _ __ ___
  / /_/ / _ \| '_ ` _ \ / _ \  //_\\/ __/ __| / __| __/ _` | '_ \| __|  / /  / _ \| '__/ _ \
 / __  / (_) | | | | | |  __/ /  _  \__ \__ \ \__ \ || (_| | | | | |_  / /__| (_) | | |  __/
 \/ /_/ \___/|_| |_| |_|\___| \_/ \_/___/___/_|___/\__\__,_|_| |_|\__| \____/\___/|_|  \___|
-                                                                                           
+
 EOF
 }
 header_info
@@ -119,7 +119,7 @@ function update_script() {
       filebrowser config init -a '0.0.0.0' &>/dev/null
       filebrowser config set -a '0.0.0.0' &>/dev/null
       filebrowser config set --auth.method=noauth &>/dev/null
-      filebrowser users add ID 1 --perm.admin &>/dev/null  
+      filebrowser users add ID 1 --perm.admin &>/dev/null
     else
       filebrowser config init -a '0.0.0.0' &>/dev/null
       filebrowser config set -a '0.0.0.0' &>/dev/null

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -s https://raw.githubusercontent.com/cospeedster/ProxmoxVE/refs/heads/patch-1/misc/build.func)
 # Copyright (c) 2021-2024 community-scripts ORG
 # Author: madelyn (DysfunctionalProgramming)
 # License: MIT
@@ -8,12 +8,12 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 function header_info {
 clear
 cat <<"EOF"
-    __ __                           
+    __ __
    / //_/___  ____ ___  ____ _____ _
   / ,< / __ \/ __ `__ \/ __ `/ __ `/
- / /| / /_/ / / / / / / /_/ / /_/ / 
-/_/ |_\____/_/ /_/ /_/\__, /\__,_/  
-                     /____/           
+ / /| / /_/ / / / / / / /_/ / /_/ /
+/_/ |_\____/_/ /_/ /_/\__, /\__,_/
+                     /____/
 EOF
 }
 header_info
@@ -76,7 +76,7 @@ if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_v
   msg_ok "Started ${APP}"
   msg_ok "Updated Successfully"
 else
-  msg_ok "No update required. ${APP} is already at ${RELEASE}."  
+  msg_ok "No update required. ${APP} is already at ${RELEASE}."
 fi
 exit
 }

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -s https://raw.githubusercontent.com/cospeedster/ProxmoxVE/refs/heads/patch-1/misc/build.func)
 # Copyright (c) 2021-2024 tteck
 # Author: tteck (tteckster)
 # License: MIT
@@ -8,12 +8,12 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 function header_info {
 clear
 cat <<"EOF"
-  ______     _ ___               
- /_  __/____(_) (_)_  ______ ___ 
+  ______     _ ___
+ /_  __/____(_) (_)_  ______ ___
   / / / ___/ / / / / / / __ `__ \
  / / / /  / / / / /_/ / / / / / /
-/_/ /_/  /_/_/_/\__,_/_/ /_/ /_/ 
-                                                                      
+/_/ /_/  /_/_/_/\__,_/_/ /_/ /_/
+
 EOF
 }
 header_info
@@ -58,7 +58,7 @@ check_container_storage
 check_container_resources
 if [[ ! -d /opt/trilium ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
 RELEASE=$(curl -s https://api.github.com/repos/TriliumNext/Notes/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-    
+
 msg_info "Stopping ${APP}"
 systemctl stop trilium.service
 sleep 1

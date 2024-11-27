@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -s https://raw.githubusercontent.com/cospeedster/ProxmoxVE/refs/heads/patch-1/misc/build.func)
 # Copyright (c) 2021-2024 tteck
 # Author: tteck (tteckster)
 # License: MIT
@@ -64,7 +64,7 @@ function update_script() {
     CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "SUPPORT" --radiolist --cancel-button Exit-Script "Spacebar = Select"  11 58 3 \
       "1" "Nextcloud Login Credentials" ON \
       "2" "Renew Self-signed Certificate" OFF \
-      3>&1 1>&2 2>&3)      
+      3>&1 1>&2 2>&3)
     exit_status=$?
     if [ $exit_status == 1 ]; then
       clear

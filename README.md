@@ -1,7 +1,7 @@
 <div align="center">
   <p align="center">
     <a href="#">
-      <img src="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/images/logo.png" height="100px" />
+      <img src="https://raw.githubusercontent.com/cospeedster/ProxmoxVE/refs/heads/patch-1/misc/images/logo.png" height="100px" />
     </a>
   </p>
 </div>
@@ -14,16 +14,16 @@
 <p align="center">
   <a href="https://helper-scripts.com">
     <img src="https://img.shields.io/badge/Website-4c9b3f?style=for-the-badge&logo=github&logoColor=white" alt="Website" />
-  </a> 
+  </a>
   <a href="https://github.com/community-scripts/ProxmoxVE/blob/main/.github/CONTRIBUTING.md">
     <img src="https://img.shields.io/badge/Contribute-ff4785?style=for-the-badge&logo=git&logoColor=white" alt="Contribute" />
-  </a> 
+  </a>
   <a href="https://github.com/community-scripts/ProxmoxVE/blob/main/USER_SUBMITTED_GUIDES.md">
     <img src="https://img.shields.io/badge/Guides-0077b5?style=for-the-badge&logo=read-the-docs&logoColor=white" alt="Guides" />
-  </a> 
+  </a>
   <a href="https://discord.gg/UHrpNWGwkH">
     <img src="https://img.shields.io/badge/Discord-7289da?style=for-the-badge&logo=discord&logoColor=white" alt="Discord" />
-  </a> 
+  </a>
   <a href="https://github.com/community-scripts/ProxmoxVE/blob/main/CHANGELOG.md">
     <img src="https://img.shields.io/badge/Changelog-6c5ce7?style=for-the-badge&logo=git&logoColor=white" alt="Changelog" />
   </a>
@@ -70,7 +70,7 @@ The Proxmox Helper Scripts project is community-driven, and we highly appreciate
 We offer two donation options to help maintain and grow this project:
 
 - **Ko-Fi for tteck**: [Donate to tteck's wife](https://ko-fi.com/proxmoxhelperscripts) - All donations will go directly to Angie, wife of the founder of this project [who passed away in early November 2024](https://github.com/community-scripts/ProxmoxVE/discussions/237).
-- **Ko-Fi for Community Edition**: [Donate to this project](https://ko-fi.com/community_scripts) -  All funds will go towards script maintenance infrastructure and server costs. **Our most immediate need is funding testing infrastructure**.  Your contributions help keep the project running. To honor tteck's legacy this project will also raise money for charity (cancer research, hospice care). Of the money donated to this project, 30% will be donated to charity. Income, expenditure and charitable donations will be disclosed annually in a transparent manner. 
+- **Ko-Fi for Community Edition**: [Donate to this project](https://ko-fi.com/community_scripts) -  All funds will go towards script maintenance infrastructure and server costs. **Our most immediate need is funding testing infrastructure**.  Your contributions help keep the project running. To honor tteck's legacy this project will also raise money for charity (cancer research, hospice care). Of the money donated to this project, 30% will be donated to charity. Income, expenditure and charitable donations will be disclosed annually in a transparent manner.
 
 <hr>
 

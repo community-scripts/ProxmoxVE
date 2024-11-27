@@ -22,10 +22,10 @@ jobs:
 
         for FILE in $FILES; do
           # Check for exact match of the source line in line 2
-          if [[ $(sed -n '2p' "$FILE") =~ ^source[[:space:]]+<(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func) ]]; then
+          if [[ $(sed -n '2p' "$FILE") =~ ^source[[:space:]]+<(curl -s https://raw.githubusercontent.com/cospeedster/ProxmoxVE/refs/heads/patch-1/misc/build.func) ]]; then
             echo "Check passed for: $FILE"
           else
-            echo "Error in $FILE: Line 2 must be exactly 'source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)' if a source line is used."
+            echo "Error in $FILE: Line 2 must be exactly 'source <(curl -s https://raw.githubusercontent.com/cospeedster/ProxmoxVE/refs/heads/patch-1/misc/build.func)' if a source line is used."
             ERROR_COUNT=$((ERROR_COUNT + 1))
           fi
 
