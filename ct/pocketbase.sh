@@ -67,7 +67,6 @@ function update_script() {
 
     msg_info "Updating $APP to v${RELEASE}"
     wget -q https://github.com/pocketbase/pocketbase/releases/download/v${RELEASE}/pocketbase_${RELEASE}_linux_amd64.zip -O /tmp/pocketbase.zip
-    mkdir -p /opt/pocketbase/{pb_public,pb_migrations,pb_hooks}
     unzip -q -o /tmp/pocketbase.zip -d /opt/pocketbase
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP} to v${RELEASE}"
