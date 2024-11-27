@@ -110,7 +110,6 @@ cat <<EOF >/etc/logrotate.d/unbound
 }
 EOF
 
-msg_info "Restarting Logrotate"
 systemctl restart logrotate
 msg_ok "Restarted Logrotate"
 
