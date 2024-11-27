@@ -58,14 +58,14 @@ $STD sudo -u postgres psql -c "CREATE ROLE $DB_USER WITH LOGIN PASSWORD '$DB_PAS
 $STD sudo -u postgres psql -c "ALTER ROLE $DB_USER WITH CREATEDB;"
 $STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET timezone TO 'UTC';"
 
-cat <<EOF >~/outline.creds
-Outline-Credentials
-Outline Database User: $DB_USER
-Outline Database Password: $DB_PASS
-Outline Database Name: $DB_NAME
-Outline Secret: $SECRET_KEY
-Outline Utils Secret: $UTILS_SECRET
-EOF
+{
+    echo "Outline-Credentials"
+    echo "Outline Database User: $DB_USER"
+    echo "Outline Database Password: $DB_PASS"
+    echo "Outline Database Name: $DB_NAME"
+    echo "Outline Secret: $SECRET_KEY"
+    echo "Outline Utils Secret: $UTILS_SECRET"
+} >~/outline.creds
 msg_ok "Set up PostgreSQL DB"
 
 
@@ -76,25 +76,23 @@ if [[ "${adminer_prompt,,}" =~ ^(y|yes)$ ]]; then
   $STD a2enconf adminer
   systemctl reload apache2
   IP=$(hostname -I | awk '{print $1}')
-cat <<EOF >>~/outline.creds
-
-Adminer Interface: $IP/adminer/
-Adminer System: PostgreSQL
-Adminer Server: localhost:5432
-Adminer Username: $DB_USER
-Adminer Password: $DB_PASS
-Adminer Database: $DB_NAME
-EOF
+  {
+      echo ""
+      echo "Adminer Interface: $IP/adminer/"
+      echo "Adminer System: PostgreSQL"
+      echo "Adminer Server: localhost:5432"
+      echo "Adminer Username: $DB_USER"
+      echo "Adminer Password: $DB_PASS"
+      echo "Adminer Database: $DB_NAME"
+  } >>~/outline.creds
   msg_ok "Installed Adminer"
 fi
 
-read -r -p "Enter the public url for your Outline instance (e.g., https://outline.your-domain.tld)): " URL
 msg_info "Installing Outline (Patience)"
 cd /opt
-RELEASE_TAG=$(curl -s https://api.github.com/repos/outline/outline/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-RELEASE=${RELEASE_TAG#v}
-wget -q "https://github.com/outline/outline/archive/refs/tags/${RELEASE_TAG}.zip"
-unzip -q ${RELEASE_TAG}.zip
+RELEASE=$(curl -s https://api.github.com/repos/outline/outline/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+wget -q "https://github.com/outline/outline/archive/refs/tags/v${RELEASE}.zip"
+unzip -q v${RELEASE}.zip
 mv outline-${RELEASE} /opt/outline
 cd /opt/outline
 
@@ -106,25 +104,22 @@ rm -rf ./node_modules
 $STD yarn install --production=true --frozen-lockfile
 $STD yarn cache clean
 
-FILE_STORAGE_LOCAL_ROOT_DIR=/var/lib/outline/data
-mkdir -p $FILE_STORAGE_LOCAL_ROOT_DIR
+mkdir -p /var/opt/outline/data
 
 cat <<EOF >/opt/outline/.env
 NODE_ENV=production
+URL=
 SECRET_KEY=$SECRET_KEY
 UTILS_SECRET=$UTILS_SECRET
 DATABASE_URL=$DATABASE_URL
 REDIS_URL=redis://localhost:6379
-URL=$URL
 FILE_STORAGE=local
-FILE_STORAGE_LOCAL_ROOT_DIR=$FILE_STORAGE_LOCAL_ROOT_DIR
+FILE_STORAGE_LOCAL_ROOT_DIR=/var/opt/outline/data
 FILE_STORAGE_UPLOAD_MAX_SIZE=262144000
 WEB_CONCURRENCY=2
 EOF
 
-$STD yarn sequelize db:create
-
-echo "${RELEASE}" >/opt/Outline_version.txt
+echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Installed Outline"
 
 msg_info "Creating Service"
@@ -148,7 +143,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm /opt/${RELEASE_TAG}.zip
+rm -rf /opt/v${RELEASE}.zip
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"

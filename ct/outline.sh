@@ -57,9 +57,8 @@ header_info
 check_container_storage
 check_container_resources
 if [[ ! -d /opt/outline ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
-RELEASE_TAG=$(curl -s https://api.github.com/repos/outline/outline/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-RELEASE=${RELEASE_TAG#v}
-if [[ "${RELEASE}" != "$(cat /opt/Outline_version.txt)" ]] || [[ ! -f /opt/Outline_version.txt ]]; then
+RELEASE=$(curl -s https://api.github.com/repos/outline/outline/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
   msg_info "Stopping ${APP}"
   systemctl stop outline
   msg_ok "Stopped ${APP}"
@@ -68,8 +67,8 @@ if [[ "${RELEASE}" != "$(cat /opt/Outline_version.txt)" ]] || [[ ! -f /opt/Outli
   cd /opt
   cp /opt/outline/.env /opt/.env
   mv /opt/outline /opt/outline_bak
-  wget -q "https://github.com/outline/outline/archive/refs/tags/${RELEASE_TAG}.zip"
-  unzip -q ${RELEASE_TAG}.zip
+  wget -q "https://github.com/outline/outline/archive/refs/tags/v${RELEASE}.zip"
+  unzip -q v${RELEASE}.zip
   mv outline-${RELEASE} /opt/outline
   cd /opt/outline
 
@@ -91,7 +90,7 @@ if [[ "${RELEASE}" != "$(cat /opt/Outline_version.txt)" ]] || [[ ! -f /opt/Outli
   msg_ok "Started ${APP}"
 
   msg_info "Cleaning up"
-  rm -rf /opt/${RELEASE_TAG}.zip
+  rm -rf /opt/v${RELEASE}.zip
   rm -rf /opt/outline_bak
   msg_ok "Cleaned"
   msg_ok "Updated Successfully"
