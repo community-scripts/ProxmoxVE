@@ -52,6 +52,36 @@ function default_settings() {
   echo_default
 }
 
+function update_script() {
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -f /etc/systemd/system/pocketbase.service ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
+
+  RELEASE=$(curl -s https://api.github.com/repos/pocketbase/pocketbase/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+
+  if [[ ! -f /opt/${APP}_version.txt || "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+    msg_info "Stopping ${APP}"
+    systemctl stop pocketbase.service
+    msg_ok "Stopped ${APP}"
+
+    msg_info "Updating $APP to ${RELEASE}"
+    wget -q https://github.com/pocketbase/pocketbase/releases/download/v${RELEASE}/pocketbase_${RELEASE}_linux_amd64.zip -O /tmp/pocketbase.zip
+    mkdir -p /opt/pocketbase/{pb_public,pb_migrations,pb_hooks}
+    unzip -q -o /tmp/pocketbase.zip -d /opt/pocketbase
+    echo "${RELEASE}" >/opt/${APP}_version.txt
+    msg_ok "Updated ${APP} to ${RELEASE}"
+
+    msg_info "Starting ${APP}"
+    systemctl start pocketbase.service
+    msg_ok "Started ${APP}"
+    msg_ok "Updated Successfully"
+  else
+    msg_ok "No update required. ${APP} is already at ${RELEASE}"
+  fi
+  exit
+}
+
 start
 build_container
 description
