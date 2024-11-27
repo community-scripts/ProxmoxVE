@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -s https://raw.githubusercontent.com/vhsdream/ProxmoxVE/hoarder/misc/build.func)
 # Copyright (c) 2021-2024 tteck
 # Author: vhsdream
 # License: MIT
