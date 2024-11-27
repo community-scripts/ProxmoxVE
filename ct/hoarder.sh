@@ -17,7 +17,6 @@ cat <<"EOF"
 EOF
 }
 header_info
-
 echo -e "Loading..."
 APP="Hoarder"
 TAGS="bookmark;links"
