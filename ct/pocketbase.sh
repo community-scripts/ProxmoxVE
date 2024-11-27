@@ -65,19 +65,19 @@ function update_script() {
     systemctl stop pocketbase.service
     msg_ok "Stopped ${APP}"
 
-    msg_info "Updating $APP to ${RELEASE}"
+    msg_info "Updating $APP to v${RELEASE}"
     wget -q https://github.com/pocketbase/pocketbase/releases/download/v${RELEASE}/pocketbase_${RELEASE}_linux_amd64.zip -O /tmp/pocketbase.zip
     mkdir -p /opt/pocketbase/{pb_public,pb_migrations,pb_hooks}
     unzip -q -o /tmp/pocketbase.zip -d /opt/pocketbase
     echo "${RELEASE}" >/opt/${APP}_version.txt
-    msg_ok "Updated ${APP} to ${RELEASE}"
+    msg_ok "Updated ${APP} to v${RELEASE}"
 
     msg_info "Starting ${APP}"
     systemctl start pocketbase.service
     msg_ok "Started ${APP}"
     msg_ok "Updated Successfully"
   else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
+    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }
