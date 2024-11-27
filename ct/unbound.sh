@@ -20,7 +20,7 @@ EOF
 }
 header_info
 echo -e "Loading..."
-APP="Unbound"
+APP="Unbound DNS"
 var_disk="2"
 var_cpu="1"
 var_ram="512"
@@ -71,5 +71,5 @@ build_container
 description
 
 msg_ok "Completed Successfully!\n"
-echo -e "${APP} Unbound DNS should be available at:
-         ${BL}${IP}:5335${CL} \n"
+echo -e "${APP} should be online.:
+         ${BL} Set your DNS server to ${IP}:5335 ${CL} \n"
