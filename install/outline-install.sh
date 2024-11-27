@@ -123,7 +123,6 @@ WEB_CONCURRENCY=2
 EOF
 
 $STD yarn sequelize db:create
-$STD yarn sequelize db:migrate
 
 echo "${RELEASE}" >/opt/Outline_version.txt
 msg_ok "Installed Outline"
