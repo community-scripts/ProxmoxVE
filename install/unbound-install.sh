@@ -72,6 +72,7 @@ server:
   access-control: 192.168.0.0/16 allow
   access-control: 172.16.0.0/12 allow
   access-control: 10.0.0.0/8 allow
+  access-control: 127.0.0.1/32 allow
   chroot: ""
   logfile: /var/log/unbound.log
   verbosity: 1
