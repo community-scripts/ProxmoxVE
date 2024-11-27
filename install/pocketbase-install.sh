@@ -50,7 +50,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
+rm -rf /tmp/pocketbase.zip
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
-rm -rf /tmp/pocketbase.zip
 msg_ok "Cleaned"
