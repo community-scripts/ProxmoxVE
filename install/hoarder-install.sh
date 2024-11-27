@@ -102,6 +102,7 @@ msg_ok "Installed Hoarder"
 msg_info "Running Database Migration"
 cd /opt/hoarder/packages/db
 pnpm migrate
+mv db.db /opt/hoarder_data
 msg_ok "Database Migration Completed"
 
 msg_info "Setting up Services"
@@ -168,7 +169,7 @@ Restart=always
 WantedBy=multi-user.target
 EOF
 
-systemctl enable --now meilisearch.service hoarder-web.service hoarder-browser.service hoarder-workers.service
+systemctl -q enable --now meilisearch.service hoarder-web.service hoarder-browser.service hoarder-workers.service
 msg_ok "Set up Services"
 
 msg_info "Cleaning up"
