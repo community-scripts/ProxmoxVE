@@ -28,7 +28,7 @@ RELEASE=$(curl -s https://api.github.com/repos/zwave-js/zwave-js-ui/releases/lat
 wget -q https://github.com/zwave-js/zwave-js-ui/releases/download/${RELEASE}/zwave-js-ui-${RELEASE}-linux.zip
 unzip -q zwave-js-ui-${RELEASE}-linux.zip
 cat <<EOF >/opt/.env
-ZWAVEJS_EXTERNAL_CONFIG=/opt/zwave-js-ui/.config-db
+ZWAVEJS_EXTERNAL_CONFIG=/opt/zwave_store/.config-db
 STORE_DIR=/opt/zwave_store
 EOF
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
