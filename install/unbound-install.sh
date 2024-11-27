@@ -88,8 +88,7 @@ chown unbound:unbound /var/lib/unbound/root.hints
 
 touch /var/log/unbound.log
 chown unbound:unbound /var/log/unbound.log
-systemctl enable -q --now unbound
-msg_info "Restarting Unbound to load new config"
+
 systemctl restart unbound
 msg_ok "Installed Unbound"
 
