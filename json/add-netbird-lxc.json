@@ -38,7 +38,7 @@
         {
             "text": "Execute within the Proxmox main shell",
             "type": "info"
-        }
+        },
         {
             "text": "The script only works in Debian/Ubuntu, not in Alpine!",
             "type": "warning"
