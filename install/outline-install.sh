@@ -5,9 +5,6 @@
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
-read -r -p "Enter the public url for your Outline instance (e.g., https://outline.your-domain.tld)): " URL
-read -r -p "Would you like to add Adminer? <y/N> " adminer_prompt
-
 source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
@@ -19,6 +16,7 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
   sudo \
+  mc \
   curl \
   lsb-release \
   postgresql \
@@ -61,74 +59,74 @@ $STD sudo -u postgres psql -c "CREATE ROLE $DB_USER WITH LOGIN PASSWORD '$DB_PAS
 $STD sudo -u postgres psql -c "ALTER ROLE $DB_USER WITH CREATEDB;"
 $STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET timezone TO 'UTC';"
 
-{
-    echo "Outline-Credentials"
-    echo "Outline Database User: $DB_USER"
-    echo "Outline Database Password: $DB_PASS"
-    echo "Outline Database Name: $DB_NAME"
-    echo "Outline Secret: $SECRET_KEY"
-    echo "Outline Utils Secret: $UTILS_SECRET"
-} >> ~/outline.creds
+cat <<EOF >~/outline.creds
+Outline-Credentials
+Outline Database User: $DB_USER
+Outline Database Password: $DB_PASS
+Outline Database Name: $DB_NAME
+Outline Secret: $SECRET_KEY
+Outline Utils Secret: $UTILS_SECRET
+EOF
 msg_ok "Set up PostgreSQL DB"
 
 
+read -r -p "Would you like to add Adminer? <y/N> " adminer_prompt
 if [[ "${adminer_prompt,,}" =~ ^(y|yes)$ ]]; then
   msg_info "Installing Adminer"
   $STD apt install -y adminer
   $STD a2enconf adminer
   systemctl reload apache2
   IP=$(hostname -I | awk '{print $1}')
-  {
-      echo ""
-      echo "Adminer Interface: $IP/adminer/"
-      echo "Adminer System: PostgreSQL"
-      echo "Adminer Server: localhost:5432"
-      echo "Adminer Username: $DB_USER"
-      echo "Adminer Password: $DB_PASS"
-      echo "Adminer Database: $DB_NAME"
-  } >> ~/outline.creds
+cat <<EOF >>~/outline.creds
+Adminer Interface: $IP/adminer/
+Adminer System: PostgreSQL
+Adminer Server: localhost:5432
+Adminer Username: $DB_USER
+Adminer Password: $DB_PASS
+Adminer Database: $DB_NAME
+EOF
   msg_ok "Installed Adminer"
 fi
 
-msg_info "Installing $APPLICATION (Patience)"
+read -r -p "Enter the public url for your Outline instance (e.g., https://outline.your-domain.tld)): " URL
+msg_info "Installing Outline (Patience)"
 cd /opt
-RELEASE=$(curl -s https://api.github.com/repos/outline/outline/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-wget -q "https://github.com/outline/outline/archive/refs/tags/${RELEASE}.zip"
-unzip -q ${RELEASE}.zip
-mv outline-${RELEASE:1} /opt/outline
+RELEASE_TAG=$(curl -s https://api.github.com/repos/outline/outline/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+RELEASE=${RELEASE_TAG#v}
+wget -q "https://github.com/outline/outline/archive/refs/tags/${RELEASE_TAG}.zip"
+unzip -q ${RELEASE_TAG}.zip
+mv outline-${RELEASE} /opt/outline
 cd /opt/outline
 
-## First build in development
 $STD yarn install --no-optional --frozen-lockfile
 $STD yarn cache clean
 $STD yarn build
 
-## Continue in production
 rm -rf ./node_modules
-$STD yarn install --production=true--frozen-lockfile
+$STD yarn install --production=true --frozen-lockfile
 $STD yarn cache clean
 
 FILE_STORAGE_LOCAL_ROOT_DIR=/var/lib/outline/data
 mkdir -p $FILE_STORAGE_LOCAL_ROOT_DIR
 
-{
-    echo NODE_ENV=production
-    echo SECRET_KEY=$SECRET_KEY
-    echo UTILS_SECRET=$UTILS_SECRET
-    echo DATABASE_URL=$DATABASE_URL
-    echo REDIS_URL=redis://localhost:6379
-    echo URL=$URL
-    echo FILE_STORAGE=local
-    echo FILE_STORAGE_LOCAL_ROOT_DIR=$FILE_STORAGE_LOCAL_ROOT_DIR
-    echo FILE_STORAGE_UPLOAD_MAX_SIZE=262144000
-    echo WEB_CONCURRENCY=2
-} > /opt/outline/.env
+cat <<EOF >/opt/outline/.env
+NODE_ENV=production
+SECRET_KEY=$SECRET_KEY
+UTILS_SECRET=$UTILS_SECRET
+DATABASE_URL=$DATABASE_URL
+REDIS_URL=redis://localhost:6379
+URL=$URL
+FILE_STORAGE=local
+FILE_STORAGE_LOCAL_ROOT_DIR=$FILE_STORAGE_LOCAL_ROOT_DIR
+FILE_STORAGE_UPLOAD_MAX_SIZE=262144000
+WEB_CONCURRENCY=2
+EOF
 
 $STD yarn sequelize db:create
 $STD yarn sequelize db:migrate
 
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
-msg_ok "Installed $APPLICATION"
+echo "${RELEASE}" >/opt/Outline_version.txt
+msg_ok "Installed Outline"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/outline.service
@@ -151,7 +149,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -rf /opt/${RELEASE}.zip
+rm /opt/${RELEASE_TAG}.zip
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"

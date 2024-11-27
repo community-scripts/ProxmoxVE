@@ -57,8 +57,9 @@ header_info
 check_container_storage
 check_container_resources
 if [[ ! -d /opt/outline ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
-RELEASE=$(curl -s https://api.github.com/repos/outline/outline/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
+RELEASE_TAG=$(curl -s https://api.github.com/repos/outline/outline/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+RELEASE=${RELEASE_TAG#v}
+if [[ "${RELEASE}" != "$(cat /opt/Outline_version.txt)" ]] || [[ ! -f /opt/Outline_version.txt ]]; then
   msg_info "Stopping ${APP}"
   systemctl stop outline
   msg_ok "Stopped ${APP}"
@@ -67,20 +68,17 @@ if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}
   cd /opt
   cp /opt/outline/.env /opt/.env
   mv /opt/outline /opt/outline_bak
-  wget -q "https://github.com/outline/outline/archive/refs/tags/${RELEASE}.zip"
-  unzip -q ${RELEASE}.zip
-  mv outline-${RELEASE:1} /opt/outline
+  wget -q "https://github.com/outline/outline/archive/refs/tags/${RELEASE_TAG}.zip"
+  unzip -q ${RELEASE_TAG}.zip
+  mv outline-${RELEASE} /opt/outline
   cd /opt/outline
 
-  ## Build in development mode
-  unset NODE_ENV
-  yarn install --no-optional --frozen-lockfile &>/dev/null &&
-  yarn cache clean &>/dev/null &&
+  yarn install --no-optional --frozen-lockfile &>/dev/null
+  yarn cache clean &>/dev/null
   yarn build &>/dev/null
 
-  ## Continue in production mode
   rm -rf ./node_modules
-  yarn install --production=true--frozen-lockfile &>/dev/null &&
+  yarn install --production=true --frozen-lockfile &>/dev/null
   yarn cache clean &>/dev/null
 
   mv /opt/.env /opt/outline/.env
@@ -91,8 +89,9 @@ if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}
   msg_info "Starting ${APP}"
   systemctl start outline
   msg_ok "Started ${APP}"
+
   msg_info "Cleaning up"
-  rm -rf /opt/${RELEASE}.zip
+  rm -rf /opt/${RELEASE_TAG}.zip
   rm -rf /opt/outline_bak
   msg_ok "Cleaned"
   msg_ok "Updated Successfully"
