@@ -32,8 +32,6 @@
     },
     "notes": [
         {
-        },
-        {
             "text": "For non-AVX CPUs, MongoDB 4.2 is installed. Please note this is a legacy solution that may present security risks and could become unsupported in future updates.",
             "type": "warning"
         }
