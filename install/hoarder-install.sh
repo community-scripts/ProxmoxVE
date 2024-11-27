@@ -164,6 +164,7 @@ ExecStart=pnpm start:prod
 WorkingDirectory=/opt/hoarder/apps/workers
 EnvironmentFile=/opt/hoarder/.env
 Restart=always
+TimeoutStopSec=5
 
 [Install]
 WantedBy=multi-user.target
@@ -171,6 +172,9 @@ EOF
 
 systemctl -q enable --now meilisearch.service hoarder-web.service hoarder-browser.service hoarder-workers.service
 msg_ok "Set up Services"
+
+motd_ssh
+customize
 
 msg_info "Cleaning up"
 rm -rf /tmp/meilisearch.deb
