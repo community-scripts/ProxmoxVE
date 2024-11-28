@@ -1,6 +1,6 @@
 {
     "name": "The Lounge",
-    "slug": "thelounge, the-lounge",
+    "slug": "thelounge",
     "categories": [
       0
     ],
@@ -16,7 +16,7 @@
     "install_methods": [
       {
         "type": "default",
-        "script": "/ct/thelounge, the-lounge.sh",
+        "script": "/ct/thelounge.sh",
         "resources": {
           "cpu": 2,
           "ram": 2048,
@@ -32,7 +32,7 @@
     },
     "notes": [
       {
-        "text": "The Lounge is now up and running in private mode. You will have to create a user by using \"sudo -u thelounge thelounge add name\"",
+        "text": "The Lounge is running in private mode. Use \"sudo -u thelounge thelounge add name\" to create users.",
         "type": "info"
       }
     ]
