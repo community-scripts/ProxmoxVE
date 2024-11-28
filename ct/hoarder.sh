@@ -19,7 +19,6 @@ EOF
 header_info
 echo -e "Loading..."
 APP="Hoarder"
-TAGS="bookmark;links"
 var_disk="8"
 var_cpu="4"
 var_ram="4096"
