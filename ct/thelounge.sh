@@ -1,22 +1,21 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/kristocopani/ProxmoxVE/build/misc/build.func)
+source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2024 tteck
-# Author: kristocopani
+# Author: tteck (tteckster)
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
 function header_info {
 clear
 cat <<"EOF"
-    ____             __    ____       __         _     __   ______                           __     _________            __
-   / __ \___  ____  / /   / __ \___  / /_  _____(_)___/ /  /_  __/___  _____________  ____  / /_   / ____/ (_)__  ____  / /_
-  / /_/ / _ \/ __ `/ /___/ / / / _ \/ __ \/ ___/ / __  /    / / / __ \/ ___/ ___/ _ \/ __ \/ __/  / /   / / / _ \/ __ \/ __/
- / _, _/  __/ /_/ / /___/ /_/ /  __/ /_/ / /  / / /_/ /    / / / /_/ / /  / /  /  __/ / / / /_   / /___/ / /  __/ / / / /_
-/_/ |_|\___/\__,_/_/   /_____/\___/_.___/_/  /_/\__,_/    /_/  \____/_/  /_/   \___/_/ /_/\__/   \____/_/_/\___/_/ /_/\__/
-
+  ________            __                               
+ /_  __/ /_  ___     / /   ____  __  ______  ____ ____ 
+  / / / __ \/ _ \   / /   / __ \/ / / / __ \/ __ `/ _ \
+ / / / / / /  __/  / /___/ /_/ / /_/ / / / / /_/ /  __/
+/_/ /_/ /_/\___/  /_____/\____/\__,_/_/ /_/\__, /\___/ 
+                                          /____/        
 EOF
 }
-
 header_info
 echo -e "Loading..."
 APP="The Lounge"
