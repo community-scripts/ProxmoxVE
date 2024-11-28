@@ -53,7 +53,6 @@ server:
   infra-cache-slabs: 8
   key-cache-slabs: 8
   serve-expired: yes
-  root-hints: /var/lib/unbound/root.hints
   serve-expired-ttl: 3600
   edns-buffer-size: 1232
   prefetch: yes
@@ -75,17 +74,11 @@ server:
   access-control: 127.0.0.1/32 allow
   chroot: ""
   logfile: /var/log/unbound.log
-  verbosity: 1
   log-queries: yes
   statistics-interval: 0
   extended-statistics: yes
   harden-below-nxdomain: yes
 EOF
-
-# Update Root hints from Internic (This file holds the information on root name servers needed to initialize cache of Internet domain name servers)
-wget -qO /var/lib/unbound/root.hints https://www.internic.net/domain/named.root
-# Set unbound user as owner of the root hints file
-chown unbound:unbound /var/lib/unbound/root.hints
 
 touch /var/log/unbound.log
 chown unbound:unbound /var/log/unbound.log
