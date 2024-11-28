@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -s https://raw.githubusercontent.com/kristocopani/ProxmoxVE/build/misc/build.func)
 # Copyright (c) 2021-2024 tteck
 # Author: kristocopani
 # License: MIT
@@ -70,7 +70,7 @@ function update_script() {
       nodejs
     cd /opt
     wget -q https://github.com/thelounge/thelounge-deb/releases/download/v${RELEASE}/thelounge_${RELEASE}_all.deb
-    apt install -y ./thelounge_${RELEASE}_all.deb
+    dpkg -i ./thelounge_${RELEASE}_all.deb
     msg_ok "Updated ${APP} to ${RELEASE}"
 
     msg_info "Starting ${APP} Services"
