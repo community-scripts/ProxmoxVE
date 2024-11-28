@@ -15,8 +15,6 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-  python3 \
-  python3-distutils \
   g++ \
   build-essential \
   curl \
@@ -25,13 +23,6 @@ $STD apt-get install -y \
   gnupg \
   ca-certificates \
   chromium \
-  libpixman-1-dev \
-  libcairo2-dev \
-  libjpeg-dev \
-  libpango1.0-dev \
-  libgif-dev \
-  librsvg2-dev \
-  pkg-config \
   mc
 msg_ok "Installed Dependencies"
 
@@ -72,9 +63,6 @@ RELEASE=$(curl -s https://api.github.com/repos/hoarder-app/hoarder/releases/late
 wget -q "https://github.com/hoarder-app/hoarder/archive/refs/tags/v${RELEASE}.zip"
 unzip -q v${RELEASE}.zip
 mv hoarder-${RELEASE} /opt/hoarder
-
-mkdir -p /opt/hoarder_data
-
 cd /opt/hoarder
 corepack enable
 export PUPPETEER_SKIP_DOWNLOAD="true"
@@ -82,14 +70,12 @@ export NEXT_TELEMETRY_DISABLED=1
 export CI="true"
 cd /opt/hoarder/apps/web
 $STD pnpm install --frozen-lockfile
-cd /opt/hoarder/apps/workers
-$STD pnpm install --frozen-lockfile
-cd /opt/hoarder/apps/web
 $STD pnpm exec next build --experimental-build-mode compile
 cp -r /opt/hoarder/apps/web/.next/standalone/apps/web/server.js /opt/hoarder/apps/web
+cd /opt/hoarder/apps/workers
+$STD pnpm install --frozen-lockfile
 
 HOARDER_SECRET=$(openssl rand -base64 36 | cut -c1-24)
-
 cat <<EOF >/opt/hoarder/.env
 SERVER_VERSION=$RELEASE
 NEXTAUTH_SECRET="$HOARDER_SECRET"
@@ -103,6 +89,7 @@ echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Installed Hoarder"
 
 msg_info "Running Database Migration"
+mkdir -p /opt/hoarder_data
 cd /opt/hoarder/packages/db
 $STD pnpm migrate
 mv db.db /opt/hoarder_data
@@ -177,6 +164,7 @@ customize
 
 msg_info "Cleaning up"
 rm -rf /tmp/meilisearch.deb
+rm -f /opt/v${RELEASE}.zip
 $STD apt-get autoremove -y
 $STD apt-get autoclean -y
 msg_ok "Cleaned"
