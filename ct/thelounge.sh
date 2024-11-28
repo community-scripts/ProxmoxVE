@@ -6,8 +6,8 @@ source <(curl -s https://raw.githubusercontent.com/kristocopani/ProxmoxVE/build/
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
 function header_info {
-clear
-cat <<"EOF"
+  clear
+  cat <<"EOF"
   ________            __                               
  /_  __/ /_  ___     / /   ____  __  ______  ____ ____ 
   / / / __ \/ _ \   / /   / __ \/ / / / __ \/ __ `/ _ \
@@ -15,7 +15,7 @@ cat <<"EOF"
 /_/ /_/ /_/\___/  /_____/\____/\__,_/_/ /_/\__, /\___/ 
                                           /____/       
  
-EOF
+  EOF
 }
 header_info
 echo -e "Loading..."
