@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2024 tteck
+# Copyright (c) 2021-2024 community-scripts ORG
 # Author: kristocopani
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -13,7 +13,8 @@ cat <<"EOF"
   / / / __ \/ _ \   / /   / __ \/ / / / __ \/ __ `/ _ \
  / / / / / /  __/  / /___/ /_/ / /_/ / / / / /_/ /  __/
 /_/ /_/ /_/\___/  /_____/\____/\__,_/_/ /_/\__, /\___/ 
-                                          /____/        
+                                          /____/       
+
 EOF
 }
 header_info
@@ -62,10 +63,10 @@ function update_script() {
     exit
   fi
   RELEASE=$(curl -s https://api.github.com/repos/thelounge/thelounge-deb/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "v${RELEASE}" != "$(sudo -u thelounge thelounge -v)" ]]; then
-    msg_info "Stopping ${APP} Services"
+  f [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+    msg_info "Stopping Service"
     systemctl stop thelounge
-    msg_ok "Stopped ${APP} Services"
+    msg_ok "Stopped Service"
 
     msg_info "Updating ${APP} to ${RELEASE}"
     apt-get install --only-upgrade \
@@ -73,12 +74,11 @@ function update_script() {
     cd /opt
     wget -q https://github.com/thelounge/thelounge-deb/releases/download/v${RELEASE}/thelounge_${RELEASE}_all.deb
     dpkg -i ./thelounge_${RELEASE}_all.deb
-    msg_ok "Updated ${APP} to ${RELEASE}"
+    msg_ok "Updated ${APP} to v${RELEASE}"
 
-    msg_info "Starting ${APP} Services"
-    systemctl daemon-reload
+    msg_info "Starting Service"
     systemctl start thelounge
-    msg_ok "Started ${APP}"
+    msg_ok "Started Service"
 
     msg_info "Cleaning up"
     rm -rf "/opt/thelounge_${RELEASE}_all.deb"
@@ -87,7 +87,7 @@ function update_script() {
     msg_ok "Cleaned"
     msg_ok "Updated Successfully"
   else
-    msg_ok "No update required.  ${APP} is already at ${RELEASE}."
+    msg_ok "No update required.  ${APP} is already at v${RELEASE}."
   fi
   exit
 }
