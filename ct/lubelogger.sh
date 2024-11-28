@@ -76,6 +76,7 @@ check_container_resources
     cp /opt/lubelogger/appsettings.json /opt/appsettings.json
     rm -rf /opt/lubelogger
     unzip -qq LubeLogger_v${RELEASE_TRIMMED}_linux_x64.zip -d lubelogger
+    echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
     msg_ok "Updated ${APP} to v${RELEASE}"
 
     msg_info "Starting Service"
