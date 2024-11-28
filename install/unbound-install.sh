@@ -40,7 +40,6 @@ server:
   hide-version: yes
   harden-glue: yes
   harden-referral-path: yes
-  use-caps-for-id: no
   qname-minimisation: yes
   rrset-roundrobin: yes
   cache-min-ttl: 300
