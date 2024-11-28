@@ -4,18 +4,17 @@ source <(curl -s https://raw.githubusercontent.com/kristocopani/ProxmoxVE/build/
 # Author: kristocopani
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-
 function header_info {
-  clear
-  cat <<"EOF"
-  ________            __                               
- /_  __/ /_  ___     / /   ____  __  ______  ____ ____ 
+clear
+cat <<"EOF"
+  ________            __
+ /_  __/ /_  ___     / /   ____  __  ______  ____ ____
   / / / __ \/ _ \   / /   / __ \/ / / / __ \/ __ `/ _ \
  / / / / / /  __/  / /___/ /_/ / /_/ / / / / /_/ /  __/
-/_/ /_/ /_/\___/  /_____/\____/\__,_/_/ /_/\__, /\___/ 
-                                          /____/       
- 
-  EOF
+/_/ /_/ /_/\___/  /_____/\____/\__,_/_/ /_/\__, /\___/
+                                          /____/
+
+EOF
 }
 header_info
 echo -e "Loading..."
@@ -58,7 +57,10 @@ function update_script() {
   check_container_storage
   check_container_resources
 
-  if [[ ! -f /usr/lib/systemd/system/thelounge.service ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
+  if [[ ! -f /usr/lib/systemd/system/thelounge.service ]]; then
+    msg_error "No ${APP} Installation Found!"
+    exit
+  fi
   RELEASE=$(curl -s https://api.github.com/repos/thelounge/thelounge-deb/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
   if [[ "v${RELEASE}" != "$(sudo -u thelounge thelounge -v)" ]]; then
     msg_info "Stopping ${APP} Services"
@@ -84,10 +86,10 @@ function update_script() {
     apt-get -y autoclean
     msg_ok "Cleaned"
     msg_ok "Updated Successfully"
-else
-  msg_ok "No update required.  ${APP} is already at ${RELEASE}."
-fi
-exit
+  else
+    msg_ok "No update required.  ${APP} is already at ${RELEASE}."
+  fi
+  exit
 }
 
 start
