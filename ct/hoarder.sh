@@ -61,7 +61,7 @@ if [[ ! -d /opt/hoarder ]]; then msg_error "No ${APP} Installation Found!"; exit
 RELEASE=$(curl -s https://api.github.com/repos/hoarder-app/hoarder/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 PREV_VERSION=$(cat /opt/${APP}_version.txt)
 if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "${PREV_VERSION}" ]]; then
-  msg_info "Stopping ${APP} Services"
+  msg_info "Stopping Services"
   systemctl stop hoarder-web hoarder-workers hoarder-browser
   msg_ok "Stopped Services"
 
