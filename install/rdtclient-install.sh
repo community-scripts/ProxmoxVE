@@ -14,10 +14,10 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y curl
-$STD apt-get install -y sudo
-$STD apt-get install -y mc
-$STD apt-get install -y unzip
+$STD apt-get install -y \
+  mc \
+  curl \
+  sudo 
 msg_ok "Installed Dependencies"
 
 msg_info "Installing ASP.NET Core Runtime"
@@ -25,7 +25,7 @@ wget -q https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.
 $STD dpkg -i packages-microsoft-prod.deb
 rm packages-microsoft-prod.deb
 $STD apt-get update
-$STD apt-get install -y dotnet-sdk-8.0
+$STD apt-get install -y dotnet-sdk-9.0
 msg_ok "Installed ASP.NET Core Runtime"
 
 msg_info "Installing rdtclient"

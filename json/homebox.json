@@ -30,5 +30,10 @@
         "username": null,
         "password": null
     },
-    "notes": []
+    "notes": [
+        {
+            "text": "env file location: `/opt/.env`",
+            "type": "info"
+        }
+    ]
 }
