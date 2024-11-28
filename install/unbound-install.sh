@@ -39,7 +39,6 @@ server:
   hide-identity: yes
   hide-version: yes
   harden-referral-path: yes
-  qname-minimisation: yes
   rrset-roundrobin: yes
   cache-min-ttl: 300
   cache-max-ttl: 14400
