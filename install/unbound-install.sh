@@ -42,7 +42,6 @@ server:
   rrset-roundrobin: yes
   cache-min-ttl: 300
   cache-max-ttl: 14400
-  msg-cache-slabs: 8
   rrset-cache-slabs: 8
   infra-cache-slabs: 8
   key-cache-slabs: 8
