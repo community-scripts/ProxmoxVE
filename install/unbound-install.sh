@@ -39,7 +39,6 @@ server:
   hide-identity: yes
   hide-version: yes
   harden-referral-path: yes
-  rrset-roundrobin: yes
   cache-min-ttl: 300
   cache-max-ttl: 14400
   rrset-cache-slabs: 8
