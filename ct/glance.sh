@@ -57,7 +57,7 @@ header_info
 check_container_storage
 check_container_resources
 
-  if [[ ! -f /etc/systemd/system/lubelogger.service ]]; then
+  if [[ ! -f /etc/systemd/system/glance.service ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
