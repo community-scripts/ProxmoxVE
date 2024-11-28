@@ -92,7 +92,6 @@ check_container_resources
   fi
   exit
 }
-  }
 
 start
 build_container
