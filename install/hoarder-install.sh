@@ -101,7 +101,7 @@ msg_ok "Installed Hoarder"
 
 msg_info "Running Database Migration"
 cd /opt/hoarder/packages/db
-pnpm migrate
+$STD pnpm migrate
 mv db.db /opt/hoarder_data
 msg_ok "Database Migration Completed"
 
