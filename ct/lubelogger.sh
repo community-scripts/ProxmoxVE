@@ -89,7 +89,7 @@ check_container_resources
     msg_ok "Cleaned"
     msg_ok "Updated Successfully"
   else
-    msg_ok "No update required.  ${APP} is already at v${RELEASE}."
+    msg_ok "No update required. ${APP} is already at v${RELEASE}."
   fi
   exit
 }
