@@ -42,7 +42,6 @@ server:
   harden-dnssec-stripped: yes
   harden-referral-path: yes
   use-caps-for-id: no
-  harden-algo-downgrade: no
   qname-minimisation: yes
   rrset-roundrobin: yes
   cache-min-ttl: 300
