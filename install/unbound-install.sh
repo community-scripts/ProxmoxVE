@@ -44,7 +44,6 @@ server:
   use-caps-for-id: no
   harden-algo-downgrade: no
   qname-minimisation: yes
-  aggressive-nsec: yes
   rrset-roundrobin: yes
   cache-min-ttl: 300
   cache-max-ttl: 14400
