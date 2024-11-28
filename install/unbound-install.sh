@@ -111,7 +111,7 @@ cat <<EOF >/etc/logrotate.d/unbound
 EOF
 
 systemctl restart logrotate
-msg_ok "Restarted Logrotate"
+msg_ok "Configured Logrotate"
 
 motd_ssh
 customize
