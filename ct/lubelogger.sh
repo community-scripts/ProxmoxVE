@@ -76,6 +76,7 @@ check_container_resources
     cp /opt/lubelogger/appsettings.json /opt/appsettings.json
     rm -rf /opt/lubelogger
     unzip -qq LubeLogger_v${RELEASE_TRIMMED}_linux_x64.zip -d lubelogger
+    mv -f /opt/appsettings.json /opt/lubelogger/appsettings.json
     echo "${RELEASE}" >"/opt/${APP}_version.txt"
     msg_ok "Updated ${APP} to v${RELEASE}"
 
@@ -84,7 +85,6 @@ check_container_resources
     msg_ok "Started Service"
 
     msg_info "Cleaning up"
-    rm -rf /opt/appsettings.json
     rm -rf /opt/LubeLogger_v${RELEASE_TRIMMED}_linux_x64.zip
     msg_ok "Cleaned"
     msg_ok "Updated Successfully"
