@@ -32,10 +32,6 @@
     },
     "notes": [
         {
-            "text": "Unbound listens to DNS requests at port 5335",
-            "type": "warning"
-        },
-        {
             "text": "Unbound Configuration Path: `/etc/unbound/unbound.conf.d/unbound.conf`",
             "type": "info"
         }
