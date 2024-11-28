@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 source <(curl -s https://raw.githubusercontent.com/kristocopani/ProxmoxVE/build/misc/build.func)
 # Copyright (c) 2021-2024 tteck
-# Author: tteck (tteckster)
+# Author: kristocopani1
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
