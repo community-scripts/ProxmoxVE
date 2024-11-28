@@ -16,6 +16,14 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
+## 2024-11-28
+
+### Changed
+
+### 🌐 Website
+
+- Show Changelog on Mobile Devices [@MickLesk](https://github.com/MickLesk) ([#558](https://github.com/community-scripts/ProxmoxVE/pull/558))
+
 ## 2024-11-27
 
 ### Changed
