@@ -38,7 +38,6 @@ server:
   num-threads: 1
   hide-identity: yes
   hide-version: yes
-  harden-glue: yes
   harden-referral-path: yes
   qname-minimisation: yes
   rrset-roundrobin: yes
