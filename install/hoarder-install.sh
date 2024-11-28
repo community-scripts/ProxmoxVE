@@ -36,8 +36,10 @@ $STD apt-get install -y \
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Additional Tools"
-wget -q https://github.com/Y2Z/monolith/releases/latest/download/monolith-gnu-linux-x86_64 -O /usr/bin/monolith && chmod +x /usr/bin/monolith
-wget -q https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux -O /usr/bin/yt-dlp && chmod +x /usr/bin/yt-dlp
+wget -q https://github.com/Y2Z/monolith/releases/latest/download/monolith-gnu-linux-x86_64 -O /usr/bin/monolith
+chmod +x /usr/bin/monolith
+wget -q https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux -O /usr/bin/yt-dlp
+chmod +x /usr/bin/yt-dlp
 msg_ok "Installed Additional Tools"
 
 msg_info "Installing Meilisearch"
@@ -68,7 +70,8 @@ msg_info "Installing Hoarder"
 cd /opt
 RELEASE=$(curl -s https://api.github.com/repos/hoarder-app/hoarder/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 wget -q "https://github.com/hoarder-app/hoarder/archive/refs/tags/v${RELEASE}.zip"
-unzip -q v${RELEASE}.zip && mv hoarder-${RELEASE} /opt/hoarder
+unzip -q v${RELEASE}.zip
+mv hoarder-${RELEASE} /opt/hoarder
 
 mkdir -p /opt/hoarder_data
 
@@ -77,9 +80,12 @@ corepack enable
 export PUPPETEER_SKIP_DOWNLOAD="true"
 export NEXT_TELEMETRY_DISABLED=1
 export CI="true"
-cd /opt/hoarder/apps/web && $STD pnpm install --frozen-lockfile
-cd /opt/hoarder/apps/workers && $STD pnpm install --frozen-lockfile
-cd /opt/hoarder/apps/web && $STD pnpm exec next build --experimental-build-mode compile
+cd /opt/hoarder/apps/web
+$STD pnpm install --frozen-lockfile
+cd /opt/hoarder/apps/workers
+$STD pnpm install --frozen-lockfile
+cd /opt/hoarder/apps/web
+$STD pnpm exec next build --experimental-build-mode compile
 cp -r /opt/hoarder/apps/web/.next/standalone/apps/web/server.js /opt/hoarder/apps/web
 
 HOARDER_SECRET=$(openssl rand -base64 36 | cut -c1-24)
