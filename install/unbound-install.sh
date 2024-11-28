@@ -26,7 +26,7 @@ $STD apt-get install -y \
   unbound-host
 msg_info "Installed Unbound"
 
-cat <<EOF >/etc/unbound/unbound.conf.d/unbound-lxe.conf
+cat <<EOF >/etc/unbound/unbound.conf.d/unbound.conf
 server:
   verbosity: 0
   interface: 0.0.0.0
