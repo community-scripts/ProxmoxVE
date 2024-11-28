@@ -71,7 +71,6 @@ server:
   logfile: /var/log/unbound.log
   log-queries: yes
   extended-statistics: yes
-  harden-below-nxdomain: yes
 EOF
 
 touch /var/log/unbound.log
