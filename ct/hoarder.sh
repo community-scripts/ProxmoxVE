@@ -72,7 +72,7 @@ if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "${PREV_VERSION}" ]]
   unzip -q v${RELEASE}.zip
   mv hoarder-${RELEASE} /opt/hoarder
   cd /opt/hoarder/apps/web
-  pnpm install --frozen-lockfile >/dev/null 2>&1
+  pnpm install --frozen-lockfile &>/dev/null
   cd /opt/hoarder/apps/workers
   pnpm install --frozen-lockfile >/dev/null 2>&1
   cd /opt/hoarder/apps/web
