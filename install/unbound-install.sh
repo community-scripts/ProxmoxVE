@@ -39,7 +39,6 @@ server:
   hide-identity: yes
   hide-version: yes
   harden-glue: yes
-  harden-dnssec-stripped: yes
   harden-referral-path: yes
   use-caps-for-id: no
   qname-minimisation: yes
