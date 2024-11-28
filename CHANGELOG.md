@@ -20,6 +20,11 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### Changed
 
+### 🚀 Updated Scripts
+
+- Remove changing DISK_REF for zfspool mikrotik-routeros.sh [@tjcomserv](https://github.com/tjcomserv) ([#529](https://github.com/community-scripts/ProxmoxVE/pull/529))
+- Fix Z-Wave JS UI script [@MickLesk](https://github.com/MickLesk) ([#546](https://github.com/community-scripts/ProxmoxVE/pull/546))
+
 ### 🌐 Website
 
 - Show Changelog on Mobile Devices [@MickLesk](https://github.com/MickLesk) ([#558](https://github.com/community-scripts/ProxmoxVE/pull/558))
