@@ -22,6 +22,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- Add vitest, add json validation tests, fix broken json files [@havardthom](https://github.com/havardthom) ([#566](https://github.com/community-scripts/ProxmoxVE/pull/566))
 - Add update script to Pocketbase [@dsiebel](https://github.com/dsiebel) ([#535](https://github.com/community-scripts/ProxmoxVE/pull/535))
 - Fix MongoDB install in Unifi script [@havardthom](https://github.com/havardthom) ([#564](https://github.com/community-scripts/ProxmoxVE/pull/564))
 - Remove changing DISK_REF for zfspool mikrotik-routeros.sh [@tjcomserv](https://github.com/tjcomserv) ([#529](https://github.com/community-scripts/ProxmoxVE/pull/529))
