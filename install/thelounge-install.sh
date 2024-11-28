@@ -29,7 +29,7 @@ msg_info "Installing The Lounge"
 cd /opt
 RELEASE=$(curl -s https://api.github.com/repos/thelounge/thelounge-deb/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 wget -q https://github.com/thelounge/thelounge-deb/releases/download/v${RELEASE}/thelounge_${RELEASE}_all.deb
-$STD apt install -y ./thelounge_${RELEASE}_all.deb >/dev/null
+$STD dpkg -i ./thelounge_${RELEASE}_all.deb
 msg_ok "Installed The Lounge"
 
 motd_ssh
