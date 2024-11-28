@@ -28,22 +28,14 @@ msg_info "Installed Unbound"
 
 cat <<EOF >/etc/unbound/unbound.conf.d/unbound.conf
 server:
-  verbosity: 0
   interface: 0.0.0.0
   port: 5335
   do-ip6: no
-  do-ip4: yes
-  do-udp: yes
-  do-tcp: yes
-  num-threads: 1
   hide-identity: yes
   hide-version: yes
   harden-referral-path: yes
   cache-min-ttl: 300
   cache-max-ttl: 14400
-  rrset-cache-slabs: 8
-  infra-cache-slabs: 8
-  key-cache-slabs: 8
   serve-expired: yes
   serve-expired-ttl: 3600
   prefetch: yes
@@ -65,8 +57,6 @@ server:
   access-control: 127.0.0.1/32 allow
   chroot: ""
   logfile: /var/log/unbound.log
-  log-queries: yes
-  extended-statistics: yes
 EOF
 
 touch /var/log/unbound.log
