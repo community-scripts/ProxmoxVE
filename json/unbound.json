@@ -36,7 +36,7 @@
             "type": "warning"
         },
         {
-            "text": "Unbound Configuration Path: `/etc/unbound/unbound.conf.d/unbound-lxe.conf`",
+            "text": "Unbound Configuration Path: `/etc/unbound/unbound.conf.d/unbound.conf`",
             "type": "info"
         }
     ]
