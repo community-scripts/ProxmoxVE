@@ -57,13 +57,42 @@ function update_script() {
 header_info
 check_container_storage
 check_container_resources
-if [[ ! -d /var ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
-msg_info "Updating $APP LXC"
-apt-get update &>/dev/null
-apt-get -y upgrade &>/dev/null
-msg_ok "Updated $APP LXC"
-exit
+
+  if [[ ! -f /etc/systemd/system/lubelogger.service ]]; then
+    msg_error "No ${APP} Installation Found!"
+    exit
+  fi
+
+  RELEASE=$(curl -s https://api.github.com/repos/hargata/lubelog/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+  RELEASE_TRIMMED=$(echo "${RELEASE}" | tr -d ".")
+  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+    msg_info "Stopping Service"
+    systemctl stop lubelogger
+    msg_ok "Stopped Service"
+
+    msg_info "Updating ${APP} to ${RELEASE}"
+    cd /opt
+    wget -q https://github.com/hargata/lubelog/releases/download/v${RELEASE}/LubeLogger_v${RELEASE_TRIMMED}_linux_x64.zip
+    cp /opt/lubelogger/appsettings.json /opt/appsettings.json
+    rm -rf /opt/lubelogger
+    unzip -qq LubeLogger_${RELEASE_TRIMMED}_linux_x64.zip -d lubelogger
+    msg_ok "Updated ${APP} to v${RELEASE}"
+
+    msg_info "Starting Service"
+    systemctl start lubelogger
+    msg_ok "Started Service"
+
+    msg_info "Cleaning up"
+    rm -rf /opt/appsettings.json
+    rm -rf /opt/LubeLogger_v${RELEASE_TRIMMED}_linux_x64.zip
+    msg_ok "Cleaned"
+    msg_ok "Updated Successfully"
+  else
+    msg_ok "No update required.  ${APP} is already at v${RELEASE}."
+  fi
+  exit
 }
+  }
 
 start
 build_container

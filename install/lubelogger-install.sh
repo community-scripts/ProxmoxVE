@@ -29,7 +29,7 @@ RELEASE=$(curl -s https://api.github.com/repos/hargata/lubelog/releases/latest |
 RELEASE_TRIMMED=$(echo "${RELEASE}" | tr -d ".")
 wget -q https://github.com/hargata/lubelog/releases/download/v${RELEASE}/LubeLogger_v${RELEASE_TRIMMED}_linux_x64.zip
 mkdir /opt/lubelogger
-$STD unzip -qq LubeLogger_v141_linux_x64.zip -d lubelogger
+$STD unzip -qq LubeLogger_${RELEASE_TRIMMED}_linux_x64.zip -d lubelogger
 chmod 700 /opt/lubelogger/CarCareTracker
 cp /opt/lubelogger/appsettings.json /opt/lubelogger/appsettings_bak.json
 jq '.Kestrel = {"Endpoints": {"Http": {"Url": "http://0.0.0.0:5000"}}}' /opt/lubelogger/appsettings_bak.json > /opt/lubelogger/appsettings.json
