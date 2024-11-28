@@ -70,12 +70,12 @@ check_container_resources
     systemctl stop lubelogger
     msg_ok "Stopped Service"
 
-    msg_info "Updating ${APP} to ${RELEASE}"
+    msg_info "Updating ${APP} to v${RELEASE}"
     cd /opt
     wget -q https://github.com/hargata/lubelog/releases/download/v${RELEASE}/LubeLogger_v${RELEASE_TRIMMED}_linux_x64.zip
     cp /opt/lubelogger/appsettings.json /opt/appsettings.json
     rm -rf /opt/lubelogger
-    unzip -qq LubeLogger_${RELEASE_TRIMMED}_linux_x64.zip -d lubelogger
+    unzip -qq LubeLogger_v${RELEASE_TRIMMED}_linux_x64.zip -d lubelogger
     msg_ok "Updated ${APP} to v${RELEASE}"
 
     msg_info "Starting Service"
