@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "3000",
+    "interface_port": 3000,
     "documentation": null,
     "website": "https://adventurelog.app/",
     "logo": "https://raw.githubusercontent.com/seanmorley15/AdventureLog/refs/heads/main/documentation/static/img/favicon.png",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/adventurelog.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "2048",
-                "hdd": "7",
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 7,
                 "os": "debian",
                 "version": "12"
             }

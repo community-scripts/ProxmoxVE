@@ -14,17 +14,19 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y curl
-$STD apt-get install -y sudo
-$STD apt-get install -y mc
+$STD apt-get install -y \
+  curl \
+  sudo \
+  mc
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Zabbix"
-wget -q https://repo.zabbix.com/zabbix/7.0/debian/pool/main/z/zabbix-release/zabbix-release_7.0-1+debian12_all.deb
-$STD dpkg -i zabbix-release_7.0-1+debian12_all.deb
-rm zabbix-release_7.0-1+debian12_all.deb
+cd /tmp
+wget -q https://repo.zabbix.com/zabbix/7.0/debian/pool/main/z/zabbix-release/zabbix-release_latest+debian12_all.deb
+$STD dpkg -i /tmp/zabbix-release_latest+debian12_all.deb
 $STD apt-get update
-$STD apt-get install -y zabbix-server-pgsql zabbix-frontend-php php8.2-pgsql zabbix-apache-conf zabbix-sql-scripts zabbix-agent
+$STD apt-get install -y zabbix-server-pgsql zabbix-frontend-php php8.2-pgsql zabbix-apache-conf zabbix-sql-scripts 
+$STD apt-get install -y zabbix-agent2 zabbix-agent2-plugin-*
 msg_ok "Installed Zabbix"
 
 msg_info "Setting up PostgreSQL"
@@ -50,14 +52,15 @@ echo -e "zabbix Database Name: \e[32m$DB_NAME\e[0m" >>~/zabbix.creds
 msg_ok "Set up PostgreSQL"
 
 msg_info "Starting Services"
-systemctl restart zabbix-server zabbix-agent apache2
-systemctl enable -q zabbix-server zabbix-agent apache2
+systemctl restart zabbix-server zabbix-agent2 apache2
+systemctl enable -q --now zabbix-server zabbix-agent2 apache2
 msg_ok "Started Services"
 
 motd_ssh
 customize
 
 msg_info "Cleaning up"
+rm -rf /tmp/zabbix-release_latest+debian12_all.deb
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"

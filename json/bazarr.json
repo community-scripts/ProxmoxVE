@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": false,
     "privileged": false,
-    "interface_port": "6767",
+    "interface_port": 6767,
     "documentation": null,
     "website": "https://www.bazarr.media/",
     "logo": "https://www.bazarr.media/assets/img/logo.png",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/bazarr.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "1024",
-                "hdd": "4",
+                "cpu": 2,
+                "ram": 1024,
+                "hdd": 4,
                 "os": "debian",
                 "version": "12"
             }

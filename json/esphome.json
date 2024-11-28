@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "6052",
+    "interface_port": 6052,
     "documentation": null,
     "website": "https://esphome.io/",
     "logo": "https://esphome.io/_static/favicon.ico",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/esphome.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "1024",
-                "hdd": "4",
+                "cpu": 2,
+                "ram": 1024,
+                "hdd": 4,
                 "os": "debian",
                 "version": "12"
             }

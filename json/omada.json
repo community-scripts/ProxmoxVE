@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "8043",
+    "interface_port": 8043,
     "documentation": null,
     "website": "https://www.tp-link.com/us/support/download/omada-software-controller/",
     "logo": "https://www.enterpriseitpro.net/wp-content/uploads/2020/12/logo-omada.png",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/omada.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "2048",
-                "hdd": "8",
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 8,
                 "os": "debian",
                 "version": "12"
             }

@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/ubuntu.sh",
             "resources": {
-                "cpu": "1",
-                "ram": "512",
-                "hdd": "2",
+                "cpu": 1,
+                "ram": 512,
+                "hdd": 2,
                 "os": "ubuntu",
                 "version": "22.04"
             }

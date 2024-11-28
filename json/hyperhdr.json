@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": false,
     "privileged": true,
-    "interface_port": "8090",
+    "interface_port": 8090,
     "documentation": null,
     "website": "https://github.com/awawa-dev/HyperHDR",
     "logo": "https://raw.githubusercontent.com/awawa-dev/HyperHDR/master/resources/icons/hyperhdr-icon-256px.png",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/hyperhdr.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "2048",
-                "hdd": "4",
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 4,
                 "os": "debian",
                 "version": "12"
             }

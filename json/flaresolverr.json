@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "8191",
+    "interface_port": 8191,
     "documentation": null,
     "website": "https://github.com/FlareSolverr/FlareSolverr",
     "logo": "https://raw.githubusercontent.com/FlareSolverr/FlareSolverr/master/resources/flaresolverr_logo.svg",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/flaresolverr.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "2048",
-                "hdd": "4",
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 4,
                 "os": "debian",
                 "version": "12"
             }

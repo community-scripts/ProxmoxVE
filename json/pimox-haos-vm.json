@@ -8,7 +8,7 @@
     "type": "vm",
     "updateable": false,
     "privileged": false,
-    "interface_port": "8123",
+    "interface_port": 8123,
     "documentation": null,
     "website": "https://github.com/jiangcuo/Proxmox-Port",
     "logo": "https://github.com/community-scripts/ProxmoxVE/blob/main/misc/images/pimox.png?raw=true",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "vm/pimox-haos-vm.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "4096",
-                "hdd": "32",
+                "cpu": 2,
+                "ram": 4096,
+                "hdd": 32,
                 "os": null,
                 "version": null
             }

@@ -11,10 +11,8 @@ import { AlertColors } from "@/config/siteConfig";
 import { cn } from "@/lib/utils";
 import { PlusCircle, Trash2 } from "lucide-react";
 import { z } from "zod";
-import { ScriptSchema } from "../_schemas/schemas";
+import { ScriptSchema, type Script } from "../_schemas/schemas";
 import { memo, useCallback } from "react";
-
-type Script = z.infer<typeof ScriptSchema>;
 
 type NoteProps = {
   script: Script;

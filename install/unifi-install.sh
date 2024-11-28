@@ -28,11 +28,25 @@ $STD apt-get update
 $STD apt-get install -y temurin-17-jre
 msg_ok "Installed Eclipse Temurin JRE"
 
-msg_info "Installing MongoDB"
-wget -qO- https://www.mongodb.org/static/pgp/server-7.0.asc | gpg --dearmor >/usr/share/keyrings/mongodb-server-7.0.gpg
-echo "deb [ signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] http://repo.mongodb.org/apt/debian bookworm/mongodb-org/7.0 main" >/etc/apt/sources.list.d/mongodb-org-7.0.list
-$STD apt-get update
-$STD apt-get install -y mongodb-org
+if ! grep -q -m1 'avx[^ ]*' /proc/cpuinfo; then
+  msg_ok "No AVX Support Detected"
+  msg_info "Installing MongoDB 4.2"
+  if ! dpkg -l | grep -q "libssl1.1"; then
+    wget -q http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.1_1.1.1n-0+deb10u6_amd64.deb
+    $STD dpkg -i libssl1.1_1.1.1n-0+deb10u6_amd64.deb
+    $STD apt-get install -f -y  # Fix any broken dependencies
+  fi
+  wget -qO- https://www.mongodb.org/static/pgp/server-4.2.asc | gpg --dearmor > /usr/share/keyrings/mongodb-server-4.2.gpg
+  echo "deb [signed-by=/usr/share/keyrings/mongodb-server-4.2.gpg] https://repo.mongodb.org/apt/debian buster/mongodb-org/4.2 main" >/etc/apt/sources.list.d/mongodb-org-4.2.list
+  $STD apt-get update
+  $STD apt-get install -y mongodb-org=4.2.17
+else
+  msg_info "Installing MongoDB 7.0"
+  wget -qO- https://www.mongodb.org/static/pgp/server-7.0.asc | gpg --dearmor >/usr/share/keyrings/mongodb-server-7.0.gpg
+  echo "deb [ signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] http://repo.mongodb.org/apt/debian bookworm/mongodb-org/7.0 main" >/etc/apt/sources.list.d/mongodb-org-7.0.list
+  $STD apt-get update
+  $STD apt-get install -y mongodb-org
+fi
 msg_ok "Installed MongoDB"
 
 msg_info "Installing UniFi Network Server"

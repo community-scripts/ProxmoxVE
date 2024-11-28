@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "3000",
+    "interface_port": 3000,
     "documentation": null,
     "website": "https://github.com/Brandawg93/PeaNUT/",
     "logo": "https://raw.githubusercontent.com/Brandawg93/PeaNUT/main/src/app/icon.svg",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/peanut.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "2048",
-                "hdd": "4",
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 4,
                 "os": "debian",
                 "version": "12"
             }

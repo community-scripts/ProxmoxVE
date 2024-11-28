@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "8409",
+    "interface_port": 8409,
     "documentation": null,
     "website": "https://ersatztv.org/",
     "logo": "https://raw.githubusercontent.com/ErsatzTV/ErsatzTV/main/artwork/ersatztv-logo.svg",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/ersatztv.sh",
             "resources": {
-                "cpu": "1",
-                "ram": "1024",
-                "hdd": "5",
+                "cpu": 1,
+                "ram": 1024,
+                "hdd": 5,
                 "os": "debian",
                 "version": "12"
             }

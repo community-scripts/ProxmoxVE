@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": false,
     "privileged": false,
-    "interface_port": "433",
+    "interface_port": 433,
     "documentation": null,
     "website": "https://www.turnkeylinux.org/nextcloud",
     "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/nextcloud.svg",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/nextcloudpi.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "2048",
-                "hdd": "8",
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 8,
                 "os": "debian",
                 "version": "12"
             }
@@ -29,9 +29,9 @@
             "type": "alpine",
             "script": "ct/alpine-nextcloud.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "1024",
-                "hdd": "2",
+                "cpu": 2,
+                "ram": 1024,
+                "hdd": 2,
                 "os": "alpine",
                 "version": "3.19"
             }

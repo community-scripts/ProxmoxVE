@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": false,
     "privileged": false,
-    "interface_port": "5001",
+    "interface_port": 5001,
     "documentation": null,
     "website": "https://github.com/louislam/dockge",
     "logo": "https://raw.githubusercontent.com/louislam/dockge/master/frontend/public/icon.svg",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/dockge.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "2048",
-                "hdd": "18",
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 18,
                 "os": "debian",
                 "version": "12"
             }

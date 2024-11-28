@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": false,
     "privileged": false,
-    "interface_port": "9117",
+    "interface_port": 9117,
     "documentation": null,
     "website": "https://github.com/Jackett/Jackett",
     "logo": "https://raw.githubusercontent.com/Jackett/Jackett/master/src/Jackett.Common/Content/jacket_medium.png",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/jackett.sh",
             "resources": {
-                "cpu": "1",
-                "ram": "512",
-                "hdd": "2",
+                "cpu": 1,
+                "ram": 512,
+                "hdd": 2,
                 "os": "debian",
                 "version": "12"
             }

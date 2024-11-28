@@ -8,7 +8,7 @@
     "type": "vm",
     "updateable": false,
     "privileged": false,
-    "interface_port": "8123",
+    "interface_port": 8123,
     "documentation": "https://www.home-assistant.io/docs/",
     "website": "https://www.home-assistant.io/",
     "logo": "https://avatars.githubusercontent.com/u/13844975?s=200&v=4",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "vm/haos-vm.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "4096",
-                "hdd": "32",
+                "cpu": 2,
+                "ram": 4096,
+                "hdd": 32,
                 "os": null,
                 "version": null
             }

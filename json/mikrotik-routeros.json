@@ -18,8 +18,8 @@
             "type": "default",
             "script": "vm/mikrotik-routeros.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "512",
+                "cpu": 2,
+                "ram": 512,
                 "hdd": null,
                 "os": null,
                 "version": null

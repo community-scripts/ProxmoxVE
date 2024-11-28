@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "5055",
+    "interface_port": 5055,
     "documentation": null,
     "website": "https://overseerr.dev/",
     "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/overseerr.svg",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/overseerr.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "2048",
-                "hdd": "8",
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 8,
                 "os": "debian",
                 "version": "12"
             }

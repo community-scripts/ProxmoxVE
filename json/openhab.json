@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": false,
     "privileged": false,
-    "interface_port": "8080",
+    "interface_port": 8080,
     "documentation": null,
     "website": "https://www.openhab.org/",
     "logo": "https://www.coxprod.org/domotique/wp-content/uploads/2019/01/openhab-logo-square.png",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/openhab.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "2048",
-                "hdd": "8",
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 8,
                 "os": "debian",
                 "version": "12"
             }

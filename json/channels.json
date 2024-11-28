@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": false,
     "privileged": true,
-    "interface_port": "8089",
+    "interface_port": 8089,
     "documentation": null,
     "website": "https://getchannels.com/dvr-server/",
     "logo": "https://getchannels.com/a/images/channels-logo.svg",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/channels.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "1024",
-                "hdd": "8",
+                "cpu": 2,
+                "ram": 1024,
+                "hdd": 8,
                 "os": "debian",
                 "version": "12"
             }

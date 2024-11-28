@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "5000",
+    "interface_port": 5000,
     "documentation": null,
     "website": "https://changedetection.io/",
     "logo": "https://github.com/dgtlmoon/changedetection.io/blob/master/changedetectionio/static/images/avatar-256x256.png?raw=true",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/changedetection.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "1024",
-                "hdd": "8",
+                "cpu": 2,
+                "ram": 1024,
+                "hdd": 8,
                 "os": "debian",
                 "version": "12"
             }

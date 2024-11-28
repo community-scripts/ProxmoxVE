@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "8080",
+    "interface_port": 8080,
     "documentation": "https://docs.magicmirror.builders/configuration/introduction.html#configuring-your-magicmirror",
     "website": "https://docs.magicmirror.builders/",
     "logo": "https://github.com/MichMich/MagicMirror/raw/master/.github/header.png",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/magicmirror.sh",
             "resources": {
-                "cpu": "1",
-                "ram": "512",
-                "hdd": "3",
+                "cpu": 1,
+                "ram": 512,
+                "hdd": 3,
                 "os": "debian",
                 "version": "12"
             }

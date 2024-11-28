@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": false,
     "privileged": false,
-    "interface_port": "8265",
+    "interface_port": 8265,
     "documentation": null,
     "website": "https://tdarr.io/",
     "logo": "https://home.tdarr.io/static/media/logo3-min.246d6df44c7f16ddebaf.png",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/tdarr.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "2048",
-                "hdd": "4",
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 4,
                 "os": "debian",
                 "version": "12"
             }

@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": false,
     "privileged": false,
-    "interface_port": "4000",
+    "interface_port": 4000,
     "documentation": null,
     "website": "https://dashy.to/",
     "logo": "https://github.com/Lissy93/dashy/raw/master/public/web-icons/dashy-logo.png",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/dashy.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "2048",
-                "hdd": "6",
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 6,
                 "os": "debian",
                 "version": "12"
             }

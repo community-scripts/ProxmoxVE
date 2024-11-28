@@ -9,11 +9,9 @@ import {
 } from "@/components/ui/select";
 import { OperatingSystems } from "@/config/siteConfig";
 import { PlusCircle, Trash2 } from "lucide-react";
-import { memo, useCallback, useEffect, useRef } from "react";
+import { memo, useCallback, useRef } from "react";
 import { z } from "zod";
-import { InstallMethodSchema, ScriptSchema } from "../_schemas/schemas";
-
-type Script = z.infer<typeof ScriptSchema>;
+import { InstallMethodSchema, ScriptSchema, type Script } from "../_schemas/schemas";
 
 type InstallMethodProps = {
   script: Script;
@@ -194,11 +192,11 @@ function InstallMethod({
               </SelectContent>
             </Select>
             <Select
-              value={method.resources.version ? String(method.resources.version) : undefined}
+              value={method.resources.version || undefined}
               onValueChange={(value) =>
                 updateInstallMethod(index, "resources", {
                   ...method.resources,
-                  version: value ? Number(value) : null,
+                  version: value || null,
                 })
               }
               disabled={method.type === "alpine"}

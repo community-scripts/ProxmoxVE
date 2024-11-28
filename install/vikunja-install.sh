@@ -26,7 +26,9 @@ cd /opt
 RELEASE=$(curl -s https://dl.vikunja.io/vikunja/ | grep -oP 'href="/vikunja/\K[0-9]+\.[0-9]+\.[0-9]+' | sort -V | tail -n 1)
 wget -q "https://dl.vikunja.io/vikunja/$RELEASE/vikunja-$RELEASE-amd64.deb"
 $STD dpkg -i vikunja-$RELEASE-amd64.deb
-sudo sed -i 's/^  timezone: .*/  timezone: UTC/' /etc/vikunja/config.yml
+sed -i 's|^  timezone: .*|  timezone: UTC|' /etc/vikunja/config.yml
+sed -i 's|"./vikunja.db"|"/etc/vikunja/vikunja.db"|' /etc/vikunja/config.yml
+sed -i 's|./files|/etc/vikunja/files|' /etc/vikunja/config.yml
 systemctl start vikunja.service
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Installed Vikunja"

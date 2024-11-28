@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": false,
     "privileged": false,
-    "interface_port": "6880",
+    "interface_port": 6880,
     "documentation": null,
     "website": "https://aria2.github.io/",
     "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/linux.svg",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/aria2.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "1028",
-                "hdd": "8",
+                "cpu": 2,
+                "ram": 1024,
+                "hdd": 8,
                 "os": "debian",
                 "version": "12"
             }

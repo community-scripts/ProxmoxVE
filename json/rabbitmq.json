@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "15672",
+    "interface_port": 15672,
     "documentation": null,
     "website": "https://www.rabbitmq.com/",
     "logo": "https://raw.githubusercontent.com/rabbitmq/rabbitmq-website/main/static/img/rabbitmq-logo.svg",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/rabbitmq.sh",
             "resources": {
-                "cpu": "1",
-                "ram": "1024",
-                "hdd": "4",
+                "cpu": 1,
+                "ram": 1024,
+                "hdd": 4,
                 "os": "debian",
                 "version": "12"
             }

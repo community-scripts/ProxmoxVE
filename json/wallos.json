@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/wallos.sh",
             "resources": {
-                "cpu": "1",
-                "ram": "1024",
-                "hdd": "5",
+                "cpu": 1,
+                "ram": 1024,
+                "hdd": 5,
                 "os": "debian",
                 "version": "12"
             }

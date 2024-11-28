@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/archivebox.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "1024",
-                "hdd": "8",
+                "cpu": 2,
+                "ram": 1024,
+                "hdd": 8,
                 "os": "debian",
                 "version": "12"
             }

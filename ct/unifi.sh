@@ -17,10 +17,6 @@ cat <<"EOF"
 EOF
 }
 header_info
-if ! grep -q -m1 'avx[^ ]*' /proc/cpuinfo; then
-  echo "AVX instruction set is not supported on this CPU."
-  exit
-fi
 echo -e "Loading..."
 APP="Unifi"
 var_disk="8"

@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "3000",
+    "interface_port": 3000,
     "documentation": null,
     "website": "https://mafl.hywax.space/",
     "logo": "https://raw.githubusercontent.com/hywax/mafl/main/docs/public/logotype.svg",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/mafl.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "2048",
-                "hdd": "6",
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 6,
                 "os": "debian",
                 "version": "12"
             }

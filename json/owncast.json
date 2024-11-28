@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": false,
     "privileged": false,
-    "interface_port": "8080",
+    "interface_port": 8080,
     "documentation": null,
     "website": "https://owncast.online/",
     "logo": "https://raw.githubusercontent.com/owncast/owncast/develop/web/public/img/favicon/android-icon-144x144.png",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/owncast.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "2048",
-                "hdd": "2",
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 2,
                 "os": "debian",
                 "version": "12"
             }

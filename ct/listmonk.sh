@@ -66,8 +66,12 @@ if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_v
 
   msg_info "Updating ${APP} to v${RELEASE}"
   cd /opt
+  mv /opt/listmonk/ /opt/listmonk-backup
+  mkdir /opt/listmonk/
   wget -q "https://github.com/knadh/listmonk/releases/download/v${RELEASE}/listmonk_${RELEASE}_linux_amd64.tar.gz"
   tar -xzf "listmonk_${RELEASE}_linux_amd64.tar.gz" -C /opt/listmonk
+  mv /opt/listmonk-backup/config.toml /opt/listmonk/config.toml
+  mv /opt/listmonk-backup/uploads /opt/listmonk/uploads
   /opt/listmonk/listmonk --upgrade --yes --config /opt/listmonk/config.toml &>/dev/null
   echo "${RELEASE}" >/opt/${APP}_version.txt
   msg_ok "Updated $APP to v${RELEASE}"
@@ -78,6 +82,7 @@ if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_v
 
   msg_info "Cleaning up"
   rm -rf "/opt/listmonk_${RELEASE}_linux_amd64.tar.gz"
+  rm -rf /opt/listmonk-backup/
   msg_ok "Cleaned"
 
   msg_ok "Updated Successfully"

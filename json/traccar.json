@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": false,
     "privileged": false,
-    "interface_port": "8082",
+    "interface_port": 8082,
     "documentation": null,
     "website": "https://www.traccar.org/",
     "logo": "https://avatars.githubusercontent.com/u/37892282?s=100&v=4",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/traccar.sh",
             "resources": {
-                "cpu": "1",
-                "ram": "1024",
-                "hdd": "2",
+                "cpu": 1,
+                "ram": 1024,
+                "hdd": 2,
                 "os": "debian",
                 "version": "12"
             }

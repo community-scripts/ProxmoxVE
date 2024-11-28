@@ -8,7 +8,7 @@
     "type": "misc",
     "updateable": false,
     "privileged": false,
-    "interface_port": "8080",
+    "interface_port": 8080,
     "documentation": null,
     "website": "https://filebrowser.org/features",
     "logo": "https://github.com/community-scripts/ProxmoxVE/blob/main/misc/images/filebrowser.png?raw=true",

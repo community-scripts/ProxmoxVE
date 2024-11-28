@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": false,
     "privileged": false,
-    "interface_port": "8081",
+    "interface_port": 8081,
     "documentation": null,
     "website": "https://www.iobroker.net/#en/intro",
     "logo": "https://raw.githubusercontent.com/ioBroker/ioBroker/master/img/logos/ioBroker_Logo_256px.png",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/iobroker.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "2048",
-                "hdd": "8",
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 8,
                 "os": "debian",
                 "version": "12"
             }

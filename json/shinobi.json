@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "8080",
+    "interface_port": 8080,
     "documentation": null,
     "website": "https://shinobi.video/",
     "logo": "https://gitlab.com/uploads/-/system/project/avatar/6947723/mstile-150x150.png?raw=true",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/shinobi.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "2048",
-                "hdd": "8",
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 8,
                 "os": "ubuntu",
                 "version": "22.04"
             }

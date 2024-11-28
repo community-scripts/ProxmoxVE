@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": false,
     "privileged": true,
-    "interface_port": "8090",
+    "interface_port": 8090,
     "documentation": null,
     "website": "https://www.ispyconnect.com/",
     "logo": "https://ispycontent.azureedge.net/img/ispy2.png?raw=true",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/agentdvr.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "2048",
-                "hdd": "8",
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 8,
                 "os": "ubuntu",
                 "version": "22.04"
             }

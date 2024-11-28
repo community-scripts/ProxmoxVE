@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": false,
     "privileged": true,
-    "interface_port": "5000",
+    "interface_port": 5000,
     "documentation": null,
     "website": "https://frigate.video/",
     "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/frigate.svg",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/frigate.sh",
             "resources": {
-                "cpu": "4",
-                "ram": "4096",
-                "hdd": "20",
+                "cpu": 4,
+                "ram": 4096,
+                "hdd": 20,
                 "os": "debian",
                 "version": "11"
             }

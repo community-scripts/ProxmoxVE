@@ -16,6 +16,68 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
+## 2024-11-28
+
+### Changed
+
+### 🚀 Updated Scripts
+
+- Add vitest, add json validation tests, fix broken json files [@havardthom](https://github.com/havardthom) ([#566](https://github.com/community-scripts/ProxmoxVE/pull/566))
+- Add update script to Pocketbase [@dsiebel](https://github.com/dsiebel) ([#535](https://github.com/community-scripts/ProxmoxVE/pull/535))
+- Fix MongoDB install in Unifi script [@havardthom](https://github.com/havardthom) ([#564](https://github.com/community-scripts/ProxmoxVE/pull/564))
+- Remove changing DISK_REF for zfspool mikrotik-routeros.sh [@tjcomserv](https://github.com/tjcomserv) ([#529](https://github.com/community-scripts/ProxmoxVE/pull/529))
+- Fix Z-Wave JS UI script [@MickLesk](https://github.com/MickLesk) ([#546](https://github.com/community-scripts/ProxmoxVE/pull/546))
+
+### 🌐 Website
+
+- Show Changelog on Mobile Devices [@MickLesk](https://github.com/MickLesk) ([#558](https://github.com/community-scripts/ProxmoxVE/pull/558))
+
+## 2024-11-27
+
+### Changed
+
+### 💥 Breaking Changes
+
+- Zabbix: Use Agent2 as Default | Update Script added | some other Improvements [@MickLesk](https://github.com/MickLesk) ([#527](https://github.com/community-scripts/ProxmoxVE/pull/527))
+
+### 🚀 Updated Scripts
+
+- Fix: install mosquitto from mosquitto repo [@dsiebel](https://github.com/dsiebel) ([#534](https://github.com/community-scripts/ProxmoxVE/pull/534))
+- Patch Netbird Script | Container Boot-Check | Debian/Ubuntu Only [@MickLesk](https://github.com/MickLesk) ([#528](https://github.com/community-scripts/ProxmoxVE/pull/528))
+- Install MongoDB 4.2 for non-AVX CPUs in Unifi LXC [@ColinOppenheim](https://github.com/ColinOppenheim) ([#319](https://github.com/community-scripts/ProxmoxVE/pull/319))
+
+### 🌐 Website
+
+- Fix json error in zabbix.json [@havardthom](https://github.com/havardthom) ([#543](https://github.com/community-scripts/ProxmoxVE/pull/543))
+- Fix another json error in add-netbird-lxc.json [@havardthom](https://github.com/havardthom) ([#545](https://github.com/community-scripts/ProxmoxVE/pull/545))
+
+## 2024-11-26
+
+### Changed
+
+### 🚀 Updated Scripts
+
+- Fix Vikunja install script to prevent database deletion upon updating [@vhsdream](https://github.com/vhsdream) ([#524](https://github.com/community-scripts/ProxmoxVE/pull/524))
+
+## 2024-11-25
+
+### Changed
+
+### 💥 Breaking Changes
+
+- Remove Scrypted script [@MickLesk](https://github.com/MickLesk) ([#511](https://github.com/community-scripts/ProxmoxVE/pull/511))
+  - Because of request from Scrypted maintainer: [#494](https://github.com/community-scripts/ProxmoxVE/issues/494)
+  - Official Scrypted script can be used instead: https://docs.scrypted.app/installation.html#proxmox-ve
+
+### 🚀 Updated Scripts
+
+- Fix bugs in Calibre-Web update [@havardthom](https://github.com/havardthom) ([#517](https://github.com/community-scripts/ProxmoxVE/pull/517))
+- Fix upload folder in listmonk LXC [@bvdberg01](https://github.com/bvdberg01) ([#515](https://github.com/community-scripts/ProxmoxVE/pull/515))
+
+### 🌐 Website
+
+- Fix website url in Zoraxy documentation [@miggi92](https://github.com/miggi92) ([#506](https://github.com/community-scripts/ProxmoxVE/pull/506))
+
 ## 2024-11-24
 
 ### Changed

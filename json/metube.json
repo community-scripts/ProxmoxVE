@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "8081",
+    "interface_port": 8081,
     "documentation": null,
     "website": "https://github.com/alexta69/metube",
     "logo": "https://raw.githubusercontent.com/alexta69/metube/master/ui/src/assets/icons/android-chrome-192x192.png",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/metube.sh",
             "resources": {
-                "cpu": "1",
-                "ram": "1024",
-                "hdd": "10",
+                "cpu": 1,
+                "ram": 1024,
+                "hdd": 10,
                 "os": "debian",
                 "version": "12"
             }

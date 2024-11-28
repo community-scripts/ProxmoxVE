@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": false,
     "privileged": false,
-    "interface_port": "17170",
+    "interface_port": 17170,
     "documentation": null,
     "website": "https://github.com/lldap/lldap",
     "logo": "https://avatars.githubusercontent.com/u/129409591?s=64&v=4",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/lldap.sh",
             "resources": {
-                "cpu": "1",
-                "ram": "512",
-                "hdd": "4",
+                "cpu": 1,
+                "ram": 512,
+                "hdd": 4,
                 "os": "debian",
                 "version": "12"
             }

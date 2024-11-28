@@ -16,13 +16,13 @@
   "install_methods": [
     {
       "type": "default",
-      "script": "/ct/nextpvr.sh",
+      "script": "ct/nextpvr.sh",
       "resources": {
-        "cpu": "1",
-        "ram": "1024",
-        "hdd": "5",
+        "cpu": 1,
+        "ram": 1024,
+        "hdd": 5,
         "os": "Debian",
-        "version": 12
+        "version": "12"
       }
     }
   ],

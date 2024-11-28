@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "9030",
+    "interface_port": 9030,
     "documentation": null,
     "website": "https://www.usememos.com/",
     "logo": "https://camo.githubusercontent.com/aa5a8cac358e3448ef7bad80fc178699841913ec438ed0ddfe18f867f931d7ee/68747470733a2f2f7777772e7573656d656d6f732e636f6d2f6c6f676f2d726f756e6465642e706e67",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/memos.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "2048",
-                "hdd": "7",
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 7,
                 "os": "debian",
                 "version": "12"
             }

@@ -16,13 +16,13 @@
   "install_methods": [
     {
       "type": "default",
-      "script": "/ct/kimai.sh",
+      "script": "ct/kimai.sh",
       "resources": {
-        "cpu": "2",
-        "ram": "2048",
-        "hdd": "7",
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 7,
         "os": "Debian",
-        "version": 12
+        "version": "12"
       }
     }
   ],

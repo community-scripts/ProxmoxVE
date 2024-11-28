@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": false,
     "privileged": false,
-    "interface_port": "80",
+    "interface_port": 80,
     "documentation": null,
     "website": "https://yunohost.org/",
     "logo": "https://yunohost.org/assets/img/ynh_logo_roundcorner.png",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/yunohost.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "2048",
-                "hdd": "20",
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 20,
                 "os": "debian",
                 "version": "12"
             }

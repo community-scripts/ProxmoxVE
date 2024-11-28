@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "3000",
+    "interface_port": 3000,
     "documentation": "https://github.com/AdguardTeam/AdGuardHome/wiki/Getting-Started",
     "website": "https://adguard.com/en/adguard-home/overview.html",
     "logo": "https://raw.githubusercontent.com/home-assistant/brands/master/core_integrations/adguard/icon.png",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/adguard.sh",
             "resources": {
-                "cpu": "1",
-                "ram": "512",
-                "hdd": "2",
+                "cpu": 1,
+                "ram": 512,
+                "hdd": 2,
                 "os": "debian",
                 "version": "12"
             }

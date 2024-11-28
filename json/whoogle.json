@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "5000",
+    "interface_port": 5000,
     "documentation": null,
     "website": null,
     "logo": "https://github.com/community-scripts/ProxmoxVE/blob/main/misc/images/whoogle.png?raw=true",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/whoogle.sh",
             "resources": {
-                "cpu": "1",
-                "ram": "512",
-                "hdd": "2",
+                "cpu": 1,
+                "ram": 512,
+                "hdd": 2,
                 "os": "debian",
                 "version": "12"
             }

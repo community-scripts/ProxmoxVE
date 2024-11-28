@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": false,
     "privileged": false,
-    "interface_port": "80",
+    "interface_port": 80,
     "documentation": null,
     "website": "https://www.casaos.io/",
     "logo": "https://wiki.casaos.io/_assets/casaos-no-text.svg",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/casaos.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "2048",
-                "hdd": "8",
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 8,
                 "os": "debian",
                 "version": "12"
             }

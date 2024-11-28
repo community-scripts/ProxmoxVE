@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/apache-cassandra.sh",
             "resources": {
-                "cpu": "1",
-                "ram": "2048",
-                "hdd": "4",
+                "cpu": 1,
+                "ram": 2048,
+                "hdd": 4,
                 "os": "debian",
                 "version": "12"
             }

@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "7745",
+    "interface_port": 7745,
     "documentation": null,
     "website": "https://homebox.software/en/",
     "logo": "https://homebox.software/lilbox.svg",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/homebox.sh",
             "resources": {
-                "cpu": "1",
-                "ram": "1024",
-                "hdd": "4",
+                "cpu": 1,
+                "ram": 1024,
+                "hdd": 4,
                 "os": "debian",
                 "version": "12"
             }

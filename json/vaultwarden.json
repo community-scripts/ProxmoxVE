@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "8000",
+    "interface_port": 8000,
     "documentation": null,
     "website": "https://www.vaultwarden.net/",
     "logo": "https://raw.githubusercontent.com/dani-garcia/vaultwarden/main/resources/vaultwarden-icon-white.svg",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/vaultwarden.sh",
             "resources": {
-                "cpu": "4",
-                "ram": "6144",
-                "hdd": "6",
+                "cpu": 4,
+                "ram": 6144,
+                "hdd": 6,
                 "os": "debian",
                 "version": "12"
             }
@@ -29,9 +29,9 @@
             "type": "alpine",
             "script": "ct/alpine-vaultwarden.sh",
             "resources": {
-                "cpu": "1",
-                "ram": "256",
-                "hdd": "0.3",
+                "cpu": 1,
+                "ram": 256,
+                "hdd": 0.3,
                 "os": "alpine",
                 "version": "3.19"
             }

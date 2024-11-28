@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "443",
+    "interface_port": 443,
     "documentation": "https://netboxlabs.com/docs/netbox/en/stable/",
     "website": "https://netboxlabs.com/",
     "logo": "https://github.com/netbox-community/netbox/wiki/images/logos/netbox_icon.svg",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/netbox.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "2048",
-                "hdd": "4",
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 4,
                 "os": "debian",
                 "version": "12"
             }

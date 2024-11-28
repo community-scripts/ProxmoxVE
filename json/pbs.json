@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": false,
     "privileged": false,
-    "interface_port": "8007",
+    "interface_port": 8007,
     "documentation": null,
     "website": "https://www.proxmox.com/en/proxmox-backup-server/overview",
     "logo": "https://raw.githubusercontent.com/home-assistant/brands/master/core_integrations/proxmoxve/icon.png",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/pbs.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "2048",
-                "hdd": "10",
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 10,
                 "os": "debian",
                 "version": "12"
             }

@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": false,
     "privileged": false,
-    "interface_port": "7474",
+    "interface_port": 7474,
     "documentation": null,
     "website": "https://neo4j.com/product/neo4j-graph-database/",
     "logo": "https://avatars.githubusercontent.com/u/201120?s=200&v=4",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/neo4j.sh",
             "resources": {
-                "cpu": "1",
-                "ram": "1024",
-                "hdd": "4",
+                "cpu": 1,
+                "ram": 1024,
+                "hdd": 4,
                 "os": "debian",
                 "version": "12"
             }

@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/pialert.sh",
             "resources": {
-                "cpu": "1",
-                "ram": "512",
-                "hdd": "3",
+                "cpu": 1,
+                "ram": 512,
+                "hdd": 3,
                 "os": "debian",
                 "version": "12"
             }

@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "25600",
+    "interface_port": 25600,
     "documentation": "https://komga.org/docs/introduction",
     "website": "https://komga.org/",
     "logo": "https://raw.githubusercontent.com/gotson/komga/25a1cfa8660c57335313c244e41c248371ffd9d6/komga-webui/src/assets/logo.svg",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/komga.sh",
             "resources": {
-                "cpu": "1",
-                "ram": "2048",
-                "hdd": "4",
+                "cpu": 1,
+                "ram": 2048,
+                "hdd": 4,
                 "os": "debian",
                 "version": "12"
             }

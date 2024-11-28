@@ -8,7 +8,7 @@
     "type": "misc",
     "updateable": false,
     "privileged": false,
-    "interface_port": "1337",
+    "interface_port": 1337,
     "documentation": null,
     "website": "https://www.olivetin.app/",
     "logo": "https://www.olivetin.app/resources/images/logo.png",

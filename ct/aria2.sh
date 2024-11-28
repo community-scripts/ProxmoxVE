@@ -20,7 +20,7 @@ echo -e "Loading..."
 APP="Aria2"
 var_disk="8"
 var_cpu="2"
-var_ram="1028"
+var_ram="1024"
 var_os="debian"
 var_version="12"
 variables

@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "81",
+    "interface_port": 81,
     "documentation": null,
     "website": "https://nginxproxymanager.com/",
     "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/nginxproxymanager.svg",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/nginxproxymanager.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "1024",
-                "hdd": "4",
+                "cpu": 2,
+                "ram": 1024,
+                "hdd": 4,
                 "os": "debian",
                 "version": "12"
             }

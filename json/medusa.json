@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "8081",
+    "interface_port": 8081,
     "documentation": null,
     "website": "https://pymedusa.com/",
     "logo": "https://cdn.jsdelivr.net/gh/pymedusa/medusa.github.io@4360d494/images/logo/new-logo.png",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/medusa.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "1024",
-                "hdd": "6",
+                "cpu": 2,
+                "ram": 1024,
+                "hdd": 6,
                 "os": "debian",
                 "version": "12"
             }

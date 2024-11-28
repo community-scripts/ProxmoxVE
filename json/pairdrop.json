@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": false,
     "privileged": false,
-    "interface_port": "3000",
+    "interface_port": 3000,
     "documentation": null,
     "website": "https://github.com/schlagmichdoch/PairDrop",
     "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/pairdrop.svg",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/pairdrop.sh",
             "resources": {
-                "cpu": "1",
-                "ram": "512",
-                "hdd": "4",
+                "cpu": 1,
+                "ram": 512,
+                "hdd": 4,
                 "os": "debian",
                 "version": "12"
             }
