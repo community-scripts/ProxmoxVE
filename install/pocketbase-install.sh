@@ -43,7 +43,6 @@ WantedBy = multi-user.target
 EOF
 
 systemctl enable -q --now pocketbase.service
-echo "${RELEASE}" > "/opt/${APPLICATION}_version.txt"
 msg_ok "Installed Pocketbase"
 
 motd_ssh
