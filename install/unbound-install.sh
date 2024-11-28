@@ -70,7 +70,6 @@ server:
   chroot: ""
   logfile: /var/log/unbound.log
   log-queries: yes
-  statistics-interval: 0
   extended-statistics: yes
   harden-below-nxdomain: yes
 EOF
