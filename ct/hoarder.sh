@@ -64,7 +64,8 @@ if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "${PREV_VERSION}" ]]
   msg_info "Stopping ${APP} Services"
   systemctl stop hoarder-web hoarder-workers hoarder-browser
   msg_ok "Stopped ${APP} Services"
-  msg_info "Updating ${APP} to ${RELEASE}"
+
+  msg_info "Updating ${APP} to v${RELEASE}"
   cd /opt
   mv /opt/hoarder /opt/hoarder_bak
   wget -q "https://github.com/hoarder-app/hoarder/archive/refs/tags/v${RELEASE}.zip"
