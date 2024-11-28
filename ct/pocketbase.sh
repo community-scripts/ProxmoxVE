@@ -57,21 +57,18 @@ function update_script() {
   check_container_storage
   check_container_resources
   if [[ ! -f /etc/systemd/system/pocketbase.service || ! -x /opt/pocketbase/pocketbase ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
-msg_info "Stopping ${APP}"
-systemctl stop pocketbase
-msg_ok "Stopped ${APP}"
+  msg_info "Stopping ${APP}"
+  systemctl stop pocketbase
+  msg_ok "Stopped ${APP}"
 
-msg_info "Updating ${APP}"
-/opt/pocketbase/pocketbase update
-msg_ok "Updated ${APP}"
+  msg_info "Updating ${APP}"
+  /opt/pocketbase/pocketbase update
+  msg_ok "Updated ${APP}"
 
-msg_info "Starting ${APP}"
-systemctl start pocketbase
-msg_ok "Started ${APP}"
-msg_ok "Updated Successfully"
-	msg_info "Restarting ${APP}"
-	systemctl restart pocketbase.service
-	msg_ok "Restarted ${APP}"
+  msg_info "Starting ${APP}"
+  systemctl start pocketbase
+  msg_ok "Started ${APP}"
+  msg_ok "Updated Successfully"
   exit
 }
 
