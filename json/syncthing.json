@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": false,
     "privileged": false,
-    "interface_port": "8384",
+    "interface_port": 8384,
     "documentation": null,
     "website": "https://syncthing.net/",
     "logo": "https://raw.githubusercontent.com/syncthing/syncthing/6afaa9f20c8eb9c7af5abbe2f2d90fa2571aa7ad/assets/logo-only.svg",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/syncthing.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "2048",
-                "hdd": "8",
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 8,
                 "os": "debian",
                 "version": "12"
             }

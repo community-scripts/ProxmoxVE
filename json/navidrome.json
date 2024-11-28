@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "4533",
+    "interface_port": 4533,
     "documentation": null,
     "website": "https://www.navidrome.org/",
     "logo": "https://raw.githubusercontent.com/navidrome/navidrome/master/resources/logo-192x192.png?raw=true",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/navidrome.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "1024",
-                "hdd": "4",
+                "cpu": 2,
+                "ram": 1024,
+                "hdd": 4,
                 "os": "debian",
                 "version": "12"
             }

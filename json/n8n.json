@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "5678",
+    "interface_port": 5678,
     "documentation": null,
     "website": "https://n8n.io/",
     "logo": "https://docs.n8n.io/_images/n8n-docs-icon.svg",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/n8n.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "2048",
-                "hdd": "6",
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 6,
                 "os": "debian",
                 "version": "12"
             }

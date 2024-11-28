@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": false,
     "privileged": false,
-    "interface_port": "8083",
+    "interface_port": 8083,
     "documentation": null,
     "website": "https://fhem.de/",
     "logo": "https://avatars.githubusercontent.com/u/45183393?s=100&v=4",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/fhem.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "2048",
-                "hdd": "8",
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 8,
                 "os": "debian",
                 "version": "12"
             }

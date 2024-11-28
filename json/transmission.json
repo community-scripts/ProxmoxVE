@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": false,
     "privileged": false,
-    "interface_port": "9091",
+    "interface_port": 9091,
     "documentation": null,
     "website": "https://transmissionbt.com/",
     "logo": "https://raw.githubusercontent.com/transmission/transmission/main/web/assets/img/logo.png",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/transmission.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "2048",
-                "hdd": "8",
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 8,
                 "os": "debian",
                 "version": "12"
             }

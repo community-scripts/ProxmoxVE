@@ -18,9 +18,9 @@
             "type": "default",
             "script": "vm/debian-vm.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "2048",
-                "hdd": "2",
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 2,
                 "os": null,
                 "version": null
             }

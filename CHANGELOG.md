@@ -16,6 +16,22 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
+## 2024-11-28
+
+### Changed
+
+### 🚀 Updated Scripts
+
+- Add vitest, add json validation tests, fix broken json files [@havardthom](https://github.com/havardthom) ([#566](https://github.com/community-scripts/ProxmoxVE/pull/566))
+- Add update script to Pocketbase [@dsiebel](https://github.com/dsiebel) ([#535](https://github.com/community-scripts/ProxmoxVE/pull/535))
+- Fix MongoDB install in Unifi script [@havardthom](https://github.com/havardthom) ([#564](https://github.com/community-scripts/ProxmoxVE/pull/564))
+- Remove changing DISK_REF for zfspool mikrotik-routeros.sh [@tjcomserv](https://github.com/tjcomserv) ([#529](https://github.com/community-scripts/ProxmoxVE/pull/529))
+- Fix Z-Wave JS UI script [@MickLesk](https://github.com/MickLesk) ([#546](https://github.com/community-scripts/ProxmoxVE/pull/546))
+
+### 🌐 Website
+
+- Show Changelog on Mobile Devices [@MickLesk](https://github.com/MickLesk) ([#558](https://github.com/community-scripts/ProxmoxVE/pull/558))
+
 ## 2024-11-27
 
 ### Changed

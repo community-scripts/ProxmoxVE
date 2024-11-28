@@ -18,9 +18,9 @@
             "type": "default",
             "script": "vm/openwrt.sh",
             "resources": {
-                "cpu": "1",
-                "ram": "256",
-                "hdd": "0.5",
+                "cpu": 1,
+                "ram": 256,
+                "hdd": 0.5,
                 "os": null,
                 "version": null
             }

@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": false,
     "privileged": false,
-    "interface_port": "18083",
+    "interface_port": 18083,
     "documentation": null,
     "website": "https://www.emqx.io/",
     "logo": "https://github.com/hassio-addons/repository/blob/master/emqx/icon.png?raw=true",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/emqx.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "1024",
-                "hdd": "4",
+                "cpu": 2,
+                "ram": 1024,
+                "hdd": 4,
                 "os": "debian",
                 "version": "12"
             }

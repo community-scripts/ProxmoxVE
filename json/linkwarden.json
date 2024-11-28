@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": false,
     "privileged": false,
-    "interface_port": "3000",
+    "interface_port": 3000,
     "documentation": "https://docs.linkwarden.app/",
     "website": "https://linkwarden.app/",
     "logo": "https://raw.githubusercontent.com/linkwarden/linkwarden/main/assets/logo.png",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/linkwarden.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "2048",
-                "hdd": "12",
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 12,
                 "os": "ubuntu",
                 "version": "22.04"
             }

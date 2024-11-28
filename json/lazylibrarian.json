@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": false,
     "privileged": false,
-    "interface_port": "5299",
+    "interface_port": 5299,
     "documentation": null,
     "website": "https://gitlab.com/LazyLibrarian/LazyLibrarian",
     "logo": "https://gitlab.com/uploads/-/system/project/avatar/9317860/ll.png",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/lazylibrarian.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "1024",
-                "hdd": "4",
+                "cpu": 2,
+                "ram": 1024,
+                "hdd": 4,
                 "os": "debian",
                 "version": "12"
             }

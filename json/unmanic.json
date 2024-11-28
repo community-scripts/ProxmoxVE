@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": true,
-    "interface_port": "8888",
+    "interface_port": 8888,
     "documentation": null,
     "website": "https://docs.unmanic.app/",
     "logo": "https://raw.githubusercontent.com/Unmanic/unmanic/master/icon.png",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/unmanic.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "2048",
-                "hdd": "4",
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 4,
                 "os": "debian",
                 "version": "12"
             }

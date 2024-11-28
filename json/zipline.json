@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "3000",
+    "interface_port": 3000,
     "documentation": null,
     "website": "https://zipline.diced.sh/",
     "logo": "https://raw.githubusercontent.com/diced/zipline/trunk/public/zipline_small.png",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/zipline.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "2048",
-                "hdd": "5",
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 5,
                 "os": "debian",
                 "version": "12"
             }

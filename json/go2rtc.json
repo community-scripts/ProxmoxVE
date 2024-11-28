@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "1984",
+    "interface_port": 1984,
     "documentation": null,
     "website": "https://github.com/AlexxIT/go2rtc",
     "logo": "https://github.com/AlexxIT/go2rtc/blob/master/assets/logo.png?raw=true",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/go2rtc.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "2048",
-                "hdd": "4",
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 4,
                 "os": "debian",
                 "version": "12"
             }

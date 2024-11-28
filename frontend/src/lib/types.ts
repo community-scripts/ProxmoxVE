@@ -21,7 +21,7 @@ export type Script = {
       ram: number | null;
       hdd: number | null;
       os: string | null;
-      version: number | null;
+      version: string | null;
     };
   }[];
   default_credentials: {

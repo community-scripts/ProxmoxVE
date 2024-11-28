@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "80",
+    "interface_port": 80,
     "documentation": null,
     "website": "https://www.bookstackapp.com/",
     "logo": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fassets.stickpng.com%2Fimages%2F6308b74c61b3e2a522f0145e.png&f=1&nofb=1&ipt=7ce7870e5081489216eb3294b735356d1c7ede678f97cadba4392bd96e032170&ipo=images",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/bookstack.sh",
             "resources": {
-                "cpu": "1",
-                "ram": "1024",
-                "hdd": "4",
+                "cpu": 1,
+                "ram": 1024,
+                "hdd": 4,
                 "os": "debian",
                 "version": "12"
             }

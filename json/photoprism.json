@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "2342",
+    "interface_port": 2342,
     "documentation": null,
     "website": "https://photoprism.app/",
     "logo": "https://github.com/community-scripts/ProxmoxVE/blob/main/misc/images/photoprism.png?raw=true",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/photoprism.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "2048",
-                "hdd": "8",
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 8,
                 "os": "debian",
                 "version": "12"
             }

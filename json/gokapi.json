@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "53842",
+    "interface_port": 53842,
     "documentation": null,
     "website": "https://github.com/Forceu/Gokapi",
     "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/linux.svg",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/gokapi.sh",
             "resources": {
-                "cpu": "1",
-                "ram": "512",
-                "hdd": "4",
+                "cpu": 1,
+                "ram": 512,
+                "hdd": 4,
                 "os": "debian",
                 "version": "12"
             }

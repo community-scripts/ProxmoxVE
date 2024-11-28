@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "8765",
+    "interface_port": 8765,
     "documentation": null,
     "website": null,
     "logo": "https://github.com/home-assistant/brands/blob/master/core_integrations/motioneye/icon.png?raw=true",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/motioneye.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "2048",
-                "hdd": "8",
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 8,
                 "os": "debian",
                 "version": "12"
             }

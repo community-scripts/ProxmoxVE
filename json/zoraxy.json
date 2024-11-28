@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": false,
     "privileged": false,
-    "interface_port": "8000",
+    "interface_port": 8000,
     "documentation": null,
     "website": "https://zoraxy.aroz.org/",
     "logo": "https://raw.githubusercontent.com/tobychui/zoraxy/refs/heads/main/docs/favicon.png",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/zoraxy.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "2048",
-                "hdd": "6",
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 6,
                 "os": "debian",
                 "version": "12"
             }

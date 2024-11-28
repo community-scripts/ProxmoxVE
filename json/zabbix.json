@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "",
+    "interface_port": null,
     "documentation": "https://www.zabbix.com/documentation/current/en/manual",
     "website": "https://www.zabbix.com/",
     "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/zabbix.svg",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/zabbix.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "4096",
-                "hdd": "6",
+                "cpu": 2,
+                "ram": 4096,
+                "hdd": 6,
                 "os": "debian",
                 "version": "12"
             }

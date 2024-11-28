@@ -9,10 +9,8 @@ import {
 import { Category } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { z } from "zod";
-import { ScriptSchema } from "../_schemas/schemas";
+import { type Script } from "../_schemas/schemas";
 import { memo } from "react";
-
-type Script = z.infer<typeof ScriptSchema>;
 
 type CategoryProps = {
   script: Script;

@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": false,
     "privileged": false,
-    "interface_port": "8096",
+    "interface_port": 8096,
     "documentation": null,
     "website": "https://emby.media/",
     "logo": "https://github.com/home-assistant/brands/blob/master/core_integrations/emby/icon.png?raw=true",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/emby.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "2048",
-                "hdd": "8",
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 8,
                 "os": "ubuntu",
                 "version": "22.04"
             }

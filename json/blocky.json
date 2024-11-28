@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": false,
     "privileged": false,
-    "interface_port": "4000",
+    "interface_port": 4000,
     "documentation": null,
     "website": "https://0xerr0r.github.io/blocky/",
     "logo": "https://raw.githubusercontent.com/0xERR0R/blocky/main/docs/blocky.svg",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/blocky.sh",
             "resources": {
-                "cpu": "1",
-                "ram": "512",
-                "hdd": "2",
+                "cpu": 1,
+                "ram": 512,
+                "hdd": 2,
                 "os": "debian",
                 "version": "12"
             }

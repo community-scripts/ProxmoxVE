@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "1880",
+    "interface_port": 1880,
     "documentation": null,
     "website": "https://nodered.org/",
     "logo": "https://github.com/home-assistant/brands/blob/master/custom_integrations/nodered/icon.png?raw=true",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/node-red.sh",
             "resources": {
-                "cpu": "1",
-                "ram": "1024",
-                "hdd": "4",
+                "cpu": 1,
+                "ram": 1024,
+                "hdd": 4,
                 "os": "debian",
                 "version": "12"
             }

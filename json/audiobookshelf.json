@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": false,
     "privileged": false,
-    "interface_port": "13378",
+    "interface_port": 13378,
     "documentation": null,
     "website": "https://www.audiobookshelf.org/",
     "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/audiobookshelf.svg",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/audiobookshelf.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "2048",
-                "hdd": "4",
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 4,
                 "os": "debian",
                 "version": "12"
             }

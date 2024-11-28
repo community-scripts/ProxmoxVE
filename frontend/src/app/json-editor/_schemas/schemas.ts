@@ -10,7 +10,7 @@ export const InstallMethodSchema = z.object({
     ram: z.number().nullable(),
     hdd: z.number().nullable(),
     os: z.string().nullable(),
-    version: z.number().nullable(),
+    version: z.string().nullable(),
   }),
 });
 
@@ -24,8 +24,8 @@ export const ScriptSchema = z.object({
   slug: z.string().min(1, "Slug is required"),
   categories: z.array(z.number()),
   date_created: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be in YYYY-MM-DD format").min(1, "Date is required"),
-  type: z.enum(["vm", "ct", "misc"], {
-    errorMap: () => ({ message: "Type must be either 'vm', 'ct', or 'misc'" })
+  type: z.enum(["vm", "ct", "misc", "turnkey"], {
+    errorMap: () => ({ message: "Type must be either 'vm', 'ct', 'misc' or 'turnkey'" })
   }),
   updateable: z.boolean(),
   privileged: z.boolean(),
@@ -41,3 +41,5 @@ export const ScriptSchema = z.object({
   }),
   notes: z.array(NoteSchema),
 });
+
+export type Script = z.infer<typeof ScriptSchema>;

@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "7990",
+    "interface_port": 7990,
     "documentation": null,
     "website": "https://heimdall.site/",
     "logo": "https://github.com/community-scripts/ProxmoxVE/blob/main/misc/images/heimdall.png?raw=true",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/heimdall-dashboard.sh",
             "resources": {
-                "cpu": "1",
-                "ram": "512",
-                "hdd": "2",
+                "cpu": 1,
+                "ram": 512,
+                "hdd": 2,
                 "os": "debian",
                 "version": "12"
             }

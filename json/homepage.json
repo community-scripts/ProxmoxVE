@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "3000",
+    "interface_port": 3000,
     "documentation": "https://gethomepage.dev/latest/configs/",
     "website": "https://github.com/benphelps/homepage",
     "logo": "https://avatars.githubusercontent.com/u/122929872?v=4",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/homepage.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "1024",
-                "hdd": "3",
+                "cpu": 2,
+                "ram": 1024,
+                "hdd": 3,
                 "os": "debian",
                 "version": "12"
             }

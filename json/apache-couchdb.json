@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": false,
     "privileged": false,
-    "interface_port": "5984",
+    "interface_port": 5984,
     "documentation": null,
     "website": "https://couchdb.apache.org/",
     "logo": "https://couchdb.apache.org/image/couch@2x.png",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/apache-couchdb.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "4096",
-                "hdd": "10",
+                "cpu": 2,
+                "ram": 4096,
+                "hdd": 10,
                 "os": "debian",
                 "version": "12"
             }

@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": false,
     "privileged": false,
-    "interface_port": "8581",
+    "interface_port": 8581,
     "documentation": null,
     "website": "https://homebridge.io/",
     "logo": "https://raw.githubusercontent.com/homebridge/branding/master/logos/homebridge-color-round-stylized.png",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/homebridge.sh",
             "resources": {
-                "cpu": "1",
-                "ram": "1024",
-                "hdd": "4",
+                "cpu": 1,
+                "ram": 1024,
+                "hdd": 4,
                 "os": "debian",
                 "version": "12"
             }

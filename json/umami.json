@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": false,
     "privileged": false,
-    "interface_port": "3000",
+    "interface_port": 3000,
     "documentation": null,
     "website": "https://umami.is/",
     "logo": "https://raw.githubusercontent.com/umami-software/umami/master/public/android-chrome-512x512.png",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/umami.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "2048",
-                "hdd": "12",
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 12,
                 "os": "debian",
                 "version": "12"
             }

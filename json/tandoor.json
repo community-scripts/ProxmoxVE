@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "8002",
+    "interface_port": 8002,
     "documentation": null,
     "website": "https://tandoor.dev/",
     "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/tandoor.svg",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/tandoor.sh",
             "resources": {
-                "cpu": "4",
-                "ram": "4096",
-                "hdd": "10",
+                "cpu": 4,
+                "ram": 4096,
+                "hdd": 10,
                 "os": "debian",
                 "version": "12"
             }

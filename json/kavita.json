@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "5000",
+    "interface_port": 5000,
     "documentation": null,
     "website": "https://www.kavitareader.com/",
     "logo": "https://raw.githubusercontent.com/Kareadita/Kavita/develop/Logo/kavita.svg",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/kavita.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "2048",
-                "hdd": "8",
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 8,
                 "os": "debian",
                 "version": "12"
             }

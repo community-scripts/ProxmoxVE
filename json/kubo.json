@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/kubo.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "4096",
-                "hdd": "4",
+                "cpu": 2,
+                "ram": 4096,
+                "hdd": 4,
                 "os": "debian",
                 "version": "12"
             }

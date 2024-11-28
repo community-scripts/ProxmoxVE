@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "8989",
+    "interface_port": 8989,
     "documentation": null,
     "website": "https://sonarr.tv/",
     "logo": "https://raw.githubusercontent.com/Sonarr/Sonarr/develop/Logo/256.png",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/sonarr.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "1024",
-                "hdd": "4",
+                "cpu": 2,
+                "ram": 1024,
+                "hdd": 4,
                 "os": "debian",
                 "version": "12"
             }

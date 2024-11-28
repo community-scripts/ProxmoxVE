@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": false,
     "privileged": true,
-    "interface_port": "80",
+    "interface_port": 80,
     "documentation": null,
     "website": "https://www.phoscon.de/en/conbee2/software#deconz",
     "logo": "https://phoscon.de/img/phoscon-logo128x.svg",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/deconz.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "1024",
-                "hdd": "4",
+                "cpu": 2,
+                "ram": 1024,
+                "hdd": 4,
                 "os": "debian",
                 "version": "12"
             }

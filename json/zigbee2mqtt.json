@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/zigbee2mqtt.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "1024",
-                "hdd": "4",
+                "cpu": 2,
+                "ram": 1024,
+                "hdd": 4,
                 "os": "debian",
                 "version": "12"
             }
@@ -29,9 +29,9 @@
             "type": "alpine",
             "script": "ct/alpine-zigbee2mqtt.sh",
             "resources": {
-                "cpu": "1",
-                "ram": "256",
-                "hdd": "0.3",
+                "cpu": 1,
+                "ram": 256,
+                "hdd": 0.3,
                 "os": "alpine",
                 "version": "3.19"
             }

@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "32400",
+    "interface_port": 32400,
     "documentation": null,
     "website": "https://www.plex.tv/",
     "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/plex-white.svg",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/plex.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "2048",
-                "hdd": "8",
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 8,
                 "os": "ubuntu",
                 "version": "22.04"
             }

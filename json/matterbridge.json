@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": false,
     "privileged": false,
-    "interface_port": "8283",
+    "interface_port": 8283,
     "documentation": null,
     "website": "https://github.com/Luligu/matterbridge",
     "logo": "https://raw.githubusercontent.com/Luligu/matterbridge/main/frontend/public/matterbridge%20624x624.png",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/matterbridge.sh",
             "resources": {
-                "cpu": "1",
-                "ram": "1024",
-                "hdd": "4",
+                "cpu": 1,
+                "ram": 1024,
+                "hdd": 4,
                 "os": "debian",
                 "version": "12"
             }

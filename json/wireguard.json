@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "10086",
+    "interface_port": 10086,
     "documentation": "https://www.wireguard.com/quickstart/",
     "website": "https://www.wireguard.com/",
     "logo": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn.icon-icons.com%2Ficons2%2F2699%2FPNG%2F512%2Fwireguard_logo_icon_168760.png&f=1&nofb=1",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/wireguard.sh",
             "resources": {
-                "cpu": "1",
-                "ram": "512",
-                "hdd": "4",
+                "cpu": 1,
+                "ram": 512,
+                "hdd": 4,
                 "os": "debian",
                 "version": "12"
             }

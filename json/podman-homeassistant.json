@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "8123",
+    "interface_port": 8123,
     "documentation": "https://www.home-assistant.io/docs/",
     "website": "https://www.home-assistant.io/",
     "logo": "https://avatars.githubusercontent.com/u/13844975?s=200&v=4",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/podman-homeassistant.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "2048",
-                "hdd": "16",
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 16,
                 "os": "debian",
                 "version": "12"
             }

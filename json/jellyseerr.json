@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": false,
     "privileged": false,
-    "interface_port": "5055",
+    "interface_port": 5055,
     "documentation": null,
     "website": "https://github.com/Fallenbagel/jellyseerr",
     "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/jellyseerr.svg",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/jellyseerr.sh",
             "resources": {
-                "cpu": "4",
-                "ram": "4096",
-                "hdd": "8",
+                "cpu": 4,
+                "ram": 4096,
+                "hdd": 8,
                 "os": "debian",
                 "version": "12"
             }

@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "12345",
+    "interface_port": 12345,
     "documentation": null,
     "website": "https://tianji.msgbyte.com/",
     "logo": "https://tianji.msgbyte.com/img/logo.svg",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/tianji.sh",
             "resources": {
-                "cpu": "4",
-                "ram": "4096",
-                "hdd": "12",
+                "cpu": 4,
+                "ram": 4096,
+                "hdd": 12,
                 "os": "debian",
                 "version": "12"
             }

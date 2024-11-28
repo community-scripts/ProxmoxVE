@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/recyclarr.sh",
             "resources": {
-                "cpu": "1",
-                "ram": "512",
-                "hdd": "2",
+                "cpu": 1,
+                "ram": 512,
+                "hdd": 2,
                 "os": "debian",
                 "version": "12"
             }

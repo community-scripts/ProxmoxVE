@@ -8,7 +8,7 @@
     "type": "misc",
     "updateable": false,
     "privileged": false,
-    "interface_port": "10000",
+    "interface_port": 10000,
     "documentation": null,
     "website": "https://webmin.com/",
     "logo": "https://user-images.githubusercontent.com/4426533/218263860-f7baf9d6-cb19-4ddc-86dc-ac1b7a3c3a8a.png?raw=true",

@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": false,
     "privileged": false,
-    "interface_port": "8084",
+    "interface_port": 8084,
     "documentation": null,
     "website": null,
     "logo": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimg.informer.com%2Ficons_mac%2Fpng%2F128%2F350%2F350335.png&f=1&nofb=1",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/daemonsync.sh",
             "resources": {
-                "cpu": "1",
-                "ram": "512",
-                "hdd": "8",
+                "cpu": 1,
+                "ram": 512,
+                "hdd": 8,
                 "os": "debian",
                 "version": "12"
             }

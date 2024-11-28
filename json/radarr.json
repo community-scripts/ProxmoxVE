@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": false,
     "privileged": false,
-    "interface_port": "7878",
+    "interface_port": 7878,
     "documentation": null,
     "website": "https://radarr.video/",
     "logo": "https://raw.githubusercontent.com/Radarr/Radarr/develop/Logo/256.png",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/radarr.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "1024",
-                "hdd": "4",
+                "cpu": 2,
+                "ram": 1024,
+                "hdd": 4,
                 "os": "debian",
                 "version": "12"
             }

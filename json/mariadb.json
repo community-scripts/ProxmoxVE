@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": false,
     "privileged": false,
-    "interface_port": "3306",
+    "interface_port": 3306,
     "documentation": "https://github.com/community-scripts/ProxmoxVE/discussions/192",
     "website": "https://mariadb.org/",
     "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/mariadb.svg",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/mariadb.sh",
             "resources": {
-                "cpu": "1",
-                "ram": "1024",
-                "hdd": "4",
+                "cpu": 1,
+                "ram": 1024,
+                "hdd": 4,
                 "os": "debian",
                 "version": "12"
             }

@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "3000",
+    "interface_port": 3000,
     "documentation": null,
     "website": "https://gitea.com",
     "logo": "https://gitea.com/gitea/design/raw/branch/main/logo/logo.svg",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/gitea.sh",
             "resources": {
-                "cpu": "1",
-                "ram": "1024",
-                "hdd": "8",
+                "cpu": 1,
+                "ram": 1024,
+                "hdd": 8,
                 "os": "debian",
                 "version": "12"
             }

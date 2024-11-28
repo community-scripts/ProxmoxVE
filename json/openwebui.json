@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "8080",
+    "interface_port": 8080,
     "documentation": null,
     "website": "https://openwebui.com/",
     "logo": "https://raw.githubusercontent.com/open-webui/open-webui/refs/heads/main/static/favicon.png",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/openwebui.sh",
             "resources": {
-                "cpu": "4",
-                "ram": "4096",
-                "hdd": "16",
+                "cpu": 4,
+                "ram": 4096,
+                "hdd": 16,
                 "os": "debian",
                 "version": "12"
             }

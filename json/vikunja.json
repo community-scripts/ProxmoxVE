@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "3456",
+    "interface_port": 3456,
     "documentation": null,
     "website": "https://vikunja.io/",
     "logo": "https://community.vikunja.io/uploads/default/original/1X/894bd400d7c5bde78a65ba02e326798ccfb82006.png",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/vikunja.sh",
             "resources": {
-                "cpu": "1",
-                "ram": "1024",
-                "hdd": "4",
+                "cpu": 1,
+                "ram": 1024,
+                "hdd": 4,
                 "os": "debian",
                 "version": "12"
             }

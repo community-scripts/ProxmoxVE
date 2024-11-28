@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "3012",
+    "interface_port": 3012,
     "documentation": null,
     "website": "https://github.com/jhuckaby/Cronicle",
     "logo": "https://github.com/jhuckaby/Cronicle/blob/master/htdocs/images/logo-128.png?raw=true",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/cronicle.sh",
             "resources": {
-                "cpu": "1",
-                "ram": "512",
-                "hdd": "2",
+                "cpu": 1,
+                "ram": 512,
+                "hdd": 2,
                 "os": "debian",
                 "version": "12"
             }

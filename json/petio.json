@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "7777",
+    "interface_port": 7777,
     "documentation": null,
     "website": "https://petio.tv/",
     "logo": "https://raw.githubusercontent.com/petio-team/petio/master/frontend/public/p-seamless.png",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/petio.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "1024",
-                "hdd": "4",
+                "cpu": 2,
+                "ram": 1024,
+                "hdd": 4,
                 "os": "ubuntu",
                 "version": "20.04"
             }

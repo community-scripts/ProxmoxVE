@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "7474",
+    "interface_port": 7474,
     "documentation": null,
     "website": "https://autobrr.com/",
     "logo": "https://raw.githubusercontent.com/autobrr/autobrr/master/.github/images/logo.png",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/autobrr.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "2048",
-                "hdd": "8",
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 8,
                 "os": "debian",
                 "version": "12"
             }

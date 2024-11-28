@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": false,
     "privileged": false,
-    "interface_port": "3000",
+    "interface_port": 3000,
     "documentation": null,
     "website": "https://github.com/stonith404/pingvin-share",
     "logo": "https://github.com/stonith404/pingvin-share/blob/main/frontend/public/img/logo.png?raw=true",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/pingvin.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "2048",
-                "hdd": "8",
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 8,
                 "os": "debian",
                 "version": "12"
             }

@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/alpine.sh",
             "resources": {
-                "cpu": "1",
-                "ram": "512",
-                "hdd": "0.1",
+                "cpu": 1,
+                "ram": 512,
+                "hdd": 0.1,
                 "os": "alpine",
                 "version": "3.19"
             }
