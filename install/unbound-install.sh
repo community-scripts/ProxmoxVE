@@ -46,7 +46,6 @@ server:
   key-cache-slabs: 8
   serve-expired: yes
   serve-expired-ttl: 3600
-  edns-buffer-size: 1232
   prefetch: yes
   prefetch-key: yes
   target-fetch-policy: "3 2 1 1 1"
