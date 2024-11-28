@@ -63,7 +63,7 @@ PREV_VERSION=$(cat /opt/${APP}_version.txt)
 if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "${PREV_VERSION}" ]]; then
   msg_info "Stopping ${APP} Services"
   systemctl stop hoarder-web hoarder-workers hoarder-browser
-  msg_ok "Stopped ${APP} Services"
+  msg_ok "Stopped Services"
 
   msg_info "Updating ${APP} to v${RELEASE}"
   cd /opt
