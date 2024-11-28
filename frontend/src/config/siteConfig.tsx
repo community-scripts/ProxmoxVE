@@ -20,7 +20,7 @@ export const navbarLinks = [
   {
     href: `https://github.com/community-scripts/${basePath}/blob/main/CHANGELOG.md`,
     event: "Change Log",
-    icon: <Scroll className="h-4 w-4 hidden sm:block" />,
+    icon: <Scroll className="h-4 w-4" />,
     text: "Change Log",
   },
   {
