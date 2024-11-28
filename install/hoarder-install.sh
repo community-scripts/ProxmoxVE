@@ -98,11 +98,8 @@ DATA_DIR="/opt/hoarder_data"
 MEILI_ADDR="http://127.0.0.1:7700"
 MEILI_MASTER_KEY="$MASTER_KEY"
 BROWSER_WEB_URL="http://127.0.0.1:9222"
-#CRAWLER_FULL_PAGE_SCREENSHOT=true
-#CRAWLER_FULL_PAGE_ARCHIVE=true
-#CRAWLER_VIDEO_DOWNLOAD=true
 EOF
-echo "${RELEASE}" >"/opt/Hoarder_version.txt"
+echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Installed Hoarder"
 
 msg_info "Running Database Migration"
@@ -111,8 +108,7 @@ $STD pnpm migrate
 mv db.db /opt/hoarder_data
 msg_ok "Database Migration Completed"
 
-msg_info "Setting up Services"
-# Meilisearch Service
+msg_info "Creating Services"
 cat <<EOF >/etc/systemd/system/meilisearch.service
 [Unit]
 Description=Meilisearch
@@ -126,7 +122,6 @@ Restart=always
 WantedBy=multi-user.target
 EOF
 
-# Hoarder Web Service
 cat <<EOF >/etc/systemd/system/hoarder-web.service
 [Unit]
 Description=Hoarder Web
@@ -143,7 +138,6 @@ Restart=always
 WantedBy=multi-user.target
 EOF
 
-# Hoarder Browser Service
 cat <<EOF >/etc/systemd/system/hoarder-browser.service
 [Unit]
 Description=Hoarder Headless Browser
@@ -158,7 +152,6 @@ Restart=always
 WantedBy=multi-user.target
 EOF
 
-# Hoarder Workers Service
 cat <<EOF >/etc/systemd/system/hoarder-workers.service
 [Unit]
 Description=Hoarder Workers
@@ -177,7 +170,7 @@ WantedBy=multi-user.target
 EOF
 
 systemctl -q enable --now meilisearch.service hoarder-web.service hoarder-browser.service hoarder-workers.service
-msg_ok "Set up Services"
+msg_ok "Created Services"
 
 motd_ssh
 customize
