@@ -63,14 +63,13 @@ function update_script() {
     exit
   fi
   RELEASE=$(curl -s https://api.github.com/repos/thelounge/thelounge-deb/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  f [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
     msg_info "Stopping Service"
     systemctl stop thelounge
     msg_ok "Stopped Service"
 
-    msg_info "Updating ${APP} to ${RELEASE}"
-    apt-get install --only-upgrade \
-      nodejs
+    msg_info "Updating ${APP} to v${RELEASE}"
+    apt-get install --only-upgrade nodejs &>/dev/null
     cd /opt
     wget -q https://github.com/thelounge/thelounge-deb/releases/download/v${RELEASE}/thelounge_${RELEASE}_all.deb
     dpkg -i ./thelounge_${RELEASE}_all.deb
@@ -82,8 +81,6 @@ function update_script() {
 
     msg_info "Cleaning up"
     rm -rf "/opt/thelounge_${RELEASE}_all.deb"
-    apt-get -y autoremove
-    apt-get -y autoclean
     msg_ok "Cleaned"
     msg_ok "Updated Successfully"
   else
