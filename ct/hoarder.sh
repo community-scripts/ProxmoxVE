@@ -75,7 +75,7 @@ if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "${PREV_RELEASE}" ]]
   pnpm exec next build --experimental-build-mode compile &>/dev/null
   cp -r /opt/hoarder/apps/web/.next/standalone/apps/web/server.js /opt/hoarder/apps/web
   cd /opt/hoarder/apps/workers
-  pnpm install --frozen-lockfile >/dev/null 2>&1
+  pnpm install --frozen-lockfile &>/dev/null
   mv /opt/.env /opt/hoarder/.env
   sed -i "s/SERVER_VERSION=${PREV_RELEASE}/SERVER_VERSION=${RELEASE}/" /opt/hoarder/.env
   msg_ok "Updated ${APP} to v${RELEASE}"
