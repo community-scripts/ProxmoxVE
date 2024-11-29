@@ -28,18 +28,17 @@ rm /etc/apt/sources.list.d/non-free.list
 msg_ok "Installed Dependencies"
 
 msg_info "Installing ${APPLICATION}"
-mkdir -p /opt/mylar3 && mkdir -p /opt/mylar3-data
+mkdir -p /opt/mylar3
+mkdir -p /opt/mylar3-data
 $STD git clone -b master https://github.com/mylar3/mylar3.git /opt/mylar3
-rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
 $STD pip install -U --no-cache-dir pip
 $STD pip install --no-cache-dir -r /opt/mylar3/requirements.txt
 msg_ok "Installed ${APPLICATION}"
 
 msg_info "Creating Service"
-# Reference: /opt/mylar3/init-scripts/systemd/mylar.service
 cat <<EOF >/etc/systemd/system/mylar3.service
 [Unit]
-Description=Systemd script to run Mylar3 as a service
+Description=Mylar3 Service
 After=network-online.target
 
 [Service]
