@@ -32,14 +32,8 @@ cat <<EOF >/opt/glance/glance.yml
 pages:
   - name: Startpage
     width: slim
-    hide-desktop-navigation: true
-    center-vertically: true
     columns:
       - size: full
-        widgets:
-          - type: search
-            autofocus: true
-
           - type: bookmarks
             groups:
               - title: General
