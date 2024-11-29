@@ -56,7 +56,7 @@ function update_script() {
 header_info
 check_container_storage
 check_container_resources
-if [[ ! -d /opt/Sonarr ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
+if [[ ! -d /var/lib/sonarr/ ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
 msg_info "Updating $APP v4"
 systemctl stop sonarr.service
 wget -q -O SonarrV4.tar.gz 'https://services.sonarr.tv/v1/download/main/latest?version=4&os=linux&arch=x64'

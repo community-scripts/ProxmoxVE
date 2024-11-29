@@ -1,0 +1,34 @@
+{
+    "name": "InspIRCd 4",
+    "slug": "inspircd",
+    "categories": [
+      0
+    ],
+    "date_created": "2024-11-29",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": 6667,
+    "documentation": "https://docs.inspircd.org/",
+    "website": "https://www.inspircd.org/",
+    "logo": "https://avatars.githubusercontent.com/u/1560750?s=200&v=4",
+    "description": "InspIRCd is a modular C++ Internet Relay Chat (IRC) server for UNIX-like and Windows systems.",
+    "install_methods": [
+      {
+        "type": "default",
+        "script": "ct/inspircd.sh",
+        "resources": {
+          "cpu": 1,
+          "ram": 512,
+          "hdd": 2,
+          "os": null,
+          "version": null
+        }
+      }
+    ],
+    "default_credentials": {
+      "username": null,
+      "password": null
+    },
+    "notes": []
+  }

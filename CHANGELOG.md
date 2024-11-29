@@ -16,6 +16,21 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
+## 2024-11-29
+
+### Changed
+
+### ✨ New Scripts
+
+- New Script: The Lounge IRC [@quantumryuu](https://github.com/quantumryuu) ([#571](https://github.com/community-scripts/ProxmoxVE/pull/571))
+- New Script: LubeLogger [@quantumryuu](https://github.com/quantumryuu) ([#574](https://github.com/community-scripts/ProxmoxVE/pull/574))
+- New Script: Inspircd [@quantumryuu](https://github.com/quantumryuu) ([#576](https://github.com/community-scripts/ProxmoxVE/pull/576))
+
+### 🚀 Updated Scripts
+
+- Fix msg_error on zwave-js-ui [@MickLesk](https://github.com/MickLesk) ([#585](https://github.com/community-scripts/ProxmoxVE/pull/585))
+- Fix Kimai Apache2 Rights [@MickLesk](https://github.com/MickLesk) ([#577](https://github.com/community-scripts/ProxmoxVE/pull/577))
+
 ## 2024-11-28
 
 ### Changed
