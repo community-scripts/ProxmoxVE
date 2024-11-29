@@ -94,4 +94,4 @@ description
 
 msg_ok "Completed Successfully!\n"
 echo -e "${APP} server should be reachable by connecting to the following server.
-         ${BL}Server Name:${IP} \nPort:6667${CL} \n"
+         ${BL}Server Name:${IP} Port:6667${CL} \n"
