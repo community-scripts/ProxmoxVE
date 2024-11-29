@@ -64,7 +64,6 @@ After=network-online.target
 
 [Service]
 ExecStart=/usr/bin/semaphore server --config /opt/semaphore/config.json
-ExecReload=/bin/kill -HUP $MAINPID
 Restart=always
 RestartSec=10s
 
