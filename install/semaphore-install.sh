@@ -50,7 +50,7 @@ cat <<EOF >/opt/semaphore/config.json
   "access_key_encryption": "${json_access_key_encryption}"
 }
 EOF
-semaphore user add --admin --login admin --email admin@example.com --name Administrator --password admin --config /opt/semaphore/config.json
+$STD semaphore user add --admin --login admin --email admin@example.com --name Administrator --password admin --config /opt/semaphore/config.json
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Installed Semaphore"
 
