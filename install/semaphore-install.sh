@@ -30,7 +30,7 @@ msg_ok "Installed Dependencies"
 
 msg_info "Installing Semaphore"
 RELEASE=$(curl -s https://api.github.com/repos/semaphoreui/semaphore/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-mkdir /opt/semaphore
+mkdir -p /opt/semaphore
 cd /opt/semaphore
 wget -q https://github.com/semaphoreui/semaphore/releases/download/v${RELEASE}/semaphore_${RELEASE}_linux_amd64.deb
 $STD dpkg -i semaphore_${RELEASE}_linux_amd64.deb  
