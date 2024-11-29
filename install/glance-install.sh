@@ -28,22 +28,24 @@ wget -q https://github.com/glanceapp/glance/releases/download/v${RELEASE}/glance
 mkdir -p /opt/glance
 tar -xzf glance-linux-amd64.tar.gz -C /opt/glance
 cat <<EOF >/opt/glance/glance.yml
-#Documentation link https://github.com/glanceapp/glance/blob/main/docs/configuration.md
 pages:
   - name: Startpage
     width: slim
+    hide-desktop-navigation: true
+    center-vertically: true
     columns:
       - size: full
+        widgets:
+          - type: search
+            autofocus: true
           - type: bookmarks
             groups:
               - title: General
                 links:
-                  - title: Gmail
-                    url: https://mail.google.com/mail/u/0/
-                  - title: Amazon
-                    url: https://www.amazon.com/
-                  - title: Github
-                    url: https://github.com/
+                  - title: Google
+                    url: https://www.google.com/
+                  - title: Helper Scripts
+                    url: https://github.com/community-scripts/ProxmoxVE
 EOF
 
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
