@@ -16,6 +16,14 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
+## 2024-11-29
+
+### Changed
+
+### 🚀 Updated Scripts
+
+- Fix Kimai Apache2 Rights [@MickLesk](https://github.com/MickLesk) ([#577](https://github.com/community-scripts/ProxmoxVE/pull/577))
+
 ## 2024-11-28
 
 ### Changed
