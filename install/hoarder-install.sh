@@ -75,12 +75,13 @@ cp -r /opt/hoarder/apps/web/.next/standalone/apps/web/server.js /opt/hoarder/app
 cd /opt/hoarder/apps/workers
 $STD pnpm install --frozen-lockfile
 
+export DATA_DIR=/opt/hoarder_data
 HOARDER_SECRET=$(openssl rand -base64 36 | cut -c1-24)
 cat <<EOF >/opt/hoarder/.env
 SERVER_VERSION=$RELEASE
 NEXTAUTH_SECRET="$HOARDER_SECRET"
 NEXTAUTH_URL="http://localhost:3000"
-DATA_DIR="/opt/hoarder_data"
+DATA_DIR="$DATA_DIR"
 MEILI_ADDR="http://127.0.0.1:7700"
 MEILI_MASTER_KEY="$MASTER_KEY"
 BROWSER_WEB_URL="http://127.0.0.1:9222"
@@ -89,10 +90,9 @@ echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Installed Hoarder"
 
 msg_info "Running Database Migration"
-mkdir -p /opt/hoarder_data
+mkdir -p ${DATA_DIR}
 cd /opt/hoarder/packages/db
 $STD pnpm migrate
-mv db.db /opt/hoarder_data
 msg_ok "Database Migration Completed"
 
 msg_info "Creating Services"
@@ -112,8 +112,8 @@ EOF
 cat <<EOF >/etc/systemd/system/hoarder-web.service
 [Unit]
 Description=Hoarder Web
-Wants=network.target hoarder-workers.service meilisearch.service
-After=network.target hoarder-workers.service meilisearch.service
+Wants=network.target hoarder-workers.service
+After=network.target hoarder-workers.service
 
 [Service]
 ExecStart=pnpm start
@@ -142,8 +142,8 @@ EOF
 cat <<EOF >/etc/systemd/system/hoarder-workers.service
 [Unit]
 Description=Hoarder Workers
-Wants=network.target hoarder-browser.service
-After=network.target hoarder-browser.service
+Wants=network.target hoarder-browser.service meilisearch.service
+After=network.target hoarder-browser.service meilisearch.service
 
 [Service]
 ExecStart=pnpm start:prod
@@ -156,7 +156,7 @@ TimeoutStopSec=5
 WantedBy=multi-user.target
 EOF
 
-systemctl -q enable --now meilisearch.service hoarder-web.service hoarder-browser.service hoarder-workers.service
+systemctl -q enable --now meilisearch.service hoarder-browser.service hoarder-workers.service hoarder-web.service
 msg_ok "Created Services"
 
 motd_ssh
