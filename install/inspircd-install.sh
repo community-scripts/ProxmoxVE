@@ -16,7 +16,8 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
     curl \
-    mc
+    mc \
+    sudo 
 msg_ok "Installed Dependencies"
 
 
@@ -24,7 +25,7 @@ msg_info "Installing InspIRCd"
 RELEASE=$(curl -s https://api.github.com/repos/inspircd/inspircd/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 cd /opt
 wget -q https://github.com/inspircd/inspircd/releases/download/v${RELEASE}/inspircd_${RELEASE}.deb12u1_amd64.deb
-$STD apt-get install "./inspircd_${RELEASE}.deb12u1_amd64.deb" -y
+$STD apt-get install "./inspircd_${RELEASE}.deb12u1_amd64.deb" -y &>/dev/null
 cat <<EOF >/etc/inspircd/inspircd.conf
 <define name="networkDomain" value="helper-scripts.com">
 <define name="networkName" value="Proxmox VE Helper-Scripts">
@@ -44,7 +45,7 @@ echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Installed InspIRCd"
 
 msg_info "Restarting Service"
-systemctl restart inspircd
+#systemctl restart inspircd
 msg_ok "Restarted Service"
 
 motd_ssh

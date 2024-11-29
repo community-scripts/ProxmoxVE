@@ -70,7 +70,7 @@ check_container_resources
     msg_info "Updating ${APP} to v${RELEASE}"
     cd /opt
     wget -q https://github.com/inspircd/inspircd/releases/download/v${RELEASE}/inspircd_${RELEASE}.deb12u1_amd64.deb
-    apt-get install "./inspircd_${RELEASE}.deb12u1_amd64.deb" -y
+    apt-get install "./inspircd_${RELEASE}.deb12u1_amd64.deb" -y &>/dev/nul
     echo "${RELEASE}" >"/opt/${APP}_version.txt"
     msg_ok "Updated ${APP} to v${RELEASE}"
 
