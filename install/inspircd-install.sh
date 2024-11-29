@@ -45,7 +45,7 @@ echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Installed InspIRCd"
 
 msg_info "Restarting Service"
-#systemctl restart inspircd
+systemctl restart inspircd
 msg_ok "Restarted Service"
 
 motd_ssh
