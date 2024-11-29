@@ -25,7 +25,7 @@ msg_info "Installing Glance"
 RELEASE=$(curl -s https://api.github.com/repos/glanceapp/glance/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 cd /opt
 wget -q https://github.com/glanceapp/glance/releases/download/v${RELEASE}/glance-linux-amd64.tar.gz
-mkdir /opt/glance
+mkdir -p /opt/glance
 tar -xzf glance-linux-amd64.tar.gz -C /opt/glance
 cat <<EOF >/opt/glance/glance.yml
 #Documentation link https://github.com/glanceapp/glance/blob/main/docs/configuration.md
