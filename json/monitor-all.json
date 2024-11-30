@@ -58,6 +58,6 @@
         {
             "text": "Monitor-All logs: `cat /var/log/ping-instances.log`",
             "type": "Info"
-        },
+        }
     ]
 }
