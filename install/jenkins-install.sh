@@ -24,10 +24,11 @@ msg_ok "Installed Dependencies"
 
 
 msg_info "Installing Jenkins"
-wget -O /usr/share/keyrings/jenkins-keyring.asc https://pkg.jenkins.io/debian/jenkins.io-2023.key
+wget -qO /usr/share/keyrings/jenkins-keyring.asc https://pkg.jenkins.io/debian/jenkins.io-2023.key
 echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc]" https://pkg.jenkins.io/debian binary/ >/etc/apt/sources.list.d/jenkins.list
-apt-get update
-apt-get install jenkins
+$STD apt-get update
+$STD apt-get install -y \
+    jenkins
 msg_ok "Installed Jenkins"
 
 motd_ssh
