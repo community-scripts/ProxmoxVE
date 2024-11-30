@@ -24,12 +24,11 @@ msg_ok "Installed Dependencies"
 
 
 msg_info "Installing Jenkins"
-wget -qO /usr/share/keyrings/jenkins-keyring.asc https://pkg.jenkins.io/debian/jenkins.io-2023.key
+wget -O /usr/share/keyrings/jenkins-keyring.asc https://pkg.jenkins.io/debian/jenkins.io-2023.key
 echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc]" https://pkg.jenkins.io/debian binary/ >/etc/apt/sources.list.d/jenkins.list
-$STD apt-get update
-$STD apt-get install jenkins
-echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt" #Will not be updatable so probably I should remove this line?
-msg_ok "Installed InspIRCd"
+apt-get update
+apt-get install jenkins
+msg_ok "Installed Jenkins"
 
 motd_ssh
 customize
