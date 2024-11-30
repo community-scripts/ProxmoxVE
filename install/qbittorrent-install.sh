@@ -37,7 +37,7 @@ cat <<EOF >/etc/systemd/system/qbittorrent-nox.service
 Description=qBittorrent client
 After=network.target
 [Service]
-ExecStart=/usr/bin/qbittorrent-nox --webui-port=8090
+ExecStart=/usr/bin/qbittorrent-nox
 Restart=always
 [Install]
 WantedBy=multi-user.target
