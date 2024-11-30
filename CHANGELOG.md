@@ -16,6 +16,14 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
+## 2024-11-30
+
+### Changed
+
+### 🚀 Updated Scripts
+
+- Convert line endings in the-lounge.sh [@jamezpolley](https://github.com/jamezpolley) ([#599](https://github.com/community-scripts/ProxmoxVE/pull/599))
+
 ## 2024-11-29
 
 ### Changed
