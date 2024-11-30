@@ -85,6 +85,16 @@ DATA_DIR="$DATA_DIR"
 MEILI_ADDR="http://127.0.0.1:7700"
 MEILI_MASTER_KEY="$MASTER_KEY"
 BROWSER_WEB_URL="http://127.0.0.1:9222"
+
+# If you're planning to use OpenAI for tagging. Uncomment the following line:
+# OPENAI_API_KEY="<API_KEY>"
+
+# If you're planning to use ollama for tagging, uncomment the following lines:
+# OLLAMA_BASE_URL="<OLLAMA_ADDR>"
+
+# You can change the models used by uncommenting the following lines, and changing them according to your needs:
+# INFERENCE_TEXT_MODEL="gpt-4o-mini"
+# INFERENCE_IMAGE_MODEL="gpt-4o-mini" 
 EOF
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Installed Hoarder"
