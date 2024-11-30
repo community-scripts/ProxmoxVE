@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
-
+source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2024 community-scripts ORG
 # Author: davalanche
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/mylar3/mylar3
 
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 function header_info {
 clear
 cat <<"EOF"
@@ -57,7 +56,17 @@ function default_settings() {
 function update_script() {
 header_info
 if [[ ! -d /opt/mylar3 ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
-msg_error "${APP} should be updated via the user interface."
+RELEASE=$(curl -s https://api.github.com/repos/mylar3/mylar3/releases/latest | jq -r '.tag_name')
+if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+  msg_info "Updating ${APP} to ${RELEASE}"
+  rm -rf /opt/mylar3/* /opt/mylar3/.*
+  wget -qO- https://github.com/mylar3/mylar3/archive/refs/tags/${RELEASE}.tar.gz | tar -xz --strip-components=1 -C /opt/mylar3
+  systemctl restart mylar3
+  echo "${RELEASE}" > /opt/${APP}_version.txt
+  msg_ok "Updated ${APP} to ${RELEASE}"
+else
+  msg_ok "No update required. ${APP} is already at ${RELEASE}"
+fi
 exit
 }
 

@@ -19,20 +19,26 @@ $STD apt-get install -y \
   curl \
   sudo \
   mc \
-  git \
-  python3-pip
+  jq
 echo "deb http://deb.debian.org/debian bookworm non-free non-free-firmware" > /etc/apt/sources.list.d/non-free.list
 $STD apt-get update
 $STD apt-get install -y unrar
 rm /etc/apt/sources.list.d/non-free.list
 msg_ok "Installed Dependencies"
 
+msg_info "Updating Python3"
+$STD apt-get install -y python3-pip
+rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
+$STD pip install -U --no-cache-dir pip
+msg_ok "Updated Python3"
+
 msg_info "Installing ${APPLICATION}"
 mkdir -p /opt/mylar3
 mkdir -p /opt/mylar3-data
-$STD git clone -b master https://github.com/mylar3/mylar3.git /opt/mylar3
-$STD pip install -U --no-cache-dir pip
+RELEASE=$(curl -s https://api.github.com/repos/mylar3/mylar3/releases/latest | jq -r '.tag_name')
+wget -qO- https://github.com/mylar3/mylar3/archive/refs/tags/${RELEASE}.tar.gz | tar -xz --strip-components=1 -C /opt/mylar3
 $STD pip install --no-cache-dir -r /opt/mylar3/requirements.txt
+echo "${RELEASE}" > /opt/${APPLICATION}_version.txt
 msg_ok "Installed ${APPLICATION}"
 
 msg_info "Creating Service"
@@ -52,12 +58,6 @@ WantedBy=multi-user.target
 EOF
 systemctl enable -q --now mylar3.service
 msg_ok "Created Service"
-
-msg_info "Updating ${APPLICATION} configuration"
-# version detection and updates through the user interface do not currently work unless "check_github_on_startup = True"
-sed -i -e 's/check_github_on_startup = False/check_github_on_startup = True/' -e 's/check_github = False/check_github = True/' /opt/mylar3-data/config.ini
-systemctl restart mylar3
-msg_ok "${APPLICATION} configuration updated"
 
 motd_ssh
 customize
