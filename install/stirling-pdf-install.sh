@@ -28,7 +28,7 @@ $STD apt-get install -y \
   make \
   g++ \
   unpaper \
-  ocrmypdf \
+  qpdf \
   poppler-utils
 msg_ok "Installed Dependencies"
 
