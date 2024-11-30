@@ -18,9 +18,9 @@
       "type": "default",
       "script": "/ct/hoarder.sh",
       "resources": {
-        "cpu": 4,
+        "cpu": 2,
         "ram": 4096,
-        "hdd": 10,
+        "hdd": 8,
         "os": "Debian",
         "version": "12"
       }
