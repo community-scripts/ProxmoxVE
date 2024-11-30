@@ -9,21 +9,20 @@ source <(curl -s https://raw.githubusercontent.com/quantumryuu/ProxmoxVE/build/m
 function header_info {
 clear
 cat <<"EOF"
-    ____                 ________  ______    __
-   /  _/___  _________  /  _/ __ \/ ____/___/ /
-   / // __ \/ ___/ __ \ / // /_/ / /   / __  / 
- _/ // / / (__  ) /_/ // // _, _/ /___/ /_/ /  
-/___/_/ /_/____/ .___/___/_/ |_|\____/\__,_/   
-              /_/                              
- 
+       __           __   _           
+      / /__  ____  / /__(_)___  _____
+ __  / / _ \/ __ \/ //_/ / __ \/ ___/
+/ /_/ /  __/ / / / ,< / / / / (__  ) 
+\____/\___/_/ /_/_/|_/_/_/ /_/____/  
+                                      
 EOF
 }
 header_info
 echo -e "Loading..."
-APP="InspIRCd"
-var_disk="2"
-var_cpu="1"
-var_ram="512"
+APP="Jenkins"
+var_disk="4"
+var_cpu="2"
+var_ram="1024"
 var_os="debian"
 var_version="12"
 variables
@@ -57,36 +56,6 @@ function update_script() {
 header_info
 check_container_storage
 check_container_resources
-
-  if [[ ! -f /lib/systemd/system/inspircd.service ]]; then
-    msg_error "No ${APP} Installation Found!"
-    exit
-  fi
-  RELEASE=$(curl -s https://api.github.com/repos/inspircd/inspircd/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
-    msg_info "Stopping Service"
-    systemctl stop inspircd
-    msg_ok "Stopped Service"
-
-    msg_info "Updating ${APP} to v${RELEASE}"
-    cd /opt
-    wget -q https://github.com/inspircd/inspircd/releases/download/v${RELEASE}/inspircd_${RELEASE}.deb12u1_amd64.deb
-    apt-get install "./inspircd_${RELEASE}.deb12u1_amd64.deb" -y &>/dev/nul
-    echo "${RELEASE}" >"/opt/${APP}_version.txt"
-    msg_ok "Updated ${APP} to v${RELEASE}"
-
-    msg_info "Starting Service"
-    systemctl start inspircd
-    msg_ok "Started Service"
-
-    msg_info "Cleaning up"
-    rm -rf /opt/inspircd_${RELEASE}.deb12u1_amd64.deb
-    msg_ok "Cleaned"
-    msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}."
-  fi
-  exit
 }
 
 start
@@ -95,4 +64,4 @@ description
 
 msg_ok "Completed Successfully!\n"
 echo -e "${APP} should be reachable by going to the following URL.
-         ${BL}http://${IP}:3000${CL} \n"
+         ${BL}http://${IP}:8080${CL} \n"

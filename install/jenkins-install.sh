@@ -17,38 +17,24 @@ msg_info "Installing Dependencies"
 $STD apt-get install -y \
     curl \
     mc \
-    sudo 
+    sudo \
+    fontconfig \
+    openjdk-17-jre
 msg_ok "Installed Dependencies"
 
 
-msg_info "Installing InspIRCd"
-RELEASE=$(curl -s https://api.github.com/repos/REPO/REPO/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-cd /opt
-wget -q https://github.com/REPO/REPO/releases/download/v${RELEASE}/inspircd_${RELEASE}.deb12u1_amd64.deb
-$STD apt-get install "./inspircd_${RELEASE}.deb12u1_amd64.deb" -y &>/dev/null
-cat <<EOF >/etc/inspircd/inspircd.conf
-<define name="networkDomain" value="helper-scripts.com">
-<define name="networkName" value="Proxmox VE Helper-Scripts">
-
-<server
-        name="irc.&networkDomain;"
-        description="&networkName; IRC server"
-        network="&networkName;">
-<admin
-       name="Admin"
-       description="Supreme Overlord"
-       email="irc@&networkDomain;">
-<bind address="" port="6667" type="clients">
-EOF
-
-echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
+msg_info "Installing Jenkins"
+wget -qO /usr/share/keyrings/jenkins-keyring.asc https://pkg.jenkins.io/debian/jenkins.io-2023.key
+echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc]" https://pkg.jenkins.io/debian binary/ >/etc/apt/sources.list.d/jenkins.list
+$STD apt-get update
+$STD apt-get install jenkins
+echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt" #Will not be updatable so probably I should remove this line?
 msg_ok "Installed InspIRCd"
 
 motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -rf /opt/inspircd_${RELEASE}.deb12u1_amd64.deb
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
