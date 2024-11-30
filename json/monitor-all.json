@@ -34,6 +34,30 @@
         {
             "text": "Execute within the Proxmox shell",
             "type": "warning"
-        }
+        },
+        {
+            "text": "To make setup changes, first stop the service: `systemctl stop ping-instances`",
+            "type": "Info"
+        },
+        {
+            "text": "To edit pause time: `nano /usr/local/bin/ping-instances.sh`",
+            "type": "Info"
+        },
+        {
+            "text": "To add excluded instances: `nano /etc/systemd/system/ping-instances.service`",
+            "type": "Info"
+        },
+        {
+            "text": "To edit pause time: `nano /usr/local/bin/ping-instances.sh`",
+            "type": "Info"
+        },
+        {
+            "text": "After changes have been saved, `systemctl daemon-reload` and start the service: `systemctl start ping-instances`",
+            "type": "Info"
+        },
+        {
+            "text": "Monitor-All logs: `cat /var/log/ping-instances.log`",
+            "type": "Info"
+        },
     ]
 }
