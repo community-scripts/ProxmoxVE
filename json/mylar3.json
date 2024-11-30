@@ -30,10 +30,5 @@
         "username": null,
         "password":  null
     },
-    "notes": [
-        {
-            "text": "Mylar3 can be updated via the user interface.",
-            "type": "info"
-        }
-    ]
+    "notes": []
 }
