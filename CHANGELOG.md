@@ -24,6 +24,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 - Convert line endings in the-lounge.sh [@jamezpolley](https://github.com/jamezpolley) ([#599](https://github.com/community-scripts/ProxmoxVE/pull/599))
 
+### 🌐 Website
+
+- add some Information for Monitor-All Script [@MickLesk](https://github.com/MickLesk) ([#605](https://github.com/community-scripts/ProxmoxVE/pull/605))
+
 ## 2024-11-29
 
 ### Changed
