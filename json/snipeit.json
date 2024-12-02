@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": 3000,
+    "interface_port": 80,
     "documentation": "https://snipe-it.readme.io/docs/overview",
     "website": "https://snipeitapp.com/",
     "logo": "https://raw.githubusercontent.com/snipe/snipe-it/refs/heads/master/public/img/snipe-logo-bug.png",
