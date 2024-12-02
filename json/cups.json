@@ -1,6 +1,6 @@
 {
-  "name": "CUPS",
-  "slug": "CUPS",
+  "name": "cups",
+  "slug": "cups",
   "categories": [
     0
   ],
@@ -27,7 +27,7 @@
       }
   ],
   "default_credentials": {
-      "username": "root",
+      "username": null,
       "password": null
   },
   "notes": []

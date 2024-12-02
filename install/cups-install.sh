@@ -15,26 +15,18 @@ update_os
 
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y curl
-$STD apt-get install -y sudo
-$STD apt-get install -y mc
+$STD apt-get install -y curl \
+  curl \
+  sudo \
+  mc
 msg_ok "Installed Dependencies"
 
-msg_info "Install CUPS"
+msg_info "Creating Service"
 $STD apt-get install -y cups
-msg_ok "Installed CUPS"
-
-msg_info "Add lpadmin to root group"
 $STD usermod -aG lpadmin root
-msg_ok "Added lpadmin to root group"
-
-msg_info "Starting Service"
 systemctl enable -q --now cups
-msg_ok "Started Service"
-
-msg_info "Allow remote administration"
 $STD cupsctl --remote-admin --remote-any --share-printers
-msg_ok "Allowed remote administration"
+msg_ok "Configured Service"
 
 motd_ssh
 customize
