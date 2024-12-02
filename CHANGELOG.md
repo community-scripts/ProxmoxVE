@@ -22,9 +22,9 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### ✨ New Scripts
 
-- New Script: Glance [@quantumryuu](https://github.com/quantumryuu) ([#595](https://github.com/community-scripts/ProxmoxVE/pull/595))
-- New script: SnipeIT LXC [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#538](https://github.com/community-scripts/ProxmoxVE/pull/538))
 - New Script: Hoarder LXC [@vhsdream](https://github.com/vhsdream) ([#567](https://github.com/community-scripts/ProxmoxVE/pull/567))
+- New script: SnipeIT LXC [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#538](https://github.com/community-scripts/ProxmoxVE/pull/538))
+- New Script: Glance [@quantumryuu](https://github.com/quantumryuu) ([#595](https://github.com/community-scripts/ProxmoxVE/pull/595))
 - New script: Unbound LXC [@wimb0](https://github.com/wimb0) ([#547](https://github.com/community-scripts/ProxmoxVE/pull/547))
 - New script: Mylar3 LXC [@davalanche](https://github.com/davalanche) ([#554](https://github.com/community-scripts/ProxmoxVE/pull/554))
 
@@ -35,6 +35,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🌐 Website
 
+- fix: vaultwarden info mismatch [@BramSuurdje](https://github.com/BramSuurdje) ([#645](https://github.com/community-scripts/ProxmoxVE/pull/645))
 - Wallos json fix [@quantumryuu](https://github.com/quantumryuu) ([#630](https://github.com/community-scripts/ProxmoxVE/pull/630))
 
 ## 2024-11-30
