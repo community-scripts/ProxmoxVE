@@ -20,8 +20,17 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### Changed
 
+### ✨ New Scripts
+
+- New Script: Glance [@quantumryuu](https://github.com/quantumryuu) ([#595](https://github.com/community-scripts/ProxmoxVE/pull/595))
+- New script: SnipeIT LXC [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#538](https://github.com/community-scripts/ProxmoxVE/pull/538))
+- New Script: Hoarder LXC [@vhsdream](https://github.com/vhsdream) ([#567](https://github.com/community-scripts/ProxmoxVE/pull/567))
+- New script: Unbound LXC [@wimb0](https://github.com/wimb0) ([#547](https://github.com/community-scripts/ProxmoxVE/pull/547))
+- New script: Mylar3 LXC [@davalanche](https://github.com/davalanche) ([#554](https://github.com/community-scripts/ProxmoxVE/pull/554))
+
 ### 🚀 Updated Scripts
 
+- Stirling-PDF: replace dependency for v0.35.0 and add check and fix in stirling-pdf.sh [@vhsdream](https://github.com/vhsdream) ([#614](https://github.com/community-scripts/ProxmoxVE/pull/614))
 - qbittorrent: do not override the configuration port in systemd [@zdraganov](https://github.com/zdraganov) ([#618](https://github.com/community-scripts/ProxmoxVE/pull/618))
 
 ### 🌐 Website
