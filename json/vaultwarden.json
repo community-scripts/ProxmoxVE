@@ -47,7 +47,7 @@
             "type": "warning"
         },
         {
-            "text": "Build Settings for normal LXC: 4GB RAM - 6GB Storage - 4vCPU",
+            "text": "Build Settings for normal LXC: 6GB RAM - 6GB Storage - 4vCPU",
             "type": "info"
         }
     ]
