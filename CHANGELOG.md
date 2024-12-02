@@ -16,6 +16,18 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
+## 2024-12-02
+
+### Changed
+
+### 🚀 Updated Scripts
+
+- qbittorrent: do not override the configuration port in systemd [@zdraganov](https://github.com/zdraganov) ([#618](https://github.com/community-scripts/ProxmoxVE/pull/618))
+
+### 🌐 Website
+
+- Wallos json fix [@quantumryuu](https://github.com/quantumryuu) ([#630](https://github.com/community-scripts/ProxmoxVE/pull/630))
+
 ## 2024-11-30
 
 ### Changed
