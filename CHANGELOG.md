@@ -35,6 +35,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🌐 Website
 
+- chore: Update unbound logo to have only the actual logo [@BramSuurdje](https://github.com/BramSuurdje) ([#648](https://github.com/community-scripts/ProxmoxVE/pull/648))
 - fix: vaultwarden info mismatch [@BramSuurdje](https://github.com/BramSuurdje) ([#645](https://github.com/community-scripts/ProxmoxVE/pull/645))
 - Wallos json fix [@quantumryuu](https://github.com/quantumryuu) ([#630](https://github.com/community-scripts/ProxmoxVE/pull/630))
 
