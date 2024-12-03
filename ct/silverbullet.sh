@@ -69,17 +69,11 @@ function update_script() {
     mv silverbullet /opt/silverbullet/bin/
     chmod +x /opt/silverbullet/bin/silverbullet
     echo "${RELEASE}" >/opt/silverbullet/${APP}_version.txt
-    msg_ok "Updated ${APP}"
+    msg_ok "Updated ${APP} to v${RELEASE}"
 
     msg_info "Starting ${APP}"
     systemctl start silverbullet
-    sleep 1
-    if systemctl status silverbullet &>/dev/null ; then
-      msg_ok "Started ${APP}"
-      msg_ok "Updated ${APP} to v${RELEASE}"
-    else
-      msg_error "Failed to start ${APP}"
-    fi
+    msg_ok "Started ${APP}"
   else
     msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
