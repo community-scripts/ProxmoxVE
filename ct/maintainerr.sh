@@ -92,25 +92,13 @@ function update_script() {
     yarn build:server &>/dev/null
 
     cat >>./ui/.env <<EOF
-NEXT_PUBLIC_BASE_PATH=/__PATH_PREFIX__
+NEXT_PUBLIC_BASE_PATH=/
 EOF
 
-    sed -i "s,basePath: '',basePath: '/__PATH_PREFIX__',g" ./ui/next.config.js
+    sed -i "s,basePath: '',basePath: '/',g" ./ui/next.config.js
     yarn build:ui &>/dev/null
 
     msg_ok "Built Maintainerr"
-
-    msg_info "Migrating DB"
-
-    # copy the db to the new version
-    mkdir ./data
-    cp /opt/data/maintainerr.sqlite ./data/maintainerr.sqlite
-    yarn migration:run &>/dev/null
-
-    mv /opt/data/maintainerr.sqlite ./data/maintainerr.sqlite.bak
-    mv ./data/maintainerr.sqlite /opt/data/maintainerr.sqlite
-
-    msg_ok "Migrated DB"
 
     msg_info "Updating files"
 
@@ -162,6 +150,7 @@ StartLimitInterval=0
 Environment=NODE_ENV=production
 Environment=VERSION_TAG=stable
 Environment=npm_package_version=${RELEASE}
+Environmnet=UV_USE_IO_URING=0
 StandardOutput=journal
 StandardError=journal
 
@@ -174,6 +163,7 @@ EOF
 
     systemctl start maintainerr-server.service
     systemctl start maintainerr.service
+    echo "${RELEASE}" >"/opt/${APP}_version.txt"
     msg_ok "Successfully Updated ${APP}"
     exit
 }

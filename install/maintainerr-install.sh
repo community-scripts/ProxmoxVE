@@ -61,24 +61,19 @@ $STD rm ./ui/.eslintrc.json
 
 $STD yarn build:server
 
+# UI
 cat >> ./ui/.env <<EOF
-NEXT_PUBLIC_BASE_PATH=/__PATH_PREFIX__
+NEXT_PUBLIC_BASE_PATH=/
 EOF
 
-sed -i "s,basePath: '',basePath: '/__PATH_PREFIX__',g" ./ui/next.config.js
+sed -i "s,basePath: '',basePath: '/',g" ./ui/next.config.js
 $STD yarn build:ui
-
 
 # Data dir
 mkdir -m 777 /opt/data
 mkdir -m 777 /opt/data/logs
-# chown -R node:node /opt/data
 
-# Migrate DB
-$STD yarn migration:run
-mv ./data /opt/data
-
-# copy standalone UI 
+# copy standalone UI
 mv ./ui/.next/standalone/ui/ ./standalone-ui/
 mv ./ui/.next/standalone/ ./standalone-ui/
 mv ./ui/.next/static ./standalone-ui/.next/static
@@ -120,6 +115,7 @@ StartLimitInterval=0
 Environment=NODE_ENV=production
 Environment=VERSION_TAG=stable
 Environment=npm_package_version=${RELEASE}
+Environmnet=UV_USE_IO_URING=0
 StandardOutput=journal
 StandardError=journal
 
