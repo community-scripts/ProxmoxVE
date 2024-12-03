@@ -1,5 +1,5 @@
 {
-  "name": "cups",
+  "name": "CUPS",
   "slug": "cups",
   "categories": [
     0
@@ -10,9 +10,9 @@
   "privileged": false,
   "interface_port": 631,
   "documentation": null,
-  "website": "https://www.cups.org/",
-  "logo": "https://www.cups.org/apple-touch-icon.png",
-  "description": "The standards-based, open source printing system developed by Apple for iOS®, iPadOS®, and macOS®. CUPS uses IPP Everywhere™ to support printing to local and network printers.",
+  "website": "https://openprinting.github.io/cups/",
+  "logo": "https://openprinting.github.io/cups/images/cups.png",
+  "description": "The current standards-based, open source printing system developed by OpenPrinting for Linux® and other Unix®-like operating systems. CUPS uses IPP Everywhere™ to support printing to local and network printers.",
   "install_methods": [
       {
           "type": "default",
