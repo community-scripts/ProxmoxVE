@@ -20,6 +20,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### Changed
 
+### ✨ New Scripts
+
+- New Script: Onedev [@quantumryuu](https://github.com/quantumryuu) ([#612](https://github.com/community-scripts/ProxmoxVE/pull/612))
+
 ### 🚀 Updated Scripts
 
 - Script Update: SnipeIT [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#641](https://github.com/community-scripts/ProxmoxVE/pull/641))
