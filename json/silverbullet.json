@@ -9,7 +9,7 @@
     "updateable": true,
     "privileged": false,
     "interface_port": 3000,
-    "documentation": null,
+    "documentation": "https://silverbullet.md/Manual",
     "website": "https://silverbullet.md",
     "logo": "https://silverbullet.md/.client/logo.png",
     "description": "SilverBullet is a note-taking application optimized for people with a hacker mindset.",
