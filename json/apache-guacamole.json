@@ -1,0 +1,44 @@
+{
+  "name": "Apache Guacamole",
+  "slug": "apache-guacamole",
+  "categories": [
+    11
+  ],
+  "date_created": "2024-12-02",
+  "type": "ct",
+  "updateable": false,
+  "privileged": false,
+  "interface_port": null,
+  "documentation": null,
+  "website": "https://guacamole.apache.org/",
+  "logo": "https://guacamole.apache.org/images/logos/guac-tricolor-logo.svg",
+  "description": "Apache Guacamole is a clientless remote desktop gateway. It supports standard protocols like VNC, RDP, and SSH.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "/ct/apacheguacamole.sh",
+      "resources": {
+        "cpu": 1,
+        "ram": 2048,
+        "hdd": 4,
+        "os": "Debian",
+        "version": "12"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "After installation you can reach the Management Dashboard with $IP:8080/guacamole"
+      "type": "info"
+    }
+    {
+      "text": "Default Username is guacadmin, Password is guacadmin"
+      "type": "info"
+    }
+
+  ]
+}
