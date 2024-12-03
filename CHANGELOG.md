@@ -16,6 +16,14 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
+## 2024-12-03
+
+### Changed
+
+### 🚀 Updated Scripts
+
+- Script Update: SnipeIT [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#641](https://github.com/community-scripts/ProxmoxVE/pull/641))
+
 ## 2024-12-02
 
 ### Changed
