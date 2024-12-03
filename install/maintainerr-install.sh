@@ -47,8 +47,7 @@ wget -q https://github.com/jorenn92/maintainerr/archive/refs/tags/v${RELEASE}.zi
 $STD unzip -q v${RELEASE}.zip
 rm -rf "/opt/v${RELEASE}.zip"
 $STD mkdir app
-# $STD mv Maintainerr-${RELEASE}/* ./maintainerr/
-echo "${RELEASE}" >"/opt/maintainerr${APPLICATION}_version.txt"
+echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 cd /opt/Maintainerr-${RELEASE}
 $STD corepack install
 msg_ok "Installed Maintainerr"
@@ -102,16 +101,9 @@ rm -rf /opt/yarn-*
 mv /opt/Maintainerr-${RELEASE}/* /opt/app/
 rm -rf /opt/Maintainerr-${RELEASE}
 
-# chown -R node:node /opt/
-# chmod -R 755 /opt/
-
-
 $STD cd /opt/app
 
 msg_ok "Built Maintainerr"
-
-# mv /opt/apt/supervisord.conf /etc/supervisord.conf
-
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/maintainerr-server.service
@@ -126,6 +118,8 @@ RestartSec=5
 StartLimitBurst=100
 StartLimitInterval=0
 Environment=NODE_ENV=production
+Environment=VERSION_TAG=stable
+Environment=npm_package_version=${RELEASE}
 StandardOutput=journal
 StandardError=journal
 
