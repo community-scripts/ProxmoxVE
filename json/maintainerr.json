@@ -1,0 +1,32 @@
+{
+  "name": "Maintainerr",
+  "slug": "maintainerr",
+  "categories": [18],
+  "date_created": "2024-12-03",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 6246,
+  "documentation": null,
+  "website": "https://maintainerr.info/",
+  "logo": "https://raw.githubusercontent.com/jorenn92/Maintainerr/main/ui/public/logo.png",
+  "description": "Maintainerr makes managing your media easy. No longer will you have to worry about your precious hard drive space being taken up by media, that isn't even being watched.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/maintainerr.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 2,
+        "os": "debian",
+        "version": "12"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": []
+}
