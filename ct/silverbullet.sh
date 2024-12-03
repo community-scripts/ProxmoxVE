@@ -56,31 +56,27 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
-
-  service_path="/etc/systemd/system/silverbullet.service"
-  if [[ ! -d /opt/silverbullet || ! -f "${service_path}" ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
-
+  if [[ ! -d /opt/silverbullet ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
   RELEASE=$(curl -s https://api.github.com/repos/silverbulletmd/silverbullet/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  if [[ ! -f "/opt/silverbullet/${APP}_version.txt" || "${RELEASE}" != "$(cat /opt/silverbullet/${APP}_version.txt)" ]]; then
+  if [[ ! -f "/opt/${APP}_version.txt" || "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
     msg_info "Stopping ${APP}"
-    systemctl stop silverbullet.service
+    systemctl stop silverbullet
     msg_ok "Stopped ${APP}"
 
-    msg_info "Updating ${APP} to ${RELEASE}"
+    msg_info "Updating ${APP} to v${RELEASE}"
     wget -q https://github.com/silverbulletmd/silverbullet/releases/download/${RELEASE}/silverbullet-server-linux-x86_64.zip
     unzip silverbullet-server-linux-x86_64.zip &>/dev/null
     mv silverbullet /opt/silverbullet/bin/
     chmod +x /opt/silverbullet/bin/silverbullet
-    ln -sf /opt/silverbullet/bin/silverbullet /usr/local/bin/silverbullet
     echo "${RELEASE}" >/opt/silverbullet/${APP}_version.txt
     msg_ok "Updated ${APP}"
 
     msg_info "Starting ${APP}"
-    systemctl start silverbullet.service
+    systemctl start silverbullet
     sleep 1
-    if systemctl status silverbullet.service &>/dev/null ; then
+    if systemctl status silverbullet &>/dev/null ; then
       msg_ok "Started ${APP}"
-      msg_ok "Updated Successfully"
+      msg_ok "Updated ${APP} to v${RELEASE}"
     else
       msg_error "Failed to start ${APP}"
     fi

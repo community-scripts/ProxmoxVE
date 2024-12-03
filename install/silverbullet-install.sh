@@ -14,9 +14,10 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y curl
-$STD apt-get install -y sudo
-$STD apt-get install -y mc
+$STD apt-get install -y \
+  curl \
+  sudo \
+  mc
 msg_ok "Installed Dependencies"
 
 RELEASE=$(curl -s https://api.github.com/repos/silverbulletmd/silverbullet/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
@@ -24,17 +25,15 @@ RELEASE=$(curl -s https://api.github.com/repos/silverbulletmd/silverbullet/relea
 msg_info "Installing ${APPLICATION}"
 mkdir -p /opt/silverbullet/bin /opt/silverbullet/space
 wget -q https://github.com/silverbulletmd/silverbullet/releases/download/${RELEASE}/silverbullet-server-linux-x86_64.zip
-unzip silverbullet-server-linux-x86_64.zip &>/dev/null
-mv silverbullet /opt/silverbullet/bin/
+unzip -q -d /opt/silverbullet/bin/ silverbullet-server-linux-x86_64.zip
 chmod +x /opt/silverbullet/bin/silverbullet
-ln -s /opt/silverbullet/bin/silverbullet /usr/local/bin/silverbullet
-echo "${RELEASE}" >/opt/silverbullet/${APPLICATION}_version.txt
+echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Installed ${APPLICATION}"
 
 msg_info "Creating Service"
-service_path="/etc/systemd/system/silverbullet.service"
 
-echo "[Unit]
+cat <<EOF >/etc/systemd/system/silverbullet.service
+[Unit]
 Description=Silverbullet Daemon
 After=syslog.target network.target
 
@@ -46,18 +45,10 @@ WorkingDirectory=/opt/silverbullet
 Restart=on-failure
 
 [Install]
-WantedBy=multi-user.target" >$service_path
+WantedBy=multi-user.target
+EOF
 systemctl enable --now -q silverbullet
 msg_ok "Created Service"
-
-msg_info "Starting ${APPLICATION}"
-systemctl start silverbullet.service
-sleep 1
-if systemctl status silverbullet.service &>/dev/null ; then
-	msg_ok "Started ${APPLICATION}"
-else
-	msg_error "Failed to start ${APPLICATION}"
-fi
 
 motd_ssh
 customize
