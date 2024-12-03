@@ -21,8 +21,8 @@ $STD apt-get install -y \
         gpg \
         python3 \
         make \
-        g++     
-        
+        g++
+
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up Node.js Repository"
@@ -61,14 +61,23 @@ $STD rm ./server/.eslintrc.js
 $STD rm ./ui/.eslintrc.json
 
 $STD yarn build:server
-$STD yarn migration:run
 
 cat >> ./ui/.env <<EOF
 NEXT_PUBLIC_BASE_PATH=/__PATH_PREFIX__
 EOF
 
 sed -i "s,basePath: '',basePath: '/__PATH_PREFIX__',g" ./ui/next.config.js
-yarn build:ui
+$STD yarn build:ui
+
+
+# Data dir
+mkdir -m 777 /opt/data
+mkdir -m 777 /opt/data/logs
+# chown -R node:node /opt/data
+
+# Migrate DB
+$STD yarn migration:run
+mv ./data /opt/data
 
 # copy standalone UI 
 mv ./ui/.next/standalone/ui/ ./standalone-ui/
@@ -96,13 +105,10 @@ rm -rf /opt/Maintainerr-${RELEASE}
 # chown -R node:node /opt/
 # chmod -R 755 /opt/
 
-# Data dir
-mkdir -m 777 /opt/data
-mkdir -m 777 /opt/data/logs
-# chown -R node:node /opt/data
-
 
 $STD cd /opt/app
+
+msg_ok "Built Maintainerr"
 
 # mv /opt/apt/supervisord.conf /etc/supervisord.conf
 
@@ -119,6 +125,7 @@ Restart=always
 RestartSec=5
 StartLimitBurst=100
 StartLimitInterval=0
+Environment=NODE_ENV=production
 StandardOutput=journal
 StandardError=journal
 
@@ -137,7 +144,9 @@ Restart=always
 RestartSec=5
 StartLimitBurst=100
 StartLimitInterval=0
-Environment="PORT=6246"
+Environment=PORT=6246
+Environment=HOSTNAME=0.0.0.0
+Environment=NODE_ENV=production
 StandardOutput=journal
 StandardError=journal
 
