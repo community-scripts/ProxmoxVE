@@ -21,36 +21,34 @@ $STD apt-get install -y \
   gpg \
   wget \
   nginx
+msg_ok "Installed Dependencies"
 
-echo "deb [signed-by=/etc/apt/trusted.gpg.d/elasticsearch.gpg] https://artifacts.elastic.co/packages/7.x/apt stable main"| tee -a /etc/apt/sources.list.d/elastic-7.x.list > /dev/null
-curl -fsSL https://artifacts.elastic.co/GPG-KEY-elasticsearch | gpg --dearmor | tee /etc/apt/trusted.gpg.d/elasticsearch.gpg> /dev/null
+msg_info "Setting up Elasticsearch"
+echo "deb [signed-by=/etc/apt/trusted.gpg.d/elasticsearch.gpg] https://artifacts.elastic.co/packages/7.x/apt stable main"| tee -a /etc/apt/sources.list.d/elastic-7.x.list 
+curl -fsSL https://artifacts.elastic.co/GPG-KEY-elasticsearch | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
 $STD apt-get update
 $STD apt-get -y install elasticsearch
 echo "-Xms2g" >> /etc/elasticsearch/jvm.options
 echo "-Xmx2g" >> /etc/elasticsearch/jvm.options
 $STD /usr/share/elasticsearch/bin/elasticsearch-plugin install ingest-attachment -b
 $STD systemctl restart elasticsearch
-msg_ok "Installed Dependencies"
+msg_ok "Setup Elasticsearch"
 
-msg_info "Install Zammad"
-
+msg_info "Installing Zammad"
 curl -fsSL https://dl.packager.io/srv/zammad/zammad/key | gpg --dearmor | sudo tee /etc/apt/keyrings/pkgr-zammad.gpg> /dev/null
 echo "deb [signed-by=/etc/apt/keyrings/pkgr-zammad.gpg] https://dl.packager.io/srv/deb/zammad/zammad/stable/debian 12 main"| sudo tee /etc/apt/sources.list.d/zammad.list > /dev/null
 $STD apt-get update
 $STD apt-get -y install zammad
-
-msg_ok "Installed Zammad"
-
-msg_info "Configuring Servcie"
 $STD zammad run rails r "Setting.set('es_url', 'http://localhost:9200')"
 $STD zammad run rake zammad:searchindex:rebuild
+msg_ok "Installed Zammad"
 
+msg_info "Set up web services"
 cp /opt/zammad/contrib/nginx/zammad.conf /etc/nginx/sites-available/zammad.conf
 IPADDRESS=$(hostname -I | awk '{print $1}')
 sed -i "s/server_name localhost;/server_name $IPADDRESS;/g" /etc/nginx/sites-available/zammad.conf
 $STD systemctl reload nginx
-
-msg_ok "Configured Service"
+msg_ok "Created Service"
 
 motd_ssh
 customize
