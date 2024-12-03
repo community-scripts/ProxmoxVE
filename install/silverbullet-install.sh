@@ -25,7 +25,7 @@ RELEASE=$(curl -s https://api.github.com/repos/silverbulletmd/silverbullet/relea
 msg_info "Installing ${APPLICATION}"
 mkdir -p /opt/silverbullet/bin /opt/silverbullet/space
 wget -q https://github.com/silverbulletmd/silverbullet/releases/download/${RELEASE}/silverbullet-server-linux-x86_64.zip
-unzip -q -d /opt/silverbullet/bin/ silverbullet-server-linux-x86_64.zip
+unzip -oq -d /opt/silverbullet/bin/ silverbullet-server-linux-x86_64.zip
 chmod +x /opt/silverbullet/bin/silverbullet
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Installed ${APPLICATION}"
