@@ -56,13 +56,15 @@ header_info
 check_container_storage
 check_container_resources
 if [[ ! -d /opt/zamad ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
-msg_info "Updating ${APP} LXC"
+msg_info "Stopping Service"
 systemctl stop zammad &>/dev/null
+msg_info "Updating ${APP}" 
 apt-get update &>/dev/null
 apt-mark hold zammad &>/dev/null
 apt-get -y upgrade &>/dev/null
 apt-mark unhold zammad &>/dev/null
 apt-get -y upgrade &>/dev/null
+msg_info "Starting Service"
 systemctl start zammad &>/dev/null
 msg_ok "Updated ${APP} LXC"
 exit
