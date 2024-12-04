@@ -9,8 +9,8 @@
     "updateable": true,
     "privileged": false,
     "interface_port": 3000,
-    "documentation": "https://gethomepage.dev/latest/configs/",
-    "website": "https://github.com/benphelps/homepage",
+    "documentation": "https://gethomepage.dev/configs/",
+    "website": "https://gethomepage.dev",
     "logo": "https://avatars.githubusercontent.com/u/122929872?v=4",
     "description": "Homepage is a self-hosted dashboard solution for centralizing and organizing data and information.",
     "install_methods": [
