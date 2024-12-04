@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 #Copyright (c) 2021-2024 community-scripts ORG
 # Author: Michel Roegl-Brunner (michelroegl-brunner)
 # License: MIT
@@ -41,16 +40,16 @@ $STD apt-get install -y \
    default-jdk
 msg_ok "Installed Dependencies"
 
-msg_info "Install Tomcat"
-mkdir /opt/${APPLICATION}
-mkdir /opt/${APPLICATION}/tomcat9
-$STD wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.97/bin/apache-tomcat-9.0.97.tar.gz
-$STD tar xzf apache-tomcat-9.0.97.tar.gz -C /opt/${APPLICATION}/tomcat9 --strip-components=1
+msg_info "Setup Apache Tomcat"
+mkdir /opt/apache-guacamole
+mkdir /opt/apache-guacamole/tomcat9
+wget -q https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.97/bin/apache-tomcat-9.0.97.tar.gz
+$STD tar xzf apache-tomcat-9.0.97.tar.gz -C /opt/apache-guacamole/tomcat9 --strip-components=1
 useradd -r -d /opt/tomcat9 -s /bin/false tomcat
-chown -R tomcat: /opt/${APPLICATION}/tomcat9/{logs,temp,webapps,work}
-chown -R :tomcat /opt/${APPLICATION}/tomcat9/
-chmod -R g+r /opt/${APPLICATION}/tomcat9/conf
-chmod g+x /opt/${APPLICATION}/tomcat9/conf
+chown -R tomcat: /opt/apache-guacamole/tomcat9/{logs,temp,webapps,work}
+chown -R :tomcat /opt/apache-guacamole/tomcat9/
+chmod -R g+r /opt/apache-guacamole/tomcat9/conf
+chmod g+x /opt/apache-guacamole/tomcat9/conf
 JAVA_HOME=$(update-alternatives --query javadoc | grep Value: | head -n1 | sed 's/Value: //' | sed 's@bin/javadoc$@@')
 cat <<EOF >/etc/systemd/system/tomcat.service
 [Unit]
@@ -61,14 +60,14 @@ After=network.target
 Type=forking
 
 Environment="JAVA_HOME=${JAVA_HOME}"
-Environment="CATALINA_PID=/opt/${APPLICATION}/tomcat9/temp/tomcat.pid"
-Environment="CATALINA_HOME=/opt/${APPLICATION}/tomcat9/"
-Environment="CATALINA_BASE=/opt/${APPLICATION}/tomcat9/"
+Environment="CATALINA_PID=/opt/apache-guacamole/tomcat9/temp/tomcat.pid"
+Environment="CATALINA_HOME=/opt/apache-guacamole/tomcat9/"
+Environment="CATALINA_BASE=/opt/apache-guacamole/tomcat9/"
 Environment="CATALINA_OPTS=-Xms512M -Xmx1024M -server -XX:+UseParallelGC"
 Environment="JAVA_OPTS=-Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom"
 
-ExecStart=/opt/${APPLICATION}/tomcat9/bin/startup.sh
-ExecStop=/opt/${APPLICATION}/tomcat9/bin/shutdown.sh
+ExecStart=/opt/apache-guacamole/tomcat9/bin/startup.sh
+ExecStop=/opt/apache-guacamole/tomcat9/bin/shutdown.sh
 
 User=tomcat
 Group=tomcat
@@ -79,37 +78,35 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 EOF
-$STD systemctl daemon-reload
-$STD systemctl enable --now tomcat
-msg_ok "Installed Tomcat"
+msg_ok "Setup Apache Tomcat"
 
-msg_info "Installing Guacamole"
+msg_info "Setup Apache Guacamole"
 mkdir -p /etc/guacamole/{extensions,lib}
-REALESE_SERVER=$(curl -sL https://api.github.com/repos/apache/guacamole-server/tags | jq -r '.[0].name')
-mkdir /opt/${APPLICATION}/apache-guacamole-server-${REALESE_SERVER}
-$STD wget -O apache-guacamole-server-${REALESE_SERVER} https://api.github.com/repos/apache/guacamole-server/tarball/refs/tags/${REALESE_SERVER}
-$STD tar -xvf apache-guacamole-server-${REALESE_SERVER} -C /opt/${APPLICATION}/apache-guacamole-server-${REALESE_SERVER} --strip-components=1
-cd /opt/${APPLICATION}/apache-guacamole-server-${REALESE_SERVER}
+RELEASE_SERVER=$(curl -sL https://api.github.com/repos/apache/guacamole-server/tags | jq -r '.[0].name')
+mkdir /opt/apache-guacamole/apache-guacamole-server-${RELEASE_SERVER}
+wget -q -O apache-guacamole-server-${RELEASE_SERVER} https://api.github.com/repos/apache/guacamole-server/tarball/refs/tags/${RELEASE_SERVER}
+$STD tar -xvf apache-guacamole-server-${RELEASE_SERVER} -C /opt/apache-guacamole/apache-guacamole-server-${RELEASE_SERVER} --strip-components=1
+cd /opt/apache-guacamole/apache-guacamole-server-${RELEASE_SERVER}
 $STD autoreconf -fi
 $STD ./configure --with-init-dir=/etc/init.d --enable-allow-freerdp-snapshots
 $STD make
 $STD make install
 $STD ldconfig
-$STD systemctl daemon-reload
-$STD systemctl enable --now guacd
-REALESE_CLIENT=$(curl -sL https://api.github.com/repos/apache/guacamole-client/tags | jq -r '.[0].name')
-$STD wget -O /opt/${APPLICATION}/tomcat9/webapps/guacamole.war https://downloads.apache.org/guacamole/${REALESE_CLIENT}/binary/guacamole-${REALESE_CLIENT}.war
-$STD systemctl restart guacd tomcat
-msg_ok "Installed Guacamole"
+RELEASE_CLIENT=$(curl -sL https://api.github.com/repos/apache/guacamole-client/tags | jq -r '.[0].name')
+wget -q -O /opt/apache-guacamole/tomcat9/webapps/guacamole.war https://downloads.apache.org/guacamole/${RELEASE_CLIENT}/binary/guacamole-${RELEASE_CLIENT}.war
+msg_ok "Setup Apache Guacamole"
 
-msg_info "Creating Service"
+msg_info "Setup Databas"
 cd /root
-$STD wget https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-8.0.26.tar.gz
+wget -q https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-8.0.26.tar.gz
 $STD tar -xf mysql-connector-java-8.0.26.tar.gz
 mv mysql-connector-java-8.0.26/mysql-connector-java-8.0.26.jar /etc/guacamole/lib/
-$STD wget https://downloads.apache.org/guacamole/1.5.5/binary/guacamole-auth-jdbc-1.5.5.tar.gz
+wget -q https://downloads.apache.org/guacamole/1.5.5/binary/guacamole-auth-jdbc-1.5.5.tar.gz
 $STD tar -xf guacamole-auth-jdbc-1.5.5.tar.gz
 mv guacamole-auth-jdbc-1.5.5/mysql/guacamole-auth-jdbc-mysql-1.5.5.jar /etc/guacamole/extensions/
+msg_ok "Setup Databse"
+
+msg_info "Setup Service"
 DB_NAME=guacamole_db
 DB_USER=guacamole_user
 DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
@@ -132,8 +129,8 @@ cat *.sql | mysql -u root ${DB_NAME}
     echo "mysql-password: $DB_PASS"
 
 } >> /etc/guacamole/guacamole.properties
-$STD systemctl restart tomcat guacd mysql
-msg_ok "Creted Service"
+systemctl -q enable --now tomcat guacd mysql
+msg_ok "Setup Service"
 
 motd_ssh
 customize

@@ -8,7 +8,7 @@
   "type": "ct",
   "updateable": false,
   "privileged": false,
-  "interface_port": null,
+  "interface_port": 8080,
   "documentation": null,
   "website": "https://guacamole.apache.org/",
   "logo": "https://guacamole.apache.org/images/logos/guac-tricolor-logo.svg",
@@ -27,18 +27,8 @@
     }
   ],
   "default_credentials": {
-    "username": null,
-    "password": null
+    "username": "guacadmin",
+    "password": "guacadmin"
   },
-  "notes": [
-    {
-      "text": "After installation you can reach the Management Dashboard with $IP:8080/guacamole"
-      "type": "info"
-    }
-    {
-      "text": "Default Username is guacadmin, Password is guacadmin"
-      "type": "info"
-    }
-
-  ]
+  "notes": []
 }
