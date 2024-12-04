@@ -16,6 +16,14 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
+## 2024-12-04
+
+### Changed
+
+### 🌐 Website
+
+- Update homepage.json documentation and website links [@patchmonkey](https://github.com/patchmonkey) ([#668](https://github.com/community-scripts/ProxmoxVE/pull/668))
+
 ## 2024-12-03
 
 ### Changed
