@@ -31,7 +31,7 @@ $STD apt-get -y install elasticsearch
 echo "-Xms2g" >> /etc/elasticsearch/jvm.options
 echo "-Xmx2g" >> /etc/elasticsearch/jvm.options
 $STD /usr/share/elasticsearch/bin/elasticsearch-plugin install ingest-attachment -b
-$STD systemctl restart elasticsearch
+systemctl -q restart elasticsearch
 msg_ok "Setup Elasticsearch"
 
 msg_info "Installing Zammad"
@@ -43,7 +43,7 @@ $STD zammad run rails r "Setting.set('es_url', 'http://localhost:9200')"
 $STD zammad run rake zammad:searchindex:rebuild
 msg_ok "Installed Zammad"
 
-msg_info "Set up web services"
+msg_info "Setup Services"
 cp /opt/zammad/contrib/nginx/zammad.conf /etc/nginx/sites-available/zammad.conf
 IPADDRESS=$(hostname -I | awk '{print $1}')
 sed -i "s/server_name localhost;/server_name $IPADDRESS;/g" /etc/nginx/sites-available/zammad.conf
