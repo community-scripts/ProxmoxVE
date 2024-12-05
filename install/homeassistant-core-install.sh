@@ -14,24 +14,54 @@ network_check
 update_os
 
 msg_info "Installing Dependencies (Patience)"
-$STD apt-get install -y git curl sudo mc bluez libffi-dev libssl-dev libjpeg-dev zlib1g-dev autoconf build-essential libopenjp2-7 libturbojpeg0-dev ffmpeg liblapack3 liblapack-dev dbus-broker libpcap-dev libavdevice-dev libavformat-dev libavcodec-dev libavutil-dev libavfilter-dev libmariadb-dev-compat libatlas-base-dev pip python3.12-dev
+$STD apt-get install -y \
+     git \
+     curl \
+     sudo \
+     mc \
+     bluez \
+     libffi-dev \
+     libssl-dev \
+     libjpeg-dev \
+     zlib1g-dev \
+     autoconf \
+     build-essential \
+     libopenjp2-7 \
+     libturbojpeg0-dev \
+     ffmpeg \
+     liblapack3 \
+     liblapack-dev \
+     dbus-broker \
+     libpcap-dev \
+     libavdevice-dev \
+     libavformat-dev \
+     libavcodec-dev \
+     libavutil-dev \
+     libavfilter-dev \
+     libmariadb-dev-compat \
+     libatlas-base-dev \
+     pip \
+     software-properties-common
+$STD add-apt-repository -y ppa:deadsnakes/ppa
+$STD apt-get update
+$STD apt-get install -y python3.13-dev
 msg_ok "Installed Dependencies"
 
 msg_info "Installing UV"
 $STD pip install uv
-msg_ok "Installed UV"
+msg_ok "Installing UV"
 
-msg_info "Setting up Home Assistant-Core environment"
+msg_info "Setup Home Assistant-Core"
 mkdir /srv/homeassistant
 cd /srv/homeassistant
 uv venv . &>/dev/null
 source bin/activate
-msg_ok "Created virtual environment with UV"
+msg_ok "Setup Home Assistant-Core"
 
-msg_info "Installing Home Assistant-Core and packages"
+msg_info "Setup Home Assistant-Core Packages"
 $STD uv pip install webrtcvad wheel homeassistant mysqlclient psycopg2-binary isal
 mkdir -p /root/.homeassistant
-msg_ok "Installed Home Assistant-Core and required packages"
+msg_ok "Setup Home Assistant-Core Packages"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/homeassistant.service
@@ -49,7 +79,7 @@ RestartForceExitStatus=100
 WantedBy=multi-user.target
 EOF
 systemctl enable -q --now homeassistant
-msg_ok "Created Service"
+msg_ok "Creating Service"
 
 motd_ssh
 customize
@@ -57,4 +87,4 @@ customize
 msg_info "Cleaning up"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
-msg_ok "Cleaned"
+msg_ok "Cleaning up"
