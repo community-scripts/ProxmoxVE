@@ -79,7 +79,7 @@ function update_script() {
       echo -e "${GN}Updating to Stable Version${CL}"
       BR=""
     fi
-    if [[ "$PY" == "python3.11" ]]; then echo -e "⚠️  Home Assistant will soon require Python 3.12."; fi
+    if [[ "$PY" == "python3.12" || "$PY" == "python3.11" ]]; then echo -e "⚠️  Since Version 2024.12 Home Assistant will require Python 3.13."; fi
 
     msg_info "Stopping Home Assistant"
     systemctl stop homeassistant
