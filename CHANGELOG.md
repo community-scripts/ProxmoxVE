@@ -16,6 +16,14 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
+## 2024-12-05
+
+### Changed
+
+### 🚀 Updated Scripts
+
+- Fix stdout in unifi.sh [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#688](https://github.com/community-scripts/ProxmoxVE/pull/688))
+
 ## 2024-12-04
 
 ### Changed
