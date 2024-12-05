@@ -22,6 +22,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- Fix `rm` bug in Vikunja update [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#692](https://github.com/community-scripts/ProxmoxVE/pull/692))
 - Fix stdout in unifi.sh [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#688](https://github.com/community-scripts/ProxmoxVE/pull/688))
 
 ## 2024-12-04
