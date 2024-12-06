@@ -27,6 +27,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🌐 Website
 
+- Update frontend CI/CD workflow [@havardthom](https://github.com/havardthom) ([#703](https://github.com/community-scripts/ProxmoxVE/pull/703))
 - fix: note component in json-editor getting out of focus when typing and revert theme switch animation [@BramSuurdje](https://github.com/BramSuurdje) ([#706](https://github.com/community-scripts/ProxmoxVE/pull/706))
 
 ## 2024-12-05
