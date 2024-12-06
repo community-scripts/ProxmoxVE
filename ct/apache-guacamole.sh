@@ -2,28 +2,24 @@
 source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/refs/heads/main/misc/build.func)
 # Copyright (c) 2021-2024 community-scripts ORG
 # Author: Michel Roegl-Brunner (michelroegl-brunner)
-# License: MIT
-# https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-function header_info {
-clear
-cat <<"EOF"
-    ___                     __            ______                                       __   
-   /   |  ____  ____ ______/ /_  ___     / ____/_  ______ __________ _____ ___  ____  / /__ 
-  / /| | / __ \/ __ `/ ___/ __ \/ _ \   / / __/ / / / __ `/ ___/ __ `/ __ `__ \/ __ \/ / _ \
- / ___ |/ /_/ / /_/ / /__/ / / /  __/  / /_/ / /_/ / /_/ / /__/ /_/ / / / / / / /_/ / /  __/
-/_/  |_/ .___/\__,_/\___/_/ /_/\___/   \____/\__,_/\__,_/\___/\__,_/_/ /_/ /_/\____/_/\___/ 
-      /_/                                                                                   
-EOF
-}
-header_info
-echo -e "Loading..."
-APP="Apache-Guacamole"
+# License: | MIT https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://guacamole.apache.org/
 
+#App Default Values
+APP="Apache-Guacamole"
+TAGS="webserver;remote"
 var_disk="4"
 var_cpu="1"
 var_ram="2048"
 var_os="debian"
 var_version="12"
+var_unprivileged="1"
+
+# App Output & Base Settings
+header_info "$APP"
+base_settings
+
+# Core
 variables
 color
 catch_errors
@@ -57,3 +53,7 @@ build_container
 description
 
 msg_ok "Completed Successfully!\n"
+echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
+echo -e "${INFO}${YW} Access it using the following URL:${CL}"
+echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8080/guacamole${CL}"
+
