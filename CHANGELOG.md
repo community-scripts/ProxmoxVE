@@ -16,6 +16,19 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
+## 2024-12-06
+
+### Changed
+
+### 🚀 Updated Scripts
+
+- Fix bugs in Komga update [@DysfunctionalProgramming](https://github.com/DysfunctionalProgramming) ([#717](https://github.com/community-scripts/ProxmoxVE/pull/717))
+- Bookstack: Fix Update function composer [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#700](https://github.com/community-scripts/ProxmoxVE/pull/700))
+
+### 🌐 Website
+
+- fix: note component in json-editor getting out of focus when typing and revert theme switch animation [@BramSuurdje](https://github.com/BramSuurdje) ([#706](https://github.com/community-scripts/ProxmoxVE/pull/706))
+
 ## 2024-12-05
 
 ### Changed
