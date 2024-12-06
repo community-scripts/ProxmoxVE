@@ -65,8 +65,8 @@ if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_v
   msg_ok "Stopped ${APP}"
 
   msg_info "Updating ${APP} to ${RELEASE}"
-  rm -rf /opt/komga/komga*.jar
-  wget -q "https://github.com/gotson/komga/releases/download/v${RELEASE}/komga-${RELEASE}.jar"
+  wget -q "https://github.com/gotson/komga/releases/download/${RELEASE}/komga-${RELEASE}.jar"
+  rm -rf /opt/komga/komga.jar
   mv -f komga-${RELEASE}.jar /opt/komga/komga.jar
   echo "${RELEASE}" >/opt/${APP}_version.txt
   msg_ok "Updated ${APP} to ${RELEASE}"
