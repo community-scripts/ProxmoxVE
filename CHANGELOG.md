@@ -25,6 +25,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 - Zigbee2MQTT: Remove dev branch choice until v2.0.0 release [@havardthom](https://github.com/havardthom) ([#702](https://github.com/community-scripts/ProxmoxVE/pull/702))
 - Fix Hoarder build failure by installing Chromium stable [@vhsdream](https://github.com/vhsdream) ([#723](https://github.com/community-scripts/ProxmoxVE/pull/723))
 
+### 🌐 Website
+
+- Bugfix: Include script name in website search [@havardthom](https://github.com/havardthom) ([#731](https://github.com/community-scripts/ProxmoxVE/pull/731))
+
 ## 2024-12-06
 
 ### Changed
