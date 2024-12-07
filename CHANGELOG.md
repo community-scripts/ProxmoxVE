@@ -29,6 +29,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 - Bugfix: Include script name in website search [@havardthom](https://github.com/havardthom) ([#731](https://github.com/community-scripts/ProxmoxVE/pull/731))
 
+### ❔ Unlabelled
+
+- Fix broken build.func [@havardthom](https://github.com/havardthom) ([#736](https://github.com/community-scripts/ProxmoxVE/pull/736))
+
 ## 2024-12-06
 
 ### Changed
