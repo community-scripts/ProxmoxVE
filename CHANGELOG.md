@@ -16,6 +16,14 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
+## 2024-12-07
+
+### Changed
+
+### 🚀 Updated Scripts
+
+- Fix Hoarder build failure by installing Chromium stable [@vhsdream](https://github.com/vhsdream) ([#723](https://github.com/community-scripts/ProxmoxVE/pull/723))
+
 ## 2024-12-06
 
 ### Changed
