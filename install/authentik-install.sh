@@ -68,7 +68,7 @@ msg_ok "Installed Node.js ${NODE_VER}"
 msg_info "Installing Golang"
 set +o pipefail
 GO_RELEASE=$(curl -s https://go.dev/dl/ | grep -o -m 1 "go.*\linux-amd64.tar.gz")
-$STD wget -q https://golang.org/dl/${GO_RELEASE}
+wget -q https://golang.org/dl/${GO_RELEASE}
 tar -xzf ${GO_RELEASE} -C /usr/local
 $STD ln -s /usr/local/go/bin/go /usr/bin/go
 rm -rf go/
