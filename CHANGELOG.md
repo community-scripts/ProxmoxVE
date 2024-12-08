@@ -16,6 +16,14 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
+## 2024-12-08
+
+### Changed
+
+### 🚀 Updated Scripts
+
+- Use MongoDB 4.4 in Unifi for non-AVX users [@havardthom](https://github.com/havardthom) ([#691](https://github.com/community-scripts/ProxmoxVE/pull/691))
+
 ## 2024-12-07
 
 ### Changed
