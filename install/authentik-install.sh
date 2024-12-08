@@ -50,7 +50,7 @@ tar -zxf Python.tgz
 cd Python-3.12.1
 $STD ./configure --enable-optimizations
 $STD make altinstall
-$STD cd -
+cd ~
 $STD rm -rf Python-3.12.1
 $STD rm -rf Python.tgz
 $STD update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.12 1
