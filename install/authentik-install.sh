@@ -154,7 +154,6 @@ $STD yq -i ".blueprints_dir = \"/opt/authentik/blueprints\"" /etc/authentik/conf
 $STD apt install -y python-is-python3
 ln -s /usr/local/bin/gunicorn /usr/bin/gunicorn
 ln -s /usr/local/bin/celery /usr/bin/celery
-cd /opt/authentik
 $STD bash /opt/authentik/lifecycle/ak migrate
 msg_ok "Installed Authentik"
 
