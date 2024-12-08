@@ -178,6 +178,7 @@ sleep 2
 cat <<EOF >/etc/systemd/system/authentik-worker.service
 [Unit]
 Description = Authentik Worker
+
 [Service]
 Environment=DJANGO_SETTINGS_MODULE="authentik.root.settings"
 ExecStart=celery -A authentik.root.celery worker -Ofair --max-tasks-per-child=1 --autoscale 3,1 -E -B -s /tmp/celerybeat-schedule -Q authentik,authentik_scheduled,authentik_events
