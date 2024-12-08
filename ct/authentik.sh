@@ -87,7 +87,6 @@ if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}
 
   msg_info "Updating ${APP} to v${RELEASE} (Patience)" 
   cp -r /opt/authentik/authentik/blueprints /opt/authentik/blueprints
-  cd /opt/authentik
   bash /opt/authentik/lifecycle/ak migrate >/dev/null 2>&1
   echo "${RELEASE}" >/opt/${APP}_version.txt
   msg_ok "Updated ${APP} to v${RELEASE}"
