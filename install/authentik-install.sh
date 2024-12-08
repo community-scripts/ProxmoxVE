@@ -161,6 +161,7 @@ msg_info "Configuring Services"
 cat <<EOF >/etc/systemd/system/authentik-server.service
 [Unit]
 Description = Authentik Server
+
 [Service]
 ExecStart=/opt/authentik/authentik-server
 WorkingDirectory=/opt/authentik/
