@@ -152,7 +152,7 @@ $STD yq -i ".geoip = \"/opt/authentik/tests/GeoLite2-City-Test.mmdb\"" /etc/auth
 cp -r /opt/authentik/authentik/blueprints /opt/authentik/blueprints
 $STD yq -i ".blueprints_dir = \"/opt/authentik/blueprints\"" /etc/authentik/config.yml
 $STD apt install -y python-is-python3
-$STD ln -s /usr/local/bin/gunicorn /usr/bin/gunicorn
+ln -s /usr/local/bin/gunicorn /usr/bin/gunicorn
 $STD ln -s /usr/local/bin/celery /usr/bin/celery
 cd /opt/authentik
 $STD bash /opt/authentik/lifecycle/ak migrate
