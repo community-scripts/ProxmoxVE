@@ -24,6 +24,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 - Use MongoDB 4.4 in Unifi for non-AVX users [@havardthom](https://github.com/havardthom) ([#691](https://github.com/community-scripts/ProxmoxVE/pull/691))
 
+### 🌐 Website
+
+- Move homarr to Dashboards section [@CrazyWolf13](https://github.com/CrazyWolf13) ([#740](https://github.com/community-scripts/ProxmoxVE/pull/740))
+
 ## 2024-12-07
 
 ### Changed
