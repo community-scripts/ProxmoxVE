@@ -51,7 +51,7 @@ cd Python-3.12.1
 $STD ./configure --enable-optimizations
 $STD make altinstall
 cd ~
-$STD rm -rf Python-3.12.1
+rm -rf Python-3.12.1
 $STD rm -rf Python.tgz
 $STD update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.12 1
 msg_ok "Installed Python 3.12"
