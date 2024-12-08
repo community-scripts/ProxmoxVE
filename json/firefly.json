@@ -1,0 +1,34 @@
+{
+    "name": "Firefly III",
+    "slug": "firefly",
+    "categories": [
+      0
+    ],
+    "date_created": "2024-11-30",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": 80,
+    "documentation": "https://docs.firefly-iii.org/",
+    "website": "https://firefly-iii.org/",
+    "logo": "https://raw.githubusercontent.com/firefly-iii/firefly-iii/develop/.github/assets/img/logo-small.png",
+    "description": "A free and open source personal finance manager",
+    "install_methods": [
+      {
+        "type": "default",
+        "script": "/ct/firefly.sh",
+        "resources": {
+          "cpu": 1,
+          "ram": 1024,
+          "hdd": 2,
+          "os": "Debian",
+          "version": "12"
+        }
+      }
+    ],
+    "default_credentials": {
+      "username": null,
+      "password": null
+    },
+    "notes": []
+  }
