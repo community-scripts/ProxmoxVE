@@ -153,7 +153,7 @@ cp -r /opt/authentik/authentik/blueprints /opt/authentik/blueprints
 $STD yq -i ".blueprints_dir = \"/opt/authentik/blueprints\"" /etc/authentik/config.yml
 $STD apt install -y python-is-python3
 ln -s /usr/local/bin/gunicorn /usr/bin/gunicorn
-$STD ln -s /usr/local/bin/celery /usr/bin/celery
+ln -s /usr/local/bin/celery /usr/bin/celery
 cd /opt/authentik
 $STD bash /opt/authentik/lifecycle/ak migrate
 msg_ok "Installed Authentik"
