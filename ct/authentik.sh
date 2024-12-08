@@ -91,7 +91,7 @@ if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}
   echo "${RELEASE}" >/opt/${APP}_version.txt
   msg_ok "Updated ${APP} to v${RELEASE}"
 
-  msg_info "Starting Authentik"
+  msg_info "Starting ${APP}"
   systemctl start authentik-server
   systemctl start authentik-worker
   msg_ok "Started Authentik"
