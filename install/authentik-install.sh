@@ -126,7 +126,7 @@ $STD pip install .
 msg_ok "Installed Python Dependencies"
 
 msg_info "Installing Redis"
-$STD apt install -y redis-server
+$STD apt-get install -y redis-server
 systemctl enable -q --now redis-server
 msg_ok "Installed Redis"
 
