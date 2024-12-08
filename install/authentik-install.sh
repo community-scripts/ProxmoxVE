@@ -131,7 +131,7 @@ systemctl enable -q --now redis-server
 msg_ok "Installed Redis"
 
 msg_info "Installing PostgreSQL"
-$STD apt install -y postgresql postgresql-contrib
+$STD apt-get install -y postgresql postgresql-contrib
 DB_NAME="authentik"
 DB_USER="authentik"
 DB_PASS="$(openssl rand -base64 18 | cut -c1-13)"
