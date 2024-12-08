@@ -96,7 +96,7 @@ if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}
   systemctl start authentik-worker
   msg_ok "Started ${APP}"
 else
-  msg_ok "No update required. ${APP} is already at ${RELEASE}"
+  msg_ok "No update required. ${APP} is already at v${RELEASE}"
 fi
 exit
 }
