@@ -70,7 +70,7 @@ set +o pipefail
 GO_RELEASE=$(curl -s https://go.dev/dl/ | grep -o -m 1 "go.*\linux-amd64.tar.gz")
 wget -q https://golang.org/dl/${GO_RELEASE}
 tar -xzf ${GO_RELEASE} -C /usr/local
-$STD ln -s /usr/local/go/bin/go /usr/bin/go
+ln -s /usr/local/go/bin/go /usr/bin/go
 rm -rf go/
 rm -rf ${GO_RELEASE}
 set -o pipefail
