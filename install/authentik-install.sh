@@ -101,7 +101,7 @@ msg_ok "Built Go Proxy"
 msg_info "Installing GeoIP"
 cd ~
 GEOIP_RELEASE=$(curl -s https://api.github.com/repos/maxmind/geoipupdate/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-$STD wget -qO geoipupdate.deb https://github.com/maxmind/geoipupdate/releases/download/v${GEOIP_RELEASE}/geoipupdate_${GEOIP_RELEASE}_linux_amd64.deb
+wget -qO geoipupdate.deb https://github.com/maxmind/geoipupdate/releases/download/v${GEOIP_RELEASE}/geoipupdate_${GEOIP_RELEASE}_linux_amd64.deb
 $STD dpkg -i geoipupdate.deb
 rm geoipupdate.deb
 cat <<EOF >/etc/GeoIP.conf
