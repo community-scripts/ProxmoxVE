@@ -18,7 +18,7 @@ EOF
 }
 header_info
 echo -e "Loading..."
-APP="Authentik"
+APP="authentik"
 var_disk="12"
 var_cpu="6"
 var_ram="8192"
@@ -70,24 +70,24 @@ if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}
   tar -xzf authentik.tar.gz -C /opt/authentik --strip-components 1 --overwrite
   rm -rf authentik.tar.gz
   cd /opt/authentik/website
-  npm install >/dev/null 2>&1
-  npm run build-bundled >/dev/null 2>&1
+  npm install &>/dev/null
+  npm run build-bundled &>/dev/null
   cd /opt/authentik/web
-  npm install >/dev/null 2>&1
-  npm run build >/dev/null 2>&1
+  npm install &>/dev/null
+  npm run build &>/dev/null
   msg_ok "Built ${APP} website"
 
   msg_info "Installing Python Dependencies"
   cd /opt/authentik
-  poetry install --only=main --no-ansi --no-interaction --no-root >/dev/null 2>&1
-  poetry export --without-hashes --without-urls -f requirements.txt --output requirements.txt >/dev/null 2>&1
-  pip install --no-cache-dir -r requirements.txt >/dev/null 2>&1
-  pip install . >/dev/null 2>&1
+  poetry install --only=main --no-ansi --no-interaction --no-root &>/dev/null
+  poetry export --without-hashes --without-urls -f requirements.txt --output requirements.txt &>/dev/null
+  pip install --no-cache-dir -r requirements.txt &>/dev/null
+  pip install . &>/dev/null
   msg_ok "Installed Python Dependencies"
 
   msg_info "Updating ${APP} to v${RELEASE} (Patience)" 
   cp -r /opt/authentik/authentik/blueprints /opt/authentik/blueprints
-  bash /opt/authentik/lifecycle/ak migrate >/dev/null 2>&1
+  bash /opt/authentik/lifecycle/ak migrate &>/dev/null
   echo "${RELEASE}" >/opt/${APP}_version.txt
   msg_ok "Updated ${APP} to v${RELEASE}"
 

@@ -35,7 +35,9 @@ $STD apt-get install -y --no-install-recommends \
   libxmlsec1 \
   libxmlsec1-dev \
   libxmlsec1-openssl \
-  libmaxminddb0
+  libmaxminddb0 \
+  python3-pip \
+  git
 msg_ok "Installed Dependencies"
 
 msg_info "Installing yq"
@@ -76,7 +78,7 @@ rm -rf ${GO_RELEASE}
 set -o pipefail
 msg_ok "Installed Golang"
 
-msg_info "Building Authentik website"
+msg_info "Building authentik website"
 RELEASE=$(curl -s https://api.github.com/repos/goauthentik/authentik/releases/latest | grep "tarball_url" | awk '{print substr($2, 2, length($2)-3)}')
 mkdir -p /opt/authentik
 wget -qO authentik.tar.gz "${RELEASE}"
@@ -89,7 +91,7 @@ cd /opt/authentik/web
 $STD npm install
 $STD npm run build
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
-msg_ok "Built Authentik website"
+msg_ok "Built authentik website"
 
 msg_info "Building Go Proxy"
 cd /opt/authentik
@@ -114,8 +116,6 @@ msg_ok "Installed GeoIP"
 
 msg_info "Installing Python Dependencies"
 cd /opt/authentik
-$STD apt install -y python3-pip
-$STD apt install -y git
 $STD pip3 install --upgrade pip
 $STD pip3 install poetry poetry-plugin-export
 ln -s /usr/local/bin/poetry /usr/bin/poetry
@@ -142,31 +142,28 @@ $STD sudo -u postgres psql -c "ALTER DATABASE $DB_NAME OWNER TO $DB_USER;"
 $STD sudo -u postgres psql -c "ALTER USER $DB_USER WITH SUPERUSER;"
 msg_ok "Installed PostgreSQL"
 
-msg_info "Installing Authentik"
+msg_info "Installing authentik"
 mkdir -p /etc/authentik
-cp /opt/authentik/authentik/lib/default.yml /opt/authentik/authentik/lib/default.yml.BAK
 mv /opt/authentik/authentik/lib/default.yml /etc/authentik/config.yml
 $STD yq -i ".secret_key = \"$(openssl rand -hex 32)\"" /etc/authentik/config.yml
 $STD yq -i ".postgresql.password = \"${DB_PASS}\"" /etc/authentik/config.yml
 $STD yq -i ".geoip = \"/opt/authentik/tests/GeoLite2-City-Test.mmdb\"" /etc/authentik/config.yml
 cp -r /opt/authentik/authentik/blueprints /opt/authentik/blueprints
 $STD yq -i ".blueprints_dir = \"/opt/authentik/blueprints\"" /etc/authentik/config.yml
-$STD apt install -y python-is-python3
+ln -s /usr/bin/python3 /usr/bin/python
 ln -s /usr/local/bin/gunicorn /usr/bin/gunicorn
 ln -s /usr/local/bin/celery /usr/bin/celery
 $STD bash /opt/authentik/lifecycle/ak migrate
-msg_ok "Installed Authentik"
+msg_ok "Installed authentik"
 
 msg_info "Configuring Services"
 cat <<EOF >/etc/systemd/system/authentik-server.service
 [Unit]
-Description = Authentik Server
+Description = authentik Server
 
 [Service]
 ExecStart=/opt/authentik/authentik-server
 WorkingDirectory=/opt/authentik/
-#User=authentik
-#Group=authentik
 Restart=always
 RestartSec=5
 
@@ -177,14 +174,12 @@ systemctl enable -q --now authentik-server
 sleep 2
 cat <<EOF >/etc/systemd/system/authentik-worker.service
 [Unit]
-Description = Authentik Worker
+Description = authentik Worker
 
 [Service]
 Environment=DJANGO_SETTINGS_MODULE="authentik.root.settings"
 ExecStart=celery -A authentik.root.celery worker -Ofair --max-tasks-per-child=1 --autoscale 3,1 -E -B -s /tmp/celerybeat-schedule -Q authentik,authentik_scheduled,authentik_events
 WorkingDirectory=/opt/authentik/authentik
-#User=authentik
-#Group=authentik
 Restart=always
 RestartSec=5
 
@@ -198,6 +193,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
+$STD apt-get -y remove yq
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
