@@ -66,7 +66,6 @@ $STD apt-get install -y nodejs
 msg_ok "Installed Node.js ${NODE_VER}"
 
 msg_info "Installing Golang"
-cd ~
 set +o pipefail
 GO_RELEASE=$(curl -s https://go.dev/dl/ | grep -o -m 1 "go.*\linux-amd64.tar.gz")
 $STD wget -q https://golang.org/dl/${GO_RELEASE}
