@@ -2,6 +2,7 @@
 
 # Copyright (c) 2021-2024 tteck
 # Author: tteck (tteckster)
+# Co-Author: MickLesk
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
@@ -9,15 +10,27 @@
 # if [ "$VERBOSE" == "yes" ]; then set -x; fi
 
 # This function sets color variables for formatting output in the terminal
+# Colors
 YW=$(echo "\033[33m")
+YWB=$(echo "\033[93m")
 BL=$(echo "\033[36m")
 RD=$(echo "\033[01;31m")
+BGN=$(echo "\033[4;92m")
 GN=$(echo "\033[1;92m")
+DGN=$(echo "\033[32m")
+
+# Formatting
 CL=$(echo "\033[m")
-CM="${GN}✓${CL}"
-CROSS="${RD}✗${CL}"
+UL=$(echo "\033[4m")
+BOLD=$(echo "\033[1m")
 BFR="\\r\\033[K"
 HOLD=" "
+TAB="  "
+
+# Icons
+CM="${TAB}✔️${TAB}${CL}"
+CROSS="${TAB}✖️${TAB}${CL}"
+INFO="${TAB}💡${TAB}${CL}"
 
 # This sets error handling options and defines the error_handler function to handle errors
 set -Eeuo pipefail
@@ -36,19 +49,24 @@ function error_handler() {
 
 # This function displays a spinner.
 function spinner() {
-    local chars="/-\|"
-    local spin_i=0
-    printf "\e[?25l"
-    while true; do
-        printf "\r \e[36m%s\e[0m" "${chars:spin_i++%${#chars}:1}"
-        sleep 0.1
-    done
+  local frames=('⠋' '⠙' '⠹' '⠸' '⠼' '⠴' '⠦' '⠧' '⠇' '⠏')
+  local spin_i=0
+  local interval=0.1
+  printf "\e[?25l" 
+
+  local color="${YWB}"
+
+  while true; do
+    printf "\r ${color}%s${CL}" "${frames[spin_i]}"
+    spin_i=$(( (spin_i + 1) % ${#frames[@]} ))
+    sleep "$interval"
+  done
 }
 
 # This function displays an informational message with a yellow color.
 function msg_info() {
   local msg="$1"
-  echo -ne " ${HOLD} ${YW}${msg}   "
+  echo -ne "${TAB}${YW}${msg}"
   spinner &
   SPINNER_PID=$!
 }
@@ -58,7 +76,7 @@ function msg_ok() {
   if [ -n "$SPINNER_PID" ] && ps -p $SPINNER_PID > /dev/null; then kill $SPINNER_PID > /dev/null; fi
   printf "\e[?25h"
   local msg="$1"
-  echo -e "${BFR} ${CM} ${GN}${msg}${CL}"
+  echo -e "${BFR}${CM}${GN}${msg}${CL}"
 }
 
 # This function displays a error message with a red color.
@@ -66,7 +84,7 @@ function msg_error() {
   if [ -n "$SPINNER_PID" ] && ps -p $SPINNER_PID > /dev/null; then kill $SPINNER_PID > /dev/null; fi
   printf "\e[?25h"
   local msg="$1"
-  echo -e "${BFR} ${CROSS} ${RD}${msg}${CL}"
+  echo -e "${BFR}${CROSS}${RD}${msg}${CL}"
 }
 
 # This checks for the presence of valid Container Storage and Template Storage locations
@@ -105,7 +123,7 @@ function select_storage() {
     local TAG=$(echo $line | awk '{print $1}')
     local TYPE=$(echo $line | awk '{printf "%-10s", $2}')
     local FREE=$(echo $line | numfmt --field 4-6 --from-unit=K --to=iec --format %.2f | awk '{printf( "%9sB", $6)}')
-    local ITEM="  Type: $TYPE Free: $FREE "
+    local ITEM="Type: $TYPE Free: $FREE "
     local OFFSET=2
     if [[ $((${#ITEM} + $OFFSET)) -gt ${MSG_MAX_LENGTH:-} ]]; then
       local MSG_MAX_LENGTH=$((${#ITEM} + $OFFSET))
