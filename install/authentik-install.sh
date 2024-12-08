@@ -79,7 +79,7 @@ msg_ok "Installed Golang"
 msg_info "Building Authentik website"
 RELEASE=$(curl -s https://api.github.com/repos/goauthentik/authentik/releases/latest | grep "tarball_url" | awk '{print substr($2, 2, length($2)-3)}')
 mkdir -p /opt/authentik
-$STD wget -qO authentik.tar.gz "${RELEASE}"
+wget -qO authentik.tar.gz "${RELEASE}"
 tar -xzf authentik.tar.gz -C /opt/authentik --strip-components 1 --overwrite
 rm -rf authentik.tar.gz
 cd /opt/authentik/website
