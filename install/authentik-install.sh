@@ -118,7 +118,7 @@ $STD apt install -y python3-pip
 $STD apt install -y git
 $STD pip3 install --upgrade pip
 $STD pip3 install poetry poetry-plugin-export
-$STD ln -s /usr/local/bin/poetry /usr/bin/poetry
+ln -s /usr/local/bin/poetry /usr/bin/poetry
 $STD poetry install --only=main --no-ansi --no-interaction --no-root
 $STD poetry export --without-hashes --without-urls -f requirements.txt --output requirements.txt
 $STD pip install --no-cache-dir -r requirements.txt
