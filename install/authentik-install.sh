@@ -58,7 +58,6 @@ rm -rf Python.tgz
 $STD update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.12 1
 msg_ok "Installed Python 3.12"
 
-NODE_VER="22"
 msg_info "Setting up Node.js Repository"
 mkdir -p /etc/apt/keyrings
 curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
@@ -69,12 +68,6 @@ msg_info "Installing Node.js"
 $STD apt-get update
 $STD apt-get install -y nodejs
 msg_ok "Installed Node.js"
-mkdir -p /etc/apt/keyrings
-curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_${NODE_VER}.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
-$STD apt-get update
-$STD apt-get install -y nodejs
-msg_ok "Installed Node.js ${NODE_VER}"
 
 msg_info "Installing Golang"
 set +o pipefail
