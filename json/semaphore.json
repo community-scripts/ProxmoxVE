@@ -1,0 +1,39 @@
+{
+    "name": "Semaphore",
+    "slug": "semaphore",
+    "categories": [
+      11
+    ],
+    "date_created": "2024-11-29",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": 3000,
+    "documentation": "https://docs.semaphoreui.com/",
+    "website": "https://semaphoreui.com/",
+    "logo": "https://docs.semaphoreui.com/favicon.png?x=",
+    "description": "Semaphore UI is a modern web interface for managing popular DevOps tools",
+    "install_methods": [
+      {
+        "type": "default",
+        "script": "/ct/semaphore.sh",
+        "resources": {
+          "cpu": 2,
+          "ram": 2048,
+          "hdd": 4,
+          "os": "Debian",
+          "version": "12"
+        }
+      }
+    ],
+    "default_credentials": {
+      "username": "admin",
+      "password": "admin"
+    },
+    "notes": [
+      {
+        "text": "This instance uses BoltDB",
+        "type": "info"
+      }
+    ]
+  }
