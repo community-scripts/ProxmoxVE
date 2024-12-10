@@ -324,7 +324,7 @@ PASSWORD=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
     echo "Password: $PASSWORD"
 } >> ~/application.creds
 ```
-- Use Random generated Passwords if possible
+- Use random generated Passwords if possible
 
 ## 10. 📂 Directory Structure
 
