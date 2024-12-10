@@ -247,7 +247,10 @@ update_os
 
 ```bash
 msg_info "Installing Dependencies"
-$STD apt-get install -y   curl   sudo   mc 
+$STD apt-get install -y \
+  curl \
+  sudo \
+  mc 
 msg_ok "Installed Dependencies"
 ```
 
