@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/authentik.sh",
             "resources": {
-                "cpu": "6",
-                "ram": "8192",
-                "hdd": "12",
+                "cpu": 6,
+                "ram": 8192,
+                "hdd": 12,
                 "os": "debian",
                 "version": "12"
             }
