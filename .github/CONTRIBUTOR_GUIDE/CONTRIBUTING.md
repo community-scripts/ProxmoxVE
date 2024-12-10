@@ -131,6 +131,71 @@ function update_script() {
 - `check_container_storage`: Checks available storage
 - `check_container_resources`: Validates CPU/RAM resources
 
+```bash
+# Check if installation is present | -f for file, -d for folder
+    if [[ ! -f [INSTALLATION_CHECK_PATH] ]]; then
+        msg_error "No ${APP} Installation Found!"
+        exit
+    fi
+```
+
+> **Note**: 
+> - First you need to check if the APP is installed in the LXC
+> - Replace ```INSTALLATION_CHECK_PATH``` with the path to the APP ```i.e. (/opt/app)```
+
+```bash
+    # Crawling the new version and checking whether an update is required
+    RELEASE=$(curl -fsSL [RELEASE_URL] | [PARSE_RELEASE_COMMAND])
+    if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
+
+    # Code to update the APP
+
+    else
+        msg_ok "No update required. ${APP} is already at v${RELEASE}"
+    fi
+    exit
+```
+
+> **Note**: 
+> - Crawl for the newest version. Example for Github Releases:
+> - ```RELEASE=$(curl -s https://api.github.com/repos/USER/REPO/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')```
+> - Then check if updating is required.
+
+```bash
+     # Stopping Services
+        msg_info "Stopping $APP"
+        systemctl stop [SERVICE_NAME]
+        msg_ok "Stopped $APP"
+
+        # Creating Backup
+        msg_info "Creating Backup"
+        tar -czf "/opt/${APP}_backup_$(date +%F).tar.gz" [IMPORTANT_PATHS]
+        msg_ok "Backup Created"
+
+        # Execute Update
+        msg_info "Updating $APP to v${RELEASE}"
+        [UPDATE_COMMANDS]
+        msg_ok "Updated $APP to v${RELEASE}"
+
+        # Starting Services
+        msg_info "Starting $APP"
+        systemctl start [SERVICE_NAME]
+        sleep 2
+        msg_ok "Started $APP"
+
+        # Cleaning up
+        msg_info "Cleaning Up"
+        rm -rf [TEMP_FILES]
+        msg_ok "Cleanup Completed"
+
+        # Last Action
+        echo "${RELEASE}" >/opt/${APP}_version.txt
+        msg_ok "Update Successful"
+```
+
+> **Note**: 
+> - In the IF-Block you then write the code to update the APP, Start and Stop the Services and clean up any temporary files
+
 ## 6. 🏁 Script-End
 
 ```bash
