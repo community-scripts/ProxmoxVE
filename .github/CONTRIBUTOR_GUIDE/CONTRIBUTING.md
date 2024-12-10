@@ -376,7 +376,7 @@ git clone https://github.com/yourUserName/ForkName
 
 ### 3. Create a New Branch
 ```bash
-git checkout -b your-feature-branch
+git switch -c your-feature-branch
 ```
 
 ### 4. Change Paths in build.func and install.func
