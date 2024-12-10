@@ -299,8 +299,6 @@ $STD apt-get -y autoclean
 msg_ok "Cleaned"
 ```
 
-
-
 ## 7. 📢 Progress Messages
 
 ```bash
@@ -318,12 +316,15 @@ echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 ## 9. 🔐 Credentials Management
 
 ```bash
+USERNAME=username
+PASSWORD=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 {
     echo "Application-Credentials"
     echo "Username: $USERNAME"
     echo "Password: $PASSWORD"
 } >> ~/application.creds
 ```
+- Use Random generated Passwords if possible
 
 ## 10. 📂 Directory Structure
 
