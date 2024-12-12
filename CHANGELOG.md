@@ -16,6 +16,20 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
+## 2024-12-12
+
+### Changed
+
+### 🌐 Website
+
+- Fix port and website in nextcloudpi.json [@PhoenixEmik](https://github.com/PhoenixEmik) ([#790](https://github.com/community-scripts/ProxmoxVE/pull/790))
+- Add post-install note to mqtt.json [@havardthom](https://github.com/havardthom) ([#783](https://github.com/community-scripts/ProxmoxVE/pull/783))
+
+### 🧰 Maintenance
+
+- Filter pull requests on main branch in changelog-pr.yml [@havardthom](https://github.com/havardthom) ([#793](https://github.com/community-scripts/ProxmoxVE/pull/793))
+- Fix Z-Wave JS UI Breaking Change in CHANGELOG.md [@havardthom](https://github.com/havardthom) ([#781](https://github.com/community-scripts/ProxmoxVE/pull/781))
+
 ## 2024-12-09
 
 ### Changed
