@@ -91,7 +91,7 @@ spinner() {
 # This function displays an informational message with a yellow color.
 msg_info() {
   local msg="$1"
-  echo -ne "${TAB}${YW}${msg}"
+  echo -ne "${TAB}${YW}${HOLD}${msg}${HOLD}"
   spinner &
   SPINNER_PID=$!
 }
@@ -185,7 +185,7 @@ base_settings() {
   DISK_SIZE="4"
   CORE_COUNT="1"
   RAM_SIZE="1024"
-  VERBOSE="no"
+  VERBOSE="${1:-no}"
   PW=""
   CT_ID=$NEXTID
   HN=$NSAPP
@@ -587,21 +587,56 @@ install_script() {
   NEXTID=$(pvesh get /cluster/nextid)
   timezone=$(cat /etc/timezone)
   header_info
-  if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "SETTINGS" --yesno "Use Default Settings?" --no-button Advanced 10 58); then
-    header_info
-    echo -e "${DEFAULT}${BOLD}${BL}Using Default Settings${CL}"
-    base_settings
-    echo_default
-  else
-    header_info
-    echo -e "${ADVANCED}${BOLD}${RD}Using Advanced Settings${CL}"
-    advanced_settings
-  fi
+  while true; do
+    CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "SETTINGS" --menu "Choose an option:" \
+      12 50 4 \
+      "1" "Default Settings" \
+      "2" "Default Settings (with verbose)" \
+      "3" "Advanced Settings" \
+      "4" "Exit" --nocancel --default-item "1" 3>&1 1>&2 2>&3)
+
+    if [ $? -ne 0 ]; then
+      echo -e "${CROSS}${RD} Menu canceled. Exiting.${CL}"
+      exit 0
+    fi
+
+    case $CHOICE in
+      1)
+        header_info
+        echo -e "${DEFAULT}${BOLD}${BL}Using Default Settings${CL}"
+        VERB="no"
+        base_settings "$VERB"  
+        echo_default
+        break
+        ;;
+      2)
+        header_info
+        echo -e "${DEFAULT}${BOLD}${BL}Using Default Settings (${SEARCH} Verbose)${CL}"
+        VERB="yes"
+        base_settings "$VERB"  
+        echo_default
+        break
+        ;;
+      3)
+        header_info
+        echo -e "${ADVANCED}${BOLD}${RD}Using Advanced Settings${CL}"
+        advanced_settings
+        break
+        ;;
+      4)
+        echo -e "${CROSS}${RD}Exiting.${CL}"
+        exit 0
+        ;;
+      *)
+        echo -e "${CROSS}${RD}Invalid option, please try again.${CL}"
+        ;;
+    esac
+  done
 }
 
 check_container_resources() {
   # Check actual RAM & Cores
-  current_ram=$(free -m | awk '/^Mem:/{print $2}')
+  current_ram=$(free -m | awk 'NR==2{print $2}')
   current_cpu=$(nproc) 
 
   # Check whether the current RAM is less than the required RAM or the CPU cores are less than required
