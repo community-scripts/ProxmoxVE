@@ -17,6 +17,7 @@ color() {
   CL=$(echo "\033[m")
   BFR="\\r\\033[K"
   BOLD=$(echo "\033[1m")
+  HOLD=" "
   TAB="  "
   
   # System
@@ -86,7 +87,7 @@ spinner() {
 # This function displays an informational message with a yellow color.
 msg_info() {
   local msg="$1"
-  echo -ne "${TAB}${YW}${msg}"
+  echo -ne "${TAB}${YW}${HOLD}${msg}${HOLD}"
   spinner &
   SPINNER_PID=$!
 }
@@ -218,11 +219,10 @@ motd_ssh() {
   if [ -f "$MOTD_FILE" ]; then
     # Start MOTD with application info and link
     echo -e "\n${BOLD}${APPLICATION} LXC Container${CL}" > "$MOTD_FILE"
-    echo -e "${TAB}${GATEWAY}${YW} Provided by: ${GN}community-scripts ORG ${YW}| Project: ${GN}ProxmoxVE ${YW}| GitHub: ${GN}https://github.com/community-scripts/ProxmoxVE${CL}\n" >> "$MOTD_FILE"
+    echo -e "${TAB}${GATEWAY}${YW} Provided by: ${GN}community-scripts ORG ${YW}| GitHub: ${GN}https://github.com/community-scripts/ProxmoxVE${CL}\n" >> "$MOTD_FILE"
 
     # Add system information with icons
-    echo -e "${TAB}${OS}${YW} OS: ${GN}${OS_NAME} ${OS_VERSION}${CL}" >> "$MOTD_FILE"
-    echo -e "${TAB}${OSVERSION}${YW} Version: ${GN}${OS_VERSION}${CL}" >> "$MOTD_FILE"
+    echo -e "${TAB}${OS}${YW} OS: ${GN}${OS_NAME} - Version: ${OS_VERSION}${CL}" >> "$MOTD_FILE"
     echo -e "${TAB}${HOSTNAME}${YW} Hostname: ${GN}$(hostname)${CL}" >> "$MOTD_FILE"
     echo -e "${TAB}${INFO}${YW} IP Address: ${GN}${IP}${CL}" >> "$MOTD_FILE"
   else
