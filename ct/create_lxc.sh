@@ -15,9 +15,7 @@ YW=$(echo "\033[33m")
 YWB=$(echo "\033[93m")
 BL=$(echo "\033[36m")
 RD=$(echo "\033[01;31m")
-BGN=$(echo "\033[4;92m")
 GN=$(echo "\033[1;92m")
-DGN=$(echo "\033[32m")
 
 # Formatting
 CL=$(echo "\033[m")
@@ -66,7 +64,7 @@ function spinner() {
 # This function displays an informational message with a yellow color.
 function msg_info() {
   local msg="$1"
-  echo -ne "${TAB}${YW}${msg}"
+  echo -ne "${TAB}${YW}${HOLD}${msg}${HOLD}"
   spinner &
   SPINNER_PID=$!
 }
@@ -141,11 +139,14 @@ function select_storage() {
       "Which storage pool you would like to use for the ${CONTENT_LABEL,,}?\nTo make a selection, use the Spacebar.\n" \
       16 $(($MSG_MAX_LENGTH + 23)) 6 \
       "${MENU[@]}" 3>&1 1>&2 2>&3) || exit "Menu aborted."
+      if [ $? -ne 0 ]; then
+        echo -e "${CROSS}${RD} Menu aborted by user.${CL}"
+        exit 0 
+      fi
     done
-    printf $STORAGE
+    printf "%s" "$STORAGE"
   fi
 }
-
 # Test if required variables are set
 [[ "${CTID:-}" ]] || exit "You need to set 'CTID' variable."
 [[ "${PCT_OSTYPE:-}" ]] || exit "You need to set 'PCT_OSTYPE' variable."
