@@ -26,7 +26,7 @@ export const formattedBadge = (type: string) => {
         <Badge className="text-yellow-500/75 border-yellow-500/75">LXC</Badge>
       );
     case "misc":
-      return <Badge className="text-red-500/75 border-red-500/75">MISC</Badge>;
+      return <Badge className="text-green-500/75 border-green-500/75">MISC</Badge>;
   }
   return null;
 };
