@@ -27,6 +27,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🌐 Website
 
+- Change MISC from red to green [@MickLesk](https://github.com/MickLesk) ([#815](https://github.com/community-scripts/ProxmoxVE/pull/815))
 - Update some JSON Files for Website [@MickLesk](https://github.com/MickLesk) ([#812](https://github.com/community-scripts/ProxmoxVE/pull/812))
 - Update Notes & Documentation for Proxmox Backup Server [@MickLesk](https://github.com/MickLesk) ([#804](https://github.com/community-scripts/ProxmoxVE/pull/804))
 
