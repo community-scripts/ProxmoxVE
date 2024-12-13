@@ -9,7 +9,7 @@
     "updateable": false,
     "privileged": false,
     "interface_port": 8007,
-    "documentation": null,
+    "documentation": "https://pbs.proxmox.com/docs/",
     "website": "https://www.proxmox.com/en/proxmox-backup-server/overview",
     "logo": "https://raw.githubusercontent.com/home-assistant/brands/master/core_integrations/proxmoxve/icon.png",
     "description": "Proxmox Backup Server is an enterprise backup solution, for backing up and restoring VMs, containers, and physical hosts. By supporting incremental, fully deduplicated backups, Proxmox Backup Server significantly reduces network load and saves valuable storage space.",
@@ -32,7 +32,7 @@
     },
     "notes": [
         {
-            "text": "Set a root password if using autologin. This will be the PBS password.",
+            "text": "Set a root password if using autologin. This will be the PBS password. `sudo passwd root`",
             "type": "warning"
         }
     ]
