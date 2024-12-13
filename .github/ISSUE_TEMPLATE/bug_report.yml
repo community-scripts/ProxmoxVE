@@ -23,7 +23,7 @@ body:
     id: script_name
     attributes:
       label: What is the name of the script you are using?
-      placeholder: "e.g., install.sh"
+      placeholder: "e.g., NextcloudPi, Zigbee2MQTT"
     validations:
       required: true
 
@@ -31,7 +31,7 @@ body:
     id: script_command
     attributes:
       label: What was the exact command used to execute the script?
-      placeholder: "e.g., sudo bash install.sh -v"
+      placeholder: "e.g., bash -c "$(wget -qLO - https://github.com/community-scripts/ProxmoxVE/raw/main/ct/zigbee2mqtt.sh)" or "update""
     validations:
       required: true
 
@@ -67,6 +67,7 @@ body:
         - Ubuntu 20.04
         - Ubuntu 22.04
         - Ubuntu 24.04
+        - Ubuntu 24.10
     validations:
       required: true
 
