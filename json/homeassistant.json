@@ -38,6 +38,10 @@
         {
             "text": "config path: `/var/lib/docker/volumes/hass_config/_data`",
             "type": "warning"
+        },
+        {
+            "text": "Portainer Interface: LXC-IP: 9443",
+            "type": "info"
         }
     ]
 }

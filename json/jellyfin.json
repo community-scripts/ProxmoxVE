@@ -33,11 +33,11 @@
     "notes": [
         {
             "text": "With Privileged/Unprivileged Hardware Acceleration Support",
-            "type": "warning"
+            "type": "info"
         },
         {
             "text": "FFmpeg path: /usr/lib/jellyfin-ffmpeg/ffmpeg",
-            "type": "warning"
+            "type": "info"
         }
     ]
 }

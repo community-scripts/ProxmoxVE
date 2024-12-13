@@ -32,8 +32,8 @@
     },
     "notes": [
         {
-            "text": "Configuration Path: `/opt/mafl/data/config.yml`\r\n",
-            "type": "warning"
+            "text": "Configuration Path: `/opt/mafl/data/config.yml`",
+            "type": "info"
         }
     ]
 }

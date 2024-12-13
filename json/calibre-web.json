@@ -33,7 +33,7 @@
     "notes": [
         {
             "text": "Add Calibre-Web Extras via `update`",
-            "type": "warning"
+            "type": "info"
         }
     ]
 }

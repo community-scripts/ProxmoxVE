@@ -33,7 +33,7 @@
     "notes": [
         {
             "text": "Database credentials: `cat mysql.creds`",
-            "type": "warning"
+            "type": "info"
         },
         {
             "text": "With an option to install the MySQL 8.4 LTS release instead of MySQL 8.0",

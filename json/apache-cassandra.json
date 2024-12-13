@@ -33,7 +33,7 @@
     "notes": [
         {
             "text": "Apache-Cassandra Configuration: `nano /etc/cassandra/cassandra.yaml`",
-            "type": "warning"
+            "type": "info"
         }
     ]
 }

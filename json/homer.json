@@ -33,7 +33,7 @@
     "notes": [
         {
             "text": "Configuration Path: `/opt/homer/assets/config.yml`",
-            "type": "warning"
+            "type": "info"
         }
     ]
 }

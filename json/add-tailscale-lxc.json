@@ -33,11 +33,11 @@
     "notes": [
         {
             "text": "After the script finishes, reboot the LXC then run `tailscale up` in the LXC console",
-            "type": "warning"
+            "type": "info"
         },
         {
             "text": "Execute within the Proxmox shell",
-            "type": "warning"
+            "type": "info"
         }
     ]
 }

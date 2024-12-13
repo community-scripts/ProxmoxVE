@@ -38,6 +38,10 @@
         {
             "text": "If the LXC is created Privileged, the script will automatically set up USB passthrough.",
             "type": "warning"
+        },
+        {
+            "text": "config path: `/var/lib/containers/storage/volumes/hass_config/_data`",
+            "type": "info"
         }
     ]
 }

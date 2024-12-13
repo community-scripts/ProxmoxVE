@@ -9,7 +9,7 @@
     "updateable": false,
     "privileged": false,
     "interface_port": 13378,
-    "documentation": null,
+    "documentation": "https://www.audiobookshelf.org/guides/",
     "website": "https://www.audiobookshelf.org/",
     "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/audiobookshelf.svg",
     "description": "Audiobookshelf is a Self-hosted audiobook and podcast server.",

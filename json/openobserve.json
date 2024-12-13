@@ -33,7 +33,7 @@
     "notes": [
         {
             "text": "Show Login Credentials: `cat /opt/openobserve/data/.env`",
-            "type": "warning"
+            "type": "info"
         }
     ]
 }

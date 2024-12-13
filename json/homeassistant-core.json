@@ -32,16 +32,20 @@
     },
     "notes": [
         {
-            "text": "config path: `/root/.homeassistant`",
+            "text": "If the LXC is created Privileged, the script will automatically set up USB passthrough.",
             "type": "warning"
         },
         {
-            "text": "Requires `6.8.4-3-pve` or newer kernel",
+            "text": "Requires PVE 8.2.2 with kernel 6.8.4-3-pve or newer",
             "type": "warning"
         },
         {
             "text": "Use Ubuntu 24.04 ONLY",
             "type": "warning"
+        },
+        {
+            "text": "config path: `/root/.homeassistant`",
+            "type": "info"
         }
     ]
 }

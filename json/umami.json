@@ -33,7 +33,7 @@
     "notes": [
         {
             "text": "To view the database credentials : `cat umami.creds`",
-            "type": "warning"
+            "type": "info"
         }
     ]
 }

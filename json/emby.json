@@ -33,7 +33,7 @@
     "notes": [
         {
             "text": "With Privileged/Unprivileged Hardware Acceleration Support",
-            "type": "warning"
+            "type": "info"
         }
     ]
 }

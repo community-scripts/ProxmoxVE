@@ -33,11 +33,11 @@
     "notes": [
         {
             "text": "The script creates a `*.creds` file in the Proxmox root directory with the password of the newly created TurnKey LXC Appliance.",
-            "type": "warning"
+            "type": "info"
         },
         {
             "text": "Retrieve Password: `cat turnkey-name.creds`",
-            "type": "warning"
+            "type": "info"
         }
     ]
 }

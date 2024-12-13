@@ -33,7 +33,7 @@
     "notes": [
         {
             "text": "Options to add Immich and/or Home Assistant",
-            "type": "warning"
+            "type": "info"
         },
         {
             "text": "If the LXC is created Privileged, the script will automatically set up USB passthrough.",

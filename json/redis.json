@@ -33,7 +33,7 @@
     "notes": [
         {
             "text": "Redis Configuration: `nano /etc/redis/redis.conf`",
-            "type": "warning"
+            "type": "info"
         }
     ]
 }

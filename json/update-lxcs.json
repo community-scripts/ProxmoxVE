@@ -33,7 +33,7 @@
     "notes": [
         {
             "text": "Execute within the Proxmox shell",
-            "type": "warning"
+            "type": "info"
         }
     ]
 }

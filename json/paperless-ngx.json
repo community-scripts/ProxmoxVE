@@ -33,7 +33,7 @@
     "notes": [
         {
             "text": "Show Login Credentials, type `update` in the LXC console",
-            "type": "warning"
+            "type": "info"
         }
     ]
 }

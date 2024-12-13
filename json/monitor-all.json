@@ -33,31 +33,35 @@
     "notes": [
         {
             "text": "Execute within the Proxmox shell",
+            "type": "info"
+        },
+        {
+            "text": "Virtual machines without the QEMU guest agent installed must be excluded.",
+            "type": "warning"
+        },
+        {
+            "text": "Prior to generating any new CT/VM not found in this repository, it's necessary to halt Proxmox VE Monitor-All by running `systemctl stop ping-instances`.",
             "type": "warning"
         },
         {
             "text": "To make setup changes, first stop the service: `systemctl stop ping-instances`",
-            "type": "Info"
+            "type": "info"
         },
         {
             "text": "To edit pause time: `nano /usr/local/bin/ping-instances.sh`",
-            "type": "Info"
+            "type": "info"
         },
         {
             "text": "To add excluded instances: `nano /etc/systemd/system/ping-instances.service`",
-            "type": "Info"
-        },
-        {
-            "text": "To edit pause time: `nano /usr/local/bin/ping-instances.sh`",
-            "type": "Info"
+            "type": "info"
         },
         {
             "text": "After changes have been saved, `systemctl daemon-reload` and start the service: `systemctl start ping-instances`",
-            "type": "Info"
+            "type": "info"
         },
         {
             "text": "Monitor-All logs: `cat /var/log/ping-instances.log`",
-            "type": "Info"
+            "type": "info"
         }
     ]
 }
