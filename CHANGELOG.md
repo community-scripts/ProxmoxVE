@@ -22,6 +22,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- Fix Keycloak Update Function [@MickLesk](https://github.com/MickLesk) ([#762](https://github.com/community-scripts/ProxmoxVE/pull/762))
 - Fix config bug in Alpine Vaultwarden [@havardthom](https://github.com/havardthom) ([#775](https://github.com/community-scripts/ProxmoxVE/pull/775))
 
 ### 🌐 Website
