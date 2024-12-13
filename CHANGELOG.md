@@ -16,6 +16,14 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
+## 2024-12-13
+
+### Changed
+
+### 🚀 Updated Scripts
+
+- Fix config bug in Alpine Vaultwarden [@havardthom](https://github.com/havardthom) ([#775](https://github.com/community-scripts/ProxmoxVE/pull/775))
+
 ## 2024-12-12
 
 ### Changed
