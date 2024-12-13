@@ -15,7 +15,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies (Patience)"
-$STD apt-get install -y --no-install-recommends \
+$STD apt-get install -y \
   curl \
   sudo \
   mc \
@@ -46,17 +46,27 @@ $STD wget "https://github.com/mikefarah/yq/releases/download/${YQ_LATEST}/yq_lin
 chmod +x /usr/bin/yq
 msg_ok "Installed yq"
 
-msg_info "Installing Python 3.12"
+msg_info "Installing GeoIP"
+GEOIP_RELEASE=$(curl -s https://api.github.com/repos/maxmind/geoipupdate/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+wget -qO geoipupdate.deb https://github.com/maxmind/geoipupdate/releases/download/v${GEOIP_RELEASE}/geoipupdate_${GEOIP_RELEASE}_linux_amd64.deb
+$STD dpkg -i geoipupdate.deb
+cat <<EOF >/etc/GeoIP.conf
+#GEOIPUPDATE_EDITION_IDS="GeoLite2-City GeoLite2-ASN"
+#GEOIPUPDATE_VERBOSE="1"
+#GEOIPUPDATE_ACCOUNT_ID_FILE="/run/secrets/GEOIPUPDATE_ACCOUNT_ID"
+#GEOIPUPDATE_LICENSE_KEY_FILE="/run/secrets/GEOIPUPDATE_LICENSE_KEY"
+EOF
+msg_ok "Installed GeoIP"
+
+msg_info "Setting up Python 3"
 wget -q https://www.python.org/ftp/python/3.12.1/Python-3.12.1.tgz -O Python.tgz
 tar -zxf Python.tgz
 cd Python-3.12.1
 $STD ./configure --enable-optimizations
 $STD make altinstall
 cd ~
-rm -rf Python-3.12.1
-rm -rf Python.tgz
 $STD update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.12 1
-msg_ok "Installed Python 3.12"
+msg_ok "Setup Python 3"
 
 msg_info "Setting up Node.js Repository"
 mkdir -p /etc/apt/keyrings
@@ -75,57 +85,8 @@ GO_RELEASE=$(curl -s https://go.dev/dl/ | grep -o -m 1 "go.*\linux-amd64.tar.gz"
 wget -q https://golang.org/dl/${GO_RELEASE}
 tar -xzf ${GO_RELEASE} -C /usr/local
 ln -s /usr/local/go/bin/go /usr/bin/go
-rm -rf go/
-rm -rf ${GO_RELEASE}
 set -o pipefail
 msg_ok "Installed Golang"
-
-msg_info "Building authentik website"
-RELEASE=$(curl -s https://api.github.com/repos/goauthentik/authentik/releases/latest | grep "tarball_url" | awk '{print substr($2, 2, length($2)-3)}')
-mkdir -p /opt/authentik
-wget -qO authentik.tar.gz "${RELEASE}"
-tar -xzf authentik.tar.gz -C /opt/authentik --strip-components 1 --overwrite
-rm -rf authentik.tar.gz
-cd /opt/authentik/website
-$STD npm install
-$STD npm run build-bundled
-cd /opt/authentik/web
-$STD npm install
-$STD npm run build
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
-msg_ok "Built authentik website"
-
-msg_info "Building Go Proxy"
-cd /opt/authentik
-$STD go mod download
-$STD go build -o /go/authentik ./cmd/server
-$STD go build -o /opt/authentik/authentik-server /opt/authentik/cmd/server/
-msg_ok "Built Go Proxy"
-
-msg_info "Installing GeoIP"
-cd ~
-GEOIP_RELEASE=$(curl -s https://api.github.com/repos/maxmind/geoipupdate/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-wget -qO geoipupdate.deb https://github.com/maxmind/geoipupdate/releases/download/v${GEOIP_RELEASE}/geoipupdate_${GEOIP_RELEASE}_linux_amd64.deb
-$STD dpkg -i geoipupdate.deb
-rm geoipupdate.deb
-cat <<EOF >/etc/GeoIP.conf
-#GEOIPUPDATE_EDITION_IDS="GeoLite2-City GeoLite2-ASN"
-#GEOIPUPDATE_VERBOSE="1"
-#GEOIPUPDATE_ACCOUNT_ID_FILE="/run/secrets/GEOIPUPDATE_ACCOUNT_ID"
-#GEOIPUPDATE_LICENSE_KEY_FILE="/run/secrets/GEOIPUPDATE_LICENSE_KEY"
-EOF
-msg_ok "Installed GeoIP"
-
-msg_info "Installing Python Dependencies"
-cd /opt/authentik
-$STD pip3 install --upgrade pip
-$STD pip3 install poetry poetry-plugin-export
-ln -s /usr/local/bin/poetry /usr/bin/poetry
-$STD poetry install --only=main --no-ansi --no-interaction --no-root
-$STD poetry export --without-hashes --without-urls -f requirements.txt --output requirements.txt
-$STD pip install --no-cache-dir -r requirements.txt
-$STD pip install .
-msg_ok "Installed Python Dependencies"
 
 msg_info "Installing Redis"
 $STD apt-get install -y redis-server
@@ -145,6 +106,29 @@ $STD sudo -u postgres psql -c "ALTER USER $DB_USER WITH SUPERUSER;"
 msg_ok "Installed PostgreSQL"
 
 msg_info "Installing authentik"
+RELEASE=$(curl -s https://api.github.com/repos/goauthentik/authentik/releases/latest | grep "tarball_url" | awk '{print substr($2, 2, length($2)-3)}')
+mkdir -p /opt/authentik
+wget -qO authentik.tar.gz "${RELEASE}"
+tar -xzf authentik.tar.gz -C /opt/authentik --strip-components 1 --overwrite
+cd /opt/authentik/website
+$STD npm install
+$STD npm run build-bundled
+cd /opt/authentik/web
+$STD npm install
+$STD npm run build
+echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
+cd /opt/authentik
+$STD go mod download
+$STD go build -o /go/authentik ./cmd/server
+$STD go build -o /opt/authentik/authentik-server /opt/authentik/cmd/server/
+cd /opt/authentik
+$STD pip3 install --upgrade pip
+$STD pip3 install poetry poetry-plugin-export
+ln -s /usr/local/bin/poetry /usr/bin/poetry
+$STD poetry install --only=main --no-ansi --no-interaction --no-root
+$STD poetry export --without-hashes --without-urls -f requirements.txt --output requirements.txt
+$STD pip install --no-cache-dir -r requirements.txt
+$STD pip install .
 mkdir -p /etc/authentik
 mv /opt/authentik/authentik/lib/default.yml /etc/authentik/config.yml
 $STD yq -i ".secret_key = \"$(openssl rand -hex 32)\"" /etc/authentik/config.yml
@@ -156,9 +140,10 @@ ln -s /usr/bin/python3 /usr/bin/python
 ln -s /usr/local/bin/gunicorn /usr/bin/gunicorn
 ln -s /usr/local/bin/celery /usr/bin/celery
 $STD bash /opt/authentik/lifecycle/ak migrate
+cd ~
 msg_ok "Installed authentik"
 
-msg_info "Configuring Services"
+msg_info "Creating Services"
 cat <<EOF >/etc/systemd/system/authentik-server.service
 [Unit]
 Description = authentik Server
@@ -172,8 +157,7 @@ RestartSec=5
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now authentik-server
-sleep 2
+
 cat <<EOF >/etc/systemd/system/authentik-worker.service
 [Unit]
 Description = authentik Worker
@@ -188,13 +172,21 @@ RestartSec=5
 [Install]
 WantedBy=multi-user.target
 EOF
+systemctl enable -q --now authentik-server
+sleep 2
 systemctl enable -q --now authentik-worker
-msg_ok "Configured Services"
+msg_ok "Created Services"
 
 motd_ssh
 customize
 
 msg_info "Cleaning up"
+rm -rf Python-3.12.1
+rm -rf Python.tgz
+rm -rf go/
+rm -rf ${GO_RELEASE}
+rm geoipupdate.deb
+rm -rf authentik.tar.gz
 $STD apt-get -y remove yq
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean

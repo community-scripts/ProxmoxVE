@@ -19,7 +19,7 @@ EOF
 header_info
 echo -e "Loading..."
 APP="authentik"
-var_disk="12"
+var_disk="15"
 var_cpu="6"
 var_ram="8192"
 var_os="debian"
@@ -106,5 +106,3 @@ build_container
 description
 
 msg_ok "Completed Successfully!\n"
-echo -e "${APP} should be reachable by going to the following URL.
-         ${BL}http://${IP}:9000/if/flow/initial-setup/${CL} \n"
