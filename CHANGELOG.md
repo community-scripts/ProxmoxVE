@@ -24,6 +24,15 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 - Fix config bug in Alpine Vaultwarden [@havardthom](https://github.com/havardthom) ([#775](https://github.com/community-scripts/ProxmoxVE/pull/775))
 
+### 🌐 Website
+
+- Update some JSON Files for Website [@MickLesk](https://github.com/MickLesk) ([#812](https://github.com/community-scripts/ProxmoxVE/pull/812))
+- Update Notes & Documentation for Proxmox Backup Server [@MickLesk](https://github.com/MickLesk) ([#804](https://github.com/community-scripts/ProxmoxVE/pull/804))
+
+### 🧰 Maintenance
+
+- Github: Optimize Issue Template & PR Template [@MickLesk](https://github.com/MickLesk) ([#802](https://github.com/community-scripts/ProxmoxVE/pull/802))
+
 ## 2024-12-12
 
 ### Changed
