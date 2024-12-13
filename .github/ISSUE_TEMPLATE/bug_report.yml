@@ -5,16 +5,19 @@ body:
   - type: markdown
     attributes:
       value: |
-        **IMPORTANT:** Please follow these guidelines:
-        - Before submitting, search closed issues to see if the problem has already been addressed. If a related issue exists, comment on it rather than opening a new one.
-        - Support is limited to the default Linux distributions. Custom environments or modifications may not be supported.
-        - If you encounter `[ERROR] in line 23: exit code *: while executing command "$@" > /dev/null 2>&1`, rerun the script with verbose mode (`-v`) before submitting the issue.
-        - Use the [Discussions section](https://github.com/community-scripts/ProxmoxVE/discussions) for questions, feature requests, or suggestions.
+        # 🐞 **Script Issue Report**
+        Thank you for taking the time to report an issue! Please provide as much detail as possible to help us address the problem efficiently.  
+
+        ## ⚠️ **IMPORTANT**  
+        - 🔍 **Search first:** Before submitting, check if the issue has already been reported or resolved in [closed issues](https://github.com/community-scripts/ProxmoxVE/issues?q=is%3Aissue+is%3Aclosed). If found, comment on that issue instead of creating a new one.  
+        - 🛠️ **Supported environments only:** Ensure you are using a default Linux distribution. Custom setups may not be supported.  
+        - 🔎 If you encounter `[ERROR] in line 23: exit code *: while executing command "$@" > /dev/null 2>&1`, rerun the script with verbose mode before submitting the issue.  
+        - 💡 For general questions, feature requests, or suggestions, use the [Discussions section](https://github.com/community-scripts/ProxmoxVE/discussions).  
 
   - type: input
     id: guidelines
     attributes:
-      label: Have you read and understood the above guidelines?
+      label: ✅ Have you read and understood the above guidelines?
       placeholder: "yes"
     validations:
       required: true
@@ -22,7 +25,7 @@ body:
   - type: input
     id: script_name
     attributes:
-      label: What is the name of the script you are using?
+      label: 📜 What is the name of the script you are using?
       placeholder: "e.g., NextcloudPi, Zigbee2MQTT"
     validations:
       required: true
@@ -30,15 +33,15 @@ body:
   - type: input
     id: script_command
     attributes:
-      label: What was the exact command used to execute the script?
-      placeholder: "e.g., bash -c "$(wget -qLO - https://github.com/community-scripts/ProxmoxVE/raw/main/ct/zigbee2mqtt.sh)" or "update""
+      label: 📂 What was the exact command used to execute the script?
+      placeholder: "e.g., bash -c \"$(wget -qLO - https://github.com/community-scripts/ProxmoxVE/raw/main/ct/zigbee2mqtt.sh)\" or \"update\""
     validations:
       required: true
 
   - type: textarea
     id: issue_description
     attributes:
-      label: Provide a clear and concise description of the issue.
+      label: 📝 Provide a clear and concise description of the issue.
     validations:
       required: true
 
@@ -46,19 +49,19 @@ body:
     validations:
       required: true
     attributes:
-      label: What settings are you using?
+      label: ⚙️ What settings are you using?
       options:
         - label: Default Settings
         - label: Advanced Settings
 
   - type: markdown
     attributes:
-      value: "If using Advanced Settings, please test with Default Settings before submitting an issue."
+      value: "💡 **Tip:** If you are using Advanced Settings, please test with Default Settings before submitting an issue."
 
   - type: dropdown
     id: linux_distribution
     attributes:
-      label: Which Linux distribution are you using?
+      label: 🖥️ Which Linux distribution are you using?
       options:
         - 
         - Alpine
@@ -74,7 +77,7 @@ body:
   - type: textarea
     id: steps_to_reproduce
     attributes:
-      label: Steps to reproduce the issue.
+      label: 🔄 Steps to reproduce the issue.
       placeholder: "e.g., Step 1: ..., Step 2: ..."
     validations:
       required: true
@@ -82,7 +85,7 @@ body:
   - type: textarea
     id: error_output
     attributes:
-      label: Paste the full error output (if available).
+      label: ❌ Paste the full error output (if available).
       placeholder: "Include any relevant logs or error messages."
     validations:
       required: true
@@ -90,7 +93,7 @@ body:
   - type: textarea
     id: additional_context
     attributes:
-      label: Additional context, including screenshots or code blocks (if applicable).
-      placeholder: "Code blocks should use triple backticks (```)."
+      label: 🖼️ Additional context (optional).
+      placeholder: "Include screenshots, code blocks (use triple backticks ```), or any other relevant information."
     validations:
       required: false
