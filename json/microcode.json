@@ -36,7 +36,7 @@
             "type": "info"
         },
         {
-            "text": "After a reboot, you can check whether any microcode updates are currently in effect by running the following command. `journalctl -k | grep -E "microcode" | head -n 1`",
+            "text": "After a reboot, you can check whether any microcode updates are currently in effect by running the following command. `journalctl -k | grep -E \"microcode\" | head -n 1`",
             "type": "info"
         }
     ]
