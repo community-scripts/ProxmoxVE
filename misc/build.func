@@ -611,7 +611,7 @@ install_script() {
         ;;
       2)
         header_info
-        echo -e "${DEFAULT}${BOLD}${BL}Using Default Settings (${SEARCH} Verbose)${CL}"
+        echo -e "${DEFAULT}${BOLD}${BL}Using Default Settings (${SEARCH}${BOLD}${BL} Verbose)${CL}"
         VERB="yes"
         base_settings "$VERB"  
         echo_default
