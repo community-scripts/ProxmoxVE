@@ -2,55 +2,26 @@
 source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2024 community-scripts ORG
 # Author: Dominik Siebel (dsiebel)
-# License: MIT
-# https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://silverbullet.md
 
-function header_info {
-clear
-cat <<"EOF"
-         _ __                __          ____     __
-   _____(_) /   _____  _____/ /_  __  __/ / /__  / /_
-  / ___/ / / | / / _ \/ ___/ __ \/ / / / / / _ \/ __/
- (__  ) / /| |/ /  __/ /  / /_/ / /_/ / / /  __/ /_
-/____/_/_/ |___/\___/_/  /_.___/\__,_/_/_/\___/\__/
-
-EOF
-}
-header_info
-echo -e "Loading..."
+# App default values
 APP="Silverbullet"
-var_disk="2"
+var_tags="notes"
 var_cpu="1"
+var_disk="2"
 var_ram="512"
 var_os="debian"
 var_version="12"
+
+# App Output & Base Settings
+header_info "${APP}"
+base_settings
+
+# Core
 variables
 color
 catch_errors
-
-function default_settings() {
-  CT_TYPE="1"
-  PW=""
-  CT_ID=$NEXTID
-  HN=$NSAPP
-  DISK_SIZE="$var_disk"
-  CORE_COUNT="$var_cpu"
-  RAM_SIZE="$var_ram"
-  BRG="vmbr0"
-  NET="dhcp"
-  GATE=""
-  APT_CACHER=""
-  APT_CACHER_IP=""
-  DISABLEIP6="no"
-  MTU=""
-  SD=""
-  NS=""
-  MAC=""
-  VLAN=""
-  SSH="no"
-  VERB="no"
-  echo_default
-}
 
 function update_script() {
   header_info
@@ -85,5 +56,6 @@ build_container
 description
 
 msg_ok "Completed Successfully!\n"
-echo -e "${APP} should be reachable by going to the following URL.
-         ${BL}http://${IP}:3000${CL} \n"
+echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
+echo -e "${INFO}${YW} Access it using the following URL:${CL}"
+echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"
