@@ -33,6 +33,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 - Increase Size | Description & Download-URL of Debian VM [@MickLesk](https://github.com/MickLesk) ([#837](https://github.com/community-scripts/ProxmoxVE/pull/837))
 
+### 🌐 Website
+
+- Bump nanoid from 3.3.7 to 3.3.8 in /frontend [@dependabot[bot]](https://github.com/dependabot[bot]) ([#845](https://github.com/community-scripts/ProxmoxVE/pull/845))
+
 ## 2024-12-13
 
 ### Changed
