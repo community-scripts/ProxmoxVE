@@ -31,6 +31,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- Update Script: Remove Docker Compose Question [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#847](https://github.com/community-scripts/ProxmoxVE/pull/847))
 - Increase Size | Description & Download-URL of Debian VM [@MickLesk](https://github.com/MickLesk) ([#837](https://github.com/community-scripts/ProxmoxVE/pull/837))
 
 ### 🌐 Website
