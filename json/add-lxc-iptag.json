@@ -36,7 +36,7 @@
             "type": "Info"
         },
         {
-            "text": "Configuration: `nano /usr/local/etc/iptag.conf`. iptag.service must be restarted after change.",
+            "text": "Configuration: `nano /opt/lxc-iptag/iptag.conf`. iptag.service must be restarted after change.",
             "type": "Info"
         }
     ]
