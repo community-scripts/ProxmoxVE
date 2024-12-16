@@ -22,8 +22,8 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 💥 Breaking Changes
 
-- Update ALL CT's to new default (Part 2) [@MickLesk](https://github.com/MickLesk) ([#710](https://github.com/community-scripts/ProxmoxVE/pull/710))
 - Massive Update: build.func | install.func | create_lxc.sh (Part 1) [@MickLesk](https://github.com/MickLesk) ([#643](https://github.com/community-scripts/ProxmoxVE/pull/643))
+- Update ALL CT's to new default (Part 2) [@MickLesk](https://github.com/MickLesk) ([#710](https://github.com/community-scripts/ProxmoxVE/pull/710))
 
 ## 2024-12-13
 
