@@ -20,7 +20,7 @@
             "resources": {
                 "cpu": 2,
                 "ram": 2048,
-                "hdd": 2,
+                "hdd": 4,
                 "os": null,
                 "version": null
             }
