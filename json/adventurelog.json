@@ -30,5 +30,10 @@
         "username": null,
         "password": null
     },
-    "notes": []
+    "notes": [
+        {
+            "text": "AdventureLog uses an initial local IP, if you change your LXC-IP, you need to change the IP here: `/opt/adventurelog/backend/server/.env` and here: `/opt/adventurelog/frontend/.env`",
+            "type": "warning"
+        }
+    ]
 }

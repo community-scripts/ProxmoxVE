@@ -9,7 +9,7 @@
     "updateable": true,
     "privileged": false,
     "interface_port": 5006,
-    "documentation": null,
+    "documentation": "https://github.com/community-scripts/ProxmoxVE/discussions/807",
     "website": "https://actualbudget.org/",
     "logo": "https://raw.githubusercontent.com/actualbudget/actual/master/packages/desktop-client/public/maskable-512x512.png",
     "description": "Actual Budget is a super fast and privacy-focused app for managing your finances. At its heart is the well proven and much loved Envelope Budgeting methodology.",

@@ -22,7 +22,8 @@ $STD apt-get install -y \
   sudo \
   gnupg \
   ca-certificates \
-  chromium \
+  chromium/stable \
+  chromium-common/stable \
   mc
 msg_ok "Installed Dependencies"
 

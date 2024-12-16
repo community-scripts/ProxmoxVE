@@ -504,7 +504,7 @@ install_script() {
 
 check_container_resources() {
   # Check actual RAM & Cores
-  current_ram=$(free -m | awk '/^Mem:/{print $2}')
+  current_ram=$(free -m | awk 'NR==2{print $2}')
   current_cpu=$(nproc) 
 
   # Check whether the current RAM is less than the required RAM or the CPU cores are less than required

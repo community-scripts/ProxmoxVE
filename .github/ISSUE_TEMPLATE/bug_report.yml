@@ -5,44 +5,64 @@ body:
   - type: markdown
     attributes:
       value: |
-        **IMPORTANT:** Failure to comply with the following guidelines may result in immediate closure.
-        - Prior to submitting, kindly search the closed issues to check if the problem you are reporting has already been addressed and resolved. If you come across a closed issue that pertains to your problem, please leave a comment on that issue instead of creating a new one.
-        - If the default Linux distribution is not adhered to, script support will be discontinued.
-        - When encountering the error message `[ERROR] in line 23: exit code *: while executing command "$@" > /dev/null 2>&1`, make sure to run the script in verbose mode to accurately determine the underlying issue.
-        - For suggestions, questions, or feature/script requests, please use the [Discussions section.](https://github.com/community-scripts/ProxmoxVE/discussions)
+        # 🐞 **Script Issue Report**
+        Thank you for taking the time to report an issue! Please provide as much detail as possible to help us address the problem efficiently.  
+
+        ## ⚠️ **IMPORTANT**  
+        - 🔍 **Search first:** Before submitting, check if the issue has already been reported or resolved in [closed issues](https://github.com/community-scripts/ProxmoxVE/issues?q=is%3Aissue+is%3Aclosed). If found, comment on that issue instead of creating a new one.  
+        Alternatively, check the **[Discussions](https://github.com/community-scripts/ProxmoxVE/discussions)** under the *"Announcement"* or *"Guide"* categories for relevant information.  
+        - 🛠️ **Supported environments only:** Ensure you are using a default Linux distribution. Custom setups may not be supported.  
+        - 🔎 If you encounter `[ERROR] in line 23: exit code *: while executing command "$@" > /dev/null 2>&1`, rerun the script with verbose mode before submitting the issue.  
+        - 💡 For general questions, feature requests, or suggestions, use the [Discussions section](https://github.com/community-scripts/ProxmoxVE/discussions).  
 
   - type: input
     id: guidelines
     attributes:
-      label: Please verify that you have read and understood the guidelines.
+      label: ✅ Have you read and understood the above guidelines?
       placeholder: "yes"
     validations:
       required: true
 
-  - type: textarea
-    id: bug
+  - type: input
+    id: script_name
     attributes:
-      label: A clear and concise description of the issue.
+      label: 📜 What is the name of the script you are using?
+      placeholder: "e.g., NextcloudPi, Zigbee2MQTT"
     validations:
       required: true
-      
+
+  - type: input
+    id: script_command
+    attributes:
+      label: 📂 What was the exact command used to execute the script?
+      placeholder: "e.g., bash -c \"$(wget -qLO - https://github.com/community-scripts/ProxmoxVE/raw/main/ct/zigbee2mqtt.sh)\" or \"update\""
+    validations:
+      required: true
+
+  - type: textarea
+    id: issue_description
+    attributes:
+      label: 📝 Provide a clear and concise description of the issue.
+    validations:
+      required: true
+
   - type: checkboxes
     validations:
       required: true
     attributes:
-      label: What settings are you currently utilizing?
+      label: ⚙️ What settings are you using?
       options:
         - label: Default Settings
         - label: Advanced Settings
 
   - type: markdown
     attributes:
-      value: "If using Advanced Settings, please try Default Settings before creating an issue."
+      value: "💡 **Tip:** If you are using Advanced Settings, please test with Default Settings before submitting an issue."
 
   - type: dropdown
-    id: distribution
+    id: linux_distribution
     attributes:
-      label: Which Linux distribution are you employing?
+      label: 🖥️ Which Linux distribution are you using?
       options:
         - 
         - Alpine
@@ -51,21 +71,30 @@ body:
         - Ubuntu 20.04
         - Ubuntu 22.04
         - Ubuntu 24.04
+        - Ubuntu 24.10
     validations:
       required: true
 
   - type: textarea
-    id: screenshot
+    id: steps_to_reproduce
     attributes:
-      label: If relevant, including screenshots or a code block can be helpful in clarifying the issue.
-      placeholder: "Code blocks begin and conclude by enclosing the code with three backticks (```) above and below it."
+      label: 🔄 Steps to reproduce the issue.
+      placeholder: "e.g., Step 1: ..., Step 2: ..."
     validations:
-      required: false
+      required: true
 
   - type: textarea
-    id: reproduce
+    id: error_output
     attributes:
-      label: Please provide detailed steps to reproduce the issue.
-      placeholder: "First do this, then this ..."
+      label: ❌ Paste the full error output (if available).
+      placeholder: "Include any relevant logs or error messages."
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: 🖼️ Additional context (optional).
+      placeholder: "Include screenshots, code blocks (use triple backticks ```), or any other relevant information."
     validations:
       required: false

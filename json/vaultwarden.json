@@ -47,7 +47,7 @@
             "type": "warning"
         },
         {
-            "text": "Build Settings for normal LXC: 6GB RAM - 6GB Storage - 4vCPU",
+            "text": "To set the Admin Token, run the command below (or type update) in the LXC Console.",
             "type": "info"
         }
     ]

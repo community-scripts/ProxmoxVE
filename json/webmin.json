@@ -33,7 +33,7 @@
     "notes": [
         {
             "text": "Execute within an existing LXC Console",
-            "type": "warning"
+            "type": "info"
         }
     ]
 }

@@ -34,6 +34,10 @@
         {
             "text": "The disk must have a minimum size of 32GB and its size cannot be changed during the creation of the VM.",
             "type": "warning"
+        },
+        {
+            "text": "After the script completes, click on the VM, then on the Summary or Console tab to find the VM IP.",
+            "type": "info"
         }
     ]
 }

@@ -33,7 +33,7 @@
     "notes": [
         {
             "text": "Configuration Path: `/opt/magicmirror/config/config.js`",
-            "type": "warning"
+            "type": "info"
         }
     ]
 }

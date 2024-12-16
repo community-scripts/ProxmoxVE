@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 import { PlusCircle, Trash2 } from "lucide-react";
 import { z } from "zod";
 import { ScriptSchema, type Script } from "../_schemas/schemas";
-import { memo, useCallback } from "react";
+import { memo, useCallback, useRef } from "react";
 
 type NoteProps = {
   script: Script;
@@ -27,6 +27,8 @@ function Note({
   setIsValid,
   setZodErrors,
 }: NoteProps) {
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+
   const addNote = useCallback(() => {
     setScript({
       ...script,
@@ -49,6 +51,12 @@ function Note({
     setIsValid(result.success);
     setZodErrors(result.success ? null : result.error);
     setScript(updated);
+    // Restore focus after state update
+    if (key === "text") {
+      setTimeout(() => {
+        inputRefs.current[index]?.focus();
+      }, 0);
+    }
   }, [script, setScript, setIsValid, setZodErrors]);
 
   const removeNote = useCallback((index: number) => {
@@ -58,46 +66,51 @@ function Note({
     });
   }, [script, setScript]);
 
-  const NoteItem = memo(({ note, index }: { note: Script["notes"][number], index: number }) => (
-    <div className="space-y-2 border p-4 rounded">
-      <Input
-        placeholder="Note Text"
-        value={note.text}
-        onChange={(e) => updateNote(index, "text", e.target.value)}
-      />
-      <Select
-        value={note.type}
-        onValueChange={(value) => updateNote(index, "type", value)}
-      >
-        <SelectTrigger className="flex-1">
-          <SelectValue placeholder="Type" />
-        </SelectTrigger>
-        <SelectContent>
-          {Object.keys(AlertColors).map((type) => (
-            <SelectItem key={type} value={type}>
-              <span className="flex items-center gap-2">
-                {type.charAt(0).toUpperCase() + type.slice(1)}{" "}
-                <div
-                  className={cn(
-                    "size-4 rounded-full border",
-                    AlertColors[type as keyof typeof AlertColors],
-                  )}
-                />
-              </span>
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-      <Button
-        size="sm"
-        variant="destructive"
-        type="button"
-        onClick={() => removeNote(index)}
-      >
-        <Trash2 className="mr-2 h-4 w-4" /> Remove Note
-      </Button>
-    </div>
-  ));
+  const NoteItem = memo(
+    ({ note, index }: { note: Script["notes"][number]; index: number }) => (
+      <div className="space-y-2 border p-4 rounded">
+        <Input
+          placeholder="Note Text"
+          value={note.text}
+          onChange={(e) => updateNote(index, "text", e.target.value)}
+          ref={(el) => {
+            inputRefs.current[index] = el;
+          }}
+        />
+        <Select
+          value={note.type}
+          onValueChange={(value) => updateNote(index, "type", value)}
+        >
+          <SelectTrigger className="flex-1">
+            <SelectValue placeholder="Type" />
+          </SelectTrigger>
+          <SelectContent>
+            {Object.keys(AlertColors).map((type) => (
+              <SelectItem key={type} value={type}>
+                <span className="flex items-center gap-2">
+                  {type.charAt(0).toUpperCase() + type.slice(1)}{" "}
+                  <div
+                    className={cn(
+                      "size-4 rounded-full border",
+                      AlertColors[type as keyof typeof AlertColors],
+                    )}
+                  />
+                </span>
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Button
+          size="sm"
+          variant="destructive"
+          type="button"
+          onClick={() => removeNote(index)}
+        >
+          <Trash2 className="mr-2 h-4 w-4" /> Remove Note
+        </Button>
+      </div>
+    ),
+  );
 
   NoteItem.displayName = 'NoteItem';
 

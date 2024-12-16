@@ -1,31 +1,39 @@
-> [!NOTE]
-> We are meticulous when it comes to merging code into the main branch, so please understand that we may reject pull requests that do not meet the project's standards. It's never personal. Also, game-related scripts have a lower chance of being merged.
+> **🛠️ Note:**  
+> We are meticulous about merging code into the main branch, so please understand that pull requests not meeting the project's standards may be rejected. It's never personal!  
+> 🎮 **Note for game-related scripts:** These have a lower likelihood of being merged.
 
-## Description
+---
 
+## ✍️ Description
 Provide a summary of the changes made and/or reference the issue being addressed.
 
-Fixes # (issue)
+- 
 
-## Type of change
-Please check the relevant option(s):
+- - -
 
-- [ ] Bug fix (non-breaking change that resolves an issue)
-- [ ] New feature (non-breaking change that adds functionality)
-- [ ] Breaking change (a fix or feature that would cause existing functionality to change unexpectedly)
-- [ ] New script (a fully functional and thoroughly tested script or set of scripts.)
+- Related Issue: # (issue number, if applicable)  
+- Related PR: # (if applicable)  
+- Related Discussion: [Link](https://github.com/community-scripts/ProxmoxVE/discussions)  
 
-## Prerequisites
-The following efforts must be made for the PR to be considered. Please check when completed:
-- [ ] Self-review performed (I have reviewed my code, ensuring it follows established patterns and conventions)
-- [ ] Testing performed (I have tested my changes, ensuring everything works as expected)
+---
+
+## 🛠️ Type of Change
+Please check the relevant options:  
+- [ ] Bug fix (non-breaking change that resolves an issue)  
+- [ ] New feature (non-breaking change that adds functionality)  
+- [ ] Breaking change (fix or feature that would cause existing functionality to change unexpectedly)  
+- [ ] New script (a fully functional and thoroughly tested script or set of scripts)  
+
+---
+
+## ✅ Prerequisites
+The following steps must be completed for the pull request to be considered:  
+- [ ] Self-review performed (I have reviewed my code to ensure it follows established patterns and conventions.)  
+- [ ] Testing performed (I have thoroughly tested my changes and verified expected functionality.)  
 - [ ] Documentation updated (I have updated any relevant documentation)
 
-## Additional Information (optional)
-Provide any additional context or screenshots about the feature or fix here.
+---
 
+## 📋 Additional Information (optional)
+Provide any extra context or screenshots about the feature or fix here.  
 
-## Related Pull Requests / Discussions
-
-If there are other pull requests or discussions related to this change, please link them here:
-- Related PR #

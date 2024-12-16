@@ -33,7 +33,7 @@
     "notes": [
         {
             "text": "entering `evcc configure` in the LXC terminal will guide you through the creation of a configuration file for evcc.",
-            "type": "warning"
+            "type": "info"
         }
     ]
 }

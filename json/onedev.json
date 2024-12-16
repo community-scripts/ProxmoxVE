@@ -16,7 +16,7 @@
     "install_methods": [
       {
         "type": "default",
-        "script": "/ct/onedev.sh",
+        "script": "ct/onedev.sh",
         "resources": {
           "cpu": 2,
           "ram": 2048,

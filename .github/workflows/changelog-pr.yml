@@ -63,6 +63,7 @@ jobs:
             const { data: pulls } = await github.rest.pulls.list({
               owner: context.repo.owner,
               repo: context.repo.repo,
+              base: "main",
               state: "closed",
               sort: "updated",
               direction: "desc",

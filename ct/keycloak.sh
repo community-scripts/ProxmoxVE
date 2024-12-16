@@ -39,18 +39,14 @@ function update_script() {
     apt-get -y upgrade &>/dev/null
 
     RELEASE=$(curl -s https://api.github.com/repos/keycloak/keycloak/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-    msg_info "Downloading Keycloak v$RELEASE"
+    msg_info "Updating Keycloak to v$RELEASE"
     cd /opt
     wget -q https://github.com/keycloak/keycloak/releases/download/$RELEASE/keycloak-$RELEASE.tar.gz
-    $STD tar -xvf keycloak-$RELEASE.tar.gz
-
-    msg_info "Merging configuration files"
-    cp -r keycloak/conf keycloak-$RELEASE
-    cp -r keycloak/providers keycloak-$RELEASE
-    cp -r keycloak/themes keycloak-$RELEASE
-
-    msg_info "Updating Keycloak"
     mv keycloak keycloak.old
+    tar -xzf keycloak-$RELEASE.tar.gz
+    cp -r keycloak.old/conf keycloak-$RELEASE
+    cp -r keycloak.old/providers keycloak-$RELEASE
+    cp -r keycloak.old/themes keycloak-$RELEASE
     mv keycloak-$RELEASE keycloak
 
     msg_info "Delete temporary installation files"

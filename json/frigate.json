@@ -33,11 +33,11 @@
     "notes": [
         {
             "text": "Discussions (explore more advanced methods): `https://github.com/tteck/Proxmox/discussions/2711`",
-            "type": "warning"
+            "type": "info"
         },
         {
             "text": "go2rtc Interface port:`1984`",
-            "type": "warning"
+            "type": "info"
         }
     ]
 }

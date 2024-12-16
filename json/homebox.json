@@ -32,7 +32,7 @@
     },
     "notes": [
         {
-            "text": "env file location: `/opt/.env`",
+            "text": ".env file location: `/opt/.env`",
             "type": "info"
         }
     ]

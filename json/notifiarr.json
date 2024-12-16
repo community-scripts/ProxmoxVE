@@ -33,7 +33,7 @@
     "notes": [
         {
             "text": "Manually edit `/etc/notifiarr/notifiarr.conf`to enter the API key from Notifiarr.com, and create a password for the UI.",
-            "type": "warning"
+            "type": "info"
         }
     ]
 }

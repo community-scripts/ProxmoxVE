@@ -40,20 +40,8 @@ msg_info "Setting up Zigbee2MQTT Repository"
 $STD git clone --depth 1 https://github.com/Koenkk/zigbee2mqtt.git /opt/zigbee2mqtt
 msg_ok "Set up Zigbee2MQTT Repository"
 
-read -r -p "Switch to Edge/dev branch? (y/N) " prompt
-if [[ $prompt == "y" ]]; then
-  DEV="y"
-else
-  DEV="n"
-fi
-
 msg_info "Installing Zigbee2MQTT"
 cd /opt/zigbee2mqtt
-if [[ $DEV == "y" ]]; then
-$STD git fetch origin dev:dev
-$STD git checkout dev
-$STD git pull
-fi
 $STD npm ci
 msg_ok "Installed Zigbee2MQTT"
 

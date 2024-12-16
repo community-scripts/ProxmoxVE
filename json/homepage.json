@@ -33,7 +33,7 @@
     "notes": [
         {
             "text": "Configuration (bookmarks.yaml, services.yaml, widgets.yaml) path: `/opt/homepage/config/`",
-            "type": "warning"
+            "type": "info"
         }
     ]
 }

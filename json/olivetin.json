@@ -33,7 +33,7 @@
     "notes": [
         {
             "text": "Configuration Path: `/etc/OliveTin/config.yaml`",
-            "type": "warning"
+            "type": "info"
         }
     ]
 }

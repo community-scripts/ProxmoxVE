@@ -35,7 +35,7 @@ cat <<EOF >/etc/postgresql/17/main/pg_hba.conf
 local   all             postgres                                peer
 # TYPE  DATABASE        USER            ADDRESS                 METHOD
 # "local" is for Unix domain socket connections only
-local   all             all                                     peer
+local   all             all                                     md5
 # IPv4 local connections:
 host    all             all             127.0.0.1/32            scram-sha-256
 host    all             all             0.0.0.0/24              md5

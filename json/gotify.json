@@ -30,14 +30,5 @@
         "username": "admin",
         "password": "admin"
     },
-    "notes": [
-        {
-            "text": "password: `admin`",
-            "type": "warning"
-        },
-        {
-            "text": "username: `admin`",
-            "type": "warning"
-        }
-    ]
+    "notes": []
 }

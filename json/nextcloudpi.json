@@ -8,9 +8,9 @@
     "type": "ct",
     "updateable": false,
     "privileged": false,
-    "interface_port": 433,
+    "interface_port": 4443,
     "documentation": null,
-    "website": "https://www.turnkeylinux.org/nextcloud",
+    "website": "https://github.com/nextcloud/nextcloudpi",
     "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/nextcloud.svg",
     "description": "NextCloudPi is a popular self-hosted solution for file collaboration and data storage. It is built on the NextCloud software, which is an open-source platform for data management.",
     "install_methods": [

@@ -33,7 +33,7 @@
     "notes": [
         {
             "text": "To set your password, log in to the container, and type the following:  `pihole -a -p`",
-            "type": "warning"
+            "type": "info"
         },
         {
             "text": "With an option to add Unbound",

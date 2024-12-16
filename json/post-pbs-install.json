@@ -33,11 +33,15 @@
     "notes": [
         {
             "text": "Proxmox Backup Server ONLY",
-            "type": "warning"
+            "type": "info"
         },
         {
             "text": "Execute within the Proxmox Backup Server Shell",
-            "type": "warning"
+            "type": "info"
+        },
+        {
+            "text": "It is recommended to answer “yes” (y) to all options presented during the process.",
+            "type": "info"
         }
     ]
 }

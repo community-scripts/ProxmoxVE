@@ -33,7 +33,11 @@
     "notes": [
         {
             "text": "Execute within the Proxmox shell",
-            "type": "warning"
+            "type": "info"
+        },
+        {
+            "text": "It is recommended to answer “yes” (y) to all options presented during the process.",
+            "type": "info"
         }
     ]
 }

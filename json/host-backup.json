@@ -33,7 +33,11 @@
     "notes": [
         {
             "text": "Execute within the Proxmox shell",
-            "type": "warning"
+            "type": "info"
+        },
+        {
+            "text": "A backup is rendered ineffective when it remains stored on the host",
+            "type": "info"
         }
     ]
 }

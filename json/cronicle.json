@@ -32,12 +32,8 @@
     },
     "notes": [
         {
-            "text": "Primary and Worker Private Keys Must Match.",
-            "type": "warning"
-        },
-        {
-            "text": "Configuration Path: `/opt/cronicle/conf/config.json`",
-            "type": "warning"
+            "text": "Configuration Path: `/opt/cronicle/conf/config.json` (Primary and Worker Private Keys Must Match)",
+            "type": "info"
         }
     ]
 }
