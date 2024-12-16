@@ -31,12 +31,16 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
-- Update Script: Remove Docker Compose Question [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#847](https://github.com/community-scripts/ProxmoxVE/pull/847))
 - Increase Size | Description & Download-URL of Debian VM [@MickLesk](https://github.com/MickLesk) ([#837](https://github.com/community-scripts/ProxmoxVE/pull/837))
+- Update Script: Remove Docker Compose Question [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#847](https://github.com/community-scripts/ProxmoxVE/pull/847))
 
 ### 🌐 Website
 
 - Bump nanoid from 3.3.7 to 3.3.8 in /frontend [@dependabot[bot]](https://github.com/dependabot[bot]) ([#845](https://github.com/community-scripts/ProxmoxVE/pull/845))
+
+### ❔ Unlabelled
+
+- Keeps the same style after writing the SEARCH icon [@remz1337](https://github.com/remz1337) ([#851](https://github.com/community-scripts/ProxmoxVE/pull/851))
 
 ## 2024-12-13
 
