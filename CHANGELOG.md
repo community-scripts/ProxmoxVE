@@ -16,6 +16,15 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
+## 2024-12-16
+
+### Changed
+
+### 💥 Breaking Changes
+
+- Update ALL CT's to new default (Part 2) [@MickLesk](https://github.com/MickLesk) ([#710](https://github.com/community-scripts/ProxmoxVE/pull/710))
+- Massive Update: build.func | install.func | create_lxc.sh (Part 1) [@MickLesk](https://github.com/MickLesk) ([#643](https://github.com/community-scripts/ProxmoxVE/pull/643))
+
 ## 2024-12-13
 
 ### Changed
