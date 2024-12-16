@@ -40,6 +40,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### ❔ Unlabelled
 
+- Fix variable name for CT_TYPE override [@remz1337](https://github.com/remz1337) ([#855](https://github.com/community-scripts/ProxmoxVE/pull/855))
 - Keeps the same style after writing the SEARCH icon [@remz1337](https://github.com/remz1337) ([#851](https://github.com/community-scripts/ProxmoxVE/pull/851))
 
 ## 2024-12-13
