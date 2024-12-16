@@ -43,8 +43,9 @@ msg_ok "Installed Dependencies"
 msg_info "Setup Apache Tomcat"
 mkdir /opt/apache-guacamole
 mkdir /opt/apache-guacamole/tomcat9
-wget -q https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.97/bin/apache-tomcat-9.0.97.tar.gz
-$STD tar xzf apache-tomcat-9.0.97.tar.gz -C /opt/apache-guacamole/tomcat9 --strip-components=1
+RELEASE=$(wget -qO- https://dlcdn.apache.org/tomcat/tomcat-9/ | grep -oP '(?<=href=")v[^"/]+(?=/")' | sed 's/^v//')
+wget -q --directory-prefix=/root/ https://dlcdn.apache.org/tomcat/tomcat-9/v${RELEASE}/bin/apache-tomcat-${RELEASE}.tar.gz
+$STD tar xzf ~/apache-tomcat-${RELEASE}.tar.gz -C /opt/apache-guacamole/tomcat9 --strip-components=1
 useradd -r -d /opt/tomcat9 -s /bin/false tomcat
 chown -R tomcat: /opt/apache-guacamole/tomcat9/{logs,temp,webapps,work}
 chown -R :tomcat /opt/apache-guacamole/tomcat9/
@@ -98,12 +99,12 @@ msg_ok "Setup Apache Guacamole"
 
 msg_info "Setup Databas"
 cd /root
-wget -q https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-8.0.26.tar.gz
-$STD tar -xf mysql-connector-java-8.0.26.tar.gz
-mv mysql-connector-java-8.0.26/mysql-connector-java-8.0.26.jar /etc/guacamole/lib/
-wget -q https://downloads.apache.org/guacamole/1.5.5/binary/guacamole-auth-jdbc-1.5.5.tar.gz
-$STD tar -xf guacamole-auth-jdbc-1.5.5.tar.gz
-mv guacamole-auth-jdbc-1.5.5/mysql/guacamole-auth-jdbc-mysql-1.5.5.jar /etc/guacamole/extensions/
+wget -q --directory-prefix=/root/ https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-8.0.26.tar.gz
+$STD tar -xf ~/mysql-connector-java-8.0.26.tar.gz
+mv ~/mysql-connector-java-8.0.26/mysql-connector-java-8.0.26.jar /etc/guacamole/lib/
+wget -q --directory-prefix=/root/ https://downloads.apache.org/guacamole/1.5.5/binary/guacamole-auth-jdbc-1.5.5.tar.gz
+$STD tar -xf ~/guacamole-auth-jdbc-1.5.5.tar.gz
+mv ~/guacamole-auth-jdbc-1.5.5/mysql/guacamole-auth-jdbc-mysql-1.5.5.jar /etc/guacamole/extensions/
 msg_ok "Setup Databse"
 
 msg_info "Setup Service"
@@ -136,10 +137,10 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD rm mysql-connector-java-8.0.26.tar.gz
-$STD rm -rf mysql-connector-java-8.0.26
-$STD rm guacamole-auth-jdbc-1.5.5.tar.gz
-$STD rm -rf guacamole-auth-jdbc-1.5.5
+$STD rm ~/mysql-connector-java-8.0.26.tar.gz
+$STD rm -rf ~/mysql-connector-java-8.0.26
+$STD rm ~/guacamole-auth-jdbc-1.5.5.tar.gz
+$STD rm -rf ~/guacamole-auth-jdbc-1.5.5
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
