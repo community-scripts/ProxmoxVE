@@ -26,8 +26,13 @@ Do not break established syntax in this file, as it is automatically updated by 
 - Fix Keycloak Installation [@MickLesk](https://github.com/MickLesk) ([#874](https://github.com/community-scripts/ProxmoxVE/pull/874))
 - Fix ports ressources [@MickLesk](https://github.com/MickLesk) ([#867](https://github.com/community-scripts/ProxmoxVE/pull/867))
 
+### 🧰 Maintenance
+
+- Small Changes to the PR Template [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#862](https://github.com/community-scripts/ProxmoxVE/pull/862))
+
 ### ❔ Unlabelled
 
+- calculate terminal size for header_info [@MickLesk](https://github.com/MickLesk) ([#879](https://github.com/community-scripts/ProxmoxVE/pull/879))
 - Fix header creation with figlet for alpine [@MickLesk](https://github.com/MickLesk) ([#869](https://github.com/community-scripts/ProxmoxVE/pull/869))
 
 ## 2024-12-16
