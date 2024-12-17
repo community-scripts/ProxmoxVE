@@ -158,7 +158,17 @@ arch_check() {
 
 # This function sets the APP-Name into an ASCII Header in Slant, figlet needed on proxmox main node.
 header_info() {
-  apt-get install -y figlet &> /dev/null
+  if [ -f /etc/debian_version ]; then
+    # Debian/Ubuntu
+    apt-get install -y figlet &> /dev/null
+  elif [ -f /etc/alpine-release ]; then
+    # Alpine Linux
+    apk add --no-cache figlet &> /dev/null
+  else
+    echo "Unsupported OS"
+    return 1
+  fi
+
   ascii_art=$(figlet -f slant "$APP")
   clear
   cat <<EOF
