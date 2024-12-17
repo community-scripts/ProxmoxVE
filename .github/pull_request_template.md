@@ -13,7 +13,7 @@ Provide a summary of the changes made and/or reference the issue being addressed
 
 - Related Issue: # (issue number, if applicable)  
 - Related PR: # (if applicable)  
-- Related Discussion: (if applicable)  
+- Related Discussion: []()(if applicable)  
 
 ---
 
