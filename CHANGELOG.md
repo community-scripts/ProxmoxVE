@@ -22,6 +22,8 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- Fix Alpine-Nextcloud: Bump PHP Version to 8.3 [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#865](https://github.com/community-scripts/ProxmoxVE/pull/865))
+- Correction of Jellyfin CT Port [@mneten](https://github.com/mneten) ([#884](https://github.com/community-scripts/ProxmoxVE/pull/884))
 - fix spinner on lxc-ip-tag [@MickLesk](https://github.com/MickLesk) ([#876](https://github.com/community-scripts/ProxmoxVE/pull/876))
 - Fix Keycloak Installation [@MickLesk](https://github.com/MickLesk) ([#874](https://github.com/community-scripts/ProxmoxVE/pull/874))
 - Fix ports ressources [@MickLesk](https://github.com/MickLesk) ([#867](https://github.com/community-scripts/ProxmoxVE/pull/867))
