@@ -19,7 +19,7 @@
             "script": "ct/photoprism.sh",
             "resources": {
                 "cpu": 2,
-                "ram": 2048,
+                "ram": 3072,
                 "hdd": 8,
                 "os": "debian",
                 "version": "12"
