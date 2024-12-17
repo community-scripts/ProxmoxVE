@@ -169,7 +169,8 @@ header_info() {
     return 1
   fi
 
-  ascii_art=$(figlet -f slant "$APP")
+  term_width=$(tput cols)
+  ascii_art=$(figlet -f slant -w "$term_width" "$APP")
   clear
   cat <<EOF
 $ascii_art
