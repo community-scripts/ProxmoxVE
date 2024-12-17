@@ -24,6 +24,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 - Fix ports ressources [@MickLesk](https://github.com/MickLesk) ([#867](https://github.com/community-scripts/ProxmoxVE/pull/867))
 
+### ❔ Unlabelled
+
+- Fix header creation with figlet for alpine [@MickLesk](https://github.com/MickLesk) ([#869](https://github.com/community-scripts/ProxmoxVE/pull/869))
+
 ## 2024-12-16
 
 ### Changed
