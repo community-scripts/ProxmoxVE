@@ -22,6 +22,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- Fix Keycloak Installation [@MickLesk](https://github.com/MickLesk) ([#874](https://github.com/community-scripts/ProxmoxVE/pull/874))
 - Fix ports ressources [@MickLesk](https://github.com/MickLesk) ([#867](https://github.com/community-scripts/ProxmoxVE/pull/867))
 
 ### ❔ Unlabelled
