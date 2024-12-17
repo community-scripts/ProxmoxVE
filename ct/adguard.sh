@@ -8,9 +8,9 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 # App Default Values
 APP="Adguard"
 var_tags="adblock"
-var_cpu="2"
-var_ram="2048"
-var_disk="4"
+var_cpu="1"
+var_ram="512"
+var_disk="2"
 var_os="debian"
 var_version="12"
 var_unprivileged="1"
