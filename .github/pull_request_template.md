@@ -20,6 +20,7 @@ Provide a summary of the changes made and/or reference the issue being addressed
 >Please provide the link to your Repository so the Script can be tested
 
 `bash -c "$(wget -qLO - https://raw.githubusercontent.com/[USER]/[REPO]/refs/heads/[BRANCH]/ct/APP.sh)"`
+
 ---
 
 ## 🛠️ Type of Change
