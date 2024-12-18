@@ -316,7 +316,6 @@ advanced_settings() {
       fi
     done
   fi
-  
   # Setting Default Tag for Advanced Settings
   TAGS="community-script;"
 
