@@ -34,7 +34,7 @@ function InstallMethod({
     setScript((prev) => {
       const method = InstallMethodSchema.parse({
         type: "default",
-        script: `/${prev.type}/${prev.slug}.sh`,
+        script: `${prev.type}/${prev.slug}.sh`,
         resources: {
           cpu: null,
           ram: null,
