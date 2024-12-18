@@ -20,15 +20,14 @@ $STD apt-get install -y \
   mc
 msg_ok "Installed Dependencies"
 
+msg_info "Installing Silverbullet"
 RELEASE=$(curl -s https://api.github.com/repos/silverbulletmd/silverbullet/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-
-msg_info "Installing ${APPLICATION}"
 mkdir -p /opt/silverbullet/bin /opt/silverbullet/space
 wget -q https://github.com/silverbulletmd/silverbullet/releases/download/${RELEASE}/silverbullet-server-linux-x86_64.zip
 unzip -oq -d /opt/silverbullet/bin/ silverbullet-server-linux-x86_64.zip
 chmod +x /opt/silverbullet/bin/silverbullet
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
-msg_ok "Installed ${APPLICATION}"
+msg_ok "Installed Silverbullet"
 
 msg_info "Creating Service"
 
@@ -54,7 +53,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
+rm -rf silverbullet-server-linux-x86_64.zip
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
-rm silverbullet-server-linux-x86_64.zip
 msg_ok "Cleaned"
