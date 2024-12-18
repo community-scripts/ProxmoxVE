@@ -24,6 +24,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 - New script: Part-DB LXC [@bvdberg01](https://github.com/bvdberg01) ([#591](https://github.com/community-scripts/ProxmoxVE/pull/591))
 
+### 🚀 Updated Scripts
+
+- [Frigate] Remove SSE 4.2 from instruction set supporting OpenVino [@remz1337](https://github.com/remz1337) ([#902](https://github.com/community-scripts/ProxmoxVE/pull/902))
+
 ### 🌐 Website
 
 - New Metadata Category: "Coding & AI" [@newzealandpaul](https://github.com/newzealandpaul) ([#890](https://github.com/community-scripts/ProxmoxVE/pull/890))
