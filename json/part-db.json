@@ -32,7 +32,7 @@
     },
     "notes": [
         {
-            "text": "Show login and database credentials: `cat part-db.creds`",
+            "text": "Show login and database credentials: `cat partdb.creds`",
             "type": "info"
         }
     ]
