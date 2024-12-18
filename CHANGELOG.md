@@ -16,6 +16,15 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
+## 2024-12-18
+
+### Changed
+
+### 🌐 Website
+
+- New Metadata Category: "Coding & AI" [@newzealandpaul](https://github.com/newzealandpaul) ([#890](https://github.com/community-scripts/ProxmoxVE/pull/890))
+- Moved Webmin to "Server & Networking" [@newzealandpaul](https://github.com/newzealandpaul) ([#891](https://github.com/community-scripts/ProxmoxVE/pull/891))
+
 ## 2024-12-17
 
 ### Changed
