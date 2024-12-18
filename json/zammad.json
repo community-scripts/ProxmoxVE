@@ -16,7 +16,7 @@
   "install_methods": [
     {
       "type": "default",
-      "script": "/ct/zammad.sh",
+      "script": "ct/zammad.sh",
       "resources": {
         "cpu": 2,
         "ram": 4096,
