@@ -8,6 +8,7 @@ variables() {
   NSAPP=$(echo ${APP,,} | tr -d ' ') # This function sets the NSAPP variable by converting the value of the APP variable to lowercase and removing any spaces.
   var_install="${NSAPP}-install"     # sets the var_install variable by appending "-install" to the value of NSAPP.
   INTEGER='^[0-9]+([.][0-9]+)?$'     # it defines the INTEGER regular expression pattern.
+  PVEHOST_NAME=$(hostname | tr a-z A-Z) # gets the Proxmox Hostname and sets it to Uppercase
 }
 
 # This function sets various color variables using ANSI escape codes for formatting text in the terminal.
@@ -34,7 +35,6 @@ color() {
   CROSS="${TAB}✖️${TAB}${CL}"
   INFO="${TAB}💡${TAB}${CL}"
   OS="${TAB}🖥️${TAB}${CL}"
-  HOST="${TAB}🏢${TAB}${CL}"
   OSVERSION="${TAB}🌟${TAB}${CL}"
   CONTAINERTYPE="${TAB}📦${TAB}${CL}" 
   DISKSIZE="${TAB}💾${TAB}${CL}"
@@ -241,7 +241,6 @@ echo_default() {
   fi
 
   # Output the selected values with icons
-  echo -e "${HOST}${BOLD}${DGN}Proxmox Hostname: ${BGN}$(hostname)${CL}"
   echo -e "${OS}${BOLD}${DGN}Operating System: ${BGN}$var_os${CL}"
   echo -e "${OSVERSION}${BOLD}${DGN}Version: ${BGN}$var_version${CL}"
   echo -e "${CONTAINERTYPE}${BOLD}${DGN}Container Type: ${BGN}$CT_TYPE_DESC${CL}"
@@ -581,8 +580,7 @@ advanced_settings() {
   else
     clear
     header_info
-    echo -e "${ADVANCED}${BOLD}${RD}Using Advanced Settings${CL}"
-    echo -e "${HOST}${BOLD}${DGN}Proxmox Hostname: ${BGN}$(hostname)${CL}"
+    echo -e "${ADVANCED}${BOLD}${RD}Using Advanced Settings on node $PVEHOST_NAME${CL}"
     advanced_settings
   fi
 }
@@ -616,7 +614,7 @@ install_script() {
     case $CHOICE in
       1)
         header_info
-        echo -e "${DEFAULT}${BOLD}${BL}Using Default Settings${CL}"
+        echo -e "${DEFAULT}${BOLD}${BL}Using Default Settings on node $PVEHOST_NAME${CL}"
         VERB="no"
         base_settings "$VERB"  
         echo_default
@@ -624,7 +622,7 @@ install_script() {
         ;;
       2)
         header_info
-        echo -e "${DEFAULT}${BOLD}${BL}Using Default Settings (${SEARCH}${BOLD}${BL} Verbose)${CL}"
+        echo -e "${DEFAULT}${BOLD}${BL}Using Default Settings on node $PVEHOST_NAME(${SEARCH}${BOLD}${BL} Verbose)${CL}"
         VERB="yes"
         base_settings "$VERB"  
         echo_default
