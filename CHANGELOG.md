@@ -20,6 +20,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### Changed
 
+### ✨ New Scripts
+
+- New script: Part-DB LXC [@bvdberg01](https://github.com/bvdberg01) ([#591](https://github.com/community-scripts/ProxmoxVE/pull/591))
+
 ### 🌐 Website
 
 - New Metadata Category: "Coding & AI" [@newzealandpaul](https://github.com/newzealandpaul) ([#890](https://github.com/community-scripts/ProxmoxVE/pull/890))
