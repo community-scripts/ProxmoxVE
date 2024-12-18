@@ -16,7 +16,7 @@
   "install_methods": [
     {
       "type": "default",
-      "script": "/ct/apache-guacamole.sh",
+      "script": "ct/apache-guacamole.sh",
       "resources": {
         "cpu": 1,
         "ram": 2048,
