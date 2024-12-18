@@ -4,11 +4,11 @@
     "categories": [
         0
     ],
-    "date_created": "2024-11-29",
+    "date_created": "2024-12-18",
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "80",
+    "interface_port": 80,
     "documentation": "https://docs.part-db.de/",
     "website": "https://github.com/Part-DB/Part-DB-server",
     "logo": "https://avatars.githubusercontent.com/u/36010898?s=48&v=4",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/part-db.sh",
             "resources": {
-                "cpu": "2",
-                "ram": "1024",
-                "hdd": "8",
+                "cpu": 2,
+                "ram": 1024,
+                "hdd": 8,
                 "os": "debian",
                 "version": "12"
             }
