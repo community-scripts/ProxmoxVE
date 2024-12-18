@@ -36,7 +36,7 @@ function update_script() {
 
     msg_info "Updating ${APP} to v${RELEASE}"
     wget -q https://github.com/silverbulletmd/silverbullet/releases/download/${RELEASE}/silverbullet-server-linux-x86_64.zip
-    unzip silverbullet-server-linux-x86_64.zip &>/dev/null
+    unzip -q silverbullet-server-linux-x86_64.zip
     mv silverbullet /opt/silverbullet/bin/
     chmod +x /opt/silverbullet/bin/silverbullet
     echo "${RELEASE}" >/opt/silverbullet/${APP}_version.txt
@@ -46,7 +46,7 @@ function update_script() {
     systemctl start silverbullet
     msg_ok "Started ${APP}"
   else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
+    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }
