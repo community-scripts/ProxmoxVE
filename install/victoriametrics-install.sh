@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2024 tteck
-# Author: tteck (tteckster)
-# License: MIT
-# https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Copyright (c) 2021-2024 community-scripts ORG
+# Author: Denys Holius https://github.com/denisgolius
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://victoriametrics.com/
 
 source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color
@@ -14,9 +14,11 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y curl
-$STD apt-get install -y sudo
-$STD apt-get install -y mc
+$STD apt install -y \
+          curl \
+          sudo \
+          mc
+
 msg_ok "Installed Dependencies"
 
 msg_info "Installing VictoriaMetrics"
@@ -46,8 +48,8 @@ echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Installed VictoriaMetrics"
 
 msg_info "Creating Service"
-service_path="/etc/systemd/system/victoriametrics.service"
-echo "[Unit]
+cat <<EOF >/etc/systemd/system/victoriametrics.service
+[Unit]
 Description=VictoriaMetrics is a fast, cost-effective and scalable monitoring solution and time series database.
 # https://docs.victoriametrics.com
 # See https://docs.victoriametrics.com/#list-of-command-line-flags to get more information about supported command-line flags
@@ -79,7 +81,9 @@ StandardError=syslog
 SyslogIdentifier=victoriametrics
 
 [Install]
-WantedBy=multi-user.target" >$service_path
+WantedBy=multi-user.target
+EOF
+
 systemctl enable -q --now victoriametrics
 msg_ok "Created Service"
 
