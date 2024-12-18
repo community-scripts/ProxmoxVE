@@ -6,6 +6,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Script } from "@/lib/types";
+import { CircleHelp } from "lucide-react";
 import React from "react";
 
 interface TooltipProps {
@@ -18,9 +19,11 @@ const TooltipBadge: React.FC<TooltipProps> = ({ variant, label, content }) => (
   <TooltipProvider>
     <Tooltip delayDuration={100}>
       <TooltipTrigger className="flex items-center">
-        <Badge variant={variant}>{label}</Badge>
+        <Badge variant={variant} className="flex items-center gap-1">
+          {label} <CircleHelp className="size-3" />
+        </Badge>
       </TooltipTrigger>
-      <TooltipContent side="bottom" className="text-sm">
+      <TooltipContent side="bottom" className="text-sm max-w-64">
         {content}
       </TooltipContent>
     </Tooltip>
