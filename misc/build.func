@@ -241,7 +241,7 @@ echo_default() {
   fi
 
   # Output the selected values with icons
-  echo -e "${HOST}${BOLD}${DGN}Hostname: ${BGN}$(hostname)${CL}"
+  echo -e "${HOST}${BOLD}${DGN}Proxmox Hostname: ${BGN}$(hostname)${CL}"
   echo -e "${OS}${BOLD}${DGN}Operating System: ${BGN}$var_os${CL}"
   echo -e "${OSVERSION}${BOLD}${DGN}Version: ${BGN}$var_version${CL}"
   echo -e "${CONTAINERTYPE}${BOLD}${DGN}Container Type: ${BGN}$CT_TYPE_DESC${CL}"
@@ -583,6 +583,7 @@ advanced_settings() {
     clear
     header_info
     echo -e "${ADVANCED}${BOLD}${RD}Using Advanced Settings${CL}"
+    echo -e "${HOST}${BOLD}${DGN}Proxmox Hostname: ${BGN}$(hostname)${CL}"
     advanced_settings
   fi
 }
