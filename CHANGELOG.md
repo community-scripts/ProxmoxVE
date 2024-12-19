@@ -16,6 +16,15 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
+## 2024-12-19
+
+### Changed
+
+### 🌐 Website
+
+- Fix script path formatting in InstallMethod component [@BramSuurdje](https://github.com/BramSuurdje) ([#909](https://github.com/community-scripts/ProxmoxVE/pull/909))
+- Enhance Tooltip component by adding CircleHelp icon and fix instructions in script component [@BramSuurdje](https://github.com/BramSuurdje) ([#910](https://github.com/community-scripts/ProxmoxVE/pull/910))
+
 ## 2024-12-18
 
 ### Changed
