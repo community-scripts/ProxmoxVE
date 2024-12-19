@@ -32,8 +32,8 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  latest_url=$(curl -fsSL "https://www.tp-link.com/en/support/download/omada-software-controller/" | grep -o 'https://.*x64.deb' | head -n1)
-  latest_version=$(basename "${latest_url}")
+  latest_url=$(curl -fsSL "https://www.tp-link.com/en/support/download/omada-software-controller/" | grep -oP 'href="([^"]+linux_x64[^"]+\.deb)"' | sed 's/href="//' | sort | tail -n 1)
+  latest_version=$(basename "$latest_url")
   if [ -z "${latest_version}" ]; then
     msg_error "It seems that the server (tp-link.com) might be down. Please try again at a later time."
     exit
