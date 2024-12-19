@@ -141,9 +141,9 @@ msg_ok "Set up Enviroment"
 
 msg_info "Building Frontend"
 cd ./frontend
-$STD pnpm install
-$STD pnpm upgrade
-$STD pnpm run build
+$STD yarn cache clean --silent --force 
+$STD yarn install --silent --network-timeout=30000
+$STD yarn build
 cp -r dist/* /app/frontend
 cp -r app-images/* /app/frontend/images
 msg_ok "Built Frontend"
