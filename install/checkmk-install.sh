@@ -17,6 +17,7 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
   curl \
+  sudo \
   mc 
 msg_ok "Installed Dependencies"
 
