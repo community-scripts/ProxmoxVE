@@ -38,9 +38,9 @@ function update_script() {
     systemctl stop victoriametrics
     msg_ok "Stopped ${APP}"
     msg_info "Updating ${APP} to ${RELEASE}"
+    mkdir -p /opt/victoriametrics
     wget -q https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/v${RELEASE}/victoria-metrics-linux-amd64-${RELEASE}.tar.gz
-    tar -xf victoria-metrics-linux-amd64-${RELEASE}.tar.gz
-    cp -rf victoria-metrics-prod /usr/local/bin/
+    tar -xf --delete victoria-metrics-linux-amd64-${RELEASE}.tar.gz -C /opt/victoriametrics
     rm -rf victoria-metrics-linux-amd64-${RELEASE}.tar.gz
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP} to ${RELEASE}"

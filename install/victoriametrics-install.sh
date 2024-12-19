@@ -23,17 +23,14 @@ msg_ok "Installed Dependencies"
 
 msg_info "Installing VictoriaMetrics"
 RELEASE=$(curl -s https://api.github.com/repos/VictoriaMetrics/VictoriaMetrics/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-mkdir -p /etc/victoriametrics
-mkdir -p /var/lib/victoriametrics
-groupadd -r victoriametrics
-useradd -g victoriametrics -d /var/lib/victoriametrics -s /sbin/nologin --system victoriametrics
-chown -R victoriametrics:victoriametrics /var/lib/victoria-metrics
-wget -q https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/v${RELEASE}/victoria-metrics-linux-amd64-${RELEASE}.tar.gz
-tar -xf victoria-metrics-linux-amd64-${RELEASE}.tar.gz
-chmod +x /usr/bin/victoria-metrics-prod
-chown root:root /usr/bin/victoria-metrics-prod
+mkdir -p {/etc/victoriametrics,/var/lib/victoriametrics,/opt/victoriametrics}
 
-cat <<END >/etc/victoriametrics/scrape.yml
+wget -q https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/v${RELEASE}/victoria-metrics-linux-amd64-${RELEASE}.tar.gz
+tar -xf --delete victoria-metrics-linux-amd64-${RELEASE}.tar.gz -C /opt/victoriametrics
+chmod +x /opt/victoriametrics/victoria-metrics-prod
+chown root:root /opt/victoriametrics/victoria-metrics-prod
+
+cat <<EOF >/etc/victoriametrics/scrape.yml
 # Scrape config example
 #
 scrape_configs:
@@ -43,7 +40,6 @@ scrape_configs:
       - targets: ['127.0.0.1:8428'] 
 END
 
-mv victoria-metrics-prod /usr/local/bin/
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Installed VictoriaMetrics"
 
@@ -63,7 +59,7 @@ ExecReload=/bin/kill -HUP \$MAINPID
 User=root
 Restart=always
 Type=simple
-ExecStart=/usr/local/bin/victoria-metrics-prod \
+ExecStart=/opt/victoriametrics/victoria-metrics-prod \
     -promscrape.config=/etc/victoriametrics/scrape.yml \
     -storageDataPath=/var/lib/victoriametrics \
     -retentionPeriod=12 \
