@@ -38,32 +38,41 @@ function update_script() {
     systemctl stop apache2
     msg_ok "Services Stopped"
 
-    msg_info "Updating ${APP} to ${RELEASE}"
-    cp /opt/bookstack/.env /opt/.env
-    wget -q "https://github.com/BookStackApp/BookStack/archive/refs/tags/v${RELEASE}.zip"
-    unzip -q v${RELEASE}.zip
-    mv BookStack-${RELEASE} /opt/bookstack
-    mv /opt/.env /opt/bookstack/.env
+    msg_info "Updating ${APP} to v${RELEASE}"
+    mv /opt/bookstack /opt/bookstack-backup
+    wget -q --directory-prefix=/opt "https://github.com/BookStackApp/BookStack/archive/refs/tags/v${RELEASE}.zip"
+    unzip -q /opt/v${RELEASE}.zip -d /opt
+    mv /opt/BookStack-${RELEASE} /opt/bookstack
+    cp /opt/bookstack-backup/.env /opt/bookstack/.env
+    cp -r /opt/bookstack-backup/public/uploads/ /opt/bookstack/public/uploads
+    cp -r /opt/bookstack-backup/storage/uploads/ /opt/bookstack/storage/uploads
+    cp -r /opt/bookstack-backup/themes/ /opt/bookstack/themes
     cd /opt/bookstack
     COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev &>/dev/null
     php artisan key:generate --force &>/dev/null
     php artisan migrate --force &>/dev/null
+    chown www-data:www-data -R /opt/bookstack /opt/bookstack/bootstrap/cache /opt/bookstack/public/uploads /opt/bookstack/storage
+    chmod -R 755 /opt/bookstack /opt/bookstack/bootstrap/cache /opt/bookstack/public/uploads /opt/bookstack/storage
+    chmod -R 775 /opt/bookstack/storage /opt/bookstack/bootstrap/cache /opt/bookstack/public/uploads
+    chmod -R 640 /opt/bookstack/.env
     echo "${RELEASE}" >/opt/${APP}_version.txt
-    msg_ok "Updated ${APP}"
+    msg_ok "Updated ${APP} to v${RELEASE}"
 
     msg_info "Starting Apache2"
     systemctl start apache2
     msg_ok "Started Apache2"
 
     msg_info "Cleaning Up"
-    rm -rf v${RELEASE}.zip
+    rm -rf /opt/bookstack-backup
+    rm -rf /opt/v${RELEASE}.zip
     msg_ok "Cleaned"
     msg_ok "Updated Successfully"
   else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
+    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }
+
 start
 build_container
 description
