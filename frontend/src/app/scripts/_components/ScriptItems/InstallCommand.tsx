@@ -28,15 +28,16 @@ export default function InstallCommand({ item }: { item: Script }) {
             time and minimal system resource usage. You are also obliged to
             adhere to updates provided by the package maintainer.
           </>
-        ) : item.type ? (
+        ) : item.type == "misc" ? (
           <>
-            To create a new Proxmox VE {item.name}{" "}
-            {getDisplayValueFromType(item.type)}, run the command below in the
-            Proxmox VE Shell.
+            To use the {item.name} script, run the command below in the shell.
           </>
         ) : (
           <>
-            To use the {item.name} script, run the command below in the shell.
+            {" "}
+            To create a new Proxmox VE {item.name}{" "}
+            {getDisplayValueFromType(item.type)}, run the command below in the
+            Proxmox VE Shell.
           </>
         )}
       </p>

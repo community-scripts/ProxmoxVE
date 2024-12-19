@@ -81,7 +81,7 @@ function ScriptItem({
               <div className="mt-4 rounded-lg border bg-accent/50">
                 <div className="flex gap-3 px-4 py-2">
                   <h2 className="text-lg font-semibold">
-                    How to {item.type ? "install" : "use"}
+                    How to {item.type == "misc" ? "use" : "install"}
                   </h2>
                   <Tooltips item={item} />
                 </div>
