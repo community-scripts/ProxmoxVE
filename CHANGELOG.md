@@ -22,8 +22,9 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🌐 Website
 
-- Fix script path formatting in InstallMethod component [@BramSuurdje](https://github.com/BramSuurdje) ([#909](https://github.com/community-scripts/ProxmoxVE/pull/909))
+- Fix Part-DB Docu (cred command) [@EvilBlood](https://github.com/EvilBlood) ([#898](https://github.com/community-scripts/ProxmoxVE/pull/898))
 - Enhance Tooltip component by adding CircleHelp icon and fix instructions in script component [@BramSuurdje](https://github.com/BramSuurdje) ([#910](https://github.com/community-scripts/ProxmoxVE/pull/910))
+- Fix script path formatting in InstallMethod component [@BramSuurdje](https://github.com/BramSuurdje) ([#909](https://github.com/community-scripts/ProxmoxVE/pull/909))
 
 ## 2024-12-18
 
