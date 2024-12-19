@@ -37,12 +37,12 @@ function update_script() {
     msg_info "Stopping Apache2"
     systemctl stop apache2
     msg_ok "Services Stopped"
-    
+
     msg_info "Updating ${APP} to v${RELEASE}"
     mv /opt/bookstack /opt/bookstack-backup
     wget -q --directory-prefix=/opt "https://github.com/BookStackApp/BookStack/archive/refs/tags/v${RELEASE}.zip"
-    unzip -q opt/v${RELEASE}.zip
-    mv opt/BookStack-${RELEASE} /opt/bookstack
+    unzip -q /opt/v${RELEASE}.zip -d /opt
+    mv /opt/BookStack-${RELEASE} /opt/bookstack
     cp /opt/bookstack-backup/.env /opt/bookstack/.env
     cp -r /opt/bookstack-backup/public/uploads/ /opt/bookstack/public/uploads
     cp -r /opt/bookstack-backup/storage/uploads/ /opt/bookstack/storage/uploads
@@ -57,11 +57,11 @@ function update_script() {
     chmod -R 640 /opt/bookstack/.env
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP} to v${RELEASE}"
-    
+
     msg_info "Starting Apache2"
     systemctl start apache2
     msg_ok "Started Apache2"
-    
+
     msg_info "Cleaning Up"
     rm -rf /opt/bookstack-backup
     rm -rf /opt/v${RELEASE}.zip
@@ -72,6 +72,7 @@ function update_script() {
   fi
   exit
 }
+
 start
 build_container
 description
