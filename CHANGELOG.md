@@ -22,6 +22,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- mysql not showing ip after install [@snow2k9](https://github.com/snow2k9) ([#924](https://github.com/community-scripts/ProxmoxVE/pull/924))
 - Fix Omada - Crawling latest version [@MickLesk](https://github.com/MickLesk) ([#918](https://github.com/community-scripts/ProxmoxVE/pull/918))
 
 ### 🌐 Website
