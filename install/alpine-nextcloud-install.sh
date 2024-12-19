@@ -103,6 +103,7 @@ server {
         listen       80;
         return 301 https://$host$request_uri;
         server_name localhost;
+        client_max_body_size 20M;
 }
 server {
         listen       443 ssl http2;
@@ -135,6 +136,7 @@ server {
 }
 EOF
 sed -i -e 's|memory_limit = 128M|memory_limit = 512M|; $aapc.enable_cli=1' /etc/php83/php.ini
+sed -i -e 's|upload_max_file_size = 2M|upload_max_file_size = 16G' /etc/php83/php.ini
 sed -i -E '/^php_admin_(flag|value)\[opcache/s/^/;/' /etc/php83/php-fpm.d/nextcloud.conf
 msg_ok "Installed Nextcloud"
 
