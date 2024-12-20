@@ -27,6 +27,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 - New Script: Apache Guacamole [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#657](https://github.com/community-scripts/ProxmoxVE/pull/657))
 - New Script: CheckMk [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#926](https://github.com/community-scripts/ProxmoxVE/pull/926))
 
+### 🚀 Updated Scripts
+
+- Fix: Remove PHP Key generation in Bookstack Update [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#948](https://github.com/community-scripts/ProxmoxVE/pull/948))
+
 ### 🌐 Website
 
 - Add Login Note for Checkmk [@MickLesk](https://github.com/MickLesk) ([#940](https://github.com/community-scripts/ProxmoxVE/pull/940))
