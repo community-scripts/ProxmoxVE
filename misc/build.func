@@ -164,13 +164,14 @@ header_info() {
     apt-get install -y figlet &> /dev/null
   elif [ -f /etc/alpine-release ]; then
     # Alpine Linux
-    apk add --no-cache figlet &> /dev/null
+    apk add --no-cache figlet ncurses &> /dev/null
+    export TERM=xterm
   else
     echo "Unsupported OS"
     return 1
   fi
 
-  term_width=$(tput cols)
+  term_width=$(tput cols 2>/dev/null || echo 120)  # Fallback to 120 columns
   ascii_art=$(figlet -f slant -w "$term_width" "$APP")
   clear
   cat <<EOF
