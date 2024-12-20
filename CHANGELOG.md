@@ -16,6 +16,21 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
+## 2024-12-20
+
+### Changed
+
+### ✨ New Scripts
+
+- New Script: silverbullet [@dsiebel](https://github.com/dsiebel) ([#659](https://github.com/community-scripts/ProxmoxVE/pull/659))
+- New Script: Apache Guacamole [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#657](https://github.com/community-scripts/ProxmoxVE/pull/657))
+- New Script: Zammad [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#640](https://github.com/community-scripts/ProxmoxVE/pull/640))
+- New Script: CheckMk [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#926](https://github.com/community-scripts/ProxmoxVE/pull/926))
+
+### ❔ Unlabelled
+
+- Update build.func to display the Proxmox Hostname [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#894](https://github.com/community-scripts/ProxmoxVE/pull/894))
+
 ## 2024-12-19
 
 ### Changed
