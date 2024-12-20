@@ -30,5 +30,10 @@
     "username": null,
     "password": null
   },
-  "notes": []
+    "notes": [
+        {
+            "text": "Login Credentials : `cat ~/checkmk.creds`",
+            "type": "info"
+        }
+    ]
 }
