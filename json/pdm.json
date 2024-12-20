@@ -1,0 +1,40 @@
+{
+    "name": "Proxmox Datacenter Manager",
+    "slug": "pdm",
+    "categories": [
+      11,
+      1
+    ],
+    "date_created": "2024-12-20",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": 8443,
+    "documentation": "https://pve.proxmox.com/wiki/Proxmox_Datacenter_Manager_Roadmap",
+    "website": "https://pve.proxmox.com/wiki/Proxmox_Datacenter_Manager_Roadmap",
+    "logo": "https://raw.githubusercontent.com/home-assistant/brands/master/core_integrations/proxmoxve/icon.png",
+    "description": "The Proxmox Datacenter Manager project has been developed with the objective of providing a centralized overview of all your individual nodes and clusters. It also enables basic management like migrations of virtual guests without any cluster network requirements. ",
+    "install_methods": [
+      {
+        "type": "default",
+        "script": "ct/pdm.sh",
+        "resources": {
+          "cpu": 2,
+          "ram": 2048,
+          "hdd": 10,
+          "os": "Debian",
+          "version": "12"
+        }
+      }
+    ],
+    "default_credentials": {
+      "username": null,
+      "password": null
+    },
+    "notes": [
+      {
+        "text": "Set a root password if using autologin. This will be the PBS password. `sudo passwd root`",
+        "type": "warning"
+      }
+    ]
+  }
