@@ -12,7 +12,7 @@
   "documentation": "https://docs.checkmk.com/",
   "website": "https://checkmk.com/",
   "logo": "https://checkmk.com/application/files/cache/thumbnails/67fc39c599afdf20557d538416e3efd3.png",
-  "description": "Checkmk - Your complete IT monitoring solution",
+  "description": "Checkmk is an IT monitoring software that tracks the health and performance of your systems, networks, servers, applications, and cloud services. It provides real-time insights, alerts for issues, and tools for troubleshooting, helping ensure smooth operations across your infrastructure.",
   "install_methods": [
     {
       "type": "default",
