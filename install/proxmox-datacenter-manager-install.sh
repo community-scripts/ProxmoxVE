@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2024 community-scripts ORG
 # Author: CrazyWolf13
 # License: MIT
-# Source: https://forum.proxmox.com/threads/proxmox-datacenter-manager-first-alpha-release.159323/
+# Source: Proxmox Server Solution GmbH
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -17,19 +17,18 @@ msg_info "Installing Dependencies"
 $STD apt-get install -y \
     curl \
     sudo \
+    gpg \
     mc 
 msg_ok "Installed Dependencies"
 
-msg_info "Installing Proxmox Backup Server"
-wget -q https://enterprise.proxmox.com/debian/proxmox-release-bookworm.gpg -O /etc/apt/trusted.gpg.d/proxmox-release-bookworm.gpg
-cat <<EOF >>/etc/apt/sources.list
-deb http://download.proxmox.com/debian/pdm bookworm pdm-test
-EOF
+msg_info "Installing Proxmox Datacenter Manager"
+curl -fsSL https://enterprise.proxmox.com/debian/proxmox-release-bookworm.gpg | gpg --dearmor -o /etc/apt/keyrings/proxmox-release-bookworm.gpg
+echo "deb [signed-by=/etc/apt/keyrings/proxmox-release-bookworm.gpg] http://download.proxmox.com/debian/pdm bookworm pdm-test  " >/etc/apt/sources.list.d/proxmox-release-bookworm.list
 $STD apt-get update
 $STD apt-get install -y \
     proxmox-datacenter-manager \
     proxmox-datacenter-manager-ui
-msg_ok "Installed Proxmox Backup Server"
+msg_ok "Installed Proxmox Datacenter Manager"
 
 motd_ssh
 customize

@@ -1,6 +1,6 @@
 {
     "name": "Proxmox Datacenter Manager",
-    "slug": "pdm",
+    "slug": "proxmox-datacenter-manager",
     "categories": [
       11,
       1
@@ -17,7 +17,7 @@
     "install_methods": [
       {
         "type": "default",
-        "script": "ct/pdm.sh",
+        "script": "ct/proxmox-datacenter-manager.sh",
         "resources": {
           "cpu": 2,
           "ram": 2048,

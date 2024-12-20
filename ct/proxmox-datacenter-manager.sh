@@ -3,10 +3,10 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/r
 # Copyright (c) 2021-2024 community-scripts ORG
 # Author: CrazyWolf13
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://forum.proxmox.com/threads/proxmox-datacenter-manager-first-alpha-release.159323/
+# Source: Proxmox Server Solution GmbH
 
 # App Default Values
-APP="PDM"
+APP="proxmox-datacenter-manager"
 var_tags="backup"
 var_cpu="2"
 var_ram="2048"
