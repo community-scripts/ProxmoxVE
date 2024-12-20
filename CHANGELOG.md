@@ -33,6 +33,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🌐 Website
 
+- Update checkmk description [@BramSuurdje](https://github.com/BramSuurdje) ([#954](https://github.com/community-scripts/ProxmoxVE/pull/954))
 - Add Login Note for Checkmk [@MickLesk](https://github.com/MickLesk) ([#940](https://github.com/community-scripts/ProxmoxVE/pull/940))
 
 ### ❔ Unlabelled
