@@ -14,7 +14,8 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y curl \
+$STD apt-get install -y \
+    curl \
     sudo \
     mc 
 msg_ok "Installed Dependencies"
@@ -25,7 +26,8 @@ cat <<EOF >>/etc/apt/sources.list
 deb http://download.proxmox.com/debian/pdm bookworm pdm-test
 EOF
 $STD apt-get update
-$STD apt-get install -y proxmox-datacenter-manager \
+$STD apt-get install -y \
+    proxmox-datacenter-manager \
     proxmox-datacenter-manager-ui
 msg_ok "Installed Proxmox Backup Server"
 

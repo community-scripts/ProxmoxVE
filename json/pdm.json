@@ -34,7 +34,7 @@
     "notes": [
       {
         "text": "Set a root password if using autologin. This will be the PBS password. `sudo passwd root`",
-        "type": "warning"
+        "type": "info"
       }
     ]
   }
