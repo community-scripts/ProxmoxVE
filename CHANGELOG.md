@@ -22,9 +22,9 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### ✨ New Scripts
 
+- New Script: Apache Guacamole [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#657](https://github.com/community-scripts/ProxmoxVE/pull/657))
 - New Script: silverbullet [@dsiebel](https://github.com/dsiebel) ([#659](https://github.com/community-scripts/ProxmoxVE/pull/659))
 - New Script: Zammad [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#640](https://github.com/community-scripts/ProxmoxVE/pull/640))
-- New Script: Apache Guacamole [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#657](https://github.com/community-scripts/ProxmoxVE/pull/657))
 - New Script: CheckMk [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#926](https://github.com/community-scripts/ProxmoxVE/pull/926))
 
 ### 🚀 Updated Scripts
