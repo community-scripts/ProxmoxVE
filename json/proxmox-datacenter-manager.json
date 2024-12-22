@@ -33,7 +33,7 @@
     },
     "notes": [
       {
-        "text": "Set a root password if using autologin. This will be the PBS password. `sudo passwd root`",
+        "text": "Set a root password if using autologin. This will be the Proxmox-Datacenter-Manager password. `sudo passwd root`",
         "type": "info"
       },
       {
