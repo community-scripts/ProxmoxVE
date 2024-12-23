@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/develop/misc/build.func)
 # Copyright (c) 2021-2024 community-scripts ORG
 # Author: MickLesk (Canbiz)
 # License: MIT
@@ -27,6 +27,7 @@ catch_errors
 
 function update_script() {
     header_info
+    verb
     check_container_storage
     check_container_resources
     if [[ ! -d /opt/nextpvr ]]; then
@@ -38,8 +39,8 @@ function update_script() {
     msg_ok "Stopped ${APP}"
 
     msg_info "Updating LXC packages"
-    apt-get update &>/dev/null
-    apt-get -y upgrade &>/dev/null
+    $STD  apt-get update
+    $STD apt-get -y upgrade
     msg_ok "Updated LXC packages"
 
     msg_info "Updating ${APP}"

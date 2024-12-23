@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/develop/misc/build.func)
 # Copyright (c) 2021-2024 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -111,9 +111,9 @@ function update_script() {
 
   msg_info "Building Frontend"
   cd ./frontend
-  pnpm install &>/dev/null
-  pnpm upgrade &>/dev/null
-  pnpm run build &>/dev/null
+  yarn cache clean --silent --force &>/dev/null
+  yarn install --silent --network-timeout=30000 &>/dev/null
+  yarn build &>/dev/null
   cp -r dist/* /app/frontend
   cp -r app-images/* /app/frontend/images
   msg_ok "Built Frontend"

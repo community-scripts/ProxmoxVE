@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #Copyright (c) 2021-2024 community-scripts ORG
-# Author: Michel Roegl-Brunner (michelroegl-brunner) | MickLesk (CanbiZ)
+# Author: Michel Roegl-Brunner (michelroegl-brunner)
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
@@ -80,10 +80,10 @@ mysql -u root -e "CREATE DATABASE $DB_NAME;"
 mysql -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED WITH mysql_native_password AS PASSWORD('$DB_PASS');"
 mysql -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
 {
-    echo "Guacamole-Credentials"
-    echo "Database User: $DB_USER"
-    echo "Database Password: $DB_PASS"
-    echo "Database Name: $DB_NAME"
+    echo "SnipeIT-Credentials"
+    echo "SnipeIT Database User: $DB_USER"
+    echo "SnipeIT Database Password: $DB_PASS"
+    echo "SnipeIT Database Name: $DB_NAME"
 } >> ~/guacamole.creds
 cd guacamole-auth-jdbc-1.5.5/mysql/schema
 cat *.sql | mysql -u root ${DB_NAME}

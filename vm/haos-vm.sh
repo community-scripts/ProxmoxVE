@@ -451,7 +451,7 @@ qm set $VMID \
   -efidisk0 ${DISK0_REF}${FORMAT} \
   -scsi0 ${DISK1_REF},${DISK_CACHE}${THIN}size=32G \
   -boot order=scsi0 \
-  -description "<div align='center'><a href='https://Helper-Scripts.com' target='_blank' rel='noopener noreferrer'><img src='https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/images/logo-81x112.png'/></a>
+  -description "<div align='center'><a href='https://Helper-Scripts.com' target='_blank' rel='noopener noreferrer'><img src='https://raw.githubusercontent.com/community-scripts/ProxmoxVE/develop/misc/images/logo-81x112.png'/></a>
 
   # Home Assistant OS
 

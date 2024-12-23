@@ -8,7 +8,6 @@ variables() {
   NSAPP=$(echo ${APP,,} | tr -d ' ') # This function sets the NSAPP variable by converting the value of the APP variable to lowercase and removing any spaces.
   var_install="${NSAPP}-install"     # sets the var_install variable by appending "-install" to the value of NSAPP.
   INTEGER='^[0-9]+([.][0-9]+)?$'     # it defines the INTEGER regular expression pattern.
-  PVEHOST_NAME=$(hostname) # gets the Proxmox Hostname and sets it to Uppercase
 }
 
 # This function sets various color variables using ANSI escape codes for formatting text in the terminal.
@@ -164,14 +163,13 @@ header_info() {
     apt-get install -y figlet &> /dev/null
   elif [ -f /etc/alpine-release ]; then
     # Alpine Linux
-    apk add --no-cache figlet ncurses &> /dev/null
-    export TERM=xterm
+    apk add --no-cache figlet &> /dev/null
   else
     echo "Unsupported OS"
     return 1
   fi
 
-  term_width=$(tput cols 2>/dev/null || echo 120)  # Fallback to 120 columns
+  term_width=$(tput cols)
   ascii_art=$(figlet -f slant -w "$term_width" "$APP")
   clear
   cat <<EOF
@@ -316,6 +314,7 @@ advanced_settings() {
       fi
     done
   fi
+
   # Setting Default Tag for Advanced Settings
   TAGS="community-script;"
 
@@ -581,7 +580,7 @@ advanced_settings() {
   else
     clear
     header_info
-    echo -e "${ADVANCED}${BOLD}${RD}Using Advanced Settings on node $PVEHOST_NAME${CL}"
+    echo -e "${ADVANCED}${BOLD}${RD}Using Advanced Settings${CL}"
     advanced_settings
   fi
 }
@@ -615,7 +614,7 @@ install_script() {
     case $CHOICE in
       1)
         header_info
-        echo -e "${DEFAULT}${BOLD}${BL}Using Default Settings on node $PVEHOST_NAME${CL}"
+        echo -e "${DEFAULT}${BOLD}${BL}Using Default Settings${CL}"
         VERB="no"
         base_settings "$VERB"  
         echo_default
@@ -623,7 +622,7 @@ install_script() {
         ;;
       2)
         header_info
-        echo -e "${DEFAULT}${BOLD}${BL}Using Default Settings on node $PVEHOST_NAME (${SEARCH}${BL}Verbose)${CL}"
+        echo -e "${DEFAULT}${BOLD}${BL}Using Default Settings (${SEARCH}${BOLD}${BL} Verbose)${CL}"
         VERB="yes"
         base_settings "$VERB"  
         echo_default
@@ -631,7 +630,7 @@ install_script() {
         ;;
       3)
         header_info
-        echo -e "${ADVANCED}${BOLD}${RD}Using Advanced Settings on node $PVEHOST_NAME${CL}"
+        echo -e "${ADVANCED}${BOLD}${RD}Using Advanced Settings${CL}"
         advanced_settings
         break
         ;;
@@ -719,9 +718,9 @@ build_container() {
   TEMP_DIR=$(mktemp -d)
   pushd $TEMP_DIR >/dev/null
   if [ "$var_os" == "alpine" ]; then
-    export FUNCTIONS_FILE_PATH="$(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/alpine-install.func)"
+    export FUNCTIONS_FILE_PATH="$(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/develop/misc/alpine-install.func)"
   else
-    export FUNCTIONS_FILE_PATH="$(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/install.func)"
+    export FUNCTIONS_FILE_PATH="$(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/develop/misc/install.func)"
   fi
   export CACHER="$APT_CACHER"
   export CACHER_IP="$APT_CACHER_IP"
@@ -751,7 +750,7 @@ build_container() {
     $PW
   "
   # This executes create_lxc.sh and creates the container and .conf file
-  bash -c "$(wget -qLO - https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/create_lxc.sh)" || exit
+  bash -c "$(wget -qLO - https://raw.githubusercontent.com/community-scripts/ProxmoxVE/develop/ct/create_lxc.sh)" || exit
 
   LXC_CONFIG=/etc/pve/lxc/${CTID}.conf
   if [ "$CT_TYPE" == "0" ]; then
@@ -813,7 +812,7 @@ http://dl-cdn.alpinelinux.org/alpine/latest-stable/community
 EOF'
     pct exec "$CTID" -- ash -c "apk add bash >/dev/null"
   fi
-  lxc-attach -n "$CTID" -- bash -c "$(wget -qLO - https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/install/$var_install.sh)" || exit
+  lxc-attach -n "$CTID" -- bash -c "$(wget -qLO - https://raw.githubusercontent.com/community-scripts/ProxmoxVE/develop/install/$var_install.sh)" || exit
 
 }
 
@@ -825,7 +824,7 @@ description() {
   DESCRIPTION=$(cat <<EOF
 <div align='center'>
   <a href='https://Helper-Scripts.com' target='_blank' rel='noopener noreferrer'>
-    <img src='https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/images/logo-81x112.png' alt='Logo' style='width:81px;height:112px;'/>
+    <img src='https://raw.githubusercontent.com/community-scripts/ProxmoxVE/develop/misc/images/logo-81x112.png' alt='Logo' style='width:81px;height:112px;'/>
   </a>
 
   <h2 style='font-size: 24px; margin: 20px 0;'>${APP} LXC</h2>

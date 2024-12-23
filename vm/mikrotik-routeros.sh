@@ -275,7 +275,7 @@ qm importdisk $VMID ${FILE%.*} $STORAGE ${DISK_IMPORT:-} 1>&/dev/null
 qm set $VMID \
   -scsi0 "$DISK_REF" \
   -boot order=scsi0 \
-  -description "<div align='center'><a href='https://Helper-Scripts.com'><img src='https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/images/logo-81x112.png'/></a>
+  -description "<div align='center'><a href='https://Helper-Scripts.com'><img src='https://raw.githubusercontent.com/community-scripts/ProxmoxVE/develop/misc/images/logo-81x112.png'/></a>
 
   # Mikrotik RouterOS CHR
 

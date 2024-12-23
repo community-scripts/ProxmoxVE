@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/develop/misc/build.func)
 # Copyright (c) 2021-2024 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -34,16 +34,18 @@ function update_script() {
     fi
     RELEASE=$(curl -s https://api.github.com/repos/navidrome/navidrome/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
     msg_info "Stopping ${APP}"
-    systemctl stop navidrome.service
+    systemctl stop navidrome
     msg_ok "Stopped Navidrome"
 
     msg_info "Updating to v${RELEASE}"
-    wget https://github.com/navidrome/navidrome/releases/download/v${RELEASE}/navidrome_${RELEASE}_linux_amd64.tar.gz -O Navidrome.tar.gz &>/dev/null
+    cd /opt
+    wget -q https://github.com/navidrome/navidrome/releases/download/v${RELEASE}/navidrome_${RELEASE}_linux_amd64.tar.gz -O Navidrome.tar.gz
     tar -xvzf Navidrome.tar.gz -C /opt/navidrome/ &>/dev/null
+    chmod +x /opt/navidrome/navidrome
     msg_ok "Updated ${APP}"
-    rm Navidrome.tar.gz
+    rm -rf /opt/Navidrome.tar.gz
 
-    msg_info "${GN} Starting ${APP}"
+    msg_info "Starting ${APP}"
     systemctl start navidrome.service
     msg_ok "Started ${APP}"
     msg_ok "Updated Successfully"

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/develop/misc/build.func)
 # Copyright (c) 2021-2024 tteck
 # Author: tteck | Co-Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -46,4 +46,4 @@ description
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following IP:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}${IP}:3306${CL}"
+echo -e "${TAB}${GATEWAY}${BGN}{IP}:3306${CL}"

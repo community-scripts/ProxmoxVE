@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/develop/misc/build.func)
 # Copyright (c) 2021-2024 community-scripts ORG
 # Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -7,7 +7,7 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 
 # App Default Values
 APP="Bookstack"
-var_tags="organizer"
+TAGS="organizer"
 var_cpu="1"
 var_ram="1024"
 var_disk="4"
@@ -37,18 +37,19 @@ function update_script() {
     msg_info "Stopping Apache2"
     systemctl stop apache2
     msg_ok "Services Stopped"
-
+    
     msg_info "Updating ${APP} to v${RELEASE}"
     mv /opt/bookstack /opt/bookstack-backup
     wget -q --directory-prefix=/opt "https://github.com/BookStackApp/BookStack/archive/refs/tags/v${RELEASE}.zip"
-    unzip -q /opt/v${RELEASE}.zip -d /opt
     mv /opt/BookStack-${RELEASE} /opt/bookstack
+    cp /opt/bookstack-backup/.env /opt/bookstack/.env
     cp /opt/bookstack-backup/.env /opt/bookstack/.env
     cp -r /opt/bookstack-backup/public/uploads/ /opt/bookstack/public/uploads
     cp -r /opt/bookstack-backup/storage/uploads/ /opt/bookstack/storage/uploads
     cp -r /opt/bookstack-backup/themes/ /opt/bookstack/themes
     cd /opt/bookstack
     COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev &>/dev/null
+    php artisan key:generate --force &>/dev/null
     php artisan migrate --force &>/dev/null
     chown www-data:www-data -R /opt/bookstack /opt/bookstack/bootstrap/cache /opt/bookstack/public/uploads /opt/bookstack/storage
     chmod -R 755 /opt/bookstack /opt/bookstack/bootstrap/cache /opt/bookstack/public/uploads /opt/bookstack/storage
@@ -56,11 +57,11 @@ function update_script() {
     chmod -R 640 /opt/bookstack/.env
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP} to v${RELEASE}"
-
+    
     msg_info "Starting Apache2"
     systemctl start apache2
     msg_ok "Started Apache2"
-
+    
     msg_info "Cleaning Up"
     rm -rf /opt/bookstack-backup
     rm -rf /opt/v${RELEASE}.zip
@@ -71,7 +72,6 @@ function update_script() {
   fi
   exit
 }
-
 start
 build_container
 description

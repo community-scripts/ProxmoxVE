@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/develop/misc/build.func)
 # Copyright (c) 2021-2024 community-scripts ORG
 # Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -7,7 +7,7 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 
 # App Default Values
 APP="Kimai"
-var_tags="time-tracking"
+var_tags="time tracking"
 var_cpu="2"
 var_ram="2048"
 var_disk="7"

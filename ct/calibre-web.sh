@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/develop/misc/build.func)
 # Copyright (c) 2021-2024 tteck
 # Author: tteck (tteckster) | Co-Author: remz1337
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -41,13 +41,13 @@ function update_script() {
   rm -rf kepubify-linux-64bit
   curl -fsSLO https://github.com/pgaskin/kepubify/releases/latest/download/kepubify-linux-64bit
   chmod +x kepubify-linux-64bit
-  menu_array=("1" "Enables gdrive as storage backend for your ebooks" OFF \
-    "2" "Enables sending emails via a googlemail account without enabling insecure apps" OFF \
-    "3" "Enables displaying of additional author infos on the authors page" OFF \
-    "4" "Enables login via LDAP server" OFF \
-    "5" "Enables login via google or github oauth" OFF \
-    "6" "Enables extracting of metadata from epub, fb2, pdf files, and also extraction of covers from cbr, cbz, cbt files" OFF \
-    "7" "Enables extracting of metadata from cbr, cbz, cbt files" OFF \
+  menu_array=("1" "Enables gdrive as storage backend for your ebooks" OFF
+    "2" "Enables sending emails via a googlemail account without enabling insecure apps" OFF
+    "3" "Enables displaying of additional author infos on the authors page" OFF
+    "4" "Enables login via LDAP server" OFF
+    "5" "Enables login via google or github oauth" OFF
+    "6" "Enables extracting of metadata from epub, fb2, pdf files, and also extraction of covers from cbr, cbz, cbt files" OFF
+    "7" "Enables extracting of metadata from cbr, cbz, cbt files" OFF
     "8" "Enables syncing with your kobo reader" OFF)
   if [ -f "/opt/calibre-web/options.txt" ]; then
     cps_options="$(cat /opt/calibre-web/options.txt)"

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/develop/misc/build.func)
 # Copyright (c) 2021-2024 tteck
 # Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -47,7 +47,7 @@ function update_script() {
   mkdir -p /opt/memos/server/dist
   cp -r web/dist/* /opt/memos/server/dist/
   cp -r web/dist/* /opt/memos/server/router/frontend/dist/
-  go build -o /opt/memos/memos -tags=embed bin/memos/main.go &>/dev/null
+  go build -o /opt/memos/memos -var_tags=embed bin/memos/main.go &>/dev/null
   systemctl start memos
   msg_ok "Updated $APP"
   exit

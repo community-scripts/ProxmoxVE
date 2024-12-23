@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/develop/misc/build.func)
 # Copyright (c) 2021-2024 community-scripts ORG
 # Author: Michel Roegl-Brunner (michelroegl-brunner)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://checkmk.com/
 
+# App Default Values
 APP="checkmk"
 var_tags="monitoring"
 var_cpu="2"
@@ -14,9 +15,11 @@ var_os="debian"
 var_version="12"
 var_unprivileged="1"
 
+# App Output & Base Settings
 header_info "$APP"
 base_settings
 
+# Core
 variables
 color
 catch_errors
@@ -35,17 +38,17 @@ function update_script() {
     omd stop monitoring &>/dev/null
     omd cp monitoring monitoringbackup &>/dev/null
     wget -q https://download.checkmk.com/checkmk/${RELEASE}/check-mk-raw-${RELEASE}_0.bookworm_amd64.deb -O /opt/checkmk.deb
-    apt-get install -y /opt/checkmk.deb &>/dev/null
+    dpkg -i /opt/checkmk.deb &>/dev/null
     omd --force -V ${RELEASE}.cre update --conflict=install monitoring &>/dev/null
     omd start monitoring &>/dev/null
-    omd -f rm monitoringbackup  &>/dev/null
+    omd rm monitoringbackup &>/dev/null
     omd cleanup &>/dev/null
     rm -rf /opt/checkmk.deb
     msg_ok "Updated ${APP} to v${RELEASE}"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}."
   fi
-
+ 
   exit
 }
 
