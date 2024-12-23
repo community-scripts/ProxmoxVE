@@ -16,6 +16,14 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
+## 2024-12-21
+
+### Changed
+
+### 🚀 Updated Scripts
+
+- update Port in homeassistant-core CT [@fraefel](https://github.com/fraefel) ([#961](https://github.com/community-scripts/ProxmoxVE/pull/961))
+
 ## 2024-12-20
 
 ### Changed
