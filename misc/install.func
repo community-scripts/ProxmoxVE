@@ -12,6 +12,7 @@ color() {
   BL=$(echo "\033[36m")
   RD=$(echo "\033[01;31m")
   GN=$(echo "\033[1;92m")
+  GD=$(echo "\033[38;5;214m")
 
   # Formatting
   CL=$(echo "\033[m")
@@ -19,6 +20,7 @@ color() {
   BOLD=$(echo "\033[1m")
   HOLD=" "
   TAB="  "
+  TABS="        "
   
   # System
   RETRY_NUM=10
@@ -34,6 +36,9 @@ color() {
   HOSTNAME="${TAB}🏠${TAB}${CL}"
   GATEWAY="${TAB}🌐${TAB}${CL}"
   DEFAULT="${TAB}⚙️${TAB}${CL}"
+  GITHUB="${TAB}🛠️${TAB}${CL}"
+  ORG="${TAB}🏢${TAB}${CL}"
+  
 }
 
 # This function enables IPv6 if it's not disabled and sets verbose mode if the global variable is set to "yes"
@@ -218,19 +223,26 @@ motd_ssh() {
   MOTD_FILE="/etc/motd"
   if [ -f "$MOTD_FILE" ]; then
     # Start MOTD with application info and link
-    echo -e "\n${BOLD}${APPLICATION} LXC Container${CL}" > "$MOTD_FILE"
-    echo -e "${TAB}${GATEWAY}${YW} Provided by: ${GN}community-scripts ORG ${YW}| GitHub: ${GN}https://github.com/community-scripts/ProxmoxVE${CL}\n" >> "$MOTD_FILE"
+    echo -e "\n${TABS}${BOLD}${GD}${APPLICATION} LXC Container${CL}\n" > "$MOTD_FILE"
+    echo -e "${TAB}${ORG}${YW} Provided by: ${GN}community-scripts ORG${CL}" >> "$MOTD_FILE"
+    echo -e "${TAB}${GATEWAY}${YW} Web: ${GN}https://helper-scripts.com/${CL}" >> "$MOTD_FILE"
+    echo -e "${TAB}${GITHUB}${YW} GitHub: ${GN}https://github.com/community-scripts/ProxmoxVE${CL}\n" >> "$MOTD_FILE"
 
     # Add system information with icons
     echo -e "${TAB}${OS}${YW} OS: ${GN}${OS_NAME} - Version: ${OS_VERSION}${CL}" >> "$MOTD_FILE"
     echo -e "${TAB}${HOSTNAME}${YW} Hostname: ${GN}$(hostname)${CL}" >> "$MOTD_FILE"
-    echo -e "${TAB}${INFO}${YW} IP Address: ${GN}${IP}${CL}" >> "$MOTD_FILE"
+    echo -e "${TAB}${NETWORK}${YW} IP Address: ${GN}${IP}${CL}\n" >> "$MOTD_FILE"
   else
     echo "MotD file does not exist!" >&2
   fi
 
   # Disable default MOTD scripts
   chmod -x /etc/update-motd.d/*
+
+  if [[ "${SSH_ROOT}" == "yes" ]]; then
+    sed -i "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
+    systemctl restart sshd
+  fi
 }
 
 # This function customizes the container by modifying the getty service and enabling auto-login for the root user
