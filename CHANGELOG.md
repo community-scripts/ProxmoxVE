@@ -20,6 +20,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### Changed
 
+### 🚀 Updated Scripts
+
+- Update emby.sh to correct port [@Rageplant](https://github.com/Rageplant) ([#989](https://github.com/community-scripts/ProxmoxVE/pull/989))
+
 ## 2024-12-21
 
 ### Changed
