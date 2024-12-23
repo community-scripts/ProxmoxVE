@@ -7,7 +7,7 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/r
 
 # App Default Values
 APP="proxmox-datacenter-manager"
-var_tags="backup"
+var_tags="server,datacenter"
 var_cpu="2"
 var_ram="2048"
 var_disk="10"
@@ -28,7 +28,7 @@ function update_script() {
     header_info
     check_container_storage
     check_container_resources
-    if [[ ! -d /var ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
+    if [[ ! -e /usr/sbin/proxmox-datacenter-manager-admin ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
         msg_info "Updating $APP LXC"
         apt-get update &>/dev/null
         apt-get -y upgrade &>/dev/null
