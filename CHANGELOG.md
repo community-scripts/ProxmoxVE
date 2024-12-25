@@ -22,6 +22,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- Fix Script: Alpine Nextcloud Upload File Size Limit [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#933](https://github.com/community-scripts/ProxmoxVE/pull/933))
 - Doubled RAM for SAB [@TheRealVira](https://github.com/TheRealVira) ([#1007](https://github.com/community-scripts/ProxmoxVE/pull/1007))
 
 ## 2024-12-23
