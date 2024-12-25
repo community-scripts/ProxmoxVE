@@ -7,7 +7,7 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/r
 
 # App Default Values
 APP="proxmox-datacenter-manager"
-var_tags="server,datacenter"
+var_tags="datacenter"
 var_cpu="2"
 var_ram="2048"
 var_disk="10"
