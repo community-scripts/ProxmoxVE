@@ -20,6 +20,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### Changed
 
+### ✨ New Scripts
+
+- add: pve-datacenter-manager [@CrazyWolf13](https://github.com/CrazyWolf13) ([#947](https://github.com/community-scripts/ProxmoxVE/pull/947))
+
 ### 🚀 Updated Scripts
 
 - Fix Script: Alpine Nextcloud Upload File Size Limit [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#933](https://github.com/community-scripts/ProxmoxVE/pull/933))
