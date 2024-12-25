@@ -16,6 +16,14 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
+## 2024-12-25
+
+### Changed
+
+### 🚀 Updated Scripts
+
+- Doubled RAM for SAB [@TheRealVira](https://github.com/TheRealVira) ([#1007](https://github.com/community-scripts/ProxmoxVE/pull/1007))
+
 ## 2024-12-23
 
 ### Changed
