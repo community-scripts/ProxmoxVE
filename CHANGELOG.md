@@ -22,12 +22,17 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### ✨ New Scripts
 
+-  New Script: Jenkins [@quantumryuu](https://github.com/quantumryuu) ([#1019](https://github.com/community-scripts/ProxmoxVE/pull/1019))
 - New Script: 2FAuth [@jkrgr0](https://github.com/jkrgr0) ([#943](https://github.com/community-scripts/ProxmoxVE/pull/943))
 
 ### 🚀 Updated Scripts
 
 - ensure all RFC1918 local Ipv4 addresses are in iptag script [@AskAlice](https://github.com/AskAlice) ([#992](https://github.com/community-scripts/ProxmoxVE/pull/992))
 - Fix Proxmox DataCenter: incorrect build.func url [@rbradley0](https://github.com/rbradley0) ([#1013](https://github.com/community-scripts/ProxmoxVE/pull/1013))
+
+### 🧰 Maintenance
+
+- [GitHub Actions] Introduce Shellcheck to check bash code [@andygrunwald](https://github.com/andygrunwald) ([#1018](https://github.com/community-scripts/ProxmoxVE/pull/1018))
 
 ## 2024-12-25
 
