@@ -5,7 +5,7 @@
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
-source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
+source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
 catch_errors
@@ -18,18 +18,15 @@ $STD apt-get install -y \
     curl \
     mc \
     sudo \
-    fontconfig \
     openjdk-17-jre
 msg_ok "Installed Dependencies"
 
-
-msg_info "Installing Jenkins"
+msg_info "Setup Jenkins"
 wget -qO /usr/share/keyrings/jenkins-keyring.asc https://pkg.jenkins.io/debian/jenkins.io-2023.key
 echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc]" https://pkg.jenkins.io/debian binary/ >/etc/apt/sources.list.d/jenkins.list
 $STD apt-get update
-$STD apt-get install -y \
-    jenkins
-msg_ok "Installed Jenkins"
+$STD apt-get install -y jenkins
+msg_ok "Setup Jenkins"
 
 motd_ssh
 customize
