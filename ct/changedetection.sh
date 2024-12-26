@@ -43,6 +43,10 @@ function update_script() {
     git -C /opt/browserless/ fetch --all &>/dev/null
     git -C /opt/browserless/ reset --hard origin/main &>/dev/null
     npm update --prefix /opt/browserless &>/dev/null
+    /opt/browserless/node_modules/playwright-core/cli.js install --with-deps &>/dev/null
+    # Update Chrome separately, as it has to be done with the force option. Otherwise the installation of other browsers will not be done if Chrome is already installed.
+    /opt/browserless/node_modules/playwright-core/cli.js install --force chrome &>/dev/null
+    /opt/browserless/node_modules/playwright-core/cli.js install chromium firefox webkit &>/dev/null
     npm run build --prefix /opt/browserless &>/dev/null
     npm run build:function --prefix /opt/browserless &>/dev/null
     npm prune production --prefix /opt/browserless &>/dev/null
