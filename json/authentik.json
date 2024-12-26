@@ -4,7 +4,7 @@
     "categories": [
         11
     ],
-    "date_created": "2024-11-06",
+    "date_created": "2024-12-26",
     "type": "ct",
     "updateable": true,
     "privileged": false,
@@ -32,8 +32,8 @@
     },
     "notes": [
         {
-            "text": "Initial configuration at http://<IP>:9000/if/flow/initial-setup/",
-            "type": "info"
+            "text": "Authentik is very resource-heavy, it is recommended to use at least 8GB RAM anytime!",
+            "type": "warning"
         }
     ]
 }
