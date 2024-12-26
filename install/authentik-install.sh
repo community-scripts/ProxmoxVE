@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
 
 # Copyright (c) 2021-2024 community-scripts ORG
-# Author: tteck (tteckster)
-# Co-Author: remz1337
-# License: MIT
-# https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Author: remz1337
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -41,12 +39,14 @@ $STD apt-get install -y \
 msg_ok "Installed Dependencies"
 
 msg_info "Installing yq"
+cd /tmp
 YQ_LATEST="$(wget -qO- "https://api.github.com/repos/mikefarah/yq/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")')"
-$STD wget "https://github.com/mikefarah/yq/releases/download/${YQ_LATEST}/yq_linux_amd64" -qO /usr/bin/yq
+wget -q "https://github.com/mikefarah/yq/releases/download/${YQ_LATEST}/yq_linux_amd64" -qO /usr/bin/yq
 chmod +x /usr/bin/yq
 msg_ok "Installed yq"
 
 msg_info "Installing GeoIP"
+cd /tmp
 GEOIP_RELEASE=$(curl -s https://api.github.com/repos/maxmind/geoipupdate/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 wget -qO geoipupdate.deb https://github.com/maxmind/geoipupdate/releases/download/v${GEOIP_RELEASE}/geoipupdate_${GEOIP_RELEASE}_linux_amd64.deb
 $STD dpkg -i geoipupdate.deb
@@ -59,6 +59,7 @@ EOF
 msg_ok "Installed GeoIP"
 
 msg_info "Setting up Python 3"
+cd /tmp
 wget -q https://www.python.org/ftp/python/3.12.1/Python-3.12.1.tgz -O Python.tgz
 tar -zxf Python.tgz
 cd Python-3.12.1
@@ -80,6 +81,7 @@ $STD apt-get install -y nodejs
 msg_ok "Installed Node.js"
 
 msg_info "Installing Golang"
+cd /tmp
 set +o pipefail
 GO_RELEASE=$(curl -s https://go.dev/dl/ | grep -o -m 1 "go.*\linux-amd64.tar.gz")
 wget -q https://golang.org/dl/${GO_RELEASE}
@@ -181,11 +183,11 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -rf Python-3.12.1
-rm -rf Python.tgz
+rm -rf /tmp/Python-3.12.1
+rm -rf /tmp/Python.tgz
 rm -rf go/
-rm -rf ${GO_RELEASE}
-rm geoipupdate.deb
+rm -rf /tmp/${GO_RELEASE}
+rm -rf /tmp/geoipupdate.deb
 rm -rf authentik.tar.gz
 $STD apt-get -y remove yq
 $STD apt-get -y autoremove
