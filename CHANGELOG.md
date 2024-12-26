@@ -16,6 +16,14 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
+## 2024-12-26
+
+### Changed
+
+### 🚀 Updated Scripts
+
+- Fix Proxmox DataCenter: incorrect build.func url [@rbradley0](https://github.com/rbradley0) ([#1013](https://github.com/community-scripts/ProxmoxVE/pull/1013))
+
 ## 2024-12-25
 
 ### Changed
