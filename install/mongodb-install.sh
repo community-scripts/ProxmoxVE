@@ -1,3 +1,4 @@
+
 #!/usr/bin/env bash
 
 # Copyright (c) 2021-2024 tteck
@@ -20,14 +21,22 @@ $STD apt-get install -y sudo
 $STD apt-get install -y mc
 msg_ok "Installed Dependencies"
 
-msg_info "Installing MongoDB"
-wget -qO- https://www.mongodb.org/static/pgp/server-7.0.asc | gpg --dearmor >/usr/share/keyrings/mongodb-server-7.0.gpg
-echo "deb [signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg] http://repo.mongodb.org/apt/debian $(grep '^VERSION_CODENAME=' /etc/os-release | cut -d'=' -f2)/mongodb-org/7.0 main" >/etc/apt/sources.list.d/mongodb-org-7.0.list
+# Abfrage für die MongoDB-Version
+read -p "Do you want to install MongoDB 8.0 instead of 7.0? [y/N]: " install_mongodb_8
+if [[ "$install_mongodb_8" =~ ^[Yy]$ ]]; then
+  MONGODB_VERSION="8.0"
+else
+  MONGODB_VERSION="7.0"
+fi
+
+msg_info "Installing MongoDB $MONGODB_VERSION"
+wget -qO- https://www.mongodb.org/static/pgp/server-${MONGODB_VERSION}.asc | gpg --dearmor >/usr/share/keyrings/mongodb-server-${MONGODB_VERSION}.gpg
+echo "deb [signed-by=/usr/share/keyrings/mongodb-server-${MONGODB_VERSION}.gpg] http://repo.mongodb.org/apt/debian $(grep '^VERSION_CODENAME=' /etc/os-release | cut -d'=' -f2)/mongodb-org/${MONGODB_VERSION} main" >/etc/apt/sources.list.d/mongodb-org-${MONGODB_VERSION}.list
 $STD apt-get update
 $STD apt-get install -y mongodb-org
 sed -i 's/bindIp: 127.0.0.1/bindIp: 0.0.0.0/' /etc/mongod.conf
 systemctl enable -q --now mongod.service
-msg_ok "Installed MongoDB"
+msg_ok "Installed MongoDB $MONGODB_VERSION"
 
 motd_ssh
 customize
