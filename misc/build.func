@@ -157,10 +157,13 @@ arch_check() {
   fi
 }
 
-# This function sets the APP-Name into an ASCII Header in Slant, figlet needed on proxmox main node.
 header_info() {
   if [ -f /etc/debian_version ]; then
     # Debian/Ubuntu
+    if ! grep -q "^deb http://ftp.debian.org/debian bookworm main contrib" /etc/apt/sources.list; then
+      echo "deb http://ftp.debian.org/debian bookworm main contrib" >> /etc/apt/sources.list
+      apt-get update -y &> /dev/null
+    fi
     apt-get install -y figlet &> /dev/null
   elif [ -f /etc/alpine-release ]; then
     # Alpine Linux
