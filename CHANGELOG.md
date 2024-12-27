@@ -26,6 +26,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- Update Zabbix to 7.2. Release [@MickLesk](https://github.com/MickLesk) ([#1048](https://github.com/community-scripts/ProxmoxVE/pull/1048))
 - Add 8.0 for MongoDB Installation [@MickLesk](https://github.com/MickLesk) ([#1046](https://github.com/community-scripts/ProxmoxVE/pull/1046))
 - Apache-Guacamole script bug fix [@sannier3](https://github.com/sannier3) ([#1039](https://github.com/community-scripts/ProxmoxVE/pull/1039))
 
