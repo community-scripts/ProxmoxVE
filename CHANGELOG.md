@@ -28,6 +28,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 - Updated SAB documentation based on RAM increase [@TheRealVira](https://github.com/TheRealVira) ([#1035](https://github.com/community-scripts/ProxmoxVE/pull/1035))
 
+### ❔ Unlabelled
+
+- fix Tags for Advanced Settings [@MickLesk](https://github.com/MickLesk) ([#1042](https://github.com/community-scripts/ProxmoxVE/pull/1042))
+
 ## 2024-12-26
 
 ### Changed
