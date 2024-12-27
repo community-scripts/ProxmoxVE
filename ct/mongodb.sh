@@ -28,7 +28,7 @@ function update_script() {
     header_info
     check_container_storage
     check_container_resources
-    if [[ ! -f /etc/apt/sources.list.d/mongodb-org-7.0.list ]]; then
+    if [[ ! -f /etc/apt/sources.list.d/mongodb-org-7.0.list && ! -f /etc/apt/sources.list.d/mongodb-org-8.0.list ]]; then
         msg_error "No ${APP} Installation Found!"
         exit
     fi
