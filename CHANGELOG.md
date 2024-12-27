@@ -24,6 +24,11 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 - new scripts for Authentik [@remz1337](https://github.com/remz1337) ([#291](https://github.com/community-scripts/ProxmoxVE/pull/291))
 
+### 🚀 Updated Scripts
+
+- Add 8.0 for MongoDB Installation [@MickLesk](https://github.com/MickLesk) ([#1046](https://github.com/community-scripts/ProxmoxVE/pull/1046))
+- Apache-Guacamole script bug fix [@sannier3](https://github.com/sannier3) ([#1039](https://github.com/community-scripts/ProxmoxVE/pull/1039))
+
 ### 🌐 Website
 
 - Updated SAB documentation based on RAM increase [@TheRealVira](https://github.com/TheRealVira) ([#1035](https://github.com/community-scripts/ProxmoxVE/pull/1035))
