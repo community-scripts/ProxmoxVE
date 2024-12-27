@@ -317,7 +317,7 @@ advanced_settings() {
     done
   fi
   # Setting Default Tag for Advanced Settings
-  TAGS="community-script;"
+  TAGS="community-script;${var_tags:-}"
 
   CT_TYPE=""
   while [ -z "$CT_TYPE" ]; do
