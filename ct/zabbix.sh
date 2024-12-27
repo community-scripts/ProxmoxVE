@@ -44,7 +44,7 @@ function update_script() {
     cp -R /usr/share/zabbix-* /opt/zabbix-backup/
     rm -Rf /etc/apt/sources.list.d/zabbix.list
     cd /tmp
-    wget -q https://repo.zabbix.com/zabbix/7.0/debian/pool/main/z/zabbix-release/zabbix-release_latest+debian12_all.deb
+    wget -q https://repo.zabbix.com/zabbix/7.2/debian/pool/main/z/zabbix-release/zabbix-release_latest+debian12_all.deb
     dpkg -i zabbix-release_latest+debian12_all.deb &>/dev/null
     apt-get update &>/dev/null
     apt-get install --only-upgrade zabbix-server-pgsql zabbix-frontend-php zabbix-agent2 zabbix-agent2-plugin-* &>/dev/null
