@@ -22,7 +22,7 @@ msg_ok "Installed Dependencies"
 
 msg_info "Installing Zabbix"
 cd /tmp
-wget -q https://repo.zabbix.com/zabbix/7.0/debian/pool/main/z/zabbix-release/zabbix-release_latest+debian12_all.deb
+wget -q https://repo.zabbix.com/zabbix/7.2/debian/pool/main/z/zabbix-release/zabbix-release_latest+debian12_all.deb
 $STD dpkg -i /tmp/zabbix-release_latest+debian12_all.deb
 $STD apt-get update
 $STD apt-get install -y zabbix-server-pgsql zabbix-frontend-php php8.2-pgsql zabbix-apache-conf zabbix-sql-scripts 
