@@ -157,6 +157,7 @@ arch_check() {
   fi
 }
 
+# This function sets the APP-Name into an ASCII Header in Slant, figlet needed on proxmox main node.
 header_info() {
   if [ -f /etc/debian_version ]; then
     # Debian/Ubuntu
