@@ -214,7 +214,7 @@ base_settings() {
   MAC=""
   VLAN=""
   SSH="no"
-  TAGS="community-script;"
+  TAGS="proxmox-helper-scripts;"
   
   # Override default settings with variables from ct script
   CT_TYPE=${var_unprivileged:-$CT_TYPE}
