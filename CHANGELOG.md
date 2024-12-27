@@ -16,6 +16,18 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
+## 2024-12-27
+
+### Changed
+
+### ✨ New Scripts
+
+- new scripts for Authentik [@remz1337](https://github.com/remz1337) ([#291](https://github.com/community-scripts/ProxmoxVE/pull/291))
+
+### 🌐 Website
+
+- Updated SAB documentation based on RAM increase [@TheRealVira](https://github.com/TheRealVira) ([#1035](https://github.com/community-scripts/ProxmoxVE/pull/1035))
+
 ## 2024-12-26
 
 ### Changed
