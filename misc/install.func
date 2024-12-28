@@ -262,4 +262,11 @@ EOF
   fi
   echo "bash -c \"\$(wget -qLO - https://github.com/community-scripts/ProxmoxVE/raw/main/ct/${app}.sh)\"" >/usr/bin/update
   chmod +x /usr/bin/update
+
+  if [[ -n "${SSH_AUTHORIZED_KEY}" ]]; then
+    mkdir -p /root/.ssh
+    echo "${SSH_AUTHORIZED_KEY}" > /root/.ssh/authorized_keys
+    chmod 700 /root/.ssh
+    chmod 600 /root/.ssh/authorized_keys
+  fi
 }
