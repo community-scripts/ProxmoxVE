@@ -47,6 +47,7 @@ mv grist-core-${RELEASE} grist
 cd grist
 $STD yarn install
 $STD yarn run build:prod
+$STD yarn run install:python
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 
 cat <<EOF >/opt/grist/.env

@@ -49,6 +49,7 @@ function update_script() {
     cd grist
     yarn install >/dev/null 2>&1
     yarn run build:prod >/dev/null 2>&1
+    yarn run install:python >/dev/null 2>&1
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP} to v${RELEASE}"
 
