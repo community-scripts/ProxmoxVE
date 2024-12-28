@@ -45,7 +45,6 @@ RELEASE=$(curl -s https://api.github.com/repos/gristlabs/grist-core/releases/lat
 cd /opt
 wget -q https://github.com/gristlabs/grist-core/archive/refs/tags/v${RELEASE}.zip
 unzip -q v$RELEASE.zip
-rm -rf v${RELEASE}.zip
 mv grist-core-${RELEASE} grist
 cd grist
 $STD yarn install
@@ -80,6 +79,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
+rm -rf /opt/v${RELEASE}.zip
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
