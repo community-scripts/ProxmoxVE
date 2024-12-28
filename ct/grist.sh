@@ -38,7 +38,7 @@ function update_script() {
     systemctl stop grist
     msg_ok "Stopped ${APP} Service"
 
-    msg_info "Updating ${APP} to ${RELEASE}"
+    msg_info "Updating ${APP} to v${RELEASE}"
     cd /opt
     rm -rf grist_bak
     mv grist grist_bak
@@ -49,7 +49,7 @@ function update_script() {
     yarn install >/dev/null 2>&1
     yarn run build:prod >/dev/null 2>&1
     echo "${RELEASE}" >/opt/${APP}_version.txt
-    msg_ok "Updated ${APP} to ${RELEASE}"
+    msg_ok "Updated ${APP} to v${RELEASE}"
 
     msg_info "Starting ${APP} Service"
     systemctl start grist
