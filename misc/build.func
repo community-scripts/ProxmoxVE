@@ -204,7 +204,7 @@ header_info() {
       return 1
     fi
     temp_dir=$(mktemp -d)
-    curl -sL https://github.com/community-scripts/ProxmoxVE/raw/refs/heads/develop/misc/figlet.tar.xz -o "$temp_dir/figlet.tar.xz"
+    curl -sL https://github.com/community-scripts/ProxmoxVE/raw/refs/heads/main/misc/figlet.tar.xz -o "$temp_dir/figlet.tar.xz"
     mkdir -p /tmp/figlet
     tar -xf "$temp_dir/figlet.tar.xz" -C /tmp/figlet --strip-components=1
     cd /tmp/figlet
