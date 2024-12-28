@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Source: https://www.getgrist.com/product/self-managed/
 # Source: https://github.com/gristlabs/grist-core
 
 # App Default Values
