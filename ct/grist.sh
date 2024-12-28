@@ -45,6 +45,7 @@ function update_script() {
     wget -q https://github.com/gristlabs/grist-core/archive/refs/tags/v${RELEASE}.zip
     unzip -q v$RELEASE.zip
     mv grist-core-${RELEASE} grist
+    cp -n /opt/grist_bak/.env /opt/grist/.env
     cd grist
     yarn install >/dev/null 2>&1
     yarn run build:prod >/dev/null 2>&1
