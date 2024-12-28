@@ -56,7 +56,7 @@ function update_script() {
     msg_ok "Started ${APP} Service"
 
     msg_info "Cleaning up"
-    rm -rf ../v$RELEASE.zip
+    rm -rf /opt/v$RELEASE.zip
     msg_ok "Cleaned"
 
     msg_ok "Updated Successfully!\n"
