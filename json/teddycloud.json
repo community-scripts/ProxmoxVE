@@ -31,13 +31,9 @@
         "password": null
     },
     "notes": [
-      {
-          "text": "Execute within the Proxmox shell",
-          "type": "info"
-      },
-      {
-          "text": "First start of the service can take some time due to certificate generation.",
-          "type": "warn"
-      }
+        {
+            "text": "First start of the service can take some time due to certificate generation.",
+            "type": "warn"
+        }
     ]
 }
