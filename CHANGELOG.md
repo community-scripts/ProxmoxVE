@@ -20,6 +20,14 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### Changed
 
+### 💥 Breaking Changes
+
+- Add an IP-Update for MOTD if IP Changed [@MickLesk](https://github.com/MickLesk) ([#1067](https://github.com/community-scripts/ProxmoxVE/pull/1067))
+
+### 🚀 Updated Scripts
+
+- Authentik: added missing port to access url [@TheRealVira](https://github.com/TheRealVira) ([#1065](https://github.com/community-scripts/ProxmoxVE/pull/1065))
+
 ## 2024-12-27
 
 ### Changed
