@@ -26,6 +26,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- Zabbix: Fix SQL Path for 7.2 [@MickLesk](https://github.com/MickLesk) ([#1069](https://github.com/community-scripts/ProxmoxVE/pull/1069))
 - Authentik: added missing port to access url [@TheRealVira](https://github.com/TheRealVira) ([#1065](https://github.com/community-scripts/ProxmoxVE/pull/1065))
 
 ## 2024-12-27
