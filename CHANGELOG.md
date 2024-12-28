@@ -22,6 +22,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 💥 Breaking Changes
 
+- Add Figlet into Repo | Creation of local ASCII Header [@MickLesk](https://github.com/MickLesk) ([#1072](https://github.com/community-scripts/ProxmoxVE/pull/1072))
 - Add an IP-Update for MOTD if IP Changed [@MickLesk](https://github.com/MickLesk) ([#1067](https://github.com/community-scripts/ProxmoxVE/pull/1067))
 
 ### 🚀 Updated Scripts
