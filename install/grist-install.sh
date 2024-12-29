@@ -22,6 +22,7 @@ $STD apt-get install -y \
   gnupg \
   ca-certificates \
   mc \
+  unzip \
   python3.11-venv
 msg_ok "Installed Dependencies"
 
@@ -43,9 +44,9 @@ wget -q https://github.com/gristlabs/grist-core/archive/refs/tags/v${RELEASE}.zi
 unzip -q v$RELEASE.zip
 mv grist-core-${RELEASE} grist
 cd grist
-yarn install
-yarn run build:prod
-yarn run install:python
+$STD yarn install
+$STD yarn run build:prod
+$STD yarn run install:python
 cat <<EOF >/opt/grist/.env
 NODE_ENV=production
 GRIST_HOST=0.0.0.0
@@ -68,6 +69,7 @@ EnvironmentFile=-/opt/grist/.env
 [Install]
 WantedBy=multi-user.target
 EOF
+
 systemctl enable -q --now grist.service
 msg_ok "Created Service"
 

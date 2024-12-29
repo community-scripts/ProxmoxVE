@@ -6,7 +6,7 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 APP="Grist"
 var_tags="database;spreadsheet"
 var_cpu="1"
-var_ram="1024"
+var_ram="2048"
 var_disk="4"
 var_os="debian"
 var_version="12"
