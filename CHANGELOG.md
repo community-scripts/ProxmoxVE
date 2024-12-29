@@ -16,6 +16,19 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
+## 2024-12-29
+
+### Changed
+
+### ✨ New Scripts
+
+- New Script: Grist [@cfurrow](https://github.com/cfurrow) ([#1076](https://github.com/community-scripts/ProxmoxVE/pull/1076))
+- New Script: TeddyCloud Server [@dsiebel](https://github.com/dsiebel) ([#1064](https://github.com/community-scripts/ProxmoxVE/pull/1064))
+
+### 🧰 Maintenance
+
+- Introduce editorconfig for more consistent formatting [@dsiebel](https://github.com/dsiebel) ([#1073](https://github.com/community-scripts/ProxmoxVE/pull/1073))
+
 ## 2024-12-28
 
 ### Changed
