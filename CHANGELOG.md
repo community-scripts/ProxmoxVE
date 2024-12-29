@@ -25,6 +25,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 - New Script: Grist [@cfurrow](https://github.com/cfurrow) ([#1076](https://github.com/community-scripts/ProxmoxVE/pull/1076))
 - New Script: TeddyCloud Server [@dsiebel](https://github.com/dsiebel) ([#1064](https://github.com/community-scripts/ProxmoxVE/pull/1064))
 
+### 🚀 Updated Scripts
+
+- Fix Install / Update on Grist Script [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1091](https://github.com/community-scripts/ProxmoxVE/pull/1091))
+
 ### 🌐 Website
 
 - fix: Update add-lxc-iptag.json warn to warning [@BramSuurdje](https://github.com/BramSuurdje) ([#1094](https://github.com/community-scripts/ProxmoxVE/pull/1094))
