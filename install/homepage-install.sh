@@ -42,10 +42,8 @@ mv homepage-${RELEASE}/* /opt/homepage
 rm -rf homepage-${RELEASE}
 cd /opt/homepage
 cp /opt/homepage/src/skeleton/* /opt/homepage/config
-NEXT_PUBLIC_VERSION=v$RELEASE
-NEXT_PUBLIC_REVISION='source'
 $STD pnpm install
-$STD pnpm build
+$STD NEXT_PUBLIC_VERSION=v$RELEASE NEXT_PUBLIC_REVISION='source' pnpm build
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Installed Homepage v${RELEASE}"
 
