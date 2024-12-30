@@ -16,6 +16,19 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
+## 2024-12-30
+
+### Changed
+
+### 🚀 Updated Scripts
+
+- [Archivebox] Fix wrong port being printed post install. [@Strana-Mechty](https://github.com/Strana-Mechty) ([#1105](https://github.com/community-scripts/ProxmoxVE/pull/1105))
+- fix: add homepage version during build step [@se-bastiaan](https://github.com/se-bastiaan) ([#1107](https://github.com/community-scripts/ProxmoxVE/pull/1107))
+
+### 🌐 Website
+
+- Fix Trilium Website to TriliumNext [@tmkis2](https://github.com/tmkis2) ([#1103](https://github.com/community-scripts/ProxmoxVE/pull/1103))
+
 ## 2024-12-29
 
 ### Changed
