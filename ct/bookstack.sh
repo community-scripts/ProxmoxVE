@@ -44,9 +44,9 @@ function update_script() {
     unzip -q /opt/v${RELEASE}.zip -d /opt
     mv /opt/BookStack-${RELEASE} /opt/bookstack
     cp /opt/bookstack-backup/.env /opt/bookstack/.env
-    cp -r /opt/bookstack-backup/public/uploads/ /opt/bookstack/public/uploads
-    cp -r /opt/bookstack-backup/storage/uploads/ /opt/bookstack/storage/uploads
-    cp -r /opt/bookstack-backup/themes/ /opt/bookstack/themes
+    cp -r /opt/bookstack-backup/public/uploads/* /opt/bookstack/public/uploads/
+    cp -r /opt/bookstack-backup/storage/uploads/* /opt/bookstack/storage/uploads/
+    cp -r /opt/bookstack-backup/themes/* /opt/bookstack/themes/
     cd /opt/bookstack
     COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev &>/dev/null
     php artisan migrate --force &>/dev/null
