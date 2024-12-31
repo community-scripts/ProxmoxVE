@@ -16,21 +16,21 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
-## 2024-12-31 - Happy new Year! 🎉✨
+## 2024-12-31
 
 ### Changed
 
 ### 💥 Breaking Changes
 
-- Add ExecReload to prometheus.service [@BasixKOR](https://github.com/BasixKOR) ([#1131](https://github.com/community-scripts/ProxmoxVE/pull/1131))
 - Fix: Figlet Version & Font Check [@MickLesk](https://github.com/MickLesk) ([#1133](https://github.com/community-scripts/ProxmoxVE/pull/1133))
+- Add ExecReload to prometheus.service [@BasixKOR](https://github.com/BasixKOR) ([#1131](https://github.com/community-scripts/ProxmoxVE/pull/1131))
 
 ### 🚀 Updated Scripts
 
 - Fix: Copy issue after update in Bookstack LXC [@MickLesk](https://github.com/MickLesk) ([#1137](https://github.com/community-scripts/ProxmoxVE/pull/1137))
 - Omada: Switch Base-URL to prevent issues [@MickLesk](https://github.com/MickLesk) ([#1135](https://github.com/community-scripts/ProxmoxVE/pull/1135))
-- fix: guacd service not start during Apache-Guacamole script installation process [@PhoenixEmik](https://github.com/PhoenixEmik) ([#1122](https://github.com/community-scripts/ProxmoxVE/pull/1122))
 - Fix Homepage-Script: Installation/Update [@MickLesk](https://github.com/MickLesk) ([#1129](https://github.com/community-scripts/ProxmoxVE/pull/1129))
+- fix: guacd service not start during Apache-Guacamole script installation process [@PhoenixEmik](https://github.com/PhoenixEmik) ([#1122](https://github.com/community-scripts/ProxmoxVE/pull/1122))
 - Netbox: Updating URL to https [@surajsbmn](https://github.com/surajsbmn) ([#1124](https://github.com/community-scripts/ProxmoxVE/pull/1124))
 
 ## 2024-12-30
