@@ -27,6 +27,8 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- Fix: Copy issue after update in Bookstack LXC [@MickLesk](https://github.com/MickLesk) ([#1137](https://github.com/community-scripts/ProxmoxVE/pull/1137))
+- Omada: Switch Base-URL to prevent issues [@MickLesk](https://github.com/MickLesk) ([#1135](https://github.com/community-scripts/ProxmoxVE/pull/1135))
 - fix: guacd service not start during Apache-Guacamole script installation process [@PhoenixEmik](https://github.com/PhoenixEmik) ([#1122](https://github.com/community-scripts/ProxmoxVE/pull/1122))
 - Fix Homepage-Script: Installation/Update [@MickLesk](https://github.com/MickLesk) ([#1129](https://github.com/community-scripts/ProxmoxVE/pull/1129))
 - Netbox: Updating URL to https [@surajsbmn](https://github.com/surajsbmn) ([#1124](https://github.com/community-scripts/ProxmoxVE/pull/1124))
