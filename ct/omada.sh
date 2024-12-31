@@ -32,9 +32,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  latest_url=$(curl -s "https://support.omadanetworks.com/en/product/omada-software-controller/?resourceType=download" | \
-  grep -o 'https://static\.tp-link\.com/upload/software/[^"]*linux_x64[^"]*\.deb' | \
-  head -n 1)
+  latest_url=$(curl -s "https://www.vigi.com/de/support/download/omada-software-controller/" | grep -o 'https://static\.tp-link\.com/upload/software/[^"]*linux_x64[^"]*\.deb' | head -n 1) 
   latest_version=$(basename "$latest_url")
   if [ -z "${latest_version}" ]; then
     msg_error "It seems that the server (tp-link.com) might be down. Please try again at a later time."
