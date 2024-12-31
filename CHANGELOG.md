@@ -16,6 +16,15 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
+## 2024-12-31
+
+### Changed
+
+### 🚀 Updated Scripts
+
+- Fix Homepage-Script: Installation/Update [@MickLesk](https://github.com/MickLesk) ([#1129](https://github.com/community-scripts/ProxmoxVE/pull/1129))
+- Netbox: Updating URL to https [@surajsbmn](https://github.com/surajsbmn) ([#1124](https://github.com/community-scripts/ProxmoxVE/pull/1124))
+
 ## 2024-12-30
 
 ### Changed
