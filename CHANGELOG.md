@@ -20,8 +20,14 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### Changed
 
+### 💥 Breaking Changes
+
+- Add ExecReload to prometheus.service [@BasixKOR](https://github.com/BasixKOR) ([#1131](https://github.com/community-scripts/ProxmoxVE/pull/1131))
+- Fix: Figlet Version & Font Check [@MickLesk](https://github.com/MickLesk) ([#1133](https://github.com/community-scripts/ProxmoxVE/pull/1133))
+
 ### 🚀 Updated Scripts
 
+- fix: guacd service not start during Apache-Guacamole script installation process [@PhoenixEmik](https://github.com/PhoenixEmik) ([#1122](https://github.com/community-scripts/ProxmoxVE/pull/1122))
 - Fix Homepage-Script: Installation/Update [@MickLesk](https://github.com/MickLesk) ([#1129](https://github.com/community-scripts/ProxmoxVE/pull/1129))
 - Netbox: Updating URL to https [@surajsbmn](https://github.com/surajsbmn) ([#1124](https://github.com/community-scripts/ProxmoxVE/pull/1124))
 
