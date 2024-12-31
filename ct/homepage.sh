@@ -50,16 +50,16 @@ function update_script() {
     cp -r homepage-${RELEASE}/* /opt/homepage/
     rm -rf homepage-${RELEASE}
     cd /opt/homepage
-    npx update-browserslist-db@latest
-    pnpm install
-    export NEXT_PUBLIC_VERSION=v$RELEASE
-    export NEXT_PUBLIC_REVISION='source' 
-    pnpm build
+    npx update-browserslist-db@latest >/dev/null 2>&1
+    pnpm install >/dev/null 2>&1
+    NEXT_PUBLIC_VERSION=v$RELEASE
+    NEXT_PUBLIC_REVISION='source' 
+    pnpm build >/dev/null 2>&1
     systemctl start homepage
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated Homepage to v${RELEASE}"
   else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
+    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }
