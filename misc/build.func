@@ -189,40 +189,59 @@ update_motd_ip() {
 
 # This function sets the APP-Name into an ASCII Header in Slant, figlet needed on proxmox main node.
 header_info() {
-  # Check if figlet is installed
-  if ! command -v figlet &> /dev/null; then
-    echo -e "${INFO}${BOLD}${DGN}Figlet for ASCII-Header not found. Installing... ${CL}"
+  # Helper function: Install FIGlet and download fonts
+  install_figlet() {
+    echo -e "${INFO}${BOLD}${DGN}Installing FIGlet...${CL}"
 
-    # Install necessary dependencies and figlet
-    if [ -f /etc/debian_version ] || [ -f /etc/lsb-release ]; then
-      apt-get update -y &> /dev/null
-      apt-get install -y tar build-essential &> /dev/null
-    elif [ -f /etc/alpine-release ]; then
-      apk add --no-cache tar xz build-base &> /dev/null
-      export TERM=xterm
-    else
-      return 1
-    fi
     temp_dir=$(mktemp -d)
     curl -sL https://github.com/community-scripts/ProxmoxVE/raw/refs/heads/main/misc/figlet.tar.xz -o "$temp_dir/figlet.tar.xz"
     mkdir -p /tmp/figlet
     tar -xf "$temp_dir/figlet.tar.xz" -C /tmp/figlet --strip-components=1
     cd /tmp/figlet
-    # Run make to compile the figlet binary
     make >/dev/null
-    # Check if the figlet binary exists
+
     if [ -f "figlet" ]; then
       chmod +x figlet
-      # Move figlet to /usr/local/bin if not already there
-      if [ ! -e /usr/local/bin/figlet ]; then
-        mv figlet /usr/local/bin/
-        mkdir -p /usr/local/share/figlet
-        cp -r /tmp/figlet/fonts/*.flf /usr/local/share/figlet/
-      fi
-      echo -e "${CM}${BOLD}${DGN}Figlet successfully installed. ${CL}"
+      mv figlet /usr/local/bin/
+      mkdir -p /usr/local/share/figlet
+      cp -r /tmp/figlet/fonts/*.flf /usr/local/share/figlet/
+      echo -e "${CM}${BOLD}${DGN}FIGlet successfully installed.${CL}"
+    else
+      echo -e "${ERR}${BOLD}${RED}Failed to install FIGlet.${CL}"
+      return 1
     fi
     rm -rf "$temp_dir"
+  }
+
+  # Check if figlet and the slant font are available
+  if ! figlet -f slant "Test" &>/dev/null; then
+    echo -e "${INFO}${BOLD}${DGN}FIGlet or the slant font is missing. Installing...${CL}"
+
+    if [ -f /etc/debian_version ] || [ -f /etc/lsb-release ]; then
+      # Debian/Ubuntu-based systems
+      apt-get update -y &>/dev/null
+      apt-get install -y wget build-essential &>/dev/null
+      install_figlet
+
+    elif [ -f /etc/alpine-release ]; then
+      # Alpine-based systems
+      apk add --no-cache tar xz build-base wget &>/dev/null
+      export TERM=xterm
+      install_figlet
+
+    else
+      echo -e "${ERR}${BOLD}${RED}Unsupported operating system.${CL}"
+      return 1
+    fi
+
+    # Ensure the slant font is available
+    if [ ! -f "/usr/share/figlet/slant.flf" ]; then
+      echo -e "${INFO}${BOLD}${DGN}Downloading slant font...${CL}"
+      wget -qO /usr/share/figlet/slant.flf "http://www.figlet.org/fonts/slant.flf"
+    fi
   fi
+
+  # Display ASCII header
   term_width=$(tput cols 2>/dev/null || echo 120)
   ascii_art=$(figlet -f slant -w "$term_width" "$APP")
   clear
