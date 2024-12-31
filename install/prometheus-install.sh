@@ -46,6 +46,7 @@ ExecStart=/usr/local/bin/prometheus \
     --config.file=/etc/prometheus/prometheus.yml \
     --storage.tsdb.path=/var/lib/prometheus/ \
     --web.listen-address=0.0.0.0:9090
+ExecReload=/bin/kill -HUP \$MAINPID
 
 [Install]
 WantedBy=multi-user.target" >$service_path
