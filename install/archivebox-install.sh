@@ -47,14 +47,14 @@ $STD apt-get update
 $STD apt-get install -y nodejs
 msg_ok "Installed Node.js"
 
-msg_info "Installing Playright/Chromium"
-$STD pip install playwright
-$STD playwright install --with-deps chromium
-msg_ok "Installed Playright/Chromium"
+msg_info "Installing Playwright"
+$STD pip install playwright 
+$STD playwright install-deps chromium 
+msg_ok "Installed Playwright"
 
-msg_info "Installing ArchiveBox"
+msg_info "Installing Chromium and ArchiveBox"
 mkdir -p /opt/archivebox/{data,.npm,.cache,.local}
-$STD adduser --system --shell /bin/bash --gecos 'Archive Box User' --group --disabled-password  archivebox
+$STD adduser --system --shell /bin/bash --gecos 'Archive Box User' --group --disabled-password --home /home/archivebox archivebox
 chown -R archivebox:archivebox /opt/archivebox/{data,.npm,.cache,.local}
 chmod -R 755 /opt/archivebox/data
 $STD pip install archivebox
@@ -63,6 +63,7 @@ expect <<EOF
 set timeout -1
 log_user 0
 
+spawn sudo -u archivebox playwright install chromium
 spawn sudo -u archivebox archivebox setup
 
 expect "Username"
