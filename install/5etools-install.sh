@@ -36,7 +36,7 @@ cd ~
 msg_ok "Set up 5etools"
 
 msg_info "Creating Service"
-cat <<EOF > /etc/apache2/apache2.conf
+cat <<EOF >> /etc/apache2/apache2.conf
 <Location /server-status>
     SetHandler server-status
     Order deny,allow
