@@ -27,6 +27,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- Happy new Year! Update Copyright to 2025 [@MickLesk](https://github.com/MickLesk) ([#1150](https://github.com/community-scripts/ProxmoxVE/pull/1150))
 - Update Kernel-Clean to new Version & Bugfixing [@MickLesk](https://github.com/MickLesk) ([#1147](https://github.com/community-scripts/ProxmoxVE/pull/1147))
 - Fix chromium installation for ArchiveBox  [@tkunzfeld](https://github.com/tkunzfeld) ([#1140](https://github.com/community-scripts/ProxmoxVE/pull/1140))
 
