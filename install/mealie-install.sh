@@ -21,6 +21,7 @@ $STD apt-get install -y \
     git \
     python3 \
     curl \
+    unzip \
     build-essential \
     libwebp-dev \
     libsasl2-dev \
