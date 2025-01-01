@@ -27,7 +27,7 @@ msg_ok "Installed Dependencies"
 msg_info "Set up base 5etools"
 RELEASE=$(curl -s https://api.github.com/repos/5etools-mirror-3/5etools-src/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 wget -q "https://github.com/5etools-mirror-3/5etools-src/archive/refs/tags/${RELEASE}.zip"
-unzip "${RELEASE}.zip"
+unzip -q "${RELEASE}.zip"
 mv "5etools-src-${RELEASE:1}" /opt/5etools
 echo "${RELEASE}" >"/opt/5etools_version.txt"
 rm "${RELEASE}.zip"
@@ -36,7 +36,7 @@ msg_ok "Set up base 5etools"
 msg_info "Set up 5etools images"
 IMG_RELEASE=$(curl -s https://api.github.com/repos/5etools-mirror-2/5etools-img/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 curl -sS "https://github.com/5etools-mirror-2/5etools-img/archive/refs/tags/${IMG_RELEASE}.zip" > "${IMG_RELEASE}.zip"
-unzip "${IMG_RELEASE}.zip"
+unzip -q "${IMG_RELEASE}.zip"
 mv "5etools-img-${IMG_RELEASE:1}" /opt/5etools/img
 echo "${IMG_RELEASE}" >"/opt/5etools_IMG_version.txt"
 rm "${IMG_RELEASE}.zip"
