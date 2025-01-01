@@ -12,7 +12,7 @@ var_cpu="1"
 var_ram="512"
 var_disk="10"
 var_os="debian"
-var_version="12"
+var_version="13"
 var_unprivileged="1"
 
 # App Output & Base Settings
