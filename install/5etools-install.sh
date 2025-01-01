@@ -36,7 +36,6 @@ cat <<EOT >> /etc/apache2/apache2.conf
 EOT
 
 rm -rf /var/www/html
-msg_info "Setting up 5etools"
 git config --global http.postBuffer 1048576000
 git config --global https.postBuffer 1048576000
 git clone https://github.com/5etools-mirror-3/5etools-src /opt/5etools
