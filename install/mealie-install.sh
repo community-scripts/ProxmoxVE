@@ -37,8 +37,7 @@ $STD apt-get install -y \
     libldap-2.5
 
 mkdir /app
-$STD npm install -g npm
-$STD npm install -g yarn
+npm install -g yarn
 msg_ok "Installed Dependencies"
 
 RELEASE=$(curl -s https://api.github.com/repos/mealie-recipes/mealie/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
@@ -50,13 +49,13 @@ msg_ok "Downloading mealie ${RELEASE}"
 
 msg_info "Setting up frontend"
 cd /app/mealie
-yarn install \
+/usr/local/bin/yarn install \
     --prefer-offline \
     --frozen-lockfile \
     --non-interactive \
     --production=false \
     --network-timeout=1000000
-yarn generate
+/usr/local/bin/yarn generate
 msg_ok "Setting up frontend"
 
 msg_info "Setting up ENV"
