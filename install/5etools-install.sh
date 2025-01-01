@@ -41,7 +41,8 @@ git config --global http.postBuffer 1048576000
 git config --global https.postBuffer 1048576000
 git clone https://github.com/5etools-mirror-3/5etools-src /opt/5etools
 msg_ok "Set up 5etools"
-msg_info "Setting up 5etools images"
+
+msg_info "Creating Service"
 cd /opt/5etools
 git submodule add -f https://github.com/5etools-mirror-2/5etools-img "img"
 git pull --recurse-submodules --jobs=10
