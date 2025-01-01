@@ -37,10 +37,16 @@ echo "<Location /server-status>\n"\
 
 rm -rf /var/www/html
 RELEASE=$(curl -s https://api.github.com/repos/5etools-mirror-3/5etools-src/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+msg_info "Setting up 5etools"
 wget -q "https://github.com/5etools-mirror-3/5etools-src/archive/refs/tags/${RELEASE}.zip"
-unzip -q "${RELEASE}.zip" -d "/opt/5etools"
+unzip -q "${RELEASE}.zip" -d "/opt/${APP}"
+rm -rf "${RELEASE}.zip"
+msg_ok "Set up 5etools"
+msg_info "Setting up 5etools images"
 wget -q "https://github.com/5etools-mirror-2/5etools-img/archive/refs/tags/${RELEASE}.zip"
-unzip -q "${RELEASE}.zip" -d "/opt/5etools/img"
+unzip -q "${RELEASE}.zip" -d "/opt/${APP}/img"
+rm -rf "${RELEASE}.zip"
+msg_info "Set up 5etools images"
 ln -s "/opt/5etools" /var/www/html
 
 chown -R www-data: "/opt/5etools"
@@ -48,7 +54,6 @@ chmod -R 755 "/opt/5etools"
 
 # Cleanup
 msg_info "Cleaning up"
-rm -rf "${RELEASE}.zip"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"

@@ -52,15 +52,16 @@ function update_script() {
         # Execute Update
         wget -q "https://github.com/5etools-mirror-3/5etools-src/archive/refs/tags/${RELEASE}.zip"
         unzip -q "${RELEASE}.zip" -d "/opt/${APP}"
+        rm -rf "${RELEASE}.zip"
         wget -q "https://github.com/5etools-mirror-2/5etools-img/archive/refs/tags/${RELEASE}.zip"
         unzip -q "${RELEASE}.zip" -d "/opt/${APP}/img"
+        rm -rf "${RELEASE}.zip"
 
         chown -R www-data: "/opt/${APP}"
         chmod -R 755 "/opt/${APP}"
 
         # Cleaning up
         msg_info "Cleaning Up"
-        rm -rf "${RELEASE}.zip"
         $STD apt-get -y autoremove
         $STD apt-get -y autoclean
         msg_ok "Cleanup Completed"
