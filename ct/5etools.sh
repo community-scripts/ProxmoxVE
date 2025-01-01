@@ -10,7 +10,7 @@ APP="5etools"
 TAGS="wiki"
 var_cpu="1"
 var_ram="512"
-var_disk="2"
+var_disk="10"
 var_os="debian"
 var_version="12"
 var_unprivileged="1"
@@ -51,8 +51,9 @@ function update_script() {
 
         # Execute Update
         wget -q "https://github.com/5etools-mirror-3/5etools-src/archive/refs/tags/${RELEASE}.zip"
-        unzip -q "${RELEASE}.zip"
-        mv "${APP}-src-${RELEASE:1}/" "/opt/${APP}"
+        unzip -q "${RELEASE}.zip" -d "/opt/${APP}"
+        wget -q "https://github.com/5etools-mirror-2/5etools-img/archive/refs/tags/${RELEASE}.zip"
+        unzip -q "${RELEASE}.zip" -d "/opt/${APP}/img"
 
         chown -R www-data: "/opt/${APP}"
         chmod -R 755 "/opt/${APP}"

@@ -38,8 +38,9 @@ echo "<Location /server-status>\n"\
 rm -rf /var/www/html
 RELEASE=$(curl -s https://api.github.com/repos/5etools-mirror-3/5etools-src/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 wget -q "https://github.com/5etools-mirror-3/5etools-src/archive/refs/tags/${RELEASE}.zip"
-unzip -q "${RELEASE}.zip"
-mv "5etools-src-${RELEASE:1}/" "/opt/5etools"
+unzip -q "${RELEASE}.zip" -d "/opt/5etools"
+wget -q "https://github.com/5etools-mirror-2/5etools-img/archive/refs/tags/${RELEASE}.zip"
+unzip -q "${RELEASE}.zip" -d "/opt/5etools/img"
 ln -s "/opt/5etools" /var/www/html
 
 chown -R www-data: "/opt/5etools"
