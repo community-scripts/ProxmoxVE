@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2024 tteck
-# Author: tteck (tteckster)
-# License: MIT
-# https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-
 function header_info {
   clear
   cat <<"EOF"
@@ -17,104 +12,65 @@ function header_info {
 EOF
 }
 
-# Color variables for output
-YW=$(echo "\033[33m")
-RD=$(echo "\033[01;31m")
-GN=$(echo "\033[1;92m")
-CL=$(echo "\033[m")
-BFR="\\r\\033[K"
-HOLD="-"
-CM="${GN}✓${CL}"
-
-# Functions for logging messages
-function msg_info() {
-  local msg="$1"
-  echo -ne " ${HOLD} ${YW}${msg}..."
-}
-
-function msg_ok() {
-  local msg="$1"
-  echo -e "${BFR} ${CM} ${GN}${msg}${CL}"
-}
+# Color variables
+YW="\033[33m"
+GN="\033[1;92m"
+RD="\033[01;31m"
+CL="\033[m"
 
 # Detect current kernel
 current_kernel=$(uname -r)
-
-# Detect all installed kernels except the current one
 available_kernels=$(dpkg --list | grep 'kernel-.*-pve' | awk '{print $2}' | grep -v "$current_kernel" | sort -V)
 
 header_info
 
-# If no old kernels are available, exit with a message
 if [ -z "$available_kernels" ]; then
-  whiptail --backtitle "Proxmox VE Helper Scripts" --title "No Old Kernels" \
-    --msgbox "It appears there are no old kernels on your system.\nCurrent kernel: $current_kernel" 10 68
-  echo "Exiting..."
-  sleep 2
-  clear
-  exit
+  echo -e "${GN}No old kernels detected. Current kernel: ${current_kernel}${CL}"
+  exit 0
 fi
 
-# Prepare kernel options for selection
-KERNEL_MENU=()
-while read -r TAG ITEM; do
-  OFFSET=2
-  MSG_MAX_LENGTH=$((MSG_MAX_LENGTH < ${#ITEM} + OFFSET ? ${#ITEM} + OFFSET : MSG_MAX_LENGTH))
-  KERNEL_MENU+=("$TAG" "$ITEM " "OFF")
-done < <(echo "$available_kernels")
+echo -e "${YW}Available kernels for removal:${CL}"
+echo "$available_kernels" | nl -w 2 -s '. '
 
-# Display checklist to select kernels for removal
-remove_kernels=$(whiptail --backtitle "Proxmox VE Helper Scripts" \
-  --title "Current Kernel: $current_kernel" \
-  --checklist "\nSelect kernels to remove:\n" \
-  16 $((MSG_MAX_LENGTH + 58)) 6 "${KERNEL_MENU[@]}" 3>&1 1>&2 2>&3 | tr -d '"') || exit
+echo -e "\n${YW}Select kernels to remove (comma-separated, e.g., 1,2):${CL}"
+read -r selected
 
-# Exit if no kernel was selected
-[ -z "$remove_kernels" ] && {
-  whiptail --backtitle "Proxmox VE Helper Scripts" --title "No Kernel Selected" \
-    --msgbox "It appears no kernel was selected." 10 68
-  echo "Exiting..."
-  sleep 2
-  clear
-  exit
-}
+# Parse selection
+IFS=',' read -r -a selected_indices <<< "$selected"
+kernels_to_remove=()
 
-# Confirm removal
-whiptail --backtitle "Proxmox VE Helper Scripts" --title "Remove Kernels" \
-  --yesno "Would you like to remove the $(echo $remove_kernels | awk '{print NF}') selected kernels?" 10 68 || exit
-
-# Process kernel removal
-msg_info "Removing ${RD}$(echo $remove_kernels | awk '{print NF}') ${YW}old kernels${CL}"
-for kernel in $remove_kernels; do
-  if [[ $kernel == *"-signed" ]]; then
-    # Handle signed kernels with dependencies
-    touch /please-remove-proxmox-ve  # Temporarily bypass Proxmox warnings
-    if sudo apt-get purge -y "$kernel" >/dev/null 2>&1; then
-      msg_ok "Removed kernel: $kernel"
-    else
-      msg_info "Failed to remove kernel: $kernel. Check dependencies or manual removal."
-    fi
-    rm -f /please-remove-proxmox-ve  # Clean up bypass file
-  else
-    # Standard kernel removal
-    if sudo apt-get purge -y "$kernel" >/dev/null 2>&1; then
-      msg_ok "Removed kernel: $kernel"
-    else
-      msg_info "Failed to remove kernel: $kernel. Check dependencies or manual removal."
-    fi
+for index in "${selected_indices[@]}"; do
+  kernel=$(echo "$available_kernels" | sed -n "${index}p")
+  if [ -n "$kernel" ]; then
+    kernels_to_remove+=("$kernel")
   fi
-  sleep 1
 done
 
-# Update GRUB configuration
-msg_info "Updating GRUB"
-if /usr/sbin/update-grub >/dev/null 2>&1; then
-  msg_ok "GRUB updated successfully"
-else
-  msg_info "Failed to update GRUB"
+if [ ${#kernels_to_remove[@]} -eq 0 ]; then
+  echo -e "${RD}No valid selection made. Exiting.${CL}"
+  exit 1
 fi
 
-# Completion message
-msg_info "Exiting"
-sleep 2
-msg_ok "Finished"
+# Confirm removal
+echo -e "${YW}Kernels to be removed:${CL}"
+printf "%s\n" "${kernels_to_remove[@]}"
+read -rp "Proceed with removal? (y/n): " confirm
+if [[ "$confirm" != "y" ]]; then
+  echo -e "${RD}Aborted.${CL}"
+  exit 1
+fi
+
+# Remove kernels
+for kernel in "${kernels_to_remove[@]}"; do
+  echo -e "${YW}Removing $kernel...${CL}"
+  if apt-get purge -y "$kernel" >/dev/null 2>&1; then
+    echo -e "${GN}Successfully removed: $kernel${CL}"
+  else
+    echo -e "${RD}Failed to remove: $kernel. Check dependencies.${CL}"
+  fi
+done
+
+# Clean up and update GRUB
+echo -e "${YW}Cleaning up...${CL}"
+apt-get autoremove -y >/dev/null 2>&1 && update-grub >/dev/null 2>&1
+echo -e "${GN}Cleanup and GRUB update complete.${CL}"
