@@ -27,6 +27,17 @@ msg_ok "Installed Dependencies"
 
 # Setup App
 msg_info "Setup 5etools"
+rm -rf /var/www/html
+git config --global http.postBuffer 1048576000
+git config --global https.postBuffer 1048576000
+git clone https://github.com/5etools-mirror-3/5etools-src /opt/5etools
+cd /opt/5etools
+git submodule add -f https://github.com/5etools-mirror-2/5etools-img "img"
+git pull --recurse-submodules --jobs=10
+cd ~
+msg_ok "Set up 5etools"
+
+msg_info "Creating Service"
 cat <<EOF > /etc/apache2/apache2.conf
 <Location /server-status>
     SetHandler server-status
@@ -34,31 +45,17 @@ cat <<EOF > /etc/apache2/apache2.conf
     Allow from all
 </Location>
 EOF
-
-rm -rf /var/www/html
-git config --global http.postBuffer 1048576000
-git config --global https.postBuffer 1048576000
-git clone https://github.com/5etools-mirror-3/5etools-src /opt/5etools
-msg_ok "Set up 5etools"
-
-msg_info "Creating Service"
-cd /opt/5etools
-git submodule add -f https://github.com/5etools-mirror-2/5etools-img "img"
-git pull --recurse-submodules --jobs=10
-cd ~
 ln -s "/opt/5etools" /var/www/html
 
 chown -R www-data: "/opt/5etools"
 chmod -R 755 "/opt/5etools"
+apache2ctl start
 msg_ok "Creating Service"
 # Cleanup
 msg_info "Cleaning up"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
-
-# Starting httpd
-apache2ctl start
 
 motd_ssh
 customize
