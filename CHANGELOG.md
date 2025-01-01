@@ -22,6 +22,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### ✨ New Scripts
 
+- New Script: Komodo [@MickLesk](https://github.com/MickLesk) ([#1167](https://github.com/community-scripts/ProxmoxVE/pull/1167))
 - New Script: Firefly [@quantumryuu](https://github.com/quantumryuu) ([#616](https://github.com/community-scripts/ProxmoxVE/pull/616))
 - New Script: Semaphore [@quantumryuu](https://github.com/quantumryuu) ([#596](https://github.com/community-scripts/ProxmoxVE/pull/596))
 
