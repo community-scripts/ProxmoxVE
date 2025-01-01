@@ -69,9 +69,9 @@ function update_script() {
         msg_ok "Updated $APP to ${RELEASE}"
 
         # Starting httpd
-        msg_info "Starting httpd"
-        httpd-foreground
-        msg_ok "Started httpd"
+        msg_info "Starting apache"
+        apache2ctl start
+        msg_ok "Started apache"
     else
         msg_ok "No update required. ${APP} is already at ${RELEASE}"
     fi

@@ -21,7 +21,8 @@ $STD apt-get install -y \
   sudo \
   git \
   jq \
-  apache2
+  apache2 \
+  unzip
 
 msg_ok "Installed Dependencies"
 
@@ -32,12 +33,14 @@ echo "<Location /server-status>\n"\
 "    Order deny,allow\n"\
 "    Allow from all\n"\
 "</Location>\n"\
->> /usr/local/apache2/conf/httpd.conf
+>> /etc/apache2/apache2.conf
 
-rm /usr/local/apache2/htdocs/index.html
+rm -rf /var/www/html
+RELEASE=$(curl -s https://api.github.com/repos/5etools-mirror-3/5etools-src/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 wget -q "https://github.com/5etools-mirror-3/5etools-src/archive/refs/tags/${RELEASE}.zip"
 unzip -q "${RELEASE}.zip"
 mv "${APP}-src-${RELEASE}/" "/opt/${APP}"
+ln -s "/opt/${APP}" /var/www/html
 
 chown -R www-data: "/opt/${APP}"
 chmod -R 755 "/opt/${APP}"
@@ -48,9 +51,9 @@ rm -rf "v${RELEASE}.zip"
 msg_ok "Setup 5etools"
 
 # Starting httpd
-msg_info "Starting httpd"
-httpd-foreground
-msg_ok "Started httpd"
+msg_info "Starting apache"
+apache2ctl start
+msg_ok "Started apache"
 
 motd_ssh
 customize
