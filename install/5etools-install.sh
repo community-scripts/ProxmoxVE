@@ -46,7 +46,6 @@ cd /opt/5etools
 git submodule add -f https://github.com/5etools-mirror-2/5etools-img "img"
 git pull --recurse-submodules --jobs=10
 cd ~
-msg_info "Set up 5etools images"
 ln -s "/opt/5etools" /var/www/html
 
 chown -R www-data: "/opt/5etools"
