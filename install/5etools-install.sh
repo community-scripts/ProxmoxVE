@@ -20,20 +20,26 @@ $STD apt-get install -y \
   mc \
   sudo \
   git \
-  apache2
+  apache2 \
+  unzip
 msg_ok "Installed Dependencies"
 
 # Setup App
-msg_info "Setup 5etools"
-rm -rf /var/www/html
-git config --global http.postBuffer 1048576000
-git config --global https.postBuffer 1048576000
-git clone https://github.com/5etools-mirror-3/5etools-src /opt/5etools
-cd /opt/5etools
-git submodule add -f https://github.com/5etools-mirror-2/5etools-img "img"
-git pull --recurse-submodules --jobs=10
-cd ~
-msg_ok "Set up 5etools"
+msg_info "Set up base 5etools"
+RELEASE=$(curl -s https://api.github.com/repos/5etools-mirror-3/5etools-src/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+wget -q "https://github.com/5etools-mirror-3/5etools-src/archive/refs/tags/${RELEASE}.zip"
+unzip "${RELEASE}.zip" -d "/opt/${APP}"
+echo "${RELEASE}" >"/opt/${APP}_version.txt"
+rm "${RELEASE}.zip"
+msg_ok "Set up base 5etools"
+
+msg_info "Set up 5etools images"
+IMG_RELEASE=$(curl -s https://api.github.com/repos/5etools-mirror-2/5etools-img/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+wget -q "https://github.com/5etools-mirror-2/5etools-img/archive/refs/tags/${IMG_RELEASE}.zip"
+unzip "${IMG_RELEASE}.zip" -d "/opt/${APP}/img"
+echo "${IMG_RELEASE}" >"/opt/${APP}_IMG_version.txt"
+rm "${IMG_RELEASE}.zip"
+msg_ok "Set up 5etools images"
 
 msg_info "Creating Service"
 cat <<EOF >> /etc/apache2/apache2.conf

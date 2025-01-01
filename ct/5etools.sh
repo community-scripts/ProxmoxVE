@@ -35,29 +35,62 @@ function update_script() {
         exit
     fi
 
-    # Crawling the new version and checking whether an update is required
-    msg_info "Updating System"
-    apt-get update &>/dev/null
-    apt-get -y upgrade &>/dev/null
-    msg_ok "Updated System"
+    RELEASE=$(curl -s https://api.github.com/repos/5etools-mirror-3/5etools-src/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+    if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f "/opt/${APP}_version.txt" ]]; then
+        # Crawling the new version and checking whether an update is required
+        msg_info "Updating System"
+        apt-get update &>/dev/null
+        apt-get -y upgrade &>/dev/null
+        msg_ok "Updated System"
 
-    # Execute Update
-    msg_info "Updating 5etools"
-    cd /opt/5etools
-    git config --global http.postBuffer 1048576000
-    git config --global https.postBuffer 1048576000
-    git pull --recurse-submodules --jobs=10
-    msg_ok "Updated 5etools"
+        # Execute Update
+        msg_info "Updating base 5etools"
+        wget -q "https://github.com/5etools-mirror-3/5etools-src/archive/refs/tags/${RELEASE}.zip"
+        unzip "${RELEASE}.zip" -d "/opt/${APP}"
+        echo "${RELEASE}" >"/opt/${APP}_version.txt"
+        msg_ok "Updated base 5etools"
 
-    chown -R www-data: "/opt/${APP}"
-    chmod -R 755 "/opt/${APP}"
+        chown -R www-data: "/opt/${APP}"
+        chmod -R 755 "/opt/${APP}"
 
-    # Cleaning up
-    msg_info "Cleaning Up"
-    $STD apt-get -y autoremove
-    $STD apt-get -y autoclean
-    msg_ok "Cleanup Completed"
-    exit
+        # Cleaning up
+        msg_info "Cleaning Up"
+        rm "${RELEASE}.zip"
+        $STD apt-get -y autoremove
+        $STD apt-get -y autoclean
+        msg_ok "Cleanup Completed"
+    else
+        msg_ok "No update required. Base ${APP} is already at ${RELEASE}"
+    fi
+
+    IMG_RELEASE=$(curl -s https://api.github.com/repos/5etools-mirror-2/5etools-img/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+    if [[ "${IMG_RELEASE}" != "$(cat /opt/${APP}_IMG_version.txt)" ]] || [[ ! -f "/opt/${APP}_IMG_version.txt" ]]; then
+        # Crawling the new version and checking whether an update is required
+        msg_info "Updating System"
+        apt-get update &>/dev/null
+        apt-get -y upgrade &>/dev/null
+        msg_ok "Updated System"
+
+        # Execute Update
+        msg_info "Updating 5etools images"
+        wget -q "https://github.com/5etools-mirror-2/5etools-img/archive/refs/tags/${IMG_RELEASE}.zip"
+        unzip "${IMG_RELEASE}.zip" -d "/opt/${APP}/img"
+        echo "${IMG_RELEASE}" >"/opt/${APP}_IMG_version.txt"
+        msg_ok "Updating 5etools images"
+
+        chown -R www-data: "/opt/${APP}"
+        chmod -R 755 "/opt/${APP}"
+
+        # Cleaning up
+        msg_info "Cleaning Up"
+        rm "${IMG_RELEASE}.zip"
+        $STD apt-get -y autoremove
+        $STD apt-get -y autoclean
+        msg_ok "Cleanup Completed"
+    else
+        msg_ok "No update required. ${APP} images are already at ${IMG_RELEASE}"
+    fi
+
 }
 
 start
