@@ -58,9 +58,7 @@ $STD apt-get -y autoclean
 msg_ok "Cleaned"
 
 # Starting httpd
-msg_info "Starting apache"
 apache2ctl start
-msg_ok "Started apache"
 
 motd_ssh
 customize
