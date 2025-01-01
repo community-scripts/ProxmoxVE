@@ -20,7 +20,11 @@ jobs:
     - name: Get changed files
       id: changes
       run: |
-        echo "::set-output name=files::$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '\.sh$')"
+        if ${{ github.event_name == 'pull_request' }}; then
+          echo "files=$(git diff --name-only -r HEAD^1 HEAD | xargs)" >> $GITHUB_OUTPUT
+        else
+          echo "files=$(git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | xargs)" >> $GITHUB_OUTPUT
+        fi
 
     - name: Run ShellCheck
       if: steps.changes.outputs.files != ''
