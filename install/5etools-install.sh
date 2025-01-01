@@ -48,6 +48,7 @@ cat <<EOF >> /etc/apache2/apache2.conf
     Allow from all
 </Location>
 EOF
+rm -rf /var/www/html
 ln -s "/opt/5etools" /var/www/html
 
 chown -R www-data: "/opt/5etools"
