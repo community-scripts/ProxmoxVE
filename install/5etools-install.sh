@@ -27,12 +27,13 @@ msg_ok "Installed Dependencies"
 
 # Setup App
 msg_info "Setup 5etools"
-echo "<Location /server-status>\n""\
-    SetHandler server-status\n""\
-    Order deny,allow\n""\
-    Allow from all\n""\
-</Location>\n" \
-  >>/etc/apache2/apache2.conf
+cat <<EOT >> /etc/apache2/apache2.conf
+<Location /server-status>
+    SetHandler server-status
+    Order deny,allow
+    Allow from all
+</Location>
+EOT
 
 rm -rf /var/www/html
 msg_info "Setting up 5etools"
