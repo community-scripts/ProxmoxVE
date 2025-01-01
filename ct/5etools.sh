@@ -7,7 +7,7 @@ source <(curl -s https://raw.githubusercontent.com/TheRealVira/ProxmoxVE/refs/he
 
 # App Default Values
 APP="5etools"
-TAGS="wiki"
+var_tags="wiki"
 var_cpu="1"
 var_ram="512"
 var_disk="20"
