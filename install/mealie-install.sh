@@ -43,12 +43,12 @@ msg_ok "Installed Dependencies"
 RELEASE=$(curl -s https://api.github.com/repos/mealie-recipes/mealie/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 msg_info "Downloading mealie ${RELEASE}"
 wget -q "https://github.com/mealie-recipes/mealie/archive/refs/tags/${RELEASE}.zip"
-unzip "${RELEASE}.zip" -d /app/${APP}
-echo "${RELEASE}" >/app/${APP}_version.txt
+unzip "${RELEASE}.zip" -d /app/mealie
+echo "${RELEASE}" >/app/mealie_version.txt
 msg_ok "Downloading mealie ${RELEASE}"
 
 msg_info "Setting up frontend"
-cd /app/${APP}
+cd /app/mealie
 npm yarn install \
     --prefer-offline \
     --frozen-lockfile \
