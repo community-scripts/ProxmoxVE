@@ -48,8 +48,7 @@ function update_script() {
     git config --global http.postBuffer 1048576000
     git config --global https.postBuffer 1048576000
     git pull --recurse-submodules --jobs=10
-    cd ~
-    msg_info "Updated 5etools"
+    msg_ok "Updated 5etools"
 
     chown -R www-data: "/opt/${APP}"
     chmod -R 755 "/opt/${APP}"
