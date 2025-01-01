@@ -6,7 +6,9 @@
 
 variables() {
   NSAPP=$(echo ${APP,,} | tr -d ' ') # This function sets the NSAPP variable by converting the value of the APP variable to lowercase and removing any spaces.
+  echo "${NSAPP}"
   var_install="${NSAPP}-install"     # sets the var_install variable by appending "-install" to the value of NSAPP.
+  echo "${var_install}"
   INTEGER='^[0-9]+([.][0-9]+)?$'     # it defines the INTEGER regular expression pattern.
   PVEHOST_NAME=$(hostname) # gets the Proxmox Hostname and sets it to Uppercase
 }
