@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2024 community-scripts ORG
+# Copyright (c) 2021-2025 community-scripts ORG
 # Author: TheRealVira
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://5e.tools/
@@ -10,11 +10,10 @@ APP="5etools"
 var_tags="wiki"
 var_cpu="1"
 var_ram="512"
-var_disk="10"
+var_disk="6"
 var_os="debian"
 var_version="12"
 var_unprivileged="1"
-var_offline_mode="TRUE"
 
 # App Output & Base Settings
 header_info "$APP"

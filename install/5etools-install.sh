@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2024 community-scripts ORG
+# Copyright (c) 2021-2025 community-scripts ORG
 # Author: TheRealVira
 # License: MIT
 # Source: https://5e.tools/
@@ -14,14 +14,12 @@ setting_up_container
 network_check
 update_os
 
-# Installing Dependencies with the 3 core dependencies (curl;sudo;mc)
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
   curl \
   mc \
   sudo \
   git \
-  jq \
   apache2
 msg_ok "Installed Dependencies"
 
