@@ -16,6 +16,20 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
+## 2025-01-01
+
+### Changed
+
+### ✨ New Scripts
+
+- New Script: Semaphore [@quantumryuu](https://github.com/quantumryuu) ([#596](https://github.com/community-scripts/ProxmoxVE/pull/596))
+- New Script: Firefly [@quantumryuu](https://github.com/quantumryuu) ([#616](https://github.com/community-scripts/ProxmoxVE/pull/616))
+
+### 🚀 Updated Scripts
+
+- Update Kernel-Clean to new Version & Bugfixing [@MickLesk](https://github.com/MickLesk) ([#1147](https://github.com/community-scripts/ProxmoxVE/pull/1147))
+- Fix chromium installation for ArchiveBox  [@tkunzfeld](https://github.com/tkunzfeld) ([#1140](https://github.com/community-scripts/ProxmoxVE/pull/1140))
+
 ## 2024-12-31 - Happy new Year! 🎉✨
 
 ### Changed
