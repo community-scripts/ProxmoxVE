@@ -21,8 +21,7 @@ $STD apt-get install -y \
   sudo \
   git \
   jq \
-  apache2 \
-  unzip
+  apache2
 
 msg_ok "Installed Dependencies"
 
@@ -36,17 +35,14 @@ echo "<Location /server-status>\n""\
   >>/etc/apache2/apache2.conf
 
 rm -rf /var/www/html
-RELEASE=$(curl -s https://api.github.com/repos/5etools-mirror-3/5etools-src/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-IMG_RELEASE=$(curl -s https://api.github.com/repos/5etools-mirror-2/5etools-img/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 msg_info "Setting up 5etools"
-wget -q "https://github.com/5etools-mirror-3/5etools-src/archive/refs/tags/${RELEASE}.zip"
-unzip -q "${RELEASE}.zip" -d "/opt/5etools"
-rm -rf "${RELEASE}.zip"
+git clone https://github.com/5etools-mirror-3/5etools-src /opt/5etools
 msg_ok "Set up 5etools"
 msg_info "Setting up 5etools images"
-wget -q "https://github.com/5etools-mirror-2/5etools-img/archive/refs/tags/${IMG_RELEASE}.zip"
-unzip -q "${IMG_RELEASE}.zip" -d "/opt/5etools/img"
-rm -rf "${IMG_RELEASE}.zip"
+cd /opt/5etools
+git submodule add -f https://github.com/5etools-mirror-2/5etools-img "img"
+git pull --recurse-submodules --jobs=10
+cd ~
 msg_info "Set up 5etools images"
 ln -s "/opt/5etools" /var/www/html
 

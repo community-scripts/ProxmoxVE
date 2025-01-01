@@ -37,53 +37,26 @@ function update_script() {
     fi
 
     # Crawling the new version and checking whether an update is required
-    RELEASE=$(curl -s https://api.github.com/repos/5etools-mirror-3/5etools-src/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-    IMG_RELEASE=$(curl -s https://api.github.com/repos/5etools-mirror-2/5etools-img/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-    if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ "${IMG_RELEASE}" != "$(cat /opt/${APP}_IMG_version.txt)" ]] || [[ ! -f "/opt/5etools_version.txt" ]] || [[ ! -f "/opt/5etools_IMG_version.txt" ]]; then
-        msg_info "Updating $APP to ${RELEASE}"
+    msg_info "Updating $APP..."
 
-        apt-get update &>/dev/null
-        apt-get -y upgrade &>/dev/null
+    apt-get update &>/dev/null
+    apt-get -y upgrade &>/dev/null
 
-        # Creating Backup
-        msg_info "Creating Backup"
-        mv "/opt/${APP}" "/opt/${APP}-backup"
-        msg_ok "Backup Created"
+    # Execute Update
+    msg_info "Updating 5etools"
+    cd /opt/5etools
+    git pull --recurse-submodules --jobs=10
+    cd ~
+    msg_info "Updated 5etools"
 
-        # Execute Update
-        msg_info "Setting up 5etools"
-        wget -q "https://github.com/5etools-mirror-3/5etools-src/archive/refs/tags/${RELEASE}.zip"
-        unzip -q "${RELEASE}.zip" -d "/opt/${APP}"
-        rm -rf "${RELEASE}.zip"
-        msg_ok "Set up 5etools"
-        msg_info "Setting up 5etools images"
-        wget -q "https://github.com/5etools-mirror-2/5etools-img/archive/refs/tags/${RELEASE}.zip"
-        unzip -q "${RELEASE}.zip" -d "/opt/${APP}/img"
-        rm -rf "${RELEASE}.zip"
-        msg_info "Set up 5etools images"
+    chown -R www-data: "/opt/${APP}"
+    chmod -R 755 "/opt/${APP}"
 
-        chown -R www-data: "/opt/${APP}"
-        chmod -R 755 "/opt/${APP}"
-
-        # Cleaning up
-        msg_info "Cleaning Up"
-        $STD apt-get -y autoremove
-        $STD apt-get -y autoclean
-        msg_ok "Cleanup Completed"
-
-        # Last Action
-        echo "${RELEASE}" >/opt/${APP}_version.txt
-        echo "${IMG_RELEASE}" >/opt/${APP}_IMG_version.txt
-        msg_ok "Updated $APP to ${RELEASE}"
-        msg_ok "Updated $APP images to ${IMG_RELEASE}"
-
-        # Starting httpd
-        msg_info "Starting apache"
-        apache2ctl start
-        msg_ok "Started apache"
-    else
-        msg_ok "No update required. ${APP} is already at ${RELEASE}"
-    fi
+    # Cleaning up
+    msg_info "Cleaning Up"
+    $STD apt-get -y autoremove
+    $STD apt-get -y autoclean
+    msg_ok "Cleanup Completed"
     exit
 }
 
