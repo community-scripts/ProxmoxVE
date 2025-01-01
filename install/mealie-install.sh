@@ -81,10 +81,11 @@ STATIC_FILES=/spa/static
 HOST 0.0.0.0
 EOF
 export PATH="$POETRY_HOME/bin:$VENV_PATH/bin:$PATH"
+set -a; source /etc/environment; set +a;
 msg_ok "Setting up ENV"
 
 msg_info "Create user account"
-useradd -u 911 -U -d $MEALIE_HOME abc
+useradd -u 911 -U -d $MEALIE_HOME -s /bin/bash abc
 usermod -G users abc
 mkdir $MEALIE_HOME
 msg_ok "Create user account"
