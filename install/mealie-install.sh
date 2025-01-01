@@ -34,6 +34,7 @@ $STD apt-get install -y \
     libldap-common \
     libldap-2.5
 
+mkdir /app
 rm -rf /var/lib/apt/lists/*
 npm install --global yarn
 msg_ok "Installed Dependencies"
