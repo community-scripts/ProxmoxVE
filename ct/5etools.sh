@@ -37,7 +37,7 @@ function update_script() {
     fi
 
     # Crawling the new version and checking whether an update is required
-    msg_info "Updating $APP..."
+    msg_info "Updating System"
 
     apt-get update &>/dev/null
     apt-get -y upgrade &>/dev/null
