@@ -39,16 +39,18 @@ rm -rf /var/www/html
 RELEASE=$(curl -s https://api.github.com/repos/5etools-mirror-3/5etools-src/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 wget -q "https://github.com/5etools-mirror-3/5etools-src/archive/refs/tags/${RELEASE}.zip"
 unzip -q "${RELEASE}.zip"
-mv "5etools-src-${RELEASE}/" "/opt/5etools"
+mv "5etools-src-${RELEASE:1}/" "/opt/5etools"
 ln -s "/opt/5etools" /var/www/html
 
 chown -R www-data: "/opt/5etools"
 chmod -R 755 "/opt/5etools"
 
-# Cleaning up
-msg_info "Cleaning Up"
-rm -rf "v${RELEASE}.zip"
-msg_ok "Setup 5etools"
+# Cleanup
+msg_info "Cleaning up"
+rm -rf "${RELEASE}.zip"
+$STD apt-get -y autoremove
+$STD apt-get -y autoclean
+msg_ok "Cleaned"
 
 # Starting httpd
 msg_info "Starting apache"
@@ -57,10 +59,3 @@ msg_ok "Started apache"
 
 motd_ssh
 customize
-
-# Cleanup
-msg_info "Cleaning up"
-rm -f "/opt/v${RELEASE}.zip"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
