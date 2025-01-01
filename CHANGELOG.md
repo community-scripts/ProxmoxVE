@@ -27,6 +27,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- Fix Script Homepage: add version during build step [@se-bastiaan](https://github.com/se-bastiaan) ([#1155](https://github.com/community-scripts/ProxmoxVE/pull/1155))
 - Happy new Year! Update Copyright to 2025 [@MickLesk](https://github.com/MickLesk) ([#1150](https://github.com/community-scripts/ProxmoxVE/pull/1150))
 - Update Kernel-Clean to new Version & Bugfixing [@MickLesk](https://github.com/MickLesk) ([#1147](https://github.com/community-scripts/ProxmoxVE/pull/1147))
 - Fix chromium installation for ArchiveBox  [@tkunzfeld](https://github.com/tkunzfeld) ([#1140](https://github.com/community-scripts/ProxmoxVE/pull/1140))
@@ -34,6 +35,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 ### 🌐 Website
 
 - Fix Category of Semaphore [@MickLesk](https://github.com/MickLesk) ([#1148](https://github.com/community-scripts/ProxmoxVE/pull/1148))
+
+### 🧰 Maintenance
+
+- Correctly check for changed files in Shellcheck workflow [@se-bastiaan](https://github.com/se-bastiaan) ([#1156](https://github.com/community-scripts/ProxmoxVE/pull/1156))
 
 ## 2024-12-31 - Happy new Year! 🎉✨
 
