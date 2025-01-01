@@ -802,11 +802,11 @@ EOF
   fi
 
   # This starts the container and executes <app>-install.sh
+  echo -e "${CREATING}${GN}${NSAPP}${CL}"
+  echo -e "${CREATING}${GN}${var_install}${CL}"
   msg_info "Starting LXC Container"
   pct start "$CTID"
   msg_ok "Started LXC Container"
-  echo "${NSAPP}"
-  echo "${var_install}"
   if [ "$var_os" == "alpine" ]; then
     sleep 3
         pct exec "$CTID" -- /bin/sh -c 'cat <<EOF >/etc/apk/repositories
