@@ -47,7 +47,8 @@ function update_script() {
         msg_info "Updating ${APP}"
         cd "/opt/${APP}"
         wget -q "https://github.com/Pf2eToolsOrg/Pf2eTools/archive/refs/tags/${RELEASE}.zip"
-        unzip -j "${RELEASE}.zip" -d /opt/${APP}
+        unzip "${RELEASE}.zip"
+        mv "${APP}-${RELEASE}" /opt/Pf2eTools
         echo "${RELEASE}" >/opt/${APP}_version.txt
         msg_ok "Updated ${APP}"
 
