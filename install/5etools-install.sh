@@ -36,6 +36,8 @@ echo "<Location /server-status>\n""\
 
 rm -rf /var/www/html
 msg_info "Setting up 5etools"
+git config --global http.postBuffer 1048576000
+git config --global https.postBuffer 1048576000
 git clone https://github.com/5etools-mirror-3/5etools-src /opt/5etools
 msg_ok "Set up 5etools"
 msg_info "Setting up 5etools images"
