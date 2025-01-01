@@ -50,7 +50,7 @@ ln -s "/opt/5etools" /var/www/html
 
 chown -R www-data: "/opt/5etools"
 chmod -R 755 "/opt/5etools"
-
+msg_ok "Creating Service"
 # Cleanup
 msg_info "Cleaning up"
 $STD apt-get -y autoremove
