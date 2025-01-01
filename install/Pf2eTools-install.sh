@@ -20,7 +20,8 @@ $STD apt-get install -y \
   mc \
   sudo \
   unzip \
-  apache2
+  apache2 \
+  git
 msg_ok "Installed Dependencies"
 
 # Setup App
