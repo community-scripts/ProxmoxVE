@@ -42,12 +42,12 @@ function update_script() {
     msg_ok "Updated System"
 
     # Execute Update
-    msg_info "Updating Pf2eTools"
-    cd /opt/Pf2eTools
+    msg_info "Updating ${APP}"
+    cd "/opt/${APP}"
     git config --global http.postBuffer 1048576000
     git config --global https.postBuffer 1048576000
     git pull --recurse-submodules --jobs=10
-    msg_ok "Updated Pf2eTools"
+    msg_ok "Updated ${APP}"
 
     chown -R www-data: "/opt/${APP}"
     chmod -R 755 "/opt/${APP}"
