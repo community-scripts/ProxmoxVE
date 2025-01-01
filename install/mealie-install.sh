@@ -88,7 +88,6 @@ msg_ok "Setting up ENV"
 msg_info "Create user account"
 useradd -u 911 -U -d $MEALIE_HOME -s /bin/bash abc
 usermod -G users abc
-mkdir $MEALIE_HOME
 msg_ok "Create user account"
 
 msg_info "Builder Image"
