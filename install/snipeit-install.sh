@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 
-#Copyright (c) 2021-2024 community-scripts ORG
+#Copyright (c) 2021-2025 community-scripts ORG
 # Author: Michel Roegl-Brunner (michelroegl-brunner)
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
