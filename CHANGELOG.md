@@ -22,13 +22,17 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### ✨ New Scripts
 
-- New Script: Semaphore [@quantumryuu](https://github.com/quantumryuu) ([#596](https://github.com/community-scripts/ProxmoxVE/pull/596))
 - New Script: Firefly [@quantumryuu](https://github.com/quantumryuu) ([#616](https://github.com/community-scripts/ProxmoxVE/pull/616))
+- New Script: Semaphore [@quantumryuu](https://github.com/quantumryuu) ([#596](https://github.com/community-scripts/ProxmoxVE/pull/596))
 
 ### 🚀 Updated Scripts
 
 - Update Kernel-Clean to new Version & Bugfixing [@MickLesk](https://github.com/MickLesk) ([#1147](https://github.com/community-scripts/ProxmoxVE/pull/1147))
 - Fix chromium installation for ArchiveBox  [@tkunzfeld](https://github.com/tkunzfeld) ([#1140](https://github.com/community-scripts/ProxmoxVE/pull/1140))
+
+### 🌐 Website
+
+- Fix Category of Semaphore [@MickLesk](https://github.com/MickLesk) ([#1148](https://github.com/community-scripts/ProxmoxVE/pull/1148))
 
 ## 2024-12-31 - Happy new Year! 🎉✨
 
