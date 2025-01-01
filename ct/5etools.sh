@@ -52,7 +52,7 @@ function update_script() {
         # Execute Update
         wget -q "https://github.com/5etools-mirror-3/5etools-src/archive/refs/tags/${RELEASE}.zip"
         unzip -q "${RELEASE}.zip"
-        mv "${APP}-src-${RELEASE}/" "/opt/${APP}"
+        mv "${APP}-src-${RELEASE:1}/" "/opt/${APP}"
 
         chown -R www-data: "/opt/${APP}"
         chmod -R 755 "/opt/${APP}"
