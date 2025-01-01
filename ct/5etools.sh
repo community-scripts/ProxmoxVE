@@ -46,7 +46,7 @@ function update_script() {
         # Execute Update
         msg_info "Updating base 5etools"
         wget -q "https://github.com/5etools-mirror-3/5etools-src/archive/refs/tags/${RELEASE}.zip"
-        unzip "${RELEASE}.zip" -d "/opt/${APP}"
+        unzip -j "${RELEASE}.zip" -d "/opt/${APP}"
         echo "${RELEASE}" >"/opt/${APP}_version.txt"
         msg_ok "Updated base 5etools"
 
@@ -74,7 +74,7 @@ function update_script() {
         # Execute Update
         msg_info "Updating 5etools images"
         wget -q "https://github.com/5etools-mirror-2/5etools-img/archive/refs/tags/${IMG_RELEASE}.zip"
-        unzip "${IMG_RELEASE}.zip" -d "/opt/${APP}/img"
+        unzip -j "${IMG_RELEASE}.zip" -d "/opt/${APP}/img"
         echo "${IMG_RELEASE}" >"/opt/${APP}_IMG_version.txt"
         msg_ok "Updating 5etools images"
 
