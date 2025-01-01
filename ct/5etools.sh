@@ -74,7 +74,7 @@ function update_script() {
 
         # Execute Update
         msg_info "Updating 5etools images"
-        curl -sS "https://github.com/5etools-mirror-2/5etools-img/archive/refs/tags/${IMG_RELEASE}.zip" > "${IMG_RELEASE}.zip"
+        curl -sSL "https://github.com/5etools-mirror-2/5etools-img/archive/refs/tags/${IMG_RELEASE}.zip" > "${IMG_RELEASE}.zip"
         unzip -q "${IMG_RELEASE}.zip"
         mv "${APP}-img-${IMG_RELEASE:1}" /opt/${APP}/img
         echo "${IMG_RELEASE}" >"/opt/${APP}_IMG_version.txt"
