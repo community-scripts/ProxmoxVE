@@ -27,13 +27,13 @@ msg_ok "Installed Dependencies"
 
 # Setup App
 msg_info "Setup 5etools"
-cat <<EOT >> /etc/apache2/apache2.conf
+cat <<EOF > /etc/apache2/apache2.conf
 <Location /server-status>
     SetHandler server-status
     Order deny,allow
     Allow from all
 </Location>
-EOT
+EOF
 
 rm -rf /var/www/html
 git config --global http.postBuffer 1048576000
