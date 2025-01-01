@@ -38,9 +38,9 @@ function update_script() {
 
     # Crawling the new version and checking whether an update is required
     msg_info "Updating System"
-
     apt-get update &>/dev/null
     apt-get -y upgrade &>/dev/null
+    msg_ok "Updated System"
 
     # Execute Update
     msg_info "Updating 5etools"
