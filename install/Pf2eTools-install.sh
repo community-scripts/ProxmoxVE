@@ -19,16 +19,16 @@ $STD apt-get install -y \
   curl \
   mc \
   sudo \
-  git \
+  unzip \
   apache2
 msg_ok "Installed Dependencies"
 
 # Setup App
 msg_info "Setup Pf2eTools"
-rm -rf /var/www/html
-git config --global http.postBuffer 1048576000
-git config --global https.postBuffer 1048576000
-git clone https://github.com/Pf2eToolsOrg/Pf2eTools /opt/Pf2eTools
+RELEASE=$(curl -s https://api.github.com/repos/Pf2eToolsOrg/Pf2eTools/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+wget -q "https://github.com/Pf2eToolsOrg/Pf2eTools/archive/refs/tags/${RELEASE}.zip"
+unzip "${RELEASE}.zip" -d /opt/Pf2eTools
+echo "${RELEASE}" >/opt/Pf2eTools_version.txt
 msg_ok "Set up Pf2eTools"
 
 msg_info "Creating Service"
@@ -47,6 +47,7 @@ apache2ctl start
 msg_ok "Creating Service"
 # Cleanup
 msg_info "Cleaning up"
+rm "${RELEASE}.zip"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"

@@ -35,28 +35,34 @@ function update_script() {
         exit
     fi
 
-    # Crawling the new version and checking whether an update is required
-    msg_info "Updating System"
-    apt-get update &>/dev/null
-    apt-get -y upgrade &>/dev/null
-    msg_ok "Updated System"
+    RELEASE=$(curl -s https://api.github.com/repos/Pf2eToolsOrg/Pf2eTools/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+    if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f "/opt/${APP}_version.txt" ]]; then
+        # Crawling the new version and checking whether an update is required
+        msg_info "Updating System"
+        apt-get update &>/dev/null
+        apt-get -y upgrade &>/dev/null
+        msg_ok "Updated System"
 
-    # Execute Update
-    msg_info "Updating ${APP}"
-    cd "/opt/${APP}"
-    git config --global http.postBuffer 1048576000
-    git config --global https.postBuffer 1048576000
-    git pull --recurse-submodules --jobs=10
-    msg_ok "Updated ${APP}"
+        # Execute Update
+        msg_info "Updating ${APP}"
+        cd "/opt/${APP}"
+        wget -q "https://github.com/Pf2eToolsOrg/Pf2eTools/archive/refs/tags/${RELEASE}.zip"
+        unzip "${RELEASE}.zip" -d /opt/${APP}
+        echo "${RELEASE}" >/opt/${APP}_version.txt
+        msg_ok "Updated ${APP}"
 
-    chown -R www-data: "/opt/${APP}"
-    chmod -R 755 "/opt/${APP}"
+        chown -R www-data: "/opt/${APP}"
+        chmod -R 755 "/opt/${APP}"
 
-    # Cleaning up
-    msg_info "Cleaning Up"
-    $STD apt-get -y autoremove
-    $STD apt-get -y autoclean
-    msg_ok "Cleanup Completed"
+        # Cleaning up
+        msg_info "Cleaning Up"
+        rm "${RELEASE}.zip"
+        $STD apt-get -y autoremove
+        $STD apt-get -y autoclean
+        msg_ok "Cleanup Completed"
+    else
+        msg_ok "No update required. ${APP} is already at ${RELEASE}"
+    fi
     exit
 }
 
