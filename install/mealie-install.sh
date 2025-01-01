@@ -37,7 +37,6 @@ $STD apt-get install -y \
     libldap-2.5
 
 mkdir /app
-rm -rf /var/lib/apt/lists/*
 npm install --global yarn
 msg_ok "Installed Dependencies"
 
@@ -50,13 +49,13 @@ msg_ok "Downloading mealie ${RELEASE}"
 
 msg_info "Setting up frontend"
 cd /app/${APP}
-yarn install \
+npm yarn install \
     --prefer-offline \
     --frozen-lockfile \
     --non-interactive \
     --production=false \
     --network-timeout=1000000
-yarn generate
+npm yarn generate
 msg_ok "Setting up frontend"
 
 msg_info "Setting up ENV"
@@ -93,7 +92,6 @@ mkdir $MEALIE_HOME
 msg_ok "Create user account"
 
 msg_info "Builder Image"
-rm -rf /var/lib/apt/lists/*
 pip install -U --no-cache-dir pip
 curl -sSL https://install.python-poetry.org | python3 -
 cd $PYSETUP_PATH
