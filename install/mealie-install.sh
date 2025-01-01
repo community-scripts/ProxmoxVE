@@ -17,11 +17,12 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
     nodejs \
-    npm sudo \
+    npm \
+    sudo \
     git \
     python3 \
     curl \
-    unzip \
+    mc \
     build-essential \
     libwebp-dev \
     libsasl2-dev \
