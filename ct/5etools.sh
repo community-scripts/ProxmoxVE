@@ -38,7 +38,8 @@ function update_script() {
 
     # Crawling the new version and checking whether an update is required
     RELEASE=$(curl -s https://api.github.com/repos/5etools-mirror-3/5etools-src/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-    if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f "/opt/5etools_version.txt" ]]; then
+    IMG_RELEASE=$(curl -s https://api.github.com/repos/5etools-mirror-2/5etools-img/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+    if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ "${IMG_RELEASE}" != "$(cat /opt/${APP}_IMG_version.txt)" ]] || [[ ! -f "/opt/5etools_version.txt" ]] || [[ ! -f "/opt/5etools_IMG_version.txt" ]]; then
         msg_info "Updating $APP to ${RELEASE}"
 
         apt-get update &>/dev/null
@@ -72,7 +73,9 @@ function update_script() {
 
         # Last Action
         echo "${RELEASE}" >/opt/${APP}_version.txt
+        echo "${IMG_RELEASE}" >/opt/${APP}_IMG_version.txt
         msg_ok "Updated $APP to ${RELEASE}"
+        msg_ok "Updated $APP images to ${IMG_RELEASE}"
 
         # Starting httpd
         msg_info "Starting apache"
