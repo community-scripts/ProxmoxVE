@@ -48,8 +48,9 @@ function update_script() {
         cd "/opt/${APP}"
         wget -q "https://github.com/Pf2eToolsOrg/Pf2eTools/archive/refs/tags/${RELEASE}.zip"
         unzip -q "${RELEASE}.zip"
-        mv "${APP}-${RELEASE:1}" /opt/Pf2eTools
-        echo "${RELEASE}" >/opt/${APP}_version.txt
+        rm -rf "/opt/${APP}"
+        mv "${APP}-${RELEASE:1}" "/opt/${APP}"
+        echo "${RELEASE}" >"/opt/${APP}_version.txt"
         msg_ok "Updated ${APP}"
 
         chown -R www-data: "/opt/${APP}"
