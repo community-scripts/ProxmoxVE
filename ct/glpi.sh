@@ -26,9 +26,6 @@ function update_script() {
   RELEASE=$(curl -s https://api.github.com/repos/glpi-project/glpi/releases/latest | grep '"tag_name"' | sed -E 's/.*"tag_name": "([^"]+)".*/\1/')
   if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
     msg_info "Updating ${APP} to v${RELEASE}"
-    
-    #In development
-
     msg_ok "Updated ${APP} LXC"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}."
