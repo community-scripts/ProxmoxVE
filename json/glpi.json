@@ -1,34 +1,43 @@
 {
-  "name": "GLPI",
-  "slug": "glpi",
+  "name": "Semaphore",
+  "slug": "semaphore",
   "categories": [
-    0
+    7
   ],
-  "date_created": "2025-01-02",
+  "date_created": "2025-01-01",
   "type": "ct",
   "updateable": true,
   "privileged": false,
-  "interface_port": 80,
-  "documentation": "https://glpi-project.org/documentation/",
-  "website": "https://glpi-project.org/",
-  "logo": "https://raw.githubusercontent.com/glpi-project/glpi/refs/heads/main/public/pics/login_logo_glpi.png",
-  "description": "GLPI is a Free Asset and IT Management Software package, Data center management, ITIL Service Desk, licenses tracking and software auditing.",
+  "interface_port": 3000,
+  "documentation": "https://docs.semaphoreui.com/",
+  "website": "https://semaphoreui.com/",
+  "logo": "https://docs.semaphoreui.com/favicon.png?x=",
+  "description": "Semaphore UI is a modern web interface for managing popular DevOps tools",
   "install_methods": [
     {
       "type": "default",
-      "script": "ct/glpi.sh",
+      "script": "ct/semaphore.sh",
       "resources": {
         "cpu": 2,
         "ram": 2048,
-        "hdd": 10,
+        "hdd": 4,
         "os": "Debian",
         "version": "12"
       }
     }
   ],
   "default_credentials": {
-    "username": "glpi",
-    "password": "glpi"
+    "username": "admin",
+    "password": null
   },
-  "notes": []
+  "notes": [
+    {
+      "text": "This instance uses BoltDB",
+      "type": "info"
+    },
+    {
+      "text": "Admin password: `cat ~/semaphore.creds`",
+      "type": "info"
+    }
+  ]
 }
