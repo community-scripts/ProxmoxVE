@@ -34,7 +34,7 @@ check_container_resources
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -s https://api.github.com/repos/firefly-iii/firefly-iii/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4)}')
+  RELEASE=$(curl -L -s -H "Accept: application/vnd.github+json" https://api.github.com/repos/firefly-iii/firefly-iii/releases?per_page=100 | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}' | grep "^v" | grep -v '\-\(alpha\|beta\)' | sed 's/^v//' | head -1)
   if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
     msg_info "Stopping Apache2"
     systemctl stop apache2
