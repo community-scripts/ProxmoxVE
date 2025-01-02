@@ -46,7 +46,7 @@ mysql -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVI
 msg_ok "Set up database"
 
 msg_info "Installing Firefly III (Patience)"
-RELEASE=$(curl -s https://api.github.com/repos/firefly-iii/firefly-iii/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4)}')
+RELEASE=$(curl -L -s -H "Accept: application/vnd.github+json" https://api.github.com/repos/firefly-iii/firefly-iii/releases?per_page=100 | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}' | grep "^v" | grep -v '\-\(alpha\|beta\)' | sed 's/^v//' | head -1)
 cd /opt
 wget -q "https://github.com/firefly-iii/firefly-iii/releases/download/v${RELEASE}/FireflyIII-v${RELEASE}.tar.gz"
 mkdir -p /opt/firefly
