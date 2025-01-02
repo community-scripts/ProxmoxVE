@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
-# Author: kristocopani
+#Copyright (c) 2021-2025 community-scripts ORG
+# Author: Nícolas Pastorello (opastorello)
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
@@ -16,72 +16,135 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
   curl \
-  mc \
   git \
-  gpg \
-  sudo
-
-wget -qO- "https://keyserver.ubuntu.com/pks/lookup?fingerprint=on&op=get&search=0x6125E2A8C77F2818FB7BD15B93C4A3FD7BB9C367" | gpg --dearmour >/usr/share/keyrings/ansible-archive-keyring.gpg
-cat <<EOF >/etc/apt/sources.list.d/ansible.list
-deb [signed-by=/usr/share/keyrings/ansible-archive-keyring.gpg] http://ppa.launchpad.net/ansible/ansible/ubuntu jammy main
-EOF
-$STD apt update
-$STD apt install -y ansible
+  sudo \
+  mc \
+  apache2 \
+  php \
+  php-{apcu,cli,common,curl,gd,imap,ldap,mysql,xmlrpc,xml,mbstring,bcmath,intl,zip,redis,bz2,soap,cas} \
+  libapache2-mod-php \
+  mariadb-server
 msg_ok "Installed Dependencies"
 
-msg_info "Setup Semaphore"
-RELEASE=$(curl -s https://api.github.com/repos/semaphoreui/semaphore/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-mkdir -p /opt/semaphore
-cd /opt/semaphore
-wget -q https://github.com/semaphoreui/semaphore/releases/download/v${RELEASE}/semaphore_${RELEASE}_linux_amd64.deb
-$STD dpkg -i semaphore_${RELEASE}_linux_amd64.deb
+msg_info "Setting up database"
+DB_NAME=glpi_db
+DB_USER=glpi
+DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
+mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql mysql
+mysql -u root -e "CREATE DATABASE $DB_NAME;"
+mysql -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
+mysql -u root -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost';"
+mysql -u root -e "GRANT SELECT ON \`mysql\`.\`time_zone_name\` TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
+msg_ok "Set up database"
 
-SEM_HASH=$(openssl rand -base64 32)
-SEM_ENCRYPTION=$(openssl rand -base64 32)
-SEM_KEY=$(openssl rand -base64 32)
-SEM_PW=$(openssl rand -base64 12)
-cat <<EOF >/opt/semaphore/config.json
-{
-  "bolt": {
-    "host": "/opt/semaphore/semaphore_db.bolt"
-  },
-  "tmp_path": "/opt/semaphore/tmp",
-  "cookie_hash": "${SEM_HASH}",
-  "cookie_encryption": "${SEM_ENCRYPTION}",
-  "access_key_encryption": "${SEM_KEY}"
+msg_info "Installing GLPi"
+cd /opt
+RELEASE=$(curl -s https://api.github.com/repos/glpi-project/glpi/releases/latest | grep '"tag_name"' | sed -E 's/.*"tag_name": "([^"]+)".*/\1/')
+echo "${RELEASE}" >"/opt/${APP}_version.txt"
+wget -q "https://github.com/glpi-project/glpi/releases/download/${RELEASE}/glpi-${RELEASE}.tgz"
+tar -xzvf glpi-${RELEASE}.tgz
+mv glpi /var/www/html/
+
+cd /var/www/html/glpi
+php bin/console db:install --db-name=$DB_NAME --db-user=$DB_USER --db-password=$DB_PASS --no-interaction
+rm -rf /var/www/html/glpi/install
+msg_ok "Installed GLPi"
+
+msg_info "Setting Downstream file"
+cat <<EOF > /var/www/html/glpi/inc/downstream.php
+<?php
+define('GLPI_CONFIG_DIR', '/etc/glpi/');
+if (file_exists(GLPI_CONFIG_DIR . '/local_define.php')) {
+    require_once GLPI_CONFIG_DIR . '/local_define.php';
 }
 EOF
 
-$STD semaphore user add --admin --login admin --email admin@helper-scripts.com --name Administrator --password ${SEM_PW} --config /opt/semaphore/config.json
-echo "${SEM_PW}" >~/semaphore.creds
-echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
-msg_ok "Setup Semaphore"
+mv /var/www/html/glpi/config /etc/glpi
+mv /var/www/html/glpi/files /var/lib/glpi
+mv /var/lib/glpi/_log /var/log/glpi
 
-msg_info "Creating Service"
-cat <<EOF >/etc/systemd/system/semaphore.service
-[Unit]
-Description=Semaphore UI
-Documentation=https://docs.semaphoreui.com/
-Wants=network-online.target
-After=network-online.target
+cat <<EOF > /etc/glpi/local_define.php
+<?php
+define('GLPI_VAR_DIR', '/var/lib/glpi');
+define('GLPI_DOC_DIR', GLPI_VAR_DIR);
+define('GLPI_CRON_DIR', GLPI_VAR_DIR . '/_cron');
+define('GLPI_DUMP_DIR', GLPI_VAR_DIR . '/_dumps');
+define('GLPI_GRAPH_DIR', GLPI_VAR_DIR . '/_graphs');
+define('GLPI_LOCK_DIR', GLPI_VAR_DIR . '/_lock');
+define('GLPI_PICTURE_DIR', GLPI_VAR_DIR . '/_pictures');
+define('GLPI_PLUGIN_DOC_DIR', GLPI_VAR_DIR . '/_plugins');
+define('GLPI_RSS_DIR', GLPI_VAR_DIR . '/_rss');
+define('GLPI_SESSION_DIR', GLPI_VAR_DIR . '/_sessions');
+define('GLPI_TMP_DIR', GLPI_VAR_DIR . '/_tmp');
+define('GLPI_UPLOAD_DIR', GLPI_VAR_DIR . '/_uploads');
+define('GLPI_CACHE_DIR', GLPI_VAR_DIR . '/_cache');
+define('GLPI_LOG_DIR', '/var/log/glpi');
+EOF
+msg_ok "Configured Downstream file"
 
-[Service]
-ExecStart=/usr/bin/semaphore server --config /opt/semaphore/config.json
-Restart=always
-RestartSec=10s
+msg_info "Setting Folder and File Permissions"
+chown root:root /var/www/html/glpi/ -R
+chown www-data:www-data /etc/glpi -R
+chown www-data:www-data /var/lib/glpi -R
+chown www-data:www-data /var/log/glpi -R
+chown www-data:www-data /var/www/html/glpi/marketplace -Rf
+find /var/www/html/glpi/ -type f -exec chmod 0644 {} \;
+find /var/www/html/glpi/ -type d -exec chmod 0755 {} \;
+find /etc/glpi -type f -exec chmod 0644 {} \;
+find /etc/glpi -type d -exec chmod 0755 {} \;
+find /var/lib/glpi -type f -exec chmod 0644 {} \;
+find /var/lib/glpi -type d -exec chmod 0755 {} \;
+find /var/log/glpi -type f -exec chmod 0644 {} \;
+find /var/log/glpi -type d -exec chmod 0755 {} \;
+msg_ok "Configured Folder and File Permissions"
 
-[Install]
-WantedBy=multi-user.target
+msg_info "Setting VirtualHost"
+cat <<EOF >/etc/apache2/sites-available/glpi.conf
+<VirtualHost *:80>
+    ServerName localhost
+    DocumentRoot /var/www/html/glpi/public
+
+    <Directory /var/www/html/glpi/public>
+        Require all granted
+        RewriteEngine On
+        RewriteCond %{HTTP:Authorization} ^(.+)$
+        RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+        RewriteCond %{REQUEST_FILENAME} !-f
+        RewriteRule ^(.*)$ index.php [QSA,L]
+    </Directory>
+
+    ErrorLog \${APACHE_LOG_DIR}/glpi_error.log
+    CustomLog \${APACHE_LOG_DIR}/glpi_access.log combined
+</VirtualHost>
 EOF
 
-systemctl enable --now -q semaphore.service
-msg_ok "Created Service"
+a2dissite 000-default.conf
+a2enmod rewrite
+a2ensite glpi.conf
+systemctl restart apache2
+msg_ok "Configured VirtualHost"
+
+msg_info "Setting Cron task"
+echo "*/2 * * * * www-data /usr/bin/php /var/www/html/glpi/front/cron.php &>/dev/null" >> /etc/cron.d/glpi
+msg_ok "Configured Cron task"
+
+msg_info "Changing parameters in php.ini"
+PHP_VERSION=$(ls /etc/php/ | grep -E '^[0-9]+\.[0-9]+$' | head -n 1)
+PHP_INI="/etc/php/$PHP_VERSION/apache2/php.ini"
+sed -i 's/^upload_max_filesize = .*/upload_max_filesize = 20M/' $PHP_INI
+sed -i 's/^post_max_size = .*/post_max_size = 20M/' $PHP_INI
+sed -i 's/^max_execution_time = .*/max_execution_time = 60/' $PHP_INI
+sed -i 's/^max_input_vars = .*/max_input_vars = 5000/' $PHP_INI
+sed -i 's/^memory_limit = .*/memory_limit = 256M/' $PHP_INI
+sed -i 's/^;\?\s*session.cookie_httponly\s*=.*/session.cookie_httponly = On/' $PHP_INI
+systemctl restart apache2
+msg_ok "Changed parameters in php.ini"
 
 motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -rf semaphore_${RELEASE}_linux_amd64.deb
+rm -rf /opt/glpi-${RELEASE}.tgz
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
