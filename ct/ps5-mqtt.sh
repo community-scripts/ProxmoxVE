@@ -36,7 +36,7 @@ function update_script() {
     check_container_storage
     check_container_resources
 
-    if [[ "${RELEASE}" != "$(cat /opt/ps5-mqtt/cs_release)" ]]; then
+    if [[ "${RELEASE}" != "$(cat /opt/ps5-mqtt_version.txt)" ]]; then
         msg_info "Stopping service"
         systemctl stop ps5-mqtt.service
         msg_ok "Stopped service"
@@ -48,7 +48,7 @@ function update_script() {
         rm -rf /opt/ps5-mqtt
         mv ps5-mqtt-* /opt/ps5-mqtt
         rm ${RELEASE}.tar.gz
-        echo ${RELEASE} > /opt/ps5-mqtt/cs_release
+        echo ${RELEASE} > /opt/ps5-mqtt_version.txt
         msg_ok "Updated PS5-MQTT"
 
         msg_info "Building new PS5-MQTT version"
