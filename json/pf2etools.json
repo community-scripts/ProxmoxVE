@@ -1,0 +1,34 @@
+{
+    "name": "Pf2eTools",
+    "slug": "Pf2eTools",
+    "categories": [
+        0
+    ],
+    "date_created": "2025-01-02",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": 80,
+    "documentation": "https://github.com/Pf2eToolsOrg/Pf2eTools/wiki",
+    "website": "https://pf2etools.com/",
+    "logo": "https://raw.githubusercontent.com/Pf2eToolsOrg/Pf2eTools/refs/heads/dev/android-chrome-192x192.png",
+    "description": "Pf2eTools is an open-source website aiming to provide tools and information for Pathfinder 2nd Edition players and gamemasters. It's built using basic web technologies to ensure wide compatibility, and utilises client-side caching for speed, efficiency, and offline access.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/pf2etools.sh",
+            "resources": {
+                "cpu": 1,
+                "ram": 512,
+                "hdd": 6,
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": []
+}

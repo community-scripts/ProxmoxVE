@@ -16,6 +16,19 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
+## 2025-01-02
+
+### Changed
+
+### ✨ New Scripts
+
+- New Script: Pf2eTools [@TheRealVira](https://github.com/TheRealVira) ([#1162](https://github.com/community-scripts/ProxmoxVE/pull/1162))
+- New Script: 5etools [@TheRealVira](https://github.com/TheRealVira) ([#1157](https://github.com/community-scripts/ProxmoxVE/pull/1157))
+
+### 🚀 Updated Scripts
+
+- Update config template in blocky-install.sh [@xFichtl1](https://github.com/xFichtl1) ([#1059](https://github.com/community-scripts/ProxmoxVE/pull/1059))
+
 ## 2025-01-01
 
 ### Changed
