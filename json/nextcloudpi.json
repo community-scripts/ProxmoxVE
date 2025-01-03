@@ -41,5 +41,10 @@
         "username": null,
         "password": null
     },
-    "notes": []
+    "notes": [
+        {
+            "text": "Only Alpine: To get the username and password, run the script again inside the LXC shell.",
+            "type": "warning"
+        }
+    ]
 }

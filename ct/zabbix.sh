@@ -41,7 +41,7 @@ function update_script() {
     cp /etc/zabbix/zabbix_server.conf /opt/zabbix-backup/
     cp /etc/apache2/conf-enabled/zabbix.conf /opt/zabbix-backup/
     cp -R /usr/share/zabbix/ /opt/zabbix-backup/
-    cp -R /usr/share/zabbix-* /opt/zabbix-backup/
+    #cp -R /usr/share/zabbix-* /opt/zabbix-backup/ Remove temporary
     rm -Rf /etc/apt/sources.list.d/zabbix.list
     cd /tmp
     wget -q https://repo.zabbix.com/zabbix/7.2/release/debian/pool/main/z/zabbix-release/zabbix-release_latest+debian12_all.deb

@@ -1,0 +1,55 @@
+name: Check Metadata
+on:
+  pull_request:
+    paths:
+      - '/ct/*.sh'
+      - '/install/*.sh'
+jobs:
+  check-metadata:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Check Metadata Lines in Scripts
+        shell: bash
+        run: |
+          set -e
+          ERROR_COUNT=0
+          FILES=$(find . -name "*.sh")
+
+          for FILE in $FILES; do
+            if [[ "$(sed -n '3p' "$FILE")" == "# Copyright (c) 2021-2024 community-scripts ORG" ]]; then
+                echo "Check for Copyright metadata passed for line 3 in: $FILE"
+            else
+                echo "Error in $FILE: Copyright metadata missing or not on line 3"
+                ERROR_COUNT=$((ERROR_COUNT + 1))
+            fi
+            
+            if sed -n '4p' "$FILE" | grep -qE "^# Author: .+"; then
+                echo "Check for Author metadata passed for line 4 in: $FILE"
+            else
+                echo "Error in $FILE: Author metadata missing or invalid on line 4"
+                ERROR_COUNT=$((ERROR_COUNT + 1))
+            fi
+
+            if [[ "$(sed -n '5p' "$FILE")" == "# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE" ]]; then
+                echo "Check for License metadata passed for line 5 in: $FILE"
+            else
+                echo "Error in $FILE: License metadata missing or not on line 5"
+                ERROR_COUNT=$((ERROR_COUNT + 1))
+            fi
+
+            if sed -n '6p' "$FILE" | grep -qE "^# Source: .+"; then
+                echo "Check for Source metadata passed for line 6 in: $FILE"
+            else
+                echo "Error in $FILE: Source metadata missing or invalid on line 6"
+                ERROR_COUNT=$((ERROR_COUNT + 1))
+            fi
+          done
+
+          if [[ "$ERROR_COUNT" -gt 0 ]]; then
+              echo "$ERROR_COUNT script(s) failed validation."
+              exit 1
+          else
+              echo "All scripts passed."
+          fi
