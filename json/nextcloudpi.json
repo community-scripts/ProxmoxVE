@@ -43,7 +43,7 @@
     },
     "notes": [
         {
-            "text": "To get the username and password, run the script again inside the LXC shell.",
+            "text": "Only Alpine: To get the username and password, run the script again inside the LXC shell.",
             "type": "warning"
         }
     ]
