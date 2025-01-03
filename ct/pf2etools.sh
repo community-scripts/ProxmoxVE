@@ -51,8 +51,8 @@ function update_script() {
         rm -rf "/opt/${APP}"
         mv "${APP}-${RELEASE:1}" "/opt/${APP}"
         cd /opt/Pf2eTools
-        npm i
-        npm run build
+        $STD npm install
+        $STD npm run build
         cd ~
         echo "${RELEASE}" >"/opt/${APP}_version.txt"
         msg_ok "Updated ${APP}"
