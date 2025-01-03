@@ -146,17 +146,16 @@ motd_ssh() {
     OS_NAME="Alpine Linux"
     OS_VERSION="Unknown"
   fi
-  # Set MOTD with application info and system details
-  MOTD_FILE="/etc/motd"
-  if [ -f "$MOTD_FILE" ]; then
-    echo -e "\n${BOLD}${APPLICATION} LXC Container${CL}" > "$MOTD_FILE"
-    echo -e "${TAB}${GATEWAY}${YW} Provided by: ${GN}community-scripts ORG ${YW}| Project: ${GN}ProxmoxVE ${YW}| GitHub: ${GN}https://github.com/community-scripts/ProxmoxVE${CL}\n" >> "$MOTD_FILE"
-    echo -e "${TAB}${OS}${YW} OS: ${GN}${OS_NAME} ${OS_VERSION}${CL}" >> "$MOTD_FILE"
-    echo -e "${TAB}${HOSTNAME}${YW} Hostname: ${GN}$(hostname)${CL}" >> "$MOTD_FILE"
-    echo -e "${TAB}${INFO}${YW} IP Address: ${GN}${IP}${CL}" >> "$MOTD_FILE"
-  else
-    echo -e "${RD}[WARNING] MOTD file does not exist!${CL}" >&2
-  fi
+
+  PROFILE_FILE="/etc/profile.d/00_lxc-details.sh"
+  echo "echo -e \"\"" > "$PROFILE_FILE"
+  echo -e "echo -e \"${BOLD}${APPLICATION} LXC Container${CL}"\" >> "$PROFILE_FILE"
+  echo -e "echo -e \"${TAB}${GATEWAY}${YW} Provided by: ${GN}community-scripts ORG ${YW}| GitHub: ${GN}https://github.com/community-scripts/ProxmoxVE${CL}\"" >> "$PROFILE_FILE"
+  echo "echo \"\"" >> "$PROFILE_FILE"
+  echo -e "echo -e \"${TAB}${OS}${YW} OS: ${GN}${OS_NAME} - Version: ${OS_VERSION}${CL}\"" >> "$PROFILE_FILE"
+  echo -e "echo -e \"${TAB}${HOSTNAME}${YW} Hostname: ${GN}\$(hostname)${CL}\"" >> "$PROFILE_FILE"
+  echo -e "echo -e \"${TAB}${INFO}${YW} IP Address: ${GN}\$(ip -4 addr show eth0 | awk '/inet / {print \$2}' | cut -d/ -f1 | head -n 1)${CL}\"" >> "$PROFILE_FILE"
+
   # Configure SSH if enabled
   if [[ "${SSH_ROOT}" == "yes" ]]; then
     # Enable sshd service
