@@ -460,7 +460,7 @@ advanced_settings() {
 
   if [ "$NET" != "dhcp" ]; then
     while true; do
-      GATE1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter gateway IP address" 8 58 --title "Gateway IP" 3>&1 1>&2 2>&3)
+      GATE1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter gateway IP address" 8 58 $GATE1 --title "Gateway IP" 3>&1 1>&2 2>&3)
       if [ -z "$GATE1" ]; then
         whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox "Gateway IP address cannot be empty" 8 58
       elif [[ ! "$GATE1" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
@@ -483,8 +483,6 @@ advanced_settings() {
     if APT_CACHER_IP=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set APT-Cacher IP (leave blank for default)" 8 58 $APT_CACHER_IP --title "APT-Cacher IP" 3>&1 1>&2 2>&3); then
       APT_CACHER="${APT_CACHER_IP:+yes}"
       echo -e "${NETWORK}${BOLD}${DGN}APT-Cacher IP Address: ${BGN}${APT_CACHER_IP:-Default}${CL}"
-	  add_proxmox_helper_scripts_env "APT_CACHER_IP" "${APT_CACHER_IP}"
-	  #Or we could call phs_validate_required_config if it's a mandatory variable
     else
       exit_script
     fi
@@ -497,7 +495,7 @@ advanced_settings() {
   fi
   echo -e "${DISABLEIPV6}${BOLD}${DGN}Disable IPv6: ${BGN}$DISABLEIP6${CL}"
 
-  if MTU1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Interface MTU Size (leave blank for default)" 8 58 --title "MTU SIZE" 3>&1 1>&2 2>&3); then
+  if MTU1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Interface MTU Size (leave blank for default)" 8 58 $MTU1 --title "MTU SIZE" 3>&1 1>&2 2>&3); then
     if [ -z $MTU1 ]; then
       MTU1="Default"
       MTU=""
@@ -509,7 +507,7 @@ advanced_settings() {
     exit_script
   fi
 
-  if SD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a DNS Search Domain (leave blank for HOST)" 8 58 --title "DNS Search Domain" 3>&1 1>&2 2>&3); then
+  if SD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a DNS Search Domain (leave blank for HOST)" 8 58 $SD --title "DNS Search Domain" 3>&1 1>&2 2>&3); then
     if [ -z $SD ]; then
       SX=Host
       SD=""
@@ -522,7 +520,7 @@ advanced_settings() {
     exit_script
   fi
 
-  if NX=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a DNS Server IP (leave blank for HOST)" 8 58 --title "DNS SERVER IP" 3>&1 1>&2 2>&3); then
+  if NX=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a DNS Server IP (leave blank for HOST)" 8 58 $NX --title "DNS SERVER IP" 3>&1 1>&2 2>&3); then
     if [ -z $NX ]; then
       NX=Host
       NS=""
@@ -546,7 +544,7 @@ advanced_settings() {
     exit_script
   fi
 
-  if VLAN1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a Vlan(leave blank for default)" 8 58 --title "VLAN" 3>&1 1>&2 2>&3); then
+  if VLAN1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a Vlan(leave blank for default)" 8 58 $VLAN1 --title "VLAN" 3>&1 1>&2 2>&3); then
     if [ -z $VLAN1 ]; then
       VLAN1="Default"
       VLAN=""
@@ -863,7 +861,6 @@ EOF
 }
 
 
-
 # Set a global variable for the PHS environment file
 PVE_ENV="/etc/pve-helper-scripts.conf"
 
@@ -878,75 +875,5 @@ function read_proxmox_helper_scripts_env(){
     msg_ok "${BL}Created Proxmox-Helper-Scripts configuration file.${CL}"
   else
     source "$PVE_ENV"
-  fi
-}
-
-# This function adds a variable to the Proxmox-Helper-Scripts config file
-function add_proxmox_helper_scripts_env(){
-  #check if first parameter was passed and it's an integer
-  if [ $# -ge 1 ] && [ ! -z "$1" ]; then
-    PHS_VAR_NAME=$1
-    DEFAULT_VALUE=""
-    if [ $# -ge 2 ] && [ ! -z "$2" ]; then
-      DEFAULT_VALUE=$2
-    fi
-    if PHS_VAR_VALUE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set value for environment variable $PHS_VAR_NAME" 8 58 $DEFAULT_VALUE --title "VALUE" 3>&1 1>&2 2>&3); then
-      if [ -z "$PHS_VAR_VALUE" ]; then
-        msg_error "Value cannot be empty!"
-        exit-script
-      fi
-      echo -e "${DGN}Setting Proxmox-Helper-Scripts Envrionment Variable $PHS_VAR_NAME: ${BGN}${PHS_VAR_VALUE}${CL}"
-      if [ $# -ge 3 ] && [ ! -z "$3" ] && [ "$3" == "PASSWORD" ]; then
-        PHS_VAR_VALUE=$(openssl passwd -1 ${PHS_VAR_VALUE})
-      fi
-      if grep -q "${PHS_VAR_NAME}=.*" "$PVE_ENV"; then
-        sed -i "s|${PHS_VAR_NAME}=.*|${PHS_VAR_NAME}='${PHS_VAR_VALUE}'|g" "$PVE_ENV"
-      else
-        echo "${PHS_VAR_NAME}='${PHS_VAR_VALUE}'" >> "$PVE_ENV"
-      fi
-    else
-      exit-script
-    fi
-  else
-    msg_error "You need to pass the variable name to set as the first parameter"
-    exit-script
-  fi
-  read_proxmox_helper_scripts_env
-}
-
-# This function adds an encrypted variable to the Proxmox-Helper-Scripts config file by passing the right arguments to add_proxmox_helper_scripts_env()
-function add_proxmox_helper_scripts_env_password(){
-  if [ $# -ge 2 ] && [ ! -z "$1" ] && [ ! -z "$2" ]; then
-    add_proxmox_helper_scripts_env $1 $2 "PASSWORD"
-  elif [ $# -ge 1 ] && [ ! -z "$1" ]; then
-    add_proxmox_helper_scripts_env $1 "" "PASSWORD"
-  else
-    msg_error "You need to pass the variable name to set as the first parameter"
-    exit-script
-  fi
-}
-
-# This function tests all enabled Proxmox-Helper-Scripts environment variable needed to build the container and prompts the user to create them if missing
-# Useful when multiple environment variables are required to enable a configuration, like a username and a password
-function phs_validate_required_config(){
-  # These are example of potential required configs
-  # If the user specifies the use of APT_CACHER, then make sure to save the APT_CACHER_IP and reuse it
-  # We might not actually need this if nothing is required
-  if [ ! -z ${APT_CACHER+x} ] && [[ "${APT_CACHER}" == "yes" ]]; then
-    if [ -z ${APT_CACHER_IP+x} ]; then
-      msg_error "Missing proxmox-helper-scripts environment variables: APT_CACHER, APT_CACHER_IP"
-      add_proxmox_helper_scripts_env "APT_CACHER" "yes"
-      add_proxmox_helper_scripts_env "APT_CACHER_IP"
-    fi
-  fi
-
-  # Another example with username/password (encrypted)
-  # These variables don't exist in the main repo, only in my fork, but it gives you an idea of how it could work
-  if [ ! -z ${ADD_SSH_USER+x} ] && [[ "${ADD_SSH_USER}" == "yes" ]]; then
-    if [ -z ${SSH_USER+x} ] || [ -z ${SSH_PASSWORD+x} ]; then
-      msg_error "Missing proxmox-helper-scripts environment variables: SSH_USER, SSH_PASSWORD"
-      add_proxmox_helper_scripts_env "SSH_USER" "admin"
-      add_proxmox_helper_scripts_env_password "SSH_PASSWORD"
-    fi
   fi
 }
