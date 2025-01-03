@@ -6,7 +6,7 @@
   ],
   "date_created": "2025-01-02",
   "type": "ct",
-  "updateable": true,
+  "updateable": false,
   "privileged": false,
   "interface_port": 80,
   "documentation": "https://glpi-project.org/documentation/",
