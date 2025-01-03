@@ -36,7 +36,7 @@ mysql -u root -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost';"
 mysql -u root -e "GRANT SELECT ON \`mysql\`.\`time_zone_name\` TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
 {
     echo "GLPI Database Credentials"
-    echo "Database $DB_BAME
+    echo "Database: $DB_NAME"
     echo "Username: $DB_USER"
     echo "Password: $DB_PASS"
 } >> ~/glpi_db.creds
@@ -45,18 +45,17 @@ msg_ok "Set up database"
 msg_info "Installing GLPi"
 cd /opt
 RELEASE=$(curl -s https://api.github.com/repos/glpi-project/glpi/releases/latest | grep '"tag_name"' | sed -E 's/.*"tag_name": "([^"]+)".*/\1/')
-echo "${RELEASE}" >"/opt/${APP}_version.txt"
+echo "${RELEASE}" >"/opt/glpi_version.txt"
 wget -q "https://github.com/glpi-project/glpi/releases/download/${RELEASE}/glpi-${RELEASE}.tgz"
 tar -xzvf glpi-${RELEASE}.tgz
-mv glpi /var/www/html/
 
-cd /var/www/html/glpi
+cd /opt/glpi
 php bin/console db:install --db-name=$DB_NAME --db-user=$DB_USER --db-password=$DB_PASS --no-interaction
-rm -rf /var/www/html/glpi/install
+rm -rf /opt/glpi/install
 msg_ok "Installed GLPi"
 
 msg_info "Setting Downstream file"
-cat <<EOF > /var/www/html/glpi/inc/downstream.php
+cat <<EOF > /opt/glpi/inc/downstream.php
 <?php
 define('GLPI_CONFIG_DIR', '/etc/glpi/');
 if (file_exists(GLPI_CONFIG_DIR . '/local_define.php')) {
@@ -64,8 +63,8 @@ if (file_exists(GLPI_CONFIG_DIR . '/local_define.php')) {
 }
 EOF
 
-mv /var/www/html/glpi/config /etc/glpi
-mv /var/www/html/glpi/files /var/lib/glpi
+mv /opt/glpi/config /etc/glpi
+mv /opt/glpi/files /var/lib/glpi
 mv /var/lib/glpi/_log /var/log/glpi
 
 cat <<EOF > /etc/glpi/local_define.php
@@ -88,13 +87,13 @@ EOF
 msg_ok "Configured Downstream file"
 
 msg_info "Setting Folder and File Permissions"
-chown root:root /var/www/html/glpi/ -R
+chown root:root /opt/glpi/ -R
 chown www-data:www-data /etc/glpi -R
 chown www-data:www-data /var/lib/glpi -R
 chown www-data:www-data /var/log/glpi -R
-chown www-data:www-data /var/www/html/glpi/marketplace -Rf
-find /var/www/html/glpi/ -type f -exec chmod 0644 {} \;
-find /var/www/html/glpi/ -type d -exec chmod 0755 {} \;
+chown www-data:www-data /opt/glpi/marketplace -Rf
+find /opt/glpi/ -type f -exec chmod 0644 {} \;
+find /opt/glpi/ -type d -exec chmod 0755 {} \;
 find /etc/glpi -type f -exec chmod 0644 {} \;
 find /etc/glpi -type d -exec chmod 0755 {} \;
 find /var/lib/glpi -type f -exec chmod 0644 {} \;
@@ -107,9 +106,9 @@ msg_info "Setting VirtualHost"
 cat <<EOF >/etc/apache2/sites-available/glpi.conf
 <VirtualHost *:80>
     ServerName localhost
-    DocumentRoot /var/www/html/glpi/public
+    DocumentRoot /opt/glpi/public
 
-    <Directory /var/www/html/glpi/public>
+    <Directory /opt/glpi/public>
         Require all granted
         RewriteEngine On
         RewriteCond %{HTTP:Authorization} ^(.+)$
@@ -129,7 +128,7 @@ a2ensite glpi.conf
 msg_ok "Configured VirtualHost"
 
 msg_info "Setting Cron task"
-echo "*/2 * * * * www-data /usr/bin/php /var/www/html/glpi/front/cron.php &>/dev/null" >> /etc/cron.d/glpi
+echo "*/2 * * * * www-data /usr/bin/php /opt/glpi/front/cron.php &>/dev/null" >> /etc/cron.d/glpi
 msg_ok "Configured Cron task"
 
 msg_info "Changing parameters in php.ini"
