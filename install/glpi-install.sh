@@ -127,7 +127,6 @@ EOF
 a2dissite 000-default.conf
 a2enmod rewrite
 a2ensite glpi.conf
-systemctl restart apache2
 msg_ok "Configured VirtualHost"
 
 msg_info "Setting Cron task"
