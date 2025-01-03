@@ -42,7 +42,7 @@ $STD npm install
 $STD npm run build
 msg_ok "Installed PS5-MQTT"
 
-msg_info "Creating Configuration"
+msg_info "Creating Service"
 
 mkdir -p /root/.config/ps5-mqtt
 mkdir -p /root/.config/playactor
@@ -75,9 +75,7 @@ cat <<EOF > /root/.config/ps5-mqtt/config.json
   "frontendPort": "8645"
 }
 EOF
-msg_ok "Created Configuration"
 
-msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/ps5-mqtt.service
 [Unit]
 Description=PS5-MQTT Daemon
