@@ -22,15 +22,19 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
-- Update Script: Lazylibrarian [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1190](https://github.com/community-scripts/ProxmoxVE/pull/1190))
 - Improve Homarr Installation [@MickLesk](https://github.com/MickLesk) ([#1208](https://github.com/community-scripts/ProxmoxVE/pull/1208))
-- Fix: Memos update function [@MickLesk](https://github.com/MickLesk) ([#1207](https://github.com/community-scripts/ProxmoxVE/pull/1207))
 - Fix: Zabbix-Update Script [@MickLesk](https://github.com/MickLesk) ([#1205](https://github.com/community-scripts/ProxmoxVE/pull/1205))
+- Update Script: Lazylibrarian [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1190](https://github.com/community-scripts/ProxmoxVE/pull/1190))
+- Fix: Memos update function [@MickLesk](https://github.com/MickLesk) ([#1207](https://github.com/community-scripts/ProxmoxVE/pull/1207))
 - Keep Lubelogger data after update to a new version [@JcMinarro](https://github.com/JcMinarro) ([#1200](https://github.com/community-scripts/ProxmoxVE/pull/1200))
 
 ### 🌐 Website
 
 - Update Nextcloud-LXC JSON [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1191](https://github.com/community-scripts/ProxmoxVE/pull/1191))
+
+### 🧰 Maintenance
+
+- Github action to check metadata lines in scripts. [@quantumryuu](https://github.com/quantumryuu) ([#1110](https://github.com/community-scripts/ProxmoxVE/pull/1110))
 
 ## 2025-01-02
 
