@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/develop/misc/build.func)
+: "${BRANCH:=develop}"
+: "${CSCRIPTS_BASE_URL:=https://raw.githubusercontent.com/community-scripts/ProxmoxVE/${BRANCH}}"
+source <(curl -s "${CSCRIPTS_BASE_URL}/misc/build.func")
 # Copyright (c) 2021-2024 tteck
 # Author: tteck | Co-Author: havardthom
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
