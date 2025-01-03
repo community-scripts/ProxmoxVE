@@ -41,7 +41,7 @@ function update_script() {
         systemctl stop ps5-mqtt.service
         msg_ok "Stopped service"
 
-        msg_info "Updating PS5-MQTT"
+        msg_info "Updating PS5-MQTT to ${RELEASE}"
         cd ~
         wget -q https://github.com/FunkeyFlo/ps5-mqtt/archive/refs/tags/${RELEASE}.tar.gz
         tar zxf ${RELEASE}.tar.gz
