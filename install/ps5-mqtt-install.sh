@@ -21,28 +21,22 @@ $STD apt-get install -y \
   jq \
   nodejs \
   npm
-
 $STD npm i -g playactor
-
 msg_ok "Installed Dependencies"
 
 RELEASE=$(curl -s https://api.github.com/repos/FunkeyFlo/ps5-mqtt/releases/latest | jq -r '.tag_name')
 
 msg_info "Installing PS5-MQTT"
 wget -q https://github.com/FunkeyFlo/ps5-mqtt/archive/refs/tags/${RELEASE}.tar.gz
-
 tar zxf ${RELEASE}.tar.gz
-
 mv ps5-mqtt-* /opt/ps5-mqtt
 echo ${RELEASE} > /opt/ps5-mqtt_version.txt
-
 cd /opt/ps5-mqtt/ps5-mqtt/
 $STD npm install
 $STD npm run build
 msg_ok "Installed PS5-MQTT"
 
 msg_info "Creating Service"
-
 mkdir -p /root/.config/ps5-mqtt
 mkdir -p /root/.config/playactor
 cat <<EOF > /root/.config/ps5-mqtt/config.json
@@ -74,7 +68,6 @@ cat <<EOF > /root/.config/ps5-mqtt/config.json
   "frontendPort": "8645"
 }
 EOF
-
 cat <<EOF >/etc/systemd/system/ps5-mqtt.service
 [Unit]
 Description=PS5-MQTT Daemon
