@@ -35,6 +35,12 @@ mysql -u root -e "CREATE DATABASE $DB_NAME;"
 mysql -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
 mysql -u root -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost';"
 mysql -u root -e "GRANT SELECT ON \`mysql\`.\`time_zone_name\` TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
+{
+    echo "GLPI Database Credentials"
+    echo "Database $DB_BAME
+    echo "Username: $DB_USER"
+    echo "Password: $DB_PASS"
+} >> ~/glpi_db.creds
 msg_ok "Set up database"
 
 msg_info "Installing GLPi"
