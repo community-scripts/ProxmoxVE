@@ -45,7 +45,7 @@ msg_ok "Set up database"
 msg_info "Installing GLPi"
 cd /opt
 RELEASE=$(curl -s https://api.github.com/repos/glpi-project/glpi/releases/latest | grep '"tag_name"' | sed -E 's/.*"tag_name": "([^"]+)".*/\1/')
-echo "${RELEASE}" >"/opt/glpi_version.txt"
+echo "${RELEASE}" >"/opt/${APP}_version.txt"
 wget -q "https://github.com/glpi-project/glpi/releases/download/${RELEASE}/glpi-${RELEASE}.tgz"
 tar -xzvf glpi-${RELEASE}.tgz
 
