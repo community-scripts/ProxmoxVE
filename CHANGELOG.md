@@ -16,6 +16,18 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
+## 2025-01-03
+
+### Changed
+
+### 🚀 Updated Scripts
+
+- Keep Lubelogger data after update to a new version [@JcMinarro](https://github.com/JcMinarro) ([#1200](https://github.com/community-scripts/ProxmoxVE/pull/1200))
+
+### 🌐 Website
+
+- Update Nextcloud-LXC JSON [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1191](https://github.com/community-scripts/ProxmoxVE/pull/1191))
+
 ## 2025-01-02
 
 ### Changed
