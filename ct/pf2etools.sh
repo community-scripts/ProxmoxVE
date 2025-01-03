@@ -53,6 +53,7 @@ function update_script() {
         cd /opt/Pf2eTools
         npm i
         npm run build
+        cd ~
         echo "${RELEASE}" >"/opt/${APP}_version.txt"
         msg_ok "Updated ${APP}"
 

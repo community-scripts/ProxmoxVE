@@ -33,6 +33,7 @@ mv "Pf2eTools-${RELEASE:1}" /opt/Pf2eTools
 cd /opt/Pf2eTools
 npm i
 npm run build
+cd ~
 echo "${RELEASE}" >/opt/Pf2eTools_version.txt
 msg_ok "Set up Pf2eTools"
 

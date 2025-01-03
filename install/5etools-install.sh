@@ -20,7 +20,8 @@ $STD apt-get install -y \
   mc \
   sudo \
   git \
-  apache2
+  apache2 \
+  npm
 msg_ok "Installed Dependencies"
 
 # Setup App
@@ -29,6 +30,10 @@ RELEASE=$(curl -s https://api.github.com/repos/5etools-mirror-3/5etools-src/rele
 wget -q "https://github.com/5etools-mirror-3/5etools-src/archive/refs/tags/${RELEASE}.zip"
 unzip -q "${RELEASE}.zip"
 mv "5etools-src-${RELEASE:1}" /opt/5etools
+cd /opt/5etools
+npm i
+npm run build
+cd ~
 echo "${RELEASE}" >"/opt/5etools_version.txt"
 rm "${RELEASE}.zip"
 msg_ok "Set up 5etools Base"
