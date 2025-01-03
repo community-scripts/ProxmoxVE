@@ -20,7 +20,8 @@ $STD apt-get install -y \
   mc \
   sudo \
   apache2 \
-  git
+  git \
+  npm
 msg_ok "Installed Dependencies"
 
 # Setup App
@@ -29,6 +30,9 @@ RELEASE=$(curl -s https://api.github.com/repos/Pf2eToolsOrg/Pf2eTools/releases/l
 wget -q "https://github.com/Pf2eToolsOrg/Pf2eTools/archive/refs/tags/${RELEASE}.zip"
 unzip -q "${RELEASE}.zip"
 mv "Pf2eTools-${RELEASE:1}" /opt/Pf2eTools
+cd /opt/Pf2eTools
+npm i
+npm run build
 echo "${RELEASE}" >/opt/Pf2eTools_version.txt
 msg_ok "Set up Pf2eTools"
 
