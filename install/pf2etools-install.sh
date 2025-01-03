@@ -31,8 +31,8 @@ wget -q "https://github.com/Pf2eToolsOrg/Pf2eTools/archive/refs/tags/${RELEASE}.
 unzip -q "${RELEASE}.zip"
 mv "Pf2eTools-${RELEASE:1}" /opt/Pf2eTools
 cd /opt/Pf2eTools
-npm i
-npm run build
+$STD npm install
+$STD npm run build
 cd ~
 echo "${RELEASE}" >/opt/Pf2eTools_version.txt
 msg_ok "Set up Pf2eTools"
