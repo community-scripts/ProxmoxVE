@@ -15,15 +15,15 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y curl jq
+$STD apt-get install -y \
+  curl \
+  sudo \
+  mc \
+  jq \
+  nodejs \
+  npm
 
-msg_info "Installing NodeJS and NPM"
-$STD apt-get install -y nodejs npm
-msg_ok "Installed NodeJS and NPM"
-
-msg_info "Installing playactor"
 $STD npm i -g playactor
-msg_ok "Installed playactor"
 
 msg_ok "Installed Dependencies"
 
