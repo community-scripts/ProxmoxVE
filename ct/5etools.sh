@@ -52,8 +52,8 @@ function update_script() {
         mv "${APP}-src-${RELEASE:1}" "/opt/${APP}"
         mv "/opt/img-backup" "/opt/${APP}/img"
         cd /opt/5etools
-        npm i
-        npm run build
+        $STD npm install
+        $STD npm run build
         cd ~
         echo "${RELEASE}" >"/opt/${APP}_version.txt"
         msg_ok "Updated base 5etools"
