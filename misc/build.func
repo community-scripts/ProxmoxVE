@@ -530,7 +530,7 @@ advanced_settings() {
 
   if [ "$NET" != "dhcp" ]; then
     while true; do
-      GATE1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter gateway IP address" 8 58 --title "Gateway IP" 3>&1 1>&2 2>&3)
+      GATE1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter gateway IP address" 8 58 $GATE1 --title "Gateway IP" 3>&1 1>&2 2>&3)
       if [ -z "$GATE1" ]; then
         whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox "Gateway IP address cannot be empty" 8 58
       elif [[ ! "$GATE1" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
@@ -550,7 +550,7 @@ advanced_settings() {
     APT_CACHER=""
     APT_CACHER_IP=""
   else
-    if APT_CACHER_IP=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set APT-Cacher IP (leave blank for default)" 8 58 --title "APT-Cacher IP" 3>&1 1>&2 2>&3); then
+    if APT_CACHER_IP=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set APT-Cacher IP (leave blank for default)" 8 58 $APT_CACHER_IP --title "APT-Cacher IP" 3>&1 1>&2 2>&3); then
       APT_CACHER="${APT_CACHER_IP:+yes}"
       echo -e "${NETWORK}${BOLD}${DGN}APT-Cacher IP Address: ${BGN}${APT_CACHER_IP:-Default}${CL}"
     else
@@ -565,7 +565,7 @@ advanced_settings() {
   fi
   echo -e "${DISABLEIPV6}${BOLD}${DGN}Disable IPv6: ${BGN}$DISABLEIP6${CL}"
 
-  if MTU1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Interface MTU Size (leave blank for default)" 8 58 --title "MTU SIZE" 3>&1 1>&2 2>&3); then
+  if MTU1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Interface MTU Size (leave blank for default)" 8 58 $MTU1 --title "MTU SIZE" 3>&1 1>&2 2>&3); then
     if [ -z $MTU1 ]; then
       MTU1="Default"
       MTU=""
@@ -577,7 +577,7 @@ advanced_settings() {
     exit_script
   fi
 
-  if SD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a DNS Search Domain (leave blank for HOST)" 8 58 --title "DNS Search Domain" 3>&1 1>&2 2>&3); then
+  if SD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a DNS Search Domain (leave blank for HOST)" 8 58 $SD --title "DNS Search Domain" 3>&1 1>&2 2>&3); then
     if [ -z $SD ]; then
       SX=Host
       SD=""
@@ -590,7 +590,7 @@ advanced_settings() {
     exit_script
   fi
 
-  if NX=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a DNS Server IP (leave blank for HOST)" 8 58 --title "DNS SERVER IP" 3>&1 1>&2 2>&3); then
+  if NX=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a DNS Server IP (leave blank for HOST)" 8 58 $NX --title "DNS SERVER IP" 3>&1 1>&2 2>&3); then
     if [ -z $NX ]; then
       NX=Host
       NS=""
@@ -614,7 +614,7 @@ advanced_settings() {
     exit_script
   fi
 
-  if VLAN1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a Vlan(leave blank for default)" 8 58 --title "VLAN" 3>&1 1>&2 2>&3); then
+  if VLAN1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a Vlan(leave blank for default)" 8 58 $VLAN1 --title "VLAN" 3>&1 1>&2 2>&3); then
     if [ -z $VLAN1 ]; then
       VLAN1="Default"
       VLAN=""
@@ -661,6 +661,7 @@ install_script() {
   root_check
   arch_check
   ssh_check
+  read_proxmox_helper_scripts_env
 
   if systemctl is-active -q ping-instances.service; then
     systemctl -q stop ping-instances.service
@@ -926,5 +927,23 @@ EOF
 
   if [[ -f /etc/systemd/system/ping-instances.service ]]; then
     systemctl start ping-instances.service
+  fi
+}
+
+
+# Set a global variable for the PHS environment file
+PVE_ENV="/etc/pve-helper-scripts.conf"
+
+# This function loads the environment file for common configuration in Proxmox-Helper-Scripts
+function read_proxmox_helper_scripts_env(){
+  #Check if file exists
+  if [ ! -f "$PVE_ENV" ]; then
+    msg_info "${BL}Creating Proxmox-Helper-Scripts configuration file.${CL}"
+    touch "$PVE_ENV"
+    chown root:root "$PVE_ENV"
+    chmod 0600 "$PVE_ENV"
+    msg_ok "${BL}Created Proxmox-Helper-Scripts configuration file.${CL}"
+  else
+    source "$PVE_ENV"
   fi
 }
