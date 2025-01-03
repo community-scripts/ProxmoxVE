@@ -31,8 +31,8 @@ wget -q "https://github.com/5etools-mirror-3/5etools-src/archive/refs/tags/${REL
 unzip -q "${RELEASE}.zip"
 mv "5etools-src-${RELEASE:1}" /opt/5etools
 cd /opt/5etools
-npm i
-npm run build
+$STD npm install
+$STD npm run build
 cd ~
 echo "${RELEASE}" >"/opt/5etools_version.txt"
 rm "${RELEASE}.zip"
