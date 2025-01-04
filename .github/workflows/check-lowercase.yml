@@ -25,7 +25,6 @@ jobs:
       # Step 3a: Validate filenames in ct directory
       - name: "Validate filenames in ct directory"
         run: |
-          echo Get the list of changed files in ct directory
           changed_files=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -E '^ct/.*\.sh$')
 
           ERROR_COUNT=0
@@ -49,7 +48,6 @@ jobs:
       # Step 3b: Validate filenames in install directory
       - name: "Validate filenames in install directory"
         run: |
-          echo Get the list of changed files in install directory
           changed_files=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -E '^install/.*\.sh$')
 
           ERROR_COUNT=0
@@ -73,7 +71,6 @@ jobs:
       # Step 3c: Validate filenames in json directory
       - name: "Validate filenames in json directory."
         run: |
-          echo Get the list of changed files in json directory
           changed_files=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -E '^json/.*\.json$')
 
           ERROR_COUNT=0
