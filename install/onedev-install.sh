@@ -19,7 +19,8 @@ $STD apt-get install -y \
     mc \
     sudo \
     default-jdk \
-    git
+    git \
+    git-lfs
 msg_ok "Installed Dependencies"
 
 
