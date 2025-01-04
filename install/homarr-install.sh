@@ -19,6 +19,7 @@ msg_info "Installing Dependencies"
 $STD apt-get install -y \
   sudo \
   mc \
+  curl \
   ca-certificates \
   gnupg \
   make \
