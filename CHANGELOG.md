@@ -16,6 +16,14 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
+## 2025-01-04
+
+### Changed
+
+### 🌐 Website
+
+- Bump next from 15.0.2 to 15.1.3 in /frontend [@dependabot[bot]](https://github.com/dependabot[bot]) ([#1212](https://github.com/community-scripts/ProxmoxVE/pull/1212))
+
 ## 2025-01-03
 
 ### Changed
