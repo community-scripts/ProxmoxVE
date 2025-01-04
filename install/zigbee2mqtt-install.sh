@@ -18,6 +18,7 @@ $STD apt-get install -y \
   curl \
   sudo \
   mc \
+  git \
   make \
   g++ \
   gcc \
@@ -42,7 +43,7 @@ msg_ok "Installed pnpm"
 
 msg_info "Setting up Zigbee2MQTT"
 cd /opt
-corepack enable
+$STD corepack enable
 RELEASE=$(curl -s https://api.github.com/repos/Koenkk/zigbee2mqtt/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 wget -q "https://github.com/Koenkk/zigbee2mqtt/archive/refs/tags/${RELEASE}.zip"
 unzip -q ${RELEASE}.zip
@@ -50,7 +51,7 @@ mv zigbee2mqtt-${RELEASE} /opt/zigbee2mqtt
 cd /opt/zigbee2mqtt/data
 mv configuration.example.yaml configuration.yaml
 cd /opt/zigbee2mqtt
-pnpm install
+$STD pnpm install
 msg_ok "Installed Zigbee2MQTT"
 
 msg_info "Creating Service"
