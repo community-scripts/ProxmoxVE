@@ -127,9 +127,9 @@ a2enmod rewrite
 a2ensite glpi.conf
 msg_ok "Configured VirtualHost"
 
-msg_info "Setting Cron task"
-echo "*/2 * * * * www-data /usr/bin/php /opt/glpi/front/cron.php &>/dev/null" >> /etc/cron.d/glpi
-msg_ok "Configured Cron task"
+msg_info "Setting Automatic Actions"
+(crontab -l 2>/dev/null; echo "* * * * * php /opt/glpi/front/cron.php") | crontab -
+msg_ok "Configured Automatic Actions"
 
 msg_info "Changing parameters in php.ini"
 PHP_VERSION=$(ls /etc/php/ | grep -E '^[0-9]+\.[0-9]+$' | head -n 1)
