@@ -9,7 +9,7 @@ on:
 
 jobs:
   check_lowercase:
-    runs-on: lxc
+    runs-on: ubuntu-latest
 
     steps:
       # Step 1: Checkout the code
