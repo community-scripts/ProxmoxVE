@@ -25,16 +25,16 @@ color
 catch_errors
 
 function update_script() {
+    header_info
+    check_container_storage
+    check_container_resources
+
     if [[ ! -d /opt/ps5-mqtt ]]; then
         msg_error "No ${APP} installation found!"
         exit
     fi
 
     RELEASE=$(curl -s https://api.github.com/repos/FunkeyFlo/ps5-mqtt/releases/latest | jq -r '.tag_name')
-
-    header_info
-    check_container_storage
-    check_container_resources
 
     if [[ "${RELEASE}" != "$(cat /opt/ps5-mqtt_version.txt)" ]]; then
         msg_info "Stopping service"
