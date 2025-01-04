@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies (Patience)"
-$STD apt-get install -y git curl sudo mc bluez libffi-dev libssl-dev libjpeg-dev zlib1g-dev autoconf build-essential libopenjp2-7 libturbojpeg0-dev ffmpeg liblapack3 liblapack-dev dbus-broker libpcap-dev libavdevice-dev libavformat-dev libavcodec-dev libavutil-dev libavfilter-dev libmariadb-dev-compat libatlas-base-dev pip python3.12-dev
+$STD apt-get install -y git curl sudo mc bluez libffi-dev libssl-dev libjpeg-dev zlib1g-dev autoconf build-essential libopenjp2-7 libturbojpeg0-dev ffmpeg liblapack3 liblapack-dev dbus-broker libpcap-dev libavdevice-dev libavformat-dev libavcodec-dev libavutil-dev libavfilter-dev libmariadb-dev-compat libatlas-base-dev pip python3.13-dev
 msg_ok "Installed Dependencies"
 
 msg_info "Installing UV"
