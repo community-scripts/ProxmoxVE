@@ -35,20 +35,27 @@ msg_ok "Set up Node.js Repository"
 msg_info "Installing Node.js"
 $STD apt-get update
 $STD apt-get install -y nodejs
-$STD apt-get install -y pnpm
 msg_ok "Installed Node.js"
 
-msg_info "Setting up Zigbee2MQTT Repository"
-$STD git clone --depth 1 https://github.com/Koenkk/zigbee2mqtt.git /opt/zigbee2mqtt
-msg_ok "Set up Zigbee2MQTT Repository"
+msg_info "Installing pnpm"
+$STD npm install -g pnpm
+msg_ok "Installed pnpm"
 
-msg_info "Installing Zigbee2MQTT"
+msg_info "Setting up Zigbee2MQTT"
+cd /opt
+corepack enable
+RELEASE=$(curl -s https://api.github.com/repos/Koenkk/zigbee2mqtt/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+wget -q "https://github.com/Koenkk/zigbee2mqtt/archive/refs/tags/${RELEASE}.zip"
+unzip -q ${RELEASE}.zip
+mv zigbee2mqtt-${RELEASE} /opt/zigbee2mqtt
+cd /opt/zigbee2mqtt/data
+mv configuration.example.yaml configuration.yaml
 cd /opt/zigbee2mqtt
-$STD pnpm ci
+pnpm install
 msg_ok "Installed Zigbee2MQTT"
 
 msg_info "Creating Service"
-service_path="/etc/systemd/system/zigbee2mqtt.service"
+cat <<EOF >/etc/systemd/system/zigbee2mqtt.service
 echo "[Unit]
 Description=zigbee2mqtt
 After=network.target
@@ -61,7 +68,7 @@ StandardError=inherit
 Restart=always
 User=root
 [Install]
-WantedBy=multi-user.target" >$service_path
+EOF
 systemctl enable -q --now zigbee2mqtt.service
 msg_ok "Created Service"
 
@@ -69,6 +76,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
+rm -rf /opt/${RELEASE}.zip
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
