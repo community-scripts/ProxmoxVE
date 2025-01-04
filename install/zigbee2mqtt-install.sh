@@ -14,15 +14,16 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y curl
-$STD apt-get install -y sudo
-$STD apt-get install -y mc
-$STD apt-get install -y git
-$STD apt-get install -y make
-$STD apt-get install -y g++
-$STD apt-get install -y gcc
-$STD apt-get install -y ca-certificates
-$STD apt-get install -y gnupg
+$STD apt-get install -y \
+  curl \
+  sudo \
+  mc \
+  git \
+  make \
+  g++ \
+  gcc \
+  ca-certificates \
+  gnupg
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up Node.js Repository"
@@ -34,6 +35,7 @@ msg_ok "Set up Node.js Repository"
 msg_info "Installing Node.js"
 $STD apt-get update
 $STD apt-get install -y nodejs
+$STD apt-get install -y pnpm
 msg_ok "Installed Node.js"
 
 msg_info "Setting up Zigbee2MQTT Repository"
@@ -42,7 +44,7 @@ msg_ok "Set up Zigbee2MQTT Repository"
 
 msg_info "Installing Zigbee2MQTT"
 cd /opt/zigbee2mqtt
-$STD npm ci
+$STD pnpm ci
 msg_ok "Installed Zigbee2MQTT"
 
 msg_info "Creating Service"
@@ -52,7 +54,7 @@ Description=zigbee2mqtt
 After=network.target
 [Service]
 Environment=NODE_ENV=production
-ExecStart=/usr/bin/npm start
+ExecStart=/usr/bin/pnpm start
 WorkingDirectory=/opt/zigbee2mqtt
 StandardOutput=inherit
 StandardError=inherit
@@ -60,7 +62,7 @@ Restart=always
 User=root
 [Install]
 WantedBy=multi-user.target" >$service_path
-$STD systemctl enable zigbee2mqtt.service
+systemctl enable -q --now zigbee2mqtt.service
 msg_ok "Created Service"
 
 motd_ssh
