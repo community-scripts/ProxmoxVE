@@ -60,6 +60,7 @@ function update_script() {
     mv zigbee2mqtt-${RELEASE} /opt/zigbee2mqtt
     rm -rf /opt/zigbee2mqtt/data
     mv /opt/z2m_backup/data /opt/zigbee2mqtt
+    msg_ok "Updated ${APP} to v${RELEASE}"
 
     msg_info "Starting Service"
     systemctl start zigbee2mqtt
