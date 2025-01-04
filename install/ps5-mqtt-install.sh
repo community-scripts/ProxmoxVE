@@ -27,9 +27,9 @@ msg_ok "Installed Dependencies"
 RELEASE=$(curl -s https://api.github.com/repos/FunkeyFlo/ps5-mqtt/releases/latest | jq -r '.tag_name')
 
 msg_info "Installing PS5-MQTT"
-wget -q https://github.com/FunkeyFlo/ps5-mqtt/archive/refs/tags/${RELEASE}.tar.gz
-tar zxf ${RELEASE}.tar.gz
-mv ps5-mqtt-* /opt/ps5-mqtt
+wget -P /tmp -q https://github.com/FunkeyFlo/ps5-mqtt/archive/refs/tags/${RELEASE}.tar.gz
+tar zxf /tmp/${RELEASE}.tar.gz -C /opt
+mv /opt/ps5-mqtt-* /opt/ps5-mqtt
 echo ${RELEASE} > /opt/ps5-mqtt_version.txt
 cd /opt/ps5-mqtt/ps5-mqtt/
 $STD npm install
@@ -94,8 +94,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-cd /
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
-rm ${RELEASE}.tar.gz
+rm /tmp/${RELEASE}.tar.gz
 msg_ok "Cleaned"

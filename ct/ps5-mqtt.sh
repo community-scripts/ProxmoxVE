@@ -42,12 +42,11 @@ function update_script() {
         msg_ok "Stopped service"
 
         msg_info "Updating PS5-MQTT to ${RELEASE}"
-        cd ~
-        wget -q https://github.com/FunkeyFlo/ps5-mqtt/archive/refs/tags/${RELEASE}.tar.gz
-        tar zxf ${RELEASE}.tar.gz
+        wget -P /tmp -q https://github.com/FunkeyFlo/ps5-mqtt/archive/refs/tags/${RELEASE}.tar.gz
         rm -rf /opt/ps5-mqtt
-        mv ps5-mqtt-* /opt/ps5-mqtt
-        rm ${RELEASE}.tar.gz
+        tar zxf /tmp/${RELEASE}.tar.gz -C /opt
+        mv /opt/ps5-mqtt-* /opt/ps5-mqtt
+        rm /tmp/${RELEASE}.tar.gz
         echo ${RELEASE} > /opt/ps5-mqtt_version.txt
         msg_ok "Updated PS5-MQTT"
 
@@ -60,7 +59,6 @@ function update_script() {
         msg_info "Starting service"
         systemctl start ps5-mqtt
         msg_ok "Started service"
-
     else
       msg_ok "No update required. ${APP} is already at ${RELEASE}"
     fi
