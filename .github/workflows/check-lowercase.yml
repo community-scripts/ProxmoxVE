@@ -1,0 +1,39 @@
+name: Check Lowercase Filenames
+
+on:
+  pull_request:
+    paths:
+      - 'ct/*.sh'
+      - 'install/*.sh'
+
+jobs:
+  check_lowercase:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Validate filenames are lowercase
+      - name: Validate filenames are lowercase
+        run: |
+          changed_files=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -E '^(ct|install)/')
+          ERROR_COUNT=0
+
+          for FILE in $changed_files; do
+              BASENAME=$(basename "$FILE")
+              if [[ "$BASENAME" =~ ^[a-z0-9._-]+$ ]]; then
+                  echo "$FILE: Check for lowercase in filename passed."
+              else
+                  echo "Error in $FILE. Change filename to lowercase."
+                  ERROR_COUNT=$((ERROR_COUNT + 1))
+              fi
+          done
+
+          if [ "$ERROR_COUNT" -ne 0 ]; then
+              echo "Filename check failed for $ERROR_COUNT file(s)."
+              exit 1
+          else
+              echo "All filenames passed the lowercase check."
+          fi
