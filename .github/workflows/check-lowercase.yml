@@ -14,7 +14,7 @@ jobs:
     steps:
       # Step 1: Checkout the code
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Ensure the full history is fetched for accurate diffing
 
@@ -22,16 +22,15 @@ jobs:
       - name: Fetch base branch
         run: git fetch origin ${{ github.base_ref }}
 
-      # Step 3: Validate filenames are lowercase
-      - name: Validate filenames are lowercase
+      # Step 3a: Validate filenames in ct directory
+      - name: "Validate filenames in ct directory"
         run: |
-          # Get the list of changed files
-          changed_files=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -E '^(ct|install|json)/')
+          # Get the list of changed files in ct directory
+          changed_files=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -E '^ct/.*\.sh$')
 
           ERROR_COUNT=0
 
-          # Process each file safely using newline as delimiter
-          while IFS= read -r FILE; do
+          for FILE in $changed_files; do
               BASENAME=$(basename "$FILE")
               if [[ "$BASENAME" =~ ^[a-z0-9._-]+$ ]]; then
                   echo "$FILE: Check for lowercase in filename passed."
@@ -39,14 +38,61 @@ jobs:
                   echo "Error in $FILE. Change filename to lowercase."
                   ERROR_COUNT=$((ERROR_COUNT + 1))
               fi
-          done <<< "$changed_files"
+          done
 
-          echo "Final ERROR_COUNT: $ERROR_COUNT"  # Debugging output
-
-          # Fail the workflow if any errors are found
           if [ "$ERROR_COUNT" -ne 0 ]; then
-              echo "$ERROR_COUNT script(s) have invalid filenames."
+              echo "$ERROR_COUNT script(s) in ct directory have invalid filenames."
               exit 1
           else
-              echo "All filenames passed the lowercase check."
+              echo "All filenames in ct directory passed the lowercase check."
+          fi
+
+      # Step 3b: Validate filenames in install directory
+      - name: "Validate filenames in install directory"
+        run: |
+          # Get the list of changed files in install directory
+          changed_files=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -E '^install/.*\.sh$')
+
+          ERROR_COUNT=0
+
+          for FILE in $changed_files; do
+              BASENAME=$(basename "$FILE")
+              if [[ "$BASENAME" =~ ^[a-z0-9._-]+$ ]]; then
+                  echo "$FILE: Check for lowercase in filename passed."
+              else
+                  echo "Error in $FILE. Change filename to lowercase."
+                  ERROR_COUNT=$((ERROR_COUNT + 1))
+              fi
+          done
+
+          if [ "$ERROR_COUNT" -ne 0 ]; then
+              echo "$ERROR_COUNT script(s) in install directory have invalid filenames."
+              exit 1
+          else
+              echo "All filenames in install directory passed the lowercase check."
+          fi
+
+      # Step 3c: Validate filenames in json directory
+      - name: "Validate filenames in json directory."
+        run: |
+          # Get the list of changed files in json directory
+          changed_files=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -E '^json/.*\.json$')
+
+          ERROR_COUNT=0
+
+          for FILE in $changed_files; do
+              BASENAME=$(basename "$FILE")
+              if [[ "$BASENAME" =~ ^[a-z0-9._-]+$ ]]; then
+                  echo "$FILE: Check for lowercase in filename passed."
+              else
+                  echo "Error in $FILE. Change filename to lowercase."
+                  ERROR_COUNT=$((ERROR_COUNT + 1))
+              fi
+          done
+
+          if [ "$ERROR_COUNT" -ne 0 ]; then
+              echo "$ERROR_COUNT script(s) in json directory have invalid filenames."
+              exit 1
+          else
+              echo "All filenames in json directory passed the lowercase check."
           fi
