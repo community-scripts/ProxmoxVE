@@ -30,10 +30,10 @@ msg_info "Installing PS5-MQTT"
 wget -P /tmp -q https://github.com/FunkeyFlo/ps5-mqtt/archive/refs/tags/${RELEASE}.tar.gz
 tar zxf /tmp/${RELEASE}.tar.gz -C /opt
 mv /opt/ps5-mqtt-* /opt/ps5-mqtt
-echo ${RELEASE} > /opt/ps5-mqtt_version.txt
 cd /opt/ps5-mqtt/ps5-mqtt/
 $STD npm install
 $STD npm run build
+echo ${RELEASE} > /opt/ps5-mqtt_version.txt
 msg_ok "Installed PS5-MQTT"
 
 msg_info "Creating Service"
