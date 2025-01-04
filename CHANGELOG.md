@@ -20,6 +20,12 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### Changed
 
+### 🚀 Updated Scripts
+
+- Fix: Update Python for HomeAssistant [@MickLesk](https://github.com/MickLesk) ([#1227](https://github.com/community-scripts/ProxmoxVE/pull/1227))
+- OneDev: Add git-lfs [@MickLesk](https://github.com/MickLesk) ([#1225](https://github.com/community-scripts/ProxmoxVE/pull/1225))
+- Pf2eTools & 5eTools: Fixing npm build [@TheRealVira](https://github.com/TheRealVira) ([#1213](https://github.com/community-scripts/ProxmoxVE/pull/1213))
+
 ### 🌐 Website
 
 - Bump next from 15.0.2 to 15.1.3 in /frontend [@dependabot[bot]](https://github.com/dependabot[bot]) ([#1212](https://github.com/community-scripts/ProxmoxVE/pull/1212))
