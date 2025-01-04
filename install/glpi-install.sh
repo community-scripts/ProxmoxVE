@@ -19,8 +19,8 @@ $STD apt-get install -y \
   sudo \
   mc \
   apache2 \
-  php \
-  php-{apcu,cli,common,curl,gd,imap,ldap,mysql,xmlrpc,xml,mbstring,bcmath,intl,zip,redis,bz2,soap,cas} \
+  php8.2-{apcu,cli,common,curl,gd,imap,ldap,mysql,xmlrpc,xml,mbstring,bcmath,intl,zip,redis,bz2,soap} \
+  php-cas \
   libapache2-mod-php \
   mariadb-server
 msg_ok "Installed Dependencies"
