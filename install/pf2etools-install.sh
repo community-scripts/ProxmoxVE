@@ -20,6 +20,8 @@ $STD apt-get install -y \
   mc \
   sudo \
   apache2 \
+  gpg \
+  ca-certificates \
   git
 msg_ok "Installed Dependencies"
 
