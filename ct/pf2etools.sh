@@ -50,6 +50,10 @@ function update_script() {
         unzip -q "${RELEASE}.zip"
         rm -rf "/opt/${APP}"
         mv "${APP}-${RELEASE:1}" "/opt/${APP}"
+        cd /opt/Pf2eTools
+        $STD npm install
+        $STD npm run build
+        cd ~
         echo "${RELEASE}" >"/opt/${APP}_version.txt"
         msg_ok "Updated ${APP}"
 
