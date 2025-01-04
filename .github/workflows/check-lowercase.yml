@@ -3,9 +3,9 @@ name: Check Lowercase Filenames
 on:
   pull_request:
     paths:
-      - '/ct/*.sh'
-      - '/install/*.sh'
-      - '/json/*.json'
+      - 'ct/*.sh'
+      - 'install/*.sh'
+      - 'json/*.json'
 
 jobs:
   check_lowercase:
@@ -26,12 +26,12 @@ jobs:
       - name: Validate filenames are lowercase
         run: |
           # Get the list of changed files
-          changed_files=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -E '^(ct|install)/')
+          changed_files=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -E '^(ct|install|json)/')
 
           ERROR_COUNT=0
 
           # Process each file safely using newline as delimiter
-          echo "$changed_files" | while IFS= read -r FILE; do
+          while IFS= read -r FILE; do
               BASENAME=$(basename "$FILE")
               if [[ "$BASENAME" =~ ^[a-z0-9._-]+$ ]]; then
                   echo "$FILE: Check for lowercase in filename passed."
@@ -39,7 +39,9 @@ jobs:
                   echo "Error in $FILE. Change filename to lowercase."
                   ERROR_COUNT=$((ERROR_COUNT + 1))
               fi
-          done
+          done <<< "$changed_files"
+
+          echo "Final ERROR_COUNT: $ERROR_COUNT"  # Debugging output
 
           # Fail the workflow if any errors are found
           if [ "$ERROR_COUNT" -ne 0 ]; then
