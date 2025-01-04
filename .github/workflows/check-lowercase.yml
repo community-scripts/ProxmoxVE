@@ -25,7 +25,7 @@ jobs:
       # Step 3a: Validate filenames in ct directory
       - name: "Validate filenames in ct directory"
         run: |
-          # Get the list of changed files in ct directory
+          echo Get the list of changed files in ct directory
           changed_files=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -E '^ct/.*\.sh$')
 
           ERROR_COUNT=0
@@ -41,7 +41,6 @@ jobs:
           done
 
           if [ "$ERROR_COUNT" -ne 0 ]; then
-              #echo "$ERROR_COUNT script(s) in ct directory have invalid filenames."
               exit 1
           else
               echo "All filenames in ct directory passed the lowercase check."
@@ -50,7 +49,7 @@ jobs:
       # Step 3b: Validate filenames in install directory
       - name: "Validate filenames in install directory"
         run: |
-          # Get the list of changed files in install directory
+          echo Get the list of changed files in install directory
           changed_files=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -E '^install/.*\.sh$')
 
           ERROR_COUNT=0
@@ -66,7 +65,6 @@ jobs:
           done
 
           if [ "$ERROR_COUNT" -ne 0 ]; then
-              #echo "$ERROR_COUNT script(s) in install directory have invalid filenames."
               exit 1
           else
               echo "All filenames in install directory passed the lowercase check."
@@ -75,7 +73,7 @@ jobs:
       # Step 3c: Validate filenames in json directory
       - name: "Validate filenames in json directory."
         run: |
-          # Get the list of changed files in json directory
+          echo Get the list of changed files in json directory
           changed_files=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -E '^json/.*\.json$')
 
           ERROR_COUNT=0
@@ -91,7 +89,6 @@ jobs:
           done
 
           if [ "$ERROR_COUNT" -ne 0 ]; then
-              #echo "$ERROR_COUNT script(s) in json directory have invalid filenames."
               exit 1
           else
               echo "All filenames in json directory passed the lowercase check."
