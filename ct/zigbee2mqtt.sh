@@ -52,6 +52,7 @@ function update_script() {
     rm -rf /opt/zigbee2mqtt/data
     mv /opt/z2m_backup/data /opt/zigbee2mqtt
     cd /opt/zigbee2mqtt 
+    pnpm build &>/dev/null
     pnpm install --frozen-lockfile &>/dev/null
     msg_info "Starting Service"
     systemctl start zigbee2mqtt
