@@ -38,7 +38,7 @@ function update_script() {
 
     if [[ "${RELEASE}" != "$(cat /opt/ps5-mqtt_version.txt)" ]]; then
         msg_info "Stopping service"
-        systemctl stop ps5-mqtt.service
+        systemctl stop ps5-mqtt
         msg_ok "Stopped service"
 
         msg_info "Updating PS5-MQTT to ${RELEASE}"
@@ -58,7 +58,7 @@ function update_script() {
         msg_ok "Built new PS5-MQTT version"
 
         msg_info "Starting service"
-        systemctl start ps5-mqtt.service
+        systemctl start ps5-mqtt
         msg_ok "Started service"
 
     else
