@@ -30,6 +30,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 - Bump next from 15.0.2 to 15.1.3 in /frontend [@dependabot[bot]](https://github.com/dependabot[bot]) ([#1212](https://github.com/community-scripts/ProxmoxVE/pull/1212))
 
+### 🧰 Maintenance
+
+- [GitHub Action] Add filename case check [@quantumryuu](https://github.com/quantumryuu) ([#1228](https://github.com/community-scripts/ProxmoxVE/pull/1228))
+
 ## 2025-01-03
 
 ### Changed
