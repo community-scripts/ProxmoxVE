@@ -22,6 +22,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- Fix gpg key pf2tools & 5etools [@MickLesk](https://github.com/MickLesk) ([#1242](https://github.com/community-scripts/ProxmoxVE/pull/1242))
 - Homarr: Fix missing curl dependency [@MickLesk](https://github.com/MickLesk) ([#1238](https://github.com/community-scripts/ProxmoxVE/pull/1238))
 - Homeassistan Core: Fix Python3 and add missing dependencies [@MickLesk](https://github.com/MickLesk) ([#1236](https://github.com/community-scripts/ProxmoxVE/pull/1236))
 - Fix: Update Python for HomeAssistant [@MickLesk](https://github.com/MickLesk) ([#1227](https://github.com/community-scripts/ProxmoxVE/pull/1227))
