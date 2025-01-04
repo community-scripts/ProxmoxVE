@@ -28,13 +28,6 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
-  if [[ "$(node -v | cut -d 'v' -f 2)" == "18."* ]]; then
-    if ! command -v pnpm >/dev/null 2>&1; then
-      echo "Installing NPM..."
-      apt-get install -y npm >/dev/null 2>&1
-      echo "Installed NPM..."
-    fi
-  fi
   if [[ ! -d /opt/zigbee2mqtt ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
@@ -58,7 +51,8 @@ function update_script() {
     mv zigbee2mqtt-${RELEASE} /opt/zigbee2mqtt
     rm -rf /opt/zigbee2mqtt/data
     mv /opt/z2m_backup/data /opt/zigbee2mqtt
-
+    cd /opt/zigbee2mqtt 
+    pnpm install --frozen-lockfile &>/dev/null
     msg_info "Starting Service"
     systemctl start zigbee2mqtt
     msg_ok "Started Service"
