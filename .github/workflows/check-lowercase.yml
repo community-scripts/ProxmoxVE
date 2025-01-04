@@ -5,6 +5,7 @@ on:
     paths:
       - 'ct/*.sh'
       - 'install/*.sh'
+      - 'json/*.json'
 
 jobs:
   check_lowercase:
@@ -13,8 +14,15 @@ jobs:
     steps:
       # Step 1: Checkout the code
       - name: Checkout code
-        uses: actions/checkout@v4
-      # Step 2: Validate filenames are lowercase
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Ensure the full history is fetched for accurate diffing
+
+      # Step 2: Fetch the base branch
+      - name: Fetch base branch
+        run: git fetch origin ${{ github.base_ref }}
+
+      # Step 3: Validate filenames are lowercase
       - name: Validate filenames are lowercase
         run: |
           # Get the list of changed files
