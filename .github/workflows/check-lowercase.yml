@@ -3,9 +3,9 @@ name: Check Lowercase Filenames
 on:
   pull_request:
     paths:
-      - 'ct/*.sh'
-      - 'install/*.sh'
-      - 'json/*.json'
+      - '/ct/*.sh'
+      - '/install/*.sh'
+      - '/json/*.json'
 
 jobs:
   check_lowercase:
