@@ -262,6 +262,7 @@ base_settings() {
   MAC=""
   VLAN=""
   SSH="no"
+  SSH_AUTHORIZED_KEY=""
   TAGS="community-script;"
   
   # Override default settings with variables from ct script
