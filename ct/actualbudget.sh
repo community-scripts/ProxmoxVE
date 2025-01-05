@@ -34,11 +34,13 @@ function update_script() {
     fi
     msg_info "Updating ${APP}"
     systemctl stop actualbudget.service
+    RELEASE=$(curl -s https://api.github.com/repos/actualbudget/actual-server/tags | jq '.[0].name')
     cd /opt/actualbudget
     git pull &>/dev/null
+    git checkout "$RELEASE"
     yarn install &>/dev/null
     systemctl start actualbudget.service
-    msg_ok "Successfully Updated ${APP}"
+    msg_ok "Successfully Updated ${APP} to ${RELEASE}"
     exit
 }
 

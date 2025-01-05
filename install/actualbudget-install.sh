@@ -35,7 +35,8 @@ $STD apt-get install -y nodejs
 $STD npm install --global yarn
 msg_ok "Installed Node.js"
 
-msg_info "Installing Actual Budget"
+RELEASE=$(curl -s https://api.github.com/repos/actualbudget/actual-server/tags | jq '.[0].name')
+msg_info "Installing Actual Budget $RELEASE"
 $STD git clone https://github.com/actualbudget/actual-server.git /opt/actualbudget
 mkdir -p /opt/actualbudget/server-files
 chown -R root:root /opt/actualbudget/server-files
@@ -45,6 +46,7 @@ ACTUAL_UPLOAD_DIR=/opt/actualbudget/server-files
 PORT=5006
 EOF
 cd /opt/actualbudget
+$STD git checkout "$RELEASE"
 $STD yarn install
 msg_ok "Installed Actual Budget"
 
