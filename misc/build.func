@@ -192,7 +192,7 @@ update_motd_ip() {
 # This function displays the ASCII Header and APP name.
 header_info() {
   clear
-  echo "$ASCII_ART"
+  echo -e "$ASCII_ART"
   echo -e "\nCopyright (c) 2021-2025 tteck"
   echo "Author: tteck (tteckster)"
   echo "Co-Author: MickLesk"
