@@ -197,7 +197,7 @@ header_info() {
   echo "Author: tteck (tteckster)"
   echo "Co-Author: MickLesk"
   echo "License: MIT. https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE"
-  echo "Website: https://Helper-Scripts.com"
+  echo -e "\nWebsite: https://Helper-Scripts.com"
   echo "Github: https://github.com/community-scripts/ProxmoxVE"
   echo "Report issues: https://github.com/community-scripts/ProxmoxVE/issues"
   echo -e "\n${BOLD}${GN}${APP} Script${CL}\n"
