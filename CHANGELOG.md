@@ -16,6 +16,18 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
+## 2025-01-05
+
+### Changed
+
+### 💥 Breaking Changes
+
+- [Breaking] Update Zigbee2mqtt to v.2.0.0 (Read PR Description) [@MickLesk](https://github.com/MickLesk) ([#1221](https://github.com/community-scripts/ProxmoxVE/pull/1221))
+
+### ❔ Unlabelled
+
+- Add RAM and Disk units [@oOStroudyOo](https://github.com/oOStroudyOo) ([#1261](https://github.com/community-scripts/ProxmoxVE/pull/1261))
+
 ## 2025-01-04
 
 ### Changed
