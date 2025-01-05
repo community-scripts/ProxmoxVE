@@ -200,7 +200,7 @@ header_info() {
   echo "Website: https://Helper-Scripts.com"
   echo "Github: https://github.com/community-scripts/ProxmoxVE"
   echo "Report issues: https://github.com/community-scripts/ProxmoxVE/issues"
-  echo -e "${BOLD}${GN}${APP} Script${CL}"
+  echo -e "\n${BOLD}${DGN}${APP} Script${CL}"
 }
 
 # This function checks if the script is running through SSH and prompts the user to confirm if they want to proceed or exit.
