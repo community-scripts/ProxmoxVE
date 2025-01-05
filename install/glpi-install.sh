@@ -47,10 +47,10 @@ cd /opt
 RELEASE=$(curl -s https://api.github.com/repos/glpi-project/glpi/releases/latest | grep '"tag_name"' | sed -E 's/.*"tag_name": "([^"]+)".*/\1/')
 echo "${RELEASE}" >"/opt/${APP}_version.txt"
 wget -q "https://github.com/glpi-project/glpi/releases/download/${RELEASE}/glpi-${RELEASE}.tgz"
-tar -xzvf glpi-${RELEASE}.tgz
+$STD tar -xzvf glpi-${RELEASE}.tgz
 
 cd /opt/glpi
-php bin/console db:install --db-name=$DB_NAME --db-user=$DB_USER --db-password=$DB_PASS --no-interaction
+$STD php bin/console db:install --db-name=$DB_NAME --db-user=$DB_USER --db-password=$DB_PASS --no-interaction
 rm -rf /opt/glpi/install
 msg_ok "Installed GLPi"
 
@@ -122,9 +122,9 @@ cat <<EOF >/etc/apache2/sites-available/glpi.conf
 </VirtualHost>
 EOF
 
-a2dissite 000-default.conf
-a2enmod rewrite
-a2ensite glpi.conf
+$STD a2dissite 000-default.conf
+$STD a2enmod rewrite
+$STD a2ensite glpi.conf
 msg_ok "Configured VirtualHost"
 
 msg_info "Setting Automatic Actions"
