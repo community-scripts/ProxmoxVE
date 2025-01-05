@@ -202,35 +202,39 @@ motd_ssh() {
   # Set terminal to 256-color mode
   grep -qxF "export TERM='xterm-256color'" /root/.bashrc || echo "export TERM='xterm-256color'" >> /root/.bashrc
 
-  # Get the current private IP address
-  IP=$(hostname -I | awk '{print $1}')  # Private IP
+  # Create our dynamic MOTD script
+  MOTD_FILE="/etc/update-motd.d/01-proxmox-tteck"
+  touch "$MOTD_FILE"
+  cat <<EOF >"$MOTD_FILE" 
+#!/bin/sh
 
-  # Get OS information (Debian / Ubuntu)
-  if [ -f "/etc/os-release" ]; then
-    OS_NAME=$(grep ^NAME /etc/os-release | cut -d= -f2 | tr -d '"')
-    OS_VERSION=$(grep ^VERSION_ID /etc/os-release | cut -d= -f2 | tr -d '"')
-  elif [ -f "/etc/debian_version" ]; then
-    OS_NAME="Debian"
-    OS_VERSION=$(cat /etc/debian_version)
-  fi
+# Get the current private IP address
+IP=\$(hostname -I | awk '{print \$1}')
 
-  # Set MOTD with application info, system details
-  MOTD_FILE="/etc/motd"
-  if [ -f "$MOTD_FILE" ]; then
-    # Start MOTD with application info and link
-    echo -e "\n${BOLD}${APPLICATION} LXC Container${CL}" > "$MOTD_FILE"
-    echo -e "${TAB}${GATEWAY}${YW} Provided by: ${GN}community-scripts ORG ${YW}| GitHub: ${GN}https://github.com/community-scripts/ProxmoxVE${CL}\n" >> "$MOTD_FILE"
+# Get OS information (Debian / Ubuntu)
+if [ -f "/etc/os-release" ]; then
+  OS_NAME=\$(grep ^NAME /etc/os-release | cut -d= -f2 | tr -d '"')
+  OS_VERSION=\$(grep ^VERSION_ID /etc/os-release | cut -d= -f2 | tr -d '"')
+elif [ -f "/etc/debian_version" ]; then
+  OS_NAME="Debian"
+  OS_VERSION=\$(cat /etc/debian_version)
+fi
 
-    # Add system information with icons
-    echo -e "${TAB}${OS}${YW} OS: ${GN}${OS_NAME} - Version: ${OS_VERSION}${CL}" >> "$MOTD_FILE"
-    echo -e "${TAB}${HOSTNAME}${YW} Hostname: ${GN}$(hostname)${CL}" >> "$MOTD_FILE"
-    echo -e "${TAB}${INFO}${YW} IP Address: ${GN}${IP}${CL}" >> "$MOTD_FILE"
-  else
-    echo "MotD file does not exist!" >&2
-  fi
+# Start MOTD with application info and link
+echo ""
+echo "${BOLD}${APPLICATION} LXC Container${CL}"
+echo "${TAB}${GATEWAY}${YW} Provided by: ${GN}community-scripts ORG ${YW}| GitHub: ${GN}https://github.com/community-scripts/ProxmoxVE${CL}"
+# Add system information with icons
+echo ""
+echo "${TAB}${OS}${YW} OS: ${GN}\${OS_NAME} - Version: \${OS_VERSION}${CL}"
+echo "${TAB}${HOSTNAME}${YW} Hostname: ${GN}\$(hostname)${CL}"
+echo "${TAB}${INFO}${YW} IP Address: ${GN}\${IP}${CL}"
+EOF
 
-  # Disable default MOTD scripts
+  # Disable default MOTD scripts and enable ours
+  [ -f /etc/motd ] && mv /etc/motd /etc/motd.bak
   chmod -x /etc/update-motd.d/*
+  chmod +x "$MOTD_FILE"
 
   if [[ "${SSH_ROOT}" == "yes" ]]; then
     sed -i "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
