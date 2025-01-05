@@ -146,6 +146,45 @@ pve_check() {
 fi
 }
 
+# When a node is running tens of containers, it's possible to exceed the kernel's
+# cryptographic key storage allocations. These are tuneable, so verify if the
+# currently deployment is approaching the limits, advise the user on how to tune
+# the limits, and exit the script.
+maxkeys_check() {
+  # https://cleveruptime.com/docs/files/proc-key-users
+  # https://docs.kernel.org/security/keys/core.html
+  per_user_maxkeys=$(cat /proc/sys/kernel/keys/maxkeys)
+  per_user_maxbytes=$(cat /proc/sys/kernel/keys/maxbytes)
+  used_lxc_keys=$(awk '/100000:/ {print $2}' /proc/key-users)
+  used_lxc_bytes=$(awk '/100000:/ {split($5, a, "/"); print a[1]}' /proc/key-users)
+  threshold_keys=$((per_user_maxkeys - 100))
+  new_limit_keys=$((per_user_maxkeys * 2))
+  threshold_bytes=$((per_user_maxbytes - 1000))
+  new_limit_bytes=$((per_user_maxbytes * 2))
+  failure=0
+  # Every LXC container will use one or more keys. Sampling indicates 1 for alpine, 25+ for debian.
+  if [ "${used_lxc_keys}" -gt "${threshold_keys}" ]; then
+    msg_error "Kernel key limits problem (count) detected."
+    echo -e "${CROSS}${RD} Your PVE node is close to the key limit of $per_user_maxkeys; this will cause problems when starting containers."
+    echo -e "${CROSS}${RD} Add or update /etc/sysctl/conf.d/98-community-scripts.conf, setting ${GN}kernel.keys.maxkeys=${new_limit_keys}${CL}"
+    echo
+    failure=1
+  fi
+  # There's also a bytes limit on keys.
+  if [ "${used_lxc_bytes}" -gt "${threshold_bytes}" ]; then
+    msg_error "Kernel key limits problem (bytes) detected."
+    echo -e "${CROSS}${RD} Your PVE node is close to the key bytes limit of $per_user_maxbytes; this will cause problems when starting containers."
+    echo -e "${CROSS}${RD} Add or update /etc/sysctl/conf.d/98-community-scripts.conf, setting ${GN}kernel.keys.maxbytes=${new_limit_bytes}${CL}"
+    echo
+    failure=1
+  fi
+  if [[ "${failure}" -eq 1 ]]; then
+    echo "You can pick values other than the suggested ones. After creating or updating the recommended "
+    echo "configuration file, run   service procps force-reload   and retry this script."
+    exit
+  fi
+}
+
 # This function checks the system architecture and exits if it's not "amd64".
 arch_check() {
   if [ "$(dpkg --print-architecture)" != "amd64" ]; then
@@ -661,6 +700,7 @@ install_script() {
   root_check
   arch_check
   ssh_check
+  maxkeys_check
 
   if systemctl is-active -q ping-instances.service; then
     systemctl -q stop ping-instances.service
