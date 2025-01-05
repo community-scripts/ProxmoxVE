@@ -9,6 +9,8 @@ variables() {
   var_install="${NSAPP}-install"     # sets the var_install variable by appending "-install" to the value of NSAPP.
   INTEGER='^[0-9]+([.][0-9]+)?$'     # it defines the INTEGER regular expression pattern.
   PVEHOST_NAME=$(hostname) # gets the Proxmox Hostname and sets it to Uppercase
+  # Display ASCII header
+  ASCII_ART="Proxmox VE Helper-Scripts"
 }
 
 # This function sets various color variables using ANSI escape codes for formatting text in the terminal.
@@ -187,65 +189,18 @@ update_motd_ip() {
   fi
 }
 
-# This function sets the APP-Name into an ASCII Header in Slant, figlet needed on proxmox main node.
+# This function displays the ASCII Header and APP name.
 header_info() {
-  # Helper function: Install FIGlet and download fonts
-  install_figlet() {
-    echo -e "${INFO}${BOLD}${DGN}Installing FIGlet...${CL}"
-
-    temp_dir=$(mktemp -d)
-    curl -sL https://github.com/community-scripts/ProxmoxVE/raw/refs/heads/main/misc/figlet.tar.xz -o "$temp_dir/figlet.tar.xz"
-    mkdir -p /tmp/figlet
-    tar -xf "$temp_dir/figlet.tar.xz" -C /tmp/figlet --strip-components=1
-    cd /tmp/figlet
-    make >/dev/null
-
-    if [ -f "figlet" ]; then
-      chmod +x figlet
-      mv figlet /usr/local/bin/
-      mkdir -p /usr/local/share/figlet
-      cp -r /tmp/figlet/fonts/*.flf /usr/local/share/figlet/
-      echo -e "${CM}${BOLD}${DGN}FIGlet successfully installed.${CL}"
-    else
-      echo -e "${ERR}${BOLD}${RED}Failed to install FIGlet.${CL}"
-      return 1
-    fi
-    rm -rf "$temp_dir"
-  }
-
-  # Check if figlet and the slant font are available
-  if ! figlet -f slant "Test" &>/dev/null; then
-    echo -e "${INFO}${BOLD}${DGN}FIGlet or the slant font is missing. Installing...${CL}"
-
-    if [ -f /etc/debian_version ] || [ -f /etc/lsb-release ]; then
-      # Debian/Ubuntu-based systems
-      apt-get update -y &>/dev/null
-      apt-get install -y wget build-essential &>/dev/null
-      install_figlet
-
-    elif [ -f /etc/alpine-release ]; then
-      # Alpine-based systems
-      apk add --no-cache tar xz build-base wget &>/dev/null
-      export TERM=xterm
-      install_figlet
-
-    else
-      echo -e "${ERR}${BOLD}${RED}Unsupported operating system.${CL}"
-      return 1
-    fi
-
-    # Ensure the slant font is available
-    if [ ! -f "/usr/share/figlet/slant.flf" ]; then
-      echo -e "${INFO}${BOLD}${DGN}Downloading slant font...${CL}"
-      wget -qO /usr/share/figlet/slant.flf "http://www.figlet.org/fonts/slant.flf"
-    fi
-  fi
-
-  # Display ASCII header
-  term_width=$(tput cols 2>/dev/null || echo 120)
-  ascii_art=$(figlet -f slant -w "$term_width" "$APP")
   clear
-  echo "$ascii_art"
+  echo "$ASCII_ART"
+  echo -e "\nCopyright (c) 2021-2025 tteck"
+  echo "Author: tteck (tteckster)"
+  echo "Co-Author: MickLesk"
+  echo "License: MIT. https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE"
+  echo "Website: https://Helper-Scripts.com"
+  echo "Github: https://github.com/community-scripts/ProxmoxVE"
+  echo "Report issues: https://github.com/community-scripts/ProxmoxVE/issues"
+  echo -e "${BOLD}${GN}${APP} Script${CL}"
 }
 
 # This function checks if the script is running through SSH and prompts the user to confirm if they want to proceed or exit.
