@@ -166,7 +166,7 @@ maxkeys_check() {
   if [ "${used_lxc_keys}" -gt "${threshold_keys}" ]; then
     msg_error "Kernel key limits problem (count) detected."
     echo -e "${CROSS}${RD} Your PVE node is close to the key limit of $per_user_maxkeys; this will cause problems when starting containers."
-    echo -e "${CROSS}${RD} Add or update /etc/sysctl/conf.d/98-community-scripts.conf, setting ${GN}kernel.keys.maxkeys=${new_limit_keys}${CL}"
+    echo -e "${CROSS}${RD} Add or update /etc/sysctl.d/98-community-scripts.conf, setting ${GN}kernel.keys.maxkeys=${new_limit_keys}${CL}"
     echo
     failure=1
   fi
@@ -174,7 +174,7 @@ maxkeys_check() {
   if [ "${used_lxc_bytes}" -gt "${threshold_bytes}" ]; then
     msg_error "Kernel key limits problem (bytes) detected."
     echo -e "${CROSS}${RD} Your PVE node is close to the key bytes limit of $per_user_maxbytes; this will cause problems when starting containers."
-    echo -e "${CROSS}${RD} Add or update /etc/sysctl/conf.d/98-community-scripts.conf, setting ${GN}kernel.keys.maxbytes=${new_limit_bytes}${CL}"
+    echo -e "${CROSS}${RD} Add or update /etc/sysctl.d/98-community-scripts.conf, setting ${GN}kernel.keys.maxbytes=${new_limit_bytes}${CL}"
     echo
     failure=1
   fi
