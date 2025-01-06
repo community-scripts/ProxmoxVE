@@ -14,10 +14,6 @@ setting_up_container
 network_check
 update_os
 
-
-####ADD user ?
-
-
 # Install Dependencies
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
@@ -30,47 +26,39 @@ $STD apt-get install -y \
   gnupg
 msg_ok "Installed Dependencies"
 
-
-#allow nginx through firewall
+# Allow nginx through firewall
 $STD ufw allow 'Nginx Full'
 
-# Enter mysql
-$STD mysql
-# Update permissions
-$STD ALTER USER 'root'@'localhost' IDENTIFIED WITH 'mysql_native_password' BY 'ghost';
-# Reread permissions
-$STD FLUSH PRIVILEGES;
-# exit mysql
-$STD exit
+# Configure MySQL
+msg_info "Configuring MySQL"
+$STD mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH 'mysql_native_password' BY 'ghost';"
+$STD mysql -u root -e "FLUSH PRIVILEGES;"
+msg_ok "Configured MySQL"
 
-
-
-
+# Set up Node.js Repository
 msg_info "Setting up Node.js Repository"
 mkdir -p /etc/apt/keyrings
 curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
 echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
 msg_ok "Set up Node.js Repository"
 
-msg_info "Installing Node.js"
+# Install Node.js and npm
+msg_info "Installing Node.js and npm"
 $STD apt-get update
-$STD apt-get install -y nodejs
-msg_ok "Installed Node.js"
+$STD apt-get install -y nodejs npm
+msg_ok "Installed Node.js and npm"
 
-msg_info "Installing npm"
-$STD apt-get install -y npm
-msg_ok "Installed npm"
-
-
+# Install Ghost CLI
+msg_info "Installing Ghost CLI"
 $STD npm install ghost-cli@latest -g
+msg_ok "Installed Ghost CLI"
 
+# Set up Ghost
 msg_info "Setting up Ghost"
 mkdir -p /var/www/ghost
 chown -R $USER:$USER /var/www/ghost
 chmod 775 /var/www/ghost
 cd /var/www/ghost
-
-
 ghost install --db=mysql --dbhost=localhost --dbuser=root --dbpass=ghost --dbname=ghost --no-prompt --no-setup-linux-user --no-setup-nginx --no-setup-ssl --no-setup-systemd
 msg_ok "Ghost setup completed"
 
@@ -100,6 +88,3 @@ msg_info "Cleaning up"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
-
-motd_ssh
-customize
