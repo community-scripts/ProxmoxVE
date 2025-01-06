@@ -66,7 +66,7 @@ msg_info "Setting up Ghost"
 mkdir -p /var/www/ghost
 chown -R ghost-user:ghost-user /var/www/ghost
 chmod 775 /var/www/ghost
-sudo -u ghost-user -H sh -c "cd /var/www/ghost && ghost install --db=mysql --dbhost=localhost --dbuser=root --dbpass=ghost --dbname=ghost --no-prompt --no-setup-linux-user --no-setup-nginx --no-setup-ssl --no-setup-systemd"
+sudo -u ghost-user -H sh -c "cd /var/www/ghost && ghost install --db=mysql --dbhost=localhost --dbuser=root --dbpass=ghost --dbname=ghost --url=http://localhost:2368 --no-prompt --no-setup-linux-user --no-setup-nginx --no-setup-ssl --no-setup-systemd --no-setup-mysql --no-start --no-enable"
 msg_ok "Ghost setup completed"
 
 # Creating Service (if needed)
@@ -77,8 +77,10 @@ Description=${APPLICATION} Service
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/ghost run
+ExecStart=/usr/bin/ghost start
 WorkingDirectory=/var/www/ghost
+User=ghost-user
+Group=ghost-user
 Restart=always
 
 [Install]

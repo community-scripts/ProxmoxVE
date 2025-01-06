@@ -30,9 +30,10 @@ function update_script() {
     check_container_storage
     check_container_resources
     msg_info "Updating ${APP} LXC"
-    # CHECK FOR NPM HERE !
+    # CHECK FOR NPM HERE !  
+
     if command -v ghost &> /dev/null; then
-        current_version=$(ghost --version | awk '{print $2}')
+        current_version=$(ghost --version | awk '{print $2}') #TO REVIEW
         latest_version=$(npm show ghost-cli version)
         if [ "$current_version" != "$latest_version" ]; then
             msg_info "Updating ${APP} from version $current_version to $latest_version"
