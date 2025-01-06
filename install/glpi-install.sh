@@ -49,7 +49,7 @@ wget -q "https://github.com/glpi-project/glpi/releases/download/${RELEASE}/glpi-
 tar -xzvf glpi-${RELEASE}.tgz > /dev/null
 cd /opt/glpi
 $STD php bin/console db:install --db-name=$DB_NAME --db-user=$DB_USER --db-password=$DB_PASS --no-interaction
-echo "${RELEASE}" >"/opt/${APP}_version.txt"
+echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Installed GLPi"
 
 msg_info "Setting Downstream file"
