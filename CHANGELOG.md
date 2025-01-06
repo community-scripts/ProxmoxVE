@@ -27,6 +27,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- Fix Tag in HyperHDR Script [@MickLesk](https://github.com/MickLesk) ([#1299](https://github.com/community-scripts/ProxmoxVE/pull/1299))
 - [Fix]: Fixed rm Bug in pf2etools [@MickLesk](https://github.com/MickLesk) ([#1292](https://github.com/community-scripts/ProxmoxVE/pull/1292))
 - Fix: Homebox Update Script  [@MickLesk](https://github.com/MickLesk) ([#1284](https://github.com/community-scripts/ProxmoxVE/pull/1284))
 - Add ca-certificates for Install (Frigate) [@MickLesk](https://github.com/MickLesk) ([#1282](https://github.com/community-scripts/ProxmoxVE/pull/1282))
