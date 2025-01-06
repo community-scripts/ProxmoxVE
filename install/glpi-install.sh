@@ -46,7 +46,7 @@ msg_info "Installing GLPi"
 cd /opt
 RELEASE=$(curl -s https://api.github.com/repos/glpi-project/glpi/releases/latest | grep '"tag_name"' | sed -E 's/.*"tag_name": "([^"]+)".*/\1/')
 wget -q "https://github.com/glpi-project/glpi/releases/download/${RELEASE}/glpi-${RELEASE}.tgz"
-tar -xzvf glpi-${RELEASE}.tgz
+$STD tar -xzvf glpi-${RELEASE}.tgz
 cd /opt/glpi
 $STD php bin/console db:install --db-name=$DB_NAME --db-user=$DB_USER --db-password=$DB_PASS --no-interaction
 echo "${RELEASE}" >"/opt/${APP}_version.txt"
