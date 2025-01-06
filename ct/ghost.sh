@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1090
-source <(curl -s https://raw.githubusercontent.com/fabrice1236/ProxmoxVE/refs/heads/ghost/misc/build.func) 
+source <(curl -s https://raw.githubusercontent.com/fabrice1236/ProxmoxVE/refs/heads/ghost-testing/misc/build.func) 
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: fabrice1236
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -51,6 +51,16 @@ function update_script() {
 start
 build_container
 description
+
+# Ensure the container is created before starting it
+if pct status "$CT_ID" &>/dev/null; then
+  msg_info "Starting LXC Container"
+  pct start "$CT_ID"
+  msg_ok "Started LXC Container"
+else
+  msg_error "Failed to create LXC Container"
+  exit 1
+fi
 
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
