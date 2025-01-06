@@ -54,13 +54,18 @@ msg_info "Installing Ghost CLI"
 $STD npm install ghost-cli@latest -g
 msg_ok "Installed Ghost CLI"
 
+
+# Create a new user for Ghost
+adduser ghost-user
+usermod -aG sudo ghost-user
+
 # Set up Ghost
 msg_info "Setting up Ghost"
 mkdir -p /var/www/ghost
 chown -R $USER:$USER /var/www/ghost
 chmod 775 /var/www/ghost
 cd /var/www/ghost
-ghost install --db=mysql --dbhost=localhost --dbuser=root --dbpass=ghost --dbname=ghost --no-prompt --no-setup-linux-user --no-setup-nginx --no-setup-ssl --no-setup-systemd
+$STD sudo -u ghost-user ghost install --db=mysql --dbhost=localhost --dbuser=root --dbpass=ghost --dbname=ghost --no-prompt --no-setup-linux-user --no-setup-nginx --no-setup-ssl --no-setup-systemd
 msg_ok "Ghost setup completed"
 
 # Creating Service (if needed)
