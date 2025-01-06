@@ -26,9 +26,8 @@ mkdir -p /etc/alertmanager
 mkdir -p /var/lib/alertmanager
 wget -q https://github.com/prometheus/alertmanager/releases/download/v${RELEASE}/alertmanager-${RELEASE}.linux-amd64.tar.gz
 tar -xf alertmanager-${RELEASE}.linux-amd64.tar.gz
-cd alertmanager-${RELEASE}.linux-amd64
-mv alertmanager amtool /usr/local/bin/
-mv alertmanager.yml /etc/alertmanager/alertmanager.yml
+mv alertmanager-${RELEASE}.linux-amd64/alertmanager alertmanager-${RELEASE}.linux-amd64/amtool /usr/local/bin/
+mv alertmanager-${RELEASE}.linux-amd64/alertmanager.yml /etc/alertmanager/alertmanager.yml
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Installed Prometheus Alertmanager"
 
@@ -61,5 +60,5 @@ customize
 msg_info "Cleaning up"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
-rm -rf ../alertmanager-${RELEASE}.linux-amd64 ../alertmanager-${RELEASE}.linux-amd64.tar.gz
+rm -rf alertmanager-${RELEASE}.linux-amd64 alertmanager-${RELEASE}.linux-amd64.tar.gz
 msg_ok "Cleaned"
