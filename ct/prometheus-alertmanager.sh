@@ -38,7 +38,7 @@ function update_script() {
     systemctl stop prometheus-alertmanager
     msg_ok "Stopped ${APP}"
 
-    msg_info "Updating ${APP} to ${RELEASE}"
+    msg_info "Updating ${APP} to v${RELEASE}"
     wget -q https://github.com/prometheus/alertmanager/releases/download/v${RELEASE}/alertmanager-${RELEASE}.linux-amd64.tar.gz
     tar -xf alertmanager-${RELEASE}.linux-amd64.tar.gz
     cd alertmanager-${RELEASE}.linux-amd64
