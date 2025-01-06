@@ -22,6 +22,8 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- fix: buffer from base64 in formatting pipeline [@se-bastiaan](https://github.com/se-bastiaan) ([#1285](https://github.com/community-scripts/ProxmoxVE/pull/1285))
+- Fix: Homebox Update Script  [@MickLesk](https://github.com/MickLesk) ([#1284](https://github.com/community-scripts/ProxmoxVE/pull/1284))
 - Add ca-certificates for Install (Frigate) [@MickLesk](https://github.com/MickLesk) ([#1282](https://github.com/community-scripts/ProxmoxVE/pull/1282))
 
 ### 🧰 Maintenance
