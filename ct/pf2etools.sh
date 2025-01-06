@@ -45,15 +45,14 @@ function update_script() {
 
         # Execute Update
         msg_info "Updating ${APP}"
-        cd "/opt/${APP}"
+        cd /opt
         wget -q "https://github.com/Pf2eToolsOrg/Pf2eTools/archive/refs/tags/${RELEASE}.zip"
-        unzip -q "${RELEASE}.zip"
+        unzip -q ${RELEASE}.zip
         rm -rf "/opt/${APP}"
-        mv "${APP}-${RELEASE:1}" "/opt/${APP}"
+        mv ${APP}-${RELEASE:1} /opt/${APP}
         cd /opt/Pf2eTools
         $STD npm install
         $STD npm run build
-        cd ~
         echo "${RELEASE}" >"/opt/${APP}_version.txt"
         msg_ok "Updated ${APP}"
 
@@ -62,7 +61,7 @@ function update_script() {
 
         # Cleaning up
         msg_info "Cleaning Up"
-        rm -rf /opt/${APP}/${RELEASE}.zip
+        rm -rf /opt/${RELEASE}.zip
         $STD apt-get -y autoremove
         $STD apt-get -y autoclean
         msg_ok "Cleanup Completed"
