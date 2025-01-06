@@ -18,7 +18,7 @@ update_os
 ####ADD user ?
 
 
-# Installing Dependencies with the 3 core dependencies (curl;sudo;mc)
+# Install Dependencies
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
   curl \
