@@ -33,7 +33,7 @@ echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Installed Prometheus Alertmanager"
 
 msg_info "Creating Service"
-service_path="/etc/systemd/system/prometheus-alertmanager.service"
+cat <<EOF >/etc/systemd/system/prometheus-alertmanager.service
 echo "[Unit]
 Description=Prometheus Alertmanager
 Wants=network-online.target
@@ -50,7 +50,8 @@ ExecStart=/usr/local/bin/alertmanager \
 ExecReload=/bin/kill -HUP \$MAINPID
 
 [Install]
-WantedBy=multi-user.target" >$service_path
+WantedBy=multi-user.target"
+EOF
 systemctl enable -q --now prometheus-alertmanager
 msg_ok "Created Service"
 
