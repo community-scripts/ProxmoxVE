@@ -37,7 +37,7 @@ function update_script() {
     systemctl stop homebox
     msg_ok "${APP} Stopped"
 
-    msg_info "Updating ${APP} to ${RELEASE}"
+    msg_info "Updating ${APP} to v${RELEASE}"
     cd /opt
     rm -rf homebox_bak
     mv homebox homebox_bak
@@ -52,7 +52,7 @@ function update_script() {
 
     msg_ok "Updated Successfully"
   else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
+    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }
