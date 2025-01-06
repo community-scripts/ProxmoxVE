@@ -43,11 +43,11 @@ curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dea
 echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
 msg_ok "Set up Node.js Repository"
 
-# Install Node.js and npm
-msg_info "Installing Node.js and npm"
+# Install Node.js (includes npm)
+msg_info "Installing Node.js"
 $STD apt-get update
-$STD apt-get install -y nodejs npm
-msg_ok "Installed Node.js and npm"
+$STD apt-get install -y nodejs
+msg_ok "Installed Node.js"
 
 # Install Ghost CLI
 msg_info "Installing Ghost CLI"
