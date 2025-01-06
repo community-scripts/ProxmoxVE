@@ -20,17 +20,23 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### Changed
 
+### ✨ New Scripts
+
+- New Script: Typesense [@tlissak](https://github.com/tlissak) ([#1291](https://github.com/community-scripts/ProxmoxVE/pull/1291))
+- New script: GLPI [@opastorello](https://github.com/opastorello) ([#1201](https://github.com/community-scripts/ProxmoxVE/pull/1201))
+
 ### 🚀 Updated Scripts
 
-- fix: buffer from base64 in formatting pipeline [@se-bastiaan](https://github.com/se-bastiaan) ([#1285](https://github.com/community-scripts/ProxmoxVE/pull/1285))
+- [Fix]: Fixed rm Bug in pf2etools [@MickLesk](https://github.com/MickLesk) ([#1292](https://github.com/community-scripts/ProxmoxVE/pull/1292))
 - Fix: Homebox Update Script  [@MickLesk](https://github.com/MickLesk) ([#1284](https://github.com/community-scripts/ProxmoxVE/pull/1284))
 - Add ca-certificates for Install (Frigate) [@MickLesk](https://github.com/MickLesk) ([#1282](https://github.com/community-scripts/ProxmoxVE/pull/1282))
+- fix: buffer from base64 in formatting pipeline [@se-bastiaan](https://github.com/se-bastiaan) ([#1285](https://github.com/community-scripts/ProxmoxVE/pull/1285))
 
 ### 🧰 Maintenance
 
+- Add reapproval of Changelog-PR [@MickLesk](https://github.com/MickLesk) ([#1279](https://github.com/community-scripts/ProxmoxVE/pull/1279))
 - ci: combine header checks into workflow with PR comment [@se-bastiaan](https://github.com/se-bastiaan) ([#1257](https://github.com/community-scripts/ProxmoxVE/pull/1257))
 - ci: change filename checks into steps with PR comment [@se-bastiaan](https://github.com/se-bastiaan) ([#1255](https://github.com/community-scripts/ProxmoxVE/pull/1255))
-- Add reapproval of Changelog-PR [@MickLesk](https://github.com/MickLesk) ([#1279](https://github.com/community-scripts/ProxmoxVE/pull/1279))
 - ci: add pipeline for code formatting checks [@se-bastiaan](https://github.com/se-bastiaan) ([#1239](https://github.com/community-scripts/ProxmoxVE/pull/1239))
 
 ## 2025-01-05
