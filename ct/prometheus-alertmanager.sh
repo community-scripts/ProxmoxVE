@@ -39,11 +39,11 @@ function update_script() {
     msg_ok "Stopped ${APP}"
 
     msg_info "Updating ${APP} to v${RELEASE}"
+    cd /opt
     wget -q https://github.com/prometheus/alertmanager/releases/download/v${RELEASE}/alertmanager-${RELEASE}.linux-amd64.tar.gz
     tar -xf alertmanager-${RELEASE}.linux-amd64.tar.gz
     cd alertmanager-${RELEASE}.linux-amd64
     cp -rf alertmanager amtool /usr/local/bin/
-    cd ~
     rm -rf alertmanager-${RELEASE}.linux-amd64 alertmanager-${RELEASE}.linux-amd64.tar.gz
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP} to ${RELEASE}"
