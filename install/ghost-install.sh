@@ -36,9 +36,6 @@ $STD mysql -u root -p'ghost' -e "FLUSH PRIVILEGES;"
 msg_ok "Configured MySQL"
 
 
-Rules updated (v6)
-
-
 # Set up Node.js Repository
 msg_info "Setting up Node.js Repository"
 mkdir -p /etc/apt/keyrings
