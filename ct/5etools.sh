@@ -45,21 +45,24 @@ function update_script() {
 
         # Execute Update
         msg_info "Updating base 5etools"
+        cd /opt
         wget -q "https://github.com/5etools-mirror-3/5etools-src/archive/refs/tags/${RELEASE}.zip"
         unzip -q "${RELEASE}.zip"
         mv "/opt/${APP}/img" "/opt/img-backup"
         rm -rf "/opt/${APP}"
         mv "${APP}-src-${RELEASE:1}" "/opt/${APP}"
         mv "/opt/img-backup" "/opt/${APP}/img"
+        cd /opt/5etools
+        $STD npm install
+        $STD npm run build
+        cd ~
         echo "${RELEASE}" >"/opt/${APP}_version.txt"
-        msg_ok "Updated base 5etools"
-
         chown -R www-data: "/opt/${APP}"
         chmod -R 755 "/opt/${APP}"
-
+        msg_ok "Updated base 5etools"
         # Cleaning up
         msg_info "Cleaning Up"
-        rm "${RELEASE}.zip"
+        rm -rf /opt/${RELEASE}.zip
         $STD apt-get -y autoremove
         $STD apt-get -y autoclean
         msg_ok "Cleanup Completed"
@@ -82,14 +85,15 @@ function update_script() {
         rm -rf "/opt/${APP}/img"
         mv "${APP}-img-${IMG_RELEASE:1}" "/opt/${APP}/img"
         echo "${IMG_RELEASE}" >"/opt/${APP}_IMG_version.txt"
-        msg_ok "Updating 5etools images"
-
         chown -R www-data: "/opt/${APP}"
         chmod -R 755 "/opt/${APP}"
 
+        msg_ok "Updating 5etools images"
+
         # Cleaning up
         msg_info "Cleaning Up"
-        rm "${IMG_RELEASE}.zip"
+        rm -rf /opt/${RELEASE}.zip
+        rm -rf ${IMG_RELEASE}.zip
         $STD apt-get -y autoremove
         $STD apt-get -y autoclean
         msg_ok "Cleanup Completed"
