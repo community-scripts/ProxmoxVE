@@ -34,13 +34,16 @@ function update_script() {
     fi
     msg_info "Updating ${APP}"
     systemctl stop actualbudget.service
-    RELEASE=$(curl -s https://api.github.com/repos/actualbudget/actual-server/tags | jq '.[0].name')
+    RELEASE=$(curl -s https://api.github.com/repos/actualbudget/actual-server/tags | jq --raw-output '.[0].name')
+    TEMPD="$(mktemp -d)"
+    cd "${TEMPD}"
+    wget -q https://codeload.github.com/actualbudget/actual-server/legacy.tar.gz/refs/tags/${RELEASE} -O - | tar -xz
+    mv actualbudget-actual-server-*/* /opt/actualbudget/
     cd /opt/actualbudget
-    git pull &>/dev/null
-    git checkout "$RELEASE"
     yarn install &>/dev/null
     systemctl start actualbudget.service
     msg_ok "Successfully Updated ${APP} to ${RELEASE}"
+    rm -rf "${TEMPD}"
     exit
 }
 
