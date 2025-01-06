@@ -16,6 +16,17 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
+## 2025-01-06
+
+### Changed
+
+### 🧰 Maintenance
+
+- ci: combine header checks into workflow with PR comment [@se-bastiaan](https://github.com/se-bastiaan) ([#1257](https://github.com/community-scripts/ProxmoxVE/pull/1257))
+- ci: change filename checks into steps with PR comment [@se-bastiaan](https://github.com/se-bastiaan) ([#1255](https://github.com/community-scripts/ProxmoxVE/pull/1255))
+- Add reapproval of Changelog-PR [@MickLesk](https://github.com/MickLesk) ([#1279](https://github.com/community-scripts/ProxmoxVE/pull/1279))
+- ci: add pipeline for code formatting checks [@se-bastiaan](https://github.com/se-bastiaan) ([#1239](https://github.com/community-scripts/ProxmoxVE/pull/1239))
+
 ## 2025-01-05
 
 ### Changed
