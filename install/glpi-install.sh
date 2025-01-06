@@ -45,13 +45,11 @@ msg_ok "Set up database"
 msg_info "Installing GLPi"
 cd /opt
 RELEASE=$(curl -s https://api.github.com/repos/glpi-project/glpi/releases/latest | grep '"tag_name"' | sed -E 's/.*"tag_name": "([^"]+)".*/\1/')
-echo "${RELEASE}" >"/opt/${APP}_version.txt"
 wget -q "https://github.com/glpi-project/glpi/releases/download/${RELEASE}/glpi-${RELEASE}.tgz"
-$STD tar -xzvf glpi-${RELEASE}.tgz
-
+tar -xzvf glpi-${RELEASE}.tgz
 cd /opt/glpi
 $STD php bin/console db:install --db-name=$DB_NAME --db-user=$DB_USER --db-password=$DB_PASS --no-interaction
-rm -rf /opt/glpi/install
+echo "${RELEASE}" >"/opt/${APP}_version.txt"
 msg_ok "Installed GLPi"
 
 msg_info "Setting Downstream file"
@@ -102,7 +100,7 @@ find /var/log/glpi -type f -exec chmod 0644 {} \;
 find /var/log/glpi -type d -exec chmod 0755 {} \;
 msg_ok "Configured Folder and File Permissions"
 
-msg_info "Setting VirtualHost"
+msg_info "Setup Service"
 cat <<EOF >/etc/apache2/sites-available/glpi.conf
 <VirtualHost *:80>
     ServerName localhost
@@ -121,17 +119,16 @@ cat <<EOF >/etc/apache2/sites-available/glpi.conf
     CustomLog \${APACHE_LOG_DIR}/glpi_access.log combined
 </VirtualHost>
 EOF
-
 $STD a2dissite 000-default.conf
 $STD a2enmod rewrite
 $STD a2ensite glpi.conf
-msg_ok "Configured VirtualHost"
+msg_ok "Setup Service"
 
-msg_info "Setting Automatic Actions"
+msg_info "Setup Cronjob"
 (crontab -l 2>/dev/null; echo "* * * * * php /opt/glpi/front/cron.php") | crontab -
-msg_ok "Configured Automatic Actions"
+msg_ok "Setup Cronjob"
 
-msg_info "Changing parameters in php.ini"
+msg_info "Update PHP Params"
 PHP_VERSION=$(ls /etc/php/ | grep -E '^[0-9]+\.[0-9]+$' | head -n 1)
 PHP_INI="/etc/php/$PHP_VERSION/apache2/php.ini"
 sed -i 's/^upload_max_filesize = .*/upload_max_filesize = 20M/' $PHP_INI
@@ -141,12 +138,13 @@ sed -i 's/^max_input_vars = .*/max_input_vars = 5000/' $PHP_INI
 sed -i 's/^memory_limit = .*/memory_limit = 256M/' $PHP_INI
 sed -i 's/^;\?\s*session.cookie_httponly\s*=.*/session.cookie_httponly = On/' $PHP_INI
 systemctl restart apache2
-msg_ok "Changed parameters in php.ini"
+msg_ok "Update PHP Params"
 
 motd_ssh
 customize
 
 msg_info "Cleaning up"
+rm -rf /opt/glpi/install
 rm -rf /opt/glpi-${RELEASE}.tgz
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
