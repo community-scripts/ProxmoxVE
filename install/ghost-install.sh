@@ -32,8 +32,12 @@ $STD ufw allow 'Nginx Full'
 # Configure MySQL
 msg_info "Configuring MySQL"
 $STD mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH 'mysql_native_password' BY 'ghost';"
-$STD mysql -u root -e "FLUSH PRIVILEGES;"
+$STD mysql -u root -p'ghost' -e "FLUSH PRIVILEGES;"
 msg_ok "Configured MySQL"
+
+
+Rules updated (v6)
+
 
 # Set up Node.js Repository
 msg_info "Setting up Node.js Repository"
