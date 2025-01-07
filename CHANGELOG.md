@@ -16,6 +16,18 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
+## 2025-01-07
+
+### Changed
+
+### 🚀 Updated Scripts
+
+- Fix: Folder-Check for Updatescript Zammad [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1309](https://github.com/community-scripts/ProxmoxVE/pull/1309))
+
+### 🧰 Maintenance
+
+- Set Execution Rights for GH-Action: Validate Scripts [@MickLesk](https://github.com/MickLesk) ([#1312](https://github.com/community-scripts/ProxmoxVE/pull/1312))
+
 ## 2025-01-06
 
 ### Changed
