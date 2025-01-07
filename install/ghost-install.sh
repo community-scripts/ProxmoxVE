@@ -60,10 +60,9 @@ msg_ok "Installed Ghost CLI"
 msg_info "Creating ghost-user"
 $STD adduser --disabled-password --gecos "Ghost user" ghost-user
 $STD usermod -aG sudo ghost-user
-echo "ghost-user ALL=(ALL) NOPASSWD:ALL | tee /etc/sudoers.d/ghost-user
+echo "ghost-user ALL=(ALL) NOPASSWD:ALL" | tee /etc/sudoers.d/ghost-user
 
-# echo "ghost-user ALL=(ALL) NOPASSWD:/bin/chown -R ghost:ghost /var/www/ghost/*/content, /bin/mv /tmp/*/ghost_*.service /lib/systemd/system/ghost_*.service, /bin/systemctl daemon-reload, /bin/systemctl is-active ghost_*, /bin/systemctl start ghost_*, /bin/systemctl is-enabled ghost_*, /bin/systemctl enable ghost_* --quiet" | tee /etc/sudoers.d/ghost-user
-
+# # echo "ghost-user ALL=(ALL) NOPASSWD:/bin/chown -R ghost:ghost /var/www/ghost/*/content, /bin/mv /tmp/*/ghost_*.service /lib/systemd/system/ghost_*.service, /bin/systemctl daemon-reload, /bin/systemctl is-active ghost_*, /bin/systemctl start ghost_*, /bin/systemctl is-enabled ghost_*, /bin/systemctl enable ghost_* --quiet" | tee /etc/sudoers.d/ghost-user
 msg_ok "Created ghost-user"
 
 # Set up Ghost
