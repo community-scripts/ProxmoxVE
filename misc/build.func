@@ -35,7 +35,7 @@ color() {
   INFO="${TAB}💡${TAB}${CL}"
   OS="${TAB}🖥️${TAB}${CL}"
   OSVERSION="${TAB}🌟${TAB}${CL}"
-  CONTAINERTYPE="${TAB}📦${TAB}${CL}" 
+  CONTAINERTYPE="${TAB}📦${TAB}${CL}"
   DISKSIZE="${TAB}💾${TAB}${CL}"
   CPUCORE="${TAB}🧠${TAB}${CL}"
   RAMSIZE="${TAB}🛠️${TAB}${CL}"
@@ -175,11 +175,11 @@ get_current_ip() {
 # Function to update the IP address in the MOTD file
 update_motd_ip() {
   MOTD_FILE="/etc/motd"
-  
+
   if [ -f "$MOTD_FILE" ]; then
     # Remove existing IP Address lines to prevent duplication
     sed -i '/IP Address:/d' "$MOTD_FILE"
-    
+
     IP=$(get_current_ip)
     # Add the new IP address
     echo -e "${TAB}${NETWORK}${YW} IP Address: ${GN}${IP}${CL}" >> "$MOTD_FILE"
@@ -264,7 +264,7 @@ base_settings() {
   SSH="no"
   SSH_AUTHORIZED_KEY=""
   TAGS="community-script;"
-  
+
   # Override default settings with variables from ct script
   CT_TYPE=${var_unprivileged:-$CT_TYPE}
   DISK_SIZE=${var_disk:-$DISK_SIZE}
@@ -272,7 +272,7 @@ base_settings() {
   RAM_SIZE=${var_ram:-$RAM_SIZE}
   VERB=${var_verbose:-$VERBOSE}
   TAGS="${TAGS}${var_tags:-}"
-  
+
   # Since these 2 are only defined outside of default_settings function, we add a temporary fallback. TODO: To align everything, we should add these as constant variables (e.g. OSTYPE and OSVERSION), but that would currently require updating the default_settings function for all existing scripts
   if [ -z "$var_os" ]; then
     var_os="debian"
@@ -621,10 +621,12 @@ advanced_settings() {
 
   if [[ "${SSH}" == "yes" ]]; then
     SSH_AUTHORIZED_KEY="$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "SSH Authorized key for root (leave empty for none)" 8 58 --title "SSH Key" 3>&1 1>&2 2>&3)"
-  
+
     if [[ -z "${SSH_AUTHORIZED_KEY}" ]]; then
       echo "Warning: No SSH key provided."
     fi
+  else
+    SSH_AUTHORIZED_KEY=""
   fi
 
   if (whiptail --backtitle "Proxmox VE Helper Scripts" --defaultno --title "VERBOSE MODE" --yesno "Enable Verbose Mode?" 10 58); then
@@ -675,7 +677,7 @@ install_script() {
         header_info
         echo -e "${DEFAULT}${BOLD}${BL}Using Default Settings${CL}"
         VERB="no"
-        base_settings "$VERB"  
+        base_settings "$VERB"
         echo_default
         break
         ;;
@@ -683,7 +685,7 @@ install_script() {
         header_info
         echo -e "${DEFAULT}${BOLD}${BL}Using Default Settings (${SEARCH}${BOLD}${BL} Verbose)${CL}"
         VERB="yes"
-        base_settings "$VERB"  
+        base_settings "$VERB"
         echo_default
         break
         ;;
@@ -707,13 +709,13 @@ install_script() {
 check_container_resources() {
   # Check actual RAM & Cores
   current_ram=$(free -m | awk 'NR==2{print $2}')
-  current_cpu=$(nproc) 
+  current_cpu=$(nproc)
 
   # Check whether the current RAM is less than the required RAM or the CPU cores are less than required
   if [[ "$current_ram" -lt "$var_ram" ]] || [[ "$current_cpu" -lt "$var_cpu" ]]; then
     echo -e "\n${INFO}${HOLD} ${GN}Required: ${var_cpu} CPU, ${var_ram}MB RAM ${CL}| ${RD}Current: ${current_cpu} CPU, ${current_ram}MB RAM${CL}"
     echo -e "${YWB}Please ensure that the ${APP} LXC is configured with at least ${var_cpu} vCPU and ${var_ram} MB RAM for the build process.${CL}\n"
-    read -r -p "${INFO}${HOLD} May cause data loss! ${INFO} Continue update with under-provisioned LXC? <yes/No>  " prompt  
+    read -r -p "${INFO}${HOLD} May cause data loss! ${INFO} Continue update with under-provisioned LXC? <yes/No>  " prompt
     # Check if the input is 'yes', otherwise exit with status 1
     if [[ ! ${prompt,,} =~ ^(yes)$ ]]; then
       echo -e "${CROSS}${HOLD} ${YWB}Exiting based on user input.${CL}"
@@ -732,7 +734,7 @@ check_container_storage() {
   if (( usage > 80 )); then
     # Prompt the user for confirmation to continue
     echo -e "${INFO}${HOLD} ${YWB}Warning: Storage is dangerously low (${usage}%).${CL}"
-    read -r -p "Continue anyway? <y/N>  " prompt  
+    read -r -p "Continue anyway? <y/N>  " prompt
     # Check if the input is 'y' or 'yes', otherwise exit with status 1
     if [[ ! ${prompt,,} =~ ^(y|yes)$ ]]; then
       echo -e "${CROSS}${HOLD}${YWB}Exiting based on user input.${CL}"
@@ -791,7 +793,7 @@ build_container() {
   export PASSWORD="$PW"
   export VERBOSE="$VERB"
   export SSH_ROOT="${SSH}"
-  export SSH_AUTHORIZED_KEY="${SSH_AUTHORIZED_KEY}"
+  export SSH_AUTHORIZED_KEY="${SSH_AUTHORIZED_KEY:-}"
   export CTID="$CT_ID"
   export CTTYPE="$CT_TYPE"
   export PCT_OSTYPE="$var_os"
@@ -895,7 +897,7 @@ description() {
       <img src='https://img.shields.io/badge/&#x2615;-Buy us a coffee-blue' alt='spend Coffee' />
     </a>
   </p>
-  
+
   <span style='margin: 0 10px;'>
     <i class="fa fa-github fa-fw" style="color: #f5f5f5;"></i>
     <a href='https://github.com/community-scripts/ProxmoxVE' target='_blank' rel='noopener noreferrer' style='text-decoration: none; color: #00617f;'>GitHub</a>
