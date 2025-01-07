@@ -44,16 +44,10 @@ echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.co
 msg_ok "Set up Node.js Repository"
 
 # Install Node.js (includes npm)
-msg_info "Installing Node.js"
+msg_info "Installing Node.js and npm"
 $STD apt-get install -y nodejs
-if ! command -v npm &> /dev/null; then
-  msg_info "Installing npm"
-  $STD apt-get install -y npm
-  msg_ok "Installed npm"
-else
-  msg_ok "npm is already installed"
-fi
-msg_ok "Installed Node.js"
+$STD apt-get install -y npm
+msg_ok "Installed Node.js and npm"
 
 # Install Ghost CLI
 msg_info "Installing Ghost CLI"
