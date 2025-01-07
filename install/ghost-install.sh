@@ -67,30 +67,30 @@ msg_info "Setting up Ghost"
 mkdir -p /var/www/ghost
 chown -R ghost-user:ghost-user /var/www/ghost
 chmod 775 /var/www/ghost
-sudo -u ghost-user -H sh -c "cd /var/www/ghost && ghost install --db=mysql --dbhost=localhost --dbuser=root --dbpass=ghost --dbname=ghost --url=http://localhost:2368 --no-prompt --no-setup-linux-user --no-setup-nginx --no-setup-ssl --no-setup-systemd --no-setup-mysql --no-start --no-enable"
+sudo -u ghost-user -H sh -c "cd /var/www/ghost && ghost install --db=mysql --dbhost=localhost --dbuser=root --dbpass=ghost --dbname=ghost --url=http://localhost:2368 --no-prompt --no-setup-nginx --no-setup-ssl --no-setup-mysql --no-start"
 msg_ok "Ghost setup completed"
 
 # Creating Service (if needed)
-msg_info "Creating Service"
-cat <<EOF >/etc/systemd/system/${APPLICATION}.service
-[Unit]
-Description=${APPLICATION} Service
-After=network.target
+# msg_info "Creating Service"
+# cat <<EOF >/etc/systemd/system/${APPLICATION}.service
+# [Unit]
+# Description=${APPLICATION} Service
+# After=network.target
 
-[Service]
-Type=simple
-Environment="NODE_ENV=production"
-ExecStart=/usr/bin/node /usr/bin/ghost run
-WorkingDirectory=/var/www/ghost
-User=ghost-user
-Group=ghost-user
-Restart=always
+# [Service]
+# Type=simple
+# Environment="NODE_ENV=production"
+# ExecStart=/usr/bin/node /usr/bin/ghost run
+# WorkingDirectory=/var/www/ghost
+# User=ghost-user
+# Group=ghost-user
+# Restart=always
 
-[Install]
-WantedBy=multi-user.target
-EOF
-systemctl enable -q --now ${APPLICATION}.service
-msg_ok "Created Service"
+# [Install]
+# WantedBy=multi-user.target
+# EOF
+# systemctl enable -q --now ${APPLICATION}.service
+# msg_ok "Created Service"
 
 motd_ssh
 customize
