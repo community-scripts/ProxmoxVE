@@ -13,7 +13,7 @@ var_cpu="2"
 var_ram="1024"
 var_disk="4"
 var_os="ubuntu"
-var_version="20.04"
+var_version="24.04"
 var_unprivileged="1"
 
 # App Output & Base Settings
@@ -52,16 +52,6 @@ function update_script() {
 start
 build_container
 description
-
-# Ensure the container is created before starting it
-if pct status "$CT_ID" &>/dev/null; then
-  msg_info "Starting LXC Container"
-  pct start "$CT_ID"
-  msg_ok "Started LXC Container"
-else
-  msg_error "Failed to create LXC Container"
-  exit 1
-fi
 
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"

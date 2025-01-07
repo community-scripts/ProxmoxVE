@@ -45,7 +45,6 @@ msg_ok "Set up Node.js Repository"
 
 # Install Node.js (includes npm)
 msg_info "Installing Node.js"
-$STD apt-get update
 $STD apt-get install -y nodejs
 msg_ok "Installed Node.js"
 
@@ -77,7 +76,9 @@ Description=${APPLICATION} Service
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/ghost start
+Type=simple
+Environment="NODE_ENV=production"
+ExecStart=/usr/bin/node /usr/bin/ghost run
 WorkingDirectory=/var/www/ghost
 User=ghost-user
 Group=ghost-user
