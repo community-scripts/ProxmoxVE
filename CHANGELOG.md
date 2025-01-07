@@ -26,6 +26,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🧰 Maintenance
 
+- fix: permissions of validate pipelines [@se-bastiaan](https://github.com/se-bastiaan) ([#1316](https://github.com/community-scripts/ProxmoxVE/pull/1316))
 - Set Execution Rights for GH-Action: Validate Scripts [@MickLesk](https://github.com/MickLesk) ([#1312](https://github.com/community-scripts/ProxmoxVE/pull/1312))
 
 ## 2025-01-06
