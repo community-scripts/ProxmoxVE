@@ -45,8 +45,9 @@ msg_ok "Set up Node.js Repository"
 
 # Install Node.js (includes npm)
 msg_info "Installing Node.js and npm"
+$STD apt-get update
 $STD apt-get install -y nodejs
-$STD apt-get install -y npm
+# $STD apt-get install -y npm
 msg_ok "Installed Node.js and npm"
 
 # Install Ghost CLI
