@@ -11,7 +11,7 @@ APP="Ghost"
 var_tags="cms;blog"
 var_cpu="2"
 var_ram="1024"
-var_disk="4"
+var_disk="5"
 var_os="ubuntu"
 var_version="22.04"
 var_unprivileged="1"
@@ -30,7 +30,6 @@ function update_script() {
     check_container_storage
     check_container_resources
     msg_info "Updating ${APP} LXC"
-    # CHECK FOR NPM HERE !  
 
     if command -v ghost &> /dev/null; then
         current_version=$(ghost --version | awk '{print $2}') #TO REVIEW
@@ -55,3 +54,5 @@ description
 
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
+echo -e "${INFO}${YW} Access it using the following URL:${CL}"
+echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:2368${CL}"

@@ -60,6 +60,7 @@ msg_ok "Installed Ghost CLI"
 msg_info "Creating ghost-user"
 $STD adduser --disabled-password --gecos "Ghost user" ghost-user
 $STD usermod -aG sudo ghost-user
+echo "ghost-user ALL=(ALL) NOPASSWD: /usr/bin/ghost" | tee /etc/sudoers.d/ghost-user
 msg_ok "Created ghost-user"
 
 # Set up Ghost
@@ -67,30 +68,10 @@ msg_info "Setting up Ghost"
 mkdir -p /var/www/ghost
 chown -R ghost-user:ghost-user /var/www/ghost
 chmod 775 /var/www/ghost
-sudo -u ghost-user -H sh -c "cd /var/www/ghost && ghost install --db=mysql --dbhost=localhost --dbuser=root --dbpass=ghost --dbname=ghost --url=http://localhost:2368 --no-prompt --no-setup-nginx --no-setup-ssl --no-setup-mysql --no-start"
+sudo -u ghost-user -H sh -c "cd /var/www/ghost && ghost install --db=mysql --dbhost=localhost --dbuser=root --dbpass=ghost --dbname=ghost --url=http://localhost:2368 --no-prompt --no-setup-nginx --no-setup-ssl --no-setup-mysql --enable --start --ip 0.0.0.0"
+rm /etc/sudoers.d/ghost-user #Remove ghost-user for sudoers after setup (not required anymore)
 msg_ok "Ghost setup completed"
 
-# Creating Service (if needed)
-# msg_info "Creating Service"
-# cat <<EOF >/etc/systemd/system/${APPLICATION}.service
-# [Unit]
-# Description=${APPLICATION} Service
-# After=network.target
-
-# [Service]
-# Type=simple
-# Environment="NODE_ENV=production"
-# ExecStart=/usr/bin/node /usr/bin/ghost run
-# WorkingDirectory=/var/www/ghost
-# User=ghost-user
-# Group=ghost-user
-# Restart=always
-
-# [Install]
-# WantedBy=multi-user.target
-# EOF
-# systemctl enable -q --now ${APPLICATION}.service
-# msg_ok "Created Service"
 
 motd_ssh
 customize
