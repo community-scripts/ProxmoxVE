@@ -24,6 +24,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 - update postgresql json to add post install password setup [@rdiazlugo](https://github.com/rdiazlugo) ([#1318](https://github.com/community-scripts/ProxmoxVE/pull/1318))
 
+### 🧰 Maintenance
+
+- fix: correctly handle pull_request_target event [@se-bastiaan](https://github.com/se-bastiaan) ([#1327](https://github.com/community-scripts/ProxmoxVE/pull/1327))
+
 ## 2025-01-07
 
 ### Changed
