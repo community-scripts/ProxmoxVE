@@ -40,6 +40,10 @@ function update_script() {
     msg_ok "Stopped Services"
     msg_info "Updating ${APP} to v${RELEASE}"
     cd /opt
+    if [[ -f /opt/hoarder/.env ]] && [[ ! -f /etc/hoarder/hoarder.env ]]; then
+      mkdir -p /etc/hoarder
+      mv /opt/hoarder/.env /etv/hoarder/hoarder.env
+    fi
     rm -rf /opt/hoarder
     wget -q "https://github.com/hoarder-app/hoarder/archive/refs/tags/v${RELEASE}.zip"
     unzip -q v${RELEASE}.zip
