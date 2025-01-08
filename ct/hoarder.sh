@@ -40,7 +40,6 @@ function update_script() {
     msg_ok "Stopped Services"
     msg_info "Updating ${APP} to v${RELEASE}"
     cd /opt
-    mv /opt/hoarder/.env /opt/.env
     rm -rf /opt/hoarder
     wget -q "https://github.com/hoarder-app/hoarder/archive/refs/tags/v${RELEASE}.zip"
     unzip -q v${RELEASE}.zip
@@ -54,8 +53,7 @@ function update_script() {
     export DATA_DIR=/opt/hoarder_data
     cd /opt/hoarder/packages/db
     pnpm migrate &>/dev/null
-    mv /opt/.env /opt/hoarder/.env
-    sed -i "s/SERVER_VERSION=${PREV_RELEASE}/SERVER_VERSION=${RELEASE}/" /opt/hoarder/.env
+    sed -i "s/SERVER_VERSION=${PREV_RELEASE}/SERVER_VERSION=${RELEASE}/" /etc/hoarder/hoarder.env
     msg_ok "Updated ${APP} to v${RELEASE}"
 
     msg_info "Starting Services"
