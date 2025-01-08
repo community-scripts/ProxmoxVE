@@ -92,7 +92,7 @@ ln -s /opt/Stirling-PDF/Stirling-PDF-$RELEASE.jar /opt/Stirling-PDF/Stirling-PDF
 ln -s /usr/share/tesseract-ocr/5/tessdata/ /usr/share/tessdata
 msg_ok "Installed Stirling-PDF v$RELEASE"
 
-msg_info "Configuring LibreOffice Service"
+msg_info "Creating Service"
 # Create LibreOffice listener service
 cat <<EOF >/etc/systemd/system/libreoffice-listener.service
 [Unit]
@@ -118,7 +118,6 @@ PYTHONPATH=/usr/lib/python3/dist-packages:/usr/lib/libreoffice/program
 LD_LIBRARY_PATH=/usr/lib/libreoffice/program
 EOF
 
-msg_info "Creating StirlingPDF Service"
 cat <<EOF >/etc/systemd/system/stirlingpdf.service
 [Unit]
 Description=Stirling-PDF service
@@ -142,14 +141,17 @@ WantedBy=multi-user.target
 EOF
 
 # Enable and start services
-systemctl enable -q libreoffice-listener
-systemctl enable -q stirlingpdf
-systemctl start libreoffice-listener
-systemctl start stirlingpdf
-msg_ok "Created and Started Services"
+systemctl enable -q --now libreoffice-listener
+systemctl enable -q --now stirlingpdf
+msg_ok "Created Service"
 
 motd_ssh
 customize
+
+msg_info "Cleaning up"
+$STD apt-get -y autoremove
+$STD apt-get -y autoclean
+msg_ok "Cleaned"
 
 msg_info "Cleaning up"
 rm -rf v$RELEASE.tar.gz /zulu-repo_1.0.0-3_all.deb
