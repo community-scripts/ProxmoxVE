@@ -78,7 +78,8 @@ $STD pnpm install --frozen-lockfile
 
 export DATA_DIR=/opt/hoarder_data
 HOARDER_SECRET=$(openssl rand -base64 36 | cut -c1-24)
-cat <<EOF >/opt/hoarder/.env
+mkdir -p /etc/hoarder
+cat <<EOF >/etc/hoarder/hoarder.env
 SERVER_VERSION=$RELEASE
 NEXTAUTH_SECRET="$HOARDER_SECRET"
 NEXTAUTH_URL="http://localhost:3000"
@@ -129,7 +130,7 @@ After=network.target hoarder-workers.service
 [Service]
 ExecStart=pnpm start
 WorkingDirectory=/opt/hoarder/apps/web
-EnvironmentFile=/opt/hoarder/.env
+EnvironmentFile=/etc/hoarder/hoarder.env
 Restart=always
 
 [Install]
@@ -159,7 +160,7 @@ After=network.target hoarder-browser.service meilisearch.service
 [Service]
 ExecStart=pnpm start:prod
 WorkingDirectory=/opt/hoarder/apps/workers
-EnvironmentFile=/opt/hoarder/.env
+EnvironmentFile=/etc/hoarder/hoarder.env
 Restart=always
 TimeoutStopSec=5
 
