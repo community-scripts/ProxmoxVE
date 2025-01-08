@@ -34,25 +34,28 @@ function update_script() {
   fi
   RELEASE=$(curl -s https://api.github.com/repos/seanmorley15/AdventureLog/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
   if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+    LAST_VERSION=$(cat /opt/${APP}_version.txt)
     msg_info "Stopping Services"
     systemctl stop adventurelog-backend
     systemctl stop adventurelog-frontend
     msg_ok "Services Stopped"
 
     msg_info "Updating ${APP} to ${RELEASE}"
-    cp /opt/adventurelog/backend/server/.env /opt/server.env
-    cp /opt/adventurelog/frontend/.env /opt/frontend.env
+    mv /opt/adventurelog/ /opt/adventurelog-backup/
     wget -q "https://github.com/seanmorley15/AdventureLog/archive/refs/tags/v${RELEASE}.zip"
     unzip -q v${RELEASE}.zip
     mv AdventureLog-${RELEASE} /opt/adventurelog
-    mv /opt/server.env /opt/adventurelog/backend/server/.env
+
+    mv /opt/adventurelog-backup/backend/server/.env /opt/adventurelog/backend/server/.env
+    mv /opt/adventurelog-backup/backend/server/media /opt/adventurelog/backend/server/media
     cd /opt/adventurelog/backend/server
     pip install --upgrade pip &>/dev/null
     pip install -r requirements.txt &>/dev/null
     python3 manage.py collectstatic --noinput &>/dev/null
     python3 manage.py migrate &>/dev/null
 
-    mv /opt/frontend.env /opt/adventurelog/frontend/.env
+
+    mv /opt/adventurelog-backup/frontend/.env /opt/adventurelog/frontend/.env
     cd /opt/adventurelog/frontend
     pnpm install &>/dev/null
     pnpm run build &>/dev/null
@@ -66,6 +69,7 @@ function update_script() {
 
     msg_info "Cleaning Up"
     rm -rf v${RELEASE}.zip
+    mv /opt/adventurelog-backup/ adventurelog-backup-$LAST_VERSION/ # Keep backup, since AdventureLog moves quickly and we want to avoid breaking changes with rm -rf
     msg_ok "Cleaned"
     msg_ok "Updated Successfully"
   else
