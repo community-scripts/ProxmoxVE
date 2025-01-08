@@ -36,7 +36,11 @@ msg_info "Installing LibreOffice Components"
 $STD apt-get install -y \
   libreoffice-writer \
   libreoffice-calc \
-  libreoffice-impress
+  libreoffice-impress \
+  libreoffice-core \
+  libreoffice-common \
+  libreoffice-base-core \
+  python3-uno
 msg_ok "Installed LibreOffice Components"
 
 msg_info "Installing Python Dependencies"
@@ -88,29 +92,61 @@ ln -s /opt/Stirling-PDF/Stirling-PDF-$RELEASE.jar /opt/Stirling-PDF/Stirling-PDF
 ln -s /usr/share/tesseract-ocr/5/tessdata/ /usr/share/tessdata
 msg_ok "Installed Stirling-PDF v$RELEASE"
 
-msg_info "Creating Service"
-cat <<EOF >/etc/systemd/system/stirlingpdf.service
+msg_info "Configuring LibreOffice Service"
+# Create LibreOffice listener service
+cat <<EOF >/etc/systemd/system/libreoffice-listener.service
 [Unit]
-Description=Stirling-PDF service
-After=syslog.target network.target
+Description=LibreOffice Headless Listener Service
+After=network.target
 
 [Service]
-SuccessExitStatus=143
-
+Type=simple
 User=root
 Group=root
-
-Type=simple
-EnvironmentFile=/opt/Stirling-PDF/.env
-WorkingDirectory=/opt/Stirling-PDF
-ExecStart=/usr/bin/java -jar Stirling-PDF.jar
-ExecStop=/bin/kill -15 %n
+ExecStart=/usr/lib/libreoffice/program/soffice --headless --invisible --nodefault --nofirststartwizard --nolockcheck --nologo --accept="socket,host=127.0.0.1,port=2002;urp;StarOffice.ComponentContext"
+Restart=always
 
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now stirlingpdf.service
-msg_ok "Created Service"
+
+# Set up environment variables
+cat <<EOF >/opt/Stirling-PDF/.env
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/libreoffice/program
+UNO_PATH=/usr/lib/libreoffice/program
+PYTHONPATH=/usr/lib/python3/dist-packages:/usr/lib/libreoffice/program
+LD_LIBRARY_PATH=/usr/lib/libreoffice/program
+EOF
+
+msg_info "Creating StirlingPDF Service"
+cat <<EOF >/etc/systemd/system/stirlingpdf.service
+[Unit]
+Description=Stirling-PDF service
+After=syslog.target network.target libreoffice-listener.service
+Requires=libreoffice-listener.service
+
+[Service]
+SuccessExitStatus=143
+Type=simple
+User=root
+Group=root
+EnvironmentFile=/opt/Stirling-PDF/.env
+WorkingDirectory=/opt/Stirling-PDF
+ExecStart=/usr/bin/java -jar Stirling-PDF.jar
+ExecStop=/bin/kill -15 %n
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# Enable and start services
+systemctl enable -q libreoffice-listener
+systemctl enable -q stirlingpdf
+systemctl start libreoffice-listener
+systemctl start stirlingpdf
+msg_ok "Created and Started Services"
 
 motd_ssh
 customize
