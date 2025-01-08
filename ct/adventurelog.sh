@@ -41,6 +41,7 @@ function update_script() {
     msg_ok "Services Stopped"
 
     msg_info "Updating ${APP} to ${RELEASE}"
+    WORKDIR="$PWD"
     mv /opt/adventurelog/ /opt/adventurelog-backup/
     wget -q "https://github.com/seanmorley15/AdventureLog/archive/refs/tags/v${RELEASE}.zip"
     unzip -q v${RELEASE}.zip
@@ -60,6 +61,7 @@ function update_script() {
     pnpm install &>/dev/null
     pnpm run build &>/dev/null
     echo "${RELEASE}" >/opt/${APP}_version.txt
+    cd "$WORKDIR"
     msg_ok "Updated ${APP}"
 
     msg_info "Starting Services"
