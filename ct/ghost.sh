@@ -37,6 +37,7 @@ function update_script() {
         if [ "$current_version" != "$latest_version" ]; then
             msg_info "Updating ${APP} from version $current_version to $latest_version"
             npm install -g ghost-cli@latest &> /dev/null
+            msg_ok "Updated Successfully"
         else
             msg_ok "${APP} is already up-to-date (version $current_version)"
         fi
@@ -44,7 +45,6 @@ function update_script() {
         msg_error "No ${APP} Installation Found!"
         exit
     fi
-    msg_ok "Updated Successfully"
     exit
 }
 
