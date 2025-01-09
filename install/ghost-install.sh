@@ -33,7 +33,7 @@ $STD ufw allow 'Nginx Full'
 msg_info "Configuring MySQL"
 DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 $STD mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH 'mysql_native_password' BY '$DB_PASS';"
-$STD mysql -u root -p'ghost' -e "FLUSH PRIVILEGES;"
+$STD mysql -u root -p"$DB_PASS" -e "FLUSH PRIVILEGES;"
 
 {
     echo "MySQL-Credentials"
