@@ -64,7 +64,7 @@ msg_ok "Installed Ghost CLI"
 
 
 # Create a new user for Ghost
-msg_info "Creating ghost-user"
+msg_info "Creating Service"
 $STD adduser --disabled-password --gecos "Ghost user" ghost-user
 $STD usermod -aG sudo ghost-user
 echo "ghost-user ALL=(ALL) NOPASSWD:ALL" | tee /etc/sudoers.d/ghost-user
