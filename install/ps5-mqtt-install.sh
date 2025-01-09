@@ -36,9 +36,9 @@ echo ${RELEASE} > /opt/ps5-mqtt_version.txt
 msg_ok "Installed PS5-MQTT"
 
 msg_info "Creating Service"
-mkdir -p /opt/ps5-mqtt/.config/
-mkdir -p /opt/ps5-mqtt/.config/playactor
-cat <<EOF > /opt/ps5-mqtt/.config/config.json
+mkdir -p /opt/.config/ps5-mqtt/
+mkdir -p /opt/.config/ps5-mqtt/playactor
+cat <<EOF > /opt/.config/ps5-mqtt/config.json
 {
   "mqtt": {
       "host": "",
@@ -63,7 +63,7 @@ cat <<EOF > /opt/ps5-mqtt/.config/config.json
 
   "account_check_interval": 5000,
 
-  "credentialsStoragePath": "/opt/ps5-mqtt/.config/credentials.json",
+  "credentialsStoragePath": "/opt/.config/ps5-mqtt/credentials.json",
   "frontendPort": "8645"
 }
 EOF
@@ -74,7 +74,7 @@ After=syslog.target network.target
 
 [Service]
 WorkingDirectory=/opt/ps5-mqtt/ps5-mqtt
-Environment="CONFIG_PATH=/opt/ps5-mqtt/.config/config.json"
+Environment="CONFIG_PATH=/opt/.config/ps5-mqtt/config.json"
 Environment="DEBUG='@ha:ps5:*'"
 Restart=always
 RestartSec=5
