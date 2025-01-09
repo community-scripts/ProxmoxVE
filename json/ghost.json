@@ -22,7 +22,7 @@
           "ram": 1024,
           "hdd": 5,
           "os": "Ubuntu",
-          "version": "24.04"
+          "version": "22.04"
         }
       }
     ],
@@ -30,5 +30,12 @@
       "username": null,
       "password": null
     },
-    "notes": []
-  }
+    "notes": [
+      {
+        "text": "To run Ghost-CLI commands, first set a password for the ghost-user by running `sudo passwd ghost-user`. Then, switch to the ghost-user with `sudo -su ghost-user`.",
+        "type": "info"
+      }
+    ]
+}
+
+
