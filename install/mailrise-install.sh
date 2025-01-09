@@ -14,18 +14,15 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y curl
-$STD apt-get install -y sudo
-$STD apt-get install -y mc
-msg_ok "Installed Dependencies"
-
-msg_info "Updating Python3"
 $STD apt-get install -y \
-  python3 \
-  python3-dev \
-  python3-pip
+ curl \
+ sudo \
+ mc \
+ python3 \
+ python3-dev \
+ python3-pip
 rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
-msg_ok "Updated Python3"
+msg_ok "Installed Dependencies"
 
 msg_info "Installing Mailrise"
 $STD pip install mailrise
