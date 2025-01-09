@@ -79,8 +79,8 @@ msg_ok "Installed Language Packs"
 
 msg_info "Installing Stirling-PDF (Additional Patience)"
 RELEASE=$(curl -s https://api.github.com/repos/Stirling-Tools/Stirling-PDF/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-wget -q https://github.com/Stirling-Tools/Stirling-PDF/archive/refs/tags/v$RELEASE.tar.gz
-tar -xzf v$RELEASE.tar.gz
+wget -q https://github.com/Stirling-Tools/Stirling-PDF/archive/refs/tags/v${RELEASE}.tar.gz
+tar -xzf v${RELEASE}.tar.gz
 cd Stirling-PDF-$RELEASE
 chmod +x ./gradlew
 $STD ./gradlew build
@@ -90,7 +90,7 @@ mv ./build/libs/Stirling-PDF-*.jar /opt/Stirling-PDF/
 mv scripts /opt/Stirling-PDF/
 ln -s /opt/Stirling-PDF/Stirling-PDF-$RELEASE.jar /opt/Stirling-PDF/Stirling-PDF.jar
 ln -s /usr/share/tesseract-ocr/5/tessdata/ /usr/share/tessdata
-msg_ok "Installed Stirling-PDF v$RELEASE"
+msg_ok "Installed Stirling-PDF"
 
 msg_info "Creating Service"
 # Create LibreOffice listener service
@@ -149,12 +149,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
-
-msg_info "Cleaning up"
-rm -rf v$RELEASE.tar.gz /zulu-repo_1.0.0-3_all.deb
+rm -rf v${RELEASE}.tar.gz /zulu-repo_1.0.0-3_all.deb
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
