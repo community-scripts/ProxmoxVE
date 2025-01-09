@@ -16,21 +16,74 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
-## 2025-01-06
+## 2025-01-09
+
+### Changed
+
+### ✨ New Scripts
+
+- New Script: Prometheus Alertmanager [@andygrunwald](https://github.com/andygrunwald) ([#1272](https://github.com/community-scripts/ProxmoxVE/pull/1272))
+- New script: ps5-mqtt [@liecno](https://github.com/liecno) ([#1198](https://github.com/community-scripts/ProxmoxVE/pull/1198))
+- New Script: calibre-server [@ThisIsJeron](https://github.com/ThisIsJeron) ([#960](https://github.com/community-scripts/ProxmoxVE/pull/960))
+
+### 🚀 Updated Scripts
+
+- Fix: AdventureLog - update script bug [@JesperDramsch](https://github.com/JesperDramsch) ([#1334](https://github.com/community-scripts/ProxmoxVE/pull/1334))
+- Install/update ActualBudget based on releases, not latest master [@SpyrosRoum](https://github.com/SpyrosRoum) ([#1254](https://github.com/community-scripts/ProxmoxVE/pull/1254))
+- Fix Checkmk: Version grep broken [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1341](https://github.com/community-scripts/ProxmoxVE/pull/1341))
+
+### 🧰 Maintenance
+
+- fix: only validate scripts in validate-scripts workflow [@se-bastiaan](https://github.com/se-bastiaan) ([#1344](https://github.com/community-scripts/ProxmoxVE/pull/1344))
+
+## 2025-01-08
+
+### Changed
+
+### 🌐 Website
+
+- update postgresql json to add post install password setup [@rdiazlugo](https://github.com/rdiazlugo) ([#1318](https://github.com/community-scripts/ProxmoxVE/pull/1318))
+
+### 🧰 Maintenance
+
+- fix(ci): formatting event & chmod +x [@se-bastiaan](https://github.com/se-bastiaan) ([#1335](https://github.com/community-scripts/ProxmoxVE/pull/1335))
+- fix: correctly handle pull_request_target event [@se-bastiaan](https://github.com/se-bastiaan) ([#1327](https://github.com/community-scripts/ProxmoxVE/pull/1327))
+
+## 2025-01-07
 
 ### Changed
 
 ### 🚀 Updated Scripts
 
-- fix: buffer from base64 in formatting pipeline [@se-bastiaan](https://github.com/se-bastiaan) ([#1285](https://github.com/community-scripts/ProxmoxVE/pull/1285))
-- Fix: Homebox Update Script  [@MickLesk](https://github.com/MickLesk) ([#1284](https://github.com/community-scripts/ProxmoxVE/pull/1284))
-- Add ca-certificates for Install (Frigate) [@MickLesk](https://github.com/MickLesk) ([#1282](https://github.com/community-scripts/ProxmoxVE/pull/1282))
+- Fix: Folder-Check for Updatescript Zammad [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1309](https://github.com/community-scripts/ProxmoxVE/pull/1309))
 
 ### 🧰 Maintenance
 
+- fix: permissions of validate pipelines [@se-bastiaan](https://github.com/se-bastiaan) ([#1316](https://github.com/community-scripts/ProxmoxVE/pull/1316))
+- Set Execution Rights for GH-Action: Validate Scripts [@MickLesk](https://github.com/MickLesk) ([#1312](https://github.com/community-scripts/ProxmoxVE/pull/1312))
+
+## 2025-01-06
+
+### Changed
+
+### ✨ New Scripts
+
+- New Script: Typesense [@tlissak](https://github.com/tlissak) ([#1291](https://github.com/community-scripts/ProxmoxVE/pull/1291))
+- New script: GLPI [@opastorello](https://github.com/opastorello) ([#1201](https://github.com/community-scripts/ProxmoxVE/pull/1201))
+
+### 🚀 Updated Scripts
+
+- Fix Tag in HyperHDR Script [@MickLesk](https://github.com/MickLesk) ([#1299](https://github.com/community-scripts/ProxmoxVE/pull/1299))
+- [Fix]: Fixed rm Bug in pf2etools [@MickLesk](https://github.com/MickLesk) ([#1292](https://github.com/community-scripts/ProxmoxVE/pull/1292))
+- Fix: Homebox Update Script  [@MickLesk](https://github.com/MickLesk) ([#1284](https://github.com/community-scripts/ProxmoxVE/pull/1284))
+- Add ca-certificates for Install (Frigate) [@MickLesk](https://github.com/MickLesk) ([#1282](https://github.com/community-scripts/ProxmoxVE/pull/1282))
+- fix: buffer from base64 in formatting pipeline [@se-bastiaan](https://github.com/se-bastiaan) ([#1285](https://github.com/community-scripts/ProxmoxVE/pull/1285))
+
+### 🧰 Maintenance
+
+- Add reapproval of Changelog-PR [@MickLesk](https://github.com/MickLesk) ([#1279](https://github.com/community-scripts/ProxmoxVE/pull/1279))
 - ci: combine header checks into workflow with PR comment [@se-bastiaan](https://github.com/se-bastiaan) ([#1257](https://github.com/community-scripts/ProxmoxVE/pull/1257))
 - ci: change filename checks into steps with PR comment [@se-bastiaan](https://github.com/se-bastiaan) ([#1255](https://github.com/community-scripts/ProxmoxVE/pull/1255))
-- Add reapproval of Changelog-PR [@MickLesk](https://github.com/MickLesk) ([#1279](https://github.com/community-scripts/ProxmoxVE/pull/1279))
 - ci: add pipeline for code formatting checks [@se-bastiaan](https://github.com/se-bastiaan) ([#1239](https://github.com/community-scripts/ProxmoxVE/pull/1239))
 
 ## 2025-01-05

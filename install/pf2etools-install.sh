@@ -38,6 +38,7 @@ msg_ok "Installed Node.js"
 
 # Setup App
 msg_info "Setup Pf2eTools"
+cd /opt
 RELEASE=$(curl -s https://api.github.com/repos/Pf2eToolsOrg/Pf2eTools/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 wget -q "https://github.com/Pf2eToolsOrg/Pf2eTools/archive/refs/tags/${RELEASE}.zip"
 unzip -q "${RELEASE}.zip"
@@ -65,7 +66,7 @@ msg_ok "Created Service"
 
 # Cleanup
 msg_info "Cleaning up"
-rm "${RELEASE}.zip"
+rm -rf /opt/${RELEASE}.zip
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"

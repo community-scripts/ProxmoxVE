@@ -3,11 +3,10 @@ on:
   push:
     branches:
       - main
-  pull_request:
+  pull_request_target:
     paths:
       - "ct/*.sh"
       - "install/*.sh"
-      - ".github/workflows/validate-scripts.yml"
 
 jobs:
   check-scripts:
@@ -17,18 +16,36 @@ jobs:
       pull-requests: write
 
     steps:
+      - name: Debug event payload
+        run: |
+          echo "Event name: ${{ github.event_name }}"
+          echo "Payload: $(cat $GITHUB_EVENT_PATH)"
+
+      - name: Get pull request information
+        if: github.event_name == 'pull_request_target'
+        uses: actions/github-script@v7
+        id: pr
+        with:
+          script: |
+            const { data: pullRequest } = await github.rest.pulls.get({
+              ...context.repo,
+              pull_number: context.payload.pull_request.number,
+            });
+            return pullRequest;
+
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: ${{ github.event_name == 'pull_request' && 2 || 0 }}
+          fetch-depth: 0
+          ref: ${{ github.event_name == 'pull_request_target' && fromJSON(steps.pr.outputs.result).merge_commit_sha || '' }}
 
       - name: Get changed files
         id: changed-files
         run: |
-          if ${{ github.event_name == 'pull_request' }}; then
-              echo "files=$(git diff --name-only -r HEAD^1 HEAD | grep -E '\.(sh|func)$' | xargs)" >> $GITHUB_OUTPUT
+          if [ "${{ github.event_name }}" == "pull_request_target" ]; then
+            echo "files=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ steps.pr.outputs.result && fromJSON(steps.pr.outputs.result).merge_commit_sha }} | grep -E '\.(sh|func)$' | xargs)" >> $GITHUB_OUTPUT
           else
-              echo "files=$(git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | grep -E '\.(sh|func)$' | xargs)" >> $GITHUB_OUTPUT
+            echo "files=$(git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | grep -E '\.(sh|func)$' | xargs)" >> $GITHUB_OUTPUT
           fi
 
       - name: Check build.func line
@@ -152,18 +169,18 @@ jobs:
           fi
 
       - name: Post results and comment
-        if: always() && steps.changed-files.outputs.files != '' && github.event_name == 'pull_request'
+        if: always() && steps.changed-files.outputs.files != '' && github.event_name == 'pull_request_target'
         uses: actions/github-script@v7
         with:
           script: |
             const result = '${{ job.status }}' === 'success' ? 'success' : 'failure';
             const nonCompliantFiles = {
-              'Invalid build.func source': "${{ steps.build-func.outputs.files }}",
-              'Not executable': "${{ steps.check-executable.outputs.files }}",
-              'Copyright header line missing or invalid': "${{ steps.check-copyright.outputs.files }}",
-              'Author header line missing or invalid': "${{ steps.check-author.outputs.files }}",
-              'License header line missing or invalid': "${{ steps.check-license.outputs.files }}",
-              'Source header line missing or invalid': "${{ steps.check-source.outputs.files }}"
+              'Invalid build.func source': "${{ steps.build-func.outputs.files || '' }}",
+              'Not executable': "${{ steps.check-executable.outputs.files || '' }}",
+              'Copyright header line missing or invalid': "${{ steps.check-copyright.outputs.files || '' }}",
+              'Author header line missing or invalid': "${{ steps.check-author.outputs.files || '' }}",
+              'License header line missing or invalid': "${{ steps.check-license.outputs.files || '' }}",
+              'Source header line missing or invalid': "${{ steps.check-source.outputs.files || '' }}"
             };
 
             const issueNumber = context.payload.pull_request ? context.payload.pull_request.number : null;
@@ -174,7 +191,11 @@ jobs:
               newCommentBody += ':x: We found issues in the following changed files:\n\n';
               for (const [check, files] of Object.entries(nonCompliantFiles)) {
                 if (files) {
-                  newCommentBody += `**${check}:**\n${files.trim().split(' ').map(file => `- ${file}`).join('\n')}\n\n`;
+                  newCommentBody += `**${check}:**\n`;
+                  files.trim().split(' ').forEach(file => {
+                    newCommentBody += `- ${file}: ${check}\n`;
+                  });
+                  newCommentBody += `\n`;
                 }
               }
             } else {
@@ -189,15 +210,14 @@ jobs:
                 issue_number: issueNumber
               });
 
-              const existingComment = comments.find(comment => comment.user.login === 'github-actions[bot]');
+              const existingComment = comments.find(comment =>
+                comment.body.includes(`<!-- ${commentIdentifier}-start -->`) &&
+                comment.user.login === 'github-actions[bot]'
+              );
 
               if (existingComment) {
-                if (existingComment.body.includes(commentIdentifier)) {
-                  const re = new RegExp(String.raw`<!-- ${commentIdentifier}-start -->[\s\S]*?<!-- ${commentIdentifier}-end -->`, "");
-                  newCommentBody = existingComment.body.replace(re, newCommentBody);
-                } else {
-                  newCommentBody = existingComment.body + '\n\n---\n\n' + newCommentBody;
-                }
+                const re = new RegExp(String.raw`<!-- ${commentIdentifier}-start -->[\\s\\S]*?<!-- ${commentIdentifier}-end -->`, "m");
+                newCommentBody = existingComment.body.replace(re, newCommentBody);
 
                 await github.rest.issues.updateComment({
                   ...context.repo,

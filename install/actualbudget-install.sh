@@ -35,8 +35,10 @@ $STD apt-get install -y nodejs
 $STD npm install --global yarn
 msg_ok "Installed Node.js"
 
-msg_info "Installing Actual Budget"
-$STD git clone https://github.com/actualbudget/actual-server.git /opt/actualbudget
+RELEASE=$(curl -s https://api.github.com/repos/actualbudget/actual-server/tags | jq --raw-output '.[0].name')
+msg_info "Installing Actual Budget $RELEASE"
+wget -q https://codeload.github.com/actualbudget/actual-server/legacy.tar.gz/refs/tags/${RELEASE} -O - | tar -xz
+mv actualbudget-actual-server-* /opt/actualbudget
 mkdir -p /opt/actualbudget/server-files
 chown -R root:root /opt/actualbudget/server-files
 chmod 755 /opt/actualbudget/server-files

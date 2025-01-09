@@ -40,19 +40,20 @@ function update_script() {
     msg_ok "Services Stopped"
 
     msg_info "Updating ${APP} to ${RELEASE}"
-    cp /opt/adventurelog/backend/server/.env /opt/server.env
-    cp /opt/adventurelog/frontend/.env /opt/frontend.env
-    wget -q "https://github.com/seanmorley15/AdventureLog/archive/refs/tags/v${RELEASE}.zip"
-    unzip -q v${RELEASE}.zip
-    mv AdventureLog-${RELEASE} /opt/adventurelog
-    mv /opt/server.env /opt/adventurelog/backend/server/.env
+    mv /opt/adventurelog/ /opt/adventurelog-backup/
+    wget -qO /opt/v${RELEASE}.zip "https://github.com/seanmorley15/AdventureLog/archive/refs/tags/v${RELEASE}.zip"
+    unzip -q /opt/v${RELEASE}.zip
+    mv /opt/AdventureLog-${RELEASE} /opt/adventurelog
+
+    mv /opt/adventurelog-backup/backend/server/.env /opt/adventurelog/backend/server/.env
+    mv /opt/adventurelog-backup/backend/server/media /opt/adventurelog/backend/server/media
     cd /opt/adventurelog/backend/server
     pip install --upgrade pip &>/dev/null
     pip install -r requirements.txt &>/dev/null
     python3 manage.py collectstatic --noinput &>/dev/null
     python3 manage.py migrate &>/dev/null
 
-    mv /opt/frontend.env /opt/adventurelog/frontend/.env
+    mv /opt/adventurelog-backup/frontend/.env /opt/adventurelog/frontend/.env
     cd /opt/adventurelog/frontend
     pnpm install &>/dev/null
     pnpm run build &>/dev/null
@@ -65,7 +66,8 @@ function update_script() {
     msg_ok "Started Services"
 
     msg_info "Cleaning Up"
-    rm -rf v${RELEASE}.zip
+    rm -rf /opt/v${RELEASE}.zip
+    rm -rf /opt/adventurelog-backup
     msg_ok "Cleaned"
     msg_ok "Updated Successfully"
   else

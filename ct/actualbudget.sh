@@ -32,13 +32,26 @@ function update_script() {
         msg_error "No ${APP} Installation Found!"
         exit
     fi
+    if ! command -v jq >/dev/null 2>&1; then
+      echo "Installing jq..."
+      apt-get install -y jq >/dev/null 2>&1
+      echo "Installed jq..."
+    fi
+
     msg_info "Updating ${APP}"
-    systemctl stop actualbudget.service
+    systemctl stop actualbudget
+    RELEASE=$(curl -s https://api.github.com/repos/actualbudget/actual-server/tags | jq --raw-output '.[0].name')
+    TEMPD="$(mktemp -d)"
+    cd "${TEMPD}"
+    wget -q https://codeload.github.com/actualbudget/actual-server/legacy.tar.gz/refs/tags/${RELEASE} -O - | tar -xz
+    mv /opt/actualbudget /opt/actualbudget_bak
+    mv actualbudget-actual-server-*/* /opt/actualbudget/
     cd /opt/actualbudget
-    git pull &>/dev/null
     yarn install &>/dev/null
-    systemctl start actualbudget.service
-    msg_ok "Successfully Updated ${APP}"
+    systemctl start actualbudget
+    msg_ok "Successfully Updated ${APP} to ${RELEASE}"
+    rm -rf "${TEMPD}"
+    rm -rf /opt/actualbudget_bak
     exit
 }
 
