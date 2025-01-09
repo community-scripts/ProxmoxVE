@@ -31,8 +31,8 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- Fix: AdventureLog: unzip to /opt/ [@JesperDramsch](https://github.com/JesperDramsch) ([#1370](https://github.com/community-scripts/ProxmoxVE/pull/1370))
 - Fix: Stirling-PDF > LibreOffice/unoconv Integration Issues  [@m6urns](https://github.com/m6urns) ([#1322](https://github.com/community-scripts/ProxmoxVE/pull/1322))
-- Update calibre-server-install.sh [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1359](https://github.com/community-scripts/ProxmoxVE/pull/1359))
 - Fix: AdventureLog - update script bug [@JesperDramsch](https://github.com/JesperDramsch) ([#1334](https://github.com/community-scripts/ProxmoxVE/pull/1334))
 - Install/update ActualBudget based on releases, not latest master [@SpyrosRoum](https://github.com/SpyrosRoum) ([#1254](https://github.com/community-scripts/ProxmoxVE/pull/1254))
 - Fix Checkmk: Version grep broken [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1341](https://github.com/community-scripts/ProxmoxVE/pull/1341))
@@ -40,6 +40,11 @@ Do not break established syntax in this file, as it is automatically updated by 
 ### 🧰 Maintenance
 
 - fix: only validate scripts in validate-scripts workflow [@se-bastiaan](https://github.com/se-bastiaan) ([#1344](https://github.com/community-scripts/ProxmoxVE/pull/1344))
+
+### ❔ Unlabelled
+
+- New Script: calibre-server [@ThisIsJeron](https://github.com/ThisIsJeron) ([#960](https://github.com/community-scripts/ProxmoxVE/pull/960))
+- Update calibre-server-install.sh [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1359](https://github.com/community-scripts/ProxmoxVE/pull/1359))
 
 ## 2025-01-08
 
