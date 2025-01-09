@@ -54,7 +54,6 @@ function update_script() {
     python3 manage.py collectstatic --noinput &>/dev/null
     python3 manage.py migrate &>/dev/null
 
-
     mv /opt/adventurelog-backup/frontend/.env /opt/adventurelog/frontend/.env
     cd /opt/adventurelog/frontend
     pnpm install &>/dev/null
