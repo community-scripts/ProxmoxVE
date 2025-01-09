@@ -41,7 +41,6 @@ function update_script() {
     msg_ok "Services Stopped"
 
     msg_info "Updating ${APP} to ${RELEASE}"
-    WORKDIR="$PWD"
     mv /opt/adventurelog/ /opt/adventurelog-backup/
     wget -q "https://github.com/seanmorley15/AdventureLog/archive/refs/tags/v${RELEASE}.zip"
     unzip -q v${RELEASE}.zip
