@@ -12,7 +12,7 @@
     "documentation": null,
     "website": "https://calibre-ebook.com",
     "logo": "https://calibre-ebook.com/resources/icons/calibre_icon.png",
-    "description": "Calibre content server is usedto manage and serve eBooks over the network.",
+    "description": "Calibre content server is used to manage and serve eBooks over the network.",
     "install_methods": [
       {
         "type": "default",
