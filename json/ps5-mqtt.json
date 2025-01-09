@@ -32,7 +32,7 @@
     },
     "notes": [
         {
-            "text": "After installation, the MQTT endpoint must be configured. The configuration file is located within the LXC container at: `/root/.config/ps5-mqtt/config.json`",
+            "text": "After installation, the MQTT endpoint must be configured. The configuration file is located within the LXC container at: `/opt/ps5-mqtt/.config/config.json`",
             "type": "info"
         }
     ]
