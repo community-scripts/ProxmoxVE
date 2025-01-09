@@ -69,7 +69,7 @@ function update_script() {
 
     msg_info "Cleaning Up"
     rm -rf /opt/v${RELEASE}.zip
-    mv /opt/adventurelog-backup/ adventurelog-backup-$LAST_VERSION/ # Keep backup, since AdventureLog moves quickly and we want to avoid breaking changes with rm -rf
+    rm -rf /opt/adventurelog-backup
     msg_ok "Cleaned"
     msg_ok "Updated Successfully"
   else
