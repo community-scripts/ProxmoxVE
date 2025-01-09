@@ -11,8 +11,8 @@ var_tags="cms;blog"
 var_cpu="2"
 var_ram="1024"
 var_disk="5"
-var_os="ubuntu"
-var_version="22.04"
+var_os="debian"
+var_version="12"
 var_unprivileged="1"
 
 # App Output & Base Settings
