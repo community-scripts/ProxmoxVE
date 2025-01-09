@@ -20,8 +20,16 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### Changed
 
+### ✨ New Scripts
+
+- New Script: Prometheus Alertmanager [@andygrunwald](https://github.com/andygrunwald) ([#1272](https://github.com/community-scripts/ProxmoxVE/pull/1272))
+- New script: ps5-mqtt [@liecno](https://github.com/liecno) ([#1198](https://github.com/community-scripts/ProxmoxVE/pull/1198))
+- New Script: calibre-server [@ThisIsJeron](https://github.com/ThisIsJeron) ([#960](https://github.com/community-scripts/ProxmoxVE/pull/960))
+
 ### 🚀 Updated Scripts
 
+- Install/update ActualBudget based on releases, not latest master [@SpyrosRoum](https://github.com/SpyrosRoum) ([#1254](https://github.com/community-scripts/ProxmoxVE/pull/1254))
+- Fix: AdventureLog - update script bug [@JesperDramsch](https://github.com/JesperDramsch) ([#1334](https://github.com/community-scripts/ProxmoxVE/pull/1334))
 - Fix Checkmk: Version grep broken [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1341](https://github.com/community-scripts/ProxmoxVE/pull/1341))
 
 ### 🧰 Maintenance
