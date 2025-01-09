@@ -1,0 +1,39 @@
+{
+    "name": "Mailrise",
+    "slug": "mailrise",
+    "categories": [
+        0
+    ],
+    "date_created": "2025-01-08",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": 8025,
+    "documentation": null,
+    "website": "https://github.com/YoRyan/mailrise",
+    "logo": "https://github.com/YoRyan/mailrise/blob/main/src/mailrise/asset/mailrise-logo.png?raw=true",
+    "description": "An SMTP gateway for Apprise notifications.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/mailrise.sh",
+            "resources": {
+                "cpu": 1,
+                "ram": 512,
+                "hdd": 2,
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": [
+    {
+      "text": "After the initial installation: Edit the configuration file at /opt/mailrise/mailrise.conf",
+      "type": "info"
+    }
+  ]
+}
