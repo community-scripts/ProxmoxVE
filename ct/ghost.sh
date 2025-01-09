@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC1090
 source <(curl -s https://raw.githubusercontent.com/fabrice1236/ProxmoxVE/refs/heads/ghost-testing/misc/build.func) 
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: fabrice1236
