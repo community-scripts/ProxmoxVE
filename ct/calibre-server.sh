@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2024
+# Copyright (c) 2021-2025 community-scripts ORG
 # Author: thisisjeron
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://calibre-ebook.com
@@ -29,25 +29,21 @@ function update_script() {
   check_container_storage
   check_container_resources
 
-  # Check if installed
   if [[ ! -f /etc/systemd/system/calibre-server.service ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-
   msg_info "Stopping ${APP}"
   systemctl stop calibre-server
   msg_ok "Stopped ${APP}"
-
-  msg_info "Updating ${APP} container packages"
+  
+  msg_info "Updating ${APP} Packages"
   apt-get update &>/dev/null
   apt-get -y upgrade &>/dev/null
-  msg_ok "Container packages updated"
+  msg_ok "Packages updated"
 
-  # Potentially re-run the official calibre script to ensure most recent version
-  # to keep logic consistent with how other scripts handle updates.
   msg_info "Updating Calibre (latest)"
-  wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | sh /dev/stdin &>/dev/null
+  bash -c "$(curl -fsSL https://download.calibre-ebook.com/linux-installer.sh)"
   msg_ok "Updated Calibre"
 
   msg_info "Starting ${APP}"
