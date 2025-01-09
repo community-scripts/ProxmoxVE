@@ -27,7 +27,6 @@ $STD apt-get install -y \
 msg_ok "Installed Dependencies"
 
 # Allow nginx through firewall
-$STD ufw allow 'Nginx Full'
 
 # Configure MySQL
 msg_info "Configuring MySQL"
