@@ -24,6 +24,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 - Fix Checkmk: Version grep broken [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1341](https://github.com/community-scripts/ProxmoxVE/pull/1341))
 
+### 🧰 Maintenance
+
+- fix: only validate scripts in validate-scripts workflow [@se-bastiaan](https://github.com/se-bastiaan) ([#1344](https://github.com/community-scripts/ProxmoxVE/pull/1344))
+
 ## 2025-01-08
 
 ### Changed
