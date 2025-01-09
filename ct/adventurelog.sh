@@ -60,7 +60,6 @@ function update_script() {
     pnpm install &>/dev/null
     pnpm run build &>/dev/null
     echo "${RELEASE}" >/opt/${APP}_version.txt
-    cd "$WORKDIR"
     msg_ok "Updated ${APP}"
 
     msg_info "Starting Services"
