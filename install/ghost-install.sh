@@ -68,12 +68,6 @@ msg_info "Creating Service"
 $STD adduser --disabled-password --gecos "Ghost user" ghost-user
 $STD usermod -aG sudo ghost-user
 echo "ghost-user ALL=(ALL) NOPASSWD:ALL" | tee /etc/sudoers.d/ghost-user
-msg_ok "Created ghost-user"
-
-
-
-# Set up Ghost
-msg_info "Setting up Ghost"
 mkdir -p /var/www/ghost
 chown -R ghost-user:ghost-user /var/www/ghost
 chmod 775 /var/www/ghost
