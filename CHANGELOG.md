@@ -28,6 +28,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 - New Script: Prometheus Alertmanager [@andygrunwald](https://github.com/andygrunwald) ([#1272](https://github.com/community-scripts/ProxmoxVE/pull/1272))
 - New script: ps5-mqtt [@liecno](https://github.com/liecno) ([#1198](https://github.com/community-scripts/ProxmoxVE/pull/1198))
+- New Script: calibre-server [@ThisIsJeron](https://github.com/ThisIsJeron) ([#960](https://github.com/community-scripts/ProxmoxVE/pull/960))
 
 ### 🚀 Updated Scripts
 
