@@ -64,7 +64,7 @@ User=root
 WantedBy=multi-user.target
 EOF
 
-$STD systemctl enable --now mailrise.service
+systemctl enable -q --now mailrise.service
 msg_ok "Installed Mailrise"
 
 motd_ssh
