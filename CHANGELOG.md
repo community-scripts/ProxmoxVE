@@ -20,6 +20,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### Changed
 
+### 💥 Breaking Changes
+
+- Delete calibre [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1362](https://github.com/community-scripts/ProxmoxVE/pull/1362))
+
 ### ✨ New Scripts
 
 - New Script: Prometheus Alertmanager [@andygrunwald](https://github.com/andygrunwald) ([#1272](https://github.com/community-scripts/ProxmoxVE/pull/1272))
