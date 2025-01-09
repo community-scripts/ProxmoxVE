@@ -2,8 +2,8 @@
 
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: liecno
-# License: MIT
-# https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://github.com/FunkeyFlo/ps5-mqtt/
 
 source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color
@@ -36,9 +36,9 @@ echo ${RELEASE} > /opt/ps5-mqtt_version.txt
 msg_ok "Installed PS5-MQTT"
 
 msg_info "Creating Service"
-mkdir -p /root/.config/ps5-mqtt
-mkdir -p /root/.config/playactor
-cat <<EOF > /root/.config/ps5-mqtt/config.json
+mkdir -p /opt/ps5-mqtt/.config/ps5-mqtt
+mkdir -p /opt/ps5-mqtt/.config/playactor
+cat <<EOF > /opt/ps5-mqtt/.config/ps5-mqtt/config.json
 {
   "mqtt": {
       "host": "",
@@ -63,7 +63,7 @@ cat <<EOF > /root/.config/ps5-mqtt/config.json
 
   "account_check_interval": 5000,
 
-  "credentialsStoragePath": "/root/.config/ps5-mqtt/credentials.json",
+  "credentialsStoragePath": "/opt/ps5-mqtt/.config/ps5-mqtt/credentials.json",
   "frontendPort": "8645"
 }
 EOF
@@ -74,7 +74,7 @@ After=syslog.target network.target
 
 [Service]
 WorkingDirectory=/opt/ps5-mqtt/ps5-mqtt
-Environment="CONFIG_PATH=/root/.config/ps5-mqtt/config.json"
+Environment="CONFIG_PATH=/opt/ps5-mqtt/.config/ps5-mqtt/config.json"
 Environment="DEBUG='@ha:ps5:*'"
 Restart=always
 RestartSec=5
