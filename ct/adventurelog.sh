@@ -42,7 +42,7 @@ function update_script() {
     msg_info "Updating ${APP} to ${RELEASE}"
     mv /opt/adventurelog/ /opt/adventurelog-backup/
     wget -qO /opt/v${RELEASE}.zip "https://github.com/seanmorley15/AdventureLog/archive/refs/tags/v${RELEASE}.zip"
-    unzip -q /opt/v${RELEASE}.zip
+    unzip -q /opt/v${RELEASE}.zip -d /opt/
     mv /opt/AdventureLog-${RELEASE} /opt/adventurelog
 
     mv /opt/adventurelog-backup/backend/server/.env /opt/adventurelog/backend/server/.env
