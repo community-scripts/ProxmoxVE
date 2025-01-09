@@ -18,9 +18,7 @@ $STD apt-get install -y \
   curl \
   sudo \
   mc \
-  jq \
-  npm
-$STD npm i -g playactor
+  jq 
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up Node.js Repository"
@@ -32,6 +30,7 @@ msg_ok "Set up Node.js Repository"
 msg_info "Installing Node.js"
 $STD apt-get update
 $STD apt-get install -y nodejs
+$STD npm i -g playactor
 msg_ok "Installed Node.js"
 
 
