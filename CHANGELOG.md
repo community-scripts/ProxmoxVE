@@ -16,6 +16,14 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
+## 2025-01-09
+
+### Changed
+
+### 🚀 Updated Scripts
+
+- Fix Checkmk: Version grep broken [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1341](https://github.com/community-scripts/ProxmoxVE/pull/1341))
+
 ## 2025-01-08
 
 ### Changed
