@@ -24,9 +24,7 @@ $STD apt-get install -y \
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Calibre"
-# If your container runs as root, you generally do not need to prefix with `sudo`.
-# The official Calibre instructions:
-wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | sh /dev/stdin
+$STD bash -c "$(curl -fsSL https://download.calibre-ebook.com/linux-installer.sh)"
 useradd -c "Calibre Server" -d /opt/calibre -s /bin/bash -m calibre
 mkdir -p /opt/calibre/calibre-library
 chown -R calibre:calibre /opt/calibre
