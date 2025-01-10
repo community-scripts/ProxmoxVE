@@ -1,0 +1,34 @@
+{
+  "name": "Redash ",
+  "slug": "redash",
+  "categories": [
+    5
+  ],
+  "date_created": "2025-01-10",
+  "type": "ct",
+  "updateable": false,
+  "privileged": false,
+  "interface_port": 5000,
+  "documentation": "https://redash.io/help/user-guide/getting-started/",
+  "website": "https://redash.io/",
+  "logo": "https://raw.githubusercontent.com/getredash/website/refs/heads/master/static/assets/images/redash-256.png",
+  "description": "Use Redash to connect to any data source (PostgreSQL, MySQL, Redshift, BigQuery, MongoDB and many others), query, visualize and share your data to make your company data driven.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/redash.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 10,
+        "os": "Debian",
+        "version": "12"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": []
+}
