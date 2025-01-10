@@ -34,9 +34,9 @@ function update_script() {
     fi
     msg_info "Updating ${APP}"
     COMPOSE_FILE=""
-    for file in *.compose.yaml; do
+    for file in /opt/komodo/*.compose.yaml; do
         if [[ "$file" != "compose.env" ]]; then
-            COMPOSE_FILE="$file"
+            COMPOSE_FILE="${file#/opt/komodo/}"
             break
         fi
     done
@@ -47,15 +47,15 @@ function update_script() {
     fi
 
     BACKUP_FILE="${COMPOSE_FILE}.bak_$(date +%Y%m%d_%H%M%S)"
-    mv "$COMPOSE_FILE" "$BACKUP_FILE" || {
+    mv "/opt/komodo/$COMPOSE_FILE" "/opt/komodo/$BACKUP_FILE" || {
         msg_error "Failed to create backup of $COMPOSE_FILE!"
         exit 1
     }
 
-    GITHUB_URL="https://raw.githubusercontent.com/mbecker20/komodo/main/compose/$COMPOSE_FILE"
-    wget -q -O "$COMPOSE_FILE" "$GITHUB_URL" || {
-        msg_error "Failed to download $COMPOSE_FILE from GitHub!"
-        mv "$BACKUP_FILE" "$COMPOSE_FILE" 
+    GITHUB_URL="https://raw.githubusercontent.com/mbecker20/komodo/main/compose/${COMPOSE_FILE}"
+    wget -q -O "/opt/komodo/${COMPOSE_FILE}" "$GITHUB_URL" || {
+        msg_error "Failed to download ${COMPOSE_FILE} from GitHub!"
+        mv "/opt/komodo/${BACKUP_FILE}" "/opt/komodo/${COMPOSE_FILE}" 
         exit 1
     }
 
