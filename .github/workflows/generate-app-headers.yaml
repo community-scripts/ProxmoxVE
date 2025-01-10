@@ -9,14 +9,14 @@ jobs:
   update-combined:
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # Erforderlich für Push-Berechtigungen
+      contents: write  
     steps:
       - name: Generate a token
         id: generate-token
         uses: actions/create-github-app-token@v1
         with:
-          app-id: ${{ secrets.APP_ID }}  # Ändere dies auf 'secrets.APP_ID'
-          private-key: ${{ secrets.APP_PRIVATE_KEY }}  # Private Key aus den Secrets
+          app-id: ${{ secrets.CREATE_HEADER_APP_ID }}  
+          private-key: ${{ CREATE_HEADER_SECRET }} 
 
       - name: Checkout repository
         uses: actions/checkout@v4
