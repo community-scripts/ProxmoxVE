@@ -9,7 +9,7 @@ current_date=$(date +"%m-%d-%Y")
   echo "### Generated on $current_date"
   echo "##################################################"
   echo
-} >> "$output_file"  # Header wird in die Datei geschrieben
+} >> "$output_file"  
 
 # Find only regular .sh files in ./ct, sort them alphabetically
 find ./ct -type f -name "*.sh" | sort | while read -r script; do
@@ -24,7 +24,7 @@ find ./ct -type f -name "*.sh" | sort | while read -r script; do
       echo "APP=$app_name"
       echo "$figlet_output"
       echo
-    } >> "$output_file"  # Figlet output wird in die Datei geschrieben
+    } >> "$output_file"  
   else
     echo "No APP name found in $script, skipping."
   fi
