@@ -3,7 +3,7 @@ name: Update .app-headers in /misc
 on:
   push:
     paths:
-      - 'ct/*'  # Action wird ausgelöst, wenn sich etwas in ct/ ändert
+      - 'ct/*' 
     branches:
       - main
   workflow_dispatch:
@@ -79,7 +79,7 @@ jobs:
             PR_URL=$(gh pr create --title "[core]: update .app-headers to latest version" \
                                    --body "This PR automatically updates the .app-headers file." \
                                    --head update-app-headers \
-                                   --base main -q .url)
+                                   --base main)
             echo "PR created: $PR_URL"
           else
             echo "PR already exists."
