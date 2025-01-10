@@ -79,7 +79,7 @@ jobs:
             PR_URL=$(gh pr create --title "[core]: update .app-headers to latest version" \
                                    --body "This PR automatically updates the .app-headers file." \
                                    --head update-app-headers \
-                                   --base main --no-edit -q .url)
+                                   --base main -q .url)
             echo "PR created: $PR_URL"
           else
             echo "PR already exists."
