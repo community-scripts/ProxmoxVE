@@ -46,6 +46,8 @@ function update_script() {
     wget -q https://codeload.github.com/actualbudget/actual-server/legacy.tar.gz/refs/tags/${RELEASE} -O - | tar -xz
     mv /opt/actualbudget /opt/actualbudget_bak
     mv actualbudget-actual-server-*/* /opt/actualbudget/
+    mv /opt/actualbudget_bak/.env /opt/actualbudget
+    mv /opt/actualbudget_bak/server-files /opt/actualbudget/server-files
     cd /opt/actualbudget
     yarn install &>/dev/null
     systemctl start actualbudget
