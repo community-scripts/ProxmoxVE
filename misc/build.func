@@ -9,6 +9,8 @@ variables() {
   var_install="${NSAPP}-install"     # sets the var_install variable by appending "-install" to the value of NSAPP.
   INTEGER='^[0-9]+([.][0-9]+)?$'     # it defines the INTEGER regular expression pattern.
   PVEHOST_NAME=$(hostname) # gets the Proxmox Hostname and sets it to Uppercase
+  APP_PATH="/opt/$NSAPP" # sets the APP_PATH variable to the path where the application will be installed.
+  UPDATE="no" # sets the UPDATE variable to "no" to indicate that the script is not in the process of updating.
 }
 
 # This function sets various color variables using ANSI escape codes for formatting text in the terminal.
@@ -56,6 +58,31 @@ color() {
   ADVANCED="${TAB}🧩${TAB}${CL}"
 }
 
+backup_data() {
+  UPDATE="yes"
+  backup_count=$(find /opt/ -maxdepth 1 -type f -name '[0-9]*-*[0-9]*-*[0-9]*.tar.gz' | wc -l)
+  if [ "$backup_count" -gt 3 ]; then
+    oldest_file=$(find /opt/ -maxdepth 1 -type f -name '[0-9]*-*[0-9]*-*[0-9]*.tar.gz' | sort | head -n 1)
+    rm -f "$oldest_file"
+  fi
+  APP_PATH=${var_apppath:-$APP_PATH}  
+  msg_ok "Creating Backup [/opt/$(date '+%Y-%m-%d').tar.gz]"  
+  tar -zcf "/opt/$(date '+%Y-%m-%d').tar.gz" "$APP_PATH" &>/dev/null
+}
+
+restore_backup() {
+
+  latest_file=$(find /opt/ -maxdepth 1 -type f -name '[0-9]*-*[0-9]*-*[0-9]*.tar.gz' | sort -r | head -n 1)
+  if [[ -n "$latest_file" ]]; then
+    msg_error "Restoring Backup due to script failure: $latest_file"
+    rm -rf "${APP_PATH:?}/*"
+    tar -xzf "$latest_file" -C "$APP_PATH" &>/dev/null
+  else
+    msg_error "No tarball found matching the format Y-m-d.tar.gz in /opt/"
+  fi
+}
+
+
 # This function enables error handling in the script by setting options and defining a trap for the ERR signal.
 catch_errors() {
   set -Eeuo pipefail
@@ -66,6 +93,9 @@ catch_errors() {
 error_handler() {
   if [ -n "$SPINNER_PID" ] && ps -p $SPINNER_PID > /dev/null; then kill $SPINNER_PID > /dev/null; fi
   printf "\e[?25h"
+  if [ "$UPDATE" == "yes" ]; then
+    restore_backup
+  fi
   local exit_code="$?"
   local line_number="$1"
   local command="$2"
