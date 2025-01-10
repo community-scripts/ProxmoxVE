@@ -626,7 +626,7 @@ advanced_settings() {
     exit_script
   fi
 
-  if ADV_TAGS=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Custom Tags?(Seperate by ;)" 8 58 --title "DNS SERVER IP" 3>&1 1>&2 2>&3); then
+  if ADV_TAGS=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Custom Tags?[Default: ${TAGS}](Seperate by ;)" 8 58 --title "Advanced Tags" 3>&1 1>&2 2>&3); then
     if [ -n "${ADV_TAGS}" ]; then
         ADV_TAGS=${ADV_TAGS:-""} 
         ADV_TAGS=$(echo "$ADV_TAGS" | tr -d '[:space:]')
