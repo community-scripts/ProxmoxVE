@@ -24,6 +24,14 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 - Fix: ActualBudget Update-Function [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1376](https://github.com/community-scripts/ProxmoxVE/pull/1376))
 
+### 🌐 Website
+
+- Change Website-Category of nzbget [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1379](https://github.com/community-scripts/ProxmoxVE/pull/1379))
+
+### 🧰 Maintenance
+
+- Add initial PR for Contributing & Coding Standard [@MickLesk](https://github.com/MickLesk) ([#920](https://github.com/community-scripts/ProxmoxVE/pull/920))
+
 ## 2025-01-09
 
 ### Changed
