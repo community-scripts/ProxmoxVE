@@ -3,6 +3,8 @@ name: Check and Update JSON Date
 on:
   pull_request:
     types: [synchronize, opened, reopened, edited]
+    paths:
+    - "json/*.json"
 
 jobs:
   update-date:
