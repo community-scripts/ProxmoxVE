@@ -26,9 +26,11 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
-- Fix: checkmk-install.sh: Version crawling. [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1385](https://github.com/community-scripts/ProxmoxVE/pull/1385))
-- Fix: bookstack.sh - Ignore empty folder [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1388](https://github.com/community-scripts/ProxmoxVE/pull/1388))
+- Update Prometheus + Alertmanager: Unify scripts for easier maintenance [@andygrunwald](https://github.com/andygrunwald) ([#1402](https://github.com/community-scripts/ProxmoxVE/pull/1402))
+- Update komodo.sh: Fix broken paths in update_script(). [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1403](https://github.com/community-scripts/ProxmoxVE/pull/1403))
 - Fix: ActualBudget Update-Function [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1376](https://github.com/community-scripts/ProxmoxVE/pull/1376))
+- Fix: bookstack.sh - Ignore empty folder [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1388](https://github.com/community-scripts/ProxmoxVE/pull/1388))
+- Fix: checkmk-install.sh: Version crawling. [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1385](https://github.com/community-scripts/ProxmoxVE/pull/1385))
 
 ### 🌐 Website
 
@@ -36,8 +38,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🧰 Maintenance
 
-- [core]: check json date of new prs & update it [@MickLesk](https://github.com/MickLesk) ([#1395](https://github.com/community-scripts/ProxmoxVE/pull/1395))
+- Update check_and_update_json_date.yml: Change path to /json [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1399](https://github.com/community-scripts/ProxmoxVE/pull/1399))
+- Visual Studio Code: Set Workspace recommended extensions [@andygrunwald](https://github.com/andygrunwald) ([#1398](https://github.com/community-scripts/ProxmoxVE/pull/1398))
 - [core]: add support for custom tags [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1384](https://github.com/community-scripts/ProxmoxVE/pull/1384))
+- [core]: check json date of new prs & update it [@MickLesk](https://github.com/MickLesk) ([#1395](https://github.com/community-scripts/ProxmoxVE/pull/1395))
 - Add initial PR for Contributing & Coding Standard [@MickLesk](https://github.com/MickLesk) ([#920](https://github.com/community-scripts/ProxmoxVE/pull/920))
 - [Core] add Github Action for Generate AppHeaders (figlet remove part 1) [@MickLesk](https://github.com/MickLesk) ([#1382](https://github.com/community-scripts/ProxmoxVE/pull/1382))
 
