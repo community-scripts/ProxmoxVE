@@ -30,6 +30,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🧰 Maintenance
 
+- [Core] add Github Action for Generate AppHeaders (figlet remove part 1) [@MickLesk](https://github.com/MickLesk) ([#1382](https://github.com/community-scripts/ProxmoxVE/pull/1382))
 - Add initial PR for Contributing & Coding Standard [@MickLesk](https://github.com/MickLesk) ([#920](https://github.com/community-scripts/ProxmoxVE/pull/920))
 
 ## 2025-01-09
