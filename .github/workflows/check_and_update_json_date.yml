@@ -1,0 +1,43 @@
+name: Check and Update JSON Date
+
+on:
+  pull_request:
+    types: [synchronize, opened, edited]
+
+jobs:
+  update-date:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.12
+
+      - name: Install dependencies
+        run: pip install jq
+
+      - name: Find and Update JSON files
+        run: |
+          TODAY=$(date +%Y-%m-%d)
+          for file in $(git diff --diff-filter=A --name-only HEAD | grep '\.json$'); do
+            if jq -e '.date_created' $file > /dev/null 2>&1; then
+              echo "Updating date_created in $file"
+              jq --arg date "$TODAY" '.date_created = $date' $file > temp.json && mv temp.json $file
+              git add $file
+            fi
+          done
+
+      - name: Commit changes
+        run: |
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+          git commit -m "Update date_created in new JSON files" || echo "No changes to commit"
+
+      - name: Push changes
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
