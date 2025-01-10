@@ -28,7 +28,13 @@ jobs:
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
 
-      # Step 3: Merge main into update-app-headers
+      # Step 3: Install figlet
+      - name: Install figlet
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y figlet
+
+      # Step 4: Merge main into update-app-headers
       - name: Merge main into update-app-headers
         run: |
           git fetch origin
@@ -36,7 +42,7 @@ jobs:
           git merge origin/main --no-ff --no-edit
           git push origin update-app-headers --force
 
-      # Step 4: Ensure .app-headers file exists and initialize it
+      # Step 5: Ensure .app-headers file exists and initialize it
       - name: Initialize .app-headers file
         run: |
           if [ ! -f "ct/.app-headers" ]; then
@@ -44,7 +50,7 @@ jobs:
             touch ct/.app-headers
           fi
 
-      # Step 5: Loop through ct/ scripts and execute figlet if APP= is found
+      # Step 6: Loop through ct/ scripts and execute figlet if APP= is found
       - name: Update .app-headers with figlet output
         run: |
           echo "Updating .app-headers with figlet output."
@@ -56,13 +62,13 @@ jobs:
             fi
           done
           
-      # Step 6: Commit the changes to .app-headers
+      # Step 7: Commit the changes to .app-headers
       - name: Commit updated .app-headers
         run: |
           git diff --quiet -- ct/.app-headers || git commit -am "[core]: update .app-headers to latest version"
           git push origin update-app-headers --force
 
-      # Step 7: Create Pull Request to merge changes into main
+      # Step 8: Create Pull Request to merge changes into main
       - name: Create Pull Request if changes detected
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -79,7 +85,7 @@ jobs:
             echo "PR already exists."
           fi
 
-      # Step 8: Automatically merge PR
+      # Step 9: Automatically merge PR
       - name: Automatically merge PR
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -93,7 +99,7 @@ jobs:
             echo "No PR found to merge."
           fi
 
-      # Step 9: Final status output
+      # Step 10: Final status output
       - name: Output final status
         run: |
           echo "Workflow completed successfully. Branch and PR status updated."
