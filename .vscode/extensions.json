@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "bmalehorn.shell-syntax",
+    "timonwong.shellcheck",
+    "foxundermoon.shell-format"
+  ],
+  "unwantedRecommendations": []
+}
