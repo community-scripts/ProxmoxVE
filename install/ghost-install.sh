@@ -65,7 +65,7 @@ echo "ghost-user ALL=(ALL) NOPASSWD:ALL" | tee /etc/sudoers.d/ghost-user
 mkdir -p /var/www/ghost
 chown -R ghost-user:ghost-user /var/www/ghost
 chmod 775 /var/www/ghost
-sudo -u ghost-user -H sh -c "cd /var/www/ghost && ghost install --db=mysql --dbhost=localhost --dbuser=root --dbpass=$DB_PASS --dbname=ghost --url=http://localhost:2368 --no-prompt --no-setup-nginx --no-setup-ssl --no-setup-mysql --enable --start --ip 0.0.0.0"
+sudo -u ghost-user -H sh -c "cd /var/www/ghost && ghost install --db=mysql --dbhost=localhost --dbuser=$DB_USER --dbpass=$DB_PASS --dbname=ghost --url=http://localhost:2368 --no-prompt --no-setup-nginx --no-setup-ssl --no-setup-mysql --enable --start --ip 0.0.0.0"
 rm /etc/sudoers.d/ghost-user
 msg_ok "Creating Service"
 
