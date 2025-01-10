@@ -22,6 +22,8 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- Fix: checkmk-install.sh: Version crawling. [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1385](https://github.com/community-scripts/ProxmoxVE/pull/1385))
+- Fix: bookstack.sh - Ignore empty folder [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1388](https://github.com/community-scripts/ProxmoxVE/pull/1388))
 - Fix: ActualBudget Update-Function [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1376](https://github.com/community-scripts/ProxmoxVE/pull/1376))
 
 ### 🌐 Website
@@ -30,8 +32,9 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🧰 Maintenance
 
-- [Core] add Github Action for Generate AppHeaders (figlet remove part 1) [@MickLesk](https://github.com/MickLesk) ([#1382](https://github.com/community-scripts/ProxmoxVE/pull/1382))
+- [core]: add support for custom tags [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1384](https://github.com/community-scripts/ProxmoxVE/pull/1384))
 - Add initial PR for Contributing & Coding Standard [@MickLesk](https://github.com/MickLesk) ([#920](https://github.com/community-scripts/ProxmoxVE/pull/920))
+- [Core] add Github Action for Generate AppHeaders (figlet remove part 1) [@MickLesk](https://github.com/MickLesk) ([#1382](https://github.com/community-scripts/ProxmoxVE/pull/1382))
 
 ## 2025-01-09
 
