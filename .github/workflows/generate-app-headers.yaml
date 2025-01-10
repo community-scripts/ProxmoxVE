@@ -1,0 +1,41 @@
+name: Update .app-headers in /misc
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  update-combined:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Erforderlich für Push-Berechtigungen
+    steps:
+      - name: Generate a token
+        id: generate-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.APP_ID }}  # Ändere dies auf 'secrets.APP_ID'
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}  # Private Key aus den Secrets
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Figlet
+        run: sudo apt-get install -y figlet
+
+      - name: Run generate-app-headers script
+        run: |
+          bash .github/workflows/generate-app-headers.sh
+
+      - name: Commit and push changes
+        env:
+          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add ./misc/.app-headers
+          git commit -m "Update .app-headers in /misc" || echo "No changes to commit"
+          git push origin main
