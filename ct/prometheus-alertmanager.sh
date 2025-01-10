@@ -42,18 +42,17 @@ function update_script() {
     cd /opt
     wget -q https://github.com/prometheus/alertmanager/releases/download/v${RELEASE}/alertmanager-${RELEASE}.linux-amd64.tar.gz
     tar -xf alertmanager-${RELEASE}.linux-amd64.tar.gz
-    cd alertmanager-${RELEASE}.linux-amd64
-    cp -rf alertmanager amtool /usr/local/bin/
+    cp -rf alertmanager-${RELEASE}.linux-amd64/alertmanager alertmanager-${RELEASE}.linux-amd64/amtool /usr/local/bin/
     rm -rf alertmanager-${RELEASE}.linux-amd64 alertmanager-${RELEASE}.linux-amd64.tar.gz
     echo "${RELEASE}" >/opt/${APP}_version.txt
-    msg_ok "Updated ${APP} to ${RELEASE}"
+    msg_ok "Updated ${APP} to v${RELEASE}"
 
     msg_info "Starting ${APP}"
     systemctl start prometheus-alertmanager
     msg_ok "Started ${APP}"
     msg_ok "Updated Successfully"
   else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
+    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }

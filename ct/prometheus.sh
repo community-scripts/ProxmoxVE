@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2025 community-scripts ORG
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://prometheus.io/
@@ -38,22 +38,21 @@ function update_script() {
     systemctl stop prometheus
     msg_ok "Stopped ${APP}"
 
-    msg_info "Updating ${APP} to ${RELEASE}"
+    msg_info "Updating ${APP} to v${RELEASE}"
+    cd /opt
     wget -q https://github.com/prometheus/prometheus/releases/download/v${RELEASE}/prometheus-${RELEASE}.linux-amd64.tar.gz
     tar -xf prometheus-${RELEASE}.linux-amd64.tar.gz
-    cd prometheus-${RELEASE}.linux-amd64
-    cp -rf prometheus promtool /usr/local/bin/
-    cd ~
+    cp -rf prometheus-${RELEASE}.linux-amd64/prometheus prometheus-${RELEASE}.linux-amd64/promtool /usr/local/bin/
     rm -rf prometheus-${RELEASE}.linux-amd64 prometheus-${RELEASE}.linux-amd64.tar.gz
     echo "${RELEASE}" >/opt/${APP}_version.txt
-    msg_ok "Updated ${APP} to ${RELEASE}"
+    msg_ok "Updated ${APP} to v${RELEASE}"
 
     msg_info "Starting ${APP}"
     systemctl start prometheus
     msg_ok "Started ${APP}"
     msg_ok "Updated Successfully"
   else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
+    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }
