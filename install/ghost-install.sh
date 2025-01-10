@@ -31,7 +31,6 @@ msg_info "Configuring MySQL"
 DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 $STD mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH 'mysql_native_password' BY '$DB_PASS';"
 $STD mysql -u root -p"$DB_PASS" -e "FLUSH PRIVILEGES;"
-
 {
     echo "MySQL-Credentials"
     echo "Username: root"
@@ -39,24 +38,20 @@ $STD mysql -u root -p"$DB_PASS" -e "FLUSH PRIVILEGES;"
 } >> ~/mysql.creds
 msg_ok "Configured MySQL"
 
-
 msg_info "Setting up Node.js Repository"
 mkdir -p /etc/apt/keyrings
 curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
 echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
 msg_ok "Set up Node.js Repository"
 
-msg_info "Installing Node.js and npm"
+msg_info "Setup Node.js"
 $STD apt-get update
 $STD apt-get install -y nodejs
-msg_ok "Installed Node.js and npm"
-
+msg_ok "Setup Node.js"
 
 msg_info "Installing Ghost CLI"
 $STD npm install ghost-cli@latest -g
 msg_ok "Installed Ghost CLI"
-
-
 
 msg_info "Creating Service"
 $STD adduser --disabled-password --gecos "Ghost user" ghost-user
@@ -69,10 +64,8 @@ sudo -u ghost-user -H sh -c "cd /var/www/ghost && ghost install --db=mysql --dbh
 rm /etc/sudoers.d/ghost-user
 msg_ok "Creating Service"
 
-
 motd_ssh
 customize
-
 
 msg_info "Cleaning up"
 $STD apt-get -y autoremove
