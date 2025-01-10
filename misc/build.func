@@ -626,6 +626,17 @@ advanced_settings() {
     exit_script
   fi
 
+  if ADV_TAGS=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Custom Tags?(Seperate by ;)" 8 58 --title "DNS SERVER IP" 3>&1 1>&2 2>&3); then
+    if [ -n "${ADV_TAGS}" ]; then
+        ADV_TAGS=${ADV_TAGS:-""} 
+        ADV_TAGS=$(echo "$ADV_TAGS" | tr -d '[:space:]')
+        TAGS="community-script;${ADV_TAGS}"
+    fi
+      echo -e "${NETWORK}${BOLD}${DGN}Tags: ${BGN}$TAGS${CL}"
+    else
+      exit_script
+  fi
+
   if [[ "$PW" == -password* ]]; then
     if (whiptail --backtitle "Proxmox VE Helper Scripts" --defaultno --title "SSH ACCESS" --yesno "Enable Root SSH Access?" 10 58); then
       SSH="yes"
