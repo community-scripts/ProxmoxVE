@@ -27,7 +27,6 @@ msg_ok "Installed Alpine Step-CA"
 # Initialize CA
 config_dir="/etc/step-ca"
 log_dir="/var/log/step-ca"
-error_log="${log_dir}/${RC_SVCNAME}.log"
 profile_file="${config_dir}/.profile"
 ca_file="${config_dir}/config/ca.json"
 passwd_file="${config_dir}/password.txt"
