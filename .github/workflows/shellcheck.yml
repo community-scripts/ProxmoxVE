@@ -18,15 +18,45 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Get changed files
-      id: changes
+      id: changed-files
+      uses: tj-actions/changed-files@v45
+      with:
+        files: |
+          **.sh
+
+    # This is a manual copy from https://github.com/ludeeus/action-shellcheck/blob/00b27aa7cb85167568cb48a3838b75f4265f2bca/action.yaml#L59
+    # Why? Because the action is not capable of adding ONLY a list of files.
+    # We aim to only check the files that have changed.
+    # This is used as we deal with a codebase that throws a lot of warnings.
+    # Checking only the changed files is a good compromise to improve the codebase over time.
+    - name: Download shellcheck
+      shell: bash
+      env:
+        INPUT_VERSION: "v0.10.0"
       run: |
-        if ${{ github.event_name == 'pull_request' }}; then
-          echo "files=$(git diff --name-only -r HEAD^1 HEAD | xargs)" >> $GITHUB_OUTPUT
+        if [[ "${{ runner.os }}" == "macOS" ]]; then
+          osvariant="darwin"
         else
-          echo "files=$(git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | xargs)" >> $GITHUB_OUTPUT
+          osvariant="linux"
         fi
 
-    - name: Run ShellCheck
-      if: steps.changes.outputs.files != ''
+        baseurl="https://github.com/koalaman/shellcheck/releases/download"
+
+        curl -Lso "${{ github.action_path }}/sc.tar.xz" \
+          "${baseurl}/${INPUT_VERSION}/shellcheck-${INPUT_VERSION}.${osvariant}.x86_64.tar.xz"
+
+        tar -xf "${{ github.action_path }}/sc.tar.xz" -C "${{ github.action_path }}"
+        mv "${{ github.action_path }}/shellcheck-${INPUT_VERSION}/shellcheck" \
+          "${{ github.action_path }}/shellcheck"
+
+    - name: Display shellcheck version
+      shell: bash
       run: |
-        echo "${{ steps.changes.outputs.files }}" | xargs shellcheck
+        "${{ github.action_path }}/shellcheck" --version
+
+    - name: Run ShellCheck
+      if: steps.changed-files-specific.outputs.any_changed == 'true'
+      env:
+        ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
+      run: |
+        echo "${ALL_CHANGED_FILES}" | xargs shellcheck
