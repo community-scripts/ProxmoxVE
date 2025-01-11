@@ -1,0 +1,34 @@
+{
+    "name": "Opengist",
+    "slug": "opengist",
+    "categories": [
+        3
+    ],
+    "date_created": "2025-11-01",
+    "type": "ct",
+    "updateable": false,
+    "privileged": false,
+    "interface_port": 6157,
+    "documentation": null,
+    "website": "https://opengist.io/",
+    "logo": "https://raw.githubusercontent.com/thomiceli/opengist/master/public/opengist.svg",
+    "description": "Self-hosted pastebin powered by Git, open-source alternative to Github Gist.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/opengist.sh",
+            "resources": {
+                "cpu": 1,
+                "ram": 1024,
+                "hdd": 8,
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": []
+}
