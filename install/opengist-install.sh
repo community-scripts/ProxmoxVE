@@ -17,9 +17,6 @@ msg_info "Installing Dependencies"
 $STD apt-get install -y curl
 $STD apt-get install -y jq
 $STD apt-get install -y sudo
-$STD apt-get install -y mc
-$STD apt-get install -y gnupg
-$STD apt-get install -y apt-transport-https
 msg_ok "Installed Dependencies"
 
 msg_info "Download Opengist Binary"
@@ -28,30 +25,33 @@ wget "$LATEST_URL"
 msg_ok "Downloaded Opengist Binary"
 
 msg_info "Creating Systemd Service"
+mkdir -p /opt/opengist
 mv opengist*.tar.gz opengist.tar.gz
 tar -xf opengist.tar.gz
-mv opengist /usr/local/bin
+mv opengist/opengist /opt/opengist/opengist
+mv opengist/config.yml /opt/opengist/config.yml
 chmod +x /usr/local/bin/opengist
-rm -rf opengist.tar.gz
+rm -rf opengist*
 cat <<EOF >/etc/systemd/system/opengist.service
 [Unit]
 Description=Opengist server to manage your Gists
-Wants=network-online.target
+After=network.target
 
 [Service]
-Type=simple
 WorkingDirectory=/opt/opengist
-ExecStart=/usr/local/bin/opengist
-Restart=on-failure
+ExecStart=/opt/opengist/opengist
+Restart=always
+User=root
 
 [Install]
 WantedBy=multi-user.target
 EOF
+msg_ok "Created Systemd Service"
 
 msg_info "Starting Service"
 systemctl daemon-reload
 systemctl enable -q --now opengist.service
-msg_ok ""
+msg_ok "Started Service"
 
 motd_ssh
 customize

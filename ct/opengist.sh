@@ -33,6 +33,14 @@ function update_script() {
         exit
     fi
     msg_info "Updating ${APP} LXC"
+    LATEST_URL=$(curl -s https://api.github.com/repos/thomiceli/opengist/releases/latest | jq -r '.assets[] | select(.name | contains("linux-amd64.tar.gz")).browser_download_url')
+    wget "$LATEST_URL"
+    mv opengist*.tar.gz opengist.tar.gz
+    tar -xf opengist.tar.gz
+    mv opengist/opengist /opt/opengist/opengist
+    mv opengist/config.yml /opt/opengist/config.yml
+    chmod +x /usr/local/bin/opengist
+    rm -rf opengist*
     apt-get update &>/dev/null
     apt-get -y upgrade &>/dev/null
     msg_ok "Updated Successfully"
