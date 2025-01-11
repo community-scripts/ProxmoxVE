@@ -20,11 +20,14 @@ jobs:
     - name: Get changed files
       id: changed-files
       uses: tj-actions/changed-files@v45
+      with:
+        files: |
+          **.sh
 
     #- name: Get changed files
     #  id: changed-files
     #  run: |
-    #    if ${{ github.event_name == 'pull_request_target' }}; then
+    #    if ${{ github.event_name == 'pull_request' }}; then
     #      echo "files=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ steps.pr.outputs.result && fromJSON(steps.pr.outputs.result).merge_commit_sha }} | xargs)" >> $GITHUB_OUTPUT
     #    else
     #      echo "files=$(git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | xargs)" >> $GITHUB_OUTPUT
