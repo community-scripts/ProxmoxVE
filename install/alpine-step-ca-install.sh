@@ -14,8 +14,10 @@ setting_up_container
 network_check
 update_os
 
-# Installing Dependencies with the 3 core dependencies (curl;sudo;mc)
+# Installing Dependencies
 #msg_info "Installing Dependencies"
+$STD apk add newt
+$STD apk add openssl
 #msg_ok "Installed Dependencies"
 
 msg_info "Installing Alpine Step-CA"
