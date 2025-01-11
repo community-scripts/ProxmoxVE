@@ -42,7 +42,7 @@ function update_script() {
     cd /opt
     if [[ -f /opt/hoarder/.env ]] && [[ ! -f /etc/hoarder/hoarder.env ]]; then
       mkdir -p /etc/hoarder
-      mv /opt/hoarder/.env /etv/hoarder/hoarder.env
+      mv /opt/hoarder/.env /etc/hoarder/hoarder.env
     fi
     rm -rf /opt/hoarder
     wget -q "https://github.com/hoarder-app/hoarder/archive/refs/tags/v${RELEASE}.zip"
