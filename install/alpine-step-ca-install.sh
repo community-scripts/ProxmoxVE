@@ -25,7 +25,6 @@ $STD apk add step-cli step-certificates
 msg_ok "Installed Alpine Step-CA"
 
 # Initialize CA
-CA_PASS="$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)"
 config_dir="/etc/step-ca"
 log_dir="/var/log/step-ca"
 error_log="${log_dir}/${RC_SVCNAME}.log"
@@ -33,9 +32,12 @@ profile_file="${config_dir}/.profile"
 ca_file="${config_dir}/config/ca.json"
 passwd_file="${config_dir}/password.txt"
 
-cat <<EOF >${passwd_file}
+msg_info "Generate CA secret"
+CA_PASS="$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)"
+$STD cat <<EOF >${passwd_file}
 ${CA_PASS}
 EOF
+msg_ok "Generated CA secret in ${passwd_file} - ${CA_PASS}"
 
 # Start application
 msg_info "Starting Alpine Step-CA"
