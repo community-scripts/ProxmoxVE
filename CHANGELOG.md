@@ -22,9 +22,9 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- Prometheus: Fix installation via creating the service file [@andygrunwald](https://github.com/andygrunwald) ([#1416](https://github.com/community-scripts/ProxmoxVE/pull/1416))
 - Update prometheus-install.sh: Service creation fix [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1417](https://github.com/community-scripts/ProxmoxVE/pull/1417))
 - Update prometheus-alertmanager-install.sh: Service Creation Fix [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1418](https://github.com/community-scripts/ProxmoxVE/pull/1418))
-- Prometheus: Fix installation via creating the service file [@andygrunwald](https://github.com/andygrunwald) ([#1416](https://github.com/community-scripts/ProxmoxVE/pull/1416))
 - Fix: LubeLogger CT vehicle tag typo [@kkroboth](https://github.com/kkroboth) ([#1413](https://github.com/community-scripts/ProxmoxVE/pull/1413))
 
 ## 2025-01-10
