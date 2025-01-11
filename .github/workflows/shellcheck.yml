@@ -28,12 +28,13 @@ jobs:
       id: changed-files
       run: |
         if ${{ github.event_name == 'pull_request' }}; then
-          CHANGED_GIT_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ steps.pr.outputs.result && fromJSON(steps.pr.outputs.result).merge_commit_sha }} | xargs)"
+          CHANGED_GIT_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ steps.pr.outputs.result && fromJSON(steps.pr.outputs.result).merge_commit_sha }} | xargs)
         else
-          CHANGED_GIT_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | xargs)"
+          CHANGED_GIT_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.event.after }} | xargs)
         fi
+
         # Filter only for *.sh files
-        echo "files=$(printf "%s\n" ${{ steps.changed-files.outputs.files }} | { grep -E '^.*\.sh$' || true; }) >> $GITHUB_OUTPUT
+        echo "files=$(printf "%s\n" $CHANGED_GIT_FILES | { grep -E '^.*\.sh$' || true; })" >> $GITHUB_OUTPUT
 
     - name: Run ShellCheck
       if: steps.changed-files.outputs.files != ''
