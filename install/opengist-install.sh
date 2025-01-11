@@ -17,6 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt-get install -y curl
 $STD apt-get install -y jq
 $STD apt-get install -y sudo
+$STD apt-get install -y git
 msg_ok "Installed Dependencies"
 
 msg_info "Download Opengist Binary"
