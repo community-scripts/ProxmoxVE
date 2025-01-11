@@ -5,7 +5,7 @@
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
-source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
+source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
 catch_errors
@@ -30,7 +30,7 @@ mv opengist*.tar.gz opengist.tar.gz
 tar -xf opengist.tar.gz
 mv opengist/opengist /opt/opengist/opengist
 mv opengist/config.yml /opt/opengist/config.yml
-chmod +x /usr/local/bin/opengist
+chmod +x /opt/opengist/opengist
 rm -rf opengist*
 cat <<EOF >/etc/systemd/system/opengist.service
 [Unit]

@@ -28,7 +28,7 @@ function update_script() {
     header_info
     check_container_storage
     check_container_resources
-    if [[ ! -f /usr/local/bin/opengist ]]; then
+    if [[ ! -f /opt/opengist/opengist ]]; then
         msg_error "No ${APP} Installation Found!"
         exit
     fi
@@ -39,7 +39,7 @@ function update_script() {
     tar -xf opengist.tar.gz
     mv opengist/opengist /opt/opengist/opengist
     mv opengist/config.yml /opt/opengist/config.yml
-    chmod +x /usr/local/bin/opengist
+    chmod +x /opt/opengist/opengist
     rm -rf opengist*
     apt-get update &>/dev/null
     apt-get -y upgrade &>/dev/null
