@@ -6,8 +6,8 @@ source <(curl -s https://raw.githubusercontent.com/fwiegerinck/ProxmoxVE/refs/he
 # Source: https://github.com/smallstep/certificates
 
 # App Default Values
-APP="Step-CA"
-TAGS="alpine;step-ca"
+APP="Alpine-Step-CA"
+var_tags="alpine;step-ca"
 var_cpu="1"
 var_ram="512"
 var_disk="1024"
