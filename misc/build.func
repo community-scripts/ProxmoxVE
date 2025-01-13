@@ -36,7 +36,7 @@ color() {
   INFO="${TAB}💡${TAB}${CL}"
   OS="${TAB}🖥️${TAB}${CL}"
   OSVERSION="${TAB}🌟${TAB}${CL}"
-  CONTAINERTYPE="${TAB}📦${TAB}${CL}" 
+  CONTAINERTYPE="${TAB}📦${TAB}${CL}"
   DISKSIZE="${TAB}💾${TAB}${CL}"
   CPUCORE="${TAB}🧠${TAB}${CL}"
   RAMSIZE="${TAB}🛠️${TAB}${CL}"
@@ -193,18 +193,32 @@ header_info() {
   install_figlet() {
     echo -e "${INFO}${BOLD}${DGN}Installing FIGlet...${CL}"
 
+											   
+																  
+									
+														 
+										 
+													
+					   
+		
+			  
+	  
     temp_dir=$(mktemp -d)
     curl -sL https://github.com/community-scripts/ProxmoxVE/raw/refs/heads/main/misc/figlet.tar.xz -o "$temp_dir/figlet.tar.xz"
     mkdir -p /tmp/figlet
     tar -xf "$temp_dir/figlet.tar.xz" -C /tmp/figlet --strip-components=1
     cd /tmp/figlet
+										   
     make >/dev/null
 
     if [ -f "figlet" ]; then
       chmod +x figlet
+														  
+											 
       mv figlet /usr/local/bin/
       mkdir -p /usr/local/share/figlet
       cp -r /tmp/figlet/fonts/*.flf /usr/local/share/figlet/
+		
       echo -e "${CM}${BOLD}${DGN}FIGlet successfully installed.${CL}"
     else
       echo -e "${ERR}${BOLD}${RED}Failed to install FIGlet.${CL}"
@@ -283,8 +297,9 @@ base_settings() {
   MAC=""
   VLAN=""
   SSH="no"
+  SSH_AUTHORIZED_KEY=""
   TAGS="community-script;"
-  
+
   # Override default settings with variables from ct script
   CT_TYPE=${var_unprivileged:-$CT_TYPE}
   DISK_SIZE=${var_disk:-$DISK_SIZE}
@@ -292,7 +307,7 @@ base_settings() {
   RAM_SIZE=${var_ram:-$RAM_SIZE}
   VERB=${var_verbose:-$VERBOSE}
   TAGS="${TAGS}${var_tags:-}"
-  
+
   # Since these 2 are only defined outside of default_settings function, we add a temporary fallback. TODO: To align everything, we should add these as constant variables (e.g. OSTYPE and OSVERSION), but that would currently require updating the default_settings function for all existing scripts
   if [ -z "$var_os" ]; then
     var_os="debian"
@@ -314,9 +329,9 @@ echo_default() {
   echo -e "${OS}${BOLD}${DGN}Operating System: ${BGN}$var_os${CL}"
   echo -e "${OSVERSION}${BOLD}${DGN}Version: ${BGN}$var_version${CL}"
   echo -e "${CONTAINERTYPE}${BOLD}${DGN}Container Type: ${BGN}$CT_TYPE_DESC${CL}"
-  echo -e "${DISKSIZE}${BOLD}${DGN}Disk Size: ${BGN}${DISK_SIZE}GB${CL}"
+  echo -e "${DISKSIZE}${BOLD}${DGN}Disk Size: ${BGN}${DISK_SIZE} GB${CL}"
   echo -e "${CPUCORE}${BOLD}${DGN}CPU Cores: ${BGN}${CORE_COUNT}${CL}"
-  echo -e "${RAMSIZE}${BOLD}${DGN}RAM Size: ${BGN}${RAM_SIZE}MiB${CL}"
+  echo -e "${RAMSIZE}${BOLD}${DGN}RAM Size: ${BGN}${RAM_SIZE} MiB${CL}"
   echo -e "${CONTAINERID}${BOLD}${DGN}Container ID: ${BGN}${CT_ID}${CL}"
   if [ "$VERB" == "yes" ]; then
     echo -e "${SEARCH}${BOLD}${DGN}Verbose Mode: ${BGN}Enabled${CL}"
@@ -385,6 +400,7 @@ advanced_settings() {
       fi
     done
   fi
+
   # Setting Default Tag for Advanced Settings
   TAGS="community-script;${var_tags:-}"
 
@@ -463,13 +479,13 @@ advanced_settings() {
   if DISK_SIZE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Disk Size in GB" 8 58 $var_disk --title "DISK SIZE" 3>&1 1>&2 2>&3); then
     if [ -z "$DISK_SIZE" ]; then
       DISK_SIZE="$var_disk"
-      echo -e "${DISKSIZE}${BOLD}${DGN}Disk Size: ${BGN}${DISK_SIZE}GB${CL}"
+      echo -e "${DISKSIZE}${BOLD}${DGN}Disk Size: ${BGN}${DISK_SIZE} GB${CL}"
     else
       if ! [[ $DISK_SIZE =~ $INTEGER ]]; then
         echo -e "{INFO}${HOLD}${RD} DISK SIZE MUST BE AN INTEGER NUMBER!${CL}"
         advanced_settings
       fi
-      echo -e "${DISKSIZE}${BOLD}${DGN}Disk Size: ${BGN}${DISK_SIZE}GB${CL}"
+      echo -e "${DISKSIZE}${BOLD}${DGN}Disk Size: ${BGN}${DISK_SIZE} GB${CL}"
     fi
   else
     exit_script
@@ -489,9 +505,9 @@ advanced_settings() {
   if RAM_SIZE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Allocate RAM in MiB" 8 58 $var_ram --title "RAM" 3>&1 1>&2 2>&3); then
     if [ -z "$RAM_SIZE" ]; then
       RAM_SIZE="$var_ram"
-      echo -e "${RAMSIZE}${BOLD}${DGN}RAM Size: ${BGN}${RAM_SIZE}MiB${CL}"
+      echo -e "${RAMSIZE}${BOLD}${DGN}RAM Size: ${BGN}${RAM_SIZE} MiB${CL}"
     else
-      echo -e "${RAMSIZE}${BOLD}${DGN}RAM Size: ${BGN}${RAM_SIZE}MiB${CL}"
+      echo -e "${RAMSIZE}${BOLD}${DGN}RAM Size: ${BGN}${RAM_SIZE} MiB${CL}"
     fi
   else
     exit_script
@@ -649,6 +665,16 @@ advanced_settings() {
     echo -e "${ROOTSSH}${BOLD}${DGN}Root SSH Access: ${BGN}$SSH${CL}"
   fi
 
+  if [[ "${SSH}" == "yes" ]]; then
+    SSH_AUTHORIZED_KEY="$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "SSH Authorized key for root (leave empty for none)" 8 58 --title "SSH Key" 3>&1 1>&2 2>&3)"
+
+    if [[ -z "${SSH_AUTHORIZED_KEY}" ]]; then
+      echo "Warning: No SSH key provided."
+    fi
+  else
+    SSH_AUTHORIZED_KEY=""
+  fi	  
+
   if (whiptail --backtitle "Proxmox VE Helper Scripts" --defaultno --title "VERBOSE MODE" --yesno "Enable Verbose Mode?" 10 58); then
     VERB="yes"
   else
@@ -697,15 +723,15 @@ install_script() {
         header_info
         echo -e "${DEFAULT}${BOLD}${BL}Using Default Settings on node $PVEHOST_NAME${CL}"
         VERB="no"
-        base_settings "$VERB"  
+        base_settings "$VERB"
         echo_default
         break
         ;;
       2)
         header_info
-        echo -e "${DEFAULT}${BOLD}${BL}Using Default Settings on node $PVEHOST_NAME (${SEARCH}${BL}Verbose)${CL}"
+        echo -e "${DEFAULT}${BOLD}${BL}Using Default Settings on node $PVEHOST_NAME (${SEARCH}Verbose)${CL}"
         VERB="yes"
-        base_settings "$VERB"  
+        base_settings "$VERB"
         echo_default
         break
         ;;
@@ -729,13 +755,13 @@ install_script() {
 check_container_resources() {
   # Check actual RAM & Cores
   current_ram=$(free -m | awk 'NR==2{print $2}')
-  current_cpu=$(nproc) 
+  current_cpu=$(nproc)
 
   # Check whether the current RAM is less than the required RAM or the CPU cores are less than required
   if [[ "$current_ram" -lt "$var_ram" ]] || [[ "$current_cpu" -lt "$var_cpu" ]]; then
     echo -e "\n${INFO}${HOLD} ${GN}Required: ${var_cpu} CPU, ${var_ram}MB RAM ${CL}| ${RD}Current: ${current_cpu} CPU, ${current_ram}MB RAM${CL}"
     echo -e "${YWB}Please ensure that the ${APP} LXC is configured with at least ${var_cpu} vCPU and ${var_ram} MB RAM for the build process.${CL}\n"
-    read -r -p "${INFO}${HOLD} May cause data loss! ${INFO} Continue update with under-provisioned LXC? <yes/No>  " prompt  
+    read -r -p "${INFO}${HOLD} May cause data loss! ${INFO} Continue update with under-provisioned LXC? <yes/No>  " prompt
     # Check if the input is 'yes', otherwise exit with status 1
     if [[ ! ${prompt,,} =~ ^(yes)$ ]]; then
       echo -e "${CROSS}${HOLD} ${YWB}Exiting based on user input.${CL}"
@@ -754,7 +780,7 @@ check_container_storage() {
   if (( usage > 80 )); then
     # Prompt the user for confirmation to continue
     echo -e "${INFO}${HOLD} ${YWB}Warning: Storage is dangerously low (${usage}%).${CL}"
-    read -r -p "Continue anyway? <y/N>  " prompt  
+    read -r -p "Continue anyway? <y/N>  " prompt
     # Check if the input is 'y' or 'yes', otherwise exit with status 1
     if [[ ! ${prompt,,} =~ ^(y|yes)$ ]]; then
       echo -e "${CROSS}${HOLD}${YWB}Exiting based on user input.${CL}"
@@ -781,6 +807,7 @@ start() {
       exit
     fi
     SPINNER_PID=""
+				  
     update_script
   fi
 }
@@ -812,6 +839,7 @@ build_container() {
   export PASSWORD="$PW"
   export VERBOSE="$VERB"
   export SSH_ROOT="${SSH}"
+													 
   export CTID="$CT_ID"
   export CTTYPE="$CT_TYPE"
   export PCT_OSTYPE="$var_os"
