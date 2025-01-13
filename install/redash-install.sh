@@ -131,8 +131,8 @@ msg_ok "Created Redash compose file"
 
 msg_info "Installing Redash"
 cd /opt/redash
-docker compose run --rm server create_db
-docker compose up -d
+$STD docker compose run --rm server create_db
+$STD docker compose up -d
 msg_ok "Installed Redash"
 
 motd_ssh
