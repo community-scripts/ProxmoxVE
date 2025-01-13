@@ -45,6 +45,7 @@ function update_script() {
     cd "${TEMPD}"
     wget -q https://codeload.github.com/actualbudget/actual-server/legacy.tar.gz/refs/tags/${RELEASE} -O - | tar -xz
     mv /opt/actualbudget /opt/actualbudget_bak
+    mkdir -p /opt/actualbudget/
     mv actualbudget-actual-server-*/* /opt/actualbudget/
     mv /opt/actualbudget_bak/.env /opt/actualbudget
     mv /opt/actualbudget_bak/server-files /opt/actualbudget/server-files

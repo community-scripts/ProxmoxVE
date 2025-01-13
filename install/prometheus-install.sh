@@ -32,8 +32,8 @@ echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Installed Prometheus"
 
 msg_info "Creating Service"
-cat <<EOF >/etc/systemd/system/prometheus.service"
-echo "[Unit]
+cat <<EOF >/etc/systemd/system/prometheus.service
+[Unit]
 Description=Prometheus
 Wants=network-online.target
 After=network-online.target
@@ -49,7 +49,7 @@ ExecStart=/usr/local/bin/prometheus \
 ExecReload=/bin/kill -HUP \$MAINPID
 
 [Install]
-WantedBy=multi-user.target"
+WantedBy=multi-user.target
 EOF
 systemctl enable -q --now prometheus
 msg_ok "Created Service"

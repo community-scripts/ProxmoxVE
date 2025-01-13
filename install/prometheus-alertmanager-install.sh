@@ -33,7 +33,7 @@ msg_ok "Installed Prometheus Alertmanager"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/prometheus-alertmanager.service
-echo "[Unit]
+[Unit]
 Description=Prometheus Alertmanager
 Wants=network-online.target
 After=network-online.target
@@ -49,7 +49,7 @@ ExecStart=/usr/local/bin/alertmanager \
 ExecReload=/bin/kill -HUP \$MAINPID
 
 [Install]
-WantedBy=multi-user.target"
+WantedBy=multi-user.target
 EOF
 systemctl enable -q --now prometheus-alertmanager
 msg_ok "Created Service"
