@@ -25,26 +25,26 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -f /opt/opengist/opengist ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    msg_info "Updating ${APP} LXC"
-    LATEST_URL=$(curl -s https://api.github.com/repos/thomiceli/opengist/releases/latest | jq -r '.assets[] | select(.name | contains("linux-amd64.tar.gz")).browser_download_url')
-    wget "$LATEST_URL"
-    mv opengist*.tar.gz opengist.tar.gz
-    tar -xf opengist.tar.gz
-    mv opengist/opengist /opt/opengist/opengist
-    mv opengist/config.yml /opt/opengist/config.yml
-    chmod +x /opt/opengist/opengist
-    rm -rf opengist*
-    apt-get update &>/dev/null
-    apt-get -y upgrade &>/dev/null
-    msg_ok "Updated Successfully"
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /opt/opengist ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+  RELEASE=$(curl -s https://api.github.com/repos/thomiceli/opengist/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+    msg_info "Updating ${APP} to v${RELEASE}"
+    cd /opt
+    wget -qO "https://github.com/thomiceli/opengist/releases/download/v${RELEASE}/opengist${RELEASE}-linux-amd64.tar.gz"
+    rm -rf /opt/opengist
+    tar -xzf opengist${RELEASE}-linux-amd64.tar.gz    
+    chmod +x /opt/opengist/opengist
+    msg_ok "Updated ${APP} LXC"
+  else
+    msg_ok "No update required. ${APP} is already at v${RELEASE}."
+  fi
+  exit
 }
 
 start
