@@ -193,32 +193,18 @@ header_info() {
   install_figlet() {
     echo -e "${INFO}${BOLD}${DGN}Installing FIGlet...${CL}"
 
-											   
-																  
-									
-														 
-										 
-													
-					   
-		
-			  
-	  
     temp_dir=$(mktemp -d)
     curl -sL https://github.com/community-scripts/ProxmoxVE/raw/refs/heads/main/misc/figlet.tar.xz -o "$temp_dir/figlet.tar.xz"
     mkdir -p /tmp/figlet
     tar -xf "$temp_dir/figlet.tar.xz" -C /tmp/figlet --strip-components=1
     cd /tmp/figlet
-										   
     make >/dev/null
 
     if [ -f "figlet" ]; then
       chmod +x figlet
-														  
-											 
       mv figlet /usr/local/bin/
       mkdir -p /usr/local/share/figlet
       cp -r /tmp/figlet/fonts/*.flf /usr/local/share/figlet/
-		
       echo -e "${CM}${BOLD}${DGN}FIGlet successfully installed.${CL}"
     else
       echo -e "${ERR}${BOLD}${RED}Failed to install FIGlet.${CL}"
@@ -400,7 +386,6 @@ advanced_settings() {
       fi
     done
   fi
-
   # Setting Default Tag for Advanced Settings
   TAGS="community-script;${var_tags:-}"
 
@@ -674,7 +659,6 @@ advanced_settings() {
   else
     SSH_AUTHORIZED_KEY=""
   fi	  
-
   if (whiptail --backtitle "Proxmox VE Helper Scripts" --defaultno --title "VERBOSE MODE" --yesno "Enable Verbose Mode?" 10 58); then
     VERB="yes"
   else
@@ -807,7 +791,6 @@ start() {
       exit
     fi
     SPINNER_PID=""
-				  
     update_script
   fi
 }
@@ -839,7 +822,6 @@ build_container() {
   export PASSWORD="$PW"
   export VERBOSE="$VERB"
   export SSH_ROOT="${SSH}"
-													 
   export CTID="$CT_ID"
   export CTTYPE="$CT_TYPE"
   export PCT_OSTYPE="$var_os"
