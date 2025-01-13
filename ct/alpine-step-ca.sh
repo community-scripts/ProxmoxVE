@@ -92,11 +92,11 @@ function ca_settings() {
   fi
 
   export CA_NAME
-  export CA_DNS=${CA_DNS_ENTRIES[@]};
+  export CA_DNS=${CA_DNS_ENTRIES[*};
 }
 
 start
-caDetails
+ca_settings
 build_container
 description
 
