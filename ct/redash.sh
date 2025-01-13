@@ -8,8 +8,8 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 # App Default Values
 APP="Redash"
 var_tags="database"
-var_cpu="2"
-var_ram="2048"
+var_cpu="4"
+var_ram="4096"
 var_disk="10"
 var_os="debian"
 var_version="12"
