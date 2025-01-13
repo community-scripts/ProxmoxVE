@@ -42,9 +42,9 @@ function update_script() {
     wget -qO "https://github.com/thomiceli/opengist/releases/download/v${RELEASE}/opengist${RELEASE}-linux-amd64.tar.gz"
     rm -rf /opt/opengist
     tar -xzf opengist${RELEASE}-linux-amd64.tar.gz
-    rm -rf /opt/opengist${RELEASE}-linux-amd64.tar.gz
     chmod +x /opt/opengist/opengist
     echo "${RELEASE}" >"/opt/${APP}_version.txt"
+    rm -rf /opt/opengist${RELEASE}-linux-amd64.tar.gz
     msg_ok "Updated ${APP} LXC"
 
     msg_info "Starting Service"
