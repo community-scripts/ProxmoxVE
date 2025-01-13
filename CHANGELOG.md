@@ -20,6 +20,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### Changed
 
+### 💥 Breaking Changes
+
+- Update Hoarder: Improvement .env location (see PR comment for little migration) [@MahrWe](https://github.com/MahrWe) ([#1325](https://github.com/community-scripts/ProxmoxVE/pull/1325))
+
 ### 🚀 Updated Scripts
 
 - Fix: tandoor.sh: Call version.py to write current version [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1454](https://github.com/community-scripts/ProxmoxVE/pull/1454))
@@ -32,6 +36,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 ### 🧰 Maintenance
 
 - GitHub Actions: Fix Shellsheck workflow to only run on changes `*.sh` files [@andygrunwald](https://github.com/andygrunwald) ([#1423](https://github.com/community-scripts/ProxmoxVE/pull/1423))
+
+### ❔ Unlabelled
+
+- feat: allow adding SSH authorized key for root (advanced settings) by @dsiebel [@MickLesk](https://github.com/MickLesk) ([#1456](https://github.com/community-scripts/ProxmoxVE/pull/1456))
 
 ## 2025-01-11
 
