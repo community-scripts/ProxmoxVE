@@ -45,6 +45,8 @@ function update_script() {
     cd /opt/tandoor/vue
     yarn install >/dev/null 2>&1
     yarn build >/dev/null 2>&1
+    cd /opt/tandoor
+    python3 version.py &>/dev/null
     systemctl restart gunicorn_tandoor
     msg_ok "Updated ${APP}"
   fi
