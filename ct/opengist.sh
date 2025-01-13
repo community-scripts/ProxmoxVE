@@ -32,15 +32,25 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  msg_info "Stopping Service"
+  systemctl stop opengist.service
+  msg_ok "Stopped Service"
   RELEASE=$(curl -s https://api.github.com/repos/thomiceli/opengist/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
   if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
     msg_info "Updating ${APP} to v${RELEASE}"
     cd /opt
     wget -qO "https://github.com/thomiceli/opengist/releases/download/v${RELEASE}/opengist${RELEASE}-linux-amd64.tar.gz"
     rm -rf /opt/opengist
-    tar -xzf opengist${RELEASE}-linux-amd64.tar.gz    
+    tar -xzf opengist${RELEASE}-linux-amd64.tar.gz
+    rm -rf /opt/opengist${RELEASE}-linux-amd64.tar.gz
     chmod +x /opt/opengist/opengist
+    echo "${RELEASE}" >"/opt/${APP}_version.txt"
     msg_ok "Updated ${APP} LXC"
+
+    msg_info "Starting Service"
+    systemctl start opengist.service
+    msg_ok "Started Service"
+    
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}."
   fi
