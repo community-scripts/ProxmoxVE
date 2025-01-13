@@ -2,8 +2,7 @@
 
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: Jonathan (jd-apprentice)
-# License: MIT
-# https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -14,15 +13,18 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y curl
-$STD apt-get install -y jq
-$STD apt-get install -y sudo
-$STD apt-get install -y git
+$STD apt-get install -y \
+    mc \
+    curl \
+    sudo \
+    git
 msg_ok "Installed Dependencies"
 
 msg_info "Download Opengist Binary"
-LATEST_URL=$(curl -s https://api.github.com/repos/thomiceli/opengist/releases/latest | jq -r '.assets[] | select(.name | contains("linux-amd64.tar.gz")).browser_download_url')
-wget "$LATEST_URL"
+RELEASE_URL=$(
+    curl -s https://api.github.com/repos/thomiceli/opengist/releases/latest | grep "linux-amd64.tar.gz" | grep "browser_download_url" | awk -F '"' '{print $4}'
+)
+wget -q "$RELEASE_URL"
 msg_ok "Downloaded Opengist Binary"
 
 msg_info "Creating Systemd Service"
