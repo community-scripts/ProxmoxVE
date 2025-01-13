@@ -44,6 +44,7 @@ msg_ok "Generated CA secret in ${passwd_file} - ${CA_PASS}"
 
 
 msg_info "Initialize CA"
+env
 DNS_FLAT=""
 for DNS_ENTRY in ${CA_DNS[*]}; do
   DNS_FLAT="$DNS_FLAT --dns=\"$DNS_ENTRY\""
