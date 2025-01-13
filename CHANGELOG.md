@@ -16,6 +16,23 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
+## 2025-01-13
+
+### Changed
+
+### 🚀 Updated Scripts
+
+- Fix: tandoor.sh: Call version.py to write current version [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1454](https://github.com/community-scripts/ProxmoxVE/pull/1454))
+- Fix inexistent folder on actualbudget update script [@dosten](https://github.com/dosten) ([#1444](https://github.com/community-scripts/ProxmoxVE/pull/1444))
+
+### 🌐 Website
+
+- Update kavita.json: Add info on how to enable folder adding. [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1447](https://github.com/community-scripts/ProxmoxVE/pull/1447))
+
+### 🧰 Maintenance
+
+- GitHub Actions: Fix Shellsheck workflow to only run on changes `*.sh` files [@andygrunwald](https://github.com/andygrunwald) ([#1423](https://github.com/community-scripts/ProxmoxVE/pull/1423))
+
 ## 2025-01-11
 
 ### Changed
