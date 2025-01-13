@@ -16,25 +16,23 @@ msg_info "Installing Dependencies"
 $STD apt-get install -y \
     mc \
     curl \
-    sudo \
-    git
+    sudo 
 msg_ok "Installed Dependencies"
 
-msg_info "Download Opengist Binary"
-RELEASE_URL=$(
-    curl -s https://api.github.com/repos/thomiceli/opengist/releases/latest | grep "linux-amd64.tar.gz" | grep "browser_download_url" | awk -F '"' '{print $4}'
-)
-wget -q "$RELEASE_URL"
-msg_ok "Downloaded Opengist Binary"
-
-msg_info "Creating Systemd Service"
-mkdir -p /opt/opengist
-mv opengist*.tar.gz opengist.tar.gz
-tar -xf opengist.tar.gz
-mv opengist/opengist /opt/opengist/opengist
-mv opengist/config.yml /opt/opengist/config.yml
+msg_info "Install Opengist"
+RELEASE=$(curl -s https://api.github.com/repos/thomiceli/opengist/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
+wget -q "https://github.com/thomiceli/opengist/releases/download/v${RELEASE}/opengist${RELEASE}-linux-amd64.tar.gz"
+tar -xzf opengist${RELEASE}-linux-amd64.tar.gz
+mv opengist /opt/opengist
 chmod +x /opt/opengist/opengist
-rm -rf opengist*
+mkdir -p /opt/opengist-data
+msg_ok "Installed Opengist"
+
+msg_info "Creating Service"
+
+sed -i 's|opengist-home:.*|opengist-home: /opt/opengist-data|' /opt/opengist/config.yml
+
 cat <<EOF >/etc/systemd/system/opengist.service
 [Unit]
 Description=Opengist server to manage your Gists
@@ -42,24 +40,21 @@ After=network.target
 
 [Service]
 WorkingDirectory=/opt/opengist
-ExecStart=/opt/opengist/opengist
+ExecStart=/opt/opengist/opengist --config config.yaml
 Restart=always
 User=root
 
 [Install]
 WantedBy=multi-user.target
 EOF
-msg_ok "Created Systemd Service"
-
-msg_info "Starting Service"
-systemctl daemon-reload
 systemctl enable -q --now opengist.service
-msg_ok "Started Service"
+msg_ok "Created Service"
 
 motd_ssh
 customize
 
 msg_info "Cleaning up"
+rm -rf /opengist${RELEASE}-linux-amd64.tar.gz
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
