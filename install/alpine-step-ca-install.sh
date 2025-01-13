@@ -22,6 +22,11 @@ $STD apk add openssl
 
 msg_info "Preparing environment"
 $STD echo "export STEPPATH=/etc/step-ca" > ~/.profile
+$STD export STEPPATH=/etc/step-ca
+
+if [ "$VERBOSE" = "yes" ]; then
+  env #Display environment details
+fi
 msg_ok "Environment prepared"
 
 msg_info "Installing Alpine Step-CA"
@@ -30,9 +35,6 @@ msg_ok "Installed Alpine Step-CA"
 
 # Initialize CA
 config_dir="/etc/step-ca"
-log_dir="/var/log/step-ca"
-profile_file="${config_dir}/.profile"
-ca_file="${config_dir}/config/ca.json"
 passwd_file="${config_dir}/password.txt"
 
 msg_info "Generate CA secret"
@@ -40,16 +42,11 @@ CA_PASS="$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)"
 $STD cat <<EOF >${passwd_file}
 ${CA_PASS}
 EOF
-msg_ok "Generated CA secret in ${passwd_file} - ${CA_PASS}"
+msg_ok "Generated CA secret stored in ${passwd_file}"
 
 
 msg_info "Initialize CA"
-env
-DNS_FLAT=""
-for DNS_ENTRY in ${CA_DNS[*]}; do
-  DNS_FLAT="$DNS_FLAT --dns=\"$DNS_ENTRY\""
-done
-$STD step ca init --name="$CA_NAME" $DNS_FLAT --password-file=/etc/step-ca/password.txt --acme --deployment-type=standalone --address=0.0.0.0:443 --provisioner=acme
+$STD step ca init --name="$CA_NAME" $CA_DNS --password-file=/etc/step-ca/password.txt --acme --deployment-type=standalone --address=0.0.0.0:443 --provisioner=acme
 $STD step ca provisioner update acme --x509-min-dur=20m --x509-max-dur=32h --x509-default-dur=24h
 msg_ok "Finished initialization of CA"
 
