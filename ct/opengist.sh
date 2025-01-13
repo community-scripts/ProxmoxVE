@@ -35,6 +35,8 @@ function update_script() {
   msg_info "Stopping Service"
   systemctl stop opengist.service
   msg_ok "Stopped Service"
+  apt-get update &>/dev/null
+  apt-get upgrade &>/dev/null
   RELEASE=$(curl -s https://api.github.com/repos/thomiceli/opengist/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
   if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
     msg_info "Updating ${APP} to v${RELEASE}"
@@ -45,6 +47,8 @@ function update_script() {
     chmod +x /opt/opengist/opengist
     echo "${RELEASE}" >"/opt/${APP}_version.txt"
     rm -rf /opt/opengist${RELEASE}-linux-amd64.tar.gz
+    apt-get -y autoremove &>/dev/null
+    apt-get -y autoclean &>/dev/null
     msg_ok "Updated ${APP} LXC"
 
     msg_info "Starting Service"
