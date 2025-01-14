@@ -74,6 +74,7 @@ $STD pnpm build:server
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 cat <<EOF >/opt/tianji/src/server/.env
 DATABASE_URL="postgresql://$DB_USER:$DB_PASS@localhost:5432/$DB_NAME?schema=public"
+OPENAI_API_KEY=""
 JWT_SECRET="$TIANJI_SECRET"
 EOF
 cd /opt/tianji/src/server
