@@ -16,6 +16,19 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
+## 2025-01-14
+
+### Changed
+
+### ✨ New Scripts
+
+- New Script: Opengist [@jd-apprentice](https://github.com/jd-apprentice) ([#1429](https://github.com/community-scripts/ProxmoxVE/pull/1429))
+
+### 🚀 Updated Scripts
+
+- Update opengist-install.sh: Add git as dependencie [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1471](https://github.com/community-scripts/ProxmoxVE/pull/1471))
+- Update lazylibrarian-install.sh: Add pypdf libary [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1467](https://github.com/community-scripts/ProxmoxVE/pull/1467))
+
 ## 2025-01-13
 
 ### Changed
