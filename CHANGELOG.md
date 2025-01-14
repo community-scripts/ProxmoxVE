@@ -20,6 +20,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### Changed
 
+### 💥 Breaking Changes
+
+- Update tianji-install.sh: Add OPENAI_API_KEY to .env [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1480](https://github.com/community-scripts/ProxmoxVE/pull/1480))
+
 ### ✨ New Scripts
 
 - New Script: Opengist [@jd-apprentice](https://github.com/jd-apprentice) ([#1429](https://github.com/community-scripts/ProxmoxVE/pull/1429))
