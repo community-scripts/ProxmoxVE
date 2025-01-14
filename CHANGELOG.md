@@ -26,8 +26,8 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
-- Update opengist-install.sh: Add git as dependencie [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1471](https://github.com/community-scripts/ProxmoxVE/pull/1471))
 - Update lazylibrarian-install.sh: Add pypdf libary [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1467](https://github.com/community-scripts/ProxmoxVE/pull/1467))
+- Update opengist-install.sh: Add git as dependencie [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1471](https://github.com/community-scripts/ProxmoxVE/pull/1471))
 
 ## 2025-01-13
 
