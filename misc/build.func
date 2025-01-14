@@ -636,7 +636,7 @@ advanced_settings() {
         TAGS="${ADV_TAGS}" # ADV_TAGS already contains "community-script"
       fi
     else
-      TAGS=""
+      TAGS="community-script;"
     fi
       echo -e "${NETWORK}${BOLD}${DGN}Tags: ${BGN}$TAGS${CL}"
     else
