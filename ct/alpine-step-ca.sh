@@ -67,9 +67,9 @@ function ca_settings() {
   DEFAULT_CA_DNS_ENTRY="${HN}.local"
   if CA_DNS_ENTRY=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "DNS entry of Certificate Authority" 8 58 "$DEFAULT_CA_DNS_ENTRY" --title "Configure Certificate Authority" 3>&1 1>&2 2>&3); then
     if [ -z "$CA_DNS_ENTRY" ]; then
-      CA_DNS_ENTRIES+=("--dns=\"$DEFAULT_CA_DNS_ENTRY\"")
+      CA_DNS_ENTRIES+=("--dns=$DEFAULT_CA_DNS_ENTRY")
     else
-      CA_DNS_ENTRIES+=("--dns=\"$CA_DNS_ENTRY\"")
+      CA_DNS_ENTRIES+=("--dns=$CA_DNS_ENTRY")
     fi
   else
     exit
@@ -78,7 +78,7 @@ function ca_settings() {
   while whiptail --backtitle "Proxmox VE Helper Scripts" --defaultno --title "Configure Certificate Authority" --yesno "Do you want to add another DNS entry?" 10 72  ; do
     if CA_DNS_ENTRY=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "DNS entry of Certificate Authority" 8 58 "" --title "Configure Certificate Authority" 3>&1 1>&2 2>&3); then
       if [ -n "$CA_DNS_ENTRY" ]; then
-        CA_DNS_ENTRIES+=(" --dns=\"$CA_DNS_ENTRY\"")
+        CA_DNS_ENTRIES+=(" --dns=$CA_DNS_ENTRY")
       fi
     fi
   done
