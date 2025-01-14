@@ -50,7 +50,7 @@ msg_ok "Generated CA secret stored in ${passwd_file}"
 
 
 msg_info "Initialize base CA"
-$STD step ca init --name "${CA_NAME}" $CA_DNS --password-file /etc/step-ca/password.txt --deployment-type=standalone --address ":443" --provisioner=admin
+$STD step ca init --name "${CA_NAME}" $CA_DNS --password-file /etc/step-ca/password.txt --deployment-type standalone --address ":443" --provisioner admin
 
 for dns_entry in "${x509_policy_dns[@]}"; do
   $STD step ca policy authority x509 allow dns "${dns_entry}"

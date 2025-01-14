@@ -93,7 +93,7 @@ function ca_settings() {
   while true; do
     if dns_entry=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "[X509 Policy] Allowed by DNS. Use full ('domain.local') or wildcard ('*.local') DNS:" 8 58 "" --title "Configure Certificate Authority" 3>&1 1>&2 2>&3); then
       if [ -n "$dns_entry" ]; then
-        x509_policy_dns+=("$(dns_entry)")
+        x509_policy_dns+=("$dns_entry")
       else
         break
       fi
@@ -107,7 +107,7 @@ function ca_settings() {
   while true; do
     if ip_entry=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "[X509 Policy] Allowed by IP addresses. Use single address ('192.168.1.169' or '::1') or CIDR address ranges ('192.168.1.0/24' or '2001:0db8::/120'):" 8 58 "" --title "Configure Certificate Authority" 3>&1 1>&2 2>&3); then
       if [ -n "$ip_entry" ]; then
-        x509_policy_ips+=("$(ip_entry)")
+        x509_policy_ips+=("$ip_entry")
       else
         break
       fi
