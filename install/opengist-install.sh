@@ -16,7 +16,8 @@ msg_info "Installing Dependencies"
 $STD apt-get install -y \
     mc \
     curl \
-    sudo
+    sudo \
+    git
 msg_ok "Installed Dependencies"
 
 msg_info "Install Opengist"
