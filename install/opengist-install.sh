@@ -41,7 +41,7 @@ After=network.target
 
 [Service]
 WorkingDirectory=/opt/opengist
-ExecStart=/opt/opengist/opengist --config config.yaml
+ExecStart=/opt/opengist/opengist --config /opt/opengist/config.yml
 Restart=always
 User=root
 
