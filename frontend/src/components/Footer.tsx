@@ -6,7 +6,7 @@ export default function Footer() {
     <div className="supports-backdrop-blur:bg-background/90 mt-auto flex border-t border-border bg-background/40 py-6 backdrop-blur-lg">
       <div className="flex w-full justify-between">
         <div className="mx-6 w-full max-w-7xl text-sm text-muted-foreground">
-          Website build by the community. The source code is avaliable on{" "}
+          Website built by the community. The source code is avaliable on{" "}
           <Link
             href={`https://github.com/community-scripts/${basePath}`}
             target="_blank"
