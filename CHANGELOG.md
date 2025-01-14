@@ -26,6 +26,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### ✨ New Scripts
 
+- New Script: Wordpress [@MickLesk](https://github.com/MickLesk) ([#1485](https://github.com/community-scripts/ProxmoxVE/pull/1485))
 - New Script: Opengist [@jd-apprentice](https://github.com/jd-apprentice) ([#1429](https://github.com/community-scripts/ProxmoxVE/pull/1429))
 
 ### 🚀 Updated Scripts
