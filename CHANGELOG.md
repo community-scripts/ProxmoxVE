@@ -40,6 +40,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🧰 Maintenance
 
+- Hotfix build.func: Error when tags are empty [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1492](https://github.com/community-scripts/ProxmoxVE/pull/1492))
 - [core] Update build.func: Fix bug with advanced tags [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1473](https://github.com/community-scripts/ProxmoxVE/pull/1473))
 
 ## 2025-01-13
