@@ -32,7 +32,7 @@
     },
     "notes": [
     {
-      "text": "After the initial installation: See https://github.com/community-scripts/ProxmoxVE/discussions/1356 for basic setup guide",
+      "text": "After the initial installation: See `https://github.com/community-scripts/ProxmoxVE/discussions/1356` for basic setup guide",
       "type": "info"
     }
   ]
