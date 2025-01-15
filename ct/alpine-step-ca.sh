@@ -147,7 +147,6 @@ function ca_settings() {
     echo -e "${DEFAULT}${BOLD}${DGN}Enable ACME: ${BGN}$CA_ACME${CL}"
     if [ "${CA_ACME}" = "yes" ]; then
       echo -e "  - Name of provider: ${CA_ACME_NAME}"
-      echo -e "  - Allowed domains: "
     fi
   fi
 
