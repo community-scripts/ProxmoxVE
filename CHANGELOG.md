@@ -16,6 +16,14 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
+## 2025-01-15
+
+### Changed
+
+### 🚀 Updated Scripts
+
+- Fix: Add FFMPEG for OpenWebUI [@MickLesk](https://github.com/MickLesk) ([#1497](https://github.com/community-scripts/ProxmoxVE/pull/1497))
+
 ## 2025-01-14
 
 ### Changed
