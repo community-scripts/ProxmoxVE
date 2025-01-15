@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": "80",
+    "interface_port": 80,
     "documentation": "https://phpipam.net/documents/all-documents/",
     "website": "https://phpipam.net/",
     "logo": "https://phpipam.net/css/images/phpipam_logo_small@2x.png",
@@ -18,9 +18,9 @@
             "type": "default",
             "script": "ct/phpipam.sh",
             "resources": {
-                "cpu": "1",
-                "ram": "1024",
-                "hdd": "4",
+                "cpu": 1,
+                "ram": 1024,
+                "hdd": 4,
                 "os": "debian",
                 "version": "12"
             }
