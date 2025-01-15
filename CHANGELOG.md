@@ -24,6 +24,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 - Fix: Add FFMPEG for OpenWebUI [@MickLesk](https://github.com/MickLesk) ([#1497](https://github.com/community-scripts/ProxmoxVE/pull/1497))
 
+### 🧰 Maintenance
+
+- [core] build.func&install.func: Fix ssh keynot added error [@dsiebel](https://github.com/dsiebel) ([#1502](https://github.com/community-scripts/ProxmoxVE/pull/1502))
+
 ## 2025-01-14
 
 ### Changed
