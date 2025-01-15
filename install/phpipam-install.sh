@@ -2,8 +2,7 @@
 
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: bvdberg01
-# License: MIT
-# https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
 source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color
@@ -39,24 +38,19 @@ $STD mysql -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH 
 } >> ~/phpipam.creds
 msg_ok "Set up MariaDB"
 
-msg_info "Setting up PHP"
-sed -i '/max_execution_time/s/= .*/= 600/' /etc/php/8.2/apache2/php.ini
-msg_ok "Set up PHP"
-
 msg_info "Installing phpIPAM"
-cd /opt
 RELEASE=$(curl -s https://api.github.com/repos/phpipam/phpipam/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+cd /opt
 wget -q "https://github.com/phpipam/phpipam/releases/download/v${RELEASE}/phpipam-v${RELEASE}.zip"
 unzip -q "phpipam-v${RELEASE}.zip"
-
 mysql -u root "${DB_NAME}" < /opt/phpipam/db/SCHEMA.sql
-
 cp /opt/phpipam/config.dist.php /opt/phpipam/config.php
-sed -i "s/\(\$disable_installer = \).*/\1true;/" /opt/phpipam/config.php
-sed -i "s/\(\$db\['user'\] = \).*/\1'$DB_USER';/" /opt/phpipam/config.php
-sed -i "s/\(\$db\['pass'\] = \).*/\1'$DB_PASS';/" /opt/phpipam/config.php
-sed -i "s/\(\$db\['name'\] = \).*/\1'$DB_NAME';/" /opt/phpipam/config.php
-
+sed -i -e "s/\(\$disable_installer = \).*/\1true;/" \
+       -e "s/\(\$db\['user'\] = \).*/\1'$DB_USER';/" \
+       -e "s/\(\$db\['pass'\] = \).*/\1'$DB_PASS';/" \
+       -e "s/\(\$db\['name'\] = \).*/\1'$DB_NAME';/" \
+       /opt/phpipam/config.php
+sed -i '/max_execution_time/s/= .*/= 600/' /etc/php/8.2/apache2/php.ini
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Installed phpIPAM"
 
