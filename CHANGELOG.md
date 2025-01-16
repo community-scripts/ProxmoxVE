@@ -24,6 +24,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 - New script: phpIPAM [@bvdberg01](https://github.com/bvdberg01) ([#1503](https://github.com/community-scripts/ProxmoxVE/pull/1503))
 
+### 🧰 Maintenance
+
+- [core] Recreate Update JSON Workflow [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1523](https://github.com/community-scripts/ProxmoxVE/pull/1523))
+
 ## 2025-01-15
 
 ### Changed
