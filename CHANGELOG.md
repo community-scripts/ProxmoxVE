@@ -20,6 +20,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### Changed
 
+### 💥 Breaking Changes
+
+- Update jellyseerr-install.sh to use Node 22 as required by latest Jellyseerr version [@pedrovieira](https://github.com/pedrovieira) ([#1535](https://github.com/community-scripts/ProxmoxVE/pull/1535))
+
 ### ✨ New Scripts
 
 - New script: Dotnet ASP.NET Web Server [@kris701](https://github.com/kris701) ([#1501](https://github.com/community-scripts/ProxmoxVE/pull/1501))
