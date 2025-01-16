@@ -55,4 +55,5 @@ jobs:
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         git diff --exit-code || git commit -am "Updating Dates in affected JSON files."
         git push 
-
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
