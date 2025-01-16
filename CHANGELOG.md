@@ -22,10 +22,17 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### ✨ New Scripts
 
+- New script: Dotnet ASP.NET Web Server [@kris701](https://github.com/kris701) ([#1501](https://github.com/community-scripts/ProxmoxVE/pull/1501))
 - New script: phpIPAM [@bvdberg01](https://github.com/bvdberg01) ([#1503](https://github.com/community-scripts/ProxmoxVE/pull/1503))
+
+### 🌐 Website
+
+- Add Mobile check for empty icon-url on website [@MickLesk](https://github.com/MickLesk) ([#1532](https://github.com/community-scripts/ProxmoxVE/pull/1532))
 
 ### 🧰 Maintenance
 
+- [Workflow]Update autolabeler-config.json [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1525](https://github.com/community-scripts/ProxmoxVE/pull/1525))
+- [core]Update update_json_date.yml [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1526](https://github.com/community-scripts/ProxmoxVE/pull/1526))
 - [core] Recreate Update JSON Workflow [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1523](https://github.com/community-scripts/ProxmoxVE/pull/1523))
 
 ## 2025-01-15
