@@ -1,4 +1,4 @@
-name: Update JSON Date in PR
+name: Update JSON Date on PR
 
 on:
   pull_request:
@@ -10,59 +10,49 @@ on:
       - reopened
 
 jobs:
-  update_json:
+  update-json-date:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-
-      - name: Configure Git user
-        run: |
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
-
-      - name: Get list of changed files in PR
-        id: files
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const prNumber = context.payload.pull_request.number;
-            const prFiles = await github.rest.pulls.listFiles({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: prNumber,
-            });
-
-            // Filter for JSON files only
-            const changedJsonFiles = prFiles.data
-              .filter(file => file.filename.endsWith('.json'))
-              .map(file => file.filename);
-
-            core.setOutput('changed_files', changedJsonFiles.join('\n'));
-            console.log('Changed JSON files:', changedJsonFiles);
-
-      - name: Update dates in changed JSON files
-        run: |
-          changed_files="${{ steps.files.outputs.changed_files }}"
-          if [[ -z "$changed_files" ]]; then
-            echo "No JSON files changed in this PR. Exiting."
-            exit 0
+    - name: Checkout PR Branch
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ github.head_ref }}
+    - name: Update Date in JSON-Files 
+      run: |
+        
+        BASE_BRANCH=${{ github.event.pull_request.base.ref }}
+        HEAD_BRANCH=${{ github.event.pull_request.head.ref }}
+        
+        git fetch origin $BASE_BRANCH       
+        
+        CHANGED_FILES=$(git diff --name-only origin/$BASE_BRANCH HEAD)
+        
+        echo "Changed files: $CHANGED_FILES"
+               
+        for FILE in $CHANGED_FILES; do
+          if [[ "$FILE" =~ /(.*)\.sh ]]; then
+            echo ${BASE_REAMTCH[1]}
+            NAME="$(echo "${BASH_REMATCH[1]}" | sed 's/-install//')"
+          elif [[ "$FILE" =~ /(.*)\.json ]]; then
+            NAME="${BASH_REMATCH[1]}"
+          else
+            echo "no Match on $FILE"
+            continue
           fi
+          
+          JSON_FILE="json/${NAME}.json"
 
-          for file in $changed_files; do
-            echo "Updating $file with current date."
-            # Your logic to update the file
-            jq '.date_created = "'"$(date +%Y-%m-%d)"'"' "$file" > tmp.$$.json && mv tmp.$$.json "$file"
-          done
+          if [[ -f "$JSON_FILE" ]]; then
+            echo "Updating date_created in $JSON_FILE"
+            jq --arg date "$(date +%Y-%m-%d)" '.date_created = $date' "$JSON_FILE" > tmp.json && mv tmp.json "$JSON_FILE"
+          else
+            echo "JSON file $JSON_FILE not found"
+          fi
+        done
+             
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git diff --exit-code || git commit -am "Updating Dates in affected JSON files."
+        git push 
 
-      - name: Commit changes if updated
-        run: |
-          git add *.json
-          git diff --cached --quiet || git commit -m "Update JSON dates"
-
-      - name: Push changes
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git push
