@@ -16,6 +16,14 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
+## 2025-01-16
+
+### Changed
+
+### ✨ New Scripts
+
+- New script: phpIPAM [@bvdberg01](https://github.com/bvdberg01) ([#1503](https://github.com/community-scripts/ProxmoxVE/pull/1503))
+
 ## 2025-01-15
 
 ### Changed
