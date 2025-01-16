@@ -26,7 +26,6 @@ function CustomArrowRightIcon() {
 
 export default function Page() {
   const { theme } = useTheme();
-
   const [color, setColor] = useState("#000000");
 
   useEffect(() => {
@@ -51,17 +50,17 @@ export default function Page() {
                   <div
                     className={cn(
                       `absolute inset-0 block size-full animate-gradient bg-gradient-to-r from-[#ffaa40]/50 via-[#9c40ff]/50 to-[#ffaa40]/50 bg-[length:var(--bg-size)_100%] [border-radius:inherit] [mask:linear-gradient(#fff_0_0)_content-box,linear-gradient(#fff_0_0)]`,
-                      `p-px ![mask-composite:subtract]`,
+                      `p-px ![mask-composite:subtract]`
                     )}
                   />
                   ❤️ <Separator className="mx-2 h-4" orientation="vertical" />
                   <span
                     className={cn(
                       `animate-gradient bg-gradient-to-r from-[#ffaa40] via-[#9c40ff] to-[#ffaa40] bg-[length:var(--bg-size)_100%] bg-clip-text text-transparent`,
-                      `inline`,
+                      `inline`
                     )}
                   >
-                    Scripts by Tteck
+                    Scripts by tteck
                   </span>
                 </AnimatedGradientText>
               </div>
@@ -70,7 +69,7 @@ export default function Page() {
               <DialogHeader>
                 <DialogTitle>Thank You!</DialogTitle>
                 <DialogDescription>
-                  A big thank you to Tteck and the many contributors who have
+                  A big thank you to tteck and the many contributors who have
                   made this project possible. Your hard work is truly
                   appreciated by the entire Proxmox community!
                 </DialogDescription>
@@ -133,7 +132,6 @@ export default function Page() {
                 variant="expandIcon"
                 Icon={CustomArrowRightIcon}
                 iconPlacement="right"
-                className="hover:"
               >
                 View Scripts
               </Button>
