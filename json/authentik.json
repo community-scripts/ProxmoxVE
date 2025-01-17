@@ -1,37 +1,37 @@
 {
-  "name": "authentik",
-  "slug": "authentik",
-  "categories": [6],
-  "date_created": "2024-12-27",
-  "type": "ct",
-  "updateable": true,
-  "privileged": false,
-  "interface_port": 9000,
-  "documentation": "https://docs.goauthentik.io/docs/",
-  "website": "https://goauthentik.io/",
-  "logo": "https://raw.githubusercontent.com/goauthentik/authentik/refs/heads/main/website/static/img/icon.png",
-  "description": "authentik is an IdP (Identity Provider) and SSO (single sign on) that is built with security at the forefront of every piece of code, every feature, with an emphasis on flexibility and versatility.",
-  "install_methods": [
-    {
-      "type": "default",
-      "script": "ct/authentik.sh",
-      "resources": {
-        "cpu": 6,
-        "ram": 8192,
-        "hdd": 12,
-        "os": "debian",
-        "version": "12"
-      }
-    }
-  ],
-  "default_credentials": {
-    "username": null,
-    "password": null
-  },
-  "notes": [
-    {
-      "text": "Authentik is very resource-heavy, it is recommended to use at least 8GB RAM anytime!",
-      "type": "warning"
-    }
-  ]
+	"name": "authentik",
+	"slug": "authentik",
+	"categories": [6],
+	"date_created": "2024-12-27",
+	"type": "ct",
+	"updateable": true,
+	"privileged": false,
+	"interface_port": 9000,
+	"documentation": "https://docs.goauthentik.io/docs/",
+	"website": "https://goauthentik.io/",
+	"logo": "https://raw.githubusercontent.com/goauthentik/authentik/refs/heads/main/website/static/img/icon.png",
+	"description": "authentik is an IdP (Identity Provider) and SSO (single sign on) that is built with security at the forefront of every piece of code, every feature, with an emphasis on flexibility and versatility.",
+	"install_methods": [
+		{
+			"type": "default",
+			"script": "ct/authentik.sh",
+			"resources": {
+				"cpu": 6,
+				"ram": 8192,
+				"hdd": 12,
+				"os": "debian",
+				"version": "12"
+			}
+		}
+	],
+	"default_credentials": {
+		"username": null,
+		"password": null
+	},
+	"notes": [
+		{
+			"text": "Authentik is very resource-heavy, it is recommended to use at least 8GB RAM anytime!",
+			"type": "warning"
+		}
+	]
 }

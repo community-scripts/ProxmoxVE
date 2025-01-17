@@ -1,37 +1,37 @@
 ﻿{
-  "name": "Firefly III",
-  "slug": "firefly",
-  "categories": [23],
-  "date_created": "2025-01-01",
-  "type": "ct",
-  "updateable": true,
-  "privileged": false,
-  "interface_port": 80,
-  "documentation": "https://docs.firefly-iii.org/",
-  "website": "https://firefly-iii.org/",
-  "logo": "https://raw.githubusercontent.com/firefly-iii/firefly-iii/develop/.github/assets/img/logo-small.png",
-  "description": "Firefly III is a free, self-hosted tool for managing your finances. Track expenses, plan budgets, and get detailed reports.",
-  "install_methods": [
-    {
-      "type": "default",
-      "script": "ct/firefly.sh",
-      "resources": {
-        "cpu": 1,
-        "ram": 1024,
-        "hdd": 2,
-        "os": "Debian",
-        "version": "12"
-      }
-    }
-  ],
-  "default_credentials": {
-    "username": null,
-    "password": null
-  },
-  "notes": [
-    {
-      "text": "Database credentials: `cat ~/firefly.creds`",
-      "type": "info"
-    }
-  ]
+	"name": "Firefly III",
+	"slug": "firefly",
+	"categories": [23],
+	"date_created": "2025-01-01",
+	"type": "ct",
+	"updateable": true,
+	"privileged": false,
+	"interface_port": 80,
+	"documentation": "https://docs.firefly-iii.org/",
+	"website": "https://firefly-iii.org/",
+	"logo": "https://raw.githubusercontent.com/firefly-iii/firefly-iii/develop/.github/assets/img/logo-small.png",
+	"description": "Firefly III is a free, self-hosted tool for managing your finances. Track expenses, plan budgets, and get detailed reports.",
+	"install_methods": [
+		{
+			"type": "default",
+			"script": "ct/firefly.sh",
+			"resources": {
+				"cpu": 1,
+				"ram": 1024,
+				"hdd": 2,
+				"os": "Debian",
+				"version": "12"
+			}
+		}
+	],
+	"default_credentials": {
+		"username": null,
+		"password": null
+	},
+	"notes": [
+		{
+			"text": "Database credentials: `cat ~/firefly.creds`",
+			"type": "info"
+		}
+	]
 }

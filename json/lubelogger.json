@@ -1,32 +1,32 @@
 ﻿{
-  "name": "LubeLogger",
-  "slug": "lubelogger",
-  "categories": [9],
-  "date_created": "2024-11-29",
-  "type": "ct",
-  "updateable": true,
-  "privileged": false,
-  "interface_port": 5000,
-  "documentation": "https://docs.lubelogger.com/",
-  "website": "https://lubelogger.com/",
-  "logo": "https://docs.lubelogger.com/Misc/Branding/a/image-1731645976107.png",
-  "description": "Web-Based Vehicle Maintenance and Fuel Mileage Tracker",
-  "install_methods": [
-    {
-      "type": "default",
-      "script": "ct/lubelogger.sh",
-      "resources": {
-        "cpu": 1,
-        "ram": 512,
-        "hdd": 2,
-        "os": "debian",
-        "version": "12"
-      }
-    }
-  ],
-  "default_credentials": {
-    "username": null,
-    "password": null
-  },
-  "notes": []
+	"name": "LubeLogger",
+	"slug": "lubelogger",
+	"categories": [9],
+	"date_created": "2024-11-29",
+	"type": "ct",
+	"updateable": true,
+	"privileged": false,
+	"interface_port": 5000,
+	"documentation": "https://docs.lubelogger.com/",
+	"website": "https://lubelogger.com/",
+	"logo": "https://docs.lubelogger.com/Misc/Branding/a/image-1731645976107.png",
+	"description": "Web-Based Vehicle Maintenance and Fuel Mileage Tracker",
+	"install_methods": [
+		{
+			"type": "default",
+			"script": "ct/lubelogger.sh",
+			"resources": {
+				"cpu": 1,
+				"ram": 512,
+				"hdd": 2,
+				"os": "debian",
+				"version": "12"
+			}
+		}
+	],
+	"default_credentials": {
+		"username": null,
+		"password": null
+	},
+	"notes": []
 }
