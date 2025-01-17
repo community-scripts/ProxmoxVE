@@ -4,7 +4,7 @@
     "categories": [
         2
     ],
-    "date_created": "2024-04-29",
+    "date_created": "2025-01-17",
     "type": "ct",
     "updateable": true,
     "privileged": false,
@@ -19,10 +19,10 @@
             "script": "ct/homeassistant-core.sh",
             "resources": {
                 "cpu": 2,
-                "ram": 1024,
-                "hdd": 8,
+                "ram": 2048,
+                "hdd": 10,
                 "os": "ubuntu",
-                "version": "24.04"
+                "version": "24.10"
             }
         }
     ],
@@ -40,7 +40,7 @@
             "type": "warning"
         },
         {
-            "text": "Use Ubuntu 24.04 ONLY",
+            "text": "Use Ubuntu 24.10 ONLY",
             "type": "warning"
         },
         {
