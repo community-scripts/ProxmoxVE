@@ -336,11 +336,12 @@ exit_script() {
 # This function allows the user to configure advanced settings for the script.
 advanced_settings() {
   whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox --title "Here is an instructional tip:" "To make a selection, use the Spacebar." 8 58
-  whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox --title "Default distribution for $APP" "${var_os} ${var_version} \n \nIf the default Linux distribution is not adhered to, script support will be discontinued. \n" 10 58
-  if [ "$var_os" != "alpine" ]; then
+  whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox --title "Default distribution for $APP" "Default is: ${var_os} ${var_version} \n \nIf the default Linux distribution is not adhered to, script support will be discontinued. \n" 10 58
+    if [ "$var_os" != "alpine" ]; then
+    var_default_os="${var_os}"
     var_os=""
     while [ -z "$var_os" ]; do
-      if var_os=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "DISTRIBUTION" --radiolist "Choose Distribution:" 10 58 2 \
+      if var_os=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "DISTRIBUTION" --radiolist "Choose Distribution: [Default: ${var_default_os}]" 10 58 2 \
         "debian" "" OFF \
         "ubuntu" "" OFF \
         3>&1 1>&2 2>&3); then
@@ -354,9 +355,10 @@ advanced_settings() {
   fi
 
   if [ "$var_os" == "debian" ]; then
+    var_default_version="${var_version}"
     var_version=""
     while [ -z "$var_version" ]; do
-      if var_version=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "DEBIAN VERSION" --radiolist "Choose Version" 10 58 2 \
+      if var_version=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "DEBIAN VERSION" --radiolist "Choose Version [Default: ${var_default_version}]" 10 58 2 \
         "11" "Bullseye" OFF \
         "12" "Bookworm" OFF \
         3>&1 1>&2 2>&3); then
@@ -370,9 +372,10 @@ advanced_settings() {
   fi
 
   if [ "$var_os" == "ubuntu" ]; then
+    var_default_version="${var_version}"
     var_version=""
     while [ -z "$var_version" ]; do
-      if var_version=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "UBUNTU VERSION" --radiolist "Choose Version" 10 58 4 \
+      if var_version=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "UBUNTU VERSION" --radiolist "Choose Version [Default: ${var_default_version}]" 10 58 4 \
         "20.04" "Focal" OFF \
         "22.04" "Jammy" OFF \
         "24.04" "Noble" OFF \
@@ -388,10 +391,10 @@ advanced_settings() {
   fi
   # Setting Default Tag for Advanced Settings
   TAGS="community-script;${var_tags:-}"
-
+  CT_DEFAULT_TYPE="${CT_TYPE}"
   CT_TYPE=""
   while [ -z "$CT_TYPE" ]; do
-    if CT_TYPE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "CONTAINER TYPE" --radiolist "Choose Type" 10 58 2 \
+    if CT_TYPE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "CONTAINER TYPE" --radiolist "Choose Type [Default: ${CT_DEFAULT_TYPE}]" 10 58 2 \
       "1" "Unprivileged" OFF \
       "0" "Privileged" OFF \
       3>&1 1>&2 2>&3); then
@@ -551,7 +554,7 @@ advanced_settings() {
     APT_CACHER=""
     APT_CACHER_IP=""
   else
-    if APT_CACHER_IP=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set APT-Cacher IP (leave blank for default)" 8 58 --title "APT-Cacher IP" 3>&1 1>&2 2>&3); then
+    if APT_CACHER_IP=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set APT-Cacher IP (leave blank for none)" 8 58 --title "APT-Cacher IP" 3>&1 1>&2 2>&3); then
       APT_CACHER="${APT_CACHER_IP:+yes}"
       echo -e "${NETWORK}${BOLD}${DGN}APT-Cacher IP Address: ${BGN}${APT_CACHER_IP:-Default}${CL}"
     else
@@ -566,7 +569,7 @@ advanced_settings() {
   fi
   echo -e "${DISABLEIPV6}${BOLD}${DGN}Disable IPv6: ${BGN}$DISABLEIP6${CL}"
 
-  if MTU1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Interface MTU Size (leave blank for default)" 8 58 --title "MTU SIZE" 3>&1 1>&2 2>&3); then
+  if MTU1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Interface MTU Size (leave blank for default [1500])" 8 58 --title "MTU SIZE" 3>&1 1>&2 2>&3); then
     if [ -z $MTU1 ]; then
       MTU1="Default"
       MTU=""
@@ -603,7 +606,7 @@ advanced_settings() {
     exit_script
   fi
 
-  if MAC1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a MAC Address(leave blank for default)" 8 58 --title "MAC ADDRESS" 3>&1 1>&2 2>&3); then
+  if MAC1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a MAC Address(leave blank for generated MAC)" 8 58 --title "MAC ADDRESS" 3>&1 1>&2 2>&3); then
     if [ -z $MAC1 ]; then
       MAC1="Default"
       MAC=""
@@ -615,7 +618,7 @@ advanced_settings() {
     exit_script
   fi
 
-  if VLAN1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a Vlan(leave blank for default)" 8 58 --title "VLAN" 3>&1 1>&2 2>&3); then
+  if VLAN1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a Vlan(leave blank for no VLAN)" 8 58 --title "VLAN" 3>&1 1>&2 2>&3); then
     if [ -z $VLAN1 ]; then
       VLAN1="Default"
       VLAN=""
