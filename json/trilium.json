@@ -1,9 +1,7 @@
 ﻿{
     "name": "Trilium",
     "slug": "trilium",
-    "categories": [
-        
-    ],
+    "categories": [12],
     "date_created": "2024-05-02",
     "type": "ct",
     "updateable": true,
@@ -32,4 +30,5 @@
     },
     "notes": []
 }
+
 

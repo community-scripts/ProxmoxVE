@@ -1,9 +1,7 @@
 ﻿{
     "name": "Komga",
     "slug": "komga",
-    "categories": [
-        
-    ],
+    "categories": [13],
     "date_created": "2024-11-15",
     "type": "ct",
     "updateable": true,
@@ -37,4 +35,5 @@
         }
     ]
 }
+
 

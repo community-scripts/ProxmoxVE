@@ -1,9 +1,7 @@
 ﻿{
     "name": "TurnKey",
     "slug": "turnkey",
-    "categories": [
-        
-    ],
+    "categories": [2],
     "date_created": "2024-05-02",
     "type": "turnkey",
     "updateable": false,
@@ -41,3 +39,4 @@
         }
     ]
 }
+

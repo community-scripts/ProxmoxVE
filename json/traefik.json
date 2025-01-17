@@ -1,9 +1,7 @@
 ﻿{
     "name": "Traefik",
     "slug": "traefik",
-    "categories": [
-        
-    ],
+    "categories": [21],
     "date_created": "2024-05-20",
     "type": "ct",
     "updateable": true,
@@ -32,3 +30,4 @@
     },
     "notes": []
 }
+

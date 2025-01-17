@@ -1,9 +1,7 @@
 ﻿{
     "name": "Node-Red",
     "slug": "node-red",
-    "categories": [
-        
-    ],
+    "categories": [19],
     "date_created": "2024-05-02",
     "type": "ct",
     "updateable": true,
@@ -37,3 +35,4 @@
         }
     ]
 }
+

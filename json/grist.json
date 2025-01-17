@@ -1,9 +1,7 @@
 ﻿{
   "name": "Grist",
   "slug": "grist",
-  "categories": [
-    
-  ],
+  "categories": [12],
   "date_created": "2024-12-27",
   "type": "ct",
   "updateable": true,
@@ -32,4 +30,5 @@
   },
   "notes": []
 }
+
 

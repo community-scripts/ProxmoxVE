@@ -1,9 +1,7 @@
 ﻿{
     "name": "Fenrus",
     "slug": "fenrus",
-    "categories": [
-        
-    ],
+    "categories": [10],
     "date_created": "2024-05-05",
     "type": "ct",
     "updateable": false,
@@ -32,3 +30,4 @@
     },
     "notes": []
 }
+

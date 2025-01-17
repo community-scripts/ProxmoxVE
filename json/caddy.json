@@ -1,9 +1,7 @@
 ﻿{
     "name": "Caddy",
     "slug": "caddy",
-    "categories": [
-        
-    ],
+    "categories": [21],
     "date_created": "2024-05-11",
     "type": "ct",
     "updateable": false,
@@ -32,3 +30,4 @@
     },
     "notes": []
 }
+

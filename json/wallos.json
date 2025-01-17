@@ -1,9 +1,7 @@
 ﻿{
   "name": "Wallos",
   "slug": "wallos",
-  "categories": [
-    
-  ],
+  "categories": [2],
   "date_created": "2024-10-24",
   "type": "ct",
   "updateable": true,
@@ -32,4 +30,5 @@
   },
   "notes": []
 }
+
 

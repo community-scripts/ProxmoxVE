@@ -1,9 +1,7 @@
 ﻿{
     "name": "RabbitMQ",
     "slug": "rabbitmq",
-    "categories": [
-        
-    ],
+    "categories": [18],
     "date_created": "2024-06-27",
     "type": "ct",
     "updateable": true,
@@ -32,3 +30,4 @@
     },
     "notes": []
 }
+

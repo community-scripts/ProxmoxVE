@@ -1,9 +1,7 @@
 ﻿{
     "name": "Proxmox Backup Server",
     "slug": "pbs",
-    "categories": [
-        
-    ],
+    "categories": [7],
     "date_created": "2024-05-02",
     "type": "ct",
     "updateable": false,
@@ -37,4 +35,5 @@
         }
     ]
 }
+
 

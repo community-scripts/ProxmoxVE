@@ -1,9 +1,7 @@
 ﻿{
     "name": "lldap",
     "slug": "lldap",
-    "categories": [
-        
-    ],
+    "categories": [6],
     "date_created": "2024-08-06",
     "type": "ct",
     "updateable": false,
@@ -32,3 +30,4 @@
     },
     "notes": []
 }
+

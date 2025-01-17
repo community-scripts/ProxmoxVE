@@ -1,9 +1,7 @@
 ﻿{
     "name": "Opengist",
     "slug": "opengist",
-    "categories": [
-        
-    ],
+    "categories": [20],
     "date_created": "2025-01-14",
     "type": "ct",
     "updateable": false,
@@ -32,3 +30,4 @@
     },
     "notes": []
 }
+

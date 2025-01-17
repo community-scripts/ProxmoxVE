@@ -1,9 +1,7 @@
 ﻿{
     "name": "BunkerWeb",
     "slug": "bunkerweb",
-    "categories": [
-        
-    ],
+    "categories": [21],
     "date_created": "2024-06-12",
     "type": "ct",
     "updateable": true,
@@ -32,3 +30,4 @@
     },
     "notes": []
 }
+

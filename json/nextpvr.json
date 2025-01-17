@@ -1,9 +1,7 @@
 ﻿{
   "name": "NextPVR",
   "slug": "nextpvr",
-  "categories": [
-    
-  ],
+  "categories": [15],
   "date_created": "2024-11-20",
   "type": "ct",
   "updateable": true,
@@ -32,4 +30,5 @@
   },
   "notes": []
 }
+
 

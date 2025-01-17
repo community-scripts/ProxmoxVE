@@ -1,9 +1,7 @@
 ﻿{
     "name": "Pocketbase",
     "slug": "pocketbase",
-    "categories": [
-        
-    ],
+    "categories": [28],
     "date_created": "2024-05-07",
     "type": "ct",
     "updateable": true,
@@ -32,4 +30,5 @@
     },
     "notes": []
 }
+
 

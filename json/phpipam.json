@@ -1,9 +1,7 @@
 ﻿{
     "name": "phpIPAM",
     "slug": "phpipam",
-    "categories": [
-        
-    ],
+    "categories": [0],
     "date_created": "2025-01-15",
     "type": "ct",
     "updateable": true,

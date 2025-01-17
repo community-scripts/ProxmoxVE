@@ -1,9 +1,7 @@
 ﻿{
     "name": "Grafana",
     "slug": "grafana",
-    "categories": [
-        
-    ],
+    "categories": [9],
     "date_created": "2024-05-02",
     "type": "ct",
     "updateable": false,
@@ -43,3 +41,4 @@
     },
     "notes": []
 }
+

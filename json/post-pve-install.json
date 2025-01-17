@@ -1,9 +1,7 @@
 ﻿{
     "name": "Proxmox VE Post Install",
     "slug": "post-pve-install",
-    "categories": [
-        
-    ],
+    "categories": [1],
     "date_created": "2024-04-28",
     "type": "misc",
     "updateable": false,
@@ -41,3 +39,4 @@
         }
     ]
 }
+

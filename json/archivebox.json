@@ -1,9 +1,7 @@
 ﻿{
     "name": "ArchiveBox",
     "slug": "archivebox",
-    "categories": [
-        
-    ],
+    "categories": [12],
     "date_created": "2024-10-19",
     "type": "ct",
     "updateable": true,
@@ -32,3 +30,4 @@
     },
     "notes": []
 }
+

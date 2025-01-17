@@ -1,9 +1,7 @@
 ﻿{
     "name": "Nextcloud",
     "slug": "nextcloud-vm",
-    "categories": [
-        
-    ],
+    "categories": [1],
     "date_created": "2023-11-14",
     "type": "vm",
     "updateable": false,
@@ -37,3 +35,4 @@
         }
     ]
 }
+

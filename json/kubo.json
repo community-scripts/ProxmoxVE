@@ -1,9 +1,7 @@
 ﻿{
     "name": "Kubo",
     "slug": "kubo",
-    "categories": [
-        
-    ],
+    "categories": [11],
     "date_created": "2024-06-27",
     "type": "ct",
     "updateable": true,
@@ -32,3 +30,4 @@
     },
     "notes": []
 }
+

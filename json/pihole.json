@@ -1,9 +1,7 @@
 ﻿{
     "name": "Pi-Hole",
     "slug": "pihole",
-    "categories": [
-        
-    ],
+    "categories": [5],
     "date_created": "2024-04-28",
     "type": "ct",
     "updateable": true,
@@ -45,4 +43,5 @@
         }
     ]
 }
+
 

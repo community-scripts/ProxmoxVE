@@ -1,9 +1,7 @@
 ﻿{
     "name": "Neo4j",
     "slug": "neo4j",
-    "categories": [
-        
-    ],
+    "categories": [8],
     "date_created": "2024-10-20",
     "type": "ct",
     "updateable": false,
@@ -32,3 +30,4 @@
     },
     "notes": []
 }
+

@@ -1,9 +1,7 @@
 ﻿{
     "name": "authentik",
     "slug": "authentik",
-    "categories": [
-        
-    ],
+    "categories": [6],
     "date_created": "2024-12-27",
     "type": "ct",
     "updateable": true,
@@ -37,4 +35,5 @@
         }
     ]
 }
+
 

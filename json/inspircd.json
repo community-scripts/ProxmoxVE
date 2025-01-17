@@ -1,9 +1,7 @@
 ﻿{
     "name": "InspIRCd 4",
     "slug": "inspircd",
-    "categories": [
-      
-    ],
+    "categories": [18],
     "date_created": "2024-11-29",
     "type": "ct",
     "updateable": true,
@@ -32,4 +30,5 @@
     },
     "notes": []
   }
+
 

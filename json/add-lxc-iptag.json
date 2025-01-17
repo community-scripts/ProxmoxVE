@@ -1,9 +1,7 @@
 ﻿{
     "name": "Proxmox VE LXC IP-Tag",
     "slug": "add-lxc-iptag",
-    "categories": [
-        
-    ],
+    "categories": [1],
     "date_created": "2024-12-16",
     "type": "misc",
     "updateable": false,
@@ -45,4 +43,5 @@
         }
     ]
 }
+
 

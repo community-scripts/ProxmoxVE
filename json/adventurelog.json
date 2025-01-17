@@ -1,9 +1,7 @@
 ﻿{
     "name": "AdventureLog",
     "slug": "adventurelog",
-    "categories": [
-        
-    ],
+    "categories": [24],
     "date_created": "2024-10-26",
     "type": "ct",
     "updateable": true,
@@ -37,3 +35,4 @@
         }
     ]
 }
+

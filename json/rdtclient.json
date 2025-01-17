@@ -1,9 +1,7 @@
 ﻿{
     "name": "Real-Debrid Torrent Client",
     "slug": "rdtclient",
-    "categories": [
-        
-    ],
+    "categories": [11],
     "date_created": "2024-05-02",
     "type": "ct",
     "updateable": true,
@@ -32,3 +30,4 @@
     },
     "notes": []
 }
+

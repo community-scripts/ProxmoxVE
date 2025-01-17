@@ -1,9 +1,7 @@
 ﻿{
   "name": "Komodo",
   "slug": "komodo",
-  "categories": [
-    
-  ],
+  "categories": [20],
   "date_created": "2025-01-01",
   "type": "ct",
   "updateable": true,
@@ -37,3 +35,4 @@
     }
   ]
 }
+

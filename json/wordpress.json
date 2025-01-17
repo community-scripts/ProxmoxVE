@@ -1,9 +1,7 @@
 ﻿{
   "name": "Wordpress",
   "slug": "wordpress",
-  "categories": [
-    
-  ],
+  "categories": [21],
   "date_created": "2025-01-14",
   "type": "ct",
   "updateable": true,
@@ -32,3 +30,4 @@
   },
   "notes": []
 }
+

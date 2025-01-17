@@ -1,9 +1,7 @@
 ﻿{
     "name": "Matterbridge",
     "slug": "matterbridge",
-    "categories": [
-        
-    ],
+    "categories": [22],
     "date_created": "2024-06-12",
     "type": "ct",
     "updateable": false,
@@ -37,3 +35,4 @@
         }
     ]
 }
+

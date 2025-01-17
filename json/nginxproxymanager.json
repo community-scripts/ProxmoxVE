@@ -1,9 +1,7 @@
 ﻿{
     "name": "Nginx Proxy Manager",
     "slug": "nginxproxymanager",
-    "categories": [
-        
-    ],
+    "categories": [21],
     "date_created": "2024-05-02",
     "type": "ct",
     "updateable": true,
@@ -37,4 +35,5 @@
         }
     ]
 }
+
 

@@ -1,9 +1,7 @@
 ﻿{
     "name": "OneDev",
     "slug": "onedev",
-    "categories": [
-      
-    ],
+    "categories": [20],
     "date_created": "2024-11-30",
     "type": "ct",
     "updateable": true,
@@ -32,3 +30,4 @@
     },
     "notes": []
   }
+

@@ -1,9 +1,7 @@
 ﻿{
     "name": "Home Assistant Core",
     "slug": "homeassistant-core",
-    "categories": [
-        
-    ],
+    "categories": [16],
     "date_created": "2024-04-29",
     "type": "ct",
     "updateable": true,
@@ -49,3 +47,4 @@
         }
     ]
 }
+

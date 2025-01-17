@@ -1,9 +1,7 @@
 ﻿{
     "name": "Zipline",
     "slug": "zipline",
-    "categories": [
-        
-    ],
+    "categories": [11],
     "date_created": "2024-09-16",
     "type": "ct",
     "updateable": true,
@@ -32,3 +30,4 @@
     },
     "notes": []
 }
+

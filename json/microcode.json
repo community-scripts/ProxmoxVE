@@ -1,9 +1,7 @@
 ﻿{
     "name": "Proxmox VE Processor Microcode",
     "slug": "microcode",
-    "categories": [
-        
-    ],
+    "categories": [2],
     "date_created": "2024-04-29",
     "type": "misc",
     "updateable": false,
@@ -41,3 +39,4 @@
         }
     ]
 }
+

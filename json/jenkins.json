@@ -1,9 +1,7 @@
 ﻿{
     "name": "Jenkins",
     "slug": "jenkins",
-    "categories": [
-      
-    ],
+    "categories": [19],
     "date_created": "2024-12-26",
     "type": "ct",
     "updateable": false,
@@ -32,4 +30,5 @@
     },
     "notes": []
   }
+
 

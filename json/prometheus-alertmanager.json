@@ -1,9 +1,7 @@
 ﻿{
     "name": "Prometheus Alertmanager",
     "slug": "prometheus-alertmanager",
-    "categories": [
-        
-    ],
+    "categories": [9],
     "date_created": "2025-01-09",
     "type": "ct",
     "updateable": true,
@@ -32,4 +30,5 @@
     },
     "notes": []
 }
+
 

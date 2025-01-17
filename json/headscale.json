@@ -1,9 +1,7 @@
 ﻿{
     "name": "Headscale",
     "slug": "headscale",
-    "categories": [
-        
-    ],
+    "categories": [4],
     "date_created": "2024-05-13",
     "type": "ct",
     "updateable": true,
@@ -37,3 +35,4 @@
         }
     ]
 }
+

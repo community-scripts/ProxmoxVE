@@ -1,9 +1,7 @@
 ﻿{
     "name": "Jellyseerr",
     "slug": "jellyseerr",
-    "categories": [
-        
-    ],
+    "categories": [14],
     "date_created": "2024-05-02",
     "type": "ct",
     "updateable": false,
@@ -32,3 +30,4 @@
     },
     "notes": []
 }
+

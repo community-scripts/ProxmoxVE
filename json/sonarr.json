@@ -1,9 +1,7 @@
 ﻿{
     "name": "Sonarr",
     "slug": "sonarr",
-    "categories": [
-        
-    ],
+    "categories": [14],
     "date_created": "2024-05-02",
     "type": "ct",
     "updateable": true,
@@ -32,4 +30,5 @@
     },
     "notes": []
 }
+
 

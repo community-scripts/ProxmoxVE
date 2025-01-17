@@ -1,9 +1,7 @@
 ﻿{
     "name": "WireGuard",
     "slug": "wireguard",
-    "categories": [
-        
-    ],
+    "categories": [4],
     "date_created": "2024-05-02",
     "type": "ct",
     "updateable": true,
@@ -37,4 +35,5 @@
     }
   ]
 }
+
 

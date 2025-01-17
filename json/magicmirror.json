@@ -1,9 +1,7 @@
 ﻿{
     "name": "MagicMirror Server",
     "slug": "magicmirror",
-    "categories": [
-        
-    ],
+    "categories": [16],
     "date_created": "2024-05-02",
     "type": "ct",
     "updateable": true,
@@ -37,3 +35,4 @@
         }
     ]
 }
+

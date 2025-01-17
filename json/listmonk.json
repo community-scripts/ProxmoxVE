@@ -1,9 +1,7 @@
 ﻿{
     "name": "listmonk",
     "slug": "listmonk",
-    "categories": [
-        
-    ],
+    "categories": [22],
     "date_created": "2024-11-22",
     "type": "ct",
     "updateable": true,
@@ -32,3 +30,4 @@
     },
     "notes": []
 }
+

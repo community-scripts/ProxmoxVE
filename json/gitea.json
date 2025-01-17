@@ -1,9 +1,7 @@
 ﻿{
     "name": "Gitea",
     "slug": "gitea",
-    "categories": [
-        
-    ],
+    "categories": [20],
     "date_created": "2024-07-26",
     "type": "ct",
     "updateable": true,
@@ -32,3 +30,4 @@
     },
     "notes": []
 }
+

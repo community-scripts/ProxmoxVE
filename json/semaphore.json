@@ -1,9 +1,7 @@
 ﻿{
   "name": "Semaphore",
   "slug": "semaphore",
-  "categories": [
-    
-  ],
+  "categories": [19],
   "date_created": "2025-01-01",
   "type": "ct",
   "updateable": true,
@@ -41,4 +39,5 @@
     }
   ]
 }
+
 

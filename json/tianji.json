@@ -1,9 +1,7 @@
 ﻿{
     "name": "Tianji",
     "slug": "tianji",
-    "categories": [
-        
-    ],
+    "categories": [25],
     "date_created": "2024-09-14",
     "type": "ct",
     "updateable": true,
@@ -32,3 +30,4 @@
     },
     "notes": []
 }
+
