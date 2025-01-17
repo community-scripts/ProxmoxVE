@@ -1,8 +1,8 @@
-{
+﻿{
     "name": "Jellyfin Media Server",
     "slug": "jellyfin",
     "categories": [
-        12
+        
     ],
     "date_created": "2024-05-02",
     "type": "ct",

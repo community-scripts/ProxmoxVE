@@ -1,8 +1,8 @@
-{
+﻿{
     "name": "TeddyCloud",
     "slug": "teddycloud",
     "categories": [
-        12
+        
     ],
     "date_created": "2024-12-28",
     "type": "ct",
@@ -37,3 +37,4 @@
         }
     ]
 }
+

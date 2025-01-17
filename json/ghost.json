@@ -1,8 +1,8 @@
-{
+﻿{
     "name": "Ghost",
     "slug": "ghost",
     "categories": [
-      12
+      
     ],
     "date_created": "2025-01-10",
     "type": "ct",
@@ -37,5 +37,6 @@
       }
     ]
 }
+
 
 

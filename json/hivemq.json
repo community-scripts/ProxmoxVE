@@ -1,8 +1,8 @@
-{
+﻿{
     "name": "HiveMQ CE",
     "slug": "hivemq",
     "categories": [
-        4
+        
     ],
     "date_created": "2024-05-02",
     "type": "ct",

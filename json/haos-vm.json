@@ -1,8 +1,8 @@
-{
+﻿{
     "name": "Home Assistant OS",
     "slug": "haos-vm",
     "categories": [
-        2
+        
     ],
     "date_created": "2024-04-29",
     "type": "vm",

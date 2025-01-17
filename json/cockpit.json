@@ -1,8 +1,8 @@
-{
+﻿{
     "name": "Cockpit",
     "slug": "cockpit",
     "categories": [
-        16
+        
     ],
     "date_created": "2024-10-20",
     "type": "ct",

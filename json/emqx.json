@@ -1,8 +1,8 @@
-{
+﻿{
     "name": "EMQX",
     "slug": "emqx",
     "categories": [
-        4
+        
     ],
     "date_created": "2024-05-02",
     "type": "ct",
@@ -32,7 +32,7 @@
     },
     "notes": [
         {
-            "text": "Setup-Steps: Access Control ➡ Authentication ➡ Create ➡ Next ➡ Next ➡ Create ➡ Users ➡ Add ➡ Username / Password (to authenicate with MQTT) ➡ Save. You're now ready to enjoy a high-performance MQTT Broker.",
+            "text": "Setup-Steps: Access Control âž¡ Authentication âž¡ Create âž¡ Next âž¡ Next âž¡ Create âž¡ Users âž¡ Add âž¡ Username / Password (to authenicate with MQTT) âž¡ Save. You're now ready to enjoy a high-performance MQTT Broker.",
             "type": "info"
         }
     ]

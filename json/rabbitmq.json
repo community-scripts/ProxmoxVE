@@ -1,8 +1,8 @@
-{
+﻿{
     "name": "RabbitMQ",
     "slug": "rabbitmq",
     "categories": [
-        4
+        
     ],
     "date_created": "2024-06-27",
     "type": "ct",

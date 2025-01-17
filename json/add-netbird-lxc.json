@@ -1,8 +1,8 @@
-{
+﻿{
     "name": "NetBird",
     "slug": "add-netbird-lxc",
     "categories": [
-        11
+        
     ],
     "date_created": "2024-05-19",
     "type": "misc",
@@ -45,3 +45,4 @@
         }
     ]
 }
+

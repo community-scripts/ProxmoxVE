@@ -1,8 +1,8 @@
-{
+﻿{
     "name": "Notifiarr",
     "slug": "notifiarr",
     "categories": [
-        18
+        
     ],
     "date_created": "2024-06-12",
     "type": "ct",
@@ -37,3 +37,4 @@
         }
     ]
 }
+

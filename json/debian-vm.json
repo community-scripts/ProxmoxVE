@@ -1,8 +1,8 @@
-{
+﻿{
     "name": "Debian 12",
     "slug": "debian-vm",
     "categories": [
-        9
+        
     ],
     "date_created": "2024-05-02",
     "type": "vm",
@@ -32,3 +32,4 @@
     },
     "notes": []
 }
+

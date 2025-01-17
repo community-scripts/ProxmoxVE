@@ -1,8 +1,8 @@
-{
+﻿{
   "name": "GLPI",
   "slug": "glpi",
   "categories": [
-    0
+    
   ],
   "date_created": "2025-01-06",
   "type": "ct",
@@ -32,3 +32,4 @@
   },
   "notes": []
 }
+

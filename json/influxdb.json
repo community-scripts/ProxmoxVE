@@ -1,8 +1,8 @@
-{
+﻿{
     "name": "InfluxDB",
     "slug": "influxdb",
     "categories": [
-        5
+        
     ],
     "date_created": "2024-05-02",
     "type": "ct",

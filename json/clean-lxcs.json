@@ -1,8 +1,8 @@
-{
+﻿{
     "name": "Proxmox VE LXC Cleaner",
     "slug": "clean-lxcs",
     "categories": [
-        1
+        
     ],
     "date_created": "2024-04-29",
     "type": "misc",

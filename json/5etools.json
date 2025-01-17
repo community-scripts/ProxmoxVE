@@ -1,8 +1,8 @@
-{
+﻿{
     "name": "5etools",
     "slug": "5etools",
     "categories": [
-        0
+        
     ],
     "date_created": "2025-01-02",
     "type": "ct",
@@ -32,3 +32,4 @@
     },
     "notes": []
 }
+

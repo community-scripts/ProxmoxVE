@@ -1,8 +1,8 @@
-{
+﻿{
     "name": "Proxmox Backup Server Post Install",
     "slug": "post-pbs-install",
     "categories": [
-        1
+        
     ],
     "date_created": "2024-04-29",
     "type": "misc",
@@ -40,7 +40,7 @@
             "type": "info"
         },
         {
-            "text": "It is recommended to answer “yes” (y) to all options presented during the process.",
+            "text": "It is recommended to answer â€œyesâ€ (y) to all options presented during the process.",
             "type": "info"
         }
     ]

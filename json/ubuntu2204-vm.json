@@ -1,8 +1,8 @@
-{
+﻿{
     "name": "Ubuntu 22.04",
     "slug": "ubuntu2204-vm",
     "categories": [
-        9
+        
     ],
     "date_created": "2024-05-02",
     "type": "vm",

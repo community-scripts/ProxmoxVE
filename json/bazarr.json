@@ -1,8 +1,8 @@
-{
+﻿{
     "name": "Bazarr",
     "slug": "bazarr",
     "categories": [
-        18
+        
     ],
     "date_created": "2024-05-02",
     "type": "ct",
@@ -32,3 +32,4 @@
     },
     "notes": []
 }
+

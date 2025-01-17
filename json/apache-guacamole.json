@@ -1,8 +1,8 @@
-{
+﻿{
   "name": "Apache Guacamole",
   "slug": "apache-guacamole",
   "categories": [
-    11
+    
   ],
   "date_created": "2024-12-19",
   "type": "ct",
@@ -32,3 +32,4 @@
   },
   "notes": []
 }
+

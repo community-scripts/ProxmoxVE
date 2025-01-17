@@ -1,8 +1,8 @@
-{
+﻿{
     "name": "Part-DB",
     "slug": "part-db",
     "categories": [
-        0
+        
     ],
     "date_created": "2024-12-18",
     "type": "ct",
@@ -37,3 +37,4 @@
         }
     ]
 }
+

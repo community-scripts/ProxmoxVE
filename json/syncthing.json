@@ -1,8 +1,8 @@
-{
+﻿{
     "name": "Syncthing",
     "slug": "syncthing",
     "categories": [
-        16
+        
     ],
     "date_created": "2024-05-02",
     "type": "ct",

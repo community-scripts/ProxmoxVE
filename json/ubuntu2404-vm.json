@@ -1,8 +1,8 @@
-{
+﻿{
     "name": "Ubuntu 24.04",
     "slug": "ubuntu2404-vm",
     "categories": [
-        9
+        
     ],
     "date_created": "2024-05-02",
     "type": "vm",

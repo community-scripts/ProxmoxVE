@@ -1,8 +1,8 @@
-{
+﻿{
     "name": "Zabbix",
     "slug": "zabbix",
     "categories": [
-        7
+        
     ],
     "date_created": "2024-06-12",
     "type": "ct",
@@ -41,3 +41,4 @@
         }
     ]
 }
+
