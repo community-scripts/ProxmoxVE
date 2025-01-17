@@ -74,7 +74,7 @@ msg_ok "Started Alpine Step-CA"
 motd_ssh
 
 # add fingerprint to motd
-ca_root_fingerprint=$(step certificate fingerprint root_${STEPPATH}/certs/ca.crt)
+ca_root_fingerprint=$(step certificate fingerprint ${STEPPATH}/certs/root_ca.crt)
 echo -e "${TAB}${DEFAULT}${YW} Fingerprint CA Root Certificate: ${GN}${ca_root_fingerprint}${CL}" >> /etc/motd
 
 customize
