@@ -28,8 +28,8 @@ if [ "$VERBOSE" = "yes" ]; then
   env #Display environment details
 fi
 
-x509_policy_dns=($(echo "${CA_X509_POLICY_DNS}" | tr ' ' '\n'))
-x509_policy_ips=($(echo "${CA_X509_POLICY_IPS}" | tr ' ' '\n'))
+#x509_policy_dns=($(echo "${CA_X509_POLICY_DNS}" | tr ' ' '\n'))
+#x509_policy_ips=($(echo "${CA_X509_POLICY_IPS}" | tr ' ' '\n'))
 
 msg_ok "Environment prepared"
 
@@ -40,41 +40,73 @@ msg_ok "Installed Alpine Step-CA"
 # Initialize CA
 config_dir="/etc/step-ca"
 passwd_file="${config_dir}/password.txt"
+ca_admin_provisioner="Admin JWK"
+ca_admin_subject="admin@localhost"
+ca_admin_provisioner_passwd_file="${config_dir}/admin-jwk-password.txt"
 
 msg_info "Generate CA secrets"
+
 CA_PASS="$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)"
 $STD cat <<EOF >${passwd_file}
 ${CA_PASS}
 EOF
+
+CA_ADMIN_PASS="$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)"
+$STD cat <<EOF >${ca_admin_provisioner_passwd_file}
+${CA_ADMIN_PASS}
+EOF
+
+chmod 600 ${passwd_file}
+chmod 600 ${ca_admin_provisioner_passwd_file}
+
 msg_ok "Generated CA secrets"
 
 
 msg_info "Initialize base CA"
-$STD step ca init --name "${CA_NAME}" $CA_DNS --password-file ${passwd_file} --deployment-type standalone --address ":443" --provisioner admin
 
-#for dns_entry in "${x509_policy_dns[@]}"; do
-#  $STD step ca policy authority x509 allow dns "${dns_entry}"
-#done
-#for ip_entry in "${x509_policy_ips[@]}"; do
-#  $STD step ca policy authority x509 allow ip ${ip_entry}
-#done
+# Do initialize and immediately start it for further configuration
+$STD step ca init --name "${CA_NAME}" --dns localhost $CA_DNS --password-file ${passwd_file} --deployment-type standalone --address ":443" --provisioner "${ca_admin_provisioner}" --admin-subject "${ca_admin_subject}" --provisioner-password-file ${ca_admin_provisioner_passwd_file} --remote-management
+$STD rc-service step-ca start
+
+# Verify whether CA policy is requested
+if [ -n "${CA_X509_POLICY_DNS}" ] || [ -n "${CA_X509_POLICY_IPS}" ]; then
+
+  # Ensure admin subject is added to the allow list
+  $STD step ca policy authority x509 allow dns "${ca_admin_subject}" --admin-provisioner "${ca_admin_provisioner}" --admin-subject "${ca_admin_subject}" --password-file ${ca_admin_provisioner_passwd_file}
+
+  if [ -n "${CA_X509_POLICY_DNS}" ]; then
+    $STD step ca policy authority x509 allow dns ${CA_X509_POLICY_DNS} --admin-provisioner "${ca_admin_provisioner}" --admin-subject "${ca_admin_subject}" --password-file ${ca_admin_provisioner_passwd_file}
+  fi
+  if [ -n "${CA_X509_POLICY_IPS}" ]; then
+    $STD step ca policy authority x509 allow ip ${CA_X509_POLICY_IPS} --admin-provisioner "${ca_admin_provisioner}" --admin-subject "${ca_admin_subject}" --password-file ${ca_admin_provisioner_passwd_file}
+  fi
+
+  #for dns_entry in "${x509_policy_dns[@]}"; do
+  #  $STD step ca policy authority x509 allow dns "${dns_entry}"
+  #done
+  #for ip_entry in "${x509_policy_ips[@]}"; do
+  #  $STD step ca policy authority x509 allow ip ${ip_entry}
+  #done
+fi
 
 if [ "${CA_ACME}" = "yes" ]; then
   msg_info "Initialize ACME for CA"
-  $STD step ca provisioner add ${CA_ACME_NAME} --type ACME --x509-min-dur=20m --x509-max-dur=32h --x509-default-dur=24h
+  $STD step ca provisioner add "${CA_ACME_NAME}" --type ACME --x509-min-dur=20m --x509-max-dur=32h --x509-default-dur=24h --admin-provisioner "${ca_admin_provisioner}" --admin-subject "${ca_admin_subject}" --password-file ${ca_admin_provisioner_passwd_file}
 fi
 msg_ok "Finished initialization of CA"
 
 # Start application
 msg_info "Starting Alpine Step-CA"
-$STD rc-service step-ca start
+$STD rc-service step-ca restart
 $STD rc-update add step-ca default
 msg_ok "Started Alpine Step-CA"
 
 motd_ssh
-
-# add fingerprint to motd
-ca_root_fingerprint=$(step certificate fingerprint ${STEPPATH}/certs/root_ca.crt)
-echo -e "${TAB}${DEFAULT}${YW} Fingerprint CA Root Certificate: ${GN}${ca_root_fingerprint}${CL}" >> /etc/motd
+# Extend motd with step-ca fingerprint of root CA
+MOTD_FILE="/etc/motd"
+if [ -f "$MOTD_FILE" ]; then
+  ca_root_fingerprint=$(step certificate fingerprint ${STEPPATH}/certs/root_ca.crt)
+  echo -e "\n${TAB}${DEFAULT}${YW} Fingerprint CA Root Certificate: ${GN}${ca_root_fingerprint}${CL}" >> "$MOTD_FILE"
+fi
 
 customize
