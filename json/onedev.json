@@ -12,22 +12,21 @@
     "logo": "https://docs.onedev.io/img/logo.svg",
     "description": "Git server with CI/CD, kanban, and packages.",
     "install_methods": [
-      {
-        "type": "default",
-        "script": "ct/onedev.sh",
-        "resources": {
-          "cpu": 2,
-          "ram": 2048,
-          "hdd": 4,
-          "os": "Debian",
-          "version": "12"
+        {
+            "type": "default",
+            "script": "ct/onedev.sh",
+            "resources": {
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 4,
+                "os": "Debian",
+                "version": "12"
+            }
         }
-      }
     ],
     "default_credentials": {
-      "username": null,
-      "password": null
+        "username": null,
+        "password": null
     },
     "notes": []
-  }
-
+}
