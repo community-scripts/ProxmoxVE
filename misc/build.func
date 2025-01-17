@@ -341,16 +341,30 @@ advanced_settings() {
     var_default_os="${var_os}"
     var_os=""
     while [ -z "$var_os" ]; do
-      if var_os=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "DISTRIBUTION" --radiolist "Choose Distribution: [Default: ${var_default_os}]" 10 58 2 \
-        "debian" "" OFF \
-        "ubuntu" "" OFF \
-        3>&1 1>&2 2>&3); then
-        if [ -n "$var_os" ]; then
-          echo -e "${OS}${BOLD}${DGN}Operating System: ${BGN}$var_os${CL}"
+        if [ "$var_default_os" == "debian" ]; then
+          if var_os=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "DISTRIBUTION" --radiolist "Choose Distribution" 10 58 2 \
+            "debian" "" ON \
+            "ubuntu" "" OFF \
+            3>&1 1>&2 2>&3); then
+            if [ -n "$var_os" ]; then
+              echo -e "${OS}${BOLD}${DGN}Operating System: ${BGN}$var_os${CL}"
+            fi
+          else
+            exit_script
+          fi
         fi
-      else
-        exit_script
-      fi
+        if [ "$var_default_os" == "ubuntu" ]; then
+          if var_os=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "DISTRIBUTION" --radiolist "Choose Distribution" 10 58 2 \
+            "debian" "" OFF \
+            "ubuntu" "" ON \
+            3>&1 1>&2 2>&3); then
+            if [ -n "$var_os" ]; then
+              echo -e "${OS}${BOLD}${DGN}Operating System: ${BGN}$var_os${CL}"
+            fi
+          else
+            exit_script
+          fi
+        fi
     done
   fi
 
@@ -358,15 +372,29 @@ advanced_settings() {
     var_default_version="${var_version}"
     var_version=""
     while [ -z "$var_version" ]; do
-      if var_version=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "DEBIAN VERSION" --radiolist "Choose Version [Default: ${var_default_version}]" 10 58 2 \
-        "11" "Bullseye" OFF \
-        "12" "Bookworm" OFF \
-        3>&1 1>&2 2>&3); then
-        if [ -n "$var_version" ]; then
-          echo -e "${OSVERSION}${BOLD}${DGN}Version: ${BGN}$var_version${CL}"
+      if [ "$var_default_version" == "11" ]; then  
+        if var_version=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "DEBIAN VERSION" --radiolist "Choose Version" 10 58 2 \
+          "11" "Bullseye" ON \
+          "12" "Bookworm" OFF \
+          3>&1 1>&2 2>&3); then
+          if [ -n "$var_version" ]; then
+            echo -e "${OSVERSION}${BOLD}${DGN}Version: ${BGN}$var_version${CL}"
+          fi
+        else
+          exit_script
         fi
-      else
-        exit_script
+      fi
+      if [ "$var_default_version" == "12" ]; then
+        if var_version=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "DEBIAN VERSION" --radiolist "Choose Version" 10 58 2 \
+          "11" "Bullseye" OFF \
+          "12" "Bookworm" ON \
+          3>&1 1>&2 2>&3); then
+          if [ -n "$var_version" ]; then
+            echo -e "${OSVERSION}${BOLD}${DGN}Version: ${BGN}$var_version${CL}"
+          fi
+        else
+          exit_script
+        fi
       fi
     done
   fi
@@ -375,17 +403,61 @@ advanced_settings() {
     var_default_version="${var_version}"
     var_version=""
     while [ -z "$var_version" ]; do
-      if var_version=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "UBUNTU VERSION" --radiolist "Choose Version [Default: ${var_default_version}]" 10 58 4 \
-        "20.04" "Focal" OFF \
-        "22.04" "Jammy" OFF \
-        "24.04" "Noble" OFF \
-        "24.10" "Oracular" OFF \
-      3>&1 1>&2 2>&3); then
-        if [ -n "$var_version" ]; then
-          echo -e "${OSVERSION}${BOLD}${DGN}Version: ${BGN}$var_version${CL}"
+      if [ "$var_default_version" == "20.04" ]; then  
+        if var_version=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "UBUNTU VERSION" --radiolist "Choose Version" 10 58 4 \
+          "20.04" "Focal" ON \
+          "22.04" "Jammy" OFF \
+          "24.04" "Noble" OFF \
+          "24.10" "Oracular" OFF \
+        3>&1 1>&2 2>&3); then
+          if [ -n "$var_version" ]; then
+            echo -e "${OSVERSION}${BOLD}${DGN}Version: ${BGN}$var_version${CL}"
+          fi
+        else
+          exit_script
         fi
-      else
-        exit_script
+      fi
+      if [ "$var_default_version" == "22.04" ]; then
+        if var_version=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "UBUNTU VERSION" --radiolist "Choose Version" 10 58 4 \
+          "20.04" "Focal" OFF \
+          "22.04" "Jammy" ON \
+          "24.04" "Noble" OFF \
+          "24.10" "Oracular" OFF \
+        3>&1 1>&2 2>&3); then
+          if [ -n "$var_version" ]; then
+            echo -e "${OSVERSION}${BOLD}${DGN}Version: ${BGN}$var_version${CL}"
+          fi
+        else
+          exit_script
+        fi
+      fi
+      if [ "$var_default_version" == "24.04" ]; then
+        if var_version=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "UBUNTU VERSION" --radiolist "Choose Version" 10 58 4 \
+          "20.04" "Focal" OFF \
+          "22.04" "Jammy" OFF \
+          "24.04" "Noble" ON \
+          "24.10" "Oracular" OFF \
+        3>&1 1>&2 2>&3); then
+          if [ -n "$var_version" ]; then
+            echo -e "${OSVERSION}${BOLD}${DGN}Version: ${BGN}$var_version${CL}"
+          fi
+        else
+          exit_script
+        fi
+      fi
+      if [ "$var_default_version" == "24.10" ]; then
+        if var_version=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "UBUNTU VERSION" --radiolist "Choose Version" 10 58 4 \
+          "20.04" "Focal" OFF \
+          "22.04" "Jammy" OFF \
+          "24.04" "Noble" OFF \
+          "24.10" "Oracular" ON \
+        3>&1 1>&2 2>&3); then
+          if [ -n "$var_version" ]; then
+            echo -e "${OSVERSION}${BOLD}${DGN}Version: ${BGN}$var_version${CL}"
+          fi
+        else
+          exit_script
+        fi
       fi
     done
   fi
@@ -394,19 +466,37 @@ advanced_settings() {
   CT_DEFAULT_TYPE="${CT_TYPE}"
   CT_TYPE=""
   while [ -z "$CT_TYPE" ]; do
-    if CT_TYPE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "CONTAINER TYPE" --radiolist "Choose Type [Default: ${CT_DEFAULT_TYPE}]" 10 58 2 \
-      "1" "Unprivileged" OFF \
-      "0" "Privileged" OFF \
-      3>&1 1>&2 2>&3); then
-      if [ -n "$CT_TYPE" ]; then
-        CT_TYPE_DESC="Unprivileged"
-        if [ "$CT_TYPE" -eq 0 ]; then
-          CT_TYPE_DESC="Privileged"
+    if [ "$CT_DEFAULT_TYPE" == "1" ]; then 
+      if CT_TYPE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "CONTAINER TYPE" --radiolist "Choose Type" 10 58 2 \
+        "1" "Unprivileged" ON \
+        "0" "Privileged" OFF \
+        3>&1 1>&2 2>&3); then
+        if [ -n "$CT_TYPE" ]; then
+          CT_TYPE_DESC="Unprivileged"
+          if [ "$CT_TYPE" -eq 0 ]; then
+            CT_TYPE_DESC="Privileged"
+          fi
+          echo -e "${CONTAINERTYPE}${BOLD}${DGN}Container Type: ${BGN}$CT_TYPE_DESC${CL}"
         fi
-        echo -e "${CONTAINERTYPE}${BOLD}${DGN}Container Type: ${BGN}$CT_TYPE_DESC${CL}"
+      else
+        exit_script
       fi
-    else
-      exit_script
+    fi
+    if [ "$CT_DEFAULT_TYPE" == "0" ]; then
+      if CT_TYPE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "CONTAINER TYPE" --radiolist "Choose Type" 10 58 2 \
+        "1" "Unprivileged" OFF \
+        "0" "Privileged" ON \
+        3>&1 1>&2 2>&3); then
+        if [ -n "$CT_TYPE" ]; then
+          CT_TYPE_DESC="Unprivileged"
+          if [ "$CT_TYPE" -eq 0 ]; then
+            CT_TYPE_DESC="Privileged"
+          fi
+          echo -e "${CONTAINERTYPE}${BOLD}${DGN}Container Type: ${BGN}$CT_TYPE_DESC${CL}"
+        fi
+      else
+        exit_script
+      fi
     fi
   done
 
@@ -681,6 +771,103 @@ advanced_settings() {
     header_info
     echo -e "${ADVANCED}${BOLD}${RD}Using Advanced Settings on node $PVEHOST_NAME${CL}"
     advanced_settings
+  fi
+}
+
+install_script() {
+  pve_check
+  shell_check
+  root_check
+  arch_check
+  ssh_check
+
+  if systemctl is-active -q ping-instances.service; then
+    systemctl -q stop ping-instances.service
+  fi
+  NEXTID=$(pvesh get /cluster/nextid)
+  timezone=$(cat /etc/timezone)
+  header_info
+  while true; do
+    CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "SETTINGS" --menu "Choose an option:" \
+      12 50 4 \
+      "1" "Default Settings" \
+      "2" "Default Settings (with verbose)" \
+      "3" "Advanced Settings" \
+      "4" "Exit" --nocancel --default-item "1" 3>&1 1>&2 2>&3)
+
+    if [ $? -ne 0 ]; then
+      echo -e "${CROSS}${RD} Menu canceled. Exiting.${CL}"
+      exit 0
+    fi
+
+    case $CHOICE in
+      1)
+        header_info
+        echo -e "${DEFAULT}${BOLD}${BL}Using Default Settings on node $PVEHOST_NAME${CL}"
+        VERB="no"
+        base_settings "$VERB"
+        echo_default
+        break
+        ;;
+      2)
+        header_info
+        echo -e "${DEFAULT}${BOLD}${BL}Using Default Settings on node $PVEHOST_NAME (${SEARCH}Verbose)${CL}"
+        VERB="yes"
+        base_settings "$VERB"
+        echo_default
+        break
+        ;;
+      3)
+        header_info
+        echo -e "${ADVANCED}${BOLD}${RD}Using Advanced Settings on node $PVEHOST_NAME${CL}"
+        advanced_settings
+        break
+        ;;
+      4)
+        echo -e "${CROSS}${RD}Exiting.${CL}"
+        exit 0
+        ;;
+      *)
+        echo -e "${CROSS}${RD}Invalid option, please try again.${CL}"
+        ;;
+    esac
+  done
+}
+
+check_container_resources() {
+  # Check actual RAM & Cores
+  current_ram=$(free -m | awk 'NR==2{print $2}')
+  current_cpu=$(nproc)
+
+  # Check whether the current RAM is less than the required RAM or the CPU cores are less than required
+  if [[ "$current_ram" -lt "$var_ram" ]] || [[ "$current_cpu" -lt "$var_cpu" ]]; then
+    echo -e "\n${INFO}${HOLD} ${GN}Required: ${var_cpu} CPU, ${var_ram}MB RAM ${CL}| ${RD}Current: ${current_cpu} CPU, ${current_ram}MB RAM${CL}"
+    echo -e "${YWB}Please ensure that the ${APP} LXC is configured with at least ${var_cpu} vCPU and ${var_ram} MB RAM for the build process.${CL}\n"
+    read -r -p "${INFO}${HOLD} May cause data loss! ${INFO} Continue update with under-provisioned LXC? <yes/No>  " prompt
+    # Check if the input is 'yes', otherwise exit with status 1
+    if [[ ! ${prompt,,} =~ ^(yes)$ ]]; then
+      echo -e "${CROSS}${HOLD} ${YWB}Exiting based on user input.${CL}"
+      exit 1
+    fi
+  else
+    echo -e ""
+  fi
+}
+
+check_container_storage() {
+  # Check if the /boot partition is more than 80% full
+  total_size=$(df /boot --output=size | tail -n 1)
+  local used_size=$(df /boot --output=used | tail -n 1)
+  usage=$(( 100 * used_size / total_size ))
+  if (( usage > 80 )); then
+    # Prompt the user for confirmation to continue
+    echo -e "${INFO}${HOLD} ${YWB}Warning: Storage is dangerously low (${usage}%).${CL}"
+    read -r -p "Continue anyway? <y/N>  " prompt
+    # Check if the input is 'y' or 'yes', otherwise exit with status 1
+    if [[ ! ${prompt,,} =~ ^(y|yes)$ ]]; then
+      echo -e "${CROSS}${HOLD}${YWB}Exiting based on user input.${CL}"
+      exit 1
+    fi
   fi
 }
 
