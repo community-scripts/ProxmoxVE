@@ -1,32 +1,32 @@
 ﻿{
-    "name": "Jenkins",
-    "slug": "jenkins",
-    "categories": [19],
-    "date_created": "2024-12-26",
-    "type": "ct",
-    "updateable": false,
-    "privileged": false,
-    "interface_port": 8080,
-    "documentation": "https://www.jenkins.io/doc/",
-    "website": "https://www.jenkins.io/",
-    "logo": "https://www.jenkins.io/images/logos/jenkins/jenkins.svg",
-    "description": "Jenkins provides hundreds of plugins to support building, deploying and automating any project. ",
-    "install_methods": [
-        {
-            "type": "default",
-            "script": "ct/jenkins.sh",
-            "resources": {
-                "cpu": 2,
-                "ram": 1024,
-                "hdd": 4,
-                "os": "Debian",
-                "version": "12"
-            }
-        }
-    ],
-    "default_credentials": {
-        "username": null,
-        "password": null
-    },
-    "notes": []
+  "name": "Jenkins",
+  "slug": "jenkins",
+  "categories": [19],
+  "date_created": "2024-12-26",
+  "type": "ct",
+  "updateable": false,
+  "privileged": false,
+  "interface_port": 8080,
+  "documentation": "https://www.jenkins.io/doc/",
+  "website": "https://www.jenkins.io/",
+  "logo": "https://www.jenkins.io/images/logos/jenkins/jenkins.svg",
+  "description": "Jenkins provides hundreds of plugins to support building, deploying and automating any project. ",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/jenkins.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 1024,
+        "hdd": 4,
+        "os": "Debian",
+        "version": "12"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": []
 }

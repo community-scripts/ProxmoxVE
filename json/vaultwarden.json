@@ -1,52 +1,52 @@
 ﻿{
-    "name": "Vaultwarden",
-    "slug": "vaultwarden",
-    "categories": [6],
-    "date_created": "2024-05-02",
-    "type": "ct",
-    "updateable": true,
-    "privileged": false,
-    "interface_port": 8000,
-    "documentation": null,
-    "website": "https://www.vaultwarden.net/",
-    "logo": "https://raw.githubusercontent.com/dani-garcia/vaultwarden/main/resources/vaultwarden-icon-white.svg",
-    "description": "Vaultwarden is a self-hosted password manager which provides secure and encrypted password storage. It uses client-side encryption and provides access to passwords through a web interface and mobile apps.",
-    "install_methods": [
-        {
-            "type": "default",
-            "script": "ct/vaultwarden.sh",
-            "resources": {
-                "cpu": 4,
-                "ram": 6144,
-                "hdd": 6,
-                "os": "debian",
-                "version": "12"
-            }
-        },
-        {
-            "type": "alpine",
-            "script": "ct/alpine-vaultwarden.sh",
-            "resources": {
-                "cpu": 1,
-                "ram": 256,
-                "hdd": 0.3,
-                "os": "alpine",
-                "version": "3.19"
-            }
-        }
-    ],
-    "default_credentials": {
-        "username": null,
-        "password": null
+  "name": "Vaultwarden",
+  "slug": "vaultwarden",
+  "categories": [6],
+  "date_created": "2024-05-02",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 8000,
+  "documentation": null,
+  "website": "https://www.vaultwarden.net/",
+  "logo": "https://raw.githubusercontent.com/dani-garcia/vaultwarden/main/resources/vaultwarden-icon-white.svg",
+  "description": "Vaultwarden is a self-hosted password manager which provides secure and encrypted password storage. It uses client-side encryption and provides access to passwords through a web interface and mobile apps.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/vaultwarden.sh",
+      "resources": {
+        "cpu": 4,
+        "ram": 6144,
+        "hdd": 6,
+        "os": "debian",
+        "version": "12"
+      }
     },
-    "notes": [
-        {
-            "text": "Vaultwarden needs to be behind a proxy (Nginx Proxy Manager) to obtain HTTPS and to allow clients to connect.",
-            "type": "warning"
-        },
-        {
-            "text": "To set the Admin Token, run the command below (or type update) in the LXC Console.",
-            "type": "info"
-        }
-    ]
+    {
+      "type": "alpine",
+      "script": "ct/alpine-vaultwarden.sh",
+      "resources": {
+        "cpu": 1,
+        "ram": 256,
+        "hdd": 0.3,
+        "os": "alpine",
+        "version": "3.19"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Vaultwarden needs to be behind a proxy (Nginx Proxy Manager) to obtain HTTPS and to allow clients to connect.",
+      "type": "warning"
+    },
+    {
+      "text": "To set the Admin Token, run the command below (or type update) in the LXC Console.",
+      "type": "info"
+    }
+  ]
 }
