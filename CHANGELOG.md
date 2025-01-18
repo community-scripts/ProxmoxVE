@@ -27,6 +27,8 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- Fix linkwarden update [@burgerga](https://github.com/burgerga) ([#1565](https://github.com/community-scripts/ProxmoxVE/pull/1565))
+- [jellyseerr] Update nodejs if not up-to-date [@makstech](https://github.com/makstech) ([#1563](https://github.com/community-scripts/ProxmoxVE/pull/1563))
 - Update VM Tags [@oOStroudyOo](https://github.com/oOStroudyOo) ([#1562](https://github.com/community-scripts/ProxmoxVE/pull/1562))
 - Update apt-cacher-ng.sh: Typo/Missing $ [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1545](https://github.com/community-scripts/ProxmoxVE/pull/1545))
 
