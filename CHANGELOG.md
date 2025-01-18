@@ -23,7 +23,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 💥 Breaking Changes
 
-- breaking change: homeassistant upgrade os and python3 **Please First read guide!** [@MickLesk](https://github.com/MickLesk) ([#1550](https://github.com/community-scripts/ProxmoxVE/pull/1550))
+- **READ GUIDE FIRST** breaking change: Homeassistant-Core upgrade os and python3 [@MickLesk](https://github.com/MickLesk) ([#1550](https://github.com/community-scripts/ProxmoxVE/pull/1550))
 - Update Openwrt: Delete lines that do WAN input and forward accept [@chackl1990](https://github.com/chackl1990) ([#1540](https://github.com/community-scripts/ProxmoxVE/pull/1540))
 
 ### 🚀 Updated Scripts
