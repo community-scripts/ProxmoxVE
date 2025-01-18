@@ -6,7 +6,7 @@
     ],
     "date_created": "2025-01-14",
     "type": "ct",
-    "updateable": false,
+    "updateable": true,
     "privileged": false,
     "interface_port": 6157,
     "documentation": null,
