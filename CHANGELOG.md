@@ -17,6 +17,19 @@ All LXC instances created using this repository come pre-installed with Midnight
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
 
+## 2025-01-18
+
+### Changed
+
+### 💥 Breaking Changes
+
+- Update Openwrt: Delete lines that do WAN input and forward accept [@chackl1990](https://github.com/chackl1990) ([#1540](https://github.com/community-scripts/ProxmoxVE/pull/1540))
+
+### 🚀 Updated Scripts
+
+- Update VM Tags [@oOStroudyOo](https://github.com/oOStroudyOo) ([#1562](https://github.com/community-scripts/ProxmoxVE/pull/1562))
+- Update apt-cacher-ng.sh: Typo/Missing $ [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1545](https://github.com/community-scripts/ProxmoxVE/pull/1545))
+
 ## 2025-01-16
 
 ### Changed
