@@ -34,7 +34,7 @@ function update_script() {
         exit
     fi
 
-    if [ "$(node -v | cut -c2- | cut -d. -f1)" -ne 22 ]; then
+    if [ "$(node -v | cut -c2-3)" -ne 22 ]; then
         msg_info "Updating Node.js Repository"
         echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_22.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
         msg_ok "Updating Node.js Repository"
