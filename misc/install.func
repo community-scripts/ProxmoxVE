@@ -263,3 +263,23 @@ EOF
     chmod 600 /root/.ssh/authorized_keys
   fi
 }
+
+# This function downloads the latest release of a GitHub repository
+github_download_latest_release() {
+  local user="$1"
+  local repo="$2"
+  local output_file="$3"
+  local tarball_url=$($STD wget -qLO - "https://api.github.com/repos/$user/$repo/releases/latest" | grep '"tarball_url":' | cut -d '"' -f 4)
+  $STD wget -qLO "$output_file" "$tarball_url"
+}
+
+# This function extracts a GitHub release tarball into a target directory
+github_extract_latest_release() {
+  local user="$1"
+  local repo="$2"
+  local output_directory="$3"
+  mkdir -p "$output_directory"
+  github_download_latest_release "$user" "$repo" "/tmp/$repo.tar.gz"
+  tar -xzf "/tmp/$repo.tar.gz" -C "$output_directory" --strip-components 1
+  rm "/tmp/$repo.tar.gz"
+}
