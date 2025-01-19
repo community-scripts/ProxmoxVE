@@ -17,6 +17,14 @@ All LXC instances created using this repository come pre-installed with Midnight
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
 
+## 2025-01-19
+
+### Changed
+
+### 🚀 Updated Scripts
+
+- Update Opengist.sh: Fix broken backup function [@bvdberg01](https://github.com/bvdberg01) ([#1572](https://github.com/community-scripts/ProxmoxVE/pull/1572))
+
 ## 2025-01-18
 
 ### Changed
