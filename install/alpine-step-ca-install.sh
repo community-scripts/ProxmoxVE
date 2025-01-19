@@ -74,7 +74,7 @@ timeout_counter=0
 while ! nc -z localhost 443; do
   sleep 0.5
   
-  ((timeout_counter++))
+  ((timeout_counter=counter+1))
   if (( timeout_counter > 30 )); then
     msg_error "Failed to start Step-CA"
     exit
