@@ -23,7 +23,7 @@ customize
 config_dir="/etc/step-ca"
 passwd_file="${config_dir}/password.txt"
 ca_admin_provisioner="Admin JWK"
-ca_admin_subject="admin@localhost"
+ca_admin_subject="admin-localhost"
 ca_admin_provisioner_passwd_file="${config_dir}/admin-jwk-password.txt"
 
 
@@ -60,18 +60,6 @@ function generatePasswordFile(){ # argument: path of file
 generatePasswordFile "${passwd_file}"
 generatePasswordFile "${ca_admin_provisioner_passwd_file}"
 
-#CA_PASS="$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)"
-#$STD cat <<EOF >${passwd_file}
-#${CA_PASS}
-#EOF
-
-#CA_ADMIN_PASS="$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)"
-#$STD cat <<EOF >${ca_admin_provisioner_passwd_file}
-#${CA_ADMIN_PASS}
-#EOF
-
-#chmod 600 ${passwd_file}
-#chmod 600 ${ca_admin_provisioner_passwd_file}
 msg_ok "Generated CA secrets"
 
 # Step 4b: Configure base CA
@@ -81,8 +69,23 @@ msg_info "Initialize base CA"
 $STD step ca init --name "${CA_NAME}" --dns localhost $CA_DNS --password-file ${passwd_file} --deployment-type standalone --address ":443" --provisioner "${ca_admin_provisioner}" --admin-subject "${ca_admin_subject}" --provisioner-password-file ${ca_admin_provisioner_passwd_file} --remote-management
 $STD rc-service step-ca start
 
-# Verify whether CA policy is requested
+# Wait till service has started and port is available
+timeout_counter=0
+while ! nc -z localhost 443; do
+  sleep 0.5
+  
+  ((timeout_counter++))
+  if [[ $timeout_counter -gt 30 ]]; then
+    msg_error "Failed to start Step-CA"
+    exit
+  fi
+done
+
+msg_ok "Initialized base CA"
+
+# Step 4c: Configure CA policy if necessary
 if [ -n "${CA_X509_POLICY_DNS}" ] || [ -n "${CA_X509_POLICY_IPS}" ]; then
+  msg_info "Configure CA policy"
 
   # Ensure admin subject is added to the allow list
   $STD step ca policy authority x509 allow dns "${ca_admin_subject}" --admin-provisioner "${ca_admin_provisioner}" --admin-subject "${ca_admin_subject}" --password-file ${ca_admin_provisioner_passwd_file}
@@ -94,27 +97,27 @@ if [ -n "${CA_X509_POLICY_DNS}" ] || [ -n "${CA_X509_POLICY_IPS}" ]; then
     $STD step ca policy authority x509 allow ip ${CA_X509_POLICY_IPS} --admin-provisioner "${ca_admin_provisioner}" --admin-subject "${ca_admin_subject}" --password-file ${ca_admin_provisioner_passwd_file}
   fi
 
-  #for dns_entry in "${x509_policy_dns[@]}"; do
-  #  $STD step ca policy authority x509 allow dns "${dns_entry}"
-  #done
-  #for ip_entry in "${x509_policy_ips[@]}"; do
-  #  $STD step ca policy authority x509 allow ip ${ip_entry}
-  #done
+  msg_ok "Configured CA policy"
 fi
 
+# Step 4d: Configure ACME if desired
 if [ "${CA_ACME}" = "yes" ]; then
   msg_info "Initialize ACME for CA"
   $STD step ca provisioner add "${CA_ACME_NAME}" --type ACME --x509-min-dur=20m --x509-max-dur=32h --x509-default-dur=24h --admin-provisioner "${ca_admin_provisioner}" --admin-subject "${ca_admin_subject}" --password-file ${ca_admin_provisioner_passwd_file}
+  msg_ok "Initialized ACME for CA"
 fi
-msg_ok "Finished initialization of CA"
 
-# Start application
+
+# Step 4e: Restart service and enable auto-start
 msg_info "Starting Alpine Step-CA"
 $STD rc-service step-ca restart
 $STD rc-update add step-ca default
 msg_ok "Started Alpine Step-CA"
 
-# Extend motd with step-ca fingerprint of root CA
+# Step 4f: Report back completion as it works from here!
+msg_ok "Completed setup of CA"
+
+# Step 4g: Extend motd with step-ca fingerprint of root CA
 MOTD_FILE="/etc/motd"
 if [ -f "$MOTD_FILE" ]; then
   ca_root_fingerprint=$(step certificate fingerprint ${STEPPATH}/certs/root_ca.crt)
