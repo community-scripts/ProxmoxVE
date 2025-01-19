@@ -133,6 +133,14 @@ update_os() {
   msg_ok "Updated Container OS"
 }
 
+# Install core packages that (almost) every container will depend upon.
+# Be sure to update install.func for apt-based systems as appropriate.
+install_core_packages() {
+  msg_info "Installing Core Packages"
+  apk add -q curl mc nano newt openssh sudo &>/dev/null
+  msg_ok "Installed Core Packages"
+}
+
 # This function modifies the message of the day (motd) and SSH settings
 motd_ssh() {
   # Set terminal to 256-color mode
