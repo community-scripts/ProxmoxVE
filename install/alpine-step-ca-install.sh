@@ -14,54 +14,67 @@ setting_up_container
 network_check
 update_os
 
-# Installing Dependencies
-#msg_info "Installing Dependencies"
-$STD apk add newt
-$STD apk add openssl
-#msg_ok "Installed Dependencies"
+motd_ssh
+customize
 
-msg_info "Preparing environment"
-$STD echo "export STEPPATH=/etc/step-ca" > ~/.profile
-$STD export STEPPATH=/etc/step-ca
+# Finished base install.... now install and setup Step-CA
 
-if [ "$VERBOSE" = "yes" ]; then
-  env #Display environment details
-fi
-
-#x509_policy_dns=($(echo "${CA_X509_POLICY_DNS}" | tr ' ' '\n'))
-#x509_policy_ips=($(echo "${CA_X509_POLICY_IPS}" | tr ' ' '\n'))
-
-msg_ok "Environment prepared"
-
-msg_info "Installing Alpine Step-CA"
-$STD apk add step-cli step-certificates
-msg_ok "Installed Alpine Step-CA"
-
-# Initialize CA
+# Step 0: Set internal values
 config_dir="/etc/step-ca"
 passwd_file="${config_dir}/password.txt"
 ca_admin_provisioner="Admin JWK"
 ca_admin_subject="admin@localhost"
 ca_admin_provisioner_passwd_file="${config_dir}/admin-jwk-password.txt"
 
+
+# Step 1: Installing Dependencies
+msg_info "Installing dependencies"
+$STD apk add newt
+$STD apk add openssl
+msg_ok "Installed dependencies"
+
+
+# Step 2: Prepare environment
+msg_info "Preparing environment"
+$STD echo "export STEPPATH=/etc/step-ca" > ~/.profile
+$STD export STEPPATH=/etc/step-ca
+msg_ok "Environment prepared"
+
+# Step 3: Do actual install of step-ca
+msg_info "Installing Alpine Step-CA"
+$STD apk add step-cli step-certificates
+msg_ok "Installed Alpine Step-CA"
+
+# Step 4: Setup step-ca
+
+# Step 4a: Prepare secrets
 msg_info "Generate CA secrets"
 
-CA_PASS="$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)"
-$STD cat <<EOF >${passwd_file}
-${CA_PASS}
-EOF
+function generatePasswordFile(){ # argument: path of file
 
-CA_ADMIN_PASS="$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)"
-$STD cat <<EOF >${ca_admin_provisioner_passwd_file}
-${CA_ADMIN_PASS}
-EOF
+  $STD echo "$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)" > "$1"
+  chmod 600 "$1"
 
-chmod 600 ${passwd_file}
-chmod 600 ${ca_admin_provisioner_passwd_file}
+}
 
+generatePasswordFile "${passwd_file}"
+generatePasswordFile "${ca_admin_provisioner_passwd_file}"
+
+#CA_PASS="$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)"
+#$STD cat <<EOF >${passwd_file}
+#${CA_PASS}
+#EOF
+
+#CA_ADMIN_PASS="$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)"
+#$STD cat <<EOF >${ca_admin_provisioner_passwd_file}
+#${CA_ADMIN_PASS}
+#EOF
+
+#chmod 600 ${passwd_file}
+#chmod 600 ${ca_admin_provisioner_passwd_file}
 msg_ok "Generated CA secrets"
 
-
+# Step 4b: Configure base CA
 msg_info "Initialize base CA"
 
 # Do initialize and immediately start it for further configuration
@@ -101,12 +114,9 @@ $STD rc-service step-ca restart
 $STD rc-update add step-ca default
 msg_ok "Started Alpine Step-CA"
 
-motd_ssh
 # Extend motd with step-ca fingerprint of root CA
 MOTD_FILE="/etc/motd"
 if [ -f "$MOTD_FILE" ]; then
   ca_root_fingerprint=$(step certificate fingerprint ${STEPPATH}/certs/root_ca.crt)
   echo -e "\n${TAB}${DEFAULT}${YW} Fingerprint CA Root Certificate: ${GN}${ca_root_fingerprint}${CL}" >> "$MOTD_FILE"
 fi
-
-customize
