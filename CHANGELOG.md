@@ -32,6 +32,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🌐 Website
 
+- Update Website | Add new Categories [@MickLesk](https://github.com/MickLesk) ([#1606](https://github.com/community-scripts/ProxmoxVE/pull/1606))
 - Grafana: Mark container as updateable [@andygrunwald](https://github.com/andygrunwald) ([#1603](https://github.com/community-scripts/ProxmoxVE/pull/1603))
 
 ### 🧰 Maintenance
