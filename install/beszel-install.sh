@@ -31,7 +31,7 @@ Description=Beszel Hub Service
 After=network.target
 
 [Service]
-ExecStart=/opt/beszel/beszel serve --http "0.0.0.0:$PORT"
+ExecStart=/opt/beszel/beszel serve --http "0.0.0.0:8090"
 WorkingDirectory=/opt/beszel
 Restart=always
 RestartSec=5

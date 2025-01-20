@@ -32,6 +32,7 @@ function update_script() {
         msg_error "No ${APP} Installation Found!"
         exit
     fi
+    /opt/beszel/beszel update
     msg_error "Ther is currently no automatic update function for ${APP}."
     exit
 }
