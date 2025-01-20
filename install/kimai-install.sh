@@ -24,9 +24,20 @@ $STD apt-get install -y \
   expect \
   composer \
   mariadb-server \
-  libapache2-mod-php \
-  php8.3-{mbstring,gd,intl,pdo,mysql,tokenizer,zip,xml} 
+  lsb-release
 msg_ok "Installed Dependencies"
+
+msg_info "Setup PHP8.4 Repository"
+$STD curl -sSLo /tmp/debsuryorg-archive-keyring.deb https://packages.sury.org/debsuryorg-archive-keyring.deb
+$STD dpkg -i /tmp/debsuryorg-archive-keyring.deb
+$STD sh -c 'echo "deb [signed-by=/usr/share/keyrings/deb.sury.org-php.gpg] https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list'
+$STD apt-get update
+
+msg_ok "Setup PHP8.4 Repository"
+$STD apt-get install -y \
+  php8.4-{mbstring,gd,intl,common,mysql,zip,xml} \
+  libapache2-mod-php8.4
+msg_info "Setup PHP"
 
 msg_info "Setting up database"
 DB_NAME=kimai_db
