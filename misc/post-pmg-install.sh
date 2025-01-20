@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck | community-scripts ORG
+# Copyright (c) 2021-2025 community-scripts ORG
 # Author: thost96 (thost96)
-# License: MIT
-# https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
 header_info() {
   clear
@@ -157,7 +156,7 @@ EOF
     reboot
     ;;
   no)
-    msg_error "Selected no to reboot  Proxmox Mail Gateway (Reboot recommended)"
+    msg_error "Selected no to reboot Proxmox Mail Gateway (Reboot recommended)"
     msg_ok "Completed Post Install Routines"
     ;;
   esac
