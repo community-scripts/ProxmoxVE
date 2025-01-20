@@ -17,11 +17,14 @@ msg_info "Installing Dependencies"
 $STD apt-get install -y \
   curl \
   tar \
-  sudo 
+  sudo \
+  mc
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Beszel"
-$STD sudo mkdir -p /opt/beszel && curl -sL "https://github.com/henrygd/beszel/releases/latest/download/beszel_$(uname -s)_$(uname -m | sed -e 's/x86_64/amd64/' -e 's/armv6l/arm/' -e 's/armv7l/arm/' -e 's/aarch64/arm64/').tar.gz" | tar -xz -O beszel | sudo tee /opt/beszel/beszel >/dev/null && sudo chmod +x /opt/beszel/beszel
+mkdir -p /opt/beszel 
+curl -sL "https://github.com/henrygd/beszel/releases/latest/download/beszel_$(uname -s)_$(uname -m | sed -e 's/x86_64/amd64/' -e 's/armv6l/arm/' -e 's/armv7l/arm/' -e 's/aarch64/arm64/').tar.gz" | tar -xz -O beszel | tee /opt/beszel/beszel >/dev/null 
+chmod +x /opt/beszel/beszel
 msg_ok "Installed Beszel"
 
 msg_info "Creating Service"
