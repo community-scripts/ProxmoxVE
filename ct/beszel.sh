@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/Sinofage/ProxmoxVE/refs/heads/beszel/misc/build.func)
+source <(curl -s https://raw.githubusercontent.com/Sinofage/ProxmoxVE/refs/heads/main/misc/build.func)
 # Copyright (c) community-scripts ORG
 # Author: Michelle Zitzerman (Sinofage)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
