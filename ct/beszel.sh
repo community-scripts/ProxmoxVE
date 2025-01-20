@@ -7,7 +7,7 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 
 # App Default Values
 APP="Beszel"
-var_tags="adblock"
+var_tags="Beszel"
 var_cpu="1"
 var_ram="512"
 var_disk="5"
@@ -28,11 +28,11 @@ function update_script() {
     header_info
     check_container_storage
     check_container_resources
-    if [[ ! -d /opt/AdGuardHome ]]; then
+    if [[ ! -d /opt/beszel ]]; then
         msg_error "No ${APP} Installation Found!"
         exit
     fi
-    msg_error "Adguard Home should be updated via the user interface."
+    msg_error "Beszel should be updated via the user interface."
     exit
 }
 

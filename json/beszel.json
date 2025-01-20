@@ -13,43 +13,10 @@
     "website":"https://beszel.dev/",
     "logo":"https://beszel.dev/icon.svg",
     "description":"A lightweight server monitoring platform that provides Docker statistics, historical data, and alert functions",
-    "features": [
-        "Lightweight and resource-efficient monitoring solution",
-        "Docker container statistics tracking (CPU, memory, network usage)",
-        "Multi-user support with role-based access control",
-        "OAuth/OIDC authentication support",
-        "Automatic backup capabilities (disk or S3-compatible storage)",
-        "REST API for integration",
-        "Configurable alerts for system metrics",
-        "No public internet exposure required"
-    ],
-    "monitored_metrics": {
-        "system": [
-            "CPU usage",
-            "Memory usage (including swap and ZFS ARC)",
-            "Disk usage and I/O",
-            "Network usage",
-            "Temperature sensors"
-        ],
-        "containers": [
-            "Docker/Podman CPU usage",
-            "Container memory usage",
-            "Container network usage"
-        ],
-        "gpu": [
-            "GPU usage",
-            "GPU temperature",
-            "Power draw (Nvidia and AMD only)"
-        ]
-    },
-    "components": {
-        "hub": "Web application built on PocketBase providing dashboard for system management",
-        "agent": "Lightweight SSH server that communicates system metrics to the hub"
-    },
     "install_methods":[
        {
           "type":"default",
-          "script":"ct/urbackupserver.sh",
+          "script":"ct/beszel.sh",
           "resources":{
              "cpu":1,
              "ram":512,
