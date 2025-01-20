@@ -21,7 +21,7 @@ $STD apt-get install -y tar
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Beszel"
-$STD curl -sL "https://github.com/henrygd/beszel/releases/latest/download/beszel_$(uname -s)_$(uname -m | sed -e 's/x86_64/amd64/' -e 's/armv6l/arm/' -e 's/armv7l/arm/' -e 's/aarch64/arm64/').tar.gz" | tar -xz -O beszel | sudo tee /opt/beszel >/dev/null && sudo chmod +x /opt/beszel
+$STD sudo mkdir -p /opt/beszel && curl -sL "https://github.com/henrygd/beszel/releases/latest/download/beszel_$(uname -s)_$(uname -m | sed -e 's/x86_64/amd64/' -e 's/armv6l/arm/' -e 's/armv7l/arm/' -e 's/aarch64/arm64/').tar.gz" | tar -xz -O beszel | sudo tee /opt/beszel/beszel >/dev/null && sudo chmod +x /opt/beszel/beszel
 msg_ok "Installed Beszel"
 
 msg_info "Creating Service"
@@ -33,7 +33,6 @@ After=network.target
 [Service]
 ExecStart=/opt/beszel/beszel serve --http "0.0.0.0:$PORT"
 WorkingDirectory=/opt/beszel
-User=beszel
 Restart=always
 RestartSec=5
 
