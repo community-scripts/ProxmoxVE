@@ -76,7 +76,7 @@ EOF
     msg_ok "Disabled 'pmg-enterprise' repository"
     ;;
   no)
-    msg_error "Selected no to Disabling 'pmg-enterprise' repository"
+    msg_error "Selected no to disabling 'pmg-enterprise' repository"
     ;;
   esac
 
@@ -92,7 +92,7 @@ EOF
     msg_ok "Enabled 'pmg-no-subscription' repository"
     ;;
   no)
-    msg_error "Selected no to Enabling 'pmg-no-subscription' repository"
+    msg_error "Selected no to enabling 'pmg-no-subscription' repository"
     ;;
   esac
 
@@ -108,7 +108,7 @@ EOF
     msg_ok "Added 'pmgtest' repository"
     ;;
   no)
-    msg_error "Selected no to Adding 'pmgtest' repository"
+    msg_error "Selected no to adding 'pmgtest' repository"
     ;;
   esac
 
@@ -126,7 +126,7 @@ EOF
       ;;
     no)
       whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox --title "Support Subscriptions" "Supporting the software's development team is essential. Check their official website's Support Subscriptions for pricing. Without their dedicated work, we wouldn't have this exceptional software." 10 58
-      msg_error "Selected no to Disabling subscription nag"
+      msg_error "Selected no to disabling subscription nag"
       ;;
     esac
   fi
@@ -142,7 +142,7 @@ EOF
     msg_ok "Updated Proxmox Mail Gateway"
     ;;
   no)
-    msg_error "Selected no to Updating Proxmox Mail Gateway"
+    msg_error "Selected no to updating Proxmox Mail Gateway"
     ;;
   esac
 
@@ -157,7 +157,7 @@ EOF
     reboot
     ;;
   no)
-    msg_error "Selected no to Rebooting Proxmox Mail Gateway (Reboot recommended)"
+    msg_error "Selected no to reboot  Proxmox Mail Gateway (Reboot recommended)"
     msg_ok "Completed Post Install Routines"
     ;;
   esac
