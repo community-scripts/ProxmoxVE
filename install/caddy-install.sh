@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 
 # Copyright (c) 2021-2025 tteck
-# Author: tteck (tteckster)
-# License: MIT
-# https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Author: tteck (tteckster) | Co-Author: MickLesk (CanbiZ)
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
 source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color
@@ -14,7 +13,14 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y {debian-keyring,debian-archive-keyring,apt-transport-https,gpg,curl,sudo,mc}
+$STD apt-get install -y \
+  debian-keyring \
+  debian-archive-keyring \
+  apt-transport-https \
+  gpg \
+  curl \
+  sudo \
+  mc
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Caddy"
@@ -23,6 +29,29 @@ curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' >/etc/a
 $STD apt-get update
 $STD apt-get install -y caddy
 msg_ok "Installed Caddy"
+
+read -r -p "Would you like to install xCaddy Addon? <y/N> " prompt
+if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
+  msg_info "Installing Golang"
+  cd /opt
+  set +o pipefail
+  GOLANG=$(curl -s https://go.dev/dl/ | grep -o "go.*\linux-amd64.tar.gz" | head -n 1)
+  wget -q https://golang.org/dl/$GOLANG
+  tar -xzf $GOLANG -C /usr/local
+  ln -s /usr/local/go/bin/go /usr/local/bin/go
+  set -o pipefail
+  rm -rf /opt/go*
+  msg_ok "Installed Golang"
+	
+  msg_info "Setup xCaddy"
+  cd /opt
+  RELEASE=$(curl -s https://api.github.com/repos/caddyserver/xcaddy/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+  wget -q https://github.com/caddyserver/xcaddy/releases/download/${RELEASE}/xcaddy_${RELEASE:1}_linux_amd64.deb
+  $STD dpkg -i xcaddy_${RELEASE:1}_linux_amd64.deb
+  rm -rf /opt/xcaddy*
+  $STD xcaddy build
+  msg_ok "Setup xCaddy"
+fi
 
 motd_ssh
 customize

@@ -1,0 +1,39 @@
+{
+   "name":"UrBackup Server",
+   "slug":"urbackupserver",
+   "categories":[
+      7
+   ],
+   "date_created":"2025-01-18",
+   "type":"ct",
+   "updateable":true,
+   "privileged":true,
+   "interface_port":55414,
+   "documentation":"https://www.urbackup.org/documentation.html",
+   "website":"https://www.urbackup.org/",
+   "logo":"https://forums.urbackup.org/uploads/default/original/2X/1/1051fd74d1dcbc3ad4220b43007fcab5287272b0.png",
+   "description":"URBackup is an open-source backup software designed for creating reliable and efficient backups of both files and system images. It supports client-server architecture, allowing you to back up multiple computers to a central server. It offers features such as incremental backups, real-time file backup, and scheduling, ensuring minimal data loss and quick recovery",
+   "install_methods":[
+      {
+         "type":"default",
+         "script":"ct/urbackupserver.sh",
+         "resources":{
+            "cpu":1,
+            "ram":1024,
+            "hdd":16,
+            "os":"Debian",
+            "version":"12"
+         }
+      }
+   ],
+   "default_credentials":{
+      "username":null,
+      "password":null
+   },
+   "notes":[
+      {
+         "text":"You probably want to drastically extend the storage space to fit whatever clients you want to back up",
+         "type":"info"
+      }
+   ]
+}

@@ -2,7 +2,7 @@
     "name": "Readeck",
     "slug": "readeck",
     "categories": [
-        0
+        12
     ],
     "date_created": "2024-05-02",
     "type": "ct",
@@ -12,7 +12,7 @@
     "documentation": null,
     "website": "https://readeck.org/",
     "logo": "https://codeberg.org/readeck/readeck/raw/branch/main/web/media/logo-square.svg",
-    "description": "Readeck helps you keep all that web content you\u2019ll want to revisit in an hour, tomorrow, or in 20 years.",
+    "description": "Readeck helps you keep all that web content you want to revisit in an hour, tomorrow, or in 20 years.",
     "install_methods": [
         {
             "type": "default",

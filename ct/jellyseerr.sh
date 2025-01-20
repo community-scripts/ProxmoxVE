@@ -34,6 +34,22 @@ function update_script() {
         exit
     fi
 
+    if [ "$(node -v | cut -c2-3)" -ne 22 ]; then
+        msg_info "Updating Node.js Repository"
+        echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_22.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
+        msg_ok "Updating Node.js Repository"
+
+        msg_info "Updating Packages"
+        apt-get update &>/dev/null
+        apt-get -y upgrade &>/dev/null
+        msg_ok "Updating Packages"
+        
+        msg_info "Cleaning up"
+        apt-get -y autoremove
+        apt-get -y autoclean
+        msg_ok "Cleaning up"
+    fi
+
     if ! command -v pnpm &> /dev/null; then
         msg_error "pnpm not found. Installing..."
         npm install -g pnpm &>/dev/null

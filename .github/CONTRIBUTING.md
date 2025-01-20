@@ -2,6 +2,7 @@
 # Community Scripts Contribution Guide
 
 ## **Welcome to the communty-scripts Repository!** 
+
 📜 These documents outline the essential coding standards for all our scripts and JSON files. Adhering to these standards ensures that our codebase remains consistent, readable, and maintainable. By following these guidelines, we can improve collaboration, reduce errors, and enhance the overall quality of our project.
 
 ### Why Coding Standards Matter

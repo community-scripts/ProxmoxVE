@@ -8,13 +8,13 @@ body:
         # 🐞 **Script Issue Report**
         Thank you for taking the time to report an issue! Please provide as much detail as possible to help us address the problem efficiently.  
 
-        ## ⚠️ **IMPORTANT**  
+        ## ⚠️ **IMPORTANT - READ FIRST**  
         - 🔍 **Search first:** Before submitting, check if the issue has already been reported or resolved in [closed issues](https://github.com/community-scripts/ProxmoxVE/issues?q=is%3Aissue+is%3Aclosed). If found, comment on that issue instead of creating a new one.  
         Alternatively, check the **[Discussions](https://github.com/community-scripts/ProxmoxVE/discussions)** under the *"Announcement"* or *"Guide"* categories for relevant information.  
         - 🛠️ **Supported environments only:** Ensure you are using a default Linux distribution. Custom setups may not be supported.  
         - 🔎 If you encounter `[ERROR] in line 23: exit code *: while executing command "$@" > /dev/null 2>&1`, rerun the script with verbose mode before submitting the issue.  
         - 💡 For general questions, feature requests, or suggestions, use the [Discussions section](https://github.com/community-scripts/ProxmoxVE/discussions).  
-
+        
   - type: input
     id: guidelines
     attributes:

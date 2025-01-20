@@ -44,34 +44,36 @@ $STD apt-get install -y \
   libavfilter-dev \
   libmariadb-dev-compat \
   libatlas-base-dev \
-  software-properties-common
+  software-properties-common \
+  libmariadb-dev \
+  pkg-config
 msg_ok "Installed Dependencies"
 
-msg_info "Setup Python3"
-$STD add-apt-repository -y ppa:deadsnakes/ppa
+msg_info "Setup Python3/pip"
 $STD apt-get update
+$STD rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
+$STD apt-get remove --purge -y python3.12 python3.12-dev python3.12-venv
+
 $STD apt-get install -y \
-  python3.13-* \
+  python3.13 \
   python3-pip \
   python3.13-dev \
   python3.13-venv
-msg_ok "Setup Python3"
 
-msg_info "Installing UV"
-$STD pip install uv
-msg_ok "Installed UV"
+ln -sf /usr/bin/python3.13 /usr/bin/python3
+msg_ok "Setup Python3"
 
 msg_info "Setting up Home Assistant-Core environment"
 mkdir /srv/homeassistant
 cd /srv/homeassistant
-uv venv . &>/dev/null
+python3 -m venv .
 source bin/activate
-msg_ok "Created virtual environment with UV"
+msg_ok "Created virtual environment"
 
-msg_info "Installing Home Assistant-Core and packages"
-$STD uv pip install webrtcvad wheel homeassistant mysqlclient psycopg2-binary isal
+msg_info "Installing Home Assistant-Core"
+$STD python3 -m pip install webrtcvad wheel homeassistant mysqlclient psycopg2-binary isal
 mkdir -p /root/.homeassistant
-msg_ok "Installed Home Assistant-Core and required packages"
+msg_ok "Installed Home Assistant-Core"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/homeassistant.service

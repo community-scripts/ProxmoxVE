@@ -2,7 +2,7 @@
     "name": "Caddy",
     "slug": "caddy",
     "categories": [
-        11
+        21
     ],
     "date_created": "2024-05-11",
     "type": "ct",
@@ -20,7 +20,7 @@
             "resources": {
                 "cpu": 1,
                 "ram": 512,
-                "hdd": 2,
+                "hdd": 4,
                 "os": "debian",
                 "version": "12"
             }
@@ -30,5 +30,14 @@
         "username": null,
         "password": null
     },
-    "notes": []
+  "notes": [
+    {
+      "text": "if you need an internal module run: `caddy add-package PACKAGENAME`",
+      "type": "info"
+    },
+    {
+      "text": "if you need an external module run: `xcaddy build --with github.com/caddy-dns/cloudflare`",
+      "type": "info"
+    }
+  ]
 }

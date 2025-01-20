@@ -16,9 +16,65 @@ All LXC instances created using this repository come pre-installed with Midnight
 > [!IMPORTANT]
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
+
+## 2025-01-20
+
+### Changed
+
+### ✨ New Scripts
+
+- New Script: UrBackup Server [@kris701](https://github.com/kris701) ([#1569](https://github.com/community-scripts/ProxmoxVE/pull/1569))
+- New Script: Proxmox Mail Gateway Post Installer [@thost96](https://github.com/thost96) ([#1559](https://github.com/community-scripts/ProxmoxVE/pull/1559))
+
+### 🚀 Updated Scripts
+
+- Feature: Add xCaddy for external Modules on Caddy-LXC [@MickLesk](https://github.com/MickLesk) ([#1613](https://github.com/community-scripts/ProxmoxVE/pull/1613))
+- Update Kimai Dependency: Use PHP 8.4  [@MickLesk](https://github.com/MickLesk) ([#1609](https://github.com/community-scripts/ProxmoxVE/pull/1609))
+- Fix Pocketbase URL after install [@MickLesk](https://github.com/MickLesk) ([#1597](https://github.com/community-scripts/ProxmoxVE/pull/1597))
+- Unifi.sh fix wrong URL after Install [@thost96](https://github.com/thost96) ([#1601](https://github.com/community-scripts/ProxmoxVE/pull/1601))
+
+### 🌐 Website
+
+- Update Website | Add new Categories [@MickLesk](https://github.com/MickLesk) ([#1606](https://github.com/community-scripts/ProxmoxVE/pull/1606))
+- Grafana: Mark container as updateable [@andygrunwald](https://github.com/andygrunwald) ([#1603](https://github.com/community-scripts/ProxmoxVE/pull/1603))
+
+### 🧰 Maintenance
+
+- Update build.func: Fix Advanced Tags (Remove all if empty / overwrite if default cleared) [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1612](https://github.com/community-scripts/ProxmoxVE/pull/1612))
+- Add new Check for LXC MaxKeys by @cricalix [@MickLesk](https://github.com/MickLesk) ([#1602](https://github.com/community-scripts/ProxmoxVE/pull/1602))
+
+## 2025-01-19
+
+### Changed
+
+### 🚀 Updated Scripts
+
+- Update Opengist.sh: Fix broken backup function [@bvdberg01](https://github.com/bvdberg01) ([#1572](https://github.com/community-scripts/ProxmoxVE/pull/1572))
+
+## 2025-01-18
+
+### Changed
+
+### 💥 Breaking Changes
+
+- **READ GUIDE FIRST** breaking change: Homeassistant-Core upgrade os and python3 [@MickLesk](https://github.com/MickLesk) ([#1550](https://github.com/community-scripts/ProxmoxVE/pull/1550))
+- Update Openwrt: Delete lines that do WAN input and forward accept [@chackl1990](https://github.com/chackl1990) ([#1540](https://github.com/community-scripts/ProxmoxVE/pull/1540))
+
+### 🚀 Updated Scripts
+
+- added cifs support in ubuntu2404-vm.sh [@plonxyz](https://github.com/plonxyz) ([#1461](https://github.com/community-scripts/ProxmoxVE/pull/1461))
+- Fix linkwarden update [@burgerga](https://github.com/burgerga) ([#1565](https://github.com/community-scripts/ProxmoxVE/pull/1565))
+- [jellyseerr] Update nodejs if not up-to-date [@makstech](https://github.com/makstech) ([#1563](https://github.com/community-scripts/ProxmoxVE/pull/1563))
+- Update VM Tags [@oOStroudyOo](https://github.com/oOStroudyOo) ([#1562](https://github.com/community-scripts/ProxmoxVE/pull/1562))
+- Update apt-cacher-ng.sh: Typo/Missing $ [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1545](https://github.com/community-scripts/ProxmoxVE/pull/1545))
+
 ## 2025-01-16
 
 ### Changed
+
+### 💥 Breaking Changes
+
+- Update jellyseerr-install.sh to use Node 22 as required by latest Jellyseerr version [@pedrovieira](https://github.com/pedrovieira) ([#1535](https://github.com/community-scripts/ProxmoxVE/pull/1535))
 
 ### ✨ New Scripts
 
