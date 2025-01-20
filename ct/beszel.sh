@@ -7,7 +7,7 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 
 # App Default Values
 APP="Beszel"
-var_tags="Beszel"
+var_tags="beszel"
 var_cpu="1"
 var_ram="512"
 var_disk="5"
