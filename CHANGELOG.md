@@ -27,8 +27,8 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
-- Unifi.sh fix wrong URL after Install [@thost96](https://github.com/thost96) ([#1601](https://github.com/community-scripts/ProxmoxVE/pull/1601))
 - Fix Pocketbase URL after install [@MickLesk](https://github.com/MickLesk) ([#1597](https://github.com/community-scripts/ProxmoxVE/pull/1597))
+- Unifi.sh fix wrong URL after Install [@thost96](https://github.com/thost96) ([#1601](https://github.com/community-scripts/ProxmoxVE/pull/1601))
 
 ### 🌐 Website
 
