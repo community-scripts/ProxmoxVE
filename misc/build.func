@@ -675,14 +675,10 @@ advanced_settings() {
 
   if ADV_TAGS=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Custom Tags?[If you remove all, there will be no tags!]" 8 58 ${TAGS} --title "Advanced Tags" 3>&1 1>&2 2>&3); then
     if [ -n "${ADV_TAGS}" ]; then
-      ADV_TAGS=$(echo "$ADV_TAGS" | tr -d '[:space:]') # Remove whitespace from ADV_TAGS
-      if [[ "$ADV_TAGS" != *"community-script"* ]]; then
-        TAGS="community-script;${ADV_TAGS}"
-      else
-        TAGS="${ADV_TAGS}" # ADV_TAGS already contains "community-script"
-      fi
+      ADV_TAGS=$(echo "$ADV_TAGS" | tr -d '[:space:]') 
+        TAGS="${ADV_TAGS}"
     else
-      TAGS="community-script;"
+      TAGS=";"
     fi
       echo -e "${NETWORK}${BOLD}${DGN}Tags: ${BGN}$TAGS${CL}"
     else
