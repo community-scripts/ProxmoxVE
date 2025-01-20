@@ -7,7 +7,7 @@ source <(curl -s https://raw.githubusercontent.com/Sinofage/ProxmoxVE/refs/heads
 
 # App Default Values
 APP="Beszel"
-var_tags="beszel"
+var_tags="monitoring"
 var_cpu="1"
 var_ram="512"
 var_disk="5"
