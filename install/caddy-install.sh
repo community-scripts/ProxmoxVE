@@ -14,7 +14,13 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-  debian-keyring,debian-archive-keyring,apt-transport-https,gpg,curl,sudo,mc}
+  debian-keyring \
+  debian-archive-keyring \
+  apt-transport-https \
+  gpg \
+  curl \
+  sudo \
+  mc
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Caddy"
