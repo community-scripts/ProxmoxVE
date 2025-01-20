@@ -2,7 +2,7 @@
     "name": "Proxmox VE Kernel Pin",
     "slug": "kernel-pin",
     "categories": [
-        1
+        2
     ],
     "date_created": "2024-05-08",
     "type": "misc",

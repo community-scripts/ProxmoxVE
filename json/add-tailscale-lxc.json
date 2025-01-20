@@ -2,7 +2,7 @@
     "name": "Tailscale",
     "slug": "add-tailscale-lxc",
     "categories": [
-        11
+        1
     ],
     "date_created": "2024-05-02",
     "type": "misc",

@@ -2,7 +2,6 @@
 "name": "Proxmox Mail Gateway Post Install",
 "slug": "post-pmg-install",
 "categories": [
-    1
 ],
 "date_created": "2025-01-20",
 "type": "misc",

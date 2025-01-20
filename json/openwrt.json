@@ -2,7 +2,7 @@
     "name": "OpenWrt",
     "slug": "openwrt",
     "categories": [
-        11
+        2
     ],
     "date_created": "2024-05-02",
     "type": "vm",

@@ -2,7 +2,7 @@
     "name": "Proxmox Update Repositories",
     "slug": "update-repo",
     "categories": [
-        1
+        25
     ],
     "date_created": "2024-11-04",
     "type": "misc",

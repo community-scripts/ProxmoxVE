@@ -2,7 +2,7 @@
     "name": "Podman Home Assistant Container",
     "slug": "podman-homeassistant",
     "categories": [
-        2
+        3
     ],
     "date_created": "2024-04-29",
     "type": "ct",

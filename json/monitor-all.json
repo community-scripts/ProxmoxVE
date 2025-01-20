@@ -2,7 +2,7 @@
     "name": "Proxmox VE Monitor-All",
     "slug": "monitor-all",
     "categories": [
-        1
+        9
     ],
     "date_created": "2024-04-29",
     "type": "misc",

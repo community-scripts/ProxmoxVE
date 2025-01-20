@@ -2,7 +2,7 @@
     "name": "Proxmox VE Host Backup",
     "slug": "host-backup",
     "categories": [
-        1
+        7
     ],
     "date_created": "2024-04-29",
     "type": "misc",
