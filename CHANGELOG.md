@@ -40,6 +40,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🧰 Maintenance
 
+- [core] Update build.func: Add defaults to Advanced mode [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1548](https://github.com/community-scripts/ProxmoxVE/pull/1548))
 - Update build.func: Fix Advanced Tags (Remove all if empty / overwrite if default cleared) [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1612](https://github.com/community-scripts/ProxmoxVE/pull/1612))
 - Add new Check for LXC MaxKeys by @cricalix [@MickLesk](https://github.com/MickLesk) ([#1602](https://github.com/community-scripts/ProxmoxVE/pull/1602))
 
