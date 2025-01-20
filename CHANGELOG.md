@@ -28,6 +28,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- Feature: Add xCaddy for external Modules on Caddy-LXC [@MickLesk](https://github.com/MickLesk) ([#1613](https://github.com/community-scripts/ProxmoxVE/pull/1613))
 - Update Kimai Dependency: Use PHP 8.4  [@MickLesk](https://github.com/MickLesk) ([#1609](https://github.com/community-scripts/ProxmoxVE/pull/1609))
 - Fix Pocketbase URL after install [@MickLesk](https://github.com/MickLesk) ([#1597](https://github.com/community-scripts/ProxmoxVE/pull/1597))
 - Unifi.sh fix wrong URL after Install [@thost96](https://github.com/thost96) ([#1601](https://github.com/community-scripts/ProxmoxVE/pull/1601))
@@ -39,6 +40,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🧰 Maintenance
 
+- Update build.func: Fix Advanced Tags (Remove all if empty / overwrite if default cleared) [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1612](https://github.com/community-scripts/ProxmoxVE/pull/1612))
 - Add new Check for LXC MaxKeys by @cricalix [@MickLesk](https://github.com/MickLesk) ([#1602](https://github.com/community-scripts/ProxmoxVE/pull/1602))
 
 ## 2025-01-19
