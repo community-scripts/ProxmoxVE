@@ -38,7 +38,7 @@ msg_ok "Installed Node.js"
 
 msg_info "Installing Actual Budget"
 RELEASE=$(curl -s https://api.github.com/repos/actualbudget/actual-server/tags | jq --raw-output '.[0].name')
-wget -q https://github.com/actualbudget/actual-server/archive/refs/tags/v25.1.0.tar.gz -O actual-server.tar.gz -O - | tar -xz
+wget -q https://github.com/actualbudget/actual-server/archive/refs/tags/${RELEASE}.tar.gz -O actual-server.tar.gz -O - | tar -xz
 mv *ctual-server-* /opt/actualbudget
 mkdir -p /opt/actualbudget/server-files
 mkdir -p /opt/actualbudget-data
@@ -52,6 +52,7 @@ PORT=5006
 EOF
 cd /opt/actualbudget
 $STD yarn install
+echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Installed Actual Budget"
 
 msg_info "Creating Service"
