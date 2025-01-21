@@ -36,14 +36,12 @@ function update_script() {
     msg_ok "Stopped ${APP}"
 
     msg_info "Updating ${APP} to v${VERSION}"
-    PREVIOUS_VERSION="$(readlink -f /opt/teddycloud)"
+    cd /opt
+    mv /opt/teddycloud /opt_teddycloud_bak
     wget -q "https://github.com/toniebox-reverse-engineering/teddycloud/releases/download/${RELEASE}/teddycloud.amd64.release_v${VERSION}.zip"
-    unzip -q -d "/opt/teddycloud-${VERSION}" "teddycloud.amd64.release_v${VERSION}.zip"
-    ln -fns "/opt/teddycloud-${VERSION}" /opt/teddycloud
+    unzip -q -d /opt/teddycloud teddycloud.amd64.release_v${VERSION}.zip
+    cp -R /opt_teddycloud_bak/certs /opt_teddycloud_bak/config /opt_teddycloud_bak/data /opt/teddycloud
     echo "${VERSION}" >"/opt/${APP}_version.txt"
-    cp -R "${PREVIOUS_VERSION}/certs" /opt/teddycloud
-    cp -R "${PREVIOUS_VERSION}/config" /opt/teddycloud
-    cp -R "${PREVIOUS_VERSION}/data" /opt/teddycloud
     msg_ok "Updated ${APP} to v${VERSION}"
 
     msg_info "Starting ${APP}"
@@ -51,8 +49,8 @@ function update_script() {
     msg_ok "Started ${APP}"
 
     msg_info "Cleaning up"
-    rm "teddycloud.amd64.release_v${VERSION}.zip"
-    rm -rf "${PREVIOUS_VERSION}"
+    rm -rf /opt/teddycloud.amd64.release_v${VERSION}.zip
+    rm -rf /opt/teddycloud_bak
     msg_ok "Cleaned"
   else
     msg_ok "No update required. ${APP} is already at v${VERSION}"
