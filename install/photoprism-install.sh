@@ -14,33 +14,35 @@ network_check
 update_os
 
 msg_info "Installing Dependencies (Patience)"
-$STD apt-get install -y curl
-$STD apt-get install -y sudo
-$STD apt-get install -y mc
-$STD apt-get install -y exiftool
-$STD apt-get install -y ffmpeg
-$STD apt-get install -y libheif1
-$STD apt-get install -y libpng-dev
-$STD apt-get install -y libjpeg-dev
-$STD apt-get install -y libtiff-dev
-$STD apt-get install -y imagemagick
-$STD apt-get install -y darktable
-$STD apt-get install -y rawtherapee
-$STD apt-get install -y libvips42
+$STD apt-get install -y \
+    curl \
+    sudo \
+    mc \
+    exiftool \
+    ffmpeg \
+    libheif1 \
+    libpng-dev \
+    libjpeg-dev \
+    libtiff-dev \
+    imagemagick \
+    darktable \
+    rawtherapee \
+    libvips42
 
 echo 'export PATH=/usr/local:$PATH' >>~/.bashrc
 export PATH=/usr/local:$PATH
 msg_ok "Installed Dependencies"
 
 msg_info "Installing PhotoPrism (Patience)"
-mkdir -p /opt/photoprism/{cache,config,photos/originals,photos/import,storage,temp}
+mkdir -p /opt/photoprism/{cache,config,photos,storage,temp}
+mkdir -p /opt/photoprism/photos/{originals,import}
+mkdir -p /opt/photoprism_backups
 wget -q -cO - https://dl.photoprism.app/pkg/linux/amd64.tar.gz | tar -xz -C /opt/photoprism --strip-components=1
-if [[ ${PCT_OSTYPE} == "ubuntu" ]]; then 
-  wget -q -cO - https://dl.photoprism.app/dist/libheif/libheif-jammy-amd64-v1.17.1.tar.gz | tar -xzf - -C /usr/local --strip-components=1
-else
-  wget -q -cO - https://dl.photoprism.app/dist/libheif/libheif-bookworm-amd64-v1.17.1.tar.gz | tar -xzf - -C /usr/local --strip-components=1
-fi
+LIBHEIF_URL=$(wget -q -O - "https://dl.photoprism.app/dist/libheif/" | grep -oP "libheif-$(lsb_release -cs)-amd64-v[0-9\.]+\.tar\.gz" | sort -V | tail -n 1)
+wget -q -cO - "https://dl.photoprism.app/dist/libheif/$LIBHEIF_URL" | tar -xzf - -C /usr/local --strip-components=1
 ldconfig
+chown -R /opt/photoprism/photos/originals
+chmod -R 755 /opt/photoprism/photos/originals
 cat <<EOF >/opt/photoprism/config/.env
 PHOTOPRISM_AUTH_MODE='password'
 PHOTOPRISM_ADMIN_PASSWORD='changeme'
@@ -50,6 +52,14 @@ PHOTOPRISM_SITE_CAPTION='https://Helper-Scripts.com'
 PHOTOPRISM_STORAGE_PATH='/opt/photoprism/storage'
 PHOTOPRISM_ORIGINALS_PATH='/opt/photoprism/photos/originals'
 PHOTOPRISM_IMPORT_PATH='/opt/photoprism/photos/import'
+PHOTOPRISM_BACKUP_PATH='/opt/photoprism_backups'
+PHOTOPRISM_DATABASE_DRIVER='sqlite'
+PHOTOPRISM_DISABLE_WEBDAV='false'
+PHOTOPRISM_DISABLE_FACES='false'
+PHOTOPRISM_AUTO_INDEX='300'
+PHOTOPRISM_AUTO_IMPORT='-1'
+PHOTOPRISM_PUBLIC='false'
+PHOTOPRISM_DEBUG='false'
 EOF
 ln -sf /opt/photoprism/bin/photoprism /usr/local/bin/photoprism
 msg_ok "Installed PhotoPrism"
