@@ -27,7 +27,7 @@ msg_ok "Installed Dependencies"
 msg_info "Setting up Node.js Repository"
 mkdir -p /etc/apt/keyrings
 curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
+echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_22.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
 msg_ok "Set up Node.js Repository"
 
 msg_info "Installing Node.js"
@@ -36,10 +36,10 @@ $STD apt-get install -y nodejs
 $STD npm install --global yarn
 msg_ok "Installed Node.js"
 
+msg_info "Installing Actual Budget"
 RELEASE=$(curl -s https://api.github.com/repos/actualbudget/actual-server/tags | jq --raw-output '.[0].name')
-msg_info "Installing Actual Budget $RELEASE"
-wget -q https://codeload.github.com/actualbudget/actual-server/legacy.tar.gz/refs/tags/${RELEASE} -O - | tar -xz
-mv actualbudget-actual-server-* /opt/actualbudget
+wget -q https://github.com/actualbudget/actual-server/archive/refs/tags/v25.1.0.tar.gz -O actual-server.tar.gz -O - | tar -xz
+mv *ctual-server-* /opt/actualbudget
 mkdir -p /opt/actualbudget/server-files
 mkdir -p /opt/actualbudget-data
 chown -R root:root /opt/actualbudget/server-files
