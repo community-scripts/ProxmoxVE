@@ -40,6 +40,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🌐 Website
 
+- Bump vite from 6.0.1 to 6.0.11 in /frontend [@dependabot[bot]](https://github.com/dependabot[bot]) ([#1653](https://github.com/community-scripts/ProxmoxVE/pull/1653))
 - Update glpi.json [@opastorello](https://github.com/opastorello) ([#1641](https://github.com/community-scripts/ProxmoxVE/pull/1641))
 - Fix Docker-VM name on website [@Sinofage](https://github.com/Sinofage) ([#1630](https://github.com/community-scripts/ProxmoxVE/pull/1630))
 
