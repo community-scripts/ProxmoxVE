@@ -46,7 +46,7 @@ function update_script() {
         systemctl stop actualbudget
         msg_ok "${APP} Stopped"
         
-        msg_info "Updating ${APP} to v${RELEASE}"
+        msg_info "Updating ${APP} to ${RELEASE}"
         wget -q https://github.com/actualbudget/actual-server/archive/refs/tags/${RELEASE}.tar.gz -O actual-server.tar.gz
         tar -xzvf actual-server.tar.gz >/dev/null 2>&1
         mv /opt/actualbudget /opt/actualbudget_bak
