@@ -31,6 +31,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- ActualBudget: Fix Update-Function, Fix Wget Crawling, Add Versionscheck [@MickLesk](https://github.com/MickLesk) ([#1643](https://github.com/community-scripts/ProxmoxVE/pull/1643))
 - Fix Photoprism missing folder & environments  [@MickLesk](https://github.com/MickLesk) ([#1639](https://github.com/community-scripts/ProxmoxVE/pull/1639))
 - Update MOTD: Add Dynamic IP with profile.d by @JcMinarro [@MickLesk](https://github.com/MickLesk) ([#1633](https://github.com/community-scripts/ProxmoxVE/pull/1633))
 - PBS.sh: Fix wrong URL after Setup [@thost96](https://github.com/thost96) ([#1629](https://github.com/community-scripts/ProxmoxVE/pull/1629))
