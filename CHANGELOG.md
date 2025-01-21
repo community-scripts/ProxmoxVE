@@ -31,6 +31,8 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- Fix: Teddycloud Script (install, clean up & update) [@MickLesk](https://github.com/MickLesk) ([#1652](https://github.com/community-scripts/ProxmoxVE/pull/1652))
+- Fix: Docker VM deprecated gpg [@MickLesk](https://github.com/MickLesk) ([#1649](https://github.com/community-scripts/ProxmoxVE/pull/1649))
 - ActualBudget: Fix Update-Function, Fix Wget Crawling, Add Versionscheck [@MickLesk](https://github.com/MickLesk) ([#1643](https://github.com/community-scripts/ProxmoxVE/pull/1643))
 - Fix Photoprism missing folder & environments  [@MickLesk](https://github.com/MickLesk) ([#1639](https://github.com/community-scripts/ProxmoxVE/pull/1639))
 - Update MOTD: Add Dynamic IP with profile.d by @JcMinarro [@MickLesk](https://github.com/MickLesk) ([#1633](https://github.com/community-scripts/ProxmoxVE/pull/1633))
