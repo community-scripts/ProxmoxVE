@@ -23,14 +23,18 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### ✨ New Scripts
 
+- New script: ProjectSend [@bvdberg01](https://github.com/bvdberg01) ([#1616](https://github.com/community-scripts/ProxmoxVE/pull/1616))
 - New Script: Beszel [@Sinofage](https://github.com/Sinofage) ([#1619](https://github.com/community-scripts/ProxmoxVE/pull/1619))
 - New Script: Docker VM [@thost96](https://github.com/thost96) ([#1608](https://github.com/community-scripts/ProxmoxVE/pull/1608))
 - New script: SQL Server 2022 [@kris701](https://github.com/kris701) ([#1482](https://github.com/community-scripts/ProxmoxVE/pull/1482))
-- New script: ProjectSend [@bvdberg01](https://github.com/bvdberg01) ([#1616](https://github.com/community-scripts/ProxmoxVE/pull/1616))
 
 ### 🚀 Updated Scripts
 
 - PBS.sh: Fix wrong URL after Setup [@thost96](https://github.com/thost96) ([#1629](https://github.com/community-scripts/ProxmoxVE/pull/1629))
+
+### 🌐 Website
+
+- Fix Docker-VM name on website [@Sinofage](https://github.com/Sinofage) ([#1630](https://github.com/community-scripts/ProxmoxVE/pull/1630))
 
 ## 2025-01-20
 
