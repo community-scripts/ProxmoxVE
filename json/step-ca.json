@@ -28,7 +28,7 @@
     ],
     "default_credentials": {
       "username": null,
-      "password": "alpine"
+      "password": null
     },
     "notes": []
   }
