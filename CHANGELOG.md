@@ -17,6 +17,21 @@ All LXC instances created using this repository come pre-installed with Midnight
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
 
+## 2025-01-21
+
+### Changed
+
+### ✨ New Scripts
+
+- New Script: Beszel [@Sinofage](https://github.com/Sinofage) ([#1619](https://github.com/community-scripts/ProxmoxVE/pull/1619))
+- New Script: Docker VM [@thost96](https://github.com/thost96) ([#1608](https://github.com/community-scripts/ProxmoxVE/pull/1608))
+- New script: SQL Server 2022 [@kris701](https://github.com/kris701) ([#1482](https://github.com/community-scripts/ProxmoxVE/pull/1482))
+- New script: ProjectSend [@bvdberg01](https://github.com/bvdberg01) ([#1616](https://github.com/community-scripts/ProxmoxVE/pull/1616))
+
+### 🚀 Updated Scripts
+
+- PBS.sh: Fix wrong URL after Setup [@thost96](https://github.com/thost96) ([#1629](https://github.com/community-scripts/ProxmoxVE/pull/1629))
+
 ## 2025-01-20
 
 ### Changed
