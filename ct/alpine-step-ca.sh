@@ -13,7 +13,7 @@ var_ram="512"
 var_disk="1024"
 var_os="alpine"
 var_version="3.20"
-var_unprivileged="0"
+var_unprivileged="1"
 
 DEFAULT_CA_NAME="HomeLab CA"
 
