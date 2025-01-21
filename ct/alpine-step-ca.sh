@@ -5,7 +5,6 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/smallstep/certificates
 
-# App Default Values
 APP="Alpine-Step-CA"
 var_tags="alpine;step-ca"
 var_cpu="1"
@@ -15,16 +14,10 @@ var_os="alpine"
 var_version="3.20"
 var_unprivileged="0"
 
-# CA default values
 DEFAULT_CA_NAME="HomeLab CA"
 
-
-
-# App Output & Base Settings
 header_info "$APP"
 base_settings
-
-# Core
 variables
 color
 catch_errors
@@ -55,10 +48,8 @@ function update_script() {
 
 function ca_settings() {
 
-  # Step 0: Announce
   whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox --title "Configure Certificate Authority" "Now that we defined the container we need to configure the certificate authority." 8 58
   
-  # Basic - Step 1: Name of CA
   if CA_NAME=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Name of certificate authority" 8 58 "$DEFAULT_CA_NAME" --title "Configure Certificate Authority" 3>&1 1>&2 2>&3); then
     if [ -z "$CA_NAME" ]; then
       CA_NAME="$DEFAULT_CA_NAME"
@@ -67,10 +58,8 @@ function ca_settings() {
     exit
   fi
 
-  # Basic - Step 2: DNS entries of CA
   CA_DNS_ENTRIES=()
   DEFAULT_CA_DNS_ENTRY="${HN}.local"
-
   if CA_PRIMARY_DNS=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "DNS entry of Certificate Authority" 8 58 "$DEFAULT_CA_DNS_ENTRY" --title "Configure Certificate Authority" 3>&1 1>&2 2>&3); then
     if [ -z "$CA_PRIMARY_DNS" ]; then
       CA_PRIMARY_DNS=$DEFAULT_CA_DNS_ENTRY
@@ -88,7 +77,6 @@ function ca_settings() {
     fi
   done
 
-  # Basic - Step 3: X509 policy allow by DNS name
   x509_policy_dns=()
   while true; do
     if dns_entry=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "[X509 Policy] Allowed by DNS. Use full ('domain.local') or wildcard ('*.local') DNS:" 8 58 "" --title "Configure Certificate Authority" 3>&1 1>&2 2>&3); then
@@ -102,7 +90,6 @@ function ca_settings() {
     fi
   done
 
-  # Basic - Step 4: X509 policy allow by IP address/range
   x509_policy_ips=()
   while true; do
     if ip_entry=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "[X509 Policy] Allowed by IP addresses. Use single address ('192.168.1.169' or '::1') or CIDR address ranges ('192.168.1.0/24' or '2001:0db8::/120'):" 8 58 "" --title "Configure Certificate Authority" 3>&1 1>&2 2>&3); then
@@ -116,11 +103,9 @@ function ca_settings() {
     fi
   done
 
-  # ACME - Step 1: Should ACME be enabled?
   if (whiptail --backtitle "Proxmox VE Helper Scripts" --defaultno --title "Configure Certificate Authority" --yesno "Enable ACME?" 10 58); then
     CA_ACME="yes"
     
-    # ACME - Step 2: Name of ACME provider
     default_ca_acme_name="acme"
     if CA_ACME_NAME=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Name of ACME provider" 8 58 "$default_ca_acme_name" --title "Configure Certificate Authority" 3>&1 1>&2 2>&3); then
       if [ -z "$CA_ACME_NAME" ]; then
