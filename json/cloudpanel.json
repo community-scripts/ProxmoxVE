@@ -1,0 +1,35 @@
+
+{
+  "name": "CloudPanel",
+  "slug": "cloudpanel",
+  "categories": [
+        21
+  ],
+  "date_created": "2025-01-22",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 8443,
+  "documentation": "https://www.cloudpanel.io/docs/v2/introduction/",
+  "website": "https://www.cloudpanel.io/",
+  "logo": "https://www.cloudpanel.io/assets/images/apple-touch-icon.png",
+  "description": "CloudPanel is a free web hosting control panel with advanced features for server management. It offers a fast technology stack built with lightweight components for maximum performance. The open source control panel provides a suite of tools to strengthen security at the server level.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/cloudpanel.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 10,
+        "os": "ubuntu",
+        "version": "24.04"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": []
+}
