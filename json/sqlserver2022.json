@@ -32,6 +32,10 @@
    },
    "notes":[
       {
+         "text":"if you not choose the install setup, execute: `/opt/mssql/bin/mssql-conf setup` in LXC shell.",
+         "type":"info"
+      },
+      {
          "text":"You can setup the admin account 'SA' during installation",
          "type":"info"
       },
