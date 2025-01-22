@@ -26,25 +26,30 @@ $STD apt-get install -y \
   libapache2-mod-php
 msg_ok "Installed Dependencies"
 
-# Install / set up MySQL
-msg_info "Install / set up MySQL"
-APPLICATION="ZoneMinder"
-APP_NAME="ZoneMinder"
-DB_NAME="zm"
-DB_USER="zmuser"
-DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
+# create a random password for root
+# create a random password for the 'zmuser'
+msg_info "Pre-seeding dbconfig-common for ZoneMinder"
 
-$STD mysql -u root -e "CREATE DATABASE $DB_NAME;"
-$STD mysql -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED WITH mysql_native_password AS PASSWORD('$DB_PASS');"
-$STD mysql -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
+ROOT_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
+ZMPASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
+
+export DEBIAN_FRONTEND=noninteractive
+
+echo "zoneminder zoneminder/dbconfig-install boolean true"        | debconf-set-selections
+echo "zoneminder zoneminder/dbconfig-reinstall boolean false"     | debconf-set-selections
+echo "zoneminder zoneminder/mysql/admin-user string root"         | debconf-set-selections
+echo "zoneminder zoneminder/mysql/admin-pass password $ROOT_PASS" | debconf-set-selections
+echo "zoneminder zoneminder/mysql/app-pass password $ZMPASS"      | debconf-set-selections
+echo "zoneminder zoneminder/app-password-confirm password $ZMPASS"| debconf-set-selections
 
 {
-    echo "Database Credentials"
-    echo "Database User: $DB_USER"
-    echo "Database Password: $DB_PASS"
-    echo "Database Name: $DB_NAME"
-} >> ~/$APP_NAME.creds
-msg_ok "MySQL setup completed"
+    echo "ZoneMinder Database Credentials"
+    echo "MySQL Root Password: $ROOT_PASS"
+    echo "ZoneMinder DB User: zmuser"
+    echo "ZoneMinder DB Pass: $ZMPASS"
+    echo "ZoneMinder DB Name: zm"
+} >> ~/zoneminder.creds
+msg_ok "dbconfig pre-seeding complete"
 
 # Enable the ZoneMinder PPA (iconnor/zoneminder-1.36) and install
 msg_info "Enabling ZoneMinder PPA and installing ZoneMinder"
