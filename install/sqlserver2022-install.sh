@@ -23,25 +23,17 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 msg_info "Get SQL Server 2022 Repository"
-mkdir -p /etc/apt/keyrings
-curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o /etc/apt/keyrings/microsoft-prod.gpg
-echo "deb [signed-by=/etc/apt/keyrings/microsoft-prod.gpg] https://packages.microsoft.com/config/ubuntu/22.04/mssql-server-2022.list main" >/etc/apt/sources.list.d/mssql-server-2022.list
+$STD curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o /usr/share/keyrings/microsoft-prod.gpg
+$STD curl https://packages.microsoft.com/keys/microsoft.asc | tee /etc/apt/trusted.gpg.d/microsoft.asc
+$STD curl -fsSL https://packages.microsoft.com/config/ubuntu/22.04/mssql-server-2022.list | tee /etc/apt/sources.list.d/mssql-server-2022.list
 $STD apt-get clean *
 $STD apt-get update -y
 $STD apt-get install -y mssql-server
 msg_ok "Get SQL Server 2022 Repository"
 
-read -r -p "Do you want to run the SQL server setup now? (Later is also possible) <y/N>" prompt
-if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
-  /opt/mssql/bin/mssql-conf setup
-else
-  msg_ok "Skipping SQL Server setup. You can run it later with '/opt/mssql/bin/mssql-conf setup'."
-fi
-
 msg_info "Installing SQL Server Tools"
-curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o /etc/apt/keyrings/microsoft-prod.gpg
-echo "deb [signed-by=/etc/apt/keyrings/microsoft-prod.gpg] https://packages.microsoft.com/config/ubuntu/22.04/prod.list main" \
-  > /etc/apt/sources.list.d/mssql-release.list
+curl https://packages.microsoft.com/keys/microsoft.asc | tee /etc/apt/trusted.gpg.d/microsoft.asc
+curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list | tee /etc/apt/sources.list.d/mssql-release.list
 $STD apt-get update
 $STD apt-get install -y \
   mssql-tools18 \
@@ -49,6 +41,13 @@ $STD apt-get install -y \
 echo 'export PATH="$PATH:/opt/mssql-tools18/bin"' >> ~/.bashrc
 source ~/.bashrc
 msg_ok "Installed SQL Server Tools"
+
+read -r -p "Do you want to run the SQL server setup now? (Later is also possible) <y/N>" prompt
+if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
+  /opt/mssql/bin/mssql-conf setup
+else
+  msg_ok "Skipping SQL Server setup. You can run it later with '/opt/mssql/bin/mssql-conf setup'."
+fi
 
 msg_info "Start Service"
 systemctl enable -q --now mssql-server 
