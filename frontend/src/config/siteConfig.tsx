@@ -1,45 +1,51 @@
 import { OperatingSystem } from "@/lib/types";
 import { MessagesSquare, Scroll } from "lucide-react";
-import { FaDiscord, FaGithub } from "react-icons/fa";
 import React from "react";
+import { FaDiscord, FaGithub } from "react-icons/fa";
 
 export const basePath = process.env.BASE_PATH;
 
 const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
 
 export const navbarLinks = [
-  {
-    href: `https://github.com/community-scripts/${basePath}`,
-    event: "Github",
-    icon: <FaGithub className="h-4 w-4" />,
-    text: "Github",
-  },
-  {
-    href: `https://discord.gg/2wvnMDgdnU`,
-    event: "Discord",
-    icon: <FaDiscord className="h-4 w-4" />,
-    text: "Discord",
-  },
-  {
-    href: `https://github.com/community-scripts/${basePath}/blob/main/CHANGELOG.md`,
-    event: "Change Log",
-    icon: <Scroll className="h-4 w-4" />,
-    text: "Change Log",
-  },
-  !isMobile
-    ? {
-        href: `https://github.com/community-scripts/${basePath}/discussions`,
-        event: "Discussions",
-        icon: <MessagesSquare className="h-4 w-4" />,
-        text: "Discussions",
-      }
-    : null,
-].filter(Boolean) as { href: string; event: string; icon: React.ReactNode; text: string }[];
+	{
+		href: `https://github.com/community-scripts/${basePath}`,
+		event: "Github",
+		icon: <FaGithub className="h-4 w-4" />,
+		text: "Github",
+	},
+	{
+		href: `https://discord.gg/2wvnMDgdnU`,
+		event: "Discord",
+		icon: <FaDiscord className="h-4 w-4" />,
+		text: "Discord",
+	},
+	{
+		href: `https://github.com/community-scripts/${basePath}/blob/main/CHANGELOG.md`,
+		event: "Change Log",
+		icon: <Scroll className="h-4 w-4" />,
+		text: "Change Log",
+    mobileHidden: true,
+	},
+	{
+		href: `https://github.com/community-scripts/${basePath}/discussions`,
+		event: "Discussions",
+		icon: <MessagesSquare className="h-4 w-4" />,
+		text: "Discussions",
+    mobileHidden: true,
+	},
+].filter(Boolean) as {
+	href: string;
+	event: string;
+	icon: React.ReactNode;
+	text: string;
+	mobileHidden?: boolean;
+}[];
 
 export const mostPopularScripts = [
-  "Proxmox VE Post Install",
-  "Docker",
-  "Home Assistant OS",
+	"Proxmox VE Post Install",
+	"Docker",
+	"Home Assistant OS",
 ];
 
 export const analytics = {
