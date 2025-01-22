@@ -108,6 +108,7 @@ function post_build_provision() {
 
 start
 build_container
+post_build_provision
 description
 
 msg_ok "Completed Successfully!\n"
