@@ -7,7 +7,7 @@
   ],
   "date_created": "2025-01-22",
   "type": "ct",
-  "updateable": true,
+  "updateable": false,
   "privileged": false,
   "interface_port": 8443,
   "documentation": "https://www.cloudpanel.io/docs/v2/introduction/",
