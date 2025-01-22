@@ -86,6 +86,26 @@ function update_script() {
     exit
 }
 
+function post_build_provision() {
+  local FILE='zoneminder-install.sh'
+  local file_name="${FILE##*/}"
+
+  # Make sure we actually have the install script on the PVE host:
+  if [[ ! -f "$FILE" ]]; then
+    msg_error "Unable to find $FILE on Proxmox host. Please ensure it’s in the same directory."
+    exit 1
+  fi
+
+  msg_info "Uploading $FILE to container"
+  pct push "${CTID}" "$FILE" "/root/$file_name" >/dev/null 2>&1
+  msg_ok "Uploaded $FILE"
+
+  msg_info "Executing $FILE inside container"
+  pct exec "${CTID}" -- chmod +x "/root/$file_name"
+  pct exec "${CTID}" -- "/root/$file_name"
+  msg_ok "Executed $FILE"
+}
+
 start
 build_container
 description
@@ -93,4 +113,4 @@ description
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:80${CL}"
+echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:80/zm${CL}"
