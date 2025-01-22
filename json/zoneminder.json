@@ -1,0 +1,34 @@
+{
+    "name": "ZoneMinder",
+    "slug": "zoneminder",
+    "categories": [
+        0
+    ],
+    "date_created": "2025-01-21",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": 80,
+    "documentation": null,
+    "website": "https://zoneminder.com",
+    "logo": "https://raw.githubusercontent.com/ZoneMinder/ZoneMinder/master/web/graphics/icon_zoneminder.png",
+    "description": "ZoneMinder is an open source video surveillance solution for Linux.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/ZoneMinder.sh",
+            "resources": {
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 16,
+                "os": "ubuntu",
+                "version": "22.04"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": []
+}
