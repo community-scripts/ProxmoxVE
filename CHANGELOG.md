@@ -17,6 +17,20 @@ All LXC instances created using this repository come pre-installed with Midnight
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
 
+## 2025-01-22
+
+### Changed
+
+### 🚀 Updated Scripts
+
+- Tweak: LubeLogger Script Upcoming Changes 1.4.3 [@JcMinarro](https://github.com/JcMinarro) ([#1656](https://github.com/community-scripts/ProxmoxVE/pull/1656))
+- Fix: SQL Server 2022 Install [@MickLesk](https://github.com/MickLesk) ([#1669](https://github.com/community-scripts/ProxmoxVE/pull/1669))
+
+### 🌐 Website
+
+- Add Docker-VM to Containers & Docker Category [@thost96](https://github.com/thost96) ([#1667](https://github.com/community-scripts/ProxmoxVE/pull/1667))
+- Moving SQL Server 2022 to database category [@CamronBorealis](https://github.com/CamronBorealis) ([#1659](https://github.com/community-scripts/ProxmoxVE/pull/1659))
+
 ## 2025-01-21
 
 ### Changed
