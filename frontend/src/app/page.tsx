@@ -61,7 +61,7 @@ export default function Page() {
 												`inline`,
 											)}
 										>
-											Scripts by Tteck
+											Scripts by tteck
 										</span>
 									</AnimatedGradientText>
 								</div>
@@ -70,7 +70,7 @@ export default function Page() {
 								<DialogHeader>
 									<DialogTitle>Thank You!</DialogTitle>
 									<DialogDescription>
-										A big thank you to Tteck and the many contributors who have
+										A big thank you to tteck and the many contributors who have
 										made this project possible. Your hard work is truly
 										appreciated by the entire Proxmox community!
 									</DialogDescription>
