@@ -28,6 +28,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🌐 Website
 
+- Refactor Sidebar component to display unique scripts count [@BramSuurdje](https://github.com/BramSuurdje) ([#1681](https://github.com/community-scripts/ProxmoxVE/pull/1681))
 - Refactor various components and configuration for mobile responsiveness. [@BramSuurdje](https://github.com/BramSuurdje) ([#1679](https://github.com/community-scripts/ProxmoxVE/pull/1679))
 - Add Docker-VM to Containers & Docker Category [@thost96](https://github.com/thost96) ([#1667](https://github.com/community-scripts/ProxmoxVE/pull/1667))
 - Moving SQL Server 2022 to database category [@CamronBorealis](https://github.com/CamronBorealis) ([#1659](https://github.com/community-scripts/ProxmoxVE/pull/1659))
