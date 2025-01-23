@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies (Patience)"
-$STD apt-get install -y --no-install-recommends \
+$STD apt-get install -y \
   redis \
   postgresql \
   build-essential \
@@ -41,7 +41,7 @@ $STD apt-get install -y --no-install-recommends \
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Python3 Dependencies (Patience)"
-$STD apt-get install -y --no-install-recommends \
+$STD apt-get install -y \
   python3 \
   python3-pip \
   python3-dev \
@@ -50,7 +50,7 @@ $STD apt-get install -y --no-install-recommends \
 msg_ok "Installed Python3 Dependencies"
 
 msg_info "Installing OCR Dependencies (Patience)"
-$STD apt-get install -y --no-install-recommends \
+$STD apt-get install -y \
   unpaper \
   icc-profiles-free \
   qpdf \
@@ -60,14 +60,20 @@ $STD apt-get install -y --no-install-recommends \
   zlib1g \
   tesseract-ocr \
   tesseract-ocr-eng
-  
-cd /tmp
-wget -q https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs10040/ghostscript-10.04.0.tar.gz
-$STD tar -xzf ghostscript-10.04.0.tar.gz
-cd ghostscript-10.04.0
-$STD ./configure
-$STD make
-$STD sudo make install
+
+echo "deb http://deb.debian.org/debian trixie main" | sudo tee /etc/apt/sources.list.d/trixie.list
+$STD cat <<EOF | sudo tee /etc/apt/preferences.d/ghostscript
+Package: *
+Pin: release n=trixie
+Pin-Priority: 100
+
+Package: ghostscript
+Pin: release n=trixie
+Pin-Priority: 990
+EOF
+$STD apt-get update
+echo "libc6 libraries/restart-without-asking boolean true" | sudo debconf-set-selections
+DEBIAN_FRONTEND=noninteractive apt install -t trixie ghostscript -y
 msg_ok "Installed OCR Dependencies"
 
 msg_info "Installing JBIG2"
@@ -196,6 +202,7 @@ Requires=redis.service
 
 [Service]
 WorkingDirectory=/opt/paperless/src
+ExecStartPre=/bin/sleep 2
 ExecStart=python3 manage.py document_consumer
 
 [Install]
@@ -220,7 +227,7 @@ EOF
 sed -i -e 's/rights="none" pattern="PDF"/rights="read|write" pattern="PDF"/' /etc/ImageMagick-6/policy.xml
 
 systemctl daemon-reload
-$STD systemctl enable --now paperless-consumer paperless-webserver paperless-scheduler paperless-task-queue.service
+$STD systemctl enable -q --now paperless-webserver paperless-scheduler paperless-task-queue paperless-consumer 
 msg_ok "Created Services"
 
 motd_ssh
@@ -228,7 +235,6 @@ customize
 
 msg_info "Cleaning up"
 rm -rf /opt/paperless/docker
-rm -rf /tmp/ghostscript*
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
