@@ -30,6 +30,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 - Refactor ScriptInfoBlocks and siteConfig to properly show the most populair scripts [@BramSuurdje](https://github.com/BramSuurdje) ([#1697](https://github.com/community-scripts/ProxmoxVE/pull/1697))
 
+### 🧰 Maintenance
+
+- Update build.func: Ubuntu advanced settings version [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1701](https://github.com/community-scripts/ProxmoxVE/pull/1701))
+
 ## 2025-01-22
 
 ### Changed
