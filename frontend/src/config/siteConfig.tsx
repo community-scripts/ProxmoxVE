@@ -36,11 +36,7 @@ export const navbarLinks = [
     : null,
 ].filter(Boolean) as { href: string; event: string; icon: React.ReactNode; text: string }[];
 
-export const mostPopularScripts = [
-  "Proxmox VE Post Install",
-  "Docker",
-  "Home Assistant OS",
-];
+export const mostPopularScripts = ["post-pve-install", "docker", "homeassistant"];
 
 export const analytics = {
   url: "analytics.proxmoxve-scripts.com",
