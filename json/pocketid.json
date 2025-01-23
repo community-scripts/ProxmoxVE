@@ -1,0 +1,43 @@
+{
+  "name": "Pocket ID",
+  "slug": "pocketid",
+  "categories": [
+    6
+  ],
+  "date_created": "2025-01-27",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 80,
+  "documentation": "https://stonith404.github.io/pocket-id/introduction",
+  "website": "https://github.com/stonith404/pocket-id",
+  "logo": "https://github.com/stonith404/pocket-id/blob/main/docs/static/img/pocket-id.png",
+  "description": "Pocket ID is a simple OIDC provider that allows users to authenticate with their passkeys to your services.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/pocketid.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 4,
+        "os": "Debian",
+        "version": "12"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Pocket ID requires https to work.",
+      "type": "warning"
+    },
+    {
+      "text": "Configuration Path: `/opt/pocket-id/backend/.env`, `/opt/pocket-id/frontend/.env`.",
+      "type": "info"
+    }
+  ]
+}
