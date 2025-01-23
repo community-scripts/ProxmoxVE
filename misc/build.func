@@ -462,8 +462,7 @@ advanced_settings() {
         else
           exit_script
         fi
-      fi
-      if [ "$var_default_version" == "22.04" ]; then
+      elif [ "$var_default_version" == "22.04" ]; then
         if var_version=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "UBUNTU VERSION" --radiolist "Choose Version" 10 58 4 \
           "20.04" "Focal" OFF \
           "22.04" "Jammy" ON \
@@ -476,9 +475,8 @@ advanced_settings() {
         else
           exit_script
         fi
-      fi
-      if [ "$var_default_version" == "24.04" ]; then
-        if var_version=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "UBUNTU VERSION" --radiolist "Choose Version" 10 58 4 \
+      elif [ "$var_default_version" == "24.04" ]; then
+	        if var_version=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "UBUNTU VERSION" --radiolist "Choose Version" 10 58 4 \
           "20.04" "Focal" OFF \
           "22.04" "Jammy" OFF \
           "24.04" "Noble" ON \
@@ -489,9 +487,8 @@ advanced_settings() {
           fi
         else
           exit_script
-        fi
-      fi
-      if [ "$var_default_version" == "24.10" ]; then
+        fi   
+      else
         if var_version=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "UBUNTU VERSION" --radiolist "Choose Version" 10 58 4 \
           "20.04" "Focal" OFF \
           "22.04" "Jammy" OFF \
