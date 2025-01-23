@@ -26,6 +26,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 - Feature: Add Debian Disk Size / Redesign / Increase Disk [@MickLesk](https://github.com/MickLesk) ([#1695](https://github.com/community-scripts/ProxmoxVE/pull/1695))
 - Fix: Paperless Service Timings & Optimization: Ghostscript Installation [@MickLesk](https://github.com/MickLesk) ([#1688](https://github.com/community-scripts/ProxmoxVE/pull/1688))
 
+### 🌐 Website
+
+- Refactor ScriptInfoBlocks and siteConfig to properly show the most populair scripts [@BramSuurdje](https://github.com/BramSuurdje) ([#1697](https://github.com/community-scripts/ProxmoxVE/pull/1697))
+
 ## 2025-01-22
 
 ### Changed
