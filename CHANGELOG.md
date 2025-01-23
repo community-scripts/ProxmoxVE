@@ -17,6 +17,15 @@ All LXC instances created using this repository come pre-installed with Midnight
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
 
+## 2025-01-23
+
+### Changed
+
+### 🚀 Updated Scripts
+
+- Feature: Add Debian Disk Size / Redesign / Increase Disk [@MickLesk](https://github.com/MickLesk) ([#1695](https://github.com/community-scripts/ProxmoxVE/pull/1695))
+- Fix: Paperless Service Timings & Optimization: Ghostscript Installation [@MickLesk](https://github.com/MickLesk) ([#1688](https://github.com/community-scripts/ProxmoxVE/pull/1688))
+
 ## 2025-01-22
 
 ### Changed
@@ -28,6 +37,8 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🌐 Website
 
+- Refactor Sidebar component to display unique scripts count [@BramSuurdje](https://github.com/BramSuurdje) ([#1681](https://github.com/community-scripts/ProxmoxVE/pull/1681))
+- Refactor various components and configuration for mobile responsiveness. [@BramSuurdje](https://github.com/BramSuurdje) ([#1679](https://github.com/community-scripts/ProxmoxVE/pull/1679))
 - Add Docker-VM to Containers & Docker Category [@thost96](https://github.com/thost96) ([#1667](https://github.com/community-scripts/ProxmoxVE/pull/1667))
 - Moving SQL Server 2022 to database category [@CamronBorealis](https://github.com/CamronBorealis) ([#1659](https://github.com/community-scripts/ProxmoxVE/pull/1659))
 
