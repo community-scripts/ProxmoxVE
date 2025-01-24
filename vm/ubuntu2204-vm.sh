@@ -79,7 +79,7 @@ function cleanup() {
 
 TEMP_DIR=$(mktemp -d)
 pushd $TEMP_DIR >/dev/null
-if whiptail --backtitle "Proxmox VE Helper Scripts" --title "Ubuntu 24.10 VM" --yesno "This will create a New Ubuntu 24.10 VM. Proceed?" 10 58; then
+if whiptail --backtitle "Proxmox VE Helper Scripts" --title "Ubuntu 22.04 VM" --yesno "This will create a New Ubuntu 22.04 VM. Proceed?" 10 58; then
   :
 else
   header_info &&   echo -e "${CROSS}${RD}User exited script${CL}\n" && exit
@@ -153,7 +153,7 @@ function default_settings() {
   VMID="$NEXTID"
   FORMAT=",efitype=4m"
   MACHINE=""
-  DISK_SIZE="8G"
+  DISK_SIZE="5G"
   DISK_CACHE=""
   HN="ubuntu"
   CPU_TYPE=""
@@ -177,7 +177,7 @@ function default_settings() {
   echo -e "${VLANTAG}${BOLD}${DGN}VLAN: ${BGN}Default${CL}"
   echo -e "${DEFAULT}${BOLD}${DGN}Interface MTU Size: ${BGN}Default${CL}"
   echo -e "${GATEWAY}${BOLD}${DGN}Start VM when completed: ${BGN}yes${CL}"
-  echo -e "${CREATING}${BOLD}${DGN}Creating a Ubuntu 24.10 VM using the above default settings${CL}"
+  echo -e "${CREATING}${BOLD}${DGN}Creating a Ubuntu 22.04 VM using the above default settings${CL}"
 }
 
 function advanced_settings() {
@@ -351,8 +351,8 @@ function advanced_settings() {
     START_VM="no"
   fi
 
-  if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "ADVANCED SETTINGS COMPLETE" --yesno "Ready to create a Ubuntu 24.10 VM?" --no-button Do-Over 10 58); then
-    echo -e "${CREATING}${BOLD}${DGN}Creating a Ubuntu 24.10 VM using the above advanced settings${CL}"
+  if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "ADVANCED SETTINGS COMPLETE" --yesno "Ready to create a Ubuntu 22.04 VM?" --no-button Do-Over 10 58); then
+    echo -e "${CREATING}${BOLD}${DGN}Creating a Ubuntu 22.04 VM using the above advanced settings${CL}"
   else
     header_info
     echo -e "${ADVANCED}${BOLD}${RD}Using Advanced Settings${CL}"
