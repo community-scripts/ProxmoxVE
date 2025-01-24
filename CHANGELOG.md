@@ -27,6 +27,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- openHAB - Update to Zulu21 [@moodyblue](https://github.com/moodyblue) ([#1734](https://github.com/community-scripts/ProxmoxVE/pull/1734))
 - Feature: Filebrowser Script > Redesign | Update Logic | Remove Logic [@MickLesk](https://github.com/MickLesk) ([#1716](https://github.com/community-scripts/ProxmoxVE/pull/1716))
 - Feature: Ubuntu 22.04 VM > Redesign | Optional HDD-Size Prompt [@MickLesk](https://github.com/MickLesk) ([#1712](https://github.com/community-scripts/ProxmoxVE/pull/1712))
 - Feature: Ubuntu 24.04 VM > Redesign | Optional HDD-Size Prompt | cifs support [@MickLesk](https://github.com/MickLesk) ([#1714](https://github.com/community-scripts/ProxmoxVE/pull/1714))
