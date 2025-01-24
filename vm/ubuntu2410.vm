@@ -155,7 +155,7 @@ function default_settings() {
   MACHINE=""
   DISK_SIZE="8G"
   DISK_CACHE=""
-  HN="debian"
+  HN="ubuntu"
   CPU_TYPE=""
   CORE_COUNT="2"
   RAM_SIZE="2048"
@@ -245,9 +245,9 @@ function advanced_settings() {
     exit-script
   fi
 
-  if VM_NAME=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Hostname" 8 58 debian --title "HOSTNAME" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+  if VM_NAME=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Hostname" 8 58 ubuntu --title "HOSTNAME" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
     if [ -z $VM_NAME ]; then
-      HN="debian"
+      HN="ubuntu"
       echo -e "${HOSTNAME}${BOLD}${DGN}Hostname: ${BGN}$HN${CL}"
     else
       HN=$(echo ${VM_NAME,,} | tr -d ' ')
@@ -454,7 +454,7 @@ DESCRIPTION=$(
     <img src='https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/images/logo-81x112.png' alt='Logo' style='width:81px;height:112px;'/>
   </a>
 
-  <h2 style='font-size: 24px; margin: 20px 0;'>Debian VM</h2>
+  <h2 style='font-size: 24px; margin: 20px 0;'>Ubuntu 24.10 VM</h2>
 
   <p style='margin: 16px 0;'>
     <a href='https://ko-fi.com/community_scripts' target='_blank' rel='noopener noreferrer'>
