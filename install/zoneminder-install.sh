@@ -5,7 +5,6 @@
 # License: MIT
 # Source: https://zoneminder.readthedocs.io/en/latest/installationguide/ubuntu.html#ubuntu-22-04-jammy
 
-# Import Functions und Setup
 source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
@@ -14,8 +13,6 @@ setting_up_container
 network_check
 update_os
 
-# Installing Dependencies with the 3 core dependencies (curl;sudo;mc)
-# plus any additional packages you need
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
   curl \
@@ -26,8 +23,6 @@ $STD apt-get install -y \
   libapache2-mod-php
 msg_ok "Installed Dependencies"
 
-# create a random password for root
-# create a random password for the 'zmuser'
 msg_info "Pre-seeding dbconfig-common for ZoneMinder"
 
 ROOT_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
@@ -51,7 +46,6 @@ echo "zoneminder zoneminder/app-password-confirm password $ZMPASS"| debconf-set-
 } >> ~/zoneminder.creds
 msg_ok "dbconfig pre-seeding complete"
 
-# Enable the ZoneMinder PPA (iconnor/zoneminder-1.36) and install
 msg_info "Enabling ZoneMinder PPA and installing ZoneMinder"
 $STD apt install -y software-properties-common
 $STD add-apt-repository ppa:iconnor/zoneminder-1.36 -y
@@ -59,7 +53,6 @@ $STD apt update
 $STD apt-get install -y zoneminder
 msg_ok "ZoneMinder installed"
 
-# Enable Apache modules & ZoneMinder service
 msg_info "Configuring Apache and ZoneMinder"
 a2enmod rewrite
 a2enconf zoneminder
@@ -68,7 +61,6 @@ systemctl enable zoneminder
 systemctl start zoneminder
 msg_ok "Apache and ZoneMinder configured and running"
 
-# Cleanup
 msg_info "Cleaning up"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
