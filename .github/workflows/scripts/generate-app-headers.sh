@@ -1,33 +1,34 @@
 #!/usr/bin/env bash
 
-output_file="./misc/.app-headers"
-> "$output_file"  # Clear or create the file
+# Base directory for headers
+headers_dir="./ct/headers"
 
-current_date=$(date +"%m-%d-%Y")
-# Header with date
-{
-  echo "### Generated on $current_date"
-  echo "##################################################"
-  echo
-} >> "$output_file"  
+# Ensure the headers directory exists and clear it
+mkdir -p "$headers_dir"
+rm -f "$headers_dir"/*
 
-# Find only regular .sh files in ./ct, sort them alphabetically
+# Find all .sh files in ./ct directory, sorted alphabetically
 find ./ct -type f -name "*.sh" | sort | while read -r script; do
   # Extract the APP name from the APP line
   app_name=$(grep -oP '^APP="\K[^"]+' "$script" 2>/dev/null)
 
   if [[ -n "$app_name" ]]; then
+    # Define the output file name in the headers directory
+    output_file="${headers_dir}/$(basename "${script%.*}")"
+
     # Generate figlet output
     figlet_output=$(figlet -f slant "$app_name")
-    {
-      echo "### $(basename "$script")"
-      echo "APP=$app_name"
-      echo "$figlet_output"
-      echo
-    } >> "$output_file"  
+
+    # Check if figlet output is not empty
+    if [[ -n "$figlet_output" ]]; then
+      echo "$figlet_output" > "$output_file"
+      echo "Generated: $output_file"
+    else
+      echo "Figlet failed for $app_name in $script"
+    fi
   else
     echo "No APP name found in $script, skipping."
   fi
 done
 
-echo "Generated combined file at $output_file"
+echo "Completed processing .sh files."

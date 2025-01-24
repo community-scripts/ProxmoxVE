@@ -1,10 +1,10 @@
 {
-    "name": "Ubuntu 24.04",
-    "slug": "ubuntu2404-vm",
+    "name": "Ubuntu 24.10",
+    "slug": "ubuntu2410-vm",
     "categories": [
         2
     ],
-    "date_created": "2024-05-02",
+    "date_created": "2025-01-24",
     "type": "vm",
     "updateable": false,
     "privileged": false,
@@ -16,11 +16,11 @@
     "install_methods": [
         {
             "type": "default",
-            "script": "vm/ubuntu2404-vm.sh",
+            "script": "vm/ubuntu2410-vm.sh",
             "resources": {
                 "cpu": 2,
                 "ram": 2048,
-                "hdd": 7,
+                "hdd": 8,
                 "os": null,
                 "version": null
             }

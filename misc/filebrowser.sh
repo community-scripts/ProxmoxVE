@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
-# Author: tteck (tteckster)
-# License: MIT
-# https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Copyright (c) 2021-2025 community-scripts ORG
+# Author: tteck (tteckster) | Co-Author: MickLesk
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
 function header_info {
     clear
@@ -11,79 +10,88 @@ function header_info {
     _______ __     ____
    / ____(_) /__  / __ )_________ _      __________  _____
   / /_  / / / _ \/ __  / ___/ __ \ | /| / / ___/ _ \/ ___/
- / __/ / / /  __/ /_/ / /  / /_/ / |/ |/ (__  )  __/ /
-/_/   /_/_/\___/_____/_/   \____/|__/|__/____/\___/_/
-
+ / __/ / / /  __/ /_/ / /  / /_/ / |/ |/ (__  )  __/ / 
+/_/   /_/_/\___/_____/_/   \____/|__/|__/____/\___/_/   
 EOF
 }
-IP=$(hostname -I | awk '{print $1}')
 YW=$(echo "\033[33m")
-BL=$(echo "\033[36m")
-RD=$(echo "\033[01;31m")
-BGN=$(echo "\033[4;92m")
 GN=$(echo "\033[1;92m")
-DGN=$(echo "\033[32m")
+RD=$(echo "\033[01;31m")
+BL=$(echo "\033[36m")
 CL=$(echo "\033[m")
-BFR="\\r\\033[K"
-HOLD="-"
-CM="${GN}✓${CL}"
+CM="${GN}✔️${CL}"
+CROSS="${RD}✖️${CL}"
+INFO="${BL}ℹ️${CL}"
+
 APP="FileBrowser"
-hostname="$(hostname)"
+INSTALL_PATH="/usr/local/bin/filebrowser"
+SERVICE_PATH="/etc/systemd/system/filebrowser.service"
+DB_PATH="/root/filebrowser.db"
+IP=$(hostname -I | awk '{print $1}')
 header_info
-if [ -f /root/filebrowser.db ]; then
-  read -r -p "Would you like to uninstall ${APP} on $hostname.? <y/N> " prompt
-    if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
-      systemctl disable -q --now filebrowser.service
-      rm -rf /usr/local/bin/filebrowser /root/filebrowser.db /etc/systemd/system/filebrowser.service
-      echo "$APP Removed"
-      sleep 2
-      clear
-      exit
-    else
-      clear
-      exit
-    fi
-fi 
-while true; do
-    read -p "This will Install ${APP} on $hostname. Proceed(y/n)?" yn
-    case $yn in
-    [Yy]*) break ;;
-    [Nn]*) exit ;;
-    *) echo "Please answer yes or no." ;;
-    esac
-done
-header_info
+
 function msg_info() {
     local msg="$1"
-    echo -ne " ${HOLD} ${YW}${msg}..."
+    echo -e "${INFO} ${YW}${msg}...${CL}"
 }
 
 function msg_ok() {
     local msg="$1"
-    echo -e "${BFR} ${CM} ${GN}${msg}${CL}"
+    echo -e "${CM} ${GN}${msg}${CL}"
 }
 
-read -r -p "Would you like to use No Authentication? <y/N> " prompt
-msg_info "Installing ${APP}"
-apt-get install -y curl &>/dev/null
-RELEASE=$(curl -fsSL https://api.github.com/repos/filebrowser/filebrowser/releases/latest | grep -o '"tag_name": ".*"' | sed 's/"//g' | sed 's/tag_name: //g')
-curl -fsSL https://github.com/filebrowser/filebrowser/releases/download/$RELEASE/linux-amd64-filebrowser.tar.gz | tar -xzv -C /usr/local/bin &>/dev/null
+function msg_error() {
+    local msg="$1"
+    echo -e "${CROSS} ${RD}${msg}${CL}"
+}
 
-if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
-  filebrowser config init -a '0.0.0.0' &>/dev/null
-  filebrowser config set -a '0.0.0.0' &>/dev/null
-  filebrowser config init --auth.method=noauth &>/dev/null
-  filebrowser config set --auth.method=noauth &>/dev/null
-  filebrowser users add ID 1 --perm.admin &>/dev/null  
-else
-  filebrowser config init -a '0.0.0.0' &>/dev/null
-  filebrowser config set -a '0.0.0.0' &>/dev/null
-  filebrowser users add admin helper-scripts.com --perm.admin &>/dev/null
+if [ -f "$INSTALL_PATH" ]; then
+    echo -e "${YW}⚠️ ${APP} is already installed.${CL}"
+    read -r -p "Would you like to uninstall ${APP}? (y/N): " uninstall_prompt
+    if [[ "${uninstall_prompt,,}" =~ ^(y|yes)$ ]]; then
+        msg_info "Uninstalling ${APP}"
+        systemctl disable -q --now filebrowser.service
+        rm -f "$INSTALL_PATH" "$DB_PATH" "$SERVICE_PATH"
+        msg_ok "${APP} has been uninstalled."
+        exit 0
+    fi
+
+    read -r -p "Would you like to update ${APP}? (y/N): " update_prompt
+    if [[ "${update_prompt,,}" =~ ^(y|yes)$ ]]; then
+        msg_info "Updating ${APP}"
+        curl -fsSL https://github.com/filebrowser/filebrowser/releases/latest/download/linux-amd64-filebrowser.tar.gz | tar -xzv -C /usr/local/bin &>/dev/null
+        msg_ok "Updated ${APP}"
+        exit 0
+    else
+        echo -e "${YW}⚠️ Update skipped. Exiting.${CL}"
+        exit 0
+    fi
 fi
-msg_ok "Installed ${APP} on $hostname"
 
-msg_info "Creating Service"
-cat <<EOF >/etc/systemd/system/filebrowser.service
+echo -e "${YW}⚠️ ${APP} is not installed.${CL}"
+read -r -p "Would you like to install ${APP}? (y/n): " install_prompt
+if [[ "${install_prompt,,}" =~ ^(y|yes)$ ]]; then
+    msg_info "Installing ${APP}"
+    apt-get install -y curl &>/dev/null
+    curl -fsSL https://github.com/filebrowser/filebrowser/releases/latest/download/linux-amd64-filebrowser.tar.gz | tar -xzv -C /usr/local/bin &>/dev/null
+    msg_ok "Installed ${APP}"
+
+    read -r -p "Would you like to use No Authentication? (y/N): " auth_prompt
+    if [[ "${auth_prompt,,}" =~ ^(y|yes)$ ]]; then
+        msg_info "Configuring No Authentication"
+        filebrowser config init -a '0.0.0.0' &>/dev/null
+        filebrowser config set -a '0.0.0.0' --auth.method=noauth &>/dev/null
+        msg_ok "No Authentication configured"
+    else
+        msg_info "Setting up default authentication"
+        filebrowser config init -a '0.0.0.0' &>/dev/null
+        filebrowser config set -a '0.0.0.0' &>/dev/null
+        filebrowser users add admin helper-scripts.com --perm.admin &>/dev/null
+        msg_ok "Default authentication configured (admin:helper-scripts.com)"
+    fi
+
+    msg_info "Creating service"
+    cat <<EOF >/etc/systemd/system/filebrowser.service
 [Unit]
 Description=Filebrowser
 After=network-online.target
@@ -96,9 +104,11 @@ ExecStart=/usr/local/bin/filebrowser -r /
 [Install]
 WantedBy=default.target
 EOF
-systemctl enable -q --now filebrowser.service
-msg_ok "Created Service"
+    systemctl enable -q --now filebrowser.service
+    msg_ok "Service created successfully"
 
-msg_ok "Completed Successfully!\n"
-echo -e "${APP} should be reachable by going to the following URL.
-         ${BL}http://$IP:8080${CL} \n"
+    echo -e "${CM} ${GN}${APP} is reachable at: ${BL}http://$IP:8080${CL}"
+else
+    echo -e "${YW}⚠️ Installation skipped. Exiting.${CL}"
+    exit 0
+fi

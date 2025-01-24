@@ -18,9 +18,8 @@ $STD apt-get install -y \
   curl \
   sudo \
   mc \
+  tini \
   gpg \
-  git \
-  jq \
   build-essential
 msg_ok "Installed Dependencies"
 
@@ -54,7 +53,7 @@ PORT=5006
 EOF
 cd /opt/actualbudget
 $STD yarn install
-echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
+echo "${RELEASE}" >"/opt/actualbudget_version.txt"
 msg_ok "Installed Actual Budget"
 
 msg_info "Creating Service"
@@ -83,6 +82,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
+rm -rf /opt/v${RELEASE}.tar.gz
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
