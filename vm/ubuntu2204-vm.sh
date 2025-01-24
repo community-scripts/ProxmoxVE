@@ -417,7 +417,7 @@ msg_ok "Downloaded ${CL}${BL}${FILE}${CL}"
 
 STORAGE_TYPE=$(pvesm status -storage $STORAGE | awk 'NR>1 {print $2}')
 case $STORAGE_TYPE in
-nfs | dir)
+nfs | dir | cifs)
   DISK_EXT=".qcow2"
   DISK_REF="$VMID/"
   DISK_IMPORT="-format qcow2"
