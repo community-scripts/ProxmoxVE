@@ -90,7 +90,7 @@ export function LatestScripts({ items }: { items: Category[] }) {
           >
             <CardHeader>
               <CardTitle className="flex items-center gap-3">
-                <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-accent p-1">
+                <div className="flex h-16 w-16 min-w-16 items-center justify-center rounded-lg bg-accent p-1">
                   <Image
                     src={script.logo || `/${basePath}/logo.png`}
                     unoptimized
@@ -142,7 +142,7 @@ export function LatestScripts({ items }: { items: Category[] }) {
 export function MostViewedScripts({ items }: { items: Category[] }) {
   const mostViewedScripts = items.reduce((acc: Script[], category) => {
     const foundScripts = category.scripts.filter((script) =>
-      mostPopularScripts.includes(script.name),
+      mostPopularScripts.includes(script.slug),
     );
     return acc.concat(foundScripts);
   }, []);
@@ -162,7 +162,7 @@ export function MostViewedScripts({ items }: { items: Category[] }) {
           >
             <CardHeader>
               <CardTitle className="flex items-center gap-3">
-                <div className="flex max-h-16 min-h-16 min-w-16 max-w-16 items-center justify-center rounded-lg bg-accent p-1">
+                <div className="flex size-16 min-w-16 items-center justify-center rounded-lg bg-accent p-1">
                   <Image
                     unoptimized
                     src={script.logo || `/${basePath}/logo.png`}

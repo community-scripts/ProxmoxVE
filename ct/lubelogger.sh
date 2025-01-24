@@ -42,14 +42,17 @@ function update_script() {
     msg_info "Updating ${APP} to v${RELEASE}"
     cd /opt
     wget -q https://github.com/hargata/lubelog/releases/download/v${RELEASE}/LubeLogger_v${RELEASE_TRIMMED}_linux_x64.zip
-    mkdir -p /tmp/lubeloggerData/wwwroot
+    mkdir -p /tmp/lubeloggerData/data
     cp /opt/lubelogger/appsettings.json /tmp/lubeloggerData/appsettings.json
-    cp -r /opt/lubelogger/config /tmp/lubeloggerData/
-    cp -r /opt/lubelogger/data /tmp/lubeloggerData/
-    [[ -e /opt/lubelogger/wwwroot/translations ]] && cp -r /opt/lubelogger/wwwroot/translations /tmp/lubeloggerData/wwwroot/
-    [[ -e /opt/lubelogger/wwwroot/documents ]] && cp -r /opt/lubelogger/wwwroot/documents /tmp/lubeloggerData/wwwroot/
-    [[ -e /opt/lubelogger/wwwroot/images ]] && cp -r /opt/lubelogger/wwwroot/images /tmp/lubeloggerData/wwwroot/
-    [[ -e /opt/lubelogger/wwwroot/temp ]] && cp -r /opt/lubelogger/wwwroot/temp /tmp/lubeloggerData/wwwroot/
+    cp -r /opt/lubelogger/data/ /tmp/lubeloggerData/
+
+    # Lubelogger has moved multiples folders to the 'data' folder, and we need to move them before the update to keep the user data
+    # Github Discussion: https://github.com/hargata/lubelog/discussions/787
+    [[ -e /opt/lubelogger/config ]] && cp -r /opt/lubelogger/config /tmp/lubeloggerData/data/
+    [[ -e /opt/lubelogger/wwwroot/translations ]] && cp -r /opt/lubelogger/wwwroot/translations /tmp/lubeloggerData/data/
+    [[ -e /opt/lubelogger/wwwroot/documents ]] && cp -r /opt/lubelogger/wwwroot/documents /tmp/lubeloggerData/data/
+    [[ -e /opt/lubelogger/wwwroot/images ]] && cp -r /opt/lubelogger/wwwroot/images /tmp/lubeloggerData/data/
+    [[ -e /opt/lubelogger/wwwroot/temp ]] && cp -r /opt/lubelogger/wwwroot/temp /tmp/lubeloggerData/data/
     [[ -e /opt/lubelogger/log ]] && cp -r /opt/lubelogger/log /tmp/lubeloggerData/
     rm -rf /opt/lubelogger
     unzip -qq LubeLogger_v${RELEASE_TRIMMED}_linux_x64.zip -d lubelogger
