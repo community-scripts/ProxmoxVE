@@ -45,7 +45,6 @@ function msg_error() {
     echo -e "${CROSS} ${RD}${msg}${CL}"
 }
 
-# Prüfen, ob FileBrowser installiert ist
 if [ -f "$INSTALL_PATH" ]; then
     echo -e "${YW}⚠️ ${APP} is already installed.${CL}"
     read -r -p "Would you like to uninstall ${APP}? (y/N): " uninstall_prompt
@@ -69,7 +68,6 @@ if [ -f "$INSTALL_PATH" ]; then
     fi
 fi
 
-# Installation, falls nicht vorhanden
 echo -e "${YW}⚠️ ${APP} is not installed.${CL}"
 read -r -p "Would you like to install ${APP}? (y/n): " install_prompt
 if [[ "${install_prompt,,}" =~ ^(y|yes)$ ]]; then
