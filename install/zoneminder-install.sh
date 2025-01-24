@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 # Copyright (c) 2021-2024 community-scripts ORG
-# Author: [YourUserName]
+# Author: connorjfarrell
 # License: MIT
-# Source: [SOURCE_URL]
+# Source: https://zoneminder.readthedocs.io/en/latest/installationguide/ubuntu.html#ubuntu-22-04-jammy
 
 # Import Functions und Setup
 source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
