@@ -17,6 +17,14 @@ All LXC instances created using this repository come pre-installed with Midnight
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
 
+## 2025-01-25
+
+### Changed
+
+### 🧰 Maintenance
+
+- Revert "[Github Action] Update CHANGELOG.md" [@MickLesk](https://github.com/MickLesk) ([#1749](https://github.com/community-scripts/ProxmoxVE/pull/1749))
+
 ## 2025-01-24
 
 ### Changed
