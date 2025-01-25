@@ -17,6 +17,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
 
+## 2025-01-25
+
+### Changed
+
 ## 2025-01-24
 
 ### Changed
