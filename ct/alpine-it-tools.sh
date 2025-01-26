@@ -42,6 +42,7 @@ function update_script() {
     rm -rf /tmp/it-tools
     rm -f it-tools.zip
     msg_ok "Updated Successfully"
+    exit
 }
 
 start
