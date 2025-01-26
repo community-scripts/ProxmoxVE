@@ -33,6 +33,7 @@ msg_ok "Setup Server 2022"
 
 msg_info "Installing SQL Server Tools"
 export DEBIAN_FRONTEND=noninteractive
+export ACCEPT_EULA=Y
 curl https://packages.microsoft.com/keys/microsoft.asc | tee /etc/apt/trusted.gpg.d/microsoft.asc
 curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list | tee /etc/apt/sources.list.d/mssql-release.list
 $STD apt-get update
