@@ -16,7 +16,7 @@
     "install_methods": [
         {
             "type": "alpine",
-            "script": "ct/IT-Tools.sh",
+            "script": "ct/alpine-it-tools.sh",
             "resources": {
                 "cpu": 1,
                 "ram": 256,
