@@ -21,9 +21,6 @@ $STD apk add \
 msg_ok "Installed Dependencies"
 
 msg_info "Installing IT-Tools"
-get_latest_release() {
-    curl -s https://api.github.com/repos/CorentinTh/it-tools/releases/latest | grep '"tag_name":' | cut -d '"' -f4
-}
 RELEASE=$(curl -s https://api.github.com/repos/CorentinTh/it-tools/releases/latest | grep '"tag_name":' | cut -d '"' -f4)
 DOWNLOAD_URL="https://github.com/CorentinTh/it-tools/releases/download/${RELEASE}/it-tools-${RELEASE#v}.zip"
 
