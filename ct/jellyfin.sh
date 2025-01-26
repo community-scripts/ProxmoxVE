@@ -35,7 +35,7 @@ function update_script() {
      msg_info "Updating ${APP} LXC"
      apt-get update &>/dev/null
      apt-get -y upgrade &>/dev/null
-     apt-get --with-new-pkgs upgrade jellyfin jellyfin-server &>/dev/null
+     apt-get -y --with-new-pkgs upgrade jellyfin jellyfin-server &>/dev/null
      msg_ok "Updated ${APP} LXC"
      exit
 }
