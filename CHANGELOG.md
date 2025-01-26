@@ -30,10 +30,6 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 - The Lounge: Fix the command to create new users [@tremor021](https://github.com/tremor021) ([#1762](https://github.com/community-scripts/ProxmoxVE/pull/1762))
 
-### 🧰 Maintenance
-
-- Revert "[Github Action] Update CHANGELOG.md" [@MickLesk](https://github.com/MickLesk) ([#1749](https://github.com/community-scripts/ProxmoxVE/pull/1749))
-
 ## 2025-01-24
 
 ### Changed
