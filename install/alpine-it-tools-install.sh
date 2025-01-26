@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
-# Author: tteck (tteckster)
-# License: MIT
-# https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
+# Copyright (c) 2021-2025 community-scripts ORG
+# Author: nicedevil007 (NiceDevil)
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
+source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
 catch_errors
@@ -14,21 +13,19 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apk add newt
-$STD apk add curl
-$STD apk add openssh
-$STD apk add nano
-$STD apk add mc
-$STD apk add nginx
-$STD apk add unzip
+$STD apk add newt \
+  curl \
+  mc \
+  nginx \
+  unzip
 msg_ok "Installed Dependencies"
 
 msg_info "Installing IT-Tools"
 get_latest_release() {
     curl -s https://api.github.com/repos/CorentinTh/it-tools/releases/latest | grep '"tag_name":' | cut -d '"' -f4
 }
-LATEST_VERSION=$(get_latest_release)
-DOWNLOAD_URL="https://github.com/CorentinTh/it-tools/releases/download/$LATEST_VERSION/it-tools-${LATEST_VERSION#v}.zip"
+RELEASE=$(curl -s https://api.github.com/repos/CorentinTh/it-tools/releases/latest | grep '"tag_name":' | cut -d '"' -f4)
+DOWNLOAD_URL="https://github.com/CorentinTh/it-tools/releases/download/${RELEASE}/it-tools-${RELEASE#v}.zip"
 
 curl -fsSL -o it-tools.zip "$DOWNLOAD_URL"
 mkdir -p /usr/share/nginx/html
@@ -50,11 +47,11 @@ $STD rc-update add nginx default
 $STD rc-service nginx start
 msg_ok "Installed IT-Tools"
 
+motd_ssh
+customize
+
 msg_info "Cleaning up"
 rm -rf /tmp/it-tools
 rm -f it-tools.zip
 $STD apk cache clean
 msg_ok "Cleaned"
-
-motd_ssh
-customize
