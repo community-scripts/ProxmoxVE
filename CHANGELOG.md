@@ -17,6 +17,23 @@ All LXC instances created using this repository come pre-installed with Midnight
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
 
+## 2025-01-26
+
+### Changed
+
+### 🚀 Updated Scripts
+
+- Calibre-Web: added installation of calibre binaries [@tremor021](https://github.com/tremor021) ([#1763](https://github.com/community-scripts/ProxmoxVE/pull/1763))
+- Added environment variable to accept EULA for SQLServer2022 [@tremor021](https://github.com/tremor021) ([#1755](https://github.com/community-scripts/ProxmoxVE/pull/1755))
+
+### 🌐 Website
+
+- The Lounge: Fix the command to create new users [@tremor021](https://github.com/tremor021) ([#1762](https://github.com/community-scripts/ProxmoxVE/pull/1762))
+
+### 🧰 Maintenance
+
+- Revert "[Github Action] Update CHANGELOG.md" [@MickLesk](https://github.com/MickLesk) ([#1749](https://github.com/community-scripts/ProxmoxVE/pull/1749))
+
 ## 2025-01-24
 
 ### Changed
