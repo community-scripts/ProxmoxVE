@@ -51,7 +51,6 @@ EOF
 # Install Jellyfin using the metapackage (which will fetch jellyfin-server, jellyfin-web, and jellyfin-ffmpeg5)
 $STD apt-get update
 $STD apt-get install -y jellyfin
-# Fix the ammount of default logging which eventually leads to a full disk
 sed -i 's/"MinimumLevel": "Information"/"MinimumLevel": "Error"/g' /etc/jellyfin/logging.json
 chown -R jellyfin:adm /etc/jellyfin
 sleep 10
