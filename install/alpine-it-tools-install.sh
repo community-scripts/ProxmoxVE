@@ -4,7 +4,7 @@
 # Author: nicedevil007 (NiceDevil)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
-source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
+source <(curl -s https://raw.githubusercontent.com/nicedevil007/ProxmoxVE/main/misc/build.func)
 color
 verb_ip6
 catch_errors
