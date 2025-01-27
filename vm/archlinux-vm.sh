@@ -406,7 +406,7 @@ else
 fi
 msg_ok "Using ${CL}${BL}$STORAGE${CL} ${GN}for Storage Location."
 msg_ok "Virtual Machine ID is ${CL}${BL}$VMID${CL}."
-msg_info "Retrieving the URL for the Arch Linux .qcow2 File"
+msg_info "Retrieving the URL for the Arch Linux .iso File"
 URL=https://geo.mirror.pkgbuild.com/iso/latest/archlinux-x86_64.iso
 sleep 2
 msg_ok "${CL}${BL}${URL}${CL}"
