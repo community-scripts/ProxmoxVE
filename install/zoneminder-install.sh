@@ -2,7 +2,7 @@
 
 # Copyright (c) 2021-2024 community-scripts ORG
 # Author: connorjfarrell
-# License: MIT
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://zoneminder.readthedocs.io
 
 source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
