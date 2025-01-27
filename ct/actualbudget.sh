@@ -47,6 +47,7 @@ function update_script() {
         mkdir -p /opt/actualbudget/
         tar -xzf v${RELEASE}.tar.gz >/dev/null 2>&1
         mv *ctual-server-*/* /opt/actualbudget
+        rm -rf /opt/actualbudget/.env
         mv /opt/actualbudget_bak/.env /opt/actualbudget
         mv /opt/actualbudget_bak/server-files /opt/actualbudget/server-files
         cd /opt/actualbudget

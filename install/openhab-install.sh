@@ -21,13 +21,13 @@ $STD apt-get install -y gnupg
 $STD apt-get install -y apt-transport-https
 msg_ok "Installed Dependencies"
 
-msg_info "Installing Azul Zulu"
+msg_info "Installing Azul Zulu21"
 wget -qO /etc/apt/trusted.gpg.d/zulu-repo.asc "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xB1998361219BD9C9"
 wget -q https://cdn.azul.com/zulu/bin/zulu-repo_1.0.0-3_all.deb
 $STD dpkg -i zulu-repo_1.0.0-3_all.deb
 $STD apt-get update
-$STD apt-get -y install zulu17-jdk
-msg_ok "Installed Azul Zulu"
+$STD apt-get -y install zulu21-jdk
+msg_ok "Installed Azul Zulu21"
 
 msg_info "Installing openHAB"
 curl -fsSL "https://openhab.jfrog.io/artifactory/api/gpg/key/public" | gpg --dearmor >openhab.gpg
