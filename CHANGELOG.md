@@ -17,6 +17,23 @@ All LXC instances created using this repository come pre-installed with Midnight
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
 
+## 2025-01-27
+
+### Changed
+
+### ✨ New Scripts
+
+- New Script: Arch Linux VM [@MickLesk](https://github.com/MickLesk) ([#1780](https://github.com/community-scripts/ProxmoxVE/pull/1780))
+
+### 🚀 Updated Scripts
+
+- Added change of the mobile GUI to disable nag request [@GarryG](https://github.com/GarryG) ([#1785](https://github.com/community-scripts/ProxmoxVE/pull/1785))
+
+### 🌐 Website
+
+- Website: Add Description for Metadata Categories [@MickLesk](https://github.com/MickLesk) ([#1783](https://github.com/community-scripts/ProxmoxVE/pull/1783))
+- [Fix] Double "VM" on website (Arch Linux) [@lasharor](https://github.com/lasharor) ([#1782](https://github.com/community-scripts/ProxmoxVE/pull/1782))
+
 ## 2025-01-26
 
 ### Changed
