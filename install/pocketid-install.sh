@@ -33,7 +33,6 @@ msg_ok "Set up Node.js Repository"
 msg_info "Installing Node.js"
 $STD apt-get update
 $STD apt-get install -y nodejs
-$STD npm install pm2 -g
 msg_ok "Installed Node.js"
 
 msg_info "Installing Golang"
@@ -46,8 +45,8 @@ ln -s /usr/local/go/bin/go /usr/bin/go
 set -o pipefail
 msg_ok "Installed Golang"
 
-public_url=$(whiptail --backtitle "${APPLICATION} LXC" --title "Public URL" --inputbox "What public URL do you want to use?" 10 58 pocketid.mydomain.com 3>&2 2>&1 1>&3)
-msg_info "Setup ${APPLICATION}"
+read -r -p "What public URL do you want to use (e.g. pocketid.mydomain.com)? " public_url
+msg_info "Setup Pocket ID"
 RELEASE=$(curl -s https://api.github.com/repos/stonith404/pocket-id/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 $STD git clone https://github.com/stonith404/pocket-id /opt/pocket-id
 cd /opt/pocket-id
@@ -71,7 +70,7 @@ $STD npm run build
 cd ..
 cp reverse-proxy/Caddyfile /etc/caddy/Caddyfile
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
-msg_ok "Setup ${APPLICATION}"
+msg_ok "Setup Pocket ID"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/pocketid-backend.service
@@ -112,11 +111,11 @@ WantedBy=multi-user.target
 EOF
 msg_ok "Created Service"
 
-msg_info "Starting ${APPLICATION}"
-systemctl enable -q --now pocketid-backend.service
-systemctl enable -q --now pocketid-frontend.service
+msg_info "Starting Services"
+systemctl enable -q --now pocketid-backend
+systemctl enable -q --now pocketid-frontend
 systemctl restart caddy
-msg_ok "Started ${APPLICATION}"
+msg_ok "Started Services"
 
 motd_ssh
 customize
