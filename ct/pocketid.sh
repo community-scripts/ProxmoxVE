@@ -34,7 +34,7 @@ function update_script() {
         exit
     fi
 
-    RELEASE=$(curl -fsSL https://api.github.com/repos/stonith404/pocket-id/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+    RELEASE=$(curl -fsSL https://api.github.com/repos/stonith404/pocket-id/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
     if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
         msg_info "Updating $APP"
 
@@ -45,16 +45,23 @@ function update_script() {
         msg_ok "Stopped $APP"
 
         msg_info "Updating $APP to v${RELEASE}"
-        cd /opt/pocket-id
-        git fetch --tags
-        git checkout $(git describe --tags `git rev-list --tags --max-count=1`)
+        cd /opt
+        cp -r /opt/pocket-id/backend/data /opt/data
+        cp /opt/pocket-id/backend/.env /opt/backend.env
+        cp /opt/pocket-id/frontend/.env /opt/frontend.env
+        rm -r /opt/pocket-id
+        wget -q "https://github.com/stonith404/pocket-id/archive/refs/tags/v${RELEASE}.zip"
+        unzip -q v${RELEASE}.zip
+        mv pocket-id-${RELEASE} /opt/pocket-id
+        mv /opt/data /opt/pocket-id/backend/data
+        mv /opt/backend.env /opt/pocket-id/backend/.env 
+        mv /opt/frontend.env /opt/pocket-id/frontend/.env 
+
         cd /opt/pocket-id/backend/cmd
         go build -o ../pocket-id-backend
         cd ../../frontend
         npm install
         npm run build
-        cd ..
-        cp reverse-proxy/Caddyfile /etc/caddy/Caddyfile
         msg_ok "Updated $APP to ${RELEASE}"
 
         msg_info "Starting $APP"
@@ -63,6 +70,11 @@ function update_script() {
         systemctl start caddy.service
         sleep 2
         msg_ok "Started $APP"
+
+        # Cleaning up
+        msg_info "Cleaning Up"
+        rm -f /opt/v${RELEASE}.zip
+        msg_ok "Cleanup Completed"
 
         echo "${RELEASE}" >/opt/${APP}_version.txt
         msg_ok "Update Successful"
