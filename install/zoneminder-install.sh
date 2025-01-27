@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2024 community-scripts ORG
 # Author: connorjfarrell
 # License: MIT
-# Source: https://zoneminder.readthedocs.io/en/latest/installationguide/ubuntu.html#ubuntu-22-04-jammy
+# Source: https://zoneminder.readthedocs.io
 
 source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color
