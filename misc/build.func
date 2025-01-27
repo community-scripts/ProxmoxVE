@@ -813,6 +813,36 @@ advanced_settings() {
   fi
 }
 
+post_to_api() {
+    local API_URL="http://api.htl-braunau.at/upload"
+   
+    
+    JSON_PAYLOAD=$(cat <<EOF
+{
+    "ct_type": $CT_TYPE,
+    "disk_size": $DISK_SIZE,
+    "core_count": $CORE_COUNT,
+    "ram_size": $RAM_SIZE,
+    "verbose": "$VERBOSE",
+    "ct_id": $CT_ID,
+    "hn": "$HN",
+    "disableip6": "$DISABLEIP6",
+    "ssh": "$SSH",
+    "tags": "$TAGS",
+    "nsapp": "$NSAPP"
+}
+EOF
+)
+   
+    RESPONSE=$(curl -s -o response.txt -w "%{http_code}" -X POST "$API_URL" \
+        -H "Content-Type: application/json" \
+        -d "$JSON_PAYLOAD")
+
+    if [ ! "$RESPONSE" -eq 201 ]; then
+        msg_error "API request failed with HTTP code $RESPONSE"
+    fi
+}
+
 install_script() {
   pve_check
   shell_check
@@ -942,7 +972,7 @@ build_container() {
   else
     FEATURES="nesting=1"
   fi
-
+  post_to_api
 
   TEMP_DIR=$(mktemp -d)
   pushd $TEMP_DIR >/dev/null
