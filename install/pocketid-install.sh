@@ -63,9 +63,6 @@ $STD go build -o ../pocket-id-backend
 cd ../../frontend
 cp .env.example .env
 sed -i "s/PUBLIC_APP_URL=http:\/\/localhost/PUBLIC_APP_URL=https:\/\/${public_url}/" .env
-# The assert causes issues with the latest version of node
-# https://github.com/stonith404/pocket-id/discussions/163#discussioncomment-11906107
-sed -i 's/assert/with/' svelte.config.js 
 $STD npm install
 $STD npm run build
 

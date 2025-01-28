@@ -60,7 +60,6 @@ function update_script() {
         cd /opt/pocket-id/backend/cmd
         go build -o ../pocket-id-backend
         cd ../../frontend
-        sed -i 's/assert/with/' svelte.config.js 
         npm install
         npm run build
         msg_ok "Updated $APP to ${RELEASE}"
