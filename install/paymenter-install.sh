@@ -103,7 +103,7 @@ server {
 EOF
 ln -s /etc/nginx/sites-available/paymenter.conf /etc/nginx/sites-enabled/
 rm -f /etc/nginx/sites-enabled/default
-$STD systemctl restart nginx
+$STD systemctl reload nginx
 chown -R www-data:www-data /opt/paymenter/*
 msg_ok "Configured Nginx"
 
