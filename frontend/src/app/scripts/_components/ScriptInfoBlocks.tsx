@@ -35,8 +35,18 @@ export function LatestScripts({ items }: { items: Category[] }) {
 
   const latestScripts = useMemo(() => {
     if (!items) return [];
+    
     const scripts = items.flatMap((category) => category.scripts || []);
-    return scripts.sort(
+
+    // Filter out duplicates by slug
+    const uniqueScriptsMap = new Map<string, Script>();
+    scripts.forEach((script) => {
+      if (!uniqueScriptsMap.has(script.slug)) {
+        uniqueScriptsMap.set(script.slug, script);
+      }
+    });
+
+    return Array.from(uniqueScriptsMap.values()).sort(
       (a, b) =>
         new Date(b.date_created).getTime() - new Date(a.date_created).getTime(),
     );
@@ -49,7 +59,7 @@ export function LatestScripts({ items }: { items: Category[] }) {
   const goToPreviousPage = () => {
     setPage((prevPage) => prevPage - 1);
   };
-
+  
   const startIndex = (page - 1) * ITEMS_PER_PAGE;
   const endIndex = page * ITEMS_PER_PAGE;
 
