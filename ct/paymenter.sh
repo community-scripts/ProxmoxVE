@@ -36,6 +36,7 @@ function update_script() {
   RELEASE=$(curl -s https://api.github.com/repos/paymenter/paymenter/releases/latest | grep '"tag_name"' | sed -E 's/.*"tag_name": "([^"]+)".*/\1/')
   if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
     msg_info "Updating ${APP} to ${RELEASE}"
+    echo "${RELEASE}" >/opt/${APP}_version.txt
     cd /opt/paymenter
     php artisan p:upgrade --no-interaction &>/dev/null
     msg_ok "Updated Successfully"
