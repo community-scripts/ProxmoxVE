@@ -21,6 +21,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### Changed
 
+### 💥 Breaking Changes
+
+- Update PingVin: Fix problem with update und switch to new method of getting files. [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1819](https://github.com/community-scripts/ProxmoxVE/pull/1819))
+
 ### ✨ New Scripts
 
 - New Script: NodeBB [@MickLesk](https://github.com/MickLesk) ([#1811](https://github.com/community-scripts/ProxmoxVE/pull/1811))
@@ -29,7 +33,6 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
-- Update pingvin.sh and pingvin-install.sh: Fix problem with update und switch to new method of getting files. [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1819](https://github.com/community-scripts/ProxmoxVE/pull/1819))
 - Update all Alpine LXC's to 3.21 (Docker, Grafana, Nextcloud, Vaultwarden, Zigbee2Mqtt, Alpine) [@MickLesk](https://github.com/MickLesk) ([#1803](https://github.com/community-scripts/ProxmoxVE/pull/1803))
 - [Standardization] Fix Spelling for "Setup Python3" [@MickLesk](https://github.com/MickLesk) ([#1810](https://github.com/community-scripts/ProxmoxVE/pull/1810))
 
