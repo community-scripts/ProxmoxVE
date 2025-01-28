@@ -37,6 +37,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 - Update all Alpine LXC's to 3.21 (Docker, Grafana, Nextcloud, Vaultwarden, Zigbee2Mqtt, Alpine) [@MickLesk](https://github.com/MickLesk) ([#1803](https://github.com/community-scripts/ProxmoxVE/pull/1803))
 - [Standardization] Fix Spelling for "Setup Python3" [@MickLesk](https://github.com/MickLesk) ([#1810](https://github.com/community-scripts/ProxmoxVE/pull/1810))
 
+### 🌐 Website
+
+- Filter out duplicate scripts in LatestScripts component and sort by creation date [@BramSuurdje](https://github.com/BramSuurdje) ([#1828](https://github.com/community-scripts/ProxmoxVE/pull/1828))
+
 ### 🧰 Maintenance
 
 - [core]: Remove Figlet | Get Headers by Repo & Store Local [@MickLesk](https://github.com/MickLesk) ([#1802](https://github.com/community-scripts/ProxmoxVE/pull/1802))
