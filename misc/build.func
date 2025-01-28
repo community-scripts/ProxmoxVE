@@ -1,6 +1,7 @@
 # Copyright (c) 2021-2025 tteck
 # Author: tteck (tteckster)
 # Co-Author: MickLesk
+# Co-Author: michelroegl-brunner
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
@@ -9,6 +10,7 @@ variables() {
   var_install="${NSAPP}-install"     # sets the var_install variable by appending "-install" to the value of NSAPP.
   INTEGER='^[0-9]+([.][0-9]+)?$'     # it defines the INTEGER regular expression pattern.
   PVEHOST_NAME=$(hostname) # gets the Proxmox Hostname and sets it to Uppercase
+   DIAGNOSTICS="yes" # sets the DIAGNOSTICS variable to "yes", used for the API call.
 }
 
 # This function sets various color variables using ANSI escape codes for formatting text in the terminal.
@@ -824,7 +826,8 @@ post_to_api() {
     "core_count": $CORE_COUNT,
     "ram_size": $RAM_SIZE,
     "verbose": "$VERBOSE",
-    "ct_id": $CT_ID,
+    "os_type": "$var_os",
+    "os_version": "$var_version",
     "hn": "$HN",
     "disableip6": "$DISABLEIP6",
     "ssh": "$SSH",
@@ -858,6 +861,11 @@ install_script() {
   timezone=$(cat /etc/timezone)
   header_info
   while true; do
+
+    if ! (whiptail --backtitle "Proxmox VE Helper Scripts" --title "DIAGNOSTICS" --yesno "Send diagnostics to the maintainer? (No User Data!)" 10 58); then
+      DIAGNOSTICS="no"
+    fi
+
     CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "SETTINGS" --menu "Choose an option:" \
       12 50 4 \
       "1" "Default Settings" \
@@ -972,7 +980,10 @@ build_container() {
   else
     FEATURES="nesting=1"
   fi
-  post_to_api
+
+  if [[ $DIAGNOSTICS == "yes" ]]; then
+    post_to_api
+  fi
 
   TEMP_DIR=$(mktemp -d)
   pushd $TEMP_DIR >/dev/null
