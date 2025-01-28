@@ -31,5 +31,10 @@
         "username": null,
         "password": null
     },
-    "notes": []
+    "notes": [
+        {
+            "text": "Please adjust the Proxmox credentials in the configuration file: /opt/prometheus-pve-exporter/pve.yml",
+            "type": "info"
+        }
+    ]
 }
