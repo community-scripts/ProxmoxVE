@@ -21,13 +21,13 @@ $STD apt-get install -y git
 $STD apt-get install -y cifs-utils
 msg_ok "Installed Dependencies"
 
-msg_info "Updating Python3"
+msg_info "Setup Python3"
 $STD apt-get install -y \
   python3 \
   python3-dev \
   python3-pip
 rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
-msg_ok "Updated Python3"
+msg_ok "Setup Python3"
 
 msg_info "Installing Motion"
 $STD apt-get install -y motion

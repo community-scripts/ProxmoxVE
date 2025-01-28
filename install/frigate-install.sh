@@ -18,10 +18,10 @@ msg_info "Installing Dependencies (Patience)"
 $STD apt-get install -y {curl,sudo,mc,git,gpg,ca-certificates,automake,build-essential,xz-utils,libtool,ccache,pkg-config,libgtk-3-dev,libavcodec-dev,libavformat-dev,libswscale-dev,libv4l-dev,libxvidcore-dev,libx264-dev,libjpeg-dev,libpng-dev,libtiff-dev,gfortran,openexr,libatlas-base-dev,libssl-dev,libtbb2,libtbb-dev,libdc1394-22-dev,libopenexr-dev,libgstreamer-plugins-base1.0-dev,libgstreamer1.0-dev,gcc,gfortran,libopenblas-dev,liblapack-dev,libusb-1.0-0-dev,jq,moreutils}
 msg_ok "Installed Dependencies"
 
-msg_info "Installing Python3 Dependencies"
+msg_info "Setup Python3"
 $STD apt-get install -y {python3,python3-dev,python3-setuptools,python3-distutils,python3-pip}
 $STD pip install --upgrade pip
-msg_ok "Installed Python3 Dependencies"
+msg_ok "Setup Python3"
 
 msg_info "Installing Node.js"
 mkdir -p /etc/apt/keyrings

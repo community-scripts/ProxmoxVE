@@ -49,7 +49,7 @@ $STD apt-get install -y \
   pkg-config
 msg_ok "Installed Dependencies"
 
-msg_info "Setup Python3/pip"
+msg_info "Setup Python3"
 $STD apt-get update
 $STD rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
 $STD apt-get remove --purge -y python3.12 python3.12-dev python3.12-venv
