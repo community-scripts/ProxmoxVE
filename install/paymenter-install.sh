@@ -16,10 +16,6 @@ msg_info "Installing Dependencies"
 $STD apt-get install -y \
     curl \
     git \
-    sudo \
-    mc \
-    tar \
-    unzip \
     software-properties-common \
     apt-transport-https \
     ca-certificates \
