@@ -17,6 +17,18 @@ All LXC instances created using this repository come pre-installed with Midnight
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
 
+## 2025-01-28
+
+### Changed
+
+### 🚀 Updated Scripts
+
+- Update all Alpine LXC's to 3.21 (Docker, Grafana, Nextcloud, Vaultwarden, Zigbee2Mqtt, Alpine) [@MickLesk](https://github.com/MickLesk) ([#1803](https://github.com/community-scripts/ProxmoxVE/pull/1803))
+
+### 🧰 Maintenance
+
+- [core]: Remove Figlet | Get Headers by Repo & Store Local [@MickLesk](https://github.com/MickLesk) ([#1802](https://github.com/community-scripts/ProxmoxVE/pull/1802))
+
 ## 2025-01-27
 
 ### Changed
