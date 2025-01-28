@@ -233,65 +233,41 @@ update_motd_ip() {
   fi
 }
 
-# This function sets the APP-Name into an ASCII Header in Slant, figlet needed on proxmox main node.
-header_info() {
-  # Helper function: Install FIGlet and download fonts
-  install_figlet() {
-    echo -e "${INFO}${BOLD}${DGN}Installing FIGlet...${CL}"
+# Function to download & save header files
+get_header() {
+  local app_name=$(echo ${APP,,} | tr -d ' ') 
+  local header_url="https://github.com/community-scripts/ProxmoxVE/raw/header_testing/ct/headers/${app_name}"
+  local local_header_path="/usr/local/community-scripts/headers/${app_name}"
 
-    temp_dir=$(mktemp -d)
-    curl -sL https://github.com/community-scripts/ProxmoxVE/raw/refs/heads/main/misc/figlet.tar.xz -o "$temp_dir/figlet.tar.xz"
-    mkdir -p /tmp/figlet
-    tar -xf "$temp_dir/figlet.tar.xz" -C /tmp/figlet --strip-components=1
-    cd /tmp/figlet
-    make >/dev/null
+  mkdir -p "/usr/local/community-scripts/headers"
 
-    if [ -f "figlet" ]; then
-      chmod +x figlet
-      mv figlet /usr/local/bin/
-      mkdir -p /usr/local/share/figlet
-      cp -r /tmp/figlet/fonts/*.flf /usr/local/share/figlet/
-      echo -e "${CM}${BOLD}${DGN}FIGlet successfully installed.${CL}"
-    else
-      echo -e "${ERR}${BOLD}${RED}Failed to install FIGlet.${CL}"
+  # Check if local file already present
+  if [ ! -f "$local_header_path" ]; then
+    wget -qO "$local_header_path" "$header_url"
+    if [ $? -ne 0 ]; then
+      echo -e "${WARN}${BOLD}${YLW}Failed to download header for ${app_name}. No header will be displayed.${CL}"
       return 1
-    fi
-    rm -rf "$temp_dir"
-  }
-
-  # Check if figlet and the slant font are available
-  if ! figlet -f slant "Test" &>/dev/null; then
-    echo -e "${INFO}${BOLD}${DGN}FIGlet or the slant font is missing. Installing...${CL}"
-
-    if [ -f /etc/debian_version ] || [ -f /etc/lsb-release ]; then
-      # Debian/Ubuntu-based systems
-      apt-get update -y &>/dev/null
-      apt-get install -y wget build-essential &>/dev/null
-      install_figlet
-
-    elif [ -f /etc/alpine-release ]; then
-      # Alpine-based systems
-      apk add --no-cache tar xz build-base wget &>/dev/null
-      export TERM=xterm
-      install_figlet
-
-    else
-      echo -e "${ERR}${BOLD}${RED}Unsupported operating system.${CL}"
-      return 1
-    fi
-
-    # Ensure the slant font is available
-    if [ ! -f "/usr/share/figlet/slant.flf" ]; then
-      echo -e "${INFO}${BOLD}${DGN}Downloading slant font...${CL}"
-      wget -qO /usr/share/figlet/slant.flf "http://www.figlet.org/fonts/slant.flf"
     fi
   fi
+  cat "$local_header_path"
+}
 
-  # Display ASCII header
+# This function sets the APP-Name into an ASCII Header in Slant, figlet needed on proxmox main node.
+header_info() {
+  local app_name=$(echo ${APP,,} | tr -d ' ') 
+  local header_content
+
+  # Download & save Header-File locally
+  header_content=$(get_header "$app_name")
+  if [ $? -ne 0 ]; then
+    # Fallback: Doesn't show Header
+    return 0
+  fi
+
+  # Show ASCII-Header
   term_width=$(tput cols 2>/dev/null || echo 120)
-  ascii_art=$(figlet -f slant -w "$term_width" "$APP")
   clear
-  echo "$ascii_art"
+  echo "$header_content"
 }
 
 # This function checks if the script is running through SSH and prompts the user to confirm if they want to proceed or exit.
