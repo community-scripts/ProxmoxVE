@@ -40,8 +40,8 @@
 - Import the build.func file.
 - When developing your own script, change the URL to your own repository.
 
-> [!CAUTION]
-> Before opening a Pull Request, change the URL to point to the community-scripts repo.
+> [!IMPORTANT] 
+> You also need to change all apperances of this URL in `misc/build.func` and `misc/install.func`
 
 Example for development:
 
@@ -54,6 +54,9 @@ Final script:
 ```bash
 source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 ```
+
+> [!CAUTION]
+> Before opening a Pull Request, change the URLs to point to the community-scripts repo.
 
 ### 1.3 **Metadata**
 
