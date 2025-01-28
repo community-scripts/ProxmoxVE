@@ -816,7 +816,7 @@ advanced_settings() {
 }
 
 post_to_api() {
-    local API_URL="http://api.htl-braunau.at/upload"
+    local API_URL="http://api.community-scripts.org/upload"
    
     
     JSON_PAYLOAD=$(cat <<EOF
