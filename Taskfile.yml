@@ -1,0 +1,38 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  GREETING: Hello, World!
+
+tasks:
+  default:
+    cmds:
+      - echo "{{.GREETING}}"
+    silent: true
+
+  update-tags:
+    cmds:
+      - echo "Fetching upstream..."
+      - git fetch upstream
+      - echo "Pushing upstream tags to origin..."
+      - git push origin --tags
+    silent: true
+
+  update:
+    cmds:
+      - echo "Fetching upstream..."
+      - git fetch upstream
+      - git checkout vendor
+      - git merge upstream/main
+      - git push origin vendor
+      - git checkout main
+    silent: true
+
+  choose:
+    cmds:
+      - echo {{.TAG}}
+    vars:
+      TAG:
+        sh: git -P tag | gum choose
+    silent: true
