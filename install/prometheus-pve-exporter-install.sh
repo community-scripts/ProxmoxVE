@@ -29,8 +29,8 @@ msg_ok "Updated Python3"
 
 msg_info "Installing Prometheus Proxmox VE Exporter"
 python3 -m pip install --quiet prometheus-pve-exporter
-mkdir -p /etc/prometheus-pve-exporter
-cat <<EOF > /etc/prometheus-pve-exporter/pve.yml
+mkdir -p /opt/prometheus-pve-exporter
+cat <<EOF > /opt/prometheus-pve-exporter/pve.yml
 default:
     user: prometheus@pve
     password: sEcr3T!
@@ -50,7 +50,7 @@ User=root
 Restart=always
 Type=simple
 ExecStart=pve_exporter \
-    --config.file=/etc/prometheus-pve-exporter/pve.yml \
+    --config.file=/opt/prometheus-pve-exporter/pve.yml \
     --web.listen-address=0.0.0.0:9221
 ExecReload=/bin/kill -HUP \$MAINPID
 
