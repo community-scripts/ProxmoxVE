@@ -32,46 +32,46 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -s https://api.github.com/repos/ajnart/homarr/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+if [[ -f /opt/homarr/database/db.sqlite ]]; then
+    msg_error "Old Homarr detected due to existing database file (/opt/homarr/database/db.sqlite)."
+    msg_error "Update not supported. Refer to:"
+    msg_error " - https://github.com/community-scripts/ProxmoxVE/discussions/1551"
+    msg_error " - https://homarr.dev/docs/getting-started/after-the-installation/#importing-a-zip-from-version-before-100"
+    exit 1
+fi
+  RELEASE=$(curl -s https://api.github.com/repos/homarr-labs/homarr/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
   if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+
     msg_info "Stopping Services"
     systemctl stop homarr
     msg_ok "Services Stopped"
 
-    msg_info "Backing up Data"
+    msg_info "Backup Data"
     mkdir -p /opt/homarr-data-backup
     cp /opt/homarr/.env /opt/homarr-data-backup/.env
-    cp /opt/homarr/database/db.sqlite /opt/homarr-data-backup/db.sqlite
-    cp -r /opt/homarr/data/configs /opt/homarr-data-backup/configs
-    msg_ok "Backed up Data"
+    msg_ok "Backup Data"
 
-    msg_info "Updating ${APP} to ${RELEASE}"
-    wget -q "https://github.com/ajnart/homarr/archive/refs/tags/v${RELEASE}.zip"
+    msg_info "Updating ${APP} to v${RELEASE}"
+    wget -q "https://github.com/homarr-labs/homarr/archive/refs/tags/v${RELEASE}.zip"
     unzip -q v${RELEASE}.zip
     rm -rf v${RELEASE}.zip
     rm -rf /opt/homarr
     mv homarr-${RELEASE} /opt/homarr
     mv /opt/homarr-data-backup/.env /opt/homarr/.env
     cd /opt/homarr
-    yarn install &>/dev/null
-    yarn build &>/dev/null
+    pnpm run db:migration:sqlite:run &>/dev/null
+    pnpm build &>/dev/null
+    mkdir build
+    cp ./node_modules/better-sqlite3/build/Release/better_sqlite3.node ./build/better_sqlite3.node
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP}"
-
-    msg_info "Restoring Data"
-    rm -rf /opt/homarr/data/configs
-    mv /opt/homarr-data-backup/configs /opt/homarr/data/configs
-    mv /opt/homarr-data-backup/db.sqlite /opt/homarr/database/db.sqlite
-    yarn db:migrate &>/dev/null
-    rm -rf /opt/homarr-data-backup
-    msg_ok "Restored Data"
 
     msg_info "Starting Services"
     systemctl start homarr
     msg_ok "Started Services"
     msg_ok "Updated Successfully"
   else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
+    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }
