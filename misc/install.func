@@ -197,6 +197,15 @@ EOF
   msg_ok "Updated Container OS"
 }
 
+# Install core packages that (almost) every container will depend upon.
+# Be sure to update alpine-install.func to match for apk-based systems when
+# adding a new package.
+install_core_packages() {
+  msg_info "Installing Core Packages"
+  apt-get install -y curl mc sudo &> /dev/null
+  msg_ok "Installed Core Packages"
+}
+
 # This function modifies the message of the day (motd) and SSH settings
 motd_ssh() {
   # Set terminal to 256-color mode
