@@ -21,12 +21,19 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### Changed
 
+### ✨ New Scripts
+
+- New Script: NodeBB [@MickLesk](https://github.com/MickLesk) ([#1811](https://github.com/community-scripts/ProxmoxVE/pull/1811))
+- New Script: Pocket ID [@Snarkenfaugister](https://github.com/Snarkenfaugister) ([#1779](https://github.com/community-scripts/ProxmoxVE/pull/1779))
+
 ### 🚀 Updated Scripts
 
+- [Standardization] Fix Spelling for "Setup Python3" [@MickLesk](https://github.com/MickLesk) ([#1810](https://github.com/community-scripts/ProxmoxVE/pull/1810))
 - Update all Alpine LXC's to 3.21 (Docker, Grafana, Nextcloud, Vaultwarden, Zigbee2Mqtt, Alpine) [@MickLesk](https://github.com/MickLesk) ([#1803](https://github.com/community-scripts/ProxmoxVE/pull/1803))
 
 ### 🧰 Maintenance
 
+- [docs] Update AppName.md: Make it clear where to change the URLs [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1809](https://github.com/community-scripts/ProxmoxVE/pull/1809))
 - [core]: Remove Figlet | Get Headers by Repo & Store Local [@MickLesk](https://github.com/MickLesk) ([#1802](https://github.com/community-scripts/ProxmoxVE/pull/1802))
 
 ## 2025-01-27
