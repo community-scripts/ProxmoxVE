@@ -2,6 +2,7 @@
     "name": "Prometheus Proxmox VE Exporter",
     "slug": "prometheus-proxmox-ve-exporter",
     "categories": [
+        1,
         9
     ],
     "date_created": "2025-01-28",
