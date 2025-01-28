@@ -10,7 +10,8 @@ variables() {
   var_install="${NSAPP}-install"     # sets the var_install variable by appending "-install" to the value of NSAPP.
   INTEGER='^[0-9]+([.][0-9]+)?$'     # it defines the INTEGER regular expression pattern.
   PVEHOST_NAME=$(hostname) # gets the Proxmox Hostname and sets it to Uppercase
-   DIAGNOSTICS="yes" # sets the DIAGNOSTICS variable to "yes", used for the API call.
+  DIAGNOSTICS="yes" # sets the DIAGNOSTICS variable to "yes", used for the API call.
+  METHOD="default" # sets the METHOD variable to "default", used for the API call.
 }
 
 # This function sets various color variables using ANSI escape codes for formatting text in the terminal.
@@ -832,7 +833,8 @@ post_to_api() {
     "disableip6": "$DISABLEIP6",
     "ssh": "$SSH",
     "tags": "$TAGS",
-    "nsapp": "$NSAPP"
+    "nsapp": "$NSAPP",
+    "method": "$METHOD"
 }
 EOF
 )
@@ -885,6 +887,7 @@ install_script() {
         header_info
         echo -e "${DEFAULT}${BOLD}${BL}Using Default Settings on node $PVEHOST_NAME${CL}"
         VERB="no"
+        METHOD="default"
         base_settings "$VERB"
         echo_default
         break
@@ -893,6 +896,7 @@ install_script() {
         header_info
         echo -e "${DEFAULT}${BOLD}${BL}Using Default Settings on node $PVEHOST_NAME (${SEARCH}Verbose)${CL}"
         VERB="yes"
+        METHOD="default"
         base_settings "$VERB"
         echo_default
         break
@@ -900,6 +904,7 @@ install_script() {
       3)
         header_info
         echo -e "${ADVANCED}${BOLD}${RD}Using Advanced Settings on node $PVEHOST_NAME${CL}"
+        METHOD="advanced"
         advanced_settings
         break
         ;;
