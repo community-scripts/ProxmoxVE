@@ -30,7 +30,6 @@ msg_ok "Updated Python3"
 
 msg_info "Installing Prometheus Proxmox VE Exporter"
 python3 -m pip install --quiet prometheus-pve-exporter
-
 mkdir -p /etc/prometheus-pve-exporter
 cat <<EOF > /etc/prometheus-pve-exporter/pve.yml
 default:
@@ -38,7 +37,6 @@ default:
     password: sEcr3T!
     verify_ssl: false
 EOF
-
 msg_ok "Installed Prometheus Proxmox VE Exporter"
 
 msg_info "Creating Service"
