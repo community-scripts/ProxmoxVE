@@ -32,7 +32,6 @@ function update_script() {
         msg_error "No ${APP} Installation Found!"
         exit
     fi
-
     msg_info "Stopping ${APP}"
     systemctl stop prometheus-pve-exporter
     msg_ok "Stopped ${APP}"
