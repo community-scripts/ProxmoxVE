@@ -11,7 +11,7 @@ var_cpu="1"
 var_ram="512"
 var_disk="0.1"
 var_os="alpine"
-var_version="3.20"
+var_version="3.21"
 var_unprivileged="1"
 
 # App Output & Base Settings

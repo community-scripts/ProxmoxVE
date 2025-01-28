@@ -33,7 +33,7 @@
                 "ram": 256,
                 "hdd": 0.5,
                 "os": "alpine",
-                "version": "3.20"
+                "version": "3.21"
             }
         }
     ],
