@@ -23,12 +23,13 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 💥 Breaking Changes
 
+- Breaking Change: Homarr v1 (Read Guide) [@MickLesk](https://github.com/MickLesk) ([#1825](https://github.com/community-scripts/ProxmoxVE/pull/1825))
 - Update PingVin: Fix problem with update und switch to new method of getting files. [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1819](https://github.com/community-scripts/ProxmoxVE/pull/1819))
 
 ### ✨ New Scripts
 
-- New Script: NodeBB [@MickLesk](https://github.com/MickLesk) ([#1811](https://github.com/community-scripts/ProxmoxVE/pull/1811))
 - New script: Monica LXC [@bvdberg01](https://github.com/bvdberg01) ([#1813](https://github.com/community-scripts/ProxmoxVE/pull/1813))
+- New Script: NodeBB [@MickLesk](https://github.com/MickLesk) ([#1811](https://github.com/community-scripts/ProxmoxVE/pull/1811))
 - New Script: Pocket ID [@Snarkenfaugister](https://github.com/Snarkenfaugister) ([#1779](https://github.com/community-scripts/ProxmoxVE/pull/1779))
 
 ### 🚀 Updated Scripts
