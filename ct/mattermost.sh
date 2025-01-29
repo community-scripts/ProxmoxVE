@@ -11,7 +11,7 @@ var_tags="sync"
 var_cpu="1"
 var_ram="2048"
 var_disk="8"
-var_os="Ubuntu"
+var_os="ubuntu"
 var_version="24.04"
 var_unprivileged="1"
 
