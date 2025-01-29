@@ -2,7 +2,7 @@
 # Author: tteck (tteckster)
 # Co-Author: MickLesk
 # License: MIT
-# https://github.com/andygrunwald/ProxmoxVE/raw/prometheus-pve-exporter-container/LICENSE
+# https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
 # This function sets color variables for formatting output in the terminal
 color() {
@@ -244,7 +244,7 @@ EOF
     systemctl restart $(basename $(dirname $GETTY_OVERRIDE) | sed 's/\.d//')
     msg_ok "Customized Container"
   fi
-  echo "bash -c \"\$(wget -qLO - https://github.com/andygrunwald/ProxmoxVE/raw/prometheus-pve-exporter-container/ct/${app}.sh)\"" >/usr/bin/update
+  echo "bash -c \"\$(wget -qLO - https://github.com/community-scripts/ProxmoxVE/raw/main/ct/${app}.sh)\"" >/usr/bin/update
   chmod +x /usr/bin/update
 
   if [[ -n "${SSH_AUTHORIZED_KEY}" ]]; then
