@@ -7,7 +7,7 @@ source <(curl -s https://raw.githubusercontent.com/andygrunwald/ProxmoxVE/refs/h
 # Source: https://github.com/prometheus-pve/prometheus-pve-exporter
 
 # App Default Values
-APP="Prometheus-Proxmox-VE-Exporter"
+APP="Prometheus-PVE-Exporter"
 var_tags="monitoring"
 var_cpu="1"
 var_ram="1024"
