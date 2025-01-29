@@ -5,5 +5,5 @@ codemods:
   mod: sed
   match: ct/*.sh
   args:
-  - github.com/community-scripts/ProxmoxVE
-  - github.com/bketelsen/IncusScripts
+  - https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func
+  - https://raw.githubusercontent.com/bketelsen/IncusScripts/main/misc/build.func
