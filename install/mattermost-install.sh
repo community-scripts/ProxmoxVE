@@ -50,7 +50,7 @@ sed -i -e "s|^\"DriverName\":.*|\"DriverName\": \"postgres\",|" \
        -e "s|^DB_CONNECTION=$|DB_CONNECTION=\"postgres://$DB_USER:$DB_PASS@localhost:5432/$DB_NAME?sslmode=disable&connect_timeout=10\"|" \
        -e "s|^\"SiteUrl\":.*|\"SiteUrl\": \"http://$IPADDRESS:8384\"|" /opt/mattermost/config/config.json
 $STD systemctl enable mattermost.service
-systemctl start mattermost.service
+$STD systemctl start mattermost.service
 msg_ok "Installed Mattermost"
 
 motd_ssh
