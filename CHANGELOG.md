@@ -34,6 +34,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🧰 Maintenance
 
+- Update build.func [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1851](https://github.com/community-scripts/ProxmoxVE/pull/1851))
 - [Diagnostic] Introduced optional lxc install diagnostics via API call [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1801](https://github.com/community-scripts/ProxmoxVE/pull/1801))
 
 ## 2025-01-28
