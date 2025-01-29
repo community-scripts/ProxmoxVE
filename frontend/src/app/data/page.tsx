@@ -40,7 +40,7 @@ const DataFetcher: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://api.htl-braunau.at/data/json");
+        const response = await fetch("https://api.htl-braunau.at/data/json");
         if (!response.ok) throw new Error("Failed to fetch data: ${response.statusText}");
         const result: DataModel[] = await response.json();
         setData(result);
