@@ -1001,43 +1001,47 @@ check_container_resources() {
 }
 
 check_container_storage() {
-  # Check if the /boot partition is more than 80% full
-  total_size=$(df /boot --output=size | tail -n 1)
-  local used_size=$(df /boot --output=used | tail -n 1)
-  usage=$(( 100 * used_size / total_size ))
-  if (( usage > 80 )); then
-    # Prompt the user for confirmation to continue
-    echo -e "${INFO}${HOLD} ${YWB}Warning: Storage is dangerously low (${usage}%).${CL}"
-    read -r -p "Continue anyway? <y/N>  " prompt
-    # Check if the input is 'y' or 'yes', otherwise exit with status 1
-    if [[ ! ${prompt,,} =~ ^(y|yes)$ ]]; then
-      echo -e "${CROSS}${HOLD}${YWB}Exiting based on user input.${CL}"
-      exit 1
-    fi
-  fi
+
+	total_size=$(df / --output=size | tail -n 1)
+	local used_size=$(df / --output=used | tail -n 1)
+	usage=$((100 * used_size / total_size))
+	if ((usage > 80)); then
+
+		echo -e "${INFO}${HOLD} ${YWB}Warning: Storage is dangerously low (${usage}%).${CL}"
+		read -r -p "Continue anyway? <y/N>  " prompt
+
+		if [[ ! ${prompt,,} =~ ^(y|yes)$ ]]; then
+			echo -e "${CROSS}${HOLD}${YWB}Exiting based on user input.${CL}"
+			exit 1
+		fi
+	fi
 }
+
 
 start() {
-  if command -v pveversion >/dev/null 2>&1; then
-    if ! (whiptail --backtitle "Incus Scripts" --title "${APP} LXC" --yesno "This will create a New ${APP} LXC. Proceed?" 10 58); then
-      clear
-      exit_script
-      exit
-    fi
-    SPINNER_PID=""
-    install_script
-  fi
 
-  if ! command -v pveversion >/dev/null 2>&1; then
-    if ! (whiptail --backtitle "Incus Scripts" --title "${APP} LXC UPDATE" --yesno "Support/Update functions for ${APP} LXC.  Proceed?" 10 58); then
-      clear
-      exit_script
-      exit
-    fi
-    SPINNER_PID=""
-    update_script
-  fi
+	if command -v incus >/dev/null 2>&1; then
+		if ! (whiptail --backtitle "Incus Scripts" --title "${APP} Container" --yesno "This will create a New ${APP} Container. Proceed?" 10 58); then
+			clear
+			exit_script
+			exit
+		fi
+		SPINNER_PID=""
+		install_script
+	fi
+
+	if ! command -v incus >/dev/null 2>&1; then
+		if ! (whiptail --backtitle "Incus Scripts" --title "${APP} Container UPDATE" --yesno "Support/Update functions for ${APP} Container.  Proceed?" 10 58); then
+			clear
+			exit_script
+			exit
+		fi
+		SPINNER_PID=""
+		update_script
+	fi
+
 }
+
 
 # This function collects user settings and integrates all the collected information.
 build_container() {
@@ -1198,4 +1202,6 @@ EOF
     systemctl start ping-instances.service
   fi
 }
+
+
 
