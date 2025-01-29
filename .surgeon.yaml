@@ -49,3 +49,9 @@ codemods:
   args:
   - https://github.com/community-scripts/ProxmoxVE/raw/main/ct/${app}.sh
   - https://github.com/bketelsen/IncusScripts/raw/main/ct/${app}.sh
+- description: PVE Check Function
+  mod: bashfunc
+  match: misc/build.func
+  args:
+  - pve_check
+  - codemods/pve_check.sh
