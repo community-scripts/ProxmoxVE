@@ -17,6 +17,14 @@ All LXC instances created using this repository come pre-installed with Midnight
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
 
+## 2025-01-29
+
+### Changed
+
+### 🧰 Maintenance
+
+- [Diagnostic] Introduced optional lxc install diagnostics via API call [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1801](https://github.com/community-scripts/ProxmoxVE/pull/1801))
+
 ## 2025-01-28
 
 ### Changed
