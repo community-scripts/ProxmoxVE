@@ -28,6 +28,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🌐 Website
 
+- Patch http Url to https in build.func and /data/page.tsx [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1849](https://github.com/community-scripts/ProxmoxVE/pull/1849))
 - [Frontend] Add /data to show API results [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1841](https://github.com/community-scripts/ProxmoxVE/pull/1841))
 - Update clean-orphaned-lvm.json [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1843](https://github.com/community-scripts/ProxmoxVE/pull/1843))
 
