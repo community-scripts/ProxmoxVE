@@ -984,10 +984,11 @@ install_script() {
     4)
       if whiptail --backtitle "Proxmox VE Helper Scripts" --title "DIAGNOSTICS SETTINGS" --yesno "Send Diagnostics of LXC Installation?\nCurrent setting: ${DIAGNOSTICS}" 10 58; then
         sed -i 's/^DIAGNOSTICS=.*/DIAGNOSTICS=yes/' /usr/local/community-scripts/diagnostics
+        DIAGNOSTICS="yes"
       else
         sed -i 's/^DIAGNOSTICS=.*/DIAGNOSTICS=no/' /usr/local/community-scripts/diagnostics
+        DIAGNOSTICS="no"
       fi
-      DIAGNOSTICS=$(awk -F '=' '/^DIAGNOSTICS/ {print $2}' /usr/local/community-scripts/diagnostics)
       whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox "Diagnostics settings changed to ${DIAGNOSTICS}." 8 58
       ;;
     5)
