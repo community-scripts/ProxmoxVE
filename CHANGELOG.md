@@ -25,6 +25,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 - New Script: Clean Orphaned LVM [@MickLesk](https://github.com/MickLesk) ([#1838](https://github.com/community-scripts/ProxmoxVE/pull/1838))
 
+### 🌐 Website
+
+- Update clean-orphaned-lvm.json [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1843](https://github.com/community-scripts/ProxmoxVE/pull/1843))
+
 ### 🧰 Maintenance
 
 - [Diagnostic] Introduced optional lxc install diagnostics via API call [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1801](https://github.com/community-scripts/ProxmoxVE/pull/1801))
