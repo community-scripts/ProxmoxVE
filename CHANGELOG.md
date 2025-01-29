@@ -23,6 +23,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### ✨ New Scripts
 
+- New Script: Prometheus Proxmox VE Exporter [@andygrunwald](https://github.com/andygrunwald) ([#1805](https://github.com/community-scripts/ProxmoxVE/pull/1805))
 - New Script: Clean Orphaned LVM [@MickLesk](https://github.com/MickLesk) ([#1838](https://github.com/community-scripts/ProxmoxVE/pull/1838))
 
 ### 🌐 Website
