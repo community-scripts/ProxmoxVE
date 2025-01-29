@@ -40,6 +40,7 @@ $STD sudo -u postgres psql -c "GRANT USAGE, CREATE ON SCHEMA PUBLIC TO $DB_USER;
 msg_ok "Set up PostgreSQL"
 
 msg_info "Installing Mattermost"
+IPADDRESS=$(hostname -I | awk '{print $1}')
 curl -sL -o- /usr/share/keyrings/mattermost-archive-keyring.gpg https://deb.packages.mattermost.com/pubkey.gpg
 sh -c 'curl -o- https://deb.packages.mattermost.com/repo-setup.sh | sudo bash -s mattermost'
 $STD apt-get update

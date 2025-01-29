@@ -7,7 +7,7 @@ source <(curl -s https://raw.githubusercontent.com/Dracentis/ProxmoxVE/main/misc
 
 # App Default Values
 APP="Mattermost"
-var_tags="sync"
+var_tags="collaboration"
 var_cpu="1"
 var_ram="2048"
 var_disk="8"
