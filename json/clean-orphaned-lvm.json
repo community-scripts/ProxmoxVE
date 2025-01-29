@@ -1,6 +1,6 @@
 {
     "name": "Proxmox Clean Orphaned LVM",
-    "slug": "clean_orphaned_lvm",
+    "slug": "clean-orphaned-lvm",
     "categories": [
         1
     ],
