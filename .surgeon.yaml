@@ -1,0 +1,3 @@
+upstream: https://github.com/community-scripts/ProxmoxVE
+modsdir: codemods
+codemods:
