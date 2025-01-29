@@ -79,3 +79,8 @@ codemods:
   args:
   - build_container
   - codemods/build_container.sh
+- description: Replace create_lxc
+  mod: replacefile
+  match: ct/create_lxc.sh
+  args:
+  - codemods/create_lxc.sh
