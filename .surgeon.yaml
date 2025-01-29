@@ -37,3 +37,15 @@ codemods:
   args:
   - Proxmox VE Helper Scripts
   - Incus Scripts
+- description: Whiptail func LXC
+  mod: sed
+  match: misc/*.func
+  args:
+  - LXC Container
+  - Incus Container
+- description: Whiptail func Updater
+  mod: sed
+  match: misc/*.func
+  args:
+  - https://github.com/community-scripts/ProxmoxVE/raw/main/ct/${app}.sh
+  - https://github.com/bketelsen/IncusScripts/raw/main/ct/${app}.sh
