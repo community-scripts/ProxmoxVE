@@ -1,9 +1,15 @@
 upstream: https://github.com/community-scripts/ProxmoxVE
 modsdir: codemods
 codemods:
-- description: Modify URLS
+- description: Modify Build Func
   mod: sed
   match: ct/*.sh
   args:
   - https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func
   - https://raw.githubusercontent.com/bketelsen/IncusScripts/main/misc/build.func
+- description: Modify Build Func Refs
+  mod: sed
+  match: ct/*.sh
+  args:
+  - https://raw.githubusercontent.com/community-scripts/ProxmoxVE/refs/heads/main/misc/build.func
+  - https://raw.githubusercontent.com/bketelsen/IncusScripts/refs/heads/main/misc/build.func
