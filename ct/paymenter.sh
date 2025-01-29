@@ -11,8 +11,8 @@ var_tags="hosting;ecommerce;marketplace;"
 var_cpu="2"
 var_ram="1024"
 var_disk="5"
-var_os="Ubuntu"
-var_version="24.04"
+var_os="Debian"
+var_version="12"
 var_unprivileged="1"
 
 # App Output & Base Settings
