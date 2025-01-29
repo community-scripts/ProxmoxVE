@@ -4,7 +4,7 @@
 # Author: tteck
 # Co-Author: MickLesk (Canbiz)
 # License: MIT
-# https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# https://github.com/Dracentis/ProxmoxVe/raw/main/LICENSE
 # Source: https://github.com/seanmorley15/AdventureLog
 
 source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"

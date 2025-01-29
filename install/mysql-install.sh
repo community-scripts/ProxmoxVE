@@ -4,7 +4,7 @@
 # Author: tteck
 # Co-Author: MickLesk (Canbiz)
 # License: MIT
-# https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# https://github.com/Dracentis/ProxmoxVe/raw/main/LICENSE
 # Source: https://www.mysql.com/products/community | https://www.phpmyadmin.net
 
 source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"

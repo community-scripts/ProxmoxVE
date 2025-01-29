@@ -2,7 +2,7 @@
 source <(curl -s https://raw.githubusercontent.com/kris701/ProxmoxVE/refs/heads/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: Kristian Skov
-# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# License: MIT | https://github.com/Dracentis/ProxmoxVe/raw/main/LICENSE
 # Source: https://www.microsoft.com/en-us/sql-server/sql-server-2022
 
 # App Default Values

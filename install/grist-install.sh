@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: cfurrow
 # License: MIT
-# https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# https://github.com/Dracentis/ProxmoxVe/raw/main/LICENSE
 # Source: https://github.com/gristlabs/grist-core
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"

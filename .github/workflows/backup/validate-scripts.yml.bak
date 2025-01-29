@@ -54,7 +54,7 @@ jobs:
         run: |
           NON_COMPLIANT_FILES=""
           for FILE in ${{ steps.changed-files.outputs.files }}; do
-            if [[ "$FILE" == ct/* ]] && [[ $(sed -n '2p' "$FILE") != "source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)" ]]; then
+            if [[ "$FILE" == ct/* ]] && [[ $(sed -n '2p' "$FILE") != "source <(curl -s https://raw.githubusercontent.com/Dracentis/ProxmoxVe/main/misc/build.func)" ]]; then
               NON_COMPLIANT_FILES="$NON_COMPLIANT_FILES $FILE"
             fi
           done
@@ -134,7 +134,7 @@ jobs:
         run: |
           NON_COMPLIANT_FILES=""
           for FILE in ${{ steps.changed-files.outputs.files }}; do
-            if [[ "$(sed -n '5p' "$FILE")" != "# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE" ]]; then
+            if [[ "$(sed -n '5p' "$FILE")" != "# License: MIT | https://github.com/Dracentis/ProxmoxVe/raw/main/LICENSE" ]]; then
               NON_COMPLIANT_FILES="$NON_COMPLIANT_FILES $FILE"
             fi
           done

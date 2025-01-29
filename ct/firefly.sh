@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -s https://raw.githubusercontent.com/Dracentis/ProxmoxVe/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: quantumryuu
 # License: MIT
-# https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# https://github.com/Dracentis/ProxmoxVe/raw/main/LICENSE
 # Source: https://firefly-iii.org/
 
 # App Default Values
