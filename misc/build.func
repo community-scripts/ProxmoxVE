@@ -856,18 +856,18 @@ diagnostics_check() {
     mkdir -p /usr/local/community-scripts
   fi
 
-  if ! [ -f "/usr/local/community-scripts/.diagnostics" ]; then
+  if ! [ -f "/usr/local/community-scripts/diagnostics" ]; then
     if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "DIAGNOSTICS" --yesno "Send Diagnostics of LXC Installation?" 10 58); then
-      cat <<EOF >/usr/local/community-scripts/.diagnostics
+      cat <<EOF >/usr/local/community-scripts/diagnostics
 DIAGNOSTICS=yes
 
 #This file is used to store the diagnostics settings for the Community-Scripts API.
 #https://github.com/community-scripts/ProxmoxVE/discussions/
 #Your diagnostics will be sent to the Community-Scripts API for troubleshooting/statistical purposes.
 #You can review the data at https://community-scripts.github.io/ProxmoxVE/data
-#If you do not wish to send diagnostics, please set the variable 'DIAGNOSTICS' to "no" in /usr/local/community-scripts/.diagnostics, or use the menue.
+#If you do not wish to send diagnostics, please set the variable 'DIAGNOSTICS' to "no" in /usr/local/community-scripts/diagnostics, or use the menue.
 #This will disable the diagnostics feature.
-#To send diagnostics, set the variable 'DIAGNOSTICS' to "yes" in /usr/local/community-scripts/.diagnostics, or use the menue.
+#To send diagnostics, set the variable 'DIAGNOSTICS' to "yes" in /usr/local/community-scripts/diagnostics, or use the menue.
 #This will enable the diagnostics feature.
 #The following information will be sent:
 #"ct_type"
@@ -888,16 +888,16 @@ DIAGNOSTICS=yes
 EOF
       DIAGNOSTICS="yes"
     else
-      cat <<EOF >/usr/local/community-scripts/.diagnostics
+      cat <<EOF >/usr/local/community-scripts/diagnostics
 DIAGNOSTICS=no
 
 #This file is used to store the diagnostics settings for the Community-Scripts API.
 #https://github.com/community-scripts/ProxmoxVE/discussions/
 #Your diagnostics will be sent to the Community-Scripts API for troubleshooting/statistical purposes.
 #You can review the data at https://community-scripts.github.io/ProxmoxVE/data
-#If you do not wish to send diagnostics, please set the variable 'DIAGNOSTICS' to "no" in /usr/local/community-scripts/.diagnostics, or use the menue.
+#If you do not wish to send diagnostics, please set the variable 'DIAGNOSTICS' to "no" in /usr/local/community-scripts/diagnostics, or use the menue.
 #This will disable the diagnostics feature.
-#To send diagnostics, set the variable 'DIAGNOSTICS' to "yes" in /usr/local/community-scripts/.diagnostics, or use the menue.
+#To send diagnostics, set the variable 'DIAGNOSTICS' to "yes" in /usr/local/community-scripts/diagnostics, or use the menue.
 #This will enable the diagnostics feature.
 #The following information will be sent:
 #"ct_type"
@@ -919,7 +919,7 @@ EOF
       DIAGNOSTICS="no"
     fi
   else
-    DIAGNOSTICS=$(awk -F '=' '/^DIAGNOSTICS/ {print $2}' /usr/local/community-scripts/.diagnostics)
+    DIAGNOSTICS=$(awk -F '=' '/^DIAGNOSTICS/ {print $2}' /usr/local/community-scripts/diagnostics)
 
   fi
 
@@ -982,12 +982,13 @@ install_script() {
       break
       ;;
     4)
-      if whiptail --backtitle "Proxmox VE Helper Scripts" --title "DIAGNOSTICS SETTINGS" --yesno "Send Diagnostics of LXC Installation?" 10 58; then
-        sed -i 's/^DIAGNOSTICS=.*/DIAGNOSTICS=yes/' /usr/local/community-scripts/.diagnostics
+      if whiptail --backtitle "Proxmox VE Helper Scripts" --title "DIAGNOSTICS SETTINGS" --yesno "Send Diagnostics of LXC Installation?\nCurrent setting: ${DIAGNOSTICS}" 10 58; then
+        sed -i 's/^DIAGNOSTICS=.*/DIAGNOSTICS=yes/' /usr/local/community-scripts/diagnostics
       else
-        sed -i 's/^DIAGNOSTICS=.*/DIAGNOSTICS=no/' /usr/local/community-scripts/.diagnostics
+        sed -i 's/^DIAGNOSTICS=.*/DIAGNOSTICS=no/' /usr/local/community-scripts/diagnostics
       fi
-      whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox "Diagnostics settings changed!." 8 58
+      DIAGNOSTICS=$(awk -F '=' '/^DIAGNOSTICS/ {print $2}' /usr/local/community-scripts/diagnostics)
+      whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox "Diagnostics settings changed to ${DIAGNOSTICS}." 8 58
       ;;
     5)
       echo -e "${CROSS}${RD}Exiting.${CL}"
