@@ -13,3 +13,27 @@ codemods:
   args:
   - https://raw.githubusercontent.com/community-scripts/ProxmoxVE/refs/heads/main/misc/build.func
   - https://raw.githubusercontent.com/bketelsen/IncusScripts/refs/heads/main/misc/build.func
+- description: Whiptail ct
+  mod: sed
+  match: ct/*.sh
+  args:
+  - Proxmox VE Helper Scripts
+  - Incus Scripts
+- description: Whiptail install
+  mod: sed
+  match: install/*.sh
+  args:
+  - Proxmox VE Helper Scripts
+  - Incus Scripts
+- description: Whiptail misc sh
+  mod: sed
+  match: misc/*.sh
+  args:
+  - Proxmox VE Helper Scripts
+  - Incus Scripts
+- description: Whiptail misc func
+  mod: sed
+  match: misc/*.func
+  args:
+  - Proxmox VE Helper Scripts
+  - Incus Scripts
