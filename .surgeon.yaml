@@ -73,3 +73,9 @@ codemods:
   args:
   - check_container_storage
   - codemods/check_container_storage.sh
+- description: PVE Build Function
+  mod: bashfunc
+  match: misc/build.func
+  args:
+  - build_container
+  - codemods/build_container.sh
