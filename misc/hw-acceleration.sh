@@ -49,7 +49,7 @@ if ! pveversion | grep -Eq "pve-manager/(8\.[1-3])"; then
   exit
 fi
 
-whiptail --backtitle "Proxmox VE Helper Scripts" --title "Add Intel HW Acceleration" --yesno "This Will Add Intel HW Acceleration to an existing LXC Container. Proceed?" 8 72 || exit
+whiptail --backtitle "Incus Scripts" --title "Add Intel HW Acceleration" --yesno "This Will Add Intel HW Acceleration to an existing LXC Container. Proceed?" 8 72 || exit
 NODE=$(hostname)
 PREV_MENU=()
 MSG_MAX_LENGTH=0
@@ -66,7 +66,7 @@ while read -r TAG ITEM; do
   PREV_MENU+=("$TAG" "$ITEM " "OFF")
 done < <(echo "$privileged_containers")
 
-privileged_container=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "Privileged Containers on $NODE" --checklist "\nSelect a Container To Add Intel HW Acceleration:\n" 16 $((MSG_MAX_LENGTH + 23)) 6 "${PREV_MENU[@]}" 3>&1 1>&2 2>&3 | tr -d '"') || exit
+privileged_container=$(whiptail --backtitle "Incus Scripts" --title "Privileged Containers on $NODE" --checklist "\nSelect a Container To Add Intel HW Acceleration:\n" 16 $((MSG_MAX_LENGTH + 23)) 6 "${PREV_MENU[@]}" 3>&1 1>&2 2>&3 | tr -d '"') || exit
 header_info
 read -r -p "Verbose mode? <y/N> " prompt
   if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
@@ -110,7 +110,7 @@ else
   msg_ok "Installed Hardware Acceleration"
 fi
 sleep 1
-whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox --title "Added tools" "vainfo, execute command 'vainfo'\nintel-gpu-tools, execute command 'intel_gpu_top'" 8 58
+whiptail --backtitle "Incus Scripts" --msgbox --title "Added tools" "vainfo, execute command 'vainfo'\nintel-gpu-tools, execute command 'intel_gpu_top'" 8 58
 
 msg_ok "Completed Successfully!\n"
 echo -e "Reboot container ${BL}$privileged_container${CL} to apply the new settings\n"

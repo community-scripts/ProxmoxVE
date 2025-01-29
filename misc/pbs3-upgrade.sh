@@ -47,7 +47,7 @@ msg_error() {
 
 start_routines() {
   header_info
-  CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "PBS 2 BACKUP" --menu "\nMake a backup of /etc/proxmox-backup to ensure that in the worst case, any relevant configuration can be recovered?" 14 58 2 \
+  CHOICE=$(whiptail --backtitle "Incus Scripts" --title "PBS 2 BACKUP" --menu "\nMake a backup of /etc/proxmox-backup to ensure that in the worst case, any relevant configuration can be recovered?" 14 58 2 \
     "yes" " " \
     "no" " " 3>&2 2>&1 1>&3)
   case $CHOICE in
@@ -61,7 +61,7 @@ start_routines() {
     ;;
   esac
 
-  CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "PBS 3 SOURCES" --menu "This will set the correct sources to update and install Proxmox Backup Server 3.\n \nChange to Proxmox Backup Server 3 sources?" 14 58 2 \
+  CHOICE=$(whiptail --backtitle "Incus Scripts" --title "PBS 3 SOURCES" --menu "This will set the correct sources to update and install Proxmox Backup Server 3.\n \nChange to Proxmox Backup Server 3 sources?" 14 58 2 \
     "yes" " " \
     "no" " " 3>&2 2>&1 1>&3)
   case $CHOICE in
@@ -79,7 +79,7 @@ EOF
     ;;
   esac
 
-  CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "PBS3-ENTERPRISE" --menu "The 'pbs-enterprise' repository is only available to users who have purchased a Proxmox VE subscription.\n \nDisable 'pbs-enterprise' repository?" 14 58 2 \
+  CHOICE=$(whiptail --backtitle "Incus Scripts" --title "PBS3-ENTERPRISE" --menu "The 'pbs-enterprise' repository is only available to users who have purchased a Proxmox VE subscription.\n \nDisable 'pbs-enterprise' repository?" 14 58 2 \
     "yes" " " \
     "no" " " 3>&2 2>&1 1>&3)
   case $CHOICE in
@@ -95,7 +95,7 @@ EOF
     ;;
   esac
 
-  CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "PBS3-NO-SUBSCRIPTION" --menu "The 'pbs-no-subscription' repository provides access to all of the open-source components of Proxmox Backup Server.\n \nEnable 'pbs-no-subscription' repository?" 14 58 2 \
+  CHOICE=$(whiptail --backtitle "Incus Scripts" --title "PBS3-NO-SUBSCRIPTION" --menu "The 'pbs-no-subscription' repository provides access to all of the open-source components of Proxmox Backup Server.\n \nEnable 'pbs-no-subscription' repository?" 14 58 2 \
     "yes" " " \
     "no" " " 3>&2 2>&1 1>&3)
   case $CHOICE in
@@ -111,7 +111,7 @@ EOF
     ;;
   esac
 
-  CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "PBS3 TEST" --menu "The 'pbstest' repository can give advanced users access to new features and updates before they are officially released.\n \nAdd (Disabled) 'pbstest' repository?" 14 58 2 \
+  CHOICE=$(whiptail --backtitle "Incus Scripts" --title "PBS3 TEST" --menu "The 'pbstest' repository can give advanced users access to new features and updates before they are officially released.\n \nAdd (Disabled) 'pbstest' repository?" 14 58 2 \
     "yes" " " \
     "no" " " 3>&2 2>&1 1>&3)
   case $CHOICE in
@@ -127,7 +127,7 @@ EOF
     ;;
   esac
 
-  CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "PBS 3 UPDATE" --menu "\nUpdate to Proxmox Backup Server 3 now?" 11 58 2 \
+  CHOICE=$(whiptail --backtitle "Incus Scripts" --title "PBS 3 UPDATE" --menu "\nUpdate to Proxmox Backup Server 3 now?" 11 58 2 \
     "yes" " " \
     "no" " " 3>&2 2>&1 1>&3)
   case $CHOICE in
@@ -142,7 +142,7 @@ EOF
     ;;
   esac
 
-  CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "REBOOT" --menu "\nReboot Proxmox Backup Server 3 now? (recommended)" 11 58 2 \
+  CHOICE=$(whiptail --backtitle "Incus Scripts" --title "REBOOT" --menu "\nReboot Proxmox Backup Server 3 now? (recommended)" 11 58 2 \
     "yes" " " \
     "no" " " 3>&2 2>&1 1>&3)
   case $CHOICE in

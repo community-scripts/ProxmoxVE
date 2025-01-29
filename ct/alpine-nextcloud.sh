@@ -32,7 +32,7 @@ function update_script() {
     apk add -q newt
   fi
   while true; do
-    CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "SUPPORT" --radiolist --cancel-button Exit-Script "Spacebar = Select"  11 58 3 \
+    CHOICE=$(whiptail --backtitle "Incus Scripts" --title "SUPPORT" --radiolist --cancel-button Exit-Script "Spacebar = Select"  11 58 3 \
       "1" "Nextcloud Login Credentials" ON \
       "2" "Renew Self-signed Certificate" OFF \
       3>&1 1>&2 2>&3)      

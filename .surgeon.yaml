@@ -61,3 +61,15 @@ codemods:
   args:
   - pve_check
   - codemods/pve_check.sh
+- description: PVE Start Function
+  mod: bashfunc
+  match: misc/build.func
+  args:
+  - start
+  - codemods/start.sh
+- description: PVE Storage Function
+  mod: bashfunc
+  match: misc/build.func
+  args:
+  - check_container_storage
+  - codemods/check_container_storage.sh

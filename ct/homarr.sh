@@ -9,7 +9,7 @@ source <(curl -s https://raw.githubusercontent.com/bketelsen/IncusScripts/main/m
 APP="Homarr"
 var_tags="arr;dashboard"
 var_cpu="2"
-var_ram="2048"
+var_ram="4096"
 var_disk="8"
 var_os="debian"
 var_version="12"

@@ -40,7 +40,7 @@ function update_script() {
     grep "tag_name" |
     awk '{print substr($2, 2, length($2)-3) }')
 
-  UPD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "SUPPORT" --radiolist --cancel-button Exit-Script "Spacebar = Select" 11 58 3 \
+  UPD=$(whiptail --backtitle "Incus Scripts" --title "SUPPORT" --radiolist --cancel-button Exit-Script "Spacebar = Select" 11 58 3 \
     "1" "VaultWarden $VAULT" ON \
     "2" "Web-Vault $WVRELEASE" OFF \
     "3" "Set Admin Token" OFF \
@@ -96,7 +96,7 @@ function update_script() {
     exit
   fi
   if [ "$UPD" == "3" ]; then
-    if NEWTOKEN=$(whiptail --backtitle "Proxmox VE Helper Scripts" --passwordbox "Set the ADMIN_TOKEN" 10 58 3>&1 1>&2 2>&3); then
+    if NEWTOKEN=$(whiptail --backtitle "Incus Scripts" --passwordbox "Set the ADMIN_TOKEN" 10 58 3>&1 1>&2 2>&3); then
       if [[ -z "$NEWTOKEN" ]]; then exit; fi
       if ! command -v argon2 >/dev/null 2>&1; then apt-get install -y argon2 &>/dev/null; fi
       TOKEN=$(echo -n ${NEWTOKEN} | argon2 "$(openssl rand -base64 32)" -t 2 -m 16 -p 4 -l 64 -e)

@@ -38,7 +38,7 @@ msg_ok() {
 
 header_info
 
-whiptail --backtitle "Proxmox VE Helper Scripts" --title "Webmin Installer" --yesno "This Will Install Webmin on this LXC Container. Proceed?" 10 58 || exit
+whiptail --backtitle "Incus Scripts" --title "Webmin Installer" --yesno "This Will Install Webmin on this LXC Container. Proceed?" 10 58 || exit
 
 msg_info "Installing Prerequisites"
 apt update &>/dev/null

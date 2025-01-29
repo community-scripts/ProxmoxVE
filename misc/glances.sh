@@ -108,7 +108,7 @@ uninstall() {
 OPTIONS=(Install "Install $APP" \
          Uninstall "Uninstall $APP")
 
-CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "$APP" --menu "Select an option:" 10 58 2 \
+CHOICE=$(whiptail --backtitle "Incus Scripts" --title "$APP" --menu "Select an option:" 10 58 2 \
           "${OPTIONS[@]}" 3>&1 1>&2 2>&3)
 
 case $CHOICE in

@@ -37,7 +37,7 @@ function msg_ok() {
   echo -e "${BFR} ${CM} ${GN}${msg}${CL}"
 }
 
-whiptail --backtitle "Proxmox VE Helper Scripts" --title "Proxmox VE Kernel Pin" --yesno "This will Pin/Unpin Kernel Images, Proceed?" 10 68 || exit
+whiptail --backtitle "Incus Scripts" --title "Proxmox VE Kernel Pin" --yesno "This will Pin/Unpin Kernel Images, Proceed?" 10 68 || exit
 
   KERNEL_MENU=()
   MSG_MAX_LENGTH=0
@@ -47,9 +47,9 @@ while read -r TAG ITEM; do
   KERNEL_MENU+=("$TAG" "$ITEM " "OFF")
 done < <(echo "$available_kernels")
 
-pin_kernel=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "Current Kernel $current_kernel" --radiolist "\nSelect Kernel to pin:\nCancel to Unpin any Kernel" 16 $((MSG_MAX_LENGTH + 58)) 6 "${KERNEL_MENU[@]}" 3>&1 1>&2 2>&3 | tr -d '"') || exit
+pin_kernel=$(whiptail --backtitle "Incus Scripts" --title "Current Kernel $current_kernel" --radiolist "\nSelect Kernel to pin:\nCancel to Unpin any Kernel" 16 $((MSG_MAX_LENGTH + 58)) 6 "${KERNEL_MENU[@]}" 3>&1 1>&2 2>&3 | tr -d '"') || exit
 [ -z "$pin_kernel" ] && {
-  whiptail --backtitle "Proxmox VE Helper Scripts" --title "No Kernel Selected" --msgbox "It appears that no Kernel was selected\nUnpinning any pinned Kernel" 10 68
+  whiptail --backtitle "Incus Scripts" --title "No Kernel Selected" --msgbox "It appears that no Kernel was selected\nUnpinning any pinned Kernel" 10 68
   msg_info "Unpinning any Kernel"
   proxmox-boot-tool kernel unpin &>/dev/null
   msg_ok "Unpinned any Kernel\n"
@@ -59,7 +59,7 @@ pin_kernel=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "Current K
   echo -e "${RD} REBOOT${CL}"
   exit
 }
-whiptail --backtitle "Proxmox VE Helper Scripts" --title "Proxmox VE Kernel Pin" --yesno "Would you like to pin the $pin_kernel Kernel?" 10 68 || exit
+whiptail --backtitle "Incus Scripts" --title "Proxmox VE Kernel Pin" --yesno "Would you like to pin the $pin_kernel Kernel?" 10 68 || exit
 
 msg_info "Pinning $pin_kernel"
 proxmox-boot-tool kernel pin $pin_kernel &>/dev/null

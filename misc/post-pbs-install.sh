@@ -48,7 +48,7 @@ msg_error() {
 start_routines() {
   header_info
   VERSION="$(awk -F'=' '/^VERSION_CODENAME=/{ print $NF }' /etc/os-release)"
-  CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "PBS SOURCES" --menu "This will set the correct sources to update and install Proxmox Backup Server.\n \nChange to Proxmox Backup Server sources?" 14 58 2 \
+  CHOICE=$(whiptail --backtitle "Incus Scripts" --title "PBS SOURCES" --menu "This will set the correct sources to update and install Proxmox Backup Server.\n \nChange to Proxmox Backup Server sources?" 14 58 2 \
     "yes" " " \
     "no" " " 3>&2 2>&1 1>&3)
   case $CHOICE in
@@ -66,7 +66,7 @@ EOF
     ;;
   esac
 
-  CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "PBS-ENTERPRISE" --menu "The 'pbs-enterprise' repository is only available to users who have purchased a Proxmox VE subscription.\n \nDisable 'pbs-enterprise' repository?" 14 58 2 \
+  CHOICE=$(whiptail --backtitle "Incus Scripts" --title "PBS-ENTERPRISE" --menu "The 'pbs-enterprise' repository is only available to users who have purchased a Proxmox VE subscription.\n \nDisable 'pbs-enterprise' repository?" 14 58 2 \
     "yes" " " \
     "no" " " 3>&2 2>&1 1>&3)
   case $CHOICE in
@@ -82,7 +82,7 @@ EOF
     ;;
   esac
 
-  CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "PBS-NO-SUBSCRIPTION" --menu "The 'pbs-no-subscription' repository provides access to all of the open-source components of Proxmox Backup Server.\n \nEnable 'pbs-no-subscription' repository?" 14 58 2 \
+  CHOICE=$(whiptail --backtitle "Incus Scripts" --title "PBS-NO-SUBSCRIPTION" --menu "The 'pbs-no-subscription' repository provides access to all of the open-source components of Proxmox Backup Server.\n \nEnable 'pbs-no-subscription' repository?" 14 58 2 \
     "yes" " " \
     "no" " " 3>&2 2>&1 1>&3)
   case $CHOICE in
@@ -98,7 +98,7 @@ EOF
     ;;
   esac
 
-  CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "PBS TEST" --menu "The 'pbstest' repository can give advanced users access to new features and updates before they are officially released.\n \nAdd (Disabled) 'pbstest' repository?" 14 58 2 \
+  CHOICE=$(whiptail --backtitle "Incus Scripts" --title "PBS TEST" --menu "The 'pbstest' repository can give advanced users access to new features and updates before they are officially released.\n \nAdd (Disabled) 'pbstest' repository?" 14 58 2 \
     "yes" " " \
     "no" " " 3>&2 2>&1 1>&3)
   case $CHOICE in
@@ -115,25 +115,25 @@ EOF
   esac
 
   if [[ ! -f /etc/apt/apt.conf.d/no-nag-script ]]; then
-    CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "SUBSCRIPTION NAG" --menu "This will disable the nag message reminding you to purchase a subscription every time you log in to the web interface.\n \nDisable subscription nag?" 14 58 2 \
+    CHOICE=$(whiptail --backtitle "Incus Scripts" --title "SUBSCRIPTION NAG" --menu "This will disable the nag message reminding you to purchase a subscription every time you log in to the web interface.\n \nDisable subscription nag?" 14 58 2 \
       "yes" " " \
       "no" " " 3>&2 2>&1 1>&3)
     case $CHOICE in
     yes)
-      whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox --title "Support Subscriptions" "Supporting the software's development team is essential. Check their official website's Support Subscriptions for pricing. Without their dedicated work, we wouldn't have this exceptional software." 10 58
+      whiptail --backtitle "Incus Scripts" --msgbox --title "Support Subscriptions" "Supporting the software's development team is essential. Check their official website's Support Subscriptions for pricing. Without their dedicated work, we wouldn't have this exceptional software." 10 58
       msg_info "Disabling subscription nag"
       echo "DPkg::Post-Invoke { \"dpkg -V proxmox-widget-toolkit | grep -q '/proxmoxlib\.js$'; if [ \$? -eq 1 ]; then { echo 'Removing subscription nag from UI...'; sed -i '/data\.status.*{/{s/\!//;s/active/NoMoreNagging/}' /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js; }; fi\"; };" >/etc/apt/apt.conf.d/no-nag-script
       apt --reinstall install proxmox-widget-toolkit &>/dev/null
       msg_ok "Disabled subscription nag (Delete browser cache)"
       ;;
     no)
-      whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox --title "Support Subscriptions" "Supporting the software's development team is essential. Check their official website's Support Subscriptions for pricing. Without their dedicated work, we wouldn't have this exceptional software." 10 58
+      whiptail --backtitle "Incus Scripts" --msgbox --title "Support Subscriptions" "Supporting the software's development team is essential. Check their official website's Support Subscriptions for pricing. Without their dedicated work, we wouldn't have this exceptional software." 10 58
       msg_error "Selected no to Disabling subscription nag"
       ;;
     esac
   fi
 
-  CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "UPDATE" --menu "\nUpdate Proxmox Backup Server now?" 11 58 2 \
+  CHOICE=$(whiptail --backtitle "Incus Scripts" --title "UPDATE" --menu "\nUpdate Proxmox Backup Server now?" 11 58 2 \
     "yes" " " \
     "no" " " 3>&2 2>&1 1>&3)
   case $CHOICE in
@@ -148,7 +148,7 @@ EOF
     ;;
   esac
 
-  CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "REBOOT" --menu "\nReboot Proxmox Backup Server now? (recommended)" 11 58 2 \
+  CHOICE=$(whiptail --backtitle "Incus Scripts" --title "REBOOT" --menu "\nReboot Proxmox Backup Server now? (recommended)" 11 58 2 \
     "yes" " " \
     "no" " " 3>&2 2>&1 1>&3)
   case $CHOICE in

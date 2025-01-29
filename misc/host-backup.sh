@@ -25,13 +25,13 @@ function perform_backup {
   local selected_directories=()
 
   # Get backup path from user
-  BACKUP_PATH=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "\nDefaults to /root/\ne.g. /mnt/backups/" 11 68 --title "Directory to backup to:" 3>&1 1>&2 2>&3) || return
+  BACKUP_PATH=$(whiptail --backtitle "Incus Scripts" --inputbox "\nDefaults to /root/\ne.g. /mnt/backups/" 11 68 --title "Directory to backup to:" 3>&1 1>&2 2>&3) || return
 
   # Default to /root/ if no input
   BACKUP_PATH="${BACKUP_PATH:-/root/}"
 
   # Get directory to work in from user
-  DIR=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "\nDefaults to /etc/\ne.g. /root/, /var/lib/pve-cluster/ etc." 11 68 --title "Directory to work in:" 3>&1 1>&2 2>&3) || return
+  DIR=$(whiptail --backtitle "Incus Scripts" --inputbox "\nDefaults to /etc/\ne.g. /root/, /var/lib/pve-cluster/ etc." 11 68 --title "Directory to work in:" 3>&1 1>&2 2>&3) || return
 
   # Default to /etc/ if no input
   DIR="${DIR:-/etc/}"
@@ -71,7 +71,7 @@ function perform_backup {
 
 # Main script execution loop
 while true; do
-  if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "Proxmox VE Host Backup" --yesno "This will create backups for particular files and directories located within a designated directory. Proceed?" 10 88); then
+  if (whiptail --backtitle "Incus Scripts" --title "Proxmox VE Host Backup" --yesno "This will create backups for particular files and directories located within a designated directory. Proceed?" 10 88); then
     perform_backup
   else
     break

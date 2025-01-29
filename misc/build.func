@@ -1,6 +1,7 @@
 # Copyright (c) 2021-2025 tteck
 # Author: tteck (tteckster)
 # Co-Author: MickLesk
+# Co-Author: michelroegl-brunner
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
@@ -8,7 +9,9 @@ variables() {
   NSAPP=$(echo ${APP,,} | tr -d ' ') # This function sets the NSAPP variable by converting the value of the APP variable to lowercase and removing any spaces.
   var_install="${NSAPP}-install"     # sets the var_install variable by appending "-install" to the value of NSAPP.
   INTEGER='^[0-9]+([.][0-9]+)?$'     # it defines the INTEGER regular expression pattern.
-  PVEHOST_NAME=$(hostname) # gets the Proxmox Hostname and sets it to Uppercase
+  PVEHOST_NAME=$(hostname)           # gets the Proxmox Hostname and sets it to Uppercase
+  DIAGNOSTICS="yes"                  # sets the DIAGNOSTICS variable to "yes", used for the API call.
+  METHOD="default"                   # sets the METHOD variable to "default", used for the API call.
 }
 
 # This function sets various color variables using ANSI escape codes for formatting text in the terminal.
@@ -137,16 +140,11 @@ root_check() {
 
 # This function checks the version of Proxmox Virtual Environment (PVE) and exits if the version is not supported.
 pve_check() {
-  if ! pveversion | grep -Eq "pve-manager/8.[1-3]"; then
-    msg_error "${CROSS}${RD}This version of Proxmox Virtual Environment is not supported"
-    echo -e "Requires Proxmox Virtual Environment Version 8.1 or later."
-    echo -e "Exiting..."
-    sleep 2
-    exit
-fi
+	return
 }
 
-# When a node is running tens of containers, it's possible to exceed the kernel's cryptographic key storage allocations. 
+
+# When a node is running tens of containers, it's possible to exceed the kernel's cryptographic key storage allocations.
 # These are tuneable, so verify if the currently deployment is approaching the limits, advise the user on how to tune the limits, and exit the script.
 # https://cleveruptime.com/docs/files/proc-key-users | https://docs.kernel.org/security/keys/core.html
 maxkeys_check() {
@@ -222,11 +220,11 @@ get_current_ip() {
 # Function to update the IP address in the MOTD file
 update_motd_ip() {
   MOTD_FILE="/etc/motd"
-  
+
   if [ -f "$MOTD_FILE" ]; then
     # Remove existing IP Address lines to prevent duplication
     sed -i '/IP Address:/d' "$MOTD_FILE"
-    
+
     IP=$(get_current_ip)
     # Add the new IP address
     echo -e "${TAB}${NETWORK}${YW} IP Address: ${GN}${IP}${CL}" >> "$MOTD_FILE"
@@ -236,7 +234,7 @@ update_motd_ip() {
 # Function to download & save header files
 get_header() {
   local app_name=$(echo ${APP,,} | tr -d ' ') 
-  local header_url="https://github.com/community-scripts/ProxmoxVE/raw/main/ct/headers/${app_name}"
+  local header_url="https://github.com/bketelsen/IncusScripts/raw/main/ct/headers/${app_name}"
   local local_header_path="/usr/local/community-scripts/headers/${app_name}"
 
   mkdir -p "/usr/local/community-scripts/headers"
@@ -273,8 +271,8 @@ header_info() {
 # This function checks if the script is running through SSH and prompts the user to confirm if they want to proceed or exit.
 ssh_check() {
   if [ -n "${SSH_CLIENT:+x}" ]; then
-    if whiptail --backtitle "Proxmox VE Helper Scripts" --defaultno --title "SSH DETECTED" --yesno "It's advisable to utilize the Proxmox shell rather than SSH, as there may be potential complications with variable retrieval. Proceed using SSH?" 10 72; then
-      whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox --title "Proceed using SSH" "You've chosen to proceed using SSH. If any issues arise, please run the script in the Proxmox shell before creating a repository issue." 10 72
+    if whiptail --backtitle "Incus Scripts" --defaultno --title "SSH DETECTED" --yesno "It's advisable to utilize the Proxmox shell rather than SSH, as there may be potential complications with variable retrieval. Proceed using SSH?" 10 72; then
+      whiptail --backtitle "Incus Scripts" --msgbox --title "Proceed using SSH" "You've chosen to proceed using SSH. If any issues arise, please run the script in the Proxmox shell before creating a repository issue." 10 72
     else
       clear
       echo "Exiting due to SSH usage. Please consider using the Proxmox shell."
@@ -357,36 +355,36 @@ exit_script() {
 
 # This function allows the user to configure advanced settings for the script.
 advanced_settings() {
-  whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox --title "Here is an instructional tip:" "To make a selection, use the Spacebar." 8 58
-  whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox --title "Default distribution for $APP" "Default is: ${var_os} ${var_version} \n \nIf the default Linux distribution is not adhered to, script support will be discontinued. \n" 10 58
-    if [ "$var_os" != "alpine" ]; then
+  whiptail --backtitle "Incus Scripts" --msgbox --title "Here is an instructional tip:" "To make a selection, use the Spacebar." 8 58
+  whiptail --backtitle "Incus Scripts" --msgbox --title "Default distribution for $APP" "Default is: ${var_os} ${var_version} \n \nIf the default Linux distribution is not adhered to, script support will be discontinued. \n" 10 58
+  if [ "$var_os" != "alpine" ]; then
     var_default_os="${var_os}"
     var_os=""
     while [ -z "$var_os" ]; do
-        if [ "$var_default_os" == "debian" ]; then
-          if var_os=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "DISTRIBUTION" --radiolist "Choose Distribution" 10 58 2 \
-            "debian" "" ON \
-            "ubuntu" "" OFF \
-            3>&1 1>&2 2>&3); then
-            if [ -n "$var_os" ]; then
-              echo -e "${OS}${BOLD}${DGN}Operating System: ${BGN}$var_os${CL}"
-            fi
-          else
-            exit_script
+      if [ "$var_default_os" == "debian" ]; then
+        if var_os=$(whiptail --backtitle "Incus Scripts" --title "DISTRIBUTION" --radiolist "Choose Distribution" 10 58 2 \
+          "debian" "" ON \
+          "ubuntu" "" OFF \
+          3>&1 1>&2 2>&3); then
+          if [ -n "$var_os" ]; then
+            echo -e "${OS}${BOLD}${DGN}Operating System: ${BGN}$var_os${CL}"
           fi
+        else
+          exit_script
         fi
-        if [ "$var_default_os" == "ubuntu" ]; then
-          if var_os=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "DISTRIBUTION" --radiolist "Choose Distribution" 10 58 2 \
-            "debian" "" OFF \
-            "ubuntu" "" ON \
-            3>&1 1>&2 2>&3); then
-            if [ -n "$var_os" ]; then
-              echo -e "${OS}${BOLD}${DGN}Operating System: ${BGN}$var_os${CL}"
-            fi
-          else
-            exit_script
+      fi
+      if [ "$var_default_os" == "ubuntu" ]; then
+        if var_os=$(whiptail --backtitle "Incus Scripts" --title "DISTRIBUTION" --radiolist "Choose Distribution" 10 58 2 \
+          "debian" "" OFF \
+          "ubuntu" "" ON \
+          3>&1 1>&2 2>&3); then
+          if [ -n "$var_os" ]; then
+            echo -e "${OS}${BOLD}${DGN}Operating System: ${BGN}$var_os${CL}"
           fi
+        else
+          exit_script
         fi
+      fi
     done
   fi
 
@@ -394,8 +392,8 @@ advanced_settings() {
     var_default_version="${var_version}"
     var_version=""
     while [ -z "$var_version" ]; do
-      if [ "$var_default_version" == "11" ]; then  
-        if var_version=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "DEBIAN VERSION" --radiolist "Choose Version" 10 58 2 \
+      if [ "$var_default_version" == "11" ]; then
+        if var_version=$(whiptail --backtitle "Incus Scripts" --title "DEBIAN VERSION" --radiolist "Choose Version" 10 58 2 \
           "11" "Bullseye" ON \
           "12" "Bookworm" OFF \
           3>&1 1>&2 2>&3); then
@@ -407,7 +405,7 @@ advanced_settings() {
         fi
       fi
       if [ "$var_default_version" == "12" ]; then
-        if var_version=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "DEBIAN VERSION" --radiolist "Choose Version" 10 58 2 \
+        if var_version=$(whiptail --backtitle "Incus Scripts" --title "DEBIAN VERSION" --radiolist "Choose Version" 10 58 2 \
           "11" "Bullseye" OFF \
           "12" "Bookworm" ON \
           3>&1 1>&2 2>&3); then
@@ -425,13 +423,13 @@ advanced_settings() {
     var_default_version="${var_version}"
     var_version=""
     while [ -z "$var_version" ]; do
-      if [ "$var_default_version" == "20.04" ]; then  
-        if var_version=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "UBUNTU VERSION" --radiolist "Choose Version" 10 58 4 \
+      if [ "$var_default_version" == "20.04" ]; then
+        if var_version=$(whiptail --backtitle "Incus Scripts" --title "UBUNTU VERSION" --radiolist "Choose Version" 10 58 4 \
           "20.04" "Focal" ON \
           "22.04" "Jammy" OFF \
           "24.04" "Noble" OFF \
           "24.10" "Oracular" OFF \
-        3>&1 1>&2 2>&3); then
+          3>&1 1>&2 2>&3); then
           if [ -n "$var_version" ]; then
             echo -e "${OSVERSION}${BOLD}${DGN}Version: ${BGN}$var_version${CL}"
           fi
@@ -439,12 +437,12 @@ advanced_settings() {
           exit_script
         fi
       elif [ "$var_default_version" == "22.04" ]; then
-        if var_version=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "UBUNTU VERSION" --radiolist "Choose Version" 10 58 4 \
+        if var_version=$(whiptail --backtitle "Incus Scripts" --title "UBUNTU VERSION" --radiolist "Choose Version" 10 58 4 \
           "20.04" "Focal" OFF \
           "22.04" "Jammy" ON \
           "24.04" "Noble" OFF \
           "24.10" "Oracular" OFF \
-        3>&1 1>&2 2>&3); then
+          3>&1 1>&2 2>&3); then
           if [ -n "$var_version" ]; then
             echo -e "${OSVERSION}${BOLD}${DGN}Version: ${BGN}$var_version${CL}"
           fi
@@ -452,25 +450,25 @@ advanced_settings() {
           exit_script
         fi
       elif [ "$var_default_version" == "24.04" ]; then
-	        if var_version=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "UBUNTU VERSION" --radiolist "Choose Version" 10 58 4 \
+        if var_version=$(whiptail --backtitle "Incus Scripts" --title "UBUNTU VERSION" --radiolist "Choose Version" 10 58 4 \
           "20.04" "Focal" OFF \
           "22.04" "Jammy" OFF \
           "24.04" "Noble" ON \
           "24.10" "Oracular" OFF \
-        3>&1 1>&2 2>&3); then
+          3>&1 1>&2 2>&3); then
           if [ -n "$var_version" ]; then
             echo -e "${OSVERSION}${BOLD}${DGN}Version: ${BGN}$var_version${CL}"
           fi
         else
           exit_script
-        fi   
+        fi
       else
-        if var_version=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "UBUNTU VERSION" --radiolist "Choose Version" 10 58 4 \
+        if var_version=$(whiptail --backtitle "Incus Scripts" --title "UBUNTU VERSION" --radiolist "Choose Version" 10 58 4 \
           "20.04" "Focal" OFF \
           "22.04" "Jammy" OFF \
           "24.04" "Noble" OFF \
           "24.10" "Oracular" ON \
-        3>&1 1>&2 2>&3); then
+          3>&1 1>&2 2>&3); then
           if [ -n "$var_version" ]; then
             echo -e "${OSVERSION}${BOLD}${DGN}Version: ${BGN}$var_version${CL}"
           fi
@@ -485,8 +483,8 @@ advanced_settings() {
   CT_DEFAULT_TYPE="${CT_TYPE}"
   CT_TYPE=""
   while [ -z "$CT_TYPE" ]; do
-    if [ "$CT_DEFAULT_TYPE" == "1" ]; then 
-      if CT_TYPE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "CONTAINER TYPE" --radiolist "Choose Type" 10 58 2 \
+    if [ "$CT_DEFAULT_TYPE" == "1" ]; then
+      if CT_TYPE=$(whiptail --backtitle "Incus Scripts" --title "CONTAINER TYPE" --radiolist "Choose Type" 10 58 2 \
         "1" "Unprivileged" ON \
         "0" "Privileged" OFF \
         3>&1 1>&2 2>&3); then
@@ -502,7 +500,7 @@ advanced_settings() {
       fi
     fi
     if [ "$CT_DEFAULT_TYPE" == "0" ]; then
-      if CT_TYPE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "CONTAINER TYPE" --radiolist "Choose Type" 10 58 2 \
+      if CT_TYPE=$(whiptail --backtitle "Incus Scripts" --title "CONTAINER TYPE" --radiolist "Choose Type" 10 58 2 \
         "1" "Unprivileged" OFF \
         "0" "Privileged" ON \
         3>&1 1>&2 2>&3); then
@@ -520,14 +518,14 @@ advanced_settings() {
   done
 
   while true; do
-    if PW1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --passwordbox "\nSet Root Password (needed for root ssh access)" 9 58 --title "PASSWORD (leave blank for automatic login)" 3>&1 1>&2 2>&3); then
+    if PW1=$(whiptail --backtitle "Incus Scripts" --passwordbox "\nSet Root Password (needed for root ssh access)" 9 58 --title "PASSWORD (leave blank for automatic login)" 3>&1 1>&2 2>&3); then
       if [[ ! -z "$PW1" ]]; then
         if [[ "$PW1" == *" "* ]]; then
           whiptail --msgbox "Password cannot contain spaces. Please try again." 8 58
         elif [ ${#PW1} -lt 5 ]; then
           whiptail --msgbox "Password must be at least 5 characters long. Please try again." 8 58
         else
-          if PW2=$(whiptail --backtitle "Proxmox VE Helper Scripts" --passwordbox "\nVerify Root Password" 9 58 --title "PASSWORD VERIFICATION" 3>&1 1>&2 2>&3); then
+          if PW2=$(whiptail --backtitle "Incus Scripts" --passwordbox "\nVerify Root Password" 9 58 --title "PASSWORD VERIFICATION" 3>&1 1>&2 2>&3); then
             if [[ "$PW1" == "$PW2" ]]; then
               PW="-password $PW1"
               echo -e "${VERIFYPW}${BOLD}${DGN}Root Password: ${BGN}********${CL}"
@@ -550,8 +548,7 @@ advanced_settings() {
     fi
   done
 
-
-  if CT_ID=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Container ID" 8 58 $NEXTID --title "CONTAINER ID" 3>&1 1>&2 2>&3); then
+  if CT_ID=$(whiptail --backtitle "Incus Scripts" --inputbox "Set Container ID" 8 58 $NEXTID --title "CONTAINER ID" 3>&1 1>&2 2>&3); then
     if [ -z "$CT_ID" ]; then
       CT_ID="$NEXTID"
       echo -e "${CONTAINERID}${BOLD}${DGN}Container ID: ${BGN}$CT_ID${CL}"
@@ -562,7 +559,7 @@ advanced_settings() {
     exit
   fi
 
-  if CT_NAME=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Hostname" 8 58 $NSAPP --title "HOSTNAME" 3>&1 1>&2 2>&3); then
+  if CT_NAME=$(whiptail --backtitle "Incus Scripts" --inputbox "Set Hostname" 8 58 $NSAPP --title "HOSTNAME" 3>&1 1>&2 2>&3); then
     if [ -z "$CT_NAME" ]; then
       HN="$NSAPP"
     else
@@ -573,7 +570,7 @@ advanced_settings() {
     exit_script
   fi
 
-  if DISK_SIZE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Disk Size in GB" 8 58 $var_disk --title "DISK SIZE" 3>&1 1>&2 2>&3); then
+  if DISK_SIZE=$(whiptail --backtitle "Incus Scripts" --inputbox "Set Disk Size in GB" 8 58 $var_disk --title "DISK SIZE" 3>&1 1>&2 2>&3); then
     if [ -z "$DISK_SIZE" ]; then
       DISK_SIZE="$var_disk"
       echo -e "${DISKSIZE}${BOLD}${DGN}Disk Size: ${BGN}${DISK_SIZE} GB${CL}"
@@ -588,7 +585,7 @@ advanced_settings() {
     exit_script
   fi
 
-  if CORE_COUNT=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Allocate CPU Cores" 8 58 $var_cpu --title "CORE COUNT" 3>&1 1>&2 2>&3); then
+  if CORE_COUNT=$(whiptail --backtitle "Incus Scripts" --inputbox "Allocate CPU Cores" 8 58 $var_cpu --title "CORE COUNT" 3>&1 1>&2 2>&3); then
     if [ -z "$CORE_COUNT" ]; then
       CORE_COUNT="$var_cpu"
       echo -e "${CPUCORE}${BOLD}${DGN}CPU Cores: ${BGN}$CORE_COUNT${CL}"
@@ -599,7 +596,7 @@ advanced_settings() {
     exit_script
   fi
 
-  if RAM_SIZE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Allocate RAM in MiB" 8 58 $var_ram --title "RAM" 3>&1 1>&2 2>&3); then
+  if RAM_SIZE=$(whiptail --backtitle "Incus Scripts" --inputbox "Allocate RAM in MiB" 8 58 $var_ram --title "RAM" 3>&1 1>&2 2>&3); then
     if [ -z "$RAM_SIZE" ]; then
       RAM_SIZE="$var_ram"
       echo -e "${RAMSIZE}${BOLD}${DGN}RAM Size: ${BGN}${RAM_SIZE} MiB${CL}"
@@ -610,7 +607,7 @@ advanced_settings() {
     exit_script
   fi
 
-  if BRG=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a Bridge" 8 58 vmbr0 --title "BRIDGE" 3>&1 1>&2 2>&3); then
+  if BRG=$(whiptail --backtitle "Incus Scripts" --inputbox "Set a Bridge" 8 58 vmbr0 --title "BRIDGE" 3>&1 1>&2 2>&3); then
     if [ -z "$BRG" ]; then
       BRG="vmbr0"
       echo -e "${BRIDGE}${BOLD}${DGN}Bridge: ${BGN}$BRG${CL}"
@@ -622,7 +619,7 @@ advanced_settings() {
   fi
 
   while true; do
-    NET=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a Static IPv4 CIDR Address (/24)" 8 58 dhcp --title "IP ADDRESS" 3>&1 1>&2 2>&3)
+    NET=$(whiptail --backtitle "Incus Scripts" --inputbox "Set a Static IPv4 CIDR Address (/24)" 8 58 dhcp --title "IP ADDRESS" 3>&1 1>&2 2>&3)
     exit_status=$?
     if [ $exit_status -eq 0 ]; then
       if [ "$NET" = "dhcp" ]; then
@@ -633,7 +630,7 @@ advanced_settings() {
           echo -e "${NETWORK}${BOLD}${DGN}IP Address: ${BGN}$NET${CL}"
           break
         else
-          whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox "$NET is an invalid IPv4 CIDR address. Please enter a valid IPv4 CIDR address or 'dhcp'" 8 58
+          whiptail --backtitle "Incus Scripts" --msgbox "$NET is an invalid IPv4 CIDR address. Please enter a valid IPv4 CIDR address or 'dhcp'" 8 58
         fi
       fi
     else
@@ -643,11 +640,11 @@ advanced_settings() {
 
   if [ "$NET" != "dhcp" ]; then
     while true; do
-      GATE1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter gateway IP address" 8 58 --title "Gateway IP" 3>&1 1>&2 2>&3)
+      GATE1=$(whiptail --backtitle "Incus Scripts" --inputbox "Enter gateway IP address" 8 58 --title "Gateway IP" 3>&1 1>&2 2>&3)
       if [ -z "$GATE1" ]; then
-        whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox "Gateway IP address cannot be empty" 8 58
+        whiptail --backtitle "Incus Scripts" --msgbox "Gateway IP address cannot be empty" 8 58
       elif [[ ! "$GATE1" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
-        whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox "Invalid IP address format" 8 58
+        whiptail --backtitle "Incus Scripts" --msgbox "Invalid IP address format" 8 58
       else
         GATE=",gw=$GATE1"
         echo -e "${GATEWAY}${BOLD}${DGN}Gateway IP Address: ${BGN}$GATE1${CL}"
@@ -663,7 +660,7 @@ advanced_settings() {
     APT_CACHER=""
     APT_CACHER_IP=""
   else
-    if APT_CACHER_IP=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set APT-Cacher IP (leave blank for none)" 8 58 --title "APT-Cacher IP" 3>&1 1>&2 2>&3); then
+    if APT_CACHER_IP=$(whiptail --backtitle "Incus Scripts" --inputbox "Set APT-Cacher IP (leave blank for none)" 8 58 --title "APT-Cacher IP" 3>&1 1>&2 2>&3); then
       APT_CACHER="${APT_CACHER_IP:+yes}"
       echo -e "${NETWORK}${BOLD}${DGN}APT-Cacher IP Address: ${BGN}${APT_CACHER_IP:-Default}${CL}"
     else
@@ -671,14 +668,14 @@ advanced_settings() {
     fi
   fi
 
-  if (whiptail --backtitle "Proxmox VE Helper Scripts" --defaultno --title "IPv6" --yesno "Disable IPv6?" 10 58); then
+  if (whiptail --backtitle "Incus Scripts" --defaultno --title "IPv6" --yesno "Disable IPv6?" 10 58); then
     DISABLEIP6="yes"
   else
     DISABLEIP6="no"
   fi
   echo -e "${DISABLEIPV6}${BOLD}${DGN}Disable IPv6: ${BGN}$DISABLEIP6${CL}"
 
-  if MTU1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Interface MTU Size (leave blank for default [1500])" 8 58 --title "MTU SIZE" 3>&1 1>&2 2>&3); then
+  if MTU1=$(whiptail --backtitle "Incus Scripts" --inputbox "Set Interface MTU Size (leave blank for default [1500])" 8 58 --title "MTU SIZE" 3>&1 1>&2 2>&3); then
     if [ -z $MTU1 ]; then
       MTU1="Default"
       MTU=""
@@ -690,7 +687,7 @@ advanced_settings() {
     exit_script
   fi
 
-  if SD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a DNS Search Domain (leave blank for HOST)" 8 58 --title "DNS Search Domain" 3>&1 1>&2 2>&3); then
+  if SD=$(whiptail --backtitle "Incus Scripts" --inputbox "Set a DNS Search Domain (leave blank for HOST)" 8 58 --title "DNS Search Domain" 3>&1 1>&2 2>&3); then
     if [ -z $SD ]; then
       SX=Host
       SD=""
@@ -703,7 +700,7 @@ advanced_settings() {
     exit_script
   fi
 
-  if NX=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a DNS Server IP (leave blank for HOST)" 8 58 --title "DNS SERVER IP" 3>&1 1>&2 2>&3); then
+  if NX=$(whiptail --backtitle "Incus Scripts" --inputbox "Set a DNS Server IP (leave blank for HOST)" 8 58 --title "DNS SERVER IP" 3>&1 1>&2 2>&3); then
     if [ -z $NX ]; then
       NX=Host
       NS=""
@@ -715,7 +712,7 @@ advanced_settings() {
     exit_script
   fi
 
-  if MAC1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a MAC Address(leave blank for generated MAC)" 8 58 --title "MAC ADDRESS" 3>&1 1>&2 2>&3); then
+  if MAC1=$(whiptail --backtitle "Incus Scripts" --inputbox "Set a MAC Address(leave blank for generated MAC)" 8 58 --title "MAC ADDRESS" 3>&1 1>&2 2>&3); then
     if [ -z $MAC1 ]; then
       MAC1="Default"
       MAC=""
@@ -727,7 +724,7 @@ advanced_settings() {
     exit_script
   fi
 
-  if VLAN1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a Vlan(leave blank for no VLAN)" 8 58 --title "VLAN" 3>&1 1>&2 2>&3); then
+  if VLAN1=$(whiptail --backtitle "Incus Scripts" --inputbox "Set a Vlan(leave blank for no VLAN)" 8 58 --title "VLAN" 3>&1 1>&2 2>&3); then
     if [ -z $VLAN1 ]; then
       VLAN1="Default"
       VLAN=""
@@ -739,20 +736,20 @@ advanced_settings() {
     exit_script
   fi
 
-  if ADV_TAGS=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Custom Tags?[If you remove all, there will be no tags!]" 8 58 ${TAGS} --title "Advanced Tags" 3>&1 1>&2 2>&3); then
+  if ADV_TAGS=$(whiptail --backtitle "Incus Scripts" --inputbox "Set Custom Tags?[If you remove all, there will be no tags!]" 8 58 ${TAGS} --title "Advanced Tags" 3>&1 1>&2 2>&3); then
     if [ -n "${ADV_TAGS}" ]; then
-      ADV_TAGS=$(echo "$ADV_TAGS" | tr -d '[:space:]') 
-        TAGS="${ADV_TAGS}"
+      ADV_TAGS=$(echo "$ADV_TAGS" | tr -d '[:space:]')
+      TAGS="${ADV_TAGS}"
     else
       TAGS=";"
     fi
-      echo -e "${NETWORK}${BOLD}${DGN}Tags: ${BGN}$TAGS${CL}"
-    else
-      exit_script
+    echo -e "${NETWORK}${BOLD}${DGN}Tags: ${BGN}$TAGS${CL}"
+  else
+    exit_script
   fi
 
   if [[ "$PW" == -password* ]]; then
-    if (whiptail --backtitle "Proxmox VE Helper Scripts" --defaultno --title "SSH ACCESS" --yesno "Enable Root SSH Access?" 10 58); then
+    if (whiptail --backtitle "Incus Scripts" --defaultno --title "SSH ACCESS" --yesno "Enable Root SSH Access?" 10 58); then
       SSH="yes"
     else
       SSH="no"
@@ -764,22 +761,22 @@ advanced_settings() {
   fi
 
   if [[ "${SSH}" == "yes" ]]; then
-    SSH_AUTHORIZED_KEY="$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "SSH Authorized key for root (leave empty for none)" 8 58 --title "SSH Key" 3>&1 1>&2 2>&3)"
+    SSH_AUTHORIZED_KEY="$(whiptail --backtitle "Incus Scripts" --inputbox "SSH Authorized key for root (leave empty for none)" 8 58 --title "SSH Key" 3>&1 1>&2 2>&3)"
 
     if [[ -z "${SSH_AUTHORIZED_KEY}" ]]; then
       echo "Warning: No SSH key provided."
     fi
   else
     SSH_AUTHORIZED_KEY=""
-  fi	  
-  if (whiptail --backtitle "Proxmox VE Helper Scripts" --defaultno --title "VERBOSE MODE" --yesno "Enable Verbose Mode?" 10 58); then
+  fi
+  if (whiptail --backtitle "Incus Scripts" --defaultno --title "VERBOSE MODE" --yesno "Enable Verbose Mode?" 10 58); then
     VERB="yes"
   else
     VERB="no"
   fi
   echo -e "${SEARCH}${BOLD}${DGN}Verbose Mode: ${BGN}$VERB${CL}"
 
-  if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "ADVANCED SETTINGS COMPLETE" --yesno "Ready to create ${APP} LXC?" 10 58); then
+  if (whiptail --backtitle "Incus Scripts" --title "ADVANCED SETTINGS COMPLETE" --yesno "Ready to create ${APP} LXC?" 10 58); then
     echo -e "${CREATING}${BOLD}${RD}Creating a ${APP} LXC using the above advanced settings${CL}"
   else
     clear
@@ -789,6 +786,116 @@ advanced_settings() {
   fi
 }
 
+post_to_api() {
+  local API_URL="http://api.community-scripts.org/upload"
+  local pve_version="not found"
+  pve_version=$(pveversion | awk -F'[/ ]' '{print $2}')
+
+  JSON_PAYLOAD=$(
+    cat <<EOF
+{
+    "ct_type": $CT_TYPE,
+    "disk_size": $DISK_SIZE,
+    "core_count": $CORE_COUNT,
+    "ram_size": $RAM_SIZE,
+    "verbose": "$VERBOSE",
+    "os_type": "$var_os",
+    "os_version": "$var_version",
+    "hn": "$HN",
+    "disableip6": "$DISABLEIP6",
+    "ssh": "$SSH",
+    "tags": "$TAGS",
+    "nsapp": "$NSAPP",
+    "method": "$METHOD",
+    "pve_version": "$pve_version"
+}
+EOF
+  )
+
+  RESPONSE=$(curl -s -o response.txt -w "%{http_code}" -L -X POST "$API_URL" --post301 --post302 \
+    -H "Content-Type: application/json" \
+    -d "$JSON_PAYLOAD")
+
+  if [ "$RESPONSE" -ne 201 ] && [ "$RESPONSE" -ne 302 ]; then
+    msg_error "API request failed with HTTP code $RESPONSE"
+  fi
+
+}
+
+diagnostics_check(){
+  if ! [ -d "/usr/local/community-scripts" ]; then
+      mkdir -p /usr/local/community-scripts
+    fi
+
+    if ! [ -f "/usr/local/community-scripts/diagnostics" ]; then
+      if (whiptail --backtitle "Incus Scripts" --title "DIAGNOSTICS" --yesno "Send Diagnostics of LXC Installation?\n\n(This only transmits data without user data, just RAM, CPU, LXC name, ...)" 10 58); then
+          cat <<EOF>/usr/local/community-scripts/diagnostics
+DIAGNOSTICS=yes
+
+#This file is used to store the diagnostics settings for the Community-Scripts API.
+#https://github.com/community-scripts/ProxmoxVE/discussions/1836
+#Your diagnostics will be sent to the Community-Scripts API for troubleshooting/statistical purposes.
+#You can review the data at https://community-scripts.github.io/ProxmoxVE/data
+#If you do not wish to send diagnostics, please set the variable 'DIAGNOSTICS' to "no" in /usr/local/community-scripts/diagnostics, or use the menue.
+#This will disable the diagnostics feature.
+#To send diagnostics, set the variable 'DIAGNOSTICS' to "yes" in /usr/local/community-scripts/diagnostics, or use the menue.
+#This will enable the diagnostics feature.
+#The following information will be sent:
+#"ct_type"
+#"disk_size"
+#"core_count"
+#"ram_size"
+#"verbose"
+#"os_type"
+#"os_version"
+#"hn"
+#"disableip6"
+#"ssh"
+#"tags"
+#"nsapp"
+#"method"
+#"pve_version"
+#If you have any concerns, please review the source code at /misc/build.func
+EOF
+      DIAGNOSTICS="yes"
+    else
+      cat <<EOF >/usr/local/community-scripts/diagnostics
+DIAGNOSTICS=no
+
+#This file is used to store the diagnostics settings for the Community-Scripts API.
+#https://github.com/community-scripts/ProxmoxVE/discussions/1836
+#Your diagnostics will be sent to the Community-Scripts API for troubleshooting/statistical purposes.
+#You can review the data at https://community-scripts.github.io/ProxmoxVE/data
+#If you do not wish to send diagnostics, please set the variable 'DIAGNOSTICS' to "no" in /usr/local/community-scripts/diagnostics, or use the menue.
+#This will disable the diagnostics feature.
+#To send diagnostics, set the variable 'DIAGNOSTICS' to "yes" in /usr/local/community-scripts/diagnostics, or use the menue.
+#This will enable the diagnostics feature.
+#The following information will be sent:
+#"ct_type"
+#"disk_size"
+#"core_count"
+#"ram_size"
+#"verbose"
+#"os_type"
+#"os_version"
+#"hn"
+#"disableip6"
+#"ssh"
+#"tags"
+#"nsapp"
+#"method"
+#"pve_version"
+#If you have any concerns, please review the source code at /misc/build.func
+EOF
+      DIAGNOSTICS="no"
+    fi
+  else
+    DIAGNOSTICS=$(awk -F '=' '/^DIAGNOSTICS/ {print $2}' /usr/local/community-scripts/diagnostics)
+
+  fi
+
+}
+
 install_script() {
   pve_check
   shell_check
@@ -796,6 +903,7 @@ install_script() {
   arch_check
   ssh_check
   maxkeys_check
+  diagnostics_check
 
   if systemctl is-active -q ping-instances.service; then
     systemctl -q stop ping-instances.service
@@ -804,12 +912,14 @@ install_script() {
   timezone=$(cat /etc/timezone)
   header_info
   while true; do
-    CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "SETTINGS" --menu "Choose an option:" \
-      12 50 4 \
+
+    CHOICE=$(whiptail --backtitle "Incus Scripts" --title "SETTINGS" --menu "Choose an option:" \
+      12 50 5 \
       "1" "Default Settings" \
       "2" "Default Settings (with verbose)" \
       "3" "Advanced Settings" \
-      "4" "Exit" --nocancel --default-item "1" 3>&1 1>&2 2>&3)
+      "4" "Diagnostic Settings" \
+      "5" "Exit" --nocancel --default-item "1" 3>&1 1>&2 2>&3)
 
     if [ $? -ne 0 ]; then
       echo -e "${CROSS}${RD} Menu canceled. Exiting.${CL}"
@@ -817,35 +927,55 @@ install_script() {
     fi
 
     case $CHOICE in
-      1)
-        header_info
-        echo -e "${DEFAULT}${BOLD}${BL}Using Default Settings on node $PVEHOST_NAME${CL}"
-        VERB="no"
-        base_settings "$VERB"
-        echo_default
-        break
+    1)
+      header_info
+      echo -e "${DEFAULT}${BOLD}${BL}Using Default Settings on node $PVEHOST_NAME${CL}"
+      VERB="no"
+      METHOD="default"
+      base_settings "$VERB"
+      echo_default
+      break
+      ;;
+    2)
+      header_info
+      echo -e "${DEFAULT}${BOLD}${BL}Using Default Settings on node $PVEHOST_NAME (${SEARCH}Verbose)${CL}"
+      VERB="yes"
+      METHOD="default"
+      base_settings "$VERB"
+      echo_default
+      break
+      ;;
+    3)
+      header_info
+      echo -e "${ADVANCED}${BOLD}${RD}Using Advanced Settings on node $PVEHOST_NAME${CL}"
+      METHOD="advanced"
+      advanced_settings
+      break
+      ;;
+     4)
+        if [[ $DIAGNOSTICS == "yes" ]]; then
+          if whiptail --backtitle "Incus Scripts" --title "DIAGNOSTICS SETTINGS" --yesno "Send Diagnostics of LXC Installation?\n\nCurrent setting: ${DIAGNOSTICS}" 10 58 \
+          --yes-button "No" --no-button "Back" ; then
+            DIAGNOSTICS="no"
+            sed -i 's/^DIAGNOSTICS=.*/DIAGNOSTICS=no/' /usr/local/community-scripts/diagnostics
+            whiptail --backtitle "Incus Scripts" --title "DIAGNOSTICS SETTINGS" --msgbox "Diagnostics settings changed to ${DIAGNOSTICS}." 8 58
+          fi
+        else
+          if whiptail --backtitle "Incus Scripts" --title "DIAGNOSTICS SETTINGS" --yesno "Send Diagnostics of LXC Installation?\n\nCurrent setting: ${DIAGNOSTICS}" 10 58 \
+          --yes-button "Yes" --no-button "Back" ; then
+            DIAGNOSTICS="yes"
+            sed -i 's/^DIAGNOSTICS=.*/DIAGNOSTICS=yes/' /usr/local/community-scripts/diagnostics
+            whiptail --backtitle "Incus Scripts" --title "DIAGNOSTICS SETTINGS" --msgbox "Diagnostics settings changed to ${DIAGNOSTICS}." 8 58
+          fi
+        fi        
         ;;
-      2)
-        header_info
-        echo -e "${DEFAULT}${BOLD}${BL}Using Default Settings on node $PVEHOST_NAME (${SEARCH}Verbose)${CL}"
-        VERB="yes"
-        base_settings "$VERB"
-        echo_default
-        break
-        ;;
-      3)
-        header_info
-        echo -e "${ADVANCED}${BOLD}${RD}Using Advanced Settings on node $PVEHOST_NAME${CL}"
-        advanced_settings
-        break
-        ;;
-      4)
-        echo -e "${CROSS}${RD}Exiting.${CL}"
-        exit 0
-        ;;
-      *)
-        echo -e "${CROSS}${RD}Invalid option, please try again.${CL}"
-        ;;
+    5)
+      echo -e "${CROSS}${RD}Exiting.${CL}"
+      exit 0
+      ;;
+    *)
+      echo -e "${CROSS}${RD}Invalid option, please try again.${CL}"
+      ;;
     esac
   done
 }
@@ -889,7 +1019,7 @@ check_container_storage() {
 
 start() {
   if command -v pveversion >/dev/null 2>&1; then
-    if ! (whiptail --backtitle "Proxmox VE Helper Scripts" --title "${APP} LXC" --yesno "This will create a New ${APP} LXC. Proceed?" 10 58); then
+    if ! (whiptail --backtitle "Incus Scripts" --title "${APP} LXC" --yesno "This will create a New ${APP} LXC. Proceed?" 10 58); then
       clear
       exit_script
       exit
@@ -899,7 +1029,7 @@ start() {
   fi
 
   if ! command -v pveversion >/dev/null 2>&1; then
-    if ! (whiptail --backtitle "Proxmox VE Helper Scripts" --title "${APP} LXC UPDATE" --yesno "Support/Update functions for ${APP} LXC.  Proceed?" 10 58); then
+    if ! (whiptail --backtitle "Incus Scripts" --title "${APP} LXC UPDATE" --yesno "Support/Update functions for ${APP} LXC.  Proceed?" 10 58); then
       clear
       exit_script
       exit
@@ -911,7 +1041,7 @@ start() {
 
 # This function collects user settings and integrates all the collected information.
 build_container() {
-#  if [ "$VERB" == "yes" ]; then set -x; fi
+  #  if [ "$VERB" == "yes" ]; then set -x; fi
 
   if [ "$CT_TYPE" == "1" ]; then
     FEATURES="keyctl=1,nesting=1"
@@ -919,6 +1049,9 @@ build_container() {
     FEATURES="nesting=1"
   fi
 
+  if [[ $DIAGNOSTICS == "yes" ]]; then
+    post_to_api
+  fi
 
   TEMP_DIR=$(mktemp -d)
   pushd $TEMP_DIR >/dev/null
@@ -1007,12 +1140,12 @@ EOF
   fi
 
   # This starts the container and executes <app>-install.sh
-  msg_info "Starting LXC Container"
+  msg_info "Starting Incus Container"
   pct start "$CTID"
-  msg_ok "Started LXC Container"
+  msg_ok "Started Incus Container"
   if [ "$var_os" == "alpine" ]; then
     sleep 3
-        pct exec "$CTID" -- /bin/sh -c 'cat <<EOF >/etc/apk/repositories
+    pct exec "$CTID" -- /bin/sh -c 'cat <<EOF >/etc/apk/repositories
 http://dl-cdn.alpinelinux.org/alpine/latest-stable/main
 http://dl-cdn.alpinelinux.org/alpine/latest-stable/community
 EOF'
@@ -1027,7 +1160,8 @@ description() {
   IP=$(pct exec "$CTID" ip a s dev eth0 | awk '/inet / {print $2}' | cut -d/ -f1)
 
   # Generate LXC Description
-  DESCRIPTION=$(cat <<EOF
+  DESCRIPTION=$(
+    cat <<EOF
 <div align='center'>
   <a href='https://Helper-Scripts.com' target='_blank' rel='noopener noreferrer'>
     <img src='https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/images/logo-81x112.png' alt='Logo' style='width:81px;height:112px;'/>
@@ -1055,7 +1189,7 @@ description() {
   </span>
 </div>
 EOF
-)
+  )
 
   # Set Description in LXC
   pct set "$CTID" -description "$DESCRIPTION"
@@ -1064,3 +1198,4 @@ EOF
     systemctl start ping-instances.service
   fi
 }
+

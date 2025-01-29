@@ -28,7 +28,7 @@ header_info
 check_container_storage
 check_container_resources
   if [[ ! -f /etc/systemd/system/homeassistant.service ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
-  UPD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "UPDATE" --radiolist --cancel-button Exit-Script "Spacebar = Select" 11 58 4 \
+  UPD=$(whiptail --backtitle "Incus Scripts" --title "UPDATE" --radiolist --cancel-button Exit-Script "Spacebar = Select" 11 58 4 \
   "1" "Update system and containers" ON \
   "2" "Install HACS" OFF \
   "3" "Install FileBrowser" OFF \

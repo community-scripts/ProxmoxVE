@@ -15,7 +15,7 @@ cat <<EOF
 EOF
 }
 header_info
-whiptail --backtitle "Proxmox VE Helper Scripts" --title "CPU Scaling Governors" --yesno "View/Change CPU Scaling Governors. Proceed?" 10 58 || exit
+whiptail --backtitle "Incus Scripts" --title "CPU Scaling Governors" --yesno "View/Change CPU Scaling Governors. Proceed?" 10 58 || exit
 current_governor=$(cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor)
 GOVERNORS_MENU=()
 MSG_MAX_LENGTH=0
@@ -24,16 +24,16 @@ while read -r TAG ITEM; do
   ((${#ITEM} + OFFSET > MSG_MAX_LENGTH)) && MSG_MAX_LENGTH=${#ITEM}+OFFSET
   GOVERNORS_MENU+=("$TAG" "$ITEM " "OFF")
 done < <(cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors | tr ' ' '\n' | grep -v "$current_governor")
-scaling_governor=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "Current CPU Scaling Governor is set to $current_governor" --checklist "\nSelect the Scaling Governor to use:\n" 16 $((MSG_MAX_LENGTH + 58)) 6 "${GOVERNORS_MENU[@]}" 3>&1 1>&2 2>&3 | tr -d '"') || exit
+scaling_governor=$(whiptail --backtitle "Incus Scripts" --title "Current CPU Scaling Governor is set to $current_governor" --checklist "\nSelect the Scaling Governor to use:\n" 16 $((MSG_MAX_LENGTH + 58)) 6 "${GOVERNORS_MENU[@]}" 3>&1 1>&2 2>&3 | tr -d '"') || exit
 [ -z "$scaling_governor" ] && {
-    whiptail --backtitle "Proxmox VE Helper Scripts" --title "No CPU Scaling Governor Selected" --msgbox "It appears that no CPU Scaling Governor was selected" 10 68
+    whiptail --backtitle "Incus Scripts" --title "No CPU Scaling Governor Selected" --msgbox "It appears that no CPU Scaling Governor was selected" 10 68
     clear
     exit
 }
 echo "${scaling_governor}" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor >/dev/null
 current_governor=$(cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor)
-whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox --title "Current CPU Scaling Governor" "\nCurrent CPU Scaling Governor has been set to $current_governor\n" 10 60
-CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "CPU Scaling Governor" --menu "This will establish a crontab to maintain the CPU Scaling Governor configuration across reboots.\n \nSetup a crontab?" 14 68 2 \
+whiptail --backtitle "Incus Scripts" --msgbox --title "Current CPU Scaling Governor" "\nCurrent CPU Scaling Governor has been set to $current_governor\n" 10 60
+CHOICE=$(whiptail --backtitle "Incus Scripts" --title "CPU Scaling Governor" --menu "This will establish a crontab to maintain the CPU Scaling Governor configuration across reboots.\n \nSetup a crontab?" 14 68 2 \
   "yes" " " \
   "no" " " 3>&2 2>&1 1>&3)
 

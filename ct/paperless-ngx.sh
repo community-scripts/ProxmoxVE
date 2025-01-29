@@ -31,7 +31,7 @@ function update_script() {
   fi
   RELEASE=$(curl -s https://api.github.com/repos/paperless-ngx/paperless-ngx/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 
-  UPD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "SUPPORT" --radiolist --cancel-button Exit-Script "Spacebar = Select" 11 58 2 \
+  UPD=$(whiptail --backtitle "Incus Scripts" --title "SUPPORT" --radiolist --cancel-button Exit-Script "Spacebar = Select" 11 58 2 \
     "1" "Update Paperless-ngx to $RELEASE" ON \
     "2" "Paperless-ngx Credentials" OFF \
     3>&1 1>&2 2>&3)

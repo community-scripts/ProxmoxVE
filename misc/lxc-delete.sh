@@ -39,7 +39,7 @@ CL=$(echo "\033[m")
 
 header_info
 echo "Loading..."
-whiptail --backtitle "Proxmox VE Helper Scripts" --title "Proxmox VE LXC Deletion" --yesno "This Will Delete LXC Containers. Proceed?" 10 58 || exit
+whiptail --backtitle "Incus Scripts" --title "Proxmox VE LXC Deletion" --yesno "This Will Delete LXC Containers. Proceed?" 10 58 || exit
 
 NODE=$(hostname)
 
