@@ -1,33 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Category } from "@/lib/types";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-
-const defaultLogo = "/default-logo.png"; // Fallback logo path
-const MAX_DESCRIPTION_LENGTH = 100; // Set max length for description
-const MAX_LOGOS = 5; // Max logos to display at once
-
-const formattedBadge = (type: string) => {
-  switch (type) {
-    case "vm":
-      return <Badge className="text-blue-500/75 border-blue-500/75 badge">VM</Badge>;
-    case "ct":
-      return (
-        <Badge className="text-yellow-500/75 border-yellow-500/75 badge">LXC</Badge>
-      );
-    case "misc":
-      return <Badge className="text-green-500/75 border-green-500/75 badge">MISC</Badge>;
-  }
-  return null;
-};
 
 interface DataModel {
   id: number;
@@ -55,7 +31,7 @@ const DataFetcher: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
-  const [sortConfig, setSortConfig] = useState<{ key: keyof DataModel | null, direction: 'ascending' | 'descending' }>({ key: 'id', direction: 'ascending' });
+  const [sortConfig, setSortConfig] = useState<{ key: keyof DataModel | null, direction: 'ascending' | 'descending' }>({ key: 'id', direction: 'descending' });
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -102,9 +78,13 @@ const DataFetcher: React.FC = () => {
     return sortableData;
   }, [filteredData, sortConfig]);
 
-  const requestSort = (key: keyof DataModel) => {
+  const requestSort = (key: keyof DataModel | null) => {
     let direction: 'ascending' | 'descending' = 'ascending';
     if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    } else if (sortConfig.key === key && sortConfig.direction === 'descending') {
+      direction = 'ascending';
+    } else {
       direction = 'descending';
     }
     setSortConfig({ key, direction });
