@@ -49,6 +49,12 @@ codemods:
   args:
   - https://github.com/community-scripts/ProxmoxVE/raw/main/ct/${app}.sh
   - https://github.com/bketelsen/IncusScripts/raw/main/ct/${app}.sh
+- description: Header Updates
+  mod: sed
+  match: misc/*.func
+  args:
+  - https://github.com/community-scripts/ProxmoxVE/raw/main/ct/headers/
+  - https://github.com/bketelsen/IncusScripts/raw/main/ct/headers/
 - description: PVE Check Function
   mod: bashfunc
   match: misc/build.func
