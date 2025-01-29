@@ -15,14 +15,13 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
     curl \
+    sudo \
+    mc \
     git \
     software-properties-common \
     apt-transport-https \
     ca-certificates \
-    gnupg
-$STD add-apt-repository -y ppa:ondrej/php
-$STD apt-get update -y
-$STD apt-get install -y \
+    gnupg \
     php8.2 \
     php8.2-{common,cli,gd,mysql,mbstring,bcmath,xml,fpm,curl,zip} \
     mariadb-server \
