@@ -1,3 +1,9 @@
 upstream: https://github.com/community-scripts/ProxmoxVE
 modsdir: codemods
 codemods:
+- description: Modify URLS
+  mod: sed
+  match: ct/*.sh
+  args:
+  - github.com/community-scripts/ProxmoxVE
+  - github.com/bketelsen/IncusScripts
