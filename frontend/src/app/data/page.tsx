@@ -25,14 +25,9 @@ interface DataModel {
   pve_version: string;
 }
 
-interface Aotd { 
-  nsapp: string;
-  count: number;
-}
 
 const DataFetcher: React.FC = () => {
   const [data, setData] = useState<DataModel[]>([]);
-  const [aotd, setAotd] = useState<Aotd[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -49,16 +44,6 @@ const DataFetcher: React.FC = () => {
         if (!response.ok) throw new Error("Failed to fetch data: ${response.statusText}");
         const result: DataModel[] = await response.json();
         setData(result);
-      } catch (err) {
-        setError((err as Error).message);
-      } finally {
-        setLoading(false);
-      }
-      try {
-        const response = await fetch("http://api.htl-braunau.at/data/json/appoftheday");
-        if (!response.ok) throw new Error("Failed to fetch data: ${response.statusText}");
-        const result: Aotd[] = await response.json();
-        setAotd(result);
       } catch (err) {
         setError((err as Error).message);
       } finally {
@@ -137,10 +122,6 @@ const DataFetcher: React.FC = () => {
   return (
     <div className="p-6 mt-20">
       <h1 className="text-2xl font-bold mb-4 text-center">Created LXCs</h1>
-      <div className="mb-4">
-        <h3 className="text-xl font-bold">Application of the Day</h3>        
-            {aotd.nsapp} ({aotd.count} times)
-      </div>
       <div className="mb-4 flex space-x-4">
         <div>
           <input
