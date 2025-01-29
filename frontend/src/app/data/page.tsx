@@ -179,7 +179,7 @@ const DataFetcher: React.FC = () => {
                 <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('ram_size')}>RAM Size</th>
                 <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('hn')}>Hostname</th>
                 <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('ssh')}>SSH</th>
-                <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('verbose')}>Verbose</th>
+                <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('verbose')}>Verb</th>
                 <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('tags')}>Tags</th>
                 <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('method')}>Method</th>
                 <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('pve_version')}>PVE Version</th>
