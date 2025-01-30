@@ -70,6 +70,12 @@ codemods:
   args:
   - pve_check
   - codemods/pve_check.sh
+- description: PVE Description
+  mod: bashfunc
+  match: misc/build.func
+  args:
+  - description
+  - codemods/description.sh
 - description: PVE Start Function
   mod: bashfunc
   match: misc/build.func
