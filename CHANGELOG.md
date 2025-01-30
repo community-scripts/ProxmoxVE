@@ -32,6 +32,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🌐 Website
 
+- [API] Update build.func to set the status message correct [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1878](https://github.com/community-scripts/ProxmoxVE/pull/1878))
 - [Website] Update /data/page.tsx [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1876](https://github.com/community-scripts/ProxmoxVE/pull/1876))
 - Fix IT-Tools Website Entry (Default | Alpine)  [@MickLesk](https://github.com/MickLesk) ([#1869](https://github.com/community-scripts/ProxmoxVE/pull/1869))
 - fix: remove rounded styles from command primitive [@steveiliop56](https://github.com/steveiliop56) ([#1840](https://github.com/community-scripts/ProxmoxVE/pull/1840))
