@@ -88,8 +88,9 @@ function msg_error() {
 
 env > /envdump.txt
 IMAGE_NAME="images:${PCT_OSTYPE}/${PCT_OSVERSION:-}"
+netflag="--network ${BRG}"
 
 # Create container
 msg_info "Creating Incus Container"
-incus create "${IMAGE_NAME}" "$app" >/dev/null
+incus create "${IMAGE_NAME}" "$app" "$netflag" >/dev/null
 msg_ok "Incus Container ${BL}${app}${CL} ${GN}was successfully created."
