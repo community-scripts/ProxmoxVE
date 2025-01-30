@@ -86,7 +86,7 @@ function msg_error() {
 }
 
 
-env
+env > envdump.txt
 
 
 # Create container
