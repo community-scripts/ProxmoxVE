@@ -23,6 +23,7 @@ interface DataModel {
   created_at: string;
   method: string;
   pve_version: string;
+  status: string;
 }
 
 
@@ -164,10 +165,10 @@ const DataFetcher: React.FC = () => {
       <div className="mb-4 flex justify-between items-center">
         <p className="text-lg font-bold">{filteredData.length} results found</p>
         <select value={itemsPerPage} onChange={handleItemsPerPageChange} className="p-2 border">
-          <option value={5}>5</option>
-          <option value={10}>10</option>
-          <option value={20}>20</option>
+          <option value={25}>25</option>
           <option value={50}>50</option>
+          <option value={100}>100</option>
+          <option value={200}>200</option>
         </select>
       </div>
       <div className="overflow-x-auto">
@@ -175,6 +176,7 @@ const DataFetcher: React.FC = () => {
           <table className="min-w-full table-auto border-collapse">
             <thead>
               <tr>
+                <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('status')}>Status</th>
                 <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('nsapp')}>Application</th>
                 <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('os_type')}>OS</th>
                 <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('os_version')}>OS Version</th>
@@ -193,6 +195,7 @@ const DataFetcher: React.FC = () => {
             <tbody>
               {paginatedData.map((item, index) => (
                 <tr key={index}>
+                  <td className="px-4 py-2 border-b">{item.status === "done" ? "✔️" : item.status === "failed" ? "❌" : item.status}</td>
                   <td className="px-4 py-2 border-b">{item.nsapp}</td>
                   <td className="px-4 py-2 border-b">{item.os_type}</td>
                   <td className="px-4 py-2 border-b">{item.os_version}</td>
@@ -232,7 +235,4 @@ const DataFetcher: React.FC = () => {
     </div>
   );
 };
-
-
-
 export default DataFetcher;
