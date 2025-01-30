@@ -21,8 +21,18 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### Changed
 
+### ✨ New Scripts
+
+- New Script: Mattermost [@Dracentis](https://github.com/Dracentis) ([#1856](https://github.com/community-scripts/ProxmoxVE/pull/1856))
+- New Script: IT-Tools [@nicedevil007](https://github.com/nicedevil007) ([#1862](https://github.com/community-scripts/ProxmoxVE/pull/1862))
+
+### 🚀 Updated Scripts
+
+- Optimize PVE Manager Version-Check [@MickLesk](https://github.com/MickLesk) ([#1866](https://github.com/community-scripts/ProxmoxVE/pull/1866))
+
 ### 🌐 Website
 
+- Fix IT-Tools Website Entry (Default | Alpine)  [@MickLesk](https://github.com/MickLesk) ([#1869](https://github.com/community-scripts/ProxmoxVE/pull/1869))
 - fix: remove rounded styles from command primitive [@steveiliop56](https://github.com/steveiliop56) ([#1840](https://github.com/community-scripts/ProxmoxVE/pull/1840))
 
 ## 2025-01-29
