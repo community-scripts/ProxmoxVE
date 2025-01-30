@@ -46,9 +46,8 @@ sh -c 'curl -o- https://deb.packages.mattermost.com/repo-setup.sh | sudo bash -s
 $STD apt-get update
 $STD apt-get install -y mattermost
 $STD install -C -m 600 -o mattermost -g mattermost /opt/mattermost/config/config.defaults.json /opt/mattermost/config/config.json
-sed -i -e "/DriverName/c\   \"DriverName\": \"postgres\"," \
-       -e "/DataSource/c\   \"DataSource\": \"postgres://$DB_USER:$DB_PASS@localhost:5432/$DB_NAME?sslmode=disable&connect_timeout=10\"," \
-       -e "/SiteURL/c\   \"SiteURL\": \"http://$IPADDRESS\"," /opt/mattermost/config/config.json
+sed -i -e "/DataSource/c\   \"DataSource\": \"postgres://$DB_USER:$DB_PASS@localhost:5432/$DB_NAME?sslmode=disable&connect_timeout=10\"," \
+       -e "/SiteURL/c\   \"SiteURL\": \"http://$IPADDRESS:8065\"," /opt/mattermost/config/config.json
 $STD systemctl enable mattermost.service
 systemctl start mattermost.service
 msg_ok "Installed Mattermost"
