@@ -17,6 +17,14 @@ All LXC instances created using this repository come pre-installed with Midnight
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
 
+## 2025-01-30
+
+### Changed
+
+### 🌐 Website
+
+- fix: remove rounded styles from command primitive [@steveiliop56](https://github.com/steveiliop56) ([#1840](https://github.com/community-scripts/ProxmoxVE/pull/1840))
+
 ## 2025-01-29
 
 ### Changed
