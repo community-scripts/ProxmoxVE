@@ -35,19 +35,19 @@ build_container() {
   echo export PCT_OSTYPE="$var_os"  >>install.func
   echo export PCT_OSVERSION="$var_version" >>install.func
   echo export PCT_DISK_SIZE="$DISK_SIZE"  >>install.func
-  echo export PCT_OPTIONS="
-    -features $FEATURES
-    -hostname $HN
-    -tags $TAGS
-    $SD
-    $NS
-    -net0 name=eth0,bridge=$BRG$MAC,ip=$NET$GATE$VLAN$MTU
-    -onboot 1
-    -cores $CORE_COUNT
-    -memory $RAM_SIZE
-    -unprivileged $CT_TYPE
-    $PW
-  " >>install.func
+  # echo export PCT_OPTIONS="
+  #   -features $FEATURES
+  #   -hostname $HN
+  #   -tags $TAGS
+  #   $SD
+  #   $NS
+  #   -net0 name=eth0,bridge=$BRG$MAC,ip=$NET$GATE$VLAN$MTU
+  #   -onboot 1
+  #   -cores $CORE_COUNT
+  #   -memory $RAM_SIZE
+  #   -unprivileged $CT_TYPE
+  #   $PW
+  # " >>install.func
   # This executes create_lxc.sh and creates the container and .conf file
   source ./install.func
   bash -c "$(wget -qLO - https://raw.githubusercontent.com/bketelsen/IncusScripts/main/ct/create_lxc.sh)" || exit
