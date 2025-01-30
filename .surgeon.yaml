@@ -52,6 +52,12 @@ codemods:
   args:
   - source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
   - source /install.func
+- description: Source Install no space
+  mod: sed
+  match: install/*.sh
+  args:
+  - source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
+  - source /install.func
 - description: Whiptail func Updater
   mod: sed
   match: misc/*.func
