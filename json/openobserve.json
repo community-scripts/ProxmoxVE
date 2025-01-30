@@ -11,7 +11,7 @@
     "interface_port": 5080,
     "documentation": null,
     "website": "https://openobserve.ai/",
-    "logo": "https://github.com/Dracentis/ProxmoxVe/blob/main/misc/images/openobsecure.png?raw=true",
+    "logo": "https://github.com/community-scripts/ProxmoxVE/blob/main/misc/images/openobsecure.png?raw=true",
     "description": "OpenObserve is a simple yet sophisticated log search, infrastructure monitoring, and APM solution.",
     "install_methods": [
         {

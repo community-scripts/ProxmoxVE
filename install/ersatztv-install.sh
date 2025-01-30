@@ -4,7 +4,7 @@
 # Author: tteck
 # Co-Author: MickLesk (Canbiz)
 # License: MIT
-# https://github.com/Dracentis/ProxmoxVe/raw/main/LICENSE
+# https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/ErsatzTV/ErsatzTV
 
 source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"

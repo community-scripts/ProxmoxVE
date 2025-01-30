@@ -1,10 +1,10 @@
 blank_issues_enabled: false
 contact_links:
     - name: 🤔 Questions and Help
-      url: https://github.com/Dracentis/ProxmoxVe/discussions
+      url: https://github.com/community-scripts/ProxmoxVE/discussions
       about: For suggestions or questions, please use the Discussions section.
     - name: 🌟 Feature request
-      url: https://github.com/Dracentis/ProxmoxVe/discussions/new?category=request-script
+      url: https://github.com/community-scripts/ProxmoxVE/discussions/new?category=request-script
       about: For feature/script requests, please use the Discussions section.
     - name: 💻 Discord
       url: https://discord.gg/UHrpNWGwkH

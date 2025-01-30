@@ -3,8 +3,8 @@
 # Copyright (c) 2021-2025 tteck
 # Author: tteck (tteckster)
 # License: MIT
-# https://github.com/Dracentis/ProxmoxVe/raw/main/LICENSE
-# bash -c "$(wget -qLO - https://github.com/Dracentis/ProxmoxVe/raw/main/misc/cron-update-lxcs.sh)"
+# https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# bash -c "$(wget -qLO - https://github.com/community-scripts/ProxmoxVE/raw/main/misc/cron-update-lxcs.sh)"
 
 clear
 cat <<"EOF"
@@ -25,13 +25,13 @@ add() {
     *) echo "Please answer yes or no." ;;
     esac
   done
-  sh -c '(crontab -l -u root 2>/dev/null; echo "0 0 * * 0 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin /bin/bash -c \"\$(wget -qLO - https://github.com/Dracentis/ProxmoxVe/raw/main/misc/update-lxcs-cron.sh)\" >>/var/log/update-lxcs-cron.log 2>/dev/null") | crontab -u root -'
+  sh -c '(crontab -l -u root 2>/dev/null; echo "0 0 * * 0 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin /bin/bash -c \"\$(wget -qLO - https://github.com/community-scripts/ProxmoxVE/raw/main/misc/update-lxcs-cron.sh)\" >>/var/log/update-lxcs-cron.log 2>/dev/null") | crontab -u root -'
   clear
   echo -e "\n To view Cron Update LXCs logs: cat /var/log/update-lxcs-cron.log"
 }
 
 remove() {
-  (crontab -l | grep -v "github.com/Dracentis/ProxmoxVe/raw/main/misc/update-lxcs-cron.sh") | crontab -
+  (crontab -l | grep -v "github.com/community-scripts/ProxmoxVE/raw/main/misc/update-lxcs-cron.sh") | crontab -
   rm -rf /var/log/update-lxcs-cron.log
   echo "Removed Crontab Schedule from Proxmox VE"
 }
