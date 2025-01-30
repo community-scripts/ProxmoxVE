@@ -46,6 +46,12 @@ codemods:
   args:
   - LXC Container
   - Incus Container
+- description: Default Bridge
+  mod: sed
+  match: misc/build.func
+  args:
+  - BRG="vmbr0"
+  - BRG="incusbr0"
 - description: Source Install
   mod: sed
   match: install/*.sh
