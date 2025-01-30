@@ -91,6 +91,6 @@ exit
 
 # Create container
 msg_info "Creating Incus Container"
-pct create $APP  >/dev/null ||
+incus create $APP images:debian/12 >/dev/null ||
   exit "A problem occured while trying to create container."
 msg_ok "Icus Container ${BL}$APP${CL} ${GN}was successfully created."
