@@ -86,10 +86,10 @@ function msg_error() {
 }
 
 
-env > envdump.txt
-
+env > /envdump.txt
+IMAGE_NAME="images:${PCT_OSTYPE}/${PCT_OSVERSION:-}"
 
 # Create container
 msg_info "Creating Incus Container"
-incus create  images:debian/bookworm "$app" >/dev/null
+incus create "${IMAGE_NAME}" "$app" >/dev/null
 msg_ok "Incus Container ${BL}${app}${CL} ${GN}was successfully created."
