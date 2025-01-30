@@ -23,8 +23,8 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### ✨ New Scripts
 
-- New Script: Mattermost [@Dracentis](https://github.com/Dracentis) ([#1856](https://github.com/community-scripts/ProxmoxVE/pull/1856))
 - New Script: IT-Tools [@nicedevil007](https://github.com/nicedevil007) ([#1862](https://github.com/community-scripts/ProxmoxVE/pull/1862))
+- New Script: Mattermost [@Dracentis](https://github.com/Dracentis) ([#1856](https://github.com/community-scripts/ProxmoxVE/pull/1856))
 
 ### 🚀 Updated Scripts
 
