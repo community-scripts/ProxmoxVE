@@ -27,7 +27,10 @@ build_container() {
   echo export PASSWORD="$PW" >>install.func
   echo export VERBOSE="$VERB" >>install.func
   echo export SSH_ROOT="${SSH}" >>install.func
-  echo export SSH_AUTHORIZED_KEY "${SSH_AUTHORIZED_KEY}" >>install.func
+  if [ -n "$SSH_AUTHORIZED_KEY" ]; then
+    echo export SSH_AUTHORIZED_KEY="${SSH_AUTHORIZED_KEY}" >>install.func
+
+  fi
   echo export CTID="$CT_ID" >>install.func
   echo export CTTYPE="$CT_TYPE" >>install.func
   echo export PCT_OSTYPE="$var_os"  >>install.func
