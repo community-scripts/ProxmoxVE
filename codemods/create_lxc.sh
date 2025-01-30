@@ -86,6 +86,7 @@ function msg_error() {
 }
 
 
+env
 
 
 # Create container
