@@ -235,7 +235,7 @@ update_motd_ip() {
 
 # Function to download & save header files
 get_header() {
-  local app_name=$(echo ${APP,,} | tr -d ' ') 
+  local app_name=$(echo ${APP,,} | tr -d ' ')
   local header_url="https://github.com/bketelsen/IncusScripts/raw/main/ct/headers/${app_name}"
   local local_header_path="/usr/local/community-scripts/headers/${app_name}"
 
@@ -254,7 +254,7 @@ get_header() {
 
 # This function sets the APP-Name into an ASCII Header in Slant, figlet needed on proxmox main node.
 header_info() {
-  local app_name=$(echo ${APP,,} | tr -d ' ') 
+  local app_name=$(echo ${APP,,} | tr -d ' ')
   local header_content
 
   # Download & save Header-File locally
@@ -831,7 +831,7 @@ post_update_to_api() {
     if [ "$POST_UPDATE_DONE" = true ]; then
         return 0
     fi
-    local API_URL="http://api.community-scripts.org/upload/updatestatus"    
+    local API_URL="http://api.community-scripts.org/upload/updatestatus"
     local status="${1:failed}"
     JSON_PAYLOAD=$(cat <<EOF
 {
@@ -840,7 +840,7 @@ post_update_to_api() {
 }
 EOF
 )
-   
+
    RESPONSE=$(curl -s -o response.txt -w "%{http_code}" -L -X POST "$API_URL" --post301 --post302 \
         -H "Content-Type: application/json" \
         -d "$JSON_PAYLOAD")
@@ -859,7 +859,7 @@ diagnostics_check(){
 
     if ! [ -f "/usr/local/community-scripts/diagnostics" ]; then
       if (whiptail --backtitle "Incus Scripts" --title "DIAGNOSTICS" --yesno "Send Diagnostics of LXC Installation?\n\n(This only transmits data without user data, just RAM, CPU, LXC name, ...)" 10 58); then
-          cat <<EOF>/usr/local/community-scripts/diagnostics
+          cat << EOF >/usr/local/community-scripts/diagnostics
 DIAGNOSTICS=yes
 
 #This file is used to store the diagnostics settings for the Community-Scripts API.
@@ -1128,7 +1128,7 @@ description() {
 
 
 trap 'post_update_to_api "done"' EXIT
-trap 'post_update_to_api "failed"' SIGINT 
+trap 'post_update_to_api "failed"' SIGINT
 trap 'post_update_to_api "failed"' SIGTERM
 
 
