@@ -24,7 +24,7 @@ build_container() {
   echo export DISABLEIPV6="$DISABLEIP6" >>install.func
   echo export APPLICATION="$APP" >>install.func
   echo export app="$NSAPP" >>install.func
-  echo export PASSWORD="$PW" >>install.func
+  echo export PASSWORD="${PW}" >>install.func
   echo export VERBOSE=yes >>install.func
   echo export SSH_ROOT="${SSH}" >>install.func
   echo export SSH_AUTHORIZED_KEY="${SSH_AUTHORIZED_KEY}" >>install.func
