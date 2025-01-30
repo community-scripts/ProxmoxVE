@@ -91,5 +91,5 @@ env
 
 # Create container
 msg_info "Creating Incus Container"
-incus create $APPLICATION images:debian/bookworm >/dev/null
-msg_ok "Incus Container ${BL}$APPLICATION${CL} ${GN}was successfully created."
+incus create $app images:debian/bookworm >/dev/null
+msg_ok "Incus Container ${BL}$app${CL} ${GN}was successfully created."
