@@ -2,7 +2,7 @@ upstream: https://github.com/community-scripts/ProxmoxVE
 modsdir: codemods
 stage: true
 commit: true
-push: false
+push: true
 codemods:
 - description: Modify Build Func
   mod: sed
