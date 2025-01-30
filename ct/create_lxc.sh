@@ -90,6 +90,6 @@ function msg_error() {
 
 # Create container
 msg_info "Creating Incus Container"
-incus create $APP images:debian/12 >/dev/null ||
+incus create $APPLICATION images:debian/12 >/dev/null ||
   exit "A problem occured while trying to create container."
-msg_ok "Icus Container ${BL}$APP${CL} ${GN}was successfully created."
+msg_ok "Icus Container ${BL}$APPLICATION${CL} ${GN}was successfully created."
