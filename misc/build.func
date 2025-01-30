@@ -1087,7 +1087,7 @@ build_container() {
 	source ./install.func
 	bash -c "$(wget -qLO - https://raw.githubusercontent.com/bketelsen/IncusScripts/main/ct/create_lxc.sh)" || exit
 
-	incus file push install.func "$app"/root/install.func
+	incus file push --mode 0777 install.func "$app"/root/install.func
 
 	msg_info "Starting Incus Container"
 	incus start "$app"
