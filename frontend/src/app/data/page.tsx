@@ -195,7 +195,7 @@ const DataFetcher: React.FC = () => {
             <tbody>
               {paginatedData.map((item, index) => (
                 <tr key={index}>
-                               <td className="px-4 py-2 border-b">
+                  <td className="px-4 py-2 border-b">
                     {item.status === "done" ? (
                       "✔️"
                     ) : item.status === "failed" ? (
