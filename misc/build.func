@@ -797,7 +797,7 @@ post_to_api() {
   local pve_version="not found"
   pve_version=$(pveversion | awk -F'[/ ]' '{print $2}')
 
-   JSON_PAYLOAD=$(cat <<EOF
+  JSON_PAYLOAD=$(cat <<EOF
 {
     "ct_type": $CT_TYPE,
     "disk_size": $DISK_SIZE,
@@ -830,9 +830,9 @@ EOF
 }
 
 post_update_to_api() {
-    local API_URL="http://api.community-scripts.org/upload/updatestatus"
+  local API_URL="http://api.community-scripts.org/upload/updatestatus"
 
-    JSON_PAYLOAD=$(cat <<EOF
+  JSON_PAYLOAD=$(cat <<EOF
 {
     "status": "done",
     "random_id": "$RANDOM_UUID"
@@ -840,13 +840,13 @@ post_update_to_api() {
 EOF
 )
    
-   RESPONSE=$(curl -s -o response.txt -w "%{http_code}" -L -X POST "$API_URL" --post301 --post302 \
-        -H "Content-Type: application/json" \
-        -d "$JSON_PAYLOAD")
+  RESPONSE=$(curl -s -o response.txt -w "%{http_code}" -L -X POST "$API_URL" --post301 --post302 \
+      -H "Content-Type: application/json" \
+      -d "$JSON_PAYLOAD")
     
-    if [ "$RESPONSE" -ne 201 ] && [ "$RESPONSE" -ne 302 ]; then
-        msg_error "API request failed with HTTP code $RESPONSE"
-    fi
+  if [ "$RESPONSE" -ne 201 ] && [ "$RESPONSE" -ne 302 ]; then
+    msg_error "API request failed with HTTP code $RESPONSE"
+  fi
 
    
 }
