@@ -1,7 +1,7 @@
 upstream: https://github.com/community-scripts/ProxmoxVE
 modsdir: codemods
 stage: true
-commit: false
+commit: true
 push: false
 codemods:
 - description: Modify Build Func
