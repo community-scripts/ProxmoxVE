@@ -1062,11 +1062,7 @@ build_container() {
 
 	TEMP_DIR=$(mktemp -d)
 	pushd $TEMP_DIR >/dev/null
-	if [ "$var_os" == "alpine" ]; then
-		curl -s https://raw.githubusercontent.com/bketelsen/IncusScripts/main/misc/alpine-install.func -o install.func
-	else
-		curl -s https://raw.githubusercontent.com/bketelsen/IncusScripts/main/misc/install.func -o install.func
-	fi
+	touch install.func
 
 	echo export CACHER="$APT_CACHER" >>install.func
 	echo export CACHER_IP="$APT_CACHER_IP" >>install.func
@@ -1084,6 +1080,12 @@ build_container() {
 	echo export PCT_OSVERSION="$var_version" >>install.func
 	echo export PCT_DISK_SIZE="$DISK_SIZE" >>install.func
 
+	if [ "$var_os" == "alpine" ]; then
+		curl -s https://raw.githubusercontent.com/bketelsen/IncusScripts/main/misc/alpine-install.func -o install.func.remote
+	else
+		curl -s https://raw.githubusercontent.com/bketelsen/IncusScripts/main/misc/install.func -o install.func.remote
+	fi
+	cat install.func.remote >>install.func
 	source ./install.func
 	bash -c "$(wget -qLO - https://raw.githubusercontent.com/bketelsen/IncusScripts/main/ct/create_lxc.sh)" || exit
 
