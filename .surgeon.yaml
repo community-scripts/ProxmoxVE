@@ -1,5 +1,8 @@
 upstream: https://github.com/community-scripts/ProxmoxVE
 modsdir: codemods
+stage: true
+commit: false
+push: false
 codemods:
 - description: Modify Build Func
   mod: sed
