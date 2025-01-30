@@ -5,7 +5,7 @@
 # License: MIT
 # Source: Proxmox Server Solution GmbH
 
-source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
+source /install.func
 color
 verb_ip6
 catch_errors

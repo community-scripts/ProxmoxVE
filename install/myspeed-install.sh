@@ -7,7 +7,7 @@
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/gnmyt/myspeed
 
-source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
+source /install.func
 color
 verb_ip6
 catch_errors
