@@ -96,16 +96,16 @@ EOF
 
   # This starts the container and executes <app>-install.sh
   msg_info "Starting Incus Container"
-  pct start "$CTID"
+  incus start "$APP"
   msg_ok "Started Incus Container"
   if [ "$var_os" == "alpine" ]; then
     sleep 3
-    pct exec "$CTID" -- /bin/sh -c 'cat <<EOF >/etc/apk/repositories
+    incus exec "$APP" -- /bin/sh -c 'cat <<EOF >/etc/apk/repositories
 http://dl-cdn.alpinelinux.org/alpine/latest-stable/main
 http://dl-cdn.alpinelinux.org/alpine/latest-stable/community
 EOF'
-    pct exec "$CTID" -- ash -c "apk add bash >/dev/null"
+    incus exec "$APP" -- ash -c "apk add bash >/dev/null"
   fi
-  lxc-attach -n "$CTID" -- bash -c "$(wget -qLO - https://raw.githubusercontent.com/bketelsen/IncusScripts/main/install/$var_install.sh)" || exit
+  incus shell "$CTID" -- bash -c "$(wget -qLO - https://raw.githubusercontent.com/bketelsen/IncusScripts/main/install/$var_install.sh)" || exit
 
 }
