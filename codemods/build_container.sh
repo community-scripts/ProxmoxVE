@@ -49,6 +49,7 @@ build_container() {
     $PW
   " >>install.func
   # This executes create_lxc.sh and creates the container and .conf file
+  source ./install.func
   bash -c "$(wget -qLO - https://raw.githubusercontent.com/bketelsen/IncusScripts/main/ct/create_lxc.sh)" || exit
 
 #   LXC_CONFIG=/etc/pve/lxc/${CTID}.conf
