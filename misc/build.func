@@ -837,7 +837,7 @@ post_update_to_api() {
         return 0
     fi
     local API_URL="http://api.community-scripts.org/upload/updatestatus"    
-    local status="${1:-}"
+    local status="${1:failed}"
     JSON_PAYLOAD=$(cat <<EOF
 {
     "status": "$status",
