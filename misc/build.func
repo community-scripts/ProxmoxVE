@@ -3,7 +3,7 @@
 # Co-Author: MickLesk
 # Co-Author: michelroegl-brunner
 # License: MIT
-# https://raw.githubusercontent.com/Dracentis/ProxmoxVE/main/LICENSE
+# https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
 variables() {
   NSAPP=$(echo ${APP,,} | tr -d ' ') # This function sets the NSAPP variable by converting the value of the APP variable to lowercase and removing any spaces.
@@ -239,7 +239,7 @@ update_motd_ip() {
 # Function to download & save header files
 get_header() {
   local app_name=$(echo ${APP,,} | tr -d ' ') 
-  local header_url="https://raw.githubusercontent.com/Dracentis/ProxmoxVE/main/ct/headers/${app_name}"
+  local header_url="https://github.com/community-scripts/ProxmoxVE/raw/main/ct/headers/${app_name}"
   local local_header_path="/usr/local/community-scripts/headers/${app_name}"
 
   mkdir -p "/usr/local/community-scripts/headers"
