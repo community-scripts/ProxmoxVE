@@ -50,7 +50,7 @@ function spinner() {
   local frames=('⠋' '⠙' '⠹' '⠸' '⠼' '⠴' '⠦' '⠧' '⠇' '⠏')
   local spin_i=0
   local interval=0.1
-  printf "\e[?25l" 
+  printf "\e[?25l"
 
   local color="${YWB}"
 
@@ -85,118 +85,12 @@ function msg_error() {
   echo -e "${BFR}${CROSS}${RD}${msg}${CL}"
 }
 
-# This checks for the presence of valid Container Storage and Template Storage locations
-msg_info "Validating Storage"
-VALIDCT=$(pvesm status -content rootdir | awk 'NR>1')
-if [ -z "$VALIDCT" ]; then
-  msg_error "Unable to detect a valid Container Storage location."
-  exit 1
-fi
-VALIDTMP=$(pvesm status -content vztmpl | awk 'NR>1')
-if [ -z "$VALIDTMP" ]; then
-  msg_error "Unable to detect a valid Template Storage location."
-  exit 1
-fi
 
-# This function is used to select the storage class and determine the corresponding storage content type and label.
-function select_storage() {
-  local CLASS=$1
-  local CONTENT
-  local CONTENT_LABEL
-  case $CLASS in
-  container)
-    CONTENT='rootdir'
-    CONTENT_LABEL='Container'
-    ;;
-  template)
-    CONTENT='vztmpl'
-    CONTENT_LABEL='Container template'
-    ;;
-  *) false || exit "Invalid storage class." ;;
-  esac
-  
-  # This Queries all storage locations
-  local -a MENU
-  while read -r line; do
-    local TAG=$(echo $line | awk '{print $1}')
-    local TYPE=$(echo $line | awk '{printf "%-10s", $2}')
-    local FREE=$(echo $line | numfmt --field 4-6 --from-unit=K --to=iec --format %.2f | awk '{printf( "%9sB", $6)}')
-    local ITEM="Type: $TYPE Free: $FREE "
-    local OFFSET=2
-    if [[ $((${#ITEM} + $OFFSET)) -gt ${MSG_MAX_LENGTH:-} ]]; then
-      local MSG_MAX_LENGTH=$((${#ITEM} + $OFFSET))
-    fi
-    MENU+=("$TAG" "$ITEM" "OFF")
-  done < <(pvesm status -content $CONTENT | awk 'NR>1')
-  
-  # Select storage location
-  if [ $((${#MENU[@]}/3)) -eq 1 ]; then
-    printf ${MENU[0]}
-  else
-    local STORAGE
-    while [ -z "${STORAGE:+x}" ]; do
-      STORAGE=$(whiptail --backtitle "Incus Scripts" --title "Storage Pools" --radiolist \
-      "Which storage pool you would like to use for the ${CONTENT_LABEL,,}?\nTo make a selection, use the Spacebar.\n" \
-      16 $(($MSG_MAX_LENGTH + 23)) 6 \
-      "${MENU[@]}" 3>&1 1>&2 2>&3) || exit "Menu aborted."
-      if [ $? -ne 0 ]; then
-        echo -e "${CROSS}${RD} Menu aborted by user.${CL}"
-        exit 0 
-      fi
-    done
-    printf "%s" "$STORAGE"
-  fi
-}
-# Test if required variables are set
-[[ "${CTID:-}" ]] || exit "You need to set 'CTID' variable."
-[[ "${PCT_OSTYPE:-}" ]] || exit "You need to set 'PCT_OSTYPE' variable."
-
-# Test if ID is valid
-[ "$CTID" -ge "100" ] || exit "ID cannot be less than 100."
-
-# Test if ID is in use
-if pct status $CTID &>/dev/null; then
-  echo -e "ID '$CTID' is already in use."
-  unset CTID
-  exit "Cannot use ID that is already in use."
-fi
-
-# Get template storage
-TEMPLATE_STORAGE=$(select_storage template) || exit
-msg_ok "Using ${BL}$TEMPLATE_STORAGE${CL} ${GN}for Template Storage."
-
-# Get container storage
-CONTAINER_STORAGE=$(select_storage container) || exit
-msg_ok "Using ${BL}$CONTAINER_STORAGE${CL} ${GN}for Container Storage."
-
-# Update LXC template list
-msg_info "Updating LXC Template List"
-pveam update >/dev/null
-msg_ok "Updated LXC Template List"
-
-# Get LXC template string
-TEMPLATE_SEARCH=${PCT_OSTYPE}-${PCT_OSVERSION:-}
-mapfile -t TEMPLATES < <(pveam available -section system | sed -n "s/.*\($TEMPLATE_SEARCH.*\)/\1/p" | sort -t - -k 2 -V)
-[ ${#TEMPLATES[@]} -gt 0 ] || exit "Unable to find a template when searching for '$TEMPLATE_SEARCH'."
-TEMPLATE="${TEMPLATES[-1]}"
-
-# Download LXC template if needed
-if ! pveam list $TEMPLATE_STORAGE | grep -q $TEMPLATE; then
-  msg_info "Downloading LXC Template"
-  pveam download $TEMPLATE_STORAGE $TEMPLATE >/dev/null ||
-    exit "A problem occured while downloading the LXC template."
-  msg_ok "Downloaded LXC Template"
-fi
-
-# Combine all options
-DEFAULT_PCT_OPTIONS=(
-  -arch $(dpkg --print-architecture))
-
-PCT_OPTIONS=(${PCT_OPTIONS[@]:-${DEFAULT_PCT_OPTIONS[@]}})
-[[ " ${PCT_OPTIONS[@]} " =~ " -rootfs " ]] || PCT_OPTIONS+=(-rootfs $CONTAINER_STORAGE:${PCT_DISK_SIZE:-8})
+env
+exit
 
 # Create container
-msg_info "Creating LXC Container"
-pct create $CTID ${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE} ${PCT_OPTIONS[@]} >/dev/null ||
+msg_info "Creating Incus Container"
+pct create $APP  >/dev/null ||
   exit "A problem occured while trying to create container."
-msg_ok "LXC Container ${BL}$CTID${CL} ${GN}was successfully created."
+msg_ok "Icus Container ${BL}$APP${CL} ${GN}was successfully created."
