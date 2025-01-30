@@ -1097,6 +1097,7 @@ build_container() {
     $PW
   " >>install.func
 
+	source ./install.func
 	bash -c "$(wget -qLO - https://raw.githubusercontent.com/bketelsen/IncusScripts/main/ct/create_lxc.sh)" || exit
 
 	incus file push install.func "$app"/root/install.func
