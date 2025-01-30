@@ -48,9 +48,9 @@ $STD apt-get install -y mattermost
 $STD install -C -m 600 -o mattermost -g mattermost /opt/mattermost/config/config.defaults.json /opt/mattermost/config/config.json
 sed -i -e "/DriverName/c\   \"DriverName\": \"postgres\"," \
        -e "/DataSource/c\   \"DataSource\": \"postgres://$DB_USER:$DB_PASS@localhost:5432/$DB_NAME?sslmode=disable&connect_timeout=10\"," \
-       -e "/SiteUrl/c\   \"SiteUrl\": \"http://$IPADDRESS\"," /opt/mattermost/config/config.json
+       -e "/SiteURL/c\   \"SiteURL\": \"http://$IPADDRESS\"," /opt/mattermost/config/config.json
 $STD systemctl enable mattermost.service
-$STD systemctl start mattermost.service
+systemctl start mattermost.service
 msg_ok "Installed Mattermost"
 
 motd_ssh
