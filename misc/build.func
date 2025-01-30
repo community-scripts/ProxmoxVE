@@ -293,7 +293,7 @@ base_settings() {
   PW=""
   CT_ID=$NEXTID
   HN=$NSAPP
-  BRG="vmbr0"
+  BRG="incusbr0"
   NET="dhcp"
   GATE=""
   APT_CACHER=""
@@ -611,7 +611,7 @@ advanced_settings() {
 
   if BRG=$(whiptail --backtitle "Incus Scripts" --inputbox "Set a Bridge" 8 58 vmbr0 --title "BRIDGE" 3>&1 1>&2 2>&3); then
     if [ -z "$BRG" ]; then
-      BRG="vmbr0"
+      BRG="incusbr0"
       echo -e "${BRIDGE}${BOLD}${DGN}Bridge: ${BGN}$BRG${CL}"
     else
       echo -e "${BRIDGE}${BOLD}${DGN}Bridge: ${BGN}$BRG${CL}"
@@ -832,7 +832,7 @@ post_update_to_api() {
         return 0
     fi
     local API_URL="http://api.community-scripts.org/upload/updatestatus"    
-    local status="${1:-}"
+    local status="${1:failed}"
     JSON_PAYLOAD=$(cat <<EOF
 {
     "status": "$status",
