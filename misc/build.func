@@ -12,6 +12,7 @@ variables() {
   PVEHOST_NAME=$(hostname)           # gets the Proxmox Hostname and sets it to Uppercase
   DIAGNOSTICS="yes"                  # sets the DIAGNOSTICS variable to "yes", used for the API call.
   METHOD="default"                   # sets the METHOD variable to "default", used for the API call.
+  RANDOM_UUID="$(cat /proc/sys/kernel/random/uuid)" # generates a random UUID and sets it to the RANDOM_UUDI variable.
 }
 
 # This function sets various color variables using ANSI escape codes for formatting text in the terminal.
@@ -796,8 +797,7 @@ post_to_api() {
   local pve_version="not found"
   pve_version=$(pveversion | awk -F'[/ ]' '{print $2}')
 
-  JSON_PAYLOAD=$(
-    cat <<EOF
+   JSON_PAYLOAD=$(cat <<EOF
 {
     "ct_type": $CT_TYPE,
     "disk_size": $DISK_SIZE,
@@ -812,10 +812,12 @@ post_to_api() {
     "tags": "$TAGS",
     "nsapp": "$NSAPP",
     "method": "$METHOD",
-    "pve_version": "$pve_version"
+    "pve_version": "$pve_version",
+    "status": "failed",
+    "random_id": "$RANDOM_UUID"
 }
 EOF
-  )
+)
 
   RESPONSE=$(curl -s -o response.txt -w "%{http_code}" -L -X POST "$API_URL" --post301 --post302 \
     -H "Content-Type: application/json" \
@@ -825,6 +827,28 @@ EOF
     msg_error "API request failed with HTTP code $RESPONSE"
   fi
 
+}
+
+post_update_to_api() {
+    local API_URL="http://api.community-scripts.org/upload/updatestatus"
+
+    JSON_PAYLOAD=$(cat <<EOF
+{
+    "status": "done",
+    "random_id": "$RANDOM_UUID"
+}
+EOF
+)
+   
+   RESPONSE=$(curl -s -o response.txt -w "%{http_code}" -L -X POST "$API_URL" --post301 --post302 \
+        -H "Content-Type: application/json" \
+        -d "$JSON_PAYLOAD")
+    
+    if [ "$RESPONSE" -ne 201 ] && [ "$RESPONSE" -ne 302 ]; then
+        msg_error "API request failed with HTTP code $RESPONSE"
+    fi
+
+   
 }
 
 diagnostics_check(){
@@ -1201,5 +1225,9 @@ EOF
 
   if [[ -f /etc/systemd/system/ping-instances.service ]]; then
     systemctl start ping-instances.service
+  fi
+
+  if [[ $DIAGNOSTICS == "yes" ]]; then
+    post_update_to_api
   fi
 }
