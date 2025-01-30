@@ -100,7 +100,7 @@ build_container() {
 #     fi
 #   fi
 
-  incus file push install.func "$app"/root/install.func
+  incus file push --mode 0777 install.func "$app"/root/install.func
   # This starts the container and executes <app>-install.sh
   msg_info "Starting Incus Container"
   incus start "$app"
