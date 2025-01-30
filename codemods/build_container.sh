@@ -10,11 +10,9 @@ build_container() {
 
   TEMP_DIR=$(mktemp -d)
   pushd $TEMP_DIR >/dev/null
-  if [ "$var_os" == "alpine" ]; then
-    curl -s https://raw.githubusercontent.com/bketelsen/IncusScripts/main/misc/alpine-install.func -o install.func
-  else
-    curl -s https://raw.githubusercontent.com/bketelsen/IncusScripts/main/misc/install.func -o install.func
-  fi
+  touch install.func
+
+
   # if [ "$var_os" == "alpine" ]; then
   #   export FUNCTIONS_FILE_PATH="$(curl -s https://raw.githubusercontent.com/bketelsen/IncusScripts/main/misc/alpine-install.func)"
   # else
@@ -49,6 +47,12 @@ build_container() {
   #   $PW
   # " >>install.func
   # This executes create_lxc.sh and creates the container and .conf file
+  if [ "$var_os" == "alpine" ]; then
+    curl -s https://raw.githubusercontent.com/bketelsen/IncusScripts/main/misc/alpine-install.func -o install.func.remote
+  else
+    curl -s https://raw.githubusercontent.com/bketelsen/IncusScripts/main/misc/install.func -o install.func.remote
+  fi
+  cat install.func.remote >>install.func
   source ./install.func
   bash -c "$(wget -qLO - https://raw.githubusercontent.com/bketelsen/IncusScripts/main/ct/create_lxc.sh)" || exit
 
