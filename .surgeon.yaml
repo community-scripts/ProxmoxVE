@@ -84,3 +84,8 @@ codemods:
   match: ct/create_lxc.sh
   args:
   - codemods/create_lxc.sh
+- description: Replace install
+  mod: bashfunc
+  match: misc/build.func
+  args:
+  - codemods/install_script.sh
