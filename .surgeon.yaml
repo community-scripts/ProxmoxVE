@@ -88,4 +88,5 @@ codemods:
   mod: bashfunc
   match: misc/build.func
   args:
+  - install_script
   - codemods/install_script.sh
