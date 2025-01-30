@@ -86,8 +86,7 @@ function msg_error() {
 }
 
 
-env
-exit
+
 
 # Create container
 msg_info "Creating Incus Container"
