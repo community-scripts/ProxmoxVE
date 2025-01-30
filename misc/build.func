@@ -1131,9 +1131,9 @@ EOF
 http://dl-cdn.alpinelinux.org/alpine/latest-stable/main
 http://dl-cdn.alpinelinux.org/alpine/latest-stable/community
 EOF'
-		incus exec "$app" -- ash -c "apk add bash >/dev/null"
+		incus exec "$app" --env=FUNCTIONS_FILE_PATH="$FUNCTIONS_FILE_PATH" -- ash -c "apk add bash >/dev/null"
 	fi
-	incus shell "$app" -- bash -c "$(wget -qLO - https://raw.githubusercontent.com/bketelsen/IncusScripts/main/install/$var_install.sh)" || exit
+	incus shell "$app" --env=FUNCTIONS_FILE_PATH="$FUNCTIONS_FILE_PATH" -- bash -c "$(wget -qLO - https://raw.githubusercontent.com/bketelsen/IncusScripts/main/install/$var_install.sh)" || exit
 
 }
 
