@@ -91,6 +91,5 @@ env
 
 # Create container
 msg_info "Creating Incus Container"
-incus create $APPLICATION images:debian/12 >/dev/null ||
-  exit "A problem occured while trying to create container."
-msg_ok "Icus Container ${BL}$APPLICATION${CL} ${GN}was successfully created."
+incus create $APPLICATION images:debian/bookworm >/dev/null
+msg_ok "Incus Container ${BL}$APPLICATION${CL} ${GN}was successfully created."
