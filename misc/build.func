@@ -1087,7 +1087,7 @@ build_container() {
 	source ./install.func
 	bash -c "$(wget -qLO - https://raw.githubusercontent.com/bketelsen/IncusScripts/main/ct/create_lxc.sh)" || exit
 
-	incus file push --mode 0777 install.func "$app"/root/install.func
+	incus file push --mode 0777 install.func "$app"/install.func
 
 	msg_info "Starting Incus Container"
 	incus start "$app"
@@ -1098,9 +1098,9 @@ build_container() {
 http://dl-cdn.alpinelinux.org/alpine/latest-stable/main
 http://dl-cdn.alpinelinux.org/alpine/latest-stable/community
 EOF'
-		incus exec "$app" --env=FUNCTIONS_FILE_PATH=/root/install.func -- ash -c "apk add bash >/dev/null"
+		incus exec "$app" --env=FUNCTIONS_FILE_PATH=/install.func -- ash -c "apk add bash >/dev/null"
 	fi
-	incus shell "$app" --env=FUNCTIONS_FILE_PATH=/root/install.func -- bash -c "$(wget -qLO - https://raw.githubusercontent.com/bketelsen/IncusScripts/main/install/$var_install.sh)" || exit
+	incus shell "$app" --env=FUNCTIONS_FILE_PATH=/install.func -- bash -c "$(wget -qLO - https://raw.githubusercontent.com/bketelsen/IncusScripts/main/install/$var_install.sh)" || exit
 
 }
 
