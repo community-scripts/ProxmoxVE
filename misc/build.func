@@ -73,6 +73,7 @@ error_handler() {
   local exit_code="$?"
   local line_number="$1"
   local command="$2"
+  post_update_to_api "failed"
   local error_message="${RD}[ERROR]${CL} in line ${RD}$line_number${CL}: exit code ${RD}$exit_code${CL}: while executing command ${YW}$command${CL}"
   echo -e "\n$error_message\n"
 }
@@ -829,26 +830,31 @@ EOF
 
 }
 
-post_update_to_api() {
-  local API_URL="http://api.community-scripts.org/upload/updatestatus"
+POST_UPDATE_DONE=false
 
-  JSON_PAYLOAD=$(cat <<EOF
+post_update_to_api() {
+    if [ "$POST_UPDATE_DONE" = true ]; then
+        return 0
+    fi
+    local API_URL="http://api.community-scripts.org/upload/updatestatus"    
+    local status="${1:-}"
+    JSON_PAYLOAD=$(cat <<EOF
 {
-    "status": "done",
+    "status": "$status",
     "random_id": "$RANDOM_UUID"
 }
 EOF
 )
    
-  RESPONSE=$(curl -s -o response.txt -w "%{http_code}" -L -X POST "$API_URL" --post301 --post302 \
-      -H "Content-Type: application/json" \
-      -d "$JSON_PAYLOAD")
-    
-  if [ "$RESPONSE" -ne 201 ] && [ "$RESPONSE" -ne 302 ]; then
-    msg_error "API request failed with HTTP code $RESPONSE"
-  fi
+   RESPONSE=$(curl -s -o response.txt -w "%{http_code}" -L -X POST "$API_URL" --post301 --post302 \
+        -H "Content-Type: application/json" \
+        -d "$JSON_PAYLOAD")
 
-   
+    if [ "$RESPONSE" -ne 201 ] && [ "$RESPONSE" -ne 302 ]; then
+        msg_error "API UPDATE request failed with HTTP code $RESPONSE"
+    fi
+
+   POST_UPDATE_DONE=true
 }
 
 diagnostics_check(){
@@ -1231,3 +1237,8 @@ EOF
     post_update_to_api
   fi
 }
+
+trap 'post_update_to_api "done"' EXIT
+trap 'post_update_to_api "failed"' SIGINT 
+trap 'post_update_to_api "failed"' SIGTERM
+
