@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { string } from "zod";
 import ApplicationChart from "../../components/ApplicationChart";
 
 interface DataModel {
@@ -35,9 +34,11 @@ const DataFetcher: React.FC = () => {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [sortConfig, setSortConfig] = useState<{ key: keyof DataModel | null, direction: 'ascending' | 'descending' }>({ key: 'id', direction: 'descending' });
-  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [itemsPerPage, setItemsPerPage] = useState(25);
   const [currentPage, setCurrentPage] = useState(1);
-  const [showChart, setShowChart] = useState<boolean>(false);
+  const [interval, setIntervalTime] = useState<number>(10); // Default interval 10 seconds
+  const [reloadInterval, setReloadInterval] = useState<NodeJS.Timeout | null>(null);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -117,9 +118,59 @@ const DataFetcher: React.FC = () => {
 
   const paginatedData = sortedData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
+  useEffect(() => {
+    const storedInterval = localStorage.getItem('reloadInterval');
+    if (storedInterval) {
+      setIntervalTime(Number(storedInterval));
+    }
+  }, []);
+
+  
+  useEffect(() => {
+    if (interval <= 10) { 
+      const newInterval = setInterval(() => {
+        window.location.reload();
+      }, 10000); 
+
+     
+      return () => clearInterval(newInterval);
+    } else {
+      const newInterval = setInterval(() => {
+        window.location.reload();
+      }, interval * 1000);
+    }
+
+  }, [interval]); 
+
+
+  useEffect(() => {
+    if (interval > 0) {
+      localStorage.setItem('reloadInterval', interval.toString());
+    } else {
+      localStorage.removeItem('reloadInterval');
+    }
+  }, [interval]);
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
+  var installingCounts: number = 0;
+  var failedCounts: number = 0;
+  var doneCounts: number = 0
+  var unknownCounts: number = 0;
+  data.forEach((item) => {
+    if (item.status === "installing") {
+      installingCounts += 1;
+    } else if (item.status === "failed") {
+      failedCounts += 1;
+    }
+    else if (item.status === "done") {
+      doneCounts += 1;
+    }
+    else {
+      unknownCounts += 1;
+    }
+  });
 
   return (
     <div className="p-6 mt-20">
@@ -160,10 +211,24 @@ const DataFetcher: React.FC = () => {
           />
           <label className="text-sm text-gray-600 mt-1 block">Set a end date</label>
         </div>
+     
+      <div className="mb-4 flex space-x-4">
+        <div>
+          <input
+            type="number"
+            value={interval}
+            onChange={e => setIntervalTime(Number(e.target.value))}
+            className="p-2 border"
+            placeholder="Interval (seconds)"
+          />
+          <label className="text-sm text-gray-600 mt-1 block">Set reload interval (0 for no reload)</label>
+        </div>
+        </div>
       </div>
       <ApplicationChart data={filteredData} />
       <div className="mb-4 flex justify-between items-center">
         <p className="text-lg font-bold">{filteredData.length} results found</p>
+        <p className="text-lg font">Status Legend: 🔄 installing {installingCounts} | ✔️ completetd {doneCounts} | ❌ failed {failedCounts} | ❓ unknown {unknownCounts}</p>
         <select value={itemsPerPage} onChange={handleItemsPerPageChange} className="p-2 border">
           <option value={25}>25</option>
           <option value={50}>50</option>
