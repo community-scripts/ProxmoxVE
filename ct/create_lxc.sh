@@ -115,7 +115,7 @@ msg_info "Creating Incus Container"
 incus create "${IMAGE_NAME}" "$HN" --network "$netflag" >/dev/null
 incus config set "$HN" limits.cpu="$CORE_COUNT" #>/dev/null
 incus config set "$HN" limits.memory="$RAM_SIZE"MiB #>/dev/null
-incus config set "$HN" environment.CACHER="$CACHER"
+incus config set "$HN" environment.CACHER="${CACHER:-no}"
 incus config set "$HN" environment.CACHER_IP="$CACHER_IP"
 incus config set "$HN" environment.tz="$tz"
 incus config set "$HN" environment.DISABLEIPV6="$DISABLEIPV6"
