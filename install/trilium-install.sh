@@ -22,8 +22,8 @@ msg_ok "Installed Dependencies"
 RELEASE=$(curl -s https://api.github.com/repos/TriliumNext/Notes/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 
 msg_info "Installing TriliumNext"
-wget -q https://github.com/TriliumNext/Notes/releases/download/${RELEASE}/TriliumNextNotes-${RELEASE}-server-linux-x64.tar.xz
-tar -xf TriliumNextNotes-${RELEASE}-server-linux-x64.tar.xz
+wget -q https://github.com/TriliumNext/Notes/releases/download/${RELEASE}/TriliumNextNotes-linux-x64-${RELEASE}.tar.xz
+tar -xf TriliumNextNotes-linux-x64-${RELEASE}.tar.xz
 mv trilium-linux-x64-server /opt/trilium
 msg_ok "Installed TriliumNext"
 
@@ -53,5 +53,5 @@ customize
 msg_info "Cleaning up"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
-rm -rf TriliumNextNotes-${RELEASE}-server-linux-x64.tar.xz
+rm -rf TriliumNextNotes-linux-x64-${RELEASE}.tar.xz
 msg_ok "Cleaned"
