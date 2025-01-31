@@ -153,3 +153,21 @@ codemods:
   args:
   - Proxmox Helper
   - Incus Helper
+- description: FE manifest
+  mod: sed
+  match: frontend/src/app/manifest.ts
+  args:
+  - Proxmox VE Helper-Scripts
+  - Incus Helper Scripts
+- description: FE manifest
+  mod: sed
+  match: frontend/src/app/layout.tsx
+  args:
+  - Proxmox VE Helper-Scripts
+  - Incus Helper Scripts
+- description: FE robots
+  mod: sed
+  match: frontend/src/app/layout.tsx
+  args:
+  - community-scripts.github.io
+  - bketelsen.github.io
