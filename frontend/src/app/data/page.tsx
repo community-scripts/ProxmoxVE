@@ -1,9 +1,33 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import ApplicationChart from "../../components/ApplicationChart";
+import ApplicationChart from "@/components/ApplicationChart";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { format } from "date-fns";
+import { Calendar as CalendarIcon } from "lucide-react";
+import React, { useCallback, useEffect, useState } from "react";
 
 interface DataModel {
   id: number;
@@ -40,23 +64,41 @@ const DataFetcher: React.FC = () => {
   const [reloadInterval, setReloadInterval] = useState<NodeJS.Timeout | null>(null);
 
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("https://api.htl-braunau.at/data/json");
-        if (!response.ok) throw new Error("Failed to fetch data: ${response.statusText}");
-        const result: DataModel[] = await response.json();
-        setData(result);
-      } catch (err) {
-        setError((err as Error).message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
+  const fetchData = useCallback(async () => {
+    try {
+      const response = await fetch("https://api.htl-braunau.at/data/json");
+      if (!response.ok) throw new Error(`Failed to fetch data: ${response.statusText}`);
+      const result: DataModel[] = await response.json();
+      setData(result);
+      setLoading(false);
+    } catch (err) {
+      setError((err as Error).message);
+      setLoading(false);
+    }
   }, []);
 
+  useEffect(() => {
+    fetchData();
+    const storedInterval = localStorage.getItem('reloadInterval');
+    if (storedInterval) {
+      setIntervalTime(Number(storedInterval));
+    }
+  }, [fetchData]);
+
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout | null = null;
+    
+    if (interval > 0) {
+      intervalId = setInterval(fetchData, Math.max(interval, 10) * 1000);
+      localStorage.setItem('reloadInterval', interval.toString());
+    } else {
+      localStorage.removeItem('reloadInterval');
+    }
+
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
+  }, [interval, fetchData]);
 
   const filteredData = data.filter(item => {
     const matchesSearchQuery = Object.values(item).some(value =>
@@ -111,203 +153,194 @@ const DataFetcher: React.FC = () => {
     return `${day}.${month}.${year} ${hours}:${minutes} ${timezoneOffset} GMT`;
   };
 
-  const handleItemsPerPageChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setItemsPerPage(Number(event.target.value));
-    setCurrentPage(1);
-  };
-
   const paginatedData = sortedData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-  useEffect(() => {
-    const storedInterval = localStorage.getItem('reloadInterval');
-    if (storedInterval) {
-      setIntervalTime(Number(storedInterval));
-    }
-  }, []);
+  const statusCounts = data.reduce((acc, item) => {
+    const status = item.status;
+    acc[status] = (acc[status] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
 
-  
-  useEffect(() => {
-    if (interval <= 10) { 
-      const newInterval = setInterval(() => {
-        window.location.reload();
-      }, 10000); 
-
-     
-      return () => clearInterval(newInterval);
-    } else {
-      const newInterval = setInterval(() => {
-        window.location.reload();
-      }, interval * 1000);
-    }
-
-  }, [interval]); 
-
-
-  useEffect(() => {
-    if (interval > 0) {
-      localStorage.setItem('reloadInterval', interval.toString());
-    } else {
-      localStorage.removeItem('reloadInterval');
-    }
-  }, [interval]);
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
-
-  var installingCounts: number = 0;
-  var failedCounts: number = 0;
-  var doneCounts: number = 0
-  var unknownCounts: number = 0;
-  data.forEach((item) => {
-    if (item.status === "installing") {
-      installingCounts += 1;
-    } else if (item.status === "failed") {
-      failedCounts += 1;
-    }
-    else if (item.status === "done") {
-      doneCounts += 1;
-    }
-    else {
-      unknownCounts += 1;
-    }
-  });
+  if (loading) return <div className="flex justify-center items-center h-screen">Loading...</div>;
+  if (error) return <div className="flex justify-center items-center h-screen text-red-500">Error: {error}</div>;
 
   return (
-    <div className="p-6 mt-20">
-      <h1 className="text-2xl font-bold mb-4 text-center">Created LXCs</h1>
-      <div className="mb-4 flex space-x-4">
-        <div>
-          <input
-            type="text"
-            placeholder="Search..."
-            value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
-            className="p-2 border"
-          />
-          <label className="text-sm text-gray-600 mt-1 block">Search by keyword</label>
-        </div>
-        <div>
-          <DatePicker
-            selected={startDate}
-            onChange={date => setStartDate(date)}
-            selectsStart
-            startDate={startDate}
-            endDate={endDate}
-            placeholderText="Start date"
-            className="p-2 border"
-          />
-          <label className="text-sm text-gray-600 mt-1 block">Set a start date</label>
-        </div>
+    <div className="container mx-auto p-6 pt-20 space-y-6">
+      <h1 className="text-3xl font-bold text-center">Created LXCs</h1>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Search</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Input
+              placeholder="Search..."
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+            />
+          </CardContent>
+        </Card>
 
-        <div>
-          <DatePicker
-            selected={endDate}
-            onChange={date => setEndDate(date)}
-            selectsEnd
-            startDate={startDate}
-            endDate={endDate}
-            placeholderText="End date"
-            className="p-2 border"
-          />
-          <label className="text-sm text-gray-600 mt-1 block">Set a end date</label>
-        </div>
-     
-      <div className="mb-4 flex space-x-4">
-        <div>
-          <input
-            type="number"
-            value={interval}
-            onChange={e => setIntervalTime(Number(e.target.value))}
-            className="p-2 border"
-            placeholder="Interval (seconds)"
-          />
-          <label className="text-sm text-gray-600 mt-1 block">Set reload interval (0 for no reload)</label>
-        </div>
-        </div>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Start Date</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" className="w-full justify-start text-left font-normal">
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {startDate ? format(startDate, "PPP") : "Pick a date"}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0">
+                <Calendar
+                  mode="single"
+                  selected={startDate || undefined}
+                  onSelect={(date: Date | undefined) => setStartDate(date || null)}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">End Date</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" className="w-full justify-start text-left font-normal">
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {endDate ? format(endDate, "PPP") : "Pick a date"}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0">
+                <Calendar
+                  mode="single"
+                  selected={endDate || undefined}
+                  onSelect={(date: Date | undefined) => setEndDate(date || null)}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Reload Interval</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Input
+              type="number"
+              value={interval}
+              onChange={e => setIntervalTime(Number(e.target.value))}
+              placeholder="Interval (seconds)"
+            />
+          </CardContent>
+        </Card>
       </div>
+
       <ApplicationChart data={filteredData} />
-      <div className="mb-4 flex justify-between items-center">
-        <p className="text-lg font-bold">{filteredData.length} results found</p>
-        <p className="text-lg font">Status Legend: 🔄 installing {installingCounts} | ✔️ completetd {doneCounts} | ❌ failed {failedCounts} | ❓ unknown {unknownCounts}</p>
-        <select value={itemsPerPage} onChange={handleItemsPerPageChange} className="p-2 border">
-          <option value={25}>25</option>
-          <option value={50}>50</option>
-          <option value={100}>100</option>
-          <option value={200}>200</option>
-        </select>
-      </div>
-      <div className="overflow-x-auto">
-        <div className="overflow-y-auto lg:overflow-y-visible">
-          <table className="min-w-full table-auto border-collapse">
-            <thead>
-              <tr>
-                <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('status')}>Status</th>
-                <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('nsapp')}>Application</th>
-                <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('os_type')}>OS</th>
-                <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('os_version')}>OS Version</th>
-                <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('disk_size')}>Disk Size</th>
-                <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('core_count')}>Core Count</th>
-                <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('ram_size')}>RAM Size</th>
-                <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('hn')}>Hostname</th>
-                <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('ssh')}>SSH</th>
-                <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('verbose')}>Verb</th>
-                <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('tags')}>Tags</th>
-                <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('method')}>Method</th>
-                <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('pve_version')}>PVE Version</th>
-                <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('created_at')}>Created At</th>
-              </tr>
-            </thead>
-            <tbody>
-              {paginatedData.map((item, index) => (
-                <tr key={index}>
-                  <td className="px-4 py-2 border-b">
-                    {item.status === "done" ? (
-                      "✔️"
-                    ) : item.status === "failed" ? (
-                      "❌"
-                    ) : item.status === "installing" ? (
-                      "🔄"  
-                    ) : (
-                      item.status
-                    )}
-                  </td>
-                  <td className="px-4 py-2 border-b">{item.nsapp}</td>
-                  <td className="px-4 py-2 border-b">{item.os_type}</td>
-                  <td className="px-4 py-2 border-b">{item.os_version}</td>
-                  <td className="px-4 py-2 border-b">{item.disk_size}</td>
-                  <td className="px-4 py-2 border-b">{item.core_count}</td>
-                  <td className="px-4 py-2 border-b">{item.ram_size}</td>
-                  <td className="px-4 py-2 border-b">{item.hn}</td>
-                  <td className="px-4 py-2 border-b">{item.ssh}</td>
-                  <td className="px-4 py-2 border-b">{item.verbose}</td>
-                  <td className="px-4 py-2 border-b">{item.tags.replace(/;/g, ' ')}</td>
-                  <td className="px-4 py-2 border-b">{item.method}</td>
-                  <td className="px-4 py-2 border-b">{item.pve_version}</td>
-                  <td className="px-4 py-2 border-b">{formatDate(item.created_at)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+
+      <div className="flex justify-between items-center">
+        <p className="text-lg font-medium">{filteredData.length} results found</p>
+        <div className="flex gap-2 items-center">
+          <span>🔄 Installing: {statusCounts.installing || 0}</span>
+          <span>✔️ Completed: {statusCounts.done || 0}</span>
+          <span>❌ Failed: {statusCounts.failed || 0}</span>
+          <span>❓ Unknown: {statusCounts.unknown || 0}</span>
         </div>
+        <Select value={itemsPerPage.toString()} onValueChange={(value) => setItemsPerPage(Number(value))}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Items per page" />
+          </SelectTrigger>
+          <SelectContent>
+            {[25, 50, 100, 200].map(value => (
+              <SelectItem key={value} value={value.toString()}>
+                {value} items
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
-      <div className="mt-4 flex justify-between items-center">
-        <button
+
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('status')}>Status</TableHead>
+              <TableHead className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('nsapp')}>Application</TableHead>
+              <TableHead className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('os_type')}>OS</TableHead>
+              <TableHead className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('os_version')}>OS Version</TableHead>
+              <TableHead className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('disk_size')}>Disk Size</TableHead>
+              <TableHead className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('core_count')}>Core Count</TableHead>
+              <TableHead className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('ram_size')}>RAM Size</TableHead>
+              <TableHead className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('hn')}>Hostname</TableHead>
+              <TableHead className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('ssh')}>SSH</TableHead>
+              <TableHead className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('verbose')}>Verb</TableHead>
+              <TableHead className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('tags')}>Tags</TableHead>
+              <TableHead className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('method')}>Method</TableHead>
+              <TableHead className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('pve_version')}>PVE Version</TableHead>
+              <TableHead className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('created_at')}>Created At</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {paginatedData.map((item, index) => (
+              <TableRow key={index}>
+                <TableCell className="px-4 py-2 border-b">{item.status === "done" ? (
+                  "✔️"
+                ) : item.status === "failed" ? (
+                  "❌"
+                ) : item.status === "installing" ? (
+                  "🔄"  
+                ) : (
+                  item.status
+                )}</TableCell>
+                <TableCell className="px-4 py-2 border-b">{item.nsapp}</TableCell>
+                <TableCell className="px-4 py-2 border-b">{item.os_type}</TableCell>
+                <TableCell className="px-4 py-2 border-b">{item.os_version}</TableCell>
+                <TableCell className="px-4 py-2 border-b">{item.disk_size}</TableCell>
+                <TableCell className="px-4 py-2 border-b">{item.core_count}</TableCell>
+                <TableCell className="px-4 py-2 border-b">{item.ram_size}</TableCell>
+                <TableCell className="px-4 py-2 border-b">{item.hn}</TableCell>
+                <TableCell className="px-4 py-2 border-b">{item.ssh}</TableCell>
+                <TableCell className="px-4 py-2 border-b">{item.verbose}</TableCell>
+                <TableCell className="px-4 py-2 border-b">{item.tags.replace(/;/g, ' ')}</TableCell>
+                <TableCell className="px-4 py-2 border-b">{item.method}</TableCell>
+                <TableCell className="px-4 py-2 border-b">{item.pve_version}</TableCell>
+                <TableCell className="px-4 py-2 border-b">{formatDate(item.created_at)}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
+      <div className="flex items-center justify-center space-x-2">
+        <Button
+          variant="outline"
           onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
           disabled={currentPage === 1}
-          className="p-2 border"
         >
           Previous
-        </button>
-        <span>Page {currentPage}</span>
-        <button
+        </Button>
+        <span className="text-sm">
+          Page {currentPage} of {Math.ceil(sortedData.length / itemsPerPage)}
+        </span>
+        <Button
+          variant="outline"
           onClick={() => setCurrentPage(prev => (prev * itemsPerPage < sortedData.length ? prev + 1 : prev))}
           disabled={currentPage * itemsPerPage >= sortedData.length}
-          className="p-2 border"
         >
           Next
-        </button>
+        </Button>
       </div>
     </div>
   );
 };
+
 export default DataFetcher;
