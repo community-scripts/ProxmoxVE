@@ -108,11 +108,11 @@ export default function Page() {
 							<div className="max-w-2xl gap-2 flex flex-col text-center sm:text-lg text-sm leading-relaxed tracking-tight text-muted-foreground md:text-xl">
 								<p>
 									We are a community-driven initiative that simplifies the setup
-									of Proxmox Virtual Environment (VE).
+									of Incus.
 								</p>
 								<p>
 									With 200+ scripts to help you manage your{" "}
-									<b>Proxmox VE environment</b>. Whether you&#39;re a seasoned
+									<b>Incus environment</b>. Whether you&#39;re a seasoned
 									user or a newcomer, we&#39;ve got you covered.
 								</p>
 							</div>
