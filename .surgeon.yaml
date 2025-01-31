@@ -225,3 +225,9 @@ codemods:
   args:
   - https://github.com/community-scripts/
   - https://github.com/bketelsen/
+- description: FE Star
+  mod: sed
+  match: frontend/src/components/ui/star-on-github-button.tsx
+  args:
+  - community-scripts
+  - bketelsen
