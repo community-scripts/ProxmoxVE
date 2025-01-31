@@ -32,7 +32,7 @@
     },
     "notes": [
         {
-            "text": "Execute within an existing LXC Console",
+            "text": "Execute within an existing Incus Container",
             "type": "warning"
         }
     ]
