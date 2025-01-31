@@ -10,7 +10,9 @@ install_script() {
   # if systemctl is-active -q ping-instances.service; then
   #   systemctl -q stop ping-instances.service
   # fi
-  NEXTID=100
+
+
+  NEXTID=$(uuidgen | cut -c1-6)
   timezone=$(cat /etc/timezone)
   header_info
   while true; do

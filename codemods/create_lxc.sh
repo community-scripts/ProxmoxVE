@@ -105,6 +105,8 @@ function msg_error() {
   # echo export CORE_COUNT="$CORE_COUNT" >>install.func // cores
   # echo export RAM_SIZE="$RAM_SIZE" >>install.func // memory
 
+# incus config set caddy environment.BRIAN=bob
+
 IMAGE_NAME="images:${PCT_OSTYPE}/${PCT_OSVERSION:-}"
 netflag="${BRG}"
 

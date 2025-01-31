@@ -52,6 +52,12 @@ codemods:
   args:
   - BRG="vmbr0"
   - BRG="incusbr0"
+- description: Default hostname
+  mod: sed
+  match: misc/build.func
+  args:
+  - HN=$NSAPP
+  - HN="${NSAPP}-${CT_ID}"
 - description: Source Install
   mod: sed
   match: install/*.sh
