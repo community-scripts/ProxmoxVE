@@ -44,10 +44,10 @@ function Navbar() {
 								unoptimized
 								width={18}
 								alt="logo"
-								src="/ProxmoxVE/logo.png"
+								src="/IncusScripts/logo.png"
 								className=""
 							/>
-							<span className="hidden md:block">Proxmox VE Helper-Scripts</span>
+							<span className="hidden md:block">Incus Helper-Scripts</span>
 						</Link>
 						<div className="flex gap-2">
 							<CommandMenu />

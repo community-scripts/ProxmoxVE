@@ -8,7 +8,7 @@ export default function Footer() {
         <div className="mx-6 w-full max-w-7xl text-xs sm:text-sm text-muted-foreground">
           Website built by the community. The source code is avaliable on{" "}
           <Link
-            href={`https://github.com/community-scripts/${basePath}`}
+            href={`https://github.com/bketelsen/${basePath}`}
             target="_blank"
             rel="noreferrer"
             className="font-semibold underline-offset-2 duration-300 hover:underline"
