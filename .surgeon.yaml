@@ -123,3 +123,9 @@ codemods:
   args:
   - install_script
   - codemods/install_script.sh
+- description: FE config
+  mod: sed
+  match: frontend/next.config.js
+  args:
+  - ProxmoxVE
+  - IncusScripts
