@@ -65,6 +65,12 @@ codemods:
   args:
   - https://github.com/community-scripts/ProxmoxVE/raw/main/ct/${app}.sh
   - https://github.com/bketelsen/IncusScripts/raw/main/ct/${app}.sh
+- description: header location
+  mod: sed
+  match: misc/build.func
+  args:
+  - /usr/local/community-scripts/headers
+  - $HOME/community-scripts/headers
 - description: Header Updates
   mod: sed
   match: misc/*.func
