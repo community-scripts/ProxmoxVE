@@ -7,10 +7,10 @@ export const generateStaticParams = () => {
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Proxmox VE Helper-Scripts",
-    short_name: "Proxmox VE Helper-Scripts",
+    name: "Incus Helper Scripts",
+    short_name: "Incus Helper Scripts",
     description:
-      "A Re-designed Front-end for the Proxmox VE Helper-Scripts Repository. Featuring over 200+ scripts to help you manage your Proxmox VE environment.",
+      "A Re-designed Front-end for the Incus Helper Scripts Repository. Featuring over 200+ scripts to help you manage your Proxmox VE environment.",
     theme_color: "#030712",
     background_color: "#030712",
     display: "standalone",

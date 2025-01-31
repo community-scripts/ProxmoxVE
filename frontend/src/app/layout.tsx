@@ -11,9 +11,9 @@ import React from "react";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Proxmox VE Helper-Scripts",
+  title: "Incus Helper Scripts",
   generator: "Next.js",
-  applicationName: "Proxmox VE Helper-Scripts",
+  applicationName: "Incus Helper Scripts",
   referrer: "origin-when-cross-origin",
   keywords: [
     "Proxmox VE",
@@ -28,22 +28,22 @@ export const metadata = {
   creator: "Bram Suurd",
   publisher: "Bram Suurd",
   description:
-    "A Front-end for the Proxmox VE Helper-Scripts (Community) Repository. Featuring over 200+ scripts to help you manage your Proxmox VE environment.",
+    "A Front-end for the Incus Helper Scripts (Community) Repository. Featuring over 200+ scripts to help you manage your Proxmox VE environment.",
   favicon: "/app/favicon.ico",
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
-  metadataBase: new URL(`https://community-scripts.github.io/${basePath}/`),
+  metadataBase: new URL(`https://bketelsen.github.io/${basePath}/`),
   openGraph: {
-    title: "Proxmox VE Helper-Scripts",
+    title: "Incus Helper Scripts",
     description:
-      "A Front-end for the Proxmox VE Helper-Scripts (Community) Repository. Featuring over 200+ scripts to help you manage your Proxmox VE environment.",
+      "A Front-end for the Incus Helper Scripts (Community) Repository. Featuring over 200+ scripts to help you manage your Proxmox VE environment.",
     url: "/defaultimg.png",
     images: [
       {
-        url: `https://community-scripts.github.io/${basePath}/defaultimg.png`,
+        url: `https://bketelsen.github.io/${basePath}/defaultimg.png`,
       },
     ],
     locale: "en_US",
