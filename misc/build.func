@@ -190,9 +190,9 @@ maxkeys_check() {
   echo -e "${CM}${GN} All kernel key limits are within safe thresholds.${CL}"
 }
 
-# This function checks the system architecture and exits if it's not "amd64".
+# This function checks the system architecture and exits if it's not "x86_64".
 arch_check() {
-  if [ "$(dpkg --print-architecture)" != "amd64" ]; then
+  if [ "$(uname -m)" != "x86_64" ]; then
     echo -e "\n ${INFO}${YWB}This script will not work with PiMox! \n"
     echo -e "\n ${YWB}Visit https://github.com/asylumexp/Proxmox for ARM64 support. \n"
     echo -e "Exiting..."
