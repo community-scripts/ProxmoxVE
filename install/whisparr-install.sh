@@ -5,7 +5,7 @@
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
-source /install.func
+source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
 catch_errors
@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt-get install -y curl
 $STD apt-get install -y sudo
 $STD apt-get install -y mc
-$STD apt-get install -y sqlite3 
+$STD apt-get install -y sqlite3
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Whisparr"

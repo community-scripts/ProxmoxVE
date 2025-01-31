@@ -5,7 +5,7 @@
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
-source /install.func
+source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
 catch_errors
@@ -221,7 +221,7 @@ EOF
 sed -i -e 's/rights="none" pattern="PDF"/rights="read|write" pattern="PDF"/' /etc/ImageMagick-6/policy.xml
 
 systemctl daemon-reload
-$STD systemctl enable -q --now paperless-webserver paperless-scheduler paperless-task-queue paperless-consumer 
+$STD systemctl enable -q --now paperless-webserver paperless-scheduler paperless-task-queue paperless-consumer
 msg_ok "Created Services"
 
 motd_ssh

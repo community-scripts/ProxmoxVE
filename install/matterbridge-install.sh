@@ -7,7 +7,7 @@
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/Luligu/matterbridge/
 
-source /install.func
+source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
 catch_errors
@@ -33,7 +33,7 @@ $STD apt-get update
 $STD apt-get install -y nodejs
 msg_ok "Installed Node.js"
 
-msg_info "Install Matterbridge" 
+msg_info "Install Matterbridge"
 mkdir -p /root/Matterbridge
 $STD npm install -g matterbridge
 msg_ok "Installed Matterbridge"

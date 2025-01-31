@@ -5,7 +5,7 @@
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
-source /install.func
+source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
 catch_errors
@@ -50,7 +50,7 @@ RestartSec=2s
 Type=simple
 User=git
 Group=git
-WorkingDirectory=/var/lib/forgejo/ 
+WorkingDirectory=/var/lib/forgejo/
 ExecStart=/usr/local/bin/forgejo web --config /etc/forgejo/app.ini
 Restart=always
 Environment=USER=git HOME=/home/git GITEA_WORK_DIR=/var/lib/forgejo

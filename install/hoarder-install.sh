@@ -5,7 +5,7 @@
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
-source /install.func
+source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
 catch_errors
@@ -96,7 +96,7 @@ BROWSER_WEB_URL="http://127.0.0.1:9222"
 
 # You can change the models used by uncommenting the following lines, and changing them according to your needs:
 # INFERENCE_TEXT_MODEL="gpt-4o-mini"
-# INFERENCE_IMAGE_MODEL="gpt-4o-mini" 
+# INFERENCE_IMAGE_MODEL="gpt-4o-mini"
 EOF
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Installed Hoarder"

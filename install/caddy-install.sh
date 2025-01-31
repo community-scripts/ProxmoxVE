@@ -4,7 +4,7 @@
 # Author: tteck (tteckster) | Co-Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
-source /install.func
+source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
 catch_errors
@@ -42,7 +42,7 @@ if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
   set -o pipefail
   rm -rf /opt/go*
   msg_ok "Installed Golang"
-	
+
   msg_info "Setup xCaddy"
   cd /opt
   RELEASE=$(curl -s https://api.github.com/repos/caddyserver/xcaddy/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')

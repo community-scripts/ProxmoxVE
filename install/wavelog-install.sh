@@ -6,7 +6,7 @@
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/wavelog/wavelog
 
-source /install.func
+source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
 catch_errors
@@ -74,7 +74,7 @@ cat <<EOF >/etc/apache2/sites-available/wavelog.conf
 </VirtualHost>
 EOF
 $STD a2ensite wavelog.conf
-$STD a2dissite 000-default.conf  
+$STD a2dissite 000-default.conf
 $STD systemctl reload apache2
 msg_ok "Created Service"
 

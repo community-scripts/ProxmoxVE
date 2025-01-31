@@ -5,7 +5,7 @@
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
-source /install.func
+source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
 catch_errors
@@ -43,8 +43,8 @@ host = 8.8.8.8
 ++ Cloudflare
 title = Cloudflare
 host = 1.1.1.1
-++ Quad9  
-title = Quad9 
+++ Quad9
+title = Quad9
 host = 9.9.9.9
 ++ OpenDNS
 title = OpenDNS

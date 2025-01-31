@@ -5,7 +5,7 @@
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
 
-source /install.func
+source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
 catch_errors
@@ -36,7 +36,7 @@ server {
   server_name localhost;
   root /usr/share/nginx/html;
   index index.html;
-  
+
   location / {
       try_files $uri $uri/ /index.html;
   }

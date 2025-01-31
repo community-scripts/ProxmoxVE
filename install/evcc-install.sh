@@ -7,7 +7,7 @@
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/evcc-io/evcc
 
-source /install.func
+source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
 catch_errors
@@ -21,12 +21,12 @@ $STD apt-get install -y \
   sudo \
   mc \
   lsb-release \
-  gpg 
+  gpg
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up evcc Repository"
-curl -fsSL https://dl.evcc.io/public/evcc/stable/gpg.EAD5D0E07B0EC0FD.key | gpg --dearmor -o /etc/apt/keyrings/evcc-stable.gpg 
-echo "deb [signed-by=/etc/apt/keyrings/evcc-stable.gpg] https://dl.evcc.io/public/evcc/stable/deb/debian $(lsb_release -cs) main" >/etc/apt/sources.list.d/evcc-stable.list 
+curl -fsSL https://dl.evcc.io/public/evcc/stable/gpg.EAD5D0E07B0EC0FD.key | gpg --dearmor -o /etc/apt/keyrings/evcc-stable.gpg
+echo "deb [signed-by=/etc/apt/keyrings/evcc-stable.gpg] https://dl.evcc.io/public/evcc/stable/deb/debian $(lsb_release -cs) main" >/etc/apt/sources.list.d/evcc-stable.list
 $STD apt update
 msg_ok "evcc Repository setup sucessfully"
 

@@ -5,7 +5,7 @@
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
-source /install.func
+source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
 catch_errors
@@ -52,7 +52,7 @@ else
 fi
 
 msg_info "Start Service"
-systemctl enable -q --now mssql-server 
+systemctl enable -q --now mssql-server
 msg_ok "Service started"
 
 motd_ssh

@@ -7,7 +7,7 @@
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
 
-source /install.func
+source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
 catch_errors
@@ -24,7 +24,7 @@ $STD apt-get install -y \
   mc \
   nginx \
   php8.2-{bcmath,common,ctype,curl,fileinfo,fpm,gd,iconv,intl,mbstring,mysql,soap,xml,xsl,zip,cli} \
-  mariadb-server 
+  mariadb-server
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up database"
@@ -76,13 +76,13 @@ cat <<EOF >/etc/nginx/conf.d/snipeit.conf
 server {
         listen 80;
         root /opt/snipe-it/public;
-        server_name $IPADDRESS; 
+        server_name $IPADDRESS;
         index index.php;
-                
+
         location / {
                 try_files \$uri \$uri/ /index.php?\$query_string;
         }
-        
+
         location ~ \.php\$ {
                 include fastcgi.conf;
                 include snippets/fastcgi-php.conf;

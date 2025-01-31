@@ -4,7 +4,7 @@
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
-source /install.func
+source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
 catch_errors
@@ -147,7 +147,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -rf ~/mysql-connector-java-8.0.26{,.tar.gz} 
+rm -rf ~/mysql-connector-java-8.0.26{,.tar.gz}
 rm -rf ~/guacamole-auth-jdbc-1.5.5{,.tar.gz}
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean

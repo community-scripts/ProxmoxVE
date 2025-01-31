@@ -5,7 +5,7 @@
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
-source /install.func
+source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
 catch_errors
@@ -78,7 +78,7 @@ cat <<EOF >/etc/apache2/sites-available/firefly.conf
         AllowOverride All
         Require all granted
     </Directory>
-  
+
     ErrorLog /var/log/apache2/error.log
     CustomLog /var/log/apache2/access.log combined
 
@@ -87,7 +87,7 @@ EOF
 $STD a2enmod php8.4
 $STD a2enmod rewrite
 $STD a2ensite firefly.conf
-$STD a2dissite 000-default.conf  
+$STD a2dissite 000-default.conf
 $STD systemctl reload apache2
 msg_ok "Created Service"
 

@@ -7,7 +7,7 @@
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/gnmyt/myspeed
 
-source /install.func
+source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
 catch_errors
@@ -58,7 +58,7 @@ ExecStart=/usr/bin/node server
 Restart=always
 User=root
 Environment=NODE_ENV=production
-WorkingDirectory=/opt/myspeed 
+WorkingDirectory=/opt/myspeed
 
 [Install]
 WantedBy=multi-user.target

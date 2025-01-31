@@ -6,7 +6,7 @@
 # Source: https://docs.2fauth.app/
 
 # Import Functions und Setup
-source /install.func
+source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
 catch_errors

@@ -5,7 +5,7 @@
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
-source /install.func
+source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
 catch_errors
@@ -19,7 +19,7 @@ $STD apt-get install -y \
   sudo \
   mc \
   gpg \
-  postgresql 
+  postgresql
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up PostgreSQL"

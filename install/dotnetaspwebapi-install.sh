@@ -4,7 +4,7 @@
 # Author: Kristian Skov
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
-source /install.func
+source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
 catch_errors
@@ -36,7 +36,7 @@ FTP_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 usermod --password $(echo ${FTP_PASS} | openssl passwd -1 -stdin) ftpuser
 mkdir -p /var/www/html
 usermod -d /var/www/html ftp
-usermod -d /var/www/html ftpuser 
+usermod -d /var/www/html ftpuser
 chown ftpuser /var/www/html
 
 sed -i "s|#write_enable=YES|write_enable=YES|g" /etc/vsftpd.conf

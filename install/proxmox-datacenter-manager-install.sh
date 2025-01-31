@@ -5,7 +5,7 @@
 # License: MIT
 # Source: Proxmox Server Solution GmbH
 
-source /install.func
+source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
 catch_errors
@@ -18,7 +18,7 @@ $STD apt-get install -y \
     curl \
     sudo \
     gpg \
-    mc 
+    mc
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Proxmox Datacenter Manager"

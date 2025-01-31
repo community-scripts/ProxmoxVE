@@ -5,7 +5,7 @@
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
-source /install.func
+source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
 catch_errors
@@ -38,7 +38,7 @@ msg_ok "Installed WGDashboard"
 
 msg_info "Create Example Config for WGDashboard"
 private_key=$(wg genkey)
-cat <<EOF >/etc/wireguard/wg0.conf 
+cat <<EOF >/etc/wireguard/wg0.conf
 [Interface]
 PrivateKey = ${private_key}
 Address = 10.0.0.1/24

@@ -5,7 +5,7 @@
 # License: MIT | https://github.com/tteck/Proxmox/raw/main/LICENSE
 # Source: https://github.com/NodeBB/NodeBB
 
-source /install.func
+source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
 catch_errors
@@ -44,7 +44,7 @@ msg_info "Installing MongoDB"
 $STD apt-get install -y mongodb-org
 systemctl enable -q --now mongod
 sleep 10 # MongoDB needs some secounds to start, if not sleep it collide with following mongosh
-msg_ok "Installed MongoDB"   
+msg_ok "Installed MongoDB"
 
 msg_info "Configure MongoDB"
 MONGO_ADMIN_USER="admin"
@@ -85,9 +85,9 @@ sed -i 's/bindIp: 127.0.0.1/bindIp: 0.0.0.0/' /etc/mongod.conf
 sed -i '/security:/d' /etc/mongod.conf
 bash -c 'echo -e "\nsecurity:\n  authorization: enabled" >> /etc/mongod.conf'
 systemctl restart mongod
-msg_ok "MongoDB successfully configurated" 
+msg_ok "MongoDB successfully configurated"
 
-msg_info "Install NodeBB" 
+msg_info "Install NodeBB"
 cd /opt
 RELEASE=$(curl -s https://api.github.com/repos/NodeBB/NodeBB/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 wget -q "https://github.com/NodeBB/NodeBB/archive/refs/tags/v${RELEASE}.zip"

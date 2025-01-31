@@ -6,7 +6,7 @@
 # Source: https://ghost.org/
 
 # Import Functions und Setup
-source /install.func
+source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
 catch_errors

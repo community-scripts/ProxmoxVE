@@ -7,7 +7,7 @@
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/usememos/memos
 
-source /install.func
+source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
 catch_errors
@@ -52,7 +52,7 @@ msg_ok "Installed Golang"
 msg_info "Installing Memos (Patience)"
 mkdir -p /opt/memos_data
 $STD sudo git clone https://github.com/usememos/memos.git /opt/memos
-cd /opt/memos/web 
+cd /opt/memos/web
 $STD pnpm i --frozen-lockfile
 $STD pnpm build
 cd /opt/memos

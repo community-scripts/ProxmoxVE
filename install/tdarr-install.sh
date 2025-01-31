@@ -5,7 +5,7 @@
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
-source /install.func
+source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
 catch_errors
@@ -62,7 +62,7 @@ Group=root
 
 Type=simple
 WorkingDirectory=/opt/tdarr/Tdarr_Server
-ExecStartPre=/opt/tdarr/Tdarr_Updater                  
+ExecStartPre=/opt/tdarr/Tdarr_Updater
 ExecStart=/opt/tdarr/Tdarr_Server/Tdarr_Server
 TimeoutStopSec=20
 KillMode=process
