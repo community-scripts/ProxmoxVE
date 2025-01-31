@@ -195,3 +195,33 @@ codemods:
   args:
   - ProxmoxVE
   - IncusScripts
+- description: FE Navbar
+  mod: sed
+  match: frontend/src/components/Navbar.tsx
+  args:
+  - Proxmox VE Helper-Scripts
+  - Incus Helper-Scripts
+- description: FE Navbar
+  mod: sed
+  match: frontend/src/components/Navbar.tsx
+  args:
+  - /ProxmoxVE/logo.png
+  - /IncusScripts/logo.png
+- description: FE Footer
+  mod: sed
+  match: frontend/src/components/Footer.tsx
+  args:
+  - https://github.com/community-scripts/
+  - https://github.com/bketelsen/
+- description: FE Command Menu
+  mod: sed
+  match: frontend/src/components/CommandMenu.tsx
+  args:
+  - LXC
+  - CONTAINER
+- description: FE Footer
+  mod: sed
+  match: frontend/src/config/siteConfig.tsx
+  args:
+  - https://github.com/community-scripts/
+  - https://github.com/bketelsen/
