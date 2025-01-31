@@ -21,6 +21,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### Changed
 
+### ✨ New Scripts
+
+- New Script: Paymenter [@opastorello](https://github.com/opastorello) ([#1827](https://github.com/community-scripts/ProxmoxVE/pull/1827))
+
 ### 🚀 Updated Scripts
 
 - [Fix] Alpine-IT-Tools, add missing ssh package for root ssh access [@CrazyWolf13](https://github.com/CrazyWolf13) ([#1891](https://github.com/community-scripts/ProxmoxVE/pull/1891))
@@ -28,7 +32,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🌐 Website
 
-- feat: enhance DataFetcher with better UI components and add reactive data fetching intervals [@BramSuurdje](https://github.com/BramSuurdje) ([#1902](https://github.com/community-scripts/ProxmoxVE/pull/1902))
+- [Website] Enhance DataFetcher with better UI components and add reactive data fetching intervals [@BramSuurdje](https://github.com/BramSuurdje) ([#1902](https://github.com/community-scripts/ProxmoxVE/pull/1902))
 - [Website] Update /data/page.tsx [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1900](https://github.com/community-scripts/ProxmoxVE/pull/1900))
 
 ## 2025-01-30
