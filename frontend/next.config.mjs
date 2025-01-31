@@ -15,11 +15,11 @@ const nextConfig = {
   },
 
   env: {
-    BASE_PATH: "ProxmoxVE",
+    BASE_PATH: "IncusScripts",
   },
 
   output: "export",
-  basePath: `/ProxmoxVE`,
+  basePath: `/IncusScripts`,
 };
 
 export default nextConfig;
