@@ -129,3 +129,27 @@ codemods:
   args:
   - ProxmoxVE
   - IncusScripts
+- description: FE sitemap
+  mod: sed
+  match: frontend/src/app/sitemap.ts
+  args:
+  - community-scripts.github.io
+  - bketelsen.github.io
+- description: FE robots
+  mod: sed
+  match: frontend/src/app/robots.ts
+  args:
+  - community-scripts.github.io
+  - bketelsen.github.io
+- description: FE github
+  mod: sed
+  match: frontend/src/app/page.tsx
+  args:
+  - github.com/community-scripts
+  - github.com/bketelsen
+- description: FE title
+  mod: sed
+  match: frontend/src/app/page.tsx
+  args:
+  - Proxmox Helper
+  - Incus Helper
