@@ -4,7 +4,7 @@ import type { MetadataRoute } from "next";
 export const dynamic = "force-static";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  let domain = "community-scripts.github.io";
+  let domain = "bketelsen.github.io";
   let protocol = "https";
   return [
     {

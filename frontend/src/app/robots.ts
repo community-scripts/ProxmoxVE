@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: `https://community-scripts.github.io/${basePath}/sitemap.xml`,
+    sitemap: `https://bketelsen.github.io/${basePath}/sitemap.xml`,
   };
 }

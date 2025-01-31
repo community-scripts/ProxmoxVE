@@ -88,12 +88,12 @@ export default function Page() {
 									</Button>
 									<Button className="w-full" asChild>
 										<a
-											href={`https://github.com/community-scripts/${basePath}`}
+											href={`https://github.com/bketelsen/${basePath}`}
 											target="_blank"
 											rel="noopener noreferrer"
 											className="flex items-center justify-center"
 										>
-											<ExternalLink className="mr-2 h-4 w-4" /> Proxmox Helper
+											<ExternalLink className="mr-2 h-4 w-4" /> Incus Helper
 											Scripts
 										</a>
 									</Button>
