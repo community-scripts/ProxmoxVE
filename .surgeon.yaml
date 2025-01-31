@@ -226,3 +226,9 @@ codemods:
   args:
   - community-scripts
   - bketelsen
+- description: JSON Execute
+  mod: sed
+  match: json/*.json
+  args:
+  - Execute within an existing LXC Console
+  - Execute within an existing Incus Container
