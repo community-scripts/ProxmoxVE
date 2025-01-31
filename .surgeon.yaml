@@ -232,3 +232,15 @@ codemods:
   args:
   - Execute within an existing LXC Console
   - Execute within an existing Incus Container
+- description: FE Landing
+  mod: sed
+  match: frontend/src/app/page.tsx
+  args:
+  - Proxmox Virtual Environment (VE)
+  - Incus
+- description: FE Landing
+  mod: sed
+  match: frontend/src/app/page.tsx
+  args:
+  - Proxmox VE environment
+  - Incus environment
