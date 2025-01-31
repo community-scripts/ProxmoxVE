@@ -28,6 +28,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🌐 Website
 
+- feat: enhance DataFetcher with better UI components and add reactive data fetching intervals [@BramSuurdje](https://github.com/BramSuurdje) ([#1902](https://github.com/community-scripts/ProxmoxVE/pull/1902))
 - [Website] Update /data/page.tsx [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1900](https://github.com/community-scripts/ProxmoxVE/pull/1900))
 
 ## 2025-01-30
