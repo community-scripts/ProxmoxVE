@@ -36,6 +36,9 @@ build_container() {
   echo export PCT_OSTYPE="$var_os"  >>install.func
   echo export PCT_OSVERSION="$var_version" >>install.func
   echo export PCT_DISK_SIZE="$DISK_SIZE"  >>install.func
+  echo export HN="$HN" >>install.func
+  echo export CORE_COUNT="$CORE_COUNT" >>install.func
+  echo export RAM_SIZE="$RAM_SIZE" >>install.func
   # echo export PCT_OPTIONS="
   #   -features $FEATURES
   #   -hostname $HN

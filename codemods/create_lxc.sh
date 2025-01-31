@@ -85,12 +85,31 @@ function msg_error() {
   echo -e "${BFR}${CROSS}${RD}${msg}${CL}"
 }
 
+# export CACHER=
+# export CACHER_IP=
+# export tz=Etc/UTC
+# export DISABLEIPV6=no
+# export APPLICATION=Docker
+# export app=docker
+# export BRG=br0
+# export PASSWORD=
+# export VERBOSE=yes
+# export SSH_ROOT=no
+# export SSH_AUTHORIZED_KEY=
+# export CTID=100
+# export CTTYPE=1
+# export PCT_OSTYPE=debian
+# export PCT_OSVERSION=12
+# export PCT_DISK_SIZE=4
+  # echo export HN="$HN" >>install.func // hostname
+  # echo export CORE_COUNT="$CORE_COUNT" >>install.func // cores
+  # echo export RAM_SIZE="$RAM_SIZE" >>install.func // memory
 
-env > /envdump.txt
 IMAGE_NAME="images:${PCT_OSTYPE}/${PCT_OSVERSION:-}"
 netflag="${BRG}"
 
 # Create container
 msg_info "Creating Incus Container"
 incus create "${IMAGE_NAME}" "$app" --network "$netflag" >/dev/null
+incus config set "$app" limits.cpu="$CORE_COUNT" #>/dev/null
 msg_ok "Incus Container ${BL}${app}${CL} ${GN}was successfully created."
