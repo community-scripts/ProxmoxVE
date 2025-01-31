@@ -235,9 +235,9 @@ update_motd_ip() {
 get_header() {
   local app_name=$(echo ${APP,,} | tr -d ' ') 
   local header_url="https://github.com/bketelsen/IncusScripts/raw/main/ct/headers/${app_name}"
-  local local_header_path="/usr/local/community-scripts/headers/${app_name}"
+  local local_header_path="$HOME/community-scripts/headers/${app_name}"
 
-  mkdir -p "/usr/local/community-scripts/headers"
+  mkdir -p "$HOME/community-scripts/headers"
 
   # Check if local file already present
   if [ ! -f "$local_header_path" ]; then
