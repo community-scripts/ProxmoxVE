@@ -35,22 +35,22 @@ function update_script() {
     RELEASE=$(curl -s https://api.github.com/repos/TriliumNext/Notes/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 
     msg_info "Stopping ${APP}"
-    systemctl stop trilium.service
+    systemctl stop trilium
     sleep 1
     msg_ok "Stopped ${APP}"
 
     msg_info "Updating to ${RELEASE}"
-    wget -q https://github.com/TriliumNext/Notes/releases/download/${RELEASE}/TriliumNextNotes-${RELEASE}-server-linux-x64.tar.xz
-    tar -xf TriliumNextNotes-${RELEASE}-server-linux-x64.tar.xz
+    wget -q https://github.com/TriliumNext/Notes/releases/download/${RELEASE}/TriliumNextNotes-linux-x64-${RELEASE}.tar.xz
+    tar -xf TriliumNextNotes-linux-x64-${RELEASE}.tar.xz
     cp -r trilium-linux-x64-server/* /opt/trilium/
     msg_ok "Updated to ${RELEASE}"
 
     msg_info "Cleaning up"
-    rm -rf TriliumNextNotes-${RELEASE}-server-linux-x64.tar.xz trilium-linux-x64-server
+    rm -rf TriliumNextNotes-linux-x64-${RELEASE}.tar.xz trilium-linux-x64-server
     msg_ok "Cleaned"
 
     msg_info "Starting ${APP}"
-    systemctl start trilium.service
+    systemctl start trilium
     sleep 1
     msg_ok "Started ${APP}"
     msg_ok "Updated Successfully"

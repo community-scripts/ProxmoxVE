@@ -17,6 +17,7 @@ msg_info "Installing Dependencies"
 $STD apk add \
   curl \
   mc \
+  openssh \
   nginx \
   unzip
 msg_ok "Installed Dependencies"
