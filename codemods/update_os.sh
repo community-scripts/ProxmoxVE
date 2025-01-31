@@ -15,6 +15,6 @@ EOF
   $STD apt-get update
   $STD apt-get -o Dpkg::Options::="--force-confold" -y dist-upgrade
   rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
-  $STD apt-get install -y wget
+  $STD apt-get install -y wget logrotate
   msg_ok "Updated Container OS"
 }
