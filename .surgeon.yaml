@@ -94,6 +94,12 @@ codemods:
   args:
   - description
   - codemods/description.sh
+- description: Install wget
+  mod: bashfunc
+  match: misc/install.func
+  args:
+  - update_os
+  - codemods/update_os.sh
 - description: PVE Start Function
   mod: bashfunc
   match: misc/build.func
