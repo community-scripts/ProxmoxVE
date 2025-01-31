@@ -134,6 +134,6 @@ incus config set "$HN" environment.PCT_DISK_SIZE="$PCT_DISK_SIZE"
 incus config set "$HN" environment.HN="$HN"
 incus config set "$HN" environment.CORE_COUNT="$CORE_COUNT"
 incus config set "$HN" environment.RAM_SIZE="$RAM_SIZE"
-incus config set "$HN" environment.FILE_FUNCTIONS_PATH="$FILE_FUNCTIONS_PATH"
+incus config set "$HN" environment.FUNCTIONS_FILE_PATH="$FUNCTIONS_FILE_PATH"
 
 msg_ok "Incus Container ${BL}${HN}${CL} ${GN}was successfully created."
