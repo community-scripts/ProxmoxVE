@@ -5,7 +5,7 @@ import { BookOpenText, Code, Globe } from "lucide-react";
 import Link from "next/link";
 
 const generateSourceUrl = (slug: string, type: string) => {
-  const baseUrl = `https://raw.githubusercontent.com/community-scripts/${basePath}/main`;
+  const baseUrl = `https://raw.githubusercontent.com/bketelsen/${basePath}/main`;
   return type === "ct"
     ? `${baseUrl}/install/${slug}-install.sh`
     : `${baseUrl}/${type}/${slug}.sh`;

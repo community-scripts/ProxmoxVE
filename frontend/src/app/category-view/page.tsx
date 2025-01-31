@@ -36,7 +36,7 @@ const CategoryView = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const basePath = process.env.NODE_ENV === "production" ? "/ProxmoxVE" : "";
+        const basePath = process.env.NODE_ENV === "production" ? "/IncusScripts" : "";
         const response = await fetch(`${basePath}/api/categories`);
         if (!response.ok) {
           throw new Error("Failed to fetch categories");

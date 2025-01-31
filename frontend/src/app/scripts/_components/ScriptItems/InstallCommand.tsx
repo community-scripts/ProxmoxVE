@@ -5,7 +5,7 @@ import { Script } from "@/lib/types";
 import { getDisplayValueFromType } from "../ScriptInfoBlocks";
 
 const getInstallCommand = (scriptPath?: string, isAlpine = false) => {
-  return `bash -c "$(wget -q${isAlpine ? "" : "L"}O - https://github.com/community-scripts/${basePath}/raw/main/${scriptPath})"`;
+  return `bash -c "$(wget -q${isAlpine ? "" : "L"}O - https://github.com/bketelsen/${basePath}/raw/main/${scriptPath})"`;
 };
 
 export default function InstallCommand({ item }: { item: Script }) {
