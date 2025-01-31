@@ -171,3 +171,27 @@ codemods:
   args:
   - community-scripts.github.io
   - bketelsen.github.io
+- description: FE ScriptInfoBlocks
+  mod: sed
+  match: frontend/src/app/scripts/_components/ScriptInfoBlocks.tsx
+  args:
+  - return "LXC";
+  - return "CONTAINER";
+- description: FE buttons
+  mod: sed
+  match: frontend/src/app/scripts/_components/ScriptItems/Buttons.tsx
+  args:
+  - https://raw.githubusercontent.com/community-scripts/
+  - https://raw.githubusercontent.com/bketelsen/
+- description: FE InstallCommand
+  mod: sed
+  match: frontend/src/app/scripts/_components/ScriptItems/InstallCommand.tsx
+  args:
+  - https://github.com/community-scripts/
+  - https://github.com/bketelsen/
+- description: FE category view
+  mod: sed
+  match: frontend/src/app/category-view/page.tsx
+  args:
+  - ProxmoxVE
+  - IncusScripts
