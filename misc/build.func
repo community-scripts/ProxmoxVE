@@ -2,8 +2,7 @@
 # Author: tteck (tteckster)
 # Co-Author: MickLesk
 # Co-Author: michelroegl-brunner
-# License: MIT
-# https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
 variables() {
   NSAPP=$(echo ${APP,,} | tr -d ' ') # This function sets the NSAPP variable by converting the value of the APP variable to lowercase and removing any spaces.
@@ -73,7 +72,6 @@ error_handler() {
   local exit_code="$?"
   local line_number="$1"
   local command="$2"
-  post_update_to_api "failed"
   local error_message="${RD}[ERROR]${CL} in line ${RD}$line_number${CL}: exit code ${RD}$exit_code${CL}: while executing command ${YW}$command${CL}"
   echo -e "\n$error_message\n"
 }
@@ -794,6 +792,9 @@ advanced_settings() {
 }
 
 post_to_api() {
+  if [ "$DIAGNOSTICS" = "no" ]; then
+    return 0
+  fi
   local API_URL="http://api.community-scripts.org/upload"
   local pve_version="not found"
   pve_version=$(pveversion | awk -F'[/ ]' '{print $2}')
@@ -831,13 +832,18 @@ EOF
 }
 
 POST_UPDATE_DONE=false
-
 post_update_to_api() {
+    if [ "$DIAGNOSTICS" = "no" ]; then
+        return 0
+    fi
     if [ "$POST_UPDATE_DONE" = true ]; then
         return 0
     fi
+	
     local API_URL="http://api.community-scripts.org/upload/updatestatus"    
-    local status="${1:-}"
+    local status="${1:-failed}"
+
+    msg_ok "Sending ${status} to API"
     JSON_PAYLOAD=$(cat <<EOF
 {
     "status": "$status",
@@ -846,16 +852,17 @@ post_update_to_api() {
 EOF
 )
    
-   RESPONSE=$(curl -s -o response.txt -w "%{http_code}" -L -X POST "$API_URL" --post301 --post302 \
-        -H "Content-Type: application/json" \
-        -d "$JSON_PAYLOAD")
+  RESPONSE=$(curl -s -o response.txt -w "%{http_code}" -L -X POST "$API_URL" --post301 --post302 \
+      -H "Content-Type: application/json" \
+      -d "$JSON_PAYLOAD")
 
-    if [ "$RESPONSE" -ne 201 ] && [ "$RESPONSE" -ne 302 ]; then
-        msg_error "API UPDATE request failed with HTTP code $RESPONSE"
-    fi
+  if [ "$RESPONSE" -ne 201 ] && [ "$RESPONSE" -ne 302 ]; then
+    msg_error "API UPDATE request failed with HTTP code $RESPONSE"
+  fi
 
-   POST_UPDATE_DONE=true
+  POST_UPDATE_DONE=true
 }
+
 
 diagnostics_check(){
   if ! [ -d "/usr/local/community-scripts" ]; then
@@ -1232,13 +1239,11 @@ EOF
   if [[ -f /etc/systemd/system/ping-instances.service ]]; then
     systemctl start ping-instances.service
   fi
-
-  if [[ $DIAGNOSTICS == "yes" ]]; then
-    post_update_to_api
-  fi
+  
+  post_update_to_api "done"
 }
 
-trap 'post_update_to_api "done"' EXIT
+trap 'post_update_to_api "failed"' EXIT
 trap 'post_update_to_api "failed"' SIGINT 
 trap 'post_update_to_api "failed"' SIGTERM
 
