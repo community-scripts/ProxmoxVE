@@ -290,7 +290,7 @@ base_settings() {
   VERBOSE="${1:-no}"
   PW=""
   CT_ID=$NEXTID
-  HN=$NSAPP
+  HN="${NSAPP}-${CT_ID}"
   BRG="incusbr0"
   NET="dhcp"
   GATE=""
@@ -940,7 +940,7 @@ install_script() {
 	ssh_check
 	maxkeys_check
 
-	NEXTID=100
+	NEXTID=$(uuidgen | cut -c1-6)
 	timezone=$(cat /etc/timezone)
 	header_info
 	while true; do
@@ -1107,23 +1107,23 @@ build_container() {
 	source ./install.func
 	bash -c "$(wget -qLO - https://raw.githubusercontent.com/bketelsen/IncusScripts/main/ct/create_lxc.sh)" || exit
 
-	incus file push --mode 0777 install.func "$app"/install.func
+	incus file push --mode 0777 install.func "$HN"/install.func
 
 	msg_info "Starting Incus Container"
-	incus start "$app"
+	incus start "$HN"
 	msg_ok "Started Incus Container"
 	if [ "$var_os" == "alpine" ]; then
 		sleep 3
-		incus exec "$app" -- /bin/sh -c 'cat <<EOF >/etc/apk/repositories
+		incus exec "$HN" -- /bin/sh -c 'cat <<EOF >/etc/apk/repositories
 http://dl-cdn.alpinelinux.org/alpine/latest-stable/main
 http://dl-cdn.alpinelinux.org/alpine/latest-stable/community
 EOF'
-		incus exec "$app" --env=FUNCTIONS_FILE_PATH=/install.func -- ash -c "apk add bash >/dev/null"
+		incus exec "$HN" --env=FUNCTIONS_FILE_PATH=/install.func -- ash -c "apk add bash >/dev/null"
 	fi
 	wget -qLO - https://raw.githubusercontent.com/bketelsen/IncusScripts/main/install/$var_install.sh >install.sh
-	incus file push --mode 0777 install.sh "$app"/install.sh
+	incus file push --mode 0777 install.sh "$HN"/install.sh
 
-	incus exec "$app" --env=FUNCTIONS_FILE_PATH=/install.func -- bash -c "/install.sh" || exit
+	incus exec "$HN" --env=FUNCTIONS_FILE_PATH=/install.func -- bash -c "/install.sh" || exit
 
 }
 

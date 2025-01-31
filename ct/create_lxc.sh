@@ -105,12 +105,14 @@ function msg_error() {
   # echo export CORE_COUNT="$CORE_COUNT" >>install.func // cores
   # echo export RAM_SIZE="$RAM_SIZE" >>install.func // memory
 
+# incus config set caddy environment.BRIAN=bob
+
 IMAGE_NAME="images:${PCT_OSTYPE}/${PCT_OSVERSION:-}"
 netflag="${BRG}"
 
 # Create container
 msg_info "Creating Incus Container"
-incus create "${IMAGE_NAME}" "$app" --network "$netflag" >/dev/null
-incus config set "$app" limits.cpu="$CORE_COUNT" #>/dev/null
-incus config set "$app" limits.memory="$RAM_SIZE"MiB #>/dev/null
-msg_ok "Incus Container ${BL}${app}${CL} ${GN}was successfully created."
+incus create "${IMAGE_NAME}" "$HN" --network "$netflag" >/dev/null
+incus config set "$HN" limits.cpu="$CORE_COUNT" #>/dev/null
+incus config set "$HN" limits.memory="$RAM_SIZE"MiB #>/dev/null
+msg_ok "Incus Container ${BL}${HN}${CL} ${GN}was successfully created."
