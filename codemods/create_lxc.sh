@@ -112,7 +112,7 @@ netflag="${BRG}"
 
 # Create container
 msg_info "Creating Incus Container"
-incus create "${IMAGE_NAME}" "$app" --network "$netflag" >/dev/null
-incus config set "$app" limits.cpu="$CORE_COUNT" #>/dev/null
-incus config set "$app" limits.memory="$RAM_SIZE"MiB #>/dev/null
-msg_ok "Incus Container ${BL}${app}${CL} ${GN}was successfully created."
+incus create "${IMAGE_NAME}" "$HN" --network "$netflag" >/dev/null
+incus config set "$HN" limits.cpu="$CORE_COUNT" #>/dev/null
+incus config set "$HN" limits.memory="$RAM_SIZE"MiB #>/dev/null
+msg_ok "Incus Container ${BL}${HN}${CL} ${GN}was successfully created."

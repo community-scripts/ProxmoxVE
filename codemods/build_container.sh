@@ -110,22 +110,22 @@ build_container() {
 #     fi
 #   fi
 
-  incus file push --mode 0777 install.func "$app"/install.func
+  incus file push --mode 0777 install.func "$HN"/install.func
   # This starts the container and executes <app>-install.sh
   msg_info "Starting Incus Container"
-  incus start "$app"
+  incus start "$HN"
   msg_ok "Started Incus Container"
   if [ "$var_os" == "alpine" ]; then
     sleep 3
-    incus exec "$app" -- /bin/sh -c 'cat <<EOF >/etc/apk/repositories
+    incus exec "$HN" -- /bin/sh -c 'cat <<EOF >/etc/apk/repositories
 http://dl-cdn.alpinelinux.org/alpine/latest-stable/main
 http://dl-cdn.alpinelinux.org/alpine/latest-stable/community
 EOF'
-    incus exec "$app" --env=FUNCTIONS_FILE_PATH=/install.func  -- ash -c "apk add bash >/dev/null"
+    incus exec "$HN" --env=FUNCTIONS_FILE_PATH=/install.func  -- ash -c "apk add bash >/dev/null"
   fi
   wget -qLO - https://raw.githubusercontent.com/bketelsen/IncusScripts/main/install/$var_install.sh >install.sh
-  incus file push --mode 0777 install.sh "$app"/install.sh
+  incus file push --mode 0777 install.sh "$HN"/install.sh
 
-  incus exec "$app" --env=FUNCTIONS_FILE_PATH=/install.func -- bash -c "/install.sh" || exit
+  incus exec "$HN" --env=FUNCTIONS_FILE_PATH=/install.func -- bash -c "/install.sh" || exit
 
 }
