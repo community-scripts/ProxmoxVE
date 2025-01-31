@@ -75,8 +75,14 @@ codemods:
   mod: sed
   match: misc/build.func
   args:
-  - "$(dpkg --print-architecture)" != "amd64"
-  - "$(uname -m)" != "x86_64"
+  - "$(dpkg --print-architecture)"
+  - "$(uname -m)"
+- description: uname location
+  mod: sed
+  match: misc/build.func
+  args:
+  - "amd64"
+  - "x86_64"
 - description: Header Updates
   mod: sed
   match: misc/*.func
