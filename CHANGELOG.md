@@ -17,6 +17,18 @@ All LXC instances created using this repository come pre-installed with Midnight
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
 
+## 2025-02-01
+
+### Changed
+
+### ✨ New Scripts
+
+- New script: Baïkal [@bvdberg01](https://github.com/bvdberg01) ([#1913](https://github.com/community-scripts/ProxmoxVE/pull/1913))
+
+### 🚀 Updated Scripts
+
+- Bug fix: Paymenter [@opastorello](https://github.com/opastorello) ([#1917](https://github.com/community-scripts/ProxmoxVE/pull/1917))
+
 ## 2025-01-31
 
 ### Changed
