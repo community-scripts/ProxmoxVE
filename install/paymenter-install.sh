@@ -32,7 +32,7 @@ msg_ok "Installed Dependencies"
 
 msg_info "Installing Paymenter"
 RELEASE=$(curl -s https://api.github.com/repos/paymenter/paymenter/releases/latest | grep '"tag_name"' | sed -E 's/.*"tag_name": "([^"]+)".*/\1/')
-echo "${RELEASE}" >/opt/${APP}_version.txt
+echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 mkdir -p /opt/paymenter
 cd /opt/paymenter
 wget -q "https://github.com/paymenter/paymenter/releases/download/${RELEASE}/paymenter.tar.gz"
