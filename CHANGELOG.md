@@ -21,6 +21,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### Changed
 
+### 💥 Breaking Changes
+
+- [DCMA] Delete scripts 5etools and pf2etools - Copyright abuse [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1922](https://github.com/community-scripts/ProxmoxVE/pull/1922))
+
 ### ✨ New Scripts
 
 - New script: Baïkal [@bvdberg01](https://github.com/bvdberg01) ([#1913](https://github.com/community-scripts/ProxmoxVE/pull/1913))
