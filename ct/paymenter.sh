@@ -11,7 +11,7 @@ var_tags="hosting;ecommerce;marketplace;"
 var_cpu="2"
 var_ram="1024"
 var_disk="5"
-var_os="Debian"
+var_os="debian"
 var_version="12"
 var_unprivileged="1"
 
