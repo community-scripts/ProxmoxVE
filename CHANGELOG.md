@@ -17,6 +17,14 @@ All LXC instances created using this repository come pre-installed with Midnight
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
 
+## 2025-02-02
+
+### Changed
+
+### 🚀 Updated Scripts
+
+- fix z2m update function to 2.1.0 [@MickLesk](https://github.com/MickLesk) ([#1938](https://github.com/community-scripts/ProxmoxVE/pull/1938))
+
 ## 2025-02-01
 
 ### Changed
