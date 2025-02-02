@@ -1,0 +1,34 @@
+{
+    "name": "Element Synapse",
+    "slug": "elementsynapse",
+    "categories": [
+      4
+    ],
+    "date_created": "2025-02-02",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": 8008,
+    "documentation": "https://element-hq.github.io/synapse/latest/welcome_and_overview.html",
+    "website": "https://element.io/",
+    "logo": "https://element.io/images/logo-mark-primary.svg",
+    "description": "Synapse is an open source Matrix homeserver implementation, written and maintained by Element. Matrix is the open standard for secure and interoperable real time communications. You can directly run and manage the source code in this repository, available under an AGPL license. There is no support provided from Element unless you have a subscription.",
+    "install_methods": [
+      {
+        "type": "default",
+        "script": "ct/elementsynapse.sh",
+        "resources": {
+          "cpu": 1,
+          "ram": 1024,
+          "hdd": 4,
+          "os": "Debian",
+          "version": "12"
+        }
+      }
+    ],
+    "default_credentials": {
+      "username": null,
+      "password": null
+    },
+    "notes": []
+  }
