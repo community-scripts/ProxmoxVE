@@ -37,7 +37,7 @@ function update_script() {
     msg_ok "Stopped ${APP}"
 
     msg_info "Updating ${APP}"
-    pip install prometheus-pve-exporter --upgrade --root-user-action=ignore &>/dev/null
+    pip install prometheus-pve-exporter --default-timeout=300 --upgrade --root-user-action=ignore &>/dev/null
     msg_ok "Updated ${APP}"
 
     msg_info "Starting ${APP}"

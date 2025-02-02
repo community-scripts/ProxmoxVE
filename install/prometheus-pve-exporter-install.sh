@@ -28,7 +28,7 @@ rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
 msg_ok "Setup Python3"
 
 msg_info "Installing Prometheus Proxmox VE Exporter"
-python3 -m pip install --quiet --root-user-action=ignore prometheus-pve-exporter
+python3 -m pip install --default-timeout=300 --quiet --root-user-action=ignore prometheus-pve-exporter
 mkdir -p /opt/prometheus-pve-exporter
 cat <<EOF > /opt/prometheus-pve-exporter/pve.yml
 default:
