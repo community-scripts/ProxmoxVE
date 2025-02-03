@@ -138,147 +138,147 @@ const DataFetcher: React.FC = () => {
     }
   });
 
-    return (
-      <div className="p-6 mt-20">
-        <h1 className="text-2xl font-bold mb-4 text-center">Created LXCs</h1>
-        <div className="mb-4 flex space-x-4">
-          <div>
-            <input
-              type="text"
-              placeholder="Search..."
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              className="p-2 border"
-            />
-            <label className="text-sm text-gray-600 mt-1 block">Search by keyword</label>
-          </div>
-          <div>
-            <DatePicker
-              selected={startDate}
-              onChange={date => setStartDate(date)}
-              selectsStart
-              startDate={startDate}
-              endDate={endDate}
-              placeholderText="Start date"
-              className="p-2 border"
-            />
-            <label className="text-sm text-gray-600 mt-1 block">Set a start date</label>
-          </div>
+  return (
+    <div className="p-6 mt-20">
+      <h1 className="text-2xl font-bold mb-4 text-center">Created LXCs</h1>
+      <div className="mb-4 flex space-x-4">
+        <div>
+          <input
+            type="text"
+            placeholder="Search..."
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            className="p-2 border"
+          />
+          <label className="text-sm text-gray-600 mt-1 block">Search by keyword</label>
+        </div>
+        <div>
+          <DatePicker
+            selected={startDate}
+            onChange={date => setStartDate(date)}
+            selectsStart
+            startDate={startDate}
+            endDate={endDate}
+            placeholderText="Start date"
+            className="p-2 border"
+          />
+          <label className="text-sm text-gray-600 mt-1 block">Set a start date</label>
+        </div>
 
-          <div>
-            <DatePicker
-              selected={endDate}
-              onChange={date => setEndDate(date)}
-              selectsEnd
-              startDate={startDate}
-              endDate={endDate}
-              placeholderText="End date"
-              className="p-2 border"
-            />
-            <label className="text-sm text-gray-600 mt-1 block">Set a end date</label>
-          </div>
-        </div>
-        <ApplicationChart data={filteredData} />
-        <div className="mb-4 flex justify-between items-center">
-          <p className="text-lg font-bold">{filteredData.length} results found</p>
-          <p className="text-lg font">Status Legend: 🔄 installing {installingCounts} | ✔️ completetd {doneCounts} | ❌ failed {failedCounts} | ❓ unknown {unknownCounts}</p>
-          <select value={itemsPerPage} onChange={handleItemsPerPageChange} className="p-2 border">
-            <option value={25}>25</option>
-            <option value={50}>50</option>
-            <option value={100}>100</option>
-            <option value={200}>200</option>
-          </select>
-        </div>
-        <div className="overflow-x-auto">
-          <div className="overflow-y-auto lg:overflow-y-visible">
-            <table className="min-w-full table-auto border-collapse">
-              <thead>
-                <tr>
-                  <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('status')}>Status</th>
-                  <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('type')}>Type</th>
-                  <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('nsapp')}>Application</th>
-                  <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('os_type')}>OS</th>
-                  <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('os_version')}>OS Version</th>
-                  <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('disk_size')}>Disk Size</th>
-                  <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('core_count')}>Core Count</th>
-                  <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('ram_size')}>RAM Size</th>
-                  <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('method')}>Method</th>
-                  <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('pve_version')}>PVE Version</th>
-                  <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('error')}>Error Message</th>
-                  <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('created_at')}>Created At</th>
-                </tr>
-              </thead>
-              <tbody>
-                {paginatedData.map((item, index) => (
-                  <tr key={index}>
-                    <td className="px-4 py-2 border-b">
-                      {item.status === "done" ? (
-                        "✔️"
-                      ) : item.status === "failed" ? (
-                        "❌"
-                      ) : item.status === "installing" ? (
-                        "🔄"
-                      ) : (
-                        item.status
-                      )}
-                    </td>
-                    <td className="px-4 py-2 border-b">{item.type === "lxc" ? (
-                        "📦"
-                      ) : item.type === "vm" ? (
-                        "🖥️"
-                      ) :(
-                        item.type
-                      )}</td>
-                    <td className="px-4 py-2 border-b">{item.nsapp}</td>                    
-                    <td className="px-4 py-2 border-b">{item.os_type}</td>
-                    <td className="px-4 py-2 border-b">{item.os_version}</td>
-                    <td className="px-4 py-2 border-b">{item.disk_size}</td>
-                    <td className="px-4 py-2 border-b">{item.core_count}</td>
-                    <td className="px-4 py-2 border-b">{item.ram_size}</td>
-                    <td className="px-4 py-2 border-b">{item.method}</td>
-                    <td className="px-4 py-2 border-b">{item.pve_version}</td>
-                    <td className="px-4 py-2 border-b">
-                      {item.error && item.error !== "none" ? (
-                        showErrorRow === index ? (
-                          <>
-                            {item.error}
-                            <button onClick={() => setShowErrorRow(null)}>Hide error</button>
-                          </>
-                        ) : (
-                          <button onClick={() => setShowErrorRow(index)}>Click to show error</button>
-                        )
-                      ) : (
-                        "none"
-                      )}
-                    </td>
-                    <td className="px-4 py-2 border-b">{formatDate(item.created_at)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-        <div className="mt-4 flex justify-between items-center">
-          <button
-            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
+        <div>
+          <DatePicker
+            selected={endDate}
+            onChange={date => setEndDate(date)}
+            selectsEnd
+            startDate={startDate}
+            endDate={endDate}
+            placeholderText="End date"
             className="p-2 border"
-          >
-            Previous
-          </button>
-          <span>Page {currentPage}</span>
-          <button
-            onClick={() => setCurrentPage(prev => (prev * itemsPerPage < sortedData.length ? prev + 1 : prev))}
-            disabled={currentPage * itemsPerPage >= sortedData.length}
-            className="p-2 border"
-          >
-            Next
-          </button>
+          />
+          <label className="text-sm text-gray-600 mt-1 block">Set a end date</label>
         </div>
       </div>
-    );
-  };
+      <ApplicationChart data={filteredData} />
+      <div className="mb-4 flex justify-between items-center">
+        <p className="text-lg font-bold">{filteredData.length} results found</p>
+        <p className="text-lg font">Status Legend: 🔄 installing {installingCounts} | ✔️ completetd {doneCounts} | ❌ failed {failedCounts} | ❓ unknown {unknownCounts}</p>
+        <select value={itemsPerPage} onChange={handleItemsPerPageChange} className="p-2 border">
+          <option value={25}>25</option>
+          <option value={50}>50</option>
+          <option value={100}>100</option>
+          <option value={200}>200</option>
+        </select>
+      </div>
+      <div className="overflow-x-auto">
+        <div className="overflow-y-auto lg:overflow-y-visible">
+          <table className="min-w-full table-auto border-collapse">
+            <thead>
+              <tr>
+                <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('status')}>Status</th>
+                <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('type')}>Type</th>
+                <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('nsapp')}>Application</th>
+                <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('os_type')}>OS</th>
+                <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('os_version')}>OS Version</th>
+                <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('disk_size')}>Disk Size</th>
+                <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('core_count')}>Core Count</th>
+                <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('ram_size')}>RAM Size</th>
+                <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('method')}>Method</th>
+                <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('pve_version')}>PVE Version</th>
+                <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('error')}>Error Message</th>
+                <th className="px-4 py-2 border-b cursor-pointer" onClick={() => requestSort('created_at')}>Created At</th>
+              </tr>
+            </thead>
+            <tbody>
+              {paginatedData.map((item, index) => (
+                <tr key={index}>
+                  <td className="px-4 py-2 border-b">
+                    {item.status === "done" ? (
+                      "✔️"
+                    ) : item.status === "failed" ? (
+                      "❌"
+                    ) : item.status === "installing" ? (
+                      "🔄"
+                    ) : (
+                      item.status
+                    )}
+                  </td>
+                  <td className="px-4 py-2 border-b">{item.type === "lxc" ? (
+                    "📦"
+                  ) : item.type === "vm" ? (
+                    "🖥️"
+                  ) : (
+                    item.type
+                  )}</td>
+                  <td className="px-4 py-2 border-b">{item.nsapp}</td>
+                  <td className="px-4 py-2 border-b">{item.os_type}</td>
+                  <td className="px-4 py-2 border-b">{item.os_version}</td>
+                  <td className="px-4 py-2 border-b">{item.disk_size}</td>
+                  <td className="px-4 py-2 border-b">{item.core_count}</td>
+                  <td className="px-4 py-2 border-b">{item.ram_size}</td>
+                  <td className="px-4 py-2 border-b">{item.method}</td>
+                  <td className="px-4 py-2 border-b">{item.pve_version}</td>
+                  <td className="px-4 py-2 border-b">
+                    {item.error && item.error !== "none" ? (
+                      showErrorRow === index ? (
+                        <>
+                          {item.error}
+                          <button onClick={() => setShowErrorRow(null)}>Hide error</button>
+                        </>
+                      ) : (
+                        <button onClick={() => setShowErrorRow(index)}>Click to show error</button>
+                      )
+                    ) : (
+                      "none"
+                    )}
+                  </td>
+                  <td className="px-4 py-2 border-b">{formatDate(item.created_at)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div className="mt-4 flex justify-between items-center">
+        <button
+          onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+          className="p-2 border"
+        >
+          Previous
+        </button>
+        <span>Page {currentPage}</span>
+        <button
+          onClick={() => setCurrentPage(prev => (prev * itemsPerPage < sortedData.length ? prev + 1 : prev))}
+          disabled={currentPage * itemsPerPage >= sortedData.length}
+          className="p-2 border"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  );
+};
 
 
 
-  export default DataFetcher;
+export default DataFetcher;
