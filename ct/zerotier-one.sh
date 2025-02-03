@@ -39,6 +39,7 @@ function update_script() {
     msg_info "Updating ${APP}"
     apt-get update &>/dev/null
     apt-get -y upgrade &>/dev/null
+    msg_ok "Updated ${APP}
     msg_info "Starting Service"
     systemctl start zerotier-one &>/dev/null
     msg_ok "Updated Successfully"
