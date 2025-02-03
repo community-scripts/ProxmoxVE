@@ -11,7 +11,7 @@ variables() {
   PVEHOST_NAME=$(hostname)           # gets the Proxmox Hostname and sets it to Uppercase
   DIAGNOSTICS="yes"                  # sets the DIAGNOSTICS variable to "yes", used for the API call.
   METHOD="default"                   # sets the METHOD variable to "default", used for the API call.
-  RANDOM_UUID="$(cat /proc/sys/kernel/random/uuid)" # generates a random UUID and sets it to the RANDOM_UUDI variable.
+  RANDOM_UUID="$(cat /proc/sys/kernel/random/uuid)" # generates a random UUID and sets it to the RANDOM_UUID variable.
 }
 
 # This function sets various color variables using ANSI escape codes for formatting text in the terminal.
