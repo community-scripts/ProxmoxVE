@@ -23,17 +23,22 @@ $STD apt-get install -y \
   lsb-release \
   apt-transport-https \
   coreutils \
-  python3 \
-  python3-dev \
-  python3-pip \
-  python3-venv \
   software-properties-common \
-  openjdk-17-jdk \
-  openjdk-17-jre
+  openjdk-17-jdk 
 wget -q https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.deb
 $STD sudo dpkg -i jdk-21_linux-x64_bin.deb
 rm -f jdk-21_linux-x64_bin.deb
 msg_ok "Installed Dependencies"
+
+msg_info "Setup Python3"
+$STD apt-get install -y \
+  python3 \
+  python3-dev \
+  python3-pip \
+  python3-venv
+rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
+msg_ok "Setup Python3"
+
 
 msg_info "Installing Craty-Controller (Patience)"
 useradd crafty -m -s /bin/bash
@@ -73,7 +78,7 @@ Restart=on-failure
 [Install]
 WantedBy=multi-user.target
 EOF
-$STD systemctl enable -q --now crafty-controller.service
+$STD systemctl enable -q --now crafty-controller
 sleep 10
 {
     echo "Crafty-Controller-Credentials"

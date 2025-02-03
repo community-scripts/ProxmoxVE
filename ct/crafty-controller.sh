@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
-
 source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-
 # Copyright (c) 2021-2025 community-scripts
 # Author: CrazyWolf13
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -39,7 +37,7 @@ function update_script() {
     if [[ ! -f /opt/crafty-controller_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/crafty-controller_version.txt)" ]]; then
       
       msg_info "Stopping Crafty-Controller"
-      systemctl stop crafty-controller.service
+      systemctl stop crafty-controller
       msg_ok "Stopped Crafty-Controller"
 
       msg_info "Creating Backup of config"
@@ -71,7 +69,7 @@ function update_script() {
       msg_ok "Backup Restored"
 
       msg_info "Starting Crafty-Controller"
-      systemctl start crafty-controller.service
+      systemctl start crafty-controller
       msg_ok "Started Crafty-Controller"
 
       msg_ok "Updated Successfully"
