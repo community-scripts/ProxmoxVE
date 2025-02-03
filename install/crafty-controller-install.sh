@@ -93,6 +93,3 @@ rm -rf /opt/crafty-4-v${RELEASE}.zip
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
-# Wait for creds generation
-sleep 10
-
