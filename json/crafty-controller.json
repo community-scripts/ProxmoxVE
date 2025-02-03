@@ -27,8 +27,13 @@
       }
     ],
     "default_credentials": {
-      "username": null,
+      "username": "admin",
       "password": null
     },
-    "notes": []
+    "notes": [
+      {
+        "text": "Show password: `cat crafty-controller.creds`",
+        "type": "info"
+      }
+    ]
   }

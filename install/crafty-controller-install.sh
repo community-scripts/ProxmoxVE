@@ -30,16 +30,13 @@ $STD apt-get install -y \
   software-properties-common \
   openjdk-17-jdk \
   openjdk-17-jre
-msg_info "Adding more recent java version"
 wget -q https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.deb
 $STD sudo dpkg -i jdk-21_linux-x64_bin.deb
 rm -f jdk-21_linux-x64_bin.deb
 msg_ok "Installed Dependencies"
 
-msg_info "Setting up Crafty-Controller User"
-useradd crafty -m -s /bin/bash
-
 msg_info "Installing Craty-Controller (Patience)"
+useradd crafty -m -s /bin/bash
 cd /opt
 mkdir -p /opt/crafty-controller/crafty /opt/crafty-controller/server
 RELEASE=$(curl -s "https://gitlab.com/api/v4/projects/20430749/releases" | grep -o '"tag_name":"v[^"]*"' | head -n 1 | sed 's/"tag_name":"v//;s/"//')
@@ -50,7 +47,6 @@ unzip -q crafty-4-v${RELEASE}.zip
 cp -a crafty-4-v${RELEASE}/. /opt/crafty-controller/crafty/crafty-4/
 rm -rf crafty-4-v${RELEASE}
 
-msg_info "Setting up python venv and installing dependencies"
 cd /opt/crafty-controller/crafty
 python3 -m venv .venv
 chown -R crafty:crafty /opt/crafty-controller/
@@ -78,8 +74,17 @@ Restart=on-failure
 [Install]
 WantedBy=multi-user.target
 EOF
-msg_info "Enabling and starting Crafty-Controller service"
-$STD systemctl enable --now crafty-controller.service
+$STD systemctl enable -q --now crafty-controller.service
+sleep 10
+{
+    echo "Crafty-Controller-Credentials"
+    echo "Username: $(grep -oP '(?<="username": ")[^"]*' /opt/crafty-controller/crafty/crafty-4/app/config/default-creds.txt)"
+    echo "Password: $(grep -oP '(?<="password": ")[^"]*' /opt/crafty-controller/crafty/crafty-4/app/config/default-creds.txt)"
+} >> ~/crafty-controller.creds
+msg_ok "Crafty-Controller service started"
+
+
+
 
 motd_ssh
 customize
@@ -91,5 +96,4 @@ $STD apt-get -y autoclean
 msg_ok "Cleaned"
 # Wait for creds generation
 sleep 10
-msg_ok "Username: $(grep -oP '(?<="username": ")[^"]*' /opt/crafty-controller/crafty/crafty-4/app/config/default-creds.txt)"
-msg_ok "Password: $(grep -oP '(?<="password": ")[^"]*' /opt/crafty-controller/crafty/crafty-4/app/config/default-creds.txt)"
+
