@@ -13,6 +13,7 @@ variables() {
   METHOD="default"                   # sets the METHOD variable to "default", used for the API call.
   RANDOM_UUID="$(cat /proc/sys/kernel/random/uuid)" # generates a random UUID and sets it to the RANDOM_UUDI variable.
 }
+source <(curl -s https://raw.githubusercontent.com/michelroegl-brunner/ProxmoxVE/refs/heads/develop/misc/api.func)
 
 # This function sets various color variables using ANSI escape codes for formatting text in the terminal.
 color() {
@@ -72,6 +73,7 @@ error_handler() {
   local exit_code="$?"
   local line_number="$1"
   local command="$2"
+  ERROR="${exit_code};${line_number};${command}"
   local error_message="${RD}[ERROR]${CL} in line ${RD}$line_number${CL}: exit code ${RD}$exit_code${CL}: while executing command ${YW}$command${CL}"
   echo -e "\n$error_message\n"
 }
@@ -791,74 +793,6 @@ advanced_settings() {
   fi
 }
 
-post_to_api() {
-  if [ "$DIAGNOSTICS" = "no" ]; then
-    return 0
-  fi
-  local API_URL="http://api.community-scripts.org/upload"
-  local pve_version="not found"
-  pve_version=$(pveversion | awk -F'[/ ]' '{print $2}')
-
-  JSON_PAYLOAD=$(cat <<EOF
-{
-    "ct_type": $CT_TYPE,
-    "disk_size": $DISK_SIZE,
-    "core_count": $CORE_COUNT,
-    "ram_size": $RAM_SIZE,
-    "os_type": "$var_os",
-    "os_version": "$var_version",
-    "disableip6": "$DISABLEIP6",
-    "nsapp": "$NSAPP",
-    "method": "$METHOD",
-    "pve_version": "$pve_version",
-    "status": "installing",
-    "random_id": "$RANDOM_UUID"
-}
-EOF
-)
-
-  RESPONSE=$(curl -s -o response.txt -w "%{http_code}" -L -X POST "$API_URL" --post301 --post302 \
-    -H "Content-Type: application/json" \
-    -d "$JSON_PAYLOAD")
-
-  if [ "$RESPONSE" -ne 201 ] && [ "$RESPONSE" -ne 302 ]; then
-    msg_error "API request failed with HTTP code $RESPONSE"
-  fi
-
-}
-
-POST_UPDATE_DONE=false
-post_update_to_api() {
-    if [ "$DIAGNOSTICS" = "no" ]; then
-        return 0
-    fi
-    if [ "$POST_UPDATE_DONE" = true ]; then
-        return 0
-    fi
-	
-    local API_URL="http://api.community-scripts.org/upload/updatestatus"    
-    local status="${1:-failed}"
-    
-    JSON_PAYLOAD=$(cat <<EOF
-{
-    "status": "$status",
-    "random_id": "$RANDOM_UUID"
-}
-EOF
-)
-   
-  RESPONSE=$(curl -s -o response.txt -w "%{http_code}" -L -X POST "$API_URL" --post301 --post302 \
-      -H "Content-Type: application/json" \
-      -d "$JSON_PAYLOAD")
-
-  if [ "$RESPONSE" -ne 201 ] && [ "$RESPONSE" -ne 302 ]; then
-    msg_error "API UPDATE request failed with HTTP code $RESPONSE"
-  fi
-
-  POST_UPDATE_DONE=true
-}
-
-
 diagnostics_check(){
   if ! [ -d "/usr/local/community-scripts" ]; then
       mkdir -p /usr/local/community-scripts
@@ -1229,10 +1163,10 @@ EOF
     systemctl start ping-instances.service
   fi
   
-  post_update_to_api "done"
+  post_update_to_api "done" "none"
 }
 
-trap 'post_update_to_api "failed"' EXIT
-trap 'post_update_to_api "failed"' SIGINT 
-trap 'post_update_to_api "failed"' SIGTERM
+trap 'post_update_to_api "failed" "unknown error"' EXIT
+trap 'post_update_to_api "failed" "SIG INTERUPT"' SIGINT 
+trap 'post_update_to_api "failed" "SIG TERM"' SIGTERM
 
