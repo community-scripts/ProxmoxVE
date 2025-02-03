@@ -26,7 +26,13 @@ msg_info "Setting up Radicale"
 python3 -m venv /opt/radicale
 source /opt/radicale/bin/activate
 python3 -m pip install --upgrade https://github.com/Kozea/Radicale/archive/master.tar.gz
-htpasswd -c -5 /opt/radicale/users admin
+RNDPASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
+htpasswd -b -5 /opt/radicale/users admin $RNDPASS
+{
+echo "Radicale Credentials"
+echo "Admin User: admin"
+echo "Admin Password: $RNDPASS"
+} >> ~/radicale.creds
 
 msg_info "Setup Service"
 
