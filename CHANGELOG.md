@@ -23,11 +23,13 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### ✨ New Scripts
 
-- New Script: Privatebin [@opastorello](https://github.com/opastorello) ([#1925](https://github.com/community-scripts/ProxmoxVE/pull/1925))
 - New Script: Element Synapse [@tremor021](https://github.com/tremor021) ([#1955](https://github.com/community-scripts/ProxmoxVE/pull/1955))
+- New Script: Privatebin [@opastorello](https://github.com/opastorello) ([#1925](https://github.com/community-scripts/ProxmoxVE/pull/1925))
 
 ### 🚀 Updated Scripts
 
+- Fix: Monica Install with nodejs [@MickLesk](https://github.com/MickLesk) ([#1996](https://github.com/community-scripts/ProxmoxVE/pull/1996))
+- Element Synapse sed fix [@tremor021](https://github.com/tremor021) ([#1994](https://github.com/community-scripts/ProxmoxVE/pull/1994))
 - Fix Hoarder corepack install/update error [@vhsdream](https://github.com/vhsdream) ([#1957](https://github.com/community-scripts/ProxmoxVE/pull/1957))
 - [Security & Maintenance] Update NodeJS Repo to 22 for new Installs [@MickLesk](https://github.com/MickLesk) ([#1984](https://github.com/community-scripts/ProxmoxVE/pull/1984))
 - [Standardization]: Same Setup for GoLang on all LXC's & Clear Tarball [@MickLesk](https://github.com/MickLesk) ([#1977](https://github.com/community-scripts/ProxmoxVE/pull/1977))
