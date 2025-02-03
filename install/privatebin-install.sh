@@ -52,7 +52,7 @@ msg_ok "Configured Environment"
 
 msg_info "Configuring PHP"
 sed -i 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/' /etc/php/8.2/fpm/php.ini
-$STD systemctl restart php8.2-fpm
+systemctl restart php8.2-fpm
 msg_ok "Configured PHP"
 
 msg_info "Configuring Universal Nginx"
