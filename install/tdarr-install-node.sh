@@ -49,28 +49,6 @@ fi
 msg_ok "Installed Tdarr"
 
 msg_info "Creating Service"
-service_path="/etc/systemd/system/tdarr-server.service"
-echo "[Unit]
-Description=Tdarr Server Daemon
-After=network.target
-# Enable if using ZFS, edit and enable if other FS mounting is required to access directory
-#Requires=zfs-mount.service
-
-[Service]
-User=root
-Group=root
-
-Type=simple
-WorkingDirectory=/opt/tdarr/Tdarr_Server
-ExecStartPre=/opt/tdarr/Tdarr_Updater                  
-ExecStart=/opt/tdarr/Tdarr_Server/Tdarr_Server
-TimeoutStopSec=20
-KillMode=process
-Restart=on-failure
-
-[Install]
-WantedBy=multi-user.target" >$service_path
-
 service_path="/etc/systemd/system/tdarr-node.service"
 echo "[Unit]
 Description=Tdarr Node Daemon
@@ -90,7 +68,6 @@ Restart=on-failure
 
 [Install]
 WantedBy=multi-user.target" >$service_path
-systemctl enable --now -q tdarr-server.service
 systemctl enable --now -q tdarr-node.service
 msg_ok "Created Service"
 
