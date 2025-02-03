@@ -15,6 +15,8 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
     curl \
+    sudo \
+    mc \
     nginx \
     php8.2-fpm \
     php8.2-{common,cli,gd,mbstring,xml,fpm,curl,zip} \
