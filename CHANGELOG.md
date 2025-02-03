@@ -21,6 +21,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### Changed
 
+### ✨ New Scripts
+
+- New Script: Element Synapse [@tremor021](https://github.com/tremor021) ([#1955](https://github.com/community-scripts/ProxmoxVE/pull/1955))
+
 ### 🚀 Updated Scripts
 
 - [Standardization]: Same Setup for GoLang on all LXC's & Clear Tarball [@MickLesk](https://github.com/MickLesk) ([#1977](https://github.com/community-scripts/ProxmoxVE/pull/1977))
@@ -40,7 +44,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🧰 Maintenance
 
-- [API] Update build.func [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1967](https://github.com/community-scripts/ProxmoxVE/pull/1967))
+- [API] Remove Hostname, Verbose, SSH and TAGS [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1967](https://github.com/community-scripts/ProxmoxVE/pull/1967))
 
 ## 2025-02-02
 
