@@ -24,11 +24,11 @@ $STD apt-get install -y \
   ffmpeg
 msg_ok "Installed Dependencies"
 
-msg_info "Installing Python3 Dependencies"
+msg_info "Setup Python3"
 $STD apt-get install -y --no-install-recommends \
   python3 \
   python3-pip
-msg_ok "Installed Python3 Dependencies"
+msg_ok "Setup Python3"
 
 msg_info "Setting up Node.js Repository"
 mkdir -p /etc/apt/keyrings

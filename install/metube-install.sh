@@ -33,13 +33,13 @@ $STD apt-get install -y --no-install-recommends \
   mc
 msg_ok "Installed Dependencies"
 
-msg_info "Installing Python3"
+msg_info "Setup Python3"
 $STD apt-get install -y \
   python3 \
   python3-dev \
   python3-pip \
   python3-venv
-msg_ok "Installed Python3"
+msg_ok "Setup Python3"
 
 msg_info "Setting up Node.js Repository"
 mkdir -p /etc/apt/keyrings
