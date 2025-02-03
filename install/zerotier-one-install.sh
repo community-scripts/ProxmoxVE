@@ -20,12 +20,10 @@ $STD apt-get install -y \
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up Zerotier-One"
-sleep 2
 curl -s https://install.zerotier.com | bash
 msg_ok "Setup Zerotier-One"
 
 msg_info "Setting up UI"
-sleep 2
 curl -O https://s3-us-west-1.amazonaws.com/key-networks/deb/ztncui/1/x86_64/ztncui_0.8.14_amd64.deb
 dpkg -i ztncui_0.8.14_amd64.deb
 sh -c "echo ZT_TOKEN=`cat /var/lib/zerotier-one/authtoken.secret` > /opt/key-networks/ztncui/.env"
