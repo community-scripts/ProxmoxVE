@@ -18,9 +18,9 @@
           "type": "default",
           "script": "ct/grist.sh",
           "resources": {
-              "cpu": 1,
-              "ram": 1024,
-              "hdd": 4,
+              "cpu": 2,
+              "ram": 3072,
+              "hdd": 6,
               "os": "debian",
               "version": "12"
           }

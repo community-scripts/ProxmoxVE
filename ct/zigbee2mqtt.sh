@@ -39,24 +39,33 @@ function update_script() {
     msg_ok "Stopped Service"
 
     msg_info "Creating Backup"
-    mkdir -p /opt/z2m_backup
-    tar -czf /opt/z2m_backup/${APP}_backup_$(date +%Y%m%d%H%M%S).tar.gz -C /opt zigbee2mqtt &>/dev/null
-    mv /opt/zigbee2mqtt/data /opt/z2m_backup
+      rm -rf /opt/${APP}_backup*.tar.gz
+      mkdir -p /opt/z2m_backup
+      tar -czf /opt/z2m_backup/${APP}_backup_$(date +%Y%m%d%H%M%S).tar.gz -C /opt zigbee2mqtt &>/dev/null
+      mv /opt/zigbee2mqtt/data /opt/z2m_backup
     msg_ok "Backup Created"
 
     msg_info "Updating ${APP} to v${RELEASE}"
-    cd /opt
-    wget -q "https://github.com/Koenkk/zigbee2mqtt/archive/refs/tags/${RELEASE}.zip"
-    unzip -q ${RELEASE}.zip
-    mv zigbee2mqtt-${RELEASE} /opt/zigbee2mqtt
-    rm -rf /opt/zigbee2mqtt/data
-    mv /opt/z2m_backup/data /opt/zigbee2mqtt
-    cd /opt/zigbee2mqtt 
-    pnpm install --frozen-lockfile &>/dev/null
-    pnpm build &>/dev/null
+      cd /opt
+      wget -q "https://github.com/Koenkk/zigbee2mqtt/archive/refs/tags/${RELEASE}.zip"
+      unzip -q ${RELEASE}.zip
+      rm -rf /opt/zigbee2mqtt
+      mv zigbee2mqtt-${RELEASE} /opt/zigbee2mqtt
+      rm -rf /opt/zigbee2mqtt/data
+      mv /opt/z2m_backup/data /opt/zigbee2mqtt
+      cd /opt/zigbee2mqtt 
+      pnpm install --frozen-lockfile &>/dev/null
+      pnpm build &>/dev/null
+    msg_ok "Updated Zigbee2MQTT"
+
     msg_info "Starting Service"
-    systemctl start zigbee2mqtt
+      systemctl start zigbee2mqtt
     msg_ok "Started Service"
+
+    msg_info "Cleaning up"
+      rm -rf /opt/z2m_backup
+      rm -rf /opt/${RELEASE}.zip
+    msg_ok "Cleaned up"
     echo "${RELEASE}" >/opt/${APP}_version.txt
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}."
