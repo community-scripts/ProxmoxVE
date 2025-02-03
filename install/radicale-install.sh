@@ -13,7 +13,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y
+$STD apt-get install -y \
   curl \
   sudo \
   mc \
@@ -23,11 +23,9 @@ $STD apt-get install -y
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up Radicale"
-sleep 2
 python3 -m venv /opt/radicale
 source /opt/radicale/bin/activate
 python3 -m pip install --upgrade https://github.com/Kozea/Radicale/archive/master.tar.gz
-sleep 2
 htpasswd -c -5 /opt/radicale/users admin
 
 msg_info "Setup Service"
