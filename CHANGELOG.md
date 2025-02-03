@@ -27,6 +27,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- Fix Hoarder corepack install/update error [@vhsdream](https://github.com/vhsdream) ([#1957](https://github.com/community-scripts/ProxmoxVE/pull/1957))
 - [Security & Maintenance] Update NodeJS Repo to 22 for new Installs [@MickLesk](https://github.com/MickLesk) ([#1984](https://github.com/community-scripts/ProxmoxVE/pull/1984))
 - [Standardization]: Same Setup for GoLang on all LXC's & Clear Tarball [@MickLesk](https://github.com/MickLesk) ([#1977](https://github.com/community-scripts/ProxmoxVE/pull/1977))
 - Feature: urbackupserver Include fuse&nesting features during install [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1968](https://github.com/community-scripts/ProxmoxVE/pull/1968))
@@ -36,7 +37,6 @@ Do not break established syntax in this file, as it is automatically updated by 
 - Fix: Increase HDD Space for Hoarder [@MickLesk](https://github.com/MickLesk) ([#1970](https://github.com/community-scripts/ProxmoxVE/pull/1970))
 - Feature: Clean Orphan LVM without CEPH [@MickLesk](https://github.com/MickLesk) ([#1974](https://github.com/community-scripts/ProxmoxVE/pull/1974))
 - [Standardization] Fix Spelling for "Setup Python3"  [@MickLesk](https://github.com/MickLesk) ([#1975](https://github.com/community-scripts/ProxmoxVE/pull/1975))
-- Fix Hoarder corepack install/update error [@vhsdream](https://github.com/vhsdream) ([#1957](https://github.com/community-scripts/ProxmoxVE/pull/1957))
 
 ### 🌐 Website
 
