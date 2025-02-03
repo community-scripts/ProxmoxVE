@@ -14,7 +14,14 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt install -y lsb-release wget apt-transport-https debconf-utils
+$STD apt install -y
+  sudo \
+  curl \
+  mc \
+  lsb-release \
+  wget \
+  apt-transport-https \
+  debconf-utils
 msg_ok "Installed Dependencies"
 
 wget -O /usr/share/keyrings/matrix-org-archive-keyring.gpg https://packages.matrix.org/debian/matrix-org-archive-keyring.gpg
