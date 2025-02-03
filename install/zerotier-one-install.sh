@@ -13,7 +13,10 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y curl
+$STD apt-get install -y \
+  curl \
+  mc \
+  sudo
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up Zerotier-One"
