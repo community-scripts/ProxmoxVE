@@ -2,8 +2,7 @@
 
 # Copyright (c) 2021-2025 tteck
 # Author: tteck (tteckster)
-# License: MIT
-# https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
 set -o pipefail
 
@@ -28,14 +27,11 @@ CL=$(echo "\033[m")
 header_info
 echo "Loading..."
 
-# Prüfung des Root Filesystems
 ROOT_FS=$(df -Th "/" | awk 'NR==2 {print $2}')
 if [ "$ROOT_FS" != "ext4" ]; then
     echo "Root filesystem is not ext4. Exiting script."
     exit 1
 fi
-
-# Bestätigung per Whiptail
 whiptail --backtitle "Proxmox VE Helper Scripts" \
          --title "Proxmox VE LXC Filesystem Trim" \
          --yesno "The LXC containers will undergo the fstrim command. Proceed?" 10 58 || exit
@@ -44,14 +40,12 @@ NODE=$(hostname)
 EXCLUDE_MENU=()
 MSG_MAX_LENGTH=0
 
-# Aufbau des Menüs für den Ausschluss
 while read -r TAG ITEM; do
   OFFSET=2
   ((${#ITEM} + OFFSET > MSG_MAX_LENGTH)) && MSG_MAX_LENGTH=${#ITEM}+OFFSET
   EXCLUDE_MENU+=("$TAG" "$ITEM " "OFF")
 done < <(pct list | awk 'NR>1')
 
-# Ausgabe zwischenspeichern und Exit-Code prüfen
 excluded_containers_raw=$(whiptail --backtitle "Proxmox VE Helper Scripts" \
     --title "Containers on $NODE" \
     --checklist "\nSelect containers to skip from trimming:\n" \
@@ -61,7 +55,6 @@ if [ $? -ne 0 ]; then
     exit
 fi
 
-# Entferne unnötige Anführungszeichen
 excluded_containers=$(echo "$excluded_containers_raw" | tr -d '"')
 
 function trim_container() {
@@ -82,7 +75,6 @@ function trim_container() {
   sleep 1.5
 }
 
-# Durchlaufe alle Container
 for container in $(pct list | awk '{if(NR>1) print $1}'); do
   if [[ " ${excluded_containers} " =~ " $container " ]]; then
     header_info
