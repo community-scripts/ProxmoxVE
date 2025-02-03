@@ -5,7 +5,11 @@
 post_to_api() {
 
   if [ "$DIAGNOSTICS" = "no" ]; then
-    return 0
+    return
+  fi
+
+  if [ -z "$RANDOM_UUID" ]; then
+    return
   fi
 
   local API_URL="http://api.community-scripts.org/upload"

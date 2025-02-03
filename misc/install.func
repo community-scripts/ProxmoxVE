@@ -68,7 +68,7 @@ error_handler() {
     echo -e "The silent function has suppressed the error, run the script with verbose mode enabled, which will provide more detailed output.\n"
     post_update_to_api "failed" "No error, script ran in silent mode"
   else
-    post_update_to_api "failed" "$error_message"
+    post_update_to_api "failed" "${command}"
   fi
 }
 
