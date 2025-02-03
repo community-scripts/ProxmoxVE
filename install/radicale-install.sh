@@ -13,7 +13,13 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y apache2-utils python3-pip python3.11-venv
+$STD apt-get install -y
+  curl \
+  sudo \
+  mc \
+  apache2-utils \
+  python3-pip \
+  python3.11-venv
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up Radicale"
