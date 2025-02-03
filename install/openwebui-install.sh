@@ -24,16 +24,16 @@ $STD apt-get install -y \
   ffmpeg
 msg_ok "Installed Dependencies"
 
-msg_info "Installing Python3 Dependencies"
+msg_info "Setup Python3"
 $STD apt-get install -y --no-install-recommends \
   python3 \
   python3-pip
-msg_ok "Installed Python3 Dependencies"
+msg_ok "Setup Python3"
 
 msg_info "Setting up Node.js Repository"
 mkdir -p /etc/apt/keyrings
 curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
+echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_22.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
 msg_ok "Set up Node.js Repository"
 
 msg_info "Installing Node.js"

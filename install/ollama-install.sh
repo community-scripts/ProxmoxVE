@@ -26,10 +26,14 @@ $STD apt-get install -y cmake
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Golang"
-$STD wget https://golang.org/dl/go1.23.2.linux-amd64.tar.gz
-$STD tar -xzf go1.23.2.linux-amd64.tar.gz -C /usr/local
-$STD ln -s /usr/local/go/bin/go /usr/local/bin/go
-rm -rf go1.23.2.linux-amd64.tar.gz
+set +o pipefail
+temp_file=$(mktemp)
+golang_tarball=$(curl -s https://go.dev/dl/ | grep -oP 'go[\d\.]+\.linux-amd64\.tar\.gz' | head -n 1)
+wget -q https://golang.org/dl/"$golang_tarball" -O "$temp_file"
+tar -C /usr/local -xzf "$temp_file"
+ln -sf /usr/local/go/bin/go /usr/local/bin/go
+rm -f "$temp_file"
+set -o pipefail
 msg_ok "Installed Golang"
 
 msg_info "Setting up Intel® Repositories"

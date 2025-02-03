@@ -27,13 +27,13 @@ $STD apt-get install -y \
   mc
 msg_ok "Installed Dependencies"
 
-msg_info "Installing Python3"
+msg_info "Setup Python3"
 $STD apt-get install -y \
   python3-dev \
   python3-setuptools \
   python3-wheel \
   python3-pip
-msg_ok "Installed Python3"
+msg_ok "Setup Python3"
 
 msg_info "Installing Spoolman"
 RELEASE=$(wget -q https://github.com/Donkie/Spoolman/releases/latest -O - | grep "title>Release" | cut -d " " -f 4)

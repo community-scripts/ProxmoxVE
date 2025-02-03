@@ -40,14 +40,14 @@ $STD apt-get install -y \
   mc
 msg_ok "Installed Dependencies"
 
-msg_info "Installing Python3 Dependencies (Patience)"
+msg_info "Setup Python3"
 $STD apt-get install -y \
   python3 \
   python3-pip \
   python3-dev \
   python3-setuptools \
   python3-wheel
-msg_ok "Installed Python3 Dependencies"
+msg_ok "Setup Python3"
 
 msg_info "Installing OCR Dependencies (Patience)"
 $STD apt-get install -y \

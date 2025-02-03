@@ -20,7 +20,7 @@
       "resources": {
         "cpu": 2,
         "ram": 4096,
-        "hdd": 8,
+        "hdd": 10,
         "os": "debian",
         "version": "12"
       }

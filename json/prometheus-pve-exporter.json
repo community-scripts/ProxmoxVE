@@ -1,6 +1,6 @@
 {
     "name": "Prometheus Proxmox VE Exporter",
-    "slug": "prometheus-proxmox-ve-exporter",
+    "slug": "prometheus-pve-exporter",
     "categories": [
         1,
         9

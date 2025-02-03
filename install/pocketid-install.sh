@@ -35,12 +35,13 @@ $STD apt-get install -y nodejs
 msg_ok "Installed Node.js"
 
 msg_info "Installing Golang"
-cd /tmp
 set +o pipefail
-GO_RELEASE=$(curl -s https://go.dev/dl/ | grep -o -m 1 "go.*\linux-amd64.tar.gz")
-wget -q https://golang.org/dl/${GO_RELEASE}
-tar -xzf ${GO_RELEASE} -C /usr/local
-ln -s /usr/local/go/bin/go /usr/bin/go
+temp_file=$(mktemp)
+golang_tarball=$(curl -s https://go.dev/dl/ | grep -oP 'go[\d\.]+\.linux-amd64\.tar\.gz' | head -n 1)
+wget -q https://golang.org/dl/"$golang_tarball" -O "$temp_file"
+tar -C /usr/local -xzf "$temp_file"
+ln -sf /usr/local/go/bin/go /usr/local/bin/go
+rm -f "$temp_file"
 set -o pipefail
 msg_ok "Installed Golang"
 

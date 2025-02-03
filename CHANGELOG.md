@@ -17,6 +17,37 @@ All LXC instances created using this repository come pre-installed with Midnight
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
 
+## 2025-02-03
+
+### Changed
+
+### ✨ New Scripts
+
+- New Script: Privatebin [@opastorello](https://github.com/opastorello) ([#1925](https://github.com/community-scripts/ProxmoxVE/pull/1925))
+- New Script: Element Synapse [@tremor021](https://github.com/tremor021) ([#1955](https://github.com/community-scripts/ProxmoxVE/pull/1955))
+
+### 🚀 Updated Scripts
+
+- Fix Hoarder corepack install/update error [@vhsdream](https://github.com/vhsdream) ([#1957](https://github.com/community-scripts/ProxmoxVE/pull/1957))
+- [Security & Maintenance] Update NodeJS Repo to 22 for new Installs [@MickLesk](https://github.com/MickLesk) ([#1984](https://github.com/community-scripts/ProxmoxVE/pull/1984))
+- [Standardization]: Same Setup for GoLang on all LXC's & Clear Tarball [@MickLesk](https://github.com/MickLesk) ([#1977](https://github.com/community-scripts/ProxmoxVE/pull/1977))
+- Feature: urbackupserver Include fuse&nesting features during install [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1968](https://github.com/community-scripts/ProxmoxVE/pull/1968))
+- Fix: MSSQL-Server: Better gpg handling [@MickLesk](https://github.com/MickLesk) ([#1962](https://github.com/community-scripts/ProxmoxVE/pull/1962))
+- Fix: Grist ran into a heap space during the update [@MickLesk](https://github.com/MickLesk) ([#1964](https://github.com/community-scripts/ProxmoxVE/pull/1964))
+- Fix: FS-Trim Cancel / Error-Button [@MickLesk](https://github.com/MickLesk) ([#1965](https://github.com/community-scripts/ProxmoxVE/pull/1965))
+- Fix: Increase HDD Space for Hoarder [@MickLesk](https://github.com/MickLesk) ([#1970](https://github.com/community-scripts/ProxmoxVE/pull/1970))
+- Feature: Clean Orphan LVM without CEPH [@MickLesk](https://github.com/MickLesk) ([#1974](https://github.com/community-scripts/ProxmoxVE/pull/1974))
+- [Standardization] Fix Spelling for "Setup Python3"  [@MickLesk](https://github.com/MickLesk) ([#1975](https://github.com/community-scripts/ProxmoxVE/pull/1975))
+
+### 🌐 Website
+
+- [Website] update data/page.tsx [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1969](https://github.com/community-scripts/ProxmoxVE/pull/1969))
+- Prometheus Proxmox VE Exporter: Set correct website slug [@andygrunwald](https://github.com/andygrunwald) ([#1961](https://github.com/community-scripts/ProxmoxVE/pull/1961))
+
+### 🧰 Maintenance
+
+- [API] Remove Hostname, Verbose, SSH and TAGS [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1967](https://github.com/community-scripts/ProxmoxVE/pull/1967))
+
 ## 2025-02-02
 
 ### Changed
