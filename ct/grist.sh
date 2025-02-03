@@ -5,8 +5,8 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 # App Default Values
 APP="Grist"
 var_tags="database;spreadsheet"
-var_cpu="1"
-var_ram="2048"
+var_cpu="2"
+var_ram="3072"
 var_disk="4"
 var_os="debian"
 var_version="12"
