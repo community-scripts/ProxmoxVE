@@ -47,7 +47,7 @@ function update_script() {
     echo "${RELEASE}" >/opt/${APP}_version.txt
     rm -rf ${RELEASE}.zip PrivateBin-${RELEASE}
     systemctl reload nginx php8.2-fpm
-    msg_ok "Updated Successfully"
+    msg_ok "Updated ${APP} to v${RELEASE}"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
