@@ -32,7 +32,7 @@
     },
     "notes": [
       {
-        "text": "Show password: `cat crafty-controller.creds`",
+        "text": "Show password: `cat ~/crafty-controller.creds`",
         "type": "info"
       }
     ]
