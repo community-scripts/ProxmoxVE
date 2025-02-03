@@ -23,6 +23,8 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- Feature: Clean Orphan LVM without CEPH [@MickLesk](https://github.com/MickLesk) ([#1974](https://github.com/community-scripts/ProxmoxVE/pull/1974))
+- [Standardization] Fix Spelling for "Setup Python3"  [@MickLesk](https://github.com/MickLesk) ([#1975](https://github.com/community-scripts/ProxmoxVE/pull/1975))
 - Update Script: urbackupserver.sh Include features during install [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1968](https://github.com/community-scripts/ProxmoxVE/pull/1968))
 - Fix: Increase HDD Space for Hoarder [@MickLesk](https://github.com/MickLesk) ([#1970](https://github.com/community-scripts/ProxmoxVE/pull/1970))
 - Fix: Grist ran into a heap space during the update [@MickLesk](https://github.com/MickLesk) ([#1964](https://github.com/community-scripts/ProxmoxVE/pull/1964))
