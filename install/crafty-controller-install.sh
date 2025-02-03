@@ -40,7 +40,6 @@ useradd crafty -m -s /bin/bash
 cd /opt
 mkdir -p /opt/crafty-controller/crafty /opt/crafty-controller/server
 RELEASE=$(curl -s "https://gitlab.com/api/v4/projects/20430749/releases" | grep -o '"tag_name":"v[^"]*"' | head -n 1 | sed 's/"tag_name":"v//;s/"//')
-RELEASE="4.4.4"
 echo "${RELEASE}" >"/opt/crafty-controller_version.txt"
 wget -q "https://gitlab.com/crafty-controller/crafty-4/-/archive/v${RELEASE}/crafty-4-v${RELEASE}.zip"
 unzip -q crafty-4-v${RELEASE}.zip
