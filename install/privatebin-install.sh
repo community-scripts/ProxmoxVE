@@ -96,7 +96,7 @@ server {
 EOF
 ln -s /etc/nginx/sites-available/privatebin.conf /etc/nginx/sites-enabled/
 rm -f /etc/nginx/sites-enabled/default
-$STD systemctl reload nginx
+systemctl reload nginx
 msg_ok "Nginx Configured"
 
 msg_info "Cleaning up"
