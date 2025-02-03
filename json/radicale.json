@@ -27,8 +27,13 @@
       }
     ],
     "default_credentials": {
-      "username": "admin",
-      "password": "created at setup"
+      "username": null,
+      "password": null
     },
-    "notes": []
+    "notes": [
+      {
+      "text": "To view the user credentials : `cat radicale.creds`",
+      "type": "info"
+      }
+    ]
   }
