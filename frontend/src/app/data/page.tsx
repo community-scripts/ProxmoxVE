@@ -242,7 +242,7 @@ const DataFetcher: React.FC = () => {
                       showErrorRow === index ? (
                         <>
                           {item.error}
-                          <button onClick={() => setShowErrorRow(null)}>Hide error</button>
+                          <button onClick={() => setShowErrorRow(null)}>{item.error}</button>
                         </>
                       ) : (
                         <button onClick={() => setShowErrorRow(index)}>Click to show error</button>
