@@ -27,8 +27,6 @@ sleep 2
 python3 -m venv /opt/radicale
 source /opt/radicale/bin/activate
 python3 -m pip install --upgrade https://github.com/Kozea/Radicale/archive/master.tar.gz
-msg_ok "Setup Radicale"
-msg_ok "Setting up admin user password:"
 sleep 2
 htpasswd -c -5 /opt/radicale/users admin
 
