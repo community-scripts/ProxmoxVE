@@ -23,19 +23,24 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
-- Feature: Clean Orphan LVM without CEPH [@MickLesk](https://github.com/MickLesk) ([#1974](https://github.com/community-scripts/ProxmoxVE/pull/1974))
-- [Standardization] Fix Spelling for "Setup Python3"  [@MickLesk](https://github.com/MickLesk) ([#1975](https://github.com/community-scripts/ProxmoxVE/pull/1975))
-- Update Script: urbackupserver.sh Include features during install [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1968](https://github.com/community-scripts/ProxmoxVE/pull/1968))
-- Fix: Increase HDD Space for Hoarder [@MickLesk](https://github.com/MickLesk) ([#1970](https://github.com/community-scripts/ProxmoxVE/pull/1970))
+- [Standardization]: Same Setup for GoLang on all LXC's & Clear Tarball [@MickLesk](https://github.com/MickLesk) ([#1977](https://github.com/community-scripts/ProxmoxVE/pull/1977))
+- Feature: urbackupserver Include fuse&nesting features during install [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1968](https://github.com/community-scripts/ProxmoxVE/pull/1968))
+- Fix: MSSQL-Server: Better gpg handling [@MickLesk](https://github.com/MickLesk) ([#1962](https://github.com/community-scripts/ProxmoxVE/pull/1962))
 - Fix: Grist ran into a heap space during the update [@MickLesk](https://github.com/MickLesk) ([#1964](https://github.com/community-scripts/ProxmoxVE/pull/1964))
 - Fix: FS-Trim Cancel / Error-Button [@MickLesk](https://github.com/MickLesk) ([#1965](https://github.com/community-scripts/ProxmoxVE/pull/1965))
+- Fix: Increase HDD Space for Hoarder [@MickLesk](https://github.com/MickLesk) ([#1970](https://github.com/community-scripts/ProxmoxVE/pull/1970))
+- Feature: Clean Orphan LVM without CEPH [@MickLesk](https://github.com/MickLesk) ([#1974](https://github.com/community-scripts/ProxmoxVE/pull/1974))
+- [Standardization] Fix Spelling for "Setup Python3"  [@MickLesk](https://github.com/MickLesk) ([#1975](https://github.com/community-scripts/ProxmoxVE/pull/1975))
 - Fix Hoarder corepack install/update error [@vhsdream](https://github.com/vhsdream) ([#1957](https://github.com/community-scripts/ProxmoxVE/pull/1957))
-- Fix: MSSQL-Server: Better gpg handling [@MickLesk](https://github.com/MickLesk) ([#1962](https://github.com/community-scripts/ProxmoxVE/pull/1962))
 
 ### 🌐 Website
 
 - [Website] update data/page.tsx [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1969](https://github.com/community-scripts/ProxmoxVE/pull/1969))
 - Prometheus Proxmox VE Exporter: Set correct website slug [@andygrunwald](https://github.com/andygrunwald) ([#1961](https://github.com/community-scripts/ProxmoxVE/pull/1961))
+
+### 🧰 Maintenance
+
+- [API] Update build.func [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#1967](https://github.com/community-scripts/ProxmoxVE/pull/1967))
 
 ## 2025-02-02
 
