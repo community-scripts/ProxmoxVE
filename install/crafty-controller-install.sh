@@ -82,9 +82,6 @@ sleep 10
 } >> ~/crafty-controller.creds
 msg_ok "Crafty-Controller service started"
 
-
-
-
 motd_ssh
 customize
 
