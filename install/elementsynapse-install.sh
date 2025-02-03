@@ -31,6 +31,7 @@ echo "matrix-synapse-py3 matrix-synapse/server-name string matrix" | debconf-set
 echo "matrix-synapse-py3 matrix-synapse/report-stats boolean false" | debconf-set-selections
 $STD apt-get install matrix-synapse-py3 -y
 sed -i 's/127.0.0.1/0.0.0.0/g' /etc/matrix-synapse/homeserver.yaml
+sed -i 's/'\''::1'\'', //g' /etc/matrix-synapse/homeserver.yaml
 systemctl enable -q --now matrix-synapse
 msg_ok "Installed Element Synapse"
 
