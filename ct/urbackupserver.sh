@@ -43,6 +43,9 @@ start
 build_container
 description
 
+pct set $CTID -features fuse=1,nesting=1
+pct reboot $CTID
+
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following IP:${CL}"
