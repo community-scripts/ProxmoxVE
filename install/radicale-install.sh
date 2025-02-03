@@ -59,8 +59,8 @@ Restart=on-failure
 [Install]
 WantedBy=multi-user.target
 EOF
+systemctl enable -q --now radicale
 msg_ok "Created Service"
-systemctl start radicale
 
 motd_ssh
 customize
