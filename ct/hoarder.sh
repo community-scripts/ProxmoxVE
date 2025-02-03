@@ -39,6 +39,9 @@ function update_script() {
     systemctl stop hoarder-web hoarder-workers hoarder-browser
     msg_ok "Stopped Services"
     msg_info "Updating ${APP} to v${RELEASE}"
+    if [[ $(corepack -v) < "0.31.0" ]]; then
+      npm install -g corepack@0.31.0 &>/dev/null
+    fi
     cd /opt
     if [[ -f /opt/hoarder/.env ]] && [[ ! -f /etc/hoarder/hoarder.env ]]; then
       mkdir -p /etc/hoarder

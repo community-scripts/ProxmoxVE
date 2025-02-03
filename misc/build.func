@@ -805,13 +805,9 @@ post_to_api() {
     "disk_size": $DISK_SIZE,
     "core_count": $CORE_COUNT,
     "ram_size": $RAM_SIZE,
-    "verbose": "$VERBOSE",
     "os_type": "$var_os",
     "os_version": "$var_version",
-    "hn": "$HN",
     "disableip6": "$DISABLEIP6",
-    "ssh": "$SSH",
-    "tags": "$TAGS",
     "nsapp": "$NSAPP",
     "method": "$METHOD",
     "pve_version": "$pve_version",
@@ -886,16 +882,13 @@ DIAGNOSTICS=yes
 #"disk_size"
 #"core_count"
 #"ram_size"
-#"verbose"
 #"os_type"
 #"os_version"
-#"hn"
 #"disableip6"
-#"ssh"
-#"tags"
 #"nsapp"
 #"method"
 #"pve_version"
+#"status"
 #If you have any concerns, please review the source code at /misc/build.func
 EOF
       DIAGNOSTICS="yes"
@@ -916,16 +909,13 @@ DIAGNOSTICS=no
 #"disk_size"
 #"core_count"
 #"ram_size"
-#"verbose"
 #"os_type"
 #"os_version"
-#"hn"
 #"disableip6"
-#"ssh"
-#"tags"
 #"nsapp"
 #"method"
 #"pve_version"
+#"status"
 #If you have any concerns, please review the source code at /misc/build.func
 EOF
       DIAGNOSTICS="no"
