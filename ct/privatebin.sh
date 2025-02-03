@@ -34,7 +34,7 @@ function update_script() {
   fi
   RELEASE=$(curl -s https://api.github.com/repos/PrivateBin/PrivateBin/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
   if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
-    msg_info "Updating ${APP} to ${RELEASE}"
+    msg_info "Updating ${APP} to v${RELEASE}"
     echo "${RELEASE}" >/opt/${APP}_version.txt
     cp -f /opt/privatebin/cfg/conf.php /tmp/privatebin_conf.bak
     wget -q "https://github.com/PrivateBin/PrivateBin/archive/refs/tags/${RELEASE}.zip"
