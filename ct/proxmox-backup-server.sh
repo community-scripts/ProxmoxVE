@@ -16,7 +16,7 @@ cat <<"EOF"
 EOF
 }
 header_info
-APP="Proxmox Backup Server"
+APP="Proxmox-Backup-Server"
 var_tags="backup"
 var_cpu="2"
 var_ram="2048"
