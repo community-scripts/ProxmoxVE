@@ -16,7 +16,7 @@ cat <<"EOF"
 EOF
 }
 header_info
-APP="PBS"
+APP="Proxmox Backup Server"
 var_tags="backup"
 var_cpu="2"
 var_ram="2048"
@@ -37,7 +37,7 @@ function update_script() {
     header_info
     check_container_storage
     check_container_resources
-    if [[ ! -d /var ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
+    if [[ ! -e /usr/sbin/proxmox-backup-manager ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
         msg_info "Updating $APP LXC"
         apt-get update &>/dev/null
         apt-get -y upgrade &>/dev/null

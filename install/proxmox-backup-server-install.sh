@@ -14,9 +14,11 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y curl
-$STD apt-get install -y sudo
-$STD apt-get install -y mc
+$STD apt-get install -y \
+    curl \
+    sudo \
+    gpg \
+    mc 
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Proxmox Backup Server"
