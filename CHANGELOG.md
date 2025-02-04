@@ -17,6 +17,14 @@ All LXC instances created using this repository come pre-installed with Midnight
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
 
+## 2025-02-04
+
+### Changed
+
+### 🚀 Updated Scripts
+
+- Update Script: Authentik Fix wrong HDD Size [@thost96](https://github.com/thost96) ([#2001](https://github.com/community-scripts/ProxmoxVE/pull/2001))
+
 ## 2025-02-03
 
 ### Changed
