@@ -34,7 +34,7 @@ wget -q "https://github.com/YuukanOO/seelf/archive/refs/tags/v${RELEASE}.tar.gz"
 tar -xzf v${RELEASE}.tar.gz
 mv seelf-${RELEASE}/ /opt/seelf
 cd /opt/seelf
-make build &> /dev/null
+$STD make build 
 PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 {
     echo "ADMIN_EMAIL=admin@example.com"
