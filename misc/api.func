@@ -37,11 +37,8 @@ EOF
 
   RESPONSE=$(curl -s -o response.txt -w "%{http_code}" -L -X POST "$API_URL" --post301 --post302 \
     -H "Content-Type: application/json" \
-    -d "$JSON_PAYLOAD")
+    -d "$JSON_PAYLOAD") || true
 
-  if [ "$RESPONSE" -ne 201 ] && [ "$RESPONSE" -ne 302 ]; then
-    msg_error "API request failed with HTTP code $RESPONSE"
-  fi
 
 }
 
@@ -80,11 +77,7 @@ EOF
 
   RESPONSE=$(curl -s -o response.txt -w "%{http_code}" -L -X POST "$API_URL" --post301 --post302 \
     -H "Content-Type: application/json" \
-    -d "$JSON_PAYLOAD")
-
-  if [ "$RESPONSE" -ne 201 ] && [ "$RESPONSE" -ne 302 ]; then
-    msg_error "API request failed with HTTP code $RESPONSE"
-  fi
+    -d "$JSON_PAYLOAD") || true
 
 }
 
@@ -109,11 +102,7 @@ EOF
    
   RESPONSE=$(curl -s -o response.txt -w "%{http_code}" -L -X POST "$API_URL" --post301 --post302 \
       -H "Content-Type: application/json" \
-      -d "$JSON_PAYLOAD")
-
-  if [ "$RESPONSE" -ne 201 ] && [ "$RESPONSE" -ne 302 ]; then
-    msg_error "API UPDATE request failed with HTTP code $RESPONSE"
-  fi
+      -d "$JSON_PAYLOAD") || true
 
   POST_UPDATE_DONE=true
 }
