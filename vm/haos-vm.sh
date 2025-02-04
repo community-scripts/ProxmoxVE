@@ -5,6 +5,9 @@
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
+source /dev/stdin <<< $(wget -qLO - https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func)
+
+
 function header_info {
   clear
   cat <<"EOF"
@@ -21,6 +24,13 @@ echo -e "\n Loading..."
 GEN_MAC=02:$(openssl rand -hex 5 | awk '{print toupper($0)}' | sed 's/\(..\)/\1:/g; s/.$//')
 NEXTID=$(pvesh get /cluster/nextid)
 VERSIONS=(stable beta dev)
+#API VARIABLES
+RANDOM_UUID="$(cat /proc/sys/kernel/random/uuid)"
+METHOD=""
+NSAPP="homeassistant-os"
+var_os="homeassistant"
+DISK_SIZE="32G"
+#
 for version in "${VERSIONS[@]}"; do
   eval "$version=$(curl -s https://raw.githubusercontent.com/home-assistant/version/master/$version.json | grep "ova" | cut -d '"' -f 4)"
 done
@@ -41,6 +51,8 @@ SPINNER_PID=""
 set -Eeuo pipefail
 trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
 trap cleanup EXIT
+trap 'post_update_to_api "failed" "INTERRUPTED"' SIGINT 
+trap 'post_update_to_api "failed" "TERMINATED"' SIGTERM
 
 function error_handler() {
   if [ -n "$SPINNER_PID" ] && ps -p $SPINNER_PID > /dev/null; then kill $SPINNER_PID > /dev/null; fi
@@ -48,6 +60,7 @@ function error_handler() {
   local exit_code="$?"
   local line_number="$1"
   local command="$2"
+  post_update_to_api "failed" "${command}"
   local error_message="${RD}[ERROR]${CL} in line ${RD}$line_number${CL}: exit code ${RD}$exit_code${CL}: while executing command ${YW}$command${CL}"
   echo -e "\n$error_message\n"
   cleanup_vmid
@@ -115,7 +128,7 @@ function check_root() {
 }
 
 function pve_check() {
-  if ! pveversion | grep -Eq "pve-manager/8\.[1-3](\.[0-9]+)*"; then
+  if ! pveversion | grep -Eq "pve-manager/8.[1-3]"; then
     msg_error "This version of Proxmox Virtual Environment is not supported"
     echo -e "Requires Proxmox Virtual Environment Version 8.1 or later."
     echo -e "Exiting..."
@@ -167,6 +180,8 @@ function default_settings() {
   VLAN=""
   MTU=""
   START_VM="yes"
+  METHOD="default"
+  var_version="${stable}"
   echo -e "${DGN}Using HAOS Version: ${BGN}${BRANCH}${CL}"
   echo -e "${DGN}Using Virtual Machine ID: ${BGN}${VMID}${CL}"
   echo -e "${DGN}Using Machine Type: ${BGN}i440fx${CL}"
@@ -184,11 +199,13 @@ function default_settings() {
 }
 
 function advanced_settings() {
+  METHOD="advanced"
   if BRANCH=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "HAOS VERSION" --radiolist "Choose Version" --cancel-button Exit-Script 10 58 3 \
     "$stable" "Stable  " ON \
     "$beta" "Beta  " OFF \
     "$dev" "Dev  " OFF \
     3>&1 1>&2 2>&3); then
+    var_version="${BRANCH}"
     echo -e "${DGN}Using HAOS Version: ${BGN}$BRANCH${CL}"
   else
     exit-script
@@ -376,6 +393,9 @@ pve_check
 ssh_check
 start_script
 
+
+post_to_api_vm
+
 msg_info "Validating Storage"
 while read -r line; do
   TAG=$(echo $line | awk '{print $1}')
@@ -444,14 +464,14 @@ done
 msg_ok "Extracted KVM Disk Image"
 msg_info "Creating HAOS VM"
 qm create $VMID -agent 1${MACHINE} -tablet 0 -localtime 1 -bios ovmf${CPU_TYPE} -cores $CORE_COUNT -memory $RAM_SIZE \
-  -name $HN -tags community-script -net0 virtio,bridge=$BRG,macaddr=$MAC$VLAN$MTU -onboot 1 -ostype l26 -scsihw virtio-scsi-pci
+  -name $HN -tags proxmox-helper-scripts -net0 virtio,bridge=$BRG,macaddr=$MAC$VLAN$MTU -onboot 1 -ostype l26 -scsihw virtio-scsi-pci
 pvesm alloc $STORAGE $VMID $DISK0 4M 1>&/dev/null
 qm importdisk $VMID ${FILE%.*} $STORAGE ${DISK_IMPORT:-} 1>&/dev/null
 qm set $VMID \
   -efidisk0 ${DISK0_REF}${FORMAT} \
   -scsi0 ${DISK1_REF},${DISK_CACHE}${THIN}size=32G \
   -boot order=scsi0 \
-  -description "<div align='center'><a href='https://Helper-Scripts.com' target='_blank' rel='noopener noreferrer'><img src='https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/images/logo-81x112.png'/></a>
+  -description "<div align='center'><a href='https://Helper-Scripts.com' target='_blank' rel='noopener noreferrer'><img src='https://raw.githubusercontent.com/michelroegl-brunner/ProxmoxVE/refs/heads/develop/misc/images/logo-81x112.png'/></a>
 
   # Home Assistant OS
 
@@ -463,4 +483,7 @@ if [ "$START_VM" == "yes" ]; then
   qm start $VMID
   msg_ok "Started Home Assistant OS VM"
 fi
+post_update_to_api "done" "none"
 msg_ok "Completed Successfully!\n"
+
+

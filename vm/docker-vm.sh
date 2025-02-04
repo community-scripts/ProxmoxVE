@@ -26,6 +26,7 @@ METHOD=""
 NSAPP="debain12vm"
 var_os="debain"
 var_version="12"
+DISK_SIZE="8G"
 
 YW=$(echo "\033[33m")
 BL=$(echo "\033[36m")
@@ -62,7 +63,6 @@ function cleanup_vmid() {
 
 function cleanup() {
   popd >/dev/null
-  post_update_to_api "done" "none"
   rm -rf $TEMP_DIR
 }
 
@@ -477,4 +477,5 @@ if [ "$START_VM" == "yes" ]; then
   qm start $VMID
   msg_ok "Started Docker VM"
 fi
+post_update_to_api "done" "none"
 msg_ok "Completed Successfully!\n"
