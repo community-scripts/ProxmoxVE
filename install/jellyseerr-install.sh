@@ -33,7 +33,7 @@ $STD apt-get install -y nodejs
 msg_ok "Installed Node.js"
 
 msg_info "Installing pnpm"
-$STD npm install -g pnpm
+$STD npm install -g pnpm@^9.0.0
 msg_ok "Installed pnpm"
 
 msg_info "Installing Jellyseerr (Patience)"
