@@ -17,7 +17,7 @@ find ./ct -type f -name "*.sh" | sort | while read -r script; do
     output_file="${headers_dir}/$(basename "${script%.*}")"
 
     # Generate figlet output
-    figlet_output=$(figlet -f slant "$app_name")
+    figlet_output=$(figlet -f -w 500 slant "$app_name")
 
     # Check if figlet output is not empty
     if [[ -n "$figlet_output" ]]; then
