@@ -25,7 +25,7 @@ curl -s -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | ba
 tar -C /usr/local -xzf go1.23.5.linux-amd64.tar.gz
 export PATH=$PATH:/usr/local/go/bin
 source ~/.bashrc
-nvm install node &> /dev/null
+$STD nvm install node
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up seelf. Patience"
