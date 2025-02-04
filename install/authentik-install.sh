@@ -187,7 +187,6 @@ msg_info "Cleaning up"
 rm -rf /tmp/Python-3.12.1
 rm -rf /tmp/Python.tgz
 rm -rf go/
-rm -rf /tmp/${GO_RELEASE}
 rm -rf /tmp/geoipupdate.deb
 rm -rf authentik.tar.gz
 $STD apt-get -y remove yq
