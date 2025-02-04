@@ -7,7 +7,7 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 
 APP="seelf"
 TAGS="server;docker"
-var_cpu="4"
+var_cpu="2"
 var_ram="4096"
 var_disk="10"
 var_os="debian"
