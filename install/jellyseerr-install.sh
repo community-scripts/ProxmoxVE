@@ -39,7 +39,7 @@ $STD git checkout main
 pnpm_desired=$(grep -Po '"pnpm":\s*"\K[^"]+' /opt/jellyseerr/package.json)
 msg_info "Installing pnpm version $pnpm_desired..."
 $STD npm install -g pnpm@$pnpm_desired
-msg_ok "Installed pnpm version $(pnpm --version 2>/dev/null)"
+msg_ok "Installed pnpm"
 
 msg_info "Installing Jellyseerr (Patience)"
 export CYPRESS_INSTALL_BINARY=0
