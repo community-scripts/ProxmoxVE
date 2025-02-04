@@ -45,6 +45,7 @@ function update_script() {
     unzip -q v${RELEASE}.zip
     mv tianji-${RELEASE} /opt/tianji
     cd tianji
+    export NODE_OPTIONS="--max_old_space_size=4096"
     pnpm install --filter @tianji/client... --config.dedupe-peer-dependents=false --frozen-lockfile >/dev/null 2>&1
     pnpm build:static >/dev/null 2>&1
     pnpm install --filter @tianji/server... --config.dedupe-peer-dependents=false >/dev/null 2>&1
