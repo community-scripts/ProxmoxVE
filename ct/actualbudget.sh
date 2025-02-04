@@ -60,7 +60,7 @@ function update_script() {
         
         msg_info "Cleaning Up"
         rm -rf /opt/actualbudget_bak
-        rm -rf /tmp/actual-server.tar.gz
+        rm -rf /tmp/v${RELEASE}.tar.gz
         msg_ok "Cleaned"
         msg_ok "Updated Successfully"
     else
