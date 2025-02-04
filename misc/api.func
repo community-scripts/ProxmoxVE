@@ -61,7 +61,7 @@ post_to_api_vm() {
 
   JSON_PAYLOAD=$(cat <<EOF
 {
-    "ct_type": "",
+    "ct_type": 2,
     "type":"vm",
     "disk_size": $DISK_SIZE,
     "core_count": $CORE_COUNT,
