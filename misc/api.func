@@ -4,6 +4,10 @@
 
 post_to_api() {
 
+  if ! command -v curl &> /dev/null; then
+    return
+  fi
+
   if [ "$DIAGNOSTICS" = "no" ]; then
     return
   fi
@@ -45,6 +49,10 @@ EOF
 post_to_api_vm() {
 
   DIAGNOSTICS=$(grep -i "^DIAGNOSTICS=" /usr/local/community-scripts/diagnostics | awk -F'=' '{print $2}')
+
+  if ! command -v curl &> /dev/null; then
+    return
+  fi
 
   if [ "$DIAGNOSTICS" = "no" ]; then
     return
@@ -88,6 +96,10 @@ EOF
 
 POST_UPDATE_DONE=false
 post_update_to_api() {
+
+    if ! command -v curl &> /dev/null; then
+      return
+    fi
 
     if [ "$POST_UPDATE_DONE" = true ]; then
         return 0
