@@ -47,9 +47,12 @@ EOF
 
 post_to_api_vm() {
 
+  DIAGNOSTICS=$(grep -i "^DIAGNOSTICS=" /usr/local/community-scripts/diagnostics | awk -F'=' '{print $2}')
+
   if [ "$DIAGNOSTICS" = "no" ]; then
     return
   fi
+
 
   if [ -z "$RANDOM_UUID" ]; then
     return
@@ -59,11 +62,13 @@ post_to_api_vm() {
   local pve_version="not found"
   pve_version=$(pveversion | awk -F'[/ ]' '{print $2}')
 
+  DISK_SIZE_API=${DISK_SIZE%G}
+
   JSON_PAYLOAD=$(cat <<EOF
 {
     "ct_type": 2,
     "type":"vm",
-    "disk_size": $DISK_SIZE,
+    "disk_size": $DISK_SIZE_API,
     "core_count": $CORE_COUNT,
     "ram_size": $RAM_SIZE,
     "os_type": "$var_os",
@@ -84,6 +89,7 @@ EOF
 
   if [ "$RESPONSE" -ne 201 ] && [ "$RESPONSE" -ne 302 ]; then
     msg_error "API request failed with HTTP code $RESPONSE"
+    echo -e ${JSON_PAYLOAD}
   fi
 
 }
