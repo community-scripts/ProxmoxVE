@@ -8,7 +8,7 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 # App Default Values
 APP="Authentik"
 var_tags="identity-provider"
-var_disk="15"
+var_disk="12"
 var_cpu="6"
 var_ram="8192"
 var_os="debian"
