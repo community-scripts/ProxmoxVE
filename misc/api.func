@@ -45,6 +45,49 @@ EOF
 
 }
 
+post_to_api_vm() {
+
+  if [ "$DIAGNOSTICS" = "no" ]; then
+    return
+  fi
+
+  if [ -z "$RANDOM_UUID" ]; then
+    return
+  fi
+
+  local API_URL="http://api.community-scripts.org/upload"
+  local pve_version="not found"
+  pve_version=$(pveversion | awk -F'[/ ]' '{print $2}')
+
+  JSON_PAYLOAD=$(cat <<EOF
+{
+    "ct_type": "",
+    "type":"vm",
+    "disk_size": $DISK_SIZE,
+    "core_count": $CORE_COUNT,
+    "ram_size": $RAM_SIZE,
+    "os_type": "$var_os",
+    "os_version": "$var_version",
+    "disableip6": "",
+    "nsapp": "$NSAPP",
+    "method": "$METHOD",
+    "pve_version": "$pve_version",
+    "status": "installing",
+    "random_id": "$RANDOM_UUID"
+}
+EOF
+)
+
+  RESPONSE=$(curl -s -o response.txt -w "%{http_code}" -L -X POST "$API_URL" --post301 --post302 \
+    -H "Content-Type: application/json" \
+    -d "$JSON_PAYLOAD")
+
+  if [ "$RESPONSE" -ne 201 ] && [ "$RESPONSE" -ne 302 ]; then
+    msg_error "API request failed with HTTP code $RESPONSE"
+  fi
+
+}
+
 POST_UPDATE_DONE=false
 post_update_to_api() {
 
