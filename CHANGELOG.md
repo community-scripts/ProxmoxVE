@@ -27,6 +27,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- Fix Script: post-pmg-install.sh [@thost96](https://github.com/thost96) ([#2022](https://github.com/community-scripts/ProxmoxVE/pull/2022))
 - Update authentik-install.sh [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2020](https://github.com/community-scripts/ProxmoxVE/pull/2020))
 - Update tandoor-install.sh, Fix node Version [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2010](https://github.com/community-scripts/ProxmoxVE/pull/2010))
 - Update Script: Authentik Fix wrong HDD Size [@thost96](https://github.com/thost96) ([#2001](https://github.com/community-scripts/ProxmoxVE/pull/2001))
