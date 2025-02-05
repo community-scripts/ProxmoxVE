@@ -193,6 +193,10 @@ EOF
 	$STD apt-get -o Dpkg::Options::="--force-confold" -y dist-upgrade
 	rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
 	$STD apt-get install -y wget logrotate
+
+	if [[ "$SSH_ROOT" == "yes" ]]; then
+		$STD apt-get install -y openssh-server
+	fi
 	msg_ok "Updated Container OS"
 }
 
