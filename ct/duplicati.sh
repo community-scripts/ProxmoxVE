@@ -39,9 +39,6 @@ function update_script() {
         systemctl stop duplicati
         msg_ok "Stopped $APP"
 
-        msg_info "Creating Backup"
-        tar -czf "/opt/${APP}_backup_$(date +%F).tar.gz" ~/Duplicati/*
-        msg_ok "Backup Created"
 
         msg_info "Updating $APP to v${RELEASE}"
         wget -q "https://github.com/duplicati/duplicati/releases/download/v${RELEASE}/duplicati-${RELEASE}-linux-x64-gui.deb"
@@ -50,7 +47,6 @@ function update_script() {
 
         msg_info "Starting $APP"
         systemctl start duplicati
-        sleep 2
         msg_ok "Started $APP"
 
         msg_info "Cleaning Up"
