@@ -23,11 +23,13 @@ $STD apt-get install -y \
   debconf-utils
 msg_ok "Installed Dependencies"
 
+read -p "Please enter the name for your server: " servername
+
 msg_info "Installing Element Synapse"
 wget -O /usr/share/keyrings/matrix-org-archive-keyring.gpg https://packages.matrix.org/debian/matrix-org-archive-keyring.gpg
 echo "deb [signed-by=/usr/share/keyrings/matrix-org-archive-keyring.gpg] https://packages.matrix.org/debian/ $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/matrix-org.list
 $STD apt-get update
-echo "matrix-synapse-py3 matrix-synapse/server-name string matrix" | debconf-set-selections
+echo "matrix-synapse-py3 matrix-synapse/server-name string $servername" | debconf-set-selections
 echo "matrix-synapse-py3 matrix-synapse/report-stats boolean false" | debconf-set-selections
 $STD apt-get install matrix-synapse-py3 -y
 sed -i 's/127.0.0.1/0.0.0.0/g' /etc/matrix-synapse/homeserver.yaml
