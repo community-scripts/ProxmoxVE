@@ -47,7 +47,6 @@ function update_script() {
 
         msg_info "Starting $APP"
         systemctl start duplicati
-        sleep 2
         msg_ok "Started $APP"
 
         msg_info "Cleaning Up"
