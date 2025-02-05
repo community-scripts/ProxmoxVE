@@ -21,6 +21,15 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### Changed
 
+### 🚀 Updated Scripts
+
+- Bugfix: Jellyseerr pnpm Version [@vidonnus](https://github.com/vidonnus) ([#2033](https://github.com/community-scripts/ProxmoxVE/pull/2033))
+- Feature: Element Synapse: add option to enter server name during LXC installation [@tremor021](https://github.com/tremor021) ([#2038](https://github.com/community-scripts/ProxmoxVE/pull/2038))
+
+### 🌐 Website
+
+- Bump vitest from 2.1.6 to 2.1.9 in /frontend [@dependabot[bot]](https://github.com/dependabot[bot]) ([#2042](https://github.com/community-scripts/ProxmoxVE/pull/2042))
+
 ### 🧰 Maintenance
 
 - [API] Add API backend code [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2040](https://github.com/community-scripts/ProxmoxVE/pull/2040))
