@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 source <(curl -s https://raw.githubusercontent.com/bketelsen/IncusScripts/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
-# Author: CrazyWolf13
+# Author: tremor021
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: Proxmox Server Solution GmbH
+# Source: https://radicale.org/
 
 # App Default Values
-APP="Proxmox-Datacenter-Manager"
-var_tags="datacenter"
-var_cpu="2"
-var_ram="2048"
-var_disk="10"
+APP="Radicale"
+var_tags="calendar"
+var_cpu="1"
+var_ram="512"
+var_disk="2"
 var_os="debian"
 var_version="12"
 var_unprivileged="1"
@@ -28,11 +28,21 @@ function update_script() {
     header_info
     check_container_storage
     check_container_resources
-    if [[ ! -e /usr/sbin/proxmox-datacenter-manager-admin ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
-        msg_info "Updating $APP LXC"
-        apt-get update &>/dev/null
-        apt-get -y upgrade &>/dev/null
-        msg_ok "Updated $APP LXC"
+    if [[ ! -d /opt/radicale ]]; then
+        msg_error "No ${APP} Installation Found!"
+        exit
+    fi
+
+    msg_info "Updating ${APP}"
+    python3 -m venv /opt/radicale
+    source /opt/radicale/bin/activate
+    python3 -m pip install --upgrade https://github.com/Kozea/Radicale/archive/master.tar.gz
+    msg_ok "Updated ${APP}"
+
+    msg_info "Starting Service"
+    systemctl enable -q --now radicale
+    msg_ok "Started Service"
+
     exit
 }
 
@@ -43,4 +53,4 @@ description
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}https://${IP}:8443${CL}"
+echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:5232${CL}"
