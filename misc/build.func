@@ -1175,31 +1175,21 @@ exit_script() {
   #200 exit codes indicate error in create_lxc.sh
   #100 exit codes indicate error in install.func
 
-  if [ $exit_code -ne 0 ]; then  # Check if exit code is nonzero
-    if [ $exit_code -eq 200 ]; then
-      post_update_to_api "failed" "create_lxc.sh: Error during LXC creation"
-    elif [ $exit_code -eq 201 ]; then
-      post_update_to_api "failed" "create_lxc.sh Invalid Storage class"
-      elif [ $exit_code -eq 202 ]; then
-      post_update_to_api "failed" "create_lxc.sh Invalid Menu aborted"
-    elif [ $exit_code -eq 203 ]; then
-      post_update_to_api "failed" "create_lxc.sh CTID was unset"
-    elif [ $exit_code -eq 204 ]; then
-      post_update_to_api "failed" "create_lxc.sh PCT_OSTYPE was unset"
-    elif [ $exit_code -eq 205 ]; then
-      post_update_to_api "failed" "create_lxc.sh ID cannot be less than 100"
-    elif [ $exit_code -eq 206 ]; then
-      post_update_to_api "failed" "create_lxc.sh ID already in use"
-    elif [ $exit_code -eq 207 ]; then
-      post_update_to_api "failed" "create_lxc.sh Template not found"
-    elif [ $exit_code -eq 208 ]; then
-      post_update_to_api "failed" "create_lxc.sh Error downloading template"
-    elif [ $exit_code -eq 101 ]; then
-      post_update_to_api "failed" "create_lxc.sh No Network connection"
-    else
-      post_update_to_api "failed" "Unknown error, exit code: $exit_code"
-    fi
-  fi
+if [ $exit_code -ne 0 ]; then  # Check if exit code is nonzero
+    case $exit_code in
+        200) post_update_to_api "failed" "create_lxc.sh: Error during LXC creation" ;;
+        201) post_update_to_api "failed" "create_lxc.sh Invalid Storage class" ;;
+        202) post_update_to_api "failed" "create_lxc.sh Invalid Menu aborted" ;;
+        203) post_update_to_api "failed" "create_lxc.sh CTID was unset" ;;
+        204) post_update_to_api "failed" "create_lxc.sh PCT_OSTYPE was unset" ;;
+        205) post_update_to_api "failed" "create_lxc.sh ID cannot be less than 100" ;;
+        206) post_update_to_api "failed" "create_lxc.sh ID already in use" ;;
+        207) post_update_to_api "failed" "create_lxc.sh Template not found" ;;
+        208) post_update_to_api "failed" "create_lxc.sh Error downloading template" ;;
+        101) post_update_to_api "failed" "create_lxc.sh No Network connection" ;;
+        *)   post_update_to_api "failed" "Unknown error, exit code: $exit_code" ;;
+    esac
+fi
 }
 
 
