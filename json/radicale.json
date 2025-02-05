@@ -36,7 +36,7 @@
       "type": "info"
       },
       {
-        "text": "This application requires additional configuration. Please refer to the documentation.",
+        "text": "This application requires additional configuration. Please refer to https://github.com/community-scripts/ProxmoxVE/discussions/2073.",
         "type": "info"
       }
     ]
