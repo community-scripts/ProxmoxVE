@@ -42,14 +42,11 @@ EOF
   RESPONSE=$(curl -s -o response.txt -w "%{http_code}" -L -X POST "$API_URL" --post301 --post302 \
     -H "Content-Type: application/json" \
     -d "$JSON_PAYLOAD") || true
-
-
 }
 
 post_to_api_vm() {
 
   DIAGNOSTICS=$(grep -i "^DIAGNOSTICS=" /usr/local/community-scripts/diagnostics | awk -F'=' '{print $2}')
-
   if ! command -v curl &> /dev/null; then
     return
   fi
@@ -91,7 +88,6 @@ EOF
   RESPONSE=$(curl -s -o response.txt -w "%{http_code}" -L -X POST "$API_URL" --post301 --post302 \
     -H "Content-Type: application/json" \
     -d "$JSON_PAYLOAD") || true
-
 }
 
 POST_UPDATE_DONE=false
@@ -106,7 +102,7 @@ post_update_to_api() {
     fi
     local API_URL="http://api.community-scripts.org/upload/updatestatus"    
     local status="${1:-failed}"
-    local error="${2:-unknown}"
+    local error="${2:-No error message}"
 
     JSON_PAYLOAD=$(cat <<EOF
 {
