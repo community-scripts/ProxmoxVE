@@ -34,6 +34,10 @@
       {
       "text": "To view the user credentials : `cat radicale.creds`",
       "type": "info"
+      },
+      {
+        "text": "This application requires additional configuration. Please refer to the documentation.",
+        "type": "info"
       }
     ]
   }
