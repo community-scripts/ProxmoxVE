@@ -21,6 +21,13 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### Changed
 
+### ✨ New Scripts
+
+- New Script: seelf [@tremor021](https://github.com/tremor021) ([#2023](https://github.com/community-scripts/ProxmoxVE/pull/2023))
+- New Script: Crafty-Controller [@CrazyWolf13](https://github.com/CrazyWolf13) ([#1926](https://github.com/community-scripts/ProxmoxVE/pull/1926))
+- New script: Koillection [@bvdberg01](https://github.com/bvdberg01) ([#2031](https://github.com/community-scripts/ProxmoxVE/pull/2031))
+- New Script: Radicale [@tremor021](https://github.com/tremor021) ([#1941](https://github.com/community-scripts/ProxmoxVE/pull/1941))
+
 ### 🚀 Updated Scripts
 
 - Bugfix: Jellyseerr pnpm Version [@vidonnus](https://github.com/vidonnus) ([#2033](https://github.com/community-scripts/ProxmoxVE/pull/2033))
