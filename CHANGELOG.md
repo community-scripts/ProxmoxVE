@@ -31,6 +31,8 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- [API] Update build.func / Improve error messages #2 [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2050](https://github.com/community-scripts/ProxmoxVE/pull/2050))
+- [API] Update create-lxc.sh / Improve error messages #1 [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2049](https://github.com/community-scripts/ProxmoxVE/pull/2049))
 - Bugfix: Jellyseerr pnpm Version [@vidonnus](https://github.com/vidonnus) ([#2033](https://github.com/community-scripts/ProxmoxVE/pull/2033))
 - Feature: Element Synapse: add option to enter server name during LXC installation [@tremor021](https://github.com/tremor021) ([#2038](https://github.com/community-scripts/ProxmoxVE/pull/2038))
 
