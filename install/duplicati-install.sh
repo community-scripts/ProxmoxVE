@@ -30,10 +30,10 @@ $STD dpkg -i duplicati-${RELEASE}-linux-x64-gui.deb
 echo "${RELEASE}" >/opt/Duplicati_version.txt
 msg_ok "Finished setting up Duplicati"
 
-read -p "Enter password for Administration UI: " adminpass
 DECRYPTKEY=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
+ADMINPASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 {
-    echo "Admin password = $adminpass"
+    echo "Admin password = ${ADMINPASS}"
     echo "Database encryption key = ${DECRYPTKEY}"
 } >> ~/duplicati.creds
 
@@ -44,7 +44,7 @@ Description=Duplicati Service
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/duplicati-server --webservice-interface=any --webservice-password=$adminpass --settings-encryption-key=$DECRYPTKEY
+ExecStart=/usr/bin/duplicati-server --webservice-interface=any --webservice-password=$ADMINPASS --settings-encryption-key=$DECRYPTKEY
 Restart=always
 
 [Install]
