@@ -13,6 +13,7 @@ variables() {
   METHOD="default"                   # sets the METHOD variable to "default", used for the API call.
   RANDOM_UUID="$(cat /proc/sys/kernel/random/uuid)" # generates a random UUID and sets it to the RANDOM_UUID variable.
 }
+
 source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func)
 
 # This function sets various color variables using ANSI escape codes for formatting text in the terminal.
