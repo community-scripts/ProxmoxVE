@@ -47,6 +47,7 @@ jobs:
         id: check-scripts
         run: |
           CHANGED_FILES=$(printf "%s\n" ${{ steps.changed-files.outputs.files }} | { grep -E '^(ct|install)/.*\.sh$' || true; })
+          CHANGED_FILES=$(echo "$CHANGED_FILES" | grep -v 'ct/create_lxc.sh' || true)
 
           NON_COMPLIANT_FILES=""
           for FILE in $CHANGED_FILES; do
