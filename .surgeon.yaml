@@ -101,6 +101,12 @@ codemods:
   args:
   - description
   - codemods/description.sh
+- description: Error Handler
+  mod: bashfunc
+  match: misc/install.func
+  args:
+  - error_handler
+  - codemods/error_handler.sh
 - description: Install wget
   mod: bashfunc
   match: misc/install.func
