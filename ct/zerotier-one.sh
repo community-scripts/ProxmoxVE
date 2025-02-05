@@ -34,14 +34,15 @@ function update_script() {
         exit
     fi
     msg_info "Stopping Service"
-    systemctl stop zerotier-one &>/dev/null
+    systemctl stop zerotier-one
     msg_ok "Stopping Service"
     msg_info "Updating ${APP}"
     apt-get update &>/dev/null
-    apt-get -y upgrade &>/dev/null
-    msg_ok "Updated ${APP}
+    apt-get -y upgrade
+    msg_ok "Updated ${APP}"
+
     msg_info "Starting Service"
-    systemctl start zerotier-one &>/dev/null
+    systemctl start zerotier-one
     msg_ok "Started Service"
     exit
 }
