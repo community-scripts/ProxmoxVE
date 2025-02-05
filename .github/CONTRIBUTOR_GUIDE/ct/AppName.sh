@@ -66,7 +66,6 @@ function update_script() {
         # Starting Services
         msg_info "Starting $APP"
         systemctl start [SERVICE_NAME]
-        sleep 2
         msg_ok "Started $APP"
 
         # Cleaning up
