@@ -41,6 +41,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 ### 🧰 Maintenance
 
 - [API] Add API backend code [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2040](https://github.com/community-scripts/ProxmoxVE/pull/2040))
+- Update auto-update-app-headers.yml: Enable auto approval [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2057](https://github.com/community-scripts/ProxmoxVE/pull/2057))
 
 ## 2025-02-04
 
