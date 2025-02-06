@@ -19,7 +19,6 @@ $STD apt-get install -y \
   curl \
   sudo \
   mc \
-  # Dependencies for Apache Tika
   software-properties-common \
   gdal-bin \
   tesseract-ocr \
