@@ -23,7 +23,9 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### ✨ New Scripts
 
-- Add new LXC: Paperless-AI [@MickLesk](https://github.com/MickLesk) ([#2093](https://github.com/community-scripts/ProxmoxVE/pull/2093))
+- New Script: Paperless-AI [@MickLesk](https://github.com/MickLesk) ([#2093](https://github.com/community-scripts/ProxmoxVE/pull/2093))
+- New Script: Duplicati [@tremor021](https://github.com/tremor021) ([#2052](https://github.com/community-scripts/ProxmoxVE/pull/2052))
+- New Script: Apache Tika [@andygrunwald](https://github.com/andygrunwald) ([#2079](https://github.com/community-scripts/ProxmoxVE/pull/2079))
 
 ### 🚀 Updated Scripts
 
@@ -32,6 +34,8 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🌐 Website
 
+- Refactor JSON generator buttons layout for better alignment and consistency [@BramSuurdje](https://github.com/BramSuurdje) ([#2106](https://github.com/community-scripts/ProxmoxVE/pull/2106))
+- Website: Refactor Footer for improved layout and styling consistency [@BramSuurdje](https://github.com/BramSuurdje) ([#2107](https://github.com/community-scripts/ProxmoxVE/pull/2107))
 - Website: Update Footer for Json-Editor & Api [@MickLesk](https://github.com/MickLesk) ([#2100](https://github.com/community-scripts/ProxmoxVE/pull/2100))
 - Website: Add Download for json-editor [@MickLesk](https://github.com/MickLesk) ([#2099](https://github.com/community-scripts/ProxmoxVE/pull/2099))
 - Radicale: Provide additional information about configuration [@tremor021](https://github.com/tremor021) ([#2072](https://github.com/community-scripts/ProxmoxVE/pull/2072))
