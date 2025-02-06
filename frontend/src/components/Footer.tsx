@@ -1,12 +1,13 @@
 import { basePath } from "@/config/siteConfig";
 import Link from "next/link";
+import { FileJson, Server, ExternalLink } from "lucide-react";
 
 export default function Footer() {
   return (
     <div className="supports-backdrop-blur:bg-background/90 mt-auto flex border-t border-border bg-background/40 py-6 backdrop-blur-lg">
-      <div className="flex w-full justify-between">
-        <div className="mx-6 w-full max-w-7xl text-xs sm:text-sm text-muted-foreground">
-          Website built by the community. The source code is avaliable on{" "}
+      <div className="mx-6 w-full max-w-7xl flex justify-between text-xs sm:text-sm text-muted-foreground">
+        <div>
+          Website built by the community. The source code is available on{" "}
           <Link
             href={`https://github.com/community-scripts/${basePath}`}
             target="_blank"
@@ -17,6 +18,20 @@ export default function Footer() {
             GitHub
           </Link>
           .
+        </div>
+        <div className="flex gap-4">
+          <Link
+            href="/json-editor"
+            className="flex items-center gap-2 text-primary hover:underline"
+          >
+            <FileJson className="h-4 w-4" /> JSON Editor
+          </Link>
+          <Link
+            href="/data"
+            className="flex items-center gap-2 text-primary hover:underline"
+          >
+            <Server className="h-4 w-4" /> API Documentation
+          </Link>
         </div>
       </div>
     </div>
