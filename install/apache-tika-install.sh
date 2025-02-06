@@ -66,7 +66,6 @@ ExecReload=/bin/kill -HUP \$MAINPID
 [Install]
 WantedBy=multi-user.target
 EOF
-
 systemctl enable -q --now apache-tika
 msg_ok "Created Service"
 
