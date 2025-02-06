@@ -14,10 +14,27 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
+# See also https://github.com/apache/tika-docker/blob/master/full/Dockerfile
 $STD apt-get install -y \
   curl \
   sudo \
-  mc
+  mc \
+  # Dependencies for Apache Tika
+  software-properties-common \
+  gdal-bin \
+  tesseract-ocr \
+  tesseract-ocr-eng \
+  tesseract-ocr-ita \
+  tesseract-ocr-fra \
+  tesseract-ocr-spa \
+  tesseract-ocr-deu
+$STD echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | debconf-set-selections
+$STD apt-get install -y \
+  xfonts-utils \
+  fonts-freefont-ttf \
+  fonts-liberation \
+  ttf-mscorefonts-installer \
+  cabextract
 msg_ok "Installed Dependencies"
 
 msg_info "Setup Java"
