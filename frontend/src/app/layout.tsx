@@ -57,7 +57,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className="dark" suppressHydrationWarning>
       <head>
         <script
           defer
@@ -69,17 +69,12 @@ export default function RootLayout({
         <link rel="preconnect" href="https://api.github.com" />
       </head>
       <body className={inter.className}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
-        >
+        <ThemeProvider>
           <div className="flex w-full flex-col justify-center">
             <Navbar />
             <div className="flex min-h-screen flex-col justify-center">
               <div className="flex w-full justify-center">
-                <div className="w-full max-w-7xl ">
+                <div className="w-full max-w-7xl">
                   <NuqsAdapter>{children}</NuqsAdapter>
                   <Toaster richColors />
                 </div>
