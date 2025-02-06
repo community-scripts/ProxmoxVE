@@ -32,6 +32,8 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🌐 Website
 
+- Website: Update Footer for Json-Editor & Api [@MickLesk](https://github.com/MickLesk) ([#2100](https://github.com/community-scripts/ProxmoxVE/pull/2100))
+- Website: Add Download for json-editor [@MickLesk](https://github.com/MickLesk) ([#2099](https://github.com/community-scripts/ProxmoxVE/pull/2099))
 - Radicale: Provide additional information about configuration [@tremor021](https://github.com/tremor021) ([#2072](https://github.com/community-scripts/ProxmoxVE/pull/2072))
 
 ## 2025-02-05
