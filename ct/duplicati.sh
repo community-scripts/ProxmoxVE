@@ -25,24 +25,19 @@ function update_script() {
     header_info
     check_container_storage
     check_container_resources
-
     if [[ ! -f /usr/bin/duplicati-server ]]; then
         msg_error "No ${APP} Installation Found!"
         exit
     fi
-
     RELEASE=$(curl -s https://api.github.com/repos/duplicati/duplicati/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4)}')
     if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
-        msg_info "Updating $APP"
-
         msg_info "Stopping $APP"
         systemctl stop duplicati
         msg_ok "Stopped $APP"
-
-
         msg_info "Updating $APP to v${RELEASE}"
         wget -q "https://github.com/duplicati/duplicati/releases/download/v${RELEASE}/duplicati-${RELEASE}-linux-x64-gui.deb"
         $STD dpkg -i duplicati-${RELEASE}-linux-x64-gui.deb
+        echo "${RELEASE}" >/opt/${APP}_version.txt
         msg_ok "Updated $APP to v${RELEASE}"
 
         msg_info "Starting $APP"
@@ -53,7 +48,6 @@ function update_script() {
         rm -rf ~/duplicati-${RELEASE}-linux-x64-gui.deb
         msg_ok "Cleanup Completed"
 
-        echo "${RELEASE}" >/opt/${APP}_version.txt
         msg_ok "Update Successful"
     else
         msg_ok "No update required. ${APP} is already at v${RELEASE}"
