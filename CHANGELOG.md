@@ -21,6 +21,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### Changed
 
+### 💥 Breaking Changes
+
+- Revert "Add new LXC: Paperless-AI" [@MickLesk](https://github.com/MickLesk) ([#2091](https://github.com/community-scripts/ProxmoxVE/pull/2091))
+
 ### 🚀 Updated Scripts
 
 - Fix: Pocket-ID Change link to GH Repo [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2082](https://github.com/community-scripts/ProxmoxVE/pull/2082))
