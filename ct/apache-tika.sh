@@ -50,6 +50,9 @@ function update_script() {
     msg_info "Starting ${APP}"
     systemctl start apache-tika
     msg_ok "Started ${APP}"
+    msg_info "Cleaning Up"
+    rm -rf /opt/apache-tika/tika-server-standard-prev-version.jar
+    msg_ok "Cleanup Completed"
     msg_ok "Updated Successfully"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}"
