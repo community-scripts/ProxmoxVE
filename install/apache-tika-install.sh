@@ -14,7 +14,6 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-# See also https://github.com/apache/tika-docker/blob/master/full/Dockerfile
 $STD apt-get install -y \
   curl \
   sudo \
