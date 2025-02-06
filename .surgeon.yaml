@@ -1,7 +1,7 @@
 upstream: https://github.com/community-scripts/ProxmoxVE
 modsdir: codemods
-stage: true
-commit: true
+stage: false
+commit: false
 push: true
 codemods:
 - description: Modify Build Func
@@ -28,6 +28,12 @@ codemods:
   args:
   - Proxmox VE Helper Scripts
   - Incus Scripts
+- description: Inject Modification notice
+  mod: inject
+  match: install/*.sh
+  args:
+  - end
+  - # Modified by surgeon
 - description: Whiptail misc sh
   mod: sed
   match: misc/*.sh
