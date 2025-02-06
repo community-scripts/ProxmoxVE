@@ -38,7 +38,7 @@ msg_ok "Installed WGDashboard"
 
 msg_info "Create Example Config for WGDashboard"
 private_key=$(wg genkey)
-cat <<EOF >/etc/wireguard/wg0.conf
+cat <<EOF >/etc/wireguard/wg0.conf 
 [Interface]
 PrivateKey = ${private_key}
 Address = 10.0.0.1/24
@@ -80,3 +80,4 @@ msg_info "Cleaning up"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
+# Modified by surgeon

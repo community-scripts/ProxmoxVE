@@ -43,8 +43,8 @@ host = 8.8.8.8
 ++ Cloudflare
 title = Cloudflare
 host = 1.1.1.1
-++ Quad9
-title = Quad9
+++ Quad9  
+title = Quad9 
 host = 9.9.9.9
 ++ OpenDNS
 title = OpenDNS
@@ -75,3 +75,4 @@ msg_info "Cleaning up"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
+# Modified by surgeon

@@ -56,6 +56,7 @@ curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dea
 echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_22.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
 $STD apt-get update
 $STD apt-get install -y nodejs
+$STD npm install -g corepack@0.31.0
 msg_ok "Installed Node.js"
 
 msg_info "Installing Hoarder"
@@ -96,7 +97,7 @@ BROWSER_WEB_URL="http://127.0.0.1:9222"
 
 # You can change the models used by uncommenting the following lines, and changing them according to your needs:
 # INFERENCE_TEXT_MODEL="gpt-4o-mini"
-# INFERENCE_IMAGE_MODEL="gpt-4o-mini"
+# INFERENCE_IMAGE_MODEL="gpt-4o-mini" 
 EOF
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Installed Hoarder"
@@ -180,3 +181,4 @@ rm -f /opt/v${RELEASE}.zip
 $STD apt-get autoremove -y
 $STD apt-get autoclean -y
 msg_ok "Cleaned"
+# Modified by surgeon

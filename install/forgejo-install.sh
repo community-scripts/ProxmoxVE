@@ -50,7 +50,7 @@ RestartSec=2s
 Type=simple
 User=git
 Group=git
-WorkingDirectory=/var/lib/forgejo/
+WorkingDirectory=/var/lib/forgejo/ 
 ExecStart=/usr/local/bin/forgejo web --config /etc/forgejo/app.ini
 Restart=always
 Environment=USER=git HOME=/home/git GITEA_WORK_DIR=/var/lib/forgejo
@@ -67,3 +67,4 @@ msg_info "Cleaning up"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
+# Modified by surgeon

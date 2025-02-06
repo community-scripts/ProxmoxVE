@@ -62,7 +62,7 @@ Group=root
 
 Type=simple
 WorkingDirectory=/opt/tdarr/Tdarr_Server
-ExecStartPre=/opt/tdarr/Tdarr_Updater
+ExecStartPre=/opt/tdarr/Tdarr_Updater                  
 ExecStart=/opt/tdarr/Tdarr_Server/Tdarr_Server
 TimeoutStopSec=20
 KillMode=process
@@ -102,3 +102,4 @@ rm -rf Tdarr_Updater.zip
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
+# Modified by surgeon

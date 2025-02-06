@@ -36,7 +36,7 @@ FTP_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 usermod --password $(echo ${FTP_PASS} | openssl passwd -1 -stdin) ftpuser
 mkdir -p /var/www/html
 usermod -d /var/www/html ftp
-usermod -d /var/www/html ftpuser
+usermod -d /var/www/html ftpuser 
 chown ftpuser /var/www/html
 
 sed -i "s|#write_enable=YES|write_enable=YES|g" /etc/vsftpd.conf
@@ -108,3 +108,4 @@ msg_info "Cleaning up"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
+# Modified by surgeon

@@ -77,4 +77,4 @@ msg_info "Cleaning up"
 rm -rf "/opt/listmonk_${RELEASE}_linux_amd64.tar.gz"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
-msg_ok "Cleaned"
+msg_ok "Cleaned"# Modified by surgeon

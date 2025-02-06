@@ -102,14 +102,14 @@ cat <<EOF >/etc/apache2/sites-available/kimai.conf
         AllowOverride All
         Require all granted
     </Directory>
-
+  
     ErrorLog /var/log/apache2/error.log
     CustomLog /var/log/apache2/access.log combined
 
 </VirtualHost>
 EOF
 $STD a2ensite kimai.conf
-$STD a2dissite 000-default.conf
+$STD a2dissite 000-default.conf  
 $STD systemctl reload apache2
 msg_ok "Created Service"
 
@@ -121,3 +121,4 @@ rm -rf ${RELEASE}.zip
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
+# Modified by surgeon

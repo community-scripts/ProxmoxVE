@@ -36,7 +36,7 @@ server {
   server_name localhost;
   root /usr/share/nginx/html;
   index index.html;
-
+  
   location / {
       try_files $uri $uri/ /index.html;
   }
@@ -55,3 +55,4 @@ rm -rf /tmp/it-tools
 rm -f it-tools.zip
 $STD apk cache clean
 msg_ok "Cleaned"
+# Modified by surgeon

@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt-get install -y \
     curl \
     mc \
-    sudo
+    sudo 
 msg_ok "Installed Dependencies"
 
 msg_info "Installing TypeSense"
@@ -37,3 +37,4 @@ rm -rf /opt/typesense-server-${RELEASE}-amd64.deb
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
+# Modified by surgeon

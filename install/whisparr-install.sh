@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt-get install -y curl
 $STD apt-get install -y sudo
 $STD apt-get install -y mc
-$STD apt-get install -y sqlite3
+$STD apt-get install -y sqlite3 
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Whisparr"
@@ -56,3 +56,4 @@ rm -rf Whisparr.develop.*.tar.gz
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
+# Modified by surgeon

@@ -58,10 +58,10 @@ cat <<EOF >/etc/postgresql/17/main/postgresql.conf
 # FILE LOCATIONS
 #------------------------------------------------------------------------------
 
-data_directory = '/var/lib/postgresql/17/main'
-hba_file = '/etc/postgresql/17/main/pg_hba.conf'
-ident_file = '/etc/postgresql/17/main/pg_ident.conf'
-external_pid_file = '/var/run/postgresql/17-main.pid'
+data_directory = '/var/lib/postgresql/17/main'       
+hba_file = '/etc/postgresql/17/main/pg_hba.conf'     
+ident_file = '/etc/postgresql/17/main/pg_ident.conf'   
+external_pid_file = '/var/run/postgresql/17-main.pid'                   
 
 #------------------------------------------------------------------------------
 # CONNECTIONS AND AUTHENTICATION
@@ -69,10 +69,10 @@ external_pid_file = '/var/run/postgresql/17-main.pid'
 
 # - Connection Settings -
 
-listen_addresses = '*'
-port = 5432
-max_connections = 100
-unix_socket_directories = '/var/run/postgresql'
+listen_addresses = '*'                 
+port = 5432                             
+max_connections = 100                  
+unix_socket_directories = '/var/run/postgresql' 
 
 # - SSL -
 
@@ -84,8 +84,8 @@ ssl_key_file = '/etc/ssl/private/ssl-cert-snakeoil.key'
 # RESOURCE USAGE (except WAL)
 #------------------------------------------------------------------------------
 
-shared_buffers = 128MB
-dynamic_shared_memory_type = posix
+shared_buffers = 128MB                
+dynamic_shared_memory_type = posix      
 
 #------------------------------------------------------------------------------
 # WRITE-AHEAD LOG
@@ -100,14 +100,14 @@ min_wal_size = 80MB
 
 # - What to Log -
 
-log_line_prefix = '%m [%p] %q%u@%d '
+log_line_prefix = '%m [%p] %q%u@%d '           
 log_timezone = 'Etc/UTC'
 
 #------------------------------------------------------------------------------
 # PROCESS TITLE
 #------------------------------------------------------------------------------
 
-cluster_name = '17/main'
+cluster_name = '17/main'                
 
 #------------------------------------------------------------------------------
 # CLIENT CONNECTION DEFAULTS
@@ -117,17 +117,17 @@ cluster_name = '17/main'
 
 datestyle = 'iso, mdy'
 timezone = 'Etc/UTC'
-lc_messages = 'C'
-lc_monetary = 'C'
-lc_numeric = 'C'
-lc_time = 'C'
+lc_messages = 'C'                      
+lc_monetary = 'C'                       
+lc_numeric = 'C'                        
+lc_time = 'C'                           
 default_text_search_config = 'pg_catalog.english'
 
 #------------------------------------------------------------------------------
 # CONFIG FILE INCLUDES
 #------------------------------------------------------------------------------
 
-include_dir = 'conf.d'
+include_dir = 'conf.d'                  
 EOF
 
 sudo systemctl restart postgresql
@@ -149,3 +149,4 @@ msg_info "Cleaning up"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
+# Modified by surgeon

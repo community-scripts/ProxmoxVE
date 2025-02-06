@@ -74,7 +74,7 @@ cat <<EOF >/etc/apache2/sites-available/wavelog.conf
 </VirtualHost>
 EOF
 $STD a2ensite wavelog.conf
-$STD a2dissite 000-default.conf
+$STD a2dissite 000-default.conf  
 $STD systemctl reload apache2
 msg_ok "Created Service"
 
@@ -86,3 +86,4 @@ rm -f ${RELEASE}.zip
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
+# Modified by surgeon

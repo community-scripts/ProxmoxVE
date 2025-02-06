@@ -58,8 +58,8 @@ sudo sed -i "s/DB_PASSWORD=.*/DB_PASSWORD=$DB_PASS/" /opt/bookstack/.env
 $STD composer install --no-dev --no-plugins --no-interaction
 $STD php artisan key:generate --no-interaction --force
 $STD php artisan migrate --no-interaction --force
-chown www-data:www-data -R /opt/bookstack /opt/bookstack/bootstrap/cache /opt/bookstack/public/uploads /opt/bookstack/storage
-chmod -R 755 /opt/bookstack /opt/bookstack/bootstrap/cache /opt/bookstack/public/uploads /opt/bookstack/storage
+chown www-data:www-data -R /opt/bookstack /opt/bookstack/bootstrap/cache /opt/bookstack/public/uploads /opt/bookstack/storage 
+chmod -R 755 /opt/bookstack /opt/bookstack/bootstrap/cache /opt/bookstack/public/uploads /opt/bookstack/storage 
 chmod -R 775 /opt/bookstack/storage /opt/bookstack/bootstrap/cache /opt/bookstack/public/uploads
 chmod -R 640 /opt/bookstack/.env
 $STD a2enmod rewrite
@@ -99,14 +99,14 @@ cat <<EOF >/etc/apache2/sites-available/bookstack.conf
           RewriteRule ^ index.php [L]
       </IfModule>
   </Directory>
-
+  
     ErrorLog /var/log/apache2/error.log
     CustomLog /var/log/apache2/access.log combined
 
 </VirtualHost>
 EOF
 $STD a2ensite bookstack.conf
-$STD a2dissite 000-default.conf
+$STD a2dissite 000-default.conf  
 $STD systemctl reload apache2
 msg_ok "Created Services"
 
@@ -118,3 +118,4 @@ rm -rf /opt/v${RELEASE}.zip
 $STD apt-get autoremove
 $STD apt-get autoclean
 msg_ok "Cleaned"
+# Modified by surgeon

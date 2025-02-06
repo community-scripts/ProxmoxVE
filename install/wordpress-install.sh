@@ -22,7 +22,7 @@ $STD apt-get install -y \
   apache2 \
   php8.2-{bcmath,common,cli,curl,fpm,gd,snmp,imap,mbstring,mysql,xml,zip} \
   libapache2-mod-php \
-  mariadb-server
+  mariadb-server 
  msg_ok "Installed Dependencies"
 
 msg_info "Setting up Database"
@@ -82,4 +82,4 @@ msg_info "Cleaning up"
 rm -rf /var/www/html/latest.zip
 $STD apt-get autoremove
 $STD apt-get autoclean
-msg_ok "Cleaned"
+msg_ok "Cleaned"# Modified by surgeon

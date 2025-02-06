@@ -24,7 +24,7 @@ msg_ok "Installed Dependencies"
 msg_info "Installing ntfy"
 mkdir -p /etc/apt/keyrings
 curl -fsSL https://archive.heckel.io/apt/pubkey.txt | gpg --dearmor -o /etc/apt/keyrings/archive.heckel.io.gpg
-echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/archive.heckel.io.gpg] https://archive.heckel.io/apt debian main" >/etc/apt/sources.list.d/archive.heckel.io.list
+echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/archive.heckel.io.gpg] https://archive.heckel.io/apt debian main" >/etc/apt/sources.list.d/archive.heckel.io.list  
 $STD apt-get update
 $STD apt-get install -y ntfy
 systemctl enable -q --now ntfy
@@ -37,3 +37,4 @@ msg_info "Cleaning up"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
+# Modified by surgeon

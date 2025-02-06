@@ -28,7 +28,7 @@ rm gokapi-linux_amd64.zip
 chmod +x /opt/gokapi/gokapi-linux_amd64
 msg_ok "Installed Gokapi"
 
-msg_info "Creating Service"
+msg_info "Creating Service" 
 cat <<EOF >/etc/systemd/system/gokapi.service
 [Unit]
 Description=gokapi
@@ -52,3 +52,4 @@ msg_info "Cleaning up"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
+# Modified by surgeon

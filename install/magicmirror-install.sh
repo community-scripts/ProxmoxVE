@@ -25,7 +25,7 @@ msg_ok "Installed Dependencies"
 msg_info "Setting up Node.js Repository"
 mkdir -p /etc/apt/keyrings
 curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
+echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_22.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
 msg_ok "Set up Node.js Repository"
 
 msg_info "Installing Node.js"
@@ -43,16 +43,16 @@ $STD npm install --only=prod --omit=dev
 
 cat <<EOF >/opt/magicmirror/config/config.js
 let config = {
-        address: "0.0.0.0",
+        address: "0.0.0.0",     
         port: 8080,
-        basePath: "/",
-        ipWhitelist: [],
-        useHttps: false,
-        httpsPrivateKey: "",
-        httpsCertificate: "",
+        basePath: "/",  
+        ipWhitelist: [],        
+        useHttps: false,              
+        httpsPrivateKey: "",    
+        httpsCertificate: "",   
         language: "en",
         locale: "en-US",
-        logLevel: ["INFO", "LOG", "WARN", "ERROR"],
+        logLevel: ["INFO", "LOG", "WARN", "ERROR"], 
         timeFormat: 24,
         units: "metric",
         serverOnly:  true,
@@ -159,3 +159,4 @@ msg_info "Cleaning up"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
+# Modified by surgeon

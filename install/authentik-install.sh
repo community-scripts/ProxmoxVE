@@ -4,7 +4,7 @@
 # Author: remz1337
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
-source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
+source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
 catch_errors
@@ -81,12 +81,13 @@ $STD apt-get install -y nodejs
 msg_ok "Installed Node.js"
 
 msg_info "Installing Golang"
-cd /tmp
 set +o pipefail
-GO_RELEASE=$(curl -s https://go.dev/dl/ | grep -o -m 1 "go.*\linux-amd64.tar.gz")
-wget -q https://golang.org/dl/${GO_RELEASE}
-tar -xzf ${GO_RELEASE} -C /usr/local
-ln -s /usr/local/go/bin/go /usr/bin/go
+temp_file=$(mktemp)
+golang_tarball=$(curl -s https://go.dev/dl/ | grep -oP 'go[\d\.]+\.linux-amd64\.tar\.gz' | head -n 1)
+wget -q https://golang.org/dl/"$golang_tarball" -O "$temp_file"
+tar -C /usr/local -xzf "$temp_file"
+ln -sf /usr/local/go/bin/go /usr/local/bin/go
+rm -f "$temp_file"
 set -o pipefail
 msg_ok "Installed Golang"
 
@@ -102,7 +103,7 @@ DB_USER="authentik"
 DB_PASS="$(openssl rand -base64 18 | cut -c1-13)"
 $STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME;"
 $STD sudo -u postgres psql -c "CREATE USER $DB_USER WITH PASSWORD '$DB_PASS';"
-$STD sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE $DB_NAME TO $DB_USER;"
+$STD sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE $DB_NAME TO $DB_USER;" 
 $STD sudo -u postgres psql -c "ALTER DATABASE $DB_NAME OWNER TO $DB_USER;"
 $STD sudo -u postgres psql -c "ALTER USER $DB_USER WITH SUPERUSER;"
 msg_ok "Installed PostgreSQL"
@@ -186,10 +187,10 @@ msg_info "Cleaning up"
 rm -rf /tmp/Python-3.12.1
 rm -rf /tmp/Python.tgz
 rm -rf go/
-rm -rf /tmp/${GO_RELEASE}
 rm -rf /tmp/geoipupdate.deb
 rm -rf authentik.tar.gz
 $STD apt-get -y remove yq
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
+# Modified by surgeon

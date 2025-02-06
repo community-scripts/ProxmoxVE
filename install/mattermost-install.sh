@@ -19,7 +19,7 @@ $STD apt-get install -y \
   sudo \
   mc \
   gpg \
-  postgresql
+  postgresql 
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up PostgreSQL"
@@ -58,3 +58,4 @@ msg_info "Cleaning up"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
+# Modified by surgeon
