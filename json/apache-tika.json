@@ -1,0 +1,34 @@
+{
+    "name": "Apache Tika",
+    "slug": "apache-tika",
+    "categories": [
+        12
+    ],
+    "date_created": "2025-02-05",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": 9998,
+    "documentation": null,
+    "website": "https://tika.apache.org/",
+    "logo": "https://tika.apache.org/tika.png",
+    "description": "The Apache Tika™ toolkit detects and extracts metadata and text from over a thousand different file types (such as PPT, XLS, and PDF). All of these file types can be parsed through a single interface, making Tika useful for search engine indexing, content analysis, translation, and much more.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/apache-tika.sh",
+            "resources": {
+                "cpu": 1,
+                "ram": 2024,
+                "hdd": 10,
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": []
+}

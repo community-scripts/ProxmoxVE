@@ -222,6 +222,40 @@
     },
     "notes": []
 },
+"alpine-it-tools": {
+  "name": "Alpine-IT-Tools",
+  "slug": "alpine-it-tools",
+  "categories": [
+      20
+  ],
+  "date_created": "2025-01-30",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 80,
+  "documentation": null,
+  "website": "https://it-tools.tech/",
+  "logo": "https://raw.githubusercontent.com/CorentinTh/it-tools/08d977b8cdb7ffb76adfa18ba6eb4b73795ec814/public/safari-pinned-tab.svg",
+  "description": "IT-Tools is a web-based suite of utilities designed to streamline and simplify various IT tasks, providing tools for developers and system administrators to manage their workflows efficiently.",
+  "install_methods": [
+      {
+          "type": "default",
+          "script": "ct/alpine-it-tools.sh",
+          "resources": {
+              "cpu": 1,
+              "ram": 256,
+              "hdd": 0.2,
+              "os": "alpine",
+              "version": "3.21"
+          }
+      }
+  ],
+  "default_credentials": {
+      "username": null,
+      "password": null
+  },
+  "notes": []
+},
 "alpine": {
     "name": "Alpine",
     "slug": "alpine",
@@ -372,6 +406,40 @@
     "password": "guacadmin"
   },
   "notes": []
+},
+"apache-tika": {
+    "name": "Apache Tika",
+    "slug": "apache-tika",
+    "categories": [
+        12
+    ],
+    "date_created": "2025-02-05",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": 9998,
+    "documentation": null,
+    "website": "https://tika.apache.org/",
+    "logo": "https://tika.apache.org/tika.png",
+    "description": "The Apache Tika™ toolkit detects and extracts metadata and text from over a thousand different file types (such as PPT, XLS, and PDF). All of these file types can be parsed through a single interface, making Tika useful for search engine indexing, content analysis, translation, and much more.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/apache-tika.sh",
+            "resources": {
+                "cpu": 1,
+                "ram": 2024,
+                "hdd": 10,
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": []
 },
 "apt-cacher-ng": {
     "name": "Apt-Cacher-NG",
@@ -584,6 +652,40 @@
     "default_credentials": {
         "username": null,
         "password": null
+    },
+    "notes": []
+},
+"baikal": {
+    "name": "Baïkal",
+    "slug": "baikal",
+    "categories": [
+      0
+    ],
+    "date_created": "2025-01-31",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": 80,
+    "documentation": null,
+    "website": "https://sabre.io/baikal/",
+    "logo": "https://sabre.io/img/logo.png",
+    "description": "Baïkal is a lightweight CalDAV+CardDAV server. It offers an extensive web interface with easy management of users, address books and calendars.",
+    "install_methods": [
+      {
+        "type": "default",
+        "script": "ct/baikal.sh",
+        "resources": {
+          "cpu": 1,
+          "ram": 512,
+          "hdd": 4,
+          "os": "Debian",
+          "version": "12"
+        }
+      }
+    ],
+    "default_credentials": {
+      "username": "Admin",
+      "password": null
     },
     "notes": []
 },
@@ -1107,6 +1209,45 @@
     },
     "notes": []
 },
+"crafty-controller": {
+    "name": "Crafty Controller",
+    "slug": "crafty-controller",
+    "categories": [
+      24
+    ],
+    "date_created": "2025-02-01",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": 8443,
+    "documentation": "https://docs.craftycontrol.com/",
+    "website": "https://craftycontrol.com/",
+    "logo": "https://gitlab.com/crafty-controller/crafty-4/-/raw/master/app/frontend/static/assets/images/logo_long.svg",
+    "description": "Crafty Controller is a free and open-source Minecraft launcher and manager that allows users to start and administer Minecraft servers from a user-friendly interface. The interface is run as a self-hosted web server that is accessible to devices on the local network by default and can be port forwarded to provide external access outside of your local network. Crafty is designed to be easy to install and use, requiring only a bit of technical knowledge and a desire to learn to get started. Crafty Controller is still actively being developed by Arcadia Technology and we are continually making major improvements to the software.\n\nCrafty Controller is a feature rich panel that allows you to create and run servers, manage players, run commands, change server settings, view and edit server files, and make backups. With the help of Crafty Controller managing a large number of Minecraft servers on separate versions is easy and intuitive to do.",
+    "install_methods": [
+      {
+        "type": "default",
+        "script": "ct/crafty-controller.sh",
+        "resources": {
+          "cpu": 2,
+          "ram": 4096,
+          "hdd": 16,
+          "os": "Debian",
+          "version": "12"
+        }
+      }
+    ],
+    "default_credentials": {
+      "username": "admin",
+      "password": null
+    },
+    "notes": [
+      {
+        "text": "Show password: `cat ~/crafty-controller.creds`",
+        "type": "info"
+      }
+    ]
+  },
 "cronicle": {
     "name": "Cronicle Primary",
     "slug": "cronicle",
@@ -1456,6 +1597,40 @@
       }
    ]
 },
+"elementsynapse": {
+    "name": "Element Synapse",
+    "slug": "elementsynapse",
+    "categories": [
+      4
+    ],
+    "date_created": "2025-02-02",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": 8008,
+    "documentation": "https://element-hq.github.io/synapse/latest/welcome_and_overview.html",
+    "website": "https://element.io/",
+    "logo": "https://element.io/images/logo-mark-primary.svg",
+    "description": "Synapse is an open source Matrix homeserver implementation, written and maintained by Element. Matrix is the open standard for secure and interoperable real time communications. You can directly run and manage the source code in this repository, available under an AGPL license. There is no support provided from Element unless you have a subscription.",
+    "install_methods": [
+      {
+        "type": "default",
+        "script": "ct/elementsynapse.sh",
+        "resources": {
+          "cpu": 1,
+          "ram": 1024,
+          "hdd": 4,
+          "os": "Debian",
+          "version": "12"
+        }
+      }
+    ],
+    "default_credentials": {
+      "username": null,
+      "password": null
+    },
+    "notes": []
+  },
 "emby": {
     "name": "Emby Media Server",
     "slug": "emby",
@@ -3157,6 +3332,40 @@
   },
   "notes": []
 },
+"koillection": {
+    "name": "Koillection",
+    "slug": "koillection",
+    "categories": [
+      24
+    ],
+    "date_created": "2025-02-04",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": 80,
+    "documentation": "https://github.com/benjaminjonard/koillection/wiki",
+    "website": "https://koillection.github.io/",
+    "logo": "https://user-images.githubusercontent.com/20560781/80213166-0e560e00-8639-11ea-944e-4f79fdbcef55.png",
+    "description": "Koillection is a self-hosted collection manager created to keep track of physical (mostly) collections of any kind like books, DVDs, stamps, games... Koillection is meant to be used for any kind of collections and doesn't come with pre-built metadata download. But you can tailor your own HTML scraper, or you can add your own metadata freely.",
+    "install_methods": [
+      {
+        "type": "default",
+        "script": "ct/koillection.sh",
+        "resources": {
+          "cpu": 2,
+          "ram": 1024,
+          "hdd": 8,
+          "os": "Debian",
+          "version": "12"
+        }
+      }
+    ],
+    "default_credentials": {
+      "username": null,
+      "password": null
+    },
+    "notes": []
+  },
 "komga": {
     "name": "Komga",
     "slug": "komga",
@@ -3633,6 +3842,40 @@
             "type": "warning"
         }
     ]
+},
+"mattermost": {
+    "name": "Mattermost",
+    "slug": "mattermost",
+    "categories": [
+        25
+    ],
+    "date_created": "2025-01-30",
+    "type": "ct",
+    "updateable": false,
+    "privileged": false,
+    "interface_port": 8065,
+    "documentation": null,
+    "website": "https://mattermost.com/",
+    "logo": "https://avatars.githubusercontent.com/u/9828093?s=200&v=4",
+    "description": "Mattermost is an open source platform for secure collaboration across the entire software development lifecycle. It's written in Go and React and runs as a single Linux binary with MySQL or PostgreSQL. It has a slimilar interface and features to Slack or Discord.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/mattermost.sh",
+            "resources": {
+                "cpu": 1,
+                "ram": 2048,
+                "hdd": 8,
+                "os": "ubuntu",
+                "version": "24.04"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": []
 },
 "mediamtx": {
     "name": "MediaMTX",
@@ -4963,6 +5206,40 @@
     },
     "notes": []
 },
+"paperless-ai": {
+  "name": "PaperlessAI",
+  "slug": "paperless-ai",
+  "categories": [
+    20
+  ],
+  "date_created": "2025-02-06",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 3000,
+  "documentation": null,
+  "website": "https://github.com/clusterzx/paperless-ai",
+  "logo": "https://raw.githubusercontent.com/paperless-ngx/paperless-ngx/main/resources/logo/web/svg/square.svg",
+  "description": "An automated document analyzer for Paperless-ngx using OpenAI API, Ollama and all OpenAI API compatible Services to automatically analyze and tag your documents.It features: Automode, Manual Mode, Ollama and OpenAI, a Chat function to query your documents with AI, a modern and intuitive Webinterface.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/paperless-ai.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 5,
+        "os": "debian",
+        "version": "12"
+      }
+    }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": []
+},
 "paperless-ngx": {
     "name": "Paperless-ngx",
     "slug": "paperless-ngx",
@@ -5040,6 +5317,40 @@
             "type": "info"
         }
     ]
+},
+"paymenter": {
+  "name": "Paymenter",
+  "slug": "paymenter",
+  "categories": [
+        21
+  ],
+  "date_created": "2025-01-28",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 80,
+  "documentation": "https://paymenter.org/docs",
+  "website": "https://paymenter.org/",
+  "logo": "https://avatars.githubusercontent.com/u/115177786?s=200&v=4",
+  "description": "Paymenter is an open source webshop solution for hosting companies. It's developed to provide an more easy way to manage your hosting company.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/paymenter.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 1024,
+        "hdd": 5,
+        "os":"Debian",
+        "version":"12"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": "admin@paymenter.org",
+    "password": "paymenter"
+  },
+  "notes": []
 },
 "pbs": {
     "name": "Proxmox Backup Server",
@@ -5611,6 +5922,40 @@
         }
     ]
 },
+"privatebin": {
+    "name": "PrivateBin",
+    "slug": "privatebin",
+    "categories": [
+        12
+    ],
+    "date_created": "2025-01-29",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": 80,
+    "documentation": "https://github.com/PrivateBin/PrivateBin/wiki",
+    "website": "https://github.com/PrivateBin/PrivateBin",
+    "logo": "https://raw.githubusercontent.com/PrivateBin/PrivateBin/refs/heads/master/img/icon.svg",
+    "description": "PrivateBin is a minimalist, open-source pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted in the browser using 256-bit AES.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/privatebin.sh",
+            "resources": {
+                "cpu": 1,
+                "ram": 1024,
+                "hdd": 4,
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": []
+},
 "projectsend": {
     "name": "ProjectSend",
     "slug": "projectsend",
@@ -5718,6 +6063,46 @@
     },
     "notes": []
 },
+"prometheus-pve-exporter": {
+    "name": "Prometheus Proxmox VE Exporter",
+    "slug": "prometheus-pve-exporter",
+    "categories": [
+        1,
+        9
+    ],
+    "date_created": "2025-01-28",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": 9221,
+    "documentation": "https://github.com/prometheus-pve/prometheus-pve-exporter",
+    "website": "https://github.com/prometheus-pve/prometheus-pve-exporter",
+    "logo": "https://raw.githubusercontent.com/home-assistant/brands/master/core_integrations/proxmoxve/icon.png",
+    "description": "An exporter that exposes information gathered from Proxmox VE node for use by the Prometheus monitoring system.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/prometheus-pve-exporter.sh",
+            "resources": {
+                "cpu": 1,
+                "ram": 1024,
+                "hdd": 2,
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": [
+        {
+            "text": "Please adjust the Proxmox credentials in the configuration file: /opt/prometheus-pve-exporter/pve.yml",
+            "type": "info"
+        }
+    ]
+},
 "prowlarr": {
     "name": "Prowlarr",
     "slug": "prowlarr",
@@ -5751,6 +6136,45 @@
         "password": null
     },
     "notes": []
+},
+"proxmox-backup-server": {
+    "name": "Proxmox Backup Server",
+    "slug": "proxmox-backup-server",
+    "categories": [
+        1
+    ],
+    "date_created": "2024-05-02",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": 8007,
+    "documentation": "https://pbs.proxmox.com/docs/",
+    "website": "https://www.proxmox.com/en/proxmox-backup-server/overview",
+    "logo": "https://raw.githubusercontent.com/home-assistant/brands/master/core_integrations/proxmoxve/icon.png",
+    "description": "Proxmox Backup Server is an enterprise backup solution, for backing up and restoring VMs, containers, and physical hosts. By supporting incremental, fully deduplicated backups, Proxmox Backup Server significantly reduces network load and saves valuable storage space.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/proxmox-backup-server.sh",
+            "resources": {
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 10,
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": "root",
+        "password": null
+    },
+    "notes": [
+        {
+            "text": "Set a root password if using autologin. This will be the PBS password. `passwd root`",
+            "type": "warning"
+        }
+    ]
 },
 "proxmox-datacenter-manager": {
     "name": "Proxmox Datacenter Manager",
@@ -5936,6 +6360,49 @@
     },
     "notes": []
 },
+"radicale": {
+    "name": "Radicale",
+    "slug": "radicale",
+    "categories": [
+        6
+    ],
+    "date_created": "2025-02-02",
+    "type": "ct",
+    "updateable": false,
+    "privileged": false,
+    "interface_port": 5232,
+    "documentation": "https://radicale.org/master.html#documentation-1",
+    "website": "https://radicale.org/",
+    "logo": "https://radicale.org/assets/logo.svg",
+    "description": "Radicale is a small but powerful CalDAV (calendars, to-do lists) and CardDAV (contacts)",
+    "install_methods": [
+      {
+        "type": "default",
+        "script": "ct/radicale.sh",
+        "resources": {
+          "cpu": 1,
+          "ram": 512,
+          "hdd": 2,
+          "os": "Debian",
+          "version": "12"
+        }
+      }
+    ],
+    "default_credentials": {
+      "username": null,
+      "password": null
+    },
+    "notes": [
+      {
+      "text": "To view the user credentials : `cat radicale.creds`",
+      "type": "info"
+      },
+      {
+        "text": "This application requires additional configuration. Please refer to https://github.com/community-scripts/ProxmoxVE/discussions/2073.",
+        "type": "info"
+      }
+    ]
+  },
 "rdtclient": {
     "name": "Real-Debrid Torrent Client",
     "slug": "rdtclient",
@@ -6212,6 +6679,45 @@
         "password": null
     },
     "notes": []
+},
+"seelf": {
+    "name": "seelf",
+    "slug": "seelf",
+    "categories": [
+        4
+    ],
+    "date_created": "2025-02-04",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": 8080,
+    "documentation": "https://yuukanoo.github.io/seelf/guide/quickstart.html",
+    "website": "https://yuukanoo.github.io/seelf/",
+    "logo": "https://yuukanoo.github.io/seelf/logo-dark.svg",
+    "description": "seelf is a self-hosted software which makes it easy to deploy your own applications on your own hardware using an easy to use interface.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/seelf.sh",
+            "resources": {
+                "cpu": 2,
+                "ram": 4096,
+                "hdd": 10,
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": [
+        {
+            "text": "Initial admin email and password: `cat ~/seelf.creds`",
+            "type": "info"
+        }
+    ]
 },
 "semaphore": {
   "name": "Semaphore",
@@ -7882,6 +8388,40 @@
     "password": null
   },
   "notes": []
+},
+"zerotier-one": {
+    "name": "Zerotier-One",
+    "slug": "zerotier-one",
+    "categories": [
+        4
+    ],
+    "date_created": "2024-05-02",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": 3443,
+    "documentation": "https://https://docs.zerotier.com/",
+    "website": "https://www.zerotier.com/",
+    "logo": "https://www.zerotier.com/wp-content/uploads/2025/01/Logo-White.svg",
+    "description": "ZeroTier is a secure network overlay that allows you to manage all of your network resources as if they were on the same LAN. The software-defined solution can be deployed in minutes from anywhere. No matter how many devices you need to connect, or where they are in the world, ZeroTier makes global networking simple.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/debian.sh",
+            "resources": {
+                "cpu": 1,
+                "ram": 512,
+                "hdd": 4,
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": "admin",
+        "password": "password"
+    },
+    "notes": []
 },
 "zigbee2mqtt": {
     "name": "Zigbee2MQTT",
