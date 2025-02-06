@@ -8,7 +8,7 @@ source <(curl -s https://raw.githubusercontent.com/andygrunwald/ProxmoxVE/refs/h
 
 # App Default Values
 APP="Apache-Tika"
-var_tags="monitoring;alerting"
+var_tags="document"
 var_cpu="1"
 var_ram="2024"
 var_disk="10"
