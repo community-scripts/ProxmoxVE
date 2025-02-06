@@ -34,18 +34,18 @@ function update_script() {
   fi
   RELEASE=$(curl -s https://api.github.com/repos/clusterzx/paperless-ai/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
   if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
-  msg_info "Updating $APP"
+    msg_info "Updating $APP"
     msg_info "Stopping $APP"
     systemctl stop paperless-ai
     msg_ok "Stopped $APP"
-  
+
     msg_info "Updating $APP to v${RELEASE}"
     cd /opt
     mv /opt/paperless-ai /opt/paperless-ai_bak
     wget -q "https://github.com/clusterzx/paperless-ai/archive/refs/tags/v${RELEASE}.zip"
     unzip -q v${RELEASE}.zip
     mv paperless-ai-${RELEASE} /opt/paperless-ai
-	mkdir -p /opt/paperless-ai/data
+    mkdir -p /opt/paperless-ai/data
     cp -a /opt/paperless-ai_bak/data/. /opt/paperless-ai/data/
     npm install &>/dev/null
     echo "${RELEASE}" >/opt/${APP}_version.txt
