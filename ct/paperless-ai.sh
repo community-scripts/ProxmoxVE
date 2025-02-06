@@ -34,7 +34,6 @@ function update_script() {
   fi
   RELEASE=$(curl -s https://api.github.com/repos/clusterzx/paperless-ai/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
   if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
-    msg_info "Updating $APP"
     msg_info "Stopping $APP"
     systemctl stop paperless-ai
     msg_ok "Stopped $APP"
