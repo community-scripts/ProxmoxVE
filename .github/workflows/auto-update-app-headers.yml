@@ -74,7 +74,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Approve pull request
-        if: steps.verify-diff.outputs.changed == 'true'
+        if: env.changed == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -84,7 +84,7 @@ jobs:
           fi
           
       - name: Re-approve pull request after update
-        if: steps.verify-diff.outputs.changed == 'true'
+        if: env.changed == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
