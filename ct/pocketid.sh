@@ -3,7 +3,7 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: Snarkenfaugister
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://github.com/stonith404/pocket-id
+# Source: https://github.com/pocket-id/pocket-id
 
 # App Default Values
 APP="PocketID"
@@ -34,7 +34,7 @@ function update_script() {
         exit
     fi
 
-    RELEASE=$(curl -fsSL https://api.github.com/repos/stonith404/pocket-id/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+    RELEASE=$(curl -fsSL https://api.github.com/repos/pocket-id/pocket-id/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
     if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
         msg_info "Updating $APP"
 
@@ -50,7 +50,7 @@ function update_script() {
         cp /opt/pocket-id/backend/.env /opt/backend.env
         cp /opt/pocket-id/frontend/.env /opt/frontend.env
         rm -r /opt/pocket-id
-        wget -q "https://github.com/stonith404/pocket-id/archive/refs/tags/v${RELEASE}.zip"
+        wget -q "https://github.com/pocket-id/pocket-id/archive/refs/tags/v${RELEASE}.zip"
         unzip -q v${RELEASE}.zip
         mv pocket-id-${RELEASE} /opt/pocket-id
         mv /opt/data /opt/pocket-id/backend/data
