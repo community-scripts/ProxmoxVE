@@ -33,7 +33,7 @@ codemods:
   match: install/*.sh
   args:
   - end
-  - # Modified by surgeon
+  - "# Modified by surgeon"
 - description: Whiptail misc sh
   mod: sed
   match: misc/*.sh
