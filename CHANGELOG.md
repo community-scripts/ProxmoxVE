@@ -21,6 +21,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### Changed
 
+### 🚀 Updated Scripts
+
+- Fix: Pocket-ID Change link to GH Repo [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2082](https://github.com/community-scripts/ProxmoxVE/pull/2082))
+
 ### 🌐 Website
 
 - Radicale: Provide additional information about configuration [@tremor021](https://github.com/tremor021) ([#2072](https://github.com/community-scripts/ProxmoxVE/pull/2072))
