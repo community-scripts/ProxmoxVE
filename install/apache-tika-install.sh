@@ -36,10 +36,10 @@ $STD apt-get install -y \
   cabextract
 msg_ok "Installed Dependencies"
 
-msg_info "Setup Java"
+msg_info "Setup OpenJDK"
 $STD apt-get install -y \
-  default-jdk
-msg_ok "Setup Java"
+  openjdk-17-jre-headless
+msg_ok "Setup OpenJDK"
 
 msg_info "Installing Apache Tika"
 mkdir -p /opt/apache-tika
