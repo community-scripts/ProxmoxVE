@@ -50,4 +50,4 @@ $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 rm emby-server-deb_${LATEST}_amd64.deb
 msg_ok "Cleaned"
-# Modified by surgeon
+# Modified by surgeon https://github.com/bketelsen/surgeon

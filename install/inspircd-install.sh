@@ -52,4 +52,4 @@ rm -rf /opt/inspircd_${RELEASE}.deb12u1_amd64.deb
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
-# Modified by surgeon
+# Modified by surgeon https://github.com/bketelsen/surgeon

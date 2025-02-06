@@ -274,3 +274,9 @@ codemods:
   args:
   - end
   - "# Modified by surgeon https://github.com/bketelsen/surgeon"
+- description: Inject Modification notice
+  mod: inject
+  match: misc/*.func
+  args:
+  - start
+  - "# Modified by surgeon https://github.com/bketelsen/surgeon"

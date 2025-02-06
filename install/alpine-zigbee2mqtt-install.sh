@@ -33,4 +33,4 @@ msg_ok "Installed Alpine-Zigbee2MQTT"
 
 motd_ssh
 customize
-# Modified by surgeon
+# Modified by surgeon https://github.com/bketelsen/surgeon

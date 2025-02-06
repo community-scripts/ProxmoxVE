@@ -70,4 +70,4 @@ rm -rf /opt/lubelogger/LubeLogger_v${RELEASE_TRIMMED}_linux_x64.zip
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
-# Modified by surgeon
+# Modified by surgeon https://github.com/bketelsen/surgeon

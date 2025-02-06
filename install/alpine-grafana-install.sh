@@ -29,4 +29,4 @@ $STD rc-update add grafana default
 msg_ok "Installed Grafana"
 
 motd_ssh
-customize# Modified by surgeon
+customize# Modified by surgeon https://github.com/bketelsen/surgeon

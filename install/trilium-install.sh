@@ -55,4 +55,4 @@ $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 rm -rf TriliumNextNotes-linux-x64-${RELEASE}.tar.xz
 msg_ok "Cleaned"
-# Modified by surgeon
+# Modified by surgeon https://github.com/bketelsen/surgeon

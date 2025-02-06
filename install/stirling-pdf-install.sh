@@ -153,4 +153,4 @@ rm -rf v${RELEASE}.tar.gz /zulu-repo_1.0.0-3_all.deb
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
-# Modified by surgeon
+# Modified by surgeon https://github.com/bketelsen/surgeon

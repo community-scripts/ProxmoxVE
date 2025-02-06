@@ -82,4 +82,4 @@ msg_info "Cleaning up"
 rm -rf /var/www/html/latest.zip
 $STD apt-get autoremove
 $STD apt-get autoclean
-msg_ok "Cleaned"# Modified by surgeon
+msg_ok "Cleaned"# Modified by surgeon https://github.com/bketelsen/surgeon

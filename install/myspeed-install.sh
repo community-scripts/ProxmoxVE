@@ -73,4 +73,4 @@ msg_info "Cleaning up"
 $STD apt-get -y autoremove
 rm -rf /opt/MySpeed-$RELEASE.zip
 $STD apt-get -y autoclean
-msg_ok "Cleaned"# Modified by surgeon
+msg_ok "Cleaned"# Modified by surgeon https://github.com/bketelsen/surgeon

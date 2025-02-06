@@ -62,4 +62,4 @@ $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 rm -rf alertmanager-${RELEASE}.linux-amd64 alertmanager-${RELEASE}.linux-amd64.tar.gz
 msg_ok "Cleaned"
-# Modified by surgeon
+# Modified by surgeon https://github.com/bketelsen/surgeon

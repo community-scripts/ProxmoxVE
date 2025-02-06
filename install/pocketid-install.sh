@@ -129,4 +129,4 @@ msg_ok "Cleaned"
 
 motd_ssh
 customize
-# Modified by surgeon
+# Modified by surgeon https://github.com/bketelsen/surgeon
