@@ -23,8 +23,8 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### ✨ New Scripts
 
-- New Script: Paperless-AI [@MickLesk](https://github.com/MickLesk) ([#2093](https://github.com/community-scripts/ProxmoxVE/pull/2093))
 - New Script: Duplicati [@tremor021](https://github.com/tremor021) ([#2052](https://github.com/community-scripts/ProxmoxVE/pull/2052))
+- New Script: Paperless-AI [@MickLesk](https://github.com/MickLesk) ([#2093](https://github.com/community-scripts/ProxmoxVE/pull/2093))
 - New Script: Apache Tika [@andygrunwald](https://github.com/andygrunwald) ([#2079](https://github.com/community-scripts/ProxmoxVE/pull/2079))
 
 ### 🚀 Updated Scripts
