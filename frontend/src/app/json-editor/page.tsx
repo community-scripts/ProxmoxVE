@@ -328,25 +328,22 @@ export default function JSONGenerator() {
       <div className="w-1/2 p-4 bg-background overflow-y-auto">
         {validationAlert}
         <div className="relative">
-          {/* Copy Button */}
-          <Button
-            className="absolute right-10 top-2"
-            size="icon"
-            variant="outline"
-            onClick={handleCopy}
-          >
-            {isCopied ? <Check className="h-4 w-4" /> : <Clipboard className="h-4 w-4" />}
-          </Button>
-        
-          {/* Download Button */}
-          <Button
-            className="absolute right-2 top-2"
-            size="icon"
-            variant="outline"
-            onClick={handleDownload}
-          >
-            <Download className="h-4 w-4" />
-          </Button>
+          <div className="absolute right-2 top-2 flex gap-1">
+            <Button
+              size="icon"
+              variant="outline"
+              onClick={handleCopy}
+            >
+              {isCopied ? <Check className="h-4 w-4" /> : <Clipboard className="h-4 w-4" />}
+            </Button>
+            <Button
+              size="icon"
+              variant="outline"
+              onClick={handleDownload}
+            >
+              <Download className="h-4 w-4" />
+            </Button>
+          </div>
         
           <pre className="mt-4 p-4 bg-secondary rounded shadow overflow-x-scroll">
             {JSON.stringify(script, null, 2)}
