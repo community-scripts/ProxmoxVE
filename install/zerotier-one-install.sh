@@ -16,7 +16,8 @@ msg_info "Installing Dependencies"
 $STD apt-get install -y \
   curl \
   mc \
-  sudo
+  sudo \
+  gnupg
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up Zerotier-One"
