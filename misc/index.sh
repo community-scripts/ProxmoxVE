@@ -13,6 +13,9 @@ JSON_DIR="$DIR/json"
 # get the index file
 INDEX_FILE="$DIR/json/ct-index.json"
 
+# delete the index file if it exists
+rm -f $INDEX_FILE
+
 # get the list of json files in the json directory
 JSON_FILES=$(ls $JSON_DIR)
 
