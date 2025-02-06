@@ -30,7 +30,7 @@ export default function Footer() {
             href="/data"
             className="flex items-center gap-2 text-primary hover:underline"
           >
-            <Server className="h-4 w-4" /> API Documentation
+            <Server className="h-4 w-4" /> API Data
           </Link>
         </div>
       </div>
