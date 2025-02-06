@@ -28,12 +28,6 @@ codemods:
   args:
   - Proxmox VE Helper Scripts
   - Incus Scripts
-- description: Inject Modification notice
-  mod: inject
-  match: install/*.sh
-  args:
-  - end
-  - "# Modified by surgeon"
 - description: Whiptail misc sh
   mod: sed
   match: misc/*.sh
@@ -274,3 +268,9 @@ codemods:
   args:
   - Proxmox VE environment
   - Incus environment
+- description: Inject Modification notice
+  mod: inject
+  match: install/*.sh
+  args:
+  - end
+  - "# Modified by surgeon https://github.com/bketelsen/surgeon"
