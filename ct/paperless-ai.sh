@@ -47,6 +47,7 @@ function update_script() {
     mv paperless-ai-${RELEASE} /opt/paperless-ai
     mkdir -p /opt/paperless-ai/data
     cp -a /opt/paperless-ai_bak/data/. /opt/paperless-ai/data/
+    cd /opt/paperless-ai
     npm install &>/dev/null
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated $APP to v${RELEASE}"
