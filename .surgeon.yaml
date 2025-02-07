@@ -62,13 +62,13 @@ codemods:
   args:
   - /usr/local/community-scripts/headers
   - $HOME/.config/incusscripts/headers
-- description: uname location
+- description: uname arch
   mod: sed
   match: misc/build.func
   args:
   - "$(dpkg --print-architecture)"
   - "$(uname -m)"
-- description: uname location
+- description: uname arch2
   mod: sed
   match: misc/build.func
   args:
