@@ -21,7 +21,7 @@ msg_ok "Installed Dependencies"
 
 msg_info "Setting up Zerotier-One"
 curl -s 'https://raw.githubusercontent.com/zerotier/ZeroTierOne/main/doc/contact%40zerotier.com.gpg' | gpg --import && \
-if z="$(curl -s 'https://install.zerotier.com/' | gpg)"; then 
+if z="$(curl -s 'https://install.zerotier.com/' | gpg)"; then
 echo "$z" | sudo bash
 fi
 msg_ok "Setup Zerotier-One"
@@ -43,4 +43,5 @@ customize
 msg_info "Cleaning up"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
-msg_ok "Cleaned"# Modified by surgeon https://github.com/bketelsen/surgeon
+msg_ok "Cleaned"
+# Modified by surgeon https://github.com/bketelsen/surgeon

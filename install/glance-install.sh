@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt-get install -y \
     curl \
     sudo \
-    mc 
+    mc
 msg_ok "Installed Dependencies"
 
 
@@ -78,4 +78,5 @@ msg_info "Cleaning up"
 rm -rf /opt/glance-linux-amd64.tar.gz
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
-msg_ok "Cleaned"# Modified by surgeon https://github.com/bketelsen/surgeon
+msg_ok "Cleaned"
+# Modified by surgeon https://github.com/bketelsen/surgeon

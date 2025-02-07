@@ -29,6 +29,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"time"
 
 	"github.com/charmbracelet/glamour"
 	"github.com/charmbracelet/log"
@@ -141,8 +142,29 @@ func (c *cmdLaunch) launch(app string, instanceName string) error {
 			launchSettings.InstallMethod = installMethod
 
 		}
-		// choose ssh options
+
+		// select install method
 		form := huh.NewForm(
+
+			huh.NewGroup(
+				huh.NewConfirm().
+					Title("Launch As VM?").
+					Value(&launchSettings.VM).
+					Affirmative("Yes").
+					Negative("No"),
+			),
+		).WithAccessible(accessible)
+
+		err = form.Run()
+		if err != nil {
+			fmt.Println("form error:", err)
+			os.Exit(1)
+		}
+		launchSettings.Image = "images:" + application.InstallMethods[installMethod].Resources.Image()
+		launchSettings.InstallMethod = installMethod
+
+		// choose ssh options
+		form = huh.NewForm(
 			huh.NewGroup(
 				huh.NewConfirm().
 					Title("Pass through GPU?").
@@ -354,7 +376,7 @@ func (c *cmdLaunch) launch(app string, instanceName string) error {
 
 	createInstance := func() {
 		// create the instance
-		err := c.global.client.Launch(launchSettings.Image, launchSettings.Name, launchSettings.Profiles, extraConfigs, false, false)
+		err := c.global.client.Launch(launchSettings.Image, launchSettings.Name, launchSettings.Profiles, extraConfigs, launchSettings.VM, false)
 		if err != nil {
 			fmt.Println("Error creating instance:", err)
 			os.Exit(1)
@@ -379,6 +401,39 @@ func (c *cmdLaunch) launch(app string, instanceName string) error {
 		if err != nil {
 			fmt.Println("Error starting instance:", err)
 			os.Exit(1)
+		}
+		if launchSettings.VM {
+			log.Info("VM started, waiting for agent...")
+			const maxAttempts = 5
+			const waitTime = 2
+			getState := func() (bool, error) {
+				time.Sleep(waitTime * time.Second)
+				state, err := c.global.client.InstanceState(context.Background(), launchSettings.Name)
+				if err != nil {
+					fmt.Println("Error waiting for vm agent:", err)
+					return false, err
+				}
+				if state.State.Processes > 2 {
+					return true, nil
+				}
+				return false, nil
+			}
+			attempts := 0
+			for {
+				success, err := getState()
+				if err != nil {
+					fmt.Println("Error waiting for vm agent:", err)
+					os.Exit(1)
+				}
+				if success {
+					break
+				}
+				attempts++
+				if attempts >= maxAttempts {
+					fmt.Println("Error waiting for vm agent: max attempts reached")
+					os.Exit(1)
+				}
+			}
 		}
 	}
 

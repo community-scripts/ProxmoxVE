@@ -22,7 +22,7 @@ $STD apt-get install -y \
   wget \
   nginx \
   apt-transport-https \
-  gnupg 
+  gnupg
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up Elasticsearch"
@@ -58,4 +58,5 @@ customize
 msg_info "Cleaning up"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
-msg_ok "Cleaned"# Modified by surgeon https://github.com/bketelsen/surgeon
+msg_ok "Cleaned"
+# Modified by surgeon https://github.com/bketelsen/surgeon

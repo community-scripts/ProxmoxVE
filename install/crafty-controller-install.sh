@@ -24,7 +24,7 @@ $STD apt-get install -y \
   apt-transport-https \
   coreutils \
   software-properties-common \
-  openjdk-17-jdk 
+  openjdk-17-jdk
 wget -q https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.deb
 $STD sudo dpkg -i jdk-21_linux-x64_bin.deb
 rm -f jdk-21_linux-x64_bin.deb
@@ -94,4 +94,5 @@ msg_info "Cleaning up"
 rm -rf /opt/crafty-4-v${RELEASE}.zip
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
-msg_ok "Cleaned"# Modified by surgeon https://github.com/bketelsen/surgeon
+msg_ok "Cleaned"
+# Modified by surgeon https://github.com/bketelsen/surgeon

@@ -65,4 +65,5 @@ msg_info "Cleaning up"
 rm -rf bazarr.zip
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
-msg_ok "Cleaned"# Modified by surgeon https://github.com/bketelsen/surgeon
+msg_ok "Cleaned"
+# Modified by surgeon https://github.com/bketelsen/surgeon

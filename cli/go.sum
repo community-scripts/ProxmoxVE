@@ -14,8 +14,8 @@ github.com/aymanbagabas/go-udiff v0.2.0 h1:TK0fH4MteXUDspT88n8CKzvK0X9O2xu9yQjWp
 github.com/aymanbagabas/go-udiff v0.2.0/go.mod h1:RE4Ex0qsGkTAJoQdQQCA0uG+nAzJO/pI/QwceO5fgrA=
 github.com/aymerick/douceur v0.2.0 h1:Mv+mAeH1Q+n9Fr+oyamOlAkUNPWPlA8PPGR0QAaYuPk=
 github.com/aymerick/douceur v0.2.0/go.mod h1:wlT5vV2O3h55X9m7iVYN0TBM0NH/MmbLnd30/FjWUq4=
-github.com/bketelsen/inclient v0.0.2 h1:VW7tqG95kEy2A3wln8Hm+IU927dIWrJFvW1mwT/RSG4=
-github.com/bketelsen/inclient v0.0.2/go.mod h1:0FTjkxQa3bWiplU90NBTEjGMoKdsfZBWLPtPoE+GaxI=
+github.com/bketelsen/inclient v0.0.3 h1:aO0EqEJTvZ1JaF9nXWnuTGMEVZhEdIXbNJTzkEibPfg=
+github.com/bketelsen/inclient v0.0.3/go.mod h1:0FTjkxQa3bWiplU90NBTEjGMoKdsfZBWLPtPoE+GaxI=
 github.com/bmatcuk/doublestar/v4 v4.8.0 h1:DSXtrypQddoug1459viM9X9D3dp1Z7993fw36I2kNcQ=
 github.com/bmatcuk/doublestar/v4 v4.8.0/go.mod h1:xBQ8jztBU6kakFMg+8WGxn0c6z1fTSPVIjEY1Wr7jzc=
 github.com/catppuccin/go v0.2.0 h1:ktBeIrIP42b/8FGiScP9sgrWOss3lw0Z5SktRoithGA=

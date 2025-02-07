@@ -62,7 +62,7 @@ After=network.target
 
 [Service]
 Type=exec
-WorkingDirectory=/opt/grist 
+WorkingDirectory=/opt/grist
 ExecStart=/usr/bin/yarn run start:prod
 EnvironmentFile=-/opt/grist/.env
 
@@ -80,4 +80,5 @@ msg_info "Cleaning up"
 rm -rf /opt/v${RELEASE}.zip
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
-msg_ok "Cleaned"# Modified by surgeon https://github.com/bketelsen/surgeon
+msg_ok "Cleaned"
+# Modified by surgeon https://github.com/bketelsen/surgeon

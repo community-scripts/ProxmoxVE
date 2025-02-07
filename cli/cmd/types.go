@@ -79,6 +79,8 @@ type LaunchSettings struct {
 	Profiles         []string          `json:"profiles,omitempty"`
 	CPU              int               `json:"cpu,omitempty"`
 	RAM              int               `json:"ram,omitempty"`
+	VM               bool              `json:"vm,omitempty"`
+	VMRootDiskSize   string            `json:"vm_root_disk_size,omitempty"`
 	RootPassword     string            `json:"root_password,omitempty"`
 	EnableSSH        bool              `json:"enable_ssh,omitempty"`
 	SSHRootPassword  bool              `json:"ssh_root_password,omitempty"`
