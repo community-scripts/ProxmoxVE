@@ -28,5 +28,10 @@
     "username": "root",
     "password": "opnsense"
   },
-  "notes": []
+  "notes": [
+    {
+      "text": "It wail fail with default settings if there is no vmbr0 and vmbr1 on your node. Use advanced settings in this case.",
+      "type": "warning"
+    }
+  ]
 }
