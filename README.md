@@ -15,16 +15,16 @@
     </a>
     <a href="https://discord.gg/UHrpNWGwkH">
       <img src="https://img.shields.io/badge/Discord-7289da?style=for-the-badge&logo=discord&logoColor=white" alt="Discord" />
-    </a> 
+    </a>
     <a href="https://ko-fi.com/community_scripts">
       <img src="https://img.shields.io/badge/Support-FF5F5F?style=for-the-badge&logo=ko-fi&logoColor=white" alt="Donate" />
     </a>
     <a href="https://github.com/community-scripts/ProxmoxVE/blob/main/.github/CONTRIBUTING.md">
       <img src="https://img.shields.io/badge/Contribute-ff4785?style=for-the-badge&logo=git&logoColor=white" alt="Contribute" />
-    </a> 
+    </a>
     <a href="https://github.com/community-scripts/ProxmoxVE/blob/main/USER_SUBMITTED_GUIDES.md">
       <img src="https://img.shields.io/badge/Guides-0077b5?style=for-the-badge&logo=read-the-docs&logoColor=white" alt="Guides" />
-    </a> 
+    </a>
     <a href="https://github.com/community-scripts/ProxmoxVE/blob/main/CHANGELOG.md">
       <img src="https://img.shields.io/badge/Changelog-6c5ce7?style=for-the-badge&logo=git&logoColor=white" alt="Changelog" />
     </a>
@@ -88,6 +88,18 @@ Join our community for support:
 ## 🤝 Report a Bug or Feature Request
 
 If you encounter any issues or have suggestions for improvement, file a new issue on our [GitHub issues page](https://github.com/community-scripts/ProxmoxVE/issues). You can also submit pull requests with solutions or enhancements!
+
+---
+
+## ⭐ Star History
+
+<a href="https://star-history.com/#community-scripts/ProxmoxVE&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=community-scripts/ProxmoxVE&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=community-scripts/ProxmoxVE&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=community-scripts/ProxmoxVE&type=Date" />
+ </picture>
+</a>
 
 ---
 
