@@ -24,11 +24,11 @@ export const metadata = {
     "proxmox",
     "VE",
   ],
-  authors: { name: "Bram Suurd" },
-  creator: "Bram Suurd",
-  publisher: "Bram Suurd",
+  authors: { name: "Brian Ketelsen" },
+  creator: "Brian Ketelsen",
+  publisher: "Brian Ketelsen",
   description:
-    "A Front-end for the Incus Helper Scripts (Community) Repository. Featuring over 200+ scripts to help you manage your Proxmox VE environment.",
+    "A Front-end for the Incus Helper Scripts (Community) Repository. Featuring over 200+ scripts to help you manage your Incus deployments.",
   favicon: "/app/favicon.ico",
   formatDetection: {
     email: false,
@@ -39,7 +39,7 @@ export const metadata = {
   openGraph: {
     title: "Incus Helper Scripts",
     description:
-      "A Front-end for the Incus Helper Scripts (Community) Repository. Featuring over 200+ scripts to help you manage your Proxmox VE environment.",
+      "A Front-end for the Incus Helper Scripts (Community) Repository. Featuring over 200+ scripts to help you manage your Incus deployments.",
     url: "/defaultimg.png",
     images: [
       {
