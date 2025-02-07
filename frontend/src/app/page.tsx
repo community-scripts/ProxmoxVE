@@ -129,6 +129,17 @@ export default function Page() {
 							</div>
 						</div>
 						<div className="flex flex-row gap-3">
+          	<Link href="/install">
+								<Button
+									size="lg"
+									variant="expandIcon"
+									Icon={CustomArrowRightIcon}
+									iconPlacement="right"
+									className="hover:"
+								>
+									Install CLI
+								</Button>
+							</Link>
 							<Link href="/scripts">
 								<Button
 									size="lg"

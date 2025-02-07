@@ -1,11 +1,19 @@
 import CodeCopyButton from "@/components/ui/code-copy-button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { basePath } from "@/config/siteConfig";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { ArrowRightIcon, ExternalLink } from "lucide-react";
+
 import { Script } from "@/lib/types";
 import { getDisplayValueFromType } from "../ScriptInfoBlocks";
 
-const getInstallCommand = (scriptPath?: string, isAlpine = false) => {
-  return `bash -c "$(wget -q${isAlpine ? "" : "L"}O - https://github.com/bketelsen/${basePath}/raw/main/${scriptPath})"`;
+function CustomArrowRightIcon() {
+  return <ArrowRightIcon className="h-4 w-4" width={1} />;
+}
+
+const getInstallCommand = (slug?: string, isAlpine = false) => {
+  return `scripts-cli launch ${slug} your-instance-name`;
 };
 
 export default function InstallCommand({ item }: { item: Script }) {
@@ -16,6 +24,8 @@ export default function InstallCommand({ item }: { item: Script }) {
   const defaultScript = item.install_methods.find(
     (method) => method.type === "default",
   );
+
+  console.log(item);
 
   const renderInstructions = (isAlpine = false) => (
     <>
@@ -36,8 +46,7 @@ export default function InstallCommand({ item }: { item: Script }) {
           <>
             {" "}
             To create a new Incus {item.name}{" "}
-            {getDisplayValueFromType(item.type)}, run the command below in the
-            Proxmox VE Shell.
+            {getDisplayValueFromType(item.type)}, run the command below in a terminal.
           </>
         )}
       </p>
@@ -62,7 +71,7 @@ export default function InstallCommand({ item }: { item: Script }) {
           <TabsContent value="default">
             {renderInstructions()}
             <CodeCopyButton>
-              {getInstallCommand(defaultScript?.script)}
+              {getInstallCommand(item.slug)}
             </CodeCopyButton>
           </TabsContent>
           <TabsContent value="alpine">
@@ -76,8 +85,19 @@ export default function InstallCommand({ item }: { item: Script }) {
         <>
           {renderInstructions()}
           <CodeCopyButton>
-            {getInstallCommand(defaultScript.script)}
+            {getInstallCommand(item.slug)}
           </CodeCopyButton>
+                    	<Link href="/install">
+								<Button
+									size="lg"
+									variant="expandIcon"
+									Icon={CustomArrowRightIcon}
+									iconPlacement="right"
+									className="hover: my-3"
+								>
+									How to install scripts-cli
+								</Button>
+							</Link>
         </>
       ) : null}
     </div>
