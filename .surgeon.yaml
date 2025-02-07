@@ -13,24 +13,6 @@ ignorelist:
 - prefix: .gitignore
 - prefix: .vscode
 codemods:
-- description: Modify Build Func
-  mod: sed
-  match: ct/*.sh
-  args:
-  - https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func
-  - https://raw.githubusercontent.com/bketelsen/IncusScripts/main/misc/build.func
-- description: Modify Build Func Refs
-  mod: sed
-  match: ct/*.sh
-  args:
-  - https://raw.githubusercontent.com/community-scripts/ProxmoxVE/refs/heads/main/misc/build.func
-  - https://raw.githubusercontent.com/bketelsen/IncusScripts/refs/heads/main/misc/build.func
-- description: Whiptail ct
-  mod: sed
-  match: ct/*.sh
-  args:
-  - Proxmox VE Helper Scripts
-  - Incus Scripts
 - description: Whiptail install
   mod: sed
   match: install/*.sh
@@ -79,7 +61,7 @@ codemods:
   match: misc/build.func
   args:
   - /usr/local/community-scripts/headers
-  - $HOME/community-scripts/headers
+  - $HOME/.config/incusscripts/headers
 - description: uname location
   mod: sed
   match: misc/build.func

@@ -1,0 +1,34 @@
+{
+  "name": "SearXNG",
+  "slug": "searxng",
+  "categories": [
+    0
+  ],
+  "date_created": "2025-02-07",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 8888,
+  "documentation": "https://docs.searxng.org/",
+  "website": "https://github.com/searxng/searxng",
+  "logo": "https://raw.githubusercontent.com/searxng/searxng/master/src/brand/searxng-wordmark.svg",
+  "description": "SearXNG is a free internet metasearch engine which aggregates results from up to 215 search services. Users are neither tracked nor profiled. Additionally, SearXNG can be used over Tor for online anonymity.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/searxng.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 7,
+        "os": "debian",
+        "version": "12"
+      }
+    }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": []
+}
