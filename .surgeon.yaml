@@ -5,6 +5,13 @@ commit: false
 push: true
 ignorelist:
 - prefix: frontend/
+- prefix: turnkey/
+- prefix: api/
+- prefix: README
+- prefix: LICENSE
+- prefix: .github
+- prefix: .gitignore
+- prefix: .vscode
 codemods:
 - description: Modify Build Func
   mod: sed
