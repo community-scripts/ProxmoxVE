@@ -16,7 +16,7 @@
   "install_methods": [
     {
       "type": "default",
-      "script": "ct/nodebb.sh",
+      "script": "ct/searxng.sh",
       "resources": {
         "cpu": 2,
         "ram": 2048,
