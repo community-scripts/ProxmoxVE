@@ -91,6 +91,10 @@ If you encounter any issues or have suggestions for improvement, file a new issu
 
 ---
 
+## ⭐ Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=community-scripts/ProxmoxVE&type=Date)](https://star-history.com/#community-scripts/ProxmoxVE&Date)
+
 ## 📜 License
 
 This project is licensed under the [MIT License](LICENSE).
