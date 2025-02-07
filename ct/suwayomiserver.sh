@@ -30,27 +30,27 @@ function update_script() {
         msg_error "No ${APP} Installation Found!"
         exit
     fi
-    VERSION=$(curl -s https://api.github.com/repos/Suwayomi/Suwayomi-Server/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-    if [[ "${VERSION}" != "$(cat /opt/suwayomi-server_version.txt)" ]] || [[ ! -f /opt/suwayomi-server_version.txt ]]; then
+    RELEASE=$(curl -s https://api.github.com/repos/Suwayomi/Suwayomi-Server/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+    if [[ "${RELEASE}" != "$(cat /opt/suwayomi-server_version.txt)" ]] || [[ ! -f /opt/suwayomi-server_version.txt ]]; then
         msg_info "Updating $APP"
         msg_info "Stopping $APP"
         systemctl stop suwayomi-server
         msg_ok "Stopped $APP"
-        msg_info "Updating $APP to v${VERSION}"
-        RELEASE=$(curl -s https://api.github.com/repos/Suwayomi/Suwayomi-Server/releases/latest | grep "browser_download_url" | awk '{print substr($2, 2, length($2)-2) }' |  tail -n+2 | head -n 1)
-        wget -q $RELEASE
+        msg_info "Updating $APP to v${RELEASE}"
+        URL=$(curl -s https://api.github.com/repos/Suwayomi/Suwayomi-Server/releases/latest | grep "browser_download_url" | awk '{print substr($2, 2, length($2)-2) }' |  tail -n+2 | head -n 1)
+        wget -q $URL
         $STD dpkg -i *.deb
-        msg_ok "Updated $APP to v${VERSION}"
+        msg_ok "Updated $APP to v${RELEASE}"
         msg_info "Starting $APP"
         systemctl start suwayomi-server
         msg_ok "Started $APP"
         msg_info "Cleaning Up"
         rm -f *.deb
         msg_ok "Cleanup Completed"
-        echo "${VERSION}" >/opt/${APP}_version.txt
+        echo "${RELEASE}" >/opt/suwayomi-server_version.txt.txt
         msg_ok "Update Successful"
     else
-        msg_ok "No update required. ${APP} is already at v${VERSION}"
+        msg_ok "No update required. ${APP} is already at v${RELEASE}"
     fi
     exit
 }

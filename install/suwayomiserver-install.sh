@@ -22,12 +22,12 @@ $STD apt-get install -y \
   libc++-dev
 msg_ok "Installed Dependencies"
 msg_info "Settting up Suwayomi-Server"
-RELEASE=$(curl -s https://api.github.com/repos/Suwayomi/Suwayomi-Server/releases/latest | grep "browser_download_url" | awk '{print substr($2, 2, length($2)-2) }' |  tail -n+2 | head -n 1)
-VERSION=$(curl -s https://api.github.com/repos/Suwayomi/Suwayomi-Server/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-wget -q $RELEASE
+URL=$(curl -s https://api.github.com/repos/Suwayomi/Suwayomi-Server/releases/latest | grep "browser_download_url" | awk '{print substr($2, 2, length($2)-2) }' |  tail -n+2 | head -n 1)
+RELEASE=$(curl -s https://api.github.com/repos/Suwayomi/Suwayomi-Server/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+wget -q $URL
 $STD dpkg -i *.deb
 rm -f *.deb
-echo ${VERSION} >/opt/suwayomi-server_version.txt
+echo ${RELEASE} >/opt/suwayomi-server_version.txt
 msg_ok "Done setting up Suwayomi-Server"
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/suwayomi-server.service
