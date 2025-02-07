@@ -661,7 +661,7 @@ fi
 msg_ok "Completed Successfully!\n"
 if [ "$IP_ADDR" != "" ]; then
   echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-  echo -e "${TAB}${GATEWAY}${BGN}http://${IP}${CL}"
+  echo -e "${TAB}${GATEWAY}${BGN}http://${IP_ADDR}${CL}"
 else
   echo -e "${INFO}${YW} LAN IP was DHCP.${CL}"
   echo -e "${INFO}${BGN}To find the IP login to the VM shell${CL}"
