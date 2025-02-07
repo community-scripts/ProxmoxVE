@@ -32,6 +32,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- Fix: Trillium Update Function & Harmonize Installation [@MickLesk](https://github.com/MickLesk) ([#2148](https://github.com/community-scripts/ProxmoxVE/pull/2148))
 - Fix: Zerotier-One fixed missing dependency [@tremor021](https://github.com/tremor021) ([#2147](https://github.com/community-scripts/ProxmoxVE/pull/2147))
 - Fix: Openwrt Version checking [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2137](https://github.com/community-scripts/ProxmoxVE/pull/2137))
 - Fix: PeaNUT Increase HDD & RAM Size [@MickLesk](https://github.com/MickLesk) ([#2127](https://github.com/community-scripts/ProxmoxVE/pull/2127))
