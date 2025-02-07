@@ -672,8 +672,6 @@ if [ "$START_VM" == "yes" ]; then
   send_line_to_vm "0"
   msg_ok "Started OpenSense VM"
 
-  
-
 fi
 msg_ok "Completed Successfully!\n"
 if [ "$IP_ADDR" != "" ]; then
@@ -681,5 +679,5 @@ if [ "$IP_ADDR" != "" ]; then
   echo -e "${TAB}${GATEWAY}${BGN}http://${IP}${CL}"
 else
   echo -e "${INFO}${YW} LAN IP was DHCP.${CL}"
-  echo -e "${INFO}${BGN}To find the IP login to the VM Shell${CL}"
+  echo -e "${INFO}${BGN}To find the IP login to the VM shell${CL}"
 fi
