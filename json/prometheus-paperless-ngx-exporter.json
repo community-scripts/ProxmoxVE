@@ -16,7 +16,7 @@
     "install_methods": [
         {
             "type": "default",
-            "script": "ct/prometheus-alertmanager.sh",
+            "script": "ct/prometheus-paperless-ngx-exporter.sh",
             "resources": {
                 "cpu": 1,
                 "ram": 256,
