@@ -4,16 +4,18 @@ version: '3'
 
 vars:
   GREETING: Hello, World!
+  BRANCHNAME: $(tr -dc A-Za-z0-9 </dev/urandom | head -c 13; echo)
 
 tasks:
   default:
     cmds:
-      - echo "{{.GREETING}}"
+      - echo "{{.BRANCHNAME}}"
     silent: true
 
   update:
     cmds:
       - echo "Running surgeon..."
+      - git checkout -b "{{.BRANCHNAME}}"
       - surgeon
       - ./misc/index.sh
     silent: true
