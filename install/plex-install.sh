@@ -46,6 +46,14 @@ else
 fi
 msg_ok "Installed Plex Media Server"
 
+msg_info "Setting up Automatic Updates"
+$STD apt-get install unattended-upgrades
+sed -i '/Unattended-Upgrade::Allowed-Origins {/a \\t"${distro_id}:${distro_codename}-updates";' /etc/apt/apt.conf.d/50unattended-upgrades
+sed -i '/Unattended-Upgrade::Allowed-Origins {/a \\t"site=downloads.plex.tv,component=main";' /etc/apt/apt.conf.d/50unattended-upgrades
+echo 'Unattended-Upgrade::Automatic-Reboot "true";' >> /etc/apt/apt.conf.d/50unattended-upgrades
+msg_info "Set Up Automatic Updates"
+
+
 motd_ssh
 customize
 
