@@ -505,7 +505,7 @@
     ],
     "default_credentials": {
         "username": "archivebox",
-        "password": "helper-scripts.com"
+        "password": "incus-scripts"
     },
     "notes": []
 },
@@ -3368,7 +3368,7 @@
         },
         {
             "text": "This script requires some extra steps after the installation, Please checkout the 'documentation'",
-            "type": "info" 
+            "type": "info"
         }
     ]
 },
@@ -3401,8 +3401,8 @@
     }
   ],
   "default_credentials": {
-    "username": "admin@helper-scripts.com",
-    "password": "helper-scripts.com"
+    "username": "admin@incus-scripts",
+    "password": "incus-scripts"
   },
   "notes": []
 },
@@ -3478,7 +3478,8 @@
             "type": "info"
         }
     ]
-},
+}
+,
 "komodo": {
   "name": "Komodo",
   "slug": "komodo",
@@ -4184,8 +4185,8 @@
         }
     ],
     "default_credentials": {
-        "username": "admin@helper-scripts.com",
-        "password": "helper-scripts.com"
+        "username": "admin@incus-scripts",
+        "password": "incus-scripts"
     },
     "notes": []
 },
@@ -7480,7 +7481,8 @@
         "type": "info"
       }
     ]
-  },
+  }
+,
 "threadfin": {
     "name": "Threadfin",
     "slug": "threadfin",

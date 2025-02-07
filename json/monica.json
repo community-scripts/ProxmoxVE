@@ -27,8 +27,8 @@
         }
     ],
     "default_credentials": {
-        "username": "admin@helper-scripts.com",
-        "password": "helper-scripts.com"
+        "username": "admin@incus-scripts",
+        "password": "incus-scripts"
     },
     "notes": []
 }

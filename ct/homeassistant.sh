@@ -80,7 +80,7 @@ function update_script() {
     curl -fsSL https://github.com/filebrowser/filebrowser/releases/download/v2.23.0/linux-amd64-filebrowser.tar.gz | tar -xzv -C /usr/local/bin &>/dev/null
     filebrowser config init -a '0.0.0.0' &>/dev/null
     filebrowser config set -a '0.0.0.0' &>/dev/null
-    filebrowser users add admin helper-scripts.com --perm.admin &>/dev/null
+    filebrowser users add admin incus-scripts --perm.admin &>/dev/null
     msg_ok "Installed FileBrowser"
 
     msg_info "Creating Service"
@@ -100,7 +100,7 @@ WantedBy=default.target" >$service_path
 
     msg_ok "Completed Successfully!\n"
     echo -e "FileBrowser should be reachable by going to the following URL.
-         ${BL}http://$IP:8080${CL}   admin|helper-scripts.com\n"
+         ${BL}http://$IP:8080${CL}   admin|incus-scripts\n"
     exit
   fi
 }

@@ -52,7 +52,7 @@ cat <<EOF >/opt/semaphore/config.json
 }
 EOF
 
-$STD semaphore user add --admin --login admin --email admin@helper-scripts.com --name Administrator --password ${SEM_PW} --config /opt/semaphore/config.json
+$STD semaphore user add --admin --login admin --email admin@incus-scripts.com --name Administrator --password ${SEM_PW} --config /opt/semaphore/config.json
 echo "${SEM_PW}" >~/semaphore.creds
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Setup Semaphore"

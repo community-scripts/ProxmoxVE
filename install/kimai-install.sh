@@ -80,10 +80,10 @@ $STD expect <<EOF
 set timeout -1
 log_user 0
 
-spawn bin/console kimai:user:create admin admin@helper-scripts.com ROLE_SUPER_ADMIN
+spawn bin/console kimai:user:create admin admin@incus-scripts.com ROLE_SUPER_ADMIN
 
 expect "Please enter the password:"
-send "helper-scripts.com\r"
+send "incus-scripts\r"
 
 expect eof
 EOF
@@ -102,14 +102,14 @@ cat <<EOF >/etc/apache2/sites-available/kimai.conf
         AllowOverride All
         Require all granted
     </Directory>
-  
+
     ErrorLog /var/log/apache2/error.log
     CustomLog /var/log/apache2/access.log combined
 
 </VirtualHost>
 EOF
 $STD a2ensite kimai.conf
-$STD a2dissite 000-default.conf  
+$STD a2dissite 000-default.conf
 $STD systemctl reload apache2
 msg_ok "Created Service"
 

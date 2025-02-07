@@ -48,8 +48,8 @@ $STD apt-get install -y nodejs
 msg_ok "Installed Node.js"
 
 msg_info "Installing Playwright"
-$STD pip install playwright 
-$STD playwright install-deps chromium 
+$STD pip install playwright
+$STD playwright install-deps chromium
 msg_ok "Installed Playwright"
 
 msg_info "Installing Chromium and ArchiveBox"
@@ -73,10 +73,10 @@ expect "Email address"
 send "\r"
 
 expect "Password"
-send "helper-scripts.com\r"
+send "incus-scripts\r"
 
 expect "Password (again)"
-send "helper-scripts.com\r"
+send "incus-scripts\r"
 
 expect eof
 EOF
