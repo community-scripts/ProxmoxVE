@@ -22,3 +22,7 @@ tasks:
     cmds:
       - goreleaser release --snapshot --clean
     silent: true
+  release-check:
+    cmds:
+      - goreleaser check
+    silent: true
