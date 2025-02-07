@@ -221,15 +221,10 @@ function default_settings() {
   VLAN=""
   MAC=$GEN_MAC
   WAN_MAC=$GEN_MAC_LAN
-  WAN_BRG="vmbr100"
+  WAN_BRG="vmbr1"
   MTU=""
   START_VM="yes"
   METHOD="default"
-
-  if ! grep -q "^iface ${WAN_BRG}" /etc/network/interfaces; then
-  msg_error "WAN Bridge '${WAN_BRG}' does not exist in /etc/network/interfaces"
-  exit
-fi
 
   echo -e "${DGN}Using Virtual Machine ID: ${BGN}${VMID}${CL}"
   echo -e "${DGN}Using Hostname: ${BGN}${HN}${CL}"
@@ -250,7 +245,6 @@ fi
   else
     echo -e "${DGN}Using WAN Bridge: ${BGN}${WAN_BRG}${CL}"
   fi
-
   echo -e "${DGN}Using Interface MTU Size: ${BGN}Default${CL}"
   echo -e "${DGN}Start VM when completed: ${BGN}yes${CL}"
   echo -e "${BL}Creating a OpenSense VM using the above default settings${CL}"
