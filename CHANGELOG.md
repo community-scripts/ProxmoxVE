@@ -21,6 +21,11 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### Changed
 
+### ✨ New Scripts
+
+- New Script: Cosmos [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2120](https://github.com/community-scripts/ProxmoxVE/pull/2120))
+- New Script: SearXNG [@MickLesk](https://github.com/MickLesk) ([#2123](https://github.com/community-scripts/ProxmoxVE/pull/2123))
+
 ### 🌐 Website
 
 - Fix JSON-Editor [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2121](https://github.com/community-scripts/ProxmoxVE/pull/2121))
