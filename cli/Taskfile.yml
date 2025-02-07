@@ -1,0 +1,24 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  GREETING: Hello, World!
+
+tasks:
+  build:
+    cmds:
+      - go build -v -trimpath -ldflags="-X github.com/bketelsen/IncusScripts/cli/cmd/main.commit=$(git rev-parse HEAD)" -o scripts-cli ./cmd
+    silent: true
+  install:
+    cmds:
+      - go install .
+    silent: true
+  clean:
+    cmds:
+      - rm -f scripts-cli
+    silent: true
+  release-snapshot:
+    cmds:
+      - goreleaser release --snapshot --clean
+    silent: true

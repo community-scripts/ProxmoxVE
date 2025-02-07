@@ -1,0 +1,4 @@
+/scripts-cli
+
+# Added by goreleaser init:
+dist/
