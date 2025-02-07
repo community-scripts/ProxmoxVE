@@ -21,6 +21,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### Changed
 
+### 💥 Breaking Changes
+
+- [core]: Enhance LXC template handling and improve error recovery [@MickLesk](https://github.com/MickLesk) ([#2128](https://github.com/community-scripts/ProxmoxVE/pull/2128))
+
 ### ✨ New Scripts
 
 - New Script: Cosmos [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2120](https://github.com/community-scripts/ProxmoxVE/pull/2120))
@@ -28,7 +32,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
-- [core]: Enhance LXC template handling and improve error recovery [@MickLesk](https://github.com/MickLesk) ([#2128](https://github.com/community-scripts/ProxmoxVE/pull/2128))
+- Fix: Zerotier-One fixed missing dependency [@tremor021](https://github.com/tremor021) ([#2147](https://github.com/community-scripts/ProxmoxVE/pull/2147))
 - Fix: Openwrt Version checking [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2137](https://github.com/community-scripts/ProxmoxVE/pull/2137))
 - Fix: PeaNUT Increase HDD & RAM Size [@MickLesk](https://github.com/MickLesk) ([#2127](https://github.com/community-scripts/ProxmoxVE/pull/2127))
 
