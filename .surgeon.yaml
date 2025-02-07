@@ -12,6 +12,31 @@ ignorelist:
 - prefix: .github
 - prefix: .gitignore
 - prefix: .vscode
+- prefix: json/add-lxc-iptag.json
+- prefix: json/add-netbird-lxc.json
+- prefix: json/add-tailscale-lxc.json
+- prefix: json/all-templates.json
+- prefix: json/clean-lxcs.json
+- prefix: json/clean-orphaned-lvm.json
+- prefix: json/cron-update-lxcs.json
+- prefix: json/crowdsec.json
+- prefix: json/fstrim.json
+- prefix: json/host-backup.json
+- prefix: json/kernel-clean.json
+- prefix: json/kernel-pin.json
+- prefix: json/lxc-delete.json
+- prefix: json/microcode.json
+- prefix: json/monitor-all.json
+- prefix: json/netdata.json
+- prefix: json/olivetin.json
+- prefix: json/post-pbs-install.json
+- prefix: json/post-pmg-install.json
+- prefix: json/post-pve-install.json
+- prefix: json/prometheus-pve-exporter.json
+- prefix: json/scaling-governor.json
+- prefix: json/turnkey.json
+- prefix: json/update-lxcs.json
+- prefix: json/update-repo.json
 codemods:
 - description: Whiptail install
   mod: sed
