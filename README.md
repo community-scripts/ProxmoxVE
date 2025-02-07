@@ -26,6 +26,12 @@ This project is a fork of [community-scripts](https://github.com/community-scrip
 
 ---
 
+## 🚀 Known Issues
+
+**VM Scripts** scripts listed as "VM" on the website don't work.  HOWEVER, you can install any of the "CONTAINER" scripts as an Incus VM by choosing "Advanced" installation.
+
+---
+
 ## 📦 Features
 
 - **Interactive Setup**: Choose between simple and advanced options for configuring VMs and Incus containers.
