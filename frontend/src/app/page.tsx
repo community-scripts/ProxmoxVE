@@ -86,6 +86,17 @@ export default function Page() {
 											<FaGithub className="mr-2 h-4 w-4" /> Tteck&apos;s GitHub
 										</a>
 									</Button>
+                  <Button className="w-full" asChild>
+										<a
+											href={`https://github.com/community-scripts/ProxmoxVE`}
+											target="_blank"
+											rel="noopener noreferrer"
+											className="flex items-center justify-center"
+										>
+											<ExternalLink className="mr-2 h-4 w-4" /> Proxmox VE Helper
+											Scripts
+										</a>
+                  </Button>
 									<Button className="w-full" asChild>
 										<a
 											href={`https://github.com/bketelsen/${basePath}`}
@@ -107,8 +118,8 @@ export default function Page() {
 							</h1>
 							<div className="max-w-2xl gap-2 flex flex-col text-center sm:text-lg text-sm leading-relaxed tracking-tight text-muted-foreground md:text-xl">
 								<p>
-									We are a community-driven initiative that simplifies the setup
-									of Incus.
+									We are a community-driven initiative that simplifies deployments
+									to Incus.
 								</p>
 								<p>
 									With 200+ scripts to help you manage your{" "}

@@ -26,12 +26,6 @@ export default function Footer() {
           >
             <FileJson className="h-4 w-4" /> JSON Editor
           </Link>
-          <Link
-            href="/data"
-            className="flex items-center gap-2 text-primary hover:underline"
-          >
-            <Server className="h-4 w-4" /> API Data
-          </Link>
         </div>
       </div>
     </div>

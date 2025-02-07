@@ -10,7 +10,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "Incus Helper Scripts",
     short_name: "Incus Helper Scripts",
     description:
-      "A Re-designed Front-end for the Incus Helper Scripts Repository. Featuring over 200+ scripts to help you manage your Proxmox VE environment.",
+      "A Front-end for the Incus Helper Scripts Repository. Featuring over 200+ scripts to help you manage your Incus deployment.",
     theme_color: "#030712",
     background_color: "#030712",
     display: "standalone",
