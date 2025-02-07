@@ -10,8 +10,8 @@ function header_info {
     _______ __     ____
    / ____(_) /__  / __ )_________ _      __________  _____
   / /_  / / / _ \/ __  / ___/ __ \ | /| / / ___/ _ \/ ___/
- / __/ / / /  __/ /_/ / /  / /_/ / |/ |/ (__  )  __/ / 
-/_/   /_/_/\___/_____/_/   \____/|__/|__/____/\___/_/   
+ / __/ / / /  __/ /_/ / /  / /_/ / |/ |/ (__  )  __/ /
+/_/   /_/_/\___/_____/_/   \____/|__/|__/____/\___/_/
 EOF
 }
 YW=$(echo "\033[33m")
@@ -86,8 +86,8 @@ if [[ "${install_prompt,,}" =~ ^(y|yes)$ ]]; then
         msg_info "Setting up default authentication"
         filebrowser config init -a '0.0.0.0' &>/dev/null
         filebrowser config set -a '0.0.0.0' &>/dev/null
-        filebrowser users add admin helper-scripts.com --perm.admin &>/dev/null
-        msg_ok "Default authentication configured (admin:helper-scripts.com)"
+        filebrowser users add admin incus-scripts --perm.admin &>/dev/null
+        msg_ok "Default authentication configured (admin:incus-scripts)"
     fi
 
     msg_info "Creating service"
