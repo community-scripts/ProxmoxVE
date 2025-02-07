@@ -28,6 +28,8 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- Fix: Openwrt Version checking [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2137](https://github.com/community-scripts/ProxmoxVE/pull/2137))
+- [core]: Enhance LXC template handling and improve error recovery [@MickLesk](https://github.com/MickLesk) ([#2128](https://github.com/community-scripts/ProxmoxVE/pull/2128))
 - Fix: PeaNUT Increase HDD & RAM Size [@MickLesk](https://github.com/MickLesk) ([#2127](https://github.com/community-scripts/ProxmoxVE/pull/2127))
 
 ### 🌐 Website
