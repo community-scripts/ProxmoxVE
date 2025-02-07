@@ -104,7 +104,7 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 EOF
-$STD systemctl enable --now searxng
+systemctl enable -q --now searxng
 msg_ok "Created Services"
 
 motd_ssh
