@@ -17,7 +17,7 @@
   "install_methods": [
     {
       "type": "default",
-      "script": "/ct/cosmos.sh",
+      "script": "ct/cosmos.sh",
       "resources": {
         "cpu": 2,
         "ram": 2048,
