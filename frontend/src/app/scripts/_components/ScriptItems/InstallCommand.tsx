@@ -35,7 +35,7 @@ export default function InstallCommand({ item }: { item: Script }) {
         ) : (
           <>
             {" "}
-            To create a new Proxmox VE {item.name}{" "}
+            To create a new Incus {item.name}{" "}
             {getDisplayValueFromType(item.type)}, run the command below in the
             Proxmox VE Shell.
           </>
