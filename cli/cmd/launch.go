@@ -416,7 +416,7 @@ func getAppMetadata(app string) (*Application, error) {
 	var application Application
 	err = json.Unmarshal(appJson, &application)
 	if err != nil {
-		log.Error("Failed to unmarshal application metadata:", "error", err)
+		log.Error("Failed to parse application metadata:", "error", err)
 		return nil, err
 	}
 	return &application, nil
