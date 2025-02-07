@@ -3,6 +3,8 @@ modsdir: codemods
 stage: false
 commit: false
 push: true
+ignorelist:
+- prefix: frontend/
 codemods:
 - description: Modify Build Func
   mod: sed
