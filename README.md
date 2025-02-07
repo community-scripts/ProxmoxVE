@@ -91,15 +91,9 @@ If you encounter any issues or have suggestions for improvement, file a new issu
 
 ---
 
-## ⭐ Star History
+## Star History
 
-<a href="https://star-history.com/#bketelsen/IncusScripts&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=bketelsen/IncusScripts&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=bketelsen/IncusScripts&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=bketelsen/IncusScripts&type=Date" />
- </picture>
-</a>
+[![Star History Chart](https://api.star-history.com/svg?repos=bketelsen/IncusScripts&type=Date)](https://star-history.com/#bketelsen/IncusScripts&Date)
 
 ---
 
