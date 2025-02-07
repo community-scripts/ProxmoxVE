@@ -44,7 +44,7 @@ User=root
 Restart=always
 Type=simple
 ExecStart=/usr/local/bin/prometheus-paperless-exporter \
-    --paperless_url==http://paperless.example.org \
+    --paperless_url=http://paperless.example.org \
     --paperless_auth_token_file=/etc/prometheus-paperless-ngx-exporter/paperless_auth_token_file
 ExecReload=/bin/kill -HUP \$MAINPID
 
