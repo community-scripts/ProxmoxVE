@@ -17,6 +17,14 @@ All LXC instances created using this repository come pre-installed with Midnight
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
 
+## 2025-02-07
+
+### Changed
+
+### 🌐 Website
+
+- Fix JSON-Editor [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2121](https://github.com/community-scripts/ProxmoxVE/pull/2121))
+
 ## 2025-02-06
 
 ### Changed
