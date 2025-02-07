@@ -221,18 +221,36 @@ function default_settings() {
   VLAN=""
   MAC=$GEN_MAC
   WAN_MAC=$GEN_MAC_LAN
-  WAN_BRG="vmbr1"
+  WAN_BRG="vmbr100"
   MTU=""
   START_VM="yes"
   METHOD="default"
+
+  if ! grep -q "^iface ${WAN_BRG}" /etc/network/interfaces; then
+  msg_error "WAN Bridge '${WAN_BRG}' does not exist in /etc/network/interfaces"
+  exit
+fi
+
   echo -e "${DGN}Using Virtual Machine ID: ${BGN}${VMID}${CL}"
   echo -e "${DGN}Using Hostname: ${BGN}${HN}${CL}"
   echo -e "${DGN}Allocated Cores: ${BGN}${CORE_COUNT}${CL}"
   echo -e "${DGN}Allocated RAM: ${BGN}${RAM_SIZE}${CL}"
-  echo -e "${DGN}Using LAN Bridge: ${BGN}${BRG}${CL}"
+  if ! grep -q "^iface ${BRG}" /etc/network/interfaces; then
+  msg_error "Bridge '${BRG}' does not exist in /etc/network/interfaces"
+  exit
+  else
+    echo -e "${DGN}Using LAN Bridge: ${BGN}${BRG}${CL}"
+  fi
   echo -e "${DGN}Using LAN VLAN: ${BGN}Default${CL}"
   echo -e "${DGN}Using LAN MAC Address: ${BGN}${MAC}${CL}"
   echo -e "${DGN}Using WAN MAC Address: ${BGN}${WAN_MAC}${CL}"
+  if ! grep -q "^iface ${WAN_BRG}" /etc/network/interfaces; then
+    msg_error "Bridge '${WAN_BRG}' does not exist in /etc/network/interfaces"
+    exit
+  else
+    echo -e "${DGN}Using WAN Bridge: ${BGN}${WAN_BRG}${CL}"
+  fi
+
   echo -e "${DGN}Using Interface MTU Size: ${BGN}Default${CL}"
   echo -e "${DGN}Start VM when completed: ${BGN}yes${CL}"
   echo -e "${BL}Creating a OpenSense VM using the above default settings${CL}"
@@ -337,6 +355,10 @@ function advanced_settings() {
     if [ -z $BRG ]; then
       BRG="vmbr0"
     fi
+    if ! grep -q "^iface ${BRG}" /etc/network/interfaces; then
+        msg_error "Bridge '${BRG}' does not exist in /etc/network/interfaces"
+        exit
+    fi
     echo -e "${DGN}Using LAN Bridge: ${BGN}$BRG${CL}"
   else
     exit-script
@@ -348,18 +370,18 @@ function advanced_settings() {
     fi
     echo -e "${DGN}Using LAN IP ADDRESS: ${BGN}$IP_ADDR${CL}"
     if LAN_GW=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a LAN GATEWAY IP" 8 58 $LAN_GW --title "LAN GATEWAY IP ADDRESS" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
-      if [ -z $LAN_GW ]; then
-        echo -e "${DGN}Gateway needs to be set if ip is not dhcp${CL}"
-        exit-script
-      fi
-      echo -e "${DGN}Using LAN GATEWAY ADDRESS: ${BGN}$LAN_GW${CL}"
-    else
+    if [ -z $LAN_GW ]; then
+      echo -e "${DGN}Gateway needs to be set if ip is not dhcp${CL}"
       exit-script
     fi
+    echo -e "${DGN}Using LAN GATEWAY ADDRESS: ${BGN}$LAN_GW${CL}"
   else
     exit-script
   fi
-  if NETMASK=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a LAN netmmask (24 for example)" 8 58 $NETMASK --title "LAN NETMASK" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+  else
+    exit-script
+  fi
+  if NETMASK=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a LAN netmmask (/24 for example)" 8 58 $NETMASK --title "LAN NETMASK" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
     if [ -z $NETMASK ]; then
       NETMASK=""
     fi
@@ -372,6 +394,10 @@ function advanced_settings() {
     if [ -z $WAN_BRG ]; then
       WAN_BRG="vmbr1"
     fi
+    if ! grep -q "^iface ${WAN_BRG}" /etc/network/interfaces; then
+      msg_error "WAN Bridge '${WAN_BRG}' does not exist in /etc/network/interfaces"
+      exit
+    fi
     echo -e "${DGN}Using WAN Bridge: ${BGN}$WAN_BRG${CL}"
   else
     exit-script
@@ -383,18 +409,18 @@ function advanced_settings() {
     fi
     echo -e "${DGN}Using WAN IP ADDRESS: ${BGN}$WAN_IP_ADDR${CL}"
     if WAN_GW=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a WAN GATEWAY IP" 8 58 $WAN_GW --title "WAN GATEWAY IP ADDRESS" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
-      if [ -z $WAN_GW ]; then
-        echo -e "${DGN}Gateway needs to be set if ip is not dhcp${CL}"
-        exit-script
-      fi
-      echo -e "${DGN}Using WAN GATEWAY ADDRESS: ${BGN}$WAN_GW${CL}"
-    else
+    if [ -z $WAN_GW ]; then
+      echo -e "${DGN}Gateway needs to be set if ip is not dhcp${CL}"
       exit-script
     fi
+    echo -e "${DGN}Using WAN GATEWAY ADDRESS: ${BGN}$WAN_GW${CL}"
   else
     exit-script
   fi
-  if WAN_NETMASK=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a WAN netmmask (24 for example)" 8 58 $WAN_NETMASK --title "WAN NETMASK" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+  else
+    exit-script
+  fi
+  if WAN_NETMASK=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a WAN netmmask (/24 for example)" 8 58 $WAN_NETMASK --title "WAN NETMASK" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
     if [ -z $WAN_NETMASK ]; then
       WAN_NETMASK=""
     fi
@@ -437,6 +463,13 @@ function advanced_settings() {
   #  exit-script
   #fi
 
+  if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "START VIRTUAL MACHINE" --yesno "Start VM when completed?" 10 58); then
+    START_VM="yes"
+  else
+    START_VM="no"
+  fi
+  echo -e "${DGN}Start VM when completed: ${BGN}$START_VM${CL}"
+
   if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "ADVANCED SETTINGS COMPLETE" --yesno "Ready to create OpenSense VM?" --no-button Do-Over 10 58); then
     echo -e "${RD}Creating a OpenSense VM using the above advanced settings${CL}"
   else
@@ -457,6 +490,8 @@ function start_script() {
     advanced_settings
   fi
 }
+
+
 
 arch_check
 pve_check
@@ -499,7 +534,7 @@ msg_ok "${CL}${BL}${URL}${CL}"
 wget -q --show-progress $URL
 echo -en "\e[1A\e[0K"
 FILE=Fressbsd.qcow2
-unxz -cv $(basename $URL) >${FILE}
+unxz -cv $(basename $URL) > ${FILE}
 msg_ok "Downloaded ${CL}${BL}${FILE}${CL}"
 
 STORAGE_TYPE=$(pvesm status -storage $STORAGE | awk 'NR>1 {print $2}')
@@ -533,11 +568,10 @@ qm set $VMID \
   -efidisk0 ${DISK0_REF}${FORMAT} \
   -scsi0 ${DISK1_REF},${DISK_CACHE}${THIN}size=2G \
   -boot order=scsi0 \
-  -serial0 socket \
-  -tags community-scripts >/dev/null
+  -serial0 socket >/dev/null \
+  -tags community-scripts
 qm resize $VMID scsi0 10G >/dev/null
-DESCRIPTION=$(
-  cat <<EOF
+  DESCRIPTION=$(cat <<EOF
 <div align='center'>
   <a href='https://Helper-Scripts.com' target='_blank' rel='noopener noreferrer'>
     <img src='https://raw.githubusercontent.com/michelroegl-brunner/ProxmoxVE/refs/heads/develop/misc/images/logo-81x112.png' alt='Logo' style='width:81px;height:112px;'/>
@@ -566,77 +600,81 @@ DESCRIPTION=$(
 </div>
 EOF
 )
-qm set "$VMID" -description "$DESCRIPTION" >/dev/null
+  qm set "$VMID" -description "$DESCRIPTION" >/dev/null  
 
 msg_info "Bridge interfaces are being added."
 qm set $VMID \
   -net0 virtio,bridge=${BRG},macaddr=${MAC}${VLAN}${MTU} 2>/dev/null
 msg_ok "Bridge interfaces have been successfully added."
-
+  
 msg_ok "Created a OpenSense VM ${CL}${BL}(${HN})"
-
-msg_ok "Starting OpenSense VM (Patience this takes 20-30 minutes)"
-qm start $VMID
-sleep 90
-send_line_to_vm "root"
-send_line_to_vm "fetch https://raw.githubusercontent.com/opnsense/update/master/src/bootstrap/opnsense-bootstrap.sh.in"
-qm set $VMID \
-  -net1 virtio,bridge=${WAN_BRG},macaddr=${WAN_MAC} 2>/dev/null
-sleep 10
-send_line_to_vm "sh ./opnsense-bootstrap.sh.in -y -f -r ${RELEASE}"
-#We need to wait for the OpenSense build proccess to finish, this takes a few minutes
-sleep 1000
-send_line_to_vm "root"
-send_line_to_vm "opnsense"
-send_line_to_vm "2"
-
-if [ "$IP_ADDR" != "" ]; then
-  send_line_to_vm "1"
-  send_line_to_vm "n"
-  send_line_to_vm "${IP_ADDR}"
-  send_line_to_vm "${NETMASK}"
-  send_line_to_vm "${LAN_GW}"
-  send_line_to_vm "n"
-  send_line_to_vm " "
-  send_line_to_vm "n"
-  send_line_to_vm "n"
-  send_line_to_vm " "
-  send_line_to_vm "n"
-  send_line_to_vm "n"
-  send_line_to_vm "n"
-  send_line_to_vm "n"
-  send_line_to_vm "n"
-else
-  send_line_to_vm "1"
-  send_line_to_vm "y"
-  send_line_to_vm "n"
-  send_line_to_vm "n"
-  send_line_to_vm " "
-  send_line_to_vm "n"
-  send_line_to_vm "n"
-  send_line_to_vm "n"
-fi
-#we need to wait for the Config changes to be saved
-sleep 20
-if [ "$WAN_IP_ADDR" != "" ]; then
+if [ "$START_VM" == "yes" ]; then
+  msg_ok "Starting OpenSense VM (Patience this takes 20-30 minutes)"
+  qm start $VMID
+  sleep 90
+  send_line_to_vm "root"
+  send_line_to_vm "fetch https://raw.githubusercontent.com/opnsense/update/master/src/bootstrap/opnsense-bootstrap.sh.in"
+  qm set $VMID \
+    -net1 virtio,bridge=${WAN_BRG},macaddr=${WAN_MAC} 2>/dev/null
+  sleep 10
+  send_line_to_vm "sh ./opnsense-bootstrap.sh.in -y -f -r ${RELEASE}"
+  msg_ok "OpenSense VM is being installed, do not close the terminal, or the installation will fail."
+  #We need to wait for the OpenSense build proccess to finish, this takes a few minutes
+  sleep 1000
+  send_line_to_vm "root"
+  send_line_to_vm "opnsense"
   send_line_to_vm "2"
-  send_line_to_vm "2"
-  send_line_to_vm "n"
-  send_line_to_vm "${WAN_IP_ADDR}"
-  send_line_to_vm "${NETMASK}"
-  send_line_to_vm "${LAN_GW}"
-  send_line_to_vm "n"
-  send_line_to_vm " "
-  send_line_to_vm "n"
-  send_line_to_vm " "
-  send_line_to_vm "n"
-  send_line_to_vm "n"
-  send_line_to_vm "n"
-fi
-sleep 10
-send_line_to_vm "0"
-msg_ok "Started OpenSense VM"
 
+  if [ "$IP_ADDR" != "" ]; then
+    send_line_to_vm "1"
+    send_line_to_vm "n"
+    send_line_to_vm "${IP_ADDR}"
+    send_line_to_vm "${NETMASK}"
+    send_line_to_vm "${LAN_GW}"
+    send_line_to_vm "n"
+    send_line_to_vm " "
+    send_line_to_vm "n"
+    send_line_to_vm "n"
+    send_line_to_vm " "
+    send_line_to_vm "n"
+    send_line_to_vm "n"
+    send_line_to_vm "n"
+    send_line_to_vm "n"
+    send_line_to_vm "n"    
+  else
+    send_line_to_vm "1"
+    send_line_to_vm "y"
+    send_line_to_vm "n"
+    send_line_to_vm "n"  
+    send_line_to_vm " "
+    send_line_to_vm "n"
+    send_line_to_vm "n"   
+    send_line_to_vm "n"
+  fi
+  #we need to wait for the Config changes to be saved
+  sleep 20
+  if [ "$WAN_IP_ADDR" != "" ]; then
+    send_line_to_vm "2"
+    send_line_to_vm "2"
+    send_line_to_vm "n"
+    send_line_to_vm "${WAN_IP_ADDR}"
+    send_line_to_vm "${NETMASK}"
+    send_line_to_vm "${LAN_GW}"
+    send_line_to_vm "n"
+    send_line_to_vm " "
+    send_line_to_vm "n"
+    send_line_to_vm " "
+    send_line_to_vm "n"
+    send_line_to_vm "n"
+    send_line_to_vm "n" 
+  fi
+  sleep 10
+  send_line_to_vm "0"
+  msg_ok "Started OpenSense VM"
+
+  
+
+fi
 msg_ok "Completed Successfully!\n"
 if [ "$IP_ADDR" != "" ]; then
   echo -e "${INFO}${YW} Access it using the following URL:${CL}"
