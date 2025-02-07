@@ -26,6 +26,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 - New Script: Cosmos [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2120](https://github.com/community-scripts/ProxmoxVE/pull/2120))
 - New Script: SearXNG [@MickLesk](https://github.com/MickLesk) ([#2123](https://github.com/community-scripts/ProxmoxVE/pull/2123))
 
+### 🚀 Updated Scripts
+
+- Fix: PeaNUT Increase HDD & RAM Size [@MickLesk](https://github.com/MickLesk) ([#2127](https://github.com/community-scripts/ProxmoxVE/pull/2127))
+
 ### 🌐 Website
 
 - Fix JSON-Editor [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2121](https://github.com/community-scripts/ProxmoxVE/pull/2121))
