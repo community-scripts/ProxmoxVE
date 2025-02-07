@@ -21,6 +21,7 @@ $STD apt-get install -y \
   openjdk-17-jre \
   libc++-dev
 msg_ok "Installed Dependencies"
+
 msg_info "Settting up Suwayomi-Server"
 URL=$(curl -s https://api.github.com/repos/Suwayomi/Suwayomi-Server/releases/latest | grep "browser_download_url" | awk '{print substr($2, 2, length($2)-2) }' |  tail -n+2 | head -n 1)
 RELEASE=$(curl -s https://api.github.com/repos/Suwayomi/Suwayomi-Server/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')

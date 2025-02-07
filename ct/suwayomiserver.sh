@@ -6,7 +6,7 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 # Source: https://github.com/Suwayomi/Suwayomi-Server
 
 APP="Suwayomi-Server"
-TAGS="media; manga"
+TAGS="media;manga"
 var_cpu="1"
 var_ram="1024"
 var_disk="4"
@@ -37,9 +37,10 @@ function update_script() {
         systemctl stop suwayomi-server
         msg_ok "Stopped $APP"
         msg_info "Updating $APP to v${RELEASE}"
+        cd /tmp
         URL=$(curl -s https://api.github.com/repos/Suwayomi/Suwayomi-Server/releases/latest | grep "browser_download_url" | awk '{print substr($2, 2, length($2)-2) }' |  tail -n+2 | head -n 1)
         wget -q $URL
-        $STD dpkg -i *.deb
+        $STD dpkg -i /tmp/*.deb
         msg_ok "Updated $APP to v${RELEASE}"
         msg_info "Starting $APP"
         systemctl start suwayomi-server
