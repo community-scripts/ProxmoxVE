@@ -6,10 +6,14 @@ import { Metadata } from "@/lib/types";
 
 const jsonDir = "public/json";
 const metadataFileName = "metadata.json";
+const indexFileName = "ct-index.json";
+
 const encoding = "utf-8";
 
 const fileNames = (await fs.readdir(jsonDir))
   .filter((fileName) => fileName !== metadataFileName)
+  .filter((fileName) => fileName !== indexFileName);
+
 
 describe.each(fileNames)("%s", async (fileName) => {
   let script: Script;
