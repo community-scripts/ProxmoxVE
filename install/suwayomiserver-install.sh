@@ -26,7 +26,6 @@ URL=$(curl -s https://api.github.com/repos/Suwayomi/Suwayomi-Server/releases/lat
 RELEASE=$(curl -s https://api.github.com/repos/Suwayomi/Suwayomi-Server/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 wget -q $URL
 $STD dpkg -i *.deb
-rm -f *.deb
 echo ${RELEASE} >/opt/suwayomi-server_version.txt
 msg_ok "Done setting up Suwayomi-Server"
 msg_info "Creating Service"
@@ -47,6 +46,7 @@ msg_ok "Created Service"
 motd_ssh
 customize
 msg_info "Cleaning up"
+rm -f *.deb
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"

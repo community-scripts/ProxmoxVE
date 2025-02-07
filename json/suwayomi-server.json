@@ -2,14 +2,14 @@
     "name": "Suwayomi-Server",
     "slug": "suwayomi-server",
     "categories": [
-        0
+        13
     ],
     "date_created": "2025-02-07",
     "type": "ct",
     "updateable": true,
     "privileged": false,
     "interface_port": 4567,
-    "documentation": "https://github.com/Suwayomi/Suwayomi-Servernull",
+    "documentation": "https://github.com/Suwayomi/Suwayomi-Server/wiki",
     "website": "https://github.com/Suwayomi/Suwayomi-Server",
     "logo": "https://github.com/Suwayomi/Suwayomi-Server/raw/master/server/src/main/resources/icon/faviconlogo.png",
     "description": "A free and open source manga reader server that runs extensions built for Mihon (Tachiyomi).",
