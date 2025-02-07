@@ -76,8 +76,8 @@ export default function JSONGenerator() {
             ...method,
             script:
               method.type === "alpine"
-                ? `/${updated.type}/alpine-${updated.slug}.sh`
-                : `/${updated.type}/${updated.slug}.sh`,
+                ? `${updated.type}/alpine-${updated.slug}.sh`
+                : `${updated.type}/${updated.slug}.sh`,
           }));
         }
 

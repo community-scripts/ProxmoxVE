@@ -64,8 +64,8 @@ function InstallMethod({
             if (key === "type") {
               updatedMethod.script =
                 value === "alpine"
-                  ? `/${prev.type}/alpine-${prev.slug}.sh`
-                  : `/${prev.type}/${prev.slug}.sh`;
+                  ? `${prev.type}/alpine-${prev.slug}.sh`
+                  : `${prev.type}/${prev.slug}.sh`;
 
               // Set OS to Alpine and reset version if type is alpine
               if (value === "alpine") {
