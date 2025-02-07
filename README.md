@@ -29,6 +29,7 @@ This project is a fork of [community-scripts](https://github.com/community-scrip
 ## 🚀 Known Issues
 
 **VM Scripts** scripts listed as "VM" on the website don't work.  HOWEVER, you can install any of the "CONTAINER" scripts as an Incus VM by choosing "Advanced" installation.
+**Networks** If you want to choose a different network bridge, create an incus profile using that bridge, then add that profile in "Advanced" settings.
 
 ---
 
