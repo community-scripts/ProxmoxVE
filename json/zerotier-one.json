@@ -16,7 +16,7 @@
     "install_methods": [
         {
             "type": "default",
-            "script": "ct/debian.sh",
+            "script": "ct/zerotier-one.sh",
             "resources": {
                 "cpu": 1,
                 "ram": 512,
