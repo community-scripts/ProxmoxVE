@@ -25,9 +25,17 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 - New script: Barcode Buddy [@bvdberg01](https://github.com/bvdberg01) ([#2167](https://github.com/community-scripts/ProxmoxVE/pull/2167))
 
+### 🚀 Updated Scripts
+
+- Fix: Actualbudget - salvage the `.migrate` file when upgrading [@bourquep](https://github.com/bourquep) ([#2173](https://github.com/community-scripts/ProxmoxVE/pull/2173))
+
 ### 🌐 Website
 
 - Update cosmos.json description [@BramSuurdje](https://github.com/BramSuurdje) ([#2162](https://github.com/community-scripts/ProxmoxVE/pull/2162))
+
+### 🧰 Maintenance
+
+- fix typos in CONTRIBUTOR_GUIDE [@thomashondema](https://github.com/thomashondema) ([#2174](https://github.com/community-scripts/ProxmoxVE/pull/2174))
 
 ## 2025-02-07 - 10.000 ⭐
 
