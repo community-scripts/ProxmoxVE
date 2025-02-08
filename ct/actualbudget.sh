@@ -48,6 +48,7 @@ function update_script() {
         mv *ctual-server-* /opt/actualbudget
         rm -rf /opt/actualbudget/.env
         mv /opt/actualbudget_bak/.env /opt/actualbudget
+        mv /opt/actualbudget_bak/.migrate /opt/actualbudget
         mv /opt/actualbudget_bak/server-files /opt/actualbudget/server-files
         cd /opt/actualbudget
         yarn install &>/dev/null
