@@ -24,7 +24,6 @@ $STD apt-get install -y \
   make \
   g++ \
   build-essential \
-  libc6-essential \
   nginx \
   gettext \
   openssl
