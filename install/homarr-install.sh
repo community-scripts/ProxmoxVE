@@ -65,7 +65,7 @@ EOF
 
 cd /opt/homarr
 
-$STD pnpm install --frozen-lockfile
+$STD pnpm install
 $STD pnpm build
 mkdir build
 
