@@ -64,6 +64,11 @@ NODE_ENV='production'
 EOF
 
 cd /opt/homarr
+
+$STD pnpm install --frozen-lockfile
+$STD pnpm build
+mkdir build
+
 cp /opt/homarr/apps/nextjs/next.config.ts .
 cp /opt/homarr/apps/nextjs/package.json .
 
@@ -79,9 +84,6 @@ cp /opt/homarr/packages/cli/cli.cjs /opt/homarr/apps/cli/cli.cjs
 echo $'#!/bin/bash\ncd /opt/homarr/apps/cli && node ./cli.cjs "$@"' > /usr/bin/homarr
 chmod +x /usr/bin/homarr
 
-$STD pnpm install --frozen-lockfile
-$STD pnpm build
-mkdir build
 cp ./node_modules/better-sqlite3/build/Release/better_sqlite3.node ./build/better_sqlite3.node
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Installed Homarr"
