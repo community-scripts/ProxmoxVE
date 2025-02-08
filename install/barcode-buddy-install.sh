@@ -34,7 +34,7 @@ echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Installed barcodebuddy"
 
 msg_info "Creating Services"
-cat <<EOF >/etc/systemd/system/barcodebuddy-ws.service
+cat <<EOF >/etc/systemd/system/barcodebuddy.service
 [Unit]
 Description=Run websocket server for barcodebuddy screen feature
 After=network.target
@@ -64,7 +64,7 @@ cat <<EOF >/etc/apache2/sites-available/barcodebuddy.conf
     CustomLog /var/log/apache2/barcodebuddy_access.log combined
 </VirtualHost>
 EOF
-systemctl enable -q --now barcodebuddy-ws
+systemctl enable -q --now barcodebuddy
 $STD a2ensite barcodebuddy
 $STD a2enmod rewrite
 $STD a2dissite 000-default.conf

@@ -36,7 +36,7 @@ function update_script() {
   if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
     msg_info "Stopping Service"
     systemctl stop apache2
-    systemctl stop barcodebuddy-ws
+    systemctl stop barcodebuddy
     msg_ok "Stopped Service"
 
     msg_info "Updating ${APP} to v${RELEASE}"
@@ -52,7 +52,7 @@ function update_script() {
 
     msg_info "Starting Service"
     systemctl start apache2
-    systemctl start barcodebuddy-ws
+    systemctl start barcodebuddy
     msg_ok "Started Service"
 
     msg_info "Cleaning up"
