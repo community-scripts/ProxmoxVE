@@ -21,6 +21,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### Changed
 
+### ✨ New Scripts
+
+- New script: Barcode Buddy [@bvdberg01](https://github.com/bvdberg01) ([#2167](https://github.com/community-scripts/ProxmoxVE/pull/2167))
+
 ### 🌐 Website
 
 - Update cosmos.json description [@BramSuurdje](https://github.com/BramSuurdje) ([#2162](https://github.com/community-scripts/ProxmoxVE/pull/2162))
