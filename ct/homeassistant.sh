@@ -49,7 +49,7 @@ function update_script() {
       LATEST_IMAGE="$(docker inspect --format "{{.Id}}" --type image "${CONTAINER_IMAGE}")"
       if [[ "${RUNNING_IMAGE}" != "${LATEST_IMAGE}" ]]; then
         echo "Updating ${container} image ${CONTAINER_IMAGE}"
-        DOCKER_COMMAND="$(runlike "${container}")"
+        DOCKER_COMMAND="$(runlike --use-volume-id "${container}")"
         docker rm --force "${container}"
         eval ${DOCKER_COMMAND}
       fi
