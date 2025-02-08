@@ -17,6 +17,14 @@ All LXC instances created using this repository come pre-installed with Midnight
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
 
+## 2025-02-08
+
+### Changed
+
+### 🌐 Website
+
+- Update cosmos.json description [@BramSuurdje](https://github.com/BramSuurdje) ([#2162](https://github.com/community-scripts/ProxmoxVE/pull/2162))
+
 ## 2025-02-07 - 10.000 ⭐
 
 ### Changed
