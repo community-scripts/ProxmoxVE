@@ -13,7 +13,7 @@
   "documentation": "https://cosmos-cloud.io/doc/1%20index/",
   "website": "https://cosmos-cloud.io/",
   "logo": "https://cosmos-cloud.io/Logo.png",
-  "description": "Selfhosting your own cloud and web services is so satisfying, but it's also very time consuming, and dangerous. With Cosmos, take the chore out of selfhosting, with automated maintenance and fully secured setup out of the box. It even integrates to your existing setup.",
+  "description": "Cosmos Cloud is a self-hosting platform that automates maintenance and security. It offers an app marketplace, reverse proxy management, container control, VPN integration, real-time monitoring, and disk management. Security features include SSO, anti-DDoS, and encryption. It simplifies self-hosting for all users.",
   "install_methods": [
     {
       "type": "default",
