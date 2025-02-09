@@ -93,6 +93,7 @@ export default function InstallCommand({ item }: { item: Script }) {
 									variant="expandIcon"
 									Icon={CustomArrowRightIcon}
 									iconPlacement="right"
+                  data-umami-event="click-install"
 									className="hover: my-3"
 								>
 									How to install scripts-cli
