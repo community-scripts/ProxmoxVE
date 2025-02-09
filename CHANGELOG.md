@@ -17,6 +17,22 @@ All LXC instances created using this repository come pre-installed with Midnight
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
 
+## 2025-02-09
+
+### Changed
+
+### ✨ New Scripts
+
+- New Script: pbs_microcode.sh [@DonPablo1010](https://github.com/DonPablo1010) ([#2166](https://github.com/community-scripts/ProxmoxVE/pull/2166))
+
+### 🚀 Updated Scripts
+
+- Keep the same hass_config volume for Home Assistant [@genehand](https://github.com/genehand) ([#2160](https://github.com/community-scripts/ProxmoxVE/pull/2160))
+
+### 🌐 Website
+
+- Fix: Barcode Buddy Logo & Title [@MickLesk](https://github.com/MickLesk) ([#2183](https://github.com/community-scripts/ProxmoxVE/pull/2183))
+
 ## 2025-02-08
 
 ### Changed
