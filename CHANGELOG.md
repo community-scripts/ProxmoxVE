@@ -31,6 +31,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🌐 Website
 
+- Website: Set new Logo for Paperless-AI [@MickLesk](https://github.com/MickLesk) ([#2194](https://github.com/community-scripts/ProxmoxVE/pull/2194))
 - Fix: Barcode Buddy Logo & Title [@MickLesk](https://github.com/MickLesk) ([#2183](https://github.com/community-scripts/ProxmoxVE/pull/2183))
 
 ## 2025-02-08
