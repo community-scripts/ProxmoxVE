@@ -23,8 +23,8 @@ GEN_MAC=02:$(openssl rand -hex 5 | awk '{print toupper($0)}' | sed 's/\(..\)/\1:
 NEXTID=$(pvesh get /cluster/nextid)
 RANDOM_UUID="$(cat /proc/sys/kernel/random/uuid)"
 METHOD=""
-NSAPP="debain12vm"
-var_os="debain"
+NSAPP="debian12vm"
+var_os="debian"
 var_version="12"
 DISK_SIZE="8G"
 

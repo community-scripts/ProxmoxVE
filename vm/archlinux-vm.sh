@@ -23,8 +23,8 @@ echo -e "\n Loading..."
 #API VARIABLES
 RANDOM_UUID="$(cat /proc/sys/kernel/random/uuid)"
 METHOD=""
-NSAPP="mikrotik-router-os"
-var_os="mikrotik"
+NSAPP="arch-linux-vm"
+var_os="arch-linux"
 var_version=" "
 GEN_MAC=02:$(openssl rand -hex 5 | awk '{print toupper($0)}' | sed 's/\(..\)/\1:/g; s/.$//')
 NEXTID=$(pvesh get /cluster/nextid)

@@ -23,9 +23,9 @@ GEN_MAC=02:$(openssl rand -hex 5 | awk '{print toupper($0)}' | sed 's/\(..\)/\1:
 NEXTID=$(pvesh get /cluster/nextid)
 RANDOM_UUID="$(cat /proc/sys/kernel/random/uuid)"
 METHOD=""
-NSAPP="debain12vm"
-var_os="debain"
-var_version="12"
+NSAPP="ubuntu-2204-vm"
+var_os="ubuntu"
+var_version="2204"
 
 YW=$(echo "\033[33m")
 BL=$(echo "\033[36m")
