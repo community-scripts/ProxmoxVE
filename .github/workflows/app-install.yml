@@ -9,16 +9,14 @@ on:
 
 jobs:
   run-install-script:
-    runs-on: ubuntu-latest
-    container:
-      image: debian:latest
-    
+    runs-on: self-hosted
+   
     steps:
       - name: Install GitHub CLI
         run: |
           # Install GitHub CLI
-          apt update
-          apt install -y git gh
+          sudo apt update
+          sudo apt install -y git gh
           
       - name: Checkout PR branch
         uses: actions/checkout@v4
@@ -59,30 +57,21 @@ jobs:
       - name: Make script executable
         run: chmod +x ${{ env.SCRIPT }}
 
-      - name: Install curl
-        run: apt update && apt install -y curl
-        
+ 
       - name: Run install script and capture error message
         id: run-install
         run: |
           set +e  # Allow the command to fail
-          echo "Running install script..."
-          EERROR_MSG=$(./${{ env.SCRIPT }} > /dev/null)  
-          echo "$ERROR_MSG" 
-          exit_code=$?  
-          echo "exit_code=$exit_code"
-          echo "$ERROR_MSG" > result.log
-          echo "exit_code=$exit_code" >> $GITHUB_ENV
-          echo "ERROR_MSG=$ERROR_MSG" >> $GITHUB_ENV
+          ERROR_MSG=$(sudo ./${{ env.SCRIPT }} 2>&1 > /dev/null)
+          echo "ERROR: $ERROR_MSG" 
+          if [ -n "$ERROR_MSG" ]; then
+            echo "$ERROR_MSG" > result.log
+            echo "ERROR_MSG=$ERROR_MSG" >> $GITHUB_ENV
+          fi        
           set -e  # Restore exit-on-error
-             
-          if [ $exit_code -ne 0 ]; then
-            echo "Error detected, exit code: $exit_code"
-            exit $exit_code  # Force the job to fail
-          fi
-
+          
       - name: Post error comment if install script fails
-        if: failure()
+        if: ${{ env.ERROR_MSG != '' }} 
         run: |
           ERROR_MSG=$(cat result.log)
           ERROR_MSG_ESCAPED=$(echo "$ERROR_MSG" | sed 's/[&/\]/\\&/g')  # Escape special characters
@@ -90,4 +79,4 @@ jobs:
           # Post an error comment to the pull request with the captured error message
           echo "Posting error message as a comment..."
           gh pr comment ${{ github.event.pull_request.number }} \
-            --body "Error: The install script failed with the following message: ${ERROR_MSG_ESCAPED}"
+            --body "The install script failed with the following message: ${ERROR_MSG_ESCAPED}"
