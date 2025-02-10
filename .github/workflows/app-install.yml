@@ -70,6 +70,8 @@ jobs:
           ERROR_MSG=$(./${{ env.SCRIPT }} 2>&1)  # Capture both stdout and stderr
           echo "$ERROR_MSG" # Save error message to a file for later use
           exit_code=$?  # Capture the exit code
+          echo "exit_code=$exit_code"
+          echo "ERROR_MSG=$ERROR_MSG"
           echo "exit_code=$exit_code" >> $GITHUB_ENV
           echo "ERROR_MSG=$ERROR_MSG" >> $GITHUB_ENV
           set -e  # Restore exit-on-error
