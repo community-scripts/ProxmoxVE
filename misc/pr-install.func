@@ -36,19 +36,10 @@ color() {
 
 catch_errors() {
   set -Eeuo pipefail
-  trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
+  trap 'exit 1' ERR
 }
 
 # This function handles errors
-error_handler() {
-  local exit_code="$?"
-  local line_number="$1"
-  local command="$2"
-  local error_message="[ERROR] in line $line_number: exit code $exit_code: while executing command $command"
-  echo -e "\n$error_message"
-  exit 1
-}
-
 
 # This function enables IPv6 if it's not disabled and sets verbose mode if the global variable is set to "yes"
 verb_ip6() {
