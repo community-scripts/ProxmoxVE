@@ -65,8 +65,6 @@ jobs:
             git checkout origin/main .github/workflows/scripts/app-test/pr-build.func
             git checkout origin/main .github/workflows/scripts/app-test/pr-install.func
             git checkout origin/main .github/workflows/scripts/app-test/pr-create-lxc.sh
-            ls -la .github/workflows/scripts/app-test/
-            cat .github/workflows/scripts/app-test/pr-create-lxc.sh
             chmod +x $FILE
             echo "Running: $FILE"
             ./$FILE
