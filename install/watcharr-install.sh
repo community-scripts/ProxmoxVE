@@ -48,7 +48,6 @@ RELEASE=$(curl -s https://api.github.com/repos/sbondCo/Watcharr/releases/latest 
 wget -q "https://github.com/sbondCo/Watcharr/archive/refs/tags/v${RELEASE}.tar.gz" -O "$temp_file"
 tar -xzf "$temp_file"
 mv Watcharr-${RELEASE}/ /opt/watcharr
-rm -f "$temp_file"
 cd /opt/watcharr
 $STD npm i
 $STD npm run build
@@ -89,6 +88,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
+rm -f "$temp_file"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
