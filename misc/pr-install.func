@@ -106,33 +106,6 @@ setting_up_container() {
 
 # This function checks the network connection by pinging a known IP address and prompts the user to continue if the internet is not connected
 network_check() {
-  set +e
-  trap - ERR
-  ipv4_connected=false
-  ipv6_connected=false
-  sleep 1
-# Check IPv4 connectivity to Google, Cloudflare & Quad9 DNS servers.
-  if ping -c 1 -W 1 1.1.1.1 &>/dev/null || ping -c 1 -W 1 8.8.8.8 &>/dev/null || ping -c 1 -W 1 9.9.9.9 &>/dev/null; then 
-    msg_ok "IPv4 Internet Connected";
-    ipv4_connected=true
-  else
-    msg_error "IPv4 Internet Not Connected";
-  fi
-
-# Check IPv6 connectivity to Google, Cloudflare & Quad9 DNS servers.
-  if ping6 -c 1 -W 1 2606:4700:4700::1111 &>/dev/null || ping6 -c 1 -W 1 2001:4860:4860::8888 &>/dev/null || ping6 -c 1 -W 1 2620:fe::fe &>/dev/null; then
-    msg_ok "IPv6 Internet Connected";
-    ipv6_connected=true
-  else
-    msg_error "IPv6 Internet Not Connected";
-  fi
-
-# If both IPv4 and IPv6 checks fail, prompt the user
-  if [[ $ipv4_connected == false && $ipv6_connected == false ]]; then
-    read -r -p "No Internet detected,would you like to continue anyway? <y/N> " prompt
-      echo -e "${NETWORK}Check Network Settings"
-      exit 101
-  fi
 
   RESOLVEDIP=$(getent hosts github.com | awk '{ print $1 }')
   if [[ -z "$RESOLVEDIP" ]]; then msg_error "DNS Lookup Failure"; else msg_ok "DNS Resolved github.com to ${BL}$RESOLVEDIP${CL}"; fi
