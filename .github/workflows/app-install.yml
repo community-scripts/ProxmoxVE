@@ -17,6 +17,11 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0  # Fetch full commit history
+      - name: Set up GH_TOKEN
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "GH_TOKEN=${GH_TOKEN}" >> $GITHUB_ENV
 
       - name: Get changed files in PR
         id: changed-files
