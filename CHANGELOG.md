@@ -27,10 +27,12 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🌐 Website
 
+- Fixed URL typo zerotier-one.json [@Divaksh](https://github.com/Divaksh) ([#2206](https://github.com/community-scripts/ProxmoxVE/pull/2206))
 - evcc.json Clarify the config file location [@mvdw](https://github.com/mvdw) ([#2193](https://github.com/community-scripts/ProxmoxVE/pull/2193))
 
 ### 🧰 Maintenance
 
+- Fix: "read -p" does not support color formatting [@PhoenixEmik](https://github.com/PhoenixEmik) ([#2191](https://github.com/community-scripts/ProxmoxVE/pull/2191))
 - [API] Add API to vms [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2021](https://github.com/community-scripts/ProxmoxVE/pull/2021))
 
 ## 2025-02-09
