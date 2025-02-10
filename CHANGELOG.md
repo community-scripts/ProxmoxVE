@@ -25,6 +25,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 - New Script: Zitadel [@dave-yap](https://github.com/dave-yap) ([#2141](https://github.com/community-scripts/ProxmoxVE/pull/2141))
 
+### 🚀 Updated Scripts
+
+- [core] Prevent double spinner [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2203](https://github.com/community-scripts/ProxmoxVE/pull/2203))
+
 ### 🌐 Website
 
 - Fixed URL typo zerotier-one.json [@Divaksh](https://github.com/Divaksh) ([#2206](https://github.com/community-scripts/ProxmoxVE/pull/2206))
@@ -32,6 +36,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🧰 Maintenance
 
+- [core] Fix app-header workflow and add API [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2204](https://github.com/community-scripts/ProxmoxVE/pull/2204))
 - Fix: "read -p" does not support color formatting [@PhoenixEmik](https://github.com/PhoenixEmik) ([#2191](https://github.com/community-scripts/ProxmoxVE/pull/2191))
 - [API] Add API to vms [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2021](https://github.com/community-scripts/ProxmoxVE/pull/2021))
 
