@@ -42,8 +42,10 @@ jobs:
           for FILE in ${{ env.SCRIPT }}; do
              if [[ $FILE =~ ^install/.*-install\.sh$ ]]; then
                INSTALL_FILES+=" $FILE"
+               echo "Install script: $FILE"
              elif [[ $FILE =~ ^ct/.*\.sh$ ]]; then
                CT_FILES+=" $FILE"
+               echo "CT script: $FILE"
              fi
           done
         
