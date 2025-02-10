@@ -62,5 +62,21 @@ jobs:
       - name: Install curl
         run: apt update && apt install -y curl
         
-      - name: Run install script
-        run: ./${{ env.SCRIPT }}
+      - name: Run install script and capture error message
+        id: run-install
+        run: |
+          set +e  # Allow the command to fail
+          ERROR_MSG=$(./${{ env.SCRIPT }} 2>&1)  # Capture both stdout and stderr
+          echo "$ERROR_MSG" > result.log  # Save error message to a file for later use
+          exit_code=$?  # Capture the exit code
+          echo "exit_code=$exit_code" >> $GITHUB_ENV
+          echo "ERROR_MSG=$ERROR_MSG" >> $GITHUB_ENV
+          set -e  # Restore exit-on-error
+
+      - name: Post error comment if install script fails
+        if: env.exit_code != '0'  # This step will only run if previous steps fail
+        run: |
+          # Post an error comment to the pull request with the captured error message
+          echo "Posting error message as a comment..."
+          gh pr comment ${{ github.event.pull_request.number }} \
+            --body "Error: The install script failed with the following message:\n\n${{ env.ERROR_MSG }}"
