@@ -23,7 +23,7 @@
     {
       "fileStatus": "modified",
       "includeGlobs": ["ct/**", "install/**", "misc/**", "turnkey/**", "vm/**"],
-      "excludeGlobs": ["misc/build.func", "misc/install.func"]
+      "excludeGlobs": ["misc/build.func", "misc/install.func", "misc/api.func"]
     }
   ],
   "delete script": [
