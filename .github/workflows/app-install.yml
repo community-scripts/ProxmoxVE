@@ -69,20 +69,16 @@ jobs:
           echo "Running install script..."
           EERROR_MSG=$(./${{ env.SCRIPT }} > /dev/null)  
           echo "$ERROR_MSG" 
-          exit_code=$?  
-          echo "exit_code=$exit_code"
           echo "$ERROR_MSG" > result.log
-          echo "exit_code=$exit_code" >> $GITHUB_ENV
-          echo "ERROR_MSG=$ERROR_MSG" >> $GITHUB_ENV
+          echo "ERROR_MSG=$ERROR_MSG" >> $GITHUB_ENV          
+          if [ -n "$ERROR_MSG" ]; then
+            echo "$ERROR_MSG" > result.log
+            echo "ERROR_MSG=$ERROR_MSG" >> $GITHUB_ENV
+          fi        
           set -e  # Restore exit-on-error
-             
-          if [ $exit_code -ne 0 ]; then
-            echo "Error detected, exit code: $exit_code"
-            exit $exit_code  # Force the job to fail
-          fi
-
+          
       - name: Post error comment if install script fails
-        if: failure()
+        if: ${{ steps.run-install.outputs.ERROR_MSG }}
         run: |
           ERROR_MSG=$(cat result.log)
           ERROR_MSG_ESCAPED=$(echo "$ERROR_MSG" | sed 's/[&/\]/\\&/g')  # Escape special characters
