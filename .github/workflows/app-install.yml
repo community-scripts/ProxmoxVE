@@ -63,6 +63,8 @@ jobs:
           for FILE in ${{ env.CT_FILES }}; do
             chmod +x $FILE
             echo "Running: $FILE"
+            ./$FILE
+            exit 1
             ERROR_MSG=$(./$FILE 2>&1 > /dev/null)
             
             if [ -n "$ERROR_MSG" ]; then
