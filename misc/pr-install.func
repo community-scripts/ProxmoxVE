@@ -36,33 +36,35 @@ color() {
 
 catch_errors() {
   set -Eeuo pipefail
-  trap 'exit 1' ERR
+  trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
 }
 
 # This function handles errors
-
-# This function enables IPv6 if it's not disabled and sets verbose mode if the global variable is set to "yes"
-verb_ip6() {
-    STD=""
-    silent() { "$@" >/dev/null 2>&1; } 
+error_handler() {
+  
+  local exit_code="$?"
+  local line_number="$1"
+  local command="$2"
+  local error_message="[ERROR] in line $line_number: exit code $exit_code: while executing command $command"
+  echo -e "\n$error_message"
+  exit "$error_message"
 }
-# This function displays an informational message with a yellow color.
 msg_info() {
   local msg="$1"
   echo -ne "${msg}\n"
 }
-# This function displays a success message with a green color.
+
 msg_ok() { 
   local msg="$1"
   echo -e "${msg}\n"
 }
-# This function displays a error message with a red color.
+
 msg_error() {
   
   local msg="$1"
   echo -e "${msg}\n"
 }
-# This function sets up the Container OS by generating the locale, setting the timezone, and checking the network connection
+
 setting_up_container() {
   msg_info "Setting up Container OS"
   for ((i = RETRY_NUM; i > 0; i--)); do
@@ -83,14 +85,12 @@ setting_up_container() {
   msg_ok "Network Connected: ${BL}$(hostname -I)"
 }
 
-# This function checks the network connection by pinging a known IP address and prompts the user to continue if the internet is not connected
 network_check() {
   RESOLVEDIP=$(getent hosts github.com | awk '{ print $1 }')
   if [[ -z "$RESOLVEDIP" ]]; then msg_error "DNS Lookup Failure"; else msg_ok "DNS Resolved github.com to ${BL}$RESOLVEDIP${CL}"; fi
   set -e
 }
 
-# This function updates the Container OS by running apt-get update and upgrade
 update_os() {
   msg_info "Updating Container OS"
   apt-get update
@@ -99,12 +99,10 @@ update_os() {
   msg_ok "Updated Container OS"
 }
 
-# This function modifies the message of the day (motd) and SSH settings
 motd_ssh() {
   return
 }
 
-# This function customizes the container by modifying the getty service and enabling auto-login for the root user
 customize() {
    return
 }
