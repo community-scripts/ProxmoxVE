@@ -72,14 +72,23 @@ jobs:
           exit_code=$?  # Capture the exit code
           echo "exit_code=$exit_code"
           echo "ERROR_MSG=$ERROR_MSG"
+          echo "$ERROR_MSG" > result.log
           echo "exit_code=$exit_code" >> $GITHUB_ENV
           echo "ERROR_MSG=$ERROR_MSG" >> $GITHUB_ENV
           set -e  # Restore exit-on-error
+             
+          if [ $exit_code -ne 0 ]; then
+            echo "Error detected, exit code: $exit_code"
+            exit $exit_code  # Force the job to fail
+          fi
 
       - name: Post error comment if install script fails
-        if: env.exit_code != '0'  # This step will only run if previous steps fail
+        if: failure()
         run: |
+          ERROR_MSG=$(cat result.log)
+          ERROR_MSG_ESCAPED=$(echo "$ERROR_MSG" | sed 's/[&/\]/\\&/g')  # Escape special characters
+          
           # Post an error comment to the pull request with the captured error message
           echo "Posting error message as a comment..."
           gh pr comment ${{ github.event.pull_request.number }} \
-            --body "Error: The install script failed with the following message:\n\n${{ env.ERROR_MSG }}"
+            --body "Error: The install script failed with the following message:\n\n${ERROR_MSG_ESCAPED}"
