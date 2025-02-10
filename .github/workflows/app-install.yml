@@ -62,7 +62,7 @@ jobs:
         id: run-install
         run: |
           set +e  # Allow the command to fail
-          ERROR_MSG=$(./${{ env.SCRIPT }} 2>&1 > /dev/null)
+          ERROR_MSG=$(sudo ./${{ env.SCRIPT }} 2>&1 > /dev/null)
           echo "ERROR: $ERROR_MSG" 
           if [ -n "$ERROR_MSG" ]; then
             echo "$ERROR_MSG" > result.log
