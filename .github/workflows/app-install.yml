@@ -66,7 +66,7 @@ jobs:
         id: run-install
         run: |
           set +e  # Allow the command to fail
-          EERROR_MSG=$(./${{ env.SCRIPT }} > /dev/null)  
+          ERROR_MSG=$(./${{ env.SCRIPT }} > /dev/null)  
           echo "$ERROR_MSG" 
           echo "$ERROR_MSG" > result.log
           echo "ERROR_MSG=$ERROR_MSG" >> $GITHUB_ENV          
