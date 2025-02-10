@@ -59,8 +59,8 @@ jobs:
       - name: Make script executable
         run: chmod +x ${{ env.SCRIPT }}
 
-      - name: Install curl
-        run: apt update && apt install -y curl
+      - name: Install curl and systemd
+        run: apt update && apt install -y curl systemd
         
       - name: Run install script and capture error message
         id: run-install
