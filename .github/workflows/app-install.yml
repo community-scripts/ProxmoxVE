@@ -44,7 +44,7 @@ jobs:
         run: chmod +x ${{ env.SCRIPT }}
 
       - name: Install curl
-        run: apt update && apt install -y curl
+        run: sudo apt update && sudo apt install -y curl
         
       - name: Run install script
         run: sudo ./${{ env.SCRIPT }}
