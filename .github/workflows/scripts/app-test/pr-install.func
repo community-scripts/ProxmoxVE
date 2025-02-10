@@ -4,34 +4,7 @@
 
 # This function sets color variables for formatting output in the terminal
 color() {
-  # Colors
-  YW=$(echo "\033[33m")
-  YWB=$(echo "\033[93m")
-  BL=$(echo "\033[36m")
-  RD=$(echo "\033[01;31m")
-  GN=$(echo "\033[1;92m")
-
-  # Formatting
-  CL=$(echo "\033[m")
-  BFR="\\r\\033[K"
-  BOLD=$(echo "\033[1m")
-  HOLD=" "
-  TAB="  "
-  
-  # System
-  RETRY_NUM=10
-  RETRY_EVERY=3
-
-  # Icons
-  CM="${TAB}✔️${TAB}${CL}"
-  CROSS="${TAB}✖️${TAB}${CL}"
-  INFO="${TAB}💡${TAB}${CL}"
-  NETWORK="${TAB}📡${TAB}${CL}"
-  OS="${TAB}🖥️${TAB}${CL}"
-  OSVERSION="${TAB}🌟${TAB}${CL}"
-  HOSTNAME="${TAB}🏠${TAB}${CL}"
-  GATEWAY="${TAB}🌐${TAB}${CL}"
-  DEFAULT="${TAB}⚙️${TAB}${CL}"
+  return
 }
 catch_errors() {
   set -Eeuo pipefail
@@ -40,8 +13,7 @@ catch_errors() {
 
 # This function handles errors
 error_handler() {
-  
-  local exit_code="$?"
+    local exit_code="$?"
   local line_number="$1"
   local command="$2"
   local error_message="Failure in line $line_number: exit code $exit_code: while executing command $command"
@@ -69,28 +41,28 @@ msg_error() {
 }
 
 setting_up_container() {
-  msg_info "Setting up Container OS"
+  
   for ((i = RETRY_NUM; i > 0; i--)); do
     if [ "$(hostname -I)" != "" ]; then
       break
     fi
-    echo 1>&2 -en "${CROSS}${RD} No Network! "
+    echo 1>&2 -en "No Network! "
     sleep $RETRY_EVERY
   done
   if [ "$(hostname -I)" = "" ]; then
-    echo 1>&2 -e "\n${CROSS}${RD} No Network After $RETRY_NUM Tries${CL}"
-    echo -e "${NETWORK}Check Network Settings"
+    echo 1>&2 -e "\nNo Network After $RETRY_NUM Tries"
+    echo -e "Check Network Settings"
     exit 101
   fi
   rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
   systemctl disable -q --now systemd-networkd-wait-online.service
   msg_ok "Set up Container OS"
-  msg_ok "Network Connected: ${BL}$(hostname -I)"
+  msg_ok "Network Connected: $(hostname -I)"
 }
 
 network_check() {
   RESOLVEDIP=$(getent hosts github.com | awk '{ print $1 }')
-  if [[ -z "$RESOLVEDIP" ]]; then msg_error "DNS Lookup Failure"; else msg_ok "DNS Resolved github.com to ${BL}$RESOLVEDIP${CL}"; fi
+  if [[ -z "$RESOLVEDIP" ]]; then msg_error "DNS Lookup Failure"; else msg_ok "DNS Resolved github.com to $RESOLVEDIP"; fi
   set -e
 }
 
