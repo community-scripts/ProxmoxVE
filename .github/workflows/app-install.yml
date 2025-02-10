@@ -1,16 +1,13 @@
 name: Run PR Install Script
-
 on:
   pull_request:
     branches:
       - main
     paths:
       - "install/*.sh"
-
 jobs:
   run-install-script:
-    runs-on: self-hosted
-   
+    runs-on: self-hosted   
     steps:
       - name: Install GitHub CLI
         run: |
@@ -66,7 +63,7 @@ jobs:
           echo "ERROR: $ERROR_MSG" 
           if [ -n "$ERROR_MSG" ]; then
             echo "$ERROR_MSG" > result.log
-            echo "ERROR_MSG=$ERROR_MSG" >> $GITHUB_ENV
+            echo "ERROR_MSG="$ERROR_MSG"" >> $GITHUB_ENV
           fi        
           set -e  # Restore exit-on-error
           
