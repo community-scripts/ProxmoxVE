@@ -66,8 +66,6 @@ jobs:
             git checkout origin/main .github/workflows/scripts/app-test/pr-install.func
             ls -la .github/workflows/scripts/app-test/
             git status
-            cat .github/workflows/scripts/app-test/pr-build.func
-            cat $FILE
             chmod +x $FILE
             echo "Running: $FILE"
             ./$FILE
