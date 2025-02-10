@@ -56,13 +56,6 @@ jobs:
           echo "INSTALL_FILES=$INSTALL_FILES" >> $GITHUB_ENV
           echo "CT_FILES=$CT_FILES" >> $GITHUB_ENV
         
-      - name: Replace $FUNCTION_FILE_PATH
-        run: |
-          sed -i 's|source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"|source <(curl -s https://raw.githubusercontent.com/michelroegl-brunner/ProxmoxVE/refs/heads/main/.github/workflows/scripts/app-test/pr-install.func)|' ${{ env.SCRIPT }}
-      - name: Make script executable
-        run: chmod +x ${{ env.INSTALL_FILES }}
-
- 
       - name: Run each install script and capture error message
         id: run-install
         run: |
