@@ -7,7 +7,7 @@ on:
       - "install/*.sh"
 jobs:
   run-install-script:
-    runs-on: self-hosted   
+    runs-on: pvehost   
     steps:
       - name: Install GitHub CLI
         run: |
