@@ -16,7 +16,7 @@
     {
       "fileStatus": "added",
       "includeGlobs": ["ct/**", "install/**", "misc/**", "turnkey/**", "vm/**"],
-      "excludeGlobs": []
+      "excludeGlobs": ["ct/headers**"]
     }
   ],
   "update script": [
