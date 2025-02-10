@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: Snarkenfaugister
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://github.com/stonith404/pocket-id
+# Source: https://github.com/pocket-id/pocket-id
 
 source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color
@@ -48,8 +48,8 @@ msg_ok "Installed Golang"
 read -r -p "What public URL do you want to use (e.g. pocketid.mydomain.com)? " public_url
 msg_info "Setup Pocket ID"
 cd /opt
-RELEASE=$(curl -s https://api.github.com/repos/stonith404/pocket-id/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-wget -q "https://github.com/stonith404/pocket-id/archive/refs/tags/v${RELEASE}.zip"
+RELEASE=$(curl -s https://api.github.com/repos/pocket-id/pocket-id/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+wget -q "https://github.com/pocket-id/pocket-id/archive/refs/tags/v${RELEASE}.zip"
 unzip -q v${RELEASE}.zip
 mv pocket-id-${RELEASE}/ /opt/pocket-id
 

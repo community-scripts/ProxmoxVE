@@ -171,7 +171,7 @@ if [[ ! -d /opt/snipe-it ]]; then
 
 ### 3.3 **Check version**
 
-- Befoer updating, check if a new version exists.
+- Before updating, check if a new version exists.
   - We use the `${APPLICATION}_version.txt` file created in `/opt` during the install to compare new versions against the currently installed version.
 
 Example with a Github Release:
@@ -241,7 +241,7 @@ Example:
 
 ### 3.7 **No update function**
 
-- In case you can not provide a update function use the following code to provide user feedback.
+- In case you can not provide an update function use the following code to provide user feedback.
 
 ```bash
 function update_script() {
@@ -252,7 +252,7 @@ function update_script() {
         msg_error "No ${APP} Installation Found!"
         exit
     fi
-    msg_error "Ther is currently no automatic update function for ${APP}."
+    msg_error "There is currently no automatic update function for ${APP}."
     exit
 }
 ```
@@ -286,6 +286,6 @@ echo -e "${TAB}${GATEWAY}${BGN}http://${IP}${CL}"
 - [ ] Metadata (author, license) is included at the top.
 - [ ] Variables follow naming conventions.
 - [ ] Update function exists.
-- [ ] Update functions checks if app is installed an for new version.
-- [ ] Update function up temporary files.
+- [ ] Update functions checks if app is installed and for new version.
+- [ ] Update function cleans up temporary files.
 - [ ] Script ends with a helpful message for the user to reach the application.

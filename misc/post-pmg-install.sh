@@ -121,9 +121,9 @@ EOF
       whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox --title "Support Subscriptions" "Supporting the software's development team is essential. Check their official website's Support Subscriptions for pricing. Without their dedicated work, we wouldn't have this exceptional software." 10 58
       msg_info "Disabling subscription nag"
       # Normal GUI:
-      echo "DPkg::Post-Invoke { \"dpkg -V proxmox-widget-toolkit | grep -q '/proxmoxlib\.js$'; if [ \$? -eq 1 ]; then { echo 'Removing subscription nag from UI...'; sed -i '/data\.status.*{/{s/\!//;s/active/NoMoreNagging/}' /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js; }; fi\"; };" >/etc/apt/apt.conf.d/no-nag-script
+      echo "DPkg::Post-Invoke { \"dpkg -V proxmox-widget-toolkit | grep -q '/proxmoxlib\.js$'; if [ \$? -eq 1 ]; then { echo 'Removing subscription nag from UI...'; sed -i '/.*data\.status.*{/{s/\!//;s/active/NoMoreNagging/}' /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js; }; fi\"; };" >/etc/apt/apt.conf.d/no-nag-script
       # JS-Library used when accessing via mobile device browser
-      echo "DPkg::Post-Invoke { \"dpkg -V pmg-gui | grep -q '/pmgmanagerlib-mobile\.js$'; if [ \$? -eq 1 ]; then { echo 'Removing subscription nag from Mobile UI...'; sed -i '/data\.status.*{/{s/\!//;s/active/NoMoreNagging/}' /usr/share/javascript/pmg-gui/js/pmgmanagerlib-mobile.js; }; fi\"; };" >/etc/apt/apt.conf.d/no-nag-script
+      echo "DPkg::Post-Invoke { \"dpkg -V pmg-gui | grep -q '/pmgmanagerlib-mobile\.js$'; if [ \$? -eq 1 ]; then { echo 'Removing subscription nag from Mobile UI...'; sed -i '/data\.status.*{/{s/\!//;s/active/NoMoreNagging/}' /usr/share/javascript/pmg-gui/js/pmgmanagerlib-mobile.js; }; fi\"; };" >>/etc/apt/apt.conf.d/no-nag-script
       apt --reinstall install proxmox-widget-toolkit pmg-gui &>/dev/null
       msg_ok "Disabled subscription nag (Delete browser cache)"
       ;;

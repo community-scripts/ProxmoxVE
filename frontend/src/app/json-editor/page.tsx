@@ -23,7 +23,7 @@ import { fetchCategories } from "@/lib/data";
 import { Category } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { CalendarIcon, Check, Clipboard } from "lucide-react";
+import { CalendarIcon, Check, Clipboard, Download } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -76,8 +76,8 @@ export default function JSONGenerator() {
             ...method,
             script:
               method.type === "alpine"
-                ? `/${updated.type}/alpine-${updated.slug}.sh`
-                : `/${updated.type}/${updated.slug}.sh`,
+                ? `${updated.type}/alpine-${updated.slug}.sh`
+                : `${updated.type}/${updated.slug}.sh`,
           }));
         }
 
@@ -95,6 +95,21 @@ export default function JSONGenerator() {
     setIsCopied(true);
     setTimeout(() => setIsCopied(false), 2000);
     toast.success("Copied metadata to clipboard");
+  }, [script]);
+
+  const handleDownload = useCallback(() => {
+    const jsonString = JSON.stringify(script, null, 2);
+    const blob = new Blob([jsonString], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+  
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${script.slug || "script"}.json`;
+    document.body.appendChild(a);
+    a.click();
+  
+    URL.revokeObjectURL(url);
+    document.body.removeChild(a);
   }, [script]);
 
   const handleDateSelect = useCallback(
@@ -313,18 +328,23 @@ export default function JSONGenerator() {
       <div className="w-1/2 p-4 bg-background overflow-y-auto">
         {validationAlert}
         <div className="relative">
-          <Button
-            className="absolute right-2 top-2"
-            size="icon"
-            variant="outline"
-            onClick={handleCopy}
-          >
-            {isCopied ? (
-              <Check className="h-4 w-4" />
-            ) : (
-              <Clipboard className="h-4 w-4" />
-            )}
-          </Button>
+          <div className="absolute right-2 top-2 flex gap-1">
+            <Button
+              size="icon"
+              variant="outline"
+              onClick={handleCopy}
+            >
+              {isCopied ? <Check className="h-4 w-4" /> : <Clipboard className="h-4 w-4" />}
+            </Button>
+            <Button
+              size="icon"
+              variant="outline"
+              onClick={handleDownload}
+            >
+              <Download className="h-4 w-4" />
+            </Button>
+          </div>
+        
           <pre className="mt-4 p-4 bg-secondary rounded shadow overflow-x-scroll">
             {JSON.stringify(script, null, 2)}
           </pre>

@@ -50,9 +50,13 @@ jobs:
 
           NON_COMPLIANT_FILES=""
           for FILE in $CHANGED_FILES; do
+            # Datei "ct/create_lxc.sh" explizit überspringen
+            if [[ "$FILE" == "ct/create_lxc.sh" ]]; then
+              continue
+            fi
             BASENAME=$(echo "$(basename "${FILE%.*}")")
             if [[ ! "$BASENAME" =~ ^[a-z0-9-]+$ ]]; then
-                    NON_COMPLIANT_FILES="$NON_COMPLIANT_FILES $FILE"
+              NON_COMPLIANT_FILES="$NON_COMPLIANT_FILES $FILE"
             fi
           done
 

@@ -1,0 +1,34 @@
+{
+  "name": "PaperlessAI",
+  "slug": "paperless-ai",
+  "categories": [
+    20
+  ],
+  "date_created": "2025-02-06",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 3000,
+  "documentation": null,
+  "website": "https://github.com/clusterzx/paperless-ai",
+  "logo": "https://raw.githubusercontent.com/clusterzx/paperless-ai/refs/heads/main/icon.png",
+  "description": "An automated document analyzer for Paperless-ngx using OpenAI API, Ollama and all OpenAI API compatible Services to automatically analyze and tag your documents.It features: Automode, Manual Mode, Ollama and OpenAI, a Chat function to query your documents with AI, a modern and intuitive Webinterface.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/paperless-ai.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 5,
+        "os": "debian",
+        "version": "12"
+      }
+    }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": []
+}
