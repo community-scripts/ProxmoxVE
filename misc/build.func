@@ -976,7 +976,8 @@ check_container_storage() {
   if (( usage > 80 )); then
     # Prompt the user for confirmation to continue
     echo -e "${INFO}${HOLD} ${YWB}Warning: Storage is dangerously low (${usage}%).${CL}"
-    read -r -p "Continue anyway? <y/N>  " prompt
+    echo -ne "Continue anyway? <y/N>  "
+    read -r prompt
     # Check if the input is 'y' or 'yes', otherwise exit with status 1
     if [[ ! ${prompt,,} =~ ^(y|yes)$ ]]; then
       echo -e "${CROSS}${HOLD}${YWB}Exiting based on user input.${CL}"
