@@ -8,18 +8,12 @@ on:
 jobs:
   run-install-script:
     runs-on: pvehost   
-    steps:
-      - name: Install GitHub CLI
-        run: |
-          # Install GitHub CLI
-          sudo apt update
-          sudo apt install -y git gh
-          
+    steps:          
       - name: Checkout PR branch
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.ref }}
-          fetch-depth: 0  # Fetch full commit history
+          fetch-depth: 0  
       - name: Add Git safe directory
         run: |
           git config --global --add safe.directory /__w/ProxmoxVE/ProxmoxVE
@@ -29,6 +23,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "GH_TOKEN=${GH_TOKEN}" >> $GITHUB_ENV
+
       - name: Get changed files in PR
         id: changed-files
         run: |
@@ -38,35 +33,29 @@ jobs:
           echo "Changed files: $CHANGED_FILES"  
           echo "SCRIPT=$CHANGED_FILES" >> $GITHUB_ENV
 
-          - name: Check if install script is changed
-          id: check-install-script
-          run: |
-            # Initialize variables
-            INSTALL_FILES=""
-            CT_FILES=""
+      - name: Check if install script is changed
+        id: check-install-script
+        run: |
+          INSTALL_FILES=""
+          CT_FILES=""
+                    
+          for FILE in ${{ env.SCRIPT }}; do
+             if [[ $FILE =~ ^install/.*-install\.sh$ ]]; then
+               INSTALL_FILES+=" $FILE"
+             elif [[ $FILE =~ ^ct/.*\.sh$ ]]; then
+               CT_FILES+=" $FILE"
+             fi
+          done
         
-            # Loop through each changed file
-            for FILE in ${{ env.SCRIPT }}; do
-              if [[ $FILE =~ ^install/.*-install\.sh$ ]]; then
-                INSTALL_FILES+=" $FILE"
-              elif [[ $FILE =~ ^ct/.*\.sh$ ]]; then
-                CT_FILES+=" $FILE"
-              fi
-            done
+          INSTALL_FILES=$(echo $INSTALL_FILES | xargs)
+          CT_FILES=$(echo $CT_FILES | xargs)
         
-            # Trim leading spaces
-            INSTALL_FILES=$(echo $INSTALL_FILES | xargs)
-            CT_FILES=$(echo $CT_FILES | xargs)
+          echo "Install scripts: $INSTALL_FILES"
+          echo "CT scripts: $CT_FILES"
         
-            # Output the results
-            echo "Install scripts: $INSTALL_FILES"
-            echo "CT scripts: $CT_FILES"
+          echo "INSTALL_FILES=$INSTALL_FILES" >> $GITHUB_ENV
+          echo "CT_FILES=$CT_FILES" >> $GITHUB_ENV
         
-            # Save to environment variables
-            echo "INSTALL_FILES=$INSTALL_FILES" >> $GITHUB_ENV
-            echo "CT_FILES=$CT_FILES" >> $GITHUB_ENV
-        
-
       - name: Replace $FUNCTION_FILE_PATH
         run: |
           sed -i 's|source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"|source <(curl -s https://raw.githubusercontent.com/michelroegl-brunner/ProxmoxVE/refs/heads/main/.github/workflows/scripts/app-test/pr-install.func)|' ${{ env.SCRIPT }}
