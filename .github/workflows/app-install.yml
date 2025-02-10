@@ -1,0 +1,297 @@
+Gemeinsam nutzen
+
+
+Du:
+      - name: Generate a token
+        id: generate-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }} where do i need to set APP_ID and APP_PRIVATE_KEY in my gh repo?
+ChatGPT:
+In your GitHub repository, you need to set APP_ID and APP_PRIVATE_KEY in the following locations:
+
+APP_ID (Repository Variable)
+
+Go to your GitHub repository.
+Click on Settings.
+In the left sidebar, under Security, click Secrets and variables > Actions.
+Select the Variables tab.
+Click New repository variable.
+Set the Name as APP_ID and enter its value.
+Click Save.
+APP_PRIVATE_KEY (Repository Secret)
+
+Go to Settings > Security > Secrets and variables > Actions.
+Select the Secrets tab.
+Click New repository secret.
+Set the Name as APP_PRIVATE_KEY and paste the private key content.
+Click Save.
+Now, your workflow can access these values using ${{ vars.APP_ID }} and ${{ secrets.APP_PRIVATE_KEY }}.
+
+
+
+
+
+
+
+Du:
+what needs to be in them?
+ChatGPT:
+What Needs to Be in APP_ID and APP_PRIVATE_KEY?
+1. APP_ID (GitHub App ID)
+This is the numeric ID of your GitHub App.
+You can find it by going to your GitHub App settings:
+Go to GitHub Developer Settings.
+Click on your GitHub App.
+Look for the App ID (a number, e.g., 123456).
+Set this number as the value for APP_ID in Repository Variables.
+2. APP_PRIVATE_KEY (Private Key for the GitHub App)
+This is the private key used to authenticate your GitHub App.
+You need to generate and copy it:
+Go to your GitHub App settings: GitHub Developer Settings.
+Click on your GitHub App.
+Scroll down to the Private keys section.
+Click Generate a private key (this downloads a .pem file).
+Open the .pem file in a text editor and copy the entire contents.
+Paste it as the value for APP_PRIVATE_KEY in Repository Secrets.
+Once these are set up, GitHub Actions will use them to generate an installation token for your GitHub App. 🚀
+
+
+
+
+
+
+
+Du:
+i have no github app, what do i need to create one?
+ChatGPT:
+To create a GitHub App, follow these steps:
+
+1. Create a GitHub App
+Go to GitHub Developer Settings.
+Click "New GitHub App".
+Fill in the required details:
+GitHub App name: Choose a unique name.
+Homepage URL: Use your project’s URL (or https://github.com/your-username if unsure).
+Webhook URL (optional): If you need webhooks, provide a URL that can receive events.
+Webhook secret (optional): A secret key for webhook security.
+2. Set App Permissions
+Under Repository Permissions, configure permissions based on what your app needs:
+Read & write permissions for things like workflows, issues, pull requests, etc.
+If you're using it to generate tokens for GitHub Actions, enable:
+Contents: Read & write
+Actions: Read & write
+Under User Permissions, adjust as needed (mostly none unless required).
+3. Register & Generate Credentials
+Click "Create GitHub App".
+After creation, you'll see:
+App ID → Copy this (you’ll use it for APP_ID).
+Client ID & Secret (used for OAuth if needed).
+Scroll down to Generate a Private Key:
+Click "Generate a private key".
+A .pem file will download—store it safely.
+Open the .pem file and copy its contents (you’ll use it for APP_PRIVATE_KEY).
+4. Install the GitHub App
+Go back to your GitHub App page.
+Click "Install App" (left sidebar).
+Select the repository (or organization) where you want to use it.
+Click "Install".
+5. Add Credentials to GitHub Actions
+Go to Settings → Secrets and variables → Actions in your repository.
+Under Variables:
+Add APP_ID with your GitHub App ID (numeric value).
+Under Secrets:
+Add APP_PRIVATE_KEY with the contents of your .pem file.
+Now your GitHub App is ready, and your workflow can authenticate using ${{ vars.APP_ID }} and ${{ secrets.APP_PRIVATE_KEY }}! 🚀
+
+
+
+
+
+
+
+Du:
+do i need a webhook for my actions?
+ChatGPT:
+No, you don’t need a webhook for your GitHub Actions to work with your GitHub App. Webhooks are only required if you want your app to receive real-time events from GitHub (e.g., when an issue is created or a PR is opened).
+
+For GitHub Actions, your app only needs repository permissions to generate tokens. The workflow will authenticate using the app and run based on GitHub Actions triggers (like push or pull_request).
+
+Summary:
+✅ Webhook NOT required for GitHub Actions.
+✅ Permissions required: Set the correct repository permissions in your GitHub App settings.
+✅ Installation required: Install the app on your repo for authentication.
+
+Let me know if you need help setting up permissions! 🚀
+
+
+
+
+
+
+
+Du:
+ - name: Commit and create PR if changes exist
+        if: env.changed == 'true'
+        run: |
+          git commit -m "Update .app files"
+          git checkout -b pr-update-app-files
+          git push origin pr-update-app-files --force
+          gh pr create --title "[core] update .app files" \
+                       --body "This PR is auto-generated by a GitHub Action to update the .app files." \
+                       --head pr-update-app-files \
+                       --base main \
+                       --label "automated pr"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Approve pull request
+        if: env.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: | where do i get and store the secrets.GITHUB_TOKEN?
+ChatGPT:
+Where Do You Get secrets.GITHUB_TOKEN?
+You don’t need to manually set GITHUB_TOKEN because GitHub automatically provides it to every workflow run.
+
+How to Use secrets.GITHUB_TOKEN?
+GitHub automatically creates a GITHUB_TOKEN secret for each workflow. This token is:
+
+Auto-generated by GitHub.
+Available as ${{ secrets.GITHUB_TOKEN }} in your workflow.
+Used for authentication in GitHub API requests, like creating PRs and approving them.
+Has read & write permissions, but can be configured.
+How to Ensure It Has the Right Permissions?
+By default, GITHUB_TOKEN has limited permissions. If you need it to approve PRs, it must have the correct workflow and pull-requests permissions.
+
+Modify your workflow’s permissions like this:
+
+yaml
+Kopieren
+Bearbeiten
+permissions:
+  contents: write
+  pull-requests: write
+Place this at the top of your workflow file, under jobs:.
+
+How to Store Custom Tokens (Optional)
+If you need a personal access token (PAT) or a GitHub App token instead:
+
+Go to Repo Settings → Security → Secrets and variables → Actions.
+Click New repository secret.
+Name it GH_TOKEN and paste your GitHub App token or PAT.
+Update your workflow to use ${{ secrets.GH_TOKEN }}.
+Final Answer:
+You don’t need to store GITHUB_TOKEN—GitHub provides it automatically.
+Make sure permissions are correctly set in your workflow.
+Use a PAT or GitHub App token only if needed, and store it as a secret.
+Let me know if you need help debugging! 🚀
+
+
+
+
+
+
+
+Du:
+Run PR_NUMBER=$(gh pr list --head "pr-update-app-files" --json number --jq '.[].number')
+failed to create review: GraphQL: Can not approve your own pull request (addPullRequestReview)
+ChatGPT:
+The error message "GraphQL: Can not approve your own pull request (addPullRequestReview)" means that the GitHub Actions workflow is trying to approve a pull request created by the same GITHUB_TOKEN, which is not allowed.
+
+Why Does This Happen?
+GITHUB_TOKEN is an automatically generated token with limited permissions.
+GitHub does not allow the same token to approve its own PRs.
+The action is failing because the PR was created using GITHUB_TOKEN, and GitHub does not allow self-approval.
+How to Fix This?
+Option 1: Use a Personal Access Token (PAT)
+Since GITHUB_TOKEN cannot approve its own PRs, you need to:
+
+Create a Personal Access Token (PAT) with the required permissions.
+
+Go to GitHub → Settings → Developer settings → Personal access tokens.
+Click Generate new token (or Fine-grained token if using the latest GitHub security model).
+Select the following permissions:
+repo (full access)
+workflow (to trigger workflows)
+Copy the token.
+Store It as a Secret in Your Repo
+
+Go to Repo Settings → Security → Secrets and variables → Actions.
+Click New repository secret.
+Name it GH_PAT and paste your PAT.
+Update Your Workflow to Use GH_PAT Instead of GITHUB_TOKEN
+
+yaml
+Kopieren
+Bearbeiten
+- name: Approve pull request
+  if: env.changed == 'true'
+  env:
+    GH_TOKEN: ${{ secrets.GH_PAT }}
+  run: |
+    PR_NUMBER=$(gh pr list --head "pr-update-app-files" --json number --jq '.[].number')
+    gh pr review --approve $PR_NUMBER
+Option 2: Use a GitHub App Instead
+If you already set up a GitHub App:
+
+Use your GitHub App Token instead of GITHUB_TOKEN.
+Store it in GitHub Secrets (APP_PRIVATE_KEY).
+Modify the workflow to authenticate using the GitHub App.
+Best Solution?
+If this is your personal repo, a PAT (GH_PAT) is the easiest fix.
+If this is for a team or organization, using a GitHub App is the best long-term solution.
+Let me know if you need help setting it up! 🚀
+
+
+
+
+
+
+
+Du:
+gh pull request. i want to run a file wich has a pr against main in the folder install/$NAME-install.sh on a debian instance on a workflow. how can i do that?
+ChatGPT:
+You want to run a file from a pull request against main on a Debian instance in a GitHub Actions workflow. Here's how you can do it:
+
+Steps to Implement:
+Find the PR against main.
+Identify the changed file inside install/$NAME-install.sh.
+Check out the PR branch.
+Run the script on a Debian runner.
+GitHub Actions Workflow
+yaml
+Kopieren
+Bearbeiten
+name: Run PR Install Script
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  run-install-script:
+    runs-on: ubuntu-latest  # Debian-based runner
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Find changed install script
+        id: find-script
+        run: |
+          CHANGED_FILE=$(git diff --name-only origin/main | grep '^install/.*-install.sh$' || echo "")
+          if [[ -z "$CHANGED_FILE" ]]; then
+            echo "No install script found."
+            exit 1
+          fi
+          echo "SCRIPT=$CHANGED_FILE" >> $GITHUB_ENV
+
+      - name: Make script executable
+        run: chmod +x ${{ env.SCRIPT }}
+
+      - name: Run install script
+        run: ./${{ env.SCRIPT }}
