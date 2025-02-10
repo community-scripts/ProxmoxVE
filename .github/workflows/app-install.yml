@@ -28,8 +28,8 @@ jobs:
       - name: Install GitHub CLI
         run: |
           # Install GitHub CLI
-          sudo apt update
-          sudo apt install -y gh
+          apt update
+          apt install -y gh
 
       - name: Get changed files in PR
         id: changed-files
@@ -57,7 +57,7 @@ jobs:
         run: chmod +x ${{ env.SCRIPT }}
 
       - name: Install curl
-        run: sudo apt update && sudo apt install -y curl
+        run: apt update && apt install -y curl
         
       - name: Run install script
-        run: sudo ./${{ env.SCRIPT }}
+        run: ./${{ env.SCRIPT }}
