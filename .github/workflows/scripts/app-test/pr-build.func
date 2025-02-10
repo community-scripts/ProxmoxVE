@@ -135,7 +135,7 @@ build_container() {
     $PW
   "
   # This executes create_lxc.sh and creates the container and .conf file
-  bash -c ".github/workflows/scripts/app-test/pr-create-lxc.func" || exit $?
+  bash -c ".github/workflows/scripts/app-test/pr-create-lxc.sh" || exit $?
 
   LXC_CONFIG=/etc/pve/lxc/${CTID}.conf
   if [ "$CT_TYPE" == "0" ]; then
