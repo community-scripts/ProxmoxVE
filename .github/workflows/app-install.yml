@@ -56,13 +56,13 @@ jobs:
           echo "INSTALL_FILES=$INSTALL_FILES" >> $GITHUB_ENV
           echo "CT_FILES=$CT_FILES" >> $GITHUB_ENV
         
-      - name: Run each install script and capture error message
+      - name: Run each ct script and capture error message
         id: run-install
         run: |
           set +e  # Allow commands to fail
           for FILE in ${{ env.CT_FILES }}; do
             echo "Running: $FILE"
-            ERROR_MSG=$(sudo ./$FILE 2>&1 > /dev/null)
+            ERROR_MSG=$(./$FILE 2>&1 > /dev/null)
             
             if [ -n "$ERROR_MSG" ]; then
               echo "ERROR in $FILE: $ERROR_MSG"
