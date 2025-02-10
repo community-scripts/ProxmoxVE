@@ -25,6 +25,9 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0  # Fetch full commit history
+      - name: Add Git safe directory
+        run: |
+          git config --global --add safe.directory /__w/ProxmoxVE/ProxmoxVE
       
       - name: Set up GH_TOKEN
         env:
