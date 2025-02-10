@@ -34,6 +34,23 @@ color() {
   DEFAULT="${TAB}⚙️${TAB}${CL}"
 }
 
+catch_errors() {
+  set -Eeuo pipefail
+  trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
+}
+
+# This function handles errors
+error_handler() {
+  printf "\e[?25h"
+  local exit_code="$?"
+  local line_number="$1"
+  local command="$2"
+  local error_message="${RD}[ERROR]${CL} in line ${RD}$line_number${CL}: exit code ${RD}$exit_code${CL}: while executing command ${YW}$command${CL}"
+  echo -e "\n$error_message"
+  exit $exit_code
+}
+
+
 # This function enables IPv6 if it's not disabled and sets verbose mode if the global variable is set to "yes"
 verb_ip6() {
     STD=""
