@@ -10,8 +10,6 @@ on:
 jobs:
   run-install-script:
     runs-on: ubuntu-latest  
-    container:
-      image: debian:latest
     
     steps:
       - name: Checkout PR branch with full history
