@@ -4,7 +4,7 @@ on:
     branches:
       - main
     paths:
-      - "install/*.sh"
+      - "ct/*.sh"
 jobs:
   run-install-script:
     runs-on: pvehost   
@@ -42,11 +42,13 @@ jobs:
         id: check-install-script
         run: |
           if echo "${{ env.SCRIPT }}" | grep -q '^install/.*-install.sh$'; then
-            echo "Install script found!"
+            echo "App-Install.sh script found!"
+          elif echo "${{ env.SCRIPT }}" | grep -q '^ct/.*.sh$'; then
+            echo "App.sh script found."
           else
-            echo "No install script found."
             exit 1
           fi
+          echo "${{ env.SCRIPT }}"
 
       - name: Replace $FUNCTION_FILE_PATH
         run: |
