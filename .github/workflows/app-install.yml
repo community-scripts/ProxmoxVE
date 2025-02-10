@@ -32,51 +32,79 @@ jobs:
       - name: Get changed files in PR
         id: changed-files
         run: |
-          # Use GitHub CLI to get the list of changed files in the PR
-          CHANGED_FILES=$(gh pr diff --name-only ${{ github.event.pull_request.number }})
-          echo "Changed files: $CHANGED_FILES"
-          # Set CHANGED_FILE as an environment variable in the correct format
+          run: |  
+          CHANGED_FILES=$(gh pr diff --name-only ${{ github.event.pull_request.number }})  
+          CHANGED_FILES=$(echo "$CHANGED_FILES" | tr '\n' ' ')  
+          echo "Changed files: $CHANGED_FILES"  
           echo "SCRIPT=$CHANGED_FILES" >> $GITHUB_ENV
 
-      - name: Check if install script is changed
-        id: check-install-script
-        run: |
-          if echo "${{ env.SCRIPT }}" | grep -q '^install/.*-install.sh$'; then
-            echo "App-Install.sh script found!"
-          elif echo "${{ env.SCRIPT }}" | grep -q '^ct/.*.sh$'; then
-            echo "App.sh script found."
-          else
-            exit 1
-          fi
-          echo "${{ env.SCRIPT }}"
+          - name: Check if install script is changed
+          id: check-install-script
+          run: |
+            # Initialize variables
+            INSTALL_FILES=""
+            CT_FILES=""
+        
+            # Loop through each changed file
+            for FILE in ${{ env.SCRIPT }}; do
+              if [[ $FILE =~ ^install/.*-install\.sh$ ]]; then
+                INSTALL_FILES+=" $FILE"
+              elif [[ $FILE =~ ^ct/.*\.sh$ ]]; then
+                CT_FILES+=" $FILE"
+              fi
+            done
+        
+            # Trim leading spaces
+            INSTALL_FILES=$(echo $INSTALL_FILES | xargs)
+            CT_FILES=$(echo $CT_FILES | xargs)
+        
+            # Output the results
+            echo "Install scripts: $INSTALL_FILES"
+            echo "CT scripts: $CT_FILES"
+        
+            # Save to environment variables
+            echo "INSTALL_FILES=$INSTALL_FILES" >> $GITHUB_ENV
+            echo "CT_FILES=$CT_FILES" >> $GITHUB_ENV
+        
 
       - name: Replace $FUNCTION_FILE_PATH
         run: |
           sed -i 's|source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"|source <(curl -s https://raw.githubusercontent.com/michelroegl-brunner/ProxmoxVE/refs/heads/main/.github/workflows/scripts/app-test/pr-install.func)|' ${{ env.SCRIPT }}
       - name: Make script executable
-        run: chmod +x ${{ env.SCRIPT }}
+        run: chmod +x ${{ env.INSTALL_FILES }}
 
  
-      - name: Run install script and capture error message
+      - name: Run each install script and capture error message
         id: run-install
         run: |
-          set +e  # Allow the command to fail
-          ERROR_MSG=$(sudo ./${{ env.SCRIPT }} 2>&1 > /dev/null)
-          echo "ERROR: $ERROR_MSG" 
-          if [ -n "$ERROR_MSG" ]; then
-            echo "$ERROR_MSG" > result.log
-            echo "ERROR_MSG="$ERROR_MSG"" >> $GITHUB_ENV
-          fi        
+          set +e  # Allow commands to fail
+          for FILE in ${{ env.CT_FILES }}; do
+            echo "Running: $FILE"
+            ERROR_MSG=$(sudo ./$FILE 2>&1 > /dev/null)
+            
+            if [ -n "$ERROR_MSG" ]; then
+              echo "ERROR in $FILE: $ERROR_MSG"
+              echo "$ERROR_MSG" > result_$FILE.log
+              echo "ERROR_MSG_$FILE=$ERROR_MSG" >> $GITHUB_ENV
+            fi
+          done
           set -e  # Restore exit-on-error
-          
-      - name: Post error comment if install script fails
-        if: ${{ env.ERROR_MSG != '' }} 
+      
+      - name: Post error comments if install scripts fail
+        if: ${{ env.CT_FILES != '' }}
         run: |
-          ERROR_MSG=$(cat result.log)
-          ERROR_MSG_ESCAPED=$(echo "$ERROR_MSG" | sed 's/[&/\]/\\&/g')  # Escape special characters
-          
-          # Post an error comment to the pull request with the captured error message
-          echo "Posting error message as a comment..."
-          gh pr comment ${{ github.event.pull_request.number }} \
-            --body 'The install script failed with the following message: ***${ERROR_MSG_ESCAPED}***'
+          for FILE in ${{ env.CT_FILES }}; do
+            ERROR_MSG_VAR="ERROR_MSG_$FILE"
+            ERROR_MSG=${!ERROR_MSG_VAR}  # Indirect variable expansion
+      
+            if [ -n "$ERROR_MSG" ]; then
+              ERROR_MSG_ESCAPED=$(echo "$ERROR_MSG" | sed 's/[&/\]/\\&/g')  # Escape special characters
+              
+              # Post an error comment to the pull request with the captured error message
+              echo "Posting error message for $FILE..."
+              gh pr comment ${{ github.event.pull_request.number }} \
+                --body "The install script **$FILE** failed with the following message: ***$ERROR_MSG_ESCAPED***"
+            fi
+          done
+      
   
