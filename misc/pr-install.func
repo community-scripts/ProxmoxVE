@@ -132,7 +132,6 @@ network_check() {
     read -r -p "No Internet detected,would you like to continue anyway? <y/N> " prompt
       echo -e "${NETWORK}Check Network Settings"
       exit 101
-    fi
   fi
 
   RESOLVEDIP=$(getent hosts github.com | awk '{ print $1 }')
