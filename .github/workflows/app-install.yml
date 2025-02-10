@@ -75,7 +75,7 @@ jobs:
           set -e  # Restore exit-on-error
           
       - name: Post error comment if install script fails
-        if: ${{ steps.run-install.outputs.ERROR_MSG }}
+        if: ${{ env.ERROR_MSG != '' }} 
         run: |
           ERROR_MSG=$(cat result.log)
           ERROR_MSG_ESCAPED=$(echo "$ERROR_MSG" | sed 's/[&/\]/\\&/g')  # Escape special characters
