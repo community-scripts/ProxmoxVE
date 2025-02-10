@@ -23,7 +23,7 @@ $STD apt-get install -y \
   lsb-release \
   apt-transport-https \
   coreutils \
-  software-properties-common \
+  software-properties-common
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up TermurinJDK"
