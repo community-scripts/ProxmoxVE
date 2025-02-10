@@ -73,6 +73,7 @@ jobs:
           if [ -n "$ERROR_MSG" ]; then
             echo "$ERROR_MSG" > result.log
             echo "ERROR_MSG=$ERROR_MSG" >> $GITHUB_ENV
+            echo "::set-output name=ERROR_MSG::$ERROR_MSG"
           fi        
           set -e  # Restore exit-on-error
           
