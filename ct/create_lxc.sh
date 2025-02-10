@@ -64,7 +64,6 @@ function spinner() {
 
 # This function displays an informational message with a yellow color.
 function msg_info() {
-  if [ -n "$SPINNER_PID" ] && ps -p $SPINNER_PID > /dev/null; then kill $SPINNER_PID > /dev/null; fi
   local msg="$1"
   echo -ne "${TAB}${YW}${HOLD}${msg}${HOLD}"
   spinner &
