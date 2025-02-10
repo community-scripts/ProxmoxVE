@@ -41,7 +41,6 @@ catch_errors() {
 
 # This function handles errors
 error_handler() {
-  printf "\e[?25h"
   local exit_code="$?"
   local line_number="$1"
   local command="$2"
