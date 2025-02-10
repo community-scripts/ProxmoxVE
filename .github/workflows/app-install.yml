@@ -62,64 +62,6 @@ jobs:
       - name: Install curl
         run: apt update && apt install -y curl
         
-      name: Run PR Install Script
-
-on:
-  pull_request:
-    branches:
-      - main
-
-jobs:
-  run-install-script:
-    runs-on: ubuntu-latest  # You can replace this with debian 12 later if needed
-    steps:
-      - name: Checkout PR branch
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
-          fetch-depth: 0  # Fetch full commit history
-
-      - name: Install Git and GitHub CLI
-        run: |
-          # Update and install necessary packages
-          sudo apt update
-          sudo apt install -y git gh
-
-      - name: Add Git safe directory
-        run: |
-          # Mark the repository as a safe directory to avoid dubious ownership issues
-          git config --global --add safe.directory /__w/ProxmoxVE/ProxmoxVE
-
-      - name: Set up GH_TOKEN
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          echo "GH_TOKEN=${GH_TOKEN}" >> $GITHUB_ENV
-
-      - name: Get changed files in PR
-        id: changed-files
-        run: |
-          # Use GitHub CLI to get the list of changed files in the PR
-          CHANGED_FILES=$(gh pr diff --name-only ${{ github.event.pull_request.number }})
-          echo "Changed files: $CHANGED_FILES"
-          # Set CHANGED_FILE as an environment variable in the correct format
-          echo "CHANGED_FILE=$CHANGED_FILES" >> $GITHUB_ENV
-
-      - name: Check if install script is changed
-        id: check-install-script
-        run: |
-          if echo "${{ env.CHANGED_FILE }}" | grep -q '^install/.*-install.sh$'; then
-            echo "Install script found!"
-          else
-            echo "No install script found."
-            exit 1
-          fi
-
-      - name: Make script executable
-        run: |
-          chmod +x ${{ env.CHANGED_FILE }}
-          ls -l ${{ env.CHANGED_FILE }}  # List the file to verify permissions
-
       - name: Run install script and capture error message
         id: run-install
         run: |
@@ -127,7 +69,7 @@ jobs:
           echo "Running install script..."
           echo "Checking if the script exists: ls -l ${{ env.CHANGED_FILE }}"  # Debugging output
           ERROR_MSG=$(./${{ env.CHANGED_FILE }} 2>&1)  # Capture both stdout and stderr
-          echo "$ERROR_MSG" 
+          echo "$ERROR_MSG" # Save error message to a file for later use
           exit_code=$?  # Capture the exit code
           echo "exit_code=$exit_code" >> $GITHUB_ENV
           echo "ERROR_MSG=$ERROR_MSG" >> $GITHUB_ENV
