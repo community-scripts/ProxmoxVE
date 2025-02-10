@@ -21,9 +21,9 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### Changed
 
-### 🌐 Website
+### 📡 API
 
-- evcc.json Clarify the config file location [@mvdw](https://github.com/mvdw) ([#2193](https://github.com/community-scripts/ProxmoxVE/pull/2193))
+- Update api.func [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#69](https://github.com/michelroegl-brunner/ProxmoxVE/pull/69))
 
 ## 2025-02-09
 
