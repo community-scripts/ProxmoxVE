@@ -77,3 +77,4 @@ jobs:
           echo "Posting error message as a comment..."
           gh pr comment ${{ github.event.pull_request.number }} \
             --body "The install script failed with the following message: ${ERROR_MSG_ESCAPED}"
+          exit 1
