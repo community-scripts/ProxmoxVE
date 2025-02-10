@@ -53,7 +53,7 @@ jobs:
 
       - name: Replace $FUNCTION_FILE_PATH
         run: |
-          sed -i 's|source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"|source <(curl -s https://raw.githubusercontent.com/michelroegl-brunner/ProxmoxVE/refs/heads/main/misc/pr-install.func)|' ${{ env.SCRIPT }}
+          sed -i 's|source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"|source <(curl -s https://raw.githubusercontent.com/michelroegl-brunner/ProxmoxVE/refs/heads/main/.github/workflows/scripts/app-test/pr-install.func)|' ${{ env.SCRIPT }}
       - name: Make script executable
         run: chmod +x ${{ env.SCRIPT }}
 
