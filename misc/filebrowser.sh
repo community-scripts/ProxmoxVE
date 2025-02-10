@@ -28,6 +28,8 @@ INSTALL_PATH="/usr/local/bin/filebrowser"
 SERVICE_PATH="/etc/systemd/system/filebrowser.service"
 DB_PATH="/var/lib/filebrowser/filebrowser.db"
 IP=$(hostname -I | awk '{print $1}')
+DEFAULT_PORT=8080
+
 header_info
 
 function msg_info() {
@@ -52,7 +54,6 @@ if [ -f "$INSTALL_PATH" ]; then
         msg_info "Uninstalling ${APP}"
         systemctl disable -q --now filebrowser.service
         rm -f "$INSTALL_PATH" "$DB_PATH" "$SERVICE_PATH"
-        
         msg_ok "${APP} has been uninstalled."
         exit 0
     fi
@@ -70,6 +71,9 @@ if [ -f "$INSTALL_PATH" ]; then
 fi
 
 echo -e "${YW}⚠️ ${APP} is not installed.${CL}"
+read -r -p "Enter port number (Default: ${DEFAULT_PORT}): " PORT
+PORT=${PORT:-$DEFAULT_PORT}
+
 read -r -p "Would you like to install ${APP}? (y/n): " install_prompt
 if [[ "${install_prompt,,}" =~ ^(y|yes)$ ]]; then
     msg_info "Installing ${APP}"
@@ -86,19 +90,19 @@ if [[ "${install_prompt,,}" =~ ^(y|yes)$ ]]; then
     read -r -p "Would you like to use No Authentication? (y/N): " auth_prompt
     if [[ "${auth_prompt,,}" =~ ^(y|yes)$ ]]; then
         msg_info "Configuring No Authentication"
-        filebrowser config init -a '0.0.0.0' --database /var/lib/filebrowser/filebrowser.db &>/dev/null
-        filebrowser config set -a '0.0.0.0' --auth.method=noauth --database /var/lib/filebrowser/filebrowser.db &>/dev/null
+        filebrowser config init -a '0.0.0.0' -p "$PORT" --database "$DB_PATH" &>/dev/null
+        filebrowser config set -a '0.0.0.0' -p "$PORT" --auth.method=noauth --database "$DB_PATH" &>/dev/null
         msg_ok "No Authentication configured"
     else
         msg_info "Setting up default authentication"
-        filebrowser config init -a '0.0.0.0' --database /var/lib/filebrowser/filebrowser.db &>/dev/null
-        filebrowser config set -a '0.0.0.0' --database /var/lib/filebrowser/filebrowser.db &>/dev/null
-        filebrowser users add admin helper-scripts.com --perm.admin --database /var/lib/filebrowser/filebrowser.db &>/dev/null
+        filebrowser config init -a '0.0.0.0' -p "$PORT" --database "$DB_PATH" &>/dev/null
+        filebrowser config set -a '0.0.0.0' -p "$PORT" --database "$DB_PATH" &>/dev/null
+        filebrowser users add admin helper-scripts.com --perm.admin --database "$DB_PATH" &>/dev/null
         msg_ok "Default authentication configured (admin:helper-scripts.com)"
     fi
 
     msg_info "Creating service"
-    cat <<EOF >/etc/systemd/system/filebrowser.service
+    cat <<EOF > "$SERVICE_PATH"
 [Unit]
 Description=Filebrowser
 After=network-online.target
@@ -106,7 +110,7 @@ After=network-online.target
 [Service]
 User=root
 WorkingDirectory=/var/lib/filebrowser/
-ExecStart=/usr/local/bin/filebrowser -r / --database /var/lib/filebrowser/filebrowser.db
+ExecStart=/usr/local/bin/filebrowser -r / --database "$DB_PATH" -p "$PORT"
 Restart=always
 
 [Install]
@@ -115,7 +119,7 @@ EOF
     systemctl enable -q --now filebrowser.service
     msg_ok "Service created successfully"
 
-    echo -e "${CM} ${GN}${APP} is reachable at: ${BL}http://$IP:8080${CL}"
+    echo -e "${CM} ${GN}${APP} is reachable at: ${BL}http://$IP:$PORT${CL}"
 else
     echo -e "${YW}⚠️ Installation skipped. Exiting.${CL}"
     exit 0
