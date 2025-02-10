@@ -106,7 +106,6 @@ build_container() {
   else
     export FUNCTIONS_FILE_PATH="$(curl -s https://raw.githubusercontent.com/michelroegl-brunner/ProxmoxVE/refs/heads/main/.github/workflows/scripts/app-test/pr-install.func)"
   fi
-  export RANDOM_UUID="$RANDOM_UUID"
   export CACHER="$APT_CACHER"
   export CACHER_IP="$APT_CACHER_IP"
   export tz="$timezone"
