@@ -29,7 +29,7 @@ jobs:
         run: |
           # Install GitHub CLI
           apt update
-          apt install -y gh
+          apt install -y git gh
 
       - name: Get changed files in PR
         id: changed-files
