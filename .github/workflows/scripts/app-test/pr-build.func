@@ -104,7 +104,7 @@ build_container() {
   if [ "$var_os" == "alpine" ]; then
     exit "NO ALPINE SUPPORT"
   else
-    export FUNCTIONS_FILE_PATH="$(.github/workflows/scripts/app-test/pr-install.func)"
+    export FUNCTIONS_FILE_PATH=".github/workflows/scripts/app-test/pr-install.func"
   fi
   export CACHER="$APT_CACHER"
   export CACHER_IP="$APT_CACHER_IP"
