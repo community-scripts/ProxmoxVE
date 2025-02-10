@@ -26,8 +26,12 @@ $STD apt-get install -y \
   software-properties-common \
   openjdk-17-jdk 
 wget -q https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.deb
+wget -q https://download.oracle.com/java/23/latest/jdk-23_linux-x64_bin.deb
 $STD sudo dpkg -i jdk-21_linux-x64_bin.deb
+$STD sudo dpkg -i jdk-23_linux-x64_bin.deb
 rm -f jdk-21_linux-x64_bin.deb
+rm -f jdk-23_linux-x64_bin.deb
+sudo update-alternatives --set java $(ls -d /usr/lib/jvm/jdk-21*/bin/java | sort -V | tail -n 1)
 msg_ok "Installed Dependencies"
 
 msg_info "Setup Python3"
