@@ -31,14 +31,6 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "GH_TOKEN=${GH_TOKEN}" >> $GITHUB_ENV
-          
-    
-      - name: Debugging
-        run: |
-          # List the files in the current directory to confirm we are inside the Git repository
-          ls -la
-          git status  # Check if the Git repository is initialized
-
       - name: Get changed files in PR
         id: changed-files
         run: |
