@@ -24,8 +24,11 @@ $STD apt-get install -y \
   apt-transport-https \
   coreutils \
   software-properties-common \
+msg_ok "Installed Dependencies"
+
+msg_info "Setting up TermurinJDK"
 wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public | gpg --dearmor | tee /etc/apt/trusted.gpg.d/adoptium.gpg > /dev/null
-$STD echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list
+$STD echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | $STD tee /etc/apt/sources.list.d/adoptium.list
 $STD apt-get update
 $STD apt-get install -y \
   temurin-8-jre \
@@ -33,8 +36,8 @@ $STD apt-get install -y \
   temurin-17-jre \
   temurin-21-jre \
   temurin-23-jre
-sudo update-alternatives --set java $(ls -d /usr/lib/jvm/temurin-21-jre-amd64/bin/java | sort -V | tail -n 1)
-msg_ok "Installed Dependencies"
+sudo update-alternatives --set java /usr/lib/jvm/temurin-21-jre-amd64/bin/java
+msg_ok "Installed TermurinJDK"
 
 msg_info "Setup Python3"
 $STD apt-get install -y \
