@@ -67,8 +67,7 @@ jobs:
         run: |
           set +e  # Allow the command to fail
           echo "Running install script..."
-          echo "Checking if the script exists: ls -l ${{ env.CHANGED_FILE }}"  # Debugging output
-          ERROR_MSG=$(./${{ env.CHANGED_FILE }} 2>&1)  # Capture both stdout and stderr
+          ERROR_MSG=$(./${{ env.SCRIPT }} 2>&1)  # Capture both stdout and stderr
           echo "$ERROR_MSG" # Save error message to a file for later use
           exit_code=$?  # Capture the exit code
           echo "exit_code=$exit_code" >> $GITHUB_ENV
