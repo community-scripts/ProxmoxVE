@@ -14,6 +14,12 @@ jobs:
       image: debian:latest
     
     steps:
+      - name: Install GitHub CLI
+        run: |
+          # Install GitHub CLI
+          apt update
+          apt install -y git gh
+          
       - name: Checkout PR branch
         uses: actions/checkout@v4
         with:
@@ -26,11 +32,7 @@ jobs:
         run: |
           echo "GH_TOKEN=${GH_TOKEN}" >> $GITHUB_ENV
           
-      - name: Install GitHub CLI
-        run: |
-          # Install GitHub CLI
-          apt update
-          apt install -y git gh
+    
       - name: Debugging
         run: |
           # List the files in the current directory to confirm we are inside the Git repository
