@@ -32,6 +32,8 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- Feature: Automatic Deletion of choosen LXC's (lxc-delete.sh) [@MickLesk](https://github.com/MickLesk) ([#2228](https://github.com/community-scripts/ProxmoxVE/pull/2228))
+- Quickfix: Crafty-Controller remove unnecessary \ [@MickLesk](https://github.com/MickLesk) ([#2233](https://github.com/community-scripts/ProxmoxVE/pull/2233))
 - Fix: Crafty-Controller java versions and set default [@CrazyWolf13](https://github.com/CrazyWolf13) ([#2199](https://github.com/community-scripts/ProxmoxVE/pull/2199))
 - Feature: Add optional Port for Filebrowser [@MickLesk](https://github.com/MickLesk) ([#2224](https://github.com/community-scripts/ProxmoxVE/pull/2224))
 - [core] Prevent double spinner [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2203](https://github.com/community-scripts/ProxmoxVE/pull/2203))
