@@ -30,7 +30,7 @@ jobs:
           CHANGED_FILES=$(gh pr diff --name-only ${{ github.event.pull_request.number }})
           echo "Changed files: $CHANGED_FILES"
           # Set CHANGED_FILE as an environment variable in the correct format
-          echo "CHANGED_FILE=$CHANGED_FILES" >> $GITHUB_ENV
+          echo "SCRIPT=$CHANGED_FILES" >> $GITHUB_ENV
 
       - name: Check if install script is changed
         id: check-install-script
