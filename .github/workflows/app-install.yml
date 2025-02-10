@@ -9,10 +9,8 @@ on:
 
 jobs:
   run-install-script:
-    runs-on: ubuntu-latest
-    container:
-      image: debian:latest
-    
+    runs-on: self-hosted
+   
     steps:
       - name: Install GitHub CLI
         run: |
