@@ -35,6 +35,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🌐 Website
 
+- Website: Fix Zitadel Logo & Created-Date [@MickLesk](https://github.com/MickLesk) ([#2217](https://github.com/community-scripts/ProxmoxVE/pull/2217))
 - Fixed URL typo zerotier-one.json [@Divaksh](https://github.com/Divaksh) ([#2206](https://github.com/community-scripts/ProxmoxVE/pull/2206))
 - evcc.json Clarify the config file location [@mvdw](https://github.com/mvdw) ([#2193](https://github.com/community-scripts/ProxmoxVE/pull/2193))
 
