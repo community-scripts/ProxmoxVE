@@ -76,15 +76,21 @@ if [[ "${install_prompt,,}" =~ ^(y|yes)$ ]]; then
     curl -fsSL https://github.com/filebrowser/filebrowser/releases/latest/download/linux-amd64-filebrowser.tar.gz | tar -xzv -C /usr/local/bin &>/dev/null
     msg_ok "Installed ${APP}"
 
+    msg_info "Creating FileBrowser directory"
+    mkdir -p /var/lib/filebrowser
+    chown root:root /var/lib/filebrowser
+    chmod 755 /var/lib/filebrowser
+    msg_ok "Directory created successfully"
+
     read -r -p "Would you like to use No Authentication? (y/N): " auth_prompt
     if [[ "${auth_prompt,,}" =~ ^(y|yes)$ ]]; then
         msg_info "Configuring No Authentication"
-        filebrowser config init -a '0.0.0.0' &>/dev/null
+        filebrowser config init -a '0.0.0.0' --database /var/lib/filebrowser/filebrowser.db &>/dev/null
         filebrowser config set -a '0.0.0.0' --auth.method=noauth &>/dev/null
         msg_ok "No Authentication configured"
     else
         msg_info "Setting up default authentication"
-        filebrowser config init -a '0.0.0.0' &>/dev/null
+        filebrowser config init -a '0.0.0.0' --database /var/lib/filebrowser/filebrowser.db &>/dev/null
         filebrowser config set -a '0.0.0.0' &>/dev/null
         filebrowser users add admin helper-scripts.com --perm.admin &>/dev/null
         msg_ok "Default authentication configured (admin:helper-scripts.com)"
@@ -98,11 +104,12 @@ After=network-online.target
 
 [Service]
 User=root
-WorkingDirectory=/root/
-ExecStart=/usr/local/bin/filebrowser -r /
+WorkingDirectory=/var/lib/filebrowser/
+ExecStart=/usr/local/bin/filebrowser -r / --database /var/lib/filebrowser/filebrowser.db
+Restart=always
 
 [Install]
-WantedBy=default.target
+WantedBy=multi-user.target
 EOF
     systemctl enable -q --now filebrowser.service
     msg_ok "Service created successfully"
