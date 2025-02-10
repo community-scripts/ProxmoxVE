@@ -62,7 +62,8 @@ jobs:
           set +e  # Allow commands to fail
           for FILE in ${{ env.CT_FILES }}; do
             sed -i 's|source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)|source .github/workflows/scripts/app-test/pr-build.func|g' "$FILE"
-            ls -la
+            ls -la .github/workflows/scripts
+            git status
             cat .github/workflows/scripts/app-test/pr-build.func
             cat $FILE
             chmod +x $FILE
