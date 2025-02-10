@@ -25,8 +25,7 @@ jobs:
 
       - name: Get changed files in PR
         id: changed-files
-        run: |
-          run: |  
+        run: | 
           CHANGED_FILES=$(gh pr diff --name-only ${{ github.event.pull_request.number }})  
           CHANGED_FILES=$(echo "$CHANGED_FILES" | tr '\n' ' ')  
           echo "Changed files: $CHANGED_FILES"  
