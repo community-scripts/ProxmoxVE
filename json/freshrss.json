@@ -32,7 +32,7 @@
   },
   "notes": [
     {
-      "text": "Database credentials: cat freshrss.creds",
+      "text": "Database credentials: `cat ~/freshrss.creds`",
       "type": "info"
     }
   ]
