@@ -57,11 +57,6 @@ verb_ip6() {
     silent() { "$@" >/dev/null 2>&1; } 
 }
 
-# This function sets error handling options and defines the error_handler function to handle errors
-catch_errors() {
-  set -Eeuo pipefail 
-}
-
 # This function displays a spinner.
 spinner() {
   local frames=('⠋' '⠙' '⠹' '⠸' '⠼' '⠴' '⠦' '⠧' '⠇' '⠏')
