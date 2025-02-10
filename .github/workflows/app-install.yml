@@ -35,7 +35,7 @@ jobs:
       - name: Check if install script is changed
         id: check-install-script
         run: |
-          if echo "${{ env.CHANGED_FILE }}" | grep -q '^install/.*-install.sh$'; then
+          if echo "${{ env.SCRIPT }}" | grep -q '^install/.*-install.sh$'; then
             echo "Install script found!"
           else
             echo "No install script found."
