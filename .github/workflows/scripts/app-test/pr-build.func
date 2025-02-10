@@ -1,0 +1,203 @@
+#!/usr/bin/env bash
+
+variables() {
+  NSAPP=$(echo ${APP,,} | tr -d ' ') # This function sets the NSAPP variable by converting the value of the APP variable to lowercase and removing any spaces.
+  var_install="${NSAPP}-install"     # sets the var_install variable by appending "-install" to the value of NSAPP.
+  INTEGER='^[0-9]+([.][0-9]+)?$'     # it defines the INTEGER regular expression pattern.
+}
+
+
+header_info(){ 
+  return  
+}
+
+base_settings() {
+  # Default Settings
+  CT_TYPE="1"
+  DISK_SIZE="4"
+  CORE_COUNT="1"
+  RAM_SIZE="1024"
+  VERBOSE="${1:-no}"
+  PW=""
+  CT_ID=$NEXTID
+  HN=$NSAPP
+  BRG="vmbr0"
+  NET="dhcp"
+  GATE=""
+  APT_CACHER=""
+  APT_CACHER_IP=""
+  DISABLEIP6="no"
+  MTU=""
+  SD=""
+  NS=""
+  MAC=""
+  VLAN=""
+  SSH="no"
+  SSH_AUTHORIZED_KEY=""
+  TAGS="community-script;"
+
+  # Override default settings with variables from ct script
+  CT_TYPE=${var_unprivileged:-$CT_TYPE}
+  DISK_SIZE=${var_disk:-$DISK_SIZE}
+  CORE_COUNT=${var_cpu:-$CORE_COUNT}
+  RAM_SIZE=${var_ram:-$RAM_SIZE}
+  VERB=${var_verbose:-$VERBOSE}
+  TAGS="${TAGS}${var_tags:-}"
+
+  # Since these 2 are only defined outside of default_settings function, we add a temporary fallback. TODO: To align everything, we should add these as constant variables (e.g. OSTYPE and OSVERSION), but that would currently require updating the default_settings function for all existing scripts
+  if [ -z "$var_os" ]; then
+    var_os="debian"
+  fi
+  if [ -z "$var_version" ]; then
+    var_version="12"
+  fi
+}
+
+color() {
+  return
+}
+
+catch_errors() {
+  set -Eeuo pipefail
+  trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
+}
+
+# This function handles errors
+error_handler() {  
+  local exit_code="$?"
+  local line_number="$1"
+  local command="$2"
+  local error_message="[ERROR] in line $line_number: exit code $exit_code: while executing command $command"
+  echo -e "\n$error_message"
+  exit "$error_message"
+}
+
+msg_info() {
+  local msg="$1"
+  echo -ne "${msg}\n"
+}
+
+msg_ok() { 
+  local msg="$1"
+  echo -e "${msg}\n"
+}
+
+msg_error() {
+  
+  local msg="$1"
+  echo -e "${msg}\n"
+}
+start(){
+  return
+}
+
+build_container() {
+  #  if [ "$VERB" == "yes" ]; then set -x; fi
+
+  if [ "$CT_TYPE" == "1" ]; then
+    FEATURES="keyctl=1,nesting=1"
+  else
+    FEATURES="nesting=1"
+  fi
+  TEMP_DIR=$(mktemp -d)
+  pushd $TEMP_DIR >/dev/null
+  if [ "$var_os" == "alpine" ]; then
+    exit "NO ALPINE SUPPORT"
+  else
+    export FUNCTIONS_FILE_PATH="$(curl -s https://raw.githubusercontent.com/michelroegl-brunner/ProxmoxVE/refs/heads/main/.github/workflows/scripts/app-test/pr-install.func)"
+  fi
+  export RANDOM_UUID="$RANDOM_UUID"
+  export CACHER="$APT_CACHER"
+  export CACHER_IP="$APT_CACHER_IP"
+  export tz="$timezone"
+  export DISABLEIPV6="$DISABLEIP6"
+  export APPLICATION="$APP"
+  export app="$NSAPP"
+  export PASSWORD="$PW"
+  export VERBOSE="$VERB"
+  export SSH_ROOT="${SSH}"
+  export SSH_AUTHORIZED_KEY
+  export CTID="$CT_ID"
+  export CTTYPE="$CT_TYPE"
+  export PCT_OSTYPE="$var_os"
+  export PCT_OSVERSION="$var_version"
+  export PCT_DISK_SIZE="$DISK_SIZE"
+  export PCT_OPTIONS="
+    -features $FEATURES
+    -hostname $HN
+    -tags $TAGS
+    $SD
+    $NS
+    -net0 name=eth0,bridge=$BRG$MAC,ip=$NET$GATE$VLAN$MTU
+    -onboot 1
+    -cores $CORE_COUNT
+    -memory $RAM_SIZE
+    -unprivileged $CT_TYPE
+    $PW
+  "
+  # This executes create_lxc.sh and creates the container and .conf file
+  bash -c "$(wget -qLO - https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/create_lxc.sh)" || exit $?
+
+  LXC_CONFIG=/etc/pve/lxc/${CTID}.conf
+  if [ "$CT_TYPE" == "0" ]; then
+    cat <<EOF >>$LXC_CONFIG
+# USB passthrough
+lxc.cgroup2.devices.allow: a
+lxc.cap.drop:
+lxc.cgroup2.devices.allow: c 188:* rwm
+lxc.cgroup2.devices.allow: c 189:* rwm
+lxc.mount.entry: /dev/serial/by-id  dev/serial/by-id  none bind,optional,create=dir
+lxc.mount.entry: /dev/ttyUSB0       dev/ttyUSB0       none bind,optional,create=file
+lxc.mount.entry: /dev/ttyUSB1       dev/ttyUSB1       none bind,optional,create=file
+lxc.mount.entry: /dev/ttyACM0       dev/ttyACM0       none bind,optional,create=file
+lxc.mount.entry: /dev/ttyACM1       dev/ttyACM1       none bind,optional,create=file
+EOF
+  fi
+
+  if [ "$CT_TYPE" == "0" ]; then
+    if [[ "$APP" == "Channels" || "$APP" == "Emby" || "$APP" == "ErsatzTV" || "$APP" == "Frigate" || "$APP" == "Jellyfin" || "$APP" == "Plex" || "$APP" == "Scrypted" || "$APP" == "Tdarr" || "$APP" == "Unmanic" || "$APP" == "Ollama" ]]; then
+      cat <<EOF >>$LXC_CONFIG
+# VAAPI hardware transcoding
+lxc.cgroup2.devices.allow: c 226:0 rwm
+lxc.cgroup2.devices.allow: c 226:128 rwm
+lxc.cgroup2.devices.allow: c 29:0 rwm
+lxc.mount.entry: /dev/fb0 dev/fb0 none bind,optional,create=file
+lxc.mount.entry: /dev/dri dev/dri none bind,optional,create=dir
+lxc.mount.entry: /dev/dri/renderD128 dev/dri/renderD128 none bind,optional,create=file
+EOF
+    fi
+  else
+    if [[ "$APP" == "Channels" || "$APP" == "Emby" || "$APP" == "ErsatzTV" || "$APP" == "Frigate" || "$APP" == "Jellyfin" || "$APP" == "Plex" || "$APP" == "Scrypted" || "$APP" == "Tdarr" || "$APP" == "Unmanic" || "$APP" == "Ollama" ]]; then
+      if [[ -e "/dev/dri/renderD128" ]]; then
+        if [[ -e "/dev/dri/card0" ]]; then
+          cat <<EOF >>$LXC_CONFIG
+# VAAPI hardware transcoding
+dev0: /dev/dri/card0,gid=44
+dev1: /dev/dri/renderD128,gid=104
+EOF
+        else
+          cat <<EOF >>$LXC_CONFIG
+# VAAPI hardware transcoding
+dev0: /dev/dri/card1,gid=44
+dev1: /dev/dri/renderD128,gid=104
+EOF
+        fi
+      fi
+    fi
+  fi
+
+  # This starts the container and executes <app>-install.sh
+  msg_info "Starting LXC Container"
+  pct start "$CTID"
+  msg_ok "Started LXC Container"
+  if [ "$var_os" == "alpine" ]; then
+    sleep 3
+    pct exec "$CTID" -- /bin/sh -c 'cat <<EOF >/etc/apk/repositories
+http://dl-cdn.alpinelinux.org/alpine/latest-stable/main
+http://dl-cdn.alpinelinux.org/alpine/latest-stable/community
+EOF'
+    pct exec "$CTID" -- ash -c "apk add bash >/dev/null"
+  fi
+  lxc-attach -n "$CTID" -- bash -c "$(wget -qLO - install/$var_install.sh)" || exit $?
+
+}
