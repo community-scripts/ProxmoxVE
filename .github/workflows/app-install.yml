@@ -68,6 +68,8 @@ jobs:
             ls -la .github/workflows/scripts/app-test/
             cat .github/workflows/scripts/app-test/pr-create-lxc.sh
             chmod +x $FILE
+            chmod +x .github/workflows/scripts/app-test/pr-create-lxc.sh
+
             echo "Running: $FILE"
             ./$FILE
             exit 1
