@@ -12,30 +12,29 @@ jobs:
     runs-on: ubuntu-latest  
     
     steps:
-      - name: Checkout PR branch with full history
+      - name: Checkout PR branch
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0  # Fetch full commit history
-          ref: ${{ github.event.pull_request.head.ref }}  # Checkout PR branch
-          fetch-tags: false  # Avoid fetching unnecessary tags
 
-      - name: Ensure main branch is available
+      - name: Get changed files in PR
+        id: changed-files
         run: |
-          git fetch origin main --depth=1  # Ensure 'main' exists
-          git branch --track main origin/main  # Track 'main' if needed
-          git pull origin main --no-rebase  # Update main branch
+          # Use GitHub CLI to get changed files in the PR
+          CHANGED_FILES=$(gh pr diff --name-only ${{ github.event.pull_request.number }} --exit-status)
+          echo "Changed files: $CHANGED_FILES"
+          echo "$CHANGED_FILES" >> $GITHUB_ENV
 
-      - name: Find changed install script
-        id: find-script
+      - name: Check if install script is changed
+        id: check-install-script
         run: |
-          CHANGED_FILE=$(git diff --name-only main...HEAD | grep '^install/.*-install.sh$' || echo "")
-    
-          if [[ -z "$CHANGED_FILE" ]]; then
+          if echo "${{ env.CHANGED_FILES }}" | grep -q '^install/.*-install.sh$'; then
+            echo "Install script found!"
+          else
             echo "No install script found."
             exit 1
           fi
-    
-          echo "SCRIPT=$CHANGED_FILE" >> $GITHUB_ENV
 
       - name: Replace $FUNCTION_FILE_PATH
         run: |
