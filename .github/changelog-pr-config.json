@@ -24,6 +24,10 @@
         "labels": ["maintenance"]
     },
     {
+        "title": "📡 API",
+        "labels": ["api"]
+    },
+    {
         "title": "❔ Unlabelled",
         "labels": []
     }
