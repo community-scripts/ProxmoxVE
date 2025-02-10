@@ -37,7 +37,8 @@ ignorelist:
 - prefix: json/turnkey.json
 - prefix: json/update-lxcs.json
 - prefix: json/update-repo.json
-- prefix: json/pbs_microcode.json
+- prefix: json/pbs-microcode.json
+- prefix: misc/pbs_microcode.sh
 codemods:
 - description: Whiptail install
   mod: sed
