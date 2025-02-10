@@ -22,8 +22,8 @@ jobs:
       - name: Ensure main branch is available
         run: |
           git fetch origin main --depth=1  # Ensure 'main' exists
-          git branch --track main origin/main || true  # Track 'main' if needed
-          git pull origin main  # Update main branch
+          git checkout main || true  # Track 'main' if needed
+          git pull origin main --no-rebase  # Update main branch
 
       - name: Find changed install script
         id: find-script
