@@ -104,7 +104,7 @@ build_container() {
   if [ "$var_os" == "alpine" ]; then
     exit "NO ALPINE SUPPORT"
   else
-    export FUNCTIONS_FILE_PATH="$(curl -s https://raw.githubusercontent.com/michelroegl-brunner/ProxmoxVE/refs/heads/main/.github/workflows/scripts/app-test/pr-install.func)"
+    export FUNCTIONS_FILE_PATH="$(curl -s .github/workflows/scripts/app-test/pr-install.func)"
   fi
   export CACHER="$APT_CACHER"
   export CACHER_IP="$APT_CACHER_IP"

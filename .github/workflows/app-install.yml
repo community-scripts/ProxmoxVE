@@ -61,7 +61,7 @@ jobs:
         run: |
           set +e  # Allow commands to fail
           for FILE in ${{ env.CT_FILES }}; do
-            sed -i 's|https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func|https://raw.githubusercontent.com/michelroegl-brunner/ProxmoxVE/refs/heads/main/.github/workflows/scripts/app-test/pr-build.func|g' "$FILE"
+            sed -i 's|https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func|.github/workflows/scripts/app-test/pr-build.func|g' "$FILE"
             chmod +x $FILE
             echo "Running: $FILE"
             ./$FILE
