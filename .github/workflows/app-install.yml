@@ -67,11 +67,10 @@ jobs:
         run: |
           set +e  # Allow the command to fail
           echo "Running install script..."
-          ERROR_MSG=$(./${{ env.SCRIPT }} 2>&1)  # Capture both stdout and stderr
-          echo "$ERROR_MSG" # Save error message to a file for later use
-          exit_code=$?  # Capture the exit code
+          EERROR_MSG=$(./${{ env.SCRIPT }} > /dev/null)  
+          echo "$ERROR_MSG" 
+          exit_code=$?  
           echo "exit_code=$exit_code"
-          echo "ERROR_MSG=$ERROR_MSG"
           echo "$ERROR_MSG" > result.log
           echo "exit_code=$exit_code" >> $GITHUB_ENV
           echo "ERROR_MSG=$ERROR_MSG" >> $GITHUB_ENV
@@ -91,4 +90,4 @@ jobs:
           # Post an error comment to the pull request with the captured error message
           echo "Posting error message as a comment..."
           gh pr comment ${{ github.event.pull_request.number }} \
-            --body "Error: The install script failed with the following message:\n\n${ERROR_MSG_ESCAPED}"
+            --body "Error: The install script failed with the following message: ${ERROR_MSG_ESCAPED}"
