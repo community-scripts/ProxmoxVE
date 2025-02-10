@@ -44,13 +44,12 @@ error_handler() {
   local exit_code="$?"
   local line_number="$1"
   local command="$2"
-  local error_message="[ERROR] in line $line_number: exit code $exit_code: while executing command $command"
+  local error_message="Failure in line $line_number: exit code $exit_code: while executing command $command"
   echo -e "\n$error_message"
   exit "$error_message"
 }
 verb_ip6() {
-    STD=""
-    silent() { "$@" >/dev/null 2>&1; } 
+    return
 }
 
 msg_info() {
