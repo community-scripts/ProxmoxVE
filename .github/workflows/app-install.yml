@@ -66,7 +66,6 @@ jobs:
         id: run-install
         run: |
           set +e  # Allow the command to fail
-          echo "Running install script..."
           EERROR_MSG=$(./${{ env.SCRIPT }} > /dev/null)  
           echo "$ERROR_MSG" 
           echo "$ERROR_MSG" > result.log
