@@ -21,6 +21,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### Changed
 
+### 💥 Breaking Changes
+
+- [Fix] Filebrowser - Add Static Path for DB [@MickLesk](https://github.com/MickLesk) ([#2207](https://github.com/community-scripts/ProxmoxVE/pull/2207))
+
 ### ✨ New Scripts
 
 - New Script: Zitadel [@dave-yap](https://github.com/dave-yap) ([#2141](https://github.com/community-scripts/ProxmoxVE/pull/2141))
