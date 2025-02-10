@@ -19,6 +19,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0  # Fetch full commit history
+      
       - name: Set up GH_TOKEN
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -30,6 +31,11 @@ jobs:
           # Install GitHub CLI
           apt update
           apt install -y git gh
+      - name: Debugging
+        run: |
+          # List the files in the current directory to confirm we are inside the Git repository
+          ls -la
+          git status  # Check if the Git repository is initialized
 
       - name: Get changed files in PR
         id: changed-files
