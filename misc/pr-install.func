@@ -33,7 +33,6 @@ color() {
   GATEWAY="${TAB}🌐${TAB}${CL}"
   DEFAULT="${TAB}⚙️${TAB}${CL}"
 }
-
 catch_errors() {
   set -Eeuo pipefail
   trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
@@ -49,6 +48,11 @@ error_handler() {
   echo -e "\n$error_message"
   exit "$error_message"
 }
+verb_ip6() {
+    STD=""
+    silent() { "$@" >/dev/null 2>&1; } 
+}
+
 msg_info() {
   local msg="$1"
   echo -ne "${msg}\n"
