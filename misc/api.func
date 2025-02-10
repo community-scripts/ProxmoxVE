@@ -46,6 +46,9 @@ EOF
 
 post_to_api_vm() {
 
+  if [[ ! -f /usr/local/community-scripts/diagnostics ]]; then
+    return
+  fi
   DIAGNOSTICS=$(grep -i "^DIAGNOSTICS=" /usr/local/community-scripts/diagnostics | awk -F'=' '{print $2}')
   if ! command -v curl &> /dev/null; then
     return
@@ -54,7 +57,6 @@ post_to_api_vm() {
   if [ "$DIAGNOSTICS" = "no" ]; then
     return
   fi
-
 
   if [ -z "$RANDOM_UUID" ]; then
     return
@@ -114,8 +116,8 @@ EOF
 )
    
   RESPONSE=$(curl -s -o response.txt -w "%{http_code}" -L -X POST "$API_URL" --post301 --post302 \
-      -H "Content-Type: application/json" \
-      -d "$JSON_PAYLOAD") || true
+    -H "Content-Type: application/json" \
+    -d "$JSON_PAYLOAD") || true
 
   POST_UPDATE_DONE=true
 }

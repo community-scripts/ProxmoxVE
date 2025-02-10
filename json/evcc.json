@@ -32,7 +32,7 @@
     },
     "notes": [
         {
-            "text": "entering `evcc configure` in the LXC terminal will guide you through the creation of a configuration file for evcc.",
+            "text": "To configure evcc, type `cd /etc` followed by `evcc configure` in the evcc LXC shell",
             "type": "info"
         }
     ]
