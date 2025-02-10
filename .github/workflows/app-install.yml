@@ -61,6 +61,7 @@ jobs:
         run: |
           set +e  # Allow commands to fail
           for FILE in ${{ env.CT_FILES }}; do
+            chmod +x $FILE
             echo "Running: $FILE"
             ERROR_MSG=$(./$FILE 2>&1 > /dev/null)
             
