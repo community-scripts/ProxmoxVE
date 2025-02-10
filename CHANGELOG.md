@@ -27,10 +27,13 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### ✨ New Scripts
 
+- New Script: FreshRSS [@bvdberg01](https://github.com/bvdberg01) ([#2226](https://github.com/community-scripts/ProxmoxVE/pull/2226))
 - New Script: Zitadel [@dave-yap](https://github.com/dave-yap) ([#2141](https://github.com/community-scripts/ProxmoxVE/pull/2141))
 
 ### 🚀 Updated Scripts
 
+- Fix: Crafty-Controller java versions and set default [@CrazyWolf13](https://github.com/CrazyWolf13) ([#2199](https://github.com/community-scripts/ProxmoxVE/pull/2199))
+- Feature: Add optional Port for Filebrowser [@MickLesk](https://github.com/MickLesk) ([#2224](https://github.com/community-scripts/ProxmoxVE/pull/2224))
 - [core] Prevent double spinner [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2203](https://github.com/community-scripts/ProxmoxVE/pull/2203))
 
 ### 🌐 Website
