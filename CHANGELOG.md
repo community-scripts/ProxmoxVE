@@ -19,7 +19,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ## 2025-02-10
 
-### Changed
+### Changes
 
 ### 💥 Breaking Changes
 
@@ -40,6 +40,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🧰 Maintenance
 
+- [gh]: Improve Workflows, Templates, Handling [@MickLesk](https://github.com/MickLesk) ([#2214](https://github.com/community-scripts/ProxmoxVE/pull/2214))
 - [core] Fix app-header workflow and add API [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2204](https://github.com/community-scripts/ProxmoxVE/pull/2204))
 - Fix: "read -p" does not support color formatting [@PhoenixEmik](https://github.com/PhoenixEmik) ([#2191](https://github.com/community-scripts/ProxmoxVE/pull/2191))
 - [API] Add API to vms [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2021](https://github.com/community-scripts/ProxmoxVE/pull/2021))
