@@ -24,6 +24,12 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "GH_TOKEN=${GH_TOKEN}" >> $GITHUB_ENV
+          
+      - name: Install GitHub CLI
+        run: |
+          # Install GitHub CLI
+          sudo apt update
+          sudo apt install -y gh
 
       - name: Get changed files in PR
         id: changed-files
