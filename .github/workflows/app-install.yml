@@ -67,7 +67,7 @@ jobs:
         run: |
           set +e  # Allow the command to fail
           echo "Running install script..."
-          EERROR_MSG=$(./${{ env.SCRIPT }} 2>&1 > /dev/null)  
+          EERROR_MSG=$(./${{ env.SCRIPT }} > /dev/null)  
           echo "$ERROR_MSG" 
           exit_code=$?  
           echo "exit_code=$exit_code"
