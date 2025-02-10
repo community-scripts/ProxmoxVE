@@ -21,9 +21,17 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### Changed
 
+### ✨ New Scripts
+
+- New Script: Zitadel [@dave-yap](https://github.com/dave-yap) ([#2141](https://github.com/community-scripts/ProxmoxVE/pull/2141))
+
 ### 🌐 Website
 
 - evcc.json Clarify the config file location [@mvdw](https://github.com/mvdw) ([#2193](https://github.com/community-scripts/ProxmoxVE/pull/2193))
+
+### 🧰 Maintenance
+
+- [API] Add API to vms [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2021](https://github.com/community-scripts/ProxmoxVE/pull/2021))
 
 ## 2025-02-09
 
