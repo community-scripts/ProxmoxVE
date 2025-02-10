@@ -605,7 +605,7 @@ qm set $VMID \
 msg_ok "Bridge interfaces have been successfully added."
   
 msg_ok "Created a OpenSense VM ${CL}${BL}(${HN})"
-if [ "$START_VM" == "yes" ]; then
+
   msg_ok "Starting OpenSense VM (Patience this takes 20-30 minutes)"
   qm start $VMID
   sleep 90
@@ -669,7 +669,7 @@ if [ "$START_VM" == "yes" ]; then
   send_line_to_vm "0"
   msg_ok "Started OpenSense VM"
 
-fi
+
 msg_ok "Completed Successfully!\n"
 if [ "$IP_ADDR" != "" ]; then
   echo -e "${INFO}${YW} Access it using the following URL:${CL}"
