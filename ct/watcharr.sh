@@ -55,7 +55,7 @@ function update_script() {
         msg_ok "Updated $APP to v${RELEASE}"
 
         msg_info "Starting $APP"
-        systemctl enable -q --now watcharr.service
+        systemctl start watcharr
         msg_ok "Started $APP"
 
         msg_info "Cleaning Up"
