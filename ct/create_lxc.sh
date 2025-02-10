@@ -182,24 +182,37 @@ mapfile -t TEMPLATES < <(pveam available -section system | sed -n "s/.*\($TEMPLA
 [ ${#TEMPLATES[@]} -gt 0 ] || { msg_error "Unable to find a template when searching for '$TEMPLATE_SEARCH'."; exit 207; }
 TEMPLATE="${TEMPLATES[-1]}"
 
-# Download LXC template if needed
-if ! pveam list $TEMPLATE_STORAGE | grep -q $TEMPLATE; then
+TEMPLATE_PATH="/var/lib/vz/template/cache/$TEMPLATE"
+# Check if template exists, if corrupt remove and redownload
+if ! pveam list "$TEMPLATE_STORAGE" | grep -q "$TEMPLATE"; then
+  [[ -f "$TEMPLATE_PATH" ]] && rm -f "$TEMPLATE_PATH"
   msg_info "Downloading LXC Template"
-  pveam download $TEMPLATE_STORAGE $TEMPLATE >/dev/null ||
-    msg_error "A problem occured while downloading the LXC template."
-    exit 208
+  pveam download "$TEMPLATE_STORAGE" "$TEMPLATE" >/dev/null ||
+    { msg_error "A problem occurred while downloading the LXC template."; exit 208; }
   msg_ok "Downloaded LXC Template"
 fi
 
+# Check and fix subuid/subgid
+grep -q "root:100000:65536" /etc/subuid || echo "root:100000:65536" >> /etc/subuid
+grep -q "root:100000:65536" /etc/subgid || echo "root:100000:65536" >> /etc/subgid
+
 # Combine all options
-DEFAULT_PCT_OPTIONS=(
-  -arch $(dpkg --print-architecture))
-
 PCT_OPTIONS=(${PCT_OPTIONS[@]:-${DEFAULT_PCT_OPTIONS[@]}})
-[[ " ${PCT_OPTIONS[@]} " =~ " -rootfs " ]] || PCT_OPTIONS+=(-rootfs $CONTAINER_STORAGE:${PCT_DISK_SIZE:-8})
+[[ " ${PCT_OPTIONS[@]} " =~ " -rootfs " ]] || PCT_OPTIONS+=(-rootfs "$CONTAINER_STORAGE:${PCT_DISK_SIZE:-8}")
 
-# Create container
+# Create container with template integrity check
 msg_info "Creating LXC Container"
-pct create $CTID ${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE} ${PCT_OPTIONS[@]} >/dev/null || { msg_error "A problem occured while trying to create container.";  exit 200; }
+  if ! pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" "${PCT_OPTIONS[@]}" &>/dev/null; then
+      [[ -f "$TEMPLATE_PATH" ]] && rm -f "$TEMPLATE_PATH"
+      
+    msg_ok "Template integrity check completed"
+    pveam download "$TEMPLATE_STORAGE" "$TEMPLATE" >/dev/null ||    
+      { msg_error "A problem occurred while re-downloading the LXC template."; exit 208; }
+    
+    msg_ok "Re-downloaded LXC Template"
+    if ! pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" "${PCT_OPTIONS[@]}" &>/dev/null; then
+        msg_error "A problem occurred while trying to create container after re-downloading template."
+      exit 200
+    fi
+  fi
 msg_ok "LXC Container ${BL}$CTID${CL} ${GN}was successfully created."
-

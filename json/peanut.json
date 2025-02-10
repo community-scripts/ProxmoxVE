@@ -19,8 +19,8 @@
             "script": "ct/peanut.sh",
             "resources": {
                 "cpu": 2,
-                "ram": 2048,
-                "hdd": 4,
+                "ram": 3072,
+                "hdd": 7,
                 "os": "debian",
                 "version": "12"
             }

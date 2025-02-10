@@ -32,21 +32,30 @@ function update_script() {
         msg_error "No ${APP} Installation Found!"
         exit
     fi
+    if [[ ! -f /opt/${APP}_version.txt ]]; then touch /opt/${APP}_version.txt
+    fi
+    if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
     RELEASE=$(curl -s https://api.github.com/repos/TriliumNext/Notes/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-
     msg_info "Stopping ${APP}"
     systemctl stop trilium
     sleep 1
     msg_ok "Stopped ${APP}"
 
     msg_info "Updating to ${RELEASE}"
+    mkdir -p /opt/trilium_backup
+    mv /opt/trilium/{db,dump-db} /opt/trilium_backup/
+    rm -rf /opt/trilium
+    cd /tmp
     wget -q https://github.com/TriliumNext/Notes/releases/download/${RELEASE}/TriliumNextNotes-linux-x64-${RELEASE}.tar.xz
     tar -xf TriliumNextNotes-linux-x64-${RELEASE}.tar.xz
-    cp -r trilium-linux-x64-server/* /opt/trilium/
+    mv trilium-linux-x64-server /opt/trilium
+    cp -r /opt/trilium_backup/{db,dump-db} /opt/trilium/
+    echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated to ${RELEASE}"
 
     msg_info "Cleaning up"
-    rm -rf TriliumNextNotes-linux-x64-${RELEASE}.tar.xz trilium-linux-x64-server
+    rm -rf /tmp/TriliumNextNotes-linux-x64-${RELEASE}.tar.xz 
+    rm -rf /opt/trilium_backup
     msg_ok "Cleaned"
 
     msg_info "Starting ${APP}"
@@ -54,7 +63,10 @@ function update_script() {
     sleep 1
     msg_ok "Started ${APP}"
     msg_ok "Updated Successfully"
-    exit
+  else
+    msg_ok "No update required. ${APP} is already at ${RELEASE}"
+  fi
+  exit
 }
 
 start
