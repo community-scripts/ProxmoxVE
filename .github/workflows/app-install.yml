@@ -67,9 +67,7 @@ jobs:
         run: |
           set +e  # Allow the command to fail
           ERROR_MSG=$(./${{ env.SCRIPT }} > /dev/null)  
-          echo "$ERROR_MSG" 
-          echo "$ERROR_MSG" > result.log
-          echo "ERROR_MSG=$ERROR_MSG" >> $GITHUB_ENV          
+          echo "ERROR: $ERROR_MSG" 
           if [ -n "$ERROR_MSG" ]; then
             echo "$ERROR_MSG" > result.log
             echo "ERROR_MSG=$ERROR_MSG" >> $GITHUB_ENV
