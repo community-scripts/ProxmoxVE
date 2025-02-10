@@ -81,11 +81,6 @@ msg_error() {
 # This function sets up the Container OS by generating the locale, setting the timezone, and checking the network connection
 setting_up_container() {
   msg_info "Setting up Container OS"
-  sed -i "/$LANG/ s/\(^# \)//" /etc/locale.gen
-  locale_line=$(grep -v '^#' /etc/locale.gen | grep -E '^[a-zA-Z]' | awk '{print $1}' | head -n 1)
-  echo "LANG=${locale_line}" >/etc/default/locale
-  locale-gen >/dev/null
-  export LANG=${locale_line}
   for ((i = RETRY_NUM; i > 0; i--)); do
     if [ "$(hostname -I)" != "" ]; then
       break
