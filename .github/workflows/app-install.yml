@@ -3,8 +3,7 @@ on:
   pull_request:
     branches:
       - main
-    paths:
-      - "ct/*.sh"
+
 jobs:
   run-install-script:
     runs-on: pvehost   
