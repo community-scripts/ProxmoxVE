@@ -29,12 +29,13 @@ jobs:
           # Use GitHub CLI to get the list of changed files in the PR
           CHANGED_FILES=$(gh pr diff --name-only ${{ github.event.pull_request.number }})
           echo "Changed files: $CHANGED_FILES"
-          echo "$CHANGED_FILES" >> $GITHUB_ENV
+          # Set CHANGED_FILE as an environment variable in the correct format
+          echo "CHANGED_FILE=$CHANGED_FILES" >> $GITHUB_ENV
 
       - name: Check if install script is changed
         id: check-install-script
         run: |
-          if echo "${{ env.CHANGED_FILES }}" | grep -q '^install/.*-install.sh$'; then
+          if echo "${{ env.CHANGED_FILE }}" | grep -q '^install/.*-install.sh$'; then
             echo "Install script found!"
           else
             echo "No install script found."
