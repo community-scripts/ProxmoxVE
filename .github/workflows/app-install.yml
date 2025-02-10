@@ -9,25 +9,44 @@ on:
 
 jobs:
   run-install-script:
-    runs-on: ubuntu-latest  # Debian-based runner
+    runs-on: ubuntu-latest  
+    container:
+      image: debian:latest
+    
     steps:
-      - name: Checkout PR branch
+      - name: Checkout PR branch with full history
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0  # Fetch full commit history
+          ref: ${{ github.event.pull_request.head.ref }}  # Checkout PR branch
+          fetch-tags: false  # Avoid fetching unnecessary tags
+
+      - name: Ensure main branch is available
+        run: |
+          git fetch origin main --depth=1  # Ensure 'main' exists
+          git branch --track main origin/main || true  # Track 'main' if needed
+          git pull origin main  # Update main branch
 
       - name: Find changed install script
         id: find-script
         run: |
-          CHANGED_FILE=$(git diff --name-only origin/main | grep '^install/.*-install.sh$' || echo "")
+          CHANGED_FILE=$(git diff --name-only main...HEAD | grep '^install/.*-install.sh$' || echo "")
+    
           if [[ -z "$CHANGED_FILE" ]]; then
             echo "No install script found."
             exit 1
           fi
+    
           echo "SCRIPT=$CHANGED_FILE" >> $GITHUB_ENV
 
+      - name: Replace $FUNCTION_FILE_PATH
+        run: |
+          sed -i 's|source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"|source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/install.func)|' ${{ env.SCRIPT }}
       - name: Make script executable
         run: chmod +x ${{ env.SCRIPT }}
 
+      - name: Install curl
+        run: apt update && apt install -y curl
+        
       - name: Run install script
-        run: ./${{ env.SCRIPT }}
+        run: sudo ./${{ env.SCRIPT }}
