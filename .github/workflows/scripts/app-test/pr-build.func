@@ -104,7 +104,7 @@ build_container() {
   if [ "$var_os" == "alpine" ]; then
     exit "NO ALPINE SUPPORT"
   else
-    export FUNCTIONS_FILE_PATH="$(curl -s .github/workflows/scripts/app-test/pr-install.func)"
+    export FUNCTIONS_FILE_PATH="$(.github/workflows/scripts/app-test/pr-install.func)"
   fi
   export CACHER="$APT_CACHER"
   export CACHER_IP="$APT_CACHER_IP"
@@ -197,6 +197,6 @@ http://dl-cdn.alpinelinux.org/alpine/latest-stable/community
 EOF'
     pct exec "$CTID" -- ash -c "apk add bash >/dev/null"
   fi
-  lxc-attach -n "$CTID" -- bash -c "$(wget -qLO - install/$var_install.sh)" || exit $?
+  lxc-attach -n "$CTID" -- bash -c "$(install/$var_install.sh)" || exit $?
 
 }
