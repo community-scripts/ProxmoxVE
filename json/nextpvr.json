@@ -2,9 +2,9 @@
   "name": "NextPVR",
   "slug": "nextpvr",
   "categories": [
-        15
+    15
   ],
-  "date_created": "2024-11-20",
+  "date_created": "2025-02-11",
   "type": "ct",
   "updateable": true,
   "privileged": false,
