@@ -35,6 +35,7 @@ function update_script() {
         systemctl stop tasmocompiler
         msg_ok "Stopped $APP"
         msg_info "Updating $APP to v${RELEASE}"
+        cd /opt
         rm -rf /opt/tasmocompiler
         RELEASE=$(curl -s https://api.github.com/repos/benzino77/tasmocompiler/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
         wget -q https://github.com/benzino77/tasmocompiler/archive/refs/tags/v${RELEASE}.tar.gz
