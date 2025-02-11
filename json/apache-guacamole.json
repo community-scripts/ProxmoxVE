@@ -2,9 +2,9 @@
   "name": "Apache Guacamole",
   "slug": "apache-guacamole",
   "categories": [
-        0
+    0
   ],
-  "date_created": "2024-12-19",
+  "date_created": "2025-02-11",
   "type": "ct",
   "updateable": false,
   "privileged": false,
