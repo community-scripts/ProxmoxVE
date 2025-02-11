@@ -14,7 +14,7 @@ error_handler() {
   local command="$2"
   local error_message="Failure in line $line_number: exit code $exit_code: while executing command $command"
   echo -e "\n$error_message"
-  exit "$error_message"
+  exit 100
 }
 verb_ip6() {
     return
