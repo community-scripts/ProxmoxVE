@@ -61,7 +61,7 @@ setting_up_container() {
     exit 1
   fi
   msg_ok "Set up Container OS"
-  msg_ok "Network Connected: $(hostname -I)"
+  msg_ok "Network Connected: $(hostname -i)"
 }
 
 network_check() {
