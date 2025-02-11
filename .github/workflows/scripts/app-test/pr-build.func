@@ -194,6 +194,6 @@ EOF
   msg_info "Starting LXC Container"
   pct start "$CTID"
   msg_ok "Started LXC Container"
-  lxc-attach -n "$CTID" -- bash -x  bash -x /root/actions-runner/_work/ProxmoxVE/ProxmoxVE/install/$var_install.sh || exit $?
+  lxc-attach -n "$CTID" -- bash -x /root/actions-runner/_work/ProxmoxVE/ProxmoxVE/install/$var_install.sh || exit $?
 
 }
