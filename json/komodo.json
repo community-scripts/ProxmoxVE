@@ -2,9 +2,9 @@
   "name": "Komodo",
   "slug": "komodo",
   "categories": [
-        3
+    3
   ],
-  "date_created": "2025-01-01",
+  "date_created": "2025-02-11",
   "type": "ct",
   "updateable": true,
   "privileged": false,

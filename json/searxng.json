@@ -4,7 +4,7 @@
   "categories": [
     0
   ],
-  "date_created": "2025-02-07",
+  "date_created": "2025-02-11",
   "type": "ct",
   "updateable": true,
   "privileged": false,
@@ -25,10 +25,10 @@
         "version": "12"
       }
     }
-    ],
-    "default_credentials": {
-        "username": null,
-        "password": null
-    },
-    "notes": []
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": []
 }
