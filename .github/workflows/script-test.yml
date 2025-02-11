@@ -135,8 +135,7 @@ jobs:
               ERROR="true"
             fi
           done
-          if [[ $ERROR == "true" ]]; then
-            exit 1
-          fi
-      
-  
+          echo "ERROR=$ERROR" >> $GITHUB_ENV
+      - name: Fail if error
+        if: ${{ env.ERROR }} == 'true'
+        run: exit 1 
