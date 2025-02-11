@@ -26,24 +26,29 @@ function update_script() {
     check_container_storage
     check_container_resources
 
-        msg_info "Updating $APP"
+    if [[ ! -d /etc/graylog ]]; then
+        msg_error "No ${APP} Installation Found!"
+        exit
+    fi
+    
+    msg_info "Updating $APP"
 
-        msg_info "Stopping $APP"
-        systemctl stop graylog-datanode
-        systemctl stop graylog-server
-        msg_ok "Stopped $APP"
+    msg_info "Stopping $APP"
+    systemctl stop graylog-datanode
+    systemctl stop graylog-server
+    msg_ok "Stopped $APP"
 
-        msg_info "Updating $APP"
-        apt-get update &> /dev/null
-        apt-get upgrade -y &> /dev/null
-        msg_ok "Updated $APP"
+    msg_info "Updating $APP"
+    apt-get update &> /dev/null
+    apt-get upgrade -y &> /dev/null
+    msg_ok "Updated $APP"
 
-        msg_info "Starting $APP"
-        systemctl start graylog-datanode
-        systemctl start graylog-server
-        msg_ok "Started $APP"
+    msg_info "Starting $APP"
+    systemctl start graylog-datanode
+    systemctl start graylog-server
+    msg_ok "Started $APP"
 
-        msg_ok "Update Successful"
+    msg_ok "Update Successful"
     exit
 }
 
