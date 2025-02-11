@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Copyright (c) 2021-2025 community-scripts ORG
-# Author: tremor021
+# Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/benzino77/tasmocompiler
 
@@ -20,11 +20,12 @@ $STD apt-get install -y \
   sudo \
   mc \
   gnupg \
-  git \
-  python3-venv
-curl -fsSL -o get-platformio.py https://raw.githubusercontent.com/platformio/platformio-core-installer/master/get-platformio.py
-$STD python3 get-platformio.py
+  git
 msg_ok "Installed Dependencies"
+
+msg_info "Setup Python3"
+$STD apt-get install python3-venv
+msg_ok "Setup Python3"
 
 msg_info "Setup Node.js & yarn"
 mkdir -p /etc/apt/keyrings
@@ -35,11 +36,17 @@ $STD apt-get install -y nodejs
 $STD npm install -g yarn
 msg_ok "Setup Node.js & yarn"
 
-msg_info "Setup TasmoCompiler. Patience"
+msg_info "Setup Platformio"
+curl -fsSL -o get-platformio.py https://raw.githubusercontent.com/platformio/platformio-core-installer/master/get-platformio.py
+$STD python3 get-platformio.py
+msg_ok "Setup Platformio"
+
+msg_info "Setup TasmoCompiler"
 mkdir /tmp/Tasmota
 RELEASE=$(curl -s https://api.github.com/repos/benzino77/tasmocompiler/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-wget -q https://github.com/benzino77/tasmocompiler/archive/refs/tags/v${RELEASE}.tar.gz
-tar xzf v${RELEASE}.tar.gz
+wget -q https://github.com/benzino77/tasmocompiler/archive/refs/tags/v${RELEASE}.tar.gz -O /tmp/v${RELEASE}.tar.gz
+cd /tmp
+tar xzf /tmp/v${RELEASE}.tar.gz
 mv tasmocompiler-${RELEASE}/ /opt/tasmocompiler/
 cd /opt/tasmocompiler
 $STD yarn install
@@ -53,7 +60,7 @@ ln -s ~/.platformio/penv/bin/piodebuggdb /usr/local/bin/piodebuggdb
 echo "${RELEASE}" >"/opt/tasmocompiler_version.txt"
 msg_ok "Setup TasmoCompiler"
 
-msg_info "Creating Service"npm
+msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/tasmocompiler.service
 [Unit]
 Description=TasmoCompiler Service
@@ -67,13 +74,14 @@ ExecStart=/usr/bin/node /opt/tasmocompiler/server/app.js &
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now tasmocompiler.service
+systemctl enable -q --now tasmocompiler
 msg_ok "Created Service"
 
 motd_ssh
 customize
 
 msg_info "Cleaning up"
+rm -f /tmp/v${RELEASE}.tar.gz
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
