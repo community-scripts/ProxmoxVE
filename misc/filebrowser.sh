@@ -26,7 +26,7 @@ INFO="${BL}ℹ️${CL}"
 APP="FileBrowser"
 INSTALL_PATH="/usr/local/bin/filebrowser"
 SERVICE_PATH="/etc/systemd/system/filebrowser.service"
-DB_PATH="/var/lib/filebrowser/filebrowser.db"
+DB_PATH="/usr/local/community-scripts/filebrowser.db"
 IP=$(hostname -I | awk '{print $1}')
 DEFAULT_PORT=8080
 
@@ -82,20 +82,26 @@ if [[ "${install_prompt,,}" =~ ^(y|yes)$ ]]; then
     msg_ok "Installed ${APP}"
 
     msg_info "Creating FileBrowser directory"
-    mkdir -p /var/lib/filebrowser
-    chown root:root /var/lib/filebrowser
-    chmod 755 /var/lib/filebrowser
+    mkdir -p /usr/local/community-scripts
+    chown root:root /usr/local/community-scripts
+    chmod 755 /usr/local/community-scripts
     msg_ok "Directory created successfully"
 
     read -r -p "Would you like to use No Authentication? (y/N): " auth_prompt
     if [[ "${auth_prompt,,}" =~ ^(y|yes)$ ]]; then
         msg_info "Configuring No Authentication"
-        filebrowser config init -a '0.0.0.0' -p "$PORT" --auth.method=noauth --database "$DB_PATH" &>/dev/null
+          cd /usr/local/community-scripts
+          filebrowser config init -a '0.0.0.0' -p "$PORT" -d "$DB_PATH" &>/dev/null
+          filebrowser config set -a '0.0.0.0' -p "$PORT" -d "$DB_PATH" &>/dev/null
+          filebrowser config init --auth.method=noauth &>/dev/null
+          filebrowser config set --auth.method=noauth &>/dev/null
+          filebrowser users add ID 1 --perm.admin &>/dev/null  
         msg_ok "No Authentication configured"
     else
         msg_info "Setting up default authentication"
-        filebrowser config init -a '0.0.0.0' -p "$PORT" --database "$DB_PATH" &>/dev/null
-        filebrowser config set -a '0.0.0.0' -p "$PORT" --database "$DB_PATH" &>/dev/null
+        cd /usr/local/community-scripts
+        filebrowser config init -a '0.0.0.0' -p "$PORT" -d "$DB_PATH" &>/dev/null
+        filebrowser config set -a '0.0.0.0' -p "$PORT" -d "$DB_PATH" &>/dev/null
         filebrowser users add admin helper-scripts.com --perm.admin --database "$DB_PATH" &>/dev/null
         msg_ok "Default authentication configured (admin:helper-scripts.com)"
     fi
@@ -108,8 +114,8 @@ After=network-online.target
 
 [Service]
 User=root
-WorkingDirectory=/var/lib/filebrowser/
-ExecStart=/usr/local/bin/filebrowser -r / --database "$DB_PATH" -p "$PORT"
+WorkingDirectory=/usr/local/community-scripts
+ExecStart=/usr/local/bin/filebrowser -r / -d "$DB_PATH" -p "$PORT"
 Restart=always
 
 [Install]

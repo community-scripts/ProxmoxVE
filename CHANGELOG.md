@@ -17,6 +17,25 @@ All LXC instances created using this repository come pre-installed with Midnight
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
 
+## 2025-02-11
+
+### Changes
+
+### ✨ New Scripts
+
+- New Script: Watcharr [@tremor021](https://github.com/tremor021) ([#2243](https://github.com/community-scripts/ProxmoxVE/pull/2243))
+- New Script: Suwayomi-Server [@tremor021](https://github.com/tremor021) ([#2139](https://github.com/community-scripts/ProxmoxVE/pull/2139))
+
+### 🚀 Updated Scripts
+
+- Fix Photoprism: Add defaults.yml for CLI Tool [@MickLesk](https://github.com/MickLesk) ([#2261](https://github.com/community-scripts/ProxmoxVE/pull/2261))
+- Update Checkmk: include Patch versions in Release grepping [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2264](https://github.com/community-scripts/ProxmoxVE/pull/2264))
+- Fix: Apache Guacamole Version Crawling - only latest Version [@MickLesk](https://github.com/MickLesk) ([#2258](https://github.com/community-scripts/ProxmoxVE/pull/2258))
+
+### 🌐 Website
+
+- Update Komodo icon [@bannert1337](https://github.com/bannert1337) ([#2263](https://github.com/community-scripts/ProxmoxVE/pull/2263))
+
 ## 2025-02-10
 
 ### Changes
@@ -27,10 +46,17 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### ✨ New Scripts
 
+- New Script: Prometheus Paperless-NGX Exporter [@andygrunwald](https://github.com/andygrunwald) ([#2153](https://github.com/community-scripts/ProxmoxVE/pull/2153))
+- New Script: Proxmox Mail Gateway [@thost96](https://github.com/thost96) ([#1906](https://github.com/community-scripts/ProxmoxVE/pull/1906))
+- New Script: FreshRSS [@bvdberg01](https://github.com/bvdberg01) ([#2226](https://github.com/community-scripts/ProxmoxVE/pull/2226))
 - New Script: Zitadel [@dave-yap](https://github.com/dave-yap) ([#2141](https://github.com/community-scripts/ProxmoxVE/pull/2141))
 
 ### 🚀 Updated Scripts
 
+- Feature: Automatic Deletion of choosen LXC's (lxc-delete.sh) [@MickLesk](https://github.com/MickLesk) ([#2228](https://github.com/community-scripts/ProxmoxVE/pull/2228))
+- Quickfix: Crafty-Controller remove unnecessary \ [@MickLesk](https://github.com/MickLesk) ([#2233](https://github.com/community-scripts/ProxmoxVE/pull/2233))
+- Fix: Crafty-Controller java versions and set default [@CrazyWolf13](https://github.com/CrazyWolf13) ([#2199](https://github.com/community-scripts/ProxmoxVE/pull/2199))
+- Feature: Add optional Port for Filebrowser [@MickLesk](https://github.com/MickLesk) ([#2224](https://github.com/community-scripts/ProxmoxVE/pull/2224))
 - [core] Prevent double spinner [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2203](https://github.com/community-scripts/ProxmoxVE/pull/2203))
 
 ### 🌐 Website

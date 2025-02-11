@@ -23,12 +23,22 @@ $STD apt-get install -y \
   lsb-release \
   apt-transport-https \
   coreutils \
-  software-properties-common \
-  openjdk-17-jdk 
-wget -q https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.deb
-$STD sudo dpkg -i jdk-21_linux-x64_bin.deb
-rm -f jdk-21_linux-x64_bin.deb
+  software-properties-common
 msg_ok "Installed Dependencies"
+
+msg_info "Setting up TermurinJDK"
+mkdir -p /etc/apt/keyrings
+wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public | tee /etc/apt/keyrings/adoptium.asc
+echo "deb [signed-by=/etc/apt/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list
+$STD apt-get update
+$STD apt-get install -y \
+  temurin-8-jre \
+  temurin-11-jre \
+  temurin-17-jre \
+  temurin-21-jre \
+  temurin-23-jre
+sudo update-alternatives --set java /usr/lib/jvm/temurin-21-jre-amd64/bin/java
+msg_ok "Installed TermurinJDK"
 
 msg_info "Setup Python3"
 $STD apt-get install -y \

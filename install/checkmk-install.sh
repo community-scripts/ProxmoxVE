@@ -22,7 +22,7 @@ $STD apt-get install -y \
 msg_ok "Installed Dependencies"
 
 msg_info "Install Checkmk"
-RELEASE=$(curl -fsSL https://api.github.com/repos/checkmk/checkmk/tags | grep "name" | awk '{print substr($2, 3, length($2)-4) }' | head -n 1)
+RELEASE=$(curl -fsSL https://api.github.com/repos/checkmk/checkmk/tags | grep "name" | awk '{print substr($2, 3, length($2)-4) }' | tr ' ' '\n' | grep -v '\-rc' | sort -V | tail -n 1)
 wget -q https://download.checkmk.com/checkmk/${RELEASE}/check-mk-raw-${RELEASE}_0.bookworm_amd64.deb -O /opt/checkmk.deb
 $STD apt-get install -y /opt/checkmk.deb
 echo "${RELEASE}" >"/opt/checkmk_version.txt"
