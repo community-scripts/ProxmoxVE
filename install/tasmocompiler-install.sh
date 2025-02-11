@@ -69,7 +69,7 @@ After=multi-user.target
 [Service]
 Type=simple
 User=root
-ExecStart=/usr/bin/node /opt/tasmocompiler/server/app.js &
+ExecStart=/usr/bin/node /opt/tasmocompiler/server/app.js
 
 [Install]
 WantedBy=multi-user.target
