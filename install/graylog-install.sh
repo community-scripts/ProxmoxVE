@@ -26,7 +26,6 @@ curl -fsSL https://www.mongodb.org/static/pgp/server-7.0.asc | gpg -o /usr/share
 echo "deb [signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg] https://repo.mongodb.org/apt/debian bookworm/mongodb-org/7.0 main" >/etc/apt/sources.list.d/mongodb-org-7.0.list
 $STD apt-get update
 $STD apt-get install -y mongodb-org
-$STD systemctl daemon-reload
 $STD apt-mark hold mongodb-org
 systemctl enable -q --now mongod
 msg_ok "Setup MongoDB"
@@ -53,7 +52,6 @@ ROOT_PASSWORD=$(echo -n $ROOT_PASSWORD | shasum -a 256 | awk '{print $1}')
 sed -i "s/password_secret =/password_secret = $PASSWORD_SECRET/g" /etc/graylog/server/server.conf
 sed -i "s/root_password_sha2 =/root_password_sha2 = $ROOT_PASSWORD/g" /etc/graylog/server/server.conf
 sed -i 's/#http_bind_address = 127.0.0.1.*/http_bind_address = 0.0.0.0:9000/g' /etc/graylog/server/server.conf
-
 systemctl enable -q --now graylog-server
 msg_ok "Setup ${APPLICATION}"
 

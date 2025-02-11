@@ -38,10 +38,6 @@
         {
         "text": "Type `cat ~/graylog.creds` to get admin password that you use to log in AFTER the Initial Setup",
         "type": "info"
-        },
-        {
-        "text": "Graylog system requirements are pretty high. Depending on your workload, you will have to scale up LXC resources ",
-        "type": "warning"
         }
     ]
 }
