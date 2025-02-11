@@ -57,7 +57,6 @@ msg_ok "Created Service"
 motd_ssh
 customize
 
-# Cleanup
 msg_info "Cleaning up"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
