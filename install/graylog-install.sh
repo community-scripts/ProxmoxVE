@@ -59,7 +59,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -f graylog-6.1-repository_latest.deb
+rm -f graylog-*-repository_latest.deb
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
