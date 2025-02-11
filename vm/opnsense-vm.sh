@@ -337,9 +337,9 @@ function advanced_settings() {
     exit-script
   fi
 
-  if RAM_SIZE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Allocate RAM in MiB" 8 58 4096 --title "RAM" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+  if RAM_SIZE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Allocate RAM in MiB" 8 58 8192 --title "RAM" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
     if [ -z $RAM_SIZE ]; then
-      RAM_SIZE="4096"
+      RAM_SIZE="8192"
     fi
     echo -e "${DGN}Allocated RAM: ${BGN}$RAM_SIZE${CL}"
   else
