@@ -22,7 +22,7 @@ base_settings() {
   VERBOSE="${1:-no}"
   PW=""
   CT_ID=$NEXTID
-  HN=$NSAPP
+  HN="Testing"
   BRG="vmbr0"
   NET="dhcp"
   GATE=""

@@ -102,18 +102,8 @@ function select_storage() {
   if [ $((${#MENU[@]}/3)) -eq 1 ]; then
     printf ${MENU[0]}
   else
-    local STORAGE
-    while [ -z "${STORAGE:+x}" ]; do
-      STORAGE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "Storage Pools" --radiolist \
-      "Which storage pool you would like to use for the ${CONTENT_LABEL,,}?\nTo make a selection, use the Spacebar.\n" \
-      16 $(($MSG_MAX_LENGTH + 23)) 6 \
-      "${MENU[@]}" 3>&1 1>&2 2>&3) || { msg_error "Menu aborted."; exit 202; }
-      if [ $? -ne 0 ]; then
-        echo -e "${CROSS}${RD} Menu aborted by user.${CL}"
-        exit 0 
-      fi
-    done
-    printf "%s" "$STORAGE"
+   msg_error "STORAGE ISSUES!"
+    exit 202  
   fi
 }
 
@@ -169,6 +159,8 @@ grep -q "root:100000:65536" /etc/subgid || echo "root:100000:65536" >> /etc/subg
 # Combine all options
 PCT_OPTIONS=(${PCT_OPTIONS[@]:-${DEFAULT_PCT_OPTIONS[@]}})
 [[ " ${PCT_OPTIONS[@]} " =~ " -rootfs " ]] || PCT_OPTIONS+=(-rootfs "$CONTAINER_STORAGE:${PCT_DISK_SIZE:-8}")
+
+echo "${PCT_OPTIONS[@]}"
 
 # Create container with template integrity check
 msg_info "Creating LXC Container"
