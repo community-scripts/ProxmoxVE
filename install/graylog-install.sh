@@ -47,7 +47,7 @@ ROOT_PASSWORD=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c16)
 {
     echo "${APPLICATION} Credentials"
     echo "Admin User: admin"
-    echo "Admin Password: $ROOT_PASSWORD"
+    echo "Admin Password: ${ROOT_PASSWORD}"
 } >> ~/graylog.creds
 ROOT_PASSWORD=$(echo -n $ROOT_PASSWORD | shasum -a 256 | awk '{print $1}')
 sed -i "s/password_secret =/password_secret = $PASSWORD_SECRET/g" /etc/graylog/server/server.conf
