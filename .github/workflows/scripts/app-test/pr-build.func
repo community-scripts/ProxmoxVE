@@ -3,11 +3,13 @@
 variables() {
   NSAPP=$(echo ${APP,,} | tr -d ' ') # This function sets the NSAPP variable by converting the value of the APP variable to lowercase and removing any spaces.
   var_install="${NSAPP}-install"     # sets the var_install variable by appending "-install" to the value of NSAPP.
-  INTEGER='^[0-9]+([.][0-9]+)?$'     # it defines the INTEGER regular expression pattern.
+
+  echo "APP: $APP"
+  echo "NSAPP: $NSAPP"
+  echo "var_install: $var_install"
 }
 pvesh get /cluster/nextid
 NEXTID=$(pvesh get /cluster/nextid)
-timezone=$(cat /etc/timezone)
 
 header_info(){ 
   return  
@@ -106,7 +108,7 @@ build_container() {
   if [ "$var_os" == "alpine" ]; then
     exit "NO ALPINE SUPPORT"
   else
-    export FUNCTIONS_FILE_PATH=".github/workflows/scripts/app-test/pr-install.func"
+    export FUNCTIONS_FILE_PATH="/root/actions-runner/_work/ProxmoxVE/ProxmoxVE/.github/workflows/scripts/app-test/pr-install.func"
   fi
   export CACHER="$APT_CACHER"
   export CACHER_IP="$APT_CACHER_IP"
@@ -192,14 +194,6 @@ EOF
   msg_info "Starting LXC Container"
   pct start "$CTID"
   msg_ok "Started LXC Container"
-  if [ "$var_os" == "alpine" ]; then
-    sleep 3
-    pct exec "$CTID" -- /bin/sh -c 'cat <<EOF >/etc/apk/repositories
-http://dl-cdn.alpinelinux.org/alpine/latest-stable/main
-http://dl-cdn.alpinelinux.org/alpine/latest-stable/community
-EOF'
-    pct exec "$CTID" -- ash -c "apk add bash >/dev/null"
-  fi
-  lxc-attach -n "$CTID" -- bash -c "$(install/$var_install.sh)" || exit $?
+  lxc-attach -n "$CTID" -- bash -x  bash -x /root/actions-runner/_work/ProxmoxVE/ProxmoxVE/install/$var_install.sh || exit $?
 
 }
