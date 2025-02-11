@@ -28,7 +28,13 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- Fix Photoprism: Add defaults.yml for CLI Tool [@MickLesk](https://github.com/MickLesk) ([#2261](https://github.com/community-scripts/ProxmoxVE/pull/2261))
+- Update Checkmk: include Patch versions in Release grepping [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2264](https://github.com/community-scripts/ProxmoxVE/pull/2264))
 - Fix: Apache Guacamole Version Crawling - only latest Version [@MickLesk](https://github.com/MickLesk) ([#2258](https://github.com/community-scripts/ProxmoxVE/pull/2258))
+
+### 🌐 Website
+
+- Update Komodo icon [@bannert1337](https://github.com/bannert1337) ([#2263](https://github.com/community-scripts/ProxmoxVE/pull/2263))
 
 ## 2025-02-10
 
