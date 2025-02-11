@@ -20,12 +20,11 @@ EOF
 header_info
 echo -e "Loading..."
 #API VARIABLES
-RELEASE=$(curl -sL https://api.github.com/repos/opnsense/core/tags | grep -oP '"name": "\K[0-9]+\.[0-9]+' | sort -V | tail -n 1)
 RANDOM_UUID="$(cat /proc/sys/kernel/random/uuid)"
 METHOD=""
 NSAPP="opnsense-vm"
 var_os="opnsense"
-var_version="${RELEASE}"
+var_version="25.1"
 #
 GEN_MAC=02:$(openssl rand -hex 5 | awk '{print toupper($0)}' | sed 's/\(..\)/\1:/g; s/.$//')
 GEN_MAC_LAN=02:$(openssl rand -hex 5 | awk '{print toupper($0)}' | sed 's/\(..\)/\1:/g; s/.$//')
@@ -613,7 +612,7 @@ msg_ok "Created a OpnSense VM ${CL}${BL}(${HN})"
   qm set $VMID \
     -net1 virtio,bridge=${WAN_BRG},macaddr=${WAN_MAC} &>/dev/null
   sleep 10
-  send_line_to_vm "sh ./opnsense-bootstrap.sh.in -y -f -r ${RELEASE}"
+  send_line_to_vm "sh ./opnsense-bootstrap.sh.in -y -f -r 25.1"
   msg_ok "OpnSense VM is being installed, do not close the terminal, or the installation will fail."
   #We need to wait for the OpnSense build proccess to finish, this takes a few minutes
   sleep 1000
