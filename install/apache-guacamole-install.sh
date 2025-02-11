@@ -41,7 +41,7 @@ $STD apt-get install -y \
 msg_ok "Installed Dependencies"
 
 msg_info "Setup Apache Tomcat"
-RELEASE=$(wget -qO- https://dlcdn.apache.org/tomcat/tomcat-9/ | grep -oP '(?<=href=")v[^"/]+(?=/")' | sed 's/^v//')
+RELEASE=$(wget -qO- https://dlcdn.apache.org/tomcat/tomcat-9/ | grep -oP '(?<=href=")v[^"/]+(?=/")' | sed 's/^v//' | sort -V | tail -n1)
 mkdir -p /opt/apache-guacamole/tomcat9
 mkdir -p /opt/apache-guacamole/server
 wget -qO- "https://dlcdn.apache.org/tomcat/tomcat-9/v${RELEASE}/bin/apache-tomcat-${RELEASE}.tar.gz" | tar -xz -C /opt/apache-guacamole/tomcat9 --strip-components=1
