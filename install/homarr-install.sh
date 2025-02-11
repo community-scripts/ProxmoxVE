@@ -80,6 +80,7 @@ mkdir -p /etc/nginx/templates
 cp /opt/homarr/nginx.conf /etc/nginx/templates/nginx.conf
 
 # Enable homar-cli
+mkdir -p /opt/homarr/apps/cli
 cp /opt/homarr/packages/cli/cli.cjs /opt/homarr/apps/cli/cli.cjs
 echo $'#!/bin/bash\ncd /opt/homarr/apps/cli && node ./cli.cjs "$@"' > /usr/bin/homarr
 chmod +x /usr/bin/homarr
