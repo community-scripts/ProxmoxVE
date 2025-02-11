@@ -5,7 +5,6 @@
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.cross-seed.org
 
-# Import Functions und Setup
 source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
@@ -14,7 +13,6 @@ setting_up_container
 network_check
 update_os
 
-# Installing Dependencies with the 3 core dependencies (curl;sudo;mc)
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
   curl \
@@ -34,16 +32,15 @@ $STD apt-get update
 $STD apt-get install -y nodejs
 msg_ok "Setup Node.js"
 
-msg_info "Setup ${APPLICATION}"
+msg_info "Setup Cross-Seed"
 $STD npm install cross-seed@latest -g
 $STD cross-seed gen-config
-msg_ok "Setup ${APPLICATION}"
+msg_ok "Setup Cross-Seed"
 
-# Creating Service (if needed)
 msg_info "Creating Service"
-cat <<EOF >/etc/systemd/system/${APPLICATION}.service
+cat <<EOF >/etc/systemd/system/cross-seed.service
 [Unit]
-Description=${APPLICATION} daemon Service
+Description=Cross-Seed daemon Service
 After=network.target
 
 [Service]
@@ -53,7 +50,7 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now ${APPLICATION}.service
+systemctl enable -q --now cross-seed
 msg_ok "Created Service"
 
 motd_ssh
