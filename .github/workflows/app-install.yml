@@ -61,7 +61,7 @@ jobs:
         run: |
           set +e  # Allow commands to fail
           for FILE in ${{ env.CT_FILES }}; do
-            pwd
+            echo "Running: $FILE"
             sed -i 's|source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)|source .github/workflows/scripts/app-test/pr-build.func|g' "$FILE"
             git checkout origin/main .github/workflows/scripts/app-test/pr-build.func
             git checkout origin/main .github/workflows/scripts/app-test/pr-install.func
@@ -70,7 +70,6 @@ jobs:
               echo "No install script found for $FILE"
               continue
             fi
-            pvesm status
             chmod +x $FILE
             chmod +x .github/workflows/scripts/app-test/pr-create-lxc.sh
 
