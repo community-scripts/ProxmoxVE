@@ -11,7 +11,7 @@
     "interface_port": 3000,
     "documentation": "https://github.com/benzino77/tasmocompiler/blob/master/README.md",
     "website": "https://github.com/benzino77/tasmocompiler",
-    "logo": "https://github.com/benzino77/tasmocompiler/raw/master/docs/logo/tasmocompiler-full.svg",
+    "logo": "https://github.com/benzino77/tasmocompiler/raw/master/docs/logo/tasmocompiler-symbol.svg",
     "description": "TasmoCompiler is a simple web GUI which allows you to compile fantastic Tasmota firmware with your own settings.",
     "install_methods": [
         {
