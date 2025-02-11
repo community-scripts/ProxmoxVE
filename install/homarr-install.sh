@@ -85,6 +85,7 @@ cp /opt/homarr/packages/cli/cli.cjs /opt/homarr/apps/cli/cli.cjs
 echo $'#!/bin/bash\ncd /opt/homarr/apps/cli && node ./cli.cjs "$@"' > /usr/bin/homarr
 chmod +x /usr/bin/homarr
 
+mkdir /opt/homarr/build
 cp ./node_modules/better-sqlite3/build/Release/better_sqlite3.node ./build/better_sqlite3.node
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Installed Homarr"
