@@ -117,9 +117,7 @@ jobs:
           ERROR="false"
           SEARCH_LINE=".github/workflows/scripts/app-test/pr-build.func: line 113:"
           for FILE in ${{ env.ALL_FILES }}; do
-            STRIPPED_NAME="${FILE#ct/}"
-            STRIPPED_NAME="${STRIPPED_NAME%.sh}"
-
+            STRIPPED_NAME=$(basename "$FILE" | sed 's/-install//' | sed 's/\.sh$//')
             if [[ ! -f result_$STRIPPED_NAME.log ]]; then
               continue
             fi
