@@ -2,9 +2,10 @@
   "name": "Docker",
   "slug": "docker-vm",
   "categories": [
-    2, 3
+    2,
+    3
   ],
-  "date_created": "2025-01-20",
+  "date_created": "2025-02-11",
   "type": "vm",
   "updateable": false,
   "privileged": false,
@@ -18,26 +19,26 @@
       "type": "default",
       "script": "vm/docker-vm.sh",
       "resources": {
-          "cpu": 2,
-          "ram": 4096,
-          "hdd": 8,
-          "os": "debian",
-          "version": "12"
+        "cpu": 2,
+        "ram": 4096,
+        "hdd": 8,
+        "os": "debian",
+        "version": "12"
       }
     }
   ],
   "default_credentials": {
-      "username": "root",
-      "password": "docker"
+    "username": "root",
+    "password": "docker"
   },
   "notes": [
     {
-        "text": "After the script completes, click on the VM, then on the Summary or Console tab to find the VM IP.",
-        "type": "info"
+      "text": "After the script completes, click on the VM, then on the Summary or Console tab to find the VM IP.",
+      "type": "info"
     },
     {
-        "text": "This Script works on amd64 and arm64 Architecture.",
-        "type": "info"
+      "text": "This Script works on amd64 and arm64 Architecture.",
+      "type": "info"
     }
   ]
 }

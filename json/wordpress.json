@@ -2,9 +2,9 @@
   "name": "Wordpress",
   "slug": "wordpress",
   "categories": [
-        21
+    21
   ],
-  "date_created": "2025-01-14",
+  "date_created": "2025-02-11",
   "type": "ct",
   "updateable": true,
   "privileged": false,
