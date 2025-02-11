@@ -46,6 +46,7 @@ After=network.target
 [Service]
 ExecStart=cross-seed daemon
 Restart=always
+User=root
 
 [Install]
 WantedBy=multi-user.target
