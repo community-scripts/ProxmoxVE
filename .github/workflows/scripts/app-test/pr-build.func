@@ -134,7 +134,9 @@ build_container() {
     -unprivileged $CT_TYPE
     $PW
   "
+  echo "PWD IN pr-build.func"
   pwd
+  ls
   # This executes create_lxc.sh and creates the container and .conf file
   bash -x .github/workflows/scripts/app-test/pr-create-lxc.sh
 
