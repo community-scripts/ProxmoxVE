@@ -50,6 +50,9 @@ function update_script() {
         systemctl start tasmocompiler
         msg_ok "Started $APP"
         echo "${RELEASE}" >/opt/${APP}_version.txt
+        msg_info "Cleaning up"
+        rm -r "/opt/v${RELEASE}.tar.gz"
+        msg_ok "Cleaned"
         msg_ok "Update Successful"
     else
         msg_ok "No update required. ${APP} is already at v${RELEASE}"
