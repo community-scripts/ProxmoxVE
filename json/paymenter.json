@@ -2,9 +2,9 @@
   "name": "Paymenter",
   "slug": "paymenter",
   "categories": [
-        21
+    21
   ],
-  "date_created": "2025-01-28",
+  "date_created": "2025-02-11",
   "type": "ct",
   "updateable": true,
   "privileged": false,
@@ -21,8 +21,8 @@
         "cpu": 2,
         "ram": 1024,
         "hdd": 5,
-        "os":"Debian",
-        "version":"12"
+        "os": "Debian",
+        "version": "12"
       }
     }
   ],
