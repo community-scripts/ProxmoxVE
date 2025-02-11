@@ -75,7 +75,8 @@ cp -r /opt/homarr/packages/db/migrations /opt/homarr_db/migrations
 cp -r /opt/homarr/apps/nextjs/.next/standalone/* /opt/homarr
 
 # Copy Redis and Nginx configurations from repository
-cp /opt/homarr/packages/redis/redis.conf /app/packages/redis/redis.conf
+cp /opt/homarr/packages/redis/redis.conf /opt/homarr/redis.conf
+mkdir -p /etc/nginx/templates
 cp /opt/homarr/nginx.conf /etc/nginx/templates/nginx.conf
 
 # Enable homar-cli
