@@ -6,7 +6,7 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 # Source: https://www.debian.org/
 
 # App Default Values
-APP="Debian"
+APP="wf-test"
 var_tags="os"
 var_cpu="1"
 var_ram="512"
