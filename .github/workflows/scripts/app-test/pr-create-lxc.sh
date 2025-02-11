@@ -61,6 +61,8 @@ function select_storage() {
   # Get the first available storage tag
   local STORAGE=$(pvesm status -content $CONTENT | awk 'NR==2 {print $1}')
 
+  echo "STORAGE = $STORAGE"
+
   if [[ -z "$STORAGE" ]]; then
     msg_error "No available storage found for $CLASS."
     exit 202
