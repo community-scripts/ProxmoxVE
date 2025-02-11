@@ -48,27 +48,74 @@ if [ -z "$VALIDTMP" ]; then
   exit 1
 fi
 
+#function select_storage() {
+#  local CLASS=$1
+#  local CONTENT
+#  
+#  case $CLASS in
+#    container) CONTENT='rootdir' ;;
+#    template) CONTENT='vztmpl' ;;
+#    *) msg_error "Invalid storage class." && exit 201 ;;
+#  esac
+#
+#  # Get the first available storage tag
+#  local STORAGE=$(pvesm status -content $CONTENT | awk 'NR==2 {print $1}')
+#
+#  echo "STORAGE = $STORAGE"
+#
+#  if [[ -z "$STORAGE" ]]; then
+#    msg_error "No available storage found for $CLASS."
+#    exit 202
+#  fi
+#}
 function select_storage() {
   local CLASS=$1
   local CONTENT
-  
+  local CONTENT_LABEL
   case $CLASS in
-    container) CONTENT='rootdir' ;;
-    template) CONTENT='vztmpl' ;;
-    *) msg_error "Invalid storage class." && exit 201 ;;
+  container)
+    CONTENT='rootdir'
+    CONTENT_LABEL='Container'
+    ;;
+  template)
+    CONTENT='vztmpl'
+    CONTENT_LABEL='Container template'
+    ;;
+  *) false || { msg_error "Invalid storage class."; exit 201; };;
   esac
-
-  # Get the first available storage tag
-  local STORAGE=$(pvesm status -content $CONTENT | awk 'NR==2 {print $1}')
-
-  echo "STORAGE = $STORAGE"
-
-  if [[ -z "$STORAGE" ]]; then
-    msg_error "No available storage found for $CLASS."
-    exit 202
+  
+  # This Queries all storage locations
+  local -a MENU
+  while read -r line; do
+    local TAG=$(echo $line | awk '{print $1}')
+    local TYPE=$(echo $line | awk '{printf "%-10s", $2}')
+    local FREE=$(echo $line | numfmt --field 4-6 --from-unit=K --to=iec --format %.2f | awk '{printf( "%9sB", $6)}')
+    local ITEM="Type: $TYPE Free: $FREE "
+    local OFFSET=2
+    if [[ $((${#ITEM} + $OFFSET)) -gt ${MSG_MAX_LENGTH:-} ]]; then
+      local MSG_MAX_LENGTH=$((${#ITEM} + $OFFSET))
+    fi
+    MENU+=("$TAG" "$ITEM" "OFF")
+  done < <(pvesm status -content $CONTENT | awk 'NR>1')
+  
+  # Select storage location
+  if [ $((${#MENU[@]}/3)) -eq 1 ]; then
+    printf ${MENU[0]}
+  else
+    local STORAGE
+    while [ -z "${STORAGE:+x}" ]; do
+      STORAGE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "Storage Pools" --radiolist \
+      "Which storage pool you would like to use for the ${CONTENT_LABEL,,}?\nTo make a selection, use the Spacebar.\n" \
+      16 $(($MSG_MAX_LENGTH + 23)) 6 \
+      "${MENU[@]}" 3>&1 1>&2 2>&3) || { msg_error "Menu aborted."; exit 202; }
+      if [ $? -ne 0 ]; then
+        echo -e "${CROSS}${RD} Menu aborted by user.${CL}"
+        exit 0 
+      fi
+    done
+    printf "%s" "$STORAGE"
   fi
 }
-
 
 
 
