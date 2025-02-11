@@ -107,13 +107,14 @@ catch_errors() {
 
 # This function handles errors
 error_handler() {  
-  local exit_code="$?"
   local line_number="$1"
   local command="$2"
-  local error_message="[ERROR] in line $line_number: exit code $exit_code: while executing command $command"
+  SCRIPT_NAME=$(basename "$0")
+  local error_message="$SCRIPT_NAME: Failure in line $line_number while executing command $command"
   echo -e "\n$error_message"
   exit "$error_message"
 }
+
 
 msg_info() {
   local msg="$1"
