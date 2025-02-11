@@ -35,6 +35,7 @@ function update_script() {
         if [ "$current_version" != "$latest_version" ]; then
             msg_info "Updating ${APP} from version v${current_version} to v${latest_version}"
             npm install -g cross-seed@latest &> /dev/null
+            systemctl restart cross-seed
             msg_ok "Updated Successfully"
         else
             msg_ok "${APP} is already at v${current_version}"
