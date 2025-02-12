@@ -20,7 +20,7 @@ $STD apt-get install -y \
   curl \
   redis-server \
   ca-certificates \
-  gnupg \
+  gpg \
   make \
   g++ \
   build-essential \
