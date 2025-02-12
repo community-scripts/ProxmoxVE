@@ -5,7 +5,7 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/Suwayomi/Suwayomi-Server
 
-APP="Suwayomi-Server"
+APP="SuwayomiServer"
 var_tags="media;manga"
 var_cpu="1"
 var_ram="1024"
