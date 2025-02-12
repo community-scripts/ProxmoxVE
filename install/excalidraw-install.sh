@@ -35,7 +35,7 @@ $STD apt-get install -y nodejs
 $STD npm install -g yarn
 msg_ok "Setup Node.js"
 
-msg_info "Setup ${APPLICATION}"
+msg_info "Setup Excalidraw"
 cd /tmp
 temp_file=$(mktemp)
 RELEASE=$(curl -s https://api.github.com/repos/excalidraw/excalidraw/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
@@ -45,7 +45,7 @@ mv excalidraw-${RELEASE} /opt/excalidraw
 cd /opt/excalidraw
 $STD yarn
 echo "${RELEASE}" >/opt/excalidraw_version.txt
-msg_ok "Setup ${APPLICATION}"
+msg_ok "Setup Excalidraw"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/excalidraw.service

@@ -34,7 +34,6 @@ function update_script() {
     RELEASE=$(curl -s https://api.github.com/repos/excalidraw/excalidraw/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
     if [[ "${RELEASE}" != "$(cat /opt/excalidraw_version.txt)" ]] || [[ ! -f /opt/excalidraw_version.txt ]]; then
         msg_info "Updating $APP"
-
         msg_info "Stopping $APP"
         systemctl stop excalidraw
         msg_ok "Stopped $APP"
@@ -47,7 +46,7 @@ function update_script() {
         rm -rf /opt/excalidraw
         mv excalidraw-${RELEASE} /opt/excalidraw
         cd /opt/excalidraw
-        $STD yarn
+        yarn &> /dev/null
         msg_ok "Updated $APP to v${RELEASE}"
 
         msg_info "Starting $APP"
