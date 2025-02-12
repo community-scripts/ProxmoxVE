@@ -32,6 +32,8 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- Update ubuntu2410-vm.sh: Fix typo in API call. [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2305](https://github.com/community-scripts/ProxmoxVE/pull/2305))
+- Fix: Myspeed Installation (g++) [@MickLesk](https://github.com/MickLesk) ([#2308](https://github.com/community-scripts/ProxmoxVE/pull/2308))
 - Fix: Pingvin wrong variable used for version tracking [@alberanid](https://github.com/alberanid) ([#2302](https://github.com/community-scripts/ProxmoxVE/pull/2302))
 - Fix: SQL Server 2022 - remove unnecessary sudo [@tremor021](https://github.com/tremor021) ([#2282](https://github.com/community-scripts/ProxmoxVE/pull/2282))
 - fix: frigate pin version [@CrazyWolf13](https://github.com/CrazyWolf13) ([#2296](https://github.com/community-scripts/ProxmoxVE/pull/2296))
@@ -42,6 +44,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🌐 Website
 
+- Website: Add After-Install Note for Ubuntu VM 22.04/24.04/24.10 and Debian VM [@MickLesk](https://github.com/MickLesk) ([#2307](https://github.com/community-scripts/ProxmoxVE/pull/2307))
 - Fix: duplicate 'VM' name in opnsense-vm.json [@nayzm](https://github.com/nayzm) ([#2293](https://github.com/community-scripts/ProxmoxVE/pull/2293))
 
 ## 2025-02-11
