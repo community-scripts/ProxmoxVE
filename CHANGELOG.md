@@ -27,11 +27,15 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### ✨ New Scripts
 
+- New Script: Kometa [@tremor021](https://github.com/tremor021) ([#2281](https://github.com/community-scripts/ProxmoxVE/pull/2281))
+- New Script: Excalidraw [@tremor021](https://github.com/tremor021) ([#2285](https://github.com/community-scripts/ProxmoxVE/pull/2285))
+- New Script: Graylog [@tremor021](https://github.com/tremor021) ([#2270](https://github.com/community-scripts/ProxmoxVE/pull/2270))
 - New Script: TasmoCompiler [@tremor021](https://github.com/tremor021) ([#2235](https://github.com/community-scripts/ProxmoxVE/pull/2235))
 - New script: cross-seed [@jmatraszek](https://github.com/jmatraszek) ([#2186](https://github.com/community-scripts/ProxmoxVE/pull/2186))
 
 ### 🚀 Updated Scripts
 
+- Fix: var_tags instead of TAGS in some CT's [@MickLesk](https://github.com/MickLesk) ([#2310](https://github.com/community-scripts/ProxmoxVE/pull/2310))
 - Update ubuntu2410-vm.sh: Fix typo in API call. [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2305](https://github.com/community-scripts/ProxmoxVE/pull/2305))
 - Fix: Myspeed Installation (g++) [@MickLesk](https://github.com/MickLesk) ([#2308](https://github.com/community-scripts/ProxmoxVE/pull/2308))
 - Fix: Pingvin wrong variable used for version tracking [@alberanid](https://github.com/alberanid) ([#2302](https://github.com/community-scripts/ProxmoxVE/pull/2302))
@@ -44,6 +48,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🌐 Website
 
+- Fix: some jsons (debian instead Debian in OS) [@MickLesk](https://github.com/MickLesk) ([#2311](https://github.com/community-scripts/ProxmoxVE/pull/2311))
 - Website: Add After-Install Note for Ubuntu VM 22.04/24.04/24.10 and Debian VM [@MickLesk](https://github.com/MickLesk) ([#2307](https://github.com/community-scripts/ProxmoxVE/pull/2307))
 - Fix: duplicate 'VM' name in opnsense-vm.json [@nayzm](https://github.com/nayzm) ([#2293](https://github.com/community-scripts/ProxmoxVE/pull/2293))
 
