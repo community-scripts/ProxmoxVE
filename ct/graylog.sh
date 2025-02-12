@@ -30,9 +30,6 @@ function update_script() {
         msg_error "No ${APP} Installation Found!"
         exit
     fi
-    
-    msg_info "Updating $APP"
-
     msg_info "Stopping $APP"
     systemctl stop graylog-datanode
     systemctl stop graylog-server
