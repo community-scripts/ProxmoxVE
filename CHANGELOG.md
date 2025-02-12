@@ -36,6 +36,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 - Fix: SQL Server 2022 - remove unnecessary sudo [@tremor021](https://github.com/tremor021) ([#2282](https://github.com/community-scripts/ProxmoxVE/pull/2282))
 - Fix: CraftyControler fix java default [@CrazyWolf13](https://github.com/CrazyWolf13) ([#2286](https://github.com/community-scripts/ProxmoxVE/pull/2286))
 
+### 🌐 Website
+
+- Fix: duplicate 'VM' name in opnsense-vm.json [@nayzm](https://github.com/nayzm) ([#2293](https://github.com/community-scripts/ProxmoxVE/pull/2293))
+
 ## 2025-02-11
 
 ### Changes
