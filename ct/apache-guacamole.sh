@@ -7,7 +7,7 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/r
 
 #App Default Values
 APP="Apache-Guacamole"
-TAGS="webserver;remote"
+var_tags="webserver;remote"
 var_disk="4"
 var_cpu="1"
 var_ram="2048"

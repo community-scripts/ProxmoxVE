@@ -7,7 +7,7 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 
 # App Default Values
 APP="2FAuth"
-TAGS="2fa;authenticator"
+var_tags="2fa;authenticator"
 var_cpu="1"
 var_ram="512"
 var_disk="2"

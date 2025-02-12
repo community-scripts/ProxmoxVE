@@ -7,7 +7,7 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 
 #App Default Values
 APP="Zammad"
-TAGS="webserver;ticket-system"
+var_tags="webserver;ticket-system"
 var_disk="8"
 var_cpu="2"
 var_ram="4096"
