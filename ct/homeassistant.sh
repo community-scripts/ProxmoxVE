@@ -48,6 +48,7 @@ function update_script() {
       docker pull "${CONTAINER_IMAGE}"
       LATEST_IMAGE="$(docker inspect --format "{{.Id}}" --type image "${CONTAINER_IMAGE}")"
       if [[ "${RUNNING_IMAGE}" != "${LATEST_IMAGE}" ]]; then
+        pip install -U runlike
         echo "Updating ${container} image ${CONTAINER_IMAGE}"
         DOCKER_COMMAND="$(runlike --use-volume-id "${container}")"
         docker rm --force "${container}"
