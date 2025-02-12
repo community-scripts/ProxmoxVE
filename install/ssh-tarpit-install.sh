@@ -34,8 +34,6 @@ $STD pip install .
 echo "${RELEASE}" >/opt/ssh-tarpit_version.txt
 msg_ok "Setup ssh-tarpit"
 
-read -p "Enter port you wish to use: " PORT
-
 msg_info "Creating Service"
 cat << EOF >/etc/systemd/system/ssh-tarpit.service
 [Unit]
@@ -44,7 +42,7 @@ After=network-online.target
 
 [Service]
 Type=simple
-ExecStart=/usr/local/bin/ssh-tarpit -a 0.0.0.0 -p $PORT
+ExecStart=/usr/local/bin/ssh-tarpit -a 0.0.0.0
 Restart=always
 RestartSec=30
 
