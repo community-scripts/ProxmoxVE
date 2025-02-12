@@ -506,7 +506,7 @@ if [ "$START_VM" == "yes" ]; then
   qm start $VMID
   msg_ok "Started Ubuntu 24.10 VM"
 fi
-post_update_to_api "done" "none"s
+post_update_to_api "done" "none"
 msg_ok "Completed Successfully!\n"
 echo -e "Setup Cloud-Init before starting \n
 More info at https://github.com/community-scripts/ProxmoxVE/discussions/272 \n"
