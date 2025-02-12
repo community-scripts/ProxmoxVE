@@ -49,11 +49,9 @@ unzip -q v${RELEASE}.zip
 mv homarr-${RELEASE} /opt/homarr
 mkdir -p /opt/homarr_db
 touch /opt/homarr_db/db.sqlite
-AUTH_SECRET="$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)"
 SECRET_ENCRYPTION_KEY="$(openssl rand -hex 32)"
 cd /opt/homarr
 cat <<EOF >/opt/homarr/.env
-AUTH_SECRET='${AUTH_SECRET}'
 DB_DRIVER='better-sqlite3'
 DB_DIALECT='sqlite'
 SECRET_ENCRYPTION_KEY='${SECRET_ENCRYPTION_KEY}'
@@ -87,24 +85,16 @@ echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Installed Homarr"
 
 msg_info "Creating Services"
-cat <<'EOF' > /opt/run_homarr.sh
-  # Run migrations
+cat <<EOF >/opt/run_homarr.sh
   DB_DIALECT='sqlite'
   node /opt/homarr_db/migrations/$DB_DIALECT/migrate.cjs /opt/homarr_db/migrations/$DB_DIALECT
-  # Auth secret is generated every time the container starts as it is required, but not used because we don't need JWTs or Mail hashing
   export AUTH_SECRET=$(openssl rand -base64 32)
   export HOSTNAME=$(ip route get 1.1.1.1 | grep -oP 'src \K[^ ]+')
   envsubst '${HOSTNAME}' < /etc/nginx/templates/nginx.conf > /etc/nginx/nginx.conf
   nginx -g 'daemon off;' &
-  # Start nginx proxy
-  # 1. Replace the HOSTNAME in the nginx template file
-  # 2. Create the nginx configuration file from the template
-  # 3. Start the nginx server
   redis-server /opt/homarr/packages/redis/redis.conf &
-  # Run the tasks backend
   node apps/tasks/tasks.cjs &
   node apps/websocket/wssServer.cjs &
-  # Run the nextjs server
   node apps/nextjs/server.js & PID=$!
   wait $PID
 EOF
