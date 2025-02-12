@@ -51,7 +51,7 @@ mkdir -p /opt/homarr_db
 touch /opt/homarr_db/db.sqlite
 AUTH_SECRET="$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)"
 SECRET_ENCRYPTION_KEY="$(openssl rand -hex 32)"
-
+cd /opt/homarr
 cat <<EOF >/opt/homarr/.env
 AUTH_SECRET='${AUTH_SECRET}'
 DB_DRIVER='better-sqlite3'
@@ -63,18 +63,13 @@ AUTH_PROVIDERS='credentials'
 NODE_ENV='production'
 EOF
 
-cd /opt/homarr
-
 $STD pnpm install
 $STD pnpm build
 
 cp /opt/homarr/apps/nextjs/next.config.ts .
 cp /opt/homarr/apps/nextjs/package.json .
-
 cp -r /opt/homarr/packages/db/migrations /opt/homarr_db/migrations
 cp -r /opt/homarr/apps/nextjs/.next/standalone/* /opt/homarr
-
-# Copy Redis and Nginx configurations from repository
 mkdir -p /appdata/redis
 cp /opt/homarr/packages/redis/redis.conf /opt/homarr/redis.conf
 mkdir -p /etc/nginx/templates
