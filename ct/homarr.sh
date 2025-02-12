@@ -59,10 +59,23 @@ fi
     mv homarr-${RELEASE} /opt/homarr
     mv /opt/homarr-data-backup/.env /opt/homarr/.env
     cd /opt/homarr
-    pnpm install &>/dev/null
-    pnpm run db:migration:sqlite:run &>/dev/null
-    pnpm build &>/dev/null
-    mkdir build
+    pnpm install
+    pnpm build
+    cp /opt/homarr/apps/nextjs/next.config.ts .
+    cp /opt/homarr/apps/nextjs/package.json .
+    cp -r /opt/homarr/packages/db/migrations /opt/homarr_db/migrations
+    cp -r /opt/homarr/apps/nextjs/.next/standalone/* /opt/homarr
+    mkdir -p /appdata/redis
+    cp /opt/homarr/packages/redis/redis.conf /opt/homarr/redis.conf
+    mkdir -p /etc/nginx/templates
+    cp /opt/homarr/nginx.conf /etc/nginx/templates/nginx.conf
+
+    mkdir -p /opt/homarr/apps/cli
+    cp /opt/homarr/packages/cli/cli.cjs /opt/homarr/apps/cli/cli.cjs
+    echo $'#!/bin/bash\ncd /opt/homarr/apps/cli && node ./cli.cjs "$@"' > /usr/bin/homarr
+    chmod +x /usr/bin/homarr
+    
+    mkdir /opt/homarr/build
     cp ./node_modules/better-sqlite3/build/Release/better_sqlite3.node ./build/better_sqlite3.node
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP}"
