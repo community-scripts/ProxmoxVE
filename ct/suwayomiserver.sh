@@ -6,7 +6,7 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 # Source: https://github.com/Suwayomi/Suwayomi-Server
 
 APP="Suwayomi-Server"
-TAGS="media;manga"
+var_tags="media;manga"
 var_cpu="1"
 var_ram="1024"
 var_disk="4"

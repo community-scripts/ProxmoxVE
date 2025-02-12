@@ -6,7 +6,7 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 # Source: https://github.com/YuukanOO/seelf
 
 APP="seelf"
-TAGS="server;docker"
+var_tags="server;docker"
 var_cpu="2"
 var_ram="4096"
 var_disk="10"

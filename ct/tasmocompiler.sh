@@ -6,7 +6,7 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 # Source: https://github.com/benzino77/tasmocompiler
 
 APP="TasmoCompiler"
-TAGS="compiler"
+var_tags="compiler"
 var_cpu="2"
 var_ram="2048"
 var_disk="10"
