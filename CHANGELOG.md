@@ -31,6 +31,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- fix: frigate pin version [@CrazyWolf13](https://github.com/CrazyWolf13) ([#2296](https://github.com/community-scripts/ProxmoxVE/pull/2296))
 - Fix changedetection: Correct Browser install [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2277](https://github.com/community-scripts/ProxmoxVE/pull/2277))
 - Paperless-AI: add dependency "make" [@MickLesk](https://github.com/MickLesk) ([#2289](https://github.com/community-scripts/ProxmoxVE/pull/2289))
 - Fix: Typo OPNsense VM [@chpego](https://github.com/chpego) ([#2291](https://github.com/community-scripts/ProxmoxVE/pull/2291))
