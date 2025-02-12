@@ -31,11 +31,9 @@ function update_script() {
         msg_error "No ${APP} Installation Found!"
         exit
     fi
-
     RELEASE=$(curl -s https://api.github.com/repos/Kometa-Team/Kometa/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
     if [[ "${RELEASE}" != "$(cat /opt/kometa_version.txt)" ]] || [[ ! -f /opt/kometa_version.txt ]]; then
         msg_info "Updating $APP"
-
         msg_info "Stopping $APP"
         systemctl stop kometa
         msg_ok "Stopped $APP"

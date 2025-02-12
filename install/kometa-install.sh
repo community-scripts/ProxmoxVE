@@ -17,19 +17,21 @@ msg_info "Installing Dependencies"
 $STD apt-get install -y \
     curl \
     mc \
-    sudo \
-    python3-pip
+    sudo
 msg_ok "Installed Dependencies"
 
+msg_info "Setup Python 3"
+$STD apt-get install python3-pip -y
+rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
+msg_ok "Setup Python 3"
+
 msg_info "Setup Kometa"
-cd /tmp
 temp_file=$(mktemp)
 RELEASE=$(curl -s https://api.github.com/repos/Kometa-Team/Kometa/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 wget -q "https://github.com/Kometa-Team/Kometa/archive/refs/tags/v${RELEASE}.tar.gz" -O "$temp_file"
 tar -xzf "$temp_file"
 mv Kometa-${RELEASE} /opt/kometa
 cd /opt/kometa
-rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
 $STD pip install -r requirements.txt --ignore-installed
 mkdir -p config/assets
 cp config/config.yml.template config/config.yml
