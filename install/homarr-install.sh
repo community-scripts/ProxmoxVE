@@ -75,6 +75,7 @@ cp -r /opt/homarr/packages/db/migrations /opt/homarr_db/migrations
 cp -r /opt/homarr/apps/nextjs/.next/standalone/* /opt/homarr
 
 # Copy Redis and Nginx configurations from repository
+mkdir -p /appdata/redis
 cp /opt/homarr/packages/redis/redis.conf /opt/homarr/redis.conf
 mkdir -p /etc/nginx/templates
 cp /opt/homarr/nginx.conf /etc/nginx/templates/nginx.conf
@@ -91,7 +92,7 @@ echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Installed Homarr"
 
 msg_info "Creating Services"
-{
+cat <<'EOF' > /opt/run_homarr.sh
   # Run migrations
   DB_DIALECT='sqlite'
   node /opt/homarr_db/migrations/$DB_DIALECT/migrate.cjs /opt/homarr_db/migrations/$DB_DIALECT
@@ -111,9 +112,11 @@ msg_info "Creating Services"
   # Run the nextjs server
   node apps/nextjs/server.js & PID=$!
   wait $PID
-} > /opt/run_homarr.sh 2>&1 &
+EOF
 chmod +x /opt/run_homarr.sh
 
+systemctl disable nginx
+systemctl disable redis
 cat <<EOF >/etc/systemd/system/homarr.service
 [Unit]
 Description=Homarr Service
