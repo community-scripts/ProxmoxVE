@@ -97,7 +97,8 @@ msg_info "Creating Services"
   node /opt/homarr_db/migrations/$DB_DIALECT/migrate.cjs /opt/homarr_db/migrations/$DB_DIALECT
   # Auth secret is generated every time the container starts as it is required, but not used because we don't need JWTs or Mail hashing
   export AUTH_SECRET=$(openssl rand -base64 32)
-  envsubst ${HOSTNAME} < /etc/nginx/templates/nginx.conf > /etc/nginx/nginx.conf
+  export HOSTNAME=$(ip route get 1.1.1.1 | grep -oP 'src \K[^ ]+')
+  envsubst '${HOSTNAME}' < /etc/nginx/templates/nginx.conf > /etc/nginx/nginx.conf
   nginx -g 'daemon off;' &
   # Start nginx proxy
   # 1. Replace the HOSTNAME in the nginx template file
