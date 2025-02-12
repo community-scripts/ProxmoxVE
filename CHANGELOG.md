@@ -17,6 +17,25 @@ All LXC instances created using this repository come pre-installed with Midnight
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
 
+## 2025-02-12
+
+### Changes
+
+### 💥 Breaking Changes
+
+- Frigate: Use Fixed Version 14 [@MickLesk](https://github.com/MickLesk) ([#2288](https://github.com/community-scripts/ProxmoxVE/pull/2288))
+
+### ✨ New Scripts
+
+- New script: cross-seed [@jmatraszek](https://github.com/jmatraszek) ([#2186](https://github.com/community-scripts/ProxmoxVE/pull/2186))
+
+### 🚀 Updated Scripts
+
+- Paperless-AI: add dependency "make" [@MickLesk](https://github.com/MickLesk) ([#2289](https://github.com/community-scripts/ProxmoxVE/pull/2289))
+- Fix: Typo OPNsense VM [@chpego](https://github.com/chpego) ([#2291](https://github.com/community-scripts/ProxmoxVE/pull/2291))
+- Fix: SQL Server 2022 - remove unnecessary sudo [@tremor021](https://github.com/tremor021) ([#2282](https://github.com/community-scripts/ProxmoxVE/pull/2282))
+- Fix: CraftyControler fix java default [@CrazyWolf13](https://github.com/CrazyWolf13) ([#2286](https://github.com/community-scripts/ProxmoxVE/pull/2286))
+
 ## 2025-02-11
 
 ### Changes
