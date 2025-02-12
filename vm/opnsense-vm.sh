@@ -142,7 +142,7 @@ function send_line_to_vm() {
 TEMP_DIR=$(mktemp -d)
 pushd $TEMP_DIR >/dev/null
 
-if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "OPNSense VM" --yesno "This will create a New OPNSense VM. Proceed?" 10 58); then
+if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "OPNsense VM" --yesno "This will create a New OPNsense VM. Proceed?" 10 58); then
   :
 else
   header_info && echo -e "⚠ User exited script \n" && exit
@@ -246,7 +246,7 @@ function default_settings() {
   fi
   echo -e "${DGN}Using Interface MTU Size: ${BGN}Default${CL}"
   echo -e "${DGN}Start VM when completed: ${BGN}yes${CL}"
-  echo -e "${BL}Creating a OPNSense VM using the above default settings${CL}"
+  echo -e "${BL}Creating a OPNsense VM using the above default settings${CL}"
 }
 
 function advanced_settings() {
@@ -316,9 +316,9 @@ function advanced_settings() {
     exit-script
   fi
 
-  if VM_NAME=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Hostname" 8 58 OPNSense --title "HOSTNAME" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+  if VM_NAME=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Hostname" 8 58 OPNsense --title "HOSTNAME" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
     if [ -z $VM_NAME ]; then
-      HN="OPNSense"
+      HN="OPNsense"
     else
       HN=$(echo ${VM_NAME,,} | tr -d ' ')
     fi
@@ -468,8 +468,8 @@ function advanced_settings() {
     exit-script
   fi
 
-  if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "ADVANCED SETTINGS COMPLETE" --yesno "Ready to create OPNSense VM?" --no-button Do-Over 10 58); then
-    echo -e "${RD}Creating a OPNSense VM using the above advanced settings${CL}"
+  if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "ADVANCED SETTINGS COMPLETE" --yesno "Ready to create OPNsense VM?" --no-button Do-Over 10 58); then
+    echo -e "${RD}Creating a OPNsense VM using the above advanced settings${CL}"
   else
     header_info
     echo -e "${RD}Using Advanced Settings${CL}"
@@ -523,7 +523,7 @@ else
 fi
 msg_ok "Using ${CL}${BL}$STORAGE${CL} ${GN}for Storage Location."
 msg_ok "Virtual Machine ID is ${CL}${BL}$VMID${CL}."
-msg_info "Retrieving the URL for the OPNSense Qcow2 Disk Image"
+msg_info "Retrieving the URL for the OPNsense Qcow2 Disk Image"
 URL=https://download.freebsd.org/releases/VM-IMAGES/14.2-RELEASE/amd64/Latest/FreeBSD-14.2-RELEASE-amd64.qcow2.xz
 sleep 2
 msg_ok "${CL}${BL}${URL}${CL}"
@@ -555,7 +555,7 @@ for i in {0,1}; do
   eval DISK${i}_REF=${STORAGE}:${DISK_REF:-}${!disk}
 done
 
-msg_info "Creating a OPNSense VM"
+msg_info "Creating a OPNsense VM"
 qm create $VMID -agent 1${MACHINE} -tablet 0 -localtime 1 -bios ovmf${CPU_TYPE} -cores $CORE_COUNT -memory $RAM_SIZE \
   -name $HN -tags proxmox-helper-scripts -net0 virtio,bridge=$BRG,macaddr=$MAC$VLAN$MTU -onboot 1 -ostype l26 -scsihw virtio-scsi-pci
 pvesm alloc $STORAGE $VMID $DISK0 4M 1>&/dev/null
@@ -573,7 +573,7 @@ qm resize $VMID scsi0 10G >/dev/null
     <img src='https://raw.githubusercontent.com/michelroegl-brunner/ProxmoxVE/refs/heads/develop/misc/images/logo-81x112.png' alt='Logo' style='width:81px;height:112px;'/>
   </a>
 
-  <h2 style='font-size: 24px; margin: 20px 0;'>OPNSense VM</h2>
+  <h2 style='font-size: 24px; margin: 20px 0;'>OPNsense VM</h2>
 
   <p style='margin: 16px 0;'>
     <a href='https://ko-fi.com/community_scripts' target='_blank' rel='noopener noreferrer'>
@@ -603,8 +603,8 @@ qm set $VMID \
   -net0 virtio,bridge=${BRG},macaddr=${MAC}${VLAN}${MTU} 2>/dev/null
 msg_ok "Bridge interfaces have been successfully added."
   
-msg_ok "Created a OPNSense VM ${CL}${BL}(${HN})"
-  msg_ok "Starting OPNSense VM (Patience this takes 20-30 minutes)"
+msg_ok "Created a OPNsense VM ${CL}${BL}(${HN})"
+  msg_ok "Starting OPNsense VM (Patience this takes 20-30 minutes)"
   qm start $VMID
   sleep 90
   send_line_to_vm "root"
@@ -613,8 +613,8 @@ msg_ok "Created a OPNSense VM ${CL}${BL}(${HN})"
     -net1 virtio,bridge=${WAN_BRG},macaddr=${WAN_MAC} &>/dev/null
   sleep 10
   send_line_to_vm "sh ./opnsense-bootstrap.sh.in -y -f -r 25.1"
-  msg_ok "OPNSense VM is being installed, do not close the terminal, or the installation will fail."
-  #We need to wait for the OPNSense build proccess to finish, this takes a few minutes
+  msg_ok "OPNsense VM is being installed, do not close the terminal, or the installation will fail."
+  #We need to wait for the OPNsense build proccess to finish, this takes a few minutes
   sleep 1000
   send_line_to_vm "root"
   send_line_to_vm "opnsense"
@@ -665,7 +665,7 @@ msg_ok "Created a OPNSense VM ${CL}${BL}(${HN})"
   fi
   sleep 10
   send_line_to_vm "0"
-  msg_ok "Started OPNSense VM"
+  msg_ok "Started OPNsense VM"
 
 msg_ok "Completed Successfully!\n"
 if [ "$IP_ADDR" != "" ]; then
