@@ -115,7 +115,7 @@ jobs:
       - name: Post error comments
         run: |
           ERROR="false"
-          SEARCH_LINE=".github/workflows/scripts/app-test/pr-build.func: line 113:"
+          SEARCH_LINE=".github/workflows/scripts/app-test/pr-build.func: line"
           for FILE in ${{ env.ALL_FILES }}; do
             STRIPPED_NAME=$(basename "$FILE" | sed 's/-install//' | sed 's/\.sh$//')
             if [[ ! -f result_$STRIPPED_NAME.log ]]; then

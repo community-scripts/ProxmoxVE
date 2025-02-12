@@ -23,6 +23,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### ✨ New Scripts
 
+- New Script: Opnsense VM [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2097](https://github.com/community-scripts/ProxmoxVE/pull/2097))
 - New Script: Watcharr [@tremor021](https://github.com/tremor021) ([#2243](https://github.com/community-scripts/ProxmoxVE/pull/2243))
 - New Script: Suwayomi-Server [@tremor021](https://github.com/tremor021) ([#2139](https://github.com/community-scripts/ProxmoxVE/pull/2139))
 
@@ -35,6 +36,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 ### 🌐 Website
 
 - Update Komodo icon [@bannert1337](https://github.com/bannert1337) ([#2263](https://github.com/community-scripts/ProxmoxVE/pull/2263))
+
+### 🧰 Maintenance
+
+- Add Workflow to test Scripts [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2269](https://github.com/community-scripts/ProxmoxVE/pull/2269))
 
 ## 2025-02-10
 
