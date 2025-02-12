@@ -115,8 +115,6 @@ cat <<'EOF' > /opt/run_homarr.sh
 EOF
 chmod +x /opt/run_homarr.sh
 
-systemctl disable nginx
-systemctl disable redis
 cat <<EOF >/etc/systemd/system/homarr.service
 [Unit]
 Description=Homarr Service
@@ -132,6 +130,8 @@ ExecStart=/opt/run_homarr.sh
 WantedBy=multi-user.target
 EOF
 systemctl enable -q --now homarr
+systemctl disable nginx
+systemctl disable redis
 msg_ok "Created Service"
 
 motd_ssh
