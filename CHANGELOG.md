@@ -31,6 +31,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- Fix changedetection: Correct Browser install [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2277](https://github.com/community-scripts/ProxmoxVE/pull/2277))
 - Paperless-AI: add dependency "make" [@MickLesk](https://github.com/MickLesk) ([#2289](https://github.com/community-scripts/ProxmoxVE/pull/2289))
 - Fix: Typo OPNsense VM [@chpego](https://github.com/chpego) ([#2291](https://github.com/community-scripts/ProxmoxVE/pull/2291))
 - Fix: SQL Server 2022 - remove unnecessary sudo [@tremor021](https://github.com/tremor021) ([#2282](https://github.com/community-scripts/ProxmoxVE/pull/2282))
