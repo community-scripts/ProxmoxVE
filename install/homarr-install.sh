@@ -44,6 +44,7 @@ msg_ok "Installed Node.js/pnpm"
 msg_info "Installing Homarr (Patience)"
 cd /opt
 RELEASE=$(curl -s https://api.github.com/repos/homarr-labs/homarr/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+RELEASE='1.3.0'
 wget -q "https://github.com/homarr-labs/homarr/archive/refs/tags/v${RELEASE}.zip"
 unzip -q v${RELEASE}.zip
 mv homarr-${RELEASE} /opt/homarr
@@ -89,6 +90,7 @@ msg_info "Creating Services"
 cat <<'EOF' >/opt/run_homarr.sh
 #!/bin/bash
 export DB_DIALECT='sqlite'
+export AUTH_SECRET=$(openssl rand -base64 32)
 node /opt/homarr_db/migrations/$DB_DIALECT/migrate.cjs /opt/homarr_db/migrations/$DB_DIALECT
 export HOSTNAME=$(ip route get 1.1.1.1 | grep -oP 'src \K[^ ]+')
 envsubst '${HOSTNAME}' < /etc/nginx/templates/nginx.conf > /etc/nginx/nginx.conf
