@@ -916,6 +916,7 @@ install_script() {
       header_info
       echo -e "${ADVANCED}${BOLD}${RD}Using Advanced Settings on node $PVEHOST_NAME${CL}"
       METHOD="advanced"
+      base_settings
       advanced_settings
       break
       ;;
