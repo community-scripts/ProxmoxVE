@@ -34,6 +34,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🌐 Website
 
+- Fix: Zoraxy - now shows application as updateable on the website [@tremor021](https://github.com/tremor021) ([#2352](https://github.com/community-scripts/ProxmoxVE/pull/2352))
 - Fix script category name text alignment in ScriptAccordion [@BramSuurdje](https://github.com/BramSuurdje) ([#2342](https://github.com/community-scripts/ProxmoxVE/pull/2342))
 
 ### 🧰 Maintenance
