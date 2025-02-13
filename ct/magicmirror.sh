@@ -37,7 +37,7 @@ function update_script() {
   msg_info "Updating ${APP} LXC"
   cd /opt/magicmirror
   git pull &>/dev/null
-  npm install --only=prod --omit=dev &>/dev/null
+  npm install --omit=dev &>/dev/null
   msg_ok "Updated Successfully"
   exit
 }
