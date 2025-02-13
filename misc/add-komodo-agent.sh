@@ -24,6 +24,11 @@ msg_error() {
   echo -e "✖ $1"
 }
 
+# Activer le mode debug si demandé
+if [[ "$1" == "--debug" ]]; then
+  set -x
+fi
+
 while true; do
   read -p "This will install ${APP} on ${hostname}. Proceed? (y/n): " yn
   case $yn in
@@ -55,11 +60,17 @@ msg_ok "LXC container list retrieved"
 # Installation de l'agent sur chaque conteneur
 for vmid in $vmid_list; do
   msg_info "Installing Komodo Agent on LXC $vmid"
-  pct exec "$vmid" -- bash -c "curl -sSL https://raw.githubusercontent.com/moghtech/komodo/main/scripts/setup-periphery.py | python3"
-  if [ $? -eq 0 ]; then
+  
+  # Exécuter la commande et capturer l'erreur si elle échoue
+  OUTPUT=$(pct exec "$vmid" -- bash -c "curl -sSL https://raw.githubusercontent.com/moghtech/komodo/main/scripts/setup-periphery.py | python3" 2>&1)
+  EXIT_CODE=$?
+  
+  if [ $EXIT_CODE -eq 0 ]; then
     msg_ok "Komodo Agent installed on LXC $vmid"
   else
     msg_error "Failed to install Komodo Agent on LXC $vmid"
+    echo "Error log for LXC $vmid:"
+    echo "$OUTPUT"
   fi
 done
 
