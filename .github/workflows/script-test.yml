@@ -1,4 +1,4 @@
-name: Run Scripts on PVE Node
+name: Run Scripts on PVE Node for testing
 on:
   pull_request:
     branches:
@@ -59,8 +59,8 @@ jobs:
           set +e  
           #run for each files in /ct
           for FILE in ${{ env.ALL_FILES }}; do            
-            echo "Running: $FILE"
             STRIPPED_NAME=$(basename "$FILE" | sed 's/-install//' | sed 's/\.sh$//')
+            echo "Running Test for: $STRIPPED_NAME"
             if [[ $FILE =~ ^install/.*-install\.sh$ ]]; then
               CT_SCRIPT="ct/$STRIPPED_NAME.sh"
               if [[ ! -f $CT_SCRIPT ]]; then
@@ -76,6 +76,7 @@ jobs:
                 echo "No install script found for $STRIPPED_NAME"
                 exit 1
               fi
+                
                 echo "Found install script for $STRIPPED_NAME"
                 chmod +x "$INSTALL_SCRIPT"
                 RUNNING_FILE=$FILE
@@ -84,13 +85,13 @@ jobs:
             git checkout origin/main .github/workflows/scripts/app-test/pr-install.func
             git checkout origin/main .github/workflows/scripts/app-test/pr-alpine-install.func
             git checkout origin/main .github/workflows/scripts/app-test/pr-create-lxc.sh
-            sed -i 's|source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)|source .github/workflows/scripts/app-test/pr-build.func|g' "$RUNNING_FILE"
             chmod +x $RUNNING_FILE         
             chmod +x .github/workflows/scripts/app-test/pr-create-lxc.sh
             chmod +x .github/workflows/scripts/app-test/pr-install.func
             chmod +x .github/workflows/scripts/app-test/pr-alpine-install.func
             chmod +x .github/workflows/scripts/app-test/pr-build.func
-
+            sed -i 's|source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)|source .github/workflows/scripts/app-test/pr-build.func|g' "$RUNNING_FILE"
+            echo "Executing $RUNNING_FILE"
             ERROR_MSG=$(./$RUNNING_FILE 2>&1 > /dev/null)
             echo "Finished running $FILE"
             if [ -n "$ERROR_MSG" ]; then
@@ -130,10 +131,14 @@ jobs:
               gh pr comment ${{ github.event.pull_request.number }} \
                 --body ":warning: The script _**$FILE**_ failed with the following message: <br> <div><strong>${CLEANED_ERROR_MSG}</strong></div>"
 
+              
               ERROR="true"
             fi
           done
           echo "ERROR=$ERROR" >> $GITHUB_ENV
+
       - name: Fail if error
-        if: ${{ env.ERROR }} == 'true'
+        if: ${{ env.ERROR == 'true' }}
         run: exit 1 
+      
+  

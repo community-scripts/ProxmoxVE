@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-# Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2025 tteck
 # Author: michelroegl-brunner
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+
 
 color() {
   return
@@ -10,6 +11,7 @@ catch_errors() {
   set -Eeuo pipefail
   trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
 }
+
 
 error_handler() {
   local line_number="$1"
@@ -39,9 +41,11 @@ msg_error() {
   local msg="$1"
   echo -e "${msg}\n"
 }
-  RETRY_NUM=10
-  RETRY_EVERY=3
+
+RETRY_NUM=10
+RETRY_EVERY=3
 setting_up_container() {
+
   sed -i "/$LANG/ s/\(^# \)//" /etc/locale.gen
   locale_line=$(grep -v '^#' /etc/locale.gen | grep -E '^[a-zA-Z]' | awk '{print $1}' | head -n 1)
   echo "LANG=${locale_line}" >/etc/default/locale
@@ -54,7 +58,6 @@ setting_up_container() {
     if [ "$(hostname -I)" != "" ]; then
       break
     fi
-    echo 1>&2 -en "No Network! "
     sleep $RETRY_EVERY
   done
   if [ "$(hostname -I)" = "" ]; then
@@ -64,8 +67,6 @@ setting_up_container() {
   fi
   rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
   systemctl disable -q --now systemd-networkd-wait-online.service
-  msg_ok "Set up Container OS"
-  msg_ok "Network Connected: $(hostname -I)"
 }
 
 network_check() {
@@ -75,11 +76,10 @@ network_check() {
 }
 
 update_os() {
-  msg_info "Updating Container OS"
-  apt-get update
-  apt-get -o Dpkg::Options::="--force-confold" -y dist-upgrade
-  rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
-  msg_ok "Updated Container OS"
+  export DEBIAN_FRONTEND=noninteractive
+  apt-get update >/dev/null 2>&1
+  apt-get -o Dpkg::Options::="--force-confold" -y dist-upgrade  >/dev/null 2>&1
+  rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED  
 }
 
 motd_ssh() {
