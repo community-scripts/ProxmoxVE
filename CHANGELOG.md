@@ -38,6 +38,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🧰 Maintenance
 
+- Update build.func [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2358](https://github.com/community-scripts/ProxmoxVE/pull/2358))
 - [gh] Remove unwanted output from script test workflow [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2337](https://github.com/community-scripts/ProxmoxVE/pull/2337))
 - [gh] Workflow to change date on new json files [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2319](https://github.com/community-scripts/ProxmoxVE/pull/2319))
 
