@@ -39,7 +39,7 @@ msg_ok "Set up MagicMirror Repository"
 
 msg_info "Installing MagicMirror"
 cd /opt/magicmirror
-$STD npm install --only=prod --omit=dev
+$STD npm install --omit=dev
 
 cat <<EOF >/opt/magicmirror/config/config.js
 let config = {
