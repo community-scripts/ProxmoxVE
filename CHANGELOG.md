@@ -23,6 +23,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### ✨ New Scripts
 
+- New Script: Nx Witness [@MickLesk](https://github.com/MickLesk) ([#2350](https://github.com/community-scripts/ProxmoxVE/pull/2350))
 - New Script: RustDesk Server [@tremor021](https://github.com/tremor021) ([#2326](https://github.com/community-scripts/ProxmoxVE/pull/2326))
 - New Script: MinIO [@MickLesk](https://github.com/MickLesk) ([#2333](https://github.com/community-scripts/ProxmoxVE/pull/2333))
 
