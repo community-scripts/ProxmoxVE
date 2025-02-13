@@ -47,15 +47,17 @@ function update_script() {
     3>&1 1>&2 2>&3)
 
   if [ "$UPD" == "1" ]; then
-    msg_info "Stopping Vaultwarden"
-    systemctl stop vaultwarden.service
-    msg_ok "Stopped Vaultwarden"
 
     msg_info "Updating VaultWarden to $VAULT (Patience)"
     cd ~ && rm -rf vaultwarden
     git clone https://github.com/dani-garcia/vaultwarden &>/dev/null
     cd vaultwarden
     cargo build --features "sqlite,mysql,postgresql" --release &>/dev/null
+
+    msg_info "Stopping Vaultwarden"
+    systemctl stop vaultwarden.service
+    msg_ok "Stopped Vaultwarden"
+
     DIR=/usr/bin/vaultwarden
     if [ -d "$DIR" ]; then
       cp target/release/vaultwarden /usr/bin/
