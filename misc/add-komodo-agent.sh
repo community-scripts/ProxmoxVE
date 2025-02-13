@@ -3,7 +3,7 @@
 function header_info {
 clear
 cat <<"EOF"
- 
+
 EOF
 }
 
@@ -33,10 +33,11 @@ while true; do
   exit
   ;;
   *) msg_error "Please answer yes or no." ;;
-  esac done
+  esac
+done
 
 # Vérifier la version de Proxmox
-if ! pveversion | grep -Eq "pve-manager/8\.[0-3](\.[0-9]+)*"; then
+if ! pveversion | grep -Eq "pve-manager/8\.[0-9]+"; then
   msg_error "This version of Proxmox Virtual Environment is not supported"
   msg_error "⚠ Requires Proxmox Virtual Environment Version 8.0 or later."
   exit
