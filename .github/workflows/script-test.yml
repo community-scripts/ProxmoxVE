@@ -1,4 +1,4 @@
-name: Run Scripts on PVE Node for testing
+name: Run Scripts on PVE Node
 on:
   pull_request:
     branches:
@@ -130,8 +130,6 @@ jobs:
               echo ${CLEANED_ERROR_MSG}
               gh pr comment ${{ github.event.pull_request.number }} \
                 --body ":warning: The script _**$FILE**_ failed with the following message: <br> <div><strong>${CLEANED_ERROR_MSG}</strong></div>"
-
-              
               ERROR="true"
             fi
           done

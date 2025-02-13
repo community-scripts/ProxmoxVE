@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+# Copyright (c) 2021-2025 community-scripts ORG
+# Author: Michel Roegl-Brunner (michelroegl-brunner)
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+
 color() {
   return
 }
@@ -7,7 +11,6 @@ catch_errors() {
   trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
 }
 
-# This function handles errors
 error_handler() {
     local exit_code="$?"
   local line_number="$1"
@@ -48,26 +51,6 @@ if [ -z "$VALIDTMP" ]; then
   exit 1
 fi
 
-#function select_storage() {
-#  local CLASS=$1
-#  local CONTENT
-#  
-#  case $CLASS in
-#    container) CONTENT='rootdir' ;;
-#    template) CONTENT='vztmpl' ;;
-#    *) msg_error "Invalid storage class." && exit 201 ;;
-#  esac
-#
-#  # Get the first available storage tag
-#  local STORAGE=$(pvesm status -content $CONTENT | awk 'NR==2 {print $1}')
-#
-#  echo "STORAGE = $STORAGE"
-#
-#  if [[ -z "$STORAGE" ]]; then
-#    msg_error "No available storage found for $CLASS."
-#    exit 202
-#  fi
-#}
 function select_storage() {
   local CLASS=$1
   local CONTENT
@@ -112,10 +95,8 @@ function select_storage() {
 [[ "${CTID:-}" ]] || { msg_error "You need to set 'CTID' variable."; exit 203; }
 [[ "${PCT_OSTYPE:-}" ]] || { msg_error "You need to set 'PCT_OSTYPE' variable."; exit 204; }
 
-# Test if ID is valid
 [ "$CTID" -ge "100" ] || { msg_error "ID cannot be less than 100."; exit 205; }
 
-# Test if ID is in use
 if pct status $CTID &>/dev/null; then
   echo -e "ID '$CTID' is already in use."
   unset CTID
