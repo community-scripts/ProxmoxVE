@@ -17,6 +17,15 @@ All LXC instances created using this repository come pre-installed with Midnight
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
 
+## 2025-02-13
+
+### Changes
+
+### 🚀 Updated Scripts
+
+- Bugfix: Authentik Embedded Outpost Upgrade [@vidonnus](https://github.com/vidonnus) ([#2327](https://github.com/community-scripts/ProxmoxVE/pull/2327))
+- Fix HomeAsisstant LXC: Use the latest versions of runlike with --use-volume-id [@genehand](https://github.com/genehand) ([#2325](https://github.com/community-scripts/ProxmoxVE/pull/2325))
+
 ## 2025-02-12
 
 ### Changes
