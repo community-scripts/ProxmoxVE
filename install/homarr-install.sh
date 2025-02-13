@@ -44,7 +44,6 @@ msg_ok "Installed Node.js/pnpm"
 msg_info "Installing Homarr (Patience)"
 cd /opt
 RELEASE=$(curl -s https://api.github.com/repos/homarr-labs/homarr/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-RELEASE='1.3.0'
 wget -q "https://github.com/homarr-labs/homarr/archive/refs/tags/v${RELEASE}.zip"
 unzip -q v${RELEASE}.zip
 mv homarr-${RELEASE} /opt/homarr
