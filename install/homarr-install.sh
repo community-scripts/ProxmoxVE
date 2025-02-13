@@ -87,6 +87,7 @@ msg_ok "Installed Homarr"
 
 msg_info "Creating Services"
 cat <<'EOF' >/opt/run_homarr.sh
+#!/bin/bash
 export DB_DIALECT='sqlite'
 node /opt/homarr_db/migrations/$DB_DIALECT/migrate.cjs /opt/homarr_db/migrations/$DB_DIALECT
 export AUTH_SECRET=$(openssl rand -base64 32)
