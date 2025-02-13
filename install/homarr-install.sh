@@ -71,6 +71,7 @@ cp -r /opt/homarr/apps/nextjs/.next/standalone/* /opt/homarr
 mkdir -p /appdata/redis
 cp /opt/homarr/packages/redis/redis.conf /opt/homarr/redis.conf
 mkdir -p /etc/nginx/templates
+rm /etc/nginx/nginx.conf
 cp /opt/homarr/nginx.conf /etc/nginx/templates/nginx.conf
 
 # Enable homar-cli
@@ -115,8 +116,6 @@ ExecStart=/opt/run_homarr.sh
 WantedBy=multi-user.target
 EOF
 systemctl enable -q --now homarr
-systemctl disable nginx
-systemctl disable redis
 msg_ok "Created Service"
 
 motd_ssh
