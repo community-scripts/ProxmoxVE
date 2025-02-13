@@ -40,11 +40,6 @@ msg_error() {
   echo -e "✖ $1"
 }
 
-# Enable debug mode if requested
-if [[ "$1" == "--debug" ]]; then
-  set -x
-fi
-
 while true; do
   read -p "This will install ${APP} on ${hostname}. Proceed? (y/n): " yn
   case $yn in
