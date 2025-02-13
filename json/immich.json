@@ -1,0 +1,43 @@
+{
+  "name": "Immich Photos",
+  "slug": "Immich",
+  "categories": [
+    13
+  ],
+  "date_created": "2025-02-11",
+  "type": "ct",
+  "updateable": true,
+  "privileged": true,
+  "interface_port": 2283,
+  "documentation": "https://immich.app/docs/overview/introduction",
+  "website": "https://immich.app/",
+  "logo": "https://github.com/home-assistant/brands/blob/master/core_integrations/jellyfin/icon.png?raw=true",
+  "description": "Immich is a free and open-source photo server designed to backup, store and share images.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/immich.sh",
+      "resources": {
+        "cpu": 4,
+        "ram": 4096,
+        "hdd": 25,
+        "os": "ubuntu",
+        "version": "22.04"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "With Privileged/Unprivileged Hardware Acceleration Support",
+      "type": "info"
+    },
+    {
+      "text": "AI Machine Learning not supported on AMD GPUs or CPUs",
+      "type": "warning"
+    }
+  ]
+}
