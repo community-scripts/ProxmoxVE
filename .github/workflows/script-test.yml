@@ -1,4 +1,4 @@
-name: Run Scripts on PVE Node
+name: Run Scripts on PVE Node for testing
 on:
   pull_request:
     branches:
@@ -9,13 +9,15 @@ on:
 
 jobs:
   run-install-script:
-    runs-on: pvenode
+    runs-on: pvehost
     steps:          
-      - name: Checkout PR branch
+      - name: Checkout PR branch (supports forks)
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.ref }}
-          fetch-depth: 0  
+          repository: ${{ github.event.pull_request.head.repo.full_name }}  # Ensure it checks out the forked repo
+          fetch-depth: 0          
+          
       - name: Add Git safe directory
         run: |
           git config --global --add safe.directory /__w/ProxmoxVE/ProxmoxVE
@@ -26,13 +28,15 @@ jobs:
         run: |
           echo "GH_TOKEN=${GH_TOKEN}" >> $GITHUB_ENV
 
-      - name: Get changed files in PR
-        id: changed-files
-        run: | 
-          CHANGED_FILES=$(gh pr diff --name-only ${{ github.event.pull_request.number }})  
-          CHANGED_FILES=$(echo "$CHANGED_FILES" | tr '\n' ' ')  
-          echo "Changed files: $CHANGED_FILES"  
+      - name: Get Changed Files
+        run: |
+          CHANGED_FILES=$(gh pr diff ${{ github.event.pull_request.number }} --repo ${{ github.repository }} --name-only)
+          CHANGED_FILES=$(echo "$CHANGED_FILES" | tr '\n' ' ')
+          echo "Changed files: $CHANGED_FILES"
           echo "SCRIPT=$CHANGED_FILES" >> $GITHUB_ENV
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
 
       - name: Get scripts
         id: check-install-script
@@ -130,6 +134,8 @@ jobs:
               echo ${CLEANED_ERROR_MSG}
               gh pr comment ${{ github.event.pull_request.number }} \
                 --body ":warning: The script _**$FILE**_ failed with the following message: <br> <div><strong>${CLEANED_ERROR_MSG}</strong></div>"
+
+              
               ERROR="true"
             fi
           done
@@ -137,6 +143,4 @@ jobs:
 
       - name: Fail if error
         if: ${{ env.ERROR == 'true' }}
-        run: exit 1 
-      
-  
+        run: exit 1
