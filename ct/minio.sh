@@ -50,6 +50,10 @@ function update_script() {
     systemctl start minio
     msg_ok "Started ${APP}"
 
+    msg_info "Cleaning up"
+    rm -f /usr/local/bin/minio_bak
+    msg_ok "Cleaned"
+
     msg_ok "Updated Successfully"
   else
     msg_ok "No update required. ${APP} is already at ${RELEASE}"
