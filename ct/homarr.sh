@@ -56,11 +56,11 @@ fi
     unzip -q v${RELEASE}.zip
     rm -rf v${RELEASE}.zip
     rm -rf /opt/homarr
-    mv homarr-${RELEASE} /opt/homarr
+    mv homarr-v${RELEASE} /opt/homarr
     mv /opt/homarr-data-backup/.env /opt/homarr/.env
     cd /opt/homarr
-    pnpm install
-    pnpm build
+    pnpm install &>/dev/null
+    pnpm build &>/dev/null
     cp /opt/homarr/apps/nextjs/next.config.ts .
     cp /opt/homarr/apps/nextjs/package.json .
     cp -r /opt/homarr/packages/db/migrations /opt/homarr_db/migrations
