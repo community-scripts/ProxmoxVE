@@ -18,9 +18,9 @@
         "type": "default",
         "script": "ct/kometa.sh",
         "resources": {
-          "cpu": 1,
-          "ram": 1024,
-          "hdd": 4,
+          "cpu": 2,
+          "ram": 4096,
+          "hdd": 8,
           "os": "debian",
           "version": "12"
         }

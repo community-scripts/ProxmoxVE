@@ -8,9 +8,9 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 # App Default Values
 APP="Kometa"
 TAGS="media;streaming"
-var_cpu="1"
-var_ram="1024"
-var_disk="4"
+var_cpu="2"
+var_ram="4096"
+var_disk="8"
 var_os="debian"
 var_version="12"
 var_unprivileged="1"
