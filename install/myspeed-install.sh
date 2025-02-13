@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
 
 # Copyright (c) 2021-2025 tteck
-# Author: tteck
-# Co-Author: MickLesk (Canbiz)
-# License: MIT
-# https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Author: MickLesk (Canbiz)
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/gnmyt/myspeed
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
@@ -18,6 +16,9 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
   curl \
+  build-essential \
+  g++ \
+  make \
   sudo \
   make \
   gpg \

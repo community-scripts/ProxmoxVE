@@ -72,7 +72,7 @@ export default function ScriptAccordion({
             )}
           >
             <div className="mr-2 flex w-full items-center justify-between">
-              <span className="pl-2">{category.name} </span>
+              <span className="pl-2 text-left">{category.name} </span>
               <span className="rounded-full bg-gray-200 px-2 py-1 text-xs text-muted-foreground hover:no-underline dark:bg-blue-800/20">
                 {category.scripts.length}
               </span>

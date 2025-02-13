@@ -7,7 +7,7 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 
 # App Default Values
 APP="PocketID"
-TAGS="identity-provider"
+var_tags="identity-provider"
 var_cpu="2"
 var_ram="2048"
 var_disk="4"
@@ -15,11 +15,7 @@ var_os="debian"
 var_version="12"
 var_unprivileged="1"
 
-# App Output & Base Settings
 header_info "$APP"
-base_settings
-
-# Core
 variables
 color
 catch_errors

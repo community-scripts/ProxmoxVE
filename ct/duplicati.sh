@@ -6,7 +6,7 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 # Source: https://github.com/duplicati/duplicati/
 
 APP="Duplicati"
-TAGS="backup"
+var_tags="backup"
 var_cpu="1"
 var_ram="1024"
 var_disk="10"

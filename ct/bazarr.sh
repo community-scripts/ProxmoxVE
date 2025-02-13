@@ -15,11 +15,7 @@ var_os="debian"
 var_version="12"
 var_unprivileged="1"
 
-# App Output & Base Settings
-header_info "$APP"
-base_settings
-
-# Core 
+header_info "$APP" 
 variables
 color
 catch_errors

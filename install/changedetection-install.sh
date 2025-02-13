@@ -76,7 +76,10 @@ mkdir /opt/browserless
 $STD python3 -m pip install playwright
 $STD git clone https://github.com/browserless/chrome /opt/browserless
 $STD npm install --prefix /opt/browserless
-$STD /opt/browserless/node_modules/playwright-core/cli.js install --with-deps chrome chromium firefox webkit
+$STD /opt/browserless/node_modules/playwright-core/cli.js install --with-deps &>/dev/null
+$STD /opt/browserless/node_modules/playwright-core/cli.js install --force chrome &>/dev/null
+$STD /opt/browserless/node_modules/playwright-core/cli.js install chromium firefox webkit &>/dev/null
+$STD /opt/browserless/node_modules/playwright-core/cli.js install --force msedge
 $STD npm run build --prefix /opt/browserless
 $STD npm run build:function --prefix /opt/browserless
 $STD npm prune production --prefix /opt/browserless

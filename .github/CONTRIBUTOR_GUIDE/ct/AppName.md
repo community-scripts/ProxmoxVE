@@ -119,18 +119,13 @@ var_unprivileged="1"
 ## 2.2 **📋 App output & base settings**
 
 ```bash
-# App Output & Base Settings
 header_info "$APP"
-base_settings
 ```
-
 - `header_info`: Generates ASCII header for APP
-- `base_settings`: Allows overwriting variable values
 
 ## 2.3 **🛠 Core functions**
 
 ```bash
-# Core
 variables
 color
 catch_errors

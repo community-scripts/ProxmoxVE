@@ -26,19 +26,14 @@ $STD apt-get install -y \
   software-properties-common
 msg_ok "Installed Dependencies"
 
-msg_info "Setting up TermurinJDK"
+msg_info "Setting up TemurinJDK"
 mkdir -p /etc/apt/keyrings
 wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public | tee /etc/apt/keyrings/adoptium.asc
 echo "deb [signed-by=/etc/apt/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list
 $STD apt-get update
-$STD apt-get install -y \
-  temurin-8-jre \
-  temurin-11-jre \
-  temurin-17-jre \
-  temurin-21-jre \
-  temurin-23-jre
+$STD apt-get install -y temurin-{8,11,17,21}-jre
 sudo update-alternatives --set java /usr/lib/jvm/temurin-21-jre-amd64/bin/java
-msg_ok "Installed TermurinJDK"
+msg_ok "Installed TemurinJDK"
 
 msg_info "Setup Python3"
 $STD apt-get install -y \
@@ -48,7 +43,6 @@ $STD apt-get install -y \
   python3-venv
 rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
 msg_ok "Setup Python3"
-
 
 msg_info "Installing Craty-Controller (Patience)"
 useradd crafty -m -s /bin/bash
@@ -81,7 +75,7 @@ After=network.target
 Type=simple
 User=crafty
 WorkingDirectory=/opt/crafty-controller/crafty/crafty-4
-Environment=PATH=/opt/crafty-controller/crafty/.venv/bin:$PATH
+Environment=PATH=/usr/lib/jvm/temurin-21-jre-amd64/bin:/opt/crafty-controller/crafty/.venv/bin:$PATH
 ExecStart=/opt/crafty-controller/crafty/.venv/bin/python3 main.py -d
 Restart=on-failure
 

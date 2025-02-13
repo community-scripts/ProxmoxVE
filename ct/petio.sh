@@ -14,11 +14,7 @@ var_disk="4"
 var_os="ubuntu"
 var_version="20.04"
 
-# App Output & Base Settings
 header_info "$APP"
-base_settings
-
-# Core
 variables
 color
 catch_errors

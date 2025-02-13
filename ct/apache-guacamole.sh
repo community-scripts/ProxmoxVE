@@ -7,7 +7,7 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/r
 
 #App Default Values
 APP="Apache-Guacamole"
-TAGS="webserver;remote"
+var_tags="webserver;remote"
 var_disk="4"
 var_cpu="1"
 var_ram="2048"
@@ -15,11 +15,7 @@ var_os="debian"
 var_version="12"
 var_unprivileged="1"
 
-# App Output & Base Settings
 header_info "$APP"
-base_settings
-
-# Core
 variables
 color
 catch_errors

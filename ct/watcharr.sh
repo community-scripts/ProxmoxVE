@@ -6,7 +6,7 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 # Source: https://github.com/sbondCo/Watcharr
 
 APP="Watcharr"
-TAGS="media"
+var_tags="media"
 var_cpu="1"
 var_ram="1024"
 var_disk="4"

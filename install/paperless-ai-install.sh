@@ -17,7 +17,11 @@ $STD apt-get install -y \
 	curl \
 	sudo \
 	mc \
-	gpg
+	gpg \
+  make \
+  gcc \
+  g++ \
+  build-essential
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up Node.js Repository"

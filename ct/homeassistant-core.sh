@@ -15,11 +15,7 @@ var_os="ubuntu"
 var_version="24.10"
 var_unprivileged="1"
 
-# App Output & Base Settings
 header_info "$APP"
-base_settings
-
-# Core
 variables
 color
 catch_errors
