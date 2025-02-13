@@ -255,5 +255,6 @@ EOF'
 }
 
 description(){
+ IP=$(pct exec "$CTID" ip a s dev eth0 | awk '/inet / {print $2}' | cut -d/ -f1)
  return
 }
