@@ -250,7 +250,7 @@ http://dl-cdn.alpinelinux.org/alpine/latest-stable/community
 EOF'
     pct exec "$CTID" -- ash -c "apk add bash >/dev/null"
   fi
-  lxc-attach -n "$CTID" -- bash -c "$(< /root/actions-runner/_work/ProxmoxVE/ProxmoxVE/install/$var_install.sh)"
+  lxc-attach -n "$CTID" -- bash -c "$(cat /root/actions-runner/_work/ProxmoxVE/ProxmoxVE/install/$var_install.sh)" $var_install.sh
 
 }
 
