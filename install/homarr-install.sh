@@ -87,17 +87,17 @@ msg_ok "Installed Homarr"
 
 msg_info "Creating Services"
 cat <<'EOF' >/opt/run_homarr.sh
-  export DB_DIALECT='sqlite'
-  node /opt/homarr_db/migrations/$DB_DIALECT/migrate.cjs /opt/homarr_db/migrations/$DB_DIALECT
-  export AUTH_SECRET=$(openssl rand -base64 32)
-  export HOSTNAME=$(ip route get 1.1.1.1 | grep -oP 'src \K[^ ]+')
-  envsubst '${HOSTNAME}' < /etc/nginx/templates/nginx.conf > /etc/nginx/nginx.conf
-  nginx -g 'daemon off;' &
-  redis-server /opt/homarr/packages/redis/redis.conf &
-  node apps/tasks/tasks.cjs &
-  node apps/websocket/wssServer.cjs &
-  node apps/nextjs/server.js & PID=$!
-  wait $PID
+export DB_DIALECT='sqlite'
+node /opt/homarr_db/migrations/$DB_DIALECT/migrate.cjs /opt/homarr_db/migrations/$DB_DIALECT
+export AUTH_SECRET=$(openssl rand -base64 32)
+export HOSTNAME=$(ip route get 1.1.1.1 | grep -oP 'src \K[^ ]+')
+envsubst '${HOSTNAME}' < /etc/nginx/templates/nginx.conf > /etc/nginx/nginx.conf
+nginx -g 'daemon off;' &
+redis-server /opt/homarr/packages/redis/redis.conf &
+node apps/tasks/tasks.cjs &
+node apps/websocket/wssServer.cjs &
+node apps/nextjs/server.js & PID=$!
+wait $PID
 EOF
 chmod +x /opt/run_homarr.sh
 
