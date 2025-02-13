@@ -31,6 +31,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 - Fix: Authentik Embedded Outpost Upgrade [@vidonnus](https://github.com/vidonnus) ([#2327](https://github.com/community-scripts/ProxmoxVE/pull/2327))
 - Fix HomeAsisstant LXC: Use the latest versions of runlike with --use-volume-id [@genehand](https://github.com/genehand) ([#2325](https://github.com/community-scripts/ProxmoxVE/pull/2325))
 
+### 🌐 Website
+
+- Fix script category name text alignment in ScriptAccordion [@BramSuurdje](https://github.com/BramSuurdje) ([#2342](https://github.com/community-scripts/ProxmoxVE/pull/2342))
+
 ### 🧰 Maintenance
 
 - [gh] Workflow to change date on new json files [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2319](https://github.com/community-scripts/ProxmoxVE/pull/2319))
