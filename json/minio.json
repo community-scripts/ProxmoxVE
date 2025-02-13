@@ -16,7 +16,7 @@
     "install_methods": [
         {
             "type": "default",
-            "script": "ct/adventurelog.sh",
+            "script": "ct/minio.sh",
             "resources": {
                 "cpu": 1,
                 "ram": 1024,
