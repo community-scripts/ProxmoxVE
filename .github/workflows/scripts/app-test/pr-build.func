@@ -131,6 +131,7 @@ msg_error() {
   echo -e "${msg}\n"
 }
 start(){
+  base_settings
   return
 }
 
@@ -232,7 +233,6 @@ EOF
       fi
     fi
   fi
-
   # This starts the container and executes <app>-install.sh
   msg_info "Starting LXC Container"
   pct start "$CTID"
