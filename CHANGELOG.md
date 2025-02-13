@@ -30,6 +30,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- Fix: Element Synapse - Fixed server listening on both localhost and 0.0.0.0 [@tremor021](https://github.com/tremor021) ([#2376](https://github.com/community-scripts/ProxmoxVE/pull/2376))
 - [core] cleanup (remove # App Default Values) [@MickLesk](https://github.com/MickLesk) ([#2356](https://github.com/community-scripts/ProxmoxVE/pull/2356))
 - Fix: Kometa - Increase RAM and HDD resources [@tremor021](https://github.com/tremor021) ([#2367](https://github.com/community-scripts/ProxmoxVE/pull/2367))
 - [core] cleanup (remove base_settings & unneeded comments) [@MickLesk](https://github.com/MickLesk) ([#2351](https://github.com/community-scripts/ProxmoxVE/pull/2351))
