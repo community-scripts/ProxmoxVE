@@ -56,7 +56,7 @@ fi
     unzip -q v${RELEASE}.zip
     rm -rf v${RELEASE}.zip
     rm -rf /opt/homarr
-    mv homarr-v${RELEASE} /opt/homarr
+    mv homarr-${RELEASE} /opt/homarr
     mv /opt/homarr-data-backup/.env /opt/homarr/.env
     cd /opt/homarr
     pnpm install &>/dev/null
