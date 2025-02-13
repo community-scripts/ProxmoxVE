@@ -42,7 +42,7 @@ fi
   RELEASE=$(curl -s https://api.github.com/repos/homarr-labs/homarr/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
   if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
 
-    msg_info "Stopping Services"
+    msg_info "Stopping Services (Patience)"
     systemctl stop homarr
     msg_ok "Services Stopped"
 
