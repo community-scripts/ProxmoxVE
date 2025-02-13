@@ -52,6 +52,13 @@ function update_script() {
     npm run build &>/dev/null
     msg_ok "Built ${APP} website"
 
+    msg_info "Building ${APP} server"
+    cd /opt/authentik
+    go mod download
+    go build -o /go/authentik ./cmd/server
+    go build -o /opt/authentik/authentik-server /opt/authentik/cmd/server/
+    msg_ok "Built ${APP} server"
+
     msg_info "Installing Python Dependencies"
     cd /opt/authentik
     poetry install --only=main --no-ansi --no-interaction --no-root &>/dev/null
