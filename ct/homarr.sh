@@ -67,6 +67,7 @@ fi
     cp -r /opt/homarr/apps/nextjs/.next/standalone/* /opt/homarr
     mkdir -p /appdata/redis
     cp /opt/homarr/packages/redis/redis.conf /opt/homarr/redis.conf
+    rm /etc/nginx/nginx.conf
     mkdir -p /etc/nginx/templates
     cp /opt/homarr/nginx.conf /etc/nginx/templates/nginx.conf
 
