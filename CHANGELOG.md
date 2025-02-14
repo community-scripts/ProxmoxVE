@@ -23,7 +23,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🌐 Website
 
-- Fix: RustDesk Server - Added configuration guide to json [@tremor021](https://github.com/tremor021) ([#2389](https://github.com/community-scripts/ProxmoxVE/pull/2389))
+- RustDesk Server - Added configuration guide to json [@tremor021](https://github.com/tremor021) ([#2389](https://github.com/community-scripts/ProxmoxVE/pull/2389))
 
 ### 📡 API
 
