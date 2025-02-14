@@ -27,16 +27,61 @@ CRON_JOB="/etc/cron.d/komodo_agent"
 LOG_FILE="/var/log/komodo_agent_install.log"
 SCRIPT_URL="https://raw.githubusercontent.com/moghtech/komodo/main/scripts/setup-periphery.py"
 
+# This function enables error handling in the script by setting options and defining a trap for the ERR signal.
+catch_errors() {
+  set -Eeuo pipefail
+  trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
+}
+
+# This function is called when an error occurs. It receives the exit code, line number, and command that caused the error, and displays an error message.
+error_handler() {
+  if [ -n "$SPINNER_PID" ] && ps -p $SPINNER_PID >/dev/null; then kill $SPINNER_PID >/dev/null; fi
+  printf "\e[?25h"
+  local exit_code="$?"
+  local line_number="$1"
+  local command="$2"
+  local error_message="${RD}[ERROR]${CL} in line ${RD}$line_number${CL}: exit code ${RD}$exit_code${CL}: while executing command ${YW}$command${CL}"
+  echo -e "\n$error_message\n"
+}
+
+# This function displays a spinner.
+spinner() {
+  local frames=('⠋' '⠙' '⠹' '⠸' '⠼' '⠴' '⠦' '⠧' '⠇' '⠏')
+  local spin_i=0
+  local interval=0.1
+  printf "\e[?25l"
+
+  local color="${YWB}"
+
+  while true; do
+  printf "\r ${color}%s${CL}" "${frames[spin_i]}"
+  spin_i=$(((spin_i + 1) % ${#frames[@]}))
+  sleep "$interval"
+  done
+}
+
+# This function displays an informational message with a yellow color.
 msg_info() {
-  echo -ne "➤ $1..."
+  local msg="$1"
+  echo -ne "${TAB}${YW}${HOLD}${msg}${HOLD}"
+  spinner &
+  SPINNER_PID=$!
 }
 
+# This function displays a success message with a green color.
 msg_ok() {
-  echo -e "✔ $1"
+  if [ -n "$SPINNER_PID" ] && ps -p $SPINNER_PID >/dev/null; then kill $SPINNER_PID >/dev/null; fi
+  printf "\e[?25h"
+  local msg="$1"
+  echo -e "${BFR}${CM}${GN}${msg}${CL}"
 }
 
+# This function displays a error message with a red color.
 msg_error() {
-  echo -e "✖ $1"
+  if [ -n "$SPINNER_PID" ] && ps -p $SPINNER_PID >/dev/null; then kill $SPINNER_PID >/dev/null; fi
+  printf "\e[?25h"
+  local msg="$1"
+  echo -e "${BFR}${CROSS}${RD}${msg}${CL}"
 }
 
 # Ask for user confirmation before proceeding
