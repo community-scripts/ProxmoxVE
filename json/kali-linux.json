@@ -1,0 +1,34 @@
+{
+  "name": "Kali Linux",
+  "slug": "kali-linux",
+  "categories": [
+    2
+  ],
+  "date_created": "2025-02-13",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 22,
+  "documentation": "https://www.kali.org/docs/",
+  "website": "https://www.kali.org",
+  "logo": "https://www.kali.org/images/kali-logo.svg",
+  "description": "Kali Linux is an open-source, Debian-based Linux distribution which allows users to perform advanced penetration testing and security auditing. It runs on multiple platforms and is freely available and accessible to both information security professionals and hobbyists.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/kali-linux.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 1024,
+        "hdd": 20,
+        "os": "Debian",
+        "version": "12"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": []
+}
