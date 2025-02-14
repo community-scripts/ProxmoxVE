@@ -21,9 +21,17 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### Changes
 
+### 🚀 Updated Scripts
+
+- Fix homarr [@CrazyWolf13](https://github.com/CrazyWolf13) ([#2369](https://github.com/community-scripts/ProxmoxVE/pull/2369))
+
 ### 🌐 Website
 
 - RustDesk Server - Added configuration guide to json [@tremor021](https://github.com/tremor021) ([#2389](https://github.com/community-scripts/ProxmoxVE/pull/2389))
+
+### 🧰 Maintenance
+
+- [gh] Introducing new Issue Github Template Feature (Bug, Feature, Task) [@MickLesk](https://github.com/MickLesk) ([#2394](https://github.com/community-scripts/ProxmoxVE/pull/2394))
 
 ### 📡 API
 
