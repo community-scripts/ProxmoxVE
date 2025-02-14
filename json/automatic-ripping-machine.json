@@ -1,0 +1,43 @@
+{
+    "name": "Automatic Ripping Machine",
+    "slug": "automatic-ripping-machine",
+    "categories": [
+        13
+    ],
+    "date_created": "2024-05-02",
+    "type": "ct",
+    "updateable": true,
+    "privileged": true,
+    "interface_port": 8080,
+    "documentation": "https://github.com/automatic-ripping-machine/automatic-ripping-machine/wiki",
+    "website": "https://github.com/automatic-ripping-machine/automatic-ripping-machine",
+    "logo": "https://raw.githubusercontent.com/automatic-ripping-machine/automatic-ripping-machine/main/docs/assets/images/arm80.png",
+    "description": "Automatic Ripping Machine (ARM) is a Python-based application that automates the process of ripping and encoding optical discs (Blu-ray, DVD, CD) by detecting disc insertion, identifying the disc, and ripping it using appropriate tools. It supports multiple formats and can be configured to automatically organize your media library.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/automatic-ripping-machine.sh",
+            "resources": {
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 32,
+                "os": "ubuntu",
+                "version": "22.04"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": "admin",
+        "password": "password"
+    },
+    "notes": [
+        {
+            "text": "Requires Privileged container for optical drive access",
+            "type": "warning"
+        },
+        {
+            "text": "Configure settings in /opt/arm/config/arm.yaml",
+            "type": "info"
+        }
+    ]
+}
