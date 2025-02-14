@@ -89,10 +89,12 @@ jobs:
                 chmod +x "$INSTALL_SCRIPT"
                 RUNNING_FILE=$FILE
             fi
-            git checkout origin/main .github/workflows/scripts/app-test/pr-build.func
-            git checkout origin/main .github/workflows/scripts/app-test/pr-install.func
-            git checkout origin/main .github/workflows/scripts/app-test/pr-alpine-install.func
-            git checkout origin/main .github/workflows/scripts/app-test/pr-create-lxc.sh
+            git remote add community-scripts https://github.com/community-scripts/ProxmoxVE.git
+            git fetch community-scripts
+            git checkout community-scripts/main -- .github/workflows/scripts/app-test/pr-build.func
+            git checkout community-scripts/main -- .github/workflows/scripts/app-test/pr-install.func
+            git checkout community-scripts/main -- .github/workflows/scripts/app-test/pr-alpine-install.func
+            git checkout community-scripts/main -- .github/workflows/scripts/app-test/pr-create-lxc.sh
             chmod +x $RUNNING_FILE         
             chmod +x .github/workflows/scripts/app-test/pr-create-lxc.sh
             chmod +x .github/workflows/scripts/app-test/pr-install.func
