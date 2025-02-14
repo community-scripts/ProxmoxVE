@@ -21,6 +21,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### Changes
 
+### 🌐 Website
+
+- Fix: RustDesk Server - Added configuration guide to json [@tremor021](https://github.com/tremor021) ([#2389](https://github.com/community-scripts/ProxmoxVE/pull/2389))
+
 ### 📡 API
 
 - [API] Update api.func: Remove unwanted file creation [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2378](https://github.com/community-scripts/ProxmoxVE/pull/2378))
