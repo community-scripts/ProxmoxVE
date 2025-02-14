@@ -60,10 +60,11 @@ TURBO_TELEMETRY_DISABLED=1
 AUTH_PROVIDERS='credentials'
 NODE_ENV='production'
 EOF
-
 $STD pnpm install
 $STD pnpm build
+msg_ok "Installed Homarr"
 
+msg_info "Copying build and config files"
 cp /opt/homarr/apps/nextjs/next.config.ts .
 cp /opt/homarr/apps/nextjs/package.json .
 cp -r /opt/homarr/packages/db/migrations /opt/homarr_db/migrations
@@ -73,17 +74,14 @@ cp /opt/homarr/packages/redis/redis.conf /opt/homarr/redis.conf
 mkdir -p /etc/nginx/templates
 rm /etc/nginx/nginx.conf
 cp /opt/homarr/nginx.conf /etc/nginx/templates/nginx.conf
-
-# Enable homar-cli
 mkdir -p /opt/homarr/apps/cli
 cp /opt/homarr/packages/cli/cli.cjs /opt/homarr/apps/cli/cli.cjs
 echo $'#!/bin/bash\ncd /opt/homarr/apps/cli && node ./cli.cjs "$@"' > /usr/bin/homarr
 chmod +x /usr/bin/homarr
-
 mkdir /opt/homarr/build
 cp ./node_modules/better-sqlite3/build/Release/better_sqlite3.node ./build/better_sqlite3.node
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
-msg_ok "Installed Homarr"
+msg_ok "Finished copying"
 
 msg_info "Creating Services"
 cat <<'EOF' >/opt/run_homarr.sh
@@ -101,7 +99,6 @@ node apps/nextjs/server.js & PID=$!
 wait $PID
 EOF
 chmod +x /opt/run_homarr.sh
-
 cat <<EOF >/etc/systemd/system/homarr.service
 [Unit]
 Description=Homarr Service
