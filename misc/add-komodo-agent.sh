@@ -103,33 +103,3 @@ done
 
 echo -e "\n${APP} installation completed successfully!"
 
-# Ask the user if they want to add a cron job for automatic installation
-while true; do
-  read -p "Do you want to schedule automatic reinstallation via cron? (y/n): " cron_yn
-  case $cron_yn in
-  [Yy]*)
-    # Check if cron service is running
-    if ! systemctl is-active --quiet cron; then
-      msg_error "Cron service is not running. Start it first before scheduling."
-      exit 1
-    fi
-
-    # Check if the cron job already exists
-    if [ -f "$CRON_JOB" ]; then
-      msg_ok "Cron job already exists at $CRON_JOB"
-    else
-      msg_info "Creating cron job for automatic installation"
-      echo "0 */12 * * * root wget -qLO - $SCRIPT_URL | bash >> $LOG_FILE 2>&1" > "$CRON_JOB"
-      chmod 644 "$CRON_JOB"
-      systemctl restart cron
-      msg_ok "Cron job added: Runs every 12 hours"
-    fi
-    break
-    ;;
-  [Nn]*)
-    msg_info "Skipping cron job setup."
-    break
-    ;;
-  *) msg_error "Please answer yes or no." ;;
-  esac
-done
