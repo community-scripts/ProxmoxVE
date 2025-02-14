@@ -27,6 +27,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 📡 API
 
+- [API]Add more enpoints to API [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2390](https://github.com/community-scripts/ProxmoxVE/pull/2390))
 - [API] Update api.func: Remove unwanted file creation [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2378](https://github.com/community-scripts/ProxmoxVE/pull/2378))
 
 ## 2025-02-13
