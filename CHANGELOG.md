@@ -21,7 +21,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### Changes
 
-### ❔ Unlabelled
+### 🌐 Website
 
 - Fix RustDesk slug in json [@tremor021](https://github.com/tremor021) ([#2411](https://github.com/community-scripts/ProxmoxVE/pull/2411))
 
