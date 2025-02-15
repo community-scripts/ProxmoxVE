@@ -23,6 +23,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- Update MagicMirror install and update scripts [@tremor021](https://github.com/tremor021) ([#2409](https://github.com/community-scripts/ProxmoxVE/pull/2409))
 - Fix: Homarr update service files [@CrazyWolf13](https://github.com/CrazyWolf13) ([#2416](https://github.com/community-scripts/ProxmoxVE/pull/2416))
 
 ### 🌐 Website
