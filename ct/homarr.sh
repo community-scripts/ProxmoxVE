@@ -35,6 +35,43 @@ if [[ -f /opt/homarr/database/db.sqlite ]]; then
     msg_error " - https://homarr.dev/docs/getting-started/after-the-installation/#importing-a-zip-from-version-before-100"
     exit 1
 fi
+if [[ ! -f /opt/run_homarr.sh ]]; then
+        msg_info "Detected outdated and missing service files"
+        msg_error "Warning - The port of homarr changed from 3000 to 7575"
+        apt-get install -y nginx gettext openssl gpg &>/dev/null
+        sed -i '/^NODE_ENV=/d' /opt/homarr/.env && echo "NODE_ENV='production'" >> /opt/homarr/.env
+        sed -i '/^DB_DIALECT=/d' /opt/homarr/.env && echo "DB_DIALECT='sqlite'" >> /opt/homarr/.env
+        cat <<'EOF' >/opt/run_homarr.sh
+#!/bin/bash
+export DB_DIALECT='sqlite'
+export AUTH_SECRET=$(openssl rand -base64 32)
+node /opt/homarr_db/migrations/$DB_DIALECT/migrate.cjs /opt/homarr_db/migrations/$DB_DIALECT
+export HOSTNAME=$(ip route get 1.1.1.1 | grep -oP 'src \K[^ ]+')
+envsubst '${HOSTNAME}' < /etc/nginx/templates/nginx.conf > /etc/nginx/nginx.conf
+nginx -g 'daemon off;' &
+redis-server /opt/homarr/packages/redis/redis.conf &
+node apps/tasks/tasks.cjs &
+node apps/websocket/wssServer.cjs &
+node apps/nextjs/server.js & PID=$!
+wait $PID
+EOF
+        chmod +x /opt/run_homarr.sh
+        rm /etc/systemd/system/homarr.service
+        cat <<EOF >/etc/systemd/system/homarr.service
+[Unit]
+Description=Homarr Service
+After=network.target
+[Service]
+Type=exec
+WorkingDirectory=/opt/homarr
+EnvironmentFile=-/opt/homarr/.env
+ExecStart=/opt/run_homarr.sh
+[Install]
+WantedBy=multi-user.target
+EOF
+        msg_ok "Updated Services"
+        systemctl daemon-reload
+fi
   RELEASE=$(curl -s https://api.github.com/repos/homarr-labs/homarr/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
   if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
 
@@ -47,7 +84,7 @@ fi
     cp /opt/homarr/.env /opt/homarr-data-backup/.env
     msg_ok "Backup Data"
 
-    msg_info "Updating ${APP} to v${RELEASE}"
+    msg_info "Updating and rebuilding ${APP} to v${RELEASE} (Patience)"
     wget -q "https://github.com/homarr-labs/homarr/archive/refs/tags/v${RELEASE}.zip"
     unzip -q v${RELEASE}.zip
     rm -rf v${RELEASE}.zip
