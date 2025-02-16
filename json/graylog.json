@@ -11,7 +11,7 @@
     "interface_port": 9000,
     "documentation": "https://go2docs.graylog.org/current/home.htm",
     "website": "https://graylog.org/",
-    "logo": "https://graylog.org/wp-content/uploads/2023/11/gl-logo-horiz-all-white-1200w-300x96.png.webp",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/graylog.svg",
     "description": "Graylog is a free and open log management platform.",
     "install_methods": [
         {
