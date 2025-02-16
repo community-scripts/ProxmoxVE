@@ -50,10 +50,20 @@ function update_script() {
     cp grist_bak/landing.db grist/landing.db || true
 
     cd grist
+    msg_info "Installing Dependencies"
     yarn install >/dev/null 2>&1
+    msg_ok "Installed Dependencies"
+
+    msg_info "Building"
     yarn run build:prod >/dev/null 2>&1
+    msg_ok "Done building"
+
+    msg_info "Installing Python"
     yarn run install:python >/dev/null 2>&1
+    msg_ok "Installed Python"
+
     echo "${RELEASE}" >/opt/${APP}_version.txt
+
     msg_ok "Updated ${APP} to v${RELEASE}"
 
     msg_info "Starting ${APP} Service"
