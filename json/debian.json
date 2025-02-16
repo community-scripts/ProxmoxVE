@@ -11,7 +11,7 @@
     "interface_port": null,
     "documentation": null,
     "website": "https://www.debian.org/",
-    "logo": "https://seeklogo.com/images/D/debian-logo-C136FDAF9E-seeklogo.com.png",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/debian.svg",
     "description": "Debian Linux is a distribution that emphasizes free software. It supports many hardware platforms.",
     "install_methods": [
         {
