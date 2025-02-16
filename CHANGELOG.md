@@ -17,6 +17,20 @@ All LXC instances created using this repository come pre-installed with Midnight
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
 
+## 2025-02-16
+
+### Changes
+
+### 🚀 Updated Scripts
+
+- Fix: Typo in Ubuntu 24.10 VM Script [@PhoenixEmik](https://github.com/PhoenixEmik) ([#2430](https://github.com/community-scripts/ProxmoxVE/pull/2430))
+- Fix: Grist update no longer removes previous user data [@cfurrow](https://github.com/cfurrow) ([#2428](https://github.com/community-scripts/ProxmoxVE/pull/2428))
+
+### 🌐 Website
+
+- Debian icon update [@bannert1337](https://github.com/bannert1337) ([#2433](https://github.com/community-scripts/ProxmoxVE/pull/2433))
+- Update Graylog icon [@bannert1337](https://github.com/bannert1337) ([#2434](https://github.com/community-scripts/ProxmoxVE/pull/2434))
+
 ## 2025-02-15
 
 ### Changes
