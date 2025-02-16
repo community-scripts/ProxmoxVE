@@ -11,6 +11,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -31,6 +32,7 @@ func loadEnv() {
 	}
 }
 
+// DataModel represents a single document in MongoDB
 type DataModel struct {
 	ID         primitive.ObjectID `json:"id" bson:"_id,omitempty"`
 	CT_TYPE    uint               `json:"ct_type" bson:"ct_type"`
@@ -56,6 +58,13 @@ type StatusModel struct {
 	STATUS    string `json:"status" bson:"status"`
 }
 
+type CountResponse struct {
+	TotalEntries int64            `json:"total_entries"`
+	StatusCount  map[string]int64 `json:"status_count"`
+	NSAPPCount   map[string]int64 `json:"nsapp_count"`
+}
+
+// ConnectDatabase initializes the MongoDB connection
 func ConnectDatabase() {
 	loadEnv()
 
@@ -78,6 +87,7 @@ func ConnectDatabase() {
 	fmt.Println("Connected to MongoDB on 10.10.10.18")
 }
 
+// UploadJSON handles API requests and stores data as a document in MongoDB
 func UploadJSON(w http.ResponseWriter, r *http.Request) {
 	var input DataModel
 
@@ -98,6 +108,7 @@ func UploadJSON(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]string{"message": "Data saved successfully"})
 }
 
+// UpdateStatus updates the status of a record based on RANDOM_ID
 func UpdateStatus(w http.ResponseWriter, r *http.Request) {
 	var input StatusModel
 
@@ -120,6 +131,7 @@ func UpdateStatus(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]string{"message": "Record updated successfully"})
 }
 
+// GetDataJSON fetches all data from MongoDB
 func GetDataJSON(w http.ResponseWriter, r *http.Request) {
 	var records []DataModel
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -144,6 +156,270 @@ func GetDataJSON(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(records)
 }
+func GetPaginatedData(w http.ResponseWriter, r *http.Request) {
+	page, _ := strconv.Atoi(r.URL.Query().Get("page"))
+	limit, _ := strconv.Atoi(r.URL.Query().Get("limit"))
+	if page < 1 {
+		page = 1
+	}
+	if limit < 1 {
+		limit = 10
+	}
+	skip := (page - 1) * limit
+	var records []DataModel
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	options := options.Find().SetSkip(int64(skip)).SetLimit(int64(limit))
+	cursor, err := collection.Find(ctx, bson.M{}, options)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer cursor.Close(ctx)
+
+	for cursor.Next(ctx) {
+		var record DataModel
+		if err := cursor.Decode(&record); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		records = append(records, record)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(records)
+}
+
+func GetSummary(w http.ResponseWriter, r *http.Request) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	totalCount, err := collection.CountDocuments(ctx, bson.M{})
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	statusCount := make(map[string]int64)
+	nsappCount := make(map[string]int64)
+
+	pipeline := []bson.M{
+		{"$group": bson.M{"_id": "$status", "count": bson.M{"$sum": 1}}},
+	}
+	cursor, err := collection.Aggregate(ctx, pipeline)
+	if err == nil {
+		for cursor.Next(ctx) {
+			var result struct {
+				ID    string `bson:"_id"`
+				Count int64  `bson:"count"`
+			}
+			if err := cursor.Decode(&result); err == nil {
+				statusCount[result.ID] = result.Count
+			}
+		}
+	}
+
+	pipeline = []bson.M{
+		{"$group": bson.M{"_id": "$nsapp", "count": bson.M{"$sum": 1}}},
+	}
+	cursor, err = collection.Aggregate(ctx, pipeline)
+	if err == nil {
+		for cursor.Next(ctx) {
+			var result struct {
+				ID    string `bson:"_id"`
+				Count int64  `bson:"count"`
+			}
+			if err := cursor.Decode(&result); err == nil {
+				nsappCount[result.ID] = result.Count
+			}
+		}
+	}
+
+	response := CountResponse{
+		TotalEntries: totalCount,
+		StatusCount:  statusCount,
+		NSAPPCount:   nsappCount,
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(response)
+}
+
+func GetByNsapp(w http.ResponseWriter, r *http.Request) {
+	nsapp := r.URL.Query().Get("nsapp")
+	var records []DataModel
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	cursor, err := collection.Find(ctx, bson.M{"nsapp": nsapp})
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer cursor.Close(ctx)
+
+	for cursor.Next(ctx) {
+		var record DataModel
+		if err := cursor.Decode(&record); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		records = append(records, record)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(records)
+}
+
+func GetByDateRange(w http.ResponseWriter, r *http.Request) {
+
+	startDate := r.URL.Query().Get("start_date")
+	endDate := r.URL.Query().Get("end_date")
+
+	if startDate == "" || endDate == "" {
+		http.Error(w, "Both start_date and end_date are required", http.StatusBadRequest)
+		return
+	}
+
+	start, err := time.Parse("2006-01-02T15:04:05.999999+00:00", startDate+"T00:00:00+00:00")
+	if err != nil {
+		http.Error(w, "Invalid start_date format", http.StatusBadRequest)
+		return
+	}
+
+	end, err := time.Parse("2006-01-02T15:04:05.999999+00:00", endDate+"T23:59:59+00:00")
+	if err != nil {
+		http.Error(w, "Invalid end_date format", http.StatusBadRequest)
+		return
+	}
+
+	var records []DataModel
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	cursor, err := collection.Find(ctx, bson.M{
+		"created_at": bson.M{
+			"$gte": start,
+			"$lte": end,
+		},
+	})
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer cursor.Close(ctx)
+
+	for cursor.Next(ctx) {
+		var record DataModel
+		if err := cursor.Decode(&record); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		records = append(records, record)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(records)
+}
+func GetByStatus(w http.ResponseWriter, r *http.Request) {
+	status := r.URL.Query().Get("status")
+	var records []DataModel
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	cursor, err := collection.Find(ctx, bson.M{"status": status})
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer cursor.Close(ctx)
+
+	for cursor.Next(ctx) {
+		var record DataModel
+		if err := cursor.Decode(&record); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		records = append(records, record)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(records)
+}
+
+func GetByOS(w http.ResponseWriter, r *http.Request) {
+	osType := r.URL.Query().Get("os_type")
+	osVersion := r.URL.Query().Get("os_version")
+	var records []DataModel
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	cursor, err := collection.Find(ctx, bson.M{"os_type": osType, "os_version": osVersion})
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer cursor.Close(ctx)
+
+	for cursor.Next(ctx) {
+		var record DataModel
+		if err := cursor.Decode(&record); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		records = append(records, record)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(records)
+}
+
+func GetErrors(w http.ResponseWriter, r *http.Request) {
+	errorCount := make(map[string]int)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	cursor, err := collection.Find(ctx, bson.M{"error": bson.M{"$ne": ""}})
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer cursor.Close(ctx)
+
+	for cursor.Next(ctx) {
+		var record DataModel
+		if err := cursor.Decode(&record); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		if record.ERROR != "" {
+			errorCount[record.ERROR]++
+		}
+	}
+
+	type ErrorCountResponse struct {
+		Error string `json:"error"`
+		Count int    `json:"count"`
+	}
+
+	var errorCounts []ErrorCountResponse
+	for err, count := range errorCount {
+		errorCounts = append(errorCounts, ErrorCountResponse{
+			Error: err,
+			Count: count,
+		})
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(struct {
+		ErrorCounts []ErrorCountResponse `json:"error_counts"`
+	}{
+		ErrorCounts: errorCounts,
+	})
+}
 
 func main() {
 	ConnectDatabase()
@@ -152,6 +428,13 @@ func main() {
 	router.HandleFunc("/upload", UploadJSON).Methods("POST")
 	router.HandleFunc("/upload/updatestatus", UpdateStatus).Methods("POST")
 	router.HandleFunc("/data/json", GetDataJSON).Methods("GET")
+	router.HandleFunc("/data/paginated", GetPaginatedData).Methods("GET")
+	router.HandleFunc("/data/summary", GetSummary).Methods("GET")
+	router.HandleFunc("/data/nsapp", GetByNsapp).Methods("GET")
+	router.HandleFunc("/data/date", GetByDateRange).Methods("GET")
+	router.HandleFunc("/data/status", GetByStatus).Methods("GET")
+	router.HandleFunc("/data/os", GetByOS).Methods("GET")
+	router.HandleFunc("/data/errors", GetErrors).Methods("GET")
 
 	c := cors.New(cors.Options{
 		AllowedOrigins:   []string{"*"},

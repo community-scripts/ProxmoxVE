@@ -3,8 +3,8 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://nodebb.org/
 
-# App Default Values
 APP="NodeBB"
 var_tags="forum"
 var_disk="10"

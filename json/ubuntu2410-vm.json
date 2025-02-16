@@ -30,5 +30,10 @@
         "username": null,
         "password": null
     },
-    "notes": []
+      "notes": [
+    {
+      "text": "after installation, checkout: ´https://github.com/community-scripts/ProxmoxVE/discussions/272´",
+      "type": "info"
+    }
+  ]
 }

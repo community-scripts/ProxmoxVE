@@ -5,7 +5,6 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.home-assistant.io/
 
-# App Default Values
 APP="Home Assistant-Core"
 var_tags="automation;smarthome"
 var_cpu="2"
@@ -15,11 +14,7 @@ var_os="ubuntu"
 var_version="24.10"
 var_unprivileged="1"
 
-# App Output & Base Settings
 header_info "$APP"
-base_settings
-
-# Core
 variables
 color
 catch_errors

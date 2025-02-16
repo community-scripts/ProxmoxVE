@@ -15,8 +15,6 @@ var_version="12"
 var_unprivileged="1"
 
 header_info "$APP"
-base_settings
-
 variables
 color
 catch_errors
@@ -29,7 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/checkmk/checkmk/tags | grep "name" | awk '{print substr($2, 3, length($2)-4) }') 
+  RELEASE=$(curl -fsSL https://api.github.com/repos/checkmk/checkmk/tags | grep "name" | awk '{print substr($2, 3, length($2)-4) }' | tr ' ' '\n' | grep -v '\-rc' | sort -V | tail -n 1) 
   if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
     msg_info "Updating ${APP} to v${RELEASE}"
     omd stop monitoring &>/dev/null

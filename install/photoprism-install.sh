@@ -62,6 +62,35 @@ PHOTOPRISM_PUBLIC='false'
 PHOTOPRISM_DEBUG='false'
 EOF
 ln -sf /opt/photoprism/bin/photoprism /usr/local/bin/photoprism
+
+mkdir -p /etc/photoprism/
+cat <<EOF >/etc/photoprism/defaults.yml
+ConfigPath: "~/.config/photoprism"
+StoragePath: "/opt/photoprism/storage"
+OriginalsPath: "/opt/photoprism/photos/originals"
+ImportPath: "/media"
+AdminUser: "admin"
+AdminPassword: "changeme"
+AuthMode: "password"
+DatabaseDriver: "sqlite"
+HttpHost: "0.0.0.0"
+HttpPort: 2342
+HttpCompression: "gzip"
+DisableTLS: false
+DefaultTLS: true
+Experimental: false
+DisableWebDAV: false
+DisableSettings: false
+DisableTensorFlow: false
+DisableFaces: false
+DisableClassification: false
+DisableVectors: false
+DisableRaw: false
+RawPresets: false
+JpegQuality: 85
+DetectNSFW: false
+UploadNSFW: true
+EOF
 msg_ok "Installed PhotoPrism"
 
 msg_info "Creating Service"

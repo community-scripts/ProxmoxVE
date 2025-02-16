@@ -7,12 +7,12 @@
 function header_info {
   clear
   cat <<"EOF"
-    ____  ____  ____ _  __ __  _______ _  __    __   _  ________   ____  ________    __________________
-   / __ \/ __ \/ __ \ |/ //  |/  / __ \ |/ /   / /  | |/ / ____/  / __ \/ ____/ /   / ____/_  __/ ____/
-  / /_/ / /_/ / / / /   // /|_/ / / / /   /   / /   |   / /      / / / / __/ / /   / __/   / / / __/   
- / ____/ _, _/ /_/ /   |/ /  / / /_/ /   |   / /___/   / /___   / /_/ / /___/ /___/ /___  / / / /___   
-/_/   /_/ |_|\____/_/|_/_/  /_/\____/_/|_|  /_____/_/|_\____/  /_____/_____/_____/_____/ /_/ /_____/   
-                                                                                                       
+    ____                                          __   _  ________   ____       __     __     
+   / __ \_________  _  ______ ___  ____  _  __   / /  | |/ / ____/  / __ \___  / /__  / /____ 
+  / /_/ / ___/ __ \| |/_/ __ `__ \/ __ \| |/_/  / /   |   / /      / / / / _ \/ / _ \/ __/ _ \
+ / ____/ /  / /_/ />  </ / / / / / /_/ />  <   / /___/   / /___   / /_/ /  __/ /  __/ /_/  __/
+/_/   /_/   \____/_/|_/_/ /_/ /_/\____/_/|_|  /_____/_/|_\____/  /_____/\___/_/\___/\__/\___/ 
+                                                                                              
 EOF
 }
 
@@ -33,29 +33,26 @@ set -eEuo pipefail
 YW=$(echo "\033[33m")
 BL=$(echo "\033[36m")
 RD=$(echo "\033[01;31m")
-CM='\xE2\x9C\x94\033'
 GN=$(echo "\033[1;92m")
 CL=$(echo "\033[m")
+TAB="  "
+CM="${TAB}✔️${TAB}${CL}"
 
 header_info
 echo "Loading..."
-whiptail --backtitle "Proxmox VE Helper Scripts" --title "Proxmox VE LXC Deletion" --yesno "This Will Delete LXC Containers. Proceed?" 10 58 || exit
+whiptail --backtitle "Proxmox VE Helper Scripts" --title "Proxmox VE LXC Deletion" --yesno "This will delete LXC containers. Proceed?" 10 58 || exit
 
 NODE=$(hostname)
-
-# Get list of containers with ID and hostname
 containers=$(pct list | tail -n +2 | awk '{print $0 " " $4}')
 
-# Exit if no containers are found
 if [ -z "$containers" ]; then
-    whiptail --title "LXC Container Delete" --msgbox "There are no LXC Container available!" 10 60
+    whiptail --title "LXC Container Delete" --msgbox "No LXC containers available!" 10 60
     exit 1
 fi
 
 menu_items=()
 FORMAT="%-10s %-15s %-10s"
 
-# Format container data for menu display
 while read -r container; do
     container_id=$(echo $container | awk '{print $1}')
     container_name=$(echo $container | awk '{print $2}')
@@ -64,49 +61,50 @@ while read -r container; do
     menu_items+=("$container_id" "$formatted_line" "OFF")
 done <<< "$containers"
 
-# Display selection menu
 CHOICES=$(whiptail --title "LXC Container Delete" \
-                   --checklist "Choose LXC container to delete:" 25 60 13 \
+                   --checklist "Select LXC containers to delete:" 25 60 13 \
                    "${menu_items[@]}" 3>&2 2>&1 1>&3)
 
 if [ -z "$CHOICES" ]; then
     whiptail --title "LXC Container Delete" \
-             --msgbox "No containers have been selected!" 10 60
+             --msgbox "No containers selected!" 10 60
     exit 1
 fi
 
-# Process selected containers
+read -p "Delete containers manually or automatically? (Default: manual) m/a: " DELETE_MODE
+DELETE_MODE=${DELETE_MODE:-m}
+
 selected_ids=$(echo "$CHOICES" | tr -d '"' | tr -s ' ' '\n')
 
 for container_id in $selected_ids; do
     status=$(pct status $container_id)
 
-    # Stop container if running
     if [ "$status" == "status: running" ]; then
-        echo -e "${BL}[Info]${GN} Stop container $container_id...${CL}"
+        echo -e "${BL}[Info]${GN} Stopping container $container_id...${CL}"
         pct stop $container_id &
         sleep 5
         echo -e "${BL}[Info]${GN} Container $container_id stopped.${CL}"
     fi
 
-    # Confirm deletion
-    read -p "Are you sure you want to delete Container $container_id? (y/N): " CONFIRM
-    if [[ "$CONFIRM" =~ ^[Yy]$ ]]; then
-        echo -e "${BL}[Info]${GN} Deleting container $container_id...${CL}"
+    if [[ "$DELETE_MODE" == "a" ]]; then
+        echo -e "${BL}[Info]${GN} Automatically deleting container $container_id...${CL}"
         pct destroy "$container_id" -f &
         pid=$!
         spinner $pid
-        if [ $? -eq 0 ]; then
-            echo "Container $container_id was successfully deleted."
-        else
-            whiptail --title "Error" --msgbox "Error deleting container $container_id." 10 60
-        fi
-    elif [[ "$CONFIRM" =~ ^[Nn]$ ]]; then
-        echo -e "${BL}[Info]${RD} Skipping container $container_id...${CL}"
+        [ $? -eq 0 ] && echo "Container $container_id deleted." || whiptail --title "Error" --msgbox "Failed to delete container $container_id." 10 60
     else
-        echo -e "${RD}[Error]${CL} Invalid input, skipping container $container_id."
+        read -p "Delete container $container_id? (y/N): " CONFIRM
+        if [[ "$CONFIRM" =~ ^[Yy]$ ]]; then
+            echo -e "${BL}[Info]${GN} Deleting container $container_id...${CL}"
+            pct destroy "$container_id" -f &
+            pid=$!
+            spinner $pid
+            [ $? -eq 0 ] && echo "Container $container_id deleted." || whiptail --title "Error" --msgbox "Failed to delete container $container_id." 10 60
+        else
+            echo -e "${BL}[Info]${RD} Skipping container $container_id...${CL}"
+        fi
     fi
 done
 
 header_info
-echo -e "${GN}The deletion process has been completed.${CL}\n"
+echo -e "${GN}Deletion process completed.${CL}\n"

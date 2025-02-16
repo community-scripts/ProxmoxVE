@@ -3,9 +3,8 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 # Copyright (c) 2021-2025 community-scripts
 # Author: CrazyWolf13
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://gitlab.com/crafty-controller/crafty-4
 
-
-# App Default Values
 APP="Crafty-Controller"
 var_tags="gaming"
 var_cpu="2"
@@ -15,11 +14,7 @@ var_os="debian"
 var_version="12"
 var_unprivileged="1"
 
-# App Output & Base Settings
 header_info "$APP"
-base_settings
-
-# Core
 variables
 color
 catch_errors

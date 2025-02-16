@@ -3,9 +3,8 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: nicedevil007 (NiceDevil)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://it-tools.tech/
 
-
-# App Default Values
 APP="Alpine-IT-Tools"
 var_tags="alpine;development"
 var_cpu="1"
@@ -15,11 +14,7 @@ var_os="alpine"
 var_version="3.21"
 var_unprivileged="1"
 
-# App Output & Base Settings
 header_info "$APP"
-base_settings
-
-# Core
 variables
 color
 catch_errors

@@ -5,7 +5,6 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://actualbudget.org/
 
-# App Default Values
 APP="Actual Budget"
 var_tags="finance"
 var_cpu="2"
@@ -15,11 +14,7 @@ var_os="debian"
 var_version="12"
 var_unprivileged="1"
 
-# App Output & Base Settings
 header_info "$APP"
-base_settings
-
-# Core
 variables
 color
 catch_errors
@@ -48,6 +43,7 @@ function update_script() {
         mv *ctual-server-* /opt/actualbudget
         rm -rf /opt/actualbudget/.env
         mv /opt/actualbudget_bak/.env /opt/actualbudget
+        mv /opt/actualbudget_bak/.migrate /opt/actualbudget
         mv /opt/actualbudget_bak/server-files /opt/actualbudget/server-files
         cd /opt/actualbudget
         yarn install &>/dev/null

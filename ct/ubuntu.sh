@@ -5,7 +5,6 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://ubuntu.com/
 
-# App Default Values
 echo -e "Loading..."
 APP="Ubuntu"
 var_tags="os"
@@ -15,11 +14,7 @@ var_disk="2"
 var_os="ubuntu"
 var_version="24.04"
 
-# App Output & Base Settings
 header_info "$APP"
-base_settings
-
-# Core
 variables
 color
 catch_errors

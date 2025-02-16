@@ -21,7 +21,7 @@
         "cpu": 2,
         "ram": 2048,
         "hdd": 7,
-        "os": "Debian",
+        "os": "debian",
         "version": "12"
       }
     }

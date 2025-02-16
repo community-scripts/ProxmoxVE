@@ -3,9 +3,9 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: tremor021
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://www.zerotier.com/
 
 
-# App Default Values
 APP="Zerotier-One"
 var_tags="networking"
 var_cpu="1"
@@ -15,11 +15,7 @@ var_os="debian"
 var_version="12"
 var_unprivileged="1"
 
-# App Output & Base Settings
 header_info "$APP"
-base_settings
-
-# Core
 variables
 color
 catch_errors

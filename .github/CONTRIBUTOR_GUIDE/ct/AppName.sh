@@ -23,11 +23,7 @@ var_version="[VERSION]"
 var_unprivileged="[UNPRIVILEGED]"
 # 1 = unprivileged container, 0 = privileged container
 
-# App Output & Base Settings
 header_info "$APP"
-base_settings
-
-# Core
 variables
 color
 catch_errors
@@ -46,8 +42,6 @@ function update_script() {
     # Crawling the new version and checking whether an update is required
     RELEASE=$(curl -fsSL [RELEASE_URL] | [PARSE_RELEASE_COMMAND])
     if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
-        msg_info "Updating $APP"
-
         # Stopping Services
         msg_info "Stopping $APP"
         systemctl stop [SERVICE_NAME]

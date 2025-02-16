@@ -5,7 +5,6 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.home-assistant.io/
 
-# App Default Values
 APP="Home Assistant"
 var_tags="automation;smarthome"
 var_cpu="2"
@@ -15,11 +14,7 @@ var_os="debian"
 var_version="12"
 var_unprivileged="1"
 
-# App Output & Base Settings
 header_info "$APP"
-base_settings
-
-# Core
 variables
 color
 catch_errors
@@ -48,8 +43,9 @@ function update_script() {
       docker pull "${CONTAINER_IMAGE}"
       LATEST_IMAGE="$(docker inspect --format "{{.Id}}" --type image "${CONTAINER_IMAGE}")"
       if [[ "${RUNNING_IMAGE}" != "${LATEST_IMAGE}" ]]; then
+        pip install -U runlike
         echo "Updating ${container} image ${CONTAINER_IMAGE}"
-        DOCKER_COMMAND="$(runlike "${container}")"
+        DOCKER_COMMAND="$(runlike --use-volume-id "${container}")"
         docker rm --force "${container}"
         eval ${DOCKER_COMMAND}
       fi

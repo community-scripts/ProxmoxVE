@@ -12,7 +12,7 @@
     "documentation": null,
     "website": "LINK TO WEBSITE",
     "logo": "LINK TO LOGO",
-    "description": "Deescription of the app",
+    "description": "Description of the app",
     "install_methods": [
         {
             "type": "default",

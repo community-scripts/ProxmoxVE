@@ -5,6 +5,9 @@
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
+source /dev/stdin <<< $(wget -qLO - https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func)
+
+
 function header_info {
   cat <<"EOF"
     __  ____ __              __  _ __      ____              __            ____  _____    ________  ______
@@ -20,6 +23,14 @@ header_info
 echo -e "Loading..."
 GEN_MAC=$(echo '00 60 2f'$(od -An -N3 -t xC /dev/urandom) | sed -e 's/ /:/g' | tr '[:lower:]' '[:upper:]')
 NEXTID=$(pvesh get /cluster/nextid)
+#API VARIABLES
+RANDOM_UUID="$(cat /proc/sys/kernel/random/uuid)"
+METHOD=""
+NSAPP="mikrotik-router-os"
+var_os="mikrotik"
+var_version=" "
+DISK_SIZE="1G"
+#
 YW=$(echo "\033[33m")
 BL=$(echo "\033[36m")
 HA=$(echo "\033[1;34m")
@@ -39,6 +50,8 @@ shopt -s expand_aliases
 alias die='EXIT=$? LINE=$LINENO error_exit'
 trap die ERR
 trap cleanup EXIT
+trap 'post_update_to_api "failed" "INTERRUPTED"' SIGINT 
+trap 'post_update_to_api "failed" "TERMINATED"' SIGTERM
 function error_exit() {
   trap - ERR
   local reason="Unknown failure occurred."
@@ -86,6 +99,7 @@ function msg_ok() {
   echo -e "${BFR} ${CM} ${GN}${msg}${CL}"
 }
 function default_settings() {
+  METHOD="default"
   echo -e "${DGN}Using Virtual Machine ID: ${BGN}$NEXTID${CL}"
   VMID=$NEXTID
   echo -e "${DGN}Using Hostname: ${BGN}mikrotik-routeros-chr${CL}"
@@ -107,6 +121,7 @@ function default_settings() {
   echo -e "${BL}Creating a Mikrotik RouterOS CHR VM using the above default settings${CL}"
 }
 function advanced_settings() {
+  METHOD="advanced"
   VMID=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Virtual Machine ID" 8 58 $NEXTID --title "VIRTUAL MACHINE ID" 3>&1 1>&2 2>&3)
   exitstatus=$?
   if [ $exitstatus = 0 ]; then
@@ -203,6 +218,8 @@ function start_script() {
   fi
 }
 start_script
+
+post_to_api_vm
 msg_info "Validating Storage"
 while read -r line; do
   TAG=$(echo $line | awk '{print $1}')
@@ -287,4 +304,5 @@ if [ "$START_VM" == "yes" ]; then
   qm start $VMID
   msg_ok "Started Mikrotik RouterOS CHR VM"
 fi
+post_update_to_api "done" "none"
 msg_ok "Completed Successfully!\n"

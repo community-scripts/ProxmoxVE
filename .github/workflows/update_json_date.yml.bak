@@ -1,48 +1,88 @@
-name: Update JSON Date
+name: Auto Update JSON-Date
+
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
-        
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
 jobs:
-  list-files:
+  update-json-dates:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      pull-requests: write
+
     steps:
-    - name: Checkout PR Branch
-      uses: actions/checkout@v4
-      with:
-        ref: ${{ github.event.pull_request.head.ref }}
+      - name: Generate a token
+        id: generate-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
 
-    - name: Fetch PR changes
-      run: |
-          git remote add fork https://github.com/${{ github.event.pull_request.head.repo.full_name }}.git
-          git fetch fork ${{ github.event.pull_request.head.ref }}:pullreq
-          git checkout pullreq
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for proper detection
 
-    - name: Update JSON
-      id: changed-files
-      run: |
-          FILES=$(gh api repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files --jq '.[].filename' | tr '\n' ' ')
-          echo "changed_files=${FILES}"
-          for FILE in $FILES; do
-            if [[ "$FILE" =~ /(.*)\.json ]]; then
-              NAME="${BASH_REMATCH[1]}"
-            else
-              echo "no new JSON in ${FILES}"
-              continue
-            fi
-          
-            JSON_FILE="json/${NAME}.json"
-            if [[ -f "$JSON_FILE" ]]; then
-              echo "Updating date_created in $JSON_FILE"
-              jq --arg date "$(date +%Y-%m-%d)" '.date_created = $date' "$JSON_FILE" > tmp.json && mv tmp.json "$JSON_FILE"
-            else
-              echo "JSON file $FILES not found"
+      - name: Set up Git
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Find JSON files with incorrect date_created
+        id: find_wrong_json
+        run: |
+          TODAY=$(date -u +"%Y-%m-%d")
+          > incorrect_json_files.txt
+
+          for FILE in json/*.json; do
+            if [[ -f "$FILE" ]]; then
+              DATE_IN_JSON=$(jq -r '.date_created' "$FILE" 2>/dev/null || echo "")
+
+              if [[ "$DATE_IN_JSON" != "$TODAY" ]]; then
+                echo "$FILE" >> incorrect_json_files.txt
+              fi
             fi
           done
-             
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git diff --exit-code || git commit -am "Updating Dates in affected JSON files."
-          git push 
-      env:
+
+          if [[ -s incorrect_json_files.txt ]]; then
+            echo "CHANGED=true" >> $GITHUB_ENV
+          else
+            echo "CHANGED=false" >> $GITHUB_ENV
+          fi
+
+      - name: Run update script
+        if: env.CHANGED == 'true'
+        run: |
+          chmod +x .github/workflows/scripts/update-json.sh
+          while read -r FILE; do
+            .github/workflows/scripts/update-json.sh "$FILE"
+          done < incorrect_json_files.txt
+
+      - name: Commit and create PR if changes exist
+        if: env.CHANGED == 'true'
+        run: |
+          git add json/*.json
+          git commit -m "Auto-update date_created in incorrect JSON files"
+          git checkout -b pr-fix-json-dates
+          git push origin pr-fix-json-dates --force
+          gh pr create --title "[core] Fix incorrect JSON date_created fields" \
+                       --body "This PR is auto-generated to fix incorrect `date_created` fields in JSON files." \
+                       --head pr-fix-json-dates \
+                       --base main \
+                       --label "automated pr"
+        env:
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+
+      - name: Approve pull request
+        if: env.CHANGED == 'true'
+        env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_NUMBER=$(gh pr list --head "pr-fix-json-dates" --json number --jq '.[].number')
+          if [ -n "$PR_NUMBER" ]; then
+            gh pr review $PR_NUMBER --approve
+          fi

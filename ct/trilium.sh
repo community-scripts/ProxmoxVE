@@ -5,7 +5,6 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://triliumnext.github.io/Docs/
 
-# App Default Values
 APP="Trilium"
 var_tags="notes"
 var_cpu="1"
@@ -15,11 +14,7 @@ var_os="debian"
 var_version="12"
 var_unprivileged="1"
 
-# App Output & Base Settings
 header_info "$APP"
-base_settings
-
-# Core
 variables
 color
 catch_errors
@@ -32,10 +27,9 @@ function update_script() {
         msg_error "No ${APP} Installation Found!"
         exit
     fi
-    if [[ ! -f /opt/${APP}_version.txt ]]; then touch /opt/${APP}_version.txt
-    fi
-    if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
+    if [[ ! -f /opt/${APP}_version.txt ]]; then touch /opt/${APP}_version.txt; fi
     RELEASE=$(curl -s https://api.github.com/repos/TriliumNext/Notes/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+    if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
     msg_info "Stopping ${APP}"
     systemctl stop trilium
     sleep 1

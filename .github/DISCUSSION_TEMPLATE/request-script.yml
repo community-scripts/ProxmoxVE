@@ -30,8 +30,6 @@ body:
         required: true
       - label: "I have searched existing [discussions](https://github.com/community-scripts/ProxmoxVE/discussions?discussions_q=) and found no duplicate requests."
         required: true
-      - label: "This is not a game-related request."
-        required: true
 - type: markdown
   attributes:
     value: "Thanks for submitting your request! The team will review it and reach out if we need more information."

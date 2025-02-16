@@ -3,19 +3,8 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 # Copyright (c) 2021-2025 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://www.proxmox.com/en/proxmox-backup-server
 
-function header_info {
-clear
-cat <<"EOF"
-    ____                                          ____             __                  _____
-   / __ \_________  _  ______ ___  ____  _  __   / __ )____ ______/ /____  ______     / ___/___  ______   _____  _____
-  / /_/ / ___/ __ \| |/_/ __ `__ \/ __ \| |/_/  / __  / __ `/ ___/ //_/ / / / __ \    \__ \/ _ \/ ___/ | / / _ \/ ___/
- / ____/ /  / /_/ />  </ / / / / / /_/ />  <   / /_/ / /_/ / /__/ ,< / /_/ / /_/ /   ___/ /  __/ /   | |/ /  __/ /
-/_/   /_/   \____/_/|_/_/ /_/ /_/\____/_/|_|  /_____/\__,_/\___/_/|_|\__,_/ .___/   /____/\___/_/    |___/\___/_/
-                                                                         /_/
-EOF
-}
-header_info
 APP="Proxmox-Backup-Server"
 var_tags="backup"
 var_cpu="2"
@@ -25,10 +14,7 @@ var_os="debian"
 var_version="12"
 var_unprivileged="1"
 
-# App Output & Base Settings
-base_settings
-
-# Core 
+header_info "$APP"
 variables
 color
 catch_errors

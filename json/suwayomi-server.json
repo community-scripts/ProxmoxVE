@@ -1,0 +1,39 @@
+{
+    "name": "Suwayomi-Server",
+    "slug": "suwayomi-server",
+    "categories": [
+        13
+    ],
+    "date_created": "2025-02-07",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": 4567,
+    "documentation": "https://github.com/Suwayomi/Suwayomi-Server/wiki",
+    "website": "https://github.com/Suwayomi/Suwayomi-Server",
+    "logo": "https://github.com/Suwayomi/Suwayomi-Server/raw/master/server/src/main/resources/icon/faviconlogo.png",
+    "description": "A free and open source manga reader server that runs extensions built for Mihon (Tachiyomi).",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/suwayomiserver.sh",
+            "resources": {
+                "cpu": 1,
+                "ram": 1024,
+                "hdd": 4,
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": [
+        {
+            "text": "This application is conflicting with Kaspersky products. You need to disable Kaspersky in order to use this application.",
+            "type": "info"
+        }
+    ]
+}

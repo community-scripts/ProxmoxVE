@@ -1,0 +1,43 @@
+{
+    "name": "Graylog",
+    "slug": "graylog",
+    "categories": [
+        9
+    ],
+    "date_created": "2025-02-12",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": 9000,
+    "documentation": "https://go2docs.graylog.org/current/home.htm",
+    "website": "https://graylog.org/",
+    "logo": "https://graylog.org/wp-content/uploads/2023/11/gl-logo-horiz-all-white-1200w-300x96.png.webp",
+    "description": "Graylog is a free and open log management platform.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/graylog.sh",
+            "resources": {
+                "cpu": 2,
+                "ram": 8192,
+                "hdd": 30,
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": [
+        {
+        "text": "Initial Setup credentials: `tail /var/log/graylog-server/server.log` after the server starts for the first time.",
+        "type": "info"
+        },
+        {
+        "text": "Type `cat ~/graylog.creds` to get admin password that you use to log in AFTER the Initial Setup",
+        "type": "info"
+        }
+    ]
+}

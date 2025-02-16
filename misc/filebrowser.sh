@@ -26,8 +26,10 @@ INFO="${BL}ℹ️${CL}"
 APP="FileBrowser"
 INSTALL_PATH="/usr/local/bin/filebrowser"
 SERVICE_PATH="/etc/systemd/system/filebrowser.service"
-DB_PATH="/root/filebrowser.db"
+DB_PATH="/usr/local/community-scripts/filebrowser.db"
 IP=$(hostname -I | awk '{print $1}')
+DEFAULT_PORT=8080
+
 header_info
 
 function msg_info() {
@@ -69,6 +71,9 @@ if [ -f "$INSTALL_PATH" ]; then
 fi
 
 echo -e "${YW}⚠️ ${APP} is not installed.${CL}"
+read -r -p "Enter port number (Default: ${DEFAULT_PORT}): " PORT
+PORT=${PORT:-$DEFAULT_PORT}
+
 read -r -p "Would you like to install ${APP}? (y/n): " install_prompt
 if [[ "${install_prompt,,}" =~ ^(y|yes)$ ]]; then
     msg_info "Installing ${APP}"
@@ -76,38 +81,50 @@ if [[ "${install_prompt,,}" =~ ^(y|yes)$ ]]; then
     curl -fsSL https://github.com/filebrowser/filebrowser/releases/latest/download/linux-amd64-filebrowser.tar.gz | tar -xzv -C /usr/local/bin &>/dev/null
     msg_ok "Installed ${APP}"
 
+    msg_info "Creating FileBrowser directory"
+    mkdir -p /usr/local/community-scripts
+    chown root:root /usr/local/community-scripts
+    chmod 755 /usr/local/community-scripts
+    msg_ok "Directory created successfully"
+
     read -r -p "Would you like to use No Authentication? (y/N): " auth_prompt
     if [[ "${auth_prompt,,}" =~ ^(y|yes)$ ]]; then
         msg_info "Configuring No Authentication"
-        filebrowser config init -a '0.0.0.0' &>/dev/null
-        filebrowser config set -a '0.0.0.0' --auth.method=noauth &>/dev/null
+          cd /usr/local/community-scripts
+          filebrowser config init -a '0.0.0.0' -p "$PORT" -d "$DB_PATH" &>/dev/null
+          filebrowser config set -a '0.0.0.0' -p "$PORT" -d "$DB_PATH" &>/dev/null
+          filebrowser config init --auth.method=noauth &>/dev/null
+          filebrowser config set --auth.method=noauth &>/dev/null
+          filebrowser users add ID 1 --perm.admin &>/dev/null  
         msg_ok "No Authentication configured"
     else
         msg_info "Setting up default authentication"
-        filebrowser config init -a '0.0.0.0' &>/dev/null
-        filebrowser config set -a '0.0.0.0' &>/dev/null
-        filebrowser users add admin helper-scripts.com --perm.admin &>/dev/null
+        cd /usr/local/community-scripts
+        filebrowser config init -a '0.0.0.0' -p "$PORT" -d "$DB_PATH" &>/dev/null
+        filebrowser config set -a '0.0.0.0' -p "$PORT" -d "$DB_PATH" &>/dev/null
+        filebrowser users add admin helper-scripts.com --perm.admin --database "$DB_PATH" &>/dev/null
         msg_ok "Default authentication configured (admin:helper-scripts.com)"
     fi
 
     msg_info "Creating service"
-    cat <<EOF >/etc/systemd/system/filebrowser.service
+    cat <<EOF > "$SERVICE_PATH"
 [Unit]
 Description=Filebrowser
 After=network-online.target
 
 [Service]
 User=root
-WorkingDirectory=/root/
-ExecStart=/usr/local/bin/filebrowser -r /
+WorkingDirectory=/usr/local/community-scripts
+ExecStart=/usr/local/bin/filebrowser -r / -d "$DB_PATH" -p "$PORT"
+Restart=always
 
 [Install]
-WantedBy=default.target
+WantedBy=multi-user.target
 EOF
     systemctl enable -q --now filebrowser.service
     msg_ok "Service created successfully"
 
-    echo -e "${CM} ${GN}${APP} is reachable at: ${BL}http://$IP:8080${CL}"
+    echo -e "${CM} ${GN}${APP} is reachable at: ${BL}http://$IP:$PORT${CL}"
 else
     echo -e "${YW}⚠️ Installation skipped. Exiting.${CL}"
     exit 0

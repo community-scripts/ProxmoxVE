@@ -6,7 +6,6 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 # https://github.com/tteck/Proxmox/raw/main/LICENSE
 # Source: https://nextpvr.com/
 
-# App Default Values
 APP="NextPVR"
 var_tags="pvr"
 var_cpu="1"
@@ -16,11 +15,7 @@ var_os="debian"
 var_version="12"
 var_unprivileged="1"
 
-# App Output & Base Settings
 header_info "$APP"
-base_settings
-
-# Core
 variables
 color
 catch_errors

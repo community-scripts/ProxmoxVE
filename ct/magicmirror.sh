@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 tteck
-# Author: tteck (tteckster)
+# Author: tteck (tteckster) | Co-Author Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://magicmirror.builders/
 
-# App Default Values
 APP="MagicMirror"
 var_tags="smarthome"
 var_cpu="1"
@@ -15,11 +14,7 @@ var_os="debian"
 var_version="12"
 var_unprivileged="1"
 
-# App Output & Base Settings
 header_info "$APP"
-base_settings
-
-# Core
 variables
 color
 catch_errors
@@ -32,18 +27,45 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  if [[ "$(node -v | cut -d 'v' -f 2)" == "18."* ]]; then
-    if ! command -v npm >/dev/null 2>&1; then
-      echo "Installing NPM..."
-      apt-get install -y npm >/dev/null 2>&1
-      echo "Installed NPM..."
+  RELEASE=$(curl -s https://api.github.com/repos/MagicMirrorOrg/MagicMirror/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+  if [[ ! -f /opt/${APP}_version.txt ]]; then touch /opt/${APP}_version.txt; fi
+  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+    msg_info "Stopping Service"
+    systemctl stop magicmirror
+    msg_ok "Stopped Service"
+
+    msg_info "Updating ${APP} to v${RELEASE}"
+    mkdir /opt/magicmirror-backup
+    cp /opt/magicmirror/config/config.js /opt/magicmirror-backup
+    if [[ -f /opt/magicmirror/css/custom.css ]]; then
+      cp /opt/magicmirror/css/custom.css /opt/magicmirror-backup
     fi
+    cp -r /opt/magicmirror/modules /opt/magicmirror-backup
+    temp_file=$(mktemp)
+    wget -q "https://github.com/MagicMirrorOrg/MagicMirror/archive/refs/tags/v${RELEASE}.tar.gz" -O "$temp_file"
+    tar -xzf "$temp_file"
+    rm -rf /opt/magicmirror
+    mv MagicMirror-${RELEASE} /opt/magicmirror
+    cd /opt/magicmirror
+    npm run install-mm &> /dev/null
+    cp /opt/magicmirror-backup/config.js /opt/magicmirror/config/
+    if [[ -f /opt/magicmirror-backup/custom.css ]]; then
+      cp /opt/magicmirror-backup/custom.css /opt/magicmirror/css/
+    fi
+    echo "${RELEASE}" >"/opt/${APP}_version.txt"
+    msg_ok "Updated ${APP} to v${RELEASE}"
+
+    msg_info "Starting Service"
+    systemctl start magicmirror
+    msg_ok "Started Service"
+
+    msg_info "Cleaning up"
+    rm -f $temp_file
+    msg_ok "Cleaned"
+    msg_ok "Updated Successfully"
+  else
+    msg_ok "No update required. ${APP} is already at v${RELEASE}."
   fi
-  msg_info "Updating ${APP} LXC"
-  cd /opt/magicmirror
-  git pull &>/dev/null
-  npm install --only=prod --omit=dev &>/dev/null
-  msg_ok "Updated Successfully"
   exit
 }
 

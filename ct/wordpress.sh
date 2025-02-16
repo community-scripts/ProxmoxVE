@@ -14,11 +14,7 @@ var_ram="2048"
 var_os="debian"
 var_version="12"
 
-# App Output & Base Settings
-header_info "$APP"
-base_settings
-
-# Core 
+header_info "$APP" 
 variables
 color
 catch_errors

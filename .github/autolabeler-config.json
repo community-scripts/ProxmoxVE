@@ -23,7 +23,7 @@
     {
       "fileStatus": "modified",
       "includeGlobs": ["ct/**", "install/**", "misc/**", "turnkey/**", "vm/**"],
-      "excludeGlobs": ["misc/build.func", "misc/install.func"]
+      "excludeGlobs": ["misc/build.func", "misc/install.func", "misc/api.func"]
     }
   ],
   "delete script": [
@@ -51,13 +51,20 @@
     {
       "fileStatus": null,
       "includeGlobs": ["*.md", ".github/**", "misc/*.func", "ct/create_lxc.sh"],
+      "excludeGlobs": ["misc/api.func"]
+    }
+  ],
+   "api": [
+    {
+      "fileStatus": null,
+      "includeGlobs": ["api/**", "misc/api.func"],
       "excludeGlobs": []
     }
   ],
   "high risk": [
     {
       "fileStatus": null,
-      "includeGlobs": ["misc/build.func", "misc/install.func"],
+      "includeGlobs": ["misc/build.func", "misc/install.func", "ct/create_lxc.sh"],
       "excludeGlobs": []
     }
   ]

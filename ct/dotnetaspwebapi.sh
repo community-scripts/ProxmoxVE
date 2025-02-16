@@ -5,7 +5,6 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/linux-nginx?view=aspnetcore-9.0&tabs=linux-ubuntu
 
-# App Default Values
 APP="Dotnet ASP Web API"
 var_tags="web"
 var_cpu="1"
@@ -15,11 +14,7 @@ var_os="ubuntu"
 var_version="24.04"
 var_unprivileged="0"
 
-# App Output & Base Settings
 header_info "$APP"
-base_settings
-
-# Core
 variables
 color
 catch_errors

@@ -1,6 +1,6 @@
 name: "🐞 Script Issue Report"
 description: Report a specific issue with a script. For other inquiries, please use the Discussions section.
-
+labels: ["bug"]
 body:
   - type: markdown
     attributes:

@@ -5,7 +5,6 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://docs.jellyseerr.dev/
 
-# App Default Values
 APP="Jellyseerr"
 var_tags="media"
 var_cpu="4"
@@ -15,11 +14,7 @@ var_os="debian"
 var_version="12"
 var_unprivileged="1"
 
-# App Output & Base Settings
-header_info "$APP"
-base_settings
-
-# Core 
+header_info "$APP" 
 variables
 color
 catch_errors
