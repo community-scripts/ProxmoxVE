@@ -34,13 +34,21 @@ function update_script() {
     msg_ok "Stopped ${APP} Service"
 
     msg_info "Updating ${APP} to v${RELEASE}"
+
     cd /opt
     rm -rf grist_bak
     mv grist grist_bak
     wget -q https://github.com/gristlabs/grist-core/archive/refs/tags/v${RELEASE}.zip
     unzip -q v$RELEASE.zip
     mv grist-core-${RELEASE} grist
-    cp -n /opt/grist_bak/.env /opt/grist/.env
+
+    mkdir -p grist/docs
+
+    cp -n grist_bak/.env grist/.env || true
+    cp -r grist_bak/docs/* grist/docs/ || true
+    cp grist_bak/grist-sessions.db grist/grist-sessions.db || true
+    cp grist_bak/landing.db grist/landing.db || true
+
     cd grist
     yarn install >/dev/null 2>&1
     yarn run build:prod >/dev/null 2>&1
