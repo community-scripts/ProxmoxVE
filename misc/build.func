@@ -5,12 +5,12 @@
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
 variables() {
-  NSAPP=$(echo ${APP,,} | tr -d ' ')                # This function sets the NSAPP variable by converting the value of the APP variable to lowercase and removing any spaces.
-  var_install="${NSAPP}-install"                    # sets the var_install variable by appending "-install" to the value of NSAPP.
-  INTEGER='^[0-9]+([.][0-9]+)?$'                    # it defines the INTEGER regular expression pattern.
-  PVEHOST_NAME=$(hostname)                          # gets the Proxmox Hostname and sets it to Uppercase
-  DIAGNOSTICS="yes"                                 # sets the DIAGNOSTICS variable to "yes", used for the API call.
-  METHOD="default"                                  # sets the METHOD variable to "default", used for the API call.
+  NSAPP=$(echo ${APP,,} | tr -d ' ') # This function sets the NSAPP variable by converting the value of the APP variable to lowercase and removing any spaces.
+  var_install="${NSAPP}-install"     # sets the var_install variable by appending "-install" to the value of NSAPP.
+  INTEGER='^[0-9]+([.][0-9]+)?$'     # it defines the INTEGER regular expression pattern.
+  PVEHOST_NAME=$(hostname)           # gets the Proxmox Hostname and sets it to Uppercase
+  DIAGNOSTICS="yes"                  # sets the DIAGNOSTICS variable to "yes", used for the API call.
+  METHOD="default"                   # sets the METHOD variable to "default", used for the API call.
   RANDOM_UUID="$(cat /proc/sys/kernel/random/uuid)" # generates a random UUID and sets it to the RANDOM_UUID variable.
 }
 
@@ -69,14 +69,14 @@ catch_errors() {
 
 # This function is called when an error occurs. It receives the exit code, line number, and command that caused the error, and displays an error message.
 error_handler() {
-  source /dev/stdin <<<$(wget -qLO - https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func)
-  if [ -n "$SPINNER_PID" ] && ps -p $SPINNER_PID >/dev/null; then kill $SPINNER_PID >/dev/null; fi
+  source /dev/stdin <<< $(wget -qLO - https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func)																															   
+  if [ -n "$SPINNER_PID" ] && ps -p $SPINNER_PID > /dev/null; then kill $SPINNER_PID > /dev/null; fi
   printf "\e[?25h"
   local exit_code="$?"
   local line_number="$1"
   local command="$2"
   local error_message="${RD}[ERROR]${CL} in line ${RD}$line_number${CL}: exit code ${RD}$exit_code${CL}: while executing command ${YW}$command${CL}"
-  post_update_to_api "failed" "${command}"
+  post_update_to_api "failed" "${command}"									  
   echo -e "\n$error_message\n"
 }
 
@@ -91,7 +91,7 @@ spinner() {
 
   while true; do
     printf "\r ${color}%s${CL}" "${frames[spin_i]}"
-    spin_i=$(((spin_i + 1) % ${#frames[@]}))
+    spin_i=$(( (spin_i + 1) % ${#frames[@]} ))
     sleep "$interval"
   done
 }
@@ -106,7 +106,7 @@ msg_info() {
 
 # This function displays a success message with a green color.
 msg_ok() {
-  if [ -n "$SPINNER_PID" ] && ps -p $SPINNER_PID >/dev/null; then kill $SPINNER_PID >/dev/null; fi
+  if [ -n "$SPINNER_PID" ] && ps -p $SPINNER_PID > /dev/null; then kill $SPINNER_PID > /dev/null; fi
   printf "\e[?25h"
   local msg="$1"
   echo -e "${BFR}${CM}${GN}${msg}${CL}"
@@ -114,7 +114,7 @@ msg_ok() {
 
 # This function displays a error message with a red color.
 msg_error() {
-  if [ -n "$SPINNER_PID" ] && ps -p $SPINNER_PID >/dev/null; then kill $SPINNER_PID >/dev/null; fi
+  if [ -n "$SPINNER_PID" ] && ps -p $SPINNER_PID > /dev/null; then kill $SPINNER_PID > /dev/null; fi
   printf "\e[?25h"
   local msg="$1"
   echo -e "${BFR}${CROSS}${RD}${msg}${CL}"
@@ -236,13 +236,13 @@ update_motd_ip() {
 
     IP=$(get_current_ip)
     # Add the new IP address
-    echo -e "${TAB}${NETWORK}${YW} IP Address: ${GN}${IP}${CL}" >>"$MOTD_FILE"
+    echo -e "${TAB}${NETWORK}${YW} IP Address: ${GN}${IP}${CL}" >> "$MOTD_FILE"
   fi
 }
 
 # Function to download & save header files
 get_header() {
-  local app_name=$(echo ${APP,,} | tr -d ' ')
+  local app_name=$(echo ${APP,,} | tr -d ' ') 
   local header_url="https://github.com/community-scripts/ProxmoxVE/raw/main/ct/headers/${app_name}"
   local local_header_path="/usr/local/community-scripts/headers/${app_name}"
 
@@ -261,7 +261,7 @@ get_header() {
 
 # This function sets the APP-Name into an ASCII Header in Slant, figlet needed on proxmox main node.
 header_info() {
-  local app_name=$(echo ${APP,,} | tr -d ' ')
+  local app_name=$(echo ${APP,,} | tr -d ' ') 
   local header_content
 
   # Download & save Header-File locally
@@ -795,14 +795,14 @@ advanced_settings() {
   fi
 }
 
-diagnostics_check() {
+diagnostics_check(){
   if ! [ -d "/usr/local/community-scripts" ]; then
-    mkdir -p /usr/local/community-scripts
-  fi
+      mkdir -p /usr/local/community-scripts
+    fi
 
-  if ! [ -f "/usr/local/community-scripts/diagnostics" ]; then
-    if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "DIAGNOSTICS" --yesno "Send Diagnostics of LXC Installation?\n\n(This only transmits data without user data, just RAM, CPU, LXC name, ...)" 10 58); then
-      cat <<EOF >/usr/local/community-scripts/diagnostics
+    if ! [ -f "/usr/local/community-scripts/diagnostics" ]; then
+      if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "DIAGNOSTICS" --yesno "Send Diagnostics of LXC Installation?\n\n(This only transmits data without user data, just RAM, CPU, LXC name, ...)" 10 58); then
+          cat <<EOF>/usr/local/community-scripts/diagnostics
 DIAGNOSTICS=yes
 
 #This file is used to store the diagnostics settings for the Community-Scripts API.
@@ -920,23 +920,23 @@ install_script() {
       advanced_settings
       break
       ;;
-    4)
-      if [[ $DIAGNOSTICS == "yes" ]]; then
-        if whiptail --backtitle "Proxmox VE Helper Scripts" --title "DIAGNOSTICS SETTINGS" --yesno "Send Diagnostics of LXC Installation?\n\nCurrent setting: ${DIAGNOSTICS}" 10 58 \
-          --yes-button "No" --no-button "Back"; then
-          DIAGNOSTICS="no"
-          sed -i 's/^DIAGNOSTICS=.*/DIAGNOSTICS=no/' /usr/local/community-scripts/diagnostics
-          whiptail --backtitle "Proxmox VE Helper Scripts" --title "DIAGNOSTICS SETTINGS" --msgbox "Diagnostics settings changed to ${DIAGNOSTICS}." 8 58
-        fi
-      else
-        if whiptail --backtitle "Proxmox VE Helper Scripts" --title "DIAGNOSTICS SETTINGS" --yesno "Send Diagnostics of LXC Installation?\n\nCurrent setting: ${DIAGNOSTICS}" 10 58 \
-          --yes-button "Yes" --no-button "Back"; then
-          DIAGNOSTICS="yes"
-          sed -i 's/^DIAGNOSTICS=.*/DIAGNOSTICS=yes/' /usr/local/community-scripts/diagnostics
-          whiptail --backtitle "Proxmox VE Helper Scripts" --title "DIAGNOSTICS SETTINGS" --msgbox "Diagnostics settings changed to ${DIAGNOSTICS}." 8 58
-        fi
-      fi
-      ;;
+     4)
+        if [[ $DIAGNOSTICS == "yes" ]]; then
+          if whiptail --backtitle "Proxmox VE Helper Scripts" --title "DIAGNOSTICS SETTINGS" --yesno "Send Diagnostics of LXC Installation?\n\nCurrent setting: ${DIAGNOSTICS}" 10 58 \
+          --yes-button "No" --no-button "Back" ; then
+            DIAGNOSTICS="no"
+            sed -i 's/^DIAGNOSTICS=.*/DIAGNOSTICS=no/' /usr/local/community-scripts/diagnostics
+            whiptail --backtitle "Proxmox VE Helper Scripts" --title "DIAGNOSTICS SETTINGS" --msgbox "Diagnostics settings changed to ${DIAGNOSTICS}." 8 58
+          fi
+        else
+          if whiptail --backtitle "Proxmox VE Helper Scripts" --title "DIAGNOSTICS SETTINGS" --yesno "Send Diagnostics of LXC Installation?\n\nCurrent setting: ${DIAGNOSTICS}" 10 58 \
+          --yes-button "Yes" --no-button "Back" ; then
+            DIAGNOSTICS="yes"
+            sed -i 's/^DIAGNOSTICS=.*/DIAGNOSTICS=yes/' /usr/local/community-scripts/diagnostics
+            whiptail --backtitle "Proxmox VE Helper Scripts" --title "DIAGNOSTICS SETTINGS" --msgbox "Diagnostics settings changed to ${DIAGNOSTICS}." 8 58
+          fi
+        fi        
+        ;;
     5)
       echo -e "${CROSS}${RD}Exiting.${CL}"
       exit 0
@@ -973,8 +973,8 @@ check_container_storage() {
   # Check if the /boot partition is more than 80% full
   total_size=$(df /boot --output=size | tail -n 1)
   local used_size=$(df /boot --output=used | tail -n 1)
-  usage=$((100 * used_size / total_size))
-  if ((usage > 80)); then
+  usage=$(( 100 * used_size / total_size ))
+  if (( usage > 80 )); then
     # Prompt the user for confirmation to continue
     echo -e "${INFO}${HOLD} ${YWB}Warning: Storage is dangerously low (${usage}%).${CL}"
     echo -ne "Continue anyway? <y/N>  "
@@ -1168,33 +1168,35 @@ EOF
   if [[ -f /etc/systemd/system/ping-instances.service ]]; then
     systemctl start ping-instances.service
   fi
-
+  
   post_update_to_api "done" "none"
 }
 
+
 exit_script() {
-  exit_code=$? # Capture the exit status of the last executed command
+  exit_code=$?  # Capture the exit status of the last executed command
   #200 exit codes indicate error in create_lxc.sh
   #100 exit codes indicate error in install.func
 
-  if [ $exit_code -ne 0 ]; then # Check if exit code is nonzero
+if [ $exit_code -ne 0 ]; then  # Check if exit code is nonzero
     case $exit_code in
-    200) post_update_to_api "failed" "create_lxc.sh: Error during LXC creation" ;;
-    201) post_update_to_api "failed" "create_lxc.sh Invalid Storage class" ;;
-    202) post_update_to_api "failed" "create_lxc.sh Invalid Menu aborted" ;;
-    203) post_update_to_api "failed" "create_lxc.sh CTID was unset" ;;
-    204) post_update_to_api "failed" "create_lxc.sh PCT_OSTYPE was unset" ;;
-    205) post_update_to_api "failed" "create_lxc.sh ID cannot be less than 100" ;;
-    206) post_update_to_api "failed" "create_lxc.sh ID already in use" ;;
-    207) post_update_to_api "failed" "create_lxc.sh Template not found" ;;
-    208) post_update_to_api "failed" "create_lxc.sh Error downloading template" ;;
-    101) post_update_to_api "failed" "create_lxc.sh No Network connection" ;;
-    *) post_update_to_api "failed" "Unknown error, exit code: $exit_code" ;;
+        200) post_update_to_api "failed" "create_lxc.sh: Error during LXC creation" ;;
+        201) post_update_to_api "failed" "create_lxc.sh Invalid Storage class" ;;
+        202) post_update_to_api "failed" "create_lxc.sh Invalid Menu aborted" ;;
+        203) post_update_to_api "failed" "create_lxc.sh CTID was unset" ;;
+        204) post_update_to_api "failed" "create_lxc.sh PCT_OSTYPE was unset" ;;
+        205) post_update_to_api "failed" "create_lxc.sh ID cannot be less than 100" ;;
+        206) post_update_to_api "failed" "create_lxc.sh ID already in use" ;;
+        207) post_update_to_api "failed" "create_lxc.sh Template not found" ;;
+        208) post_update_to_api "failed" "create_lxc.sh Error downloading template" ;;
+        101) post_update_to_api "failed" "create_lxc.sh No Network connection" ;;
+        *)   post_update_to_api "failed" "Unknown error, exit code: $exit_code" ;;
     esac
-  fi
+fi
 }
+
 
 trap 'exit_script' EXIT
 trap 'post_update_to_api "failed" "$BASH_COMMAND"' ERR
-trap 'post_update_to_api "failed" "INTERRUPTED"' SIGINT
+trap 'post_update_to_api "failed" "INTERRUPTED"' SIGINT 
 trap 'post_update_to_api "failed" "TERMINATED"' SIGTERM
