@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
-# Author: [YourUserName]
+# Author: miviro
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: [SOURCE_URL]
+# Source: https://github.com/heiher/hev-socks5-server
 
 # App Default Values
 APP="hev-socks5-server"
@@ -34,37 +34,45 @@ function update_script() {
     check_container_resources
 
     # Check if installation is present | -f for file, -d for folder
-    if [[ ! -f [INSTALLATION_CHECK_PATH] ]]; then
+    if [[ ! -f /opt/hev-socks5-server ]]; then
         msg_error "No ${APP} Installation Found!"
         exit
     fi
 
     # Crawling the new version and checking whether an update is required
-    RELEASE=$(curl -fsSL [RELEASE_URL] | [PARSE_RELEASE_COMMAND])
+    RELEASE=$(curl -s https://api.github.com/repos/heiher/hev-socks5-server/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
     if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
         # Stopping Services
         msg_info "Stopping $APP"
-        systemctl stop [SERVICE_NAME]
+        systemctl stop $APP
         msg_ok "Stopped $APP"
 
         # Creating Backup
         msg_info "Creating Backup"
-        tar -czf "/opt/${APP}_backup_$(date +%F).tar.gz" [IMPORTANT_PATHS]
+        tar -czf "/opt/${APP}_backup_$(date +%F).tar.gz" "/etc/${APP}"
         msg_ok "Backup Created"
 
         # Execute Update
         msg_info "Updating $APP to v${RELEASE}"
-        [UPDATE_COMMANDS]
+        git clone --recursive https://github.com/heiher/hev-socks5-server
+        cd hev-socks5-server || exit
+        make
+        mv bin/${APP} /opt/${APP}
+        echo "${RELEASE}" >/opt/${APP}_version.txt
+        # do not overwrite existing config
+        if [ ! -d "/etc/${APP}" ]; then
+            mv conf/ /etc/${APP}/
+        fi
         msg_ok "Updated $APP to v${RELEASE}"
 
         # Starting Services
         msg_info "Starting $APP"
-        systemctl start [SERVICE_NAME]
+        systemctl start $APP
         msg_ok "Started $APP"
 
         # Cleaning up
         msg_info "Cleaning Up"
-        rm -rf [TEMP_FILES]
+        rm -rf "${APP}"
         msg_ok "Cleanup Completed"
 
         # Last Action

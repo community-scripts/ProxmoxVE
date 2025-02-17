@@ -32,7 +32,7 @@
     },
     "notes": [
         {
-            "text": "Modify config at /etc/hev-socks5-server/main.yml (restart needed)",
+            "text": "You must set up username and password at /etc/hev-socks5-server/main.yml (restart needed)",
             "type": "info"
         }
     ]    
