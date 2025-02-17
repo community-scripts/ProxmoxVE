@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 # Copyright (c) 2021-2025 community-scripts ORG
-# Author: [YourUserName]
+# Author: miviro
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: [SOURCE_URL]
+# Source: https://github.com/heiher/hev-socks5-server
 
 # Import Functions und Setup
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
