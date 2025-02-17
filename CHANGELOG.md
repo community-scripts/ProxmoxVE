@@ -21,6 +21,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### Changes
 
+### 💥 Breaking Changes
+
+- Zipline: Prepare for Version 4.0.0 [@MickLesk](https://github.com/MickLesk) ([#2455](https://github.com/community-scripts/ProxmoxVE/pull/2455))
+
 ### 🚀 Updated Scripts
 
 - Fix: Zipline increase SECRET to 42 chars [@V1d1o7](https://github.com/V1d1o7) ([#2444](https://github.com/community-scripts/ProxmoxVE/pull/2444))
