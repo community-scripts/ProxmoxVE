@@ -72,7 +72,8 @@ function update_script() {
 
         # Cleaning up
         msg_info "Cleaning Up"
-        rm -rf "${APP}"
+        cd .. || exit 1
+        rm -rf hev-socks5-server
         msg_ok "Cleanup Completed"
 
         # Last Action

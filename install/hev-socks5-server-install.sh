@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 # Copyright (c) 2021-2025 community-scripts ORG
-# Author: miviro
+# Author: [YourUserName]
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://github.com/heiher/hev-socks5-server
+# Source: [SOURCE_URL]
 
 # Import Functions und Setup
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
@@ -63,6 +63,7 @@ customize
 
 # Cleanup
 msg_info "Cleaning up"
+cd .. || exit 1
 rm -rf "${APPLICATION}"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
