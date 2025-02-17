@@ -21,7 +21,7 @@ msg_ok "Installed Dependencies"
 
 msg_info "Installing Apt-Cacher NG"
 DEBIAN_FRONTEND=noninteractive $STD apt-get -o Dpkg::Options::="--force-confold" install -y apt-cacher-ng
-sed -i 's/# PassThroughPattern: .* # this would allow CONNECT to everything/PassThroughPattern: .*/' /etc/apt-cacher-ng/acng.conf
+sed -i 's/# PassThroughPattern: .* # this would allow CONNECT to everything/PassThroughPattern: ^(.*):443$/' /etc/apt-cacher-ng/acng.conf
 systemctl enable -q --now apt-cacher-ng
 msg_ok "Installed Apt-Cacher NG"
 
