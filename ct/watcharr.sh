@@ -37,11 +37,12 @@ function update_script() {
 
         msg_info "Updating $APP to v${RELEASE}"
         temp_file=$(mktemp)
+        temp_folder=$(mktemp -d)
         wget -q "https://github.com/sbondCo/Watcharr/archive/refs/tags/v${RELEASE}.tar.gz" -O "$temp_file"
-        tar -xzf "$temp_file"
+        tar -xzf "$temp_file" -C "$temp_folder"
         rm -f /opt/watcharr/server/watcharr
         rm -rf /opt/watcharr/server/ui
-        mv Watcharr-${RELEASE}/ /opt/watcharr
+        cp -rf ${temp_folder}/Watcharr-${RELEASE}/* /opt/watcharr
         cd /opt/watcharr
         export GOOS=linux
         npm i &> /dev/null
@@ -58,6 +59,7 @@ function update_script() {
 
         msg_info "Cleaning Up"
         rm -f ${temp_file}
+        rm -rf ${temp_folder}
         msg_ok "Cleanup Completed"
 
         echo "${RELEASE}" >/opt/${APP}_version.txt
