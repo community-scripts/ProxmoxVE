@@ -8,7 +8,7 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 APP="BunkerWeb"
 var_tags="webserver"
 var_cpu="2"
-var_ram="1024"
+var_ram="4096"
 var_disk="4"
 var_os="debian"
 var_version="12"
@@ -34,7 +34,7 @@ Pin: version ${RELEASE}
 Pin-Priority: 1001
 EOF
   apt-get update
-  apt-get install -y nginx=1.26.2*
+  apt-get install -y nginx=1.26.3*
   apt-get install -y bunkerweb=${RELEASE}
   echo "${RELEASE}" >/opt/${APP}_version.txt
   msg_ok "Updated ${APP} to ${RELEASE}"

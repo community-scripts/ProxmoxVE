@@ -26,7 +26,7 @@ msg_info "Installing Nginx"
 wget -qO- https://nginx.org/keys/nginx_signing.key | gpg --dearmor >/usr/share/keyrings/nginx-archive-keyring.gpg
 echo "deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] http://nginx.org/packages/debian $(lsb_release -cs) nginx" >/etc/apt/sources.list.d/nginx.list
 $STD apt-get update
-$STD apt-get install -y nginx=1.26.2*
+$STD apt-get install -y nginx=1.26.3*
 msg_ok "Installed Nginx"
 
 RELEASE=$(curl -s https://api.github.com/repos/bunkerity/bunkerweb/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
@@ -34,7 +34,6 @@ msg_info "Installing BunkerWeb v${RELEASE} (Patience)"
 curl -fsSL "https://repo.bunkerweb.io/bunkerity/bunkerweb/gpgkey" | gpg --dearmor >/etc/apt/keyrings/bunkerity_bunkerweb-archive-keyring.gpg
 echo "deb [signed-by=/etc/apt/keyrings/bunkerity_bunkerweb-archive-keyring.gpg] https://repo.bunkerweb.io/bunkerity/bunkerweb/debian/ bookworm main" >/etc/apt/sources.list.d/bunkerity_bunkerweb.list
 $STD apt-get update
-export UI_WIZARD=1
 $STD apt-get install -y bunkerweb=${RELEASE}
 cat <<EOF >/etc/apt/preferences.d/bunkerweb
 Package: bunkerweb
