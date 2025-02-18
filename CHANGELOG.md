@@ -27,6 +27,8 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- Fix: SQL Server 2022 | GPG & Install [@MickLesk](https://github.com/MickLesk) ([#2476](https://github.com/community-scripts/ProxmoxVE/pull/2476))
+- Feature: PBS Bare Metal Installation - Allow Microcode [@MickLesk](https://github.com/MickLesk) ([#2477](https://github.com/community-scripts/ProxmoxVE/pull/2477))
 - Fix: MagicMirror force Node version and fix backups [@tremor021](https://github.com/tremor021) ([#2468](https://github.com/community-scripts/ProxmoxVE/pull/2468))
 - Update BunkerWeb scripts to latest NGINX and specs [@TheophileDiot](https://github.com/TheophileDiot) ([#2466](https://github.com/community-scripts/ProxmoxVE/pull/2466))
 
