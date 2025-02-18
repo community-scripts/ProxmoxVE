@@ -43,7 +43,7 @@ function update_script() {
         rm -rf /opt/watcharr/server/ui
         mv Watcharr-${RELEASE}/ /opt/watcharr
         cd /opt/watcharr
-        export GOOS=linux
+        export GOOS=linux PATH="/usr/local/bin:$PATH"
         npm i &> /dev/null
         npm run build &> /dev/null
         mv ./build ./server/ui
