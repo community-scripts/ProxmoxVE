@@ -23,6 +23,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- Fix: MagicMirror force Node version and fix backups [@tremor021](https://github.com/tremor021) ([#2468](https://github.com/community-scripts/ProxmoxVE/pull/2468))
 - Update BunkerWeb scripts to latest NGINX and specs [@TheophileDiot](https://github.com/TheophileDiot) ([#2466](https://github.com/community-scripts/ProxmoxVE/pull/2466))
 
 ## 2025-02-17
