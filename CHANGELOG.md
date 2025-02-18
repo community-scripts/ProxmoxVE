@@ -17,6 +17,14 @@ All LXC instances created using this repository come pre-installed with Midnight
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
 
+## 2025-02-18
+
+### Changes
+
+### 🚀 Updated Scripts
+
+- Update BunkerWeb scripts to latest NGINX and specs [@TheophileDiot](https://github.com/TheophileDiot) ([#2466](https://github.com/community-scripts/ProxmoxVE/pull/2466))
+
 ## 2025-02-17
 
 ### Changes
