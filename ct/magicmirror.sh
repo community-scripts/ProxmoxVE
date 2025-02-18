@@ -35,6 +35,9 @@ function update_script() {
     msg_ok "Stopped Service"
 
     msg_info "Updating ${APP} to v${RELEASE}"
+    $STD apt-get update
+    $STD apt-get upgrade -y
+    rm -rf /opt/magicmirror-backup
     mkdir /opt/magicmirror-backup
     cp /opt/magicmirror/config/config.js /opt/magicmirror-backup
     if [[ -f /opt/magicmirror/css/custom.css ]]; then
