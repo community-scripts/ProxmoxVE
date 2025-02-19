@@ -34,6 +34,10 @@
       {
         "text": "During installation you will be prompted to input your TMDb key, Plex URL and Plex token. Make sure you have them ready.",
         "type": "info"
+      },
+      {
+        "text": "Configuration file is at `/opt/kometa/config/config.yml`",
+        "type": "info"
       }
     ]
   }
