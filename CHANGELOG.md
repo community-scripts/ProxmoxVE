@@ -32,6 +32,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- Fix: Pingvin Share - Update not copying to correct directory [@tremor021](https://github.com/tremor021) ([#2521](https://github.com/community-scripts/ProxmoxVE/pull/2521))
 - WikiJS: Prepare for Using PostgreSQL [@MickLesk](https://github.com/MickLesk) ([#2516](https://github.com/community-scripts/ProxmoxVE/pull/2516))
 
 ### 🧰 Maintenance
