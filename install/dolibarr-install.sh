@@ -19,11 +19,11 @@ $STD apt-get install -y \
   sudo \
   mc \
   php-imap \
-  debconf-utils
+  debconf-utils \
+  mariadb-server
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up Database"
-$STD apt-get install mariadb-server
 ROOT_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 $STD sudo mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password AS PASSWORD('$ROOT_PASS'); flush privileges;"
 {
@@ -38,7 +38,8 @@ RELEASE=$(curl -s "$BASE" | grep -oP '(?<=/Dolibarr%20installer%20for%20Debian-U
 FILE=$(curl -s "${BASE}${RELEASE}/" | grep -oP 'dolibarr_[^"]+_all.deb' | head -n1)
 wget -q "https://netcologne.dl.sourceforge.net/project/dolibarr/Dolibarr%20installer%20for%20Debian-Ubuntu%20(DoliDeb)/${RELEASE}/${FILE}?viasf=1" -O "$FILE"
 echo "dolibarr dolibarr/reconfigure-webserver multiselect apache2" | debconf-set-selections
-$STD apt-get install ./$FILE -y && $STD apt install -f
+$STD apt-get install ./$FILE -y
+$STD apt install -f
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Setup Dolibarr"
 

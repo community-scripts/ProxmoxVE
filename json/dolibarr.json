@@ -12,7 +12,7 @@
     "documentation": "https://wiki.dolibarr.org/index.php?title=Home",
     "website": "https://www.dolibarr.org/",
     "logo": "https://wiki.dolibarr.org/images/5/51/Dolibarr_124x124_white.svg",
-    "description": "Web based ERP and CRM Open Source software to manage a professional or foundation activity.",
+    "description": "Dolibarr ERP CRM is a modern software package to manage your company or foundation's activity (contacts, suppliers, invoices, orders, stocks, agenda, accounting, ...). it's an open source Web application (written in PHP) designed for businesses of any sizes, foundations and freelancers.",
     "install_methods": [
       {
         "type": "default",
