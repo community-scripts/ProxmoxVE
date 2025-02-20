@@ -52,6 +52,7 @@ fi
 msg_info "Installing Podman"
 $STD apt-get -y install podman
 $STD systemctl enable --now podman.socket
+echo -e 'unqualified-search-registries=["docker.io"]' >> /etc/containers/registries.conf
 msg_ok "Installed Podman"
 
 read -r -p "Would you like to add Portainer? <y/N> " prompt
