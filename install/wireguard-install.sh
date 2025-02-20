@@ -22,7 +22,6 @@ msg_ok "Installed Dependencies"
 
 msg_info "Installing WireGuard"
 $STD apt-get install -y wireguard wireguard-tools net-tools iptables
-iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::="--force-confnew" install -y iptables-persistent &>/dev/null
 $STD netfilter-persistent reload
 msg_ok "Installed WireGuard"
