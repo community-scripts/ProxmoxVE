@@ -14,32 +14,48 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y curl
-$STD apt-get install -y sudo
-$STD apt-get install -y mc
-$STD apt-get install -y ufw
-$STD apt-get install -y ntp
+$STD apt-get install -y \
+  curl \
+  sudo \
+  mc \
+  ufw
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Pi-hole"
-mkdir -p /etc/pihole/
-cat <<EOF >/etc/pihole/setupVars.conf
-PIHOLE_INTERFACE=eth0
-PIHOLE_DNS_1=8.8.8.8
-PIHOLE_DNS_2=8.8.4.4
-QUERY_LOGGING=true
-INSTALL_WEB_SERVER=true
-INSTALL_WEB_INTERFACE=true
-LIGHTTPD_ENABLED=true
-CACHE_SIZE=10000
-DNS_FQDN_REQUIRED=true
-DNS_BOGUS_PRIV=true
-DNSMASQ_LISTENING=local
-WEBPASSWORD=$(openssl rand -base64 48)
-BLOCKING_ENABLED=true
-EOF
-# View script https://install.pi-hole.net
+mkdir -p /etc/pihole
+touch /etc/pihole/pihole.toml
 $STD bash <(curl -fsSL https://install.pi-hole.net) --unattended
+sed -i -E '
+/^\s*upstreams =/ s|=.*|= ["8.8.8.8", "8.8.4.4"]|
+/^\s*interface =/ s|=.*|= "eth0"|
+/^\s*queryLogging =/ s|=.*|= true|
+/^\s*size =/ s|=.*|= 10000|
+/^\s*active =/ s|=.*|= true|
+/^\s*listeningMode =/ s|=.*|= "LOCAL"|
+/^\s*port =/ s|=.*|= "80o,443os,[::]:80o,[::]:443os"|
+/^\s*pwhash =/ s|=.*|= ""|
+
+# DHCP Disable
+/^\s*\[dhcp\]/,/^\s*\[/{s/^\s*active = true/  active = false/}
+
+# NTP Disable
+/^\s*\[ntp.ipv4\]/,/^\s*\[/{s/^\s*active = true/  active = false/}
+/^\s*\[ntp.ipv6\]/,/^\s*\[/{s/^\s*active = true/  active = false/}
+/^\s*\[ntp.sync\]/,/^\s*\[/{s/^\s*active = true/  active = false/}
+/^\s*\[ntp.sync\]/,/^\s*\[/{s/^\s*interval = [0-9]+/  interval = 0/}
+/^\s*\[ntp.sync.rtc\]/,/^\s*\[/{s/^\s*set = true/  set = false/}
+
+# set domainNeeded und expandHosts
+/^\s*domainNeeded =/ s|=.*|= true|
+/^\s*expandHosts =/ s|=.*|= true|
+' /etc/pihole/pihole.toml
+
+cat <<EOF > /etc/dnsmasq.d/01-pihole.conf
+server=8.8.8.8
+server=8.8.4.4
+EOF
+$STD pihole-FTL --config ntp.sync.interval 0
+systemctl restart pihole-FTL.service
 msg_ok "Installed Pi-hole"
 
 read -r -p "Would you like to add Unbound? <y/N> " prompt
@@ -119,9 +135,13 @@ forward-zone:
   #forward-addr: 2620:fe::9@853#dns.quad9.net
 EOF
   fi
+cat <<EOF > /etc/dnsmasq.d/01-pihole.conf
+server=127.0.0.1#5335
+server=8.8.8.8
+server=8.8.4.4
+EOF
 
-  sed -i -e 's/PIHOLE_DNS_1=8.8.8.8/PIHOLE_DNS_1=127.0.0.1#5335/' -e '/PIHOLE_DNS_2=8.8.4.4/d' /etc/pihole/setupVars.conf
-  sed -i -e 's/server=8.8.8.8/server=127.0.0.1#5335/' -e '/server=8.8.4.4/d' /etc/dnsmasq.d/01-pihole.conf
+  sed -i -E "s|^(upstreams =).*|\1 [\"127.0.0.1#5335\", \"8.8.4.4\"]|" /etc/pihole/pihole.toml
   systemctl enable -q --now unbound
   systemctl restart pihole-FTL.service
   msg_ok "Installed Unbound"
