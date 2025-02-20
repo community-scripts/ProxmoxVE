@@ -19,6 +19,28 @@ $STD apt-get install -y sudo
 $STD apt-get install -y mc
 msg_ok "Installed Dependencies"
 
+if $STD mount | grep 'on / type zfs' > null && echo "ZFS"; then
+    msg_info "Enabling ZFS support."
+    cat <<'EOF' >/usr/local/bin/overlayzfsmount
+#!/bin/sh
+exec /bin/mount -t overlay overlay "$@"
+EOF
+    chmod +x /usr/local/bin/overlayzfsmount
+    cat <<'EOF' >/etc/containers/storage.conf
+[storage]
+driver = "overlay"
+runroot = "/run/containers/storage"
+graphroot = "/var/lib/containers/storage"
+
+[storage.options]
+pull_options = {enable_partial_images = "false", use_hard_links = "false", ostree_repos=""}
+mount_program = "/usr/local/bin/overlayzfsmount"
+
+[storage.options.overlay]
+mountopt = "nodev"
+EOF
+fi
+
 msg_info "Installing Podman"
 $STD apt-get -y install podman
 $STD systemctl enable --now podman.socket

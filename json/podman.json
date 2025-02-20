@@ -30,10 +30,5 @@
         "username": null,
         "password": null
     },
-    "notes": [
-        {
-            "text": "Doesn't work with ZFS",
-            "type": "warning"
-        }
-    ]
+    "notes": []
 }
