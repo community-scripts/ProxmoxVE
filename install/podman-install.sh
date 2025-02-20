@@ -72,6 +72,8 @@ else
   read -r -p "Would you like to add the Portainer Agent? <y/N> " prompt
   if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
     msg_info "Installing Portainer agent $PORTAINER_AGENT_LATEST_VERSION"
+    podman volume create temp >/dev/null
+    podman volume remove temp >/dev/null
     $STD podman run -d \
       -p 9001:9001 \
       --name portainer_agent \
