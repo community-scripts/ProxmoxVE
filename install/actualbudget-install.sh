@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
-# Author: tteck (tteckster)
-# License: MIT
-# https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Copyright (c) 2021-2025 community-scripts ORG
+# Author: MickLesk (CanbiZ)
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://actualbudget.org/
 
 source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color
@@ -52,12 +52,21 @@ ACTUAL_DATA_DIR=/opt/actualbudget-data
 ACTUAL_SERVER_FILES_DIR=/opt/actualbudget-data/server-files
 ACTUAL_USER_FILES=/opt/actualbudget-data/user-files
 PORT=5006
-ACTUAL_CONFIG_PATH=/opt/actualbudget-data/config/config.json
-ACTUAL_TRUSTED_PROXIES="10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, fc00::/7, ::1/128"
+ACTUAL_TRUSTED_PROXIES="10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,127.0.0.1/32,::1/128,fc00::/7"
+ACTUAL_HTTPS_KEY=/opt/actualbudget/selfhost.key
+ACTUAL_HTTPS_CERT=/opt/actualbudget/selfhost.crt
 EOF
-
 cd /opt/actualbudget
 $STD yarn install
+$STD openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout selfhost.key -out selfhost.crt <<EOF
+US
+California
+San Francisco
+My Organization
+My Unit
+localhost
+myemail@example.com
+EOF
 echo "${RELEASE}" >"/opt/actualbudget_version.txt"
 msg_ok "Installed Actual Budget"
 
