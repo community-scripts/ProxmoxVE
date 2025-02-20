@@ -21,6 +21,7 @@ msg_ok "Installed Dependencies"
 
 if $STD mount | grep 'on / type zfs' > null && echo "ZFS"; then
     msg_info "Enabling ZFS support."
+    mkdir -p /etc/containers
     cat <<'EOF' >/usr/local/bin/overlayzfsmount
 #!/bin/sh
 exec /bin/mount -t overlay overlay "$@"
