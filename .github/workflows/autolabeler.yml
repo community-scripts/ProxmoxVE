@@ -19,7 +19,7 @@ jobs:
       - name: Install minimatch
         run: npm install minimatch
 
-      - name: Label PR based on config rules
+      - name: Label PR based on file changes
         uses: actions/github-script@v7
         with:
           script: |
@@ -39,6 +39,8 @@ jobs:
             });
             const prFiles = prListFilesResponse.data;
 
+            let labelsToAdd = new Set();
+
             for (const [label, rules] of Object.entries(autolabelerConfig)) {
               const shouldAddLabel = prFiles.some((prFile) => {
                 return rules.some((rule) => {
@@ -51,12 +53,48 @@ jobs:
               });
 
               if (shouldAddLabel) {
-                console.log(`Adding label ${label} to PR ${prNumber}`);
-                await github.rest.issues.addLabels({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  issue_number: prNumber,
-                  labels: [label],
-                });
+                labelsToAdd.add(label);
               }
+            }
+
+            if (labelsToAdd.size > 0) {
+              console.log(`Adding labels ${Array.from(labelsToAdd).join(", ")} to PR ${prNumber}`);
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                labels: Array.from(labelsToAdd),
+              });
+            }
+
+      - name: Label PR based on PR template selections
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prBody = context.payload.pull_request.body.toLowerCase();
+            const prNumber = context.payload.pull_request.number;
+            const labelMappings = {
+              "🐞 bug fix": "bug fix",
+              "✨ new feature": "new feature",
+              "💥 breaking change": "breaking change",
+              "🆕 new script": "new script"
+            };
+
+            let labelsToAdd = new Set();
+
+            for (const [checkbox, label] of Object.entries(labelMappings)) {
+              const regex = new RegExp(`- \\[(.*?)\\] ${checkbox}`, "i");
+              if (regex.test(prBody)) {
+                labelsToAdd.add(label);
+              }
+            }
+
+            if (labelsToAdd.size > 0) {
+              console.log(`Adding labels ${Array.from(labelsToAdd).join(", ")} to PR ${prNumber}`);
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                labels: Array.from(labelsToAdd),
+              });
             }
