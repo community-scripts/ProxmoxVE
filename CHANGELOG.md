@@ -21,6 +21,11 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### Changes
 
+### 💥 Breaking Changes
+
+- Pihole & Unbound: Installation for Pihole V6 (read description) [@MickLesk](https://github.com/MickLesk) ([#2505](https://github.com/community-scripts/ProxmoxVE/pull/2505))
+- Breaking: Actual Budget Script (HTTPS / DB Migration / New Structure) - Read Description [@MickLesk](https://github.com/MickLesk) ([#2496](https://github.com/community-scripts/ProxmoxVE/pull/2496))
+
 ### ✨ New Scripts
 
 - New Script: Dolibarr [@tremor021](https://github.com/tremor021) ([#2502](https://github.com/community-scripts/ProxmoxVE/pull/2502))
