@@ -39,7 +39,7 @@ function update_script() {
       cd /opt
       wget -q "https://github.com/stonith404/pingvin-share/archive/refs/tags/v${RELEASE}.zip"
       unzip -q v${RELEASE}.zip
-      mv pingvin-share-${RELEASE} /opt/pingvin-share  
+      cp -rf pingvin-share-${RELEASE}/* /opt/pingvin-share
       cd /opt/pingvin-share
       cd backend
       npm install &>/dev/null
@@ -49,6 +49,7 @@ function update_script() {
       npm run build &>/dev/null
       echo "${RELEASE}" >"/opt/pingvin_version.txt"
       rm -rf /opt/v${RELEASE}.zip
+      rm -rf /opt/pingvin-share-${RELEASE}
       msg_ok "Updated Pingvin Share to v${RELEASE}"
 
       msg_info "Starting Pingvin Share"
