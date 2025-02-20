@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -s https://raw.githubusercontent.com/mattosaurus/ProxmoxVE/refs/heads/update-frigate-version/misc/build.func)
 # Source: https://github.com/gristlabs/grist-core
 
 APP="Grist"

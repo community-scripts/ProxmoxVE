@@ -125,4 +125,4 @@ info "Successfully Transferred Data."
 
 # Use to copy all data from one Plex Media Server LXC to another
 # run from the Proxmox Shell
-# bash -c "$(wget -qLO - https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/copy-data/plex-copy-data-plex.sh)"
+# bash -c "$(wget -qLO - https://raw.githubusercontent.com/mattosaurus/ProxmoxVE/refs/heads/update-frigate-version/misc/copy-data/plex-copy-data-plex.sh)"

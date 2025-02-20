@@ -5,7 +5,7 @@
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
-source /dev/stdin <<< $(wget -qLO - https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func)
+source /dev/stdin <<< $(wget -qLO - https://raw.githubusercontent.com/mattosaurus/ProxmoxVE/refs/heads/update-frigate-version/misc/api.func)
 
 
 function header_info {
@@ -292,7 +292,7 @@ qm importdisk $VMID ${FILE%.*} $STORAGE ${DISK_IMPORT:-} 1>&/dev/null
 qm set $VMID \
   -scsi0 "$DISK_REF" \
   -boot order=scsi0 \
-  -description "<div align='center'><a href='https://Helper-Scripts.com'><img src='https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/images/logo-81x112.png'/></a>
+  -description "<div align='center'><a href='https://Helper-Scripts.com'><img src='https://raw.githubusercontent.com/mattosaurus/ProxmoxVE/refs/heads/update-frigate-version/misc/images/logo-81x112.png'/></a>
 
   # Mikrotik RouterOS CHR
 

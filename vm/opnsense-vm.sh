@@ -4,7 +4,7 @@
 # Author: michelroegl-brunner
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
-source /dev/stdin <<<$(wget -qLO - https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func)
+source /dev/stdin <<<$(wget -qLO - https://raw.githubusercontent.com/mattosaurus/ProxmoxVE/refs/heads/update-frigate-version/misc/api.func)
 
 function header_info {
   clear
