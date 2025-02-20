@@ -6,7 +6,7 @@
     ],
     "date_created": "2025-02-20",
     "type": "ct",
-    "updateable": false,
+    "updateable": true,
     "privileged": false,
     "interface_port": 80,
     "documentation": "https://wiki.dolibarr.org/index.php?title=Home",
