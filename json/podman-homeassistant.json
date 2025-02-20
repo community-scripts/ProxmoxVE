@@ -38,6 +38,10 @@
         {
             "text": "config path: `/var/lib/containers/storage/volumes/hass_config/_data`",
             "type": "info"
+        },
+        {
+            "text": "Options to Install Portainer or Portainer Agent",
+            "type": "warning"
         }
     ]
 }
