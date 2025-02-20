@@ -42,7 +42,7 @@ function update_script() {
         wget -q "https://github.com/actualbudget/actual-server/archive/refs/tags/v${RELEASE}.tar.gz"
 
         mv /opt/actualbudget /opt/actualbudget_bak
-        tar -xzf "v${RELEASE}.tar.gz" >/dev/null 2>&1
+        silent tar -xzf "v${RELEASE}.tar.gz"
         mv *ctual-server-* /opt/actualbudget
 
         mkdir -p /opt/actualbudget-data/{server-files,upload,migrate,user-files,migrations,config}
@@ -51,6 +51,13 @@ function update_script() {
                 mv /opt/actualbudget_bak/$dir/* /opt/actualbudget-data/$dir/ 2>/dev/null || true
             fi
         done
+        if [[ -f /opt/actualbudget-data/migrate/.migrations ]]; then
+            sed -i 's/null/1732656575219/g' /opt/actualbudget-data/migrate/.migrations
+            sed -i 's/null/1732656575220/g' /opt/actualbudget-data/migrate/.migrations
+        fi
+        if [[ -f /opt/actualbudget/server-files/account.sqlite ]] && [[ ! -f /opt/actualbudget-data/server-files/account.sqlite ]]; then
+            mv /opt/actualbudget/server-files/account.sqlite /opt/actualbudget-data/server-files/account.sqlite
+        fi
 
         if [[ -f /opt/actualbudget_bak/.env ]]; then
             mv /opt/actualbudget_bak/.env /opt/actualbudget-data/.env
@@ -61,22 +68,13 @@ ACTUAL_DATA_DIR=/opt/actualbudget-data
 ACTUAL_SERVER_FILES_DIR=/opt/actualbudget-data/server-files
 ACTUAL_USER_FILES=/opt/actualbudget-data/user-files
 PORT=5006
-ACTUAL_CONFIG_PATH=/opt/actualbudget-data/config/config.json
-ACTUAL_TRUSTED_PROXIES="10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, fc00::/7, ::1/128"
+ACTUAL_TRUSTED_PROXIES="10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,127.0.0.1/32,::1/128,fc00::/7"
+ACTUAL_HTTPS_KEY=/opt/actualbudget/selfhost.key
+ACTUAL_HTTPS_CERT=/opt/actualbudget/selfhost.crt
 EOF
         fi
-
-        fi
-        mv /opt/actualbudget_bak/.env /opt/actualbudget/
-        if [[ -d /opt/actualbudget_bak/server-files ]] && [[ -n $(ls -A /opt/actualbudget_bak/server-files 2>/dev/null) ]]; then
-            mv /opt/actualbudget_bak/server-files/* /opt/actualbudget/server-files/
-        fi
-        if [[ -d /opt/actualbudget_bak/.migrate ]]; then
-            mv /opt/actualbudget_bak/.migrate /opt/actualbudget/
-        fi
-
         cd /opt/actualbudget
-        yarn install &>/dev/null
+        silent yarn install
         echo "${RELEASE}" > /opt/actualbudget_version.txt
         msg_ok "Updated ${APP}"
 
