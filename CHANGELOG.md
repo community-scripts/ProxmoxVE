@@ -30,6 +30,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 - New Script: Dolibarr [@tremor021](https://github.com/tremor021) ([#2502](https://github.com/community-scripts/ProxmoxVE/pull/2502))
 
+### 🧰 Maintenance
+
+- [gh] better handling of labels [@MickLesk](https://github.com/MickLesk) ([#2517](https://github.com/community-scripts/ProxmoxVE/pull/2517))
+
 ## 2025-02-19
 
 ### Changes
