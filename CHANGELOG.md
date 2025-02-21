@@ -25,6 +25,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 - Fix: Tianji - Downgrade Node [@MickLesk](https://github.com/MickLesk) ([#2530](https://github.com/community-scripts/ProxmoxVE/pull/2530))
 
+### 🧰 Maintenance
+
+- [gh] General Cleanup & Moving Files / Folders [@MickLesk](https://github.com/MickLesk) ([#2532](https://github.com/community-scripts/ProxmoxVE/pull/2532))
+
 ## 2025-02-20
 
 ### Changes
