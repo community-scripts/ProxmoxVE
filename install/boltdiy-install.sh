@@ -31,6 +31,7 @@ msg_ok "Setup Node.js Repository"
 msg_info "Setup Node.js"
 $STD apt-get update
 $STD apt-get install -y nodejs
+$STD npm install -g pnpm
 msg_ok "Setup Node.js"
 
 msg_info "Setup bolt.diy"
@@ -40,7 +41,6 @@ wget -q "https://github.com/stackblitz-labs/bolt.diy/archive/refs/tags/v${RELEAS
 tar xzf $temp_file
 mv bolt.diy-${RELEASE} /opt/bolt.diy
 cd /opt/bolt.diy
-$STD npm install -g pnpm
 $STD pnpm install
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Setup bolt.diy"
