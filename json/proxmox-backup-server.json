@@ -11,7 +11,7 @@
     "interface_port": 8007,
     "documentation": "https://pbs.proxmox.com/docs/",
     "website": "https://www.proxmox.com/en/proxmox-backup-server/overview",
-    "logo": "https://raw.githubusercontent.com/home-assistant/brands/master/core_integrations/proxmoxve/icon.png",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/proxmox.svg",
     "description": "Proxmox Backup Server is an enterprise backup solution, for backing up and restoring VMs, containers, and physical hosts. By supporting incremental, fully deduplicated backups, Proxmox Backup Server significantly reduces network load and saves valuable storage space.",
     "install_methods": [
         {

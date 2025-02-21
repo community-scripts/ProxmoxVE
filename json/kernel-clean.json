@@ -11,7 +11,7 @@
     "interface_port": null,
     "documentation": null,
     "website": null,
-    "logo": "https://raw.githubusercontent.com/home-assistant/brands/master/core_integrations/proxmoxve/icon.png",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/proxmox.svg",
     "description": "Cleaning unused kernel images is beneficial for reducing the length of the GRUB menu and freeing up disk space. By removing old, unused kernels, the system is able to conserve disk space and streamline the boot process.",
     "install_methods": [
         {

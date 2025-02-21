@@ -11,7 +11,7 @@
     "interface_port": null,
     "documentation": null,
     "website": null,
-    "logo": "https://raw.githubusercontent.com/home-assistant/brands/master/core_integrations/proxmoxve/icon.png",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/proxmox.svg",
     "description": "Kernel Pin is an essential tool for effortlessly managing kernel pinning and unpinning.",
     "install_methods": [
         {
