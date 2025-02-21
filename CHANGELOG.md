@@ -17,6 +17,14 @@ All LXC instances created using this repository come pre-installed with Midnight
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
 
+## 2025-02-21
+
+### Changes
+
+### 🚀 Updated Scripts
+
+- Fix: Tianji - Downgrade Node [@MickLesk](https://github.com/MickLesk) ([#2530](https://github.com/community-scripts/ProxmoxVE/pull/2530))
+
 ## 2025-02-20
 
 ### Changes
