@@ -40,15 +40,8 @@ function update_script() {
         msg_ok "Backup Created"
 
         msg_info "Updating $APP to v${RELEASE}"
-        git clone --recursive https://github.com/heiher/hev-socks5-server
-        cd hev-socks5-server || exit
-        make
-        mv bin/${APP} /opt/${APP}
-        echo "${RELEASE}" >/opt/${APP}_version.txt
-
-        if [ ! -d "/etc/${APP}" ]; then
-            mv conf/ /etc/${APP}/
-        fi
+        curl -L -o "${APP}" "https://github.com/heiher/hev-socks5-server/releases/download/${RELEASE}/hev-socks5-server-linux-x86_64"
+        mv ${APP} /opt/${APP}
         msg_ok "Updated $APP to v${RELEASE}"
 
         msg_info "Starting $APP"
@@ -56,8 +49,6 @@ function update_script() {
         msg_ok "Started $APP"
 
         msg_info "Cleaning Up"
-        cd .. || exit 1
-        rm -rf hev-socks5-server
         msg_ok "Cleanup Completed"
 
         echo "${RELEASE}" >/opt/${APP}_version.txt

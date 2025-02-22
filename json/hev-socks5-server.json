@@ -32,8 +32,8 @@
     },
     "notes": [
         {
-            "text": "You must set up username and password at /etc/hev-socks5-server/main.yml (restart needed)",
+            "text": "Default credentials stored at /root/hev.creds",
             "type": "info"
         }
-    ]    
+    ]
 }
