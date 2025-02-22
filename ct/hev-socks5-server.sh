@@ -24,23 +24,19 @@ function update_script() {
     check_container_storage
     check_container_resources
 
-    if [[ ! -f /opt/hev-socks5-server ]]; then
+    if [[ ! -f /opt/${APP} ]]; then
         msg_error "No ${APP} Installation Found!"
         exit
     fi
 
-    RELEASE=$(curl -s https://api.github.com/repos/heiher/hev-socks5-server/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+    RELEASE=$(curl -s https://api.github.com/repos/heiher/${APP}/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
     if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
         msg_info "Stopping $APP"
         systemctl stop $APP
         msg_ok "Stopped $APP"
 
-        msg_info "Creating Backup"
-        tar -czf "/opt/${APP}_backup_$(date +%F).tar.gz" "/etc/${APP}"
-        msg_ok "Backup Created"
-
         msg_info "Updating $APP to v${RELEASE}"
-        curl -L -o "${APP}" "https://github.com/heiher/hev-socks5-server/releases/download/${RELEASE}/hev-socks5-server-linux-x86_64"
+        curl -L -o "${APP}" "https://github.com/heiher/${APP}/releases/download/${RELEASE}/hev-socks5-server-linux-x86_64"
         mv ${APP} /opt/${APP}
         chmod +x /opt/${APP}
         msg_ok "Updated $APP to v${RELEASE}"
@@ -48,9 +44,6 @@ function update_script() {
         msg_info "Starting $APP"
         systemctl start $APP
         msg_ok "Started $APP"
-
-        msg_info "Cleaning Up"
-        msg_ok "Cleanup Completed"
 
         echo "${RELEASE}" >/opt/${APP}_version.txt
         msg_ok "Update Successful"

@@ -32,11 +32,11 @@
     },
     "notes": [
         {
-            "text": "Default credentials stored at /root/hev.creds",
+            "text": "Default credentials: `cat /root/hev.creds`",
             "type": "info"
         },
         {
-            "text": "Config stored at /etc/hev-socks5-server/main.yml",
+            "text": "Config stored at `/etc/hev-socks5-server/main.yml`",
             "type": "info"
         }
     ]
