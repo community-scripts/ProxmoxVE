@@ -28,7 +28,7 @@ $STD apt-get update
 $STD apt-get install -y cloudflared
 msg_ok "Installed Cloudflared"
 
-read -r -p "Would you like to configure cloudflared as a DNS-over-HTTPS (DoH) proxy? <y/N> " prompt
+read -r -p "Would you like to configure cloudflared as a DNS-over-HTTPS (DoH) proxy instead of a Cloudflare Tunnel? <y/N> " prompt
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   msg_info "Creating Service"
   cat <<EOF >/usr/local/etc/cloudflared/config.yml
