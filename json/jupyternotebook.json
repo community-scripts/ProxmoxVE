@@ -1,0 +1,34 @@
+{
+    "name": "jupyter-notebook",
+    "slug": "jupyter-notebook",
+    "categories": [
+      20
+    ],
+    "date_created": "2025-02-20",
+    "type": "ct",
+    "updateable": false,
+    "privileged": false,
+    "interface_port": 8888,
+    "documentation": "https://jupyter-notebook.readthedocs.io/en/stable/",
+    "website": "https://jupyter.org/",
+    "logo": "https://jupyter.org/assets/nav_logo.svg",
+    "description": "The Jupyter Notebook is an open-source web application that allows you to create and share documents that contain live code, equations, visualizations and narrative text. Uses include: data cleaning and transformation, numerical simulation, statistical modeling, data visualization, machine learning, and much more.",
+    "install_methods": [
+      {
+        "type": "default",
+        "script": "ct/jupyternotebook.sh",
+        "resources": {
+          "cpu": 2,
+          "ram": 2048,
+          "hdd": 4,
+          "os": "Ubuntu",
+          "version": "22.04"
+        }
+      }
+    ],
+    "default_credentials": {
+      "username": null,
+      "password": null
+    },
+    "notes": ["To get the token to access the Jupyter Notebook, run the following command: jupyter notebook list"]
+  }
