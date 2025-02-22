@@ -11,7 +11,7 @@
     "interface_port": 8080,
     "documentation": null,
     "website": "https://github.com/Stirling-Tools/Stirling-PDF",
-    "logo": "https://raw.githubusercontent.com/Stirling-Tools/Stirling-PDF/main/docs/stirling-pdf.png",
+    "logo": "https://raw.githubusercontent.com/Stirling-Tools/Stirling-PDF/refs/heads/main/docs/stirling.svg",
     "description": "Stirling-PDF is a powerful locally hosted web based PDF manipulation tool that allows you to perform various operations on PDF files, such as splitting merging, converting, reorganizing, adding images, rotating, compressing, and more.",
     "install_methods": [
         {

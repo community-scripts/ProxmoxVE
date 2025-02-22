@@ -11,7 +11,7 @@
     "interface_port": 8080,
     "documentation": "https://github.com/glanceapp/glance/blob/main/docs/configuration.md",
     "website": "https://github.com/glanceapp/glance",
-    "logo": "https://github.com/glanceapp/glance/blob/main/internal/assets/static/app-icon.png?raw=true",
+    "logo": "https://raw.githubusercontent.com/glanceapp/glance/refs/heads/main/internal/glance/static/app-icon.png",
     "description": "A self-hosted dashboard that puts all your feeds in one place",
     "install_methods": [
       {
