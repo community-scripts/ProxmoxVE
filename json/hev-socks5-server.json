@@ -34,6 +34,10 @@
         {
             "text": "Default credentials stored at /root/hev.creds",
             "type": "info"
+        },
+        {
+            "text": "Config stored at /etc/hev-socks5-server/main.yml",
+            "type": "info"
         }
     ]
 }
