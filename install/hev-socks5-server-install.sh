@@ -67,8 +67,6 @@ customize
 
 # Cleanup
 msg_info "Cleaning up"
-cd .. || exit 1
-rm -rf "${APPLICATION}"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
