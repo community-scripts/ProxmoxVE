@@ -29,6 +29,7 @@ msg_info "Setup ${APPLICATION}"
 RELEASE=$(curl -s https://api.github.com/repos/heiher/hev-socks5-server/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 curl -L -o "${APPLICATION}" "https://github.com/heiher/hev-socks5-server/releases/download/${RELEASE}/hev-socks5-server-linux-x86_64"
 mv ${APPLICATION} /opt/${APPLICATION}
+chmod +x /opt/${APPLICATION}
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 
 # do not overwrite existing config

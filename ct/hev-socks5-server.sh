@@ -42,6 +42,7 @@ function update_script() {
         msg_info "Updating $APP to v${RELEASE}"
         curl -L -o "${APP}" "https://github.com/heiher/hev-socks5-server/releases/download/${RELEASE}/hev-socks5-server-linux-x86_64"
         mv ${APP} /opt/${APP}
+        chmod +x /opt/${APP}
         msg_ok "Updated $APP to v${RELEASE}"
 
         msg_info "Starting $APP"
@@ -65,5 +66,7 @@ description
 
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:1080${CL}"
+echo -e "${INFO}${YW} Access it with a SOCKS5 client using the following URL:${CL}"
+echo -e "${TAB}${GATEWAY}${BGN}${IP}:1080${CL}"
+echo -e "${INFO}${YW} and the credentials stores at:${CL}"
+echo -e "${TAB}${GATEWAY}${BGN}/root/hev.creds${CL}"
