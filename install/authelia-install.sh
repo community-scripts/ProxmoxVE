@@ -1,13 +1,10 @@
 #!/usr/bin/env bash
 
-
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: thost96 (thost96)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.authelia.com/
 
-
-# Import Functions und Setup
 source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
@@ -82,7 +79,6 @@ msg_ok "Authelia Setup completed"
 motd_ssh
 customize
 
-# Cleanup
 msg_info "Cleaning up"
 rm -f "authelia_${RELEASE}_amd64.deb"
 $STD apt-get -y autoremove
