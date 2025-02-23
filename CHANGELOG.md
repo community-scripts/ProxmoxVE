@@ -30,6 +30,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 - Fix: Wireguard - Remove setting NAT as its already in PostUp/Down [@tremor021](https://github.com/tremor021) ([#2510](https://github.com/community-scripts/ProxmoxVE/pull/2510))
 
+### 🌐 Website
+
+- Fix: Home Assistant Core - fixed wrong text in application description on website [@TMigue](https://github.com/TMigue) ([#2576](https://github.com/community-scripts/ProxmoxVE/pull/2576))
+
 ## 2025-02-22
 
 ### Changes
