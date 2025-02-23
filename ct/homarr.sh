@@ -43,6 +43,9 @@ if [[ ! -f /opt/run_homarr.sh ]]; then
         sed -i '/^DB_DIALECT=/d' /opt/homarr/.env && echo "DB_DIALECT='sqlite'" >> /opt/homarr/.env
         cat <<'EOF' >/opt/run_homarr.sh
 #!/bin/bash
+set -a
+source /opt/homarr/.env
+set +a
 export DB_DIALECT='sqlite'
 export AUTH_SECRET=$(openssl rand -base64 32)
 node /opt/homarr_db/migrations/$DB_DIALECT/migrate.cjs /opt/homarr_db/migrations/$DB_DIALECT
@@ -85,6 +88,25 @@ fi
     msg_ok "Backup Data"
 
     msg_info "Updating and rebuilding ${APP} to v${RELEASE} (Patience)"
+    rm /opt/run_homarr.sh
+    cat <<'EOF' >/opt/run_homarr.sh
+#!/bin/bash
+set -a
+source /opt/homarr/.env
+set +a
+export DB_DIALECT='sqlite'
+export AUTH_SECRET=$(openssl rand -base64 32)
+node /opt/homarr_db/migrations/$DB_DIALECT/migrate.cjs /opt/homarr_db/migrations/$DB_DIALECT
+export HOSTNAME=$(ip route get 1.1.1.1 | grep -oP 'src \K[^ ]+')
+envsubst '${HOSTNAME}' < /etc/nginx/templates/nginx.conf > /etc/nginx/nginx.conf
+nginx -g 'daemon off;' &
+redis-server /opt/homarr/packages/redis/redis.conf &
+node apps/tasks/tasks.cjs &
+node apps/websocket/wssServer.cjs &
+node apps/nextjs/server.js & PID=$!
+wait $PID
+EOF
+    chmod +x /opt/run_homarr.sh
     wget -q "https://github.com/homarr-labs/homarr/archive/refs/tags/v${RELEASE}.zip"
     unzip -q v${RELEASE}.zip
     rm -rf v${RELEASE}.zip
