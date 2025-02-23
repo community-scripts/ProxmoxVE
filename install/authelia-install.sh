@@ -24,18 +24,16 @@ msg_info "Installing Authelia"
 RELEASE=$(curl -s https://api.github.com/repos/authelia/authelia/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 wget -q "https://github.com/authelia/authelia/releases/download/${RELEASE}/authelia_${RELEASE}_amd64.deb"
 $STD dpkg -i "authelia_${RELEASE}_amd64.deb"
-$STD systemctl enable authelia
 msg_ok "Install Authelia completed"
 
 msg_info "Setting Authelia up"
-$STD touch /etc/authelia/emails.txt
+touch /etc/authelia/emails.txt
 JWT_SECRET=$(openssl rand  -hex 64)
 SESSION_SECRET=$(openssl rand  -hex 64)
 STORAGE_KEY=$(openssl rand  -hex 64)
 DOMAIN=$(hostname -d)
 
-#authelia crypto hash generate argon2 --random
-cat <<'EOF' >/etc/authelia/users.yml
+cat <<EOF >/etc/authelia/users.yml
 users:
   authelia:
     disabled: false
@@ -73,7 +71,7 @@ notifier:
   filesystem:
     filename: /etc/authelia/emails.txt
 EOF
-$STD systemctl start authelia
+systemctl enable -q --now authelia
 msg_ok "Authelia Setup completed"
 
 motd_ssh
