@@ -16,7 +16,7 @@
     "install_methods": [
         {
             "type": "default",
-            "script": "ct/victoria.sh",
+            "script": "ct/victoriametrics.sh",
             "resources": {
                 "cpu": 2,
                 "ram": 2024,
