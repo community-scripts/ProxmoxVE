@@ -5,8 +5,6 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://www.authelia.com/
 
-
-# App Default Values
 APP="Authelia"
 TAGS=""
 var_cpu="1"
@@ -16,11 +14,9 @@ var_os="debian"
 var_version="12"
 var_unprivileged="1"
 
-# App Output & Base Settings
 header_info "$APP"
 base_settings
 
-# Core
 variables
 color
 catch_errors
@@ -33,14 +29,14 @@ function update_script() {
     RELEASE=$(curl -s https://api.github.com/repos/authelia/authelia/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
     if [[ "${RELEASE}" != "$(/usr/bin/authelia -v | awk '{print substr($3, 2, length($2)) }' )" ]]; then
         msg_info "Updating $APP to ${RELEASE}"
-        $STD apt-get update &>/dev/null
-        $STD apt-get -y upgrade &>/dev/null
+        apt-get update &>/dev/null
+        apt-get -y upgrade &>/dev/null
         wget -q "https://github.com/authelia/authelia/releases/download/${RELEASE}/authelia_${RELEASE}_amd64.deb"
-        $STD dpkg -i "authelia_${RELEASE}_amd64.deb"
+        dpkg -i "authelia_${RELEASE}_amd64.deb" &>/dev/null
         msg_info "Cleaning Up"
         rm -f "authelia_${RELEASE}_amd64.deb"
-        $STD apt-get -y autoremove
-        $STD apt-get -y autoclean
+        apt-get -y autoremove &>/dev/null
+        apt-get -y autoclean &>/dev/null
         msg_ok "Cleanup Completed"
         msg_ok "Updated $APP to ${RELEASE}"
     else
