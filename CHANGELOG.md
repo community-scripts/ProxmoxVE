@@ -29,18 +29,24 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- Fix: Authelia Unbound Variable Argon2id [@MickLesk](https://github.com/MickLesk) ([#2604](https://github.com/community-scripts/ProxmoxVE/pull/2604))
 - Fix Docmost: default upload size and saving data when updating [@bvdberg01](https://github.com/bvdberg01) ([#2598](https://github.com/community-scripts/ProxmoxVE/pull/2598))
 - Fix: Wireguard - Restart wgdashboard automatically after update [@LostALice](https://github.com/LostALice) ([#2587](https://github.com/community-scripts/ProxmoxVE/pull/2587))
-- Feature: Possibility to perform updates in silent / verbose (+ logging) [@MickLesk](https://github.com/MickLesk) ([#2583](https://github.com/community-scripts/ProxmoxVE/pull/2583))
 - fix: homarr db migration [@CrazyWolf13](https://github.com/CrazyWolf13) ([#2575](https://github.com/community-scripts/ProxmoxVE/pull/2575))
 
 ### ✨ Feature Updates (Updated Scripts)
 
+- Feature: Possibility to perform updates in silent / verbose (+ logging) [@MickLesk](https://github.com/MickLesk) ([#2583](https://github.com/community-scripts/ProxmoxVE/pull/2583))
 - Feature: Use Verbose Mode for all Scripts (removed &>/dev/null) [@MickLesk](https://github.com/MickLesk) ([#2596](https://github.com/community-scripts/ProxmoxVE/pull/2596))
 
 ### 🌐 Website
 
+- Website: Change Info for PiHole Password [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2602](https://github.com/community-scripts/ProxmoxVE/pull/2602))
 - Fix: Jupyter Json (missing logo & improve name on website) [@MickLesk](https://github.com/MickLesk) ([#2584](https://github.com/community-scripts/ProxmoxVE/pull/2584))
+
+### 🧰 Maintenance
+
+- [gh] Contributor-Guide: Update AppName.md & AppName.sh [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2603](https://github.com/community-scripts/ProxmoxVE/pull/2603))
 
 ## 2025-02-23
 
