@@ -53,7 +53,7 @@ function update_script() {
       sudo -u crafty bash -c '
         source /opt/crafty-controller/crafty/.venv/bin/activate
         pip3 install --no-cache-dir -r requirements.txt
-      $STD '
+      ' &>/dev/null
       echo "${RELEASE}" >"/opt/crafty-controller_version.txt"
       msg_ok "Updated Crafty-Controller to v${RELEASE}"
 
