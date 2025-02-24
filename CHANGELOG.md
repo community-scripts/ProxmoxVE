@@ -28,7 +28,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
-- Fix: Restart wgdashboard automatically after update [@LostALice](https://github.com/LostALice) ([#2587](https://github.com/community-scripts/ProxmoxVE/pull/2587))
+- Fix: Wireguard - Restart wgdashboard automatically after update [@LostALice](https://github.com/LostALice) ([#2587](https://github.com/community-scripts/ProxmoxVE/pull/2587))
 - Feature: Possibility to perform updates in silent / verbose (+ logging) [@MickLesk](https://github.com/MickLesk) ([#2583](https://github.com/community-scripts/ProxmoxVE/pull/2583))
 - fix: homarr db migration [@CrazyWolf13](https://github.com/CrazyWolf13) ([#2575](https://github.com/community-scripts/ProxmoxVE/pull/2575))
 
