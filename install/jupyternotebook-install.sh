@@ -5,7 +5,6 @@
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: [https://jupyter.org/]
 
-# Import Functions und Setup
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
@@ -42,15 +41,12 @@ RestartSec=10
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl daemon-reload
-systemctl enable --now jupyternotebook.service
+systemctl enable -q --now jupyternotebook
 
 motd_ssh
 customize
 
-# Cleanup
 msg_info "Cleaning up"
-
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
