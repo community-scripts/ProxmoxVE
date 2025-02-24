@@ -6,7 +6,7 @@
 # Source: [https://jupyter.org/]
 
 # Import Functions und Setup
-source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
+source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
 catch_errors
@@ -14,24 +14,21 @@ setting_up_container
 network_check
 update_os
 
-# Installing Dependencies with the 3 core dependencies (curl;sudo;mc)
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-  curl \
-  sudo \
-  mc \
-  python3 \
-    python3-pip \
+    curl \
+    sudo \
+    mc \
+    python3 \
+    python3-pip
+msg_ok "Installed Dependencies"
 
-msg_ok "Ins talled Dependencies"
-
-# Setup Application (Jupyter Notebook)"
 msg_info "Setting up Jupyter Notebook"
-pip3 install jupyter
-msg_ok "Jupyter Notebook Installed"
+$STD pip3 install jupyter
+msg_ok "Setup Jupyter Notebook"
 
 msg_info "Creating Service"
-cat << EOF >/etc/systemd/system/jupyternotebook.service
+cat <<EOF >/etc/systemd/system/jupyternotebook.service
 [Unit]
 Description=Jupyter Notebook Server
 After=network.target
@@ -57,4 +54,3 @@ msg_info "Cleaning up"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
-
