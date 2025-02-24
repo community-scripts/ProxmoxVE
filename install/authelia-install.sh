@@ -32,7 +32,9 @@ JWT_SECRET=$(openssl rand  -hex 64)
 SESSION_SECRET=$(openssl rand  -hex 64)
 STORAGE_KEY=$(openssl rand  -hex 64)
 DOMAIN=$(hostname -d)
-
+if [ -z "$DOMAIN" ]; then
+    DOMAIN=$(hostname)
+fi
 cat <<EOF >/etc/authelia/users.yml
 users:
   authelia:
