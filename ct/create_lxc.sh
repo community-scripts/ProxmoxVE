@@ -36,7 +36,7 @@ trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
 
 # This function handles errors
 function error_handler() {
-  if [ -n "$SPINNER_PID" ] && ps -p $SPINNER_PID > /dev/null; then kill $SPINNER_PID > /dev/null; fi
+  if [ -n "$SPINNER_PID" ] && ps -p $SPINNER_PID >/dev/null; then kill $SPINNER_PID >/dev/null; fi
   printf "\e[?25h"
   local exit_code="$?"
   local line_number="$1"
@@ -51,13 +51,13 @@ function spinner() {
   local frames=('⠋' '⠙' '⠹' '⠸' '⠼' '⠴' '⠦' '⠧' '⠇' '⠏')
   local spin_i=0
   local interval=0.1
-  printf "\e[?25l" 
+  printf "\e[?25l"
 
   local color="${YWB}"
 
   while true; do
     printf "\r ${color}%s${CL}" "${frames[spin_i]}"
-    spin_i=$(( (spin_i + 1) % ${#frames[@]} ))
+    spin_i=$(((spin_i + 1) % ${#frames[@]}))
     sleep "$interval"
   done
 }
@@ -70,9 +70,16 @@ function msg_info() {
   SPINNER_PID=$!
 }
 
+function msg_warn() {
+  if [ -n "$SPINNER_PID" ] && ps -p $SPINNER_PID >/dev/null; then kill $SPINNER_PID >/dev/null; fi
+  printf "\e[?25h"
+  local msg="$1"
+  echo -e "${BFR}${INFO}${YWB}${msg}${CL}"
+}
+
 # This function displays a success message with a green color.
 function msg_ok() {
-  if [ -n "$SPINNER_PID" ] && ps -p $SPINNER_PID > /dev/null; then kill $SPINNER_PID > /dev/null; fi
+  if [ -n "$SPINNER_PID" ] && ps -p $SPINNER_PID >/dev/null; then kill $SPINNER_PID >/dev/null; fi
   printf "\e[?25h"
   local msg="$1"
   echo -e "${BFR}${CM}${GN}${msg}${CL}"
@@ -80,7 +87,7 @@ function msg_ok() {
 
 # This function displays a error message with a red color.
 function msg_error() {
-  if [ -n "$SPINNER_PID" ] && ps -p $SPINNER_PID > /dev/null; then kill $SPINNER_PID > /dev/null; fi
+  if [ -n "$SPINNER_PID" ] && ps -p $SPINNER_PID >/dev/null; then kill $SPINNER_PID >/dev/null; fi
   printf "\e[?25h"
   local msg="$1"
   echo -e "${BFR}${CROSS}${RD}${msg}${CL}"
@@ -113,9 +120,12 @@ function select_storage() {
     CONTENT='vztmpl'
     CONTENT_LABEL='Container template'
     ;;
-  *) false || { msg_error "Invalid storage class."; exit 201; };
+  *) false || {
+    msg_error "Invalid storage class."
+    exit 201
+  } ;;
   esac
-  
+
   # This Queries all storage locations
   local -a MENU
   while read -r line; do
@@ -129,34 +139,60 @@ function select_storage() {
     fi
     MENU+=("$TAG" "$ITEM" "OFF")
   done < <(pvesm status -content $CONTENT | awk 'NR>1')
-  
+
   # Select storage location
-  if [ $((${#MENU[@]}/3)) -eq 1 ]; then
+  if [ $((${#MENU[@]} / 3)) -eq 1 ]; then
     printf ${MENU[0]}
   else
     local STORAGE
     while [ -z "${STORAGE:+x}" ]; do
       STORAGE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "Storage Pools" --radiolist \
-      "Which storage pool you would like to use for the ${CONTENT_LABEL,,}?\nTo make a selection, use the Spacebar.\n" \
-      16 $(($MSG_MAX_LENGTH + 23)) 6 \
-      "${MENU[@]}" 3>&1 1>&2 2>&3) || { msg_error "Menu aborted."; exit 202; }
+        "Which storage pool you would like to use for the ${CONTENT_LABEL,,}?\nTo make a selection, use the Spacebar.\n" \
+        16 $(($MSG_MAX_LENGTH + 23)) 6 \
+        "${MENU[@]}" 3>&1 1>&2 2>&3) || {
+        msg_error "Menu aborted."
+        exit 202
+      }
       if [ $? -ne 0 ]; then
         echo -e "${CROSS}${RD} Menu aborted by user.${CL}"
-        exit 0 
+        exit 0
       fi
     done
     printf "%s" "$STORAGE"
   fi
 }
 # Test if required variables are set
-[[ "${CTID:-}" ]] || { msg_error "You need to set 'CTID' variable."; exit 203; }
-[[ "${PCT_OSTYPE:-}" ]] || { msg_error "You need to set 'PCT_OSTYPE' variable."; exit 204; }
+[[ "${CTID:-}" ]] || {
+  msg_error "You need to set 'CTID' variable."
+  exit 203
+}
+[[ "${PCT_OSTYPE:-}" ]] || {
+  msg_error "You need to set 'PCT_OSTYPE' variable."
+  exit 204
+}
 
 # Test if ID is valid
-[ "$CTID" -ge "100" ] || { msg_error "ID cannot be less than 100."; exit 205; }
+[ "$CTID" -ge "100" ] || {
+  msg_error "ID cannot be less than 100."
+  exit 205
+}
+
+# Check for network connectivity (IPv4 & IPv6)
+function check_network() {
+  local CHECK_URLS=("8.8.8.8" "1.1.1.1" "9.9.9.9" "2606:4700:4700::1111" "2001:4860:4860::8888" "2620:fe::fe")
+
+  for url in "${CHECK_URLS[@]}"; do
+    if ping -c 1 -W 2 "$url" &>/dev/null; then
+      return 0 # Success: At least one connection works
+    fi
+  done
+
+  msg_error "No network connection detected. Check your internet connection."
+  exit 101
+}
 
 # Test if ID is in use
-if pct status $CTID &>/dev/null; then
+if qm status "$CTID" &>/dev/null || pct status "$CTID" &>/dev/null; then
   echo -e "ID '$CTID' is already in use."
   unset CTID
   msg_error "Cannot use ID that is already in use."
@@ -173,46 +209,73 @@ msg_ok "Using ${BL}$CONTAINER_STORAGE${CL} ${GN}for Container Storage."
 
 # Update LXC template list
 msg_info "Updating LXC Template List"
+check_network
 pveam update >/dev/null
 msg_ok "Updated LXC Template List"
 
 # Get LXC template string
 TEMPLATE_SEARCH=${PCT_OSTYPE}-${PCT_OSVERSION:-}
 mapfile -t TEMPLATES < <(pveam available -section system | sed -n "s/.*\($TEMPLATE_SEARCH.*\)/\1/p" | sort -t - -k 2 -V)
-[ ${#TEMPLATES[@]} -gt 0 ] || { msg_error "Unable to find a template when searching for '$TEMPLATE_SEARCH'."; exit 207; }
+[ ${#TEMPLATES[@]} -gt 0 ] || {
+  msg_error "Unable to find a template when searching for '$TEMPLATE_SEARCH'."
+  exit 207
+}
 TEMPLATE="${TEMPLATES[-1]}"
-
 TEMPLATE_PATH="/var/lib/vz/template/cache/$TEMPLATE"
 # Check if template exists, if corrupt remove and redownload
-if ! pveam list "$TEMPLATE_STORAGE" | grep -q "$TEMPLATE"; then
+if ! pveam list "$TEMPLATE_STORAGE" | grep -q "$TEMPLATE" || ! zstdcat "$TEMPLATE_PATH" | tar -tf - >/dev/null 2>&1; then
+  msg_warn "Template $TEMPLATE not found in storage or seems to be corrupted. Redownloading."
   [[ -f "$TEMPLATE_PATH" ]] && rm -f "$TEMPLATE_PATH"
-  msg_info "Downloading LXC Template"
-  pveam download "$TEMPLATE_STORAGE" "$TEMPLATE" >/dev/null ||
-    { msg_error "A problem occurred while downloading the LXC template."; exit 208; }
-  msg_ok "Downloaded LXC Template"
+
+  # Download with 3 attempts
+  for attempt in {1..3}; do
+    msg_info "Attempt $attempt: Downloading LXC template..."
+
+    if timeout 120 pveam download "$TEMPLATE_STORAGE" "$TEMPLATE" >/dev/null; then
+      msg_ok "Template download successful."
+      break
+    fi
+
+    if [ $attempt -eq 3 ]; then
+      msg_error "Three failed attempts. Aborting."
+      exit 208
+    fi
+
+    sleep $((attempt * 5))
+  done
 fi
+msg_ok "LXC Template is ready to use."
 
 # Check and fix subuid/subgid
-grep -q "root:100000:65536" /etc/subuid || echo "root:100000:65536" >> /etc/subuid
-grep -q "root:100000:65536" /etc/subgid || echo "root:100000:65536" >> /etc/subgid
+grep -q "root:100000:65536" /etc/subuid || echo "root:100000:65536" >>/etc/subuid
+grep -q "root:100000:65536" /etc/subgid || echo "root:100000:65536" >>/etc/subgid
 
 # Combine all options
 PCT_OPTIONS=(${PCT_OPTIONS[@]:-${DEFAULT_PCT_OPTIONS[@]}})
 [[ " ${PCT_OPTIONS[@]} " =~ " -rootfs " ]] || PCT_OPTIONS+=(-rootfs "$CONTAINER_STORAGE:${PCT_DISK_SIZE:-8}")
 
-# Create container with template integrity check
 msg_info "Creating LXC Container"
-  if ! pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" "${PCT_OPTIONS[@]}" &>/dev/null; then
-      [[ -f "$TEMPLATE_PATH" ]] && rm -f "$TEMPLATE_PATH"
-      
-    msg_ok "Template integrity check completed"
-    pveam download "$TEMPLATE_STORAGE" "$TEMPLATE" >/dev/null ||    
-      { msg_error "A problem occurred while re-downloading the LXC template."; exit 208; }
-    
+if ! pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" "${PCT_OPTIONS[@]}" &>/dev/null; then
+  msg_error "Container creation failed. Checking if template is corrupted."
+
+  if ! zstdcat "$TEMPLATE_PATH" | tar -tf - >/dev/null 2>&1; then
+    msg_error "Template appears to be corrupted. Removing and re-downloading."
+    rm -f "$TEMPLATE_PATH"
+
+    if ! timeout 120 pveam download "$TEMPLATE_STORAGE" "$TEMPLATE" >/dev/null; then
+      msg_error "Failed to re-download template."
+      exit 208
+    fi
+
     msg_ok "Re-downloaded LXC Template"
+
     if ! pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" "${PCT_OPTIONS[@]}" &>/dev/null; then
-        msg_error "A problem occurred while trying to create container after re-downloading template."
+      msg_error "Container creation failed after re-downloading template."
       exit 200
     fi
+  else
+    msg_error "Container creation failed, but template is not corrupted."
+    exit 209
   fi
+fi
 msg_ok "LXC Container ${BL}$CTID${CL} ${GN}was successfully created."
