@@ -142,8 +142,8 @@ jobs:
               if (hasSubcategories) {
                 for (const { title: subTitle, notes: subNotes } of subCategories) {
                   if (subNotes && subNotes.length > 0) {
-                    newReleaseNotes += `    #### ${subTitle}\n\n`; 
-                    newReleaseNotes += `    ${subNotes.join("\n    ")}\n\n`; 
+                    newReleaseNotes += `  #### ${subTitle}\n\n`; 
+                    newReleaseNotes += `  ${subNotes.join("\n    ")}\n\n`; 
                   }
                 }
               }
