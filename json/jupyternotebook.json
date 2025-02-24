@@ -1,5 +1,5 @@
 {
-    "name": "jupyter-notebook",
+    "name": "Jupyter Notebook",
     "slug": "jupyter-notebook",
     "categories": [
       20
@@ -11,7 +11,7 @@
     "interface_port": 8888,
     "documentation": "https://jupyter-notebook.readthedocs.io/en/stable/",
     "website": "https://jupyter.org/",
-    "logo": "https://jupyter.org/assets/nav_logo.svg",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Jupyter_logo.svg/800px-Jupyter_logo.svg.png",
     "description": "The Jupyter Notebook is an open-source web application that allows you to create and share documents that contain live code, equations, visualizations and narrative text. Uses include: data cleaning and transformation, numerical simulation, statistical modeling, data visualization, machine learning, and much more.",
     "install_methods": [
       {
