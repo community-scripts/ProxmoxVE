@@ -6,12 +6,13 @@
 variables() {
   NSAPP=$(echo ${APP,,} | tr -d ' ') # This function sets the NSAPP variable by converting the value of the APP variable to lowercase and removing any spaces.
   var_install="${NSAPP}-install"     # sets the var_install variable by appending "-install" to the value of NSAPP.
+
 }
 
 NEXTID=$(pvesh get /cluster/nextid)
 timezone=$(cat /etc/timezone)
-header_info(){ 
-  return  
+header_info() {
+  return
 }
 
 base_settings() {
@@ -20,10 +21,10 @@ base_settings() {
   DISK_SIZE="4"
   CORE_COUNT="1"
   RAM_SIZE="1024"
-  VERBOSE="${1:-no}"
+  VERBOSE="no"
   PW=""
   CT_ID=$NEXTID
-  HN="Testing"
+  HN=$NSAPP
   BRG="vmbr0"
   NET="dhcp"
   GATE=""
@@ -106,7 +107,7 @@ catch_errors() {
 }
 
 # This function handles errors
-error_handler() {  
+error_handler() {
   local line_number="$1"
   local command="$2"
   SCRIPT_NAME=$(basename "$0")
@@ -120,17 +121,17 @@ msg_info() {
   echo -ne "${msg}\n"
 }
 
-msg_ok() { 
+msg_ok() {
   local msg="$1"
   echo -e "${msg}\n"
 }
 
 msg_error() {
-  
+
   local msg="$1"
   echo -e "${msg}\n"
 }
-start(){
+start() {
   base_settings
   return
 }
@@ -146,9 +147,9 @@ build_container() {
   TEMP_DIR=$(mktemp -d)
   pushd $TEMP_DIR >/dev/null
   if [ "$var_os" == "alpine" ]; then
-    export FUNCTIONS_FILE_PATH="$(cat /root/actions-runner/_work/ProxmoxVE/ProxmoxVE/.github/workflows/scripts/app-test/pr-alpine-install.func)"
+    export FUNCTIONS_FILE_PATH="$(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/.github/workflows/scripts/app-test/pr-alpine-install.func)"
   else
-    export FUNCTIONS_FILE_PATH="$(cat /root/actions-runner/_work/ProxmoxVE/ProxmoxVE/.github/workflows/scripts/app-test/pr-install.func)"
+    export FUNCTIONS_FILE_PATH="$(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/.github/workflows/scripts/app-test/pr-install.func)"
   fi
 
   export CACHER="$APT_CACHER"
@@ -182,9 +183,8 @@ build_container() {
   "
   echo "Container ID: $CTID"
 
-
   # This executes create_lxc.sh and creates the container and .conf file
-  bash /root/actions-runner/_work/ProxmoxVE/ProxmoxVE/.github/workflows/scripts/app-test/pr-create-lxc.sh
+  bash -c "$(wget -qLO - https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/.github/workflows/scripts/app-test/pr-create-lxc.sh)"
 
   LXC_CONFIG=/etc/pve/lxc/${CTID}.conf
   if [ "$CT_TYPE" == "0" ]; then
@@ -233,6 +233,7 @@ EOF
       fi
     fi
   fi
+
   # This starts the container and executes <app>-install.sh
   msg_info "Starting LXC Container"
   pct start "$CTID"
@@ -242,7 +243,7 @@ EOF
     msg_error "No install script found for $APP"
     exit 1
   fi
-    if [ "$var_os" == "alpine" ]; then
+  if [ "$var_os" == "alpine" ]; then
     sleep 3
     pct exec "$CTID" -- /bin/sh -c 'cat <<EOF >/etc/apk/repositories
 http://dl-cdn.alpinelinux.org/alpine/latest-stable/main
@@ -250,11 +251,10 @@ http://dl-cdn.alpinelinux.org/alpine/latest-stable/community
 EOF'
     pct exec "$CTID" -- ash -c "apk add bash >/dev/null"
   fi
-  lxc-attach -n "$CTID" -- bash -c "$(cat /root/actions-runner/_work/ProxmoxVE/ProxmoxVE/install/$var_install.sh)" $var_install.sh
+  lxc-attach -n "$CTID" -- bash -c "$(cat /root/actions-runner/_work/ProxmoxVE/ProxmoxVE/install/$var_install.sh)"
 
 }
 
-description(){
- IP=$(pct exec "$CTID" ip a s dev eth0 | awk '/inet / {print $2}' | cut -d/ -f1)
- return
+description() {
+  IP=$(pct exec "$CTID" ip a s dev eth0 | awk '/inet / {print $2}' | cut -d/ -f1)
 }

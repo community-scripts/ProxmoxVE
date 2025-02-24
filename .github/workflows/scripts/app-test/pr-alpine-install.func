@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright (c) 2021-2025 community-scripts ORG
-# Author: michelroegl-brunner
+# Author: Michel Roegl-Brunner (michelroegl-brunner)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
 color() {
@@ -11,7 +11,7 @@ catch_errors() {
   trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
 }
 
-
+# This function handles errors
 error_handler() {
   local line_number="$1"
   local command="$2"
@@ -21,8 +21,8 @@ error_handler() {
   exit 0
 }
 verb_ip6() {
-    STD=""
-    return
+  STD=""
+  return
 }
 
 msg_info() {
@@ -30,13 +30,13 @@ msg_info() {
   echo -ne "${msg}\n"
 }
 
-msg_ok() { 
+msg_ok() {
   local msg="$1"
   echo -e "${msg}\n"
 }
 
 msg_error() {
-  
+
   local msg="$1"
   echo -e "${msg}\n"
 }
@@ -71,7 +71,7 @@ network_check() {
 }
 
 update_os() {
- msg_info "Updating Container OS"
+  msg_info "Updating Container OS"
   apk update
   apk upgrade
   msg_ok "Updated Container OS"
@@ -82,7 +82,5 @@ motd_ssh() {
 }
 
 customize() {
-   return
+  return
 }
-
-
