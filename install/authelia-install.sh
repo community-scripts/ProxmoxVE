@@ -38,7 +38,7 @@ users:
   authelia:
     disabled: false
     displayname: "Authelia Admin"
-    password: "$argon2id$v=19$m=65536,t=3,p=4$ZBopMzXrzhHXPEZxRDVT2w$SxWm96DwhOsZyn34DLocwQEIb4kCDsk632PuiMdZnig"
+    password: "\$argon2id\$v=19\$m=65536,t=3,p=4\$ZBopMzXrzhHXPEZxRDVT2w\$SxWm96DwhOsZyn34DLocwQEIb4kCDsk632PuiMdZnig"
     groups: []
 EOF
 
