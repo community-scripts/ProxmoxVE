@@ -30,14 +30,14 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
-- Fix: Update-Script Firefly III based on their docs [@MickLesk](https://github.com/MickLesk) ([#2534](https://github.com/community-scripts/ProxmoxVE/pull/2534))
-- Fix: Omada check for AVX Support and use the correct MongoDB Version [@MickLesk](https://github.com/MickLesk) ([#2600](https://github.com/community-scripts/ProxmoxVE/pull/2600))
-- Fix: Authelia Unbound Variable Argon2id [@MickLesk](https://github.com/MickLesk) ([#2604](https://github.com/community-scripts/ProxmoxVE/pull/2604))
-- Fix Docmost: default upload size and saving data when updating [@bvdberg01](https://github.com/bvdberg01) ([#2598](https://github.com/community-scripts/ProxmoxVE/pull/2598))
+- Fix: homarr db migration [@CrazyWolf13](https://github.com/CrazyWolf13) ([#2575](https://github.com/community-scripts/ProxmoxVE/pull/2575))
 - Fix: Wireguard - Restart wgdashboard automatically after update [@LostALice](https://github.com/LostALice) ([#2587](https://github.com/community-scripts/ProxmoxVE/pull/2587))
-- fix: homarr db migration [@CrazyWolf13](https://github.com/CrazyWolf13) ([#2575](https://github.com/community-scripts/ProxmoxVE/pull/2575))
+- Fix Docmost: default upload size and saving data when updating [@bvdberg01](https://github.com/bvdberg01) ([#2598](https://github.com/community-scripts/ProxmoxVE/pull/2598))
+- Fix: Authelia Unbound Variable Argon2id [@MickLesk](https://github.com/MickLesk) ([#2604](https://github.com/community-scripts/ProxmoxVE/pull/2604))
+- Fix: Omada check for AVX Support and use the correct MongoDB Version [@MickLesk](https://github.com/MickLesk) ([#2600](https://github.com/community-scripts/ProxmoxVE/pull/2600))
+- Fix: Update-Script Firefly III based on their docs [@MickLesk](https://github.com/MickLesk) ([#2534](https://github.com/community-scripts/ProxmoxVE/pull/2534))
 
-### ✨ Feature Updates (Updated Scripts)
+### ✨ New Features
 
 - Feature: Template-Check, Better Handling of Downloads, Better Network… [@MickLesk](https://github.com/MickLesk) ([#2592](https://github.com/community-scripts/ProxmoxVE/pull/2592))
 - Feature: Possibility to perform updates in silent / verbose (+ logging) [@MickLesk](https://github.com/MickLesk) ([#2583](https://github.com/community-scripts/ProxmoxVE/pull/2583))
