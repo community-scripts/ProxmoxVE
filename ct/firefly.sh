@@ -37,14 +37,12 @@ check_container_resources
     msg_info "Updating ${APP} to v${RELEASE}"
     cp /opt/firefly/.env /opt/.env
     cp -r /opt/firefly/storage /opt/storage
-    rm -rf /opt/firefly/*
     cd /opt
     wget -q "https://github.com/firefly-iii/firefly-iii/releases/download/v${RELEASE}/FireflyIII-v${RELEASE}.tar.gz"
     tar -xzf FireflyIII-v${RELEASE}.tar.gz -C /opt/firefly --exclude='storage'
+    cp /opt/.env /opt/firefly/.env
     cd /opt/firefly 
-    #composer install --no-dev --no-interaction &>/dev/null
     php artisan migrate --seed --force &>/dev/null
-    #php artisan firefly:decrypt-all &>/dev/null
     php artisan cache:clear &>/dev/null
     php artisan view:clear &>/dev/null
     php artisan firefly-iii:upgrade-database &>/dev/null
