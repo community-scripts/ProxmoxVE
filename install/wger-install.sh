@@ -43,6 +43,30 @@ msg_ok "Installed Node.js"
 
 msg_info "Setting up wger"
 $STD adduser wger --disabled-password --gecos ""
+mkdir /home/wger/db
+touch /home/wger/db/database.sqlite
+chown :www-data -R /home/wger/db
+chmod g+w /home/wger/db /home/wger/db/database.sqlite
+mkdir /home/wger/{static,media}
+chmod o+w /home/wger/media
+temp_dir=$(mktemp -d)
+cd $temp_dir
+RELEASE=$(curl -s https://api.github.com/repos/wger-project/wger/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}')
+wget -q "https://github.com/wger-project/wger/archive/refs/tags/$RELEASE.tar.gz"
+tar xzf $RELEASE.tar.gz
+mv wger-$RELEASE /home/wger/src
+cd /home/wger/src
+$STD pip install -r requirements_prod.txt
+$STD pip install -e .
+$STD wger create-settings --database-path /home/wger/db/database.sqlite
+sed -i "s#home/wger/src/media#home/wger/media#g" /home/wger/src/settings.py
+sed -i "/MEDIA_ROOT = '\/home\/wger\/media'/a STATIC_ROOT = '/home/wger/static'" /home/wger/src/settings.py
+$STD wger bootstrap
+$STD python3 manage.py collectstatic
+echo "${RELEASE}" >/opt/wger_version.txt
+msg_ok "Finished setting up wger"
+
+msg_info "Creating Service"
 cat <<EOF >/etc/apache2/sites-available/wger.conf
 <Directory /home/wger/src>
     <Files wsgi.py>
@@ -74,30 +98,6 @@ EOF
 $STD a2dissite 000-default.conf
 $STD a2ensite wger
 systemctl restart apache2
-mkdir /home/wger/db
-touch /home/wger/db/database.sqlite
-chown :www-data -R /home/wger/db
-chmod g+w /home/wger/db /home/wger/db/database.sqlite
-mkdir /home/wger/{static,media}
-chmod o+w /home/wger/media
-temp_dir=$(mktemp -d)
-cd $temp_dir
-RELEASE=$(curl -s https://api.github.com/repos/wger-project/wger/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}')
-wget -q "https://github.com/wger-project/wger/archive/refs/tags/$RELEASE.tar.gz"
-tar xzf $RELEASE.tar.gz
-mv wger-$RELEASE /home/wger/src
-cd /home/wger/src
-$STD pip install -r requirements_prod.txt
-$STD pip install -e .
-$STD wger create-settings --database-path /home/wger/db/database.sqlite
-sed -i "s#home/wger/src/media#home/wger/media#g" /home/wger/src/settings.py
-sed -i "/MEDIA_ROOT = '\/home\/wger\/media'/a STATIC_ROOT = '/home/wger/static'" /home/wger/src/settings.py
-$STD wger bootstrap
-$STD python3 manage.py collectstatic
-echo "${RELEASE}" >/opt/wger_version.txt
-msg_ok "Finished setting up wger"
-
-msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/wger.service
 [Unit]
 Description=wger Service
