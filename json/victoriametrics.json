@@ -1,0 +1,34 @@
+{
+  "name": "VictoriaMetrics",
+  "slug": "victoria",
+  "categories": [
+    8
+  ],
+  "date_created": "2025-02-24",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 8428,
+  "documentation": "https://docs.victoriametrics.com/",
+  "website": "https://victoriametrics.com/",
+  "logo": "https://marketplace-assets.digitalocean.com/logos/victoriametrics-victoriametricss.png",
+  "description": "VictoriaMetrics is a fast, cost-saving, and scalable solution for monitoring and managing time series data. It delivers high performance and reliability, making it an ideal choice for businesses of all sizes.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/victoriametrics.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 16,
+        "os": "debian",
+        "version": "12"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": []
+}

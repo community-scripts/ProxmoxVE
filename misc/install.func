@@ -19,7 +19,7 @@ color() {
   BOLD=$(echo "\033[1m")
   HOLD=" "
   TAB="  "
-  
+
   # System
   RETRY_NUM=10
   RETRY_EVERY=3
@@ -36,12 +36,24 @@ color() {
   DEFAULT="${TAB}⚙️${TAB}${CL}"
 }
 
-# This function enables IPv6 if it's not disabled and sets verbose mode if the global variable is set to "yes"
-verb_ip6() {
+# Function to set STD mode based on verbosity
+set_std_mode() {
   if [ "$VERBOSE" = "yes" ]; then
     STD=""
-  else STD="silent"; fi
-  silent() { "$@" >/dev/null 2>&1; }
+  else
+    STD="silent"
+  fi
+}
+
+# Silent execution function
+silent() {
+  "$@" >/dev/null 2>&1
+}
+
+# This function enables IPv6 if it's not disabled and sets verbose mode
+verb_ip6() {
+  set_std_mode # Set STD mode based on VERBOSE
+
   if [ "$DISABLEIPV6" == "yes" ]; then
     echo "net.ipv6.conf.all.disable_ipv6 = 1" >>/etc/sysctl.conf
     $STD sysctl -p
@@ -57,7 +69,7 @@ catch_errors() {
 # This function handles errors
 error_handler() {
   source <(wget -qLO - https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func)
-  if [ -n "$SPINNER_PID" ] && ps -p $SPINNER_PID > /dev/null; then kill $SPINNER_PID > /dev/null; fi
+  if [ -n "$SPINNER_PID" ] && ps -p $SPINNER_PID >/dev/null; then kill $SPINNER_PID >/dev/null; fi
   printf "\e[?25h"
   local exit_code="$?"
   local line_number="$1"
@@ -83,7 +95,7 @@ spinner() {
 
   while true; do
     printf "\r ${color}%s${CL}" "${frames[spin_i]}"
-    spin_i=$(( (spin_i + 1) % ${#frames[@]} ))
+    spin_i=$(((spin_i + 1) % ${#frames[@]}))
     sleep "$interval"
   done
 }
@@ -98,7 +110,7 @@ msg_info() {
 
 # This function displays a success message with a green color.
 msg_ok() {
-  if [ -n "$SPINNER_PID" ] && ps -p $SPINNER_PID > /dev/null; then kill $SPINNER_PID > /dev/null; fi
+  if [ -n "$SPINNER_PID" ] && ps -p $SPINNER_PID >/dev/null; then kill $SPINNER_PID >/dev/null; fi
   printf "\e[?25h"
   local msg="$1"
   echo -e "${BFR}${CM}${GN}${msg}${CL}"
@@ -106,7 +118,7 @@ msg_ok() {
 
 # This function displays a error message with a red color.
 msg_error() {
-  if [ -n "$SPINNER_PID" ] && ps -p $SPINNER_PID > /dev/null; then kill $SPINNER_PID > /dev/null; fi
+  if [ -n "$SPINNER_PID" ] && ps -p $SPINNER_PID >/dev/null; then kill $SPINNER_PID >/dev/null; fi
   printf "\e[?25h"
   local msg="$1"
   echo -e "${BFR}${CROSS}${RD}${msg}${CL}"
@@ -147,23 +159,23 @@ network_check() {
   ipv4_connected=false
   ipv6_connected=false
   sleep 1
-# Check IPv4 connectivity to Google, Cloudflare & Quad9 DNS servers.
-  if ping -c 1 -W 1 1.1.1.1 &>/dev/null || ping -c 1 -W 1 8.8.8.8 &>/dev/null || ping -c 1 -W 1 9.9.9.9 &>/dev/null; then 
-    msg_ok "IPv4 Internet Connected";
+  # Check IPv4 connectivity to Google, Cloudflare & Quad9 DNS servers.
+  if ping -c 1 -W 1 1.1.1.1 &>/dev/null || ping -c 1 -W 1 8.8.8.8 &>/dev/null || ping -c 1 -W 1 9.9.9.9 &>/dev/null; then
+    msg_ok "IPv4 Internet Connected"
     ipv4_connected=true
   else
-    msg_error "IPv4 Internet Not Connected";
+    msg_error "IPv4 Internet Not Connected"
   fi
 
-# Check IPv6 connectivity to Google, Cloudflare & Quad9 DNS servers.
+  # Check IPv6 connectivity to Google, Cloudflare & Quad9 DNS servers.
   if ping6 -c 1 -W 1 2606:4700:4700::1111 &>/dev/null || ping6 -c 1 -W 1 2001:4860:4860::8888 &>/dev/null || ping6 -c 1 -W 1 2620:fe::fe &>/dev/null; then
-    msg_ok "IPv6 Internet Connected";
+    msg_ok "IPv6 Internet Connected"
     ipv6_connected=true
   else
-    msg_error "IPv6 Internet Not Connected";
+    msg_error "IPv6 Internet Not Connected"
   fi
 
-# If both IPv4 and IPv6 checks fail, prompt the user
+  # If both IPv4 and IPv6 checks fail, prompt the user
   if [[ $ipv4_connected == false && $ipv6_connected == false ]]; then
     read -r -p "No Internet detected,would you like to continue anyway? <y/N> " prompt
     if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
@@ -193,7 +205,7 @@ else
   echo -n "DIRECT"
 fi
 EOF
-  chmod +x /usr/local/bin/apt-proxy-detect.sh
+    chmod +x /usr/local/bin/apt-proxy-detect.sh
   fi
   $STD apt-get update
   $STD apt-get -o Dpkg::Options::="--force-confold" -y dist-upgrade
@@ -204,7 +216,7 @@ EOF
 # This function modifies the message of the day (motd) and SSH settings
 motd_ssh() {
   # Set terminal to 256-color mode
-  grep -qxF "export TERM='xterm-256color'" /root/.bashrc || echo "export TERM='xterm-256color'" >> /root/.bashrc
+  grep -qxF "export TERM='xterm-256color'" /root/.bashrc || echo "export TERM='xterm-256color'" >>/root/.bashrc
 
   # Get OS information (Debian / Ubuntu)
   if [ -f "/etc/os-release" ]; then
@@ -216,13 +228,13 @@ motd_ssh() {
   fi
 
   PROFILE_FILE="/etc/profile.d/00_lxc-details.sh"
-  echo "echo -e \"\"" > "$PROFILE_FILE"
-  echo -e "echo -e \"${BOLD}${APPLICATION} LXC Container${CL}"\" >> "$PROFILE_FILE"
-  echo -e "echo -e \"${TAB}${GATEWAY}${YW} Provided by: ${GN}community-scripts ORG ${YW}| GitHub: ${GN}https://github.com/community-scripts/ProxmoxVE${CL}\"" >> "$PROFILE_FILE"
-  echo "echo \"\"" >> "$PROFILE_FILE"
-  echo -e "echo -e \"${TAB}${OS}${YW} OS: ${GN}${OS_NAME} - Version: ${OS_VERSION}${CL}\"" >> "$PROFILE_FILE"
-  echo -e "echo -e \"${TAB}${HOSTNAME}${YW} Hostname: ${GN}\$(hostname)${CL}\"" >> "$PROFILE_FILE"
-  echo -e "echo -e \"${TAB}${INFO}${YW} IP Address: ${GN}\$(hostname -I | awk '{print \$1}')${CL}\"" >> "$PROFILE_FILE"
+  echo "echo -e \"\"" >"$PROFILE_FILE"
+  echo -e "echo -e \"${BOLD}${APPLICATION} LXC Container${CL}"\" >>"$PROFILE_FILE"
+  echo -e "echo -e \"${TAB}${GATEWAY}${YW} Provided by: ${GN}community-scripts ORG ${YW}| GitHub: ${GN}https://github.com/community-scripts/ProxmoxVE${CL}\"" >>"$PROFILE_FILE"
+  echo "echo \"\"" >>"$PROFILE_FILE"
+  echo -e "echo -e \"${TAB}${OS}${YW} OS: ${GN}${OS_NAME} - Version: ${OS_VERSION}${CL}\"" >>"$PROFILE_FILE"
+  echo -e "echo -e \"${TAB}${HOSTNAME}${YW} Hostname: ${GN}\$(hostname)${CL}\"" >>"$PROFILE_FILE"
+  echo -e "echo -e \"${TAB}${INFO}${YW} IP Address: ${GN}\$(hostname -I | awk '{print \$1}')${CL}\"" >>"$PROFILE_FILE"
 
   # Disable default MOTD scripts
   chmod -x /etc/update-motd.d/*
@@ -253,7 +265,7 @@ EOF
 
   if [[ -n "${SSH_AUTHORIZED_KEY}" ]]; then
     mkdir -p /root/.ssh
-    echo "${SSH_AUTHORIZED_KEY}" > /root/.ssh/authorized_keys
+    echo "${SSH_AUTHORIZED_KEY}" >/root/.ssh/authorized_keys
     chmod 700 /root/.ssh
     chmod 600 /root/.ssh/authorized_keys
   fi

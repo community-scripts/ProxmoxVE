@@ -43,12 +43,12 @@ function update_script() {
     cp -r /opt/koillection-backup/.env.local /opt/koillection
     cp -r /opt/koillection-backup/public/uploads/. /opt/koillection/public/uploads/
     export COMPOSER_ALLOW_SUPERUSER=1
-    composer install --no-dev -o --no-interaction --classmap-authoritative &>/dev/null
-    php bin/console doctrine:migrations:migrate --no-interaction &>/dev/null
-    php bin/console app:translations:dump &>/dev/null
+    $STD composer install --no-dev -o --no-interaction --classmap-authoritative
+    $STD php bin/console doctrine:migrations:migrate --no-interaction
+    $STD php bin/console app:translations:dump
     cd assets/
-    yarn install &>/dev/null
-    yarn build &>/dev/null
+    $STD yarn install
+    $STD yarn build
     chown -R www-data:www-data /opt/koillection/public/uploads
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated $APP to v${RELEASE}"

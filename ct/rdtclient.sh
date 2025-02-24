@@ -33,8 +33,8 @@ function update_script() {
 
     msg_info "Updating ${APP}"
     if dpkg-query -W dotnet-sdk-8.0 >/dev/null 2>&1; then
-        apt-get remove --purge -y dotnet-sdk-8.0 &>/dev/null
-        apt-get install -y dotnet-sdk-9.0 &>/dev/null
+        $STD apt-get remove --purge -y dotnet-sdk-8.0
+        $STD apt-get install -y dotnet-sdk-9.0
     fi
     mkdir -p rdtc-backup
     cp -R /opt/rdtc/appsettings.json rdtc-backup/

@@ -41,7 +41,7 @@ function update_script() {
     wget -q "$DOWNLOAD_URL" -O "nxwitness-server-$RELEASE-linux_x64.deb"
     export DEBIAN_FRONTEND=noninteractive
     export DEBCONF_NOWARNINGS=yes
-    dpkg -i nxwitness-server-$RELEASE-linux_x64.deb >/dev/null 2>&1
+    $STD dpkg -i nxwitness-server-$RELEASE-linux_x64.deb
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP}"
 

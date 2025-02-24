@@ -40,9 +40,9 @@ function update_script() {
     rm -Rf /etc/apt/sources.list.d/zabbix.list
     cd /tmp
     wget -q https://repo.zabbix.com/zabbix/7.2/release/debian/pool/main/z/zabbix-release/zabbix-release_latest+debian12_all.deb
-    dpkg -i zabbix-release_latest+debian12_all.deb &>/dev/null
-    apt-get update &>/dev/null
-    apt-get install --only-upgrade zabbix-server-pgsql zabbix-frontend-php zabbix-agent2 zabbix-agent2-plugin-* &>/dev/null
+    $STD dpkg -i zabbix-release_latest+debian12_all.deb
+    $STD apt-get update
+    $STD apt-get install --only-upgrade zabbix-server-pgsql zabbix-frontend-php zabbix-agent2 zabbix-agent2-plugin-*
 
     msg_info "Starting ${APP} Services"
     systemctl start zabbix-server zabbix-agent2

@@ -46,11 +46,11 @@ function update_script() {
     cp -r "/opt/partdb-backup/config/banner.md" /opt/partdb/config/
 
     export COMPOSER_ALLOW_SUPERUSER=1
-    composer install --no-dev -o --no-interaction &>/dev/null
-    yarn install &>/dev/null
-    yarn build &>/dev/null
-    php bin/console cache:clear &>/dev/null
-    php bin/console doctrine:migrations:migrate -n &>/dev/null
+    $STD composer install --no-dev -o --no-interaction
+    $STD yarn install
+    $STD yarn build
+    $STD php bin/console cache:clear
+    $STD php bin/console doctrine:migrations:migrate -n
     chown -R www-data:www-data /opt/partdb
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated $APP to v${RELEASE}"

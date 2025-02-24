@@ -25,8 +25,8 @@ function update_script() {
   check_container_resources
   if [[ ! -e /usr/bin/pmgproxy ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
   msg_info "Updating ${APP}"
-  apt-get update &>/dev/null
-  apt-get -y upgrade &>/dev/null
+  $STD apt-get update
+  $STD apt-get -y upgrade
   msg_ok "Updated ${APP}"
   exit
 }

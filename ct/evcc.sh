@@ -28,8 +28,8 @@ function update_script() {
     exit
   fi
   msg_info "Updating evcc LXC"
-  apt update &>/dev/null
-  apt --only-upgrade install -y evcc &>/dev/null
+  $STD apt update
+  $STD apt --only-upgrade install -y evcc
   msg_ok "Updated Successfully"
   exit
 }

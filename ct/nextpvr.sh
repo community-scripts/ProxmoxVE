@@ -33,14 +33,14 @@ function update_script() {
     msg_ok "Stopped ${APP}"
 
     msg_info "Updating LXC packages"
-    apt-get update &>/dev/null
-    apt-get -y upgrade &>/dev/null
+    $STD apt-get update
+    $STD apt-get -y upgrade
     msg_ok "Updated LXC packages"
 
     msg_info "Updating ${APP}"
     cd /opt
     wget -q https://nextpvr.com/nextpvr-helper.deb
-    dpkg -i nextpvr-helper.deb &>/dev/null
+    $STD dpkg -i nextpvr-helper.deb
     msg_ok "Updated ${APP}"
 
     msg_info "Starting ${APP}"

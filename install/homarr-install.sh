@@ -86,6 +86,9 @@ msg_ok "Finished copying"
 msg_info "Creating Services"
 cat <<'EOF' >/opt/run_homarr.sh
 #!/bin/bash
+set -a
+source /opt/homarr/.env
+set +a
 export DB_DIALECT='sqlite'
 export AUTH_SECRET=$(openssl rand -base64 32)
 node /opt/homarr_db/migrations/$DB_DIALECT/migrate.cjs /opt/homarr_db/migrations/$DB_DIALECT

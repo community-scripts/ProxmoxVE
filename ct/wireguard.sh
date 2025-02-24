@@ -32,6 +32,7 @@ function update_script() {
     sleep 2
     cd /etc/wgdashboard/src
     ./wgd.sh update
+    ./wgd.sh start
     exit
 }
 

@@ -41,8 +41,8 @@ function update_script() {
     mv kimai-${RELEASE} /opt/kimai
     mv /opt/.env /opt/kimai/.env
     cd /opt/kimai
-    composer install --no-dev --optimize-autoloader &>/dev/null
-    bin/console kimai:update &>/dev/null
+    $STD composer install --no-dev --optimize-autoloader
+    $STD bin/console kimai:update
     chown -R :www-data .
     chmod -R g+r .
     chmod -R g+rw var/

@@ -31,14 +31,14 @@ function update_script() {
   systemctl stop overseerr
   cd /opt/overseerr
   output=$(git pull)
-  git pull &>/dev/null
+  $STD git pull
   if echo "$output" | grep -q "Already up to date."; then
     msg_ok " $APP is already up to date."
     systemctl start overseerr
     exit
   fi
-  yarn install &>/dev/null
-  yarn build &>/dev/null
+  $STD yarn install
+  $STD yarn build
   systemctl start overseerr
   msg_ok "Updated $APP"
   exit

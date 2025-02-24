@@ -44,7 +44,7 @@ jobs:
             echo "LATEST_DATE=$LATEST_DATE" >> $GITHUB_ENV
           fi
 
-      - name: Get categorized pull requests (including PR template selections)
+      - name: Get categorized pull requests
         id: get-categorized-prs
         uses: actions/github-script@v7
         with:
@@ -54,23 +54,7 @@ jobs:
 
             const configPath = path.resolve(process.env.CONFIG_PATH);
             const fileContent = await fs.readFile(configPath, 'utf-8');
-            let changelogConfig = JSON.parse(fileContent);
-
-            // Reihenfolge der Kategorien beibehalten
-            const order = [
-              "💥 Breaking Changes",
-              "🆕 New Scripts",
-              "🚀 Updated Scripts",
-              "🐞 Bug Fixes (Updated Scripts)",
-              "✨ Feature Updates (Updated Scripts)",
-              "✨ New Features",
-              "🌐 Website",
-              "📡 API",
-              "🧰 Maintenance",
-              "❔ Unlabelled"
-            ];
-            changelogConfig = changelogConfig.sort((a, b) => order.indexOf(a.title) - order.indexOf(b.title));
-
+            const changelogConfig = JSON.parse(fileContent);
             const categorizedPRs = changelogConfig.map(obj => ({ ...obj, notes: [] }));
 
             const latestDateInChangelog = new Date(process.env.LATEST_DATE);
@@ -86,66 +70,23 @@ jobs:
               per_page: 100,
             });
 
-            if (!pulls || pulls.length === 0) {
-              console.log("⚠️ No merged PRs found. create empty Changelog.");
-              core.setOutput("result", JSON.stringify([]));
-              return;
-            }
-
             pulls.filter(pr => 
               pr.merged_at && 
               new Date(pr.merged_at) > latestDateInChangelog && 
               !pr.labels.some(label => ["invalid", "wontdo", process.env.AUTOMATED_PR_LABEL].includes(label.name.toLowerCase()))
             ).forEach(pr => {
               const prLabels = pr.labels.map(label => label.name.toLowerCase());
-              const prBody = pr.body ? pr.body.toLowerCase() : "";
               const prNote = `- ${pr.title} [@${pr.user.login}](https://github.com/${pr.user.login}) ([#${pr.number}](${pr.html_url}))`;
 
-              // Mapping für PR-Checkboxen → Labels
-              const templateLabelMappings = {
-                "🐞 bug fix": "bugfix",
-                "✨ new feature": "feature",
-                "💥 breaking change": "breaking change",
-                "🆕 new script": "new script"
-              };
-
-              let addedByTemplate = false;
-              for (const [checkbox, label] of Object.entries(templateLabelMappings)) {
-                const regex = new RegExp(`- \\[(.*?)\\] ${checkbox}`, "i");
-                const match = prBody.match(regex);
-                if (match && match[1].trim() !== "") { // Checkbox ist gesetzt
-                  prLabels.push(label);
-                  addedByTemplate = true;
-                }
-              }
-
-              let categorized = false;
-              for (const { labels, notes, title } of categorizedPRs) {
-                if (labels.includes("update script") && labels.includes("bugfix")) {
-                  if (title === "🐞 Bug Fixes (Updated Scripts)") {
-                    notes.push(prNote);
-                    categorized = true;
-                    break;
-                  }
-                } else if (labels.includes("update script") && labels.includes("feature")) {
-                  if (title === "✨ Feature Updates (Updated Scripts)") {
-                    notes.push(prNote);
-                    categorized = true;
-                    break;
-                  }
-                } else if (labels.length === 0 || labels.some(label => prLabels.includes(label))) {
+              for (const { labels, notes } of categorizedPRs) {
+                if (labels.length === 0 || labels.some(label => prLabels.includes(label))) {
                   notes.push(prNote);
-                  categorized = true;
                   break;
                 }
               }
-
-              if (addedByTemplate) {
-                console.log(`PR #${pr.number} added by PR-Template category`);
-              }
             });
 
-            core.setOutput("result", JSON.stringify(categorizedPRs));
+            return categorizedPRs;
 
       - name: Update CHANGELOG.md
         uses: actions/github-script@v7
@@ -157,7 +98,7 @@ jobs:
             const today = process.env.TODAY;
             const latestDateInChangelog = process.env.LATEST_DATE;
             const changelogPath = path.resolve('CHANGELOG.md');
-            const categorizedPRs = JSON.parse(process.env.RESULT);
+            const categorizedPRs = ${{ steps.get-categorized-prs.outputs.result }};
 
             let newReleaseNotes = `## ${today}\n\n### Changes\n\n`;
             for (const { title, notes } of categorizedPRs) {

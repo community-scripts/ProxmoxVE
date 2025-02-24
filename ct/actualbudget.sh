@@ -42,13 +42,13 @@ function update_script() {
         wget -q "https://github.com/actualbudget/actual-server/archive/refs/tags/v${RELEASE}.tar.gz"
 
         mv /opt/actualbudget /opt/actualbudget_bak
-        tar -xzf "v${RELEASE}.tar.gz" &>/dev/null
+        $STD tar -xzf "v${RELEASE}.tar.gz"
         mv *ctual-server-* /opt/actualbudget
 
         mkdir -p /opt/actualbudget-data/{server-files,upload,migrate,user-files,migrations,config}
         for dir in server-files .migrate user-files migrations; do
             if [[ -d /opt/actualbudget_bak/$dir ]]; then
-                mv /opt/actualbudget_bak/$dir/* /opt/actualbudget-data/$dir/ 2>/dev/null || true
+                mv /opt/actualbudget_bak/$dir/* /opt/actualbudget-data/$dir/ || true
             fi
         done
         if [[ -f /opt/actualbudget-data/migrate/.migrations ]]; then
@@ -74,7 +74,7 @@ ACTUAL_HTTPS_CERT=/opt/actualbudget/selfhost.crt
 EOF
         fi
         cd /opt/actualbudget
-        yarn install &>/dev/null
+        $STD yarn install
         echo "${RELEASE}" > /opt/actualbudget_version.txt
         msg_ok "Updated ${APP}"
 

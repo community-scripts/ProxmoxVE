@@ -34,8 +34,10 @@ jobs:
             const prNumber = context.payload.pull_request.number;
             const prBody = context.payload.pull_request.body.toLowerCase();
             
+            // Label-Sammlung (um doppelte API-Calls zu vermeiden)
             let labelsToAdd = new Set();
 
+            // Prüfe Datei-Änderungen
             const prListFilesResponse = await github.rest.pulls.listFiles({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -59,6 +61,7 @@ jobs:
               }
             }
 
+            // Prüfe PR-Template Checkboxen mit den korrekten Labels
             const templateLabelMappings = {
               "🐞 bug fix": "bugfix",
               "✨ new feature": "feature",
@@ -74,6 +77,10 @@ jobs:
               }
             }
 
+            // Debugging: Anzeigen, welche Labels tatsächlich erkannt wurden
+            console.log(`Labels to add: ${Array.from(labelsToAdd).join(", ")}`);
+
+            // Labels setzen, falls neue erkannt wurden
             if (labelsToAdd.size > 0) {
               console.log(`Adding labels ${Array.from(labelsToAdd).join(", ")} to PR ${prNumber}`);
               await github.rest.issues.addLabels({

@@ -39,12 +39,12 @@ function update_script() {
     unzip -q /opt/v${RELEASE}.zip -d /opt
     mv /opt/BookStack-${RELEASE} /opt/bookstack
     cp /opt/bookstack-backup/.env /opt/bookstack/.env
-    cp -r /opt/bookstack-backup/public/uploads/* /opt/bookstack/public/uploads/ 2>/dev/null || true
-    cp -r /opt/bookstack-backup/storage/uploads/* /opt/bookstack/storage/uploads/ 2>/dev/null || true
-    cp -r /opt/bookstack-backup/themes/* /opt/bookstack/themes/ 2>/dev/null || true
+    cp -r /opt/bookstack-backup/public/uploads/* /opt/bookstack/public/uploads/ || true
+    cp -r /opt/bookstack-backup/storage/uploads/* /opt/bookstack/storage/uploads/ || true
+    cp -r /opt/bookstack-backup/themes/* /opt/bookstack/themes/ || true
     cd /opt/bookstack
-    COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev &>/dev/null
-    php artisan migrate --force &>/dev/null
+    $STD COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev
+    $STD php artisan migrate --force
     chown www-data:www-data -R /opt/bookstack /opt/bookstack/bootstrap/cache /opt/bookstack/public/uploads /opt/bookstack/storage
     chmod -R 755 /opt/bookstack /opt/bookstack/bootstrap/cache /opt/bookstack/public/uploads /opt/bookstack/storage
     chmod -R 775 /opt/bookstack/storage /opt/bookstack/bootstrap/cache /opt/bookstack/public/uploads

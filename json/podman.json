@@ -32,7 +32,7 @@
     },
     "notes": [
         {
-            "text": "Doesn't work with ZFS",
+            "text": "Options to Install Portainer or Portainer Agent",
             "type": "warning"
         }
     ]

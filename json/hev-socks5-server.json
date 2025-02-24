@@ -1,0 +1,43 @@
+{
+  "name": "hev-socks5-server",
+  "slug": "hev-socks5-server",
+  "categories": [
+    4
+  ],
+  "date_created": "2025-02-23",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 1080,
+  "documentation": null,
+  "website": "https://github.com/heiher/hev-socks5-server",
+  "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/405px-Tux.svg.png",
+  "description": "HevSocks5Server is a simple, lightweight socks5 server.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/hev-socks5-server.sh",
+      "resources": {
+        "cpu": 1,
+        "ram": 512,
+        "hdd": 2,
+        "os": "debian",
+        "version": "12"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Default credentials: `cat /root/hev.creds`",
+      "type": "info"
+    },
+    {
+      "text": "Config stored at `/etc/hev-socks5-server/main.yml`",
+      "type": "info"
+    }
+  ]
+}

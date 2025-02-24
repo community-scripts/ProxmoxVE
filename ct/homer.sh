@@ -41,7 +41,7 @@ function update_script() {
     rm -rf /opt/homer/*
     cd /opt/homer
     wget -q https://github.com/bastienwirtz/homer/releases/latest/download/homer.zip
-    unzip homer.zip &>/dev/null
+    $STD unzip homer.zip
     msg_ok "Updated ${APP}"
 
     msg_info "Restoring assets directory"

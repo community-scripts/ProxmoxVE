@@ -40,10 +40,10 @@ function update_script() {
         tar xzf v${RELEASE}.tar.gz
         mv tasmocompiler-${RELEASE}/ /opt/tasmocompiler/
         cd /opt/tasmocompiler
-        yarn install &> /dev/null
+        $STD yarn install
         export NODE_OPTIONS=--openssl-legacy-provider
-        npm i &> /dev/null
-        yarn build &> /dev/null
+        $STD npm i
+        $STD yarn build
         msg_ok "Updated $APP to v${RELEASE}"
         msg_info "Starting $APP"
         systemctl start tasmocompiler

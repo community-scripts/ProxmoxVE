@@ -34,8 +34,8 @@ function update_script() {
     msg_ok "Stopped $APP"
 
     msg_info "Updating $APP"
-    apt-get update &> /dev/null
-    apt-get upgrade -y &> /dev/null
+    $STD apt-get update
+    $STD apt-get upgrade -y
     msg_ok "Updated $APP"
 
     msg_info "Starting $APP"

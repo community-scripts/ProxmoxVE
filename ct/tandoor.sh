@@ -33,15 +33,15 @@ function update_script() {
     msg_info "Updating ${APP} (Patience)"
     export $(cat /opt/tandoor/.env | grep "^[^#]" | xargs)
     cd /opt/tandoor/
-    pip3 install -r requirements.txt >/dev/null 2>&1
-    /usr/bin/python3 /opt/tandoor/manage.py migrate >/dev/null 2>&1
-    /usr/bin/python3 /opt/tandoor/manage.py collectstatic --no-input >/dev/null 2>&1
-    /usr/bin/python3 /opt/tandoor/manage.py collectstatic_js_reverse >/dev/null 2>&1
+    $STD pip3 install -r requirements.txt
+    $STD /usr/bin/python3 /opt/tandoor/manage.py migrate
+    $STD /usr/bin/python3 /opt/tandoor/manage.py collectstatic --no-input
+    $STD /usr/bin/python3 /opt/tandoor/manage.py collectstatic_js_reverse
     cd /opt/tandoor/vue
-    yarn install >/dev/null 2>&1
-    yarn build >/dev/null 2>&1
+    $STD yarn install
+    $STD yarn build
     cd /opt/tandoor
-    python3 version.py &>/dev/null
+    $STD python3 version.py
     systemctl restart gunicorn_tandoor
     msg_ok "Updated ${APP}"
   fi

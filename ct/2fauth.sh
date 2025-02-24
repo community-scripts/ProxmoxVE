@@ -35,8 +35,8 @@ function update_script() {
     if [[ "${RELEASE}" != "$(cat /opt/2fauth_version.txt)" ]] || [[ ! -f /opt/2fauth_version.txt ]]; then
         msg_info "Updating $APP to ${RELEASE}"
 
-        apt-get update &>/dev/null
-        apt-get -y upgrade &>/dev/null
+        $STD apt-get update
+        $STD apt-get -y upgrade
 
         # Creating Backup
         msg_info "Creating Backup"
@@ -55,7 +55,7 @@ function update_script() {
         chmod -R 755 "/opt/2fauth"
 
         export COMPOSER_ALLOW_SUPERUSER=1
-        composer install --no-dev --prefer-source &>/dev/null
+        $STD composer install --no-dev --prefer-source
 
         php artisan 2fauth:install
 

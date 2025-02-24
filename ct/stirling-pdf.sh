@@ -30,15 +30,15 @@ function update_script() {
   msg_info "Updating ${APP}"
   systemctl stop stirlingpdf
   if [[ -n $(dpkg -l | grep -w ocrmypdf) ]] && [[ -z $(dpkg -l | grep -w qpdf) ]]; then
-    apt-get remove -y ocrmypdf &>/dev/null
-    apt-get install -y qpdf &>/dev/null
+    $STD apt-get remove -y ocrmypdf
+    $STD apt-get install -y qpdf
   fi
   RELEASE=$(curl -s https://api.github.com/repos/Stirling-Tools/Stirling-PDF/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
   wget -q https://github.com/Stirling-Tools/Stirling-PDF/archive/refs/tags/v$RELEASE.tar.gz
   tar -xzf v$RELEASE.tar.gz
   cd Stirling-PDF-$RELEASE
   chmod +x ./gradlew
-  ./gradlew build &>/dev/null
+  $STD ./gradlew build
   cp -r ./build/libs/Stirling-PDF-*.jar /opt/Stirling-PDF/
   cp -r scripts /opt/Stirling-PDF/
   cd ~

@@ -17,13 +17,72 @@ All LXC instances created using this repository come pre-installed with Midnight
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
 
+## 2025-02-24
+
+### Changes
+
+### 🆕 New Scripts
+
+- New Script: VictoriaMetrics [@tremor021](https://github.com/tremor021) ([#2565](https://github.com/community-scripts/ProxmoxVE/pull/2565))
+- New Script: Authelia [@thost96](https://github.com/thost96) ([#2060](https://github.com/community-scripts/ProxmoxVE/pull/2060))
+- New Script: Jupyter Notebook [@Dave-code-creater](https://github.com/Dave-code-creater) ([#2561](https://github.com/community-scripts/ProxmoxVE/pull/2561))
+
+### 🚀 Updated Scripts
+
+- Fix Docmost: default upload size and saving data when updating [@bvdberg01](https://github.com/bvdberg01) ([#2598](https://github.com/community-scripts/ProxmoxVE/pull/2598))
+- Fix: Wireguard - Restart wgdashboard automatically after update [@LostALice](https://github.com/LostALice) ([#2587](https://github.com/community-scripts/ProxmoxVE/pull/2587))
+- Feature: Possibility to perform updates in silent / verbose (+ logging) [@MickLesk](https://github.com/MickLesk) ([#2583](https://github.com/community-scripts/ProxmoxVE/pull/2583))
+- fix: homarr db migration [@CrazyWolf13](https://github.com/CrazyWolf13) ([#2575](https://github.com/community-scripts/ProxmoxVE/pull/2575))
+
+### ✨ Feature Updates (Updated Scripts)
+
+- Feature: Use Verbose Mode for all Scripts (removed &>/dev/null) [@MickLesk](https://github.com/MickLesk) ([#2596](https://github.com/community-scripts/ProxmoxVE/pull/2596))
+
+### 🌐 Website
+
+- Fix: Jupyter Json (missing logo & improve name on website) [@MickLesk](https://github.com/MickLesk) ([#2584](https://github.com/community-scripts/ProxmoxVE/pull/2584))
+
+## 2025-02-23
+
+### Changes
+
+### 🆕 New Scripts
+
+- New Script: Hev socks5 server [@miviro](https://github.com/miviro) ([#2454](https://github.com/community-scripts/ProxmoxVE/pull/2454))
+- New Script: bolt.diy [@tremor021](https://github.com/tremor021) ([#2528](https://github.com/community-scripts/ProxmoxVE/pull/2528))
+
+### 🚀 Updated Scripts
+
+- Fix: Wireguard - Remove setting NAT as its already in PostUp/Down [@tremor021](https://github.com/tremor021) ([#2510](https://github.com/community-scripts/ProxmoxVE/pull/2510))
+
+### 🌐 Website
+
+- Fix: Home Assistant Core - fixed wrong text in application description on website [@TMigue](https://github.com/TMigue) ([#2576](https://github.com/community-scripts/ProxmoxVE/pull/2576))
+
+## 2025-02-22
+
+### Changes
+
+### 🌐 Website
+
+- Fix a few broken icon links [@Snarkenfaugister](https://github.com/Snarkenfaugister) ([#2548](https://github.com/community-scripts/ProxmoxVE/pull/2548))
+
+### 🧰 Maintenance
+
+- Fix: URL's in CONTRIBUTING.md [@bvdberg01](https://github.com/bvdberg01) ([#2552](https://github.com/community-scripts/ProxmoxVE/pull/2552))
+
 ## 2025-02-21
 
 ### Changes
 
 ### 🚀 Updated Scripts
 
+- Add ZFS to Podman. Now it works on ZFS! [@jaminmc](https://github.com/jaminmc) ([#2526](https://github.com/community-scripts/ProxmoxVE/pull/2526))
 - Fix: Tianji - Downgrade Node [@MickLesk](https://github.com/MickLesk) ([#2530](https://github.com/community-scripts/ProxmoxVE/pull/2530))
+
+### 🧰 Maintenance
+
+- [gh] General Cleanup & Moving Files / Folders [@MickLesk](https://github.com/MickLesk) ([#2532](https://github.com/community-scripts/ProxmoxVE/pull/2532))
 
 ## 2025-02-20
 

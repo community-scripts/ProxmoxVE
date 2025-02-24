@@ -41,12 +41,12 @@ function update_script() {
     unzip -q ${RELEASE}.zip
     mv linkwarden-${RELEASE:1} /opt/linkwarden
     cd /opt/linkwarden
-    yarn &>/dev/null
-    npx playwright install-deps &>/dev/null
-    yarn playwright install &>/dev/null
+    $STD yarn
+    $STD npx playwright install-deps
+    $STD yarn playwright install
     cp /opt/.env /opt/linkwarden/.env
-    yarn build &>/dev/null
-    yarn prisma migrate deploy &>/dev/null
+    $STD yarn build
+    $STD yarn prisma migrate deploy
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP} to ${RELEASE}"
 

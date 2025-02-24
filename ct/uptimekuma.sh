@@ -30,29 +30,29 @@ function update_script() {
   if [[ "$(node -v | cut -d 'v' -f 2)" == "18."* ]]; then
     if ! command -v npm >/dev/null 2>&1; then
       echo "Installing NPM..."
-      apt-get install -y npm >/dev/null 2>&1
+      $STD apt-get install -y npm
       echo "Installed NPM..."
     fi
   fi
   LATEST=$(curl -sL https://api.github.com/repos/louislam/uptime-kuma/releases/latest | grep '"tag_name":' | cut -d'"' -f4)
   msg_info "Stopping ${APP}"
-  sudo systemctl stop uptime-kuma &>/dev/null
+  $STD sudo systemctl stop uptime-kuma
   msg_ok "Stopped ${APP}"
 
   cd /opt/uptime-kuma
 
   msg_info "Pulling ${APP} ${LATEST}"
-  git fetch --all &>/dev/null
-  git checkout $LATEST --force &>/dev/null
+  $STD git fetch --all
+  $STD git checkout $LATEST --force
   msg_ok "Pulled ${APP} ${LATEST}"
 
   msg_info "Updating ${APP} to ${LATEST}"
-  npm install --production &>/dev/null
-  npm run download-dist &>/dev/null
+  $STD npm install --production
+  $STD npm run download-dist
   msg_ok "Updated ${APP}"
 
   msg_info "Starting ${APP}"
-  sudo systemctl start uptime-kuma &>/dev/null
+  $STD sudo systemctl start uptime-kuma
   msg_ok "Started ${APP}"
   msg_ok "Updated Successfully"
   exit
