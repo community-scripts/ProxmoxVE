@@ -6,7 +6,7 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 # Source: https://jupyter.org/
 
 APP="Jupyter Notebook"
-TAGS="ai;dev-tools"
+var_tags="ai;dev-tools"
 var_cpu="2"
 var_ram="2048"
 var_disk="4"
@@ -27,6 +27,7 @@ function update_script() {
     msg_info "Updating ${APP} LXC"
     apt-get update &>/dev/null
     apt-get install -y upgrade &>/dev/null
+    pip3 install jupyter --upgrade &>/dev/null
     msg_ok "Updated Successfully"
     exit
 }
