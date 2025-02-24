@@ -29,6 +29,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 - fix: homarr db migration [@CrazyWolf13](https://github.com/CrazyWolf13) ([#2575](https://github.com/community-scripts/ProxmoxVE/pull/2575))
 
+### 🌐 Website
+
+- Fix: Jupyter Json (missing logo & improve name on website) [@MickLesk](https://github.com/MickLesk) ([#2584](https://github.com/community-scripts/ProxmoxVE/pull/2584))
+
 ## 2025-02-23
 
 ### Changes
