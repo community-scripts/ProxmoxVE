@@ -17,6 +17,14 @@ All LXC instances created using this repository come pre-installed with Midnight
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
 
+## 2025-02-24
+
+### Changes
+
+### 🚀 Updated Scripts
+
+- fix: homarr db migration [@CrazyWolf13](https://github.com/CrazyWolf13) ([#2575](https://github.com/community-scripts/ProxmoxVE/pull/2575))
+
 ## 2025-02-23
 
 ### Changes
