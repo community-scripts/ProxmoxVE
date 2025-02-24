@@ -4,9 +4,9 @@
     "categories": [
       20
     ],
-    "date_created": "2025-02-20",
+    "date_created": "2025-02-24",
     "type": "ct",
-    "updateable": false,
+    "updateable": true,
     "privileged": false,
     "interface_port": 8888,
     "documentation": "https://jupyter-notebook.readthedocs.io/en/stable/",
@@ -21,8 +21,8 @@
           "cpu": 2,
           "ram": 2048,
           "hdd": 4,
-          "os": "Ubuntu",
-          "version": "22.04"
+          "os": "ubuntu",
+          "version": "24.04"
         }
       }
     ],
@@ -30,5 +30,10 @@
       "username": null,
       "password": null
     },
-    "notes": ["To get the token to access the Jupyter Notebook, run the following command: jupyter notebook list"]
-  }
+    "notes": [
+        {
+            "text": "To get the token to access the Jupyter Notebook, run the following command: jupyter notebook list.",
+            "type": "info"
+        }
+    ]
+}
