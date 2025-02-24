@@ -36,7 +36,7 @@ function update_script() {
     msg_info "Creating Backup"
       rm -rf /opt/${APP}_backup*.tar.gz
       mkdir -p /opt/z2m_backup
-      tar -czf /opt/z2m_backup/${APP}_backup_$(date +%Y%m%d%H%M%S).tar.gz -C /opt zigbee2mqtt &>/dev/null
+      $STD tar -czf /opt/z2m_backup/${APP}_backup_$(date +%Y%m%d%H%M%S).tar.gz -C /opt zigbee2mqtt
       mv /opt/zigbee2mqtt/data /opt/z2m_backup
     msg_ok "Backup Created"
 
@@ -49,8 +49,8 @@ function update_script() {
       rm -rf /opt/zigbee2mqtt/data
       mv /opt/z2m_backup/data /opt/zigbee2mqtt
       cd /opt/zigbee2mqtt 
-      pnpm install --frozen-lockfile &>/dev/null
-      pnpm build &>/dev/null
+      $STD pnpm install --frozen-lockfile
+      $STD pnpm build
     msg_ok "Updated Zigbee2MQTT"
 
     msg_info "Starting Service"

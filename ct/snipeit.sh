@@ -30,11 +30,11 @@ function update_script() {
   RELEASE=$(curl -s https://api.github.com/repos/snipe/snipe-it/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
   if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
     msg_info "Updating ${APP} to v${RELEASE}"
-    apt-get update &>/dev/null
-    apt-get -y upgrade &>/dev/null
+    $STD apt-get update
+    $STD apt-get -y upgrade
     mv /opt/snipe-it /opt/snipe-it-backup
     cd /opt
-    wget -q "https://github.com/snipe/snipe-it/archive/refs/tags/v${RELEASE}.zip" &>/dev/null
+    $STD wget -q "https://github.com/snipe/snipe-it/archive/refs/tags/v${RELEASE}.zip"
     unzip -q v${RELEASE}.zip
     mv snipe-it-${RELEASE} /opt/snipe-it
     cp /opt/snipe-it-backup/.env /opt/snipe-it/.env
@@ -42,13 +42,13 @@ function update_script() {
     cp -r /opt/snipe-it-backup/storage/private_uploads /opt/snipe-it/storage/private_uploads
     cd /opt/snipe-it/
     export COMPOSER_ALLOW_SUPERUSER=1
-    composer install --no-dev --prefer-source &>/dev/null
-    composer dump-autoload &>/dev/null
-    php artisan migrate --force &>/dev/null
-    php artisan config:clear &>/dev/null
-    php artisan route:clear &>/dev/null
-    php artisan cache:clear &>/dev/null
-    php artisan view:clear &>/dev/null
+    $STD composer install --no-dev --prefer-source
+    $STD composer dump-autoload
+    $STD php artisan migrate --force
+    $STD php artisan config:clear
+    $STD php artisan route:clear
+    $STD php artisan cache:clear
+    $STD php artisan view:clear
     chown -R www-data: /opt/snipe-it
     chmod -R 755 /opt/snipe-it
     rm -rf /opt/v${RELEASE}.zip

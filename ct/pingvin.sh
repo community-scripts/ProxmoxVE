@@ -42,11 +42,11 @@ function update_script() {
       cp -rf pingvin-share-${RELEASE}/* /opt/pingvin-share
       cd /opt/pingvin-share
       cd backend
-      npm install &>/dev/null
-      npm run build &>/dev/null
+      $STD npm install
+      $STD npm run build
       cd ../frontend
-      npm install &>/dev/null
-      npm run build &>/dev/null
+      $STD npm install
+      $STD npm run build
       echo "${RELEASE}" >"/opt/pingvin_version.txt"
       rm -rf /opt/v${RELEASE}.zip
       rm -rf /opt/pingvin-share-${RELEASE}

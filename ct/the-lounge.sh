@@ -34,7 +34,7 @@ function update_script() {
     msg_ok "Stopped Service"
 
     msg_info "Updating ${APP} to v${RELEASE}"
-    apt-get install --only-upgrade nodejs &>/dev/null
+    $STD apt-get install --only-upgrade nodejs
     cd /opt
     wget -q https://github.com/thelounge/thelounge-deb/releases/download/v${RELEASE}/thelounge_${RELEASE}_all.deb
     dpkg -i ./thelounge_${RELEASE}_all.deb

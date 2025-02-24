@@ -30,8 +30,8 @@ function update_script() {
   msg_info "Updating ${APP} LXC"
 
   msg_info "Updating packages"
-  apt-get update &>/dev/null
-  apt-get -y upgrade &>/dev/null
+  $STD apt-get update
+  $STD apt-get -y upgrade
 
   RELEASE=$(curl -s https://api.github.com/repos/keycloak/keycloak/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
   msg_info "Updating Keycloak to v$RELEASE"

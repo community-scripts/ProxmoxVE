@@ -45,8 +45,8 @@ function update_script() {
         cp -rf ${temp_folder}/Watcharr-${RELEASE}/* /opt/watcharr
         cd /opt/watcharr
         export GOOS=linux
-        npm i &> /dev/null
-        npm run build &> /dev/null
+        $STD npm i
+        $STD npm run build
         mv ./build ./server/ui
         cd server
         go mod download

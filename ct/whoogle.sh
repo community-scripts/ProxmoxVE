@@ -28,7 +28,7 @@ function update_script() {
         exit
     fi
     msg_info "Updating ${APP} LXC"
-    pip3 install whoogle-search --upgrade &>/dev/null
+    $STD pip3 install whoogle-search --upgrade
     systemctl restart whoogle.service
     msg_ok "Updated Successfully"
     exit

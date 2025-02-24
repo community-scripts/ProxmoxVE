@@ -46,7 +46,7 @@ function update_script() {
         mv Kometa-${RELEASE} /opt/kometa
         cd /opt/kometa
         rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
-        pip install -r requirements.txt --ignore-installed &> /dev/null
+        $STD pip install -r requirements.txt --ignore-installed
         mkdir -p config/assets
         cp /opt/config.yml config/config.yml
         echo "${RELEASE}" >/opt/kometa_version.txt

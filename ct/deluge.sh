@@ -28,7 +28,7 @@ function update_script() {
         exit
     fi
     msg_info "Updating $APP LXC"
-    apt-get update &>/dev/null
+    $STD apt-get update
     pip3 install deluge[all] --upgrade
     msg_ok "Updated $APP LXC"
     exit

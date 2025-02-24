@@ -35,8 +35,8 @@ function update_script() {
     tar -xzf peanut.tar.gz -C /opt/peanut --strip-components 1
     rm peanut.tar.gz
     cd /opt/peanut
-    pnpm i &>/dev/null
-    pnpm run build &>/dev/null
+    $STD pnpm i
+    $STD pnpm run build
     cp -r .next/static .next/standalone/.next/
     mkdir -p /opt/peanut/.next/standalone/config
     ln -sf /etc/peanut/settings.yml /opt/peanut/.next/standalone/config/settings.yml

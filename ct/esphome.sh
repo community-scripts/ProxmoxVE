@@ -33,9 +33,9 @@ function update_script() {
 
   msg_info "Updating ESPHome"
   if [[ -d /srv/esphome ]]; then
-    source /srv/esphome/bin/activate &>/dev/null
+    $STD source /srv/esphome/bin/activate
   fi
-  pip3 install -U esphome &>/dev/null
+  $STD pip3 install -U esphome
   msg_ok "Updated ESPHome"
 
   msg_info "Starting ESPHome"

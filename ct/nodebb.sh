@@ -39,7 +39,7 @@ function update_script() {
 
     msg_info "Updating ${APP} to v${RELEASE}"
     cd /opt/nodebb
-    ./nodebb upgrade >/dev/null 2>&1
+    $STD ./nodebb upgrade
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP} to v${RELEASE}"
 

@@ -25,9 +25,9 @@ function update_script() {
     check_container_resources
     
     msg_info "Updating ${APP} LXC"
-    apt-get update &>/dev/null
-    apt-get install -y upgrade &>/dev/null
-    pip3 install jupyter --upgrade &>/dev/null
+    $STD apt-get update
+    $STD apt-get install -y upgrade
+    $STD pip3 install jupyter --upgrade
     msg_ok "Updated Successfully"
     exit
 }

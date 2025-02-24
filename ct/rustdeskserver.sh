@@ -40,7 +40,7 @@ function update_script() {
         wget -q "https://github.com/rustdesk/rustdesk-server/releases/download/${RELEASE}/rustdesk-server-hbbr_${RELEASE}_amd64.deb" -P $TEMPDIR
         wget -q "https://github.com/rustdesk/rustdesk-server/releases/download/${RELEASE}/rustdesk-server-hbbs_${RELEASE}_amd64.deb" -P $TEMPDIR
         wget -q "https://github.com/rustdesk/rustdesk-server/releases/download/${RELEASE}/rustdesk-server-utils_${RELEASE}_amd64.deb" -P $TEMPDIR
-        dpkg -i $TEMPDIR/*.deb &> /dev/null
+        $STD dpkg -i $TEMPDIR/*.deb
         msg_ok "Updated $APP to v${RELEASE}"
 
         msg_info "Cleaning Up"

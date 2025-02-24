@@ -47,8 +47,8 @@ function update_script() {
 
         msg_info "Building new PS5-MQTT version"
         cd /opt/ps5-mqtt/ps5-mqtt/
-        npm install &>/dev/null
-        npm run build &>/dev/null
+        $STD npm install
+        $STD npm run build
         msg_ok "Built new PS5-MQTT version"
 
         msg_info "Starting service"

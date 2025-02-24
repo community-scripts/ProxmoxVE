@@ -44,8 +44,8 @@ function update_script() {
     VER=$(curl -s https://api.github.com/repos/linuxserver/Heimdall/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
     cp -R Heimdall-${VER}/* /opt/Heimdall
     cd /opt/Heimdall
-    apt-get install -y composer &>/dev/null
-    COMPOSER_ALLOW_SUPERUSER=1 composer dump-autoload &>/dev/null
+    $STD apt-get install -y composer
+    $STD COMPOSER_ALLOW_SUPERUSER=1 composer dump-autoload
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated Heimdall Dashboard to ${RELEASE}"
     msg_info "Restoring Data"

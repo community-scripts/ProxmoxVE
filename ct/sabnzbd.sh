@@ -31,11 +31,11 @@ function update_script() {
    if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
       msg_info "Updating $APP to ${RELEASE}"
       systemctl stop sabnzbd.service
-      tar zxvf <(curl -fsSL https://github.com/sabnzbd/sabnzbd/releases/download/$RELEASE/SABnzbd-${RELEASE}-src.tar.gz) &>/dev/null
-      \cp -r SABnzbd-${RELEASE}/* /opt/sabnzbd &>/dev/null
+      $STD tar zxvf <(curl -fsSL https://github.com/sabnzbd/sabnzbd/releases/download/$RELEASE/SABnzbd-${RELEASE}-src.tar.gz)
+      $STD \cp -r SABnzbd-${RELEASE}/* /opt/sabnzbd
       rm -rf SABnzbd-${RELEASE}
       cd /opt/sabnzbd
-      python3 -m pip install -r requirements.txt &>/dev/null
+      $STD python3 -m pip install -r requirements.txt
       echo "${RELEASE}" >/opt/${APP}_version.txt
       systemctl start sabnzbd.service
       msg_ok "Updated ${APP} to ${RELEASE}"

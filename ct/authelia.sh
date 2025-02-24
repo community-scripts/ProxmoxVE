@@ -29,14 +29,14 @@ function update_script() {
     RELEASE=$(curl -s https://api.github.com/repos/authelia/authelia/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
     if [[ "${RELEASE}" != "$(/usr/bin/authelia -v | awk '{print substr($3, 2, length($2)) }' )" ]]; then
         msg_info "Updating $APP to ${RELEASE}"
-        apt-get update &>/dev/null
-        apt-get -y upgrade &>/dev/null
+        $STD apt-get update
+        $STD apt-get -y upgrade
         wget -q "https://github.com/authelia/authelia/releases/download/${RELEASE}/authelia_${RELEASE}_amd64.deb"
-        dpkg -i "authelia_${RELEASE}_amd64.deb" &>/dev/null
+        $STD dpkg -i "authelia_${RELEASE}_amd64.deb"
         msg_info "Cleaning Up"
         rm -f "authelia_${RELEASE}_amd64.deb"
-        apt-get -y autoremove &>/dev/null
-        apt-get -y autoclean &>/dev/null
+        $STD apt-get -y autoremove
+        $STD apt-get -y autoclean
         msg_ok "Cleanup Completed"
         msg_ok "Updated $APP to ${RELEASE}"
     else

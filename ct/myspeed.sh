@@ -41,7 +41,7 @@ function update_script() {
     wget -q https://github.com/gnmyt/myspeed/releases/download/v$RELEASE/MySpeed-$RELEASE.zip
     unzip -q MySpeed-$RELEASE.zip -d myspeed
     cd myspeed
-    npm install >/dev/null 2>&1
+    $STD npm install
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP} to ${RELEASE}"
 

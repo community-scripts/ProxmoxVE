@@ -115,10 +115,10 @@ function update_script() {
       echo "${options[*]}"
     )
     echo $cps_options >/opt/calibre-web/options.txt
-    pip install --upgrade calibreweb[$cps_options] &>/dev/null
+    $STD pip install --upgrade calibreweb[$cps_options]
   else
     rm -rf /opt/calibre-web/options.txt
-    pip install --upgrade calibreweb &>/dev/null
+    $STD pip install --upgrade calibreweb
   fi
 
   msg_info "Starting ${APP}"

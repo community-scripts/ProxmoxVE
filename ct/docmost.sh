@@ -41,8 +41,8 @@ function update_script() {
     mv docmost-${RELEASE} /opt/docmost
     cd /opt/docmost
     mv /opt/.env /opt/docmost/.env
-    pnpm install --force &>/dev/null
-    pnpm build &>/dev/null
+    $STD pnpm install --force
+    $STD pnpm build
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP}"
 

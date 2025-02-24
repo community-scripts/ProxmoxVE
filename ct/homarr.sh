@@ -38,7 +38,7 @@ fi
 if [[ ! -f /opt/run_homarr.sh ]]; then
         msg_info "Detected outdated and missing service files"
         msg_error "Warning - The port of homarr changed from 3000 to 7575"
-        apt-get install -y nginx gettext openssl gpg &>/dev/null
+        $STD apt-get install -y nginx gettext openssl gpg
         sed -i '/^NODE_ENV=/d' /opt/homarr/.env && echo "NODE_ENV='production'" >> /opt/homarr/.env
         sed -i '/^DB_DIALECT=/d' /opt/homarr/.env && echo "DB_DIALECT='sqlite'" >> /opt/homarr/.env
         cat <<'EOF' >/opt/run_homarr.sh
@@ -114,8 +114,8 @@ EOF
     mv homarr-${RELEASE} /opt/homarr
     mv /opt/homarr-data-backup/.env /opt/homarr/.env
     cd /opt/homarr
-    pnpm install &>/dev/null
-    pnpm build &>/dev/null
+    $STD pnpm install
+    $STD pnpm build
     cp /opt/homarr/apps/nextjs/next.config.ts .
     cp /opt/homarr/apps/nextjs/package.json .
     cp -r /opt/homarr/packages/db/migrations /opt/homarr_db/migrations

@@ -44,7 +44,7 @@ function update_script() {
         tar -xzf v${RELEASE}.tar.gz
         cp -r seelf-${RELEASE}/ /opt/seelf
         cd /opt/seelf
-        make build &> /dev/null
+        $STD make build
         msg_ok "Updated $APP to v${RELEASE}"
 
         msg_info "Starting $APP"

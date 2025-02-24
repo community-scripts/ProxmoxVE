@@ -48,9 +48,9 @@ function update_script() {
 
     msg_info "Updating VaultWarden to $VAULT (Patience)"
     cd ~ && rm -rf vaultwarden
-    git clone https://github.com/dani-garcia/vaultwarden &>/dev/null
+    $STD git clone https://github.com/dani-garcia/vaultwarden
     cd vaultwarden
-    cargo build --features "sqlite,mysql,postgresql" --release &>/dev/null
+    $STD cargo build --features "sqlite,mysql,postgresql" --release
     DIR=/usr/bin/vaultwarden
     if [ -d "$DIR" ]; then
       cp target/release/vaultwarden /usr/bin/
@@ -76,8 +76,8 @@ function update_script() {
     msg_ok "Stopped Vaultwarden"
 
     msg_info "Updating Web-Vault to $WVRELEASE"
-    curl -fsSLO https://github.com/dani-garcia/bw_web_builds/releases/download/$WVRELEASE/bw_web_$WVRELEASE.tar.gz &>/dev/null
-    tar -zxf bw_web_$WVRELEASE.tar.gz -C /opt/vaultwarden/ &>/dev/null
+    $STD curl -fsSLO https://github.com/dani-garcia/bw_web_builds/releases/download/$WVRELEASE/bw_web_$WVRELEASE.tar.gz
+    $STD tar -zxf bw_web_$WVRELEASE.tar.gz -C /opt/vaultwarden/
     msg_ok "Updated Web-Vault"
 
     msg_info "Cleaning up"
@@ -93,7 +93,7 @@ function update_script() {
   if [ "$UPD" == "3" ]; then
     if NEWTOKEN=$(whiptail --backtitle "Proxmox VE Helper Scripts" --passwordbox "Set the ADMIN_TOKEN" 10 58 3>&1 1>&2 2>&3); then
       if [[ -z "$NEWTOKEN" ]]; then exit; fi
-      if ! command -v argon2 >/dev/null 2>&1; then apt-get install -y argon2 &>/dev/null; fi
+      if ! command -v argon2 >/dev/null 2>&1; then $STD apt-get install -y argon2; fi
       TOKEN=$(echo -n ${NEWTOKEN} | argon2 "$(openssl rand -base64 32)" -t 2 -m 16 -p 4 -l 64 -e)
       sed -i "s|ADMIN_TOKEN=.*|ADMIN_TOKEN='${TOKEN}'|" /opt/vaultwarden/.env
       if [[ -f /opt/vaultwarden/data/config.json ]]; then

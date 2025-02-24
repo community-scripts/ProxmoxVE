@@ -35,8 +35,8 @@ function update_script() {
         msg_ok "Updating Node.js Repository"
 
         msg_info "Updating Packages"
-        apt-get update &>/dev/null
-        apt-get -y upgrade &>/dev/null
+        $STD apt-get update
+        $STD apt-get -y upgrade
         msg_ok "Updating Packages"
         
         msg_info "Cleaning up"
@@ -53,10 +53,10 @@ function update_script() {
     
     if [ -z "$pnpm_current" ]; then
         msg_error "pnpm not found. Installing version $pnpm_desired..."
-        npm install -g pnpm@"$pnpm_desired" &>/dev/null
+        $STD npm install -g pnpm@"$pnpm_desired"
     elif ! node -e "const semver = require('semver'); process.exit(semver.satisfies('$pnpm_current', '$pnpm_desired') ? 0 : 1)" ; then
         msg_error "Updating pnpm from version $pnpm_current to $pnpm_desired..."
-        npm install -g pnpm@"$pnpm_desired" &>/dev/null
+        $STD npm install -g pnpm@"$pnpm_desired"
     else
         msg_ok "pnpm is already installed and satisfies version $pnpm_desired."
     fi
@@ -70,9 +70,9 @@ function update_script() {
     systemctl stop jellyseerr
     rm -rf dist .next node_modules
     export CYPRESS_INSTALL_BINARY=0
-    pnpm install --frozen-lockfile &>/dev/null
+    $STD pnpm install --frozen-lockfile
     export NODE_OPTIONS="--max-old-space-size=3072"
-    pnpm build &>/dev/null
+    $STD pnpm build
 
     cat <<EOF >/etc/systemd/system/jellyseerr.service
 [Unit]

@@ -31,12 +31,12 @@ function update_script() {
 
   if ! dpkg -s aspnetcore-runtime-8.0 >/dev/null 2>&1; then
     wget -q https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb
-    dpkg -i packages-microsoft-prod.deb &>/dev/null
-    apt-get update &>/dev/null
-    apt-get install -y aspnetcore-runtime-8.0 &>/dev/null
+    $STD dpkg -i packages-microsoft-prod.deb
+    $STD apt-get update
+    $STD apt-get install -y aspnetcore-runtime-8.0
     rm packages-microsoft-prod.deb
   fi
-  bash <(curl -fsSL https://download.technitium.com/dns/install.sh) &>/dev/null
+  $STD bash <(curl -fsSL https://download.technitium.com/dns/install.sh)
   msg_ok "Updated Successfully"
   exit
 }

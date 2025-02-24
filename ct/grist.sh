@@ -51,15 +51,15 @@ function update_script() {
 
     cd grist
     msg_info "Installing Dependencies"
-    yarn install >/dev/null 2>&1
+    $STD yarn install
     msg_ok "Installed Dependencies"
 
     msg_info "Building"
-    yarn run build:prod >/dev/null 2>&1
+    $STD yarn run build:prod
     msg_ok "Done building"
 
     msg_info "Installing Python"
-    yarn run install:python >/dev/null 2>&1
+    $STD yarn run install:python
     msg_ok "Installed Python"
 
     echo "${RELEASE}" >/opt/${APP}_version.txt

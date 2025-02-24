@@ -33,7 +33,7 @@ function update_script() {
     systemctl stop zerotier-one
     msg_ok "Stopping Service"
     msg_info "Updating ${APP}"
-    apt-get update &>/dev/null
+    $STD apt-get update
     apt-get -y upgrade
     msg_ok "Updated ${APP}"
 

@@ -30,12 +30,12 @@ function update_script() {
   if [[ "$(node -v | cut -d 'v' -f 2)" == "18."* ]]; then
     if ! command -v npm >/dev/null 2>&1; then
       echo "Installing NPM..."
-      apt-get install -y npm >/dev/null 2>&1
+      $STD apt-get install -y npm
       echo "Installed NPM..."
     fi
   fi
   msg_info "Updating ${APP} LXC"
-  npm update -g n8n &>/dev/null
+  $STD npm update -g n8n
   systemctl restart n8n
   msg_ok "Updated Successfully"
   exit
