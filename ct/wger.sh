@@ -32,9 +32,10 @@ function update_script() {
         msg_info "Stopping $APP"
         systemctl stop wger
         msg_ok "Stopped $APP"
+
         msg_info "Updating $APP to v${RELEASE}"
-        temp_dir=$(mktemp -d)
-        cd $temp_dir
+        temp_file=$(mktemp)
+        cd $temp_file
         wget -q "https://github.com/wger-project/wger/archive/refs/tags/$RELEASE.tar.gz"
         tar xzf $RELEASE.tar.gz
         cp -rf wger-$RELEASE/* /home/wger/src
@@ -51,7 +52,7 @@ function update_script() {
         msg_ok "Started $APP"
 
         msg_info "Cleaning Up"
-        rm -rf $temp_dir
+        rm -rf $temp_file
         msg_ok "Cleanup Completed"
 
         msg_ok "Update Successful"
