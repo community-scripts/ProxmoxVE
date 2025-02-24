@@ -6,8 +6,8 @@ on:
     branches:
       - main
     paths:
-      - 'install/*.sh'
-      - 'ct/*.sh'
+      - 'install/**.sh'
+      - 'ct/**.sh'
 
 jobs:
   run-install-script:
@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.ref }}
-          repository: ${{ github.event.pull_request.head.repo.full_name }}  # Ensure it checks out the forked repo
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
           fetch-depth: 0          
           
       - name: Add Git safe directory
