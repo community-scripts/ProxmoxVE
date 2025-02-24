@@ -28,7 +28,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 - New Script: Authelia [@thost96](https://github.com/thost96) ([#2060](https://github.com/community-scripts/ProxmoxVE/pull/2060))
 - New Script: Jupyter Notebook [@Dave-code-creater](https://github.com/Dave-code-creater) ([#2561](https://github.com/community-scripts/ProxmoxVE/pull/2561))
 
-### 🚀 Updated Scripts
+### 🐞 Bug Fixes
 
 - Fix: homarr db migration [@CrazyWolf13](https://github.com/CrazyWolf13) ([#2575](https://github.com/community-scripts/ProxmoxVE/pull/2575))
 - Fix: Wireguard - Restart wgdashboard automatically after update [@LostALice](https://github.com/LostALice) ([#2587](https://github.com/community-scripts/ProxmoxVE/pull/2587))
