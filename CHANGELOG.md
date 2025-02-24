@@ -30,6 +30,8 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+- Fix: Update-Script Firefly III based on their docs [@MickLesk](https://github.com/MickLesk) ([#2534](https://github.com/community-scripts/ProxmoxVE/pull/2534))
+- Fix: Omada check for AVX Support and use the correct MongoDB Version [@MickLesk](https://github.com/MickLesk) ([#2600](https://github.com/community-scripts/ProxmoxVE/pull/2600))
 - Fix: Authelia Unbound Variable Argon2id [@MickLesk](https://github.com/MickLesk) ([#2604](https://github.com/community-scripts/ProxmoxVE/pull/2604))
 - Fix Docmost: default upload size and saving data when updating [@bvdberg01](https://github.com/bvdberg01) ([#2598](https://github.com/community-scripts/ProxmoxVE/pull/2598))
 - Fix: Wireguard - Restart wgdashboard automatically after update [@LostALice](https://github.com/LostALice) ([#2587](https://github.com/community-scripts/ProxmoxVE/pull/2587))
@@ -48,6 +50,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🧰 Maintenance
 
+- [gh] Update Script Test Workflow [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2599](https://github.com/community-scripts/ProxmoxVE/pull/2599))
 - [gh] Contributor-Guide: Update AppName.md & AppName.sh [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2603](https://github.com/community-scripts/ProxmoxVE/pull/2603))
 
 ## 2025-02-23
