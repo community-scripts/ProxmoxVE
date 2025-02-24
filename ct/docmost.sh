@@ -34,6 +34,7 @@ function update_script() {
 
     msg_info "Updating ${APP} to v${RELEASE}"
     cp /opt/docmost/.env /opt/
+    cp -r /opt/docmost/data /opt/
     rm -rf /opt/docmost
     temp_file=$(mktemp)
     wget -q "https://github.com/docmost/docmost/archive/refs/tags/v${RELEASE}.tar.gz" -O "$temp_file"
@@ -41,6 +42,7 @@ function update_script() {
     mv docmost-${RELEASE} /opt/docmost
     cd /opt/docmost
     mv /opt/.env /opt/docmost/.env
+    mv /opt/data /opt/docmost/data
     $STD pnpm install --force
     $STD pnpm build
     echo "${RELEASE}" >/opt/${APP}_version.txt
