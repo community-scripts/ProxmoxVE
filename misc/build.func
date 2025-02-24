@@ -1269,7 +1269,6 @@ exit_script() {
   fi
 }
 
-
 trap 'exit_script' EXIT
 trap 'post_update_to_api "failed" "$BASH_COMMAND"' ERR
 trap 'post_update_to_api "failed" "INTERRUPTED"' SIGINT
