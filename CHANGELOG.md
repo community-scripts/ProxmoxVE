@@ -23,6 +23,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🆕 New Scripts
 
+- New Script: wger [@tremor021](https://github.com/tremor021) ([#2574](https://github.com/community-scripts/ProxmoxVE/pull/2574))
 - New Script: VictoriaMetrics [@tremor021](https://github.com/tremor021) ([#2565](https://github.com/community-scripts/ProxmoxVE/pull/2565))
 - New Script: Authelia [@thost96](https://github.com/thost96) ([#2060](https://github.com/community-scripts/ProxmoxVE/pull/2060))
 - New Script: Jupyter Notebook [@Dave-code-creater](https://github.com/Dave-code-creater) ([#2561](https://github.com/community-scripts/ProxmoxVE/pull/2561))
