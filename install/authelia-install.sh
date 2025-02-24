@@ -26,15 +26,13 @@ wget -q "https://github.com/authelia/authelia/releases/download/${RELEASE}/authe
 $STD dpkg -i "authelia_${RELEASE}_amd64.deb"
 msg_ok "Install Authelia completed"
 
+read -p "Enter your domain (ex. example.com): " DOMAIN
+
 msg_info "Setting Authelia up"
 touch /etc/authelia/emails.txt
 JWT_SECRET=$(openssl rand  -hex 64)
 SESSION_SECRET=$(openssl rand  -hex 64)
 STORAGE_KEY=$(openssl rand  -hex 64)
-DOMAIN=$(hostname -d)
-if [ -z "$DOMAIN" ]; then
-    DOMAIN=$(hostname)
-fi
 cat <<EOF >/etc/authelia/users.yml
 users:
   authelia:
