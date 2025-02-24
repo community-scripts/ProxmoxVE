@@ -95,7 +95,7 @@ Example:
 >| Variable | Description | Notes |
 >|----------|-------------|-------|
 >| `APP` | Application name | Must match ct\AppName.sh |
->| `TAGS` | Proxmox display tags without Spaces, only ; | Limit the number |  
+>| `var_tags` | Proxmox display tags without Spaces, only ; | Limit the number |  
 >| `var_cpu` | CPU cores | Number of cores |
 >| `var_ram` | RAM | In MB |
 >| `var_disk` | Disk capacity | In GB |
@@ -193,13 +193,13 @@ wget -q
 unzip -q
 ```
 
-- If a command does not come with this functionality use `&>/dev/null` to suppress it's output.
+- If a command does not come with this functionality use `$STD` to suppress it's output.
 
 Example:
 
 ```bash
-php artisan migrate --force &>/dev/null
-php artisan config:clear &>/dev/null
+$STD php artisan migrate --force 
+$STD php artisan config:clear 
 ```
 
 ### 3.5 **Backups**
