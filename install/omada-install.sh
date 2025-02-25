@@ -20,7 +20,7 @@ msg_ok "Installed Dependencies"
 msg_info "Checking CPU Features"
 if lscpu | grep -q 'avx'; then
     USE_AVX=true
-    MONGODB_VERSION="8.0"
+    MONGODB_VERSION="7.0"
     msg_ok "AVX detected: Using MongoDB 8.0"
 else
     USE_AVX=false
