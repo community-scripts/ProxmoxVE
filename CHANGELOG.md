@@ -21,17 +21,23 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### Changes
 
+### ✨ New Features
+
+- Update Tailscale: Add Tag when installation is finished [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2633](https://github.com/community-scripts/ProxmoxVE/pull/2633))
+
+### 🚀 Updated Scripts
+
+  #### 🐞 Bug Fixes
+
+  - Fix Omada installer [@JcMinarro](https://github.com/JcMinarro) ([#2625](https://github.com/community-scripts/ProxmoxVE/pull/2625))
+
 ### 🌐 Website
 
 - Update Tailscale-lxc Json: Add message for Supported OS [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2629](https://github.com/community-scripts/ProxmoxVE/pull/2629))
 
 ### 🧰 Maintenance
 
-- [gh] Update Changelog Workflow [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2621](https://github.com/community-scripts/ProxmoxVE/pull/2621))
-
-### ❔ Unlabelled
-
-- Fix Omada installer [@JcMinarro](https://github.com/JcMinarro) ([#2625](https://github.com/community-scripts/ProxmoxVE/pull/2625))
+- [gh] Updated Changelog Workflow [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2632](https://github.com/community-scripts/ProxmoxVE/pull/2632))
 
 ## 2025-02-24
 
