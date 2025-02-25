@@ -34,7 +34,7 @@
         {
             "text": "Only supportet on Debian 12 LXCs",
             "type": "warning"
-        }
+        },
         {
             "text": "After the script finishes, reboot the LXC then run `tailscale up` in the LXC console",
             "type": "info"
