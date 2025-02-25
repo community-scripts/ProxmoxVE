@@ -88,6 +88,7 @@ jobs:
               const prLabels = pr.labels.map(label => label.name.toLowerCase());
               const prNote = `- ${pr.title} [@${pr.user.login}](https://github.com/${pr.user.login}) ([#${pr.number}](${pr.html_url}))`;
 
+
               const updateScriptsCategory = categorizedPRs.find(category =>
                 category.labels.some(label => prLabels.includes(label))
               );
@@ -102,6 +103,15 @@ jobs:
                   subCategory.notes.push(prNote);
                 } else {
                   updateScriptsCategory.notes.push(prNote);
+
+                }
+              }
+
+              // If PR is not categorized, assign it to the "Unlabelled" category
+              if (!isCategorized) {
+                const unlabelledCategory = categorizedPRs.find(cat => cat.title === "❔ Unlabelled");
+                if (unlabelledCategory) {
+                  unlabelledCategory.notes.push(prNote);
                 }
               }
             });

@@ -1250,19 +1250,21 @@ exit_script() {
   #200 exit codes indicate error in create_lxc.sh
   #100 exit codes indicate error in install.func
 
-  if [ $exit_code -ne 0 ]; then # Check if exit code is nonzero
+  if [ $exit_code -ne 0 ]; then  
     case $exit_code in
-    200) post_update_to_api "failed" "create_lxc.sh: Error during LXC creation" ;;
-    201) post_update_to_api "failed" "create_lxc.sh Invalid Storage class" ;;
-    202) post_update_to_api "failed" "create_lxc.sh Invalid Menu aborted" ;;
-    203) post_update_to_api "failed" "create_lxc.sh CTID was unset" ;;
-    204) post_update_to_api "failed" "create_lxc.sh PCT_OSTYPE was unset" ;;
-    205) post_update_to_api "failed" "create_lxc.sh ID cannot be less than 100" ;;
-    206) post_update_to_api "failed" "create_lxc.sh ID already in use" ;;
-    207) post_update_to_api "failed" "create_lxc.sh Template not found" ;;
-    208) post_update_to_api "failed" "create_lxc.sh Error downloading template" ;;
-    101) post_update_to_api "failed" "create_lxc.sh No Network connection" ;;
-    *) post_update_to_api "failed" "Unknown error, exit code: $exit_code" ;;
+      100) post_update_to_api "failed" "100: Unexpected error in create_lxc.sh" ;;
+      101) post_update_to_api "failed" "101: No network connection detected in create_lxc.sh" ;;
+      200) post_update_to_api "failed" "200: LXC creation failed in create_lxc.sh" ;;
+      201) post_update_to_api "failed" "201: Invalid Storage class in create_lxc.sh" ;;
+      202) post_update_to_api "failed" "202: User aborted menu in create_lxc.sh" ;;
+      203) post_update_to_api "failed" "203: CTID not set in create_lxc.sh" ;;
+      204) post_update_to_api "failed" "204: PCT_OSTYPE not set in create_lxc.sh" ;;
+      205) post_update_to_api "failed" "205: CTID cannot be less than 100 in create_lxc.sh" ;;
+      206) post_update_to_api "failed" "206: CTID already in use in create_lxc.sh" ;;
+      207) post_update_to_api "failed" "207: Template not found in create_lxc.sh" ;;
+      208) post_update_to_api "failed" "208: Error downloading template in create_lxc.sh" ;;
+      209) post_update_to_api "failed" "209: Container creation failed, but template is intact in create_lxc.sh" ;;
+      *)   post_update_to_api "failed" "Unknown error, exit code: $exit_code in create_lxc.sh" ;;
     esac
   fi
 }

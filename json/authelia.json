@@ -30,5 +30,10 @@
     "username": "authelia",
     "password": "authelia"
   },
-  "notes": []
+  "notes": [
+    {
+      "text": "During installation, you will have to input your domain (ex. domain.com). Authelia will use auth.domain.com",
+      "type": "info"
+    }
+  ]
 }

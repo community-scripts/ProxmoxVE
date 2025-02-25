@@ -32,6 +32,7 @@ jobs:
             const autolabelerConfig = JSON.parse(fileContent);
 
             const prNumber = context.payload.pull_request.number;
+
             const prBody = context.payload.pull_request.body.toLowerCase();
 
             let labelsToAdd = new Set();
@@ -80,7 +81,20 @@ jobs:
               }
             }
 
-            
+            const templateLabelMappings = {
+              "🐞 bug fix": "bugfix",
+              "✨ new feature": "feature",
+              "💥 breaking change": "breaking change",
+              "🆕 new script": "new script"
+            };
+
+            for (const [checkbox, label] of Object.entries(templateLabelMappings)) {
+              const regex = new RegExp(`- \\[x\\] ${checkbox}`, "i"); // Match only checked checkboxes
+              if (regex.test(prBody)) {
+                labelsToAdd.add(label);
+              }
+            }
+
             console.log(`Labels to add: ${Array.from(labelsToAdd).join(", ")}`);
 
             if (labelsToAdd.size > 0) {

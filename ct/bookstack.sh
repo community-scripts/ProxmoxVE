@@ -43,7 +43,8 @@ function update_script() {
     cp -r /opt/bookstack-backup/storage/uploads/* /opt/bookstack/storage/uploads/ || true
     cp -r /opt/bookstack-backup/themes/* /opt/bookstack/themes/ || true
     cd /opt/bookstack
-    $STD COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev
+    export COMPOSER_ALLOW_SUPERUSER=1 
+    $STD composer install --no-dev
     $STD php artisan migrate --force
     chown www-data:www-data -R /opt/bookstack /opt/bookstack/bootstrap/cache /opt/bookstack/public/uploads /opt/bookstack/storage
     chmod -R 755 /opt/bookstack /opt/bookstack/bootstrap/cache /opt/bookstack/public/uploads /opt/bookstack/storage

@@ -13,7 +13,7 @@ jobs:
   run-install-script:
     runs-on: pvenode
     steps:          
-      - name: Checkout PR branch (supports forks)
+      - name: Checkout PR branch
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.ref }}
@@ -37,7 +37,8 @@ jobs:
           echo "Changed files: $CHANGED_FILES"
           echo "SCRIPT=$CHANGED_FILES" >> $GITHUB_ENV
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}        
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
 
       - name: Get scripts
         id: check-install-script
@@ -68,11 +69,11 @@ jobs:
             echo "Running Test for: $STRIPPED_NAME"
             if [[ $FILE =~ ^install/.*-install\.sh$ ]]; then
               CT_SCRIPT="ct/$STRIPPED_NAME.sh"
+              echo $CT_SCRIPT
               if [[ ! -f $CT_SCRIPT ]]; then
                 echo "No CT script found for $STRIPPED_NAME"
                 ERROR_MSG="No CT script found for $FILE"
-                echo "$ERROR_MSG" > result_$STRIPPED_NAME.log
-                continue
+                RUN=false
               fi
                 echo "Found CT script for $STRIPPED_NAME"
                 chmod +x "$CT_SCRIPT"
@@ -82,32 +83,19 @@ jobs:
               if [[ ! -f $INSTALL_SCRIPT ]]; then
                 echo "No install script found for $STRIPPED_NAME"
                 ERROR_MSG="No install script found for $FILE"
-                echo "$ERROR_MSG" > result_$STRIPPED_NAME.log
-                continue
+                RUN=false
               fi                
                 echo "Found install script for $STRIPPED_NAME"
                 chmod +x "$INSTALL_SCRIPT"
                 RUNNING_FILE=$FILE
             fi
-            git remote add community-scripts https://github.com/community-scripts/ProxmoxVE.git
-            git fetch community-scripts
-            rm -f .github/workflows/scripts/app-test/pr-build.func || true
-            rm -f .github/workflows/scripts/app-test/pr-install.func || true
-            rm -f .github/workflows/scripts/app-test/pr-alpine-install.func || true
-            rm -f .github/workflows/scripts/app-test/pr-create-lxc.sh || true
-            git checkout community-scripts/main -- .github/workflows/scripts/app-test/pr-build.func
-            git checkout community-scripts/main -- .github/workflows/scripts/app-test/pr-install.func
-            git checkout community-scripts/main -- .github/workflows/scripts/app-test/pr-alpine-install.func
-            git checkout community-scripts/main -- .github/workflows/scripts/app-test/pr-create-lxc.sh
-            chmod +x $RUNNING_FILE         
-            chmod +x .github/workflows/scripts/app-test/pr-create-lxc.sh
-            chmod +x .github/workflows/scripts/app-test/pr-install.func
-            chmod +x .github/workflows/scripts/app-test/pr-alpine-install.func
-            chmod +x .github/workflows/scripts/app-test/pr-build.func
-            sed -i 's|source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)|source .github/workflows/scripts/app-test/pr-build.func|g' "$RUNNING_FILE"
-            echo "Executing $RUNNING_FILE"
-            ERROR_MSG=$(./$RUNNING_FILE 2>&1 > /dev/null)
-            echo "Finished running $FILE"
+            if [[ $RUN != "false" ]]; then
+              chmod +x $RUNNING_FILE         
+              sed -i 's|source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)|source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/.github/workflows/scripts/app-test/pr-build.func)|g' "$RUNNING_FILE"
+              echo "Executing $RUNNING_FILE"
+              ERROR_MSG=$(./$RUNNING_FILE 2>&1 > /dev/null)
+              echo "Finished running $FILE"
+            fi  
             if [ -n "$ERROR_MSG" ]; then
               echo "ERROR in $STRIPPED_NAME: $ERROR_MSG"
               echo "$ERROR_MSG" > result_$STRIPPED_NAME.log
@@ -125,12 +113,13 @@ jobs:
                 pct stop $container_id
                 pct destroy $container_id
             fi            
-          done   
+          done
+   
 
       - name: Post error comments
         run: |
           ERROR="false"
-          SEARCH_LINE=".github/workflows/scripts/app-test/pr-build.func: line 253:"
+          SEARCH_LINE=".github/workflows/scripts/app-test/pr-build.func: line 255"
           for FILE in ${{ env.ALL_FILES }}; do
             STRIPPED_NAME=$(basename "$FILE" | sed 's/-install//' | sed 's/\.sh$//')
             if [[ ! -f result_$STRIPPED_NAME.log ]]; then
@@ -145,8 +134,6 @@ jobs:
               gh pr comment ${{ github.event.pull_request.number }} \
                 --repo ${{ github.repository }} \
                 --body ":warning: The script _**$FILE**_ failed with the following message: <br> <div><strong>${CLEANED_ERROR_MSG}</strong></div>"
-
-              
               ERROR="true"
             fi
           done
@@ -157,3 +144,5 @@ jobs:
       - name: Fail if error
         if: ${{ env.ERROR == 'true' }}
         run: exit 1 
+      
+  
