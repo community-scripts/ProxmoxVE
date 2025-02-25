@@ -67,5 +67,5 @@
       "includeGlobs": ["misc/build.func", "misc/install.func", "ct/create_lxc.sh"],
       "excludeGlobs": []
     }
-  ]
+  ]  
 }

@@ -8,13 +8,26 @@
     "labels": ["new script"]
   },
   {
-    "title": "🐞 Bug Fixes",
-    "labels": ["bugfix"]
-  },
-  {
     "title": "✨ New Features",
     "labels": ["feature"]
   },
+  {
+    "title": "🚀 Updated Scripts",
+    "labels": ["update script"],
+    "subCategories": [
+      {
+        "title": "🐞 Bug Fixes",
+        "labels": ["bugfix"],
+        "notes" : []
+      },
+      {
+        "title": "General Updates",
+        "labels": ["general"],
+        "notes" : []
+      }
+    ]
+  },
+  
   {
     "title": "🌐 Website",
     "labels": ["website"]
