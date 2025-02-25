@@ -21,6 +21,14 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### Changes
 
+### 🌐 Website
+
+- Update Tailscale-lxc Json: Add message for Supported OS [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2629](https://github.com/community-scripts/ProxmoxVE/pull/2629))
+
+### 🧰 Maintenance
+
+- [gh] Update Changelog Workflow [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2621](https://github.com/community-scripts/ProxmoxVE/pull/2621))
+
 ### ❔ Unlabelled
 
 - Fix Omada installer [@JcMinarro](https://github.com/JcMinarro) ([#2625](https://github.com/community-scripts/ProxmoxVE/pull/2625))
