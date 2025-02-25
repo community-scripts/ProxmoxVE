@@ -32,7 +32,7 @@
     },
     "notes": [
         {
-            "text": "Only supportet on Debian 12 LXCs",
+            "text": "Only supported on Debian 12 LXCs",
             "type": "warning"
         },
         {
