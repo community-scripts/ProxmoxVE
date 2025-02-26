@@ -19,6 +19,10 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ## 2025-02-26
 
+### 🆕 New Scripts
+
+  - New Script: Outline [@tremor021](https://github.com/tremor021) ([#2653](https://github.com/community-scripts/ProxmoxVE/pull/2653))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
