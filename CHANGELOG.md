@@ -25,7 +25,8 @@ Do not break established syntax in this file, as it is automatically updated by 
 
   #### 🐞 Bug Fixes
 
-  - Alpine IT-Tools fix typo "unexpected EOF while looking for matching `"' [@MickLesk](https://github.com/MickLesk) ([#2644](https://github.com/community-scripts/ProxmoxVE/pull/2644))
+  - PiHole: Fix Unbound sed for DNS [@MickLesk](https://github.com/MickLesk) ([#2647](https://github.com/community-scripts/ProxmoxVE/pull/2647))
+    - Alpine IT-Tools fix typo "unexpected EOF while looking for matching `"' [@MickLesk](https://github.com/MickLesk) ([#2644](https://github.com/community-scripts/ProxmoxVE/pull/2644))
 
 ### 🌐 Website
 
