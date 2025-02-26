@@ -77,7 +77,7 @@ wget -q "https://github.com/CrazyWolf13/web-check/archive/refs/heads/${RELEASE}.
 tar xzf $temp_file
 mv web-check-${RELEASE} /opt/web-check
 cd /opt/web-check
-cat > /opt/web-check/.env << 'EOF'
+cat <<EOF > /opt/web-check/.env
 CHROME_PATH=/usr/bin/chromium
 PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 HEADLESS=true
@@ -108,7 +108,7 @@ $STD yarn build --production
 msg_ok "Built Web-Check"
 
 msg_info "Creating Service"
-cat > /opt/run_web-check.sh << 'EOF'
+cat <<EOF > /opt/run_web-check.sh
 #!/bin/bash
 SCREEN_RESOLUTION="1280x1024x24"
 if ! systemctl is-active --quiet dbus; then
@@ -122,7 +122,7 @@ cd /opt/web-check
 exec yarn start
 EOF
 chmod +x /opt/run_web-check.sh
-cat > /etc/systemd/system/web-check.service << 'EOF'
+cat <<EOF > /etc/systemd/system/web-check.service
 [Unit]
 Description=Web Check Service
 After=network.target
