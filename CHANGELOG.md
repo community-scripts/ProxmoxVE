@@ -29,15 +29,19 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🧰 Maintenance
 
-  - [gh] Furhter Impove Changelog Workflow [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2655](https://github.com/community-scripts/ProxmoxVE/pull/2655))
+  - #### 📂 Github
+
+    - [gh] Furhter Impove Changelog Workflow [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2655](https://github.com/community-scripts/ProxmoxVE/pull/2655))
 
 ### 🌐 Website
-
-  - Fix: Graylog - Improve application description for website [@tremor021](https://github.com/tremor021) ([#2658](https://github.com/community-scripts/ProxmoxVE/pull/2658))
 
   - #### 🐞 Bug Fixes
 
     - Website: PocketID Change of website and documentation links [@schneider-de-com](https://github.com/schneider-de-com) ([#2643](https://github.com/community-scripts/ProxmoxVE/pull/2643))
+
+  - #### 📝 Script Information
+
+    - Fix: Graylog - Improve application description for website [@tremor021](https://github.com/tremor021) ([#2658](https://github.com/community-scripts/ProxmoxVE/pull/2658))
 
 ## 2025-02-25
 
