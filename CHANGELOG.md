@@ -25,6 +25,8 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
+  - Fix: SABnzbd - Removed few artefacts in the code preventing the update [@tremor021](https://github.com/tremor021) ([#2670](https://github.com/community-scripts/ProxmoxVE/pull/2670))
+
   - #### 🐞 Bug Fixes
 
     - Kimai: add local.yaml & fix path permissions [@MickLesk](https://github.com/MickLesk) ([#2646](https://github.com/community-scripts/ProxmoxVE/pull/2646))
