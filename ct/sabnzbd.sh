@@ -40,7 +40,7 @@ function update_script() {
       systemctl start sabnzbd.service
       msg_ok "Updated ${APP} to ${RELEASE}"
    else
-      msg_info "No update required. ${APP} is already at ${RELEASE}"
+      msg_ok "No update required. ${APP} is already at ${RELEASE}"
    fi
    exit
 }
