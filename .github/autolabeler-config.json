@@ -1,17 +1,5 @@
 
 {
-  "breaking change": [
-    {
-      "fileStatus": "renamed",
-      "includeGlobs": ["ct/**", "install/**", "misc/**", "turnkey/**", "vm/**"],
-      "excludeGlobs": []
-    },
-    {
-      "fileStatus": "removed", 
-      "includeGlobs": ["ct/**", "install/**", "misc/**", "turnkey/**", "vm/**"],
-      "excludeGlobs": []
-    }
-  ],
   "new script": [
     {
       "fileStatus": "added",
@@ -33,10 +21,17 @@
       "excludeGlobs": []
     }
   ],
-  "rename script": [
+  "maintenance": [
     {
-      "fileStatus": "renamed", 
-      "includeGlobs": ["ct/**", "install/**", "misc/**", "turnkey/**", "vm/**"],
+      "fileStatus": null,
+      "includeGlobs": ["*.md", ".github/**", "misc/*.func", "ct/create_lxc.sh", "api/**"],
+      "excludeGlobs": []
+    }
+  ],
+  "core": [
+    {
+      "fileStatus": null,
+      "includeGlobs": ["misc/*.func", "ct/create_lxc.sh"],
       "excludeGlobs": []
     }
   ],
@@ -47,25 +42,35 @@
       "excludeGlobs": []
     }
   ],
-  "maintenance": [
-    {
-      "fileStatus": null,
-      "includeGlobs": ["*.md", ".github/**", "misc/*.func", "ct/create_lxc.sh"],
-      "excludeGlobs": ["misc/api.func"]
-    }
-  ],
-   "api": [
+  "api": [
     {
       "fileStatus": null,
       "includeGlobs": ["api/**", "misc/api.func"],
       "excludeGlobs": []
     }
   ],
+  "github": [
+    {
+      "fileStatus": null,
+      "includeGlobs": [".github/**"],
+      "excludeGlobs": []
+    }
+  ],
+  "json": [
+    {
+      "fileStatus": "modified",
+      "includeGlobs": ["json/**"],
+      "excludeGlobs": []
+    }
+  ],
+
   "high risk": [
     {
       "fileStatus": null,
       "includeGlobs": ["misc/build.func", "misc/install.func", "ct/create_lxc.sh"],
       "excludeGlobs": []
     }
-  ]  
+  ]
+  
+  
 }

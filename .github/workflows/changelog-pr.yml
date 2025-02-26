@@ -58,10 +58,26 @@ jobs:
             const categorizedPRs = changelogConfig.map(obj => ({
               ...obj,
               notes: [],
-              subCategories: obj.subCategories ?? (obj.labels.includes("update script") ? [
-                { title: "🐞 Bug Fixes", labels: ["bugfix"] },
-                { title: "✨ Feature Updates", labels: ["feature"] }
-              ] : [])
+              subCategories: obj.subCategories ?? (
+                obj.labels.includes("update script") ? [
+                  { title: "🐞 Bug Fixes", labels: ["bugfix"], notes: [] },
+                  { title: "✨ New Features", labels: ["feature"], notes: [] },
+                  { title: "💥 Breaking Changes", labels: ["breaking change"], notes: [] }
+                ] :
+                obj.labels.includes("maintenance") ? [
+                  { title: "🐞 Bug Fixes", labels: ["bugfix"], notes: [] },
+                  { title: "✨ New Features", labels: ["feature"], notes: [] },
+                  { title: "💥 Breaking Changes", labels: ["breaking change"], notes: [] },
+                  { title: "📡 API", labels: ["api"], notes: [] },
+                  { title: "Github", labels: ["github"], notes: [] }
+                ] :
+                obj.labels.includes("website") ? [
+                  { title: "🐞 Bug Fixes", labels: ["bugfix"], notes: [] },
+                  { title: "✨ New Features", labels: ["feature"], notes: [] },
+                  { title: "💥 Breaking Changes", labels: ["breaking change"], notes: [] },
+                  { title: "Script Information", labels: ["json"], notes: [] }
+                ] : []
+              )
             }));
 
             const latestDateInChangelog = new Date(process.env.LATEST_DATE);
@@ -110,6 +126,7 @@ jobs:
 
             return categorizedPRs;
 
+
       - name: Update CHANGELOG.md
         uses: actions/github-script@v7
         with:
@@ -124,7 +141,8 @@ jobs:
 
             console.log(JSON.stringify(categorizedPRs, null, 2));
 
-            let newReleaseNotes = `## ${today}\n\n### Changes\n\n`;
+
+            let newReleaseNotes = `## ${today}\n\n`;
             for (const { title, notes, subCategories } of categorizedPRs) {
               const hasSubcategories = subCategories && subCategories.length > 0;
               const hasMainNotes = notes.length > 0;
@@ -133,17 +151,16 @@ jobs:
     
               if (hasMainNotes || hasSubNotes) {
                 newReleaseNotes += `### ${title}\n\n`;
-              }        
+              }
             
               if (hasMainNotes) {
-                newReleaseNotes += `${notes.join("\n")}\n\n`;
-              }        
-             
+                newReleaseNotes += `  ${notes.join("\n")}\n\n`;
+              }
               if (hasSubcategories) {
                 for (const { title: subTitle, notes: subNotes } of subCategories) {
                   if (subNotes && subNotes.length > 0) {
-                    newReleaseNotes += `  #### ${subTitle}\n\n`; 
-                    newReleaseNotes += `  ${subNotes.join("\n    ")}\n\n`; 
+                    newReleaseNotes += `  - #### ${subTitle}\n\n`; 
+                    newReleaseNotes += `    ${subNotes.join("\n    ")}\n\n`; 
                   }
                 }
               }
