@@ -141,7 +141,7 @@ server=8.8.8.8
 server=8.8.4.4
 EOF
 
-  sed -i -E "s|^(upstreams =).*|\1 [\"127.0.0.1#5335\", \"8.8.4.4\"]|" /etc/pihole/pihole.toml
+  sed -i -E 's|^(\s*upstreams =).*|\1 ["127.0.0.1#5335", "8.8.4.4"]|' /etc/pihole/pihole.toml
   systemctl enable -q --now unbound
   systemctl restart pihole-FTL.service
   msg_ok "Installed Unbound"
