@@ -93,7 +93,7 @@ EnvironmentFile=/opt/outline/.env
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now outline.service
+systemctl enable -q --now outline
 msg_ok "Created Service"
 
 motd_ssh
