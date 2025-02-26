@@ -17,6 +17,20 @@ All LXC instances created using this repository come pre-installed with Midnight
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
 
+## 2025-02-26
+
+### Changes
+
+### 🚀 Updated Scripts
+
+  #### 🐞 Bug Fixes
+
+  - Alpine IT-Tools fix typo "unexpected EOF while looking for matching `"' [@MickLesk](https://github.com/MickLesk) ([#2644](https://github.com/community-scripts/ProxmoxVE/pull/2644))
+
+### 🌐 Website
+
+- Website: PocketID Change of website and documentation links [@schneider-de-com](https://github.com/schneider-de-com) ([#2643](https://github.com/community-scripts/ProxmoxVE/pull/2643))
+
 ## 2025-02-25
 
 ### Changes
