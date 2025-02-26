@@ -30,7 +30,7 @@ function update_script() {
   RELEASE=$(curl -s https://api.github.com/repos/pelican-dev/wings/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
   if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
     msg_info "Stopping Service"
-    $STD systemctl stop wings
+    systemctl stop wings
     msg_ok "Stopped Service"
 
     msg_info "Updating ${APP} to v${RELEASE}"
@@ -41,7 +41,7 @@ function update_script() {
     msg_ok "Updated $APP to v${RELEASE}"
 
     msg_info "Starting Service"
-    $STD systemctl start wings
+    systemctl start wings
     msg_ok "Started Service"
     msg_ok "Updated Successfully"
   else
