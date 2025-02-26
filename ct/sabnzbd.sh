@@ -31,7 +31,7 @@ function update_script() {
    if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
       msg_info "Updating $APP to ${RELEASE}"
       systemctl stop sabnzbd.service
-      $STD tar zxvf <(curl -fsSL https://github.com/sabnzbd/sabnzbd/releases/download/$RELEASE/SABnzbd-${RELEASE}-src.tar.gz)
+      tar zxvf <(curl -fsSL https://github.com/sabnzbd/sabnzbd/releases/download/$RELEASE/SABnzbd-${RELEASE}-src.tar.gz)
       cp -rf SABnzbd-${RELEASE}/* /opt/sabnzbd
       rm -rf SABnzbd-${RELEASE}
       cd /opt/sabnzbd
