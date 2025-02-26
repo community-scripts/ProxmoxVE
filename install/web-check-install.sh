@@ -21,7 +21,6 @@ $STD apt-get -y install --no-install-recommends \
   git \
   gnupg \
   traceroute \
-  python3 \
   make \
   g++ \
   traceroute \
@@ -73,14 +72,12 @@ msg_ok "Finished setting up Chromium"
 
 msg_info "Installing Web-Check (Patience)"
 temp_file=$(mktemp)
-# RELEASE=$(curl -s https://api.github.com/repos/Lissy93/web-check/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-# wget -q "https://github.com/Lissy93/web-check/archive/refs/tags/${RELEASE}.tar.gz" -O $temp_file
 RELEASE="patch-1"
 wget -q "https://github.com/CrazyWolf13/web-check/archive/refs/heads/${RELEASE}.tar.gz" -O $temp_file
 tar xzf $temp_file
 mv web-check-${RELEASE} /opt/web-check
 cd /opt/web-check
-cat <<EOF > /opt/web-check/.env
+cat > /opt/web-check/.env << 'EOF'
 CHROME_PATH=/usr/bin/chromium
 PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 HEADLESS=true
