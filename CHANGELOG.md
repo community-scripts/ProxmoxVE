@@ -29,6 +29,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
   - #### 🐞 Bug Fixes
 
+    - Fix: Homarr - Manually correct db-migration wrong-folder [@CrazyWolf13](https://github.com/CrazyWolf13) ([#2676](https://github.com/community-scripts/ProxmoxVE/pull/2676))
     - Kimai: add local.yaml & fix path permissions [@MickLesk](https://github.com/MickLesk) ([#2646](https://github.com/community-scripts/ProxmoxVE/pull/2646))
     - PiHole: Fix Unbound sed for DNS [@MickLesk](https://github.com/MickLesk) ([#2647](https://github.com/community-scripts/ProxmoxVE/pull/2647))
     - Alpine IT-Tools fix typo "unexpected EOF while looking for matching `"' [@MickLesk](https://github.com/MickLesk) ([#2644](https://github.com/community-scripts/ProxmoxVE/pull/2644))
