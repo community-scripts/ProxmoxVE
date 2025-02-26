@@ -35,19 +35,22 @@ function update_script() {
 
     msg_info "Updating ${APP} to ${RELEASE}"
     cp /opt/kimai/.env /opt/.env
+    cp /opt/kimai/config/packages/local.yaml /opt/local.yaml
     rm -rf /opt/kimai
     wget -q "https://github.com/kimai/kimai/archive/refs/tags/${RELEASE}.zip"
     unzip -q ${RELEASE}.zip
     mv kimai-${RELEASE} /opt/kimai
     mv /opt/.env /opt/kimai/.env
+    mv /opt/local.yaml /opt/kimai/config/packages/local.yaml
     cd /opt/kimai
     $STD composer install --no-dev --optimize-autoloader
     $STD bin/console kimai:update
     chown -R :www-data .
     chmod -R g+r .
     chmod -R g+rw var/
-    sudo chown -R www-data:www-data /opt/kimai
-    sudo chmod -R 755 /opt/kimai
+    chmod -R 777 /opt/kimai/var/ 
+    chown -R www-data:www-data /opt/kimai
+    chmod -R 755 /opt/kimai
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP} to ${RELEASE}"
 
