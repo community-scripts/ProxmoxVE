@@ -30,6 +30,16 @@ Do not break established syntax in this file, as it is automatically updated by 
 
     - SFTPGo Remove unneeded RELEASE variable [@MickLesk](https://github.com/MickLesk) ([#2683](https://github.com/community-scripts/ProxmoxVE/pull/2683))
 
+### 🧰 Maintenance
+
+  - #### 🐞 Bug Fixes
+
+    - Update install.func: Change Line Number for Error message. [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2690](https://github.com/community-scripts/ProxmoxVE/pull/2690))
+
+  - #### 📂 Github
+
+    - [gh] New Workflow to close Script Request Discussions on PR merge [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2688](https://github.com/community-scripts/ProxmoxVE/pull/2688))
+
 ## 2025-02-26
 
 ### 🆕 New Scripts
