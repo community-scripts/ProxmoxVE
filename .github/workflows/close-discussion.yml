@@ -1,4 +1,5 @@
 name: Close Discussion on PR Merge
+
 on:
   pull_request:
     types: [closed]
@@ -65,18 +66,13 @@ jobs:
                   }
                 }
               `;
-
-              try {
-                const discussionResponse = await graphqlWithAuth(discussionQuery, {
+              
+              const discussionResponse = await graphqlWithAuth(discussionQuery, {
                   owner,
                   repo,
                   number: parseInt(discussionNumber, 10),
-                });
-                discussionQLId = discussionResponse.repository.discussion?.id;
-              } catch (error) {
-                return; // Discussion not found
-              }
-
+              });              
+              
               const discussionQLId = discussionResponse.repository.discussion.id;
               if (!discussionQLId) {
                 console.log("Failed to fetch discussion GraphQL ID.");
@@ -120,7 +116,7 @@ jobs:
 
             } catch (error) {
               console.error("Error:", error);
-              process.exit(1);
+              return;
             }
           })();
           EOF
