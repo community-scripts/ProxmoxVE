@@ -108,7 +108,7 @@ $STD yarn build --production
 msg_ok "Built Web-Check"
 
 msg_info "Creating Service"
-cat <<EOF > /opt/run_web-check.sh
+cat > /opt/run_web-check.sh << 'EOF'
 #!/bin/bash
 SCREEN_RESOLUTION="1280x1024x24"
 if ! systemctl is-active --quiet dbus; then
@@ -122,7 +122,7 @@ cd /opt/web-check
 exec yarn start
 EOF
 chmod +x /opt/run_web-check.sh
-cat <<EOF > /etc/systemd/system/web-check.service
+cat > /etc/systemd/system/web-check.service << 'EOF' 
 [Unit]
 Description=Web Check Service
 After=network.target
