@@ -40,7 +40,7 @@ msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/keycloak.service
 [Unit]
 Description=Keycloak Service
-After=network-online.target
+After=network.target
 
 [Service]
 User=root
