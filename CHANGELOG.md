@@ -21,7 +21,8 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🆕 New Scripts
 
-  - Pelican Wings [@bvdberg01](https://github.com/bvdberg01) ([#2677](https://github.com/community-scripts/ProxmoxVE/pull/2677))
+  - New Script: ByteStash [@tremor021](https://github.com/tremor021) ([#2680](https://github.com/community-scripts/ProxmoxVE/pull/2680))
+- Pelican Wings [@bvdberg01](https://github.com/bvdberg01) ([#2677](https://github.com/community-scripts/ProxmoxVE/pull/2677))
 - Pelican Panel [@bvdberg01](https://github.com/bvdberg01) ([#2678](https://github.com/community-scripts/ProxmoxVE/pull/2678))
 
 ### 🚀 Updated Scripts
