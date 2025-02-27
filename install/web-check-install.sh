@@ -116,7 +116,7 @@ if ! systemctl is-active --quiet dbus; then
   echo "Warning: dbus service is not running. Some features may not work properly."
 fi
 [[ -z "\${DISPLAY}" ]] && export DISPLAY=":99"
-Xvfb "\${DISPLAY}" -screen 0 "${SCREEN_RESOLUTION}" &
+Xvfb "\${DISPLAY}" -screen 0 "\${SCREEN_RESOLUTION}" &
 XVFB_PID=$!
 sleep 2
 cd /opt/web-check
