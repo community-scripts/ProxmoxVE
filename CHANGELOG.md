@@ -21,7 +21,8 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🆕 New Scripts
 
-  - Pelican Panel [@bvdberg01](https://github.com/bvdberg01) ([#2678](https://github.com/community-scripts/ProxmoxVE/pull/2678))
+  - web-check [@CrazyWolf13](https://github.com/CrazyWolf13) ([#2662](https://github.com/community-scripts/ProxmoxVE/pull/2662))
+- Pelican Panel [@bvdberg01](https://github.com/bvdberg01) ([#2678](https://github.com/community-scripts/ProxmoxVE/pull/2678))
 - Pelican Wings [@bvdberg01](https://github.com/bvdberg01) ([#2677](https://github.com/community-scripts/ProxmoxVE/pull/2677))
 - ByteStash [@tremor021](https://github.com/tremor021) ([#2680](https://github.com/community-scripts/ProxmoxVE/pull/2680))
 
@@ -53,6 +54,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
   - #### ✨ New Features
 
+    - Use HTML button element for copying to clipboard [@scallaway](https://github.com/scallaway) ([#2720](https://github.com/community-scripts/ProxmoxVE/pull/2720))
     - Add basic pagination to Data Viewer [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2715](https://github.com/community-scripts/ProxmoxVE/pull/2715))
 
   - #### 📝 Script Information
