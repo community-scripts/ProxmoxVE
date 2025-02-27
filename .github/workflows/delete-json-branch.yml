@@ -9,7 +9,7 @@ on:
 
 jobs:
   delete_branch:
-    runs-on: ubuntu-latest
+    runs-on: runner-cluster-htl-set
     steps:
       - name: Checkout the code
         uses: actions/checkout@v3
