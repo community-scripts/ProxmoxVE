@@ -44,9 +44,15 @@ Do not break established syntax in this file, as it is automatically updated by 
 
   - #### 📂 Github
 
+    - Improve Script-Test Workflow [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2712](https://github.com/community-scripts/ProxmoxVE/pull/2712))
+    - Switch all actions to self-hosted Runners [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2711](https://github.com/community-scripts/ProxmoxVE/pull/2711))
     - [gh] New Workflow to close Script Request Discussions on PR merge [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2688](https://github.com/community-scripts/ProxmoxVE/pull/2688))
 
 ### 🌐 Website
+
+  - #### ✨ New Features
+
+    - Add basic pagination to Data Viewer [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2715](https://github.com/community-scripts/ProxmoxVE/pull/2715))
 
   - #### 📝 Script Information
 
