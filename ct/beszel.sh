@@ -28,7 +28,7 @@ function update_script() {
         exit
     fi
     /opt/beszel/beszel update
-    msg_error "Ther is currently no automatic update function for ${APP}."
+    msg_error "There is currently no automatic update function for ${APP}."
     exit
 }
 

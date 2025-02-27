@@ -27,7 +27,7 @@ function update_script() {
         msg_error "No ${APP} Installation Found!"
         exit
     fi
-    msg_error "Ther is currently no automatic update function for ${APP}."
+    msg_error "There is currently no automatic update function for ${APP}."
     exit
 }
 
