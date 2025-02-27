@@ -41,6 +41,12 @@ Do not break established syntax in this file, as it is automatically updated by 
 
     - [gh] New Workflow to close Script Request Discussions on PR merge [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2688](https://github.com/community-scripts/ProxmoxVE/pull/2688))
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Fix: wger - Add HTTPS instructions to the website [@tremor021](https://github.com/tremor021) ([#2695](https://github.com/community-scripts/ProxmoxVE/pull/2695))
+
 ## 2025-02-26
 
 ### 🆕 New Scripts
