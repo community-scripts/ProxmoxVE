@@ -45,7 +45,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
   - #### 📝 Script Information
 
-    - Fix: wger - Add HTTPS instructions to the website [@tremor021](https://github.com/tremor021) ([#2695](https://github.com/community-scripts/ProxmoxVE/pull/2695))
+    - wger - Add HTTPS instructions to the website [@tremor021](https://github.com/tremor021) ([#2695](https://github.com/community-scripts/ProxmoxVE/pull/2695))
 
 ## 2025-02-26
 
