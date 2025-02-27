@@ -7,7 +7,7 @@ on:
 
 jobs:
   autolabeler:
-    runs-on: runner-cluster-htl-set
+    runs-on: ubuntu-latest
     permissions:
       pull-requests: write
     env:

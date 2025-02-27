@@ -10,7 +10,7 @@ on:
 
 jobs:
   update-app-files:
-    runs-on: runner-cluster-htl-set
+    runs-on: ubuntu-latest
 
     permissions:
       contents: write

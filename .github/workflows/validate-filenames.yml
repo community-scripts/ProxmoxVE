@@ -10,7 +10,7 @@ on:
 jobs:
   check-files:
     name: Check changed files
-    runs-on: runner-cluster-htl-set
+    runs-on: ubuntu-latest
     permissions:
       pull-requests: write
 
