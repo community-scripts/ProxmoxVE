@@ -30,5 +30,10 @@
     "username": "admin",
     "password": "adminadmin"
   },
-  "notes": []
+  "notes": [
+    {
+    "text": "Enable proxy support by uncommenting this line in `/home/wger/src/settings.py` and pointing it to your URL: `# CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1', 'https://my.domain.example.com']`, then restart the service `systemctl restart wger`.",
+    "type": "info"
+    }
+  ]
 }
