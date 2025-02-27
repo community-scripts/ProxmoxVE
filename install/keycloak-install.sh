@@ -50,7 +50,7 @@ ExecStart=/opt/keycloak/bin/kc.sh start-dev
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable --now keycloak
+systemctl enable -q --now keycloak
 msg_ok "Created Service"
 
 motd_ssh
