@@ -11,7 +11,7 @@
   "interface_port": 3000,
   "documentation": "https://github.com/Lissy93/web-check/blob/master/.github/README.md",
   "website": "https://github.com/lissy93/web-check",
-  "logo": "https://github.com/Lissy93/web-check/blob/master/public/favicon-32x32.png?raw=true",
+  "logo": "https://raw.githubusercontent.com/Lissy93/web-check/refs/heads/master/.github/web-check-logo.png",
   "description": "Get an insight into the inner-workings of a given website: uncover potential attack vectors, analyse server architecture, view security configurations, and learn what technologies a site is using.",
   "install_methods": [
     {
