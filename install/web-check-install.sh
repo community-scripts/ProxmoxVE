@@ -142,7 +142,7 @@ Environment=DISPLAY=:99
 [Install]
 WantedBy=multi-user.target
 EOF
-$STD systemctl enable -q --now web-check
+systemctl enable -q --now web-check
 msg_ok "Created Service"
 
 motd_ssh
