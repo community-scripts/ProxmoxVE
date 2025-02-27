@@ -38,6 +38,7 @@ RELEASE=$(curl -s https://api.github.com/repos/jordan-dalby/ByteStash/releases/l
 wget -q "https://github.com/jordan-dalby/ByteStash/archive/refs/tags/v${RELEASE}.tar.gz" -O $temp_file
 tar zxf $temp_file
 mv ByteStash-${RELEASE} /opt/bytestash
+sed -i '6s/.*/if (!globalThis.crypto) { globalThis.crypto = crypto; }/' /opt/bytestash/server/src/oidc/oidcConfig.js
 cd /opt/bytestash/server
 $STD npm install
 cd /opt/bytestash/client
