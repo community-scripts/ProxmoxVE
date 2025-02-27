@@ -68,7 +68,7 @@ msg_ok "Installed Node.js"
 msg_info "Setting up Chromium"
 /usr/bin/chromium --no-sandbox --version > /etc/chromium-version
 chmod 755 /usr/bin/chromium
-msg_ok "Finished setting up Chromium"
+msg_ok "Setup Chromium"
 
 msg_info "Installing Web-Check (Patience)"
 temp_file=$(mktemp)
