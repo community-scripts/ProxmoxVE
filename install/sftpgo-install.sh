@@ -43,7 +43,6 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -rf $RELEASE
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
