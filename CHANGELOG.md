@@ -27,7 +27,8 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
-  - ByteStash: Fix Node 22 compatibility (thanks t2lc) [@tremor021](https://github.com/tremor021) ([#2705](https://github.com/community-scripts/ProxmoxVE/pull/2705))
+  - Keycloak: Update installation script [@tremor021](https://github.com/tremor021) ([#2714](https://github.com/community-scripts/ProxmoxVE/pull/2714))
+- ByteStash: Fix Node 22 compatibility (thanks t2lc) [@tremor021](https://github.com/tremor021) ([#2705](https://github.com/community-scripts/ProxmoxVE/pull/2705))
 
   - #### 🐞 Bug Fixes
 
@@ -44,9 +45,9 @@ Do not break established syntax in this file, as it is automatically updated by 
 
   - #### 📂 Github
 
+    - New Workflow to close Script Request Discussions on PR merge [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2688](https://github.com/community-scripts/ProxmoxVE/pull/2688))
     - Improve Script-Test Workflow [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2712](https://github.com/community-scripts/ProxmoxVE/pull/2712))
     - Switch all actions to self-hosted Runners [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2711](https://github.com/community-scripts/ProxmoxVE/pull/2711))
-    - [gh] New Workflow to close Script Request Discussions on PR merge [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2688](https://github.com/community-scripts/ProxmoxVE/pull/2688))
 
 ### 🌐 Website
 
