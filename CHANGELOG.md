@@ -28,11 +28,13 @@ Do not break established syntax in this file, as it is automatically updated by 
 
 ### 🚀 Updated Scripts
 
-  - Keycloak: Update installation script [@tremor021](https://github.com/tremor021) ([#2714](https://github.com/community-scripts/ProxmoxVE/pull/2714))
+  - ByteStash: Removed sed, app supports Node v22 now [@tremor021](https://github.com/tremor021) ([#2728](https://github.com/community-scripts/ProxmoxVE/pull/2728))
+- Keycloak: Update installation script [@tremor021](https://github.com/tremor021) ([#2714](https://github.com/community-scripts/ProxmoxVE/pull/2714))
 - ByteStash: Fix Node 22 compatibility (thanks t2lc) [@tremor021](https://github.com/tremor021) ([#2705](https://github.com/community-scripts/ProxmoxVE/pull/2705))
 
   - #### 🐞 Bug Fixes
 
+    - EOF not detected [@CrazyWolf13](https://github.com/CrazyWolf13) ([#2726](https://github.com/community-scripts/ProxmoxVE/pull/2726))
     - Zitadel-install.sh: Remove one version file and update to our standard [@bvdberg01](https://github.com/bvdberg01) ([#2710](https://github.com/community-scripts/ProxmoxVE/pull/2710))
     - Outline: Change key to hex32 [@tremor021](https://github.com/tremor021) ([#2709](https://github.com/community-scripts/ProxmoxVE/pull/2709))
     - Typo in update scripts [@bvdberg01](https://github.com/bvdberg01) ([#2707](https://github.com/community-scripts/ProxmoxVE/pull/2707))
