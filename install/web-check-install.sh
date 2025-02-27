@@ -14,6 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
+export DEBIAN_FRONTEND=noninteractive
 $STD apt-get -y install --no-install-recommends \
   curl \
   sudo \
