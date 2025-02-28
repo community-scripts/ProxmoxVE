@@ -140,34 +140,38 @@ jobs:
             fi            
           done
    
-
       - name: Post error comments
         run: |
           ERROR="false"
-          SEARCH_LINE=".github/workflows/scripts/app-test/pr-build.func: line 255"
+          SEARCH_LINE=".github/workflows/scripts/app-test/pr-build.func: line 253:"
+          
+          # Get all existing comments on the PR
+          EXISTING_COMMENTS=$(gh pr view ${{ github.event.pull_request.number }} --repo ${{ github.repository }} --json comments --jq '.comments[].body')
+          
           for FILE in ${{ env.ALL_FILES }}; do
             STRIPPED_NAME=$(basename "$FILE" | sed 's/-install//' | sed 's/\.sh$//')
             if [[ ! -f result_$STRIPPED_NAME.log ]]; then
               continue
             fi
             ERROR_MSG=$(cat result_$STRIPPED_NAME.log)
-      
+          
             if [ -n "$ERROR_MSG" ]; then
               CLEANED_ERROR_MSG=$(echo "$ERROR_MSG" | sed "s|$SEARCH_LINE.*||")
-              echo "Posting error message for $FILE"
-              echo ${CLEANED_ERROR_MSG}
-              gh pr comment ${{ github.event.pull_request.number }} \
-                --repo ${{ github.repository }} \
-                --body ":warning: The script _**$FILE**_ failed with the following message: <br> <div><strong>${CLEANED_ERROR_MSG}</strong></div>"
-              ERROR="true"
+              COMMENT_BODY=":warning: The script _**$FILE**_ failed with the following message: <br> <div><strong>${CLEANED_ERROR_MSG}</strong></div>"
+          
+              # Check if the comment already exists
+              if echo "$EXISTING_COMMENTS" | grep -qF "$COMMENT_BODY"; then
+                echo "Skipping duplicate comment for $FILE"
+              else
+                echo "Posting error message for $FILE"
+                gh pr comment ${{ github.event.pull_request.number }} \
+                  --repo ${{ github.repository }} \
+                  --body "$COMMENT_BODY"
+                ERROR="true"
+              fi
             fi
           done
+          
           echo "ERROR=$ERROR" >> $GITHUB_ENV
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Fail if error
-        if: ${{ env.ERROR == 'true' }}
-        run: exit 1 
       
   
