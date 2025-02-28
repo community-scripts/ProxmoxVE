@@ -17,6 +17,14 @@ All LXC instances created using this repository come pre-installed with Midnight
 Do not break established syntax in this file, as it is automatically updated by a Github Workflow
 
 
+## 2025-02-28
+
+### 🧰 Maintenance
+
+  - #### ✨ New Features
+
+    - [gh] Shell Format Workflow [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2400](https://github.com/community-scripts/ProxmoxVE/pull/2400))
+
 ## 2025-02-27
 
 ### 🆕 New Scripts
