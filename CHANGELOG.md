@@ -27,6 +27,7 @@ Do not break established syntax in this file, as it is automatically updated by 
 
   - #### 📂 Github
 
+    - Update all Action to new selfhosted Runner Cluster [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2739](https://github.com/community-scripts/ProxmoxVE/pull/2739))
     - Update Script Test Workflow [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2741](https://github.com/community-scripts/ProxmoxVE/pull/2741))
 
 ## 2025-02-27
