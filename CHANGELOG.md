@@ -23,7 +23,11 @@ Do not break established syntax in this file, as it is automatically updated by 
 
   - #### ✨ New Features
 
-    - [gh] Shell Format Workflow [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2400](https://github.com/community-scripts/ProxmoxVE/pull/2400))
+    - Shell Format Workflow [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2400](https://github.com/community-scripts/ProxmoxVE/pull/2400))
+
+  - #### 📂 Github
+
+    - Update Script Test Workflow [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2741](https://github.com/community-scripts/ProxmoxVE/pull/2741))
 
 ## 2025-02-27
 
