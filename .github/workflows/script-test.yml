@@ -143,7 +143,7 @@ jobs:
       - name: Post error comments
         run: |
           ERROR="false"
-          SEARCH_LINE=".github/workflows/scripts/app-test/pr-build.func: line 253:"
+          SEARCH_LINE=".github/workflows/scripts/app-test/pr-build.func: line 255:"
           
           # Get all existing comments on the PR
           EXISTING_COMMENTS=$(gh pr view ${{ github.event.pull_request.number }} --repo ${{ github.repository }} --json comments --jq '.comments[].body')
