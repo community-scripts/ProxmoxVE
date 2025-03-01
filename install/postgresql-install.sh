@@ -30,7 +30,7 @@ msg_info "Installing PostgreSQL"
 $STD apt-get update
 $STD apt-get install -y postgresql
 
-cat <<EOF >/etc/postgresql/17/main/pg_hba.conf
+cat << EOF >/etc/postgresql/17/main/pg_hba.conf
 # PostgreSQL Client Authentication Configuration File
 local   all             postgres                                peer
 # TYPE  DATABASE        USER            ADDRESS                 METHOD
@@ -49,7 +49,7 @@ host    replication     all             127.0.0.1/32            scram-sha-256
 host    replication     all             ::1/128                 scram-sha-256
 EOF
 
-cat <<EOF >/etc/postgresql/17/main/postgresql.conf
+cat << EOF >/etc/postgresql/17/main/postgresql.conf
 # -----------------------------
 # PostgreSQL configuration file
 # -----------------------------

@@ -6,7 +6,7 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 # Source: https://www.microsoft.com/en-us/sql-server/sql-server-2022
 
 APP="SQL Server 2022"
-var_tags="sql"
+var_tags="database"
 var_cpu="1"
 var_ram="2048"
 var_disk="10"
