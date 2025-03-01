@@ -60,9 +60,7 @@ function update_script() {
     version=$(python3 --version 2>&1)
 
     # Extract the version number
-    if [[ $version == "Python 3.13"* ]]; then
-      echo "Python 3.13 is installed."
-    else
+    if [[ ! $version == "Python 3.13"* ]]; then
       msg_info "Update Python"
       $STD apt-get update
       $STD rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
@@ -77,8 +75,6 @@ function update_script() {
       ln -sf /usr/bin/python3.13 /usr/bin/python3
       mdg_ok "Updated Python"
     fi
-
-
 
     msg_info "Updating Home Assistant"
     source /srv/homeassistant/bin/activate
