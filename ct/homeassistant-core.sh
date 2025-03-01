@@ -57,6 +57,29 @@ function update_script() {
     systemctl stop homeassistant
     msg_ok "Stopped Home Assistant"
 
+    version=$(python3 --version 2>&1)
+
+    # Extract the version number
+    if [[ $version == "Python 3.13"* ]]; then
+      echo "Python 3.13 is installed."
+    else
+      msg_info "Update Python"
+      $STD apt-get update
+      $STD rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
+      $STD apt-get remove --purge -y python3.* python3.*-dev python3.*-venv
+
+      $STD apt-get install -y \
+        python3.13 \
+        python3-pip \
+        python3.13-dev \
+        python3.13-venv
+
+      ln -sf /usr/bin/python3.13 /usr/bin/python3
+      mdg_ok "Updated Python"
+    fi
+
+
+
     msg_info "Updating Home Assistant"
     source /srv/homeassistant/bin/activate
     $STD pip install ${BR}--upgrade homeassistant
