@@ -20,6 +20,10 @@ jobs:
           YESTERDAY=$(date -u --date="yesterday" +%Y-%m-%d)
           YESTERDAY_CHANGELOG_NOTES=$(awk '/^## '"$YESTERDAY"'/ {f=1; next} f && /^## [0-9]{4}-[0-9]{2}-[0-9]{2}/ {f=0} f && !/^## / {print}' CHANGELOG.md)
           
-          if [ -n "$YESTERDAY_CHANGELOG_NOTES" ]; then
+          if [ ${#YESTERDAY_CHANGELOG_NOTES} -gt 10000 ]; then
+            echo "Changelog is too large, saving to file..."
+            echo "$YESTERDAY_CHANGELOG_NOTES" > changelog_tmp.md
+            gh release create "$YESTERDAY" -t "$YESTERDAY" -F changelog_tmp.md --latest
+          elif [ -n "$YESTERDAY_CHANGELOG_NOTES" ]; then
             gh release create "$YESTERDAY" -t "$YESTERDAY" -n "$YESTERDAY_CHANGELOG_NOTES" --latest
           fi
