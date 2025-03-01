@@ -37,7 +37,8 @@ function update_script() {
     cd /opt
     rm -rf /opt/vikunja/vikunja
     wget -q "https://dl.vikunja.io/vikunja/$RELEASE/vikunja-$RELEASE-amd64.deb"
-    $STD DEBIAN_FRONTEND=noninteractive dpkg -i vikunja-$RELEASE-amd64.deb
+    export DEBIAN_FRONTEND=noninteractive
+    $STD dpkg -i vikunja-$RELEASE-amd64.deb
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP}"
 
