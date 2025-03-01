@@ -20,6 +20,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - Firefly III: FIx Ownership for OAuth Key [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2759](https://github.com/community-scripts/ProxmoxVE/pull/2759))
     - homarr: double restart to fix homarr migration [@CrazyWolf13](https://github.com/CrazyWolf13) ([#2757](https://github.com/community-scripts/ProxmoxVE/pull/2757))
 
 ### 🧰 Maintenance
