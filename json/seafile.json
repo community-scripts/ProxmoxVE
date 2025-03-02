@@ -1,0 +1,43 @@
+{
+    "name": "Seafile",
+    "slug": "Seafile",
+    "categories": [
+        12
+    ],
+    "date_created": "2025-02-25",
+    "type": "ct",
+    "updateable": false,
+    "privileged": false,
+    "interface_port": 8000,
+    "documentation": "https://manual.seafile.com/11.0/deploy",
+    "website": "https://seafile.com",
+    "logo": "https://manual.seafile.com/11.0/media/seafile-transparent-1024.png",
+    "description": "Seafile is an open source file sync and share platform, focusing on reliability and performance.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/seafile.sh",
+            "resources": {
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 20,
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": [
+        {
+            "text": "Application credentials: `cat ~/seafile.creds`",
+            "type": "info"
+        },
+        {
+            "text": "Change STORAGE_DIR value in `external-storage.sh` and run `bash external-storage.sh` to use your defined storage instead of internal.",
+            "type": "info"
+        }
+    ]
+}
