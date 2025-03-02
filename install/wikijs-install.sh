@@ -18,19 +18,13 @@ $STD apt-get install -y \
   curl \
   sudo \
   mc \
-  git \
-  ca-certificates \
-  gnupg \
-  build-essential \
-  python3 \
-  g++ \
-  make
+  gpg
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up Node.js Repository"
 mkdir -p /etc/apt/keyrings
 curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
+echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_22.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
 msg_ok "Set up Node.js Repository"
 
 msg_info "Setting up PostgreSQL Repository"
@@ -45,7 +39,7 @@ $STD npm install --global yarn
 $STD npm install -g node-gyp
 msg_ok "Installed Node.js"
 
-msg_info "Set up PostgreSQL"
+msg_info "Setting up PostgreSQL"
 $STD apt-get install -y postgresql-17
 DB_NAME="wiki"
 DB_USER="wikijs_user"
@@ -57,26 +51,22 @@ $STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET client_encoding TO 'utf8'
 $STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET default_transaction_isolation TO 'read committed';"
 $STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET timezone TO 'UTC';"
 {
-    echo "WikiJS-Credentials"
-    echo "WikiJS Database User: $DB_USER"
-    echo "WikiJS Database Password: $DB_PASS"
-    echo "WikiJS Database Name: $DB_NAME"
-} >> ~/wikijs.creds
+  echo "WikiJS-Credentials"
+  echo "WikiJS Database User: $DB_USER"
+  echo "WikiJS Database Password: $DB_PASS"
+  echo "WikiJS Database Name: $DB_NAME"
+} >>~/wikijs.creds
 msg_ok "Set up PostgreSQL"
 
 msg_info "Setup Wiki.js"
-temp_file=$(mktemp)
 RELEASE=$(curl -s https://api.github.com/repos/Requarks/wiki/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-wget -q "https://github.com/Requarks/wiki/archive/refs/tags/v${RELEASE}.tar.gz" -O "$temp_file"
-tar -xzf "$temp_file"
-mv wiki-${RELEASE} /opt/wikijs
+mkdir /opt/wikijs
+cd /opt/wikijs
+wget -q "https://github.com/requarks/wiki/releases/download/v${RELEASE}/wiki-js.tar.gz"
+tar -xzf wiki-js.tar.gz
 mv /opt/wikijs/config.sample.yml /opt/wikijs/config.yml
 sed -i -E 's|^( *user: ).*|\1'"$DB_USER"'|' /opt/wikijs/config.yml
 sed -i -E 's|^( *pass: ).*|\1'"$DB_PASS"'|' /opt/wikijs/config.yml
-cd /opt/wikijs
-export NODE_OPTIONS="--max-old-space-size=2048"
-$STD yarn install --ignore-engines
-$STD yarn build
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Installed Wiki.js"
 
@@ -88,7 +78,7 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/yarn start
+ExecStart=/usr/bin/node server
 Restart=always
 User=root
 Environment=NODE_ENV=production
@@ -104,7 +94,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -f "$temp_file"
+rm -f /opt/wikijs/wiki-js.tar.gz
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
