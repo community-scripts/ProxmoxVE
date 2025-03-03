@@ -60,6 +60,9 @@ function ScriptItem({
                       <p className="w-full text-sm text-muted-foreground">
                         Date added: {extractDate(item.date_created)}
                       </p>
+                      <p className="text-sm text-muted-foreground">
+                        Default OS: {item.os} {item.version}
+                      </p>
                     </div>
                     <div className="flex gap-5">
                       <DefaultSettings item={item} />

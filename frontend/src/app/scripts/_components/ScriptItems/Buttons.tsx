@@ -1,14 +1,20 @@
 import { Button } from "@/components/ui/button";
 import { basePath } from "@/config/siteConfig";
 import { Script } from "@/lib/types";
-import { BookOpenText, Code, Globe } from "lucide-react";
+import { BookOpenText, Code, Globe, RefreshCcw } from "lucide-react";
 import Link from "next/link";
 
 const generateSourceUrl = (slug: string, type: string) => {
   const baseUrl = `https://raw.githubusercontent.com/community-scripts/${basePath}/main`;
   return type === "ct"
     ? `${baseUrl}/install/${slug}-install.sh`
-    : `${baseUrl}/${type}/${slug}.sh`;
+    : `${baseUrl}/misc/${slug}.sh`;
+};
+
+const generateUpdateUrl = (slug: string, type: string) => {
+  if (type !== "ct") return null;
+  const baseUrl = `https://raw.githubusercontent.com/community-scripts/${basePath}/main`;
+  return `${baseUrl}/ct/${slug}.sh`;
 };
 
 interface ButtonLinkProps {
@@ -29,6 +35,9 @@ const ButtonLink = ({ href, icon, text }: ButtonLinkProps) => (
 );
 
 export default function Buttons({ item }: { item: Script }) {
+  const sourceUrl = generateSourceUrl(item.slug, item.type);
+  const updateUrl = generateUpdateUrl(item.slug, item.type);
+
   const buttons = [
     item.website && {
       href: item.website,
@@ -41,9 +50,14 @@ export default function Buttons({ item }: { item: Script }) {
       text: "Documentation",
     },
     {
-      href: generateSourceUrl(item.slug, item.type),
+      href: sourceUrl,
       icon: <Code className="h-4 w-4" />,
-      text: "Source Code",
+      text: item.type === "ct" || item.type === "default" ? "Install-Source" : "Source Code",
+    },
+    updateUrl && {
+      href: updateUrl,
+      icon: <RefreshCcw className="h-4 w-4" />,
+      text: "Update-Source",
     },
   ].filter(Boolean) as ButtonLinkProps[];
 
