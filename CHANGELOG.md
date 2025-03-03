@@ -24,18 +24,23 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - Zigbee2Mqtt Use fixed pnpm Version 10.4.1 [@MickLesk](https://github.com/MickLesk) ([#2805](https://github.com/community-scripts/ProxmoxVE/pull/2805))
     - Linkwarden: Fix & Update Monolith-Installation [@MickLesk](https://github.com/MickLesk) ([#2787](https://github.com/community-scripts/ProxmoxVE/pull/2787))
 
   - #### ✨ New Features
 
-    - Feature Template Path for Mountings [@MickLesk](https://github.com/MickLesk) ([#2785](https://github.com/community-scripts/ProxmoxVE/pull/2785))
     - Feature: MinIO use now static port 9001 [@MickLesk](https://github.com/MickLesk) ([#2786](https://github.com/community-scripts/ProxmoxVE/pull/2786))
+    - Feature Template Path for Mountings [@MickLesk](https://github.com/MickLesk) ([#2785](https://github.com/community-scripts/ProxmoxVE/pull/2785))
 
 ### 🌐 Website
 
   - #### ✨ New Features
 
     - Feature: Website - show default OS [@MickLesk](https://github.com/MickLesk) ([#2790](https://github.com/community-scripts/ProxmoxVE/pull/2790))
+
+  - #### 📝 Script Information
+
+    - Update zigbee2mqtt.json - make sure link is clickable [@gurtjun](https://github.com/gurtjun) ([#2802](https://github.com/community-scripts/ProxmoxVE/pull/2802))
 
 ## 2025-03-02
 
