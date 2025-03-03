@@ -32,6 +32,15 @@ function update_script() {
     systemctl stop linkwarden
     msg_ok "Stopped ${APP}"
 
+    msg_info "Updating Rust"
+    $STD apt-get install -y build-essential
+    $STD curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+    source $HOME/.cargo/env
+    echo 'export PATH=/usr/local/cargo/bin:$PATH' >> /etc/profile
+    source /etc/profile
+    $STD cargo install monolith
+    msg_ok "Updated Rust"
+
     msg_info "Updating ${APP} to ${RELEASE}"
     cd /opt
     mv /opt/linkwarden/.env /opt/.env
