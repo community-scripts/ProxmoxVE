@@ -16,6 +16,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-03-03
 
+### 🆕 New Scripts
+
+  - Habitica [@tremor021](https://github.com/tremor021) ([#2779](https://github.com/community-scripts/ProxmoxVE/pull/2779))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
