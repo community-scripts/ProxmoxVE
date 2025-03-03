@@ -61,7 +61,7 @@ function ScriptItem({
                         Date added: {extractDate(item.date_created)}
                       </p>
                       <p className="text-sm text-muted-foreground">
-                        Default OS: {item.os} {item.version}
+                        Default OS: {item.os || "Proxmox Node"} {item.version || ""}
                       </p>
                     </div>
                     <div className="flex gap-5">
