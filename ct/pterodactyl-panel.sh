@@ -6,7 +6,7 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 # Source: https://github.com/pterodactyl/panel
 
 APP="Pterodactyl-Panel"
-var_tags="Gaming"
+var_tags="gaming"
 var_cpu="2"
 var_ram="1024"
 var_disk="4"
