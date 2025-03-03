@@ -221,7 +221,8 @@ mapfile -t TEMPLATES < <(pveam available -section system | sed -n "s/.*\($TEMPLA
   exit 207
 }
 TEMPLATE="${TEMPLATES[-1]}"
-TEMPLATE_PATH="/var/lib/vz/template/cache/$TEMPLATE"
+TEMPLATE_PATH="$(pvesm path $TEMPLATE_STORAGE:vztmpl/$TEMPLATE)"
+# Without NAS/Mount: TEMPLATE_PATH="/var/lib/vz/template/cache/$TEMPLATE"
 # Check if template exists, if corrupt remove and redownload
 if ! pveam list "$TEMPLATE_STORAGE" | grep -q "$TEMPLATE" || ! zstdcat "$TEMPLATE_PATH" | tar -tf - >/dev/null 2>&1; then
   msg_warn "Template $TEMPLATE not found in storage or seems to be corrupted. Redownloading."
