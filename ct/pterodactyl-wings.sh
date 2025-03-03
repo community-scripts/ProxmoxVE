@@ -3,7 +3,7 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: bvdberg01
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://github.com/pterodactyl-dev/wings
+# Source: https://github.com/pterodactyl/wings
 
 APP="Pterodactyl-Wings"
 var_tags="gaming"
