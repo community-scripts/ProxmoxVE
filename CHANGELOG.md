@@ -14,6 +14,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 All LXC instances created using this repository come pre-installed with Midnight Commander, which is a command-line tool (`mc`) that offers a user-friendly file and directory management interface for the terminal environment.
 
 
+## 2025-03-03
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Linkwarden: Fix & Update Monolith-Installation [@MickLesk](https://github.com/MickLesk) ([#2787](https://github.com/community-scripts/ProxmoxVE/pull/2787))
+
 ## 2025-03-02
 
 ### 🚀 Updated Scripts
