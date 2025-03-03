@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { basePath } from "@/config/siteConfig";
 import { Script } from "@/lib/types";
-import { BookOpenText, Code, Globe } from "lucide-react";
+import { BookOpenText, Code, Globe, RefreshCcw } from "lucide-react";
 import Link from "next/link";
 
 const generateInstallSourceUrl = (slug: string) => {
