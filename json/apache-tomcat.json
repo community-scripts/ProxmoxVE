@@ -21,7 +21,7 @@
         "cpu": 1,
         "ram": 1024,
         "hdd": 5,
-        "os": "Debian",
+        "os": "debian",
         "version": "12"
       }
     }
@@ -33,7 +33,7 @@
   "notes": [
     {
       "text": "User can select which Adoptium JDK should be used for the selected Tomcat version (9, 10.1 or 11). ",
-      "type": ""
+      "type": "info"
     }
   ]
 }
