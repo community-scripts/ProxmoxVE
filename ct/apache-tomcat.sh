@@ -27,7 +27,7 @@ function update_script() {
         msg_error "No ${APP} Installation Found!"
         exit
     fi
-    msg_error "Currently we dont provide an Update of Apache Tomcat."
+    msg_error "Currently we don't provide an update function for this ${APP}."
     exit
 }
 
