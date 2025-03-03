@@ -12,6 +12,7 @@ var_cpu="1"
 var_ram="1024"
 var_os="debian"
 var_version="12"
+var_unprivileged="1"
 
 header_info "$APP"
 variables
