@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": 9000,
+    "interface_port": 9001,
     "documentation": "https://min.io/docs/minio/linux/index.html",
     "website": "https://min.io/",
     "logo": "https://raw.githubusercontent.com/minio/minio/refs/heads/master/.github/logo.svg",
