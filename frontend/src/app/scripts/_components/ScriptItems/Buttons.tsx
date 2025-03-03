@@ -4,15 +4,13 @@ import { Script } from "@/lib/types";
 import { BookOpenText, Code, Globe, RefreshCcw } from "lucide-react";
 import Link from "next/link";
 
-const generateSourceUrl = (slug: string, type: string) => {
+const generateInstallSourceUrl = (slug: string) => {
   const baseUrl = `https://raw.githubusercontent.com/community-scripts/${basePath}/main`;
-  return type === "ct"
-    ? `${baseUrl}/install/${slug}-install.sh`
-    : `${baseUrl}/misc/${slug}.sh`;
+  return `${baseUrl}/install/${slug}-install.sh`;
 };
 
 const generateUpdateUrl = (slug: string, type: string) => {
-  if (type !== "ct") return null;
+  if (!["ct", "default"].includes(type)) return null;
   const baseUrl = `https://raw.githubusercontent.com/community-scripts/${basePath}/main`;
   return `${baseUrl}/ct/${slug}.sh`;
 };
@@ -36,7 +34,8 @@ const ButtonLink = ({ href, icon, text }: ButtonLinkProps) => (
 
 export default function Buttons({ item }: { item: Script }) {
   const sourceUrl = generateSourceUrl(item.slug, item.type);
-  const updateUrl = generateUpdateUrl(item.slug, item.type);
+  const installSourceUrl = ["ct", "default"].includes(item.type) ? generateInstallSourceUrl(item.slug) : null;
+  const updateSourceUrl = ["ct", "default"].includes(item.type) ? generateUpdateUrl(item.slug, item.type) : null;
 
   const buttons = [
     item.website && {
@@ -49,15 +48,15 @@ export default function Buttons({ item }: { item: Script }) {
       icon: <BookOpenText className="h-4 w-4" />,
       text: "Documentation",
     },
+    installSourceUrl && {
+      href: installSourceUrl,
+      icon: <Code className="h-4 w-4" />, 
+      text: "Install-Source",
+    },
     {
       href: sourceUrl,
-      icon: <Code className="h-4 w-4" />,
-      text: item.type === "ct" || item.type === "default" ? "Install-Source" : "Source Code",
-    },
-    updateUrl && {
-      href: updateUrl,
-      icon: <RefreshCcw className="h-4 w-4" />,
-      text: "Update-Source",
+      icon: <Code className="h-4 w-4" />, 
+      text: ["ct", "default"].includes(item.type) ? "Update-Source" : "Source Code",
     },
   ].filter(Boolean) as ButtonLinkProps[];
 
