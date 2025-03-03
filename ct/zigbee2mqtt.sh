@@ -33,6 +33,10 @@ function update_script() {
     systemctl stop zigbee2mqtt
     msg_ok "Stopped Service"
 
+    msg_info "Updating pnpm"
+    $STD npm install -g pnpm@10.4.1
+    msg_ok "Updated pnpm"
+
     msg_info "Creating Backup"
       rm -rf /opt/${APP}_backup*.tar.gz
       mkdir -p /opt/z2m_backup
