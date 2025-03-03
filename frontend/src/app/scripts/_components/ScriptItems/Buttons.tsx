@@ -4,7 +4,7 @@ import { Script } from "@/lib/types";
 import { BookOpenText, Code, Globe, RefreshCcw } from "lucide-react";
 import Link from "next/link";
 
-const generateInstallSourceUrl = (slug: string) => {
+const generateSourceUrl = (slug: string) => {
   const baseUrl = `https://raw.githubusercontent.com/community-scripts/${basePath}/main`;
   return `${baseUrl}/install/${slug}-install.sh`;
 };
