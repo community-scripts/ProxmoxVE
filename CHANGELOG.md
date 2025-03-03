@@ -22,6 +22,17 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - Linkwarden: Fix & Update Monolith-Installation [@MickLesk](https://github.com/MickLesk) ([#2787](https://github.com/community-scripts/ProxmoxVE/pull/2787))
 
+  - #### ✨ New Features
+
+    - Feature Template Path for Mountings [@MickLesk](https://github.com/MickLesk) ([#2785](https://github.com/community-scripts/ProxmoxVE/pull/2785))
+    - Feature: MinIO use now static port 9001 [@MickLesk](https://github.com/MickLesk) ([#2786](https://github.com/community-scripts/ProxmoxVE/pull/2786))
+
+### 🌐 Website
+
+  - #### ✨ New Features
+
+    - Feature: Website - show default OS [@MickLesk](https://github.com/MickLesk) ([#2790](https://github.com/community-scripts/ProxmoxVE/pull/2790))
+
 ## 2025-03-02
 
 ### 🚀 Updated Scripts
