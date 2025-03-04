@@ -51,7 +51,7 @@ function update_script() {
   msg_ok "Cleaned Old Files"
 
   msg_info "Downloading NPM v${RELEASE}"
-  $STD wget -q https://codeload.github.com/NginxProxyManager/nginx-proxy-manager/tar.gz/v${RELEASE} -O - | tar -xz
+  wget -q https://codeload.github.com/NginxProxyManager/nginx-proxy-manager/tar.gz/v${RELEASE} -O - | tar -xz
   cd nginx-proxy-manager-${RELEASE}
   msg_ok "Downloaded NPM v${RELEASE}"
 
