@@ -11,7 +11,7 @@
     "interface_port": 32400,
     "documentation": null,
     "website": "https://www.plex.tv/",
-    "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/plex-white.svg",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/plex.svg",
     "description": "Plex personal media server magically scans and organizes your files, sorting your media intuitively and beautifully.",
     "install_methods": [
         {

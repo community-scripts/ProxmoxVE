@@ -11,7 +11,7 @@
     "interface_port": 8080,
     "documentation": null,
     "website": "https://owncast.online/",
-    "logo": "https://raw.githubusercontent.com/owncast/owncast/develop/web/public/img/favicon/android-icon-144x144.png",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/owncast.svg",
     "description": "Owncast is a free and open source live video and web chat server for use with existing popular broadcasting software.",
     "install_methods": [
         {

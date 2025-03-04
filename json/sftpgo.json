@@ -11,7 +11,7 @@
     "interface_port": 8080,
     "documentation": null,
     "website": "https://github.com/drakkan/sftpgo",
-    "logo": "https://raw.githubusercontent.com/drakkan/sftpgo/main/img/logo.png",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/webp/sftpgo.webp",
     "description": "SFTPGo is a fully featured and highly configurable SFTP server with optional HTTP/S, FTP/S and WebDAV support. Several storage backends are supported: local filesystem, encrypted local filesystem, S3 (compatible) Object Storage, Google Cloud Storage, Azure Blob Storage, SFTP.",
     "install_methods": [
         {

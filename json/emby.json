@@ -11,7 +11,7 @@
     "interface_port": 8096,
     "documentation": null,
     "website": "https://emby.media/",
-    "logo": "https://github.com/home-assistant/brands/blob/master/core_integrations/emby/icon.png?raw=true",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/emby.svg",
     "description": "Emby brings together your personal videos, music, photos, and live television.",
     "install_methods": [
         {

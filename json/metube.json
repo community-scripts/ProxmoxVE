@@ -11,7 +11,7 @@
     "interface_port": 8081,
     "documentation": null,
     "website": "https://github.com/alexta69/metube",
-    "logo": "https://raw.githubusercontent.com/alexta69/metube/master/ui/src/assets/icons/android-chrome-192x192.png",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/metube.svg",
     "description": "MeTube allows you to download videos from YouTube and dozens of other sites.",
     "install_methods": [
         {

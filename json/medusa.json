@@ -11,7 +11,7 @@
     "interface_port": 8081,
     "documentation": null,
     "website": "https://pymedusa.com/",
-    "logo": "https://cdn.jsdelivr.net/gh/pymedusa/medusa.github.io@4360d494/images/logo/new-logo.png",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/webp/py-medusa.webp",
     "description": "Medusa is an automatic Video Library Manager for TV Shows. It watches for new episodes of your favorite shows, and when they are posted it does its magic: automatic torrent/nzb searching, downloading, and processing at the qualities you want.",
     "install_methods": [
         {

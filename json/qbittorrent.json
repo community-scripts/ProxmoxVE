@@ -11,7 +11,7 @@
     "interface_port": 8090,
     "documentation": null,
     "website": "https://www.qbittorrent.org/",
-    "logo": "https://raw.githubusercontent.com/qbittorrent/qBittorrent/master/src/icons/qbittorrent.ico",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/qbittorrent.svg",
     "description": "qBittorrent offers a user-friendly interface that allows users to search for and download torrent files easily. It also supports magnet links, which allow users to start downloading files without the need for a torrent file.",
     "install_methods": [
         {

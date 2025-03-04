@@ -11,7 +11,7 @@
     "interface_port": 9091,
     "documentation": null,
     "website": "https://transmissionbt.com/",
-    "logo": "https://raw.githubusercontent.com/transmission/transmission/main/web/assets/img/logo.png",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/transmission.svg",
     "description": "Transmission is a free, open-source BitTorrent client known for its fast download speeds and ease of use. It supports various platforms such as Windows, Linux, and macOS and has features like web interface, peer exchange, and encrypted transfers.",
     "install_methods": [
         {
