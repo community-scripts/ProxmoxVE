@@ -11,7 +11,7 @@
     "interface_port": 9000,
     "documentation": "https://docs.goauthentik.io/docs/",
     "website": "https://goauthentik.io/",
-    "logo": "https://raw.githubusercontent.com/goauthentik/authentik/refs/heads/main/website/static/img/icon.png",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/authentik.svg",
     "description": "authentik is an IdP (Identity Provider) and SSO (single sign on) that is built with security at the forefront of every piece of code, every feature, with an emphasis on flexibility and versatility.",
     "install_methods": [
         {

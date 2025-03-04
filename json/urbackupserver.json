@@ -11,7 +11,7 @@
    "interface_port":55414,
    "documentation":"https://www.urbackup.org/documentation.html",
    "website":"https://www.urbackup.org/",
-   "logo":"https://forums.urbackup.org/uploads/default/original/2X/1/1051fd74d1dcbc3ad4220b43007fcab5287272b0.png",
+   "logo":"https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/webp/urbackup.webp",
    "description":"URBackup is an open-source backup software designed for creating reliable and efficient backups of both files and system images. It supports client-server architecture, allowing you to back up multiple computers to a central server. It offers features such as incremental backups, real-time file backup, and scheduling, ensuring minimal data loss and quick recovery",
    "install_methods":[
       {

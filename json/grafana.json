@@ -11,7 +11,7 @@
     "interface_port": 3000,
     "documentation": null,
     "website": "https://grafana.com/",
-    "logo": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fdocs.checkmk.com%2Flatest%2Fimages%2Fgrafana_logo.png&f=1&nofb=1",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/grafana.svg",
     "description": "Grafana is a data visualization and monitoring platform that enables users to query, visualize, alert on and understand metrics, logs, and other data sources. It integrates with various data sources, including Prometheus, InfluxDB, Elasticsearch, and many others, to present a unified view of the data and enable users to create insightful and interactive dashboards.",
     "install_methods": [
         {

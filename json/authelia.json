@@ -11,7 +11,7 @@
   "interface_port": 9091,
   "documentation": "https://www.authelia.com/integration/deployment/bare-metal/",
   "website": "https://www.authelia.com/",
-  "logo": "https://www.authelia.com/images/branding/logo.png",
+  "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/authelia.svg",
   "description": "Authelia is an open-source authentication and authorization server and portal fulfilling the identity and access management (IAM) role of information security in providing multi-factor authentication and single sign-on (SSO) for your applications via a web portal. It acts as a companion for common reverse proxies.",
   "install_methods": [
     {

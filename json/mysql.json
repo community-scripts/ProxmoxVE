@@ -11,7 +11,7 @@
     "interface_port": null,
     "documentation": "https://dev.mysql.com/doc/",
     "website": "https://www.mysql.com/",
-    "logo": "https://1000logos.net/wp-content/uploads/2020/08/MySQL-Logo.png",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/mysql.svg",
     "description": "MySQL is an open-source relational database management system (RDBMS) that uses SQL for managing and manipulating data. It is known for its scalability, reliability, and high performance, making it suitable for small to large-scale applications. Key features include support for ACID transactions, data replication for high availability, and compatibility with various programming languages like Python, PHP, and Java.",
     "install_methods": [
         {
