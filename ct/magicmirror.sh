@@ -50,7 +50,7 @@ function update_script() {
     rm -rf /opt/magicmirror
     mv MagicMirror-${RELEASE} /opt/magicmirror
     cd /opt/magicmirror
-    npm run install-mm &> /dev/null
+    $STD npm run install-mm
     cp /opt/magicmirror-backup/config.js /opt/magicmirror/config/
     if [[ -f /opt/magicmirror-backup/custom.css ]]; then
       cp /opt/magicmirror-backup/custom.css /opt/magicmirror/css/

@@ -44,7 +44,7 @@ function update_script() {
     chown -R www-data:www-data /opt/wallos
     chmod -R 755 /opt/wallos
     mkdir -p /var/log/cron
-    curl http://localhost/endpoints/db/migrate.php &>/dev/null
+    $STD curl http://localhost/endpoints/db/migrate.php
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP}"
 

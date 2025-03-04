@@ -61,7 +61,7 @@ EOF
 
 touch /var/log/unbound.log
 chown unbound:unbound /var/log/unbound.log
-
+sleep 5
 systemctl restart unbound
 msg_ok "Installed Unbound"
 

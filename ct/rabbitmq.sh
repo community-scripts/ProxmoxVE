@@ -32,7 +32,7 @@ function update_script() {
     msg_ok "Stopped ${APP} Service"
 
     msg_info "Updating..."
-    apt install --only-upgrade rabbitmq-server &>/dev/null
+    $STD apt install --only-upgrade rabbitmq-server
     msg_ok "Update Successfully"
 
     msg_info "Starting ${APP}"

@@ -1,0 +1,122 @@
+name: Close Discussion on PR Merge
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  close-discussion:
+    runs-on: runner-cluster-htl-set
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4  
+
+      - name: Set Up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install Dependencies
+        run: npm install zx @octokit/graphql
+
+      - name: Close Discussion
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO_OWNER: ${{ github.repository_owner }}
+          REPO_NAME: ${{ github.event.repository.name }}
+        run: |
+          npx zx << 'EOF'
+          import { graphql } from "@octokit/graphql";
+          (async function() {
+            try {
+              const token = process.env.GITHUB_TOKEN;
+              const prBody = process.env.PR_BODY;
+              const prNumber = process.env.PR_NUMBER;
+              const owner = process.env.REPO_OWNER;
+              const repo = process.env.REPO_NAME;
+
+              if (!token || !prBody || !prNumber || !owner || !repo) {
+                console.log("Missing required environment variables.");
+                process.exit(1);
+              }
+
+              const match = prBody.match(/#(\d+)/);
+              if (!match) {
+                console.log("No discussion ID found in PR body.");
+                return;
+              }
+              const discussionNumber = match[1];
+
+              console.log(`Extracted Discussion Number: ${discussionNumber}`);
+              console.log(`PR Number: ${prNumber}`);
+              console.log(`Repository: ${owner}/${repo}`);
+
+              const graphqlWithAuth = graphql.defaults({
+                headers: { authorization: `Bearer ${token}` },
+              });
+
+              const discussionQuery = `
+                query($owner: String!, $repo: String!, $number: Int!) {
+                  repository(owner: $owner, name: $repo) {
+                    discussion(number: $number) {
+                      id
+                    }
+                  }
+                }
+              `;
+              
+              const discussionResponse = await graphqlWithAuth(discussionQuery, {
+                  owner,
+                  repo,
+                  number: parseInt(discussionNumber, 10),
+              });              
+              
+              const discussionQLId = discussionResponse.repository.discussion.id;
+              if (!discussionQLId) {
+                console.log("Failed to fetch discussion GraphQL ID.");
+                return;
+              }
+
+              console.log(`GraphQL Discussion ID: ${discussionQLId}`);
+              
+              const commentMutation = `
+                mutation($discussionId: ID!, $body: String!) {
+                  addDiscussionComment(input: { discussionId: $discussionId, body: $body }) {
+                    comment { id body }
+                  }
+                }
+              `;
+
+              const commentResponse = await graphqlWithAuth(commentMutation, {
+                discussionId: discussionQLId,
+                body: `Merged with PR #${prNumber}`,
+              });
+
+              const commentId = commentResponse.addDiscussionComment.comment.id;
+              if (!commentId) {
+                console.log("Failed to post the comment.");
+                return;
+              }
+
+              console.log(`Comment Posted Successfully! Comment ID: ${commentId}`);
+
+              const markAnswerMutation = `
+                mutation($id: ID!) {
+                  markDiscussionCommentAsAnswer(input: { id: $id }) {
+                    discussion { id title }
+                  }
+                }
+              `;
+
+              await graphqlWithAuth(markAnswerMutation, { id: commentId });
+
+              console.log("Comment marked as answer successfully!");
+
+            } catch (error) {
+              console.error("Error:", error);
+              return;
+            }
+          })();
+          EOF

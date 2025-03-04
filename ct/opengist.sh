@@ -34,8 +34,8 @@ function update_script() {
     msg_ok "Stopped Service"
     
     msg_info "Updating ${APP} to v${RELEASE}"
-    apt-get update &>/dev/null
-    apt-get -y upgrade &>/dev/null
+    $STD apt-get update
+    $STD apt-get -y upgrade
     cd /opt
     mv /opt/opengist /opt/opengist-backup
     wget -q "https://github.com/thomiceli/opengist/releases/download/v${RELEASE}/opengist${RELEASE}-linux-amd64.tar.gz"
@@ -52,8 +52,8 @@ function update_script() {
     msg_info "Cleaning up"
     rm -rf /opt/opengist${RELEASE}-linux-amd64.tar.gz
     rm -rf /opt/opengist-backup
-    apt-get -y autoremove &>/dev/null
-    apt-get -y autoclean &>/dev/null
+    $STD apt-get -y autoremove
+    $STD apt-get -y autoclean
     msg_ok "Cleaned"
     msg_ok "Updated Successfully"
   else

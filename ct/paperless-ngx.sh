@@ -41,9 +41,9 @@ function update_script() {
         wget -q https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs10040/ghostscript-10.04.0.tar.gz
         tar -xzf ghostscript-10.04.0.tar.gz
         cd ghostscript-10.04.0
-        ./configure &>/dev/null
-        make &>/dev/null
-        sudo make install &>/dev/null
+        $STD ./configure
+        $STD make
+        $STD sudo make install
         rm -rf /tmp/ghostscript*
         msg_ok "Ghostscript updated to 10.04.0"
       fi
@@ -58,9 +58,9 @@ function update_script() {
       cp -r /opt/paperless/paperless.conf paperless-ngx/
       cp -r paperless-ngx/* /opt/paperless/
       cd /opt/paperless
-      pip install -r requirements.txt &>/dev/null
+      $STD pip install -r requirements.txt
       cd /opt/paperless/src
-      /usr/bin/python3 manage.py migrate &>/dev/null
+      $STD /usr/bin/python3 manage.py migrate
       echo "${RELEASE}" >/opt/${APP}_version.txt
       msg_ok "Updated to ${RELEASE}"
 

@@ -1,42 +1,97 @@
 [
   {
-    "title": "💥 Breaking Changes",
-    "labels": ["breaking change"]
-  },
-  {
     "title": "🆕 New Scripts",
     "labels": ["new script"]
   },
   {
     "title": "🚀 Updated Scripts",
-    "labels": ["update script"]
-  },
-  {
-    "title": "🐞 Bug Fixes (Updated Scripts)",
-    "labels": ["update script", "bugfix"]
-  },
-  {
-    "title": "✨ Feature Updates (Updated Scripts)",
-    "labels": ["update script", "feature"]
-  },
-  {
-    "title": "✨ New Features",
-    "labels": ["feature"]
-  },
-  {
-    "title": "🌐 Website",
-    "labels": ["website"]
-  },
-  {
-    "title": "📡 API",
-    "labels": ["api"]
+    "labels": ["update script"],
+    "subCategories": [
+      {
+        "title": "🐞 Bug Fixes",
+        "labels": ["bugfix"],
+        "notes" : []
+      },
+      {
+        "title": "✨ New Features",
+        "labels": ["feature"],
+        "notes" : []
+      },
+      {
+        "title": "💥 Breaking Changes",
+        "labels": ["breaking change"],
+        "notes" : []
+      }
+    ]
   },
   {
     "title": "🧰 Maintenance",
-    "labels": ["maintenance"]
+    "labels": ["maintenance"],
+    "subCategories": [
+      {
+        "title": "🐞 Bug Fixes",
+        "labels": ["bugfix"],
+        "notes" : []
+      },
+      {
+        "title": "✨ New Features",
+        "labels": ["feature"],
+        "notes" : []
+      },
+      {
+        "title": "💥 Breaking Changes",
+        "labels": ["breaking change"],
+        "notes" : []
+      },
+      {
+        "title": "📡 API",
+        "labels": ["api"],
+        "notes" : []
+      },
+      {
+        "title": "💾 Core",
+        "labels": ["core"],
+        "notes" : []
+      },
+      {
+        "title": "📂 Github",
+        "labels": ["github"],
+        "notes" : []
+      }
+    ]
+  },
+  {
+    "title": "🌐 Website",
+    "labels": ["website"],
+    "subCategories": [
+      {
+        "title": "🐞 Bug Fixes",
+        "labels": ["bugfix"],
+        "notes" : []
+      },
+      {
+        "title": "✨ New Features",
+        "labels": ["feature"],
+        "notes" : []
+      },
+      {
+        "title": "💥 Breaking Changes",
+        "labels": ["breaking change"],
+        "notes" : []
+      },
+      {
+        "title": "📝 Script Information",
+        "labels": ["json"],
+        "notes" : []
+      }
+    ]
   },
   {
     "title": "❔ Unlabelled",
     "labels": []
+  },
+  {
+    "title": "💥 Breaking Changes",
+    "labels": ["breaking change"]
   }
 ]

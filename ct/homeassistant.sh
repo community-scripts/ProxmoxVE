@@ -61,10 +61,10 @@ function update_script() {
   fi
   if [ "$UPD" == "3" ]; then
     msg_info "Installing Home Assistant Community Store (HACS)"
-    apt update &>/dev/null
-    apt install unzip &>/dev/null
+    $STD apt update
+    $STD apt install unzip
     cd /var/lib/docker/volumes/hass_config/_data
-    bash <(curl -fsSL https://get.hacs.xyz) &>/dev/null
+    $STD bash <(curl -fsSL https://get.hacs.xyz)
     msg_ok "Installed Home Assistant Community Store (HACS)"
     echo -e "\n Reboot Home Assistant and clear browser cache then Add HACS integration.\n"
     exit
@@ -73,10 +73,10 @@ function update_script() {
     IP=$(hostname -I | awk '{print $1}')
     msg_info "Installing FileBrowser"
     RELEASE=$(curl -fsSL https://api.github.com/repos/filebrowser/filebrowser/releases/latest | grep -o '"tag_name": ".*"' | sed 's/"//g' | sed 's/tag_name: //g')
-    curl -fsSL https://github.com/filebrowser/filebrowser/releases/download/v2.23.0/linux-amd64-filebrowser.tar.gz | tar -xzv -C /usr/local/bin &>/dev/null
-    filebrowser config init -a '0.0.0.0' &>/dev/null
-    filebrowser config set -a '0.0.0.0' &>/dev/null
-    filebrowser users add admin helper-scripts.com --perm.admin &>/dev/null
+    $STD curl -fsSL https://github.com/filebrowser/filebrowser/releases/download/v2.23.0/linux-amd64-filebrowser.tar.gz | tar -xzv -C /usr/local/bin
+    $STD filebrowser config init -a '0.0.0.0'
+    $STD filebrowser config set -a '0.0.0.0'
+    $STD filebrowser users add admin helper-scripts.com --perm.admin
     msg_ok "Installed FileBrowser"
 
     msg_info "Creating Service"
@@ -91,7 +91,7 @@ ExecStart=/usr/local/bin/filebrowser -r /
 [Install]
 WantedBy=default.target" >$service_path
 
-    systemctl enable --now filebrowser.service &>/dev/null
+    $STD systemctl enable --now filebrowser.service
     msg_ok "Created Service"
 
     msg_ok "Completed Successfully!\n"

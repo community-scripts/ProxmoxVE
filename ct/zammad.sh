@@ -28,15 +28,15 @@ function update_script() {
         exit
     fi
     msg_info "Stopping Service"
-    systemctl stop zammad &>/dev/null
+    $STD systemctl stop zammad
     msg_info "Updating ${APP}"
-    apt-get update &>/dev/null
-    apt-mark hold zammad &>/dev/null
-    apt-get -y upgrade &>/dev/null
-    apt-mark unhold zammad &>/dev/null
-    apt-get -y upgrade &>/dev/null
+    $STD apt-get update
+    $STD apt-mark hold zammad
+    $STD apt-get -y upgrade
+    $STD apt-mark unhold zammad
+    $STD apt-get -y upgrade
     msg_info "Starting Service"
-    systemctl start zammad &>/dev/null
+    $STD systemctl start zammad
     msg_ok "Updated ${APP} LXC"
     exit
 }

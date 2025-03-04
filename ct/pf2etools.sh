@@ -32,8 +32,8 @@ function update_script() {
   RELEASE=$(curl -s https://api.github.com/repos/Pf2eToolsOrg/Pf2eTools/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
   if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f "/opt/${APP}_version.txt" ]]; then
     msg_info "Updating System"
-    apt-get update &>/dev/null
-    apt-get -y upgrade &>/dev/null
+    $STD apt-get update
+    $STD apt-get -y upgrade
     msg_ok "Updated System"
 
     msg_info "Updating ${APP}"
@@ -43,8 +43,8 @@ function update_script() {
     rm -rf "/opt/${APP}"
     mv ${APP}-${RELEASE:1} /opt/${APP}
     cd /opt/Pf2eTools
-    npm install &>/dev/null
-    npm run build &>/dev/null
+    $STD npm install
+    $STD npm run build
     chown -R www-data: "/opt/${APP}"
     chmod -R 755 "/opt/${APP}"
     echo "${RELEASE}" >"/opt/${APP}_version.txt"

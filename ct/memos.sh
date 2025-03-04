@@ -37,13 +37,13 @@ function update_script() {
   fi
   systemctl stop memos
   cd /opt/memos/web
-  pnpm i --frozen-lockfile &>/dev/null
-  pnpm build &>/dev/null
+  $STD pnpm i --frozen-lockfile
+  $STD pnpm build
   cd /opt/memos
   mkdir -p /opt/memos/server/dist
   cp -r web/dist/* /opt/memos/server/dist/
   cp -r web/dist/* /opt/memos/server/router/frontend/dist/
-  go build -o /opt/memos/memos -tags=embed bin/memos/main.go &>/dev/null
+  $STD go build -o /opt/memos/memos -tags=embed bin/memos/main.go
   systemctl start memos
   msg_ok "Updated $APP"
   exit

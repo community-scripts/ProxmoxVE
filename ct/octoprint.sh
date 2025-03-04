@@ -33,7 +33,7 @@ function update_script() {
 
     msg_info "Updating OctoPrint"
     source /opt/octoprint/bin/activate
-    pip3 install octoprint --upgrade &>/dev/null
+    $STD pip3 install octoprint --upgrade
     msg_ok "Updated OctoPrint"
 
     msg_info "Starting OctoPrint"

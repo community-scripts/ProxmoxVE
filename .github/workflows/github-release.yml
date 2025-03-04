@@ -1,25 +1,53 @@
-name: Create new release
+name: Create Daily Release
 
 on:
   schedule:
-    # Runs "At 00:01 every night" (UTC)
-    - cron: '1 0 * * *'
+    - cron: '1 0 * * *'  # Runs daily at 00:01 UTC
+  workflow_dispatch:
 
 jobs:
-  create-new-release:
-    runs-on: ubuntu-latest
+  create-daily-release:
+    runs-on: runner-cluster-htl-set
     permissions:
       contents: write
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Parse CHANGELOG.md for yesterday's entries and create a new release
+
+      - name: Extract first 5000 characters from CHANGELOG.md
+        run: head -c 5000 CHANGELOG.md > changelog_cropped.md
+
+      - name: Debugging - Show extracted changelog
+        run: |
+          echo "=== CHANGELOG EXCERPT ==="
+          cat changelog_cropped.md
+          echo "========================="
+
+      - name: Extract relevant changelog section
+        run: |
+          YESTERDAY=$(date -u --date="yesterday" +%Y-%m-%d)
+          echo "Checking for changes on: $YESTERDAY"
+
+          # Extract relevant section from cropped changelog
+          awk -v date="## $YESTERDAY" '
+            $0 ~ date {found=1; next} 
+            found && /^## [0-9]{4}-[0-9]{2}-[0-9]{2}/ {exit} 
+            found
+          ' changelog_cropped.md > changelog_tmp.md
+
+          echo "=== Extracted Changelog ==="
+          cat changelog_tmp.md
+          echo "==========================="
+
+          # Skip if no content was found
+          if [ ! -s changelog_tmp.md ]; then
+            echo "No changes found for $YESTERDAY, skipping release."
+            exit 0
+          fi
+
+      - name: Create GitHub release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           YESTERDAY=$(date -u --date="yesterday" +%Y-%m-%d)
-          YESTERDAY_CHANGELOG_NOTES=$(awk '/^## '"$YESTERDAY"'/ {f=1; next} f && /^## [0-9]{4}-[0-9]{2}-[0-9]{2}/ {f=0} f && !/^## / {print}' CHANGELOG.md)
-          
-          if [ -n "$YESTERDAY_CHANGELOG_NOTES" ]; then
-            gh release create "$YESTERDAY" -t "$YESTERDAY" -n "$YESTERDAY_CHANGELOG_NOTES" --latest
-          fi
+          gh release create "$YESTERDAY" -t "$YESTERDAY" -F changelog_tmp.md

@@ -33,7 +33,7 @@ function update_script() {
     msg_info "Updating ${APP} to ${RELEASE}"
     echo "${RELEASE}" >/opt/${APP}_version.txt
     cd /opt/paymenter
-    php artisan p:upgrade --no-interaction &>/dev/null
+    $STD php artisan p:upgrade --no-interaction
     msg_ok "Updated Successfully"
   else
     msg_ok "No update required. ${APP} is already at ${RELEASE}."

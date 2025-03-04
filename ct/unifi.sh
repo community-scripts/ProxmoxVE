@@ -28,8 +28,8 @@ function update_script() {
         exit
     fi
     msg_info "Updating ${APP}"
-    apt-get update --allow-releaseinfo-change &>/dev/null
-    apt-get install -y unifi &>/dev/null
+    $STD apt-get update --allow-releaseinfo-change
+    $STD apt-get install -y unifi
     msg_ok "Updated Successfully"
     exit
 }

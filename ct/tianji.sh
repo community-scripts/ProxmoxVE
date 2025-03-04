@@ -41,15 +41,15 @@ function update_script() {
     mv tianji-${RELEASE} /opt/tianji
     cd tianji
     export NODE_OPTIONS="--max_old_space_size=4096"
-    pnpm install --filter @tianji/client... --config.dedupe-peer-dependents=false --frozen-lockfile >/dev/null 2>&1
-    pnpm build:static >/dev/null 2>&1
-    pnpm install --filter @tianji/server... --config.dedupe-peer-dependents=false >/dev/null 2>&1
-    mkdir -p ./src/server/public >/dev/null 2>&1
-    cp -r ./geo ./src/server/public >/dev/null 2>&1
-    pnpm build:server >/dev/null 2>&1
+    $STD pnpm install --filter @tianji/client... --config.dedupe-peer-dependents=false --frozen-lockfile
+    $STD pnpm build:static
+    $STD pnpm install --filter @tianji/server... --config.dedupe-peer-dependents=false
+    mkdir -p ./src/server/public
+    cp -r ./geo ./src/server/public
+    $STD pnpm build:server
     mv /opt/.env /opt/tianji/src/server/.env
     cd src/server
-    pnpm db:migrate:apply >/dev/null 2>&1
+    $STD pnpm db:migrate:apply
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP} to v${RELEASE}"
     

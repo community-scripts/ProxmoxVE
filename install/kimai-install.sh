@@ -74,8 +74,9 @@ $STD bin/console kimai:install -n
 chown -R :www-data /opt/*
 chmod -R g+r /opt/*
 chmod -R g+rw /opt/*
-sudo chown -R www-data:www-data /opt/*
-sudo chmod -R 755 /opt/*
+chown -R www-data:www-data /opt/*
+chmod -R 755 /opt/*
+chmod -R 777 /opt/kimai/var/ 
 $STD expect <<EOF
 set timeout -1
 log_user 0
@@ -88,6 +89,19 @@ send "helper-scripts.com\r"
 expect eof
 EOF
 $STD composer update --no-interaction
+cat <<EOF >/opt/kimai/config/packages/local.yaml
+kimai:
+    timesheet:
+        rounding:
+            default:
+                begin: 15
+                end: 15
+
+admin_lte:
+    options:
+        default_avatar: build/apple-touch-icon.png
+EOF
+
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Installed Kimai"
 

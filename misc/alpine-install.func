@@ -18,7 +18,7 @@ color() {
   BFR="\\r\\033[K"
   BOLD=$(echo "\033[1m")
   TAB="  "
-  
+
   # System
   RETRY_NUM=10
   RETRY_EVERY=3
@@ -36,12 +36,24 @@ color() {
   DEFAULT="${TAB}⚙️${TAB}${CL}"
 }
 
-# This function enables IPv6 if it's not disabled and sets verbose mode if the global variable is set to "yes"
-verb_ip6() {
+# Function to set STD mode based on verbosity
+set_std_mode() {
   if [ "$VERBOSE" = "yes" ]; then
     STD=""
-  else STD="silent"; fi
-  silent() { "$@" >/dev/null 2>&1; }
+  else
+    STD="silent"
+  fi
+}
+
+# Silent execution function
+silent() {
+  "$@" >/dev/null 2>&1
+}
+
+# This function enables IPv6 if it's not disabled and sets verbose mode
+verb_ip6() {
+  set_std_mode # Set STD mode based on VERBOSE
+
   if [ "$DISABLEIPV6" == "yes" ]; then
     $STD sysctl -w net.ipv6.conf.all.disable_ipv6=1
     echo "net.ipv6.conf.all.disable_ipv6 = 1" >>/etc/sysctl.conf
@@ -107,15 +119,15 @@ setting_up_container() {
 network_check() {
   set +e
   trap - ERR
-  if ping -c 1 -W 1 1.1.1.1 &>/dev/null || ping -c 1 -W 1 8.8.8.8 &>/dev/null || ping -c 1 -W 1 9.9.9.9 &>/dev/null; then 
-    msg_ok "Internet Connected"; 
+  if ping -c 1 -W 1 1.1.1.1 &>/dev/null || ping -c 1 -W 1 8.8.8.8 &>/dev/null || ping -c 1 -W 1 9.9.9.9 &>/dev/null; then
+    msg_ok "Internet Connected"
   else
     msg_error "Internet NOT Connected"
     read -r -p "Would you like to continue anyway? <y/N> " prompt
     if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
       echo -e "${INFO}${RD}Expect Issues Without Internet${CL}"
     else
-    echo -e "${NETWORK}Check Network Settings"
+      echo -e "${NETWORK}Check Network Settings"
       exit 1
     fi
   fi
@@ -148,13 +160,13 @@ motd_ssh() {
   fi
 
   PROFILE_FILE="/etc/profile.d/00_lxc-details.sh"
-  echo "echo -e \"\"" > "$PROFILE_FILE"
-  echo -e "echo -e \"${BOLD}${APPLICATION} LXC Container${CL}"\" >> "$PROFILE_FILE"
-  echo -e "echo -e \"${TAB}${GATEWAY}${YW} Provided by: ${GN}community-scripts ORG ${YW}| GitHub: ${GN}https://github.com/community-scripts/ProxmoxVE${CL}\"" >> "$PROFILE_FILE"
-  echo "echo \"\"" >> "$PROFILE_FILE"
-  echo -e "echo -e \"${TAB}${OS}${YW} OS: ${GN}${OS_NAME} - Version: ${OS_VERSION}${CL}\"" >> "$PROFILE_FILE"
-  echo -e "echo -e \"${TAB}${HOSTNAME}${YW} Hostname: ${GN}\$(hostname)${CL}\"" >> "$PROFILE_FILE"
-  echo -e "echo -e \"${TAB}${INFO}${YW} IP Address: ${GN}\$(ip -4 addr show eth0 | awk '/inet / {print \$2}' | cut -d/ -f1 | head -n 1)${CL}\"" >> "$PROFILE_FILE"
+  echo "echo -e \"\"" >"$PROFILE_FILE"
+  echo -e "echo -e \"${BOLD}${APPLICATION} LXC Container${CL}"\" >>"$PROFILE_FILE"
+  echo -e "echo -e \"${TAB}${GATEWAY}${YW} Provided by: ${GN}community-scripts ORG ${YW}| GitHub: ${GN}https://github.com/community-scripts/ProxmoxVE${CL}\"" >>"$PROFILE_FILE"
+  echo "echo \"\"" >>"$PROFILE_FILE"
+  echo -e "echo -e \"${TAB}${OS}${YW} OS: ${GN}${OS_NAME} - Version: ${OS_VERSION}${CL}\"" >>"$PROFILE_FILE"
+  echo -e "echo -e \"${TAB}${HOSTNAME}${YW} Hostname: ${GN}\$(hostname)${CL}\"" >>"$PROFILE_FILE"
+  echo -e "echo -e \"${TAB}${INFO}${YW} IP Address: ${GN}\$(ip -4 addr show eth0 | awk '/inet / {print \$2}' | cut -d/ -f1 | head -n 1)${CL}\"" >>"$PROFILE_FILE"
 
   # Configure SSH if enabled
   if [[ "${SSH_ROOT}" == "yes" ]]; then
@@ -170,8 +182,8 @@ motd_ssh() {
 # This function customizes the container and enables passwordless login for the root user
 customize() {
   if [[ "$PASSWORD" == "" ]]; then
-  msg_info "Customizing Container"
-  bash -c "passwd -d root" >/dev/null 2>&1
-  msg_ok "Customized Container"
+    msg_info "Customizing Container"
+    bash -c "passwd -d root" >/dev/null 2>&1
+    msg_ok "Customized Container"
   fi
 }

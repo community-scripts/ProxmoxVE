@@ -43,15 +43,15 @@ function update_script() {
     mv /opt/adventurelog-backup/backend/server/.env /opt/adventurelog/backend/server/.env
     mv /opt/adventurelog-backup/backend/server/media /opt/adventurelog/backend/server/media
     cd /opt/adventurelog/backend/server
-    pip install --upgrade pip &>/dev/null
-    pip install -r requirements.txt &>/dev/null
-    python3 manage.py collectstatic --noinput &>/dev/null
-    python3 manage.py migrate &>/dev/null
+    $STD pip install --upgrade pip
+    $STD pip install -r requirements.txt
+    $STD python3 manage.py collectstatic --noinput
+    $STD python3 manage.py migrate
 
     mv /opt/adventurelog-backup/frontend/.env /opt/adventurelog/frontend/.env
     cd /opt/adventurelog/frontend
-    pnpm install &>/dev/null
-    pnpm run build &>/dev/null
+    $STD pnpm install
+    $STD pnpm run build
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP}"
 

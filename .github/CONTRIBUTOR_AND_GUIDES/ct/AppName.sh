@@ -8,7 +8,7 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 # App Default Values
 APP="[APP_NAME]"
 # Name of the app (e.g. Google, Adventurelog, Apache-Guacamole"
-TAGS="[TAGS]"
+var_tags="[TAGS]"
 # Tags for Proxmox VE, maximum 2 pcs., no spaces allowed, separated by a semicolon ; (e.g. database | adblock;dhcp) 
 var_cpu="[CPU]"
 # Number of cores (1-X) (e.g. 4) - default are 2

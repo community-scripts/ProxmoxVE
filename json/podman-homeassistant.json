@@ -32,16 +32,16 @@
     },
     "notes": [
         {
-            "text": "Doesn't work with ZFS",
-            "type": "warning"
-        },
-        {
             "text": "If the LXC is created Privileged, the script will automatically set up USB passthrough.",
             "type": "warning"
         },
         {
             "text": "config path: `/var/lib/containers/storage/volumes/hass_config/_data`",
             "type": "info"
+        },
+        {
+            "text": "Options to Install Portainer or Portainer Agent",
+            "type": "warning"
         }
     ]
 }

@@ -42,7 +42,7 @@ function update_script() {
     tar -xzf "listmonk_${RELEASE}_linux_amd64.tar.gz" -C /opt/listmonk
     mv /opt/listmonk-backup/config.toml /opt/listmonk/config.toml
     mv /opt/listmonk-backup/uploads /opt/listmonk/uploads
-    /opt/listmonk/listmonk --upgrade --yes --config /opt/listmonk/config.toml &>/dev/null
+    $STD /opt/listmonk/listmonk --upgrade --yes --config /opt/listmonk/config.toml
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated $APP to v${RELEASE}"
 

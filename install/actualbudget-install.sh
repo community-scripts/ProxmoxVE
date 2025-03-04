@@ -38,9 +38,9 @@ msg_ok "Installed Node.js"
 msg_info "Installing Actual Budget"
 cd /opt
 RELEASE=$(curl -s https://api.github.com/repos/actualbudget/actual/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-wget -q https://github.com/actualbudget/actual-server/archive/refs/tags/v${RELEASE}.tar.gz
+wget -q https://github.com/actualbudget/actual/archive/refs/tags/v${RELEASE}.tar.gz
 tar -xzf v${RELEASE}.tar.gz
-mv *ctual-server-* /opt/actualbudget
+mv actual-${RELEASE} /opt/actualbudget
 
 mkdir -p /opt/actualbudget-data/{server-files,upload,migrate,user-files,migrations,config}
 chown -R root:root /opt/actualbudget-data
@@ -57,7 +57,7 @@ ACTUAL_HTTPS_KEY=/opt/actualbudget/selfhost.key
 ACTUAL_HTTPS_CERT=/opt/actualbudget/selfhost.crt
 EOF
 cd /opt/actualbudget
-$STD yarn install
+$STD yarn workspaces focus @actual-app/sync-server --production
 $STD openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout selfhost.key -out selfhost.crt <<EOF
 US
 California
@@ -82,14 +82,14 @@ User=root
 Group=root
 WorkingDirectory=/opt/actualbudget
 EnvironmentFile=/opt/actualbudget-data/.env
-ExecStart=/usr/bin/yarn start
+ExecStart=/usr/bin/yarn start:server
 Restart=always
 RestartSec=10
 
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now actualbudget.service
+systemctl enable -q --now actualbudget
 msg_ok "Created Service"
 
 motd_ssh

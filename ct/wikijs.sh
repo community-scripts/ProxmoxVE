@@ -46,7 +46,7 @@ function update_script() {
     msg_info "Restoring Data"
     cp -R ~/data-backup/* /opt/wikijs
     rm -rf ~/data-backup
-    npm rebuild sqlite3 &>/dev/null
+    $STD npm rebuild sqlite3
     msg_ok "Restored Data"
 
     msg_info "Starting ${APP}"

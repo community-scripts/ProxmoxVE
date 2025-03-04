@@ -30,7 +30,7 @@ function update_script() {
     msg_info "Updating $APP LXC"
     systemctl stop kavita
     RELEASE=$(curl -s https://api.github.com/repos/Kareadita/Kavita/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-    tar -xvzf <(curl -fsSL https://github.com/Kareadita/Kavita/releases/download/$RELEASE/kavita-linux-x64.tar.gz) --no-same-owner &>/dev/null
+    $STD tar -xvzf <(curl -fsSL https://github.com/Kareadita/Kavita/releases/download/$RELEASE/kavita-linux-x64.tar.gz) --no-same-owner
     rm -rf Kavita/config
     cp -r Kavita/* /opt/Kavita
     rm -rf Kavita

@@ -20,7 +20,9 @@ $STD apt-get install -y \
   sudo \
   mc \
   make \
+  git \
   postgresql \
+  build-essential \
   cargo \
   gnupg
 msg_ok "Installed Dependencies"
@@ -37,10 +39,14 @@ $STD apt-get install -y nodejs
 $STD npm install -g yarn
 msg_ok "Installed Node.js/Yarn"
 
-msg_info "Installing Monolith"
-$STD cargo install monolith
+msg_info "Installing Rust"
+wget -qL https://sh.rustup.rs
+$STD bash index.html -y --profile minimal
+echo 'export PATH=~/.cargo/bin:$PATH' >>~/.bashrc
 export PATH=~/.cargo/bin:$PATH
-msg_ok "Installed Monolith"
+rm index.html
+$STD cargo install monolith
+msg_ok "Installed Rust"
 
 msg_info "Setting up PostgreSQL DB"
 DB_NAME=linkwardendb

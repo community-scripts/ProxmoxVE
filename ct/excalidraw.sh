@@ -43,7 +43,7 @@ function update_script() {
         rm -rf /opt/excalidraw
         mv excalidraw-${RELEASE} /opt/excalidraw
         cd /opt/excalidraw
-        yarn &> /dev/null
+        $STD yarn
         msg_ok "Updated $APP to v${RELEASE}"
 
         msg_info "Starting $APP"

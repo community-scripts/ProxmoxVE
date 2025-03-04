@@ -30,10 +30,5 @@
         "username": null,
         "password": null
     },
-    "notes": [
-        {
-            "text": "Linkwarden > 2.8.2 needs Monolith, More info: `https://github.com/community-scripts/ProxmoxVE/discussions/305`",
-            "type": "info"
-        }
-    ]
+    "notes": []
 }

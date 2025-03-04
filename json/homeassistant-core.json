@@ -12,7 +12,7 @@
     "documentation": "https://www.home-assistant.io/docs/",
     "website": "https://www.home-assistant.io/",
     "logo": "https://avatars.githubusercontent.com/u/13844975?s=200&v=4",
-    "description": "A standalone installation of Home Assistant Core refers to a setup where the Home Assistant Core software is installed directly on a device or operating system, without the use of Docker containers. This provides a simpler, but less flexible and scalable solution, as the software is tightly coupled with the underlying system.\r\n\r\n\ud83d\udec8 If the LXC is created Privileged, the script will automatically set up USB passthrough.",
+    "description": "A standalone installation of Home Assistant Core refers to a setup where the Home Assistant Core software is installed directly on a device or operating system, without the use of Docker containers. This provides a simpler, but less flexible and scalable solution, as the software is tightly coupled with the underlying system.",
     "install_methods": [
         {
             "type": "default",

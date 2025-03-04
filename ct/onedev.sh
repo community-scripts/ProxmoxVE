@@ -37,7 +37,7 @@ function update_script() {
     cd /opt
     wget -q https://code.onedev.io/onedev/server/~site/onedev-latest.tar.gz
     tar -xzf onedev-latest.tar.gz
-    /opt/onedev-latest/bin/upgrade.sh /opt/onedev >/dev/null
+    $STD /opt/onedev-latest/bin/upgrade.sh /opt/onedev
     RELEASE=$(cat /opt/onedev/release.properties | grep "version" | cut -d'=' -f2)
     echo "${RELEASE}" >"/opt/${APP}_version.txt"
     msg_ok "Updated ${APP} to v${RELEASE}"

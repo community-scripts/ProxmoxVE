@@ -35,7 +35,7 @@ function update_script() {
     msg_ok "Stopped Services"
     msg_info "Updating ${APP} to v${RELEASE}"
     if [[ $(corepack -v) < "0.31.0" ]]; then
-      npm install -g corepack@0.31.0 &>/dev/null
+      $STD npm install -g corepack@0.31.0
     fi
     cd /opt
     if [[ -f /opt/hoarder/.env ]] && [[ ! -f /etc/hoarder/hoarder.env ]]; then
@@ -47,14 +47,14 @@ function update_script() {
     unzip -q v${RELEASE}.zip
     mv hoarder-${RELEASE} /opt/hoarder
     cd /opt/hoarder/apps/web
-    pnpm install --frozen-lockfile &>/dev/null
-    pnpm exec next build --experimental-build-mode compile &>/dev/null
+    $STD pnpm install --frozen-lockfile
+    $STD pnpm exec next build --experimental-build-mode compile
     cp -r /opt/hoarder/apps/web/.next/standalone/apps/web/server.js /opt/hoarder/apps/web
     cd /opt/hoarder/apps/workers
-    pnpm install --frozen-lockfile &>/dev/null
+    $STD pnpm install --frozen-lockfile
     export DATA_DIR=/opt/hoarder_data
     cd /opt/hoarder/packages/db
-    pnpm migrate &>/dev/null
+    $STD pnpm migrate
     sed -i "s/SERVER_VERSION=${PREV_RELEASE}/SERVER_VERSION=${RELEASE}/" /etc/hoarder/hoarder.env
     msg_ok "Updated ${APP} to v${RELEASE}"
 

@@ -2,7 +2,8 @@
   "name": "OPNsense",
   "slug": "opnsense-vm",
   "categories": [
-    4
+    4,
+    2
   ],
   "date_created": "2025-02-11",
   "type": "vm",

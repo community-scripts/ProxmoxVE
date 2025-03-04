@@ -27,7 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  msg_error "There is currently no update path available."
+  msg_error "Currently we don't provide an update function for this ${APP}."
   exit
 }
 

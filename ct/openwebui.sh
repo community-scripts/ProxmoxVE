@@ -35,11 +35,11 @@ function update_script() {
     exit
   fi
   systemctl stop open-webui.service
-  npm install &>/dev/null
+  $STD npm install
   export NODE_OPTIONS="--max-old-space-size=3584"
-  npm run build &>/dev/null
+  $STD npm run build
   cd ./backend
-  pip install -r requirements.txt -U &>/dev/null
+  $STD pip install -r requirements.txt -U
   systemctl start open-webui.service
   msg_ok "Updated Successfully"
   exit

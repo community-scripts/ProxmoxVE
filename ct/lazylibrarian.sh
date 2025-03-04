@@ -32,7 +32,7 @@ function update_script() {
     msg_ok "LazyLibrarian Stopped"
 
     msg_info "Updating $APP LXC"
-    git -C /opt/LazyLibrarian pull origin master &>/dev/null
+    $STD git -C /opt/LazyLibrarian pull origin master
     msg_ok "Updated $APP LXC"
 
     msg_info "Starting LazyLibrarian"

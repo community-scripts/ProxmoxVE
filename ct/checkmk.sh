@@ -30,14 +30,14 @@ function update_script() {
   RELEASE=$(curl -fsSL https://api.github.com/repos/checkmk/checkmk/tags | grep "name" | awk '{print substr($2, 3, length($2)-4) }' | tr ' ' '\n' | grep -v '\-rc' | sort -V | tail -n 1) 
   if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
     msg_info "Updating ${APP} to v${RELEASE}"
-    omd stop monitoring &>/dev/null
-    omd cp monitoring monitoringbackup &>/dev/null
+    $STD omd stop monitoring
+    $STD omd cp monitoring monitoringbackup
     wget -q https://download.checkmk.com/checkmk/${RELEASE}/check-mk-raw-${RELEASE}_0.bookworm_amd64.deb -O /opt/checkmk.deb
-    apt-get install -y /opt/checkmk.deb &>/dev/null
-    omd --force -V ${RELEASE}.cre update --conflict=install monitoring &>/dev/null
-    omd start monitoring &>/dev/null
-    omd -f rm monitoringbackup  &>/dev/null
-    omd cleanup &>/dev/null
+    $STD apt-get install -y /opt/checkmk.deb
+    $STD omd --force -V ${RELEASE}.cre update --conflict=install monitoring
+    $STD omd start monitoring
+    $STD omd -f rm monitoringbackup 
+    $STD omd cleanup
     rm -rf /opt/checkmk.deb
     msg_ok "Updated ${APP} to v${RELEASE}"
   else

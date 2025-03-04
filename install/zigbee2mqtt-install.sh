@@ -50,7 +50,7 @@ mv zigbee2mqtt-${RELEASE} /opt/zigbee2mqtt
 cd /opt/zigbee2mqtt/data
 mv configuration.example.yaml configuration.yaml
 cd /opt/zigbee2mqtt
-$STD pnpm install --frozen-lockfile
+$STD pnpm install --no-frozen-lockfile
 $STD pnpm build
 msg_ok "Installed Zigbee2MQTT"
 

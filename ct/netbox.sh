@@ -56,7 +56,7 @@ function update_script() {
       cp -r /opt/netbox-backup/netbox/netbox/ldap_config.py /opt/netbox/netbox/netbox/
     fi
 
-    /opt/netbox/upgrade.sh &>/dev/null
+    $STD /opt/netbox/upgrade.sh
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated $APP to v${RELEASE}"
 

@@ -25,12 +25,16 @@ import { Chart as ChartJS, ArcElement, Tooltip as ChartTooltip, Legend } from "c
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import { BarChart3, PieChart } from "lucide-react";
 import React, { useState } from "react";
-import { Pie } from "react-chartjs-2";
+import { Pie, Bar } from "react-chartjs-2";
 
 ChartJS.register(ArcElement, ChartTooltip, Legend, ChartDataLabels);
 
+interface SummaryData {
+  nsapp_count: Record<string, number>;
+}
+
 interface ApplicationChartProps {
-  data: { nsapp: string }[];
+  data: SummaryData | null;
 }
 
 const ITEMS_PER_PAGE = 20;
@@ -57,13 +61,9 @@ export default function ApplicationChart({ data }: ApplicationChartProps) {
   const [chartStartIndex, setChartStartIndex] = useState(0);
   const [tableLimit, setTableLimit] = useState(ITEMS_PER_PAGE);
 
-  // Calculate application counts
-  const appCounts = data.reduce((acc, item) => {
-    acc[item.nsapp] = (acc[item.nsapp] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
+  if (!data) return null;
 
-  const sortedApps = Object.entries(appCounts)
+  const sortedApps = Object.entries(data.nsapp_count)
     .sort(([, a], [, b]) => b - a);
 
   const chartApps = sortedApps.slice(

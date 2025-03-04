@@ -33,8 +33,8 @@ check_container_resources
 
 if [ "$UPD" == "1" ]; then
   msg_info "Updating ${APP} LXC"
-  apt-get update &>/dev/null
-  apt-get -y upgrade &>/dev/null
+  $STD apt-get update
+  $STD apt-get -y upgrade
   msg_ok "Updated Successfully"
 
   msg_info "Updating All Containers\n"
@@ -54,10 +54,10 @@ if [ "$UPD" == "1" ]; then
 fi
 if [ "$UPD" == "2" ]; then
   msg_info "Installing Home Assistant Community Store (HACS)"
-  apt update &>/dev/null
-  apt install unzip &>/dev/null
+  $STD apt update
+  $STD apt install unzip
   cd /var/lib/containers/storage/volumes/hass_config/_data
-  bash <(curl -fsSL https://get.hacs.xyz) &>/dev/null
+  $STD bash <(curl -fsSL https://get.hacs.xyz)
   msg_ok "Installed Home Assistant Community Store (HACS)"
   echo -e "\n Reboot Home Assistant and clear browser cache then Add HACS integration.\n"
   exit
@@ -65,10 +65,10 @@ fi
 if [ "$UPD" == "3" ]; then
   IP=$(hostname -I | awk '{print $1}') 
   msg_info "Installing FileBrowser"
-  curl -fsSL https://raw.githubusercontent.com/filebrowser/get/master/get.sh | bash &>/dev/null
-  filebrowser config init -a '0.0.0.0' &>/dev/null
-  filebrowser config set -a '0.0.0.0' &>/dev/null
-  filebrowser users add admin helper-scripts.com --perm.admin &>/dev/null
+  $STD curl -fsSL https://raw.githubusercontent.com/filebrowser/get/master/get.sh | bash
+  $STD filebrowser config init -a '0.0.0.0'
+  $STD filebrowser config set -a '0.0.0.0'
+  $STD filebrowser users add admin helper-scripts.com --perm.admin
   msg_ok "Installed FileBrowser"
 
   msg_info "Creating Service"
@@ -83,7 +83,7 @@ if [ "$UPD" == "3" ]; then
   [Install]
     WantedBy=default.target" >$service_path
 
-    systemctl enable --now filebrowser.service &>/dev/null
+    $STD systemctl enable --now filebrowser.service
     msg_ok "Created Service"
 
     msg_ok "Completed Successfully!\n"

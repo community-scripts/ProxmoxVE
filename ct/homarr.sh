@@ -38,14 +38,22 @@ fi
 if [[ ! -f /opt/run_homarr.sh ]]; then
         msg_info "Detected outdated and missing service files"
         msg_error "Warning - The port of homarr changed from 3000 to 7575"
-        apt-get install -y nginx gettext openssl gpg &>/dev/null
+        $STD apt-get install -y nginx gettext openssl gpg
         sed -i '/^NODE_ENV=/d' /opt/homarr/.env && echo "NODE_ENV='production'" >> /opt/homarr/.env
         sed -i '/^DB_DIALECT=/d' /opt/homarr/.env && echo "DB_DIALECT='sqlite'" >> /opt/homarr/.env
         cat <<'EOF' >/opt/run_homarr.sh
 #!/bin/bash
+set -a
+source /opt/homarr/.env
+set +a
 export DB_DIALECT='sqlite'
 export AUTH_SECRET=$(openssl rand -base64 32)
 node /opt/homarr_db/migrations/$DB_DIALECT/migrate.cjs /opt/homarr_db/migrations/$DB_DIALECT
+for dir in $(find /opt/homarr_db/migrations/migrations -mindepth 1 -maxdepth 1 -type d); do
+  dirname=$(basename "$dir")
+  mkdir -p "/opt/homarr_db/migrations/$dirname"
+  cp -r "$dir"/* "/opt/homarr_db/migrations/$dirname/" 2>/dev/null || true
+done
 export HOSTNAME=$(ip route get 1.1.1.1 | grep -oP 'src \K[^ ]+')
 envsubst '${HOSTNAME}' < /etc/nginx/templates/nginx.conf > /etc/nginx/nginx.conf
 nginx -g 'daemon off;' &
@@ -85,6 +93,30 @@ fi
     msg_ok "Backup Data"
 
     msg_info "Updating and rebuilding ${APP} to v${RELEASE} (Patience)"
+    rm /opt/run_homarr.sh
+    cat <<'EOF' >/opt/run_homarr.sh
+#!/bin/bash
+set -a
+source /opt/homarr/.env
+set +a
+export DB_DIALECT='sqlite'
+export AUTH_SECRET=$(openssl rand -base64 32)
+node /opt/homarr_db/migrations/$DB_DIALECT/migrate.cjs /opt/homarr_db/migrations/$DB_DIALECT
+for dir in $(find /opt/homarr_db/migrations/migrations -mindepth 1 -maxdepth 1 -type d); do
+  dirname=$(basename "$dir")
+  mkdir -p "/opt/homarr_db/migrations/$dirname"
+  cp -r "$dir"/* "/opt/homarr_db/migrations/$dirname/" 2>/dev/null || true
+done
+export HOSTNAME=$(ip route get 1.1.1.1 | grep -oP 'src \K[^ ]+')
+envsubst '${HOSTNAME}' < /etc/nginx/templates/nginx.conf > /etc/nginx/nginx.conf
+nginx -g 'daemon off;' &
+redis-server /opt/homarr/packages/redis/redis.conf &
+node apps/tasks/tasks.cjs &
+node apps/websocket/wssServer.cjs &
+node apps/nextjs/server.js & PID=$!
+wait $PID
+EOF
+    chmod +x /opt/run_homarr.sh
     wget -q "https://github.com/homarr-labs/homarr/archive/refs/tags/v${RELEASE}.zip"
     unzip -q v${RELEASE}.zip
     rm -rf v${RELEASE}.zip
@@ -92,8 +124,8 @@ fi
     mv homarr-${RELEASE} /opt/homarr
     mv /opt/homarr-data-backup/.env /opt/homarr/.env
     cd /opt/homarr
-    pnpm install &>/dev/null
-    pnpm build &>/dev/null
+    $STD pnpm install
+    $STD pnpm build
     cp /opt/homarr/apps/nextjs/next.config.ts .
     cp /opt/homarr/apps/nextjs/package.json .
     cp -r /opt/homarr/packages/db/migrations /opt/homarr_db/migrations
@@ -116,6 +148,7 @@ fi
 
     msg_info "Starting Services"
     systemctl start homarr
+    systemctl restart homarr
     msg_ok "Started Services"
     msg_ok "Updated Successfully"
   else

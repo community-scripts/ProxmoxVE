@@ -31,7 +31,7 @@ msg_ok "Installed Dependencies"
 msg_info "Installing NZBGet"
 mkdir -p /etc/apt/keyrings
 curl -fsSL https://nzbgetcom.github.io/nzbgetcom.asc | gpg --dearmor -o /etc/apt/keyrings/nzbgetcom.gpg
-echo "deb [signed-by=/etc/apt/keyrings/nzbgetcom.gpg] https://nzbgetcom.github.io/deb stable main" >/etc/apt/sources.list.d/nzbgetcom.list
+echo "deb [arch=all signed-by=/etc/apt/keyrings/nzbgetcom.gpg] https://nzbgetcom.github.io/deb stable main" >/etc/apt/sources.list.d/nzbgetcom.list
 $STD apt-get update
 $STD apt-get install -y nzbget
 msg_ok "Installed NZBGet"
