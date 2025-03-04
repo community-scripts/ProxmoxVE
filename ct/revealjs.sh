@@ -39,10 +39,13 @@ function update_script() {
         wget -q "https://github.com/hakimel/reveal.js/archive/refs/tags/${RELEASE}.tar.gz" -O $temp_file
         tar zxf $temp_file
         rm -rf /opt/revealjs/node_modules/*
+        cp /opt/revealjs/index.html  /opt
+        cp /opt/revealjs/gulpfile.js /opt
         cp -rf reveal.js-${RELEASE}/* /opt/revealjs
         cd /opt/revealjs
         $STD npm install
-        sed -i '25s/localhost/0.0.0.0/g' /opt/revealjs/gulpfile.js
+        cp -f /opt/index.html /opt/revealjs
+        cp -f /opt/gulpfile.js /opt/revealjs
         echo "${RELEASE}" >/opt/${APP}_version.txt
         msg_ok "Updated $APP to ${RELEASE}"
 
