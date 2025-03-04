@@ -11,7 +11,7 @@
     "interface_port": null,
     "documentation": null,
     "website": "https://ubuntu.com/",
-    "logo": "https://assets.ubuntu.com/v1/29985a98-ubuntu-logo32.png",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/ubuntu.svg",
     "description": "Ubuntu is a distribution based on Debian, designed to have regular releases and a consistent user experience.",
     "install_methods": [
         {
