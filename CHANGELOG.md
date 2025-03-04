@@ -18,7 +18,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🆕 New Scripts
 
-  - Apache Tomcat [@MickLesk](https://github.com/MickLesk) ([#2797](https://github.com/community-scripts/ProxmoxVE/pull/2797))
+  - Reveal.js [@tremor021](https://github.com/tremor021) ([#2806](https://github.com/community-scripts/ProxmoxVE/pull/2806))
+- Apache Tomcat [@MickLesk](https://github.com/MickLesk) ([#2797](https://github.com/community-scripts/ProxmoxVE/pull/2797))
 - Pterodactyl Wings [@bvdberg01](https://github.com/bvdberg01) ([#2800](https://github.com/community-scripts/ProxmoxVE/pull/2800))
 - Pterodactyl Panel [@bvdberg01](https://github.com/bvdberg01) ([#2801](https://github.com/community-scripts/ProxmoxVE/pull/2801))
 
@@ -28,6 +29,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - Linkwarden: Optimze RUST Installation [@MickLesk](https://github.com/MickLesk) ([#2817](https://github.com/community-scripts/ProxmoxVE/pull/2817))
     - Nginx: Fix $STD for tar [@MickLesk](https://github.com/MickLesk) ([#2813](https://github.com/community-scripts/ProxmoxVE/pull/2813))
+
+### 🧰 Maintenance
+
+  - #### 🐞 Bug Fixes
+
+    - Better handling of create release [@MickLesk](https://github.com/MickLesk) ([#2818](https://github.com/community-scripts/ProxmoxVE/pull/2818))
 
 ### 🌐 Website
 
