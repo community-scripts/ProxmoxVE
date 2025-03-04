@@ -11,7 +11,7 @@
     "interface_port": null,
     "documentation": null,
     "website": "https://tailscale.com/",
-    "logo": "https://avatars.githubusercontent.com/u/48932923?v=4&s=100",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/tailscale.svg",
     "description": "Tailscale is a software-defined networking solution that enables secure communication between devices over the internet. It creates a virtual private network (VPN) that enables devices to communicate with each other as if they were on the same local network. Tailscale works even when the devices are separated by firewalls or subnets, and provides secure and encrypted communication between devices. With Tailscale, users can connect devices, servers, computers, and cloud instances to create a secure network, making it easier to manage and control access to resources. Tailscale is designed to be easy to set up and use, providing a streamlined solution for secure communication between devices over the internet.",
     "install_methods": [
         {

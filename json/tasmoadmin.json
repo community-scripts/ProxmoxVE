@@ -11,7 +11,7 @@
     "interface_port": 9999,
     "documentation": null,
     "website": "https://github.com/TasmoAdmin/TasmoAdmin#readme",
-    "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/tasmota.svg",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/tasmoadmin.svg",
     "description": "TasmoAdmin is an administrative platform for devices flashed with Tasmota.",
     "install_methods": [
         {

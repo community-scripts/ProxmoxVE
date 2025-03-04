@@ -11,7 +11,7 @@
     "interface_port": 8065,
     "documentation": null,
     "website": "https://mattermost.com/",
-    "logo": "https://avatars.githubusercontent.com/u/9828093?s=200&v=4",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/mattermost.svg",
     "description": "Mattermost is an open source platform for secure collaboration across the entire software development lifecycle. It's written in Go and React and runs as a single Linux binary with MySQL or PostgreSQL. It has a slimilar interface and features to Slack or Discord.",
     "install_methods": [
         {

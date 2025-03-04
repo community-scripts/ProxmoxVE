@@ -11,7 +11,7 @@
   "interface_port": null,
   "documentation": "https://docs.zammad.org/en/latest/",
   "website": "https://zammad.com/",
-  "logo": "https://raw.githubusercontent.com/zammad/zammad/refs/heads/develop/public/assets/images/logo.svg",
+  "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/zammad.svg",
   "description": "Zammad is a web based open source helpdesk/customer support system with many features to manage customer communication via several channels like telephone, facebook, twitter, chat and emails. It is distributed under version 3 of the GNU AFFERO General Public License (GNU AGPLv3).",
   "install_methods": [
     {

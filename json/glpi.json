@@ -11,7 +11,7 @@
   "interface_port": 80,
   "documentation": "https://glpi-project.org/documentation/",
   "website": "https://glpi-project.org/",
-  "logo": "https://raw.githubusercontent.com/glpi-project/glpi/refs/heads/main/public/pics/login_logo_glpi.png",
+  "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/glpi.svg",
   "description": "GLPI is a Free Asset and IT Management Software package, Data center management, ITIL Service Desk, licenses tracking and software auditing.",
   "install_methods": [
     {

@@ -11,7 +11,7 @@
     "interface_port": 80,
     "documentation": "https://docs.projectsend.org/",
     "website": "https://projectsend.org/",
-    "logo": "https://camo.githubusercontent.com/378a455e1cf6f36c5427b2bdfd78b0defd829be9b8c6b073f83931693e1665d5/68747470733a2f2f7777772e70726f6a65637473656e642e6f72672f70726f6a65637473656e642d6c6f676f2d6e65772e706e67",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/projectsend.svg",
     "description": "ProjectSend is a free, open source software that lets you share files with your clients, focused on ease of use and privacy. It supports clients groups, system users roles, statistics, multiple languages, detailed logs... and much more!",
     "install_methods": [
       {

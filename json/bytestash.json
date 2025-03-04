@@ -11,7 +11,7 @@
   "interface_port": 3000,
   "documentation": "https://github.com/jordan-dalby/ByteStash/wiki",
   "website": "https://github.com/jordan-dalby/ByteStash",
-  "logo": "https://raw.githubusercontent.com/jordan-dalby/ByteStash/refs/heads/main/client/public/logo192.png",
+  "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/bytestash.svg",
   "description": "ByteStash is a self-hosted web application designed to store, organise, and manage your code snippets efficiently. With support for creating, editing, and filtering snippets, ByteStash helps you keep track of your code in one secure place.",
   "install_methods": [
     {

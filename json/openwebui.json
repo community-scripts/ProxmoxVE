@@ -11,7 +11,7 @@
     "interface_port": 8080,
     "documentation": null,
     "website": "https://openwebui.com/",
-    "logo": "https://raw.githubusercontent.com/open-webui/open-webui/refs/heads/main/static/favicon.png",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/open-webui.svg",
     "description": "OpenWebUI is a self-hosted, web-based interface that allows you to run AI models entirely offline. It integrates with various LLM runners, such as OpenAI and Ollama, and supports features like markdown and LaTeX rendering, model management, and voice/video calls. It also offers multilingual support and the ability to generate images using APIs like DALL-E or ComfyUI",
     "install_methods": [
         {

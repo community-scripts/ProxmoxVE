@@ -11,7 +11,7 @@
     "interface_port": 3000,
     "documentation": "https://docs.excalidraw.com/docs",
     "website": "https://excalidraw.com/",
-    "logo": "https://docs.excalidraw.com/img/logo.svg",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/excalidraw.svg",
     "description": "An open source virtual hand-drawn style whiteboard. Collaborative and end-to-end encrypted.",
     "install_methods": [
       {

@@ -11,7 +11,7 @@
     "interface_port": null,
     "documentation": "https://github.com/community-scripts/ProxmoxVE/discussions/805",
     "website": null,
-    "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/lxc.svg",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/linuxcontainers.svg",
     "description": "This maintains SSD performance by managing unused blocks. Thin-provisioned storage systems also require management to prevent unnecessary storage use. VMs automate fstrim, while LXC containers need manual or automated fstrim processes for optimal performance.",
     "install_methods": [
         {

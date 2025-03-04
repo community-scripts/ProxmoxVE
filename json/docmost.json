@@ -11,7 +11,7 @@
     "interface_port": 3000,
     "documentation": "https://docmost.com/docs/installation",
     "website": "https://docmost.com/",
-    "logo": "https://raw.githubusercontent.com/docmost/docmost/refs/heads/main/apps/client/public/favicon-32x32.png",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/webp/docmost.webp",
     "description": "Open-source collaborative wiki and documentation software Create, collaborate, and share knowledge seamlessly with Docmost. Ideal for managing your wiki, knowledge-base, documentation and a lot more.",
     "install_methods": [
         {

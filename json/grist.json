@@ -11,7 +11,7 @@
   "interface_port": 8484,
   "documentation": null,
   "website": "https://www.getgrist.com/",
-  "logo": "https://github.com/gristlabs/grist-core/blob/main/static/img/logo-grist.png?raw=true",
+  "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/grist.svg",
   "description": "Grist is a modern, open source spreadsheet that goes beyond the grid",
   "install_methods": [
       {
