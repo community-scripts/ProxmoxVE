@@ -93,8 +93,8 @@ useradd seafile
 mkdir -p /home/seafile
 chown seafile: /home/seafile
 chown seafile: /opt/seafile
-su - seafile -c "wget -qc https://s3.eu-central-1.amazonaws.com/download.seadrive.org/seafile-server_11.0.13_x86-64.tar.gz"
-su - seafile -c "tar -xzf seafile-server_11.0.13_x86-64.tar.gz -C /opt/seafile/"
+$STD su - seafile -c "wget -qc https://s3.eu-central-1.amazonaws.com/download.seadrive.org/seafile-server_11.0.13_x86-64.tar.gz"
+$STD su - seafile -c "tar -xzf seafile-server_11.0.13_x86-64.tar.gz -C /opt/seafile/"
 $STD su - seafile -c "expect <<EOF
 spawn bash /opt/seafile/seafile-server-11.0.13/setup-seafile-mysql.sh
 expect {
@@ -186,6 +186,8 @@ msg_ok "Memcached Started"
 
 msg_info "Adjusting Conf files"
 sed -i "0,/127.0.0.1/s/127.0.0.1/0.0.0.0/" /opt/seafile/conf/gunicorn.conf.py
+echo -e "\nFILE_SERVER_ROOT = \"http://$IP:8082/seafhttp\"" >> /opt/seafile/conf/seahub_settings.py
+echo -e "\nCSRF_TRUSTED_ORIGINS = ['http://$IP:8000']" >> /opt/seafile/conf/seahub_settings.py
 msg_ok "Conf files adjusted"
 
 msg_info "Setting up Seafile" 
@@ -209,6 +211,8 @@ expect {
     }
 expect eof
 EOF"
+$STD su - seafile -c "bash /opt/seafile/seafile-server-latest/seahub.sh stop" || true
+$STD su - seafile -c "bash /opt/seafile/seafile-server-latest/seafile.sh stop" || true
 msg_ok "Seafile setup"
 
 msg_info "Creating Services"
@@ -235,7 +239,7 @@ RestartSec=5s
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q seafile.service
+systemctl enable --now -q seafile.service
 msg_ok "Created Services"
 
 msg_info "Creating External Storage script"
@@ -251,11 +255,22 @@ ln -s $STORAGE_DIR/seafile-data /opt/seafile/seafile-data
 EOF
 msg_ok "Bash Script for External Storage created"
 
+msg_info "Creating Domain access script"
+cat <<'EOF' >~/domain.sh
+#!/bin/bash
+domain=$1
+IP=$(ip a s dev eth0 | awk '/inet / {print $2}' | cut -d/ -f1)
+
+#Change the CORS to provided domain
+sed -i "s|http://$IP:8000|http://$1:8000|g" /opt/seafile/conf/seahub_settings.py
+sed -i "s|http://$IP:8082|http://$1:8082|g" /opt/seafile/conf/seahub_settings.py
+EOF
+msg_ok "Bash Script for Domain access created"
 motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -rf seafile-server_11.0.13_x86-64.tar.gz
+su - seafile -c "rm -rf seafile*.tar.gz"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
