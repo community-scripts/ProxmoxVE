@@ -23,20 +23,12 @@ jobs:
           cat changelog_cropped.md
           echo "========================="
 
-      - name: Parse CHANGELOG.md and create release
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Extract relevant changelog section
         run: |
           YESTERDAY=$(date -u --date="yesterday" +%Y-%m-%d)
           echo "Checking for changes on: $YESTERDAY"
 
-          # Ensure yesterday's date exists in the changelog
-          if ! grep -q "## $YESTERDAY" changelog_cropped.md; then
-            echo "No entry found for $YESTERDAY, skipping release."
-            exit 0
-          fi
-
-          # Extract section for yesterday's date
+          # Extract relevant section from cropped changelog
           awk -v date="## $YESTERDAY" '
             $0 ~ date {found=1; next} 
             found && /^## [0-9]{4}-[0-9]{2}-[0-9]{2}/ {exit} 
@@ -53,5 +45,9 @@ jobs:
             exit 0
           fi
 
-          # Create GitHub release
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          YESTERDAY=$(date -u --date="yesterday" +%Y-%m-%d)
           gh release create "$YESTERDAY" -t "$YESTERDAY" -F changelog_tmp.md
