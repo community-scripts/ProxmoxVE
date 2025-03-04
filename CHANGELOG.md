@@ -16,6 +16,11 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-03-04
 
+### 🆕 New Scripts
+
+  - Pterodactyl Wings [@bvdberg01](https://github.com/bvdberg01) ([#2800](https://github.com/community-scripts/ProxmoxVE/pull/2800))
+- Pterodactyl Panel [@bvdberg01](https://github.com/bvdberg01) ([#2801](https://github.com/community-scripts/ProxmoxVE/pull/2801))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
