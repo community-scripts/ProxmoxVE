@@ -18,7 +18,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🆕 New Scripts
 
-  - Pterodactyl Wings [@bvdberg01](https://github.com/bvdberg01) ([#2800](https://github.com/community-scripts/ProxmoxVE/pull/2800))
+  - Apache Tomcat [@MickLesk](https://github.com/MickLesk) ([#2797](https://github.com/community-scripts/ProxmoxVE/pull/2797))
+- Pterodactyl Wings [@bvdberg01](https://github.com/bvdberg01) ([#2800](https://github.com/community-scripts/ProxmoxVE/pull/2800))
 - Pterodactyl Panel [@bvdberg01](https://github.com/bvdberg01) ([#2801](https://github.com/community-scripts/ProxmoxVE/pull/2801))
 
 ### 🚀 Updated Scripts
