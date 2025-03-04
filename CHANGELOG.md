@@ -27,6 +27,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - Changedetection: Increase RAM & Disk-Space [@MickLesk](https://github.com/MickLesk) ([#2838](https://github.com/community-scripts/ProxmoxVE/pull/2838))
     - Linkwarden: Optimze RUST Installation [@MickLesk](https://github.com/MickLesk) ([#2817](https://github.com/community-scripts/ProxmoxVE/pull/2817))
     - Nginx: Fix $STD for tar [@MickLesk](https://github.com/MickLesk) ([#2813](https://github.com/community-scripts/ProxmoxVE/pull/2813))
 
