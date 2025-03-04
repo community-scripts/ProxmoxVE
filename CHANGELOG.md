@@ -31,6 +31,10 @@ All LXC instances created using this repository come pre-installed with Midnight
     - Linkwarden: Optimze RUST Installation [@MickLesk](https://github.com/MickLesk) ([#2817](https://github.com/community-scripts/ProxmoxVE/pull/2817))
     - Nginx: Fix $STD for tar [@MickLesk](https://github.com/MickLesk) ([#2813](https://github.com/community-scripts/ProxmoxVE/pull/2813))
 
+  - #### ✨ New Features
+
+    - Add source to install scripts and make license one line [@bvdberg01](https://github.com/bvdberg01) ([#2842](https://github.com/community-scripts/ProxmoxVE/pull/2842))
+
 ### 🧰 Maintenance
 
   - #### 🐞 Bug Fixes
