@@ -3,9 +3,8 @@
 
 #Copyright (c) 2021-2025 community-scripts ORG
 # Author: Michel Roegl-Brunner (michelroegl-brunner)
-# License: MIT
-# https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://https://cosmos-cloud.io/
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color

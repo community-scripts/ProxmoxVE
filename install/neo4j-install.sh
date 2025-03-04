@@ -3,8 +3,8 @@
 # Copyright (c) 2021-2025 tteck
 # Author: tteck
 # Co-Author: havardthom
-# License: MIT
-# https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://neo4j.com/product/neo4j-graph-database/
 
 source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color

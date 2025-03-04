@@ -5,7 +5,6 @@
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://ghost.org/
 
-# Import Functions und Setup
 source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
@@ -25,7 +24,6 @@ $STD apt-get install -y \
   ca-certificates \
   gnupg
 msg_ok "Installed Dependencies"
-
 
 msg_info "Configuring Database"
 DB_NAME=ghost
