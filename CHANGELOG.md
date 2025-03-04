@@ -51,6 +51,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### ✨ New Features
 
+    - Feature: Update Icons (selfhst repo) [@bannert1337](https://github.com/bannert1337) ([#2834](https://github.com/community-scripts/ProxmoxVE/pull/2834))
     - Website: Add Mikrotik to Network too, OPNSense & OpenWRT to OS [@MickLesk](https://github.com/MickLesk) ([#2823](https://github.com/community-scripts/ProxmoxVE/pull/2823))
 
 ## 2025-03-03
