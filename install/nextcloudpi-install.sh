@@ -21,7 +21,7 @@ $STD apt-get install -y \
 msg_ok "Installed Dependencies"
 
 msg_info "Installing NextCloudPi (Patience)"
-bash <(curl -fsSL https://raw.githubusercontent.com/nextcloud/nextcloudpi/master/install.sh) >/dev/null 2>&1
+$STD bash <(curl -fsSL https://raw.githubusercontent.com/nextcloud/nextcloudpi/master/install.sh) >/dev/null 2>&1
 msg_ok "Installed NextCloudPi"
 
 motd_ssh
