@@ -14,13 +14,14 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y curl
-$STD apt-get install -y sudo
-$STD apt-get install -y mc
+$STD apt-get install -y \
+  curl \
+  sudo \
+  mc
 msg_ok "Installed Dependencies"
 
 msg_info "Installing NextCloudPi (Patience)"
-$STD bash <(curl -fsSL https://raw.githubusercontent.com/nextcloud/nextcloudpi/master/install.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/nextcloud/nextcloudpi/master/install.sh) >/dev/null 2>&1
 msg_ok "Installed NextCloudPi"
 
 motd_ssh
