@@ -186,8 +186,9 @@ msg_ok "Memcached Started"
 
 msg_info "Adjusting Conf files"
 sed -i "0,/127.0.0.1/s/127.0.0.1/0.0.0.0/" /opt/seafile/conf/gunicorn.conf.py
-echo -e "\nFILE_SERVER_ROOT = \"http://$IP:8082/seafhttp\"" >> /opt/seafile/conf/seahub_settings.py
-echo -e "\nCSRF_TRUSTED_ORIGINS = ['http://$IP:8000']" >> /opt/seafile/conf/seahub_settings.py
+sed -i "0,/SERVICE_URL = \"http:\/\/$IP\"/s/SERVICE_URL = \"http:\/\/$IP\"/SERVICE_URL = \"http:\/\/$IP:8000\"/" /opt/seafile/conf/seahub_settings.py
+echo -e "\nFILE_SERVER_ROOT = \"http://$IP:8082\"" >> /opt/seafile/conf/seahub_settings.py
+echo -e "CSRF_TRUSTED_ORIGINS = ['http://$IP/']" >> /opt/seafile/conf/seahub_settings.py
 msg_ok "Conf files adjusted"
 
 msg_info "Setting up Seafile" 
@@ -253,24 +254,28 @@ mv /opt/seafile/seafile-data $STORAGE_DIR/seafile-data
 # Create a symlink for access
 ln -s $STORAGE_DIR/seafile-data /opt/seafile/seafile-data
 EOF
+chmod +x ~/external-storage.sh
 msg_ok "Bash Script for External Storage created"
 
 msg_info "Creating Domain access script"
 cat <<'EOF' >~/domain.sh
 #!/bin/bash
-domain=$1
+DOMAIN=$1
 IP=$(ip a s dev eth0 | awk '/inet / {print $2}' | cut -d/ -f1)
+DOMAIN_NOSCHEME=$(echo $DOMAIN | sed 's|^https://||')
 
 #Change the CORS to provided domain
-sed -i "s|http://$IP:8000|http://$1:8000|g" /opt/seafile/conf/seahub_settings.py
-sed -i "s|http://$IP:8082|http://$1:8082|g" /opt/seafile/conf/seahub_settings.py
+sed -i "s|CSRF_TRUSTED_ORIGINS = ['http://$IP:8000/']|CSRF_TRUSTED_ORIGINS = ['$DOMAIN']|g" /opt/seafile/conf/seahub_settings.py
+sed -i "s|FILE_SERVER_ROOT = \"http://$IP:8082\"|FILE_SERVER_ROOT = \"$DOMAIN/seafhttp\"|g" /opt/seafile/conf/seahub_settings.py
 EOF
+chmod +x ~/domain.sh
 msg_ok "Bash Script for Domain access created"
+
 motd_ssh
 customize
 
 msg_info "Cleaning up"
-su - seafile -c "rm -rf seafile*.tar.gz"
+rm -rf /home/seafile/seafile*.tar.gz
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
