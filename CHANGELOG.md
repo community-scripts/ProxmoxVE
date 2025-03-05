@@ -20,6 +20,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - Kimai: Better Handling of Updates (backup var / env / yaml) [@MickLesk](https://github.com/MickLesk) ([#2862](https://github.com/community-scripts/ProxmoxVE/pull/2862))
     - Fix NextcloudPi-Installation [@MickLesk](https://github.com/MickLesk) ([#2853](https://github.com/community-scripts/ProxmoxVE/pull/2853))
 
 ## 2025-03-04
