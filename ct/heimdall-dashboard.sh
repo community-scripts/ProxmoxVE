@@ -45,7 +45,8 @@ function update_script() {
     cp -R Heimdall-${VER}/* /opt/Heimdall
     cd /opt/Heimdall
     $STD apt-get install -y composer
-    $STD COMPOSER_ALLOW_SUPERUSER=1 composer dump-autoload
+    export COMPOSER_ALLOW_SUPERUSER=1
+    $STD composer dump-autoload
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated Heimdall Dashboard to ${RELEASE}"
     msg_info "Restoring Data"
