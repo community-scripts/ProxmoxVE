@@ -14,6 +14,15 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 All LXC instances created using this repository come pre-installed with Midnight Commander, which is a command-line tool (`mc`) that offers a user-friendly file and directory management interface for the terminal environment.
 
 
+## 2025-03-06
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Homarr: Optional Reboot after update [@CrazyWolf13](https://github.com/CrazyWolf13) ([#2876](https://github.com/community-scripts/ProxmoxVE/pull/2876))
+    - Fix Tag "community-scripts" for ArchLinux / OPNSense [@MickLesk](https://github.com/MickLesk) ([#2875](https://github.com/community-scripts/ProxmoxVE/pull/2875))
+
 ## 2025-03-05
 
 ### 🚀 Updated Scripts
