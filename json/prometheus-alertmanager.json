@@ -11,7 +11,7 @@
     "interface_port": 9093,
     "documentation": "https://prometheus.io/docs/alerting/latest/overview/",
     "website": "https://prometheus.io/",
-    "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/prometheus.svg",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/prometheus.svg",
     "description": "Alerting with Prometheus is separated into two parts. Alerting rules in Prometheus servers send alerts to an Alertmanager. The Alertmanager then manages those alerts, including silencing, inhibition, aggregation and sending out notifications via methods such as email, on-call notification systems, and chat platforms.",
     "install_methods": [
         {
