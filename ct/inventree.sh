@@ -32,8 +32,6 @@ function update_script() {
     $STD apt-get update
     $STD apt-get install --only-upgrade inventree -y
     msg_ok "Updated $APP"
-
-    msg_ok "Update Successful"
     exit
 }
 
