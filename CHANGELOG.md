@@ -23,6 +23,10 @@ All LXC instances created using this repository come pre-installed with Midnight
     - Homarr: Optional Reboot after update [@CrazyWolf13](https://github.com/CrazyWolf13) ([#2876](https://github.com/community-scripts/ProxmoxVE/pull/2876))
     - Fix Tag "community-scripts" for ArchLinux / OPNSense [@MickLesk](https://github.com/MickLesk) ([#2875](https://github.com/community-scripts/ProxmoxVE/pull/2875))
 
+  - #### ✨ New Features
+
+    - Wastebin: Update Script for Version 3.0.0 [@MickLesk](https://github.com/MickLesk) ([#2885](https://github.com/community-scripts/ProxmoxVE/pull/2885))
+
 ## 2025-03-05
 
 ### 🚀 Updated Scripts
