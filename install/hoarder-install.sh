@@ -64,9 +64,10 @@ msg_ok "Installed Node.js"
 msg_info "Installing Hoarder"
 cd /opt
 RELEASE=$(curl -s https://api.github.com/repos/hoarder-app/hoarder/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-wget -q "https://github.com/hoarder-app/hoarder/archive/refs/tags/v${RELEASE}.zip"
-unzip -q v${RELEASE}.zip
-mv hoarder-${RELEASE} /opt/hoarder
+# wget -q "https://github.com/hoarder-app/hoarder/archive/refs/tags/v${RELEASE}.zip"
+# unzip -q v${RELEASE}.zip
+# mv hoarder-${RELEASE} /opt/hoarder
+$STD git clone https://github.com/hoarder-app/hoarder.git
 cd /opt/hoarder
 corepack enable
 export PUPPETEER_SKIP_DOWNLOAD="true"
