@@ -16,6 +16,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-03-06
 
+### 🆕 New Scripts
+
+  - InvenTree [@tremor021](https://github.com/tremor021) ([#2890](https://github.com/community-scripts/ProxmoxVE/pull/2890))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
