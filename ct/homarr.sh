@@ -148,9 +148,12 @@ EOF
 
     msg_info "Starting Services"
     systemctl start homarr
-    systemctl restart homarr
     msg_ok "Started Services"
     msg_ok "Updated Successfully"
+    read -p its recommended to reboot the LXC after an Update, would you like to reboot the LXC now ? (y/n): " choice
+    if [[ "$choice" =~ ^[Yy]$ ]]; then
+      reboot
+    fi
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
