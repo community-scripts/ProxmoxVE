@@ -6,7 +6,7 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 # Source: https://fluidcalendar.com
 
 APP="fluid-calendar"
-var_tags=""
+var_tags="calendar,tasks"
 var_cpu="2"
 var_ram="4096"
 var_disk="4"

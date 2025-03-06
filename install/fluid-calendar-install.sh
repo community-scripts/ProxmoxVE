@@ -56,7 +56,6 @@ unzip -q $tmp_file
 mv ${APPLICATION}-${RELEASE}/ /opt/${APPLICATION}
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 
-# Creating env file before running setup because the setup requires it
 cat <<EOF >/opt/fluid-calendar/.env
 DATABASE_URL="postgresql://${DB_USER}:${DB_PASS}@localhost:5432/${DB_NAME}"
 
@@ -80,7 +79,6 @@ AZURE_AD_TENANT_ID=""
 LOG_LEVEL="none"
 DEBUG_ENABLED=0
 EOF
-
 export NEXT_TELEMETRY_DISABLED=1
 cd /opt/fluid-calendar
 $STD npm run setup
@@ -88,7 +86,6 @@ $STD npm run build
 msg_ok "Setup ${APPLICATION}"
 
 msg_info "Creating Service"
-
 cat <<EOF >/etc/systemd/system/fluid-calendar.service
 [Unit]
 Description=Fluid Calendar Application
@@ -102,7 +99,6 @@ ExecStart=/usr/bin/npm run start
 [Install]
 WantedBy=multi-user.target
 EOF
-
 systemctl enable -q --now fluid-calendar.service
 msg_ok "Created Service"
 
