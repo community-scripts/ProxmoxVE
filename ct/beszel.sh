@@ -28,7 +28,9 @@ function update_script() {
         exit
     fi
     /opt/beszel/beszel update
+    msg_info "Stopping Service from $APP"
     systemctl start beszel.service
+    msg_ok "Successfully started the $APP service."
     exit
 }
 
