@@ -14,6 +14,22 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 All LXC instances created using this repository come pre-installed with Midnight Commander, which is a command-line tool (`mc`) that offers a user-friendly file and directory management interface for the terminal environment.
 
 
+## 2025-03-07
+
+### 🌐 Website
+
+  - #### 🐞 Bug Fixes
+
+    - Prowlarr icon [@bannert1337](https://github.com/bannert1337) ([#2906](https://github.com/community-scripts/ProxmoxVE/pull/2906))
+
+  - #### ✨ New Features
+
+    - Update Apache Tika icon to SVG [@bannert1337](https://github.com/bannert1337) ([#2904](https://github.com/community-scripts/ProxmoxVE/pull/2904))
+
+  - #### 📝 Script Information
+
+    - Update Prometheus Alertmanager Icon [@bannert1337](https://github.com/bannert1337) ([#2905](https://github.com/community-scripts/ProxmoxVE/pull/2905))
+
 ## 2025-03-06
 
 ### 🆕 New Scripts
