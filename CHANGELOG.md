@@ -16,6 +16,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-03-07
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - JupyterNotebook: Fix APP Variable [@MickLesk](https://github.com/MickLesk) ([#2924](https://github.com/community-scripts/ProxmoxVE/pull/2924))
+
 ### 🌐 Website
 
   - #### 🐞 Bug Fixes
