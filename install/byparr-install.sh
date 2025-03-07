@@ -1,93 +1,120 @@
 #!/usr/bin/env bash
-set -e
 
-APP="Byparr"
+# Copyright (c) 2021-2025
+# License: MIT
+# Source: https://github.com/ThePhaseless/Byparr
 
-################################################################################
-# STEP 1: System Updates and Basic Dependencies
-################################################################################
+source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
+color
+verb_ip6
+catch_errors
+setting_up_container
+network_check
+update_os
 
-echo "Updating system packages..."
-apt-get update -qq
-apt-get install -y --no-install-recommends \
-    ca-certificates \
-    curl \
-    git \
-    python3 \
-    python3-pip \
-    chromium \
-    chromium-driver \
-    xvfb \
-    gnupg
+msg_info "Installing Dependencies"
+$STD apt-get install -y curl
+$STD apt-get install -y sudo
+$STD apt-get install -y mc
+$STD apt-get install -y apt-transport-https
+$STD apt-get install -y gpg
+$STD apt-get install -y xvfb
+$STD apt-get install -y scrot
+$STD apt-get install -y xauth
+$STD apt-get install -y ca-certificates
+$STD apt-get install -y python3-pip
+$STD apt-get install -y python3-venv
+$STD apt-get install -y git
+msg_ok "Installed Dependencies"
 
-################################################################################
-# STEP 2: Install uv
-# (See https://docs.astral.sh/uv/getting-started/installation/ for details)
-################################################################################
+msg_info "Installing Chrome"
+wget -qO- https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/google-chrome.gpg
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list
+$STD apt update
+$STD apt install -y google-chrome-stable chromium chromium-driver
+msg_ok "Installed Chrome"
 
-if ! command -v uv &>/dev/null; then
-  echo "Installing uv..."
-  # Pull the official uv install script from astral.sh:
-  curl -fSsL https://astral.sh/uv/install.sh | bash
-  echo "uv installed successfully."
-else
-  echo "uv is already installed."
+msg_info "Installing UV Package Manager"
+curl -sSf https://astral.sh/uv/install.sh | bash
+export PATH="/root/.local/bin:$PATH"
+msg_ok "Installed UV"
+
+msg_info "Cloning Byparr"
+mkdir -p /opt/byparr
+cd /opt/byparr
+git clone https://github.com/ThePhaseless/Byparr.git .
+msg_ok "Cloned Byparr"
+
+msg_info "Installing Python Dependencies"
+cd /opt/byparr
+/root/.local/bin/uv sync
+if [ "$(uname -m)" = "aarch64" ]; then
+  cd .venv/lib/*/site-packages/seleniumbase/drivers && ln -s /usr/bin/chromedriver uc_driver
+  cd /opt/byparr
+fi
+msg_ok "Installed Python Dependencies"
+
+msg_info "Creating Service"
+cat <<EOF >/etc/systemd/system/byparr.service
+[Unit]
+Description=Byparr
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/byparr
+Environment="PATH=/root/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+Environment="DISPLAY=:0"
+Environment="PYTHONUNBUFFERED=1"
+Environment="PYTHONDONTWRITEBYTECODE=1"
+ExecStartPre=/usr/bin/Xvfb :0 -screen 0 1920x1080x24 -ac &
+ExecStart=/opt/byparr/cmd.sh
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+EOF
+systemctl enable -q --now byparr.service
+msg_ok "Created Service"
+
+msg_info "Creating Test Script"
+cat <<EOF >/opt/byparr/run-tests.sh
+#!/bin/bash
+cd /opt/byparr
+export PATH="/root/.local/bin:\$PATH"
+export DISPLAY=:0
+export PYTHONUNBUFFERED=1
+export PYTHONDONTWRITEBYTECODE=1
+
+# Start Xvfb if not running
+if ! pgrep Xvfb > /dev/null; then
+  Xvfb :0 -screen 0 1920x1080x24 &
+  xvfb_pid=\$!
+  sleep 2
 fi
 
-################################################################################
-# STEP 3: Clone or Download Byparr Source (assuming GitHub)
-# If you already have a local copy, adjust as needed.
-################################################################################
+# Run tests
+/root/.local/bin/uv sync --group test
+/root/.local/bin/uv run pytest --retries 3
 
-if [ ! -d "/opt/${APP}" ]; then
-  echo "Cloning Byparr repository..."
-  git clone --depth=1 https://github.com/ThePhaseless/Byparr.git /opt/${APP}
-else
-  echo "Byparr directory already exists—pulling latest changes."
-  cd /opt/${APP}
-  git pull --rebase
+test_result=\$?
+
+# Kill Xvfb if we started it
+if [ -n "\$xvfb_pid" ]; then
+  kill \$xvfb_pid
 fi
 
-cd /opt/${APP}
+exit \$test_result
+EOF
+chmod +x /opt/byparr/run-tests.sh
+msg_ok "Created Test Script"
 
-################################################################################
-# STEP 4: Sync Dependencies for Tests
-################################################################################
-echo "Syncing test dependencies..."
-uv sync --group test
+motd_ssh
+customize
 
-################################################################################
-# STEP 5: Run Tests
-################################################################################
-
-echo "Running tests with retries..."
-# -n auto uses parallel tests if you prefer, remove if not needed
-uv run pytest --retries 3 -n auto || TEST_FAIL="true"
-
-if [ "$TEST_FAIL" = "true" ]; then
-  echo "Some tests failed after retries."
-  echo "Consider troubleshooting on another host or using another method."
-  # Exit or keep going depending on your needs:
-  # exit 1
-else
-  echo "All tests have passed successfully."
-
-  ##############################################################################
-  # STEP 6: Optionally Update Container / Create Issue for New Release
-  # (Only if you have a process to handle new releases or updates)
-  ##############################################################################
-  # Example idea:
-  # echo "Checking if we can create a new release..."
-  # <your logic here>
-
-fi
-
-################################################################################
-# STEP 7: Final Sync and Start
-################################################################################
-
-echo "Performing final dependencies sync..."
-uv sync
-
-echo "The Byparr install script has completed successfully!"
-echo "To start Byparr, run: ./cmd.sh (from /opt/${APP} or wherever Byparr is located)"
+msg_info "Cleaning up"
+$STD apt-get -y autoremove
+$STD apt-get -y autoclean
+msg_ok "Cleaned"
