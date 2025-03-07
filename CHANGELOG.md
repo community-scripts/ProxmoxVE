@@ -22,6 +22,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - JupyterNotebook: Fix APP Variable [@MickLesk](https://github.com/MickLesk) ([#2924](https://github.com/community-scripts/ProxmoxVE/pull/2924))
 
+  - #### ✨ New Features
+
+    - Beszel: restarting service after update [@C0pywriting](https://github.com/C0pywriting) ([#2915](https://github.com/community-scripts/ProxmoxVE/pull/2915))
+
 ### 🌐 Website
 
   - #### 🐞 Bug Fixes
