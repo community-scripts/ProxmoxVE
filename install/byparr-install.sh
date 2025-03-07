@@ -15,50 +15,37 @@ network_check
 update_os
 
 LOG_FILE="/var/log/byparr-install.log"
+echo "Starting Byparr installation at $(date)" > "$LOG_FILE"
 
-# Function to log messages
-log() {
-    if [[ "$VERBOSE" == "true" ]]; then
-        echo "$1" | tee -a "$LOG_FILE"
-    else
-        echo "$1"
-    fi
-}
+# Installing Dependencies
+msg_info "Installing Dependencies"
+$STD apt-get update
+$STD apt-get install -y curl sudo mc apt-transport-https gpg xvfb git
+msg_ok "Installed Dependencies"
 
-# Check for verbose option
-VERBOSE=false
-for arg in "$@"; do
-    if [[ "$arg" == "--verbose" ]]; then
-        VERBOSE=true
-        log "Verbose mode enabled."
-    fi
-done
-
-log "Installing Dependencies"
-$STD apt-get install -y curl sudo mc apt-transport-https gpg xvfb git | tee -a "$LOG_FILE"
-log "Installed Dependencies"
-
-log "Installing Chrome"
-wget -qO- https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/google-chrome.gpg
+# Installing Chrome
+msg_info "Installing Chrome"
+$STD wget -qO- https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/google-chrome.gpg
 echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list
-$STD apt update | tee -a "$LOG_FILE"
-$STD apt install -y google-chrome-stable | tee -a "$LOG_FILE"
-log "Installed Chrome"
+$STD apt-get update
+$STD apt-get install -y google-chrome-stable
+msg_ok "Installed Chrome"
 
-log "Installing UV Package Manager"
-$STD curl -LsSf https://astral.sh/uv/install.sh | sh | tee -a "$LOG_FILE"
+# Installing UV Package Manager
+msg_info "Installing UV Package Manager"
+$STD curl -LsSf https://astral.sh/uv/install.sh | sh
 source $HOME/.local/bin/env
-log "Installed UV Package Manager"
+msg_ok "Installed UV Package Manager"
 
-log "Installing Byparr"
-mkdir /home/byparr
-$STD git clone https://github.com/ThePhaseless/Byparr.git /opt/byparr | tee -a "$LOG_FILE"
-cd /home/byparr
-$STD uv sync --group test | tee -a "$LOG_FILE"
-$STD uv run pytest --retries 3 | tee -a "$LOG_FILE"
-log "Installed Byparr"
+# Installing Byparr
+msg_info "Installing Byparr"
+$STD git clone https://github.com/ThePhaseless/Byparr.git /opt/byparr
+cd /opt/byparr
+$STD uv sync --group test
+msg_ok "Installed Byparr"
 
-log "Creating Service"
+# Creating Service
+msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/byparr.service
 [Unit]
 Description=Byparr
@@ -76,13 +63,16 @@ TimeoutStopSec=60
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now byparr.service | tee -a "$LOG_FILE"
-log "Created Service"
+$STD systemctl enable --now byparr.service
+msg_ok "Created Service"
 
 motd_ssh
 customize
 
-log "Cleaning up"
-$STD apt-get -y autoremove | tee -a "$LOG_FILE"
-$STD apt-get -y autoclean | tee -a "$LOG_FILE"
-log "Cleaned"
+# Cleanup
+msg_info "Cleaning up"
+$STD apt-get -y autoremove
+$STD apt-get -y autoclean
+msg_ok "Cleaned"
+
+echo "Byparr installation completed successfully at $(date)" >> "$LOG_FILE"
