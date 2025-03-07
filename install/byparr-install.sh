@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-# At the beginning of both scripts
-set -x  # Enables bash debugging
 
 # Copyright (c) 2021-2025 tteck
 # Author: tteck (tteckster)
@@ -34,18 +32,16 @@ $STD apt-get install -y google-chrome-stable
 msg_ok "Installed Chrome"
 
 # Installing UV Package Manager
-msg_info "Installing UV Package Manager"
+msg_info "Installing UV Package Manager" 
 $STD curl -LsSf https://astral.sh/uv/install.sh | sh
 # Make sure we source the env file properly
-$STD bash -c "source $HOME/.local/bin/env"
-# Make sure it's also available in .bashrc
-echo 'source $HOME/.local/bin/env' >> $HOME/.bashrc
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+echo 'source "$HOME/.local/bin/env"' >> ~/.bashrc
+source $HOME/.local/bin/env
 msg_ok "Installed UV Package Manager"
 
 # Installing Byparr
 msg_info "Installing Byparr"
-# Create proper directory structure
-$STD mkdir -p /opt/byparr
 $STD git clone https://github.com/ThePhaseless/Byparr.git /opt/byparr
 cd /opt/byparr
 # Source env again to ensure uv command is available
@@ -67,26 +63,18 @@ Type=simple
 Environment="LOG_LEVEL=info"
 Environment="CAPTCHA_SOLVER=none"
 WorkingDirectory=/opt/byparr
-ExecStart=/bin/bash -c "source /root/.local/bin/env && uv sync && ./cmd.sh"
+ExecStart=/bin/bash -c "source /root/.local/bin/env && cd /opt/byparr && uv sync && ./cmd.sh"
 TimeoutStopSec=60
 [Install]
 WantedBy=multi-user.target
 EOF
+systemctl daemon-reload
 $STD systemctl enable --now byparr.service
 msg_ok "Created Service"
 
-# Setup login user if needed
+# Fix SSH access
 msg_info "Setting up system access"
-# Ensure root can login
 sed -i 's/#PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
-# Create motd with IP information and login info
-cat <<EOF > /etc/motd
-Byparr LXC Container
----------------------
-Access the web interface at: http://$(hostname -I | awk '{print $1}'):8191
-
-Default port: 8191
-EOF
 $STD systemctl restart sshd
 msg_ok "System access configured"
 
