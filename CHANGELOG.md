@@ -38,6 +38,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 📝 Script Information
 
+    - Improve Trilium Description and Name to TriliumNext [@MickLesk](https://github.com/MickLesk) ([#2929](https://github.com/community-scripts/ProxmoxVE/pull/2929))
     - Prowlarr icon [@bannert1337](https://github.com/bannert1337) ([#2906](https://github.com/community-scripts/ProxmoxVE/pull/2906))
     - Update Apache Tika icon to SVG [@bannert1337](https://github.com/bannert1337) ([#2904](https://github.com/community-scripts/ProxmoxVE/pull/2904))
     - Update Prometheus Alertmanager Icon [@bannert1337](https://github.com/bannert1337) ([#2905](https://github.com/community-scripts/ProxmoxVE/pull/2905))
