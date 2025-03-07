@@ -17,12 +17,6 @@ jobs:
       - name: Extract first 5000 characters from CHANGELOG.md
         run: head -c 5000 CHANGELOG.md > changelog_cropped.md
 
-      - name: Debugging - Show extracted changelog
-        run: |
-          echo "=== CHANGELOG EXCERPT ==="
-          cat changelog_cropped.md
-          echo "========================="
-
       - name: Extract relevant changelog section
         run: |
           YESTERDAY=$(date -u --date="yesterday" +%Y-%m-%d)
