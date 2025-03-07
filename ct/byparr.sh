@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# At the beginning of both scripts
+set -x  # Enables bash debugging
 source <(curl -s https://raw.githubusercontent.com/tanujdargan/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 tteck
 # Author: tteck (tteckster)
@@ -15,11 +17,9 @@ var_os="debian"
 var_version="12"
 var_unprivileged="1"
 
-# If needed, explicitly set the install script path
-INSTALL_SCRIPT="byparr-install"
-
+# Make sure variables function runs early to set NSAPP and var_install
 header_info "$APP"
-variables
+variables  # This sets var_install="${NSAPP}-install"
 color
 catch_errors
 
@@ -44,9 +44,11 @@ start
 build_container
 description
 
+# Explicitly get and display the IP address
+IP=$(pct exec "$CTID" ip a s dev eth0 | awk '/inet / {print $2}' | cut -d/ -f1)
+
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8191${CL}"
-# Add explicit IP display for clarity
-echo -e "${INFO}${YW} Container IP: ${IP}${CL}"
+echo -e "${INFO}${YW} Container IP address: ${IP}${CL}"
