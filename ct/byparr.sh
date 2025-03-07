@@ -9,7 +9,7 @@ APP="Byparr"
 var_tags="automatic-rarbg-replacement"
 var_cpu="2"
 var_ram="2048"
-var_disk="8"
+var_disk="4"
 var_os="debian"
 var_version="12"
 var_unprivileged="1"
@@ -28,11 +28,8 @@ function update_script() {
     exit
   fi
   
-  # Get current version from git
   cd /Byparr
   CURRENT_VERSION=$(git rev-parse HEAD)
-  
-  # Get latest version
   git fetch
   LATEST_VERSION=$(git rev-parse origin/main)
   
@@ -52,17 +49,7 @@ start
 build_container
 description
 
-# Make sure we have the IP address
-IP=$(pct exec "$CTID" ip a s dev eth0 | sed -n '/inet / s/\// /p' | awk '{print $2}')
-if [[ -z "$IP" ]]; then
-  IP=$(pct exec "$CTID" hostname -I | awk '{print $1}')
-fi
-
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8000${CL}"
-echo -e "\n${INFO}${YW} To run Byparr manually:${CL}"
-echo -e "${TAB}${YW}cd /Byparr && ./run.sh${CL}"
-echo -e "\n${INFO}${YW} To check the service status:${CL}"
-echo -e "${TAB}${YW}systemctl status byparr${CL}"

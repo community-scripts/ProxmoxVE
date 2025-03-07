@@ -1,0 +1,1 @@
+bash -c "$(wget -qLO - https://github.com/tanujdargan/ProxmoxVE/raw/main/ct/byparr.sh)"

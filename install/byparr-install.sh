@@ -13,17 +13,6 @@ setting_up_container
 network_check
 update_os
 
-# Enable automatic login for root user
-msg_info "Setting up auto-login for root user"
-mkdir -p /etc/systemd/system/getty@tty1.service.d/
-cat <<EOF > /etc/systemd/system/getty@tty1.service.d/autologin.conf
-[Service]
-ExecStart=
-ExecStart=-/sbin/agetty --autologin root --noclear --keep-baud tty%I 115200,38400,9600 \$TERM
-EOF
-systemctl daemon-reload
-msg_ok "Set up auto-login for root user"
-
 msg_info "Installing Dependencies"
 $STD apt-get install -y curl
 $STD apt-get install -y git
@@ -41,7 +30,6 @@ msg_ok "Installed UV Package Manager"
 msg_info "Cloning Byparr Repository"
 $STD git clone https://github.com/byparr/byparr /Byparr
 cd /Byparr
-# Store the current version for update tracking
 CURRENT_VERSION=$(git rev-parse HEAD)
 echo "${CURRENT_VERSION}" > /opt/${APPLICATION}_version.txt
 msg_ok "Cloned Byparr Repository"
@@ -66,12 +54,13 @@ Description=Byparr Service
 After=network.target
 
 [Service]
+SyslogIdentifier=byparr
+Restart=always
+RestartSec=5
 Type=simple
-User=root
 WorkingDirectory=/Byparr
 ExecStart=/Byparr/run.sh
-Restart=always
-RestartSec=5s
+TimeoutStopSec=30
 
 [Install]
 WantedBy=multi-user.target
@@ -85,4 +74,4 @@ customize
 msg_info "Cleaning up"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
-msg_ok "Cleaned" 
+msg_ok "Cleaned"
