@@ -4,15 +4,15 @@
     "categories": [
         14
     ],
-    "date_created": "2024-07-01",
+    "date_created": "2025-03-07",
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": 8000,
-    "documentation": "https://github.com/byparr/byparr",
-    "website": "https://github.com/byparr/byparr",
-    "logo": "https://raw.githubusercontent.com/byparr/byparr/main/byparr/static/logo.png",
-    "description": "Byparr is an automatic RARBG replacement designed to automate the collection and distribution of torrents. It provides a reliable alternative to the now-defunct RARBG service, helping users find and manage media content efficiently through a clean web interface.",
+    "interface_port": 8191,
+    "documentation": null,
+    "website": "https://github.com/ThePhaseless/Byparr",
+    "logo": null,
+    "description": "Byparr is a proxy server to bypass various protection systems.",
     "install_methods": [
         {
             "type": "default",
@@ -27,13 +27,8 @@
         }
     ],
     "default_credentials": {
-        "username": "root",
-        "password": "root"
+        "username": null,
+        "password": null
     },
-    "notes": [
-        {
-            "text": "Default login credentials are username: root, password: root",
-            "type": "info"
-        }
-    ]
-} 
+    "notes": []
+}

@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 community-scripts ORG
-# Author: Your Name Here | Co-Author: Another Name
-# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://github.com/byparr/byparr
+# Copyright (c) 2025
+# License: MIT
+# Source: https://github.com/ThePhaseless/Byparr
 
 source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color
@@ -13,114 +12,130 @@ setting_up_container
 network_check
 update_os
 
-# Set root password to 'root'
-msg_info "Setting default root password"
-echo "root:root" | chpasswd
-if [[ $? -ne 0 ]]; then
-  msg_error "Failed to set root password. Please check container permissions."
-  exit 1
-fi
-msg_ok "Root password has been set to 'root'"
-
-# Set up auto-login for root
-msg_info "Setting up auto-login"
-mkdir -p /etc/systemd/system/getty@tty1.service.d/
-cat <<EOF >/etc/systemd/system/getty@tty1.service.d/override.conf
-[Service]
-ExecStart=
-ExecStart=-/sbin/agetty --autologin root --noclear --keep-baud tty%I 115200,38400,9600 \$TERM
-EOF
-systemctl daemon-reload
-if [[ $? -ne 0 ]]; then
-  msg_error "Failed to reload systemd daemon. Auto-login may not work."
-  exit 1
-fi
-msg_ok "Set up auto-login"
-
 msg_info "Installing Dependencies"
-$STD apt-get update
 $STD apt-get install -y curl
-$STD apt-get install -y git
-$STD apt-get install -y python3-full
-$STD apt-get install -y python3-pip
 $STD apt-get install -y sudo
 $STD apt-get install -y mc
+$STD apt-get install -y apt-transport-https
+$STD apt-get install -y gpg
+$STD apt-get install -y xvfb
+$STD apt-get install -y scrot
+$STD apt-get install -y xauth
+$STD apt-get install -y ca-certificates
+$STD apt-get install -y python3-pip
+$STD apt-get install -y python3-venv
+$STD apt-get install -y git
 msg_ok "Installed Dependencies"
 
+msg_info "Installing Chrome"
+wget -qO- https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/google-chrome.gpg
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list
+$STD apt update
+$STD apt install -y google-chrome-stable chromium chromium-driver
+msg_ok "Installed Chrome"
+
 msg_info "Installing UV Package Manager"
-$STD curl -LsSf https://astral.sh/uv/install.sh | sh
-source $HOME/.local/bin/env
-msg_ok "Installed UV Package Manager"
+$STD curl -fsSL https://astral.sh/uv/install.sh | sh
+msg_ok "Installed UV"
 
-msg_info "Cloning Byparr Repository"
-if [[ ! -d /Byparr ]]; then
-  $STD git clone https://github.com/byparr/byparr /Byparr
-  if [[ $? -ne 0 ]]; then
-    msg_error "Failed to clone Byparr repository. Please check network connectivity."
-    exit 1
-  fi
-else {
-  msg_info "Byparr repository already exists. Pulling latest changes."
-  cd /Byparr && git pull
-}
-cd /Byparr
-CURRENT_VERSION=$(git rev-parse HEAD)
-mkdir -p /opt
-echo "${CURRENT_VERSION}" > /opt/${APPLICATION}_version.txt
-msg_ok "Cloned Byparr Repository"
+# Create Byparr directory
+msg_info "Setting up Byparr"
+mkdir -p /opt/byparr
+cd /opt/byparr
 
-msg_info "Installing Byparr Dependencies"
-$STD cd /Byparr && uv sync --group test
-msg_ok "Installed Byparr Dependencies"
+# Clone Byparr repository
+$STD git clone https://github.com/ThePhaseless/Byparr.git .
 
-msg_info "Setting up Run Script"
-cat <<EOF > /Byparr/run.sh
+# Install Python dependencies with UV
+msg_info "Installing Python dependencies"
+export PATH="/root/.local/bin:$PATH"
+$STD uv sync
+# Fix for SeleniumBase arm64 if needed
+if [ "$(uname -m)" = "aarch64" ]; then
+  cd .venv/lib/*/site-packages/seleniumbase/drivers && ln -s /usr/bin/chromedriver uc_driver
+  cd /opt/byparr
+fi
+msg_ok "Installed Python dependencies"
+
+# Create cmd.sh execution script
+msg_info "Creating execution script"
+cat <<EOF >/opt/byparr/cmd.sh
 #!/bin/bash
-cd /Byparr
-source $HOME/.local/bin/env
-uv run python -m byparr
+export DISPLAY=:0
+export PYTHONUNBUFFERED=1
+export PYTHONDONTWRITEBYTECODE=1
+
+# Start Xvfb
+Xvfb :0 -screen 0 1920x1080x24 &
+xvfb_pid=\$!
+
+# Start Byparr
+cd /opt/byparr
+export PATH="/root/.local/bin:\$PATH"
+uv run python main.py
+
+# Cleanup
+kill \$xvfb_pid
 EOF
-chmod +x /Byparr/run.sh
-msg_ok "Created Run Script"
+chmod +x /opt/byparr/cmd.sh
+msg_ok "Created execution script"
 
 msg_info "Creating Service"
-cat <<EOF > /etc/systemd/system/byparr.service
+cat <<EOF >/etc/systemd/system/byparr.service
 [Unit]
-Description=Byparr Service
+Description=Byparr
 After=network.target
-
 [Service]
 SyslogIdentifier=byparr
 Restart=always
 RestartSec=5
 Type=simple
-User=root
-WorkingDirectory=/Byparr
-ExecStart=/bin/bash /Byparr/run.sh
+Environment="DISPLAY=:0"
+Environment="PYTHONUNBUFFERED=1"
+Environment="PYTHONDONTWRITEBYTECODE=1"
+WorkingDirectory=/opt/byparr
+ExecStart=/opt/byparr/cmd.sh
 TimeoutStopSec=30
-
 [Install]
 WantedBy=multi-user.target
 EOF
+systemctl enable -q --now byparr.service
+msg_ok "Created Service"
 
-# Make sure the service is enabled and started
-systemctl daemon-reload
-systemctl enable byparr.service
-systemctl start byparr.service
-# Verify service is running
-if systemctl is-active --quiet byparr.service; then
-  msg_ok "Created and started Byparr service"
-else
-  msg_error "Failed to start Byparr service. Check logs for details."
-  systemctl status byparr.service
-  # Try again with more debugging
-  msg_info "Attempting to restart service with more debugging"
-  cat /Byparr/run.sh
-  chmod +x /Byparr/run.sh
-  systemctl restart byparr.service
-  sleep 2
-  systemctl status byparr.service
-fi
+# Create update script
+msg_info "Creating update script"
+cat <<EOF >/opt/byparr/update.sh
+#!/bin/bash
+cd /opt/byparr
+git pull
+export PATH="/root/.local/bin:\$PATH"
+uv sync
+systemctl restart byparr.service
+EOF
+chmod +x /opt/byparr/update.sh
+msg_ok "Created update script"
+
+# Create test script
+msg_info "Creating test script"
+cat <<EOF >/opt/byparr/test.sh
+#!/bin/bash
+cd /opt/byparr
+export PATH="/root/.local/bin:\$PATH"
+export DISPLAY=:0
+
+# Start Xvfb
+Xvfb :0 -screen 0 1920x1080x24 &
+xvfb_pid=\$!
+
+# Run tests
+uv sync --group test
+uv run pytest --retries 3
+
+# Cleanup
+kill \$xvfb_pid
+EOF
+chmod +x /opt/byparr/test.sh
+msg_ok "Created test script"
 
 motd_ssh
 customize
@@ -129,3 +144,8 @@ msg_info "Cleaning up"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
+
+msg_ok "Completed Successfully!\n"
+echo -e "${CREATING}${GN}Byparr setup has been successfully initialized!${CL}"
+echo -e "${INFO}${YW} Access it using the following URL:${CL}"
+echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8191${CL}"
