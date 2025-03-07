@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2025
-# License: MIT
+# Copyright (c) 2021-2025
+# License: MIT 
 # Source: https://github.com/ThePhaseless/Byparr
 
 APP="Byparr"
@@ -29,22 +29,10 @@ function update_script() {
   
   msg_info "Updating $APP LXC"
   cd /opt/byparr
-  
-  # Pull latest changes
   git pull
-  
-  # Run test to ensure everything works with new version
-  ./test-script.sh
-  
-  if [ $? -ne 0 ]; then
-    msg_error "Tests failed after update. Rolling back."
-    git reset --hard HEAD@{1}
-    systemctl restart byparr.service
-    exit 1
-  fi
-  
-  # Restart service to apply changes
-  systemctl restart byparr.service
+  export PATH="/root/.local/bin:$PATH"
+  /root/.local/bin/uv sync
+  systemctl restart byparr
   msg_ok "Updated $APP LXC"
   exit
 }

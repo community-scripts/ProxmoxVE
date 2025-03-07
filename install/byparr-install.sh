@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2025
+# Copyright (c) 2021-2025
 # License: MIT
 # Source: https://github.com/ThePhaseless/Byparr
 
@@ -34,69 +34,53 @@ $STD apt update
 $STD apt install -y google-chrome-stable chromium chromium-driver
 msg_ok "Installed Chrome"
 
-# Create Byparr directory
-msg_info "Setting up Byparr"
-mkdir -p /opt/byparr
-cd /opt/byparr
-
-# Clone Byparr repository
-$STD git clone https://github.com/ThePhaseless/Byparr.git .
-
-# Install UV package manager
 msg_info "Installing UV Package Manager"
-$STD curl -fsSL https://astral.sh/uv/install.sh | sh
+curl -sSf https://astral.sh/uv/install.sh | bash
 export PATH="/root/.local/bin:$PATH"
 msg_ok "Installed UV"
 
-# Create cmd.sh execution script
-msg_info "Creating execution script"
-cat <<EOF >/opt/byparr/cmd.sh
-#!/bin/bash
-export DISPLAY=:0
-export PYTHONUNBUFFERED=1
-export PYTHONDONTWRITEBYTECODE=1
-export PATH="/root/.local/bin:\$PATH"
-
-# Start Xvfb
-Xvfb :0 -screen 0 1920x1080x24 &
-xvfb_pid=\$!
-
-# Sync dependencies and run Byparr
+msg_info "Cloning Byparr"
+mkdir -p /opt/byparr
 cd /opt/byparr
-uv sync
-./cmd.sh
+git clone https://github.com/ThePhaseless/Byparr.git .
+msg_ok "Cloned Byparr"
 
-# Cleanup
-kill \$xvfb_pid
-EOF
-chmod +x /opt/byparr/cmd.sh
-msg_ok "Created execution script"
+msg_info "Installing Python Dependencies"
+cd /opt/byparr
+/root/.local/bin/uv sync
+if [ "$(uname -m)" = "aarch64" ]; then
+  cd .venv/lib/*/site-packages/seleniumbase/drivers && ln -s /usr/bin/chromedriver uc_driver
+  cd /opt/byparr
+fi
+msg_ok "Installed Python Dependencies"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/byparr.service
 [Unit]
 Description=Byparr
 After=network.target
+
 [Service]
-SyslogIdentifier=byparr
-Restart=always
-RestartSec=5
 Type=simple
+User=root
+WorkingDirectory=/opt/byparr
+Environment="PATH=/root/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 Environment="DISPLAY=:0"
 Environment="PYTHONUNBUFFERED=1"
 Environment="PYTHONDONTWRITEBYTECODE=1"
-WorkingDirectory=/opt/byparr
+ExecStartPre=/usr/bin/Xvfb :0 -screen 0 1920x1080x24 -ac &
 ExecStart=/opt/byparr/cmd.sh
-TimeoutStopSec=30
+Restart=always
+RestartSec=10
+
 [Install]
 WantedBy=multi-user.target
 EOF
 systemctl enable -q --now byparr.service
 msg_ok "Created Service"
 
-# Create test script
-msg_info "Creating test script"
-cat <<EOF >/opt/byparr/test-script.sh
+msg_info "Creating Test Script"
+cat <<EOF >/opt/byparr/run-tests.sh
 #!/bin/bash
 cd /opt/byparr
 export PATH="/root/.local/bin:\$PATH"
@@ -104,30 +88,28 @@ export DISPLAY=:0
 export PYTHONUNBUFFERED=1
 export PYTHONDONTWRITEBYTECODE=1
 
-# Start Xvfb
-Xvfb :0 -screen 0 1920x1080x24 &
-xvfb_pid=\$!
-
-# Run tests with retries as specified
-uv sync --group test
-uv run pytest --retries 3
-
-# Add parallelization option if needed
-# uv run pytest --retries 3 -n auto
-
-# Cleanup
-kill \$xvfb_pid
-
-# Check for test failures
-if [ \$? -ne 0 ]; then
-    echo "Tests failed even after retries"
-    exit 1
-else
-    echo "All tests passed successfully"
+# Start Xvfb if not running
+if ! pgrep Xvfb > /dev/null; then
+  Xvfb :0 -screen 0 1920x1080x24 &
+  xvfb_pid=\$!
+  sleep 2
 fi
+
+# Run tests
+/root/.local/bin/uv sync --group test
+/root/.local/bin/uv run pytest --retries 3
+
+test_result=\$?
+
+# Kill Xvfb if we started it
+if [ -n "\$xvfb_pid" ]; then
+  kill \$xvfb_pid
+fi
+
+exit \$test_result
 EOF
-chmod +x /opt/byparr/test-script.sh
-msg_ok "Created test script"
+chmod +x /opt/byparr/run-tests.sh
+msg_ok "Created Test Script"
 
 motd_ssh
 customize
@@ -136,8 +118,3 @@ msg_info "Cleaning up"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
-
-msg_ok "Completed Successfully!\n"
-echo -e "${CREATING}${GN}Byparr setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8191${CL}"
