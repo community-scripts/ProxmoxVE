@@ -37,7 +37,7 @@ function update_script() {
     if [[ $(corepack -v) < "0.31.0" ]]; then
       $STD npm install -g corepack@0.31.0
     fi
-    apt-get install -yqq graphicsmagick ghostscript
+    $STD apt-get install -y graphicsmagick ghostscript
     cd /opt
     if [[ -f /opt/hoarder/.env ]] && [[ ! -f /etc/hoarder/hoarder.env ]]; then
       mkdir -p /etc/hoarder
