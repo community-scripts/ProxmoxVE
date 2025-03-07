@@ -16,6 +16,10 @@ update_os
 # Set root password to 'root'
 msg_info "Setting default root password"
 echo "root:root" | chpasswd
+if [[ $? -ne 0 ]]; then
+  msg_error "Failed to set root password. Please check container permissions."
+  exit 1
+fi
 msg_ok "Root password has been set to 'root'"
 
 # Set up auto-login for root
@@ -27,6 +31,10 @@ ExecStart=
 ExecStart=-/sbin/agetty --autologin root --noclear --keep-baud tty%I 115200,38400,9600 \$TERM
 EOF
 systemctl daemon-reload
+if [[ $? -ne 0 ]]; then
+  msg_error "Failed to reload systemd daemon. Auto-login may not work."
+  exit 1
+fi
 msg_ok "Set up auto-login"
 
 msg_info "Installing Dependencies"
@@ -45,7 +53,16 @@ source $HOME/.local/bin/env
 msg_ok "Installed UV Package Manager"
 
 msg_info "Cloning Byparr Repository"
-$STD git clone https://github.com/byparr/byparr /Byparr
+if [[ ! -d /Byparr ]]; then
+  $STD git clone https://github.com/byparr/byparr /Byparr
+  if [[ $? -ne 0 ]]; then
+    msg_error "Failed to clone Byparr repository. Please check network connectivity."
+    exit 1
+  fi
+else {
+  msg_info "Byparr repository already exists. Pulling latest changes."
+  cd /Byparr && git pull
+}
 cd /Byparr
 CURRENT_VERSION=$(git rev-parse HEAD)
 mkdir -p /opt
@@ -94,7 +111,7 @@ systemctl start byparr.service
 if systemctl is-active --quiet byparr.service; then
   msg_ok "Created and started Byparr service"
 else
-  msg_error "Failed to start Byparr service"
+  msg_error "Failed to start Byparr service. Check logs for details."
   systemctl status byparr.service
   # Try again with more debugging
   msg_info "Attempting to restart service with more debugging"
