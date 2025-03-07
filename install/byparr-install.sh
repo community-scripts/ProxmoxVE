@@ -13,6 +13,16 @@ setting_up_container
 network_check
 update_os
 
+# Set up auto-login for root
+msg_info "Setting up auto-login"
+cat <<EOF >/etc/systemd/system/getty@tty1.service.d/override.conf
+[Service]
+ExecStart=
+ExecStart=-/sbin/agetty --autologin root --noclear --keep-baud tty%I 115200,38400,9600 \$TERM
+EOF
+systemctl daemon-reload
+msg_ok "Set up auto-login"
+
 msg_info "Installing Dependencies"
 $STD apt-get install -y curl
 $STD apt-get install -y git
@@ -31,6 +41,7 @@ msg_info "Cloning Byparr Repository"
 $STD git clone https://github.com/byparr/byparr /Byparr
 cd /Byparr
 CURRENT_VERSION=$(git rev-parse HEAD)
+mkdir -p /opt
 echo "${CURRENT_VERSION}" > /opt/${APPLICATION}_version.txt
 msg_ok "Cloned Byparr Repository"
 
