@@ -28,7 +28,7 @@ function update_script() {
         exit
     fi
     /opt/beszel/beszel update
-    msg_error "Currently we don't provide an update function for this ${APP}."
+    systemctl start beszel.service
     exit
 }
 
