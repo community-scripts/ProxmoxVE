@@ -28,11 +28,13 @@ function update_script() {
         exit
     fi
     msg_info "Stopping $APP"
-    systemctl stop beszel-hub.service
+    systemctl stop beszel-hub
     msg_ok "Stopped $APP"
+    
     msg_info "Updating $APP"
-    /opt/beszel/beszel update
+    $STD /opt/beszel/beszel update
     msg_ok "Updated $APP"
+    
     msg_info "Starting $APP"
     systemctl start beszel-hub.service
     msg_ok "Successfully started $APP"
