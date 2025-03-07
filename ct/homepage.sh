@@ -45,8 +45,8 @@ function update_script() {
     cp -r homepage-${RELEASE}/* /opt/homepage/
     rm -rf homepage-${RELEASE}
     cd /opt/homepage
-    $STD npx --yes update-browserslist-db@latest
     $STD pnpm install
+    $STD npx --yes update-browserslist-db@latest
     export NEXT_PUBLIC_VERSION="v$RELEASE"
     export NEXT_PUBLIC_REVISION="source"
     $STD pnpm build
