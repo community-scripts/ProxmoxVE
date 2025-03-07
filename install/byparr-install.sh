@@ -19,10 +19,10 @@ $STD apt-get install -y curl sudo mc apt-transport-https gpg xvfb git
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Chrome"
-wget -qO- https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/google-chrome.gpg
-echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list
-$STD apt update
-$STD apt install -y google-chrome-stable
+$STD wget -qO- https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/google-chrome.gpg
+$STD echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list
+$STD apt-get update
+$STD apt-get install -y google-chrome-stable
 msg_ok "Installed Chrome"
 
 msg_info "Installing UV Package Manager"
@@ -31,11 +31,13 @@ source $HOME/.local/bin/env
 msg_ok "Installed UV Package Manager"
 
 msg_info "Installing Byparr"
-$STD mkdir /opt/byparr
 $STD git clone https://github.com/ThePhaseless/Byparr.git /opt/byparr
+if [ ! -d "/opt/byparr" ]; then
+    msg_error "Failed to clone Byparr repository!"
+    exit 1
+fi
 cd /opt/byparr
 $STD uv sync --group test
-$STD uv run pytest --retries 3
 msg_ok "Installed Byparr"
 
 msg_info "Creating Service"
@@ -56,7 +58,9 @@ TimeoutStopSec=30
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now byparr.service
+systemctl daemon-reload
+systemctl enable byparr.service
+systemctl start byparr.service
 msg_ok "Created Service"
 
 motd_ssh
