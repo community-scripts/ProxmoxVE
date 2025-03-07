@@ -13,8 +13,14 @@ setting_up_container
 network_check
 update_os
 
+# Set root password to 'root'
+msg_info "Setting default root password"
+echo "root:root" | chpasswd
+msg_ok "Root password has been set to 'root'"
+
 # Set up auto-login for root
 msg_info "Setting up auto-login"
+mkdir -p /etc/systemd/system/getty@tty1.service.d/
 cat <<EOF >/etc/systemd/system/getty@tty1.service.d/override.conf
 [Service]
 ExecStart=
@@ -24,6 +30,7 @@ systemctl daemon-reload
 msg_ok "Set up auto-login"
 
 msg_info "Installing Dependencies"
+$STD apt-get update
 $STD apt-get install -y curl
 $STD apt-get install -y git
 $STD apt-get install -y python3-full
@@ -46,13 +53,14 @@ echo "${CURRENT_VERSION}" > /opt/${APPLICATION}_version.txt
 msg_ok "Cloned Byparr Repository"
 
 msg_info "Installing Byparr Dependencies"
-$STD uv sync --group test
+$STD cd /Byparr && uv sync --group test
 msg_ok "Installed Byparr Dependencies"
 
 msg_info "Setting up Run Script"
 cat <<EOF > /Byparr/run.sh
 #!/bin/bash
 cd /Byparr
+source $HOME/.local/bin/env
 uv run python -m byparr
 EOF
 chmod +x /Byparr/run.sh
@@ -69,15 +77,33 @@ SyslogIdentifier=byparr
 Restart=always
 RestartSec=5
 Type=simple
+User=root
 WorkingDirectory=/Byparr
-ExecStart=/Byparr/run.sh
+ExecStart=/bin/bash /Byparr/run.sh
 TimeoutStopSec=30
 
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now byparr.service
-msg_ok "Created Service"
+
+# Make sure the service is enabled and started
+systemctl daemon-reload
+systemctl enable byparr.service
+systemctl start byparr.service
+# Verify service is running
+if systemctl is-active --quiet byparr.service; then
+  msg_ok "Created and started Byparr service"
+else
+  msg_error "Failed to start Byparr service"
+  systemctl status byparr.service
+  # Try again with more debugging
+  msg_info "Attempting to restart service with more debugging"
+  cat /Byparr/run.sh
+  chmod +x /Byparr/run.sh
+  systemctl restart byparr.service
+  sleep 2
+  systemctl status byparr.service
+fi
 
 motd_ssh
 customize

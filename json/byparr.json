@@ -20,15 +20,20 @@
             "resources": {
                 "cpu": 2,
                 "ram": 2048,
-                "hdd": 8,
+                "hdd": 4,
                 "os": "debian",
                 "version": "12"
             }
         }
     ],
     "default_credentials": {
-        "username": null,
-        "password": null
+        "username": "root",
+        "password": "root"
     },
-    "notes": []
+    "notes": [
+        {
+            "text": "Default login credentials are username: root, password: root",
+            "type": "info"
+        }
+    ]
 } 
