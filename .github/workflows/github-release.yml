@@ -4,7 +4,7 @@ on:
   schedule:
     - cron: '1 0 * * *'  # Runs daily at 00:01 UTC
   workflow_dispatch:
-
+  
 jobs:
   create-daily-release:
     runs-on: runner-cluster-htl-set
@@ -14,32 +14,25 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Extract first 5000 characters from CHANGELOG.md
-        run: head -c 5000 CHANGELOG.md > changelog_cropped.md
-
-      - name: Debugging - Show extracted changelog
-        run: |
-          echo "=== CHANGELOG EXCERPT ==="
-          cat changelog_cropped.md
-          echo "========================="
+      - name: Clean CHANGELOG (remove HTML header)
+        run: sed -n '/^## /,$p' CHANGELOG.md > changelog_cleaned.md
 
       - name: Extract relevant changelog section
         run: |
           YESTERDAY=$(date -u --date="yesterday" +%Y-%m-%d)
           echo "Checking for changes on: $YESTERDAY"
 
-          # Extract relevant section from cropped changelog
-          awk -v date="## $YESTERDAY" '
-            $0 ~ date {found=1; next} 
-            found && /^## [0-9]{4}-[0-9]{2}-[0-9]{2}/ {exit} 
-            found
-          ' changelog_cropped.md > changelog_tmp.md
+          # Extract the section from "## $YESTERDAY" until the next "## YYYY-MM-DD"
+          sed -n "/^## $YESTERDAY/,/^## [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/p" changelog_cleaned.md | head -n -1 > changelog_tmp_full.md
+
+          # Truncate the extracted section to 5000 characters
+          head -c 5000 changelog_tmp_full.md > changelog_tmp.md
 
           echo "=== Extracted Changelog ==="
           cat changelog_tmp.md
           echo "==========================="
 
-          # Skip if no content was found
+          # Abort if no content was found
           if [ ! -s changelog_tmp.md ]; then
             echo "No changes found for $YESTERDAY, skipping release."
             exit 0
