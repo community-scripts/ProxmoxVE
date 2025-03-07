@@ -4,7 +4,7 @@
     "categories": [1],
     "date_created": "2024-03-25",
     "type": "ct",
-    "updateable": true,
+    "updateable": false,
     "privileged": false,
     "interface_port": 443,
     "documentation": "https://documentation.wazuh.com/",
