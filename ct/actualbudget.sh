@@ -58,8 +58,8 @@ function update_script() {
         fi
 
         if [[ -f /opt/actualbudget_bak/selfhost.key ]]; then
-            mv /opt/actualbudget_bak/selfhost.key /opt/actualbudget-data/selfhost.key
-            mv /opt/actualbudget_bak/selfhost.crt /opt/actualbudget-data/selfhost.crt
+            mv /opt/actualbudget_bak/selfhost.key /opt/actualbudget/selfhost.key
+            mv /opt/actualbudget_bak/selfhost.crt /opt/actualbudget/selfhost.crt
         fi
 
         if [[ -f /opt/actualbudget_bak/.env ]]; then
