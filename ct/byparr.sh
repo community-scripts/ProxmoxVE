@@ -6,6 +6,8 @@ source <(curl -s https://raw.githubusercontent.com/tanujdargan/ProxmoxVE/main/mi
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/ThePhaseless/Byparr
 
+set -e #terminate script if it fails a command
+
 APP="Byparr"
 var_tags="cloudflare,solver"
 var_cpu="2"
@@ -37,9 +39,8 @@ function update_script() {
     exit
 }
 
-start
 # Override the normal build_container function with custom logic
-build_container() {
+function build_container() {
   if [ "$CT_TYPE" == "1" ]; then
     FEATURES="keyctl=1,nesting=1"
   else
@@ -85,7 +86,7 @@ build_container() {
     $PW
   "
   
-  # This executes create_lxc.sh and creates the container and .conf file
+  # Create the container
   bash -c "$(wget -qLO - https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/create_lxc.sh)" || exit $?
 
   LXC_CONFIG=/etc/pve/lxc/${CTID}.conf
@@ -104,23 +105,119 @@ lxc.mount.entry: /dev/ttyACM1       dev/ttyACM1       none bind,optional,create=
 EOF
   fi
 
-  # This starts the container
+  # Start the container
   msg_info "Starting LXC Container"
   pct start "$CTID"
   msg_ok "Started LXC Container"
-  
+
   # Wait for container to fully start
   sleep 5
   
-  # Check if network is up
-  pct exec "$CTID" -- ping -c 1 8.8.8.8 || true
+  # Create the installation script file
+  cat > /tmp/byparr-install-script.sh <<'EOF'
+#!/usr/bin/env bash
+
+# Byparr Installation Script
+# Based on your manual installation steps
+
+# Set up logging
+LOG_FILE="/var/log/byparr-install.log"
+echo "Starting Byparr installation at $(date)" > "$LOG_FILE"
+
+# Update package lists
+echo "Updating package lists..." | tee -a "$LOG_FILE"
+apt update
+
+# Install dependencies
+echo "Installing dependencies..." | tee -a "$LOG_FILE"
+apt install -y curl sudo mc apt-transport-https wget gpg xvfb git
+
+# Install Chrome with more reliable key handling
+echo "Installing Chrome..." | tee -a "$LOG_FILE"
+# Download the key and verify it downloaded correctly
+curl -s https://dl.google.com/linux/linux_signing_key.pub > /tmp/google-key.pub
+if [ ! -s /tmp/google-key.pub ]; then
+  echo "Failed to download Google key, retrying with wget..." | tee -a "$LOG_FILE"
+  wget -q -O /tmp/google-key.pub https://dl.google.com/linux/linux_signing_key.pub
+fi
+
+# Verify the key file is not empty and looks valid
+if [ ! -s /tmp/google-key.pub ] || ! grep -q "BEGIN PGP PUBLIC KEY BLOCK" /tmp/google-key.pub; then
+  echo "Error: Invalid or empty Google signing key" | tee -a "$LOG_FILE"
+  exit 1
+fi
+
+# Import the key
+cat /tmp/google-key.pub | gpg --dearmor -o /usr/share/keyrings/google-chrome.gpg
+
+# Add Chrome repository
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list
+apt update
+apt install -y google-chrome-stable
+
+# Install UV Package Manager
+echo "Installing UV Package Manager..." | tee -a "$LOG_FILE"
+curl -LsSf https://astral.sh/uv/install.sh | sh
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+echo 'source "$HOME/.local/bin/env"' >> ~/.bashrc
+source $HOME/.local/bin/env
+
+# Clone Byparr
+echo "Installing Byparr..." | tee -a "$LOG_FILE"
+git clone https://github.com/ThePhaseless/Byparr.git /opt/byparr
+cd /opt/byparr
+source $HOME/.local/bin/env
+uv sync --group test
+
+# Create service
+echo "Creating Byparr service..." | tee -a "$LOG_FILE"
+cat <<INNEREOF >/etc/systemd/system/byparr.service
+[Unit]
+Description=Byparr
+After=network.target
+[Service]
+SyslogIdentifier=byparr
+Restart=always
+RestartSec=5
+Type=simple
+Environment="LOG_LEVEL=info"
+Environment="CAPTCHA_SOLVER=none"
+WorkingDirectory=/opt/byparr
+ExecStart=/bin/bash -c "source /root/.local/bin/env && cd /opt/byparr && uv sync && ./cmd.sh"
+TimeoutStopSec=60
+[Install]
+WantedBy=multi-user.target
+INNEREOF
+
+# Enable and start the service
+systemctl daemon-reload
+systemctl enable --now byparr.service
+
+# Configure SSH for root access
+echo "Setting up system access..." | tee -a "$LOG_FILE"
+sed -i 's/#PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
+systemctl restart sshd
+
+# Cleanup
+echo "Cleaning up..." | tee -a "$LOG_FILE"
+rm -f /tmp/google-key.pub
+apt-get -y autoremove
+apt-get -y autoclean
+
+echo "Byparr installation completed successfully at $(date)" | tee -a "$LOG_FILE"
+EOF
+
+  # Copy the script to the container
+  pct push "$CTID" /tmp/byparr-install-script.sh /tmp/byparr-install-script.sh
+  pct exec "$CTID" -- chmod +x /tmp/byparr-install-script.sh
   
-  # Run the installation script directly from YOUR repository
+  # Execute the installation script inside the container
   msg_info "Running installation script"
-  lxc-attach -n "$CTID" -- bash -c "$(wget -qLO - https://raw.githubusercontent.com/tanujdargan/ProxmoxVE/main/install/byparr-install.sh)" || exit $?
+  pct exec "$CTID" -- bash /tmp/byparr-install-script.sh
   msg_ok "Installation script completed"
 }
 
+start
 build_container
 description
 

@@ -6,6 +6,8 @@
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/ThePhaseless/Byparr
 
+set -e #terminate script if it fails a command
+
 source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
