@@ -2,17 +2,17 @@
     "name": "Byparr",
     "slug": "byparr",
     "categories": [
-        14
+        5
     ],
     "date_created": "2025-03-07",
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": 8191,
-    "documentation": null,
+    "interface_port": 8000,
+    "documentation": "https://github.com/ThePhaseless/Byparr",
     "website": "https://github.com/ThePhaseless/Byparr",
-    "logo": null,
-    "description": "Byparr is a proxy server to bypass various protection systems.",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/flaresolverr.svg",
+    "description": "Byparr is a FlareSolverr drop-in replacement with FastAPI and nodriver. It allows applications like Sonarr, Radarr, Lidarr, and Readarr to access websites that are protected by Cloudflare and other anti-bot systems. Unlike the original FlareSolverr, Byparr uses a more lightweight approach for solving Cloudflare challenges without relying on Puppeteer or full browser automation.",
     "install_methods": [
         {
             "type": "default",
@@ -30,5 +30,10 @@
         "username": null,
         "password": null
     },
-    "notes": []
+    "notes": [
+        {
+            "text": "Byparr can be updated via the update script or manually by pulling the latest code from GitHub.",
+            "type": "info"
+        }
+    ]
 }
