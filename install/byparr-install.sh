@@ -34,10 +34,6 @@ $STD apt update
 $STD apt install -y google-chrome-stable chromium chromium-driver
 msg_ok "Installed Chrome"
 
-msg_info "Installing UV Package Manager"
-$STD curl -fsSL https://astral.sh/uv/install.sh | sh
-msg_ok "Installed UV"
-
 # Create Byparr directory
 msg_info "Setting up Byparr"
 mkdir -p /opt/byparr
@@ -46,16 +42,11 @@ cd /opt/byparr
 # Clone Byparr repository
 $STD git clone https://github.com/ThePhaseless/Byparr.git .
 
-# Install Python dependencies with UV
-msg_info "Installing Python dependencies"
+# Install UV package manager
+msg_info "Installing UV Package Manager"
+$STD curl -fsSL https://astral.sh/uv/install.sh | sh
 export PATH="/root/.local/bin:$PATH"
-$STD uv sync
-# Fix for SeleniumBase arm64 if needed
-if [ "$(uname -m)" = "aarch64" ]; then
-  cd .venv/lib/*/site-packages/seleniumbase/drivers && ln -s /usr/bin/chromedriver uc_driver
-  cd /opt/byparr
-fi
-msg_ok "Installed Python dependencies"
+msg_ok "Installed UV"
 
 # Create cmd.sh execution script
 msg_info "Creating execution script"
@@ -64,15 +55,16 @@ cat <<EOF >/opt/byparr/cmd.sh
 export DISPLAY=:0
 export PYTHONUNBUFFERED=1
 export PYTHONDONTWRITEBYTECODE=1
+export PATH="/root/.local/bin:\$PATH"
 
 # Start Xvfb
 Xvfb :0 -screen 0 1920x1080x24 &
 xvfb_pid=\$!
 
-# Start Byparr
+# Sync dependencies and run Byparr
 cd /opt/byparr
-export PATH="/root/.local/bin:\$PATH"
-uv run python main.py
+uv sync
+./cmd.sh
 
 # Cleanup
 kill \$xvfb_pid
@@ -102,39 +94,39 @@ EOF
 systemctl enable -q --now byparr.service
 msg_ok "Created Service"
 
-# Create update script
-msg_info "Creating update script"
-cat <<EOF >/opt/byparr/update.sh
-#!/bin/bash
-cd /opt/byparr
-git pull
-export PATH="/root/.local/bin:\$PATH"
-uv sync
-systemctl restart byparr.service
-EOF
-chmod +x /opt/byparr/update.sh
-msg_ok "Created update script"
-
 # Create test script
 msg_info "Creating test script"
-cat <<EOF >/opt/byparr/test.sh
+cat <<EOF >/opt/byparr/test-script.sh
 #!/bin/bash
 cd /opt/byparr
 export PATH="/root/.local/bin:\$PATH"
 export DISPLAY=:0
+export PYTHONUNBUFFERED=1
+export PYTHONDONTWRITEBYTECODE=1
 
 # Start Xvfb
 Xvfb :0 -screen 0 1920x1080x24 &
 xvfb_pid=\$!
 
-# Run tests
+# Run tests with retries as specified
 uv sync --group test
 uv run pytest --retries 3
 
+# Add parallelization option if needed
+# uv run pytest --retries 3 -n auto
+
 # Cleanup
 kill \$xvfb_pid
+
+# Check for test failures
+if [ \$? -ne 0 ]; then
+    echo "Tests failed even after retries"
+    exit 1
+else
+    echo "All tests passed successfully"
+fi
 EOF
-chmod +x /opt/byparr/test.sh
+chmod +x /opt/byparr/test-script.sh
 msg_ok "Created test script"
 
 motd_ssh

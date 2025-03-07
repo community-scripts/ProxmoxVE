@@ -29,15 +29,21 @@ function update_script() {
   
   msg_info "Updating $APP LXC"
   cd /opt/byparr
-  if [ -d ".git" ]; then
-    git pull
-  else
-    msg_error "Cannot update. Installation not using git repository."
-    exit
+  
+  # Pull latest changes
+  git pull
+  
+  # Run test to ensure everything works with new version
+  ./test-script.sh
+  
+  if [ $? -ne 0 ]; then
+    msg_error "Tests failed after update. Rolling back."
+    git reset --hard HEAD@{1}
+    systemctl restart byparr.service
+    exit 1
   fi
   
-  export PATH="/root/.local/bin:$PATH"
-  uv sync
+  # Restart service to apply changes
   systemctl restart byparr.service
   msg_ok "Updated $APP LXC"
   exit
