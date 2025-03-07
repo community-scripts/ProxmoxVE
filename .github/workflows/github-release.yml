@@ -4,7 +4,7 @@ on:
   schedule:
     - cron: '1 0 * * *'  # Runs daily at 00:01 UTC
   workflow_dispatch:
-
+  
 jobs:
   create-daily-release:
     runs-on: runner-cluster-htl-set
@@ -28,7 +28,6 @@ jobs:
           YESTERDAY=$(date -u --date="yesterday" +%Y-%m-%d)
           echo "Checking for changes on: $YESTERDAY"
 
-          # Extract relevant section from cropped changelog
           awk -v date="## $YESTERDAY" '
             $0 ~ date {found=1; next} 
             found && /^## [0-9]{4}-[0-9]{2}-[0-9]{2}/ {exit} 
@@ -51,3 +50,4 @@ jobs:
         run: |
           YESTERDAY=$(date -u --date="yesterday" +%Y-%m-%d)
           gh release create "$YESTERDAY" -t "$YESTERDAY" -F changelog_tmp.md
+
