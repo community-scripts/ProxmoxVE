@@ -52,6 +52,12 @@ start
 build_container
 description
 
+# Make sure we have the IP address
+IP=$(pct exec "$CTID" ip a s dev eth0 | sed -n '/inet / s/\// /p' | awk '{print $2}')
+if [[ -z "$IP" ]]; then
+  IP=$(pct exec "$CTID" hostname -I | awk '{print $1}')
+fi
+
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
@@ -59,4 +65,4 @@ echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8000${CL}"
 echo -e "\n${INFO}${YW} To run Byparr manually:${CL}"
 echo -e "${TAB}${YW}cd /Byparr && ./run.sh${CL}"
 echo -e "\n${INFO}${YW} To check the service status:${CL}"
-echo -e "${TAB}${YW}systemctl status byparr${CL}" 
+echo -e "${TAB}${YW}systemctl status byparr${CL}"

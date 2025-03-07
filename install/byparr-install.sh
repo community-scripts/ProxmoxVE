@@ -13,6 +13,17 @@ setting_up_container
 network_check
 update_os
 
+# Enable automatic login for root user
+msg_info "Setting up auto-login for root user"
+mkdir -p /etc/systemd/system/getty@tty1.service.d/
+cat <<EOF > /etc/systemd/system/getty@tty1.service.d/autologin.conf
+[Service]
+ExecStart=
+ExecStart=-/sbin/agetty --autologin root --noclear --keep-baud tty%I 115200,38400,9600 \$TERM
+EOF
+systemctl daemon-reload
+msg_ok "Set up auto-login for root user"
+
 msg_info "Installing Dependencies"
 $STD apt-get install -y curl
 $STD apt-get install -y git
