@@ -44,10 +44,9 @@ function update_script() {
       mv /opt/hoarder/.env /etc/hoarder/hoarder.env
     fi
     rm -rf /opt/hoarder
-    # wget -q "https://github.com/hoarder-app/hoarder/archive/refs/tags/v${RELEASE}.zip"
-    # unzip -q v${RELEASE}.zip
-    # mv hoarder-${RELEASE} /opt/hoarder
-    $STD git clone https://github.com/hoarder-app/hoarder.git
+    wget -q "https://github.com/hoarder-app/hoarder/archive/refs/tags/v${RELEASE}.zip"
+    unzip -q v${RELEASE}.zip
+    mv hoarder-${RELEASE} /opt/hoarder
     cd /opt/hoarder/apps/web
     $STD pnpm install --frozen-lockfile
     $STD pnpm exec next build --experimental-build-mode compile
