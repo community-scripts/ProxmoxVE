@@ -57,6 +57,11 @@ function update_script() {
             mv /opt/actualbudget/server-files/account.sqlite /opt/actualbudget-data/server-files/account.sqlite
         fi
 
+        if [[ -f /opt/actualbudget_bak/selfhost.key ]]; then
+            mv /opt/actualbudget_bak/selfhost.key /opt/actualbudget-data/selfhost.key
+            mv /opt/actualbudget_bak/selfhost.crt /opt/actualbudget-data/selfhost.crt
+        fi
+
         if [[ -f /opt/actualbudget_bak/.env ]]; then
             mv /opt/actualbudget_bak/.env /opt/actualbudget-data/.env
         else
