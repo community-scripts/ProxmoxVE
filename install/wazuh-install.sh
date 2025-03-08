@@ -17,12 +17,10 @@ msg_info "Installing Dependencies"
 $STD apt-get install -y \
     sudo \
     curl
-    
 msg_ok "Installed Dependencies"
 
 msg_info "Downloading Wazuh Installation Files"
-curl -sO https://packages.wazuh.com/4.11/wazuh-install.sh
-
+wget https://packages.wazuh.com/4.11/wazuh-install.sh
 msg_ok "Downloaded Wazuh Files"
 
 msg_info "Installing Wazuh"
@@ -33,7 +31,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -f wazuh-*.tar wazuh-*.sh
+rm -f wazuh-*.sh
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
