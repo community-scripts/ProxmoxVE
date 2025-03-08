@@ -182,6 +182,7 @@ RestartSec=5
 Type=simple
 Environment="LOG_LEVEL=info"
 Environment="CAPTCHA_SOLVER=none"
+Environment="PATH=/root/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 WorkingDirectory=/opt/byparr
 ExecStart=/bin/bash -c "source /root/.local/bin/env && cd /opt/byparr && uv sync && ./cmd.sh"
 TimeoutStopSec=60
