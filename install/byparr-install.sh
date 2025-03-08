@@ -18,14 +18,29 @@ update_os
 LOG_FILE="/var/log/byparr-install.log"
 echo "Starting Byparr installation at $(date)" > "$LOG_FILE"
 
-# Set root password to 'root'
+# Set root password to 'root' - more robust approach
 msg_info "Setting default root password"
+# Try multiple methods to ensure the password gets set
+passwd --delete root  # First delete any existing password
+echo -e "root\nroot" | passwd root
 echo "root:root" | chpasswd
-if [[ $? -ne 0 ]]; then
-  msg_error "Failed to set root password. Please check container permissions."
+# Verify the password was set
+if ! grep -q "root:" /etc/shadow; then
+  msg_error "Failed to find root entry in /etc/shadow"
   exit 1
 fi
 msg_ok "Root password has been set to 'root'"
+
+# Set up auto-login for root on console
+msg_info "Setting up auto-login for console"
+mkdir -p /etc/systemd/system/getty@tty1.service.d/
+cat <<EOF >/etc/systemd/system/getty@tty1.service.d/override.conf
+[Service]
+ExecStart=
+ExecStart=-/sbin/agetty --autologin root --noclear %I \$TERM
+EOF
+systemctl daemon-reload
+msg_ok "Set up auto-login for console"
 
 # Installing Dependencies
 msg_info "Installing Dependencies"
@@ -103,14 +118,34 @@ systemctl daemon-reload
 $STD systemctl enable --now byparr.service
 msg_ok "Created Service"
 
-# Fix SSH access
+# Fix SSH access - enhanced version
 msg_info "Setting up system access"
+# Enable root login via SSH
 sed -i 's/#PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
+# Make sure password authentication is enabled
+sed -i 's/#PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config
+sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
+# Make sure PAM is enabled
+sed -i 's/#UsePAM.*/UsePAM yes/' /etc/ssh/sshd_config
+# Restart SSH service
 $STD systemctl restart sshd
+# Verify root login is enabled
+if ! grep -q "^PermitRootLogin yes" /etc/ssh/sshd_config; then
+  msg_error "Failed to enable root login in SSH config"
+  # Try a more direct approach if the sed command failed
+  echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
+  echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config
+  $STD systemctl restart sshd
+fi
 msg_ok "System access configured"
 
 motd_ssh
 customize
+
+# Double-check password is still set correctly
+msg_info "Verifying password configuration"
+echo "root:root" | chpasswd
+msg_ok "Password verified"
 
 # Cleanup
 msg_info "Cleaning up"

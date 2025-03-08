@@ -229,6 +229,12 @@ if [ -z "$IP" ]; then
   IP=$(pct exec "$CTID" ip a s dev eth0 | awk '/inet / {print $2}' | cut -d/ -f1)
 fi
 
+# Set password just to be sure
+msg_info "Ensuring root password is set"
+pct exec "$CTID" -- bash -c "echo -e 'root\nroot' | passwd root"
+pct exec "$CTID" -- bash -c "echo 'root:root' | chpasswd"
+msg_ok "Root password set to 'root'"
+
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
