@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -s https://raw.githubusercontent.com/omiinaya/ProxmoxVE/refs/heads/main/misc/build.func)
+#source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2024 community-scripts ORG
 # Author: Omar Minaya
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -10,8 +11,8 @@ var_tags="security;monitoring"
 var_cpu="8"
 var_ram="4096"
 var_disk="24"
-var_os="ubuntu"
-var_version="22.04"
+var_os="debian"
+var_version="12"
 var_unprivileged="1"
 
 header_info "$APP"
