@@ -32,11 +32,11 @@ else
 fi
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
+  header_info
+  check_container_storage
+  check_container_resources
     if [[ ! -d /opt/byparr ]]; then
-        msg_error "No ${APP} Installation Found!"
+    msg_error "No ${APP} Installation Found!"
         exit
     fi
     msg_info "Updating Byparr"
@@ -246,39 +246,21 @@ EOF
   # Execute the installation script inside the container
   msg_info "Running installation script"
   
-  if [ "$VERB" = "1" ]; then
-    # Verbose mode: Show detailed output
-    pct exec "$CTID" -- bash -c "export VERBOSE=$VERB; /tmp/byparr-install-script.sh"
-  else
-    # Non-verbose mode: Hide detailed output
-    pct exec "$CTID" -- bash -c "export VERBOSE=$VERB; /tmp/byparr-install-script.sh" >/dev/null 2>&1
-  fi
+  # Pass the verbose flag to the script but don't redirect output at this level
+  pct exec "$CTID" -- bash -c "export VERBOSE=$VERB; /tmp/byparr-install-script.sh"
   
-  msg_ok "Installation script completed"
+  # Check if the installation was successful by verifying the service is running
+  if pct exec "$CTID" -- systemctl is-active --quiet byparr.service; then
+    msg_ok "Installation script completed successfully"
+  else
+    msg_error "Installation failed, check logs inside container"
+    exit 1
+  fi
 }
 
 start
 build_container
 description
-
-# Download and execute the installation script inside the container
-msg_info "Running installation script"
-
-if [ "$VERB" = "1" ]; then
-  # Verbose mode: Show detailed output
-  pct exec "$CTID" -- bash -c "export VERBOSE=1; /tmp/byparr-install-script.sh" || true
-else
-  # Non-verbose mode: Hide detailed output but don't redirect within eval
-  pct exec "$CTID" -- bash -c "export VERBOSE=0; /tmp/byparr-install-script.sh" >/dev/null 2>&1 || true
-fi
-
-# Check if the installation was successful by verifying the service is running
-if pct exec "$CTID" -- systemctl is-active --quiet byparr.service; then
-  msg_ok "Installation script completed successfully"
-else
-  msg_error "Installation failed, check logs inside container"
-  exit 1
-fi
 
 # Get IP address explicitly
 IP=$(pct exec "$CTID" ip a s dev eth0 | awk '/inet / {print $2}' | cut -d/ -f1)
