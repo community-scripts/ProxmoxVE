@@ -5,6 +5,12 @@ source <(curl -s https://raw.githubusercontent.com/tanujdargan/ProxmoxVE/main/mi
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/ThePhaseless/Byparr
 
+if [ "$VERB" = "1" ]; then
+  STD=""
+else
+  STD="&>/dev/null"
+fi
+
 set -e #terminate script if it fails a command
 
 APP="Byparr"
@@ -110,7 +116,7 @@ EOF
   msg_ok "Started LXC Container"
 
   # Wait for container to fully start
-  sleep 5
+  sleep 10
   
   # Create the installation script file
   cat > /tmp/byparr-install-script.sh <<'EOF'
@@ -196,6 +202,11 @@ systemctl enable --now byparr.service
 # Configure SSH for root access
 echo "Setting up system access..." | tee -a "$LOG_FILE"
 sed -i 's/#PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
+sed -i 's/#PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config
+sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
+# Add these lines explicitly if sed fails
+grep -q "^PermitRootLogin yes" /etc/ssh/sshd_config || echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
+grep -q "^PasswordAuthentication yes" /etc/ssh/sshd_config || echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config
 systemctl restart sshd
 
 # Cleanup
@@ -230,10 +241,10 @@ if [ -z "$IP" ]; then
 fi
 
 # Set password just to be sure
-msg_info "Ensuring root password is set"
-pct exec "$CTID" -- bash -c "echo -e 'root\nroot' | passwd root"
+pct exec "$CTID" -- bash -c "passwd --delete root && echo -e 'root\nroot' | passwd root"
 pct exec "$CTID" -- bash -c "echo 'root:root' | chpasswd"
-msg_ok "Root password set to 'root'"
+# Add verification
+pct exec "$CTID" -- bash -c "grep -q '^root:' /etc/shadow || echo 'ERROR: Root password not set correctly'"
 
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
