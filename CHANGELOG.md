@@ -14,6 +14,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 All LXC instances created using this repository come pre-installed with Midnight Commander, which is a command-line tool (`mc`) that offers a user-friendly file and directory management interface for the terminal environment.
 
 
+## 2025-03-08
+
+### 🌐 Website
+
+  - #### 🐞 Bug Fixes
+
+    - Update slug to lowercase in pf2etools.json  [@PhoenixEmik](https://github.com/PhoenixEmik) ([#2942](https://github.com/community-scripts/ProxmoxVE/pull/2942))
+
 ## 2025-03-07
 
 ### 🚀 Updated Scripts
