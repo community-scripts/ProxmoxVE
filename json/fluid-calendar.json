@@ -1,0 +1,44 @@
+{
+  "name": "Fluid-Calendar",
+  "slug": "fluid-calendar",
+  "categories": [
+    19,
+    0
+  ],
+  "date_created": "2025-03-04",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 3000,
+  "documentation": "https://github.com/dotnetfactory/fluid-calendar/tree/main/docs",
+  "website": "https://github.com/dotnetfactory/fluid-calendar",
+  "logo": "https://raw.githubusercontent.com/dotnetfactory/fluid-calendar/refs/heads/main/src/app/favicon.ico",
+  "description": "The open-source intelligent calendar that adapts to your workflow. Experience seamless task scheduling powered by AI, designed to make your time management effortless.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/fluid-calendar.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 4096,
+        "hdd": 4,
+        "os": "Debian",
+        "version": "12"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "RAM can be reduced to 2GB after installation",
+      "type": "info"
+    },
+    {
+      "text": "Creds: cat ~/fluid-calendar.creds",
+      "type": "info"
+    }
+  ]
+}
