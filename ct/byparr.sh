@@ -120,9 +120,8 @@ EOF
   msg_ok "Started LXC Container"
 
   # Wait for container to fully start
-  msg_info "Waiting for container to initialize..."
+  echo "Waiting for container to initialize..."
   sleep 10
-  msg_ok "Container initialized"
   
   # Create the installation script file
   cat > /tmp/byparr-install-script.sh <<'EOF'
@@ -138,32 +137,30 @@ echo "Starting Byparr installation at $(date)" > "$LOG_FILE"
 # Determine output redirection based on VERBOSE environment variable
 if [ "$VERBOSE" = "1" ]; then
   REDIRECT=""
-  QUIET=""
 else
   REDIRECT=">/dev/null 2>&1"
-  QUIET=">/dev/null 2>&1"
 fi
 
 # Update package lists
-echo "Updating package lists..." | tee -a "$LOG_FILE" $QUIET
+echo "Updating package lists..." | tee -a "$LOG_FILE"
 eval "apt update $REDIRECT"
 
 # Install dependencies
-echo "Installing dependencies..." | tee -a "$LOG_FILE" $QUIET
+echo "Installing dependencies..." | tee -a "$LOG_FILE"
 eval "apt install -y curl sudo mc apt-transport-https wget gpg xvfb git $REDIRECT"
 
 # Install Chrome with more reliable key handling
-echo "Installing Chrome..." | tee -a "$LOG_FILE" $QUIET
+echo "Installing Chrome..." | tee -a "$LOG_FILE"
 # Download the key and verify it downloaded correctly
 eval "curl -s https://dl.google.com/linux/linux_signing_key.pub > /tmp/google-key.pub $REDIRECT"
 if [ ! -s /tmp/google-key.pub ]; then
-  echo "Failed to download Google key, retrying with wget..." | tee -a "$LOG_FILE" $QUIET
+  echo "Failed to download Google key, retrying with wget..." | tee -a "$LOG_FILE"
   eval "wget -q -O /tmp/google-key.pub https://dl.google.com/linux/linux_signing_key.pub $REDIRECT"
 fi
 
 # Verify the key file is not empty and looks valid
 if [ ! -s /tmp/google-key.pub ] || ! grep -q "BEGIN PGP PUBLIC KEY BLOCK" /tmp/google-key.pub; then
-  echo "Error: Invalid or empty Google signing key" | tee -a "$LOG_FILE" $QUIET
+  echo "Error: Invalid or empty Google signing key" | tee -a "$LOG_FILE"
   exit 1
 fi
 
@@ -176,21 +173,21 @@ eval "apt update $REDIRECT"
 eval "apt install -y google-chrome-stable $REDIRECT"
 
 # Install UV Package Manager
-echo "Installing UV Package Manager..." | tee -a "$LOG_FILE" $QUIET
+echo "Installing UV Package Manager..." | tee -a "$LOG_FILE"
 eval "curl -LsSf https://astral.sh/uv/install.sh | sh $REDIRECT"
 echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
 echo 'source "$HOME/.local/bin/env"' >> ~/.bashrc
 eval "source $HOME/.local/bin/env $REDIRECT || true"
 
 # Clone Byparr
-echo "Installing Byparr..." | tee -a "$LOG_FILE" $QUIET
+echo "Installing Byparr..." | tee -a "$LOG_FILE"
 eval "git clone https://github.com/ThePhaseless/Byparr.git /opt/byparr $REDIRECT"
 cd /opt/byparr
 eval "source $HOME/.local/bin/env $REDIRECT || true"
 eval "uv sync --group test $REDIRECT"
 
 # Create service
-echo "Creating Byparr service..." | tee -a "$LOG_FILE" $QUIET
+echo "Creating Byparr service..." | tee -a "$LOG_FILE"
 cat <<INNEREOF >/etc/systemd/system/byparr.service
 [Unit]
 Description=Byparr
@@ -215,7 +212,7 @@ eval "systemctl daemon-reload $REDIRECT"
 eval "systemctl enable --now byparr.service $REDIRECT"
 
 # Configure SSH for root access
-echo "Setting up system access..." | tee -a "$LOG_FILE" $QUIET
+echo "Setting up system access..." | tee -a "$LOG_FILE"
 eval "sed -i 's/#PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config $REDIRECT"
 eval "sed -i 's/#PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config $REDIRECT"
 eval "sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config $REDIRECT"
@@ -225,18 +222,18 @@ eval "grep -q '^PasswordAuthentication yes' /etc/ssh/sshd_config $REDIRECT || ec
 eval "systemctl restart sshd $REDIRECT"
 
 # Set root password directly
-echo "Setting root password..." | tee -a "$LOG_FILE" $QUIET
+echo "Setting root password..." | tee -a "$LOG_FILE"
 eval "passwd --delete root $REDIRECT"
 eval "echo -e 'root\nroot' | passwd root $REDIRECT"
 eval "echo 'root:root' | chpasswd $REDIRECT"
 
 # Cleanup
-echo "Cleaning up..." | tee -a "$LOG_FILE" $QUIET
+echo "Cleaning up..." | tee -a "$LOG_FILE"
 eval "rm -f /tmp/google-key.pub $REDIRECT"
 eval "apt-get -y autoremove $REDIRECT"
 eval "apt-get -y autoclean $REDIRECT"
 
-echo "Byparr installation completed successfully at $(date)" | tee -a "$LOG_FILE" $QUIET
+echo "Byparr installation completed successfully at $(date)" | tee -a "$LOG_FILE"
 EOF
 
   # Copy the script to the container
@@ -245,15 +242,7 @@ EOF
   
   # Execute the installation script inside the container
   msg_info "Running installation script"
-  
-  if [ "$VERB" = "1" ]; then
-    # Verbose mode: Show detailed output
-    pct exec "$CTID" -- bash -c "export VERBOSE=$VERB; /tmp/byparr-install-script.sh"
-  else
-    # Non-verbose mode: Hide detailed output
-    pct exec "$CTID" -- bash -c "export VERBOSE=$VERB; /tmp/byparr-install-script.sh" >/dev/null 2>&1
-  fi
-  
+  pct exec "$CTID" -- bash -c "export VERBOSE=$VERB; /tmp/byparr-install-script.sh"
   msg_ok "Installation script completed"
 }
 
@@ -271,10 +260,10 @@ fi
 
 # Set password just to be sure
 msg_info "Setting root password"
-pct exec "$CTID" -- bash -c "passwd --delete root && echo -e 'root\nroot' | passwd root" >/dev/null 2>&1
-pct exec "$CTID" -- bash -c "echo 'root:root' | chpasswd" >/dev/null 2>&1
+pct exec "$CTID" -- bash -c "passwd --delete root && echo -e 'root\nroot' | passwd root"
+pct exec "$CTID" -- bash -c "echo 'root:root' | chpasswd"
 # Add verification
-pct exec "$CTID" -- bash -c "grep -q '^root:' /etc/shadow || echo 'ERROR: Root password not set correctly'" >/dev/null 2>&1
+pct exec "$CTID" -- bash -c "grep -q '^root:' /etc/shadow || echo 'ERROR: Root password not set correctly'"
 msg_ok "Root password set"
 
 msg_ok "Completed Successfully!\n"
