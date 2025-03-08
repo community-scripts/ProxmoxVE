@@ -29,6 +29,7 @@ function update_script() {
   fi
   msg_info "Updating ${APP} (Patience)"
   cd /opt/open-webui
+  $STD git reset --hard
   output=$(git pull --no-rebase)
   if echo "$output" | grep -q "Already up to date."; then
     msg_ok "$APP is already up to date."
