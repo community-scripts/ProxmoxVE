@@ -21,6 +21,9 @@ variables
 color
 catch_errors
 
+# Initialize VERB variable with default value
+VERB="${VERB:-0}"
+
 # Define output redirection based on verbose flag
 if [ "$VERB" = "1" ]; then
   REDIRECT=""
