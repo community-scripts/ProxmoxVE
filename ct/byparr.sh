@@ -243,9 +243,27 @@ EOF
   pct push "$CTID" /tmp/byparr-install-script.sh /tmp/byparr-install-script.sh
   pct exec "$CTID" -- chmod +x /tmp/byparr-install-script.sh
   
-# Execute the installation script inside the container
-msg_info "Running installation script"
+  # Execute the installation script inside the container
+  msg_info "Running installation script"
   
+  if [ "$VERB" = "1" ]; then
+    # Verbose mode: Show detailed output
+    pct exec "$CTID" -- bash -c "export VERBOSE=$VERB; /tmp/byparr-install-script.sh"
+  else
+    # Non-verbose mode: Hide detailed output
+    pct exec "$CTID" -- bash -c "export VERBOSE=$VERB; /tmp/byparr-install-script.sh" >/dev/null 2>&1
+  fi
+  
+  msg_ok "Installation script completed"
+}
+
+start
+build_container
+description
+
+# Download and execute the installation script inside the container
+msg_info "Running installation script"
+
 if [ "$VERB" = "1" ]; then
   # Verbose mode: Show detailed output
   pct exec "$CTID" -- bash -c "export VERBOSE=1; /tmp/byparr-install-script.sh" || true
@@ -253,7 +271,7 @@ else
   # Non-verbose mode: Hide detailed output but don't redirect within eval
   pct exec "$CTID" -- bash -c "export VERBOSE=0; /tmp/byparr-install-script.sh" >/dev/null 2>&1 || true
 fi
-  
+
 # Check if the installation was successful by verifying the service is running
 if pct exec "$CTID" -- systemctl is-active --quiet byparr.service; then
   msg_ok "Installation script completed successfully"
@@ -262,10 +280,6 @@ else
   exit 1
 fi
 
-start
-build_container
-description
-
 # Get IP address explicitly
 IP=$(pct exec "$CTID" ip a s dev eth0 | awk '/inet / {print $2}' | cut -d/ -f1)
 if [ -z "$IP" ]; then
@@ -273,14 +287,6 @@ if [ -z "$IP" ]; then
   sleep 5
   IP=$(pct exec "$CTID" ip a s dev eth0 | awk '/inet / {print $2}' | cut -d/ -f1)
 fi
-
-# Set password just to be sure
-msg_info "Setting root password"
-pct exec "$CTID" -- bash -c "passwd --delete root && echo -e 'root\nroot' | passwd root" >/dev/null 2>&1
-pct exec "$CTID" -- bash -c "echo 'root:root' | chpasswd" >/dev/null 2>&1
-# Add verification
-pct exec "$CTID" -- bash -c "grep -q '^root:' /etc/shadow || echo 'ERROR: Root password not set correctly'" >/dev/null 2>&1
-msg_ok "Root password set"
 
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
