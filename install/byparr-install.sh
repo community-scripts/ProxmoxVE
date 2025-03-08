@@ -51,6 +51,27 @@ source $HOME/.local/bin/env
 $STD uv sync --group test
 msg_ok "Installed Byparr"
 
+# Creating wrapper script
+msg_info "Creating startup wrapper script"
+cat <<EOF >/opt/byparr/start-byparr.sh
+#!/bin/bash
+
+# Source the environment file to set up PATH
+if [ -f /root/.local/bin/env ]; then
+  source /root/.local/bin/env
+fi
+
+# Change to the Byparr directory
+cd /opt/byparr
+
+# Run UV sync and start the application
+uv sync && ./cmd.sh
+EOF
+
+# Make the wrapper script executable
+chmod +x /opt/byparr/start-byparr.sh
+msg_ok "Created startup wrapper script"
+
 # Creating Service
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/byparr.service
@@ -65,7 +86,7 @@ Type=simple
 Environment="LOG_LEVEL=info"
 Environment="CAPTCHA_SOLVER=none"
 WorkingDirectory=/opt/byparr
-ExecStart=/bin/bash -c "source /root/.local/bin/env && cd /opt/byparr && uv sync && ./cmd.sh"
+ExecStart=/opt/byparr/start-byparr.sh
 TimeoutStopSec=60
 [Install]
 WantedBy=multi-user.target
