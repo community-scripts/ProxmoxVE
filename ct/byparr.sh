@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 source <(curl -s https://raw.githubusercontent.com/tanujdargan/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
-# Author: tteck (tteckster)
-# Co-Auther: tanujdargan
+# Copyright (c) 2021-2025 community-scripts ORG
+# Author: tanujdargan
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/ThePhaseless/Byparr
 
@@ -235,3 +234,6 @@ echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8191${CL}"
 echo -e "${INFO}${YW} Container IP address: ${IP}${CL}"
+echo -e "${INFO}${YW} Default login credentials:${CL}"
+echo -e "${TAB}${YW}Username: root${CL}"
+echo -e "${TAB}${YW}Password: root${CL}"

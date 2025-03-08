@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
-# Author: tteck (tteckster)
-# Co-Author: remz1337
+# Copyright (c) 2021-2025 community-scripts ORG
+# Author: tanujdargan
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/ThePhaseless/Byparr
 
@@ -18,6 +17,15 @@ update_os
 
 LOG_FILE="/var/log/byparr-install.log"
 echo "Starting Byparr installation at $(date)" > "$LOG_FILE"
+
+# Set root password to 'root'
+msg_info "Setting default root password"
+echo "root:root" | chpasswd
+if [[ $? -ne 0 ]]; then
+  msg_error "Failed to set root password. Please check container permissions."
+  exit 1
+fi
+msg_ok "Root password has been set to 'root'"
 
 # Installing Dependencies
 msg_info "Installing Dependencies"
@@ -111,3 +119,10 @@ $STD apt-get -y autoclean
 msg_ok "Cleaned"
 
 echo "Byparr installation completed successfully at $(date)" >> "$LOG_FILE"
+
+# Print login information
+echo ""
+echo "======== LOGIN INFORMATION ========"
+echo "Username: root"
+echo "Password: root"
+echo "=================================="
