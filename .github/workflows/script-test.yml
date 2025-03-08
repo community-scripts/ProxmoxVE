@@ -117,7 +117,7 @@ jobs:
               chmod +x .github/workflows/scripts/app-test/pr-install.func
               chmod +x .github/workflows/scripts/app-test/pr-alpine-install.func
               chmod +x .github/workflows/scripts/app-test/pr-build.func
-              sed -i 's|source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)|source .github/workflows/scripts/app-test/pr-build.func|g' "$RUNNING_FILE"
+              sed -i 's|source <(curl -s https://raw.githubusercontent.com/omiinaya/ProxmoxVE/refs/heads/main/misc/build.func)|source .github/workflows/scripts/app-test/pr-build.func|g' "$RUNNING_FILE"
               echo "Executing $RUNNING_FILE"
               ERROR_MSG=$(./$RUNNING_FILE 2>&1 > /dev/null)
               echo "Finished running $FILE"

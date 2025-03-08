@@ -54,8 +54,8 @@ jobs:
                 FIRST_LINE=$(sed -n '1p' "$FILE")
                 [[ "$FIRST_LINE" != "#!/usr/bin/env bash" ]] && echo "Line 1 was $FIRST_LINE | Should be: #!/usr/bin/env bash" >> "$LOG_FILE"
                 SECOND_LINE=$(sed -n '2p' "$FILE")
-                [[ "$SECOND_LINE" != "source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)" ]] && 
-                echo "Line 2 was $SECOND_LINE | Should be: source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)" >> "$LOG_FILE"
+                [[ "$SECOND_LINE" != "source <(curl -s https://raw.githubusercontent.com/omiinaya/ProxmoxVE/refs/heads/main/misc/build.func)" ]] && 
+                echo "Line 2 was $SECOND_LINE | Should be: source <(curl -s https://raw.githubusercontent.com/omiinaya/ProxmoxVE/refs/heads/main/misc/build.func)" >> "$LOG_FILE"
                 THIRD_LINE=$(sed -n '3p' "$FILE")
                  if ! [[ "$THIRD_LINE" =~ ^#\ Copyright\ \(c\)\ [0-9]{4}-[0-9]{4}\ community-scripts\ ORG$ || "$THIRD_LINE" =~ ^Copyright\ \(c\)\ [0-9]{4}-[0-9]{4}\ tteck$ ]]; then
                      echo "Line 3 was $THIRD_LINE | Should be: # Copyright (c) 2021-2025 community-scripts ORG" >> "$LOG_FILE"

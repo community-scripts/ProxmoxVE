@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
 source <(curl -s https://raw.githubusercontent.com/omiinaya/ProxmoxVE/refs/heads/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
-# Author: tteck (tteckster)
+#source <(curl -s https://raw.githubusercontent.com/omiinaya/ProxmoxVE/refs/heads/main/misc/build.func)
+# Copyright (c) 2024 community-scripts ORG
+# Author: Omar Minaya
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://www.cloudflare.com/
+# Source: https://wazuh.com/
 
-APP="Cloudflared"
-var_tags="network;cloudflare"
-var_cpu="1"
-var_ram="512"
-var_disk="2"
+APP="Wazuh"
+var_tags="security;monitoring"
+var_cpu="8"
+var_ram="4096"
+var_disk="24"
 var_os="debian"
 var_version="12"
 var_unprivileged="1"
@@ -27,10 +28,10 @@ function update_script() {
       msg_error "No ${APP} Installation Found!"
       exit
    fi
-   msg_info "Updating $APP LXC"
+   msg_info "Updating ${APP} LXC"
    $STD apt-get update
    $STD apt-get -y upgrade
-   msg_ok "Updated $APP LXC"
+   msg_ok "Updated ${APP} LXC"
    exit
 }
 
@@ -40,3 +41,5 @@ description
 
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
+echo -e "${INFO}${YW} Access it using the following URL:${CL}"
+echo -e "${TAB}${GATEWAY}${BGN}https://${IP}:443${CL}"
