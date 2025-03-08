@@ -147,9 +147,9 @@ build_container() {
   TEMP_DIR=$(mktemp -d)
   pushd $TEMP_DIR >/dev/null
   if [ "$var_os" == "alpine" ]; then
-    export FUNCTIONS_FILE_PATH="$(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/.github/workflows/scripts/app-test/pr-alpine-install.func)"
+    export FUNCTIONS_FILE_PATH="$(curl -s https://raw.githubusercontent.com/omiinaya/ProxmoxVE/refs/heads/main/.github/workflows/scripts/app-test/pr-alpine-install.func)"
   else
-    export FUNCTIONS_FILE_PATH="$(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/.github/workflows/scripts/app-test/pr-install.func)"
+    export FUNCTIONS_FILE_PATH="$(curl -s https://raw.githubusercontent.com/omiinaya/ProxmoxVE/refs/heads/main/.github/workflows/scripts/app-test/pr-install.func)"
   fi
 
   export CACHER="$APT_CACHER"
@@ -184,7 +184,7 @@ build_container() {
   echo "Container ID: $CTID"
 
   # This executes create_lxc.sh and creates the container and .conf file
-  bash -c "$(wget -qLO - https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/.github/workflows/scripts/app-test/pr-create-lxc.sh)"
+  bash -c "$(wget -qLO - https://raw.githubusercontent.com/omiinaya/ProxmoxVE/refs/heads/main/.github/workflows/scripts/app-test/pr-create-lxc.sh)"
 
   LXC_CONFIG=/etc/pve/lxc/${CTID}.conf
   if [ "$CT_TYPE" == "0" ]; then

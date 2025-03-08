@@ -68,8 +68,7 @@ catch_errors() {
 
 # This function handles errors
 error_handler() {
-  source <(curl -s https://raw.githubusercontent.com/omiinaya/ProxmoxVE/refs/heads/main/misc/api.func)
-  source <(wget -qLO - https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func)
+  source <(wget -qLO - https://raw.githubusercontent.com/omiinaya/ProxmoxVE/refs/heads/main/misc/api.func)
   if [ -n "$SPINNER_PID" ] && ps -p $SPINNER_PID >/dev/null; then kill $SPINNER_PID >/dev/null; fi
   printf "\e[?25h"
   local exit_code="$?"

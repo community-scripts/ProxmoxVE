@@ -54,7 +54,7 @@ jobs:
         run: |
           NON_COMPLIANT_FILES=""
           for FILE in ${{ steps.changed-files.outputs.files }}; do
-            if [[ "$FILE" == ct/* ]] && [[ $(sed -n '2p' "$FILE") != "source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)" ]]; then
+            if [[ "$FILE" == ct/* ]] && [[ $(sed -n '2p' "$FILE") != "source <(curl -s https://raw.githubusercontent.com/omiinaya/ProxmoxVE/refs/heads/main/misc/build.func)" ]]; then
               NON_COMPLIANT_FILES="$NON_COMPLIANT_FILES $FILE"
             fi
           done
