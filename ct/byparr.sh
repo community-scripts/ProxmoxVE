@@ -243,24 +243,19 @@ EOF
   pct push "$CTID" /tmp/byparr-install-script.sh /tmp/byparr-install-script.sh
   pct exec "$CTID" -- chmod +x /tmp/byparr-install-script.sh
   
-# Execute the installation script inside the container
-msg_info "Running installation script"
+  # Execute the installation script inside the container
+  msg_info "Running installation script"
   
-if [ "$VERB" = "1" ]; then
-  # Verbose mode: Show detailed output
-  pct exec "$CTID" -- bash -c "export VERBOSE=1; /tmp/byparr-install-script.sh" || true
-else
-  # Non-verbose mode: Hide detailed output but don't redirect within eval
-  pct exec "$CTID" -- bash -c "export VERBOSE=0; /tmp/byparr-install-script.sh" >/dev/null 2>&1 || true
-fi
+  if [ "$VERB" = "1" ]; then
+    # Verbose mode: Show detailed output
+    pct exec "$CTID" -- bash -c "export VERBOSE=$VERB; /tmp/byparr-install-script.sh"
+  else
+    # Non-verbose mode: Hide detailed output
+    pct exec "$CTID" -- bash -c "export VERBOSE=$VERB; /tmp/byparr-install-script.sh" >/dev/null 2>&1
+  fi
   
-# Check if the installation was successful by verifying the service is running
-if pct exec "$CTID" -- systemctl is-active --quiet byparr.service; then
-  msg_ok "Installation script completed successfully"
-else
-  msg_error "Installation failed, check logs inside container"
-  exit 1
-fi
+  msg_ok "Installation script completed"
+}
 
 start
 build_container
