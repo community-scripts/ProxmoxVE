@@ -22,6 +22,18 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - Fix wikijs update issue while backing up data [@AdelRefaat](https://github.com/AdelRefaat) ([#2950](https://github.com/community-scripts/ProxmoxVE/pull/2950))
 
+### 🧰 Maintenance
+
+  - #### 🐞 Bug Fixes
+
+    - Improve Release-Action (awk function) [@MickLesk](https://github.com/MickLesk) ([#2934](https://github.com/community-scripts/ProxmoxVE/pull/2934))
+
+### 🌐 Website
+
+  - #### 🐞 Bug Fixes
+
+    - Pi-hole interface port in documentation [@la7eralus](https://github.com/la7eralus) ([#2953](https://github.com/community-scripts/ProxmoxVE/pull/2953))
+
 ## 2025-03-08
 
 ### 🌐 Website
