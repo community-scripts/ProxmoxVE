@@ -2,38 +2,38 @@
     "name": "Byparr",
     "slug": "byparr",
     "categories": [
-        5
+      14
     ],
-    "date_created": "2025-03-07",
+    "date_created": "2025-03-03",
     "type": "ct",
     "updateable": true,
     "privileged": false,
     "interface_port": 8191,
-    "documentation": "https://github.com/ThePhaseless/Byparr",
+    "documentation": "https://github.com/ThePhaseless/Byparr/blob/main/README.md",
     "website": "https://github.com/ThePhaseless/Byparr",
-    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/flaresolverr.svg",
-    "description": "Byparr is a FlareSolverr drop-in replacement with FastAPI and nodriver. It allows applications like Sonarr, Radarr, Lidarr, and Readarr to access websites that are protected by Cloudflare and other anti-bot systems. Unlike the original FlareSolverr, Byparr uses a more lightweight approach for solving Cloudflare challenges without relying on Puppeteer or full browser automation.",
+    "logo": null,
+    "description": "Byparr is a FlareSolverr drop-in replacement with FastAPI and nodriver. It allows applications like Sonarr, Radarr, Lidarr, and Readarr to access websites that are protected by Cloudflare and other anti-bot systems.",
     "install_methods": [
-        {
-            "type": "default",
-            "script": "ct/byparr.sh",
-            "resources": {
-                "cpu": 2,
-                "ram": 2048,
-                "hdd": 4,
-                "os": "debian",
-                "version": "12"
-            }
+      {
+        "type": "default",
+        "script": "ct/byparr.sh",
+        "resources": {
+          "cpu": 2,
+          "ram": 2048,
+          "hdd": 4,
+          "os": "Debian",
+          "version": "12"
         }
+      }
     ],
     "default_credentials": {
-        "username": null,
-        "password": null
+      "username": "root",
+      "password": "root"
     },
     "notes": [
-        {
-            "text": "Byparr can be updated via the update script or manually by pulling the latest code from GitHub.",
-            "type": "info"
-        }
+      {
+        "text": "Byparr can be updated via the update script or manually by pulling the latest code from GitHub.",
+        "type": "info"
+      }
     ]
-}
+  }
