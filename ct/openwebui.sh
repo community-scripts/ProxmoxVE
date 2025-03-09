@@ -29,6 +29,8 @@ function update_script() {
   fi
   msg_info "Updating ${APP} (Patience)"
   cd /opt/open-webui
+  mkdir /opt/open-webui/backup
+  cp -rf /opt/open-webui/backend/data /opt/open-webui/backup
   $STD git reset --hard
   output=$(git pull --no-rebase)
   if echo "$output" | grep -q "Already up to date."; then
@@ -41,6 +43,7 @@ function update_script() {
   $STD npm run build
   cd ./backend
   $STD pip install -r requirements.txt -U
+  cp -rf /opt/open-webui/backup/* /opt/open-webui/backend/data
   systemctl start open-webui.service
   msg_ok "Updated Successfully"
   exit
