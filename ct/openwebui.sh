@@ -31,6 +31,7 @@ function update_script() {
   cd /opt/open-webui
   mkdir /opt/open-webui-backup
   cp -rf /opt/open-webui/backend/data /opt/open-webui-backup
+  git add -A
   $STD git stash
   $STD git reset --hard
   output=$(git pull --no-rebase)
