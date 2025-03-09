@@ -14,12 +14,45 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 All LXC instances created using this repository come pre-installed with Midnight Commander, which is a command-line tool (`mc`) that offers a user-friendly file and directory management interface for the terminal environment.
 
 
+## 2025-03-09
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Fix wikijs update issue while backing up data [@AdelRefaat](https://github.com/AdelRefaat) ([#2950](https://github.com/community-scripts/ProxmoxVE/pull/2950))
+
+## 2025-03-08
+
+### 🌐 Website
+
+  - #### 🐞 Bug Fixes
+
+    - Update slug to lowercase in pf2etools.json  [@PhoenixEmik](https://github.com/PhoenixEmik) ([#2942](https://github.com/community-scripts/ProxmoxVE/pull/2942))
+
 ## 2025-03-07
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - JupyterNotebook: Fix APP Variable [@MickLesk](https://github.com/MickLesk) ([#2924](https://github.com/community-scripts/ProxmoxVE/pull/2924))
+
+  - #### ✨ New Features
+
+    - Beszel: restarting service after update [@C0pywriting](https://github.com/C0pywriting) ([#2915](https://github.com/community-scripts/ProxmoxVE/pull/2915))
+
+  - #### 💥 Breaking Changes
+
+    - ActualBudget: Update Script with new Repo [@MickLesk](https://github.com/MickLesk) ([#2907](https://github.com/community-scripts/ProxmoxVE/pull/2907))
 
 ### 🌐 Website
 
   - #### 📝 Script Information
 
+    - Improve Nextcloud(pi) docu and Name to NextcloudPi [@MickLesk](https://github.com/MickLesk) ([#2930](https://github.com/community-scripts/ProxmoxVE/pull/2930))
+    - fix jupyternotebook slug [@MickLesk](https://github.com/MickLesk) ([#2922](https://github.com/community-scripts/ProxmoxVE/pull/2922))
+    - Improve Trilium Description and Name to TriliumNext [@MickLesk](https://github.com/MickLesk) ([#2929](https://github.com/community-scripts/ProxmoxVE/pull/2929))
     - Prowlarr icon [@bannert1337](https://github.com/bannert1337) ([#2906](https://github.com/community-scripts/ProxmoxVE/pull/2906))
     - Update Apache Tika icon to SVG [@bannert1337](https://github.com/bannert1337) ([#2904](https://github.com/community-scripts/ProxmoxVE/pull/2904))
     - Update Prometheus Alertmanager Icon [@bannert1337](https://github.com/bannert1337) ([#2905](https://github.com/community-scripts/ProxmoxVE/pull/2905))
