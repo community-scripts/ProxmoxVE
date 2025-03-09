@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/tanujdargan/ProxmoxVE/main/misc/build.func)
+source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: tanujdargan
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -263,14 +263,6 @@ EOF
 start
 build_container
 description
-
-# Get IP address explicitly
-IP=$(pct exec "$CTID" ip a s dev eth0 | awk '/inet / {print $2}' | cut -d/ -f1)
-if [ -z "$IP" ]; then
-  # Try again if IP is empty
-  sleep 5
-  IP=$(pct exec "$CTID" ip a s dev eth0 | awk '/inet / {print $2}' | cut -d/ -f1)
-fi
 
 # Set password just to be sure - Use redirection to hide command output
 msg_info "Setting root password"
