@@ -44,7 +44,7 @@ function update_script() {
   $STD npm run build
   cd ./backend
   $STD pip install -r requirements.txt -U
-  cp -rf /opt/open-webui-backup/* /opt/open-webui/backend/data
+  cp -rf /opt/open-webui-backup/* /opt/open-webui/backend
   $STD git stash pop
   systemctl start open-webui.service
   msg_ok "Updated Successfully"
