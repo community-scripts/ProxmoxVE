@@ -8,7 +8,7 @@
     "type": "ct",
     "updateable": true,
     "privileged": false,
-    "interface_port": 81,
+    "interface_port": 80,
     "documentation": "https://docs.pi-hole.net/",
     "website": "https://pi-hole.net/",
     "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/pi-hole.svg",
