@@ -151,7 +151,7 @@ run_cmd() {
     eval "$1"
   else
     eval "$1 >/dev/null 2>&1"
-  }
+  fi
 }
 
 # Update package lists
