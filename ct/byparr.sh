@@ -136,58 +136,71 @@ echo "Starting Byparr installation at $(date)" > "$LOG_FILE"
 
 # Determine output redirection based on VERBOSE environment variable
 if [ "$VERBOSE" = "1" ]; then
-  REDIRECT=""
+  log() {
+    echo "$1" | tee -a "$LOG_FILE"
+  }
 else
-  REDIRECT=">/dev/null 2>&1"
+  log() {
+    echo "$1" >> "$LOG_FILE"
+  }
 fi
 
+# Function for executing commands with proper output handling
+run_cmd() {
+  if [ "$VERBOSE" = "1" ]; then
+    eval "$1"
+  else
+    eval "$1 >/dev/null 2>&1"
+  }
+}
+
 # Update package lists
-echo "Updating package lists..." | tee -a "$LOG_FILE"
-eval "apt update $REDIRECT"
+log "Updating package lists..."
+run_cmd "apt update"
 
 # Install dependencies
-echo "Installing dependencies..." | tee -a "$LOG_FILE"
-eval "apt install -y curl sudo mc apt-transport-https wget gpg xvfb git $REDIRECT"
+log "Installing dependencies..."
+run_cmd "apt install -y curl sudo mc apt-transport-https wget gpg xvfb git"
 
 # Install Chrome with more reliable key handling
-echo "Installing Chrome..." | tee -a "$LOG_FILE"
+log "Installing Chrome..."
 # Download the key and verify it downloaded correctly
-eval "curl -s https://dl.google.com/linux/linux_signing_key.pub > /tmp/google-key.pub $REDIRECT"
+run_cmd "curl -s https://dl.google.com/linux/linux_signing_key.pub > /tmp/google-key.pub"
 if [ ! -s /tmp/google-key.pub ]; then
-  echo "Failed to download Google key, retrying with wget..." | tee -a "$LOG_FILE"
-  eval "wget -q -O /tmp/google-key.pub https://dl.google.com/linux/linux_signing_key.pub $REDIRECT"
+  log "Failed to download Google key, retrying with wget..."
+  run_cmd "wget -q -O /tmp/google-key.pub https://dl.google.com/linux/linux_signing_key.pub"
 fi
 
 # Verify the key file is not empty and looks valid
 if [ ! -s /tmp/google-key.pub ] || ! grep -q "BEGIN PGP PUBLIC KEY BLOCK" /tmp/google-key.pub; then
-  echo "Error: Invalid or empty Google signing key" | tee -a "$LOG_FILE"
+  log "Error: Invalid or empty Google signing key"
   exit 1
 fi
 
 # Import the key
-eval "cat /tmp/google-key.pub | gpg --dearmor -o /usr/share/keyrings/google-chrome.gpg $REDIRECT"
+run_cmd "cat /tmp/google-key.pub | gpg --dearmor -o /usr/share/keyrings/google-chrome.gpg"
 
 # Add Chrome repository
 echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list
-eval "apt update $REDIRECT"
-eval "apt install -y google-chrome-stable $REDIRECT"
+run_cmd "apt update"
+run_cmd "apt install -y google-chrome-stable"
 
 # Install UV Package Manager
-echo "Installing UV Package Manager..." | tee -a "$LOG_FILE"
-eval "curl -LsSf https://astral.sh/uv/install.sh | sh $REDIRECT"
+log "Installing UV Package Manager..."
+run_cmd "curl -LsSf https://astral.sh/uv/install.sh | sh"
 echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
 echo 'source "$HOME/.local/bin/env"' >> ~/.bashrc
-eval "source $HOME/.local/bin/env $REDIRECT || true"
+run_cmd "source $HOME/.local/bin/env || true"
 
 # Clone Byparr
-echo "Installing Byparr..." | tee -a "$LOG_FILE"
-eval "git clone https://github.com/ThePhaseless/Byparr.git /opt/byparr $REDIRECT"
+log "Installing Byparr..."
+run_cmd "git clone https://github.com/ThePhaseless/Byparr.git /opt/byparr"
 cd /opt/byparr
-eval "source $HOME/.local/bin/env $REDIRECT || true"
-eval "uv sync --group test $REDIRECT"
+run_cmd "source $HOME/.local/bin/env || true"
+run_cmd "uv sync --group test"
 
 # Create service
-echo "Creating Byparr service..." | tee -a "$LOG_FILE"
+log "Creating Byparr service..."
 cat <<INNEREOF >/etc/systemd/system/byparr.service
 [Unit]
 Description=Byparr
@@ -208,32 +221,32 @@ WantedBy=multi-user.target
 INNEREOF
 
 # Enable and start the service
-eval "systemctl daemon-reload $REDIRECT"
-eval "systemctl enable --now byparr.service $REDIRECT"
+run_cmd "systemctl daemon-reload"
+run_cmd "systemctl enable --now byparr.service"
 
 # Configure SSH for root access
-echo "Setting up system access..." | tee -a "$LOG_FILE"
-eval "sed -i 's/#PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config $REDIRECT"
-eval "sed -i 's/#PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config $REDIRECT"
-eval "sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config $REDIRECT"
+log "Setting up system access..."
+run_cmd "sed -i 's/#PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config"
+run_cmd "sed -i 's/#PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config"
+run_cmd "sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config"
 # Add these lines explicitly if sed fails
-eval "grep -q '^PermitRootLogin yes' /etc/ssh/sshd_config $REDIRECT || echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config"
-eval "grep -q '^PasswordAuthentication yes' /etc/ssh/sshd_config $REDIRECT || echo 'PasswordAuthentication yes' >> /etc/ssh/sshd_config"
-eval "systemctl restart sshd $REDIRECT"
+run_cmd "grep -q '^PermitRootLogin yes' /etc/ssh/sshd_config || echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config"
+run_cmd "grep -q '^PasswordAuthentication yes' /etc/ssh/sshd_config || echo 'PasswordAuthentication yes' >> /etc/ssh/sshd_config"
+run_cmd "systemctl restart sshd"
 
 # Set root password directly
-echo "Setting root password..." | tee -a "$LOG_FILE"
-eval "passwd --delete root $REDIRECT"
-eval "echo -e 'root\nroot' | passwd root $REDIRECT"
-eval "echo 'root:root' | chpasswd $REDIRECT"
+log "Setting root password..."
+run_cmd "passwd --delete root"
+run_cmd "echo -e 'root\nroot' | passwd root"
+run_cmd "echo 'root:root' | chpasswd"
 
 # Cleanup
-echo "Cleaning up..." | tee -a "$LOG_FILE"
-eval "rm -f /tmp/google-key.pub $REDIRECT"
-eval "apt-get -y autoremove $REDIRECT"
-eval "apt-get -y autoclean $REDIRECT"
+log "Cleaning up..."
+run_cmd "rm -f /tmp/google-key.pub"
+run_cmd "apt-get -y autoremove"
+run_cmd "apt-get -y autoclean"
 
-echo "Byparr installation completed successfully at $(date)" | tee -a "$LOG_FILE"
+log "Byparr installation completed successfully at $(date)"
 EOF
 
   # Copy the script to the container
