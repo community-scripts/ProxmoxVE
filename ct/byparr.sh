@@ -119,9 +119,10 @@ EOF
   pct start "$CTID"
   msg_ok "Started LXC Container"
 
-  # Wait for container to fully start
-  echo "Waiting for container to initialize..."
+  # Wait for container to fully start - Replace echo with msg_info to show the spinner
+  msg_info "Waiting for container to initialize"
   sleep 10
+  msg_ok "Container initialized"
   
   # Create the installation script file
   cat > /tmp/byparr-install-script.sh <<'EOF'
@@ -271,12 +272,12 @@ if [ -z "$IP" ]; then
   IP=$(pct exec "$CTID" ip a s dev eth0 | awk '/inet / {print $2}' | cut -d/ -f1)
 fi
 
-# Set password just to be sure
+# Set password just to be sure - Use redirection to hide command output
 msg_info "Setting root password"
-pct exec "$CTID" -- bash -c "passwd --delete root && echo -e 'root\nroot' | passwd root"
-pct exec "$CTID" -- bash -c "echo 'root:root' | chpasswd"
-# Add verification
-pct exec "$CTID" -- bash -c "grep -q '^root:' /etc/shadow || echo 'ERROR: Root password not set correctly'"
+pct exec "$CTID" -- bash -c "passwd --delete root >/dev/null 2>&1 && echo -e 'root\nroot' | passwd root >/dev/null 2>&1"
+pct exec "$CTID" -- bash -c "echo 'root:root' | chpasswd >/dev/null 2>&1"
+# Add verification without showing output
+pct exec "$CTID" -- bash -c "grep -q '^root:' /etc/shadow >/dev/null 2>&1 || echo 'ERROR: Root password not set correctly'"
 msg_ok "Root password set"
 
 msg_ok "Completed Successfully!\n"
