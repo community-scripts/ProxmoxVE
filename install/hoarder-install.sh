@@ -24,6 +24,8 @@ $STD apt-get install -y \
   ca-certificates \
   chromium/stable \
   chromium-common/stable \
+  graphicsmagick \
+  ghostscript \
   mc
 msg_ok "Installed Dependencies"
 
