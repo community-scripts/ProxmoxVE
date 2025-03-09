@@ -50,6 +50,8 @@ function update_script() {
 
 # Override the normal build_container function with custom logic
 function build_container() {
+  RANDOM_UUID=$(dd if=/dev/urandom bs=16 count=1 2>/dev/null | od -x | head -1 | awk '{print $2$3$4$5$6$7$8}')
+
   if [ "$CT_TYPE" == "1" ]; then
     FEATURES="keyctl=1,nesting=1"
   else
