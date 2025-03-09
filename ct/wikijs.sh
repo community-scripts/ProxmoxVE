@@ -32,8 +32,11 @@ function update_script() {
     msg_ok "Stopped ${APP}"
 
     msg_info "Backing up Data"
+    rm -rf ~/data-backup
     mkdir -p ~/data-backup
-    cp -R /opt/wikijs/{db.sqlite,config.yml,/data} ~/data-backup
+    [ -f /opt/wikijs/db.sqlite ] && cp /opt/wikijs/db.sqlite ~/data-backup
+    [ -f /opt/wikijs/config.yml ] && cp /opt/wikijs/config.yml ~/data-backup
+    [ -d /opt/wikijs/data ] && cp -R /opt/wikijs/data ~/data-backup
     msg_ok "Backed up Data"
 
     msg_info "Updating ${APP}"
