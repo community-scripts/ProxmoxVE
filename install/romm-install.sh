@@ -20,8 +20,34 @@ msg_ok "Installed Dependencies"
 
 msg_info "Installing Docker"
 $STD install -m 0755 -d /etc/apt/keyrings
-$STD curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-$STD chmod a+r /etc/apt/keyrings/docker.gpg
+
+# Download the key to a temporary file first - this prevents pipe failures
+KEY_TMP_FILE=$(mktemp)
+$STD curl -fsSL https://download.docker.com/linux/debian/gpg -o $KEY_TMP_FILE
+
+# Check if the key was downloaded successfully
+if [ -s "$KEY_TMP_FILE" ]; then
+  # Process the key file
+  $STD cat $KEY_TMP_FILE | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+  $STD chmod a+r /etc/apt/keyrings/docker.gpg
+  rm -f $KEY_TMP_FILE
+else
+  echo "Failed to download Docker GPG key. Trying alternate method..."
+  # Alternative approach using apt-key (deprecated but works in many cases)
+  $STD curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
+  # Create docker.list without signed-by option
+  echo \
+    "deb [arch=$(dpkg --print-architecture)] https://download.docker.com/linux/debian \
+    $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+    tee /etc/apt/sources.list.d/docker.list > /dev/null
+  rm -f $KEY_TMP_FILE
+  
+  # Continue with installation
+  $STD apt-get update
+  $STD apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+  msg_ok "Installed Docker (alternative method)"
+  return
+fi
 
 echo \
   "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
