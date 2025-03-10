@@ -34,6 +34,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - Update autolabeler.yml: Set Labels correctly [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2968](https://github.com/community-scripts/ProxmoxVE/pull/2968))
 
+### 🌐 Website
+
+  - Add warnings about externaly sourced scripts [@tremor021](https://github.com/tremor021) ([#2975](https://github.com/community-scripts/ProxmoxVE/pull/2975))
+
 ## 2025-03-09
 
 ### 🚀 Updated Scripts
