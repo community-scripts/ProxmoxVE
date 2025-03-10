@@ -1,0 +1,34 @@
+{
+  "name": "RomM",
+  "slug": "romm",
+  "categories": [
+    14
+  ],
+  "date_created": "2024-03-10",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 8080,
+  "documentation": "https://docs.romm.app/",
+  "website": "https://romm.app/",
+  "logo": "https://raw.githubusercontent.com/rommapp/romm/main/resources/romm-logo.svg",
+  "description": "RomM (ROM Manager) is an application for managing your ROM collection. It provides a clean web interface for organizing, scanning, and viewing your ROM library with metadata support. Features include automatic metadata fetching, platform organization, and library management tools.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/romm.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 20,
+        "os": "debian",
+        "version": "12"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": []
+}
