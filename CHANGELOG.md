@@ -16,12 +16,22 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-03-10
 
+### 🆕 New Scripts
+
+  - Paperless-GPT [@MickLesk](https://github.com/MickLesk) ([#2965](https://github.com/community-scripts/ProxmoxVE/pull/2965))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
 
     - Hoarder: v0.23.0 dependency update [@vhsdream](https://github.com/vhsdream) ([#2958](https://github.com/community-scripts/ProxmoxVE/pull/2958))
     - pihole: fix path when accessing pihole using `pct enter` [@CrazyWolf13](https://github.com/CrazyWolf13) ([#2964](https://github.com/community-scripts/ProxmoxVE/pull/2964))
+
+### 🧰 Maintenance
+
+  - #### 📂 Github
+
+    - Update autolabeler.yml: Set Labels correctly [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#2968](https://github.com/community-scripts/ProxmoxVE/pull/2968))
 
 ## 2025-03-09
 
