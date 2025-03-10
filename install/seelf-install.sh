@@ -20,13 +20,28 @@ $STD apt-get install -y \
   mc \
   make \
   gcc
-wget -q https://go.dev/dl/go1.23.5.linux-amd64.tar.gz
-curl -s -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash &> /dev/null
-tar -C /usr/local -xzf go1.23.5.linux-amd64.tar.gz
-export PATH=$PATH:/usr/local/go/bin
-source ~/.bashrc
-$STD nvm install node
 msg_ok "Installed Dependencies"
+
+msg_info "Installing Golang"
+set +o pipefail
+temp_file=$(mktemp)
+golang_tarball=$(curl -s https://go.dev/dl/ | grep -oP 'go[\d\.]+\.linux-amd64\.tar\.gz' | head -n 1)
+wget -q https://golang.org/dl/"$golang_tarball" -O "$temp_file"
+tar -C /usr/local -xzf "$temp_file"
+ln -sf /usr/local/go/bin/go /usr/local/bin/go
+set -o pipefail
+msg_ok "Installed Golang"
+
+msg_info "Setting up Node.js Repository"
+mkdir -p /etc/apt/keyrings
+curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_22.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
+msg_ok "Set up Node.js Repository"
+
+msg_info "Installing Node.js"
+$STD apt-get update
+$STD apt-get install -y nodejs
+msg_ok "Installed Node.js"
 
 msg_info "Setting up seelf. Patience"
 RELEASE=$(curl -s https://api.github.com/repos/YuukanOO/seelf/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
@@ -71,7 +86,7 @@ customize
 # Cleanup
 msg_info "Cleaning up"
 rm -f ~/v${RELEASE}.tar.gz
-rm -f ~/go1.23.5.linux-amd64.tar.gz
+rm -f $temp_file
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"

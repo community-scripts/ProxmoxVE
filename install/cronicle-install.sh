@@ -14,20 +14,21 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y curl
-$STD apt-get install -y sudo
-$STD apt-get install -y mc
-$STD apt-get install -y git
-$STD apt-get install -y make
-$STD apt-get install -y g++
-$STD apt-get install -y gcc
+$STD apt-get install -y \
+    curl \
+    sudo \
+    mc
 msg_ok "Installed Dependencies"
 
+msg_info "Setting up Node.js Repository"
+mkdir -p /etc/apt/keyrings
+curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_22.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
+msg_ok "Set up Node.js Repository"
+
 msg_info "Installing Node.js"
-$STD bash <(curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh)
-. ~/.bashrc
-$STD nvm install 16.20.1
-ln -sf /root/.nvm/versions/node/v16.20.1/bin/node /usr/bin/node
+$STD apt-get update
+$STD apt-get install -y nodejs
 msg_ok "Installed Node.js"
 
 msg_info "Installing Cronicle Primary Server"
