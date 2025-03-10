@@ -110,7 +110,10 @@ git push origin your-feature-branch
 ```
 
 ### 6. Create a Pull Request
-Open a Pull Request from your feature branch to the main repository branch. You must only include your **$AppName.sh**, **$AppName-install.sh** and **$AppName.json** files in the pull request.
+
+All PR's related to new scripts should be made against our Dev repo, where we can test the scripts before they are pushed and merged in the official repository.\
+**Our dev repo is `http://www.github.com/community-scripts/ProxmoxVED`**\
+Open a Pull Request from your feature branch to the main branch on the Dev repository. You must only include your **$AppName.sh**, **$AppName-install.sh** and **$AppName.json** files in the pull request.
 
 ---
 
