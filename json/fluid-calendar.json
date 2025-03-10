@@ -19,9 +19,9 @@
       "type": "default",
       "script": "ct/fluid-calendar.sh",
       "resources": {
-        "cpu": 2,
+        "cpu": 3,
         "ram": 4096,
-        "hdd": 4,
+        "hdd": 7,
         "os": "Debian",
         "version": "12"
       }
