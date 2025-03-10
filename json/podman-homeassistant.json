@@ -42,6 +42,10 @@
         {
             "text": "Options to Install Portainer or Portainer Agent",
             "type": "warning"
+        },
+        {
+            "text": "WARNING: Installation sources scripts outside of Community Scripts repo. Please check the source before installing.",
+            "type": "warning"
         }
     ]
 }
