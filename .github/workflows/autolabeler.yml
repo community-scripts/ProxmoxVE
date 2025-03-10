@@ -11,14 +11,14 @@ jobs:
     permissions:
       pull-requests: write
     env:
-      CONFIG_PATH: .github/autolabeler-config.json
+      CONFIG_PATH: .github/autolabeler-config_new.json
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install minimatch
+      - name: Install dependencies
         run: npm install minimatch
-
+      
       - name: Label PR based on file changes and PR template
         uses: actions/github-script@v7
         with:
@@ -61,21 +61,26 @@ jobs:
                 labelsToAdd.add(label);
               }
             }
-            const templateLabelMappings = {
-              "🐞 **Bug fix**": "bugfix",
-              "✨ **New feature**": "feature",
-              "💥 **Breaking change**": "breaking change",
-            };
-            
-            for (const [checkbox, label] of Object.entries(templateLabelMappings)) {
-              const escapedCheckbox = checkbox.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
-              const regex = new RegExp(`- \\[(x|X)\\]\\s*.*${escapedCheckbox}`, "i");
-              const match = prBody.match(regex);              
-              if (match) {
-                console.log(`Match: ${match}`);
-                labelsToAdd.add(label);
+            //if two labels or more are added, return
+              if (labelsToAdd.size < 2) {
+                const templateLabelMappings = {
+                "🐞 **Bug fix**": "bugfix",
+                "✨ **New feature**": "feature",
+                "💥 **Breaking change**": "breaking change",
+              };
+
+              for (const [checkbox, label] of Object.entries(templateLabelMappings)) {
+                const escapedCheckbox = checkbox.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+                const regex = new RegExp(`- \\[(x|X)\\]\\s*.*${escapedCheckbox}`, "i");
+                const match = prBody.match(regex);              
+                if (match) {
+                  console.log(`Match: ${match}`);
+                  labelsToAdd.add(label);
+                }
               }
             }
+
+            
             
             console.log(`Labels to add: ${Array.from(labelsToAdd).join(", ")}`);
 
