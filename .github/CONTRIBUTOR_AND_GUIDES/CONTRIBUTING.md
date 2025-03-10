@@ -40,7 +40,7 @@ Before contributing, please ensure that you have the following setup:
    - [Shell Format](https://marketplace.visualstudio.com/items?itemName=foxundermoon.shell-format)
 
 ### Important Notes
-- Use [AppName.sh](https://github.com/community-scripts/ProxmoxVE/blob/main/.github/CONTRIBUTOR_AND_GUIDES/ct/AppName.sh) and [AppName-install.sh](https://github.com/community-scripts/ProxmoxVE/blob/main/.github/CONTRIBUTOR_AND_GUIDES/install/AppName-install.sh) as templates when creating new scripts.
+- Use [AppName.sh](https://github.com/community-scripts/ProxmoxVE/blob/main/.github/CONTRIBUTOR_AND_GUIDES/ct/AppName.sh) and [AppName-install.sh](https://github.com/community-scripts/ProxmoxVE/blob/main/.github/CONTRIBUTOR_AND_GUIDES/install/AppName-install.sh) as templates when creating new scripts. Final version of the script (the one you will push for review), must have all comments removed, except the ones in the file header.
 
 ---
 
@@ -80,7 +80,24 @@ git switch -c your-feature-branch
 ```
 
 ### 4. Change paths in build.func install.func and AppName.sh
-To be able to develop from your own branch you need to change `https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main` to `https://raw.githubusercontent.com/[USER]/[REPOSITORY]/refs/heads/[BRANCH]`. You need to make this change atleast in misc/build.func misc/install.func and in your ct/AppName.sh. This change is only for testing. Before opening a Pull Request you should change this line change all this back to point to `https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main`.
+To be able to develop from your own branch you need to change:\
+`https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main`\
+to\
+`https://raw.githubusercontent.com/[USER]/[REPOSITORY]/refs/heads/[BRANCH]`\
+ in following files:
+
+`misc/build.func`\
+`misc/install.func`\
+`ct/AppName.sh`
+
+Example: `https://raw.githubusercontent.com/tremor021/PromoxVE/refs/heads/testbranch`
+
+Also you need to change:\
+`https://github.com/community-scripts/ProxmoxVE/raw/main`\
+to\
+`https://github.com/[USER]/[REPOSITORY]/raw/[BRANCH]`\
+in `misc/install.func` in order for `update` shell command to work.\
+These changes are only while writing and testing your scripts. Before opening a Pull Request, you should change all above mentioned paths in `misc/build.func`, `misc/install.func` and `ct/AppName.sh` to point to the original paths.
 
 ### 4. Commit changes (without build.func and install.func!)
 ```bash

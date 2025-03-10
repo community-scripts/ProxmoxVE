@@ -67,6 +67,7 @@ Example:
 >
 > - Add your username
 > - When updating/reworking scripts, add "| Co-Author [YourUserName]"
+> - Source is a URL of github repo containting source files of the application you're installing (not URL of your homepage or a blog)
 
 ### 1.3 **Variables and function import**
 
@@ -177,6 +178,7 @@ echo "${RELEASE}" >"/opt/AppName_version.txt"
 - Use standard functions like `msg_info`, `msg_ok` or `msg_error` to print status messages.
 - Each `msg_info` must be followed with a `msg_ok` before any other output is made.
 - Display meaningful progress messages at key stages.
+- Taking user input with `read -p` must be outside of `msg_info`...`msg_ok` code block
 
 Example:
 
@@ -184,6 +186,8 @@ Example:
 msg_info "Installing Dependencies"
 $STD apt-get install -y ...
 msg_ok "Installed Dependencies"
+
+read -p "Do you wish to enable HTTPS mode? (y/N): " httpschoice
 ```
 
 ### 6.2 **Verbosity**

@@ -75,6 +75,7 @@ Example:
 >
 > - Add your username and source URL
 > - For existing scripts, add "| Co-Author [YourUserName]" after the current author
+> - Source is a URL of github repo containting source files of the application you're installing (not URL of your homepage or a blog)
 
 ---
 
@@ -95,7 +96,7 @@ Example:
 >| Variable | Description | Notes |
 >|----------|-------------|-------|
 >| `APP` | Application name | Must match ct\AppName.sh |
->| `var_tags` | Proxmox display tags without Spaces, only ; | Limit the number |  
+>| `var_tags` | Proxmox display tags without Spaces, only ; | Limit the number to 2 |  
 >| `var_cpu` | CPU cores | Number of cores |
 >| `var_ram` | RAM | In MB |
 >| `var_disk` | Disk capacity | In GB |
