@@ -20,6 +20,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - Hoarder: v0.23.0 dependency update [@vhsdream](https://github.com/vhsdream) ([#2958](https://github.com/community-scripts/ProxmoxVE/pull/2958))
     - pihole: fix path when accessing pihole using `pct enter` [@CrazyWolf13](https://github.com/CrazyWolf13) ([#2964](https://github.com/community-scripts/ProxmoxVE/pull/2964))
 
 ## 2025-03-09
