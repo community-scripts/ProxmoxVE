@@ -20,6 +20,14 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - Seafile [@dave-yap](https://github.com/dave-yap) ([#2987](https://github.com/community-scripts/ProxmoxVE/pull/2987))
 
+### 🚀 Updated Scripts
+
+  - Jellyseer not labeled as updateable even though update function exists [@tremor021](https://github.com/tremor021) ([#2991](https://github.com/community-scripts/ProxmoxVE/pull/2991))
+
+  - #### 🐞 Bug Fixes
+
+    - Teddycloud: fix update function [@tremor021](https://github.com/tremor021) ([#2996](https://github.com/community-scripts/ProxmoxVE/pull/2996))
+
 ### 🧰 Maintenance
 
   - #### 📂 Github
