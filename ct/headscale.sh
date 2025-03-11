@@ -42,8 +42,7 @@ function update_script() {
 
     msg_info "Starting ${APP}"
     # Temporary fix until headscale project resolves service getting disabled on updates.
-    systemctl -q enable headscale
-    systemctl start headscale
+    systemctl enable -q --now headscale
     msg_ok "Started ${APP}"
     msg_ok "Updated Successfully"
   else
