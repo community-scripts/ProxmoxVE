@@ -14,6 +14,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 All LXC instances created using this repository come pre-installed with Midnight Commander, which is a command-line tool (`mc`) that offers a user-friendly file and directory management interface for the terminal environment.
 
 
+## 2025-03-11
+
+### 🧰 Maintenance
+
+  - #### 📂 Github
+
+    - Additions and amends to the CONTIRBUTOR docs [@tremor021](https://github.com/tremor021) ([#2983](https://github.com/community-scripts/ProxmoxVE/pull/2983))
+
 ## 2025-03-10
 
 ### 🆕 New Scripts
