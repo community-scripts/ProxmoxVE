@@ -27,6 +27,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - SnipeIT: Harmonize composer install to Project-Dockerfile [@MickLesk](https://github.com/MickLesk) ([#3009](https://github.com/community-scripts/ProxmoxVE/pull/3009))
     - Teddycloud: fix update function [@tremor021](https://github.com/tremor021) ([#2996](https://github.com/community-scripts/ProxmoxVE/pull/2996))
 
 ### 🧰 Maintenance
