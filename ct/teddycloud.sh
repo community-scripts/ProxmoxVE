@@ -32,10 +32,10 @@ function update_script() {
 
     msg_info "Updating ${APP} to v${VERSION}"
     cd /opt
-    mv /opt/teddycloud /opt_teddycloud_bak
+    mv /opt/teddycloud /opt/teddycloud_bak
     wget -q "https://github.com/toniebox-reverse-engineering/teddycloud/releases/download/${RELEASE}/teddycloud.amd64.release_v${VERSION}.zip"
     unzip -q -d /opt/teddycloud teddycloud.amd64.release_v${VERSION}.zip
-    cp -R /opt_teddycloud_bak/certs /opt_teddycloud_bak/config /opt_teddycloud_bak/data /opt/teddycloud
+    cp -R /opt/teddycloud_bak/certs /opt/teddycloud_bak/config /opt/teddycloud_bak/data /opt/teddycloud
     echo "${VERSION}" >"/opt/${APP}_version.txt"
     msg_ok "Updated ${APP} to v${VERSION}"
 
