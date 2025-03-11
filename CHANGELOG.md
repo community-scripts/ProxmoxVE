@@ -16,6 +16,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-03-11
 
+### 🆕 New Scripts
+
+  - Seafile [@dave-yap](https://github.com/dave-yap) ([#2987](https://github.com/community-scripts/ProxmoxVE/pull/2987))
+
 ### 🧰 Maintenance
 
   - #### 📂 Github
