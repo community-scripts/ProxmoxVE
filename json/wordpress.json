@@ -11,7 +11,7 @@
   "interface_port": 80,
   "documentation": "https://wordpress.org/documentation/",
   "website": "https://wordpress.org/",
-  "logo": "https://s.w.org/style/images/about/WordPress-logotype-simplified.png",
+  "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/wordpress.svg",
   "description": "WordPress is the simplest, most popular way to create your own website or blog. In fact, WordPress powers over 43.6% of all the websites on the Internet. Yes – more than one in four websites that you visit are likely powered by WordPress.\n\nOn a slightly more technical level, WordPress is an open-source content management system licensed under GPLv2, which means that anyone can use or modify the WordPress software for free.",
   "install_methods": [
     {

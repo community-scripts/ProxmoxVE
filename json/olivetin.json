@@ -11,7 +11,7 @@
     "interface_port": 1337,
     "documentation": null,
     "website": "https://www.olivetin.app/",
-    "logo": "https://www.olivetin.app/resources/images/logo.png",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/olivetin.svg",
     "description": "OliveTin provides a secure and straightforward way to execute pre-determined shell commands through a web-based interface.",
     "install_methods": [
         {

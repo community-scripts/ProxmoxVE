@@ -565,7 +565,7 @@ qm set $VMID \
   -scsi0 ${DISK1_REF},${DISK_CACHE}${THIN}size=2G \
   -boot order=scsi0 \
   -serial0 socket >/dev/null \
-  -tags community-scripts
+  -tags community-script
 qm resize $VMID scsi0 10G >/dev/null
   DESCRIPTION=$(cat <<EOF
 <div align='center'>

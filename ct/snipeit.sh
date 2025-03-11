@@ -6,7 +6,7 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 # Source: https://snipeitapp.com/
 
 APP="SnipeIT"
-var_tags="assat-management;foss"
+var_tags="asset-management;foss"
 var_cpu="2"
 var_ram="2048"
 var_disk="4"
@@ -27,13 +27,20 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -s https://api.github.com/repos/snipe/snipe-it/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+  RELEASE=$(curl -s https://api.github.com/repos/snipe/snipe-it/releases/latest | grep '"tag_name"' | sed -E 's/.*"tag_name": "v([^"]+).*/\1/')
   if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+    msg_info "Stopping Services"
+    systemctl stop nginx
+    msg_ok "Services Stopped"
+    
     msg_info "Updating ${APP} to v${RELEASE}"
     $STD apt-get update
     $STD apt-get -y upgrade
     mv /opt/snipe-it /opt/snipe-it-backup
-    cd /opt
+    temp_file=$(mktemp)
+    wget -q "https://github.com/snipe/snipe-it/archive/refs/tags/v${RELEASE}.tar.gz" -O $temp_file
+    tar zxf $temp_file
+    mv snipe-it-${RELEASE} /opt/snipe-it
     $STD wget -q "https://github.com/snipe/snipe-it/archive/refs/tags/v${RELEASE}.zip"
     unzip -q v${RELEASE}.zip
     mv snipe-it-${RELEASE} /opt/snipe-it
@@ -53,9 +60,13 @@ function update_script() {
     chmod -R 755 /opt/snipe-it
     rm -rf /opt/v${RELEASE}.zip
     rm -rf /opt/snipe-it-backup
-    msg_ok "Updated ${APP} LXC"
+    msg_ok "Updated ${APP}"
+    
+    msg_info "Starting Service"
+    systemctl start nginx
+    msg_ok "Started Service"
   else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}."
+    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }

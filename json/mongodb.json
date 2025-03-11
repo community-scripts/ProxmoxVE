@@ -11,7 +11,7 @@
     "interface_port": null,
     "documentation": null,
     "website": "https://www.mongodb.com/",
-    "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/mongodb-spring-green.svg",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/mongodb.svg",
     "description": "MongoDB is a NoSQL database that uses a document-oriented data model, storing data in JSON-like documents with dynamic schemas. This design offers flexibility and scalability, making it ideal for handling large volumes of data. MongoDB supports indexing, replication, and load balancing, ensuring high performance and availability, and can distribute data across multiple servers, making it well-suited for big data applications.",
     "install_methods": [
         {

@@ -11,7 +11,7 @@
     "interface_port": 8384,
     "documentation": null,
     "website": "https://syncthing.net/",
-    "logo": "https://raw.githubusercontent.com/syncthing/syncthing/6afaa9f20c8eb9c7af5abbe2f2d90fa2571aa7ad/assets/logo-only.svg",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/syncthing.svg",
     "description": "Syncthing is an open-source file syncing tool that allows users to keep their files in sync across multiple devices by using peer-to-peer synchronization. It doesn't rely on any central server, so all data transfers are directly between devices.",
     "install_methods": [
         {

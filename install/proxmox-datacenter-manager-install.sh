@@ -2,7 +2,7 @@
 
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: CrazyWolf13
-# License: MIT
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: Proxmox Server Solution GmbH
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"

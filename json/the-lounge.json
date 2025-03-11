@@ -11,7 +11,7 @@
     "interface_port": 9000,
     "documentation": "https://thelounge.chat/docs",
     "website": "https://thelounge.chat/",
-    "logo": "https://raw.githubusercontent.com/thelounge/thelounge.github.io/master/assets/logos/logo/TL_Grey%26Yellow_Vertical_logotype_Transparent_Bg/TL_Grey%26Yellow_Vertical_logotype_Transparent_Bg.png",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/the-lounge.svg",
     "description": "Modern web IRC client designed for self-hosting ",
     "install_methods": [
       {

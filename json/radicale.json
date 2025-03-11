@@ -11,7 +11,7 @@
     "interface_port": 5232,
     "documentation": "https://radicale.org/master.html#documentation-1",
     "website": "https://radicale.org/",
-    "logo": "https://radicale.org/assets/logo.svg",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/radicale.svg",
     "description": "Radicale is a small but powerful CalDAV (calendars, to-do lists) and CardDAV (contacts)",
     "install_methods": [
       {

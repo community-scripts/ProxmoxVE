@@ -34,6 +34,10 @@
         {
             "text": "If the LXC is created Privileged, the script will automatically set up USB passthrough.",
             "type": "warning"
+        },
+        {
+            "text": "WARNING: Installation sources scripts outside of Community Scripts repo. Please check the source before installing.",
+            "type": "warning"
         }
     ]
 }

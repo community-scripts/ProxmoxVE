@@ -27,8 +27,18 @@ function update_script() {
         msg_error "No ${APP} Installation Found!"
         exit
     fi
-    /opt/beszel/beszel update
-    msg_error "Currently we don't provide an update function for this ${APP}."
+    msg_info "Stopping $APP"
+    systemctl stop beszel-hub
+    msg_ok "Stopped $APP"
+    
+    msg_info "Updating $APP"
+    $STD /opt/beszel/beszel update
+    msg_ok "Updated $APP"
+    
+    msg_info "Starting $APP"
+    systemctl start beszel-hub
+    msg_ok "Successfully started $APP"
+    msg_ok "Update Successful"
     exit
 }
 

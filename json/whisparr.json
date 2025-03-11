@@ -11,7 +11,7 @@
     "interface_port": 6969,
     "documentation": null,
     "website": "https://github.com/Whisparr/Whisparr",
-    "logo": "https://raw.githubusercontent.com/Whisparr/Whisparr/develop/Logo/256.png",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/whisparr.svg",
     "description": "Whisparr is an adult movie collection manager for Usenet and BitTorrent users.",
     "install_methods": [
         {

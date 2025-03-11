@@ -11,7 +11,7 @@
   "interface_port": null,
   "documentation": "https://www.kimai.org/documentation/",
   "website": "https://www.kimai.org/",
-  "logo": "https://raw.githubusercontent.com/kimai/images/refs/heads/main/logo-transparent.png",
+  "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/kimai.svg",
   "description": "Kimai is an open-source time-tracking software designed for freelancers, small teams, and businesses to efficiently track, manage, and analyze work hours. This web-based tool enables users to log their work time with ease, associating entries with specific clients, projects, and tasks.",
   "install_methods": [
     {

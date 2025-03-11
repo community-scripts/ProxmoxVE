@@ -11,7 +11,7 @@
     "interface_port": 5335,
     "documentation": null,
     "website": "https://www.nlnetlabs.nl/projects/unbound/about/",
-    "logo": "https://netdata.cloud/img/unbound.png",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/unbound.svg",
     "description": "Unbound is a validating, recursive, caching DNS resolver. It is designed to be fast and lean and incorporates modern features based on open standards.",
     "install_methods": [
         {

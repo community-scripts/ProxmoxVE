@@ -11,7 +11,7 @@
     "interface_port": 80,
     "documentation": null,
     "website": "https://www.bookstackapp.com/",
-    "logo": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fassets.stickpng.com%2Fimages%2F6308b74c61b3e2a522f0145e.png&f=1&nofb=1&ipt=7ce7870e5081489216eb3294b735356d1c7ede678f97cadba4392bd96e032170&ipo=images",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/bookstack.svg",
     "description": "BookStack is a user-friendly documentation platform that offers a simple and intuitive experience. New users should be able to create content with basic word-processing skills. While the platform provides advanced features, they do not interfere with the core simplicity of the user experience.",
     "install_methods": [
         {

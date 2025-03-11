@@ -11,7 +11,7 @@
     "interface_port": null,
     "documentation": null,
     "website": null,
-    "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/lxc.svg",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/linuxcontainers.svg",
     "description": "This script provides options to delete logs and cache, and repopulate apt lists for Ubuntu and Debian systems.",
     "install_methods": [
         {

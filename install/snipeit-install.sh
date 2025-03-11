@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-
-#Copyright (c) 2021-2025 community-scripts ORG
+# Copyright (c) 2021-2025 community-scripts ORG
 # Author: Michel Roegl-Brunner (michelroegl-brunner)
-# License: MIT
-# https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://snipeitapp.com/
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -43,13 +41,11 @@ mysql -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVI
 msg_ok "Set up database"
 
 msg_info "Installing Snipe-IT"
-cd /opt
-RELEASE=$(curl -s https://api.github.com/repos/snipe/snipe-it/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
-wget -q "https://github.com/snipe/snipe-it/archive/refs/tags/v${RELEASE}.zip"
-unzip -q v${RELEASE}.zip
+temp_file=$(mktemp)
+RELEASE=$(curl -s https://api.github.com/repos/snipe/snipe-it/releases/latest | grep '"tag_name"' | sed -E 's/.*"tag_name": "v([^"]+).*/\1/')
+wget -q "https://github.com/snipe/snipe-it/archive/refs/tags/v${RELEASE}.tar.gz" -O $temp_file
+tar zxf $temp_file
 mv snipe-it-${RELEASE} /opt/snipe-it
-
 cd /opt/snipe-it
 cp .env.example .env
 IPADDRESS=$(hostname -I | awk '{print $1}')
@@ -61,17 +57,14 @@ sed -i -e "s|^APP_URL=.*|APP_URL=http://$IPADDRESS|" \
 
 chown -R www-data: /opt/snipe-it
 chmod -R 755 /opt/snipe-it
-
-
 export COMPOSER_ALLOW_SUPERUSER=1
 $STD composer update --no-plugins --no-scripts
 $STD composer install --no-dev --prefer-source --no-plugins --no-scripts
-
 $STD php artisan key:generate --force
+echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Installed SnipeIT"
 
 msg_info "Creating Service"
-
 cat <<EOF >/etc/nginx/conf.d/snipeit.conf
 server {
         listen 80;
@@ -102,7 +95,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -rf /opt/v${RELEASE}.zip
+rm -f $temp_file
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"

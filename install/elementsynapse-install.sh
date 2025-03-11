@@ -3,6 +3,7 @@
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: tremor021
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://github.com/element-hq/synapse
 
 source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
 color

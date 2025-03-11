@@ -11,7 +11,7 @@
     "interface_port": 80,
     "documentation": "https://github.com/PrivateBin/PrivateBin/wiki",
     "website": "https://github.com/PrivateBin/PrivateBin",
-    "logo": "https://raw.githubusercontent.com/PrivateBin/PrivateBin/refs/heads/master/img/icon.svg",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/privatebin.svg",
     "description": "PrivateBin is a minimalist, open-source pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted in the browser using 256-bit AES.",
     "install_methods": [
         {

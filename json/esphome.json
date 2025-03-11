@@ -11,7 +11,7 @@
     "interface_port": 6052,
     "documentation": null,
     "website": "https://esphome.io/",
-    "logo": "https://esphome.io/_static/favicon.ico",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/esphome.svg",
     "description": "ESPHome is a platform for controlling ESP8266/ESP32-based devices using configuration files and integrating them with Home Automation systems. It provides a simple and flexible way to set up and manage the functionality of these devices, including defining and automating actions, monitoring sensors, and connecting to networks and other services. ESPHome is designed to be user-friendly and easy to use, and supports a wide range of features and integrations, making it a popular choice for home automation projects and IoT applications.",
     "install_methods": [
         {

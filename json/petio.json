@@ -11,7 +11,7 @@
     "interface_port": 7777,
     "documentation": null,
     "website": "https://petio.tv/",
-    "logo": "https://raw.githubusercontent.com/petio-team/petio/master/frontend/public/p-seamless.png",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/webp/petio.webp",
     "description": "Petio is a third party companion app available to Plex server owners to allow their users to request, review and discover content.",
     "install_methods": [
         {

@@ -29,7 +29,7 @@ function update_script() {
     fi
     msg_info "Updating ${APP}"
     set +e
-    pihole -up
+    /usr/local/bin/pihole -up
     msg_ok "Updated ${APP}"
     exit
 }

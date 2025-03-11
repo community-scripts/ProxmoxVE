@@ -11,7 +11,7 @@
   "interface_port": 3000,
   "documentation": "https://docs.hoarder.app/",
   "website": "https://hoarder.app/",
-  "logo": "https://raw.githubusercontent.com/hoarder-app/hoarder/refs/heads/main/screenshots/logo.png",
+  "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/hoarder.svg",
   "description": "Hoarder is an AI-powered bookmarking tool that helps you save and organize your digital content. It automatically tags your links, notes, and images, making them easy to find later. With features like auto-fetching, lists, and full-text search, Hoarder is the perfect tool for anyone who wants to keep track of their digital life.",
   "install_methods": [
     {

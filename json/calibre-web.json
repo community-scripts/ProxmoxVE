@@ -11,7 +11,7 @@
     "interface_port": 8083,
     "documentation": null,
     "website": "https://github.com/janeczku/calibre-web",
-    "logo": "https://sasquatters.com/media/2017/04/Calibre-web-banner-768x512.jpg",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/calibre-web.svg",
     "description": "Calibre-Web is a web app for browsing, reading and downloading eBooks stored in a Calibre database.",
     "install_methods": [
         {

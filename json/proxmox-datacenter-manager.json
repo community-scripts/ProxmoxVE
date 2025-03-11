@@ -11,7 +11,7 @@
     "interface_port": 8443,
     "documentation": "https://pve.proxmox.com/wiki/Proxmox_Datacenter_Manager_Roadmap",
     "website": "https://pve.proxmox.com/wiki/Proxmox_Datacenter_Manager_Roadmap",
-    "logo": "https://raw.githubusercontent.com/home-assistant/brands/master/core_integrations/proxmoxve/icon.png",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/proxmox.svg",
     "description": "The Proxmox Datacenter Manager project has been developed with the objective of providing a centralized overview of all your individual nodes and clusters. It also enables basic management like migrations of virtual guests without any cluster network requirements. ",
     "install_methods": [
       {

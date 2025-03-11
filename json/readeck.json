@@ -11,7 +11,7 @@
     "interface_port": 8000,
     "documentation": null,
     "website": "https://readeck.org/",
-    "logo": "https://codeberg.org/readeck/readeck/raw/branch/main/web/media/logo-square.svg",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/readeck.svg",
     "description": "Readeck helps you keep all that web content you want to revisit in an hour, tomorrow, or in 20 years.",
     "install_methods": [
         {

@@ -11,7 +11,7 @@
     "interface_port": 80,
     "documentation": "https://phpipam.net/documents/all-documents/",
     "website": "https://phpipam.net/",
-    "logo": "https://phpipam.net/css/images/phpipam_logo_small@2x.png",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/webp/phpipam.webp",
     "description": "phpipam is an open-source web IP address management application (IPAM). Its goal is to provide light, modern and useful IP address management.",
     "install_methods": [
         {

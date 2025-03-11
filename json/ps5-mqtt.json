@@ -11,7 +11,7 @@
     "interface_port": 8645,
     "documentation": null,
     "website": "https://github.com/FunkeyFlo/",
-    "logo": "https://github.com/FunkeyFlo/ps5-mqtt/blob/main/add-ons/ps5-mqtt/logo.png?raw=true",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/ps5-mqtt.svg",
     "description": "Integrate your Sony Playstation 5 devices with Home Assistant using MQTT.",
     "install_methods": [
         {

@@ -11,7 +11,7 @@
     "interface_port": 1880,
     "documentation": null,
     "website": "https://nodered.org/",
-    "logo": "https://github.com/home-assistant/brands/blob/master/custom_integrations/nodered/icon.png?raw=true",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/node-red.svg",
     "description": "Node-RED is a visual programming tool that allows developers and non-developers alike to easily wire together hardware devices, APIs, and online services to create custom applications. It provides a visual interface for building workflows, making it easy to create and modify complex integrations without having to write any code. Node-RED is used in a wide range of applications, from simple automations to complex integrations, and is known for its simplicity, versatility, and ease of use.",
     "install_methods": [
         {

@@ -34,6 +34,10 @@
         {
             "text": "Execute within an existing LXC Console",
             "type": "warning"
+        },
+        {
+            "text": "WARNING: Installation sources scripts outside of Community Scripts repo. Please check the source before installing.",
+            "type": "warning"
         }
     ]
 }

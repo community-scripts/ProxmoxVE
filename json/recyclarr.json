@@ -11,7 +11,7 @@
     "interface_port": null,
     "documentation": null,
     "website": "https://recyclarr.dev/",
-    "logo": "https://recyclarr.dev/img/recyclarr.png",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/recyclarr.svg",
     "description": "Recyclarr is an automation tool that integrates with media management software like Sonarr and Radarr. It helps users manage and organize their media libraries by automatically searching for and adding content from indexers, based on user-defined criteria. It streamlines the process of maintaining and updating media collections without manual intervention.",
     "install_methods": [
         {

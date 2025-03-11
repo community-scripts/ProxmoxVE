@@ -11,7 +11,7 @@
     "interface_port": 80,
     "documentation": null,
     "website": "https://grocy.info/",
-    "logo": "https://grocy.info/img/grocy_logo.svg",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/grocy.svg",
     "description": "grocy is a web-based self-hosted groceries & household management solution for your home. It helps you keep track of your groceries and household items, manage your shopping list, and keep track of your pantry, recipes, meal plans, and more.",
     "install_methods": [
         {

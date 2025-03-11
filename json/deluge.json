@@ -11,7 +11,7 @@
     "interface_port": 8112,
     "documentation": null,
     "website": "https://www.deluge-torrent.org/",
-    "logo": "https://dev.deluge-torrent.org/chrome/common/deluge_logo.png",
+    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/deluge.svg",
     "description": "Deluge is a free, open-source, lightweight BitTorrent client. It supports various platforms including Windows, Linux, and macOS, and offers features such as peer exchange, DHT, and magnet links.",
     "install_methods": [
         {

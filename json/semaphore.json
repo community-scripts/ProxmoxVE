@@ -11,7 +11,7 @@
   "interface_port": 3000,
   "documentation": "https://docs.semaphoreui.com/",
   "website": "https://semaphoreui.com/",
-  "logo": "https://docs.semaphoreui.com/favicon.png?x=",
+  "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/semaphore-ui.svg",
   "description": "Semaphore UI is a modern web interface for managing popular DevOps tools",
   "install_methods": [
     {
