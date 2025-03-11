@@ -23,8 +23,6 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
-  - Jellyseer not labeled as updateable even though update function exists [@tremor021](https://github.com/tremor021) ([#2991](https://github.com/community-scripts/ProxmoxVE/pull/2991))
-
   - #### 🐞 Bug Fixes
 
     - Headscale: Re-enable Service after Update [@Cerothen](https://github.com/Cerothen) ([#3012](https://github.com/community-scripts/ProxmoxVE/pull/3012))
@@ -32,6 +30,8 @@ All LXC instances created using this repository come pre-installed with Midnight
     - Teddycloud: fix update function [@tremor021](https://github.com/tremor021) ([#2996](https://github.com/community-scripts/ProxmoxVE/pull/2996))
 
 ### 🧰 Maintenance
+
+  - Cleanup Old Project Files (figlet, app-header, images) [@MickLesk](https://github.com/MickLesk) ([#3004](https://github.com/community-scripts/ProxmoxVE/pull/3004))
 
   - #### 📂 Github
 
@@ -41,6 +41,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 📝 Script Information
 
+    - Jellyseer not labeled as updateable even though update function exists [@tremor021](https://github.com/tremor021) ([#2991](https://github.com/community-scripts/ProxmoxVE/pull/2991))
     - Fix Website - Show correct wget path for alpine [@MickLesk](https://github.com/MickLesk) ([#2998](https://github.com/community-scripts/ProxmoxVE/pull/2998))
 
 ## 2025-03-10
