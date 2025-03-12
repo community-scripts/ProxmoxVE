@@ -33,10 +33,6 @@
   },
   "notes": [
     {
-      "text": "RAM can be reduced to 2GB after installation",
-      "type": "info"
-    },
-    {
       "text": "Creds: cat ~/fluid-calendar.creds",
       "type": "info"
     }
