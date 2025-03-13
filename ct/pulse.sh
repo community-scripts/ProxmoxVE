@@ -167,26 +167,41 @@ description
 msg_info "Setting up Pulse installation in the container"
 
 # Install core dependencies directly
-pct exec ${CTID} -- bash -c "apt-get update && apt-get install -y curl git ca-certificates gnupg sudo build-essential locales"
+msg_info "Installing core dependencies"
+pct exec ${CTID} -- bash -c "apt-get update > /dev/null 2>&1"
+pct exec ${CTID} -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get install -y curl git ca-certificates gnupg sudo build-essential locales > /dev/null 2>&1"
+msg_ok "Core dependencies installed"
 
-# Set up locales properly - separated commands with error handling
+# Set up locales properly with a more robust approach
 msg_info "Setting up locales in the container"
-pct exec ${CTID} -- bash -c "locale-gen en_US.UTF-8"
+# Generate the locale without relying on update-locale
+pct exec ${CTID} -- bash -c "sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen"
+pct exec ${CTID} -- bash -c "locale-gen > /dev/null 2>&1"
+# Set the locale using direct file creation instead of update-locale
 pct exec ${CTID} -- bash -c "echo 'LANG=en_US.UTF-8' > /etc/default/locale"
 pct exec ${CTID} -- bash -c "echo 'LC_ALL=en_US.UTF-8' >> /etc/default/locale"
+# Export directly for the current session
 pct exec ${CTID} -- bash -c "export LANG=en_US.UTF-8 && export LC_ALL=en_US.UTF-8"
 msg_ok "Locale configuration completed"
 
 # Install Node.js
-pct exec ${CTID} -- bash -c "curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && apt-get install -y nodejs"
+msg_info "Installing Node.js"
+pct exec ${CTID} -- bash -c "curl -fsSL https://deb.nodesource.com/setup_20.x | bash - > /dev/null 2>&1"
+pct exec ${CTID} -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get install -y nodejs > /dev/null 2>&1"
+msg_ok "Node.js installed"
 
 # Create app directory
+msg_info "Creating application directory"
 pct exec ${CTID} -- bash -c "mkdir -p /opt/pulse"
+msg_ok "Application directory created"
 
 # Clone pulse repository
-pct exec ${CTID} -- bash -c "cd /opt/pulse && git clone https://github.com/rcourtman/pulse.git ."
+msg_info "Cloning Pulse repository"
+pct exec ${CTID} -- bash -c "cd /opt/pulse && git clone https://github.com/rcourtman/pulse.git . > /dev/null 2>&1"
+msg_ok "Repository cloned"
 
 # Set up environment file for demo mode
+msg_info "Setting up environment configuration"
 pct exec ${CTID} -- bash -c "cat > /opt/pulse/.env.example << 'EOFENV'
 # Pulse Environment Configuration
 # Required Proxmox Configuration
@@ -224,12 +239,16 @@ EOFENV"
 
 # Copy the example to the actual config
 pct exec ${CTID} -- bash -c "cp /opt/pulse/.env.example /opt/pulse/.env"
+msg_ok "Environment configuration created"
 
 # Build the application
-pct exec ${CTID} -- bash -c "cd /opt/pulse && npm ci && npm run build"
-pct exec ${CTID} -- bash -c "cd /opt/pulse/frontend && npm ci && npm run build"
+msg_info "Building the application (this may take some time...)"
+pct exec ${CTID} -- bash -c "cd /opt/pulse && npm ci > /dev/null 2>&1 && npm run build > /dev/null 2>&1"
+pct exec ${CTID} -- bash -c "cd /opt/pulse/frontend && npm ci > /dev/null 2>&1 && npm run build > /dev/null 2>&1"
+msg_ok "Application built successfully"
 
 # Create service file
+msg_info "Setting up systemd service"
 pct exec ${CTID} -- bash -c "cat > /etc/systemd/system/pulse.service << 'EOFSVC'
 [Unit]
 Description=Pulse for Proxmox Monitoring
@@ -247,18 +266,25 @@ RestartSec=10
 [Install]
 WantedBy=multi-user.target
 EOFSVC"
+msg_ok "Service file created"
 
 # Set file permissions
+msg_info "Setting file permissions"
 pct exec ${CTID} -- bash -c "chown -R root:root /opt/pulse && chmod -R 755 /opt/pulse && chmod 600 /opt/pulse/.env && chmod 644 /opt/pulse/.env.example"
+msg_ok "File permissions set"
 
 # Save version info
 pct exec ${CTID} -- bash -c "echo '1.6.3' > /opt/pulse/pulse_version.txt"
 
 # Create update script
+msg_info "Creating update utility"
 pct exec ${CTID} -- bash -c "echo 'bash -c \"\$(wget -qLO - https://github.com/rcourtman/ProxmoxVE/raw/main/ct/pulse.sh)\"' > /usr/bin/update && chmod +x /usr/bin/update"
+msg_ok "Update utility created"
 
 # Enable and start the service
-pct exec ${CTID} -- bash -c "systemctl enable pulse && systemctl start pulse"
+msg_info "Starting Pulse service"
+pct exec ${CTID} -- bash -c "systemctl enable pulse > /dev/null 2>&1 && systemctl start pulse"
+msg_ok "Pulse service started"
 
 msg_ok "Pulse installation complete"
 
