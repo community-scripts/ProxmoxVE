@@ -5,10 +5,11 @@
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/rcourtman/ProxmoxVE
 
-source <(curl -s https://raw.githubusercontent.com/rcourtman/ProxmoxVE/main/misc/build.func)
+source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 
 # Default values
 APP="Pulse"
+NSAPP=$(echo ${APP,,} | tr -d ' ')  # Convert to lowercase and remove spaces
 var_tags="monitoring;proxmox;dashboard"
 var_cpu="1"
 var_ram="1024"
@@ -31,16 +32,20 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
-  if [[ ! -d /opt/pulse ]]; then
+  if [[ ! -d /opt/${NSAPP} ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
   
   # Check for updates
-  cd /opt/pulse
+  cd /opt/${NSAPP}
   
   # Get current version
-  CURRENT_VERSION=$(cat /opt/${NSAPP}/${NSAPP}_version.txt 2>/dev/null || echo "unknown")
+  if [[ -f /opt/${NSAPP}/${NSAPP}_version.txt ]]; then
+    CURRENT_VERSION=$(cat /opt/${NSAPP}/${NSAPP}_version.txt)
+  else
+    CURRENT_VERSION="unknown"
+  fi
   
   # Get the latest version from GitHub API
   msg_info "Checking for updates"
@@ -69,12 +74,12 @@ function update_script() {
     
     # Install frontend dependencies and build
     msg_info "Building frontend"
-    cd /opt/pulse/frontend
+    cd /opt/${NSAPP}/frontend
     $STD npm ci
     $STD npm run build
     
     # Return to main directory
-    cd /opt/pulse
+    cd /opt/${NSAPP}
     
     # Save new version
     echo "${LATEST_VERSION}" > /opt/${NSAPP}/${NSAPP}_version.txt
@@ -94,13 +99,12 @@ start
 build_container
 description
 
-# Make sure we have the IP address
+# Get the IP address of the container
 if [ -z "${IP}" ]; then
-  # Try to get IP address from the container
-  IP=$(pct exec ${CTID} -- ip -4 addr show eth0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | head -1)
-  if [ -z "${IP}" ]; then
-    # Fallback to container IP from Proxmox
-    IP=$(pct config ${CTID} | grep -E 'ip=|net0:' | grep -oP '\d+\.\d+\.\d+\.\d+' | head -1)
+  IP=$(pct exec ${CTID} ip a s dev eth0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}' || echo "CONTAINER_IP")
+  if [[ "${IP}" == "CONTAINER_IP" ]]; then
+    # Fallback: Get the IP from the container configuration
+    IP=$(pct config ${CTID} | grep -E 'net0' | grep -oP '(?<=ip=)\d+(\.\d+){3}')
   fi
 fi
 

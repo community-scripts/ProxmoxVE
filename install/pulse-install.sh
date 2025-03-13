@@ -89,7 +89,7 @@ cat <<EOF >${APPPATH}/README.txt
 ====== Pulse for Proxmox VE ======
 
 1. Edit the .env file with your Proxmox credentials:
-   nano /opt/pulse/.env
+   nano /opt/${NSAPP}/.env
 
 2. Required Proxmox settings:
    - PROXMOX_NODE_1_NAME=Your Node Name
@@ -98,7 +98,7 @@ cat <<EOF >${APPPATH}/README.txt
    - PROXMOX_NODE_1_TOKEN_SECRET=your-token-secret
 
 3. Restart the Pulse service:
-   systemctl restart pulse
+   systemctl restart ${NSAPP}
 
 ====== Important Notes ======
 
@@ -146,8 +146,8 @@ msg_ok "Setup systemd service"
 
 # Final steps
 msg_info "Cleaning up"
-apt-get -y autoremove
-apt-get -y autoclean
+$STD apt-get -y autoremove
+$STD apt-get -y autoclean
 msg_ok "Cleaned up"
 
 # Message to display when complete
@@ -166,7 +166,7 @@ cat <<EOF
  ⚠️  IMPORTANT: Configuration required before use
 
  1. Edit the .env file with your Proxmox credentials:
-    nano /opt/pulse/.env
+    nano /opt/${NSAPP}/.env
 
  2. Required settings:
     - PROXMOX_NODE_1_NAME=Your Node Name
@@ -175,7 +175,7 @@ cat <<EOF
     - PROXMOX_NODE_1_TOKEN_SECRET=your-token-secret
 
  3. Start Pulse with:
-    systemctl start pulse
+    systemctl start ${NSAPP}
 
  Access URL: http://${IP}:7654 (after starting)
  
