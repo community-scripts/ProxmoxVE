@@ -46,7 +46,9 @@ function update_script() {
   cd ./backend
   $STD pip install -r requirements.txt -U
   cp -rf /opt/open-webui-backup/* /opt/open-webui/backend
-  $STD git stash pop
+  if git stash list | grep -q 'stash@{'; then
+    $STD git stash pop
+  fi
   systemctl start open-webui.service
   msg_ok "Updated Successfully"
   exit
