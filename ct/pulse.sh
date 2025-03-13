@@ -5,6 +5,12 @@
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/rcourtman/pulse
 
+# NOTE: This script was significantly updated on March 13, 2025.
+# If you're seeing errors about missing files or wget commands,
+# you are using an outdated version. Please use the latest version:
+# bash -c "$(curl -s https://raw.githubusercontent.com/rcourtman/ProxmoxVE/main/ct/pulse.sh)"
+# Current version uses direct commands and doesn't rely on external installation scripts.
+
 # Initialize spinner variable for safety
 export SPINNER_PID=""
 
