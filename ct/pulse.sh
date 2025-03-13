@@ -63,9 +63,21 @@ function update_script() {
   if [[ "$CURRENT_VERSION" != "$LATEST_VERSION" ]]; then
     msg_info "Updating ${APP} from v${CURRENT_VERSION} to v${LATEST_VERSION}"
     
+    # Backup .env file first
+    if [[ -f /opt/${NSAPP}/.env ]]; then
+      cp /opt/${NSAPP}/.env /opt/${NSAPP}/.env.backup
+      msg_ok "Backed up existing configuration"
+    fi
+    
     # Pull latest changes
     $STD git fetch origin
     $STD git reset --hard origin/main
+    
+    # Restore .env if it was backed up
+    if [[ -f /opt/${NSAPP}/.env.backup ]]; then
+      cp /opt/${NSAPP}/.env.backup /opt/${NSAPP}/.env
+      msg_ok "Restored existing configuration"
+    fi
     
     # Install backend dependencies and build
     msg_info "Building backend"
@@ -89,6 +101,11 @@ function update_script() {
     $STD systemctl restart ${NSAPP}
     
     msg_ok "Updated ${APP} to v${LATEST_VERSION}"
+    
+    # Show access information
+    IP=$(hostname -I | awk '{print $1}')
+    echo -e "${INFO}${YW} Access it using the following URL:${CL}"
+    echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:7654${CL}"
   else
     msg_ok "No update required. ${APP} is already at v${LATEST_VERSION}"
   fi
@@ -112,3 +129,11 @@ msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:7654${CL}" 
+
+# Provide instructions for configuration
+echo -e "\n${INFO}${YW}Configuration Required:${CL}"
+echo -e "${TAB}${GATEWAY}${BL}1. Execute the following on the host: ${CL}"
+echo -e "${TAB}${GATEWAY}${GN}   pct exec ${CTID} -- bash -c \"nano /opt/pulse/.env\"${CL}"
+echo -e "${TAB}${GATEWAY}${BL}2. Set the required Proxmox credentials in the .env file${CL}"
+echo -e "${TAB}${GATEWAY}${BL}3. Start the service:${CL}"
+echo -e "${TAB}${GATEWAY}${GN}   pct exec ${CTID} -- bash -c \"systemctl start pulse\"${CL}" 

@@ -144,6 +144,10 @@ EOF
 $STD systemctl enable ${NSAPP}
 msg_ok "Setup systemd service"
 
+# Add the motd (Message of the Day) and SSH customization
+motd_ssh
+customize
+
 # Final steps
 msg_info "Cleaning up"
 $STD apt-get -y autoremove
