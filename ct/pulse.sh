@@ -157,15 +157,38 @@ start
 build_container
 description
 
-# Execute the installation script inside the container
-msg_info "Executing installation script inside the container"
-# Download the installation script to the container
-pct exec ${CTID} -- bash -c "wget -qO /tmp/pulse-install.sh https://raw.githubusercontent.com/rcourtman/ProxmoxVE/main/install/pulse-install.sh"
+# Create a simple wrapper script to download and execute the installation
+msg_info "Preparing installation in the container"
+cat > /tmp/install-wrapper.sh << 'EOF'
+#!/bin/bash
+
+# Download the install.func
+wget -qO /tmp/install.func https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/install.func
+
+# Download the installation script
+wget -qO /tmp/pulse-install.sh https://raw.githubusercontent.com/rcourtman/ProxmoxVE/main/install/pulse-install.sh
+
 # Make it executable
-pct exec ${CTID} -- bash -c "chmod +x /tmp/pulse-install.sh"
-# Execute the installation script with proper function path
-pct exec ${CTID} -- bash -c "export FUNCTIONS_FILE_PATH=\"\$(wget -qO- https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/install.func)\" && bash /tmp/pulse-install.sh"
-msg_ok "Installation script executed"
+chmod +x /tmp/pulse-install.sh
+
+# Execute the script with the functions file
+export FUNCTIONS_FILE_PATH="$(cat /tmp/install.func)"
+bash /tmp/pulse-install.sh
+
+# Cleanup
+rm /tmp/install.func
+rm /tmp/pulse-install.sh
+EOF
+
+# Make the wrapper script executable
+chmod +x /tmp/install-wrapper.sh
+
+# Copy the script to the container
+pct push ${CTID} /tmp/install-wrapper.sh /tmp/install-wrapper.sh
+
+# Execute the wrapper script in the container
+pct exec ${CTID} -- bash -c "chmod +x /tmp/install-wrapper.sh && /tmp/install-wrapper.sh"
+msg_ok "Installation complete"
 
 # Configure locale in the container to support emojis and UTF-8
 pct exec ${CTID} -- bash -c "apt-get update > /dev/null 2>&1 && apt-get install -y locales > /dev/null 2>&1"
