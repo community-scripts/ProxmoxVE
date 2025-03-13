@@ -70,6 +70,11 @@ function update_script() {
       msg_ok "Backed up existing configuration"
     fi
     
+    # Backup .env.example file if it exists
+    if [[ -f /opt/${NSAPP}/.env.example ]]; then
+      cp /opt/${NSAPP}/.env.example /opt/${NSAPP}/.env.example.backup
+    fi
+    
     # Pull latest changes
     $STD git fetch origin
     $STD git reset --hard origin/main
@@ -78,6 +83,11 @@ function update_script() {
     if [[ -f /opt/${NSAPP}/.env.backup ]]; then
       cp /opt/${NSAPP}/.env.backup /opt/${NSAPP}/.env
       msg_ok "Restored existing configuration"
+    fi
+    
+    # Restore .env.example if it was backed up
+    if [[ -f /opt/${NSAPP}/.env.example.backup ]]; then
+      cp /opt/${NSAPP}/.env.example.backup /opt/${NSAPP}/.env.example
     fi
     
     # Install backend dependencies and build
@@ -141,6 +151,7 @@ echo -e "\n${INFO}${YW}Configuration Required:${CL}"
 echo -e "${TAB}${GATEWAY}${BL}1. Execute the following on the host: ${CL}"
 echo -e "${TAB}${GATEWAY}${GN}   pct exec ${CTID} -- bash -c \"nano /opt/pulse/.env\"${CL}"
 echo -e "${TAB}${GATEWAY}${BL}2. Set the required Proxmox credentials in the .env file${CL}"
+echo -e "${TAB}${GATEWAY}${BL}   (Reference .env.example for all available options)${CL}"
 echo -e "${TAB}${GATEWAY}${BL}3. Start the service:${CL}"
 echo -e "${TAB}${GATEWAY}${GN}   pct exec ${CTID} -- bash -c \"systemctl start pulse\"${CL}"
 

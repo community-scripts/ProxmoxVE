@@ -56,7 +56,7 @@ echo "${APPVERSION}" > "${APPPATH}/${NSAPP}_version.txt"
 
 # Configure Pulse
 msg_info "Configuring Pulse"
-cat <<EOF >${APPPATH}/.env
+cat <<EOF >${APPPATH}/.env.example
 # Pulse Environment Configuration
 # Required Proxmox Configuration
 PROXMOX_NODE_1_NAME=Proxmox Node 1
@@ -86,6 +86,9 @@ MOCK_DATA_ENABLED=false
 # NODE_TLS_REJECT_UNAUTHORIZED=0
 EOF
 
+# Copy the example to create the actual .env file
+cp ${APPPATH}/.env.example ${APPPATH}/.env
+
 cat <<EOF >${APPPATH}/README.txt
 ====== Pulse for Proxmox VE ======
 
@@ -103,6 +106,7 @@ cat <<EOF >${APPPATH}/README.txt
 
 ====== Important Notes ======
 
+- An example configuration is provided at /opt/${NSAPP}/.env.example
 - Pulse is accessible at: http://${IP}:7654
 - Documentation: https://github.com/rcourtman/pulse
 - For issues or support: https://github.com/rcourtman/pulse/issues
@@ -150,6 +154,7 @@ msg_info "Setting file permissions"
 chown -R root:root ${APPPATH}
 chmod -R 755 ${APPPATH}
 chmod 600 ${APPPATH}/.env
+chmod 644 ${APPPATH}/.env.example
 msg_ok "Set file permissions"
 
 # Add the motd (Message of the Day) and SSH customization
