@@ -157,43 +157,97 @@ start
 build_container
 description
 
-# Create a simple wrapper script to download and execute the installation
-msg_info "Preparing installation in the container"
-cat > /tmp/install-wrapper.sh << 'EOF'
-#!/bin/bash
+# Simplify the installation process with direct commands
+msg_info "Setting up Pulse installation in the container"
 
-# Download the install.func
-wget -qO /tmp/install.func https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/install.func
+# Install core dependencies directly
+pct exec ${CTID} -- bash -c "apt-get update && apt-get install -y curl git ca-certificates gnupg sudo build-essential locales"
+pct exec ${CTID} -- bash -c "locale-gen en_US.UTF-8 && update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8"
 
-# Download the installation script
-wget -qO /tmp/pulse-install.sh https://raw.githubusercontent.com/rcourtman/ProxmoxVE/main/install/pulse-install.sh
+# Install Node.js
+pct exec ${CTID} -- bash -c "curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && apt-get install -y nodejs"
 
-# Make it executable
-chmod +x /tmp/pulse-install.sh
+# Create app directory
+pct exec ${CTID} -- bash -c "mkdir -p /opt/pulse"
 
-# Execute the script with the functions file
-export FUNCTIONS_FILE_PATH="$(cat /tmp/install.func)"
-bash /tmp/pulse-install.sh
+# Clone pulse repository
+pct exec ${CTID} -- bash -c "cd /opt/pulse && git clone https://github.com/rcourtman/pulse.git ."
 
-# Cleanup
-rm /tmp/install.func
-rm /tmp/pulse-install.sh
-EOF
+# Set up environment file for demo mode
+pct exec ${CTID} -- bash -c "cat > /opt/pulse/.env.example << 'EOFENV'
+# Pulse Environment Configuration
+# Required Proxmox Configuration
+PROXMOX_NODE_1_NAME=Proxmox Node 1
+PROXMOX_NODE_1_HOST=https://your-proxmox-host:8006
+PROXMOX_NODE_1_TOKEN_ID=root@pam!pulse
+PROXMOX_NODE_1_TOKEN_SECRET=your-token-secret
 
-# Make the wrapper script executable
-chmod +x /tmp/install-wrapper.sh
+# Basic Configuration
+NODE_ENV=production
+LOG_LEVEL=info
+PORT=7654
 
-# Copy the script to the container
-pct push ${CTID} /tmp/install-wrapper.sh /tmp/install-wrapper.sh
+# Performance settings
+METRICS_HISTORY_MINUTES=30
+NODE_POLLING_INTERVAL_MS=15000
+EVENT_POLLING_INTERVAL_MS=5000
+API_RATE_LIMIT_MS=2000
+API_TIMEOUT_MS=90000
+API_RETRY_DELAY_MS=10000
 
-# Execute the wrapper script in the container
-pct exec ${CTID} -- bash -c "chmod +x /tmp/install-wrapper.sh && /tmp/install-wrapper.sh"
-msg_ok "Installation complete"
+# Mock Data Settings (enabled by default for initial experience)
+# Set to 'false' when ready to connect to real Proxmox server
+USE_MOCK_DATA=true
+MOCK_DATA_ENABLED=true
 
-# Configure locale in the container to support emojis and UTF-8
-pct exec ${CTID} -- bash -c "apt-get update > /dev/null 2>&1 && apt-get install -y locales > /dev/null 2>&1"
-pct exec ${CTID} -- bash -c "locale-gen en_US.UTF-8 > /dev/null 2>&1"
-pct exec ${CTID} -- bash -c "update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 > /dev/null 2>&1"
+# Mock Cluster Settings
+MOCK_CLUSTER_ENABLED=true
+MOCK_CLUSTER_NAME=Demo Cluster
+
+# SSL Configuration (uncomment if needed)
+# IGNORE_SSL_ERRORS=true
+# NODE_TLS_REJECT_UNAUTHORIZED=0
+EOFENV"
+
+# Copy the example to the actual config
+pct exec ${CTID} -- bash -c "cp /opt/pulse/.env.example /opt/pulse/.env"
+
+# Build the application
+pct exec ${CTID} -- bash -c "cd /opt/pulse && npm ci && npm run build"
+pct exec ${CTID} -- bash -c "cd /opt/pulse/frontend && npm ci && npm run build"
+
+# Create service file
+pct exec ${CTID} -- bash -c "cat > /etc/systemd/system/pulse.service << 'EOFSVC'
+[Unit]
+Description=Pulse for Proxmox Monitoring
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/pulse
+Environment=NODE_ENV=production
+ExecStart=/usr/bin/node /opt/pulse/dist/server.js
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+EOFSVC"
+
+# Set file permissions
+pct exec ${CTID} -- bash -c "chown -R root:root /opt/pulse && chmod -R 755 /opt/pulse && chmod 600 /opt/pulse/.env && chmod 644 /opt/pulse/.env.example"
+
+# Save version info
+pct exec ${CTID} -- bash -c "echo '1.6.3' > /opt/pulse/pulse_version.txt"
+
+# Create update script
+pct exec ${CTID} -- bash -c "echo 'bash -c \"\$(wget -qLO - https://github.com/rcourtman/ProxmoxVE/raw/main/ct/pulse.sh)\"' > /usr/bin/update && chmod +x /usr/bin/update"
+
+# Enable and start the service
+pct exec ${CTID} -- bash -c "systemctl enable pulse && systemctl start pulse"
+
+msg_ok "Pulse installation complete"
 
 # Get the IP address of the container and ensure we have a valid IP
 if [ -z "${IP}" ]; then
