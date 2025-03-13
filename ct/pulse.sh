@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: rcourtman
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://github.com/rcourtman/ProxmoxVE
+# Source: https://github.com/rcourtman/pulse
 
 source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 
@@ -52,6 +52,7 @@ function update_script() {
   LATEST_VERSION=$(curl -s https://api.github.com/repos/rcourtman/pulse/releases/latest | grep "tag_name" | cut -d'"' -f4 | sed 's/^v//')
   
   if [[ -z "$LATEST_VERSION" ]]; then
+    # If unable to get version from releases, check package.json
     LATEST_VERSION=$(grep -o '"version": "[^"]*"' package.json | cut -d'"' -f4)
     if [[ -z "$LATEST_VERSION" ]]; then
       msg_error "Failed to determine version information"
@@ -92,6 +93,11 @@ function update_script() {
     
     # Return to main directory
     cd /opt/${NSAPP}
+    
+    # Set permissions again
+    chown -R root:root ${APPPATH}
+    chmod -R 755 ${APPPATH}
+    chmod 600 ${APPPATH}/.env
     
     # Save new version
     echo "${LATEST_VERSION}" > /opt/${NSAPP}/${NSAPP}_version.txt
@@ -136,4 +142,8 @@ echo -e "${TAB}${GATEWAY}${BL}1. Execute the following on the host: ${CL}"
 echo -e "${TAB}${GATEWAY}${GN}   pct exec ${CTID} -- bash -c \"nano /opt/pulse/.env\"${CL}"
 echo -e "${TAB}${GATEWAY}${BL}2. Set the required Proxmox credentials in the .env file${CL}"
 echo -e "${TAB}${GATEWAY}${BL}3. Start the service:${CL}"
-echo -e "${TAB}${GATEWAY}${GN}   pct exec ${CTID} -- bash -c \"systemctl start pulse\"${CL}" 
+echo -e "${TAB}${GATEWAY}${GN}   pct exec ${CTID} -- bash -c \"systemctl start pulse\"${CL}"
+
+# Final instructions
+echo -e "\n${INFO}${YW}To update ${APP} in the future:${CL}"
+echo -e "${TAB}${GATEWAY}${GN}   pct exec ${CTID} -- bash -c \"update\"${CL}" 
