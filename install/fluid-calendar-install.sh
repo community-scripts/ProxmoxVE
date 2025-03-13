@@ -59,30 +59,23 @@ echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 cat <<EOF >/opt/fluid-calendar/.env
 DATABASE_URL="postgresql://${DB_USER}:${DB_PASS}@localhost:5432/${DB_NAME}"
 
-# For OAuth integration with Google Calendar
-# See https://console.cloud.google.com
-GOOGLE_CLIENT_ID=""
-GOOGLE_CLIENT_SECRET=""
-
 # Change the URL below to your external URL
 NEXTAUTH_URL="http://localhost:3000"
+NEXT_PUBLIC_APP_URL="http://localhost:3000"
 NEXTAUTH_SECRET="${NEXTAUTH_SECRET}"
+NEXT_PUBLIC_SITE_URL="http://localhost:3000"
 
-# For optional Outlook Calendar Integration
-# Create at https://portal.azure.com
-AZURE_AD_CLIENT_ID=""
-AZURE_AD_CLIENT_SECRET=""
-AZURE_AD_TENANT_ID=""
+NEXT_PUBLIC_ENABLE_SAAS_FEATURES=false
 
-# Logging configuration
-# Options: debug, none (check logger.js for more details)
-LOG_LEVEL="none"
-DEBUG_ENABLED=0
+RESEND_API_KEY=
+RESEND_EMAIL=
 EOF
 export NEXT_TELEMETRY_DISABLED=1
 cd /opt/fluid-calendar
-$STD npm run setup
-$STD npm run build
+$STD npm install --legacy-peer-deps
+$STD npm run prisma:generate
+$STD npm run prisma:migrate
+$STD npm run build:os
 msg_ok "Setup ${APPLICATION}"
 
 msg_info "Creating Service"

@@ -46,8 +46,10 @@ function update_script() {
         cp -rf ${APP}-${RELEASE}/* /opt/fluid-calendar
         cd /opt/fluid-calendar
         export NEXT_TELEMETRY_DISABLED=1
-        $STD npm run setup
-        $STD npm run build
+        $STD npm install --legacy-peer-deps
+        $STD npm run prisma:generate
+        $STD npm run prisma:migrate
+        $STD npm run build:os
         msg_ok "Updated $APP to v${RELEASE}"
 
         msg_info "Starting $APP"
