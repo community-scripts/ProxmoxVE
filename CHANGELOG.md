@@ -20,6 +20,16 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - Update Vaultwarden Source [@MickLesk](https://github.com/MickLesk) ([#3036](https://github.com/community-scripts/ProxmoxVE/pull/3036))
 
+### 🧰 Maintenance
+
+  - #### 📂 Github
+
+    - New Workflow: Close Issues in DEV Repo when new Script is merged [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#3042](https://github.com/community-scripts/ProxmoxVE/pull/3042))
+
+### 🌐 Website
+
+  - Bump @babel/runtime from 7.26.0 to 7.26.10 in /frontend [@dependabot[bot]](https://github.com/dependabot[bot]) ([#3044](https://github.com/community-scripts/ProxmoxVE/pull/3044))
+
 ## 2025-03-12
 
 ### 🆕 New Scripts
