@@ -9,7 +9,7 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 
 # Default values
 APP="Pulse"
-NSAPP=$(echo ${APP,,} | tr -d ' ')  # Convert to lowercase and remove spaces
+NSAPP="pulse"  # This must match the install script filename (pulse-install.sh) without the "-install.sh"
 var_tags="monitoring;proxmox;dashboard"
 var_cpu="1"
 var_ram="1024"
