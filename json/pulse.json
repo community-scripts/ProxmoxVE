@@ -1,0 +1,14 @@
+{
+  "id": "pulse",
+  "name": "Pulse",
+  "description": "Real-time monitoring dashboard for Proxmox VE",
+  "shortdesc": "Monitoring dashboard for Proxmox VE",
+  "category": "monitoring",
+  "type": "application",
+  "privileged": false,
+  "container": "https://github.com/rcourtman/ProxmoxVE/raw/main/ct/pulse.sh",
+  "install": "https://github.com/rcourtman/ProxmoxVE/raw/main/install/pulse-install.sh",
+  "port": "7654",
+  "author": "rcourtman",
+  "tags": "monitoring;dashboard;proxmox;pulse"
+} 
