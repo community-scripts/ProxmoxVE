@@ -179,6 +179,11 @@ motd_ssh() {
   fi
 }
 
+# Validate Timezone for some LXC's
+validate_tz() {
+    [[ -f "/usr/share/zoneinfo/$1" ]]
+}
+
 # This function customizes the container and enables passwordless login for the root user
 customize() {
   if [[ "$PASSWORD" == "" ]]; then
