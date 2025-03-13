@@ -15,6 +15,17 @@
     "description": "A security-oriented, lightweight Linux distribution based on musl and BusyBox.\r\nBy default, the root password is set to alpine. If you choose to use advanced settings, you will need to define a password, autologin is currently unavailable.",
     "install_methods": [
         {
+            "type": "default",
+            "script": "ct/alpine.sh",
+            "resources": {
+                "cpu": 1,
+                "ram": 512,
+                "hdd": 0.1,
+                "os": "alpine",
+                "version": "3.21"
+            }
+        },
+        {
             "type": "alpine",
             "script": "ct/alpine.sh",
             "resources": {
