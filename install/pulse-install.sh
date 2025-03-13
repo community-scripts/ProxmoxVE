@@ -92,6 +92,7 @@ API_RETRY_DELAY_MS=10000
 # Set to 'false' when ready to connect to real Proxmox server
 USE_MOCK_DATA=true
 MOCK_DATA_ENABLED=true
+MOCK_SERVER_PORT=7656
 
 # Mock Cluster Settings
 MOCK_CLUSTER_ENABLED=true
@@ -146,17 +147,19 @@ cd ${APPPATH}
 msg_ok "Built application"
 
 # Create service file
-msg_info "Setting up systemd service"
+msg_info "Setting up systemd services"
 cat <<EOF >/etc/systemd/system/${NSAPP}.service
 [Unit]
 Description=Pulse for Proxmox Monitoring
 After=network.target
+After=${NSAPP}-mock.service
 
 [Service]
 Type=simple
 User=root
 WorkingDirectory=${APPPATH}
 Environment=NODE_ENV=production
+Environment=MOCK_SERVER_PORT=7656
 ExecStart=/usr/bin/node ${APPPATH}/dist/server.js
 Restart=on-failure
 RestartSec=10
@@ -165,10 +168,36 @@ RestartSec=10
 WantedBy=multi-user.target
 EOF
 
-# Enable and start the service
+# Create a separate service for the mock data server
+msg_info "Setting up mock data server service"
+cat <<EOF >/etc/systemd/system/${NSAPP}-mock.service
+[Unit]
+Description=Pulse Mock Data Server
+After=network.target
+Before=${NSAPP}.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=${APPPATH}
+Environment=NODE_ENV=production
+Environment=MOCK_SERVER_PORT=7656
+ExecStart=/usr/bin/npx ts-node ${APPPATH}/src/mock/run-server.ts
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# Enable and start the mock service first
+$STD systemctl enable ${NSAPP}-mock
+$STD systemctl start ${NSAPP}-mock
+
+# Enable and start the main service
 $STD systemctl enable ${NSAPP}
 $STD systemctl start ${NSAPP}
-msg_ok "Setup and started service"
+msg_ok "Setup and started services"
 
 # Set proper file permissions
 msg_info "Setting file permissions"

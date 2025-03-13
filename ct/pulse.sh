@@ -226,7 +226,8 @@ API_RETRY_DELAY_MS=10000
 # Mock Data Settings (enabled by default for initial experience)
 # Set to 'false' when ready to connect to real Proxmox server
 USE_MOCK_DATA=true
-MOCK_DATA_ENABLED=true
+MOCK_DATA_ENABLED=true\nMOCK_SERVER_PORT=7656
+MOCK_SERVER_PORT=7656
 
 # Mock Cluster Settings
 MOCK_CLUSTER_ENABLED=true
@@ -248,17 +249,19 @@ pct exec ${CTID} -- bash -c "cd /opt/pulse/frontend && npm ci > /dev/null 2>&1 &
 msg_ok "Application built successfully"
 
 # Create service file
-msg_info "Setting up systemd service"
+msg_info "Creating service files"
 pct exec ${CTID} -- bash -c "cat > /etc/systemd/system/pulse.service << 'EOFSVC'
 [Unit]
 Description=Pulse for Proxmox Monitoring
 After=network.target
+After=pulse-mock.service
 
 [Service]
 Type=simple
 User=root
 WorkingDirectory=/opt/pulse
 Environment=NODE_ENV=production
+Environment=MOCK_SERVER_PORT=7656
 ExecStart=/usr/bin/node /opt/pulse/dist/server.js
 Restart=on-failure
 RestartSec=10
@@ -266,7 +269,30 @@ RestartSec=10
 [Install]
 WantedBy=multi-user.target
 EOFSVC"
-msg_ok "Service file created"
+msg_ok "Main service file created"
+
+# Create mock data server service
+msg_info "Creating mock server service file"
+pct exec ${CTID} -- bash -c "cat > /etc/systemd/system/pulse-mock.service << 'EOFSVC'
+[Unit]
+Description=Pulse Mock Data Server
+After=network.target
+Before=pulse.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/pulse
+Environment=NODE_ENV=production
+Environment=MOCK_SERVER_PORT=7656
+ExecStart=/usr/bin/npx ts-node /opt/pulse/src/mock/run-server.ts
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+EOFSVC"
+msg_ok "Mock server service file created"
 
 # Set file permissions
 msg_info "Setting file permissions"
@@ -281,12 +307,11 @@ msg_info "Creating update utility"
 pct exec ${CTID} -- bash -c "echo 'bash -c \"\$(wget -qLO - https://github.com/rcourtman/ProxmoxVE/raw/main/ct/pulse.sh)\"' > /usr/bin/update && chmod +x /usr/bin/update"
 msg_ok "Update utility created"
 
-# Enable and start the service
-msg_info "Starting Pulse service"
-pct exec ${CTID} -- bash -c "systemctl enable pulse > /dev/null 2>&1 && systemctl start pulse"
-msg_ok "Pulse service started"
-
-msg_ok "Pulse installation complete"
+# Enable and start services
+msg_info "Enabling and starting services"
+pct exec ${CTID} -- bash -c "systemctl enable pulse-mock && systemctl start pulse-mock"
+pct exec ${CTID} -- bash -c "systemctl enable pulse && systemctl start pulse"
+msg_ok "Pulse services started"
 
 # Get the IP address of the container and ensure we have a valid IP
 if [ -z "${IP}" ]; then
@@ -329,3 +354,5 @@ echo -e "${TAB}${GATEWAY}${GN}   pct exec ${CTID} -- bash -c \"update\"${CL}"
 
 # Force a flush of output
 printf "\n" 
+
+msg_ok "Pulse installation complete" 
