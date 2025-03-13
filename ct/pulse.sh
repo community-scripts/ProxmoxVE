@@ -157,6 +157,16 @@ start
 build_container
 description
 
+# Execute the installation script inside the container
+msg_info "Executing installation script inside the container"
+# Download the installation script to the container
+pct exec ${CTID} -- bash -c "wget -qO /tmp/pulse-install.sh https://raw.githubusercontent.com/rcourtman/ProxmoxVE/main/install/pulse-install.sh"
+# Make it executable
+pct exec ${CTID} -- bash -c "chmod +x /tmp/pulse-install.sh"
+# Execute the installation script with proper function path
+pct exec ${CTID} -- bash -c "export FUNCTIONS_FILE_PATH=\"\$(wget -qO- https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/install.func)\" && bash /tmp/pulse-install.sh"
+msg_ok "Installation script executed"
+
 # Configure locale in the container to support emojis and UTF-8
 pct exec ${CTID} -- bash -c "apt-get update > /dev/null 2>&1 && apt-get install -y locales > /dev/null 2>&1"
 pct exec ${CTID} -- bash -c "locale-gen en_US.UTF-8 > /dev/null 2>&1"
