@@ -24,6 +24,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - OpenWebUI check if there are stashed changes before poping [@tremor021](https://github.com/tremor021) ([#3064](https://github.com/community-scripts/ProxmoxVE/pull/3064))
     - Update Fluid Calendar for v1.2.0 [@vhsdream](https://github.com/vhsdream) ([#3053](https://github.com/community-scripts/ProxmoxVE/pull/3053))
 
 ### 🧰 Maintenance
