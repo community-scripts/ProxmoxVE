@@ -168,7 +168,14 @@ msg_info "Setting up Pulse installation in the container"
 
 # Install core dependencies directly
 pct exec ${CTID} -- bash -c "apt-get update && apt-get install -y curl git ca-certificates gnupg sudo build-essential locales"
-pct exec ${CTID} -- bash -c "locale-gen en_US.UTF-8 && update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8"
+
+# Set up locales properly - separated commands with error handling
+msg_info "Setting up locales in the container"
+pct exec ${CTID} -- bash -c "locale-gen en_US.UTF-8"
+pct exec ${CTID} -- bash -c "echo 'LANG=en_US.UTF-8' > /etc/default/locale"
+pct exec ${CTID} -- bash -c "echo 'LC_ALL=en_US.UTF-8' >> /etc/default/locale"
+pct exec ${CTID} -- bash -c "export LANG=en_US.UTF-8 && export LC_ALL=en_US.UTF-8"
+msg_ok "Locale configuration completed"
 
 # Install Node.js
 pct exec ${CTID} -- bash -c "curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && apt-get install -y nodejs"
