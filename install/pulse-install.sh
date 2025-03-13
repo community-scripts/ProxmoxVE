@@ -77,9 +77,14 @@ API_RATE_LIMIT_MS=2000
 API_TIMEOUT_MS=90000
 API_RETRY_DELAY_MS=10000
 
-# Disable mock data in production
-USE_MOCK_DATA=false
-MOCK_DATA_ENABLED=false
+# Mock Data Settings (enabled by default for initial experience)
+# Set to 'false' when ready to connect to real Proxmox server
+USE_MOCK_DATA=true
+MOCK_DATA_ENABLED=true
+
+# Mock Cluster Settings
+MOCK_CLUSTER_ENABLED=true
+MOCK_CLUSTER_NAME=Demo Cluster
 
 # SSL Configuration (uncomment if needed)
 # IGNORE_SSL_ERRORS=true
@@ -92,10 +97,14 @@ cp ${APPPATH}/.env.example ${APPPATH}/.env
 cat <<EOF >${APPPATH}/README.txt
 ====== Pulse for Proxmox VE ======
 
+QUICK START: Pulse is already running with mock data at: http://${IP}:7654
+
+For real Proxmox connection:
 1. Edit the .env file with your Proxmox credentials:
    nano /opt/${NSAPP}/.env
 
-2. Required Proxmox settings:
+2. Required settings:
+   - Change USE_MOCK_DATA and MOCK_DATA_ENABLED to false
    - PROXMOX_NODE_1_NAME=Your Node Name
    - PROXMOX_NODE_1_HOST=https://your-proxmox-ip:8006
    - PROXMOX_NODE_1_TOKEN_ID=root@pam!pulse
@@ -145,9 +154,10 @@ RestartSec=10
 WantedBy=multi-user.target
 EOF
 
-# Enable the service but don't start (needs configuration)
+# Enable and start the service
 $STD systemctl enable ${NSAPP}
-msg_ok "Setup systemd service"
+$STD systemctl start ${NSAPP}
+msg_ok "Setup and started service"
 
 # Set proper file permissions
 msg_info "Setting file permissions"
@@ -184,21 +194,24 @@ cat <<EOF
 
  🟢 ${APP} installation complete!
 
- ⚠️  IMPORTANT: Configuration required before use
+ 🚀 Pulse is ALREADY RUNNING with demo data!
+ 🌐 Access it right now at: http://${IP}:7654
 
- 1. Edit the .env file with your Proxmox credentials:
+ ⚙️  To connect to your real Proxmox server:
+ 1. Edit the .env file:
     nano /opt/${NSAPP}/.env
+    
+ 2. Change these settings:
+    - Set USE_MOCK_DATA=false
+    - Set MOCK_DATA_ENABLED=false
+    - Configure your Proxmox credentials:
+      PROXMOX_NODE_1_NAME=Your Node Name
+      PROXMOX_NODE_1_HOST=https://your-proxmox-ip:8006
+      PROXMOX_NODE_1_TOKEN_ID=root@pam!pulse
+      PROXMOX_NODE_1_TOKEN_SECRET=your-token-secret
 
- 2. Required settings:
-    - PROXMOX_NODE_1_NAME=Your Node Name
-    - PROXMOX_NODE_1_HOST=https://your-proxmox-ip:8006
-    - PROXMOX_NODE_1_TOKEN_ID=root@pam!pulse
-    - PROXMOX_NODE_1_TOKEN_SECRET=your-token-secret
-
- 3. Start Pulse with:
-    systemctl start ${NSAPP}
-
- Access URL: http://${IP}:7654 (after starting)
+ 3. Restart Pulse:
+    systemctl restart ${NSAPP}
  
  To update ${APP} in the future, run: update
  

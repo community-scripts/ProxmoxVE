@@ -67,6 +67,13 @@ function update_script() {
     # Backup .env file first
     if [[ -f /opt/${NSAPP}/.env ]]; then
       cp /opt/${NSAPP}/.env /opt/${NSAPP}/.env.backup
+      
+      # Save mock data settings
+      USE_MOCK_DATA=$(grep "USE_MOCK_DATA" /opt/${NSAPP}/.env | cut -d= -f2)
+      MOCK_DATA_ENABLED=$(grep "MOCK_DATA_ENABLED" /opt/${NSAPP}/.env | cut -d= -f2)
+      MOCK_CLUSTER_ENABLED=$(grep "MOCK_CLUSTER_ENABLED" /opt/${NSAPP}/.env | cut -d= -f2 || echo "true")
+      MOCK_CLUSTER_NAME=$(grep "MOCK_CLUSTER_NAME" /opt/${NSAPP}/.env | cut -d= -f2 || echo "Demo Cluster")
+      
       msg_ok "Backed up existing configuration"
     fi
     
@@ -82,12 +89,27 @@ function update_script() {
     # Restore .env if it was backed up
     if [[ -f /opt/${NSAPP}/.env.backup ]]; then
       cp /opt/${NSAPP}/.env.backup /opt/${NSAPP}/.env
+      
+      # Ensure mock data settings are preserved
+      if [[ -n "$USE_MOCK_DATA" ]]; then
+        sed -i "s/USE_MOCK_DATA=.*/USE_MOCK_DATA=$USE_MOCK_DATA/" /opt/${NSAPP}/.env
+        sed -i "s/MOCK_DATA_ENABLED=.*/MOCK_DATA_ENABLED=$MOCK_DATA_ENABLED/" /opt/${NSAPP}/.env
+        
+        # Add or update mock cluster settings
+        if grep -q "MOCK_CLUSTER_ENABLED" /opt/${NSAPP}/.env; then
+          sed -i "s/MOCK_CLUSTER_ENABLED=.*/MOCK_CLUSTER_ENABLED=$MOCK_CLUSTER_ENABLED/" /opt/${NSAPP}/.env
+        else
+          echo "MOCK_CLUSTER_ENABLED=$MOCK_CLUSTER_ENABLED" >> /opt/${NSAPP}/.env
+        fi
+        
+        if grep -q "MOCK_CLUSTER_NAME" /opt/${NSAPP}/.env; then
+          sed -i "s/MOCK_CLUSTER_NAME=.*/MOCK_CLUSTER_NAME=$MOCK_CLUSTER_NAME/" /opt/${NSAPP}/.env
+        else
+          echo "MOCK_CLUSTER_NAME=$MOCK_CLUSTER_NAME" >> /opt/${NSAPP}/.env
+        fi
+      fi
+      
       msg_ok "Restored existing configuration"
-    fi
-    
-    # Restore .env.example if it was backed up
-    if [[ -f /opt/${NSAPP}/.env.example.backup ]]; then
-      cp /opt/${NSAPP}/.env.example.backup /opt/${NSAPP}/.env.example
     fi
     
     # Install backend dependencies and build
@@ -146,14 +168,19 @@ echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:7654${CL}" 
 
-# Provide instructions for configuration
-echo -e "\n${INFO}${YW}Configuration Required:${CL}"
+# Provide instructions for demo mode and real configuration
+echo -e "\n${INFO}${YW}Pulse is ALREADY RUNNING with demo data!${CL}"
+echo -e "${TAB}${GATEWAY}${BL}You can explore the interface immediately.${CL}"
+
+echo -e "\n${INFO}${YW}To connect to your actual Proxmox server:${CL}"
 echo -e "${TAB}${GATEWAY}${BL}1. Execute the following on the host: ${CL}"
 echo -e "${TAB}${GATEWAY}${GN}   pct exec ${CTID} -- bash -c \"nano /opt/pulse/.env\"${CL}"
-echo -e "${TAB}${GATEWAY}${BL}2. Set the required Proxmox credentials in the .env file${CL}"
-echo -e "${TAB}${GATEWAY}${BL}   (Reference .env.example for all available options)${CL}"
-echo -e "${TAB}${GATEWAY}${BL}3. Start the service:${CL}"
-echo -e "${TAB}${GATEWAY}${GN}   pct exec ${CTID} -- bash -c \"systemctl start pulse\"${CL}"
+echo -e "${TAB}${GATEWAY}${BL}2. Change these settings in the .env file:${CL}"
+echo -e "${TAB}${GATEWAY}${BL}   - Set USE_MOCK_DATA=false${CL}"
+echo -e "${TAB}${GATEWAY}${BL}   - Set MOCK_DATA_ENABLED=false${CL}"
+echo -e "${TAB}${GATEWAY}${BL}   - Configure your Proxmox credentials${CL}"
+echo -e "${TAB}${GATEWAY}${BL}3. Restart the service:${CL}"
+echo -e "${TAB}${GATEWAY}${GN}   pct exec ${CTID} -- bash -c \"systemctl restart pulse\"${CL}"
 
 # Final instructions
 echo -e "\n${INFO}${YW}To update ${APP} in the future:${CL}"
