@@ -10,6 +10,17 @@ source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
 catch_errors
+
+# Fix locale issues
+msg_info "Setting up locale"
+$STD apt-get update > /dev/null 2>&1
+$STD apt-get install -y locales > /dev/null 2>&1
+$STD locale-gen en_US.UTF-8 > /dev/null 2>&1
+$STD update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 > /dev/null 2>&1
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+msg_ok "Locale configured"
+
 setting_up_container
 network_check
 update_os

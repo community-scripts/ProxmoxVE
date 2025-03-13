@@ -5,6 +5,9 @@
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/rcourtman/pulse
 
+# Initialize spinner variable for safety
+export SPINNER_PID=""
+
 source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 
 # Default values
@@ -154,16 +157,28 @@ start
 build_container
 description
 
-# Get the IP address of the container
+# Configure locale in the container to support emojis and UTF-8
+pct exec ${CTID} -- bash -c "apt-get update > /dev/null 2>&1 && apt-get install -y locales > /dev/null 2>&1"
+pct exec ${CTID} -- bash -c "locale-gen en_US.UTF-8 > /dev/null 2>&1"
+pct exec ${CTID} -- bash -c "update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 > /dev/null 2>&1"
+
+# Get the IP address of the container and ensure we have a valid IP
 if [ -z "${IP}" ]; then
-  IP=$(pct exec ${CTID} ip a s dev eth0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}' || echo "CONTAINER_IP")
-  if [[ "${IP}" == "CONTAINER_IP" ]]; then
-    # Fallback: Get the IP from the container configuration
-    IP=$(pct config ${CTID} | grep -E 'net0' | grep -oP '(?<=ip=)\d+(\.\d+){3}')
+  # Try multiple methods to get the IP address
+  IP=$(pct exec ${CTID} ip a s dev eth0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}' || echo "")
+  if [ -z "${IP}" ]; then
+    IP=$(pct config ${CTID} | grep -E 'net0' | grep -oP '(?<=ip=)\d+(\.\d+){3}' || echo "")
+    if [ -z "${IP}" ]; then
+      # Last resort - get IP after a brief delay
+      sleep 5
+      IP=$(pct exec ${CTID} hostname -I | awk '{print $1}' || echo "CONTAINER_IP")
+    fi
   fi
 fi
 
-msg_ok "Completed Successfully!\n"
+# Ensure final messages are displayed properly with proper formatting
+printf "\n"
+echo -e "${BFR}${CM}${GN}Completed Successfully!${CL}\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:7654${CL}" 
@@ -184,4 +199,7 @@ echo -e "${TAB}${GATEWAY}${GN}   pct exec ${CTID} -- bash -c \"systemctl restart
 
 # Final instructions
 echo -e "\n${INFO}${YW}To update ${APP} in the future:${CL}"
-echo -e "${TAB}${GATEWAY}${GN}   pct exec ${CTID} -- bash -c \"update\"${CL}" 
+echo -e "${TAB}${GATEWAY}${GN}   pct exec ${CTID} -- bash -c \"update\"${CL}"
+
+# Force a flush of output
+printf "\n" 
