@@ -210,83 +210,33 @@ msg_info "Downloading Pulse v${PULSE_VERSION} release"
 pct exec ${CTID} -- bash -c "wget -qO- https://github.com/rcourtman/pulse/releases/download/v${PULSE_VERSION}/pulse-${PULSE_VERSION}.tar.gz | tar xz -C /opt/pulse --strip-components=1 > /dev/null 2>&1"
 msg_ok "Release downloaded and extracted"
 
-# Verify the extracted files and structure
-msg_info "Verifying installation structure"
-pct exec ${CTID} -- bash -c "ls -la /opt/pulse"
-pct exec ${CTID} -- bash -c "if [ ! -d /opt/pulse/dist ]; then mkdir -p /opt/pulse/dist; fi"
-pct exec ${CTID} -- bash -c "if [ ! -d /opt/pulse/dist/public ]; then mkdir -p /opt/pulse/dist/public; fi"
+# GUARANTEED FIX: Clone the repo and build the frontend to ensure it works
+msg_info "Building frontend from scratch (guaranteed fix)"
+pct exec ${CTID} -- bash -c "rm -rf /tmp/pulse-source && mkdir -p /tmp/pulse-source && cd /tmp/pulse-source && git clone https://github.com/rcourtman/pulse.git . && cd frontend && npm ci && npm run build && rm -rf /opt/pulse/dist/public/* && mkdir -p /opt/pulse/dist/public && cp -r dist/* /opt/pulse/dist/public/"
+msg_ok "Frontend built and installed directly from source"
 
-# If frontend files are in a different location, copy them to the expected location
-pct exec ${CTID} -- bash -c "if [ -d /opt/pulse/frontend/dist ] && [ ! -d /opt/pulse/dist/public ]; then cp -r /opt/pulse/frontend/dist /opt/pulse/dist/public; fi"
-pct exec ${CTID} -- bash -c "if [ -d /opt/pulse/public ] && [ ! -d /opt/pulse/dist/public ]; then cp -r /opt/pulse/public /opt/pulse/dist/; fi"
+# Modify the mock service to use the compiled JavaScript instead of TypeScript
+msg_info "Updating mock server service"
+pct exec ${CTID} -- bash -c "cat > /etc/systemd/system/pulse-mock.service << 'EOFSVC'
+[Unit]
+Description=Pulse Mock Data Server
+After=network.target
+Before=pulse.service
 
-# Create symlink to help find frontend files (common solution)
-pct exec ${CTID} -- bash -c "if [ -d /opt/pulse/frontend/dist ] && [ ! -L /opt/pulse/dist/public ]; then ln -s /opt/pulse/frontend/dist /opt/pulse/dist/public; fi"
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/pulse
+Environment=NODE_ENV=production
+Environment=MOCK_SERVER_PORT=7656
+ExecStart=/usr/bin/node /opt/pulse/dist/mock/server.js
+Restart=on-failure
+RestartSec=10
 
-# Check the directory structure after our fixes
-pct exec ${CTID} -- bash -c "echo 'Content of /opt/pulse/dist:'; ls -la /opt/pulse/dist || echo 'dist directory does not exist'"
-pct exec ${CTID} -- bash -c "echo 'Content of /opt/pulse/dist/public (if exists):'; ls -la /opt/pulse/dist/public 2>/dev/null || echo 'public directory does not exist'"
-pct exec ${CTID} -- bash -c "echo 'Checking for frontend source:'; ls -la /opt/pulse/frontend 2>/dev/null || echo 'frontend directory does not exist'"
-
-# Fallback: If frontend files are still missing after our fixes, build them
-pct exec ${CTID} -- bash -c "if [ ! -d /opt/pulse/dist/public ] || [ -z \"\$(ls -A /opt/pulse/dist/public 2>/dev/null)\" ]; then
-  echo 'Frontend files not found in the pre-built package. Building them now...'
-  
-  # First check if the frontend directory exists
-  if [ -d /opt/pulse/frontend ]; then
-    echo 'Found frontend directory, building from source...'
-    cd /opt/pulse/frontend
-    
-    # Install dependencies and build
-    npm ci
-    npm run build
-    
-    # Check if build was successful
-    if [ -d /opt/pulse/frontend/dist ]; then
-      echo 'Frontend built successfully, copying files...'
-      mkdir -p /opt/pulse/dist/public
-      cp -r /opt/pulse/frontend/dist/* /opt/pulse/dist/public/
-      echo 'Frontend copied to /opt/pulse/dist/public'
-      ls -la /opt/pulse/dist/public
-    else
-      echo 'Frontend build failed, no dist directory created'
-      exit 1
-    fi
-  else
-    # If frontend directory doesn't exist, clone the repo and build
-    echo 'Frontend directory not found, cloning repository...'
-    cd /opt/pulse
-    git clone https://github.com/rcourtman/pulse.git /tmp/pulse-build
-    
-    if [ -d /tmp/pulse-build/frontend ]; then
-      echo 'Cloned repository, building frontend...'
-      cd /tmp/pulse-build/frontend
-      npm ci
-      npm run build
-      
-      if [ -d /tmp/pulse-build/frontend/dist ]; then
-        echo 'Frontend built successfully, copying files...'
-        mkdir -p /opt/pulse/dist/public
-        cp -r /tmp/pulse-build/frontend/dist/* /opt/pulse/dist/public/
-        echo 'Frontend copied to /opt/pulse/dist/public'
-        ls -la /opt/pulse/dist/public
-      else
-        echo 'Frontend build failed, no dist directory created'
-        exit 1
-      fi
-      
-      # Clean up
-      rm -rf /tmp/pulse-build
-    else
-      echo 'Failed to clone repository or find frontend directory'
-      exit 1
-    fi
-  fi
-else
-  echo 'Frontend files found, no need to build'
-fi"
-
-msg_ok "Installation structure verified"
+[Install]
+WantedBy=multi-user.target
+EOFSVC"
+msg_ok "Updated mock server service configuration"
 
 # Set up environment configuration
 msg_info "Setting up environment configuration"
@@ -349,29 +299,6 @@ RestartSec=10
 WantedBy=multi-user.target
 EOFSVC"
 msg_ok "Main service file created"
-
-# Create mock data server service
-msg_info "Creating mock server service file"
-pct exec ${CTID} -- bash -c "cat > /etc/systemd/system/pulse-mock.service << 'EOFSVC'
-[Unit]
-Description=Pulse Mock Data Server
-After=network.target
-Before=pulse.service
-
-[Service]
-Type=simple
-User=root
-WorkingDirectory=/opt/pulse
-Environment=NODE_ENV=production
-Environment=MOCK_SERVER_PORT=7656
-ExecStart=/usr/bin/npx ts-node /opt/pulse/src/mock/run-server.ts
-Restart=on-failure
-RestartSec=10
-
-[Install]
-WantedBy=multi-user.target
-EOFSVC"
-msg_ok "Mock server service file created"
 
 # Set file permissions
 msg_info "Setting file permissions"
