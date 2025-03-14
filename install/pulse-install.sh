@@ -63,6 +63,47 @@ msg_info "Downloading release v${APPVERSION}"
 $STD wget -qO- https://github.com/rcourtman/pulse/releases/download/v${APPVERSION}/pulse-${APPVERSION}.tar.gz | tar xz -C ${APPPATH} --strip-components=1
 msg_ok "Release extracted to ${APPPATH}"
 
+# Verify and fix the installation structure 
+msg_info "Verifying installation structure"
+ls -la ${APPPATH}
+# Ensure dist directory exists
+if [ ! -d ${APPPATH}/dist ]; then
+  mkdir -p ${APPPATH}/dist
+fi
+# Ensure public directory exists
+if [ ! -d ${APPPATH}/dist/public ]; then
+  mkdir -p ${APPPATH}/dist/public
+fi
+
+# If frontend files are in a different location, copy them to the expected location
+if [ -d ${APPPATH}/frontend/dist ] && [ ! -d ${APPPATH}/dist/public ]; then
+  cp -r ${APPPATH}/frontend/dist ${APPPATH}/dist/public
+fi
+if [ -d ${APPPATH}/public ] && [ ! -d ${APPPATH}/dist/public ]; then
+  cp -r ${APPPATH}/public ${APPPATH}/dist/
+fi
+
+# Create symlink to help find frontend files (common solution)
+if [ -d ${APPPATH}/frontend/dist ] && [ ! -L ${APPPATH}/dist/public ]; then
+  ln -s ${APPPATH}/frontend/dist ${APPPATH}/dist/public
+fi
+
+# Fallback: If frontend files are still missing after our fixes, build them
+if [ ! -d ${APPPATH}/dist/public ] || [ -z "$(ls -A ${APPPATH}/dist/public 2>/dev/null)" ]; then
+  msg_info "Frontend files not found in the pre-built package. Building them now..."
+  if [ -d ${APPPATH}/frontend ]; then
+    cd ${APPPATH}/frontend
+    $STD npm ci
+    $STD npm run build
+    if [ -d ${APPPATH}/frontend/dist ]; then
+      mkdir -p ${APPPATH}/dist/public
+      cp -r ${APPPATH}/frontend/dist/* ${APPPATH}/dist/public/
+    fi
+  fi
+fi
+
+msg_ok "Installation structure verified"
+
 # Set up environment file
 msg_info "Setting up environment"
 cat > ${APPPATH}/.env.example << 'EOF'

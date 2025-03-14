@@ -210,6 +210,35 @@ msg_info "Downloading Pulse v${PULSE_VERSION} release"
 pct exec ${CTID} -- bash -c "wget -qO- https://github.com/rcourtman/pulse/releases/download/v${PULSE_VERSION}/pulse-${PULSE_VERSION}.tar.gz | tar xz -C /opt/pulse --strip-components=1 > /dev/null 2>&1"
 msg_ok "Release downloaded and extracted"
 
+# Verify the extracted files and structure
+msg_info "Verifying installation structure"
+pct exec ${CTID} -- bash -c "ls -la /opt/pulse"
+pct exec ${CTID} -- bash -c "if [ ! -d /opt/pulse/dist ]; then mkdir -p /opt/pulse/dist; fi"
+pct exec ${CTID} -- bash -c "if [ ! -d /opt/pulse/dist/public ]; then mkdir -p /opt/pulse/dist/public; fi"
+
+# If frontend files are in a different location, copy them to the expected location
+pct exec ${CTID} -- bash -c "if [ -d /opt/pulse/frontend/dist ] && [ ! -d /opt/pulse/dist/public ]; then cp -r /opt/pulse/frontend/dist /opt/pulse/dist/public; fi"
+pct exec ${CTID} -- bash -c "if [ -d /opt/pulse/public ] && [ ! -d /opt/pulse/dist/public ]; then cp -r /opt/pulse/public /opt/pulse/dist/; fi"
+
+# Create symlink to help find frontend files (common solution)
+pct exec ${CTID} -- bash -c "if [ -d /opt/pulse/frontend/dist ] && [ ! -L /opt/pulse/dist/public ]; then ln -s /opt/pulse/frontend/dist /opt/pulse/dist/public; fi"
+
+# Fallback: If frontend files are still missing after our fixes, build them
+pct exec ${CTID} -- bash -c "if [ ! -d /opt/pulse/dist/public ] || [ -z \"\$(ls -A /opt/pulse/dist/public 2>/dev/null)\" ]; then
+  echo 'Frontend files not found in the pre-built package. Building them now...'
+  if [ -d /opt/pulse/frontend ]; then
+    cd /opt/pulse/frontend
+    npm ci > /dev/null 2>&1
+    npm run build > /dev/null 2>&1
+    if [ -d /opt/pulse/frontend/dist ]; then
+      mkdir -p /opt/pulse/dist/public
+      cp -r /opt/pulse/frontend/dist/* /opt/pulse/dist/public/
+    fi
+  fi
+fi"
+
+msg_ok "Installation structure verified"
+
 # Set up environment configuration
 msg_info "Setting up environment configuration"
 pct exec ${CTID} -- bash -c "cat > /opt/pulse/.env.example << 'EOFENV'
