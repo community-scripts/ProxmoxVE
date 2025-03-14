@@ -12,7 +12,7 @@ Pulse is a modern, lightweight monitoring dashboard specifically designed for Pr
 - **VM/CT Overview**: Status and resource allocation overview for all virtual machines and containers
 - **Demo Mode**: Built-in demo data allows exploring the interface without connecting to a real Proxmox server
 - **Mobile Responsive**: Access your monitoring dashboard from any device
-- **Lightweight**: Minimal resource footprint, perfect for running on a Proxmox node
+- **Lightweight**: Minimal resource footprint, perfect for running in an LXC container
 
 ## Installation
 
