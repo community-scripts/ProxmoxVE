@@ -342,27 +342,27 @@ fi
 # Ensure final messages are displayed properly with proper formatting
 printf "\n"
 echo -e "${BFR}${CM}${GN}Completed Successfully!${CL}\n"
-echo -e "${CREATING}${GN}${APP} setup has been successfully initialized.${CL}"
-echo -e "${INFO}${YW}Access it using the following URL:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:7654${CL}" 
+echo -e "${GN}${APP} setup has been successfully initialized.${CL}"
+echo -e "${YW}Access it using the following URL:${CL}"
+echo -e "    ${BGN}http://${IP}:7654${CL}" 
 
 # Provide instructions for demo mode and real configuration
-echo -e "\n${INFO}${YW}${APP} is running with demo data.${CL}"
-echo -e "${TAB}${GATEWAY}You can explore the interface immediately.${CL}"
+echo -e "\n${YW}${APP} is running with demo data.${CL}"
+echo -e "    You can explore the interface immediately."
 
-echo -e "\n${INFO}${YW}To connect to your actual Proxmox server:${CL}"
-echo -e "${TAB}${GATEWAY}1. Execute the following on the host:${CL}"
-echo -e "${TAB}${GATEWAY}   pct exec ${CTID} -- bash -c \"nano /opt/pulse/.env\"${CL}"
-echo -e "${TAB}${GATEWAY}2. Change these settings in the .env file:${CL}"
-echo -e "${TAB}${GATEWAY}   - Set USE_MOCK_DATA=false${CL}"
-echo -e "${TAB}${GATEWAY}   - Set MOCK_DATA_ENABLED=false${CL}"
-echo -e "${TAB}${GATEWAY}   - Configure your Proxmox credentials${CL}"
-echo -e "${TAB}${GATEWAY}3. Restart the service:${CL}"
-echo -e "${TAB}${GATEWAY}   pct exec ${CTID} -- bash -c \"systemctl restart pulse\"${CL}"
+echo -e "\n${YW}To connect to your actual Proxmox server:${CL}"
+echo -e "    1. Execute the following on the host:"
+echo -e "       pct exec ${CTID} -- bash -c \"nano /opt/pulse/.env\""
+echo -e "    2. Change these settings in the .env file:"
+echo -e "       - Set USE_MOCK_DATA=false"
+echo -e "       - Set MOCK_DATA_ENABLED=false"
+echo -e "       - Configure your Proxmox credentials"
+echo -e "    3. Restart the service:"
+echo -e "       pct exec ${CTID} -- bash -c \"systemctl restart pulse\""
 
 # Final instructions
-echo -e "\n${INFO}${YW}To update ${APP} in the future:${CL}"
-echo -e "${TAB}${GATEWAY}   pct exec ${CTID} -- bash -c \"update\"${CL}"
+echo -e "\n${YW}To update ${APP} in the future:${CL}"
+echo -e "    pct exec ${CTID} -- bash -c \"update\""
 
 # Force a flush of output
 printf "\n" 
