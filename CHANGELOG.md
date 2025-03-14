@@ -21,6 +21,12 @@ All LXC instances created using this repository come pre-installed with Midnight
   - Memos: Increase RAM Usage and max space [@MickLesk](https://github.com/MickLesk) ([#3072](https://github.com/community-scripts/ProxmoxVE/pull/3072))
 - Seafile - Minor bug fix: domain.sh script fix [@dave-yap](https://github.com/dave-yap) ([#3046](https://github.com/community-scripts/ProxmoxVE/pull/3046))
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - NPM: Add info about docker use. [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#3085](https://github.com/community-scripts/ProxmoxVE/pull/3085))
+
 ## 2025-03-13
 
 ### 🆕 New Scripts
