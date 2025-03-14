@@ -159,32 +159,41 @@ function update_script() {
   exit
 }
 
+# Set up the locale environment in the container early
+function setup_locale_environment() {
+  # Install locales package if needed
+  pct exec ${CTID} -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get install -y locales > /dev/null 2>&1"
+  
+  # Configure locales silently
+  pct exec ${CTID} -- bash -c "sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen"
+  pct exec ${CTID} -- bash -c "locale-gen > /dev/null 2>&1"
+  
+  # Set environment variables directly in container
+  pct exec ${CTID} -- bash -c "echo 'LANG=en_US.UTF-8' > /etc/default/locale"
+  pct exec ${CTID} -- bash -c "echo 'LC_ALL=en_US.UTF-8' >> /etc/default/locale"
+  pct exec ${CTID} -- bash -c "echo 'export LANG=en_US.UTF-8' >> /etc/profile"
+  pct exec ${CTID} -- bash -c "echo 'export LC_ALL=en_US.UTF-8' >> /etc/profile"
+  
+  # Also set directly in current environment
+  pct exec ${CTID} -- bash -c "export LANG=en_US.UTF-8 && export LC_ALL=en_US.UTF-8"
+}
+
 start
 build_container
 description
+
+# Set up locale immediately after container is created
+setup_locale_environment
 
 # Simplify the installation process with direct commands
 msg_info "Setting up Pulse installation in the container"
 
 # Install core dependencies directly
-msg_info "Installing core dependencies"
 pct exec ${CTID} -- bash -c "apt-get update > /dev/null 2>&1"
-pct exec ${CTID} -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get install -y curl git ca-certificates gnupg sudo build-essential locales > /dev/null 2>&1"
+pct exec ${CTID} -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get install -y curl git ca-certificates gnupg sudo build-essential > /dev/null 2>&1"
 msg_ok "Core dependencies installed"
 
-# Set up locales properly with a more robust approach
-msg_info "Setting up locales in the container"
-# Generate the locale without relying on update-locale
-pct exec ${CTID} -- bash -c "sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen"
-pct exec ${CTID} -- bash -c "locale-gen > /dev/null 2>&1"
-# Set the locale using direct file creation instead of update-locale
-pct exec ${CTID} -- bash -c "echo 'LANG=en_US.UTF-8' > /etc/default/locale"
-pct exec ${CTID} -- bash -c "echo 'LC_ALL=en_US.UTF-8' >> /etc/default/locale"
-# Export directly for the current session
-pct exec ${CTID} -- bash -c "export LANG=en_US.UTF-8 && export LC_ALL=en_US.UTF-8"
-msg_ok "Locale configuration completed"
-
-# Install Node.js
+# Installing Node.js
 msg_info "Installing Node.js"
 pct exec ${CTID} -- bash -c "curl -fsSL https://deb.nodesource.com/setup_20.x | bash - > /dev/null 2>&1"
 pct exec ${CTID} -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get install -y nodejs > /dev/null 2>&1"
@@ -309,9 +318,12 @@ msg_ok "Update utility created"
 
 # Enable and start services
 msg_info "Enabling and starting services"
-pct exec ${CTID} -- bash -c "systemctl enable pulse-mock && systemctl start pulse-mock"
-pct exec ${CTID} -- bash -c "systemctl enable pulse && systemctl start pulse"
+pct exec ${CTID} -- bash -c "systemctl enable pulse-mock > /dev/null 2>&1 && systemctl start pulse-mock > /dev/null 2>&1"
+pct exec ${CTID} -- bash -c "systemctl enable pulse > /dev/null 2>&1 && systemctl start pulse > /dev/null 2>&1"
 msg_ok "Pulse services started"
+
+# Complete the installation message
+msg_ok "Pulse installation complete"
 
 # Get the IP address of the container and ensure we have a valid IP
 if [ -z "${IP}" ]; then
@@ -354,5 +366,3 @@ echo -e "${TAB}${GATEWAY}${GN}   pct exec ${CTID} -- bash -c \"update\"${CL}"
 
 # Force a flush of output
 printf "\n" 
-
-msg_ok "Pulse installation complete" 

@@ -11,12 +11,15 @@ color
 verb_ip6
 catch_errors
 
-# Fix locale issues
+# Fix locale issues early to prevent warnings
 msg_info "Setting up locale"
 $STD apt-get update > /dev/null 2>&1
 $STD apt-get install -y locales > /dev/null 2>&1
+$STD sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen > /dev/null 2>&1
 $STD locale-gen en_US.UTF-8 > /dev/null 2>&1
 $STD update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 > /dev/null 2>&1
+echo 'export LANG=en_US.UTF-8' >> /etc/profile
+echo 'export LC_ALL=en_US.UTF-8' >> /etc/profile
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 msg_ok "Locale configured"
@@ -191,13 +194,14 @@ WantedBy=multi-user.target
 EOF
 
 # Enable and start the mock service first
-$STD systemctl enable ${NSAPP}-mock
-$STD systemctl start ${NSAPP}-mock
+msg_info "Enabling services"
+$STD systemctl enable ${NSAPP}-mock > /dev/null 2>&1
+$STD systemctl start ${NSAPP}-mock > /dev/null 2>&1
 
 # Enable and start the main service
-$STD systemctl enable ${NSAPP}
-$STD systemctl start ${NSAPP}
-msg_ok "Setup and started services"
+$STD systemctl enable ${NSAPP} > /dev/null 2>&1
+$STD systemctl start ${NSAPP} > /dev/null 2>&1
+msg_ok "Services started"
 
 # Set proper file permissions
 msg_info "Setting file permissions"
@@ -205,7 +209,7 @@ chown -R root:root ${APPPATH}
 chmod -R 755 ${APPPATH}
 chmod 600 ${APPPATH}/.env
 chmod 644 ${APPPATH}/.env.example
-msg_ok "Set file permissions"
+msg_ok "File permissions set"
 
 # Add the motd (Message of the Day) and SSH customization
 motd_ssh
@@ -217,16 +221,12 @@ $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned up"
 
-# Message to display when complete
-msg_info "Completing ${APP} installation"
-echo "Application Name: ${APP}" > ${APPPATH}/${NSAPP}.txt
-echo "Application Version: ${APPVERSION}" >> ${APPPATH}/${NSAPP}.txt
-echo "Access URL: http://${IP}:7654 (after configuration)" >> ${APPPATH}/${NSAPP}.txt
-msg_ok "Completed ${APP} installation"
-
 # Create update script for easy updates
 echo "bash -c \"\$(wget -qLO - https://github.com/rcourtman/ProxmoxVE/raw/main/ct/${NSAPP}.sh)\"" >/usr/bin/update
 chmod +x /usr/bin/update
+
+# Message to display when complete
+msg_ok "${APP} installation complete"
 
 # Final message with configuration instructions
 cat <<EOF
