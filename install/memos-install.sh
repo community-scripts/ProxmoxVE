@@ -52,7 +52,8 @@ msg_ok "Installed Golang"
 
 msg_info "Installing Memos (Patience)"
 mkdir -p /opt/memos_data
-$STD sudo git clone https://github.com/usememos/memos.git /opt/memos
+export NODE_OPTIONS="--max-old-space-size=2048"
+$STD git clone https://github.com/usememos/memos.git /opt/memos
 cd /opt/memos/web 
 $STD pnpm i --frozen-lockfile
 $STD pnpm build
