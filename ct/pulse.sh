@@ -223,18 +223,67 @@ pct exec ${CTID} -- bash -c "if [ -d /opt/pulse/public ] && [ ! -d /opt/pulse/di
 # Create symlink to help find frontend files (common solution)
 pct exec ${CTID} -- bash -c "if [ -d /opt/pulse/frontend/dist ] && [ ! -L /opt/pulse/dist/public ]; then ln -s /opt/pulse/frontend/dist /opt/pulse/dist/public; fi"
 
+# Check the directory structure after our fixes
+pct exec ${CTID} -- bash -c "echo 'Content of /opt/pulse/dist:'; ls -la /opt/pulse/dist || echo 'dist directory does not exist'"
+pct exec ${CTID} -- bash -c "echo 'Content of /opt/pulse/dist/public (if exists):'; ls -la /opt/pulse/dist/public 2>/dev/null || echo 'public directory does not exist'"
+pct exec ${CTID} -- bash -c "echo 'Checking for frontend source:'; ls -la /opt/pulse/frontend 2>/dev/null || echo 'frontend directory does not exist'"
+
 # Fallback: If frontend files are still missing after our fixes, build them
 pct exec ${CTID} -- bash -c "if [ ! -d /opt/pulse/dist/public ] || [ -z \"\$(ls -A /opt/pulse/dist/public 2>/dev/null)\" ]; then
   echo 'Frontend files not found in the pre-built package. Building them now...'
+  
+  # First check if the frontend directory exists
   if [ -d /opt/pulse/frontend ]; then
+    echo 'Found frontend directory, building from source...'
     cd /opt/pulse/frontend
-    npm ci > /dev/null 2>&1
-    npm run build > /dev/null 2>&1
+    
+    # Install dependencies and build
+    npm ci
+    npm run build
+    
+    # Check if build was successful
     if [ -d /opt/pulse/frontend/dist ]; then
+      echo 'Frontend built successfully, copying files...'
       mkdir -p /opt/pulse/dist/public
       cp -r /opt/pulse/frontend/dist/* /opt/pulse/dist/public/
+      echo 'Frontend copied to /opt/pulse/dist/public'
+      ls -la /opt/pulse/dist/public
+    else
+      echo 'Frontend build failed, no dist directory created'
+      exit 1
+    fi
+  else
+    # If frontend directory doesn't exist, clone the repo and build
+    echo 'Frontend directory not found, cloning repository...'
+    cd /opt/pulse
+    git clone https://github.com/rcourtman/pulse.git /tmp/pulse-build
+    
+    if [ -d /tmp/pulse-build/frontend ]; then
+      echo 'Cloned repository, building frontend...'
+      cd /tmp/pulse-build/frontend
+      npm ci
+      npm run build
+      
+      if [ -d /tmp/pulse-build/frontend/dist ]; then
+        echo 'Frontend built successfully, copying files...'
+        mkdir -p /opt/pulse/dist/public
+        cp -r /tmp/pulse-build/frontend/dist/* /opt/pulse/dist/public/
+        echo 'Frontend copied to /opt/pulse/dist/public'
+        ls -la /opt/pulse/dist/public
+      else
+        echo 'Frontend build failed, no dist directory created'
+        exit 1
+      fi
+      
+      # Clean up
+      rm -rf /tmp/pulse-build
+    else
+      echo 'Failed to clone repository or find frontend directory'
+      exit 1
     fi
   fi
+else
+  echo 'Frontend files found, no need to build'
 fi"
 
 msg_ok "Installation structure verified"
