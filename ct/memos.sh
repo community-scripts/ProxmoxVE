@@ -8,7 +8,7 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 APP="Memos"
 var_tags="notes"
 var_cpu="2"
-var_ram="2048"
+var_ram="3072"
 var_disk="7"
 var_os="debian"
 var_version="12"
@@ -36,6 +36,7 @@ function update_script() {
     exit
   fi
   systemctl stop memos
+  export NODE_OPTIONS="--max-old-space-size=2048"
   cd /opt/memos/web
   $STD pnpm i --frozen-lockfile
   $STD pnpm build
