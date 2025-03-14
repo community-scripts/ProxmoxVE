@@ -26,6 +26,7 @@ var_disk="6"
 var_os="debian"
 var_version="12"
 var_unprivileged="1"
+PULSE_VERSION="1.6.4"  # Current version to install
 
 # App Output & Base Settings
 header_info "$APP"
@@ -199,35 +200,37 @@ pct exec ${CTID} -- bash -c "curl -fsSL https://deb.nodesource.com/setup_20.x | 
 pct exec ${CTID} -- bash -c "DEBIAN_FRONTEND=noninteractive apt-get install -y nodejs > /dev/null 2>&1"
 msg_ok "Node.js installed"
 
-# Create app directory
+# Create application directory
 msg_info "Creating application directory"
 pct exec ${CTID} -- bash -c "mkdir -p /opt/pulse"
 msg_ok "Application directory created"
 
-# Clone pulse repository
-msg_info "Cloning Pulse repository"
-pct exec ${CTID} -- bash -c "cd /opt/pulse && git clone https://github.com/rcourtman/pulse.git . > /dev/null 2>&1"
-msg_ok "Repository cloned"
+# Download and extract pre-built release instead of cloning and building
+msg_info "Downloading Pulse v${PULSE_VERSION} release"
+pct exec ${CTID} -- bash -c "wget -qO- https://github.com/rcourtman/pulse/releases/download/v${PULSE_VERSION}/pulse-${PULSE_VERSION}.tar.gz | tar xz -C /opt/pulse --strip-components=1 > /dev/null 2>&1"
+msg_ok "Release downloaded and extracted"
 
-# Set up environment file for demo mode
+# Set up environment configuration
 msg_info "Setting up environment configuration"
 pct exec ${CTID} -- bash -c "cat > /opt/pulse/.env.example << 'EOFENV'
-# Pulse Environment Configuration
-# Required Proxmox Configuration
-PROXMOX_NODE_1_NAME=Proxmox Node 1
-PROXMOX_NODE_1_HOST=https://your-proxmox-host:8006
+# Proxmox Node Configuration
+# You can add up to 10 nodes by incrementing the number in PROXMOX_NODE_X_* variables
+
+# Node 1 (Required)
+PROXMOX_NODE_1_NAME=pve
+PROXMOX_NODE_1_HOST=https://your-proxmox-ip:8006
 PROXMOX_NODE_1_TOKEN_ID=root@pam!pulse
 PROXMOX_NODE_1_TOKEN_SECRET=your-token-secret
 
-# Basic Configuration
-NODE_ENV=production
-LOG_LEVEL=info
-PORT=7654
+# Node 2 (Optional)
+# PROXMOX_NODE_2_NAME=pve2
+# PROXMOX_NODE_2_HOST=https://your-second-proxmox-ip:8006
+# PROXMOX_NODE_2_TOKEN_ID=root@pam!pulse
+# PROXMOX_NODE_2_TOKEN_SECRET=your-token-secret
 
-# Performance settings
-METRICS_HISTORY_MINUTES=30
-NODE_POLLING_INTERVAL_MS=15000
-EVENT_POLLING_INTERVAL_MS=5000
+# API Settings
+IGNORE_SSL_ERRORS=true
+NODE_TLS_REJECT_UNAUTHORIZED=0
 API_RATE_LIMIT_MS=2000
 API_TIMEOUT_MS=90000
 API_RETRY_DELAY_MS=10000
@@ -235,27 +238,16 @@ API_RETRY_DELAY_MS=10000
 # Mock Data Settings (enabled by default for initial experience)
 # Set to 'false' when ready to connect to real Proxmox server
 USE_MOCK_DATA=true
-MOCK_DATA_ENABLED=true\nMOCK_SERVER_PORT=7656
+MOCK_DATA_ENABLED=true
 MOCK_SERVER_PORT=7656
 
 # Mock Cluster Settings
 MOCK_CLUSTER_ENABLED=true
-MOCK_CLUSTER_NAME=Demo Cluster
-
-# SSL Configuration (uncomment if needed)
-# IGNORE_SSL_ERRORS=true
-# NODE_TLS_REJECT_UNAUTHORIZED=0
+MOCK_CLUSTER_NAME=mock-cluster
 EOFENV"
 
-# Copy the example to the actual config
 pct exec ${CTID} -- bash -c "cp /opt/pulse/.env.example /opt/pulse/.env"
 msg_ok "Environment configuration created"
-
-# Build the application
-msg_info "Building the application (this may take some time...)"
-pct exec ${CTID} -- bash -c "cd /opt/pulse && npm ci > /dev/null 2>&1 && npm run build > /dev/null 2>&1"
-pct exec ${CTID} -- bash -c "cd /opt/pulse/frontend && npm ci > /dev/null 2>&1 && npm run build > /dev/null 2>&1"
-msg_ok "Application built successfully"
 
 # Create service file
 msg_info "Creating service files"

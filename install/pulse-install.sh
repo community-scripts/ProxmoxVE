@@ -31,7 +31,7 @@ update_os
 # Application Details
 NSAPP=pulse
 APP="Pulse"
-APPVERSION="1.6.3"  # Current version as of script creation
+APPVERSION="1.6.4"  # Current version as of script creation
 
 # Installation Path
 APPPATH=/opt/${NSAPP}
@@ -54,39 +54,36 @@ curl -fsSL https://deb.nodesource.com/setup_20.x | $STD bash -
 $STD apt-get install -y nodejs
 msg_ok "Installed Node.js $(node -v)"
 
-# Create application directories
-msg_info "Creating application directories"
+# Clone repository
+msg_info "Setting up application"
 mkdir -p ${APPPATH}
-cd ${APPPATH}
-msg_ok "Created application directories"
 
-# Clone and setup Pulse
-msg_info "Downloading Pulse from GitHub"
-$STD git clone https://github.com/rcourtman/pulse.git .
-msg_ok "Downloaded Pulse"
+# Download and extract release
+msg_info "Downloading release v${APPVERSION}"
+$STD wget -qO- https://github.com/rcourtman/pulse/releases/download/v${APPVERSION}/pulse-${APPVERSION}.tar.gz | tar xz -C ${APPPATH} --strip-components=1
+msg_ok "Release extracted to ${APPPATH}"
 
-# Save version information for update tracking
-echo "${APPVERSION}" > "${APPPATH}/${NSAPP}_version.txt"
+# Set up environment file
+msg_info "Setting up environment"
+cat > ${APPPATH}/.env.example << 'EOF'
+# Proxmox Node Configuration
+# You can add up to 10 nodes by incrementing the number in PROXMOX_NODE_X_* variables
 
-# Configure Pulse
-msg_info "Configuring Pulse"
-cat <<EOF >${APPPATH}/.env.example
-# Pulse Environment Configuration
-# Required Proxmox Configuration
-PROXMOX_NODE_1_NAME=Proxmox Node 1
-PROXMOX_NODE_1_HOST=https://your-proxmox-host:8006
+# Node 1 (Required)
+PROXMOX_NODE_1_NAME=pve
+PROXMOX_NODE_1_HOST=https://your-proxmox-ip:8006
 PROXMOX_NODE_1_TOKEN_ID=root@pam!pulse
 PROXMOX_NODE_1_TOKEN_SECRET=your-token-secret
 
-# Basic Configuration
-NODE_ENV=production
-LOG_LEVEL=info
-PORT=7654
+# Node 2 (Optional)
+# PROXMOX_NODE_2_NAME=pve2
+# PROXMOX_NODE_2_HOST=https://your-second-proxmox-ip:8006
+# PROXMOX_NODE_2_TOKEN_ID=root@pam!pulse
+# PROXMOX_NODE_2_TOKEN_SECRET=your-token-secret
 
-# Performance settings
-METRICS_HISTORY_MINUTES=30
-NODE_POLLING_INTERVAL_MS=15000
-EVENT_POLLING_INTERVAL_MS=5000
+# API Settings
+IGNORE_SSL_ERRORS=true
+NODE_TLS_REJECT_UNAUTHORIZED=0
 API_RATE_LIMIT_MS=2000
 API_TIMEOUT_MS=90000
 API_RETRY_DELAY_MS=10000
@@ -99,55 +96,11 @@ MOCK_SERVER_PORT=7656
 
 # Mock Cluster Settings
 MOCK_CLUSTER_ENABLED=true
-MOCK_CLUSTER_NAME=Demo Cluster
-
-# SSL Configuration (uncomment if needed)
-# IGNORE_SSL_ERRORS=true
-# NODE_TLS_REJECT_UNAUTHORIZED=0
+MOCK_CLUSTER_NAME=mock-cluster
 EOF
 
-# Copy the example to create the actual .env file
 cp ${APPPATH}/.env.example ${APPPATH}/.env
-
-cat <<EOF >${APPPATH}/README.txt
-====== Pulse for Proxmox VE ======
-
-QUICK START: Pulse is already running with mock data at: http://${IP}:7654
-
-For real Proxmox connection:
-1. Edit the .env file with your Proxmox credentials:
-   nano /opt/${NSAPP}/.env
-
-2. Required settings:
-   - Change USE_MOCK_DATA and MOCK_DATA_ENABLED to false
-   - PROXMOX_NODE_1_NAME=Your Node Name
-   - PROXMOX_NODE_1_HOST=https://your-proxmox-ip:8006
-   - PROXMOX_NODE_1_TOKEN_ID=root@pam!pulse
-   - PROXMOX_NODE_1_TOKEN_SECRET=your-token-secret
-
-3. Restart the Pulse service:
-   systemctl restart ${NSAPP}
-
-====== Important Notes ======
-
-- An example configuration is provided at /opt/${NSAPP}/.env.example
-- Pulse is accessible at: http://${IP}:7654
-- Documentation: https://github.com/rcourtman/pulse
-- For issues or support: https://github.com/rcourtman/pulse/issues
-EOF
-msg_ok "Configured Pulse"
-
-# Build the application
-msg_info "Installing dependencies and building application"
-$STD npm ci
-$STD npm run build
-
-# Build the frontend
-cd ${APPPATH}/frontend
-$STD npm ci
-$STD npm run build
-cd ${APPPATH}
-msg_ok "Built application"
+msg_ok "Environment configuration created"
 
 # Create service file
 msg_info "Setting up systemd services"
