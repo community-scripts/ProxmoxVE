@@ -43,6 +43,10 @@
     },
     "notes": [
         {
+            "text": "This uses Docker under the hood, as this can not easily be installed bare-metal. ",
+            "type": "info"
+        },
+        {
             "text": "The initial starting process can be take 1-2min. ",
             "type": "info"
         },
