@@ -27,7 +27,7 @@ var_os="debian"
 var_version="12"
 var_unprivileged="1"
 PULSE_VERSION="1.6.4"  # Current version to install
-COMMIT_HASH="1e743c8d"  # Current commit hash of this script
+COMMIT_HASH="7586c48f"  # Current commit hash of this script
 
 # App Output & Base Settings
 header_info "$APP"
@@ -210,12 +210,6 @@ msg_ok "Application directory created"
 msg_info "Downloading Pulse v${PULSE_VERSION} release"
 pct exec ${CTID} -- bash -c "wget -qO- https://github.com/rcourtman/pulse/releases/download/v${PULSE_VERSION}/pulse-${PULSE_VERSION}.tar.gz | tar xz -C /opt/pulse --strip-components=1 > /dev/null 2>&1"
 msg_ok "Release downloaded and extracted"
-
-# Verify installation structure
-msg_info "Verifying installation structure"
-pct exec ${CTID} -- bash -c "if [ -d /opt/pulse/frontend/dist ]; then echo 'Frontend found at: /opt/pulse/frontend/dist'; else echo 'Frontend not found at expected location'; fi"
-pct exec ${CTID} -- bash -c "if [ -d /opt/pulse/dist ]; then echo 'Server build found at: /opt/pulse/dist'; else echo 'Server build not found at expected location'; fi"
-msg_ok "Installation structure verified"
 
 # Modify the mock service to use the compiled JavaScript
 msg_info "Creating mock server service"
