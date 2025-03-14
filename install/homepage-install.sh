@@ -14,10 +14,10 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y curl
-$STD apt-get install -y sudo
-$STD apt-get install -y mc
-$STD apt-get install -y gpg
+$STD apt-get install -y curl \
+    sudo \
+    mc \
+    gpg
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up Node.js Repository"
@@ -32,6 +32,7 @@ $STD apt-get install -y nodejs
 $STD npm install -g pnpm
 msg_ok "Installed Node.js"
 
+LOCAL_IP=$(hostname -I | awk '{print $1}')
 RELEASE=$(curl -s https://api.github.com/repos/gethomepage/homepage/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 msg_info "Installing Homepage v${RELEASE} (Patience)"
 wget -q https://github.com/gethomepage/homepage/archive/refs/tags/v${RELEASE}.tar.gz
@@ -45,7 +46,9 @@ cp /opt/homepage/src/skeleton/* /opt/homepage/config
 $STD pnpm install
 export NEXT_PUBLIC_VERSION="v$RELEASE"
 export NEXT_PUBLIC_REVISION="source"
+export NEXT_TELEMETRY_DISABLED=1
 $STD pnpm build
+echo "HOMEPAGE_ALLOWED_HOSTS=localhost:3000,${LOCAL_IP}:3000" > /opt/homepage/.env
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Installed Homepage v${RELEASE}"
 

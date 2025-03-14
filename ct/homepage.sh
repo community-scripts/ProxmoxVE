@@ -8,8 +8,8 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 APP="Homepage"
 var_tags="dashboard"
 var_cpu="2"
-var_ram="1024"
-var_disk="3"
+var_ram="4096"
+var_disk="6"
 var_os="debian"
 var_version="12"
 var_unprivileged="1"
@@ -35,6 +35,7 @@ function update_script() {
       echo "Installed NPM..."
     fi
   fi
+  LOCAL_IP=$(hostname -I | awk '{print $1}')
   RELEASE=$(curl -s https://api.github.com/repos/gethomepage/homepage/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
   if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
     msg_info "Updating Homepage to v${RELEASE} (Patience)"
@@ -49,7 +50,11 @@ function update_script() {
     $STD npx --yes update-browserslist-db@latest
     export NEXT_PUBLIC_VERSION="v$RELEASE"
     export NEXT_PUBLIC_REVISION="source"
+    export NEXT_TELEMETRY_DISABLED=1
     $STD pnpm build
+    if [[ ! -f /opt/homepage/.env ]]; then
+        echo "HOMEPAGE_ALLOWED_HOSTS=localhost:3000,${LOCAL_IP}:3000" > /opt/homepage/.env
+    fi
     systemctl start homepage
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated Homepage to v${RELEASE}"
