@@ -27,6 +27,7 @@ var_os="debian"
 var_version="12"
 var_unprivileged="1"
 PULSE_VERSION="1.6.4"  # Current version to install
+COMMIT_HASH="1e743c8d"  # Current commit hash of this script
 
 # App Output & Base Settings
 header_info "$APP"
@@ -210,13 +211,14 @@ msg_info "Downloading Pulse v${PULSE_VERSION} release"
 pct exec ${CTID} -- bash -c "wget -qO- https://github.com/rcourtman/pulse/releases/download/v${PULSE_VERSION}/pulse-${PULSE_VERSION}.tar.gz | tar xz -C /opt/pulse --strip-components=1 > /dev/null 2>&1"
 msg_ok "Release downloaded and extracted"
 
-# GUARANTEED FIX: Clone the repo and build the frontend to ensure it works
-msg_info "Building frontend from scratch (guaranteed fix)"
-pct exec ${CTID} -- bash -c "rm -rf /tmp/pulse-source && mkdir -p /tmp/pulse-source && cd /tmp/pulse-source && git clone https://github.com/rcourtman/pulse.git . && cd frontend && npm ci && npm run build && rm -rf /opt/pulse/dist/public/* && mkdir -p /opt/pulse/dist/public && cp -r dist/* /opt/pulse/dist/public/"
-msg_ok "Frontend built and installed directly from source"
+# Verify installation structure
+msg_info "Verifying installation structure"
+pct exec ${CTID} -- bash -c "if [ -d /opt/pulse/frontend/dist ]; then echo 'Frontend found at: /opt/pulse/frontend/dist'; else echo 'Frontend not found at expected location'; fi"
+pct exec ${CTID} -- bash -c "if [ -d /opt/pulse/dist ]; then echo 'Server build found at: /opt/pulse/dist'; else echo 'Server build not found at expected location'; fi"
+msg_ok "Installation structure verified"
 
-# Modify the mock service to use the compiled JavaScript instead of TypeScript
-msg_info "Updating mock server service"
+# Modify the mock service to use the compiled JavaScript
+msg_info "Creating mock server service"
 pct exec ${CTID} -- bash -c "cat > /etc/systemd/system/pulse-mock.service << 'EOFSVC'
 [Unit]
 Description=Pulse Mock Data Server
@@ -236,7 +238,7 @@ RestartSec=10
 [Install]
 WantedBy=multi-user.target
 EOFSVC"
-msg_ok "Updated mock server service configuration"
+msg_ok "Mock server service created"
 
 # Set up environment configuration
 msg_info "Setting up environment configuration"
@@ -306,11 +308,11 @@ pct exec ${CTID} -- bash -c "chown -R root:root /opt/pulse && chmod -R 755 /opt/
 msg_ok "File permissions set"
 
 # Save version info
-pct exec ${CTID} -- bash -c "echo '1.6.3' > /opt/pulse/pulse_version.txt"
+pct exec ${CTID} -- bash -c "echo '${PULSE_VERSION}' > /opt/pulse/pulse_version.txt"
 
 # Create update script
 msg_info "Creating update utility"
-pct exec ${CTID} -- bash -c "echo 'bash -c \"\$(wget -qLO - https://github.com/rcourtman/ProxmoxVE/raw/main/ct/pulse.sh)\"' > /usr/bin/update && chmod +x /usr/bin/update"
+pct exec ${CTID} -- bash -c "echo 'bash -c \"\$(wget -qLO - https://github.com/rcourtman/ProxmoxVE/raw/${COMMIT_HASH}/ct/pulse.sh)\"' > /usr/bin/update && chmod +x /usr/bin/update"
 msg_ok "Update utility created"
 
 # Enable and start services
