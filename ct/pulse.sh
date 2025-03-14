@@ -342,27 +342,27 @@ fi
 # Ensure final messages are displayed properly with proper formatting
 printf "\n"
 echo -e "${BFR}${CM}${GN}Completed Successfully!${CL}\n"
-echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Access it using the following URL:${CL}"
+echo -e "${CREATING}${GN}${APP} setup has been successfully initialized.${CL}"
+echo -e "${INFO}${YW}Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:7654${CL}" 
 
 # Provide instructions for demo mode and real configuration
-echo -e "\n${INFO}${YW}Pulse is ALREADY RUNNING with demo data!${CL}"
-echo -e "${TAB}${GATEWAY}${BL}You can explore the interface immediately.${CL}"
+echo -e "\n${INFO}${YW}${APP} is running with demo data.${CL}"
+echo -e "${TAB}${GATEWAY}You can explore the interface immediately.${CL}"
 
 echo -e "\n${INFO}${YW}To connect to your actual Proxmox server:${CL}"
-echo -e "${TAB}${GATEWAY}${BL}1. Execute the following on the host: ${CL}"
-echo -e "${TAB}${GATEWAY}${GN}   pct exec ${CTID} -- bash -c \"nano /opt/pulse/.env\"${CL}"
-echo -e "${TAB}${GATEWAY}${BL}2. Change these settings in the .env file:${CL}"
-echo -e "${TAB}${GATEWAY}${BL}   - Set USE_MOCK_DATA=false${CL}"
-echo -e "${TAB}${GATEWAY}${BL}   - Set MOCK_DATA_ENABLED=false${CL}"
-echo -e "${TAB}${GATEWAY}${BL}   - Configure your Proxmox credentials${CL}"
-echo -e "${TAB}${GATEWAY}${BL}3. Restart the service:${CL}"
-echo -e "${TAB}${GATEWAY}${GN}   pct exec ${CTID} -- bash -c \"systemctl restart pulse\"${CL}"
+echo -e "${TAB}${GATEWAY}1. Execute the following on the host:${CL}"
+echo -e "${TAB}${GATEWAY}   pct exec ${CTID} -- bash -c \"nano /opt/pulse/.env\"${CL}"
+echo -e "${TAB}${GATEWAY}2. Change these settings in the .env file:${CL}"
+echo -e "${TAB}${GATEWAY}   - Set USE_MOCK_DATA=false${CL}"
+echo -e "${TAB}${GATEWAY}   - Set MOCK_DATA_ENABLED=false${CL}"
+echo -e "${TAB}${GATEWAY}   - Configure your Proxmox credentials${CL}"
+echo -e "${TAB}${GATEWAY}3. Restart the service:${CL}"
+echo -e "${TAB}${GATEWAY}   pct exec ${CTID} -- bash -c \"systemctl restart pulse\"${CL}"
 
 # Final instructions
 echo -e "\n${INFO}${YW}To update ${APP} in the future:${CL}"
-echo -e "${TAB}${GATEWAY}${GN}   pct exec ${CTID} -- bash -c \"update\"${CL}"
+echo -e "${TAB}${GATEWAY}   pct exec ${CTID} -- bash -c \"update\"${CL}"
 
 # Force a flush of output
 printf "\n" 

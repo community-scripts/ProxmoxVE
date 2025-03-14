@@ -232,28 +232,28 @@ msg_ok "${APP} installation complete"
 cat <<EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
- 🟢 ${APP} installation complete!
+${APP} installation complete.
 
- 🚀 Pulse is ALREADY RUNNING with demo data!
- 🌐 Access it right now at: http://${IP}:7654
+${APP} is running with demo data.
+Access it now at: http://${IP}:7654
 
- ⚙️  To connect to your real Proxmox server:
- 1. Edit the .env file:
-    nano /opt/${NSAPP}/.env
+To connect to your real Proxmox server:
+1. Edit the .env file:
+   nano /opt/${NSAPP}/.env
     
- 2. Change these settings:
-    - Set USE_MOCK_DATA=false
-    - Set MOCK_DATA_ENABLED=false
-    - Configure your Proxmox credentials:
-      PROXMOX_NODE_1_NAME=Your Node Name
-      PROXMOX_NODE_1_HOST=https://your-proxmox-ip:8006
-      PROXMOX_NODE_1_TOKEN_ID=root@pam!pulse
-      PROXMOX_NODE_1_TOKEN_SECRET=your-token-secret
+2. Change these settings:
+   - Set USE_MOCK_DATA=false
+   - Set MOCK_DATA_ENABLED=false
+   - Configure your Proxmox credentials:
+     PROXMOX_NODE_1_NAME=Your Node Name
+     PROXMOX_NODE_1_HOST=https://your-proxmox-ip:8006
+     PROXMOX_NODE_1_TOKEN_ID=root@pam!pulse
+     PROXMOX_NODE_1_TOKEN_SECRET=your-token-secret
 
- 3. Restart Pulse:
-    systemctl restart ${NSAPP}
+3. Restart Pulse:
+   systemctl restart ${NSAPP}
  
- To update ${APP} in the future, run: update
+To update ${APP} in the future, run: update
  
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF 
