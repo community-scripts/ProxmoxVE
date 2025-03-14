@@ -18,7 +18,7 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 
 # Default values
 APP="Pulse"
-NSAPP="pulse"  # This must match the install script filename (pulse-install.sh) without the "-install.sh"
+# NSAPP is now derived from APP via the variables function
 var_tags="monitoring;proxmox;dashboard"
 var_cpu="1"
 var_ram="1024"
@@ -38,22 +38,25 @@ variables
 color
 catch_errors
 
+# Define application path
+APPPATH="/opt/${NSAPP}"
+
 # Update function - Add your specific update logic here
 function update_script() {
   header_info
   check_container_storage
   check_container_resources
-  if [[ ! -d /opt/${NSAPP} ]]; then
+  if [[ ! -d ${APPPATH} ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
   
   # Check for updates
-  cd /opt/${NSAPP}
+  cd ${APPPATH}
   
   # Get current version
-  if [[ -f /opt/${NSAPP}/${NSAPP}_version.txt ]]; then
-    CURRENT_VERSION=$(cat /opt/${NSAPP}/${NSAPP}_version.txt)
+  if [[ -f ${APPPATH}/${NSAPP}_version.txt ]]; then
+    CURRENT_VERSION=$(cat ${APPPATH}/${NSAPP}_version.txt)
   else
     CURRENT_VERSION="unknown"
   fi
@@ -76,21 +79,21 @@ function update_script() {
     msg_info "Updating ${APP} from v${CURRENT_VERSION} to v${LATEST_VERSION}"
     
     # Backup .env file first
-    if [[ -f /opt/${NSAPP}/.env ]]; then
-      cp /opt/${NSAPP}/.env /opt/${NSAPP}/.env.backup
+    if [[ -f ${APPPATH}/.env ]]; then
+      cp ${APPPATH}/.env ${APPPATH}/.env.backup
       
       # Save mock data settings
-      USE_MOCK_DATA=$(grep "USE_MOCK_DATA" /opt/${NSAPP}/.env | cut -d= -f2)
-      MOCK_DATA_ENABLED=$(grep "MOCK_DATA_ENABLED" /opt/${NSAPP}/.env | cut -d= -f2)
-      MOCK_CLUSTER_ENABLED=$(grep "MOCK_CLUSTER_ENABLED" /opt/${NSAPP}/.env | cut -d= -f2 || echo "true")
-      MOCK_CLUSTER_NAME=$(grep "MOCK_CLUSTER_NAME" /opt/${NSAPP}/.env | cut -d= -f2 || echo "Demo Cluster")
+      USE_MOCK_DATA=$(grep "USE_MOCK_DATA" ${APPPATH}/.env | cut -d= -f2)
+      MOCK_DATA_ENABLED=$(grep "MOCK_DATA_ENABLED" ${APPPATH}/.env | cut -d= -f2)
+      MOCK_CLUSTER_ENABLED=$(grep "MOCK_CLUSTER_ENABLED" ${APPPATH}/.env | cut -d= -f2 || echo "true")
+      MOCK_CLUSTER_NAME=$(grep "MOCK_CLUSTER_NAME" ${APPPATH}/.env | cut -d= -f2 || echo "Demo Cluster")
       
       msg_ok "Backed up existing configuration"
     fi
     
     # Backup .env.example file if it exists
-    if [[ -f /opt/${NSAPP}/.env.example ]]; then
-      cp /opt/${NSAPP}/.env.example /opt/${NSAPP}/.env.example.backup
+    if [[ -f ${APPPATH}/.env.example ]]; then
+      cp ${APPPATH}/.env.example ${APPPATH}/.env.example.backup
     fi
     
     # Pull latest changes
@@ -98,25 +101,25 @@ function update_script() {
     $STD git reset --hard origin/main
     
     # Restore .env if it was backed up
-    if [[ -f /opt/${NSAPP}/.env.backup ]]; then
-      cp /opt/${NSAPP}/.env.backup /opt/${NSAPP}/.env
+    if [[ -f ${APPPATH}/.env.backup ]]; then
+      cp ${APPPATH}/.env.backup ${APPPATH}/.env
       
       # Ensure mock data settings are preserved
       if [[ -n "$USE_MOCK_DATA" ]]; then
-        sed -i "s/USE_MOCK_DATA=.*/USE_MOCK_DATA=$USE_MOCK_DATA/" /opt/${NSAPP}/.env
-        sed -i "s/MOCK_DATA_ENABLED=.*/MOCK_DATA_ENABLED=$MOCK_DATA_ENABLED/" /opt/${NSAPP}/.env
+        sed -i "s/USE_MOCK_DATA=.*/USE_MOCK_DATA=$USE_MOCK_DATA/" ${APPPATH}/.env
+        sed -i "s/MOCK_DATA_ENABLED=.*/MOCK_DATA_ENABLED=$MOCK_DATA_ENABLED/" ${APPPATH}/.env
         
         # Add or update mock cluster settings
-        if grep -q "MOCK_CLUSTER_ENABLED" /opt/${NSAPP}/.env; then
-          sed -i "s/MOCK_CLUSTER_ENABLED=.*/MOCK_CLUSTER_ENABLED=$MOCK_CLUSTER_ENABLED/" /opt/${NSAPP}/.env
+        if grep -q "MOCK_CLUSTER_ENABLED" ${APPPATH}/.env; then
+          sed -i "s/MOCK_CLUSTER_ENABLED=.*/MOCK_CLUSTER_ENABLED=$MOCK_CLUSTER_ENABLED/" ${APPPATH}/.env
         else
-          echo "MOCK_CLUSTER_ENABLED=$MOCK_CLUSTER_ENABLED" >> /opt/${NSAPP}/.env
+          echo "MOCK_CLUSTER_ENABLED=$MOCK_CLUSTER_ENABLED" >> ${APPPATH}/.env
         fi
         
-        if grep -q "MOCK_CLUSTER_NAME" /opt/${NSAPP}/.env; then
-          sed -i "s/MOCK_CLUSTER_NAME=.*/MOCK_CLUSTER_NAME=$MOCK_CLUSTER_NAME/" /opt/${NSAPP}/.env
+        if grep -q "MOCK_CLUSTER_NAME" ${APPPATH}/.env; then
+          sed -i "s/MOCK_CLUSTER_NAME=.*/MOCK_CLUSTER_NAME=$MOCK_CLUSTER_NAME/" ${APPPATH}/.env
         else
-          echo "MOCK_CLUSTER_NAME=$MOCK_CLUSTER_NAME" >> /opt/${NSAPP}/.env
+          echo "MOCK_CLUSTER_NAME=$MOCK_CLUSTER_NAME" >> ${APPPATH}/.env
         fi
       fi
       
@@ -130,12 +133,12 @@ function update_script() {
     
     # Install frontend dependencies and build
     msg_info "Building frontend"
-    cd /opt/${NSAPP}/frontend
+    cd ${APPPATH}/frontend
     $STD npm ci
     $STD npm run build
     
     # Return to main directory
-    cd /opt/${NSAPP}
+    cd ${APPPATH}
     
     # Set permissions again
     chown -R root:root ${APPPATH}
@@ -143,7 +146,7 @@ function update_script() {
     chmod 600 ${APPPATH}/.env
     
     # Save new version
-    echo "${LATEST_VERSION}" > /opt/${NSAPP}/${NSAPP}_version.txt
+    echo "${LATEST_VERSION}" > ${APPPATH}/${NSAPP}_version.txt
     
     # Restart service
     msg_info "Restarting service"
@@ -203,12 +206,12 @@ msg_ok "Node.js installed"
 
 # Create application directory
 msg_info "Creating application directory"
-pct exec ${CTID} -- bash -c "mkdir -p /opt/pulse"
+pct exec ${CTID} -- bash -c "mkdir -p /opt/${NSAPP}"
 msg_ok "Application directory created"
 
 # Download and extract pre-built release instead of cloning and building
 msg_info "Downloading Pulse v${PULSE_VERSION} release"
-pct exec ${CTID} -- bash -c "wget -qO- https://github.com/rcourtman/pulse/releases/download/v${PULSE_VERSION}/pulse-${PULSE_VERSION}.tar.gz | tar xz -C /opt/pulse --strip-components=1 > /dev/null 2>&1"
+pct exec ${CTID} -- bash -c "wget -qO- https://github.com/rcourtman/pulse/releases/download/v${PULSE_VERSION}/pulse-${PULSE_VERSION}.tar.gz | tar xz -C /opt/${NSAPP} --strip-components=1 > /dev/null 2>&1"
 msg_ok "Release downloaded and extracted"
 
 # Modify the mock service to use the compiled JavaScript
@@ -222,10 +225,10 @@ Before=pulse.service
 [Service]
 Type=simple
 User=root
-WorkingDirectory=/opt/pulse
+WorkingDirectory=/opt/${NSAPP}
 Environment=NODE_ENV=production
 Environment=MOCK_SERVER_PORT=7656
-ExecStart=/usr/bin/node /opt/pulse/dist/mock/server.js
+ExecStart=/usr/bin/node /opt/${NSAPP}/dist/mock/server.js
 Restart=on-failure
 RestartSec=10
 
@@ -236,7 +239,7 @@ msg_ok "Mock server service created"
 
 # Set up environment configuration
 msg_info "Setting up environment configuration"
-pct exec ${CTID} -- bash -c "cat > /opt/pulse/.env.example << 'EOFENV'
+pct exec ${CTID} -- bash -c "cat > /opt/${NSAPP}/.env.example << 'EOFENV'
 # Proxmox Node Configuration
 # You can add up to 10 nodes by incrementing the number in PROXMOX_NODE_X_* variables
 
@@ -270,7 +273,7 @@ MOCK_CLUSTER_ENABLED=true
 MOCK_CLUSTER_NAME=mock-cluster
 EOFENV"
 
-pct exec ${CTID} -- bash -c "cp /opt/pulse/.env.example /opt/pulse/.env"
+pct exec ${CTID} -- bash -c "cp /opt/${NSAPP}/.env.example /opt/${NSAPP}/.env"
 msg_ok "Environment configuration created"
 
 # Create service file
@@ -284,10 +287,10 @@ After=pulse-mock.service
 [Service]
 Type=simple
 User=root
-WorkingDirectory=/opt/pulse
+WorkingDirectory=/opt/${NSAPP}
 Environment=NODE_ENV=production
 Environment=MOCK_SERVER_PORT=7656
-ExecStart=/usr/bin/node /opt/pulse/dist/server.js
+ExecStart=/usr/bin/node /opt/${NSAPP}/dist/server.js
 Restart=on-failure
 RestartSec=10
 
@@ -298,11 +301,11 @@ msg_ok "Main service file created"
 
 # Set file permissions
 msg_info "Setting file permissions"
-pct exec ${CTID} -- bash -c "chown -R root:root /opt/pulse && chmod -R 755 /opt/pulse && chmod 600 /opt/pulse/.env && chmod 644 /opt/pulse/.env.example"
+pct exec ${CTID} -- bash -c "chown -R root:root /opt/${NSAPP} && chmod -R 755 /opt/${NSAPP} && chmod 600 /opt/${NSAPP}/.env && chmod 644 /opt/${NSAPP}/.env.example"
 msg_ok "File permissions set"
 
 # Save version info
-pct exec ${CTID} -- bash -c "echo '${PULSE_VERSION}' > /opt/pulse/pulse_version.txt"
+pct exec ${CTID} -- bash -c "echo '${PULSE_VERSION}' > /opt/${NSAPP}/${NSAPP}_version.txt"
 
 # Create update script
 msg_info "Creating update utility"
@@ -345,7 +348,7 @@ echo -e "    You can explore the interface immediately."
 
 echo -e "\n${YW}To connect to your actual Proxmox server:${CL}"
 echo -e "    1. Execute the following on the host:"
-echo -e "       pct exec ${CTID} -- bash -c \"nano /opt/pulse/.env\""
+echo -e "       pct exec ${CTID} -- bash -c \"nano /opt/${NSAPP}/.env\""
 echo -e "    2. Change these settings in the .env file:"
 echo -e "       - Set USE_MOCK_DATA=false"
 echo -e "       - Set MOCK_DATA_ENABLED=false"
