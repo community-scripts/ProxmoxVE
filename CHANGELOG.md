@@ -14,6 +14,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 All LXC instances created using this repository come pre-installed with Midnight Commander, which is a command-line tool (`mc`) that offers a user-friendly file and directory management interface for the terminal environment.
 
 
+## 2025-03-14
+
+### 🚀 Updated Scripts
+
+  - Seafile - Minor bug fix: domain.sh script fix [@dave-yap](https://github.com/dave-yap) ([#3046](https://github.com/community-scripts/ProxmoxVE/pull/3046))
+
 ## 2025-03-13
 
 ### 🆕 New Scripts
