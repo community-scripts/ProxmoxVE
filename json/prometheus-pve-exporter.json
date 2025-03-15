@@ -21,7 +21,7 @@
             "resources": {
                 "cpu": 1,
                 "ram": 128,
-                "hdd": 1,
+                "hdd": 2,
                 "os": "debian",
                 "version": "12"
             }
