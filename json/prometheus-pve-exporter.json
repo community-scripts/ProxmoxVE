@@ -20,7 +20,7 @@
             "script": "ct/prometheus-pve-exporter.sh",
             "resources": {
                 "cpu": 1,
-                "ram": 1024,
+                "ram": 128,
                 "hdd": 2,
                 "os": "debian",
                 "version": "12"
