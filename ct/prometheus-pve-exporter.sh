@@ -8,7 +8,7 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 APP="Prometheus-PVE-Exporter"
 var_tags="monitoring"
 var_cpu="1"
-var_ram="128"
+var_ram="512"
 var_disk="2"
 var_os="debian"
 var_version="12"
