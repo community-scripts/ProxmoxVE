@@ -33,6 +33,7 @@ $STD apt-get install -y nodejs
 msg_ok "Installed Node.js"
 
 msg_info "Installing ByteStash"
+JWT_SECRET=$(openssl rand -base64 32 | tr -d '/+=')
 temp_file=$(mktemp)
 RELEASE=$(curl -s https://api.github.com/repos/jordan-dalby/ByteStash/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 wget -q "https://github.com/jordan-dalby/ByteStash/archive/refs/tags/v${RELEASE}.tar.gz" -O $temp_file
@@ -45,6 +46,8 @@ $STD npm install
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Installed ByteStash"
 
+read -p "Do you want to allow registration of multiple accounts? [y/n]: " allowreg
+
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/bytestash-backend.service
 [Unit]
@@ -55,10 +58,16 @@ After=network.target
 WorkingDirectory=/opt/bytestash/server
 ExecStart=/usr/bin/node src/app.js
 Restart=always
+Environment=JWT_SECRET=$JWT_SECRET
 
 [Install]
 WantedBy=multi-user.target
 EOF
+
+if [[ "$allowreg" =~ ^[Yy]$ ]]; then
+    sed -i '8i\Environment=ALLOW_NEW_ACCOUNTS=true' /etc/systemd/system/bytestash-backend.service
+fi
+
 cat <<EOF >/etc/systemd/system/bytestash-frontend.service
 [Unit]
 Description=ByteStash Frontend Service
@@ -72,6 +81,7 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 EOF
+
 systemctl enable -q --now bytestash-backend
 systemctl enable -q --now bytestash-frontend
 msg_ok "Created Service"
