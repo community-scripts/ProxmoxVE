@@ -18,6 +18,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
+  - Prometheus PVE Exporter: Rightsizing RAM and Disk [@andygrunwald](https://github.com/andygrunwald) ([#3098](https://github.com/community-scripts/ProxmoxVE/pull/3098))
+
   - #### 🐞 Bug Fixes
 
     - Filebrowser: Fix hardcoded port in Debian service file [@Xerovoxx98](https://github.com/Xerovoxx98) ([#3105](https://github.com/community-scripts/ProxmoxVE/pull/3105))
