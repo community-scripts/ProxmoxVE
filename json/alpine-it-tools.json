@@ -15,7 +15,7 @@
   "description": "IT-Tools is a web-based suite of utilities designed to streamline and simplify various IT tasks, providing tools for developers and system administrators to manage their workflows efficiently.",
   "install_methods": [
       {
-          "type": "alpine",
+          "type": "default",
           "script": "ct/alpine-it-tools.sh",
           "resources": {
               "cpu": 1,
