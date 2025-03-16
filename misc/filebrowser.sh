@@ -150,8 +150,8 @@ After=network-online.target
 User=root
 WorkingDirectory=/usr/local/community-scripts
 ExecStartPre=/bin/touch /usr/local/community-scripts/filebrowser.db
-ExecStartPre=/usr/local/bin/filebrowser config set -a "0.0.0.0" -p 9000 -d /usr/local/community-scripts/filebrowser.db
-ExecStart=/usr/local/bin/filebrowser -r / -d /usr/local/community-scripts/filebrowser.db -p 9000
+ExecStartPre=/usr/local/bin/filebrowser config set -a "0.0.0.0" -p ${PORT} -d /usr/local/community-scripts/filebrowser.db
+ExecStart=/usr/local/bin/filebrowser -r / -d /usr/local/community-scripts/filebrowser.db -p ${PORT}
 Restart=always
 
 [Install]
