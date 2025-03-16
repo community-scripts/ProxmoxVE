@@ -14,7 +14,7 @@
   "logo": "https://raw.githubusercontent.com/CorentinTh/it-tools/08d977b8cdb7ffb76adfa18ba6eb4b73795ec814/public/safari-pinned-tab.svg",
   "description": "IT-Tools is a web-based suite of utilities designed to streamline and simplify various IT tasks, providing tools for developers and system administrators to manage their workflows efficiently.",
   "install_methods": [
-          {
+      {
           "type": "default",
           "script": "ct/alpine-it-tools.sh",
           "resources": {
@@ -23,8 +23,9 @@
               "hdd": 0.2,
               "os": "alpine",
               "version": "3.21"
-          },
-          {
+         }
+      },
+      {
           "type": "alpine",
           "script": "ct/alpine-it-tools.sh",
           "resources": {
@@ -33,7 +34,8 @@
               "hdd": 0.2,
               "os": "alpine",
               "version": "3.21"
-          }
+         }
+      }
   ],
   "default_credentials": {
       "username": null,
