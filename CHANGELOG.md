@@ -24,6 +24,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - wger: Fix build.func path [@tremor021](https://github.com/tremor021) ([#3121](https://github.com/community-scripts/ProxmoxVE/pull/3121))
     - Filebrowser: Fix hardcoded port in Debian service file [@Xerovoxx98](https://github.com/Xerovoxx98) ([#3105](https://github.com/community-scripts/ProxmoxVE/pull/3105))
 
 ## 2025-03-15
