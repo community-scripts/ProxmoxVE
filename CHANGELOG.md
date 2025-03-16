@@ -18,7 +18,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
-  - Prometheus PVE Exporter: Rightsizing RAM and Disk [@andygrunwald](https://github.com/andygrunwald) ([#3098](https://github.com/community-scripts/ProxmoxVE/pull/3098))
+  - Paperless-NGS: Add additional information to website on how to install OCR languages [@tremor021](https://github.com/tremor021) ([#3111](https://github.com/community-scripts/ProxmoxVE/pull/3111))
+- Prometheus PVE Exporter: Rightsizing RAM and Disk [@andygrunwald](https://github.com/andygrunwald) ([#3098](https://github.com/community-scripts/ProxmoxVE/pull/3098))
 
   - #### 🐞 Bug Fixes
 
