@@ -34,6 +34,10 @@
         {
             "text": "Show Login Credentials, type `update` in the LXC console",
             "type": "info"
+        },
+        {
+            "text": "Script installs English as default OCR language. To install additional languages, use `apt-get install tesseract-ocr-[lang]`, where [lang] is the language code (e.g. `apt-get install tesseract-ocr-ger`).",
+            "type": "info"
         }
     ]
 }
