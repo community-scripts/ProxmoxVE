@@ -27,7 +27,7 @@
     },
     {
       "type": "alpine",
-      "script": "ct/alpine-alpine-it-tools.sh",
+      "script": "ct/alpine-it-tools.sh",
       "resources": {
         "cpu": 1,
         "ram": 256,
