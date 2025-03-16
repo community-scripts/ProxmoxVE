@@ -34,7 +34,7 @@
               "hdd": 0.2,
               "os": "alpine",
               "version": "3.21"
-         }
+          }
       }
   ],
   "default_credentials": {
