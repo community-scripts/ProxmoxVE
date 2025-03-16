@@ -137,7 +137,7 @@ fi
 mkdir -p /app/global /app/frontend/images
 cp -r backend/* /app
 cp -r global/* /app/global
-msg_ok "Set up Enviroment"
+msg_ok "Set up Environment"
 
 msg_info "Building Frontend"
 cd ./frontend
