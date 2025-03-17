@@ -29,6 +29,7 @@ function update_script() {
     fi
     if [[ ! -f /opt/${APP}_version.txt ]]; then touch /opt/${APP}_version.txt; fi
     RELEASE=$(curl -s https://api.github.com/repos/TriliumNext/Notes/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+    EXTRACTED_DIR=$(echo ${RELEASE} | sed 's/^v//')
     if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
     msg_info "Stopping ${APP}"
     systemctl stop trilium
@@ -42,7 +43,7 @@ function update_script() {
     cd /tmp
     wget -q https://github.com/TriliumNext/Notes/releases/download/${RELEASE}/TriliumNextNotes-Server-${RELEASE}-linux-x64.tar.xz
     tar -xf TriliumNextNotes-Server-${RELEASE}-linux-x64.tar.xz
-    mv TriliumNextNotes-Server-${RELEASE}-linux-x64 /opt/trilium
+    mv TriliumNextNotes-Server-${EXTRACTED_DIR}-linux-x64 /opt/trilium
     cp -r /opt/trilium_backup/{db,dump-db} /opt/trilium/
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated to ${RELEASE}"
