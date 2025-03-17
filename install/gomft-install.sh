@@ -92,7 +92,6 @@ msg_ok "Created Service"
 motd_ssh
 customize
 
-# Cleanup
 msg_info "Cleaning up"
 rm -f $temp_file $temp_file2
 $STD apt-get -y autoremove
