@@ -57,9 +57,8 @@ function update_script() {
         chown -R :www-data .
         chmod -R g+r .
         chmod -R g+rw var/
-        chmod -R 777 /opt/kimai/var/
+        chmod -R 777 /opt/kimai/*
         chown -R www-data:www-data /opt/kimai
-        chmod -R 755 /opt/kimai
         echo "${RELEASE}" >/opt/${APP}_version.txt
         msg_ok "Updated ${APP} to ${RELEASE}"
 
