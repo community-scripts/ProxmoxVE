@@ -35,11 +35,13 @@ function update_script() {
         msg_ok "Stopped $APP"
 
         msg_info "Updating $APP to ${RELEASE}"
+        cp /opt/gomft/.env /opt/.env
         rm -f /opt/gomft/gomft
         temp_file=$(mktemp)
         wget -q "https://github.com/StarFleetCPTN/GoMFT/archive/refs/tags/v${RELEASE}.tar.gz" -O $temp_file
         tar -xzf $temp_file
         cp -rf GoMFT-${RELEASE}/* /opt/gomft
+        $STD $HOME/go/bin/templ generate
         wget -q "https://github.com/StarFleetCPTN/GoMFT/releases/download/v${RELEASE}/gomft-v${RELEASE}-linux-amd64" -O /opt/gomft/gomft
         chmod +x /opt/gomft/gomft
         echo "${RELEASE}" >/opt/${APP}_version.txt
