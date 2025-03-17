@@ -18,9 +18,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
-  - TriliumNext: Fix release file name/path, preventing install and update [@tremor021](https://github.com/tremor021) ([#3152](https://github.com/community-scripts/ProxmoxVE/pull/3152))
-- InfluxDB: Add Ports as Info / Script-End [@MickLesk](https://github.com/MickLesk) ([#3141](https://github.com/community-scripts/ProxmoxVE/pull/3141))
+  - Paperless-ngx: Fix example on website [@tremor021](https://github.com/tremor021) ([#3155](https://github.com/community-scripts/ProxmoxVE/pull/3155))
 - ByteStash: Add option for multiple accounts and generate JWT secret [@tremor021](https://github.com/tremor021) ([#3132](https://github.com/community-scripts/ProxmoxVE/pull/3132))
+- TriliumNext: Fix release file name/path, preventing install and update [@tremor021](https://github.com/tremor021) ([#3152](https://github.com/community-scripts/ProxmoxVE/pull/3152))
+- InfluxDB: Add Ports as Info / Script-End [@MickLesk](https://github.com/MickLesk) ([#3141](https://github.com/community-scripts/ProxmoxVE/pull/3141))
 
   - #### 🐞 Bug Fixes
 
