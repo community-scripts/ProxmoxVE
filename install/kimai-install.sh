@@ -76,7 +76,7 @@ chmod -R g+r /opt/*
 chmod -R g+rw /opt/*
 chown -R www-data:www-data /opt/*
 chmod -R 755 /opt/*
-chmod -R 777 /opt/kimai/var/ 
+chmod -R 777 /opt/kimai/* 
 $STD expect <<EOF
 set timeout -1
 log_user 0
