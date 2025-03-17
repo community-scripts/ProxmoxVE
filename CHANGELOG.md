@@ -23,8 +23,9 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
-    - Fixed wrong PHP values to match default part-db size (100M) [@dMopp](https://github.com/dMopp) ([#3143](https://github.com/community-scripts/ProxmoxVE/pull/3143))
+    - qBittorrent: Accept legal notice in config file [@tremor021](https://github.com/tremor021) ([#3150](https://github.com/community-scripts/ProxmoxVE/pull/3150))
     - Tandoor: Switch Repo to new Link [@MickLesk](https://github.com/MickLesk) ([#3140](https://github.com/community-scripts/ProxmoxVE/pull/3140))
+    - Fixed wrong PHP values to match default part-db size (100M) [@dMopp](https://github.com/dMopp) ([#3143](https://github.com/community-scripts/ProxmoxVE/pull/3143))
     - Kimai: Fix Permission Issue on new Timerecords [@MickLesk](https://github.com/MickLesk) ([#3136](https://github.com/community-scripts/ProxmoxVE/pull/3136))
 
 ## 2025-03-16
