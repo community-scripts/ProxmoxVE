@@ -18,17 +18,25 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
-  - Paperless-ngx: Fix example on website [@tremor021](https://github.com/tremor021) ([#3155](https://github.com/community-scripts/ProxmoxVE/pull/3155))
-- ByteStash: Add option for multiple accounts and generate JWT secret [@tremor021](https://github.com/tremor021) ([#3132](https://github.com/community-scripts/ProxmoxVE/pull/3132))
-- TriliumNext: Fix release file name/path, preventing install and update [@tremor021](https://github.com/tremor021) ([#3152](https://github.com/community-scripts/ProxmoxVE/pull/3152))
-- InfluxDB: Add Ports as Info / Script-End [@MickLesk](https://github.com/MickLesk) ([#3141](https://github.com/community-scripts/ProxmoxVE/pull/3141))
-
   - #### 🐞 Bug Fixes
 
+    - TriliumNotes: Fix release handling [@tremor021](https://github.com/tremor021) ([#3160](https://github.com/community-scripts/ProxmoxVE/pull/3160))
+    - TriliumNext: Fix release file name/path, preventing install and update [@tremor021](https://github.com/tremor021) ([#3152](https://github.com/community-scripts/ProxmoxVE/pull/3152))
     - qBittorrent: Accept legal notice in config file [@tremor021](https://github.com/tremor021) ([#3150](https://github.com/community-scripts/ProxmoxVE/pull/3150))
     - Tandoor: Switch Repo to new Link [@MickLesk](https://github.com/MickLesk) ([#3140](https://github.com/community-scripts/ProxmoxVE/pull/3140))
     - Fixed wrong PHP values to match default part-db size (100M) [@dMopp](https://github.com/dMopp) ([#3143](https://github.com/community-scripts/ProxmoxVE/pull/3143))
     - Kimai: Fix Permission Issue on new Timerecords [@MickLesk](https://github.com/MickLesk) ([#3136](https://github.com/community-scripts/ProxmoxVE/pull/3136))
+
+  - #### ✨ New Features
+
+    - InfluxDB: Add Ports as Info / Script-End [@MickLesk](https://github.com/MickLesk) ([#3141](https://github.com/community-scripts/ProxmoxVE/pull/3141))
+    - ByteStash: Add option for multiple accounts and generate JWT secret [@tremor021](https://github.com/tremor021) ([#3132](https://github.com/community-scripts/ProxmoxVE/pull/3132))
+
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Paperless-ngx: Fix example on website [@tremor021](https://github.com/tremor021) ([#3155](https://github.com/community-scripts/ProxmoxVE/pull/3155))
 
 ## 2025-03-16
 
