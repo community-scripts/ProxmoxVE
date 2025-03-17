@@ -18,10 +18,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
-  - ByteStash: Add option for multiple accounts and generate JWT secret [@tremor021](https://github.com/tremor021) ([#3132](https://github.com/community-scripts/ProxmoxVE/pull/3132))
+  - InfluxDB: Add Ports as Info / Script-End [@MickLesk](https://github.com/MickLesk) ([#3141](https://github.com/community-scripts/ProxmoxVE/pull/3141))
+- ByteStash: Add option for multiple accounts and generate JWT secret [@tremor021](https://github.com/tremor021) ([#3132](https://github.com/community-scripts/ProxmoxVE/pull/3132))
 
   - #### 🐞 Bug Fixes
 
+    - Tandoor: Switch Repo to new Link [@MickLesk](https://github.com/MickLesk) ([#3140](https://github.com/community-scripts/ProxmoxVE/pull/3140))
     - Kimai: Fix Permission Issue on new Timerecords [@MickLesk](https://github.com/MickLesk) ([#3136](https://github.com/community-scripts/ProxmoxVE/pull/3136))
 
 ## 2025-03-16
