@@ -36,7 +36,7 @@
             "type": "info"
         },
         {
-            "text": "Script installs English as default OCR language. To install additional languages, use `apt-get install tesseract-ocr-[lang]`, where [lang] is the language code (e.g. `apt-get install tesseract-ocr-ger`).",
+            "text": "Script installs English as default OCR language. To install additional languages, use `apt-get install tesseract-ocr-[lang]`, where [lang] is the language code (e.g. `apt-get install tesseract-ocr-deu`).",
             "type": "info"
         }
     ]
