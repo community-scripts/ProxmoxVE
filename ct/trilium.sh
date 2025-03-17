@@ -28,8 +28,8 @@ function update_script() {
         exit
     fi
     if [[ ! -f /opt/${APP}_version.txt ]]; then touch /opt/${APP}_version.txt; fi
-    RELEASE=$(curl -s https://api.github.com/repos/TriliumNext/Notes/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-    if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
+    RELEASE=$(curl -s https://api.github.com/repos/TriliumNext/Notes/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+    if [[ "v${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
     msg_info "Stopping ${APP}"
     systemctl stop trilium
     sleep 1
@@ -40,11 +40,11 @@ function update_script() {
     mv /opt/trilium/{db,dump-db} /opt/trilium_backup/
     rm -rf /opt/trilium
     cd /tmp
-    wget -q https://github.com/TriliumNext/Notes/releases/download/${RELEASE}/TriliumNextNotes-Server-${RELEASE}-linux-x64.tar.xz
-    tar -xf TriliumNextNotes-Server-${RELEASE}-linux-x64.tar.xz
+    wget -q https://github.com/TriliumNext/Notes/releases/download/v${RELEASE}/TriliumNextNotes-Server-v${RELEASE}-linux-x64.tar.xz
+    tar -xf TriliumNextNotes-Server-v${RELEASE}-linux-x64.tar.xz
     mv TriliumNextNotes-Server-$RELEASE-linux-x64 /opt/trilium
     cp -r /opt/trilium_backup/{db,dump-db} /opt/trilium/
-    echo "${RELEASE}" >/opt/${APP}_version.txt
+    echo "v${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated to ${RELEASE}"
 
     msg_info "Cleaning up"

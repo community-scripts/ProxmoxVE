@@ -22,9 +22,9 @@ msg_ok "Installed Dependencies"
 
 msg_info "Setup TriliumNext"
 cd /opt
-RELEASE=$(curl -s https://api.github.com/repos/TriliumNext/Notes/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-wget -q https://github.com/TriliumNext/Notes/releases/download/${RELEASE}/TriliumNextNotes-Server-${RELEASE}-linux-x64.tar.xz
-tar -xf TriliumNextNotes-Server-${RELEASE}-linux-x64.tar.xz
+RELEASE=$(curl -s https://api.github.com/repos/TriliumNext/Notes/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+wget -q https://github.com/TriliumNext/Notes/releases/download/v${RELEASE}/TriliumNextNotes-Server-v${RELEASE}-linux-x64.tar.xz
+tar -xf TriliumNextNotes-Server-v${RELEASE}-linux-x64.tar.xz
 mv TriliumNextNotes-Server-$RELEASE-linux-x64 /opt/trilium
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Setup TriliumNext"
