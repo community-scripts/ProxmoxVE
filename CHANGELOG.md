@@ -20,6 +20,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - ByteStash: Add option for multiple accounts and generate JWT secret [@tremor021](https://github.com/tremor021) ([#3132](https://github.com/community-scripts/ProxmoxVE/pull/3132))
 
+  - #### 🐞 Bug Fixes
+
+    - Kimai: Fix Permission Issue on new Timerecords [@MickLesk](https://github.com/MickLesk) ([#3136](https://github.com/community-scripts/ProxmoxVE/pull/3136))
+
 ## 2025-03-16
 
 ### 🚀 Updated Scripts
