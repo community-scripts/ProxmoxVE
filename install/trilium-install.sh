@@ -23,9 +23,9 @@ msg_ok "Installed Dependencies"
 msg_info "Setup TriliumNext"
 cd /opt
 RELEASE=$(curl -s https://api.github.com/repos/TriliumNext/Notes/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-wget -q https://github.com/TriliumNext/Notes/releases/download/${RELEASE}/TriliumNextNotes-linux-x64-${RELEASE}.tar.xz
-tar -xf TriliumNextNotes-linux-x64-${RELEASE}.tar.xz
-mv trilium-linux-x64-server /opt/trilium
+wget -q https://github.com/TriliumNext/Notes/releases/download/${RELEASE}/TriliumNextNotes-Server-${RELEASE}-linux-x64.tar.xz
+tar -xf TriliumNextNotes-Server-${RELEASE}-linux-x64.tar.xz
+mv TriliumNextNotes-Server-$RELEASE-linux-x64 /opt/trilium
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Setup TriliumNext"
 
@@ -53,7 +53,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -rf /opt/TriliumNextNotes-linux-x64-${RELEASE}.tar.xz
+rm -rf /opt/TriliumNextNotes-Server-${RELEASE}-linux-x64.tar.xz
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"

@@ -40,15 +40,15 @@ function update_script() {
     mv /opt/trilium/{db,dump-db} /opt/trilium_backup/
     rm -rf /opt/trilium
     cd /tmp
-    wget -q https://github.com/TriliumNext/Notes/releases/download/${RELEASE}/TriliumNextNotes-linux-x64-${RELEASE}.tar.xz
-    tar -xf TriliumNextNotes-linux-x64-${RELEASE}.tar.xz
-    mv trilium-linux-x64-server /opt/trilium
+    wget -q https://github.com/TriliumNext/Notes/releases/download/${RELEASE}/TriliumNextNotes-Server-${RELEASE}-linux-x64.tar.xz
+    tar -xf TriliumNextNotes-Server-${RELEASE}-linux-x64.tar.xz
+    mv TriliumNextNotes-Server-$RELEASE-linux-x64 /opt/trilium
     cp -r /opt/trilium_backup/{db,dump-db} /opt/trilium/
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated to ${RELEASE}"
 
     msg_info "Cleaning up"
-    rm -rf /tmp/TriliumNextNotes-linux-x64-${RELEASE}.tar.xz 
+    rm -rf /tmp/TriliumNextNotes-Server-${RELEASE}-linux-x64.tar.xz
     rm -rf /opt/trilium_backup
     msg_ok "Cleaned"
 
