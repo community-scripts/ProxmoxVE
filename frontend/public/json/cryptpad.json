@@ -35,4 +35,5 @@
             "text": "After installation finishes, `systemctl status cryptpad.service` to get token URL which you can use to create admin account",
             "type": "info"
         }
-    }
+    ]
+}
