@@ -1,0 +1,38 @@
+{
+    "name": "CryptPad",
+    "slug": "cryptpad",
+    "categories": [
+        12
+    ],
+    "date_created": "2025-03-11",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": 3000,
+    "documentation": "https://docs.cryptpad.org/",
+    "website": "https://cryptpad.org/",
+    "logo": "https://raw.githubusercontent.com/cryptpad/cryptpad/refs/heads/main/customize.dist/CryptPad_logo.svg",
+    "description": "CryptPad is a collaboration suite that is end-to-end encrypted and open-source. It is designed to facilitate collaboration by synchronizing changes to documents in real time. Since all the user data is encrypted, in the event of a breach, attackers have no way of accessing the stored content",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/cryptpad.sh",
+            "resources": {
+                "cpu": 1,
+                "ram": 1024,
+                "hdd": 8,
+                "os": "Debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": [
+        {
+            "text": "After installation finishes, `systemctl status cryptpad.service` to get token URL which you can use to create admin account",
+            "type": "info"
+        }
+    }
