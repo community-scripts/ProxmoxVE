@@ -62,11 +62,12 @@ jobs:
               }
             }
             //if two labels or more are added, return
-              if (labelsToAdd.size < 2) {
+              if (labelsToAdd.size < 3) {
                 const templateLabelMappings = {
                 "🐞 **Bug fix**": "bugfix",
                 "✨ **New feature**": "feature",
                 "💥 **Breaking change**": "breaking change",
+                "🔧 **Refactoring / Code Cleanup**": "refactor",
               };
 
               for (const [checkbox, label] of Object.entries(templateLabelMappings)) {

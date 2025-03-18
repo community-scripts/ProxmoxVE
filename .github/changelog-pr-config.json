@@ -21,6 +21,11 @@
         "title": "💥 Breaking Changes",
         "labels": ["breaking change"],
         "notes" : []
+      },
+      {
+        "title": "🔧 Refactor",
+        "labels": ["refactor"],
+        "notes" : []
       }
     ]
   },
@@ -56,6 +61,16 @@
       {
         "title": "📂 Github",
         "labels": ["github"],
+        "notes" : []
+      },
+      {
+        "title" :"📝 Documentation",
+        "labels": ["documentation"],
+        "notes" : []
+      },
+      {
+        "title" :"🔧 Refactor",
+        "labels": ["refactor"],
         "notes" : []
       }
     ]

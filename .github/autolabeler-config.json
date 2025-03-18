@@ -1,4 +1,3 @@
-
 {
   "new script": [
     {
@@ -16,7 +15,7 @@
   ],
   "delete script": [
     {
-      "fileStatus": "removed", 
+      "fileStatus": "removed",
       "includeGlobs": ["ct/**", "install/**", "misc/**", "turnkey/**", "vm/**"],
       "excludeGlobs": []
     }
@@ -24,7 +23,13 @@
   "maintenance": [
     {
       "fileStatus": null,
-      "includeGlobs": ["*.md", ".github/**", "misc/*.func", "ct/create_lxc.sh", "api/**"],
+      "includeGlobs": [
+        "*.md",
+        ".github/**",
+        "misc/*.func",
+        "ct/create_lxc.sh",
+        "api/**"
+      ],
       "excludeGlobs": []
     }
   ],
@@ -59,7 +64,7 @@
   "json": [
     {
       "fileStatus": "modified",
-      "includeGlobs": ["frontend/public/json/**"],
+      "includeGlobs": ["frontend/publuc/json/**"],
       "excludeGlobs": []
     }
   ],
@@ -67,10 +72,19 @@
   "high risk": [
     {
       "fileStatus": null,
-      "includeGlobs": ["misc/build.func", "misc/install.func", "ct/create_lxc.sh"],
+      "includeGlobs": [
+        "misc/build.func",
+        "misc/install.func",
+        "ct/create_lxc.sh"
+      ],
+      "excludeGlobs": []
+    }
+  ],
+  "documentation": [
+    {
+      "fileStatus": null,
+      "includeGlobs": ["*.md"],
       "excludeGlobs": []
     }
   ]
-  
-  
 }
