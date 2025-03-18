@@ -7,14 +7,12 @@ on:
     branches: ["main"]
     paths:
       - frontend/**
-      - json/**
 
   pull_request:
     branches: ["main"]
     types: [opened, synchronize, reopened, edited]
     paths:
       - frontend/**
-      - json/**
 
   workflow_dispatch:
 

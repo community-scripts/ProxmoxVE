@@ -5,7 +5,7 @@ on:
     paths:
       - "ct/*.sh"
       - "install/*.sh"
-      - "json/*.json"
+      - "frontend/public/json/*.json"
 
 jobs:
   check-files:

@@ -38,7 +38,7 @@
   "website": [
     {
       "fileStatus": null,
-      "includeGlobs": ["frontend/**", "json/**"],
+      "includeGlobs": ["frontend/**"],
       "excludeGlobs": []
     }
   ],
@@ -59,7 +59,7 @@
   "json": [
     {
       "fileStatus": "modified",
-      "includeGlobs": ["json/**"],
+      "includeGlobs": ["frontend/public/json/**"],
       "excludeGlobs": []
     }
   ],

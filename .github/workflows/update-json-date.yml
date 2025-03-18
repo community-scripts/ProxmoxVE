@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'json/**.json'
+      - 'frontend/public/json/**.json'
   workflow_dispatch: 
 
 jobs:
@@ -49,7 +49,7 @@ jobs:
       - name: Get Newly Added JSON Files
         id: new_json_files
         run: |
-          git diff --name-only --diff-filter=A ${{ env.prev_commit }} HEAD | grep '^json/.*\.json$' > new_files.txt || true
+          git diff --name-only --diff-filter=A ${{ env.prev_commit }} HEAD | grep '^frontend/public/json/.*\.json$' > new_files.txt || true
           echo "New files detected:"
           cat new_files.txt || echo "No new files."
 
@@ -87,7 +87,7 @@ jobs:
       - name: Check if there are any changes
         run: |
           echo "Checking for changes..."
-          git add -A  # Untracked Dateien aufnehmen
+          git add -A  
           git status
           if git diff --cached --quiet; then
             echo "No changes detected."
