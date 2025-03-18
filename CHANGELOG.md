@@ -44,12 +44,19 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🌐 Website
 
+  - #### 🐞 Bug Fixes
+
+    - Update Frontend Version Logic [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#3223](https://github.com/community-scripts/ProxmoxVE/pull/3223))
+
   - #### ✨ New Features
 
     - Show Version Information on Frontend [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#3216](https://github.com/community-scripts/ProxmoxVE/pull/3216))
 
   - #### 📝 Script Information
 
+    - Heimdall Dashboard: Fix missing logo on website [@tremor021](https://github.com/tremor021) ([#3227](https://github.com/community-scripts/ProxmoxVE/pull/3227))
+    - CrowdSec: Add debian only warning to website [@tremor021](https://github.com/tremor021) ([#3210](https://github.com/community-scripts/ProxmoxVE/pull/3210))
+    - VictoriaMetrics: Fix Wrong Slug [@MickLesk](https://github.com/MickLesk) ([#3225](https://github.com/community-scripts/ProxmoxVE/pull/3225))
     - Website: Lowercase Zitadel-Slug [@MickLesk](https://github.com/MickLesk) ([#3222](https://github.com/community-scripts/ProxmoxVE/pull/3222))
     - Debian VM: Update webpage with login info [@tremor021](https://github.com/tremor021) ([#3215](https://github.com/community-scripts/ProxmoxVE/pull/3215))
     - Seafile: lowercase slug for Install/Update-Source [@MickLesk](https://github.com/MickLesk) ([#3209](https://github.com/community-scripts/ProxmoxVE/pull/3209))
