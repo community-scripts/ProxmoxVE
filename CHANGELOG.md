@@ -34,6 +34,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 📝 Script Information
 
+    - [AUTOMATIC PR]Update versions.json [@community-scripts-pr-app[bot]](https://github.com/community-scripts-pr-app[bot]) ([#3201](https://github.com/community-scripts/ProxmoxVE/pull/3201))
     - GoMFT: Update Logo [@MickLesk](https://github.com/MickLesk) ([#3188](https://github.com/community-scripts/ProxmoxVE/pull/3188))
 
 ## 2025-03-17
