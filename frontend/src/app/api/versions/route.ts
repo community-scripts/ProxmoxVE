@@ -19,7 +19,7 @@ const getVersions = async () => {
   const modifiedVersions = versions.map(version => {
     let newName = version.name;
     newName = newName.toLowerCase().replace(/[^a-z0-9/]/g, '');
-    return { ...version, name: newName };
+    return { ...version, name: newName, date: new Date(version.date) };
   });
 
   return modifiedVersions;
