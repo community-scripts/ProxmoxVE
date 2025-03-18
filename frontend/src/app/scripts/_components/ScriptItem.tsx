@@ -95,7 +95,13 @@ function ScriptItem({
                     <div>{versions.length === 0 ? (<p>Loading versions...</p>) :
                       (<>
                         <p className="text-l text-foreground">Version:</p>
-                        <p className="text-l text-muted-foreground">{versions.find((v) => v.name === item.slug.replace(/[^a-z0-9]/g, ''))?.version || "No Version Information found"}</p>
+                        <p className="text-l text-muted-foreground">{versions.find((v) =>
+                          v.name === item.slug.replace(/[^a-z0-9]/g, '') ||
+                          v.name.includes(item.slug.replace(/[^a-z0-9]/g, '')) ||
+                          v.name.replace(/[^a-z0-9]/g, '') === item.slug.replace(/[^a-z0-9]/g, '')
+
+                        )?.version || "No Version information found"
+                        }</p>
                       </>)
                     }
                     </div>

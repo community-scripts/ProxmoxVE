@@ -17,9 +17,8 @@ const getVersions = async () => {
   const versions: AppVersion[] = JSON.parse(fileContent);
 
   const modifiedVersions = versions.map(version => {
-    const nameParts = version.name.split('/');
-    let newName = nameParts[nameParts.length - 1];
-    newName = newName.toLowerCase().replace(/[^a-z0-9]/g, '');
+    let newName = version.name;
+    newName = newName.toLowerCase().replace(/[^a-z0-9/]/g, '');
     return { ...version, name: newName };
   });
 
