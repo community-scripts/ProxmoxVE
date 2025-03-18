@@ -29,7 +29,7 @@ function update_script() {
   fi
   msg_info "Updating ${APP} (Patience)"
   cd /opt/open-webui
-  mkdir /opt/open-webui-backup
+  mkdir -p /opt/open-webui-backup
   cp -rf /opt/open-webui/backend/data /opt/open-webui-backup
   git add -A
   $STD git stash
