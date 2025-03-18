@@ -3,14 +3,14 @@ import { promises as fs } from "fs";
 import path from "path";
 import { ScriptSchema, type Script } from "@/app/json-editor/_schemas/schemas";
 import { Metadata } from "@/lib/types";
-
+console.log('Current directory: ' + process.cwd());
 const jsonDir = "public/json";
 const metadataFileName = "metadata.json";
-const versionFileName = "version.json";
+const versionsFileName = "versions.json";
 const encoding = "utf-8";
 
 const fileNames = (await fs.readdir(jsonDir))
-  .filter((fileName) => fileName !== metadataFileName && fileName !== versionFileName);
+  .filter((fileName) => fileName !== metadataFileName && fileName !== versionsFileName);
 
 describe.each(fileNames)("%s", async (fileName) => {
   let script: Script;
@@ -21,6 +21,7 @@ describe.each(fileNames)("%s", async (fileName) => {
     script = JSON.parse(fileContent);
   })
 
+
   it("should have valid json according to script schema", () => {
     ScriptSchema.parse(script);
   });
@@ -28,6 +29,8 @@ describe.each(fileNames)("%s", async (fileName) => {
   it("should have a corresponding script file", () => {
     script.install_methods.forEach((method) => {
       const scriptPath = path.resolve("..", method.script)
+      //FIXME: Dose note account for new dir structure and files in /script/tools
+
       assert(fs.stat(scriptPath), `Script file not found: ${scriptPath}`)
     })
   });
@@ -41,7 +44,6 @@ describe(`${metadataFileName}`, async () => {
     const fileContent = await fs.readFile(filePath, encoding)
     metadata = JSON.parse(fileContent);
   })
-
   it("should have valid json according to metadata schema", () => {
     // TODO: create zod schema for metadata. Move zod schemas to /lib/types.ts
     assert(metadata.categories.length > 0);
