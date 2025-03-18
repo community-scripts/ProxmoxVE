@@ -24,8 +24,16 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 📂 Github
 
+    - Update Workflow to Close Discussion [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#3185](https://github.com/community-scripts/ProxmoxVE/pull/3185))
+    - Change json path CONTRIBUTING.md [@bvdberg01](https://github.com/bvdberg01) ([#3187](https://github.com/community-scripts/ProxmoxVE/pull/3187))
     - Relocate the Json Files [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#3184](https://github.com/community-scripts/ProxmoxVE/pull/3184))
     - Update Workflow Context [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#3171](https://github.com/community-scripts/ProxmoxVE/pull/3171))
+
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - GoMFT: Update Logo [@MickLesk](https://github.com/MickLesk) ([#3188](https://github.com/community-scripts/ProxmoxVE/pull/3188))
 
 ## 2025-03-17
 
