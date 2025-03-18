@@ -90,7 +90,7 @@ jobs:
           fi
           git commit -m "Update versions.json"
           git push origin update_versions --force
-          gh pr create --title "[AUTOMATIC PR]Update versions.json" --body "Update versions.json, crawled from newreleases.io" --base main --head update_versions
+          gh pr create --title "[AUTOMATIC PR]Update versions.json" --body "Update versions.json, crawled from newreleases.io" --base main --head update_versions --label "automated pr"
 
       - name: Approve pull request
         if: env.changed == 'true'
