@@ -1,7 +1,9 @@
-"use client";
+
 import { Separator } from "@/components/ui/separator";
 import { extractDate } from "@/lib/time";
-import { Script } from "@/lib/types";
+import { Script, AppVersion } from "@/lib/types";
+import { fetchVersions } from "@/lib/data";
+
 import { X } from "lucide-react";
 import Image from "next/image";
 
@@ -15,6 +17,8 @@ import InstallCommand from "./ScriptItems/InstallCommand";
 import InterFaces from "./ScriptItems/InterFaces";
 import Tooltips from "./ScriptItems/Tooltips";
 import { basePath } from "@/config/siteConfig";
+import { useEffect, useState } from "react";
+
 
 function ScriptItem({
   item,
@@ -27,6 +31,23 @@ function ScriptItem({
     window.history.pushState({}, document.title, window.location.pathname);
     setSelectedScript(null);
   };
+  const [versions, setVersions] = useState<AppVersion[]>([]);
+
+
+  useEffect(() => {
+    fetchVersions()
+      .then((fetchedVersions) => {
+        console.log("Fetched Versions: ", fetchedVersions);
+        if (Array.isArray(fetchedVersions)) {
+          setVersions(fetchedVersions);
+        } else if (fetchedVersions && typeof fetchedVersions === "object") {
+          setVersions([fetchedVersions]);
+        } else {
+          setVersions([]);
+        }
+      })
+      .catch((error) => console.error("Error fetching versions:", error));
+  }, []);
 
   const defaultInstallMethod = item.install_methods?.[0];
   const os = defaultInstallMethod?.resources?.os || "Proxmox Node";
@@ -48,8 +69,8 @@ function ScriptItem({
                   src={item.logo || `/${basePath}/logo.png`}
                   width={400}
                   onError={(e) =>
-                    ((e.currentTarget as HTMLImageElement).src =
-                      `/${basePath}/logo.png`)
+                  ((e.currentTarget as HTMLImageElement).src =
+                    `/${basePath}/logo.png`)
                   }
                   height={400}
                   alt={item.name}
@@ -70,6 +91,13 @@ function ScriptItem({
                     </div>
                     <div className="flex gap-5">
                       <DefaultSettings item={item} />
+                    </div>
+                    <div>{versions.length === 0 ? (<p>Loading versions...</p>) :
+                      (<>
+                        <p className="text-l text-foreground">Version:</p>
+                        <p className="text-l text-muted-foreground">{versions.find((v) => v.name === item.slug.replace(/[^a-z0-9]/g, ''))?.version || "No Version Information found"}</p>
+                      </>)
+                    }
                     </div>
                   </div>
                 </div>

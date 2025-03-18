@@ -56,3 +56,8 @@ export interface OperatingSystem {
   name: string;
   versions: Version[];
 }
+
+export interface AppVersion {
+  name: string;
+  version: string;
+}
