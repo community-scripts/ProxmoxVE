@@ -102,6 +102,19 @@ function ScriptItem({
 
                         )?.version || "No Version information found"
                         }</p>
+                        <p className="text-l text-foreground">Latest changes:</p>
+                        <p className="text-l text-muted-foreground">
+                          {(() => {
+                            const matchedVersion = versions.find((v) =>
+                              v.name === item.slug.replace(/[^a-z0-9]/g, '') ||
+                              v.name.includes(item.slug.replace(/[^a-z0-9]/g, '')) ||
+                              v.name.replace(/[^a-z0-9]/g, '') === item.slug.replace(/[^a-z0-9]/g, '')
+                            );
+                            return matchedVersion?.date ?
+                              extractDate(matchedVersion.date as unknown as string) :
+                              "No date information found"
+                          })()}
+                        </p>
                       </>)
                     }
                     </div>

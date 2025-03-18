@@ -63,9 +63,10 @@ jobs:
             jq -r '.projects[] | "\(.id) \(.name)"' "$projects_file" | while read -r id name; do
               version=$(curl -s -H "X-Key: $token" "https://api.newreleases.io/v1/projects/$id/latest-release")
               version_data=$(echo "$version" | jq -r '.version // empty')
+              date=$(echo "$version" | jq -r '.date // empty')
               if [ -n "$version_data" ]; then
-                jq --arg name "$name" --arg version "$version_data" \
-                  '. += [{"name": $name, "version": $version}]' "$output_file" > "$output_file.tmp" && mv "$output_file.tmp" "$output_file"
+                jq --arg name "$name" --arg version "$version_data" --arg date "$date" \
+                  '. += [{"name": $name, "version": $version, "date": $date}]' "$output_file" > "$output_file.tmp" && mv "$output_file.tmp" "$output_file"
               fi
             done
             ((page++))

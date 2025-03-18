@@ -60,4 +60,5 @@ export interface OperatingSystem {
 export interface AppVersion {
   name: string;
   version: string;
+  date: Date;
 }
