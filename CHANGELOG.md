@@ -35,8 +35,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 📂 Github
 
-    - Update pr template and WF [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#3200](https://github.com/community-scripts/ProxmoxVE/pull/3200))
     - Add worflow to crawl APP verisons [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#3192](https://github.com/community-scripts/ProxmoxVE/pull/3192))
+    - Update pr template and WF [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#3200](https://github.com/community-scripts/ProxmoxVE/pull/3200))
     - Update Workflow Context [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#3171](https://github.com/community-scripts/ProxmoxVE/pull/3171))
     - Change json path CONTRIBUTING.md [@bvdberg01](https://github.com/bvdberg01) ([#3187](https://github.com/community-scripts/ProxmoxVE/pull/3187))
     - Relocate the Json Files [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#3184](https://github.com/community-scripts/ProxmoxVE/pull/3184))
@@ -50,6 +50,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 📝 Script Information
 
+    - Website: Lowercase Zitadel-Slug [@MickLesk](https://github.com/MickLesk) ([#3222](https://github.com/community-scripts/ProxmoxVE/pull/3222))
     - Debian VM: Update webpage with login info [@tremor021](https://github.com/tremor021) ([#3215](https://github.com/community-scripts/ProxmoxVE/pull/3215))
     - Seafile: lowercase slug for Install/Update-Source [@MickLesk](https://github.com/MickLesk) ([#3209](https://github.com/community-scripts/ProxmoxVE/pull/3209))
     - [AUTOMATIC PR]Update versions.json [@community-scripts-pr-app[bot]](https://github.com/community-scripts-pr-app[bot]) ([#3201](https://github.com/community-scripts/ProxmoxVE/pull/3201))
