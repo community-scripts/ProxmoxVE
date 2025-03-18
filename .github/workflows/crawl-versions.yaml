@@ -11,7 +11,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  move-to-main-repo:
+  crawl-versions:
     runs-on: runner-cluster-htl-set
 
     steps:
