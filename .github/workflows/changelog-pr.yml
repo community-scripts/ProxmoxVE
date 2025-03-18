@@ -62,7 +62,7 @@ jobs:
                 obj.labels.includes("update script") ? [
                   { title: "🐞 Bug Fixes", labels: ["bugfix"], notes: [] },
                   { title: "✨ New Features", labels: ["feature"], notes: [] },
-                  { title: "💥 Breaking Changes", labels: ["breaking change"], notes: [] }
+                  { title: "💥 Breaking Changes", labels: ["breaking change"], notes: [] },
                   { title: "🔧 Refactor", labels: ["refactor"], notes: [] },
                 ] :
                 obj.labels.includes("maintenance") ? [
