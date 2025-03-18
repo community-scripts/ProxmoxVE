@@ -47,6 +47,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - Move cryptpad files to right folders [@bvdberg01](https://github.com/bvdberg01) ([#3242](https://github.com/community-scripts/ProxmoxVE/pull/3242))
     - Update Frontend Version Logic [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#3223](https://github.com/community-scripts/ProxmoxVE/pull/3223))
 
   - #### ✨ New Features
