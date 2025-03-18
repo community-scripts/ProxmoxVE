@@ -7,6 +7,7 @@ export const dynamic = "force-static";
 
 const jsonDir = "public/json";
 const metadataFileName = "metadata.json";
+const versionFileName = "version.json";
 const encoding = "utf-8";
 
 const getMetadata = async () => {
@@ -18,7 +19,7 @@ const getMetadata = async () => {
 
 const getScripts = async () => {
   const filePaths = (await fs.readdir(jsonDir))
-    .filter((fileName) => fileName !== metadataFileName)
+    .filter((fileName) => fileName !== metadataFileName && fileName !== versionFileName)
     .map((fileName) => path.resolve(jsonDir, fileName));
 
   const scripts = await Promise.all(
