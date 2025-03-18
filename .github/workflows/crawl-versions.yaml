@@ -18,7 +18,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
         with:
-          repository: community-scripts/ProxmoxVED
+          repository: community-scripts/ProxmoxVE
           ref: main
 
       - name: Generate a token
