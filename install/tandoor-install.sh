@@ -29,7 +29,11 @@ $STD apt-get install -y --no-install-recommends \
   sudo \
   git \
   make \
-  mc
+  mc \
+  pkg-config \
+  libxmlsec1-dev \
+  libxml2-dev \
+  libxmlsec1-openssl
 msg_ok "Installed Dependencies"
 
 msg_info "Setup Python3"
