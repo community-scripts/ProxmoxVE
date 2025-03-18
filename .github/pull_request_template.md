@@ -1,14 +1,13 @@
-🛑 **New scripts must first be submitted to [ProxmoxVED](https://github.com/community-scripts/ProxmoxVED) for testing.**  
-PRs for new scripts that skip this process will be closed.
-
----
+<!--🛑 New scripts must first be submitted to [ProxmoxVED](https://github.com/community-scripts/ProxmoxVED) for testing.
+PRs for new scripts that skip this process will be closed. -->  
 
 ## ✍️ Description  
 <!-- Briefly describe your changes. -->  
 
-## 🔗 Related PR / Issue  
 
+## 🔗 Related PR / Issue  
 Link: #
+
 
 ## ✅ Prerequisites  (**X** in brackets) 
 
@@ -33,9 +32,7 @@ Link: #
 
 ## 🔍 Code & Security Review  (**X** in brackets) 
 
-- [ ] **Follows `Code_Audit.md` & `CONTRIBUTING.md` guidelines**  
-- [ ] **Uses correct script structure (`AppName.sh`, `AppName-install.sh`, `AppName.json`)**  
-- [ ] **No hardcoded credentials**  
+- [ ] **Follows `Code_Audit.md` & `CONTRIBUTING.md` guidelines**
 
 
 ## 📋 Additional Information (optional)  
