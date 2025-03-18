@@ -25,6 +25,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - Wikijs: Remove Dev Message & Performance-Boost [@bvdberg01](https://github.com/bvdberg01) ([#3232](https://github.com/community-scripts/ProxmoxVE/pull/3232))
     - Fix openwebui update script when backup directory already exists [@chrisdoc](https://github.com/chrisdoc) ([#3213](https://github.com/community-scripts/ProxmoxVE/pull/3213))
 
   - #### 💥 Breaking Changes
@@ -54,6 +55,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 📝 Script Information
 
+    - Update Pimox Logo [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#3233](https://github.com/community-scripts/ProxmoxVE/pull/3233))
     - Heimdall Dashboard: Fix missing logo on website [@tremor021](https://github.com/tremor021) ([#3227](https://github.com/community-scripts/ProxmoxVE/pull/3227))
     - CrowdSec: Add debian only warning to website [@tremor021](https://github.com/tremor021) ([#3210](https://github.com/community-scripts/ProxmoxVE/pull/3210))
     - VictoriaMetrics: Fix Wrong Slug [@MickLesk](https://github.com/MickLesk) ([#3225](https://github.com/community-scripts/ProxmoxVE/pull/3225))
