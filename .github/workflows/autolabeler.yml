@@ -62,7 +62,7 @@ jobs:
               }
             }
             //if two labels or more are added, return
-              if (labelsToAdd.size < 3) {
+              if (labelsToAdd.size < 2) {
                 const templateLabelMappings = {
                 "🐞 **Bug fix**": "bugfix",
                 "✨ **New feature**": "feature",
