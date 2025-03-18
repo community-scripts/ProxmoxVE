@@ -64,7 +64,7 @@
   "json": [
     {
       "fileStatus": "modified",
-      "includeGlobs": ["frontend/publuc/json/**"],
+      "includeGlobs": ["frontend/public/json/**"],
       "excludeGlobs": []
     }
   ],
