@@ -63,7 +63,7 @@ jobs:
                   { title: "🐞 Bug Fixes", labels: ["bugfix"], notes: [] },
                   { title: "✨ New Features", labels: ["feature"], notes: [] },
                   { title: "💥 Breaking Changes", labels: ["breaking change"], notes: [] }
-                  { title: "🔧 Refactor, labels: ["refactor"], notes: [] }
+                  { title: "🔧 Refactor", labels: ["refactor"], notes: [] },
                 ] :
                 obj.labels.includes("maintenance") ? [
                   { title: "🐞 Bug Fixes", labels: ["bugfix"], notes: [] },
@@ -71,8 +71,8 @@ jobs:
                   { title: "💥 Breaking Changes", labels: ["breaking change"], notes: [] },
                   { title: "📡 API", labels: ["api"], notes: [] },
                   { title: "Github", labels: ["github"], notes: [] },
-                  { title: "📝 Documentation", labels: ["documentation"], notes: [] }
-                  { title: "🔧 Refactor, labels: ["refactor"], notes: [] }
+                  { title: "📝 Documentation", labels: ["documentation"], notes: [] },
+                  { title: "🔧 Refactor", labels: ["refactor"], notes: [] }
                 ] :
                 obj.labels.includes("website") ? [
                   { title: "🐞 Bug Fixes", labels: ["bugfix"], notes: [] },
