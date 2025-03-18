@@ -24,10 +24,11 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 📂 Github
 
-    - Update Workflow to Close Discussion [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#3185](https://github.com/community-scripts/ProxmoxVE/pull/3185))
+    - Add worflow to crawl APP verisons [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#3192](https://github.com/community-scripts/ProxmoxVE/pull/3192))
+    - Update Workflow Context [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#3171](https://github.com/community-scripts/ProxmoxVE/pull/3171))
     - Change json path CONTRIBUTING.md [@bvdberg01](https://github.com/bvdberg01) ([#3187](https://github.com/community-scripts/ProxmoxVE/pull/3187))
     - Relocate the Json Files [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#3184](https://github.com/community-scripts/ProxmoxVE/pull/3184))
-    - Update Workflow Context [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#3171](https://github.com/community-scripts/ProxmoxVE/pull/3171))
+    - Update Workflow to Close Discussion [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#3185](https://github.com/community-scripts/ProxmoxVE/pull/3185))
 
 ### 🌐 Website
 
