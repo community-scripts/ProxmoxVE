@@ -25,6 +25,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - Update omada download url [@bvdberg01](https://github.com/bvdberg01) ([#3245](https://github.com/community-scripts/ProxmoxVE/pull/3245))
     - Wikijs: Remove Dev Message & Performance-Boost [@bvdberg01](https://github.com/bvdberg01) ([#3232](https://github.com/community-scripts/ProxmoxVE/pull/3232))
     - Fix openwebui update script when backup directory already exists [@chrisdoc](https://github.com/chrisdoc) ([#3213](https://github.com/community-scripts/ProxmoxVE/pull/3213))
 
@@ -36,6 +37,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 📂 Github
 
+    - [core] cleanup - remove old backups of workflow files [@MickLesk](https://github.com/MickLesk) ([#3247](https://github.com/community-scripts/ProxmoxVE/pull/3247))
     - Add worflow to crawl APP verisons [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#3192](https://github.com/community-scripts/ProxmoxVE/pull/3192))
     - Update pr template and WF [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#3200](https://github.com/community-scripts/ProxmoxVE/pull/3200))
     - Update Workflow Context [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#3171](https://github.com/community-scripts/ProxmoxVE/pull/3171))
@@ -57,13 +59,13 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 📝 Script Information
 
+    - CrowdSec: Add debian only warning to website [@tremor021](https://github.com/tremor021) ([#3210](https://github.com/community-scripts/ProxmoxVE/pull/3210))
+    - Debian VM: Update webpage with login info [@tremor021](https://github.com/tremor021) ([#3215](https://github.com/community-scripts/ProxmoxVE/pull/3215))
+    - Heimdall Dashboard: Fix missing logo on website [@tremor021](https://github.com/tremor021) ([#3227](https://github.com/community-scripts/ProxmoxVE/pull/3227))
     - Seafile: lowercase slug for Install/Update-Source [@MickLesk](https://github.com/MickLesk) ([#3209](https://github.com/community-scripts/ProxmoxVE/pull/3209))
     - Website: Lowercase Zitadel-Slug [@MickLesk](https://github.com/MickLesk) ([#3222](https://github.com/community-scripts/ProxmoxVE/pull/3222))
     - VictoriaMetrics: Fix Wrong Slug [@MickLesk](https://github.com/MickLesk) ([#3225](https://github.com/community-scripts/ProxmoxVE/pull/3225))
     - Update Pimox Logo [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#3233](https://github.com/community-scripts/ProxmoxVE/pull/3233))
-    - Heimdall Dashboard: Fix missing logo on website [@tremor021](https://github.com/tremor021) ([#3227](https://github.com/community-scripts/ProxmoxVE/pull/3227))
-    - CrowdSec: Add debian only warning to website [@tremor021](https://github.com/tremor021) ([#3210](https://github.com/community-scripts/ProxmoxVE/pull/3210))
-    - Debian VM: Update webpage with login info [@tremor021](https://github.com/tremor021) ([#3215](https://github.com/community-scripts/ProxmoxVE/pull/3215))
     - [AUTOMATIC PR]Update versions.json [@community-scripts-pr-app[bot]](https://github.com/community-scripts-pr-app[bot]) ([#3201](https://github.com/community-scripts/ProxmoxVE/pull/3201))
     - GoMFT: Update Logo [@MickLesk](https://github.com/MickLesk) ([#3188](https://github.com/community-scripts/ProxmoxVE/pull/3188))
 
