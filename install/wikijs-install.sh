@@ -19,12 +19,7 @@ $STD apt-get install -y \
   sudo \
   mc \
   git \
-  ca-certificates \
-  gnupg \
-  build-essential \
-  python3 \
-  g++ \
-  make
+  gpg
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up Node.js Repository"
@@ -67,16 +62,12 @@ msg_ok "Set up PostgreSQL"
 msg_info "Setup Wiki.js"
 temp_file=$(mktemp)
 RELEASE=$(curl -s https://api.github.com/repos/Requarks/wiki/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-wget -q "https://github.com/Requarks/wiki/archive/refs/tags/v${RELEASE}.tar.gz" -O "$temp_file"
-tar -xzf "$temp_file"
-mv wiki-${RELEASE} /opt/wikijs
+wget -q "https://github.com/requarks/wiki/releases/download/v${RELEASE}/wiki-js.tar.gz" -O "$temp_file"
+mkdir /opt/wikijs
+tar -xzf "$temp_file" -C /opt/wikijs
 mv /opt/wikijs/config.sample.yml /opt/wikijs/config.yml
 sed -i -E 's|^( *user: ).*|\1'"$DB_USER"'|' /opt/wikijs/config.yml
 sed -i -E 's|^( *pass: ).*|\1'"$DB_PASS"'|' /opt/wikijs/config.yml
-cd /opt/wikijs
-export NODE_OPTIONS="--max-old-space-size=2048"
-$STD yarn install --ignore-engines
-$STD yarn build
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Installed Wiki.js"
 
@@ -88,7 +79,7 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/yarn start
+ExecStart=/usr/bin/node server
 Restart=always
 User=root
 Environment=NODE_ENV=production

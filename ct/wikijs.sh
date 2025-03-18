@@ -27,35 +27,50 @@ function update_script() {
         msg_error "No ${APP} Installation Found!"
         exit
     fi
-    msg_info "Stopping ${APP}"
-    systemctl stop wikijs
-    msg_ok "Stopped ${APP}"
+    RELEASE=$(curl -s https://api.github.com/repos/Requarks/wiki/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+    if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
+        msg_info "Verifying whether ${APP}' new release is v3.x+ and current install uses SQLite."
+        SQLITE_INSTALL=$([ -f /opt/wikijs/db.sqlite ] && echo "true" || echo "false")
+        if [[ "${SQLITE_INSTALL}" == "true" && "${RELEASE}" =~ ^3.* ]]; then
+            echo "SQLite is not supported in v3.x+, currently there is no update path availble."
+            exit
+        fi
+        msg_ok "There is an update path available for ${APP} to v${RELEASE}"
 
-    msg_info "Backing up Data"
-    rm -rf ~/data-backup
-    mkdir -p ~/data-backup
-    [ -f /opt/wikijs/db.sqlite ] && cp /opt/wikijs/db.sqlite ~/data-backup
-    [ -f /opt/wikijs/config.yml ] && cp /opt/wikijs/config.yml ~/data-backup
-    [ -d /opt/wikijs/data ] && cp -R /opt/wikijs/data ~/data-backup
-    msg_ok "Backed up Data"
+        msg_info "Stopping ${APP}"
+        systemctl stop wikijs
+        msg_ok "Stopped ${APP}"
 
-    msg_info "Updating ${APP}"
-    rm -rf /opt/wikijs/*
-    cd /opt/wikijs
-    wget -q https://github.com/Requarks/wiki/releases/latest/download/wiki-js.tar.gz
-    tar xzf wiki-js.tar.gz
-    msg_ok "Updated ${APP}"
+        msg_info "Backing up Data"
+        mkdir /opt/wikijs-backup
+        $SQLITE_INSTALL && cp /opt/wikijs/db.sqlite /opt/wikijs-backup
+        cp -R /opt/wikijs/{config.yml,/data} /opt/wikijs-backup
+        msg_ok "Backed up Data"
 
-    msg_info "Restoring Data"
-    cp -R ~/data-backup/* /opt/wikijs
-    rm -rf ~/data-backup
-    $STD npm rebuild sqlite3
-    msg_ok "Restored Data"
+        msg_info "Updating ${APP}"
+        rm -rf /opt/wikijs/*
+        cd /opt/wikijs
+        wget -q "https://github.com/requarks/wiki/releases/download/v${RELEASE}/wiki-js.tar.gz"
+        tar -xzf wiki-js.tar.gz
+        msg_ok "Updated ${APP}"
 
-    msg_info "Starting ${APP}"
-    systemctl start wikijs
-    msg_ok "Started ${APP}"
-    msg_ok "Updated Successfully"
+        msg_info "Restoring Data"
+        cp -R /opt/wikijs-backup/* /opt/wikijs
+        $SQLITE_INSTALL && $STD npm rebuild sqlite3
+        msg_ok "Restored Data"
+
+        msg_info "Starting ${APP}"
+        systemctl start wikijs
+        msg_ok "Started ${APP}"
+
+        msg_info "Cleaning Up"
+        rm -rf /opt/wikijs/wiki-js.tar.gz
+        rm -rf /opt/wikijs-backup
+        msg_ok "Cleanup Completed"
+        msg_ok "Updated Successfully"
+    else
+        msg_ok "No update required. ${APP} is already at v${RELEASE}"
+    fi
     exit
 }
 
