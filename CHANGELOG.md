@@ -18,12 +18,24 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🆕 New Scripts
 
-  - GoMFT [@tremor021](https://github.com/tremor021) ([#3157](https://github.com/community-scripts/ProxmoxVE/pull/3157))
+  - CryptPad [@MickLesk](https://github.com/MickLesk) ([#3205](https://github.com/community-scripts/ProxmoxVE/pull/3205))
+- GoMFT [@tremor021](https://github.com/tremor021) ([#3157](https://github.com/community-scripts/ProxmoxVE/pull/3157))
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Fix openwebui update script when backup directory already exists [@chrisdoc](https://github.com/chrisdoc) ([#3213](https://github.com/community-scripts/ProxmoxVE/pull/3213))
+
+  - #### 💥 Breaking Changes
+
+    - Tandoor: Extend needed dependencies (Read for Update-Functionality)  [@MickLesk](https://github.com/MickLesk) ([#3207](https://github.com/community-scripts/ProxmoxVE/pull/3207))
 
 ### 🧰 Maintenance
 
   - #### 📂 Github
 
+    - Update pr template and WF [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#3200](https://github.com/community-scripts/ProxmoxVE/pull/3200))
     - Add worflow to crawl APP verisons [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#3192](https://github.com/community-scripts/ProxmoxVE/pull/3192))
     - Update Workflow Context [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#3171](https://github.com/community-scripts/ProxmoxVE/pull/3171))
     - Change json path CONTRIBUTING.md [@bvdberg01](https://github.com/bvdberg01) ([#3187](https://github.com/community-scripts/ProxmoxVE/pull/3187))
@@ -34,6 +46,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 📝 Script Information
 
+    - Seafile: lowercase slug for Install/Update-Source [@MickLesk](https://github.com/MickLesk) ([#3209](https://github.com/community-scripts/ProxmoxVE/pull/3209))
+    - [AUTOMATIC PR]Update versions.json [@community-scripts-pr-app[bot]](https://github.com/community-scripts-pr-app[bot]) ([#3204](https://github.com/community-scripts/ProxmoxVE/pull/3204))
     - [AUTOMATIC PR]Update versions.json [@community-scripts-pr-app[bot]](https://github.com/community-scripts-pr-app[bot]) ([#3201](https://github.com/community-scripts/ProxmoxVE/pull/3201))
     - GoMFT: Update Logo [@MickLesk](https://github.com/MickLesk) ([#3188](https://github.com/community-scripts/ProxmoxVE/pull/3188))
 
