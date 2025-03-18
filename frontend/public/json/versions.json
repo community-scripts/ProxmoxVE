@@ -1,7 +1,31 @@
 [
   {
+    "name": "crowdsecurity/crowdsec",
+    "version": "v1.6.6"
+  },
+  {
+    "name": "openobserve/openobserve",
+    "version": "v0.14.5-rc4"
+  },
+  {
+    "name": "Radarr/Radarr",
+    "version": "v5.20.2.9777"
+  },
+  {
+    "name": "apache/couchdb",
+    "version": "3.4.3.post1"
+  },
+  {
     "name": "zitadel/zitadel",
     "version": "v2.70.5"
+  },
+  {
+    "name": "nzbgetcom/nzbget",
+    "version": "testing"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.4.0b1"
   },
   {
     "name": "Jackett/Jackett",
@@ -14,6 +38,10 @@
   {
     "name": "ollama/ollama",
     "version": "v0.6.1"
+  },
+  {
+    "name": "StarFleetCPTN/GoMFT",
+    "version": "v0.1.15"
   },
   {
     "name": "advplyr/audiobookshelf",
@@ -36,12 +64,36 @@
     "version": "v0.8.5.11"
   },
   {
+    "name": "goauthentik/authentik",
+    "version": "version/2025.2.2"
+  },
+  {
+    "name": "Sonarr/Sonarr",
+    "version": "v4.0.14.2939"
+  },
+  {
     "name": "TriliumNext/Notes",
     "version": "v0.92.4"
   },
   {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.84.0"
+  },
+  {
+    "name": "Graylog2/graylog2-server",
+    "version": "6.2.0-beta.1"
+  },
+  {
+    "name": "home-assistant/operating-system",
+    "version": "15.0"
+  },
+  {
     "name": "morpheus65535/bazarr",
     "version": "v1.5.1"
+  },
+  {
+    "name": "webmin/webmin",
+    "version": "2.303"
   },
   {
     "name": "fallenbagel/jellyseerr",
@@ -64,6 +116,10 @@
     "version": "v0.22.0"
   },
   {
+    "name": "autobrr/autobrr",
+    "version": "v1.60.0"
+  },
+  {
     "name": "pocket-id/pocket-id",
     "version": "v0.40.1"
   },
@@ -80,8 +136,24 @@
     "version": "ios/v1.6.9-0"
   },
   {
+    "name": "YunoHost/yunohost",
+    "version": "debian/12.0.12"
+  },
+  {
+    "name": "Prowlarr/Prowlarr",
+    "version": "v1.32.2.4987"
+  },
+  {
     "name": "pocketbase/pocketbase",
     "version": "v0.26.1"
+  },
+  {
+    "name": "redis/redis",
+    "version": "8.0-m04"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2025.3.0b3"
   },
   {
     "name": "Kozea/Radicale",
@@ -90,6 +162,14 @@
   {
     "name": "VictoriaMetrics/VictoriaMetrics",
     "version": "v1.17.0-victorialogs"
+  },
+  {
+    "name": "bunkerity/bunkerweb",
+    "version": "v1.6.1"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "v3.10.0"
   },
   {
     "name": "msgbyte/tianji",
@@ -106,6 +186,10 @@
   {
     "name": "navidrome/navidrome",
     "version": "v0.55.1"
+  },
+  {
+    "name": "coder/code-server",
+    "version": "v4.98.2"
   },
   {
     "name": "Threadfin/Threadfin",
@@ -132,6 +216,10 @@
     "version": "v1.11.0"
   },
   {
+    "name": "home-assistant/core",
+    "version": "2025.3.3"
+  },
+  {
     "name": "docker/compose",
     "version": "v2.34.0"
   },
@@ -148,8 +236,8 @@
     "version": "v0.24.1"
   },
   {
-    "name": "openobserve/openobserve",
-    "version": "v0.14.5-rc3"
+    "name": "moghtech/komodo",
+    "version": "v1.17.0-dev-7"
   },
   {
     "name": "NodeBB/NodeBB",
@@ -172,8 +260,20 @@
     "version": "335"
   },
   {
+    "name": "syncthing/syncthing",
+    "version": "v1.29.3"
+  },
+  {
+    "name": "transmission/transmission",
+    "version": "4.1.0-beta.2"
+  },
+  {
     "name": "gotson/komga",
     "version": "1.21.2"
+  },
+  {
+    "name": "element-hq/synapse",
+    "version": "v1.126.0"
   },
   {
     "name": "benjaminjonard/koillection",
@@ -182,6 +282,10 @@
   {
     "name": "excalidraw/excalidraw",
     "version": "v0.18.0"
+  },
+  {
+    "name": "neo4j/neo4j",
+    "version": "5.26.4"
   },
   {
     "name": "Ombi-app/Ombi",
@@ -210,6 +314,22 @@
   {
     "name": "clusterzx/paperless-ai",
     "version": "v2.7.4"
+  },
+  {
+    "name": "awawa-dev/HyperHDR",
+    "version": "v21.0.0.0"
+  },
+  {
+    "name": "Lidarr/Lidarr",
+    "version": "v2.10.1.4589"
+  },
+  {
+    "name": "Readarr/Readarr",
+    "version": "v0.4.12.2753"
+  },
+  {
+    "name": "Brandawg93/PeaNUT",
+    "version": "v5.6.0"
   },
   {
     "name": "YuukanOO/seelf",
@@ -272,6 +392,18 @@
     "version": "v1.23.5"
   },
   {
+    "name": "apache/tomcat",
+    "version": "10.1.39"
+  },
+  {
+    "name": "tailscale/tailscale",
+    "version": "v1.80.3"
+  },
+  {
+    "name": "pi-hole/pi-hole",
+    "version": "v6.0.5"
+  },
+  {
     "name": "sysadminsmedia/homebox",
     "version": "v0.18.0"
   },
@@ -296,12 +428,24 @@
     "version": "v4.4.2"
   },
   {
+    "name": "photoprism/photoprism",
+    "version": "250228-43447fa38"
+  },
+  {
     "name": "jhuckaby/Cronicle",
     "version": "v0.9.76"
   },
   {
     "name": "docmost/docmost",
     "version": "v0.8.4"
+  },
+  {
+    "name": "cloudflare/cloudflared",
+    "version": "2025.2.1"
+  },
+  {
+    "name": "cross-seed/cross-seed",
+    "version": "v6.11.2"
   },
   {
     "name": "Part-DB/Part-DB-server",
@@ -328,16 +472,52 @@
     "version": "v3.3.4"
   },
   {
+    "name": "zabbix/zabbix",
+    "version": "7.2.4"
+  },
+  {
     "name": "schlagmichdoch/PairDrop",
     "version": "v1.11.2"
+  },
+  {
+    "name": "drakkan/sftpgo",
+    "version": "v2.6.6"
+  },
+  {
+    "name": "ioBroker/ioBroker",
+    "version": "2025-02-23"
+  },
+  {
+    "name": "ventoy/Ventoy",
+    "version": "v1.1.05"
   },
   {
     "name": "Athou/commafeed",
     "version": "5.6.1"
   },
   {
+    "name": "openhab/openhab-core",
+    "version": "5.0.0.M1"
+  },
+  {
+    "name": "outline/outline",
+    "version": "v0.82.1-15"
+  },
+  {
+    "name": "TechnitiumSoftware/DnsServer",
+    "version": "v13.4.3"
+  },
+  {
+    "name": "OliveTin/OliveTin",
+    "version": "2025.2.21"
+  },
+  {
     "name": "azukaar/Cosmos-Server",
     "version": "v0.18.3"
+  },
+  {
+    "name": "wavelog/wavelog",
+    "version": "2.0.1"
   },
   {
     "name": "wavelog/wavelog",
@@ -360,12 +540,48 @@
     "version": "v3.5.2"
   },
   {
+    "name": "leiweibau/Pi.Alert",
+    "version": "v2025-02-16"
+  },
+  {
+    "name": "qbittorrent/qBittorrent",
+    "version": "release-5.0.4"
+  },
+  {
+    "name": "postgres/postgres",
+    "version": "REL_13_20"
+  },
+  {
+    "name": "jellyfin/jellyfin",
+    "version": "v10.10.6"
+  },
+  {
     "name": "sbondCo/Watcharr",
     "version": "v2.0.2"
   },
   {
+    "name": "recyclarr/recyclarr",
+    "version": "v7.4.1"
+  },
+  {
+    "name": "node-red/node-red",
+    "version": "4.0.9"
+  },
+  {
+    "name": "mayswind/AriaNg",
+    "version": "1.3.10"
+  },
+  {
+    "name": "MariaDB/server",
+    "version": "mariadb-11.8.1"
+  },
+  {
     "name": "glpi-project/glpi",
     "version": "10.0.18"
+  },
+  {
+    "name": "homebridge/homebridge",
+    "version": "v1.9.0"
   },
   {
     "name": "TasmoAdmin/TasmoAdmin",
@@ -384,6 +600,14 @@
     "version": "v1.11.3"
   },
   {
+    "name": "apache/cassandra",
+    "version": "cassandra-4.0.17"
+  },
+  {
+    "name": "apache/tika",
+    "version": "2.9.3"
+  },
+  {
     "name": "actualbudget/actual-server",
     "version": "v25.2.1"
   },
@@ -392,12 +616,20 @@
     "version": "v2.12.3"
   },
   {
+    "name": "mongodb/mongo",
+    "version": "r8.0.5-rc1"
+  },
+  {
     "name": "thomiceli/opengist",
     "version": "v1.9.1"
   },
   {
     "name": "Forceu/Gokapi",
     "version": "v1.9.6"
+  },
+  {
+    "name": "requarks/wiki",
+    "version": "v2.5.306"
   },
   {
     "name": "PrivateBin/PrivateBin",
@@ -416,12 +648,28 @@
     "version": "v0.0.6"
   },
   {
+    "name": "owncast/owncast",
+    "version": "v0.2.1"
+  },
+  {
     "name": "donaldzou/WGDashboard",
     "version": "v4.1.4"
   },
   {
     "name": "0xERR0R/blocky",
     "version": "v0.25"
+  },
+  {
+    "name": "petio-team/petio",
+    "version": "v0.5.7"
+  },
+  {
+    "name": "readeck/readeck",
+    "version": "0.17.1"
+  },
+  {
+    "name": "influxdata/influxdb",
+    "version": "v1.10.8"
   },
   {
     "name": "linkwarden/linkwarden",
@@ -444,12 +692,32 @@
     "version": "v0.8.0"
   },
   {
+    "name": "nicolargo/glances",
+    "version": "v4.3.0.8"
+  },
+  {
     "name": "MagicMirrorOrg/MagicMirror",
     "version": "v2.30.0"
   },
   {
+    "name": "go-vikunja/vikunja",
+    "version": "v0.24.6"
+  },
+  {
     "name": "louislam/uptime-kuma",
     "version": "2.0.0-beta.1"
+  },
+  {
+    "name": "IceWhaleTech/CasaOS",
+    "version": "v0.4.15"
+  },
+  {
+    "name": "mysql/mysql-server",
+    "version": "mysql-cluster-7.6.33"
+  },
+  {
+    "name": "ArchiveBox/ArchiveBox",
+    "version": "v0.7.3"
   },
   {
     "name": "pymedusa/Medusa",
@@ -464,6 +732,10 @@
     "version": "v5.4.3"
   },
   {
+    "name": "lldap/lldap",
+    "version": "v0.6.1"
+  },
+  {
     "name": "gotify/server",
     "version": "v2.6.1"
   },
@@ -476,6 +748,10 @@
     "version": "0.10.1"
   },
   {
+    "name": "nextcloud/nextcloudpi",
+    "version": "v1.55.3"
+  },
+  {
     "name": "caddyserver/xcaddy",
     "version": "v0.4.4"
   },
@@ -484,8 +760,20 @@
     "version": "v2.6.3"
   },
   {
+    "name": "zerotier/ZeroTierOne",
+    "version": "1.14.2"
+  },
+  {
     "name": "aceberg/WatchYourLAN",
     "version": "2.0.4"
+  },
+  {
+    "name": "NLnetLabs/unbound",
+    "version": "release-1.22.0"
+  },
+  {
+    "name": "Notifiarr/notifiarr",
+    "version": "v0.8.3"
   },
   {
     "name": "Kometa-Team/Kometa",
@@ -512,6 +800,10 @@
     "version": "v0.15.4"
   },
   {
+    "name": "hywax/mafl",
+    "version": "v0.15.4"
+  },
+  {
     "name": "FlareSolverr/FlareSolverr",
     "version": "v3.3.21"
   },
@@ -528,16 +820,36 @@
     "version": "3.1.1"
   },
   {
+    "name": "motioneye-project/motioneye",
+    "version": "0.43.1b2"
+  },
+  {
     "name": "gnmyt/myspeed",
     "version": "v1.0.9"
+  },
+  {
+    "name": "CrazyWolf13/web-check",
+    "version": "1.0.0"
   },
   {
     "name": "monicahq/monica",
     "version": "v4.1.2"
   },
   {
+    "name": "hakimel/reveal.js",
+    "version": "5.1.0"
+  },
+  {
     "name": "thelounge/thelounge-deb",
     "version": "v4.4.3"
+  },
+  {
+    "name": "louislam/dockge",
+    "version": "1.4.2"
+  },
+  {
+    "name": "hyperion-project/hyperion.ng",
+    "version": "2.0.16"
   },
   {
     "name": "wger-project/wger",
@@ -552,11 +864,19 @@
     "version": "v2.4.3"
   },
   {
+    "name": "Shinobi-Systems/Shinobi",
+    "version": "furrykitten-3"
+  },
+  {
+    "name": "deluge-torrent/deluge",
+    "version": "deluge-2.1.2.dev0"
+  },
+  {
     "name": "searxng/searxng",
     "version": "v1.0.0"
   },
   {
-    "name": "MediaBrowser/Emby",
-    "version": "3.5.2.0"
+    "name": "LazyLibrarian/LazyLibrarian",
+    "version": "1.7.2"
   }
 ]
