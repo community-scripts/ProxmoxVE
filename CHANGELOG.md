@@ -52,7 +52,6 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - Debian VM: Update webpage with login info [@tremor021](https://github.com/tremor021) ([#3215](https://github.com/community-scripts/ProxmoxVE/pull/3215))
     - Seafile: lowercase slug for Install/Update-Source [@MickLesk](https://github.com/MickLesk) ([#3209](https://github.com/community-scripts/ProxmoxVE/pull/3209))
-    - [AUTOMATIC PR]Update versions.json [@community-scripts-pr-app[bot]](https://github.com/community-scripts-pr-app[bot]) ([#3204](https://github.com/community-scripts/ProxmoxVE/pull/3204))
     - [AUTOMATIC PR]Update versions.json [@community-scripts-pr-app[bot]](https://github.com/community-scripts-pr-app[bot]) ([#3201](https://github.com/community-scripts/ProxmoxVE/pull/3201))
     - GoMFT: Update Logo [@MickLesk](https://github.com/MickLesk) ([#3188](https://github.com/community-scripts/ProxmoxVE/pull/3188))
 
