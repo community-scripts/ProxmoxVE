@@ -20,7 +20,7 @@ These documents cover the coding standards for the following types of files in o
 
 - **`install/$AppName-install.sh` Scripts**: These scripts are responsible for the installation of applications.
 - **`ct/$AppName.sh` Scripts**: These scripts handle the creation and updating of containers.
-- **`json/$AppName.json`**: These files store structured data and are used for the website.
+- **`frontend/public/json/$AppName.json`**: These files store structured data and are used for the website.
 
 Each section provides detailed guidelines on various aspects of coding, including shebang usage, comments, variable naming, function naming, indentation, error handling, command substitution, quoting, script structure, and logging. Additionally, examples are provided to illustrate the application of these standards.
 
