@@ -1,5 +1,40 @@
 [
   {
+    "name": "Luligu/matterbridge",
+    "version": "2.2.5",
+    "date": "2025-03-19T09:11:26Z"
+  },
+  {
+    "name": "forgejo/forgejo",
+    "version": "v7.0.14",
+    "date": "2025-03-19T08:53:16Z"
+  },
+  {
+    "name": "zwave-js/zwave-js-ui",
+    "version": "v10.0.0",
+    "date": "2025-03-19T08:16:12Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.3.0p29",
+    "date": "2025-03-19T07:42:50Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1665",
+    "date": "2025-03-19T05:58:42Z"
+  },
+  {
+    "name": "StarFleetCPTN/GoMFT",
+    "version": "v0.1.16",
+    "date": "2025-03-19T04:30:53Z"
+  },
+  {
+    "name": "fhem/fhem-mirror",
+    "version": "6.2",
+    "date": "2025-03-19T01:59:46Z"
+  },
+  {
     "name": "pocket-id/pocket-id",
     "version": "v0.42.1",
     "date": "2025-03-18T22:03:53Z"
@@ -10,24 +45,19 @@
     "date": "2025-03-18T21:01:22Z"
   },
   {
-    "name": "fhem/fhem-mirror",
-    "version": "6.2",
-    "date": "2025-03-18T20:28:40Z"
-  },
-  {
     "name": "esphome/esphome",
     "version": "2025.2.2",
     "date": "2025-03-03T08:23:30Z"
   },
   {
+    "name": "keycloak/keycloak",
+    "version": "26.1.4",
+    "date": "2025-03-13T15:41:42Z"
+  },
+  {
     "name": "dotnetfactory/fluid-calendar",
     "version": "v1.2.2",
     "date": "2025-03-18T18:47:36Z"
-  },
-  {
-    "name": "zwave-js/zwave-js-ui",
-    "version": "v9.33.1",
-    "date": "2025-03-18T17:26:41Z"
   },
   {
     "name": "zitadel/zitadel",
@@ -65,14 +95,19 @@
     "date": "2025-03-14T15:43:23Z"
   },
   {
+    "name": "zabbix/zabbix",
+    "version": "7.2.5rc1",
+    "date": "2025-03-18T14:10:32Z"
+  },
+  {
     "name": "openobserve/openobserve",
     "version": "v0.14.5-rc4",
     "date": "2025-03-18T13:51:56Z"
   },
   {
     "name": "crowdsecurity/crowdsec",
-    "version": "v1.6.5",
-    "date": "2025-02-07T13:44:35Z"
+    "version": "v1.6.6",
+    "date": "2025-03-18T13:05:01Z"
   },
   {
     "name": "Radarr/Radarr",
@@ -90,16 +125,6 @@
     "date": "2025-03-18T07:33:51Z"
   },
   {
-    "name": "Checkmk/checkmk",
-    "version": "v2.4.0b1",
-    "date": "2025-03-18T08:03:25Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1660",
-    "date": "2025-03-18T06:10:42Z"
-  },
-  {
     "name": "authelia/authelia",
     "version": "v4.39.1",
     "date": "2025-03-18T03:57:41Z"
@@ -110,11 +135,6 @@
     "date": "2025-03-18T03:11:33Z"
   },
   {
-    "name": "StarFleetCPTN/GoMFT",
-    "version": "v0.1.15",
-    "date": "2025-03-18T02:30:29Z"
-  },
-  {
     "name": "advplyr/audiobookshelf",
     "version": "v2.20.0",
     "date": "2025-03-17T22:44:56Z"
@@ -123,11 +143,6 @@
     "name": "bastienwirtz/homer",
     "version": "v25.03.3",
     "date": "2025-03-17T20:55:37Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.1.4",
-    "date": "2025-03-13T15:41:42Z"
   },
   {
     "name": "semaphoreui/semaphore",
@@ -450,11 +465,6 @@
     "date": "2025-02-20T14:58:55Z"
   },
   {
-    "name": "Luligu/matterbridge",
-    "version": "2.2.4",
-    "date": "2025-03-10T10:40:00Z"
-  },
-  {
     "name": "icereed/paperless-gpt",
     "version": "v0.13.0",
     "date": "2025-03-10T10:03:12Z"
@@ -690,11 +700,6 @@
     "date": "2025-02-25T10:18:58Z"
   },
   {
-    "name": "zabbix/zabbix",
-    "version": "7.2.4",
-    "date": "2025-02-25T09:35:54Z"
-  },
-  {
     "name": "schlagmichdoch/PairDrop",
     "version": "v1.11.2",
     "date": "2025-02-24T19:47:06Z"
@@ -848,11 +853,6 @@
     "name": "blakeblackshear/frigate",
     "version": "v0.15.0",
     "date": "2025-02-08T18:45:30Z"
-  },
-  {
-    "name": "forgejo/forgejo",
-    "version": "v10.0.1",
-    "date": "2025-02-08T13:17:20Z"
   },
   {
     "name": "bluenviron/mediamtx",
