@@ -25,6 +25,10 @@ All LXC instances created using this repository come pre-installed with Midnight
     - Snipe-IT: Remove composer update & add no interaction for install [@MickLesk](https://github.com/MickLesk) ([#3256](https://github.com/community-scripts/ProxmoxVE/pull/3256))
     - Fluid-Calendar: Remove unneeded $STD in update [@MickLesk](https://github.com/MickLesk) ([#3250](https://github.com/community-scripts/ProxmoxVE/pull/3250))
 
+  - #### 💥 Breaking Changes
+
+    - FluidCalendar: Switch to safer DB operations [@vhsdream](https://github.com/vhsdream) ([#3270](https://github.com/community-scripts/ProxmoxVE/pull/3270))
+
 ### 🌐 Website
 
   - #### 🐞 Bug Fixes
