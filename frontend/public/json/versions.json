@@ -1,13 +1,78 @@
 [
   {
-    "name": "crowdsecurity/crowdsec",
-    "version": "v1.6.6",
-    "date": "2025-03-18T13:05:01Z"
+    "name": "pocket-id/pocket-id",
+    "version": "v0.42.1",
+    "date": "2025-03-18T22:03:53Z"
+  },
+  {
+    "name": "Donkie/Spoolman",
+    "version": "v0.22.1",
+    "date": "2025-03-18T21:01:22Z"
+  },
+  {
+    "name": "fhem/fhem-mirror",
+    "version": "6.2",
+    "date": "2025-03-18T20:28:40Z"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2025.2.2",
+    "date": "2025-03-03T08:23:30Z"
+  },
+  {
+    "name": "dotnetfactory/fluid-calendar",
+    "version": "v1.2.2",
+    "date": "2025-03-18T18:47:36Z"
+  },
+  {
+    "name": "zwave-js/zwave-js-ui",
+    "version": "v9.33.1",
+    "date": "2025-03-18T17:26:41Z"
+  },
+  {
+    "name": "zitadel/zitadel",
+    "version": "v2.66.14",
+    "date": "2025-03-18T16:05:48Z"
+  },
+  {
+    "name": "prometheus/prometheus",
+    "version": "v2.53.4",
+    "date": "2025-03-18T15:50:39Z"
+  },
+  {
+    "name": "syncthing/syncthing",
+    "version": "v1.29.3",
+    "date": "2025-03-12T11:56:30Z"
+  },
+  {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.502",
+    "date": "2025-03-18T15:02:59Z"
+  },
+  {
+    "name": "element-hq/synapse",
+    "version": "v1.126.0",
+    "date": "2025-03-11T16:29:42Z"
+  },
+  {
+    "name": "OctoPrint/OctoPrint",
+    "version": "1.10.3",
+    "date": "2024-11-05T09:20:50Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.83.2",
+    "date": "2025-03-14T15:43:23Z"
   },
   {
     "name": "openobserve/openobserve",
     "version": "v0.14.5-rc4",
-    "date": "2025-03-18T12:51:31Z"
+    "date": "2025-03-18T13:51:56Z"
+  },
+  {
+    "name": "crowdsecurity/crowdsec",
+    "version": "v1.6.5",
+    "date": "2025-02-07T13:44:35Z"
   },
   {
     "name": "Radarr/Radarr",
@@ -20,14 +85,9 @@
     "date": "2025-03-18T09:44:59Z"
   },
   {
-    "name": "zitadel/zitadel",
-    "version": "v2.70.5",
-    "date": "2025-03-18T08:08:16Z"
-  },
-  {
     "name": "nzbgetcom/nzbget",
-    "version": "testing",
-    "date": "2025-03-18T08:06:43Z"
+    "version": "v24.8",
+    "date": "2025-03-18T07:33:51Z"
   },
   {
     "name": "Checkmk/checkmk",
@@ -46,8 +106,8 @@
   },
   {
     "name": "ollama/ollama",
-    "version": "v0.6.1",
-    "date": "2025-03-14T15:57:59Z"
+    "version": "v0.6.2",
+    "date": "2025-03-18T03:11:33Z"
   },
   {
     "name": "StarFleetCPTN/GoMFT",
@@ -100,11 +160,6 @@
     "date": "2025-03-17T14:20:04Z"
   },
   {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.84.0",
-    "date": "2025-03-17T13:58:36Z"
-  },
-  {
     "name": "Graylog2/graylog2-server",
     "version": "6.2.0-beta.1",
     "date": "2025-03-17T13:00:39Z"
@@ -145,19 +200,9 @@
     "date": "2025-03-16T22:19:31Z"
   },
   {
-    "name": "Donkie/Spoolman",
-    "version": "v0.22.0",
-    "date": "2025-03-16T21:14:52Z"
-  },
-  {
     "name": "autobrr/autobrr",
     "version": "v1.60.0",
     "date": "2025-03-16T18:39:49Z"
-  },
-  {
-    "name": "pocket-id/pocket-id",
-    "version": "v0.40.1",
-    "date": "2025-03-16T17:02:54Z"
   },
   {
     "name": "evcc-io/evcc",
@@ -193,11 +238,6 @@
     "name": "redis/redis",
     "version": "8.0-m04",
     "date": "2025-03-16T08:12:40Z"
-  },
-  {
-    "name": "esphome/esphome",
-    "version": "2025.3.0b3",
-    "date": "2025-03-16T06:53:58Z"
   },
   {
     "name": "Kozea/Radicale",
@@ -315,11 +355,6 @@
     "date": "2025-03-13T21:34:25Z"
   },
   {
-    "name": "dotnetfactory/fluid-calendar",
-    "version": "v1.2.1",
-    "date": "2025-03-13T19:11:35Z"
-  },
-  {
     "name": "kimai/kimai",
     "version": "2.31.0",
     "date": "2025-03-13T17:13:47Z"
@@ -336,8 +371,8 @@
   },
   {
     "name": "moghtech/komodo",
-    "version": "v1.17.0-dev-7",
-    "date": "2025-03-13T05:03:04Z"
+    "version": "v1.16.12",
+    "date": "2024-12-02T08:46:29Z"
   },
   {
     "name": "NodeBB/NodeBB",
@@ -350,19 +385,9 @@
     "date": "2025-03-12T22:41:17Z"
   },
   {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.501",
-    "date": "2025-03-12T21:47:58Z"
-  },
-  {
     "name": "minio/minio",
     "version": "RELEASE.2025-03-12T18-04-18Z",
     "date": "2025-03-12T18:45:21Z"
-  },
-  {
-    "name": "zwave-js/zwave-js-ui",
-    "version": "v9.33.0",
-    "date": "2025-03-12T16:29:52Z"
   },
   {
     "name": "cockpit-project/cockpit",
@@ -370,14 +395,9 @@
     "date": "2025-03-12T13:03:27Z"
   },
   {
-    "name": "syncthing/syncthing",
-    "version": "v1.29.3",
-    "date": "2025-03-12T11:56:30Z"
-  },
-  {
     "name": "transmission/transmission",
-    "version": "4.1.0-beta.2",
-    "date": "2025-03-12T11:01:28Z"
+    "version": "4.0.1-beta.1",
+    "date": "2024-12-13T00:16:24Z"
   },
   {
     "name": "emqx/emqx",
@@ -390,19 +410,9 @@
     "date": "2025-03-12T04:19:30Z"
   },
   {
-    "name": "element-hq/synapse",
-    "version": "v1.126.0",
-    "date": "2025-03-11T16:29:42Z"
-  },
-  {
     "name": "benjaminjonard/koillection",
     "version": "1.6.12",
     "date": "2025-03-11T15:04:43Z"
-  },
-  {
-    "name": "OctoPrint/OctoPrint",
-    "version": "1.11.0rc4",
-    "date": "2025-03-11T13:37:12Z"
   },
   {
     "name": "excalidraw/excalidraw",
@@ -461,8 +471,8 @@
   },
   {
     "name": "caddyserver/caddy",
-    "version": "v2.10.0-beta.2",
-    "date": "2025-03-09T13:51:09Z"
+    "version": "v2.9.1",
+    "date": "2025-01-08T15:22:53Z"
   },
   {
     "name": "awawa-dev/HyperHDR",
@@ -471,13 +481,13 @@
   },
   {
     "name": "Lidarr/Lidarr",
-    "version": "v2.10.1.4589",
-    "date": "2025-03-09T09:51:41Z"
+    "version": "v2.9.6.4552",
+    "date": "2025-02-03T12:11:00Z"
   },
   {
     "name": "Readarr/Readarr",
-    "version": "v0.4.12.2753",
-    "date": "2025-03-09T09:50:51Z"
+    "version": "v2.0.0.4645",
+    "date": "2017-03-07T18:56:06Z"
   },
   {
     "name": "Brandawg93/PeaNUT",
@@ -655,11 +665,6 @@
     "date": "2025-02-26T11:29:15Z"
   },
   {
-    "name": "prometheus/prometheus",
-    "version": "v3.2.1",
-    "date": "2025-02-26T09:55:45Z"
-  },
-  {
     "name": "silverbulletmd/silverbullet",
     "version": "0.10.4",
     "date": "2025-02-25T18:13:42Z"
@@ -811,8 +816,8 @@
   },
   {
     "name": "MariaDB/server",
-    "version": "mariadb-11.8.1",
-    "date": "2025-02-13T04:14:39Z"
+    "version": "mariadb-11.7.2",
+    "date": "2025-02-13T04:13:46Z"
   },
   {
     "name": "glpi-project/glpi",
@@ -1141,8 +1146,8 @@
   },
   {
     "name": "motioneye-project/motioneye",
-    "version": "0.43.1b2",
-    "date": "2024-05-29T20:32:35Z"
+    "version": "0.42.1",
+    "date": "2020-06-07T07:27:04Z"
   },
   {
     "name": "gnmyt/myspeed",
@@ -1193,10 +1198,5 @@
     "name": "sct/overseerr",
     "version": "preview-test-node-18",
     "date": "2023-11-06T10:21:37Z"
-  },
-  {
-    "name": "deepch/RTSPtoWeb",
-    "version": "v2.4.3",
-    "date": "2023-03-29T12:05:02Z"
   }
 ]
