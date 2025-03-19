@@ -74,7 +74,7 @@ export NEXT_TELEMETRY_DISABLED=1
 cd /opt/fluid-calendar
 $STD npm install --legacy-peer-deps
 $STD npm run prisma:generate
-$STD npm run prisma:migrate
+$STD npx prisma migrate deploy
 $STD npm run build:os
 msg_ok "Setup ${APPLICATION}"
 
