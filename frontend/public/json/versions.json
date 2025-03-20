@@ -1,5 +1,50 @@
 [
   {
+    "name": "ellite/Wallos",
+    "version": "v2.47.1",
+    "date": "2025-03-19T23:30:33Z"
+  },
+  {
+    "name": "influxdata/influxdb",
+    "version": "v3.0.0-0.beta.1",
+    "date": "2025-03-19T22:25:30Z"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2025.2.2",
+    "date": "2025-03-03T08:23:30Z"
+  },
+  {
+    "name": "fhem/fhem-mirror",
+    "version": "6.2",
+    "date": "2025-03-19T20:32:24Z"
+  },
+  {
+    "name": "NodeBB/NodeBB",
+    "version": "v4.2.0",
+    "date": "2025-03-19T18:34:01Z"
+  },
+  {
+    "name": "AdguardTeam/AdGuardHome",
+    "version": "v0.107.58",
+    "date": "2025-03-19T16:29:42Z"
+  },
+  {
+    "name": "zwave-js/zwave-js-ui",
+    "version": "v10.0.2",
+    "date": "2025-03-19T14:47:05Z"
+  },
+  {
+    "name": "seanmorley15/AdventureLog",
+    "version": "v0.9.0",
+    "date": "2025-03-19T13:30:02Z"
+  },
+  {
+    "name": "hakimel/reveal.js",
+    "version": "5.2.0",
+    "date": "2025-03-19T11:03:56Z"
+  },
+  {
     "name": "Luligu/matterbridge",
     "version": "2.2.5",
     "date": "2025-03-19T09:11:26Z"
@@ -8,11 +53,6 @@
     "name": "forgejo/forgejo",
     "version": "v7.0.14",
     "date": "2025-03-19T08:53:16Z"
-  },
-  {
-    "name": "zwave-js/zwave-js-ui",
-    "version": "v10.0.0",
-    "date": "2025-03-19T08:16:12Z"
   },
   {
     "name": "Checkmk/checkmk",
@@ -30,11 +70,6 @@
     "date": "2025-03-19T04:30:53Z"
   },
   {
-    "name": "fhem/fhem-mirror",
-    "version": "6.2",
-    "date": "2025-03-19T01:59:46Z"
-  },
-  {
     "name": "pocket-id/pocket-id",
     "version": "v0.42.1",
     "date": "2025-03-18T22:03:53Z"
@@ -43,11 +78,6 @@
     "name": "Donkie/Spoolman",
     "version": "v0.22.1",
     "date": "2025-03-18T21:01:22Z"
-  },
-  {
-    "name": "esphome/esphome",
-    "version": "2025.2.2",
-    "date": "2025-03-03T08:23:30Z"
   },
   {
     "name": "keycloak/keycloak",
@@ -91,8 +121,8 @@
   },
   {
     "name": "n8n-io/n8n",
-    "version": "n8n@1.83.2",
-    "date": "2025-03-14T15:43:23Z"
+    "version": "n8n@1.84.0",
+    "date": "2025-03-17T13:58:36Z"
   },
   {
     "name": "zabbix/zabbix",
@@ -390,11 +420,6 @@
     "date": "2024-12-02T08:46:29Z"
   },
   {
-    "name": "NodeBB/NodeBB",
-    "version": "v4.1.1",
-    "date": "2025-03-12T23:10:23Z"
-  },
-  {
     "name": "diced/zipline",
     "version": "v4.0.1",
     "date": "2025-03-12T22:41:17Z"
@@ -458,11 +483,6 @@
     "name": "stonith404/pingvin-share",
     "version": "v1.10.3",
     "date": "2025-03-10T20:36:59Z"
-  },
-  {
-    "name": "AdguardTeam/AdGuardHome",
-    "version": "v0.107.57",
-    "date": "2025-02-20T14:58:55Z"
   },
   {
     "name": "icereed/paperless-gpt",
@@ -533,11 +553,6 @@
     "name": "hargata/lubelog",
     "version": "v1.4.5",
     "date": "2025-03-06T19:43:48Z"
-  },
-  {
-    "name": "ellite/Wallos",
-    "version": "v2.46.1",
-    "date": "2025-03-06T16:29:30Z"
   },
   {
     "name": "eclipse-mosquitto/mosquitto",
@@ -950,11 +965,6 @@
     "date": "2025-01-15T19:13:33Z"
   },
   {
-    "name": "influxdata/influxdb",
-    "version": "v1.10.8",
-    "date": "2025-01-15T09:31:05Z"
-  },
-  {
     "name": "linkwarden/linkwarden",
     "version": "v2.9.3",
     "date": "2025-01-13T16:19:53Z"
@@ -973,11 +983,6 @@
     "name": "ErsatzTV/ErsatzTV",
     "version": "v25.1.0",
     "date": "2025-01-10T18:14:54Z"
-  },
-  {
-    "name": "seanmorley15/AdventureLog",
-    "version": "v0.8.0",
-    "date": "2025-01-08T14:27:50Z"
   },
   {
     "name": "nicolargo/glances",
@@ -1150,7 +1155,7 @@
     "date": "2020-06-07T07:27:04Z"
   },
   {
-    "name": "gnmyt/myspeed",
+    "name": "gnmyt/MySpeed",
     "version": "v1.0.9",
     "date": "2024-05-21T22:15:33Z"
   },
@@ -1168,11 +1173,6 @@
     "name": "monicahq/monica",
     "version": "v4.1.2",
     "date": "2024-05-04T08:06:50Z"
-  },
-  {
-    "name": "hakimel/reveal.js",
-    "version": "5.1.0",
-    "date": "2024-04-11T07:03:04Z"
   },
   {
     "name": "thelounge/thelounge-deb",
