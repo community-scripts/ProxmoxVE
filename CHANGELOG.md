@@ -16,6 +16,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-03-20
 
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - Netdata: Update to newer deb File [@MickLesk](https://github.com/MickLesk) ([#3276](https://github.com/community-scripts/ProxmoxVE/pull/3276))
+
 ## 2025-03-19
 
 ### 🚀 Updated Scripts
