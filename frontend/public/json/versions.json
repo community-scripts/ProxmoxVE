@@ -1,8 +1,63 @@
 [
   {
+    "name": "ipfs/kubo",
+    "version": "v0.34.0",
+    "date": "2025-03-20T21:51:05Z"
+  },
+  {
+    "name": "pocket-id/pocket-id",
+    "version": "v0.43.1",
+    "date": "2025-03-20T20:38:06Z"
+  },
+  {
     "name": "fhem/fhem-mirror",
     "version": "6.2",
-    "date": "2025-03-20T10:33:53Z"
+    "date": "2025-03-20T20:29:19Z"
+  },
+  {
+    "name": "stonith404/pingvin-share",
+    "version": "v1.10.4",
+    "date": "2025-03-20T18:56:10Z"
+  },
+  {
+    "name": "dotnetfactory/fluid-calendar",
+    "version": "v1.2.3",
+    "date": "2025-03-20T17:54:55Z"
+  },
+  {
+    "name": "ellite/Wallos",
+    "version": "v2.48.0",
+    "date": "2025-03-20T16:57:43Z"
+  },
+  {
+    "name": "HabitRPG/habitica",
+    "version": "v5.34.4",
+    "date": "2025-03-20T16:54:45Z"
+  },
+  {
+    "name": "AdguardTeam/AdGuardHome",
+    "version": "v0.107.58",
+    "date": "2025-03-19T16:29:42Z"
+  },
+  {
+    "name": "neo4j/neo4j",
+    "version": "4.4.42",
+    "date": "2025-03-20T14:44:17Z"
+  },
+  {
+    "name": "ZoeyVid/NPMplus",
+    "version": "2025-03-20-r1",
+    "date": "2025-03-20T14:32:21Z"
+  },
+  {
+    "name": "redis/redis",
+    "version": "8.0-rc1",
+    "date": "2025-03-11T18:16:27Z"
+  },
+  {
+    "name": "zwave-js/zwave-js-ui",
+    "version": "v10.0.3",
+    "date": "2025-03-20T12:56:27Z"
   },
   {
     "name": "Stirling-Tools/Stirling-PDF",
@@ -50,11 +105,6 @@
     "date": "2025-02-26T19:07:11Z"
   },
   {
-    "name": "ellite/Wallos",
-    "version": "v2.47.1",
-    "date": "2025-03-19T23:30:33Z"
-  },
-  {
     "name": "influxdata/influxdb",
     "version": "v3.0.0-0.beta.1",
     "date": "2025-03-19T22:25:30Z"
@@ -68,16 +118,6 @@
     "name": "NodeBB/NodeBB",
     "version": "v4.2.0",
     "date": "2025-03-19T18:34:01Z"
-  },
-  {
-    "name": "AdguardTeam/AdGuardHome",
-    "version": "v0.107.58",
-    "date": "2025-03-19T16:29:42Z"
-  },
-  {
-    "name": "zwave-js/zwave-js-ui",
-    "version": "v10.0.2",
-    "date": "2025-03-19T14:47:05Z"
   },
   {
     "name": "seanmorley15/AdventureLog",
@@ -110,19 +150,9 @@
     "date": "2025-03-19T04:30:53Z"
   },
   {
-    "name": "pocket-id/pocket-id",
-    "version": "v0.42.1",
-    "date": "2025-03-18T22:03:53Z"
-  },
-  {
     "name": "Donkie/Spoolman",
     "version": "v0.22.1",
     "date": "2025-03-18T21:01:22Z"
-  },
-  {
-    "name": "dotnetfactory/fluid-calendar",
-    "version": "v1.2.2",
-    "date": "2025-03-18T18:47:36Z"
   },
   {
     "name": "zitadel/zitadel",
@@ -186,8 +216,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v3.10.0",
-    "date": "2025-03-15T14:38:16Z"
+    "version": "nightly",
+    "date": "2025-03-18T07:27:47Z"
   },
   {
     "name": "authelia/authelia",
@@ -233,11 +263,6 @@
     "name": "TriliumNext/Notes",
     "version": "v0.92.4",
     "date": "2025-03-17T16:00:19Z"
-  },
-  {
-    "name": "HabitRPG/habitica",
-    "version": "v5.34.3",
-    "date": "2025-03-17T14:20:04Z"
   },
   {
     "name": "Graylog2/graylog2-server",
@@ -310,11 +335,6 @@
     "date": "2025-03-16T08:51:41Z"
   },
   {
-    "name": "redis/redis",
-    "version": "8.0-m04",
-    "date": "2025-03-16T08:12:40Z"
-  },
-  {
     "name": "Kozea/Radicale",
     "version": "v3.5.0",
     "date": "2025-03-16T06:05:55Z"
@@ -373,11 +393,6 @@
     "name": "Threadfin/Threadfin",
     "version": "1.2.31",
     "date": "2025-03-14T22:04:10Z"
-  },
-  {
-    "name": "ipfs/kubo",
-    "version": "v0.33.2",
-    "date": "2025-02-14T00:24:56Z"
   },
   {
     "name": "paperless-ngx/paperless-ngx",
@@ -470,11 +485,6 @@
     "date": "2025-03-11T12:47:22Z"
   },
   {
-    "name": "neo4j/neo4j",
-    "version": "5.26.4",
-    "date": "2025-03-11T10:52:05Z"
-  },
-  {
     "name": "Ombi-app/Ombi",
     "version": "v4.47.1",
     "date": "2025-01-05T21:14:23Z"
@@ -488,11 +498,6 @@
     "name": "stackblitz-labs/bolt.diy",
     "version": "v0.0.7-hf1",
     "date": "2025-03-10T20:49:39Z"
-  },
-  {
-    "name": "stonith404/pingvin-share",
-    "version": "v1.10.3",
-    "date": "2025-03-10T20:36:59Z"
   },
   {
     "name": "icereed/paperless-gpt",
@@ -703,11 +708,6 @@
     "name": "benzino77/tasmocompiler",
     "version": "v12.5.0",
     "date": "2025-02-25T14:55:50Z"
-  },
-  {
-    "name": "ZoeyVid/NPMplus",
-    "version": "2025-02-25-r1",
-    "date": "2025-02-25T13:26:41Z"
   },
   {
     "name": "traefik/traefik",
