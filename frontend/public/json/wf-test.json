@@ -1,0 +1,39 @@
+{
+    "name": "Wazuh",
+    "slug": "wazuh",
+    "categories": [
+        1
+    ],
+    "date_created": "2025-03-19",
+    "type": "ct",
+    "updateable": false,
+    "privileged": false,
+    "interface_port": 443,
+    "documentation": "https://documentation.wazuh.com/",
+    "website": "https://wazuh.com/",
+    "logo": "https://avatars.githubusercontent.com/u/13752566?s=200&v=4",
+    "description": "Wazuh is an open-source security monitoring solution that provides endpoint protection, network monitoring, and log analysis capabilities.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/wazuh.sh",
+            "resources": {
+                "cpu": 4,
+                "ram": 4096,
+                "hdd": 10,
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": "root",
+        "password": null
+    },
+    "notes": [
+        {
+            "text": "WARNING: Installation sources scripts outside of Community Scripts repo. Please check the source before installing.",
+            "type": "warning"
+        }
+    ]
+}
