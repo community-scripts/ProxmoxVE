@@ -34,7 +34,7 @@ wget -qO /etc/apt/trusted.gpg.d/zulu-repo.asc "https://keyserver.ubuntu.com/pks/
 wget -q https://cdn.azul.com/zulu/bin/zulu-repo_1.0.0-3_all.deb
 $STD dpkg -i zulu-repo_1.0.0-3_all.deb
 $STD apt-get update
-$STD apt-get -y install zulu21-jdk
+$STD apt-get -y install zulu21-jre-headless
 msg_ok "Installed Azul Zulu Java"
 
 msg_info "Installing libssl (if needed)"

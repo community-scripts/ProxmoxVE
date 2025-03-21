@@ -46,7 +46,7 @@ function update_script() {
   java_version=$(java -version 2>&1 | awk -F[\"_] '/version/ {print $2}')
   if [[ "$java_version" =~ ^1\.8\.* ]]; then
       $STD apt-get remove --purge -y zulu8-jdk
-      $STD apt-get -y install zulu21-jdk
+      $STD apt-get -y install zulu21-jre-headless
       msg_ok "Updated Azul Zulu Java to 21"
   else
       msg_ok "Azul Zulu Java 21 already installed"
