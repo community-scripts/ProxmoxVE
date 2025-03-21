@@ -41,9 +41,17 @@ function update_script() {
         tar -xzf $temp_file
         cp -rf GoMFT-${RELEASE}/* /opt/gomft
         cd /opt/gomft
+<<<<<<< HEAD
         $STD go mod download
         $STD go build -o gomft
         $STD $HOME/go/bin/templ generate
+=======
+        $STD $HOME/go/bin/templ generate
+        export CGO_ENABLED=1
+        export GOOS=linux
+        $STD go mod download
+        $STD go build -o gomft
+>>>>>>> 67217457 (Fix dependency)
         chmod +x /opt/gomft/gomft
         echo "${RELEASE}" >/opt/${APP}_version.txt
         msg_ok "Updated $APP to ${RELEASE}"
