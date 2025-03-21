@@ -20,51 +20,51 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
+  header_info
+  check_container_storage
+  check_container_resources
 
-    if [[ ! -d "/opt/gomft" ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    RELEASE=$(curl -s https://api.github.com/repos/StarFleetCPTN/GoMFT/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-    if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
-        msg_info "Stopping $APP"
-        systemctl stop gomft
-        msg_ok "Stopped $APP"
-
-        msg_info "Updating $APP to ${RELEASE}"
-        rm -f /opt/gomft/gomft
-        temp_file=$(mktemp)
-        wget -q "https://github.com/StarFleetCPTN/GoMFT/archive/refs/tags/v${RELEASE}.tar.gz" -O $temp_file
-        tar -xzf $temp_file
-        cp -rf GoMFT-${RELEASE}/* /opt/gomft
-        cd /opt/gomft
-        $STD go mod download
-        $STD go install github.com/a-h/templ/cmd/templ@latest
-        $STD $HOME/go/bin/templ generate
-        export CGO_ENABLED=1
-        export GOOS=linux
-        $STD go build -o gomft
-        chmod +x /opt/gomft/gomft
-        echo "${RELEASE}" >/opt/${APP}_version.txt
-        msg_ok "Updated $APP to ${RELEASE}"
-
-        msg_info "Cleaning Up"
-        rm -f $temp_file
-        rm -rf GoMFT-${RELEASE}
-        msg_ok "Cleanup Complete"
-
-        msg_info "Starting $APP"
-        systemctl start gomft
-        msg_ok "Started $APP"
-
-        msg_ok "Update Successful"
-    else
-        msg_ok "No update required. ${APP} is already at ${RELEASE}"
-    fi
+  if [[ ! -d "/opt/gomft" ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+  RELEASE=$(curl -s https://api.github.com/repos/StarFleetCPTN/GoMFT/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+  if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
+    msg_info "Stopping $APP"
+    systemctl stop gomft
+    msg_ok "Stopped $APP"
+
+    msg_info "Updating $APP to ${RELEASE}"
+    rm -f /opt/gomft/gomft
+    temp_file=$(mktemp)
+    wget -q "https://github.com/StarFleetCPTN/GoMFT/archive/refs/tags/v${RELEASE}.tar.gz" -O $temp_file
+    tar -xzf $temp_file
+    cp -rf GoMFT-${RELEASE}/* /opt/gomft
+    cd /opt/gomft
+    $STD go mod download
+    $STD go install github.com/a-h/templ/cmd/templ@latest
+    $STD $HOME/go/bin/templ generate
+    export CGO_ENABLED=1
+    export GOOS=linux
+    $STD go build -o gomft
+    chmod +x /opt/gomft/gomft
+    echo "${RELEASE}" >/opt/${APP}_version.txt
+    msg_ok "Updated $APP to ${RELEASE}"
+
+    msg_info "Cleaning Up"
+    rm -f $temp_file
+    rm -rf GoMFT-${RELEASE}
+    msg_ok "Cleanup Complete"
+
+    msg_info "Starting $APP"
+    systemctl start gomft
+    msg_ok "Started $APP"
+
+    msg_ok "Update Successful"
+  else
+    msg_ok "No update required. ${APP} is already at ${RELEASE}"
+  fi
+  exit
 }
 
 start
