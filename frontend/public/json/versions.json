@@ -1,5 +1,45 @@
 [
   {
+    "name": "AdguardTeam/AdGuardHome",
+    "version": "v0.107.59",
+    "date": "2025-03-21T11:11:39Z"
+  },
+  {
+    "name": "openobserve/openobserve",
+    "version": "v0.14.5-rc5",
+    "date": "2025-03-21T10:50:34Z"
+  },
+  {
+    "name": "fhem/fhem-mirror",
+    "version": "6.2",
+    "date": "2025-03-21T10:32:59Z"
+  },
+  {
+    "name": "zwave-js/zwave-js-ui",
+    "version": "v10.1.0",
+    "date": "2025-03-21T09:17:45Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.1",
+    "date": "2025-01-01T16:15:52Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1672",
+    "date": "2025-03-21T05:51:00Z"
+  },
+  {
+    "name": "StarFleetCPTN/GoMFT",
+    "version": "v0.1.18",
+    "date": "2025-03-21T04:36:04Z"
+  },
+  {
+    "name": "jhuckaby/Cronicle",
+    "version": "v0.9.77",
+    "date": "2025-03-21T02:25:42Z"
+  },
+  {
     "name": "ipfs/kubo",
     "version": "v0.34.0",
     "date": "2025-03-20T21:51:05Z"
@@ -10,9 +50,9 @@
     "date": "2025-03-20T20:38:06Z"
   },
   {
-    "name": "fhem/fhem-mirror",
-    "version": "6.2",
-    "date": "2025-03-20T20:29:19Z"
+    "name": "keycloak/keycloak",
+    "version": "26.1.4",
+    "date": "2025-03-13T15:41:42Z"
   },
   {
     "name": "stonith404/pingvin-share",
@@ -25,6 +65,11 @@
     "date": "2025-03-20T17:54:55Z"
   },
   {
+    "name": "runtipi/runtipi",
+    "version": "v3.10.0",
+    "date": "2025-03-15T14:38:16Z"
+  },
+  {
     "name": "ellite/Wallos",
     "version": "v2.48.0",
     "date": "2025-03-20T16:57:43Z"
@@ -33,11 +78,6 @@
     "name": "HabitRPG/habitica",
     "version": "v5.34.4",
     "date": "2025-03-20T16:54:45Z"
-  },
-  {
-    "name": "AdguardTeam/AdGuardHome",
-    "version": "v0.107.58",
-    "date": "2025-03-19T16:29:42Z"
   },
   {
     "name": "neo4j/neo4j",
@@ -53,11 +93,6 @@
     "name": "redis/redis",
     "version": "8.0-rc1",
     "date": "2025-03-11T18:16:27Z"
-  },
-  {
-    "name": "zwave-js/zwave-js-ui",
-    "version": "v10.0.3",
-    "date": "2025-03-20T12:56:27Z"
   },
   {
     "name": "Stirling-Tools/Stirling-PDF",
@@ -90,11 +125,6 @@
     "date": "2025-03-20T06:59:18Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1669",
-    "date": "2025-03-20T05:56:41Z"
-  },
-  {
     "name": "esphome/esphome",
     "version": "2025.3.0",
     "date": "2025-03-20T04:37:16Z"
@@ -108,11 +138,6 @@
     "name": "influxdata/influxdb",
     "version": "v3.0.0-0.beta.1",
     "date": "2025-03-19T22:25:30Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.1.4",
-    "date": "2025-03-13T15:41:42Z"
   },
   {
     "name": "NodeBB/NodeBB",
@@ -143,11 +168,6 @@
     "name": "Checkmk/checkmk",
     "version": "v2.3.0p29",
     "date": "2025-03-19T07:42:50Z"
-  },
-  {
-    "name": "StarFleetCPTN/GoMFT",
-    "version": "v0.1.16",
-    "date": "2025-03-19T04:30:53Z"
   },
   {
     "name": "Donkie/Spoolman",
@@ -190,11 +210,6 @@
     "date": "2025-03-18T14:10:32Z"
   },
   {
-    "name": "openobserve/openobserve",
-    "version": "v0.14.5-rc4",
-    "date": "2025-03-18T13:51:56Z"
-  },
-  {
     "name": "crowdsecurity/crowdsec",
     "version": "v1.6.6",
     "date": "2025-03-18T13:05:01Z"
@@ -213,11 +228,6 @@
     "name": "nzbgetcom/nzbget",
     "version": "v24.8",
     "date": "2025-03-18T07:33:51Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-03-18T07:27:47Z"
   },
   {
     "name": "authelia/authelia",
@@ -273,11 +283,6 @@
     "name": "home-assistant/operating-system",
     "version": "15.0",
     "date": "2025-03-17T10:26:18Z"
-  },
-  {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.1",
-    "date": "2025-01-01T16:15:52Z"
   },
   {
     "name": "webmin/webmin",
@@ -663,11 +668,6 @@
     "name": "photoprism/photoprism",
     "version": "250228-43447fa38",
     "date": "2025-02-28T15:18:09Z"
-  },
-  {
-    "name": "jhuckaby/Cronicle",
-    "version": "v0.9.76",
-    "date": "2025-02-28T03:15:18Z"
   },
   {
     "name": "jordan-dalby/ByteStash",
