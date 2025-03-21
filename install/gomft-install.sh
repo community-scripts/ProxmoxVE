@@ -48,6 +48,7 @@ $STD $HOME/go/bin/templ generate
 export CGO_ENABLED=1
 export GOOS=linux
 $STD go build -o gomft
+chmod +x /opt/gomft/gomft
 JWT_SECRET_KEY=$(openssl rand -base64 24 | tr -d '/+=')
 
 cat <<EOF >/opt/gomft/.env
