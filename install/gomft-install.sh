@@ -35,16 +35,17 @@ set -o pipefail
 msg_ok "Setup Golang"
 
 msg_info "Setup ${APPLICATION}"
-temp_file2=$(mktemp)
+temp_file=$(mktemp)
 RELEASE=$(curl -s https://api.github.com/repos/StarFleetCPTN/GoMFT/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-wget -q "https://github.com/StarFleetCPTN/GoMFT/archive/refs/tags/v${RELEASE}.tar.gz" -O $temp_file2
-tar -xzf $temp_file2
+wget -q "https://github.com/StarFleetCPTN/GoMFT/archive/refs/tags/v${RELEASE}.tar.gz" -O $temp_file
+tar -xzf $temp_file
 mv GoMFT-${RELEASE}/ /opt/gomft
 cd /opt/gomft
-$STD go install github.com/a-h/templ/cmd/templ@latest
-wget -q "https://github.com/StarFleetCPTN/GoMFT/releases/download/v${RELEASE}/gomft-v${RELEASE}-linux-amd64" -O gomft
-$STD $HOME/go/bin/templ generate
+$STD go mod download
+$STD go build -o gomft
 chmod +x gomft
+$STD go install github.com/a-h/templ/cmd/templ@latest
+$STD $HOME/go/bin/templ generate
 JWT_SECRET_KEY=$(openssl rand -base64 24 | tr -d '/+=')
 
 cat <<EOF >/opt/gomft/.env
@@ -93,7 +94,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -f $temp_file $temp_file2
+rm -f $temp_file
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
