@@ -1,5 +1,75 @@
 [
   {
+    "name": "ollama/ollama",
+    "version": "v0.6.3-rc0",
+    "date": "2025-03-21T21:47:13Z"
+  },
+  {
+    "name": "netbox-community/netbox",
+    "version": "v4.2.6",
+    "date": "2025-03-21T21:20:29Z"
+  },
+  {
+    "name": "sabnzbd/sabnzbd",
+    "version": "4.4.1",
+    "date": "2024-12-20T13:21:31Z"
+  },
+  {
+    "name": "fhem/fhem-mirror",
+    "version": "6.2",
+    "date": "2025-03-21T20:27:25Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.3.4",
+    "date": "2025-03-21T20:22:46Z"
+  },
+  {
+    "name": "leiweibau/Pi.Alert",
+    "version": "v2025-03-21",
+    "date": "2025-03-21T19:50:46Z"
+  },
+  {
+    "name": "clusterzx/paperless-ai",
+    "version": "v2.7.6",
+    "date": "2025-03-21T19:24:53Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "develop-20250222.4",
+    "date": "2025-02-22T16:26:15Z"
+  },
+  {
+    "name": "homarr-labs/homarr",
+    "version": "v1.12.0",
+    "date": "2025-03-21T19:14:59Z"
+  },
+  {
+    "name": "influxdata/influxdb",
+    "version": "v1.12.0rc0",
+    "date": "2025-03-21T17:24:38Z"
+  },
+  {
+    "name": "documenso/documenso",
+    "version": "v1.10.0-rc.0",
+    "date": "2025-03-21T16:23:23Z"
+  },
+  {
+    "name": "ZoeyVid/NPMplus",
+    "version": "2025-03-21-r1",
+    "date": "2025-03-21T14:54:00Z"
+  },
+  {
+    "name": "forgejo/forgejo",
+    "version": "v10.0.2",
+    "date": "2025-03-21T12:34:48Z"
+  },
+  {
+    "name": "photoprism/photoprism",
+    "version": "250321-57590c48b",
+    "date": "2025-03-21T11:48:16Z"
+  },
+  {
     "name": "AdguardTeam/AdGuardHome",
     "version": "v0.107.59",
     "date": "2025-03-21T11:11:39Z"
@@ -8,11 +78,6 @@
     "name": "openobserve/openobserve",
     "version": "v0.14.5-rc5",
     "date": "2025-03-21T10:50:34Z"
-  },
-  {
-    "name": "fhem/fhem-mirror",
-    "version": "6.2",
-    "date": "2025-03-21T10:32:59Z"
   },
   {
     "name": "zwave-js/zwave-js-ui",
@@ -66,8 +131,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v3.10.0",
-    "date": "2025-03-15T14:38:16Z"
+    "version": "nightly",
+    "date": "2025-03-20T17:49:45Z"
   },
   {
     "name": "ellite/Wallos",
@@ -85,11 +150,6 @@
     "date": "2025-03-20T14:44:17Z"
   },
   {
-    "name": "ZoeyVid/NPMplus",
-    "version": "2025-03-20-r1",
-    "date": "2025-03-20T14:32:21Z"
-  },
-  {
     "name": "redis/redis",
     "version": "8.0-rc1",
     "date": "2025-03-11T18:16:27Z"
@@ -103,11 +163,6 @@
     "name": "jenkinsci/jenkins",
     "version": "jenkins-2.502",
     "date": "2025-03-18T15:02:59Z"
-  },
-  {
-    "name": "clusterzx/paperless-ai",
-    "version": "v2.7.5",
-    "date": "2025-03-20T08:45:10Z"
   },
   {
     "name": "wazuh/wazuh",
@@ -135,11 +190,6 @@
     "date": "2025-02-26T19:07:11Z"
   },
   {
-    "name": "influxdata/influxdb",
-    "version": "v3.0.0-0.beta.1",
-    "date": "2025-03-19T22:25:30Z"
-  },
-  {
     "name": "NodeBB/NodeBB",
     "version": "v4.2.0",
     "date": "2025-03-19T18:34:01Z"
@@ -158,11 +208,6 @@
     "name": "Luligu/matterbridge",
     "version": "2.2.5",
     "date": "2025-03-19T09:11:26Z"
-  },
-  {
-    "name": "forgejo/forgejo",
-    "version": "v7.0.14",
-    "date": "2025-03-19T08:53:16Z"
   },
   {
     "name": "Checkmk/checkmk",
@@ -235,11 +280,6 @@
     "date": "2025-03-18T03:57:41Z"
   },
   {
-    "name": "ollama/ollama",
-    "version": "v0.6.2",
-    "date": "2025-03-18T03:11:33Z"
-  },
-  {
     "name": "advplyr/audiobookshelf",
     "version": "v2.20.0",
     "date": "2025-03-17T22:44:56Z"
@@ -293,11 +333,6 @@
     "name": "fallenbagel/jellyseerr",
     "version": "v2.5.1",
     "date": "2025-03-17T03:18:32Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "develop-20250222.4",
-    "date": "2025-02-22T16:26:15Z"
   },
   {
     "name": "glanceapp/glance",
@@ -405,19 +440,9 @@
     "date": "2025-03-14T18:05:28Z"
   },
   {
-    "name": "homarr-labs/homarr",
-    "version": "v1.11.0",
-    "date": "2025-03-14T19:14:52Z"
-  },
-  {
     "name": "FlowiseAI/Flowise",
     "version": "flowise@2.2.7-patch.1",
     "date": "2025-03-14T14:53:53Z"
-  },
-  {
-    "name": "home-assistant/core",
-    "version": "2025.3.3",
-    "date": "2025-03-14T11:58:45Z"
   },
   {
     "name": "docker/compose",
@@ -550,11 +575,6 @@
     "date": "2025-03-08T06:08:04Z"
   },
   {
-    "name": "documenso/documenso",
-    "version": "v1.9.1-rc.9",
-    "date": "2025-03-07T23:28:53Z"
-  },
-  {
     "name": "rogerfar/rdt-client",
     "version": "v2.0.102",
     "date": "2025-03-07T20:48:46Z"
@@ -578,11 +598,6 @@
     "name": "Dolibarr/dolibarr",
     "version": "21.0.0",
     "date": "2025-03-06T16:20:45Z"
-  },
-  {
-    "name": "netbox-community/netbox",
-    "version": "v4.2.5",
-    "date": "2025-03-06T15:11:52Z"
   },
   {
     "name": "open-webui/open-webui",
@@ -663,11 +678,6 @@
     "name": "grocy/grocy",
     "version": "v4.4.2",
     "date": "2025-02-28T16:26:05Z"
-  },
-  {
-    "name": "photoprism/photoprism",
-    "version": "250228-43447fa38",
-    "date": "2025-02-28T15:18:09Z"
   },
   {
     "name": "jordan-dalby/ByteStash",
@@ -770,11 +780,6 @@
     "date": "2025-02-21T17:55:59Z"
   },
   {
-    "name": "sabnzbd/sabnzbd",
-    "version": "4.4.1",
-    "date": "2024-12-20T13:21:31Z"
-  },
-  {
     "name": "grafana/grafana",
     "version": "v11.5.2",
     "date": "2025-02-19T00:12:27Z"
@@ -788,11 +793,6 @@
     "name": "prometheus-pve/prometheus-pve-exporter",
     "version": "v3.5.2",
     "date": "2025-02-18T16:43:41Z"
-  },
-  {
-    "name": "leiweibau/Pi.Alert",
-    "version": "v2025-02-16",
-    "date": "2025-02-18T15:50:08Z"
   },
   {
     "name": "typesense/typesense",
