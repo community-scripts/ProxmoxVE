@@ -14,6 +14,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 All LXC instances created using this repository come pre-installed with Midnight Commander, which is a command-line tool (`mc`) that offers a user-friendly file and directory management interface for the terminal environment.
 
 
+## 2025-03-22
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Cronicle: add missing gnupg package [@MickLesk](https://github.com/MickLesk) ([#3323](https://github.com/community-scripts/ProxmoxVE/pull/3323))
+
 ## 2025-03-21
 
 ### 🚀 Updated Scripts
