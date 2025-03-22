@@ -22,6 +22,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - Cronicle: add missing gnupg package [@MickLesk](https://github.com/MickLesk) ([#3323](https://github.com/community-scripts/ProxmoxVE/pull/3323))
 
+  - #### ✨ New Features
+
+    - Update nextcloud-vm.sh to 18.1 ISO [@0xN0BADC0FF33](https://github.com/0xN0BADC0FF33) ([#3333](https://github.com/community-scripts/ProxmoxVE/pull/3333))
+
 ## 2025-03-21
 
 ### 🚀 Updated Scripts
