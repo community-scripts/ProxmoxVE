@@ -1,8 +1,33 @@
 [
   {
+    "name": "dgtlmoon/changedetection.io",
+    "version": "0.49.5",
+    "date": "2025-03-22T21:58:07Z"
+  },
+  {
     "name": "fhem/fhem-mirror",
     "version": "6.2",
-    "date": "2025-03-22T10:31:21Z"
+    "date": "2025-03-22T20:27:13Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.19.1",
+    "date": "2025-03-22T17:57:11Z"
+  },
+  {
+    "name": "hoarder-app/hoarder",
+    "version": "sdk/v0.23.0",
+    "date": "2025-03-22T17:26:10Z"
+  },
+  {
+    "name": "nicolargo/glances",
+    "version": "v4.3.1",
+    "date": "2025-03-22T16:51:36Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.10",
+    "date": "2025-03-22T13:02:26Z"
   },
   {
     "name": "documenso/documenso",
@@ -53,11 +78,6 @@
     "name": "clusterzx/paperless-ai",
     "version": "v2.7.6",
     "date": "2025-03-21T19:24:53Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "develop-20250222.4",
-    "date": "2025-02-22T16:26:15Z"
   },
   {
     "name": "homarr-labs/homarr",
@@ -136,8 +156,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v3.10.0",
-    "date": "2025-03-15T14:38:16Z"
+    "version": "nightly",
+    "date": "2025-03-20T17:49:45Z"
   },
   {
     "name": "ellite/Wallos",
@@ -360,11 +380,6 @@
     "date": "2025-03-16T12:51:00Z"
   },
   {
-    "name": "hoarder-app/hoarder",
-    "version": "ios/v1.6.9-0",
-    "date": "2025-03-16T12:48:20Z"
-  },
-  {
     "name": "YunoHost/yunohost",
     "version": "debian/12.0.12",
     "date": "2025-03-16T11:59:24Z"
@@ -398,11 +413,6 @@
     "name": "bunkerity/bunkerweb",
     "version": "v1.6.1",
     "date": "2025-03-15T17:29:17Z"
-  },
-  {
-    "name": "msgbyte/tianji",
-    "version": "v1.18.22",
-    "date": "2025-03-15T13:36:57Z"
   },
   {
     "name": "duplicati/duplicati",
@@ -463,11 +473,6 @@
     "name": "usememos/memos",
     "version": "v0.24.1",
     "date": "2025-03-13T14:08:30Z"
-  },
-  {
-    "name": "dgtlmoon/changedetection.io",
-    "version": "0.49.4",
-    "date": "2025-03-13T11:08:16Z"
   },
   {
     "name": "moghtech/komodo",
@@ -983,11 +988,6 @@
     "name": "ErsatzTV/ErsatzTV",
     "version": "v25.1.0",
     "date": "2025-01-10T18:14:54Z"
-  },
-  {
-    "name": "nicolargo/glances",
-    "version": "v4.3.0.8",
-    "date": "2025-01-05T13:55:13Z"
   },
   {
     "name": "MagicMirrorOrg/MagicMirror",
