@@ -1,13 +1,73 @@
 [
   {
-    "name": "dgtlmoon/changedetection.io",
-    "version": "0.49.5",
-    "date": "2025-03-22T21:58:07Z"
+    "name": "Lidarr/Lidarr",
+    "version": "v2.10.3.4602",
+    "date": "2025-03-23T11:00:37Z"
   },
   {
     "name": "fhem/fhem-mirror",
     "version": "6.2",
-    "date": "2025-03-22T20:27:13Z"
+    "date": "2025-03-23T10:30:16Z"
+  },
+  {
+    "name": "YunoHost/yunohost",
+    "version": "debian/12.1.3",
+    "date": "2025-03-23T09:08:41Z"
+  },
+  {
+    "name": "nicolargo/glances",
+    "version": "v4.3.1",
+    "date": "2025-03-23T09:02:54Z"
+  },
+  {
+    "name": "forgejo/forgejo",
+    "version": "v10.0.3",
+    "date": "2025-03-23T08:58:24Z"
+  },
+  {
+    "name": "Radarr/Radarr",
+    "version": "v5.20.2.9777",
+    "date": "2025-03-18T12:11:37Z"
+  },
+  {
+    "name": "Prowlarr/Prowlarr",
+    "version": "v1.32.2.4987",
+    "date": "2025-03-16T09:41:37Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1680",
+    "date": "2025-03-23T06:10:41Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.1",
+    "date": "2025-01-01T16:15:52Z"
+  },
+  {
+    "name": "theonedev/onedev",
+    "version": "v11.7.6",
+    "date": "2025-03-23T05:08:22Z"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2025.3.1",
+    "date": "2025-03-23T04:45:21Z"
+  },
+  {
+    "name": "usememos/memos",
+    "version": "v0.24.2",
+    "date": "2025-03-23T04:01:50Z"
+  },
+  {
+    "name": "OliveTin/OliveTin",
+    "version": "2025.3.23",
+    "date": "2025-03-23T01:38:55Z"
+  },
+  {
+    "name": "dgtlmoon/changedetection.io",
+    "version": "0.49.6",
+    "date": "2025-03-23T01:02:36Z"
   },
   {
     "name": "msgbyte/tianji",
@@ -20,9 +80,9 @@
     "date": "2025-03-22T17:26:10Z"
   },
   {
-    "name": "nicolargo/glances",
-    "version": "v4.3.1",
-    "date": "2025-03-22T16:51:36Z"
+    "name": "keycloak/keycloak",
+    "version": "26.1.4",
+    "date": "2025-03-13T15:41:42Z"
   },
   {
     "name": "firefly-iii/firefly-iii",
@@ -33,11 +93,6 @@
     "name": "documenso/documenso",
     "version": "v1.10.0-rc.1",
     "date": "2025-03-22T06:34:33Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1675",
-    "date": "2025-03-22T05:59:21Z"
   },
   {
     "name": "pocketbase/pocketbase",
@@ -58,11 +113,6 @@
     "name": "sabnzbd/sabnzbd",
     "version": "4.4.1",
     "date": "2024-12-20T13:21:31Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.1.4",
-    "date": "2025-03-13T15:41:42Z"
   },
   {
     "name": "home-assistant/core",
@@ -95,11 +145,6 @@
     "date": "2025-03-21T14:54:00Z"
   },
   {
-    "name": "forgejo/forgejo",
-    "version": "v10.0.2",
-    "date": "2025-03-21T12:34:48Z"
-  },
-  {
     "name": "photoprism/photoprism",
     "version": "250321-57590c48b",
     "date": "2025-03-21T11:48:16Z"
@@ -118,11 +163,6 @@
     "name": "zwave-js/zwave-js-ui",
     "version": "v10.1.0",
     "date": "2025-03-21T09:17:45Z"
-  },
-  {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.1",
-    "date": "2025-01-01T16:15:52Z"
   },
   {
     "name": "StarFleetCPTN/GoMFT",
@@ -156,8 +196,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-03-20T17:49:45Z"
+    "version": "v3.10.0",
+    "date": "2025-03-15T14:38:16Z"
   },
   {
     "name": "ellite/Wallos",
@@ -203,11 +243,6 @@
     "name": "evcc-io/evcc",
     "version": "0.201.1",
     "date": "2025-03-20T06:59:18Z"
-  },
-  {
-    "name": "esphome/esphome",
-    "version": "2025.3.0",
-    "date": "2025-03-20T04:37:16Z"
   },
   {
     "name": "rabbitmq/rabbitmq-server",
@@ -283,11 +318,6 @@
     "name": "crowdsecurity/crowdsec",
     "version": "v1.6.6",
     "date": "2025-03-18T13:05:01Z"
-  },
-  {
-    "name": "Radarr/Radarr",
-    "version": "v5.20.2.9777",
-    "date": "2025-03-18T12:11:37Z"
   },
   {
     "name": "apache/couchdb",
@@ -380,16 +410,6 @@
     "date": "2025-03-16T12:51:00Z"
   },
   {
-    "name": "YunoHost/yunohost",
-    "version": "debian/12.0.12",
-    "date": "2025-03-16T11:59:24Z"
-  },
-  {
-    "name": "Prowlarr/Prowlarr",
-    "version": "v1.32.2.4987",
-    "date": "2025-03-16T09:41:37Z"
-  },
-  {
     "name": "Kozea/Radicale",
     "version": "v3.5.0",
     "date": "2025-03-16T06:05:55Z"
@@ -418,11 +438,6 @@
     "name": "duplicati/duplicati",
     "version": "v2.1.0.111-2.1.0.111_canary_2025-03-15",
     "date": "2025-03-15T11:06:44Z"
-  },
-  {
-    "name": "theonedev/onedev",
-    "version": "vv11.7.5",
-    "date": "2025-03-15T09:53:15Z"
   },
   {
     "name": "henrygd/beszel",
@@ -468,11 +483,6 @@
     "name": "kimai/kimai",
     "version": "2.31.0",
     "date": "2025-03-13T17:13:47Z"
-  },
-  {
-    "name": "usememos/memos",
-    "version": "v0.24.1",
-    "date": "2025-03-13T14:08:30Z"
   },
   {
     "name": "moghtech/komodo",
@@ -553,11 +563,6 @@
     "name": "awawa-dev/HyperHDR",
     "version": "v21.0.0.0",
     "date": "2025-03-09T12:25:44Z"
-  },
-  {
-    "name": "Lidarr/Lidarr",
-    "version": "v2.9.6.4552",
-    "date": "2025-02-03T12:11:00Z"
   },
   {
     "name": "Readarr/Readarr",
@@ -768,11 +773,6 @@
     "name": "TechnitiumSoftware/DnsServer",
     "version": "v13.4.3",
     "date": "2025-02-23T11:08:26Z"
-  },
-  {
-    "name": "OliveTin/OliveTin",
-    "version": "2025.2.21",
-    "date": "2025-02-21T23:09:34Z"
   },
   {
     "name": "azukaar/Cosmos-Server",
