@@ -29,6 +29,10 @@ function update_script() {
     exit
   fi
   RELEASE=$(curl -s https://api.github.com/repos/StarFleetCPTN/GoMFT/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+  if ! dpkg -l | grep -q "^ii.*build-essential"; then
+    $STD apt-get install -y build-essential
+  fi
+
   if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
     msg_info "Stopping $APP"
     systemctl stop gomft
