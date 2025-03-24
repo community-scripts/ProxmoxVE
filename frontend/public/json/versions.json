@@ -1,18 +1,33 @@
 [
   {
+    "name": "fhem/fhem-mirror",
+    "version": "6.2",
+    "date": "2025-03-23T20:28:38Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "nightly",
+    "date": "2025-03-23T18:02:12Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.19.2",
+    "date": "2025-03-23T16:33:14Z"
+  },
+  {
+    "name": "dgtlmoon/changedetection.io",
+    "version": "0.49.7",
+    "date": "2025-03-23T15:51:11Z"
+  },
+  {
     "name": "Lidarr/Lidarr",
     "version": "v2.10.3.4602",
     "date": "2025-03-23T11:00:37Z"
   },
   {
-    "name": "fhem/fhem-mirror",
-    "version": "6.2",
-    "date": "2025-03-23T10:30:16Z"
-  },
-  {
     "name": "YunoHost/yunohost",
-    "version": "debian/12.1.3",
-    "date": "2025-03-23T09:08:41Z"
+    "version": "debian/12.0.12",
+    "date": "2025-03-16T11:59:24Z"
   },
   {
     "name": "nicolargo/glances",
@@ -63,16 +78,6 @@
     "name": "OliveTin/OliveTin",
     "version": "2025.3.23",
     "date": "2025-03-23T01:38:55Z"
-  },
-  {
-    "name": "dgtlmoon/changedetection.io",
-    "version": "0.49.6",
-    "date": "2025-03-23T01:02:36Z"
-  },
-  {
-    "name": "msgbyte/tianji",
-    "version": "v1.19.1",
-    "date": "2025-03-22T17:57:11Z"
   },
   {
     "name": "hoarder-app/hoarder",
@@ -193,11 +198,6 @@
     "name": "dotnetfactory/fluid-calendar",
     "version": "v1.2.3",
     "date": "2025-03-20T17:54:55Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "v3.10.0",
-    "date": "2025-03-15T14:38:16Z"
   },
   {
     "name": "ellite/Wallos",
