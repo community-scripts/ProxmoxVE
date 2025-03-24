@@ -105,8 +105,37 @@ jobs:
             ).forEach(pr => {
 
               const prLabels = pr.labels.map(label => label.name.toLowerCase());
-              const prNote = `- ${pr.title} [@${pr.user.login}](https://github.com/${pr.user.login}) ([#${pr.number}](${pr.html_url}))`;
+              if (pr.user.login === "push-app-to-main") {
+                const scriptName = pr.title;
+                if (scriptName) {
+                  try {
+                    const { data: relatedIssues } = await github.rest.issues.listForRepo({
+                      owner: context.repo.owner,
+                      repo: "ProxmoxVED", 
+                      state: "all",
+                      label: "Started Migration To ProxmoxVE",
+                      per_page: 5
+                    });                    
+                    const matchingIssue = relatedIssues.find(issue => 
+                      issue.title.toLowerCase().includes(scriptName.toLowerCase())
+                    );
+                    if (matchingIssue) {
+                      const issueAuthor = matchingIssue.user.login;
+                      const issueAuthorUrl = `https://github.com/${issueAuthor}`;
+                      const prNote = `- ${pr.title} [@${issueAuthor}](${issueAuthorUrl}) ([#${pr.number}](${pr.html_url}))`;
+                    } else {
+                      const prNote = `- ${pr.title} ([#${pr.number}](${pr.html_url}))`;
+                    }
+                  } catch (error) {
+                    console.error(`Error fetching related issues: ${error}`);
+                    const prNote = `- ${pr.title}  ([#${pr.number}](${pr.html_url}))`;
+                  }
+                } else {
+                  const prNote = `- ${pr.title} ([#${pr.number}](${pr.html_url}))`;
 
+              }else{
+                const prNote = `- ${pr.title} [@${pr.user.login}](https://github.com/${pr.user.login}) ([#${pr.number}](${pr.html_url}))`;
+              }
               const updateScriptsCategory = categorizedPRs.find(category =>
                 category.labels.some(label => prLabels.includes(label))
               );
@@ -150,7 +179,8 @@ jobs:
               const hasSubcategories = subCategories && subCategories.length > 0;
               const hasMainNotes = notes.length > 0;
               const hasSubNotes = hasSubcategories && subCategories.some(sub => sub.notes && sub.notes.length > 0);
-        
+
+
     
               if (hasMainNotes || hasSubNotes) {
                 newReleaseNotes += `### ${title}\n\n`;
