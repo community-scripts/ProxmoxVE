@@ -35,6 +35,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🔧 Refactor
 
+    - qBittorrent: Switch to static builds for faster updating/upgrading [@tremor021](https://github.com/tremor021) ([#3405](https://github.com/community-scripts/ProxmoxVE/pull/3405))
     - Refactor: ErsatzTV Script [@MickLesk](https://github.com/MickLesk) ([#3365](https://github.com/community-scripts/ProxmoxVE/pull/3365))
 
 ### 🧰 Maintenance
