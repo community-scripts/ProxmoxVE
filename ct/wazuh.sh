@@ -23,7 +23,7 @@ function update_script() {
    header_info
    check_container_storage
    check_container_resources
-   if [[ ! -d /var ]]; then
+   if [[ ! -f /lib/systemd/system/wazuh-manager.service ]]; then
       msg_error "No ${APP} Installation Found!"
       exit
    fi
