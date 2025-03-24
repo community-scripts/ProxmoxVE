@@ -13,13 +13,6 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt-get install -y \
-  curl \
-  sudo \
-  mc
-msg_ok "Installed Dependencies"
-
 msg_info "Setup qBittorrent-nox"
 FULLRELEASE=$(curl -s https://api.github.com/repos/userdocs/qbittorrent-nox-static/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 RELEASE=$(echo $FULLRELEASE | cut -c 9-13)
