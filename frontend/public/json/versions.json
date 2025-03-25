@@ -1,23 +1,88 @@
 [
   {
+    "name": "caddyserver/caddy",
+    "version": "v2.9.1",
+    "date": "2025-01-08T15:22:53Z"
+  },
+  {
+    "name": "influxdata/influxdb",
+    "version": "v3.0.0-0.beta.2",
+    "date": "2025-03-24T21:12:19Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "nightly",
+    "date": "2025-03-24T21:04:06Z"
+  },
+  {
+    "name": "ZoeyVid/NPMplus",
+    "version": "2025-03-24-r2",
+    "date": "2025-03-24T20:52:35Z"
+  },
+  {
+    "name": "HabitRPG/habitica",
+    "version": "v5.35.0",
+    "date": "2025-03-24T20:51:10Z"
+  },
+  {
+    "name": "go-gitea/gitea",
+    "version": "v1.23.6",
+    "date": "2025-03-24T20:38:45Z"
+  },
+  {
     "name": "fhem/fhem-mirror",
     "version": "6.2",
-    "date": "2025-03-24T10:36:10Z"
+    "date": "2025-03-24T20:28:03Z"
+  },
+  {
+    "name": "docmost/docmost",
+    "version": "v0.9.0",
+    "date": "2025-03-24T18:25:37Z"
+  },
+  {
+    "name": "Radarr/Radarr",
+    "version": "v5.21.1.9799",
+    "date": "2025-03-24T15:52:12Z"
+  },
+  {
+    "name": "crowdsecurity/crowdsec",
+    "version": "v1.6.6",
+    "date": "2025-03-18T13:05:01Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.84.0",
+    "date": "2025-03-17T13:58:36Z"
+  },
+  {
+    "name": "VictoriaMetrics/VictoriaMetrics",
+    "version": "v1.114.0",
+    "date": "2025-03-24T13:27:36Z"
+  },
+  {
+    "name": "Graylog2/graylog2-server",
+    "version": "6.2.0-beta.2",
+    "date": "2025-03-24T12:20:51Z"
+  },
+  {
+    "name": "wavelog/wavelog",
+    "version": "2.0.2",
+    "date": "2025-03-24T12:02:08Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.2.0p41-rc1",
+    "date": "2025-03-24T11:45:43Z"
   },
   {
     "name": "semaphoreui/semaphore",
-    "version": "v2.13.1",
-    "date": "2025-03-24T09:42:32Z"
+    "version": "v2.13.2",
+    "date": "2025-03-24T11:18:10Z"
   },
   {
     "name": "zwave-js/zwave-js-ui",
     "version": "v10.1.1",
     "date": "2025-03-24T08:34:47Z"
-  },
-  {
-    "name": "Checkmk/checkmk",
-    "version": "v2.4.0b2-rc1",
-    "date": "2025-03-24T07:20:45Z"
   },
   {
     "name": "cockpit-project/cockpit",
@@ -60,11 +125,6 @@
     "date": "2025-03-24T00:46:32Z"
   },
   {
-    "name": "runtipi/runtipi",
-    "version": "v3.10.0",
-    "date": "2025-03-15T14:38:16Z"
-  },
-  {
     "name": "msgbyte/tianji",
     "version": "v1.19.2",
     "date": "2025-03-23T16:33:14Z"
@@ -98,11 +158,6 @@
     "name": "forgejo/forgejo",
     "version": "v10.0.3",
     "date": "2025-03-23T08:58:24Z"
-  },
-  {
-    "name": "Radarr/Radarr",
-    "version": "v5.20.2.9777",
-    "date": "2025-03-18T12:11:37Z"
   },
   {
     "name": "Prowlarr/Prowlarr",
@@ -180,16 +235,6 @@
     "date": "2025-03-21T19:14:59Z"
   },
   {
-    "name": "influxdata/influxdb",
-    "version": "v1.12.0rc0",
-    "date": "2025-03-21T17:24:38Z"
-  },
-  {
-    "name": "ZoeyVid/NPMplus",
-    "version": "2025-03-21-r1",
-    "date": "2025-03-21T14:54:00Z"
-  },
-  {
     "name": "photoprism/photoprism",
     "version": "250321-57590c48b",
     "date": "2025-03-21T11:48:16Z"
@@ -238,11 +283,6 @@
     "name": "ellite/Wallos",
     "version": "v2.48.0",
     "date": "2025-03-20T16:57:43Z"
-  },
-  {
-    "name": "HabitRPG/habitica",
-    "version": "v5.34.4",
-    "date": "2025-03-20T16:54:45Z"
   },
   {
     "name": "neo4j/neo4j",
@@ -335,19 +375,9 @@
     "date": "2024-11-05T09:20:50Z"
   },
   {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.84.0",
-    "date": "2025-03-17T13:58:36Z"
-  },
-  {
     "name": "zabbix/zabbix",
     "version": "7.2.5rc1",
     "date": "2025-03-18T14:10:32Z"
-  },
-  {
-    "name": "crowdsecurity/crowdsec",
-    "version": "v1.6.6",
-    "date": "2025-03-18T13:05:01Z"
   },
   {
     "name": "apache/couchdb",
@@ -390,11 +420,6 @@
     "date": "2025-03-17T16:00:19Z"
   },
   {
-    "name": "Graylog2/graylog2-server",
-    "version": "6.2.0-beta.1",
-    "date": "2025-03-17T13:00:39Z"
-  },
-  {
     "name": "home-assistant/operating-system",
     "version": "15.0",
     "date": "2025-03-17T10:26:18Z"
@@ -433,11 +458,6 @@
     "name": "Kozea/Radicale",
     "version": "v3.5.0",
     "date": "2025-03-16T06:05:55Z"
-  },
-  {
-    "name": "VictoriaMetrics/VictoriaMetrics",
-    "version": "v1.17.0-victorialogs",
-    "date": "2025-03-16T00:22:43Z"
   },
   {
     "name": "pelican-dev/wings",
@@ -560,11 +580,6 @@
     "date": "2025-03-10T03:22:11Z"
   },
   {
-    "name": "caddyserver/caddy",
-    "version": "v2.9.1",
-    "date": "2025-01-08T15:22:53Z"
-  },
-  {
     "name": "awawa-dev/HyperHDR",
     "version": "v21.0.0.0",
     "date": "2025-03-09T12:25:44Z"
@@ -640,11 +655,6 @@
     "date": "2025-03-05T15:43:40Z"
   },
   {
-    "name": "go-gitea/gitea",
-    "version": "v1.23.5",
-    "date": "2025-03-05T00:10:15Z"
-  },
-  {
     "name": "apache/tomcat",
     "version": "10.1.39",
     "date": "2025-03-04T19:05:18Z"
@@ -698,11 +708,6 @@
     "name": "jordan-dalby/ByteStash",
     "version": "v1.5.7",
     "date": "2025-02-27T20:04:08Z"
-  },
-  {
-    "name": "docmost/docmost",
-    "version": "v0.8.4",
-    "date": "2025-02-27T16:18:45Z"
   },
   {
     "name": "cloudflare/cloudflared",
@@ -783,11 +788,6 @@
     "name": "azukaar/Cosmos-Server",
     "version": "v0.18.3",
     "date": "2025-02-21T20:51:12Z"
-  },
-  {
-    "name": "wavelog/wavelog",
-    "version": "2.0.1",
-    "date": "2025-02-21T17:55:59Z"
   },
   {
     "name": "grafana/grafana",
