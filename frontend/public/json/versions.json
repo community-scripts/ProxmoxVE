@@ -1,5 +1,55 @@
 [
   {
+    "name": "fhem/fhem-mirror",
+    "version": "6.2",
+    "date": "2025-03-26T10:33:41Z"
+  },
+  {
+    "name": "evcc-io/evcc",
+    "version": "0.202.0",
+    "date": "2025-03-26T10:19:01Z"
+  },
+  {
+    "name": "jupyter/notebook",
+    "version": "@jupyter-notebook/ui-components@7.4.0-beta.3",
+    "date": "2025-03-26T10:07:53Z"
+  },
+  {
+    "name": "forgejo/forgejo",
+    "version": "v12.0.0-dev",
+    "date": "2025-03-26T09:58:55Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.2.0p41",
+    "date": "2025-03-26T09:55:26Z"
+  },
+  {
+    "name": "sct/overseerr",
+    "version": "v1.34.0",
+    "date": "2025-03-26T08:48:34Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1695",
+    "date": "2025-03-26T06:01:34Z"
+  },
+  {
+    "name": "pocketbase/pocketbase",
+    "version": "v0.26.4",
+    "date": "2025-03-26T05:16:46Z"
+  },
+  {
+    "name": "theonedev/onedev",
+    "version": "v11.8.0",
+    "date": "2025-03-26T04:41:15Z"
+  },
+  {
+    "name": "cockpit-project/cockpit",
+    "version": "336.1",
+    "date": "2025-03-26T04:10:14Z"
+  },
+  {
     "name": "esphome/esphome",
     "version": "2025.3.2",
     "date": "2025-03-25T23:06:45Z"
@@ -20,9 +70,9 @@
     "date": "2025-03-25T20:49:15Z"
   },
   {
-    "name": "fhem/fhem-mirror",
-    "version": "6.2",
-    "date": "2025-03-25T20:30:03Z"
+    "name": "keycloak/keycloak",
+    "version": "26.1.4",
+    "date": "2025-03-13T15:41:42Z"
   },
   {
     "name": "zabbix/zabbix",
@@ -65,11 +115,6 @@
     "date": "2025-03-25T15:11:18Z"
   },
   {
-    "name": "Checkmk/checkmk",
-    "version": "v2.4.0b2",
-    "date": "2025-03-25T14:27:52Z"
-  },
-  {
     "name": "jenkinsci/jenkins",
     "version": "jenkins-2.503",
     "date": "2025-03-25T14:01:20Z"
@@ -105,6 +150,11 @@
     "date": "2025-03-25T10:09:14Z"
   },
   {
+    "name": "runtipi/runtipi",
+    "version": "v3.10.0",
+    "date": "2025-03-15T14:38:16Z"
+  },
+  {
     "name": "VictoriaMetrics/VictoriaMetrics",
     "version": "pmm-6401-v1.114.0",
     "date": "2025-03-25T07:58:34Z"
@@ -115,24 +165,19 @@
     "date": "2025-03-25T07:11:32Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1691",
-    "date": "2025-03-25T06:11:16Z"
-  },
-  {
     "name": "caddyserver/caddy",
     "version": "v2.9.1",
     "date": "2025-01-08T15:22:53Z"
   },
   {
+    "name": "fallenbagel/jellyseerr",
+    "version": "preview-OIDC",
+    "date": "2025-03-25T00:28:11Z"
+  },
+  {
     "name": "influxdata/influxdb",
     "version": "v3.0.0-0.beta.2",
     "date": "2025-03-24T21:12:19Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "v3.10.0",
-    "date": "2025-03-15T14:38:16Z"
   },
   {
     "name": "ZoeyVid/NPMplus",
@@ -148,11 +193,6 @@
     "name": "go-gitea/gitea",
     "version": "v1.23.6",
     "date": "2025-03-24T20:38:45Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.1.4",
-    "date": "2025-03-13T15:41:42Z"
   },
   {
     "name": "docmost/docmost",
@@ -180,19 +220,9 @@
     "date": "2025-03-24T11:18:10Z"
   },
   {
-    "name": "cockpit-project/cockpit",
-    "version": "336",
-    "date": "2025-03-24T07:16:02Z"
-  },
-  {
     "name": "nzbgetcom/nzbget",
     "version": "v24.8",
     "date": "2025-03-18T07:33:51Z"
-  },
-  {
-    "name": "pocketbase/pocketbase",
-    "version": "v0.26.3",
-    "date": "2025-03-24T04:42:52Z"
   },
   {
     "name": "firefly-iii/firefly-iii",
@@ -225,11 +255,6 @@
     "date": "2025-03-23T09:02:54Z"
   },
   {
-    "name": "forgejo/forgejo",
-    "version": "v10.0.3",
-    "date": "2025-03-23T08:58:24Z"
-  },
-  {
     "name": "Prowlarr/Prowlarr",
     "version": "v1.32.2.4987",
     "date": "2025-03-16T09:41:37Z"
@@ -238,11 +263,6 @@
     "name": "morpheus65535/bazarr",
     "version": "v1.5.1",
     "date": "2025-01-01T16:15:52Z"
-  },
-  {
-    "name": "theonedev/onedev",
-    "version": "v11.7.6",
-    "date": "2025-03-23T05:08:22Z"
   },
   {
     "name": "usememos/memos",
@@ -300,11 +320,6 @@
     "date": "2025-03-21T19:14:59Z"
   },
   {
-    "name": "fallenbagel/jellyseerr",
-    "version": "preview-OIDC",
-    "date": "2025-03-21T14:14:45Z"
-  },
-  {
     "name": "photoprism/photoprism",
     "version": "250321-57590c48b",
     "date": "2025-03-21T11:48:16Z"
@@ -353,16 +368,6 @@
     "name": "wazuh/wazuh",
     "version": "coverity-w11-4.12.0",
     "date": "2025-03-14T20:04:02Z"
-  },
-  {
-    "name": "jupyter/notebook",
-    "version": "@jupyter-notebook/ui-components@7.4.0-beta.2",
-    "date": "2025-03-20T07:41:24Z"
-  },
-  {
-    "name": "evcc-io/evcc",
-    "version": "0.201.1",
-    "date": "2025-03-20T06:59:18Z"
   },
   {
     "name": "rabbitmq/rabbitmq-server",
@@ -1193,10 +1198,5 @@
     "name": "wger-project/wger",
     "version": "2.2",
     "date": "2023-12-06T12:08:09Z"
-  },
-  {
-    "name": "sct/overseerr",
-    "version": "preview-test-node-18",
-    "date": "2023-11-06T10:21:37Z"
   }
 ]
