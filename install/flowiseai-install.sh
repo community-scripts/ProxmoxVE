@@ -26,7 +26,11 @@ $STD apt-get install -y nodejs
 msg_ok "Installed Node.js"
 
 msg_info "Installing FlowiseAI (Patience)"
-$STD npm install -g flowise
+$STD npm install -g flowise \
+  @opentelemetry/exporter-trace-otlp-grpc \
+  @opentelemetry/exporter-trace-otlp-proto \
+  @opentelemetry/sdk-trace-node \
+  langchainhub
 mkdir -p /opt/flowiseai
 wget -q https://raw.githubusercontent.com/FlowiseAI/Flowise/main/packages/server/.env.example -O /opt/flowiseai/.env
 msg_ok "Installed FlowiseAI"
