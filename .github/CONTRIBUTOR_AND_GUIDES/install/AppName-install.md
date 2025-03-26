@@ -111,11 +111,8 @@ Example:
 
 ```bash
 $STD apt-get install -y \
-  curl \
   composer \
   git \
-  sudo \
-  mc \
   nginx 
 ```
 

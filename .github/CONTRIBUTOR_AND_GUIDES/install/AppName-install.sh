@@ -14,12 +14,9 @@ setting_up_container
 network_check
 update_os
 
-# Installing Dependencies with the 3 core dependencies (curl;sudo;mc)
+# Installing Dependencies
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-  curl \
-  sudo \
-  mc \
   [PACKAGE_1] \
   [PACKAGE_2] \
   [PACKAGE_3]
