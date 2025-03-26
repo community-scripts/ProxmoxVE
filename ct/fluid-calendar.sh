@@ -35,15 +35,14 @@ function update_script() {
         systemctl stop fluid-calendar.service
         msg_ok "Stopped $APP"
 
-        msg_info "Creating Backup"
-        tar -czf "/opt/${APP}_backup_$(date +%F).tar.gz" /opt/fluid-calendar
-        msg_ok "Backup Created"
-
         msg_info "Updating $APP to v${RELEASE}"
+        cp /opt/fluid-calendar/.env /opt/fluid.env
+        rm -rf /opt/fluid-calendar
         tmp_file=$(mktemp)
         wget -q "https://github.com/dotnetfactory/fluid-calendar/archive/refs/tags/v${RELEASE}.zip" -O $tmp_file
         unzip -q $tmp_file
-        cp -rf ${APP}-${RELEASE}/* /opt/fluid-calendar
+        mv ${APP}-${RELEASE}/ /opt/fluid-calendar
+        mv /opt/fluid.env /opt/fluid-calendar/.env
         cd /opt/fluid-calendar
         export NEXT_TELEMETRY_DISABLED=1
         $STD npm install --legacy-peer-deps
@@ -58,8 +57,6 @@ function update_script() {
 
         msg_info "Cleaning Up"
         rm -rf $tmp_file
-        rm -rf "/opt/${APP}_backup_$(date +%F).tar.gz"
-        rm -rf /tmp/${APP}-${RELEASE}
         msg_ok "Cleanup Completed"
 
         echo "${RELEASE}" >/opt/${APP}_version.txt
