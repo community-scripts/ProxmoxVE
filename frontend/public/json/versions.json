@@ -1,28 +1,108 @@
 [
   {
-    "name": "crowdsecurity/crowdsec",
-    "version": "v1.6.6",
-    "date": "2025-03-18T13:05:01Z"
+    "name": "esphome/esphome",
+    "version": "2025.3.2",
+    "date": "2025-03-25T23:06:45Z"
+  },
+  {
+    "name": "grafana/grafana",
+    "version": "v11.6.0",
+    "date": "2025-03-25T22:10:15Z"
+  },
+  {
+    "name": "dgtlmoon/changedetection.io",
+    "version": "0.49.8",
+    "date": "2025-03-25T22:00:52Z"
+  },
+  {
+    "name": "immich-app/immich",
+    "version": "v1.130.1",
+    "date": "2025-03-25T20:49:15Z"
   },
   {
     "name": "fhem/fhem-mirror",
     "version": "6.2",
-    "date": "2025-03-25T10:34:31Z"
+    "date": "2025-03-25T20:30:03Z"
+  },
+  {
+    "name": "zabbix/zabbix",
+    "version": "7.2.5rc2",
+    "date": "2025-03-25T19:25:22Z"
+  },
+  {
+    "name": "Stirling-Tools/Stirling-PDF",
+    "version": "v0.45.0",
+    "date": "2025-03-25T18:48:17Z"
+  },
+  {
+    "name": "ipfs/kubo",
+    "version": "v0.34.1",
+    "date": "2025-03-25T18:11:12Z"
+  },
+  {
+    "name": "aceberg/WatchYourLAN",
+    "version": "2.1.1",
+    "date": "2025-03-25T17:21:41Z"
+  },
+  {
+    "name": "pocket-id/pocket-id",
+    "version": "v0.44.0",
+    "date": "2025-03-25T16:09:10Z"
+  },
+  {
+    "name": "dotnetfactory/fluid-calendar",
+    "version": "v1.3.0",
+    "date": "2025-03-25T15:55:02Z"
+  },
+  {
+    "name": "emqx/emqx",
+    "version": "v5.8.6",
+    "date": "2025-03-25T15:22:13Z"
+  },
+  {
+    "name": "hansmi/prometheus-paperless-exporter",
+    "version": "v0.0.7",
+    "date": "2025-03-25T15:11:18Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.4.0b2",
+    "date": "2025-03-25T14:27:52Z"
+  },
+  {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.503",
+    "date": "2025-03-25T14:01:20Z"
+  },
+  {
+    "name": "zwave-js/zwave-js-ui",
+    "version": "v10.1.2",
+    "date": "2025-03-25T13:56:22Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.19.3",
+    "date": "2025-03-25T13:50:19Z"
+  },
+  {
+    "name": "crowdsecurity/crowdsec",
+    "version": "v1.6.8",
+    "date": "2025-03-25T13:33:10Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.85.1",
+    "date": "2025-03-25T09:33:57Z"
+  },
+  {
+    "name": "element-hq/synapse",
+    "version": "v1.127.0",
+    "date": "2025-03-25T12:47:44Z"
   },
   {
     "name": "icereed/paperless-gpt",
     "version": "v0.14.1",
     "date": "2025-03-25T10:09:14Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.84.0",
-    "date": "2025-03-17T13:58:36Z"
-  },
-  {
-    "name": "Checkmk/checkmk",
-    "version": "v2.4.0b2-rc2",
-    "date": "2025-03-25T08:29:23Z"
   },
   {
     "name": "VictoriaMetrics/VictoriaMetrics",
@@ -33,11 +113,6 @@
     "name": "zitadel/zitadel",
     "version": "v2.70.6",
     "date": "2025-03-25T07:11:32Z"
-  },
-  {
-    "name": "aceberg/WatchYourLAN",
-    "version": "2.1.0",
-    "date": "2025-03-25T06:45:18Z"
   },
   {
     "name": "Jackett/Jackett",
@@ -105,11 +180,6 @@
     "date": "2025-03-24T11:18:10Z"
   },
   {
-    "name": "zwave-js/zwave-js-ui",
-    "version": "v10.1.1",
-    "date": "2025-03-24T08:34:47Z"
-  },
-  {
     "name": "cockpit-project/cockpit",
     "version": "336",
     "date": "2025-03-24T07:16:02Z"
@@ -138,16 +208,6 @@
     "name": "moghtech/komodo",
     "version": "v1.17.0",
     "date": "2025-03-24T00:46:32Z"
-  },
-  {
-    "name": "msgbyte/tianji",
-    "version": "v1.19.2",
-    "date": "2025-03-23T16:33:14Z"
-  },
-  {
-    "name": "dgtlmoon/changedetection.io",
-    "version": "0.49.7",
-    "date": "2025-03-23T15:51:11Z"
   },
   {
     "name": "Lidarr/Lidarr",
@@ -183,11 +243,6 @@
     "name": "theonedev/onedev",
     "version": "v11.7.6",
     "date": "2025-03-23T05:08:22Z"
-  },
-  {
-    "name": "esphome/esphome",
-    "version": "2025.3.1",
-    "date": "2025-03-23T04:45:21Z"
   },
   {
     "name": "usememos/memos",
@@ -275,24 +330,9 @@
     "date": "2025-03-21T02:25:42Z"
   },
   {
-    "name": "ipfs/kubo",
-    "version": "v0.34.0",
-    "date": "2025-03-20T21:51:05Z"
-  },
-  {
-    "name": "pocket-id/pocket-id",
-    "version": "v0.43.1",
-    "date": "2025-03-20T20:38:06Z"
-  },
-  {
     "name": "stonith404/pingvin-share",
     "version": "v1.10.4",
     "date": "2025-03-20T18:56:10Z"
-  },
-  {
-    "name": "dotnetfactory/fluid-calendar",
-    "version": "v1.2.3",
-    "date": "2025-03-20T17:54:55Z"
   },
   {
     "name": "ellite/Wallos",
@@ -308,16 +348,6 @@
     "name": "redis/redis",
     "version": "8.0-rc1",
     "date": "2025-03-11T18:16:27Z"
-  },
-  {
-    "name": "Stirling-Tools/Stirling-PDF",
-    "version": "v0.44.3",
-    "date": "2025-03-20T09:43:56Z"
-  },
-  {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.502",
-    "date": "2025-03-18T15:02:59Z"
   },
   {
     "name": "wazuh/wazuh",
@@ -375,19 +405,9 @@
     "date": "2025-03-12T11:56:30Z"
   },
   {
-    "name": "element-hq/synapse",
-    "version": "v1.126.0",
-    "date": "2025-03-11T16:29:42Z"
-  },
-  {
     "name": "OctoPrint/OctoPrint",
     "version": "1.10.3",
     "date": "2024-11-05T09:20:50Z"
-  },
-  {
-    "name": "zabbix/zabbix",
-    "version": "7.2.5rc1",
-    "date": "2025-03-18T14:10:32Z"
   },
   {
     "name": "apache/couchdb",
@@ -545,11 +565,6 @@
     "date": "2024-12-13T00:16:24Z"
   },
   {
-    "name": "emqx/emqx",
-    "version": "e5.9.0-beta.1",
-    "date": "2025-03-12T09:52:26Z"
-  },
-  {
     "name": "gotson/komga",
     "version": "1.21.2",
     "date": "2025-03-12T04:19:30Z"
@@ -643,11 +658,6 @@
     "name": "matze/wastebin",
     "version": "3.0.0",
     "date": "2025-03-05T21:41:29Z"
-  },
-  {
-    "name": "immich-app/immich",
-    "version": "v1.129.0",
-    "date": "2025-03-05T20:19:18Z"
   },
   {
     "name": "snipe/snipe-it",
@@ -795,11 +805,6 @@
     "date": "2025-02-21T20:51:12Z"
   },
   {
-    "name": "grafana/grafana",
-    "version": "v11.5.2",
-    "date": "2025-02-19T00:12:27Z"
-  },
-  {
     "name": "gristlabs/grist-core",
     "version": "v1.4.2",
     "date": "2025-02-18T21:43:36Z"
@@ -938,11 +943,6 @@
     "name": "rustdesk/rustdesk-server",
     "version": "1.1.14",
     "date": "2025-01-25T12:48:28Z"
-  },
-  {
-    "name": "hansmi/prometheus-paperless-exporter",
-    "version": "v0.0.6",
-    "date": "2025-01-22T22:19:33Z"
   },
   {
     "name": "crafty-controller/crafty-4",
