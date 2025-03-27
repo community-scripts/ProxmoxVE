@@ -16,7 +16,7 @@ update_os
 msg_info "Installing NocoDB"
 mkdir -p /opt/nocodb
 cd /opt/nocodb
-curl -s http://get.nocodb.com/linux-x64 -o nocodb -L
+curl -fsSL http://get.nocodb.com/linux-x64 -o nocodb -L
 chmod +x nocodb
 msg_ok "Installed NocoDB"
 

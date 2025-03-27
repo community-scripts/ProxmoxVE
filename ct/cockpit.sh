@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 tteck
 # Author: tteck | Co-Author: havardthom
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -51,7 +51,7 @@ function update_script() {
     $STD apt-get install -y gawk
     msg_ok "Installed dependencies"
     msg_info "Installing Cockpit file sharing"
-    wget -q $(curl -s https://api.github.com/repos/45Drives/cockpit-file-sharing/releases/latest | grep download | grep focal_all.deb | cut -d\" -f4)
+    wget -q $(curl -fsSL https://api.github.com/repos/45Drives/cockpit-file-sharing/releases/latest | grep download | grep focal_all.deb | cut -d\" -f4)
     $STD dpkg -i cockpit-file-sharing_*focal_all.deb
     rm cockpit-file-sharing_*focal_all.deb
     msg_ok "Installed Cockpit file sharing"
@@ -64,7 +64,7 @@ function update_script() {
     $STD apt-get install -y samba-common-bin
     msg_ok "Installed dependencies"
     msg_info "Installing Cockpit identities"
-    wget -q $(curl -s https://api.github.com/repos/45Drives/cockpit-identities/releases/latest | grep download | grep focal_all.deb | cut -d\" -f4)
+    wget -q $(curl -fsSL https://api.github.com/repos/45Drives/cockpit-identities/releases/latest | grep download | grep focal_all.deb | cut -d\" -f4)
     $STD dpkg -i cockpit-identities_*focal_all.deb
     rm cockpit-identities_*focal_all.deb
     msg_ok "Installed Cockpit identities"
@@ -76,7 +76,7 @@ function update_script() {
     $STD apt-get install -y zip
     msg_ok "Installed dependencies"
     msg_info "Installing Cockpit navigator"
-    wget -q $(curl -s https://api.github.com/repos/45Drives/cockpit-navigator/releases/latest | grep download | grep focal_all.deb | cut -d\" -f4)
+    wget -q $(curl -fsSL https://api.github.com/repos/45Drives/cockpit-navigator/releases/latest | grep download | grep focal_all.deb | cut -d\" -f4)
     $STD dpkg -i cockpit-navigator_*focal_all.deb
     rm cockpit-navigator_*focal_all.deb
     msg_ok "Installed Cockpit navigator"

@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Setup MinIO"
-RELEASE=$(curl -s https://api.github.com/repos/minio/minio/releases/latest | grep '"tag_name"' | awk -F '"' '{print $4}')
+RELEASE=$(curl -fsSL https://api.github.com/repos/minio/minio/releases/latest | grep '"tag_name"' | awk -F '"' '{print $4}')
 wget -q https://dl.min.io/server/minio/release/linux-amd64/minio
 mv minio /usr/local/bin/
 chmod +x /usr/local/bin/minio

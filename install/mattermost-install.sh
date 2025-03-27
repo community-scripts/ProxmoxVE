@@ -38,8 +38,8 @@ msg_ok "Set up PostgreSQL"
 
 msg_info "Installing Mattermost"
 IPADDRESS=$(hostname -I | awk '{print $1}')
-curl -sL -o /usr/share/keyrings/mattermost-archive-keyring.gpg https://deb.packages.mattermost.com/pubkey.gpg
-sh -c 'curl -sL https://deb.packages.mattermost.com/repo-setup.sh | sudo bash -s mattermost' >/dev/null
+curl -fsSLL -o /usr/share/keyrings/mattermost-archive-keyring.gpg https://deb.packages.mattermost.com/pubkey.gpg
+sh -c 'curl -fsSLL https://deb.packages.mattermost.com/repo-setup.sh | sudo bash -s mattermost' >/dev/null
 $STD apt-get update
 $STD apt-get install -y mattermost
 $STD install -C -m 600 -o mattermost -g mattermost /opt/mattermost/config/config.defaults.json /opt/mattermost/config/config.json

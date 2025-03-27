@@ -18,7 +18,7 @@ $STD apt-get install -y ffmpeg
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Navidrome"
-RELEASE=$(curl -s https://api.github.com/repos/navidrome/navidrome/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+RELEASE=$(curl -fsSL https://api.github.com/repos/navidrome/navidrome/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 install -d -o root -g root /opt/navidrome
 install -d -o root -g root /var/lib/navidrome
 wget -q https://github.com/navidrome/navidrome/releases/download/v${RELEASE}/navidrome_${RELEASE}_linux_amd64.tar.gz -O Navidrome.tar.gz

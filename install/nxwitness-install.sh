@@ -27,8 +27,8 @@ msg_ok "Installed Dependencies"
 msg_info "Setup Nx Witness"
 cd /tmp
 BASE_URL="https://updates.networkoptix.com/default/index.html"
-RELEASE=$(curl -s "$BASE_URL" | grep -oP '(?<=<b>)[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(?=</b>)' | head -n 1)
-DETAIL_PAGE=$(curl -s "$BASE_URL#note_$RELEASE")
+RELEASE=$(curl -fsSL "$BASE_URL" | grep -oP '(?<=<b>)[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(?=</b>)' | head -n 1)
+DETAIL_PAGE=$(curl -fsSL "$BASE_URL#note_$RELEASE")
 DOWNLOAD_URL=$(echo "$DETAIL_PAGE" | grep -oP "https://updates.networkoptix.com/default/$RELEASE/linux/nxwitness-server-[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+-linux_x64\.deb" | head -n 1)
 wget -q "$DOWNLOAD_URL" -O "nxwitness-server-$RELEASE-linux_x64.deb"
 export DEBIAN_FRONTEND=noninteractive

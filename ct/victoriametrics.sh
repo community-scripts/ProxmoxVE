@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -14,7 +14,7 @@ var_os="debian"
 var_version="12"
 var_unprivileged="1"
 
-header_info "$APP" 
+header_info "$APP"
 variables
 color
 catch_errors
@@ -27,12 +27,12 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -s https://api.github.com/repos/VictoriaMetrics/VictoriaMetrics/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+  RELEASE=$(curl -fsSL https://api.github.com/repos/VictoriaMetrics/VictoriaMetrics/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
   if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
     msg_info "Stopping $APP"
     systemctl stop victoriametrics
     msg_ok "Stopped $APP"
-    
+
     msg_info "Updating ${APP} to v${RELEASE}"
     temp_dir=$(mktemp -d)
     cd $temp_dir
@@ -44,18 +44,18 @@ function update_script() {
     chmod +x /opt/victoriametrics/*
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated $APP to v${RELEASE}"
-    
+
     msg_info "Starting $APP"
     systemctl start victoriametrics
     msg_ok "Started $APP"
-    
+
     msg_info "Cleaning Up"
     rm -rf $temp_dir
     msg_ok "Cleaned"
     msg_ok "Updated Successfully"
-    else
+  else
     msg_ok "No update required. ${APP} is already at ${RELEASE}"
-    fi
+  fi
   exit
 }
 

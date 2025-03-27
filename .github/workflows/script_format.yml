@@ -1,29 +1,29 @@
 name: Script Format Check
 permissions:
-    pull-requests: write
+  pull-requests: write
 on:
   pull_request_target:
     branches:
       - main
     paths:
-      - 'install/*.sh'
-      - 'ct/*.sh'
+      - "install/*.sh"
+      - "ct/*.sh"
 
 jobs:
   run-install-script:
     runs-on: pvenode
-    steps:          
+    steps:
       - name: Checkout PR branch (supports forks)
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.ref }}
-          repository: ${{ github.event.pull_request.head.repo.full_name }} 
-          fetch-depth: 0          
-          
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          fetch-depth: 0
+
       - name: Add Git safe directory
         run: |
           git config --global --add safe.directory /__w/ProxmoxVE/ProxmoxVE
-      
+
       - name: Set up GH_TOKEN
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -38,7 +38,7 @@ jobs:
           echo "SCRIPT=$CHANGED_FILES" >> $GITHUB_ENV
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            
+
       - name: Check scripts
         id: run-install
         continue-on-error: true
@@ -54,13 +54,13 @@ jobs:
                 FIRST_LINE=$(sed -n '1p' "$FILE")
                 [[ "$FIRST_LINE" != "#!/usr/bin/env bash" ]] && echo "Line 1 was $FIRST_LINE | Should be: #!/usr/bin/env bash" >> "$LOG_FILE"
                 SECOND_LINE=$(sed -n '2p' "$FILE")
-                [[ "$SECOND_LINE" != "source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)" ]] && 
-                echo "Line 2 was $SECOND_LINE | Should be: source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)" >> "$LOG_FILE"
+                [[ "$SECOND_LINE" != "source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)" ]] && 
+                echo "Line 2 was $SECOND_LINE | Should be: source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)" >> "$LOG_FILE"
                 THIRD_LINE=$(sed -n '3p' "$FILE")
                  if ! [[ "$THIRD_LINE" =~ ^#\ Copyright\ \(c\)\ [0-9]{4}-[0-9]{4}\ community-scripts\ ORG$ || "$THIRD_LINE" =~ ^Copyright\ \(c\)\ [0-9]{4}-[0-9]{4}\ tteck$ ]]; then
                      echo "Line 3 was $THIRD_LINE | Should be: # Copyright (c) 2021-2025 community-scripts ORG" >> "$LOG_FILE"
                  fi
-      
+
               EXPECTED_AUTHOR="# Author:"
               EXPECTED_LICENSE="# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE"
               EXPECTED_SOURCE="# Source:"
@@ -210,7 +210,6 @@ jobs:
             
           done
 
-
       - name: Post error comments
         run: |
           ERROR="false"
@@ -222,7 +221,7 @@ jobs:
               continue
             fi
             ERROR_MSG=$(cat $LOG_FILE)
-      
+
             if [ -n "$ERROR_MSG" ]; then
               echo "Posting error message for $FILE"
               echo ${ERROR_MSG}
@@ -240,4 +239,4 @@ jobs:
 
       - name: Fail if error
         if: ${{ env.ERROR == 'true' }}
-        run: exit 1 
+        run: exit 1

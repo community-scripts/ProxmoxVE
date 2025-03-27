@@ -42,7 +42,7 @@ sed -i '/upload_max_filesize/s/= .*/= 8M/' /etc/php/8.2/apache2/php.ini
 msg_ok "Set up PHP"
 
 msg_info "Installing Wavelog"
-RELEASE=$(curl -s https://api.github.com/repos/wavelog/wavelog/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+RELEASE=$(curl -fsSL https://api.github.com/repos/wavelog/wavelog/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 wget -q "https://github.com/wavelog/wavelog/archive/refs/tags/${RELEASE}.zip"
 unzip -q ${RELEASE}.zip
 mv wavelog-${RELEASE}/ /opt/wavelog

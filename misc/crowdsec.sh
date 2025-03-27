@@ -33,7 +33,10 @@ function error_exit() {
     echo -e "$flag $msg" 1>&2
     exit $EXIT
 }
-if command -v pveversion >/dev/null 2>&1; then echo -e "⚠️  Can't Install on Proxmox "; exit; fi
+if command -v pveversion >/dev/null 2>&1; then
+    echo -e "⚠️  Can't Install on Proxmox "
+    exit
+fi
 while true; do
     read -p "This will Install ${APP} on $hostname. Proceed(y/n)?" yn
     case $yn in
@@ -70,7 +73,7 @@ msg_info "Setting up ${APP} Repository"
 apt-get update &>/dev/null
 apt-get install -y curl &>/dev/null
 apt-get install -y gnupg &>/dev/null
-curl -s https://packagecloud.io/install/repositories/crowdsec/crowdsec/script.deb.sh | bash &>/dev/null
+curl -fsSL https://packagecloud.io/install/repositories/crowdsec/crowdsec/script.deb.sh | bash &>/dev/null
 msg_ok "Setup ${APP} Repository"
 
 msg_info "Installing ${APP}"

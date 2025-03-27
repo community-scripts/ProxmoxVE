@@ -30,7 +30,7 @@ msg_ok "Setup Python3"
 msg_info "Installing ${APPLICATION}"
 mkdir -p /opt/mylar3
 mkdir -p /opt/mylar3-data
-RELEASE=$(curl -s https://api.github.com/repos/mylar3/mylar3/releases/latest | jq -r '.tag_name')
+RELEASE=$(curl -fsSL https://api.github.com/repos/mylar3/mylar3/releases/latest | jq -r '.tag_name')
 wget -qO- https://github.com/mylar3/mylar3/archive/refs/tags/${RELEASE}.tar.gz | tar -xz --strip-components=1 -C /opt/mylar3
 $STD pip install --no-cache-dir -r /opt/mylar3/requirements.txt
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt

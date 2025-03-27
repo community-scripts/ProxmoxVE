@@ -40,7 +40,7 @@ msg_ok "Installed pnpm"
 
 msg_info "Setting up Zigbee2MQTT"
 cd /opt
-RELEASE=$(curl -s https://api.github.com/repos/Koenkk/zigbee2mqtt/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+RELEASE=$(curl -fsSL https://api.github.com/repos/Koenkk/zigbee2mqtt/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 wget -q "https://github.com/Koenkk/zigbee2mqtt/archive/refs/tags/${RELEASE}.zip"
 unzip -q ${RELEASE}.zip
 mv zigbee2mqtt-${RELEASE} /opt/zigbee2mqtt

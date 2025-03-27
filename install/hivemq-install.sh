@@ -25,7 +25,7 @@ $STD apt-get install -y temurin-17-jre
 msg_ok "Installed OpenJDK"
 
 msg_info "Installing HiveMQ CE"
-RELEASE=$(curl -s https://api.github.com/repos/hivemq/hivemq-community-edition/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+RELEASE=$(curl -fsSL https://api.github.com/repos/hivemq/hivemq-community-edition/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 wget -q https://github.com/hivemq/hivemq-community-edition/releases/download/${RELEASE}/hivemq-ce-${RELEASE}.zip
 unzip -q hivemq-ce-${RELEASE}.zip
 mkdir -p /opt/hivemq

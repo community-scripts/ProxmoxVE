@@ -33,7 +33,7 @@ if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
   msg_info "Installing Golang"
   set +o pipefail
   temp_file=$(mktemp)
-  golang_tarball=$(curl -s https://go.dev/dl/ | grep -oP 'go[\d\.]+\.linux-amd64\.tar\.gz' | head -n 1)
+  golang_tarball=$(curl -fsSL https://go.dev/dl/ | grep -oP 'go[\d\.]+\.linux-amd64\.tar\.gz' | head -n 1)
   wget -q https://golang.org/dl/"$golang_tarball" -O "$temp_file"
   tar -C /usr/local -xzf "$temp_file"
   ln -sf /usr/local/go/bin/go /usr/local/bin/go
@@ -43,7 +43,7 @@ if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
 
   msg_info "Setup xCaddy"
   cd /opt
-  RELEASE=$(curl -s https://api.github.com/repos/caddyserver/xcaddy/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+  RELEASE=$(curl -fsSL https://api.github.com/repos/caddyserver/xcaddy/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
   wget -q https://github.com/caddyserver/xcaddy/releases/download/${RELEASE}/xcaddy_${RELEASE:1}_linux_amd64.deb
   $STD dpkg -i xcaddy_${RELEASE:1}_linux_amd64.deb
   rm -rf /opt/xcaddy*

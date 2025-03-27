@@ -15,7 +15,7 @@ update_os
 
 msg_info "Installing Kavita"
 cd /opt
-RELEASE=$(curl -s https://api.github.com/repos/Kareadita/Kavita/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+RELEASE=$(curl -fsSL https://api.github.com/repos/Kareadita/Kavita/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 $STD tar -xvzf <(curl -fsSL https://github.com/Kareadita/Kavita/releases/download/$RELEASE/kavita-linux-x64.tar.gz) --no-same-owner
 msg_ok "Installed Kavita"
 

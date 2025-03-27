@@ -49,7 +49,7 @@ $STD mysql -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH 
 msg_ok "Set up MariaDB"
 
 msg_info "Setup Plant-it"
-RELEASE=$(curl -s https://api.github.com/repos/MDeLuise/plant-it/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+RELEASE=$(curl -fsSL https://api.github.com/repos/MDeLuise/plant-it/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 wget -q https://github.com/MDeLuise/plant-it/releases/download/${RELEASE}/server.jar
 mkdir -p /opt/plant-it/{backend,frontend}
 mkdir -p /opt/plant-it-data

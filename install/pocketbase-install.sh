@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Pocketbase"
-RELEASE="$(curl -s https://api.github.com/repos/pocketbase/pocketbase/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')"
+RELEASE="$(curl -fsSL https://api.github.com/repos/pocketbase/pocketbase/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')"
 wget -q "https://github.com/pocketbase/pocketbase/releases/download/v${RELEASE}/pocketbase_${RELEASE}_linux_amd64.zip" -O /tmp/pocketbase.zip
 mkdir -p /opt/pocketbase/{pb_public,pb_migrations,pb_hooks}
 unzip -q -o /tmp/pocketbase.zip -d /opt/pocketbase

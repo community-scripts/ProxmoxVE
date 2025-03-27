@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing InspIRCd"
-RELEASE=$(curl -s https://api.github.com/repos/inspircd/inspircd/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+RELEASE=$(curl -fsSL https://api.github.com/repos/inspircd/inspircd/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 cd /opt
 wget -q https://github.com/inspircd/inspircd/releases/download/v${RELEASE}/inspircd_${RELEASE}.deb12u1_amd64.deb
 $STD apt-get install "./inspircd_${RELEASE}.deb12u1_amd64.deb" -y &>/dev/null

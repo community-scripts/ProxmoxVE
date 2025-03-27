@@ -39,7 +39,7 @@ msg_ok "Setup Platformio"
 
 msg_info "Setup TasmoCompiler"
 mkdir /tmp/Tasmota
-RELEASE=$(curl -s https://api.github.com/repos/benzino77/tasmocompiler/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+RELEASE=$(curl -fsSL https://api.github.com/repos/benzino77/tasmocompiler/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 wget -q https://github.com/benzino77/tasmocompiler/archive/refs/tags/v${RELEASE}.tar.gz -O /tmp/v${RELEASE}.tar.gz
 cd /tmp
 tar xzf /tmp/v${RELEASE}.tar.gz

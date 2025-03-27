@@ -31,8 +31,8 @@ msg_ok "Set up database"
 
 msg_info "Setup Dolibarr"
 BASE="https://sourceforge.net/projects/dolibarr/files/Dolibarr%20installer%20for%20Debian-Ubuntu%20(DoliDeb)/"
-RELEASE=$(curl -s "$BASE" | grep -oP '(?<=/Dolibarr%20installer%20for%20Debian-Ubuntu%20%28DoliDeb%29/)[^/"]+' | head -n1)
-FILE=$(curl -s "${BASE}${RELEASE}/" | grep -oP 'dolibarr_[^"]+_all.deb' | head -n1)
+RELEASE=$(curl -fsSL "$BASE" | grep -oP '(?<=/Dolibarr%20installer%20for%20Debian-Ubuntu%20%28DoliDeb%29/)[^/"]+' | head -n1)
+FILE=$(curl -fsSL "${BASE}${RELEASE}/" | grep -oP 'dolibarr_[^"]+_all.deb' | head -n1)
 wget -q "https://netcologne.dl.sourceforge.net/project/dolibarr/Dolibarr%20installer%20for%20Debian-Ubuntu%20(DoliDeb)/${RELEASE}/${FILE}?viasf=1" -O "$FILE"
 echo "dolibarr dolibarr/reconfigure-webserver multiselect apache2" | debconf-set-selections
 $STD apt-get install ./$FILE -y

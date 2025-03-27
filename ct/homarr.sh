@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 tteck
 # Author: tteck (tteckster) | Co-Author: MickLesk (Canbiz) | Co-Author: CrazyWolf13
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -28,20 +28,20 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-if [[ -f /opt/homarr/database/db.sqlite ]]; then
+  if [[ -f /opt/homarr/database/db.sqlite ]]; then
     msg_error "Old Homarr detected due to existing database file (/opt/homarr/database/db.sqlite)."
     msg_error "Update not supported. Refer to:"
     msg_error " - https://github.com/community-scripts/ProxmoxVE/discussions/1551"
     msg_error " - https://homarr.dev/docs/getting-started/after-the-installation/#importing-a-zip-from-version-before-100"
     exit 1
-fi
-if [[ ! -f /opt/run_homarr.sh ]]; then
-        msg_info "Detected outdated and missing service files"
-        msg_error "Warning - The port of homarr changed from 3000 to 7575"
-        $STD apt-get install -y nginx gettext openssl gpg
-        sed -i '/^NODE_ENV=/d' /opt/homarr/.env && echo "NODE_ENV='production'" >> /opt/homarr/.env
-        sed -i '/^DB_DIALECT=/d' /opt/homarr/.env && echo "DB_DIALECT='sqlite'" >> /opt/homarr/.env
-        cat <<'EOF' >/opt/run_homarr.sh
+  fi
+  if [[ ! -f /opt/run_homarr.sh ]]; then
+    msg_info "Detected outdated and missing service files"
+    msg_error "Warning - The port of homarr changed from 3000 to 7575"
+    $STD apt-get install -y nginx gettext openssl gpg
+    sed -i '/^NODE_ENV=/d' /opt/homarr/.env && echo "NODE_ENV='production'" >>/opt/homarr/.env
+    sed -i '/^DB_DIALECT=/d' /opt/homarr/.env && echo "DB_DIALECT='sqlite'" >>/opt/homarr/.env
+    cat <<'EOF' >/opt/run_homarr.sh
 #!/bin/bash
 set -a
 source /opt/homarr/.env
@@ -63,9 +63,9 @@ node apps/websocket/wssServer.cjs &
 node apps/nextjs/server.js & PID=$!
 wait $PID
 EOF
-        chmod +x /opt/run_homarr.sh
-        rm /etc/systemd/system/homarr.service
-        cat <<EOF >/etc/systemd/system/homarr.service
+    chmod +x /opt/run_homarr.sh
+    rm /etc/systemd/system/homarr.service
+    cat <<EOF >/etc/systemd/system/homarr.service
 [Unit]
 Description=Homarr Service
 After=network.target
@@ -77,10 +77,10 @@ ExecStart=/opt/run_homarr.sh
 [Install]
 WantedBy=multi-user.target
 EOF
-        msg_ok "Updated Services"
-        systemctl daemon-reload
-fi
-  RELEASE=$(curl -s https://api.github.com/repos/homarr-labs/homarr/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+    msg_ok "Updated Services"
+    systemctl daemon-reload
+  fi
+  RELEASE=$(curl -fsSL https://api.github.com/repos/homarr-labs/homarr/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
   if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
 
     msg_info "Stopping Services (Patience)"
@@ -138,9 +138,9 @@ EOF
 
     mkdir -p /opt/homarr/apps/cli
     cp /opt/homarr/packages/cli/cli.cjs /opt/homarr/apps/cli/cli.cjs
-    echo $'#!/bin/bash\ncd /opt/homarr/apps/cli && node ./cli.cjs "$@"' > /usr/bin/homarr
+    echo $'#!/bin/bash\ncd /opt/homarr/apps/cli && node ./cli.cjs "$@"' >/usr/bin/homarr
     chmod +x /usr/bin/homarr
-    
+
     mkdir /opt/homarr/build
     cp ./node_modules/better-sqlite3/build/Release/better_sqlite3.node ./build/better_sqlite3.node
     echo "${RELEASE}" >/opt/${APP}_version.txt

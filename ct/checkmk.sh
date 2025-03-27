@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: Michel Roegl-Brunner (michelroegl-brunner)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -27,7 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/checkmk/checkmk/tags | grep "name" | awk '{print substr($2, 3, length($2)-4) }' | tr ' ' '\n' | grep -v '\-rc' | sort -V | tail -n 1) 
+  RELEASE=$(curl -fsSL https://api.github.com/repos/checkmk/checkmk/tags | grep "name" | awk '{print substr($2, 3, length($2)-4) }' | tr ' ' '\n' | grep -v '\-rc' | sort -V | tail -n 1)
   if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
     msg_info "Updating ${APP} to v${RELEASE}"
     $STD omd stop monitoring
@@ -36,7 +36,7 @@ function update_script() {
     $STD apt-get install -y /opt/checkmk.deb
     $STD omd --force -V ${RELEASE}.cre update --conflict=install monitoring
     $STD omd start monitoring
-    $STD omd -f rm monitoringbackup 
+    $STD omd -f rm monitoringbackup
     $STD omd cleanup
     rm -rf /opt/checkmk.deb
     msg_ok "Updated ${APP} to v${RELEASE}"

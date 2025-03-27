@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: MickLesk
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -50,7 +50,7 @@ function update_script() {
     GITHUB_URL="https://raw.githubusercontent.com/mbecker20/komodo/main/compose/${COMPOSE_FILE}"
     wget -q -O "/opt/komodo/${COMPOSE_FILE}" "$GITHUB_URL" || {
         msg_error "Failed to download ${COMPOSE_FILE} from GitHub!"
-        mv "/opt/komodo/${BACKUP_FILE}" "/opt/komodo/${COMPOSE_FILE}" 
+        mv "/opt/komodo/${BACKUP_FILE}" "/opt/komodo/${COMPOSE_FILE}"
         exit 1
     }
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: CrazyWolf13
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -31,9 +31,9 @@ function update_script() {
    msg_info "Updating yt-dlp"
    $STD yt-dlp -U
    msg_ok "Updated yt-dlp"
-   RELEASE=$(curl -s https://api.github.com/repos/marcopiovanello/yt-dlp-web-ui/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+   RELEASE=$(curl -fsSL https://api.github.com/repos/marcopiovanello/yt-dlp-web-ui/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
    if [[ "${RELEASE}" != "$(cat /opt/yt-dlp-webui_version.txt)" ]] || [[ ! -f /opt/yt-dlp-webui_version.txt ]]; then
-      
+
       msg_info "Stopping $APP"
       systemctl stop yt-dlp-webui
       msg_ok "Stopped $APP"

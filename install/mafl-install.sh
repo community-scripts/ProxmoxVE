@@ -34,7 +34,7 @@ $STD npm install -g npm@latest
 $STD npm install -g yarn
 msg_ok "Installed Node.js"
 
-RELEASE=$(curl -s https://api.github.com/repos/hywax/mafl/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+RELEASE=$(curl -fsSL https://api.github.com/repos/hywax/mafl/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 msg_info "Installing Mafl v${RELEASE}"
 wget -q https://github.com/hywax/mafl/archive/refs/tags/v${RELEASE}.tar.gz
 tar -xzf v${RELEASE}.tar.gz

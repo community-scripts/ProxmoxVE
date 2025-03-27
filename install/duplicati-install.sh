@@ -21,7 +21,7 @@ $STD apt-get install -y \
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up Duplicati"
-RELEASE=$(curl -s https://api.github.com/repos/duplicati/duplicati/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4)}')
+RELEASE=$(curl -fsSL https://api.github.com/repos/duplicati/duplicati/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4)}')
 wget -q "https://github.com/duplicati/duplicati/releases/download/v${RELEASE}/duplicati-${RELEASE}-linux-x64-gui.deb"
 $STD dpkg -i duplicati-${RELEASE}-linux-x64-gui.deb
 echo "${RELEASE}" >/opt/Duplicati_version.txt

@@ -23,7 +23,7 @@ $STD apt-get install -y \
 msg_ok "Installed Dependencies"
 
 msg_info "Adding PHP8.3 Repository"
-$STD curl -sSLo /tmp/debsuryorg-archive-keyring.deb https://packages.sury.org/debsuryorg-archive-keyring.deb
+$STD curl -fsSLSLo /tmp/debsuryorg-archive-keyring.deb https://packages.sury.org/debsuryorg-archive-keyring.deb
 $STD dpkg -i /tmp/debsuryorg-archive-keyring.deb
 $STD sh -c 'echo "deb [signed-by=/usr/share/keyrings/deb.sury.org-php.gpg] https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list'
 $STD apt-get update
@@ -53,7 +53,7 @@ $STD mysql -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH 
 msg_ok "Set up MariaDB"
 
 msg_info "Installing Pelican Panel"
-RELEASE=$(curl -s https://api.github.com/repos/pelican-dev/panel/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+RELEASE=$(curl -fsSL https://api.github.com/repos/pelican-dev/panel/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 mkdir /opt/pelican-panel
 cd /opt/pelican-panel
 wget -q "https://github.com/pelican-dev/panel/releases/download/v${RELEASE}/panel.tar.gz"

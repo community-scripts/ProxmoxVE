@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -27,7 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -s https://api.github.com/repos/Koenkk/zigbee2mqtt/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+  RELEASE=$(curl -fsSL https://api.github.com/repos/Koenkk/zigbee2mqtt/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
   if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
     msg_info "Stopping Service"
     systemctl stop zigbee2mqtt
@@ -38,32 +38,32 @@ function update_script() {
     msg_ok "Updated pnpm"
 
     msg_info "Creating Backup"
-      rm -rf /opt/${APP}_backup*.tar.gz
-      mkdir -p /opt/z2m_backup
-      $STD tar -czf /opt/z2m_backup/${APP}_backup_$(date +%Y%m%d%H%M%S).tar.gz -C /opt zigbee2mqtt
-      mv /opt/zigbee2mqtt/data /opt/z2m_backup
+    rm -rf /opt/${APP}_backup*.tar.gz
+    mkdir -p /opt/z2m_backup
+    $STD tar -czf /opt/z2m_backup/${APP}_backup_$(date +%Y%m%d%H%M%S).tar.gz -C /opt zigbee2mqtt
+    mv /opt/zigbee2mqtt/data /opt/z2m_backup
     msg_ok "Backup Created"
 
     msg_info "Updating ${APP} to v${RELEASE}"
-      cd /opt
-      wget -q "https://github.com/Koenkk/zigbee2mqtt/archive/refs/tags/${RELEASE}.zip"
-      unzip -q ${RELEASE}.zip
-      rm -rf /opt/zigbee2mqtt
-      mv zigbee2mqtt-${RELEASE} /opt/zigbee2mqtt
-      rm -rf /opt/zigbee2mqtt/data
-      mv /opt/z2m_backup/data /opt/zigbee2mqtt
-      cd /opt/zigbee2mqtt 
-      $STD pnpm install --frozen-lockfile
-      $STD pnpm build
+    cd /opt
+    wget -q "https://github.com/Koenkk/zigbee2mqtt/archive/refs/tags/${RELEASE}.zip"
+    unzip -q ${RELEASE}.zip
+    rm -rf /opt/zigbee2mqtt
+    mv zigbee2mqtt-${RELEASE} /opt/zigbee2mqtt
+    rm -rf /opt/zigbee2mqtt/data
+    mv /opt/z2m_backup/data /opt/zigbee2mqtt
+    cd /opt/zigbee2mqtt
+    $STD pnpm install --frozen-lockfile
+    $STD pnpm build
     msg_ok "Updated Zigbee2MQTT"
 
     msg_info "Starting Service"
-      systemctl start zigbee2mqtt
+    systemctl start zigbee2mqtt
     msg_ok "Started Service"
 
     msg_info "Cleaning up"
-      rm -rf /opt/z2m_backup
-      rm -rf /opt/${RELEASE}.zip
+    rm -rf /opt/z2m_backup
+    rm -rf /opt/${RELEASE}.zip
     msg_ok "Cleaned up"
     echo "${RELEASE}" >/opt/${APP}_version.txt
   else

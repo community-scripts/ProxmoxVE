@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -14,7 +14,7 @@ var_os="debian"
 var_version="12"
 var_unprivileged="1"
 
-header_info "$APP" 
+header_info "$APP"
 variables
 color
 catch_errors
@@ -24,7 +24,7 @@ function update_script() {
     check_container_storage
     check_container_resources
 
-    if [[ ! -d /opt/jellyseerr ]]; then 
+    if [[ ! -d /opt/jellyseerr ]]; then
         msg_error "No ${APP} Installation Found!"
         exit
     fi
@@ -38,7 +38,7 @@ function update_script() {
         $STD apt-get update
         $STD apt-get -y upgrade
         msg_ok "Updating Packages"
-        
+
         msg_info "Cleaning up"
         apt-get -y autoremove
         apt-get -y autoclean
@@ -50,11 +50,11 @@ function update_script() {
 
     pnpm_current=$(pnpm --version 2>/dev/null)
     pnpm_desired=$(grep -Po '"pnpm":\s*"\K[^"]+' /opt/jellyseerr/package.json)
-    
+
     if [ -z "$pnpm_current" ]; then
         msg_error "pnpm not found. Installing version $pnpm_desired..."
         $STD npm install -g pnpm@"$pnpm_desired"
-    elif ! node -e "const semver = require('semver'); process.exit(semver.satisfies('$pnpm_current', '$pnpm_desired') ? 0 : 1)" ; then
+    elif ! node -e "const semver = require('semver'); process.exit(semver.satisfies('$pnpm_current', '$pnpm_desired') ? 0 : 1)"; then
         msg_error "Updating pnpm from version $pnpm_current to $pnpm_desired..."
         $STD npm install -g pnpm@"$pnpm_desired"
     else

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: jkrgr0
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -31,7 +31,7 @@ function update_script() {
     fi
 
     # Crawling the new version and checking whether an update is required
-    RELEASE=$(curl -s https://api.github.com/repos/Bubka/2FAuth/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+    RELEASE=$(curl -fsSL https://api.github.com/repos/Bubka/2FAuth/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
     if [[ "${RELEASE}" != "$(cat /opt/2fauth_version.txt)" ]] || [[ ! -f /opt/2fauth_version.txt ]]; then
         msg_info "Updating $APP to ${RELEASE}"
 
@@ -46,7 +46,7 @@ function update_script() {
         # Execute Update
         wget -q "https://github.com/Bubka/2FAuth/archive/refs/tags/${RELEASE}.zip"
         unzip -q "${RELEASE}.zip"
-        mv "2FAuth-${RELEASE//v}/" "/opt/2fauth"
+        mv "2FAuth-${RELEASE//v/}/" "/opt/2fauth"
         mv "/opt/2fauth-backup/.env" "/opt/2fauth/.env"
         mv "/opt/2fauth-backup/storage" "/opt/2fauth/storage"
         cd "/opt/2fauth" || return

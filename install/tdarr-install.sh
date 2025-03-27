@@ -31,7 +31,7 @@ msg_ok "Set Up Hardware Acceleration"
 msg_info "Installing Tdarr"
 mkdir -p /opt/tdarr
 cd /opt/tdarr
-RELEASE=$(curl -s https://f000.backblazeb2.com/file/tdarrs/versions.json | grep -oP '(?<="Tdarr_Updater": ")[^"]+' | grep linux_x64 | head -n 1)
+RELEASE=$(curl -fsSL https://f000.backblazeb2.com/file/tdarrs/versions.json | grep -oP '(?<="Tdarr_Updater": ")[^"]+' | grep linux_x64 | head -n 1)
 wget -q $RELEASE
 $STD unzip Tdarr_Updater.zip
 rm -rf Tdarr_Updater.zip

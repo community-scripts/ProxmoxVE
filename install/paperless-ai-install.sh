@@ -35,7 +35,7 @@ msg_ok "Installed Node.js"
 
 msg_info "Setup Paperless-AI"
 cd /opt
-RELEASE=$(curl -s https://api.github.com/repos/clusterzx/paperless-ai/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+RELEASE=$(curl -fsSL https://api.github.com/repos/clusterzx/paperless-ai/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 wget -q "https://github.com/clusterzx/paperless-ai/archive/refs/tags/v${RELEASE}.zip"
 unzip -q v${RELEASE}.zip
 mv paperless-ai-${RELEASE} /opt/paperless-ai

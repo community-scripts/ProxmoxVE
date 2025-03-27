@@ -21,7 +21,7 @@ $STD apt-get install -y \
 msg_ok "Installed Dependencies"
 
 msg_info "Setup PHP8.4 Repository"
-$STD curl -sSLo /tmp/debsuryorg-archive-keyring.deb https://packages.sury.org/debsuryorg-archive-keyring.deb
+$STD curl -fsSLSLo /tmp/debsuryorg-archive-keyring.deb https://packages.sury.org/debsuryorg-archive-keyring.deb
 $STD dpkg -i /tmp/debsuryorg-archive-keyring.deb
 $STD sh -c 'echo "deb [signed-by=/usr/share/keyrings/deb.sury.org-php.gpg] https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list'
 $STD apt-get update
@@ -60,7 +60,7 @@ $STD npm install -g yarn
 msg_ok "Installed Node.js/Yarn"
 
 msg_info "Installing Koillection"
-RELEASE=$(curl -s https://api.github.com/repos/benjaminjonard/koillection/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+RELEASE=$(curl -fsSL https://api.github.com/repos/benjaminjonard/koillection/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 cd /opt
 wget -q "https://github.com/benjaminjonard/koillection/archive/refs/tags/${RELEASE}.zip"
 unzip -q "${RELEASE}.zip"

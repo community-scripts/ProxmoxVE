@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: Snarkenfaugister
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -49,8 +49,8 @@ function update_script() {
         unzip -q v${RELEASE}.zip
         mv pocket-id-${RELEASE} /opt/pocket-id
         mv /opt/data /opt/pocket-id/backend/data
-        mv /opt/backend.env /opt/pocket-id/backend/.env 
-        mv /opt/frontend.env /opt/pocket-id/frontend/.env 
+        mv /opt/backend.env /opt/pocket-id/backend/.env
+        mv /opt/frontend.env /opt/pocket-id/frontend/.env
 
         cd /opt/pocket-id/backend/cmd
         go build -o ../pocket-id-backend

@@ -20,7 +20,7 @@ msg_ok "Installed Dependencies"
 msg_info "Installing Owncast"
 mkdir /opt/owncast
 cd /opt/owncast
-wget -q $(curl -s https://api.github.com/repos/owncast/owncast/releases/latest | grep download | grep linux-64bit | cut -d\" -f4)
+wget -q $(curl -fsSL https://api.github.com/repos/owncast/owncast/releases/latest | grep download | grep linux-64bit | cut -d\" -f4)
 $STD unzip owncast*.zip
 rm owncast*.zip
 msg_ok "Installed Owncast"

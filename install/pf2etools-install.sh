@@ -34,7 +34,7 @@ msg_ok "Installed Node.js"
 
 msg_info "Setup Pf2eTools"
 cd /opt
-RELEASE=$(curl -s https://api.github.com/repos/Pf2eToolsOrg/Pf2eTools/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+RELEASE=$(curl -fsSL https://api.github.com/repos/Pf2eToolsOrg/Pf2eTools/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 wget -q "https://github.com/Pf2eToolsOrg/Pf2eTools/archive/refs/tags/${RELEASE}.zip"
 unzip -q "${RELEASE}.zip"
 mv "Pf2eTools-${RELEASE:1}" /opt/Pf2eTools

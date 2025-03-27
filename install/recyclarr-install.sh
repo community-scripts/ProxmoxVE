@@ -18,7 +18,7 @@ $STD apt-get install -y git
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Recyclarr"
-wget -q $(curl -s https://api.github.com/repos/recyclarr/recyclarr/releases/latest | grep download | grep linux-x64 | cut -d\" -f4)
+wget -q $(curl -fsSL https://api.github.com/repos/recyclarr/recyclarr/releases/latest | grep download | grep linux-x64 | cut -d\" -f4)
 tar -C /usr/local/bin -xJf recyclarr*.tar.xz
 mkdir -p /root/.config/recyclarr
 recyclarr config create

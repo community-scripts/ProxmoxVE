@@ -67,7 +67,7 @@ DJANGO_ADMIN_USER="djangoadmin"
 DJANGO_ADMIN_PASS="$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)"
 LOCAL_IP="$(hostname -I | awk '{print $1}')"
 cd /opt
-RELEASE=$(curl -s https://api.github.com/repos/seanmorley15/AdventureLog/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+RELEASE=$(curl -fsSL https://api.github.com/repos/seanmorley15/AdventureLog/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 wget -q "https://github.com/seanmorley15/AdventureLog/archive/refs/tags/v${RELEASE}.zip"
 unzip -q v${RELEASE}.zip
 mv AdventureLog-${RELEASE} /opt/adventurelog

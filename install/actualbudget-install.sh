@@ -34,7 +34,7 @@ msg_ok "Installed Node.js"
 
 msg_info "Installing Actual Budget"
 cd /opt
-RELEASE=$(curl -s https://api.github.com/repos/actualbudget/actual/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+RELEASE=$(curl -fsSL https://api.github.com/repos/actualbudget/actual/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 wget -q https://github.com/actualbudget/actual/archive/refs/tags/v${RELEASE}.tar.gz
 tar -xzf v${RELEASE}.tar.gz
 mv actual-${RELEASE} /opt/actualbudget

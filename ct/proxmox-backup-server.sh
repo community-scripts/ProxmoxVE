@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -23,11 +23,14 @@ function update_script() {
     header_info
     check_container_storage
     check_container_resources
-    if [[ ! -e /usr/sbin/proxmox-backup-manager ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
-        msg_info "Updating $APP LXC"
-        $STD apt-get update
-        $STD apt-get -y upgrade
-        msg_ok "Updated $APP LXC"
+    if [[ ! -e /usr/sbin/proxmox-backup-manager ]]; then
+        msg_error "No ${APP} Installation Found!"
+        exit
+    fi
+    msg_info "Updating $APP LXC"
+    $STD apt-get update
+    $STD apt-get -y upgrade
+    msg_ok "Updated $APP LXC"
     exit
 }
 

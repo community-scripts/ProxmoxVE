@@ -30,7 +30,7 @@ msg_ok "Installed Node.js"
 
 msg_info "Setup MagicMirror"
 temp_file=$(mktemp)
-RELEASE=$(curl -s https://api.github.com/repos/MagicMirrorOrg/MagicMirror/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+RELEASE=$(curl -fsSL https://api.github.com/repos/MagicMirrorOrg/MagicMirror/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 wget -q "https://github.com/MagicMirrorOrg/MagicMirror/archive/refs/tags/v${RELEASE}.tar.gz" -O "$temp_file"
 tar -xzf "$temp_file"
 mv MagicMirror-${RELEASE} /opt/magicmirror

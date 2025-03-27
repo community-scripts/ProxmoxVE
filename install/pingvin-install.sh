@@ -6,7 +6,7 @@
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://stonith404.github.io/pingvin-share/introduction
 
-source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
+source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
 catch_errors
@@ -34,7 +34,7 @@ msg_ok "Installed Node.js"
 
 msg_info "Installing Pingvin Share (Patience)"
 cd /opt
-RELEASE=$(curl -s https://api.github.com/repos/stonith404/pingvin-share/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+RELEASE=$(curl -fsSL https://api.github.com/repos/stonith404/pingvin-share/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 wget -q "https://github.com/stonith404/pingvin-share/archive/refs/tags/v${RELEASE}.zip"
 unzip -q v${RELEASE}.zip
@@ -50,7 +50,7 @@ $STD npm install
 $STD npm run build
 $STD pm2 start --name="pingvin-share-frontend" npm -- run start
 # create and enable pm2-root systemd script
-$STD pm2 startup systemd 
+$STD pm2 startup systemd
 # save running pm2 processes so pingvin-share can survive reboots
 $STD pm2 save
 msg_ok "Installed Pingvin Share"

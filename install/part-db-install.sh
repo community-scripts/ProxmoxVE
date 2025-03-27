@@ -57,7 +57,7 @@ msg_ok "Installed Node.js/Yarn"
 
 msg_info "Installing Part-DB (Patience)"
 cd /opt
-RELEASE=$(curl -s https://api.github.com/repos/Part-DB/Part-DB-server/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+RELEASE=$(curl -fsSL https://api.github.com/repos/Part-DB/Part-DB-server/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 wget -q "https://github.com/Part-DB/Part-DB-server/archive/refs/tags/v${RELEASE}.zip"
 unzip -q "v${RELEASE}.zip"
 mv /opt/Part-DB-server-${RELEASE}/ /opt/partdb

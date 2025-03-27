@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-RELEASE=$(curl -s https://api.github.com/repos/ventoy/pxe/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+RELEASE=$(curl -fsSL https://api.github.com/repos/ventoy/pxe/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 msg_info "Installing iVentoy v${RELEASE}"
 mkdir -p /opt/iventoy/{data,iso}
 wget -q https://github.com/ventoy/PXE/releases/download/v${RELEASE}/iventoy-${RELEASE}-linux-free.tar.gz

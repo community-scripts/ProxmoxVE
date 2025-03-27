@@ -54,7 +54,7 @@ msg_ok "Set up PostgreSQL"
 msg_info "Setup Outline (Patience)"
 temp_file=$(mktemp)
 LOCAL_IP="$(hostname -I | awk '{print $1}')"
-RELEASE=$(curl -s https://api.github.com/repos/outline/outline/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+RELEASE=$(curl -fsSL https://api.github.com/repos/outline/outline/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 wget -q "https://github.com/outline/outline/archive/refs/tags/v${RELEASE}.tar.gz" -O $temp_file
 tar zxf $temp_file
 mv outline-${RELEASE} /opt/outline

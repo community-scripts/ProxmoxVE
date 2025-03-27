@@ -32,7 +32,7 @@ var_os="homeassistant"
 DISK_SIZE="32G"
 #
 for version in "${VERSIONS[@]}"; do
-  eval "$version=$(curl -s https://raw.githubusercontent.com/home-assistant/version/master/$version.json | grep "ova" | cut -d '"' -f 4)"
+  eval "$version=$(curl -fsSL https://raw.githubusercontent.com/home-assistant/version/master/$version.json | grep "ova" | cut -d '"' -f 4)"
 done
 YW=$(echo "\033[33m")
 BL=$(echo "\033[36m")

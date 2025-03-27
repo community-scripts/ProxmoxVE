@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 tteck
 # Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -19,15 +19,15 @@ variables
 color
 catch_errors
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /opt/ErsatzTV ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    RELEASE=$(curl -s https://api.github.com/repos/ErsatzTV/ErsatzTV/releases | grep -oP '"tag_name": "\K[^"]+' | head -n 1)
-    if [[ ! -f /opt/${APP}_version.txt && $(echo "x.x.x" > /opt/${APP}_version.txt) || "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /opt/ErsatzTV ]]; then
+    msg_error "No ${APP} Installation Found!"
+    exit
+  fi
+  RELEASE=$(curl -fsSL https://api.github.com/repos/ErsatzTV/ErsatzTV/releases | grep -oP '"tag_name": "\K[^"]+' | head -n 1)
+  if [[ ! -f /opt/${APP}_version.txt && $(echo "x.x.x" >/opt/${APP}_version.txt) || "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
     msg_info "Stopping ErsatzTV"
     systemctl stop ersatzTV
     msg_ok "Stopped ErsatzTV"
@@ -58,7 +58,6 @@ function update_script() {
   fi
   exit
 }
-
 
 start
 build_container

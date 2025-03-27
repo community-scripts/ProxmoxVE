@@ -25,7 +25,7 @@ msg_ok "Installed Dependencies"
 msg_info "Setting up Golang"
 set +o pipefail
 temp_file=$(mktemp)
-golang_tarball=$(curl -s https://go.dev/dl/ | grep -oP 'go[\d\.]+\.linux-amd64\.tar\.gz' | head -n 1)
+golang_tarball=$(curl -fsSL https://go.dev/dl/ | grep -oP 'go[\d\.]+\.linux-amd64\.tar\.gz' | head -n 1)
 wget -q https://golang.org/dl/"$golang_tarball" -O "$temp_file"
 tar -C /usr/local -xzf "$temp_file"
 ln -sf /usr/local/go/bin/go /usr/local/bin/go
@@ -34,7 +34,7 @@ msg_ok "Setup Golang"
 
 msg_info "Setup ${APPLICATION} (Patience)"
 temp_file=$(mktemp)
-RELEASE=$(curl -s https://api.github.com/repos/StarFleetCPTN/GoMFT/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+RELEASE=$(curl -fsSL https://api.github.com/repos/StarFleetCPTN/GoMFT/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 wget -q "https://github.com/StarFleetCPTN/GoMFT/archive/refs/tags/v${RELEASE}.tar.gz" -O $temp_file
 tar -xzf $temp_file
 mv GoMFT-${RELEASE}/ /opt/gomft

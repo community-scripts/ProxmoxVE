@@ -91,7 +91,7 @@ fi
 
 msg_info "Installing Linkwarden (Patience)"
 cd /opt
-RELEASE=$(curl -s https://api.github.com/repos/linkwarden/linkwarden/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+RELEASE=$(curl -fsSL https://api.github.com/repos/linkwarden/linkwarden/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 wget -q "https://github.com/linkwarden/linkwarden/archive/refs/tags/${RELEASE}.zip"
 unzip -q ${RELEASE}.zip
 mv linkwarden-${RELEASE:1} /opt/linkwarden

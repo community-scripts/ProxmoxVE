@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Zoraxy (Patience)"
-RELEASE=$(curl -s https://api.github.com/repos/tobychui/zoraxy/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+RELEASE=$(curl -fsSL https://api.github.com/repos/tobychui/zoraxy/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 wget -q "https://github.com/tobychui/zoraxy/releases/download/${RELEASE}/zoraxy_linux_amd64"
 mkdir -p /opt/zoraxy
 mv zoraxy_linux_amd64 /opt/zoraxy/zoraxy

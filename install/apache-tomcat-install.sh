@@ -115,7 +115,7 @@ case $version in
 esac
 
 msg_info "Installing Tomcat $TOMCAT_VERSION"
-LATEST_VERSION=$(curl -s "https://dlcdn.apache.org/tomcat/tomcat-$TOMCAT_VERSION/" | grep -oP 'v[0-9]+\.[0-9]+\.[0-9]+(-M[0-9]+)?/' | sort -V | tail -n 1 | sed 's/\/$//; s/v//')
+LATEST_VERSION=$(curl -fsSL "https://dlcdn.apache.org/tomcat/tomcat-$TOMCAT_VERSION/" | grep -oP 'v[0-9]+\.[0-9]+\.[0-9]+(-M[0-9]+)?/' | sort -V | tail -n 1 | sed 's/\/$//; s/v//')
 TOMCAT_URL="https://dlcdn.apache.org/tomcat/tomcat-$TOMCAT_VERSION/v$LATEST_VERSION/bin/apache-tomcat-$LATEST_VERSION.tar.gz"
 wget -qO /tmp/tomcat.tar.gz "$TOMCAT_URL"
 mkdir -p /opt/tomcat-$TOMCAT_VERSION

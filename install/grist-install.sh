@@ -32,7 +32,7 @@ $STD npm install -g yarn
 msg_ok "Installed Node.js"
 
 msg_info "Installing Grist"
-RELEASE=$(curl -s https://api.github.com/repos/gristlabs/grist-core/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+RELEASE=$(curl -fsSL https://api.github.com/repos/gristlabs/grist-core/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 export CYPRESS_INSTALL_BINARY=0
 export NODE_OPTIONS="--max-old-space-size=2048"
 cd /opt

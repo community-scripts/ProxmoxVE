@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-RELEASE=$(curl -s https://api.github.com/repos/juanfont/headscale/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+RELEASE=$(curl -fsSL https://api.github.com/repos/juanfont/headscale/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 msg_info "Installing ${APPLICATION} v${RELEASE}"
 wget -q https://github.com/juanfont/headscale/releases/download/v${RELEASE}/headscale_${RELEASE}_linux_amd64.deb
 $STD dpkg -i headscale_${RELEASE}_linux_amd64.deb

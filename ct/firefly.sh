@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: quantumryuu
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -20,15 +20,15 @@ color
 catch_errors
 
 function update_script() {
-header_info
-check_container_storage
-check_container_resources
+  header_info
+  check_container_storage
+  check_container_resources
 
   if [[ ! -d /opt/firefly ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -s https://api.github.com/repos/firefly-iii/firefly-iii/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4)}')
+  RELEASE=$(curl -fsSL https://api.github.com/repos/firefly-iii/firefly-iii/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4)}')
   if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
     msg_info "Stopping Apache2"
     systemctl stop apache2
@@ -42,7 +42,7 @@ check_container_resources
     tar -xzf FireflyIII-v${RELEASE}.tar.gz -C /opt/firefly --exclude='storage'
     cp /opt/.env /opt/firefly/.env
     cp -r /opt/storage /opt/firefly/storage
-    cd /opt/firefly 
+    cd /opt/firefly
     chown -R www-data:www-data /opt/firefly
     chmod -R 775 /opt/firefly/storage
     $STD php artisan migrate --seed --force

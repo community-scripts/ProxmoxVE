@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: Jakub Matraszek (jmatraszek)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -24,7 +24,7 @@ function update_script() {
     check_container_storage
     check_container_resources
 
-    if command -v cross-seed &> /dev/null; then
+    if command -v cross-seed &>/dev/null; then
         current_version=$(cross-seed --version)
         latest_version=$(npm show cross-seed version)
         if [ "$current_version" != "$latest_version" ]; then

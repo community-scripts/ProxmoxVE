@@ -87,7 +87,7 @@ rm paperless-ngx-$Paperlessngx.tar.xz
 cd /opt/paperless
 $STD pip install --upgrade pip
 $STD pip install -r requirements.txt
-curl -s -o /opt/paperless/paperless.conf https://raw.githubusercontent.com/paperless-ngx/paperless-ngx/main/paperless.conf.example
+curl -fsSL -o /opt/paperless/paperless.conf https://raw.githubusercontent.com/paperless-ngx/paperless-ngx/main/paperless.conf.example
 mkdir -p {consume,data,media,static}
 sed -i -e 's|#PAPERLESS_REDIS=redis://localhost:6379|PAPERLESS_REDIS=redis://localhost:6379|' /opt/paperless/paperless.conf
 sed -i -e "s|#PAPERLESS_CONSUMPTION_DIR=../consume|PAPERLESS_CONSUMPTION_DIR=/opt/paperless/consume|" /opt/paperless/paperless.conf

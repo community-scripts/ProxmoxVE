@@ -30,7 +30,7 @@ $STD npm install -g pnpm
 msg_ok "Installed Node.js"
 
 LOCAL_IP=$(hostname -I | awk '{print $1}')
-RELEASE=$(curl -s https://api.github.com/repos/gethomepage/homepage/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+RELEASE=$(curl -fsSL https://api.github.com/repos/gethomepage/homepage/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 msg_info "Installing Homepage v${RELEASE} (Patience)"
 wget -q https://github.com/gethomepage/homepage/archive/refs/tags/v${RELEASE}.tar.gz
 $STD tar -xzf v${RELEASE}.tar.gz

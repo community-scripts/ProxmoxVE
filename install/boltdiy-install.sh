@@ -33,7 +33,7 @@ msg_ok "Setup Node.js"
 
 msg_info "Setup bolt.diy"
 temp_file=$(mktemp)
-RELEASE=$(curl -s https://api.github.com/repos/stackblitz-labs/bolt.diy/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+RELEASE=$(curl -fsSL https://api.github.com/repos/stackblitz-labs/bolt.diy/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 wget -q "https://github.com/stackblitz-labs/bolt.diy/archive/refs/tags/v${RELEASE}.tar.gz" -O $temp_file
 tar xzf $temp_file
 mv bolt.diy-${RELEASE} /opt/bolt.diy

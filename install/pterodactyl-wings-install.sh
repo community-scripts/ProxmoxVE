@@ -17,12 +17,12 @@ msg_info "Installing Docker"
 DOCKER_CONFIG_PATH='/etc/docker/daemon.json'
 mkdir -p $(dirname $DOCKER_CONFIG_PATH)
 echo -e '{\n  "log-driver": "journald"\n}' >/etc/docker/daemon.json
-$STD sh <(curl -sSL https://get.docker.com)
+$STD sh <(curl -fsSLSL https://get.docker.com)
 systemctl enable -q --now docker
 msg_ok "Installed Docker"
 
 msg_info "Installing Pterodactyl Wings"
-RELEASE=$(curl -s https://api.github.com/repos/pterodactyl/wings/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+RELEASE=$(curl -fsSL https://api.github.com/repos/pterodactyl/wings/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 wget -q -O /usr/local/bin/wings "https://github.com/pterodactyl/wings/releases/download/v${RELEASE}/wings_linux_amd64"
 chmod u+x /usr/local/bin/wings
 mkdir -p /etc/pterodactyl

@@ -22,7 +22,7 @@ $STD apt-get install -y \
 msg_ok "Installed Dependencies"
 
 msg_info "Installing barcodebuddy"
-RELEASE=$(curl -s https://api.github.com/repos/Forceu/barcodebuddy/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+RELEASE=$(curl -fsSL https://api.github.com/repos/Forceu/barcodebuddy/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 cd /opt
 wget -q "https://github.com/Forceu/barcodebuddy/archive/refs/tags/v${RELEASE}.zip"
 unzip -q "v${RELEASE}.zip"

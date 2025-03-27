@@ -17,7 +17,7 @@ msg_info "Installing Z-Wave JS UI"
 mkdir -p /opt/zwave-js-ui
 mkdir -p /opt/zwave_store
 cd /opt/zwave-js-ui
-RELEASE=$(curl -s https://api.github.com/repos/zwave-js/zwave-js-ui/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+RELEASE=$(curl -fsSL https://api.github.com/repos/zwave-js/zwave-js-ui/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 wget -q https://github.com/zwave-js/zwave-js-ui/releases/download/${RELEASE}/zwave-js-ui-${RELEASE}-linux.zip
 unzip -q zwave-js-ui-${RELEASE}-linux.zip
 cat <<EOF >/opt/.env

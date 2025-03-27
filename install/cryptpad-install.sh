@@ -34,7 +34,7 @@ read -p "Install OnlyOffice components instead of CKEditor? (Y/N): " onlyoffice
 
 msg_info "Setup ${APPLICATION}"
 temp_file=$(mktemp)
-RELEASE=$(curl -s https://api.github.com/repos/cryptpad/cryptpad/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+RELEASE=$(curl -fsSL https://api.github.com/repos/cryptpad/cryptpad/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 wget -q "https://github.com/cryptpad/cryptpad/archive/refs/tags/${RELEASE}.tar.gz" -O $temp_file
 tar zxf $temp_file
 mv cryptpad-$RELEASE /opt/cryptpad

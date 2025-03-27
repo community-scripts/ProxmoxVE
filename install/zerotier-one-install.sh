@@ -18,8 +18,8 @@ $STD apt-get install -y gnupg
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up Zerotier-One"
-curl -s 'https://raw.githubusercontent.com/zerotier/ZeroTierOne/main/doc/contact%40zerotier.com.gpg' | gpg --import &&
-  if z="$(curl -s 'https://install.zerotier.com/' | gpg)"; then
+curl -fsSL 'https://raw.githubusercontent.com/zerotier/ZeroTierOne/main/doc/contact%40zerotier.com.gpg' | gpg --import &&
+  if z="$(curl -fsSL 'https://install.zerotier.com/' | gpg)"; then
     echo "$z" | sudo bash
   fi
 msg_ok "Setup Zerotier-One"

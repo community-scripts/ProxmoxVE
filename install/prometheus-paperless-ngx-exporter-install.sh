@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Prometheus Paperless NGX Exporter"
-RELEASE=$(curl -s https://api.github.com/repos/hansmi/prometheus-paperless-exporter/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+RELEASE=$(curl -fsSL https://api.github.com/repos/hansmi/prometheus-paperless-exporter/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 wget -q https://github.com/hansmi/prometheus-paperless-exporter/releases/download/v${RELEASE}/prometheus-paperless-exporter_${RELEASE}_linux_amd64.tar.gz
 tar -xf prometheus-paperless-exporter_${RELEASE}_linux_amd64.tar.gz
 mv prometheus-paperless-exporter_${RELEASE}_linux_amd64/prometheus-paperless-exporter /usr/local/bin/

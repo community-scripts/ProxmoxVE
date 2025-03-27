@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: dave-yap (dave-yap)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -27,12 +27,12 @@ function update_script() {
         msg_error "No ${APP} Installation Found!"
         exit
     fi
-    RELEASE=$(curl -si https://github.com/zitadel/zitadel/releases/latest | grep location: | cut -d '/' -f 8 | tr -d '\r')
+    RELEASE=$(curl -fsSLi https://github.com/zitadel/zitadel/releases/latest | grep location: | cut -d '/' -f 8 | tr -d '\r')
     if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt | grep -oP '\d+\.\d+\.\d+')" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
         msg_info "Stopping $APP"
         systemctl stop zitadel
         msg_ok "Stopped $APP"
-        
+
         msg_info "Updating $APP to ${RELEASE}"
         cd /tmp
         wget -qc https://github.com/zitadel/zitadel/releases/download/$RELEASE/zitadel-linux-amd64.tar.gz -O - | tar -xz
@@ -49,7 +49,7 @@ function update_script() {
         rm -rf /tmp/zitadel-linux-amd64
         msg_ok "Cleanup Completed"
         msg_ok "Update Successful"
-      else
+    else
         msg_ok "No update required. ${APP} is already at ${RELEASE}"
     fi
     exit

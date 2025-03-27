@@ -55,7 +55,7 @@ $STD apt-get install -y mongodb-org
 msg_ok "Installed MongoDB $MONGODB_VERSION"
 
 msg_info "Installing Omada Controller"
-latest_url=$(curl -s "https://support.omadanetworks.com/en/download/software/omada-controller/" | grep -o 'https://static\.tp-link\.com/upload/software/[^"]*linux_x64[^"]*\.deb' | head -n 1)
+latest_url=$(curl -fsSL "https://support.omadanetworks.com/en/download/software/omada-controller/" | grep -o 'https://static\.tp-link\.com/upload/software/[^"]*linux_x64[^"]*\.deb' | head -n 1)
 latest_version=$(basename "$latest_url")
 
 wget -qL ${latest_url}
