@@ -44,7 +44,7 @@ function update_script() {
         msg_ok "Backup Created"
 
         # Execute Update
-        wget -q "https://github.com/Bubka/2FAuth/archive/refs/tags/${RELEASE}.zip"
+        curl -fsSL -o "${RELEASE}.zip" "https://github.com/Bubka/2FAuth/archive/refs/tags/${RELEASE}.zip"
         unzip -q "${RELEASE}.zip"
         mv "2FAuth-${RELEASE//v/}/" "/opt/2fauth"
         mv "/opt/2fauth-backup/.env" "/opt/2fauth/.env"
