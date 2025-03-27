@@ -29,15 +29,13 @@ color() {
 
   # Formatting
   CL=$(echo "\033[m")
-  UL=$(echo "\033[4m")
   BOLD=$(echo "\033[1m")
-  BFR="\\r\\033[K"
   HOLD=" "
   TAB="  "
 
   # Icons
-  CM="${TAB}✔️${TAB}${CL}"
-  CROSS="${TAB}✖️${TAB}${CL}"
+  CM="${TAB}✔️${TAB}"
+  CROSS="${TAB}✖️${TAB}"
   INFO="${TAB}💡${TAB}${CL}"
   OS="${TAB}🖥️${TAB}${CL}"
   OSVERSION="${TAB}🌟${TAB}${CL}"
@@ -81,58 +79,75 @@ error_handler() {
 }
 
 # This function displays an informational message with logging support.
+declare -A MSG_INFO_SHOWN
+SPINNER_ACTIVE=0
+SPINNER_PID=""
+SPINNER_MSG=""
+
+trap 'stop_spinner' EXIT INT TERM HUP
+
 start_spinner() {
   local msg="$1"
-  local frames=('⠋' '⠙' '⠹' '⠸' '⠼' '⠴' '⠦' '⠧' '⠇' '⠏')
+  local frames=(⠋ ⠙ ⠹ ⠸ ⠼ ⠴ ⠦ ⠧ ⠇ ⠏)
   local spin_i=0
   local interval=0.1
-  local term_width=$(tput cols)
+
+  SPINNER_MSG="$msg"
+  printf "\r\e[2K" >&2
 
   {
-    while [ "${SPINNER_ACTIVE:-1}" -eq 1 ]; do
-      printf "\r\e[2K${frames[spin_i]} ${YW}%b${CL}" "$msg" >&2
+    while [[ "$SPINNER_ACTIVE" -eq 1 ]]; do
+      printf "\r\e[2K%s %b" "${frames[spin_i]}" "${YW}${SPINNER_MSG}${CL}" >&2
       spin_i=$(((spin_i + 1) % ${#frames[@]}))
       sleep "$interval"
     done
   } &
 
   SPINNER_PID=$!
+  disown "$SPINNER_PID"
+}
+
+stop_spinner() {
+  if [[ ${SPINNER_PID+v} && -n "$SPINNER_PID" ]] && kill -0 "$SPINNER_PID" 2>/dev/null; then
+    kill "$SPINNER_PID" 2>/dev/null
+    sleep 0.1
+    kill -0 "$SPINNER_PID" 2>/dev/null && kill -9 "$SPINNER_PID" 2>/dev/null
+    wait "$SPINNER_PID" 2>/dev/null || true
+  fi
+  SPINNER_ACTIVE=0
+  unset SPINNER_PID
+}
+
+spinner_guard() {
+  if [[ "$SPINNER_ACTIVE" -eq 1 ]] && [[ -n "$SPINNER_PID" ]]; then
+    kill "$SPINNER_PID" 2>/dev/null
+    wait "$SPINNER_PID" 2>/dev/null || true
+    SPINNER_ACTIVE=0
+    unset SPINNER_PID
+  fi
 }
 
 msg_info() {
   local msg="$1"
-  if [ "${SPINNER_ACTIVE:-0}" -eq 1 ]; then
-    return
-  fi
+  [[ -n "${MSG_INFO_SHOWN["$msg"]+x}" ]] && return
+  MSG_INFO_SHOWN["$msg"]=1
 
+  spinner_guard
   SPINNER_ACTIVE=1
   start_spinner "$msg"
 }
 
 msg_ok() {
-  if [ -n "${SPINNER_PID:-}" ] && ps -p "$SPINNER_PID" >/dev/null 2>&1; then
-    kill "$SPINNER_PID" >/dev/null 2>&1
-    wait "$SPINNER_PID" 2>/dev/null || true
-  fi
-
   local msg="$1"
-  printf "\r\e[2K${CM}${GN}%b${CL}\n" "$msg" >&2
-  unset SPINNER_PID
-  SPINNER_ACTIVE=0
-
-  log_message "OK" "$msg"
+  stop_spinner
+  printf "\r\e[2K%s %b\n" "${CM}" "${GN}${msg}${CL}" >&2
+  unset MSG_INFO_SHOWN["$msg"]
 }
 
 msg_error() {
-  if [ -n "${SPINNER_PID:-}" ] && ps -p "$SPINNER_PID" >/dev/null 2>&1; then
-    kill "$SPINNER_PID" >/dev/null 2>&1
-    wait "$SPINNER_PID" 2>/dev/null || true
-  fi
-
+  stop_spinner
   local msg="$1"
-  printf "\r\e[2K${CROSS}${RD}%b${CL}\n" "$msg" >&2
-  unset SPINNER_PID
-  SPINNER_ACTIVE=0
+  printf "\r\e[2K%s %b\n" "${CROSS}" "${RD}${msg}${CL}" >&2
   log_message "ERROR" "$msg"
 }
 
@@ -1250,21 +1265,21 @@ exit_script() {
   #200 exit codes indicate error in create_lxc.sh
   #100 exit codes indicate error in install.func
 
-  if [ $exit_code -ne 0 ]; then  
+  if [ $exit_code -ne 0 ]; then
     case $exit_code in
-      100) post_update_to_api "failed" "100: Unexpected error in create_lxc.sh" ;;
-      101) post_update_to_api "failed" "101: No network connection detected in create_lxc.sh" ;;
-      200) post_update_to_api "failed" "200: LXC creation failed in create_lxc.sh" ;;
-      201) post_update_to_api "failed" "201: Invalid Storage class in create_lxc.sh" ;;
-      202) post_update_to_api "failed" "202: User aborted menu in create_lxc.sh" ;;
-      203) post_update_to_api "failed" "203: CTID not set in create_lxc.sh" ;;
-      204) post_update_to_api "failed" "204: PCT_OSTYPE not set in create_lxc.sh" ;;
-      205) post_update_to_api "failed" "205: CTID cannot be less than 100 in create_lxc.sh" ;;
-      206) post_update_to_api "failed" "206: CTID already in use in create_lxc.sh" ;;
-      207) post_update_to_api "failed" "207: Template not found in create_lxc.sh" ;;
-      208) post_update_to_api "failed" "208: Error downloading template in create_lxc.sh" ;;
-      209) post_update_to_api "failed" "209: Container creation failed, but template is intact in create_lxc.sh" ;;
-      *)   post_update_to_api "failed" "Unknown error, exit code: $exit_code in create_lxc.sh" ;;
+    100) post_update_to_api "failed" "100: Unexpected error in create_lxc.sh" ;;
+    101) post_update_to_api "failed" "101: No network connection detected in create_lxc.sh" ;;
+    200) post_update_to_api "failed" "200: LXC creation failed in create_lxc.sh" ;;
+    201) post_update_to_api "failed" "201: Invalid Storage class in create_lxc.sh" ;;
+    202) post_update_to_api "failed" "202: User aborted menu in create_lxc.sh" ;;
+    203) post_update_to_api "failed" "203: CTID not set in create_lxc.sh" ;;
+    204) post_update_to_api "failed" "204: PCT_OSTYPE not set in create_lxc.sh" ;;
+    205) post_update_to_api "failed" "205: CTID cannot be less than 100 in create_lxc.sh" ;;
+    206) post_update_to_api "failed" "206: CTID already in use in create_lxc.sh" ;;
+    207) post_update_to_api "failed" "207: Template not found in create_lxc.sh" ;;
+    208) post_update_to_api "failed" "208: Error downloading template in create_lxc.sh" ;;
+    209) post_update_to_api "failed" "209: Container creation failed, but template is intact in create_lxc.sh" ;;
+    *) post_update_to_api "failed" "Unknown error, exit code: $exit_code in create_lxc.sh" ;;
     esac
   fi
 }
