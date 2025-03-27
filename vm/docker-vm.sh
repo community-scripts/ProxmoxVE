@@ -41,6 +41,9 @@ HOLD="-"
 CM="${GN}✓${CL}"
 CROSS="${RD}✗${CL}"
 THIN="discard=on,ssd=1,"
+DEBIAN_NAME="Debian 12 (default)"
+UBUNTU_NAME="Ubuntu 22.04 with cloud-init"
+
 set -e
 trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
 trap cleanup EXIT
@@ -145,6 +148,9 @@ function default_settings() {
   VMID="$NEXTID"
   FORMAT=",efitype=4m"
   MACHINE=""
+  IMAGE=$DEBIAN_NAME
+  URL="https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-nocloud-$(dpkg --print-architecture).qcow2"
+  CLOUD_INIT=""
   DISK_CACHE=""
   HN="docker"
   CPU_TYPE=""
@@ -207,8 +213,6 @@ function advanced_settings() {
     exit-script
   fi
 
-  DEBIAN_NAME="Debian 12 (default)"
-  UBUNTU_NAME="Ubuntu 22.04 with cloud-init"
   if MACH=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "IMAGE TYPE" --radiolist --cancel-button Exit-Script "Choose Type" 10 58 2 \
     "debian" $DEBIAN_NAME ON \
     "ubuntu" $UBUNTU_NAME OFF \
@@ -221,6 +225,7 @@ function advanced_settings() {
       echo -e "${DGN}Using Machine Type: ${BGN}$UBUNTU_NAME${CL}"
       IMAGE=$UBUNTU_NAME
       URL="https://cloud-images.ubuntu.com/releases/noble/release/ubuntu-24.04-server-cloudimg-$(dpkg --print-architecture).img"
+      CLOUD_INIT="cloudinit"
     fi
   else
     exit-script
@@ -433,6 +438,10 @@ for i in {0,1}; do
   eval DISK${i}_REF=${STORAGE}:${DISK_REF:-}${!disk}
 done
 
+if [ -n "$CLOUD_INIT" ]; then
+  CLOUD_INIT = "--ide2 ${STORAGE}:${CLOUD_INIT}"
+fi
+
 msg_info "Installing Pre-Requisite libguestfs-tools onto Host"
 apt-get -qq update && apt-get -qq install libguestfs-tools lsb-release -y >/dev/null
 msg_ok "Installed libguestfs-tools successfully"
@@ -457,6 +466,7 @@ qm set $VMID \
   -scsi0 ${DISK1_REF},${DISK_CACHE}${THIN}size=2G \
   -boot order=scsi0 \
   -serial0 socket >/dev/null
+  ${CLOUD_INIT}
 qm resize $VMID scsi0 8G >/dev/null
 qm set $VMID --agent enabled=1 >/dev/null
 
