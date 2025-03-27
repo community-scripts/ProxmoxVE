@@ -5,6 +5,41 @@
     "date": "2025-03-21T20:22:46Z"
   },
   {
+    "name": "syncthing/syncthing",
+    "version": "v1.29.3",
+    "date": "2025-03-12T11:56:30Z"
+  },
+  {
+    "name": "evcc-io/evcc",
+    "version": "0.202.1",
+    "date": "2025-03-27T08:24:55Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.1",
+    "date": "2025-01-01T16:15:52Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1699",
+    "date": "2025-03-27T05:57:08Z"
+  },
+  {
+    "name": "openobserve/openobserve",
+    "version": "v0.14.5-rc6",
+    "date": "2025-03-27T05:15:49Z"
+  },
+  {
+    "name": "StarFleetCPTN/GoMFT",
+    "version": "v0.2.1",
+    "date": "2025-03-27T02:08:19Z"
+  },
+  {
+    "name": "fhem/fhem-mirror",
+    "version": "6.2",
+    "date": "2025-03-27T02:00:18Z"
+  },
+  {
     "name": "element-hq/synapse",
     "version": "v1.127.1",
     "date": "2025-03-26T21:44:28Z"
@@ -16,18 +51,13 @@
   },
   {
     "name": "ollama/ollama",
-    "version": "v0.6.3-rc1",
-    "date": "2025-03-26T20:39:01Z"
-  },
-  {
-    "name": "fhem/fhem-mirror",
-    "version": "6.2",
-    "date": "2025-03-26T20:29:58Z"
+    "version": "v0.6.2",
+    "date": "2025-03-18T03:11:33Z"
   },
   {
     "name": "runtipi/runtipi",
-    "version": "e2e",
-    "date": "2025-03-23T22:08:04Z"
+    "version": "nightly",
+    "date": "2025-03-26T20:06:34Z"
   },
   {
     "name": "glanceapp/glance",
@@ -38,6 +68,11 @@
     "name": "tailscale/tailscale",
     "version": "v1.82.0",
     "date": "2025-03-26T19:50:59Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.1.4",
+    "date": "2025-03-13T15:41:42Z"
   },
   {
     "name": "semaphoreui/semaphore",
@@ -70,11 +105,6 @@
     "date": "2025-03-26T14:11:45Z"
   },
   {
-    "name": "evcc-io/evcc",
-    "version": "0.202.0",
-    "date": "2025-03-26T10:19:01Z"
-  },
-  {
     "name": "jupyter/notebook",
     "version": "@jupyter-notebook/ui-components@7.4.0-beta.3",
     "date": "2025-03-26T10:07:53Z"
@@ -93,11 +123,6 @@
     "name": "sct/overseerr",
     "version": "v1.34.0",
     "date": "2025-03-26T08:48:34Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1695",
-    "date": "2025-03-26T06:01:34Z"
   },
   {
     "name": "pocketbase/pocketbase",
@@ -123,11 +148,6 @@
     "name": "grafana/grafana",
     "version": "v11.6.0",
     "date": "2025-03-25T22:10:15Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.1.4",
-    "date": "2025-03-13T15:41:42Z"
   },
   {
     "name": "zabbix/zabbix",
@@ -295,11 +315,6 @@
     "date": "2025-03-16T09:41:37Z"
   },
   {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.1",
-    "date": "2025-01-01T16:15:52Z"
-  },
-  {
     "name": "usememos/memos",
     "version": "v0.24.2",
     "date": "2025-03-23T04:01:50Z"
@@ -355,16 +370,6 @@
     "date": "2025-03-21T11:11:39Z"
   },
   {
-    "name": "openobserve/openobserve",
-    "version": "v0.14.5-rc5",
-    "date": "2025-03-21T10:50:34Z"
-  },
-  {
-    "name": "StarFleetCPTN/GoMFT",
-    "version": "v0.1.18",
-    "date": "2025-03-21T04:36:04Z"
-  },
-  {
     "name": "jhuckaby/Cronicle",
     "version": "v0.9.77",
     "date": "2025-03-21T02:25:42Z"
@@ -418,11 +423,6 @@
     "name": "Donkie/Spoolman",
     "version": "v0.22.1",
     "date": "2025-03-18T21:01:22Z"
-  },
-  {
-    "name": "syncthing/syncthing",
-    "version": "v1.29.3",
-    "date": "2025-03-12T11:56:30Z"
   },
   {
     "name": "OctoPrint/OctoPrint",
