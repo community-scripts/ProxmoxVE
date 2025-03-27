@@ -207,6 +207,25 @@ function advanced_settings() {
     exit-script
   fi
 
+  DEBIAN_NAME="Debian 12 (default)"
+  UBUNTU_NAME="Ubuntu 22.04 with cloud-init"
+  if MACH=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "IMAGE TYPE" --radiolist --cancel-button Exit-Script "Choose Type" 10 58 2 \
+    "debian" $DEBIAN_NAME ON \
+    "ubuntu" $UBUNTU_NAME OFF \
+    3>&1 1>&2 2>&3); then
+    if [ $MACH = debian ]; then
+      echo -e "${DGN}Using Image Type: ${BGN}$DEBIAN_NAME${CL}"
+      IMAGE=$DEBIAN_NAME
+      URL="https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-nocloud-$(dpkg --print-architecture).qcow2"
+    else
+      echo -e "${DGN}Using Machine Type: ${BGN}$UBUNTU_NAME${CL}"
+      IMAGE=$UBUNTU_NAME
+      URL="https://cloud-images.ubuntu.com/releases/noble/release/ubuntu-24.04-server-cloudimg-$(dpkg --print-architecture).img"
+    fi
+  else
+    exit-script
+  fi
+
   if DISK_CACHE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "DISK CACHE" --radiolist "Choose" --cancel-button Exit-Script 10 58 2 \
     "0" "None (Default)" ON \
     "1" "Write Through" OFF \
@@ -384,8 +403,7 @@ else
 fi
 msg_ok "Using ${CL}${BL}$STORAGE${CL} ${GN}for Storage Location."
 msg_ok "Virtual Machine ID is ${CL}${BL}$VMID${CL}."
-msg_info "Retrieving the URL for the Debian 12 Qcow2 Disk Image"
-URL="https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-nocloud-$(dpkg --print-architecture).qcow2"
+msg_info "Retrieving the URL for the ${IMAGE} Disk Image"
 sleep 2
 msg_ok "${CL}${BL}${URL}${CL}"
 wget -q --show-progress $URL
@@ -419,14 +437,14 @@ msg_info "Installing Pre-Requisite libguestfs-tools onto Host"
 apt-get -qq update && apt-get -qq install libguestfs-tools lsb-release -y >/dev/null
 msg_ok "Installed libguestfs-tools successfully"
 
-msg_info "Adding Docker and Docker Compose Plugin to Debian 12 Qcow2 Disk Image"
+msg_info "Adding Docker and Docker Compose Plugin to ${IMAGE} Disk Image"
 virt-customize -q -a "${FILE}" --install qemu-guest-agent,apt-transport-https,ca-certificates,curl,gnupg,software-properties-common,lsb-release >/dev/null &&
 virt-customize -q -a "${FILE}" --run-command "mkdir -p /etc/apt/keyrings && curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg" >/dev/null &&
 virt-customize -q -a "${FILE}" --run-command "echo 'deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian bookworm stable' > /etc/apt/sources.list.d/docker.list" >/dev/null &&
 virt-customize -q -a "${FILE}" --run-command "apt-get update -qq && apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin" >/dev/null &&
 virt-customize -q -a "${FILE}" --run-command "systemctl enable docker" >/dev/null &&
 virt-customize -q -a "${FILE}" --run-command "echo -n > /etc/machine-id" >/dev/null
-msg_ok "Added Docker and Docker Compose Plugin to Debian 12 Qcow2 Disk Image successfully"
+msg_ok "Added Docker and Docker Compose Plugin to ${IMAGE} Disk Image successfully"
 
 
 msg_info "Creating a Docker VM"
