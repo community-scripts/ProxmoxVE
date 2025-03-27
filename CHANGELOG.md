@@ -14,6 +14,18 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 All LXC instances created using this repository come pre-installed with Midnight Commander, which is a command-line tool (`mc`) that offers a user-friendly file and directory management interface for the terminal environment.
 
 
+## 2025-03-27
+
+### 🚀 Updated Scripts
+
+  - [core]: add functions for Alpine (update / core deps) [@MickLesk](https://github.com/MickLesk) ([#3437](https://github.com/community-scripts/ProxmoxVE/pull/3437))
+
+### 🧰 Maintenance
+
+  - #### 💾 Core
+
+    - [core]: Refactor Spinner/MSG Function (support now alpine / performance / handling) [@MickLesk](https://github.com/MickLesk) ([#3436](https://github.com/community-scripts/ProxmoxVE/pull/3436))
+
 ## 2025-03-26
 
 ### 🆕 New Scripts
