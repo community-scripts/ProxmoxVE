@@ -388,7 +388,7 @@ msg_info "Retrieving the URL for the Debian 12 Qcow2 Disk Image"
 URL="https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-nocloud-$(dpkg --print-architecture).qcow2"
 sleep 2
 msg_ok "${CL}${BL}${URL}${CL}"
-wget -q --show-progress $URL
+curl -fsSL -o "$(basename "$URL")" "$URL"
 echo -en "\e[1A\e[0K"
 FILE=$(basename $URL)
 msg_ok "Downloaded ${CL}${BL}${FILE}${CL}"

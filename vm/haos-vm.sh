@@ -434,7 +434,7 @@ else
 fi
 sleep 2
 msg_ok "${CL}${BL}${URL}${CL}"
-wget -q --show-progress $URL
+curl -fsSL -o "$(basename "$URL")" "$URL"
 echo -en "\e[1A\e[0K"
 FILE=$(basename $URL)
 msg_ok "Downloaded ${CL}${BL}haos_ova-${BRANCH}.qcow2.xz${CL}"

@@ -423,7 +423,7 @@ msg_info "Retrieving the URL for the Ubuntu 22.04 Disk Image"
 URL=https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img
 sleep 2
 msg_ok "${CL}${BL}${URL}${CL}"
-wget -q --show-progress $URL
+curl -fsSL -o "$(basename "$URL")" "$URL"
 echo -en "\e[1A\e[0K"
 FILE=$(basename $URL)
 msg_ok "Downloaded ${CL}${BL}${FILE}${CL}"
