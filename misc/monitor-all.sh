@@ -16,16 +16,16 @@ cat <<"EOF"
 EOF
 
 add() {
-while true; do
-  read -p "This script will add Monitor All to Proxmox VE. Proceed(y/n)?" yn
-  case $yn in
-  [Yy]*) break ;;
-  [Nn]*) exit ;;
-  *) echo "Please answer yes or no." ;;
-  esac
-done
+  while true; do
+    read -p "This script will add Monitor All to Proxmox VE. Proceed(y/n)?" yn
+    case $yn in
+    [Yy]*) break ;;
+    [Nn]*) exit ;;
+    *) echo "Please answer yes or no." ;;
+    esac
+  done
 
-echo '#!/usr/bin/env bash
+  echo '#!/usr/bin/env bash
 # Read excluded instances from command line arguments
 excluded_instances=("$@")
 echo "Excluded instances: ${excluded_instances[@]}"
@@ -89,10 +89,10 @@ while true; do
   echo "$(date): Pausing for 5 minutes..."
   sleep 300
 done >/var/log/ping-instances.log 2>&1' >/usr/local/bin/ping-instances.sh
-touch /var/log/ping-instances.log
-# Change file permissions to executable
-chmod +x /usr/local/bin/ping-instances.sh
-cat <<EOF >/etc/systemd/system/ping-instances.timer
+  touch /var/log/ping-instances.log
+  # Change file permissions to executable
+  chmod +x /usr/local/bin/ping-instances.sh
+  cat <<EOF >/etc/systemd/system/ping-instances.timer
 [Unit]
 Description=Delay ping-instances.service by 5 minutes
 
@@ -104,8 +104,8 @@ OnUnitActiveSec=300
 WantedBy=timers.target
 EOF
 
-# Create ping-instances.service
-cat <<EOF >/etc/systemd/system/ping-instances.service
+  # Create ping-instances.service
+  cat <<EOF >/etc/systemd/system/ping-instances.service
 [Unit]
 Description=Ping instances every 5 minutes and restarts if necessary
 After=ping-instances.timer
@@ -125,12 +125,12 @@ StandardError=file:/var/log/ping-instances.log
 WantedBy=multi-user.target
 EOF
 
-# Reload daemon, enable and start ping-instances.service
-systemctl daemon-reload
-systemctl enable -q --now ping-instances.timer
-systemctl enable -q --now ping-instances.service
-clear
-echo -e "\n To view Monitor All logs: cat /var/log/ping-instances.log"
+  # Reload daemon, enable and start ping-instances.service
+  systemctl daemon-reload
+  systemctl enable -q --now ping-instances.timer
+  systemctl enable -q --now ping-instances.service
+  clear
+  echo -e "\n To view Monitor All logs: cat /var/log/ping-instances.log"
 }
 
 remove() {
@@ -141,23 +141,23 @@ remove() {
 }
 
 # Define options for the whiptail menu
-OPTIONS=(Add "Add Monitor-All to Proxmox VE" \
-         Remove "Remove Monitor-All from Proxmox VE")
+OPTIONS=(Add "Add Monitor-All to Proxmox VE"
+  Remove "Remove Monitor-All from Proxmox VE")
 
 # Show the whiptail menu and save the user's choice
 CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "Monitor-All for Proxmox VE" --menu "Select an option:" 10 58 2 \
-          "${OPTIONS[@]}" 3>&1 1>&2 2>&3)
+  "${OPTIONS[@]}" 3>&1 1>&2 2>&3)
 
 # Check the user's choice and perform the corresponding action
 case $CHOICE in
-  "Add")
-    add
-    ;;
-  "Remove")
-    remove
-    ;;
-  *)
-    echo "Exiting..."
-    exit 0
-    ;;
+"Add")
+  add
+  ;;
+"Remove")
+  remove
+  ;;
+*)
+  echo "Exiting..."
+  exit 0
+  ;;
 esac

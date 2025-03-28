@@ -48,48 +48,48 @@ start_routines() {
   header_info
 
   whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox --title "PVE8 SOURCES" "This will set the correct sources to update and install Proxmox VE 8." 10 58
-    msg_info "Changing to Proxmox VE 8 Sources"
-    cat <<EOF >/etc/apt/sources.list
+  msg_info "Changing to Proxmox VE 8 Sources"
+  cat <<EOF >/etc/apt/sources.list
 deb http://ftp.debian.org/debian bookworm main contrib
 deb http://ftp.debian.org/debian bookworm-updates main contrib
 deb http://security.debian.org/debian-security bookworm-security main contrib
 EOF
-    msg_ok "Changed to Proxmox VE 8 Sources"
+  msg_ok "Changed to Proxmox VE 8 Sources"
 
   whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox --title "PVE8-ENTERPRISE" "The 'pve-enterprise' repository is only available to users who have purchased a Proxmox VE subscription." 10 58
-    msg_info "Disabling 'pve-enterprise' repository"
-    cat <<EOF >/etc/apt/sources.list.d/pve-enterprise.list
+  msg_info "Disabling 'pve-enterprise' repository"
+  cat <<EOF >/etc/apt/sources.list.d/pve-enterprise.list
 # deb https://enterprise.proxmox.com/debian/pve bookworm pve-enterprise
 EOF
-    msg_ok "Disabled 'pve-enterprise' repository"
+  msg_ok "Disabled 'pve-enterprise' repository"
 
   whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox --title "PVE8-NO-SUBSCRIPTION" "The 'pve-no-subscription' repository provides access to all of the open-source components of Proxmox VE." 10 58
-    msg_info "Enabling 'pve-no-subscription' repository"
-    cat <<EOF >/etc/apt/sources.list.d/pve-install-repo.list
+  msg_info "Enabling 'pve-no-subscription' repository"
+  cat <<EOF >/etc/apt/sources.list.d/pve-install-repo.list
 deb http://download.proxmox.com/debian/pve bookworm pve-no-subscription
 EOF
-    msg_ok "Enabled 'pve-no-subscription' repository"
+  msg_ok "Enabled 'pve-no-subscription' repository"
 
   whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox --title "PVE8 CEPH PACKAGE REPOSITORIES" "The 'Ceph Package Repositories' provides access to both the 'no-subscription' and 'enterprise' repositories." 10 58
-    msg_info "Enabling 'ceph package repositories'"
-    cat <<EOF >/etc/apt/sources.list.d/ceph.list
+  msg_info "Enabling 'ceph package repositories'"
+  cat <<EOF >/etc/apt/sources.list.d/ceph.list
 # deb https://enterprise.proxmox.com/debian/ceph-quincy bookworm enterprise
 deb http://download.proxmox.com/debian/ceph-quincy bookworm no-subscription
 EOF
-    msg_ok "Enabled 'ceph package repositories'"
+  msg_ok "Enabled 'ceph package repositories'"
 
   whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox --title "PVE8 TEST" "The 'pvetest' repository can give advanced users access to new features and updates before they are officially released (Disabled)." 10 58
-    msg_info "Adding 'pvetest' repository and set disabled"
-    cat <<EOF >/etc/apt/sources.list.d/pvetest-for-beta.list
+  msg_info "Adding 'pvetest' repository and set disabled"
+  cat <<EOF >/etc/apt/sources.list.d/pvetest-for-beta.list
 # deb http://download.proxmox.com/debian/pve bookworm pvetest
 EOF
-    msg_ok "Added 'pvetest' repository"
+  msg_ok "Added 'pvetest' repository"
 
   whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox --title "PVE8 UPDATE" "Updating to Proxmox VE 8" 10 58
-    msg_info "Updating to Proxmox VE 8 (Patience)"
-    apt-get update
-    DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::="--force-confold" dist-upgrade -y
-    msg_ok "Updated to Proxmox VE 8"
+  msg_info "Updating to Proxmox VE 8 (Patience)"
+  apt-get update
+  DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::="--force-confold" dist-upgrade -y
+  msg_ok "Updated to Proxmox VE 8"
 
   CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "REBOOT" --menu "\nReboot Proxmox VE 8 now? (recommended)" 11 58 2 \
     "yes" " " \
@@ -113,7 +113,10 @@ while true; do
   read -p "Start the Update to Proxmox VE 8 Script (y/n)?" yn
   case $yn in
   [Yy]*) break ;;
-  [Nn]*) clear; exit ;;
+  [Nn]*)
+    clear
+    exit
+    ;;
   *) echo "Please answer yes or no." ;;
   esac
 done

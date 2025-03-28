@@ -38,17 +38,17 @@ done < <(pct list | awk 'NR>1')
 excluded_containers=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "Containers on $NODE" --checklist "\nSelect containers to skip from updates:\n" 16 $((MSG_MAX_LENGTH + 23)) 6 "${EXCLUDE_MENU[@]}" 3>&1 1>&2 2>&3 | tr -d '"') || exit
 
 function needs_reboot() {
-    local container=$1
-    local os=$(pct config "$container" | awk '/^ostype/ {print $2}')
-    local reboot_required_file="/var/run/reboot-required.pkgs"
-    if [ -f "$reboot_required_file" ]; then
-        if [[ "$os" == "ubuntu" || "$os" == "debian" ]]; then
-            if pct exec "$container" -- [ -s "$reboot_required_file" ]; then
-                return 0
-            fi
-        fi
+  local container=$1
+  local os=$(pct config "$container" | awk '/^ostype/ {print $2}')
+  local reboot_required_file="/var/run/reboot-required.pkgs"
+  if [ -f "$reboot_required_file" ]; then
+    if [[ "$os" == "ubuntu" || "$os" == "debian" ]]; then
+      if pct exec "$container" -- [ -s "$reboot_required_file" ]; then
+        return 0
+      fi
     fi
-    return 1
+  fi
+  return 1
 }
 
 function update_container() {
@@ -94,9 +94,9 @@ for container in $(pct list | awk '{if(NR>1) print $1}'); do
       update_container $container
     fi
     if pct exec "$container" -- [ -e "/var/run/reboot-required" ]; then
-        # Get the container's hostname and add it to the list
-        container_hostname=$(pct exec "$container" hostname)
-        containers_needing_reboot+=("$container ($container_hostname)")
+      # Get the container's hostname and add it to the list
+      container_hostname=$(pct exec "$container" hostname)
+      containers_needing_reboot+=("$container ($container_hostname)")
     fi
   fi
 done
@@ -104,9 +104,9 @@ wait
 header_info
 echo -e "${GN}The process is complete, and the containers have been successfully updated.${CL}\n"
 if [ "${#containers_needing_reboot[@]}" -gt 0 ]; then
-    echo -e "${RD}The following containers require a reboot:${CL}"
-    for container_name in "${containers_needing_reboot[@]}"; do
-        echo "$container_name"
-    done
+  echo -e "${RD}The following containers require a reboot:${CL}"
+  for container_name in "${containers_needing_reboot[@]}"; do
+    echo "$container_name"
+  done
 fi
 echo ""

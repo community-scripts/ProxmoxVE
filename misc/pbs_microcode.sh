@@ -39,8 +39,8 @@ header_info
 # Check if running on bare metal using systemd-detect-virt.
 virt=$(systemd-detect-virt)
 if [ "$virt" != "none" ]; then
-    msg_error "This script must be run on bare metal. Detected virtual environment: $virt"
-    exit 1
+  msg_error "This script must be run on bare metal. Detected virtual environment: $virt"
+  exit 1
 fi
 
 # Attempt to obtain the current loaded microcode revision
@@ -58,7 +58,7 @@ intel() {
   fi
 
   intel_microcode=$(curl -fsSL "https://ftp.debian.org/debian/pool/non-free-firmware/i/intel-microcode/" | grep -o 'href="[^"]*amd64.deb"' | sed 's/href="//;s/"//')
-  [ -z "$intel_microcode" ] && { 
+  [ -z "$intel_microcode" ] && {
     whiptail --backtitle "Proxmox Backup Server Helper Scripts" --title "No Microcode Found" --msgbox "No microcode packages were found.\nTry again later." 10 68
     msg_info "Exiting"
     sleep 1
@@ -71,7 +71,7 @@ intel() {
 
   while read -r TAG ITEM; do
     OFFSET=2
-    (( ${#ITEM} + OFFSET > MSG_MAX_LENGTH )) && MSG_MAX_LENGTH=$(( ${#ITEM} + OFFSET ))
+    ((${#ITEM} + OFFSET > MSG_MAX_LENGTH)) && MSG_MAX_LENGTH=$((${#ITEM} + OFFSET))
     MICROCODE_MENU+=("$TAG" "$ITEM " "OFF")
   done < <(echo "$intel_microcode")
 
@@ -80,7 +80,7 @@ intel() {
     --radiolist "\nSelect a microcode package to install:\n" \
     16 $((MSG_MAX_LENGTH + 58)) 6 "${MICROCODE_MENU[@]}" 3>&1 1>&2 2>&3 | tr -d '"') || exit
 
-  [ -z "$microcode" ] && { 
+  [ -z "$microcode" ] && {
     whiptail --backtitle "Proxmox Backup Server Helper Scripts" --title "No Microcode Selected" --msgbox "No microcode package was selected." 10 68
     msg_info "Exiting"
     sleep 1
@@ -89,7 +89,7 @@ intel() {
   }
 
   msg_info "Downloading Intel processor microcode package $microcode"
-curl -fsSL "http://ftp.debian.org/debian/pool/non-free-firmware/i/intel-microcode/$microcode" -O $(basename "http://ftp.debian.org/debian/pool/non-free-firmware/i/intel-microcode/$microcode")
+  curl -fsSL "http://ftp.debian.org/debian/pool/non-free-firmware/i/intel-microcode/$microcode" -O $(basename "http://ftp.debian.org/debian/pool/non-free-firmware/i/intel-microcode/$microcode")
   msg_ok "Downloaded Intel processor microcode package $microcode"
 
   msg_info "Installing $microcode (this might take a while)"
@@ -105,7 +105,7 @@ curl -fsSL "http://ftp.debian.org/debian/pool/non-free-firmware/i/intel-microcod
 amd() {
   amd_microcode=$(curl -fsSL "https://ftp.debian.org/debian/pool/non-free-firmware/a/amd64-microcode/" | grep -o 'href="[^"]*amd64.deb"' | sed 's/href="//;s/"//')
 
-  [ -z "$amd_microcode" ] && { 
+  [ -z "$amd_microcode" ] && {
     whiptail --backtitle "Proxmox Backup Server Helper Scripts" --title "No Microcode Found" --msgbox "No microcode packages were found.\nTry again later." 10 68
     msg_info "Exiting"
     sleep 1
@@ -118,7 +118,7 @@ amd() {
 
   while read -r TAG ITEM; do
     OFFSET=2
-    (( ${#ITEM} + OFFSET > MSG_MAX_LENGTH )) && MSG_MAX_LENGTH=$(( ${#ITEM} + OFFSET ))
+    ((${#ITEM} + OFFSET > MSG_MAX_LENGTH)) && MSG_MAX_LENGTH=$((${#ITEM} + OFFSET))
     MICROCODE_MENU+=("$TAG" "$ITEM " "OFF")
   done < <(echo "$amd_microcode")
 
@@ -127,7 +127,7 @@ amd() {
     --radiolist "\nSelect a microcode package to install:\n" \
     16 $((MSG_MAX_LENGTH + 58)) 6 "${MICROCODE_MENU[@]}" 3>&1 1>&2 2>&3 | tr -d '"') || exit
 
-  [ -z "$microcode" ] && { 
+  [ -z "$microcode" ] && {
     whiptail --backtitle "Proxmox Backup Server Helper Scripts" --title "No Microcode Selected" --msgbox "No microcode package was selected." 10 68
     msg_info "Exiting"
     sleep 1
@@ -136,7 +136,7 @@ amd() {
   }
 
   msg_info "Downloading AMD processor microcode package $microcode"
-curl -fsSL "https://ftp.debian.org/debian/pool/non-free-firmware/a/amd64-microcode/$microcode" -O $(basename "https://ftp.debian.org/debian/pool/non-free-firmware/a/amd64-microcode/$microcode")
+  curl -fsSL "https://ftp.debian.org/debian/pool/non-free-firmware/a/amd64-microcode/$microcode" -O $(basename "https://ftp.debian.org/debian/pool/non-free-firmware/a/amd64-microcode/$microcode")
   msg_ok "Downloaded AMD processor microcode package $microcode"
 
   msg_info "Installing $microcode (this might take a while)"

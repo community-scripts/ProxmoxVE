@@ -172,7 +172,10 @@ while true; do
   read -p "Start the Proxmox Mail Gateway Post Install Script (y/n)?" yn
   case $yn in
   [Yy]*) break ;;
-  [Nn]*) clear; exit ;;
+  [Nn]*)
+    clear
+    exit
+    ;;
   *) echo "Please answer yes or no." ;;
   esac
 done

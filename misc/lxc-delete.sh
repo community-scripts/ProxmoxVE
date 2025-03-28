@@ -5,8 +5,8 @@
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
 function header_info {
-  clear
-  cat <<"EOF"
+    clear
+    cat <<"EOF"
     ____                                          __   _  ________   ____       __     __     
    / __ \_________  _  ______ ___  ____  _  __   / /  | |/ / ____/  / __ \___  / /__  / /____ 
   / /_/ / ___/ __ \| |/_/ __ `__ \/ __ \| |/_/  / /   |   / /      / / / / _ \/ / _ \/ __/ _ \
@@ -20,7 +20,7 @@ spinner() {
     local pid=$1
     local delay=0.1
     local spinstr='|/-\'
-    while ps -p $pid > /dev/null; do
+    while ps -p $pid >/dev/null; do
         printf " [%c]  " "$spinstr"
         spinstr=${spinstr#?}${spinstr%"${spinstr#?}"}
         sleep $delay
@@ -59,15 +59,15 @@ while read -r container; do
     container_status=$(echo $container | awk '{print $3}')
     formatted_line=$(printf "$FORMAT" "$container_name" "$container_status")
     menu_items+=("$container_id" "$formatted_line" "OFF")
-done <<< "$containers"
+done <<<"$containers"
 
 CHOICES=$(whiptail --title "LXC Container Delete" \
-                   --checklist "Select LXC containers to delete:" 25 60 13 \
-                   "${menu_items[@]}" 3>&2 2>&1 1>&3)
+    --checklist "Select LXC containers to delete:" 25 60 13 \
+    "${menu_items[@]}" 3>&2 2>&1 1>&3)
 
 if [ -z "$CHOICES" ]; then
     whiptail --title "LXC Container Delete" \
-             --msgbox "No containers selected!" 10 60
+        --msgbox "No containers selected!" 10 60
     exit 1
 fi
 

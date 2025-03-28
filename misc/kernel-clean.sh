@@ -40,7 +40,7 @@ echo -e "\n${YW}Select kernels to remove (comma-separated, e.g., 1,2):${CL}"
 read -r selected
 
 # Parse selection
-IFS=',' read -r -a selected_indices <<< "$selected"
+IFS=',' read -r -a selected_indices <<<"$selected"
 kernels_to_remove=()
 
 for index in "${selected_indices[@]}"; do

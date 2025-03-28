@@ -36,7 +36,6 @@ IP=$(ip -4 addr show "$IFACE" | awk '/inet / {print $2}' | cut -d/ -f1 | head -n
 [[ -z "$IP" ]] && IP=$(hostname -I | awk '{print $1}')
 [[ -z "$IP" ]] && IP="127.0.0.1"
 
-
 # Detect OS
 if [[ -f "/etc/alpine-release" ]]; then
     OS="Alpine"
@@ -89,7 +88,7 @@ if [ -f "$INSTALL_PATH" ]; then
     read -r -p "Would you like to update ${APP}? (y/N): " update_prompt
     if [[ "${update_prompt,,}" =~ ^(y|yes)$ ]]; then
         msg_info "Updating ${APP}"
-curl -fsSL "https://github.com/filebrowser/filebrowser/releases/latest/download/linux-amd64-filebrowser.tar.gz" | tar -xzv -C /usr/local/bin &>/dev/null
+        curl -fsSL "https://github.com/filebrowser/filebrowser/releases/latest/download/linux-amd64-filebrowser.tar.gz" | tar -xzv -C /usr/local/bin &>/dev/null
         chmod +x "$INSTALL_PATH"
         msg_ok "Updated ${APP}"
         exit 0
@@ -107,7 +106,7 @@ read -r -p "Would you like to install ${APP}? (y/n): " install_prompt
 if [[ "${install_prompt,,}" =~ ^(y|yes)$ ]]; then
     msg_info "Installing ${APP} on ${OS}"
     $PKG_MANAGER wget tar curl &>/dev/null
-curl -fsSL "https://github.com/filebrowser/filebrowser/releases/latest/download/linux-amd64-filebrowser.tar.gz" | tar -xzv -C /usr/local/bin &>/dev/null
+    curl -fsSL "https://github.com/filebrowser/filebrowser/releases/latest/download/linux-amd64-filebrowser.tar.gz" | tar -xzv -C /usr/local/bin &>/dev/null
     chmod +x "$INSTALL_PATH"
     msg_ok "Installed ${APP}"
 
@@ -115,9 +114,9 @@ curl -fsSL "https://github.com/filebrowser/filebrowser/releases/latest/download/
     mkdir -p /usr/local/community-scripts
     chown root:root /usr/local/community-scripts
     chmod 755 /usr/local/community-scripts
-	touch "$DB_PATH"
-	chown root:root "$DB_PATH"
-	chmod 644 "$DB_PATH"
+    touch "$DB_PATH"
+    chown root:root "$DB_PATH"
+    chmod 644 "$DB_PATH"
     msg_ok "Directory created successfully"
 
     read -r -p "Would you like to use No Authentication? (y/N): " auth_prompt
@@ -141,7 +140,7 @@ curl -fsSL "https://github.com/filebrowser/filebrowser/releases/latest/download/
 
     msg_info "Creating service"
     if [[ "$OS" == "Debian" ]]; then
-        cat <<EOF > "$SERVICE_PATH"
+        cat <<EOF >"$SERVICE_PATH"
 [Unit]
 Description=Filebrowser
 After=network-online.target
@@ -159,7 +158,7 @@ WantedBy=multi-user.target
 EOF
         systemctl enable -q --now filebrowser
     else
-        cat <<EOF > "$SERVICE_PATH"
+        cat <<EOF >"$SERVICE_PATH"
 #!/sbin/openrc-run
 
 command="/usr/local/bin/filebrowser"

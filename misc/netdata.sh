@@ -6,8 +6,8 @@
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
 function header_info {
-    clear
-    cat <<"EOF"
+  clear
+  cat <<"EOF"
     _   __     __  ____        __
    / | / /__  / /_/ __ \____ _/ /_____ _
   /  |/ / _ \/ __/ / / / __ `/ __/ __ `/
@@ -52,14 +52,14 @@ install() {
   header_info
   read -r -p "Verbose mode? <y/N> " prompt
   if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
-  STD=""
+    STD=""
   else
-  STD="silent"
+    STD="silent"
   fi
   header_info
 
   msg_info "Setting up repository"
-curl -fsSL "https://repo.netdata.cloud/repos/repoconfig/debian/bookworm/netdata-repo_5-1+debian12_all.deb" -O $(basename "https://repo.netdata.cloud/repos/repoconfig/debian/bookworm/netdata-repo_5-1+debian12_all.deb")
+  curl -fsSL "https://repo.netdata.cloud/repos/repoconfig/debian/bookworm/netdata-repo_5-1+debian12_all.deb" -O $(basename "https://repo.netdata.cloud/repos/repoconfig/debian/bookworm/netdata-repo_5-1+debian12_all.deb")
   $STD dpkg -i netdata-repo_5-1+debian12_all.deb
   rm -rf netdata-repo_5-1+debian12_all.deb
   msg_ok "Set up repository"
@@ -76,9 +76,9 @@ uninstall() {
   header_info
   read -r -p "Verbose mode? <y/N> " prompt
   if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
-  STD=""
+    STD=""
   else
-  STD="silent"
+    STD="silent"
   fi
   header_info
 
@@ -102,21 +102,21 @@ if ! pveversion | grep -Eq "pve-manager/(8\.[0-9])"; then
   exit
 fi
 
-OPTIONS=(Install "Install NetData on Proxmox VE" \
-         Uninstall "Uninstall NetData from Proxmox VE")
+OPTIONS=(Install "Install NetData on Proxmox VE"
+  Uninstall "Uninstall NetData from Proxmox VE")
 
 CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "NetData" --menu "Select an option:" 10 58 2 \
-          "${OPTIONS[@]}" 3>&1 1>&2 2>&3)
+  "${OPTIONS[@]}" 3>&1 1>&2 2>&3)
 
 case $CHOICE in
-  "Install")
-    install
-    ;;
-  "Uninstall")
-    uninstall
-    ;;
-  *)
-    echo "Exiting..."
-    exit 0
-    ;;
+"Install")
+  install
+  ;;
+"Uninstall")
+  uninstall
+  ;;
+*)
+  echo "Exiting..."
+  exit 0
+  ;;
 esac
