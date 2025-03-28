@@ -20,7 +20,7 @@ msg_ok "Installed Dependencies"
 msg_info "Installing Readarr"
 mkdir -p /var/lib/readarr/
 chmod 775 /var/lib/readarr/
-$STD wget --content-disposition 'https://readarr.servarr.com/v1/update/develop/updatefile?os=linux&runtime=netcore&arch=x64'
+$STD curl -fJL 'https://readarr.servarr.com/v1/update/develop/updatefile?os=linux&runtime=netcore&arch=x64'
 $STD tar -xvzf Readarr.develop.*.tar.gz
 mv Readarr /opt
 chmod 775 /opt/Readarr

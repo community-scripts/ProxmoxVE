@@ -5,8 +5,8 @@
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
 function header_info {
-  clear
-  cat <<"EOF"
+    clear
+    cat <<"EOF"
     ____                                          ________                    ____             __                         __   __ _    ____  ___    
    / __ \_________  _  ______ ___  ____  _  __   / ____/ /__  ____ _____     / __ \_________  / /_  ____ _____  ___  ____/ /  / /| |  / /  |/  /____
   / /_/ / ___/ __ \| |/_/ __ `__ \/ __ \| |/_/  / /   / / _ \/ __ `/ __ \   / / / / ___/ __ \/ __ \/ __ `/ __ \/ _ \/ __  /  / / | | / / /|_/ / ___/
@@ -38,19 +38,19 @@ function find_orphaned_lvm {
     echo -e "❗ The following orphaned LVM volumes were found:\n"
     printf "%-25s %-10s %-10s\n" "LV Name" "VG" "Size"
     printf "%-25s %-10s %-10s\n" "-------------------------" "----------" "----------"
-    
-    for ((i = 0; i < ${#orphaned_volumes[@]}; i+=3)); do
-        printf "%-25s %-10s %-10s\n" "${orphaned_volumes[i]}" "${orphaned_volumes[i+1]}" "${orphaned_volumes[i+2]}"
+
+    for ((i = 0; i < ${#orphaned_volumes[@]}; i += 3)); do
+        printf "%-25s %-10s %-10s\n" "${orphaned_volumes[i]}" "${orphaned_volumes[i + 1]}" "${orphaned_volumes[i + 2]}"
     done
     echo ""
 }
 
 # Function to delete selected volumes
 function delete_orphaned_lvm {
-    for ((i = 0; i < ${#orphaned_volumes[@]}; i+=3)); do
+    for ((i = 0; i < ${#orphaned_volumes[@]}; i += 3)); do
         lv="${orphaned_volumes[i]}"
-        vg="${orphaned_volumes[i+1]}"
-        size="${orphaned_volumes[i+2]}"
+        vg="${orphaned_volumes[i + 1]}"
+        size="${orphaned_volumes[i + 2]}"
 
         read -p "❓ Do you want to delete $lv (VG: $vg, Size: $size)? [y/N]: " confirm
         if [[ "$confirm" =~ ^[Yy]$ ]]; then

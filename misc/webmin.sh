@@ -45,10 +45,10 @@ apt update &>/dev/null
 apt-get -y install libnet-ssleay-perl libauthen-pam-perl libio-pty-perl unzip shared-mime-info &>/dev/null
 msg_ok "Installed Prerequisites"
 
-LATEST=$(curl -sL https://api.github.com/repos/webmin/webmin/releases/latest | grep '"tag_name":' | cut -d'"' -f4)
+LATEST=$(curl -fsSLL https://api.github.com/repos/webmin/webmin/releases/latest | grep '"tag_name":' | cut -d'"' -f4)
 
 msg_info "Downloading Webmin"
-wget -q https://github.com/webmin/webmin/releases/download/$LATEST/webmin_${LATEST}_all.deb
+curl -fsSL "https://github.com/webmin/webmin/releases/download/$LATEST/webmin_${LATEST}_all.deb" -O $(basename "https://github.com/webmin/webmin/releases/download/$LATEST/webmin_${LATEST}_all.deb")
 msg_ok "Downloaded Webmin"
 
 msg_info "Installing Webmin"

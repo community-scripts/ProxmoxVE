@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Fetching Latest Wazuh Version"
-RELEASE=$(curl -s https://api.github.com/repos/wazuh/wazuh/releases/latest | grep '"tag_name"' | awk -F '"' '{print substr($4, 2, length($2)-4)}')
+RELEASE=$(curl -fsSL https://api.github.com/repos/wazuh/wazuh/releases/latest | grep '"tag_name"' | awk -F '"' '{print substr($4, 2, length($2)-4)}')
 msg_ok "Latest Wazuh Version: $RELEASE"
 
 msg_info "Setup Wazuh"

@@ -47,8 +47,8 @@ msg_ok "Set up Postgresql Database"
 
 msg_info "Setup ${APPLICATION}"
 tmp_file=$(mktemp)
-RELEASE=$(curl -s https://api.github.com/repos/dotnetfactory/fluid-calendar/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-wget -q "https://github.com/dotnetfactory/fluid-calendar/archive/refs/tags/v${RELEASE}.zip" -O $tmp_file
+RELEASE=$(curl -fsSL https://api.github.com/repos/dotnetfactory/fluid-calendar/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+curl -fsSL "https://github.com/dotnetfactory/fluid-calendar/archive/refs/tags/v${RELEASE}.zip" -o "$tmp_file"
 unzip -q $tmp_file
 mv ${APPLICATION}-${RELEASE}/ /opt/${APPLICATION}
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt

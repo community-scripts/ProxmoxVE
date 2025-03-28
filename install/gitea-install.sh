@@ -20,8 +20,8 @@ $STD apt-get install -y sqlite3
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Gitea"
-RELEASE=$(wget -q https://github.com/go-gitea/gitea/releases/latest -O - | grep "title>Release" | cut -d " " -f 4 | sed 's/^v//')
-wget -q https://github.com/go-gitea/gitea/releases/download/v$RELEASE/gitea-$RELEASE-linux-amd64
+RELEASE=$(curl -fsSL https://github.com/go-gitea/gitea/releases/latest | grep "title>Release" | cut -d " " -f 4 | sed 's/^v//')
+curl -fsSL "https://github.com/go-gitea/gitea/releases/download/v$RELEASE/gitea-$RELEASE-linux-amd64" -O $(basename "https://github.com/go-gitea/gitea/releases/download/v$RELEASE/gitea-$RELEASE-linux-amd64")
 mv gitea* /usr/local/bin/gitea
 chmod +x /usr/local/bin/gitea
 adduser --system --group --disabled-password --shell /bin/bash --home /etc/gitea gitea >/dev/null

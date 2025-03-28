@@ -46,8 +46,14 @@ function error_exit() {
 }
 clear
 header_info
-if command -v pveversion >/dev/null 2>&1; then echo -e "⚠️  Can't Install on Proxmox "; exit; fi
-if [ -e /etc/alpine-release ]; then echo -e "⚠️  Can't Install on Alpine"; exit; fi
+if command -v pveversion >/dev/null 2>&1; then
+    echo -e "⚠️  Can't Install on Proxmox "
+    exit
+fi
+if [ -e /etc/alpine-release ]; then
+    echo -e "⚠️  Can't Install on Alpine"
+    exit
+fi
 while true; do
     read -p "This will Install ${APP} on $hostname. Proceed(y/n)?" yn
     case $yn in
@@ -73,7 +79,7 @@ apt-get install -y curl &>/dev/null
 apt-get install -y git &>/dev/null
 msg_ok "Installed Dependencies"
 
-VERSION=$(curl -s https://api.github.com/repos/coder/code-server/releases/latest |
+VERSION=$(curl -fsSL https://api.github.com/repos/coder/code-server/releases/latest |
     grep "tag_name" |
     awk '{print substr($2, 3, length($2)-4) }')
 

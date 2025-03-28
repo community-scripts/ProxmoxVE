@@ -22,7 +22,7 @@ msg_ok "Installed Dependencies"
 
 msg_info "Installing OneDev"
 cd /opt
-wget -q https://code.onedev.io/onedev/server/~site/onedev-latest.tar.gz
+curl -fsSL "https://code.onedev.io/onedev/server/~site/onedev-latest.tar.gz" -O $(basename "https://code.onedev.io/onedev/server/~site/onedev-latest.tar.gz")
 tar -xzf onedev-latest.tar.gz
 mv /opt/onedev-latest /opt/onedev
 $STD /opt/onedev/bin/server.sh install

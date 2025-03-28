@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing ASP.NET Core Runtime"
-wget -q https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+curl -fsSL "https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb" -o "packages-microsoft-prod.deb"
 $STD dpkg -i packages-microsoft-prod.deb
 rm -rf packages-microsoft-prod.deb
 $STD apt-get update

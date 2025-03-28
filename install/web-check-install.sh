@@ -71,7 +71,7 @@ msg_ok "Setup Chromium"
 msg_info "Installing Web-Check (Patience)"
 temp_file=$(mktemp)
 RELEASE="patch-1"
-wget -q "https://github.com/CrazyWolf13/web-check/archive/refs/heads/${RELEASE}.tar.gz" -O $temp_file
+curl -fsSL "https://github.com/CrazyWolf13/web-check/archive/refs/heads/${RELEASE}.tar.gz" -o "$temp_file"
 tar xzf $temp_file
 mv web-check-${RELEASE} /opt/web-check
 cd /opt/web-check

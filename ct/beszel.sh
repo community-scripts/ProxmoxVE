@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) community-scripts ORG
 # Author: Michelle Zitzerman (Sinofage)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -30,11 +30,11 @@ function update_script() {
     msg_info "Stopping $APP"
     systemctl stop beszel-hub
     msg_ok "Stopped $APP"
-    
+
     msg_info "Updating $APP"
     $STD /opt/beszel/beszel update
     msg_ok "Updated $APP"
-    
+
     msg_info "Starting $APP"
     systemctl start beszel-hub
     msg_ok "Successfully started $APP"

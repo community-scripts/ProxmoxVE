@@ -37,7 +37,7 @@ $STD npm install -g yarn
 msg_ok "Installed Node.js/Yarn"
 
 msg_info "Installing Rust"
-wget -qL https://sh.rustup.rs
+curl -fsSL https://sh.rustup.rs -O
 $STD bash index.html -y --profile minimal
 echo 'export PATH=~/.cargo/bin:$PATH' >>~/.bashrc
 export PATH=~/.cargo/bin:$PATH
@@ -91,8 +91,8 @@ fi
 
 msg_info "Installing Linkwarden (Patience)"
 cd /opt
-RELEASE=$(curl -s https://api.github.com/repos/linkwarden/linkwarden/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-wget -q "https://github.com/linkwarden/linkwarden/archive/refs/tags/${RELEASE}.zip"
+RELEASE=$(curl -fsSL https://api.github.com/repos/linkwarden/linkwarden/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+curl -fsSL "https://github.com/linkwarden/linkwarden/archive/refs/tags/${RELEASE}.zip" -O $(basename "https://github.com/linkwarden/linkwarden/archive/refs/tags/${RELEASE}.zip")
 unzip -q ${RELEASE}.zip
 mv linkwarden-${RELEASE:1} /opt/linkwarden
 cd /opt/linkwarden

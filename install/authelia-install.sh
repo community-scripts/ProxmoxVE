@@ -14,8 +14,8 @@ network_check
 update_os
 
 msg_info "Installing Authelia"
-RELEASE=$(curl -s https://api.github.com/repos/authelia/authelia/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-wget -q "https://github.com/authelia/authelia/releases/download/${RELEASE}/authelia_${RELEASE}_amd64.deb"
+RELEASE=$(curl -fsSL https://api.github.com/repos/authelia/authelia/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+curl -fsSL "https://github.com/authelia/authelia/releases/download/${RELEASE}/authelia_${RELEASE}_amd64.deb" -O $(basename "https://github.com/authelia/authelia/releases/download/${RELEASE}/authelia_${RELEASE}_amd64.deb")
 $STD dpkg -i "authelia_${RELEASE}_amd64.deb"
 msg_ok "Install Authelia completed"
 

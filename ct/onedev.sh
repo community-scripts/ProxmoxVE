@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: kristocopani
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -27,7 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  GITHUB_RELEASE=$(curl -s https://api.github.com/repos/theonedev/onedev/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+  GITHUB_RELEASE=$(curl -fsSL https://api.github.com/repos/theonedev/onedev/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
   if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${GITHUB_RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
     msg_info "Stopping Service"
     systemctl stop onedev
@@ -35,7 +35,7 @@ function update_script() {
 
     msg_info "Updating ${APP} to v${GITHUB_RELEASE}"
     cd /opt
-    wget -q https://code.onedev.io/onedev/server/~site/onedev-latest.tar.gz
+curl -fsSL "https://code.onedev.io/onedev/server/~site/onedev-latest.tar.gz" -O $(basename "https://code.onedev.io/onedev/server/~site/onedev-latest.tar.gz")
     tar -xzf onedev-latest.tar.gz
     $STD /opt/onedev-latest/bin/upgrade.sh /opt/onedev
     RELEASE=$(cat /opt/onedev/release.properties | grep "version" | cut -d'=' -f2)

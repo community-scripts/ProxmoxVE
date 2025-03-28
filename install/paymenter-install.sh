@@ -25,15 +25,15 @@ $STD apt-get install -y \
     mariadb-server \
     nginx \
     redis-server
-$STD curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+$STD curl -fsSLS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Paymenter"
-RELEASE=$(curl -s https://api.github.com/repos/paymenter/paymenter/releases/latest | grep '"tag_name"' | sed -E 's/.*"tag_name": "([^"]+)".*/\1/')
+RELEASE=$(curl -fsSL https://api.github.com/repos/paymenter/paymenter/releases/latest | grep '"tag_name"' | sed -E 's/.*"tag_name": "([^"]+)".*/\1/')
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 mkdir -p /opt/paymenter
 cd /opt/paymenter
-wget -q "https://github.com/paymenter/paymenter/releases/download/${RELEASE}/paymenter.tar.gz"
+curl -fsSL "https://github.com/paymenter/paymenter/releases/download/${RELEASE}/paymenter.tar.gz" -O $(basename "https://github.com/paymenter/paymenter/releases/download/${RELEASE}/paymenter.tar.gz")
 $STD tar -xzvf paymenter.tar.gz
 chmod -R 755 storage/* bootstrap/cache/
 msg_ok "Installed Paymenter"

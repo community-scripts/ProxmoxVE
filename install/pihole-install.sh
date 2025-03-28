@@ -5,7 +5,7 @@
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://pi-hole.net/
 
-source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
+source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
 catch_errors
@@ -46,7 +46,7 @@ sed -i -E '
 /^\s*expandHosts =/ s|=.*|= true|
 ' /etc/pihole/pihole.toml
 
-cat <<EOF > /etc/dnsmasq.d/01-pihole.conf
+cat <<EOF >/etc/dnsmasq.d/01-pihole.conf
 server=8.8.8.8
 server=8.8.4.4
 EOF
@@ -131,7 +131,7 @@ forward-zone:
   #forward-addr: 2620:fe::9@853#dns.quad9.net
 EOF
   fi
-cat <<EOF > /etc/dnsmasq.d/01-pihole.conf
+  cat <<EOF >/etc/dnsmasq.d/01-pihole.conf
 server=127.0.0.1#5335
 server=8.8.8.8
 server=8.8.4.4

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: bvdberg01
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -27,7 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -s https://api.github.com/repos/sabre-io/Baikal/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+  RELEASE=$(curl -fsSL https://api.github.com/repos/sabre-io/Baikal/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
   if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
     msg_info "Stopping Service"
     systemctl stop apache2
@@ -35,7 +35,7 @@ function update_script() {
 
     msg_info "Updating ${APP} to v${RELEASE}"
     cd /opt
-    wget -q "https://github.com/sabre-io/baikal/releases/download/${RELEASE}/baikal-${RELEASE}.zip"
+curl -fsSL "https://github.com/sabre-io/baikal/releases/download/${RELEASE}/baikal-${RELEASE}.zip" -O $(basename "https://github.com/sabre-io/baikal/releases/download/${RELEASE}/baikal-${RELEASE}.zip")
     mv /opt/baikal /opt/baikal-backup
     unzip -o -q "baikal-${RELEASE}.zip"
     cp -r /opt/baikal-backup/config/baikal.yaml /opt/baikal/config/

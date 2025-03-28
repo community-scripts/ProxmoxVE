@@ -44,7 +44,6 @@ msg_error() {
   echo -e "${BFR} ${CROSS} ${RD}${msg}${CL}"
 }
 
-
 start_routines() {
   header_info
   CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "PBS 2 BACKUP" --menu "\nMake a backup of /etc/proxmox-backup to ensure that in the worst case, any relevant configuration can be recovered?" 14 58 2 \
@@ -164,7 +163,10 @@ while true; do
   read -p "Start the Update to Proxmox Backup Server 3 Script (y/n)?" yn
   case $yn in
   [Yy]*) break ;;
-  [Nn]*) clear; exit ;;
+  [Nn]*)
+    clear
+    exit
+    ;;
   *) echo "Please answer yes or no." ;;
   esac
 done

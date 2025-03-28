@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Setup ${APPLICATION}"
-RELEASE=$(curl -s https://api.github.com/repos/heiher/${APPLICATION}/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+RELEASE=$(curl -fsSL https://api.github.com/repos/heiher/${APPLICATION}/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 curl -L -o "${APPLICATION}" "https://github.com/heiher/${APPLICATION}/releases/download/${RELEASE}/hev-socks5-server-linux-x86_64"
 mv ${APPLICATION} /opt/${APPLICATION}
 chmod +x /opt/${APPLICATION}

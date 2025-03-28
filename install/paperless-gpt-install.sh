@@ -38,8 +38,8 @@ msg_ok "Installed Node.js"
 msg_info "Installing Golang"
 set +o pipefail
 temp_file=$(mktemp)
-golang_tarball=$(curl -s https://go.dev/dl/ | grep -oP 'go[\d\.]+\.linux-amd64\.tar\.gz' | head -n 1)
-wget -q https://golang.org/dl/"$golang_tarball" -O "$temp_file"
+golang_tarball=$(curl -fsSL https://go.dev/dl/ | grep -oP 'go[\d\.]+\.linux-amd64\.tar\.gz' | head -n 1)
+curl -fsSL "https://golang.org/dl/"$golang_tarball" -o ""$temp_file""
 tar -C /usr/local -xzf "$temp_file"
 ln -sf /usr/local/go/bin/go /usr/local/bin/go
 rm -f "$temp_file"
@@ -48,8 +48,8 @@ msg_ok "Installed Golang"
 
 msg_info "Setup Paperless-GPT"
 temp_file=$(mktemp)
-RELEASE=$(curl -s https://api.github.com/repos/icereed/paperless-gpt/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-wget -q "https://github.com/icereed/paperless-gpt/archive/refs/tags/v${RELEASE}.tar.gz" -O $temp_file
+RELEASE=$(curl -fsSL https://api.github.com/repos/icereed/paperless-gpt/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+curl -fsSL "https://github.com/icereed/paperless-gpt/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
 tar zxf $temp_file
 mv paperless-gpt-${RELEASE} /opt/paperless-gpt
 cd /opt/paperless-gpt/web-app

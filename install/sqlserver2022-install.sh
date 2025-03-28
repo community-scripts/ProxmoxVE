@@ -20,8 +20,8 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 msg_info "Setup SQL Server 2022"
-curl -s https://packages.microsoft.com/keys/microsoft.asc | sudo tee /etc/apt/trusted.gpg.d/microsoft.asc > /dev/null
-curl -fsSL https://packages.microsoft.com/config/ubuntu/22.04/mssql-server-2022.list | tee /etc/apt/sources.list.d/mssql-server-2022.list > /dev/null
+curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | sudo tee /etc/apt/trusted.gpg.d/microsoft.asc >/dev/null
+curl -fsSL https://packages.microsoft.com/config/ubuntu/22.04/mssql-server-2022.list | tee /etc/apt/sources.list.d/mssql-server-2022.list >/dev/null
 $STD apt-get update -y
 $STD apt-get install -y mssql-server
 msg_ok "Setup Server 2022"
@@ -29,8 +29,8 @@ msg_ok "Setup Server 2022"
 msg_info "Installing SQL Server Tools"
 export DEBIAN_FRONTEND=noninteractive
 export ACCEPT_EULA=Y
-curl -s https://packages.microsoft.com/keys/microsoft.asc | tee /etc/apt/trusted.gpg.d/microsoft.asc > /dev/null
-curl -fsSL https://packages.microsoft.com/config/ubuntu/22.04/prod.list | tee /etc/apt/sources.list.d/mssql-release.list > /dev/null
+curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | tee /etc/apt/trusted.gpg.d/microsoft.asc >/dev/null
+curl -fsSL https://packages.microsoft.com/config/ubuntu/22.04/prod.list | tee /etc/apt/sources.list.d/mssql-release.list >/dev/null
 $STD apt-get update
 $STD apt-get install -y -qq \
   mssql-tools18 \

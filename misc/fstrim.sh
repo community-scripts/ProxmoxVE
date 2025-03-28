@@ -29,12 +29,12 @@ echo "Loading..."
 
 ROOT_FS=$(df -Th "/" | awk 'NR==2 {print $2}')
 if [ "$ROOT_FS" != "ext4" ]; then
-    echo "Root filesystem is not ext4. Exiting script."
-    exit 1
+  echo "Root filesystem is not ext4. Exiting script."
+  exit 1
 fi
 whiptail --backtitle "Proxmox VE Helper Scripts" \
-         --title "Proxmox VE LXC Filesystem Trim" \
-         --yesno "The LXC containers will undergo the fstrim command. Proceed?" 10 58 || exit
+  --title "Proxmox VE LXC Filesystem Trim" \
+  --yesno "The LXC containers will undergo the fstrim command. Proceed?" 10 58 || exit
 
 NODE=$(hostname)
 EXCLUDE_MENU=()
@@ -47,12 +47,12 @@ while read -r TAG ITEM; do
 done < <(pct list | awk 'NR>1')
 
 excluded_containers_raw=$(whiptail --backtitle "Proxmox VE Helper Scripts" \
-    --title "Containers on $NODE" \
-    --checklist "\nSelect containers to skip from trimming:\n" \
-    16 $((MSG_MAX_LENGTH + 23)) 6 "${EXCLUDE_MENU[@]}" 3>&1 1>&2 2>&3)
+  --title "Containers on $NODE" \
+  --checklist "\nSelect containers to skip from trimming:\n" \
+  16 $((MSG_MAX_LENGTH + 23)) 6 "${EXCLUDE_MENU[@]}" 3>&1 1>&2 2>&3)
 
 if [ $? -ne 0 ]; then
-    exit
+  exit
 fi
 
 excluded_containers=$(echo "$excluded_containers_raw" | tr -d '"')
@@ -61,17 +61,17 @@ function trim_container() {
   local container=$1
   header_info
   echo -e "${BL}[Info]${GN} Trimming ${BL}$container${CL} \n"
-  
+
   local before_trim
   before_trim=$(lvs | awk -F '[[:space:]]+' 'NR>1 && (/Data%|'"vm-$container"'/) {gsub(/%/, "", $7); print $7}')
   echo -e "${RD}Data before trim $before_trim%${CL}"
-  
+
   pct fstrim "$container"
-  
+
   local after_trim
   after_trim=$(lvs | awk -F '[[:space:]]+' 'NR>1 && (/Data%|'"vm-$container"'/) {gsub(/%/, "", $7); print $7}')
   echo -e "${GN}Data after trim $after_trim%${CL}"
-  
+
   sleep 1.5
 }
 

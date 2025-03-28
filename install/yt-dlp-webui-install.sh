@@ -5,7 +5,7 @@
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/marcopiovanello/yt-dlp-web-ui
 
-source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
+source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
 catch_errors
@@ -18,14 +18,14 @@ $STD apt-get install -y ffmpeg
 msg_ok "Installed Dependencies"
 
 msg_info "Installing ${APPLICATION}"
-RELEASE=$(curl -s https://api.github.com/repos/marcopiovanello/yt-dlp-web-ui/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-wget -q "https://github.com/marcopiovanello/yt-dlp-web-ui/releases/download/v${RELEASE}/yt-dlp-webui_linux-amd64" -O /usr/local/bin/yt-dlp-webui
+RELEASE=$(curl -fsSL https://api.github.com/repos/marcopiovanello/yt-dlp-web-ui/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+curl -fsSL "https://github.com/marcopiovanello/yt-dlp-web-ui/releases/download/v${RELEASE}/yt-dlp-webui_linux-amd64" -o "/usr/local/bin/yt-dlp-webui"
 chmod +x /usr/local/bin/yt-dlp-webui
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Installed ${APPLICATION}"
 
 msg_info "Installing yt-dlp"
-wget -q https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -O /usr/local/bin/yt-dlp
+curl -fsSL "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp" -o "/usr/local/bin/yt-dlp"
 chmod a+rx /usr/local/bin/yt-dlp
 msg_ok "Installed yt-dlp"
 
@@ -37,9 +37,9 @@ RPC_PASSWORD=$(openssl rand -base64 16)
     echo "yt-dlp-webui-Credentials"
     echo "Username: admin"
     echo "Password: ${RPC_PASSWORD}"
-} >> ~/yt-dlp-webui.creds
+} >>~/yt-dlp-webui.creds
 
-cat <<EOF > /opt/yt-dlp-webui/config.conf
+cat <<EOF >/opt/yt-dlp-webui/config.conf
 # Host where server will listen at (default: "0.0.0.0")
 #host: 0.0.0.0
 
@@ -76,7 +76,7 @@ downloaderPath: /usr/local/bin/yt-dlp
 #frontend_path: ./web/solid-frontend
 EOF
 
-cat <<EOF > /etc/systemd/system/yt-dlp-webui.service
+cat <<EOF >/etc/systemd/system/yt-dlp-webui.service
 [Unit]
 Description=yt-dlp-webui service file
 After=network.target

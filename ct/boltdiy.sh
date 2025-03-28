@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -27,7 +27,7 @@ function update_script() {
         msg_error "No ${APP} Installation Found!"
         exit
     fi
-    RELEASE=$(curl -s https://api.github.com/repos/stackblitz-labs/bolt.diy/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+    RELEASE=$(curl -fsSL https://api.github.com/repos/stackblitz-labs/bolt.diy/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
     if [[ "${RELEASE}" != "$(cat /opt/boltdiy_version.txt)" ]] || [[ ! -f /opt/boltdiy_version.txt ]]; then
         msg_info "Stopping $APP"
         systemctl stop boltdiy
@@ -37,7 +37,7 @@ function update_script() {
         temp_dir=$(mktemp -d)
         temp_file=$(mktemp)
         cd $temp_dir
-        wget -q "https://github.com/stackblitz-labs/bolt.diy/archive/refs/tags/v${RELEASE}.tar.gz" -O $temp_file
+curl -fsSL "https://github.com/stackblitz-labs/bolt.diy/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
         tar xzf $temp_file
         cp -rf bolt.diy-${RELEASE}/* /opt/bolt.diy
         cd /opt/bolt.diy

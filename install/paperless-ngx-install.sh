@@ -59,7 +59,7 @@ $STD apt-get install -y \
   tesseract-ocr-eng
 
 cd /tmp
-wget -q https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs10040/ghostscript-10.04.0.tar.gz
+curl -fsSL "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs10040/ghostscript-10.04.0.tar.gz" -O $(basename "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs10040/ghostscript-10.04.0.tar.gz")
 $STD tar -xzf ghostscript-10.04.0.tar.gz
 cd ghostscript-10.04.0
 $STD ./configure
@@ -78,16 +78,16 @@ rm -rf /opt/jbig2enc
 msg_ok "Installed JBIG2"
 
 msg_info "Installing Paperless-ngx (Patience)"
-Paperlessngx=$(wget -q https://github.com/paperless-ngx/paperless-ngx/releases/latest -O - | grep "title>Release" | cut -d " " -f 5)
+Paperlessngx=$(curl -fsSL https://github.com/paperless-ngx/paperless-ngx/releases/latest | grep "title>Release" | cut -d " " -f 5)
 cd /opt
-$STD wget https://github.com/paperless-ngx/paperless-ngx/releases/download/$Paperlessngx/paperless-ngx-$Paperlessngx.tar.xz
+$STD curl -fsSL "https://github.com/paperless-ngx/paperless-ngx/releases/download/$Paperlessngx/paperless-ngx-$Paperlessngx.tar.xz" -O
 $STD tar -xf paperless-ngx-$Paperlessngx.tar.xz -C /opt/
 mv paperless-ngx paperless
 rm paperless-ngx-$Paperlessngx.tar.xz
 cd /opt/paperless
 $STD pip install --upgrade pip
 $STD pip install -r requirements.txt
-curl -s -o /opt/paperless/paperless.conf https://raw.githubusercontent.com/paperless-ngx/paperless-ngx/main/paperless.conf.example
+curl -fsSL -o /opt/paperless/paperless.conf https://raw.githubusercontent.com/paperless-ngx/paperless-ngx/main/paperless.conf.example
 mkdir -p {consume,data,media,static}
 sed -i -e 's|#PAPERLESS_REDIS=redis://localhost:6379|PAPERLESS_REDIS=redis://localhost:6379|' /opt/paperless/paperless.conf
 sed -i -e "s|#PAPERLESS_CONSUMPTION_DIR=../consume|PAPERLESS_CONSUMPTION_DIR=/opt/paperless/consume|" /opt/paperless/paperless.conf

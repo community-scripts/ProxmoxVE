@@ -33,14 +33,14 @@ while read -r TAG ITEM; do
   EXCLUDE_MENU+=("$TAG" "$ITEM " "OFF")
 done < <(pct list | awk 'NR>1')
 excluded_containers=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "Containers on $NODE" --checklist "\nSelect containers to skip from cleaning:\n" \
-  16 $((MSG_MAX_LENGTH + 23)) 6 "${EXCLUDE_MENU[@]}" 3>&1 1>&2 2>&3 | tr -d '"') || exit  
+  16 $((MSG_MAX_LENGTH + 23)) 6 "${EXCLUDE_MENU[@]}" 3>&1 1>&2 2>&3 | tr -d '"') || exit
 
 function clean_container() {
   container=$1
   header_info
   name=$(pct exec "$container" hostname)
   echo -e "${BL}[Info]${GN} Cleaning ${name} ${CL} \n"
-  pct exec $container -- bash -c "apt-get -y --purge autoremove && apt-get -y autoclean && bash <(curl -fsSL https://github.com/community-scripts/ProxmoxVE/raw/main/misc/clean.sh) && rm -rf /var/lib/apt/lists/* && apt-get update"
+  pct exec $container -- bash -c "apt-get -y --purge autoremove && apt-get -y autoclean && bash <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/raw/main/misc/clean.sh) && rm -rf /var/lib/apt/lists/* && apt-get update"
 }
 for container in $(pct list | awk '{if(NR>1) print $1}'); do
   if [[ " ${excluded_containers[@]} " =~ " $container " ]]; then

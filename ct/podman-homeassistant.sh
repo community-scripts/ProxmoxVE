@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -14,66 +14,69 @@ var_os="debian"
 var_version="12"
 var_unprivileged="1"
 
-header_info "$APP" 
+header_info "$APP"
 variables
 color
 catch_errors
 
 function update_script() {
-header_info
-check_container_storage
-check_container_resources
-  if [[ ! -f /etc/systemd/system/homeassistant.service ]]; then msg_error "No ${APP} Installation Found!"; exit; fi
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -f /etc/systemd/system/homeassistant.service ]]; then
+    msg_error "No ${APP} Installation Found!"
+    exit
+  fi
   UPD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "UPDATE" --radiolist --cancel-button Exit-Script "Spacebar = Select" 11 58 4 \
-  "1" "Update system and containers" ON \
-  "2" "Install HACS" OFF \
-  "3" "Install FileBrowser" OFF \
-  "4" "Remove ALL Unused Images" OFF \
-  3>&1 1>&2 2>&3)
+    "1" "Update system and containers" ON \
+    "2" "Install HACS" OFF \
+    "3" "Install FileBrowser" OFF \
+    "4" "Remove ALL Unused Images" OFF \
+    3>&1 1>&2 2>&3)
 
-if [ "$UPD" == "1" ]; then
-  msg_info "Updating ${APP} LXC"
-  $STD apt-get update
-  $STD apt-get -y upgrade
-  msg_ok "Updated Successfully"
+  if [ "$UPD" == "1" ]; then
+    msg_info "Updating ${APP} LXC"
+    $STD apt-get update
+    $STD apt-get -y upgrade
+    msg_ok "Updated Successfully"
 
-  msg_info "Updating All Containers\n"
-  CONTAINER_LIST="${1:-$(podman ps -q)}"
-  for container in ${CONTAINER_LIST}; do
-    CONTAINER_IMAGE="$(podman inspect --format "{{.Config.Image}}" --type container ${container})"
-    RUNNING_IMAGE="$(podman inspect --format "{{.Image}}" --type container "${container}")"
-    podman pull "${CONTAINER_IMAGE}"
-    LATEST_IMAGE="$(podman inspect --format "{{.Id}}" --type image "${CONTAINER_IMAGE}")"
-    if [[ "${RUNNING_IMAGE}" != "${LATEST_IMAGE}" ]]; then
-      echo "Updating ${container} image ${CONTAINER_IMAGE}"
-      systemctl restart homeassistant
-    fi
-  done
-  msg_ok "All containers updated."
-  exit
-fi
-if [ "$UPD" == "2" ]; then
-  msg_info "Installing Home Assistant Community Store (HACS)"
-  $STD apt update
-  $STD apt install unzip
-  cd /var/lib/containers/storage/volumes/hass_config/_data
-  $STD bash <(curl -fsSL https://get.hacs.xyz)
-  msg_ok "Installed Home Assistant Community Store (HACS)"
-  echo -e "\n Reboot Home Assistant and clear browser cache then Add HACS integration.\n"
-  exit
-fi
-if [ "$UPD" == "3" ]; then
-  IP=$(hostname -I | awk '{print $1}') 
-  msg_info "Installing FileBrowser"
-  $STD curl -fsSL https://raw.githubusercontent.com/filebrowser/get/master/get.sh | bash
-  $STD filebrowser config init -a '0.0.0.0'
-  $STD filebrowser config set -a '0.0.0.0'
-  $STD filebrowser users add admin helper-scripts.com --perm.admin
-  msg_ok "Installed FileBrowser"
+    msg_info "Updating All Containers\n"
+    CONTAINER_LIST="${1:-$(podman ps -q)}"
+    for container in ${CONTAINER_LIST}; do
+      CONTAINER_IMAGE="$(podman inspect --format "{{.Config.Image}}" --type container ${container})"
+      RUNNING_IMAGE="$(podman inspect --format "{{.Image}}" --type container "${container}")"
+      podman pull "${CONTAINER_IMAGE}"
+      LATEST_IMAGE="$(podman inspect --format "{{.Id}}" --type image "${CONTAINER_IMAGE}")"
+      if [[ "${RUNNING_IMAGE}" != "${LATEST_IMAGE}" ]]; then
+        echo "Updating ${container} image ${CONTAINER_IMAGE}"
+        systemctl restart homeassistant
+      fi
+    done
+    msg_ok "All containers updated."
+    exit
+  fi
+  if [ "$UPD" == "2" ]; then
+    msg_info "Installing Home Assistant Community Store (HACS)"
+    $STD apt update
+    $STD apt install unzip
+    cd /var/lib/containers/storage/volumes/hass_config/_data
+    $STD bash <(curl -fsSL https://get.hacs.xyz)
+    msg_ok "Installed Home Assistant Community Store (HACS)"
+    echo -e "\n Reboot Home Assistant and clear browser cache then Add HACS integration.\n"
+    exit
+  fi
+  if [ "$UPD" == "3" ]; then
+    IP=$(hostname -I | awk '{print $1}')
+    msg_info "Installing FileBrowser"
+    $STD curl -fsSL https://raw.githubusercontent.com/filebrowser/get/master/get.sh | bash
+    $STD filebrowser config init -a '0.0.0.0'
+    $STD filebrowser config set -a '0.0.0.0'
+    $STD filebrowser users add admin helper-scripts.com --perm.admin
+    msg_ok "Installed FileBrowser"
 
-  msg_info "Creating Service"
-  service_path="/etc/systemd/system/filebrowser.service"
-  echo "[Unit]
+    msg_info "Creating Service"
+    service_path="/etc/systemd/system/filebrowser.service"
+    echo "[Unit]
   Description=Filebrowser
   After=network-online.target
   [Service]
@@ -89,14 +92,14 @@ if [ "$UPD" == "3" ]; then
     msg_ok "Completed Successfully!\n"
     echo -e "FileBrowser should be reachable by going to the following URL.
          ${BL}http://$IP:8080${CL}   admin|helper-scripts.com\n"
-  exit
-fi
-if [ "$UPD" == "4" ]; then
-  msg_info "Removing ALL Unused Images"
-  podman image prune -a -f
-  msg_ok "Removed ALL Unused Images"
-  exit
-fi
+    exit
+  fi
+  if [ "$UPD" == "4" ]; then
+    msg_info "Removing ALL Unused Images"
+    podman image prune -a -f
+    msg_ok "Removed ALL Unused Images"
+    exit
+  fi
 
 }
 

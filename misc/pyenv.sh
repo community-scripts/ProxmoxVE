@@ -28,7 +28,10 @@ function msg_error() {
   local msg="$1"
   echo -e "${BFR} ${CROSS} ${RD}${msg}${CL}"
 }
-if command -v pveversion >/dev/null 2>&1; then msg_error "Can't Install on Proxmox "; exit; fi
+if command -v pveversion >/dev/null 2>&1; then
+  msg_error "Can't Install on Proxmox "
+  exit
+fi
 msg_info "Installing pyenv"
 apt-get install -y \
   make \
@@ -58,9 +61,9 @@ apt-get install -y \
 
 git clone https://github.com/pyenv/pyenv.git ~/.pyenv &>/dev/null
 set +e
-echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc
-echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc
-echo -e 'if command -v pyenv 1>/dev/null 2>&1; then\n eval "$(pyenv init --path)"\nfi' >> ~/.bashrc  
+echo 'export PYENV_ROOT="$HOME/.pyenv"' >>~/.bashrc
+echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >>~/.bashrc
+echo -e 'if command -v pyenv 1>/dev/null 2>&1; then\n eval "$(pyenv init --path)"\nfi' >>~/.bashrc
 msg_ok "Installed pyenv"
 . ~/.bashrc
 set -e
@@ -70,8 +73,8 @@ pyenv global 3.11.1
 msg_ok "Installed Python 3.11.1"
 read -r -p "Would you like to install Home Assistant Beta? <y/N> " prompt
 if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
-msg_info "Installing Home Assistant Beta"
-cat <<EOF >/etc/systemd/system/homeassistant.service
+  msg_info "Installing Home Assistant Beta"
+  cat <<EOF >/etc/systemd/system/homeassistant.service
 [Unit]
 Description=Home Assistant
 After=network-online.target
@@ -83,31 +86,31 @@ RestartForceExitStatus=100
 [Install]
 WantedBy=multi-user.target
 EOF
-mkdir /srv/homeassistant
-cd /srv/homeassistant
-python3 -m venv .
-source bin/activate
-python3 -m pip install wheel &>/dev/null
-pip3 install --upgrade pip &>/dev/null
-pip3 install psycopg2-binary &>/dev/null
-pip3 install --pre homeassistant &>/dev/null
-systemctl enable homeassistant &>/dev/null
-msg_ok "Installed Home Assistant Beta"
-echo -e " Go to $(hostname -I | awk '{print $1}'):8123"
-hass
+  mkdir /srv/homeassistant
+  cd /srv/homeassistant
+  python3 -m venv .
+  source bin/activate
+  python3 -m pip install wheel &>/dev/null
+  pip3 install --upgrade pip &>/dev/null
+  pip3 install psycopg2-binary &>/dev/null
+  pip3 install --pre homeassistant &>/dev/null
+  systemctl enable homeassistant &>/dev/null
+  msg_ok "Installed Home Assistant Beta"
+  echo -e " Go to $(hostname -I | awk '{print $1}'):8123"
+  hass
 fi
 
 read -r -p "Would you like to install ESPHome Beta? <y/N> " prompt
 if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
-msg_info "Installing ESPHome Beta"
-mkdir /srv/esphome
-cd /srv/esphome
-python3 -m venv .
-source bin/activate
-python3 -m pip install wheel &>/dev/null
-pip3 install --upgrade pip &>/dev/null
-pip3 install --pre esphome &>/dev/null
-cat <<EOF >/srv/esphome/start.sh
+  msg_info "Installing ESPHome Beta"
+  mkdir /srv/esphome
+  cd /srv/esphome
+  python3 -m venv .
+  source bin/activate
+  python3 -m pip install wheel &>/dev/null
+  pip3 install --upgrade pip &>/dev/null
+  pip3 install --pre esphome &>/dev/null
+  cat <<EOF >/srv/esphome/start.sh
 #!/usr/bin/env bash
 
 # Copyright (c) 2021-2025 tteck
@@ -118,8 +121,8 @@ cat <<EOF >/srv/esphome/start.sh
 source /srv/esphome/bin/activate
 esphome dashboard /srv/esphome/
 EOF
-chmod +x start.sh
-cat <<EOF >/etc/systemd/system/esphomedashboard.service
+  chmod +x start.sh
+  cat <<EOF >/etc/systemd/system/esphomedashboard.service
 [Unit]
 Description=ESPHome Dashboard Service
 After=network.target
@@ -133,27 +136,27 @@ Restart=on-failure
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable --now esphomedashboard &>/dev/null
-msg_ok "Installed ESPHome Beta"
-echo -e " Go to $(hostname -I | awk '{print $1}'):6052"
-exec $SHELL
+  systemctl enable --now esphomedashboard &>/dev/null
+  msg_ok "Installed ESPHome Beta"
+  echo -e " Go to $(hostname -I | awk '{print $1}'):6052"
+  exec $SHELL
 fi
 
 read -r -p "Would you like to install Matter-Server (Beta)? <y/N> " prompt
 if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
-msg_info "Installing Matter Server"
-apt-get install -y \
-libcairo2-dev \
-libjpeg62-turbo-dev \
-libgirepository1.0-dev \
-libpango1.0-dev \
-libgif-dev \
-g++ &>/dev/null
-python3 -m pip install wheel 
-pip3 install --upgrade pip 
-pip install python-matter-server[server]
-msg_ok "Installed Matter Server"
-echo -e "Start server > python -m matter_server.server"
+  msg_info "Installing Matter Server"
+  apt-get install -y \
+    libcairo2-dev \
+    libjpeg62-turbo-dev \
+    libgirepository1.0-dev \
+    libpango1.0-dev \
+    libgif-dev \
+    g++ &>/dev/null
+  python3 -m pip install wheel
+  pip3 install --upgrade pip
+  pip install python-matter-server[server]
+  msg_ok "Installed Matter Server"
+  echo -e "Start server > python -m matter_server.server"
 fi
 msg_ok "\nFinished\n"
 exec $SHELL

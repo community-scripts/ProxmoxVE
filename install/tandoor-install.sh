@@ -61,7 +61,7 @@ $STD pip3 install -r /opt/tandoor/requirements.txt
 cd /opt/tandoor/vue
 $STD yarn install
 $STD yarn build
-wget -q https://raw.githubusercontent.com/TandoorRecipes/recipes/develop/.env.template -O /opt/tandoor/.env
+curl -fsSL "https://raw.githubusercontent.com/TandoorRecipes/recipes/develop/.env.template" -o "/opt/tandoor/.env"
 DB_NAME=db_recipes
 DB_USER=tandoor
 DB_ENCODING=utf8

@@ -6,8 +6,8 @@
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
 function header_info {
-clear
-cat <<"EOF"
+  clear
+  cat <<"EOF"
   ______      _ __                __
  /_  __/___ _(_) /_____________ _/ /__
   / / / __ `/ / / ___/ ___/ __ `/ / _ \
@@ -62,7 +62,7 @@ msg "Installing Tailscale..."
 pct exec "$CTID" -- bash -c '
 ID=$(grep "^ID=" /etc/os-release | cut -d"=" -f2)
 VER=$(grep "^VERSION_CODENAME=" /etc/os-release | cut -d"=" -f2)
-wget -qO- https://pkgs.tailscale.com/stable/$ID/$VER.noarmor.gpg >/usr/share/keyrings/tailscale-archive-keyring.gpg
+curl -fsSL https://pkgs.tailscale.com/stable/$ID/$VER.noarmor.gpg | tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null
 echo "deb [signed-by=/usr/share/keyrings/tailscale-archive-keyring.gpg] https://pkgs.tailscale.com/stable/$ID $VER main" >/etc/apt/sources.list.d/tailscale.list
 apt-get update &>/dev/null
 apt-get install -y tailscale &>/dev/null

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -29,16 +29,16 @@ function update_script() {
         exit
     fi
 
-    RELEASE=$(curl -s https://api.github.com/repos/MDeLuise/plant-it/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+    RELEASE=$(curl -fsSL https://api.github.com/repos/MDeLuise/plant-it/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
     if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
         msg_info "Stopping $APP"
         systemctl stop plant-it
         msg_ok "Stopped $APP"
 
         msg_info "Updating $APP to v${RELEASE}"
-        wget -q -O /opt/plant-it/server.jar "https://github.com/MDeLuise/plant-it/releases/download/${RELEASE}/server.jar"
+curl -fsSL "https://github.com/MDeLuise/plant-it/releases/download/${RELEASE}/server.jar" -o "/opt/plant-it/server.jar"
         cd /opt/plant-it/frontend
-        wget -q https://github.com/MDeLuise/plant-it/releases/download/${RELEASE}/client.tar.gz
+curl -fsSL "https://github.com/MDeLuise/plant-it/releases/download/${RELEASE}/client.tar.gz" -O $(basename "https://github.com/MDeLuise/plant-it/releases/download/${RELEASE}/client.tar.gz")
         tar -xzf client.tar.gz
         rm -f client.tar.gz
         echo "${RELEASE}" >/opt/${APP}_version.txt

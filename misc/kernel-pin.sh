@@ -39,8 +39,8 @@ function msg_ok() {
 
 whiptail --backtitle "Proxmox VE Helper Scripts" --title "Proxmox VE Kernel Pin" --yesno "This will Pin/Unpin Kernel Images, Proceed?" 10 68 || exit
 
-  KERNEL_MENU=()
-  MSG_MAX_LENGTH=0
+KERNEL_MENU=()
+MSG_MAX_LENGTH=0
 while read -r TAG ITEM; do
   OFFSET=2
   ((${#ITEM} + OFFSET > MSG_MAX_LENGTH)) && MSG_MAX_LENGTH=${#ITEM}+OFFSET

@@ -7,8 +7,8 @@
 # Source: https://github.com/gitsang/lxc-iptag
 
 function header_info {
-clear
-cat <<"EOF"
+  clear
+  cat <<"EOF"
     __   _  ________   ________      ______           
    / /  | |/ / ____/  /  _/ __ \    /_  __/___ _____ _
   / /   |   / /       / // /_/ /_____/ / / __ `/ __ `/
@@ -60,9 +60,9 @@ spinner() {
   local color="${YWB}"
 
   while true; do
-  printf "\r ${color}%s${CL}" "${frames[spin_i]}"
-  spin_i=$(((spin_i + 1) % ${#frames[@]}))
-  sleep "$interval"
+    printf "\r ${color}%s${CL}" "${frames[spin_i]}"
+    spin_i=$(((spin_i + 1) % ${#frames[@]}))
+    sleep "$interval"
   done
 }
 
@@ -95,9 +95,9 @@ while true; do
   case $yn in
   [Yy]*) break ;;
   [Nn]*)
-  msg_error "Installation cancelled."
-  exit
-  ;;
+    msg_error "Installation cancelled."
+    exit
+    ;;
   *) msg_error "Please answer yes or no." ;;
   esac
 done

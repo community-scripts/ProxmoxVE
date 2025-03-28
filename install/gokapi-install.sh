@@ -14,9 +14,9 @@ network_check
 update_os
 
 msg_info "Installing Gokapi"
-LATEST=$(curl -sL https://api.github.com/repos/Forceu/Gokapi/releases/latest | grep '"tag_name":' | cut -d'"' -f4)
+LATEST=$(curl -fsSLL https://api.github.com/repos/Forceu/Gokapi/releases/latest | grep '"tag_name":' | cut -d'"' -f4)
 mkdir -p /opt/gokapi/{data,config}
-wget -q https://github.com/Forceu/Gokapi/releases/download/$LATEST/gokapi-linux_amd64.zip
+curl -fsSL "https://github.com/Forceu/Gokapi/releases/download/$LATEST/gokapi-linux_amd64.zip" -O $(basename "https://github.com/Forceu/Gokapi/releases/download/$LATEST/gokapi-linux_amd64.zip")
 unzip -q gokapi-linux_amd64.zip -d /opt/gokapi
 rm gokapi-linux_amd64.zip
 chmod +x /opt/gokapi/gokapi-linux_amd64

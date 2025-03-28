@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -27,7 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -s https://api.github.com/repos/minio/minio/releases/latest | grep '"tag_name"' | awk -F '"' '{print $4}')
+  RELEASE=$(curl -fsSL https://api.github.com/repos/minio/minio/releases/latest | grep '"tag_name"' | awk -F '"' '{print $4}')
   if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
     msg_info "Stopping ${APP}"
     systemctl stop minio
@@ -35,7 +35,7 @@ function update_script() {
 
     msg_info "Updating ${APP} to ${RELEASE}"
     mv /usr/local/bin/minio /usr/local/bin/minio_bak
-    wget -q https://dl.min.io/server/minio/release/linux-amd64/minio
+curl -fsSL "https://dl.min.io/server/minio/release/linux-amd64/minio" -O $(basename "https://dl.min.io/server/minio/release/linux-amd64/minio")
     mv minio /usr/local/bin/
     chmod +x /usr/local/bin/minio
     echo "${RELEASE}" >/opt/${APP}_version.txt

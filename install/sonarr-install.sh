@@ -20,7 +20,7 @@ msg_ok "Installed Dependencies"
 msg_info "Installing Sonarr v4"
 mkdir -p /var/lib/sonarr/
 chmod 775 /var/lib/sonarr/
-wget -q -O SonarrV4.tar.gz 'https://services.sonarr.tv/v1/download/main/latest?version=4&os=linux&arch=x64'
+curl -fsSL "'https://services.sonarr.tv/v1/download/main/latest?version=4&os=linux&arch=x64'" -o "SonarrV4.tar.gz"
 tar -xzf SonarrV4.tar.gz
 mv Sonarr /opt
 rm -rf SonarrV4.tar.gz

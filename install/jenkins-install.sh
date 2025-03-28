@@ -17,7 +17,7 @@ $STD apt-get install -y openjdk-17-jre
 msg_ok "Installed Dependencies"
 
 msg_info "Setup Jenkins"
-wget -qO /usr/share/keyrings/jenkins-keyring.asc https://pkg.jenkins.io/debian/jenkins.io-2023.key
+curl -fsSL "https://pkg.jenkins.io/debian/jenkins.io-2023.key" -o "/usr/share/keyrings/jenkins-keyring.asc"
 echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc]" https://pkg.jenkins.io/debian binary/ >/etc/apt/sources.list.d/jenkins.list
 $STD apt-get update
 $STD apt-get install -y jenkins

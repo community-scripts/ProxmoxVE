@@ -11,8 +11,8 @@ for json_file in $json_dir; do
 
     if [[ "$current_json_date" != "$current_date" ]]; then
       echo "Updating $json_file with date $current_date"
-      jq --arg date "$current_date" '.date_created = $date' "$json_file" > temp.json && mv temp.json "$json_file"
-      
+      jq --arg date "$current_date" '.date_created = $date' "$json_file" >temp.json && mv temp.json "$json_file"
+
       git add "$json_file"
       git commit -m "Update date_created to $current_date in $json_file"
     else

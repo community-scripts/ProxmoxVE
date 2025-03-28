@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -33,10 +33,10 @@ function update_script() {
   if ! lscpu | grep -q 'avx'; then
     MONGODB_VERSION="4.4"
     msg_error "No AVX detected: TP-Link Canceled Support for Old MongoDB for Debian 12\n https://www.tp-link.com/baltic/support/faq/4160/"
-    exit 1 
+    exit 1
   fi
 
-  wget -qO- https://www.mongodb.org/static/pgp/server-${MONGODB_VERSION}.asc | gpg --dearmor >/usr/share/keyrings/mongodb-server-${MONGODB_VERSION}.gpg
+  curl -fsSL "https://www.mongodb.org/static/pgp/server-${MONGODB_VERSION}.asc" | gpg --dearmor >/usr/share/keyrings/mongodb-server-${MONGODB_VERSION}.gpg
   echo "deb [signed-by=/usr/share/keyrings/mongodb-server-${MONGODB_VERSION}.gpg] http://repo.mongodb.org/apt/debian $(grep '^VERSION_CODENAME=' /etc/os-release | cut -d'=' -f2)/mongodb-org/${MONGODB_VERSION} main" >/etc/apt/sources.list.d/mongodb-org-${MONGODB_VERSION}.list
   $STD apt-get update
   $STD apt-get install -y --only-upgrade mongodb-org
@@ -45,24 +45,24 @@ function update_script() {
   msg_info "Checking if right Azul Zulu Java is installed"
   java_version=$(java -version 2>&1 | awk -F[\"_] '/version/ {print $2}')
   if [[ "$java_version" =~ ^1\.8\.* ]]; then
-      $STD apt-get remove --purge -y zulu8-jdk
-      $STD apt-get -y install zulu21-jre-headless
-      msg_ok "Updated Azul Zulu Java to 21"
+    $STD apt-get remove --purge -y zulu8-jdk
+    $STD apt-get -y install zulu21-jre-headless
+    msg_ok "Updated Azul Zulu Java to 21"
   else
-      msg_ok "Azul Zulu Java 21 already installed"
+    msg_ok "Azul Zulu Java 21 already installed"
   fi
 
   msg_info "Updating Omada Controller"
-  latest_url=$(curl -s "https://support.omadanetworks.com/en/download/software/omada-controller/" | grep -o 'https://static\.tp-link\.com/upload/software/[^"]*linux_x64[^"]*\.deb' | head -n 1)
+  latest_url=$(curl -fsSL "https://support.omadanetworks.com/en/download/software/omada-controller/" | grep -o 'https://static\.tp-link\.com/upload/software/[^"]*linux_x64[^"]*\.deb' | head -n 1)
   latest_version=$(basename "$latest_url")
   if [ -z "${latest_version}" ]; then
     msg_error "It seems that the server (tp-link.com) might be down. Please try again at a later time."
     exit
   fi
 
-  wget -qL ${latest_url}
+  curl -fsSL "${latest_url}" -O
   export DEBIAN_FRONTEND=noninteractive
-  $STD dpkg -i ${latest_version} 
+  $STD dpkg -i ${latest_version}
   rm -rf ${latest_version}
   msg_ok "Updated Omada Controller"
 }

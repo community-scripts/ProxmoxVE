@@ -19,8 +19,8 @@ msg_ok "Installed Dependencies"
 
 msg_info "Setup Vikunja (Patience)"
 cd /opt
-RELEASE=$(curl -s https://dl.vikunja.io/vikunja/ | grep -oP 'href="/vikunja/\K[0-9]+\.[0-9]+\.[0-9]+' | sort -V | tail -n 1)
-wget -q "https://dl.vikunja.io/vikunja/$RELEASE/vikunja-$RELEASE-amd64.deb"
+RELEASE=$(curl -fsSL https://dl.vikunja.io/vikunja/ | grep -oP 'href="/vikunja/\K[0-9]+\.[0-9]+\.[0-9]+' | sort -V | tail -n 1)
+curl -fsSL "https://dl.vikunja.io/vikunja/$RELEASE/vikunja-$RELEASE-amd64.deb" -O $(basename "https://dl.vikunja.io/vikunja/$RELEASE/vikunja-$RELEASE-amd64.deb")
 $STD dpkg -i vikunja-$RELEASE-amd64.deb
 sed -i 's|^  timezone: .*|  timezone: UTC|' /etc/vikunja/config.yml
 sed -i 's|"./vikunja.db"|"/etc/vikunja/vikunja.db"|' /etc/vikunja/config.yml

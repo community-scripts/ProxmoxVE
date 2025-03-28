@@ -33,7 +33,7 @@ msg_ok "Installed Kepubify"
 msg_info "Installing Calibre-Web"
 mkdir -p /opt/calibre-web
 $STD apt-get install -y calibre
-$STD wget https://github.com/janeczku/calibre-web/raw/master/library/metadata.db -P /opt/calibre-web
+$STD curl -fsSL https://github.com/janeczku/calibre-web/raw/master/library/metadata.db -o /opt/calibre-web/metadata.db
 $STD pip install calibreweb
 $STD pip install jsonschema
 msg_ok "Installed Calibre-Web"

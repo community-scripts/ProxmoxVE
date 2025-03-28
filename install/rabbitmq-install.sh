@@ -23,9 +23,9 @@ $STD apt-get install -y \
 msg_ok "Installed Dependencies"
 
 msg_info "Adding RabbitMQ signing key"
-wget -qO- "https://keys.openpgp.org/vks/v1/by-fingerprint/0A9AF2115F4687BD29803A206B73A36E6026DFCA" | gpg --dearmor >/usr/share/keyrings/com.rabbitmq.team.gpg
-wget -qO- "https://github.com/rabbitmq/signing-keys/releases/download/3.0/cloudsmith.rabbitmq-erlang.E495BB49CC4BBE5B.key" | gpg --dearmor >/usr/share/keyrings/rabbitmq.E495BB49CC4BBE5B.gpg
-wget -qO- "https://github.com/rabbitmq/signing-keys/releases/download/3.0/cloudsmith.rabbitmq-server.9F4587F226208342.key" | gpg --dearmor >/usr/share/keyrings/rabbitmq.9F4587F226208342.gpg
+curl -fsSL "https://keys.openpgp.org/vks/v1/by-fingerprint/0A9AF2115F4687BD29803A206B73A36E6026DFCA" | gpg --dearmor >/usr/share/keyrings/com.rabbitmq.team.gpg
+curl -fsSL "https://github.com/rabbitmq/signing-keys/releases/download/3.0/cloudsmith.rabbitmq-erlang.E495BB49CC4BBE5B.key" | gpg --dearmor >/usr/share/keyrings/rabbitmq.E495BB49CC4BBE5B.gpg
+curl -fsSL "https://github.com/rabbitmq/signing-keys/releases/download/3.0/cloudsmith.rabbitmq-server.9F4587F226208342.key" | gpg --dearmor >/usr/share/keyrings/rabbitmq.9F4587F226208342.gpg
 msg_ok "Signing keys added"
 
 msg_info "Adding RabbitMQ repository"

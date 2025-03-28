@@ -23,7 +23,7 @@ msg_ok "Installed Dependencies"
 read -p "Please enter the name for your server: " servername
 
 msg_info "Installing Element Synapse"
-wget -q -O /usr/share/keyrings/matrix-org-archive-keyring.gpg https://packages.matrix.org/debian/matrix-org-archive-keyring.gpg
+curl -fsSL "https://packages.matrix.org/debian/matrix-org-archive-keyring.gpg" -o "/usr/share/keyrings/matrix-org-archive-keyring.gpg"
 echo "deb [signed-by=/usr/share/keyrings/matrix-org-archive-keyring.gpg] https://packages.matrix.org/debian/ $(lsb_release -cs) main" >/etc/apt/sources.list.d/matrix-org.list
 $STD apt-get update
 echo "matrix-synapse-py3 matrix-synapse/server-name string $servername" | debconf-set-selections

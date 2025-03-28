@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -38,7 +38,7 @@ function update_script() {
     fi
     mkdir -p rdtc-backup
     cp -R /opt/rdtc/appsettings.json rdtc-backup/
-    wget -q https://github.com/rogerfar/rdt-client/releases/latest/download/RealDebridClient.zip
+curl -fsSL "https://github.com/rogerfar/rdt-client/releases/latest/download/RealDebridClient.zip" -O $(basename "https://github.com/rogerfar/rdt-client/releases/latest/download/RealDebridClient.zip")
     unzip -oqq RealDebridClient.zip -d /opt/rdtc
     cp -R rdtc-backup/appsettings.json /opt/rdtc/
     msg_ok "Updated ${APP}"

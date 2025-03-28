@@ -21,15 +21,15 @@ $STD apt-get install -y xvfb
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Chrome"
-wget -qO- https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/google-chrome.gpg
+curl -fsSL "https://dl.google.com/linux/linux_signing_key.pub" | gpg --dearmor -o /usr/share/keyrings/google-chrome.gpg
 echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main" >/etc/apt/sources.list.d/google-chrome.list
 $STD apt update
 $STD apt install -y google-chrome-stable
 msg_ok "Installed Chrome"
 
 msg_info "Installing FlareSolverr"
-RELEASE=$(wget -q https://github.com/FlareSolverr/FlareSolverr/releases/latest -O - | grep "title>Release" | cut -d " " -f 4)
-$STD wget -q https://github.com/FlareSolverr/FlareSolverr/releases/download/$RELEASE/flaresolverr_linux_x64.tar.gz
+RELEASE=$(curl -fsSL https://github.com/FlareSolverr/FlareSolverr/releases/latest | grep "title>Release" | cut -d " " -f 4)
+$STD curl -fsSL "https://github.com/FlareSolverr/FlareSolverr/releases/download/$RELEASE/flaresolverr_linux_x64.tar.gz" -O
 $STD tar -xzf flaresolverr_linux_x64.tar.gz -C /opt
 $STD rm flaresolverr_linux_x64.tar.gz
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt

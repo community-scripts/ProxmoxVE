@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: tteck (tteckster) | Co-Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -100,7 +100,7 @@ function update_script() {
     msg_ok "Installed FileBrowser"
 
     msg_info "Creating Service"
-    cat <<EOF > /etc/systemd/system/filebrowser.service
+    cat <<EOF >/etc/systemd/system/filebrowser.service
 [Unit]
 Description=Filebrowser
 After=network-online.target

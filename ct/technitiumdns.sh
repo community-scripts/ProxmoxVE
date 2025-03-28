@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -30,7 +30,7 @@ function update_script() {
   msg_info "Updating ${APP}"
 
   if ! dpkg -s aspnetcore-runtime-8.0 >/dev/null 2>&1; then
-    wget -q https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb
+curl -fsSL "https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb" -O $(basename "https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb")
     $STD dpkg -i packages-microsoft-prod.deb
     $STD apt-get update
     $STD apt-get install -y aspnetcore-runtime-8.0

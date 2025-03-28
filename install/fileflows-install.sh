@@ -6,7 +6,7 @@
 # Source: https://fileflows.com/
 
 # Import Functions und Setup
-source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
+source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
 catch_errors

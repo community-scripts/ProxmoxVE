@@ -5,7 +5,7 @@
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://umbrel.com/
 
-source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
+source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
 catch_errors
@@ -16,7 +16,7 @@ update_os
 msg_info "Installing Umbrel (Patience)"
 DOCKER_CONFIG_PATH='/etc/docker/daemon.json'
 mkdir -p $(dirname $DOCKER_CONFIG_PATH)
-echo -e '{\n  "log-driver": "journald"\n}' > /etc/docker/daemon.json
+echo -e '{\n  "log-driver": "journald"\n}' >/etc/docker/daemon.json
 $STD bash <(curl -fsSL https://umbrel.sh)
 systemctl daemon-reload
 $STD systemctl enable --now umbrel-startup.service

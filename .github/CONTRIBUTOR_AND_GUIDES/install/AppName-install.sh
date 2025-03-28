@@ -42,10 +42,10 @@ msg_ok "Set up Database"
 
 # Setup App
 msg_info "Setup ${APPLICATION}"
-RELEASE=$(curl -s https://api.github.com/repos/[REPO]/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-wget -q "https://github.com/[REPO]/archive/refs/tags/${RELEASE}.zip"
-unzip -q ${RELEASE}.zip
-mv ${APPLICATION}-${RELEASE}/ /opt/${APPLICATION}
+RELEASE=$(curl -fsSL https://api.github.com/repos/[REPO]/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+curl -fsSL -o "${RELEASE}.zip" "https://github.com/[REPO]/archive/refs/tags/${RELEASE}.zip"
+unzip -q "${RELEASE}.zip"
+mv "${APPLICATION}-${RELEASE}/" "/opt/${APPLICATION}"
 # 
 # 
 #

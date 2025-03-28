@@ -15,7 +15,7 @@ update_os
 
 msg_info "Installing FFmpeg (Patience)"
 cd /usr/local/bin
-wget -q https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz
+curl -fsSL "https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz" -O $(basename "https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz")
 $STD tar -xvf ffmpeg-release-amd64-static.tar.xz
 rm -f ffmpeg-*.tar.xz
 cd ffmpeg-*
@@ -36,8 +36,8 @@ msg_ok "Set Up Hardware Acceleration"
 
 msg_info "Installing ErsatzTV"
 cd /opt
-RELEASE=$(curl -s https://api.github.com/repos/ErsatzTV/ErsatzTV/releases | grep -oP '"tag_name": "\K[^"]+' | head -n 1)
-wget -qO- "https://github.com/ErsatzTV/ErsatzTV/releases/download/${RELEASE}/ErsatzTV-${RELEASE}-linux-x64.tar.gz" -O "$temp_file"
+RELEASE=$(curl -fsSL https://api.github.com/repos/ErsatzTV/ErsatzTV/releases | grep -oP '"tag_name": "\K[^"]+' | head -n 1)
+curl -fsSL "https://github.com/ErsatzTV/ErsatzTV/releases/download/${RELEASE}/ErsatzTV-${RELEASE}-linux-x64.tar.gz" -o "$temp_file"
 tar -xzf "$temp_file"
 mv /opt/ErsatzTV-${RELEASE}-linux-x64 /opt/ErsatzTV
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"

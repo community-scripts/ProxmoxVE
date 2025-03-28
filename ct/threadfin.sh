@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -29,7 +29,7 @@ function update_script() {
   fi
   msg_info "Updating $APP"
   systemctl stop threadfin.service
-  wget -q -O /opt/threadfin/threadfin 'https://github.com/Threadfin/Threadfin/releases/latest/download/Threadfin_linux_amd64'
+curl -fsSL "'https://github.com/Threadfin/Threadfin/releases/latest/download/Threadfin_linux_amd64'" -o "/opt/threadfin/threadfin"
   chmod +x /opt/threadfin/threadfin
   systemctl start threadfin.service
   msg_ok "Updated $APP"

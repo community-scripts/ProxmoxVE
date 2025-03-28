@@ -1,29 +1,29 @@
 name: Run Scripts on PVE Node for testing
 permissions:
-    pull-requests: write
+  pull-requests: write
 on:
   pull_request_target:
     branches:
       - main
     paths:
-      - 'install/**.sh'
-      - 'ct/**.sh'
+      - "install/**.sh"
+      - "ct/**.sh"
 
 jobs:
   run-install-script:
     runs-on: pvenode
-    steps:          
+    steps:
       - name: Checkout PR branch
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
-          fetch-depth: 0          
-          
+          fetch-depth: 0
+
       - name: Add Git safe directory
         run: |
           git config --global --add safe.directory /__w/ProxmoxVE/ProxmoxVE
-      
+
       - name: Set up GH_TOKEN
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -38,7 +38,6 @@ jobs:
           echo "SCRIPT=$CHANGED_FILES" >> $GITHUB_ENV
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        
 
       - name: Get scripts
         id: check-install-script
@@ -57,81 +56,81 @@ jobs:
           ALL_FILES=$(echo "${ALL_FILES[@]}" | xargs)
           echo "$ALL_FILES"
           echo "ALL_FILES=$ALL_FILES" >> $GITHUB_ENV
-     
+
       - name: Run scripts
         id: run-install
         continue-on-error: true
         run: |
-            set +e  
-            #run for each files in /ct
-            for FILE in ${{ env.ALL_FILES }}; do            
-              STRIPPED_NAME=$(basename "$FILE" | sed 's/-install//' | sed 's/\.sh$//')
-              echo "Running Test for: $STRIPPED_NAME"
-              if grep -E -q 'read\s+-r\s+-p\s+".*"\s+\w+' "$FILE"; then
-                echo "The script contains an interactive prompt. Skipping execution."
+          set +e  
+          #run for each files in /ct
+          for FILE in ${{ env.ALL_FILES }}; do            
+            STRIPPED_NAME=$(basename "$FILE" | sed 's/-install//' | sed 's/\.sh$//')
+            echo "Running Test for: $STRIPPED_NAME"
+            if grep -E -q 'read\s+-r\s+-p\s+".*"\s+\w+' "$FILE"; then
+              echo "The script contains an interactive prompt. Skipping execution."
+              continue
+            fi
+            if [[ $FILE =~ ^install/.*-install\.sh$ ]]; then
+              CT_SCRIPT="ct/$STRIPPED_NAME.sh"
+              if [[ ! -f $CT_SCRIPT ]]; then
+                echo "No CT script found for $STRIPPED_NAME"
+                ERROR_MSG="No CT script found for $FILE"
+                echo "$ERROR_MSG" > result_$STRIPPED_NAME.log
                 continue
               fi
-              if [[ $FILE =~ ^install/.*-install\.sh$ ]]; then
-                CT_SCRIPT="ct/$STRIPPED_NAME.sh"
-                if [[ ! -f $CT_SCRIPT ]]; then
-                  echo "No CT script found for $STRIPPED_NAME"
-                  ERROR_MSG="No CT script found for $FILE"
-                  echo "$ERROR_MSG" > result_$STRIPPED_NAME.log
+                if grep -E -q 'read\s+-r\s+-p\s+".*"\s+\w+' "install/$STRIPPED_NAME-install.sh"; then
+                  echo "The script contains an interactive prompt. Skipping execution."
                   continue
                 fi
-                  if grep -E -q 'read\s+-r\s+-p\s+".*"\s+\w+' "install/$STRIPPED_NAME-install.sh"; then
-                    echo "The script contains an interactive prompt. Skipping execution."
-                    continue
-                  fi
-                  echo "Found CT script for $STRIPPED_NAME"
-                  chmod +x "$CT_SCRIPT"
-                  RUNNING_FILE=$CT_SCRIPT
-              elif [[ $FILE =~ ^ct/.*\.sh$ ]]; then
-                INSTALL_SCRIPT="install/$STRIPPED_NAME-install.sh"
-                if [[ ! -f $INSTALL_SCRIPT ]]; then
-                  echo "No install script found for $STRIPPED_NAME"
-                  ERROR_MSG="No install script found for $FILE"
-                  echo "$ERROR_MSG" > result_$STRIPPED_NAME.log
-                  continue
-                fi                
-                  echo "Found install script for $STRIPPED_NAME"
-                  chmod +x "$INSTALL_SCRIPT"
-                  RUNNING_FILE=$FILE
-                  if grep -E -q 'read\s+-r\s+-p\s+".*"\s+\w+' "ct/$STRIPPED_NAME.sh"; then
-                    echo "The script contains an interactive prompt. Skipping execution."
-                    continue
-                  fi
-              fi
-              git remote add community-scripts https://github.com/community-scripts/ProxmoxVE.git
-              git fetch community-scripts
-              rm -f .github/workflows/scripts/app-test/pr-build.func || true
-              rm -f .github/workflows/scripts/app-test/pr-install.func || true
-              rm -f .github/workflows/scripts/app-test/pr-alpine-install.func || true
-              rm -f .github/workflows/scripts/app-test/pr-create-lxc.sh || true
-              git checkout community-scripts/main -- .github/workflows/scripts/app-test/pr-build.func
-              git checkout community-scripts/main -- .github/workflows/scripts/app-test/pr-install.func
-              git checkout community-scripts/main -- .github/workflows/scripts/app-test/pr-alpine-install.func
-              git checkout community-scripts/main -- .github/workflows/scripts/app-test/pr-create-lxc.sh
-              chmod +x $RUNNING_FILE         
-              chmod +x .github/workflows/scripts/app-test/pr-create-lxc.sh
-              chmod +x .github/workflows/scripts/app-test/pr-install.func
-              chmod +x .github/workflows/scripts/app-test/pr-alpine-install.func
-              chmod +x .github/workflows/scripts/app-test/pr-build.func
-              sed -i 's|source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)|source .github/workflows/scripts/app-test/pr-build.func|g' "$RUNNING_FILE"
-              echo "Executing $RUNNING_FILE"
-              ERROR_MSG=$(./$RUNNING_FILE 2>&1 > /dev/null)
-              echo "Finished running $FILE"
-              if [ -n "$ERROR_MSG" ]; then
-                echo "ERROR in $STRIPPED_NAME: $ERROR_MSG"
+                echo "Found CT script for $STRIPPED_NAME"
+                chmod +x "$CT_SCRIPT"
+                RUNNING_FILE=$CT_SCRIPT
+            elif [[ $FILE =~ ^ct/.*\.sh$ ]]; then
+              INSTALL_SCRIPT="install/$STRIPPED_NAME-install.sh"
+              if [[ ! -f $INSTALL_SCRIPT ]]; then
+                echo "No install script found for $STRIPPED_NAME"
+                ERROR_MSG="No install script found for $FILE"
                 echo "$ERROR_MSG" > result_$STRIPPED_NAME.log
-              fi
-            done
-            set -e  # Restore exit-on-error
-      
+                continue
+              fi                
+                echo "Found install script for $STRIPPED_NAME"
+                chmod +x "$INSTALL_SCRIPT"
+                RUNNING_FILE=$FILE
+                if grep -E -q 'read\s+-r\s+-p\s+".*"\s+\w+' "ct/$STRIPPED_NAME.sh"; then
+                  echo "The script contains an interactive prompt. Skipping execution."
+                  continue
+                fi
+            fi
+            git remote add community-scripts https://github.com/community-scripts/ProxmoxVE.git
+            git fetch community-scripts
+            rm -f .github/workflows/scripts/app-test/pr-build.func || true
+            rm -f .github/workflows/scripts/app-test/pr-install.func || true
+            rm -f .github/workflows/scripts/app-test/pr-alpine-install.func || true
+            rm -f .github/workflows/scripts/app-test/pr-create-lxc.sh || true
+            git checkout community-scripts/main -- .github/workflows/scripts/app-test/pr-build.func
+            git checkout community-scripts/main -- .github/workflows/scripts/app-test/pr-install.func
+            git checkout community-scripts/main -- .github/workflows/scripts/app-test/pr-alpine-install.func
+            git checkout community-scripts/main -- .github/workflows/scripts/app-test/pr-create-lxc.sh
+            chmod +x $RUNNING_FILE         
+            chmod +x .github/workflows/scripts/app-test/pr-create-lxc.sh
+            chmod +x .github/workflows/scripts/app-test/pr-install.func
+            chmod +x .github/workflows/scripts/app-test/pr-alpine-install.func
+            chmod +x .github/workflows/scripts/app-test/pr-build.func
+            sed -i 's|source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)|source .github/workflows/scripts/app-test/pr-build.func|g' "$RUNNING_FILE"
+            echo "Executing $RUNNING_FILE"
+            ERROR_MSG=$(./$RUNNING_FILE 2>&1 > /dev/null)
+            echo "Finished running $FILE"
+            if [ -n "$ERROR_MSG" ]; then
+              echo "ERROR in $STRIPPED_NAME: $ERROR_MSG"
+              echo "$ERROR_MSG" > result_$STRIPPED_NAME.log
+            fi
+          done
+          set -e  # Restore exit-on-error
+
       - name: Cleanup PVE Node
         run: |
           containers=$(pct list | tail -n +2 | awk '{print $0 " " $4}' | awk '{print $1}')
-        
+
           for container_id in $containers; do
             status=$(pct status $container_id | awk '{print $2}')
             if [[ $status == "running" ]]; then
@@ -139,26 +138,26 @@ jobs:
                 pct destroy $container_id
             fi            
           done
-   
+
       - name: Post error comments
         run: |
           ERROR="false"
           SEARCH_LINE=".github/workflows/scripts/app-test/pr-build.func: line 255:"
-          
+
           # Get all existing comments on the PR
           EXISTING_COMMENTS=$(gh pr view ${{ github.event.pull_request.number }} --repo ${{ github.repository }} --json comments --jq '.comments[].body')
-          
+
           for FILE in ${{ env.ALL_FILES }}; do
             STRIPPED_NAME=$(basename "$FILE" | sed 's/-install//' | sed 's/\.sh$//')
             if [[ ! -f result_$STRIPPED_NAME.log ]]; then
               continue
             fi
             ERROR_MSG=$(cat result_$STRIPPED_NAME.log)
-          
+
             if [ -n "$ERROR_MSG" ]; then
               CLEANED_ERROR_MSG=$(echo "$ERROR_MSG" | sed "s|$SEARCH_LINE.*||")
               COMMENT_BODY=":warning: The script _**$FILE**_ failed with the following message: <br> <div><strong>${CLEANED_ERROR_MSG}</strong></div>"
-          
+
               # Check if the comment already exists
               if echo "$EXISTING_COMMENTS" | grep -qF "$COMMENT_BODY"; then
                 echo "Skipping duplicate comment for $FILE"
@@ -171,7 +170,5 @@ jobs:
               fi
             fi
           done
-          
+
           echo "ERROR=$ERROR" >> $GITHUB_ENV
-      
-  

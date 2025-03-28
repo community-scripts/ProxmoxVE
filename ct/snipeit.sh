@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: Michel Roegl-Brunner (michelroegl-brunner)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -27,21 +27,21 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -s https://api.github.com/repos/snipe/snipe-it/releases/latest | grep '"tag_name"' | sed -E 's/.*"tag_name": "v([^"]+).*/\1/')
+  RELEASE=$(curl -fsSL https://api.github.com/repos/snipe/snipe-it/releases/latest | grep '"tag_name"' | sed -E 's/.*"tag_name": "v([^"]+).*/\1/')
   if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
     msg_info "Stopping Services"
     systemctl stop nginx
     msg_ok "Services Stopped"
-    
+
     msg_info "Updating ${APP} to v${RELEASE}"
     $STD apt-get update
     $STD apt-get -y upgrade
     mv /opt/snipe-it /opt/snipe-it-backup
     temp_file=$(mktemp)
-    wget -q "https://github.com/snipe/snipe-it/archive/refs/tags/v${RELEASE}.tar.gz" -O $temp_file
+    curl -fsSL "https://github.com/snipe/snipe-it/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
     tar zxf $temp_file
     mv snipe-it-${RELEASE} /opt/snipe-it
-    $STD wget -q "https://github.com/snipe/snipe-it/archive/refs/tags/v${RELEASE}.zip"
+    $STD curl -fsSL "https://github.com/snipe/snipe-it/archive/refs/tags/v${RELEASE}.zip" -O
     unzip -q v${RELEASE}.zip
     mv snipe-it-${RELEASE} /opt/snipe-it
     cp /opt/snipe-it-backup/.env /opt/snipe-it/.env
@@ -61,7 +61,7 @@ function update_script() {
     rm -rf /opt/v${RELEASE}.zip
     rm -rf /opt/snipe-it-backup
     msg_ok "Updated ${APP}"
-    
+
     msg_info "Starting Service"
     systemctl start nginx
     msg_ok "Started Service"

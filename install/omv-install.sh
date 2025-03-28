@@ -18,7 +18,7 @@ $STD apt-get install -y gpg
 msg_ok "Installed Dependencies"
 
 msg_info "Installing OpenMediaVault (Patience)"
-wget -qO- https://packages.openmediavault.org/public/archive.key | gpg --dearmor >"/etc/apt/trusted.gpg.d/openmediavault-archive-keyring.gpg"
+curl -fsSL "https://packages.openmediavault.org/public/archive.key" | gpg --dearmor >"/etc/apt/trusted.gpg.d/openmediavault-archive-keyring.gpg"
 cat <<EOF >/etc/apt/sources.list.d/openmediavault.list
 deb [signed-by=/etc/apt/trusted.gpg.d/openmediavault-archive-keyring.gpg] http://packages.openmediavault.org/public sandworm main
 EOF

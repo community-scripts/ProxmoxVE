@@ -29,7 +29,7 @@ msg_ok "Installed Dependencies"
 
 msg_info "Setup NextPVR (Patience)"
 cd /opt
-wget -q https://nextpvr.com/nextpvr-helper.deb
+curl -fsSL "https://nextpvr.com/nextpvr-helper.deb" -O $(basename "https://nextpvr.com/nextpvr-helper.deb")
 $STD dpkg -i nextpvr-helper.deb
 msg_ok "Installed NextPVR"
 

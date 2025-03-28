@@ -6,8 +6,8 @@
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
 function header_info {
-clear
-cat <<"EOF"
+  clear
+  cat <<"EOF"
    ____  ___          _______     
   / __ \/ (_)   _____/_  __(_)___ 
  / / / / / / | / / _ \/ / / / __ \
@@ -31,12 +31,12 @@ set-e
 header_info
 
 while true; do
-    read -p "This will Install ${APP} on $hostname. Proceed(y/n)?" yn
-    case $yn in
-    [Yy]*) break ;;
-    [Nn]*) exit ;;
-    *) echo "Please answer yes or no." ;;
-    esac
+  read -p "This will Install ${APP} on $hostname. Proceed(y/n)?" yn
+  case $yn in
+  [Yy]*) break ;;
+  [Nn]*) exit ;;
+  *) echo "Please answer yes or no." ;;
+  esac
 done
 header_info
 
@@ -51,7 +51,7 @@ function msg_ok() {
 }
 
 msg_info "Installing ${APP}"
-wget -q https://github.com/OliveTin/OliveTin/releases/latest/download/OliveTin_linux_amd64.deb
+curl -fsSL "https://github.com/OliveTin/OliveTin/releases/latest/download/OliveTin_linux_amd64.deb" -O $(basename "https://github.com/OliveTin/OliveTin/releases/latest/download/OliveTin_linux_amd64.deb")
 dpkg -i OliveTin_linux_amd64.deb &>/dev/null
 systemctl enable --now OliveTin &>/dev/null
 rm OliveTin_linux_amd64.deb

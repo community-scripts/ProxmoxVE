@@ -19,7 +19,7 @@ $STD apt-get install -y gpg
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Neo4j (patience)"
-wget -qO- https://debian.neo4j.com/neotechnology.gpg.key | gpg --dearmor -o /etc/apt/keyrings/neotechnology.gpg
+curl -fsSL "https://debian.neo4j.com/neotechnology.gpg.key" | gpg --dearmor -o /etc/apt/keyrings/neotechnology.gpg
 echo 'deb [signed-by=/etc/apt/keyrings/neotechnology.gpg] https://debian.neo4j.com stable latest' >/etc/apt/sources.list.d/neo4j.list
 $STD apt-get update
 $STD apt-get install -y neo4j

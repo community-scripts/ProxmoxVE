@@ -23,11 +23,11 @@ $STD apt-get install -y \
 msg_ok "Installed Dependencies"
 
 msg_info "Installing PrivateBin"
-RELEASE=$(curl -s https://api.github.com/repos/PrivateBin/PrivateBin/releases/latest | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')
+RELEASE=$(curl -fsSL https://api.github.com/repos/PrivateBin/PrivateBin/releases/latest | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 mkdir -p /opt/privatebin
 cd /opt/privatebin
-wget -q "https://github.com/PrivateBin/PrivateBin/archive/refs/tags/${RELEASE}.zip"
+curl -fsSL "https://github.com/PrivateBin/PrivateBin/archive/refs/tags/${RELEASE}.zip" -O $(basename "https://github.com/PrivateBin/PrivateBin/archive/refs/tags/${RELEASE}.zip")
 $STD unzip -q ${RELEASE}.zip
 mv PrivateBin-${RELEASE}/* .
 msg_ok "Installed PrivateBin"
