@@ -37,7 +37,7 @@ function update_script() {
 
         msg_info "Updating ${APP} to ${RELEASE}"
         cd /tmp
-        wget -q https://github.com/actualbudget/actual/archive/refs/tags/v${RELEASE}.tar.gz
+        curl -fsSL -O https://github.com/actualbudget/actual/archive/refs/tags/v${RELEASE}.tar.gz
 
         mv /opt/actualbudget /opt/actualbudget_bak
         tar -xzf "v${RELEASE}.tar.gz"
