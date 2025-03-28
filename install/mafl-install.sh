@@ -36,10 +36,10 @@ msg_ok "Installed Node.js"
 
 RELEASE=$(curl -fsSL https://api.github.com/repos/hywax/mafl/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 msg_info "Installing Mafl v${RELEASE}"
-wget -q https://github.com/hywax/mafl/archive/refs/tags/v${RELEASE}.tar.gz
+curl -fsSL "https://github.com/hywax/mafl/archive/refs/tags/v${RELEASE}.tar.gz" -O $(basename "https://github.com/hywax/mafl/archive/refs/tags/v${RELEASE}.tar.gz")
 tar -xzf v${RELEASE}.tar.gz
 mkdir -p /opt/mafl/data
-wget -q -O /opt/mafl/data/config.yml https://raw.githubusercontent.com/hywax/mafl/main/.example/config.yml
+curl -fsSL "https://raw.githubusercontent.com/hywax/mafl/main/.example/config.yml" -o "/opt/mafl/data/config.yml"
 mv mafl-${RELEASE}/* /opt/mafl
 rm -rf mafl-${RELEASE}
 cd /opt/mafl

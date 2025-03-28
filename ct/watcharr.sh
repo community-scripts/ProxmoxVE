@@ -38,7 +38,7 @@ function update_script() {
         msg_info "Updating $APP to v${RELEASE}"
         temp_file=$(mktemp)
         temp_folder=$(mktemp -d)
-        wget -q "https://github.com/sbondCo/Watcharr/archive/refs/tags/v${RELEASE}.tar.gz" -O "$temp_file"
+curl -fsSL "https://github.com/sbondCo/Watcharr/archive/refs/tags/v${RELEASE}.tar.gz" -o ""$temp_file""
         tar -xzf "$temp_file" -C "$temp_folder"
         rm -f /opt/watcharr/server/watcharr
         rm -rf /opt/watcharr/server/ui

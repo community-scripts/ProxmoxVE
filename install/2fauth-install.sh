@@ -38,7 +38,7 @@ msg_ok "Set up Database"
 
 msg_info "Setup 2FAuth"
 RELEASE=$(curl -fsSL https://api.github.com/repos/Bubka/2FAuth/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-wget -q "https://github.com/Bubka/2FAuth/archive/refs/tags/${RELEASE}.zip"
+curl -fsSL "https://github.com/Bubka/2FAuth/archive/refs/tags/${RELEASE}.zip" -O $(basename "https://github.com/Bubka/2FAuth/archive/refs/tags/${RELEASE}.zip")
 unzip -q "${RELEASE}.zip"
 mv "2FAuth-${RELEASE//v/}/" /opt/2fauth
 

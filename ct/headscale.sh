@@ -34,7 +34,7 @@ function update_script() {
     msg_ok "Stopped ${APP}"
 
     msg_info "Updating $APP to v${RELEASE}"
-    wget -q https://github.com/juanfont/headscale/releases/download/v${RELEASE}/headscale_${RELEASE}_linux_amd64.deb
+curl -fsSL "https://github.com/juanfont/headscale/releases/download/v${RELEASE}/headscale_${RELEASE}_linux_amd64.deb" -O $(basename "https://github.com/juanfont/headscale/releases/download/v${RELEASE}/headscale_${RELEASE}_linux_amd64.deb")
     dpkg -i headscale_${RELEASE}_linux_amd64.deb
     rm headscale_${RELEASE}_linux_amd64.deb
     echo "${RELEASE}" >/opt/${APP}_version.txt

@@ -36,7 +36,7 @@ msg_info "Installing Pingvin Share (Patience)"
 cd /opt
 RELEASE=$(curl -fsSL https://api.github.com/repos/stonith404/pingvin-share/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
-wget -q "https://github.com/stonith404/pingvin-share/archive/refs/tags/v${RELEASE}.zip"
+curl -fsSL "https://github.com/stonith404/pingvin-share/archive/refs/tags/v${RELEASE}.zip" -O $(basename "https://github.com/stonith404/pingvin-share/archive/refs/tags/v${RELEASE}.zip")
 unzip -q v${RELEASE}.zip
 echo "${RELEASE}" >"/opt/pingvin_version.txt"
 mv pingvin-share-${RELEASE} /opt/pingvin-share

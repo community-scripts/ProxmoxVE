@@ -31,7 +31,7 @@ function update_script() {
   if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
     msg_info "Updating ${APP} to ${RELEASE}"
     cd /opt
-    wget -q "https://github.com/ellite/Wallos/archive/refs/tags/v${RELEASE}.zip"
+curl -fsSL "https://github.com/ellite/Wallos/archive/refs/tags/v${RELEASE}.zip" -O $(basename "https://github.com/ellite/Wallos/archive/refs/tags/v${RELEASE}.zip")
     mkdir -p /opt/logos
     mv /opt/wallos/db/wallos.db /opt/wallos.db
     mv /opt/wallos/images/uploads/logos /opt/logos/

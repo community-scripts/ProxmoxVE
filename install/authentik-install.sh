@@ -39,14 +39,14 @@ msg_ok "Installed Dependencies"
 msg_info "Installing yq"
 cd /tmp
 YQ_LATEST="$(wget -qO- "https://api.github.com/repos/mikefarah/yq/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")')"
-wget -q "https://github.com/mikefarah/yq/releases/download/${YQ_LATEST}/yq_linux_amd64" -qO /usr/bin/yq
+curl -fsSL "https://github.com/mikefarah/yq/releases/download/${YQ_LATEST}/yq_linux_amd64" -qO /usr/bin/yq" -O $(basename "https://github.com/mikefarah/yq/releases/download/${YQ_LATEST}/yq_linux_amd64" -qO /usr/bin/yq")
 chmod +x /usr/bin/yq
 msg_ok "Installed yq"
 
 msg_info "Installing GeoIP"
 cd /tmp
 GEOIP_RELEASE=$(curl -fsSL https://api.github.com/repos/maxmind/geoipupdate/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-wget -qO geoipupdate.deb https://github.com/maxmind/geoipupdate/releases/download/v${GEOIP_RELEASE}/geoipupdate_${GEOIP_RELEASE}_linux_amd64.deb
+curl -fsSL "https://github.com/maxmind/geoipupdate/releases/download/v${GEOIP_RELEASE}/geoipupdate_${GEOIP_RELEASE}_linux_amd64.deb" -o "geoipupdate.deb"
 $STD dpkg -i geoipupdate.deb
 cat <<EOF >/etc/GeoIP.conf
 #GEOIPUPDATE_EDITION_IDS="GeoLite2-City GeoLite2-ASN"
@@ -58,7 +58,7 @@ msg_ok "Installed GeoIP"
 
 msg_info "Setting up Python 3"
 cd /tmp
-wget -q https://www.python.org/ftp/python/3.12.1/Python-3.12.1.tgz -O Python.tgz
+curl -fsSL "https://www.python.org/ftp/python/3.12.1/Python-3.12.1.tgz" -o "Python.tgz"
 tar -zxf Python.tgz
 cd Python-3.12.1
 $STD ./configure --enable-optimizations
@@ -82,7 +82,7 @@ msg_info "Installing Golang"
 set +o pipefail
 temp_file=$(mktemp)
 golang_tarball=$(curl -fsSL https://go.dev/dl/ | grep -oP 'go[\d\.]+\.linux-amd64\.tar\.gz' | head -n 1)
-wget -q https://golang.org/dl/"$golang_tarball" -O "$temp_file"
+curl -fsSL "https://golang.org/dl/"$golang_tarball" -o ""$temp_file""
 tar -C /usr/local -xzf "$temp_file"
 ln -sf /usr/local/go/bin/go /usr/local/bin/go
 rm -f "$temp_file"
@@ -109,7 +109,7 @@ msg_ok "Installed PostgreSQL"
 msg_info "Installing authentik"
 RELEASE=$(curl -fsSL https://api.github.com/repos/goauthentik/authentik/releases/latest | grep "tarball_url" | awk '{print substr($2, 2, length($2)-3)}')
 mkdir -p /opt/authentik
-wget -qO authentik.tar.gz "${RELEASE}"
+curl -fsSL "${RELEASE}" -o "authentik.tar.gz"
 tar -xzf authentik.tar.gz -C /opt/authentik --strip-components 1 --overwrite
 cd /opt/authentik/website
 $STD npm install

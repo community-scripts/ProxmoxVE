@@ -33,7 +33,7 @@ function update_script() {
 
     msg_info "Updating ${APP} LXC"
     rm -rf /usr/local/bin/*
-    wget -q $(curl -fsSL https://api.github.com/repos/autobrr/autobrr/releases/latest | grep download | grep linux_x86_64 | cut -d\" -f4)
+curl -fsSL "$(curl -fsSL https://api.github.com/repos/autobrr/autobrr/releases/latest | grep download | grep linux_x86_64 | cut -d\" -f4)" -O $(basename "$(curl -fsSL https://api.github.com/repos/autobrr/autobrr/releases/latest | grep download | grep linux_x86_64 | cut -d\" -f4)")
     tar -C /usr/local/bin -xzf autobrr*.tar.gz
     rm -rf autobrr*.tar.gz
     msg_ok "Updated ${APP} LXC"

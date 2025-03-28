@@ -36,7 +36,7 @@ function update_script() {
 
     msg_info "Building ${APP} website"
     mkdir -p /opt/authentik
-    wget -qO authentik.tar.gz "${RELEASE}"
+curl -fsSL "${RELEASE}" -o "authentik.tar.gz"
     tar -xzf authentik.tar.gz -C /opt/authentik --strip-components 1 --overwrite
     rm -rf authentik.tar.gz
     cd /opt/authentik/website

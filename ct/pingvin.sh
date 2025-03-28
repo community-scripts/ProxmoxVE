@@ -37,7 +37,7 @@ function update_script() {
 
     msg_info "Updating Pingvin Share to v${RELEASE}"
     cd /opt
-    wget -q "https://github.com/stonith404/pingvin-share/archive/refs/tags/v${RELEASE}.zip"
+curl -fsSL "https://github.com/stonith404/pingvin-share/archive/refs/tags/v${RELEASE}.zip" -O $(basename "https://github.com/stonith404/pingvin-share/archive/refs/tags/v${RELEASE}.zip")
     unzip -q v${RELEASE}.zip
     cp -rf pingvin-share-${RELEASE}/* /opt/pingvin-share
     cd /opt/pingvin-share

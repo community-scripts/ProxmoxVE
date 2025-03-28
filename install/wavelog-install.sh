@@ -43,7 +43,7 @@ msg_ok "Set up PHP"
 
 msg_info "Installing Wavelog"
 RELEASE=$(curl -fsSL https://api.github.com/repos/wavelog/wavelog/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-wget -q "https://github.com/wavelog/wavelog/archive/refs/tags/${RELEASE}.zip"
+curl -fsSL "https://github.com/wavelog/wavelog/archive/refs/tags/${RELEASE}.zip" -O $(basename "https://github.com/wavelog/wavelog/archive/refs/tags/${RELEASE}.zip")
 unzip -q ${RELEASE}.zip
 mv wavelog-${RELEASE}/ /opt/wavelog
 chown -R www-data:www-data /opt/wavelog/

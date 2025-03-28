@@ -38,7 +38,7 @@ function update_script() {
     msg_info "Updating $APP to v${RELEASE}"
     mv /opt/netbox/ /opt/netbox-backup
     cd /opt
-    wget -q "https://github.com/netbox-community/netbox/archive/refs/tags/v${RELEASE}.zip"
+curl -fsSL "https://github.com/netbox-community/netbox/archive/refs/tags/v${RELEASE}.zip" -O $(basename "https://github.com/netbox-community/netbox/archive/refs/tags/v${RELEASE}.zip")
     unzip -q "v${RELEASE}.zip"
     mv /opt/netbox-${RELEASE}/ /opt/netbox/
 

@@ -21,7 +21,7 @@ msg_ok "Setup Python 3"
 msg_info "Setup Kometa"
 temp_file=$(mktemp)
 RELEASE=$(curl -fsSL https://api.github.com/repos/Kometa-Team/Kometa/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-wget -q "https://github.com/Kometa-Team/Kometa/archive/refs/tags/v${RELEASE}.tar.gz" -O "$temp_file"
+curl -fsSL "https://github.com/Kometa-Team/Kometa/archive/refs/tags/v${RELEASE}.tar.gz" -o ""$temp_file""
 tar -xzf "$temp_file"
 mv Kometa-${RELEASE} /opt/kometa
 cd /opt/kometa

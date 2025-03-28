@@ -35,7 +35,7 @@ function update_script() {
 
     msg_info "Updating ${APP} to ${RELEASE}"
     mv /usr/local/bin/minio /usr/local/bin/minio_bak
-    wget -q https://dl.min.io/server/minio/release/linux-amd64/minio
+curl -fsSL "https://dl.min.io/server/minio/release/linux-amd64/minio" -O $(basename "https://dl.min.io/server/minio/release/linux-amd64/minio")
     mv minio /usr/local/bin/
     chmod +x /usr/local/bin/minio
     echo "${RELEASE}" >/opt/${APP}_version.txt

@@ -36,7 +36,7 @@ function update_script() {
         msg_info "Updating $APP to v${RELEASE}"
         temp_file=$(mktemp)
         cd $temp_file
-        wget -q "https://github.com/wger-project/wger/archive/refs/tags/$RELEASE.tar.gz" -O $temp_file
+curl -fsSL "https://github.com/wger-project/wger/archive/refs/tags/$RELEASE.tar.gz" -o "$temp_file"
         tar xzf $temp_file
         cp -rf wger-$RELEASE/* /home/wger/src
         cd /home/wger/src

@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Proxmox Mail Gateway"
-wget -q https://enterprise.proxmox.com/debian/proxmox-release-bookworm.gpg -O /etc/apt/trusted.gpg.d/proxmox-release-bookworm.gpg
+curl -fsSL "https://enterprise.proxmox.com/debian/proxmox-release-bookworm.gpg" -o "/etc/apt/trusted.gpg.d/proxmox-release-bookworm.gpg"
 echo "deb http://download.proxmox.com/debian/pmg bookworm pmg-no-subscription" >/etc/apt/sources.list.d/pmg.list
 $STD apt-get update
 $STD apt-get -y install proxmox-mailgateway-container

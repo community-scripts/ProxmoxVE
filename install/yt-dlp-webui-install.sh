@@ -19,13 +19,13 @@ msg_ok "Installed Dependencies"
 
 msg_info "Installing ${APPLICATION}"
 RELEASE=$(curl -fsSL https://api.github.com/repos/marcopiovanello/yt-dlp-web-ui/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-wget -q "https://github.com/marcopiovanello/yt-dlp-web-ui/releases/download/v${RELEASE}/yt-dlp-webui_linux-amd64" -O /usr/local/bin/yt-dlp-webui
+curl -fsSL "https://github.com/marcopiovanello/yt-dlp-web-ui/releases/download/v${RELEASE}/yt-dlp-webui_linux-amd64" -o "/usr/local/bin/yt-dlp-webui"
 chmod +x /usr/local/bin/yt-dlp-webui
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Installed ${APPLICATION}"
 
 msg_info "Installing yt-dlp"
-wget -q https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -O /usr/local/bin/yt-dlp
+curl -fsSL "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp" -o "/usr/local/bin/yt-dlp"
 chmod a+rx /usr/local/bin/yt-dlp
 msg_ok "Installed yt-dlp"
 

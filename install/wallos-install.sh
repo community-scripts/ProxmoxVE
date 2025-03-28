@@ -24,7 +24,7 @@ msg_ok "Installed Dependencies"
 msg_info "Installing Wallos (Patience)"
 cd /opt
 RELEASE=$(curl -fsSL https://api.github.com/repos/ellite/Wallos/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-wget -q "https://github.com/ellite/Wallos/archive/refs/tags/v${RELEASE}.zip"
+curl -fsSL "https://github.com/ellite/Wallos/archive/refs/tags/v${RELEASE}.zip" -O $(basename "https://github.com/ellite/Wallos/archive/refs/tags/v${RELEASE}.zip")
 unzip -q v${RELEASE}.zip
 mv Wallos-${RELEASE} /opt/wallos
 cd /opt/wallos

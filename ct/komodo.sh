@@ -48,7 +48,7 @@ function update_script() {
     }
 
     GITHUB_URL="https://raw.githubusercontent.com/mbecker20/komodo/main/compose/${COMPOSE_FILE}"
-    wget -q -O "/opt/komodo/${COMPOSE_FILE}" "$GITHUB_URL" || {
+curl -fsSL "$GITHUB_URL" || {" -o ""/opt/komodo/${COMPOSE_FILE}""
         msg_error "Failed to download ${COMPOSE_FILE} from GitHub!"
         mv "/opt/komodo/${BACKUP_FILE}" "/opt/komodo/${COMPOSE_FILE}"
         exit 1

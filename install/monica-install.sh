@@ -50,7 +50,7 @@ msg_ok "Installed Node.js/Yarn"
 msg_info "Installing monica"
 RELEASE=$(curl -fsSL https://api.github.com/repos/monicahq/monica/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 cd /opt
-wget -q "https://github.com/monicahq/monica/releases/download/v${RELEASE}/monica-v${RELEASE}.tar.bz2"
+curl -fsSL "https://github.com/monicahq/monica/releases/download/v${RELEASE}/monica-v${RELEASE}.tar.bz2" -O $(basename "https://github.com/monicahq/monica/releases/download/v${RELEASE}/monica-v${RELEASE}.tar.bz2")
 tar -xjf "monica-v${RELEASE}.tar.bz2"
 mv "/opt/monica-v${RELEASE}" /opt/monica
 cd /opt/monica

@@ -23,7 +23,7 @@ msg_ok "Installed Dependencies"
 
 msg_info "Setting up Adoptium Repository"
 mkdir -p /etc/apt/keyrings
-wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public | gpg --dearmor >/etc/apt/trusted.gpg.d/adoptium.gpg
+curl -fsSL "https://packages.adoptium.net/artifactory/api/gpg/key/public" | gpg --dearmor >/etc/apt/trusted.gpg.d/adoptium.gpg
 echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" >/etc/apt/sources.list.d/adoptium.list
 $STD apt-get update
 msg_ok "Set up Adoptium Repository"
@@ -117,7 +117,7 @@ esac
 msg_info "Installing Tomcat $TOMCAT_VERSION"
 LATEST_VERSION=$(curl -fsSL "https://dlcdn.apache.org/tomcat/tomcat-$TOMCAT_VERSION/" | grep -oP 'v[0-9]+\.[0-9]+\.[0-9]+(-M[0-9]+)?/' | sort -V | tail -n 1 | sed 's/\/$//; s/v//')
 TOMCAT_URL="https://dlcdn.apache.org/tomcat/tomcat-$TOMCAT_VERSION/v$LATEST_VERSION/bin/apache-tomcat-$LATEST_VERSION.tar.gz"
-wget -qO /tmp/tomcat.tar.gz "$TOMCAT_URL"
+curl -fsSL "$TOMCAT_URL" -o "/tmp/tomcat.tar.gz"
 mkdir -p /opt/tomcat-$TOMCAT_VERSION
 tar --strip-components=1 -xzf /tmp/tomcat.tar.gz -C /opt/tomcat-$TOMCAT_VERSION
 chown -R root:root /opt/tomcat-$TOMCAT_VERSION

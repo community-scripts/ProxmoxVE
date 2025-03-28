@@ -19,7 +19,7 @@ if systemctl is-active systemd-resolved >/dev/null 2>&1; then
 fi
 mkdir /opt/blocky
 RELEASE=$(curl -fsSL https://api.github.com/repos/0xERR0R/blocky/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-wget -qO- https://github.com/0xERR0R/blocky/releases/download/v${RELEASE}/blocky_v${RELEASE}_Linux_x86_64.tar.gz | tar -xzf - -C /opt/blocky/
+curl -fsSL "https://github.com/0xERR0R/blocky/releases/download/v${RELEASE}/blocky_v${RELEASE}_Linux_x86_64.tar.gz" | tar -xzf - -C /opt/blocky/
 
 cat <<EOF >/opt/blocky/config.yml
 # configuration documentation: https://0xerr0r.github.io/blocky/latest/configuration/

@@ -89,7 +89,7 @@ if [ -f "$INSTALL_PATH" ]; then
     read -r -p "Would you like to update ${APP}? (y/N): " update_prompt
     if [[ "${update_prompt,,}" =~ ^(y|yes)$ ]]; then
         msg_info "Updating ${APP}"
-        wget -qO- https://github.com/filebrowser/filebrowser/releases/latest/download/linux-amd64-filebrowser.tar.gz | tar -xzv -C /usr/local/bin &>/dev/null
+curl -fsSL "https://github.com/filebrowser/filebrowser/releases/latest/download/linux-amd64-filebrowser.tar.gz" | tar -xzv -C /usr/local/bin &>/dev/null
         chmod +x "$INSTALL_PATH"
         msg_ok "Updated ${APP}"
         exit 0
@@ -107,7 +107,7 @@ read -r -p "Would you like to install ${APP}? (y/n): " install_prompt
 if [[ "${install_prompt,,}" =~ ^(y|yes)$ ]]; then
     msg_info "Installing ${APP} on ${OS}"
     $PKG_MANAGER wget tar curl &>/dev/null
-    wget -qO- https://github.com/filebrowser/filebrowser/releases/latest/download/linux-amd64-filebrowser.tar.gz | tar -xzv -C /usr/local/bin &>/dev/null
+curl -fsSL "https://github.com/filebrowser/filebrowser/releases/latest/download/linux-amd64-filebrowser.tar.gz" | tar -xzv -C /usr/local/bin &>/dev/null
     chmod +x "$INSTALL_PATH"
     msg_ok "Installed ${APP}"
 

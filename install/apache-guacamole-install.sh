@@ -43,7 +43,7 @@ msg_info "Setup Apache Tomcat"
 RELEASE=$(wget -qO- https://dlcdn.apache.org/tomcat/tomcat-9/ | grep -oP '(?<=href=")v[^"/]+(?=/")' | sed 's/^v//' | sort -V | tail -n1)
 mkdir -p /opt/apache-guacamole/tomcat9
 mkdir -p /opt/apache-guacamole/server
-wget -qO- "https://dlcdn.apache.org/tomcat/tomcat-9/v${RELEASE}/bin/apache-tomcat-${RELEASE}.tar.gz" | tar -xz -C /opt/apache-guacamole/tomcat9 --strip-components=1
+curl -fsSL "https://dlcdn.apache.org/tomcat/tomcat-9/v${RELEASE}/bin/apache-tomcat-${RELEASE}.tar.gz" | tar -xz -C /opt/apache-guacamole/tomcat9 --strip-components=1
 useradd -r -d /opt/apache-guacamole/tomcat9 -s /bin/false tomcat
 chown -R tomcat: /opt/apache-guacamole/tomcat9
 chmod -R g+r /opt/apache-guacamole/tomcat9/conf
@@ -53,7 +53,7 @@ msg_ok "Setup Apache Tomcat"
 msg_info "Setup Apache Guacamole"
 mkdir -p /etc/guacamole/{extensions,lib}
 RELEASE_SERVER=$(curl -fsSLL https://api.github.com/repos/apache/guacamole-server/tags | jq -r '.[0].name')
-wget -qO- https://api.github.com/repos/apache/guacamole-server/tarball/refs/tags/${RELEASE_SERVER} | tar -xz --strip-components=1 -C /opt/apache-guacamole/server
+curl -fsSL "https://api.github.com/repos/apache/guacamole-server/tarball/refs/tags/${RELEASE_SERVER}" | tar -xz --strip-components=1 -C /opt/apache-guacamole/server
 cd /opt/apache-guacamole/server
 $STD autoreconf -fi
 $STD ./configure --with-init-dir=/etc/init.d --enable-allow-freerdp-snapshots
@@ -61,12 +61,12 @@ $STD make
 $STD make install
 $STD ldconfig
 RELEASE_CLIENT=$(curl -fsSLL https://api.github.com/repos/apache/guacamole-client/tags | jq -r '.[0].name')
-wget -q -O /opt/apache-guacamole/tomcat9/webapps/guacamole.war https://downloads.apache.org/guacamole/${RELEASE_CLIENT}/binary/guacamole-${RELEASE_CLIENT}.war
+curl -fsSL "https://downloads.apache.org/guacamole/${RELEASE_CLIENT}/binary/guacamole-${RELEASE_CLIENT}.war" -o "/opt/apache-guacamole/tomcat9/webapps/guacamole.war"
 cd /root
-wget -q --directory-prefix=/root/ https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-8.0.26.tar.gz
+curl -fsSL "--directory-prefix=/root/ https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-8.0.26.tar.gz" -O $(basename "--directory-prefix=/root/ https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-8.0.26.tar.gz")
 $STD tar -xf ~/mysql-connector-java-8.0.26.tar.gz
 mv ~/mysql-connector-java-8.0.26/mysql-connector-java-8.0.26.jar /etc/guacamole/lib/
-wget -q --directory-prefix=/root/ https://downloads.apache.org/guacamole/1.5.5/binary/guacamole-auth-jdbc-1.5.5.tar.gz
+curl -fsSL "--directory-prefix=/root/ https://downloads.apache.org/guacamole/1.5.5/binary/guacamole-auth-jdbc-1.5.5.tar.gz" -O $(basename "--directory-prefix=/root/ https://downloads.apache.org/guacamole/1.5.5/binary/guacamole-auth-jdbc-1.5.5.tar.gz")
 $STD tar -xf ~/guacamole-auth-jdbc-1.5.5.tar.gz
 mv ~/guacamole-auth-jdbc-1.5.5/mysql/guacamole-auth-jdbc-mysql-1.5.5.jar /etc/guacamole/extensions/
 msg_ok "Setup Apache Guacamole"

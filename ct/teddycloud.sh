@@ -36,7 +36,7 @@ function update_script() {
     msg_info "Updating ${APP} to v${VERSION}"
     cd /opt
     mv /opt/teddycloud /opt/teddycloud_bak
-    wget -q "https://github.com/toniebox-reverse-engineering/teddycloud/releases/download/${RELEASE}/teddycloud.amd64.release_v${VERSION}.zip"
+curl -fsSL "https://github.com/toniebox-reverse-engineering/teddycloud/releases/download/${RELEASE}/teddycloud.amd64.release_v${VERSION}.zip" -O $(basename "https://github.com/toniebox-reverse-engineering/teddycloud/releases/download/${RELEASE}/teddycloud.amd64.release_v${VERSION}.zip")
     unzip -q -d /opt/teddycloud teddycloud.amd64.release_v${VERSION}.zip
     cp -R /opt/teddycloud_bak/certs /opt/teddycloud_bak/config /opt/teddycloud_bak/data /opt/teddycloud
     echo "${VERSION}" >"/opt/${APP}_version.txt"

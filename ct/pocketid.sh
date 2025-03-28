@@ -45,7 +45,7 @@ function update_script() {
         cp /opt/pocket-id/backend/.env /opt/backend.env
         cp /opt/pocket-id/frontend/.env /opt/frontend.env
         rm -r /opt/pocket-id
-        wget -q "https://github.com/pocket-id/pocket-id/archive/refs/tags/v${RELEASE}.zip"
+curl -fsSL "https://github.com/pocket-id/pocket-id/archive/refs/tags/v${RELEASE}.zip" -O $(basename "https://github.com/pocket-id/pocket-id/archive/refs/tags/v${RELEASE}.zip")
         unzip -q v${RELEASE}.zip
         mv pocket-id-${RELEASE} /opt/pocket-id
         mv /opt/data /opt/pocket-id/backend/data

@@ -45,7 +45,7 @@ function update_script() {
     msg_ok "Backup Created"
 
     msg_info "Updating Crafty-Controller to v${RELEASE}"
-    wget -q "https://gitlab.com/crafty-controller/crafty-4/-/archive/v${RELEASE}/crafty-4-v${RELEASE}.zip"
+curl -fsSL "https://gitlab.com/crafty-controller/crafty-4/-/archive/v${RELEASE}/crafty-4-v${RELEASE}.zip" -O $(basename "https://gitlab.com/crafty-controller/crafty-4/-/archive/v${RELEASE}/crafty-4-v${RELEASE}.zip")
     unzip -q crafty-4-v${RELEASE}.zip
     cp -a crafty-4-v${RELEASE}/. /opt/crafty-controller/crafty/crafty-4/
     rm -rf crafty-4-v${RELEASE}

@@ -40,7 +40,7 @@ function update_script() {
         msg_info "Updating $APP to v${RELEASE}. Patience"
         export PATH=$PATH:/usr/local/go/bin
         source ~/.bashrc
-        wget -q "https://github.com/YuukanOO/seelf/archive/refs/tags/v${RELEASE}.tar.gz"
+curl -fsSL "https://github.com/YuukanOO/seelf/archive/refs/tags/v${RELEASE}.tar.gz" -O $(basename "https://github.com/YuukanOO/seelf/archive/refs/tags/v${RELEASE}.tar.gz")
         tar -xzf v${RELEASE}.tar.gz
         cp -r seelf-${RELEASE}/ /opt/seelf
         cd /opt/seelf

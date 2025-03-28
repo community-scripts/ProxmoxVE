@@ -35,7 +35,7 @@ function update_script() {
 
     msg_info "Updating ${APP} to v${GITHUB_RELEASE}"
     cd /opt
-    wget -q https://code.onedev.io/onedev/server/~site/onedev-latest.tar.gz
+curl -fsSL "https://code.onedev.io/onedev/server/~site/onedev-latest.tar.gz" -O $(basename "https://code.onedev.io/onedev/server/~site/onedev-latest.tar.gz")
     tar -xzf onedev-latest.tar.gz
     $STD /opt/onedev-latest/bin/upgrade.sh /opt/onedev
     RELEASE=$(cat /opt/onedev/release.properties | grep "version" | cut -d'=' -f2)

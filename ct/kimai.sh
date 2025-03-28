@@ -44,7 +44,7 @@ function update_script() {
 
         msg_info "Updating ${APP} to ${RELEASE}"
         rm -rf /opt/kimai
-        wget -q "https://github.com/kimai/kimai/archive/refs/tags/${RELEASE}.zip"
+curl -fsSL "https://github.com/kimai/kimai/archive/refs/tags/${RELEASE}.zip" -O $(basename "https://github.com/kimai/kimai/archive/refs/tags/${RELEASE}.zip")
         unzip -q ${RELEASE}.zip
         mv kimai-${RELEASE} /opt/kimai
         [ -d "$BACKUP_DIR/var" ] && cp -r "$BACKUP_DIR/var" /opt/kimai/

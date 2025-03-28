@@ -39,7 +39,7 @@ function update_script() {
     sleep 1
     msg_ok "Backed up Data"
     msg_info "Updating Heimdall Dashboard to ${RELEASE}"
-    wget -q https://github.com/linuxserver/Heimdall/archive/${RELEASE}.tar.gz
+curl -fsSL "https://github.com/linuxserver/Heimdall/archive/${RELEASE}.tar.gz" -O $(basename "https://github.com/linuxserver/Heimdall/archive/${RELEASE}.tar.gz")
     tar xzf ${RELEASE}.tar.gz
     VER=$(curl -fsSL https://api.github.com/repos/linuxserver/Heimdall/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
     cp -R Heimdall-${VER}/* /opt/Heimdall

@@ -40,7 +40,7 @@ function update_script() {
     mv /opt/trilium/{db,dump-db} /opt/trilium_backup/
     rm -rf /opt/trilium
     cd /tmp
-    wget -q https://github.com/TriliumNext/Notes/releases/download/v${RELEASE}/TriliumNextNotes-Server-v${RELEASE}-linux-x64.tar.xz
+curl -fsSL "https://github.com/TriliumNext/Notes/releases/download/v${RELEASE}/TriliumNextNotes-Server-v${RELEASE}-linux-x64.tar.xz" -O $(basename "https://github.com/TriliumNext/Notes/releases/download/v${RELEASE}/TriliumNextNotes-Server-v${RELEASE}-linux-x64.tar.xz")
     tar -xf TriliumNextNotes-Server-v${RELEASE}-linux-x64.tar.xz
     mv TriliumNextNotes-Server-$RELEASE-linux-x64 /opt/trilium
     cp -r /opt/trilium_backup/{db,dump-db} /opt/trilium/

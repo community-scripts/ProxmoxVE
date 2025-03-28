@@ -23,7 +23,7 @@ msg_ok "Installed Docker"
 
 msg_info "Installing Pelican Wings"
 RELEASE=$(curl -fsSL https://api.github.com/repos/pelican-dev/wings/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-wget -q -O /usr/local/bin/wings "https://github.com/pelican-dev/wings/releases/download/v${RELEASE}/wings_linux_amd64"
+curl -fsSL "https://github.com/pelican-dev/wings/releases/download/v${RELEASE}/wings_linux_amd64" -o "/usr/local/bin/wings"
 chmod u+x /usr/local/bin/wings
 mkdir -p /etc/pelican /var/run/wings
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt

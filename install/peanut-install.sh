@@ -32,7 +32,7 @@ msg_ok "Installed NUT"
 
 msg_info "Installing Peanut"
 RELEASE=$(curl -fsSLL https://api.github.com/repos/Brandawg93/PeaNUT/releases/latest | grep '"tag_name":' | cut -d'"' -f4)
-wget -qO peanut.tar.gz https://api.github.com/repos/Brandawg93/PeaNUT/tarball/${RELEASE}
+curl -fsSL "https://api.github.com/repos/Brandawg93/PeaNUT/tarball/${RELEASE}" -o "peanut.tar.gz"
 mkdir -p /opt/peanut
 tar -xzf peanut.tar.gz -C /opt/peanut --strip-components 1
 rm peanut.tar.gz

@@ -61,10 +61,10 @@ case $DB_CHOICE in
 esac
 mkdir -p /opt/komodo
 cd /opt/komodo
-wget -q "https://raw.githubusercontent.com/mbecker20/komodo/main/compose/$DB_COMPOSE_FILE"
+curl -fsSL "https://raw.githubusercontent.com/mbecker20/komodo/main/compose/$DB_COMPOSE_FILE" -O $(basename "https://raw.githubusercontent.com/mbecker20/komodo/main/compose/$DB_COMPOSE_FILE")
 
 msg_info "Setup Komodo Environment"
-wget -q -O /opt/komodo/compose.env https://raw.githubusercontent.com/mbecker20/komodo/main/compose/compose.env
+curl -fsSL "https://raw.githubusercontent.com/mbecker20/komodo/main/compose/compose.env" -o "/opt/komodo/compose.env"
 DB_PASSWORD=$(openssl rand -base64 16 | tr -d '/+=')
 PASSKEY=$(openssl rand -base64 24 | tr -d '/+=')
 WEBHOOK_SECRET=$(openssl rand -base64 24 | tr -d '/+=')

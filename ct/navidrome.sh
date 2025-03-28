@@ -34,7 +34,7 @@ function update_script() {
 
     msg_info "Updating to v${RELEASE}"
     cd /opt
-    wget -q https://github.com/navidrome/navidrome/releases/download/v${RELEASE}/navidrome_${RELEASE}_linux_amd64.tar.gz -O Navidrome.tar.gz
+curl -fsSL "https://github.com/navidrome/navidrome/releases/download/v${RELEASE}/navidrome_${RELEASE}_linux_amd64.tar.gz" -o "Navidrome.tar.gz"
     $STD tar -xvzf Navidrome.tar.gz -C /opt/navidrome/
     chmod +x /opt/navidrome/navidrome
     msg_ok "Updated ${APP}"

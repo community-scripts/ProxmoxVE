@@ -36,7 +36,7 @@ function update_script() {
   RELEASE=$(curl -fsSL https://api.github.com/repos/keycloak/keycloak/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
   msg_info "Updating Keycloak to v$RELEASE"
   cd /opt
-  wget -q https://github.com/keycloak/keycloak/releases/download/$RELEASE/keycloak-$RELEASE.tar.gz
+curl -fsSL "https://github.com/keycloak/keycloak/releases/download/$RELEASE/keycloak-$RELEASE.tar.gz" -O $(basename "https://github.com/keycloak/keycloak/releases/download/$RELEASE/keycloak-$RELEASE.tar.gz")
   mv keycloak keycloak.old
   tar -xzf keycloak-$RELEASE.tar.gz
   cp -r keycloak.old/conf keycloak-$RELEASE

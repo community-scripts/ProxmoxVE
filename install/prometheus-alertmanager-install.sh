@@ -17,7 +17,7 @@ msg_info "Installing Prometheus Alertmanager"
 RELEASE=$(curl -fsSL https://api.github.com/repos/prometheus/alertmanager/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 mkdir -p /etc/alertmanager
 mkdir -p /var/lib/alertmanager
-wget -q https://github.com/prometheus/alertmanager/releases/download/v${RELEASE}/alertmanager-${RELEASE}.linux-amd64.tar.gz
+curl -fsSL "https://github.com/prometheus/alertmanager/releases/download/v${RELEASE}/alertmanager-${RELEASE}.linux-amd64.tar.gz" -O $(basename "https://github.com/prometheus/alertmanager/releases/download/v${RELEASE}/alertmanager-${RELEASE}.linux-amd64.tar.gz")
 tar -xf alertmanager-${RELEASE}.linux-amd64.tar.gz
 mv alertmanager-${RELEASE}.linux-amd64/alertmanager alertmanager-${RELEASE}.linux-amd64/amtool /usr/local/bin/
 mv alertmanager-${RELEASE}.linux-amd64/alertmanager.yml /etc/alertmanager/alertmanager.yml

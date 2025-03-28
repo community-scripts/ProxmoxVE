@@ -22,7 +22,7 @@ msg_info "Installing ASP.NET Core 7 SDK"
 var_os=$(grep "^ID=" /etc/os-release | cut -d'=' -f2 | tr -d '"')
 var_version=$(grep "^VERSION_ID=" /etc/os-release | cut -d'=' -f2 | tr -d '"')
 if [ "${var_os}" = "debian" ]; then
-  wget -q "https://packages.microsoft.com/config/debian/$var_version/packages-microsoft-prod.deb"
+curl -fsSL "https://packages.microsoft.com/config/debian/$var_version/packages-microsoft-prod.deb" -O $(basename "https://packages.microsoft.com/config/debian/$var_version/packages-microsoft-prod.deb")
   $STD dpkg -i packages-microsoft-prod.deb
   rm packages-microsoft-prod.deb
 fi

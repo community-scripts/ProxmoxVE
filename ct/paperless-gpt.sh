@@ -35,7 +35,7 @@ function update_script() {
 
         msg_info "Updating Paperless-GPT to ${RELEASE}"
         temp_file=$(mktemp)
-        wget -q "https://github.com/icereed/paperless-gpt/archive/refs/tags/v${RELEASE}.tar.gz" -O $temp_file
+curl -fsSL "https://github.com/icereed/paperless-gpt/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
         tar zxf $temp_file
         rm -rf /opt/paperless-gpt
         mv paperless-gpt-${RELEASE} /opt/paperless-gpt

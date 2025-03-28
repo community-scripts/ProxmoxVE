@@ -38,7 +38,7 @@ msg_ok "Set up PostgreSQL"
 msg_info "Installing Baikal"
 RELEASE=$(curl -fsSL https://api.github.com/repos/sabre-io/Baikal/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 cd /opt
-wget -q "https://github.com/sabre-io/baikal/releases/download/${RELEASE}/baikal-${RELEASE}.zip"
+curl -fsSL "https://github.com/sabre-io/baikal/releases/download/${RELEASE}/baikal-${RELEASE}.zip" -O $(basename "https://github.com/sabre-io/baikal/releases/download/${RELEASE}/baikal-${RELEASE}.zip")
 unzip -q "baikal-${RELEASE}.zip"
 cat <<EOF >/opt/baikal/config/baikal.yaml
 database:

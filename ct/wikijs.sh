@@ -50,7 +50,7 @@ function update_script() {
         msg_info "Updating ${APP}"
         rm -rf /opt/wikijs/*
         cd /opt/wikijs
-        wget -q "https://github.com/requarks/wiki/releases/download/v${RELEASE}/wiki-js.tar.gz"
+curl -fsSL "https://github.com/requarks/wiki/releases/download/v${RELEASE}/wiki-js.tar.gz" -O $(basename "https://github.com/requarks/wiki/releases/download/v${RELEASE}/wiki-js.tar.gz")
         tar -xzf wiki-js.tar.gz
         msg_ok "Updated ${APP}"
 

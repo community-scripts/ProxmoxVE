@@ -38,7 +38,7 @@ function update_script() {
     $STD apt-get -y upgrade
     cd /opt
     mv /opt/opengist /opt/opengist-backup
-    wget -q "https://github.com/thomiceli/opengist/releases/download/v${RELEASE}/opengist${RELEASE}-linux-amd64.tar.gz"
+curl -fsSL "https://github.com/thomiceli/opengist/releases/download/v${RELEASE}/opengist${RELEASE}-linux-amd64.tar.gz" -O $(basename "https://github.com/thomiceli/opengist/releases/download/v${RELEASE}/opengist${RELEASE}-linux-amd64.tar.gz")
     tar -xzf opengist${RELEASE}-linux-amd64.tar.gz
     mv /opt/opengist-backup/config.yml /opt/opengist/config.yml
     chmod +x /opt/opengist/opengist

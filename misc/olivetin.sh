@@ -51,7 +51,7 @@ function msg_ok() {
 }
 
 msg_info "Installing ${APP}"
-wget -q https://github.com/OliveTin/OliveTin/releases/latest/download/OliveTin_linux_amd64.deb
+curl -fsSL "https://github.com/OliveTin/OliveTin/releases/latest/download/OliveTin_linux_amd64.deb" -O $(basename "https://github.com/OliveTin/OliveTin/releases/latest/download/OliveTin_linux_amd64.deb")
 dpkg -i OliveTin_linux_amd64.deb &>/dev/null
 systemctl enable --now OliveTin &>/dev/null
 rm OliveTin_linux_amd64.deb

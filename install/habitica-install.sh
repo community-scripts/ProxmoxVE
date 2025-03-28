@@ -19,7 +19,7 @@ $STD apt-get install -y \
     gnupg \
     build-essential \
     git
-wget -q http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2_amd64.deb
+curl -fsSL "http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2_amd64.deb" -O $(basename "http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2_amd64.deb")
 $STD dpkg -i libssl1.1_1.1.1f-1ubuntu2_amd64.deb
 msg_ok "Installed Dependencies"
 
@@ -37,7 +37,7 @@ msg_ok "Setup Node.js"
 msg_info "Setup ${APPLICATION}"
 temp_file=$(mktemp)
 RELEASE=$(curl -fsSL https://api.github.com/repos/HabitRPG/habitica/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-wget -q "https://github.com/HabitRPG/habitica/archive/refs/tags/v${RELEASE}.tar.gz" -O $temp_file
+curl -fsSL "https://github.com/HabitRPG/habitica/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
 tar zxf $temp_file
 mv habitica-${RELEASE}/ /opt/habitica
 cd /opt/habitica

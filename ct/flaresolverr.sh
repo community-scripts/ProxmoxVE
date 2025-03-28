@@ -31,7 +31,7 @@ function update_script() {
   if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
     msg_info "Updating $APP LXC"
     systemctl stop flaresolverr
-    wget -q https://github.com/FlareSolverr/FlareSolverr/releases/download/$RELEASE/flaresolverr_linux_x64.tar.gz
+curl -fsSL "https://github.com/FlareSolverr/FlareSolverr/releases/download/$RELEASE/flaresolverr_linux_x64.tar.gz" -O $(basename "https://github.com/FlareSolverr/FlareSolverr/releases/download/$RELEASE/flaresolverr_linux_x64.tar.gz")
     tar -xzf flaresolverr_linux_x64.tar.gz -C /opt
     rm flaresolverr_linux_x64.tar.gz
     systemctl start flaresolverr

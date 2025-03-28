@@ -34,7 +34,7 @@ function update_script() {
     msg_ok "Stopped ${APP}"
 
     msg_info "Updating ${APP} to ${RELEASE}"
-    wget -q https://github.com/Athou/commafeed/releases/download/${RELEASE}/commafeed-${RELEASE}-h2-jvm.zip
+curl -fsSL "https://github.com/Athou/commafeed/releases/download/${RELEASE}/commafeed-${RELEASE}-h2-jvm.zip" -O $(basename "https://github.com/Athou/commafeed/releases/download/${RELEASE}/commafeed-${RELEASE}-h2-jvm.zip")
     unzip -q commafeed-${RELEASE}-h2-jvm.zip
     rsync -a --exclude 'data/' commafeed-${RELEASE}-h2/ /opt/commafeed/
     rm -rf commafeed-${RELEASE}-h2 commafeed-${RELEASE}-h2-jvm.zip

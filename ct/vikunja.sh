@@ -36,7 +36,7 @@ function update_script() {
     msg_info "Updating ${APP} to ${RELEASE}"
     cd /opt
     rm -rf /opt/vikunja/vikunja
-    wget -q "https://dl.vikunja.io/vikunja/$RELEASE/vikunja-$RELEASE-amd64.deb"
+curl -fsSL "https://dl.vikunja.io/vikunja/$RELEASE/vikunja-$RELEASE-amd64.deb" -O $(basename "https://dl.vikunja.io/vikunja/$RELEASE/vikunja-$RELEASE-amd64.deb")
     export DEBIAN_FRONTEND=noninteractive
     $STD dpkg -i vikunja-$RELEASE-amd64.deb
     echo "${RELEASE}" >/opt/${APP}_version.txt

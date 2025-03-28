@@ -32,7 +32,7 @@ function update_script() {
     msg_info "Updating ${APP} to v${RELEASE}"
     $STD omd stop monitoring
     $STD omd cp monitoring monitoringbackup
-    wget -q https://download.checkmk.com/checkmk/${RELEASE}/check-mk-raw-${RELEASE}_0.bookworm_amd64.deb -O /opt/checkmk.deb
+curl -fsSL "https://download.checkmk.com/checkmk/${RELEASE}/check-mk-raw-${RELEASE}_0.bookworm_amd64.deb" -o "/opt/checkmk.deb"
     $STD apt-get install -y /opt/checkmk.deb
     $STD omd --force -V ${RELEASE}.cre update --conflict=install monitoring
     $STD omd start monitoring

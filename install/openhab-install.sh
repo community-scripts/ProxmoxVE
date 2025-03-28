@@ -19,8 +19,8 @@ $STD apt-get install -y apt-transport-https
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Azul Zulu21"
-wget -qO /etc/apt/trusted.gpg.d/zulu-repo.asc "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xB1998361219BD9C9"
-wget -q https://cdn.azul.com/zulu/bin/zulu-repo_1.0.0-3_all.deb
+curl -fsSL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xB1998361219BD9C9" -o "/etc/apt/trusted.gpg.d/zulu-repo.asc"
+curl -fsSL "https://cdn.azul.com/zulu/bin/zulu-repo_1.0.0-3_all.deb" -O $(basename "https://cdn.azul.com/zulu/bin/zulu-repo_1.0.0-3_all.deb")
 $STD dpkg -i zulu-repo_1.0.0-3_all.deb
 $STD apt-get update
 $STD apt-get -y install zulu21-jdk

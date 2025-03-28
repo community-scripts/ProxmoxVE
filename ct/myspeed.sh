@@ -38,7 +38,7 @@ function update_script() {
     cd /opt
     rm -rf myspeed_bak
     mv myspeed myspeed_bak
-    wget -q https://github.com/gnmyt/myspeed/releases/download/v$RELEASE/MySpeed-$RELEASE.zip
+curl -fsSL "https://github.com/gnmyt/myspeed/releases/download/v$RELEASE/MySpeed-$RELEASE.zip" -O $(basename "https://github.com/gnmyt/myspeed/releases/download/v$RELEASE/MySpeed-$RELEASE.zip")
     unzip -q MySpeed-$RELEASE.zip -d myspeed
     cd myspeed
     $STD npm install

@@ -39,7 +39,7 @@ function update_script() {
 
     msg_info "Updating ${APP}"
     cd /opt
-    wget -q https://nextpvr.com/nextpvr-helper.deb
+curl -fsSL "https://nextpvr.com/nextpvr-helper.deb" -O $(basename "https://nextpvr.com/nextpvr-helper.deb")
     $STD dpkg -i nextpvr-helper.deb
     msg_ok "Updated ${APP}"
 

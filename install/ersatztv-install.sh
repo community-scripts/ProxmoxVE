@@ -15,7 +15,7 @@ update_os
 
 msg_info "Installing FFmpeg (Patience)"
 cd /usr/local/bin
-wget -q https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz
+curl -fsSL "https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz" -O $(basename "https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz")
 $STD tar -xvf ffmpeg-release-amd64-static.tar.xz
 rm -f ffmpeg-*.tar.xz
 cd ffmpeg-*

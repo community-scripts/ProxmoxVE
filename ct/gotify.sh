@@ -36,7 +36,7 @@ function update_script() {
 
     msg_info "Updating ${APP} to ${RELEASE}"
     cd /opt/gotify
-    wget -q https://github.com/gotify/server/releases/download/v${RELEASE}/gotify-linux-amd64.zip
+curl -fsSL "https://github.com/gotify/server/releases/download/v${RELEASE}/gotify-linux-amd64.zip" -O $(basename "https://github.com/gotify/server/releases/download/v${RELEASE}/gotify-linux-amd64.zip")
     unzip -oq gotify-linux-amd64.zip
     rm -rf gotify-linux-amd64.zip
     chmod +x gotify-linux-amd64

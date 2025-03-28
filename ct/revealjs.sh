@@ -36,7 +36,7 @@ function update_script() {
 
         msg_info "Updating $APP to ${RELEASE}"
         temp_file=$(mktemp)
-        wget -q "https://github.com/hakimel/reveal.js/archive/refs/tags/${RELEASE}.tar.gz" -O $temp_file
+curl -fsSL "https://github.com/hakimel/reveal.js/archive/refs/tags/${RELEASE}.tar.gz" -o "$temp_file"
         tar zxf $temp_file
         rm -rf /opt/revealjs/node_modules/*
         cp /opt/revealjs/index.html /opt

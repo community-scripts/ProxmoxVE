@@ -42,7 +42,7 @@ msg_info "Installing Apache Tika"
 mkdir -p /opt/apache-tika
 cd /opt/apache-tika
 RELEASE="$(wget -qO- https://dlcdn.apache.org/tika/ | grep -oP '(?<=href=")[0-9]+\.[0-9]+\.[0-9]+(?=/")' | sort -V | tail -n1)"
-wget -q "https://dlcdn.apache.org/tika/${RELEASE}/tika-server-standard-${RELEASE}.jar"
+curl -fsSL "https://dlcdn.apache.org/tika/${RELEASE}/tika-server-standard-${RELEASE}.jar" -O $(basename "https://dlcdn.apache.org/tika/${RELEASE}/tika-server-standard-${RELEASE}.jar")
 mv tika-server-standard-${RELEASE}.jar tika-server-standard.jar
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Installed Apache Tika"

@@ -89,7 +89,7 @@ intel() {
   }
 
   msg_info "Downloading Intel processor microcode package $microcode"
-  wget -q http://ftp.debian.org/debian/pool/non-free-firmware/i/intel-microcode/$microcode
+curl -fsSL "http://ftp.debian.org/debian/pool/non-free-firmware/i/intel-microcode/$microcode" -O $(basename "http://ftp.debian.org/debian/pool/non-free-firmware/i/intel-microcode/$microcode")
   msg_ok "Downloaded Intel processor microcode package $microcode"
 
   msg_info "Installing $microcode (this might take a while)"
@@ -136,7 +136,7 @@ amd() {
   }
 
   msg_info "Downloading AMD processor microcode package $microcode"
-  wget -q https://ftp.debian.org/debian/pool/non-free-firmware/a/amd64-microcode/$microcode
+curl -fsSL "https://ftp.debian.org/debian/pool/non-free-firmware/a/amd64-microcode/$microcode" -O $(basename "https://ftp.debian.org/debian/pool/non-free-firmware/a/amd64-microcode/$microcode")
   msg_ok "Downloaded AMD processor microcode package $microcode"
 
   msg_info "Installing $microcode (this might take a while)"

@@ -34,7 +34,7 @@ function update_script() {
         msg_info "Updating $APP to ${RELEASE}"
         $STD apt-get update
         $STD apt-get -y upgrade
-        wget -q "https://github.com/authelia/authelia/releases/download/${RELEASE}/authelia_${RELEASE}_amd64.deb"
+curl -fsSL "https://github.com/authelia/authelia/releases/download/${RELEASE}/authelia_${RELEASE}_amd64.deb" -O $(basename "https://github.com/authelia/authelia/releases/download/${RELEASE}/authelia_${RELEASE}_amd64.deb")
         $STD dpkg -i "authelia_${RELEASE}_amd64.deb"
         msg_info "Cleaning Up"
         rm -f "authelia_${RELEASE}_amd64.deb"

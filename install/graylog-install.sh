@@ -28,7 +28,7 @@ msg_ok "Setup MongoDB"
 
 msg_info "Setup Graylog Data Node"
 PASSWORD_SECRET=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c16)
-wget -q https://packages.graylog2.org/repo/packages/graylog-6.1-repository_latest.deb
+curl -fsSL "https://packages.graylog2.org/repo/packages/graylog-6.1-repository_latest.deb" -O $(basename "https://packages.graylog2.org/repo/packages/graylog-6.1-repository_latest.deb")
 $STD dpkg -i graylog-6.1-repository_latest.deb
 $STD apt-get update
 $STD apt-get install graylog-datanode -y

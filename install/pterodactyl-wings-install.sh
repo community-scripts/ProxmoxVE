@@ -23,7 +23,7 @@ msg_ok "Installed Docker"
 
 msg_info "Installing Pterodactyl Wings"
 RELEASE=$(curl -fsSL https://api.github.com/repos/pterodactyl/wings/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-wget -q -O /usr/local/bin/wings "https://github.com/pterodactyl/wings/releases/download/v${RELEASE}/wings_linux_amd64"
+curl -fsSL "https://github.com/pterodactyl/wings/releases/download/v${RELEASE}/wings_linux_amd64" -o "/usr/local/bin/wings"
 chmod u+x /usr/local/bin/wings
 mkdir -p /etc/pterodactyl
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt

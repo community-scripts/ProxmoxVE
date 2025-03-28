@@ -24,7 +24,7 @@ msg_ok "Installed Dependencies"
 msg_info "Installing barcodebuddy"
 RELEASE=$(curl -fsSL https://api.github.com/repos/Forceu/barcodebuddy/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 cd /opt
-wget -q "https://github.com/Forceu/barcodebuddy/archive/refs/tags/v${RELEASE}.zip"
+curl -fsSL "https://github.com/Forceu/barcodebuddy/archive/refs/tags/v${RELEASE}.zip" -O $(basename "https://github.com/Forceu/barcodebuddy/archive/refs/tags/v${RELEASE}.zip")
 unzip -q "v${RELEASE}.zip"
 mv "/opt/barcodebuddy-${RELEASE}" /opt/barcodebuddy
 chown -R www-data:www-data /opt/barcodebuddy/data

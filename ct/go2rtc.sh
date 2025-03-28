@@ -31,7 +31,7 @@ function update_script() {
     systemctl stop go2rtc
     cd /opt/go2rtc
     rm go2rtc_linux_amd64
-    wget -q https://github.com/AlexxIT/go2rtc/releases/latest/download/go2rtc_linux_amd64
+curl -fsSL "https://github.com/AlexxIT/go2rtc/releases/latest/download/go2rtc_linux_amd64" -O $(basename "https://github.com/AlexxIT/go2rtc/releases/latest/download/go2rtc_linux_amd64")
     chmod +x go2rtc_linux_amd64
     systemctl start go2rtc
     msg_ok "Updated $APP"

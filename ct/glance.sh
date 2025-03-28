@@ -37,7 +37,7 @@ function update_script() {
 
     msg_info "Updating ${APP} to v${RELEASE}"
     cd /opt
-    wget -q https://github.com/glanceapp/glance/releases/download/v${RELEASE}/glance-linux-amd64.tar.gz
+curl -fsSL "https://github.com/glanceapp/glance/releases/download/v${RELEASE}/glance-linux-amd64.tar.gz" -O $(basename "https://github.com/glanceapp/glance/releases/download/v${RELEASE}/glance-linux-amd64.tar.gz")
     rm -rf /opt/glance/glance
     tar -xzf glance-linux-amd64.tar.gz -C /opt/glance
     echo "${RELEASE}" >"/opt/${APP}_version.txt"

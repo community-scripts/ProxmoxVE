@@ -38,11 +38,11 @@ function update_script() {
     cd /opt
     rm -rf spoolman_bak
     mv spoolman spoolman_bak
-    wget -q https://github.com/Donkie/Spoolman/releases/download/${RELEASE}/spoolman.zip
+curl -fsSL "https://github.com/Donkie/Spoolman/releases/download/${RELEASE}/spoolman.zip" -O $(basename "https://github.com/Donkie/Spoolman/releases/download/${RELEASE}/spoolman.zip")
     unzip -q spoolman.zip -d spoolman
     cd spoolman
     $STD pip3 install -r requirements.txt
-    wget -q https://raw.githubusercontent.com/Donkie/Spoolman/master/.env.example -O .env
+curl -fsSL "https://raw.githubusercontent.com/Donkie/Spoolman/master/.env.example" -o ".env"
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP} to ${RELEASE}"
 

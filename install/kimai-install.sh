@@ -58,7 +58,7 @@ msg_ok "Set up database"
 
 msg_info "Installing Kimai (Patience)"
 RELEASE=$(curl -fsSL https://api.github.com/repos/kimai/kimai/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-wget -q "https://github.com/kimai/kimai/archive/refs/tags/${RELEASE}.zip"
+curl -fsSL "https://github.com/kimai/kimai/archive/refs/tags/${RELEASE}.zip" -O $(basename "https://github.com/kimai/kimai/archive/refs/tags/${RELEASE}.zip")
 unzip -q ${RELEASE}.zip
 mv kimai-${RELEASE} /opt/kimai
 cd /opt/kimai

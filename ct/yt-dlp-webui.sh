@@ -40,7 +40,7 @@ function update_script() {
 
       msg_info "Updating $APP to v${RELEASE}"
       rm -rf /usr/local/bin/yt-dlp-webui
-      wget -q "https://github.com/marcopiovanello/yt-dlp-web-ui/releases/download/v${RELEASE}/yt-dlp-webui_linux-amd64" -O /usr/local/bin/yt-dlp-webui
+curl -fsSL "https://github.com/marcopiovanello/yt-dlp-web-ui/releases/download/v${RELEASE}/yt-dlp-webui_linux-amd64" -o "/usr/local/bin/yt-dlp-webui"
       chmod +x /usr/local/bin/yt-dlp-webui
       msg_ok "Updated $APP LXC"
 

@@ -51,7 +51,7 @@ function update_script() {
     $STD apt-get install -y gawk
     msg_ok "Installed dependencies"
     msg_info "Installing Cockpit file sharing"
-    wget -q $(curl -fsSL https://api.github.com/repos/45Drives/cockpit-file-sharing/releases/latest | grep download | grep focal_all.deb | cut -d\" -f4)
+curl -fsSL "$(curl -fsSL https://api.github.com/repos/45Drives/cockpit-file-sharing/releases/latest | grep download | grep focal_all.deb | cut -d\" -f4)" -O $(basename "$(curl -fsSL https://api.github.com/repos/45Drives/cockpit-file-sharing/releases/latest | grep download | grep focal_all.deb | cut -d\" -f4)")
     $STD dpkg -i cockpit-file-sharing_*focal_all.deb
     rm cockpit-file-sharing_*focal_all.deb
     msg_ok "Installed Cockpit file sharing"
@@ -64,7 +64,7 @@ function update_script() {
     $STD apt-get install -y samba-common-bin
     msg_ok "Installed dependencies"
     msg_info "Installing Cockpit identities"
-    wget -q $(curl -fsSL https://api.github.com/repos/45Drives/cockpit-identities/releases/latest | grep download | grep focal_all.deb | cut -d\" -f4)
+curl -fsSL "$(curl -fsSL https://api.github.com/repos/45Drives/cockpit-identities/releases/latest | grep download | grep focal_all.deb | cut -d\" -f4)" -O $(basename "$(curl -fsSL https://api.github.com/repos/45Drives/cockpit-identities/releases/latest | grep download | grep focal_all.deb | cut -d\" -f4)")
     $STD dpkg -i cockpit-identities_*focal_all.deb
     rm cockpit-identities_*focal_all.deb
     msg_ok "Installed Cockpit identities"
@@ -76,7 +76,7 @@ function update_script() {
     $STD apt-get install -y zip
     msg_ok "Installed dependencies"
     msg_info "Installing Cockpit navigator"
-    wget -q $(curl -fsSL https://api.github.com/repos/45Drives/cockpit-navigator/releases/latest | grep download | grep focal_all.deb | cut -d\" -f4)
+curl -fsSL "$(curl -fsSL https://api.github.com/repos/45Drives/cockpit-navigator/releases/latest | grep download | grep focal_all.deb | cut -d\" -f4)" -O $(basename "$(curl -fsSL https://api.github.com/repos/45Drives/cockpit-navigator/releases/latest | grep download | grep focal_all.deb | cut -d\" -f4)")
     $STD dpkg -i cockpit-navigator_*focal_all.deb
     rm cockpit-navigator_*focal_all.deb
     msg_ok "Installed Cockpit navigator"

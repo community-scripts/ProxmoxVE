@@ -38,7 +38,7 @@ function update_script() {
     cd /opt
     rm -rf grist_bak
     mv grist grist_bak
-    wget -q https://github.com/gristlabs/grist-core/archive/refs/tags/v${RELEASE}.zip
+curl -fsSL "https://github.com/gristlabs/grist-core/archive/refs/tags/v${RELEASE}.zip" -O $(basename "https://github.com/gristlabs/grist-core/archive/refs/tags/v${RELEASE}.zip")
     unzip -q v$RELEASE.zip
     mv grist-core-${RELEASE} grist
 

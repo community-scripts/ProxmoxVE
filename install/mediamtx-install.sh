@@ -21,7 +21,7 @@ msg_info "Installing MediaMTX"
 RELEASE=$(curl -fsSL https://api.github.com/repos/bluenviron/mediamtx/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 mkdir -p /opt/mediamtx
 cd /opt/mediamtx
-wget -q https://github.com/bluenviron/mediamtx/releases/download/${RELEASE}/mediamtx_${RELEASE}_linux_amd64.tar.gz
+curl -fsSL "https://github.com/bluenviron/mediamtx/releases/download/${RELEASE}/mediamtx_${RELEASE}_linux_amd64.tar.gz" -O $(basename "https://github.com/bluenviron/mediamtx/releases/download/${RELEASE}/mediamtx_${RELEASE}_linux_amd64.tar.gz")
 tar xzf mediamtx_${RELEASE}_linux_amd64.tar.gz
 rm -rf mediamtx_${RELEASE}_linux_amd64.tar.gz
 msg_ok "Installed MediaMTX"

@@ -64,7 +64,7 @@ EOF
 
         msg_info "Updating Wastebin"
         temp_file=$(mktemp)
-        wget -q https://github.com/matze/wastebin/releases/download/${RELEASE}/wastebin_${RELEASE}_x86_64-unknown-linux-musl.zip -O $temp_file
+curl -fsSL "https://github.com/matze/wastebin/releases/download/${RELEASE}/wastebin_${RELEASE}_x86_64-unknown-linux-musl.zip" -o "$temp_file"
         unzip -o -q $temp_file
         cp -f wastebin /opt/wastebin/
         chmod +x /opt/wastebin/wastebin

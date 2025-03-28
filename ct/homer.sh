@@ -40,7 +40,7 @@ function update_script() {
     msg_info "Updating ${APP}"
     rm -rf /opt/homer/*
     cd /opt/homer
-    wget -q https://github.com/bastienwirtz/homer/releases/latest/download/homer.zip
+curl -fsSL "https://github.com/bastienwirtz/homer/releases/latest/download/homer.zip" -O $(basename "https://github.com/bastienwirtz/homer/releases/latest/download/homer.zip")
     $STD unzip homer.zip
     msg_ok "Updated ${APP}"
 

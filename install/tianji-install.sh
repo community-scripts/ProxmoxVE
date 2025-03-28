@@ -57,7 +57,7 @@ msg_ok "Set up PostgreSQL"
 msg_info "Installing Tianji (Extreme Patience)"
 cd /opt
 RELEASE=$(curl -fsSL https://api.github.com/repos/msgbyte/tianji/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-wget -q "https://github.com/msgbyte/tianji/archive/refs/tags/v${RELEASE}.zip"
+curl -fsSL "https://github.com/msgbyte/tianji/archive/refs/tags/v${RELEASE}.zip" -O $(basename "https://github.com/msgbyte/tianji/archive/refs/tags/v${RELEASE}.zip")
 unzip -q v${RELEASE}.zip
 mv tianji-${RELEASE} /opt/tianji
 cd tianji

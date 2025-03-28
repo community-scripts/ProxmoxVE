@@ -38,7 +38,7 @@ msg_ok "Set up PostgreSQL"
 msg_info "Installing FreshRSS"
 RELEASE=$(curl -fsSL https://api.github.com/repos/FreshRSS/FreshRSS/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 cd /opt
-wget -q "https://github.com/FreshRSS/FreshRSS/archive/refs/tags/${RELEASE}.zip"
+curl -fsSL "https://github.com/FreshRSS/FreshRSS/archive/refs/tags/${RELEASE}.zip" -O $(basename "https://github.com/FreshRSS/FreshRSS/archive/refs/tags/${RELEASE}.zip")
 unzip -q "${RELEASE}.zip"
 mv "/opt/FreshRSS-${RELEASE}" /opt/freshrss
 cd /opt/freshrss

@@ -22,7 +22,7 @@ msg_ok "Installed Dependencies"
 
 msg_info "Install mergerfs"
 MERGERFS_VERSION="2.40.2"
-wget -q "https://github.com/trapexit/mergerfs/releases/download/${MERGERFS_VERSION}/mergerfs_${MERGERFS_VERSION}.debian-bullseye_amd64.deb"
+curl -fsSL "https://github.com/trapexit/mergerfs/releases/download/${MERGERFS_VERSION}/mergerfs_${MERGERFS_VERSION}.debian-bullseye_amd64.deb" -O $(basename "https://github.com/trapexit/mergerfs/releases/download/${MERGERFS_VERSION}/mergerfs_${MERGERFS_VERSION}.debian-bullseye_amd64.deb")
 $STD dpkg -i "mergerfs_${MERGERFS_VERSION}.debian-bullseye_amd64.deb" || $STD apt-get install -f -y
 rm "mergerfs_${MERGERFS_VERSION}.debian-bullseye_amd64.deb"
 msg_ok "Installed mergerfs"

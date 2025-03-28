@@ -36,7 +36,7 @@ function update_script() {
     msg_info "Updating Z-Wave JS UI"
     rm -rf /opt/zwave-js-ui/*
     cd /opt/zwave-js-ui
-    wget -q https://github.com/zwave-js/zwave-js-ui/releases/download/${RELEASE}/zwave-js-ui-${RELEASE}-linux.zip
+curl -fsSL "https://github.com/zwave-js/zwave-js-ui/releases/download/${RELEASE}/zwave-js-ui-${RELEASE}-linux.zip" -O $(basename "https://github.com/zwave-js/zwave-js-ui/releases/download/${RELEASE}/zwave-js-ui-${RELEASE}-linux.zip")
     unzip -q zwave-js-ui-${RELEASE}-linux.zip
     msg_ok "Updated Z-Wave JS UI"
 

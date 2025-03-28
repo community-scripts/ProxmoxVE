@@ -38,7 +38,7 @@ function update_script() {
 
     msg_info "Updating ${APP}"
     cd /opt
-    wget -q "https://github.com/Pf2eToolsOrg/Pf2eTools/archive/refs/tags/${RELEASE}.zip"
+curl -fsSL "https://github.com/Pf2eToolsOrg/Pf2eTools/archive/refs/tags/${RELEASE}.zip" -O $(basename "https://github.com/Pf2eToolsOrg/Pf2eTools/archive/refs/tags/${RELEASE}.zip")
     unzip -q ${RELEASE}.zip
     rm -rf "/opt/${APP}"
     mv ${APP}-${RELEASE:1} /opt/${APP}

@@ -35,7 +35,7 @@ msg_info "Installing Golang"
 set +o pipefail
 temp_file=$(mktemp)
 golang_tarball=$(curl -fsSL https://go.dev/dl/ | grep -oP 'go[\d\.]+\.linux-amd64\.tar\.gz' | head -n 1)
-wget -q https://golang.org/dl/"$golang_tarball" -O "$temp_file"
+curl -fsSL "https://golang.org/dl/"$golang_tarball" -o ""$temp_file""
 tar -C /usr/local -xzf "$temp_file"
 ln -sf /usr/local/go/bin/go /usr/local/bin/go
 rm -f "$temp_file"
@@ -46,7 +46,7 @@ read -r -p "What public URL do you want to use (e.g. pocketid.mydomain.com)? " p
 msg_info "Setup Pocket ID"
 cd /opt
 RELEASE=$(curl -fsSL https://api.github.com/repos/pocket-id/pocket-id/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-wget -q "https://github.com/pocket-id/pocket-id/archive/refs/tags/v${RELEASE}.zip"
+curl -fsSL "https://github.com/pocket-id/pocket-id/archive/refs/tags/v${RELEASE}.zip" -O $(basename "https://github.com/pocket-id/pocket-id/archive/refs/tags/v${RELEASE}.zip")
 unzip -q v${RELEASE}.zip
 mv pocket-id-${RELEASE}/ /opt/pocket-id
 

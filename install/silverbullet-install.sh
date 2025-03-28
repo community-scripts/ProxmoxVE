@@ -16,7 +16,7 @@ update_os
 msg_info "Installing Silverbullet"
 RELEASE=$(curl -fsSL https://api.github.com/repos/silverbulletmd/silverbullet/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 mkdir -p /opt/silverbullet/bin /opt/silverbullet/space
-wget -q https://github.com/silverbulletmd/silverbullet/releases/download/${RELEASE}/silverbullet-server-linux-x86_64.zip
+curl -fsSL "https://github.com/silverbulletmd/silverbullet/releases/download/${RELEASE}/silverbullet-server-linux-x86_64.zip" -O $(basename "https://github.com/silverbulletmd/silverbullet/releases/download/${RELEASE}/silverbullet-server-linux-x86_64.zip")
 unzip -oq -d /opt/silverbullet/bin/ silverbullet-server-linux-x86_64.zip
 chmod +x /opt/silverbullet/bin/silverbullet
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt

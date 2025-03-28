@@ -36,7 +36,7 @@ function update_script() {
         cd /opt
         rm -rf /opt/tasmocompiler
         RELEASE=$(curl -fsSL https://api.github.com/repos/benzino77/tasmocompiler/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-        wget -q https://github.com/benzino77/tasmocompiler/archive/refs/tags/v${RELEASE}.tar.gz
+curl -fsSL "https://github.com/benzino77/tasmocompiler/archive/refs/tags/v${RELEASE}.tar.gz" -O $(basename "https://github.com/benzino77/tasmocompiler/archive/refs/tags/v${RELEASE}.tar.gz")
         tar xzf v${RELEASE}.tar.gz
         mv tasmocompiler-${RELEASE}/ /opt/tasmocompiler/
         cd /opt/tasmocompiler

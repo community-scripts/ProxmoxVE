@@ -38,7 +38,7 @@ function update_script() {
 
         msg_info "Updating $APP to ${RELEASE}"
         temp_file=$(mktemp)
-        wget -q "https://github.com/HabitRPG/habitica/archive/refs/tags/v${RELEASE}.tar.gz" -O $temp_file
+curl -fsSL "https://github.com/HabitRPG/habitica/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
         tar zxf $temp_file
         cp -rf habitica-${RELEASE}/* /opt/habitica
         cd /opt/habitica

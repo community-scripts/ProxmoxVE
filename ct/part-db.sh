@@ -36,7 +36,7 @@ function update_script() {
     msg_info "Updating $APP to v${RELEASE}"
     cd /opt
     mv /opt/partdb/ /opt/partdb-backup
-    wget -q "https://github.com/Part-DB/Part-DB-server/archive/refs/tags/v${RELEASE}.zip"
+curl -fsSL "https://github.com/Part-DB/Part-DB-server/archive/refs/tags/v${RELEASE}.zip" -O $(basename "https://github.com/Part-DB/Part-DB-server/archive/refs/tags/v${RELEASE}.zip")
     unzip -q "v${RELEASE}.zip"
     mv /opt/Part-DB-server-${RELEASE}/ /opt/partdb
 

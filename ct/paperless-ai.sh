@@ -36,7 +36,7 @@ function update_script() {
     msg_info "Updating $APP to v${RELEASE}"
     cd /opt
     mv /opt/paperless-ai /opt/paperless-ai_bak
-    wget -q "https://github.com/clusterzx/paperless-ai/archive/refs/tags/v${RELEASE}.zip"
+curl -fsSL "https://github.com/clusterzx/paperless-ai/archive/refs/tags/v${RELEASE}.zip" -O $(basename "https://github.com/clusterzx/paperless-ai/archive/refs/tags/v${RELEASE}.zip")
     unzip -q v${RELEASE}.zip
     mv paperless-ai-${RELEASE} /opt/paperless-ai
     mkdir -p /opt/paperless-ai/data

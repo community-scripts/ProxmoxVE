@@ -36,7 +36,7 @@ RELEASE=$(curl -fsSL https://api.github.com/repos/gristlabs/grist-core/releases/
 export CYPRESS_INSTALL_BINARY=0
 export NODE_OPTIONS="--max-old-space-size=2048"
 cd /opt
-wget -q https://github.com/gristlabs/grist-core/archive/refs/tags/v${RELEASE}.zip
+curl -fsSL "https://github.com/gristlabs/grist-core/archive/refs/tags/v${RELEASE}.zip" -O $(basename "https://github.com/gristlabs/grist-core/archive/refs/tags/v${RELEASE}.zip")
 unzip -q v$RELEASE.zip
 mv grist-core-${RELEASE} grist
 cd grist

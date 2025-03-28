@@ -40,7 +40,7 @@ msg_ok "Set up database"
 msg_info "Installing Snipe-IT"
 temp_file=$(mktemp)
 RELEASE=$(curl -fsSL https://api.github.com/repos/snipe/snipe-it/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-wget -q "https://github.com/snipe/snipe-it/archive/refs/tags/v${RELEASE}.tar.gz" -O $temp_file
+curl -fsSL "https://github.com/snipe/snipe-it/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
 tar zxf $temp_file
 mv snipe-it-${RELEASE} /opt/snipe-it
 cd /opt/snipe-it

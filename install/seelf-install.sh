@@ -23,7 +23,7 @@ msg_info "Installing Golang"
 set +o pipefail
 temp_file=$(mktemp)
 golang_tarball=$(curl -fsSL https://go.dev/dl/ | grep -oP 'go[\d\.]+\.linux-amd64\.tar\.gz' | head -n 1)
-wget -q https://golang.org/dl/"$golang_tarball" -O "$temp_file"
+curl -fsSL "https://golang.org/dl/"$golang_tarball" -o ""$temp_file""
 tar -C /usr/local -xzf "$temp_file"
 ln -sf /usr/local/go/bin/go /usr/local/bin/go
 set -o pipefail
@@ -42,7 +42,7 @@ msg_ok "Installed Node.js"
 
 msg_info "Setting up seelf. Patience"
 RELEASE=$(curl -fsSL https://api.github.com/repos/YuukanOO/seelf/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-wget -q "https://github.com/YuukanOO/seelf/archive/refs/tags/v${RELEASE}.tar.gz"
+curl -fsSL "https://github.com/YuukanOO/seelf/archive/refs/tags/v${RELEASE}.tar.gz" -O $(basename "https://github.com/YuukanOO/seelf/archive/refs/tags/v${RELEASE}.tar.gz")
 tar -xzf v${RELEASE}.tar.gz
 mv seelf-${RELEASE}/ /opt/seelf
 cd /opt/seelf

@@ -16,7 +16,7 @@ update_os
 
 msg_info "Installing Homebox"
 RELEASE=$(curl -fsSL https://api.github.com/repos/sysadminsmedia/homebox/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-wget -qO- https://github.com/sysadminsmedia/homebox/releases/download/${RELEASE}/homebox_Linux_x86_64.tar.gz | tar -xzf - -C /opt
+curl -fsSL "https://github.com/sysadminsmedia/homebox/releases/download/${RELEASE}/homebox_Linux_x86_64.tar.gz" | tar -xzf - -C /opt
 chmod +x /opt/homebox
 cat <<EOF >/opt/.env
 # For possible environment variables check here: https://homebox.software/en/configure-homebox

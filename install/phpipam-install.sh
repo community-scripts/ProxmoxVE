@@ -40,7 +40,7 @@ msg_ok "Set up MariaDB"
 msg_info "Installing phpIPAM"
 RELEASE=$(curl -fsSL https://api.github.com/repos/phpipam/phpipam/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 cd /opt
-wget -q "https://github.com/phpipam/phpipam/releases/download/v${RELEASE}/phpipam-v${RELEASE}.zip"
+curl -fsSL "https://github.com/phpipam/phpipam/releases/download/v${RELEASE}/phpipam-v${RELEASE}.zip" -O $(basename "https://github.com/phpipam/phpipam/releases/download/v${RELEASE}/phpipam-v${RELEASE}.zip")
 unzip -q "phpipam-v${RELEASE}.zip"
 mysql -u root "${DB_NAME}" </opt/phpipam/db/SCHEMA.sql
 cp /opt/phpipam/config.dist.php /opt/phpipam/config.php

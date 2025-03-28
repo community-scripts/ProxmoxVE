@@ -31,7 +31,7 @@ msg_ok "Setup Node.js"
 msg_info "Setup ${APPLICATION}"
 temp_file=$(mktemp)
 RELEASE=$(curl -fsSL https://api.github.com/repos/hakimel/reveal.js/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-wget -q "https://github.com/hakimel/reveal.js/archive/refs/tags/${RELEASE}.tar.gz" -O $temp_file
+curl -fsSL "https://github.com/hakimel/reveal.js/archive/refs/tags/${RELEASE}.tar.gz" -o "$temp_file"
 tar zxf $temp_file
 mv reveal.js-${RELEASE}/ /opt/revealjs
 cd /opt/revealjs

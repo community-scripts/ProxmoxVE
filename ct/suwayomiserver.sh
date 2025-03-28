@@ -37,7 +37,7 @@ function update_script() {
         msg_info "Updating $APP to v${RELEASE}"
         cd /tmp
         URL=$(curl -fsSL https://api.github.com/repos/Suwayomi/Suwayomi-Server/releases/latest | grep "browser_download_url" | awk '{print substr($2, 2, length($2)-2) }' | tail -n+2 | head -n 1)
-        wget -q $URL
+curl -fsSL "$URL" -O $(basename "$URL")
         $STD dpkg -i /tmp/*.deb
         msg_ok "Updated $APP to v${RELEASE}"
         msg_info "Starting $APP"

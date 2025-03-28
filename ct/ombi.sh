@@ -34,7 +34,7 @@ function update_script() {
     msg_ok "Stopped ${APP}"
 
     msg_info "Updating ${APP} to ${RELEASE}"
-    wget -q https://github.com/Ombi-app/Ombi/releases/download/${RELEASE}/linux-x64.tar.gz
+curl -fsSL "https://github.com/Ombi-app/Ombi/releases/download/${RELEASE}/linux-x64.tar.gz" -O $(basename "https://github.com/Ombi-app/Ombi/releases/download/${RELEASE}/linux-x64.tar.gz")
     tar -xzf linux-x64.tar.gz -C /opt/ombi
     rm -rf linux-x64.tar.gz
     echo "${RELEASE}" >/opt/${APP}_version.txt

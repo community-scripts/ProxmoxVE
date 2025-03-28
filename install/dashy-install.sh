@@ -31,7 +31,7 @@ msg_ok "Installed Node.js"
 RELEASE=$(curl -fsSL https://api.github.com/repos/Lissy93/dashy/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 msg_info "Installing Dashy ${RELEASE} (Patience)"
 mkdir -p /opt/dashy
-wget -qO- https://github.com/Lissy93/dashy/archive/refs/tags/${RELEASE}.tar.gz | tar -xz -C /opt/dashy --strip-components=1
+curl -fsSL "https://github.com/Lissy93/dashy/archive/refs/tags/${RELEASE}.tar.gz" | tar -xz -C /opt/dashy --strip-components=1
 cd /opt/dashy
 $STD npm install
 $STD npm run build

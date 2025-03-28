@@ -37,7 +37,7 @@ function update_script() {
     msg_info "Updating ${APP} to v${RELEASE}"
     cp -r /opt/pelican-panel/.env /opt/
     rm -rf * .*
-    wget -q "https://github.com/pelican-dev/panel/releases/download/v${RELEASE}/panel.tar.gz"
+curl -fsSL "https://github.com/pelican-dev/panel/releases/download/v${RELEASE}/panel.tar.gz" -O $(basename "https://github.com/pelican-dev/panel/releases/download/v${RELEASE}/panel.tar.gz")
     tar -xzf "panel.tar.gz"
     mv /opt/.env /opt/pelican-panel/
     $STD composer install --no-dev --optimize-autoloader --no-interaction

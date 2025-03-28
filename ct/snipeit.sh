@@ -38,7 +38,7 @@ function update_script() {
     $STD apt-get -y upgrade
     mv /opt/snipe-it /opt/snipe-it-backup
     temp_file=$(mktemp)
-    wget -q "https://github.com/snipe/snipe-it/archive/refs/tags/v${RELEASE}.tar.gz" -O $temp_file
+curl -fsSL "https://github.com/snipe/snipe-it/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
     tar zxf $temp_file
     mv snipe-it-${RELEASE} /opt/snipe-it
     $STD wget -q "https://github.com/snipe/snipe-it/archive/refs/tags/v${RELEASE}.zip"

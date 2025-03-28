@@ -16,7 +16,7 @@ update_os
 msg_info "Installing Glance"
 RELEASE=$(curl -fsSL https://api.github.com/repos/glanceapp/glance/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 cd /opt
-wget -q https://github.com/glanceapp/glance/releases/download/v${RELEASE}/glance-linux-amd64.tar.gz
+curl -fsSL "https://github.com/glanceapp/glance/releases/download/v${RELEASE}/glance-linux-amd64.tar.gz" -O $(basename "https://github.com/glanceapp/glance/releases/download/v${RELEASE}/glance-linux-amd64.tar.gz")
 mkdir -p /opt/glance
 tar -xzf glance-linux-amd64.tar.gz -C /opt/glance
 cat <<EOF >/opt/glance/glance.yml

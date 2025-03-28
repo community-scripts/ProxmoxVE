@@ -38,7 +38,7 @@ function update_script() {
     fi
     mkdir -p rdtc-backup
     cp -R /opt/rdtc/appsettings.json rdtc-backup/
-    wget -q https://github.com/rogerfar/rdt-client/releases/latest/download/RealDebridClient.zip
+curl -fsSL "https://github.com/rogerfar/rdt-client/releases/latest/download/RealDebridClient.zip" -O $(basename "https://github.com/rogerfar/rdt-client/releases/latest/download/RealDebridClient.zip")
     unzip -oqq RealDebridClient.zip -d /opt/rdtc
     cp -R rdtc-backup/appsettings.json /opt/rdtc/
     msg_ok "Updated ${APP}"

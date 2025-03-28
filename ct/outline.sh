@@ -36,7 +36,7 @@ function update_script() {
         msg_info "Updating ${APP} to ${RELEASE}"
         temp_file=$(mktemp)
         rm -rf /opt/outline/node_modules
-        wget -q "https://github.com/outline/outline/archive/refs/tags/v${RELEASE}.tar.gz" -O $temp_file
+curl -fsSL "https://github.com/outline/outline/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
         tar zxf $temp_file
         cp -rf outline-${RELEASE}/* /opt/outline
         cd /opt/outline

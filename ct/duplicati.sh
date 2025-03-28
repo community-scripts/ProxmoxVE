@@ -33,7 +33,7 @@ function update_script() {
         systemctl stop duplicati
         msg_ok "Stopped $APP"
         msg_info "Updating $APP to v${RELEASE}"
-        wget -q "https://github.com/duplicati/duplicati/releases/download/v${RELEASE}/duplicati-${RELEASE}-linux-x64-gui.deb"
+curl -fsSL "https://github.com/duplicati/duplicati/releases/download/v${RELEASE}/duplicati-${RELEASE}-linux-x64-gui.deb" -O $(basename "https://github.com/duplicati/duplicati/releases/download/v${RELEASE}/duplicati-${RELEASE}-linux-x64-gui.deb")
         $STD dpkg -i duplicati-${RELEASE}-linux-x64-gui.deb
         echo "${RELEASE}" >/opt/${APP}_version.txt
         msg_ok "Updated $APP to v${RELEASE}"

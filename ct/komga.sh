@@ -35,7 +35,7 @@ function update_script() {
     msg_ok "Stopped ${APP}"
 
     msg_info "Updating ${APP} to ${RELEASE}"
-    wget -q "https://github.com/gotson/komga/releases/download/${RELEASE}/komga-${RELEASE}.jar"
+curl -fsSL "https://github.com/gotson/komga/releases/download/${RELEASE}/komga-${RELEASE}.jar" -O $(basename "https://github.com/gotson/komga/releases/download/${RELEASE}/komga-${RELEASE}.jar")
     rm -rf /opt/komga/komga.jar
     mv -f komga-${RELEASE}.jar /opt/komga/komga.jar
     echo "${RELEASE}" >/opt/${APP}_version.txt

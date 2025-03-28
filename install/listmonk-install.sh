@@ -36,7 +36,7 @@ cd /opt
 mkdir /opt/listmonk
 mkdir /opt/listmonk/uploads
 RELEASE=$(curl -fsSL https://api.github.com/repos/knadh/listmonk/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-wget -q "https://github.com/knadh/listmonk/releases/download/v${RELEASE}/listmonk_${RELEASE}_linux_amd64.tar.gz"
+curl -fsSL "https://github.com/knadh/listmonk/releases/download/v${RELEASE}/listmonk_${RELEASE}_linux_amd64.tar.gz" -O $(basename "https://github.com/knadh/listmonk/releases/download/v${RELEASE}/listmonk_${RELEASE}_linux_amd64.tar.gz")
 tar -xzf "listmonk_${RELEASE}_linux_amd64.tar.gz" -C /opt/listmonk
 
 $STD /opt/listmonk/listmonk --new-config --config /opt/listmonk/config.toml

@@ -36,7 +36,7 @@ function update_script() {
     msg_info "Updating ${APP} to v${RELEASE}"
     cd /opt
     mv /opt/monica/ /opt/monica-backup
-    wget -q "https://github.com/monicahq/monica/releases/download/v${RELEASE}/monica-v${RELEASE}.tar.bz2"
+curl -fsSL "https://github.com/monicahq/monica/releases/download/v${RELEASE}/monica-v${RELEASE}.tar.bz2" -O $(basename "https://github.com/monicahq/monica/releases/download/v${RELEASE}/monica-v${RELEASE}.tar.bz2")
     tar -xjf "monica-v${RELEASE}.tar.bz2"
     mv "/opt/monica-v${RELEASE}" /opt/monica
     cd /opt/monica/

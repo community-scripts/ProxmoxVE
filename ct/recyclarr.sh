@@ -29,7 +29,7 @@ function update_script() {
     fi
 
     msg_info "Updating ${APP}"
-    wget -q $(curl -fsSL https://api.github.com/repos/recyclarr/recyclarr/releases/latest | grep download | grep linux-x64 | cut -d\" -f4)
+curl -fsSL "$(curl -fsSL https://api.github.com/repos/recyclarr/recyclarr/releases/latest | grep download | grep linux-x64 | cut -d\" -f4)" -O $(basename "$(curl -fsSL https://api.github.com/repos/recyclarr/recyclarr/releases/latest | grep download | grep linux-x64 | cut -d\" -f4)")
     tar -C /usr/local/bin -xJf recyclarr*.tar.xz
     rm -rf recyclarr*.tar.xz
     msg_ok "Updated ${APP}"

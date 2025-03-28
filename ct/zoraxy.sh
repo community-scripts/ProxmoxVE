@@ -31,7 +31,7 @@ function update_script() {
   if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
     msg_info "Updating $APP to ${RELEASE}"
     systemctl stop zoraxy
-    wget -q "https://github.com/tobychui/zoraxy/releases/download/${RELEASE}/zoraxy_linux_amd64"
+curl -fsSL "https://github.com/tobychui/zoraxy/releases/download/${RELEASE}/zoraxy_linux_amd64" -O $(basename "https://github.com/tobychui/zoraxy/releases/download/${RELEASE}/zoraxy_linux_amd64")
     rm -rf /opt/zoraxy/zoraxy
     mv zoraxy_linux_amd64 /opt/zoraxy/zoraxy
     chmod +x /opt/zoraxy/zoraxy

@@ -37,7 +37,7 @@ function update_script() {
         temp_dir=$(mktemp -d)
         temp_file=$(mktemp)
         cd $temp_dir
-        wget -q "https://github.com/stackblitz-labs/bolt.diy/archive/refs/tags/v${RELEASE}.tar.gz" -O $temp_file
+curl -fsSL "https://github.com/stackblitz-labs/bolt.diy/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
         tar xzf $temp_file
         cp -rf bolt.diy-${RELEASE}/* /opt/bolt.diy
         cd /opt/bolt.diy

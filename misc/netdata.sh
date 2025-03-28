@@ -59,7 +59,7 @@ install() {
   header_info
 
   msg_info "Setting up repository"
-  wget -q https://repo.netdata.cloud/repos/repoconfig/debian/bookworm/netdata-repo_5-1+debian12_all.deb
+curl -fsSL "https://repo.netdata.cloud/repos/repoconfig/debian/bookworm/netdata-repo_5-1+debian12_all.deb" -O $(basename "https://repo.netdata.cloud/repos/repoconfig/debian/bookworm/netdata-repo_5-1+debian12_all.deb")
   $STD dpkg -i netdata-repo_5-1+debian12_all.deb
   rm -rf netdata-repo_5-1+debian12_all.deb
   msg_ok "Set up repository"

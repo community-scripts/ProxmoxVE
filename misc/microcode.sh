@@ -60,7 +60,7 @@ intel() {
   [ -z "$microcode" ] && { whiptail --backtitle "Proxmox VE Helper Scripts" --title "No Microcode Selected" --msgbox "It appears that no microcode packages were selected" 10 68; msg_info "Exiting"; sleep 1; msg_ok "Done"; exit; }
 
   msg_info "Downloading the Intel Processor Microcode Package $microcode"
-  wget -q http://ftp.debian.org/debian/pool/non-free-firmware/i/intel-microcode/$microcode
+curl -fsSL "http://ftp.debian.org/debian/pool/non-free-firmware/i/intel-microcode/$microcode" -O $(basename "http://ftp.debian.org/debian/pool/non-free-firmware/i/intel-microcode/$microcode")
   msg_ok "Downloaded the Intel Processor Microcode Package $microcode"
 
   msg_info "Installing $microcode (Patience)"
@@ -92,7 +92,7 @@ amd() {
   [ -z "$microcode" ] && { whiptail --backtitle "Proxmox VE Helper Scripts" --title "No Microcode Selected" --msgbox "It appears that no microcode packages were selected" 10 68; msg_info "Exiting"; sleep 1; msg_ok "Done"; exit; }
 
   msg_info "Downloading the AMD Processor Microcode Package $microcode"
-  wget -q https://ftp.debian.org/debian/pool/non-free-firmware/a/amd64-microcode/$microcode
+curl -fsSL "https://ftp.debian.org/debian/pool/non-free-firmware/a/amd64-microcode/$microcode" -O $(basename "https://ftp.debian.org/debian/pool/non-free-firmware/a/amd64-microcode/$microcode")
   msg_ok "Downloaded the AMD Processor Microcode Package $microcode"
 
   msg_info "Installing $microcode (Patience)"

@@ -23,7 +23,7 @@ msg_ok "Installed Dependencies"
 
 msg_info "Setting up Adoptium Repository"
 mkdir -p /etc/apt/keyrings
-wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public | gpg --dearmor >/etc/apt/trusted.gpg.d/adoptium.gpg
+curl -fsSL "https://packages.adoptium.net/artifactory/api/gpg/key/public" | gpg --dearmor >/etc/apt/trusted.gpg.d/adoptium.gpg
 echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" >/etc/apt/sources.list.d/adoptium.list
 $STD apt-get update
 msg_ok "Set up Adoptium Repository"
@@ -50,7 +50,7 @@ msg_ok "Set up MariaDB"
 
 msg_info "Setup Plant-it"
 RELEASE=$(curl -fsSL https://api.github.com/repos/MDeLuise/plant-it/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-wget -q https://github.com/MDeLuise/plant-it/releases/download/${RELEASE}/server.jar
+curl -fsSL "https://github.com/MDeLuise/plant-it/releases/download/${RELEASE}/server.jar" -O $(basename "https://github.com/MDeLuise/plant-it/releases/download/${RELEASE}/server.jar")
 mkdir -p /opt/plant-it/{backend,frontend}
 mkdir -p /opt/plant-it-data
 mv -f server.jar /opt/plant-it/backend/server.jar
@@ -80,7 +80,7 @@ CACHE_PORT=6379
 EOF
 
 cd /opt/plant-it/frontend
-wget -q https://github.com/MDeLuise/plant-it/releases/download/${RELEASE}/client.tar.gz
+curl -fsSL "https://github.com/MDeLuise/plant-it/releases/download/${RELEASE}/client.tar.gz" -O $(basename "https://github.com/MDeLuise/plant-it/releases/download/${RELEASE}/client.tar.gz")
 tar -xzf client.tar.gz
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Setup Plant-it"

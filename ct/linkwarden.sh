@@ -46,7 +46,7 @@ function update_script() {
     mv /opt/linkwarden/.env /opt/.env
     rm -rf /opt/linkwarden
     RELEASE=$(curl -fsSL https://api.github.com/repos/linkwarden/linkwarden/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-    wget -q "https://github.com/linkwarden/linkwarden/archive/refs/tags/${RELEASE}.zip"
+curl -fsSL "https://github.com/linkwarden/linkwarden/archive/refs/tags/${RELEASE}.zip" -O $(basename "https://github.com/linkwarden/linkwarden/archive/refs/tags/${RELEASE}.zip")
     unzip -q ${RELEASE}.zip
     mv linkwarden-${RELEASE:1} /opt/linkwarden
     cd /opt/linkwarden

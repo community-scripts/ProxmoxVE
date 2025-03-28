@@ -32,7 +32,7 @@ function update_script() {
     msg_info "Updating ${APP} to v${RELEASE}"
     echo "${RELEASE}" >/opt/${APP}_version.txt
     cp -f /opt/privatebin/cfg/conf.php /tmp/privatebin_conf.bak
-    wget -q "https://github.com/PrivateBin/PrivateBin/archive/refs/tags/${RELEASE}.zip"
+curl -fsSL "https://github.com/PrivateBin/PrivateBin/archive/refs/tags/${RELEASE}.zip" -O $(basename "https://github.com/PrivateBin/PrivateBin/archive/refs/tags/${RELEASE}.zip")
     unzip -q ${RELEASE}.zip
     rm -rf /opt/privatebin/*
     mv PrivateBin-${RELEASE}/* /opt/privatebin/

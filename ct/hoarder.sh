@@ -46,7 +46,7 @@ function update_script() {
       mv /opt/hoarder/.env /etc/hoarder/hoarder.env
     fi
     rm -rf /opt/hoarder
-    wget -q "https://github.com/hoarder-app/hoarder/archive/refs/tags/v${RELEASE}.zip"
+curl -fsSL "https://github.com/hoarder-app/hoarder/archive/refs/tags/v${RELEASE}.zip" -O $(basename "https://github.com/hoarder-app/hoarder/archive/refs/tags/v${RELEASE}.zip")
     unzip -q v${RELEASE}.zip
     mv hoarder-${RELEASE} /opt/hoarder
     cd /opt/hoarder/apps/web

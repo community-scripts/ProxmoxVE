@@ -20,7 +20,7 @@ $STD apt-get install -y lsb-release
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Nginx"
-wget -qO- https://nginx.org/keys/nginx_signing.key | gpg --dearmor >/usr/share/keyrings/nginx-archive-keyring.gpg
+curl -fsSL "https://nginx.org/keys/nginx_signing.key" | gpg --dearmor >/usr/share/keyrings/nginx-archive-keyring.gpg
 echo "deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] http://nginx.org/packages/debian $(lsb_release -cs) nginx" >/etc/apt/sources.list.d/nginx.list
 $STD apt-get update
 $STD apt-get install -y nginx=1.26.3*

@@ -36,7 +36,7 @@ function update_script() {
     msg_info "Updating ${APP} to v${RELEASE}"
     cd /opt
     mv /opt/koillection/ /opt/koillection-backup
-    wget -q "https://github.com/benjaminjonard/koillection/archive/refs/tags/${RELEASE}.zip"
+curl -fsSL "https://github.com/benjaminjonard/koillection/archive/refs/tags/${RELEASE}.zip" -O $(basename "https://github.com/benjaminjonard/koillection/archive/refs/tags/${RELEASE}.zip")
     unzip -q "${RELEASE}.zip"
     mv "/opt/koillection-${RELEASE}" /opt/koillection
     cd /opt/koillection

@@ -32,7 +32,7 @@ function update_script() {
     systemctl stop readeck.service
     rm -rf /opt/readeck/readeck
     cd /opt/readeck
-    wget -q -O readeck https://codeberg.org/readeck/readeck/releases/download/${LATEST}/readeck-${LATEST}-linux-amd64
+curl -fsSL "https://codeberg.org/readeck/readeck/releases/download/${LATEST}/readeck-${LATEST}-linux-amd64" -o "readeck"
     chmod a+x readeck
     systemctl start readeck.service
     msg_ok "Updated ${APP}"

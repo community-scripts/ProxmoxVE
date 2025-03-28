@@ -27,17 +27,17 @@ $STD apt-get install -y \
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Additional Tools"
-wget -q https://github.com/Y2Z/monolith/releases/latest/download/monolith-gnu-linux-x86_64 -O /usr/bin/monolith
+curl -fsSL "https://github.com/Y2Z/monolith/releases/latest/download/monolith-gnu-linux-x86_64" -o "/usr/bin/monolith"
 chmod +x /usr/bin/monolith
-wget -q https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux -O /usr/bin/yt-dlp
+curl -fsSL "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux" -o "/usr/bin/yt-dlp"
 chmod +x /usr/bin/yt-dlp
 msg_ok "Installed Additional Tools"
 
 msg_info "Installing Meilisearch"
 cd /tmp
-wget -q https://github.com/meilisearch/meilisearch/releases/latest/download/meilisearch.deb
+curl -fsSL "https://github.com/meilisearch/meilisearch/releases/latest/download/meilisearch.deb" -O $(basename "https://github.com/meilisearch/meilisearch/releases/latest/download/meilisearch.deb")
 $STD dpkg -i meilisearch.deb
-wget -q https://raw.githubusercontent.com/meilisearch/meilisearch/latest/config.toml -O /etc/meilisearch.toml
+curl -fsSL "https://raw.githubusercontent.com/meilisearch/meilisearch/latest/config.toml" -o "/etc/meilisearch.toml"
 MASTER_KEY=$(openssl rand -base64 12)
 sed -i \
   -e 's|^env =.*|env = "production"|' \
@@ -61,7 +61,7 @@ msg_ok "Installed Node.js"
 msg_info "Installing Hoarder"
 cd /opt
 RELEASE=$(curl -fsSL https://api.github.com/repos/hoarder-app/hoarder/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-wget -q "https://github.com/hoarder-app/hoarder/archive/refs/tags/v${RELEASE}.zip"
+curl -fsSL "https://github.com/hoarder-app/hoarder/archive/refs/tags/v${RELEASE}.zip" -O $(basename "https://github.com/hoarder-app/hoarder/archive/refs/tags/v${RELEASE}.zip")
 unzip -q v${RELEASE}.zip
 mv hoarder-${RELEASE} /opt/hoarder
 cd /opt/hoarder

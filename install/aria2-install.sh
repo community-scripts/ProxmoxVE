@@ -22,7 +22,7 @@ if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   msg_info "Installing AriaNG"
   $STD apt-get install -y nginx
   systemctl disable -q --now nginx
-  wget -q "$(curl -fsSL https://api.github.com/repos/mayswind/ariang/releases/latest | grep download | grep AllInOne.zip | cut -d\" -f4)"
+curl -fsSL "$(curl -fsSL https://api.github.com/repos/mayswind/ariang/releases/latest | grep download | grep AllInOne.zip | cut -d\" -f4)" -O $(basename "$(curl -fsSL https://api.github.com/repos/mayswind/ariang/releases/latest | grep download | grep AllInOne.zip | cut -d\" -f4)")
   $STD unzip AriaNg-*-AllInOne.zip -d /var/www
   rm /etc/nginx/sites-enabled/*
   cat <<EOF >/etc/nginx/conf.d/ariang.conf

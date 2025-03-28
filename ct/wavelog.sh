@@ -40,7 +40,7 @@ function update_script() {
     if [[ -f /opt/wavelog/assets/js/sections/custom.js ]]; then
       cp /opt/wavelog/assets/js/sections/custom.js /opt/custom.js
     fi
-    wget -q "https://github.com/wavelog/wavelog/archive/refs/tags/${RELEASE}.zip"
+curl -fsSL "https://github.com/wavelog/wavelog/archive/refs/tags/${RELEASE}.zip" -O $(basename "https://github.com/wavelog/wavelog/archive/refs/tags/${RELEASE}.zip")
     unzip -q ${RELEASE}.zip
     rm -rf /opt/wavelog
     mv wavelog-${RELEASE}/ /opt/wavelog

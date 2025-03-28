@@ -43,7 +43,7 @@ msg_info "Setup Bookstack (Patience)"
 LOCAL_IP="$(hostname -I | awk '{print $1}')"
 cd /opt
 RELEASE=$(curl -fsSL https://api.github.com/repos/BookStackApp/BookStack/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-wget -q "https://github.com/BookStackApp/BookStack/archive/refs/tags/v${RELEASE}.zip"
+curl -fsSL "https://github.com/BookStackApp/BookStack/archive/refs/tags/v${RELEASE}.zip" -O $(basename "https://github.com/BookStackApp/BookStack/archive/refs/tags/v${RELEASE}.zip")
 unzip -q v${RELEASE}.zip
 mv BookStack-${RELEASE} /opt/bookstack
 cd /opt/bookstack

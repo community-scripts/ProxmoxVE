@@ -30,7 +30,7 @@ BASE_URL="https://updates.networkoptix.com/default/index.html"
 RELEASE=$(curl -fsSL "$BASE_URL" | grep -oP '(?<=<b>)[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(?=</b>)' | head -n 1)
 DETAIL_PAGE=$(curl -fsSL "$BASE_URL#note_$RELEASE")
 DOWNLOAD_URL=$(echo "$DETAIL_PAGE" | grep -oP "https://updates.networkoptix.com/default/$RELEASE/linux/nxwitness-server-[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+-linux_x64\.deb" | head -n 1)
-wget -q "$DOWNLOAD_URL" -O "nxwitness-server-$RELEASE-linux_x64.deb"
+curl -fsSL "$DOWNLOAD_URL" -o ""nxwitness-server-$RELEASE-linux_x64.deb""
 export DEBIAN_FRONTEND=noninteractive
 $STD dpkg -i nxwitness-server-$RELEASE-linux_x64.deb
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
