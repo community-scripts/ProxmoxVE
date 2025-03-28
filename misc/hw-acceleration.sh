@@ -5,7 +5,7 @@
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Execute within the Proxmox shell
-# bash -c "$(wget -qLO - https://github.com/community-scripts/ProxmoxVE/raw/main/misc/hw-acceleration.sh)"
+# bash -c "$(curl -fsSL https://github.com/community-scripts/ProxmoxVE/raw/main/misc/hw-acceleration.sh)"
 
 set -e
 function header_info {
@@ -56,8 +56,8 @@ MSG_MAX_LENGTH=0
 privileged_containers=$(pct list | awk 'NR>1 && system("grep -q \047unprivileged: 1\047 /etc/pve/lxc/" $1 ".conf")')
 
 if [ -z "$privileged_containers" ]; then
-    whiptail --msgbox "No Privileged Containers Found." 10 58
-    exit
+  whiptail --msgbox "No Privileged Containers Found." 10 58
+  exit
 fi
 
 while read -r TAG ITEM; do
@@ -69,11 +69,11 @@ done < <(echo "$privileged_containers")
 privileged_container=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "Privileged Containers on $NODE" --checklist "\nSelect a Container To Add Intel HW Acceleration:\n" 16 $((MSG_MAX_LENGTH + 23)) 6 "${PREV_MENU[@]}" 3>&1 1>&2 2>&3 | tr -d '"') || exit
 header_info
 read -r -p "Verbose mode? <y/N> " prompt
-  if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
+if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   STD=""
-  else
+else
   STD="silent"
-  fi
+fi
 header_info
 
 cat <<EOF >>/etc/pve/lxc/${privileged_container}.conf

@@ -8,7 +8,10 @@
 # Use to copy all data from one Plex Media Server LXC to another
 # run from the Proxmox Shell
 clear
-if ! command -v pveversion >/dev/null 2>&1; then echo -e "⚠️  Run from the Proxmox Shell"; exit; fi
+if ! command -v pveversion >/dev/null 2>&1; then
+  echo -e "⚠️  Run from the Proxmox Shell"
+  exit
+fi
 while true; do
   read -p "Use to copy all data from one Plex Media Server LXC to another. Proceed(y/n)?" yn
   case $yn in
@@ -125,4 +128,4 @@ info "Successfully Transferred Data."
 
 # Use to copy all data from one Plex Media Server LXC to another
 # run from the Proxmox Shell
-# bash -c "$(wget -qLO - https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/copy-data/plex-copy-data-plex.sh)"
+# bash -c "$(curl -fsSL https://github.com/community-scripts/ProxmoxVE/raw/main/misc/copy-data/plex-copy-data-plex.sh)"

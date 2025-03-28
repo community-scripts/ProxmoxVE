@@ -6,8 +6,8 @@
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
 function header_info {
-    clear
-cat <<"EOF"
+  clear
+  cat <<"EOF"
    ____    _           __        ____                        __
   / __/___(_)__ ____ _/ /____   / __/_ _____  ___  ___  ____/ /_
  / _// __/ / _ `/ _ `/ __/ -_) _\ \/ // / _ \/ _ \/ _ \/ __/ __/
@@ -28,11 +28,11 @@ header_info
 
 # The array of device types
 # CHAR_DEVS+=(major:minor)
-CHAR_DEVS+=("1:1") # mem
-CHAR_DEVS+=("29:0") # fb0
-CHAR_DEVS+=("188:.*") # ttyUSB*
-CHAR_DEVS+=("189:.*") # bus/usb/*
-CHAR_DEVS+=("226:0") # card0
+CHAR_DEVS+=("1:1")     # mem
+CHAR_DEVS+=("29:0")    # fb0
+CHAR_DEVS+=("188:.*")  # ttyUSB*
+CHAR_DEVS+=("189:.*")  # bus/usb/*
+CHAR_DEVS+=("226:0")   # card0
 CHAR_DEVS+=("226:128") # renderD128
 
 # Proccess char device string
@@ -89,5 +89,5 @@ EOF
 echo -e "\e[1;33m \nFinished....Reboot ${CTID} LXC to apply the changes.\n \e[0m"
 
 # In the Proxmox web shell run
-# bash -c "$(wget -qLO - https://github.com/community-scripts/ProxmoxVE/raw/main/misc/frigate-support.sh)"
+# bash -c "$(curl -fsSL https://github.com/community-scripts/ProxmoxVE/raw/main/misc/frigate-support.sh)"
 # Reboot the LXC to apply the changes
