@@ -24,6 +24,17 @@
                 "os": "debian",
                 "version": "12"
             }
+        },
+        {
+            "type": "alpine",
+            "script": "ct/alpine-node-red.sh",
+            "resources": {
+                "cpu": 1,
+                "ram": 256,
+                "hdd": 1,
+                "os": "alpine",
+                "version": "3.21"
+            }
         }
     ],
     "default_credentials": {
@@ -32,7 +43,7 @@
     },
     "notes": [
         {
-            "text": "To install themes, type `update` in the LXC console.",
+            "text": "To install themes, type `update` in the LXC console. (debian/ubuntu only)",
             "type": "info"
         }
     ]
