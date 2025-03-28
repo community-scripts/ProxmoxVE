@@ -1,13 +1,48 @@
 [
   {
-    "name": "Bubka/2FAuth",
-    "version": "v5.5.0",
-    "date": "2025-03-27T22:35:02Z"
+    "name": "fhem/fhem-mirror",
+    "version": "6.2",
+    "date": "2025-03-28T10:33:13Z"
+  },
+  {
+    "name": "cockpit-project/cockpit",
+    "version": "336.2",
+    "date": "2025-03-28T10:16:47Z"
+  },
+  {
+    "name": "YunoHost/yunohost",
+    "version": "debian/12.0.12",
+    "date": "2025-03-16T11:59:24Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1702",
+    "date": "2025-03-28T05:57:28Z"
   },
   {
     "name": "gethomepage/homepage",
-    "version": "v1.1.0",
-    "date": "2025-03-27T22:29:09Z"
+    "version": "v1.1.1",
+    "date": "2025-03-28T04:12:31Z"
+  },
+  {
+    "name": "documenso/documenso",
+    "version": "v1.10.0-rc.3",
+    "date": "2025-03-28T03:45:54Z"
+  },
+  {
+    "name": "theonedev/onedev",
+    "version": "v11.8.1",
+    "date": "2025-03-28T00:13:20Z"
+  },
+  {
+    "name": "StarFleetCPTN/GoMFT",
+    "version": "v.0.2.3",
+    "date": "2025-03-27T23:54:49Z"
+  },
+  {
+    "name": "Bubka/2FAuth",
+    "version": "v5.5.0",
+    "date": "2025-03-27T22:35:02Z"
   },
   {
     "name": "ellite/Wallos",
@@ -15,9 +50,9 @@
     "date": "2025-03-27T22:02:16Z"
   },
   {
-    "name": "fhem/fhem-mirror",
-    "version": "6.2",
-    "date": "2025-03-27T20:29:05Z"
+    "name": "keycloak/keycloak",
+    "version": "26.1.4",
+    "date": "2025-03-13T15:41:42Z"
   },
   {
     "name": "home-assistant/core",
@@ -55,19 +90,9 @@
     "date": "2025-03-27T15:51:38Z"
   },
   {
-    "name": "documenso/documenso",
-    "version": "v1.10.0-rc.2",
-    "date": "2025-03-27T14:50:59Z"
-  },
-  {
     "name": "home-assistant/operating-system",
     "version": "15.0",
     "date": "2025-03-17T10:26:18Z"
-  },
-  {
-    "name": "theonedev/onedev",
-    "version": "v11.8.1",
-    "date": "2025-03-27T14:11:29Z"
   },
   {
     "name": "tailscale/tailscale",
@@ -100,19 +125,9 @@
     "date": "2025-01-01T16:15:52Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1699",
-    "date": "2025-03-27T05:57:08Z"
-  },
-  {
     "name": "openobserve/openobserve",
     "version": "v0.14.5-rc6",
     "date": "2025-03-27T05:15:49Z"
-  },
-  {
-    "name": "StarFleetCPTN/GoMFT",
-    "version": "v0.2.1",
-    "date": "2025-03-27T02:08:19Z"
   },
   {
     "name": "element-hq/synapse",
@@ -143,11 +158,6 @@
     "name": "glanceapp/glance",
     "version": "v0.7.8",
     "date": "2025-03-26T19:59:07Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.1.4",
-    "date": "2025-03-13T15:41:42Z"
   },
   {
     "name": "semaphoreui/semaphore",
@@ -188,11 +198,6 @@
     "name": "pocketbase/pocketbase",
     "version": "v0.26.4",
     "date": "2025-03-26T05:16:46Z"
-  },
-  {
-    "name": "cockpit-project/cockpit",
-    "version": "336.1",
-    "date": "2025-03-26T04:10:14Z"
   },
   {
     "name": "esphome/esphome",
@@ -333,11 +338,6 @@
     "name": "Lidarr/Lidarr",
     "version": "v2.10.3.4602",
     "date": "2025-03-23T11:00:37Z"
-  },
-  {
-    "name": "YunoHost/yunohost",
-    "version": "debian/12.0.12",
-    "date": "2025-03-16T11:59:24Z"
   },
   {
     "name": "nicolargo/glances",
