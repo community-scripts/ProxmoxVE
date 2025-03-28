@@ -15,11 +15,6 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apk add --no-cache \
-    newt \
-    curl \
-    openssh \
-    nano \
-    mc \
     gpg \
     git \
     nodejs \
