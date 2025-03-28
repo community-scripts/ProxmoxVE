@@ -40,7 +40,7 @@ function update_script() {
   fi
   if [ "$UPD" == "2" ]; then
     set +e
-    bash -c "$(wget -qO - https://raw.githubusercontent.com/mrworf/plexupdate/master/extras/installer.sh)"
+    bash -c "$(curl -fsSL https://raw.githubusercontent.com/mrworf/plexupdate/master/extras/installer.sh)"
     exit
   fi
 }

@@ -33,7 +33,7 @@ function update_script() {
     msg_ok "Stopped ${APP}"
 
     msg_info "Updating ${APP}"
-    $STD wget https://github.com/MediaBrowser/Emby.Releases/releases/download/${LATEST}/emby-server-deb_${LATEST}_amd64.deb
+    $STD curl -fsSL "https://github.com/MediaBrowser/Emby.Releases/releases/download/${LATEST}/emby-server-deb_${LATEST}_amd64.deb" -O
     $STD dpkg -i emby-server-deb_${LATEST}_amd64.deb
     rm emby-server-deb_${LATEST}_amd64.deb
     msg_ok "Updated ${APP}"

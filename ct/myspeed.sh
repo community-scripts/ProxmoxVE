@@ -27,7 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(wget -q https://github.com/gnmyt/myspeed/releases/latest -O - | grep "title>Release" | cut -d " " -f 5)
+  RELEASE=$(curl -fsSL https://github.com/gnmyt/myspeed/releases/latest | grep "title>Release" | cut -d " " -f 5)
   if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
 
     msg_info "Stopping ${APP} Service"
@@ -38,7 +38,7 @@ function update_script() {
     cd /opt
     rm -rf myspeed_bak
     mv myspeed myspeed_bak
-curl -fsSL "https://github.com/gnmyt/myspeed/releases/download/v$RELEASE/MySpeed-$RELEASE.zip" -O $(basename "https://github.com/gnmyt/myspeed/releases/download/v$RELEASE/MySpeed-$RELEASE.zip")
+    curl -fsSL "https://github.com/gnmyt/myspeed/releases/download/v$RELEASE/MySpeed-$RELEASE.zip" -O $(basename "https://github.com/gnmyt/myspeed/releases/download/v$RELEASE/MySpeed-$RELEASE.zip")
     unzip -q MySpeed-$RELEASE.zip -d myspeed
     cd myspeed
     $STD npm install

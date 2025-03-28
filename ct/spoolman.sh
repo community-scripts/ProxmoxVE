@@ -27,7 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(wget -q https://github.com/Donkie/Spoolman/releases/latest -O - | grep "title>Release" | cut -d " " -f 4)
+  RELEASE=$(curl -fsSL https://github.com/Donkie/Spoolman/releases/latest | grep "title>Release" | cut -d " " -f 4)
   if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
 
     msg_info "Stopping ${APP} Service"
@@ -38,11 +38,11 @@ function update_script() {
     cd /opt
     rm -rf spoolman_bak
     mv spoolman spoolman_bak
-curl -fsSL "https://github.com/Donkie/Spoolman/releases/download/${RELEASE}/spoolman.zip" -O $(basename "https://github.com/Donkie/Spoolman/releases/download/${RELEASE}/spoolman.zip")
+    curl -fsSL "https://github.com/Donkie/Spoolman/releases/download/${RELEASE}/spoolman.zip" -O $(basename "https://github.com/Donkie/Spoolman/releases/download/${RELEASE}/spoolman.zip")
     unzip -q spoolman.zip -d spoolman
     cd spoolman
     $STD pip3 install -r requirements.txt
-curl -fsSL "https://raw.githubusercontent.com/Donkie/Spoolman/master/.env.example" -o ".env"
+    curl -fsSL "https://raw.githubusercontent.com/Donkie/Spoolman/master/.env.example" -o ".env"
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP} to ${RELEASE}"
 

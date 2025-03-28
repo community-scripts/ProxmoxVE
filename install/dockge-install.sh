@@ -45,9 +45,8 @@ read -r -p "Would you like to add Immich? <y/N> " prompt
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   msg_info "Adding Immich compose.yaml"
   mkdir -p /opt/stacks/immich
-curl -fsSL "https://github.com/immich-app/immich/releases/latest/download/docker-compose.yml" -o "/opt/stacks/immich/compose.yaml"
-curl -fsSL "https://github.com/immich-app/immich/releases/latest/download/example.env" -o "/opt/stacks/immich/.env"
-  #wget -q -O /opt/stacks/immich/hwaccel.ml.yml https://github.com/immich-app/immich/releases/latest/download/hwaccel.ml.yml
+  curl -fsSL "https://github.com/immich-app/immich/releases/latest/download/docker-compose.yml" -o "/opt/stacks/immich/compose.yaml"
+  curl -fsSL "https://github.com/immich-app/immich/releases/latest/download/example.env" -o "/opt/stacks/immich/.env"
   msg_ok "Added Immich compose.yaml"
 fi
 

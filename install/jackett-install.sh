@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Jackett"
-RELEASE=$(wget -q https://github.com/Jackett/Jackett/releases/latest -O - | grep "title>Release" | cut -d " " -f 4)
+RELEASE=$(curl -fsSL https://github.com/Jackett/Jackett/releases/latest | grep "title>Release" | cut -d " " -f 4)
 curl -fsSL "https://github.com/Jackett/Jackett/releases/download/$RELEASE/Jackett.Binaries.LinuxAMDx64.tar.gz" -O $(basename "https://github.com/Jackett/Jackett/releases/download/$RELEASE/Jackett.Binaries.LinuxAMDx64.tar.gz")
 tar -xzf Jackett.Binaries.LinuxAMDx64.tar.gz -C /opt
 rm -rf Jackett.Binaries.LinuxAMDx64.tar.gz

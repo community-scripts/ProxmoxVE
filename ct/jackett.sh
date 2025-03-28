@@ -27,10 +27,10 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(wget -q https://github.com/Jackett/Jackett/releases/latest -O - | grep "title>Release" | cut -d " " -f 4)
+  RELEASE=$(curl -fsSL https://github.com/Jackett/Jackett/releases/latest | grep "title>Release" | cut -d " " -f 4)
   if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
     msg_info "Updating ${APP}"
-curl -fsSL "https://github.com/Jackett/Jackett/releases/download/$RELEASE/Jackett.Binaries.LinuxAMDx64.tar.gz" -O $(basename "https://github.com/Jackett/Jackett/releases/download/$RELEASE/Jackett.Binaries.LinuxAMDx64.tar.gz")
+    curl -fsSL "https://github.com/Jackett/Jackett/releases/download/$RELEASE/Jackett.Binaries.LinuxAMDx64.tar.gz" -O $(basename "https://github.com/Jackett/Jackett/releases/download/$RELEASE/Jackett.Binaries.LinuxAMDx64.tar.gz")
     systemctl stop jackett
     rm -rf /opt/Jackett
     tar -xzf Jackett.Binaries.LinuxAMDx64.tar.gz -C /opt

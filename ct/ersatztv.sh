@@ -37,7 +37,7 @@ function update_script() {
     rm ErsatzTV-backup/ErsatzTV
     rm -rf /opt/ErsatzTV
     temp_file=$(mktemp)
-wget -qO- https://github.com/ErsatzTV/ErsatzTV/releases/download/${RELEASE}/ErsatzTV-${RELEASE}-linux-x64.tar.gz -O "$temp_file"
+    curl -fsSL "https://github.com/ErsatzTV/ErsatzTV/releases/download/${RELEASE}/ErsatzTV-${RELEASE}-linux-x64.tar.gz" -o "$temp_file"
     tar -xzf "$temp_file"
     mv /opt/ErsatzTV-${RELEASE}-linux-x64 /opt/ErsatzTV
     cp -R ErsatzTV-backup/* /opt/ErsatzTV/

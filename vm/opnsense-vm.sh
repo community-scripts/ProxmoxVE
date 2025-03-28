@@ -4,11 +4,11 @@
 # Author: michelroegl-brunner
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
-source /dev/stdin <<<$(wget -qLO - https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func)
+source /dev/stdin <<<$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func)
 
 function header_info {
   clear
-  cat <<"EOF" 
+  cat <<"EOF"
    ____  ____  _   __                        
   / __ \/ __ \/ | / /_______  ____  ________ 
  / / / / /_/ /  |/ / ___/ _ \/ __ \/ ___/ _ \
@@ -230,8 +230,8 @@ function default_settings() {
   echo -e "${DGN}Allocated Cores: ${BGN}${CORE_COUNT}${CL}"
   echo -e "${DGN}Allocated RAM: ${BGN}${RAM_SIZE}${CL}"
   if ! grep -q "^iface ${BRG}" /etc/network/interfaces; then
-  msg_error "Bridge '${BRG}' does not exist in /etc/network/interfaces"
-  exit
+    msg_error "Bridge '${BRG}' does not exist in /etc/network/interfaces"
+    exit
   else
     echo -e "${DGN}Using LAN Bridge: ${BGN}${BRG}${CL}"
   fi
@@ -530,7 +530,7 @@ msg_ok "${CL}${BL}${URL}${CL}"
 curl -fsSL -o "$(basename "$URL")" "$URL"
 echo -en "\e[1A\e[0K"
 FILE=Fressbsd.qcow2
-unxz -cv $(basename $URL) > ${FILE}
+unxz -cv $(basename $URL) >${FILE}
 msg_ok "Downloaded ${CL}${BL}${FILE}${CL}"
 
 STORAGE_TYPE=$(pvesm status -storage $STORAGE | awk 'NR>1 {print $2}')
@@ -564,10 +564,11 @@ qm set $VMID \
   -efidisk0 ${DISK0_REF}${FORMAT} \
   -scsi0 ${DISK1_REF},${DISK_CACHE}${THIN}size=2G \
   -boot order=scsi0 \
-  -serial0 socket >/dev/null \
-  -tags community-script
+  -serial0 socket \
+  -tags community-script >/dev/null
 qm resize $VMID scsi0 10G >/dev/null
-  DESCRIPTION=$(cat <<EOF
+DESCRIPTION=$(
+  cat <<EOF
 <div align='center'>
   <a href='https://Helper-Scripts.com' target='_blank' rel='noopener noreferrer'>
     <img src='https://raw.githubusercontent.com/michelroegl-brunner/ProxmoxVE/refs/heads/develop/misc/images/logo-81x112.png' alt='Logo' style='width:81px;height:112px;'/>
@@ -596,76 +597,76 @@ qm resize $VMID scsi0 10G >/dev/null
 </div>
 EOF
 )
-  qm set "$VMID" -description "$DESCRIPTION" >/dev/null  
+qm set "$VMID" -description "$DESCRIPTION" >/dev/null
 
 msg_info "Bridge interfaces are being added."
 qm set $VMID \
   -net0 virtio,bridge=${BRG},macaddr=${MAC}${VLAN}${MTU} 2>/dev/null
 msg_ok "Bridge interfaces have been successfully added."
-  
-msg_ok "Created a OPNsense VM ${CL}${BL}(${HN})"
-  msg_ok "Starting OPNsense VM (Patience this takes 20-30 minutes)"
-  qm start $VMID
-  sleep 90
-  send_line_to_vm "root"
-  send_line_to_vm "fetch https://raw.githubusercontent.com/opnsense/update/master/src/bootstrap/opnsense-bootstrap.sh.in"
-  qm set $VMID \
-    -net1 virtio,bridge=${WAN_BRG},macaddr=${WAN_MAC} &>/dev/null
-  sleep 10
-  send_line_to_vm "sh ./opnsense-bootstrap.sh.in -y -f -r 25.1"
-  msg_ok "OPNsense VM is being installed, do not close the terminal, or the installation will fail."
-  #We need to wait for the OPNsense build proccess to finish, this takes a few minutes
-  sleep 1000
-  send_line_to_vm "root"
-  send_line_to_vm "opnsense"
-  send_line_to_vm "2"
 
-  if [ "$IP_ADDR" != "" ]; then
-    send_line_to_vm "1"
-    send_line_to_vm "n"
-    send_line_to_vm "${IP_ADDR}"
-    send_line_to_vm "${NETMASK}"
-    send_line_to_vm "${LAN_GW}"
-    send_line_to_vm "n"
-    send_line_to_vm " "
-    send_line_to_vm "n"
-    send_line_to_vm "n"
-    send_line_to_vm " "
-    send_line_to_vm "n"
-    send_line_to_vm "n"
-    send_line_to_vm "n"
-    send_line_to_vm "n"
-    send_line_to_vm "n"    
-  else
-    send_line_to_vm "1"
-    send_line_to_vm "y"
-    send_line_to_vm "n"
-    send_line_to_vm "n"  
-    send_line_to_vm " "
-    send_line_to_vm "n"
-    send_line_to_vm "n"   
-    send_line_to_vm "n"
-  fi
-  #we need to wait for the Config changes to be saved
-  sleep 20
-  if [ "$WAN_IP_ADDR" != "" ]; then
-    send_line_to_vm "2"
-    send_line_to_vm "2"
-    send_line_to_vm "n"
-    send_line_to_vm "${WAN_IP_ADDR}"
-    send_line_to_vm "${NETMASK}"
-    send_line_to_vm "${LAN_GW}"
-    send_line_to_vm "n"
-    send_line_to_vm " "
-    send_line_to_vm "n"
-    send_line_to_vm " "
-    send_line_to_vm "n"
-    send_line_to_vm "n"
-    send_line_to_vm "n" 
-  fi
-  sleep 10
-  send_line_to_vm "0"
-  msg_ok "Started OPNsense VM"
+msg_ok "Created a OPNsense VM ${CL}${BL}(${HN})"
+msg_ok "Starting OPNsense VM (Patience this takes 20-30 minutes)"
+qm start $VMID
+sleep 90
+send_line_to_vm "root"
+send_line_to_vm "fetch https://raw.githubusercontent.com/opnsense/update/master/src/bootstrap/opnsense-bootstrap.sh.in"
+qm set $VMID \
+  -net1 virtio,bridge=${WAN_BRG},macaddr=${WAN_MAC} &>/dev/null
+sleep 10
+send_line_to_vm "sh ./opnsense-bootstrap.sh.in -y -f -r 25.1"
+msg_ok "OPNsense VM is being installed, do not close the terminal, or the installation will fail."
+#We need to wait for the OPNsense build proccess to finish, this takes a few minutes
+sleep 1000
+send_line_to_vm "root"
+send_line_to_vm "opnsense"
+send_line_to_vm "2"
+
+if [ "$IP_ADDR" != "" ]; then
+  send_line_to_vm "1"
+  send_line_to_vm "n"
+  send_line_to_vm "${IP_ADDR}"
+  send_line_to_vm "${NETMASK}"
+  send_line_to_vm "${LAN_GW}"
+  send_line_to_vm "n"
+  send_line_to_vm " "
+  send_line_to_vm "n"
+  send_line_to_vm "n"
+  send_line_to_vm " "
+  send_line_to_vm "n"
+  send_line_to_vm "n"
+  send_line_to_vm "n"
+  send_line_to_vm "n"
+  send_line_to_vm "n"
+else
+  send_line_to_vm "1"
+  send_line_to_vm "y"
+  send_line_to_vm "n"
+  send_line_to_vm "n"
+  send_line_to_vm " "
+  send_line_to_vm "n"
+  send_line_to_vm "n"
+  send_line_to_vm "n"
+fi
+#we need to wait for the Config changes to be saved
+sleep 20
+if [ "$WAN_IP_ADDR" != "" ]; then
+  send_line_to_vm "2"
+  send_line_to_vm "2"
+  send_line_to_vm "n"
+  send_line_to_vm "${WAN_IP_ADDR}"
+  send_line_to_vm "${NETMASK}"
+  send_line_to_vm "${LAN_GW}"
+  send_line_to_vm "n"
+  send_line_to_vm " "
+  send_line_to_vm "n"
+  send_line_to_vm " "
+  send_line_to_vm "n"
+  send_line_to_vm "n"
+  send_line_to_vm "n"
+fi
+sleep 10
+send_line_to_vm "0"
+msg_ok "Started OPNsense VM"
 
 msg_ok "Completed Successfully!\n"
 if [ "$IP_ADDR" != "" ]; then
