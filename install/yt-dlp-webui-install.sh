@@ -5,7 +5,7 @@
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/marcopiovanello/yt-dlp-web-ui
 
-source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
+source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
 catch_errors
@@ -37,9 +37,9 @@ RPC_PASSWORD=$(openssl rand -base64 16)
     echo "yt-dlp-webui-Credentials"
     echo "Username: admin"
     echo "Password: ${RPC_PASSWORD}"
-} >> ~/yt-dlp-webui.creds
+} >>~/yt-dlp-webui.creds
 
-cat <<EOF > /opt/yt-dlp-webui/config.conf
+cat <<EOF >/opt/yt-dlp-webui/config.conf
 # Host where server will listen at (default: "0.0.0.0")
 #host: 0.0.0.0
 
@@ -76,7 +76,7 @@ downloaderPath: /usr/local/bin/yt-dlp
 #frontend_path: ./web/solid-frontend
 EOF
 
-cat <<EOF > /etc/systemd/system/yt-dlp-webui.service
+cat <<EOF >/etc/systemd/system/yt-dlp-webui.service
 [Unit]
 Description=yt-dlp-webui service file
 After=network.target

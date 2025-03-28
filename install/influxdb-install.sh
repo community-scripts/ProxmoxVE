@@ -37,7 +37,7 @@ if [[ $INFLUX == "2" ]]; then
   $STD apt-get install -y influxdb2
 else
   $STD apt-get install -y influxdb
-curl -fsSL "https://dl.influxdata.com/chronograf/releases/chronograf_1.10.1_amd64.deb" -O $(basename "https://dl.influxdata.com/chronograf/releases/chronograf_1.10.1_amd64.deb")
+  curl -fsSL "https://dl.influxdata.com/chronograf/releases/chronograf_1.10.1_amd64.deb" -O $(basename "https://dl.influxdata.com/chronograf/releases/chronograf_1.10.1_amd64.deb")
   $STD dpkg -i chronograf_1.10.1_amd64.deb
 fi
 $STD systemctl enable --now influxdb

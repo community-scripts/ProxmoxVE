@@ -16,7 +16,7 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
   git \
-  gpg \
+  gpg
 
 curl -fsSL "https://keyserver.ubuntu.com/pks/lookup?fingerprint=on&op=get&search=0x6125E2A8C77F2818FB7BD15B93C4A3FD7BB9C367" | gpg --dearmour >/usr/share/keyrings/ansible-archive-keyring.gpg
 cat <<EOF >/etc/apt/sources.list.d/ansible.list

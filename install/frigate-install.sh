@@ -114,7 +114,7 @@ if grep -q -o -m1 -E 'avx[^ ]*' /proc/cpuinfo; then
   $STD /usr/local/bin/omz_converter --name ssdlite_mobilenet_v2 --precision FP16 --mo /usr/local/bin/mo
   cd /
   cp -r /opt/frigate/models/public/ssdlite_mobilenet_v2 openvino-model
-curl -fsSL "https://github.com/openvinotoolkit/open_model_zoo/raw/master/data/dataset_classes/coco_91cl_bkgr.txt" -o "openvino-model/coco_91cl_bkgr.txt"
+  curl -fsSL "https://github.com/openvinotoolkit/open_model_zoo/raw/master/data/dataset_classes/coco_91cl_bkgr.txt" -o "openvino-model/coco_91cl_bkgr.txt"
   sed -i 's/truck/car/g' openvino-model/coco_91cl_bkgr.txt
   cat <<EOF >>/config/config.yml
 detectors:

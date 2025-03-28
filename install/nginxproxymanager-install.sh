@@ -68,12 +68,12 @@ RELEASE=$(curl -fsSL https://api.github.com/repos/NginxProxyManager/nginx-proxy-
 read -r -p "Would you like to install an older version (v2.10.4)? <y/N> " prompt
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   msg_info "Downloading Nginx Proxy Manager v2.10.4"
-curl -fsSL "https://codeload.github.com/NginxProxyManager/nginx-proxy-manager/tar.gz/v2.10.4" -o "- | tar -xz"
+  curl -fsSL "https://codeload.github.com/NginxProxyManager/nginx-proxy-manager/tar.gz/v2.10.4" -o "- | tar -xz"
   cd ./nginx-proxy-manager-2.10.4
   msg_ok "Downloaded Nginx Proxy Manager v2.10.4"
 else
   msg_info "Downloading Nginx Proxy Manager v${RELEASE}"
-curl -fsSL "https://codeload.github.com/NginxProxyManager/nginx-proxy-manager/tar.gz/v${RELEASE}" -o "- | tar -xz"
+  curl -fsSL "https://codeload.github.com/NginxProxyManager/nginx-proxy-manager/tar.gz/v${RELEASE}" -o "- | tar -xz"
   cd ./nginx-proxy-manager-${RELEASE}
   msg_ok "Downloaded Nginx Proxy Manager v${RELEASE}"
 fi
