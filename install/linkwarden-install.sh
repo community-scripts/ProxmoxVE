@@ -37,7 +37,7 @@ $STD npm install -g yarn
 msg_ok "Installed Node.js/Yarn"
 
 msg_info "Installing Rust"
-wget -qL https://sh.rustup.rs
+curl -fsSL https://sh.rustup.rs -O
 $STD bash index.html -y --profile minimal
 echo 'export PATH=~/.cargo/bin:$PATH' >>~/.bashrc
 export PATH=~/.cargo/bin:$PATH

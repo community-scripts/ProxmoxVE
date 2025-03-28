@@ -29,7 +29,7 @@ fi
 msg_ok "Set Up Hardware Acceleration"
 
 msg_info "Setting Up Plex Media Server Repository"
-wget -qO- https://downloads.plex.tv/plex-keys/PlexSign.key >/usr/share/keyrings/PlexSign.asc
+curl -fsSL https://downloads.plex.tv/plex-keys/PlexSign.key | tee /usr/share/keyrings/PlexSign.asc >/dev/null
 echo "deb [signed-by=/usr/share/keyrings/PlexSign.asc] https://downloads.plex.tv/repo/deb/ public main" >/etc/apt/sources.list.d/plexmediaserver.list
 msg_ok "Set Up Plex Media Server Repository"
 

@@ -39,7 +39,7 @@ msg_ok "Installed Azul Zulu Java"
 
 msg_info "Installing libssl (if needed)"
 if ! dpkg -l | grep -q 'libssl1.1'; then
-curl -fsSL "https://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.1_1.1.1w-0+deb11u2_amd64.deb" -o "/tmp/libssl.deb"
+    curl -fsSL "https://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.1_1.1.1w-0+deb11u2_amd64.deb" -o "/tmp/libssl.deb"
     $STD dpkg -i /tmp/libssl.deb
     rm -f /tmp/libssl.deb
     msg_ok "Installed libssl1.1"
@@ -58,7 +58,7 @@ msg_info "Installing Omada Controller"
 latest_url=$(curl -fsSL "https://support.omadanetworks.com/en/download/software/omada-controller/" | grep -o 'https://static\.tp-link\.com/upload/software/[^"]*linux_x64[^"]*\.deb' | head -n 1)
 latest_version=$(basename "$latest_url")
 
-wget -qL ${latest_url}
+curl -fsSL "${latest_url}" -O
 $STD dpkg -i ${latest_version}
 msg_ok "Installed Omada Controller"
 

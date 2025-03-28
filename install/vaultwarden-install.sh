@@ -34,7 +34,7 @@ VAULT=$(curl -fsSL https://api.github.com/repos/dani-garcia/vaultwarden/releases
   awk '{print substr($2, 2, length($2)-3) }')
 
 msg_info "Installing Rust"
-wget -qL https://sh.rustup.rs
+curl -fsSL https://sh.rustup.rs -O
 $STD bash index.html -y --profile minimal
 echo 'export PATH=~/.cargo/bin:$PATH' >>~/.bashrc
 export PATH=~/.cargo/bin:$PATH

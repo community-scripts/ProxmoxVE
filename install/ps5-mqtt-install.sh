@@ -34,7 +34,7 @@ msg_ok "Installed Node.js"
 
 msg_info "Installing PS5-MQTT"
 RELEASE=$(curl -fsSL https://api.github.com/repos/FunkeyFlo/ps5-mqtt/releases/latest | jq -r '.tag_name')
-wget -P /tmp -q https://github.com/FunkeyFlo/ps5-mqtt/archive/refs/tags/${RELEASE}.tar.gz
+curl -fsSL https://github.com/FunkeyFlo/ps5-mqtt/archive/refs/tags/${RELEASE}.tar.gz -o /tmp/${RELEASE}.tar.gz
 tar zxf /tmp/${RELEASE}.tar.gz -C /opt
 mv /opt/ps5-mqtt-* /opt/ps5-mqtt
 cd /opt/ps5-mqtt/ps5-mqtt/

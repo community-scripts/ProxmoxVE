@@ -21,7 +21,7 @@ msg_ok "Setup Phoscon Repository"
 
 msg_info "Installing deConz"
 libssl=$(curl -fsSL "http://security.ubuntu.com/ubuntu/pool/main/o/openssl/" | grep -o 'libssl1\.1_1\.1\.1f-1ubuntu2\.2[^"]*amd64\.deb' | head -n1)
-wget -qL http://security.ubuntu.com/ubuntu/pool/main/o/openssl/$libssl
+curl -fsSL "http://security.ubuntu.com/ubuntu/pool/main/o/openssl/$libssl" -O
 $STD dpkg -i $libssl
 $STD apt-get update
 $STD apt-get install -y deconz

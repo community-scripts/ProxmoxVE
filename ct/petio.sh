@@ -28,7 +28,7 @@ function update_script() {
     fi
     msg_info "Updating $APP"
     systemctl stop petio.service
-wget https://petio.tv/releases/latest -O petio-latest.zip
+    curl -fsSL https://petio.tv/releases/latest -o petio-latest.zip
     unzip petio-latest.zip -d /opt/Petio
     systemctl start petio.service
     msg_ok "Updated $APP"

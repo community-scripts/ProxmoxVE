@@ -37,7 +37,7 @@ function update_script() {
         msg_ok "Stopped service"
 
         msg_info "Updating PS5-MQTT to ${RELEASE}"
-wget -P /tmp -q https://github.com/FunkeyFlo/ps5-mqtt/archive/refs/tags/${RELEASE}.tar.gz
+        curl -fsSL https://github.com/FunkeyFlo/ps5-mqtt/archive/refs/tags/${RELEASE}.tar.gz -o /tmp/${RELEASE}.tar.gz
         rm -rf /opt/ps5-mqtt
         tar zxf /tmp/${RELEASE}.tar.gz -C /opt
         mv /opt/ps5-mqtt-* /opt/ps5-mqtt

@@ -40,7 +40,7 @@ msg_ok "Installed PostgreSQL"
 
 msg_info "Installing Zitadel"
 RELEASE=$(curl -fsSLi https://github.com/zitadel/zitadel/releases/latest | grep location: | cut -d '/' -f 8 | tr -d '\r')
-wget -qc https://github.com/zitadel/zitadel/releases/download/$RELEASE/zitadel-linux-amd64.tar.gz -O - | tar -xz
+curl -fsSL https://github.com/zitadel/zitadel/releases/download/$RELEASE/zitadel-linux-amd64.tar.gz | tar -xz
 mv zitadel-linux-amd64/zitadel /usr/local/bin
 msg_ok "Installed Zitadel"
 
