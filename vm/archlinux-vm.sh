@@ -4,8 +4,7 @@
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
-source /dev/stdin <<< $(wget -qLO - https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func)
-
+source /dev/stdin <<<$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func)
 
 function header_info {
   clear
@@ -65,7 +64,7 @@ THIN="discard=on,ssd=1,"
 set -e
 trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
 trap cleanup EXIT
-trap 'post_update_to_api "failed" "INTERRUPTED"' SIGINT 
+trap 'post_update_to_api "failed" "INTERRUPTED"' SIGINT
 trap 'post_update_to_api "failed" "TERMINATED"' SIGTERM
 function error_handler() {
   local exit_code="$?"
@@ -94,7 +93,7 @@ pushd $TEMP_DIR >/dev/null
 if whiptail --backtitle "Proxmox VE Helper Scripts" --title "Arch Linux VM" --yesno "This will create a New Arch Linux VM. Proceed?" 10 58; then
   :
 else
-  header_info &&   echo -e "${CROSS}${RD}User exited script${CL}\n" && exit
+  header_info && echo -e "${CROSS}${RD}User exited script${CL}\n" && exit
 fi
 
 function msg_info() {
@@ -123,7 +122,7 @@ function check_root() {
 }
 
 function pve_check() {
- if ! pveversion | grep -Eq "pve-manager/8\.[1-3](\.[0-9]+)*"; then
+  if ! pveversion | grep -Eq "pve-manager/8\.[1-3](\.[0-9]+)*"; then
     msg_error "${CROSS}${RD}This version of Proxmox Virtual Environment is not supported"
     echo -e "Requires Proxmox Virtual Environment Version 8.1 or later."
     echo -e "Exiting..."
@@ -228,7 +227,7 @@ function advanced_settings() {
   else
     exit-script
   fi
-  
+
   if DISK_SIZE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Disk Size in GiB (e.g., 10, 20)" 8 58 "$DISK_SIZE" --title "DISK SIZE" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
     DISK_SIZE=$(echo "$DISK_SIZE" | tr -d ' ')
     if [[ "$DISK_SIZE" =~ ^[0-9]+$ ]]; then
@@ -243,7 +242,7 @@ function advanced_settings() {
   else
     exit-script
   fi
-  
+
   if DISK_CACHE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "DISK CACHE" --radiolist "Choose" --cancel-button Exit-Script 10 58 2 \
     "0" "None (Default)" ON \
     "1" "Write Through" OFF \
@@ -495,11 +494,11 @@ EOF
 )
 qm set "$VMID" -description "$DESCRIPTION" >/dev/null
 if [ -n "$DISK_SIZE" ]; then
-    msg_info "Resizing disk to $DISK_SIZE GB"
-    qm resize $VMID scsi0 ${DISK_SIZE} >/dev/null
+  msg_info "Resizing disk to $DISK_SIZE GB"
+  qm resize $VMID scsi0 ${DISK_SIZE} >/dev/null
 else
-    msg_info "Using default disk size of $DEFAULT_DISK_SIZE GB"
-    qm resize $VMID scsi0 ${DEFAULT_DISK_SIZE} >/dev/null
+  msg_info "Using default disk size of $DEFAULT_DISK_SIZE GB"
+  qm resize $VMID scsi0 ${DEFAULT_DISK_SIZE} >/dev/null
 fi
 
 msg_ok "Created a Arch Linux VM ${CL}${BL}(${HN})"

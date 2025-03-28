@@ -28,8 +28,8 @@ $STD apt install -y google-chrome-stable
 msg_ok "Installed Chrome"
 
 msg_info "Installing FlareSolverr"
-RELEASE=$(wget -q https://github.com/FlareSolverr/FlareSolverr/releases/latest -O - | grep "title>Release" | cut -d " " -f 4)
-$STD wget -q https://github.com/FlareSolverr/FlareSolverr/releases/download/$RELEASE/flaresolverr_linux_x64.tar.gz
+RELEASE=$(curl -fsSL https://github.com/FlareSolverr/FlareSolverr/releases/latest | grep "title>Release" | cut -d " " -f 4)
+$STD curl -fsSL "https://github.com/FlareSolverr/FlareSolverr/releases/download/$RELEASE/flaresolverr_linux_x64.tar.gz" -O
 $STD tar -xzf flaresolverr_linux_x64.tar.gz -C /opt
 $STD rm flaresolverr_linux_x64.tar.gz
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt

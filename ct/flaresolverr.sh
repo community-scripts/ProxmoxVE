@@ -27,11 +27,11 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(wget -q https://github.com/FlareSolverr/FlareSolverr/releases/latest -O - | grep "title>Release" | cut -d " " -f 4)
+  RELEASE=$(curl -fsSL https://github.com/FlareSolverr/FlareSolverr/releases/latest | grep "title>Release" | cut -d " " -f 4)
   if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
     msg_info "Updating $APP LXC"
     systemctl stop flaresolverr
-curl -fsSL "https://github.com/FlareSolverr/FlareSolverr/releases/download/$RELEASE/flaresolverr_linux_x64.tar.gz" -O $(basename "https://github.com/FlareSolverr/FlareSolverr/releases/download/$RELEASE/flaresolverr_linux_x64.tar.gz")
+    curl -fsSL "https://github.com/FlareSolverr/FlareSolverr/releases/download/$RELEASE/flaresolverr_linux_x64.tar.gz" -O $(basename "https://github.com/FlareSolverr/FlareSolverr/releases/download/$RELEASE/flaresolverr_linux_x64.tar.gz")
     tar -xzf flaresolverr_linux_x64.tar.gz -C /opt
     rm flaresolverr_linux_x64.tar.gz
     systemctl start flaresolverr

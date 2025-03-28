@@ -78,9 +78,9 @@ rm -rf /opt/jbig2enc
 msg_ok "Installed JBIG2"
 
 msg_info "Installing Paperless-ngx (Patience)"
-Paperlessngx=$(wget -q https://github.com/paperless-ngx/paperless-ngx/releases/latest -O - | grep "title>Release" | cut -d " " -f 5)
+Paperlessngx=$(curl -fsSL https://github.com/paperless-ngx/paperless-ngx/releases/latest | grep "title>Release" | cut -d " " -f 5)
 cd /opt
-$STD wget https://github.com/paperless-ngx/paperless-ngx/releases/download/$Paperlessngx/paperless-ngx-$Paperlessngx.tar.xz
+$STD curl -fsSL "https://github.com/paperless-ngx/paperless-ngx/releases/download/$Paperlessngx/paperless-ngx-$Paperlessngx.tar.xz" -O
 $STD tar -xf paperless-ngx-$Paperlessngx.tar.xz -C /opt/
 mv paperless-ngx paperless
 rm paperless-ngx-$Paperlessngx.tar.xz

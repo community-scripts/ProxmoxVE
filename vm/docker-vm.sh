@@ -4,7 +4,7 @@
 # Author: thost96 (thost96)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
-source /dev/stdin <<< $(wget -qLO - https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func)
+source /dev/stdin <<<$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func)
 
 function header_info {
   clear
@@ -44,7 +44,7 @@ THIN="discard=on,ssd=1,"
 set -e
 trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
 trap cleanup EXIT
-trap 'post_update_to_api "failed" "INTERRUPTED"' SIGINT 
+trap 'post_update_to_api "failed" "INTERRUPTED"' SIGINT
 trap 'post_update_to_api "failed" "TERMINATED"' SIGTERM
 function error_handler() {
   local exit_code="$?"
@@ -102,13 +102,13 @@ function check_root() {
 }
 
 function pve_check() {
- if ! pveversion | grep -Eq "pve-manager/8\.[1-3](\.[0-9]+)*"; then
+  if ! pveversion | grep -Eq "pve-manager/8\.[1-3](\.[0-9]+)*"; then
     msg_error "This version of Proxmox Virtual Environment is not supported"
     echo -e "Requires Proxmox Virtual Environment Version 8.1 or later."
     echo -e "Exiting..."
     sleep 2
     exit
-fi
+  fi
 }
 
 function arch_check() {
@@ -421,13 +421,12 @@ msg_ok "Installed libguestfs-tools successfully"
 
 msg_info "Adding Docker and Docker Compose Plugin to Debian 12 Qcow2 Disk Image"
 virt-customize -q -a "${FILE}" --install qemu-guest-agent,apt-transport-https,ca-certificates,curl,gnupg,software-properties-common,lsb-release >/dev/null &&
-virt-customize -q -a "${FILE}" --run-command "mkdir -p /etc/apt/keyrings && curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg" >/dev/null &&
-virt-customize -q -a "${FILE}" --run-command "echo 'deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian bookworm stable' > /etc/apt/sources.list.d/docker.list" >/dev/null &&
-virt-customize -q -a "${FILE}" --run-command "apt-get update -qq && apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin" >/dev/null &&
-virt-customize -q -a "${FILE}" --run-command "systemctl enable docker" >/dev/null &&
-virt-customize -q -a "${FILE}" --run-command "echo -n > /etc/machine-id" >/dev/null
+  virt-customize -q -a "${FILE}" --run-command "mkdir -p /etc/apt/keyrings && curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg" >/dev/null &&
+  virt-customize -q -a "${FILE}" --run-command "echo 'deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian bookworm stable' > /etc/apt/sources.list.d/docker.list" >/dev/null &&
+  virt-customize -q -a "${FILE}" --run-command "apt-get update -qq && apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin" >/dev/null &&
+  virt-customize -q -a "${FILE}" --run-command "systemctl enable docker" >/dev/null &&
+  virt-customize -q -a "${FILE}" --run-command "echo -n > /etc/machine-id" >/dev/null
 msg_ok "Added Docker and Docker Compose Plugin to Debian 12 Qcow2 Disk Image successfully"
-
 
 msg_info "Creating a Docker VM"
 qm create $VMID -agent 1${MACHINE} -tablet 0 -localtime 1 -bios ovmf${CPU_TYPE} -cores $CORE_COUNT -memory $RAM_SIZE \
@@ -442,7 +441,8 @@ qm set $VMID \
 qm resize $VMID scsi0 8G >/dev/null
 qm set $VMID --agent enabled=1 >/dev/null
 
-  DESCRIPTION=$(cat <<EOF
+DESCRIPTION=$(
+  cat <<EOF
 <div align='center'>
   <a href='https://Helper-Scripts.com' target='_blank' rel='noopener noreferrer'>
     <img src='https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/images/logo-81x112.png' alt='Logo' style='width:81px;height:112px;'/>
