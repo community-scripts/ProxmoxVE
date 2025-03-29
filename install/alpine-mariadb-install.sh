@@ -17,7 +17,6 @@ msg_info "Installing Dependencies"
 $STD apk add \
     gpg \
     sudo
-
 msg_ok "Installed Dependencies"
 
 msg_info "Installing MariaDB"
