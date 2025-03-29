@@ -32,7 +32,13 @@ function update_script() {
   if ! dpkg -l | grep -q "^ii.*build-essential"; then
     $STD apt-get install -y build-essential
   fi
-
+  if [[ ! -d "/usr/bin/node" ]]; then
+  mkdir -p /etc/apt/keyrings
+  curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+  echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
+  $STD apt-get update
+  $STD apt-get install -y nodejs
+  fi
   if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
     msg_info "Stopping $APP"
     systemctl stop gomft
