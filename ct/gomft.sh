@@ -41,9 +41,9 @@ function update_script() {
     msg_info "Updating $APP to ${RELEASE}"
     rm -f /opt/gomft/gomft
     temp_file=$(mktemp)
-    wget -q "https://github.com/StarFleetCPTN/GoMFT/archive/refs/tags/v${RELEASE}.tar.gz" -O $temp_file
+    wget -q "https://github.com/StarFleetCPTN/GoMFT/archive/refs/tags/v.${RELEASE}.tar.gz" -O $temp_file
     tar -xzf $temp_file
-    cp -rf GoMFT-${RELEASE}/* /opt/gomft
+    cp -rf GoMFT-v.${RELEASE}/* /opt/gomft
     cd /opt/gomft
     $STD go mod download
     $STD go install github.com/a-h/templ/cmd/templ@latest
