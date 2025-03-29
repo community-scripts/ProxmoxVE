@@ -1,8 +1,78 @@
 [
   {
+    "name": "msgbyte/tianji",
+    "version": "v1.19.5",
+    "date": "2025-03-28T22:03:01Z"
+  },
+  {
+    "name": "homarr-labs/homarr",
+    "version": "v1.13.1",
+    "date": "2025-03-28T21:58:30Z"
+  },
+  {
+    "name": "TasmoAdmin/TasmoAdmin",
+    "version": "v4.2.3",
+    "date": "2025-02-09T23:07:48Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.3.4",
+    "date": "2025-03-21T20:22:46Z"
+  },
+  {
+    "name": "gristlabs/grist-core",
+    "version": "v1.5.0",
+    "date": "2025-03-28T20:43:51Z"
+  },
+  {
     "name": "fhem/fhem-mirror",
     "version": "6.2",
-    "date": "2025-03-28T10:33:13Z"
+    "date": "2025-03-28T20:29:54Z"
+  },
+  {
+    "name": "grocy/grocy",
+    "version": "v4.5.0",
+    "date": "2025-03-28T19:02:22Z"
+  },
+  {
+    "name": "Brandawg93/PeaNUT",
+    "version": "v5.6.1",
+    "date": "2025-03-28T18:40:22Z"
+  },
+  {
+    "name": "pocketbase/pocketbase",
+    "version": "v0.26.5",
+    "date": "2025-03-28T17:41:23Z"
+  },
+  {
+    "name": "NodeBB/NodeBB",
+    "version": "v4.2.0",
+    "date": "2025-03-19T18:34:01Z"
+  },
+  {
+    "name": "louislam/uptime-kuma",
+    "version": "2.0.0-beta.2-temp",
+    "date": "2025-03-28T08:45:58Z"
+  },
+  {
+    "name": "zitadel/zitadel",
+    "version": "v2.71.5",
+    "date": "2025-03-28T15:34:27Z"
+  },
+  {
+    "name": "emqx/emqx",
+    "version": "e5.9.0-beta.2",
+    "date": "2025-03-28T15:06:27Z"
+  },
+  {
+    "name": "goauthentik/authentik",
+    "version": "version/2025.2.3",
+    "date": "2025-03-28T14:28:34Z"
+  },
+  {
+    "name": "hakimel/reveal.js",
+    "version": "5.2.1",
+    "date": "2025-03-28T13:00:23Z"
   },
   {
     "name": "cockpit-project/cockpit",
@@ -55,19 +125,14 @@
     "date": "2025-03-13T15:41:42Z"
   },
   {
-    "name": "home-assistant/core",
-    "version": "2025.3.4",
-    "date": "2025-03-21T20:22:46Z"
-  },
-  {
-    "name": "gristlabs/grist-core",
-    "version": "v1.5.0",
-    "date": "2025-03-27T19:59:55Z"
-  },
-  {
     "name": "hivemq/hivemq-community-edition",
     "version": "2025.2",
     "date": "2025-03-27T19:21:13Z"
+  },
+  {
+    "name": "TriliumNext/Notes",
+    "version": "v0.92.4",
+    "date": "2025-03-17T16:00:19Z"
   },
   {
     "name": "fallenbagel/jellyseerr",
@@ -78,11 +143,6 @@
     "name": "immich-app/immich",
     "version": "v1.130.3",
     "date": "2025-03-27T16:38:04Z"
-  },
-  {
-    "name": "msgbyte/tianji",
-    "version": "v1.19.4",
-    "date": "2025-03-27T16:25:34Z"
   },
   {
     "name": "zwave-js/zwave-js-ui",
@@ -195,11 +255,6 @@
     "date": "2025-03-26T08:48:34Z"
   },
   {
-    "name": "pocketbase/pocketbase",
-    "version": "v0.26.4",
-    "date": "2025-03-26T05:16:46Z"
-  },
-  {
     "name": "esphome/esphome",
     "version": "2025.3.2",
     "date": "2025-03-25T23:06:45Z"
@@ -235,11 +290,6 @@
     "date": "2025-03-25T15:55:02Z"
   },
   {
-    "name": "emqx/emqx",
-    "version": "v5.8.6",
-    "date": "2025-03-25T15:22:13Z"
-  },
-  {
     "name": "hansmi/prometheus-paperless-exporter",
     "version": "v0.0.7",
     "date": "2025-03-25T15:11:18Z"
@@ -263,11 +313,6 @@
     "name": "VictoriaMetrics/VictoriaMetrics",
     "version": "pmm-6401-v1.114.0",
     "date": "2025-03-25T07:58:34Z"
-  },
-  {
-    "name": "zitadel/zitadel",
-    "version": "v2.70.6",
-    "date": "2025-03-25T07:11:32Z"
   },
   {
     "name": "caddyserver/caddy",
@@ -385,11 +430,6 @@
     "date": "2025-03-21T19:24:53Z"
   },
   {
-    "name": "homarr-labs/homarr",
-    "version": "v1.12.0",
-    "date": "2025-03-21T19:14:59Z"
-  },
-  {
     "name": "photoprism/photoprism",
     "version": "250321-57590c48b",
     "date": "2025-03-21T11:48:16Z"
@@ -425,19 +465,9 @@
     "date": "2025-02-26T19:07:11Z"
   },
   {
-    "name": "NodeBB/NodeBB",
-    "version": "v4.2.0",
-    "date": "2025-03-19T18:34:01Z"
-  },
-  {
     "name": "seanmorley15/AdventureLog",
     "version": "v0.9.0",
     "date": "2025-03-19T13:30:02Z"
-  },
-  {
-    "name": "hakimel/reveal.js",
-    "version": "5.2.0",
-    "date": "2025-03-19T11:03:56Z"
   },
   {
     "name": "Luligu/matterbridge",
@@ -480,19 +510,9 @@
     "date": "2025-03-17T19:25:25Z"
   },
   {
-    "name": "goauthentik/authentik",
-    "version": "version/2025.2.2",
-    "date": "2025-03-17T19:16:49Z"
-  },
-  {
     "name": "Sonarr/Sonarr",
     "version": "v4.0.14.2939",
     "date": "2025-03-17T19:12:37Z"
-  },
-  {
-    "name": "TriliumNext/Notes",
-    "version": "v0.92.4",
-    "date": "2025-03-17T16:00:19Z"
   },
   {
     "name": "webmin/webmin",
@@ -635,11 +655,6 @@
     "date": "2017-03-07T18:56:06Z"
   },
   {
-    "name": "Brandawg93/PeaNUT",
-    "version": "v5.6.0",
-    "date": "2025-03-08T19:02:31Z"
-  },
-  {
     "name": "YuukanOO/seelf",
     "version": "v2.4.2",
     "date": "2025-03-08T10:49:04Z"
@@ -733,11 +748,6 @@
     "name": "tobychui/zoraxy",
     "version": "v3.1.9",
     "date": "2025-03-01T02:24:33Z"
-  },
-  {
-    "name": "grocy/grocy",
-    "version": "v4.4.2",
-    "date": "2025-02-28T16:26:05Z"
   },
   {
     "name": "jordan-dalby/ByteStash",
@@ -890,11 +900,6 @@
     "date": "2025-02-11T13:26:42Z"
   },
   {
-    "name": "TasmoAdmin/TasmoAdmin",
-    "version": "v4.2.3",
-    "date": "2025-02-09T23:07:48Z"
-  },
-  {
     "name": "dani-garcia/vaultwarden",
     "version": "1.33.2",
     "date": "2025-02-09T17:54:59Z"
@@ -1013,11 +1018,6 @@
     "name": "go-vikunja/vikunja",
     "version": "v0.24.6",
     "date": "2024-12-22T20:24:35Z"
-  },
-  {
-    "name": "louislam/uptime-kuma",
-    "version": "2.0.0-beta.1",
-    "date": "2024-12-20T08:56:43Z"
   },
   {
     "name": "IceWhaleTech/CasaOS",
