@@ -31,7 +31,7 @@ function update_script() {
   msg_info "Updating Ollama"
   OLLAMA_VERSION=$(ollama -v | awk '{print $NF}')
   if [ -z "$OLLAMA_VERSION" ]; then
-    msg_error "Ollama is not installed!"
+    msg_error "Skipped... Ollama not installed!"
   else
     RELEASE=$(curl -s https://api.github.com/repos/ollama/ollama/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
     if [ "$OLLAMA_VERSION" != "$RELEASE" ]; then
