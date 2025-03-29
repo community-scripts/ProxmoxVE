@@ -1,5 +1,40 @@
 [
   {
+    "name": "theonedev/onedev",
+    "version": "v11.8.4",
+    "date": "2025-03-29T08:28:12Z"
+  },
+  {
+    "name": "tobychui/zoraxy",
+    "version": "v3.1.9",
+    "date": "2025-03-01T02:24:33Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1705",
+    "date": "2025-03-29T05:54:06Z"
+  },
+  {
+    "name": "inspircd/inspircd",
+    "version": "v4.7.0",
+    "date": "2025-03-29T03:50:50Z"
+  },
+  {
+    "name": "fhem/fhem-mirror",
+    "version": "6.2",
+    "date": "2025-03-29T01:59:30Z"
+  },
+  {
+    "name": "bunkerity/bunkerweb",
+    "version": "v1.6.1",
+    "date": "2025-03-15T17:29:17Z"
+  },
+  {
+    "name": "OliveTin/OliveTin",
+    "version": "2025.3.28",
+    "date": "2025-03-29T00:18:56Z"
+  },
+  {
     "name": "msgbyte/tianji",
     "version": "v1.19.5",
     "date": "2025-03-28T22:03:01Z"
@@ -25,11 +60,6 @@
     "date": "2025-03-28T20:43:51Z"
   },
   {
-    "name": "fhem/fhem-mirror",
-    "version": "6.2",
-    "date": "2025-03-28T20:29:54Z"
-  },
-  {
     "name": "grocy/grocy",
     "version": "v4.5.0",
     "date": "2025-03-28T19:02:22Z"
@@ -38,6 +68,11 @@
     "name": "Brandawg93/PeaNUT",
     "version": "v5.6.1",
     "date": "2025-03-28T18:40:22Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.1.4",
+    "date": "2025-03-13T15:41:42Z"
   },
   {
     "name": "pocketbase/pocketbase",
@@ -85,11 +120,6 @@
     "date": "2025-03-16T11:59:24Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1702",
-    "date": "2025-03-28T05:57:28Z"
-  },
-  {
     "name": "gethomepage/homepage",
     "version": "v1.1.1",
     "date": "2025-03-28T04:12:31Z"
@@ -98,11 +128,6 @@
     "name": "documenso/documenso",
     "version": "v1.10.0-rc.3",
     "date": "2025-03-28T03:45:54Z"
-  },
-  {
-    "name": "theonedev/onedev",
-    "version": "v11.8.1",
-    "date": "2025-03-28T00:13:20Z"
   },
   {
     "name": "StarFleetCPTN/GoMFT",
@@ -118,11 +143,6 @@
     "name": "ellite/Wallos",
     "version": "v2.48.1",
     "date": "2025-03-27T22:02:16Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.1.4",
-    "date": "2025-03-13T15:41:42Z"
   },
   {
     "name": "hivemq/hivemq-community-edition",
@@ -211,8 +231,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-03-26T20:06:34Z"
+    "version": "v3.10.0",
+    "date": "2025-03-15T14:38:16Z"
   },
   {
     "name": "glanceapp/glance",
@@ -400,11 +420,6 @@
     "date": "2025-03-23T04:01:50Z"
   },
   {
-    "name": "OliveTin/OliveTin",
-    "version": "2025.3.23",
-    "date": "2025-03-23T01:38:55Z"
-  },
-  {
     "name": "hoarder-app/hoarder",
     "version": "sdk/v0.23.0",
     "date": "2025-03-22T17:26:10Z"
@@ -543,11 +558,6 @@
     "name": "pelican-dev/panel",
     "version": "v1.0.0-beta18",
     "date": "2025-03-15T20:24:04Z"
-  },
-  {
-    "name": "bunkerity/bunkerweb",
-    "version": "v1.6.1",
-    "date": "2025-03-15T17:29:17Z"
   },
   {
     "name": "henrygd/beszel",
@@ -738,16 +748,6 @@
     "name": "heiher/hev-socks5-server",
     "version": "2.8.0",
     "date": "2025-03-02T04:30:50Z"
-  },
-  {
-    "name": "inspircd/inspircd",
-    "version": "v4.6.0",
-    "date": "2025-03-01T10:29:31Z"
-  },
-  {
-    "name": "tobychui/zoraxy",
-    "version": "v3.1.9",
-    "date": "2025-03-01T02:24:33Z"
   },
   {
     "name": "jordan-dalby/ByteStash",
