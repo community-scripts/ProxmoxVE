@@ -60,7 +60,7 @@ function update_script() {
 
     msg_info "Cleaning Up"
     rm -f $temp_file
-    rm -rf GoMFT-v.${RELEASE}
+    rm -rf $HOME/GoMFT-v.${RELEASE}
     msg_ok "Cleanup Complete"
 
     msg_info "Starting $APP"
