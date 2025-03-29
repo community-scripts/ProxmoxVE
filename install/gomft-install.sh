@@ -34,7 +34,7 @@ msg_ok "Setup Golang"
 
 msg_info "Setup ${APPLICATION} (Patience)"
 temp_file=$(mktemp)
-RELEASE=$(curl -s https://api.github.com/repos/StarFleetCPTN/GoMFT/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+RELEASE=$(curl -s https://api.github.com/repos/StarFleetCPTN/GoMFT/releases/latest | grep "tag_name" | awk '{print substr($2, 4, length($2)-5) }')
 wget -q "https://github.com/StarFleetCPTN/GoMFT/archive/refs/tags/v${RELEASE}.tar.gz" -O $temp_file
 tar -xzf $temp_file
 mv GoMFT-${RELEASE}/ /opt/gomft

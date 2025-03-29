@@ -8,7 +8,6 @@
 color() {
   # Colors
   YW=$(echo "\033[33m")
-  YWB=$(echo "\033[93m")
   BL=$(echo "\033[36m")
   RD=$(echo "\033[01;31m")
   GN=$(echo "\033[1;92m")
@@ -30,10 +29,8 @@ color() {
   INFO="${TAB}💡${TAB}${CL}"
   NETWORK="${TAB}📡${TAB}${CL}"
   OS="${TAB}🖥️${TAB}${CL}"
-  OSVERSION="${TAB}🌟${TAB}${CL}"
   HOSTNAME="${TAB}🏠${TAB}${CL}"
   GATEWAY="${TAB}🌐${TAB}${CL}"
-  DEFAULT="${TAB}⚙️${TAB}${CL}"
 }
 
 # Function to set STD mode based on verbosity
@@ -143,6 +140,11 @@ update_os() {
   $STD apk update
   $STD apk upgrade
   msg_ok "Updated Container OS"
+
+  msg_info "Installing core dependencies"
+  $STD apk update
+  $STD apk add newt curl openssh nano mc ncurses
+  msg_ok "Core dependencies installed"
 }
 
 # This function modifies the message of the day (motd) and SSH settings
@@ -181,7 +183,7 @@ motd_ssh() {
 
 # Validate Timezone for some LXC's
 validate_tz() {
-    [[ -f "/usr/share/zoneinfo/$1" ]]
+  [[ -f "/usr/share/zoneinfo/$1" ]]
 }
 
 # This function customizes the container and enables passwordless login for the root user
@@ -191,4 +193,7 @@ customize() {
     bash -c "passwd -d root" >/dev/null 2>&1
     msg_ok "Customized Container"
   fi
+
+  echo "bash -c \"\$(curl -fsSL https://github.com/community-scripts/ProxmoxVE/raw/main/ct/${app}.sh)\"" >/usr/bin/update
+  chmod +x /usr/bin/update
 }

@@ -14,15 +14,61 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 All LXC instances created using this repository come pre-installed with Midnight Commander, which is a command-line tool (`mc`) that offers a user-friendly file and directory management interface for the terminal environment.
 
 
-## 2025-03-26
+## 2025-03-29
 
 ### 🚀 Updated Scripts
 
-  - Remove coredeps in CONTRIBUTOR_AND_GUIDES [@bvdberg01](https://github.com/bvdberg01) ([#3420](https://github.com/community-scripts/ProxmoxVE/pull/3420))
+  - #### 🐞 Bug Fixes
+
+    - Homepage: Fix release parsing [@tremor021](https://github.com/tremor021) ([#3484](https://github.com/community-scripts/ProxmoxVE/pull/3484))
+    - Netdata: Fix debian-keyring dependency missing [@tremor021](https://github.com/tremor021) ([#3477](https://github.com/community-scripts/ProxmoxVE/pull/3477))
+    - ErsatzTV: Fix temp file reference [@tremor021](https://github.com/tremor021) ([#3476](https://github.com/community-scripts/ProxmoxVE/pull/3476))
+    - Komodo: Fix compose.env [@tremor021](https://github.com/tremor021) ([#3466](https://github.com/community-scripts/ProxmoxVE/pull/3466))
+
+## 2025-03-28
+
+### 🆕 New Scripts
+
+  - Alpine Node-RED [@MickLesk](https://github.com/MickLesk) ([#3457](https://github.com/community-scripts/ProxmoxVE/pull/3457))
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - GoMFT: Fix release grep [@tremor021](https://github.com/tremor021) ([#3462](https://github.com/community-scripts/ProxmoxVE/pull/3462))
+    - ErsatzTV: Fix path in update function [@tremor021](https://github.com/tremor021) ([#3463](https://github.com/community-scripts/ProxmoxVE/pull/3463))
+
+## 2025-03-27
+
+### 🚀 Updated Scripts
+
+  - [core]: add functions for Alpine (update / core deps) [@MickLesk](https://github.com/MickLesk) ([#3437](https://github.com/community-scripts/ProxmoxVE/pull/3437))
+
+### 🧰 Maintenance
+
+  - #### 💾 Core
+
+    - [core]: Refactor Spinner/MSG Function (support now alpine / performance / handling) [@MickLesk](https://github.com/MickLesk) ([#3436](https://github.com/community-scripts/ProxmoxVE/pull/3436))
+
+## 2025-03-26
+
+### 🆕 New Scripts
+
+  - Alpine: Gitea [@MickLesk](https://github.com/MickLesk) ([#3424](https://github.com/community-scripts/ProxmoxVE/pull/3424))
+
+### 🚀 Updated Scripts
+
+  - FlowiseAI: Fix dependencies [@tremor021](https://github.com/tremor021) ([#3427](https://github.com/community-scripts/ProxmoxVE/pull/3427))
 
   - #### 🐞 Bug Fixes
 
     - fluid-calendar: Fix failed build during updates [@vhsdream](https://github.com/vhsdream) ([#3417](https://github.com/community-scripts/ProxmoxVE/pull/3417))
+
+### 🧰 Maintenance
+
+  - #### 📂 Github
+
+    - Remove coredeps in CONTRIBUTOR_AND_GUIDES [@bvdberg01](https://github.com/bvdberg01) ([#3420](https://github.com/community-scripts/ProxmoxVE/pull/3420))
 
 ## 2025-03-25
 

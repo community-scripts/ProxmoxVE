@@ -59,6 +59,7 @@ install() {
   header_info
 
   msg_info "Setting up repository"
+  $STD apt-get install -y debian-keyring
   wget -q https://repo.netdata.cloud/repos/repoconfig/debian/bookworm/netdata-repo_5-1+debian12_all.deb
   $STD dpkg -i netdata-repo_5-1+debian12_all.deb
   rm -rf netdata-repo_5-1+debian12_all.deb
