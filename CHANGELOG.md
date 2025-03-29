@@ -20,6 +20,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - Komodo: Fix wrong sed text [@tremor021](https://github.com/tremor021) ([#3491](https://github.com/community-scripts/ProxmoxVE/pull/3491))
     - GoMFT: Fix release archive naming [@tremor021](https://github.com/tremor021) ([#3483](https://github.com/community-scripts/ProxmoxVE/pull/3483))
     - Homepage: Fix release parsing [@tremor021](https://github.com/tremor021) ([#3484](https://github.com/community-scripts/ProxmoxVE/pull/3484))
     - Netdata: Fix debian-keyring dependency missing [@tremor021](https://github.com/tremor021) ([#3477](https://github.com/community-scripts/ProxmoxVE/pull/3477))
