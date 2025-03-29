@@ -45,8 +45,11 @@ function update_script() {
     tar -xzf $temp_file
     cp -rf GoMFT-v.${RELEASE}/* /opt/gomft
     cd /opt/gomft
+    rm -f /opt/gomft/node_modules
+    $STD npm ci
+    $STD node build.js
     $STD go mod download
-    $STD go install github.com/a-h/templ/cmd/templ@latest
+    $STD go get -u github.com/a-h/templ
     $STD $HOME/go/bin/templ generate
     export CGO_ENABLED=1
     export GOOS=linux
@@ -57,7 +60,7 @@ function update_script() {
 
     msg_info "Cleaning Up"
     rm -f $temp_file
-    rm -rf GoMFT-${RELEASE}
+    rm -rf GoMFT-v.${RELEASE}
     msg_ok "Cleanup Complete"
 
     msg_info "Starting $APP"

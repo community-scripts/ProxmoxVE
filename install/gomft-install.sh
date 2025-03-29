@@ -19,7 +19,8 @@ $STD apt-get install -y \
   rclone \
   tzdata \
   ca-certificates \
-  build-essential
+  build-essential \
+  gnupg
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up Golang"
@@ -32,6 +33,17 @@ ln -sf /usr/local/go/bin/go /usr/local/bin/go
 set -o pipefail
 msg_ok "Setup Golang"
 
+msg_info "Setting up Node.js Repository"
+mkdir -p /etc/apt/keyrings
+curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
+msg_ok "Set up Node.js Repository"
+
+msg_info "Installing Node.js"
+$STD apt-get update
+$STD apt-get install -y nodejs
+msg_ok "Installed Node.js"
+
 msg_info "Setup ${APPLICATION} (Patience)"
 temp_file=$(mktemp)
 RELEASE=$(curl -fsSL https://api.github.com/repos/StarFleetCPTN/GoMFT/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
@@ -39,8 +51,11 @@ curl -fsSL "https://github.com/StarFleetCPTN/GoMFT/archive/refs/tags/v.${RELEASE
 tar -xzf $temp_file
 mv GoMFT-v.${RELEASE}/ /opt/gomft
 cd /opt/gomft
+$STD npm ci
+$STD node build.js
 $STD go mod download
 $STD go install github.com/a-h/templ/cmd/templ@latest
+$STD go get -u github.com/a-h/templ
 $STD $HOME/go/bin/templ generate
 export CGO_ENABLED=1
 export GOOS=linux
