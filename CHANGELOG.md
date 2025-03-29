@@ -20,6 +20,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - Netdata: Fix debian-keyring dependency missing [@tremor021](https://github.com/tremor021) ([#3477](https://github.com/community-scripts/ProxmoxVE/pull/3477))
+    - ErsatzTV: Fix temp file reference [@tremor021](https://github.com/tremor021) ([#3476](https://github.com/community-scripts/ProxmoxVE/pull/3476))
     - Komodo: Fix compose.env [@tremor021](https://github.com/tremor021) ([#3466](https://github.com/community-scripts/ProxmoxVE/pull/3466))
 
 ## 2025-03-28
