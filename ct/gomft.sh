@@ -28,7 +28,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -s https://api.github.com/repos/StarFleetCPTN/GoMFT/releases/latest | grep "tag_name" | awk '{print substr($2, 4, length($2)-5) }')
+  RELEASE=$(curl -s https://api.github.com/repos/StarFleetCPTN/GoMFT/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
   if ! dpkg -l | grep -q "^ii.*build-essential"; then
     $STD apt-get install -y build-essential
   fi
@@ -41,7 +41,7 @@ function update_script() {
     msg_info "Updating $APP to ${RELEASE}"
     rm -f /opt/gomft/gomft
     temp_file=$(mktemp)
-    wget -q "https://github.com/StarFleetCPTN/GoMFT/archive/refs/tags/v.${RELEASE}.tar.gz" -O $temp_file
+    curl -fsSL "https://github.com/StarFleetCPTN/GoMFT/archive/refs/tags/v.${RELEASE}.tar.gz" -o $temp_file
     tar -xzf $temp_file
     cp -rf GoMFT-v.${RELEASE}/* /opt/gomft
     cd /opt/gomft
