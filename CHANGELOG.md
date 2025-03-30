@@ -18,6 +18,11 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Open WebUI: Fix Ollama update logic [@tremor021](https://github.com/tremor021) ([#3506](https://github.com/community-scripts/ProxmoxVE/pull/3506))
+    - GoMFT: Add frontend build procedure [@tremor021](https://github.com/tremor021) ([#3499](https://github.com/community-scripts/ProxmoxVE/pull/3499))
+
   - #### ✨ New Features
 
     - Open WebUI: Add Ollama update check [@tremor021](https://github.com/tremor021) ([#3478](https://github.com/community-scripts/ProxmoxVE/pull/3478))
