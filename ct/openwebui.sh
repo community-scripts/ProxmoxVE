@@ -41,7 +41,7 @@ function update_script() {
       msg_ok "Ollama is already up to date."
     fi
   fi
-g
+
   msg_info "Updating ${APP} (Patience)"
   cd /opt/open-webui
   mkdir -p /opt/open-webui-backup
