@@ -1,18 +1,78 @@
 [
   {
+    "name": "pocketbase/pocketbase",
+    "version": "v0.26.6",
+    "date": "2025-03-30T08:02:19Z"
+  },
+  {
+    "name": "Prowlarr/Prowlarr",
+    "version": "v1.32.2.4987",
+    "date": "2025-03-16T09:41:37Z"
+  },
+  {
+    "name": "Readarr/Readarr",
+    "version": "v2.0.0.4645",
+    "date": "2017-03-07T18:56:06Z"
+  },
+  {
+    "name": "Lidarr/Lidarr",
+    "version": "v2.10.3.4602",
+    "date": "2025-03-23T11:00:37Z"
+  },
+  {
+    "name": "Radarr/Radarr",
+    "version": "v5.21.1.9799",
+    "date": "2025-03-24T15:52:12Z"
+  },
+  {
+    "name": "aceberg/WatchYourLAN",
+    "version": "2.1.2-alpine",
+    "date": "2025-03-30T06:25:22Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1709",
+    "date": "2025-03-30T05:51:21Z"
+  },
+  {
+    "name": "pocket-id/pocket-id",
+    "version": "v0.45.0",
+    "date": "2025-03-29T23:12:22Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.1.4",
+    "date": "2025-03-13T15:41:42Z"
+  },
+  {
+    "name": "glanceapp/glance",
+    "version": "v0.7.9",
+    "date": "2025-03-29T18:08:11Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.3.4",
+    "date": "2025-03-21T20:22:46Z"
+  },
+  {
     "name": "theonedev/onedev",
     "version": "v11.8.4",
-    "date": "2025-03-29T08:28:12Z"
+    "date": "2025-03-29T13:37:15Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "v3.10.0",
+    "date": "2025-03-15T14:38:16Z"
+  },
+  {
+    "name": "syncthing/syncthing",
+    "version": "v2.0.0-beta.1",
+    "date": "2025-03-29T12:53:28Z"
   },
   {
     "name": "tobychui/zoraxy",
     "version": "v3.1.9",
     "date": "2025-03-01T02:24:33Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1705",
-    "date": "2025-03-29T05:54:06Z"
   },
   {
     "name": "inspircd/inspircd",
@@ -50,11 +110,6 @@
     "date": "2025-02-09T23:07:48Z"
   },
   {
-    "name": "home-assistant/core",
-    "version": "2025.3.4",
-    "date": "2025-03-21T20:22:46Z"
-  },
-  {
     "name": "gristlabs/grist-core",
     "version": "v1.5.0",
     "date": "2025-03-28T20:43:51Z"
@@ -68,16 +123,6 @@
     "name": "Brandawg93/PeaNUT",
     "version": "v5.6.1",
     "date": "2025-03-28T18:40:22Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.1.4",
-    "date": "2025-03-13T15:41:42Z"
-  },
-  {
-    "name": "pocketbase/pocketbase",
-    "version": "v0.26.5",
-    "date": "2025-03-28T17:41:23Z"
   },
   {
     "name": "NodeBB/NodeBB",
@@ -131,7 +176,7 @@
   },
   {
     "name": "StarFleetCPTN/GoMFT",
-    "version": "v.0.2.3",
+    "version": "v0.2.3",
     "date": "2025-03-27T23:54:49Z"
   },
   {
@@ -190,11 +235,6 @@
     "date": "2025-03-27T11:06:48Z"
   },
   {
-    "name": "syncthing/syncthing",
-    "version": "v1.29.3",
-    "date": "2025-03-12T11:56:30Z"
-  },
-  {
     "name": "evcc-io/evcc",
     "version": "0.202.1",
     "date": "2025-03-27T08:24:55Z"
@@ -228,16 +268,6 @@
     "name": "ollama/ollama",
     "version": "v0.6.3-rc1",
     "date": "2025-03-26T20:39:01Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "v3.10.0",
-    "date": "2025-03-15T14:38:16Z"
-  },
-  {
-    "name": "glanceapp/glance",
-    "version": "v0.7.8",
-    "date": "2025-03-26T19:59:07Z"
   },
   {
     "name": "semaphoreui/semaphore",
@@ -293,16 +323,6 @@
     "name": "ipfs/kubo",
     "version": "v0.34.1",
     "date": "2025-03-25T18:11:12Z"
-  },
-  {
-    "name": "aceberg/WatchYourLAN",
-    "version": "2.1.1",
-    "date": "2025-03-25T17:21:41Z"
-  },
-  {
-    "name": "pocket-id/pocket-id",
-    "version": "v0.44.0",
-    "date": "2025-03-25T16:09:10Z"
   },
   {
     "name": "dotnetfactory/fluid-calendar",
@@ -365,11 +385,6 @@
     "date": "2025-03-24T18:25:37Z"
   },
   {
-    "name": "Radarr/Radarr",
-    "version": "v5.21.1.9799",
-    "date": "2025-03-24T15:52:12Z"
-  },
-  {
     "name": "Graylog2/graylog2-server",
     "version": "6.2.0-beta.2",
     "date": "2025-03-24T12:20:51Z"
@@ -400,19 +415,9 @@
     "date": "2025-03-24T00:46:32Z"
   },
   {
-    "name": "Lidarr/Lidarr",
-    "version": "v2.10.3.4602",
-    "date": "2025-03-23T11:00:37Z"
-  },
-  {
     "name": "nicolargo/glances",
     "version": "v4.3.1",
     "date": "2025-03-23T09:02:54Z"
-  },
-  {
-    "name": "Prowlarr/Prowlarr",
-    "version": "v1.32.2.4987",
-    "date": "2025-03-16T09:41:37Z"
   },
   {
     "name": "usememos/memos",
@@ -658,11 +663,6 @@
     "name": "awawa-dev/HyperHDR",
     "version": "v21.0.0.0",
     "date": "2025-03-09T12:25:44Z"
-  },
-  {
-    "name": "Readarr/Readarr",
-    "version": "v2.0.0.4645",
-    "date": "2017-03-07T18:56:06Z"
   },
   {
     "name": "YuukanOO/seelf",
