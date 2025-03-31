@@ -2,7 +2,7 @@
 
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: vhsdream
-# License: MIT | https://github.com/community-scripts/ProxmoxVED/raw/main/LICENSE
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/slskd/slskd/, https://soularr.net
 
 source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
@@ -15,10 +15,6 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-  curl \
-  sudo \
-  mc \
-  unzip \
   python3-pip
 msg_ok "Installed Dependencies"
 
