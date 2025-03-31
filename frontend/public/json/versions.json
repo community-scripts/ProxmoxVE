@@ -136,8 +136,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-03-29T12:57:40Z"
+    "version": "v3.10.0",
+    "date": "2025-03-15T14:38:16Z"
   },
   {
     "name": "syncthing/syncthing",
@@ -220,6 +220,11 @@
     "date": "2025-03-28T14:28:34Z"
   },
   {
+    "name": "mattermost/mattermost",
+    "version": "server/public/v0.1.11",
+    "date": "2025-03-28T14:04:31Z"
+  },
+  {
     "name": "hakimel/reveal.js",
     "version": "5.2.1",
     "date": "2025-03-28T13:00:23Z"
@@ -258,6 +263,11 @@
     "name": "immich-app/immich",
     "version": "v1.130.3",
     "date": "2025-03-27T16:38:04Z"
+  },
+  {
+    "name": "TandoorRecipes/recipes",
+    "version": "1.5.34",
+    "date": "2025-03-27T16:17:38Z"
   },
   {
     "name": "zwave-js/zwave-js-ui",
@@ -558,6 +568,11 @@
     "name": "Sonarr/Sonarr",
     "version": "v4.0.14.2939",
     "date": "2025-03-17T19:12:37Z"
+  },
+  {
+    "name": "inventree/InvenTree",
+    "version": "0.17.9",
+    "date": "2025-03-17T12:13:23Z"
   },
   {
     "name": "webmin/webmin",
@@ -885,6 +900,11 @@
     "date": "2025-02-14T16:23:14Z"
   },
   {
+    "name": "TryGhost/Ghost-CLI",
+    "version": "v1.27.0",
+    "date": "2025-02-13T15:55:36Z"
+  },
+  {
     "name": "MariaDB/server",
     "version": "mariadb-11.7.2",
     "date": "2025-02-13T04:13:46Z"
@@ -908,6 +928,11 @@
     "name": "dani-garcia/vaultwarden",
     "version": "1.33.2",
     "date": "2025-02-09T17:54:59Z"
+  },
+  {
+    "name": "slskd/slskd",
+    "version": "0.22.2",
+    "date": "2025-02-09T00:00:04Z"
   },
   {
     "name": "blakeblackshear/frigate",
@@ -1070,6 +1095,11 @@
     "date": "2024-11-16T06:47:56Z"
   },
   {
+    "name": "pterodactyl/panel",
+    "version": "v1.11.10",
+    "date": "2024-11-15T02:29:18Z"
+  },
+  {
     "name": "sabre-io/Baikal",
     "version": "0.10.1",
     "date": "2024-11-10T10:25:45Z"
@@ -1175,6 +1205,11 @@
     "date": "2024-05-13T20:19:54Z"
   },
   {
+    "name": "pterodactyl/wings",
+    "version": "v1.11.13",
+    "date": "2024-05-08T04:20:34Z"
+  },
+  {
     "name": "CrazyWolf13/web-check",
     "version": "1.0.0",
     "date": "2024-05-05T02:01:51Z"
@@ -1198,5 +1233,20 @@
     "name": "wger-project/wger",
     "version": "2.2",
     "date": "2023-12-06T12:08:09Z"
+  },
+  {
+    "name": "deepch/RTSPtoWeb",
+    "version": "v2.4.3",
+    "date": "2023-03-29T12:05:02Z"
+  },
+  {
+    "name": "Shinobi-Systems/Shinobi",
+    "version": "furrykitten-3",
+    "date": "2022-07-15T05:20:17Z"
+  },
+  {
+    "name": "deluge-torrent/deluge",
+    "version": "deluge-2.1.2.dev0",
+    "date": "2022-07-10T13:05:21Z"
   }
 ]
