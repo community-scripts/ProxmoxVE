@@ -1,5 +1,50 @@
 [
   {
+    "name": "TriliumNext/Notes",
+    "version": "v0.92.5",
+    "date": "2025-03-30T12:32:43Z"
+  },
+  {
+    "name": "icereed/paperless-gpt",
+    "version": "v0.14.2",
+    "date": "2025-03-30T19:50:38Z"
+  },
+  {
+    "name": "StarFleetCPTN/GoMFT",
+    "version": "v0.2.4",
+    "date": "2025-03-30T19:46:08Z"
+  },
+  {
+    "name": "semaphoreui/semaphore",
+    "version": "v2.13.3",
+    "date": "2025-03-30T19:24:44Z"
+  },
+  {
+    "name": "louislam/dockge",
+    "version": "1.5.0",
+    "date": "2025-03-30T17:42:59Z"
+  },
+  {
+    "name": "pi-hole/pi-hole",
+    "version": "v6.0.6",
+    "date": "2025-03-30T16:59:06Z"
+  },
+  {
+    "name": "sabnzbd/sabnzbd",
+    "version": "4.5.0",
+    "date": "2025-03-30T16:17:11Z"
+  },
+  {
+    "name": "Part-DB/Part-DB-server",
+    "version": "v1.17.0",
+    "date": "2025-03-30T14:21:53Z"
+  },
+  {
+    "name": "openhab/openhab-core",
+    "version": "4.3.4",
+    "date": "2025-03-30T13:32:38Z"
+  },
+  {
     "name": "pocketbase/pocketbase",
     "version": "v0.26.6",
     "date": "2025-03-30T08:02:19Z"
@@ -61,8 +106,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v3.10.0",
-    "date": "2025-03-15T14:38:16Z"
+    "version": "nightly",
+    "date": "2025-03-29T12:57:40Z"
   },
   {
     "name": "syncthing/syncthing",
@@ -175,11 +220,6 @@
     "date": "2025-03-28T03:45:54Z"
   },
   {
-    "name": "StarFleetCPTN/GoMFT",
-    "version": "v0.2.3",
-    "date": "2025-03-27T23:54:49Z"
-  },
-  {
     "name": "Bubka/2FAuth",
     "version": "v5.5.0",
     "date": "2025-03-27T22:35:02Z"
@@ -193,11 +233,6 @@
     "name": "hivemq/hivemq-community-edition",
     "version": "2025.2",
     "date": "2025-03-27T19:21:13Z"
-  },
-  {
-    "name": "TriliumNext/Notes",
-    "version": "v0.92.4",
-    "date": "2025-03-17T16:00:19Z"
   },
   {
     "name": "fallenbagel/jellyseerr",
@@ -270,11 +305,6 @@
     "date": "2025-03-26T20:39:01Z"
   },
   {
-    "name": "semaphoreui/semaphore",
-    "version": "v2.13.2",
-    "date": "2025-03-26T19:13:48Z"
-  },
-  {
     "name": "dgtlmoon/changedetection.io",
     "version": "0.49.9",
     "date": "2025-03-26T15:31:03Z"
@@ -343,11 +373,6 @@
     "name": "crowdsecurity/crowdsec",
     "version": "v1.6.8",
     "date": "2025-03-25T13:33:10Z"
-  },
-  {
-    "name": "icereed/paperless-gpt",
-    "version": "v0.14.1",
-    "date": "2025-03-25T10:09:14Z"
   },
   {
     "name": "VictoriaMetrics/VictoriaMetrics",
@@ -433,11 +458,6 @@
     "name": "netbox-community/netbox",
     "version": "v4.2.6",
     "date": "2025-03-21T21:20:29Z"
-  },
-  {
-    "name": "sabnzbd/sabnzbd",
-    "version": "4.4.1",
-    "date": "2024-12-20T13:21:31Z"
   },
   {
     "name": "leiweibau/Pi.Alert",
@@ -725,11 +745,6 @@
     "date": "2025-03-04T19:05:18Z"
   },
   {
-    "name": "pi-hole/pi-hole",
-    "version": "v6.0.5",
-    "date": "2025-03-04T17:28:41Z"
-  },
-  {
     "name": "sysadminsmedia/homebox",
     "version": "v0.18.0",
     "date": "2025-03-04T15:35:27Z"
@@ -763,11 +778,6 @@
     "name": "cross-seed/cross-seed",
     "version": "v6.11.2",
     "date": "2025-02-26T14:54:49Z"
-  },
-  {
-    "name": "Part-DB/Part-DB-server",
-    "version": "v1.16.1",
-    "date": "2025-02-26T11:29:15Z"
   },
   {
     "name": "silverbulletmd/silverbullet",
@@ -813,11 +823,6 @@
     "name": "Athou/commafeed",
     "version": "5.6.1",
     "date": "2025-02-23T20:39:48Z"
-  },
-  {
-    "name": "openhab/openhab-core",
-    "version": "5.0.0.M1",
-    "date": "2025-02-23T14:55:36Z"
   },
   {
     "name": "outline/outline",
@@ -1183,11 +1188,6 @@
     "name": "thelounge/thelounge-deb",
     "version": "v4.4.3",
     "date": "2024-04-06T12:24:35Z"
-  },
-  {
-    "name": "louislam/dockge",
-    "version": "1.4.2",
-    "date": "2024-01-21T17:02:52Z"
   },
   {
     "name": "hyperion-project/hyperion.ng",
