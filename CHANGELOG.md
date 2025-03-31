@@ -22,6 +22,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
+  - 2FAuth: Update PHP to 8.3 [@BrockHumblet](https://github.com/BrockHumblet) ([#3510](https://github.com/community-scripts/ProxmoxVE/pull/3510))
+
   - #### 🐞 Bug Fixes
 
     - GoMFT: Update Curl Path [@MickLesk](https://github.com/MickLesk) ([#3537](https://github.com/community-scripts/ProxmoxVE/pull/3537))
@@ -44,6 +46,10 @@ All LXC instances created using this repository come pre-installed with Midnight
     - core: fix empty header if header in repo exist [@MickLesk](https://github.com/MickLesk) ([#3536](https://github.com/community-scripts/ProxmoxVE/pull/3536))
 
 ### 🌐 Website
+
+  - #### ✨ New Features
+
+    - Change Frontend Version Info [@MickLesk](https://github.com/MickLesk) ([#3527](https://github.com/community-scripts/ProxmoxVE/pull/3527))
 
   - #### 📝 Script Information
 
