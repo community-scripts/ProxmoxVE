@@ -27,6 +27,13 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  if ! dpkg -l build-essential >/dev/null 2>&1; then
+    $STD apt-get update
+    $STD apt-get install -y build-essential
+  fi
+  if ! npm list -g node-gyp >/dev/null 2>&1; then
+    $STD npm install -g node-gyp
+  fi
   RELEASE=$(curl -s https://api.github.com/repos/thelounge/thelounge-deb/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
   if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
     msg_info "Stopping Service"

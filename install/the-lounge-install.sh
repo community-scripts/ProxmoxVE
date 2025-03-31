@@ -14,7 +14,9 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y gpg
+$STD apt-get install -y \
+  gpg \
+  build-essential
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up Node.js Repository"
@@ -27,6 +29,7 @@ msg_info "Installing Node.js"
 $STD apt-get update
 $STD apt-get install -y nodejs
 $STD npm install --global yarn
+$STD npm install --global node-gyp
 msg_ok "Installed Node.js"
 
 msg_info "Installing The Lounge"
