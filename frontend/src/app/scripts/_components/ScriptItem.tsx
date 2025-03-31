@@ -158,45 +158,79 @@ function ScriptItem({
       hdd,
     }: {
       title: string;
-      cpu: number;
-      ram: number;
-      hdd: number;
-    }) => (
-      <div className="flex items-center gap-2 flex-wrap">
-        <span className="font-semibold text-foreground">{title}:</span>
-        <IconText icon={CPUIcon} label={`CPU: ${cpu} vCPU`} />
-        <span>|</span>
-        <IconText icon={RAMIcon} label={`RAM: ${getDisplayValueFromRAM(ram)}`} />
-        <span>|</span>
-        <IconText icon={HDDIcon} label={`HDD: ${hdd} GB`} />
-      </div>
-    );
-
+      cpu: number | null;
+      ram: number | null;
+      hdd: number | null;
+    }) => {
+      const getDisplayValueFromRAM = (ram: number) =>
+        ram >= 1024 ? `${Math.floor(ram / 1024)}GB` : `${ram}MB`;
+    
+      const IconText = ({
+        icon,
+        label,
+      }: {
+        icon: React.ReactNode;
+        label: string;
+      }) => (
+        <span className="flex items-center gap-1 whitespace-nowrap">
+          {icon}
+          {label}
+        </span>
+      );
+    
+      const hasCPU = typeof cpu === 'number' && cpu > 0;
+      const hasRAM = typeof ram === 'number' && ram > 0;
+      const hasHDD = typeof hdd === 'number' && hdd > 0;
+    
+      if (!hasCPU && !hasRAM && !hasHDD) return null;
+    
+      return (
+        <div className="flex flex-wrap items-center gap-1">
+          <span className="font-semibold text-foreground">{title}:</span>
+          {hasCPU && (
+            <>
+              <IconText icon={CPUIcon} label={`CPU: ${cpu} vCPU`} />
+              <span>|</span>
+            </>
+          )}
+          {hasRAM && (
+            <>
+              <IconText icon={RAMIcon} label={`RAM: ${getDisplayValueFromRAM(ram!)}`} />
+              <span>|</span>
+            </>
+          )}
+          {hasHDD && (
+            <IconText icon={HDDIcon} label={`HDD: ${hdd} GB`} />
+          )}
+        </div>
+      );
+    };
+    
     const defaultSettings = item.install_methods.find(
       (method) => method.type === 'default'
     );
     const alpineSettings = item.install_methods.find(
       (method) => method.type === 'alpine'
     );
-
     return (
       <>
-        {defaultSettings?.resources && (
-          <ResourceDisplay
-            title="Default"
-            cpu={defaultSettings.resources.cpu}
-            ram={defaultSettings.resources.ram ?? 0}
-            hdd={defaultSettings.resources.hdd}
-          />
-        )}
-        {alpineSettings?.resources && (
-          <ResourceDisplay
-            title="Alpine"
-            cpu={alpineSettings.resources.cpu}
-            ram={alpineSettings.resources.ram ?? 0}
-            hdd={alpineSettings.resources.hdd}
-          />
-        )}
+       {defaultSettings?.resources && (
+  <ResourceDisplay
+    title="Default"
+    cpu={defaultSettings.resources.cpu}
+    ram={defaultSettings.resources.ram}
+    hdd={defaultSettings.resources.hdd}
+  />
+)}
+
+{alpineSettings?.resources && (
+  <ResourceDisplay
+    title="Alpine"
+    cpu={alpineSettings.resources.cpu}
+    ram={alpineSettings.resources.ram}
+    hdd={alpineSettings.resources.hdd}
+  />
+)}
       </>
     );
   })()}
