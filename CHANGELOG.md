@@ -16,12 +16,20 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-03-31
 
+### 🆕 New Scripts
+
+  - slskd [@vhsdream](https://github.com/vhsdream) ([#3516](https://github.com/community-scripts/ProxmoxVE/pull/3516))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
 
     - Docmost: Bump NodeJS to 22 & fixed pnpm [@MickLesk](https://github.com/MickLesk) ([#3521](https://github.com/community-scripts/ProxmoxVE/pull/3521))
     - Tianji: Bump NodeJS to V22 [@MickLesk](https://github.com/MickLesk) ([#3519](https://github.com/community-scripts/ProxmoxVE/pull/3519))
+
+  - #### ✨ New Features
+
+    - NPMPlus: update function & better create handling (user/password) [@MickLesk](https://github.com/MickLesk) ([#3520](https://github.com/community-scripts/ProxmoxVE/pull/3520))
 
   - #### 🔧 Refactor
 
