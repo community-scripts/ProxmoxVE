@@ -20,16 +20,34 @@ color
 catch_errors
 
 function update_script() {
-    UPD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "SUPPORT" --radiolist --cancel-button Exit-Script "Spacebar = Select" 11 58 1 \
-        "1" "Check for Alpine Updates" ON \
+    UPD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "UPDATE MODE" --radiolist --cancel-button Exit-Script "Spacebar = Select" 14 60 2 \
+        "1" "Check for Alpine Updates" OFF \
+        "2" "Update NPMplus Docker Container" ON \
         3>&1 1>&2 2>&3)
 
-    header_info
-    if [ "$UPD" == "1" ]; then
-        apk update && apk upgrade
-        exit
-    fi
+    header_info "$APP"
+
+    case "$UPD" in
+        "1")
+            msg_info "Updating Alpine OS"
+            apk update && apk upgrade
+            msg_ok "System updated"
+            exit
+            ;;
+        "2")
+            msg_info "Updating NPMplus Container"
+            cd /opt || exit 1
+            msg_info "Pulling latest container image"
+            $STD docker compose pull
+            msg_info "Recreating container"
+            $STD docker compose up -d
+            msg_ok "NPMplus container updated"
+            exit
+            ;;
+    esac
+    exit 0
 }
+
 
 start
 build_container
