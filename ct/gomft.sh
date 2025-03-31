@@ -47,9 +47,9 @@ function update_script() {
     msg_info "Updating $APP to ${RELEASE}"
     rm -f /opt/gomft/gomft
     temp_file=$(mktemp)
-    curl -fsSL "https://github.com/StarFleetCPTN/GoMFT/archive/refs/tags/v.${RELEASE}.tar.gz" -o $temp_file
+    curl -fsSL "https://github.com/StarFleetCPTN/GoMFT/archive/refs/tags/v${RELEASE}.tar.gz" -o $temp_file
     tar -xzf $temp_file
-    cp -rf GoMFT-v.${RELEASE}/* /opt/gomft
+    cp -rf GoMFT-${RELEASE}/* /opt/gomft
     cd /opt/gomft
     rm -f /opt/gomft/node_modules
     $STD npm ci
