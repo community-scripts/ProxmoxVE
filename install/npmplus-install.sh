@@ -15,14 +15,9 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apk add \
-    newt \
-    curl \
-    openssh \
     tzdata \
-    nano \
     gawk \
-    yq \
-    mc
+    yq
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Docker & Compose"
@@ -95,7 +90,7 @@ customize
 msg_info "Retrieving Default Login (Patience)"
 PASSWORD_FOUND=0
 for i in {1..60}; do
-    PASSWORD_LINE=$(docker logs "$CONTAINER_ID" 2>&1 | grep -m1 "Creating a new user:")
+    PASSWORD_LINE=$(docker logs "$CONTAINER_ID" 2>&1 | awk '/Creating a new user:/ { print; exit }')
     if [[ -n "$PASSWORD_LINE" ]]; then
         PASSWORD=$(echo "$PASSWORD_LINE" | awk -F 'password: ' '{print $2}')
         echo -e "username: admin@example.org\npassword: $PASSWORD" >/opt/.npm_pwd
@@ -107,5 +102,6 @@ for i in {1..60}; do
 done
 
 if [[ $PASSWORD_FOUND -eq 0 ]]; then
-    msg_ok "No default login found, use docker ps & docker logs for container password."
+    msg_error "Could not retrieve default login after 60 seconds."
+    echo -e "\nYou can manually check the container logs with:\n  docker logs $CONTAINER_ID | grep 'Creating a new user:'\n"
 fi
