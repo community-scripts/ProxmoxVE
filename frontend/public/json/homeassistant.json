@@ -37,10 +37,10 @@
         },
         {
             "text": "config path: `/var/lib/docker/volumes/hass_config/_data`",
-            "type": "warning"
+            "type": "info"
         },
         {
-            "text": "Portainer Interface: LXC-IP: 9443",
+            "text": "Portainer interface: $IP: 9443 - User & password must be set manually within 5 minutes, otherwise a restart of Portainer is required!",
             "type": "info"
         },
         {
