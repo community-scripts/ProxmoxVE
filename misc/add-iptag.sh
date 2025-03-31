@@ -136,7 +136,7 @@ fi
 
 # Convert IP to integer for comparison
 ip_to_int() {
-  local ip="${1}"
+  local ip="$1"
   local a b c d
   IFS=. read -r a b c d <<< "${ip}"
   echo "$((a << 24 | b << 16 | c << 8 | d))"
@@ -144,40 +144,34 @@ ip_to_int() {
 
 # Check if IP is in CIDR
 ip_in_cidr() {
-  local ip="${1}"
-  local cidr="${2}"
-  ip_int=$(ip_to_int "${ip}")
-  netmask_int=$(ip_to_int "$(ipcalc -b "${cidr}" | grep Broadcast | awk '{print $2}')")
-  masked_ip_int=$(( "${ip_int}" & "${netmask_int}" ))
-  [[ ${ip_int} -eq ${masked_ip_int} ]] && return 0 || return 1
+  local ip="$1"
+  local cidr="$2"
+  local ip_int=$(ip_to_int "$ip")
+  local netmask_int=$(ip_to_int "$(ipcalc -b "$cidr" | grep Broadcast | awk '{print $2}')")
+  [[ $((ip_int & netmask_int)) -eq $((ip_int & netmask_int)) ]] && return 0 || return 1
 }
 
 # Check if IP is in any CIDRs
 ip_in_cidrs() {
-  local ip="${1}"
+  local ip="$1"
   local cidrs=()
-  mapfile -t cidrs < <(echo "${2}" | tr ' ' '\n')
+  mapfile -t cidrs < <(echo "$2" | tr ' ' '\n')
   for cidr in "${cidrs[@]}"; do
-    ip_in_cidr "${ip}" "${cidr}" && return 0
+    ip_in_cidr "$ip" "$cidr" && return 0
   done
   return 1
 }
 
 # Check if IP is valid
 is_valid_ipv4() {
-  local ip=$1
-  local regex="^([0-9]{1,3}\.){3}[0-9]{1,3}$"
-  if [[ $ip =~ $regex ]]; then
-    IFS='.' read -r -a parts <<< "$ip"
-    for part in "${parts[@]}"; do
-      if ! [[ $part =~ ^[0-9]+$ ]] || ((part < 0 || part > 255)); then
-        return 1
-      fi
-    done
-    return 0
-  else
-    return 1
-  fi
+  local ip="$1"
+  [[ "$ip" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]] || return 1
+  local IFS='.'
+  read -ra parts <<< "$ip"
+  for part in "${parts[@]}"; do
+    [[ "$part" =~ ^[0-9]+$ ]] && ((part >= 0 && part <= 255)) || return 1
+  done
+  return 0
 }
 
 lxc_status_changed() {
@@ -234,81 +228,63 @@ get_vm_ips() {
   echo "$ips"
 }
 
-# =============== MAIN =============== #
-update_lxc_iptags() {
-  vmid_list=$(pct list 2>/dev/null | grep -v VMID | awk '{print $1}')
-  for vmid in ${vmid_list}; do
-    last_tagged_ips=()
-    current_valid_ips=()
-    next_tags=()
-    
-    # Parse current tags
-    mapfile -t current_tags < <(pct config "${vmid}" | grep tags | awk '{print $2}' | sed 's/;/\n/g')
-    for current_tag in "${current_tags[@]}"; do
-      if is_valid_ipv4 "${current_tag}"; then
-        last_tagged_ips+=("${current_tag}")
-        continue
-      fi
-      next_tags+=("${current_tag}")
-    done
-    
-    # Get current IPs
+# Update tags for container or VM
+update_tags() {
+  local type="$1"
+  local vmid="$2"
+  local config_cmd="pct"
+  [[ "$type" == "vm" ]] && config_cmd="qm"
+  
+  # Get current IPs
+  local current_ips_full
+  if [[ "$type" == "lxc" ]]; then
     current_ips_full=$(lxc-info -n "${vmid}" -i | awk '{print $2}')
-    for ip in ${current_ips_full}; do
-      if is_valid_ipv4 "${ip}" && ip_in_cidrs "${ip}" "${CIDR_LIST[*]}"; then
-        current_valid_ips+=("${ip}")
-        next_tags+=("${ip}")
-      fi
-    done
-    
-    # Skip if no ip change
-    if [[ "$(echo "${last_tagged_ips[@]}" | tr ' ' '\n' | sort -u)" == "$(echo "${current_valid_ips[@]}" | tr ' ' '\n' | sort -u)" ]]; then
-      echo "Skipping LXC ${vmid} cause ip no changes"
-      continue
-    fi
-    
-    # Set tags
-    echo "Setting LXC ${vmid} tags from ${current_tags[*]} to ${next_tags[*]}"
-    pct set "${vmid}" -tags "$(IFS=';'; echo "${next_tags[*]}")"
+  else
+    current_ips_full=$(get_vm_ips "${vmid}")
+  fi
+  
+  # Parse current tags and get valid IPs
+  local current_tags=()
+  local next_tags=()
+  mapfile -t current_tags < <($config_cmd config "${vmid}" | grep tags | awk '{print $2}' | sed 's/;/\n/g')
+  
+  for tag in "${current_tags[@]}"; do
+    is_valid_ipv4 "${tag}" || next_tags+=("${tag}")
   done
+  
+  # Add valid IPs to tags
+  for ip in ${current_ips_full}; do
+    is_valid_ipv4 "${ip}" && ip_in_cidrs "${ip}" "${CIDR_LIST[*]}" && next_tags+=("${ip}")
+  done
+  
+  # Update if changed
+  [[ "$(IFS=';'; echo "${current_tags[*]}")" != "$(IFS=';'; echo "${next_tags[*]}")" ]] && \
+    $config_cmd set "${vmid}" -tags "$(IFS=';'; echo "${next_tags[*]}")"
 }
 
-update_vm_iptags() {
-  vmid_list=$(qm list 2>/dev/null | grep -v VMID | awk '{print $1}')
-  for vmid in ${vmid_list}; do
-    last_tagged_ips=()
-    current_valid_ips=()
-    next_tags=()
-    
-    # Parse current tags
-    mapfile -t current_tags < <(qm config "${vmid}" | grep tags | awk '{print $2}' | sed 's/;/\n/g')
-    for current_tag in "${current_tags[@]}"; do
-      if is_valid_ipv4 "${current_tag}"; then
-        last_tagged_ips+=("${current_tag}")
-        continue
-      fi
-      next_tags+=("${current_tag}")
-    done
-    
-    # Get current IPs
-    current_ips_full=$(get_vm_ips "${vmid}")
-    for ip in ${current_ips_full}; do
-      if is_valid_ipv4 "${ip}" && ip_in_cidrs "${ip}" "${CIDR_LIST[*]}"; then
-        current_valid_ips+=("${ip}")
-        next_tags+=("${ip}")
-      fi
-    done
-    
-    # Skip if no ip change
-    if [[ "$(echo "${last_tagged_ips[@]}" | tr ' ' '\n' | sort -u)" == "$(echo "${current_valid_ips[@]}" | tr ' ' '\n' | sort -u)" ]]; then
-      echo "Skipping VM ${vmid} cause ip no changes"
-      continue
-    fi
-    
-    # Set tags
-    echo "Setting VM ${vmid} tags from ${current_tags[*]} to ${next_tags[*]}"
-    qm set "${vmid}" -tags "$(IFS=';'; echo "${next_tags[*]}")"
-  done
+# Check if status changed
+check_status_changed() {
+  local type="$1"
+  local current_status
+  
+  case "$type" in
+    "lxc")
+      current_status=$(pct list 2>/dev/null)
+      [[ "${last_lxc_status}" == "${current_status}" ]] && return 1
+      last_lxc_status="${current_status}"
+      ;;
+    "vm")
+      current_status=$(qm list 2>/dev/null)
+      [[ "${last_vm_status}" == "${current_status}" ]] && return 1
+      last_vm_status="${current_status}"
+      ;;
+    "fw")
+      current_status=$(ifconfig | grep "^fw")
+      [[ "${last_net_interface}" == "${current_status}" ]] && return 1
+      last_net_interface="${current_status}"
+      ;;
+  esac
+  return 0
 }
 
 check() {
@@ -320,8 +296,8 @@ check() {
     && [[ "${time_since_last_lxc_status_check}" -ge "${LXC_STATUS_CHECK_INTERVAL}" ]]; then
     echo "Checking lxc status..."
     last_lxc_status_check_time=${current_time}
-    if lxc_status_changed; then
-      update_lxc_iptags
+    if check_status_changed "lxc"; then
+      update_tags "lxc" "${vmid}"
       last_update_lxc_time=${current_time}
     fi
   fi
@@ -332,8 +308,8 @@ check() {
     && [[ "${time_since_last_vm_status_check}" -ge "${VM_STATUS_CHECK_INTERVAL}" ]]; then
     echo "Checking vm status..."
     last_vm_status_check_time=${current_time}
-    if vm_status_changed; then
-      update_vm_iptags
+    if check_status_changed "vm"; then
+      update_tags "vm" "${vmid}"
       last_update_vm_time=${current_time}
     fi
   fi
@@ -344,29 +320,27 @@ check() {
     && [[ "${time_since_last_fw_net_interface_check}" -ge "${FW_NET_INTERFACE_CHECK_INTERVAL}" ]]; then
     echo "Checking fw net interface..."
     last_fw_net_interface_check_time=${current_time}
-    if fw_net_interface_changed; then
-      update_lxc_iptags
-      update_vm_iptags
+    if check_status_changed "fw"; then
+      update_tags "lxc" "${vmid}"
+      update_tags "vm" "${vmid}"
       last_update_lxc_time=${current_time}
       last_update_vm_time=${current_time}
     fi
   fi
   
-  # Force update LXC if needed
-  time_since_last_lxc_update=$((current_time - last_update_lxc_time))
-  if [ ${time_since_last_lxc_update} -ge ${FORCE_UPDATE_INTERVAL} ]; then
-    echo "Force updating lxc iptags..."
-    update_lxc_iptags
-    last_update_lxc_time=${current_time}
-  fi
-  
-  # Force update VM if needed
-  time_since_last_vm_update=$((current_time - last_update_vm_time))
-  if [ ${time_since_last_vm_update} -ge ${FORCE_UPDATE_INTERVAL} ]; then
-    echo "Force updating vm iptags..."
-    update_vm_iptags
-    last_update_vm_time=${current_time}
-  fi
+  # Force update if needed
+  for type in "lxc" "vm"; do
+    local last_update_var="last_update_${type}_time"
+    local time_since_last_update=$((current_time - ${!last_update_var}))
+    if [ ${time_since_last_update} -ge ${FORCE_UPDATE_INTERVAL} ]; then
+      echo "Force updating ${type} iptags..."
+      case "$type" in
+        "lxc") update_tags "lxc" "${vmid}" ;;
+        "vm") update_tags "vm" "${vmid}" ;;
+      esac
+      eval "${last_update_var}=${current_time}"
+    fi
+  done
 }
 
 # Initialize time variables
@@ -504,7 +478,7 @@ fi
 
 # Convert IP to integer for comparison
 ip_to_int() {
-  local ip="${1}"
+  local ip="$1"
   local a b c d
   IFS=. read -r a b c d <<< "${ip}"
   echo "$((a << 24 | b << 16 | c << 8 | d))"
@@ -512,40 +486,34 @@ ip_to_int() {
 
 # Check if IP is in CIDR
 ip_in_cidr() {
-  local ip="${1}"
-  local cidr="${2}"
-  ip_int=$(ip_to_int "${ip}")
-  netmask_int=$(ip_to_int "$(ipcalc -b "${cidr}" | grep Broadcast | awk '{print $2}')")
-  masked_ip_int=$(( "${ip_int}" & "${netmask_int}" ))
-  [[ ${ip_int} -eq ${masked_ip_int} ]] && return 0 || return 1
+  local ip="$1"
+  local cidr="$2"
+  local ip_int=$(ip_to_int "$ip")
+  local netmask_int=$(ip_to_int "$(ipcalc -b "$cidr" | grep Broadcast | awk '{print $2}')")
+  [[ $((ip_int & netmask_int)) -eq $((ip_int & netmask_int)) ]] && return 0 || return 1
 }
 
 # Check if IP is in any CIDRs
 ip_in_cidrs() {
-  local ip="${1}"
+  local ip="$1"
   local cidrs=()
-  mapfile -t cidrs < <(echo "${2}" | tr ' ' '\n')
+  mapfile -t cidrs < <(echo "$2" | tr ' ' '\n')
   for cidr in "${cidrs[@]}"; do
-    ip_in_cidr "${ip}" "${cidr}" && return 0
+    ip_in_cidr "$ip" "$cidr" && return 0
   done
   return 1
 }
 
 # Check if IP is valid
 is_valid_ipv4() {
-  local ip=$1
-  local regex="^([0-9]{1,3}\.){3}[0-9]{1,3}$"
-  if [[ $ip =~ $regex ]]; then
-    IFS='.' read -r -a parts <<< "$ip"
-    for part in "${parts[@]}"; do
-      if ! [[ $part =~ ^[0-9]+$ ]] || ((part < 0 || part > 255)); then
-        return 1
-      fi
-    done
-    return 0
-  else
-    return 1
-  fi
+  local ip="$1"
+  [[ "$ip" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]] || return 1
+  local IFS='.'
+  read -ra parts <<< "$ip"
+  for part in "${parts[@]}"; do
+    [[ "$part" =~ ^[0-9]+$ ]] && ((part >= 0 && part <= 255)) || return 1
+  done
+  return 0
 }
 
 lxc_status_changed() {
@@ -602,81 +570,38 @@ get_vm_ips() {
   echo "$ips"
 }
 
-# =============== MAIN =============== #
-update_lxc_iptags() {
-  vmid_list=$(pct list 2>/dev/null | grep -v VMID | awk '{print $1}')
-  for vmid in ${vmid_list}; do
-    last_tagged_ips=()
-    current_valid_ips=()
-    next_tags=()
-    
-    # Parse current tags
-    mapfile -t current_tags < <(pct config "${vmid}" | grep tags | awk '{print $2}' | sed 's/;/\n/g')
-    for current_tag in "${current_tags[@]}"; do
-      if is_valid_ipv4 "${current_tag}"; then
-        last_tagged_ips+=("${current_tag}")
-        continue
-      fi
-      next_tags+=("${current_tag}")
-    done
-    
-    # Get current IPs
+# Update tags for container or VM
+update_tags() {
+  local type="$1"
+  local vmid="$2"
+  local config_cmd="pct"
+  [[ "$type" == "vm" ]] && config_cmd="qm"
+  
+  # Get current IPs
+  local current_ips_full
+  if [[ "$type" == "lxc" ]]; then
     current_ips_full=$(lxc-info -n "${vmid}" -i | awk '{print $2}')
-    for ip in ${current_ips_full}; do
-      if is_valid_ipv4 "${ip}" && ip_in_cidrs "${ip}" "${CIDR_LIST[*]}"; then
-        current_valid_ips+=("${ip}")
-        next_tags+=("${ip}")
-      fi
-    done
-    
-    # Skip if no ip change
-    if [[ "$(echo "${last_tagged_ips[@]}" | tr ' ' '\n' | sort -u)" == "$(echo "${current_valid_ips[@]}" | tr ' ' '\n' | sort -u)" ]]; then
-      echo "Skipping LXC ${vmid} cause ip no changes"
-      continue
-    fi
-    
-    # Set tags
-    echo "Setting LXC ${vmid} tags from ${current_tags[*]} to ${next_tags[*]}"
-    pct set "${vmid}" -tags "$(IFS=';'; echo "${next_tags[*]}")"
-  done
-}
-
-update_vm_iptags() {
-  vmid_list=$(qm list 2>/dev/null | grep -v VMID | awk '{print $1}')
-  for vmid in ${vmid_list}; do
-    last_tagged_ips=()
-    current_valid_ips=()
-    next_tags=()
-    
-    # Parse current tags
-    mapfile -t current_tags < <(qm config "${vmid}" | grep tags | awk '{print $2}' | sed 's/;/\n/g')
-    for current_tag in "${current_tags[@]}"; do
-      if is_valid_ipv4 "${current_tag}"; then
-        last_tagged_ips+=("${current_tag}")
-        continue
-      fi
-      next_tags+=("${current_tag}")
-    done
-    
-    # Get current IPs
+  else
     current_ips_full=$(get_vm_ips "${vmid}")
-    for ip in ${current_ips_full}; do
-      if is_valid_ipv4 "${ip}" && ip_in_cidrs "${ip}" "${CIDR_LIST[*]}"; then
-        current_valid_ips+=("${ip}")
-        next_tags+=("${ip}")
-      fi
-    done
-    
-    # Skip if no ip change
-    if [[ "$(echo "${last_tagged_ips[@]}" | tr ' ' '\n' | sort -u)" == "$(echo "${current_valid_ips[@]}" | tr ' ' '\n' | sort -u)" ]]; then
-      echo "Skipping VM ${vmid} cause ip no changes"
-      continue
-    fi
-    
-    # Set tags
-    echo "Setting VM ${vmid} tags from ${current_tags[*]} to ${next_tags[*]}"
-    qm set "${vmid}" -tags "$(IFS=';'; echo "${next_tags[*]}")"
+  fi
+  
+  # Parse current tags and get valid IPs
+  local current_tags=()
+  local next_tags=()
+  mapfile -t current_tags < <($config_cmd config "${vmid}" | grep tags | awk '{print $2}' | sed 's/;/\n/g')
+  
+  for tag in "${current_tags[@]}"; do
+    is_valid_ipv4 "${tag}" || next_tags+=("${tag}")
   done
+  
+  # Add valid IPs to tags
+  for ip in ${current_ips_full}; do
+    is_valid_ipv4 "${ip}" && ip_in_cidrs "${ip}" "${CIDR_LIST[*]}" && next_tags+=("${ip}")
+  done
+  
+  # Update if changed
+  [[ "$(IFS=';'; echo "${current_tags[*]}")" != "$(IFS=';'; echo "${next_tags[*]}")" ]] && \
+    $config_cmd set "${vmid}" -tags "$(IFS=';'; echo "${next_tags[*]}")"
 }
 
 check() {
@@ -688,8 +613,8 @@ check() {
     && [[ "${time_since_last_lxc_status_check}" -ge "${LXC_STATUS_CHECK_INTERVAL}" ]]; then
     echo "Checking lxc status..."
     last_lxc_status_check_time=${current_time}
-    if lxc_status_changed; then
-      update_lxc_iptags
+    if check_status_changed "lxc"; then
+      update_tags "lxc" "${vmid}"
       last_update_lxc_time=${current_time}
     fi
   fi
@@ -700,8 +625,8 @@ check() {
     && [[ "${time_since_last_vm_status_check}" -ge "${VM_STATUS_CHECK_INTERVAL}" ]]; then
     echo "Checking vm status..."
     last_vm_status_check_time=${current_time}
-    if vm_status_changed; then
-      update_vm_iptags
+    if check_status_changed "vm"; then
+      update_tags "vm" "${vmid}"
       last_update_vm_time=${current_time}
     fi
   fi
@@ -712,29 +637,27 @@ check() {
     && [[ "${time_since_last_fw_net_interface_check}" -ge "${FW_NET_INTERFACE_CHECK_INTERVAL}" ]]; then
     echo "Checking fw net interface..."
     last_fw_net_interface_check_time=${current_time}
-    if fw_net_interface_changed; then
-      update_lxc_iptags
-      update_vm_iptags
+    if check_status_changed "fw"; then
+      update_tags "lxc" "${vmid}"
+      update_tags "vm" "${vmid}"
       last_update_lxc_time=${current_time}
       last_update_vm_time=${current_time}
     fi
   fi
   
-  # Force update LXC if needed
-  time_since_last_lxc_update=$((current_time - last_update_lxc_time))
-  if [ ${time_since_last_lxc_update} -ge ${FORCE_UPDATE_INTERVAL} ]; then
-    echo "Force updating lxc iptags..."
-    update_lxc_iptags
-    last_update_lxc_time=${current_time}
-  fi
-  
-  # Force update VM if needed
-  time_since_last_vm_update=$((current_time - last_update_vm_time))
-  if [ ${time_since_last_vm_update} -ge ${FORCE_UPDATE_INTERVAL} ]; then
-    echo "Force updating vm iptags..."
-    update_vm_iptags
-    last_update_vm_time=${current_time}
-  fi
+  # Force update if needed
+  for type in "lxc" "vm"; do
+    local last_update_var="last_update_${type}_time"
+    local time_since_last_update=$((current_time - ${!last_update_var}))
+    if [ ${time_since_last_update} -ge ${FORCE_UPDATE_INTERVAL} ]; then
+      echo "Force updating ${type} iptags..."
+      case "$type" in
+        "lxc") update_tags "lxc" "${vmid}" ;;
+        "vm") update_tags "vm" "${vmid}" ;;
+      esac
+      eval "${last_update_var}=${current_time}"
+    fi
+  done
 }
 
 # Initialize time variables
