@@ -80,7 +80,7 @@ function ScriptItem({
                   <div className="flex h-full w-full flex-col justify-between">
                     <div>
                       <h1 className="text-lg font-semibold">
-                        {item.name} {getDisplayValueFromType(item.type)}
+                        {item.name} {getDisplayValueFromType(item.type)} 
                       </h1>
                       <p className="w-full text-sm text-muted-foreground">
                         Date added: {extractDate(item.date_created)}
@@ -89,35 +89,149 @@ function ScriptItem({
                         Default OS: {os} {version}
                       </p>
                     </div>
-                    <div className="flex gap-5">
-                      <DefaultSettings item={item} />
-                    </div>
-                    <div>{versions.length === 0 ? (<p>Loading versions...</p>) :
-                      (<>
-                        <p className="text-l text-foreground">Version:</p>
-                        <p className="text-l text-muted-foreground">{versions.find((v) =>
-                          v.name === item.slug.replace(/[^a-z0-9]/g, '') ||
-                          v.name.includes(item.slug.replace(/[^a-z0-9]/g, '')) ||
-                          v.name.replace(/[^a-z0-9]/g, '') === item.slug.replace(/[^a-z0-9]/g, '')
+                    <div className="flex min-w-[600px] flex-wrap gap-6 text-sm text-muted-foreground">
 
-                        )?.version || "No Version information found"
-                        }</p>
-                        <p className="text-l text-foreground">Latest Version changes(Pulled from newreleases.io):</p>
-                        <p className="text-l text-muted-foreground">
-                          {(() => {
-                            const matchedVersion = versions.find((v) =>
-                              v.name === item.slug.replace(/[^a-z0-9]/g, '') ||
-                              v.name.includes(item.slug.replace(/[^a-z0-9]/g, '')) ||
-                              v.name.replace(/[^a-z0-9]/g, '') === item.slug.replace(/[^a-z0-9]/g, '')
-                            );
-                            return matchedVersion?.date ?
-                              extractDate(matchedVersion.date as unknown as string) :
-                              "No date information found"
-                          })()}
-                        </p>
-                      </>)
-                    }
-                    </div>
+  {(() => {
+    const getDisplayValueFromRAM = (ram: number) =>
+      ram >= 1024 ? `${Math.floor(ram / 1024)}GB` : `${ram}MB`;
+
+    const IconText = ({
+      icon,
+      label,
+    }: {
+      icon: React.ReactNode;
+      label: string;
+    }) => (
+      <span className="flex items-center gap-1">
+        {icon}
+        {label}
+      </span>
+    );
+
+    const CPUIcon = (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-4 h-4"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        strokeWidth={2}
+      >
+        <rect x="9" y="9" width="6" height="6" />
+        <path d="M3 9h2m14 0h2M3 15h2m14 0h2M9 3v2m6-2v2M9 19v2m6-2v2" />
+      </svg>
+    );
+
+    const RAMIcon = (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-4 h-4"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        strokeWidth={2}
+      >
+        <rect x="4" y="6" width="16" height="12" rx="2" ry="2" />
+        <path d="M8 6v12M16 6v12" />
+      </svg>
+    );
+
+    const HDDIcon = (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-4 h-4"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        strokeWidth={2}
+      >
+        <path d="M4 4h16v16H4z" />
+        <circle cx="8" cy="16" r="1" />
+        <circle cx="16" cy="16" r="1" />
+      </svg>
+    );
+
+    const ResourceDisplay = ({
+      title,
+      cpu,
+      ram,
+      hdd,
+    }: {
+      title: string;
+      cpu: number;
+      ram: number;
+      hdd: number;
+    }) => (
+      <div className="flex items-center gap-2 flex-wrap">
+        <span className="font-semibold text-foreground">{title}:</span>
+        <IconText icon={CPUIcon} label={`CPU: ${cpu} vCPU`} />
+        <span>|</span>
+        <IconText icon={RAMIcon} label={`RAM: ${getDisplayValueFromRAM(ram)}`} />
+        <span>|</span>
+        <IconText icon={HDDIcon} label={`HDD: ${hdd} GB`} />
+      </div>
+    );
+
+    const defaultSettings = item.install_methods.find(
+      (method) => method.type === 'default'
+    );
+    const alpineSettings = item.install_methods.find(
+      (method) => method.type === 'alpine'
+    );
+
+    return (
+      <>
+        {defaultSettings?.resources && (
+          <ResourceDisplay
+            title="Default"
+            cpu={defaultSettings.resources.cpu}
+            ram={defaultSettings.resources.ram ?? 0}
+            hdd={defaultSettings.resources.hdd}
+          />
+        )}
+        {alpineSettings?.resources && (
+          <ResourceDisplay
+            title="Alpine"
+            cpu={alpineSettings.resources.cpu}
+            ram={alpineSettings.resources.ram ?? 0}
+            hdd={alpineSettings.resources.hdd}
+          />
+        )}
+      </>
+    );
+  })()}
+</div>
+
+
+                    {(() => {
+  if (versions.length === 0) {
+    return <p>Loading versions...</p>
+  }
+
+  const cleanSlug = item.slug.replace(/[^a-z0-9]/gi, '').toLowerCase()
+
+  const matched = versions.find((v) => {
+    const cleanName = v.name.replace(/[^a-z0-9]/gi, '').toLowerCase()
+    return cleanName === cleanSlug || cleanName.includes(cleanSlug)
+  })
+
+  if (!matched) return null
+
+  return (
+    <div className="flex items-center gap-2 text-sm text-muted-foreground mt-2">
+      <span className="text-foreground">
+        Version: {matched.version} ({extractDate(matched.date || '')})
+      </span>
+      <span
+        title="Crawled version from newreleases.io"
+        className="cursor-help rounded-full border border-green-500 px-2 py-0.5 text-xs font-semibold text-green-500"
+      >
+        Info
+      </span>
+    </div>
+  )
+})()}
+
                   </div>
                 </div>
               </div>
