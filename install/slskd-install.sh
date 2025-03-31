@@ -41,7 +41,7 @@ msg_ok "Setup ${APPLICATION}"
 msg_info "Installing Soularr"
 rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
 cd /tmp
-curl -fsSL https://github.com/mrusse/soularr/archive/refs/heads/main.zip
+curl -fsSL -o main.zip https://github.com/mrusse/soularr/archive/refs/heads/main.zip
 unzip -q main.zip
 mv soularr-main /opt/soularr
 cd /opt/soularr
