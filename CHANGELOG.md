@@ -22,10 +22,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
-  - 2FAuth: Update PHP to 8.3 [@BrockHumblet](https://github.com/BrockHumblet) ([#3510](https://github.com/community-scripts/ProxmoxVE/pull/3510))
-
   - #### 🐞 Bug Fixes
 
+    - The Lounge: Fix sqlite3 failing to build [@tremor021](https://github.com/tremor021) ([#3542](https://github.com/community-scripts/ProxmoxVE/pull/3542))
+    - 2FAuth: Update PHP to 8.3 [@BrockHumblet](https://github.com/BrockHumblet) ([#3510](https://github.com/community-scripts/ProxmoxVE/pull/3510))
     - GoMFT: Update Curl Path [@MickLesk](https://github.com/MickLesk) ([#3537](https://github.com/community-scripts/ProxmoxVE/pull/3537))
     - slskd: fix broken curl for soularr [@MickLesk](https://github.com/MickLesk) ([#3533](https://github.com/community-scripts/ProxmoxVE/pull/3533))
     - Docmost: Bump NodeJS to 22 & fixed pnpm [@MickLesk](https://github.com/MickLesk) ([#3521](https://github.com/community-scripts/ProxmoxVE/pull/3521))
