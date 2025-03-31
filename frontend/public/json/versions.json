@@ -1,5 +1,50 @@
 [
   {
+    "name": "fhem/fhem-mirror",
+    "version": "6.2",
+    "date": "2025-03-31T10:34:25Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.3.0p30-rc1",
+    "date": "2025-03-31T09:39:47Z"
+  },
+  {
+    "name": "semaphoreui/semaphore",
+    "version": "v2.13.5",
+    "date": "2025-03-31T09:36:04Z"
+  },
+  {
+    "name": "documenso/documenso",
+    "version": "v1.10.0-rc.4",
+    "date": "2025-03-31T09:02:22Z"
+  },
+  {
+    "name": "traefik/traefik",
+    "version": "v3.3.5",
+    "date": "2025-03-31T08:55:12Z"
+  },
+  {
+    "name": "fallenbagel/jellyseerr",
+    "version": "preview-fix-remove-button",
+    "date": "2025-03-31T08:41:27Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.3.4",
+    "date": "2025-03-21T20:22:46Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.10",
+    "date": "2025-03-22T13:02:26Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1712",
+    "date": "2025-03-31T05:57:14Z"
+  },
+  {
     "name": "TriliumNext/Notes",
     "version": "v0.92.5",
     "date": "2025-03-30T12:32:43Z"
@@ -13,11 +58,6 @@
     "name": "StarFleetCPTN/GoMFT",
     "version": "v0.2.4",
     "date": "2025-03-30T19:46:08Z"
-  },
-  {
-    "name": "semaphoreui/semaphore",
-    "version": "v2.13.3",
-    "date": "2025-03-30T19:24:44Z"
   },
   {
     "name": "louislam/dockge",
@@ -75,11 +115,6 @@
     "date": "2025-03-30T06:25:22Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1709",
-    "date": "2025-03-30T05:51:21Z"
-  },
-  {
     "name": "pocket-id/pocket-id",
     "version": "v0.45.0",
     "date": "2025-03-29T23:12:22Z"
@@ -95,14 +130,9 @@
     "date": "2025-03-29T18:08:11Z"
   },
   {
-    "name": "home-assistant/core",
-    "version": "2025.3.4",
-    "date": "2025-03-21T20:22:46Z"
-  },
-  {
     "name": "theonedev/onedev",
     "version": "v11.8.4",
-    "date": "2025-03-29T13:37:15Z"
+    "date": "2025-03-29T08:28:12Z"
   },
   {
     "name": "runtipi/runtipi",
@@ -123,11 +153,6 @@
     "name": "inspircd/inspircd",
     "version": "v4.7.0",
     "date": "2025-03-29T03:50:50Z"
-  },
-  {
-    "name": "fhem/fhem-mirror",
-    "version": "6.2",
-    "date": "2025-03-29T01:59:30Z"
   },
   {
     "name": "bunkerity/bunkerweb",
@@ -215,11 +240,6 @@
     "date": "2025-03-28T04:12:31Z"
   },
   {
-    "name": "documenso/documenso",
-    "version": "v1.10.0-rc.3",
-    "date": "2025-03-28T03:45:54Z"
-  },
-  {
     "name": "Bubka/2FAuth",
     "version": "v5.5.0",
     "date": "2025-03-27T22:35:02Z"
@@ -233,11 +253,6 @@
     "name": "hivemq/hivemq-community-edition",
     "version": "2025.2",
     "date": "2025-03-27T19:21:13Z"
-  },
-  {
-    "name": "fallenbagel/jellyseerr",
-    "version": "preview-music-support",
-    "date": "2025-03-27T16:54:41Z"
   },
   {
     "name": "immich-app/immich",
@@ -323,11 +338,6 @@
     "name": "forgejo/forgejo",
     "version": "v12.0.0-dev",
     "date": "2025-03-26T09:58:55Z"
-  },
-  {
-    "name": "Checkmk/checkmk",
-    "version": "v2.2.0p41",
-    "date": "2025-03-26T09:55:26Z"
   },
   {
     "name": "sct/overseerr",
@@ -423,11 +433,6 @@
     "name": "nzbgetcom/nzbget",
     "version": "v24.8",
     "date": "2025-03-18T07:33:51Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.10",
-    "date": "2025-03-22T13:02:26Z"
   },
   {
     "name": "requarks/wiki",
@@ -793,11 +798,6 @@
     "name": "benzino77/tasmocompiler",
     "version": "v12.5.0",
     "date": "2025-02-25T14:55:50Z"
-  },
-  {
-    "name": "traefik/traefik",
-    "version": "v3.3.4",
-    "date": "2025-02-25T10:18:58Z"
   },
   {
     "name": "schlagmichdoch/PairDrop",
