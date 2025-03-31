@@ -24,6 +24,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - GoMFT: Update Curl Path [@MickLesk](https://github.com/MickLesk) ([#3537](https://github.com/community-scripts/ProxmoxVE/pull/3537))
+    - slskd: fix broken curl for soularr [@MickLesk](https://github.com/MickLesk) ([#3533](https://github.com/community-scripts/ProxmoxVE/pull/3533))
     - Docmost: Bump NodeJS to 22 & fixed pnpm [@MickLesk](https://github.com/MickLesk) ([#3521](https://github.com/community-scripts/ProxmoxVE/pull/3521))
     - Tianji: Bump NodeJS to V22 [@MickLesk](https://github.com/MickLesk) ([#3519](https://github.com/community-scripts/ProxmoxVE/pull/3519))
 
@@ -34,6 +36,12 @@ All LXC instances created using this repository come pre-installed with Midnight
   - #### 🔧 Refactor
 
     - Remove old `.jar` versions of Stirling-PDF [@JcMinarro](https://github.com/JcMinarro) ([#3512](https://github.com/community-scripts/ProxmoxVE/pull/3512))
+
+### 🧰 Maintenance
+
+  - #### 💾 Core
+
+    - core: fix empty header if header in repo exist [@MickLesk](https://github.com/MickLesk) ([#3536](https://github.com/community-scripts/ProxmoxVE/pull/3536))
 
 ### 🌐 Website
 
