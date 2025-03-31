@@ -295,7 +295,7 @@ get_header() {
   mkdir -p "/usr/local/community-scripts/headers"
 
   # Check if local file already present
-  if [ ! -f "$local_header_path" ]; then
+  if [ ! -s "$local_header_path" ]; then
     wget -qO "$local_header_path" "$header_url"
     if [ $? -ne 0 ]; then
       echo -e "${WARN}${BOLD}${YLW}Failed to download header for ${app_name}. No header will be displayed.${CL}"
