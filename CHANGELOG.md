@@ -22,10 +22,9 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
-  - Authentik - Fix YQ_LATEST regex [@ceres-c](https://github.com/ceres-c) ([#3565](https://github.com/community-scripts/ProxmoxVE/pull/3565))
-
   - #### 🐞 Bug Fixes
 
+    - Authentik - Fix YQ_LATEST regex [@ceres-c](https://github.com/ceres-c) ([#3565](https://github.com/community-scripts/ProxmoxVE/pull/3565))
     - Fileflows: Fix update dependencies [@tremor021](https://github.com/tremor021) ([#3577](https://github.com/community-scripts/ProxmoxVE/pull/3577))
     - CheckMK: Increase Disk size [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#3559](https://github.com/community-scripts/ProxmoxVE/pull/3559))
     - switch arr lxc's (lidarr,-prowlarr,-radarr,-readarr,-whisparr) to curl -fsSL [@MickLesk](https://github.com/MickLesk) ([#3554](https://github.com/community-scripts/ProxmoxVE/pull/3554))
