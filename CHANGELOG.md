@@ -14,6 +14,18 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 All LXC instances created using this repository come pre-installed with Midnight Commander, which is a command-line tool (`mc`) that offers a user-friendly file and directory management interface for the terminal environment.
 
 
+## 2025-04-01
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Replace wget with curl -fsSL, normalize downloads, and prep for IPv6 [@MickLesk](https://github.com/MickLesk) ([#3455](https://github.com/community-scripts/ProxmoxVE/pull/3455))
+
+### 🌐 Website
+
+  - Bump vite from 5.4.14 to 5.4.16 in /frontend [@dependabot[bot]](https://github.com/dependabot[bot]) ([#3549](https://github.com/community-scripts/ProxmoxVE/pull/3549))
+
 ## 2025-03-31
 
 ### 🆕 New Scripts
