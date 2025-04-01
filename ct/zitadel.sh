@@ -27,15 +27,15 @@ function update_script() {
         msg_error "No ${APP} Installation Found!"
         exit
     fi
-    RELEASE=$(curl -fsSLi https://github.com/zitadel/zitadel/releases/latest | grep location: | cut -d '/' -f 8 | tr -d '\r')
+    RELEASE=$(curl -fsSL https://github.com/zitadel/zitadel/releases/latest | grep location: | cut -d '/' -f 8 | tr -d '\r')
     if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt | grep -oP '\d+\.\d+\.\d+')" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
         msg_info "Stopping $APP"
         systemctl stop zitadel
         msg_ok "Stopped $APP"
 
         msg_info "Updating $APP to ${RELEASE}"
-        cd /tmp
-        curl -fsSL https://github.com/zitadel/zitadel/releases/download/$RELEASE/zitadel-linux-amd64.tar.gz | tar -xz
+        cd /tmp || exit
+        curl -fsSL https://github.com/zitadel/zitadel/releases/download/"$RELEASE"/zitadel-linux-amd64.tar.gz | tar -xz
         mv zitadel-linux-amd64/zitadel /usr/local/bin
         $STD zitadel setup --masterkeyFile /opt/zitadel/.masterkey --config /opt/zitadel/config.yaml --init-projections=true
         echo "${RELEASE}" >/opt/${APP}_version.txt
