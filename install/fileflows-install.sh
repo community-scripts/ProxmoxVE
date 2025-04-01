@@ -16,7 +16,8 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-  ffmpeg
+  ffmpeg \
+  jq
 msg_ok "Installed Dependencies"
 
 read -r -p "Do you need the intel-media-va-driver-non-free driver for HW encoding (Debian 12 only)? <y/N> " prompt
@@ -53,8 +54,8 @@ msg_info "Setup ${APPLICATION}"
 $STD ln -svf /usr/bin/ffmpeg /usr/local/bin/ffmpeg
 $STD ln -svf /usr/bin/ffprobe /usr/local/bin/ffprobe
 temp_file=$(mktemp)
-curl -fsSL https://fileflows.com/downloads/zip -o $temp_file
-unzip -q -d /opt/fileflows $temp_file
+curl -fsSL https://fileflows.com/downloads/zip -o "$temp_file"
+unzip -q -d /opt/fileflows "$temp_file"
 (cd /opt/fileflows/Server && dotnet FileFlows.Server.dll --systemd install --root true)
 systemctl enable -q --now fileflows.service
 msg_ok "Setup ${APPLICATION}"
@@ -63,7 +64,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -f $temp_file
+rm -f "$temp_file"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"

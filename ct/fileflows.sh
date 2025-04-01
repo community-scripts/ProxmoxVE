@@ -28,6 +28,10 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  if ! [[ $(dpkg -s jq 2>/dev/null) ]]; then
+    $STD apt-get update
+    $STD apt-get install -y jq
+  fi
 
   update_available=$(curl -fsSL -X 'GET' "http://localhost:19200/api/status/update-available" -H 'accept: application/json' | jq .UpdateAvailable)
   if [[ "${update_available}" == "true" ]]; then
@@ -37,13 +41,13 @@ function update_script() {
 
     msg_info "Creating Backup"
     backup_filename="/opt/${APP}_backup_$(date +%F).tar.gz"
-    tar -czf $backup_filename -C /opt/fileflows Data
+    tar -czf "$backup_filename" -C /opt/fileflows Data
     msg_ok "Backup Created"
 
     msg_info "Updating $APP to latest version"
     temp_file=$(mktemp)
-    curl -fsSL https://fileflows.com/downloads/zip -o $temp_file
-    unzip -oq -d /opt/fileflows $temp_file
+    curl -fsSL https://fileflows.com/downloads/zip -o "$temp_file"
+    unzip -oq -d /opt/fileflows "$temp_file"
     msg_ok "Updated $APP to latest version"
 
     msg_info "Starting $APP"
@@ -51,8 +55,8 @@ function update_script() {
     msg_ok "Started $APP"
 
     msg_info "Cleaning Up"
-    rm -rf $temp_file
-    rm -rf $backup_filename
+    rm -rf "$temp_file"
+    rm -rf "$backup_filename"
     msg_ok "Cleanup Completed"
 
     msg_ok "Update Successful"
