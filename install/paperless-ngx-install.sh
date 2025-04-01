@@ -58,10 +58,10 @@ $STD apt-get install -y \
   tesseract-ocr \
   tesseract-ocr-eng
 
-cd /tmp
+cd /tmp || exit
 curl -fsSL "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs10040/ghostscript-10.04.0.tar.gz" -o $(basename "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs10040/ghostscript-10.04.0.tar.gz")
 $STD tar -xzf ghostscript-10.04.0.tar.gz
-cd ghostscript-10.04.0
+cd ghostscript-10.04.0 || exit
 $STD ./configure
 $STD make
 $STD sudo make install
@@ -69,7 +69,7 @@ msg_ok "Installed OCR Dependencies"
 
 msg_info "Installing JBIG2"
 $STD git clone https://github.com/ie13/jbig2enc /opt/jbig2enc
-cd /opt/jbig2enc
+cd /opt/jbig2enc || exit
 $STD bash ./autogen.sh
 $STD bash ./configure
 $STD make
@@ -78,23 +78,23 @@ rm -rf /opt/jbig2enc
 msg_ok "Installed JBIG2"
 
 msg_info "Installing Paperless-ngx (Patience)"
-Paperlessngx=$(curl -fsSL https://github.com/paperless-ngx/paperless-ngx/releases/latest | grep "title>Release" | cut -d " " -f 5)
-cd /opt
-$STD curl -fsSL "https://github.com/paperless-ngx/paperless-ngx/releases/download/$Paperlessngx/paperless-ngx-$Paperlessngx.tar.xz" -O
-$STD tar -xf paperless-ngx-$Paperlessngx.tar.xz -C /opt/
+Paperlessngx=$(curl -fsSL "https://github.com/paperless-ngx/paperless-ngx/releases/latest" | grep "title>Release" | cut -d " " -f 5)
+cd /opt || exit
+$STD curl -fsSL "https://github.com/paperless-ngx/paperless-ngx/releases/download/$Paperlessngx/paperless-ngx-$Paperlessngx.tar.xz" -o "paperless-ngx-$Paperlessngx.tar.xz"
+$STD tar -xf "paperless-ngx-$Paperlessngx.tar.xz" -C /opt/
 mv paperless-ngx paperless
-rm paperless-ngx-$Paperlessngx.tar.xz
-cd /opt/paperless
+rm "paperless-ngx-$Paperlessngx.tar.xz"
+cd /opt/paperless || exit
 $STD pip install --upgrade pip
 $STD pip install -r requirements.txt
-curl -fsSL -o /opt/paperless/paperless.conf https://raw.githubusercontent.com/paperless-ngx/paperless-ngx/main/paperless.conf.example
+curl -fsSL "https://raw.githubusercontent.com/paperless-ngx/paperless-ngx/main/paperless.conf.example" -o /opt/paperless/paperless.conf
 mkdir -p {consume,data,media,static}
 sed -i -e 's|#PAPERLESS_REDIS=redis://localhost:6379|PAPERLESS_REDIS=redis://localhost:6379|' /opt/paperless/paperless.conf
 sed -i -e "s|#PAPERLESS_CONSUMPTION_DIR=../consume|PAPERLESS_CONSUMPTION_DIR=/opt/paperless/consume|" /opt/paperless/paperless.conf
 sed -i -e "s|#PAPERLESS_DATA_DIR=../data|PAPERLESS_DATA_DIR=/opt/paperless/data|" /opt/paperless/paperless.conf
 sed -i -e "s|#PAPERLESS_MEDIA_ROOT=../media|PAPERLESS_MEDIA_ROOT=/opt/paperless/media|" /opt/paperless/paperless.conf
 sed -i -e "s|#PAPERLESS_STATICDIR=../static|PAPERLESS_STATICDIR=/opt/paperless/static|" /opt/paperless/paperless.conf
-echo "${Paperlessngx}" >/opt/${APPLICATION}_version.txt
+echo "${Paperlessngx}" >/opt/"${APPLICATION}"_version.txt
 msg_ok "Installed Paperless-ngx"
 
 msg_info "Installing Natural Language Toolkit (Patience)"
@@ -121,7 +121,7 @@ sed -i -e "s|#PAPERLESS_DBNAME=paperless|PAPERLESS_DBNAME=$DB_NAME|" /opt/paperl
 sed -i -e "s|#PAPERLESS_DBUSER=paperless|PAPERLESS_DBUSER=$DB_USER|" /opt/paperless/paperless.conf
 sed -i -e "s|#PAPERLESS_DBPASS=paperless|PAPERLESS_DBPASS=$DB_PASS|" /opt/paperless/paperless.conf
 sed -i -e "s|#PAPERLESS_SECRET_KEY=change-me|PAPERLESS_SECRET_KEY=$SECRET_KEY|" /opt/paperless/paperless.conf
-cd /opt/paperless/src
+cd /opt/paperless/src || exit
 $STD python3 manage.py migrate
 msg_ok "Set up PostgreSQL database"
 

@@ -15,14 +15,14 @@ update_os
 
 msg_info "Setting Phoscon Repository"
 VERSION="$(awk -F'=' '/^VERSION_CODENAME=/{ print $NF }' /etc/os-release)"
-curl -fsSL http://phoscon.de/apt/deconz.pub.key >/etc/apt/trusted.gpg.d/deconz.pub.asc
+curl -fsSL "http://phoscon.de/apt/deconz.pub.key" >/etc/apt/trusted.gpg.d/deconz.pub.asc
 echo "deb [arch=amd64] http://phoscon.de/apt/deconz $VERSION main" >/etc/apt/sources.list.d/deconz.list
 msg_ok "Setup Phoscon Repository"
 
 msg_info "Installing deConz"
 libssl=$(curl -fsSL "http://security.ubuntu.com/ubuntu/pool/main/o/openssl/" | grep -o 'libssl1\.1_1\.1\.1f-1ubuntu2\.2[^"]*amd64\.deb' | head -n1)
-curl -fsSL "http://security.ubuntu.com/ubuntu/pool/main/o/openssl/$libssl" -O
-$STD dpkg -i $libssl
+curl -fsSL "http://security.ubuntu.com/ubuntu/pool/main/o/openssl/$libssl" -o "$libssl"
+$STD dpkg -i "$libssl"
 $STD apt-get update
 $STD apt-get install -y deconz
 msg_ok "Installed deConz"
@@ -51,7 +51,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -rf $libssl
+rm -rf "$libssl"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"

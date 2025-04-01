@@ -39,15 +39,12 @@ function update_script() {
     mv /opt/snipe-it /opt/snipe-it-backup
     temp_file=$(mktemp)
     curl -fsSL "https://github.com/snipe/snipe-it/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
-    tar zxf $temp_file
-    mv snipe-it-${RELEASE} /opt/snipe-it
-    $STD curl -fsSL "https://github.com/snipe/snipe-it/archive/refs/tags/v${RELEASE}.zip" -O
-    unzip -q v${RELEASE}.zip
-    mv snipe-it-${RELEASE} /opt/snipe-it
+    tar zxf "$temp_file"
+    mv "snipe-it-${RELEASE}" /opt/snipe-it
     cp /opt/snipe-it-backup/.env /opt/snipe-it/.env
     cp -r /opt/snipe-it-backup/public/uploads/ /opt/snipe-it/public/uploads/
     cp -r /opt/snipe-it-backup/storage/private_uploads /opt/snipe-it/storage/private_uploads
-    cd /opt/snipe-it/
+    cd /opt/snipe-it/ || exit
     export COMPOSER_ALLOW_SUPERUSER=1
     $STD composer install --no-dev --optimize-autoloader --no-interaction
     $STD composer dump-autoload
@@ -58,7 +55,7 @@ function update_script() {
     $STD php artisan view:clear
     chown -R www-data: /opt/snipe-it
     chmod -R 755 /opt/snipe-it
-    rm -rf /opt/v${RELEASE}.zip
+    rm -rf "$temp_file"
     rm -rf /opt/snipe-it-backup
     msg_ok "Updated ${APP}"
 
