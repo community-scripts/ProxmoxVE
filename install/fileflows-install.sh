@@ -17,7 +17,8 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
   ffmpeg \
-  jq
+  jq \
+  imagemagick
 msg_ok "Installed Dependencies"
 
 read -r -p "Do you need the intel-media-va-driver-non-free driver for HW encoding (Debian 12 only)? <y/N> " prompt
