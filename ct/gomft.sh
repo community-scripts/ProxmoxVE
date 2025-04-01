@@ -28,11 +28,17 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/StarFleetCPTN/GoMFT/releases/latest | grep "tag_name" | awk '{print substr($2, 4, length($2)-5) }')
   if ! dpkg -l | grep -q "^ii.*build-essential"; then
     $STD apt-get install -y build-essential
   fi
-
+  if [[ ! -f "/usr/bin/node" ]]; then
+    mkdir -p /etc/apt/keyrings
+    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_22.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
+    $STD apt-get update
+    $STD apt-get install -y nodejs
+  fi
+  RELEASE=$(curl -fsSL https://api.github.com/repos/StarFleetCPTN/GoMFT/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
   if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
     msg_info "Stopping $APP"
     systemctl stop gomft
@@ -41,12 +47,15 @@ function update_script() {
     msg_info "Updating $APP to ${RELEASE}"
     rm -f /opt/gomft/gomft
     temp_file=$(mktemp)
-curl -fsSL "https://github.com/StarFleetCPTN/GoMFT/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
+    curl -fsSL "https://github.com/StarFleetCPTN/GoMFT/archive/refs/tags/v${RELEASE}.tar.gz" -o $temp_file
     tar -xzf $temp_file
     cp -rf GoMFT-${RELEASE}/* /opt/gomft
     cd /opt/gomft
+    rm -f /opt/gomft/node_modules
+    $STD npm ci
+    $STD node build.js
     $STD go mod download
-    $STD go install github.com/a-h/templ/cmd/templ@latest
+    $STD go get -u github.com/a-h/templ
     $STD $HOME/go/bin/templ generate
     export CGO_ENABLED=1
     export GOOS=linux
@@ -57,7 +66,7 @@ curl -fsSL "https://github.com/StarFleetCPTN/GoMFT/archive/refs/tags/v${RELEASE}
 
     msg_info "Cleaning Up"
     rm -f $temp_file
-    rm -rf GoMFT-${RELEASE}
+    rm -rf $HOME/GoMFT-v.${RELEASE}
     msg_ok "Cleanup Complete"
 
     msg_info "Starting $APP"

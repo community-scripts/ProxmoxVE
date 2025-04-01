@@ -40,7 +40,7 @@ function update_script() {
   if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
     msg_info "Updating Homepage to v${RELEASE} (Patience)"
     systemctl stop homepage
-curl -fsSL "https://github.com/gethomepage/homepage/archive/refs/tags/v${RELEASE}.tar.gz" -O $(basename "https://github.com/gethomepage/homepage/archive/refs/tags/v${RELEASE}.tar.gz")
+    curl -fsSL "https://github.com/gethomepage/homepage/archive/refs/tags/v${RELEASE}.tar.gz" -o $(basename "https://github.com/gethomepage/homepage/archive/refs/tags/v${RELEASE}.tar.gz")
     tar -xzf v${RELEASE}.tar.gz
     rm -rf v${RELEASE}.tar.gz
     cp -r homepage-${RELEASE}/* /opt/homepage/

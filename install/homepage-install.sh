@@ -32,7 +32,7 @@ msg_ok "Installed Node.js"
 LOCAL_IP=$(hostname -I | awk '{print $1}')
 RELEASE=$(curl -fsSL https://api.github.com/repos/gethomepage/homepage/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 msg_info "Installing Homepage v${RELEASE} (Patience)"
-curl -fsSL "https://github.com/gethomepage/homepage/archive/refs/tags/v${RELEASE}.tar.gz" -O $(basename "https://github.com/gethomepage/homepage/archive/refs/tags/v${RELEASE}.tar.gz")
+curl -fsSL "https://github.com/gethomepage/homepage/archive/refs/tags/v${RELEASE}.tar.gz" -o $(basename "https://github.com/gethomepage/homepage/archive/refs/tags/v${RELEASE}.tar.gz")
 $STD tar -xzf v${RELEASE}.tar.gz
 rm -rf v${RELEASE}.tar.gz
 mkdir -p /opt/homepage/config

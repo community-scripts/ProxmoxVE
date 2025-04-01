@@ -26,6 +26,22 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  if command -v node >/dev/null; then
+    NODE_MAJOR=$(/usr/bin/env node -v | grep -oP '^v\K[0-9]+')
+    if [[ "$NODE_MAJOR" != "22" ]]; then
+      $STD apt-get purge -y nodejs
+      rm -f /etc/apt/sources.list.d/nodesource.list
+      rm -f /etc/apt/keyrings/nodesource.gpg
+    else
+      return
+    fi
+  fi
+  mkdir -p /etc/apt/keyrings
+  curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+  echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_22.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
+  $STD apt-get update
+  $STD apt-get install -y nodejs
+  $STD npm install -g pnpm@9.7.1
   RELEASE=$(curl -fsSL https://api.github.com/repos/msgbyte/tianji/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
   if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
     msg_info "Stopping ${APP} Service"
@@ -36,7 +52,7 @@ function update_script() {
     cd /opt
     cp /opt/tianji/src/server/.env /opt/.env
     mv /opt/tianji /opt/tianji_bak
-curl -fsSL "https://github.com/msgbyte/tianji/archive/refs/tags/v${RELEASE}.zip" -O $(basename "https://github.com/msgbyte/tianji/archive/refs/tags/v${RELEASE}.zip")
+    curl -fsSL "https://github.com/msgbyte/tianji/archive/refs/tags/v${RELEASE}.zip" -O $(basename "https://github.com/msgbyte/tianji/archive/refs/tags/v${RELEASE}.zip")
     unzip -q v${RELEASE}.zip
     mv tianji-${RELEASE} /opt/tianji
     cd tianji

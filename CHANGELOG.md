@@ -14,6 +14,90 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 All LXC instances created using this repository come pre-installed with Midnight Commander, which is a command-line tool (`mc`) that offers a user-friendly file and directory management interface for the terminal environment.
 
 
+## 2025-03-31
+
+### 🆕 New Scripts
+
+  - slskd [@vhsdream](https://github.com/vhsdream) ([#3516](https://github.com/community-scripts/ProxmoxVE/pull/3516))
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - The Lounge: Fix sqlite3 failing to build [@tremor021](https://github.com/tremor021) ([#3542](https://github.com/community-scripts/ProxmoxVE/pull/3542))
+    - 2FAuth: Update PHP to 8.3 [@BrockHumblet](https://github.com/BrockHumblet) ([#3510](https://github.com/community-scripts/ProxmoxVE/pull/3510))
+    - GoMFT: Update Curl Path [@MickLesk](https://github.com/MickLesk) ([#3537](https://github.com/community-scripts/ProxmoxVE/pull/3537))
+    - slskd: fix broken curl for soularr [@MickLesk](https://github.com/MickLesk) ([#3533](https://github.com/community-scripts/ProxmoxVE/pull/3533))
+    - Docmost: Bump NodeJS to 22 & fixed pnpm [@MickLesk](https://github.com/MickLesk) ([#3521](https://github.com/community-scripts/ProxmoxVE/pull/3521))
+    - Tianji: Bump NodeJS to V22 [@MickLesk](https://github.com/MickLesk) ([#3519](https://github.com/community-scripts/ProxmoxVE/pull/3519))
+
+  - #### ✨ New Features
+
+    - NPMPlus: update function & better create handling (user/password) [@MickLesk](https://github.com/MickLesk) ([#3520](https://github.com/community-scripts/ProxmoxVE/pull/3520))
+
+  - #### 🔧 Refactor
+
+    - Remove old `.jar` versions of Stirling-PDF [@JcMinarro](https://github.com/JcMinarro) ([#3512](https://github.com/community-scripts/ProxmoxVE/pull/3512))
+
+### 🧰 Maintenance
+
+  - #### 💾 Core
+
+    - core: fix empty header if header in repo exist [@MickLesk](https://github.com/MickLesk) ([#3536](https://github.com/community-scripts/ProxmoxVE/pull/3536))
+
+### 🌐 Website
+
+  - #### ✨ New Features
+
+    - Change Frontend Version Info [@MickLesk](https://github.com/MickLesk) ([#3527](https://github.com/community-scripts/ProxmoxVE/pull/3527))
+
+  - #### 📝 Script Information
+
+    - HomeAssistant (Container): Better Portainer explanation [@MickLesk](https://github.com/MickLesk) ([#3518](https://github.com/community-scripts/ProxmoxVE/pull/3518))
+
+## 2025-03-30
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Open WebUI: Fix Ollama update logic [@tremor021](https://github.com/tremor021) ([#3506](https://github.com/community-scripts/ProxmoxVE/pull/3506))
+    - GoMFT: Add frontend build procedure [@tremor021](https://github.com/tremor021) ([#3499](https://github.com/community-scripts/ProxmoxVE/pull/3499))
+
+  - #### ✨ New Features
+
+    - Open WebUI: Add Ollama update check [@tremor021](https://github.com/tremor021) ([#3478](https://github.com/community-scripts/ProxmoxVE/pull/3478))
+
+## 2025-03-29
+
+### 🆕 New Scripts
+
+  - Alpine MariaDB [@MickLesk](https://github.com/MickLesk) ([#3456](https://github.com/community-scripts/ProxmoxVE/pull/3456))
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Komodo: Fix wrong sed text [@tremor021](https://github.com/tremor021) ([#3491](https://github.com/community-scripts/ProxmoxVE/pull/3491))
+    - GoMFT: Fix release archive naming [@tremor021](https://github.com/tremor021) ([#3483](https://github.com/community-scripts/ProxmoxVE/pull/3483))
+    - Homepage: Fix release parsing [@tremor021](https://github.com/tremor021) ([#3484](https://github.com/community-scripts/ProxmoxVE/pull/3484))
+    - Netdata: Fix debian-keyring dependency missing [@tremor021](https://github.com/tremor021) ([#3477](https://github.com/community-scripts/ProxmoxVE/pull/3477))
+    - ErsatzTV: Fix temp file reference [@tremor021](https://github.com/tremor021) ([#3476](https://github.com/community-scripts/ProxmoxVE/pull/3476))
+    - Komodo: Fix compose.env [@tremor021](https://github.com/tremor021) ([#3466](https://github.com/community-scripts/ProxmoxVE/pull/3466))
+
+## 2025-03-28
+
+### 🆕 New Scripts
+
+  - Alpine Node-RED [@MickLesk](https://github.com/MickLesk) ([#3457](https://github.com/community-scripts/ProxmoxVE/pull/3457))
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - GoMFT: Fix release grep [@tremor021](https://github.com/tremor021) ([#3462](https://github.com/community-scripts/ProxmoxVE/pull/3462))
+    - ErsatzTV: Fix path in update function [@tremor021](https://github.com/tremor021) ([#3463](https://github.com/community-scripts/ProxmoxVE/pull/3463))
+
 ## 2025-03-27
 
 ### 🚀 Updated Scripts

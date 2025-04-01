@@ -27,6 +27,21 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
+  if [ -x "/usr/bin/ollama" ]; then
+    msg_info "Updating Ollama"
+    OLLAMA_VERSION=$(ollama -v | awk '{print $NF}')
+    RELEASE=$(curl -s https://api.github.com/repos/ollama/ollama/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4)}')
+    if [ "$OLLAMA_VERSION" != "$RELEASE" ]; then
+      curl -fsSLO https://ollama.com/download/ollama-linux-amd64.tgz
+      tar -C /usr -xzf ollama-linux-amd64.tgz
+      rm -rf ollama-linux-amd64.tgz
+      msg_ok "Ollama updated to version $RELEASE"
+    else
+      msg_ok "Ollama is already up to date."
+    fi
+  fi
+
   msg_info "Updating ${APP} (Patience)"
   cd /opt/open-webui
   mkdir -p /opt/open-webui-backup

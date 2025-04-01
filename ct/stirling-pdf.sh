@@ -39,6 +39,7 @@ curl -fsSL "https://github.com/Stirling-Tools/Stirling-PDF/archive/refs/tags/v$R
   cd Stirling-PDF-$RELEASE
   chmod +x ./gradlew
   $STD ./gradlew build
+  rm -rf /opt/Stirling-PDF/Stirling-PDF-*.jar
   cp -r ./build/libs/Stirling-PDF-*.jar /opt/Stirling-PDF/
   cp -r scripts /opt/Stirling-PDF/
   cd ~
