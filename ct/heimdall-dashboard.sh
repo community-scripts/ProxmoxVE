@@ -27,7 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSLX GET "https://api.github.com/repos/linuxserver/Heimdall/releases/latest" | awk '/tag_name/{print $4;exit}' FS='[""]')
+  RELEASE=$(curl -fsSL "https://api.github.com/repos/linuxserver/Heimdall/releases/latest" | awk '/tag_name/{print $4;exit}' FS='[""]')
   if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
     msg_info "Stopping ${APP}"
     systemctl stop heimdall
@@ -40,23 +40,23 @@ function update_script() {
     msg_ok "Backed up Data"
     msg_info "Updating Heimdall Dashboard to ${RELEASE}"
     curl -fsSL "https://github.com/linuxserver/Heimdall/archive/${RELEASE}.tar.gz" -o $(basename "https://github.com/linuxserver/Heimdall/archive/${RELEASE}.tar.gz")
-    tar xzf ${RELEASE}.tar.gz
+    tar xzf "${RELEASE}".tar.gz
     VER=$(curl -fsSL https://api.github.com/repos/linuxserver/Heimdall/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-    cp -R Heimdall-${VER}/* /opt/Heimdall
-    cd /opt/Heimdall
+    cp -R Heimdall-"${VER}"/* /opt/Heimdall
+    cd /opt/Heimdall || exit
     $STD apt-get install -y composer
     export COMPOSER_ALLOW_SUPERUSER=1
     $STD composer dump-autoload
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated Heimdall Dashboard to ${RELEASE}"
     msg_info "Restoring Data"
-    cd ~
+    cd ~ || exit
     cp -R database-backup/* /opt/Heimdall/database
     cp -R public-backup/* /opt/Heimdall/public
     sleep 1
     msg_ok "Restored Data"
     msg_info "Cleanup"
-    rm -rf {${RELEASE}.tar.gz,Heimdall-${VER},public-backup,database-backup,Heimdall}
+    rm -rf {"${RELEASE}".tar.gz,Heimdall-"${VER}",public-backup,database-backup,Heimdall}
     sleep 1
     msg_ok "Cleaned"
     msg_info "Starting ${APP}"

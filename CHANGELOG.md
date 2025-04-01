@@ -16,7 +16,13 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-04-01
 
+### 🆕 New Scripts
+
+  - Alpine Prometheus [@MickLesk](https://github.com/MickLesk) ([#3547](https://github.com/community-scripts/ProxmoxVE/pull/3547))
+
 ### 🚀 Updated Scripts
+
+  - Authentik - Fix YQ_LATEST regex [@ceres-c](https://github.com/ceres-c) ([#3565](https://github.com/community-scripts/ProxmoxVE/pull/3565))
 
   - #### 🐞 Bug Fixes
 
@@ -31,7 +37,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🌐 Website
 
-  - Bump vite from 5.4.14 to 5.4.16 in /frontend [@dependabot[bot]](https://github.com/dependabot[bot]) ([#3549](https://github.com/community-scripts/ProxmoxVE/pull/3549))
+  - Update metadata inside layout.tsx for better SEO [@BramSuurdje](https://github.com/BramSuurdje) ([#3570](https://github.com/community-scripts/ProxmoxVE/pull/3570))
+- Bump vite from 5.4.14 to 5.4.16 in /frontend [@dependabot[bot]](https://github.com/dependabot[bot]) ([#3549](https://github.com/community-scripts/ProxmoxVE/pull/3549))
+
+  - #### ✨ New Features
+
+    - Refactor ScriptItem and Buttons components to enhance layout and integrate dropdown for links. Update InterFaces component for improved styling and structure. [@BramSuurdje](https://github.com/BramSuurdje) ([#3567](https://github.com/community-scripts/ProxmoxVE/pull/3567))
 
 ## 2025-03-31
 

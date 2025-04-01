@@ -19,15 +19,15 @@ $STD apt-get install -y composer
 $STD apt-get install -y php8.2-{bz2,curl,sqlite3,zip,xml}
 msg_ok "Installed Dependencies"
 
-RELEASE=$(curl -fsSLX GET "https://api.github.com/repos/linuxserver/Heimdall/releases/latest" | awk '/tag_name/{print $4;exit}' FS='[""]')
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
+RELEASE=$(curl -fsSL "https://api.github.com/repos/linuxserver/Heimdall/releases/latest" | awk '/tag_name/{print $4;exit}' FS='[""]')
+echo "${RELEASE}" >/opt/"${APPLICATION}"_version.txt
 msg_info "Installing Heimdall Dashboard ${RELEASE}"
 curl -fsSL "https://github.com/linuxserver/Heimdall/archive/${RELEASE}.tar.gz" -o $(basename "https://github.com/linuxserver/Heimdall/archive/${RELEASE}.tar.gz")
-tar xzf ${RELEASE}.tar.gz
+tar xzf "${RELEASE}".tar.gz
 VER=$(curl -fsSL https://api.github.com/repos/linuxserver/Heimdall/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-rm -rf ${RELEASE}.tar.gz
-mv Heimdall-${VER} /opt/Heimdall
-cd /opt/Heimdall
+rm -rf "${RELEASE}".tar.gz
+mv Heimdall-"${VER}" /opt/Heimdall
+cd /opt/Heimdall || exit
 cp .env.example .env
 $STD php artisan key:generate
 msg_ok "Installed Heimdall Dashboard ${RELEASE}"

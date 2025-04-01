@@ -89,7 +89,7 @@ useradd seafile
 mkdir -p /home/seafile
 chown seafile: /home/seafile
 chown seafile: /opt/seafile
-$STD su - seafile -c "curl -fsSL https://s3.eu-central-1.amazonaws.com/download.seadrive.org/seafile-server_11.0.13_x86-64.tar.gz -O"
+$STD su - seafile -c "curl -fsSL https://s3.eu-central-1.amazonaws.com/download.seadrive.org/seafile-server_11.0.13_x86-64.tar.gz -o seafile-server_11.0.13_x86-64.tar.gz"
 $STD su - seafile -c "tar -xzf seafile-server_11.0.13_x86-64.tar.gz -C /opt/seafile/"
 $STD su - seafile -c "expect <<EOF
 spawn bash /opt/seafile/seafile-server-11.0.13/setup-seafile-mysql.sh
