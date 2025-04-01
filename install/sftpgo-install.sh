@@ -30,7 +30,7 @@ set -o pipefail
 msg_ok "Installed Golang"
 
 msg_info "Installing SFTPGo"
-curl -fsSLS https://ftp.osuosl.org/pub/sftpgo/apt/gpg.key | gpg --dearmor -o /usr/share/keyrings/sftpgo-archive-keyring.gpg
+curl -fsSL https://ftp.osuosl.org/pub/sftpgo/apt/gpg.key | gpg --dearmor -o /usr/share/keyrings/sftpgo-archive-keyring.gpg
 echo "deb [signed-by=/usr/share/keyrings/sftpgo-archive-keyring.gpg] https://ftp.osuosl.org/pub/sftpgo/apt bookworm main" >/etc/apt/sources.list.d/sftpgo.list
 $STD apt-get update
 $STD apt-get install -y sftpgo

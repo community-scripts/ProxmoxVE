@@ -15,17 +15,17 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-  git \
-  software-properties-common \
-  apt-transport-https \
-  ca-certificates \
-  gnupg \
-  php8.2 \
-  php8.2-{common,cli,gd,mysql,mbstring,bcmath,xml,fpm,curl,zip} \
-  mariadb-server \
-  nginx \
-  redis-server
-$STD curl -fsSLS "https://getcomposer.org/installer" | php -- --install-dir=/usr/local/bin --filename=composer
+    git \
+    software-properties-common \
+    apt-transport-https \
+    ca-certificates \
+    gnupg \
+    php8.2 \
+    php8.2-{common,cli,gd,mysql,mbstring,bcmath,xml,fpm,curl,zip} \
+    mariadb-server \
+    nginx \
+    redis-server
+$STD curl -fsSL https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Paymenter"

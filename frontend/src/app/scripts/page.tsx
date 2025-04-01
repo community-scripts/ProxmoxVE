@@ -2,7 +2,7 @@
 
 export const dynamic = "force-static";
 
-import ScriptItem from "@/app/scripts/_components/ScriptItem";
+import { ScriptItem } from "@/app/scripts/_components/ScriptItem";
 import { fetchCategories } from "@/lib/data";
 import { Category, Script } from "@/lib/types";
 import { Loader2 } from "lucide-react";

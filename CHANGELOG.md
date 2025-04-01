@@ -20,6 +20,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - CheckMK: Increase Disk size [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#3559](https://github.com/community-scripts/ProxmoxVE/pull/3559))
     - switch arr lxc's (lidarr,-prowlarr,-radarr,-readarr,-whisparr) to curl -fsSL [@MickLesk](https://github.com/MickLesk) ([#3554](https://github.com/community-scripts/ProxmoxVE/pull/3554))
 
 ### 🧰 Maintenance

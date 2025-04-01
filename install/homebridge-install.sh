@@ -19,7 +19,7 @@ $STD apt-get install -y gnupg2
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up Homebridge Repository"
-curl -fsSLSf https://repo.homebridge.io/KEY.gpg | gpg --dearmor >/etc/apt/trusted.gpg.d/homebridge.gpg
+curl -fsSL https://repo.homebridge.io/KEY.gpg | gpg --dearmor >/etc/apt/trusted.gpg.d/homebridge.gpg
 echo 'deb [signed-by=/etc/apt/trusted.gpg.d/homebridge.gpg] https://repo.homebridge.io stable main' >/etc/apt/sources.list.d/homebridge.list
 msg_ok "Set up Homebridge Repository"
 

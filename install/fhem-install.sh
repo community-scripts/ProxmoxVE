@@ -19,7 +19,7 @@ $STD apt-get install -y gnupg2
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up Fhem Repository"
-curl -fsSLSf https://debian.fhem.de/archive.key | gpg --dearmor >/etc/apt/trusted.gpg.d/debianfhemde-archive-keyring.gpg
+curl -fsSL https://debian.fhem.de/archive.key | gpg --dearmor >/etc/apt/trusted.gpg.d/debianfhemde-archive-keyring.gpg
 echo 'deb [signed-by=/etc/apt/trusted.gpg.d/debianfhemde-archive-keyring.gpg] https://debian.fhem.de/nightly/ /' >/etc/apt/sources.list.d/fhem.list
 msg_ok "Set up Fhem Repository"
 
