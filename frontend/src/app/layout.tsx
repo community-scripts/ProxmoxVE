@@ -5,20 +5,20 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { analytics, basePath } from "@/config/siteConfig";
 import "@/styles/globals.css";
+import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import React from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata = {
+export const metadata : Metadata = {
   title: "Proxmox VE Helper-Scripts",
   description:
     "The official website for the Proxmox VE Helper-Scripts (Community) Repository. Featuring over 300+ scripts to help you manage your Proxmox VE environment.",
   applicationName: "Proxmox VE Helper-Scripts",
   generator: "Next.js",
   referrer: "origin-when-cross-origin",
-  licence: "MIT",
   keywords: [
     "Proxmox VE",
     "Helper-Scripts",
@@ -98,7 +98,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <script defer src={`https://${analytics.url}/script.js`} data-website-id={analytics.token}></script>
-        <link rel="canonical" href={metadata.metadataBase.href} />
+        <link rel="canonical" href={metadata.metadataBase?.href} />
         <link rel="manifest" href="manifest.webmanifest" />
         <link rel="preconnect" href="https://api.github.com" />
       </head>
