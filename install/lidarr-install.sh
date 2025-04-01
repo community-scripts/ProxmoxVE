@@ -22,8 +22,9 @@ msg_ok "Installed Dependencies"
 msg_info "Installing Lidarr"
 mkdir -p /var/lib/lidarr/
 chmod 775 /var/lib/lidarr/
-$STD curl -fJL 'https://lidarr.servarr.com/v1/update/master/updatefile?os=linux&runtime=netcore&arch=x64'
-$STD tar -xvzf Lidarr.master.*.tar.gz
+cd /var/lib/lidarr/
+$STD curl -fsSL 'https://lidarr.servarr.com/v1/update/master/updatefile?os=linux&runtime=netcore&arch=x64' -o lidarr.tar.gz
+$STD tar -xvzf lidarr.tar.gz
 mv Lidarr /opt
 chmod 775 /opt/Lidarr
 msg_ok "Installed Lidarr"

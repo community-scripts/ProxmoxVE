@@ -20,8 +20,9 @@ msg_ok "Installed Dependencies"
 msg_info "Installing Prowlarr"
 mkdir -p /var/lib/prowlarr/
 chmod 775 /var/lib/prowlarr/
-$STD curl -fJL 'https://prowlarr.servarr.com/v1/update/master/updatefile?os=linux&runtime=netcore&arch=x64'
-$STD tar -xvzf Prowlarr.master.*.tar.gz
+cd /var/lib/prowlarr/
+$STD curl -fsSL 'https://prowlarr.servarr.com/v1/update/master/updatefile?os=linux&runtime=netcore&arch=x64' -o prowlarr.tar.gz
+$STD tar -xvzf prowlarr.tar.gz
 mv Prowlarr /opt
 chmod 775 /opt/Prowlarr
 msg_ok "Installed Prowlarr"
