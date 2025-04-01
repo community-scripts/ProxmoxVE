@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+f#!/usr/bin/env bash
 
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: remz1337
@@ -38,7 +38,7 @@ msg_ok "Installed Dependencies"
 
 msg_info "Installing yq"
 cd /tmp
-YQ_LATEST="$(curl -fsSL https://api.github.com/repos/mikefarah/yq/releases/latest | grep -Po '"tag_name": \K.*?(?=")')"
+YQ_LATEST="$(curl -fsSL https://api.github.com/repos/mikefarah/yq/releases/latest | grep -Po '"tag_name": "\K.*?(?=")')"
 curl -fsSL "https://github.com/mikefarah/yq/releases/download/${YQ_LATEST}/yq_linux_amd64" -o /usr/bin/yq
 chmod +x /usr/bin/yq
 msg_ok "Installed yq"
