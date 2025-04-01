@@ -1,23 +1,58 @@
 [
   {
-    "name": "fhem/fhem-mirror",
-    "version": "6.2",
-    "date": "2025-03-31T10:34:25Z"
-  },
-  {
-    "name": "Checkmk/checkmk",
-    "version": "v2.3.0p30-rc1",
-    "date": "2025-03-31T09:39:47Z"
+    "name": "outline/outline",
+    "version": "v0.82.1-18",
+    "date": "2025-03-31T23:12:40Z"
   },
   {
     "name": "semaphoreui/semaphore",
-    "version": "v2.13.5",
-    "date": "2025-03-31T09:36:04Z"
+    "version": "v2.13.6",
+    "date": "2025-03-31T22:43:48Z"
   },
   {
-    "name": "documenso/documenso",
-    "version": "v1.10.0-rc.4",
-    "date": "2025-03-31T09:02:22Z"
+    "name": "esphome/esphome",
+    "version": "2025.3.3",
+    "date": "2025-03-31T22:07:05Z"
+  },
+  {
+    "name": "Kometa-Team/Kometa",
+    "version": "v2.2.0",
+    "date": "2025-03-31T21:31:48Z"
+  },
+  {
+    "name": "immich-app/immich",
+    "version": "v1.131.1",
+    "date": "2025-03-31T20:53:57Z"
+  },
+  {
+    "name": "fhem/fhem-mirror",
+    "version": "6.2",
+    "date": "2025-03-31T20:30:25Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.3.4",
+    "date": "2025-03-21T20:22:46Z"
+  },
+  {
+    "name": "NodeBB/NodeBB",
+    "version": "v4.2.0",
+    "date": "2025-03-19T18:34:01Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "nightly",
+    "date": "2025-03-31T19:17:28Z"
+  },
+  {
+    "name": "redis/redis",
+    "version": "8.0-rc1-int",
+    "date": "2025-03-31T18:26:40Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.3.0p30-rc2",
+    "date": "2025-03-31T15:30:40Z"
   },
   {
     "name": "traefik/traefik",
@@ -25,14 +60,39 @@
     "date": "2025-03-31T08:55:12Z"
   },
   {
+    "name": "home-assistant/operating-system",
+    "version": "15.1",
+    "date": "2025-03-31T13:42:20Z"
+  },
+  {
+    "name": "theonedev/onedev",
+    "version": "v11.8.5",
+    "date": "2025-03-31T13:14:22Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.84.3",
+    "date": "2025-03-27T11:54:33Z"
+  },
+  {
+    "name": "zitadel/zitadel",
+    "version": "v2.63.9",
+    "date": "2025-03-31T12:47:21Z"
+  },
+  {
+    "name": "Graylog2/graylog2-server",
+    "version": "6.2.0-beta.3",
+    "date": "2025-03-31T11:22:28Z"
+  },
+  {
+    "name": "documenso/documenso",
+    "version": "v1.10.0-rc.4",
+    "date": "2025-03-31T09:02:22Z"
+  },
+  {
     "name": "fallenbagel/jellyseerr",
     "version": "preview-fix-remove-button",
     "date": "2025-03-31T08:41:27Z"
-  },
-  {
-    "name": "home-assistant/core",
-    "version": "2025.3.4",
-    "date": "2025-03-21T20:22:46Z"
   },
   {
     "name": "firefly-iii/firefly-iii",
@@ -43,6 +103,11 @@
     "name": "Jackett/Jackett",
     "version": "v0.22.1712",
     "date": "2025-03-31T05:57:14Z"
+  },
+  {
+    "name": "MediaBrowser/Emby.Releases",
+    "version": "4.8.11.0",
+    "date": "2025-03-10T06:39:11Z"
   },
   {
     "name": "TriliumNext/Notes",
@@ -130,16 +195,6 @@
     "date": "2025-03-29T18:08:11Z"
   },
   {
-    "name": "theonedev/onedev",
-    "version": "v11.8.4",
-    "date": "2025-03-29T08:28:12Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "v3.10.0",
-    "date": "2025-03-15T14:38:16Z"
-  },
-  {
     "name": "syncthing/syncthing",
     "version": "v2.0.0-beta.1",
     "date": "2025-03-29T12:53:28Z"
@@ -195,19 +250,9 @@
     "date": "2025-03-28T18:40:22Z"
   },
   {
-    "name": "NodeBB/NodeBB",
-    "version": "v4.2.0",
-    "date": "2025-03-19T18:34:01Z"
-  },
-  {
     "name": "louislam/uptime-kuma",
     "version": "2.0.0-beta.2-temp",
     "date": "2025-03-28T08:45:58Z"
-  },
-  {
-    "name": "zitadel/zitadel",
-    "version": "v2.71.5",
-    "date": "2025-03-28T15:34:27Z"
   },
   {
     "name": "emqx/emqx",
@@ -260,11 +305,6 @@
     "date": "2025-03-27T19:21:13Z"
   },
   {
-    "name": "immich-app/immich",
-    "version": "v1.130.3",
-    "date": "2025-03-27T16:38:04Z"
-  },
-  {
     "name": "TandoorRecipes/recipes",
     "version": "1.5.34",
     "date": "2025-03-27T16:17:38Z"
@@ -275,19 +315,9 @@
     "date": "2025-03-27T15:51:38Z"
   },
   {
-    "name": "home-assistant/operating-system",
-    "version": "15.0",
-    "date": "2025-03-17T10:26:18Z"
-  },
-  {
     "name": "tailscale/tailscale",
     "version": "v1.82.0",
     "date": "2025-03-27T13:08:18Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.84.3",
-    "date": "2025-03-27T11:54:33Z"
   },
   {
     "name": "zabbix/zabbix",
@@ -353,11 +383,6 @@
     "name": "sct/overseerr",
     "version": "v1.34.0",
     "date": "2025-03-26T08:48:34Z"
-  },
-  {
-    "name": "esphome/esphome",
-    "version": "2025.3.2",
-    "date": "2025-03-25T23:06:45Z"
   },
   {
     "name": "grafana/grafana",
@@ -428,11 +453,6 @@
     "name": "docmost/docmost",
     "version": "v0.9.0",
     "date": "2025-03-24T18:25:37Z"
-  },
-  {
-    "name": "Graylog2/graylog2-server",
-    "version": "6.2.0-beta.2",
-    "date": "2025-03-24T12:20:51Z"
   },
   {
     "name": "wavelog/wavelog",
@@ -508,11 +528,6 @@
     "name": "neo4j/neo4j",
     "version": "4.4.42",
     "date": "2025-03-20T14:44:17Z"
-  },
-  {
-    "name": "redis/redis",
-    "version": "8.0-rc1",
-    "date": "2025-03-11T18:16:27Z"
   },
   {
     "name": "rabbitmq/rabbitmq-server",
@@ -840,11 +855,6 @@
     "date": "2025-02-23T20:39:48Z"
   },
   {
-    "name": "outline/outline",
-    "version": "v0.82.1-15",
-    "date": "2025-02-23T14:38:09Z"
-  },
-  {
     "name": "TechnitiumSoftware/DnsServer",
     "version": "v13.4.3",
     "date": "2025-02-23T11:08:26Z"
@@ -1140,11 +1150,6 @@
     "date": "2024-10-04T23:49:07Z"
   },
   {
-    "name": "Kometa-Team/Kometa",
-    "version": "v2.1.0",
-    "date": "2024-09-30T17:59:43Z"
-  },
-  {
     "name": "FunkeyFlo/ps5-mqtt",
     "version": "v1.4.0",
     "date": "2024-08-06T19:57:33Z"
@@ -1243,10 +1248,5 @@
     "name": "Shinobi-Systems/Shinobi",
     "version": "furrykitten-3",
     "date": "2022-07-15T05:20:17Z"
-  },
-  {
-    "name": "deluge-torrent/deluge",
-    "version": "deluge-2.1.2.dev0",
-    "date": "2022-07-10T13:05:21Z"
   }
 ]
