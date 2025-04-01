@@ -16,9 +16,9 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-04-01
 
-### 🚀 Updated Scripts
+### 🧰 Maintenance
 
-  - #### 🐞 Bug Fixes
+  - #### ✨ New Features
 
     - Replace wget with curl -fsSL, normalize downloads, and prep for IPv6 [@MickLesk](https://github.com/MickLesk) ([#3455](https://github.com/community-scripts/ProxmoxVE/pull/3455))
 
