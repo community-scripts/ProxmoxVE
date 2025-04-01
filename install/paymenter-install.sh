@@ -15,17 +15,17 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-    git \
-    software-properties-common \
-    apt-transport-https \
-    ca-certificates \
-    gnupg \
-    php8.2 \
-    php8.2-{common,cli,gd,mysql,mbstring,bcmath,xml,fpm,curl,zip} \
-    mariadb-server \
-    nginx \
-    redis-server
-$STD curl -fsSL "https://getcomposer.org/installer" | php -- --install-dir=/usr/local/bin --filename=composer
+  git \
+  software-properties-common \
+  apt-transport-https \
+  ca-certificates \
+  gnupg \
+  php8.2 \
+  php8.2-{common,cli,gd,mysql,mbstring,bcmath,xml,fpm,curl,zip} \
+  mariadb-server \
+  nginx \
+  redis-server
+$STD curl -fsSLS "https://getcomposer.org/installer" | php -- --install-dir=/usr/local/bin --filename=composer
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Paymenter"
@@ -47,10 +47,10 @@ mysql -u root -e "CREATE DATABASE $DB_NAME;"
 mysql -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
 mysql -u root -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost' WITH GRANT OPTION;"
 {
-    echo "Paymenter Database Credentials"
-    echo "Database: $DB_NAME"
-    echo "Username: $DB_USER"
-    echo "Password: $DB_PASS"
+  echo "Paymenter Database Credentials"
+  echo "Database: $DB_NAME"
+  echo "Username: $DB_USER"
+  echo "Password: $DB_PASS"
 } >>~/paymenter_db.creds
 cp .env.example .env
 $STD composer install --no-dev --optimize-autoloader --no-interaction
