@@ -66,7 +66,7 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now wg-dashboard.service
+systemctl enable -q --now wg-dashboard
 msg_ok "Created Service"
 
 motd_ssh

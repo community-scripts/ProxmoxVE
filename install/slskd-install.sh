@@ -105,7 +105,7 @@ ExecStart=/bin/bash -c /opt/soularr/run.sh
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now ${APPLICATION}.service
+systemctl enable -q --now ${APPLICATION}
 systemctl enable -q soularr.timer
 msg_ok "Created Services"
 

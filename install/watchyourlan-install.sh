@@ -45,7 +45,7 @@ msg_ok "Installed WatchYourLAN"
 
 msg_info "Creating Service"
 sed -i 's|/etc/watchyourlan/config.yaml|/data/config.yaml|' /lib/systemd/system/watchyourlan.service
-systemctl enable -q --now watchyourlan.service
+systemctl enable -q --now watchyourlan
 msg_ok "Created Service"
 
 motd_ssh

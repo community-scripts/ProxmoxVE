@@ -31,7 +31,7 @@ fi
 $STD apt-get update
 $STD apt-get install -y mongodb-org
 sed -i 's/bindIp: 127.0.0.1/bindIp: 0.0.0.0/' /etc/mongod.conf
-systemctl enable -q --now mongod.service
+systemctl enable -q --now mongod
 msg_ok "MongoDB 4.4 Installed"
 
 msg_info "Installing Petio"

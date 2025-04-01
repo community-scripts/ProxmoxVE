@@ -58,7 +58,7 @@ User=root
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now spoolman.service
+systemctl enable -q --now spoolman
 msg_ok "Created Service"
 
 motd_ssh

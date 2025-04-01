@@ -40,7 +40,7 @@ Restart=on-failure
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now iventoy.service
+systemctl enable -q --now iventoy
 msg_ok "Created Service"
 
 motd_ssh

@@ -55,7 +55,7 @@ Restart=on-failure
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now cps.service
+systemctl enable -q --now cps
 msg_ok "Created Service"
 
 motd_ssh

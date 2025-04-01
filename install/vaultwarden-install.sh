@@ -104,7 +104,7 @@ AmbientCapabilities=CAP_NET_BIND_SERVICE
 [Install]
 WantedBy=multi-user.target" >$service_path
 systemctl daemon-reload
-$STD systemctl enable --now vaultwarden.service
+$STD systemctl enable --now vaultwarden
 msg_ok "Created Service"
 
 motd_ssh

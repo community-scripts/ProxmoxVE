@@ -89,7 +89,7 @@ ExecStart=/usr/bin/npm run start
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now fluid-calendar.service
+systemctl enable -q --now fluid-calendar
 msg_ok "Created Service"
 
 motd_ssh

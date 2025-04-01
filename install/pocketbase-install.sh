@@ -36,7 +36,7 @@ ExecStart      = /opt/pocketbase/pocketbase serve --http=0.0.0.0:8080
 WantedBy = multi-user.target
 EOF
 
-systemctl enable -q --now pocketbase.service
+systemctl enable -q --now pocketbase
 msg_ok "Installed Pocketbase"
 
 motd_ssh

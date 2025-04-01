@@ -100,7 +100,7 @@ Environment=DOTNET_NOLOGO=true
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now kestrel-aspnetapi.service
+systemctl enable -q --now kestrel-aspnetapi
 msg_ok "Created Service"
 
 motd_ssh

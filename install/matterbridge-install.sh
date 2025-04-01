@@ -53,7 +53,7 @@ TimeoutStopSec=30s
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now matterbridge.service
+systemctl enable -q --now matterbridge
 msg_ok "Created Service"
 
 motd_ssh

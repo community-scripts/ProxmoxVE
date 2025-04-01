@@ -157,8 +157,8 @@ EnvironmentFile=/opt/adventurelog/frontend/.env
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now adventurelog-backend.service
-systemctl enable -q --now adventurelog-frontend.service
+systemctl enable -q --now adventurelog-backend
+systemctl enable -q --now adventurelog-frontend
 msg_ok "Created Service"
 
 motd_ssh

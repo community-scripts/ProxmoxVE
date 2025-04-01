@@ -69,7 +69,7 @@ ExecStart=/usr/bin/node dist/index.js
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now jellyseerr.service
+systemctl enable -q --now jellyseerr
 msg_ok "Created Service"
 
 motd_ssh

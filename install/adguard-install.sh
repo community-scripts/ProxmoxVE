@@ -38,7 +38,7 @@ EnvironmentFile=-/etc/sysconfig/AdGuardHome
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now AdGuardHome.service
+systemctl enable -q --now AdGuardHome
 msg_ok "Created Service"
 
 motd_ssh

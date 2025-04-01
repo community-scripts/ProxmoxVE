@@ -26,7 +26,7 @@ curl -fsSL "https://releases.hyperion-project.org/hyperion.pub.key" | gpg --dear
 echo "deb [signed-by=/usr/share/keyrings/hyperion.pub.gpg] https://apt.releases.hyperion-project.org/ $(lsb_release -cs) main" >/etc/apt/sources.list.d/hyperion.list
 $STD apt-get update
 $STD apt-get install -y hyperion
-$STD systemctl enable --now hyperion@root.service
+$STD systemctl enable --now hyperion@root
 msg_ok "Installed Hyperion"
 
 motd_ssh

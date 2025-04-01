@@ -38,7 +38,7 @@ Environment="DisableRootWarning=true"
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now jackett.service
+systemctl enable -q --now jackett
 msg_ok "Created Service"
 
 motd_ssh

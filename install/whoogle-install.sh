@@ -36,7 +36,7 @@ User=root
 [Install]
 WantedBy=multi-user.target" >$service_path
 
-$STD systemctl enable --now whoogle.service
+$STD systemctl enable --now whoogle
 msg_ok "Installed Whoogle"
 
 motd_ssh

@@ -72,7 +72,7 @@ ExecStart=/usr/bin/yarn run start
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now umami.service
+systemctl enable -q --now umami
 msg_ok "Created Service"
 
 motd_ssh

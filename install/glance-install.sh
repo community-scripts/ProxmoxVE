@@ -60,7 +60,7 @@ Restart=on-failure
 [Install]
 WantedBy=multi-user.target" >$service_path
 
-systemctl enable -q --now glance.service
+systemctl enable -q --now glance
 msg_ok "Created Service"
 
 motd_ssh

@@ -94,7 +94,7 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now archivebox.service
+systemctl enable -q --now archivebox
 msg_ok "Created Service"
 
 motd_ssh

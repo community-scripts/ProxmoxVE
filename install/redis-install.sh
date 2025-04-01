@@ -25,7 +25,7 @@ echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://pack
 $STD apt-get update
 $STD apt-get install -y redis
 sed -i 's/^bind .*/bind 0.0.0.0/' /etc/redis/redis.conf
-systemctl enable -q --now redis-server.service
+systemctl enable -q --now redis-server
 msg_ok "Installed Redis"
 
 motd_ssh

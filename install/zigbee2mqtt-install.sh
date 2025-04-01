@@ -67,7 +67,7 @@ User=root
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now zigbee2mqtt.service
+systemctl enable -q --now zigbee2mqtt
 msg_ok "Created Service"
 
 motd_ssh

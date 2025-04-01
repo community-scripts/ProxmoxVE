@@ -36,7 +36,7 @@ function update_script() {
     cp -R config.yaml /data/config.yaml
     sed -i 's|/etc/watchyourlan/config.yaml|/data/config.yaml|' /lib/systemd/system/watchyourlan.service
     rm watchyourlan_${RELEASE}_linux_amd64.deb config.yaml
-    systemctl enable -q --now watchyourlan.service
+    systemctl enable -q --now watchyourlan
     msg_ok "Updated $APP"
     exit
 }

@@ -48,7 +48,7 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now commafeed.service
+systemctl enable -q --now commafeed
 msg_ok "Created Service"
 
 motd_ssh

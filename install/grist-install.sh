@@ -66,7 +66,7 @@ EnvironmentFile=-/opt/grist/.env
 WantedBy=multi-user.target
 EOF
 
-systemctl enable -q --now grist.service
+systemctl enable -q --now grist
 msg_ok "Created Service"
 
 motd_ssh

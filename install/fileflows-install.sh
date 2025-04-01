@@ -56,7 +56,7 @@ temp_file=$(mktemp)
 curl -fsSL https://fileflows.com/downloads/zip -o $temp_file
 unzip -q -d /opt/fileflows $temp_file
 (cd /opt/fileflows/Server && dotnet FileFlows.Server.dll --systemd install --root true)
-systemctl enable -q --now fileflows.service
+systemctl enable -q --now fileflows
 msg_ok "Setup ${APPLICATION}"
 
 motd_ssh

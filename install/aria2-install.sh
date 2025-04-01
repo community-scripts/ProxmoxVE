@@ -78,7 +78,7 @@ Restart=on-failure
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now aria2.service
+systemctl enable -q --now aria2
 systemctl enable -q --now ariang
 msg_ok "Created Service"
 

@@ -37,7 +37,7 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now zoraxy.service
+systemctl enable -q --now zoraxy
 msg_ok "Created Service"
 
 motd_ssh

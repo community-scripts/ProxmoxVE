@@ -99,7 +99,7 @@ ExecReload=/bin/kill -USR1 \$MAINPID
 WantedBy=multi-user.target
 EOF
 
-systemctl enable -q --now traefik.service
+systemctl enable -q --now traefik
 msg_ok "Created Service"
 
 motd_ssh

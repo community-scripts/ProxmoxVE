@@ -94,7 +94,7 @@ Environment=NODE_ENV=production
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now tianji.service
+systemctl enable -q --now tianji
 msg_ok "Created Service"
 
 motd_ssh

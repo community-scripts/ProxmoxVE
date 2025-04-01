@@ -19,7 +19,7 @@ mkdir -p $(dirname $DOCKER_CONFIG_PATH)
 echo -e '{\n  "log-driver": "journald"\n}' >/etc/docker/daemon.json
 $STD bash <(curl -fsSL https://umbrel.sh)
 systemctl daemon-reload
-$STD systemctl enable --now umbrel-startup.service
+$STD systemctl enable --now umbrel-startup
 msg_ok "Installed Umbrel"
 
 motd_ssh

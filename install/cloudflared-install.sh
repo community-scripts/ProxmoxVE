@@ -53,7 +53,7 @@ KillMode=process
 [Install]
 WantedBy=multi-user.target
 EOF
-  systemctl enable -q --now cloudflared.service
+  systemctl enable -q --now cloudflared
   msg_ok "Created Service"
 fi
 

@@ -68,7 +68,7 @@ EnvironmentFile=-/etc/sysconfig/CosmosCloud
 WantedBy=multi-user.target
 EOF
 
-systemctl enable -q --now cosmos.service
+systemctl enable -q --now cosmos
 msg_info "Created Service"
 
 motd_ssh

@@ -49,7 +49,7 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now flowise.service
+systemctl enable -q --now flowise
 msg_ok "Created Service"
 
 motd_ssh

@@ -126,7 +126,7 @@ ExecStart=/usr/bin/yarn start
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now linkwarden.service
+systemctl enable -q --now linkwarden
 msg_ok "Created Service"
 
 motd_ssh

@@ -42,7 +42,7 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now ${APPLICATION}.service
+systemctl enable -q --now ${APPLICATION}
 msg_ok "Created Service"
 
 motd_ssh

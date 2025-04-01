@@ -42,7 +42,7 @@ Restart=on-failure
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now homebox.service
+systemctl enable -q --now homebox
 msg_ok "Created Service"
 
 motd_ssh

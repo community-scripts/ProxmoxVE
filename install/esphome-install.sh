@@ -45,7 +45,7 @@ User=root
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now esphomeDashboard.service
+systemctl enable -q --now esphomeDashboard
 msg_ok "Created Service"
 
 motd_ssh

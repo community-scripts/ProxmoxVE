@@ -49,7 +49,7 @@ TimeoutStopSec=30
 
 [Install]
 WantedBy=multi-user.target" >$service_path
-systemctl enable -q --now heimdall.service
+systemctl enable -q --now heimdall
 cd /opt/Heimdall
 COMPOSER_ALLOW_SUPERUSER=1 composer dump-autoload &>/dev/null
 systemctl restart heimdall.service
