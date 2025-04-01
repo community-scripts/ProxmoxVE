@@ -1,13 +1,58 @@
 [
   {
-    "name": "outline/outline",
-    "version": "v0.82.1-18",
-    "date": "2025-03-31T23:12:40Z"
+    "name": "fhem/fhem-mirror",
+    "version": "6.2",
+    "date": "2025-04-01T10:35:00Z"
+  },
+  {
+    "name": "OctoPrint/OctoPrint",
+    "version": "1.10.3",
+    "date": "2024-11-05T09:20:50Z"
   },
   {
     "name": "semaphoreui/semaphore",
-    "version": "v2.13.6",
-    "date": "2025-03-31T22:43:48Z"
+    "version": "v2.13.7",
+    "date": "2025-04-01T09:41:55Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.4.0b3-rc1",
+    "date": "2025-04-01T09:22:44Z"
+  },
+  {
+    "name": "syncthing/syncthing",
+    "version": "v1.29.4",
+    "date": "2025-04-01T08:45:07Z"
+  },
+  {
+    "name": "wazuh/wazuh",
+    "version": "v4.11.2",
+    "date": "2025-04-01T07:07:35Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1714",
+    "date": "2025-04-01T05:50:38Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.10",
+    "date": "2025-03-22T13:02:26Z"
+  },
+  {
+    "name": "diced/zipline",
+    "version": "v4.0.2",
+    "date": "2025-04-01T04:51:05Z"
+  },
+  {
+    "name": "open-webui/open-webui",
+    "version": "v0.6.0",
+    "date": "2025-04-01T01:47:32Z"
+  },
+  {
+    "name": "outline/outline",
+    "version": "v0.82.1-18",
+    "date": "2025-03-31T23:12:40Z"
   },
   {
     "name": "esphome/esphome",
@@ -25,11 +70,6 @@
     "date": "2025-03-31T20:53:57Z"
   },
   {
-    "name": "fhem/fhem-mirror",
-    "version": "6.2",
-    "date": "2025-03-31T20:30:25Z"
-  },
-  {
     "name": "home-assistant/core",
     "version": "2025.3.4",
     "date": "2025-03-21T20:22:46Z"
@@ -41,18 +81,13 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-03-31T19:17:28Z"
+    "version": "v3.10.0",
+    "date": "2025-03-15T14:38:16Z"
   },
   {
     "name": "redis/redis",
     "version": "8.0-rc1-int",
     "date": "2025-03-31T18:26:40Z"
-  },
-  {
-    "name": "Checkmk/checkmk",
-    "version": "v2.3.0p30-rc2",
-    "date": "2025-03-31T15:30:40Z"
   },
   {
     "name": "traefik/traefik",
@@ -95,14 +130,9 @@
     "date": "2025-03-31T08:41:27Z"
   },
   {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.10",
-    "date": "2025-03-22T13:02:26Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1712",
-    "date": "2025-03-31T05:57:14Z"
+    "name": "keycloak/keycloak",
+    "version": "26.1.4",
+    "date": "2025-03-13T15:41:42Z"
   },
   {
     "name": "MediaBrowser/Emby.Releases",
@@ -185,19 +215,9 @@
     "date": "2025-03-29T23:12:22Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.1.4",
-    "date": "2025-03-13T15:41:42Z"
-  },
-  {
     "name": "glanceapp/glance",
     "version": "v0.7.9",
     "date": "2025-03-29T18:08:11Z"
-  },
-  {
-    "name": "syncthing/syncthing",
-    "version": "v2.0.0-beta.1",
-    "date": "2025-03-29T12:53:28Z"
   },
   {
     "name": "tobychui/zoraxy",
@@ -343,11 +363,6 @@
     "name": "element-hq/synapse",
     "version": "v1.127.1",
     "date": "2025-03-26T21:44:28Z"
-  },
-  {
-    "name": "wazuh/wazuh",
-    "version": "coverity-w13-4.12.0",
-    "date": "2025-03-26T21:11:43Z"
   },
   {
     "name": "duplicati/duplicati",
@@ -550,11 +565,6 @@
     "date": "2025-03-18T21:01:22Z"
   },
   {
-    "name": "OctoPrint/OctoPrint",
-    "version": "1.10.3",
-    "date": "2024-11-05T09:20:50Z"
-  },
-  {
     "name": "apache/couchdb",
     "version": "3.4.3.post1",
     "date": "2025-03-18T09:44:59Z"
@@ -665,11 +675,6 @@
     "date": "2025-03-13T17:13:47Z"
   },
   {
-    "name": "diced/zipline",
-    "version": "v4.0.1",
-    "date": "2025-03-12T22:41:17Z"
-  },
-  {
     "name": "minio/minio",
     "version": "RELEASE.2025-03-12T18-04-18Z",
     "date": "2025-03-12T18:45:21Z"
@@ -753,11 +758,6 @@
     "name": "Dolibarr/dolibarr",
     "version": "21.0.0",
     "date": "2025-03-06T16:20:45Z"
-  },
-  {
-    "name": "open-webui/open-webui",
-    "version": "v0.5.20",
-    "date": "2025-03-06T03:44:57Z"
   },
   {
     "name": "matze/wastebin",
