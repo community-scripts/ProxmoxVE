@@ -14,7 +14,9 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y gnupg apt-transport-https
+$STD apt-get install -y \
+  gnupg \
+  apt-transport-https
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Azul Zulu21"
