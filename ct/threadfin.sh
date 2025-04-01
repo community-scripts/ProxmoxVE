@@ -29,7 +29,7 @@ function update_script() {
   fi
   msg_info "Updating $APP"
   systemctl stop threadfin.service
-curl -fsSL "'https://github.com/Threadfin/Threadfin/releases/latest/download/Threadfin_linux_amd64'" -o "/opt/threadfin/threadfin"
+  curl -fsSL "https://github.com/Threadfin/Threadfin/releases/latest/download/Threadfin_linux_amd64" -o "/opt/threadfin/threadfin"
   chmod +x /opt/threadfin/threadfin
   systemctl start threadfin.service
   msg_ok "Updated $APP"

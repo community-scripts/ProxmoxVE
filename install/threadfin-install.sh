@@ -20,7 +20,7 @@ msg_ok "Installed Dependencies"
 
 msg_info "Installing Threadfin"
 mkdir -p /opt/threadfin
-curl -fsSL "'https://github.com/Threadfin/Threadfin/releases/latest/download/Threadfin_linux_amd64'" -o "/opt/threadfin/threadfin"
+curl -fsSL "https://github.com/Threadfin/Threadfin/releases/latest/download/Threadfin_linux_amd64" -o "/opt/threadfin/threadfin"
 chmod +x /opt/threadfin/threadfin
 
 msg_ok "Installed Threadfin"

@@ -29,7 +29,7 @@ function update_script() {
     fi
     msg_info "Updating $APP v4"
     systemctl stop sonarr.service
-    curl -fsSL "'https://services.sonarr.tv/v1/download/main/latest?version=4&os=linux&arch=x64'" -o "SonarrV4.tar.gz"
+    curl -fsSL "https://services.sonarr.tv/v1/download/main/latest?version=4&os=linux&arch=x64" -o "SonarrV4.tar.gz"
     tar -xzf SonarrV4.tar.gz
     rm -rf /opt/Sonarr
     mv Sonarr /opt
