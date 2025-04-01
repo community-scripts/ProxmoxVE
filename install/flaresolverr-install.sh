@@ -29,10 +29,10 @@ msg_ok "Installed Chrome"
 
 msg_info "Installing FlareSolverr"
 RELEASE=$(curl -fsSL https://github.com/FlareSolverr/FlareSolverr/releases/latest | grep "title>Release" | cut -d " " -f 4)
-$STD curl -fsSL "https://github.com/FlareSolverr/FlareSolverr/releases/download/$RELEASE/flaresolverr_linux_x64.tar.gz" -O "flaresolverr_linux_x64.tar.gz"
+$STD curl -fsSL "https://github.com/FlareSolverr/FlareSolverr/releases/download/$RELEASE/flaresolverr_linux_x64.tar.gz" -o "flaresolverr_linux_x64.tar.gz"
 $STD tar -xzf flaresolverr_linux_x64.tar.gz -C /opt
 $STD rm flaresolverr_linux_x64.tar.gz
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
+echo "${RELEASE}" >/opt/"${APPLICATION}"_version.txt
 msg_ok "Installed FlareSolverr"
 
 msg_info "Creating Service"
