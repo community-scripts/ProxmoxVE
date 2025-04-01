@@ -168,7 +168,7 @@ TimeoutStopSec=5
 WantedBy=multi-user.target
 EOF
 
-systemctl -q enable --now meilisearch hoarder-browser hoarder-workers hoarder-web
+systemctl enable -q --now meilisearch hoarder-browser hoarder-workers hoarder-web
 msg_ok "Created Services"
 
 motd_ssh
