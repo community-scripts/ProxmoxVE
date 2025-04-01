@@ -1,4 +1,4 @@
-f#!/usr/bin/env bash
+#!/usr/bin/env bash
 
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: remz1337
