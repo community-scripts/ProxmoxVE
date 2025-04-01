@@ -296,7 +296,7 @@ get_header() {
 
   # Check if local file already present
   if [ ! -s "$local_header_path" ]; then
-    curl -fsSL "$local_header_path" "$header_url"
+    curl -fsSL "$header_url" -o "$local_header_path"
     if [ $? -ne 0 ]; then
       echo -e "${WARN}${BOLD}${YLW}Failed to download header for ${app_name}. No header will be displayed.${CL}"
       return 1
