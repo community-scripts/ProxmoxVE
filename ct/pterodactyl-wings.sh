@@ -35,7 +35,7 @@ function update_script() {
 
     msg_info "Updating ${APP} to v${RELEASE}"
     rm /usr/local/bin/wings
-curl -fsSL "https://github.com/pterodactyl/wings/releases/download/v${RELEASE}/wings_linux_amd64" -o "/usr/local/bin/wings"
+    curl -fsSL "https://github.com/pterodactyl/wings/releases/download/v${RELEASE}/wings_linux_amd64" -o "/usr/local/bin/wings"
     chmod u+x /usr/local/bin/wings
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated $APP to v${RELEASE}"
