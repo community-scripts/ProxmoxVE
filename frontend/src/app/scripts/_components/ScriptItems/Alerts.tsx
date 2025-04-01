@@ -14,7 +14,7 @@ export default function Alerts({ item }: { item: Script }) {
     <>
       {item?.notes?.length > 0 &&
         item.notes.map((note: NoteProps, index: number) => (
-          <div key={index} className="mt-4 flex flex-col gap-2">
+          <div key={index} className="mt-4 flex flex-col shadow-sm gap-2">
             <p
               className={cn(
                 "inline-flex items-center gap-2 rounded-lg border p-2 pl-4 text-sm",

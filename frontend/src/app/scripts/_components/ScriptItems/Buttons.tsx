@@ -69,7 +69,7 @@ export default function Buttons({ item }: { item: Script }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="secondary" className="flex items-center gap-2">
+        <Button variant="outline" className="flex items-center gap-2">
           <LinkIcon className="size-4" />
           Links
         </Button>
