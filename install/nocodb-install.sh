@@ -34,7 +34,7 @@ ExecStart=/opt/nocodb/./nocodb
 
 [Install]
 WantedBy=multi-user.target" >$service_path
-systemctl enable -q --now nocodb.service &>/dev/null
+systemctl enable -q --now nocodb
 msg_ok "Created Service"
 
 motd_ssh

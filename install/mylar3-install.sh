@@ -51,7 +51,7 @@ Restart=on-failure
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now mylar3.service
+systemctl enable -q --now mylar3
 msg_ok "Created Service"
 
 motd_ssh

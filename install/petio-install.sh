@@ -61,7 +61,7 @@ WantedBy=multi-user.target
 
 
 EOF
-systemctl enable -q --now petio.service
+systemctl enable -q --now petio
 msg_ok "Created Service"
 
 motd_ssh

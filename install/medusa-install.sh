@@ -48,7 +48,7 @@ Restart=on-failure
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now medusa.service
+systemctl enable -q --now medusa
 msg_ok "Created Service"
 
 motd_ssh

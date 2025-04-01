@@ -45,7 +45,7 @@ User=root
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now opengist.service
+systemctl enable -q --now opengist
 msg_ok "Created Service"
 
 motd_ssh

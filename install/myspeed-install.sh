@@ -16,9 +16,6 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
   build-essential \
-  g++ \
-  make \
-  make \
   gpg \
   ca-certificates
 msg_ok "Installed Dependencies"
@@ -61,7 +58,7 @@ WorkingDirectory=/opt/myspeed
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now myspeed.service
+systemctl enable -q --now myspeed
 msg_ok "Created Service"
 
 motd_ssh

@@ -18,10 +18,6 @@ $STD apt-get install -y \
   apache2 \
   redis-server \
   postgresql \
-  python3 \
-  python3-pip \
-  python3-venv \
-  python3-dev \
   build-essential \
   libxml2-dev \
   libxslt1-dev \
@@ -30,6 +26,14 @@ $STD apt-get install -y \
   libssl-dev \
   zlib1g-dev
 msg_ok "Installed Dependencies"
+
+msg_info "Installing Python"
+$STD apt-get install -y \
+  python3 \
+  python3-pip \
+  python3-venv \
+  python3-dev
+msg_ok "Installed Python"  
 
 msg_info "Setting up PostgreSQL"
 DB_NAME=netbox

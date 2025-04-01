@@ -17,9 +17,6 @@ msg_info "Installing Dependencies"
 $STD apt-get update
 $STD apt-get -y install \
   gnupg \
-  make \
-  gcc \
-  g++ \
   ca-certificates \
   apache2-utils \
   logrotate \

@@ -14,12 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
-  gpg \
-  make \
-  gcc \
-  g++ \
-  build-essential
+$STD apt-get install -y gpg build-essential
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up Node.js Repository"
@@ -82,7 +77,7 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now paperless-ai.service
+systemctl enable -q --now paperless-ai
 msg_ok "Created Service"
 
 motd_ssh

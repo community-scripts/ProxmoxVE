@@ -65,7 +65,7 @@ ProtectSystem=full
 [Install]
 WantedBy=multi-user.target" >$service_path
 systemctl daemon-reload
-$STD systemctl enable --now navidrome.service
+$STD systemctl enable -q --now navidrome
 
 msg_ok "Created Service"
 

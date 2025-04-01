@@ -15,11 +15,12 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y gpg
-$STD apt-get install -y git
-$STD apt-get install -y build-essential
-$STD apt-get install -y pkg-config
-$STD apt-get install -y cmake
+$STD apt-get install -y \
+  gpg \
+  git \
+  build-essential \
+  pkg-config \
+  cmake
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Golang"
@@ -85,7 +86,7 @@ RestartSec=3
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now ollama.service
+systemctl enable -q --now ollama
 msg_ok "Created Service"
 
 motd_ssh

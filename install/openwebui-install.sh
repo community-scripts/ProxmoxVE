@@ -77,7 +77,7 @@ RestartSec=3
 [Install]
 WantedBy=multi-user.target
 EOF
-  systemctl enable -q --now ollama.service
+  systemctl enable -q --now ollama
   sed -i 's/ENABLE_OLLAMA_API=false/ENABLE_OLLAMA_API=true/g' /opt/open-webui/.env
   msg_ok "Installed Ollama"
 fi
@@ -97,7 +97,7 @@ ExecStart=/opt/open-webui/backend/start.sh
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now open-webui.service
+systemctl enable -q --now open-webui
 msg_ok "Created Service"
 
 motd_ssh

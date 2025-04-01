@@ -16,7 +16,6 @@ update_os
 msg_info "Installing Dependencies (Patience)"
 $STD apt-get install -y \
     build-essential \
-    make \
     redis-server \
     expect \
     gnupg \

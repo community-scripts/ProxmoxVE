@@ -82,7 +82,7 @@ User=root
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now metube.service
+systemctl enable -q --now metube
 msg_ok "Created Service"
 
 motd_ssh

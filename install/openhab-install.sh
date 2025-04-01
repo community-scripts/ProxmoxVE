@@ -14,8 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y gnupg
-$STD apt-get install -y apt-transport-https
+$STD apt-get install -y gnupg apt-transport-https
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Azul Zulu21"
@@ -34,7 +33,7 @@ echo "deb [signed-by=/usr/share/keyrings/openhab.gpg] https://openhab.jfrog.io/a
 $STD apt update
 $STD apt-get -y install openhab
 systemctl daemon-reload
-systemctl enable -q --now openhab.service
+systemctl enable -q --now openhab
 msg_ok "Installed openHAB"
 
 motd_ssh

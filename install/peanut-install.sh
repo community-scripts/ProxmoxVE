@@ -73,7 +73,7 @@ TimeoutStopSec=30
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now peanut.service
+systemctl enable -q --now peanut
 msg_ok "Created Service"
 
 motd_ssh

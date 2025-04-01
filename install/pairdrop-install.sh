@@ -14,8 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y git
-$STD apt-get install -y gpg
+$STD apt-get install -y git gpg
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up Node.js Repository"
@@ -49,7 +48,7 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now pairdrop.service
+systemctl enable -q --now pairdrop
 msg_ok "Created Service"
 
 motd_ssh

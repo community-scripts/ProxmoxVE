@@ -36,7 +36,7 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now ombi.service
+systemctl enable -q --now ombi
 msg_ok "Created Service"
 
 motd_ssh

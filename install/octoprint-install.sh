@@ -14,9 +14,9 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y git
-$STD apt-get install -y libyaml-dev
-$STD apt-get install -y build-essential
+$STD apt-get install -y git \
+  libyaml-dev \
+  build-essential
 msg_ok "Installed Dependencies"
 
 msg_info "Setup Python3"
@@ -24,9 +24,8 @@ $STD apt-get install -y \
   python3 \
   python3-dev \
   python3-pip \
-  python3-venv
-
-$STD apt-get install -y python3-setuptools
+  python3-venv \
+  python3-setuptools
 rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
 msg_ok "Setup Python3"
 
@@ -66,7 +65,7 @@ ExecStart=/opt/octoprint/bin/octoprint serve
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now octoprint.service
+systemctl enable -q --now octoprint
 msg_ok "Created Service"
 
 motd_ssh
