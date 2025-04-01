@@ -13,34 +13,79 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: "Proxmox VE Helper-Scripts",
-  generator: "Next.js",
-  applicationName: "Proxmox VE Helper-Scripts",
-  referrer: "origin-when-cross-origin",
-  keywords: ["Proxmox VE", "Helper-Scripts", "tteck", "helper", "scripts", "proxmox", "VE"],
-  authors: { name: "Bram Suurd" },
-  creator: "Bram Suurd",
-  publisher: "Bram Suurd",
   description:
-    "A Front-end for the Proxmox VE Helper-Scripts (Community) Repository. Featuring over 200+ scripts to help you manage your Proxmox VE environment.",
-  favicon: "/app/favicon.ico",
+    "The official website for the Proxmox VE Helper-Scripts (Community) Repository. Featuring over 300+ scripts to help you manage your Proxmox VE environment.",
+  applicationName: "Proxmox VE Helper-Scripts",
+  generator: "Next.js",
+  referrer: "origin-when-cross-origin",
+  licence: "MIT",
+  keywords: [
+    "Proxmox VE",
+    "Helper-Scripts",
+    "tteck",
+    "helper",
+    "scripts",
+    "proxmox",
+    "VE",
+    "virtualization",
+    "containers",
+    "LXC",
+    "VM",
+  ],
+  authors: [
+    { name: "Bram Suurd", url: "https://github.com/BramSuurdje" },
+    { name: "Community Scripts", url: "https://github.com/Community-Scripts" },
+  ],
+  creator: "Bram Suurd",
+  publisher: "Community Scripts",
+  metadataBase: new URL(`https://community-scripts.github.io/${basePath}/`),
+  alternates: {
+    canonical: `https://community-scripts.github.io/${basePath}/`,
+  },
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 5,
+  },
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
-  metadataBase: new URL(`https://community-scripts.github.io/${basePath}/`),
   openGraph: {
     title: "Proxmox VE Helper-Scripts",
     description:
-      "A Front-end for the Proxmox VE Helper-Scripts (Community) Repository. Featuring over 200+ scripts to help you manage your Proxmox VE environment.",
-    url: "/defaultimg.png",
+      "The official website for the Proxmox VE Helper-Scripts (Community) Repository. Featuring over 300+ scripts to help you manage your Proxmox VE environment.",
+    url: `https://community-scripts.github.io/${basePath}/`,
+    siteName: "Proxmox VE Helper-Scripts",
     images: [
       {
         url: `https://community-scripts.github.io/${basePath}/defaultimg.png`,
+        width: 1200,
+        height: 630,
+        alt: "Proxmox VE Helper-Scripts",
       },
     ],
     locale: "en_US",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Proxmox VE Helper-Scripts",
+    creator: "@BramSuurdje",
+    description:
+      "The official website for the Proxmox VE Helper-Scripts (Community) Repository. Featuring over 300+ scripts to help you manage your Proxmox VE environment.",
+    images: [`https://community-scripts.github.io/${basePath}/defaultimg.png`],
+  },
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Proxmox VE Helper-Scripts",
   },
 };
 
