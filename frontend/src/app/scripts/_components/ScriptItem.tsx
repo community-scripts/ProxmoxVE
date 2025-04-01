@@ -238,9 +238,11 @@ function ScriptItem({ item, setSelectedScript }: { item: Script; setSelectedScri
                   </div>
                 </div>
               </div>
-              <div className="hidden flex-col justify-between gap-2 sm:flex">
+              <div className="hidden flex-col w-full justify-between sm:flex">
                 <InterFaces item={item} />
-                <Buttons item={item} />
+                <div className="flex justify-end">
+                  <Buttons item={item} />
+                </div>
               </div>
             </div>
             <Separator className="mt-4" />
