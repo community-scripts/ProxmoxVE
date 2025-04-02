@@ -1,8 +1,73 @@
 [
   {
+    "name": "immich-app/immich",
+    "version": "v1.131.3",
+    "date": "2025-04-01T22:48:22Z"
+  },
+  {
     "name": "fhem/fhem-mirror",
     "version": "6.2",
-    "date": "2025-04-01T10:35:00Z"
+    "date": "2025-04-01T20:30:26Z"
+  },
+  {
+    "name": "icereed/paperless-gpt",
+    "version": "v0.14.3",
+    "date": "2025-04-01T19:53:18Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "nightly",
+    "date": "2025-03-31T19:17:28Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.3.4",
+    "date": "2025-03-21T20:22:46Z"
+  },
+  {
+    "name": "fallenbagel/jellyseerr",
+    "version": "preview-music-support",
+    "date": "2025-04-01T19:04:25Z"
+  },
+  {
+    "name": "Koenkk/zigbee2mqtt",
+    "version": "2.2.0",
+    "date": "2025-04-01T18:50:44Z"
+  },
+  {
+    "name": "apache/tomcat",
+    "version": "9.0.103",
+    "date": "2025-04-01T18:39:51Z"
+  },
+  {
+    "name": "MagicMirrorOrg/MagicMirror",
+    "version": "v2.31.0",
+    "date": "2025-04-01T18:12:45Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.19.6",
+    "date": "2025-04-01T17:26:31Z"
+  },
+  {
+    "name": "influxdata/influxdb",
+    "version": "v3.0.0-0.beta.3",
+    "date": "2025-04-01T15:34:30Z"
+  },
+  {
+    "name": "element-hq/synapse",
+    "version": "v1.127.1",
+    "date": "2025-03-26T21:44:28Z"
+  },
+  {
+    "name": "Luligu/matterbridge",
+    "version": "2.2.6",
+    "date": "2025-04-01T14:01:36Z"
+  },
+  {
+    "name": "theonedev/onedev",
+    "version": "v11.8.6",
+    "date": "2025-04-01T13:52:03Z"
   },
   {
     "name": "OctoPrint/OctoPrint",
@@ -65,24 +130,9 @@
     "date": "2025-03-31T21:31:48Z"
   },
   {
-    "name": "immich-app/immich",
-    "version": "v1.131.1",
-    "date": "2025-03-31T20:53:57Z"
-  },
-  {
-    "name": "home-assistant/core",
-    "version": "2025.3.4",
-    "date": "2025-03-21T20:22:46Z"
-  },
-  {
     "name": "NodeBB/NodeBB",
     "version": "v4.2.0",
     "date": "2025-03-19T18:34:01Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "v3.10.0",
-    "date": "2025-03-15T14:38:16Z"
   },
   {
     "name": "redis/redis",
@@ -98,11 +148,6 @@
     "name": "home-assistant/operating-system",
     "version": "15.1",
     "date": "2025-03-31T13:42:20Z"
-  },
-  {
-    "name": "theonedev/onedev",
-    "version": "v11.8.5",
-    "date": "2025-03-31T13:14:22Z"
   },
   {
     "name": "n8n-io/n8n",
@@ -125,11 +170,6 @@
     "date": "2025-03-31T09:02:22Z"
   },
   {
-    "name": "fallenbagel/jellyseerr",
-    "version": "preview-fix-remove-button",
-    "date": "2025-03-31T08:41:27Z"
-  },
-  {
     "name": "keycloak/keycloak",
     "version": "26.1.4",
     "date": "2025-03-13T15:41:42Z"
@@ -143,11 +183,6 @@
     "name": "TriliumNext/Notes",
     "version": "v0.92.5",
     "date": "2025-03-30T12:32:43Z"
-  },
-  {
-    "name": "icereed/paperless-gpt",
-    "version": "v0.14.2",
-    "date": "2025-03-30T19:50:38Z"
   },
   {
     "name": "StarFleetCPTN/GoMFT",
@@ -238,11 +273,6 @@
     "name": "OliveTin/OliveTin",
     "version": "2025.3.28",
     "date": "2025-03-29T00:18:56Z"
-  },
-  {
-    "name": "msgbyte/tianji",
-    "version": "v1.19.5",
-    "date": "2025-03-28T22:03:01Z"
   },
   {
     "name": "homarr-labs/homarr",
@@ -360,11 +390,6 @@
     "date": "2025-03-27T05:15:49Z"
   },
   {
-    "name": "element-hq/synapse",
-    "version": "v1.127.1",
-    "date": "2025-03-26T21:44:28Z"
-  },
-  {
     "name": "duplicati/duplicati",
     "version": "v2.1.0.112-2.1.0.112_canary_2025-03-26",
     "date": "2025-03-26T21:04:38Z"
@@ -443,11 +468,6 @@
     "name": "caddyserver/caddy",
     "version": "v2.9.1",
     "date": "2025-01-08T15:22:53Z"
-  },
-  {
-    "name": "influxdata/influxdb",
-    "version": "v3.0.0-0.beta.2",
-    "date": "2025-03-24T21:12:19Z"
   },
   {
     "name": "ZoeyVid/NPMplus",
@@ -553,11 +573,6 @@
     "name": "seanmorley15/AdventureLog",
     "version": "v0.9.0",
     "date": "2025-03-19T13:30:02Z"
-  },
-  {
-    "name": "Luligu/matterbridge",
-    "version": "2.2.5",
-    "date": "2025-03-19T09:11:26Z"
   },
   {
     "name": "Donkie/Spoolman",
@@ -775,11 +790,6 @@
     "date": "2025-03-05T15:43:40Z"
   },
   {
-    "name": "apache/tomcat",
-    "version": "10.1.39",
-    "date": "2025-03-04T19:05:18Z"
-  },
-  {
     "name": "sysadminsmedia/homebox",
     "version": "v0.18.0",
     "date": "2025-03-04T15:35:27Z"
@@ -788,11 +798,6 @@
     "name": "actualbudget/actual",
     "version": "v25.3.1",
     "date": "2025-03-03T02:05:36Z"
-  },
-  {
-    "name": "Koenkk/zigbee2mqtt",
-    "version": "2.1.3",
-    "date": "2025-03-02T07:47:30Z"
   },
   {
     "name": "heiher/hev-socks5-server",
@@ -1048,11 +1053,6 @@
     "name": "ErsatzTV/ErsatzTV",
     "version": "v25.1.0",
     "date": "2025-01-10T18:14:54Z"
-  },
-  {
-    "name": "MagicMirrorOrg/MagicMirror",
-    "version": "v2.30.0",
-    "date": "2025-01-01T14:30:19Z"
   },
   {
     "name": "go-vikunja/vikunja",
