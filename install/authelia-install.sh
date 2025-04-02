@@ -34,7 +34,6 @@ users:
     password: "\$argon2id\$v=19\$m=65536,t=3,p=4\$ZBopMzXrzhHXPEZxRDVT2w\$SxWm96DwhOsZyn34DLocwQEIb4kCDsk632PuiMdZnig"
     groups: []
 EOF
-
 cat <<EOF >/etc/authelia/configuration.yml
 authentication_backend:
   file:
@@ -64,6 +63,8 @@ notifier:
   filesystem:
     filename: /etc/authelia/emails.txt
 EOF
+touch /etc/authelia/emails.txt
+chown -R authelia:authelia /etc/authelia
 systemctl enable -q --now authelia
 msg_ok "Authelia Setup completed"
 
