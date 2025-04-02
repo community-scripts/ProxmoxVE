@@ -14,6 +14,22 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 All LXC instances created using this repository come pre-installed with Midnight Commander, which is a command-line tool (`mc`) that offers a user-friendly file and directory management interface for the terminal environment.
 
 
+## 2025-04-02
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Fix link in clean-lxcs.sh [@thalatamsainath](https://github.com/thalatamsainath) ([#3593](https://github.com/community-scripts/ProxmoxVE/pull/3593))
+    - Fileflows: Add ImageMagick dependecy [@tremor021](https://github.com/tremor021) ([#3589](https://github.com/community-scripts/ProxmoxVE/pull/3589))
+    - General fixes for several scripts [@tremor021](https://github.com/tremor021) ([#3587](https://github.com/community-scripts/ProxmoxVE/pull/3587))
+
+### 🧰 Maintenance
+
+  - #### 💾 Core
+
+    - UI-Fix: verbose without useless space in header [@MickLesk](https://github.com/MickLesk) ([#3598](https://github.com/community-scripts/ProxmoxVE/pull/3598))
+
 ## 2025-04-01
 
 ### 🆕 New Scripts
