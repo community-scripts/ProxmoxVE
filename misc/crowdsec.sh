@@ -70,17 +70,19 @@ function msg_ok() {
 }
 
 msg_info "Setting up ${APP} Repository"
-$STD apt-get install -y gnupg
-$STD bash <(curl -fsSL https://install.crowdsec.net)
+apt-get update &>/dev/null
+apt-get install -y curl &>/dev/null
+apt-get install -y gnupg &>/dev/null
+curl -fsSL "https://install.crowdsec.net" | bash &>/dev/null
 msg_ok "Setup ${APP} Repository"
 
 msg_info "Installing ${APP}"
-$STD apt-get update
-$STD apt-get install -y crowdsec
+apt-get update &>/dev/null
+apt-get install -y crowdsec &>/dev/null
 msg_ok "Installed ${APP} on $hostname"
 
 msg_info "Installing ${APP} Common Bouncer"
-$STD apt-get install -y crowdsec-firewall-bouncer-iptables
+apt-get install -y crowdsec-firewall-bouncer-iptables &>/dev/null
 msg_ok "Installed ${APP} Common Bouncer"
 
 msg_ok "Completed Successfully!\n"
