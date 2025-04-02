@@ -59,7 +59,7 @@ function update_script() {
 
     msg_info "Cleaning Up"
     rm -rf /opt/bookstack-backup
-    rm -rf "/opt/BookStack-${RELEASE}".zip"
+    rm -rf "/opt/BookStack-${RELEASE}.zip"
     msg_ok "Cleaned"
     msg_ok "Updated Successfully"
   else
