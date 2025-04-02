@@ -20,15 +20,29 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /var/lib/radarr/ ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    msg_error "Currently we don't provide an update function for this ${APP}."
+  header_info
+  check_container_storage
+  check_container_resources
+
+  if [[ ! -d /var/lib/radarr/ ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+
+  msg_info "Updating $APP LXC"
+  temp_file="$(mktemp)"
+  rm -rf /opt/Radarr
+  RELEASE=$(curl -fsSL https://api.github.com/repos/Radarr/Radarr/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+  curl -fsSL "https://github.com/Radarr/Radarr/releases/download/v${RELEASE}/Radarr.master.${RELEASE}.linux-core-x64.tar.gz" -o "$temp_file"
+  $STD tar -xvzf "$temp_file"
+  mv Radarr /opt
+  chmod 775 /opt/Radarr
+  msg_ok "Updated $APP LXC"
+
+  msg_info "Cleaning up"
+  rm -rf "$temp_file"
+  msg_ok "Cleaned up"
+  exit
 }
 
 start

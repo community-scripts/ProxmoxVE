@@ -14,17 +14,19 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y sqlite3
-$STD apt-get install -y libchromaprint-tools
-$STD apt-get install -y mediainfo
+$STD apt-get install -y \
+  sqlite3 \
+  libchromaprint-tools \
+  mediainfo
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Lidarr"
+temp_file="$(mktemp)"
 mkdir -p /var/lib/lidarr/
 chmod 775 /var/lib/lidarr/
-cd /var/lib/lidarr/
-$STD curl -fsSL 'https://lidarr.servarr.com/v1/update/master/updatefile?os=linux&runtime=netcore&arch=x64' -o lidarr.tar.gz
-$STD tar -xvzf lidarr.tar.gz
+RELEASE=$(curl -fsSL https://api.github.com/repos/Lidarr/Lidarr/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+curl -fsSL "https://github.com/Lidarr/Lidarr/releases/download/v${RELEASE}/Lidarr.master.${RELEASE}.linux-core-x64.tar.gz" -o "$temp_file"
+$STD tar -xvzf "$temp_file"
 mv Lidarr /opt
 chmod 775 /opt/Lidarr
 msg_ok "Installed Lidarr"
@@ -44,15 +46,14 @@ Restart=on-failure
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl -q daemon-reload
-systemctl enable --now -q lidarr
+systemctl enable -q --now lidarr
 msg_ok "Created Service"
 
 motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -rf Lidarr.master.*.tar.gz
+rm -rf "$temp_file"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"

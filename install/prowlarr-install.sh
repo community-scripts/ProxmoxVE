@@ -18,11 +18,13 @@ $STD apt-get install -y sqlite3
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Prowlarr"
+temp_file="$(mktemp)"
 mkdir -p /var/lib/prowlarr/
 chmod 775 /var/lib/prowlarr/
-cd /var/lib/prowlarr/
-$STD curl -fsSL 'https://prowlarr.servarr.com/v1/update/master/updatefile?os=linux&runtime=netcore&arch=x64' -o prowlarr.tar.gz
-$STD tar -xvzf prowlarr.tar.gz
+cd /var/lib/prowlarr/ || exit
+RELEASE=$(curl -fsSL https://api.github.com/repos/Prowlarr/Prowlarr/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+curl -fsSL "https://github.tcom/Prowlarr/Prowlarr/releases/download/v${RELEASE}/Prowlarr.master.${RELEASE}.linux-core-x64.tar.gz" -o "$temp_file"
+$STD tar -xvzf "$temp_file"
 mv Prowlarr /opt
 chmod 775 /opt/Prowlarr
 msg_ok "Installed Prowlarr"
@@ -42,15 +44,14 @@ Restart=on-failure
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl -q daemon-reload
-systemctl enable --now -q prowlarr
+systemctl enable -q --now prowlarr
 msg_ok "Created Service"
 
 motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -rf Prowlarr.master.*.tar.gz
+rm -f "$temp_file"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"

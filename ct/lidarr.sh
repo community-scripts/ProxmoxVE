@@ -20,18 +20,29 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /var/lib/lidarr/ ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    msg_info "Updating $APP LXC"
-    $STD apt-get update
-    $STD apt-get -y upgrade
-    msg_ok "Updated $APP LXC"
+  header_info
+  check_container_storage
+  check_container_resources
+
+  if [[ ! -d /var/lib/lidarr/ ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+
+  msg_info "Updating $APP LXC"
+  temp_file="$(mktemp)"
+  rm -rf /opt/Lidarr
+  RELEASE=$(curl -fsSL https://api.github.com/repos/Lidarr/Lidarr/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+  curl -fsSL "https://github.com/Lidarr/Lidarr/releases/download/v${RELEASE}/Lidarr.master.${RELEASE}.linux-core-x64.tar.gz" -o "$temp_file"
+  $STD tar -xvzf "$temp_file"
+  mv Lidarr /opt
+  chmod 775 /opt/Lidarr
+  msg_ok "Updated $APP LXC"
+
+  msg_info "Cleaning up"
+  rm -rf "$temp_file"
+  msg_ok "Cleaned up"
+  exit
 }
 
 start
