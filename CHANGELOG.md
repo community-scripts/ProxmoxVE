@@ -18,7 +18,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🆕 New Scripts
 
-  - Alpine-Wireguard [@MickLesk](https://github.com/MickLesk) ([#3611](https://github.com/community-scripts/ProxmoxVE/pull/3611))
+  - openziti-tunnel [@emoscardini](https://github.com/emoscardini) ([#3610](https://github.com/community-scripts/ProxmoxVE/pull/3610))
+- Alpine-Wireguard [@MickLesk](https://github.com/MickLesk) ([#3611](https://github.com/community-scripts/ProxmoxVE/pull/3611))
 
 ### 🚀 Updated Scripts
 
