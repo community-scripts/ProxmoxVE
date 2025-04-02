@@ -44,6 +44,7 @@ color() {
   CPUCORE="${TAB}🧠${TAB}${CL}"
   RAMSIZE="${TAB}🛠️${TAB}${CL}"
   SEARCH="${TAB}🔍${TAB}${CL}"
+  VERBOSE_CROPPED="🔍${TAB}"
   VERIFYPW="${TAB}🔐${TAB}${CL}"
   CONTAINERID="${TAB}🆔${TAB}${CL}"
   HOSTNAME="${TAB}🏠${TAB}${CL}"
@@ -950,7 +951,7 @@ install_script() {
       ;;
     2)
       header_info
-      echo -e "${DEFAULT}${BOLD}${BL}Using Default Settings on node $PVEHOST_NAME (${SEARCH}Verbose)${CL}"
+      echo -e "${DEFAULT}${BOLD}${BL}Using Default Settings on node $PVEHOST_NAME (${VERBOSE_CROPPED}Verbose)${CL}"
       VERB="yes"
       METHOD="default"
       base_settings "$VERB"
