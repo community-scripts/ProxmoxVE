@@ -1,13 +1,48 @@
 [
   {
-    "name": "immich-app/immich",
-    "version": "v1.131.3",
-    "date": "2025-04-01T22:48:22Z"
+    "name": "Graylog2/graylog2-server",
+    "version": "6.1.9",
+    "date": "2025-04-02T11:18:59Z"
+  },
+  {
+    "name": "syncthing/syncthing",
+    "version": "v1.29.4",
+    "date": "2025-04-01T08:45:07Z"
   },
   {
     "name": "fhem/fhem-mirror",
     "version": "6.2",
-    "date": "2025-04-01T20:30:26Z"
+    "date": "2025-04-02T10:34:08Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.3.4",
+    "date": "2025-03-21T20:22:46Z"
+  },
+  {
+    "name": "zwave-js/zwave-js-ui",
+    "version": "v10.1.4",
+    "date": "2025-04-02T09:38:52Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "server/public/v0.1.11",
+    "date": "2025-03-28T14:04:31Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1719",
+    "date": "2025-04-02T05:50:17Z"
+  },
+  {
+    "name": "rabbitmq/rabbitmq-server",
+    "version": "v4.0.7",
+    "date": "2025-02-26T19:07:11Z"
+  },
+  {
+    "name": "immich-app/immich",
+    "version": "v1.131.3",
+    "date": "2025-04-01T22:48:22Z"
   },
   {
     "name": "icereed/paperless-gpt",
@@ -16,13 +51,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-03-31T19:17:28Z"
-  },
-  {
-    "name": "home-assistant/core",
-    "version": "2025.3.4",
-    "date": "2025-03-21T20:22:46Z"
+    "version": "v3.10.0",
+    "date": "2025-03-15T14:38:16Z"
   },
   {
     "name": "fallenbagel/jellyseerr",
@@ -60,6 +90,11 @@
     "date": "2025-03-26T21:44:28Z"
   },
   {
+    "name": "keycloak/keycloak",
+    "version": "26.1.4",
+    "date": "2025-03-13T15:41:42Z"
+  },
+  {
     "name": "Luligu/matterbridge",
     "version": "2.2.6",
     "date": "2025-04-01T14:01:36Z"
@@ -80,24 +115,19 @@
     "date": "2025-04-01T09:41:55Z"
   },
   {
+    "name": "neo4j/neo4j",
+    "version": "5.26.5",
+    "date": "2025-04-01T09:32:48Z"
+  },
+  {
     "name": "Checkmk/checkmk",
     "version": "v2.4.0b3-rc1",
     "date": "2025-04-01T09:22:44Z"
   },
   {
-    "name": "syncthing/syncthing",
-    "version": "v1.29.4",
-    "date": "2025-04-01T08:45:07Z"
-  },
-  {
     "name": "wazuh/wazuh",
     "version": "v4.11.2",
     "date": "2025-04-01T07:07:35Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1714",
-    "date": "2025-04-01T05:50:38Z"
   },
   {
     "name": "firefly-iii/firefly-iii",
@@ -160,19 +190,9 @@
     "date": "2025-03-31T12:47:21Z"
   },
   {
-    "name": "Graylog2/graylog2-server",
-    "version": "6.2.0-beta.3",
-    "date": "2025-03-31T11:22:28Z"
-  },
-  {
     "name": "documenso/documenso",
     "version": "v1.10.0-rc.4",
     "date": "2025-03-31T09:02:22Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.1.4",
-    "date": "2025-03-13T15:41:42Z"
   },
   {
     "name": "MediaBrowser/Emby.Releases",
@@ -315,11 +335,6 @@
     "date": "2025-03-28T14:28:34Z"
   },
   {
-    "name": "mattermost/mattermost",
-    "version": "server/public/v0.1.11",
-    "date": "2025-03-28T14:04:31Z"
-  },
-  {
     "name": "hakimel/reveal.js",
     "version": "5.2.1",
     "date": "2025-03-28T13:00:23Z"
@@ -358,11 +373,6 @@
     "name": "TandoorRecipes/recipes",
     "version": "1.5.34",
     "date": "2025-03-27T16:17:38Z"
-  },
-  {
-    "name": "zwave-js/zwave-js-ui",
-    "version": "v10.1.3",
-    "date": "2025-03-27T15:51:38Z"
   },
   {
     "name": "tailscale/tailscale",
@@ -558,16 +568,6 @@
     "name": "stonith404/pingvin-share",
     "version": "v1.10.4",
     "date": "2025-03-20T18:56:10Z"
-  },
-  {
-    "name": "neo4j/neo4j",
-    "version": "4.4.42",
-    "date": "2025-03-20T14:44:17Z"
-  },
-  {
-    "name": "rabbitmq/rabbitmq-server",
-    "version": "v4.0.7",
-    "date": "2025-02-26T19:07:11Z"
   },
   {
     "name": "seanmorley15/AdventureLog",
