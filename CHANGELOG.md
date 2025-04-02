@@ -20,6 +20,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - Photoprism: harmonize curl  [@MickLesk](https://github.com/MickLesk) ([#3601](https://github.com/community-scripts/ProxmoxVE/pull/3601))
     - Fix link in clean-lxcs.sh [@thalatamsainath](https://github.com/thalatamsainath) ([#3593](https://github.com/community-scripts/ProxmoxVE/pull/3593))
     - Fileflows: Add ImageMagick dependecy [@tremor021](https://github.com/tremor021) ([#3589](https://github.com/community-scripts/ProxmoxVE/pull/3589))
     - General fixes for several scripts [@tremor021](https://github.com/tremor021) ([#3587](https://github.com/community-scripts/ProxmoxVE/pull/3587))
