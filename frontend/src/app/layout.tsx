@@ -42,10 +42,6 @@ export const metadata : Metadata = {
   alternates: {
     canonical: `https://community-scripts.github.io/${basePath}/`,
   },
-  icons: {
-    icon: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
-  },
   viewport: {
     width: "device-width",
     initialScale: 1,
