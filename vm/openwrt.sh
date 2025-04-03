@@ -453,7 +453,7 @@ URL="https://downloads.openwrt.org/releases/$stableversion/targets/x86/64/openwr
 
 sleep 2
 msg_ok "${CL}${BL}${URL}${CL}"
-curl -fsSL -o "$(basename "$URL")" "$URL"
+curl -f#SL -o "$(basename "$URL")" "$URL"
 echo -en "\e[1A\e[0K"
 FILE=$(basename $URL)
 msg_ok "Downloaded ${CL}${BL}$FILE${CL}"

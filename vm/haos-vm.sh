@@ -31,7 +31,7 @@ var_os="homeassistant"
 DISK_SIZE="32G"
 #
 for version in "${VERSIONS[@]}"; do
-  eval "$version=$(curl -fsSL https://raw.githubusercontent.com/home-assistant/version/master/$version.json | grep "ova" | cut -d '"' -f 4)"
+  eval "$version=$(curl -fsSL https://raw.githubusercontent.com/home-assistant/version/master/stable.json | grep '"ova"' | cut -d '"' -f 4)"
 done
 YW=$(echo "\033[33m")
 BL=$(echo "\033[36m")
@@ -432,7 +432,7 @@ else
 fi
 sleep 2
 msg_ok "${CL}${BL}${URL}${CL}"
-curl -fsSL -o "$(basename "$URL")" "$URL"
+curl -f#SL -o "$(basename "$URL")" "$URL"
 echo -en "\e[1A\e[0K"
 FILE=$(basename $URL)
 msg_ok "Downloaded ${CL}${BL}haos_ova-${BRANCH}.qcow2.xz${CL}"

@@ -423,7 +423,7 @@ msg_info "Retrieving the URL for the Ubuntu 24.04 Disk Image"
 URL=https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img
 sleep 2
 msg_ok "${CL}${BL}${URL}${CL}"
-curl -fsSL -o "$(basename "$URL")" "$URL"
+curl -f#SL -o "$(basename "$URL")" "$URL"
 echo -en "\e[1A\e[0K"
 FILE=$(basename $URL)
 msg_ok "Downloaded ${CL}${BL}${FILE}${CL}"

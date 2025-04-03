@@ -296,7 +296,7 @@ msg_info "Getting URL for Home Assistant ${BRANCH} Disk Image"
 URL=https://github.com/home-assistant/operating-system/releases/download/${BRANCH}/haos_generic-aarch64-${BRANCH}.qcow2.xz
 sleep 2
 msg_ok "${CL}${BL}${URL}${CL}"
-curl -fsSL -o "$(basename "$URL")" "$URL"
+curl -f#SL -o "$(basename "$URL")" "$URL"
 echo -en "\e[1A\e[0K"
 FILE=$(basename $URL)
 msg_ok "Downloaded ${CL}${BL}haos_generic-aarch64-${BRANCH}.qcow2.xz${CL}"
