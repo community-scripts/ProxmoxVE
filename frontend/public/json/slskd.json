@@ -32,7 +32,7 @@
   },
   "notes": [
     {
-      "text": "See /opt/slskd/config/sksld.yml to add your Soulseek credentials",
+      "text": "See /opt/slskd/config/slskd.yml to add your Soulseek credentials",
       "type": "info"
     },
     {
