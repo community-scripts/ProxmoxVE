@@ -20,6 +20,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - Prowlarr: Fix Typo in URL (update_function) [@ribera96](https://github.com/ribera96) ([#3640](https://github.com/community-scripts/ProxmoxVE/pull/3640))
     - Prowlarr: Fix typo in release URL [@tremor021](https://github.com/tremor021) ([#3636](https://github.com/community-scripts/ProxmoxVE/pull/3636))
     - GoMFT: Fix the node_modules deletion command [@tremor021](https://github.com/tremor021) ([#3624](https://github.com/community-scripts/ProxmoxVE/pull/3624))
     - BookStack: Fix path to downloaded release file [@tremor021](https://github.com/tremor021) ([#3627](https://github.com/community-scripts/ProxmoxVE/pull/3627))
