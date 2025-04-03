@@ -23,6 +23,14 @@ All LXC instances created using this repository come pre-installed with Midnight
     - GoMFT: Fix the node_modules deletion command [@tremor021](https://github.com/tremor021) ([#3624](https://github.com/community-scripts/ProxmoxVE/pull/3624))
     - BookStack: Fix path to downloaded release file [@tremor021](https://github.com/tremor021) ([#3627](https://github.com/community-scripts/ProxmoxVE/pull/3627))
 
+  - #### ✨ New Features
+
+    - *Arr: Move Arr apps to github release crawling and provide update functionality [@tremor021](https://github.com/tremor021) ([#3625](https://github.com/community-scripts/ProxmoxVE/pull/3625))
+
+### 🌐 Website
+
+  - Bump next from 15.2.3 to 15.2.4 in /frontend [@dependabot[bot]](https://github.com/dependabot[bot]) ([#3628](https://github.com/community-scripts/ProxmoxVE/pull/3628))
+
 ## 2025-04-02
 
 ### 🆕 New Scripts
