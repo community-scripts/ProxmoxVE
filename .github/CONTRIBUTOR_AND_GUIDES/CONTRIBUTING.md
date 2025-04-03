@@ -99,9 +99,9 @@ to\
 Example: `https://raw.githubusercontent.com/tremor021/PromoxVE/refs/heads/testbranch`
 
 Also you need to change:\
-`https://github.com/community-scripts/ProxmoxVE/raw/main`\
+`https://raw.githubusercontent.com/community-scripts/ProxmoxVE/raw/main`\
 to\
-`https://github.com/[USER]/[REPOSITORY]/raw/[BRANCH]`\
+`https://raw.githubusercontent.com/[USER]/[REPOSITORY]/raw/[BRANCH]`\
 in `misc/install.func` in order for `update` shell command to work.\
 These changes are only while writing and testing your scripts. Before opening a Pull Request, you should change all above mentioned paths in `misc/build.func`, `misc/install.func` and `ct/AppName.sh` to point to the original paths.
 
