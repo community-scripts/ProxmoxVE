@@ -30,6 +30,12 @@ All LXC instances created using this repository come pre-installed with Midnight
     - VM: show progress bar while downloading [@MickLesk](https://github.com/MickLesk) ([#3634](https://github.com/community-scripts/ProxmoxVE/pull/3634))
     - *Arr: Move Arr apps to github release crawling and provide update functionality [@tremor021](https://github.com/tremor021) ([#3625](https://github.com/community-scripts/ProxmoxVE/pull/3625))
 
+### 🧰 Maintenance
+
+  - #### 📂 Github
+
+    - Correct URL in contributing docs [@verbumfeit](https://github.com/verbumfeit) ([#3648](https://github.com/community-scripts/ProxmoxVE/pull/3648))
+
 ### 🌐 Website
 
   - Bump next from 15.2.3 to 15.2.4 in /frontend [@dependabot[bot]](https://github.com/dependabot[bot]) ([#3628](https://github.com/community-scripts/ProxmoxVE/pull/3628))
