@@ -1,5 +1,70 @@
 [
   {
+    "name": "ollama/ollama",
+    "version": "v0.6.3-rc1",
+    "date": "2025-03-26T20:39:01Z"
+  },
+  {
+    "name": "HabitRPG/habitica",
+    "version": "v5.35.1",
+    "date": "2025-04-02T21:49:00Z"
+  },
+  {
+    "name": "fhem/fhem-mirror",
+    "version": "6.2",
+    "date": "2025-04-02T20:29:57Z"
+  },
+  {
+    "name": "redis/redis",
+    "version": "8.0-rc1-int2",
+    "date": "2025-04-02T19:05:08Z"
+  },
+  {
+    "name": "zitadel/zitadel",
+    "version": "v2.63.9",
+    "date": "2025-03-31T12:47:21Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.4.0",
+    "date": "2025-04-02T17:01:41Z"
+  },
+  {
+    "name": "BookStackApp/BookStack",
+    "version": "v25.02.2",
+    "date": "2025-04-02T16:39:50Z"
+  },
+  {
+    "name": "cloudflare/cloudflared",
+    "version": "2025.4.0",
+    "date": "2025-04-02T15:38:53Z"
+  },
+  {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.503",
+    "date": "2025-04-02T15:12:13Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.4.0b3",
+    "date": "2025-04-02T14:39:56Z"
+  },
+  {
+    "name": "hargata/lubelog",
+    "version": "v1.4.6",
+    "date": "2025-04-02T14:07:12Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.10",
+    "date": "2025-03-22T13:02:26Z"
+  },
+  {
+    "name": "wazuh/wazuh",
+    "version": "v4.11.2",
+    "date": "2025-04-02T13:40:18Z"
+  },
+  {
     "name": "Graylog2/graylog2-server",
     "version": "6.1.9",
     "date": "2025-04-02T11:18:59Z"
@@ -8,16 +73,6 @@
     "name": "syncthing/syncthing",
     "version": "v1.29.4",
     "date": "2025-04-01T08:45:07Z"
-  },
-  {
-    "name": "fhem/fhem-mirror",
-    "version": "6.2",
-    "date": "2025-04-02T10:34:08Z"
-  },
-  {
-    "name": "home-assistant/core",
-    "version": "2025.3.4",
-    "date": "2025-03-21T20:22:46Z"
   },
   {
     "name": "zwave-js/zwave-js-ui",
@@ -51,8 +106,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v3.10.0",
-    "date": "2025-03-15T14:38:16Z"
+    "version": "nightly",
+    "date": "2025-04-01T19:30:29Z"
   },
   {
     "name": "fallenbagel/jellyseerr",
@@ -120,21 +175,6 @@
     "date": "2025-04-01T09:32:48Z"
   },
   {
-    "name": "Checkmk/checkmk",
-    "version": "v2.4.0b3-rc1",
-    "date": "2025-04-01T09:22:44Z"
-  },
-  {
-    "name": "wazuh/wazuh",
-    "version": "v4.11.2",
-    "date": "2025-04-01T07:07:35Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.10",
-    "date": "2025-03-22T13:02:26Z"
-  },
-  {
     "name": "diced/zipline",
     "version": "v4.0.2",
     "date": "2025-04-01T04:51:05Z"
@@ -165,11 +205,6 @@
     "date": "2025-03-19T18:34:01Z"
   },
   {
-    "name": "redis/redis",
-    "version": "8.0-rc1-int",
-    "date": "2025-03-31T18:26:40Z"
-  },
-  {
     "name": "traefik/traefik",
     "version": "v3.3.5",
     "date": "2025-03-31T08:55:12Z"
@@ -183,11 +218,6 @@
     "name": "n8n-io/n8n",
     "version": "n8n@1.84.3",
     "date": "2025-03-27T11:54:33Z"
-  },
-  {
-    "name": "zitadel/zitadel",
-    "version": "v2.63.9",
-    "date": "2025-03-31T12:47:21Z"
   },
   {
     "name": "documenso/documenso",
@@ -405,11 +435,6 @@
     "date": "2025-03-26T21:04:38Z"
   },
   {
-    "name": "ollama/ollama",
-    "version": "v0.6.3-rc1",
-    "date": "2025-03-26T20:39:01Z"
-  },
-  {
     "name": "dgtlmoon/changedetection.io",
     "version": "0.49.9",
     "date": "2025-03-26T15:31:03Z"
@@ -460,11 +485,6 @@
     "date": "2025-03-25T15:11:18Z"
   },
   {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.503",
-    "date": "2025-03-25T14:01:20Z"
-  },
-  {
     "name": "crowdsecurity/crowdsec",
     "version": "v1.6.8",
     "date": "2025-03-25T13:33:10Z"
@@ -483,11 +503,6 @@
     "name": "ZoeyVid/NPMplus",
     "version": "2025-03-24-r2",
     "date": "2025-03-24T20:52:35Z"
-  },
-  {
-    "name": "HabitRPG/habitica",
-    "version": "v5.35.0",
-    "date": "2025-03-24T20:51:10Z"
   },
   {
     "name": "go-gitea/gitea",
@@ -625,11 +640,6 @@
     "date": "2025-03-16T18:39:49Z"
   },
   {
-    "name": "BookStackApp/BookStack",
-    "version": "v25.02.1",
-    "date": "2025-03-16T12:51:00Z"
-  },
-  {
     "name": "Kozea/Radicale",
     "version": "v3.5.0",
     "date": "2025-03-16T06:05:55Z"
@@ -760,11 +770,6 @@
     "date": "2025-03-07T15:41:35Z"
   },
   {
-    "name": "hargata/lubelog",
-    "version": "v1.4.5",
-    "date": "2025-03-06T19:43:48Z"
-  },
-  {
     "name": "eclipse-mosquitto/mosquitto",
     "version": "v2.0.21",
     "date": "2025-03-06T16:24:56Z"
@@ -808,11 +813,6 @@
     "name": "jordan-dalby/ByteStash",
     "version": "v1.5.7",
     "date": "2025-02-27T20:04:08Z"
-  },
-  {
-    "name": "cloudflare/cloudflared",
-    "version": "2025.2.1",
-    "date": "2025-02-27T11:36:11Z"
   },
   {
     "name": "cross-seed/cross-seed",
