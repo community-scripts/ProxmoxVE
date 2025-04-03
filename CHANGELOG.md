@@ -14,6 +14,15 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 All LXC instances created using this repository come pre-installed with Midnight Commander, which is a command-line tool (`mc`) that offers a user-friendly file and directory management interface for the terminal environment.
 
 
+## 2025-04-03
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - GoMFT: Fix the node_modules deletion command [@tremor021](https://github.com/tremor021) ([#3624](https://github.com/community-scripts/ProxmoxVE/pull/3624))
+    - BookStack: Fix path to downloaded release file [@tremor021](https://github.com/tremor021) ([#3627](https://github.com/community-scripts/ProxmoxVE/pull/3627))
+
 ## 2025-04-02
 
 ### 🆕 New Scripts
