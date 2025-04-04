@@ -94,12 +94,12 @@ msg_error() {
 # This function sets up the Container OS by generating the locale, setting the timezone, and checking the network connection
 setting_up_container() {
   msg_info "Setting up Container OS"
-  while [ $i -gt 0 ]; do
+  while [ "$i" -gt 0 ]; do
     if [ "$(ip addr show | grep 'inet ' | grep -v '127.0.0.1' | awk '{print $2}' | cut -d'/' -f1)" != "" ]; then
       break
     fi
     echo 1>&2 -en "${CROSS}${RD} No Network! "
-    sleep $RETRY_EVERY
+    sleep "$RETRY_EVERY"
     i=$((i - 1))
   done
 
@@ -194,6 +194,6 @@ customize() {
     msg_ok "Customized Container"
   fi
 
-  echo "bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/raw/main/ct/${app}.sh)\"" >/usr/bin/update
+  echo "bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/${app}.sh)\"" >/usr/bin/update
   chmod +x /usr/bin/update
 }
