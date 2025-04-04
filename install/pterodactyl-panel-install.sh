@@ -23,19 +23,19 @@ $STD apt-get install -y \
   composer
 msg_ok "Installed Dependencies"
 
-msg_info "Adding PHP8.3 Repository"
-$STD curl -fsSLo /tmp/debsuryorg-archive-keyring.deb https://packages.sury.org/debsuryorg-archive-keyring.deb
+msg_info "Adding PHP8.4 Repository"
+$STD curl -sSLo /tmp/debsuryorg-archive-keyring.deb https://packages.sury.org/debsuryorg-archive-keyring.deb
 $STD dpkg -i /tmp/debsuryorg-archive-keyring.deb
 $STD sh -c 'echo "deb [signed-by=/usr/share/keyrings/deb.sury.org-php.gpg] https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list'
 $STD apt-get update
-msg_ok "Added PHP8.3 Repository"
+msg_ok "Added PHP8.4 Repository"
 
 msg_info "Installing PHP"
 $STD apt-get remove -y php8.2*
 $STD apt-get install -y \
-  php8.3 \
-  php8.3-{gd,mysql,mbstring,bcmath,xml,curl,zip,intl,fpm} \
-  libapache2-mod-php8.3
+  php8.4 \
+  php8.4-{gd,mysql,mbstring,bcmath,xml,curl,zip,intl,fpm} \
+  libapache2-mod-php8.4
 msg_ok "Installed PHP"
 
 msg_info "Setting up MariaDB"
@@ -60,7 +60,7 @@ read -p "Enter your Last Name: " NAME_LAST
 msg_info "Installing pterodactyl Panel"
 RELEASE=$(curl -fsSL https://api.github.com/repos/pterodactyl/panel/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 mkdir /opt/pterodactyl-panel
-cd /opt/pterodactyl-panel
+cd /opt/pterodactyl-panel || exit
 curl -fsSL "https://github.com/pterodactyl/panel/releases/download/v${RELEASE}/panel.tar.gz" -o $(basename "https://github.com/pterodactyl/panel/releases/download/v${RELEASE}/panel.tar.gz")
 tar -xzf "panel.tar.gz"
 cp .env.example .env
@@ -68,8 +68,8 @@ IP=$(hostname -I | awk '{print $1}')
 ADMIN_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 $STD composer install --no-dev --optimize-autoloader --no-interaction
 $STD php artisan key:generate --force
-$STD php artisan p:environment:setup --no-interaction --author $ADMIN_EMAIL --url "http://$IP"
-$STD php artisan p:environment:database --no-interaction --database $DB_NAME --username $DB_USER --password $DB_PASS
+$STD php artisan p:environment:setup --no-interaction --author "$ADMIN_EMAIL" --url "http://$IP"
+$STD php artisan p:environment:database --no-interaction --database $DB_NAME --username $DB_USER --password "$DB_PASS"
 $STD php artisan migrate --seed --force --no-interaction
 $STD php artisan p:user:make --no-interaction --admin=1 --email "$ADMIN_EMAIL" --password "$ADMIN_PASS" --name-first "$NAME_FIRST" --name-last "$NAME_LAST" --username "admin"
 echo "* * * * * php /opt/pterodactyl-panel/artisan schedule:run >> /dev/null 2>&1" | crontab -u www-data -
@@ -82,7 +82,7 @@ chmod -R 755 /opt/pterodactyl-panel/storage/* /opt/pterodactyl-panel/bootstrap/c
   echo "pterodactyl Admin Password: $ADMIN_PASS"
 } >>~/pterodactyl-panel.creds
 
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
+echo "${RELEASE}" >/opt/"${APPLICATION}"_version.txt
 msg_ok "Installed pterodactyl Panel"
 
 msg_info "Creating Service"
