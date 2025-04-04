@@ -16,10 +16,15 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-04-04
 
+### 🆕 New Scripts
+
+  - meilisearch [@MickLesk](https://github.com/MickLesk) ([#3638](https://github.com/community-scripts/ProxmoxVE/pull/3638))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
 
+    - Pelican Panel: Bump php to 8.4 [@bvdberg01](https://github.com/bvdberg01) ([#3669](https://github.com/community-scripts/ProxmoxVE/pull/3669))
     - Pterodactyl: Bump php to 8.4 [@MickLesk](https://github.com/MickLesk) ([#3655](https://github.com/community-scripts/ProxmoxVE/pull/3655))
 
   - #### ✨ New Features
