@@ -27,10 +27,27 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+    CURRENT_PHP=$(php -v 2>/dev/null | awk '/^PHP/{print $2}' | cut -d. -f1,2)
+
+  if [[ "$CURRENT_PHP" != "8.4" ]]; then
+    msg_info "Migrating PHP $CURRENT_PHP to 8.4"
+    $STD curl -fsSLo /tmp/debsuryorg-archive-keyring.deb https://packages.sury.org/debsuryorg-archive-keyring.deb
+    $STD dpkg -i /tmp/debsuryorg-archive-keyring.deb
+    $STD sh -c 'echo "deb [signed-by=/usr/share/keyrings/deb.sury.org-php.gpg] https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list'
+    $STD apt-get update
+    $STD apt-get remove -y php"${CURRENT_PHP//./}"*
+    $STD apt-get install -y \
+      php8.4 \
+      php8.4-{gd,mysql,mbstring,bcmath,xml,curl,zip,intl,fpm} \
+      libapache2-mod-php8.4
+
+    msg_ok "Migrated PHP $CURRENT_PHP to 8.4"
+  fi
+
   RELEASE=$(curl -fsSL https://api.github.com/repos/pelican-dev/panel/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
   if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
     msg_info "Stopping Service"
-    cd /opt/pelican-panel
+    cd /opt/pelican-panel  || exit
     $STD php artisan down
     msg_ok "Stopped Service"
 
