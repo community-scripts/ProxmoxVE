@@ -81,6 +81,21 @@ EOF
     echo "${RELEASE}" >/opt/actualbudget_version.txt
     msg_ok "Updated ${APP}"
 
+    # Rebuild frontend if update just happened or build/index.html is missing
+    if [[ ! -f /opt/actualbudget/packages/desktop-client/build/index.html ]] || [[ "$(find /opt/actualbudget_version.txt -mmin -1)" ]]; then
+      echo "[Actual Budget] Rebuilding frontend due to missing files or recent update..."
+
+      apt-get update
+      apt-get install -y git
+
+      yarn install
+      yarn run build:server
+
+      echo "[Actual Budget] Rebuild completed."
+    else
+      echo "[Actual Budget] Skipping frontend rebuild — all files present and up to date."
+    fi
+
     msg_info "Starting ${APP}"
     cat <<EOF >/etc/systemd/system/actualbudget.service
 [Unit]
@@ -112,6 +127,21 @@ EOF
     msg_ok "Updated Successfully"
   else
     msg_ok "No update required. ${APP} is already at ${RELEASE}"
+
+    # Handle broken frontend even if version is current
+    if [[ ! -f /opt/actualbudget/packages/desktop-client/build/index.html ]]; then
+      echo "[Actual Budget] Detected missing frontend — rebuilding..."
+
+      apt-get update
+      apt-get install -y git
+
+      cd /opt/actualbudget || exit 1
+      yarn install
+      yarn run build:server
+
+      systemctl restart actualbudget
+      echo "[Actual Budget] Rebuild and restart completed."
+    fi
   fi
   exit
 }
