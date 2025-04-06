@@ -14,6 +14,21 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 All LXC instances created using this repository come pre-installed with Midnight Commander, which is a command-line tool (`mc`) that offers a user-friendly file and directory management interface for the terminal environment.
 
 
+## 2025-04-06
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Actual: Add git dependency & change yarn commands [@MickLesk](https://github.com/MickLesk) ([#3703](https://github.com/community-scripts/ProxmoxVE/pull/3703))
+    - Pelican-Panel: Fix PHP 8.4 Repository [@MickLesk](https://github.com/MickLesk) ([#3700](https://github.com/community-scripts/ProxmoxVE/pull/3700))
+
+### 🌐 Website
+
+  - #### 🐞 Bug Fixes
+
+    - Implement FAQ component and integrate it into the main page [@BramSuurdje](https://github.com/BramSuurdje) ([#3709](https://github.com/community-scripts/ProxmoxVE/pull/3709))
+
 ## 2025-04-05
 
 ### 🌐 Website
