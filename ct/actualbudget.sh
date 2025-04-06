@@ -35,6 +35,13 @@ function update_script() {
     systemctl stop actualbudget
     msg_ok "${APP} Stopped"
 
+    if ! command -v git &>/dev/null; then
+      msg_info "Installing git"
+      $STD apt-get update
+      $STD apt-get install -y git
+      msg_ok "Installed git"
+    fi
+
     msg_info "Updating ${APP} to ${RELEASE}"
     cd /tmp || exit
     curl -fsSL "https://github.com/actualbudget/actual/archive/refs/tags/v${RELEASE}.tar.gz" -o "v${RELEASE}.tar.gz"
@@ -77,7 +84,9 @@ ACTUAL_HTTPS_CERT=/opt/actualbudget/selfhost.crt
 EOF
     fi
     cd /opt/actualbudget || exit
-    $STD yarn workspaces focus @actual-app/sync-server --production
+    $STD yarn install
+    $STD yarn run build:server
+    #$STD yarn workspaces focus @actual-app/sync-server --production
     echo "${RELEASE}" >/opt/actualbudget_version.txt
     msg_ok "Updated ${APP}"
 
