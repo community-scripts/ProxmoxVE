@@ -7,8 +7,8 @@ export default function FAQ() {
   return (
     <div className="space-y-4">
       <Accordion type="single" collapsible className="w-full">
-        {FAQ_Items.map((item) => (
-          <AccordionItem value={item.id} key={item.id} className="py-2">
+        {FAQ_Items.map((item, index) => (
+          <AccordionItem value={index.toString()} key={index} className="py-2">
             <AccordionPrimitive.Header className="flex">
               <AccordionPrimitive.Trigger className="flex flex-1 items-center gap-3 py-2 text-left text-[15px] font-semibold leading-6 transition-all [&>svg>path:last-child]:origin-center [&>svg>path:last-child]:transition-all [&>svg>path:last-child]:duration-200 [&>svg]:-order-1 [&[data-state=open]>svg>path:last-child]:rotate-90 [&[data-state=open]>svg>path:last-child]:opacity-0 [&[data-state=open]>svg]:rotate-180">
                 {item.title}
