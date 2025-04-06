@@ -6,7 +6,7 @@ import { Accordion, AccordionContent, AccordionItem } from "./ui/accordion";
 export default function FAQ() {
   return (
     <div className="space-y-4">
-      <Accordion type="single" collapsible className="w-full" defaultValue="3">
+      <Accordion type="single" collapsible className="w-full">
         {FAQ_Items.map((item) => (
           <AccordionItem value={item.id} key={item.id} className="py-2">
             <AccordionPrimitive.Header className="flex">
