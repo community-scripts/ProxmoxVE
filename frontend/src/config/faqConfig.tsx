@@ -1,37 +1,44 @@
 export const FAQ_Items = [
   {
-    id: '1',
-    title: 'Git pull vs tarball install',
-    content: 'As you probably know, git repositories contain code that is constantly changing. Pulling from a git repository means that you are getting the latest version of development code. This is not always the best idea as live repository often contains unfinished code or code containing bugs. We are using release tarballs because they are safer and most likely don\'t contain that many bugs or at least not obvious ones.',
+    id: "1",
+    title: "Why do you use tarballs instead of git pull for installation?",
+    content:
+      "Our LXC scripts install applications using release tarballs. Tarballs contain stable code versions tested for release. Using `git pull` directly fetches the latest development code, which might be unstable or contain bugs. Tarballs offer a more reliable installation.",
   },
   {
-    id: '2',
-    title: 'HTTP vs HTTPS in LXC',
-    content: 'Many of the applications installed by our scripts are available via HTTP and HTTPS. Since there are so many different application frameworks and use cases, we default to HTTP install where enabling of HTTPS is left to the user, unless its impossible to run the application without HTTPS. Enabling HTTPS often requires manual steps which we cant cover with simple bash script. We usually point to the application documentation for such LXCs.',
+    id: "2",
+    title: "Why do the scripts install applications using HTTP by default?",
+    content:
+      "Our LXC scripts install applications using HTTP by default. Setting up HTTPS often requires manual configuration specific to your setup, which our automated scripts cannot handle reliably. If an application requires HTTPS, the script will configure it. For others, you need to enable HTTPS yourself, often following the application's official documentation.",
   },
   {
-    id: '3',
-    title: 'Application Documentation',
-    content: 'Most of the applications installed by our scripts have their own documentation. We try to point to the official documentation as much as possible. If you find that script web page is missing a link to the official documentation (for applications that have it), please let us know and we will fix it.',
+    id: "3",
+    title: "Where can I find documentation for the installed application?",
+    content:
+      "We link to the official documentation for each application whenever possible. You can usually find this link on the script's information page for the specific LXC script. If you notice a missing link for an application that has official docs, please report it so we can add it.",
   },
   {
-    id: '4',
-    title: 'Bugs in our LXC scripts',
-    content: 'We are bunch of individuals doing this in our free time and unfortunately bugs happen. Be it our own doing or it\'s a change in the application we\'re installing. If you find a bug in our LXC scripts, please let us know. We are constantly working on improving our scripts and we appreciate any feedback. You can report bugs on our GitHub page.',
+    id: "4",
+    title: "What should I do if I find a bug in an LXC script?",
+    content:
+      "Our LXC scripts are maintained by volunteers in their free time. Bugs can occur due to our errors or changes in the applications themselves. If you find a bug in one of our LXC scripts, please report it on our GitHub issues page. Your feedback helps us improve the scripts.",
   },
   {
-    id: '5',
-    title: 'Application not updating to the latest version',
-    content: 'As we\'re using the github release system to pull the latest tarballs, this can mean that either there is bug in the repository itself (can happen if developer changes the release naming scheme) or it\'s a unintended bug in our script. This can happen if we deliberately stop the update of the application at specific version. This happens when there is a breaking change introduced by the version you tried to update and we don\'t want you to lose your LXC/data. This also happens if we decide to stop supporting the application until developer fixes the isses plaguing the version.',
+    id: "5",
+    title: "Why isn't the application updating to the very latest version?",
+    content:
+      "Updates via our LXC scripts might not pull the absolute latest version for a few reasons:\n- A bug in the application's release naming on GitHub.\n- A bug in our update script.\n- We intentionally pinned the version. This happens if a newer version has breaking changes or serious bugs that could affect your data or LXC stability. We wait for fixes before allowing the update.",
   },
   {
-    id: '6',
-    title: "I'm getting 502 Bad Gateway error while trying to access the application",
-    content: 'This error can happen for a number of reasons. The most common reason is that the application is not running or is not configured correctly. Please check the application logs for more information. If you are using a reverse proxy, please check the reverse proxy logs as well. If you are still having issues, please let us know and we will try to help you.',
+    id: "6",
+    title: 'Why am I getting a "502 Bad Gateway" error?',
+    content:
+      'A "502 Bad Gateway" error usually means the application inside the LXC is not running or responding correctly. Check the application\'s logs first. If you use a reverse proxy, check its logs too. If you still have problems after checking the logs, report the issue, providing details from the logs.',
   },
   {
-    id: '7',
-    title: 'Errors while running the script',
-    content: 'If a script fails to run, please run it in Verbose mode. Normal mode suppresses all the output and only show progress messages. Verbose mode shows all the output and is useful for debugging.',
+    id: "7",
+    title: "What should I do if a script fails during execution?",
+    content:
+      "If an LXC script fails, run it again using Verbose mode. Standard mode hides detailed output for neatness, showing only progress. Verbose mode displays all messages, which helps you (and us) diagnose the error. Include this verbose output if you report the issue.",
   },
 ];
