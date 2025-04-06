@@ -1,13 +1,53 @@
 [
   {
+    "name": "karakeep-app/karakeep",
+    "version": "ios/v1.6.9-1",
+    "date": "2025-04-06T10:51:57Z"
+  },
+  {
+    "name": "fallenbagel/jellyseerr",
+    "version": "preview-back-to-axios",
+    "date": "2025-04-06T10:39:06Z"
+  },
+  {
+    "name": "TriliumNext/Notes",
+    "version": "v0.92.6",
+    "date": "2025-04-06T10:38:54Z"
+  },
+  {
     "name": "fhem/fhem-mirror",
     "version": "6.2",
-    "date": "2025-04-05T20:27:18Z"
+    "date": "2025-04-06T10:31:42Z"
+  },
+  {
+    "name": "kimai/kimai",
+    "version": "2.32.0",
+    "date": "2025-04-06T09:43:51Z"
   },
   {
     "name": "semaphoreui/semaphore",
-    "version": "v2.13.8-beta1",
-    "date": "2025-04-05T20:12:37Z"
+    "version": "v2.13.8-beta2",
+    "date": "2025-04-06T06:36:42Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1733",
+    "date": "2025-04-06T06:00:36Z"
+  },
+  {
+    "name": "inventree/InvenTree",
+    "version": "0.17.10",
+    "date": "2025-04-06T05:31:49Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.10",
+    "date": "2025-03-22T13:02:26Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.6.5-rc0",
+    "date": "2025-04-03T23:57:36Z"
   },
   {
     "name": "jellyfin/jellyfin",
@@ -35,9 +75,9 @@
     "date": "2025-04-05T17:15:47Z"
   },
   {
-    "name": "karakeep-app/karakeep",
-    "version": "v0.23.1",
-    "date": "2025-04-05T15:37:45Z"
+    "name": "keycloak/keycloak",
+    "version": "26.1.4",
+    "date": "2025-03-13T15:41:42Z"
   },
   {
     "name": "stonith404/pingvin-share",
@@ -60,19 +100,9 @@
     "date": "2025-04-05T06:20:18Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1730",
-    "date": "2025-04-05T06:00:00Z"
-  },
-  {
     "name": "actualbudget/actual",
     "version": "v25.4.0",
     "date": "2025-04-05T04:14:57Z"
-  },
-  {
-    "name": "ollama/ollama",
-    "version": "v0.6.5-rc1",
-    "date": "2025-04-05T00:04:24Z"
   },
   {
     "name": "home-assistant/core",
@@ -110,19 +140,9 @@
     "date": "2025-04-01T08:45:07Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.1.4",
-    "date": "2025-03-13T15:41:42Z"
-  },
-  {
     "name": "icereed/paperless-gpt",
     "version": "v0.14.4",
     "date": "2025-04-04T14:18:53Z"
-  },
-  {
-    "name": "fallenbagel/jellyseerr",
-    "version": "preview-back-to-axios",
-    "date": "2025-04-04T13:26:23Z"
   },
   {
     "name": "nzbgetcom/nzbget",
@@ -168,11 +188,6 @@
     "name": "OctoPrint/OctoPrint",
     "version": "1.10.3",
     "date": "2024-11-05T09:20:50Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.10",
-    "date": "2025-03-22T13:02:26Z"
   },
   {
     "name": "Graylog2/graylog2-server",
@@ -241,8 +256,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-04-02T05:54:40Z"
+    "version": "v3.10.0",
+    "date": "2025-03-15T14:38:16Z"
   },
   {
     "name": "immich-app/immich",
@@ -333,11 +348,6 @@
     "name": "MediaBrowser/Emby.Releases",
     "version": "4.8.11.0",
     "date": "2025-03-10T06:39:11Z"
-  },
-  {
-    "name": "TriliumNext/Notes",
-    "version": "v0.92.5",
-    "date": "2025-03-30T12:32:43Z"
   },
   {
     "name": "StarFleetCPTN/GoMFT",
@@ -680,11 +690,6 @@
     "date": "2025-03-17T19:12:37Z"
   },
   {
-    "name": "inventree/InvenTree",
-    "version": "0.17.9",
-    "date": "2025-03-17T12:13:23Z"
-  },
-  {
     "name": "webmin/webmin",
     "version": "2.303",
     "date": "2025-03-17T04:54:50Z"
@@ -733,11 +738,6 @@
     "name": "FreshRSS/FreshRSS",
     "version": "1.26.1",
     "date": "2025-03-13T21:34:25Z"
-  },
-  {
-    "name": "kimai/kimai",
-    "version": "2.31.0",
-    "date": "2025-03-13T17:13:47Z"
   },
   {
     "name": "transmission/transmission",
