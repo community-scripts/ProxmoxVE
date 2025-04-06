@@ -23,106 +23,56 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
-  APP_OLD="hoarder"
-  APP_NEW="karakeep"
-
-  if [[ ! -d /opt/${APP_OLD} ]]; then
-    msg_error "No exist ${APP_OLD}-Installation found!"
-    exit 1
+  if [[ ! -d /opt/hoarder ]]; then
+    msg_error "No ${APP} Installation Found!"
+    exit
   fi
+  RELEASE=$(curl -fsSL https://api.github.com/repos/hoarder-app/hoarder/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+  PREV_RELEASE=$(cat /opt/${APP}_version.txt)
+  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "${PREV_RELEASE}" ]]; then
+    msg_info "Stopping Services"
+    systemctl stop hoarder-web hoarder-workers hoarder-browser
+    msg_ok "Stopped Services"
+    msg_info "Updating ${APP} to v${RELEASE}"
+    if [[ $(corepack -v) < "0.31.0" ]]; then
+      $STD npm install -g corepack@0.31.0
+    fi
+    if [[ "${PREV_RELEASE}" < 0.23.0 ]]; then
+      $STD apt-get install -y graphicsmagick ghostscript
+    fi
+    cd /opt || exit
+    if [[ -f /opt/hoarder/.env ]] && [[ ! -f /etc/hoarder/hoarder.env ]]; then
+      mkdir -p /etc/hoarder
+      mv /opt/hoarder/.env /etc/hoarder/hoarder.env
+    fi
+    rm -rf /opt/hoarder
+    curl -fsSL "https://github.com/hoarder-app/hoarder/archive/refs/tags/v${RELEASE}.zip" -o "v${RELEASE}.zip"
+    unzip -q v"${RELEASE}".zip
+    mv karakeep-"${RELEASE}" /opt/hoarder
+    cd /opt/hoarder/apps/web || exit
+    $STD pnpm install --frozen-lockfile
+    $STD pnpm exec next build --experimental-build-mode compile
+    cp -r /opt/hoarder/apps/web/.next/standalone/apps/web/server.js /opt/hoarder/apps/web
+    cd /opt/hoarder/apps/workers || exit
+    $STD pnpm install --frozen-lockfile
+    export DATA_DIR=/opt/hoarder_data
+    cd /opt/hoarder/packages/db || exit
+    $STD pnpm migrate
+    sed -i "s/SERVER_VERSION=${PREV_RELEASE}/SERVER_VERSION=${RELEASE}/" /etc/hoarder/hoarder.env
+    msg_ok "Updated ${APP} to v${RELEASE}"
 
-  msg_info "Stopping old Services"
-  systemctl stop hoarder-web hoarder-workers hoarder-browser meilisearch &>/dev/null || true
-  msg_ok "Stopped old Services"
-
-  msg_info "Disable old Services"
-  systemctl disable hoarder-web hoarder-workers hoarder-browser meilisearch &>/dev/null || true
-  rm -f /etc/systemd/system/hoarder-*.service
-  msg_ok "OLd Services disabled"
-
-  msg_info "Copy Folderstructure to new Project (/opt/${APP_NEW})"
-  mv /opt/${APP_OLD} /opt/${APP_NEW}
-  [[ -f /opt/${APP_OLD}_version.txt ]] && mv "/opt/${APP_OLD}_version.txt" "/opt/${APP_NEW^}_version.txt"
-  msg_ok "Copy Folderstructure done"
-
-  msg_info "Migrate .env File"
-  mkdir -p /etc/${APP_NEW}
-  if [[ -f /etc/${APP_OLD}/${APP_OLD}.env ]]; then
-    mv "/etc/${APP_OLD}/${APP_OLD}.env" "/etc/${APP_NEW}/${APP_NEW}.env"
-    rm -rf "/etc/${APP_OLD}"
+    msg_info "Starting Services"
+    systemctl start hoarder-browser hoarder-workers hoarder-web
+    msg_ok "Started Services"
+    msg_info "Cleaning up"
+    rm -R /opt/v"${RELEASE}".zip
+    echo "${RELEASE}" >/opt/${APP}_version.txt
+    msg_ok "Cleaned"
+    msg_ok "Updated Successfully"
+  else
+    msg_ok "No update required.  ${APP} is already at ${RELEASE}."
   fi
-  msg_ok ".env migrated"
-
-  msg_info "Modify .env file"
-  sed -i "s|/opt/${APP_OLD}|/opt/${APP_NEW}|g" "/etc/${APP_NEW}/${APP_NEW}.env"
-  sed -i "s|${APP_OLD}|${APP_NEW}|g" "/etc/${APP_NEW}/${APP_NEW}.env"
-  msg_ok ".env updated"
-
-  msg_info "Create new Services"
-  cat <<EOF >/etc/systemd/system/karakeep-web.service
-[Unit]
-Description=Karakeep Web
-Wants=network.target karakeep-workers.service
-After=network.target karakeep-workers.service
-
-[Service]
-ExecStart=pnpm start
-WorkingDirectory=/opt/karakeep/apps/web
-EnvironmentFile=/etc/karakeep/karakeep.env
-Restart=always
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-  cat <<EOF >/etc/systemd/system/karakeep-browser.service
-[Unit]
-Description=Karakeep Headless Browser
-After=network.target
-
-[Service]
-User=root
-ExecStart=/usr/bin/chromium --headless --no-sandbox --disable-gpu --disable-dev-shm-usage --remote-debugging-address=127.0.0.1 --remote-debugging-port=9222 --hide-scrollbars
-Restart=always
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-  cat <<EOF >/etc/systemd/system/karakeep-workers.service
-[Unit]
-Description=Karakeep Workers
-Wants=network.target karakeep-browser.service meilisearch.service
-After=network.target karakeep-browser.service meilisearch.service
-
-[Service]
-ExecStart=pnpm start:prod
-WorkingDirectory=/opt/karakeep/apps/workers
-EnvironmentFile=/etc/karakeep/karakeep.env
-Restart=always
-TimeoutStopSec=5
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-  msg_ok "New Services created"
-
-  msg_info "Activate Karakeep-Services"
-  systemctl daemon-reexec
-  systemctl daemon-reload
-  systemctl enable --now karakeep-web karakeep-workers karakeep-browser meilisearch
-  msg_ok "Karakeep-Services activated"
-
-  msg_info "Migrate update function"
-  rm -f /usr/bin/update
-  echo 'bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/karakeep.sh)"' >/usr/bin/update
-  chmod +x /usr/bin/update
-  msg_ok "Update function migrated"
-
-  msg_info "Starting update process for ${APP_NEW}"
-  bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/karakeep.sh)"
-  msg_ok "Done"
+  exit
 }
 
 start
