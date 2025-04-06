@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2025 community-scripts ORG
 # Author: MickLesk (Canbiz) & vhsdream
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://hoarder.app/
+# Source: https://karakeep.app/
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -34,8 +34,8 @@ chmod +x /usr/bin/yt-dlp
 msg_ok "Installed Additional Tools"
 
 msg_info "Installing Meilisearch"
-cd /tmp
-curl -fsSL "https://github.com/meilisearch/meilisearch/releases/latest/download/meilisearch.deb" -o $(basename "https://github.com/meilisearch/meilisearch/releases/latest/download/meilisearch.deb")
+cd /tmp || exit
+curl -fsSL "https://github.com/meilisearch/meilisearch/releases/latest/download/meilisearch.deb" -o "meilisearch.deb"
 $STD dpkg -i meilisearch.deb
 curl -fsSL "https://raw.githubusercontent.com/meilisearch/meilisearch/latest/config.toml" -o "/etc/meilisearch.toml"
 MASTER_KEY=$(openssl rand -base64 12)
@@ -58,30 +58,30 @@ $STD apt-get install -y nodejs
 $STD npm install -g corepack@0.31.0
 msg_ok "Installed Node.js"
 
-msg_info "Installing Hoarder"
-cd /opt
-RELEASE=$(curl -fsSL https://api.github.com/repos/hoarder-app/hoarder/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/hoarder-app/hoarder/archive/refs/tags/v${RELEASE}.zip" -o $(basename "https://github.com/hoarder-app/hoarder/archive/refs/tags/v${RELEASE}.zip")
-unzip -q v${RELEASE}.zip
-mv hoarder-${RELEASE} /opt/hoarder
-cd /opt/hoarder
+msg_info "Installing karakeep"
+cd /opt || exit
+RELEASE=$(curl -fsSL https://api.github.com/repos/karakeep-app/karakeep/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+curl -fsSL "https://github.com/karakeep-app/karakeep/archive/refs/tags/v${RELEASE}.zip" -o "v${RELEASE}.zip"
+unzip -q "v${RELEASE}.zip"
+mv karakeep-"${RELEASE}" /opt/karakeep
+cd /opt/karakeep || exit
 corepack enable
 export PUPPETEER_SKIP_DOWNLOAD="true"
 export NEXT_TELEMETRY_DISABLED=1
 export CI="true"
-cd /opt/hoarder/apps/web
+cd /opt/karakeep/apps/web || exit
 $STD pnpm install --frozen-lockfile
 $STD pnpm exec next build --experimental-build-mode compile
-cp -r /opt/hoarder/apps/web/.next/standalone/apps/web/server.js /opt/hoarder/apps/web
-cd /opt/hoarder/apps/workers
+cp -r /opt/karakeep/apps/web/.next/standalone/apps/web/server.js /opt/karakeep/apps/web
+cd /opt/karakeep/apps/workers || exit
 $STD pnpm install --frozen-lockfile
 
-export DATA_DIR=/opt/hoarder_data
-HOARDER_SECRET=$(openssl rand -base64 36 | cut -c1-24)
-mkdir -p /etc/hoarder
-cat <<EOF >/etc/hoarder/hoarder.env
+export DATA_DIR=/opt/karakeep_data
+karakeep_SECRET=$(openssl rand -base64 36 | cut -c1-24)
+mkdir -p /etc/karakeep
+cat <<EOF >/etc/karakeep/karakeep.env
 SERVER_VERSION=$RELEASE
-NEXTAUTH_SECRET="$HOARDER_SECRET"
+NEXTAUTH_SECRET="$karakeep_SECRET"
 NEXTAUTH_URL="http://localhost:3000"
 DATA_DIR="$DATA_DIR"
 MEILI_ADDR="http://127.0.0.1:7700"
@@ -99,11 +99,11 @@ BROWSER_WEB_URL="http://127.0.0.1:9222"
 # INFERENCE_IMAGE_MODEL="gpt-4o-mini" 
 EOF
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
-msg_ok "Installed Hoarder"
+msg_ok "Installed karakeep"
 
 msg_info "Running Database Migration"
 mkdir -p ${DATA_DIR}
-cd /opt/hoarder/packages/db
+cd /opt/karakeep/packages/db || exit
 $STD pnpm migrate
 msg_ok "Database Migration Completed"
 
@@ -121,25 +121,25 @@ Restart=always
 WantedBy=multi-user.target
 EOF
 
-cat <<EOF >/etc/systemd/system/hoarder-web.service
+cat <<EOF >/etc/systemd/system/karakeep-web.service
 [Unit]
-Description=Hoarder Web
-Wants=network.target hoarder-workers.service
-After=network.target hoarder-workers.service
+Description=karakeep Web
+Wants=network.target karakeep-workers.service
+After=network.target karakeep-workers.service
 
 [Service]
 ExecStart=pnpm start
-WorkingDirectory=/opt/hoarder/apps/web
-EnvironmentFile=/etc/hoarder/hoarder.env
+WorkingDirectory=/opt/karakeep/apps/web
+EnvironmentFile=/etc/karakeep/karakeep.env
 Restart=always
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
-cat <<EOF >/etc/systemd/system/hoarder-browser.service
+cat <<EOF >/etc/systemd/system/karakeep-browser.service
 [Unit]
-Description=Hoarder Headless Browser
+Description=karakeep Headless Browser
 After=network.target
 
 [Service]
@@ -151,16 +151,16 @@ Restart=always
 WantedBy=multi-user.target
 EOF
 
-cat <<EOF >/etc/systemd/system/hoarder-workers.service
+cat <<EOF >/etc/systemd/system/karakeep-workers.service
 [Unit]
-Description=Hoarder Workers
-Wants=network.target hoarder-browser.service meilisearch.service
-After=network.target hoarder-browser.service meilisearch.service
+Description=karakeep Workers
+Wants=network.target karakeep-browser.service meilisearch.service
+After=network.target karakeep-browser.service meilisearch.service
 
 [Service]
 ExecStart=pnpm start:prod
-WorkingDirectory=/opt/hoarder/apps/workers
-EnvironmentFile=/etc/hoarder/hoarder.env
+WorkingDirectory=/opt/karakeep/apps/workers
+EnvironmentFile=/etc/karakeep/karakeep.env
 Restart=always
 TimeoutStopSec=5
 
@@ -168,7 +168,7 @@ TimeoutStopSec=5
 WantedBy=multi-user.target
 EOF
 
-systemctl enable -q --now meilisearch hoarder-browser hoarder-workers hoarder-web
+systemctl enable -q --now meilisearch karakeep-browser karakeep-workers karakeep-web
 msg_ok "Created Services"
 
 motd_ssh
@@ -176,7 +176,7 @@ customize
 
 msg_info "Cleaning up"
 rm -rf /tmp/meilisearch.deb
-rm -f /opt/v${RELEASE}.zip
+rm -f /opt/v"${RELEASE}".zip
 $STD apt-get autoremove -y
 $STD apt-get autoclean -y
 msg_ok "Cleaned"

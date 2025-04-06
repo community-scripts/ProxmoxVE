@@ -1,22 +1,22 @@
 {
-  "name": "Hoarder",
-  "slug": "hoarder",
+  "name": "karakeep",
+  "slug": "karakeep",
   "categories": [
         12
   ],
-  "date_created": "2024-12-02",
+  "date_created": "2025-04-06",
   "type": "ct",
   "updateable": true,
   "privileged": false,
   "interface_port": 3000,
-  "documentation": "https://docs.hoarder.app/",
-  "website": "https://hoarder.app/",
-  "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/hoarder.svg",
-  "description": "Hoarder is an AI-powered bookmarking tool that helps you save and organize your digital content. It automatically tags your links, notes, and images, making them easy to find later. With features like auto-fetching, lists, and full-text search, Hoarder is the perfect tool for anyone who wants to keep track of their digital life.",
+  "documentation": "https://docs.karakeep.app/",
+  "website": "https://karakeep.app/",
+  "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/karakeep.svg",
+  "description": "karakeep (formerly: hoarder) is an AI-powered bookmarking tool that helps you save and organize your digital content. It automatically tags your links, notes, and images, making them easy to find later. With features like auto-fetching, lists, and full-text search, karakeep is the perfect tool for anyone who wants to keep track of their digital life.",
   "install_methods": [
     {
       "type": "default",
-      "script": "ct/hoarder.sh",
+      "script": "ct/karakeep.sh",
       "resources": {
         "cpu": 2,
         "ram": 4096,
