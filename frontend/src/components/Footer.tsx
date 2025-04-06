@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 
 export default function Footer() {
   return (
-    <div className="supports-backdrop-blur:bg-background/90 mt-auto border-t w-full flex justify-between border-border bg-background/40 py-6 backdrop-blur-lg">
+    <div className="supports-backdrop-blur:bg-background/90 mt-auto border-t w-full flex justify-between border-border bg-background/40 py-4 backdrop-blur-lg">
       <div className="mx-6 w-full flex justify-between text-xs sm:text-sm text-muted-foreground">
         <div className="flex items-center">
           <p>
