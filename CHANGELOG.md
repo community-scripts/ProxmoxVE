@@ -14,6 +14,20 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 All LXC instances created using this repository come pre-installed with Midnight Commander, which is a command-line tool (`mc`) that offers a user-friendly file and directory management interface for the terminal environment.
 
 
+## 2025-04-07
+
+### 🆕 New Scripts
+
+  - Breaking: Hoarder > Karakeep [@MickLesk](https://github.com/MickLesk) ([#3699](https://github.com/community-scripts/ProxmoxVE/pull/3699))
+
+### 🚀 Updated Scripts
+
+  - Actual: Increase RAM and add heap-space var for nodejs [@MickLesk](https://github.com/MickLesk) ([#3713](https://github.com/community-scripts/ProxmoxVE/pull/3713))
+
+  - #### 🐞 Bug Fixes
+
+    - Zitadel: Fix release tarball crawling [@tremor021](https://github.com/tremor021) ([#3716](https://github.com/community-scripts/ProxmoxVE/pull/3716))
+
 ## 2025-04-06
 
 ### 🚀 Updated Scripts
