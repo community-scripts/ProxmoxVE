@@ -55,6 +55,7 @@ ACTUAL_HTTPS_KEY=/opt/actualbudget/selfhost.key
 ACTUAL_HTTPS_CERT=/opt/actualbudget/selfhost.crt
 EOF
 cd /opt/actualbudget || exit
+export NODE_OPTIONS="--max_old_space_size=4096"
 $STD yarn install
 $STD yarn run build:server
 $STD openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout selfhost.key -out selfhost.crt <<EOF
