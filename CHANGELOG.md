@@ -26,11 +26,22 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - Alpine-MariaDB: Fix Install Service startup [@MickLesk](https://github.com/MickLesk) ([#3701](https://github.com/community-scripts/ProxmoxVE/pull/3701))
     - Zitadel: Fix release tarball crawling [@tremor021](https://github.com/tremor021) ([#3716](https://github.com/community-scripts/ProxmoxVE/pull/3716))
+
+  - #### ✨ New Features
+
+    - Kimai: bump php to 8.4 [@MickLesk](https://github.com/MickLesk) ([#3724](https://github.com/community-scripts/ProxmoxVE/pull/3724))
 
   - #### 🔧 Refactor
 
     - Refactor: Zabbix, get always latest version [@MickLesk](https://github.com/MickLesk) ([#3720](https://github.com/community-scripts/ProxmoxVE/pull/3720))
+
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Changed the category of Channels DVR and NextPVR [@johnsturgeon](https://github.com/johnsturgeon) ([#3729](https://github.com/community-scripts/ProxmoxVE/pull/3729))
 
 ## 2025-04-06
 
