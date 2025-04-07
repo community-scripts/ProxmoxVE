@@ -1,13 +1,93 @@
 [
   {
+    "name": "Graylog2/graylog2-server",
+    "version": "6.2.0-beta.4",
+    "date": "2025-04-07T11:28:13Z"
+  },
+  {
+    "name": "VictoriaMetrics/VictoriaMetrics",
+    "version": "pmm-6401-v1.115.0",
+    "date": "2025-04-07T11:15:53Z"
+  },
+  {
     "name": "semaphoreui/semaphore",
-    "version": "v2.13.8",
-    "date": "2025-04-06T20:59:11Z"
+    "version": "v2.13.10",
+    "date": "2025-04-07T11:05:41Z"
   },
   {
     "name": "fhem/fhem-mirror",
     "version": "6.2",
-    "date": "2025-04-06T20:28:01Z"
+    "date": "2025-04-07T10:34:55Z"
+  },
+  {
+    "name": "syncthing/syncthing",
+    "version": "v1.29.4",
+    "date": "2025-04-01T08:45:07Z"
+  },
+  {
+    "name": "fallenbagel/jellyseerr",
+    "version": "preview-back-to-axios",
+    "date": "2025-04-07T09:23:08Z"
+  },
+  {
+    "name": "zwave-js/zwave-js-ui",
+    "version": "v10.1.5",
+    "date": "2025-04-07T09:19:35Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.4.0b4-rc1",
+    "date": "2025-04-07T09:13:56Z"
+  },
+  {
+    "name": "redis/redis",
+    "version": "8.0-rc1-int2",
+    "date": "2025-04-02T19:05:08Z"
+  },
+  {
+    "name": "zabbix/zabbix",
+    "version": "7.4.0beta1",
+    "date": "2025-04-07T08:14:13Z"
+  },
+  {
+    "name": "StarFleetCPTN/GoMFT",
+    "version": "v0.2.5",
+    "date": "2025-04-07T07:43:29Z"
+  },
+  {
+    "name": "nzbgetcom/nzbget",
+    "version": "v24.8",
+    "date": "2025-03-18T07:33:51Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "server/public/v0.1.11",
+    "date": "2025-03-28T14:04:31Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.1",
+    "date": "2025-01-01T16:15:52Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1740",
+    "date": "2025-04-07T05:56:22Z"
+  },
+  {
+    "name": "prometheus/prometheus",
+    "version": "v0.303.0-rc.1",
+    "date": "2025-04-07T04:39:38Z"
+  },
+  {
+    "name": "open-webui/open-webui",
+    "version": "v0.6.2",
+    "date": "2025-04-07T03:41:23Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.10",
+    "date": "2025-03-22T13:02:26Z"
   },
   {
     "name": "Luligu/matterbridge",
@@ -41,8 +121,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-04-02T05:54:40Z"
+    "version": "v3.10.0",
+    "date": "2025-03-15T14:38:16Z"
   },
   {
     "name": "stackblitz-labs/bolt.diy",
@@ -70,9 +150,9 @@
     "date": "2025-04-06T11:56:18Z"
   },
   {
-    "name": "fallenbagel/jellyseerr",
-    "version": "preview-back-to-axios",
-    "date": "2025-04-06T10:39:06Z"
+    "name": "TechnitiumSoftware/DnsServer",
+    "version": "v13.5.0",
+    "date": "2025-04-06T11:24:50Z"
   },
   {
     "name": "TriliumNext/Notes",
@@ -85,19 +165,9 @@
     "date": "2025-04-06T09:43:51Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1733",
-    "date": "2025-04-06T06:00:36Z"
-  },
-  {
     "name": "inventree/InvenTree",
     "version": "0.17.10",
     "date": "2025-04-06T05:31:49Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.10",
-    "date": "2025-03-22T13:02:26Z"
   },
   {
     "name": "ollama/ollama",
@@ -123,11 +193,6 @@
     "name": "Paymenter/Paymenter",
     "version": "v1.0.2",
     "date": "2025-04-05T17:40:25Z"
-  },
-  {
-    "name": "open-webui/open-webui",
-    "version": "v0.6.1",
-    "date": "2025-04-05T17:15:47Z"
   },
   {
     "name": "keycloak/keycloak",
@@ -185,19 +250,9 @@
     "date": "2025-04-04T18:10:16Z"
   },
   {
-    "name": "syncthing/syncthing",
-    "version": "v1.29.4",
-    "date": "2025-04-01T08:45:07Z"
-  },
-  {
     "name": "icereed/paperless-gpt",
     "version": "v0.14.4",
     "date": "2025-04-04T14:18:53Z"
-  },
-  {
-    "name": "nzbgetcom/nzbget",
-    "version": "v24.8",
-    "date": "2025-03-18T07:33:51Z"
   },
   {
     "name": "apache/tomcat",
@@ -215,11 +270,6 @@
     "date": "2025-04-04T07:31:08Z"
   },
   {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.1",
-    "date": "2025-01-01T16:15:52Z"
-  },
-  {
     "name": "wazuh/wazuh",
     "version": "coverity-w14-4.12.0",
     "date": "2025-04-04T00:03:06Z"
@@ -235,19 +285,9 @@
     "date": "2024-11-05T09:20:50Z"
   },
   {
-    "name": "Graylog2/graylog2-server",
-    "version": "6.0.14",
-    "date": "2025-04-03T07:52:24Z"
-  },
-  {
     "name": "jupyter/notebook",
     "version": "@jupyter-notebook/ui-components@7.4.0-rc.0",
     "date": "2025-04-03T06:49:38Z"
-  },
-  {
-    "name": "mattermost/mattermost",
-    "version": "server/public/v0.1.11",
-    "date": "2025-03-28T14:04:31Z"
   },
   {
     "name": "rabbitmq/rabbitmq-server",
@@ -258,11 +298,6 @@
     "name": "HabitRPG/habitica",
     "version": "v5.35.1",
     "date": "2025-04-02T21:49:00Z"
-  },
-  {
-    "name": "redis/redis",
-    "version": "8.0-rc1-int2",
-    "date": "2025-04-02T19:05:08Z"
   },
   {
     "name": "zitadel/zitadel",
@@ -285,19 +320,9 @@
     "date": "2025-04-02T15:12:13Z"
   },
   {
-    "name": "Checkmk/checkmk",
-    "version": "v2.4.0b3",
-    "date": "2025-04-02T14:39:56Z"
-  },
-  {
     "name": "hargata/lubelog",
     "version": "v1.4.6",
     "date": "2025-04-02T14:07:12Z"
-  },
-  {
-    "name": "zwave-js/zwave-js-ui",
-    "version": "v10.1.4",
-    "date": "2025-04-02T09:38:52Z"
   },
   {
     "name": "immich-app/immich",
@@ -378,11 +403,6 @@
     "name": "MediaBrowser/Emby.Releases",
     "version": "4.8.11.0",
     "date": "2025-03-10T06:39:11Z"
-  },
-  {
-    "name": "StarFleetCPTN/GoMFT",
-    "version": "v0.2.4",
-    "date": "2025-03-30T19:46:08Z"
   },
   {
     "name": "louislam/dockge",
@@ -525,11 +545,6 @@
     "date": "2025-03-27T13:08:18Z"
   },
   {
-    "name": "zabbix/zabbix",
-    "version": "7.2.5",
-    "date": "2025-03-27T11:06:48Z"
-  },
-  {
     "name": "evcc-io/evcc",
     "version": "0.202.1",
     "date": "2025-03-27T08:24:55Z"
@@ -543,11 +558,6 @@
     "name": "duplicati/duplicati",
     "version": "v2.1.0.112-2.1.0.112_canary_2025-03-26",
     "date": "2025-03-26T21:04:38Z"
-  },
-  {
-    "name": "prometheus/prometheus",
-    "version": "v0.303.0-rc.0",
-    "date": "2025-03-26T12:48:46Z"
   },
   {
     "name": "forgejo/forgejo",
@@ -588,11 +598,6 @@
     "name": "crowdsecurity/crowdsec",
     "version": "v1.6.8",
     "date": "2025-03-25T13:33:10Z"
-  },
-  {
-    "name": "VictoriaMetrics/VictoriaMetrics",
-    "version": "pmm-6401-v1.114.0",
-    "date": "2025-03-25T07:58:34Z"
   },
   {
     "name": "caddyserver/caddy",
@@ -878,11 +883,6 @@
     "name": "ventoy/Ventoy",
     "version": "v1.1.05",
     "date": "2025-02-24T11:53:12Z"
-  },
-  {
-    "name": "TechnitiumSoftware/DnsServer",
-    "version": "v13.4.3",
-    "date": "2025-02-23T11:08:26Z"
   },
   {
     "name": "prometheus-pve/prometheus-pve-exporter",
