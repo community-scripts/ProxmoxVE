@@ -35,8 +35,8 @@ if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   $STD apk add --no-cache lighttpd php php-cgi php-mysqli php-mbstring php-zip php-gd php-json php-curl jq
   sed -i 's|server.modules += ( "mod_cgi" )|server.modules += ( "mod_cgi", "mod_fastcgi" )|' /etc/lighttpd/lighttpd.conf
   echo 'fastcgi.server += ( ".php" => (( "bin-path" => "/usr/bin/php-cgi", "socket" => "/var/run/php-cgi.sock" )))' >>/etc/lighttpd/lighttpd.conf
-  ADMINER_VERSION=$(curl -s https://api.github.com/repos/vrana/adminer/releases/latest | jq -r '.tag_name' | sed 's/v//')
-  wget -q -O /var/www/adminer.php "https://github.com/vrana/adminer/releases/download/v${ADMINER_VERSION}/adminer-${ADMINER_VERSION}.php"
+  ADMINER_VERSION=$(curl -fsSL https://api.github.com/repos/vrana/adminer/releases/latest | jq -r '.tag_name' | sed 's/v//')
+  curl -fsSL "https://github.com/vrana/adminer/releases/download/v${ADMINER_VERSION}/adminer-${ADMINER_VERSION}.php" -o /var/www/adminer.php
   chown lighttpd:lighttpd /var/www/adminer.php
   chmod 755 /var/www/adminer.php
   msg_ok "Adminer Installed"
