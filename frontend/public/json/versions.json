@@ -1,8 +1,73 @@
 [
   {
+    "name": "semaphoreui/semaphore",
+    "version": "v2.13.8",
+    "date": "2025-04-06T20:59:11Z"
+  },
+  {
+    "name": "fhem/fhem-mirror",
+    "version": "6.2",
+    "date": "2025-04-06T20:28:01Z"
+  },
+  {
+    "name": "Luligu/matterbridge",
+    "version": "2.2.7",
+    "date": "2025-04-06T20:00:53Z"
+  },
+  {
+    "name": "Dolibarr/dolibarr",
+    "version": "21.0.1",
+    "date": "2025-04-06T19:22:59Z"
+  },
+  {
+    "name": "pelican-dev/wings",
+    "version": "v1.0.0-beta11",
+    "date": "2025-04-06T18:52:35Z"
+  },
+  {
+    "name": "stonith404/pingvin-share",
+    "version": "v1.11.1",
+    "date": "2025-04-06T18:39:42Z"
+  },
+  {
+    "name": "wavelog/wavelog",
+    "version": "2.0.3",
+    "date": "2025-04-06T17:35:41Z"
+  },
+  {
+    "name": "TandoorRecipes/recipes",
+    "version": "1.5.34",
+    "date": "2025-03-27T16:17:38Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "nightly",
+    "date": "2025-04-02T05:54:40Z"
+  },
+  {
+    "name": "stackblitz-labs/bolt.diy",
+    "version": "v0.0.7-hf1",
+    "date": "2025-03-10T20:49:39Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.19.7",
+    "date": "2025-04-06T14:22:44Z"
+  },
+  {
+    "name": "Prowlarr/Prowlarr",
+    "version": "v1.32.2.4987",
+    "date": "2025-03-16T09:41:37Z"
+  },
+  {
+    "name": "Radarr/Radarr",
+    "version": "v5.21.1.9799",
+    "date": "2025-03-24T15:52:12Z"
+  },
+  {
     "name": "karakeep-app/karakeep",
-    "version": "ios/v1.6.9-1",
-    "date": "2025-04-06T10:51:57Z"
+    "version": "extension/v1.2.4",
+    "date": "2025-04-06T11:56:18Z"
   },
   {
     "name": "fallenbagel/jellyseerr",
@@ -15,19 +80,9 @@
     "date": "2025-04-06T10:38:54Z"
   },
   {
-    "name": "fhem/fhem-mirror",
-    "version": "6.2",
-    "date": "2025-04-06T10:31:42Z"
-  },
-  {
     "name": "kimai/kimai",
     "version": "2.32.0",
     "date": "2025-04-06T09:43:51Z"
-  },
-  {
-    "name": "semaphoreui/semaphore",
-    "version": "v2.13.8-beta2",
-    "date": "2025-04-06T06:36:42Z"
   },
   {
     "name": "Jackett/Jackett",
@@ -78,11 +133,6 @@
     "name": "keycloak/keycloak",
     "version": "26.1.4",
     "date": "2025-03-13T15:41:42Z"
-  },
-  {
-    "name": "stonith404/pingvin-share",
-    "version": "v1.11.0",
-    "date": "2025-04-05T14:56:47Z"
   },
   {
     "name": "bastienwirtz/homer",
@@ -153,11 +203,6 @@
     "name": "apache/tomcat",
     "version": "9.0.104",
     "date": "2025-04-04T12:58:11Z"
-  },
-  {
-    "name": "Dolibarr/dolibarr",
-    "version": "21.0.1",
-    "date": "2025-04-04T12:56:35Z"
   },
   {
     "name": "sabnzbd/sabnzbd",
@@ -255,11 +300,6 @@
     "date": "2025-04-02T09:38:52Z"
   },
   {
-    "name": "runtipi/runtipi",
-    "version": "v3.10.0",
-    "date": "2025-03-15T14:38:16Z"
-  },
-  {
     "name": "immich-app/immich",
     "version": "v1.131.3",
     "date": "2025-04-01T22:48:22Z"
@@ -270,11 +310,6 @@
     "date": "2025-04-01T18:12:45Z"
   },
   {
-    "name": "msgbyte/tianji",
-    "version": "v1.19.6",
-    "date": "2025-04-01T17:26:31Z"
-  },
-  {
     "name": "influxdata/influxdb",
     "version": "v3.0.0-0.beta.3",
     "date": "2025-04-01T15:34:30Z"
@@ -283,11 +318,6 @@
     "name": "element-hq/synapse",
     "version": "v1.127.1",
     "date": "2025-03-26T21:44:28Z"
-  },
-  {
-    "name": "Luligu/matterbridge",
-    "version": "2.2.6",
-    "date": "2025-04-01T14:01:36Z"
   },
   {
     "name": "theonedev/onedev",
@@ -380,11 +410,6 @@
     "date": "2025-03-30T08:02:19Z"
   },
   {
-    "name": "Prowlarr/Prowlarr",
-    "version": "v1.32.2.4987",
-    "date": "2025-03-16T09:41:37Z"
-  },
-  {
     "name": "Readarr/Readarr",
     "version": "v2.0.0.4645",
     "date": "2017-03-07T18:56:06Z"
@@ -393,11 +418,6 @@
     "name": "Lidarr/Lidarr",
     "version": "v2.10.3.4602",
     "date": "2025-03-23T11:00:37Z"
-  },
-  {
-    "name": "Radarr/Radarr",
-    "version": "v5.21.1.9799",
-    "date": "2025-03-24T15:52:12Z"
   },
   {
     "name": "aceberg/WatchYourLAN",
@@ -500,11 +520,6 @@
     "date": "2025-03-27T19:21:13Z"
   },
   {
-    "name": "TandoorRecipes/recipes",
-    "version": "1.5.34",
-    "date": "2025-03-27T16:17:38Z"
-  },
-  {
     "name": "tailscale/tailscale",
     "version": "v1.82.0",
     "date": "2025-03-27T13:08:18Z"
@@ -598,11 +613,6 @@
     "name": "docmost/docmost",
     "version": "v0.9.0",
     "date": "2025-03-24T18:25:37Z"
-  },
-  {
-    "name": "wavelog/wavelog",
-    "version": "2.0.2",
-    "date": "2025-03-24T12:02:08Z"
   },
   {
     "name": "requarks/wiki",
@@ -700,11 +710,6 @@
     "date": "2025-03-16T18:39:49Z"
   },
   {
-    "name": "pelican-dev/wings",
-    "version": "v1.0.0-beta10",
-    "date": "2025-03-15T20:24:34Z"
-  },
-  {
     "name": "pelican-dev/panel",
     "version": "v1.0.0-beta18",
     "date": "2025-03-15T20:24:04Z"
@@ -768,11 +773,6 @@
     "name": "mylar3/mylar3",
     "version": "v0.8.2",
     "date": "2025-03-11T05:20:22Z"
-  },
-  {
-    "name": "stackblitz-labs/bolt.diy",
-    "version": "v0.0.7-hf1",
-    "date": "2025-03-10T20:49:39Z"
   },
   {
     "name": "AlexxIT/go2rtc",
