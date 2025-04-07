@@ -28,6 +28,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - Zitadel: Fix release tarball crawling [@tremor021](https://github.com/tremor021) ([#3716](https://github.com/community-scripts/ProxmoxVE/pull/3716))
 
+  - #### 🔧 Refactor
+
+    - Refactor: Zabbix, get always latest version [@MickLesk](https://github.com/MickLesk) ([#3720](https://github.com/community-scripts/ProxmoxVE/pull/3720))
+
 ## 2025-04-06
 
 ### 🚀 Updated Scripts
