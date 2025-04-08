@@ -1,5 +1,65 @@
 [
   {
+    "name": "pelican-dev/panel",
+    "version": "v1.0.0-beta19",
+    "date": "2025-04-07T23:06:29Z"
+  },
+  {
+    "name": "pelican-dev/wings",
+    "version": "v1.0.0-beta11",
+    "date": "2025-04-07T23:02:00Z"
+  },
+  {
+    "name": "fhem/fhem-mirror",
+    "version": "6.2",
+    "date": "2025-04-07T20:30:04Z"
+  },
+  {
+    "name": "Threadfin/Threadfin",
+    "version": "1.2.32",
+    "date": "2025-04-07T20:01:09Z"
+  },
+  {
+    "name": "NodeBB/NodeBB",
+    "version": "v4.2.0",
+    "date": "2025-03-19T18:34:01Z"
+  },
+  {
+    "name": "go-gitea/gitea",
+    "version": "v1.23.7",
+    "date": "2025-04-07T19:27:52Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.4.0b4",
+    "date": "2025-04-07T19:14:53Z"
+  },
+  {
+    "name": "Brandawg93/PeaNUT",
+    "version": "v5.7.0",
+    "date": "2025-04-07T16:14:10Z"
+  },
+  {
+    "name": "openobserve/openobserve",
+    "version": "v0.14.5",
+    "date": "2025-04-07T16:09:11Z"
+  },
+  {
+    "name": "thomiceli/opengist",
+    "version": "v1.10.0",
+    "date": "2025-04-07T14:32:15Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.84.3",
+    "date": "2025-03-27T11:54:33Z"
+  },
+  {
+    "name": "apache/cassandra",
+    "version": "5.0.4-tentative",
+    "date": "2025-04-07T12:05:05Z"
+  },
+  {
     "name": "Graylog2/graylog2-server",
     "version": "6.2.0-beta.4",
     "date": "2025-04-07T11:28:13Z"
@@ -15,11 +75,6 @@
     "date": "2025-04-07T11:05:41Z"
   },
   {
-    "name": "fhem/fhem-mirror",
-    "version": "6.2",
-    "date": "2025-04-07T10:34:55Z"
-  },
-  {
     "name": "syncthing/syncthing",
     "version": "v1.29.4",
     "date": "2025-04-01T08:45:07Z"
@@ -33,11 +88,6 @@
     "name": "zwave-js/zwave-js-ui",
     "version": "v10.1.5",
     "date": "2025-04-07T09:19:35Z"
-  },
-  {
-    "name": "Checkmk/checkmk",
-    "version": "v2.4.0b4-rc1",
-    "date": "2025-04-07T09:13:56Z"
   },
   {
     "name": "redis/redis",
@@ -98,11 +148,6 @@
     "name": "Dolibarr/dolibarr",
     "version": "21.0.1",
     "date": "2025-04-06T19:22:59Z"
-  },
-  {
-    "name": "pelican-dev/wings",
-    "version": "v1.0.0-beta11",
-    "date": "2025-04-06T18:52:35Z"
   },
   {
     "name": "stonith404/pingvin-share",
@@ -171,8 +216,8 @@
   },
   {
     "name": "ollama/ollama",
-    "version": "v0.6.5-rc0",
-    "date": "2025-04-03T23:57:36Z"
+    "version": "v0.6.5",
+    "date": "2025-04-06T00:15:39Z"
   },
   {
     "name": "jellyfin/jellyfin",
@@ -375,11 +420,6 @@
     "date": "2025-03-31T21:31:48Z"
   },
   {
-    "name": "NodeBB/NodeBB",
-    "version": "v4.2.0",
-    "date": "2025-03-19T18:34:01Z"
-  },
-  {
     "name": "traefik/traefik",
     "version": "v3.3.5",
     "date": "2025-03-31T08:55:12Z"
@@ -388,11 +428,6 @@
     "name": "home-assistant/operating-system",
     "version": "15.1",
     "date": "2025-03-31T13:42:20Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.84.3",
-    "date": "2025-03-27T11:54:33Z"
   },
   {
     "name": "documenso/documenso",
@@ -490,11 +525,6 @@
     "date": "2025-03-28T19:02:22Z"
   },
   {
-    "name": "Brandawg93/PeaNUT",
-    "version": "v5.6.1",
-    "date": "2025-03-28T18:40:22Z"
-  },
-  {
     "name": "louislam/uptime-kuma",
     "version": "2.0.0-beta.2-temp",
     "date": "2025-03-28T08:45:58Z"
@@ -550,11 +580,6 @@
     "date": "2025-03-27T08:24:55Z"
   },
   {
-    "name": "openobserve/openobserve",
-    "version": "v0.14.5-rc6",
-    "date": "2025-03-27T05:15:49Z"
-  },
-  {
     "name": "duplicati/duplicati",
     "version": "v2.1.0.112-2.1.0.112_canary_2025-03-26",
     "date": "2025-03-26T21:04:38Z"
@@ -608,11 +633,6 @@
     "name": "ZoeyVid/NPMplus",
     "version": "2025-03-24-r2",
     "date": "2025-03-24T20:52:35Z"
-  },
-  {
-    "name": "go-gitea/gitea",
-    "version": "v1.23.6",
-    "date": "2025-03-24T20:38:45Z"
   },
   {
     "name": "docmost/docmost",
@@ -715,19 +735,9 @@
     "date": "2025-03-16T18:39:49Z"
   },
   {
-    "name": "pelican-dev/panel",
-    "version": "v1.0.0-beta18",
-    "date": "2025-03-15T20:24:04Z"
-  },
-  {
     "name": "henrygd/beszel",
     "version": "v0.10.2",
     "date": "2025-03-15T07:14:54Z"
-  },
-  {
-    "name": "Threadfin/Threadfin",
-    "version": "1.2.31",
-    "date": "2025-03-14T22:04:10Z"
   },
   {
     "name": "paperless-ngx/paperless-ngx",
@@ -970,11 +980,6 @@
     "date": "2025-02-07T19:29:19Z"
   },
   {
-    "name": "apache/cassandra",
-    "version": "cassandra-4.0.17",
-    "date": "2025-02-07T10:38:54Z"
-  },
-  {
     "name": "apache/tika",
     "version": "2.9.3",
     "date": "2025-02-07T00:15:40Z"
@@ -993,11 +998,6 @@
     "name": "mongodb/mongo",
     "version": "r8.0.5-rc1",
     "date": "2025-02-04T20:35:23Z"
-  },
-  {
-    "name": "thomiceli/opengist",
-    "version": "v1.9.1",
-    "date": "2025-02-04T20:24:29Z"
   },
   {
     "name": "Forceu/Gokapi",
