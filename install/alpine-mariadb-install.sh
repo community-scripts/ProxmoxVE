@@ -29,16 +29,33 @@ mysql_install_db --user=mysql --basedir=/usr --datadir=/var/lib/mysql >/dev/null
 $STD rc-service mariadb start
 msg_ok "MariaDB Configured"
 
-read -r -p "Would you like to install Adminer with lighthttpd? <y/N>: " prompt
+read -r -p "Would you like to install Adminer with lighttpd? <y/N>: " prompt
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
-  msg_info "Installing Adminer"
-  $STD apk add --no-cache lighttpd php php-cgi php-mysqli php-mbstring php-zip php-gd php-json php-curl jq
-  sed -i 's|server.modules += ( "mod_cgi" )|server.modules += ( "mod_cgi", "mod_fastcgi" )|' /etc/lighttpd/lighttpd.conf
-  echo 'fastcgi.server += ( ".php" => (( "bin-path" => "/usr/bin/php-cgi", "socket" => "/var/run/php-cgi.sock" )))' >>/etc/lighttpd/lighttpd.conf
-  ADMINER_VERSION=$(curl -fsSL https://api.github.com/repos/vrana/adminer/releases/latest | jq -r '.tag_name' | sed 's/v//')
-  curl -fsSL "https://github.com/vrana/adminer/releases/download/v${ADMINER_VERSION}/adminer-${ADMINER_VERSION}.php" -o /var/www/adminer.php
-  chown lighttpd:lighttpd /var/www/adminer.php
-  chmod 755 /var/www/adminer.php
+  msg_info "Installing Adminer and dependencies"
+
+  $STD apk add --no-cache \
+    lighttpd \
+    lighttpd-openrc \
+    php83 \
+    php83-cgi \
+    php83-common \
+    php83-curl \
+    php83-gd \
+    php83-mbstring \
+    php83-mysqli \
+    php83-mysqlnd \
+    php83-openssl \
+    php83-zip \
+    php83-session \
+    jq
+
+  sed -i 's|# *include "mod_fastcgi.conf"|include "mod_fastcgi.conf"|' /etc/lighttpd/lighttpd.conf
+  mkdir -p /var/www/localhost/htdocs
+  ADMINER_VERSION=$(curl -fsSL https://api.github.com/repos/vrana/adminer/releases/latest | jq -r '.tag_name' | sed 's/^v//')
+  curl -fsSL "https://github.com/vrana/adminer/releases/download/v${ADMINER_VERSION}/adminer-${ADMINER_VERSION}.php" -o /var/www/localhost/htdocs/adminer.php
+  chown lighttpd:lighttpd /var/www/localhost/htdocs/adminer.php
+  chmod 755 /var/www/localhost/htdocs/adminer.php
+
   msg_ok "Adminer Installed"
 
   msg_info "Starting Lighttpd"
