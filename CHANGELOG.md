@@ -14,6 +14,20 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 All LXC instances created using this repository come pre-installed with Midnight Commander, which is a command-line tool (`mc`) that offers a user-friendly file and directory management interface for the terminal environment.
 
 
+## 2025-04-08
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - TriliumNext: fix dump-db [@MickLesk](https://github.com/MickLesk) ([#3741](https://github.com/community-scripts/ProxmoxVE/pull/3741))
+    - Actual: Reduce RAM to 4GB and old space to 3072MB  [@dannyellis](https://github.com/dannyellis) ([#3730](https://github.com/community-scripts/ProxmoxVE/pull/3730))
+
+  - #### ✨ New Features
+
+    - Alpine-MariaDB: better handling of adminer installation [@MickLesk](https://github.com/MickLesk) ([#3739](https://github.com/community-scripts/ProxmoxVE/pull/3739))
+    - Paperless-GPT: Add logging to service file [@tremor021](https://github.com/tremor021) ([#3738](https://github.com/community-scripts/ProxmoxVE/pull/3738))
+
 ## 2025-04-07
 
 ### 🆕 New Scripts
