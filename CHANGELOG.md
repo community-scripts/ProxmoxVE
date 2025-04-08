@@ -29,6 +29,12 @@ All LXC instances created using this repository come pre-installed with Midnight
     - Alpine-MariaDB: better handling of adminer installation [@MickLesk](https://github.com/MickLesk) ([#3739](https://github.com/community-scripts/ProxmoxVE/pull/3739))
     - Paperless-GPT: Add logging to service file [@tremor021](https://github.com/tremor021) ([#3738](https://github.com/community-scripts/ProxmoxVE/pull/3738))
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Meilisearch: Fix Typo [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#3749](https://github.com/community-scripts/ProxmoxVE/pull/3749))
+
 ## 2025-04-07
 
 ### 🆕 New Scripts
