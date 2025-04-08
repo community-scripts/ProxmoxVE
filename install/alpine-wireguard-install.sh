@@ -15,20 +15,20 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apk add \
-    newt \
-    curl \
-    openssh \
-    nano \
-    mc \
-    gpg \
-    iptables \
-    openrc
+  newt \
+  curl \
+  openssh \
+  nano \
+  mc \
+  gpg \
+  iptables \
+  openrc
 msg_ok "Installed Dependencies"
 
 msg_info "Installing WireGuard"
 $STD apk add --no-cache wireguard-tools
 if [[ ! -L /etc/init.d/wg-quick.wg0 ]]; then
-    ln -s /etc/init.d/wg-quick /etc/init.d/wg-quick.wg0
+  ln -s /etc/init.d/wg-quick /etc/init.d/wg-quick.wg0
 fi
 
 private_key=$(wg genkey)
@@ -41,32 +41,33 @@ PostUp = iptables -A FORWARD -i wg0 -j ACCEPT; iptables -A FORWARD -o wg0 -j ACC
 PostDown = iptables -D FORWARD -i wg0 -j ACCEPT; iptables -D FORWARD -o wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE;
 ListenPort = 51820
 EOF
+echo "net.ipv4.ip_forward=1" >>/etc/sysctl.conf
+$STD rc-update add sysctl
+$STD sysctl -p /etc/sysctl.conf
 msg_ok "Installed WireGuard"
 
 read -rp "Do you want to install WGDashboard? (y/N): " INSTALL_WGD
 if [[ "$INSTALL_WGD" =~ ^[Yy]$ ]]; then
-    msg_info "Installing additional dependencies for WGDashboard"
-    $STD apk add --no-cache \
-        python3 \
-        py3-pip \
-        git \
-        sudo \
-        musl-dev \
-        linux-headers \
-        gcc \
-        python3-dev
-    msg_ok "Installed additional dependencies for WGDashboard"
-    msg_info "Installing WGDashboard"
-    git clone -q https://github.com/donaldzou/WGDashboard.git /etc/wgdashboard
-    cd /etc/wgdashboard/src || exit
-    chmod u+x wgd.sh
-    $STD ./wgd.sh install
-    $STD echo "net.ipv4.ip_forward=1" >>/etc/sysctl.conf
-    sysctl -p /etc/sysctl.conf
-    msg_ok "Installed WGDashboard"
+  msg_info "Installing additional dependencies for WGDashboard"
+  $STD apk add --no-cache \
+    python3 \
+    py3-pip \
+    git \
+    sudo \
+    musl-dev \
+    linux-headers \
+    gcc \
+    python3-dev
+  msg_ok "Installed additional dependencies for WGDashboard"
+  msg_info "Installing WGDashboard"
+  git clone -q https://github.com/donaldzou/WGDashboard.git /etc/wgdashboard
+  cd /etc/wgdashboard/src || exit
+  chmod u+x wgd.sh
+  $STD ./wgd.sh install
+  msg_ok "Installed WGDashboard"
 
-    msg_info "Creating Service for WGDashboard"
-    cat <<EOF >/etc/init.d/wg-dashboard
+  msg_info "Creating Service for WGDashboard"
+  cat <<EOF >/etc/init.d/wg-dashboard
 #!/sbin/openrc-run
 
 description="WireGuard Dashboard Service"
@@ -89,10 +90,10 @@ stop() {
     eend $?
 }
 EOF
-    chmod +x /etc/init.d/wg-dashboard
-    $STD rc-update add wg-dashboard default
-    $STD rc-service wg-dashboard start
-    msg_ok "Created Service for WGDashboard"
+  chmod +x /etc/init.d/wg-dashboard
+  $STD rc-update add wg-dashboard default
+  $STD rc-service wg-dashboard start
+  msg_ok "Created Service for WGDashboard"
 
 fi
 
