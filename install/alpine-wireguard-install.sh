@@ -41,7 +41,7 @@ PostUp = iptables -A FORWARD -i wg0 -j ACCEPT; iptables -A FORWARD -o wg0 -j ACC
 PostDown = iptables -D FORWARD -i wg0 -j ACCEPT; iptables -D FORWARD -o wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE;
 ListenPort = 51820
 EOF
-echo "net.ipv4.ip_forward=1" >>/etc/sysctl.conf
+$STD echo "net.ipv4.ip_forward=1" >>/etc/sysctl.conf
 $STD rc-update add sysctl
 $STD sysctl -p /etc/sysctl.conf
 msg_ok "Installed WireGuard"
