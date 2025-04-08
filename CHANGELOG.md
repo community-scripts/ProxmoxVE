@@ -16,6 +16,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-04-08
 
+### 🆕 New Scripts
+
+  - Alpine-PostgreSQL [@MickLesk](https://github.com/MickLesk) ([#3751](https://github.com/community-scripts/ProxmoxVE/pull/3751))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
