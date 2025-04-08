@@ -1,5 +1,50 @@
 [
   {
+    "name": "semaphoreui/semaphore",
+    "version": "v2.13.11-beta1",
+    "date": "2025-04-08T10:56:42Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.84.3",
+    "date": "2025-03-27T11:54:33Z"
+  },
+  {
+    "name": "fhem/fhem-mirror",
+    "version": "6.2",
+    "date": "2025-04-08T10:34:47Z"
+  },
+  {
+    "name": "openobserve/openobserve",
+    "version": "v0.14.6-rc1",
+    "date": "2025-04-08T08:50:03Z"
+  },
+  {
+    "name": "prometheus/prometheus",
+    "version": "v0.303.0-rc.1",
+    "date": "2025-04-07T04:39:38Z"
+  },
+  {
+    "name": "NLnetLabs/unbound",
+    "version": "release-1.23.0rc1",
+    "date": "2025-04-08T06:39:46Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1744",
+    "date": "2025-04-08T06:09:14Z"
+  },
+  {
+    "name": "StarFleetCPTN/GoMFT",
+    "version": "v0.2.6",
+    "date": "2025-04-08T02:23:38Z"
+  },
+  {
+    "name": "coder/code-server",
+    "version": "v4.99.0",
+    "date": "2025-04-08T00:55:36Z"
+  },
+  {
     "name": "pelican-dev/panel",
     "version": "v1.0.0-beta19",
     "date": "2025-04-07T23:06:29Z"
@@ -8,11 +53,6 @@
     "name": "pelican-dev/wings",
     "version": "v1.0.0-beta11",
     "date": "2025-04-07T23:02:00Z"
-  },
-  {
-    "name": "fhem/fhem-mirror",
-    "version": "6.2",
-    "date": "2025-04-07T20:30:04Z"
   },
   {
     "name": "Threadfin/Threadfin",
@@ -35,24 +75,24 @@
     "date": "2025-04-07T19:14:53Z"
   },
   {
+    "name": "wazuh/wazuh",
+    "version": "coverity-w15-4.12.0",
+    "date": "2025-04-07T17:50:14Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.1.4",
+    "date": "2025-03-13T15:41:42Z"
+  },
+  {
     "name": "Brandawg93/PeaNUT",
     "version": "v5.7.0",
     "date": "2025-04-07T16:14:10Z"
   },
   {
-    "name": "openobserve/openobserve",
-    "version": "v0.14.5",
-    "date": "2025-04-07T16:09:11Z"
-  },
-  {
     "name": "thomiceli/opengist",
     "version": "v1.10.0",
     "date": "2025-04-07T14:32:15Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.84.3",
-    "date": "2025-03-27T11:54:33Z"
   },
   {
     "name": "apache/cassandra",
@@ -68,11 +108,6 @@
     "name": "VictoriaMetrics/VictoriaMetrics",
     "version": "pmm-6401-v1.115.0",
     "date": "2025-04-07T11:15:53Z"
-  },
-  {
-    "name": "semaphoreui/semaphore",
-    "version": "v2.13.10",
-    "date": "2025-04-07T11:05:41Z"
   },
   {
     "name": "syncthing/syncthing",
@@ -100,11 +135,6 @@
     "date": "2025-04-07T08:14:13Z"
   },
   {
-    "name": "StarFleetCPTN/GoMFT",
-    "version": "v0.2.5",
-    "date": "2025-04-07T07:43:29Z"
-  },
-  {
     "name": "nzbgetcom/nzbget",
     "version": "v24.8",
     "date": "2025-03-18T07:33:51Z"
@@ -118,16 +148,6 @@
     "name": "morpheus65535/bazarr",
     "version": "v1.5.1",
     "date": "2025-01-01T16:15:52Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1740",
-    "date": "2025-04-07T05:56:22Z"
-  },
-  {
-    "name": "prometheus/prometheus",
-    "version": "v0.303.0-rc.1",
-    "date": "2025-04-07T04:39:38Z"
   },
   {
     "name": "open-webui/open-webui",
@@ -240,11 +260,6 @@
     "date": "2025-04-05T17:40:25Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.1.4",
-    "date": "2025-03-13T15:41:42Z"
-  },
-  {
     "name": "bastienwirtz/homer",
     "version": "v25.04.1",
     "date": "2025-04-05T12:39:18Z"
@@ -280,11 +295,6 @@
     "date": "2025-04-04T20:05:45Z"
   },
   {
-    "name": "coder/code-server",
-    "version": "v4.98.2",
-    "date": "2025-03-15T02:11:28Z"
-  },
-  {
     "name": "homarr-labs/homarr",
     "version": "v1.14.0",
     "date": "2025-04-04T19:15:59Z"
@@ -313,11 +323,6 @@
     "name": "dgtlmoon/changedetection.io",
     "version": "0.49.12",
     "date": "2025-04-04T07:31:08Z"
-  },
-  {
-    "name": "wazuh/wazuh",
-    "version": "coverity-w14-4.12.0",
-    "date": "2025-04-04T00:03:06Z"
   },
   {
     "name": "minio/minio",
@@ -1148,11 +1153,6 @@
     "name": "CorentinTh/it-tools",
     "version": "v2024.10.22-7ca5933",
     "date": "2024-10-22T09:58:03Z"
-  },
-  {
-    "name": "NLnetLabs/unbound",
-    "version": "release-1.22.0",
-    "date": "2024-10-17T08:43:37Z"
   },
   {
     "name": "Notifiarr/notifiarr",
