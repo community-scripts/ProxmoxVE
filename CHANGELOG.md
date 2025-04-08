@@ -20,6 +20,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - Alpine-Wireguard: Fix for sysctl and ip_forward [@juronja](https://github.com/juronja) ([#3744](https://github.com/community-scripts/ProxmoxVE/pull/3744))
     - TriliumNext: fix dump-db [@MickLesk](https://github.com/MickLesk) ([#3741](https://github.com/community-scripts/ProxmoxVE/pull/3741))
     - Actual: Reduce RAM to 4GB and old space to 3072MB  [@dannyellis](https://github.com/dannyellis) ([#3730](https://github.com/community-scripts/ProxmoxVE/pull/3730))
 
