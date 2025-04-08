@@ -15,13 +15,13 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-    gcc \
-    gnupg \
-    ca-certificates \
-    musl-dev \
-    mupdf \
-    libc6-dev \
-    musl-tools
+  gcc \
+  gnupg \
+  ca-certificates \
+  musl-dev \
+  mupdf \
+  libc6-dev \
+  musl-tools
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up Node.js Repository"
@@ -66,16 +66,16 @@ msg_ok "Setup Paperless-GPT"
 mkdir -p /opt/paperless-gpt-data
 read -p "Do you want to enter the Paperless local URL now? (y/n) " input_url
 if [[ "$input_url" =~ ^[Yy]$ ]]; then
-    read -p "Enter your Paperless-NGX instance URL (e.g., http://192.168.1.100:8000): " PAPERLESS_BASE_URL
+  read -p "Enter your Paperless-NGX instance URL (e.g., http://192.168.1.100:8000): " PAPERLESS_BASE_URL
 else
-    PAPERLESS_BASE_URL="http://your_paperless_ngx_url"
+  PAPERLESS_BASE_URL="http://your_paperless_ngx_url"
 fi
 
 read -p "Do you want to enter the Paperless API token now? (y/n) " input_token
 if [[ "$input_token" =~ ^[Yy]$ ]]; then
-    read -p "Enter your Paperless API token: " PAPERLESS_API_TOKEN
+  read -p "Enter your Paperless API token: " PAPERLESS_API_TOKEN
 else
-    PAPERLESS_API_TOKEN="your_paperless_api_token"
+  PAPERLESS_API_TOKEN="your_paperless_api_token"
 fi
 
 msg_info "Setup Environment"
@@ -116,6 +116,8 @@ ExecStart=/opt/paperless-gpt/paperless-gpt
 Restart=always
 User=root
 EnvironmentFile=/opt/paperless-gpt-data/.env
+StandardOutput=append:/var/log/paperless-gpt.log
+StandardError=append:/var/log/paperless-gpt.log
 
 [Install]
 WantedBy=multi-user.target
