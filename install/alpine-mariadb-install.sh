@@ -32,7 +32,6 @@ msg_ok "MariaDB Configured"
 read -r -p "Would you like to install Adminer with lighttpd? <y/N>: " prompt
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   msg_info "Installing Adminer and dependencies"
-
   $STD apk add --no-cache \
     lighttpd \
     lighttpd-openrc \
@@ -55,7 +54,6 @@ if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   curl -fsSL "https://github.com/vrana/adminer/releases/download/v${ADMINER_VERSION}/adminer-${ADMINER_VERSION}.php" -o /var/www/localhost/htdocs/adminer.php
   chown lighttpd:lighttpd /var/www/localhost/htdocs/adminer.php
   chmod 755 /var/www/localhost/htdocs/adminer.php
-
   msg_ok "Adminer Installed"
 
   msg_info "Starting Lighttpd"
