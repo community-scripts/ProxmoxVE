@@ -20,6 +20,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - Paperless-NGX: remove gunicorn, use python3 for webserver [@MickLesk](https://github.com/MickLesk) ([#3785](https://github.com/community-scripts/ProxmoxVE/pull/3785))
     - HomeAssistantOS: allow Proxmox version 8.4 [@quentinvnk](https://github.com/quentinvnk) ([#3773](https://github.com/community-scripts/ProxmoxVE/pull/3773))
     - Tandoor: Add xmlsec as dependency [@tremor021](https://github.com/tremor021) ([#3762](https://github.com/community-scripts/ProxmoxVE/pull/3762))
 
