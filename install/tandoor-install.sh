@@ -38,7 +38,8 @@ $STD apt-get install -y \
   python3 \
   python3-dev \
   python3-setuptools \
-  python3-pip
+  python3-pip \
+  python3-xmlsec
 rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
 msg_ok "Setup Python3"
 
