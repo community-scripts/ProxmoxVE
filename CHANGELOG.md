@@ -20,6 +20,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - Paperless-NGX: Extend Granian Service Env [@MickLesk](https://github.com/MickLesk) ([#3790](https://github.com/community-scripts/ProxmoxVE/pull/3790))
     - Paperless-NGX: remove gunicorn, use python3 for webserver [@MickLesk](https://github.com/MickLesk) ([#3785](https://github.com/community-scripts/ProxmoxVE/pull/3785))
     - HomeAssistantOS: allow Proxmox version 8.4 [@quentinvnk](https://github.com/quentinvnk) ([#3773](https://github.com/community-scripts/ProxmoxVE/pull/3773))
     - Tandoor: Add xmlsec as dependency [@tremor021](https://github.com/tremor021) ([#3762](https://github.com/community-scripts/ProxmoxVE/pull/3762))
@@ -32,13 +33,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 💥 Breaking Changes
 
-    - core: Removal of OS/Version Selection from Advanced Settings [@MickLesk](https://github.com/MickLesk) ([#3771](https://github.com/community-scripts/ProxmoxVE/pull/3771))
-
-### 🌐 Website
-
-  - #### 📝 Script Information
-
     - core: move misc scripts to structured addon/pve paths | Refactor JSON Editor & Script Mapping [@MickLesk](https://github.com/MickLesk) ([#3765](https://github.com/community-scripts/ProxmoxVE/pull/3765))
+    - core: Removal of OS/Version Selection from Advanced Settings [@MickLesk](https://github.com/MickLesk) ([#3771](https://github.com/community-scripts/ProxmoxVE/pull/3771))
 
 ## 2025-04-08
 
