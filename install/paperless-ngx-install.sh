@@ -209,7 +209,7 @@ Requires=redis.service
 
 [Service]
 WorkingDirectory=/opt/paperless/src
-ExecStart=/usr/local/bin/gunicorn -c /opt/paperless/gunicorn.conf.py paperless.asgi:application
+ExecStart=python3 webserver.py
 
 [Install]
 WantedBy=multi-user.target
