@@ -41,7 +41,7 @@ catch_errors() {
 
 # This function is called when an error occurs. It receives the exit code, line number, and command that caused the error, and displays an error message.
 error_handler() {
-  if [ -n "$SPINNER_PID" ] && ps -p $SPINNER_PID >/dev/null; then kill $SPINNER_PID >/dev/null; fi
+  if [ -n "$SPINNER_PID" ] && ps -p "$SPINNER_PID" >/dev/null; then kill "$SPINNER_PID" >/dev/null; fi
   printf "\e[?25h"
   local exit_code="$?"
   local line_number="$1"
@@ -84,7 +84,7 @@ msg_ok() {
 
 # This function displays a error message with a red color.
 msg_error() {
-  if [ -n "$SPINNER_PID" ] && ps -p $SPINNER_PID >/dev/null; then kill $SPINNER_PID >/dev/null; fi
+  if [ -n "$SPINNER_PID" ] && ps -p "$SPINNER_PID" >/dev/null; then kill "$SPINNER_PID" >/dev/null; fi
   printf "\e[?25h"
   local msg="$1"
   echo -e "${BFR}${CROSS}${RD}${msg}${CL}"
@@ -102,7 +102,7 @@ while true; do
   esac
 done
 
-if ! pveversion | grep -Eq "pve-manager/8\.[0-3](\.[0-9]+)*"; then
+if ! pveversion | grep -Eq "pve-manager/8\.[0-4](\.[0-9]+)*"; then
   msg_error "This version of Proxmox Virtual Environment is not supported"
   msg_error "⚠️ Requires Proxmox Virtual Environment Version 8.0 or later."
   msg_error "Exiting..."

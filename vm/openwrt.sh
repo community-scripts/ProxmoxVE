@@ -170,7 +170,7 @@ function msg_error() {
 }
 
 function pve_check() {
-  if ! pveversion | grep -Eq "pve-manager/8\.[1-3](\.[0-9]+)*"; then
+  if ! pveversion | grep -Eq "pve-manager/8\.[1-4](\.[0-9]+)*"; then
     msg_error "This version of Proxmox Virtual Environment is not supported"
     echo -e "Requires Proxmox Virtual Environment Version 8.1 or later."
     echo -e "Exiting..."
@@ -478,8 +478,8 @@ btrfs)
 esac
 for i in {0,1}; do
   disk="DISK$i"
-  eval DISK"${i}"=vm-"${VMID}"-disk-"${i}"${DISK_EXT:-}
-  eval DISK"${i}"_REF="${STORAGE}":"${DISK_REF:-}"${!disk}
+  eval DISK"${i}"=vm-"${VMID}"-disk-"${i}""${DISK_EXT:-}"
+  eval DISK"${i}"_REF="${STORAGE}":"${DISK_REF:-}""${!disk}"
 done
 
 msg_info "Creating OpenWrt VM"
@@ -522,8 +522,8 @@ until qm status "$VMID" | grep -q "stopped"; do
 done
 msg_info "Bridge interfaces are being added."
 qm set "$VMID" \
-  -net0 virtio,bridge="${LAN_BRG}",macaddr="${LAN_MAC}"${LAN_VLAN}"${MTU}" \
-  -net1 virtio,bridge="${BRG}",macaddr="${MAC}"${VLAN}"${MTU}" >/dev/null 2>/dev/null
+  -net0 virtio,bridge="${LAN_BRG}",macaddr="${LAN_MAC}""${LAN_VLAN}""${MTU}" \
+  -net1 virtio,bridge="${BRG}",macaddr="${MAC}""${VLAN}""${MTU}" >/dev/null 2>/dev/null
 msg_ok "Bridge interfaces have been successfully added."
 if [ "$START_VM" == "yes" ]; then
   msg_info "Starting OpenWrt VM"

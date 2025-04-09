@@ -122,7 +122,7 @@ function check_root() {
 }
 
 function pve_check() {
-  if ! pveversion | grep -Eq "pve-manager/8\.[1-3](\.[0-9]+)*"; then
+  if ! pveversion | grep -Eq "pve-manager/8\.[1-4](\.[0-9]+)*"; then
     msg_error "${CROSS}${RD}This version of Proxmox Virtual Environment is not supported"
     echo -e "Requires Proxmox Virtual Environment Version 8.1 or later."
     echo -e "Exiting..."
@@ -447,13 +447,13 @@ btrfs)
 esac
 for i in {0,1}; do
   disk="DISK$i"
-  eval DISK"${i}"=vm-"${VMID}"-disk-"${i}"${DISK_EXT:-}
-  eval DISK"${i}"_REF="${STORAGE}":"${DISK_REF:-}"${!disk}
+  eval DISK"${i}"=vm-"${VMID}"-disk-"${i}""${DISK_EXT:-}"
+  eval DISK"${i}"_REF="${STORAGE}":"${DISK_REF:-}""${!disk}"
 done
 
 msg_info "Creating a Arch Linux VM"
 qm create "$VMID" -agent 1"${MACHINE}" -tablet 0 -localtime 1 -bios ovmf"${CPU_TYPE}" -cores "$CORE_COUNT" -memory "$RAM_SIZE" \
-  -name "$HN" -tags community-script -net0 virtio,bridge="$BRG",macaddr="$MAC"$VLAN"$MTU" -onboot 1 -ostype l26 -scsihw virtio-scsi-pci
+  -name "$HN" -tags community-script -net0 virtio,bridge="$BRG",macaddr="$MAC""$VLAN""$MTU" -onboot 1 -ostype l26 -scsihw virtio-scsi-pci
 pvesm alloc "$STORAGE" "$VMID" "$DISK0" 4M 1>&/dev/null
 qm importdisk "$VMID" "${FILE}" "$STORAGE" "${DISK_IMPORT:-}" 1>&/dev/null
 qm set "$VMID" \

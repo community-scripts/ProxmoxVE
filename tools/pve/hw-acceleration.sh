@@ -41,7 +41,7 @@ function msg_ok() {
   echo -e "${BFR} ${CM} ${GN}${msg}${CL}"
 }
 
-if ! pveversion | grep -Eq "pve-manager/8\.[0-3](\.[0-9]+)*"; then
+if ! pveversion | grep -Eq "pve-manager/8\.[0-4](\.[0-9]+)*"; then
   msg_error "This version of Proxmox Virtual Environment is not supported"
   echo -e "Requires PVE Version 8.1 or higher"
   echo -e "Exiting..."
