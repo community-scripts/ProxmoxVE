@@ -23,6 +23,10 @@ All LXC instances created using this repository come pre-installed with Midnight
     - HomeAssistantOS: allow Proxmox version 8.4 [@quentinvnk](https://github.com/quentinvnk) ([#3773](https://github.com/community-scripts/ProxmoxVE/pull/3773))
     - Tandoor: Add xmlsec as dependency [@tremor021](https://github.com/tremor021) ([#3762](https://github.com/community-scripts/ProxmoxVE/pull/3762))
 
+  - #### 🔧 Refactor
+
+    - harmonize pve versions check & vm vars [@MickLesk](https://github.com/MickLesk) ([#3779](https://github.com/community-scripts/ProxmoxVE/pull/3779))
+
 ### 🧰 Maintenance
 
   - #### 💥 Breaking Changes
