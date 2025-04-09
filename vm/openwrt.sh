@@ -62,19 +62,19 @@ function error_handler() {
 }
 
 function cleanup_vmid() {
-  if qm status $VMID &>/dev/null; then
-    qm stop $VMID &>/dev/null
-    qm destroy $VMID &>/dev/null
+  if qm status "$VMID" &>/dev/null; then
+    qm stop "$VMID" &>/dev/null
+    qm destroy "$VMID" &>/dev/null
   fi
 }
 
 function cleanup() {
   popd >/dev/null
-  rm -rf $TEMP_DIR
+  rm -rf "$TEMP_DIR"
 }
 
 TEMP_DIR=$(mktemp -d)
-pushd $TEMP_DIR >/dev/null
+pushd "$TEMP_DIR" >/dev/null
 function send_line_to_vm() {
   echo -e "${DGN}Sending line: ${YW}$1${CL}"
   for ((i = 0; i < ${#1}; i++)); do
@@ -140,13 +140,13 @@ function send_line_to_vm() {
     "(") character="shift-9" ;;
     ")") character="shift-0" ;;
     esac
-    qm sendkey $VMID "$character"
+    qm sendkey "$VMID" "$character"
   done
-  qm sendkey $VMID ret
+  qm sendkey "$VMID" ret
 }
 
 TEMP_DIR=$(mktemp -d)
-pushd $TEMP_DIR >/dev/null
+pushd "$TEMP_DIR" >/dev/null
 
 if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "OpenWrt VM" --yesno "This will create a New OpenWrt VM. Proceed?" 10 58); then
   :
@@ -243,7 +243,7 @@ function default_settings() {
 function advanced_settings() {
   METHOD="advanced"
   while true; do
-    if VMID=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Virtual Machine ID" 8 58 $NEXTID --title "VIRTUAL MACHINE ID" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+    if VMID=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Virtual Machine ID" 8 58 "$NEXTID" --title "VIRTUAL MACHINE ID" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
       if [ -z "$VMID" ]; then
         VMID="$NEXTID"
       fi
@@ -260,10 +260,10 @@ function advanced_settings() {
   done
 
   if VM_NAME=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Hostname" 8 58 openwrt --title "HOSTNAME" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
-    if [ -z $VM_NAME ]; then
+    if [ -z "$VM_NAME" ]; then
       HN="openwrt"
     else
-      HN=$(echo ${VM_NAME,,} | tr -d ' ')
+      HN=$(echo "${VM_NAME,,}" | tr -d ' ')
     fi
     echo -e "${DGN}Using Hostname: ${BGN}$HN${CL}"
   else
@@ -271,7 +271,7 @@ function advanced_settings() {
   fi
 
   if CORE_COUNT=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Allocate CPU Cores" 8 58 1 --title "CORE COUNT" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
-    if [ -z $CORE_COUNT ]; then
+    if [ -z "$CORE_COUNT" ]; then
       CORE_COUNT="1"
     fi
     echo -e "${DGN}Allocated Cores: ${BGN}$CORE_COUNT${CL}"
@@ -280,7 +280,7 @@ function advanced_settings() {
   fi
 
   if RAM_SIZE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Allocate RAM in MiB" 8 58 256 --title "RAM" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
-    if [ -z $RAM_SIZE ]; then
+    if [ -z "$RAM_SIZE" ]; then
       RAM_SIZE="256"
     fi
     echo -e "${DGN}Allocated RAM: ${BGN}$RAM_SIZE${CL}"
@@ -289,7 +289,7 @@ function advanced_settings() {
   fi
 
   if BRG=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a WAN Bridge" 8 58 vmbr0 --title "WAN BRIDGE" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
-    if [ -z $BRG ]; then
+    if [ -z "$BRG" ]; then
       BRG="vmbr0"
     fi
     echo -e "${DGN}Using WAN Bridge: ${BGN}$BRG${CL}"
@@ -298,7 +298,7 @@ function advanced_settings() {
   fi
 
   if LAN_BRG=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a LAN Bridge" 8 58 vmbr0 --title "LAN BRIDGE" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
-    if [ -z $LAN_BRG ]; then
+    if [ -z "$LAN_BRG" ]; then
       LAN_BRG="vmbr0"
     fi
     echo -e "${DGN}Using LAN Bridge: ${BGN}$LAN_BRG${CL}"
@@ -306,8 +306,8 @@ function advanced_settings() {
     exit-script
   fi
 
-  if LAN_IP_ADDR=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a router IP" 8 58 $LAN_IP_ADDR --title "LAN IP ADDRESS" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
-    if [ -z $LAN_IP_ADDR ]; then
+  if LAN_IP_ADDR=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a router IP" 8 58 "$LAN_IP_ADDR" --title "LAN IP ADDRESS" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+    if [ -z "$LAN_IP_ADDR" ]; then
       LAN_IP_ADDR="192.168.1.1"
     fi
     echo -e "${DGN}Using LAN IP ADDRESS: ${BGN}$LAN_IP_ADDR${CL}"
@@ -315,8 +315,8 @@ function advanced_settings() {
     exit-script
   fi
 
-  if LAN_NETMASK=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a router netmask" 8 58 $LAN_NETMASK --title "LAN NETMASK" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
-    if [ -z $LAN_NETMASK ]; then
+  if LAN_NETMASK=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a router netmask" 8 58 "$LAN_NETMASK" --title "LAN NETMASK" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+    if [ -z "$LAN_NETMASK" ]; then
       LAN_NETMASK="255.255.255.0"
     fi
     echo -e "${DGN}Using LAN NETMASK: ${BGN}$LAN_NETMASK${CL}"
@@ -324,8 +324,8 @@ function advanced_settings() {
     exit-script
   fi
 
-  if MAC1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a WAN MAC Address" 8 58 $GEN_MAC --title "WAN MAC ADDRESS" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
-    if [ -z $MAC1 ]; then
+  if MAC1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a WAN MAC Address" 8 58 "$GEN_MAC" --title "WAN MAC ADDRESS" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+    if [ -z "$MAC1" ]; then
       MAC="$GEN_MAC"
     else
       MAC="$MAC1"
@@ -335,8 +335,8 @@ function advanced_settings() {
     exit-script
   fi
 
-  if MAC2=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a LAN MAC Address" 8 58 $GEN_MAC_LAN --title "LAN MAC ADDRESS" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
-    if [ -z $MAC2 ]; then
+  if MAC2=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a LAN MAC Address" 8 58 "$GEN_MAC_LAN" --title "LAN MAC ADDRESS" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+    if [ -z "$MAC2" ]; then
       LAN_MAC="$GEN_MAC_LAN"
     else
       LAN_MAC="$MAC2"
@@ -347,7 +347,7 @@ function advanced_settings() {
   fi
 
   if VLAN1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a WAN Vlan (leave blank for default)" 8 58 --title "WAN VLAN" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
-    if [ -z $VLAN1 ]; then
+    if [ -z "$VLAN1" ]; then
       VLAN1="Default"
       VLAN=""
     else
@@ -359,7 +359,7 @@ function advanced_settings() {
   fi
 
   if VLAN2=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a LAN Vlan" 8 58 999 --title "LAN VLAN" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
-    if [ -z $VLAN2 ]; then
+    if [ -z "$VLAN2" ]; then
       VLAN2="999"
       LAN_VLAN=",tag=$VLAN2"
     else
@@ -371,7 +371,7 @@ function advanced_settings() {
   fi
 
   if MTU1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Interface MTU Size (leave blank for default)" 8 58 --title "MTU SIZE" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
-    if [ -z $MTU1 ]; then
+    if [ -z "$MTU1" ]; then
       MTU1="Default"
       MTU=""
     else
@@ -418,9 +418,9 @@ post_to_api_vm
 
 msg_info "Validating Storage"
 while read -r line; do
-  TAG=$(echo $line | awk '{print $1}')
-  TYPE=$(echo $line | awk '{printf "%-10s", $2}')
-  FREE=$(echo $line | numfmt --field 4-6 --from-unit=K --to=iec --format %.2f | awk '{printf( "%9sB", $6)}')
+  TAG=$(echo "$line" | awk '{print $1}')
+  TYPE=$(echo "$line" | awk '{printf "%-10s", $2}')
+  FREE=$(echo "$line" | numfmt --field 4-6 --from-unit=K --to=iec --format %.2f | awk '{printf( "%9sB", $6)}')
   ITEM="  Type: $TYPE Free: $FREE "
   OFFSET=2
   if [[ $((${#ITEM} + $OFFSET)) -gt ${MSG_MAX_LENGTH:-} ]]; then
@@ -455,15 +455,15 @@ sleep 2
 msg_ok "${CL}${BL}${URL}${CL}"
 curl -f#SL -o "$(basename "$URL")" "$URL"
 echo -en "\e[1A\e[0K"
-FILE=$(basename $URL)
+FILE=$(basename "$URL")
 msg_ok "Downloaded ${CL}${BL}$FILE${CL}"
-gunzip -f $FILE >/dev/null 2>/dev/null || true
+gunzip -f "$FILE" >/dev/null 2>/dev/null || true
 NEWFILE="${FILE%.*}"
 FILE="$NEWFILE"
-mv $FILE ${FILE%.*}
-qemu-img resize -f raw ${FILE%.*} 512M >/dev/null 2>/dev/null
+mv "$FILE" "${FILE%.*}"
+qemu-img resize -f raw "${FILE%.*}" 512M >/dev/null 2>/dev/null
 msg_ok "Extracted & Resized OpenWrt Disk Image ${CL}${BL}$FILE${CL}"
-STORAGE_TYPE=$(pvesm status -storage $STORAGE | awk 'NR>1 {print $2}')
+STORAGE_TYPE=$(pvesm status -storage "$STORAGE" | awk 'NR>1 {print $2}')
 case $STORAGE_TYPE in
 nfs | dir)
   DISK_EXT=".qcow2"
@@ -478,18 +478,18 @@ btrfs)
 esac
 for i in {0,1}; do
   disk="DISK$i"
-  eval DISK${i}=vm-${VMID}-disk-${i}${DISK_EXT:-}
-  eval DISK${i}_REF=${STORAGE}:${DISK_REF:-}${!disk}
+  eval DISK"${i}"=vm-"${VMID}"-disk-"${i}"${DISK_EXT:-}
+  eval DISK"${i}"_REF="${STORAGE}":"${DISK_REF:-}"${!disk}
 done
 
 msg_info "Creating OpenWrt VM"
-qm create $VMID -cores $CORE_COUNT -memory $RAM_SIZE -name $HN \
+qm create "$VMID" -cores "$CORE_COUNT" -memory "$RAM_SIZE" -name "$HN" \
   -onboot 1 -ostype l26 -scsihw virtio-scsi-pci --tablet 0
-pvesm alloc $STORAGE $VMID $DISK0 4M 1>&/dev/null
-qm importdisk $VMID ${FILE%.*} $STORAGE ${DISK_IMPORT:-} 1>&/dev/null
-qm set $VMID \
-  -efidisk0 ${DISK0_REF},efitype=4m,size=4M \
-  -scsi0 ${DISK1_REF},size=512M \
+pvesm alloc "$STORAGE" "$VMID" "$DISK0" 4M 1>&/dev/null
+qm importdisk "$VMID" "${FILE%.*}" "$STORAGE" "${DISK_IMPORT:-}" 1>&/dev/null
+qm set "$VMID" \
+  -efidisk0 "${DISK0_REF}",efitype=4m,size=4M \
+  -scsi0 "${DISK1_REF}",size=512M \
   -boot order=scsi0 \
   -tags community-script \
   -description "<div align='center'><a href='https://Helper-Scripts.com'><img src='https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/images/logo-81x112.png'/></a>
@@ -500,7 +500,7 @@ qm set $VMID \
   </div>" >/dev/null
 msg_ok "Created OpenWrt VM ${CL}${BL}(${HN})"
 msg_info "OpenWrt is being started in order to configure the network interfaces."
-qm start $VMID
+qm start "$VMID"
 sleep 15
 msg_ok "Network interfaces are being configured as OpenWrt initiates."
 send_line_to_vm ""
@@ -517,17 +517,17 @@ send_line_to_vm "uci set network.lan.netmask=${LAN_NETMASK}"
 send_line_to_vm "uci commit"
 send_line_to_vm "halt"
 msg_ok "Network interfaces have been successfully configured."
-until qm status $VMID | grep -q "stopped"; do
+until qm status "$VMID" | grep -q "stopped"; do
   sleep 2
 done
 msg_info "Bridge interfaces are being added."
-qm set $VMID \
-  -net0 virtio,bridge=${LAN_BRG},macaddr=${LAN_MAC}${LAN_VLAN}${MTU} \
-  -net1 virtio,bridge=${BRG},macaddr=${MAC}${VLAN}${MTU} >/dev/null 2>/dev/null
+qm set "$VMID" \
+  -net0 virtio,bridge="${LAN_BRG}",macaddr="${LAN_MAC}"${LAN_VLAN}"${MTU}" \
+  -net1 virtio,bridge="${BRG}",macaddr="${MAC}"${VLAN}"${MTU}" >/dev/null 2>/dev/null
 msg_ok "Bridge interfaces have been successfully added."
 if [ "$START_VM" == "yes" ]; then
   msg_info "Starting OpenWrt VM"
-  qm start $VMID
+  qm start "$VMID"
   msg_ok "Started OpenWrt VM"
 fi
 VLAN_FINISH=""
