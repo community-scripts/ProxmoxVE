@@ -1,23 +1,83 @@
 [
   {
+    "name": "OliveTin/OliveTin",
+    "version": "2025.4.8",
+    "date": "2025-04-08T22:02:50Z"
+  },
+  {
+    "name": "coder/code-server",
+    "version": "v4.99.1",
+    "date": "2025-04-08T21:35:21Z"
+  },
+  {
     "name": "semaphoreui/semaphore",
-    "version": "v2.13.11-beta1",
-    "date": "2025-04-08T10:56:42Z"
+    "version": "v2.13.12",
+    "date": "2025-04-08T20:54:58Z"
+  },
+  {
+    "name": "fhem/fhem-mirror",
+    "version": "6.2",
+    "date": "2025-04-08T20:30:27Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "nightly",
+    "date": "2025-04-06T15:58:08Z"
+  },
+  {
+    "name": "minio/minio",
+    "version": "RELEASE.2025-04-08T15-41-24Z",
+    "date": "2025-04-08T19:51:06Z"
+  },
+  {
+    "name": "goauthentik/authentik",
+    "version": "version/2025.2.4",
+    "date": "2025-04-08T18:39:57Z"
+  },
+  {
+    "name": "influxdata/influxdb",
+    "version": "v1.12.0rc1",
+    "date": "2025-04-08T17:35:21Z"
+  },
+  {
+    "name": "paperless-ngx/paperless-ngx",
+    "version": "v2.15.0",
+    "date": "2025-04-08T17:24:06Z"
+  },
+  {
+    "name": "syncthing/syncthing",
+    "version": "v1.29.4",
+    "date": "2025-04-01T08:45:07Z"
+  },
+  {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.505",
+    "date": "2025-04-08T15:46:42Z"
+  },
+  {
+    "name": "AdguardTeam/AdGuardHome",
+    "version": "v0.107.59",
+    "date": "2025-03-21T11:11:39Z"
+  },
+  {
+    "name": "openobserve/openobserve",
+    "version": "v0.14.6-rc2",
+    "date": "2025-04-08T14:42:54Z"
+  },
+  {
+    "name": "element-hq/synapse",
+    "version": "v1.128.0",
+    "date": "2025-04-08T14:27:55Z"
+  },
+  {
+    "name": "linkwarden/linkwarden",
+    "version": "v2.10.0",
+    "date": "2025-04-08T12:33:57Z"
   },
   {
     "name": "n8n-io/n8n",
     "version": "n8n@1.84.3",
     "date": "2025-03-27T11:54:33Z"
-  },
-  {
-    "name": "fhem/fhem-mirror",
-    "version": "6.2",
-    "date": "2025-04-08T10:34:47Z"
-  },
-  {
-    "name": "openobserve/openobserve",
-    "version": "v0.14.6-rc1",
-    "date": "2025-04-08T08:50:03Z"
   },
   {
     "name": "prometheus/prometheus",
@@ -38,11 +98,6 @@
     "name": "StarFleetCPTN/GoMFT",
     "version": "v0.2.6",
     "date": "2025-04-08T02:23:38Z"
-  },
-  {
-    "name": "coder/code-server",
-    "version": "v4.99.0",
-    "date": "2025-04-08T00:55:36Z"
   },
   {
     "name": "pelican-dev/panel",
@@ -108,11 +163,6 @@
     "name": "VictoriaMetrics/VictoriaMetrics",
     "version": "pmm-6401-v1.115.0",
     "date": "2025-04-07T11:15:53Z"
-  },
-  {
-    "name": "syncthing/syncthing",
-    "version": "v1.29.4",
-    "date": "2025-04-01T08:45:07Z"
   },
   {
     "name": "fallenbagel/jellyseerr",
@@ -183,11 +233,6 @@
     "name": "TandoorRecipes/recipes",
     "version": "1.5.34",
     "date": "2025-03-27T16:17:38Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "v3.10.0",
-    "date": "2025-03-15T14:38:16Z"
   },
   {
     "name": "stackblitz-labs/bolt.diy",
@@ -325,11 +370,6 @@
     "date": "2025-04-04T07:31:08Z"
   },
   {
-    "name": "minio/minio",
-    "version": "RELEASE.2025-04-03T14-56-28Z",
-    "date": "2025-04-03T19:08:18Z"
-  },
-  {
     "name": "OctoPrint/OctoPrint",
     "version": "1.10.3",
     "date": "2024-11-05T09:20:50Z"
@@ -365,11 +405,6 @@
     "date": "2025-04-02T15:38:53Z"
   },
   {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.503",
-    "date": "2025-04-02T15:12:13Z"
-  },
-  {
     "name": "hargata/lubelog",
     "version": "v1.4.6",
     "date": "2025-04-02T14:07:12Z"
@@ -383,16 +418,6 @@
     "name": "MagicMirrorOrg/MagicMirror",
     "version": "v2.31.0",
     "date": "2025-04-01T18:12:45Z"
-  },
-  {
-    "name": "influxdata/influxdb",
-    "version": "v3.0.0-0.beta.3",
-    "date": "2025-04-01T15:34:30Z"
-  },
-  {
-    "name": "element-hq/synapse",
-    "version": "v1.127.1",
-    "date": "2025-03-26T21:44:28Z"
   },
   {
     "name": "theonedev/onedev",
@@ -510,11 +535,6 @@
     "date": "2025-03-15T17:29:17Z"
   },
   {
-    "name": "OliveTin/OliveTin",
-    "version": "2025.3.28",
-    "date": "2025-03-29T00:18:56Z"
-  },
-  {
     "name": "TasmoAdmin/TasmoAdmin",
     "version": "v4.2.3",
     "date": "2025-02-09T23:07:48Z"
@@ -538,11 +558,6 @@
     "name": "emqx/emqx",
     "version": "e5.9.0-beta.2",
     "date": "2025-03-28T15:06:27Z"
-  },
-  {
-    "name": "goauthentik/authentik",
-    "version": "version/2025.2.3",
-    "date": "2025-03-28T14:28:34Z"
   },
   {
     "name": "hakimel/reveal.js",
@@ -685,11 +700,6 @@
     "date": "2025-03-21T11:48:16Z"
   },
   {
-    "name": "AdguardTeam/AdGuardHome",
-    "version": "v0.107.59",
-    "date": "2025-03-21T11:11:39Z"
-  },
-  {
     "name": "jhuckaby/Cronicle",
     "version": "v0.9.77",
     "date": "2025-03-21T02:25:42Z"
@@ -743,11 +753,6 @@
     "name": "henrygd/beszel",
     "version": "v0.10.2",
     "date": "2025-03-15T07:14:54Z"
-  },
-  {
-    "name": "paperless-ngx/paperless-ngx",
-    "version": "v2.15.0-beta",
-    "date": "2025-03-14T18:05:28Z"
   },
   {
     "name": "FlowiseAI/Flowise",
@@ -1048,11 +1053,6 @@
     "name": "readeck/readeck",
     "version": "0.17.1",
     "date": "2025-01-15T19:13:33Z"
-  },
-  {
-    "name": "linkwarden/linkwarden",
-    "version": "v2.9.3",
-    "date": "2025-01-13T16:19:53Z"
   },
   {
     "name": "Tautulli/Tautulli",
