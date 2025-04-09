@@ -57,23 +57,23 @@ function error_exit() {
   local msg="${1:-$reason}"
   local flag="${RD}‼ ERROR ${CL}$EXIT@$LINE"
   echo -e "$flag $msg" 1>&2
-  [ ! -z ${VMID-} ] && cleanup_vmid
-  exit $EXIT
+  [ ! -z "${VMID-}" ] && cleanup_vmid
+  exit "$EXIT"
 }
 function cleanup_vmid() {
-  if $(qm status $VMID &>/dev/null); then
-    if [ "$(qm status $VMID | awk '{print $2}')" == "running" ]; then
-      qm stop $VMID
+  if $(qm status "$VMID" &>/dev/null); then
+    if [ "$(qm status "$VMID" | awk '{print $2}')" == "running" ]; then
+      qm stop "$VMID"
     fi
-    qm destroy $VMID
+    qm destroy "$VMID"
   fi
 }
 function cleanup() {
   popd >/dev/null
-  rm -rf $TEMP_DIR
+  rm -rf "$TEMP_DIR"
 }
 TEMP_DIR=$(mktemp -d)
-pushd $TEMP_DIR >/dev/null
+pushd "$TEMP_DIR" >/dev/null
 if ! pveversion | grep -Eq "pve-manager/8\.[1-3](\.[0-9]+)*"; then
   msg_error "This version of Proxmox Virtual Environment is not supported"
   echo -e "Requires Proxmox Virtual Environment Version 8.1 or later."
@@ -121,7 +121,7 @@ function default_settings() {
 }
 function advanced_settings() {
   METHOD="advanced"
-  VMID=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Virtual Machine ID" 8 58 $NEXTID --title "VIRTUAL MACHINE ID" 3>&1 1>&2 2>&3)
+  VMID=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Virtual Machine ID" 8 58 "$NEXTID" --title "VIRTUAL MACHINE ID" 3>&1 1>&2 2>&3)
   exitstatus=$?
   if [ $exitstatus = 0 ]; then
     echo -e "${DGN}Using Virtual Machine ID: ${BGN}$VMID${CL}"
@@ -131,7 +131,7 @@ function advanced_settings() {
   VM_NAME=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Hostname" 8 58 mikrotik-routeros-chr --title "HOSTNAME" 3>&1 1>&2 2>&3)
   exitstatus=$?
   if [ $exitstatus = 0 ]; then
-    HN=$(echo ${VM_NAME,,} | tr -d ' ')
+    HN=$(echo "${VM_NAME,,}" | tr -d ' ')
     echo -e "${DGN}Using Hostname: ${BGN}$HN${CL}"
   else
     exit
@@ -157,7 +157,7 @@ function advanced_settings() {
   else
     exit
   fi
-  MAC1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a MAC Address" 8 58 $GEN_MAC --title "MAC ADDRESS" 3>&1 1>&2 2>&3)
+  MAC1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a MAC Address" 8 58 "$GEN_MAC" --title "MAC ADDRESS" 3>&1 1>&2 2>&3)
   exitstatus=$?
   if [ $exitstatus = 0 ]; then
     MAC="$MAC1"
@@ -168,7 +168,7 @@ function advanced_settings() {
   VLAN1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a Vlan(leave blank for default)" 8 58 --title "VLAN" 3>&1 1>&2 2>&3)
   exitstatus=$?
   if [ $exitstatus = 0 ]; then
-    if [ -z $VLAN1 ]; then
+    if [ -z "$VLAN1" ]; then
       VLAN1="Default" VLAN=""
       echo -e "${DGN}Using Vlan: ${BGN}$VLAN1${CL}"
     else
@@ -179,7 +179,7 @@ function advanced_settings() {
   MTU1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Interface MTU Size (leave blank for default)" 8 58 --title "MTU SIZE" --cancel-button Exit-Script 3>&1 1>&2 2>&3)
   exitstatus=$?
   if [ $exitstatus = 0 ]; then
-    if [ -z $MTU1 ]; then
+    if [ -z "$MTU1" ]; then
       MTU1="Default" MTU=""
       echo -e "${DGN}Using Interface MTU Size: ${BGN}$MTU1${CL}"
     else
@@ -221,9 +221,9 @@ start_script
 post_to_api_vm
 msg_info "Validating Storage"
 while read -r line; do
-  TAG=$(echo $line | awk '{print $1}')
-  TYPE=$(echo $line | awk '{printf "%-10s", $2}')
-  FREE=$(echo $line | numfmt --field 4-6 --from-unit=K --to=iec --format %.2f | awk '{printf( "%9sB", $6)}')
+  TAG=$(echo "$line" | awk '{print $1}')
+  TYPE=$(echo "$line" | awk '{printf "%-10s", $2}')
+  FREE=$(echo "$line" | numfmt --field 4-6 --from-unit=K --to=iec --format %.2f | awk '{printf( "%9sB", $6)}')
   ITEM="  Type: $TYPE Free: $FREE "
   OFFSET=2
   if [[ $((${#ITEM} + $OFFSET)) -gt ${MSG_MAX_LENGTH:-} ]]; then
@@ -259,8 +259,8 @@ echo -en "\e[1A\e[0K"
 FILE=$(basename $URL)
 msg_ok "Downloaded ${CL}${BL}$FILE${CL}"
 msg_info "Extracting Mikrotik RouterOS CHR Disk Image"
-gunzip -f -S .zip $FILE
-STORAGE_TYPE=$(pvesm status -storage $STORAGE | awk 'NR>1 {print $2}')
+gunzip -f -S .zip "$FILE"
+STORAGE_TYPE=$(pvesm status -storage "$STORAGE" | awk 'NR>1 {print $2}')
 case $STORAGE_TYPE in
 nfs | dir)
   DISK_EXT=".qcow2"
@@ -284,11 +284,11 @@ DISK_REF="${STORAGE}:${DISK_REF:-}${DISK_VAR:-}"
 
 msg_ok "Extracted Mikrotik RouterOS CHR Disk Image"
 msg_info "Creating Mikrotik RouterOS CHR VM"
-qm create $VMID -tablet 0 -localtime 1 -cores $CORE_COUNT -memory $RAM_SIZE -name $HN \
-  -tags community-script -net0 virtio,bridge=$BRG,macaddr=$MAC$VLAN$MTU \
+qm create "$VMID" -tablet 0 -localtime 1 -cores "$CORE_COUNT" -memory "$RAM_SIZE" -name "$HN" \
+  -tags community-script -net0 virtio,bridge="$BRG",macaddr="$MAC"$VLAN"$MTU" \
   -onboot 1 -ostype l26 -scsihw virtio-scsi-pci
-qm importdisk $VMID ${FILE%.*} $STORAGE ${DISK_IMPORT:-} 1>&/dev/null
-qm set $VMID \
+qm importdisk "$VMID" "${FILE%.*}" "$STORAGE" "${DISK_IMPORT:-}" 1>&/dev/null
+qm set "$VMID" \
   -scsi0 "$DISK_REF" \
   -boot order=scsi0 \
   -description "<div align='center'><a href='https://Helper-Scripts.com'><img src='https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/images/logo-81x112.png'/></a>
@@ -300,7 +300,7 @@ qm set $VMID \
 msg_ok "Mikrotik RouterOS CHR VM ${CL}${BL}(${HN})"
 if [ "$START_VM" == "yes" ]; then
   msg_info "Starting Mikrotik RouterOS CHR VM"
-  qm start $VMID
+  qm start "$VMID"
   msg_ok "Started Mikrotik RouterOS CHR VM"
 fi
 post_update_to_api "done" "none"
