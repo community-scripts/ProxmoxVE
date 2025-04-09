@@ -33,8 +33,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 💥 Breaking Changes
 
-    - core: move misc scripts to structured addon/pve paths | Refactor JSON Editor & Script Mapping [@MickLesk](https://github.com/MickLesk) ([#3765](https://github.com/community-scripts/ProxmoxVE/pull/3765))
     - core: Removal of OS/Version Selection from Advanced Settings [@MickLesk](https://github.com/MickLesk) ([#3771](https://github.com/community-scripts/ProxmoxVE/pull/3771))
+    - core: move misc scripts to structured addon/pve paths | Refactor JSON Editor & Script Mapping [@MickLesk](https://github.com/MickLesk) ([#3765](https://github.com/community-scripts/ProxmoxVE/pull/3765))
 
 ## 2025-04-08
 
