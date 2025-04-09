@@ -209,7 +209,10 @@ Requires=redis.service
 
 [Service]
 WorkingDirectory=/opt/paperless/src
-ExecStart=python3 webserver.py
+ExecStart=granian --interface asginl --ws "paperless.asgi:application"
+Environment=GRANIAN_HOST=::
+Environment=GRANIAN_PORT=8000
+Environment=GRANIAN_WORKERS=1
 
 [Install]
 WantedBy=multi-user.target
