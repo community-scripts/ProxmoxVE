@@ -20,15 +20,15 @@ $STD apt-get install -y \
   gpg
 msg_ok "Installed Dependencies"
 
-msg_info "Seting up OpenProject Repository"
-curl -sSL "https://dl.packager.io/srv/opf/openproject/key" | gpg --dearmor >/etc/apt/trusted.gpg.d/packager-io.gpg
+msg_info "Setting up OpenProject Repository"
+curl -fsSL "https://dl.packager.io/srv/opf/openproject/key" | gpg --dearmor >/etc/apt/trusted.gpg.d/packager-io.gpg
 curl -fsSL  "https://dl.packager.io/srv/opf/openproject/stable/15/installer/debian/12.repo" -o "/etc/apt/sources.list.d/openproject.list"
 msg_ok "Setup OpenProject Repository"
 
-msg_info "Seting up PostgreSQL Repository"
+msg_info "Setting up PostgreSQL Repository"
 VERSION="$(awk -F'=' '/^VERSION_CODENAME=/{ print $NF }' /etc/os-release)"
 echo "deb http://apt.postgresql.org/pub/repos/apt ${VERSION}-pgdg main" >/etc/apt/sources.list.d/pgdg.list
-curl -sSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor --output /etc/apt/trusted.gpg.d/postgresql.gpg
+curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor --output /etc/apt/trusted.gpg.d/postgresql.gpg
 msg_ok "Setup PostgreSQL Repository"
 
 msg_info "Installing PostgreSQL"
