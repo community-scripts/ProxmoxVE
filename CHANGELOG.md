@@ -30,6 +30,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - change var in ct files to new standard [@MickLesk](https://github.com/MickLesk) ([#3804](https://github.com/community-scripts/ProxmoxVE/pull/3804))
 
+### 🧰 Maintenance
+
+  - #### 💾 Core
+
+    - New Feature: Config File [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#3808](https://github.com/community-scripts/ProxmoxVE/pull/3808))
+
 ### 💥 Breaking Changes
 
   - Remove Actualbudget [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#3801](https://github.com/community-scripts/ProxmoxVE/pull/3801))
