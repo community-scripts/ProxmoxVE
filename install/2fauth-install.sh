@@ -16,18 +16,18 @@ update_os
 msg_info "Installing Dependencies"
 
 $STD apt-get install -y \
-        lsb-release \
-        gpg
+  lsb-release \
+  gpg
 
 curl -fsSL https://packages.sury.org/php/apt.gpg | gpg --dearmor -o /usr/share/keyrings/deb.sury.org-php.gpg
-echo "deb [signed-by=/usr/share/keyrings/deb.sury.org-php.gpg] https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list
+echo "deb [signed-by=/usr/share/keyrings/deb.sury.org-php.gpg] https://packages.sury.org/php/ $(lsb_release -sc) main" >/etc/apt/sources.list.d/php.list
 $STD apt-get update
 
 $STD apt-get install -y \
-        nginx \
-        composer \
-        php8.3-{bcmath,common,ctype,curl,fileinfo,fpm,gd,mbstring,mysql,xml,cli} \
-        mariadb-server
+  nginx \
+  composer \
+  php8.3-{bcmath,common,ctype,curl,fileinfo,fpm,gd,intl,mbstring,mysql,xml,cli} \
+  mariadb-server
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up Database"
@@ -38,10 +38,10 @@ $STD mysql -u root -e "CREATE DATABASE $DB_NAME;"
 $STD mysql -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED WITH mysql_native_password AS PASSWORD('$DB_PASS');"
 $STD mysql -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
 {
-        echo "2FAuth Credentials"
-        echo "Database User: $DB_USER"
-        echo "Database Password: $DB_PASS"
-        echo "Database Name: $DB_NAME"
+  echo "2FAuth Credentials"
+  echo "Database User: $DB_USER"
+  echo "Database Password: $DB_PASS"
+  echo "Database Name: $DB_NAME"
 } >>~/2FAuth.creds
 msg_ok "Set up Database"
 
@@ -56,12 +56,12 @@ cp .env.example .env
 IPADDRESS=$(hostname -I | awk '{print $1}')
 
 sed -i -e "s|^APP_URL=.*|APP_URL=http://$IPADDRESS|" \
-        -e "s|^DB_CONNECTION=$|DB_CONNECTION=mysql|" \
-        -e "s|^DB_DATABASE=$|DB_DATABASE=$DB_NAME|" \
-        -e "s|^DB_HOST=$|DB_HOST=127.0.0.1|" \
-        -e "s|^DB_PORT=$|DB_PORT=3306|" \
-        -e "s|^DB_USERNAME=$|DB_USERNAME=$DB_USER|" \
-        -e "s|^DB_PASSWORD=$|DB_PASSWORD=$DB_PASS|" .env
+  -e "s|^DB_CONNECTION=$|DB_CONNECTION=mysql|" \
+  -e "s|^DB_DATABASE=$|DB_DATABASE=$DB_NAME|" \
+  -e "s|^DB_HOST=$|DB_HOST=127.0.0.1|" \
+  -e "s|^DB_PORT=$|DB_PORT=3306|" \
+  -e "s|^DB_USERNAME=$|DB_USERNAME=$DB_USER|" \
+  -e "s|^DB_PASSWORD=$|DB_PASSWORD=$DB_PASS|" .env
 
 export COMPOSER_ALLOW_SUPERUSER=1
 $STD composer update --no-plugins --no-scripts
