@@ -1,5 +1,35 @@
 [
   {
+    "name": "fhem/fhem-mirror",
+    "version": "6.2",
+    "date": "2025-04-10T10:34:26Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.86.1",
+    "date": "2025-04-09T09:20:55Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.1",
+    "date": "2025-01-01T16:15:52Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1756",
+    "date": "2025-04-10T05:56:27Z"
+  },
+  {
+    "name": "outline/outline",
+    "version": "v0.82.1-23",
+    "date": "2025-04-10T03:51:33Z"
+  },
+  {
+    "name": "glanceapp/glance",
+    "version": "v0.7.10",
+    "date": "2025-04-09T23:51:06Z"
+  },
+  {
     "name": "mongodb/mongo",
     "version": "r8.0.5-rc2",
     "date": "2025-04-09T22:37:52Z"
@@ -8,11 +38,6 @@
     "name": "paperless-ngx/paperless-ngx",
     "version": "v2.15.1",
     "date": "2025-04-09T22:26:39Z"
-  },
-  {
-    "name": "fhem/fhem-mirror",
-    "version": "6.2",
-    "date": "2025-04-09T20:29:25Z"
   },
   {
     "name": "syncthing/syncthing",
@@ -50,6 +75,11 @@
     "date": "2025-04-09T17:17:58Z"
   },
   {
+    "name": "keycloak/keycloak",
+    "version": "26.1.4",
+    "date": "2025-03-13T15:41:42Z"
+  },
+  {
     "name": "Brandawg93/PeaNUT",
     "version": "v5.7.1",
     "date": "2025-04-09T15:06:49Z"
@@ -85,29 +115,14 @@
     "date": "2025-04-09T10:09:00Z"
   },
   {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.86.1",
-    "date": "2025-04-09T09:20:55Z"
-  },
-  {
     "name": "esphome/esphome",
     "version": "2025.3.3",
     "date": "2025-03-31T22:07:05Z"
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-04-08T07:12:33Z"
-  },
-  {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.1",
-    "date": "2025-01-01T16:15:52Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1751",
-    "date": "2025-04-09T06:00:36Z"
+    "version": "v3.10.0",
+    "date": "2025-03-15T14:38:16Z"
   },
   {
     "name": "StarFleetCPTN/GoMFT",
@@ -138,11 +153,6 @@
     "name": "goauthentik/authentik",
     "version": "version/2025.2.4",
     "date": "2025-04-08T18:39:57Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.1.4",
-    "date": "2025-03-13T15:41:42Z"
   },
   {
     "name": "influxdata/influxdb",
@@ -470,11 +480,6 @@
     "date": "2025-04-01T04:51:05Z"
   },
   {
-    "name": "outline/outline",
-    "version": "v0.82.1-18",
-    "date": "2025-03-31T23:12:40Z"
-  },
-  {
     "name": "Kometa-Team/Kometa",
     "version": "v2.2.0",
     "date": "2025-03-31T21:31:48Z"
@@ -538,11 +543,6 @@
     "name": "pocket-id/pocket-id",
     "version": "v0.45.0",
     "date": "2025-03-29T23:12:22Z"
-  },
-  {
-    "name": "glanceapp/glance",
-    "version": "v0.7.9",
-    "date": "2025-03-29T18:08:11Z"
   },
   {
     "name": "tobychui/zoraxy",
