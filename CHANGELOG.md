@@ -16,7 +16,15 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-04-10
 
+### 🆕 New Scripts
+
+  - openproject ([#3637](https://github.com/community-scripts/ProxmoxVE/pull/3637))
+
 ### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Fix: NodeJS Check (Tianji/Docmost) [@MickLesk](https://github.com/MickLesk) ([#3813](https://github.com/community-scripts/ProxmoxVE/pull/3813))
 
   - #### ✨ New Features
 
