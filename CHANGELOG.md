@@ -32,6 +32,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🌐 Website
 
+  - Bump vite from 6.2.5 to 6.2.6 in /frontend [@dependabot[bot]](https://github.com/dependabot[bot]) ([#3842](https://github.com/community-scripts/ProxmoxVE/pull/3842))
+
   - #### 📝 Script Information
 
     - SQLServer: fix some typos in notes [@stiny861](https://github.com/stiny861) ([#3838](https://github.com/community-scripts/ProxmoxVE/pull/3838))
