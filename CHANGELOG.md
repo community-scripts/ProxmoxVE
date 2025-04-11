@@ -24,6 +24,18 @@ All LXC instances created using this repository come pre-installed with Midnight
     - 2FAuth: Fix php dependencies [@tremor021](https://github.com/tremor021) ([#3820](https://github.com/community-scripts/ProxmoxVE/pull/3820))
     - Komodo: Update Repository link [@sendyputra](https://github.com/sendyputra) ([#3823](https://github.com/community-scripts/ProxmoxVE/pull/3823))
 
+### 🧰 Maintenance
+
+  - #### 💾 Core
+
+    - Enlarge the size of the menu in build.func [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#3833](https://github.com/community-scripts/ProxmoxVE/pull/3833))
+
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Radicale: move to misc category [@tremor021](https://github.com/tremor021) ([#3830](https://github.com/community-scripts/ProxmoxVE/pull/3830))
+
 ## 2025-04-10
 
 ### 🆕 New Scripts
