@@ -34,6 +34,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 📝 Script Information
 
+    - SQLServer: fix some typos in notes [@stiny861](https://github.com/stiny861) ([#3838](https://github.com/community-scripts/ProxmoxVE/pull/3838))
     - Radicale: move to misc category [@tremor021](https://github.com/tremor021) ([#3830](https://github.com/community-scripts/ProxmoxVE/pull/3830))
 
 ## 2025-04-10
