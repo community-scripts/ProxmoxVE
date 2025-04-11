@@ -47,7 +47,7 @@ function update_script() {
     cp /opt/soularr/run.sh /opt/run.sh.bak
     cd /tmp
     rm -rf /opt/soularr
-    curl -fsSL https://github.com/mrusse/soularr/archive/refs/heads/main.zip
+    curl -fsSL -o main.zip https://github.com/mrusse/soularr/archive/refs/heads/main.zip
     unzip -q main.zip
     mv soularr-main /opt/soularr
     cd /opt/soularr
