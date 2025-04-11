@@ -1,8 +1,68 @@
 [
   {
+    "name": "outline/outline",
+    "version": "v0.82.1-28",
+    "date": "2025-04-10T23:18:53Z"
+  },
+  {
+    "name": "tailscale/tailscale",
+    "version": "v1.82.2",
+    "date": "2025-04-10T21:46:04Z"
+  },
+  {
+    "name": "Luligu/matterbridge",
+    "version": "2.2.8",
+    "date": "2025-04-10T20:30:49Z"
+  },
+  {
     "name": "fhem/fhem-mirror",
     "version": "6.2",
-    "date": "2025-04-10T10:34:26Z"
+    "date": "2025-04-10T20:30:02Z"
+  },
+  {
+    "name": "netbox-community/netbox",
+    "version": "v4.2.7",
+    "date": "2025-04-10T20:08:13Z"
+  },
+  {
+    "name": "gristlabs/grist-core",
+    "version": "v1.5.1",
+    "date": "2025-04-10T19:48:43Z"
+  },
+  {
+    "name": "TriliumNext/Notes",
+    "version": "v0.92.7",
+    "date": "2025-04-10T19:33:46Z"
+  },
+  {
+    "name": "MediaBrowser/Emby.Releases",
+    "version": "4.8.11.0",
+    "date": "2025-03-10T06:39:11Z"
+  },
+  {
+    "name": "apache/cassandra",
+    "version": "cassandra-5.0.4",
+    "date": "2025-04-10T16:32:00Z"
+  },
+  {
+    "name": "VictoriaMetrics/VictoriaMetrics",
+    "version": "v1.18.0-victorialogs",
+    "date": "2025-04-10T15:05:20Z"
+  },
+  {
+    "name": "NodeBB/NodeBB",
+    "version": "v4.2.1",
+    "date": "2025-04-10T14:03:47Z"
+  },
+  {
+    "name": "Paymenter/Paymenter",
+    "version": "v1.0.3",
+    "date": "2025-04-10T13:57:39Z"
+  },
+  {
+    "name": "docker/compose",
+    "version": "v2.35.0",
+    "date": "2025-04-10T13:45:22Z"
   },
   {
     "name": "n8n-io/n8n",
@@ -18,11 +78,6 @@
     "name": "Jackett/Jackett",
     "version": "v0.22.1756",
     "date": "2025-04-10T05:56:27Z"
-  },
-  {
-    "name": "outline/outline",
-    "version": "v0.82.1-23",
-    "date": "2025-04-10T03:51:33Z"
   },
   {
     "name": "glanceapp/glance",
@@ -45,11 +100,6 @@
     "date": "2025-04-09T13:41:32Z"
   },
   {
-    "name": "NodeBB/NodeBB",
-    "version": "v4.2.0",
-    "date": "2025-03-19T18:34:01Z"
-  },
-  {
     "name": "docmost/docmost",
     "version": "v0.10.0",
     "date": "2025-04-09T18:58:20Z"
@@ -63,11 +113,6 @@
     "name": "jupyter/notebook",
     "version": "v7.4.0",
     "date": "2025-04-09T17:36:14Z"
-  },
-  {
-    "name": "MediaBrowser/Emby.Releases",
-    "version": "4.8.11.0",
-    "date": "2025-03-10T06:39:11Z"
   },
   {
     "name": "Stirling-Tools/Stirling-PDF",
@@ -121,8 +166,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v3.10.0",
-    "date": "2025-03-15T14:38:16Z"
+    "version": "nightly",
+    "date": "2025-04-08T07:12:33Z"
   },
   {
     "name": "StarFleetCPTN/GoMFT",
@@ -230,19 +275,9 @@
     "date": "2025-04-07T14:32:15Z"
   },
   {
-    "name": "apache/cassandra",
-    "version": "5.0.4-tentative",
-    "date": "2025-04-07T12:05:05Z"
-  },
-  {
     "name": "Graylog2/graylog2-server",
     "version": "6.2.0-beta.4",
     "date": "2025-04-07T11:28:13Z"
-  },
-  {
-    "name": "VictoriaMetrics/VictoriaMetrics",
-    "version": "pmm-6401-v1.115.0",
-    "date": "2025-04-07T11:15:53Z"
   },
   {
     "name": "fallenbagel/jellyseerr",
@@ -283,11 +318,6 @@
     "name": "firefly-iii/firefly-iii",
     "version": "v6.2.10",
     "date": "2025-03-22T13:02:26Z"
-  },
-  {
-    "name": "Luligu/matterbridge",
-    "version": "2.2.7",
-    "date": "2025-04-06T20:00:53Z"
   },
   {
     "name": "Dolibarr/dolibarr",
@@ -335,11 +365,6 @@
     "date": "2025-04-06T11:24:50Z"
   },
   {
-    "name": "TriliumNext/Notes",
-    "version": "v0.92.6",
-    "date": "2025-04-06T10:38:54Z"
-  },
-  {
     "name": "kimai/kimai",
     "version": "2.32.0",
     "date": "2025-04-06T09:43:51Z"
@@ -368,11 +393,6 @@
     "name": "wger-project/wger",
     "version": "2.3",
     "date": "2025-04-05T18:05:36Z"
-  },
-  {
-    "name": "Paymenter/Paymenter",
-    "version": "v1.0.2",
-    "date": "2025-04-05T17:40:25Z"
   },
   {
     "name": "bastienwirtz/homer",
@@ -565,11 +585,6 @@
     "date": "2025-02-09T23:07:48Z"
   },
   {
-    "name": "gristlabs/grist-core",
-    "version": "v1.5.0",
-    "date": "2025-03-28T20:43:51Z"
-  },
-  {
     "name": "grocy/grocy",
     "version": "v4.5.0",
     "date": "2025-03-28T19:02:22Z"
@@ -613,11 +628,6 @@
     "name": "hivemq/hivemq-community-edition",
     "version": "2025.2",
     "date": "2025-03-27T19:21:13Z"
-  },
-  {
-    "name": "tailscale/tailscale",
-    "version": "v1.82.0",
-    "date": "2025-03-27T13:08:18Z"
   },
   {
     "name": "evcc-io/evcc",
@@ -695,11 +705,6 @@
     "date": "2025-03-23T04:01:50Z"
   },
   {
-    "name": "netbox-community/netbox",
-    "version": "v4.2.6",
-    "date": "2025-03-21T21:20:29Z"
-  },
-  {
     "name": "leiweibau/Pi.Alert",
     "version": "v2025-03-21",
     "date": "2025-03-21T19:50:46Z"
@@ -773,11 +778,6 @@
     "name": "FlowiseAI/Flowise",
     "version": "flowise@2.2.7-patch.1",
     "date": "2025-03-14T14:53:53Z"
-  },
-  {
-    "name": "docker/compose",
-    "version": "v2.34.0",
-    "date": "2025-03-14T09:11:17Z"
   },
   {
     "name": "FreshRSS/FreshRSS",
