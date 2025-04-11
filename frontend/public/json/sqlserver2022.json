@@ -32,7 +32,7 @@
    },
    "notes":[
       {
-         "text":"if you not choose the install setup, execute: `/opt/mssql/bin/mssql-conf setup` in LXC shell.",
+         "text":"If you choose not to run the installation setup, execute: `/opt/mssql/bin/mssql-conf setup` in LXC shell.",
          "type":"info"
       },
       {
@@ -40,7 +40,7 @@
          "type":"info"
       },
       {
-         "text":"Do disable the SA account if you intent to use this in production!",
+         "text":"Make sure you disable the SA account if you intend to use this in production!",
          "type":"warning"
       }
    ]
