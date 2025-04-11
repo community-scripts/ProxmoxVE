@@ -1,8 +1,63 @@
 [
   {
+    "name": "dgtlmoon/changedetection.io",
+    "version": "0.49.13",
+    "date": "2025-04-11T11:48:06Z"
+  },
+  {
+    "name": "fhem/fhem-mirror",
+    "version": "6.2",
+    "date": "2025-04-11T10:33:38Z"
+  },
+  {
+    "name": "sabnzbd/sabnzbd",
+    "version": "4.5.1",
+    "date": "2025-04-11T09:57:47Z"
+  },
+  {
+    "name": "TriliumNext/Notes",
+    "version": "v0.0.0",
+    "date": "2025-04-11T08:56:12Z"
+  },
+  {
+    "name": "Stirling-Tools/Stirling-PDF",
+    "version": "v0.45.4",
+    "date": "2025-04-11T08:45:04Z"
+  },
+  {
+    "name": "home-assistant/operating-system",
+    "version": "15.1",
+    "date": "2025-03-31T13:42:20Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.1.5",
+    "date": "2025-04-11T07:58:34Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.1",
+    "date": "2025-01-01T16:15:52Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1760",
+    "date": "2025-04-11T05:53:19Z"
+  },
+  {
+    "name": "StarFleetCPTN/GoMFT",
+    "version": "v0.2.9",
+    "date": "2025-04-11T04:41:36Z"
+  },
+  {
     "name": "outline/outline",
-    "version": "v0.82.1-28",
-    "date": "2025-04-10T23:18:53Z"
+    "version": "v0.83.0",
+    "date": "2025-04-11T03:53:10Z"
+  },
+  {
+    "name": "openobserve/openobserve",
+    "version": "v0.14.6-rc3",
+    "date": "2025-04-11T03:08:28Z"
   },
   {
     "name": "tailscale/tailscale",
@@ -15,11 +70,6 @@
     "date": "2025-04-10T20:30:49Z"
   },
   {
-    "name": "fhem/fhem-mirror",
-    "version": "6.2",
-    "date": "2025-04-10T20:30:02Z"
-  },
-  {
     "name": "netbox-community/netbox",
     "version": "v4.2.7",
     "date": "2025-04-10T20:08:13Z"
@@ -28,11 +78,6 @@
     "name": "gristlabs/grist-core",
     "version": "v1.5.1",
     "date": "2025-04-10T19:48:43Z"
-  },
-  {
-    "name": "TriliumNext/Notes",
-    "version": "v0.92.7",
-    "date": "2025-04-10T19:33:46Z"
   },
   {
     "name": "MediaBrowser/Emby.Releases",
@@ -70,16 +115,6 @@
     "date": "2025-04-09T09:20:55Z"
   },
   {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.1",
-    "date": "2025-01-01T16:15:52Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1756",
-    "date": "2025-04-10T05:56:27Z"
-  },
-  {
     "name": "glanceapp/glance",
     "version": "v0.7.10",
     "date": "2025-04-09T23:51:06Z"
@@ -113,16 +148,6 @@
     "name": "jupyter/notebook",
     "version": "v7.4.0",
     "date": "2025-04-09T17:36:14Z"
-  },
-  {
-    "name": "Stirling-Tools/Stirling-PDF",
-    "version": "v0.45.3",
-    "date": "2025-04-09T17:17:58Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.1.4",
-    "date": "2025-03-13T15:41:42Z"
   },
   {
     "name": "Brandawg93/PeaNUT",
@@ -166,13 +191,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-04-08T07:12:33Z"
-  },
-  {
-    "name": "StarFleetCPTN/GoMFT",
-    "version": "v0.2.7",
-    "date": "2025-04-09T04:53:30Z"
+    "version": "v3.10.0",
+    "date": "2025-03-15T14:38:16Z"
   },
   {
     "name": "OliveTin/OliveTin",
@@ -213,11 +233,6 @@
     "name": "AdguardTeam/AdGuardHome",
     "version": "v0.107.59",
     "date": "2025-03-21T11:11:39Z"
-  },
-  {
-    "name": "openobserve/openobserve",
-    "version": "v0.14.6-rc2",
-    "date": "2025-04-08T14:42:54Z"
   },
   {
     "name": "element-hq/synapse",
@@ -440,16 +455,6 @@
     "date": "2025-04-04T12:58:11Z"
   },
   {
-    "name": "sabnzbd/sabnzbd",
-    "version": "4.5.0",
-    "date": "2025-03-30T16:17:11Z"
-  },
-  {
-    "name": "dgtlmoon/changedetection.io",
-    "version": "0.49.12",
-    "date": "2025-04-04T07:31:08Z"
-  },
-  {
     "name": "OctoPrint/OctoPrint",
     "version": "1.10.3",
     "date": "2024-11-05T09:20:50Z"
@@ -508,11 +513,6 @@
     "name": "traefik/traefik",
     "version": "v3.3.5",
     "date": "2025-03-31T08:55:12Z"
-  },
-  {
-    "name": "home-assistant/operating-system",
-    "version": "15.1",
-    "date": "2025-03-31T13:42:20Z"
   },
   {
     "name": "documenso/documenso",
