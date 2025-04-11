@@ -36,11 +36,11 @@ $STD apt-get install -y \
     mariadb-server \
     nginx \
     redis
-msg_info "Installed PHP"
+msg_ok "Installed PHP"
 
 msg_info "Installing Composer"
 $STD curl -fsSL https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-msg_info "Installed Composer"
+msg_ok "Installed Composer"
 
 msg_info "Installing Paymenter"
 RELEASE=$(curl -fsSL https://api.github.com/repos/paymenter/paymenter/releases/latest | grep '"tag_name"' | sed -E 's/.*"tag_name": "([^"]+)".*/\1/')
