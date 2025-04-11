@@ -1,43 +1,43 @@
 {
-    "name": "Radicale",
-    "slug": "radicale",
-    "categories": [
-        6
-    ],
-    "date_created": "2025-02-02",
-    "type": "ct",
-    "updateable": false,
-    "privileged": false,
-    "interface_port": 5232,
-    "documentation": "https://radicale.org/master.html#documentation-1",
-    "website": "https://radicale.org/",
-    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/radicale.svg",
-    "description": "Radicale is a small but powerful CalDAV (calendars, to-do lists) and CardDAV (contacts)",
-    "install_methods": [
-      {
-        "type": "default",
-        "script": "ct/radicale.sh",
-        "resources": {
-          "cpu": 1,
-          "ram": 512,
-          "hdd": 2,
-          "os": "debian",
-          "version": "12"
-        }
+  "name": "Radicale",
+  "slug": "radicale",
+  "categories": [
+    0
+  ],
+  "date_created": "2025-02-02",
+  "type": "ct",
+  "updateable": false,
+  "privileged": false,
+  "interface_port": 5232,
+  "documentation": "https://radicale.org/master.html#documentation-1",
+  "website": "https://radicale.org/",
+  "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/radicale.svg",
+  "description": "Radicale is a small but powerful CalDAV (calendars, to-do lists) and CardDAV (contacts)",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/radicale.sh",
+      "resources": {
+        "cpu": 1,
+        "ram": 512,
+        "hdd": 2,
+        "os": "debian",
+        "version": "12"
       }
-    ],
-    "default_credentials": {
-      "username": null,
-      "password": null
-    },
-    "notes": [
-      {
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
       "text": "To view the user credentials : `cat radicale.creds`",
       "type": "info"
-      },
-      {
-        "text": "This application requires additional configuration. Please refer to https://github.com/community-scripts/ProxmoxVE/discussions/2073.",
-        "type": "info"
-      }
-    ]
-  }
+    },
+    {
+      "text": "This application requires additional configuration. Please refer to https://github.com/community-scripts/ProxmoxVE/discussions/2073.",
+      "type": "info"
+    }
+  ]
+}
