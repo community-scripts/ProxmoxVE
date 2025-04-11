@@ -14,6 +14,16 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 All LXC instances created using this repository come pre-installed with Midnight Commander, which is a command-line tool (`mc`) that offers a user-friendly file and directory management interface for the terminal environment.
 
 
+## 2025-04-11
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - slskd: fix missing -o for curl [@MickLesk](https://github.com/MickLesk) ([#3828](https://github.com/community-scripts/ProxmoxVE/pull/3828))
+    - 2FAuth: Fix php dependencies [@tremor021](https://github.com/tremor021) ([#3820](https://github.com/community-scripts/ProxmoxVE/pull/3820))
+    - Komodo: Update Repository link [@sendyputra](https://github.com/sendyputra) ([#3823](https://github.com/community-scripts/ProxmoxVE/pull/3823))
+
 ## 2025-04-10
 
 ### 🆕 New Scripts
