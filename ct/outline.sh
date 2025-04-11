@@ -36,7 +36,10 @@ function update_script() {
         msg_info "Updating ${APP} to ${RELEASE}"
         temp_file=$(mktemp)
         rm -rf /opt/outline/node_modules
-curl -fsSL "https://github.com/outline/outline/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
+        if [ -f /opt/outline/app/components/Fade.ts ]; then
+          rm -f /opt/outline/app/components/Fade.ts
+        fi
+        curl -fsSL "https://github.com/outline/outline/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
         tar zxf $temp_file
         cp -rf outline-${RELEASE}/* /opt/outline
         cd /opt/outline
