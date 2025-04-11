@@ -19,14 +19,28 @@ $STD apt-get install -y \
     software-properties-common \
     apt-transport-https \
     ca-certificates \
-    gnupg \
-    php8.2 \
-    php8.2-{common,cli,gd,mysql,mbstring,bcmath,xml,fpm,curl,zip} \
+    gnupg2 \
+    lsb-release
+msg_ok "Installed Dependencies" 
+
+msg_info "Adding PHP8.3 Repository"
+$STD echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/sury-php.list
+curl -fsSL https://packages.sury.org/php/apt.gpg | gpg --dearmor -o /etc/apt/trusted.gpg.d/sury-keyring.gpg
+$STD apt update -y
+msg_ok "Added PHP8.3 Repository"
+
+msg_info "Installing PHP"
+$STD apt-get install -y \
+    php8.3 \
+    php8.3-{common,cli,gd,mysql,mbstring,bcmath,xml,fpm,curl,zip,intl,redis} \
     mariadb-server \
     nginx \
-    redis-server
+    redis
+msg_ok "Installed PHP"
+
+msg_info "Installing Composer"
 $STD curl -fsSL https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-msg_ok "Installed Dependencies"
+msg_ok "Installed Composer"
 
 msg_info "Installing Paymenter"
 RELEASE=$(curl -fsSL https://api.github.com/repos/paymenter/paymenter/releases/latest | grep '"tag_name"' | sed -E 's/.*"tag_name": "([^"]+)".*/\1/')
@@ -63,13 +77,7 @@ $STD php artisan migrate --force --seed
 msg_ok "Set up database"
 
 msg_info "Creating Admin User"
-$STD php artisan p:user:create <<EOF
-admin@paymenter.org
-paymenter
-admin
-paymenter
-0
-EOF
+$STD php artisan app:user:create paymenter admin admin@paymenter.org paymenter 1 -q
 msg_ok "Created Admin User"
 
 msg_info "Configuring Nginx"
@@ -88,7 +96,7 @@ server {
 
     location ~ \.php\$ {
         include snippets/fastcgi-php.conf;
-        fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
+        fastcgi_pass unix:/var/run/php/php8.3-fpm.sock;
         fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
         include fastcgi_params;
     }
@@ -125,7 +133,8 @@ RestartSec=5s
 [Install]
 WantedBy=multi-user.target
 EOF
-$STD systemctl enable --now paymenter
+systemctl enable --now paymenter
+systemctl enable --now redis-server
 msg_ok "Setup Service"
 
 msg_info "Cleaning up"
