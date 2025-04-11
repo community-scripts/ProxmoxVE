@@ -30,5 +30,8 @@
     "username": "admin@paymenter.org",
     "password": "paymenter"
   },
-  "notes": []
+  "notes": {
+    "text": "After installation, navigate to the directory with `cd /opt/paymenter` and run `php artisan app:init`. An interactive setup will prompt you to enter your company name and application URL.",
+    "type": "info"
+  }
 }
