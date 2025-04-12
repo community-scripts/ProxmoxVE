@@ -6,26 +6,25 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Script } from "@/lib/types";
+import { cn } from "@/lib/utils";
 import { CircleHelp } from "lucide-react";
 import React from "react";
 
 interface TooltipProps {
   variant: BadgeProps["variant"];
   label: string;
-  content: string;
+  content?: string;
 }
 
 const TooltipBadge: React.FC<TooltipProps> = ({ variant, label, content }) => (
   <TooltipProvider>
     <Tooltip delayDuration={100}>
-      <TooltipTrigger className="flex items-center">
+      <TooltipTrigger className={cn("flex items-center", !content && "cursor-default")}>
         <Badge variant={variant} className="flex items-center gap-1">
-          {label} <CircleHelp className="size-3" />
+          {label} {content && <CircleHelp className="size-3" />}
         </Badge>
       </TooltipTrigger>
-      <TooltipContent side="bottom" className="text-sm max-w-64">
-        {content}
-      </TooltipContent>
+      {content && <TooltipContent side="bottom" className="text-sm max-w-64">{content}</TooltipContent>}
     </Tooltip>
   </TooltipProvider>
 );
@@ -50,7 +49,7 @@ export default function Tooltips({ item }: { item: Script }) {
         <TooltipBadge
           variant="failure"
           label="Not Updateable"
-          content={`${item.name} is not updateable. To update, you must manually update the application using the documentation of the application.`}
+          // content={`${item.name} is not updateable. To update, you must manually update the application using the documentation of the application.`}
         />
       )}
     </div>
