@@ -50,7 +50,7 @@ export default function Tooltips({ item }: { item: Script }) {
         <TooltipBadge
           variant="failure"
           label="Not Updateable"
-          content={`${item.name} is not updateable. To update, you must manually download the latest version and replace the existing script.`}
+          content={`${item.name} is not updateable. To update, you must manually update the application using the documentation of the application.`}
         />
       )}
     </div>
