@@ -1,4 +1,4 @@
-import { Badge } from "@/components/ui/badge";
+import { Badge, type BadgeProps } from "@/components/ui/badge";
 import {
   Tooltip,
   TooltipContent,
@@ -10,7 +10,7 @@ import { CircleHelp } from "lucide-react";
 import React from "react";
 
 interface TooltipProps {
-  variant: "warning" | "success";
+  variant: BadgeProps["variant"];
   label: string;
   content: string;
 }
@@ -40,11 +40,17 @@ export default function Tooltips({ item }: { item: Script }) {
           content="This script will be run in a privileged LXC"
         />
       )}
-      {item.updateable && (
+      {item.updateable ? (
         <TooltipBadge
           variant="success"
           label="Updateable"
           content={`To Update ${item.name}, run the command below (or type update) in the LXC Console.`}
+        />
+      ) : (
+        <TooltipBadge
+          variant="failure"
+          label="Not Updateable"
+          content={`${item.name} is not updateable. To update, you must manually download the latest version and replace the existing script.`}
         />
       )}
     </div>
