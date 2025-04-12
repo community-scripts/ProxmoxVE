@@ -1,23 +1,88 @@
 [
   {
+    "name": "Bubka/2FAuth",
+    "version": "v5.5.2",
+    "date": "2025-04-11T22:00:06Z"
+  },
+  {
+    "name": "fhem/fhem-mirror",
+    "version": "6.2",
+    "date": "2025-04-11T20:30:09Z"
+  },
+  {
+    "name": "homarr-labs/homarr",
+    "version": "v1.16.0",
+    "date": "2025-04-11T19:15:24Z"
+  },
+  {
+    "name": "rabbitmq/rabbitmq-server",
+    "version": "v4.0.8",
+    "date": "2025-04-03T05:11:15Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.10",
+    "date": "2025-03-22T13:02:26Z"
+  },
+  {
+    "name": "tailscale/tailscale",
+    "version": "v1.82.4",
+    "date": "2025-04-11T17:58:09Z"
+  },
+  {
+    "name": "coder/code-server",
+    "version": "v4.99.2",
+    "date": "2025-04-11T17:57:47Z"
+  },
+  {
+    "name": "duplicati/duplicati",
+    "version": "v2.1.0.113-2.1.0.113_canary_2025-04-11",
+    "date": "2025-04-11T16:57:07Z"
+  },
+  {
+    "name": "TriliumNext/Notes",
+    "version": "v0.0.0",
+    "date": "2025-04-11T14:18:00Z"
+  },
+  {
+    "name": "emqx/emqx",
+    "version": "e5.9.0-beta.3",
+    "date": "2025-04-11T14:17:53Z"
+  },
+  {
+    "name": "NLnetLabs/unbound",
+    "version": "release-1.23.0rc2",
+    "date": "2025-04-11T13:24:25Z"
+  },
+  {
+    "name": "MediaBrowser/Emby.Releases",
+    "version": "4.8.11.0",
+    "date": "2025-03-10T06:39:11Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.2.0",
+    "date": "2025-04-11T12:48:27Z"
+  },
+  {
+    "name": "docmost/docmost",
+    "version": "v0.10.1",
+    "date": "2025-04-11T12:42:08Z"
+  },
+  {
     "name": "dgtlmoon/changedetection.io",
     "version": "0.49.13",
     "date": "2025-04-11T11:48:06Z"
   },
   {
-    "name": "fhem/fhem-mirror",
-    "version": "6.2",
-    "date": "2025-04-11T10:33:38Z"
+    "name": "semaphoreui/semaphore",
+    "version": "v2.13.13",
+    "date": "2025-04-11T10:15:13Z"
   },
   {
     "name": "sabnzbd/sabnzbd",
     "version": "4.5.1",
     "date": "2025-04-11T09:57:47Z"
-  },
-  {
-    "name": "TriliumNext/Notes",
-    "version": "v0.0.0",
-    "date": "2025-04-11T08:56:12Z"
   },
   {
     "name": "Stirling-Tools/Stirling-PDF",
@@ -28,11 +93,6 @@
     "name": "home-assistant/operating-system",
     "version": "15.1",
     "date": "2025-03-31T13:42:20Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.1.5",
-    "date": "2025-04-11T07:58:34Z"
   },
   {
     "name": "morpheus65535/bazarr",
@@ -60,11 +120,6 @@
     "date": "2025-04-11T03:08:28Z"
   },
   {
-    "name": "tailscale/tailscale",
-    "version": "v1.82.2",
-    "date": "2025-04-10T21:46:04Z"
-  },
-  {
     "name": "Luligu/matterbridge",
     "version": "2.2.8",
     "date": "2025-04-10T20:30:49Z"
@@ -78,11 +133,6 @@
     "name": "gristlabs/grist-core",
     "version": "v1.5.1",
     "date": "2025-04-10T19:48:43Z"
-  },
-  {
-    "name": "MediaBrowser/Emby.Releases",
-    "version": "4.8.11.0",
-    "date": "2025-03-10T06:39:11Z"
   },
   {
     "name": "apache/cassandra",
@@ -135,11 +185,6 @@
     "date": "2025-04-09T13:41:32Z"
   },
   {
-    "name": "docmost/docmost",
-    "version": "v0.10.0",
-    "date": "2025-04-09T18:58:20Z"
-  },
-  {
     "name": "Prowlarr/Prowlarr",
     "version": "v1.33.3.5008",
     "date": "2025-04-09T17:58:37Z"
@@ -170,11 +215,6 @@
     "date": "2025-04-09T13:46:58Z"
   },
   {
-    "name": "homarr-labs/homarr",
-    "version": "v1.15.0",
-    "date": "2025-04-09T13:27:14Z"
-  },
-  {
     "name": "zitadel/zitadel",
     "version": "v2.69.10",
     "date": "2025-04-09T12:16:51Z"
@@ -191,23 +231,13 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v3.10.0",
-    "date": "2025-03-15T14:38:16Z"
+    "version": "nightly",
+    "date": "2025-04-08T07:12:33Z"
   },
   {
     "name": "OliveTin/OliveTin",
     "version": "2025.4.8",
     "date": "2025-04-08T22:02:50Z"
-  },
-  {
-    "name": "coder/code-server",
-    "version": "v4.99.1",
-    "date": "2025-04-08T21:35:21Z"
-  },
-  {
-    "name": "semaphoreui/semaphore",
-    "version": "v2.13.12",
-    "date": "2025-04-08T20:54:58Z"
   },
   {
     "name": "minio/minio",
@@ -248,11 +278,6 @@
     "name": "prometheus/prometheus",
     "version": "v0.303.0-rc.1",
     "date": "2025-04-07T04:39:38Z"
-  },
-  {
-    "name": "NLnetLabs/unbound",
-    "version": "release-1.23.0rc1",
-    "date": "2025-04-08T06:39:46Z"
   },
   {
     "name": "pelican-dev/panel",
@@ -328,11 +353,6 @@
     "name": "open-webui/open-webui",
     "version": "v0.6.2",
     "date": "2025-04-07T03:41:23Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.10",
-    "date": "2025-03-22T13:02:26Z"
   },
   {
     "name": "Dolibarr/dolibarr",
@@ -458,11 +478,6 @@
     "name": "OctoPrint/OctoPrint",
     "version": "1.10.3",
     "date": "2024-11-05T09:20:50Z"
-  },
-  {
-    "name": "rabbitmq/rabbitmq-server",
-    "version": "v4.0.8",
-    "date": "2025-04-03T05:11:15Z"
   },
   {
     "name": "BookStackApp/BookStack",
@@ -595,11 +610,6 @@
     "date": "2025-03-28T08:45:58Z"
   },
   {
-    "name": "emqx/emqx",
-    "version": "e5.9.0-beta.2",
-    "date": "2025-03-28T15:06:27Z"
-  },
-  {
     "name": "hakimel/reveal.js",
     "version": "5.2.1",
     "date": "2025-03-28T13:00:23Z"
@@ -615,11 +625,6 @@
     "date": "2025-03-28T04:12:31Z"
   },
   {
-    "name": "Bubka/2FAuth",
-    "version": "v5.5.0",
-    "date": "2025-03-27T22:35:02Z"
-  },
-  {
     "name": "ellite/Wallos",
     "version": "v2.48.1",
     "date": "2025-03-27T22:02:16Z"
@@ -633,11 +638,6 @@
     "name": "evcc-io/evcc",
     "version": "0.202.1",
     "date": "2025-03-27T08:24:55Z"
-  },
-  {
-    "name": "duplicati/duplicati",
-    "version": "v2.1.0.112-2.1.0.112_canary_2025-03-26",
-    "date": "2025-03-26T21:04:38Z"
   },
   {
     "name": "forgejo/forgejo",
