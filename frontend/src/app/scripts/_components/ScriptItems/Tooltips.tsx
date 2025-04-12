@@ -39,17 +39,17 @@ export default function Tooltips({ item }: { item: Script }) {
           content="This script will be run in a privileged LXC"
         />
       )}
-      {item.updateable ? (
+      {item.updateable && (
         <TooltipBadge
           variant="success"
           label="Updateable"
           content={`To Update ${item.name}, run the command below (or type update) in the LXC Console.`}
         />
-      ) : (
+      )}
+      {!item.updateable && (
         <TooltipBadge
           variant="failure"
           label="Not Updateable"
-          // content={`${item.name} is not updateable. To update, you must manually update the application using the documentation of the application.`}
         />
       )}
     </div>
