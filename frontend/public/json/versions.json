@@ -1,13 +1,43 @@
 [
   {
+    "name": "fhem/fhem-mirror",
+    "version": "6.2",
+    "date": "2025-04-12T10:30:19Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.4.2",
+    "date": "2025-04-12T09:46:22Z"
+  },
+  {
+    "name": "readeck/readeck",
+    "version": "0.18.0",
+    "date": "2025-04-12T08:55:32Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "nightly",
+    "date": "2025-04-08T07:12:33Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1767",
+    "date": "2025-04-12T06:06:09Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.1",
+    "date": "2025-01-01T16:15:52Z"
+  },
+  {
+    "name": "StarFleetCPTN/GoMFT",
+    "version": "v0.2.10",
+    "date": "2025-04-12T01:53:46Z"
+  },
+  {
     "name": "Bubka/2FAuth",
     "version": "v5.5.2",
     "date": "2025-04-11T22:00:06Z"
-  },
-  {
-    "name": "fhem/fhem-mirror",
-    "version": "6.2",
-    "date": "2025-04-11T20:30:09Z"
   },
   {
     "name": "homarr-labs/homarr",
@@ -35,6 +65,11 @@
     "date": "2025-04-11T17:57:47Z"
   },
   {
+    "name": "keycloak/keycloak",
+    "version": "26.2.0",
+    "date": "2025-04-11T12:48:27Z"
+  },
+  {
     "name": "duplicati/duplicati",
     "version": "v2.1.0.113-2.1.0.113_canary_2025-04-11",
     "date": "2025-04-11T16:57:07Z"
@@ -58,11 +93,6 @@
     "name": "MediaBrowser/Emby.Releases",
     "version": "4.8.11.0",
     "date": "2025-03-10T06:39:11Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.2.0",
-    "date": "2025-04-11T12:48:27Z"
   },
   {
     "name": "docmost/docmost",
@@ -93,21 +123,6 @@
     "name": "home-assistant/operating-system",
     "version": "15.1",
     "date": "2025-03-31T13:42:20Z"
-  },
-  {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.1",
-    "date": "2025-01-01T16:15:52Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1760",
-    "date": "2025-04-11T05:53:19Z"
-  },
-  {
-    "name": "StarFleetCPTN/GoMFT",
-    "version": "v0.2.9",
-    "date": "2025-04-11T04:41:36Z"
   },
   {
     "name": "outline/outline",
@@ -228,11 +243,6 @@
     "name": "esphome/esphome",
     "version": "2025.3.3",
     "date": "2025-03-31T22:07:05Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-04-08T07:12:33Z"
   },
   {
     "name": "OliveTin/OliveTin",
@@ -448,11 +458,6 @@
     "name": "actualbudget/actual",
     "version": "v25.4.0",
     "date": "2025-04-05T04:14:57Z"
-  },
-  {
-    "name": "home-assistant/core",
-    "version": "2025.4.1",
-    "date": "2025-04-04T20:59:57Z"
   },
   {
     "name": "Koenkk/zigbee2mqtt",
@@ -1048,11 +1053,6 @@
     "name": "petio-team/petio",
     "version": "v0.5.7",
     "date": "2025-01-17T15:57:17Z"
-  },
-  {
-    "name": "readeck/readeck",
-    "version": "0.17.1",
-    "date": "2025-01-15T19:13:33Z"
   },
   {
     "name": "Tautulli/Tautulli",
