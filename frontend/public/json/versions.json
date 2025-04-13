@@ -1,5 +1,50 @@
 [
   {
+    "name": "fhem/fhem-mirror",
+    "version": "6.2",
+    "date": "2025-04-13T10:32:39Z"
+  },
+  {
+    "name": "syncthing/syncthing",
+    "version": "v2.0.0-beta.9",
+    "date": "2025-04-12T13:58:29Z"
+  },
+  {
+    "name": "Lidarr/Lidarr",
+    "version": "v2.10.3.4602",
+    "date": "2025-03-23T11:00:37Z"
+  },
+  {
+    "name": "Readarr/Readarr",
+    "version": "v2.0.0.4645",
+    "date": "2017-03-07T18:56:06Z"
+  },
+  {
+    "name": "Prowlarr/Prowlarr",
+    "version": "v1.33.3.5008",
+    "date": "2025-04-09T17:58:37Z"
+  },
+  {
+    "name": "Radarr/Radarr",
+    "version": "v5.21.1.9799",
+    "date": "2025-03-24T15:52:12Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.1",
+    "date": "2025-01-01T16:15:52Z"
+  },
+  {
+    "name": "open-webui/open-webui",
+    "version": "v0.6.4",
+    "date": "2025-04-13T06:01:32Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1773",
+    "date": "2025-04-13T05:56:23Z"
+  },
+  {
     "name": "slskd/slskd",
     "version": "0.22.4",
     "date": "2025-04-13T00:14:13Z"
@@ -13,11 +58,6 @@
     "name": "StarFleetCPTN/GoMFT",
     "version": "v0.2.11",
     "date": "2025-04-12T21:13:08Z"
-  },
-  {
-    "name": "fhem/fhem-mirror",
-    "version": "6.2",
-    "date": "2025-04-12T20:27:37Z"
   },
   {
     "name": "semaphoreui/semaphore",
@@ -40,11 +80,6 @@
     "date": "2025-04-12T14:24:39Z"
   },
   {
-    "name": "syncthing/syncthing",
-    "version": "v2.0.0-beta.9",
-    "date": "2025-04-12T13:58:29Z"
-  },
-  {
     "name": "home-assistant/core",
     "version": "2025.4.2",
     "date": "2025-04-12T09:46:22Z"
@@ -56,18 +91,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-04-08T07:12:33Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1767",
-    "date": "2025-04-12T06:06:09Z"
-  },
-  {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.1",
-    "date": "2025-01-01T16:15:52Z"
+    "version": "v3.10.0",
+    "date": "2025-03-15T14:38:16Z"
   },
   {
     "name": "Bubka/2FAuth",
@@ -220,11 +245,6 @@
     "date": "2025-04-09T22:26:39Z"
   },
   {
-    "name": "Prowlarr/Prowlarr",
-    "version": "v1.33.3.5008",
-    "date": "2025-04-09T17:58:37Z"
-  },
-  {
     "name": "jupyter/notebook",
     "version": "v7.4.0",
     "date": "2025-04-09T17:36:14Z"
@@ -375,11 +395,6 @@
     "date": "2025-03-28T14:04:31Z"
   },
   {
-    "name": "open-webui/open-webui",
-    "version": "v0.6.2",
-    "date": "2025-04-07T03:41:23Z"
-  },
-  {
     "name": "Dolibarr/dolibarr",
     "version": "21.0.1",
     "date": "2025-04-06T19:22:59Z"
@@ -408,11 +423,6 @@
     "name": "msgbyte/tianji",
     "version": "v1.19.7",
     "date": "2025-04-06T14:22:44Z"
-  },
-  {
-    "name": "Radarr/Radarr",
-    "version": "v5.21.1.9799",
-    "date": "2025-03-24T15:52:12Z"
   },
   {
     "name": "TechnitiumSoftware/DnsServer",
@@ -573,16 +583,6 @@
     "name": "pocketbase/pocketbase",
     "version": "v0.26.6",
     "date": "2025-03-30T08:02:19Z"
-  },
-  {
-    "name": "Readarr/Readarr",
-    "version": "v2.0.0.4645",
-    "date": "2017-03-07T18:56:06Z"
-  },
-  {
-    "name": "Lidarr/Lidarr",
-    "version": "v2.10.3.4602",
-    "date": "2025-03-23T11:00:37Z"
   },
   {
     "name": "aceberg/WatchYourLAN",
