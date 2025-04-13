@@ -1,8 +1,48 @@
 [
   {
+    "name": "slskd/slskd",
+    "version": "0.22.4",
+    "date": "2025-04-13T00:14:13Z"
+  },
+  {
+    "name": "Tautulli/Tautulli",
+    "version": "v2.15.2",
+    "date": "2025-04-12T23:27:51Z"
+  },
+  {
+    "name": "StarFleetCPTN/GoMFT",
+    "version": "v0.2.11",
+    "date": "2025-04-12T21:13:08Z"
+  },
+  {
     "name": "fhem/fhem-mirror",
     "version": "6.2",
-    "date": "2025-04-12T10:30:19Z"
+    "date": "2025-04-12T20:27:37Z"
+  },
+  {
+    "name": "semaphoreui/semaphore",
+    "version": "v2.14.0-beta1",
+    "date": "2025-04-12T20:14:09Z"
+  },
+  {
+    "name": "karakeep-app/karakeep",
+    "version": "sdk/v0.23.2",
+    "date": "2025-04-12T18:37:40Z"
+  },
+  {
+    "name": "MediaBrowser/Emby.Releases",
+    "version": "4.8.11.0",
+    "date": "2025-03-10T06:39:11Z"
+  },
+  {
+    "name": "rogerfar/rdt-client",
+    "version": "v2.0.104",
+    "date": "2025-04-12T14:24:39Z"
+  },
+  {
+    "name": "syncthing/syncthing",
+    "version": "v2.0.0-beta.9",
+    "date": "2025-04-12T13:58:29Z"
   },
   {
     "name": "home-assistant/core",
@@ -28,11 +68,6 @@
     "name": "morpheus65535/bazarr",
     "version": "v1.5.1",
     "date": "2025-01-01T16:15:52Z"
-  },
-  {
-    "name": "StarFleetCPTN/GoMFT",
-    "version": "v0.2.10",
-    "date": "2025-04-12T01:53:46Z"
   },
   {
     "name": "Bubka/2FAuth",
@@ -90,11 +125,6 @@
     "date": "2025-04-11T13:24:25Z"
   },
   {
-    "name": "MediaBrowser/Emby.Releases",
-    "version": "4.8.11.0",
-    "date": "2025-03-10T06:39:11Z"
-  },
-  {
     "name": "docmost/docmost",
     "version": "v0.10.1",
     "date": "2025-04-11T12:42:08Z"
@@ -103,11 +133,6 @@
     "name": "dgtlmoon/changedetection.io",
     "version": "0.49.13",
     "date": "2025-04-11T11:48:06Z"
-  },
-  {
-    "name": "semaphoreui/semaphore",
-    "version": "v2.13.13",
-    "date": "2025-04-11T10:15:13Z"
   },
   {
     "name": "sabnzbd/sabnzbd",
@@ -195,11 +220,6 @@
     "date": "2025-04-09T22:26:39Z"
   },
   {
-    "name": "syncthing/syncthing",
-    "version": "v2.0.0-beta.7",
-    "date": "2025-04-09T13:41:32Z"
-  },
-  {
     "name": "Prowlarr/Prowlarr",
     "version": "v1.33.3.5008",
     "date": "2025-04-09T17:58:37Z"
@@ -218,11 +238,6 @@
     "name": "glpi-project/glpi",
     "version": "10.0.18",
     "date": "2025-02-12T11:07:02Z"
-  },
-  {
-    "name": "slskd/slskd",
-    "version": "0.22.3",
-    "date": "2025-04-09T14:02:12Z"
   },
   {
     "name": "HabitRPG/habitica",
@@ -398,11 +413,6 @@
     "name": "Radarr/Radarr",
     "version": "v5.21.1.9799",
     "date": "2025-03-24T15:52:12Z"
-  },
-  {
-    "name": "karakeep-app/karakeep",
-    "version": "extension/v1.2.4",
-    "date": "2025-04-06T11:56:18Z"
   },
   {
     "name": "TechnitiumSoftware/DnsServer",
@@ -840,11 +850,6 @@
     "date": "2025-03-08T06:08:04Z"
   },
   {
-    "name": "rogerfar/rdt-client",
-    "version": "v2.0.102",
-    "date": "2025-03-07T20:48:46Z"
-  },
-  {
     "name": "prometheus/alertmanager",
     "version": "v0.28.1",
     "date": "2025-03-07T15:41:35Z"
@@ -1053,11 +1058,6 @@
     "name": "petio-team/petio",
     "version": "v0.5.7",
     "date": "2025-01-17T15:57:17Z"
-  },
-  {
-    "name": "Tautulli/Tautulli",
-    "version": "v2.15.1",
-    "date": "2025-01-11T23:38:33Z"
   },
   {
     "name": "traccar/traccar",
