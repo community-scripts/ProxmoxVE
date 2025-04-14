@@ -1,5 +1,70 @@
 [
   {
+    "name": "Graylog2/graylog2-server",
+    "version": "6.2.0-rc.1",
+    "date": "2025-04-14T11:26:18Z"
+  },
+  {
+    "name": "fhem/fhem-mirror",
+    "version": "6.2",
+    "date": "2025-04-14T10:36:18Z"
+  },
+  {
+    "name": "bluenviron/mediamtx",
+    "version": "v1.12.0",
+    "date": "2025-04-14T10:36:04Z"
+  },
+  {
+    "name": "Stirling-Tools/Stirling-PDF",
+    "version": "v0.45.5",
+    "date": "2025-04-14T09:57:39Z"
+  },
+  {
+    "name": "open-webui/open-webui",
+    "version": "v0.6.5",
+    "date": "2025-04-14T09:13:36Z"
+  },
+  {
+    "name": "zwave-js/zwave-js-ui",
+    "version": "v10.2.0",
+    "date": "2025-04-14T08:53:44Z"
+  },
+  {
+    "name": "zabbix/zabbix",
+    "version": "6.0.40rc1",
+    "date": "2025-04-14T08:45:46Z"
+  },
+  {
+    "name": "duplicati/duplicati",
+    "version": "v2.1.0.114-2.1.0.114_canary_2025-04-14",
+    "date": "2025-04-14T07:54:21Z"
+  },
+  {
+    "name": "evcc-io/evcc",
+    "version": "0.203.1",
+    "date": "2025-04-14T07:23:02Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.1",
+    "date": "2025-01-01T16:15:52Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1775",
+    "date": "2025-04-14T05:59:53Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.10",
+    "date": "2025-03-22T13:02:26Z"
+  },
+  {
+    "name": "glanceapp/glance",
+    "version": "v0.7.12",
+    "date": "2025-04-14T00:16:15Z"
+  },
+  {
     "name": "ellite/Wallos",
     "version": "v2.49.1",
     "date": "2025-04-13T22:36:24Z"
@@ -15,11 +80,6 @@
     "date": "2025-04-13T21:14:40Z"
   },
   {
-    "name": "fhem/fhem-mirror",
-    "version": "6.2",
-    "date": "2025-04-13T20:28:55Z"
-  },
-  {
     "name": "Ombi-app/Ombi",
     "version": "v4.47.1",
     "date": "2025-01-05T21:14:23Z"
@@ -30,9 +90,14 @@
     "date": "2025-04-13T18:31:13Z"
   },
   {
-    "name": "glanceapp/glance",
-    "version": "v0.7.11",
-    "date": "2025-04-13T16:22:22Z"
+    "name": "runtipi/runtipi",
+    "version": "v3.10.0",
+    "date": "2025-03-15T14:38:16Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.2.0",
+    "date": "2025-04-11T12:48:27Z"
   },
   {
     "name": "karakeep-app/karakeep",
@@ -43,11 +108,6 @@
     "name": "syncthing/syncthing",
     "version": "v2.0.0-beta.9",
     "date": "2025-04-12T13:58:29Z"
-  },
-  {
-    "name": "evcc-io/evcc",
-    "version": "0.203.0",
-    "date": "2025-04-13T11:49:39Z"
   },
   {
     "name": "qbittorrent/qBittorrent",
@@ -73,21 +133,6 @@
     "name": "Radarr/Radarr",
     "version": "v5.21.1.9799",
     "date": "2025-03-24T15:52:12Z"
-  },
-  {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.1",
-    "date": "2025-01-01T16:15:52Z"
-  },
-  {
-    "name": "open-webui/open-webui",
-    "version": "v0.6.4",
-    "date": "2025-04-13T06:01:32Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1773",
-    "date": "2025-04-13T05:56:23Z"
   },
   {
     "name": "slskd/slskd",
@@ -125,11 +170,6 @@
     "date": "2025-04-12T08:55:32Z"
   },
   {
-    "name": "runtipi/runtipi",
-    "version": "v3.10.0",
-    "date": "2025-03-15T14:38:16Z"
-  },
-  {
     "name": "Bubka/2FAuth",
     "version": "v5.5.2",
     "date": "2025-04-11T22:00:06Z"
@@ -145,11 +185,6 @@
     "date": "2025-04-03T05:11:15Z"
   },
   {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.10",
-    "date": "2025-03-22T13:02:26Z"
-  },
-  {
     "name": "tailscale/tailscale",
     "version": "v1.82.4",
     "date": "2025-04-11T17:58:09Z"
@@ -158,16 +193,6 @@
     "name": "coder/code-server",
     "version": "v4.99.2",
     "date": "2025-04-11T17:57:47Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.2.0",
-    "date": "2025-04-11T12:48:27Z"
-  },
-  {
-    "name": "duplicati/duplicati",
-    "version": "v2.1.0.113-2.1.0.113_canary_2025-04-11",
-    "date": "2025-04-11T16:57:07Z"
   },
   {
     "name": "TriliumNext/Notes",
@@ -198,11 +223,6 @@
     "name": "sabnzbd/sabnzbd",
     "version": "4.5.1",
     "date": "2025-04-11T09:57:47Z"
-  },
-  {
-    "name": "Stirling-Tools/Stirling-PDF",
-    "version": "v0.45.4",
-    "date": "2025-04-11T08:45:04Z"
   },
   {
     "name": "home-assistant/operating-system",
@@ -390,29 +410,14 @@
     "date": "2025-04-07T14:32:15Z"
   },
   {
-    "name": "Graylog2/graylog2-server",
-    "version": "6.2.0-beta.4",
-    "date": "2025-04-07T11:28:13Z"
-  },
-  {
     "name": "fallenbagel/jellyseerr",
     "version": "preview-back-to-axios",
     "date": "2025-04-07T09:23:08Z"
   },
   {
-    "name": "zwave-js/zwave-js-ui",
-    "version": "v10.1.5",
-    "date": "2025-04-07T09:19:35Z"
-  },
-  {
     "name": "redis/redis",
     "version": "8.0-rc1-int2",
     "date": "2025-04-02T19:05:08Z"
-  },
-  {
-    "name": "zabbix/zabbix",
-    "version": "7.4.0beta1",
-    "date": "2025-04-07T08:14:13Z"
   },
   {
     "name": "nzbgetcom/nzbget",
@@ -1003,11 +1008,6 @@
     "name": "blakeblackshear/frigate",
     "version": "v0.15.0",
     "date": "2025-02-08T18:45:30Z"
-  },
-  {
-    "name": "bluenviron/mediamtx",
-    "version": "v1.11.3",
-    "date": "2025-02-07T19:29:19Z"
   },
   {
     "name": "apache/tika",
