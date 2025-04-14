@@ -15,10 +15,22 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y gpg
+$STD apt-get install -y \
+    gnupg2 \
+    lsb-release \
+    gpg \
+    apt-transport-https
 msg_ok "Installed Dependencies"
 
+msg_info "Setting up Adoptium Repository"
+mkdir -p /etc/apt/keyrings
+curl -fsSL "https://packages.adoptium.net/artifactory/api/gpg/key/public" | gpg --dearmor >/etc/apt/trusted.gpg.d/adoptium.gpg
+echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" >/etc/apt/sources.list.d/adoptium.list
+$STD apt-get update
+msg_ok "Set up Adoptium Repository"
+
 msg_info "Installing Neo4j (patience)"
+$STD apt-get install -y temurin-21-jdk
 curl -fsSL "https://debian.neo4j.com/neotechnology.gpg.key" | gpg --dearmor -o /etc/apt/keyrings/neotechnology.gpg
 echo 'deb [signed-by=/etc/apt/keyrings/neotechnology.gpg] https://debian.neo4j.com stable latest' >/etc/apt/sources.list.d/neo4j.list
 $STD apt-get update
