@@ -18,7 +18,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🆕 New Scripts
 
-  - Alpine-AdGuardHome [@MickLesk](https://github.com/MickLesk) ([#3875](https://github.com/community-scripts/ProxmoxVE/pull/3875))
+  - openziti-controller ([#3880](https://github.com/community-scripts/ProxmoxVE/pull/3880))
+- Alpine-AdGuardHome [@MickLesk](https://github.com/MickLesk) ([#3875](https://github.com/community-scripts/ProxmoxVE/pull/3875))
 
 ### 🚀 Updated Scripts
 
