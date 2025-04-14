@@ -31,9 +31,7 @@ function update_script() {
     msg_info "Installing Adoptium JDK"
     $STD apt-get install -y \
       gnupg2 \
-      lsb-release \
-      gpg \
-      apt-transport-https
+      lsb-release
     mkdir -p /etc/apt/keyrings
     curl -fsSL https://packages.adoptium.net/artifactory/api/gpg/key/public | gpg --dearmor >/etc/apt/trusted.gpg.d/adoptium.gpg
     echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" >/etc/apt/sources.list.d/adoptium.list
