@@ -14,6 +14,39 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 All LXC instances created using this repository come pre-installed with Midnight Commander, which is a command-line tool (`mc`) that offers a user-friendly file and directory management interface for the terminal environment.
 
 
+## 2025-04-12
+
+### 🌐 Website
+
+  - #### ✨ New Features
+
+    - Add "Not Updateable" tooltip to scripts [@BramSuurdje](https://github.com/BramSuurdje) ([#3852](https://github.com/community-scripts/ProxmoxVE/pull/3852))
+
+## 2025-04-11
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - slskd: fix missing -o for curl [@MickLesk](https://github.com/MickLesk) ([#3828](https://github.com/community-scripts/ProxmoxVE/pull/3828))
+    - 2FAuth: Fix php dependencies [@tremor021](https://github.com/tremor021) ([#3820](https://github.com/community-scripts/ProxmoxVE/pull/3820))
+    - Komodo: Update Repository link [@sendyputra](https://github.com/sendyputra) ([#3823](https://github.com/community-scripts/ProxmoxVE/pull/3823))
+
+### 🧰 Maintenance
+
+  - #### 💾 Core
+
+    - Enlarge the size of the menu in build.func [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#3833](https://github.com/community-scripts/ProxmoxVE/pull/3833))
+
+### 🌐 Website
+
+  - Bump vite from 6.2.5 to 6.2.6 in /frontend [@dependabot[bot]](https://github.com/dependabot[bot]) ([#3842](https://github.com/community-scripts/ProxmoxVE/pull/3842))
+
+  - #### 📝 Script Information
+
+    - SQLServer: fix some typos in notes [@stiny861](https://github.com/stiny861) ([#3838](https://github.com/community-scripts/ProxmoxVE/pull/3838))
+    - Radicale: move to misc category [@tremor021](https://github.com/tremor021) ([#3830](https://github.com/community-scripts/ProxmoxVE/pull/3830))
+
 ## 2025-04-10
 
 ### 🆕 New Scripts
