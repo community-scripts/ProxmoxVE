@@ -1,13 +1,58 @@
 [
   {
+    "name": "ellite/Wallos",
+    "version": "v2.49.1",
+    "date": "2025-04-13T22:36:24Z"
+  },
+  {
+    "name": "rogerfar/rdt-client",
+    "version": "v2.0.108",
+    "date": "2025-04-13T22:17:55Z"
+  },
+  {
+    "name": "autobrr/autobrr",
+    "version": "v1.61.0",
+    "date": "2025-04-13T21:14:40Z"
+  },
+  {
     "name": "fhem/fhem-mirror",
     "version": "6.2",
-    "date": "2025-04-13T10:32:39Z"
+    "date": "2025-04-13T20:28:55Z"
+  },
+  {
+    "name": "Ombi-app/Ombi",
+    "version": "v4.47.1",
+    "date": "2025-01-05T21:14:23Z"
+  },
+  {
+    "name": "pocket-id/pocket-id",
+    "version": "v0.46.0",
+    "date": "2025-04-13T18:31:13Z"
+  },
+  {
+    "name": "glanceapp/glance",
+    "version": "v0.7.11",
+    "date": "2025-04-13T16:22:22Z"
+  },
+  {
+    "name": "karakeep-app/karakeep",
+    "version": "mcp/v0.23.4",
+    "date": "2025-04-13T14:09:19Z"
   },
   {
     "name": "syncthing/syncthing",
     "version": "v2.0.0-beta.9",
     "date": "2025-04-12T13:58:29Z"
+  },
+  {
+    "name": "evcc-io/evcc",
+    "version": "0.203.0",
+    "date": "2025-04-13T11:49:39Z"
+  },
+  {
+    "name": "qbittorrent/qBittorrent",
+    "version": "release-5.0.5",
+    "date": "2025-04-13T07:55:55Z"
   },
   {
     "name": "Lidarr/Lidarr",
@@ -65,19 +110,9 @@
     "date": "2025-04-12T20:14:09Z"
   },
   {
-    "name": "karakeep-app/karakeep",
-    "version": "sdk/v0.23.2",
-    "date": "2025-04-12T18:37:40Z"
-  },
-  {
     "name": "MediaBrowser/Emby.Releases",
     "version": "4.8.11.0",
     "date": "2025-03-10T06:39:11Z"
-  },
-  {
-    "name": "rogerfar/rdt-client",
-    "version": "v2.0.104",
-    "date": "2025-04-12T14:24:39Z"
   },
   {
     "name": "home-assistant/core",
@@ -228,11 +263,6 @@
     "name": "n8n-io/n8n",
     "version": "n8n@1.86.1",
     "date": "2025-04-09T09:20:55Z"
-  },
-  {
-    "name": "glanceapp/glance",
-    "version": "v0.7.10",
-    "date": "2025-04-09T23:51:06Z"
   },
   {
     "name": "mongodb/mongo",
@@ -590,11 +620,6 @@
     "date": "2025-03-30T06:25:22Z"
   },
   {
-    "name": "pocket-id/pocket-id",
-    "version": "v0.45.0",
-    "date": "2025-03-29T23:12:22Z"
-  },
-  {
     "name": "tobychui/zoraxy",
     "version": "v3.1.9",
     "date": "2025-03-01T02:24:33Z"
@@ -640,19 +665,9 @@
     "date": "2025-03-28T04:12:31Z"
   },
   {
-    "name": "ellite/Wallos",
-    "version": "v2.48.1",
-    "date": "2025-03-27T22:02:16Z"
-  },
-  {
     "name": "hivemq/hivemq-community-edition",
     "version": "2025.2",
     "date": "2025-03-27T19:21:13Z"
-  },
-  {
-    "name": "evcc-io/evcc",
-    "version": "0.202.1",
-    "date": "2025-03-27T08:24:55Z"
   },
   {
     "name": "forgejo/forgejo",
@@ -698,6 +713,11 @@
     "name": "ZoeyVid/NPMplus",
     "version": "2025-03-24-r2",
     "date": "2025-03-24T20:52:35Z"
+  },
+  {
+    "name": "nextcloud/nextcloudpi",
+    "version": "v1.55.4",
+    "date": "2025-03-24T11:31:02Z"
   },
   {
     "name": "requarks/wiki",
@@ -780,11 +800,6 @@
     "date": "2025-03-17T04:54:50Z"
   },
   {
-    "name": "autobrr/autobrr",
-    "version": "v1.60.0",
-    "date": "2025-03-16T18:39:49Z"
-  },
-  {
     "name": "henrygd/beszel",
     "version": "v0.10.2",
     "date": "2025-03-15T07:14:54Z"
@@ -818,11 +833,6 @@
     "name": "excalidraw/excalidraw",
     "version": "v0.18.0",
     "date": "2025-03-11T12:47:22Z"
-  },
-  {
-    "name": "Ombi-app/Ombi",
-    "version": "v4.47.1",
-    "date": "2025-01-05T21:14:23Z"
   },
   {
     "name": "mylar3/mylar3",
@@ -938,11 +948,6 @@
     "name": "typesense/typesense",
     "version": "v28.0",
     "date": "2025-02-18T15:49:57Z"
-  },
-  {
-    "name": "qbittorrent/qBittorrent",
-    "version": "release-5.0.4",
-    "date": "2025-02-18T14:14:11Z"
   },
   {
     "name": "postgres/postgres",
@@ -1128,11 +1133,6 @@
     "name": "sabre-io/Baikal",
     "version": "0.10.1",
     "date": "2024-11-10T10:25:45Z"
-  },
-  {
-    "name": "nextcloud/nextcloudpi",
-    "version": "v1.55.3",
-    "date": "2024-11-08T22:21:10Z"
   },
   {
     "name": "caddyserver/xcaddy",
