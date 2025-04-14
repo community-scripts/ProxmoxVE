@@ -16,9 +16,21 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-04-14
 
+### 🆕 New Scripts
+
+  - Alpine-AdGuardHome [@MickLesk](https://github.com/MickLesk) ([#3875](https://github.com/community-scripts/ProxmoxVE/pull/3875))
+
 ### 🚀 Updated Scripts
 
   - Paymenter: bump php to 8.3 [@opastorello](https://github.com/opastorello) ([#3825](https://github.com/community-scripts/ProxmoxVE/pull/3825))
+
+  - #### 🐞 Bug Fixes
+
+    - Neo4j: Add Java dependency [@tremor021](https://github.com/tremor021) ([#3871](https://github.com/community-scripts/ProxmoxVE/pull/3871))
+
+  - #### 🔧 Refactor
+
+    - Refactor Cockpit update_script part [@MickLesk](https://github.com/MickLesk) ([#3878](https://github.com/community-scripts/ProxmoxVE/pull/3878))
 
 ## 2025-04-12
 
