@@ -15,20 +15,24 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y gpg
+$STD apt-get install -y \
+  gnupg2 \
+  lsb-release \
+  gpg \
+  apt-transport-https
 msg_ok "Installed Dependencies"
 
-msg_info "Installing OpenJDK"
-curl -fsSL https://packages.adoptium.net/artifactory/api/gpg/key/public | gpg --dearmor >/etc/apt/trusted.gpg.d/adoptium.gpg
-echo 'deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/adoptium.gpg] https://packages.adoptium.net/artifactory/deb bookworm main' >/etc/apt/sources.list.d/adoptium.list
-$STD apt-get update
-$STD apt-get install -y temurin-21-jre
-msg_ok "Installed OpenJDK"
+msg_info "Setting up Adoptium Repository"
+mkdir -p /etc/apt/keyrings
+curl -fsSL "https://packages.adoptium.net/artifactory/api/gpg/key/public" | gpg --dearmor >/etc/apt/trusted.gpg.d/adoptium.gpg
+echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" >/etc/apt/sources.list.d/adoptium.list
+msg_ok "Set up Adoptium Repository"
 
 msg_info "Installing Neo4j (patience)"
 curl -fsSL "https://debian.neo4j.com/neotechnology.gpg.key" | gpg --dearmor -o /etc/apt/keyrings/neotechnology.gpg
 echo 'deb [signed-by=/etc/apt/keyrings/neotechnology.gpg] https://debian.neo4j.com stable latest' >/etc/apt/sources.list.d/neo4j.list
 $STD apt-get update
+$STD apt-get install -y temurin-21-jre
 $STD apt-get install -y neo4j
 sed -i '/server.default_listen_address/s/^#//' /etc/neo4j/neo4j.conf
 systemctl enable -q --now neo4j
