@@ -17,10 +17,8 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
   gnupg2 \
-  lsb-release \
-  gpg \
-  apt-transport-https
-msg_ok "Installed Dependencies"
+  lsb-release 
+  msg_ok "Installed Dependencies"
 
 msg_info "Setting up Adoptium Repository"
 mkdir -p /etc/apt/keyrings
