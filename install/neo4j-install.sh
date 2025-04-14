@@ -18,6 +18,13 @@ msg_info "Installing Dependencies"
 $STD apt-get install -y gpg
 msg_ok "Installed Dependencies"
 
+msg_info "Installing OpenJDK"
+curl -fsSL https://packages.adoptium.net/artifactory/api/gpg/key/public | gpg --dearmor >/etc/apt/trusted.gpg.d/adoptium.gpg
+echo 'deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/adoptium.gpg] https://packages.adoptium.net/artifactory/deb bookworm main' >/etc/apt/sources.list.d/adoptium.list
+$STD apt-get update
+$STD apt-get install -y temurin-21-jre
+msg_ok "Installed OpenJDK"
+
 msg_info "Installing Neo4j (patience)"
 curl -fsSL "https://debian.neo4j.com/neotechnology.gpg.key" | gpg --dearmor -o /etc/apt/keyrings/neotechnology.gpg
 echo 'deb [signed-by=/etc/apt/keyrings/neotechnology.gpg] https://debian.neo4j.com stable latest' >/etc/apt/sources.list.d/neo4j.list
