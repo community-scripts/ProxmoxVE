@@ -20,23 +20,24 @@ $STD apt-get install -y \
     apt-transport-https \
     ca-certificates \
     gnupg2 \
-    lsb-release
-msg_ok "Installed Dependencies" 
-
-msg_info "Adding PHP8.3 Repository"
-$STD echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/sury-php.list
-curl -fsSL https://packages.sury.org/php/apt.gpg | gpg --dearmor -o /etc/apt/trusted.gpg.d/sury-keyring.gpg
-$STD apt update -y
-msg_ok "Added PHP8.3 Repository"
-
-msg_info "Installing PHP"
-$STD apt-get install -y \
-    php8.3 \
-    php8.3-{common,cli,gd,mysql,mbstring,bcmath,xml,fpm,curl,zip,intl,redis} \
     mariadb-server \
     nginx \
-    redis
-msg_ok "Installed PHP"
+    redis-server
+msg_ok "Installed Dependencies"
+
+msg_info "Adding PHP Repository"
+$STD curl -sSLo /tmp/debsuryorg-archive-keyring.deb https://packages.sury.org/debsuryorg-archive-keyring.deb
+$STD dpkg -i /tmp/debsuryorg-archive-keyring.deb
+$STD sh -c 'echo "deb [signed-by=/usr/share/keyrings/deb.sury.org-php.gpg] https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list'
+$STD apt-get update
+msg_ok "Added PHP Repository"
+
+msg_info "Installing PHP"
+$STD apt-get remove -y php8.2*
+$STD apt-get install -y \
+    php8.3 \
+    php8.3-{common,cli,gd,mysql,mbstring,bcmath,xml,curl,zip,intl,fpm}
+msg_info "Installed PHP"
 
 msg_info "Installing Composer"
 $STD curl -fsSL https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
@@ -44,10 +45,10 @@ msg_ok "Installed Composer"
 
 msg_info "Installing Paymenter"
 RELEASE=$(curl -fsSL https://api.github.com/repos/paymenter/paymenter/releases/latest | grep '"tag_name"' | sed -E 's/.*"tag_name": "([^"]+)".*/\1/')
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
+echo "${RELEASE}" >/opt/"${APPLICATION}"_version.txt
 mkdir -p /opt/paymenter
-cd /opt/paymenter
-curl -fsSL "https://github.com/paymenter/paymenter/releases/download/${RELEASE}/paymenter.tar.gz" -o $(basename "https://github.com/paymenter/paymenter/releases/download/${RELEASE}/paymenter.tar.gz")
+cd /opt/paymenter || exit
+curl -fsSL "https://github.com/paymenter/paymenter/releases/download/${RELEASE}/paymenter.tar.gz" -o paymenter.tar.gz
 $STD tar -xzvf paymenter.tar.gz
 chmod -R 755 storage/* bootstrap/cache/
 msg_ok "Installed Paymenter"
@@ -61,10 +62,10 @@ mysql -u root -e "CREATE DATABASE $DB_NAME;"
 mysql -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
 mysql -u root -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost' WITH GRANT OPTION;"
 {
-  echo "Paymenter Database Credentials"
-  echo "Database: $DB_NAME"
-  echo "Username: $DB_USER"
-  echo "Password: $DB_PASS"
+    echo "Paymenter Database Credentials"
+    echo "Database: $DB_NAME"
+    echo "Username: $DB_USER"
+    echo "Password: $DB_PASS"
 } >>~/paymenter_db.creds
 cp .env.example .env
 $STD composer install --no-dev --optimize-autoloader --no-interaction
