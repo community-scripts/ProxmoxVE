@@ -14,6 +14,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 All LXC instances created using this repository come pre-installed with Midnight Commander, which is a command-line tool (`mc`) that offers a user-friendly file and directory management interface for the terminal environment.
 
 
+## 2025-04-14
+
+### 🚀 Updated Scripts
+
+  - Paymenter: bump php to 8.3 [@opastorello](https://github.com/opastorello) ([#3825](https://github.com/community-scripts/ProxmoxVE/pull/3825))
+
 ## 2025-04-12
 
 ### 🌐 Website
