@@ -15,10 +15,10 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-    gnupg \
-    mkcert \
-    git \
-    redis
+  gnupg \
+  mkcert \
+  git \
+  redis
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up Node.js Repository"
@@ -43,7 +43,6 @@ $STD apt-get install -y postgresql-16
 DB_NAME="outline"
 DB_USER="outline"
 DB_PASS="$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)"
-SECRET_KEY="$(openssl rand -hex 32)"
 $STD sudo -u postgres psql -c "CREATE ROLE $DB_USER WITH LOGIN PASSWORD '$DB_PASS';"
 $STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER ENCODING 'UTF8' TEMPLATE template0;"
 $STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET client_encoding TO 'utf8';"
@@ -52,6 +51,7 @@ $STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET timezone TO 'UTC';"
 msg_ok "Set up PostgreSQL"
 
 msg_info "Setup Outline (Patience)"
+SECRET_KEY="$(openssl rand -hex 32)"
 temp_file=$(mktemp)
 LOCAL_IP="$(hostname -I | awk '{print $1}')"
 RELEASE=$(curl -fsSL https://api.github.com/repos/outline/outline/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
@@ -60,6 +60,7 @@ tar zxf $temp_file
 mv outline-${RELEASE} /opt/outline
 cd /opt/outline
 cp .env.sample .env
+export NODE_ENV=development
 sed -i 's/NODE_ENV=production/NODE_ENV=development/g' /opt/outline/.env
 sed -i "s/generate_a_new_key/${SECRET_KEY}/g" /opt/outline/.env
 sed -i "s/user:pass@postgres/${DB_USER}:${DB_PASS}@localhost/g" /opt/outline/.env
@@ -70,6 +71,7 @@ $STD yarn install --frozen-lockfile
 export NODE_OPTIONS="--max-old-space-size=3584"
 $STD yarn build
 sed -i 's/NODE_ENV=development/NODE_ENV=production/g' /opt/outline/.env
+export NODE_ENV=production
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Setup Outline"
 
@@ -83,7 +85,7 @@ After=network.target
 Type=simple
 User=root
 WorkingDirectory=/opt/outline
-ExecStart=/usr/bin/node ./build/server/index.js
+ExecStart=/usr/bin/yarn start
 Restart=always
 EnvironmentFile=/opt/outline/.env
 
