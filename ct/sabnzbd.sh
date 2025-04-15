@@ -20,29 +20,30 @@ color
 catch_errors
 
 function update_script() {
-   header_info
-   check_container_storage
-   check_container_resources
-   if [[ ! -d /opt/sabnzbd ]]; then
-      msg_error "No ${APP} Installation Found!"
-      exit
-   fi
-   RELEASE=$(curl -fsSL https://api.github.com/repos/sabnzbd/sabnzbd/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-   if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
-      msg_info "Updating $APP to ${RELEASE}"
-      systemctl stop sabnzbd.service
-      tar zxvf <(curl -fsSL https://github.com/sabnzbd/sabnzbd/releases/download/$RELEASE/SABnzbd-${RELEASE}-src.tar.gz)
-      cp -rf SABnzbd-${RELEASE}/* /opt/sabnzbd
-      rm -rf SABnzbd-${RELEASE}
-      cd /opt/sabnzbd
-      $STD python3 -m pip install -r requirements.txt
-      echo "${RELEASE}" >/opt/${APP}_version.txt
-      systemctl start sabnzbd.service
-      msg_ok "Updated ${APP} to ${RELEASE}"
-   else
-      msg_ok "No update required. ${APP} is already at ${RELEASE}"
-   fi
-   exit
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /opt/sabnzbd ]]; then
+    msg_error "No ${APP} Installation Found!"
+    exit
+  fi
+  RELEASE=$(curl -fsSL https://api.github.com/repos/sabnzbd/sabnzbd/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+    msg_info "Updating $APP to ${RELEASE}"
+    rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
+    systemctl stop sabnzbd.service
+    tar zxvf <(curl -fsSL https://github.com/sabnzbd/sabnzbd/releases/download/$RELEASE/SABnzbd-${RELEASE}-src.tar.gz)
+    cp -rf SABnzbd-${RELEASE}/* /opt/sabnzbd
+    rm -rf SABnzbd-${RELEASE}
+    cd /opt/sabnzbd
+    $STD python3 -m pip install -r requirements.txt
+    echo "${RELEASE}" >/opt/${APP}_version.txt
+    systemctl start sabnzbd.service
+    msg_ok "Updated ${APP} to ${RELEASE}"
+  else
+    msg_ok "No update required. ${APP} is already at ${RELEASE}"
+  fi
+  exit
 }
 
 start
