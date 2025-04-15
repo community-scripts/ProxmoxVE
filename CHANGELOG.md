@@ -25,6 +25,12 @@ All LXC instances created using this repository come pre-installed with Midnight
     - Outline: Installation and update fixes [@tremor021](https://github.com/tremor021) ([#3895](https://github.com/community-scripts/ProxmoxVE/pull/3895))
     - SABnzbd: Fix update error caused by externaly managed message [@tremor021](https://github.com/tremor021) ([#3892](https://github.com/community-scripts/ProxmoxVE/pull/3892))
 
+### 🧰 Maintenance
+
+  - #### 📂 Github
+
+    - shrink & minimalize report templates [@MickLesk](https://github.com/MickLesk) ([#3902](https://github.com/community-scripts/ProxmoxVE/pull/3902))
+
 ## 2025-04-14
 
 ### 🆕 New Scripts
