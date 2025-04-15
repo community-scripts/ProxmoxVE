@@ -27,6 +27,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🧰 Maintenance
 
+  - #### 📡 API
+
+    - Bump golang.org/x/crypto from 0.32.0 to 0.35.0 in /api [@dependabot[bot]](https://github.com/dependabot[bot]) ([#3887](https://github.com/community-scripts/ProxmoxVE/pull/3887))
+
   - #### 📂 Github
 
     - shrink & minimalize report templates [@MickLesk](https://github.com/MickLesk) ([#3902](https://github.com/community-scripts/ProxmoxVE/pull/3902))
