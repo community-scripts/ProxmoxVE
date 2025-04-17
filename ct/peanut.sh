@@ -32,7 +32,7 @@ function update_script() {
     msg_info "Updating $APP to ${RELEASE}"
     systemctl stop peanut
     curl -fsSL "https://api.github.com/repos/Brandawg93/PeaNUT/tarball/${RELEASE}" -o "peanut.tar.gz"
-    tar -xzf peanut.tar.gz -C /opt/peanut --strip-components
+    tar -xzf peanut.tar.gz -C /opt/peanut --strip-components=1
     rm peanut.tar.gz
     cd /opt/peanut
     $STD pnpm i
