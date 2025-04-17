@@ -51,11 +51,8 @@ function update_script() {
     tar -xzf "$temp_file"
     cp -rf "GoMFT-${RELEASE}"/* /opt/gomft/
     cd /opt/gomft
-    rm -rf /opt/gomft/node_modules
-    $STD npm ci
-    $STD node build.js
-    $STD go mod download
-    $STD go get -u github.com/a-h/templ
+    $STD npm install
+    $STD npm run build
     $STD "$HOME"/go/bin/templ generate
     export CGO_ENABLED=1
     export GOOS=linux

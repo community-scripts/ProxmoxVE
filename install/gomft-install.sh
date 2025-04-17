@@ -47,19 +47,13 @@ msg_ok "Installed Node.js"
 msg_info "Setup ${APPLICATION} (Patience)"
 temp_file=$(mktemp)
 RELEASE=$(curl -fsSL https://api.github.com/repos/StarFleetCPTN/GoMFT/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/StarFleetCPTN/GoMFT/archive/refs/tags/v${RELEASE}.tar.gz" -o $temp_file
-tar -xzf $temp_file
-mv GoMFT-${RELEASE}/ /opt/gomft
+curl -fsSL "https://github.com/StarFleetCPTN/GoMFT/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
+tar -xzf "$temp_file"
+mv GoMFT-"${RELEASE}"/ /opt/gomft
 cd /opt/gomft
-$STD npm ci
-$STD node build.js
-$STD go mod download
 $STD go install github.com/a-h/templ/cmd/templ@latest
-$STD go get -u github.com/a-h/templ
-$STD $HOME/go/bin/templ generate
-export CGO_ENABLED=1
-export GOOS=linux
-$STD go build -o gomft
+$STD "$HOME"/go/bin/templ generate
+$STD go build -o gomft main.go
 chmod +x /opt/gomft/gomft
 JWT_SECRET_KEY=$(openssl rand -base64 24 | tr -d '/+=')
 
@@ -83,7 +77,7 @@ EMAIL_USERNAME=smtp_username
 EMAIL_PASSWORD=smtp_password
 EOF
 
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
+echo "${RELEASE}" >/opt/"${APPLICATION}"_version.txt
 msg_ok "Setup ${APPLICATION}"
 
 msg_info "Creating Service"
@@ -109,7 +103,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -f $temp_file
+rm -f "$temp_file"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
