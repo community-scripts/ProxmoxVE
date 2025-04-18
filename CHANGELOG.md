@@ -16,6 +16,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-04-18
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Changedetection: Increase connection timeout for older systems [@tremor021](https://github.com/tremor021) ([#3935](https://github.com/community-scripts/ProxmoxVE/pull/3935))
+
 ### 🌐 Website
 
   - #### 📝 Script Information
