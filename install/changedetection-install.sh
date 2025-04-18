@@ -137,6 +137,7 @@ cat <<EOF >/etc/systemd/system/browserless.service
 Description=browserless service
 After=network.target
 [Service]
+Environment=CONNECTION_TIMEOUT=60000
 WorkingDirectory=/opt/browserless
 ExecStart=/opt/browserless/scripts/start.sh
 SyslogIdentifier=browserless
