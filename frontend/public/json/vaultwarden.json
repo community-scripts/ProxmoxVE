@@ -43,7 +43,7 @@
     },
     "notes": [
         {
-            "text": "Vaultwarden needs to be behind a proxy (Nginx Proxy Manager) to obtain HTTPS and to allow clients to connect. If you try to open the web page directly on the new container, the web site will not load",
+            "text": "Vaultwarden needs to be behind a proxy (Nginx Proxy Manager, Caddy, etc) to obtain HTTPS and to allow clients to connect. If you try to open the web page directly on the new container, the web site will not load",
             "type": "warning"
         },
         {
