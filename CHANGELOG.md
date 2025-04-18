@@ -14,6 +14,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 All LXC instances created using this repository come pre-installed with Midnight Commander, which is a command-line tool (`mc`) that offers a user-friendly file and directory management interface for the terminal environment.
 
 
+## 2025-04-18
+
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - VaultWarden: Update json with additonal information [@uSlackr](https://github.com/uSlackr) ([#3929](https://github.com/community-scripts/ProxmoxVE/pull/3929))
+
 ## 2025-04-17
 
 ### 🚀 Updated Scripts
