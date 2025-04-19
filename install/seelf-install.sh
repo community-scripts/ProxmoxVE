@@ -16,7 +16,8 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
   make \
-  gcc
+  gcc \
+  gpg
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Golang"
@@ -43,9 +44,9 @@ msg_ok "Installed Node.js"
 msg_info "Setting up seelf. Patience"
 RELEASE=$(curl -fsSL https://api.github.com/repos/YuukanOO/seelf/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 curl -fsSL "https://github.com/YuukanOO/seelf/archive/refs/tags/v${RELEASE}.tar.gz" -o $(basename "https://github.com/YuukanOO/seelf/archive/refs/tags/v${RELEASE}.tar.gz")
-tar -xzf v${RELEASE}.tar.gz
-mv seelf-${RELEASE}/ /opt/seelf
-cd /opt/seelf
+tar -xzf v"${RELEASE}".tar.gz
+mv seelf-"${RELEASE}"/ /opt/seelf
+cd /opt/seelf || exit
 $STD make build
 PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 {
@@ -84,8 +85,8 @@ customize
 
 # Cleanup
 msg_info "Cleaning up"
-rm -f ~/v${RELEASE}.tar.gz
-rm -f $temp_file
+rm -f ~/v"${RELEASE}".tar.gz
+rm -f "$temp_file"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
