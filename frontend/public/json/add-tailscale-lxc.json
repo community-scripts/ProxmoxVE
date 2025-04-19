@@ -1,7 +1,9 @@
 {
   "name": "Tailscale",
   "slug": "add-tailscale-lxc",
-  "categories": [1],
+  "categories": [
+    1
+  ],
   "date_created": "2024-05-02",
   "type": "addon",
   "updateable": false,
@@ -38,7 +40,7 @@
       "type": "info"
     },
     {
-      "text": "Execute within the Proxmox shell",
+      "text": "Execute within the Proxmox host shell",
       "type": "info"
     }
   ]
