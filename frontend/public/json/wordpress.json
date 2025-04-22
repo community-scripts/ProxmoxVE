@@ -2,7 +2,7 @@
   "name": "Wordpress",
   "slug": "wordpress",
   "categories": [
-        21
+    21
   ],
   "date_created": "2025-01-14",
   "type": "ct",
@@ -30,5 +30,10 @@
     "username": null,
     "password": null
   },
-  "notes": []
+  "notes": [
+    {
+      "type": "info",
+      "text": "Application configuration: `/var/www/html/wordpress/wp-config.php`"
+    }
+  ]
 }

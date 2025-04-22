@@ -30,5 +30,10 @@
     "username": "admin",
     "password": "changeme"
   },
-  "notes": []
+  "notes": [
+    {
+      "text": "Application configuration: `$HOME/.config/qBittorrent/qBittorrent.conf`",
+      "type": "info"
+    }
+  ]
 }

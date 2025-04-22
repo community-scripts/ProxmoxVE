@@ -36,7 +36,7 @@
       "type": "info"
     },
     {
-      "text": "Config stored at `/etc/hev-socks5-server/main.yml`",
+      "text": "Application configuration: `/etc/hev-socks5-server/main.yml`",
       "type": "info"
     }
   ]

@@ -38,6 +38,10 @@
     {
       "text": "After the initial start, the backend requires approx. 1-2 minutes boot time",
       "type": "info"
+    },
+    {
+      "text": "Application configuration: `/opt/plant-it/backend/server.env`",
+      "type": "info"
     }
   ]
 }

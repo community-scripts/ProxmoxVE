@@ -2,7 +2,7 @@
   "name": "Semaphore",
   "slug": "semaphore",
   "categories": [
-        19
+    19
   ],
   "date_created": "2025-01-01",
   "type": "ct",
@@ -37,6 +37,10 @@
     },
     {
       "text": "Admin password: `cat ~/semaphore.creds`",
+      "type": "info"
+    },
+    {
+      "text": "Application configuration: `/opt/semaphore/config.json`",
       "type": "info"
     }
   ]

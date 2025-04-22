@@ -2,7 +2,7 @@
   "name": "Kimai",
   "slug": "kimai",
   "categories": [
-        25
+    25
   ],
   "date_created": "2024-11-20",
   "type": "ct",
@@ -30,5 +30,10 @@
     "username": "admin@helper-scripts.com",
     "password": "helper-scripts.com"
   },
-  "notes": []
+  "notes": [
+    {
+      "type": "info",
+      "text": "Application configuration: `/opt/kimai/.env`"
+    }
+  ]
 }

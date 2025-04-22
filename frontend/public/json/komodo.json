@@ -2,7 +2,7 @@
   "name": "Komodo",
   "slug": "komodo",
   "categories": [
-        3
+    3
   ],
   "date_created": "2025-01-01",
   "type": "ct",
@@ -33,6 +33,10 @@
   "notes": [
     {
       "text": "After the initial installation: Enter your desired admin user and password and then click on Sign Up",
+      "type": "info"
+    },
+    {
+      "text": "Application configuration: `/opt/komodo/compose.env`",
       "type": "info"
     }
   ]

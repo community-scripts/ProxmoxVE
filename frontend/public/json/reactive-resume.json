@@ -30,5 +30,10 @@
     "username": null,
     "password": null
   },
-  "notes": []
+  "notes": [
+    {
+      "text": "Application configuration: `/opt/reactive-resume/.env`",
+      "type": "info"
+    }
+  ]
 }

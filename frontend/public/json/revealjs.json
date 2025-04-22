@@ -32,7 +32,7 @@
   },
   "notes": [
     {
-      "text": "Config file is at `/opt/revealjs/gulpfile.js`. Check the documentation for more information.",
+      "text": "Application configuration: `/opt/revealjs/gulpfile.js`",
       "type": "info"
     },
     {

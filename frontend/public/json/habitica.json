@@ -36,7 +36,7 @@
       "type": "info"
     },
     {
-      "text": "Config file is at `/opt/habitica/config.json`",
+      "text": "Application configuration: `/opt/habitica/config.json`",
       "type": "info"
     }
   ]

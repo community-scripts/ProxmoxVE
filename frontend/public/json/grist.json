@@ -2,7 +2,7 @@
   "name": "Grist",
   "slug": "grist",
   "categories": [
-        12
+    12
   ],
   "date_created": "2024-12-27",
   "type": "ct",
@@ -14,21 +14,26 @@
   "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/grist.svg",
   "description": "Grist is a modern, open source spreadsheet that goes beyond the grid",
   "install_methods": [
-      {
-          "type": "default",
-          "script": "ct/grist.sh",
-          "resources": {
-              "cpu": 2,
-              "ram": 3072,
-              "hdd": 6,
-              "os": "debian",
-              "version": "12"
-          }
+    {
+      "type": "default",
+      "script": "ct/grist.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 3072,
+        "hdd": 6,
+        "os": "debian",
+        "version": "12"
       }
+    }
   ],
   "default_credentials": {
-      "username": null,
-      "password": null
+    "username": null,
+    "password": null
   },
-  "notes": []
+  "notes": [
+    {
+      "text": "Application configuration: `/opt/grist/.env`",
+      "type": "info"
+    }
+  ]
 }

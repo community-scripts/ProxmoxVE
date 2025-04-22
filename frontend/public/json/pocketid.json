@@ -36,7 +36,7 @@
       "type": "warning"
     },
     {
-      "text": "Configuration Path: `/opt/pocket-id/backend/.env`, `/opt/pocket-id/frontend/.env`.",
+      "text": "Application configuration: `/opt/pocket-id/backend/.env`, `/opt/pocket-id/frontend/.env`.",
       "type": "info"
     }
   ]

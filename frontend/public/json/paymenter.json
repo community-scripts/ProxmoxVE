@@ -2,7 +2,7 @@
   "name": "Paymenter",
   "slug": "paymenter",
   "categories": [
-        21
+    21
   ],
   "date_created": "2025-01-28",
   "type": "ct",
@@ -33,6 +33,10 @@
   "notes": [
     {
       "text": "After installation, navigate to the directory with `cd /opt/paymenter` and run `php artisan app:init`. An interactive setup will prompt you to enter your company name and application URL.",
+      "type": "info"
+    },
+    {
+      "text": "Application configuration: `/opt/paymenter/.env`",
       "type": "info"
     }
   ]

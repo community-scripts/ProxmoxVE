@@ -25,10 +25,15 @@
         "version": "12"
       }
     }
-    ],
-    "default_credentials": {
-        "username": null,
-        "password": null
-    },
-    "notes": []
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "type": "info",
+      "text": "Application configuration: `/opt/paperless-ai/data/.env`"
+    }
+  ]
 }

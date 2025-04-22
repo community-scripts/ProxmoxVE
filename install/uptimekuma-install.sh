@@ -51,7 +51,7 @@ ExecStart=/usr/bin/npm start
 
 [Install]
 WantedBy=multi-user.target" >$service_path
-$STD systemctl enable --now uptime-kuma
+systemctl enable -q --now uptime-kuma
 msg_ok "Created Service"
 
 motd_ssh

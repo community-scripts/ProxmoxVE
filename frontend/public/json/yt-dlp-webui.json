@@ -36,7 +36,7 @@
       "type": "info"
     },
     {
-      "text": "The config file is located in `/opt/yt-dlp-webui/config.conf`",
+      "text": "Application configuration: `/opt/yt-dlp-webui/config.conf`",
       "type": "info"
     },
     {

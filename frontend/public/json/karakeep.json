@@ -30,5 +30,10 @@
     "username": null,
     "password": null
   },
-  "notes": []
+  "notes": [
+    {
+      "type": "info",
+      "text": "Application configuration: `/etc/karakeep/karakeep.env`"
+    }
+  ]
 }

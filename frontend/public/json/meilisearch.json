@@ -38,6 +38,10 @@
     {
       "text": "Meilisearch-UI has early development status and can cause performance issues",
       "type": "warn"
+    },
+    {
+      "text": "Application configuration: `/etc/meilisearch.toml`",
+      "type": "info"
     }
   ]
 }
