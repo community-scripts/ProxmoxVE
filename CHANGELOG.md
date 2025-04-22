@@ -24,6 +24,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🌐 Website
 
+  - #### 🐞 Bug Fixes
+
+    - Fix Turnkey Source Link in Button Component [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#3978](https://github.com/community-scripts/ProxmoxVE/pull/3978))
+
   - #### 📝 Script Information
 
     - qBittorrent: Update web page [@tremor021](https://github.com/tremor021) ([#3969](https://github.com/community-scripts/ProxmoxVE/pull/3969))
