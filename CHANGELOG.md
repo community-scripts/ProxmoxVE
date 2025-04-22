@@ -16,6 +16,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-04-22
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - wger: Fix a bug in update procedure and general code maintenance [@tremor021](https://github.com/tremor021) ([#3974](https://github.com/community-scripts/ProxmoxVE/pull/3974))
+
 ### 🌐 Website
 
   - #### 📝 Script Information
