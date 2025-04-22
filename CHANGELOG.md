@@ -22,6 +22,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - wger: Fix a bug in update procedure and general code maintenance [@tremor021](https://github.com/tremor021) ([#3974](https://github.com/community-scripts/ProxmoxVE/pull/3974))
 
+### 🧰 Maintenance
+
+  - #### 📂 Github
+
+    - Add workflow to close ttek Repo relatate issues [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#3981](https://github.com/community-scripts/ProxmoxVE/pull/3981))
+
 ### 🌐 Website
 
   - #### 🐞 Bug Fixes
