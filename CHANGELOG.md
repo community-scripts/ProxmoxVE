@@ -16,6 +16,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-04-22
 
+### 🆕 New Scripts
+
+  - reactive-resume ([#3980](https://github.com/community-scripts/ProxmoxVE/pull/3980))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
