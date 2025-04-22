@@ -24,6 +24,8 @@ const generateSourceUrl = (slug: string, type: string) => {
       return `${baseUrl}/tools/pve/${slug}.sh`;
     case "addon":
       return `${baseUrl}/tools/addon/${slug}.sh`;
+    case "turnkey":
+      return `${baseUrl}/turnkey/${slug}.sh`;
     default:
       return `${baseUrl}/ct/${slug}.sh`; // fallback for "ct"
   }
