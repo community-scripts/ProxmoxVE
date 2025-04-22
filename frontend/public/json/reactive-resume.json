@@ -1,0 +1,34 @@
+{
+  "name": "Reactive Resume",
+  "slug": "reactive-resume",
+  "categories": [
+    12
+  ],
+  "date_created": "2025-03-26",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 3000,
+  "documentation": "https://docs.rxresu.me/",
+  "website": "https://rxresu.me",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/png/reactive-resume-light.png",
+  "description": "A one-of-a-kind resume builder that keeps your privacy in mind. Completely secure, customizable, portable, open-source and free forever.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/reactive-resume.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 3072,
+        "hdd": 8,
+        "os": "Debian",
+        "version": "12"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": []
+}
