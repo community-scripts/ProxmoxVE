@@ -33,6 +33,9 @@ function update_script() {
     msg_info "Stopping Services"
     systemctl stop karakeep-web karakeep-workers karakeep-browser
     msg_ok "Stopped Services"
+    msg_info "Updating yt-dlp"
+    $STD yt-dlp --update-to nightly
+    msg_ok "Updated yt-dlp"
     msg_info "Updating ${APP} to v${RELEASE}"
     if [[ $(corepack -v) < "0.31.0" ]]; then
       $STD npm install -g corepack@0.31.0
