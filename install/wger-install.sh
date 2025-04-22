@@ -15,10 +15,10 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-    git \
-    gnupg \
-    apache2 \
-    libapache2-mod-wsgi-py3
+  git \
+  gnupg \
+  apache2 \
+  libapache2-mod-wsgi-py3
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Python"
