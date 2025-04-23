@@ -1,28 +1,108 @@
 [
   {
+    "name": "grafana/grafana",
+    "version": "v11.2.9",
+    "date": "2025-04-22T23:28:16Z"
+  },
+  {
+    "name": "cross-seed/cross-seed",
+    "version": "v6.11.2",
+    "date": "2025-02-26T14:54:49Z"
+  },
+  {
+    "name": "minio/minio",
+    "version": "RELEASE.2025-04-22T22-12-26Z",
+    "date": "2025-04-22T22:44:34Z"
+  },
+  {
+    "name": "docmost/docmost",
+    "version": "v0.20.0",
+    "date": "2025-04-22T22:30:25Z"
+  },
+  {
+    "name": "glanceapp/glance",
+    "version": "v0.7.13",
+    "date": "2025-04-22T22:19:16Z"
+  },
+  {
     "name": "fhem/fhem-mirror",
     "version": "6.2",
-    "date": "2025-04-22T10:34:10Z"
+    "date": "2025-04-22T20:30:58Z"
+  },
+  {
+    "name": "netbox-community/netbox",
+    "version": "v4.2.8",
+    "date": "2025-04-22T19:44:49Z"
+  },
+  {
+    "name": "donaldzou/WGDashboard",
+    "version": "v4.2.0",
+    "date": "2025-04-22T18:18:28Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.90.0",
+    "date": "2025-04-22T08:58:15Z"
+  },
+  {
+    "name": "NodeBB/NodeBB",
+    "version": "v4.2.2",
+    "date": "2025-04-22T16:33:53Z"
+  },
+  {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.507",
+    "date": "2025-04-22T15:22:53Z"
+  },
+  {
+    "name": "evcc-io/evcc",
+    "version": "0.203.2",
+    "date": "2025-04-22T15:07:28Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.4.0b6",
+    "date": "2025-04-22T15:00:31Z"
+  },
+  {
+    "name": "zwave-js/zwave-js-ui",
+    "version": "v10.3.0",
+    "date": "2025-04-22T14:57:47Z"
+  },
+  {
+    "name": "OliveTin/OliveTin",
+    "version": "2025.4.22",
+    "date": "2025-04-22T14:18:11Z"
+  },
+  {
+    "name": "mongodb/mongo",
+    "version": "r8.2.0-alpha",
+    "date": "2025-04-22T13:19:07Z"
+  },
+  {
+    "name": "AdguardTeam/AdGuardHome",
+    "version": "v0.107.61",
+    "date": "2025-04-22T12:42:26Z"
+  },
+  {
+    "name": "VictoriaMetrics/VictoriaMetrics",
+    "version": "v1.20.0-victorialogs",
+    "date": "2025-04-22T12:00:23Z"
+  },
+  {
+    "name": "zabbix/zabbix",
+    "version": "7.0.12",
+    "date": "2025-04-22T11:40:31Z"
+  },
+  {
+    "name": "Graylog2/graylog2-server",
+    "version": "6.2.0-rc.2",
+    "date": "2025-04-22T11:35:32Z"
   },
   {
     "name": "OctoPrint/OctoPrint",
     "version": "1.11.0",
     "date": "2025-04-22T09:33:46Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.86.1",
-    "date": "2025-04-09T09:20:55Z"
-  },
-  {
-    "name": "zabbix/zabbix",
-    "version": "6.0.40",
-    "date": "2025-04-22T08:43:35Z"
-  },
-  {
-    "name": "Checkmk/checkmk",
-    "version": "v2.4.0b6-rc1",
-    "date": "2025-04-22T08:12:24Z"
   },
   {
     "name": "nzbgetcom/nzbget",
@@ -60,11 +140,6 @@
     "date": "2024-05-04T08:06:50Z"
   },
   {
-    "name": "OliveTin/OliveTin",
-    "version": "2025.4.21",
-    "date": "2025-04-21T19:16:09Z"
-  },
-  {
     "name": "Suwayomi/Suwayomi-Server",
     "version": "v2.0.1727",
     "date": "2025-04-21T17:53:05Z"
@@ -81,23 +156,13 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v3.10.0-beta.9",
-    "date": "2025-04-17T11:46:08Z"
-  },
-  {
-    "name": "AdguardTeam/AdGuardHome",
-    "version": "v0.107.60",
-    "date": "2025-04-14T11:46:19Z"
+    "version": "nightly",
+    "date": "2025-04-21T16:55:50Z"
   },
   {
     "name": "keycloak/keycloak",
     "version": "26.2.0",
     "date": "2025-04-11T12:48:27Z"
-  },
-  {
-    "name": "cross-seed/cross-seed",
-    "version": "v6.11.2",
-    "date": "2025-02-26T14:54:49Z"
   },
   {
     "name": "Prowlarr/Prowlarr",
@@ -250,11 +315,6 @@
     "date": "2025-04-17T18:33:11Z"
   },
   {
-    "name": "VictoriaMetrics/VictoriaMetrics",
-    "version": "v1.19.0-victorialogs",
-    "date": "2025-04-17T18:26:31Z"
-  },
-  {
     "name": "duplicati/duplicati",
     "version": "v2.1.0.116-2.1.0.116_canary_2025-04-17",
     "date": "2025-04-17T17:52:31Z"
@@ -295,11 +355,6 @@
     "date": "2025-04-17T00:55:34Z"
   },
   {
-    "name": "docmost/docmost",
-    "version": "v0.10.2",
-    "date": "2025-04-16T20:43:40Z"
-  },
-  {
     "name": "forgejo/forgejo",
     "version": "v11.0.0",
     "date": "2025-04-16T19:25:53Z"
@@ -308,11 +363,6 @@
     "name": "element-hq/synapse",
     "version": "v1.129.0rc1",
     "date": "2025-04-16T15:18:13Z"
-  },
-  {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.506",
-    "date": "2025-04-15T15:40:50Z"
   },
   {
     "name": "wazuh/wazuh",
@@ -355,11 +405,6 @@
     "date": "2024-08-29T22:32:51Z"
   },
   {
-    "name": "netbox-community/netbox",
-    "version": "v4.2.7",
-    "date": "2025-04-10T20:08:13Z"
-  },
-  {
     "name": "home-assistant/operating-system",
     "version": "15.2",
     "date": "2025-04-14T15:37:12Z"
@@ -370,11 +415,6 @@
     "date": "2025-03-10T20:49:39Z"
   },
   {
-    "name": "Graylog2/graylog2-server",
-    "version": "6.2.0-rc.1",
-    "date": "2025-04-14T11:26:18Z"
-  },
-  {
     "name": "bluenviron/mediamtx",
     "version": "v1.12.0",
     "date": "2025-04-14T10:36:04Z"
@@ -383,21 +423,6 @@
     "name": "open-webui/open-webui",
     "version": "v0.6.5",
     "date": "2025-04-14T09:13:36Z"
-  },
-  {
-    "name": "zwave-js/zwave-js-ui",
-    "version": "v10.2.0",
-    "date": "2025-04-14T08:53:44Z"
-  },
-  {
-    "name": "evcc-io/evcc",
-    "version": "0.203.1",
-    "date": "2025-04-14T07:23:02Z"
-  },
-  {
-    "name": "glanceapp/glance",
-    "version": "v0.7.12",
-    "date": "2025-04-14T00:16:15Z"
   },
   {
     "name": "rogerfar/rdt-client",
@@ -475,16 +500,6 @@
     "date": "2025-04-10T16:32:00Z"
   },
   {
-    "name": "NodeBB/NodeBB",
-    "version": "v4.2.1",
-    "date": "2025-04-10T14:03:47Z"
-  },
-  {
-    "name": "mongodb/mongo",
-    "version": "r8.0.5-rc2",
-    "date": "2025-04-09T22:37:52Z"
-  },
-  {
     "name": "jupyter/notebook",
     "version": "v7.4.0",
     "date": "2025-04-09T17:36:14Z"
@@ -498,11 +513,6 @@
     "name": "zitadel/zitadel",
     "version": "v2.69.10",
     "date": "2025-04-09T12:16:51Z"
-  },
-  {
-    "name": "minio/minio",
-    "version": "RELEASE.2025-04-08T15-41-24Z",
-    "date": "2025-04-08T19:51:06Z"
   },
   {
     "name": "goauthentik/authentik",
@@ -743,11 +753,6 @@
     "name": "sct/overseerr",
     "version": "v1.34.0",
     "date": "2025-03-26T08:48:34Z"
-  },
-  {
-    "name": "grafana/grafana",
-    "version": "v11.6.0",
-    "date": "2025-03-25T22:10:15Z"
   },
   {
     "name": "ipfs/kubo",
@@ -1068,11 +1073,6 @@
     "name": "owncast/owncast",
     "version": "v0.2.1",
     "date": "2025-01-19T22:40:40Z"
-  },
-  {
-    "name": "donaldzou/WGDashboard",
-    "version": "v4.1.4",
-    "date": "2025-01-19T13:14:19Z"
   },
   {
     "name": "0xERR0R/blocky",
