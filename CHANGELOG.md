@@ -20,6 +20,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - Zipline: Add new ENV Variable and Change Update [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#3997](https://github.com/community-scripts/ProxmoxVE/pull/3997))
     - karakeep: use nightly channel for yt-dlp [@vhsdream](https://github.com/vhsdream) ([#3992](https://github.com/community-scripts/ProxmoxVE/pull/3992))
 
 ### 🧰 Maintenance
