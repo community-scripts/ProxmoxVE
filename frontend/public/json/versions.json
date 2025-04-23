@@ -1,8 +1,58 @@
 [
   {
+    "name": "Graylog2/graylog2-server",
+    "version": "6.3.0-alpha.1",
+    "date": "2025-04-23T11:25:55Z"
+  },
+  {
+    "name": "fhem/fhem-mirror",
+    "version": "6.2",
+    "date": "2025-04-23T10:36:12Z"
+  },
+  {
+    "name": "nzbgetcom/nzbget",
+    "version": "v24.8",
+    "date": "2025-03-18T07:33:51Z"
+  },
+  {
+    "name": "cockpit-project/cockpit",
+    "version": "337",
+    "date": "2025-04-23T08:26:31Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "v10.6.2",
+    "date": "2025-04-15T08:14:23Z"
+  },
+  {
+    "name": "zabbix/zabbix",
+    "version": "7.2.6",
+    "date": "2025-04-23T08:06:23Z"
+  },
+  {
+    "name": "jupyter/notebook",
+    "version": "v7.4.1",
+    "date": "2025-04-23T06:40:34Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1815",
+    "date": "2025-04-23T05:56:23Z"
+  },
+  {
+    "name": "openobserve/openobserve",
+    "version": "v0.14.6-rc6",
+    "date": "2025-04-23T04:24:27Z"
+  },
+  {
+    "name": "jhuckaby/Cronicle",
+    "version": "v0.9.78",
+    "date": "2025-04-23T01:38:28Z"
+  },
+  {
     "name": "grafana/grafana",
-    "version": "v11.2.9",
-    "date": "2025-04-22T23:28:16Z"
+    "version": "v11.3.6",
+    "date": "2025-04-23T00:18:05Z"
   },
   {
     "name": "cross-seed/cross-seed",
@@ -25,14 +75,14 @@
     "date": "2025-04-22T22:19:16Z"
   },
   {
-    "name": "fhem/fhem-mirror",
-    "version": "6.2",
-    "date": "2025-04-22T20:30:58Z"
-  },
-  {
     "name": "netbox-community/netbox",
     "version": "v4.2.8",
     "date": "2025-04-22T19:44:49Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.2.0",
+    "date": "2025-04-11T12:48:27Z"
   },
   {
     "name": "donaldzou/WGDashboard",
@@ -90,34 +140,9 @@
     "date": "2025-04-22T12:00:23Z"
   },
   {
-    "name": "zabbix/zabbix",
-    "version": "7.0.12",
-    "date": "2025-04-22T11:40:31Z"
-  },
-  {
-    "name": "Graylog2/graylog2-server",
-    "version": "6.2.0-rc.2",
-    "date": "2025-04-22T11:35:32Z"
-  },
-  {
     "name": "OctoPrint/OctoPrint",
     "version": "1.11.0",
     "date": "2025-04-22T09:33:46Z"
-  },
-  {
-    "name": "nzbgetcom/nzbget",
-    "version": "v24.8",
-    "date": "2025-03-18T07:33:51Z"
-  },
-  {
-    "name": "openobserve/openobserve",
-    "version": "v0.14.6-rc5",
-    "date": "2025-04-22T06:50:13Z"
-  },
-  {
-    "name": "mattermost/mattermost",
-    "version": "v10.6.2",
-    "date": "2025-04-15T08:14:23Z"
   },
   {
     "name": "morpheus65535/bazarr",
@@ -128,11 +153,6 @@
     "name": "firefly-iii/firefly-iii",
     "version": "v6.2.12",
     "date": "2025-04-20T19:22:17Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1809",
-    "date": "2025-04-22T05:55:35Z"
   },
   {
     "name": "monicahq/monica",
@@ -156,13 +176,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-04-21T16:55:50Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.2.0",
-    "date": "2025-04-11T12:48:27Z"
+    "version": "v3.10.0-beta.9",
+    "date": "2025-04-17T11:46:08Z"
   },
   {
     "name": "Prowlarr/Prowlarr",
@@ -500,11 +515,6 @@
     "date": "2025-04-10T16:32:00Z"
   },
   {
-    "name": "jupyter/notebook",
-    "version": "v7.4.0",
-    "date": "2025-04-09T17:36:14Z"
-  },
-  {
     "name": "glpi-project/glpi",
     "version": "10.0.18",
     "date": "2025-02-12T11:07:02Z"
@@ -735,11 +745,6 @@
     "date": "2025-03-28T13:00:23Z"
   },
   {
-    "name": "cockpit-project/cockpit",
-    "version": "336.2",
-    "date": "2025-03-28T10:16:47Z"
-  },
-  {
     "name": "gethomepage/homepage",
     "version": "v1.1.1",
     "date": "2025-03-28T04:12:31Z"
@@ -813,11 +818,6 @@
     "name": "photoprism/photoprism",
     "version": "250321-57590c48b",
     "date": "2025-03-21T11:48:16Z"
-  },
-  {
-    "name": "jhuckaby/Cronicle",
-    "version": "v0.9.77",
-    "date": "2025-03-21T02:25:42Z"
   },
   {
     "name": "seanmorley15/AdventureLog",
