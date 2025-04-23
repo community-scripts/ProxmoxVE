@@ -22,6 +22,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - karakeep: use nightly channel for yt-dlp [@vhsdream](https://github.com/vhsdream) ([#3992](https://github.com/community-scripts/ProxmoxVE/pull/3992))
 
+### 🧰 Maintenance
+
+  - #### 📂 Github
+
+    - Fix Workflow to close discussions [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#3999](https://github.com/community-scripts/ProxmoxVE/pull/3999))
+
 ## 2025-04-22
 
 ### 🆕 New Scripts
