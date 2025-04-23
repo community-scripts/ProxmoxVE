@@ -41,7 +41,7 @@ function update_script() {
     msg_info "Updating ${APP} to ${RELEASE}"
     cp /opt/zipline/.env /opt/
     mkdir -p /opt/zipline-upload
-    cp -R /opt/zipline/updload/* /opt/zipline-upload/
+    cp -R /opt/zipline/upload/* /opt/zipline-upload/
     curl -fsSL "https://github.com/diced/zipline/archive/refs/tags/v${RELEASE}.zip" -o $(basename "https://github.com/diced/zipline/archive/refs/tags/v${RELEASE}.zip")
     unzip -q v"${RELEASE}".zip
     rm -R /opt/zipline
