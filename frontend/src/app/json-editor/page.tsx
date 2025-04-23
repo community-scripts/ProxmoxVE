@@ -32,6 +32,7 @@ const initialScript: Script = {
   privileged: false,
   interface_port: null,
   documentation: null,
+  config_path: "",
   website: null,
   logo: null,
   description: "",
@@ -172,6 +173,14 @@ export default function JSONGenerator() {
               placeholder="Full logo URL"
               value={script.logo || ""}
               onChange={(e) => updateScript("logo", e.target.value || null)}
+            />
+          </div>
+          <div>
+            <Label>Config Path</Label>
+            <Input
+              placeholder="Path to config file"
+              value={script.config_path || ""}
+              onChange={(e) => updateScript("config_path", e.target.value || null)}
             />
           </div>
           <div>

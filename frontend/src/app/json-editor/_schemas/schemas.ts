@@ -33,6 +33,7 @@ export const ScriptSchema = z.object({
   documentation: z.string().nullable(),
   website: z.string().url().nullable(),
   logo: z.string().url().nullable(),
+  config_path: z.string(),
   description: z.string().min(1, "Description is required"),
   install_methods: z.array(InstallMethodSchema).min(1, "At least one install method is required"),
   default_credentials: z.object({
