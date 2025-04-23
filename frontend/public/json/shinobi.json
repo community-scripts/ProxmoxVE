@@ -33,7 +33,7 @@
   "notes": [
     {
       "type": "info",
-      "message": "Application configuration: `/opt/Shinobi/conf.json"
+      "message": "Application configuration: `/opt/Shinobi/conf.json`"
     }
   ]
 }
