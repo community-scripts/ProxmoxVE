@@ -34,6 +34,10 @@
     {
       "type": "info",
       "text": "Type `cat ~/matrix.creds` to see admin username/password."
+    },
+    {
+      "type": "info",
+      "text": "Synapse-Admin is running on port 5173"
     }
   ]
 }
