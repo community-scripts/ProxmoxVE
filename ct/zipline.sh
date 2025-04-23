@@ -46,7 +46,7 @@ function update_script() {
     unzip -q v"${RELEASE}".zip
     rm -R /opt/zipline
     mv zipline-"${RELEASE}" /opt/zipline
-    cd /opt/zipline || exit
+    cd /opt/zipline
     mv /opt/.env /opt/zipline/.env
     $STD pnpm install
     $STD pnpm build
