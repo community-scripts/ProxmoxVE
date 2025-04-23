@@ -12,6 +12,7 @@
     "documentation": "https://pocketbase.io/docs/",
     "website": "https://pocketbase.io/",
     "logo": "https://pocketbase.io/images/logo.svg",
+    "config_path": "",
     "description": "PocketBase is an open source backend consisting of embedded database (SQLite) with realtime subscriptions, built-in auth management, convenient dashboard UI and simple REST-ish API.",
     "install_methods": [
         {
@@ -32,3 +33,4 @@
     },
     "notes": []
 }
+

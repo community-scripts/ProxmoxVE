@@ -12,6 +12,7 @@
   "documentation": "https://github.com/hakimel/reveal.js/wiki",
   "website": "https://github.com/hakimel/reveal.js",
   "logo": "https://static.slid.es/reveal/logo-v1/reveal-white-text.svg",
+    "config_path": "/opt/revealjs/gulpfile.js",
   "description": "reveal.js is an open source HTML presentation framework. It's a tool that enables anyone with a web browser to create fully-featured and beautiful presentations for free.",
   "install_methods": [
     {
@@ -32,12 +33,9 @@
   },
   "notes": [
     {
-      "text": "Config file is at `/opt/revealjs/gulpfile.js`. Check the documentation for more information.",
-      "type": "info"
-    },
-    {
       "text": "LiveReload is on port: 35729",
       "type": "info"
     }
   ]
 }
+

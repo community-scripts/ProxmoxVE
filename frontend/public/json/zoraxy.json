@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://zoraxy.aroz.org/",
     "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/zoraxy.svg",
+    "config_path": "",
     "description": "Zoraxy is an all in one homelab network routing solution.",
     "install_methods": [
         {
@@ -32,3 +33,4 @@
     },
     "notes": []
 }
+

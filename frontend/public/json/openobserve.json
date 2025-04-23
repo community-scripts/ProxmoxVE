@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://openobserve.ai/",
     "logo": "https://github.com/community-scripts/ProxmoxVE/blob/main/misc/images/openobsecure.png?raw=true",
+    "config_path": "/opt/openobserve/data/.env",
     "description": "OpenObserve is a simple yet sophisticated log search, infrastructure monitoring, and APM solution.",
     "install_methods": [
         {

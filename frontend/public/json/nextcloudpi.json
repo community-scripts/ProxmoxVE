@@ -12,6 +12,7 @@
     "documentation": "https://docs.nextcloudpi.com/",
     "website": "https://github.com/nextcloud/nextcloudpi",
     "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/nextcloud.svg",
+    "config_path": "",
     "description": "NextCloudPi is a popular self-hosted solution for file collaboration and data storage. It is built on the NextCloud software, which is an open-source platform for data management.",
     "install_methods": [
         {
@@ -52,3 +53,4 @@
         }
     ]
 }
+

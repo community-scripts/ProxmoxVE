@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://cockpit-project.org/",
     "logo": "https://i0.wp.com/easycode.page/wp-content/uploads/2021/10/cockpit.png?fit=400%2C400&ssl=1",
+    "config_path": "",
     "description": "Cockpit is a web-based graphical interface for managing Linux servers. It allows users to perform tasks like configuring networks, managing storage, and monitoring system performance directly through a web browser. It integrates with existing system tools, making it suitable for both beginners and experienced admins.",
     "install_methods": [
         {

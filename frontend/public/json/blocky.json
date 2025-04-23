@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://0xerr0r.github.io/blocky/",
     "logo": "https://raw.githubusercontent.com/0xERR0R/blocky/main/docs/blocky.svg",
+    "config_path": "",
     "description": "Blocky is a software tool designed for blocking unwanted ads and trackers on local networks. It functions as a DNS proxy and runs on the Go programming language. Blocky intercepts requests to advertisements and other unwanted content and blocks them before they reach the end user. This results in a cleaner, faster, and more secure online experience for users connected to the local network. Blocky is open-source, easy to configure and can be run on a variety of devices, making it a versatile solution for small to medium-sized local networks.",
     "install_methods": [
         {

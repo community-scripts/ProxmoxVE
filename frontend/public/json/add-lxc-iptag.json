@@ -10,6 +10,7 @@
   "documentation": null,
   "website": null,
   "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/proxmox.svg",
+  "config_path": "",
   "description": "This script automatically adds IP address as tags to LXC containers using a Systemd service. The service also updates the tags if a LXC IP address is changed.",
   "install_methods": [
     {
@@ -43,3 +44,4 @@
     }
   ]
 }
+

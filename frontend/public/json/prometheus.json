@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://prometheus.io/",
     "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/prometheus.svg",
+    "config_path": "/etc/prometheus/prometheus.yml",
     "description": "Prometheus is widely used to monitor the performance and health of various infrastructure components and applications, and trigger alerts based on predefined rules. It has a multi-dimensional data model and supports various data sources and exporters, making it an extremely flexible and scalable monitoring solution.",
     "install_methods": [
         {

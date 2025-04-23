@@ -12,6 +12,7 @@
   "documentation": null,
   "website": "https://www.getgrist.com/",
   "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/grist.svg",
+  "config_path": "/opt/grist/.env",
   "description": "Grist is a modern, open source spreadsheet that goes beyond the grid",
   "install_methods": [
       {
@@ -32,3 +33,4 @@
   },
   "notes": []
 }
+

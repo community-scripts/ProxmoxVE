@@ -12,6 +12,7 @@
   "documentation": "https://documentation.wazuh.com/",
   "website": "https://wazuh.com/",
   "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/wazuh.svg",
+    "config_path": "",
   "description": "Wazuh is an open-source security monitoring solution that provides endpoint protection, network monitoring, and log analysis capabilities.",
   "install_methods": [
     {
@@ -41,3 +42,4 @@
     }
   ]
 }
+

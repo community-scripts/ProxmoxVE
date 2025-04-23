@@ -12,6 +12,7 @@
     "documentation": "https://github.com/PrivateBin/PrivateBin/wiki",
     "website": "https://github.com/PrivateBin/PrivateBin",
     "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/privatebin.svg",
+    "config_path": "/opt/privatebin/cfg/conf.php",
     "description": "PrivateBin is a minimalist, open-source pastebin where the server has zero knowledge of pasted data. Data is encrypted/decrypted in the browser using 256-bit AES.",
     "install_methods": [
         {
@@ -32,3 +33,4 @@
     },
     "notes": []
 }
+

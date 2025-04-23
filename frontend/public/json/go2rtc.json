@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://github.com/AlexxIT/go2rtc",
     "logo": "https://github.com/AlexxIT/go2rtc/blob/master/assets/logo.png?raw=true",
+    "config_path": "",
     "description": "go2rtc is the ultimate camera streaming application with support RTSP, WebRTC, HomeKit, FFmpeg, RTMP, etc.",
     "install_methods": [
         {

@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://homebox.software/en/",
     "logo": "https://homebox.software/lilbox.svg",
+    "config_path": "/opt/.env",
     "description": "HomeBox is a simple, home-focused inventory management software. It allows users to organize and track household items by adding, updating, or deleting them. Features include optional details like warranty info, CSV import/export, custom labels, locations, and multi-tenant support for sharing with others. It\u2019s designed to be fast, easy to use, and portable.",
     "install_methods": [
         {
@@ -37,3 +38,4 @@
         }
     ]
 }
+

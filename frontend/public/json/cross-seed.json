@@ -12,6 +12,7 @@
     "documentation": "https://www.cross-seed.org/docs/category/basics",
     "website": "https://www.cross-seed.org/",
     "logo": "https://www.cross-seed.org/img/cross-seed.svg",
+    "config_path": "",
     "description": "cross-seed is an app designed to help you download torrents that you can cross seed based on your existing torrents. It is designed to match conservatively to minimize manual intervention.",
     "install_methods": [
         {
@@ -37,3 +38,4 @@
       }
     ]
 }
+

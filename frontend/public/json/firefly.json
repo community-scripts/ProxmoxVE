@@ -12,6 +12,7 @@
   "documentation": "https://docs.firefly-iii.org/",
   "website": "https://firefly-iii.org/",
   "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/firefly-iii.svg",
+  "config_path": "",
   "description": "Firefly III is a free, self-hosted tool for managing your finances. Track expenses, plan budgets, and get detailed reports.",
   "install_methods": [
     {
@@ -37,3 +38,4 @@
     }
   ]
 }
+

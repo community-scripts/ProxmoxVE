@@ -12,6 +12,7 @@
   "documentation": "https://freshrss.github.io/FreshRSS/en/",
   "website": "https://freshrss.org/",
   "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/freshrss.svg",
+  "config_path": "",
   "description": "FreshRSS is a self-hosted RSS and Atom feed aggregator that lets users collect, organize, and read from multiple sources in one place. It is lightweight, easy to work with, powerful, and customizable.",
   "install_methods": [
     {
@@ -41,3 +42,4 @@
     }
   ]
 }
+

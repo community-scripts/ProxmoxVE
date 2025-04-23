@@ -12,6 +12,7 @@
     "documentation": "https://snipe-it.readme.io/docs/overview",
     "website": "https://snipeitapp.com/",
     "logo": "https://raw.githubusercontent.com/snipe/snipe-it/refs/heads/master/public/img/snipe-logo-bug.png",
+    "config_path": "/opt/snipe-it/.env",
     "description": "This is a FOSS project for asset management in IT Operations. Knowing who has which laptop, when it was purchased in order to depreciate it correctly, handling software licenses, etc.",
     "install_methods": [
       {
@@ -37,3 +38,4 @@
       }
   ]
 }
+

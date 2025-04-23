@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://aria2.github.io/",
     "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/linux.svg",
+    "config_path": "",
     "description": "Aria2 is a lightweight multi-protocol & multi-source, cross platform download utility operated in command-line. It supports HTTP/HTTPS, FTP, SFTP, BitTorrent and Metalink.",
     "install_methods": [
         {

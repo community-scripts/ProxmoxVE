@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://mafl.hywax.space/",
     "logo": "https://raw.githubusercontent.com/hywax/mafl/main/docs/public/logotype.svg",
+    "config_path": "/opt/mafl/data/config.yml",
     "description": "Mafl is an intuitive service for organizing your homepage. Customize Mafl to your individual needs and work even more efficiently!",
     "install_methods": [
         {

@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://github.com/benbusby/whoogle-search",
     "logo": "https://github.com/community-scripts/ProxmoxVE/blob/main/misc/images/whoogle.png?raw=true",
+    "config_path": "",
     "description": "Get Google search results, but without any ads, javascript, AMP links, cookies, or IP address tracking.",
     "install_methods": [
         {

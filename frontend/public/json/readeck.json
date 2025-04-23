@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://readeck.org/",
     "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/readeck.svg",
+    "config_path": "",
     "description": "Readeck helps you keep all that web content you want to revisit in an hour, tomorrow, or in 20 years.",
     "install_methods": [
         {

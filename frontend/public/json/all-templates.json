@@ -10,6 +10,7 @@
   "documentation": null,
   "website": null,
   "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/proxmox.svg",
+  "config_path": "",
   "description": "A script designed to allow for the creation of one of the many free LXC templates. Great for creating system LXCs.\r\nThe script creates a `*.creds` file in the Proxmox root directory with the password of the newly created LXC.\r\nPlease take note that if you plan to use this script for creating TurnKey LXCs, you'll need to modify the hostname after creation.",
   "install_methods": [
     {
@@ -35,3 +36,4 @@
     }
   ]
 }
+

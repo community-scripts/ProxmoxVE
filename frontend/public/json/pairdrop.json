@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://github.com/schlagmichdoch/PairDrop",
     "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/pairdrop.svg",
+    "config_path": "",
     "description": "PairDrop: Local file sharing in your browser.",
     "install_methods": [
         {

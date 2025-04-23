@@ -12,6 +12,7 @@
     "documentation": "https://manual.seafile.com/11.0/deploy",
     "website": "https://seafile.com",
     "logo": "https://manual.seafile.com/11.0/media/seafile-transparent-1024.png",
+    "config_path": "/opt/seafile/conf/seahub_settings.py",
     "description": "Seafile is an open source file sync and share platform, focusing on reliability and performance.",
     "install_methods": [
         {
@@ -45,3 +46,4 @@
         }
     ]
 }
+
