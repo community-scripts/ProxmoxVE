@@ -102,15 +102,21 @@ jobs:
                 }
               `;
 
-              const discussionResponse = await graphqlWithAuth(discussionQuery, {
-                owner,
-                repo,
-                number: parseInt(discussionNumber, 10),
-              });
+              //
+              try {
+                const discussionResponse = await graphqlWithAuth(discussionQuery, {
+                  owner,
+                  repo,
+                  number: parseInt(discussionNumber, 10),
+                });
 
-              const discussionQLId = discussionResponse.repository.discussion.id;
-              if (!discussionQLId) {
-                console.log("Failed to fetch discussion GraphQL ID.");
+                const discussionQLId = discussionResponse.repository.discussion.id;
+                if (!discussionQLId) {
+                  console.log("Failed to fetch discussion GraphQL ID.");
+                  return;
+                }
+              } catch (error) {
+                console.error("Discussion not found or error occurred while fetching discussion:", error);
                 return;
               }
 
