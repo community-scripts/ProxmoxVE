@@ -65,6 +65,7 @@ CORE_RETURN_HTTPS=false
 DATASOURCE_TYPE=local
 DATASOURCE_LOCAL_DIRECTORY=/opt/zipline-uploads
 EOF
+mkdir -p /opt/zipline-uploads
 $STD pnpm install
 $STD pnpm build
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
