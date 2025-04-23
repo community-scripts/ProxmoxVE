@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVED/main/misc/build.func)
 # Copyright (c) 2021-2025 tteck
 # Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -40,11 +40,13 @@ function update_script() {
 
     msg_info "Updating ${APP} to ${RELEASE}"
     cp /opt/zipline/.env /opt/
-    rm -R /opt/zipline
+    mkdir -p /opt/zipline-updload
+    $STD cp -R /opt/zipline/updload/* /opt/zipline-upload/ || true
     curl -fsSL "https://github.com/diced/zipline/archive/refs/tags/v${RELEASE}.zip" -o $(basename "https://github.com/diced/zipline/archive/refs/tags/v${RELEASE}.zip")
-    unzip -q v${RELEASE}.zip
-    mv zipline-${RELEASE} /opt/zipline
-    cd /opt/zipline
+    unzip -q v"${RELEASE}".zip
+    rm -R /opt/zipline
+    mv zipline-"${RELEASE}" /opt/zipline
+    cd /opt/zipline || exit
     mv /opt/.env /opt/zipline/.env
     $STD pnpm install
     $STD pnpm build
@@ -56,7 +58,7 @@ function update_script() {
     msg_ok "Started ${APP}"
 
     msg_info "Cleaning Up"
-    rm -rf v${RELEASE}.zip
+    rm -rf v"${RELEASE}".zip
     msg_ok "Cleaned"
     msg_ok "Updated Successfully"
   else
