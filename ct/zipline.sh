@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVED/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 tteck
 # Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -40,8 +40,8 @@ function update_script() {
 
     msg_info "Updating ${APP} to ${RELEASE}"
     cp /opt/zipline/.env /opt/
-    mkdir -p /opt/zipline-updload
-    $STD cp -R /opt/zipline/updload/* /opt/zipline-upload/ || true
+    mkdir -p /opt/zipline-upload
+    cp -R /opt/zipline/updload/* /opt/zipline-upload/
     curl -fsSL "https://github.com/diced/zipline/archive/refs/tags/v${RELEASE}.zip" -o $(basename "https://github.com/diced/zipline/archive/refs/tags/v${RELEASE}.zip")
     unzip -q v"${RELEASE}".zip
     rm -R /opt/zipline
