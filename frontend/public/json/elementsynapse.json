@@ -26,7 +26,6 @@
           "os": "debian",
           "version": "12"
         }
-      }
     }
   ],
   "default_credentials": {
