@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://www.nlnetlabs.nl/projects/unbound/about/",
     "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/unbound.svg",
+    "config_path": "/etc/unbound/unbound.conf.d/unbound.conf",
     "description": "Unbound is a validating, recursive, caching DNS resolver. It is designed to be fast and lean and incorporates modern features based on open standards.",
     "install_methods": [
         {
@@ -37,3 +38,4 @@
         }
     ]
 }
+

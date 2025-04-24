@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://runtipi.io/",
     "logo": "https://runtipi.io/_next/static/media/tipi.c0b9b68e.png",
+    "config_path": "opt/runtipi/state/settings.json",
     "description": "Runtipi lets you install all your favorite self-hosted apps without the hassle of configuring and managing each service. One-click installs and updates for more than 180 popular apps.",
     "install_methods": [
         {

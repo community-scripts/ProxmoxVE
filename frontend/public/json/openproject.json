@@ -12,6 +12,7 @@
   "documentation": "https://www.openproject.org",
   "website": "https://www.openproject.org",
   "logo": "https://raw.githubusercontent.com/opf/openproject/dev/docker/prod/logo.png",
+    "config_path": "",
   "description": "OpenProject is a web-based project management software. Use OpenProject to manage your projects, tasks and goals. Collaborate via work packages and link them to your pull requests on Github. Read more about the OpenProject GitHub integration.",
   "install_methods": [
     {
@@ -32,3 +33,4 @@
   },
   "notes": []
 }
+

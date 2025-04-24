@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://github.com/ipfs/kubo",
     "logo": "https://user-images.githubusercontent.com/157609/250148884-d6d12db8-fdcf-4be3-8546-2550b69845d8.png",
+    "config_path": "",
     "description": "Kubo, developed by IPFS, is a decentralized file storage and sharing protocol. It implements the IPFS protocol, allowing users to manage files across a distributed network, ensuring data integrity and availability. Kubo supports file versioning, pinning, provides APIs and CLI tools for developers, and allows customizable node configurations for enhanced privacy and control.",
     "install_methods": [
         {

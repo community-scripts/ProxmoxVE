@@ -12,6 +12,7 @@
     "documentation": "https://www.home-assistant.io/docs/",
     "website": "https://www.home-assistant.io/",
     "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/home-assistant.svg",
+    "config_path": "/root/.homeassistant",
     "description": "A standalone installation of Home Assistant Core refers to a setup where the Home Assistant Core software is installed directly on a device or operating system, without the use of Docker containers. This provides a simpler, but less flexible and scalable solution, as the software is tightly coupled with the underlying system.",
     "install_methods": [
         {
@@ -49,3 +50,4 @@
         }
     ]
 }
+

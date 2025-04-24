@@ -13,6 +13,7 @@
     "documentation": "https://github.com/prometheus-pve/prometheus-pve-exporter",
     "website": "https://github.com/prometheus-pve/prometheus-pve-exporter",
     "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/proxmox.svg",
+    "config_path": "",
     "description": "An exporter that exposes information gathered from Proxmox VE node for use by the Prometheus monitoring system.",
     "install_methods": [
         {

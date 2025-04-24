@@ -12,6 +12,7 @@
    "documentation":"https://www.urbackup.org/documentation.html",
    "website":"https://www.urbackup.org/",
    "logo":"https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/webp/urbackup.webp",
+    "config_path": "",
    "description":"URBackup is an open-source backup software designed for creating reliable and efficient backups of both files and system images. It supports client-server architecture, allowing you to back up multiple computers to a central server. It offers features such as incremental backups, real-time file backup, and scheduling, ensuring minimal data loss and quick recovery",
    "install_methods":[
       {
@@ -37,3 +38,4 @@
       }
    ]
 }
+

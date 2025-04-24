@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://www.bookstackapp.com/",
     "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/bookstack.svg",
+    "config_path": "/opt/bookstack/.env",
     "description": "BookStack is a user-friendly documentation platform that offers a simple and intuitive experience. New users should be able to create content with basic word-processing skills. While the platform provides advanced features, they do not interfere with the core simplicity of the user experience.",
     "install_methods": [
         {

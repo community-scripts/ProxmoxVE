@@ -10,6 +10,7 @@
   "documentation": null,
   "website": "https://nicolargo.github.io/glances/",
   "logo": "https://raw.githubusercontent.com/nicolargo/glances/develop/docs/_static/Glances%20Logo.svg",
+  "config_path": "",
   "description": "Glances is an open-source system cross-platform monitoring tool. It allows real-time monitoring of various aspects of your system such as CPU, memory, disk, network usage etc.",
   "install_methods": [
     {
@@ -39,3 +40,4 @@
     }
   ]
 }
+

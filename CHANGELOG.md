@@ -24,6 +24,18 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - SLSKD: always check for soularr update [@vhsdream](https://github.com/vhsdream) ([#4012](https://github.com/community-scripts/ProxmoxVE/pull/4012))
 
+### 🌐 Website
+
+  - Remove Whoogle [@CrazyWolf13](https://github.com/CrazyWolf13) ([#4019](https://github.com/community-scripts/ProxmoxVE/pull/4019))
+
+  - #### ✨ New Features
+
+    - Feat: Add config path to website [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4005](https://github.com/community-scripts/ProxmoxVE/pull/4005))
+
+  - #### 📝 Script Information
+
+    - Prepare JSON files for new website feature [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4004](https://github.com/community-scripts/ProxmoxVE/pull/4004))
+
 ## 2025-04-23
 
 ### 🚀 Updated Scripts

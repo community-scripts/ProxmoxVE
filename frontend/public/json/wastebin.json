@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://github.com/matze/wastebin",
     "logo": "https://raw.githubusercontent.com/matze/wastebin/master/assets/favicon.png?raw=true",
+    "config_path": "/opt/wastebin-data/.env",
     "description": "Wastebin is a minimal pastebin with a design shamelessly copied from bin.",
     "install_methods": [
         {

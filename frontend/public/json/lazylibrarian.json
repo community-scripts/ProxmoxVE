@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://gitlab.com/LazyLibrarian/LazyLibrarian",
     "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/webp/lazylibrarian.webp",
+    "config_path": "",
     "description": "LazyLibrarian is a SickBeard, CouchPotato, Headphones-like application for ebooks, audiobooks and magazines.",
     "install_methods": [
         {

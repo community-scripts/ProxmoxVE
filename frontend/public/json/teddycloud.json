@@ -12,6 +12,7 @@
     "documentation": "https://tonies-wiki.revvox.de/docs/tools/teddycloud/",
     "website": "https://tonies-wiki.revvox.de/docs/tools/teddycloud/",
     "logo": "https://avatars.githubusercontent.com/u/57543015",
+    "config_path": "",
     "description": "TeddyCloud is an open source server replacement for the Boxine Cloud.",
     "install_methods": [
         {
@@ -37,3 +38,4 @@
         }
     ]
 }
+

@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://github.com/Donkie/Spoolman",
     "logo": "https://raw.githubusercontent.com/Donkie/Spoolman/master/client/public/favicon.svg",
+    "config_path": "/opt/spoolman/.env",
     "description": "Spoolman is a self-hosted web service designed to help you efficiently manage your 3D printer filament spools and monitor their usage.",
     "install_methods": [
         {

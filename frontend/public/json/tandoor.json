@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://tandoor.dev/",
     "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/tandoor.svg",
+    "config_path": "/opt/tandoor/.env",
     "description": "Tandoor Recipes is an application for managing recipes, planning meals, building shopping lists and much much more!",
     "install_methods": [
         {

@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://overseerr.dev/",
     "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/overseerr.svg",
+    "config_path": "",
     "description": "Overseerr is a request management and media discovery tool built to work with your existing Plex ecosystem.",
     "install_methods": [
         {

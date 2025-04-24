@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://ersatztv.org/",
     "logo": "https://raw.githubusercontent.com/ErsatzTV/ErsatzTV/main/artwork/ersatztv-logo.svg",
+    "config_path": "",
     "description": "ErsatzTV is software for configuring and streaming custom live channels using your media library.",
     "install_methods": [
         {

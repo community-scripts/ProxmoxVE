@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://github.com/FlareSolverr/FlareSolverr",
     "logo": "https://raw.githubusercontent.com/FlareSolverr/FlareSolverr/master/resources/flaresolverr_logo.svg",
+    "config_path": "",
     "description": "FlareSolverr is a proxy server to bypass Cloudflare and DDoS-GUARD protection.",
     "install_methods": [
         {

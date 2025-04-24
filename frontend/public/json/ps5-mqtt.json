@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://github.com/FunkeyFlo/",
     "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/ps5-mqtt.svg",
+    "config_path": "/opt/.config/ps5-mqtt/config.json",
     "description": "Integrate your Sony Playstation 5 devices with Home Assistant using MQTT.",
     "install_methods": [
         {
@@ -37,3 +38,4 @@
         }
     ]
 }
+

@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://nzbget.com/",
     "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/nzbget.svg",
+    "config_path": "",
     "description": "NZBGet is a Usenet downloader focused on efficiency and performance, designed to handle NZB files for downloading content from Usenet. It automates downloading, checking, repairing, and extracting files, optimizing resources to run well on lower-powered devices.",
     "install_methods": [
         {
@@ -32,3 +33,4 @@
     },
     "notes": []
 }
+

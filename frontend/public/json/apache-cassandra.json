@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://cassandra.apache.org/",
     "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/apachecassandra.svg",
+    "config_path": "",
     "description": "Apache-Cassandra is an open source NoSQL distributed database trusted by thousands of companies for scalability and high availability without compromising performance.",
     "install_methods": [
         {

@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://github.com/stonith404/pingvin-share",
     "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/pingvin-share.svg",
+    "config_path": "",
     "description": "Pingvin Share is self-hosted file sharing platform and an alternative for WeTransfer.",
     "install_methods": [
         {

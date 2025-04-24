@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://github.com/TasmoAdmin/TasmoAdmin#readme",
     "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/tasmoadmin.svg",
+    "config_path": "",
     "description": "TasmoAdmin is an administrative platform for devices flashed with Tasmota.",
     "install_methods": [
         {

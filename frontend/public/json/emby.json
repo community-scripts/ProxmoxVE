@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://emby.media/",
     "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/emby.svg",
+    "config_path": "",
     "description": "Emby brings together your personal videos, music, photos, and live television.",
     "install_methods": [
         {

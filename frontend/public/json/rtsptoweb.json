@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://github.com/deepch/RTSPtoWeb",
     "logo": "https://brands.home-assistant.io/_/rtsp_to_webrtc/logo.png?raw=true",
+    "config_path": "",
     "description": "RTSPtoWeb converts your RTSP streams to formats consumable in a web browser like MSE (Media Source Extensions), WebRTC, or HLS. It's fully native Golang without the use of FFmpeg or GStreamer",
     "install_methods": [
         {

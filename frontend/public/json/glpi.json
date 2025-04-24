@@ -12,6 +12,7 @@
   "documentation": "https://glpi-project.org/documentation/",
   "website": "https://glpi-project.org/",
   "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/glpi.svg",
+  "config_path": "",
   "description": "GLPI is a Free Asset and IT Management Software package, Data center management, ITIL Service Desk, licenses tracking and software auditing.",
   "install_methods": [
     {
@@ -32,3 +33,4 @@
   },
   "notes": []
 }
+

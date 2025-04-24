@@ -12,6 +12,7 @@
     "documentation": "https://docs.linkwarden.app/",
     "website": "https://linkwarden.app/",
     "logo": "https://raw.githubusercontent.com/linkwarden/linkwarden/main/assets/logo.png",
+    "config_path": "/opt/linkwarden/.env",
     "description": "Linkwarden is a fully self-hostable, open-source collaborative bookmark manager to collect, organize and archive webpages.",
     "install_methods": [
         {
@@ -32,3 +33,4 @@
     },
     "notes": []
 }
+

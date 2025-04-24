@@ -12,6 +12,7 @@
     "documentation": "https://watcharr.app/docs/introduction",
     "website": "https://watcharr.app/",
     "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/webp/watcharr.webp",
+    "config_path": "",
     "description": "Open source, self-hostable watched list for all your content with user authentication, modern and clean UI and a very simple setup.",
     "install_methods": [
         {
