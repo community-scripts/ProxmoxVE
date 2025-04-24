@@ -29,6 +29,8 @@ function update_script() {
     fi
     msg_info "Updating ${APP}"
     set +e
+    $STD apt-get update
+    $STD apt-get upgrade -y
     /usr/local/bin/pihole -up
     msg_ok "Updated ${APP}"
     exit
