@@ -10,6 +10,7 @@
   "documentation": null,
   "website": "https://webmin.com/",
   "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/webmin.svg",
+    "config_path": "",
   "description": "Webmin provides a graphical user interface (GUI) for tasks such as user account management, package management, file system configuration, network configuration, and more.",
   "install_methods": [
     {
@@ -35,3 +36,4 @@
     }
   ]
 }
+

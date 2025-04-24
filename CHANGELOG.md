@@ -14,6 +14,20 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 All LXC instances created using this repository come pre-installed with Midnight Commander, which is a command-line tool (`mc`) that offers a user-friendly file and directory management interface for the terminal environment.
 
 
+## 2025-04-24
+
+### 🚀 Updated Scripts
+
+  - Element Synapse: Add Synapse-Admin web UI to manage Matrix [@tremor021](https://github.com/tremor021) ([#4010](https://github.com/community-scripts/ProxmoxVE/pull/4010))
+
+  - #### 🐞 Bug Fixes
+
+    - SLSKD: always check for soularr update [@vhsdream](https://github.com/vhsdream) ([#4012](https://github.com/community-scripts/ProxmoxVE/pull/4012))
+
+### 🌐 Website
+
+  - Remove Whoogle [@CrazyWolf13](https://github.com/CrazyWolf13) ([#4019](https://github.com/community-scripts/ProxmoxVE/pull/4019))
+
 ## 2025-04-23
 
 ### 🚀 Updated Scripts

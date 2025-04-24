@@ -12,6 +12,7 @@
    "documentation":"https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/linux-nginx?view=aspnetcore-9.0&tabs=linux-ubuntu",
    "website":"https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/linux-nginx?view=aspnetcore-9.0&tabs=linux-ubuntu",
    "logo":"https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Microsoft_.NET_logo.svg/456px-Microsoft_.NET_logo.svg.png",
+   "config_path": "",
    "description":"Automatically setup a ASP.NET server up, as well as a FTP server so you can publish to this container from Visual Studio.",
    "install_methods":[
       {
@@ -37,3 +38,4 @@
       }
    ]
 }
+

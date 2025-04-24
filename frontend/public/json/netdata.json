@@ -10,6 +10,7 @@
   "documentation": null,
   "website": "https://www.netdata.cloud/",
   "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/netdata.svg",
+    "config_path": "",
   "description": "Netdata is an open-source, real-time performance monitoring tool designed to provide insights into the performance and health of systems and applications. It is often used by system administrators, DevOps professionals, and developers to monitor and troubleshoot issues on servers and other devices.",
   "install_methods": [
     {
@@ -35,3 +36,4 @@
     }
   ]
 }
+

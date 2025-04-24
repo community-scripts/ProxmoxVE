@@ -12,6 +12,7 @@
     "documentation": "https://docs.onedev.io/",
     "website": "https://onedev.io/",
     "logo": "https://docs.onedev.io/img/logo.svg",
+    "config_path": "",
     "description": "Git server with CI/CD, kanban, and packages.",
     "install_methods": [
       {

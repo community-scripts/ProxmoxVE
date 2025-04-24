@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://opengist.io/",
     "logo": "https://raw.githubusercontent.com/thomiceli/opengist/master/public/opengist.svg",
+    "config_path": "/opt/opengist/config.yml",
     "description": "Self-hosted pastebin powered by Git, open-source alternative to Github Gist.",
     "install_methods": [
         {

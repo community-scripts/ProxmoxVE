@@ -12,6 +12,7 @@
     "documentation": "https://silverbullet.md/Manual",
     "website": "https://silverbullet.md",
     "logo": "https://silverbullet.md/.client/logo.png",
+    "config_path": "",
     "description": "SilverBullet is a note-taking application optimized for people with a hacker mindset.",
     "install_methods": [
         {
@@ -32,3 +33,4 @@
     },
     "notes": []
 }
+

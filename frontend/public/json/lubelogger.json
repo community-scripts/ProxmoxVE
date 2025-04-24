@@ -12,6 +12,7 @@
     "documentation": "https://docs.lubelogger.com/",
     "website": "https://lubelogger.com/",
     "logo": "https://docs.lubelogger.com/Misc/Branding/a/image-1731645976107.png",
+    "config_path": "/opt/lubelogger/appsettings.json",
     "description": "Web-Based Vehicle Maintenance and Fuel Mileage Tracker",
     "install_methods": [
       {
@@ -32,3 +33,4 @@
     },
     "notes": []
   }
+

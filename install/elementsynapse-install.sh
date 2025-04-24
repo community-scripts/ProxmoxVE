@@ -17,8 +17,21 @@ msg_info "Installing Dependencies"
 $STD apt-get install -y \
   lsb-release \
   apt-transport-https \
-  debconf-utils
+  debconf-utils \
+  gpg
 msg_ok "Installed Dependencies"
+
+msg_info "Setting up Node.js Repository"
+mkdir -p /etc/apt/keyrings
+curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_22.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
+msg_ok "Set up Node.js Repository"
+
+msg_info "Installing Node.js"
+$STD apt-get update
+$STD apt-get install -y nodejs
+$STD npm install -g yarn
+msg_ok "Installed Node.js"
 
 read -p "Please enter the name for your server: " servername
 
@@ -32,8 +45,47 @@ $STD apt-get install matrix-synapse-py3 -y
 systemctl stop matrix-synapse
 sed -i 's/127.0.0.1/0.0.0.0/g' /etc/matrix-synapse/homeserver.yaml
 sed -i 's/'\''::1'\'', //g' /etc/matrix-synapse/homeserver.yaml
+SECRET=$(openssl rand -hex 32)
+ADMIN_PASS="$(openssl rand -base64 18 | cut -c1-13)"
+echo "enable_registration_without_verification: true" >>/etc/matrix-synapse/homeserver.yaml
+echo "registration_shared_secret: ${SECRET}" >>/etc/matrix-synapse/homeserver.yaml
 systemctl enable -q --now matrix-synapse
+$STD register_new_matrix_user -a --user admin --password "$ADMIN_PASS" --config /etc/matrix-synapse/homeserver.yaml
+{
+  echo "Matrix-Credentials"
+  echo "Admin username: admin"
+  echo "Admin password: $ADMIN_PASS"
+} >>~/matrix.creds
+systemctl stop matrix-synapse
+sed -i '34d' /etc/matrix-synapse/homeserver.yaml
+systemctl start matrix-synapse
+temp_file=$(mktemp)
+mkdir -p /opt/synapse-admin
+RELEASE=$(curl -fsSL https://api.github.com/repos/etkecc/synapse-admin/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+curl -fsSL "https://github.com/etkecc/synapse-admin/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
+tar xzf "$temp_file" -C /opt/synapse-admin
+cd /opt/synapse-admin
+$STD yarn install --ignore-engines
 msg_ok "Installed Element Synapse"
+
+msg_info "Creating Service"
+cat <<EOF >/etc/systemd/system/synapse-admin.service
+[Unit]
+Description=Excalidraw Service
+After=network.target
+Requires=matrix-synapse.service
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/synapse-admin
+ExecStart=/usr/bin/yarn start --host
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF
+systemctl enable -q --now synapse-admin
+msg_ok "Created Service"
 
 motd_ssh
 customize

@@ -12,6 +12,7 @@
     "documentation": "https://min.io/docs/minio/linux/index.html",
     "website": "https://min.io/",
     "logo": "https://raw.githubusercontent.com/minio/minio/refs/heads/master/.github/logo.svg",
+    "config_path": "/etc/default/minio",
     "description": "MinIO is a High Performance Object Storage released under GNU Affero General Public License v3.0. It is API compatible with Amazon S3 cloud storage service. Use MinIO to build high performance infrastructure for machine learning, analytics and application data workloads.",
     "install_methods": [
         {
@@ -37,3 +38,4 @@
         }
     ]
 }
+

@@ -12,6 +12,7 @@
   "documentation": "https://github.com/marcopiovanello/yt-dlp-web-ui",
   "website": "https://github.com/marcopiovanello/yt-dlp-web-ui",
   "logo": "https://raw.githubusercontent.com/marcopiovanello/yt-dlp-web-ui/refs/heads/master/frontend/src/assets/favicon.ico",
+    "config_path": "/opt/yt-dlp-webui/config.conf",
   "description": "A not so terrible web ui for yt-dlp.\nHigh performance extendeable web ui and RPC server for yt-dlp with low impact on resources.\nCreated for the only purpose of fetching videos from my server/nas and monitor upcoming livestreams.",
   "install_methods": [
     {
@@ -45,3 +46,4 @@
     }
   ]
 }
+

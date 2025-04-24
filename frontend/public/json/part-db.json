@@ -12,6 +12,7 @@
     "documentation": "https://docs.part-db.de/",
     "website": "https://github.com/Part-DB/Part-DB-server",
     "logo": "https://avatars.githubusercontent.com/u/36010898?s=48&v=4",
+    "config_path": "/opt/partdb/.env.local",
     "description": "Part-DB is an Open source inventory management system for your electronic components",
     "install_methods": [
         {
@@ -37,3 +38,4 @@
         }
     ]
 }
+

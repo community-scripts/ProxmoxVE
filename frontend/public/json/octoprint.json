@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://octoprint.org/",
     "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/octoprint.svg",
+    "config_path": "",
     "description": "OctoPrint is a free and open-source web-based 3D printer control software that allows you to remotely control and monitor your 3D printer from a web interface. It was designed to be compatible with a wide range of 3D printers.",
     "install_methods": [
         {

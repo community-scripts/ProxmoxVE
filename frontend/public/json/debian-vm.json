@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://www.debian.org/",
     "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/debian.svg",
+    "config_path": "",
     "description": "Debian Linux is a distribution that emphasizes free software. It supports many hardware platforms",
     "install_methods": [
         {
@@ -41,3 +42,4 @@
         }
   ]
 }
+

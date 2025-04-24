@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://couchdb.apache.org/",
     "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/couchdb.svg",
+    "config_path": "",
     "description": "Apache-CouchDB Seamless multi-master sync, that scales from Big Data to Mobile, with an Intuitive HTTP/JSON API and designed for Reliability.",
     "install_methods": [
         {

@@ -10,6 +10,7 @@
   "documentation": null,
   "website": null,
   "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/linuxcontainers.svg",
+    "config_path": "",
   "description": "This script has been created to simplify and speed up the process of updating all LXC containers across various Linux distributions, such as Ubuntu, Debian, Devuan, Alpine Linux, CentOS-Rocky-Alma, Fedora, and ArchLinux. It's designed to automatically skip templates and specific containers during the update, enhancing its convenience and usability.",
   "install_methods": [
     {
@@ -35,3 +36,4 @@
     }
   ]
 }
+

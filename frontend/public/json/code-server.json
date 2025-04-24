@@ -10,6 +10,7 @@
   "documentation": null,
   "website": null,
   "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/visual-studio-code.svg",
+  "config_path": "",
   "description": "VS Code Server is a service you can run on a remote development machine, like your desktop PC or a virtual machine (VM). It allows you to securely connect to that remote machine from anywhere through a vscode.dev URL, without the requirement of SSH.",
   "install_methods": [
     {
@@ -35,3 +36,4 @@
     }
   ]
 }
+

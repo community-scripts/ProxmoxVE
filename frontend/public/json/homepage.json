@@ -12,6 +12,7 @@
     "documentation": "https://gethomepage.dev/configs/",
     "website": "https://gethomepage.dev",
     "logo": "https://avatars.githubusercontent.com/u/122929872?v=4",
+    "config_path": "/opt/homepage/config/",
     "description": "Homepage is a self-hosted dashboard solution for centralizing and organizing data and information.",
     "install_methods": [
         {
@@ -41,3 +42,4 @@
         }
     ]
 }
+

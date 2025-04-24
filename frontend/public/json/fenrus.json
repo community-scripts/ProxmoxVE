@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://github.com/revenz/Fenrus",
     "logo": "https://raw.githubusercontent.com/revenz/Fenrus/master/wwwroot/fenrus.svg",
+    "config_path": "",
     "description": "A personal home page for quick access to all your personal apps/sites.",
     "install_methods": [
         {

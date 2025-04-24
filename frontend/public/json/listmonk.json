@@ -12,6 +12,7 @@
     "documentation": "https://listmonk.app/docs/",
     "website": "https://listmonk.app/",
     "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/listmonk.svg",
+    "config_path": "/opt/listmonk/config.toml",
     "description": "High performance, self-hosted, newsletter and mailing list manager with a modern dashboard.",
     "install_methods": [
         {

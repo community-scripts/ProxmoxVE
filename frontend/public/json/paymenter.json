@@ -12,6 +12,7 @@
   "documentation": "https://paymenter.org/docs",
   "website": "https://paymenter.org/",
   "logo": "https://avatars.githubusercontent.com/u/115177786?s=200&v=4",
+    "config_path": "/opt/paymenter/.env",
   "description": "Paymenter is an open source webshop solution for hosting companies. It's developed to provide an more easy way to manage your hosting company.",
   "install_methods": [
     {
@@ -37,3 +38,4 @@
     }
   ]
 }
+

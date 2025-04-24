@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://github.com/Forceu/Gokapi",
     "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/linux.svg",
+    "config_path": "",
     "description": "Gokapi is a lightweight server to share files, which expire after a set amount of downloads or days.",
     "install_methods": [
         {

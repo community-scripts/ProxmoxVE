@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://gotify.net/",
     "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/gotify.svg",
+    "config_path": "",
     "description": "Gotify is a simple server for sending and receiving messages",
     "install_methods": [
         {

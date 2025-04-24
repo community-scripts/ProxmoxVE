@@ -10,6 +10,7 @@
   "documentation": "https://docs.netbird.io/",
   "website": "https://netbird.io/",
   "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/netbird.svg",
+  "config_path": "",
   "description": "NetBird combines a configuration-free peer-to-peer private network and a centralized access control system in a single platform, making it easy to create secure private networks for your organization or home.",
   "install_methods": [
     {
@@ -43,3 +44,4 @@
     }
   ]
 }
+

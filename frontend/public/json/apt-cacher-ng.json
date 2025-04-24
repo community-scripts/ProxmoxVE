@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://www.unix-ag.uni-kl.de/~bloch/acng/",
     "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/linux.svg",
+    "config_path": "",
     "description": "Apt-Cacher-NG is a caching proxy. Specialized for package files from Linux distributors, primarily for Debian (and Debian based) distributions.",
     "install_methods": [
         {

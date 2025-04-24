@@ -31,9 +31,9 @@ function update_script() {
 
   RELEASE=$(curl -s https://api.github.com/repos/slskd/slskd/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
   if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
-    msg_info "Stopping $APP and Soularr"
+    msg_info "Stopping $APP"
     systemctl stop slskd soularr.timer soularr.service
-    msg_ok "Stopped $APP and Soularr"
+    msg_ok "Stopped $APP"
 
     msg_info "Updating $APP to v${RELEASE}"
     tmp_file=$(mktemp)
@@ -42,31 +42,34 @@ function update_script() {
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated $APP to v${RELEASE}"
 
-    msg_info "Updating Soularr"
-    cp /opt/soularr/config.ini /opt/config.ini.bak
-    cp /opt/soularr/run.sh /opt/run.sh.bak
-    cd /tmp
-    rm -rf /opt/soularr
-    curl -fsSL -o main.zip https://github.com/mrusse/soularr/archive/refs/heads/main.zip
-    unzip -q main.zip
-    mv soularr-main /opt/soularr
-    cd /opt/soularr
-    $STD pip install -r requirements.txt
-    mv /opt/config.ini.bak /opt/soularr/config.ini
-    mv /opt/run.sh.bak /opt/soularr/run.sh
-    msg_ok "Soularr updated"
-    msg_info "Starting $APP and Soularr"
-    systemctl start slskd soularr.timer
-    msg_ok "Started $APP and Soularr"
-
-    msg_info "Cleaning Up"
+    msg_info "Starting $APP"
+    systemctl start slskd
+    msg_ok "Started $APP"
     rm -rf $tmp_file
-    rm -rf /tmp/main.zip
-    msg_ok "Cleanup Completed"
-
   else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
+    msg_ok "No ${APP} update required. ${APP} is already at v${RELEASE}"
   fi
+  msg_info "Updating Soularr"
+  cp /opt/soularr/config.ini /opt/config.ini.bak
+  cp /opt/soularr/run.sh /opt/run.sh.bak
+  cd /tmp
+  rm -rf /opt/soularr
+  curl -fsSL -o main.zip https://github.com/mrusse/soularr/archive/refs/heads/main.zip
+  unzip -q main.zip
+  mv soularr-main /opt/soularr
+  cd /opt/soularr
+  $STD pip install -r requirements.txt
+  mv /opt/config.ini.bak /opt/soularr/config.ini
+  mv /opt/run.sh.bak /opt/soularr/run.sh
+  msg_ok "Updated soularr"
+
+  msg_info "Starting soularr timer"
+  systemctl start soularr.timer
+  msg_ok "Started soularr timer"
+
+  msg_info "Cleaning Up"
+  rm -rf /tmp/main.zip
+  msg_ok "Cleanup Completed"
   exit
 }
 

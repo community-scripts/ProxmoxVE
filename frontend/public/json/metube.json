@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://github.com/alexta69/metube",
     "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/metube.svg",
+    "config_path": "/opt/metube/.env",
     "description": "MeTube allows you to download videos from YouTube and dozens of other sites.",
     "install_methods": [
         {

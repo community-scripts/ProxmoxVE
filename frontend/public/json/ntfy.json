@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://ntfy.sh/",
     "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/ntfy.svg",
+    "config_path": "/etc/ntfy/server.yml",
     "description": "ntfy (pronounced notify) is a simple HTTP-based pub-sub notification service. It allows you to send notifications to your phone or desktop via scripts from any computer, and/or using a REST API. It's infinitely flexible, and 100% free software.",
     "install_methods": [
         {

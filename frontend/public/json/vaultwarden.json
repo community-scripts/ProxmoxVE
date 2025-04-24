@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://github.com/dani-garcia/vaultwarden/",
     "logo": "https://raw.githubusercontent.com/dani-garcia/vaultwarden/main/resources/vaultwarden-icon-white.svg",
+    "config_path": "/opt/vaultwarden/.env",
     "description": "Vaultwarden is a self-hosted password manager which provides secure and encrypted password storage. It uses client-side encryption and provides access to passwords through a web interface and mobile apps.",
     "install_methods": [
         {
@@ -52,3 +53,4 @@
         }
     ]
 }
+

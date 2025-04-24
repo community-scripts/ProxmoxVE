@@ -12,6 +12,7 @@
     "documentation": "https://thelounge.chat/docs",
     "website": "https://thelounge.chat/",
     "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/the-lounge.svg",
+    "config_path": "",
     "description": "Modern web IRC client designed for self-hosting ",
     "install_methods": [
       {
@@ -37,3 +38,4 @@
       }
     ]
   }
+

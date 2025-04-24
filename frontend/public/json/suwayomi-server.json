@@ -12,6 +12,7 @@
     "documentation": "https://github.com/Suwayomi/Suwayomi-Server/wiki",
     "website": "https://github.com/Suwayomi/Suwayomi-Server",
     "logo": "https://github.com/Suwayomi/Suwayomi-Server/raw/master/server/src/main/resources/icon/faviconlogo.png",
+    "config_path": "",
     "description": "A free and open source manga reader server that runs extensions built for Mihon (Tachiyomi).",
     "install_methods": [
         {

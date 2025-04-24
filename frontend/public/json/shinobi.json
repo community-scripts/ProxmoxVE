@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://shinobi.video/",
     "logo": "https://gitlab.com/uploads/-/system/project/avatar/6947723/mstile-150x150.png?raw=true",
+    "config_path": "/opt/Shinobi/conf.json",
     "description": "Shinobi is an open-source, self-hosted network video recording (NVR) software. It allows you to manage and monitor security cameras and record video footage. Shinobi can be run on various platforms including Linux, macOS, and Raspberry Pi, and offers features such as real-time streaming, motion detection, and email notifications.",
     "install_methods": [
         {

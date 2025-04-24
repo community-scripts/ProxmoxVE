@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://neo4j.com/product/neo4j-graph-database/",
     "logo": "https://avatars.githubusercontent.com/u/201120?s=200&v=4",
+    "config_path": "/etc/neo4j/neo4j.conf",
     "description": "Neo4j is a graph database designed to manage complex data relationships. It uses nodes, relationships, and properties to store and analyze connected data, making it ideal for applications like recommendation engines, fraud detection, and network analysis. Its structure allows for fast querying and deep data insights through native graph storage.",
     "install_methods": [
         {

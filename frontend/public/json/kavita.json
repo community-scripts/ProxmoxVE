@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://www.kavitareader.com/",
     "logo": "https://raw.githubusercontent.com/Kareadita/Kavita/develop/Logo/kavita.svg",
+    "config_path": "",
     "description": "Kavita is a fast, feature rich, cross platform reading server. Built with a focus for manga, and the goal of being a full solution for all your reading needs.",
     "install_methods": [
         {
@@ -36,3 +37,4 @@
       }
     ]
 }
+

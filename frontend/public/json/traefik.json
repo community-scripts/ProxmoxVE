@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://traefik.io/",
     "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/traefik-gopher.svg",
+    "config_path": "/etc/traefik/traefik.yaml",
     "description": "Traefik (pronounced traffic) is an open-source edge router and reverse proxy that simplifies managing microservices. It automatically discovers services, dynamically updates routing rules without downtime, provides load balancing, handles SSL termination, and supports various middleware for added functionality. Ideal for cloud-native environments, it integrates seamlessly with platforms like Docker and Kubernetes.",
     "install_methods": [
         {

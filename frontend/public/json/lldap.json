@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://github.com/lldap/lldap",
     "logo": "https://avatars.githubusercontent.com/u/129409591?s=64&v=4",
+    "config_path": "",
     "description": "LLDAP is a lightweight LDAP server designed for simplicity and ease of use. It provides secure user authentication and authorization management through LDAP over TLS. Ideal for small to medium-sized environments, It aims to streamline identity management tasks with a minimalistic and straightforward setup.",
     "install_methods": [
         {

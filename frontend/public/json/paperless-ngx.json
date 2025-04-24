@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://docs.paperless-ngx.com/",
     "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/paperless-ngx.svg",
+    "config_path": "/opt/paperless/paperless.conf",
     "description": "Paperless-ngx is a software tool designed for digitizing and organizing paper documents. It provides a web-based interface for scanning, uploading, and organizing paper documents, making it easier to manage, search, and access important information. Paperless-ngx uses the OCR (Optical Character Recognition) technology to extract text from scanned images and makes it searchable, thus increasing the efficiency of document management.",
     "install_methods": [
         {

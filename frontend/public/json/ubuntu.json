@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://ubuntu.com/",
     "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/ubuntu.svg",
+    "config_path": "",
     "description": "Ubuntu is a distribution based on Debian, designed to have regular releases and a consistent user experience.",
     "install_methods": [
         {

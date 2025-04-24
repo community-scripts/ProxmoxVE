@@ -12,6 +12,7 @@
     "documentation": "https://docs.duplicati.com/",
     "website": "https://duplicati.com/",
     "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/duplicati.svg",
+    "config_path": "",
     "description": "Duplicati is a free, open-source backup solution that offers zero-trust, fully encrypted backups for your data.",
     "install_methods": [
         {

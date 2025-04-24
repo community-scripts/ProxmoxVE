@@ -10,6 +10,7 @@
   "documentation": null,
   "website": null,
   "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/proxmox.svg",
+    "config_path": "",
   "description": "The script will give options to Disable the Enterprise Repo, Add/Correct PMG Sources, Enable the No-Subscription Repo, Add Test Repo, Disable Subscription Nag, Update Proxmox Mail Gateway and Reboot PMG.",
   "install_methods": [
     {
@@ -43,3 +44,4 @@
     }
   ]
 }
+

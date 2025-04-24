@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://docs.unmanic.app/",
     "logo": "https://raw.githubusercontent.com/Unmanic/unmanic/master/icon.png",
+    "config_path": "",
     "description": "Unmanic is a simple tool for optimising your file library. You can use it to convert your files into a single, uniform format, manage file movements based on timestamps, or execute custom commands against a file based on its file size.",
     "install_methods": [
         {

@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://daemonsync.me/",
     "logo": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimg.informer.com%2Ficons_mac%2Fpng%2F128%2F350%2F350335.png&f=1&nofb=1",
+    "config_path": "",
     "description": "Sync files from app to server, share photos & videos, back up your data and stay secure inside local network.",
     "install_methods": [
         {

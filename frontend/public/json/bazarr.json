@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://www.bazarr.media/",
     "logo": "https://www.bazarr.media/assets/img/logo.png",
+    "config_path": "",
     "description": "Bazarr is a companion application to Sonarr and Radarr that manages and downloads subtitles based on your requirements.",
     "install_methods": [
         {
@@ -32,3 +33,4 @@
     },
     "notes": []
 }
+

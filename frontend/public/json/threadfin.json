@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://github.com/Threadfin/Threadfin",
     "logo": "https://raw.githubusercontent.com/Threadfin/Threadfin/main/html/img/threadfin.png",
+    "config_path": "",
     "description": "Threadfin is a M3U proxy for Kernel, Plex, Jellyfin, or Emby, based on xTeVe.",
     "install_methods": [
         {
@@ -32,3 +33,4 @@
     },
     "notes": []
 }
+

@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://redis.io/",
     "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/redis.svg",
+    "config_path": "Debian /etc/redis/redis.conf | Alpine: /etc/redis.conf",
     "description": "Redis is an open-source, in-memory data store used by millions of developers as a cache, vector database, document database, streaming engine, and message broker.",
     "install_methods": [
         {

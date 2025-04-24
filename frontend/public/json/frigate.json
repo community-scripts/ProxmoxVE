@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://frigate.video/",
     "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/frigate.svg",
+    "config_path": "",
     "description": "Frigate is an open source NVR built around real-time AI object detection. All processing is performed locally on your own hardware, and your camera feeds never leave your home.",
     "install_methods": [
         {

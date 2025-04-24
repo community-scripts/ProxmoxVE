@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://petio.tv/",
     "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/webp/petio.webp",
+    "config_path": "",
     "description": "Petio is a third party companion app available to Plex server owners to allow their users to request, review and discover content.",
     "install_methods": [
         {

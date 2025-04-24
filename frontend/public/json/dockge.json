@@ -12,6 +12,7 @@
     "documentation": null,
     "website": "https://github.com/louislam/dockge",
     "logo": "https://raw.githubusercontent.com/louislam/dockge/master/frontend/public/icon.svg",
+    "config_path": "",
     "description": "Dockge is a fancy, easy-to-use and reactive self-hosted docker compose.yaml stack-oriented manager.",
     "install_methods": [
         {
