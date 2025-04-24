@@ -28,6 +28,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - Remove Whoogle [@CrazyWolf13](https://github.com/CrazyWolf13) ([#4019](https://github.com/community-scripts/ProxmoxVE/pull/4019))
 
+  - #### 📝 Script Information
+
+    - Prepare JSON files for new website feature [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4004](https://github.com/community-scripts/ProxmoxVE/pull/4004))
+
 ## 2025-04-23
 
 ### 🚀 Updated Scripts
