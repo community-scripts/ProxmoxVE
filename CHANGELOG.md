@@ -18,6 +18,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
+  - Element Synapse: Add Synapse-Admin web UI to manage Matrix [@tremor021](https://github.com/tremor021) ([#4010](https://github.com/community-scripts/ProxmoxVE/pull/4010))
+
   - #### 🐞 Bug Fixes
 
     - SLSKD: always check for soularr update [@vhsdream](https://github.com/vhsdream) ([#4012](https://github.com/community-scripts/ProxmoxVE/pull/4012))
