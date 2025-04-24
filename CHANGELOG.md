@@ -38,6 +38,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 📝 Script Information
 
+    - Jellyfin: Mark as updateable [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4029](https://github.com/community-scripts/ProxmoxVE/pull/4029))
     - Prepare JSON files for new website feature [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4004](https://github.com/community-scripts/ProxmoxVE/pull/4004))
 
 ## 2025-04-23
