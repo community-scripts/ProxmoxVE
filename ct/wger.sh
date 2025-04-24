@@ -39,10 +39,10 @@ function update_script() {
     tar xzf "$temp_file"
     cp -rf wger-"$RELEASE"/* /home/wger/src
     cd /home/wger/src
-    python3 manage.py migrate &>/dev/null
-    yarn install &>/dev/null
-    yarn build:css:sass &>/dev/null
-    python3 manage.py collectstatic --noinput &>/dev/null
+    $STD python3 manage.py migrate 
+    $STD yarn install 
+    $STD yarn build:css:sass 
+    $STD python3 manage.py collectstatic --noinput
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated $APP to v${RELEASE}"
 
