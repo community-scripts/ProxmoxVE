@@ -20,6 +20,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - Element Synapse: Fix Admin UI install and update procedure [@tremor021](https://github.com/tremor021) ([#4041](https://github.com/community-scripts/ProxmoxVE/pull/4041))
     - SLSKD: always check for soularr update [@vhsdream](https://github.com/vhsdream) ([#4012](https://github.com/community-scripts/ProxmoxVE/pull/4012))
 
   - #### ✨ New Features
