@@ -1,4 +1,5 @@
 {
+
     "name": "Element Synapse",
     "slug": "elementsynapse",
     "categories": [
@@ -26,10 +27,21 @@
           "version": "12"
         }
       }
-    ],
-    "default_credentials": {
-      "username": null,
-      "password": null
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "type": "info",
+      "text": "Type `cat ~/matrix.creds` to see admin username/password."
     },
-    "notes": []
-  }
+    {
+      "type": "info",
+      "text": "Synapse-Admin is running on port 5173"
+    }
+  ]
+}
+

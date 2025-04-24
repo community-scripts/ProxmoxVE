@@ -20,18 +20,52 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /etc/matrix-synapse ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    msg_info "Updating $APP LXC"
-    $STD apt-get update
-    $STD apt-get -y upgrade
-    msg_ok "Updated $APP LXC"
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /etc/matrix-synapse ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+  if [[ ! -f /opt/"${APP}"_version.txt ]]; then
+    touch /opt/"${APP}"_version.txt
+  fi
+  if ! dpkg -l | grep -q '^ii.*gpg'; then
+    $STD apt-get update
+    $STD apt-get install -y gpg
+  fi
+  if [[ ! -x /usr/bin/node ]]; then
+    mkdir -p /etc/apt/keyrings
+    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_22.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
+    $STD apt-get update
+    $STD apt-get install -y nodejs
+    $STD npm install -g yarn
+  fi
+  msg_info "Updating $APP LXC"
+  $STD apt-get update
+  $STD apt-get -y upgrade
+  msg_ok "Updated $APP LXC"
+
+  msg_info "Updating Synapse-Admin"
+  RELEASE=$(curl -fsSL https://api.github.com/repos/etkecc/synapse-admin/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+  if [[ "${RELEASE}" != "$(cat /opt/"${APP}"_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
+    temp_file=$(mktemp)
+    systemctl stop synapse-admin
+    rm -rf /opt/synapse-admin
+    mkdir -p /opt/synapse-admin
+    curl -fsSL "https://github.com/etkecc/synapse-admin/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
+    tar xzf "$temp_file" -C /opt/synapse-admin
+    cd /opt/synapse-admin
+    $STD yarn install --ignore-engines
+    systemctl start synapse-admin
+    echo "${RELEASE}" >/opt/"${APP}"_version.txt
+    rm -f "$temp_file"
+    msg_ok "Update Successful"
+  else
+    msg_ok "No update required. ${APP} is already at v${RELEASE}"
+  fi
+  exit
 }
 
 start

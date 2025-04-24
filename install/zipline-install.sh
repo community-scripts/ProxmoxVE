@@ -53,8 +53,8 @@ msg_info "Installing Zipline (Patience)"
 cd /opt
 RELEASE=$(curl -fsSL https://api.github.com/repos/diced/zipline/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 curl -fsSL "https://github.com/diced/zipline/archive/refs/tags/v${RELEASE}.zip" -o $(basename "https://github.com/diced/zipline/archive/refs/tags/v${RELEASE}.zip")
-unzip -q v${RELEASE}.zip
-mv zipline-${RELEASE} /opt/zipline
+unzip -q v"${RELEASE}".zip
+mv zipline-"${RELEASE}" /opt/zipline
 cd /opt/zipline
 cat <<EOF >/opt/zipline/.env
 DATABASE_URL=postgres://$DB_USER:$DB_PASS@localhost:5432/$DB_NAME
@@ -62,7 +62,10 @@ CORE_SECRET=$SECRET_KEY
 CORE_HOSTNAME=0.0.0.0
 CORE_PORT=3000
 CORE_RETURN_HTTPS=false
+DATASOURCE_TYPE=local
+DATASOURCE_LOCAL_DIRECTORY=/opt/zipline-upload
 EOF
+mkdir -p /opt/zipline-upload
 $STD pnpm install
 $STD pnpm build
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
