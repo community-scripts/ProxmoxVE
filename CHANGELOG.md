@@ -24,6 +24,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - SLSKD: always check for soularr update [@vhsdream](https://github.com/vhsdream) ([#4012](https://github.com/community-scripts/ProxmoxVE/pull/4012))
 
+  - #### ✨ New Features
+
+    - Pi-Hole: Fix Unbound update [@CrazyWolf13](https://github.com/CrazyWolf13) ([#4026](https://github.com/community-scripts/ProxmoxVE/pull/4026))
+
 ### 🌐 Website
 
   - Remove Whoogle [@CrazyWolf13](https://github.com/CrazyWolf13) ([#4019](https://github.com/community-scripts/ProxmoxVE/pull/4019))
