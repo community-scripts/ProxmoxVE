@@ -1,13 +1,58 @@
 [
   {
+    "name": "fhem/fhem-mirror",
+    "version": "6.2",
+    "date": "2025-04-24T10:35:55Z"
+  },
+  {
+    "name": "glpi-project/glpi",
+    "version": "10.0.18",
+    "date": "2025-02-12T11:07:02Z"
+  },
+  {
+    "name": "zwave-js/zwave-js-ui",
+    "version": "v10.3.1",
+    "date": "2025-04-24T08:47:43Z"
+  },
+  {
+    "name": "NLnetLabs/unbound",
+    "version": "release-1.23.0",
+    "date": "2025-04-24T08:07:21Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1822",
+    "date": "2025-04-24T06:06:38Z"
+  },
+  {
+    "name": "inventree/InvenTree",
+    "version": "0.17.11",
+    "date": "2025-04-24T05:25:55Z"
+  },
+  {
+    "name": "openobserve/openobserve",
+    "version": "v0.14.6-rc7",
+    "date": "2025-04-24T04:02:56Z"
+  },
+  {
+    "name": "rogerfar/rdt-client",
+    "version": "v2.0.109",
+    "date": "2025-04-24T03:55:08Z"
+  },
+  {
+    "name": "syncthing/syncthing",
+    "version": "v2.0.0-beta.9",
+    "date": "2025-04-12T13:58:29Z"
+  },
+  {
     "name": "immich-app/immich",
     "version": "v1.132.1",
     "date": "2025-04-23T22:08:21Z"
   },
   {
-    "name": "fhem/fhem-mirror",
-    "version": "6.2",
-    "date": "2025-04-23T20:31:09Z"
+    "name": "keycloak/keycloak",
+    "version": "26.2.1",
+    "date": "2025-04-23T12:17:17Z"
   },
   {
     "name": "mongodb/mongo",
@@ -31,8 +76,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-04-21T16:55:50Z"
+    "version": "v3.10.0-beta.9",
+    "date": "2025-04-17T11:46:08Z"
   },
   {
     "name": "NodeBB/NodeBB",
@@ -43,11 +88,6 @@
     "name": "grafana/grafana",
     "version": "v11.6.1",
     "date": "2025-04-23T17:04:02Z"
-  },
-  {
-    "name": "syncthing/syncthing",
-    "version": "v2.0.0-beta.9",
-    "date": "2025-04-12T13:58:29Z"
   },
   {
     "name": "nzbgetcom/nzbget",
@@ -63,11 +103,6 @@
     "name": "Checkmk/checkmk",
     "version": "v2.3.0p31-rc1",
     "date": "2025-04-23T13:16:47Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.2.1",
-    "date": "2025-04-23T12:17:17Z"
   },
   {
     "name": "redis/redis",
@@ -105,16 +140,6 @@
     "date": "2025-04-23T06:40:34Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1815",
-    "date": "2025-04-23T05:56:23Z"
-  },
-  {
-    "name": "openobserve/openobserve",
-    "version": "v0.14.6-rc6",
-    "date": "2025-04-23T04:24:27Z"
-  },
-  {
     "name": "jhuckaby/Cronicle",
     "version": "v0.9.78",
     "date": "2025-04-23T01:38:28Z"
@@ -148,11 +173,6 @@
     "name": "evcc-io/evcc",
     "version": "0.203.2",
     "date": "2025-04-22T15:07:28Z"
-  },
-  {
-    "name": "zwave-js/zwave-js-ui",
-    "version": "v10.3.0",
-    "date": "2025-04-22T14:57:47Z"
   },
   {
     "name": "OliveTin/OliveTin",
@@ -287,7 +307,7 @@
   {
     "name": "ollama/ollama",
     "version": "v0.6.6",
-    "date": "2025-04-19T01:13:05Z"
+    "date": "2025-04-17T04:34:58Z"
   },
   {
     "name": "caddyserver/caddy",
@@ -460,11 +480,6 @@
     "date": "2025-04-14T09:13:36Z"
   },
   {
-    "name": "rogerfar/rdt-client",
-    "version": "v2.0.108",
-    "date": "2025-04-13T22:17:55Z"
-  },
-  {
     "name": "autobrr/autobrr",
     "version": "v1.61.0",
     "date": "2025-04-13T21:14:40Z"
@@ -505,11 +520,6 @@
     "date": "2025-04-11T22:00:06Z"
   },
   {
-    "name": "NLnetLabs/unbound",
-    "version": "release-1.23.0rc2",
-    "date": "2025-04-11T13:24:25Z"
-  },
-  {
     "name": "sabnzbd/sabnzbd",
     "version": "4.5.1",
     "date": "2025-04-11T09:57:47Z"
@@ -528,11 +538,6 @@
     "name": "apache/cassandra",
     "version": "cassandra-5.0.4",
     "date": "2025-04-10T16:32:00Z"
-  },
-  {
-    "name": "glpi-project/glpi",
-    "version": "10.0.18",
-    "date": "2025-02-12T11:07:02Z"
   },
   {
     "name": "zitadel/zitadel",
@@ -603,11 +608,6 @@
     "name": "kimai/kimai",
     "version": "2.32.0",
     "date": "2025-04-06T09:43:51Z"
-  },
-  {
-    "name": "inventree/InvenTree",
-    "version": "0.17.10",
-    "date": "2025-04-06T05:31:49Z"
   },
   {
     "name": "jellyfin/jellyfin",
@@ -1250,4 +1250,3 @@
     "date": "2022-07-15T05:20:17Z"
   }
 ]
-
