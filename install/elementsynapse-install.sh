@@ -63,15 +63,15 @@ temp_file=$(mktemp)
 mkdir -p /opt/synapse-admin
 RELEASE=$(curl -fsSL https://api.github.com/repos/etkecc/synapse-admin/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 curl -fsSL "https://github.com/etkecc/synapse-admin/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
-tar xzf "$temp_file" -C /opt/synapse-admin
-cd /opt/synapse-admin
+tar xzf "$temp_file" -C /opt/synapse-admin --strip-components=1
+cd /opt/synapse-adminsys
 $STD yarn install --ignore-engines
 msg_ok "Installed Element Synapse"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/synapse-admin.service
 [Unit]
-Description=Excalidraw Service
+Description=Synapse-Admin Service
 After=network.target
 Requires=matrix-synapse.service
 

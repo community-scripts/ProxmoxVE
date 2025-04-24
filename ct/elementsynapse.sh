@@ -55,7 +55,7 @@ function update_script() {
     rm -rf /opt/synapse-admin
     mkdir -p /opt/synapse-admin
     curl -fsSL "https://github.com/etkecc/synapse-admin/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
-    tar xzf "$temp_file" -C /opt/synapse-admin
+    tar xzf "$temp_file" -C /opt/synapse-admin --strip-components=1
     cd /opt/synapse-admin
     $STD yarn install --ignore-engines
     systemctl start synapse-admin
