@@ -1,18 +1,88 @@
 [
   {
-    "name": "Graylog2/graylog2-server",
-    "version": "6.3.0-alpha.1",
-    "date": "2025-04-23T11:25:55Z"
+    "name": "immich-app/immich",
+    "version": "v1.132.1",
+    "date": "2025-04-23T22:08:21Z"
   },
   {
     "name": "fhem/fhem-mirror",
     "version": "6.2",
-    "date": "2025-04-23T10:36:12Z"
+    "date": "2025-04-23T20:31:09Z"
+  },
+  {
+    "name": "mongodb/mongo",
+    "version": "r6.0.22",
+    "date": "2025-04-23T19:53:55Z"
+  },
+  {
+    "name": "Radarr/Radarr",
+    "version": "v5.22.4.9896",
+    "date": "2025-04-23T18:51:12Z"
+  },
+  {
+    "name": "netbox-community/netbox",
+    "version": "v4.2.8",
+    "date": "2025-04-22T19:44:49Z"
+  },
+  {
+    "name": "Kozea/Radicale",
+    "version": "v3.5.2",
+    "date": "2025-04-23T18:41:46Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "nightly",
+    "date": "2025-04-21T16:55:50Z"
+  },
+  {
+    "name": "NodeBB/NodeBB",
+    "version": "v4.2.2",
+    "date": "2025-04-22T16:33:53Z"
+  },
+  {
+    "name": "grafana/grafana",
+    "version": "v11.6.1",
+    "date": "2025-04-23T17:04:02Z"
+  },
+  {
+    "name": "syncthing/syncthing",
+    "version": "v2.0.0-beta.9",
+    "date": "2025-04-12T13:58:29Z"
   },
   {
     "name": "nzbgetcom/nzbget",
     "version": "v24.8",
     "date": "2025-03-18T07:33:51Z"
+  },
+  {
+    "name": "docmost/docmost",
+    "version": "v0.20.1",
+    "date": "2025-04-23T13:44:12Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.3.0p31-rc1",
+    "date": "2025-04-23T13:16:47Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.2.1",
+    "date": "2025-04-23T12:17:17Z"
+  },
+  {
+    "name": "redis/redis",
+    "version": "7.4.3",
+    "date": "2025-04-23T12:00:04Z"
+  },
+  {
+    "name": "donaldzou/WGDashboard",
+    "version": "v4.2.1",
+    "date": "2025-04-23T11:42:05Z"
+  },
+  {
+    "name": "Graylog2/graylog2-server",
+    "version": "6.3.0-alpha.1",
+    "date": "2025-04-23T11:25:55Z"
   },
   {
     "name": "cockpit-project/cockpit",
@@ -50,11 +120,6 @@
     "date": "2025-04-23T01:38:28Z"
   },
   {
-    "name": "grafana/grafana",
-    "version": "v11.3.6",
-    "date": "2025-04-23T00:18:05Z"
-  },
-  {
     "name": "cross-seed/cross-seed",
     "version": "v6.11.2",
     "date": "2025-02-26T14:54:49Z"
@@ -65,39 +130,14 @@
     "date": "2025-04-22T22:44:34Z"
   },
   {
-    "name": "docmost/docmost",
-    "version": "v0.20.0",
-    "date": "2025-04-22T22:30:25Z"
-  },
-  {
     "name": "glanceapp/glance",
     "version": "v0.7.13",
     "date": "2025-04-22T22:19:16Z"
   },
   {
-    "name": "netbox-community/netbox",
-    "version": "v4.2.8",
-    "date": "2025-04-22T19:44:49Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.2.0",
-    "date": "2025-04-11T12:48:27Z"
-  },
-  {
-    "name": "donaldzou/WGDashboard",
-    "version": "v4.2.0",
-    "date": "2025-04-22T18:18:28Z"
-  },
-  {
     "name": "n8n-io/n8n",
     "version": "n8n@1.90.0",
     "date": "2025-04-22T08:58:15Z"
-  },
-  {
-    "name": "NodeBB/NodeBB",
-    "version": "v4.2.2",
-    "date": "2025-04-22T16:33:53Z"
   },
   {
     "name": "jenkinsci/jenkins",
@@ -110,11 +150,6 @@
     "date": "2025-04-22T15:07:28Z"
   },
   {
-    "name": "Checkmk/checkmk",
-    "version": "v2.4.0b6",
-    "date": "2025-04-22T15:00:31Z"
-  },
-  {
     "name": "zwave-js/zwave-js-ui",
     "version": "v10.3.0",
     "date": "2025-04-22T14:57:47Z"
@@ -123,11 +158,6 @@
     "name": "OliveTin/OliveTin",
     "version": "2025.4.22",
     "date": "2025-04-22T14:18:11Z"
-  },
-  {
-    "name": "mongodb/mongo",
-    "version": "r8.2.0-alpha",
-    "date": "2025-04-22T13:19:07Z"
   },
   {
     "name": "AdguardTeam/AdGuardHome",
@@ -173,11 +203,6 @@
     "name": "emqx/emqx",
     "version": "e5.9.0-beta.4",
     "date": "2025-04-21T17:08:59Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "v3.10.0-beta.9",
-    "date": "2025-04-17T11:46:08Z"
   },
   {
     "name": "Prowlarr/Prowlarr",
@@ -230,11 +255,6 @@
     "date": "2017-03-07T18:56:06Z"
   },
   {
-    "name": "Radarr/Radarr",
-    "version": "v5.21.1.9799",
-    "date": "2025-03-24T15:52:12Z"
-  },
-  {
     "name": "paperless-ngx/paperless-ngx",
     "version": "v2.15.3",
     "date": "2025-04-19T23:02:17Z"
@@ -266,8 +286,8 @@
   },
   {
     "name": "ollama/ollama",
-    "version": "v0.6.6-rc1",
-    "date": "2025-04-17T01:56:29Z"
+    "version": "v0.6.6",
+    "date": "2025-04-19T01:13:05Z"
   },
   {
     "name": "caddyserver/caddy",
@@ -455,11 +475,6 @@
     "date": "2025-01-05T21:14:23Z"
   },
   {
-    "name": "syncthing/syncthing",
-    "version": "v2.0.0-beta.9",
-    "date": "2025-04-12T13:58:29Z"
-  },
-  {
     "name": "qbittorrent/qBittorrent",
     "version": "release-5.0.5",
     "date": "2025-04-13T07:55:55Z"
@@ -565,11 +580,6 @@
     "date": "2025-04-07T09:23:08Z"
   },
   {
-    "name": "redis/redis",
-    "version": "8.0-rc1-int2",
-    "date": "2025-04-02T19:05:08Z"
-  },
-  {
     "name": "Dolibarr/dolibarr",
     "version": "21.0.1",
     "date": "2025-04-06T19:22:59Z"
@@ -625,11 +635,6 @@
     "date": "2025-04-05T12:07:32Z"
   },
   {
-    "name": "Kozea/Radicale",
-    "version": "v3.5.1",
-    "date": "2025-04-05T06:20:18Z"
-  },
-  {
     "name": "actualbudget/actual",
     "version": "v25.4.0",
     "date": "2025-04-05T04:14:57Z"
@@ -663,11 +668,6 @@
     "name": "hargata/lubelog",
     "version": "v1.4.6",
     "date": "2025-04-02T14:07:12Z"
-  },
-  {
-    "name": "immich-app/immich",
-    "version": "v1.131.3",
-    "date": "2025-04-01T22:48:22Z"
   },
   {
     "name": "MagicMirrorOrg/MagicMirror",
