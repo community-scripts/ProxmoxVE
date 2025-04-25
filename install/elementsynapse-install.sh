@@ -64,7 +64,7 @@ mkdir -p /opt/synapse-admin
 RELEASE=$(curl -fsSL https://api.github.com/repos/etkecc/synapse-admin/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 curl -fsSL "https://github.com/etkecc/synapse-admin/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
 tar xzf "$temp_file" -C /opt/synapse-admin --strip-components=1
-cd /opt/synapse-admin || exit
+cd /opt/synapse-admin
 $STD yarn install --ignore-engines
 msg_ok "Installed Element Synapse"
 
