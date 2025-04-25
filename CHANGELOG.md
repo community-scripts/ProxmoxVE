@@ -24,6 +24,14 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🌐 Website
 
+  - #### 🐞 Bug Fixes
+
+    - Only show update source when app is marked updateable [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4059](https://github.com/community-scripts/ProxmoxVE/pull/4059))
+
+  - #### 💥 Breaking Changes
+
+    - Removal of Seafile due to recurring problems [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4058](https://github.com/community-scripts/ProxmoxVE/pull/4058))
+
   - #### 📝 Script Information
 
     - Filebrowser: Add Category Files & Donwloads [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4055](https://github.com/community-scripts/ProxmoxVE/pull/4055))
