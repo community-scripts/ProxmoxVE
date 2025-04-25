@@ -47,23 +47,25 @@ function update_script() {
   $STD apt-get -y upgrade
   msg_ok "Updated $APP LXC"
 
-  msg_info "Updating Synapse-Admin"
-  RELEASE=$(curl -fsSL https://api.github.com/repos/etkecc/synapse-admin/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "${RELEASE}" != "$(cat /opt/"${APP}"_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
-    temp_file=$(mktemp)
-    systemctl stop synapse-admin
-    rm -rf /opt/synapse-admin
-    mkdir -p /opt/synapse-admin
-    curl -fsSL "https://github.com/etkecc/synapse-admin/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
-    tar xzf "$temp_file" -C /opt/synapse-admin --strip-components=1
-    cd /opt/synapse-admin
-    $STD yarn install --ignore-engines
-    systemctl start synapse-admin
-    echo "${RELEASE}" >/opt/"${APP}"_version.txt
-    rm -f "$temp_file"
-    msg_ok "Update Successful"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
+  if [[ -f /systemd/system/synapse-admin.service ]]; then
+    msg_info "Updating Synapse-Admin"
+    RELEASE=$(curl -fsSL https://api.github.com/repos/etkecc/synapse-admin/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+    if [[ "${RELEASE}" != "$(cat /opt/"${APP}"_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
+      temp_file=$(mktemp)
+      systemctl stop synapse-admin
+      rm -rf /opt/synapse-admin
+      mkdir -p /opt/synapse-admin
+      curl -fsSL "https://github.com/etkecc/synapse-admin/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
+      tar xzf "$temp_file" -C /opt/synapse-admin --strip-components=1
+      cd /opt/synapse-admin
+      $STD yarn install --ignore-engines
+      systemctl start synapse-admin
+      echo "${RELEASE}" >/opt/"${APP}"_version.txt
+      rm -f "$temp_file"
+      msg_ok "Update Successful"
+    else
+      msg_ok "No update required. ${APP} is already at v${RELEASE}"
+    fi
   fi
   exit
 }
