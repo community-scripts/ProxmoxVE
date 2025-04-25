@@ -1,5 +1,60 @@
 [
   {
+    "name": "zitadel/zitadel",
+    "version": "v2.71.8",
+    "date": "2025-04-25T11:50:04Z"
+  },
+  {
+    "name": "photoprism/photoprism",
+    "version": "250425-21ddba459",
+    "date": "2025-04-25T11:18:53Z"
+  },
+  {
+    "name": "fhem/fhem-mirror",
+    "version": "6.2",
+    "date": "2025-04-25T10:34:09Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.4.4",
+    "date": "2025-04-25T07:47:57Z"
+  },
+  {
+    "name": "donaldzou/WGDashboard",
+    "version": "v4.2.2",
+    "date": "2025-04-25T07:42:03Z"
+  },
+  {
+    "name": "evcc-io/evcc",
+    "version": "0.203.3",
+    "date": "2025-04-25T06:29:28Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "v10.6.2",
+    "date": "2025-04-15T08:14:23Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1823",
+    "date": "2025-04-25T05:52:52Z"
+  },
+  {
+    "name": "goauthentik/authentik",
+    "version": "version/2025.4.0-rc1",
+    "date": "2025-04-25T04:53:56Z"
+  },
+  {
+    "name": "immich-app/immich",
+    "version": "v1.132.2",
+    "date": "2025-04-25T03:07:06Z"
+  },
+  {
+    "name": "moghtech/komodo",
+    "version": "v1.17.3",
+    "date": "2025-04-25T02:33:19Z"
+  },
+  {
     "name": "docmost/docmost",
     "version": "v0.20.3",
     "date": "2025-04-24T22:33:32Z"
@@ -10,9 +65,9 @@
     "date": "2025-04-24T20:59:43Z"
   },
   {
-    "name": "fhem/fhem-mirror",
-    "version": "6.2",
-    "date": "2025-04-24T20:30:54Z"
+    "name": "keycloak/keycloak",
+    "version": "26.2.1",
+    "date": "2025-04-23T12:17:17Z"
   },
   {
     "name": "rogerfar/rdt-client",
@@ -60,11 +115,6 @@
     "date": "2025-04-24T08:07:21Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1822",
-    "date": "2025-04-24T06:06:38Z"
-  },
-  {
     "name": "inventree/InvenTree",
     "version": "0.17.11",
     "date": "2025-04-24T05:25:55Z"
@@ -73,16 +123,6 @@
     "name": "syncthing/syncthing",
     "version": "v2.0.0-beta.9",
     "date": "2025-04-12T13:58:29Z"
-  },
-  {
-    "name": "immich-app/immich",
-    "version": "v1.132.1",
-    "date": "2025-04-23T22:08:21Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.2.1",
-    "date": "2025-04-23T12:17:17Z"
   },
   {
     "name": "Radarr/Radarr",
@@ -101,8 +141,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-04-21T16:55:50Z"
+    "version": "v3.10.0-beta.9",
+    "date": "2025-04-17T11:46:08Z"
   },
   {
     "name": "NodeBB/NodeBB",
@@ -125,11 +165,6 @@
     "date": "2025-04-23T12:00:04Z"
   },
   {
-    "name": "donaldzou/WGDashboard",
-    "version": "v4.2.1",
-    "date": "2025-04-23T11:42:05Z"
-  },
-  {
     "name": "Graylog2/graylog2-server",
     "version": "6.3.0-alpha.1",
     "date": "2025-04-23T11:25:55Z"
@@ -138,11 +173,6 @@
     "name": "cockpit-project/cockpit",
     "version": "337",
     "date": "2025-04-23T08:26:31Z"
-  },
-  {
-    "name": "mattermost/mattermost",
-    "version": "v10.6.2",
-    "date": "2025-04-15T08:14:23Z"
   },
   {
     "name": "zabbix/zabbix",
@@ -173,11 +203,6 @@
     "name": "jenkinsci/jenkins",
     "version": "jenkins-2.507",
     "date": "2025-04-22T15:22:53Z"
-  },
-  {
-    "name": "evcc-io/evcc",
-    "version": "0.203.2",
-    "date": "2025-04-22T15:07:28Z"
   },
   {
     "name": "OliveTin/OliveTin",
@@ -300,19 +325,9 @@
     "date": "2025-04-19T11:19:29Z"
   },
   {
-    "name": "home-assistant/core",
-    "version": "2025.4.3",
-    "date": "2025-04-19T10:23:38Z"
-  },
-  {
-    "name": "moghtech/komodo",
-    "version": "v1.17.2",
-    "date": "2025-04-19T06:56:25Z"
-  },
-  {
     "name": "ollama/ollama",
     "version": "v0.6.6",
-    "date": "2025-04-19T01:13:05Z"
+    "date": "2025-04-17T04:34:58Z"
   },
   {
     "name": "caddyserver/caddy",
@@ -543,16 +558,6 @@
     "name": "apache/cassandra",
     "version": "cassandra-5.0.4",
     "date": "2025-04-10T16:32:00Z"
-  },
-  {
-    "name": "zitadel/zitadel",
-    "version": "v2.69.10",
-    "date": "2025-04-09T12:16:51Z"
-  },
-  {
-    "name": "goauthentik/authentik",
-    "version": "version/2025.2.4",
-    "date": "2025-04-08T18:39:57Z"
   },
   {
     "name": "linkwarden/linkwarden",
@@ -813,11 +818,6 @@
     "name": "clusterzx/paperless-ai",
     "version": "v2.7.6",
     "date": "2025-03-21T19:24:53Z"
-  },
-  {
-    "name": "photoprism/photoprism",
-    "version": "250321-57590c48b",
-    "date": "2025-03-21T11:48:16Z"
   },
   {
     "name": "seanmorley15/AdventureLog",
