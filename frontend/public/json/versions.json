@@ -1,8 +1,48 @@
 [
   {
+    "name": "docmost/docmost",
+    "version": "v0.20.3",
+    "date": "2025-04-24T22:33:32Z"
+  },
+  {
+    "name": "mongodb/mongo",
+    "version": "r7.0.19",
+    "date": "2025-04-24T20:59:43Z"
+  },
+  {
     "name": "fhem/fhem-mirror",
     "version": "6.2",
-    "date": "2025-04-24T10:35:55Z"
+    "date": "2025-04-24T20:30:54Z"
+  },
+  {
+    "name": "rogerfar/rdt-client",
+    "version": "v2.0.110",
+    "date": "2025-04-24T19:11:06Z"
+  },
+  {
+    "name": "cross-seed/cross-seed",
+    "version": "v6.11.2",
+    "date": "2025-02-26T14:54:49Z"
+  },
+  {
+    "name": "dotnetfactory/fluid-calendar",
+    "version": "v1.4.0",
+    "date": "2025-04-24T16:20:17Z"
+  },
+  {
+    "name": "jhuckaby/Cronicle",
+    "version": "v0.9.79",
+    "date": "2025-04-24T15:53:43Z"
+  },
+  {
+    "name": "openobserve/openobserve",
+    "version": "v0.14.6-rc8",
+    "date": "2025-04-24T15:39:41Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.3.0p31",
+    "date": "2025-04-24T15:08:03Z"
   },
   {
     "name": "glpi-project/glpi",
@@ -30,16 +70,6 @@
     "date": "2025-04-24T05:25:55Z"
   },
   {
-    "name": "openobserve/openobserve",
-    "version": "v0.14.6-rc7",
-    "date": "2025-04-24T04:02:56Z"
-  },
-  {
-    "name": "rogerfar/rdt-client",
-    "version": "v2.0.109",
-    "date": "2025-04-24T03:55:08Z"
-  },
-  {
     "name": "syncthing/syncthing",
     "version": "v2.0.0-beta.9",
     "date": "2025-04-12T13:58:29Z"
@@ -53,11 +83,6 @@
     "name": "keycloak/keycloak",
     "version": "26.2.1",
     "date": "2025-04-23T12:17:17Z"
-  },
-  {
-    "name": "mongodb/mongo",
-    "version": "r6.0.22",
-    "date": "2025-04-23T19:53:55Z"
   },
   {
     "name": "Radarr/Radarr",
@@ -76,8 +101,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v3.10.0-beta.9",
-    "date": "2025-04-17T11:46:08Z"
+    "version": "nightly",
+    "date": "2025-04-21T16:55:50Z"
   },
   {
     "name": "NodeBB/NodeBB",
@@ -93,16 +118,6 @@
     "name": "nzbgetcom/nzbget",
     "version": "v24.8",
     "date": "2025-03-18T07:33:51Z"
-  },
-  {
-    "name": "docmost/docmost",
-    "version": "v0.20.1",
-    "date": "2025-04-23T13:44:12Z"
-  },
-  {
-    "name": "Checkmk/checkmk",
-    "version": "v2.3.0p31-rc1",
-    "date": "2025-04-23T13:16:47Z"
   },
   {
     "name": "redis/redis",
@@ -138,16 +153,6 @@
     "name": "jupyter/notebook",
     "version": "v7.4.1",
     "date": "2025-04-23T06:40:34Z"
-  },
-  {
-    "name": "jhuckaby/Cronicle",
-    "version": "v0.9.78",
-    "date": "2025-04-23T01:38:28Z"
-  },
-  {
-    "name": "cross-seed/cross-seed",
-    "version": "v6.11.2",
-    "date": "2025-02-26T14:54:49Z"
   },
   {
     "name": "minio/minio",
@@ -307,7 +312,7 @@
   {
     "name": "ollama/ollama",
     "version": "v0.6.6",
-    "date": "2025-04-17T04:34:58Z"
+    "date": "2025-04-19T01:13:05Z"
   },
   {
     "name": "caddyserver/caddy",
@@ -763,11 +768,6 @@
     "name": "ipfs/kubo",
     "version": "v0.34.1",
     "date": "2025-03-25T18:11:12Z"
-  },
-  {
-    "name": "dotnetfactory/fluid-calendar",
-    "version": "v1.3.0",
-    "date": "2025-03-25T15:55:02Z"
   },
   {
     "name": "hansmi/prometheus-paperless-exporter",
