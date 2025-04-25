@@ -14,7 +14,7 @@ variables() {
   RANDOM_UUID="$(cat /proc/sys/kernel/random/uuid)" # generates a random UUID and sets it to the RANDOM_UUID variable.
 }
 
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func)
+source <(curl -fsSL https://raw.githubusercontent.com/thegeorgeliu/ProxmoxVE/refs/heads/fix/element-synapse-cd-typo/misc/api.func)
 
 # This function sets various color variables using ANSI escape codes for formatting text in the terminal.
 color() {
@@ -68,7 +68,7 @@ catch_errors() {
 
 # This function is called when an error occurs. It receives the exit code, line number, and command that caused the error, and displays an error message.
 error_handler() {
-  source /dev/stdin <<<$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func)
+  source /dev/stdin <<<$(curl -fsSL https://raw.githubusercontent.com/thegeorgeliu/ProxmoxVE/refs/heads/fix/element-synapse-cd-typo/misc/api.func)
   if [ -n "$SPINNER_PID" ] && ps -p "$SPINNER_PID" >/dev/null; then kill "$SPINNER_PID" >/dev/null; fi
   printf "\e[?25h"
   local exit_code="$?"
@@ -290,7 +290,7 @@ update_motd_ip() {
 # Function to download & save header files
 get_header() {
   local app_name=$(echo "${APP,,}" | tr -d ' ')
-  local header_url="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/headers/${app_name}"
+  local header_url="https://raw.githubusercontent.com/thegeorgeliu/ProxmoxVE/refs/heads/fix/element-synapse-cd-typo/ct/headers/${app_name}"
   local local_header_path="/usr/local/community-scripts/headers/${app_name}"
 
   mkdir -p "$(dirname "$local_header_path")"
@@ -1299,9 +1299,9 @@ build_container() {
   TEMP_DIR=$(mktemp -d)
   pushd "$TEMP_DIR" >/dev/null
   if [ "$var_os" == "alpine" ]; then
-    export FUNCTIONS_FILE_PATH="$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/alpine-install.func)"
+    export FUNCTIONS_FILE_PATH="$(curl -fsSL https://raw.githubusercontent.com/thegeorgeliu/ProxmoxVE/refs/heads/fix/element-synapse-cd-typo/misc/alpine-install.func)"
   else
-    export FUNCTIONS_FILE_PATH="$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/install.func)"
+    export FUNCTIONS_FILE_PATH="$(curl -fsSL https://raw.githubusercontent.com/thegeorgeliu/ProxmoxVE/refs/heads/fix/element-synapse-cd-typo/misc/install.func)"
   fi
   export RANDOM_UUID="$RANDOM_UUID"
   export CACHER="$APT_CACHER"
@@ -1333,7 +1333,7 @@ build_container() {
     $PW
   "
   # This executes create_lxc.sh and creates the container and .conf file
-  bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/create_lxc.sh)" $?
+  bash -c "$(curl -fsSL https://raw.githubusercontent.com/thegeorgeliu/ProxmoxVE/refs/heads/fix/element-synapse-cd-typo/ct/create_lxc.sh)" $?
 
   LXC_CONFIG=/etc/pve/lxc/${CTID}.conf
   if [ "$CT_TYPE" == "0" ]; then
@@ -1395,7 +1395,7 @@ http://dl-cdn.alpinelinux.org/alpine/latest-stable/community
 EOF'
     pct exec "$CTID" -- ash -c "apk add bash >/dev/null"
   fi
-  lxc-attach -n "$CTID" -- bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/install/"$var_install".sh)" $?
+  lxc-attach -n "$CTID" -- bash -c "$(curl -fsSL https://raw.githubusercontent.com/thegeorgeliu/ProxmoxVE/refs/heads/fix/element-synapse-cd-typo/install/"$var_install".sh)" $?
 
 }
 
@@ -1408,7 +1408,7 @@ description() {
     cat <<EOF
 <div align='center'>
   <a href='https://Helper-Scripts.com' target='_blank' rel='noopener noreferrer'>
-    <img src='https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/images/logo-81x112.png' alt='Logo' style='width:81px;height:112px;'/>
+    <img src='https://raw.githubusercontent.com/thegeorgeliu/ProxmoxVE/refs/heads/fix/element-synapse-cd-typo/misc/images/logo-81x112.png' alt='Logo' style='width:81px;height:112px;'/>
   </a>
 
   <h2 style='font-size: 24px; margin: 20px 0;'>${APP} LXC</h2>
