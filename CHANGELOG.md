@@ -22,6 +22,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - Element Synapse: Fix update for older versions [@tremor021](https://github.com/tremor021) ([#4050](https://github.com/community-scripts/ProxmoxVE/pull/4050))
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Filebrowser: Add Category Files & Donwloads [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4055](https://github.com/community-scripts/ProxmoxVE/pull/4055))
+
 ## 2025-04-24
 
 ### 🚀 Updated Scripts
