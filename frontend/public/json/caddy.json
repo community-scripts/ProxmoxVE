@@ -12,7 +12,7 @@
     "documentation": "https://caddyserver.com/docs/",
     "website": "https://caddyserver.com/",
     "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/caddy.svg",
-    "config_path": "",
+    "config_path": "/etc/caddy/Caddyfile",
     "description": "Caddy is a powerful, extensible platform to serve your sites, services, and apps, written in Go.",
     "install_methods": [
         {
