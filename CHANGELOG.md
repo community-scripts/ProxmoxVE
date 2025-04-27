@@ -14,6 +14,20 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 All LXC instances created using this repository come pre-installed with Midnight Commander, which is a command-line tool (`mc`) that offers a user-friendly file and directory management interface for the terminal environment.
 
 
+## 2025-04-27
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Re-Add DeamonSync Package [@MickLesk](https://github.com/MickLesk) ([#4079](https://github.com/community-scripts/ProxmoxVE/pull/4079))
+
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - add default configuration file location for Caddy LXC  [@aly-yvette](https://github.com/aly-yvette) ([#4074](https://github.com/community-scripts/ProxmoxVE/pull/4074))
+
 ## 2025-04-26
 
 ### 🚀 Updated Scripts
