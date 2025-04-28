@@ -25,11 +25,13 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - Install rsync in ct/commafeed.sh [@mzhaodev](https://github.com/mzhaodev) ([#4086](https://github.com/community-scripts/ProxmoxVE/pull/4086))
     - fstrim: cancel/no whiptail support [@PonyXplosion](https://github.com/PonyXplosion) ([#4101](https://github.com/community-scripts/ProxmoxVE/pull/4101))
     - clean-lxc.sh: cancel/no whiptail support [@PonyXplosion](https://github.com/PonyXplosion) ([#4102](https://github.com/community-scripts/ProxmoxVE/pull/4102))
 
   - #### ✨ New Features
 
+    - karakeep: add cli and mcp build commands [@vhsdream](https://github.com/vhsdream) ([#4112](https://github.com/community-scripts/ProxmoxVE/pull/4112))
     - Make apt-cacher-ng a client of its own server [@pgcudahy](https://github.com/pgcudahy) ([#4092](https://github.com/community-scripts/ProxmoxVE/pull/4092))
 
 ### 🧰 Maintenance
