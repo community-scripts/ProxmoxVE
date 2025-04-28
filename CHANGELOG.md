@@ -18,7 +18,37 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🆕 New Scripts
 
-  - documenso ([#4080](https://github.com/community-scripts/ProxmoxVE/pull/4080))
+  - umlautadaptarr ([#4093](https://github.com/community-scripts/ProxmoxVE/pull/4093))
+- documenso ([#4080](https://github.com/community-scripts/ProxmoxVE/pull/4080))
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - fstrim: cancel/no whiptail support [@PonyXplosion](https://github.com/PonyXplosion) ([#4101](https://github.com/community-scripts/ProxmoxVE/pull/4101))
+    - clean-lxc.sh: cancel/no whiptail support [@PonyXplosion](https://github.com/PonyXplosion) ([#4102](https://github.com/community-scripts/ProxmoxVE/pull/4102))
+
+  - #### ✨ New Features
+
+    - Make apt-cacher-ng a client of its own server [@pgcudahy](https://github.com/pgcudahy) ([#4092](https://github.com/community-scripts/ProxmoxVE/pull/4092))
+
+### 🧰 Maintenance
+
+  - #### ✨ New Features
+
+    - Add: tools.func [@MickLesk](https://github.com/MickLesk) ([#4100](https://github.com/community-scripts/ProxmoxVE/pull/4100))
+
+  - #### 💾 Core
+
+    - core: remove unneeded logging [@MickLesk](https://github.com/MickLesk) ([#4103](https://github.com/community-scripts/ProxmoxVE/pull/4103))
+
+### 🌐 Website
+
+  - Website: Fix frontend path in footer [@tremor021](https://github.com/tremor021) ([#4108](https://github.com/community-scripts/ProxmoxVE/pull/4108))
+
+  - #### 📝 Script Information
+
+    - GoMFT: Move configuration info into config_path [@tremor021](https://github.com/tremor021) ([#4106](https://github.com/community-scripts/ProxmoxVE/pull/4106))
 
 ## 2025-04-27
 
