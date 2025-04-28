@@ -1104,7 +1104,7 @@ install_script() {
   while true; do
 
     CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "SETTINGS" --menu "Choose an option:" \
-      14 50 5 \
+      18 60 6 \
       "1" "Default Settings" \
       "2" "Default Settings (with verbose)" \
       "3" "Advanced Settings" \
