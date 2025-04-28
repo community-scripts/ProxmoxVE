@@ -12,7 +12,7 @@
   "documentation": "https://github.com/StarFleetCPTN/GoMFT#configuration",
   "website": "https://github.com/StarFleetCPTN/GoMFT",
   "logo": "https://raw.githubusercontent.com/StarFleetCPTN/GoMFT/83be259754689acc49a4b0dba25ba8384088a0fc/static/img/logo.svg",
-  "config_path": "",
+  "config_path": "/opt/gomft/.env",
   "description": "GoMFT is a web-based managed file transfer application built with Go, leveraging rclone for robust file transfer capabilities. It provides a user-friendly interface for configuring, scheduling, and monitoring file transfers across various storage providers.",
   "install_methods": [
     {
@@ -33,9 +33,8 @@
   },
   "notes": [
     {
-      "text": "For additional configuration options, edit .env file here: `/opt/gomft/.env`. Check the documentation for more details.",
+      "text": "For additional configuration options check the documentation.",
       "type": "info"
     }
   ]
 }
-
