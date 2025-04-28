@@ -1237,6 +1237,7 @@ check_container_storage() {
 }
 
 start() {
+  source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
   LOGDIR="/usr/local/community-scripts/logs"
   mkdir -p "$LOGDIR"
 
