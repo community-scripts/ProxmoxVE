@@ -149,22 +149,6 @@ msg_error() {
   stop_spinner
   local msg="$1"
   printf "\r\e[2K%s %b\n" "${CROSS}" "${RD}${msg}${CL}" >&2
-  log_message "ERROR" "$msg"
-}
-
-log_message() {
-  local level="$1"
-  local message="$2"
-  local timestamp
-  local logdate
-  timestamp=$(date '+%Y-%m-%d %H:%M:%S')
-  logdate=$(date '+%Y-%m-%d')
-
-  LOGDIR="/usr/local/community-scripts/logs"
-  mkdir -p "$LOGDIR"
-
-  LOGFILE="${LOGDIR}/${logdate}_${NSAPP}.log"
-  echo "$timestamp - $level: $message" >>"$LOGFILE"
 }
 
 # Check if the shell is using bash
@@ -1238,9 +1222,6 @@ check_container_storage() {
 
 start() {
   source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
-  LOGDIR="/usr/local/community-scripts/logs"
-  mkdir -p "$LOGDIR"
-
   if command -v pveversion >/dev/null 2>&1; then
     if ! (whiptail --backtitle "Proxmox VE Helper Scripts" --title "${APP} LXC" --yesno "This will create a New ${APP} LXC. Proceed?" 10 58); then
       clear
@@ -1263,16 +1244,13 @@ start() {
     1)
       VERB="no"
       set_std_mode
-      log_message "INFO" "Update started (Silent Mode)"
       ;;
     2)
       VERB="yes"
       set_std_mode
-      log_message "INFO" "Update started (Verbose Mode)"
       ;;
     3)
       clear
-      log_message "INFO" "Update aborted."
       exit_script
       exit
       ;;
@@ -1457,9 +1435,9 @@ set_std_mode() {
 # Silent execution function
 silent() {
   if [ "$VERB" = "no" ]; then
-    "$@" >>"$LOGFILE" 2>&1
+    "$@" >/dev/null 2>&1 || return 1
   else
-    "$@" 2>&1 | tee -a "$LOGFILE"
+    "$@" || return 1
   fi
 }
 
