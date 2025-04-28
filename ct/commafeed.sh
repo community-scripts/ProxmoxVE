@@ -33,6 +33,10 @@ function update_script() {
     systemctl stop commafeed
     msg_ok "Stopped ${APP}"
 
+    msg_info "Installing Dependencies"
+    $STD apt-get install -y rsync
+    msg_ok "Installed Dependencies"
+
     msg_info "Updating ${APP} to ${RELEASE}"
     curl -fsSL "https://github.com/Athou/commafeed/releases/download/${RELEASE}/commafeed-${RELEASE}-h2-jvm.zip" -o $(basename "https://github.com/Athou/commafeed/releases/download/${RELEASE}/commafeed-${RELEASE}-h2-jvm.zip")
     unzip -q commafeed-"${RELEASE}"-h2-jvm.zip
