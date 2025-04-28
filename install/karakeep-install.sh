@@ -71,10 +71,15 @@ export NEXT_TELEMETRY_DISABLED=1
 export CI="true"
 cd /opt/karakeep/apps/web
 $STD pnpm install --frozen-lockfile
-$STD pnpm exec next build --experimental-build-mode compile
-cp -r /opt/karakeep/apps/web/.next/standalone/apps/web/server.js /opt/karakeep/apps/web
+$STD pnpm build
 cd /opt/karakeep/apps/workers
 $STD pnpm install --frozen-lockfile
+cd /opt/karakeep/apps/cli
+$STD pnpm install --frozen-lockfile
+$STD pnpm build
+cd /opt/karakeep/apps/mcp
+$STD pnpm install --frozen-lockfile
+$STD pnpm build
 
 export DATA_DIR=/opt/karakeep_data
 karakeep_SECRET=$(openssl rand -base64 36 | cut -c1-24)

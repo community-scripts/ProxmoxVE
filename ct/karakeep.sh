@@ -54,10 +54,15 @@ function update_script() {
     mv karakeep-"${RELEASE}" /opt/karakeep
     cd /opt/karakeep/apps/web
     $STD pnpm install --frozen-lockfile
-    $STD pnpm exec next build --experimental-build-mode compile
-    cp -r /opt/karakeep/apps/web/.next/standalone/apps/web/server.js /opt/karakeep/apps/web
+    $STD pnpm build
     cd /opt/karakeep/apps/workers
     $STD pnpm install --frozen-lockfile
+    cd /opt/karakeep/apps/cli
+    $STD pnpm install --frozen-lockfile
+    $STD pnpm build
+    cd /opt/karakeep/apps/mcp
+    $STD pnpm install --frozen-lockfile
+    $STD pnpm build
     export DATA_DIR=/opt/karakeep_data
     cd /opt/karakeep/packages/db
     $STD pnpm migrate
