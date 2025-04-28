@@ -6,7 +6,7 @@
     ],
     "date_created": "2025-04-28",
     "type": "ct",
-    "updateable": false,
+    "updateable": true,
     "privileged": false,
     "interface_port": 3000,
     "documentation": "https://documenso.com/",
