@@ -1,28 +1,68 @@
 [
   {
+    "name": "semaphoreui/semaphore",
+    "version": "v2.14.1",
+    "date": "2025-04-28T11:30:32Z"
+  },
+  {
+    "name": "VictoriaMetrics/VictoriaMetrics",
+    "version": "pmm-6401-v1.116.0",
+    "date": "2025-04-28T11:30:10Z"
+  },
+  {
+    "name": "fhem/fhem-mirror",
+    "version": "6.2",
+    "date": "2025-04-28T11:16:47Z"
+  },
+  {
+    "name": "pocket-id/pocket-id",
+    "version": "v0.51.0",
+    "date": "2025-04-28T09:15:56Z"
+  },
+  {
+    "name": "FlowiseAI/Flowise",
+    "version": "flowise@2.2.8",
+    "date": "2025-04-28T08:27:00Z"
+  },
+  {
+    "name": "karakeep-app/karakeep",
+    "version": "v0.24.1",
+    "date": "2025-04-28T08:21:37Z"
+  },
+  {
+    "name": "Graylog2/graylog2-server",
+    "version": "6.2.0",
+    "date": "2025-04-28T08:12:45Z"
+  },
+  {
+    "name": "nzbgetcom/nzbget",
+    "version": "v24.8",
+    "date": "2025-03-18T07:33:51Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.1",
+    "date": "2025-01-01T16:15:52Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1830",
+    "date": "2025-04-28T05:51:29Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.12",
+    "date": "2025-04-20T19:22:17Z"
+  },
+  {
     "name": "henrygd/beszel",
     "version": "v0.11.0",
-    "date": "2025-04-27T23:20:17Z"
+    "date": "2025-04-27T23:46:23Z"
   },
   {
     "name": "moghtech/komodo",
     "version": "v1.17.4",
     "date": "2025-04-27T23:19:33Z"
-  },
-  {
-    "name": "fhem/fhem-mirror",
-    "version": "6.2",
-    "date": "2025-04-27T20:29:11Z"
-  },
-  {
-    "name": "pocket-id/pocket-id",
-    "version": "v0.50.0",
-    "date": "2025-04-27T19:58:32Z"
-  },
-  {
-    "name": "karakeep-app/karakeep",
-    "version": "v0.24.0",
-    "date": "2025-04-27T18:55:48Z"
   },
   {
     "name": "cross-seed/cross-seed",
@@ -50,11 +90,6 @@
     "date": "2025-04-27T14:32:09Z"
   },
   {
-    "name": "semaphoreui/semaphore",
-    "version": "v2.13.15",
-    "date": "2025-04-27T13:02:39Z"
-  },
-  {
     "name": "gotify/server",
     "version": "v2.6.3",
     "date": "2025-04-27T09:05:42Z"
@@ -75,19 +110,9 @@
     "date": "2025-04-23T18:51:12Z"
   },
   {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.12",
-    "date": "2025-04-20T19:22:17Z"
-  },
-  {
     "name": "tobychui/zoraxy",
     "version": "v3.1.9",
     "date": "2025-03-01T02:24:33Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1828",
-    "date": "2025-04-27T05:59:14Z"
   },
   {
     "name": "zwave-js/zwave-js-ui",
@@ -122,22 +147,12 @@
   {
     "name": "ollama/ollama",
     "version": "v0.6.6",
-    "date": "2025-04-19T01:13:05Z"
-  },
-  {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.1",
-    "date": "2025-01-01T16:15:52Z"
+    "date": "2025-04-17T04:34:58Z"
   },
   {
     "name": "immich-app/immich",
     "version": "v1.132.3",
     "date": "2025-04-25T19:44:05Z"
-  },
-  {
-    "name": "VictoriaMetrics/VictoriaMetrics",
-    "version": "v1.21.0-victorialogs",
-    "date": "2025-04-25T17:47:20Z"
   },
   {
     "name": "duplicati/duplicati",
@@ -251,8 +266,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-04-21T16:55:50Z"
+    "version": "v3.10.0-beta.9",
+    "date": "2025-04-17T11:46:08Z"
   },
   {
     "name": "NodeBB/NodeBB",
@@ -265,19 +280,9 @@
     "date": "2025-04-23T17:04:02Z"
   },
   {
-    "name": "nzbgetcom/nzbget",
-    "version": "v24.8",
-    "date": "2025-03-18T07:33:51Z"
-  },
-  {
     "name": "redis/redis",
     "version": "7.4.3",
     "date": "2025-04-23T12:00:04Z"
-  },
-  {
-    "name": "Graylog2/graylog2-server",
-    "version": "6.3.0-alpha.1",
-    "date": "2025-04-23T11:25:55Z"
   },
   {
     "name": "cockpit-project/cockpit",
@@ -863,11 +868,6 @@
     "name": "webmin/webmin",
     "version": "2.303",
     "date": "2025-03-17T04:54:50Z"
-  },
-  {
-    "name": "FlowiseAI/Flowise",
-    "version": "flowise@2.2.7-patch.1",
-    "date": "2025-03-14T14:53:53Z"
   },
   {
     "name": "FreshRSS/FreshRSS",
