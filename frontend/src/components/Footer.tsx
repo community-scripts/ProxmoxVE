@@ -12,7 +12,7 @@ export default function Footer() {
           <p>
             Website built by the community. The source code is available on{" "}
             <Link
-              href={`https://github.com/community-scripts/${basePath}/frontend`}
+              href={`https://github.com/community-scripts/${basePath}/tree/main/frontend`}
               target="_blank"
               rel="noreferrer"
               className="font-semibold underline-offset-2 duration-300 hover:underline"
