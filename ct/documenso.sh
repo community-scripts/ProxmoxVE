@@ -36,6 +36,7 @@ function update_script() {
         msg_info "Updating ${APP} to ${RELEASE}"
         cp /opt/documenso/.env /opt/
         rm -rf /opt/documenso
+        cd /opt
         curl -fsSL "https://github.com/documenso/documenso/archive/refs/tags/v${RELEASE}.zip" -o v${RELEASE}.zip
         unzip -q v${RELEASE}.zip
         mv documenso-${RELEASE} /opt/documenso
@@ -52,7 +53,7 @@ function update_script() {
         msg_ok "Started ${APP}"
 
         msg_info "Cleaning Up"
-        rm -rf v${RELEASE}.zip
+        rm -rf /opt/v${RELEASE}.zip
         msg_ok "Cleaned"
         msg_ok "Updated Successfully"
     else
