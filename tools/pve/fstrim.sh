@@ -17,7 +17,7 @@ function header_info() {
                     /____/
 EOF
 }
-
+set -eEuo pipefail
 BL=$(echo "\033[36m")
 RD=$(echo "\033[01;31m")
 CM='\xE2\x9C\x94\033'
