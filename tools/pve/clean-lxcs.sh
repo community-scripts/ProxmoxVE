@@ -16,6 +16,7 @@ function header_info() {
 
 EOF
 }
+set -eEuo pipefail
 BL=$(echo "\033[36m")
 RD=$(echo "\033[01;31m")
 CM='\xE2\x9C\x94\033'
@@ -34,6 +35,10 @@ while read -r TAG ITEM; do
 done < <(pct list | awk 'NR>1')
 excluded_containers=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "Containers on $NODE" --checklist "\nSelect containers to skip from cleaning:\n" \
   16 $((MSG_MAX_LENGTH + 23)) 6 "${EXCLUDE_MENU[@]}" 3>&1 1>&2 2>&3 | tr -d '"')
+
+if [ $? -ne 0 ]; then
+  exit
+fi  
 
 function clean_container() {
   container=$1
