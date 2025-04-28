@@ -62,7 +62,7 @@ msg_ok "Set up PostgreSQL"
 msg_info "Installing Documenso (Patience)"
 cd /opt
 RELEASE=$(curl -fsSL https://api.github.com/repos/documenso/documenso/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-wget -q "https://github.com/documenso/documenso/archive/refs/tags/v${RELEASE}.zip"
+curl -fsSL "https://github.com/documenso/documenso/archive/refs/tags/v${RELEASE}.zip" -o v${RELEASE}.zip
 unzip -q v${RELEASE}.zip
 mv documenso-${RELEASE} /opt/documenso
 cd /opt/documenso
@@ -84,9 +84,6 @@ export TURBO_CACHE=1
 export NEXT_TELEMETRY_DISABLED=1
 export CYPRESS_INSTALL_BINARY=0
 export NODE_OPTIONS="--max-old-space-size=4096"
-# $STD npm ci --cache ~/.npm-cache --maxsockets=5
-# $STD npm run build
-# $STD npx prisma migrate deploy --schema ./packages/prisma/schema.prisma
 $STD npm ci
 $STD npm run build:web
 $STD npm run prisma:migrate-deploy
