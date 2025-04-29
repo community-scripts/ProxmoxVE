@@ -5,7 +5,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://sabnzbd.org/
 
-PP="SABnzbd"
+APP="SABnzbd"
 var_tags="${var_tags:-downloader}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
@@ -28,22 +28,18 @@ function update_script() {
         msg_error "No ${APP} Installation Found!"
         exit
     fi
-
     RELEASE=$(curl -fsSL https://api.github.com/repos/sabnzbd/sabnzbd/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-
     if [[ -f /opt/${APP}_version.txt ]] && [[ "${RELEASE}" == "$(cat /opt/${APP}_version.txt)" ]]; then
         msg_ok "No update required. ${APP} is already at ${RELEASE}"
         exit
     fi
-
     msg_info "Updating $APP to ${RELEASE}"
     systemctl stop sabnzbd
     cp -r /opt/sabnzbd /opt/sabnzbd_backup_$(date +%s)
-
-    tmpdir=$(mktemp -d)
-    curl -fsSL "https://github.com/sabnzbd/sabnzbd/releases/download/${RELEASE}/SABnzbd-${RELEASE}-src.tar.gz" | tar -xz -C "$tmpdir"
-    cp -rf "${tmpdir}/SABnzbd-${RELEASE}/"* /opt/sabnzbd/
-    rm -rf "$tmpdir"
+    temp_file=$(mktemp)
+    curl -fsSL "https://github.com/sabnzbd/sabnzbd/releases/download/${RELEASE}/SABnzbd-${RELEASE}-src.tar.gz" -o "$temp_file"
+    tar -xzf "$temp_file" -C /opt/sabnzbd --strip-components=1
+    rm -f "$temp_file"
 
     # Check if venv exists, else create with uv
     if [[ ! -d /opt/sabnzbd/venv ]]; then
