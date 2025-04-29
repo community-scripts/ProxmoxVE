@@ -756,3 +756,60 @@ import_local_ip() {
 
     export LOCAL_IP
 }
+
+function setup_uv() {
+    msg_info "Checking uv installation..."
+
+    UV_BIN="/usr/local/bin/uv"
+    TMP_DIR=$(mktemp -d)
+    ARCH=$(uname -m)
+
+    if [[ "$ARCH" == "x86_64" ]]; then
+        UV_TAR="uv-x86_64-unknown-linux-gnu.tar.gz"
+    elif [[ "$ARCH" == "aarch64" ]]; then
+        UV_TAR="uv-aarch64-unknown-linux-gnu.tar.gz"
+    else
+        msg_error "Unsupported architecture: $ARCH"
+        rm -rf "$TMP_DIR"
+        return 1
+    fi
+
+    # get current github version
+    LATEST_VERSION=$(curl -s https://api.github.com/repos/astral-sh/uv/releases/latest | grep '"tag_name":' | cut -d '"' -f4 | sed 's/^v//')
+    if [[ -z "$LATEST_VERSION" ]]; then
+        msg_error "Could not fetch latest uv version from GitHub."
+        rm -rf "$TMP_DIR"
+        return 1
+    fi
+
+    # check if uv exists
+    if [[ -x "$UV_BIN" ]]; then
+        INSTALLED_VERSION=$($UV_BIN -V | awk '{print $2}')
+        if [[ "$INSTALLED_VERSION" == "$LATEST_VERSION" ]]; then
+            msg_ok "uv is already at the latest version ($INSTALLED_VERSION)"
+            rm -rf "$TMP_DIR"
+            # set path
+            if [[ ":$PATH:" != *":/usr/local/bin:"* ]]; then
+                export PATH="/usr/local/bin:$PATH"
+            fi
+            return 0
+        else
+            msg_info "Updating uv from $INSTALLED_VERSION to $LATEST_VERSION"
+        fi
+    else
+        msg_info "uv not found. Installing version $LATEST_VERSION"
+    fi
+
+    # install or update uv
+    curl -fsSL "https://github.com/astral-sh/uv/releases/latest/download/${UV_TAR}" -o "$TMP_DIR/uv.tar.gz"
+    tar -xzf "$TMP_DIR/uv.tar.gz" -C "$TMP_DIR"
+    install -m 755 "$TMP_DIR"/*/uv "$UV_BIN"
+    rm -rf "$TMP_DIR"
+
+    # set path
+    if [[ ":$PATH:" != *":/usr/local/bin:"* ]]; then
+        export PATH="/usr/local/bin:$PATH"
+    fi
+
+    msg_ok "uv installed/updated to $LATEST_VERSION"
+}
