@@ -12,7 +12,7 @@
   "documentation": "https://docs.inventree.org/en/latest/",
   "website": "https://inventree.org",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/inventree.svg",
-    "config_path": "",
+  "config_path": "/etc/inventree/",
   "description": "InvenTree is an open-source inventory management system which provides intuitive parts management and stock control. It is designed to be lightweight and easy to use for SME or hobbyist applications.",
   "install_methods": [
     {
@@ -38,4 +38,3 @@
     }
   ]
 }
-
