@@ -40,8 +40,6 @@ function update_script() {
     curl -fsSL "https://github.com/sabnzbd/sabnzbd/releases/download/${RELEASE}/SABnzbd-${RELEASE}-src.tar.gz" -o "$temp_file"
     tar -xzf "$temp_file" -C /opt/sabnzbd --strip-components=1
     rm -f "$temp_file"
-
-    # Check if venv exists, else create with uv
     if [[ ! -d /opt/sabnzbd/venv ]]; then
         msg_info "Migrating SABnzbd to uv virtual environment"
         $STD uv venv /opt/sabnzbd/venv
@@ -53,10 +51,8 @@ function update_script() {
             msg_ok "Updated SABnzbd service to use uv venv"
         fi
     fi
-
     $STD uv pip install --upgrade pip --python=/opt/sabnzbd/venv/bin/python
     $STD uv pip install -r /opt/sabnzbd/requirements.txt --python=/opt/sabnzbd/venv/bin/python
-
     echo "${RELEASE}" >/opt/${APP}_version.txt
     systemctl start sabnzbd
     msg_ok "Updated ${APP} to ${RELEASE}"
