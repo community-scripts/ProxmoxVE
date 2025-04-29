@@ -2,7 +2,7 @@
   "name": "NextPVR",
   "slug": "nextpvr",
   "categories": [
-        13
+    13
   ],
   "date_created": "2024-11-20",
   "type": "ct",
@@ -11,8 +11,8 @@
   "interface_port": 8866,
   "documentation": "https://github.com/sub3/NextPVR/wiki",
   "website": "https://nextpvr.com/",
-  "logo": null,
-  "config_path": "",
+  "logo": "https://kodi.tv/images/addons/omega/pvr.nextpvr/icon.png",
+  "config_path": "/var/opt/nextpvr/config.xml",
   "description": "NextPVR is a personal video recorder application for Microsoft Windows, Linux, Mac and Docker. NextPVR makes it easy to watch or record live TV, and provides great features like series recordings, web scheduling, iPhone/iPad client application, Kodi/Emby integration etc.",
   "install_methods": [
     {
@@ -28,9 +28,8 @@
     }
   ],
   "default_credentials": {
-    "username": null,
-    "password": null
+    "username": "admin",
+    "password": "password"
   },
   "notes": []
 }
-
