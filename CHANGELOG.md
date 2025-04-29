@@ -18,9 +18,6 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
-  - core: persist /usr/local/bin via profile.d helper [@MickLesk](https://github.com/MickLesk) ([#4133](https://github.com/community-scripts/ProxmoxVE/pull/4133))
-- core: add setup_uv() function to automate installation and updating of uv [@MickLesk](https://github.com/MickLesk) ([#4129](https://github.com/community-scripts/ProxmoxVE/pull/4129))
-
   - #### 🐞 Bug Fixes
 
     - Umlautadaptarr Service File [@MickLesk](https://github.com/MickLesk) ([#4124](https://github.com/community-scripts/ProxmoxVE/pull/4124))
@@ -31,6 +28,11 @@ All LXC instances created using this repository come pre-installed with Midnight
     - Refactor: Navidrome [@MickLesk](https://github.com/MickLesk) ([#4120](https://github.com/community-scripts/ProxmoxVE/pull/4120))
 
 ### 🧰 Maintenance
+
+  - #### ✨ New Features
+
+    - core: add setup_uv() function to automate installation and updating of uv [@MickLesk](https://github.com/MickLesk) ([#4129](https://github.com/community-scripts/ProxmoxVE/pull/4129))
+    - core: persist /usr/local/bin via profile.d helper [@MickLesk](https://github.com/MickLesk) ([#4133](https://github.com/community-scripts/ProxmoxVE/pull/4133))
 
   - #### 📝 Documentation
 
