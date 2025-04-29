@@ -1,35 +1,35 @@
 {
-    "name": "Docmost",
-    "slug": "docmost",
-    "categories": [
-        12
-    ],
-    "date_created": "2025-02-18",
-    "type": "ct",
-    "updateable": true,
-    "privileged": false,
-    "interface_port": 3000,
-    "documentation": "https://docmost.com/docs/installation",
-    "website": "https://docmost.com/",
-    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/webp/docmost.webp",
-    "config_path": "",
-    "description": "Open-source collaborative wiki and documentation software Create, collaborate, and share knowledge seamlessly with Docmost. Ideal for managing your wiki, knowledge-base, documentation and a lot more.",
-    "install_methods": [
-        {
-            "type": "default",
-            "script": "ct/docmost.sh",
-            "resources": {
-                "cpu": 3,
-                "ram": 3072,
-                "hdd": 7,
-                "os": "debian",
-                "version": "12"
-            }
-        }
-    ],
-    "default_credentials": {
-        "username": null,
-        "password": null
-    },
-    "notes": []
+  "name": "Docmost",
+  "slug": "docmost",
+  "categories": [
+    12
+  ],
+  "date_created": "2025-02-18",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 3000,
+  "documentation": "https://docmost.com/docs/installation",
+  "website": "https://docmost.com/",
+  "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/webp/docmost.webp",
+  "config_path": "/opt/docmost/.env",
+  "description": "Open-source collaborative wiki and documentation software Create, collaborate, and share knowledge seamlessly with Docmost. Ideal for managing your wiki, knowledge-base, documentation and a lot more.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/docmost.sh",
+      "resources": {
+        "cpu": 3,
+        "ram": 3072,
+        "hdd": 7,
+        "os": "debian",
+        "version": "12"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": []
 }

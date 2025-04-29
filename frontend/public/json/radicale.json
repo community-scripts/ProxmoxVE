@@ -12,7 +12,7 @@
   "documentation": "https://radicale.org/master.html#documentation-1",
   "website": "https://radicale.org/",
   "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/radicale.svg",
-    "config_path": "",
+  "config_path": "/etc/radicale/config or ~/.config/radicale/config",
   "description": "Radicale is a small but powerful CalDAV (calendars, to-do lists) and CardDAV (contacts)",
   "install_methods": [
     {
@@ -42,4 +42,3 @@
     }
   ]
 }
-

@@ -1,35 +1,35 @@
 {
-    "name": "Pingvin Share",
-    "slug": "pingvin",
-    "categories": [
-        11
-    ],
-    "date_created": "2024-05-02",
-    "type": "ct",
-    "updateable": false,
-    "privileged": false,
-    "interface_port": 3000,
-    "documentation": null,
-    "website": "https://github.com/stonith404/pingvin-share",
-    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/pingvin-share.svg",
-    "config_path": "",
-    "description": "Pingvin Share is self-hosted file sharing platform and an alternative for WeTransfer.",
-    "install_methods": [
-        {
-            "type": "default",
-            "script": "ct/pingvin.sh",
-            "resources": {
-                "cpu": 2,
-                "ram": 2048,
-                "hdd": 8,
-                "os": "debian",
-                "version": "12"
-            }
-        }
-    ],
-    "default_credentials": {
-        "username": null,
-        "password": null
-    },
-    "notes": []
+  "name": "Pingvin Share",
+  "slug": "pingvin",
+  "categories": [
+    11
+  ],
+  "date_created": "2024-05-02",
+  "type": "ct",
+  "updateable": false,
+  "privileged": false,
+  "interface_port": 3000,
+  "documentation": "https://stonith404.github.io/pingvin-share/introduction",
+  "website": "https://github.com/stonith404/pingvin-share",
+  "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/pingvin-share.svg",
+  "config_path": "/opt/pingin-share/config.yaml",
+  "description": "Pingvin Share is self-hosted file sharing platform and an alternative for WeTransfer.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/pingvin.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 8,
+        "os": "debian",
+        "version": "12"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": []
 }
