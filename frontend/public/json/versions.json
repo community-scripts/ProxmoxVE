@@ -1,8 +1,48 @@
 [
   {
+    "name": "deluge-torrent/deluge",
+    "version": "deluge-2.2.0",
+    "date": "2025-04-28T21:31:06Z"
+  },
+  {
     "name": "semaphoreui/semaphore",
-    "version": "v2.14.1",
-    "date": "2025-04-28T11:30:32Z"
+    "version": "v2.14.4",
+    "date": "2025-04-28T21:28:54Z"
+  },
+  {
+    "name": "fhem/fhem-mirror",
+    "version": "6.2",
+    "date": "2025-04-28T20:28:18Z"
+  },
+  {
+    "name": "gethomepage/homepage",
+    "version": "v1.2.0",
+    "date": "2025-04-28T17:55:01Z"
+  },
+  {
+    "name": "cross-seed/cross-seed",
+    "version": "v6.12.2",
+    "date": "2025-04-28T17:44:49Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.90.0",
+    "date": "2025-04-22T08:58:15Z"
+  },
+  {
+    "name": "immich-app/immich",
+    "version": "v1.132.3",
+    "date": "2025-04-28T14:11:06Z"
+  },
+  {
+    "name": "pocketbase/pocketbase",
+    "version": "v0.27.2",
+    "date": "2025-04-28T12:03:30Z"
+  },
+  {
+    "name": "Lidarr/Lidarr",
+    "version": "v2.11.2.4629",
+    "date": "2025-04-28T11:59:37Z"
   },
   {
     "name": "VictoriaMetrics/VictoriaMetrics",
@@ -10,9 +50,9 @@
     "date": "2025-04-28T11:30:10Z"
   },
   {
-    "name": "fhem/fhem-mirror",
-    "version": "6.2",
-    "date": "2025-04-28T11:16:47Z"
+    "name": "redis/redis",
+    "version": "8.0-rc2-int",
+    "date": "2025-04-28T09:56:36Z"
   },
   {
     "name": "pocket-id/pocket-id",
@@ -63,11 +103,6 @@
     "name": "moghtech/komodo",
     "version": "v1.17.4",
     "date": "2025-04-27T23:19:33Z"
-  },
-  {
-    "name": "cross-seed/cross-seed",
-    "version": "v6.12.1",
-    "date": "2025-04-27T18:43:52Z"
   },
   {
     "name": "advplyr/audiobookshelf",
@@ -147,12 +182,7 @@
   {
     "name": "ollama/ollama",
     "version": "v0.6.6",
-    "date": "2025-04-17T04:34:58Z"
-  },
-  {
-    "name": "immich-app/immich",
-    "version": "v1.132.3",
-    "date": "2025-04-25T19:44:05Z"
+    "date": "2025-04-19T01:13:05Z"
   },
   {
     "name": "duplicati/duplicati",
@@ -168,11 +198,6 @@
     "name": "icereed/paperless-gpt",
     "version": "v0.16.0",
     "date": "2025-04-25T12:44:34Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.90.0",
-    "date": "2025-04-22T08:58:15Z"
   },
   {
     "name": "goauthentik/authentik",
@@ -280,11 +305,6 @@
     "date": "2025-04-23T17:04:02Z"
   },
   {
-    "name": "redis/redis",
-    "version": "7.4.3",
-    "date": "2025-04-23T12:00:04Z"
-  },
-  {
     "name": "cockpit-project/cockpit",
     "version": "337",
     "date": "2025-04-23T08:26:31Z"
@@ -358,11 +378,6 @@
     "name": "Kareadita/Kavita",
     "version": "v0.8.6.2",
     "date": "2025-04-20T16:55:38Z"
-  },
-  {
-    "name": "pocketbase/pocketbase",
-    "version": "v0.27.1",
-    "date": "2025-04-20T11:26:50Z"
   },
   {
     "name": "MediaBrowser/Emby.Releases",
@@ -548,11 +563,6 @@
     "name": "Ombi-app/Ombi",
     "version": "v4.47.1",
     "date": "2025-01-05T21:14:23Z"
-  },
-  {
-    "name": "Lidarr/Lidarr",
-    "version": "v2.10.3.4602",
-    "date": "2025-03-23T11:00:37Z"
   },
   {
     "name": "Tautulli/Tautulli",
@@ -778,11 +788,6 @@
     "name": "hakimel/reveal.js",
     "version": "5.2.1",
     "date": "2025-03-28T13:00:23Z"
-  },
-  {
-    "name": "gethomepage/homepage",
-    "version": "v1.1.1",
-    "date": "2025-03-28T04:12:31Z"
   },
   {
     "name": "hivemq/hivemq-community-edition",
@@ -1243,10 +1248,5 @@
     "name": "deepch/RTSPtoWeb",
     "version": "v2.4.3",
     "date": "2023-03-29T12:05:02Z"
-  },
-  {
-    "name": "Shinobi-Systems/Shinobi",
-    "version": "furrykitten-3",
-    "date": "2022-07-15T05:20:17Z"
   }
 ]
