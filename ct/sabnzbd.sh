@@ -5,11 +5,11 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://sabnzbd.org/
 
-APP="SABnzbd"
+PP="SABnzbd"
 var_tags="${var_tags:-downloader}"
 var_cpu="${var_cpu:-2}"
-var_ram="${var_ram:-4096}"
-var_disk="${var_disk:-8}"
+var_ram="${var_ram:-2048}"
+var_disk="${var_disk:-5}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-12}"
 var_unprivileged="${var_unprivileged:-1}"
@@ -28,11 +28,14 @@ function update_script() {
         msg_error "No ${APP} Installation Found!"
         exit
     fi
+
     RELEASE=$(curl -fsSL https://api.github.com/repos/sabnzbd/sabnzbd/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-    if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" = "$(cat /opt/${APP}_version.txt)" ]]; then
+
+    if [[ -f /opt/${APP}_version.txt ]] && [[ "${RELEASE}" == "$(cat /opt/${APP}_version.txt)" ]]; then
         msg_ok "No update required. ${APP} is already at ${RELEASE}"
         exit
     fi
+
     msg_info "Updating $APP to ${RELEASE}"
     systemctl stop sabnzbd
     cp -r /opt/sabnzbd /opt/sabnzbd_backup_$(date +%s)
@@ -42,27 +45,21 @@ function update_script() {
     cp -rf "${tmpdir}/SABnzbd-${RELEASE}/"* /opt/sabnzbd/
     rm -rf "$tmpdir"
 
+    # Check if venv exists, else create with uv
     if [[ ! -d /opt/sabnzbd/venv ]]; then
-        msg_info "Migrating SABnzbd to venv installation"
-        $STD python3 -m venv /opt/sabnzbd/venv
-        source /opt/sabnzbd/venv/bin/activate
-        $STD pip install --upgrade pip
-        if [[ -f /opt/sabnzbd/requirements.txt ]]; then
-            $STD pip install -r /opt/sabnzbd/requirements.txt
-        fi
-        deactivate
+        msg_info "Migrating SABnzbd to uv virtual environment"
+        $STD uv venv /opt/sabnzbd/venv
+        msg_ok "Created uv venv at /opt/sabnzbd/venv"
 
         if grep -q "ExecStart=python3 SABnzbd.py" /etc/systemd/system/sabnzbd.service; then
             sed -i "s|ExecStart=python3 SABnzbd.py|ExecStart=/opt/sabnzbd/venv/bin/python SABnzbd.py|" /etc/systemd/system/sabnzbd.service
             systemctl daemon-reload
-            msg_ok "Migrated SABnzbd to venv installation and updated Service"
+            msg_ok "Updated SABnzbd service to use uv venv"
         fi
-    else
-        source /opt/sabnzbd/venv/bin/activate
-        $STD pip install --upgrade pip
-        $STD pip install -r /opt/sabnzbd/requirements.txt
-        deactivate
     fi
+
+    $STD uv pip install --upgrade pip --python=/opt/sabnzbd/venv/bin/python
+    $STD uv pip install -r /opt/sabnzbd/requirements.txt --python=/opt/sabnzbd/venv/bin/python
 
     echo "${RELEASE}" >/opt/${APP}_version.txt
     systemctl start sabnzbd
@@ -78,3 +75,4 @@ msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:7777${CL}"
+
