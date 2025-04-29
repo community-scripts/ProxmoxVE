@@ -36,7 +36,9 @@ msg_info "Installing SABnzbd"
 RELEASE=$(curl -fsSL https://api.github.com/repos/sabnzbd/sabnzbd/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 mkdir -p /opt/sabnzbd
 $STD uv venv /opt/sabnzbd/venv
-$STD tar zxvf <(curl -fsSL https://github.com/sabnzbd/sabnzbd/releases/download/${RELEASE}/SABnzbd-${RELEASE}-src.tar.gz) -C /opt/sabnzbd --strip-components=1
+temp_file=$(mktemp)
+curl -fsSL "https://github.com/sabnzbd/sabnzbd/releases/download/${RELEASE}/SABnzbd-${RELEASE}-src.tar.gz" -o "$temp_file"
+tar -xzf "$temp_file" -C /opt/sabnzbd --strip-components=1
 $STD uv pip install -r /opt/sabnzbd/requirements.txt --python=/opt/sabnzbd/venv/bin/python
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Installed SABnzbd"
@@ -63,6 +65,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
+rm -f "$temp_file"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
