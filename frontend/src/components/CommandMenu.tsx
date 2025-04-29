@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/command";
 import { basePath } from "@/config/siteConfig";
 import { fetchCategories } from "@/lib/data";
-import { Category } from "@/lib/types";
+import { Category, Script } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -16,6 +16,7 @@ import React from "react";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { DialogTitle } from "./ui/dialog";
+import { Sparkles } from "lucide-react"; // <- Hinzugefügt
 
 export const formattedBadge = (type: string) => {
   switch (type) {
@@ -31,11 +32,19 @@ export const formattedBadge = (type: string) => {
   return null;
 };
 
+// random Script
+function getRandomScript(categories: Category[]): Script | null {
+  const allScripts = categories.flatMap((cat) => cat.scripts || []);
+  if (allScripts.length === 0) return null;
+  const idx = Math.floor(Math.random() * allScripts.length);
+  return allScripts[idx];
+}
+
 export default function CommandMenu() {
   const [open, setOpen] = React.useState(false);
   const [links, setLinks] = React.useState<Category[]>([]);
-  const router = useRouter();
   const [isLoading, setIsLoading] = React.useState(false);
+  const router = useRouter();
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -45,7 +54,6 @@ export default function CommandMenu() {
         setOpen((open) => !open);
       }
     };
-
     document.addEventListener("keydown", down);
     return () => document.removeEventListener("keydown", down);
   }, []);
@@ -63,23 +71,58 @@ export default function CommandMenu() {
       });
   };
 
+  const openRandomScript = async () => {
+    if (links.length === 0) {
+      setIsLoading(true);
+      try {
+        const categories = await fetchCategories();
+        setLinks(categories);
+        const randomScript = getRandomScript(categories);
+        if (randomScript) {
+          router.push(`/scripts?id=${randomScript.slug}`);
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
+      const randomScript = getRandomScript(links);
+      if (randomScript) {
+        router.push(`/scripts?id=${randomScript.slug}`);
+      }
+    }
+  };
+
   return (
     <>
-      <Button
-        variant="outline"
-        className={cn(
-          "relative h-9 w-full justify-start rounded-[0.5rem] bg-muted/50 text-sm font-normal text-muted-foreground shadow-none sm:pr-12 md:w-40 lg:w-64",
-        )}
-        onClick={() => {
-          fetchSortedCategories();
-          setOpen(true);
-        }}
-      >
-        <span className="inline-flex">Search scripts...</span>
-        <kbd className="pointer-events-none absolute right-[0.3rem] top-[0.45rem] hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
-          <span className="text-xs">⌘</span>K
-        </kbd>
-      </Button>
+      <div className="flex gap-2">
+        <Button
+          variant="outline"
+          className={cn(
+            "relative h-9 w-full justify-start rounded-[0.5rem] bg-muted/50 text-sm font-normal text-muted-foreground shadow-none sm:pr-12 md:w-40 lg:w-64",
+          )}
+          onClick={() => {
+            fetchSortedCategories();
+            setOpen(true);
+          }}
+        >
+          <span className="inline-flex">Search scripts...</span>
+          <kbd className="pointer-events-none absolute right-[0.3rem] top-[0.45rem] hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
+            <span className="text-xs">⌘</span>K
+          </kbd>
+        </Button>
+
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={openRandomScript}
+          title="Open random script"
+          disabled={isLoading}
+          className="h-9 w-9"
+        >
+          <Sparkles className="h-5 w-5" />
+        </Button>
+      </div>
+
       <CommandDialog open={open} onOpenChange={setOpen}>
         <DialogTitle className="sr-only">Search scripts</DialogTitle>
         <CommandInput placeholder="Search for a script..." />
