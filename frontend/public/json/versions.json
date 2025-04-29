@@ -1,5 +1,45 @@
 [
   {
+    "name": "fhem/fhem-mirror",
+    "version": "6.2",
+    "date": "2025-04-29T10:36:13Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "v10.6.3",
+    "date": "2025-04-29T07:03:19Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.1",
+    "date": "2025-01-01T16:15:52Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1831",
+    "date": "2025-04-29T05:55:55Z"
+  },
+  {
+    "name": "nzbgetcom/nzbget",
+    "version": "v24.8",
+    "date": "2025-03-18T07:33:51Z"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2025.4.1",
+    "date": "2025-04-29T02:20:36Z"
+  },
+  {
+    "name": "henrygd/beszel",
+    "version": "v0.11.1",
+    "date": "2025-04-29T01:14:35Z"
+  },
+  {
+    "name": "go-gitea/gitea",
+    "version": "v1.25.0-dev",
+    "date": "2025-04-28T22:57:56Z"
+  },
+  {
     "name": "deluge-torrent/deluge",
     "version": "deluge-2.2.0",
     "date": "2025-04-28T21:31:06Z"
@@ -10,9 +50,9 @@
     "date": "2025-04-28T21:28:54Z"
   },
   {
-    "name": "fhem/fhem-mirror",
-    "version": "6.2",
-    "date": "2025-04-28T20:28:18Z"
+    "name": "keycloak/keycloak",
+    "version": "26.2.1",
+    "date": "2025-04-23T12:17:17Z"
   },
   {
     "name": "gethomepage/homepage",
@@ -75,29 +115,9 @@
     "date": "2025-04-28T08:12:45Z"
   },
   {
-    "name": "nzbgetcom/nzbget",
-    "version": "v24.8",
-    "date": "2025-03-18T07:33:51Z"
-  },
-  {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.1",
-    "date": "2025-01-01T16:15:52Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1830",
-    "date": "2025-04-28T05:51:29Z"
-  },
-  {
     "name": "firefly-iii/firefly-iii",
     "version": "v6.2.12",
     "date": "2025-04-20T19:22:17Z"
-  },
-  {
-    "name": "henrygd/beszel",
-    "version": "v0.11.0",
-    "date": "2025-04-27T23:46:23Z"
   },
   {
     "name": "moghtech/komodo",
@@ -182,17 +202,12 @@
   {
     "name": "ollama/ollama",
     "version": "v0.6.6",
-    "date": "2025-04-19T01:13:05Z"
+    "date": "2025-04-17T04:34:58Z"
   },
   {
     "name": "duplicati/duplicati",
     "version": "v2.1.0.117-2.1.0.117_canary_2025-04-25",
     "date": "2025-04-25T17:22:12Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.2.1",
-    "date": "2025-04-23T12:17:17Z"
   },
   {
     "name": "icereed/paperless-gpt",
@@ -218,11 +233,6 @@
     "name": "donaldzou/WGDashboard",
     "version": "v4.2.2",
     "date": "2025-04-25T07:42:03Z"
-  },
-  {
-    "name": "mattermost/mattermost",
-    "version": "v10.6.2",
-    "date": "2025-04-15T08:14:23Z"
   },
   {
     "name": "docmost/docmost",
@@ -485,11 +495,6 @@
     "date": "2024-12-19T03:19:49Z"
   },
   {
-    "name": "esphome/esphome",
-    "version": "2025.4.0",
-    "date": "2025-04-17T00:55:34Z"
-  },
-  {
     "name": "forgejo/forgejo",
     "version": "v11.0.0",
     "date": "2025-04-16T19:25:53Z"
@@ -600,6 +605,11 @@
     "date": "2025-04-10T19:48:43Z"
   },
   {
+    "name": "cloudflare/cloudflared",
+    "version": "2025.test.test",
+    "date": "2025-04-10T16:58:04Z"
+  },
+  {
     "name": "apache/cassandra",
     "version": "cassandra-5.0.4",
     "date": "2025-04-10T16:32:00Z"
@@ -623,11 +633,6 @@
     "name": "Threadfin/Threadfin",
     "version": "1.2.32",
     "date": "2025-04-07T20:01:09Z"
-  },
-  {
-    "name": "go-gitea/gitea",
-    "version": "v1.23.7",
-    "date": "2025-04-07T19:27:52Z"
   },
   {
     "name": "thomiceli/opengist",
@@ -708,11 +713,6 @@
     "name": "BookStackApp/BookStack",
     "version": "v25.02.2",
     "date": "2025-04-02T16:39:50Z"
-  },
-  {
-    "name": "cloudflare/cloudflared",
-    "version": "2025.4.0",
-    "date": "2025-04-02T15:38:53Z"
   },
   {
     "name": "hargata/lubelog",
