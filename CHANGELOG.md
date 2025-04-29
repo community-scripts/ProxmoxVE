@@ -22,6 +22,16 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - CheckMK added filter to not install beta versions [@briodan](https://github.com/briodan) ([#4118](https://github.com/community-scripts/ProxmoxVE/pull/4118))
 
+  - #### 🔧 Refactor
+
+    - Refactor: Navidrome [@MickLesk](https://github.com/MickLesk) ([#4120](https://github.com/community-scripts/ProxmoxVE/pull/4120))
+
+### 🌐 Website
+
+  - #### ✨ New Features
+
+    - Feat: Random Script picker for Website [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4090](https://github.com/community-scripts/ProxmoxVE/pull/4090))
+
 ## 2025-04-28
 
 ### 🆕 New Scripts
