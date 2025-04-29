@@ -1,45 +1,44 @@
 {
-    "name": "Keycloak",
-    "slug": "keycloak",
-    "categories": [
-        6
-    ],
-    "date_created": "2024-05-02",
-    "type": "ct",
-    "updateable": false,
-    "privileged": false,
-    "interface_port": 8080,
-    "documentation": "https://github.com/community-scripts/ProxmoxVE/discussions/193",
-    "website": "https://www.keycloak.org/",
-    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/keycloak.svg",
-    "config_path": "",
-    "description": "Keycloak is an open-source identity and access management solution that provides centralized authentication and authorization for modern applications and services. It enables organizations to secure their applications and services with a single sign-on (SSO) solution, reducing the need for users to remember multiple login credentials. Keycloak supports various authentication protocols, including SAML, OAuth, and OpenID Connect, and integrates with a wide range of applications and services. With Keycloak, administrators can manage user identities, define security policies, and monitor access to their applications and services. The software is designed to be scalable, flexible, and easy to use, making it a valuable tool for enhancing the security and usability of modern applications and services.",
-    "install_methods": [
-        {
-            "type": "default",
-            "script": "ct/keycloak.sh",
-            "resources": {
-                "cpu": 2,
-                "ram": 2048,
-                "hdd": 4,
-                "os": "debian",
-                "version": "12"
-            }
-        }
-    ],
-    "default_credentials": {
-        "username": null,
-        "password": null
+  "name": "Keycloak",
+  "slug": "keycloak",
+  "categories": [
+    6
+  ],
+  "date_created": "2024-05-02",
+  "type": "ct",
+  "updateable": false,
+  "privileged": false,
+  "interface_port": 8080,
+  "documentation": "https://www.keycloak.org/documentation",
+  "website": "https://www.keycloak.org/",
+  "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/keycloak.svg",
+  "config_path": "/opt/keycloak/conf/keycloak.conf",
+  "description": "Keycloak is an open-source identity and access management solution that provides centralized authentication and authorization for modern applications and services. It enables organizations to secure their applications and services with a single sign-on (SSO) solution, reducing the need for users to remember multiple login credentials. Keycloak supports various authentication protocols, including SAML, OAuth, and OpenID Connect, and integrates with a wide range of applications and services. With Keycloak, administrators can manage user identities, define security policies, and monitor access to their applications and services. The software is designed to be scalable, flexible, and easy to use, making it a valuable tool for enhancing the security and usability of modern applications and services.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/keycloak.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 4,
+        "os": "debian",
+        "version": "12"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "First start can take a few minutes",
+      "type": "warning"
     },
-    "notes": [
-        {
-            "text": "First start can take a few minutes",
-            "type": "warning"
-        },
-        {
-            "text": "This script requires some extra steps after the installation, Please checkout the 'documentation'",
-            "type": "info" 
-        }
-    ]
+    {
+      "text": "This script requires some extra steps after the installation, Please checkout the `https://github.com/community-scripts/ProxmoxVE/discussions/193`",
+      "type": "info"
+    }
+  ]
 }
-
