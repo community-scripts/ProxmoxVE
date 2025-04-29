@@ -100,7 +100,7 @@ After=network.target
 
 [Service]
 WorkingDirectory=/opt/UmlautAdaptarr
-ExecStart=/usr/bin/dotnet /opt/UmlautAdaptarr/bin/Release/net8.0/UmlautAdaptarr.dll --urls=http://0.0.0.0:5005
+ExecStart=/usr/bin/dotnet /opt/UmlautAdaptarr/UmlautAdaptarr.dll --urls=http://0.0.0.0:5005
 Restart=always
 User=root
 Group=root
