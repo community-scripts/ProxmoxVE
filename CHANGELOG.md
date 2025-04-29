@@ -20,11 +20,18 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - Umlautadaptarr Service File [@MickLesk](https://github.com/MickLesk) ([#4124](https://github.com/community-scripts/ProxmoxVE/pull/4124))
     - CheckMK added filter to not install beta versions [@briodan](https://github.com/briodan) ([#4118](https://github.com/community-scripts/ProxmoxVE/pull/4118))
 
   - #### 🔧 Refactor
 
     - Refactor: Navidrome [@MickLesk](https://github.com/MickLesk) ([#4120](https://github.com/community-scripts/ProxmoxVE/pull/4120))
+
+### 🧰 Maintenance
+
+  - #### 📝 Documentation
+
+    - SECURITY.md: add pve 8.4 as supported [@MickLesk](https://github.com/MickLesk) ([#4123](https://github.com/community-scripts/ProxmoxVE/pull/4123))
 
 ### 🌐 Website
 
