@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 tteck
-# Author: tteck (tteckster)
+# Author: tteck (tteckster) | Co-Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://sabnzbd.org/
 
@@ -20,30 +20,54 @@ color
 catch_errors
 
 function update_script() {
-  header_info
-  check_container_storage
-  check_container_resources
-  if [[ ! -d /opt/sabnzbd ]]; then
-    msg_error "No ${APP} Installation Found!"
-    exit
-  fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/sabnzbd/sabnzbd/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+    header_info
+    check_container_storage
+    check_container_resources
+
+    if [[ ! -d /opt/sabnzbd ]]; then
+        msg_error "No ${APP} Installation Found!"
+        exit
+    fi
+    RELEASE=$(curl -fsSL https://api.github.com/repos/sabnzbd/sabnzbd/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+    if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" = "$(cat /opt/${APP}_version.txt)" ]]; then
+        msg_ok "No update required. ${APP} is already at ${RELEASE}"
+        exit
+    fi
     msg_info "Updating $APP to ${RELEASE}"
-    rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
-    systemctl stop sabnzbd.service
-    tar zxvf <(curl -fsSL https://github.com/sabnzbd/sabnzbd/releases/download/$RELEASE/SABnzbd-${RELEASE}-src.tar.gz)
-    cp -rf SABnzbd-${RELEASE}/* /opt/sabnzbd
-    rm -rf SABnzbd-${RELEASE}
-    cd /opt/sabnzbd
-    $STD python3 -m pip install -r requirements.txt
+    systemctl stop sabnzbd
+    cp -r /opt/sabnzbd /opt/sabnzbd_backup_$(date +%s)
+
+    tmpdir=$(mktemp -d)
+    curl -fsSL "https://github.com/sabnzbd/sabnzbd/releases/download/${RELEASE}/SABnzbd-${RELEASE}-src.tar.gz" | tar -xz -C "$tmpdir"
+    cp -rf "${tmpdir}/SABnzbd-${RELEASE}/"* /opt/sabnzbd/
+    rm -rf "$tmpdir"
+
+    if [[ ! -d /opt/sabnzbd/venv ]]; then
+        msg_info "Migrating SABnzbd to venv installation"
+        $STD python3 -m venv /opt/sabnzbd/venv
+        source /opt/sabnzbd/venv/bin/activate
+        $STD pip install --upgrade pip
+        if [[ -f /opt/sabnzbd/requirements.txt ]]; then
+            $STD pip install -r /opt/sabnzbd/requirements.txt
+        fi
+        deactivate
+
+        if grep -q "ExecStart=python3 SABnzbd.py" /etc/systemd/system/sabnzbd.service; then
+            sed -i "s|ExecStart=python3 SABnzbd.py|ExecStart=/opt/sabnzbd/venv/bin/python SABnzbd.py|" /etc/systemd/system/sabnzbd.service
+            systemctl daemon-reload
+            msg_ok "Migrated SABnzbd to venv installation and updated Service"
+        fi
+    else
+        source /opt/sabnzbd/venv/bin/activate
+        $STD pip install --upgrade pip
+        $STD pip install -r /opt/sabnzbd/requirements.txt
+        deactivate
+    fi
+
     echo "${RELEASE}" >/opt/${APP}_version.txt
-    systemctl start sabnzbd.service
+    systemctl start sabnzbd
     msg_ok "Updated ${APP} to ${RELEASE}"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
-  fi
-  exit
+    exit
 }
 
 start
