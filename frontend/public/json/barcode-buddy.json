@@ -12,7 +12,7 @@
   "documentation": "https://barcodebuddy-documentation.readthedocs.io/en/latest/",
   "website": "https://github.com/Forceu/barcodebuddy",
   "logo": "https://raw.githubusercontent.com/Forceu/barcodebuddy/refs/heads/master/incl/img/favicon/android-icon-192x192.png",
-  "config_path": "",
+  "config_path": "/opt/barcodebuddy/data/config.php",
   "description": "Barcode Buddy for Grocy is an extension for Grocy, allowing to pass barcodes to Grocy. It supports barcodes for products and chores. If you own a physical barcode scanner, it can be integrated, so that all barcodes scanned are automatically pushed to BarcodeBuddy/Grocy.",
   "install_methods": [
     {
@@ -38,4 +38,3 @@
     }
   ]
 }
-

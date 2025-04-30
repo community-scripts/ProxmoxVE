@@ -9,7 +9,7 @@
   "updateable": false,
   "privileged": false,
   "interface_port": null,
-  "documentation": null,
+  "documentation": "https://tailscale.com/kb/1017/install",
   "website": "https://tailscale.com/",
   "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/tailscale.svg",
   "config_path": "",
@@ -46,4 +46,3 @@
     }
   ]
 }
-

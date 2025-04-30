@@ -12,7 +12,7 @@
   "documentation": "https://changedetection.io/tutorials",
   "website": "https://changedetection.io/",
   "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/changedetection.svg",
-  "config_path": "",
+  "config_path": "/opt/changedetection/url-watches.json",
   "description": "Change Detection is a service that allows you to monitor changes to web pages and receive notifications when changes occur. It can be used for a variety of purposes such as keeping track of online price changes, monitoring news websites for updates, or tracking changes to online forums.",
   "install_methods": [
     {

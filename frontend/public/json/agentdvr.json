@@ -1,35 +1,35 @@
 {
-    "name": "AgentDVR",
-    "slug": "agentdvr",
-    "categories": [
-        15
-    ],
-    "date_created": "2024-05-02",
-    "type": "ct",
-    "updateable": false,
-    "privileged": true,
-    "interface_port": 8090,
-    "documentation": null,
-    "website": "https://www.ispyconnect.com/",
-    "logo": "https://ispycontent.azureedge.net/img/ispy2.png?raw=true",
-    "config_path": "",
-    "description": "AgentDVR a new video surveillance solution for the Internet Of Things.",
-    "install_methods": [
-        {
-            "type": "default",
-            "script": "ct/agentdvr.sh",
-            "resources": {
-                "cpu": 2,
-                "ram": 2048,
-                "hdd": 8,
-                "os": "ubuntu",
-                "version": "22.04"
-            }
-        }
-    ],
-    "default_credentials": {
-        "username": null,
-        "password": null
-    },
-    "notes": []
+  "name": "AgentDVR",
+  "slug": "agentdvr",
+  "categories": [
+    15
+  ],
+  "date_created": "2024-05-02",
+  "type": "ct",
+  "updateable": false,
+  "privileged": true,
+  "interface_port": 8090,
+  "documentation": "https://www.ispyconnect.com/docs/agent/about",
+  "website": "https://www.ispyconnect.com/",
+  "logo": "https://ispycontent.azureedge.net/img/ispy2.png?raw=true",
+  "config_path": "/opt/agentdvr/agent/Media/XML/config.json",
+  "description": "AgentDVR a new video surveillance solution for the Internet Of Things.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/agentdvr.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 8,
+        "os": "ubuntu",
+        "version": "22.04"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": []
 }

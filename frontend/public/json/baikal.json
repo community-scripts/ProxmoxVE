@@ -1,35 +1,35 @@
 {
-    "name": "Baïkal",
-    "slug": "baikal",
-    "categories": [
-      0
-    ],
-    "date_created": "2025-01-31",
-    "type": "ct",
-    "updateable": true,
-    "privileged": false,
-    "interface_port": 80,
-    "documentation": null,
-    "website": "https://sabre.io/baikal/",
-    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/webp/baikal.webp",
-    "config_path": "",
-    "description": "Baïkal is a lightweight CalDAV+CardDAV server. It offers an extensive web interface with easy management of users, address books and calendars.",
-    "install_methods": [
-      {
-        "type": "default",
-        "script": "ct/baikal.sh",
-        "resources": {
-          "cpu": 1,
-          "ram": 512,
-          "hdd": 4,
-          "os": "debian",
-          "version": "12"
-        }
+  "name": "Baïkal",
+  "slug": "baikal",
+  "categories": [
+    0
+  ],
+  "date_created": "2025-01-31",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 80,
+  "documentation": null,
+  "website": "https://sabre.io/baikal/",
+  "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/webp/baikal.webp",
+  "config_path": "/opt/baikal/config/baikal.yaml",
+  "description": "Baïkal is a lightweight CalDAV+CardDAV server. It offers an extensive web interface with easy management of users, address books and calendars.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/baikal.sh",
+      "resources": {
+        "cpu": 1,
+        "ram": 512,
+        "hdd": 4,
+        "os": "debian",
+        "version": "12"
       }
-    ],
-    "default_credentials": {
-      "username": "Admin",
-      "password": null
-    },
-    "notes": []
+    }
+  ],
+  "default_credentials": {
+    "username": "Admin",
+    "password": null
+  },
+  "notes": []
 }

@@ -12,7 +12,7 @@
   "documentation": "https://stackblitz-labs.github.io/bolt.diy/",
   "website": "https://github.com/stackblitz-labs/bolt.diy",
   "logo": "https://github.com/stackblitz-labs/bolt.diy/raw/refs/heads/main/icons/logo-text.svg",
-  "config_path": "",
+  "config_path": "/opt/bolt.diy/.env.local",
   "description": "The official open source version of Bolt.new (previously known as oTToDev and bolt.new ANY LLM), which allows you to choose the LLM that you use for each prompt! Currently, you can use OpenAI, Anthropic, Ollama, OpenRouter, Gemini, LMStudio, Mistral, xAI, HuggingFace, DeepSeek, or Groq models - and it is easily extended to use any other model supported by the Vercel AI SDK!",
   "install_methods": [
     {
@@ -33,4 +33,3 @@
   },
   "notes": []
 }
-
