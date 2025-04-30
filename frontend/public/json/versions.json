@@ -1,8 +1,63 @@
 [
   {
-    "name": "fhem/fhem-mirror",
-    "version": "6.2",
-    "date": "2025-04-29T10:36:13Z"
+    "name": "grokability/snipe-it",
+    "version": "v8.1.1",
+    "date": "2025-04-29T22:22:31Z"
+  },
+  {
+    "name": "gristlabs/grist-core",
+    "version": "v1.5.2",
+    "date": "2025-04-29T20:42:32Z"
+  },
+  {
+    "name": "emqx/emqx",
+    "version": "e5.9.0-rc.1",
+    "date": "2025-04-29T20:30:20Z"
+  },
+  {
+    "name": "goauthentik/authentik",
+    "version": "version/2025.4.0",
+    "date": "2025-04-29T19:16:32Z"
+  },
+  {
+    "name": "HabitRPG/habitica",
+    "version": "v5.36.0",
+    "date": "2025-04-29T19:14:25Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.6.7-rc1",
+    "date": "2025-04-29T18:57:54Z"
+  },
+  {
+    "name": "MediaBrowser/Emby.Releases",
+    "version": "4.8.11.0",
+    "date": "2025-03-10T06:39:11Z"
+  },
+  {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.508",
+    "date": "2025-04-29T15:34:02Z"
+  },
+  {
+    "name": "semaphoreui/semaphore",
+    "version": "v2.14.6",
+    "date": "2025-04-29T15:18:03Z"
+  },
+  {
+    "name": "hargata/lubelog",
+    "version": "v1.4.7",
+    "date": "2025-04-29T15:00:18Z"
+  },
+  {
+    "name": "cloudflare/cloudflared",
+    "version": "2025.100.150",
+    "date": "2025-04-29T13:53:12Z"
+  },
+  {
+    "name": "apache/tika",
+    "version": "2.9.4-rc1",
+    "date": "2025-04-29T13:06:08Z"
   },
   {
     "name": "mattermost/mattermost",
@@ -43,11 +98,6 @@
     "name": "deluge-torrent/deluge",
     "version": "deluge-2.2.0",
     "date": "2025-04-28T21:31:06Z"
-  },
-  {
-    "name": "semaphoreui/semaphore",
-    "version": "v2.14.4",
-    "date": "2025-04-28T21:28:54Z"
   },
   {
     "name": "keycloak/keycloak",
@@ -200,11 +250,6 @@
     "date": "2025-04-26T10:21:12Z"
   },
   {
-    "name": "ollama/ollama",
-    "version": "v0.6.6",
-    "date": "2025-04-17T04:34:58Z"
-  },
-  {
     "name": "duplicati/duplicati",
     "version": "v2.1.0.117-2.1.0.117_canary_2025-04-25",
     "date": "2025-04-25T17:22:12Z"
@@ -213,11 +258,6 @@
     "name": "icereed/paperless-gpt",
     "version": "v0.16.0",
     "date": "2025-04-25T12:44:34Z"
-  },
-  {
-    "name": "goauthentik/authentik",
-    "version": "version/2025.4.0-rc1",
-    "date": "2025-04-25T04:53:56Z"
   },
   {
     "name": "zitadel/zitadel",
@@ -301,8 +341,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v3.10.0-beta.9",
-    "date": "2025-04-17T11:46:08Z"
+    "version": "nightly",
+    "date": "2025-04-21T16:55:50Z"
   },
   {
     "name": "NodeBB/NodeBB",
@@ -340,11 +380,6 @@
     "date": "2025-04-22T22:19:16Z"
   },
   {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.507",
-    "date": "2025-04-22T15:22:53Z"
-  },
-  {
     "name": "OliveTin/OliveTin",
     "version": "2025.4.22",
     "date": "2025-04-22T14:18:11Z"
@@ -375,11 +410,6 @@
     "date": "2025-04-21T17:44:40Z"
   },
   {
-    "name": "emqx/emqx",
-    "version": "e5.9.0-beta.4",
-    "date": "2025-04-21T17:08:59Z"
-  },
-  {
     "name": "YunoHost/yunohost",
     "version": "debian/12.0.14",
     "date": "2025-04-09T10:09:00Z"
@@ -388,11 +418,6 @@
     "name": "Kareadita/Kavita",
     "version": "v0.8.6.2",
     "date": "2025-04-20T16:55:38Z"
-  },
-  {
-    "name": "MediaBrowser/Emby.Releases",
-    "version": "4.8.11.0",
-    "date": "2025-03-10T06:39:11Z"
   },
   {
     "name": "Readarr/Readarr",
@@ -445,11 +470,6 @@
     "date": "2025-04-18T10:05:52Z"
   },
   {
-    "name": "HabitRPG/habitica",
-    "version": "v5.35.4",
-    "date": "2025-04-17T21:18:55Z"
-  },
-  {
     "name": "tailscale/tailscale",
     "version": "v1.82.5",
     "date": "2025-04-17T20:59:15Z"
@@ -483,6 +503,11 @@
     "name": "documenso/documenso",
     "version": "v1.10.0-rc.5",
     "date": "2025-04-17T13:01:43Z"
+  },
+  {
+    "name": "neo4j/neo4j",
+    "version": "2025.04.0",
+    "date": "2025-04-17T11:13:20Z"
   },
   {
     "name": "prometheus-pve/prometheus-pve-exporter",
@@ -600,16 +625,6 @@
     "date": "2025-04-11T03:53:10Z"
   },
   {
-    "name": "gristlabs/grist-core",
-    "version": "v1.5.1",
-    "date": "2025-04-10T19:48:43Z"
-  },
-  {
-    "name": "cloudflare/cloudflared",
-    "version": "2025.test.test",
-    "date": "2025-04-10T16:58:04Z"
-  },
-  {
     "name": "apache/cassandra",
     "version": "cassandra-5.0.4",
     "date": "2025-04-10T16:32:00Z"
@@ -715,19 +730,9 @@
     "date": "2025-04-02T16:39:50Z"
   },
   {
-    "name": "hargata/lubelog",
-    "version": "v1.4.6",
-    "date": "2025-04-02T14:07:12Z"
-  },
-  {
     "name": "MagicMirrorOrg/MagicMirror",
     "version": "v2.31.0",
     "date": "2025-04-01T18:12:45Z"
-  },
-  {
-    "name": "neo4j/neo4j",
-    "version": "5.26.5",
-    "date": "2025-04-01T09:32:48Z"
   },
   {
     "name": "diced/zipline",
@@ -940,11 +945,6 @@
     "date": "2025-03-05T21:41:29Z"
   },
   {
-    "name": "grokability/snipe-it",
-    "version": "v8.0.4",
-    "date": "2025-03-05T17:12:03Z"
-  },
-  {
     "name": "toniebox-reverse-engineering/teddycloud",
     "version": "tc_v0.6.4",
     "date": "2025-03-05T15:43:40Z"
@@ -1043,11 +1043,6 @@
     "name": "dani-garcia/vaultwarden",
     "version": "1.33.2",
     "date": "2025-02-09T17:54:59Z"
-  },
-  {
-    "name": "apache/tika",
-    "version": "2.9.3",
-    "date": "2025-02-07T00:15:40Z"
   },
   {
     "name": "actualbudget/actual-server",
@@ -1248,5 +1243,10 @@
     "name": "deepch/RTSPtoWeb",
     "version": "v2.4.3",
     "date": "2023-03-29T12:05:02Z"
+  },
+  {
+    "name": "Shinobi-Systems/Shinobi",
+    "version": "furrykitten-3",
+    "date": "2022-07-15T05:20:17Z"
   }
 ]
