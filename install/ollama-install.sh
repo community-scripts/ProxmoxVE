@@ -15,8 +15,8 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-    build-essential \
-    pkg-config
+  build-essential \
+  pkg-config
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up Intel® Repositories"
@@ -31,11 +31,11 @@ msg_ok "Set up Intel® Repositories"
 msg_info "Setting Up Hardware Acceleration"
 $STD apt-get -y install {va-driver-all,ocl-icd-libopencl1,intel-opencl-icd,vainfo,intel-gpu-tools,intel-level-zero-gpu,level-zero,level-zero-dev}
 if [[ "$CTTYPE" == "0" ]]; then
-    chgrp video /dev/dri
-    chmod 755 /dev/dri
-    chmod 660 /dev/dri/*
-    $STD adduser $(id -u -n) video
-    $STD adduser $(id -u -n) render
+  chgrp video /dev/dri
+  chmod 755 /dev/dri
+  chmod 660 /dev/dri/*
+  $STD adduser $(id -u -n) video
+  $STD adduser $(id -u -n) render
 fi
 msg_ok "Set Up Hardware Acceleration"
 
@@ -52,22 +52,22 @@ OLLAMA_URL="https://github.com/ollama/ollama/releases/download/${RELEASE}/ollama
 TMP_TAR="/tmp/ollama.tgz"
 echo -e "\n"
 if curl -fL# -o "$TMP_TAR" "$OLLAMA_URL"; then
-    if tar -xzf "$TMP_TAR" -C "$OLLAMA_INSTALL_DIR"; then
-        ln -sf "$OLLAMA_INSTALL_DIR/bin/ollama" "$BINDIR/ollama"
-        echo "${RELEASE}" >/opt/Ollama_version.txt
-        msg_ok "Installed Ollama ${RELEASE}"
-    else
-        msg_error "Extraction failed – archive corrupt or incomplete"
-        exit 1
-    fi
-else
-    msg_error "Download failed – $OLLAMA_URL not reachable"
+  if tar -xzf "$TMP_TAR" -C "$OLLAMA_INSTALL_DIR"; then
+    ln -sf "$OLLAMA_INSTALL_DIR/bin/ollama" "$BINDIR/ollama"
+    echo "${RELEASE}" >/opt/Ollama_version.txt
+    msg_ok "Installed Ollama ${RELEASE}"
+  else
+    msg_error "Extraction failed – archive corrupt or incomplete"
     exit 1
+  fi
+else
+  msg_error "Download failed – $OLLAMA_URL not reachable"
+  exit 1
 fi
 
 msg_info "Creating ollama User and Group"
 if ! id ollama >/dev/null 2>&1; then
-    useradd -r -s /usr/sbin/nologin -U -m -d /usr/share/ollama ollama
+  useradd -r -s /usr/sbin/nologin -U -m -d /usr/share/ollama ollama
 fi
 $STD usermod -aG render ollama || true
 $STD usermod -aG video ollama || true
