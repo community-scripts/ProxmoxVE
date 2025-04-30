@@ -6,7 +6,7 @@
     ],
     "date_created": "2024-06-12",
     "type": "ct",
-    "updateable": false,
+    "updateable": true,
     "privileged": false,
     "interface_port": 8283,
     "documentation": null,
@@ -35,6 +35,10 @@
         {
             "text": "If the LXC is created Privileged, the script will automatically set up USB passthrough.",
             "type": "warning"
+        },
+        {
+            "text": "Updatable via the Matterbridge WebUI",
+            "type": "info"
         }
     ]
 }

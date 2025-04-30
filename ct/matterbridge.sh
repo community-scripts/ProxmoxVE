@@ -27,7 +27,11 @@ function update_script() {
         msg_error "No ${APP} Installation Found!"
         exit
     fi
-    msg_error "Update via the Matterbridge UI"
+    $STD apt-get update
+    $STD apt-get upgrade -y
+    NODE_VERSION="22"
+    NODE_MODULE="matterbridge"
+    install_node_and_modules
     exit
 }
 
