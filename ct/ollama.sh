@@ -19,42 +19,42 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /usr/local/lib/ollama ]]; then
-        msg_error "No Ollama Installation Found!"
-        exit
-    fi
-    RELEASE=$(curl -fsSL https://api.github.com/repos/ollama/ollama/releases/latest | grep "tag_name" | awk -F '"' '{print $4}')
-    if [[ ! -f /opt/Ollama_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/Ollama_version.txt)" ]]; then
-      if [[ ! -f /opt/Ollama_version.txt ]]; then
-        touch /opt/Ollama_version.txt
-      fi
-        msg_info "Stopping Services"
-        systemctl stop ollama
-        msg_ok "Services Stopped"
-
-        TMP_TAR=$(mktemp --suffix=.tgz)
-        curl -fL# -o "${TMP_TAR}" "https://github.com/ollama/ollama/releases/download/${RELEASE}/ollama-linux-amd64.tgz"
-        msg_info "Updating Ollama to ${RELEASE}"
-        tar -xzf "${TMP_TAR}" -C /usr/local/lib/ollama
-        ln -sf /usr/local/lib/ollama/bin/ollama /usr/local/bin/ollama
-        echo "${RELEASE}" >/opt/Ollama_version.txt
-        msg_ok "Updated Ollama to ${RELEASE}"
-
-        msg_info "Starting Services"
-        systemctl start ollama
-        msg_ok "Started Services"
-
-        msg_info "Cleaning Up"
-        rm -f "${TMP_TAR}"
-        msg_ok "Cleaned"
-        msg_ok "Updated Successfully"
-    else
-        msg_ok "No update required. Ollama is already at ${RELEASE}"
-    fi
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /usr/local/lib/ollama ]]; then
+    msg_error "No Ollama Installation Found!"
     exit
+  fi
+  RELEASE=$(curl -fsSL https://api.github.com/repos/ollama/ollama/releases/latest | grep "tag_name" | awk -F '"' '{print $4}')
+  if [[ ! -f /opt/Ollama_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/Ollama_version.txt)" ]]; then
+    if [[ ! -f /opt/Ollama_version.txt ]]; then
+      touch /opt/Ollama_version.txt
+    fi
+    msg_info "Stopping Services"
+    systemctl stop ollama
+    msg_ok "Services Stopped"
+
+    TMP_TAR=$(mktemp --suffix=.tgz)
+    curl -fL# -o "${TMP_TAR}" "https://github.com/ollama/ollama/releases/download/${RELEASE}/ollama-linux-amd64.tgz"
+    msg_info "Updating Ollama to ${RELEASE}"
+    tar -xzf "${TMP_TAR}" -C /usr/local/lib/ollama
+    ln -sf /usr/local/lib/ollama/bin/ollama /usr/local/bin/ollama
+    echo "${RELEASE}" >/opt/Ollama_version.txt
+    msg_ok "Updated Ollama to ${RELEASE}"
+
+    msg_info "Starting Services"
+    systemctl start ollama
+    msg_ok "Started Services"
+
+    msg_info "Cleaning Up"
+    rm -f "${TMP_TAR}"
+    msg_ok "Cleaned"
+    msg_ok "Updated Successfully"
+  else
+    msg_ok "No update required. Ollama is already at ${RELEASE}"
+  fi
+  exit
 }
 
 start
