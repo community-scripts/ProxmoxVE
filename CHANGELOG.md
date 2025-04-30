@@ -25,6 +25,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 📝 Script Information
 
+    - mark Caddy as updateable [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4154](https://github.com/community-scripts/ProxmoxVE/pull/4154))
     - Website: Add missing docs and config paths [@tremor021](https://github.com/tremor021) ([#4131](https://github.com/community-scripts/ProxmoxVE/pull/4131))
 
 ## 2025-04-29
