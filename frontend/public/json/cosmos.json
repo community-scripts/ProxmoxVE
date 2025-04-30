@@ -13,7 +13,7 @@
   "documentation": "https://cosmos-cloud.io/doc/1%20index/",
   "website": "https://cosmos-cloud.io/",
   "logo": "https://cosmos-cloud.io/Logo.png",
-  "config_path": "",
+  "config_path": "/etc/sysconfig/CosmosCloud",
   "description": "Cosmos Cloud is a self-hosting platform that automates maintenance and security. It offers an app marketplace, reverse proxy management, container control, VPN integration, real-time monitoring, and disk management. Security features include SSO, anti-DDoS, and encryption. It simplifies self-hosting for all users.",
   "install_methods": [
     {
@@ -34,4 +34,3 @@
   },
   "notes": []
 }
-

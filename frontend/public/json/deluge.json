@@ -1,35 +1,35 @@
 {
-    "name": "Deluge",
-    "slug": "deluge",
-    "categories": [
-        11
-    ],
-    "date_created": "2024-05-02",
-    "type": "ct",
-    "updateable": false,
-    "privileged": false,
-    "interface_port": 8112,
-    "documentation": null,
-    "website": "https://www.deluge-torrent.org/",
-    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/deluge.svg",
-    "config_path": "",
-    "description": "Deluge is a free, open-source, lightweight BitTorrent client. It supports various platforms including Windows, Linux, and macOS, and offers features such as peer exchange, DHT, and magnet links.",
-    "install_methods": [
-        {
-            "type": "default",
-            "script": "ct/deluge.sh",
-            "resources": {
-                "cpu": 2,
-                "ram": 2048,
-                "hdd": 4,
-                "os": "debian",
-                "version": "12"
-            }
-        }
-    ],
-    "default_credentials": {
-        "username": null,
-        "password": "deluge"
-    },
-    "notes": []
+  "name": "Deluge",
+  "slug": "deluge",
+  "categories": [
+    11
+  ],
+  "date_created": "2024-05-02",
+  "type": "ct",
+  "updateable": false,
+  "privileged": false,
+  "interface_port": 8112,
+  "documentation": "https://www.deluge-torrent.org/userguide/",
+  "website": "https://www.deluge-torrent.org/",
+  "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/deluge.svg",
+  "config_path": "~/.config/deluge",
+  "description": "Deluge is a free, open-source, lightweight BitTorrent client. It supports various platforms including Windows, Linux, and macOS, and offers features such as peer exchange, DHT, and magnet links.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/deluge.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 4,
+        "os": "debian",
+        "version": "12"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": "deluge"
+  },
+  "notes": []
 }
