@@ -1,16 +1,18 @@
 {
   "name": "Glances",
   "slug": "glances",
-  "categories": [9],
+  "categories": [
+    9
+  ],
   "date_created": "2024-05-02",
   "type": "addon",
   "updateable": false,
   "privileged": false,
   "interface_port": 61208,
-  "documentation": null,
+  "documentation": "https://glances.readthedocs.io/en/latest/",
   "website": "https://nicolargo.github.io/glances/",
   "logo": "https://raw.githubusercontent.com/nicolargo/glances/develop/docs/_static/Glances%20Logo.svg",
-  "config_path": "",
+  "config_path": "/usr/local/share/doc/glances/glances.conf",
   "description": "Glances is an open-source system cross-platform monitoring tool. It allows real-time monitoring of various aspects of your system such as CPU, memory, disk, network usage etc.",
   "install_methods": [
     {
@@ -40,4 +42,3 @@
     }
   ]
 }
-
