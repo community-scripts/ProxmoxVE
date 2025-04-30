@@ -12,7 +12,7 @@
   "documentation": "https://fileflows.com/docs",
   "website": "https://fileflows.com/",
   "logo": "https://raw.githubusercontent.com/revenz/FileFlows/refs/heads/develop/icon.png",
-  "config_path": "",
+  "config_path": "/opt/fileflows/Data/server.config",
   "description": "FileFlows is a powerful, open-source tool for automating media file processing workflows, including encoding, decoding, and media management. It offers an intuitive GUI and extensive plugin support, making it ideal for tasks like video transcoding, organizing, and managing large media libraries.",
   "install_methods": [
     {
@@ -38,4 +38,3 @@
     }
   ]
 }
-

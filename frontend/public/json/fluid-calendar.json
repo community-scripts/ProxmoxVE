@@ -13,7 +13,7 @@
   "documentation": "https://github.com/dotnetfactory/fluid-calendar/tree/main/docs",
   "website": "https://github.com/dotnetfactory/fluid-calendar",
   "logo": "https://raw.githubusercontent.com/dotnetfactory/fluid-calendar/refs/heads/main/src/app/favicon.ico",
-  "config_path": "",
+  "config_path": "/opt/fluid-calendar/.env",
   "description": "The open-source intelligent calendar that adapts to your workflow. Experience seamless task scheduling powered by AI, designed to make your time management effortless.",
   "install_methods": [
     {
@@ -39,4 +39,3 @@
     }
   ]
 }
-

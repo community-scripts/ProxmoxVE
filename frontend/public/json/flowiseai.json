@@ -12,7 +12,7 @@
   "documentation": "https://docs.flowiseai.com/",
   "website": "https://flowiseai.com/",
   "logo": "https://flowiseai.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo-color-high.e60de2f8.png&w=256&q=75",
-  "config_path": "",
+  "config_path": "/opt/flowiseai/.env",
   "description": "FlowiseAI is an open source low-code tool for developers to build customized LLM orchestration flow & AI agents",
   "install_methods": [
     {
@@ -38,4 +38,3 @@
     }
   ]
 }
-
