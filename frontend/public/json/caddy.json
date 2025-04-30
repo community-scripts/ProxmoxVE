@@ -6,7 +6,7 @@
     ],
     "date_created": "2024-05-11",
     "type": "ct",
-    "updateable": false,
+    "updateable": true,
     "privileged": false,
     "interface_port": 80,
     "documentation": "https://caddyserver.com/docs/",
@@ -32,6 +32,10 @@
         "password": null
     },
   "notes": [
+    {
+      "text": "xcaddy needs to be updated manually after a caddy update!",
+      "type": "warning"
+    },
     {
       "text": "if you need an internal module run: `caddy add-package PACKAGENAME`",
       "type": "info"
