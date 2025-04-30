@@ -28,6 +28,9 @@ function update_script() {
     fi
     RELEASE=$(curl -fsSL https://api.github.com/repos/ollama/ollama/releases/latest | grep "tag_name" | awk -F '"' '{print $4}')
     if [[ ! -f /opt/Ollama_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/Ollama_version.txt)" ]]; then
+      if [[ ! -f /opt/Ollama_version.txt ]]; then
+        touch /opt/Ollama_version.txt
+      fi
         msg_info "Stopping Services"
         systemctl stop ollama
         msg_ok "Services Stopped"
