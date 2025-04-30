@@ -14,6 +14,19 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 All LXC instances created using this repository come pre-installed with Midnight Commander, which is a command-line tool (`mc`) that offers a user-friendly file and directory management interface for the terminal environment.
 
 
+## 2025-04-30
+
+### 🚀 Updated Scripts
+
+  - Refactor: Matterbridge [@MickLesk](https://github.com/MickLesk) ([#4148](https://github.com/community-scripts/ProxmoxVE/pull/4148))
+- Refactor: Ollama & Adding to Website [@MickLesk](https://github.com/MickLesk) ([#4147](https://github.com/community-scripts/ProxmoxVE/pull/4147))
+
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Website: Add missing docs and config paths [@tremor021](https://github.com/tremor021) ([#4131](https://github.com/community-scripts/ProxmoxVE/pull/4131))
+
 ## 2025-04-29
 
 ### 🚀 Updated Scripts
