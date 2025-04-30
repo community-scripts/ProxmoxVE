@@ -1,5 +1,65 @@
 [
   {
+    "name": "Prowlarr/Prowlarr",
+    "version": "v1.35.1.5034",
+    "date": "2025-04-30T11:02:36Z"
+  },
+  {
+    "name": "cloudflare/cloudflared",
+    "version": "2025.4.1",
+    "date": "2025-04-30T10:09:14Z"
+  },
+  {
+    "name": "nzbgetcom/nzbget",
+    "version": "v24.8",
+    "date": "2025-03-18T07:33:51Z"
+  },
+  {
+    "name": "wazuh/wazuh",
+    "version": "coverity-w17-4.12.0",
+    "date": "2025-04-16T11:20:57Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "v10.6.3",
+    "date": "2025-04-29T07:03:19Z"
+  },
+  {
+    "name": "Stirling-Tools/Stirling-PDF",
+    "version": "v0.46.0",
+    "date": "2025-04-30T07:05:42Z"
+  },
+  {
+    "name": "Luligu/matterbridge",
+    "version": "3.0.0",
+    "date": "2025-04-30T06:24:07Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.2.2",
+    "date": "2025-04-30T06:14:22Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1836",
+    "date": "2025-04-30T06:07:27Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.1",
+    "date": "2025-01-01T16:15:52Z"
+  },
+  {
+    "name": "go-gitea/gitea",
+    "version": "v1.25.0-dev",
+    "date": "2025-04-28T22:57:56Z"
+  },
+  {
+    "name": "hivemq/hivemq-community-edition",
+    "version": "2025.3",
+    "date": "2025-04-30T02:52:28Z"
+  },
+  {
     "name": "grokability/snipe-it",
     "version": "v8.1.1",
     "date": "2025-04-29T22:22:31Z"
@@ -26,8 +86,8 @@
   },
   {
     "name": "ollama/ollama",
-    "version": "v0.6.7-rc1",
-    "date": "2025-04-29T18:57:54Z"
+    "version": "v0.6.6",
+    "date": "2025-04-17T04:34:58Z"
   },
   {
     "name": "MediaBrowser/Emby.Releases",
@@ -50,34 +110,9 @@
     "date": "2025-04-29T15:00:18Z"
   },
   {
-    "name": "cloudflare/cloudflared",
-    "version": "2025.100.150",
-    "date": "2025-04-29T13:53:12Z"
-  },
-  {
     "name": "apache/tika",
     "version": "2.9.4-rc1",
     "date": "2025-04-29T13:06:08Z"
-  },
-  {
-    "name": "mattermost/mattermost",
-    "version": "v10.6.3",
-    "date": "2025-04-29T07:03:19Z"
-  },
-  {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.1",
-    "date": "2025-01-01T16:15:52Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1831",
-    "date": "2025-04-29T05:55:55Z"
-  },
-  {
-    "name": "nzbgetcom/nzbget",
-    "version": "v24.8",
-    "date": "2025-03-18T07:33:51Z"
   },
   {
     "name": "esphome/esphome",
@@ -90,19 +125,9 @@
     "date": "2025-04-29T01:14:35Z"
   },
   {
-    "name": "go-gitea/gitea",
-    "version": "v1.25.0-dev",
-    "date": "2025-04-28T22:57:56Z"
-  },
-  {
     "name": "deluge-torrent/deluge",
     "version": "deluge-2.2.0",
     "date": "2025-04-28T21:31:06Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.2.1",
-    "date": "2025-04-23T12:17:17Z"
   },
   {
     "name": "gethomepage/homepage",
@@ -203,11 +228,6 @@
     "name": "qbittorrent/qBittorrent",
     "version": "release-5.1.0",
     "date": "2025-04-27T08:53:48Z"
-  },
-  {
-    "name": "Prowlarr/Prowlarr",
-    "version": "v1.34.1.5021",
-    "date": "2025-04-20T19:29:50Z"
   },
   {
     "name": "Radarr/Radarr",
@@ -341,8 +361,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-04-21T16:55:50Z"
+    "version": "v3.10.0-beta.9",
+    "date": "2025-04-17T11:46:08Z"
   },
   {
     "name": "NodeBB/NodeBB",
@@ -465,11 +485,6 @@
     "date": "2025-04-18T09:28:22Z"
   },
   {
-    "name": "Luligu/matterbridge",
-    "version": "2.2.9",
-    "date": "2025-04-18T10:05:52Z"
-  },
-  {
     "name": "tailscale/tailscale",
     "version": "v1.82.5",
     "date": "2025-04-17T20:59:15Z"
@@ -530,11 +545,6 @@
     "date": "2025-04-16T15:18:13Z"
   },
   {
-    "name": "wazuh/wazuh",
-    "version": "coverity-w17-4.12.0",
-    "date": "2025-04-16T11:20:57Z"
-  },
-  {
     "name": "rabbitmq/rabbitmq-server",
     "version": "v4.1.0",
     "date": "2025-04-15T16:18:29Z"
@@ -548,11 +558,6 @@
     "name": "WordPress/WordPress",
     "version": "6.8",
     "date": "2025-04-15T15:41:16Z"
-  },
-  {
-    "name": "Stirling-Tools/Stirling-PDF",
-    "version": "v0.45.6",
-    "date": "2025-04-15T14:16:52Z"
   },
   {
     "name": "slskd/slskd",
@@ -793,11 +798,6 @@
     "name": "hakimel/reveal.js",
     "version": "5.2.1",
     "date": "2025-03-28T13:00:23Z"
-  },
-  {
-    "name": "hivemq/hivemq-community-edition",
-    "version": "2025.2",
-    "date": "2025-03-27T19:21:13Z"
   },
   {
     "name": "sct/overseerr",
