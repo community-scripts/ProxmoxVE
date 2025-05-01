@@ -9,7 +9,7 @@
     "updateable": true,
     "privileged": false,
     "interface_port": 3000,
-    "documentation": null,
+    "documentation": "https://grafana.com/docs/grafana/latest/",
     "website": "https://grafana.com/",
     "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/grafana.svg",
     "config_path": "/etc/grafana",
