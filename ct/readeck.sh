@@ -28,7 +28,7 @@ function update_script() {
     exit
   fi
   msg_info "Updating ${APP}"
-  LATEST=$(LATEST=$(curl -fsSL https://codeberg.org/readeck/readeck/releases/ | grep -oP '/releases/tag/\K\d+\.\d+\.\d+' | head -1))
+  LATEST=$(curl -fsSL https://codeberg.org/readeck/readeck/releases/ | grep -oP '/releases/tag/\K\d+\.\d+\.\d+' | head -1)
   systemctl stop readeck.service
   rm -rf /opt/readeck/readeck
   cd /opt/readeck
