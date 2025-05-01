@@ -1,18 +1,108 @@
 [
   {
-    "name": "Prowlarr/Prowlarr",
-    "version": "v1.35.1.5034",
-    "date": "2025-04-30T11:02:36Z"
+    "name": "syncthing/syncthing",
+    "version": "v2.0.0-beta.9",
+    "date": "2025-04-12T13:58:29Z"
   },
   {
-    "name": "cloudflare/cloudflared",
-    "version": "2025.4.1",
-    "date": "2025-04-30T10:09:14Z"
+    "name": "NodeBB/NodeBB",
+    "version": "v4.3.0",
+    "date": "2025-04-30T21:02:34Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.6.7-rc1",
+    "date": "2025-04-29T18:57:54Z"
+  },
+  {
+    "name": "HabitRPG/habitica",
+    "version": "v5.36.1",
+    "date": "2025-04-30T19:44:44Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.4.4",
+    "date": "2025-04-25T07:47:57Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "v4.0.0",
+    "date": "2025-04-30T18:37:46Z"
+  },
+  {
+    "name": "netbox-community/netbox",
+    "version": "v4.2.9",
+    "date": "2025-04-30T18:32:46Z"
+  },
+  {
+    "name": "readeck/readeck",
+    "version": "0.18.1",
+    "date": "2025-04-30T17:44:46Z"
+  },
+  {
+    "name": "ellite/Wallos",
+    "version": "v3.0.1",
+    "date": "2025-04-30T17:16:36Z"
+  },
+  {
+    "name": "WordPress/WordPress",
+    "version": "6.8.1",
+    "date": "2025-04-30T16:44:16Z"
+  },
+  {
+    "name": "benjaminjonard/koillection",
+    "version": "1.6.13",
+    "date": "2025-04-30T16:38:35Z"
+  },
+  {
+    "name": "element-hq/synapse",
+    "version": "v1.129.0rc1",
+    "date": "2025-04-16T15:18:13Z"
   },
   {
     "name": "nzbgetcom/nzbget",
     "version": "v24.8",
     "date": "2025-03-18T07:33:51Z"
+  },
+  {
+    "name": "Graylog2/graylog2-server",
+    "version": "6.3.0-alpha.2",
+    "date": "2025-04-30T14:55:15Z"
+  },
+  {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.504.1",
+    "date": "2025-04-30T14:33:59Z"
+  },
+  {
+    "name": "zitadel/zitadel",
+    "version": "v2.71.8",
+    "date": "2025-04-25T11:50:04Z"
+  },
+  {
+    "name": "cloudflare/cloudflared",
+    "version": "2025.4.2",
+    "date": "2025-04-30T14:16:11Z"
+  },
+  {
+    "name": "docmost/docmost",
+    "version": "v0.20.4",
+    "date": "2025-04-30T14:15:16Z"
+  },
+  {
+    "name": "goauthentik/authentik",
+    "version": "version/2025.4.0",
+    "date": "2025-04-30T12:34:14Z"
+  },
+  {
+    "name": "Prowlarr/Prowlarr",
+    "version": "v1.35.1.5034",
+    "date": "2025-04-30T11:02:36Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.4.0-rc1",
+    "date": "2025-04-30T11:01:56Z"
   },
   {
     "name": "wazuh/wazuh",
@@ -75,29 +165,9 @@
     "date": "2025-04-29T20:30:20Z"
   },
   {
-    "name": "goauthentik/authentik",
-    "version": "version/2025.4.0",
-    "date": "2025-04-29T19:16:32Z"
-  },
-  {
-    "name": "HabitRPG/habitica",
-    "version": "v5.36.0",
-    "date": "2025-04-29T19:14:25Z"
-  },
-  {
-    "name": "ollama/ollama",
-    "version": "v0.6.6",
-    "date": "2025-04-17T04:34:58Z"
-  },
-  {
     "name": "MediaBrowser/Emby.Releases",
     "version": "4.8.11.0",
     "date": "2025-03-10T06:39:11Z"
-  },
-  {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.508",
-    "date": "2025-04-29T15:34:02Z"
   },
   {
     "name": "semaphoreui/semaphore",
@@ -185,11 +255,6 @@
     "date": "2025-04-28T08:21:37Z"
   },
   {
-    "name": "Graylog2/graylog2-server",
-    "version": "6.2.0",
-    "date": "2025-04-28T08:12:45Z"
-  },
-  {
     "name": "firefly-iii/firefly-iii",
     "version": "v6.2.12",
     "date": "2025-04-20T19:22:17Z"
@@ -203,11 +268,6 @@
     "name": "advplyr/audiobookshelf",
     "version": "v2.21.0",
     "date": "2025-04-27T16:31:14Z"
-  },
-  {
-    "name": "ellite/Wallos",
-    "version": "v3.0.0",
-    "date": "2025-04-27T15:31:26Z"
   },
   {
     "name": "homarr-labs/homarr",
@@ -280,24 +340,9 @@
     "date": "2025-04-25T12:44:34Z"
   },
   {
-    "name": "zitadel/zitadel",
-    "version": "v2.71.8",
-    "date": "2025-04-25T11:50:04Z"
-  },
-  {
-    "name": "home-assistant/core",
-    "version": "2025.4.4",
-    "date": "2025-04-25T07:47:57Z"
-  },
-  {
     "name": "donaldzou/WGDashboard",
     "version": "v4.2.2",
     "date": "2025-04-25T07:42:03Z"
-  },
-  {
-    "name": "docmost/docmost",
-    "version": "v0.20.3",
-    "date": "2025-04-24T22:33:32Z"
   },
   {
     "name": "mongodb/mongo",
@@ -325,11 +370,6 @@
     "date": "2025-04-24T15:39:41Z"
   },
   {
-    "name": "Checkmk/checkmk",
-    "version": "v2.3.0p31",
-    "date": "2025-04-24T15:08:03Z"
-  },
-  {
     "name": "glpi-project/glpi",
     "version": "10.0.18",
     "date": "2025-02-12T11:07:02Z"
@@ -345,29 +385,9 @@
     "date": "2025-04-24T05:25:55Z"
   },
   {
-    "name": "syncthing/syncthing",
-    "version": "v2.0.0-beta.9",
-    "date": "2025-04-12T13:58:29Z"
-  },
-  {
-    "name": "netbox-community/netbox",
-    "version": "v4.2.8",
-    "date": "2025-04-22T19:44:49Z"
-  },
-  {
     "name": "Kozea/Radicale",
     "version": "v3.5.2",
     "date": "2025-04-23T18:41:46Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "v3.10.0-beta.9",
-    "date": "2025-04-17T11:46:08Z"
-  },
-  {
-    "name": "NodeBB/NodeBB",
-    "version": "v4.2.2",
-    "date": "2025-04-22T16:33:53Z"
   },
   {
     "name": "grafana/grafana",
@@ -540,11 +560,6 @@
     "date": "2025-04-16T19:25:53Z"
   },
   {
-    "name": "element-hq/synapse",
-    "version": "v1.129.0rc1",
-    "date": "2025-04-16T15:18:13Z"
-  },
-  {
     "name": "rabbitmq/rabbitmq-server",
     "version": "v4.1.0",
     "date": "2025-04-15T16:18:29Z"
@@ -553,11 +568,6 @@
     "name": "Brandawg93/PeaNUT",
     "version": "v5.7.2",
     "date": "2025-04-15T15:44:49Z"
-  },
-  {
-    "name": "WordPress/WordPress",
-    "version": "6.8",
-    "date": "2025-04-15T15:41:16Z"
   },
   {
     "name": "slskd/slskd",
@@ -608,11 +618,6 @@
     "name": "StarFleetCPTN/GoMFT",
     "version": "v0.2.11",
     "date": "2025-04-12T21:13:08Z"
-  },
-  {
-    "name": "readeck/readeck",
-    "version": "0.18.0",
-    "date": "2025-04-12T08:55:32Z"
   },
   {
     "name": "Bubka/2FAuth",
@@ -893,11 +898,6 @@
     "name": "gotson/komga",
     "version": "1.21.2",
     "date": "2025-03-12T04:19:30Z"
-  },
-  {
-    "name": "benjaminjonard/koillection",
-    "version": "1.6.12",
-    "date": "2025-03-11T15:04:43Z"
   },
   {
     "name": "excalidraw/excalidraw",
