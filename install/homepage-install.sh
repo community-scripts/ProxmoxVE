@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y gpg
+$STD apt-get install -y gpg jq
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up Node.js Repository"
@@ -43,6 +43,7 @@ cp /opt/homepage/src/skeleton/* /opt/homepage/config
 $STD pnpm install
 export NEXT_PUBLIC_VERSION="v$RELEASE"
 export NEXT_PUBLIC_REVISION="source"
+export NEXT_PUBLIC_BUILDTIME=$(curl -fsSL https://api.github.com/repos/gethomepage/homepage/releases/latest | jq -r '.published_at')
 export NEXT_TELEMETRY_DISABLED=1
 $STD pnpm build
 echo "HOMEPAGE_ALLOWED_HOSTS=localhost:3000,${LOCAL_IP}:3000" >/opt/homepage/.env
