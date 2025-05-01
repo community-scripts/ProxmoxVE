@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Readeck"
-LATEST=$(curl -fsSL https://codeberg.org/readeck/readeck/releases/ | grep -oP '(?<=Version )\d+\.\d+\.\d+' | head -1)
+LATEST=$(curl -fsSL https://codeberg.org/readeck/readeck/releases/ | grep -oP '/releases/tag/\K\d+\.\d+\.\d+' | head -1)
 mkdir -p /opt/readeck
 cd /opt/readeck
 curl -fsSL "https://codeberg.org/readeck/readeck/releases/download/${LATEST}/readeck-${LATEST}-linux-amd64" -o "readeck"
