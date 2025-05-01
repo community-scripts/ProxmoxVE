@@ -1,13 +1,33 @@
 [
   {
-    "name": "syncthing/syncthing",
-    "version": "v2.0.0-beta.9",
-    "date": "2025-04-12T13:58:29Z"
+    "name": "stackblitz-labs/bolt.diy",
+    "version": "1.0.0-draft",
+    "date": "2025-05-01T11:34:18Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.91.0",
+    "date": "2025-04-28T15:38:56Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1837",
+    "date": "2025-05-01T06:01:00Z"
   },
   {
     "name": "NodeBB/NodeBB",
     "version": "v4.3.0",
-    "date": "2025-04-30T21:02:34Z"
+    "date": "2025-05-01T04:13:41Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.2.2",
+    "date": "2025-04-30T06:14:22Z"
+  },
+  {
+    "name": "syncthing/syncthing",
+    "version": "v2.0.0-beta.9",
+    "date": "2025-04-12T13:58:29Z"
   },
   {
     "name": "ollama/ollama",
@@ -125,16 +145,6 @@
     "date": "2025-04-30T06:24:07Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.2.2",
-    "date": "2025-04-30T06:14:22Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1836",
-    "date": "2025-04-30T06:07:27Z"
-  },
-  {
     "name": "morpheus65535/bazarr",
     "version": "v1.5.1",
     "date": "2025-01-01T16:15:52Z"
@@ -208,11 +218,6 @@
     "name": "cross-seed/cross-seed",
     "version": "v6.12.2",
     "date": "2025-04-28T17:44:49Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.90.0",
-    "date": "2025-04-22T08:58:15Z"
   },
   {
     "name": "immich-app/immich",
@@ -583,11 +588,6 @@
     "name": "home-assistant/operating-system",
     "version": "15.2",
     "date": "2025-04-14T15:37:12Z"
-  },
-  {
-    "name": "stackblitz-labs/bolt.diy",
-    "version": "v0.0.7-hf1",
-    "date": "2025-03-10T20:49:39Z"
   },
   {
     "name": "bluenviron/mediamtx",
