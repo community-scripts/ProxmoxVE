@@ -18,6 +18,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Readeck: Fix release crawling [@tremor021](https://github.com/tremor021) ([#4172](https://github.com/community-scripts/ProxmoxVE/pull/4172))
+
   - #### ✨ New Features
 
     - homepage: Add build time var [@burgerga](https://github.com/burgerga) ([#4167](https://github.com/community-scripts/ProxmoxVE/pull/4167))
