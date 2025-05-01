@@ -16,6 +16,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-05-01
 
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - homepage: Add build time var [@burgerga](https://github.com/burgerga) ([#4167](https://github.com/community-scripts/ProxmoxVE/pull/4167))
+
 ### 🌐 Website
 
   - Bump vite from 6.2.6 to 6.3.4 in /frontend [@dependabot[bot]](https://github.com/dependabot[bot]) ([#4159](https://github.com/community-scripts/ProxmoxVE/pull/4159))
