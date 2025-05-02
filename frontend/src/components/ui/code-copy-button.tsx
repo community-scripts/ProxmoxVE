@@ -41,8 +41,8 @@ export default function CodeCopyButton({
 
   return (
     <div className="mt-4 flex">
-      <Card className="flex items-center overflow-x-auto bg-primary-foreground pl-4">
-        <div className="overflow-x-auto whitespace-pre-wrap text-nowrap break-all pr-4 text-sm">
+      <Card className="flex items-center overflow-x-auto bg-primary-foreground pl-4 [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-muted-foreground/20">
+        <div className="overflow-x-auto whitespace-pre-wrap text-nowrap break-all pr-4 text-sm [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-muted-foreground/20">
           {!isMobile && children ? children : "Copy install command"}
         </div>
         <button
