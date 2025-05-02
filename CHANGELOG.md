@@ -14,6 +14,20 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 All LXC instances created using this repository come pre-installed with Midnight Commander, which is a command-line tool (`mc`) that offers a user-friendly file and directory management interface for the terminal environment.
 
 
+## 2025-05-02
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - NetBox: Fix typo in sed command, preventing install [@tremor021](https://github.com/tremor021) ([#4179](https://github.com/community-scripts/ProxmoxVE/pull/4179))
+
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Habitica: correct config path [@DrDonoso](https://github.com/DrDonoso) ([#4181](https://github.com/community-scripts/ProxmoxVE/pull/4181))
+
 ## 2025-05-01
 
 ### 🚀 Updated Scripts
