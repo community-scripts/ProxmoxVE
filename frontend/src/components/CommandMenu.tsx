@@ -16,7 +16,10 @@ import React from "react";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { DialogTitle } from "./ui/dialog";
-import { Sparkles } from "lucide-react"; // <- Hinzugefügt
+import { Sparkles } from "lucide-react";
+import { TooltipContent, TooltipProvider } from "./ui/tooltip";
+import { TooltipTrigger } from "./ui/tooltip";
+import { Tooltip } from "./ui/tooltip";
 
 export const formattedBadge = (type: string) => {
   switch (type) {
@@ -111,16 +114,19 @@ export default function CommandMenu() {
           </kbd>
         </Button>
 
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={openRandomScript}
-          title="Open random script"
-          disabled={isLoading}
-          className="h-9 w-9"
-        >
-          <Sparkles className="h-5 w-5" />
-        </Button>
+        <TooltipProvider>
+          <Tooltip delayDuration={100}>
+            <TooltipTrigger asChild>
+              <Button variant="ghost" size="icon" onClick={openRandomScript} disabled={isLoading} className="hidden lg:flex">
+                <Sparkles className="size-4" />
+                <span className="sr-only">Open Random Script</span>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Open Random Script</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
 
       <CommandDialog open={open} onOpenChange={setOpen}>
