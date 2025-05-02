@@ -12,7 +12,7 @@
   "documentation": "https://github.com/HabitRPG/habitica/wiki",
   "website": "https://habitica.com/",
   "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/habitica.svg",
-  "config_path": "/etc/headscale/config.yaml",
+  "config_path": "/opt/habitica/config.json",
   "description": "Habitica is an open-source habit-building program that treats your life like a role-playing game. Level up as you succeed, lose HP as you fail, and earn Gold to buy weapons and armor!",
   "install_methods": [
     {
@@ -35,11 +35,6 @@
     {
       "text": "It takes a minute or two after installation for web UI to start, please be patient.",
       "type": "info"
-    },
-    {
-      "text": "Config file is at `/opt/habitica/config.json`",
-      "type": "info"
     }
   ]
 }
-
