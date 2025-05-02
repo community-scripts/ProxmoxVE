@@ -117,7 +117,7 @@ export default function CommandMenu() {
         <TooltipProvider>
           <Tooltip delayDuration={100}>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" onClick={openRandomScript} disabled={isLoading} className="hidden lg:flex">
+              <Button variant="outline" size="icon" onClick={openRandomScript} disabled={isLoading} className="hidden lg:flex">
                 <Sparkles className="size-4" />
                 <span className="sr-only">Open Random Script</span>
               </Button>
