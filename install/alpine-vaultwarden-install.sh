@@ -28,6 +28,11 @@ $STD apk add vaultwarden
 sed -i -e 's|export WEB_VAULT_ENABLED=.*|export WEB_VAULT_ENABLED=true|' /etc/conf.d/vaultwarden
 echo -e "export ADMIN_TOKEN=''" >>/etc/conf.d/vaultwarden
 echo -e "export ROCKET_ADDRESS=0.0.0.0" >>/etc/conf.d/vaultwarden
+echo -e "export ROCKET_TLS='{certs=\"/etc/ssl/certs/vaultwarden-selfsigned.crt\",key=\"/etc/ssl/private/vaultwarden-selfsigned.key\"}'"
+$STD openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout /etc/ssl/private/vaultwarden-selfsigned.key -out /etc/ssl/certs/vaultwarden-selfsigned.crt -subj "/C=US/O=Vaultwarden/O
+U=Domain Control Validated/CN=localhost"
+chown vaultwarden:vaultwarden /etc/ssl/certs/vaultwarden-selfsigned.crt
+chown vaultwarden:vaultwarden /etc/ssl/private/vaultwarden-selfsigned.key
 msg_ok "Installed Alpine-Vaultwarden"
 
 msg_info "Installing Web-Vault"
