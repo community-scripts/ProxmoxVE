@@ -1,8 +1,78 @@
 [
   {
-    "name": "emqx/emqx",
-    "version": "e5.9.0",
-    "date": "2025-05-02T11:07:10Z"
+    "name": "blakeblackshear/frigate",
+    "version": "v0.14.1",
+    "date": "2024-08-29T22:32:51Z"
+  },
+  {
+    "name": "kimai/kimai",
+    "version": "2.33.0",
+    "date": "2025-05-03T10:33:49Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1857",
+    "date": "2025-05-03T05:54:00Z"
+  },
+  {
+    "name": "theonedev/onedev",
+    "version": "v11.9.1",
+    "date": "2025-05-03T02:48:33Z"
+  },
+  {
+    "name": "Brandawg93/PeaNUT",
+    "version": "v5.7.4",
+    "date": "2025-05-02T23:41:08Z"
+  },
+  {
+    "name": "documenso/documenso",
+    "version": "v1.10.3",
+    "date": "2025-05-02T23:23:25Z"
+  },
+  {
+    "name": "homarr-labs/homarr",
+    "version": "v1.19.0",
+    "date": "2025-05-02T19:15:25Z"
+  },
+  {
+    "name": "coder/code-server",
+    "version": "v4.99.4",
+    "date": "2025-05-02T18:33:09Z"
+  },
+  {
+    "name": "prometheus/prometheus",
+    "version": "v0.304.0-rc.0",
+    "date": "2025-05-02T17:29:18Z"
+  },
+  {
+    "name": "influxdata/influxdb",
+    "version": "v3.0.2",
+    "date": "2025-05-02T18:11:39Z"
+  },
+  {
+    "name": "forgejo/forgejo",
+    "version": "v11.0.1",
+    "date": "2025-05-02T17:10:30Z"
+  },
+  {
+    "name": "jhuckaby/Cronicle",
+    "version": "v0.9.80",
+    "date": "2025-05-02T16:48:15Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.2.2",
+    "date": "2025-04-30T06:14:22Z"
+  },
+  {
+    "name": "prometheus-pve/prometheus-pve-exporter",
+    "version": "v3.5.4",
+    "date": "2025-05-02T13:42:06Z"
+  },
+  {
+    "name": "zitadel/zitadel",
+    "version": "v2.71.9",
+    "date": "2025-05-02T12:48:14Z"
   },
   {
     "name": "nzbgetcom/nzbget",
@@ -10,34 +80,34 @@
     "date": "2025-03-18T07:33:51Z"
   },
   {
+    "name": "motioneye-project/motioneye",
+    "version": "0.42.1",
+    "date": "2020-06-07T07:27:04Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.20.8",
+    "date": "2025-05-02T11:37:05Z"
+  },
+  {
+    "name": "redis/redis",
+    "version": "8.0.0",
+    "date": "2025-05-02T11:20:31Z"
+  },
+  {
+    "name": "emqx/emqx",
+    "version": "e5.9.0",
+    "date": "2025-05-02T11:07:10Z"
+  },
+  {
     "name": "semaphoreui/semaphore",
     "version": "v2.14.7",
     "date": "2025-05-02T07:57:33Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1846",
-    "date": "2025-05-02T06:04:23Z"
-  },
-  {
     "name": "apache/couchdb",
     "version": "3.5.0-RC1",
     "date": "2025-05-02T04:34:23Z"
-  },
-  {
-    "name": "theonedev/onedev",
-    "version": "v11.9.0",
-    "date": "2025-05-02T02:44:12Z"
-  },
-  {
-    "name": "documenso/documenso",
-    "version": "v1.10.0",
-    "date": "2025-05-02T02:06:44Z"
-  },
-  {
-    "name": "Brandawg93/PeaNUT",
-    "version": "v5.7.3",
-    "date": "2025-05-02T01:16:34Z"
   },
   {
     "name": "syncthing/syncthing",
@@ -48,11 +118,6 @@
     "name": "home-assistant/core",
     "version": "2025.4.4",
     "date": "2025-04-25T07:47:57Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.2.2",
-    "date": "2025-04-30T06:14:22Z"
   },
   {
     "name": "stackblitz-labs/bolt.diy",
@@ -71,8 +136,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v4.0.1",
-    "date": "2025-05-01T15:37:16Z"
+    "version": "v4.0.2",
+    "date": "2025-05-01T16:10:58Z"
   },
   {
     "name": "fallenbagel/jellyseerr",
@@ -135,11 +200,6 @@
     "date": "2025-04-30T14:33:59Z"
   },
   {
-    "name": "zitadel/zitadel",
-    "version": "v2.71.8",
-    "date": "2025-04-25T11:50:04Z"
-  },
-  {
     "name": "cloudflare/cloudflared",
     "version": "2025.4.2",
     "date": "2025-04-30T14:16:11Z"
@@ -166,8 +226,8 @@
   },
   {
     "name": "wazuh/wazuh",
-    "version": "coverity-w17-4.12.0",
-    "date": "2025-04-16T11:20:57Z"
+    "version": "coverity-w18-4.12.0",
+    "date": "2025-04-30T09:30:26Z"
   },
   {
     "name": "mattermost/mattermost",
@@ -270,11 +330,6 @@
     "date": "2025-04-28T11:30:10Z"
   },
   {
-    "name": "redis/redis",
-    "version": "8.0-rc2-int",
-    "date": "2025-04-28T09:56:36Z"
-  },
-  {
     "name": "pocket-id/pocket-id",
     "version": "v0.51.0",
     "date": "2025-04-28T09:15:56Z"
@@ -303,11 +358,6 @@
     "name": "advplyr/audiobookshelf",
     "version": "v2.21.0",
     "date": "2025-04-27T16:31:14Z"
-  },
-  {
-    "name": "homarr-labs/homarr",
-    "version": "v1.18.1",
-    "date": "2025-04-27T15:17:35Z"
   },
   {
     "name": "evcc-io/evcc",
@@ -393,11 +443,6 @@
     "name": "dotnetfactory/fluid-calendar",
     "version": "v1.4.0",
     "date": "2025-04-24T16:20:17Z"
-  },
-  {
-    "name": "jhuckaby/Cronicle",
-    "version": "v0.9.79",
-    "date": "2025-04-24T15:53:43Z"
   },
   {
     "name": "openobserve/openobserve",
@@ -505,11 +550,6 @@
     "date": "2025-04-19T23:02:17Z"
   },
   {
-    "name": "msgbyte/tianji",
-    "version": "v1.20.7",
-    "date": "2025-04-19T20:35:09Z"
-  },
-  {
     "name": "caddyserver/caddy",
     "version": "v2.10.0",
     "date": "2025-04-18T20:46:28Z"
@@ -518,11 +558,6 @@
     "name": "Paymenter/Paymenter",
     "version": "v1.0.4",
     "date": "2025-04-18T16:08:02Z"
-  },
-  {
-    "name": "prometheus/prometheus",
-    "version": "v3.3.0",
-    "date": "2025-04-18T13:46:38Z"
   },
   {
     "name": "dgtlmoon/changedetection.io",
@@ -545,11 +580,6 @@
     "date": "2025-04-17T20:05:25Z"
   },
   {
-    "name": "coder/code-server",
-    "version": "v4.99.3",
-    "date": "2025-04-17T18:33:11Z"
-  },
-  {
     "name": "benzino77/tasmocompiler",
     "version": "v12.6.1",
     "date": "2025-04-17T17:35:02Z"
@@ -560,29 +590,14 @@
     "date": "2025-04-17T14:29:11Z"
   },
   {
-    "name": "influxdata/influxdb",
-    "version": "v3.0.1",
-    "date": "2025-04-17T14:06:09Z"
-  },
-  {
     "name": "neo4j/neo4j",
     "version": "2025.04.0",
     "date": "2025-04-17T11:13:20Z"
   },
   {
-    "name": "prometheus-pve/prometheus-pve-exporter",
-    "version": "v3.5.3",
-    "date": "2025-04-17T10:40:47Z"
-  },
-  {
     "name": "IceWhaleTech/CasaOS",
     "version": "v0.4.15",
     "date": "2024-12-19T03:19:49Z"
-  },
-  {
-    "name": "forgejo/forgejo",
-    "version": "v11.0.0",
-    "date": "2025-04-16T19:25:53Z"
   },
   {
     "name": "rabbitmq/rabbitmq-server",
@@ -593,11 +608,6 @@
     "name": "slskd/slskd",
     "version": "0.22.5",
     "date": "2025-04-15T02:52:26Z"
-  },
-  {
-    "name": "blakeblackshear/frigate",
-    "version": "v0.14.1",
-    "date": "2024-08-29T22:32:51Z"
   },
   {
     "name": "home-assistant/operating-system",
@@ -693,11 +703,6 @@
     "name": "wavelog/wavelog",
     "version": "2.0.3",
     "date": "2025-04-06T17:35:41Z"
-  },
-  {
-    "name": "kimai/kimai",
-    "version": "2.32.0",
-    "date": "2025-04-06T09:43:51Z"
   },
   {
     "name": "jellyfin/jellyfin",
@@ -1203,11 +1208,6 @@
     "name": "Lissy93/dashy",
     "version": "3.1.1",
     "date": "2024-05-30T17:20:53Z"
-  },
-  {
-    "name": "motioneye-project/motioneye",
-    "version": "0.42.1",
-    "date": "2020-06-07T07:27:04Z"
   },
   {
     "name": "gnmyt/MySpeed",
