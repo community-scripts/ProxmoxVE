@@ -6,7 +6,7 @@
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
 function header_info {
-    cat <<"EOF"
+  cat <<"EOF"
    ______          __        _____                          
   / ____/___  ____/ /__     / ___/___  ______   _____  _____
  / /   / __ \/ __  / _ \    \__ \/ _ \/ ___/ | / / _ \/ ___/
@@ -26,7 +26,7 @@ CL=$(echo "\033[m")
 BFR="\\r\\033[K"
 HOLD="-"
 CM="${GN}✓${CL}"
-APP="Code Server"
+APP="Coder Code Server"
 hostname="$(hostname)"
 set -o errexit
 set -o errtrace
@@ -37,40 +37,40 @@ alias die='EXIT=$? LINE=$LINENO error_exit'
 trap die ERR
 
 function error_exit() {
-    trap - ERR
-    local reason="Unknown failure occured."
-    local msg="${1:-$reason}"
-    local flag="${RD}‼ ERROR ${CL}$EXIT@$LINE"
-    echo -e "$flag $msg" 1>&2
-    exit $EXIT
+  trap - ERR
+  local reason="Unknown failure occured."
+  local msg="${1:-$reason}"
+  local flag="${RD}‼ ERROR ${CL}$EXIT@$LINE"
+  echo -e "$flag $msg" 1>&2
+  exit "$EXIT"
 }
 clear
 header_info
 if command -v pveversion >/dev/null 2>&1; then
-    echo -e "⚠️  Can't Install on Proxmox "
-    exit
+  echo -e "⚠️  Can't Install on Proxmox "
+  exit
 fi
 if [ -e /etc/alpine-release ]; then
-    echo -e "⚠️  Can't Install on Alpine"
-    exit
+  echo -e "⚠️  Can't Install on Alpine"
+  exit
 fi
 while true; do
-    read -p "This will Install ${APP} on $hostname. Proceed(y/n)?" yn
-    case $yn in
-    [Yy]*) break ;;
-    [Nn]*) exit ;;
-    *) echo "Please answer yes or no." ;;
-    esac
+  read -p "This will Install ${APP} on $hostname. Proceed(y/n)?" yn
+  case $yn in
+  [Yy]*) break ;;
+  [Nn]*) exit ;;
+  *) echo "Please answer yes or no." ;;
+  esac
 done
 
 function msg_info() {
-    local msg="$1"
-    echo -ne " ${HOLD} ${YW}${msg}..."
+  local msg="$1"
+  echo -ne " ${HOLD} ${YW}${msg}..."
 }
 
 function msg_ok() {
-    local msg="$1"
-    echo -e "${BFR} ${CM} ${GN}${msg}${CL}"
+  local msg="$1"
+  echo -e "${BFR} ${CM} ${GN}${msg}${CL}"
 }
 
 msg_info "Installing Dependencies"
@@ -80,22 +80,22 @@ apt-get install -y git &>/dev/null
 msg_ok "Installed Dependencies"
 
 VERSION=$(curl -fsSL https://api.github.com/repos/coder/code-server/releases/latest |
-    grep "tag_name" |
-    awk '{print substr($2, 3, length($2)-4) }')
+  grep "tag_name" |
+  awk '{print substr($2, 3, length($2)-4) }')
 
 msg_info "Installing Code-Server v${VERSION}"
-curl -fOL https://github.com/coder/code-server/releases/download/v$VERSION/code-server_${VERSION}_amd64.deb &>/dev/null
-dpkg -i code-server_${VERSION}_amd64.deb &>/dev/null
-rm -rf code-server_${VERSION}_amd64.deb
+curl -fOL https://github.com/coder/code-server/releases/download/v"$VERSION"/code-server_"${VERSION}"_amd64.deb &>/dev/null
+dpkg -i code-server_"${VERSION}"_amd64.deb &>/dev/null
+rm -rf code-server_"${VERSION}"_amd64.deb
 mkdir -p ~/.config/code-server/
-systemctl enable -q --now code-server@$USER
+systemctl enable -q --now code-server@"$USER"
 cat <<EOF >~/.config/code-server/config.yaml
 bind-addr: 0.0.0.0:8680
 auth: none
 password: 
 cert: false
 EOF
-systemctl restart code-server@$USER
+systemctl restart code-server@"$USER"
 msg_ok "Installed Code-Server v${VERSION} on $hostname"
 
 echo -e "${APP} should be reachable by going to the following URL.
