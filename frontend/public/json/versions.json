@@ -1,5 +1,85 @@
 [
   {
+    "name": "theonedev/onedev",
+    "version": "v11.9.2",
+    "date": "2025-05-04T08:05:43Z"
+  },
+  {
+    "name": "semaphoreui/semaphore",
+    "version": "v2.14.8-beta3",
+    "date": "2025-05-03T12:14:48Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.1",
+    "date": "2025-01-01T16:15:52Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1863",
+    "date": "2025-05-04T05:59:06Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.6.7-rc2",
+    "date": "2025-04-30T20:57:45Z"
+  },
+  {
+    "name": "pocket-id/pocket-id",
+    "version": "v0.51.1",
+    "date": "2025-05-03T21:42:51Z"
+  },
+  {
+    "name": "FreshRSS/FreshRSS",
+    "version": "1.26.2",
+    "date": "2025-05-03T20:23:27Z"
+  },
+  {
+    "name": "actualbudget/actual",
+    "version": "v25.5.0",
+    "date": "2025-05-03T19:03:17Z"
+  },
+  {
+    "name": "owncast/owncast",
+    "version": "v0.2.2",
+    "date": "2025-05-03T18:45:34Z"
+  },
+  {
+    "name": "rogerfar/rdt-client",
+    "version": "v2.0.111",
+    "date": "2025-05-03T16:25:30Z"
+  },
+  {
+    "name": "linkwarden/linkwarden",
+    "version": "v2.10.1",
+    "date": "2025-05-03T16:03:26Z"
+  },
+  {
+    "name": "dgtlmoon/changedetection.io",
+    "version": "0.49.16",
+    "date": "2025-05-03T14:44:01Z"
+  },
+  {
+    "name": "ellite/Wallos",
+    "version": "v3.0.2",
+    "date": "2025-05-03T13:38:57Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "v4.0.2",
+    "date": "2025-05-01T16:10:58Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.2.2",
+    "date": "2025-04-30T06:14:22Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.4.4",
+    "date": "2025-04-25T07:47:57Z"
+  },
+  {
     "name": "blakeblackshear/frigate",
     "version": "v0.14.1",
     "date": "2024-08-29T22:32:51Z"
@@ -8,16 +88,6 @@
     "name": "kimai/kimai",
     "version": "2.33.0",
     "date": "2025-05-03T10:33:49Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1857",
-    "date": "2025-05-03T05:54:00Z"
-  },
-  {
-    "name": "theonedev/onedev",
-    "version": "v11.9.1",
-    "date": "2025-05-03T02:48:33Z"
   },
   {
     "name": "Brandawg93/PeaNUT",
@@ -60,11 +130,6 @@
     "date": "2025-05-02T16:48:15Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.2.2",
-    "date": "2025-04-30T06:14:22Z"
-  },
-  {
     "name": "prometheus-pve/prometheus-pve-exporter",
     "version": "v3.5.4",
     "date": "2025-05-02T13:42:06Z"
@@ -100,11 +165,6 @@
     "date": "2025-05-02T11:07:10Z"
   },
   {
-    "name": "semaphoreui/semaphore",
-    "version": "v2.14.7",
-    "date": "2025-05-02T07:57:33Z"
-  },
-  {
     "name": "apache/couchdb",
     "version": "3.5.0-RC1",
     "date": "2025-05-02T04:34:23Z"
@@ -113,11 +173,6 @@
     "name": "syncthing/syncthing",
     "version": "v2.0.0-rc.14",
     "date": "2025-05-01T23:50:42Z"
-  },
-  {
-    "name": "home-assistant/core",
-    "version": "2025.4.4",
-    "date": "2025-04-25T07:47:57Z"
   },
   {
     "name": "stackblitz-labs/bolt.diy",
@@ -135,11 +190,6 @@
     "date": "2025-05-01T16:46:17Z"
   },
   {
-    "name": "runtipi/runtipi",
-    "version": "v4.0.2",
-    "date": "2025-05-01T16:10:58Z"
-  },
-  {
     "name": "fallenbagel/jellyseerr",
     "version": "preview-typeorm-fix",
     "date": "2025-05-01T14:47:45Z"
@@ -155,11 +205,6 @@
     "date": "2025-05-01T04:13:41Z"
   },
   {
-    "name": "ollama/ollama",
-    "version": "v0.6.7-rc2",
-    "date": "2025-04-30T20:57:45Z"
-  },
-  {
     "name": "HabitRPG/habitica",
     "version": "v5.36.1",
     "date": "2025-04-30T19:44:44Z"
@@ -168,11 +213,6 @@
     "name": "readeck/readeck",
     "version": "0.18.1",
     "date": "2025-04-30T17:44:46Z"
-  },
-  {
-    "name": "ellite/Wallos",
-    "version": "v3.0.1",
-    "date": "2025-04-30T17:16:36Z"
   },
   {
     "name": "WordPress/WordPress",
@@ -243,11 +283,6 @@
     "name": "Luligu/matterbridge",
     "version": "3.0.0",
     "date": "2025-04-30T06:24:07Z"
-  },
-  {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.1",
-    "date": "2025-01-01T16:15:52Z"
   },
   {
     "name": "go-gitea/gitea",
@@ -328,11 +363,6 @@
     "name": "VictoriaMetrics/VictoriaMetrics",
     "version": "pmm-6401-v1.116.0",
     "date": "2025-04-28T11:30:10Z"
-  },
-  {
-    "name": "pocket-id/pocket-id",
-    "version": "v0.51.0",
-    "date": "2025-04-28T09:15:56Z"
   },
   {
     "name": "FlowiseAI/Flowise",
@@ -433,11 +463,6 @@
     "name": "mongodb/mongo",
     "version": "r7.0.19",
     "date": "2025-04-24T20:59:43Z"
-  },
-  {
-    "name": "rogerfar/rdt-client",
-    "version": "v2.0.110",
-    "date": "2025-04-24T19:11:06Z"
   },
   {
     "name": "dotnetfactory/fluid-calendar",
@@ -560,11 +585,6 @@
     "date": "2025-04-18T16:08:02Z"
   },
   {
-    "name": "dgtlmoon/changedetection.io",
-    "version": "0.49.15",
-    "date": "2025-04-18T12:58:26Z"
-  },
-  {
     "name": "traefik/traefik",
     "version": "v3.3.6",
     "date": "2025-04-18T09:28:22Z"
@@ -665,11 +685,6 @@
     "date": "2025-04-10T16:32:00Z"
   },
   {
-    "name": "linkwarden/linkwarden",
-    "version": "v2.10.0",
-    "date": "2025-04-08T12:33:57Z"
-  },
-  {
     "name": "pelican-dev/panel",
     "version": "v1.0.0-beta19",
     "date": "2025-04-07T23:06:29Z"
@@ -728,11 +743,6 @@
     "name": "navidrome/navidrome",
     "version": "v0.55.2",
     "date": "2025-04-05T12:07:32Z"
-  },
-  {
-    "name": "actualbudget/actual",
-    "version": "v25.4.0",
-    "date": "2025-04-05T04:14:57Z"
   },
   {
     "name": "Athou/commafeed",
@@ -888,11 +898,6 @@
     "name": "webmin/webmin",
     "version": "2.303",
     "date": "2025-03-17T04:54:50Z"
-  },
-  {
-    "name": "FreshRSS/FreshRSS",
-    "version": "1.26.1",
-    "date": "2025-03-13T21:34:25Z"
   },
   {
     "name": "transmission/transmission",
@@ -1078,11 +1083,6 @@
     "name": "crafty-controller/crafty-4",
     "version": "v4.4.7",
     "date": "2025-01-20T15:45:06Z"
-  },
-  {
-    "name": "owncast/owncast",
-    "version": "v0.2.1",
-    "date": "2025-01-19T22:40:40Z"
   },
   {
     "name": "0xERR0R/blocky",
