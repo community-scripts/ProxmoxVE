@@ -23,7 +23,7 @@ $STD apt-get install -y \
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="22"
-NODE_MODULE="pnpm@10.1,yarn"
+NODE_MODULE="yarn@latest"
 install_node_and_modules
 PG_VERSION="15"
 install_postgresql
