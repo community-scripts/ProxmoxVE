@@ -16,12 +16,20 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-05-05
 
+### 🆕 New Scripts
+
+  - Alpine-Komodo [@MickLesk](https://github.com/MickLesk) ([#4234](https://github.com/community-scripts/ProxmoxVE/pull/4234))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
 
     - Alpine-Vaultwarden: Fix sed and better cert generation [@tremor021](https://github.com/tremor021) ([#4232](https://github.com/community-scripts/ProxmoxVE/pull/4232))
     - Apache Guacamole: Fix Version Grepping [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4229](https://github.com/community-scripts/ProxmoxVE/pull/4229))
+
+  - #### 🔧 Refactor
+
+    - Refactor: Komodo update logic [@MickLesk](https://github.com/MickLesk) ([#4231](https://github.com/community-scripts/ProxmoxVE/pull/4231))
 
 ## 2025-05-04
 
