@@ -20,42 +20,36 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /opt/komodo ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    msg_info "Updating ${APP}"
-    COMPOSE_FILE=""
-    for file in /opt/komodo/*.compose.yaml; do
-        if [[ "$file" != "compose.env" ]]; then
-            COMPOSE_FILE="${file#/opt/komodo/}"
-            break
-        fi
-    done
+  header_info
+  check_container_storage
+  check_container_resources
 
-    if [[ -z "$COMPOSE_FILE" ]]; then
-        msg_error "No valid compose file found in /opt/komodo!"
-        exit 1
-    fi
+  [[ -d /opt/komodo ]] || {
+    msg_error "No ${APP} Installation Found!"
+    exit 1
+  }
 
-    BACKUP_FILE="${COMPOSE_FILE}.bak_$(date +%Y%m%d_%H%M%S)"
-    mv "/opt/komodo/$COMPOSE_FILE" "/opt/komodo/$BACKUP_FILE" || {
-        msg_error "Failed to create backup of $COMPOSE_FILE!"
-        exit 1
-    }
-
-    GITHUB_URL="https://raw.githubusercontent.com/moghtech/komodo/main/compose/${COMPOSE_FILE}"
-    if ! curl -fsSL "$GITHUB_URL" -o "/opt/komodo/${COMPOSE_FILE}"; then
-        msg_error "Failed to download ${COMPOSE_FILE} from GitHub!"
-        mv "/opt/komodo/${BACKUP_FILE}" "/opt/komodo/${COMPOSE_FILE}"
-        exit 1
-    fi
-
-    $STD docker compose -p komodo -f "/opt/komodo/$COMPOSE_FILE" --env-file /opt/komodo/compose.env up -d
-    msg_ok "Updated ${APP}"
+  msg_info "Updating ${APP}"
+  COMPOSE_FILE=$(find /opt/komodo -maxdepth 1 -type f -name '*.compose.yaml' ! -name 'compose.env' | head -n1)
+  if [[ -z "$COMPOSE_FILE" ]]; then
+    msg_error "No valid compose file found in /opt/komodo!"
+    exit 1
+  fi
+  COMPOSE_BASENAME=$(basename "$COMPOSE_FILE")
+  BACKUP_FILE="/opt/komodo/${COMPOSE_BASENAME}.bak_$(date +%Y%m%d_%H%M%S)"
+  cp "$COMPOSE_FILE" "$BACKUP_FILE" || {
+    msg_error "Failed to create backup of ${COMPOSE_BASENAME}!"
+    exit 1
+  }
+  GITHUB_URL="https://raw.githubusercontent.com/moghtech/komodo/main/compose/${COMPOSE_BASENAME}"
+  if ! curl -fsSL "$GITHUB_URL" -o "$COMPOSE_FILE"; then
+    msg_error "Failed to download ${COMPOSE_BASENAME} from GitHub!"
+    mv "$BACKUP_FILE" "$COMPOSE_FILE"
+    exit 1
+  fi
+  $STD docker compose -p komodo -f "$COMPOSE_FILE" --env-file /opt/komodo/compose.env up -d
+  msg_ok "Updated ${APP}"
+  exit
 }
 
 start
