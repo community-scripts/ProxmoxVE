@@ -99,8 +99,8 @@ NEXTAUTH_URL=http://${IP}:3000
 DATABASE_URL=postgresql://${DB_USER}:${DB_PASS}@localhost:5432/${DB_NAME}
 " >$env_path
 $STD yarn prisma:generate
-yarn web:build
-yarn prisma:deploy
+$STD yarn web:build
+$STD yarn prisma:deploy
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Installed Linkwarden"
 
