@@ -24,6 +24,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - Docker VM: Fix variable doublequoting [@tremor021](https://github.com/tremor021) ([#4245](https://github.com/community-scripts/ProxmoxVE/pull/4245))
     - Alpine-Vaultwarden: Fix sed and better cert generation [@tremor021](https://github.com/tremor021) ([#4232](https://github.com/community-scripts/ProxmoxVE/pull/4232))
     - Apache Guacamole: Fix Version Grepping [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4229](https://github.com/community-scripts/ProxmoxVE/pull/4229))
 
