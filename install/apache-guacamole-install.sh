@@ -52,7 +52,7 @@ msg_ok "Setup Apache Tomcat"
 
 msg_info "Setup Apache Guacamole"
 mkdir -p /etc/guacamole/{extensions,lib}
-RELEASE_SERVER=$(curl -fsSL https://api.github.com/repos/apache/guacamole-server/tags | jq -r '.[0].name')
+RELEASE_SERVER=$(curl -fsSL https://api.github.com/repos/apache/guacamole-server/tags | jq -r '.[].name' | grep -v -- '-RC' | head -n 1)
 curl -fsSL "https://api.github.com/repos/apache/guacamole-server/tarball/refs/tags/${RELEASE_SERVER}" | tar -xz --strip-components=1 -C /opt/apache-guacamole/server
 cd /opt/apache-guacamole/server
 $STD autoreconf -fi
