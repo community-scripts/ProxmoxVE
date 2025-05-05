@@ -72,7 +72,7 @@ WorkingDirectory=/opt/actualbudget
 Environment=ACTUAL_UPLOAD_FILE_SIZE_LIMIT_MB=20
 Environment=ACTUAL_UPLOAD_SYNC_ENCRYPTED_FILE_SYNC_SIZE_LIMIT_MB=50
 Environment=ACTUAL_UPLOAD_FILE_SYNC_SIZE_LIMIT_MB=20
-ExecStart=/usr/local/bin/actual-server --config /opt/actualbudget-data/config.json
+ExecStart=/usr/bin/actual-server --config /opt/actualbudget-data/config.json
 Restart=always
 RestartSec=10
 
