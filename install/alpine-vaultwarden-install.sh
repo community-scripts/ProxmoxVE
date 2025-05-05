@@ -15,12 +15,7 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apk add --no-cache \
-  newt \
-  curl \
   openssl \
-  openssh \
-  nano \
-  mc \
   argon2
 msg_ok "Installed Dependencies"
 
