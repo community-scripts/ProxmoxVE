@@ -28,6 +28,10 @@ function update_script() {
   fi
   RELEASE=$(curl -fsSL https://api.github.com/repos/linkwarden/linkwarden/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
   if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
+    NODE_VERSION="22"
+    NODE_MODULE="yarn@latest"
+    install_node_and_modules
+    
     msg_info "Stopping ${APP}"
     systemctl stop linkwarden
     msg_ok "Stopped ${APP}"
@@ -46,7 +50,7 @@ function update_script() {
     mv /opt/linkwarden/.env /opt/.env
     rm -rf /opt/linkwarden
     RELEASE=$(curl -fsSL https://api.github.com/repos/linkwarden/linkwarden/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-    curl -fsSL "https://github.com/linkwarden/linkwarden/archive/refs/tags/${RELEASE}.zip" -o $(basename "https://github.com/linkwarden/linkwarden/archive/refs/tags/${RELEASE}.zip")
+    curl -fsSL "https://github.com/linkwarden/linkwarden/archive/refs/tags/${RELEASE}.zip" -o ${RELEASE}.zip
     unzip -q ${RELEASE}.zip
     mv linkwarden-${RELEASE:1} /opt/linkwarden
     cd /opt/linkwarden
@@ -54,8 +58,9 @@ function update_script() {
     $STD npx playwright install-deps
     $STD yarn playwright install
     cp /opt/.env /opt/linkwarden/.env
-    $STD yarn build
-    $STD yarn prisma migrate deploy
+    $STD yarn prisma:generate
+    $STD yarn web:build
+    $STD yarn prisma:deploy
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP} to ${RELEASE}"
 
