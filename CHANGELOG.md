@@ -31,6 +31,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - Refactor: Komodo update logic [@MickLesk](https://github.com/MickLesk) ([#4231](https://github.com/community-scripts/ProxmoxVE/pull/4231))
 
+### 🧰 Maintenance
+
+  - #### 💾 Core
+
+    - tools.func: better function handling + gs as new helper [@MickLesk](https://github.com/MickLesk) ([#4238](https://github.com/community-scripts/ProxmoxVE/pull/4238))
+
 ## 2025-05-04
 
 ### 🌐 Website
