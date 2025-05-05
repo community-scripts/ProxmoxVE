@@ -27,6 +27,10 @@ All LXC instances created using this repository come pre-installed with Midnight
     - Alpine-Vaultwarden: Fix sed and better cert generation [@tremor021](https://github.com/tremor021) ([#4232](https://github.com/community-scripts/ProxmoxVE/pull/4232))
     - Apache Guacamole: Fix Version Grepping [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4229](https://github.com/community-scripts/ProxmoxVE/pull/4229))
 
+  - #### ✨ New Features
+
+    - Docker-VM: Add Disk Size choice [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4241](https://github.com/community-scripts/ProxmoxVE/pull/4241))
+
   - #### 🔧 Refactor
 
     - Refactor: Komodo update logic [@MickLesk](https://github.com/MickLesk) ([#4231](https://github.com/community-scripts/ProxmoxVE/pull/4231))
