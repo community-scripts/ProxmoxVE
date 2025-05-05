@@ -108,8 +108,7 @@ EOF
 
     echo "${RELEASE}" >/opt/actualbudget_version.txt
     $STD systemctl daemon-reload
-    systemctl enable actualbudget
-    systemctl start actualbudget
+    systemctl enable -q --now actualbudget
     msg_ok "Migrated and started ${APP} ${RELEASE}"
   fi
 
