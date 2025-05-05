@@ -405,7 +405,7 @@ msg_info "Retrieving the URL for the Debian 12 Qcow2 Disk Image"
 URL="https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-nocloud-$(dpkg --print-architecture).qcow2"
 sleep 2
 msg_ok "${CL}${BL}${URL}${CL}"
-curl -f#SL -o "$(basename "$URL")" "$URL"
+curl -fsSL -o "$(basename "$URL")" "$URL"
 echo -en "\e[1A\e[0K"
 FILE=$(basename "$URL")
 msg_ok "Downloaded ${CL}${BL}${FILE}${CL}"
@@ -447,7 +447,7 @@ msg_ok "Added Docker and Docker Compose Plugin to Debian 12 Qcow2 Disk Image suc
 
 msg_info "Creating a Docker VM"
 qm create "$VMID" -agent 1"${MACHINE}" -tablet 0 -localtime 1 -bios ovmf"${CPU_TYPE}" -cores "$CORE_COUNT" -memory "$RAM_SIZE" \
-  -name "$HN" -tags community-script,debian12,docker -net0 virtio,bridge="$BRG",macaddr="$MAC"$VLAN"$MTU" -onboot 1 -ostype l26 -scsihw virtio-scsi-pci
+  -name "$HN" -tags community-script,debian12,docker -net0 virtio,bridge="$BRG",macaddr="$MAC""$VLAN""$MTU" -onboot 1 -ostype l26 -scsihw virtio-scsi-pci
 pvesm alloc "$STORAGE" "$VMID" "$DISK0" 4M 1>&/dev/null
 qm importdisk "$VMID" "${FILE}" "$STORAGE" "${DISK_IMPORT:-}" 1>&/dev/null
 qm set "$VMID" \
