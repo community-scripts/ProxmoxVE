@@ -45,7 +45,7 @@ EOF
 
 mkdir -p /opt/actualbudget
 cd /opt/actualbudget
-npm install --location=global @actual-app/sync-server
+$STD npm install --location=global @actual-app/sync-server
 $STD openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout selfhost.key -out selfhost.crt <<EOF
 US
 California
