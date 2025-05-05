@@ -428,8 +428,8 @@ btrfs)
 esac
 for i in {0,1}; do
   disk="DISK$i"
-  eval DISK"${i}"=vm-"${VMID}"-disk-"${i}""${DISK_EXT:-}"
-  eval DISK"${i}"_REF="${STORAGE}":"${DISK_REF:-}""${!disk}"
+  eval DISK"${i}"=vm-"${VMID}"-disk-"${i}"""${DISK_EXT:-"}"
+  eval DISK"${i}"_REF="${STORAGE}":"${DISK_REF:-}"""${!disk"}"
 done
 
 msg_info "Installing Pre-Requisite libguestfs-tools onto Host"
@@ -446,17 +446,16 @@ virt-customize -q -a "${FILE}" --install qemu-guest-agent,apt-transport-https,ca
 msg_ok "Added Docker and Docker Compose Plugin to Debian 12 Qcow2 Disk Image successfully"
 
 msg_info "Creating a Docker VM"
-qm create "$VMID" -agent 1"${MACHINE}" -tablet 0 -localtime 1 -bios ovmf"${CPU_TYPE}" -cores "$CORE_COUNT" -memory "$RAM_SIZE" \
-  -name "$HN" -tags community-script,debian12,docker -net0 virtio,bridge="$BRG",macaddr="$MAC""$VLAN""$MTU" -onboot 1 -ostype l26 -scsihw virtio-scsi-pci
-pvesm alloc "$STORAGE" "$VMID" "$DISK0" 4M 1>&/dev/null
-qm importdisk "$VMID" "${FILE}" "$STORAGE" "${DISK_IMPORT:-}" 1>&/dev/null
-qm set "$VMID" \
-  -efidisk0 "${DISK0_REF}"${FORMAT} \
-  -scsi0 "${DISK1_REF}",${DISK_CACHE}${THIN}size="${DISK_SIZE}" \
+qm create $VMID -agent 1${MACHINE} -tablet 0 -localtime 1 -bios ovmf${CPU_TYPE} -cores $CORE_COUNT -memory $RAM_SIZE \
+  -name $HN -tags community-script,debian12,docker -net0 virtio,bridge=$BRG,macaddr=$MAC$VLAN$MTU -onboot 1 -ostype l26 -scsihw virtio-scsi-pci
+pvesm alloc $STORAGE $VMID $DISK0 4M 1>&/dev/null
+qm importdisk $VMID ${FILE} $STORAGE ${DISK_IMPORT:-} 1>&/dev/null
+qm set $VMID \
+  -efidisk0 ${DISK0_REF}${FORMAT} \
+  -scsi0 ${DISK1_REF},${DISK_CACHE}${THIN}size=${DISK_SIZE} \
   -boot order=scsi0 \
   -serial0 socket >/dev/null
-qm resize "$VMID" scsi0 8G >/dev/null
-qm set "$VMID" --agent enabled=1 >/dev/null
+qm set $VMID --agent enabled=1 >/dev/null
 
 DESCRIPTION=$(
   cat <<EOF
@@ -492,16 +491,16 @@ qm set "$VMID" -description "$DESCRIPTION" >/dev/null
 
 if [ -n "$DISK_SIZE" ]; then
   msg_info "Resizing disk to $DISK_SIZE GB"
-  qm resize "$VMID" scsi0 "${DISK_SIZE}" >/dev/null
+  qm resize $VMID scsi0 ${DISK_SIZE} >/dev/null
 else
   msg_info "Using default disk size of $DEFAULT_DISK_SIZE GB"
-  qm resize "$VMID" scsi0 "${DEFAULT_DISK_SIZE}" >/dev/null
+  qm resize $VMID scsi0 ${DEFAULT_DISK_SIZE} >/dev/null
 fi
 
 msg_ok "Created a Docker VM ${CL}${BL}(${HN})"
 if [ "$START_VM" == "yes" ]; then
   msg_info "Starting Docker VM"
-  qm start "$VMID"
+  qm start $VMID
   msg_ok "Started Docker VM"
 fi
 post_update_to_api "done" "none"
