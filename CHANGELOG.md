@@ -14,6 +14,18 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 All LXC instances created using this repository come pre-installed with Midnight Commander, which is a command-line tool (`mc`) that offers a user-friendly file and directory management interface for the terminal environment.
 
 
+## 2025-05-06
+
+### 🆕 New Scripts
+
+  - Re-Add: ActualBudget [@MickLesk](https://github.com/MickLesk) ([#4228](https://github.com/community-scripts/ProxmoxVE/pull/4228))
+
+### 🧰 Maintenance
+
+  - #### 🐞 Bug Fixes
+
+    - whiptail menu - cancel button now exists the advanced menu [@MickLesk](https://github.com/MickLesk) ([#4259](https://github.com/community-scripts/ProxmoxVE/pull/4259))
+
 ## 2025-05-05
 
 ### 🆕 New Scripts
