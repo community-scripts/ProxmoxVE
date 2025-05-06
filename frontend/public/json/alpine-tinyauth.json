@@ -1,0 +1,51 @@
+{
+  "name": "Alpine-tinyauth",
+  "slug": "alpine-tinyauth",
+  "categories": [
+    6
+  ],
+  "date_created": "2025-04-28",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 3000,
+  "documentation": "https://tinyauth.app/docs/getting-started.html",
+  "website": "https://tinyauth.app/",
+  "logo": "https://raw.githubusercontent.com/steveiliop56/tinyauth/refs/heads/main/frontend/public/android-chrome-192x192.png",
+  "config_path": "/opt/tinyauth/.env",
+  "description": "Tinyauth is a simple authentication middleware that adds simple username/password login or OAuth with Google, Github and any generic provider to all of your docker apps. It is designed for traefik but it can be extended to work with all reverse proxies like caddy and nginx.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/alpine-tinyauth.sh",
+      "resources": {
+        "cpu": 1,
+        "ram": 256,
+        "hdd": 3,
+        "os": "alpine",
+        "version": "3.21"
+      }
+    },
+    {
+      "type": "alpine",
+      "script": "ct/alpine-tinyauth.sh",
+      "resources": {
+        "cpu": 1,
+        "ram": 256,
+        "hdd": 3,
+        "os": "alpine",
+        "version": "3.21"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "type": "info",
+      "text": "`cat ~/tinyauth.creds` to view login credentials"
+    }
+  ]
+}
