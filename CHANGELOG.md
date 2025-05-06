@@ -18,7 +18,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🆕 New Scripts
 
-  - streamlink-webui ([#4262](https://github.com/community-scripts/ProxmoxVE/pull/4262))
+  - alpine-transmission ([#4277](https://github.com/community-scripts/ProxmoxVE/pull/4277))
+- streamlink-webui ([#4262](https://github.com/community-scripts/ProxmoxVE/pull/4262))
 - Fumadocs ([#4263](https://github.com/community-scripts/ProxmoxVE/pull/4263))
 - alpine-rclone ([#4265](https://github.com/community-scripts/ProxmoxVE/pull/4265))
 - alpine-tinyauth ([#4264](https://github.com/community-scripts/ProxmoxVE/pull/4264))
