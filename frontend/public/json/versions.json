@@ -1,5 +1,80 @@
 [
   {
+    "name": "autobrr/autobrr",
+    "version": "v1.62.0",
+    "date": "2025-05-05T20:35:18Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.20.9",
+    "date": "2025-05-05T19:24:09Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.4.4",
+    "date": "2025-04-25T07:47:57Z"
+  },
+  {
+    "name": "grafana/grafana",
+    "version": "v12.0.0",
+    "date": "2025-05-05T18:28:19Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "v9.11.14",
+    "date": "2025-05-05T17:50:53Z"
+  },
+  {
+    "name": "BookStackApp/BookStack",
+    "version": "v25.02.3",
+    "date": "2025-05-05T17:39:11Z"
+  },
+  {
+    "name": "apache/couchdb",
+    "version": "3.5.0",
+    "date": "2025-05-05T16:28:24Z"
+  },
+  {
+    "name": "fallenbagel/jellyseerr",
+    "version": "preview-tvdb",
+    "date": "2025-05-05T16:23:09Z"
+  },
+  {
+    "name": "icereed/paperless-gpt",
+    "version": "v0.18.0",
+    "date": "2025-05-05T15:34:40Z"
+  },
+  {
+    "name": "apache/tika",
+    "version": "2.9.4",
+    "date": "2025-05-05T15:17:27Z"
+  },
+  {
+    "name": "traefik/traefik",
+    "version": "v3.4.0",
+    "date": "2025-05-05T13:59:23Z"
+  },
+  {
+    "name": "open-webui/open-webui",
+    "version": "v0.6.6",
+    "date": "2025-05-05T13:59:08Z"
+  },
+  {
+    "name": "zwave-js/zwave-js-ui",
+    "version": "v10.4.0",
+    "date": "2025-05-05T13:01:01Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.91.2",
+    "date": "2025-05-05T12:59:51Z"
+  },
+  {
+    "name": "semaphoreui/semaphore",
+    "version": "v2.14.9",
+    "date": "2025-05-05T12:20:38Z"
+  },
+  {
     "name": "keycloak/keycloak",
     "version": "26.2.3",
     "date": "2025-05-05T11:12:36Z"
@@ -15,24 +90,9 @@
     "date": "2025-05-05T10:22:11Z"
   },
   {
-    "name": "traefik/traefik",
-    "version": "v3.3.7",
-    "date": "2025-05-05T08:53:40Z"
-  },
-  {
-    "name": "icereed/paperless-gpt",
-    "version": "v0.17.0",
-    "date": "2025-05-05T08:27:55Z"
-  },
-  {
     "name": "evcc-io/evcc",
     "version": "0.203.5",
     "date": "2025-05-05T06:41:02Z"
-  },
-  {
-    "name": "mattermost/mattermost",
-    "version": "v10.6.3",
-    "date": "2025-04-29T07:03:19Z"
   },
   {
     "name": "Jackett/Jackett",
@@ -65,11 +125,6 @@
     "date": "2025-02-25T17:30:48Z"
   },
   {
-    "name": "semaphoreui/semaphore",
-    "version": "v2.14.8",
-    "date": "2025-05-04T19:28:20Z"
-  },
-  {
     "name": "runtipi/runtipi",
     "version": "nightly",
     "date": "2025-05-04T18:23:57Z"
@@ -100,11 +155,6 @@
     "date": "2025-04-23T18:51:12Z"
   },
   {
-    "name": "home-assistant/core",
-    "version": "2025.4.4",
-    "date": "2025-04-25T07:47:57Z"
-  },
-  {
     "name": "bastienwirtz/homer",
     "version": "v25.05.1",
     "date": "2025-05-04T12:17:00Z"
@@ -116,8 +166,8 @@
   },
   {
     "name": "ollama/ollama",
-    "version": "v0.6.7-rc2",
-    "date": "2025-04-30T20:57:45Z"
+    "version": "v0.6.8",
+    "date": "2025-05-03T22:56:44Z"
   },
   {
     "name": "pocket-id/pocket-id",
@@ -230,11 +280,6 @@
     "date": "2020-06-07T07:27:04Z"
   },
   {
-    "name": "msgbyte/tianji",
-    "version": "v1.20.8",
-    "date": "2025-05-02T11:37:05Z"
-  },
-  {
     "name": "redis/redis",
     "version": "8.0.0",
     "date": "2025-05-02T11:20:31Z"
@@ -245,19 +290,14 @@
     "date": "2025-05-02T11:07:10Z"
   },
   {
-    "name": "apache/couchdb",
-    "version": "3.5.0-RC1",
-    "date": "2025-05-02T04:34:23Z"
-  },
-  {
     "name": "syncthing/syncthing",
     "version": "v2.0.0-rc.14",
     "date": "2025-05-01T23:50:42Z"
   },
   {
     "name": "stackblitz-labs/bolt.diy",
-    "version": "v0.0.7-hf1",
-    "date": "2025-03-10T20:49:39Z"
+    "version": "v1.0.0-draft",
+    "date": "2025-05-01T18:33:44Z"
   },
   {
     "name": "Koenkk/zigbee2mqtt",
@@ -268,16 +308,6 @@
     "name": "netbox-community/netbox",
     "version": "v4.3.0",
     "date": "2025-05-01T16:46:17Z"
-  },
-  {
-    "name": "fallenbagel/jellyseerr",
-    "version": "preview-plex-home-profile",
-    "date": "2025-05-01T14:59:46Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.91.0",
-    "date": "2025-04-28T15:38:56Z"
   },
   {
     "name": "NodeBB/NodeBB",
@@ -375,11 +405,6 @@
     "date": "2025-04-29T15:00:18Z"
   },
   {
-    "name": "apache/tika",
-    "version": "2.9.4-rc1",
-    "date": "2025-04-29T13:06:08Z"
-  },
-  {
     "name": "esphome/esphome",
     "version": "2025.4.1",
     "date": "2025-04-29T02:20:36Z"
@@ -450,11 +475,6 @@
     "date": "2025-03-01T02:24:33Z"
   },
   {
-    "name": "zwave-js/zwave-js-ui",
-    "version": "v10.3.3",
-    "date": "2025-04-26T21:44:00Z"
-  },
-  {
     "name": "TandoorRecipes/recipes",
     "version": "1.5.34",
     "date": "2025-03-27T16:17:38Z"
@@ -523,11 +543,6 @@
     "name": "Kozea/Radicale",
     "version": "v3.5.2",
     "date": "2025-04-23T18:41:46Z"
-  },
-  {
-    "name": "grafana/grafana",
-    "version": "v11.6.1",
-    "date": "2025-04-23T17:04:02Z"
   },
   {
     "name": "cockpit-project/cockpit",
@@ -650,16 +665,6 @@
     "date": "2025-04-14T15:37:12Z"
   },
   {
-    "name": "open-webui/open-webui",
-    "version": "v0.6.5",
-    "date": "2025-04-14T09:13:36Z"
-  },
-  {
-    "name": "autobrr/autobrr",
-    "version": "v1.61.0",
-    "date": "2025-04-13T21:14:40Z"
-  },
-  {
     "name": "Ombi-app/Ombi",
     "version": "v4.47.1",
     "date": "2025-01-05T21:14:23Z"
@@ -758,11 +763,6 @@
     "name": "apache/tomcat",
     "version": "9.0.104",
     "date": "2025-04-04T12:58:11Z"
-  },
-  {
-    "name": "BookStackApp/BookStack",
-    "version": "v25.02.2",
-    "date": "2025-04-02T16:39:50Z"
   },
   {
     "name": "MagicMirrorOrg/MagicMirror",
