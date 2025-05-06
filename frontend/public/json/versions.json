@@ -1,5 +1,70 @@
 [
   {
+    "name": "element-hq/synapse",
+    "version": "v1.129.0",
+    "date": "2025-05-06T11:25:39Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.91.2",
+    "date": "2025-05-05T12:59:51Z"
+  },
+  {
+    "name": "Luligu/matterbridge",
+    "version": "3.0.1",
+    "date": "2025-05-06T10:24:43Z"
+  },
+  {
+    "name": "syncthing/syncthing",
+    "version": "v1.29.6",
+    "date": "2025-05-06T07:57:02Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "v9.11.14",
+    "date": "2025-05-05T17:50:53Z"
+  },
+  {
+    "name": "zitadel/zitadel",
+    "version": "v3.0.1",
+    "date": "2025-05-06T06:53:59Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.4.0",
+    "date": "2025-05-06T06:47:16Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.1",
+    "date": "2025-01-01T16:15:52Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1867",
+    "date": "2025-05-06T05:54:56Z"
+  },
+  {
+    "name": "linkwarden/linkwarden",
+    "version": "v2.10.2",
+    "date": "2025-05-06T03:12:53Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.4.4",
+    "date": "2025-04-25T07:47:57Z"
+  },
+  {
+    "name": "fallenbagel/jellyseerr",
+    "version": "preview-tvdb",
+    "date": "2025-05-06T01:32:52Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.2.3",
+    "date": "2025-05-05T11:12:36Z"
+  },
+  {
     "name": "autobrr/autobrr",
     "version": "v1.62.0",
     "date": "2025-05-05T20:35:18Z"
@@ -10,19 +75,14 @@
     "date": "2025-05-05T19:24:09Z"
   },
   {
-    "name": "home-assistant/core",
-    "version": "2025.4.4",
-    "date": "2025-04-25T07:47:57Z"
+    "name": "runtipi/runtipi",
+    "version": "v4.0.2",
+    "date": "2025-05-01T16:10:58Z"
   },
   {
     "name": "grafana/grafana",
     "version": "v12.0.0",
     "date": "2025-05-05T18:28:19Z"
-  },
-  {
-    "name": "mattermost/mattermost",
-    "version": "v9.11.14",
-    "date": "2025-05-05T17:50:53Z"
   },
   {
     "name": "BookStackApp/BookStack",
@@ -33,11 +93,6 @@
     "name": "apache/couchdb",
     "version": "3.5.0",
     "date": "2025-05-05T16:28:24Z"
-  },
-  {
-    "name": "fallenbagel/jellyseerr",
-    "version": "preview-tvdb",
-    "date": "2025-05-05T16:23:09Z"
   },
   {
     "name": "icereed/paperless-gpt",
@@ -65,19 +120,9 @@
     "date": "2025-05-05T13:01:01Z"
   },
   {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.91.2",
-    "date": "2025-05-05T12:59:51Z"
-  },
-  {
     "name": "semaphoreui/semaphore",
     "version": "v2.14.9",
     "date": "2025-05-05T12:20:38Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.2.3",
-    "date": "2025-05-05T11:12:36Z"
   },
   {
     "name": "grokability/snipe-it",
@@ -93,11 +138,6 @@
     "name": "evcc-io/evcc",
     "version": "0.203.5",
     "date": "2025-05-05T06:41:02Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1865",
-    "date": "2025-05-05T05:54:54Z"
   },
   {
     "name": "MediaBrowser/Emby.Releases",
@@ -123,11 +163,6 @@
     "name": "juanfont/headscale",
     "version": "v0.25.1",
     "date": "2025-02-25T17:30:48Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-05-04T18:23:57Z"
   },
   {
     "name": "bluenviron/mediamtx",
@@ -160,11 +195,6 @@
     "date": "2025-05-04T12:17:00Z"
   },
   {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.1",
-    "date": "2025-01-01T16:15:52Z"
-  },
-  {
     "name": "ollama/ollama",
     "version": "v0.6.8",
     "date": "2025-05-03T22:56:44Z"
@@ -193,11 +223,6 @@
     "name": "rogerfar/rdt-client",
     "version": "v2.0.111",
     "date": "2025-05-03T16:25:30Z"
-  },
-  {
-    "name": "linkwarden/linkwarden",
-    "version": "v2.10.1",
-    "date": "2025-05-03T16:03:26Z"
   },
   {
     "name": "dgtlmoon/changedetection.io",
@@ -265,11 +290,6 @@
     "date": "2025-05-02T13:42:06Z"
   },
   {
-    "name": "zitadel/zitadel",
-    "version": "v2.71.9",
-    "date": "2025-05-02T12:48:14Z"
-  },
-  {
     "name": "nzbgetcom/nzbget",
     "version": "v24.8",
     "date": "2025-03-18T07:33:51Z"
@@ -288,11 +308,6 @@
     "name": "emqx/emqx",
     "version": "e5.9.0",
     "date": "2025-05-02T11:07:10Z"
-  },
-  {
-    "name": "syncthing/syncthing",
-    "version": "v2.0.0-rc.14",
-    "date": "2025-05-01T23:50:42Z"
   },
   {
     "name": "stackblitz-labs/bolt.diy",
@@ -335,11 +350,6 @@
     "date": "2025-04-30T16:38:35Z"
   },
   {
-    "name": "element-hq/synapse",
-    "version": "v1.129.0rc1",
-    "date": "2025-04-16T15:18:13Z"
-  },
-  {
     "name": "Graylog2/graylog2-server",
     "version": "6.3.0-alpha.2",
     "date": "2025-04-30T14:55:15Z"
@@ -365,11 +375,6 @@
     "date": "2025-04-30T12:34:14Z"
   },
   {
-    "name": "Checkmk/checkmk",
-    "version": "v2.4.0-rc1",
-    "date": "2025-04-30T11:01:56Z"
-  },
-  {
     "name": "wazuh/wazuh",
     "version": "coverity-w18-4.12.0",
     "date": "2025-04-30T09:30:26Z"
@@ -378,11 +383,6 @@
     "name": "Stirling-Tools/Stirling-PDF",
     "version": "v0.46.0",
     "date": "2025-04-30T07:05:42Z"
-  },
-  {
-    "name": "Luligu/matterbridge",
-    "version": "3.0.0",
-    "date": "2025-04-30T06:24:07Z"
   },
   {
     "name": "go-gitea/gitea",
