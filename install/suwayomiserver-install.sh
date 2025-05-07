@@ -17,9 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt-get install -y libc++-dev
 msg_ok "Installed Dependencies"
 
-msg_info "Setting up Java 21"
 JAVA_VERSION=21 install_java
-msg_ok "Set up Java 21"
 
 msg_info "Settting up Suwayomi-Server"
 temp_file=$(mktemp)
