@@ -37,6 +37,6 @@ export const FAQ_Items = [
   {
     title: "What does \"Updatable\" and \"Not updatable\" mean?",
     content:
-      "Updatable means that script has a function that is used to update the installed application to the latest version availabale. Not updatable means that script doesn't have a function that can safely update the application to the latest version available, so only the LXC OS is updated.",
+      "Updatable means that script has a function that is used to update the installed application to the latest version available. Not updatable means that script doesn't have a function that can safely update the application to the latest version available, so only the LXC OS is updated.",
   },
 ];
