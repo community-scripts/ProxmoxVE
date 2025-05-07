@@ -1,5 +1,60 @@
 [
   {
+    "name": "docker/compose",
+    "version": "v2.36.0",
+    "date": "2025-05-07T11:54:14Z"
+  },
+  {
+    "name": "Graylog2/graylog2-server",
+    "version": "6.2.2",
+    "date": "2025-05-07T11:36:20Z"
+  },
+  {
+    "name": "openobserve/openobserve",
+    "version": "v0.14.7",
+    "date": "2025-05-07T11:32:23Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.4.4",
+    "date": "2025-04-25T07:47:57Z"
+  },
+  {
+    "name": "grokability/snipe-it",
+    "version": "v8.1.3",
+    "date": "2025-05-07T11:09:21Z"
+  },
+  {
+    "name": "cockpit-project/cockpit",
+    "version": "338",
+    "date": "2025-05-07T10:43:29Z"
+  },
+  {
+    "name": "zabbix/zabbix",
+    "version": "7.4.0beta2",
+    "date": "2025-05-07T10:39:21Z"
+  },
+  {
+    "name": "zwave-js/zwave-js-ui",
+    "version": "v10.4.1",
+    "date": "2025-05-07T09:22:38Z"
+  },
+  {
+    "name": "jupyter/notebook",
+    "version": "@jupyter-notebook/ui-components@7.5.0-alpha.0",
+    "date": "2025-05-07T09:12:08Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1874",
+    "date": "2025-05-07T05:56:30Z"
+  },
+  {
+    "name": "cross-seed/cross-seed",
+    "version": "v6.12.2",
+    "date": "2025-04-28T17:44:49Z"
+  },
+  {
     "name": "open-webui/open-webui",
     "version": "v0.6.7",
     "date": "2025-05-06T23:08:38Z"
@@ -10,24 +65,24 @@
     "date": "2025-05-06T20:56:30Z"
   },
   {
+    "name": "keycloak/keycloak",
+    "version": "26.2.3",
+    "date": "2025-05-05T11:12:36Z"
+  },
+  {
     "name": "pocket-id/pocket-id",
     "version": "v0.52.0",
     "date": "2025-05-06T20:14:44Z"
   },
   {
-    "name": "home-assistant/core",
-    "version": "2025.4.4",
-    "date": "2025-04-25T07:47:57Z"
+    "name": "runtipi/runtipi",
+    "version": "v4.0.2",
+    "date": "2025-05-01T16:10:58Z"
   },
   {
     "name": "redis/redis",
     "version": "8.0.1-int",
     "date": "2025-05-06T18:40:34Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-05-05T19:08:13Z"
   },
   {
     "name": "Athou/commafeed",
@@ -45,9 +100,9 @@
     "date": "2025-05-06T17:32:30Z"
   },
   {
-    "name": "openobserve/openobserve",
-    "version": "v0.14.6",
-    "date": "2025-05-06T15:39:54Z"
+    "name": "wazuh/wazuh",
+    "version": "coverity-w19-4.13.0",
+    "date": "2025-05-06T15:59:45Z"
   },
   {
     "name": "jenkinsci/jenkins",
@@ -63,11 +118,6 @@
     "name": "bluenviron/mediamtx",
     "version": "v1.12.2",
     "date": "2025-05-06T15:30:10Z"
-  },
-  {
-    "name": "jupyter/notebook",
-    "version": "v7.4.2",
-    "date": "2025-05-06T15:08:11Z"
   },
   {
     "name": "AdguardTeam/AdGuardHome",
@@ -120,11 +170,6 @@
     "date": "2025-01-01T16:15:52Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1867",
-    "date": "2025-05-06T05:54:56Z"
-  },
-  {
     "name": "linkwarden/linkwarden",
     "version": "v2.10.2",
     "date": "2025-05-06T03:12:53Z"
@@ -133,11 +178,6 @@
     "name": "fallenbagel/jellyseerr",
     "version": "preview-tvdb",
     "date": "2025-05-06T01:32:52Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.2.3",
-    "date": "2025-05-05T11:12:36Z"
   },
   {
     "name": "autobrr/autobrr",
@@ -190,19 +230,9 @@
     "date": "2025-05-05T13:59:23Z"
   },
   {
-    "name": "zwave-js/zwave-js-ui",
-    "version": "v10.4.0",
-    "date": "2025-05-05T13:01:01Z"
-  },
-  {
     "name": "semaphoreui/semaphore",
     "version": "v2.14.9",
     "date": "2025-05-05T12:20:38Z"
-  },
-  {
-    "name": "grokability/snipe-it",
-    "version": "v8.1.2",
-    "date": "2025-05-05T10:28:17Z"
   },
   {
     "name": "theonedev/onedev",
@@ -395,11 +425,6 @@
     "date": "2025-04-30T16:38:35Z"
   },
   {
-    "name": "Graylog2/graylog2-server",
-    "version": "6.3.0-alpha.2",
-    "date": "2025-04-30T14:55:15Z"
-  },
-  {
     "name": "cloudflare/cloudflared",
     "version": "2025.4.2",
     "date": "2025-04-30T14:16:11Z"
@@ -413,11 +438,6 @@
     "name": "goauthentik/authentik",
     "version": "version/2025.4.0",
     "date": "2025-04-30T12:34:14Z"
-  },
-  {
-    "name": "wazuh/wazuh",
-    "version": "coverity-w18-4.12.0",
-    "date": "2025-04-30T09:30:26Z"
   },
   {
     "name": "Stirling-Tools/Stirling-PDF",
@@ -463,11 +483,6 @@
     "name": "gethomepage/homepage",
     "version": "v1.2.0",
     "date": "2025-04-28T17:55:01Z"
-  },
-  {
-    "name": "cross-seed/cross-seed",
-    "version": "v6.12.2",
-    "date": "2025-04-28T17:44:49Z"
   },
   {
     "name": "immich-app/immich",
@@ -580,16 +595,6 @@
     "date": "2025-04-23T18:41:46Z"
   },
   {
-    "name": "cockpit-project/cockpit",
-    "version": "337",
-    "date": "2025-04-23T08:26:31Z"
-  },
-  {
-    "name": "zabbix/zabbix",
-    "version": "7.2.6",
-    "date": "2025-04-23T08:06:23Z"
-  },
-  {
     "name": "minio/minio",
     "version": "RELEASE.2025-04-22T22-12-26Z",
     "date": "2025-04-22T22:44:34Z"
@@ -658,11 +663,6 @@
     "name": "benzino77/tasmocompiler",
     "version": "v12.6.1",
     "date": "2025-04-17T17:35:02Z"
-  },
-  {
-    "name": "docker/compose",
-    "version": "v2.35.1",
-    "date": "2025-04-17T14:29:11Z"
   },
   {
     "name": "IceWhaleTech/CasaOS",
