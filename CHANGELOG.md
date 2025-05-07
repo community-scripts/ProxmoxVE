@@ -18,6 +18,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
+  - Alpine scripts: Set minimum disk space to 0.5GB [@tremor021](https://github.com/tremor021) ([#4288](https://github.com/community-scripts/ProxmoxVE/pull/4288))
+
   - #### 🐞 Bug Fixes
 
     - SuwayomiServer: Bump Java to v21, code formating [@tremor021](https://github.com/tremor021) ([#3987](https://github.com/community-scripts/ProxmoxVE/pull/3987))
