@@ -20,7 +20,6 @@ EOF
 header_info
 echo -e "\n Loading..."
 GEN_MAC=02:$(openssl rand -hex 5 | awk '{print toupper($0)}' | sed 's/\(..\)/\1:/g; s/.$//')
-NEXTID=$(pvesh get /cluster/nextid)
 RANDOM_UUID="$(cat /proc/sys/kernel/random/uuid)"
 METHOD=""
 NSAPP="debian12vm"
@@ -74,6 +73,23 @@ function error_handler() {
   local error_message="${RD}[ERROR]${CL} in line ${RD}$line_number${CL}: exit code ${RD}$exit_code${CL}: while executing command ${YW}$command${CL}"
   echo -e "\n$error_message\n"
   cleanup_vmid
+}
+
+function get_valid_nextid() {
+  local try_id
+  try_id=$(pvesh get /cluster/nextid)
+  while true; do
+    if [ -f "/etc/pve/qemu-server/${try_id}.conf" ] || [ -f "/etc/pve/lxc/${try_id}.conf" ]; then
+      try_id=$((try_id + 1))
+      continue
+    fi
+    if lvs --noheadings -o lv_name | grep -qE "(^|[-_])${try_id}($|[-_])"; then
+      try_id=$((try_id + 1))
+      continue
+    fi
+    break
+  done
+  echo "$try_id"
 }
 
 function cleanup_vmid() {
@@ -162,7 +178,7 @@ function exit-script() {
 }
 
 function default_settings() {
-  VMID="$NEXTID"
+  VMID=$(get_valid_nextid)
   FORMAT=",efitype=4m"
   MACHINE=""
   DISK_CACHE=""
@@ -195,10 +211,11 @@ function default_settings() {
 
 function advanced_settings() {
   METHOD="advanced"
+  [ -z "${VMID:-}" ] && VMID=$(get_valid_nextid)
   while true; do
-    if VMID=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Virtual Machine ID" 8 58 $NEXTID --title "VIRTUAL MACHINE ID" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+    if VMID=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Virtual Machine ID" 8 58 $VMID --title "VIRTUAL MACHINE ID" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
       if [ -z "$VMID" ]; then
-        VMID="$NEXTID"
+        VMID=$(get_valid_nextid)
       fi
       if pct status "$VMID" &>/dev/null || qm status "$VMID" &>/dev/null; then
         echo -e "${CROSS}${RD} ID $VMID is already in use${CL}"
@@ -243,7 +260,6 @@ function advanced_settings() {
   else
     exit-script
   fi
-
 
   if DISK_CACHE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "DISK CACHE" --radiolist "Choose" --cancel-button Exit-Script 10 58 2 \
     "0" "None (Default)" ON \

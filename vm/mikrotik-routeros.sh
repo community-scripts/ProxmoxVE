@@ -21,15 +21,12 @@ clear
 header_info
 echo -e "Loading..."
 GEN_MAC=$(echo '00 60 2f'$(od -An -N3 -t xC /dev/urandom) | sed -e 's/ /:/g' | tr '[:lower:]' '[:upper:]')
-NEXTID=$(pvesh get /cluster/nextid)
-#API VARIABLES
 RANDOM_UUID="$(cat /proc/sys/kernel/random/uuid)"
 METHOD=""
 NSAPP="mikrotik-router-os"
 var_os="mikrotik"
 var_version=" "
 DISK_SIZE="1G"
-#
 YW=$(echo "\033[33m")
 BL=$(echo "\033[36m")
 HA=$(echo "\033[1;34m")
@@ -60,6 +57,24 @@ function error_exit() {
   [ ! -z ${VMID-} ] && cleanup_vmid
   exit $EXIT
 }
+
+function get_valid_nextid() {
+  local try_id
+  try_id=$(pvesh get /cluster/nextid)
+  while true; do
+    if [ -f "/etc/pve/qemu-server/${try_id}.conf" ] || [ -f "/etc/pve/lxc/${try_id}.conf" ]; then
+      try_id=$((try_id + 1))
+      continue
+    fi
+    if lvs --noheadings -o lv_name | grep -qE "(^|[-_])${try_id}($|[-_])"; then
+      try_id=$((try_id + 1))
+      continue
+    fi
+    break
+  done
+  echo "$try_id"
+}
+
 function cleanup_vmid() {
   if $(qm status $VMID &>/dev/null); then
     if [ "$(qm status $VMID | awk '{print $2}')" == "running" ]; then
