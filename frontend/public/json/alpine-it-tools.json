@@ -2,7 +2,7 @@
   "name": "Alpine-IT-Tools",
   "slug": "alpine-it-tools",
   "categories": [
-      20
+    20
   ],
   "date_created": "2025-01-30",
   "type": "ct",
@@ -15,33 +15,32 @@
   "config_path": "",
   "description": "IT-Tools is a web-based suite of utilities designed to streamline and simplify various IT tasks, providing tools for developers and system administrators to manage their workflows efficiently.",
   "install_methods": [
-      {
-          "type": "default",
-          "script": "ct/alpine-it-tools.sh",
-          "resources": {
-              "cpu": 1,
-              "ram": 256,
-              "hdd": 0.2,
-              "os": "alpine",
-              "version": "3.21"
-         }
-      },
-      {
-          "type": "alpine",
-          "script": "ct/alpine-it-tools.sh",
-          "resources": {
-              "cpu": 1,
-              "ram": 256,
-              "hdd": 0.2,
-              "os": "alpine",
-              "version": "3.21"
-          }
+    {
+      "type": "default",
+      "script": "ct/alpine-it-tools.sh",
+      "resources": {
+        "cpu": 1,
+        "ram": 256,
+        "hdd": 0.5,
+        "os": "alpine",
+        "version": "3.21"
       }
+    },
+    {
+      "type": "alpine",
+      "script": "ct/alpine-it-tools.sh",
+      "resources": {
+        "cpu": 1,
+        "ram": 256,
+        "hdd": 0.5,
+        "os": "alpine",
+        "version": "3.21"
+      }
+    }
   ],
   "default_credentials": {
-      "username": null,
-      "password": null
+    "username": null,
+    "password": null
   },
   "notes": []
 }
-
