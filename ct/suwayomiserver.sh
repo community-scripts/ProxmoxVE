@@ -30,8 +30,8 @@ function update_script() {
   fi
   if dpkg -l | grep -q "openjdk-17-jre"; then
     $STD apt-get remove -y openjdk-17-jre
-    JAVA_VERSION=21 install_java
   fi
+  JAVA_VERSION=21 install_java
   RELEASE=$(curl -fsSL https://api.github.com/repos/Suwayomi/Suwayomi-Server/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
   if [[ "${RELEASE}" != "$(cat /opt/suwayomi-server_version.txt)" ]] || [[ ! -f /opt/suwayomi-server_version.txt ]]; then
     msg_info "Updating $APP"
