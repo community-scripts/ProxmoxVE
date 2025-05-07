@@ -30,30 +30,31 @@ function update_script() {
   fi
   if dpkg -l | grep -q "openjdk-17-jre"; then
     $STD apt-get remove -y openjdk-17-jre
-    mkdir -p /etc/apt/keyrings
-    curl -fsSL "https://packages.adoptium.net/artifactory/api/gpg/key/public" | gpg --dearmor >/etc/apt/trusted.gpg.d/adoptium.gpg
-    echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" >/etc/apt/sources.list.d/adoptium.list
-    $STD apt-get update
-    $STD apt-get install -y temurin-21-jre
+    JAVA_VERSION=21 install_java
   fi
   RELEASE=$(curl -fsSL https://api.github.com/repos/Suwayomi/Suwayomi-Server/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
   if [[ "${RELEASE}" != "$(cat /opt/suwayomi-server_version.txt)" ]] || [[ ! -f /opt/suwayomi-server_version.txt ]]; then
     msg_info "Updating $APP"
+
     msg_info "Stopping $APP"
     systemctl stop suwayomi-server
     msg_ok "Stopped $APP"
+
     msg_info "Updating $APP to v${RELEASE}"
-    cd /tmp
-    URL=$(curl -fsSL https://api.github.com/repos/Suwayomi/Suwayomi-Server/releases/latest | grep "browser_download_url" | awk '{print substr($2, 2, length($2)-2) }' | tail -n+2 | head -n 1)
-    curl -fsSL "$URL" -o $(basename "$URL")
-    $STD dpkg -i /tmp/*.deb
+    temp_file=$(mktemp)
+    RELEASE=$(curl -fsSL https://api.github.com/repos/Suwayomi/Suwayomi-Server/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+    curl -fsSL "https://github.com/Suwayomi/Suwayomi-Server/releases/download/${RELEASE}/Suwayomi-Server-${RELEASE}-debian-all.deb" -o "$temp_file"
+    $STD dpkg -i "$temp_file"
     msg_ok "Updated $APP to v${RELEASE}"
+
     msg_info "Starting $APP"
     systemctl start suwayomi-server
     msg_ok "Started $APP"
+
     msg_info "Cleaning Up"
-    rm -f *.deb
+    rm -f "$temp_file"
     msg_ok "Cleanup Completed"
+
     echo "${RELEASE}" >/opt/suwayomi-server_version.txt.txt
     msg_ok "Update Successful"
   else
