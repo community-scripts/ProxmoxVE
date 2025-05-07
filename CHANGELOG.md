@@ -24,6 +24,16 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - SuwayomiServer: Bump Java to v21, code formating [@tremor021](https://github.com/tremor021) ([#3987](https://github.com/community-scripts/ProxmoxVE/pull/3987))
 
+  - #### ✨ New Features
+
+    - Feature: get correct next VMID [@MickLesk](https://github.com/MickLesk) ([#4292](https://github.com/community-scripts/ProxmoxVE/pull/4292))
+
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - OpenWebUI: Update docs link [@tremor021](https://github.com/tremor021) ([#4298](https://github.com/community-scripts/ProxmoxVE/pull/4298))
+
 ## 2025-05-06
 
 ### 🆕 New Scripts
