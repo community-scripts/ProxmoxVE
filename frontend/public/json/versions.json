@@ -1,23 +1,103 @@
 [
   {
+    "name": "cross-seed/cross-seed",
+    "version": "v6.12.3",
+    "date": "2025-05-07T20:35:11Z"
+  },
+  {
+    "name": "semaphoreui/semaphore",
+    "version": "v2.14.10",
+    "date": "2025-05-07T20:23:29Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "nightly",
+    "date": "2025-05-06T19:37:26Z"
+  },
+  {
+    "name": "readeck/readeck",
+    "version": "0.18.2",
+    "date": "2025-05-07T19:22:22Z"
+  },
+  {
+    "name": "apache/tomcat",
+    "version": "9.0.105",
+    "date": "2025-05-07T18:52:24Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.5.0",
+    "date": "2025-05-07T17:26:14Z"
+  },
+  {
+    "name": "HabitRPG/habitica",
+    "version": "v5.36.3",
+    "date": "2025-05-07T17:22:07Z"
+  },
+  {
+    "name": "ipfs/kubo",
+    "version": "v0.34.1",
+    "date": "2025-03-25T18:11:12Z"
+  },
+  {
+    "name": "NodeBB/NodeBB",
+    "version": "v4.3.1",
+    "date": "2025-05-07T15:38:20Z"
+  },
+  {
+    "name": "donaldzou/WGDashboard",
+    "version": "v4.2.3",
+    "date": "2025-05-07T15:35:04Z"
+  },
+  {
+    "name": "zitadel/zitadel",
+    "version": "v3.0.2",
+    "date": "2025-05-07T15:13:57Z"
+  },
+  {
+    "name": "stonith404/pingvin-share",
+    "version": "v1.12.0",
+    "date": "2025-05-07T14:12:11Z"
+  },
+  {
+    "name": "Brandawg93/PeaNUT",
+    "version": "v5.7.5",
+    "date": "2025-05-07T14:01:45Z"
+  },
+  {
+    "name": "Graylog2/graylog2-server",
+    "version": "6.3.0-alpha.3",
+    "date": "2025-05-07T13:58:36Z"
+  },
+  {
+    "name": "glpi-project/glpi",
+    "version": "10.0.18",
+    "date": "2025-02-12T11:07:02Z"
+  },
+  {
+    "name": "nzbgetcom/nzbget",
+    "version": "v24.8",
+    "date": "2025-03-18T07:33:51Z"
+  },
+  {
+    "name": "ZoeyVid/NPMplus",
+    "version": "2025-05-07-r1",
+    "date": "2025-05-07T12:18:42Z"
+  },
+  {
     "name": "docker/compose",
     "version": "v2.36.0",
     "date": "2025-05-07T11:54:14Z"
   },
   {
-    "name": "Graylog2/graylog2-server",
-    "version": "6.2.2",
-    "date": "2025-05-07T11:36:20Z"
+    "name": "Checkmk/checkmk",
+    "version": "v2.2.0p42-rc1",
+    "date": "2025-05-07T11:50:30Z"
   },
   {
     "name": "openobserve/openobserve",
     "version": "v0.14.7",
     "date": "2025-05-07T11:32:23Z"
-  },
-  {
-    "name": "home-assistant/core",
-    "version": "2025.4.4",
-    "date": "2025-04-25T07:47:57Z"
   },
   {
     "name": "grokability/snipe-it",
@@ -50,11 +130,6 @@
     "date": "2025-05-07T05:56:30Z"
   },
   {
-    "name": "cross-seed/cross-seed",
-    "version": "v6.12.2",
-    "date": "2025-04-28T17:44:49Z"
-  },
-  {
     "name": "open-webui/open-webui",
     "version": "v0.6.7",
     "date": "2025-05-06T23:08:38Z"
@@ -75,11 +150,6 @@
     "date": "2025-05-06T20:14:44Z"
   },
   {
-    "name": "runtipi/runtipi",
-    "version": "v4.0.2",
-    "date": "2025-05-01T16:10:58Z"
-  },
-  {
     "name": "redis/redis",
     "version": "8.0.1-int",
     "date": "2025-05-06T18:40:34Z"
@@ -93,11 +163,6 @@
     "name": "sysadminsmedia/homebox",
     "version": "v0.19.0",
     "date": "2025-05-06T18:05:42Z"
-  },
-  {
-    "name": "HabitRPG/habitica",
-    "version": "v5.36.2",
-    "date": "2025-05-06T17:32:30Z"
   },
   {
     "name": "wazuh/wazuh",
@@ -125,19 +190,9 @@
     "date": "2025-04-22T12:42:26Z"
   },
   {
-    "name": "zitadel/zitadel",
-    "version": "v2.65.8",
-    "date": "2025-05-06T13:57:49Z"
-  },
-  {
     "name": "element-hq/synapse",
     "version": "v1.129.0",
     "date": "2025-05-06T12:28:54Z"
-  },
-  {
-    "name": "nzbgetcom/nzbget",
-    "version": "v24.8",
-    "date": "2025-03-18T07:33:51Z"
   },
   {
     "name": "n8n-io/n8n",
@@ -158,11 +213,6 @@
     "name": "mattermost/mattermost",
     "version": "v9.11.14",
     "date": "2025-05-05T17:50:53Z"
-  },
-  {
-    "name": "Checkmk/checkmk",
-    "version": "v2.4.0",
-    "date": "2025-05-06T06:47:16Z"
   },
   {
     "name": "morpheus65535/bazarr",
@@ -228,11 +278,6 @@
     "name": "traefik/traefik",
     "version": "v3.4.0",
     "date": "2025-05-05T13:59:23Z"
-  },
-  {
-    "name": "semaphoreui/semaphore",
-    "version": "v2.14.9",
-    "date": "2025-05-05T12:20:38Z"
   },
   {
     "name": "theonedev/onedev",
@@ -340,11 +385,6 @@
     "date": "2025-05-03T10:33:49Z"
   },
   {
-    "name": "Brandawg93/PeaNUT",
-    "version": "v5.7.4",
-    "date": "2025-05-02T23:41:08Z"
-  },
-  {
     "name": "documenso/documenso",
     "version": "v1.10.3",
     "date": "2025-05-02T23:23:25Z"
@@ -403,16 +443,6 @@
     "name": "netbox-community/netbox",
     "version": "v4.3.0",
     "date": "2025-05-01T16:46:17Z"
-  },
-  {
-    "name": "NodeBB/NodeBB",
-    "version": "v4.3.0",
-    "date": "2025-05-01T04:13:41Z"
-  },
-  {
-    "name": "readeck/readeck",
-    "version": "0.18.1",
-    "date": "2025-04-30T17:44:46Z"
   },
   {
     "name": "WordPress/WordPress",
@@ -560,11 +590,6 @@
     "date": "2025-04-25T17:22:12Z"
   },
   {
-    "name": "donaldzou/WGDashboard",
-    "version": "v4.2.2",
-    "date": "2025-04-25T07:42:03Z"
-  },
-  {
     "name": "mongodb/mongo",
     "version": "r7.0.19",
     "date": "2025-04-24T20:59:43Z"
@@ -573,11 +598,6 @@
     "name": "dotnetfactory/fluid-calendar",
     "version": "v1.4.0",
     "date": "2025-04-24T16:20:17Z"
-  },
-  {
-    "name": "glpi-project/glpi",
-    "version": "10.0.18",
-    "date": "2025-02-12T11:07:02Z"
   },
   {
     "name": "NLnetLabs/unbound",
@@ -745,11 +765,6 @@
     "date": "2025-04-06T19:22:59Z"
   },
   {
-    "name": "stonith404/pingvin-share",
-    "version": "v1.11.1",
-    "date": "2025-04-06T18:39:42Z"
-  },
-  {
     "name": "wavelog/wavelog",
     "version": "2.0.3",
     "date": "2025-04-06T17:35:41Z"
@@ -773,11 +788,6 @@
     "name": "navidrome/navidrome",
     "version": "v0.55.2",
     "date": "2025-04-05T12:07:32Z"
-  },
-  {
-    "name": "apache/tomcat",
-    "version": "9.0.104",
-    "date": "2025-04-04T12:58:11Z"
   },
   {
     "name": "MagicMirrorOrg/MagicMirror",
@@ -850,11 +860,6 @@
     "date": "2025-03-26T08:48:34Z"
   },
   {
-    "name": "ipfs/kubo",
-    "version": "v0.34.1",
-    "date": "2025-03-25T18:11:12Z"
-  },
-  {
     "name": "hansmi/prometheus-paperless-exporter",
     "version": "v0.0.7",
     "date": "2025-03-25T15:11:18Z"
@@ -863,11 +868,6 @@
     "name": "crowdsecurity/crowdsec",
     "version": "v1.6.8",
     "date": "2025-03-25T13:33:10Z"
-  },
-  {
-    "name": "ZoeyVid/NPMplus",
-    "version": "2025-03-24-r2",
-    "date": "2025-03-24T20:52:35Z"
   },
   {
     "name": "nextcloud/nextcloudpi",
