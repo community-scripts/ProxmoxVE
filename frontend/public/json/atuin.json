@@ -1,0 +1,77 @@
+{
+  "name": "Atuin Server",
+  "slug": "atuin-server",
+  "categories": [
+    12,
+    8
+  ],
+  "date_created": "2024-06-11",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 8888,
+  "documentation": "https://docs.atuin.sh/self-hosting/server-setup/",
+  "website": "https://atuin.sh/",
+  "logo": "https://raw.githubusercontent.com/atuinsh/atuin/main/assets/logo.png",
+  "config_path": "/etc/atuin/server.toml",
+  "description": "Atuin Server provides a self-hosted sync service for the Atuin shell history tool. It stores your shell history in a PostgreSQL database and allows you to securely sync command history across all your devices with end-to-end encryption.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/atuin.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 8,
+        "os": "debian",
+        "version": "12"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": "atuin",
+    "password": "atuin"
+  },
+  "notes": [
+    {
+      "text": "PostgreSQL database is configured with username: atuin, password: atuin. Change these for production use.",
+      "type": "warning"
+    },
+    {
+      "text": "The server listens on port 8888 by default and has open registration enabled.",
+      "type": "info"
+    },
+    {
+      "text": "To connect clients: atuin settings update sync_address http://<SERVER_IP>:8888",
+      "type": "info"
+    },
+    {
+      "text": "Users can register with: atuin register --username <USERNAME> --password <PASSWORD>",
+      "type": "info"
+    },
+    {
+      "text": "Server configuration file is located at: /etc/atuin/server.toml",
+      "type": "info"
+    },
+    {
+      "text": "For production use, consider setting up TLS by adding the [tls] section to the config file.",
+      "type": "warning"
+    },
+    {
+      "text": "Restart the server after config changes with: systemctl restart atuin-server",
+      "type": "info"
+    },
+    {
+      "text": "For client usage instructions, visit: https://docs.atuin.sh/guide/basic-usage/",
+      "type": "info"
+    },
+    {
+      "text": "View all server logs with: journalctl -u atuin-server",
+      "type": "info"
+    },
+    {
+      "text": "Change PostgreSQL credentials with: sudo -u postgres psql -c \"ALTER USER atuin WITH PASSWORD 'new_password';\"",
+      "type": "info"
+    }
+  ]
+}
