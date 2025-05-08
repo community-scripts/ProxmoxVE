@@ -20,8 +20,8 @@
       "script": "ct/openwebui.sh",
       "resources": {
         "cpu": 4,
-        "ram": 4096,
-        "hdd": 16,
+        "ram": 8192,
+        "hdd": 25,
         "os": "debian",
         "version": "12"
       }
