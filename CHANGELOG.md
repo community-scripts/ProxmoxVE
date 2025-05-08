@@ -23,6 +23,12 @@ All LXC instances created using this repository come pre-installed with Midnight
     - SearXNG: fix to resolve yaml dependency error [@Biendeo](https://github.com/Biendeo) ([#4322](https://github.com/community-scripts/ProxmoxVE/pull/4322))
     - Bugfix: Mikrotik & Pimox HAOS VM (NEXTID) [@MickLesk](https://github.com/MickLesk) ([#4313](https://github.com/community-scripts/ProxmoxVE/pull/4313))
 
+### 🧰 Maintenance
+
+  - #### 💾 Core
+
+    - build.func Change the menu for Bridge Selection [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4326](https://github.com/community-scripts/ProxmoxVE/pull/4326))
+
 ### 🌐 Website
 
   - FAQ: Explanation "updatable" [@tremor021](https://github.com/tremor021) ([#4300](https://github.com/community-scripts/ProxmoxVE/pull/4300))
