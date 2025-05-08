@@ -114,8 +114,8 @@ function msg_ok() {
 }
 function default_settings() {
   METHOD="default"
-  echo -e "${DGN}Using Virtual Machine ID: ${BGN}$NEXTID${CL}"
-  VMID=$NEXTID
+  VMID=$(get_valid_nextid)
+  echo -e "${DGN}Using Virtual Machine ID: ${BGN}$VMID${CL}"
   echo -e "${DGN}Using Hostname: ${BGN}mikrotik-routeros-chr${CL}"
   HN=mikrotik-routeros-chr
   echo -e "${DGN}Allocated Cores: ${BGN}1${CL}"
@@ -136,7 +136,8 @@ function default_settings() {
 }
 function advanced_settings() {
   METHOD="advanced"
-  VMID=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Virtual Machine ID" 8 58 $NEXTID --title "VIRTUAL MACHINE ID" 3>&1 1>&2 2>&3)
+  [ -z "${VMID:-}" ] && VMID=$(get_valid_nextid)
+  VMID=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Virtual Machine ID" 8 58 $VMID --title "VIRTUAL MACHINE ID" 3>&1 1>&2 2>&3)
   exitstatus=$?
   if [ $exitstatus = 0 ]; then
     echo -e "${DGN}Using Virtual Machine ID: ${BGN}$VMID${CL}"

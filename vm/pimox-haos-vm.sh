@@ -137,8 +137,8 @@ function default_settings() {
   METHOD="default"
   echo -e "${DGN}Using HAOS Version: ${BGN}${STABLE}${CL}"
   BRANCH=${STABLE}
-  echo -e "${DGN}Using Virtual Machine ID: ${BGN}$NEXTID${CL}"
-  VMID=$NEXTID
+  VMID=$(get_valid_nextid)
+  echo -e "${DGN}Using Virtual Machine ID: ${BGN}$VMID${CL}"
   echo -e "${DGN}Using Hostname: ${BGN}haos${STABLE}${CL}"
   HN=haos${STABLE}
   echo -e "${DGN}Allocated Cores: ${BGN}2${CL}"
@@ -166,10 +166,11 @@ function advanced_settings() {
     3>&1 1>&2 2>&3)
   exitstatus=$?
   if [ $exitstatus = 0 ]; then echo -e "${DGN}Using HAOS Version: ${BGN}$BRANCH${CL}"; fi
-  VMID=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Virtual Machine ID" 8 58 $NEXTID --title "VIRTUAL MACHINE ID" --cancel-button Exit-Script 3>&1 1>&2 2>&3)
+  [ -z "${VMID:-}" ] && VMID=$(get_valid_nextid)
+  VMID=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Virtual Machine ID" 8 58 $VMID --title "VIRTUAL MACHINE ID" --cancel-button Exit-Script 3>&1 1>&2 2>&3)
   exitstatus=$?
   if [ -z $VMID ]; then
-    VMID="$NEXTID"
+    VMID="$VMID"
     echo -e "${DGN}Virtual Machine: ${BGN}$VMID${CL}"
   else
     if echo "$USEDID" | egrep -q "$VMID"; then
