@@ -533,7 +533,7 @@ advanced_settings() {
     BRG="vmbr0"
     echo -e "${BRIDGE}${BOLD}${DGN}Bridge: ${BGN}$BRG${CL}"
   else
-    BRG=$(whiptail --backtitle "Proxmox VE Helper Scripts" --menu "Select network bridge:" 10 40 6 $(echo "$BRIDGES" | awk '{print $0, "Bridge"}') 3>&1 1>&2 2>&3)
+    BRG=$(whiptail --backtitle "Proxmox VE Helper Scripts" --menu "Select network bridge:" 15 40 6 $(echo "$BRIDGES" | awk '{print $0, "Bridge"}') 3>&1 1>&2 2>&3)
       if [ -z "$BRG" ]; then
         exit_script
       else
