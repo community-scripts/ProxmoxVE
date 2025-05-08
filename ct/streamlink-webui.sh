@@ -31,25 +31,27 @@ function update_script() {
 
   RELEASE=$(curl -fsSL https://api.github.com/repos/CrazyWolf13/streamlink-webui/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
   if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
+    msg_info "Starting Update"
+    
     msg_info "Stopping $APP"
     systemctl stop ${APP}
     msg_ok "Stopped $APP"
 
     rm -rf /opt/${APP}
     NODE_VERSION="22"
-    NODE_MODULE="npm@latest,yarn@latest"
+    NODE_MODULE="npm,yarn"
     install_node_and_modules
     setup_uv
     fetch_and_deploy_gh_release "CrazyWolf13/streamlink-webui"
 
     msg_info "Updating $APP to v${RELEASE}"
-    $STD uv venv /opt/"${APPLICATION}"/backend/src/.venv
-    source /opt/"${APPLICATION}"/backend/src/.venv/bin/activate
-    $STD uv pip install -r /opt/streamlink-webui/backend/src/requirements.txt --python=/opt/"${APPLICATION}"/backend/src/.venv
-    cd /opt/"${APPLICATION}"/frontend/src
+    $STD uv venv /opt/"${APP}"/backend/src/.venv
+    source /opt/"${APP}"/backend/src/.venv/bin/activate
+    $STD uv pip install -r /opt/"${APP}"/backend/src/requirements.txt --python=/opt/"${APP}"/backend/src/.venv
+    cd /opt/"${APP}"/frontend/src
     $STD yarn install
     $STD yarn build
-    chmod +x /opt/"${APPLICATION}"/start.sh
+    chmod +x /opt/"${APP}"/start.sh
     msg_ok "Updated $APP to v${RELEASE}"
 
     msg_info "Starting $APP"
