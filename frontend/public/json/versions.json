@@ -1,5 +1,35 @@
 [
   {
+    "name": "mattermost/mattermost",
+    "version": "server/public/v0.1.12",
+    "date": "2025-05-08T11:04:17Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.2.4",
+    "date": "2025-05-08T09:10:10Z"
+  },
+  {
+    "name": "zwave-js/zwave-js-ui",
+    "version": "v10.4.2",
+    "date": "2025-05-08T08:11:27Z"
+  },
+  {
+    "name": "zitadel/zitadel",
+    "version": "v2.71.10",
+    "date": "2025-05-08T08:01:47Z"
+  },
+  {
+    "name": "umami-software/umami",
+    "version": "v2.18.0",
+    "date": "2025-05-08T07:14:55Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1877",
+    "date": "2025-05-08T05:57:36Z"
+  },
+  {
     "name": "cross-seed/cross-seed",
     "version": "v6.12.3",
     "date": "2025-05-07T20:35:11Z"
@@ -11,8 +41,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-05-06T19:37:26Z"
+    "version": "v4.0.2",
+    "date": "2025-05-01T16:10:58Z"
   },
   {
     "name": "readeck/readeck",
@@ -48,11 +78,6 @@
     "name": "donaldzou/WGDashboard",
     "version": "v4.2.3",
     "date": "2025-05-07T15:35:04Z"
-  },
-  {
-    "name": "zitadel/zitadel",
-    "version": "v3.0.2",
-    "date": "2025-05-07T15:13:57Z"
   },
   {
     "name": "stonith404/pingvin-share",
@@ -115,19 +140,9 @@
     "date": "2025-05-07T10:39:21Z"
   },
   {
-    "name": "zwave-js/zwave-js-ui",
-    "version": "v10.4.1",
-    "date": "2025-05-07T09:22:38Z"
-  },
-  {
     "name": "jupyter/notebook",
     "version": "@jupyter-notebook/ui-components@7.5.0-alpha.0",
     "date": "2025-05-07T09:12:08Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1874",
-    "date": "2025-05-07T05:56:30Z"
   },
   {
     "name": "open-webui/open-webui",
@@ -138,11 +153,6 @@
     "name": "influxdata/influxdb",
     "version": "v1.12.1rc0",
     "date": "2025-05-06T20:56:30Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.2.3",
-    "date": "2025-05-05T11:12:36Z"
   },
   {
     "name": "pocket-id/pocket-id",
@@ -208,11 +218,6 @@
     "name": "syncthing/syncthing",
     "version": "v1.29.6",
     "date": "2025-05-06T07:57:02Z"
-  },
-  {
-    "name": "mattermost/mattermost",
-    "version": "v9.11.14",
-    "date": "2025-05-05T17:50:53Z"
   },
   {
     "name": "morpheus65535/bazarr",
@@ -953,11 +958,6 @@
     "name": "YuukanOO/seelf",
     "version": "v2.4.2",
     "date": "2025-03-08T10:49:04Z"
-  },
-  {
-    "name": "umami-software/umami",
-    "version": "v2.17.0",
-    "date": "2025-03-08T06:08:04Z"
   },
   {
     "name": "prometheus/alertmanager",
