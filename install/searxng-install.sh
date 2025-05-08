@@ -40,7 +40,7 @@ sudo -u searxng python3 -m venv /usr/local/searxng/searx-pyenv
 source /usr/local/searxng/searx-pyenv/bin/activate
 $STD pip install --upgrade pip setuptools wheel
 $STD pip install pyyaml
-$STD pip install -e /usr/local/searxng/searxng-src
+$STD pip install --use-pep517 --no-build-isolation -e /usr/local/searxng/searxng-src
 SECRET_KEY=$(openssl rand -hex 32)
 cat <<EOF >/etc/searxng/settings.yml
 # SearXNG settings
