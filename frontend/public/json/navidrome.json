@@ -33,7 +33,7 @@
     },
     "notes": [
         {
-            "text": "To change Navidrome music folder path, `nano /var/lib/navidrome/navidrome.toml`",
+            "text": "To change Navidrome music folder path, `nano /etc/navidrome/navidrome.toml`",
             "type": "info"
         }
     ]
