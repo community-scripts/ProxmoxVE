@@ -26,8 +26,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 📂 Github
 
-    - Auto-Merge Automatic PR [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4343](https://github.com/community-scripts/ProxmoxVE/pull/4343))
     - Add a Repo check to all Workflows [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4339](https://github.com/community-scripts/ProxmoxVE/pull/4339))
+    - Auto-Merge Automatic PR [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4343](https://github.com/community-scripts/ProxmoxVE/pull/4343))
 
 ## 2025-05-08
 
