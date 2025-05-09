@@ -479,7 +479,7 @@ install_mongodb() {
 
 fetch_and_deploy_gh_release() {
   local repo="$1"
-  local app=$(echo ${APPLICATION,,} | tr -d ' ')
+  local app=${APP:-$(echo "${APPLICATION,,}" | tr -d ' ')}
   local api_url="https://api.github.com/repos/$repo/releases/latest"
   local header=()
   local attempt=0
