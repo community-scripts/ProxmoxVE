@@ -190,10 +190,29 @@ validate_tz() {
 customize() {
   if [[ "$PASSWORD" == "" ]]; then
     msg_info "Customizing Container"
-    bash -c "passwd -d root" >/dev/null 2>&1
+    passwd -d root >/dev/null 2>&1
+
+    # Ensure agetty is available
+    apk add --no-cache --force-broken-world util-linux >/dev/null 2>&1
+
+    # Create persistent autologin boot script
+    mkdir -p /etc/local.d
+    cat <<'EOF' >/etc/local.d/autologin.start
+#!/bin/sh
+sed -i 's|^tty1::respawn:.*|tty1::respawn:/sbin/agetty --autologin root --noclear tty1 38400 linux|' /etc/inittab
+kill -HUP 1
+EOF
+    touch /root/.hushlogin
+
+    chmod +x /etc/local.d/autologin.start
+    rc-update add local >/dev/null 2>&1
+
+    # Apply autologin immediately for current session
+    /etc/local.d/autologin.start
+
     msg_ok "Customized Container"
   fi
 
-  echo "bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/${app}.sh)\"" >/usr/bin/update
+  echo "bash -c \"\$(curl -fsSL https://github.com/community-scripts/ProxmoxVE/raw/main/ct/${app}.sh)\"" >/usr/bin/update
   chmod +x /usr/bin/update
 }
