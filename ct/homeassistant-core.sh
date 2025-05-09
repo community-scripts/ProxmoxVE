@@ -21,8 +21,6 @@ catch_errors
 
 function update_script() {
   header_info
-
-  # OS Check
   if ! lsb_release -d | grep -q "Ubuntu 24.10"; then
     msg_error "Wrong OS detected. This script only supports Ubuntu 24.10."
     msg_error "Read Guide: https://github.com/community-scripts/ProxmoxVE/discussions/1549"
@@ -32,54 +30,88 @@ function update_script() {
   check_container_resources
   if [[ ! -d /srv/homeassistant ]]; then
     msg_error "No ${APP} Installation Found!"
-    exit
+    exit 1
   fi
-  PY=$(ls /srv/homeassistant/lib/)
+  setup_uv
   IP=$(hostname -I | awk '{print $1}')
   UPD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "UPDATE" --radiolist --cancel-button Exit-Script "Spacebar = Select" 11 58 4 \
     "1" "Update Core" ON \
     "2" "Install HACS" OFF \
     "3" "Install FileBrowser" OFF \
     3>&1 1>&2 2>&3)
+
   if [ "$UPD" == "1" ]; then
     if (whiptail --backtitle "Proxmox VE Helper Scripts" --defaultno --title "SELECT BRANCH" --yesno "Use Beta Branch?" 10 58); then
       clear
       header_info
       echo -e "${GN}Updating to Beta Version${CL}"
-      BR="--pre "
+      BR="--pre"
     else
       clear
       header_info
       echo -e "${GN}Updating to Stable Version${CL}"
       BR=""
     fi
+
     msg_info "Stopping Home Assistant"
     systemctl stop homeassistant
     msg_ok "Stopped Home Assistant"
 
+    if [[ -d /srv/homeassistant/bin ]]; then
+      msg_info "Migrating to .venv-based structure"
+      $STD source /srv/homeassistant/bin/activate
+      PY_VER=$(python3 -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
+      $STD deactivate
+      mv /srv/homeassistant "/srv/homeassistant_backup_$PY_VER"
+      mkdir -p /srv/homeassistant
+      cd /srv/homeassistant
+
+      $STD uv python install 3.13
+      UV_PYTHON=$(uv python list | awk '/3\.13\.[0-9]+.*\/root\/.local/ {print $2; exit}')
+      if [[ -z "$UV_PYTHON" ]]; then
+        msg_error "No local Python 3.13 found via uv"
+        exit 1
+      fi
+
+      $STD uv venv .venv --python "$UV_PYTHON"
+      $STD source .venv/bin/activate
+      $STD uv pip install homeassistant mysqlclient psycopg2-binary isal webrtcvad wheel
+      mkdir -p /root/.homeassistant
+      msg_ok "Migration complete"
+    else
+      source /srv/homeassistant/.venv/bin/activate
+    fi
+
     msg_info "Updating Home Assistant"
-    source /srv/homeassistant/bin/activate
-    $STD pip install ${BR}--upgrade homeassistant
+    $STD uv pip install $BR --upgrade homeassistant
     msg_ok "Updated Home Assistant"
 
     msg_info "Starting Home Assistant"
+    if [[ -f /etc/systemd/system/homeassistant.service ]] && grep -q "/srv/homeassistant/bin/python3" /etc/systemd/system/homeassistant.service; then
+      sed -i 's|ExecStart=/srv/homeassistant/bin/python3|ExecStart=/srv/homeassistant/.venv/bin/python3|' /etc/systemd/system/homeassistant.service
+      sed -i 's|PATH=/srv/homeassistant/bin|PATH=/srv/homeassistant/.venv/bin|' /etc/systemd/system/homeassistant.service
+      $STD systemctl daemon-reload
+    fi
+
     systemctl start homeassistant
-    sleep 2
+    sleep 5
     msg_ok "Started Home Assistant"
     msg_ok "Update Successful"
-    echo -e "\n  Go to http://${IP}:8123 \n"
+    echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8123${CL}"
     exit
   fi
+
   if [ "$UPD" == "2" ]; then
     msg_info "Installing Home Assistant Community Store (HACS)"
     $STD apt update
     $STD apt install -y unzip
-    cd .homeassistant
+    cd /root/.homeassistant
     $STD bash <(curl -fsSL https://get.hacs.xyz)
     msg_ok "Installed Home Assistant Community Store (HACS)"
     echo -e "\n Reboot Home Assistant and clear browser cache then Add HACS integration.\n"
     exit
   fi
+
   if [ "$UPD" == "3" ]; then
     set +Eeuo pipefail
     read -r -p "Would you like to use No Authentication? <y/N> " prompt
