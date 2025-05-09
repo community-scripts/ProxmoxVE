@@ -33,7 +33,11 @@
     },
     "notes": [
         {
-            "text": "Authentik is very resource-heavy, it is recommended to use at least 8GB RAM anytime!",
+            "text": "Authentik is very resource-heavy, it is recommended to use at least 10GB RAM anytime!",
+            "type": "warning"
+        },
+        {
+            "text": "some updates doesnt work due massive dependency errors, its recommended to do an backup before or an pg_dump and an new LXC.",
             "type": "warning"
         }
     ]
