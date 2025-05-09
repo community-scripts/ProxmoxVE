@@ -26,7 +26,7 @@ mkdir -p /var/lib/bazarr/
 curl -fsSL "https://github.com/morpheus65535/bazarr/releases/latest/download/bazarr.zip" -o $(basename "https://github.com/morpheus65535/bazarr/releases/latest/download/bazarr.zip")
 unzip -qq bazarr -d /opt/bazarr
 chmod 775 /opt/bazarr /var/lib/bazarr/
-python3 -m pip install -q -r /opt/bazarr/requirements.txt
+$STD python3 -m pip install -q -r /opt/bazarr/requirements.txt
 msg_ok "Installed Bazarr"
 
 msg_info "Creating Service"
