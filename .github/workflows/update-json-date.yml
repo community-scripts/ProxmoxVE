@@ -126,6 +126,16 @@ jobs:
           if [ -n "$PR_NUMBER" ]; then
             gh pr review $PR_NUMBER --approve
           fi
+      - name: Approve pull request and merge
+        if: env.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.PAT_MICHEL }}
+        run: |
+          PR_NUMBER=$(gh pr list --head "${{ env.BRANCH_NAME }}" --json number --jq '.[].number')
+          if [ -n "$PR_NUMBER" ]; then
+            gh pr review $PR_NUMBER --approve
+            gh pr merge $PR_NUMBER --squash --admin
+          fi
 
       - name: No changes detected
         if: env.changed == 'false'
