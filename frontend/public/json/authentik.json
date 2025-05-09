@@ -37,7 +37,7 @@
             "type": "warning"
         },
         {
-            "text": "some updates doesnt work due massive dependency errors, its recommended to do an backup before or an pg_dump and an new LXC.",
+            "text": "Some updates don't work due to massive dependency errors, it's recommended to do a backup before updating or a pg_dump and a new LXC.",
             "type": "warning"
         }
     ]
