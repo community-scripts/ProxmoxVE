@@ -1,5 +1,40 @@
 [
   {
+    "name": "crowdsecurity/crowdsec",
+    "version": "v1.6.8",
+    "date": "2025-03-25T13:33:10Z"
+  },
+  {
+    "name": "zitadel/zitadel",
+    "version": "v3.0.4",
+    "date": "2025-05-09T11:38:33Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "v9.5.14",
+    "date": "2025-05-09T07:29:03Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1884",
+    "date": "2025-05-09T05:58:40Z"
+  },
+  {
+    "name": "theonedev/onedev",
+    "version": "v11.9.4",
+    "date": "2025-05-09T02:45:16Z"
+  },
+  {
+    "name": "coder/code-server",
+    "version": "v4.99.4",
+    "date": "2025-05-02T18:33:09Z"
+  },
+  {
+    "name": "VictoriaMetrics/VictoriaMetrics",
+    "version": "v1.22.1-victorialogs",
+    "date": "2025-05-08T23:40:19Z"
+  },
+  {
     "name": "pocket-id/pocket-id",
     "version": "v0.53.0",
     "date": "2025-05-08T19:56:55Z"
@@ -8,11 +43,6 @@
     "name": "ellite/Wallos",
     "version": "v3.1.0",
     "date": "2025-05-08T15:33:17Z"
-  },
-  {
-    "name": "VictoriaMetrics/VictoriaMetrics",
-    "version": "v1.22.0-victorialogs",
-    "date": "2025-05-08T15:11:08Z"
   },
   {
     "name": "BookStackApp/BookStack",
@@ -35,11 +65,6 @@
     "date": "2025-05-08T12:25:10Z"
   },
   {
-    "name": "mattermost/mattermost",
-    "version": "server/public/v0.1.12",
-    "date": "2025-05-08T11:04:17Z"
-  },
-  {
     "name": "keycloak/keycloak",
     "version": "26.2.4",
     "date": "2025-05-08T09:10:10Z"
@@ -50,19 +75,14 @@
     "date": "2025-05-08T08:11:27Z"
   },
   {
-    "name": "zitadel/zitadel",
-    "version": "v2.71.10",
-    "date": "2025-05-08T08:01:47Z"
-  },
-  {
     "name": "umami-software/umami",
     "version": "v2.18.0",
     "date": "2025-05-08T07:14:55Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1877",
-    "date": "2025-05-08T05:57:36Z"
+    "name": "runtipi/runtipi",
+    "version": "v4.0.2",
+    "date": "2025-05-01T16:10:58Z"
   },
   {
     "name": "cross-seed/cross-seed",
@@ -73,11 +93,6 @@
     "name": "semaphoreui/semaphore",
     "version": "v2.14.10",
     "date": "2025-05-07T20:23:29Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-05-07T19:22:21Z"
   },
   {
     "name": "readeck/readeck",
@@ -295,11 +310,6 @@
     "date": "2025-05-05T13:59:23Z"
   },
   {
-    "name": "theonedev/onedev",
-    "version": "v11.9.3",
-    "date": "2025-05-05T10:22:11Z"
-  },
-  {
     "name": "evcc-io/evcc",
     "version": "0.203.5",
     "date": "2025-05-05T06:41:02Z"
@@ -403,11 +413,6 @@
     "name": "homarr-labs/homarr",
     "version": "v1.19.0",
     "date": "2025-05-02T19:15:25Z"
-  },
-  {
-    "name": "coder/code-server",
-    "version": "v4.99.4",
-    "date": "2025-05-02T18:33:09Z"
   },
   {
     "name": "prometheus/prometheus",
@@ -868,11 +873,6 @@
     "name": "hansmi/prometheus-paperless-exporter",
     "version": "v0.0.7",
     "date": "2025-03-25T15:11:18Z"
-  },
-  {
-    "name": "crowdsecurity/crowdsec",
-    "version": "v1.6.8",
-    "date": "2025-03-25T13:33:10Z"
   },
   {
     "name": "nextcloud/nextcloudpi",
