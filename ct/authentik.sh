@@ -9,7 +9,7 @@ APP="Authentik"
 var_tags="${var_tags:-identity-provider}"
 var_disk="${var_disk:-12}"
 var_cpu="${var_cpu:-6}"
-var_ram="${var_ram:-8192}"
+var_ram="${var_ram:-10240}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-12}"
 var_unprivileged="${var_unprivileged:-1}"
@@ -29,6 +29,13 @@ function update_script() {
   fi
   RELEASE=$(curl -fsSL https://api.github.com/repos/goauthentik/authentik/releases/latest | grep "tarball_url" | awk '{print substr($2, 2, length($2)-3)}')
   if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
+    NODE_VERSION="22"
+    PG_VERSION="16"
+    setup_uv
+    install_postgresql
+    install_node_and_modules
+    install_go
+
     msg_info "Stopping ${APP}"
     systemctl stop authentik-server
     systemctl stop authentik-worker
@@ -54,17 +61,14 @@ function update_script() {
     go build -o /opt/authentik/authentik-server /opt/authentik/cmd/server/
     msg_ok "Built ${APP} server"
 
-    msg_info "Installing Python Dependencies"
+    msg_info "Building Authentik"
     cd /opt/authentik
-    $STD poetry install --only=main --no-ansi --no-interaction --no-root
-    $STD poetry export --without-hashes --without-urls -f requirements.txt --output requirements.txt
-    $STD pip install --no-cache-dir -r requirements.txt
-    $STD pip install .
-    msg_ok "Installed Python Dependencies"
+    $STD uv sync --frozen --no-install-project --no-dev
+    uv run python -m lifecycle.migrate
+    ln -s /opt/authentik/.venv/bin/gunicorn /usr/local/bin/gunicorn
+    ln -s /opt/authentik/.venv/bin/celery /usr/local/bin/celery
+    msg_ok "Authentik built"
 
-    msg_info "Updating ${APP} to v${RELEASE} (Patience)"
-    cp -r /opt/authentik/authentik/blueprints /opt/authentik/blueprints
-    $STD bash /opt/authentik/lifecycle/ak migrate
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP} to v${RELEASE}"
 
