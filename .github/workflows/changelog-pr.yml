@@ -267,7 +267,7 @@ jobs:
       - name: Approve pull request and merge
         if: env.changed == 'true'
         env:
-          GH_TOKEN: ${{ secrets.PAT_MICHEL }}
+          GH_TOKEN: ${{ secrets.PAT_AUTOMERGE }}
         run: |
           PR_NUMBER=$(gh pr list --head "${BRANCH_NAME}" --json number --jq '.[].number')
           if [ -n "$PR_NUMBER" ]; then
