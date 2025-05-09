@@ -16,6 +16,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-05-09
 
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - Feature: autologin for Alpine [@MickLesk](https://github.com/MickLesk) ([#4344](https://github.com/community-scripts/ProxmoxVE/pull/4344))
+
 ### 🧰 Maintenance
 
   - #### 📂 Github
