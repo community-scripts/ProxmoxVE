@@ -46,29 +46,33 @@ $STD apt-get install -y \
   pkg-config
 msg_ok "Installed Dependencies"
 
+setup_uv
 msg_info "Setup Python3"
-$STD apt-get update
-$STD rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
-$STD apt-get remove --purge -y python3.12 python3.12-dev python3.12-venv
-
 $STD apt-get install -y \
   python3.13 \
-  python3-pip \
   python3.13-dev \
   python3.13-venv
-
-ln -sf /usr/bin/python3.13 /usr/bin/python3
 msg_ok "Setup Python3"
 
+msg_info "Preparing Python 3.13 for uv"
+$STD uv python install 3.13
+UV_PYTHON=$(uv python list | awk '/3\.13\.[0-9]+.*\/root\/.local/ {print $2; exit}')
+if [[ -z "$UV_PYTHON" ]]; then
+  msg_error "No local Python 3.13 found via uv"
+  exit 1
+fi
+msg_ok "Prepared Python 3.13"
+
 msg_info "Setting up Home Assistant-Core environment"
-mkdir /srv/homeassistant
+rm -rf /srv/homeassistant
+mkdir -p /srv/homeassistant
 cd /srv/homeassistant
-python3 -m venv .
-source bin/activate
+$STD uv venv .venv --python "$UV_PYTHON"
+source .venv/bin/activate
 msg_ok "Created virtual environment"
 
 msg_info "Installing Home Assistant-Core"
-$STD python3 -m pip install webrtcvad wheel homeassistant mysqlclient psycopg2-binary isal
+$STD uv pip install homeassistant mysqlclient psycopg2-binary isal webrtcvad wheel
 mkdir -p /root/.homeassistant
 msg_ok "Installed Home Assistant-Core"
 
@@ -77,16 +81,19 @@ cat <<EOF >/etc/systemd/system/homeassistant.service
 [Unit]
 Description=Home Assistant
 After=network-online.target
+
 [Service]
 Type=simple
 WorkingDirectory=/root/.homeassistant
-Environment="PATH=/srv/homeassistant/bin:/usr/local/bin:/usr/bin:/usr/local/bin/uv"
-ExecStart=/srv/homeassistant/bin/python3 -m homeassistant --config /root/.homeassistant
+Environment="PATH=/srv/homeassistant/.venv/bin:/usr/local/bin:/usr/bin"
+ExecStart=/srv/homeassistant/.venv/bin/python3 -m homeassistant --config /root/.homeassistant
 Restart=always
 RestartForceExitStatus=100
+
 [Install]
 WantedBy=multi-user.target
 EOF
+
 systemctl enable -q --now homeassistant
 msg_ok "Created Service"
 
