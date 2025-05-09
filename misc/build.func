@@ -528,7 +528,7 @@ advanced_settings() {
     exit_script
   fi
 
-  BRIDGES=$( grep -B1 "bridge-" /etc/network/interfaces | grep "iface" | grep -Pv "^\s*#" | awk '{print $2}' | sort | uniq | while read bridge; do ip link show "$bridge" 2> /dev/null | grep -oP "$bridge"; done )
+  BRIDGES=$( ip link show | grep -oP '(?<=: )vmbr\d+' | sort)
   if [[ -z "$BRIDGES" ]]; then
     BRG="vmbr0"
     echo -e "${BRIDGE}${BOLD}${DGN}Bridge: ${BGN}$BRG${CL}"
