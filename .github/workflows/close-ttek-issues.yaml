@@ -5,6 +5,7 @@ on:
 
 jobs:
   close_tteck_issues:
+    if: github.repository == 'community-scripts/ProxmoxVE'
     runs-on: ubuntu-latest
     steps:
       - name: Auto-close if tteck script detected

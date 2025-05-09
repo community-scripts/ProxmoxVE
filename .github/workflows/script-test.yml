@@ -11,6 +11,7 @@ on:
 
 jobs:
   run-install-script:
+    if: github.repository == 'community-scripts/ProxmoxVE'
     runs-on: pvenode
     steps:
       - name: Checkout PR branch

@@ -11,6 +11,7 @@ on:
 
 jobs:
   build:
+    if: github.repository == 'community-scripts/ProxmoxVE'
     runs-on: ubuntu-latest #To ensure it always builds we use the github runner with all the right tooling
 
     steps:

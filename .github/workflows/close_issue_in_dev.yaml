@@ -5,7 +5,7 @@ on:
       - closed
 jobs:
   close_issue:
-    if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true && github.repository == 'community-scripts/ProxmoxVE'
     runs-on: ubuntu-latest
     
     steps:

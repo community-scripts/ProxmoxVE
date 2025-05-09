@@ -12,6 +12,7 @@ permissions:
 
 jobs:
   crawl-versions:
+    if: github.repository == 'community-scripts/ProxmoxVE'
     runs-on: runner-cluster-htl-set
 
     steps:
