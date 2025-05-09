@@ -24,6 +24,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🧰 Maintenance
 
+  - #### 💾 Core
+
+    - fix: detect all bridge types, not just vmbr prefix [@filippolauria](https://github.com/filippolauria) ([#4351](https://github.com/community-scripts/ProxmoxVE/pull/4351))
+
   - #### 📂 Github
 
     - Add a Repo check to all Workflows [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4339](https://github.com/community-scripts/ProxmoxVE/pull/4339))
