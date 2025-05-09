@@ -24,6 +24,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### ✨ New Features
 
+    - HomeAssistant-Core: update script for 2025.5+ [@MickLesk](https://github.com/MickLesk) ([#4363](https://github.com/community-scripts/ProxmoxVE/pull/4363))
     - Feature: autologin for Alpine [@MickLesk](https://github.com/MickLesk) ([#4344](https://github.com/community-scripts/ProxmoxVE/pull/4344))
 
 ### 🧰 Maintenance
