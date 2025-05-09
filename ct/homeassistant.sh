@@ -38,7 +38,7 @@ function update_script() {
     msg_info "Updating All Containers"
     CONTAINER_LIST="${1:-$(docker ps -q)}"
     for container in ${CONTAINER_LIST}; do
-      CONTAINER_IMAGE="$(docker inspect --format "{{.Config.Image}}" --type container ${container})"
+      CONTAINER_IMAGE="$(docker inspect --format "{{.Config.Image}}" --type container "${container}")"
       RUNNING_IMAGE="$(docker inspect --format "{{.Image}}" --type container "${container}")"
       docker pull "${CONTAINER_IMAGE}"
       LATEST_IMAGE="$(docker inspect --format "{{.Id}}" --type image "${CONTAINER_IMAGE}")"
@@ -47,7 +47,7 @@ function update_script() {
         echo "Updating ${container} image ${CONTAINER_IMAGE}"
         DOCKER_COMMAND="$(runlike --use-volume-id "${container}")"
         docker rm --force "${container}"
-        eval ${DOCKER_COMMAND}
+        eval "${DOCKER_COMMAND}"
       fi
     done
     msg_ok "Updated All Containers"
@@ -109,4 +109,4 @@ msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}HA: http://${IP}:8123${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}Portainer: http://${IP}:9443${CL}"
+echo -e "${TAB}${GATEWAY}${BGN}Portainer: https://${IP}:9443${CL}"
