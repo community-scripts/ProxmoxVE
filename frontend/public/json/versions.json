@@ -1,5 +1,35 @@
 [
   {
+    "name": "pelican-dev/wings",
+    "version": "v1.0.0-beta13",
+    "date": "2025-05-09T23:14:41Z"
+  },
+  {
+    "name": "pelican-dev/panel",
+    "version": "v1.0.0-beta21",
+    "date": "2025-05-09T23:14:23Z"
+  },
+  {
+    "name": "homarr-labs/homarr",
+    "version": "v1.19.1",
+    "date": "2025-05-09T19:15:10Z"
+  },
+  {
+    "name": "MediaBrowser/Emby.Releases",
+    "version": "4.8.11.0",
+    "date": "2025-03-10T06:39:11Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.5.1",
+    "date": "2025-05-09T15:05:54Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "v9.11.15",
+    "date": "2025-05-09T13:48:50Z"
+  },
+  {
     "name": "crowdsecurity/crowdsec",
     "version": "v1.6.8",
     "date": "2025-03-25T13:33:10Z"
@@ -8,11 +38,6 @@
     "name": "zitadel/zitadel",
     "version": "v3.0.4",
     "date": "2025-05-09T11:38:33Z"
-  },
-  {
-    "name": "mattermost/mattermost",
-    "version": "v9.5.14",
-    "date": "2025-05-09T07:29:03Z"
   },
   {
     "name": "Jackett/Jackett",
@@ -98,11 +123,6 @@
     "name": "readeck/readeck",
     "version": "0.18.2",
     "date": "2025-05-07T19:22:22Z"
-  },
-  {
-    "name": "home-assistant/core",
-    "version": "2025.5.0",
-    "date": "2025-05-07T17:26:14Z"
   },
   {
     "name": "HabitRPG/habitica",
@@ -315,11 +335,6 @@
     "date": "2025-05-05T06:41:02Z"
   },
   {
-    "name": "MediaBrowser/Emby.Releases",
-    "version": "4.8.11.0",
-    "date": "2025-03-10T06:39:11Z"
-  },
-  {
     "name": "firefly-iii/firefly-iii",
     "version": "v6.2.12",
     "date": "2025-04-20T19:22:17Z"
@@ -408,11 +423,6 @@
     "name": "documenso/documenso",
     "version": "v1.10.3",
     "date": "2025-05-02T23:23:25Z"
-  },
-  {
-    "name": "homarr-labs/homarr",
-    "version": "v1.19.0",
-    "date": "2025-05-02T19:15:25Z"
   },
   {
     "name": "prometheus/prometheus",
@@ -748,16 +758,6 @@
     "name": "apache/cassandra",
     "version": "cassandra-5.0.4",
     "date": "2025-04-10T16:32:00Z"
-  },
-  {
-    "name": "pelican-dev/panel",
-    "version": "v1.0.0-beta19",
-    "date": "2025-04-07T23:06:29Z"
-  },
-  {
-    "name": "pelican-dev/wings",
-    "version": "v1.0.0-beta11",
-    "date": "2025-04-07T23:02:00Z"
   },
   {
     "name": "Threadfin/Threadfin",
