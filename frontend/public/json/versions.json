@@ -1,5 +1,25 @@
 [
   {
+    "name": "juanfont/headscale",
+    "version": "v0.25.1",
+    "date": "2025-02-25T17:30:48Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1887",
+    "date": "2025-05-10T05:57:46Z"
+  },
+  {
+    "name": "authelia/authelia",
+    "version": "v4.39.2",
+    "date": "2025-05-10T05:23:02Z"
+  },
+  {
+    "name": "VictoriaMetrics/VictoriaMetrics",
+    "version": "v1.22.2-victorialogs",
+    "date": "2025-05-10T01:20:19Z"
+  },
+  {
     "name": "pelican-dev/wings",
     "version": "v1.0.0-beta13",
     "date": "2025-05-09T23:14:41Z"
@@ -25,6 +45,11 @@
     "date": "2025-05-09T15:05:54Z"
   },
   {
+    "name": "keycloak/keycloak",
+    "version": "26.2.4",
+    "date": "2025-05-08T09:10:10Z"
+  },
+  {
     "name": "mattermost/mattermost",
     "version": "v9.11.15",
     "date": "2025-05-09T13:48:50Z"
@@ -40,11 +65,6 @@
     "date": "2025-05-09T11:38:33Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1884",
-    "date": "2025-05-09T05:58:40Z"
-  },
-  {
     "name": "theonedev/onedev",
     "version": "v11.9.4",
     "date": "2025-05-09T02:45:16Z"
@@ -53,11 +73,6 @@
     "name": "coder/code-server",
     "version": "v4.99.4",
     "date": "2025-05-02T18:33:09Z"
-  },
-  {
-    "name": "VictoriaMetrics/VictoriaMetrics",
-    "version": "v1.22.1-victorialogs",
-    "date": "2025-05-08T23:40:19Z"
   },
   {
     "name": "pocket-id/pocket-id",
@@ -88,11 +103,6 @@
     "name": "n8n-io/n8n",
     "version": "n8n@1.91.3",
     "date": "2025-05-08T12:25:10Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.2.4",
-    "date": "2025-05-08T09:10:10Z"
   },
   {
     "name": "zwave-js/zwave-js-ui",
@@ -348,11 +358,6 @@
     "name": "YunoHost/yunohost",
     "version": "debian/12.0.16",
     "date": "2025-05-04T22:06:15Z"
-  },
-  {
-    "name": "juanfont/headscale",
-    "version": "v0.25.1",
-    "date": "2025-02-25T17:30:48Z"
   },
   {
     "name": "Lidarr/Lidarr",
@@ -908,11 +913,6 @@
     "name": "Donkie/Spoolman",
     "version": "v0.22.1",
     "date": "2025-03-18T21:01:22Z"
-  },
-  {
-    "name": "authelia/authelia",
-    "version": "v4.39.1",
-    "date": "2025-03-18T03:57:41Z"
   },
   {
     "name": "Sonarr/Sonarr",
