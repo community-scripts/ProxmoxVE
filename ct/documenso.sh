@@ -20,46 +20,51 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /opt/documenso ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    RELEASE=$(curl -fsSL https://api.github.com/repos/documenso/documenso/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-    if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
-        msg_info "Stopping ${APP}"
-        systemctl stop documenso
-        msg_ok "${APP} Stopped"
-
-        msg_info "Updating ${APP} to ${RELEASE}"
-        cp /opt/documenso/.env /opt/
-        rm -rf /opt/documenso
-        cd /opt
-        curl -fsSL "https://github.com/documenso/documenso/archive/refs/tags/v${RELEASE}.zip" -o v${RELEASE}.zip
-        unzip -q v${RELEASE}.zip
-        mv documenso-${RELEASE} /opt/documenso
-        cd /opt/documenso
-        mv /opt/.env /opt/documenso/.env
-        $STD npm install
-        $STD npm run build:web
-        $STD npm run prisma:migrate-deploy
-        echo "${RELEASE}" >/opt/${APP}_version.txt
-        msg_ok "Updated ${APP}"
-
-        msg_info "Starting ${APP}"
-        systemctl start documenso
-        msg_ok "Started ${APP}"
-
-        msg_info "Cleaning Up"
-        rm -rf /opt/v${RELEASE}.zip
-        msg_ok "Cleaned"
-        msg_ok "Updated Successfully"
-    else
-        msg_ok "No update required. ${APP} is already at ${RELEASE}"
-    fi
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /opt/documenso ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+  RELEASE=$(curl -fsSL https://api.github.com/repos/documenso/documenso/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+    msg_info "Stopping ${APP}"
+    systemctl stop documenso
+    msg_ok "${APP} Stopped"
+
+    msg_info "Updating ${APP} to ${RELEASE}"
+    cp /opt/documenso/.env /opt/
+    rm -rf /opt/documenso
+    cd /opt
+    curl -fsSL "https://github.com/documenso/documenso/archive/refs/tags/v${RELEASE}.zip" -o v${RELEASE}.zip
+    unzip -q v${RELEASE}.zip
+    mv documenso-${RELEASE} /opt/documenso
+    cd /opt/documenso
+    mv /opt/.env /opt/documenso/.env
+    export TURBO_CACHE=1
+    export NEXT_TELEMETRY_DISABLED=1
+    export CYPRESS_INSTALL_BINARY=0
+    export NODE_OPTIONS="--max-old-space-size=4096"
+    $STD npm ci
+    $STD turbo run build --filter=@documenso/remix
+    $STD npm run prisma:migrate-deploy
+    $STD turbo daemon stop
+    echo "${RELEASE}" >/opt/${APP}_version.txt
+    msg_ok "Updated ${APP}"
+
+    msg_info "Starting ${APP}"
+    systemctl start documenso
+    msg_ok "Started ${APP}"
+
+    msg_info "Cleaning Up"
+    rm -rf /opt/v${RELEASE}.zip
+    msg_ok "Cleaned"
+    msg_ok "Updated Successfully"
+  else
+    msg_ok "No update required. ${APP} is already at ${RELEASE}"
+  fi
+  exit
 }
 
 start

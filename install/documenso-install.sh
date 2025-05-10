@@ -20,14 +20,14 @@ msg_ok "Setup Functions"
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-    gpg \
-    libc6 \
-    make \
-    cmake \
-    jq \
-    postgresql \
-    python3 \
-    python3-bcrypt
+  gpg \
+  libc6 \
+  make \
+  cmake \
+  jq \
+  postgresql \
+  python3 \
+  python3-bcrypt
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up Node.js Repository"
@@ -52,10 +52,10 @@ $STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET client_encoding TO 'utf8'
 $STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET default_transaction_isolation TO 'read committed';"
 $STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET timezone TO 'UTC'"
 {
-    echo "Documenso-Credentials"
-    echo "Database Name: $DB_NAME"
-    echo "Database User: $DB_USER"
-    echo "Database Password: $DB_PASS"
+  echo "Documenso-Credentials"
+  echo "Database Name: $DB_NAME"
+  echo "Database User: $DB_USER"
+  echo "Database Password: $DB_PASS"
 } >>~/documenso.creds
 msg_ok "Set up PostgreSQL"
 
@@ -68,24 +68,22 @@ mv documenso-${RELEASE} /opt/documenso
 cd /opt/documenso
 mv .env.example /opt/documenso/.env
 sed -i \
-    -e "s|^NEXTAUTH_SECRET=.*|NEXTAUTH_SECRET='$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | cut -c1-32)'|" \
-    -e "s|^NEXT_PRIVATE_ENCRYPTION_KEY=.*|NEXT_PRIVATE_ENCRYPTION_KEY='$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | cut -c1-32)'|" \
-    -e "s|^NEXT_PRIVATE_ENCRYPTION_SECONDARY_KEY=.*|NEXT_PRIVATE_ENCRYPTION_SECONDARY_KEY='$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | cut -c1-32)'|" \
-    -e "s|^DOCUMENSO_ENCRYPTION_KEY=.*|DOCUMENSO_ENCRYPTION_KEY='$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | cut -c1-32)'|" \
-    -e "s|^DOCUMENSO_ENCRYPTION_SECONDARY_KEY=.*|DOCUMENSO_ENCRYPTION_SECONDARY_KEY='$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | cut -c1-32)'|" \
-    -e "s|^NEXTAUTH_URL=.*|NEXTAUTH_URL=\"http://${LOCAL_IP}:3000\"|" \
-    -e "s|^NEXT_PUBLIC_WEBAPP_URL=.*|NEXT_PUBLIC_WEBAPP_URL='http://${LOCAL_IP}:9000'|" \
-    -e "s|^NEXT_PUBLIC_MARKETING_URL=.*|NEXT_PUBLIC_MARKETING_URL=\"http://${LOCAL_IP}:3001\"|" \
-    -e "s|^NEXT_PRIVATE_INTERNAL_WEBAPP_URL=.*|NEXT_PRIVATE_INTERNAL_WEBAPP_URL=\"http://${LOCAL_IP}:3000\"|" \
-    -e "s|^NEXT_PRIVATE_DATABASE_URL=.*|NEXT_PRIVATE_DATABASE_URL=\"postgres://$DB_USER:$DB_PASS@localhost:5432/$DB_NAME\"|" \
-    -e "s|^NEXT_PRIVATE_DIRECT_DATABASE_URL=.*|NEXT_PRIVATE_DIRECT_DATABASE_URL=\"postgres://$DB_USER:$DB_PASS@localhost:5432/$DB_NAME\"|" \
-    /opt/documenso/.env
+  -e "s|^NEXTAUTH_SECRET=.*|NEXTAUTH_SECRET='$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | cut -c1-32)'|" \
+  -e "s|^NEXT_PRIVATE_ENCRYPTION_KEY=.*|NEXT_PRIVATE_ENCRYPTION_KEY='$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | cut -c1-32)'|" \
+  -e "s|^NEXT_PRIVATE_ENCRYPTION_SECONDARY_KEY=.*|NEXT_PRIVATE_ENCRYPTION_SECONDARY_KEY='$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | cut -c1-32)'|" \
+  -e "s|^DOCUMENSO_ENCRYPTION_KEY=.*|DOCUMENSO_ENCRYPTION_KEY='$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | cut -c1-32)'|" \
+  -e "s|^DOCUMENSO_ENCRYPTION_SECONDARY_KEY=.*|DOCUMENSO_ENCRYPTION_SECONDARY_KEY='$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | cut -c1-32)'|" \
+  -e "s|^NEXT_PUBLIC_WEBAPP_URL=.*|NEXT_PUBLIC_WEBAPP_URL='http://${LOCAL_IP}:3000'|" \
+  -e "s|^NEXT_PRIVATE_INTERNAL_WEBAPP_URL=.*|NEXT_PRIVATE_INTERNAL_WEBAPP_URL=\"http://${LOCAL_IP}:3000\"|" \
+  -e "s|^NEXT_PRIVATE_DATABASE_URL=.*|NEXT_PRIVATE_DATABASE_URL=\"postgres://$DB_USER:$DB_PASS@localhost:5432/$DB_NAME\"|" \
+  -e "s|^NEXT_PRIVATE_DIRECT_DATABASE_URL=.*|NEXT_PRIVATE_DIRECT_DATABASE_URL=\"postgres://$DB_USER:$DB_PASS@localhost:5432/$DB_NAME\"|" \
+  /opt/documenso/.env
 export TURBO_CACHE=1
 export NEXT_TELEMETRY_DISABLED=1
 export CYPRESS_INSTALL_BINARY=0
 export NODE_OPTIONS="--max-old-space-size=4096"
 $STD npm ci
-$STD npm run build:web
+$STD turbo run build --filter=@documenso/remix
 $STD npm run prisma:migrate-deploy
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Installed Documenso"
@@ -103,8 +101,8 @@ Description=Documenso Service
 After=network.target postgresql.service
 
 [Service]
-WorkingDirectory=/opt/documenso/apps/web
-ExecStart=/usr/bin/npm start
+WorkingDirectory=/opt/documenso
+ExecStart=/usr/bin/turbo run start --filter=@documenso/remix
 Restart=always
 EnvironmentFile=/opt/documenso/.env
 
@@ -118,6 +116,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
+$STD turbo daemon stop
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
