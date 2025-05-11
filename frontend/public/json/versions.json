@@ -1,5 +1,45 @@
 [
   {
+    "name": "Prowlarr/Prowlarr",
+    "version": "v1.35.1.5034",
+    "date": "2025-04-30T11:02:36Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.12",
+    "date": "2025-04-20T19:22:17Z"
+  },
+  {
+    "name": "authelia/authelia",
+    "version": "v4.39.3",
+    "date": "2025-05-11T11:12:15Z"
+  },
+  {
+    "name": "theonedev/onedev",
+    "version": "v11.9.5",
+    "date": "2025-05-11T10:50:37Z"
+  },
+  {
+    "name": "Radarr/Radarr",
+    "version": "v5.22.4.9896",
+    "date": "2025-04-23T18:51:12Z"
+  },
+  {
+    "name": "pocketbase/pocketbase",
+    "version": "v0.28.0",
+    "date": "2025-05-11T06:25:22Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.1",
+    "date": "2025-01-01T16:15:52Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1888",
+    "date": "2025-05-11T06:00:48Z"
+  },
+  {
     "name": "cross-seed/cross-seed",
     "version": "v6.12.3",
     "date": "2025-05-07T20:35:11Z"
@@ -11,8 +51,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "e2e",
-    "date": "2025-05-10T20:46:31Z"
+    "version": "v4.0.2",
+    "date": "2025-05-01T16:10:58Z"
   },
   {
     "name": "open-webui/open-webui",
@@ -28,16 +68,6 @@
     "name": "juanfont/headscale",
     "version": "v0.25.1",
     "date": "2025-02-25T17:30:48Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1887",
-    "date": "2025-05-10T05:57:46Z"
-  },
-  {
-    "name": "authelia/authelia",
-    "version": "v4.39.2",
-    "date": "2025-05-10T05:23:02Z"
   },
   {
     "name": "VictoriaMetrics/VictoriaMetrics",
@@ -88,11 +118,6 @@
     "name": "zitadel/zitadel",
     "version": "v3.0.4",
     "date": "2025-05-09T11:38:33Z"
-  },
-  {
-    "name": "theonedev/onedev",
-    "version": "v11.9.4",
-    "date": "2025-05-09T02:45:16Z"
   },
   {
     "name": "coder/code-server",
@@ -290,11 +315,6 @@
     "date": "2025-05-06T07:57:02Z"
   },
   {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.1",
-    "date": "2025-01-01T16:15:52Z"
-  },
-  {
     "name": "linkwarden/linkwarden",
     "version": "v2.10.2",
     "date": "2025-05-06T03:12:53Z"
@@ -355,11 +375,6 @@
     "date": "2025-05-05T06:41:02Z"
   },
   {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.12",
-    "date": "2025-04-20T19:22:17Z"
-  },
-  {
     "name": "moghtech/komodo",
     "version": "v1.17.5",
     "date": "2025-05-04T22:17:06Z"
@@ -378,16 +393,6 @@
     "name": "Readarr/Readarr",
     "version": "v2.0.0.4645",
     "date": "2017-03-07T18:56:06Z"
-  },
-  {
-    "name": "Prowlarr/Prowlarr",
-    "version": "v1.35.1.5034",
-    "date": "2025-04-30T11:02:36Z"
-  },
-  {
-    "name": "Radarr/Radarr",
-    "version": "v5.22.4.9896",
-    "date": "2025-04-23T18:51:12Z"
   },
   {
     "name": "bastienwirtz/homer",
@@ -548,11 +553,6 @@
     "name": "immich-app/immich",
     "version": "v1.132.3",
     "date": "2025-04-28T14:11:06Z"
-  },
-  {
-    "name": "pocketbase/pocketbase",
-    "version": "v0.27.2",
-    "date": "2025-04-28T12:03:30Z"
   },
   {
     "name": "FlowiseAI/Flowise",
