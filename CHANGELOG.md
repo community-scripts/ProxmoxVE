@@ -16,6 +16,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-05-11
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Zammad: Enable ElasticSearch service [@tremor021](https://github.com/tremor021) ([#4391](https://github.com/community-scripts/ProxmoxVE/pull/4391))
+
 ## 2025-05-10
 
 ### 🚀 Updated Scripts
