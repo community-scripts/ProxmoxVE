@@ -1,5 +1,30 @@
 [
   {
+    "name": "cross-seed/cross-seed",
+    "version": "v6.12.3",
+    "date": "2025-05-07T20:35:11Z"
+  },
+  {
+    "name": "owncast/owncast",
+    "version": "v0.2.3",
+    "date": "2025-05-10T21:14:45Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "e2e",
+    "date": "2025-05-10T20:46:31Z"
+  },
+  {
+    "name": "open-webui/open-webui",
+    "version": "v0.6.9",
+    "date": "2025-05-10T19:05:02Z"
+  },
+  {
+    "name": "Stirling-Tools/Stirling-PDF",
+    "version": "v0.46.1",
+    "date": "2025-05-10T15:39:10Z"
+  },
+  {
     "name": "juanfont/headscale",
     "version": "v0.25.1",
     "date": "2025-02-25T17:30:48Z"
@@ -115,16 +140,6 @@
     "date": "2025-05-08T07:14:55Z"
   },
   {
-    "name": "runtipi/runtipi",
-    "version": "v4.0.2",
-    "date": "2025-05-01T16:10:58Z"
-  },
-  {
-    "name": "cross-seed/cross-seed",
-    "version": "v6.12.3",
-    "date": "2025-05-07T20:35:11Z"
-  },
-  {
     "name": "semaphoreui/semaphore",
     "version": "v2.14.10",
     "date": "2025-05-07T20:23:29Z"
@@ -218,11 +233,6 @@
     "name": "jupyter/notebook",
     "version": "@jupyter-notebook/ui-components@7.5.0-alpha.0",
     "date": "2025-05-07T09:12:08Z"
-  },
-  {
-    "name": "open-webui/open-webui",
-    "version": "v0.6.7",
-    "date": "2025-05-06T23:08:38Z"
   },
   {
     "name": "influxdata/influxdb",
@@ -400,11 +410,6 @@
     "date": "2025-05-03T19:03:17Z"
   },
   {
-    "name": "owncast/owncast",
-    "version": "v0.2.2",
-    "date": "2025-05-03T18:45:34Z"
-  },
-  {
     "name": "rogerfar/rdt-client",
     "version": "v2.0.111",
     "date": "2025-05-03T16:25:30Z"
@@ -498,11 +503,6 @@
     "name": "goauthentik/authentik",
     "version": "version/2025.4.0",
     "date": "2025-04-30T12:34:14Z"
-  },
-  {
-    "name": "Stirling-Tools/Stirling-PDF",
-    "version": "v0.46.0",
-    "date": "2025-04-30T07:05:42Z"
   },
   {
     "name": "go-gitea/gitea",
