@@ -20,21 +20,20 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    msg_info "Updating Alpine Packages"
-    $STD apk update
-    $STD apk upgrade
-    msg_ok "Updated Alpine Packages"
+  header_info
+  msg_info "Updating Alpine Packages"
+  $STD apk -U upgrade
+  msg_ok "Updated Alpine Packages"
 
-    msg_info "Updating AdGuard Home"
-    $STD /opt/AdGuardHome/AdGuardHome --update
-    msg_ok "Updated AdGuard Home"
+  msg_info "Updating AdGuard Home"
+  $STD /opt/AdGuardHome/AdGuardHome --update
+  msg_ok "Updated AdGuard Home"
 
-    msg_info "Restarting AdGuard Home"
-    $STD rc-service adguardhome restart
-    msg_ok "Restarted AdGuard Home"
+  msg_info "Restarting AdGuard Home"
+  $STD rc-service adguardhome restart
+  msg_ok "Restarted AdGuard Home"
 
-    exit 0
+  exit 0
 }
 
 start

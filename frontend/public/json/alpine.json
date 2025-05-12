@@ -44,7 +44,7 @@
   },
   "notes": [
     {
-      "text": "To Update Alpine: `apk update && apk upgrade`",
+      "text": "To Update Alpine: `apk -U upgrade`",
       "type": "info"
     }
   ]

@@ -137,8 +137,7 @@ network_check() {
 # This function updates the Container OS by running apt-get update and upgrade
 update_os() {
   msg_info "Updating Container OS"
-  $STD apk update
-  $STD apk upgrade
+  $STD apk -U upgrade
   msg_ok "Updated Container OS"
 
   msg_info "Installing core dependencies"

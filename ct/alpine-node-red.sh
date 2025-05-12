@@ -20,24 +20,23 @@ color
 catch_errors
 
 function update_script() {
-    msg_info "Updating Alpine Packages"
-    $STD apk update
-    $STD apk upgrade
-    msg_ok "Updated Alpine Packages"
+  msg_info "Updating Alpine Packages"
+  $STD apk -U upgrade
+  msg_ok "Updated Alpine Packages"
 
-    msg_info "Updating Node.js and npm"
-    $STD apk upgrade nodejs npm
-    msg_ok "Updated Node.js and npm"
+  msg_info "Updating Node.js and npm"
+  $STD apk upgrade nodejs npm
+  msg_ok "Updated Node.js and npm"
 
-    msg_info "Updating Node-RED"
-    $STD npm install -g --unsafe-perm node-red
-    msg_ok "Updated Node-RED"
+  msg_info "Updating Node-RED"
+  $STD npm install -g --unsafe-perm node-red
+  msg_ok "Updated Node-RED"
 
-    msg_info "Restarting Node-RED"
-    $STD rc-service nodered restart
-    msg_ok "Restarted Node-RED"
+  msg_info "Restarting Node-RED"
+  $STD rc-service nodered restart
+  msg_ok "Restarted Node-RED"
 
-    exit 0
+  exit 0
 }
 
 start

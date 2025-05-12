@@ -20,20 +20,19 @@ color
 catch_errors
 
 function update_script() {
-    msg_info "Updating Alpine Packages"
-    $STD apk update
-    $STD apk upgrade
-    msg_ok "Updated Alpine Packages"
+  msg_info "Updating Alpine Packages"
+  $STD apk -U upgrade
+  msg_ok "Updated Alpine Packages"
 
-    msg_info "Updating Prometheus"
-    $STD apk upgrade prometheus
-    msg_ok "Updated Prometheus"
+  msg_info "Updating Prometheus"
+  $STD apk upgrade prometheus
+  msg_ok "Updated Prometheus"
 
-    msg_info "Restarting Prometheus"
-    $STD rc-service prometheus restart
-    msg_ok "Restarted Prometheus"
+  msg_info "Restarting Prometheus"
+  $STD rc-service prometheus restart
+  msg_ok "Restarted Prometheus"
 
-    exit 0
+  exit 0
 }
 
 start

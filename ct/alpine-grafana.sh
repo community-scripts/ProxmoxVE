@@ -39,7 +39,7 @@ function update_script() {
     header_info
     case $CHOICE in
     1)
-      apk update && apk upgrade
+      $STD apk -U upgrade
       exit
       ;;
     2)

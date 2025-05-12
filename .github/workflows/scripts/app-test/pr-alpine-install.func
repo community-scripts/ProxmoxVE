@@ -72,8 +72,7 @@ network_check() {
 
 update_os() {
   msg_info "Updating Container OS"
-  apk update
-  apk upgrade
+  $STD apk -U upgrade
   msg_ok "Updated Container OS"
 }
 
