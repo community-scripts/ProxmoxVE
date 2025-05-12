@@ -528,7 +528,7 @@ advanced_settings() {
     exit_script
   fi
 
-  BRIDGES=$( ip link show | grep -oP '(?<=: )vmbr\d+' | sort)
+  BRIDGES=$( ip link show | grep -oP '(?<=: )vmbr\d+(\.\d+)?' | sort)
   if [[ -z "$BRIDGES" ]]; then
     BRG="vmbr0"
     echo -e "${BRIDGE}${BOLD}${DGN}Bridge: ${BGN}$BRG${CL}"
