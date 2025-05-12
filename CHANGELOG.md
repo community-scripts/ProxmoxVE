@@ -16,6 +16,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-05-12
 
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - Feature: LXC-Delete (pve helper): add "all items" [@MickLesk](https://github.com/MickLesk) ([#4296](https://github.com/community-scripts/ProxmoxVE/pull/4296))
+
 ### 🧰 Maintenance
 
   - #### 💾 Core
