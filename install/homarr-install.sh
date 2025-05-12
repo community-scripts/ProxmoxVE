@@ -23,27 +23,17 @@ $STD apt-get install -y \
   build-essential \
   nginx \
   gettext \
+  jq \
   openssl
 msg_ok "Installed Dependencies"
 
-msg_info "Setting up Node.js Repository"
-mkdir -p /etc/apt/keyrings
-curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_22.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
-msg_ok "Set up Node.js Repository"
-
-msg_info "Installing Node.js/pnpm"
-$STD apt-get update
-$STD apt-get install -y nodejs
-$STD npm install -g pnpm@latest
-msg_ok "Installed Node.js/pnpm"
+NODE_VERSION=$(curl -s https://raw.githubusercontent.com/homarr-labs/homarr/dev/package.json | jq -r '.engines.node | split(">=")[1] | split(".")[0]')
+NODE_MODULE="pnpm@$(curl -s https://raw.githubusercontent.com/homarr-labs/homarr/dev/package.json | jq -r '.packageManager | split("@")[1]')"
+install_node_and_modules
+fetch_and_deploy_gh_release "homarr-labs/homarr"
 
 msg_info "Installing Homarr (Patience)"
 cd /opt
-RELEASE=$(curl -fsSL https://api.github.com/repos/homarr-labs/homarr/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/homarr-labs/homarr/archive/refs/tags/v${RELEASE}.zip" -o $(basename "https://github.com/homarr-labs/homarr/archive/refs/tags/v${RELEASE}.zip")
-unzip -q v${RELEASE}.zip
-mv homarr-${RELEASE} /opt/homarr
 mkdir -p /opt/homarr_db
 touch /opt/homarr_db/db.sqlite
 SECRET_ENCRYPTION_KEY="$(openssl rand -hex 32)"
