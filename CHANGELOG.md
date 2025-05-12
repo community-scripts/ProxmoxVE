@@ -16,6 +16,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-05-12
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Navidrome - Fix config path (use /etc/ instead of /var/lib) [@quake1508](https://github.com/quake1508) ([#4406](https://github.com/community-scripts/ProxmoxVE/pull/4406))
+
 ## 2025-05-11
 
 ### 🚀 Updated Scripts
