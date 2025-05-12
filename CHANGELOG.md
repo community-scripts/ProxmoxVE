@@ -18,6 +18,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
+  - Alpine: Use onliner for updates [@tremor021](https://github.com/tremor021) ([#4414](https://github.com/community-scripts/ProxmoxVE/pull/4414))
+
   - #### ✨ New Features
 
     - Feature: LXC-Delete (pve helper): add "all items" [@MickLesk](https://github.com/MickLesk) ([#4296](https://github.com/community-scripts/ProxmoxVE/pull/4296))
