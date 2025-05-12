@@ -25,7 +25,7 @@ curl -fsSL "https://cdn.azul.com/zulu/bin/zulu-repo_1.0.0-3_all.deb" -o $(basena
 $STD dpkg -i zulu-repo_1.0.0-3_all.deb
 $STD apt-get update
 $STD apt-get -y install zulu17-jdk
-msg_ok "Installed Azul Zulu21"
+msg_ok "Installed Azul Zulu17"
 
 msg_info "Installing openHAB"
 curl -fsSL "https://openhab.jfrog.io/artifactory/api/gpg/key/public" | gpg --dearmor >openhab.gpg
