@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
-# Author: tteck (tteckster) | Co-Author: MickLesk (Canbiz) | Co-Author: CrazyWolf13
+# Copyright (c) 2021-2025 community-scripts ORG
+# Author: CrazyWolf13
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://homarr.dev/
 
@@ -117,11 +117,12 @@ node apps/nextjs/server.js & PID=$!
 wait $PID
 EOF
     chmod +x /opt/run_homarr.sh
-curl -fsSL "https://github.com/homarr-labs/homarr/archive/refs/tags/v${RELEASE}.zip" -o $(basename "https://github.com/homarr-labs/homarr/archive/refs/tags/v${RELEASE}.zip")
-    unzip -q v${RELEASE}.zip
-    rm -rf v${RELEASE}.zip
+    $STD command -v jq || $STD apt-get update && $STD apt-get install -y jq
+    NODE_VERSION=$(curl -s https://raw.githubusercontent.com/homarr-labs/homarr/dev/package.json | jq -r '.engines.node | split(">=")[1] | split(".")[0]')
+    NODE_MODULE="pnpm@$(curl -s https://raw.githubusercontent.com/homarr-labs/homarr/dev/package.json | jq -r '.packageManager | split("@")[1]')"
+    install_node_and_modules
     rm -rf /opt/homarr
-    mv homarr-${RELEASE} /opt/homarr
+    fetch_and_deploy_gh_release "homarr-labs/homarr"
     mv /opt/homarr-data-backup/.env /opt/homarr/.env
     cd /opt/homarr
     $STD pnpm install
