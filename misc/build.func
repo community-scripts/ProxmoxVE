@@ -785,7 +785,7 @@ config_file() {
     CONFIG_FILE="/opt/community-scripts/${NSAPP}.conf"
   fi
 
-  if CONFIG_FILE=$(whiptail --backtitle "[dev] Proxmox VE Helper Scripts" --inputbox "Set absolute path to config file" 8 58 "$CONFIG_FILE" --title "CONFIG FILE" 3>&1 1>&2 2>&3); then
+  if CONFIG_FILE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set absolute path to config file" 8 58 "$CONFIG_FILE" --title "CONFIG FILE" 3>&1 1>&2 2>&3); then
     if [[ ! -f "$CONFIG_FILE" ]]; then
       echo -e "${CROSS}${RD}Config file not found, exiting script!.${CL}"
       exit
@@ -1037,16 +1037,16 @@ config_file() {
     exit
   fi
 
-  if [[ "$VERBOSE" == "yes" ]]; then
-    echo -e "${SEARCH}${BOLD}${DGN}Verbose Mode: ${BGN}$VERBOSE${CL}"
-  elif [[ "$VERBOSE" == "no" ]]; then
+  if [[ "$VERB" == "yes" ]]; then
+    echo -e "${SEARCH}${BOLD}${DGN}Verbose Mode: ${BGN}$VERB${CL}"
+  elif [[ "$VERB" == "no" ]]; then
     echo -e "${SEARCH}${BOLD}${DGN}Verbose Mode: ${BGN}No${CL}"
   else
-    msg_error "Verbose Mode needs to be 'yes' or 'no', was ${VERBOSE}"
+    msg_error "Verbose Mode needs to be 'yes' or 'no', was ${VERB}"
     exit
   fi
 
-  if (whiptail --backtitle "[dev] Proxmox VE Helper Scripts" --title "ADVANCED SETTINGS WITH CONFIG FILE COMPLETE" --yesno "Ready to create ${APP} LXC?" 10 58); then
+  if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "ADVANCED SETTINGS WITH CONFIG FILE COMPLETE" --yesno "Ready to create ${APP} LXC?" 10 58); then
     echo -e "${CREATING}${BOLD}${RD}Creating a ${APP} LXC using the above settings${CL}"
   else
     clear
