@@ -779,15 +779,13 @@ EOF
 
 config_file() {
 
-  whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox --title "Default distribution for $APP" "${var_os} ${var_version} \n \nIf the default Linux distribution is not adhered to, script support will be discontinued. \n" 10 58
-
   CONFIG_FILE="/opt/community-scripts/.settings"
 
   if [[ -f "/opt/community-scripts/${NSAPP}.conf" ]]; then
     CONFIG_FILE="/opt/community-scripts/${NSAPP}.conf"
   fi
 
-  if CONFIG_FILE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set absolute path to config file" 8 58 "$CONFIG_FILE" --title "CONFIG FILE" 3>&1 1>&2 2>&3); then
+  if CONFIG_FILE=$(whiptail --backtitle "[dev] Proxmox VE Helper Scripts" --inputbox "Set absolute path to config file" 8 58 "$CONFIG_FILE" --title "CONFIG FILE" 3>&1 1>&2 2>&3); then
     if [[ ! -f "$CONFIG_FILE" ]]; then
       echo -e "${CROSS}${RD}Config file not found, exiting script!.${CL}"
       exit
@@ -797,66 +795,38 @@ config_file() {
       source "$CONFIG_FILE"
     fi
   fi
-
-  if [[ "$var_os" == "debian" ]]; then
-    echo -e "${OS}${BOLD}${DGN}Operating System: ${BGN}$var_os${CL}"
-    if [[ "$var_version" == "11" ]]; then
-      echo -e "${OSVERSION}${BOLD}${DGN}Version: ${BGN}$var_version${CL}"
-    elif [[ "$var_version" == "12" ]]; then
-      echo -e "${OSVERSION}${BOLD}${DGN}Version: ${BGN}$var_version${CL}"
-    else
-      msg_error "Unknown setting for var_version, should be 11 or 12, was ${var_version}"
-      exit
-    fi
-  elif [[ "$var_os" == "ubuntu" ]]; then
-    echo -e "${OS}${BOLD}${DGN}Operating System: ${BGN}$var_os${CL}"
-    if [[ "$var_version" == "20.04" ]]; then
-      echo -e "${OSVERSION}${BOLD}${DGN}Version: ${BGN}$var_version${CL}"
-    elif [[ "$var_version" == "22.04" ]]; then
-      echo -e "${OSVERSION}${BOLD}${DGN}Version: ${BGN}$var_version${CL}"
-    elif [[ "$var_version" == "24.04" ]]; then
-      echo -e "${OSVERSION}${BOLD}${DGN}Version: ${BGN}$var_version${CL}"
-    elif [[ "$var_version" == "24.10" ]]; then
-      echo -e "${OSVERSION}${BOLD}${DGN}Version: ${BGN}$var_version${CL}"
-    else
-      msg_error "Unknown setting for var_version, should be 20.04, 22.04, 24.04 or 24.10, was ${var_version}"
-      exit
-    fi
-  else
-    msg_error "Unknown setting for var_os! should be debian or ubuntu, was ${var_os}"
-    exit
-  fi
-
   if [[ -n "$CT_ID" ]]; then
-
     if [[ "$CT_ID" =~ ^([0-9]{3,4})-([0-9]{3,4})$ ]]; then
       MIN_ID=${BASH_REMATCH[1]}
       MAX_ID=${BASH_REMATCH[2]}
-
       if ((MIN_ID >= MAX_ID)); then
         msg_error "Invalid Container ID range. The first number must be smaller than the second number, was ${CT_ID}"
         exit
       fi
 
-      LIST_OF_IDS=$(pvesh get /cluster/resources --type vm --output-format json | grep -oP '"vmid":\s*\K\d+')
-
-      for ((ID = MIN_ID; ID <= MAX_ID; ID++)); do
-        if ! grep -q "^$ID$" <<<"$LIST_OF_IDS"; then
-          CT_ID=$ID
-          break
-        fi
-      done
-
+      LIST_OF_IDS=$(pvesh get /cluster/resources --type vm --output-format json 2>/dev/null | grep -oP '"vmid":\s*\K\d+') || true
+      if [[ -n "$LIST_OF_IDS" ]]; then
+        for ((ID = MIN_ID; ID <= MAX_ID; ID++)); do
+          if ! grep -q "^$ID$" <<<"$LIST_OF_IDS"; then
+            CT_ID=$ID
+            break
+          fi
+        done
+      fi
       echo -e "${CONTAINERID}${BOLD}${DGN}Container ID: ${BGN}$CT_ID${CL}"
 
     elif [[ "$CT_ID" =~ ^[0-9]+$ ]]; then
+      LIST_OF_IDS=$(pvesh get /cluster/resources --type vm --output-format json 2>/dev/null | grep -oP '"vmid":\s*\K\d+') || true
+      if [[ -n "$LIST_OF_IDS" ]]; then
 
-      LIST_OF_IDS=$(pvesh get /cluster/resources --type vm --output-format json | grep -oP '"vmid":\s*\K\d+')
-      if ! grep -q "^$CT_ID$" <<<"$LIST_OF_IDS"; then
-        echo -e "${CONTAINERID}${BOLD}${DGN}Container ID: ${BGN}$CT_ID${CL}"
+        if ! grep -q "^$CT_ID$" <<<"$LIST_OF_IDS"; then
+          echo -e "${CONTAINERID}${BOLD}${DGN}Container ID: ${BGN}$CT_ID${CL}"
+        else
+          msg_error "Container ID $CT_ID already exists"
+          exit
+        fi
       else
-        msg_error "Container ID $CT_ID already exists"
-        exit
+        echo -e "${CONTAINERID}${BOLD}${DGN}Container ID: ${BGN}$CT_ID${CL}"
       fi
     else
       msg_error "Invalid Container ID format. Needs to be 0000-9999 or 0-9999, was ${CT_ID}"
@@ -954,27 +924,26 @@ config_file() {
     if [ "$NET" == "dhcp" ]; then
       echo -e "${NETWORK}${BOLD}${DGN}IP Address: ${BGN}DHCP${CL}"
       echo -e "${GATEWAY}${BOLD}${DGN}Gateway IP Address: ${BGN}Default${CL}"
-    elif
-      [[ "$NET" =~ $ip_cidr_regex ]]
-    then
+    elif [[ "$NET" =~ $ip_cidr_regex ]]; then
       echo -e "${NETWORK}${BOLD}${DGN}IP Address: ${BGN}$NET${CL}"
+      if [ ! -z "$GATE" ]; then
+        if [[ "$GATE" =~ $ip_regex ]]; then
+          echo -e "${GATEWAY}${BOLD}${DGN}Gateway IP Address: ${BGN}$GATE${CL}"
+          GATE=",gw=$GATE"
+        else
+          msg_error "Invalid IP Address format for Gateway. Needs to be 0.0.0.0, was ${GATE}"
+          exit
+      fi
+  else
+    msg_error "Gateway IP Address cannot be empty"
+    exit
+  fi
     else
       msg_error "Invalid IP Address format. Needs to be 0.0.0.0/0, was ${NET}"
       exit
     fi
   fi
-  if [ ! -z "$GATE" ]; then
-    if [[ "$GATE" =~ $ip_regex ]]; then
-      echo -e "${GATEWAY}${BOLD}${DGN}Gateway IP Address: ${BGN}$GATE${CL}"
-      GATE=",gw=$GATE"
-    else
-      msg_error "Invalid IP Address format for Gateway. Needs to be 0.0.0.0, was ${GATE}"
-      exit
-    fi
-  else
-    msg_error "Gateway IP Address cannot be empty"
-    exit
-  fi
+
 
   if [[ ! -z "$APT_CACHER_IP" ]]; then
     if [[ "$APT_CACHER_IP" =~ $ip_regex ]]; then
@@ -1068,16 +1037,16 @@ config_file() {
     exit
   fi
 
-  if [[ "$VERB" == "yes" ]]; then
-    echo -e "${SEARCH}${BOLD}${DGN}Verbose Mode: ${BGN}$VERB${CL}"
-  elif [[ "$VERB" == "no" ]]; then
+  if [[ "$VERBOSE" == "yes" ]]; then
+    echo -e "${SEARCH}${BOLD}${DGN}Verbose Mode: ${BGN}$VERBOSE${CL}"
+  elif [[ "$VERBOSE" == "no" ]]; then
     echo -e "${SEARCH}${BOLD}${DGN}Verbose Mode: ${BGN}No${CL}"
   else
-    msg_error "Verbose Mode needs to be 'yes' or 'no', was ${VERB}"
+    msg_error "Verbose Mode needs to be 'yes' or 'no', was ${VERBOSE}"
     exit
   fi
 
-  if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "ADVANCED SETTINGS WITH CONFIG FILE COMPLETE" --yesno "Ready to create ${APP} LXC?" 10 58); then
+  if (whiptail --backtitle "[dev] Proxmox VE Helper Scripts" --title "ADVANCED SETTINGS WITH CONFIG FILE COMPLETE" --yesno "Ready to create ${APP} LXC?" 10 58); then
     echo -e "${CREATING}${BOLD}${RD}Creating a ${APP} LXC using the above settings${CL}"
   else
     clear
