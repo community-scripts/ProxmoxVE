@@ -16,6 +16,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-05-12
 
+### 🧰 Maintenance
+
+  - #### 💾 Core
+
+    - Config file Function in build.func [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4411](https://github.com/community-scripts/ProxmoxVE/pull/4411))
+
 ### 🌐 Website
 
   - #### 📝 Script Information
