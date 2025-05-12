@@ -22,8 +22,7 @@ catch_errors
 function update_script() {
   header_info
   msg_info "Updating Alpine Packages"
-  $STD apk update
-  $STD apk upgrade
+  $STD apk -U upgrade
   msg_ok "Updated Alpine Packages"
 
   msg_info "Upgrading traefik from edge"
