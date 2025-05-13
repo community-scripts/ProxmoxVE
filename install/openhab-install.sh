@@ -16,14 +16,14 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
   gnupg \
+  ca-certificates \
   apt-transport-https
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Azul Zulu17"
-curl -fsSL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xB1998361219BD9C9" -o "/etc/apt/trusted.gpg.d/zulu-repo.asc"
-curl -fsSL "https://cdn.azul.com/zulu/bin/zulu-repo_1.0.0-3_all.deb" -o $(basename "https://cdn.azul.com/zulu/bin/zulu-repo_1.0.0-3_all.deb")
-$STD dpkg -i zulu-repo_1.0.0-3_all.deb
-$STD apt-get update
+curl -s https://repos.azul.com/azul-repo.key | gpg --dearmor -o /usr/share/keyrings/azul.gpg
+echo "deb [signed-by=/usr/share/keyrings/azul.gpg] https://repos.azul.com/zulu/deb stable main" | tee /etc/apt/sources.list.d/zulu.list
+$STD apt update
 $STD apt-get -y install zulu17-jdk
 msg_ok "Installed Azul Zulu17"
 
