@@ -20,6 +20,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - update some improvements from dev (tools.func) [@MickLesk](https://github.com/MickLesk) ([#4430](https://github.com/community-scripts/ProxmoxVE/pull/4430))
 
+  - #### 🐞 Bug Fixes
+
+    - openhab: use zulu17-jdk [@moodyblue](https://github.com/moodyblue) ([#4438](https://github.com/community-scripts/ProxmoxVE/pull/4438))
+
 ### 🌐 Website
 
   - #### 📝 Script Information
