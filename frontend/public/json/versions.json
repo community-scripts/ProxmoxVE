@@ -1,18 +1,48 @@
 [
   {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.12",
+    "date": "2025-04-20T19:22:17Z"
+  },
+  {
+    "name": "cross-seed/cross-seed",
+    "version": "v6.12.4",
+    "date": "2025-05-11T11:41:32Z"
+  },
+  {
+    "name": "element-hq/synapse",
+    "version": "v1.130.0rc1",
+    "date": "2025-05-13T10:00:45Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1893",
+    "date": "2025-05-13T05:57:50Z"
+  },
+  {
+    "name": "zitadel/zitadel",
+    "version": "v2.65.9",
+    "date": "2025-05-13T05:14:39Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.6.9-rc0",
+    "date": "2025-05-10T18:57:30Z"
+  },
+  {
     "name": "go-gitea/gitea",
     "version": "v1.23.8",
     "date": "2025-05-12T22:40:50Z"
   },
   {
-    "name": "ollama/ollama",
-    "version": "v0.7.0-rc0",
-    "date": "2025-05-12T22:23:31Z"
-  },
-  {
     "name": "MediaBrowser/Emby.Releases",
     "version": "4.8.11.0",
     "date": "2025-03-10T06:39:11Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.2.4",
+    "date": "2025-05-08T09:10:10Z"
   },
   {
     "name": "leiweibau/Pi.Alert",
@@ -25,14 +55,14 @@
     "date": "2025-05-12T18:50:44Z"
   },
   {
-    "name": "coder/code-server",
-    "version": "v4.100.0",
-    "date": "2025-05-12T18:23:47Z"
-  },
-  {
     "name": "runtipi/runtipi",
     "version": "v4.1.0",
     "date": "2025-05-12T07:13:15Z"
+  },
+  {
+    "name": "coder/code-server",
+    "version": "v4.100.0",
+    "date": "2025-05-12T18:23:47Z"
   },
   {
     "name": "neo4j/neo4j",
@@ -90,19 +120,9 @@
     "date": "2025-05-12T07:39:23Z"
   },
   {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.12",
-    "date": "2025-04-20T19:22:17Z"
-  },
-  {
     "name": "umami-software/umami",
     "version": "v2.18.1",
     "date": "2025-05-12T07:16:12Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1891",
-    "date": "2025-05-12T05:53:07Z"
   },
   {
     "name": "esphome/esphome",
@@ -128,11 +148,6 @@
     "name": "Prowlarr/Prowlarr",
     "version": "v1.35.1.5034",
     "date": "2025-04-30T11:02:36Z"
-  },
-  {
-    "name": "cross-seed/cross-seed",
-    "version": "v6.12.4",
-    "date": "2025-05-11T11:41:32Z"
   },
   {
     "name": "authelia/authelia",
@@ -195,19 +210,9 @@
     "date": "2025-05-09T15:05:54Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.2.4",
-    "date": "2025-05-08T09:10:10Z"
-  },
-  {
     "name": "crowdsecurity/crowdsec",
     "version": "v1.6.8",
     "date": "2025-03-25T13:33:10Z"
-  },
-  {
-    "name": "zitadel/zitadel",
-    "version": "v3.0.4",
-    "date": "2025-05-09T11:38:33Z"
   },
   {
     "name": "pocket-id/pocket-id",
@@ -276,8 +281,8 @@
   },
   {
     "name": "Graylog2/graylog2-server",
-    "version": "6.3.0-alpha.3",
-    "date": "2025-05-07T13:58:36Z"
+    "version": "6.3.0-alpha.4",
+    "date": "2025-05-13T11:18:29Z"
   },
   {
     "name": "glpi-project/glpi",
@@ -363,11 +368,6 @@
     "name": "AdguardTeam/AdGuardHome",
     "version": "v0.107.61",
     "date": "2025-04-22T12:42:26Z"
-  },
-  {
-    "name": "element-hq/synapse",
-    "version": "v1.129.0",
-    "date": "2025-05-06T12:28:54Z"
   },
   {
     "name": "Luligu/matterbridge",
