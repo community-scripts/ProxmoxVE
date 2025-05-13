@@ -16,6 +16,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-05-13
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - pingvin.json: fix typo [@warmbo](https://github.com/warmbo) ([#4426](https://github.com/community-scripts/ProxmoxVE/pull/4426))
+
 ## 2025-05-12
 
 ### 🆕 New Scripts
