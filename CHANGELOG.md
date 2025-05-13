@@ -18,7 +18,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🆕 New Scripts
 
-  - alpine-gatus ([#4442](https://github.com/community-scripts/ProxmoxVE/pull/4442))
+  - gatus ([#4443](https://github.com/community-scripts/ProxmoxVE/pull/4443))
+- alpine-gatus ([#4442](https://github.com/community-scripts/ProxmoxVE/pull/4442))
 
 ### 🚀 Updated Scripts
 
