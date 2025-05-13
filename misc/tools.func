@@ -55,10 +55,16 @@ install_node_and_modules() {
     IFS=',' read -ra MODULES <<<"$NODE_MODULE"
     for mod in "${MODULES[@]}"; do
       local MODULE_NAME MODULE_REQ_VERSION MODULE_INSTALLED_VERSION
-      if [[ "$mod" == *"@"* ]]; then
+      if [[ "$mod" == @*/*@* ]]; then
+        # Scoped package with version, e.g. @vue/cli-service@latest
         MODULE_NAME="${mod%@*}"
-        MODULE_REQ_VERSION="${mod#*@}"
+        MODULE_REQ_VERSION="${mod##*@}"
+      elif [[ "$mod" == *"@"* ]]; then
+        # Unscoped package with version, e.g. yarn@latest
+        MODULE_NAME="${mod%@*}"
+        MODULE_REQ_VERSION="${mod##*@}"
       else
+        # No version specified
         MODULE_NAME="$mod"
         MODULE_REQ_VERSION="latest"
       fi
@@ -101,25 +107,31 @@ install_postgresql() {
   DISTRO="$(awk -F'=' '/^VERSION_CODENAME=/{ print $NF }' /etc/os-release)"
 
   if command -v psql >/dev/null; then
-    CURRENT_PG_VERSION="$(psql -V | grep -oP '\s\K[0-9]+(?=\.)')"
-    if [[ "$CURRENT_PG_VERSION" != "$PG_VERSION" ]]; then
-      msg_info "PostgreSQL Version $CURRENT_PG_VERSION found, replacing with $PG_VERSION"
-      NEED_PG_INSTALL=true
+    CURRENT_PG_VERSION="$(psql -V | awk '{print $3}' | cut -d. -f1)"
+    if [[ "$CURRENT_PG_VERSION" == "$PG_VERSION" ]]; then
+      msg_ok "PostgreSQL $PG_VERSION is already installed"
+      return
     fi
+    msg_info "Detected PostgreSQL $CURRENT_PG_VERSION, preparing upgrade to $PG_VERSION"
+    NEED_PG_INSTALL=true
   else
-    msg_info "PostgreSQL not found, installing version $PG_VERSION"
+    msg_info "PostgreSQL not installed, proceeding with fresh install of $PG_VERSION"
     NEED_PG_INSTALL=true
   fi
 
   if [[ "$NEED_PG_INSTALL" == true ]]; then
-    msg_info "Stopping PostgreSQL if running"
-    systemctl stop postgresql >/dev/null 2>&1 || true
+    if [[ -n "$CURRENT_PG_VERSION" ]]; then
+      msg_info "Dumping all PostgreSQL data from version $CURRENT_PG_VERSION"
+      su - postgres -c "pg_dumpall > /var/lib/postgresql/backup_$(date +%F)_v${CURRENT_PG_VERSION}.sql"
+    fi
 
-    msg_info "Removing conflicting PostgreSQL packages"
-    $STD apt-get purge -y "postgresql*"
+    msg_info "Stopping PostgreSQL service"
+    systemctl stop postgresql || true
+
+    msg_info "Removing pgdg repo and old GPG key"
     rm -f /etc/apt/sources.list.d/pgdg.list /etc/apt/trusted.gpg.d/postgresql.gpg
 
-    msg_info "Setting up PostgreSQL Repository"
+    msg_info "Adding PostgreSQL PGDG repository"
     curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc |
       gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg
 
@@ -127,9 +139,24 @@ install_postgresql() {
       >/etc/apt/sources.list.d/pgdg.list
 
     $STD apt-get update
-    $STD apt-get install -y "postgresql-${PG_VERSION}"
 
-    msg_ok "Installed PostgreSQL ${PG_VERSION}"
+    msg_info "Installing PostgreSQL $PG_VERSION"
+    $STD apt-get install -y "postgresql-${PG_VERSION}" "postgresql-client-${PG_VERSION}"
+
+    if [[ -n "$CURRENT_PG_VERSION" ]]; then
+      $STD msg_info "Removing old PostgreSQL $CURRENT_PG_VERSION packages"
+      $STD apt-get purge -y "postgresql-${CURRENT_PG_VERSION}" "postgresql-client-${CURRENT_PG_VERSION}" || true
+    fi
+
+    $STD msg_info "Starting PostgreSQL $PG_VERSION"
+    systemctl enable --now postgresql
+
+    if [[ -n "$CURRENT_PG_VERSION" ]]; then
+      $STD msg_info "Restoring dumped data"
+      su - postgres -c "psql < /var/lib/postgresql/backup_$(date +%F)_v${CURRENT_PG_VERSION}.sql"
+    fi
+
+    msg_ok "PostgreSQL $PG_VERSION installed"
   fi
 }
 
@@ -245,7 +272,11 @@ install_php() {
   COMBINED_MODULES=$(echo "$COMBINED_MODULES" | tr ',' '\n' | awk '!seen[$0]++' | paste -sd, -)
 
   local CURRENT_PHP
-  CURRENT_PHP=$(php -v 2>/dev/null | awk '/^PHP/{print $2}' | cut -d. -f1,2)
+  if command -v php >/dev/null 2>&1; then
+    CURRENT_PHP=$(php -v 2>/dev/null | awk '/^PHP/{print $2}' | cut -d. -f1,2)
+  else
+    CURRENT_PHP=""
+  fi
 
   if [[ "$CURRENT_PHP" != "$PHP_VERSION" ]]; then
     $STD echo "PHP $CURRENT_PHP detected, migrating to PHP $PHP_VERSION"
@@ -352,7 +383,7 @@ install_go() {
       msg_error "Could not determine latest Go version"
       return 1
     fi
-    msg_info "Detected latest Go version: $GO_VERSION"
+    $STD msg_info "Detected latest Go version: $GO_VERSION"
   fi
 
   local GO_BIN="/usr/local/bin/go"
@@ -362,10 +393,10 @@ install_go() {
     local CURRENT_VERSION
     CURRENT_VERSION=$("$GO_BIN" version | awk '{print $3}' | sed 's/go//')
     if [[ "$CURRENT_VERSION" == "$GO_VERSION" ]]; then
-      msg_ok "Go $GO_VERSION already installed"
+      $STD msg_ok "Go $GO_VERSION already installed"
       return 0
     else
-      msg_info "Go $CURRENT_VERSION found, upgrading to $GO_VERSION"
+      $STD msg_info "Go $CURRENT_VERSION found, upgrading to $GO_VERSION"
       rm -rf "$GO_INSTALL_DIR"
     fi
   else
