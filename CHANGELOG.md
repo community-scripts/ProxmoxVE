@@ -29,6 +29,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - openhab: use zulu17-jdk [@moodyblue](https://github.com/moodyblue) ([#4438](https://github.com/community-scripts/ProxmoxVE/pull/4438))
 
+  - #### 🔧 Refactor
+
+    - openhab. correct some typos [@moodyblue](https://github.com/moodyblue) ([#4448](https://github.com/community-scripts/ProxmoxVE/pull/4448))
+
 ### 🧰 Maintenance
 
   - #### 💾 Core
