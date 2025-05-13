@@ -528,57 +528,33 @@ advanced_settings() {
     exit_script
   fi
 
-  # List of network interface configuration files
-  # Considers both the main /etc/network/interfaces file and all files in the /etc/network/interfaces.d/ directory
-  IFACE_FILEPATH_LIST="/etc/network/interfaces"$'\n'$(find "/etc/network/interfaces.d/" -type f)
 
-  # Initialize the variable that will contain bridge names
   BRIDGES=""
+  IFACE_FILEPATH_LIST="/etc/network/interfaces"$'\n'$(find "/etc/network/interfaces.d/" -type f)
+  OLD_IFS=$IFS; IFS=$'\n'
 
-  # Save the original value of the internal field separator (IFS)...
-  OLD_IFS=$IFS
-  # ...then IFS to newline to iterate over complete lines
-  IFS=$'\n'
-
-  # Iterate over each network interface configuration file
   for iface_filepath in ${IFACE_FILEPATH_LIST}; do
-    # Create a unique temporary filename to store interface indexes
     iface_indexes_tmpfile=$(mktemp -q -u '.iface-XXXX')
 
-    # This block processes the file to create start:end pairs for each 'iface' block
-    # 1. Find all lines starting with 'iface' and store their line numbers
-    # 2. Get the total number of lines in the file
-    # 3. Use awk to create line ranges for each iface section (start:end)
     ( grep -Pn '^\s*iface' "${iface_filepath}" | cut -d':' -f1 && wc -l "${iface_filepath}" | cut -d' ' -f1 ) | \
     awk 'FNR==1 {line=$0; next} {print line":"$0-1; line=$0}' > "${iface_indexes_tmpfile}"
 
-    # Check if the indexes file exists, hence has been created
     if [ -f "${iface_indexes_tmpfile}" ]; then
-        # Iterate over each start:end pair in the indexes file
         while read -r pair; do
-            # Extract the starting line number of the interface block
             start=$(echo "${pair}" | cut -d':' -f1)
-            # Extract the ending line number of the interface block
             end=$(echo "${pair}" | cut -d':' -f2)
 
-            # Check if the block contains bridge configurations
-            # Looks for lines containing bridge parameters like bridge-ports, bridge-stp, etc.
             if awk "NR >= ${start} && NR <= ${end}" "${iface_filepath}" | grep -qP '^\s*bridge[-_](ports|stp|fd|vlan-aware|vids)\s+'; then
-                # Extract the interface name from the first line of the block
                 iface_name=$(sed "${start}q;d" "${iface_filepath}" | awk '{print $2}')
-                # Add the interface name to the list of bridges
                 BRIDGES="${iface_name}"$'\n'"${BRIDGES}"
             fi
 
         done < "${iface_indexes_tmpfile}"
-
-        # Clean up the temporary file
         rm -f "${iface_indexes_tmpfile}"
     fi
 
   done
 
-  # Restore the original IFS value
   IFS=$OLD_IFS
 
   # Filter the bridge list to remove empty lines and duplicates, then sort alphabetically
