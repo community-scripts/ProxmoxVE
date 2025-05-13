@@ -1,13 +1,78 @@
 [
   {
-    "name": "mattermost/mattermost",
-    "version": "v10.7.2",
-    "date": "2025-05-12T10:42:32Z"
+    "name": "go-gitea/gitea",
+    "version": "v1.23.8",
+    "date": "2025-05-12T22:40:50Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.7.0-rc0",
+    "date": "2025-05-12T22:23:31Z"
+  },
+  {
+    "name": "MediaBrowser/Emby.Releases",
+    "version": "4.8.11.0",
+    "date": "2025-03-10T06:39:11Z"
+  },
+  {
+    "name": "leiweibau/Pi.Alert",
+    "version": "v2025-05-11",
+    "date": "2025-05-12T19:14:57Z"
+  },
+  {
+    "name": "duplicati/duplicati",
+    "version": "v2.1.0.118-2.1.0.118_canary_2025-05-12",
+    "date": "2025-05-12T18:50:44Z"
+  },
+  {
+    "name": "coder/code-server",
+    "version": "v4.100.0",
+    "date": "2025-05-12T18:23:47Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "v4.1.0",
+    "date": "2025-05-12T07:13:15Z"
+  },
+  {
+    "name": "neo4j/neo4j",
+    "version": "4.4.43",
+    "date": "2025-05-12T15:33:17Z"
+  },
+  {
+    "name": "usememos/memos",
+    "version": "v0.24.3",
+    "date": "2025-05-12T15:23:21Z"
+  },
+  {
+    "name": "NodeBB/NodeBB",
+    "version": "v2.8.18",
+    "date": "2025-05-12T15:08:09Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.91.3",
+    "date": "2025-05-08T12:25:10Z"
+  },
+  {
+    "name": "Paymenter/Paymenter",
+    "version": "v1.1.0",
+    "date": "2025-05-12T14:40:27Z"
   },
   {
     "name": "VictoriaMetrics/VictoriaMetrics",
-    "version": "v1.102.20",
-    "date": "2025-05-12T10:23:03Z"
+    "version": "pmm-6401-v1.117.0",
+    "date": "2025-05-12T13:24:20Z"
+  },
+  {
+    "name": "apache/tika",
+    "version": "3.2.0-rc1",
+    "date": "2025-05-12T13:06:47Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "v10.7.2",
+    "date": "2025-05-12T10:42:32Z"
   },
   {
     "name": "nzbgetcom/nzbget",
@@ -33,11 +98,6 @@
     "name": "umami-software/umami",
     "version": "v2.18.1",
     "date": "2025-05-12T07:16:12Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "v4.1.0",
-    "date": "2025-05-12T07:13:15Z"
   },
   {
     "name": "Jackett/Jackett",
@@ -105,11 +165,6 @@
     "date": "2025-05-10T19:05:02Z"
   },
   {
-    "name": "ollama/ollama",
-    "version": "v0.6.9-rc0",
-    "date": "2025-05-10T18:57:30Z"
-  },
-  {
     "name": "Stirling-Tools/Stirling-PDF",
     "version": "v0.46.1",
     "date": "2025-05-10T15:39:10Z"
@@ -135,11 +190,6 @@
     "date": "2025-05-09T19:15:10Z"
   },
   {
-    "name": "MediaBrowser/Emby.Releases",
-    "version": "4.8.11.0",
-    "date": "2025-03-10T06:39:11Z"
-  },
-  {
     "name": "home-assistant/core",
     "version": "2025.5.1",
     "date": "2025-05-09T15:05:54Z"
@@ -158,11 +208,6 @@
     "name": "zitadel/zitadel",
     "version": "v3.0.4",
     "date": "2025-05-09T11:38:33Z"
-  },
-  {
-    "name": "coder/code-server",
-    "version": "v4.99.4",
-    "date": "2025-05-02T18:33:09Z"
   },
   {
     "name": "pocket-id/pocket-id",
@@ -190,11 +235,6 @@
     "date": "2025-05-08T12:45:44Z"
   },
   {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.91.3",
-    "date": "2025-05-08T12:25:10Z"
-  },
-  {
     "name": "zwave-js/zwave-js-ui",
     "version": "v10.4.2",
     "date": "2025-05-08T08:11:27Z"
@@ -218,11 +258,6 @@
     "name": "ipfs/kubo",
     "version": "v0.34.1",
     "date": "2025-03-25T18:11:12Z"
-  },
-  {
-    "name": "NodeBB/NodeBB",
-    "version": "v4.3.1",
-    "date": "2025-05-07T15:38:20Z"
   },
   {
     "name": "donaldzou/WGDashboard",
@@ -385,16 +420,6 @@
     "date": "2025-05-05T15:34:40Z"
   },
   {
-    "name": "apache/tika",
-    "version": "2.9.4",
-    "date": "2025-05-05T15:17:27Z"
-  },
-  {
-    "name": "neo4j/neo4j",
-    "version": "5.26.6",
-    "date": "2025-05-05T13:59:36Z"
-  },
-  {
     "name": "traefik/traefik",
     "version": "v3.4.0",
     "date": "2025-05-05T13:59:23Z"
@@ -525,11 +550,6 @@
     "date": "2025-04-30T12:34:14Z"
   },
   {
-    "name": "go-gitea/gitea",
-    "version": "v1.25.0-dev",
-    "date": "2025-04-28T22:57:56Z"
-  },
-  {
     "name": "hivemq/hivemq-community-edition",
     "version": "2025.3",
     "date": "2025-04-30T02:52:28Z"
@@ -600,11 +620,6 @@
     "date": "2025-03-27T16:17:38Z"
   },
   {
-    "name": "leiweibau/Pi.Alert",
-    "version": "v2025-04-26",
-    "date": "2025-04-26T14:16:12Z"
-  },
-  {
     "name": "openhab/openhab-core",
     "version": "4.3.5",
     "date": "2025-04-26T13:52:07Z"
@@ -618,11 +633,6 @@
     "name": "TechnitiumSoftware/DnsServer",
     "version": "v13.6.0",
     "date": "2025-04-26T10:21:12Z"
-  },
-  {
-    "name": "duplicati/duplicati",
-    "version": "v2.1.0.117-2.1.0.117_canary_2025-04-25",
-    "date": "2025-04-25T17:22:12Z"
   },
   {
     "name": "mongodb/mongo",
@@ -693,11 +703,6 @@
     "name": "caddyserver/caddy",
     "version": "v2.10.0",
     "date": "2025-04-18T20:46:28Z"
-  },
-  {
-    "name": "Paymenter/Paymenter",
-    "version": "v1.0.4",
-    "date": "2025-04-18T16:08:02Z"
   },
   {
     "name": "tailscale/tailscale",
@@ -893,11 +898,6 @@
     "name": "nicolargo/glances",
     "version": "v4.3.1",
     "date": "2025-03-23T09:02:54Z"
-  },
-  {
-    "name": "usememos/memos",
-    "version": "v0.24.2",
-    "date": "2025-03-23T04:01:50Z"
   },
   {
     "name": "clusterzx/paperless-ai",
