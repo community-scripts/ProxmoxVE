@@ -568,7 +568,7 @@ fetch_and_deploy_gh_release() {
     fi
 
     tag=$(echo "$api_response" | jq -r '.tag_name // .name // empty')
-    [[ "$tag" =~ ^v[0-9] ]] && tag="${tag:1}"
+    version="${tag#v}"
 
     if [[ -z "$tag" ]]; then
       $STD msg_info "Empty tag received, retrying...\n"
@@ -586,12 +586,11 @@ fetch_and_deploy_gh_release() {
   fi
 
   # Version comparison (if we already have this version, skip)
-  if [[ "$current_version" == "$tag" ]]; then
-    $STD msg_info "Already running the latest version ($tag). Skipping update."
+  if [[ "$current_version" == "$version" ]]; then
+    $STD msg_info "Already running the latest version ($version). Skipping update."
     return 0
   fi
 
-  local version="$tag"
   local base_url="https://github.com/$repo/releases/download/v$tag"
   local tmpdir
   tmpdir=$(mktemp -d) || return 1
