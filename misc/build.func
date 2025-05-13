@@ -557,7 +557,6 @@ advanced_settings() {
 
   IFS=$OLD_IFS
 
-  # Filter the bridge list to remove empty lines and duplicates, then sort alphabetically
   BRIDGES=$(echo "$BRIDGES" | grep -v '^\s*$' | sort | uniq)
 
   if [[ -z "$BRIDGES" ]]; then
