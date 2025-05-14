@@ -1,5 +1,60 @@
 [
   {
+    "name": "blakeblackshear/frigate",
+    "version": "v0.14.1",
+    "date": "2024-08-29T22:32:51Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.4.0p1-rc1",
+    "date": "2025-05-14T07:54:22Z"
+  },
+  {
+    "name": "nzbgetcom/nzbget",
+    "version": "v25.0",
+    "date": "2025-05-12T09:12:04Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.2",
+    "date": "2025-05-11T16:40:55Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1895",
+    "date": "2025-05-14T05:59:00Z"
+  },
+  {
+    "name": "TandoorRecipes/recipes",
+    "version": "2.0.0-alpha-4",
+    "date": "2025-05-14T05:01:45Z"
+  },
+  {
+    "name": "MediaBrowser/Emby.Releases",
+    "version": "4.8.11.0",
+    "date": "2025-03-10T06:39:11Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.6.9-rc0",
+    "date": "2025-05-10T18:57:30Z"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2025.4.2",
+    "date": "2025-05-11T22:18:43Z"
+  },
+  {
+    "name": "cross-seed/cross-seed",
+    "version": "v6.12.4",
+    "date": "2025-05-11T11:41:32Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.12",
+    "date": "2025-04-20T19:22:17Z"
+  },
+  {
     "name": "netbox-community/netbox",
     "version": "v4.3.1",
     "date": "2025-05-13T19:45:00Z"
@@ -23,6 +78,11 @@
     "name": "mongodb/mongo",
     "version": "r6.0.23",
     "date": "2025-05-13T18:28:23Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.2.4",
+    "date": "2025-05-08T09:10:10Z"
   },
   {
     "name": "OctoPrint/OctoPrint",
@@ -55,44 +115,14 @@
     "date": "2025-05-13T11:18:29Z"
   },
   {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.12",
-    "date": "2025-04-20T19:22:17Z"
-  },
-  {
-    "name": "cross-seed/cross-seed",
-    "version": "v6.12.4",
-    "date": "2025-05-11T11:41:32Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1893",
-    "date": "2025-05-13T05:57:50Z"
-  },
-  {
     "name": "zitadel/zitadel",
     "version": "v2.65.9",
     "date": "2025-05-13T05:14:39Z"
   },
   {
-    "name": "ollama/ollama",
-    "version": "v0.6.9-rc0",
-    "date": "2025-05-10T18:57:30Z"
-  },
-  {
     "name": "go-gitea/gitea",
     "version": "v1.23.8",
     "date": "2025-05-12T22:40:50Z"
-  },
-  {
-    "name": "MediaBrowser/Emby.Releases",
-    "version": "4.8.11.0",
-    "date": "2025-03-10T06:39:11Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.2.4",
-    "date": "2025-05-08T09:10:10Z"
   },
   {
     "name": "leiweibau/Pi.Alert",
@@ -106,8 +136,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-05-12T18:39:33Z"
+    "version": "v4.1.0",
+    "date": "2025-05-12T07:13:15Z"
   },
   {
     "name": "coder/code-server",
@@ -155,11 +185,6 @@
     "date": "2025-05-12T10:42:32Z"
   },
   {
-    "name": "nzbgetcom/nzbget",
-    "version": "v25.0",
-    "date": "2025-05-12T09:12:04Z"
-  },
-  {
     "name": "dgtlmoon/changedetection.io",
     "version": "0.49.17",
     "date": "2025-05-12T08:48:30Z"
@@ -173,16 +198,6 @@
     "name": "umami-software/umami",
     "version": "v2.18.1",
     "date": "2025-05-12T07:16:12Z"
-  },
-  {
-    "name": "esphome/esphome",
-    "version": "2025.4.2",
-    "date": "2025-05-11T22:18:43Z"
-  },
-  {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.2",
-    "date": "2025-05-11T16:40:55Z"
   },
   {
     "name": "outline/outline",
@@ -335,11 +350,6 @@
     "date": "2025-05-07T11:54:14Z"
   },
   {
-    "name": "Checkmk/checkmk",
-    "version": "v2.2.0p42-rc1",
-    "date": "2025-05-07T11:50:30Z"
-  },
-  {
     "name": "openobserve/openobserve",
     "version": "v0.14.7",
     "date": "2025-05-07T11:32:23Z"
@@ -490,11 +500,6 @@
     "date": "2025-05-03T16:25:30Z"
   },
   {
-    "name": "blakeblackshear/frigate",
-    "version": "v0.14.1",
-    "date": "2024-08-29T22:32:51Z"
-  },
-  {
     "name": "kimai/kimai",
     "version": "2.33.0",
     "date": "2025-05-03T10:33:49Z"
@@ -628,11 +633,6 @@
     "name": "tobychui/zoraxy",
     "version": "v3.1.9",
     "date": "2025-03-01T02:24:33Z"
-  },
-  {
-    "name": "TandoorRecipes/recipes",
-    "version": "1.5.34",
-    "date": "2025-03-27T16:17:38Z"
   },
   {
     "name": "openhab/openhab-core",
