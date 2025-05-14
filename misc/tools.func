@@ -689,8 +689,8 @@ setup_local_ip_helper() {
 
   # Install networkd-dispatcher if not present
   if ! dpkg -s networkd-dispatcher >/dev/null 2>&1; then
-    apt-get update -qq
-    apt-get install -yq networkd-dispatcher
+    $STD apt-get update -qq
+    $STD apt-get install -yq networkd-dispatcher
   fi
 
   # Write update_local_ip.sh
@@ -746,7 +746,7 @@ $SCRIPT_PATH
 EOF
 
   chmod +x "$DISPATCHER_SCRIPT"
-  systemctl enable --now networkd-dispatcher.service
+  systemctl enable -q --now networkd-dispatcher.service
 
   $STD msg_ok "LOCAL_IP helper installed using networkd-dispatcher"
 }

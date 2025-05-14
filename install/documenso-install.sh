@@ -20,27 +20,16 @@ msg_ok "Setup Functions"
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-  gpg \
   libc6 \
   make \
   cmake \
   jq \
-  postgresql \
   python3 \
   python3-bcrypt
 msg_ok "Installed Dependencies"
 
-msg_info "Setting up Node.js Repository"
-mkdir -p /etc/apt/keyrings
-curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_22.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
-msg_ok "Set up Node.js Repository"
-
-msg_info "Installing Node.js"
-$STD apt-get update
-$STD apt-get install -y nodejs
-$STD npm install -g turbo@1.9.3
-msg_ok "Installed Node.js"
+NODE_VERSION="22" NODE_MODULE="turbo@1.9.3" install_node_and_modules
+PG_VERSION="16" install_postgresql
 
 msg_info "Setting up PostgreSQL"
 DB_NAME="documenso_db"
@@ -90,7 +79,7 @@ msg_ok "Installed Documenso"
 
 msg_info "Create User"
 PASSWORD_HASH=$(python3 -c "import bcrypt; print(bcrypt.hashpw(b'helper-scripts', bcrypt.gensalt(rounds=12)).decode())")
-sudo -u postgres psql -d documenso_db -c "INSERT INTO \"User\" (name, email, \"emailVerified\", password, \"identityProvider\", roles, \"createdAt\", \"lastSignedIn\", \"updatedAt\", \"customerId\") VALUES ('helper-scripts', 'helper-scripts@local.com', '2025-01-20 17:14:45.058', '$PASSWORD_HASH', 'DOCUMENSO', ARRAY['USER', 'ADMIN']::\"Role\"[], '2025-01-20 16:04:05.543', '2025-01-20 16:14:55.249', '2025-01-20 16:14:55.25', NULL) RETURNING id;"
+$STD sudo -u postgres psql -d documenso_db -c "INSERT INTO \"User\" (name, email, \"emailVerified\", password, \"identityProvider\", roles, \"createdAt\", \"lastSignedIn\", \"updatedAt\", \"customerId\") VALUES ('helper-scripts', 'helper-scripts@local.com', '2025-01-20 17:14:45.058', '$PASSWORD_HASH', 'DOCUMENSO', ARRAY['USER', 'ADMIN']::\"Role\"[], '2025-01-20 16:04:05.543', '2025-01-20 16:14:55.249', '2025-01-20 16:14:55.25', NULL) RETURNING id;"
 $STD npm run prisma:migrate-deploy
 msg_ok "User created"
 
