@@ -13,6 +13,11 @@ setting_up_container
 network_check
 update_os
 
+msg_info "Installing Dependencies"
+$STD apt-get install -y \
+  make
+msg_ok "Installed Dependencies"
+
 msg_info "Installing Actual Budget"
 cd /opt
 RELEASE=$(curl -fsSL https://api.github.com/repos/actualbudget/actual/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
