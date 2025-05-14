@@ -41,7 +41,7 @@
             "type": "warning"
         },
         {
-            "text": "Use Ubuntu 24.10 ONLY",
+            "text": "Deprecation-Warning: This Core-based setup will be deprecated by August 2025. Use Home Assistant OS is strongly recommended to ensure long-term stability and updates.",
             "type": "warning"
         },
         {
