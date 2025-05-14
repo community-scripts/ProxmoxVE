@@ -1,10 +1,7 @@
 {
   "name": "Asterisk",
   "slug": "asterisk",
-  "categories": [
-    0,
-    4
-  ],
+  "categories": [0],
   "date_created": "2025-05-14",
   "type": "ct",
   "updateable": false,
