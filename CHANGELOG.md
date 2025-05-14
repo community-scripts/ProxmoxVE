@@ -16,14 +16,20 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-05-14
 
+### 🆕 New Scripts
+
+  - odoo ([#4477](https://github.com/community-scripts/ProxmoxVE/pull/4477))
+- asterisk ([#4468](https://github.com/community-scripts/ProxmoxVE/pull/4468))
+
 ### 🚀 Updated Scripts
 
-  - Website: re-add documenso & some little bugfixes [@MickLesk](https://github.com/MickLesk) ([#4456](https://github.com/community-scripts/ProxmoxVE/pull/4456))
+  - fix: fetch_release_and_deploy function [@CrazyWolf13](https://github.com/CrazyWolf13) ([#4478](https://github.com/community-scripts/ProxmoxVE/pull/4478))
+- Website: re-add documenso & some little bugfixes [@MickLesk](https://github.com/MickLesk) ([#4456](https://github.com/community-scripts/ProxmoxVE/pull/4456))
 
   - #### 🐞 Bug Fixes
 
-    - Alpine-Rclone: Fix location of passwords file [@tremor021](https://github.com/tremor021) ([#4465](https://github.com/community-scripts/ProxmoxVE/pull/4465))
     - Bookstack: fix copy of themes/uploads/storage [@MickLesk](https://github.com/MickLesk) ([#4457](https://github.com/community-scripts/ProxmoxVE/pull/4457))
+    - Alpine-Rclone: Fix location of passwords file [@tremor021](https://github.com/tremor021) ([#4465](https://github.com/community-scripts/ProxmoxVE/pull/4465))
 
   - #### ✨ New Features
 
