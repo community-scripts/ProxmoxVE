@@ -20,6 +20,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - Website: re-add documenso & some little bugfixes [@MickLesk](https://github.com/MickLesk) ([#4456](https://github.com/community-scripts/ProxmoxVE/pull/4456))
 
+  - #### ✨ New Features
+
+    - monitor-all: improvements - tag based filtering [@grizmin](https://github.com/grizmin) ([#4437](https://github.com/community-scripts/ProxmoxVE/pull/4437))
+
 ## 2025-05-13
 
 ### 🆕 New Scripts
