@@ -20,9 +20,19 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - Website: re-add documenso & some little bugfixes [@MickLesk](https://github.com/MickLesk) ([#4456](https://github.com/community-scripts/ProxmoxVE/pull/4456))
 
+  - #### 🐞 Bug Fixes
+
+    - Bookstack: fix copy of themes/uploads/storage [@MickLesk](https://github.com/MickLesk) ([#4457](https://github.com/community-scripts/ProxmoxVE/pull/4457))
+
   - #### ✨ New Features
 
     - monitor-all: improvements - tag based filtering [@grizmin](https://github.com/grizmin) ([#4437](https://github.com/community-scripts/ProxmoxVE/pull/4437))
+
+### 🧰 Maintenance
+
+  - #### 📂 Github
+
+    - Add Github app for auto PR merge [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4461](https://github.com/community-scripts/ProxmoxVE/pull/4461))
 
 ## 2025-05-13
 
