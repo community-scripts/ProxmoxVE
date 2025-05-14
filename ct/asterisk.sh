@@ -6,7 +6,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Source: https://asterisk.org/
 
 APP="Asterisk"
-var_tags="${var_tags:-telephone}"
+var_tags="${var_tags:-telephone;pbx}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-4}"
