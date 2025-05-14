@@ -28,6 +28,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - Add make installation dependency to Actual Budget script [@maciejmatczak](https://github.com/maciejmatczak) ([#4485](https://github.com/community-scripts/ProxmoxVE/pull/4485))
     - Bookstack: fix copy of themes/uploads/storage [@MickLesk](https://github.com/MickLesk) ([#4457](https://github.com/community-scripts/ProxmoxVE/pull/4457))
     - Alpine-Rclone: Fix location of passwords file [@tremor021](https://github.com/tremor021) ([#4465](https://github.com/community-scripts/ProxmoxVE/pull/4465))
 
