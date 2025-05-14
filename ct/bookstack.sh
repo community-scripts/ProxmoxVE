@@ -39,9 +39,9 @@ function update_script() {
     unzip -q "/opt/BookStack-${RELEASE}.zip" -d /opt
     mv "/opt/BookStack-${RELEASE}" /opt/bookstack
     cp /opt/bookstack-backup/.env /opt/bookstack/.env
-    cp -r /opt/bookstack-backup/public/uploads/* /opt/bookstack/public/uploads/ || true
-    cp -r /opt/bookstack-backup/storage/uploads/* /opt/bookstack/storage/uploads/ || true
-    cp -r /opt/bookstack-backup/themes/* /opt/bookstack/themes/ || true
+    [[ -d /opt/bookstack-backup/public/uploads ]] && cp -a /opt/bookstack-backup/public/uploads/. /opt/bookstack/public/uploads/
+    [[ -d /opt/bookstack-backup/storage/uploads ]] && cp -a /opt/bookstack-backup/storage/uploads/. /opt/bookstack/storage/uploads/
+    [[ -d /opt/bookstack-backup/themes ]] && cp -a /opt/bookstack-backup/themes/. /opt/bookstack/themes/
     cd /opt/bookstack
     export COMPOSER_ALLOW_SUPERUSER=1
     $STD composer install --no-dev
