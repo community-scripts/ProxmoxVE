@@ -3,6 +3,7 @@
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: michelroegl-brunner
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://asterisk.org
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -24,7 +25,7 @@ $STD apt-get install -y \
 msg_ok "Installed Dependencies"
 
 msg_info "Downloading Asterisk"
-RELEASE=$(curl -s https://downloads.asterisk.org/pub/telephony/asterisk/ | grep -o 'asterisk-[0-9]\+-current\.tar\.gz' | sort -V | tail -n1)
+RELEASE=$(curl -fsSL https://downloads.asterisk.org/pub/telephony/asterisk/ | grep -o 'asterisk-[0-9]\+-current\.tar\.gz' | sort -V | tail -n1)
 temp_file=$(mktemp)
 curl -fsSL "https://downloads.asterisk.org/pub/telephony/asterisk/${RELEASE}" -o "$temp_file"
 mkdir -p /opt/asterisk
@@ -49,7 +50,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
+$STD rm -f "$temp_file"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
-$STD rm -f "$temp_file"
 msg_ok "Cleaned"
