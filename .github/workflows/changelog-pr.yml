@@ -24,6 +24,13 @@ jobs:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
 
+      - name: Generate a token for PR approval and merge
+        id: generate-token-merge
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.APP_ID_APPROVE_AND_MERGE }}
+          private-key: ${{ secrets.APP_KEY_APPROVE_AND_MERGE }}
+
       - name: Checkout code
         uses: actions/checkout@v4
         with:
@@ -177,7 +184,7 @@ jobs:
             }
 
             return await main();
-            
+
       - name: Update CHANGELOG.md
         uses: actions/github-script@v7
         with:
@@ -202,7 +209,7 @@ jobs:
               if (hasMainNotes || hasSubNotes) {
                 newReleaseNotes += `### ${title}\n\n`;
               }
-            
+
               if (hasMainNotes) {
                 newReleaseNotes += `  ${notes.join("\n")}\n\n`;
               }
@@ -267,20 +274,12 @@ jobs:
       - name: Approve pull request and merge
         if: env.changed == 'true'
         env:
-          GH_TOKEN: ${{ secrets.PAT_AUTOMERGE }}
+          GH_TOKEN: ${{ steps.generate-token-merge.outputs.token }}
         run: |
+          git config --global user.name "github-actions-automege[bot]"
+          git config --global user.email "github-actions-automege[bot]@users.noreply.github.com"
           PR_NUMBER=$(gh pr list --head "${BRANCH_NAME}" --json number --jq '.[].number')
           if [ -n "$PR_NUMBER" ]; then
             gh pr review $PR_NUMBER --approve
             gh pr merge $PR_NUMBER --squash --admin
-          fi
-
-      - name: Re-approve pull request after update
-        if: env.changed == 'true'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          PR_NUMBER=$(gh pr list --head "${BRANCH_NAME}" --json number --jq '.[].number')
-          if [ -n "$PR_NUMBER" ]; then
-            gh pr review $PR_NUMBER --approve
           fi

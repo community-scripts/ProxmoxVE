@@ -5,8 +5,8 @@ on:
     branches:
       - main
     paths:
-      - 'frontend/public/json/**.json'
-  workflow_dispatch: 
+      - "frontend/public/json/**.json"
+  workflow_dispatch:
 
 jobs:
   update-app-files:
@@ -25,10 +25,17 @@ jobs:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
 
+      - name: Generate a token for PR approval and merge
+        id: generate-token-merge
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.APP_ID_APPROVE_AND_MERGE }}
+          private-key: ${{ secrets.APP_KEY_APPROVE_AND_MERGE }}
+
       - name: Generate dynamic branch name
         id: timestamp
         run: echo "BRANCH_NAME=pr-update-json-$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
-      
+
       - name: Set up GH_TOKEN
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -38,7 +45,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2  # Ensure we have the last two commits
+          fetch-depth: 2 # Ensure we have the last two commits
 
       - name: Get Previous Commit
         id: prev_commit
@@ -103,8 +110,8 @@ jobs:
       - name: Commit and create PR if changes exist
         if: env.changed == 'true'
         run: |
-         
-          
+
+
           git commit -m "Update date in json"
           git checkout -b ${{ env.BRANCH_NAME }}
           git push origin ${{ env.BRANCH_NAME }}
@@ -126,12 +133,15 @@ jobs:
           if [ -n "$PR_NUMBER" ]; then
             gh pr review $PR_NUMBER --approve
           fi
+
       - name: Approve pull request and merge
         if: env.changed == 'true'
         env:
-          GH_TOKEN: ${{ secrets.PAT_AUTOMERGE }}
+          GH_TOKEN: ${{ steps.generate-token-merge.outputs.token }}
         run: |
-          PR_NUMBER=$(gh pr list --head "${{ env.BRANCH_NAME }}" --json number --jq '.[].number')
+          git config --global user.name "github-actions-automege[bot]"
+          git config --global user.email "github-actions-automege[bot]@users.noreply.github.com"
+          PR_NUMBER=$(gh pr list --head "${BRANCH_NAME}" --json number --jq '.[].number')
           if [ -n "$PR_NUMBER" ]; then
             gh pr review $PR_NUMBER --approve
             gh pr merge $PR_NUMBER --squash --admin
