@@ -568,6 +568,7 @@ fetch_and_deploy_gh_release() {
     fi
 
     tag=$(echo "$api_response" | jq -r '.tag_name // .name // empty')
+    [[ "$tag" =~ ^v[0-9] ]] && tag="${tag:1}"
     version="${tag#v}"
 
     if [[ -z "$tag" ]]; then
@@ -586,8 +587,8 @@ fetch_and_deploy_gh_release() {
   fi
 
   # Version comparison (if we already have this version, skip)
-  if [[ "$current_version" == "$version" ]]; then
-    $STD msg_info "Already running the latest version ($version). Skipping update."
+  if [[ "$current_version" == "$tag" ]]; then
+    $STD msg_info "Already running the latest version ($tag). Skipping update."
     return 0
   fi
 
@@ -650,8 +651,15 @@ fetch_and_deploy_gh_release() {
 
   # Final fallback to GitHub source tarball
   if [[ -z "$url" ]]; then
-    url="https://github.com/$repo/archive/refs/tags/$version.tar.gz"
-    $STD msg_info "Trying GitHub source tarball fallback: $url"
+    # Use tarball_url directly from API response instead of constructing our own URL
+    url=$(echo "$api_response" | jq -r '.tarball_url // empty')
+
+    # If tarball_url is empty for some reason, fall back to a constructed URL as before
+    if [[ -z "$url" ]]; then
+      url="https://github.com/$repo/archive/refs/tags/v$version.tar.gz"
+    fi
+
+    $STD msg_info "Using GitHub source tarball: $url"
   fi
 
   local filename="${url##*/}"
