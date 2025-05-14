@@ -50,7 +50,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD rm -f "$temp_file"
+rm -f "$temp_file"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
