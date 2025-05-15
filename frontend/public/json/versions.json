@@ -1,5 +1,55 @@
 [
   {
+    "name": "zwave-js/zwave-js-ui",
+    "version": "v10.5.1",
+    "date": "2025-05-15T09:59:28Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.4.0p1-rc2",
+    "date": "2025-05-15T08:44:23Z"
+  },
+  {
+    "name": "theonedev/onedev",
+    "version": "v11.9.7",
+    "date": "2025-05-15T08:41:54Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "v10.6.5",
+    "date": "2025-05-15T07:06:52Z"
+  },
+  {
+    "name": "cross-seed/cross-seed",
+    "version": "v6.12.4",
+    "date": "2025-05-11T11:41:32Z"
+  },
+  {
+    "name": "clusterzx/paperless-ai",
+    "version": "v2.7.7",
+    "date": "2025-05-15T06:10:00Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.2",
+    "date": "2025-05-11T16:40:55Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1900",
+    "date": "2025-05-15T06:01:04Z"
+  },
+  {
+    "name": "FlowiseAI/Flowise",
+    "version": "flowise@3.0.0",
+    "date": "2025-05-15T01:49:47Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.7.0-rc1",
+    "date": "2025-05-14T03:58:02Z"
+  },
+  {
     "name": "advplyr/audiobookshelf",
     "version": "v2.22.0",
     "date": "2025-05-14T22:30:59Z"
@@ -30,6 +80,11 @@
     "date": "2025-05-11T22:18:43Z"
   },
   {
+    "name": "keycloak/keycloak",
+    "version": "26.2.4",
+    "date": "2025-05-08T09:10:10Z"
+  },
+  {
     "name": "coder/code-server",
     "version": "v4.100.1",
     "date": "2025-05-14T18:08:16Z"
@@ -38,11 +93,6 @@
     "name": "MediaBrowser/Emby.Releases",
     "version": "4.8.11.0",
     "date": "2025-03-10T06:39:11Z"
-  },
-  {
-    "name": "Checkmk/checkmk",
-    "version": "v2.3.0p32+security",
-    "date": "2025-05-14T15:37:55Z"
   },
   {
     "name": "Athou/commafeed",
@@ -63,11 +113,6 @@
     "name": "motioneye-project/motioneye",
     "version": "0.42.1",
     "date": "2020-06-07T07:27:04Z"
-  },
-  {
-    "name": "zwave-js/zwave-js-ui",
-    "version": "v10.5.0",
-    "date": "2025-05-14T13:21:21Z"
   },
   {
     "name": "firefly-iii/firefly-iii",
@@ -95,29 +140,14 @@
     "date": "2024-08-29T22:32:51Z"
   },
   {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.2",
-    "date": "2025-05-11T16:40:55Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1895",
-    "date": "2025-05-14T05:59:00Z"
+    "name": "runtipi/runtipi",
+    "version": "v4.1.0",
+    "date": "2025-05-12T07:13:15Z"
   },
   {
     "name": "TandoorRecipes/recipes",
     "version": "2.0.0-alpha-4",
     "date": "2025-05-14T05:01:45Z"
-  },
-  {
-    "name": "ollama/ollama",
-    "version": "v0.6.9-rc0",
-    "date": "2025-05-10T18:57:30Z"
-  },
-  {
-    "name": "cross-seed/cross-seed",
-    "version": "v6.12.4",
-    "date": "2025-05-11T11:41:32Z"
   },
   {
     "name": "netbox-community/netbox",
@@ -130,11 +160,6 @@
     "date": "2025-05-13T18:45:47Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.2.4",
-    "date": "2025-05-08T09:10:10Z"
-  },
-  {
     "name": "OctoPrint/OctoPrint",
     "version": "1.11.1",
     "date": "2025-05-13T13:32:07Z"
@@ -143,11 +168,6 @@
     "name": "redis/redis",
     "version": "8.0.1",
     "date": "2025-05-13T13:31:53Z"
-  },
-  {
-    "name": "theonedev/onedev",
-    "version": "v11.9.6",
-    "date": "2025-05-13T12:16:17Z"
   },
   {
     "name": "element-hq/synapse",
@@ -185,11 +205,6 @@
     "date": "2025-05-12T18:50:44Z"
   },
   {
-    "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-05-12T18:39:33Z"
-  },
-  {
     "name": "neo4j/neo4j",
     "version": "4.4.43",
     "date": "2025-05-12T15:33:17Z"
@@ -218,11 +233,6 @@
     "name": "apache/tika",
     "version": "3.2.0-rc1",
     "date": "2025-05-12T13:06:47Z"
-  },
-  {
-    "name": "mattermost/mattermost",
-    "version": "v10.7.2",
-    "date": "2025-05-12T10:42:32Z"
   },
   {
     "name": "dgtlmoon/changedetection.io",
@@ -615,11 +625,6 @@
     "date": "2025-04-28T14:11:06Z"
   },
   {
-    "name": "FlowiseAI/Flowise",
-    "version": "flowise@2.2.8",
-    "date": "2025-04-28T08:27:00Z"
-  },
-  {
     "name": "karakeep-app/karakeep",
     "version": "v0.24.1",
     "date": "2025-04-28T08:21:37Z"
@@ -898,11 +903,6 @@
     "name": "nicolargo/glances",
     "version": "v4.3.1",
     "date": "2025-03-23T09:02:54Z"
-  },
-  {
-    "name": "clusterzx/paperless-ai",
-    "version": "v2.7.6",
-    "date": "2025-03-21T19:24:53Z"
   },
   {
     "name": "seanmorley15/AdventureLog",
