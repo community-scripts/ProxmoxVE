@@ -18,7 +18,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
-  - core: Add TAB3 formatting var to core [@tremor021](https://github.com/tremor021) ([#4496](https://github.com/community-scripts/ProxmoxVE/pull/4496))
+  - Update scripts that use "read -p" to properly indent text [@tremor021](https://github.com/tremor021) ([#4498](https://github.com/community-scripts/ProxmoxVE/pull/4498))
+- core: Add TAB3 formatting var to core [@tremor021](https://github.com/tremor021) ([#4496](https://github.com/community-scripts/ProxmoxVE/pull/4496))
 
 ## 2025-05-14
 
