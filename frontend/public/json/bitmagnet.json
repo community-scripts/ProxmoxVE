@@ -19,8 +19,8 @@
       "type": "default",
       "script": "ct/bitmagnet.sh",
       "resources": {
-        "cpu": 1,
-        "ram": 512,
+        "cpu": 2,
+        "ram": 1024,
         "hdd": 4,
         "os": "debian",
         "version": "12"
@@ -30,8 +30,8 @@
       "type": "alpine",
       "script": "ct/alpine-bitmagnet.sh",
       "resources": {
-        "cpu": 1,
-        "ram": 256,
+        "cpu": 2,
+        "ram": 1024,
         "hdd": 3,
         "os": "alpine",
         "version": "3.21"
