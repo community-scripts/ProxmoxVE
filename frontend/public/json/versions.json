@@ -1,18 +1,98 @@
 [
   {
-    "name": "blakeblackshear/frigate",
-    "version": "v0.14.1",
-    "date": "2024-08-29T22:32:51Z"
+    "name": "advplyr/audiobookshelf",
+    "version": "v2.22.0",
+    "date": "2025-05-14T22:30:59Z"
+  },
+  {
+    "name": "glanceapp/glance",
+    "version": "v0.8.2",
+    "date": "2025-05-14T21:34:41Z"
+  },
+  {
+    "name": "Ombi-app/Ombi",
+    "version": "v4.47.1",
+    "date": "2025-01-05T21:14:23Z"
+  },
+  {
+    "name": "Luligu/matterbridge",
+    "version": "3.0.2",
+    "date": "2025-05-14T20:38:06Z"
+  },
+  {
+    "name": "NodeBB/NodeBB",
+    "version": "v4.4.0",
+    "date": "2025-05-14T20:36:37Z"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2025.4.2",
+    "date": "2025-05-11T22:18:43Z"
+  },
+  {
+    "name": "coder/code-server",
+    "version": "v4.100.1",
+    "date": "2025-05-14T18:08:16Z"
+  },
+  {
+    "name": "MediaBrowser/Emby.Releases",
+    "version": "4.8.11.0",
+    "date": "2025-03-10T06:39:11Z"
   },
   {
     "name": "Checkmk/checkmk",
-    "version": "v2.4.0p1-rc1",
-    "date": "2025-05-14T07:54:22Z"
+    "version": "v2.3.0p32+security",
+    "date": "2025-05-14T15:37:55Z"
+  },
+  {
+    "name": "Athou/commafeed",
+    "version": "5.9.0",
+    "date": "2025-05-14T15:29:48Z"
+  },
+  {
+    "name": "juanfont/headscale",
+    "version": "v0.26.0",
+    "date": "2025-05-14T15:12:14Z"
+  },
+  {
+    "name": "mongodb/mongo",
+    "version": "r6.0.24-alpha0",
+    "date": "2025-05-14T14:52:41Z"
+  },
+  {
+    "name": "motioneye-project/motioneye",
+    "version": "0.42.1",
+    "date": "2020-06-07T07:27:04Z"
+  },
+  {
+    "name": "zwave-js/zwave-js-ui",
+    "version": "v10.5.0",
+    "date": "2025-05-14T13:21:21Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.12",
+    "date": "2025-04-20T19:22:17Z"
+  },
+  {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.510",
+    "date": "2025-05-13T18:33:42Z"
   },
   {
     "name": "nzbgetcom/nzbget",
     "version": "v25.0",
     "date": "2025-05-12T09:12:04Z"
+  },
+  {
+    "name": "wazuh/wazuh",
+    "version": "coverity-w20-4.13.0",
+    "date": "2025-05-14T12:06:20Z"
+  },
+  {
+    "name": "blakeblackshear/frigate",
+    "version": "v0.14.1",
+    "date": "2024-08-29T22:32:51Z"
   },
   {
     "name": "morpheus65535/bazarr",
@@ -30,19 +110,9 @@
     "date": "2025-05-14T05:01:45Z"
   },
   {
-    "name": "MediaBrowser/Emby.Releases",
-    "version": "4.8.11.0",
-    "date": "2025-03-10T06:39:11Z"
-  },
-  {
     "name": "ollama/ollama",
     "version": "v0.6.9-rc0",
     "date": "2025-05-10T18:57:30Z"
-  },
-  {
-    "name": "esphome/esphome",
-    "version": "2025.4.2",
-    "date": "2025-05-11T22:18:43Z"
   },
   {
     "name": "cross-seed/cross-seed",
@@ -50,34 +120,14 @@
     "date": "2025-05-11T11:41:32Z"
   },
   {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.12",
-    "date": "2025-04-20T19:22:17Z"
-  },
-  {
     "name": "netbox-community/netbox",
     "version": "v4.3.1",
     "date": "2025-05-13T19:45:00Z"
   },
   {
-    "name": "glanceapp/glance",
-    "version": "v0.8.1",
-    "date": "2025-05-13T19:42:42Z"
-  },
-  {
     "name": "pocketbase/pocketbase",
     "version": "v0.28.1",
     "date": "2025-05-13T18:45:47Z"
-  },
-  {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.510",
-    "date": "2025-05-13T18:33:42Z"
-  },
-  {
-    "name": "mongodb/mongo",
-    "version": "r6.0.23",
-    "date": "2025-05-13T18:28:23Z"
   },
   {
     "name": "keycloak/keycloak",
@@ -136,13 +186,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v4.1.0",
-    "date": "2025-05-12T07:13:15Z"
-  },
-  {
-    "name": "coder/code-server",
-    "version": "v4.100.0",
-    "date": "2025-05-12T18:23:47Z"
+    "version": "nightly",
+    "date": "2025-05-12T18:39:33Z"
   },
   {
     "name": "neo4j/neo4j",
@@ -153,11 +198,6 @@
     "name": "usememos/memos",
     "version": "v0.24.3",
     "date": "2025-05-12T15:23:21Z"
-  },
-  {
-    "name": "NodeBB/NodeBB",
-    "version": "v2.8.18",
-    "date": "2025-05-12T15:08:09Z"
   },
   {
     "name": "n8n-io/n8n",
@@ -240,11 +280,6 @@
     "date": "2025-05-10T15:39:10Z"
   },
   {
-    "name": "juanfont/headscale",
-    "version": "v0.25.1",
-    "date": "2025-02-25T17:30:48Z"
-  },
-  {
     "name": "pelican-dev/wings",
     "version": "v1.0.0-beta13",
     "date": "2025-05-09T23:14:41Z"
@@ -285,19 +320,9 @@
     "date": "2025-05-08T15:03:17Z"
   },
   {
-    "name": "wazuh/wazuh",
-    "version": "v4.12.0",
-    "date": "2025-05-08T13:27:46Z"
-  },
-  {
     "name": "apache/tomcat",
     "version": "10.1.41",
     "date": "2025-05-08T12:45:44Z"
-  },
-  {
-    "name": "zwave-js/zwave-js-ui",
-    "version": "v10.4.2",
-    "date": "2025-05-08T08:11:27Z"
   },
   {
     "name": "semaphoreui/semaphore",
@@ -375,11 +400,6 @@
     "date": "2025-05-06T20:56:30Z"
   },
   {
-    "name": "Athou/commafeed",
-    "version": "5.8.0",
-    "date": "2025-05-06T18:33:07Z"
-  },
-  {
     "name": "sysadminsmedia/homebox",
     "version": "v0.19.0",
     "date": "2025-05-06T18:05:42Z"
@@ -398,11 +418,6 @@
     "name": "AdguardTeam/AdGuardHome",
     "version": "v0.107.61",
     "date": "2025-04-22T12:42:26Z"
-  },
-  {
-    "name": "Luligu/matterbridge",
-    "version": "3.0.1",
-    "date": "2025-05-06T10:24:43Z"
   },
   {
     "name": "syncthing/syncthing",
@@ -530,11 +545,6 @@
     "date": "2025-05-02T13:42:06Z"
   },
   {
-    "name": "motioneye-project/motioneye",
-    "version": "0.42.1",
-    "date": "2020-06-07T07:27:04Z"
-  },
-  {
     "name": "emqx/emqx",
     "version": "e5.9.0",
     "date": "2025-05-02T11:07:10Z"
@@ -613,11 +623,6 @@
     "name": "karakeep-app/karakeep",
     "version": "v0.24.1",
     "date": "2025-04-28T08:21:37Z"
-  },
-  {
-    "name": "advplyr/audiobookshelf",
-    "version": "v2.21.0",
-    "date": "2025-04-27T16:31:14Z"
   },
   {
     "name": "gotify/server",
@@ -738,11 +743,6 @@
     "name": "home-assistant/operating-system",
     "version": "15.2",
     "date": "2025-04-14T15:37:12Z"
-  },
-  {
-    "name": "Ombi-app/Ombi",
-    "version": "v4.47.1",
-    "date": "2025-01-05T21:14:23Z"
   },
   {
     "name": "Tautulli/Tautulli",
