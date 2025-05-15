@@ -6,7 +6,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Source: https://github.com/AlexxIT/go2rtc
 
 APP="go2rtc"
-var_tags="${var_tags:-recorder;video}"
+var_tags="${var_tags:-streaming;video}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-4}"
@@ -20,22 +20,22 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /opt/go2rtc ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    msg_info "Updating $APP"
-    systemctl stop go2rtc
-    cd /opt/go2rtc
-    rm go2rtc_linux_amd64
-    curl -fsSL "https://github.com/AlexxIT/go2rtc/releases/latest/download/go2rtc_linux_amd64" -o $(basename "https://github.com/AlexxIT/go2rtc/releases/latest/download/go2rtc_linux_amd64")
-    chmod +x go2rtc_linux_amd64
-    systemctl start go2rtc
-    msg_ok "Updated $APP"
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /opt/go2rtc ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+  msg_info "Updating $APP"
+  systemctl stop go2rtc
+  cd /opt/go2rtc
+  rm go2rtc_linux_amd64
+  curl -fsSL "https://github.com/AlexxIT/go2rtc/releases/latest/download/go2rtc_linux_amd64" -o $(basename "https://github.com/AlexxIT/go2rtc/releases/latest/download/go2rtc_linux_amd64")
+  chmod +x go2rtc_linux_amd64
+  systemctl start go2rtc
+  msg_ok "Updated $APP"
+  exit
 }
 
 start
