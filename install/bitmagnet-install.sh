@@ -22,7 +22,7 @@ msg_ok "Installed Dependencies"
 
 PG_VERSION="16" install_postgresql
 install_go
-RELEASE=$(curl -s https://api.github.com/repos/bitmagnet-io/bitmagnet/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+RELEASE=$(curl -fsSL https://api.github.com/repos/bitmagnet-io/bitmagnet/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 
 msg_info "Installing bitmagnet v${RELEASE}"
 mkdir -p /opt/bitmagnet
