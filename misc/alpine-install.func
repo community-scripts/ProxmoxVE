@@ -17,6 +17,7 @@ color() {
   BFR="\\r\\033[K"
   BOLD=$(echo "\033[1m")
   TAB="  "
+  TAB3="      "
 
   # System
   RETRY_NUM=10
