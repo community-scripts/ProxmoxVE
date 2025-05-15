@@ -21,6 +21,12 @@ All LXC instances created using this repository come pre-installed with Midnight
   - Update scripts that use "read -p" to properly indent text [@tremor021](https://github.com/tremor021) ([#4498](https://github.com/community-scripts/ProxmoxVE/pull/4498))
 - core: Add TAB3 formatting var to core [@tremor021](https://github.com/tremor021) ([#4496](https://github.com/community-scripts/ProxmoxVE/pull/4496))
 
+### 🧰 Maintenance
+
+  - #### 💾 Core
+
+    - core: fix bridge detection for OVS  [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4495](https://github.com/community-scripts/ProxmoxVE/pull/4495))
+
 ## 2025-05-14
 
 ### 🆕 New Scripts
