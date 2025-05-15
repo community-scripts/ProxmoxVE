@@ -7,8 +7,8 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 
 APP="Bitmagnet"
 var_tags="${var_tags:-os}"
-var_cpu="${var_cpu:-1}"
-var_ram="${var_ram:-512}"
+var_cpu="${var_cpu:-2}"
+var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-12}"
