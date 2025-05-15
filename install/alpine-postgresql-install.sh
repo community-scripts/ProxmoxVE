@@ -33,7 +33,7 @@ sed -i '/^host\s\+all\s\+all\s\+127.0.0.1\/32\s\+md5/ s/.*/host all all 0.0.0.0\
 $STD rc-service postgresql restart
 msg_ok "Configured and Restarted PostgreSQL"
 
-read -r -p "Would you like to install Adminer with lighttpd? <y/N>: " prompt
+read -r -p "${TAB3}Would you like to install Adminer with lighttpd? <y/N>: " prompt
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   msg_info "Installing Adminer and dependencies"
   $STD apk add --no-cache \

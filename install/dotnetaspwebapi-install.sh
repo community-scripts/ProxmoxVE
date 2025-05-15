@@ -28,7 +28,7 @@ msg_ok "Installed Dependencies"
 
 msg_info "Configure Application"
 var_project_name="default"
-read -r -p "Type the assembly name of the project: " var_project_name
+read -r -p "${TAB3}Type the assembly name of the project: " var_project_name
 echo "Target assembly: '${var_project_name}'"
 msg_ok "Application Configured"
 

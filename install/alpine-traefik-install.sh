@@ -21,7 +21,7 @@ msg_info "Installing Traefik"
 $STD apk add traefik --repository=https://dl-cdn.alpinelinux.org/alpine/edge/community
 msg_ok "Installed Traefik"
 
-read -p "Enable Traefik WebUI (Port 8080)? [y/N]: " enable_webui
+read -p "${TAB3}Enable Traefik WebUI (Port 8080)? [y/N]: " enable_webui
 if [[ "$enable_webui" =~ ^[Yy]$ ]]; then
   msg_info "Configuring Traefik WebUI"
   mkdir -p /etc/traefik/config

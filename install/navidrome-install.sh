@@ -15,7 +15,7 @@ update_os
 
 msg_info "Installing Dependencies (Patience)"
 $STD apt-get install -y \
-    ffmpeg
+  ffmpeg
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Navidrome"
@@ -27,9 +27,9 @@ systemctl enable -q --now navidrome
 echo "${RELEASE}" >/opt/Navidrome_version.txt
 msg_ok "Installed Navidrome"
 
-read -p "Do you want to install filebrowser addon? (y/n) " -n 1 -r
+read -p "${TAB3}Do you want to install filebrowser addon? (y/n) " -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-    bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/tools/addon/filebrowser.sh)"
+  bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/tools/addon/filebrowser.sh)"
 fi
 
 motd_ssh

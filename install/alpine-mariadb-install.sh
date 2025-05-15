@@ -29,7 +29,7 @@ mysql_install_db --user=mysql --basedir=/usr --datadir=/var/lib/mysql >/dev/null
 $STD rc-service mariadb start
 msg_ok "MariaDB Configured"
 
-read -r -p "Would you like to install Adminer with lighttpd? <y/N>: " prompt
+read -r -p "${TAB3}Would you like to install Adminer with lighttpd? <y/N>: " prompt
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   msg_info "Installing Adminer and dependencies"
   $STD apk add --no-cache \

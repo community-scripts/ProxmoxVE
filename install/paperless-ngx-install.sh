@@ -125,7 +125,7 @@ cd /opt/paperless/src
 $STD python3 manage.py migrate
 msg_ok "Set up PostgreSQL database"
 
-read -r -p "Would you like to add Adminer? <y/N> " prompt
+read -r -p "${TAB3}Would you like to add Adminer? <y/N> " prompt
 if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
   msg_info "Installing Adminer"
   $STD apt install -y adminer

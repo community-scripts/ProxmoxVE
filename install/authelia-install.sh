@@ -19,7 +19,7 @@ curl -fsSL "https://github.com/authelia/authelia/releases/download/${RELEASE}/au
 $STD dpkg -i "authelia_${RELEASE}_amd64.deb"
 msg_ok "Install Authelia completed"
 
-read -p "Enter your domain (ex. example.com): " DOMAIN
+read -p "${TAB3}Enter your domain (ex. example.com): " DOMAIN
 
 msg_info "Setting Authelia up"
 touch /etc/authelia/emails.txt

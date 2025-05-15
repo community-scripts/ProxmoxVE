@@ -33,7 +33,7 @@ $STD apt-get install -y nodejs
 $STD npm install -g yarn
 msg_ok "Installed Node.js"
 
-read -p "Please enter the name for your server: " servername
+read -p "${TAB3}Please enter the name for your server: " servername
 
 msg_info "Installing Element Synapse"
 curl -fsSL "https://packages.matrix.org/debian/matrix-org-archive-keyring.gpg" -o "/usr/share/keyrings/matrix-org-archive-keyring.gpg"

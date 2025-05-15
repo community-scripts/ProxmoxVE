@@ -55,7 +55,7 @@ export NODE_OPTIONS="--max-old-space-size=3584"
 $STD npm run build
 msg_ok "Installed Open WebUI"
 
-read -r -p "Would you like to add Ollama? <y/N> " prompt
+read -r -p "${TAB3}Would you like to add Ollama? <y/N> " prompt
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   msg_info "Installing Ollama"
   curl -fsSLO https://ollama.com/download/ollama-linux-amd64.tgz

@@ -15,7 +15,7 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-    gnupg
+  gnupg
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up Node.js Repository"
@@ -43,7 +43,7 @@ $STD npm install
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Installed ByteStash"
 
-read -p "Do you want to allow registration of multiple accounts? [y/n]: " allowreg
+read -p "${TAB3}Do you want to allow registration of multiple accounts? [y/n]: " allowreg
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/bytestash-backend.service
@@ -62,7 +62,7 @@ WantedBy=multi-user.target
 EOF
 
 if [[ "$allowreg" =~ ^[Yy]$ ]]; then
-    sed -i '8i\Environment=ALLOW_NEW_ACCOUNTS=true' /etc/systemd/system/bytestash-backend.service
+  sed -i '8i\Environment=ALLOW_NEW_ACCOUNTS=true' /etc/systemd/system/bytestash-backend.service
 fi
 
 cat <<EOF >/etc/systemd/system/bytestash-frontend.service
