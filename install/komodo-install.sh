@@ -37,11 +37,11 @@ $STD apt-get install -y \
   docker-compose-plugin
 msg_ok "Installed Docker"
 
-echo "Choose the database for Komodo installation:"
-echo "1) MongoDB (recommended)"
-echo "2) SQLite"
-echo "3) PostgreSQL"
-read -rp "Enter your choice (default: 1): " DB_CHOICE
+echo "${TAB3}Choose the database for Komodo installation:"
+echo "${TAB3}1) MongoDB (recommended)"
+echo "${TAB3}2) SQLite"
+echo "${TAB3}3) PostgreSQL"
+read -rp "${TAB3}Enter your choice (default: 1): " DB_CHOICE
 DB_CHOICE=${DB_CHOICE:-1}
 
 case $DB_CHOICE in

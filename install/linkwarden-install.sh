@@ -31,7 +31,7 @@ install_postgresql
 msg_info "Installing Rust"
 curl -fsSL https://sh.rustup.rs -o rustup-init.sh
 $STD bash rustup-init.sh -y --profile minimal
-echo 'export PATH="$HOME/.cargo/bin:$PATH"' >> ~/.bashrc
+echo 'export PATH="$HOME/.cargo/bin:$PATH"' >>~/.bashrc
 export PATH="$HOME/.cargo/bin:$PATH"
 rm rustup-init.sh
 $STD cargo install monolith
@@ -56,7 +56,7 @@ $STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET timezone TO 'UTC';"
 } >>~/linkwarden.creds
 msg_ok "Set up PostgreSQL DB"
 
-read -r -p "Would you like to add Adminer? <y/N> " prompt
+read -r -p "${TAB3}Would you like to add Adminer? <y/N> " prompt
 if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
   msg_info "Installing Adminer"
   $STD apt install -y adminer

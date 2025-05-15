@@ -15,7 +15,7 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-    gnupg
+  gnupg
 msg_ok "Installed Dependencies"
 
 msg_info "Setup ${APPLICATION}"
@@ -27,49 +27,49 @@ curl -fsSL https://raw.githubusercontent.com/meilisearch/meilisearch/latest/conf
 MASTER_KEY=$(openssl rand -base64 12)
 LOCAL_IP="$(hostname -I | awk '{print $1}')"
 sed -i \
-    -e 's|^env =.*|env = "production"|' \
-    -e "s|^# master_key =.*|master_key = \"$MASTER_KEY\"|" \
-    -e 's|^db_path =.*|db_path = "/var/lib/meilisearch/data"|' \
-    -e 's|^dump_dir =.*|dump_dir = "/var/lib/meilisearch/dumps"|' \
-    -e 's|^snapshot_dir =.*|snapshot_dir = "/var/lib/meilisearch/snapshots"|' \
-    -e 's|^# no_analytics = true|no_analytics = true|' \
-    -e 's|^http_addr =.*|http_addr = "0.0.0.0:7700"|' \
-    /etc/meilisearch.toml
+  -e 's|^env =.*|env = "production"|' \
+  -e "s|^# master_key =.*|master_key = \"$MASTER_KEY\"|" \
+  -e 's|^db_path =.*|db_path = "/var/lib/meilisearch/data"|' \
+  -e 's|^dump_dir =.*|dump_dir = "/var/lib/meilisearch/dumps"|' \
+  -e 's|^snapshot_dir =.*|snapshot_dir = "/var/lib/meilisearch/snapshots"|' \
+  -e 's|^# no_analytics = true|no_analytics = true|' \
+  -e 's|^http_addr =.*|http_addr = "0.0.0.0:7700"|' \
+  /etc/meilisearch.toml
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Setup ${APPLICATION}"
 
-read -r -p "Do you want add meilisearch-ui? [y/n]: " prompt
+read -r -p "${TAB3}Do you want add meilisearch-ui? [y/n]: " prompt
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
-    msg_info "Setting up Node.js Repository"
-    mkdir -p /etc/apt/keyrings
-    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_22.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
-    msg_ok "Set up Node.js Repository"
+  msg_info "Setting up Node.js Repository"
+  mkdir -p /etc/apt/keyrings
+  curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+  echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_22.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
+  msg_ok "Set up Node.js Repository"
 
-    msg_info "Installing Node.js"
-    $STD apt-get update
-    $STD apt-get install -y nodejs
-    $STD npm install -g pnpm
-    msg_ok "Installed Node.js"
+  msg_info "Installing Node.js"
+  $STD apt-get update
+  $STD apt-get install -y nodejs
+  $STD npm install -g pnpm
+  msg_ok "Installed Node.js"
 
-    msg_info "Setup ${APPLICATION}-ui"
-    tmp_file=$(mktemp)
-    tmp_dir=$(mktemp -d)
-    mkdir -p /opt/meilisearch-ui
-    RELEASE_UI=$(curl -s https://api.github.com/repos/riccox/meilisearch-ui/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-    curl -fsSL "https://github.com/riccox/meilisearch-ui/archive/refs/tags/${RELEASE_UI}.zip" -o $tmp_file
-    unzip -q "$tmp_file" -d "$tmp_dir"
-    mv "$tmp_dir"/*/* /opt/meilisearch-ui/
-    cd /opt/meilisearch-ui
-    sed -i 's|const hash = execSync("git rev-parse HEAD").toString().trim();|const hash = "unknown";|' /opt/meilisearch-ui/vite.config.ts
-    $STD pnpm install
-    cat <<EOF > /opt/meilisearch-ui/.env.local
+  msg_info "Setup ${APPLICATION}-ui"
+  tmp_file=$(mktemp)
+  tmp_dir=$(mktemp -d)
+  mkdir -p /opt/meilisearch-ui
+  RELEASE_UI=$(curl -s https://api.github.com/repos/riccox/meilisearch-ui/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+  curl -fsSL "https://github.com/riccox/meilisearch-ui/archive/refs/tags/${RELEASE_UI}.zip" -o "$tmp_file"
+  unzip -q "$tmp_file" -d "$tmp_dir"
+  mv "$tmp_dir"/*/* /opt/meilisearch-ui/
+  cd /opt/meilisearch-ui
+  sed -i 's|const hash = execSync("git rev-parse HEAD").toString().trim();|const hash = "unknown";|' /opt/meilisearch-ui/vite.config.ts
+  $STD pnpm install
+  cat <<EOF >/opt/meilisearch-ui/.env.local
 VITE_SINGLETON_MODE=true
 VITE_SINGLETON_HOST=http://${LOCAL_IP}:7700
 VITE_SINGLETON_API_KEY=${MASTER_KEY}
 EOF
-    echo "${RELEASE_UI}" >/opt/${APPLICATION}-ui_version.txt
-    msg_ok "Setup ${APPLICATION}-ui"
+  echo "${RELEASE_UI}" >/opt/${APPLICATION}-ui_version.txt
+  msg_ok "Setup ${APPLICATION}-ui"
 fi
 
 msg_info "Setting up Services"
@@ -88,7 +88,7 @@ EOF
 systemctl enable -q --now meilisearch
 
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
-cat <<EOF > /etc/systemd/system/meilisearch-ui.service
+  cat <<EOF >/etc/systemd/system/meilisearch-ui.service
 [Unit]
 Description=Meilisearch UI Service
 After=network.target meilisearch.service
@@ -107,11 +107,10 @@ SyslogIdentifier=meilisearch-ui
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now meilisearch-ui
+  systemctl enable -q --now meilisearch-ui
 fi
 
 msg_ok "Set up Services"
-
 
 motd_ssh
 customize

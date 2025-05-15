@@ -49,7 +49,7 @@ $STD systemctl enable --now podman.socket
 echo -e 'unqualified-search-registries=["docker.io"]' >>/etc/containers/registries.conf
 msg_ok "Installed Podman"
 
-read -r -p "Would you like to add Portainer? <y/N> " prompt
+read -r -p "${TAB3}Would you like to add Portainer? <y/N> " prompt
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   msg_info "Installing Portainer $PORTAINER_LATEST_VERSION"
   podman volume create portainer_data >/dev/null
@@ -63,7 +63,7 @@ if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
     portainer/portainer-ce:latest
   msg_ok "Installed Portainer $PORTAINER_LATEST_VERSION"
 else
-  read -r -p "Would you like to add the Portainer Agent? <y/N> " prompt
+  read -r -p "${TAB3}Would you like to add the Portainer Agent? <y/N> " prompt
   if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
     msg_info "Installing Portainer agent $PORTAINER_AGENT_LATEST_VERSION"
     podman volume create temp >/dev/null

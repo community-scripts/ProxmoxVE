@@ -15,8 +15,8 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-    gnupg \
-    git
+  gnupg \
+  git
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up Node.js Repository"
@@ -30,7 +30,7 @@ $STD apt-get update
 $STD apt-get install -y nodejs
 msg_ok "Setup Node.js"
 
-read -p "Install OnlyOffice components instead of CKEditor? (Y/N): " onlyoffice
+read -p "${TAB3}Install OnlyOffice components instead of CKEditor? (Y/N): " onlyoffice
 
 msg_info "Setup ${APPLICATION}"
 temp_file=$(mktemp)
@@ -47,7 +47,7 @@ IP=$(hostname -I | awk '{print $1}')
 sed -i "51s/localhost/${IP}/g" /opt/cryptpad/config/config.js
 sed -i "80s#//httpAddress: 'localhost'#httpAddress: '0.0.0.0'#g" /opt/cryptpad/config/config.js
 if [[ "$onlyoffice" =~ ^[Yy]$ ]]; then
-    $STD bash -c "./install-onlyoffice.sh --accept-license"
+  $STD bash -c "./install-onlyoffice.sh --accept-license"
 fi
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Setup ${APPLICATION}"

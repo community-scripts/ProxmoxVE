@@ -21,9 +21,9 @@ msg_ok "Setup Python 3"
 msg_info "Setup Kometa"
 temp_file=$(mktemp)
 RELEASE=$(curl -fsSL https://api.github.com/repos/Kometa-Team/Kometa/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/Kometa-Team/Kometa/archive/refs/tags/v${RELEASE}.tar.gz" -o ""$temp_file""
+curl -fsSL "https://github.com/Kometa-Team/Kometa/archive/refs/tags/v${RELEASE}.tar.gz" -o """$temp_file"""
 tar -xzf "$temp_file"
-mv Kometa-${RELEASE} /opt/kometa
+mv Kometa-"${RELEASE}" /opt/kometa
 cd /opt/kometa
 $STD pip install -r requirements.txt --ignore-installed
 mkdir -p config/assets
@@ -31,10 +31,10 @@ cp config/config.yml.template config/config.yml
 echo "${RELEASE}" >/opt/kometa_version.txt
 msg_ok "Setup Kometa"
 
-read -p "Enter your TMDb API key: " TMDBKEY
-read -p "Enter your Plex URL: " PLEXURL
-read -p "Enter your Plex token: " PLEXTOKEN
-sed -i -e "s#url: http://192.168.1.12:32400#url: $PLEXURL#g" /opt/kometa/config/config.yml
+read -p "${TAB3}nter your TMDb API key: " TMDBKEY
+read -p "${TAB3}Enter your Plex URL: " PLEXURL
+read -p "${TAB3}Enter your Plex token: " PLEXTOKEN
+sed -i -e "s#url: http://192.168.1.12:32400#url: $PLEXURL #g" /opt/kometa/config/config.yml
 sed -i -e "s/token: ####################/token: $PLEXTOKEN/g" /opt/kometa/config/config.yml
 sed -i -e "s/apikey: ################################/apikey: $TMDBKEY/g" /opt/kometa/config/config.yml
 
@@ -61,7 +61,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -f $temp_file
+rm -f "$temp_file"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"

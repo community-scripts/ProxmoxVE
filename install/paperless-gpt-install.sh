@@ -50,8 +50,8 @@ msg_info "Setup Paperless-GPT"
 temp_file=$(mktemp)
 RELEASE=$(curl -fsSL https://api.github.com/repos/icereed/paperless-gpt/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 curl -fsSL "https://github.com/icereed/paperless-gpt/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
-tar zxf $temp_file
-mv paperless-gpt-${RELEASE} /opt/paperless-gpt
+tar zxf "$temp_file"
+mv paperless-gpt-"${RELEASE}" /opt/paperless-gpt
 cd /opt/paperless-gpt/web-app
 $STD npm install
 $STD npm run build
@@ -64,16 +64,16 @@ echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Setup Paperless-GPT"
 
 mkdir -p /opt/paperless-gpt-data
-read -p "Do you want to enter the Paperless local URL now? (y/n) " input_url
+read -p "${TAB3}Do you want to enter the Paperless local URL now? (y/n) " input_url
 if [[ "$input_url" =~ ^[Yy]$ ]]; then
-  read -p "Enter your Paperless-NGX instance URL (e.g., http://192.168.1.100:8000): " PAPERLESS_BASE_URL
+  read -p "${TAB3}Enter your Paperless-NGX instance URL (e.g., http://192.168.1.100:8000): " PAPERLESS_BASE_URL
 else
   PAPERLESS_BASE_URL="http://your_paperless_ngx_url"
 fi
 
-read -p "Do you want to enter the Paperless API token now? (y/n) " input_token
+read -p "${TAB3}Do you want to enter the Paperless API token now? (y/n) " input_token
 if [[ "$input_token" =~ ^[Yy]$ ]]; then
-  read -p "Enter your Paperless API token: " PAPERLESS_API_TOKEN
+  read -p "${TAB3}Enter your Paperless API token: " PAPERLESS_API_TOKEN
 else
   PAPERLESS_API_TOKEN="your_paperless_api_token"
 fi
@@ -129,7 +129,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -f $temp_file
+rm -f "$temp_file"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"

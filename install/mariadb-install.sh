@@ -19,7 +19,7 @@ sed -i 's/^# *\(port *=.*\)/\1/' /etc/mysql/my.cnf
 sed -i 's/^bind-address/#bind-address/g' /etc/mysql/mariadb.conf.d/50-server.cnf
 msg_ok "Installed MariaDB"
 
-read -r -p "Would you like to add PhpMyAdmin? <y/N> " prompt
+read -r -p "${TAB3}Would you like to add PhpMyAdmin? <y/N> " prompt
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   msg_info "Installing phpMyAdmin"
   $STD apt-get install -y \

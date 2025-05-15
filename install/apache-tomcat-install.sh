@@ -15,10 +15,10 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-    gnupg2 \
-    lsb-release \
-    gpg \
-    apt-transport-https
+  gnupg2 \
+  lsb-release \
+  gpg \
+  apt-transport-https
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up Adoptium Repository"
@@ -28,90 +28,90 @@ echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_COD
 $STD apt-get update
 msg_ok "Set up Adoptium Repository"
 
-read -r -p "Which Tomcat version would you like to install? (9, 10.1, 11): " version
+read -r -p "${TAB3}Which Tomcat version would you like to install? (9, 10.1, 11): " version
 case $version in
 9)
-    TOMCAT_VERSION="9"
-    echo "Which LTS Java version would you like to use? (8, 11, 17, 21): "
-    read -r jdk_version
-    case $jdk_version in
-    8)
-        msg_info "Installing Temurin JDK 8 (LTS) for Tomcat $TOMCAT_VERSION"
-        $STD apt-get install -y temurin-8-jdk
-        msg_ok "Setup Temurin JDK 8 (LTS)"
-        ;;
-    11)
-        msg_info "Installing Temurin JDK 11 (LTS) for Tomcat $TOMCAT_VERSION"
-        $STD apt-get install -y temurin-11-jdk
-        msg_ok "Setup Temurin JDK 11 (LTS)"
-        ;;
-    17)
-        msg_info "Installing Temurin JDK 17 (LTS) for Tomcat $TOMCAT_VERSION"
-        $STD apt-get install -qqy temurin-17-jdk
-        msg_ok "Setup Temurin JDK 17 (LTS)"
-        ;;
-    21)
-        msg_info "Installing Temurin JDK 21 (LTS) for Tomcat $TOMCAT_VERSION"
-        $STD apt-get install -y temurin-21-jdk
-        msg_ok "Setup Temurin JDK 21 (LTS)"
-        ;;
-    *)
-        msg_error "Invalid JDK version selected. Please enter 8, 11, 17 or 21."
-        exit 1
-        ;;
-    esac
+  TOMCAT_VERSION="9"
+  echo "Which LTS Java version would you like to use? (8, 11, 17, 21): "
+  read -r jdk_version
+  case $jdk_version in
+  8)
+    msg_info "Installing Temurin JDK 8 (LTS) for Tomcat $TOMCAT_VERSION"
+    $STD apt-get install -y temurin-8-jdk
+    msg_ok "Setup Temurin JDK 8 (LTS)"
     ;;
-10 | 10.1)
-    TOMCAT_VERSION="10"
-    echo "Which LTS Java version would you like to use? (11, 17): "
-    read -r jdk_version
-    case $jdk_version in
-    11)
-        msg_info "Installing Temurin JDK 11 (LTS) for Tomcat $TOMCAT_VERSION"
-        $STD apt-get install -y temurin-11-jdk
-        msg_ok "Setup Temurin JDK 11"
-        ;;
-    17)
-        msg_info "Installing Temurin JDK 17 (LTS) for Tomcat $TOMCAT_VERSION"
-        $STD apt-get install -y temurin-17-jdk
-        msg_ok "Setup Temurin JDK 17"
-        ;;
-    21)
-        msg_info "Installing Temurin JDK 21 (LTS) for Tomcat $TOMCAT_VERSION"
-        $STD apt-get install -y temurin-21-jdk
-        msg_ok "Setup Temurin JDK 21 (LTS)"
-        ;;
-    *)
-        msg_error "Invalid JDK version selected. Please enter 11 or 17."
-        exit 1
-        ;;
-    esac
+  11)
+    msg_info "Installing Temurin JDK 11 (LTS) for Tomcat $TOMCAT_VERSION"
+    $STD apt-get install -y temurin-11-jdk
+    msg_ok "Setup Temurin JDK 11 (LTS)"
     ;;
-11)
-    TOMCAT_VERSION="11"
-    echo "Which LTS Java version would you like to use? (17, 21): "
-    read -r jdk_version
-    case $jdk_version in
-    17)
-        msg_info "Installing Temurin JDK 17 (LTS) for Tomcat $TOMCAT_VERSION"
-        $STD apt-get install -qqy temurin-17-jdk
-        msg_ok "Setup Temurin JDK 17"
-        ;;
-    21)
-        msg_info "Installing Temurin JDK 21 (LTS) for Tomcat $TOMCAT_VERSION"
-        $STD apt-get install -y temurin-21-jdk
-        msg_ok "Setup Temurin JDK 21 (LTS)"
-        ;;
-    *)
-        msg_error "Invalid JDK version selected. Please enter 17 or 21."
-        exit 1
-        ;;
-    esac
+  17)
+    msg_info "Installing Temurin JDK 17 (LTS) for Tomcat $TOMCAT_VERSION"
+    $STD apt-get install -qqy temurin-17-jdk
+    msg_ok "Setup Temurin JDK 17 (LTS)"
     ;;
-*)
-    msg_error "Invalid Tomcat version selected. Please enter 9, 10.1 or 11."
+  21)
+    msg_info "Installing Temurin JDK 21 (LTS) for Tomcat $TOMCAT_VERSION"
+    $STD apt-get install -y temurin-21-jdk
+    msg_ok "Setup Temurin JDK 21 (LTS)"
+    ;;
+  *)
+    msg_error "Invalid JDK version selected. Please enter 8, 11, 17 or 21."
     exit 1
     ;;
+  esac
+  ;;
+10 | 10.1)
+  TOMCAT_VERSION="10"
+  echo "Which LTS Java version would you like to use? (11, 17): "
+  read -r jdk_version
+  case $jdk_version in
+  11)
+    msg_info "Installing Temurin JDK 11 (LTS) for Tomcat $TOMCAT_VERSION"
+    $STD apt-get install -y temurin-11-jdk
+    msg_ok "Setup Temurin JDK 11"
+    ;;
+  17)
+    msg_info "Installing Temurin JDK 17 (LTS) for Tomcat $TOMCAT_VERSION"
+    $STD apt-get install -y temurin-17-jdk
+    msg_ok "Setup Temurin JDK 17"
+    ;;
+  21)
+    msg_info "Installing Temurin JDK 21 (LTS) for Tomcat $TOMCAT_VERSION"
+    $STD apt-get install -y temurin-21-jdk
+    msg_ok "Setup Temurin JDK 21 (LTS)"
+    ;;
+  *)
+    msg_error "Invalid JDK version selected. Please enter 11 or 17."
+    exit 1
+    ;;
+  esac
+  ;;
+11)
+  TOMCAT_VERSION="11"
+  echo "Which LTS Java version would you like to use? (17, 21): "
+  read -r jdk_version
+  case $jdk_version in
+  17)
+    msg_info "Installing Temurin JDK 17 (LTS) for Tomcat $TOMCAT_VERSION"
+    $STD apt-get install -qqy temurin-17-jdk
+    msg_ok "Setup Temurin JDK 17"
+    ;;
+  21)
+    msg_info "Installing Temurin JDK 21 (LTS) for Tomcat $TOMCAT_VERSION"
+    $STD apt-get install -y temurin-21-jdk
+    msg_ok "Setup Temurin JDK 21 (LTS)"
+    ;;
+  *)
+    msg_error "Invalid JDK version selected. Please enter 17 or 21."
+    exit 1
+    ;;
+  esac
+  ;;
+*)
+  msg_error "Invalid Tomcat version selected. Please enter 9, 10.1 or 11."
+  exit 1
+  ;;
 esac
 
 msg_info "Installing Tomcat $TOMCAT_VERSION"

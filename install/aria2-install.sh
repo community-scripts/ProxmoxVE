@@ -17,7 +17,7 @@ msg_info "Installing Aria2"
 $STD apt-get install -y aria2
 msg_ok "Installed Aria2"
 
-read -r -p "Would you like to add AriaNG? <y/N> " prompt
+read -r -p "${TAB3}Would you like to add AriaNG? <y/N> " prompt
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   msg_info "Installing AriaNG"
   $STD apt-get install -y nginx

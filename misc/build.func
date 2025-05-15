@@ -32,6 +32,7 @@ color() {
   BOLD=$(echo "\033[1m")
   HOLD=" "
   TAB="  "
+  TAB3="      "
 
   # Icons
   CM="${TAB}✔️${TAB}"
@@ -528,29 +529,29 @@ advanced_settings() {
     exit_script
   fi
 
-
   BRIDGES=""
   IFACE_FILEPATH_LIST="/etc/network/interfaces"$'\n'$(find "/etc/network/interfaces.d/" -type f)
-  OLD_IFS=$IFS; IFS=$'\n'
+  OLD_IFS=$IFS
+  IFS=$'\n'
 
   for iface_filepath in ${IFACE_FILEPATH_LIST}; do
     iface_indexes_tmpfile=$(mktemp -q -u '.iface-XXXX')
 
-    ( grep -Pn '^\s*iface' "${iface_filepath}" | cut -d':' -f1 && wc -l "${iface_filepath}" | cut -d' ' -f1 ) | \
-    awk 'FNR==1 {line=$0; next} {print line":"$0-1; line=$0}' > "${iface_indexes_tmpfile}"
+    (grep -Pn '^\s*iface' "${iface_filepath}" | cut -d':' -f1 && wc -l "${iface_filepath}" | cut -d' ' -f1) |
+      awk 'FNR==1 {line=$0; next} {print line":"$0-1; line=$0}' >"${iface_indexes_tmpfile}"
 
     if [ -f "${iface_indexes_tmpfile}" ]; then
-        while read -r pair; do
-            start=$(echo "${pair}" | cut -d':' -f1)
-            end=$(echo "${pair}" | cut -d':' -f2)
+      while read -r pair; do
+        start=$(echo "${pair}" | cut -d':' -f1)
+        end=$(echo "${pair}" | cut -d':' -f2)
 
-            if awk "NR >= ${start} && NR <= ${end}" "${iface_filepath}" | grep -qP '^\s*(bridge[-_](ports|stp|fd|vlan-aware|vids)|ovs_type\s+OVSBridge)\b'; then
-                iface_name=$(sed "${start}q;d" "${iface_filepath}" | awk '{print $2}')
-                BRIDGES="${iface_name}"$'\n'"${BRIDGES}"
-            fi
+        if awk "NR >= ${start} && NR <= ${end}" "${iface_filepath}" | grep -qP '^\s*(bridge[-_](ports|stp|fd|vlan-aware|vids)|ovs_type\s+OVSBridge)\b'; then
+          iface_name=$(sed "${start}q;d" "${iface_filepath}" | awk '{print $2}')
+          BRIDGES="${iface_name}"$'\n'"${BRIDGES}"
+        fi
 
-        done < "${iface_indexes_tmpfile}"
-        rm -f "${iface_indexes_tmpfile}"
+      done <"${iface_indexes_tmpfile}"
+      rm -f "${iface_indexes_tmpfile}"
     fi
 
   done
@@ -564,11 +565,11 @@ advanced_settings() {
     echo -e "${BRIDGE}${BOLD}${DGN}Bridge: ${BGN}$BRG${CL}"
   else
     BRG=$(whiptail --backtitle "Proxmox VE Helper Scripts" --menu "Select network bridge:" 15 40 6 $(echo "$BRIDGES" | awk '{print $0, "Bridge"}') 3>&1 1>&2 2>&3)
-      if [ -z "$BRG" ]; then
-        exit_script
-      else
-        echo -e "${BRIDGE}${BOLD}${DGN}Bridge: ${BGN}$BRG${CL}"
-      fi
+    if [ -z "$BRG" ]; then
+      exit_script
+    else
+      echo -e "${BRIDGE}${BOLD}${DGN}Bridge: ${BGN}$BRG${CL}"
+    fi
   fi
 
   while true; do
@@ -963,17 +964,16 @@ config_file() {
         else
           msg_error "Invalid IP Address format for Gateway. Needs to be 0.0.0.0, was ${GATE}"
           exit
+        fi
+      else
+        msg_error "Gateway IP Address cannot be empty"
+        exit
       fi
-  else
-    msg_error "Gateway IP Address cannot be empty"
-    exit
-  fi
     else
       msg_error "Invalid IP Address format. Needs to be 0.0.0.0/0, was ${NET}"
       exit
     fi
   fi
-
 
   if [[ ! -z "$APT_CACHER_IP" ]]; then
     if [[ "$APT_CACHER_IP" =~ $ip_regex ]]; then

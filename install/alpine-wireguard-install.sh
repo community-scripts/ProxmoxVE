@@ -46,7 +46,7 @@ $STD rc-update add sysctl
 $STD sysctl -p /etc/sysctl.conf
 msg_ok "Installed WireGuard"
 
-read -rp "Do you want to install WGDashboard? (y/N): " INSTALL_WGD
+read -rp "${TAB3}Do you want to install WGDashboard? (y/N): " INSTALL_WGD
 if [[ "$INSTALL_WGD" =~ ^[Yy]$ ]]; then
   msg_info "Installing additional dependencies for WGDashboard"
   $STD apk add --no-cache \

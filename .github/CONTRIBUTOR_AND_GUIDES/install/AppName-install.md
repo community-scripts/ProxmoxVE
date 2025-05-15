@@ -184,7 +184,7 @@ msg_info "Installing Dependencies"
 $STD apt-get install -y ...
 msg_ok "Installed Dependencies"
 
-read -p "Do you wish to enable HTTPS mode? (y/N): " httpschoice
+read -p "${TAB3}Do you wish to enable HTTPS mode? (y/N): " httpschoice
 ```
 
 ### 6.2 **Verbosity**

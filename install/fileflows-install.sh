@@ -21,7 +21,7 @@ $STD apt-get install -y \
   imagemagick
 msg_ok "Installed Dependencies"
 
-read -r -p "Do you need the intel-media-va-driver-non-free driver for HW encoding (Debian 12 only)? <y/N> " prompt
+read -r -p "${TAB3}Do you need the intel-media-va-driver-non-free driver for HW encoding (Debian 12 only)? <y/N> " prompt
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   msg_info "Installing Intel Hardware Acceleration (non-free)"
   cat <<EOF >/etc/apt/sources.list.d/non-free.list

@@ -28,7 +28,7 @@ $STD apt-get update
 $STD apt-get install -y caddy
 msg_ok "Installed Caddy"
 
-read -r -p "Would you like to install xCaddy Addon? <y/N> " prompt
+read -r -p "${TAB3}Would you like to install xCaddy Addon? <y/N> " prompt
 if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
   msg_info "Installing Golang"
   set +o pipefail
@@ -46,7 +46,7 @@ if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
   cd /opt
   RELEASE=$(curl -fsSL https://api.github.com/repos/caddyserver/xcaddy/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
   curl -fsSL "https://github.com/caddyserver/xcaddy/releases/download/${RELEASE}/xcaddy_${RELEASE:1}_linux_amd64.deb" -o $(basename "https://github.com/caddyserver/xcaddy/releases/download/${RELEASE}/xcaddy_${RELEASE:1}_linux_amd64.deb")
-  $STD dpkg -i xcaddy_${RELEASE:1}_linux_amd64.deb
+  $STD dpkg -i xcaddy_"${RELEASE:1}"_linux_amd64.deb
   rm -rf /opt/xcaddy*
   $STD xcaddy build
   msg_ok "Setup xCaddy"

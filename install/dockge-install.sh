@@ -41,7 +41,7 @@ cd /opt/dockge
 $STD docker compose up -d
 msg_ok "Installed Dockge"
 
-read -r -p "Would you like to add Immich? <y/N> " prompt
+read -r -p "${TAB3}Would you like to add Immich? <y/N> " prompt
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   msg_info "Adding Immich compose.yaml"
   mkdir -p /opt/stacks/immich
@@ -50,7 +50,7 @@ if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   msg_ok "Added Immich compose.yaml"
 fi
 
-read -r -p "Would you like to add Home Assistant? <y/N> " prompt
+read -r -p "${TAB3}Would you like to add Home Assistant? <y/N> " prompt
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   msg_info "Adding Home Assistant compose.yaml"
   mkdir -p /opt/stacks/homeassistant

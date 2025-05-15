@@ -24,7 +24,7 @@ curl -fsSL "https://repos.influxdata.com/influxdata-archive_compat.key" | gpg --
 echo "deb [signed-by=/etc/apt/trusted.gpg.d/influxdata-archive_compat.gpg] https://repos.influxdata.com/debian stable main" >/etc/apt/sources.list.d/influxdata.list
 msg_ok "Set up InfluxDB Repository"
 
-read -r -p "Which version of InfluxDB to install? (1 or 2) " prompt
+read -r -p "${TAB3}Which version of InfluxDB to install? (1 or 2) " prompt
 if [[ $prompt == "2" ]]; then
   INFLUX="2"
 else
@@ -43,7 +43,7 @@ fi
 $STD systemctl enable --now influxdb
 msg_ok "Installed InfluxDB"
 
-read -r -p "Would you like to add Telegraf? <y/N> " prompt
+read -r -p "${TAB3}Would you like to add Telegraf? <y/N> " prompt
 if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
   msg_info "Installing Telegraf"
   $STD apt-get install -y telegraf
