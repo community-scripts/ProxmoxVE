@@ -16,6 +16,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-05-15
 
+### 🆕 New Scripts
+
+  - bitmagnet ([#4493](https://github.com/community-scripts/ProxmoxVE/pull/4493))
+
 ### 🚀 Updated Scripts
 
   - core: Add TAB3 formatting var to core [@tremor021](https://github.com/tremor021) ([#4496](https://github.com/community-scripts/ProxmoxVE/pull/4496))
