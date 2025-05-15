@@ -32,7 +32,7 @@ $STD rc-update add postgresql
 $STD rc-service postgresql start
 msg_ok "Installed PostreSQL"
 
-RELEASE=$(curl -s https://api.github.com/repos/bitmagnet-io/bitmagnet/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+RELEASE=$(curl -fsSL https://api.github.com/repos/bitmagnet-io/bitmagnet/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 
 msg_info "Installing bitmagnet v${RELEASE}"
 mkdir -p /opt/bitmagnet
