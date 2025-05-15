@@ -544,7 +544,7 @@ advanced_settings() {
             start=$(echo "${pair}" | cut -d':' -f1)
             end=$(echo "${pair}" | cut -d':' -f2)
 
-            if awk "NR >= ${start} && NR <= ${end}" "${iface_filepath}" | grep -qP '^\s*bridge[-_](ports|stp|fd|vlan-aware|vids)\s+'; then
+            if awk "NR >= ${start} && NR <= ${end}" "${iface_filepath}" | grep -qP '^\s*(bridge[-_](ports|stp|fd|vlan-aware|vids)|ovs_type\s+OVSBridge)\b'; then
                 iface_name=$(sed "${start}q;d" "${iface_filepath}" | awk '{print $2}')
                 BRIDGES="${iface_name}"$'\n'"${BRIDGES}"
             fi
