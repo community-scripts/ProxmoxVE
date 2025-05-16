@@ -11,7 +11,7 @@
   "interface_port": 5055,
   "documentation": "https://docs.overseerr.dev/",
   "website": "https://overseerr.dev/",
-  "logo": "",
+  "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/overseerr.svg",
   "config_path": "/opt/overseerr/config/settings.json",
   "description": "Overseerr is a request management and media discovery tool built to work with your existing Plex ecosystem.",
   "install_methods": [
