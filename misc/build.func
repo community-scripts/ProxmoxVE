@@ -538,7 +538,7 @@ advanced_settings() {
     iface_indexes_tmpfile=$(mktemp -q -u '.iface-XXXX')
 
     (grep -Pn '^\s*iface' "${iface_filepath}" | cut -d':' -f1 && wc -l "${iface_filepath}" | cut -d' ' -f1) |
-      awk 'FNR==1 {line=$0; next} {print line":"$0-1; line=$0}' >"${iface_indexes_tmpfile}"
+      awk 'FNR==1 {line=$0; next} {print line":"$0-1; line=$0}' >"${iface_indexes_tmpfile}" || true
 
     if [ -f "${iface_indexes_tmpfile}" ]; then
       while read -r pair; do
