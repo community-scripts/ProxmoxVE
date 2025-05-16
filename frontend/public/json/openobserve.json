@@ -11,7 +11,7 @@
     "interface_port": 5080,
     "documentation": null,
     "website": "https://openobserve.ai/",
-    "logo": "https://avatars.githubusercontent.com/u/95867656",
+    "logo": "",
     "config_path": "/opt/openobserve/data/.env",
     "description": "OpenObserve is a simple yet sophisticated log search, infrastructure monitoring, and APM solution.",
     "install_methods": [

@@ -11,7 +11,7 @@
     "interface_port": null,
     "documentation": null,
     "website": "https://www.docker.com/",
-    "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/docker.svg",
+    "logo": "",
     "config_path": "",
     "description": "Docker is an open-source project for automating the deployment of applications as portable, self-sufficient containers.",
     "install_methods": [

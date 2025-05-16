@@ -11,7 +11,7 @@
     "interface_port": 8283,
     "documentation": null,
     "website": "https://github.com/Luligu/matterbridge",
-    "logo": "https://raw.githubusercontent.com/Luligu/matterbridge/main/frontend/public/matterbridge%20624x624.png",
+    "logo": "",
     "config_path": "",
     "description": "Matterbridge allows you to have all your Matter devices up and running in a couple of minutes without having to deal with the pairing process of each single device.",
     "install_methods": [

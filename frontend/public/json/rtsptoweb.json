@@ -11,7 +11,7 @@
   "interface_port": 8083,
   "documentation": "https://readeck.org/en/docs/",
   "website": "https://github.com/deepch/RTSPtoWeb",
-  "logo": "https://brands.home-assistant.io/_/rtsp_to_webrtc/logo.png?raw=true",
+  "logo": "",
   "config_path": "/opt/rtsptoweb/config.json",
   "description": "RTSPtoWeb converts your RTSP streams to formats consumable in a web browser like MSE (Media Source Extensions), WebRTC, or HLS. It's fully native Golang without the use of FFmpeg or GStreamer",
   "install_methods": [

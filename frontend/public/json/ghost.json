@@ -11,7 +11,7 @@
     "interface_port": 2368,
     "documentation": "https://ghost.org/docs/",
     "website": "https://ghost.org",
-    "logo": "https://raw.githubusercontent.com/TryGhost/Ghost/b6fe724b577e84f7dd174646d0323dabdcdf576e/apps/shade/src/assets/images/ghost-orb.svg",
+    "logo": "",
     "config_path": "",
     "description": "Ghost is a powerful app for professional publishers to create, share, and grow a business around their content. It comes with modern tools to build a website, publish content, send newsletters & offer paid subscriptions to members.",
     "install_methods": [

@@ -9,7 +9,7 @@
   "interface_port": null,
   "documentation": null,
   "website": null,
-  "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/lxc.svg",
+  "logo": "",
   "config_path": "",
   "description": "This script will add/remove a crontab schedule that updates all LXCs every Sunday at midnight.",
   "install_methods": [

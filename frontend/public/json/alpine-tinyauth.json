@@ -11,7 +11,7 @@
   "interface_port": 3000,
   "documentation": "https://tinyauth.app/docs/getting-started.html",
   "website": "https://tinyauth.app/",
-  "logo": "https://raw.githubusercontent.com/steveiliop56/tinyauth/refs/heads/main/frontend/public/android-chrome-192x192.png",
+  "logo": "",
   "config_path": "/opt/tinyauth/.env",
   "description": "Tinyauth is a simple authentication middleware that adds simple username/password login or OAuth with Google, Github and any generic provider to all of your docker apps. It is designed for traefik but it can be extended to work with all reverse proxies like caddy and nginx.",
   "install_methods": [

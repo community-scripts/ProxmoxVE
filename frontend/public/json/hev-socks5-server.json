@@ -11,7 +11,7 @@
   "interface_port": 1080,
   "documentation": null,
   "website": "https://github.com/heiher/hev-socks5-server",
-  "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/405px-Tux.svg.png",
+  "logo": "",
   "config_path": "/opt/hivemq/conf/config.xml",
   "description": "HevSocks5Server is a simple, lightweight socks5 server.",
   "install_methods": [

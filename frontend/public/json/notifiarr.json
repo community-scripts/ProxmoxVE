@@ -11,7 +11,7 @@
     "interface_port": 5454,
     "documentation": null,
     "website": "https://notifiarr.com/",
-    "logo": "https://notifiarr.com/images/logo/notifiarr.png?raw=true",
+    "logo": "",
     "config_path": "/etc/notifiarr/notifiarr.conf",
     "description": "Notifiarr is a purpose built system to bring many applications together to manage and customize notifications via Discord. You can monitor many aspects of your network(s), be notified of downtime, be notified of health issues, etc",
     "install_methods": [

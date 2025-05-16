@@ -11,7 +11,7 @@
     "interface_port": null,
     "documentation": "https://headscale.net/",
     "website": "https://github.com/juanfont/headscale",
-    "logo": "https://raw.githubusercontent.com/loganmarchione/homelab-svg-assets/main/assets/headscale.svg",
+    "logo": "",
     "config_path": "/etc/headscale/config.yaml",
     "description": "An open source, self-hosted implementation of the Tailscale control server",
     "install_methods": [

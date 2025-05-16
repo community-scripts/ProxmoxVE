@@ -11,7 +11,7 @@
   "interface_port": 80,
   "documentation": null,
   "website": "https://it-tools.tech/",
-  "logo": "https://raw.githubusercontent.com/CorentinTh/it-tools/08d977b8cdb7ffb76adfa18ba6eb4b73795ec814/public/safari-pinned-tab.svg",
+  "logo": "",
   "config_path": "",
   "description": "IT-Tools is a web-based suite of utilities designed to streamline and simplify various IT tasks, providing tools for developers and system administrators to manage their workflows efficiently.",
   "install_methods": [

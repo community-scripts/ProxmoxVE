@@ -11,7 +11,7 @@
     "interface_port": null,
     "documentation": null,
     "website": "https://github.com/leiweibau/Pi.Alert/",
-    "logo": "https://raw.githubusercontent.com/leiweibau/Pi.Alert/main/front/img/favicons/glass_black_white.png",
+    "logo": "",
     "config_path": "/opt/pialert/config/pialert.conf",
     "description": "Pi.Alert is a WIFI / LAN intruder detector. Checks the devices connected and alert you with unknown devices. It also warns of the disconnection of \"always connected\" devices.",
     "install_methods": [
