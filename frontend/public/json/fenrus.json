@@ -11,7 +11,7 @@
   "interface_port": 5000,
   "documentation": "https://github.com/revenz/Fenrus/wiki",
   "website": "https://github.com/revenz/Fenrus",
-  "logo": "",
+  "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/webp/fenrus.webp",
   "config_path": "",
   "description": "A personal home page for quick access to all your personal apps/sites.",
   "install_methods": [

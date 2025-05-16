@@ -11,7 +11,7 @@
   "interface_port": 80,
   "documentation": null,
   "website": "https://it-tools.tech/",
-  "logo": "",
+  "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/webp/it-tools.webp",
   "config_path": "",
   "description": "IT-Tools is a web-based suite of utilities designed to streamline and simplify various IT tasks, providing tools for developers and system administrators to manage their workflows efficiently.",
   "install_methods": [

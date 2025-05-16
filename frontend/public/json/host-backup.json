@@ -1,7 +1,9 @@
 {
   "name": "Proxmox VE Host Backup",
   "slug": "host-backup",
-  "categories": [1],
+  "categories": [
+    1
+  ],
   "date_created": "2024-04-29",
   "type": "pve",
   "updateable": false,
@@ -9,8 +11,8 @@
   "interface_port": null,
   "documentation": null,
   "website": null,
-  "logo": "",
-    "config_path": "",
+  "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/webp/proxmox.webp",
+  "config_path": "",
   "description": "This script serves as a versatile backup utility, enabling users to specify both the backup path and the directory they want to work in. This flexibility empowers users to select the specific files and directories they wish to back up, making it compatible with a wide range of hosts, not limited to Proxmox.",
   "install_methods": [
     {
@@ -40,4 +42,3 @@
     }
   ]
 }
-

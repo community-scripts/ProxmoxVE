@@ -11,7 +11,7 @@
   "interface_port": 80,
   "documentation": "https://gotify.net/docs/index",
   "website": "https://gotify.net/",
-  "logo": "",
+  "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/webp/gotify.webp",
   "config_path": "/etc/gotify/config.yml",
   "description": "Gotify is a simple server for sending and receiving messages",
   "install_methods": [
