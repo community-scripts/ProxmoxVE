@@ -21,12 +21,16 @@ All LXC instances created using this repository come pre-installed with Midnight
   - #### 💾 Core
 
     - [core] Refactor Config File function [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4528](https://github.com/community-scripts/ProxmoxVE/pull/4528))
-    - [core] Enable SSH_KEY and SSH without password [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4523](https://github.com/community-scripts/ProxmoxVE/pull/4523))
     - [core] Fix Bridge detection in Advanced Mode [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4522](https://github.com/community-scripts/ProxmoxVE/pull/4522))
+    - [core] Enable SSH_KEY and SSH without password [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4523](https://github.com/community-scripts/ProxmoxVE/pull/4523))
 
   - #### 📂 Github
 
     - Updates to contributor docs/guide [@tremor021](https://github.com/tremor021) ([#4518](https://github.com/community-scripts/ProxmoxVE/pull/4518))
+
+### 🌐 Website
+
+  - Remove bolt.diy script [@tremor021](https://github.com/tremor021) ([#4541](https://github.com/community-scripts/ProxmoxVE/pull/4541))
 
 ## 2025-05-15
 
