@@ -18,6 +18,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🧰 Maintenance
 
+  - #### 💾 Core
+
+    - [core] Fix Bridge detection in Advanced Mode [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4522](https://github.com/community-scripts/ProxmoxVE/pull/4522))
+
   - #### 📂 Github
 
     - Updates to contributor docs/guide [@tremor021](https://github.com/tremor021) ([#4518](https://github.com/community-scripts/ProxmoxVE/pull/4518))
