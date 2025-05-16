@@ -20,6 +20,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 💾 Core
 
+    - [core] Refactor Config File function [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4528](https://github.com/community-scripts/ProxmoxVE/pull/4528))
     - [core] Enable SSH_KEY and SSH without password [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4523](https://github.com/community-scripts/ProxmoxVE/pull/4523))
     - [core] Fix Bridge detection in Advanced Mode [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4522](https://github.com/community-scripts/ProxmoxVE/pull/4522))
 
