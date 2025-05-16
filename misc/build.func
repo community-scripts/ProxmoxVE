@@ -362,6 +362,76 @@ base_settings() {
     var_version="12"
   fi
 }
+write_config() {
+  # This function writes the configuration to a file.
+  if whiptail --backtitle "[dev] Proxmox VE Helper Scripts" --defaultno --title "Write configfile" --yesno "Do you want to write the selections to a config file?" 10 60; then
+    FILEPATH="/opt/community-scripts/${NSAPP}.conf"
+    if [[ ! -f $FILEPATH ]]; then
+      cat <<EOF >"$FILEPATH"
+# ${NSAPP} Configuration File
+# Generated on $(date)
+
+CT_TYPE="${CT_TYPE}"
+DISK_SIZE="${DISK_SIZE}"
+CORE_COUNT="${DISK_SIZE}"
+RAM_SIZE="${RAM_SIZE}"
+HN="${HN}"
+BRG="${BRG}"
+APT_CACHER_IP="${APT_CACHER_IP:-none}"
+DISABLEIP6="${DISABLEIP6}"
+PW="${PW:-none}"
+SSH="${SSH}"
+SSH_AUTHORIZED_KEY="${SSH_AUTHORIZED_KEY}"
+VERBOSE="${VERBOSE}"
+TAGS="${TAGS:-none}"
+VLAN="${VLAN:-none}"
+MTU="${MTU:-1500}"
+GATE="${GATE:-none}"
+SD="${SD:-none}"
+MAC="${MAC:-none}"
+NS="${NS:-none}"
+NET="${NET}"
+
+EOF
+      echo -e "${INFO}${BOLD}${GN}Writing configuration to ${FILEPATH}${CL}"
+    else
+      echo -e "${INFO}${BOLD}${RD}Configuration file already exists at ${FILEPATH}${CL}"
+      if whiptail --backtitle "[dev] Proxmox VE Helper Scripts" --defaultno --title "Overwrite configfile" --yesno "Do you want to overwrite the existing config file?" 10 60; then
+              rm -f "$FILEPATH"
+              cat <<EOF >"$FILEPATH"
+# ${NSAPP} Configuration File
+# Generated on $(date)
+
+CT_TYPE="${CT_TYPE}"
+DISK_SIZE="${DISK_SIZE}"
+CORE_COUNT="${DISK_SIZE}"
+RAM_SIZE="${RAM_SIZE}"
+HN="${HN}"
+BRG="${BRG}"
+APT_CACHER_IP="${APT_CACHER_IP:-none}"
+DISABLEIP6="${DISABLEIP6}"
+PW="${PW:-none}"
+SSH="${SSH}"
+SSH_AUTHORIZED_KEY="${SSH_AUTHORIZED_KEY}"
+VERBOSE="${VERBOSE}"
+TAGS="${TAGS:-none}"
+VLAN="${VLAN:-none}"
+MTU="${MTU:-1500}"
+GATE="${GATE:-none}"
+SD="${SD:-none}"
+MAC="${MAC:-none}"
+NS="${NS:-none}"
+NET="${NET}"
+
+EOF
+        echo -e "${INFO}${BOLD}${GN}Writing configuration to ${FILEPATH}${CL}"
+      else
+        echo -e "${INFO}${BOLD}${RD}Configuration file not overwritten${CL}"
+      fi
+    fi
+  fi
+}
+
 
 # This function displays the default values for various settings.
 echo_default() {
@@ -730,6 +800,7 @@ advanced_settings() {
 
   if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "ADVANCED SETTINGS COMPLETE" --yesno "Ready to create ${APP} LXC?" 10 58); then
     echo -e "${CREATING}${BOLD}${RD}Creating a ${APP} LXC using the above advanced settings${CL}"
+    write_config
   else
     clear
     header_info
