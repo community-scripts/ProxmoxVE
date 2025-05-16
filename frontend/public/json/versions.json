@@ -1,18 +1,68 @@
 [
   {
+    "name": "ipfs/kubo",
+    "version": "v0.34.1",
+    "date": "2025-03-25T18:11:12Z"
+  },
+  {
+    "name": "coder/code-server",
+    "version": "v4.100.2",
+    "date": "2025-05-15T23:02:46Z"
+  },
+  {
+    "name": "influxdata/influxdb",
+    "version": "v3.0.3",
+    "date": "2025-05-15T19:56:23Z"
+  },
+  {
+    "name": "clusterzx/paperless-ai",
+    "version": "v2.7.8",
+    "date": "2025-05-15T18:04:54Z"
+  },
+  {
+    "name": "goauthentik/authentik",
+    "version": "version/2025.4.1",
+    "date": "2025-05-15T17:48:29Z"
+  },
+  {
+    "name": "cloudflare/cloudflared",
+    "version": "2025.5.0",
+    "date": "2025-05-15T17:09:50Z"
+  },
+  {
+    "name": "apache/cassandra",
+    "version": "4.1.9-tentative",
+    "date": "2025-05-15T15:52:53Z"
+  },
+  {
+    "name": "VictoriaMetrics/VictoriaMetrics",
+    "version": "pmm-6401-v1.117.1",
+    "date": "2025-05-15T15:45:22Z"
+  },
+  {
+    "name": "ellite/Wallos",
+    "version": "v3.1.1",
+    "date": "2025-05-15T15:17:57Z"
+  },
+  {
+    "name": "bunkerity/bunkerweb",
+    "version": "v1.6.1",
+    "date": "2025-03-15T17:29:17Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.4.0p1",
+    "date": "2025-05-15T12:41:12Z"
+  },
+  {
     "name": "zwave-js/zwave-js-ui",
     "version": "v10.5.1",
     "date": "2025-05-15T09:59:28Z"
   },
   {
-    "name": "Checkmk/checkmk",
-    "version": "v2.4.0p1-rc2",
-    "date": "2025-05-15T08:44:23Z"
-  },
-  {
     "name": "theonedev/onedev",
     "version": "v11.9.7",
-    "date": "2025-05-15T08:41:54Z"
+    "date": "2025-05-15T07:03:28Z"
   },
   {
     "name": "mattermost/mattermost",
@@ -23,11 +73,6 @@
     "name": "cross-seed/cross-seed",
     "version": "v6.12.4",
     "date": "2025-05-11T11:41:32Z"
-  },
-  {
-    "name": "clusterzx/paperless-ai",
-    "version": "v2.7.7",
-    "date": "2025-05-15T06:10:00Z"
   },
   {
     "name": "morpheus65535/bazarr",
@@ -85,11 +130,6 @@
     "date": "2025-05-08T09:10:10Z"
   },
   {
-    "name": "coder/code-server",
-    "version": "v4.100.1",
-    "date": "2025-05-14T18:08:16Z"
-  },
-  {
     "name": "MediaBrowser/Emby.Releases",
     "version": "4.8.11.0",
     "date": "2025-03-10T06:39:11Z"
@@ -141,8 +181,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v4.1.0",
-    "date": "2025-05-12T07:13:15Z"
+    "version": "nightly",
+    "date": "2025-05-14T06:48:39Z"
   },
   {
     "name": "TandoorRecipes/recipes",
@@ -223,11 +263,6 @@
     "name": "Paymenter/Paymenter",
     "version": "v1.1.0",
     "date": "2025-05-12T14:40:27Z"
-  },
-  {
-    "name": "VictoriaMetrics/VictoriaMetrics",
-    "version": "pmm-6401-v1.117.0",
-    "date": "2025-05-12T13:24:20Z"
   },
   {
     "name": "apache/tika",
@@ -320,11 +355,6 @@
     "date": "2025-05-08T19:56:55Z"
   },
   {
-    "name": "ellite/Wallos",
-    "version": "v3.1.0",
-    "date": "2025-05-08T15:33:17Z"
-  },
-  {
     "name": "BookStackApp/BookStack",
     "version": "v25.02.4",
     "date": "2025-05-08T15:03:17Z"
@@ -348,11 +378,6 @@
     "name": "HabitRPG/habitica",
     "version": "v5.36.3",
     "date": "2025-05-07T17:22:07Z"
-  },
-  {
-    "name": "ipfs/kubo",
-    "version": "v0.34.1",
-    "date": "2025-03-25T18:11:12Z"
   },
   {
     "name": "donaldzou/WGDashboard",
@@ -403,11 +428,6 @@
     "name": "jupyter/notebook",
     "version": "@jupyter-notebook/ui-components@7.5.0-alpha.0",
     "date": "2025-05-07T09:12:08Z"
-  },
-  {
-    "name": "influxdata/influxdb",
-    "version": "v1.12.1rc0",
-    "date": "2025-05-06T20:56:30Z"
   },
   {
     "name": "sysadminsmedia/homebox",
@@ -575,19 +595,9 @@
     "date": "2025-04-30T16:38:35Z"
   },
   {
-    "name": "cloudflare/cloudflared",
-    "version": "2025.4.2",
-    "date": "2025-04-30T14:16:11Z"
-  },
-  {
     "name": "docmost/docmost",
     "version": "v0.20.4",
     "date": "2025-04-30T14:15:16Z"
-  },
-  {
-    "name": "goauthentik/authentik",
-    "version": "version/2025.4.0",
-    "date": "2025-04-30T12:34:14Z"
   },
   {
     "name": "hivemq/hivemq-community-edition",
@@ -770,11 +780,6 @@
     "date": "2025-04-11T09:57:47Z"
   },
   {
-    "name": "apache/cassandra",
-    "version": "cassandra-5.0.4",
-    "date": "2025-04-10T16:32:00Z"
-  },
-  {
     "name": "Threadfin/Threadfin",
     "version": "1.2.32",
     "date": "2025-04-07T20:01:09Z"
@@ -858,11 +863,6 @@
     "name": "inspircd/inspircd",
     "version": "v4.7.0",
     "date": "2025-03-29T03:50:50Z"
-  },
-  {
-    "name": "bunkerity/bunkerweb",
-    "version": "v1.6.1",
-    "date": "2025-03-15T17:29:17Z"
   },
   {
     "name": "grocy/grocy",
