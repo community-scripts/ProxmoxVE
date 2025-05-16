@@ -16,6 +16,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-05-16
 
+### 🧰 Maintenance
+
+  - #### 📂 Github
+
+    - Updates to contributor docs/guide [@tremor021](https://github.com/tremor021) ([#4518](https://github.com/community-scripts/ProxmoxVE/pull/4518))
+
 ## 2025-05-15
 
 ### 🆕 New Scripts
