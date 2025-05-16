@@ -702,8 +702,14 @@ advanced_settings() {
     exit_script
   fi
 
-  if [[ "$PW" == -password* ]]; then
-    if (whiptail --backtitle "Proxmox VE Helper Scripts" --defaultno --title "SSH ACCESS" --yesno "Enable Root SSH Access?" 10 58); then
+  SSH_AUTHORIZED_KEY="$(whiptail --backtitle "[dev] Proxmox VE Helper Scripts" --inputbox "SSH Authorized key for root (leave empty for none)" 8 58 --title "SSH Key" 3>&1 1>&2 2>&3)"
+
+  if [[ -z "${SSH_AUTHORIZED_KEY}" ]]; then
+    SSH_AUTHORIZED_KEY=""
+  fi
+
+  if [[ "$PW" == -password* || -n "$SSH_AUTHORIZED_KEY" ]]; then
+    if (whiptail --backtitle "[dev] Proxmox VE Helper Scripts" --defaultno --title "SSH ACCESS" --yesno "Enable Root SSH Access?" 10 58); then
       SSH="yes"
     else
       SSH="no"
@@ -714,15 +720,7 @@ advanced_settings() {
     echo -e "${ROOTSSH}${BOLD}${DGN}Root SSH Access: ${BGN}$SSH${CL}"
   fi
 
-  if [[ "${SSH}" == "yes" ]]; then
-    SSH_AUTHORIZED_KEY="$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "SSH Authorized key for root (leave empty for none)" 8 58 --title "SSH Key" 3>&1 1>&2 2>&3)"
 
-    if [[ -z "${SSH_AUTHORIZED_KEY}" ]]; then
-      echo "Warning: No SSH key provided."
-    fi
-  else
-    SSH_AUTHORIZED_KEY=""
-  fi
   if (whiptail --backtitle "Proxmox VE Helper Scripts" --defaultno --title "VERBOSE MODE" --yesno "Enable Verbose Mode?" 10 58); then
     VERB="yes"
   else
