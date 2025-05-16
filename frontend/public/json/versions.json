@@ -1,5 +1,30 @@
 [
   {
+    "name": "wazuh/wazuh",
+    "version": "coverity-w20-4.13.0",
+    "date": "2025-05-14T12:06:20Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1908",
+    "date": "2025-05-16T05:54:21Z"
+  },
+  {
+    "name": "gotson/komga",
+    "version": "1.21.3",
+    "date": "2025-05-16T04:31:05Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "server/public/v0.1.13",
+    "date": "2025-05-16T03:44:25Z"
+  },
+  {
+    "name": "cross-seed/cross-seed",
+    "version": "v6.12.4",
+    "date": "2025-05-11T11:41:32Z"
+  },
+  {
     "name": "ipfs/kubo",
     "version": "v0.34.1",
     "date": "2025-03-25T18:11:12Z"
@@ -45,6 +70,11 @@
     "date": "2025-05-15T15:17:57Z"
   },
   {
+    "name": "keycloak/keycloak",
+    "version": "26.0.12",
+    "date": "2025-05-15T14:06:52Z"
+  },
+  {
     "name": "bunkerity/bunkerweb",
     "version": "v1.6.1",
     "date": "2025-03-15T17:29:17Z"
@@ -62,27 +92,12 @@
   {
     "name": "theonedev/onedev",
     "version": "v11.9.7",
-    "date": "2025-05-15T07:03:28Z"
-  },
-  {
-    "name": "mattermost/mattermost",
-    "version": "v10.6.5",
-    "date": "2025-05-15T07:06:52Z"
-  },
-  {
-    "name": "cross-seed/cross-seed",
-    "version": "v6.12.4",
-    "date": "2025-05-11T11:41:32Z"
+    "date": "2025-05-15T08:41:54Z"
   },
   {
     "name": "morpheus65535/bazarr",
     "version": "v1.5.2",
     "date": "2025-05-11T16:40:55Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1900",
-    "date": "2025-05-15T06:01:04Z"
   },
   {
     "name": "FlowiseAI/Flowise",
@@ -125,11 +140,6 @@
     "date": "2025-05-11T22:18:43Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.2.4",
-    "date": "2025-05-08T09:10:10Z"
-  },
-  {
     "name": "MediaBrowser/Emby.Releases",
     "version": "4.8.11.0",
     "date": "2025-03-10T06:39:11Z"
@@ -170,19 +180,14 @@
     "date": "2025-05-12T09:12:04Z"
   },
   {
-    "name": "wazuh/wazuh",
-    "version": "coverity-w20-4.13.0",
-    "date": "2025-05-14T12:06:20Z"
-  },
-  {
     "name": "blakeblackshear/frigate",
     "version": "v0.14.1",
     "date": "2024-08-29T22:32:51Z"
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-05-14T06:48:39Z"
+    "version": "v4.1.0",
+    "date": "2025-05-12T07:13:15Z"
   },
   {
     "name": "TandoorRecipes/recipes",
@@ -928,11 +933,6 @@
     "name": "transmission/transmission",
     "version": "4.0.1-beta.1",
     "date": "2024-12-13T00:16:24Z"
-  },
-  {
-    "name": "gotson/komga",
-    "version": "1.21.2",
-    "date": "2025-03-12T04:19:30Z"
   },
   {
     "name": "excalidraw/excalidraw",
