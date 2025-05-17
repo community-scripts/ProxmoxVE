@@ -11,7 +11,7 @@
     "interface_port": 9000,
     "documentation": "https://go2docs.graylog.org/current/home.htm",
     "website": "https://graylog.org/",
-    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/graylog.svg",
+    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/graylog.svg",
     "config_path": "/etc/graylog/server/server.conf",
     "description": "Graylog is an open-source log management and analysis platform that centralizes and processes log data from various sources, enabling real-time search, analysis, and alerting for IT infrastructure monitoring and troubleshooting.",
     "install_methods": [
@@ -33,13 +33,12 @@
     },
     "notes": [
         {
-        "text": "Initial Setup credentials: `tail /var/log/graylog-server/server.log` after the server starts for the first time.",
-        "type": "info"
+            "text": "Initial Setup credentials: `tail /var/log/graylog-server/server.log` after the server starts for the first time.",
+            "type": "info"
         },
         {
-        "text": "Type `cat ~/graylog.creds` to get admin password that you use to log in AFTER the Initial Setup",
-        "type": "info"
+            "text": "Type `cat ~/graylog.creds` to get admin password that you use to log in AFTER the Initial Setup",
+            "type": "info"
         }
     ]
 }
-

@@ -1,7 +1,9 @@
 {
   "name": "Proxmox Update Repositories",
   "slug": "update-repo",
-  "categories": [1],
+  "categories": [
+    1
+  ],
   "date_created": "2024-11-04",
   "type": "pve",
   "updateable": false,
@@ -9,8 +11,8 @@
   "interface_port": null,
   "documentation": null,
   "website": null,
-  "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/linuxcontainers.svg",
-    "config_path": "",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/linuxcontainers.svg",
+  "config_path": "",
   "description": "This script updates repository links in LXC containers, replacing old links from the tteck repository with links to the new community-scripts repository to fix issues related to updating scripts.",
   "install_methods": [
     {
@@ -36,4 +38,3 @@
     }
   ]
 }
-

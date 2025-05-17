@@ -11,8 +11,8 @@
   "interface_port": 7700,
   "documentation": "https://www.meilisearch.com/docs",
   "website": "https://www.meilisearch.com/",
-  "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/meilisearch.svg",
-    "config_path": "/etc/meilisearch.toml",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/meilisearch.svg",
+  "config_path": "/etc/meilisearch.toml",
   "description": "Meilisearch is a fast, open-source search engine designed for instant, full-text search with typo tolerance. It provides an API that allows developers to integrate powerful search features into applications. Meilisearch-UI is an optional web-based interface that provides a simple way to interact with Meilisearch, visualize indexed data, and test queries without needing to use the API directly.",
   "install_methods": [
     {
@@ -42,4 +42,3 @@
     }
   ]
 }
-

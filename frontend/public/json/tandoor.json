@@ -11,7 +11,7 @@
   "interface_port": 8002,
   "documentation": null,
   "website": "https://tandoor.dev/",
-  "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/tandoor-recipes.svg",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/tandoor-recipes.svg",
   "config_path": "/opt/tandoor/.env",
   "description": "Tandoor Recipes is an application for managing recipes, planning meals, building shopping lists and much much more!",
   "install_methods": [

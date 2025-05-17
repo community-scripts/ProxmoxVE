@@ -2,7 +2,7 @@
   "name": "Semaphore",
   "slug": "semaphore",
   "categories": [
-        19
+    19
   ],
   "date_created": "2025-01-01",
   "type": "ct",
@@ -11,8 +11,8 @@
   "interface_port": 3000,
   "documentation": "https://docs.semaphoreui.com/",
   "website": "https://semaphoreui.com/",
-  "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/semaphore-ui.svg",
-    "config_path": "/opt/semaphore/config.json",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/semaphore-ui.svg",
+  "config_path": "/opt/semaphore/config.json",
   "description": "Semaphore UI is a modern web interface for managing popular DevOps tools",
   "install_methods": [
     {
@@ -42,4 +42,3 @@
     }
   ]
 }
-

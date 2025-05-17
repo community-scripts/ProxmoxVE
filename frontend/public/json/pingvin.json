@@ -11,7 +11,7 @@
   "interface_port": 3000,
   "documentation": "https://stonith404.github.io/pingvin-share/introduction",
   "website": "https://github.com/stonith404/pingvin-share",
-  "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/pingvin-share.svg",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/pingvin-share.svg",
   "config_path": "/opt/pingvin-share/config.yaml",
   "description": "Pingvin Share is self-hosted file sharing platform and an alternative for WeTransfer.",
   "install_methods": [

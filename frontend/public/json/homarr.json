@@ -11,7 +11,7 @@
   "interface_port": 7575,
   "documentation": null,
   "website": "https://homarr.dev/",
-  "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/webp/homarr.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/homarr.webp",
   "config_path": "/opt/homarr/.env",
   "description": "Homarr is a sleek, modern dashboard that puts all of your apps and services at your fingertips.",
   "install_methods": [

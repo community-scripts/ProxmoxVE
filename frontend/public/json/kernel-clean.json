@@ -1,7 +1,9 @@
 {
   "name": "Proxmox VE Kernel Clean",
   "slug": "kernel-clean",
-  "categories": [1],
+  "categories": [
+    1
+  ],
   "date_created": "2024-04-29",
   "type": "pve",
   "updateable": false,
@@ -9,8 +11,8 @@
   "interface_port": null,
   "documentation": null,
   "website": null,
-  "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/proxmox.svg",
-    "config_path": "",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/proxmox.svg",
+  "config_path": "",
   "description": "Cleaning unused kernel images is beneficial for reducing the length of the GRUB menu and freeing up disk space. By removing old, unused kernels, the system is able to conserve disk space and streamline the boot process.",
   "install_methods": [
     {
@@ -36,4 +38,3 @@
     }
   ]
 }
-

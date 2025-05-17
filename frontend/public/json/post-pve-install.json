@@ -1,7 +1,9 @@
 {
   "name": "Proxmox VE Post Install",
   "slug": "post-pve-install",
-  "categories": [1],
+  "categories": [
+    1
+  ],
   "date_created": "2024-04-28",
   "type": "pve",
   "updateable": false,
@@ -9,8 +11,8 @@
   "interface_port": null,
   "documentation": null,
   "website": null,
-  "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/proxmox.svg",
-    "config_path": "",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/proxmox.svg",
+  "config_path": "",
   "description": "This script provides options for managing Proxmox VE repositories, including disabling the Enterprise Repo, adding or correcting PVE sources, enabling the No-Subscription Repo, adding the test Repo, disabling the subscription nag, updating Proxmox VE, and rebooting the system.",
   "install_methods": [
     {
@@ -40,4 +42,3 @@
     }
   ]
 }
-

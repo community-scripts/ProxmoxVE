@@ -11,7 +11,7 @@
   "interface_port": 4000,
   "documentation": null,
   "website": "https://dashy.to/",
-  "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/webp/dashy.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/dashy.webp",
   "config_path": "/opt/dashy/public/conf.yml",
   "description": "Dashy is a solution that helps you organize your self-hosted services by centralizing access to them through a single interface.",
   "install_methods": [

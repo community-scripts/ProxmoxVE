@@ -11,7 +11,7 @@
     "interface_port": 80,
     "documentation": "https://phpipam.net/documents/all-documents/",
     "website": "https://phpipam.net/",
-    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/webp/phpipam.webp",
+    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/phpipam.webp",
     "config_path": "/opt/phpipam/config.php",
     "description": "phpipam is an open-source web IP address management application (IPAM). Its goal is to provide light, modern and useful IP address management.",
     "install_methods": [
@@ -29,8 +29,7 @@
     ],
     "default_credentials": {
         "username": "Admin",
-        "password":  "ipamadmin"
+        "password": "ipamadmin"
     },
     "notes": []
 }
-

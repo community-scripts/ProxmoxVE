@@ -1,7 +1,9 @@
 {
   "name": "Webmin System Administration",
   "slug": "webmin",
-  "categories": [1],
+  "categories": [
+    1
+  ],
   "date_created": "2024-05-02",
   "type": "addon",
   "updateable": false,
@@ -9,8 +11,8 @@
   "interface_port": 10000,
   "documentation": null,
   "website": "https://webmin.com/",
-  "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/webmin.svg",
-    "config_path": "",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/webmin.svg",
+  "config_path": "",
   "description": "Webmin provides a graphical user interface (GUI) for tasks such as user account management, package management, file system configuration, network configuration, and more.",
   "install_methods": [
     {
@@ -36,4 +38,3 @@
     }
   ]
 }
-

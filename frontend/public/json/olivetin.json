@@ -1,7 +1,9 @@
 {
   "name": "OliveTin",
   "slug": "olivetin",
-  "categories": [10],
+  "categories": [
+    10
+  ],
   "date_created": "2024-05-02",
   "type": "addon",
   "updateable": false,
@@ -9,8 +11,8 @@
   "interface_port": 1337,
   "documentation": null,
   "website": "https://www.olivetin.app/",
-  "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/olivetin.svg",
-    "config_path": "/etc/OliveTin/config.yaml",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/olivetin.svg",
+  "config_path": "/etc/OliveTin/config.yaml",
   "description": "OliveTin provides a secure and straightforward way to execute pre-determined shell commands through a web-based interface.",
   "install_methods": [
     {
@@ -36,4 +38,3 @@
     }
   ]
 }
-

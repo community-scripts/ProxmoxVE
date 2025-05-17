@@ -11,8 +11,8 @@
   "interface_port": 80,
   "documentation": "https://pelican.dev/docs/panel/getting-started",
   "website": "https://pelican.dev/",
-  "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/pelican-panel.svg",
-    "config_path": "",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/pelican-panel.svg",
+  "config_path": "",
   "description": "Pelican Panel is a web-based control panel for managing game and application servers. It provides an intuitive interface to start, stop, configure, and monitor servers easily. It works alongside Pelican Wings, a lightweight daemon that handles server deployments and resource management.",
   "install_methods": [
     {
@@ -42,4 +42,3 @@
     }
   ]
 }
-

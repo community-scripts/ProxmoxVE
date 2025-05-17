@@ -2,7 +2,7 @@
     "name": "Proxmox Mail Gateway",
     "slug": "proxmox-mail-gateway",
     "categories": [
-            1
+        1
     ],
     "date_created": "2025-02-04",
     "type": "ct",
@@ -11,7 +11,7 @@
     "interface_port": 8006,
     "documentation": "https://pmg.proxmox.com/pmg-docs/pmg-admin-guide.html",
     "website": "https://www.proxmox.com/en/products/proxmox-mail-gateway/overview",
-    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/proxmox.svg",
+    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/proxmox.svg",
     "config_path": "",
     "description": "Proxmox Mail Gateway is the leading open-source email security solution helping you to protect your mail server against all email threats from the moment they emerge.",
     "install_methods": [
@@ -33,9 +33,8 @@
     },
     "notes": [
         {
-        "text": "Set a root password if using autologin. This will be the PMG password. `passwd root`",
-        "type": "warning"
+            "text": "Set a root password if using autologin. This will be the PMG password. `passwd root`",
+            "type": "warning"
         }
     ]
 }
-

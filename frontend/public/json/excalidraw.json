@@ -1,36 +1,35 @@
 {
-    "name": "Excalidraw",
-    "slug": "excalidraw",
-    "categories": [
-        12
-    ],
-    "date_created": "2025-02-12",
-    "type": "ct",
-    "updateable": true,
-    "privileged": false,
-    "interface_port": 3000,
-    "documentation": "https://docs.excalidraw.com/docs",
-    "website": "https://excalidraw.com/",
-    "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/excalidraw.svg",
-    "config_path": "",
-    "description": "An open source virtual hand-drawn style whiteboard. Collaborative and end-to-end encrypted.",
-    "install_methods": [
-      {
-        "type": "default",
-        "script": "ct/excalidraw.sh",
-        "resources": {
-          "cpu": 2,
-          "ram": 3072,
-          "hdd": 6,
-          "os": "debian",
-          "version": "12"
-        }
+  "name": "Excalidraw",
+  "slug": "excalidraw",
+  "categories": [
+    12
+  ],
+  "date_created": "2025-02-12",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 3000,
+  "documentation": "https://docs.excalidraw.com/docs",
+  "website": "https://excalidraw.com/",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/excalidraw.svg",
+  "config_path": "",
+  "description": "An open source virtual hand-drawn style whiteboard. Collaborative and end-to-end encrypted.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/excalidraw.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 3072,
+        "hdd": 6,
+        "os": "debian",
+        "version": "12"
       }
-    ],
-    "default_credentials": {
-      "username": null,
-      "password": null
-    },
-    "notes": []
-  }
-
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": []
+}

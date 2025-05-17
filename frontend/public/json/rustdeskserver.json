@@ -11,7 +11,7 @@
   "interface_port": null,
   "documentation": "https://rustdesk.com/docs/en/",
   "website": "https://rustdesk.com/",
-  "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/rustdesk.svg",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/rustdesk.svg",
   "config_path": "",
   "description": "RustDesk is a full-featured open source remote control alternative for self-hosting and security with minimal configuration.",
   "install_methods": [

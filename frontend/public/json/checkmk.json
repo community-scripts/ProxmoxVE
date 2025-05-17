@@ -2,7 +2,7 @@
   "name": "Checkmk",
   "slug": "checkmk",
   "categories": [
-        9
+    9
   ],
   "date_created": "2024-12-19",
   "type": "ct",
@@ -11,7 +11,7 @@
   "interface_port": 80,
   "documentation": "https://docs.checkmk.com/",
   "website": "https://checkmk.com/",
-  "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/checkmk.svg",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/checkmk.svg",
   "config_path": "",
   "description": "Checkmk is an IT monitoring software that tracks the health and performance of your systems, networks, servers, applications, and cloud services. It provides real-time insights, alerts for issues, and tools for troubleshooting, helping ensure smooth operations across your infrastructure.",
   "install_methods": [
@@ -31,11 +31,10 @@
     "username": null,
     "password": null
   },
-    "notes": [
-        {
-            "text": "Login Credentials : `cat ~/checkmk.creds`",
-            "type": "info"
-        }
-    ]
+  "notes": [
+    {
+      "text": "Login Credentials : `cat ~/checkmk.creds`",
+      "type": "info"
+    }
+  ]
 }
-

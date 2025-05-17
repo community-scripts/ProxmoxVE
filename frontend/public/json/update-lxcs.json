@@ -1,7 +1,9 @@
 {
   "name": "Proxmox VE LXC Updater",
   "slug": "update-lxcs",
-  "categories": [1],
+  "categories": [
+    1
+  ],
   "date_created": "2024-04-29",
   "type": "pve",
   "updateable": false,
@@ -9,8 +11,8 @@
   "interface_port": null,
   "documentation": null,
   "website": null,
-  "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/linuxcontainers.svg",
-    "config_path": "",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/linuxcontainers.svg",
+  "config_path": "",
   "description": "This script has been created to simplify and speed up the process of updating all LXC containers across various Linux distributions, such as Ubuntu, Debian, Devuan, Alpine Linux, CentOS-Rocky-Alma, Fedora, and ArchLinux. It's designed to automatically skip templates and specific containers during the update, enhancing its convenience and usability.",
   "install_methods": [
     {
@@ -36,4 +38,3 @@
     }
   ]
 }
-

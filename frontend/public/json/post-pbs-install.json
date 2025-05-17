@@ -1,7 +1,9 @@
 {
   "name": "Proxmox Backup Server Post Install",
   "slug": "post-pbs-install",
-  "categories": [1],
+  "categories": [
+    1
+  ],
   "date_created": "2024-04-29",
   "type": "pve",
   "updateable": false,
@@ -9,8 +11,8 @@
   "interface_port": null,
   "documentation": null,
   "website": null,
-  "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/proxmox.svg",
-    "config_path": "",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/proxmox.svg",
+  "config_path": "",
   "description": "The script will give options to Disable the Enterprise Repo, Add/Correct PBS Sources, Enable the No-Subscription Repo, Add Test Repo, Disable Subscription Nag, Update Proxmox Backup Server and Reboot PBS.",
   "install_methods": [
     {
@@ -44,4 +46,3 @@
     }
   ]
 }
-

@@ -11,7 +11,7 @@
   "interface_port": 12345,
   "documentation": null,
   "website": "https://tianji.msgbyte.com/",
-  "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/tianji.svg",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/tianji.svg",
   "config_path": "/opt/tianji/src/server/.env",
   "description": "Tianji is an open-source tool for website analytics, uptime monitoring, and server status tracking, all in one. It\u2019s lightweight, privacy-focused, and helps teams monitor web traffic, server health, and gather user interaction data",
   "install_methods": [
