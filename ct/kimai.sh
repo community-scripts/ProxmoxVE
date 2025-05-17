@@ -36,7 +36,7 @@ function update_script() {
     $STD apt-get update
     $STD apt-get remove -y php"${CURRENT_PHP//./}"*
     $STD apt-get install -y \
-      php8.4 \
+      php8.4 composer \
       php8.4-{gd,mysql,mbstring,bcmath,xml,curl,zip,intl} \
       libapache2-mod-php8.4
     msg_ok "Migrated PHP $CURRENT_PHP to 8.4"
