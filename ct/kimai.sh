@@ -23,6 +23,9 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
+  if ! command -v lsb_release; then
+    apt install -y lsb-release
+  fi
   if [[ ! -d /opt/kimai ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
@@ -36,8 +39,8 @@ function update_script() {
     $STD apt-get update
     $STD apt-get remove -y php"${CURRENT_PHP//./}"*
     $STD apt-get install -y \
-      php8.4 \
-      php8.4-{gd,mysql,mbstring,bcmath,xml,curl,zip,intl} \
+      php8.4 composer \
+      php8.4-{gd,mysql,mbstring,bcmath,xml,curl,zip,intl,fpm} \
       libapache2-mod-php8.4
     msg_ok "Migrated PHP $CURRENT_PHP to 8.4"
   fi
@@ -58,9 +61,13 @@ function update_script() {
     msg_ok "Backup completed"
 
     msg_info "Updating ${APP} to ${RELEASE}"
-    rm -rf /opt/kimai
+    trap "echo Unable to download release file for version ${RELEASE}; try again later" ERR
+    set -e
     curl -fsSL "https://github.com/kimai/kimai/archive/refs/tags/${RELEASE}.zip" -o $(basename "https://github.com/kimai/kimai/archive/refs/tags/${RELEASE}.zip")
     unzip -q "${RELEASE}".zip
+    set +e
+    trap - ERR
+    rm -rf /opt/kimai
     mv kimai-"${RELEASE}" /opt/kimai
     [ -d "$BACKUP_DIR/var" ] && cp -r "$BACKUP_DIR/var" /opt/kimai/
     [ -f "$BACKUP_DIR/.env" ] && cp "$BACKUP_DIR/.env" /opt/kimai/
