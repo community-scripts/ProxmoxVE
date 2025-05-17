@@ -1,5 +1,55 @@
 [
   {
+    "name": "syncthing/syncthing",
+    "version": "v1.29.6",
+    "date": "2025-05-06T07:57:02Z"
+  },
+  {
+    "name": "advplyr/audiobookshelf",
+    "version": "v2.23.0",
+    "date": "2025-05-16T22:13:53Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.5.2",
+    "date": "2025-05-16T21:09:45Z"
+  },
+  {
+    "name": "clusterzx/paperless-ai",
+    "version": "v2.7.8",
+    "date": "2025-05-16T19:50:06Z"
+  },
+  {
+    "name": "homarr-labs/homarr",
+    "version": "v1.20.0",
+    "date": "2025-05-16T19:18:10Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "v4.1.1",
+    "date": "2025-05-16T17:37:30Z"
+  },
+  {
+    "name": "NodeBB/NodeBB",
+    "version": "v4.4.1",
+    "date": "2025-05-16T16:37:51Z"
+  },
+  {
+    "name": "influxdata/influxdb",
+    "version": "v3.0.3",
+    "date": "2025-05-16T15:41:16Z"
+  },
+  {
+    "name": "wavelog/wavelog",
+    "version": "2.0.4",
+    "date": "2025-05-16T15:09:53Z"
+  },
+  {
+    "name": "emqx/emqx",
+    "version": "e5.10.0-alpha.1",
+    "date": "2025-05-16T13:30:53Z"
+  },
+  {
     "name": "wazuh/wazuh",
     "version": "coverity-w20-4.13.0",
     "date": "2025-05-14T12:06:20Z"
@@ -33,16 +83,6 @@
     "name": "coder/code-server",
     "version": "v4.100.2",
     "date": "2025-05-15T23:02:46Z"
-  },
-  {
-    "name": "influxdata/influxdb",
-    "version": "v3.0.3",
-    "date": "2025-05-15T19:56:23Z"
-  },
-  {
-    "name": "clusterzx/paperless-ai",
-    "version": "v2.7.8",
-    "date": "2025-05-15T18:04:54Z"
   },
   {
     "name": "goauthentik/authentik",
@@ -106,13 +146,8 @@
   },
   {
     "name": "ollama/ollama",
-    "version": "v0.7.0-rc1",
-    "date": "2025-05-14T03:58:02Z"
-  },
-  {
-    "name": "advplyr/audiobookshelf",
-    "version": "v2.22.0",
-    "date": "2025-05-14T22:30:59Z"
+    "version": "v0.7.0",
+    "date": "2025-05-14T23:42:30Z"
   },
   {
     "name": "glanceapp/glance",
@@ -128,11 +163,6 @@
     "name": "Luligu/matterbridge",
     "version": "3.0.2",
     "date": "2025-05-14T20:38:06Z"
-  },
-  {
-    "name": "NodeBB/NodeBB",
-    "version": "v4.4.0",
-    "date": "2025-05-14T20:36:37Z"
   },
   {
     "name": "esphome/esphome",
@@ -183,11 +213,6 @@
     "name": "blakeblackshear/frigate",
     "version": "v0.14.1",
     "date": "2024-08-29T22:32:51Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "v4.1.0",
-    "date": "2025-05-12T07:13:15Z"
   },
   {
     "name": "TandoorRecipes/recipes",
@@ -340,16 +365,6 @@
     "date": "2025-05-09T23:14:23Z"
   },
   {
-    "name": "homarr-labs/homarr",
-    "version": "v1.19.1",
-    "date": "2025-05-09T19:15:10Z"
-  },
-  {
-    "name": "home-assistant/core",
-    "version": "2025.5.1",
-    "date": "2025-05-09T15:05:54Z"
-  },
-  {
     "name": "crowdsecurity/crowdsec",
     "version": "v1.6.8",
     "date": "2025-03-25T13:33:10Z"
@@ -453,11 +468,6 @@
     "name": "AdguardTeam/AdGuardHome",
     "version": "v0.107.61",
     "date": "2025-04-22T12:42:26Z"
-  },
-  {
-    "name": "syncthing/syncthing",
-    "version": "v1.29.6",
-    "date": "2025-05-06T07:57:02Z"
   },
   {
     "name": "linkwarden/linkwarden",
@@ -578,11 +588,6 @@
     "name": "prometheus-pve/prometheus-pve-exporter",
     "version": "v3.5.4",
     "date": "2025-05-02T13:42:06Z"
-  },
-  {
-    "name": "emqx/emqx",
-    "version": "e5.9.0",
-    "date": "2025-05-02T11:07:10Z"
   },
   {
     "name": "Koenkk/zigbee2mqtt",
@@ -798,11 +803,6 @@
     "name": "Dolibarr/dolibarr",
     "version": "21.0.1",
     "date": "2025-04-06T19:22:59Z"
-  },
-  {
-    "name": "wavelog/wavelog",
-    "version": "2.0.3",
-    "date": "2025-04-06T17:35:41Z"
   },
   {
     "name": "jellyfin/jellyfin",
