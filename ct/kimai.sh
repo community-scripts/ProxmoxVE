@@ -61,9 +61,13 @@ function update_script() {
     msg_ok "Backup completed"
 
     msg_info "Updating ${APP} to ${RELEASE}"
-    rm -rf /opt/kimai
+    trap "echo Unable to download release file for version ${RELEASE}; try again later" ERR
+    set -e
     curl -fsSL "https://github.com/kimai/kimai/archive/refs/tags/${RELEASE}.zip" -o $(basename "https://github.com/kimai/kimai/archive/refs/tags/${RELEASE}.zip")
     unzip -q "${RELEASE}".zip
+    set +e
+    trap - ERR
+    rm -rf /opt/kimai
     mv kimai-"${RELEASE}" /opt/kimai
     [ -d "$BACKUP_DIR/var" ] && cp -r "$BACKUP_DIR/var" /opt/kimai/
     [ -f "$BACKUP_DIR/.env" ] && cp "$BACKUP_DIR/.env" /opt/kimai/
