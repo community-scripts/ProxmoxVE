@@ -377,16 +377,16 @@ install_php() {
   if [[ "$PHP_APACHE" == "YES" ]]; then
     # Optionally disable old Apache PHP module
     if [[ -f /etc/apache2/mods-enabled/php${CURRENT_PHP}.load ]]; then
-      $STD a2dismod php${CURRENT_PHP} || true
+      $STD a2dismod php"${CURRENT_PHP}" || true
     fi
   fi
 
   if [[ "$PHP_FPM" == "YES" ]]; then
-    $STD systemctl stop php${CURRENT_PHP}-fpm || true
-    $STD systemctl disable php${CURRENT_PHP}-fpm || true
+    $STD systemctl stop php"${CURRENT_PHP}"-fpm || true
+    $STD systemctl disable php"${CURRENT_PHP}"-fpm || true
   fi
 
-  $STD apt-get install -y $MODULE_LIST
+  $STD apt-get install -y "$MODULE_LIST"
   msg_ok "Installed PHP $PHP_VERSION with selected modules"
 
   if [[ "$PHP_APACHE" == "YES" ]]; then
@@ -394,8 +394,8 @@ install_php() {
   fi
 
   if [[ "$PHP_FPM" == "YES" ]]; then
-    $STD systemctl enable php${PHP_VERSION}-fpm
-    $STD systemctl restart php${PHP_VERSION}-fpm
+    $STD systemctl enable php"${PHP_VERSION}"-fpm
+    $STD systemctl restart php"${PHP_VERSION}"-fpm
   fi
 
   # Patch all relevant php.ini files
@@ -667,7 +667,7 @@ fetch_and_deploy_gh_release() {
   until [[ $attempt -ge $max_attempts ]]; do
     ((attempt++)) || true
     $STD msg_info "[$attempt/$max_attempts] Fetching GitHub release for $repo...\n"
-    api_response=$(curl $curl_timeout -fsSL -w "%{http_code}" -o /tmp/gh_resp.json "${header[@]}" "$api_url")
+    api_response=$(curl "$curl_timeout" -fsSL -w "%{http_code}" -o /tmp/gh_resp.json "${header[@]}" "$api_url")
     http_code="${api_response:(-3)}"
     if [[ "$http_code" == "404" ]]; then
       msg_error "Repository $repo has no Release candidate (404)"
@@ -773,7 +773,7 @@ fetch_and_deploy_gh_release() {
   fi
   local filename="${url##*/}"
   $STD msg_info "Downloading $url"
-  if ! curl $curl_timeout -fsSL -o "$tmpdir/$filename" "$url"; then
+  if ! curl "$curl_timeout" -fsSL -o "$tmpdir/$filename" "$url"; then
     msg_error "Failed to download release asset from $url"
     rm -rf "$tmpdir"
     return 1
@@ -1179,4 +1179,23 @@ setup_rbenv_stack() {
 
   rm -rf "$TMP_DIR"
   msg_ok "rbenv stack ready (Ruby $RUBY_VERSION)"
+}
+
+# ------------------------------------------------------------------------------
+# Creates and installs self-signed certificates.
+#
+# Description:
+#   - Create a self-signed certificate with option to override application name
+#
+# Variables:
+#   APP   - Application name (default: $APPLICATION variable)
+# ------------------------------------------------------------------------------
+create_selfsigned_certs() {
+  local app=${APP:-$(echo "${APPLICATION,,}" | tr -d ' ')}
+  $STD msg_info "Creating Self-Signed Certificate"
+  $STD openssl req -x509 -nodes -days 365 -newkey rsa:4096 \
+    -keyout /etc/ssl/private/"$app"-selfsigned.key \
+    -out /etc/ssl/certs/"$app"-selfsigned.crt \
+    -subj "/C=US/O=$app/OU=Domain Control Validated/CN=localhost"
+  $STD msg_ok "Created Self-Signed Certificate"
 }
