@@ -1,5 +1,30 @@
 [
   {
+    "name": "hansmi/prometheus-paperless-exporter",
+    "version": "v0.0.8",
+    "date": "2025-05-18T11:37:31Z"
+  },
+  {
+    "name": "Prowlarr/Prowlarr",
+    "version": "v1.35.1.5034",
+    "date": "2025-04-30T11:02:36Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1917",
+    "date": "2025-05-18T05:59:41Z"
+  },
+  {
+    "name": "MediaBrowser/Emby.Releases",
+    "version": "4.8.11.0",
+    "date": "2025-03-10T06:39:11Z"
+  },
+  {
+    "name": "theonedev/onedev",
+    "version": "v11.9.8",
+    "date": "2025-05-18T01:27:37Z"
+  },
+  {
     "name": "inventree/InvenTree",
     "version": "0.17.12",
     "date": "2025-05-17T19:16:00Z"
@@ -8,11 +33,6 @@
     "name": "crafty-controller/crafty-4",
     "version": "v4.4.8",
     "date": "2025-05-17T18:47:36Z"
-  },
-  {
-    "name": "theonedev/onedev",
-    "version": "v11.9.8",
-    "date": "2025-05-17T13:13:22Z"
   },
   {
     "name": "Radarr/Radarr",
@@ -43,11 +63,6 @@
     "name": "prometheus/prometheus",
     "version": "v0.304.0",
     "date": "2025-05-17T07:29:09Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1913",
-    "date": "2025-05-17T05:56:27Z"
   },
   {
     "name": "cross-seed/cross-seed",
@@ -186,8 +201,8 @@
   },
   {
     "name": "ollama/ollama",
-    "version": "v0.7.0",
-    "date": "2025-05-14T23:42:30Z"
+    "version": "v0.7.0-rc1",
+    "date": "2025-05-14T03:58:02Z"
   },
   {
     "name": "glanceapp/glance",
@@ -208,11 +223,6 @@
     "name": "esphome/esphome",
     "version": "2025.4.2",
     "date": "2025-05-11T22:18:43Z"
-  },
-  {
-    "name": "MediaBrowser/Emby.Releases",
-    "version": "4.8.11.0",
-    "date": "2025-03-10T06:39:11Z"
   },
   {
     "name": "Athou/commafeed",
@@ -358,11 +368,6 @@
     "name": "Kozea/Radicale",
     "version": "v3.5.3",
     "date": "2025-05-11T15:17:13Z"
-  },
-  {
-    "name": "Prowlarr/Prowlarr",
-    "version": "v1.35.1.5034",
-    "date": "2025-04-30T11:02:36Z"
   },
   {
     "name": "authelia/authelia",
@@ -893,11 +898,6 @@
     "name": "sct/overseerr",
     "version": "v1.34.0",
     "date": "2025-03-26T08:48:34Z"
-  },
-  {
-    "name": "hansmi/prometheus-paperless-exporter",
-    "version": "v0.0.7",
-    "date": "2025-03-25T15:11:18Z"
   },
   {
     "name": "nextcloud/nextcloudpi",
