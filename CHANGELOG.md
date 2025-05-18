@@ -24,6 +24,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - Homarr: fix the build [@CrazyWolf13](https://github.com/CrazyWolf13) ([#4569](https://github.com/community-scripts/ProxmoxVE/pull/4569))
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Fix Dashy Config Path on Frontend [@CrazyWolf13](https://github.com/CrazyWolf13) ([#4570](https://github.com/community-scripts/ProxmoxVE/pull/4570))
+
 ## 2025-05-17
 
 ## 2025-05-16
