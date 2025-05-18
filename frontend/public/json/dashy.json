@@ -12,7 +12,7 @@
     "documentation": null,
     "website": "https://dashy.to/",
     "logo": "https://github.com/Lissy93/dashy/raw/master/public/web-icons/dashy-logo.png",
-    "config_path": "/opt/dashy/public/conf.yml",
+    "config_path": "/opt/dashy/user-data/conf.yml",
     "description": "Dashy is a solution that helps you organize your self-hosted services by centralizing access to them through a single interface.",
     "install_methods": [
         {
