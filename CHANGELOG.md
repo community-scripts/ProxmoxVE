@@ -16,6 +16,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-05-18
 
+### 🚀 Updated Scripts
+
+  - tools.func - Add function to create self-signed certificates [@tremor021](https://github.com/tremor021) ([#4562](https://github.com/community-scripts/ProxmoxVE/pull/4562))
+
 ## 2025-05-17
 
 ## 2025-05-16
