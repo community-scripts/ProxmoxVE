@@ -47,7 +47,7 @@ TURBO_TELEMETRY_DISABLED=1
 AUTH_PROVIDERS='credentials'
 NODE_ENV='production'
 EOF
-$STD pnpm install
+$STD pnpm install --recursive --frozen-lockfile --shamefully-hoist
 $STD pnpm build
 msg_ok "Installed Homarr"
 
