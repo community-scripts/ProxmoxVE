@@ -1,5 +1,30 @@
 [
   {
+    "name": "inventree/InvenTree",
+    "version": "0.17.12",
+    "date": "2025-05-17T19:16:00Z"
+  },
+  {
+    "name": "crafty-controller/crafty-4",
+    "version": "v4.4.8",
+    "date": "2025-05-17T18:47:36Z"
+  },
+  {
+    "name": "theonedev/onedev",
+    "version": "v11.9.8",
+    "date": "2025-05-17T13:13:22Z"
+  },
+  {
+    "name": "Radarr/Radarr",
+    "version": "v5.23.3.9987",
+    "date": "2025-05-17T12:55:29Z"
+  },
+  {
+    "name": "bastienwirtz/homer",
+    "version": "v25.05.2",
+    "date": "2025-05-17T12:53:29Z"
+  },
+  {
     "name": "BookStackApp/BookStack",
     "version": "v25.02.5",
     "date": "2025-05-17T11:24:01Z"
@@ -150,11 +175,6 @@
     "date": "2025-05-15T09:59:28Z"
   },
   {
-    "name": "theonedev/onedev",
-    "version": "v11.9.7",
-    "date": "2025-05-15T07:03:28Z"
-  },
-  {
     "name": "morpheus65535/bazarr",
     "version": "v1.5.2",
     "date": "2025-05-11T16:40:55Z"
@@ -166,8 +186,8 @@
   },
   {
     "name": "ollama/ollama",
-    "version": "v0.7.0-rc1",
-    "date": "2025-05-14T03:58:02Z"
+    "version": "v0.7.0",
+    "date": "2025-05-14T23:42:30Z"
   },
   {
     "name": "glanceapp/glance",
@@ -348,11 +368,6 @@
     "name": "authelia/authelia",
     "version": "v4.39.3",
     "date": "2025-05-11T11:12:15Z"
-  },
-  {
-    "name": "Radarr/Radarr",
-    "version": "v5.22.4.9896",
-    "date": "2025-04-23T18:51:12Z"
   },
   {
     "name": "owncast/owncast",
@@ -545,11 +560,6 @@
     "date": "2017-03-07T18:56:06Z"
   },
   {
-    "name": "bastienwirtz/homer",
-    "version": "v25.05.1",
-    "date": "2025-05-04T12:17:00Z"
-  },
-  {
     "name": "FreshRSS/FreshRSS",
     "version": "1.26.2",
     "date": "2025-05-03T20:23:27Z"
@@ -688,11 +698,6 @@
     "name": "NLnetLabs/unbound",
     "version": "release-1.23.0",
     "date": "2025-04-24T08:07:21Z"
-  },
-  {
-    "name": "inventree/InvenTree",
-    "version": "0.17.11",
-    "date": "2025-04-24T05:25:55Z"
   },
   {
     "name": "minio/minio",
@@ -1078,11 +1083,6 @@
     "name": "rustdesk/rustdesk-server",
     "version": "1.1.14",
     "date": "2025-01-25T12:48:28Z"
-  },
-  {
-    "name": "crafty-controller/crafty-4",
-    "version": "v4.4.7",
-    "date": "2025-01-20T15:45:06Z"
   },
   {
     "name": "0xERR0R/blocky",
