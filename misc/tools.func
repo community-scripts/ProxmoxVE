@@ -386,7 +386,7 @@ install_php() {
     $STD systemctl disable php${CURRENT_PHP}-fpm || true
   fi
 
-  $STD apt-get install -y "$MODULE_LIST"
+  $STD apt-get install -y $MODULE_LIST
   msg_ok "Installed PHP $PHP_VERSION with selected modules"
 
   if [[ "$PHP_APACHE" == "YES" ]]; then
