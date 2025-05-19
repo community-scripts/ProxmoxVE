@@ -1,5 +1,45 @@
 [
   {
+    "name": "MediaBrowser/Emby.Releases",
+    "version": "4.8.11.0",
+    "date": "2025-03-10T06:39:11Z"
+  },
+  {
+    "name": "Part-DB/Part-DB-server",
+    "version": "v1.17.1",
+    "date": "2025-05-18T21:06:41Z"
+  },
+  {
+    "name": "sbondCo/Watcharr",
+    "version": "v2.1.0",
+    "date": "2025-05-18T18:20:43Z"
+  },
+  {
+    "name": "rogerfar/rdt-client",
+    "version": "v2.0.112",
+    "date": "2025-05-18T17:44:52Z"
+  },
+  {
+    "name": "YunoHost/yunohost",
+    "version": "debian/12.1.6.1",
+    "date": "2025-05-18T17:01:42Z"
+  },
+  {
+    "name": "clusterzx/paperless-ai",
+    "version": "v3.0.0",
+    "date": "2025-05-18T15:32:52Z"
+  },
+  {
+    "name": "kimai/kimai",
+    "version": "2.34.0",
+    "date": "2025-05-18T13:22:17Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "v4.1.1",
+    "date": "2025-05-16T17:37:30Z"
+  },
+  {
     "name": "hansmi/prometheus-paperless-exporter",
     "version": "v0.0.8",
     "date": "2025-05-18T11:37:31Z"
@@ -13,11 +53,6 @@
     "name": "Jackett/Jackett",
     "version": "v0.22.1917",
     "date": "2025-05-18T05:59:41Z"
-  },
-  {
-    "name": "MediaBrowser/Emby.Releases",
-    "version": "4.8.11.0",
-    "date": "2025-03-10T06:39:11Z"
   },
   {
     "name": "theonedev/onedev",
@@ -85,19 +120,9 @@
     "date": "2025-05-16T21:09:45Z"
   },
   {
-    "name": "clusterzx/paperless-ai",
-    "version": "v2.7.8",
-    "date": "2025-05-16T19:50:06Z"
-  },
-  {
     "name": "homarr-labs/homarr",
     "version": "v1.20.0",
     "date": "2025-05-16T19:18:10Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "v4.1.1",
-    "date": "2025-05-16T17:37:30Z"
   },
   {
     "name": "NodeBB/NodeBB",
@@ -201,8 +226,8 @@
   },
   {
     "name": "ollama/ollama",
-    "version": "v0.7.0-rc1",
-    "date": "2025-05-14T03:58:02Z"
+    "version": "v0.7.0",
+    "date": "2025-05-14T23:42:30Z"
   },
   {
     "name": "glanceapp/glance",
@@ -550,11 +575,6 @@
     "date": "2025-05-04T22:17:06Z"
   },
   {
-    "name": "YunoHost/yunohost",
-    "version": "debian/12.0.16",
-    "date": "2025-05-04T22:06:15Z"
-  },
-  {
     "name": "Lidarr/Lidarr",
     "version": "v2.11.2.4629",
     "date": "2025-04-28T11:59:37Z"
@@ -573,16 +593,6 @@
     "name": "actualbudget/actual",
     "version": "v25.5.0",
     "date": "2025-05-03T19:03:17Z"
-  },
-  {
-    "name": "rogerfar/rdt-client",
-    "version": "v2.0.111",
-    "date": "2025-05-03T16:25:30Z"
-  },
-  {
-    "name": "kimai/kimai",
-    "version": "2.33.0",
-    "date": "2025-05-03T10:33:49Z"
   },
   {
     "name": "documenso/documenso",
@@ -865,11 +875,6 @@
     "date": "2025-03-30T16:59:06Z"
   },
   {
-    "name": "Part-DB/Part-DB-server",
-    "version": "v1.17.0",
-    "date": "2025-03-30T14:21:53Z"
-  },
-  {
     "name": "aceberg/WatchYourLAN",
     "version": "2.1.2-alpine",
     "date": "2025-03-30T06:25:22Z"
@@ -1023,11 +1028,6 @@
     "name": "typesense/typesense",
     "version": "v28.0",
     "date": "2025-02-18T15:49:57Z"
-  },
-  {
-    "name": "sbondCo/Watcharr",
-    "version": "v2.0.2",
-    "date": "2025-02-16T21:34:29Z"
   },
   {
     "name": "recyclarr/recyclarr",
