@@ -8,7 +8,7 @@
   "type": "ct",
   "updateable": true,
   "privileged": false,
-  "interface_port": null,
+  "interface_port": 21114,
   "documentation": "https://rustdesk.com/docs/en/",
   "website": "https://rustdesk.com/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/rustdesk.webp",
