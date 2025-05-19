@@ -1,8 +1,43 @@
 [
   {
+    "name": "Graylog2/graylog2-server",
+    "version": "6.3.0-beta.1",
+    "date": "2025-05-19T11:23:27Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.4.0p2-rc1",
+    "date": "2025-05-19T06:47:49Z"
+  },
+  {
+    "name": "documenso/documenso",
+    "version": "v1.11.0",
+    "date": "2025-05-19T06:21:18Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1921",
+    "date": "2025-05-19T05:54:21Z"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2025.4.2",
+    "date": "2025-05-11T22:18:43Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.12",
+    "date": "2025-04-20T19:22:17Z"
+  },
+  {
     "name": "MediaBrowser/Emby.Releases",
     "version": "4.8.11.0",
     "date": "2025-03-10T06:39:11Z"
+  },
+  {
+    "name": "open-webui/open-webui",
+    "version": "v0.6.10",
+    "date": "2025-05-19T01:34:37Z"
   },
   {
     "name": "Part-DB/Part-DB-server",
@@ -50,14 +85,9 @@
     "date": "2025-04-30T11:02:36Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1917",
-    "date": "2025-05-18T05:59:41Z"
-  },
-  {
     "name": "theonedev/onedev",
     "version": "v11.9.8",
-    "date": "2025-05-18T01:27:37Z"
+    "date": "2025-05-17T13:13:22Z"
   },
   {
     "name": "inventree/InvenTree",
@@ -205,11 +235,6 @@
     "date": "2025-03-15T17:29:17Z"
   },
   {
-    "name": "Checkmk/checkmk",
-    "version": "v2.4.0p1",
-    "date": "2025-05-15T12:41:12Z"
-  },
-  {
     "name": "zwave-js/zwave-js-ui",
     "version": "v10.5.1",
     "date": "2025-05-15T09:59:28Z"
@@ -226,8 +251,8 @@
   },
   {
     "name": "ollama/ollama",
-    "version": "v0.7.0",
-    "date": "2025-05-14T23:42:30Z"
+    "version": "v0.7.0-rc1",
+    "date": "2025-05-14T03:58:02Z"
   },
   {
     "name": "glanceapp/glance",
@@ -243,11 +268,6 @@
     "name": "Luligu/matterbridge",
     "version": "3.0.2",
     "date": "2025-05-14T20:38:06Z"
-  },
-  {
-    "name": "esphome/esphome",
-    "version": "2025.4.2",
-    "date": "2025-05-11T22:18:43Z"
   },
   {
     "name": "Athou/commafeed",
@@ -268,11 +288,6 @@
     "name": "motioneye-project/motioneye",
     "version": "0.42.1",
     "date": "2020-06-07T07:27:04Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.12",
-    "date": "2025-04-20T19:22:17Z"
   },
   {
     "name": "jenkinsci/jenkins",
@@ -323,11 +338,6 @@
     "name": "zabbix/zabbix",
     "version": "7.2.7rc1",
     "date": "2025-05-13T11:55:32Z"
-  },
-  {
-    "name": "Graylog2/graylog2-server",
-    "version": "6.3.0-alpha.4",
-    "date": "2025-05-13T11:18:29Z"
   },
   {
     "name": "zitadel/zitadel",
@@ -403,11 +413,6 @@
     "name": "owncast/owncast",
     "version": "v0.2.3",
     "date": "2025-05-10T21:14:45Z"
-  },
-  {
-    "name": "open-webui/open-webui",
-    "version": "v0.6.9",
-    "date": "2025-05-10T19:05:02Z"
   },
   {
     "name": "Stirling-Tools/Stirling-PDF",
@@ -593,11 +598,6 @@
     "name": "actualbudget/actual",
     "version": "v25.5.0",
     "date": "2025-05-03T19:03:17Z"
-  },
-  {
-    "name": "documenso/documenso",
-    "version": "v1.10.3",
-    "date": "2025-05-02T23:23:25Z"
   },
   {
     "name": "forgejo/forgejo",
