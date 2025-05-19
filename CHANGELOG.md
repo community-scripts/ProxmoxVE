@@ -22,8 +22,15 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
-  - RustDesk Server: Add WebUI [@tremor021](https://github.com/tremor021) ([#4590](https://github.com/community-scripts/ProxmoxVE/pull/4590))
-- increase ressources of Homarr (3 vCPU / 6GB RAM) [@MickLesk](https://github.com/MickLesk) ([#4583](https://github.com/community-scripts/ProxmoxVE/pull/4583))
+  - increase ressources of Homarr (3 vCPU / 6GB RAM) [@MickLesk](https://github.com/MickLesk) ([#4583](https://github.com/community-scripts/ProxmoxVE/pull/4583))
+
+  - #### 🐞 Bug Fixes
+
+    - Various unrelated fixes to kimai update script [@jamezpolley](https://github.com/jamezpolley) ([#4549](https://github.com/community-scripts/ProxmoxVE/pull/4549))
+
+  - #### ✨ New Features
+
+    - RustDesk Server: Add WebUI [@tremor021](https://github.com/tremor021) ([#4590](https://github.com/community-scripts/ProxmoxVE/pull/4590))
 
 ## 2025-05-18
 
