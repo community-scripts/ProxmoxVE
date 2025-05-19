@@ -32,7 +32,7 @@ ADMINPASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 cd /var/lib/rustdesk-api
 $STD rustdesk-api reset-admin-pwd $ADMINPASS
 {
-  echo "RustDesk API"
+  echo "RustDesk WebUI"
   echo ""
   echo "Username: admin"
   echo "Password: $ADMINPASS"
