@@ -1,7 +1,9 @@
 {
   "name": "Proxmox VE Cron LXC Updater",
   "slug": "cron-update-lxcs",
-  "categories": [1],
+  "categories": [
+    1
+  ],
   "date_created": "2024-04-29",
   "type": "pve",
   "updateable": false,
@@ -9,7 +11,7 @@
   "interface_port": null,
   "documentation": null,
   "website": null,
-  "logo": "",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/proxmox.webp",
   "config_path": "",
   "description": "This script will add/remove a crontab schedule that updates all LXCs every Sunday at midnight.",
   "install_methods": [
@@ -40,4 +42,3 @@
     }
   ]
 }
-
