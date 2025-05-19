@@ -19,8 +19,8 @@
       "type": "default",
       "script": "ct/homarr.sh",
       "resources": {
-        "cpu": 2,
-        "ram": 4096,
+        "cpu": 3,
+        "ram": 6144,
         "hdd": 8,
         "os": "debian",
         "version": "12"
