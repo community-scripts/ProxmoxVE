@@ -11,7 +11,7 @@
     "interface_port": 8484,
     "documentation": null,
     "website": "https://www.getgrist.com/",
-    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/grist.svg",
+    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/grist.webp",
     "config_path": "/opt/grist/.env",
     "description": "Grist is a modern, open source spreadsheet that goes beyond the grid",
     "install_methods": [
