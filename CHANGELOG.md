@@ -18,7 +18,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
-  - [core] New Features for Config File function [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4601](https://github.com/community-scripts/ProxmoxVE/pull/4601))
+  - [tools.func]: Update fetch_and_deploy_gh_release function [@tremor021](https://github.com/tremor021) ([#4605](https://github.com/community-scripts/ProxmoxVE/pull/4605))
+- [core] New Features for Config File function [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4601](https://github.com/community-scripts/ProxmoxVE/pull/4601))
 
 ### 🌐 Website
 
