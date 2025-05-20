@@ -5,7 +5,7 @@ config_file() {
     CONFIG_FILE="/opt/community-scripts/${NSAPP}.conf"
   fi
 
-  if CONFIG_FILE=$(whiptail --backtitle "[dev] Proxmox VE Helper Scripts" --inputbox "Set absolute path to config file" 8 58 "$CONFIG_FILE" --title "CONFIG FILE" 3>&1 1>&2 2>&3); then
+  if CONFIG_FILE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set absolute path to config file" 8 58 "$CONFIG_FILE" --title "CONFIG FILE" 3>&1 1>&2 2>&3); then
     if [[ ! -f "$CONFIG_FILE" ]]; then
       echo -e "${CROSS}${RD}Config file not found, exiting script!.${CL}"
       exit
@@ -279,13 +279,86 @@ config_file() {
         else
           msg_error "Invalid IP Address format for Gateway. Needs to be 0.0.0.0, was ${GATE}"
           exit
+        fi
+
+      else
+        while true; do
+          GATE1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter gateway IP address" 8 58 --title "Gateway IP" 3>&1 1>&2 2>&3)
+          if [ -z "$GATE1" ]; then
+            whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox "Gateway IP address cannot be empty" 8 58
+          elif [[ ! "$GATE1" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
+            whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox "Invalid IP address format" 8 58
+          else
+            GATE=",gw=$GATE1"
+            echo -e "${GATEWAY}${BOLD}${DGN}Gateway IP Address: ${BGN}$GATE1${CL}"
+            break
+          fi
+        done
+      fi
+    elif [[ "$NET" == *-* ]]; then
+      IFS="-" read -r ip_start ip_end <<< "$NET"
+
+      if [[ ! "$ip_start" =~ $ip_cidr_regex ]] || [[ ! "$ip_end" =~ $ip_cidr_regex ]]; then
+        msg_error "Invalid IP range format, was $NET should be 0.0.0.0/0-0.0.0.0/0"
+        exit 1
+      fi
+
+      ip1="${ip_start%%/*}"
+      ip2="${ip_end%%/*}"
+      cidr="${ip_start##*/}"
+
+      ip_to_int() {
+        local IFS=.
+        read -r i1 i2 i3 i4 <<< "$1"
+        echo $(( (i1 << 24) + (i2 << 16) + (i3 << 8) + i4 ))
+      }
+
+      int_to_ip() {
+        local ip=$1
+        echo "$(( (ip >> 24) & 0xFF )).$(( (ip >> 16) & 0xFF )).$(( (ip >> 8) & 0xFF )).$(( ip & 0xFF ))"
+      }
+
+      start_int=$(ip_to_int "$ip1")
+      end_int=$(ip_to_int "$ip2")
+
+      for ((ip_int=start_int; ip_int<=end_int; ip_int++)); do
+        ip=$(int_to_ip $ip_int)
+          msg_info "Checking IP: $ip"
+        if ! ping -c 2 -W 1 "$ip" >/dev/null 2>&1; then
+          NET="$ip/$cidr"
+          msg_ok "Using free IP Address: ${BGN}$NET${CL}"
+          sleep 3
+          break
+        fi
+      done
+      if [[ "$NET" == *-* ]]; then
+        msg_error "No free IP found in range"
+        exit 1
+      fi
+      if [ -n "$GATE" ]; then
+        if [[ "$GATE" =~ $ip_regex ]]; then
+          echo -e "${GATEWAY}${BOLD}${DGN}Gateway IP Address: ${BGN}$GATE${CL}"
+          GATE=",gw=$GATE"
+        else
+          msg_error "Invalid IP Address format for Gateway. Needs to be 0.0.0.0, was ${GATE}"
+          exit
+        fi
+      else
+        while true; do
+          GATE1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter gateway IP address" 8 58 --title "Gateway IP" 3>&1 1>&2 2>&3)
+          if [ -z "$GATE1" ]; then
+            whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox "Gateway IP address cannot be empty" 8 58
+          elif [[ ! "$GATE1" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
+            whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox "Invalid IP address format" 8 58
+          else
+            GATE=",gw=$GATE1"
+            echo -e "${GATEWAY}${BOLD}${DGN}Gateway IP Address: ${BGN}$GATE1${CL}"
+            break
+          fi
+        done
       fi
     else
-      msg_error "Gateway IP Address cannot be empty"
-      exit
-    fi
-    else
-      msg_error "Invalid IP Address format. Needs to be 0.0.0.0/0, was ${NET}"
+      msg_error "Invalid IP Address format. Needs to be 0.0.0.0/0 or a range like 10.0.0.1/24-10.0.0.10/24, was ${NET}"
       exit
     fi
   else
@@ -333,13 +406,8 @@ config_file() {
   else
     if [[ -n "${APT_CACHER_IP-}" ]]; then
       if [[ ! $APT_CACHER_IP == "none" ]]; then
-        if [[ "$APT_CACHER_IP" =~ $ip_regex ]]; then
           APT_CACHER="yes"
           echo -e "${NETWORK}${BOLD}${DGN}APT-CACHER IP Address: ${BGN}$APT_CACHER_IP${CL}"
-        else
-          msg_error "Invalid IP Address format for APT-Cacher. Needs to be 0.0.0.0, was ${APT_CACHER_IP}"
-          exit
-        fi
       else
         APT_CACHER=""
         echo -e "${NETWORK}${BOLD}${DGN}APT-Cacher IP Address: ${BGN}No${CL}"
@@ -497,7 +565,12 @@ config_file() {
   fi
 
   if [[ -n "${TAGS-}" ]]; then
-    echo -e "${NETWORK}${BOLD}${DGN}Tags: ${BGN}$TAGS${CL}"
+    if [[ "$TAGS" == *"DEFAULT"* ]]; then
+      TAGS="${TAGS//DEFAULT/}"
+      TAGS="${TAGS//;/}"
+      TAGS="$TAGS;${var_tags:-}"
+      echo -e "${NETWORK}${BOLD}${DGN}Tags: ${BGN}$TAGS${CL}"
+    fi
   else
     TAGS="community-scripts;"
     if ADV_TAGS=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Custom Tags?[If you remove all, there will be no tags!]" 8 58 "${TAGS}" --title "Advanced Tags" 3>&1 1>&2 2>&3); then
@@ -528,12 +601,12 @@ config_file() {
       exit
     fi
   else
-    SSH_AUTHORIZED_KEY="$(whiptail --backtitle "[dev] Proxmox VE Helper Scripts" --inputbox "SSH Authorized key for root (leave empty for none)" 8 58 --title "SSH Key" 3>&1 1>&2 2>&3)"
+    SSH_AUTHORIZED_KEY="$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "SSH Authorized key for root (leave empty for none)" 8 58 --title "SSH Key" 3>&1 1>&2 2>&3)"
     if [[ -z "${SSH_AUTHORIZED_KEY}" ]]; then
       SSH_AUTHORIZED_KEY=""
     fi
     if [[ "$PW" == -password* || -n "$SSH_AUTHORIZED_KEY" ]]; then
-      if (whiptail --backtitle "[dev] Proxmox VE Helper Scripts" --defaultno --title "SSH ACCESS" --yesno "Enable Root SSH Access?" 10 58); then
+      if (whiptail --backtitle "Proxmox VE Helper Scripts" --defaultno --title "SSH ACCESS" --yesno "Enable Root SSH Access?" 10 58); then
         SSH="yes"
       else
         SSH="no"
@@ -563,14 +636,12 @@ config_file() {
     echo -e "${SEARCH}${BOLD}${DGN}Verbose Mode: ${BGN}$VERBOSE${CL}"
   fi
 
-  if (whiptail --backtitle "[dev] Proxmox VE Helper Scripts" --title "ADVANCED SETTINGS WITH CONFIG FILE COMPLETE" --yesno "Ready to create ${APP} LXC?" 10 58); then
+  if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "ADVANCED SETTINGS WITH CONFIG FILE COMPLETE" --yesno "Ready to create ${APP} LXC?" 10 58); then
     echo -e "${CREATING}${BOLD}${RD}Creating a ${APP} LXC using the above settings${CL}"
-    write_config
   else
     clear
     header_info
     echo -e "${INFO}${HOLD} ${GN}Using Config File on node $PVEHOST_NAME${CL}"
     config_file
   fi
-
 }

@@ -363,6 +363,7 @@ base_settings() {
   fi
 }
 write_config() {
+  mkdir -p /opt/community-scripts
   # This function writes the configuration to a file.
   if whiptail --backtitle "[dev] Proxmox VE Helper Scripts" --defaultno --title "Write configfile" --yesno "Do you want to write the selections to a config file?" 10 60; then
     FILEPATH="/opt/community-scripts/${NSAPP}.conf"
@@ -800,7 +801,7 @@ advanced_settings() {
 
   if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "ADVANCED SETTINGS COMPLETE" --yesno "Ready to create ${APP} LXC?" 10 58); then
     echo -e "${CREATING}${BOLD}${RD}Creating a ${APP} LXC using the above advanced settings${CL}"
-    
+    write_config
   else
     clear
     header_info
