@@ -20,6 +20,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - [core] New Features for Config File function [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4601](https://github.com/community-scripts/ProxmoxVE/pull/4601))
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Website: harmonize all Logos | use jsDelivr CDN links for icons from selfhst/icons repo [@MickLesk](https://github.com/MickLesk) ([#4603](https://github.com/community-scripts/ProxmoxVE/pull/4603))
+
 ## 2025-05-19
 
 ### 🆕 New Scripts
