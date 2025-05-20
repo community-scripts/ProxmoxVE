@@ -38,7 +38,9 @@ function update_script() {
     msg_info "Stopping $APP"
     systemctl stop rustdesk-hbbr
     systemctl stop rustdesk-hbbs
-    systemctl stop rustdesk-api
+    if [[ -f /lib/systemd/system/rustdesk-api.service ]]; then
+      systemctl stop rustdesk-api
+    fi
     msg_ok "Stopped $APP"
 
     msg_info "Updating $APP to v${RELEASE}"
