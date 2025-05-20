@@ -1,5 +1,35 @@
 [
   {
+    "name": "Stirling-Tools/Stirling-PDF",
+    "version": "v0.46.2",
+    "date": "2025-05-20T11:21:04Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "server/public/v0.1.13",
+    "date": "2025-05-16T03:44:25Z"
+  },
+  {
+    "name": "zabbix/zabbix",
+    "version": "7.0.13",
+    "date": "2025-05-20T10:41:10Z"
+  },
+  {
+    "name": "Luligu/matterbridge",
+    "version": "3.0.3",
+    "date": "2025-05-20T06:51:42Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1930",
+    "date": "2025-05-20T06:38:17Z"
+  },
+  {
+    "name": "crafty-controller/crafty-4",
+    "version": "v4.4.9",
+    "date": "2025-05-20T00:08:29Z"
+  },
+  {
     "name": "HabitRPG/habitica",
     "version": "v5.36.4",
     "date": "2025-05-19T22:28:11Z"
@@ -18,6 +48,11 @@
     "name": "glanceapp/glance",
     "version": "v0.8.3",
     "date": "2025-05-19T20:45:10Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.0.12",
+    "date": "2025-05-15T14:06:52Z"
   },
   {
     "name": "bunkerity/bunkerweb",
@@ -65,11 +100,6 @@
     "date": "2025-05-19T06:21:18Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1921",
-    "date": "2025-05-19T05:54:21Z"
-  },
-  {
     "name": "MediaBrowser/Emby.Releases",
     "version": "4.8.11.0",
     "date": "2025-03-10T06:39:11Z"
@@ -111,8 +141,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-05-18T13:00:01Z"
+    "version": "v4.1.1",
+    "date": "2025-05-16T17:37:30Z"
   },
   {
     "name": "hansmi/prometheus-paperless-exporter",
@@ -127,17 +157,12 @@
   {
     "name": "theonedev/onedev",
     "version": "v11.9.8",
-    "date": "2025-05-18T01:27:37Z"
+    "date": "2025-05-17T13:13:22Z"
   },
   {
     "name": "inventree/InvenTree",
     "version": "0.17.12",
     "date": "2025-05-17T19:16:00Z"
-  },
-  {
-    "name": "crafty-controller/crafty-4",
-    "version": "v4.4.8",
-    "date": "2025-05-17T18:47:36Z"
   },
   {
     "name": "Radarr/Radarr",
@@ -210,11 +235,6 @@
     "date": "2025-05-16T15:09:53Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.0.12",
-    "date": "2025-05-15T14:06:52Z"
-  },
-  {
     "name": "emqx/emqx",
     "version": "e5.10.0-alpha.1",
     "date": "2025-05-16T13:30:53Z"
@@ -228,11 +248,6 @@
     "name": "gotson/komga",
     "version": "1.21.3",
     "date": "2025-05-16T04:31:05Z"
-  },
-  {
-    "name": "mattermost/mattermost",
-    "version": "server/public/v0.1.13",
-    "date": "2025-05-16T03:44:25Z"
   },
   {
     "name": "ipfs/kubo",
@@ -281,18 +296,13 @@
   },
   {
     "name": "ollama/ollama",
-    "version": "v0.7.0-rc1",
-    "date": "2025-05-14T03:58:02Z"
+    "version": "v0.7.0",
+    "date": "2025-05-14T23:42:30Z"
   },
   {
     "name": "Ombi-app/Ombi",
     "version": "v4.47.1",
     "date": "2025-01-05T21:14:23Z"
-  },
-  {
-    "name": "Luligu/matterbridge",
-    "version": "3.0.2",
-    "date": "2025-05-14T20:38:06Z"
   },
   {
     "name": "Athou/commafeed",
@@ -358,11 +368,6 @@
     "name": "element-hq/synapse",
     "version": "v1.129.0",
     "date": "2025-05-06T12:28:54Z"
-  },
-  {
-    "name": "zabbix/zabbix",
-    "version": "7.2.7rc1",
-    "date": "2025-05-13T11:55:32Z"
   },
   {
     "name": "zitadel/zitadel",
@@ -433,11 +438,6 @@
     "name": "owncast/owncast",
     "version": "v0.2.3",
     "date": "2025-05-10T21:14:45Z"
-  },
-  {
-    "name": "Stirling-Tools/Stirling-PDF",
-    "version": "v0.46.1",
-    "date": "2025-05-10T15:39:10Z"
   },
   {
     "name": "pelican-dev/wings",
