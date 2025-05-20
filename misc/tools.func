@@ -783,9 +783,13 @@ fetch_and_deploy_gh_release() {
   local content_root
   content_root=$(find "$tmpdir" -mindepth 1 -maxdepth 1 -type d)
   if [[ $(echo "$content_root" | wc -l) -eq 1 ]]; then
+    shopt -s dotglob nullglob
     cp -r "$content_root"/* "/opt/$app/"
+    shopt -u dotglob nullglob
   else
+    shopt -s dotglob nullglob
     cp -r "$tmpdir"/* "/opt/$app/"
+    shopt -u dotglob nullglob
   fi
   echo "$version" >"/opt/${app}_version.txt"
   $STD msg_ok "Deployed $app v$version to /opt/$app"
