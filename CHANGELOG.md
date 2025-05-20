@@ -14,17 +14,65 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 All LXC instances created using this repository come pre-installed with Midnight Commander, which is a command-line tool (`mc`) that offers a user-friendly file and directory management interface for the terminal environment.
 
 
+## 2025-05-20
+
+### 🚀 Updated Scripts
+
+  - [core] New Features for Config File function [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4601](https://github.com/community-scripts/ProxmoxVE/pull/4601))
+
+## 2025-05-19
+
+### 🆕 New Scripts
+
+  - rclone ([#4579](https://github.com/community-scripts/ProxmoxVE/pull/4579))
+
+### 🚀 Updated Scripts
+
+  - increase ressources of Homarr (3 vCPU / 6GB RAM) [@MickLesk](https://github.com/MickLesk) ([#4583](https://github.com/community-scripts/ProxmoxVE/pull/4583))
+
+  - #### 🐞 Bug Fixes
+
+    - Various unrelated fixes to kimai update script [@jamezpolley](https://github.com/jamezpolley) ([#4549](https://github.com/community-scripts/ProxmoxVE/pull/4549))
+
+  - #### ✨ New Features
+
+    - RustDesk Server: Add WebUI [@tremor021](https://github.com/tremor021) ([#4590](https://github.com/community-scripts/ProxmoxVE/pull/4590))
+
+## 2025-05-18
+
+### 🚀 Updated Scripts
+
+  - tools.func - Add function to create self-signed certificates [@tremor021](https://github.com/tremor021) ([#4562](https://github.com/community-scripts/ProxmoxVE/pull/4562))
+
+  - #### 🐞 Bug Fixes
+
+    - Homarr: fix the build [@CrazyWolf13](https://github.com/CrazyWolf13) ([#4569](https://github.com/community-scripts/ProxmoxVE/pull/4569))
+
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Fix Dashy Config Path on Frontend [@CrazyWolf13](https://github.com/CrazyWolf13) ([#4570](https://github.com/community-scripts/ProxmoxVE/pull/4570))
+
+## 2025-05-17
+
 ## 2025-05-16
 
 ### 🧰 Maintenance
 
   - #### 💾 Core
 
+    - [core] Refactor Config File function [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4528](https://github.com/community-scripts/ProxmoxVE/pull/4528))
     - [core] Fix Bridge detection in Advanced Mode [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4522](https://github.com/community-scripts/ProxmoxVE/pull/4522))
+    - [core] Enable SSH_KEY and SSH without password [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4523](https://github.com/community-scripts/ProxmoxVE/pull/4523))
 
   - #### 📂 Github
 
     - Updates to contributor docs/guide [@tremor021](https://github.com/tremor021) ([#4518](https://github.com/community-scripts/ProxmoxVE/pull/4518))
+
+### 🌐 Website
+
+  - Remove bolt.diy script [@tremor021](https://github.com/tremor021) ([#4541](https://github.com/community-scripts/ProxmoxVE/pull/4541))
 
 ## 2025-05-15
 

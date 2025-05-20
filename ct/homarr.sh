@@ -7,8 +7,8 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 
 APP="homarr"
 var_tags="${var_tags:-arr;dashboard}"
-var_cpu="${var_cpu:-2}"
-var_ram="${var_ram:-4096}"
+var_cpu="${var_cpu:-3}"
+var_ram="${var_ram:-6144}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-12}"
@@ -125,7 +125,7 @@ EOF
     fetch_and_deploy_gh_release "homarr-labs/homarr"
     mv /opt/homarr-data-backup/.env /opt/homarr/.env
     cd /opt/homarr
-    $STD pnpm install
+    $STD pnpm install --recursive --frozen-lockfile --shamefully-hoist
     $STD pnpm build
     cp /opt/homarr/apps/nextjs/next.config.ts .
     cp /opt/homarr/apps/nextjs/package.json .

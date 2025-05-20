@@ -47,7 +47,7 @@ TURBO_TELEMETRY_DISABLED=1
 AUTH_PROVIDERS='credentials'
 NODE_ENV='production'
 EOF
-$STD pnpm install
+$STD pnpm install --recursive --frozen-lockfile --shamefully-hoist
 $STD pnpm build
 msg_ok "Installed Homarr"
 
@@ -67,7 +67,6 @@ echo $'#!/bin/bash\ncd /opt/homarr/apps/cli && node ./cli.cjs "$@"' >/usr/bin/ho
 chmod +x /usr/bin/homarr
 mkdir /opt/homarr/build
 cp ./node_modules/better-sqlite3/build/Release/better_sqlite3.node ./build/better_sqlite3.node
-echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Finished copying"
 
 msg_info "Creating Services"
@@ -115,7 +114,6 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -rf /opt/v${RELEASE}.zip
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"

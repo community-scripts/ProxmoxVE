@@ -1180,3 +1180,22 @@ setup_rbenv_stack() {
   rm -rf "$TMP_DIR"
   msg_ok "rbenv stack ready (Ruby $RUBY_VERSION)"
 }
+
+# ------------------------------------------------------------------------------
+# Creates and installs self-signed certificates.
+#
+# Description:
+#   - Create a self-signed certificate with option to override application name
+#
+# Variables:
+#   APP   - Application name (default: $APPLICATION variable)
+# ------------------------------------------------------------------------------
+create_selfsigned_certs() {
+  local app=${APP:-$(echo "${APPLICATION,,}" | tr -d ' ')}
+  $STD msg_info "Creating Self-Signed Certificate"
+  $STD openssl req -x509 -nodes -days 365 -newkey rsa:4096 \
+    -keyout /etc/ssl/private/"$app"-selfsigned.key \
+    -out /etc/ssl/certs/"$app"-selfsigned.crt \
+    -subj "/C=US/O=$app/OU=Domain Control Validated/CN=localhost"
+  $STD msg_ok "Created Self-Signed Certificate"
+}
