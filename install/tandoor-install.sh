@@ -75,6 +75,8 @@ sed -i -e "s|SECRET_KEY=.*|SECRET_KEY=$secret_key|g" \
   -e "s|POSTGRES_DB=.*|POSTGRES_DB=$DB_NAME|g" \
   -e "s|POSTGRES_USER=.*|POSTGRES_USER=$DB_USER|g" \
   -e "\$a\STATIC_URL=/staticfiles/" /opt/tandoor/.env
+cd /opt/tandoor
+$STD python3 version.py
 msg_ok "Installed Tandoor"
 
 msg_info "Install/Set up PostgreSQL Database"
@@ -96,11 +98,6 @@ export $(cat /opt/tandoor/.env | grep "^[^#]" | xargs)
 /usr/bin/python3 /opt/tandoor/manage.py collectstatic --no-input >/dev/null 2>&1
 /usr/bin/python3 /opt/tandoor/manage.py collectstatic_js_reverse >/dev/null 2>&1
 msg_ok "Set up PostgreSQL Database"
-
-msg_info "Setting Version Information"
-cd /opt/tandoor
-$STD python3 version.py
-msg_ok "Version Information Set"
 
 msg_info "Creating Services"
 cat <<EOF >/etc/systemd/system/gunicorn_tandoor.service
