@@ -16,6 +16,11 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-05-21
 
+### 🆕 New Scripts
+
+  - configarr ([#4620](https://github.com/community-scripts/ProxmoxVE/pull/4620))
+- babybuddy ([#4619](https://github.com/community-scripts/ProxmoxVE/pull/4619))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
