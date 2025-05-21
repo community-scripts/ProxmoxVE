@@ -2,6 +2,7 @@
 
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: Slaviša Arežina (tremor021)
+# Modified by: Stavros (steveiliop56)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/steveiliop56/tinyauth
 
@@ -14,45 +15,38 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apk add --no-cache \
-  npm \
-  curl \
-  go
+$STD apk add --no-cache curl openssl
 msg_ok "Installed Dependencies"
 
-msg_info "Installing tinyauth"
-temp_file=$(mktemp)
-$STD npm install -g bun
+msg_info "Installing Tinyauth"
 mkdir -p /opt/tinyauth
-RELEASE=$(curl -s https://api.github.com/repos/steveiliop56/tinyauth/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/steveiliop56/tinyauth/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
-tar -xzf "$temp_file" -C /opt/tinyauth --strip-components=1
-cd /opt/tinyauth/frontend
-$STD bun install
-$STD bun run build
-mv dist /opt/tinyauth/internal/assets/
-cd /opt/tinyauth
-$STD go mod download
-CGO_ENABLED=0 go build -ldflags "-s -w"
-{
-  echo "tinyauth Credentials"
-  echo "Username: admin@example.com"
-  echo "Password: admin"
-} >>~/tinyauth.creds
-echo "${RELEASE}" >/opt/tinyauth_version.txt
-msg_ok "Installed tinyauth"
 
-msg_info "Enabling tinyauth Service"
-SECRET=$(head -c 16 /dev/urandom | xxd -p -c 16 | tr -d '\n')
-{
-  echo "SECRET=${SECRET}"
-  echo "USERS=admin@example.com:\$2a\$10\$CrTK.W7WXSClo3ZY1yJUFupg5UdV8WNcynEhZhJFNjhGQB.Ga0ZDm"
-  echo "APP_URL=http://localhost:3000"
-} >>/opt/tinyauth/.env
+RELEASE=$(curl -s https://api.github.com/repos/steveiliop56/tinyauth/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+curl -fsSL "https://github.com/steveiliop56/tinyauth/releases/download/${RELEASE}/tinyauth-amd64" -o tinyauth
+chmod +x tinyauth
+
+cat <<EOF > /opt/tinyauth/credentials.txt
+echo "Tinyauth Credentials"
+echo "Username: user"
+echo "Password: password"
+EOF
+
+echo "${RELEASE}" >/opt/tinyauth_version.txt
+msg_ok "Installed Tinyauth"
+
+msg_info "Creating Tinyauth Service"
+SECRET=$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | head -c 32)
+read -p "${TAB3}Enter your Tinyauth subdomain (e.g. https://tinyauth.example.com): " app_url
+
+cat <<EOF >/opt/tinyauth/.env
+SECRET=${SECRET}
+USERS=user:\$2a\$10\$tfjwMcNIFAUewa9ts4hK4e9qP4rdG4L5qAwWmgtG54KnP9U.0tMxy
+APP_URL=${app_url}
+EOF
 
 cat <<EOF >/etc/init.d/tinyauth
 #!/sbin/openrc-run
-description="tinyauth Service"
+description="Tinyauth Service"
 
 command="/opt/tinyauth/tinyauth"
 directory="/opt/tinyauth"
@@ -73,11 +67,11 @@ EOF
 
 chmod +x /etc/init.d/tinyauth
 $STD rc-update add tinyauth default
-msg_ok "Enabled tinyauth Service"
+msg_ok "Enabled Tinyauth Service"
 
-msg_info "Starting tinyauth"
+msg_info "Starting Tinyauth"
 $STD service tinyauth start
-msg_ok "Started tinyauth"
+msg_ok "Started Tinyauth"
 
 motd_ssh
 customize
