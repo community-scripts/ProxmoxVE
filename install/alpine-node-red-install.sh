@@ -35,7 +35,7 @@ service_path="/etc/init.d/nodered"
 echo '#!/sbin/openrc-run
 description="Node-RED Service"
 
-command="/usr/bin/node-red"
+command="/usr/local/bin/node-red"
 command_args="--max-old-space-size=128 -v"
 command_user="nodered"
 pidfile="/var/run/nodered.pid"
