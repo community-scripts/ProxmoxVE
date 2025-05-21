@@ -97,6 +97,11 @@ export $(cat /opt/tandoor/.env | grep "^[^#]" | xargs)
 /usr/bin/python3 /opt/tandoor/manage.py collectstatic_js_reverse >/dev/null 2>&1
 msg_ok "Set up PostgreSQL Database"
 
+msg_info "Setting Version Information"
+cd /opt/tandoor
+$STD python3 version.py
+msg_ok "Version Information Set"
+
 msg_info "Creating Services"
 cat <<EOF >/etc/systemd/system/gunicorn_tandoor.service
 [Unit]
