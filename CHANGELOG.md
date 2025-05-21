@@ -28,6 +28,10 @@ All LXC instances created using this repository come pre-installed with Midnight
     - Alpine-Node-RED: Update Service File [@MickLesk](https://github.com/MickLesk) ([#4628](https://github.com/community-scripts/ProxmoxVE/pull/4628))
     - RustDesk Server: Fix update for older installs [@tremor021](https://github.com/tremor021) ([#4612](https://github.com/community-scripts/ProxmoxVE/pull/4612))
 
+  - #### ✨ New Features
+
+    - Tandoor Recipes: Capture version information when installing [@jbolla](https://github.com/jbolla) ([#4633](https://github.com/community-scripts/ProxmoxVE/pull/4633))
+
 ## 2025-05-20
 
 ### 🚀 Updated Scripts
