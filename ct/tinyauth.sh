@@ -35,10 +35,9 @@ function update_script() {
   
   if [ "${RELEASE}" != "$(cat /opt/tinyauth_version.txt)" ] || [ ! -f /opt/tinyauth_version.txt ]; then
     $STD service tinyauth stop
-    cd /opt/tinyauth
-    rm -f tinyauth
-    curl -fsSL "https://github.com/steveiliop56/tinyauth/releases/download/v${RELEASE}/tinyauth-amd64" -o tinyauth
-    chmod +x tinyauth
+    rm -f /opt/tinyauth/tinyauth
+    curl -fsSL "https://github.com/steveiliop56/tinyauth/releases/download/v${RELEASE}/tinyauth-amd64" -o /opt/tinyauth/tinyauth
+    chmod +x /opt/tinyauth/tinyauth
     echo "${RELEASE}" > /opt/tinyauth_version.txt
     msg_info "Restarting Tinyauth"
     $STD service tinyauth start

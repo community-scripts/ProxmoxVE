@@ -22,8 +22,8 @@ msg_info "Installing Tinyauth"
 mkdir -p /opt/tinyauth
 
 RELEASE=$(curl -s https://api.github.com/repos/steveiliop56/tinyauth/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/steveiliop56/tinyauth/releases/download/v${RELEASE}/tinyauth-amd64" -o tinyauth
-chmod +x tinyauth
+curl -fsSL "https://github.com/steveiliop56/tinyauth/releases/download/v${RELEASE}/tinyauth-amd64" -o /opt/tinyauth/tinyauth
+chmod +x /opt/tinyauth/tinyauth
 
 cat <<EOF > /opt/tinyauth/credentials.txt
 echo "Tinyauth Credentials"
