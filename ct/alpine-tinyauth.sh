@@ -6,7 +6,7 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/steveiliop56/tinyauth
 
-APP="Tinyauth"
+APP="Alpine-Tinyauth"
 var_tags="${var_tags:-alpine;auth}"
 var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-256}"
