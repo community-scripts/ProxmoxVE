@@ -34,9 +34,10 @@ EOF
 echo "${RELEASE}" >/opt/tinyauth_version.txt
 msg_ok "Installed Tinyauth"
 
+read -p "${TAB3}Enter your Tinyauth subdomain (e.g. https://tinyauth.example.com): " app_url
+
 msg_info "Creating Tinyauth Service"
 SECRET=$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | head -c 32)
-read -p "${TAB3}Enter your Tinyauth subdomain (e.g. https://tinyauth.example.com): " app_url
 
 cat <<EOF >/opt/tinyauth/.env
 SECRET=${SECRET}
