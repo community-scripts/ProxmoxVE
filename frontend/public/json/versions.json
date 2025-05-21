@@ -1,18 +1,68 @@
 [
   {
+    "name": "esphome/esphome",
+    "version": "2025.4.2",
+    "date": "2025-05-11T22:18:43Z"
+  },
+  {
+    "name": "mongodb/mongo",
+    "version": "r6.0.24-rc0",
+    "date": "2025-05-20T21:33:16Z"
+  },
+  {
+    "name": "clusterzx/paperless-ai",
+    "version": "v3.0.3",
+    "date": "2025-05-20T19:37:45Z"
+  },
+  {
+    "name": "0xERR0R/blocky",
+    "version": "v0.26",
+    "date": "2025-05-20T19:34:05Z"
+  },
+  {
+    "name": "matze/wastebin",
+    "version": "3.1.0",
+    "date": "2025-05-20T19:20:03Z"
+  },
+  {
+    "name": "MediaBrowser/Emby.Releases",
+    "version": "4.8.11.0",
+    "date": "2025-03-10T06:39:11Z"
+  },
+  {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.511",
+    "date": "2025-05-20T15:39:17Z"
+  },
+  {
+    "name": "element-hq/synapse",
+    "version": "v1.130.0",
+    "date": "2025-05-20T15:33:54Z"
+  },
+  {
+    "name": "syncthing/syncthing",
+    "version": "v1.29.6",
+    "date": "2025-05-06T07:57:02Z"
+  },
+  {
+    "name": "documenso/documenso",
+    "version": "v1.11.1",
+    "date": "2025-05-20T12:37:46Z"
+  },
+  {
     "name": "Stirling-Tools/Stirling-PDF",
     "version": "v0.46.2",
     "date": "2025-05-20T11:21:04Z"
   },
   {
+    "name": "zabbix/zabbix",
+    "version": "7.2.7",
+    "date": "2025-05-20T11:00:56Z"
+  },
+  {
     "name": "mattermost/mattermost",
     "version": "server/public/v0.1.13",
     "date": "2025-05-16T03:44:25Z"
-  },
-  {
-    "name": "zabbix/zabbix",
-    "version": "7.0.13",
-    "date": "2025-05-20T10:41:10Z"
   },
   {
     "name": "Luligu/matterbridge",
@@ -75,11 +125,6 @@
     "date": "2025-04-20T19:22:17Z"
   },
   {
-    "name": "esphome/esphome",
-    "version": "2025.4.2",
-    "date": "2025-05-11T22:18:43Z"
-  },
-  {
     "name": "n8n-io/n8n",
     "version": "n8n@1.91.3",
     "date": "2025-05-08T12:25:10Z"
@@ -93,16 +138,6 @@
     "name": "Graylog2/graylog2-server",
     "version": "6.3.0-beta.1",
     "date": "2025-05-19T11:23:27Z"
-  },
-  {
-    "name": "documenso/documenso",
-    "version": "v1.11.0",
-    "date": "2025-05-19T06:21:18Z"
-  },
-  {
-    "name": "MediaBrowser/Emby.Releases",
-    "version": "4.8.11.0",
-    "date": "2025-03-10T06:39:11Z"
   },
   {
     "name": "open-webui/open-webui",
@@ -128,11 +163,6 @@
     "name": "YunoHost/yunohost",
     "version": "debian/12.1.6.1",
     "date": "2025-05-18T17:01:42Z"
-  },
-  {
-    "name": "clusterzx/paperless-ai",
-    "version": "v3.0.0",
-    "date": "2025-05-18T15:32:52Z"
   },
   {
     "name": "kimai/kimai",
@@ -198,11 +228,6 @@
     "name": "cross-seed/cross-seed",
     "version": "v6.12.5",
     "date": "2025-05-17T02:52:33Z"
-  },
-  {
-    "name": "syncthing/syncthing",
-    "version": "v1.29.6",
-    "date": "2025-05-06T07:57:02Z"
   },
   {
     "name": "advplyr/audiobookshelf",
@@ -315,19 +340,9 @@
     "date": "2025-05-14T15:12:14Z"
   },
   {
-    "name": "mongodb/mongo",
-    "version": "r6.0.24-alpha0",
-    "date": "2025-05-14T14:52:41Z"
-  },
-  {
     "name": "motioneye-project/motioneye",
     "version": "0.42.1",
     "date": "2020-06-07T07:27:04Z"
-  },
-  {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.510",
-    "date": "2025-05-13T18:33:42Z"
   },
   {
     "name": "nzbgetcom/nzbget",
@@ -363,11 +378,6 @@
     "name": "redis/redis",
     "version": "8.0.1",
     "date": "2025-05-13T13:31:53Z"
-  },
-  {
-    "name": "element-hq/synapse",
-    "version": "v1.129.0",
-    "date": "2025-05-06T12:28:54Z"
   },
   {
     "name": "zitadel/zitadel",
@@ -985,11 +995,6 @@
     "date": "2025-03-06T16:24:56Z"
   },
   {
-    "name": "matze/wastebin",
-    "version": "3.0.0",
-    "date": "2025-03-05T21:41:29Z"
-  },
-  {
     "name": "toniebox-reverse-engineering/teddycloud",
     "version": "tc_v0.6.4",
     "date": "2025-03-05T15:43:40Z"
@@ -1083,11 +1088,6 @@
     "name": "rustdesk/rustdesk-server",
     "version": "1.1.14",
     "date": "2025-01-25T12:48:28Z"
-  },
-  {
-    "name": "0xERR0R/blocky",
-    "version": "v0.25",
-    "date": "2025-01-17T20:49:31Z"
   },
   {
     "name": "petio-team/petio",
