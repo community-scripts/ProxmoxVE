@@ -37,7 +37,7 @@ function update_script() {
     $STD service tinyauth stop
     cd /opt/tinyauth
     rm -f tinyauth
-    curl -fsSL "https://github.com/steveiliop56/tinyauth/releases/download/${RELEASE}/tinyauth-amd64" -o tinyauth
+    curl -fsSL "https://github.com/steveiliop56/tinyauth/releases/download/v${RELEASE}/tinyauth-amd64" -o tinyauth
     chmod +x tinyauth
     echo "${RELEASE}" > /opt/tinyauth_version.txt
     msg_info "Restarting Tinyauth"
