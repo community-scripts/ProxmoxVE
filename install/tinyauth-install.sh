@@ -15,7 +15,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apk add --no-cache curl openssl
+$STD apk add --no-cache curl openssl apache2-utils
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Tinyauth"
@@ -25,10 +25,13 @@ RELEASE=$(curl -s https://api.github.com/repos/steveiliop56/tinyauth/releases/la
 curl -fsSL "https://github.com/steveiliop56/tinyauth/releases/download/v${RELEASE}/tinyauth-amd64" -o /opt/tinyauth/tinyauth
 chmod +x /opt/tinyauth/tinyauth
 
+PASSWORD=$(openssl rand -base64 8 | tr -dc 'a-zA-Z0-9' | head -c 8)
+USER=$(htpasswd -Bbn "tinyauth" "${PASSWORD}")
+
 cat <<EOF > /opt/tinyauth/credentials.txt
-echo "Tinyauth Credentials"
-echo "Username: user"
-echo "Password: password"
+Tinyauth Credentials
+Username: tinyauth
+Password: ${PASSWORD}
 EOF
 
 echo "${RELEASE}" >/opt/tinyauth_version.txt
@@ -41,9 +44,11 @@ SECRET=$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | head -c 32)
 
 cat <<EOF >/opt/tinyauth/.env
 SECRET=${SECRET}
-USERS=user:\$2a\$10\$tfjwMcNIFAUewa9ts4hK4e9qP4rdG4L5qAwWmgtG54KnP9U.0tMxy
+USERS=${USER}
 APP_URL=${app_url}
 EOF
+
+sed -i -e 's/\$/\$\$/g' /opt/tinyauth/.env
 
 cat <<EOF >/etc/init.d/tinyauth
 #!/sbin/openrc-run
