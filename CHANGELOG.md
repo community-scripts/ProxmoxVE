@@ -16,6 +16,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-05-21
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - RustDesk Server: Fix update for older installs [@tremor021](https://github.com/tremor021) ([#4612](https://github.com/community-scripts/ProxmoxVE/pull/4612))
+
 ## 2025-05-20
 
 ### 🚀 Updated Scripts
