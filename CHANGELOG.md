@@ -16,6 +16,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-05-22
 
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - Paperless-AI: Add RAG chat [@tremor021](https://github.com/tremor021) ([#4635](https://github.com/community-scripts/ProxmoxVE/pull/4635))
+
 ## 2025-05-21
 
 ### 🆕 New Scripts
