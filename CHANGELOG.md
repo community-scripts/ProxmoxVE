@@ -18,6 +18,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - slskd: fix #4649 [@vhsdream](https://github.com/vhsdream) ([#4651](https://github.com/community-scripts/ProxmoxVE/pull/4651))
+
   - #### ✨ New Features
 
     - Paperless-AI: Add RAG chat [@tremor021](https://github.com/tremor021) ([#4635](https://github.com/community-scripts/ProxmoxVE/pull/4635))
