@@ -1,34 +1,50 @@
 #!/usr/bin/env bash
 
-# Base directory for headers
-headers_dir="./ct/headers"
+# Function for generating Figlet headers
+generate_headers() {
+  local base_dir=$1
+  local target_subdir=$2
+  local search_pattern=$3
 
-# Ensure the headers directory exists and clear it
-mkdir -p "$headers_dir"
-rm -f "$headers_dir"/*
+  local headers_dir="${base_dir}/headers"
+  mkdir -p "$headers_dir"
+  rm -f "$headers_dir"/*
 
-# Find all .sh files in ./ct directory, sorted alphabetically
-find ./ct -type f -name "*.sh" | sort | while read -r script; do
-  # Extract the APP name from the APP line
-  app_name=$(grep -oP '^APP="\K[^"]+' "$script" 2>/dev/null)
-
-  if [[ -n "$app_name" ]]; then
-    # Define the output file name in the headers directory
-    output_file="${headers_dir}/$(basename "${script%.*}")"
-
-    # Generate figlet output
-    figlet_output=$(figlet -w 500 -f slant "$app_name")
-
-    # Check if figlet output is not empty
-    if [[ -n "$figlet_output" ]]; then
-      echo "$figlet_output" > "$output_file"
-      echo "Generated: $output_file"
-    else
-      echo "Figlet failed for $app_name in $script"
-    fi
+  # Recursive or non-recursive search
+  if [[ "$search_pattern" == "**" ]]; then
+    shopt -s globstar nullglob
+    file_list=("${base_dir}"/**/*.sh)
+    shopt -u globstar
   else
-    echo "No APP name found in $script, skipping."
+    file_list=("${base_dir}"/*.sh)
   fi
-done
 
-echo "Completed processing .sh files."
+  for script in "${file_list[@]}"; do
+    [[ -f "$script" ]] || continue
+
+    app_name=$(grep -oP '^APP="\K[^"]+' "$script" 2>/dev/null)
+    if [[ -n "$app_name" ]]; then
+      output_file="${headers_dir}/$(basename "${script%.*}")"
+      figlet_output=$(figlet -w 500 -f slant "$app_name")
+      if [[ -n "$figlet_output" ]]; then
+        echo "$figlet_output" >"$output_file"
+        echo "Generated: $output_file"
+      else
+        echo "Figlet failed for $app_name in $script"
+      fi
+    else
+      echo "No APP name found in $script, skipping."
+    fi
+  done
+}
+
+# ct
+generate_headers "./ct" "headers" "*"
+
+# tools (addon, pve, ...)
+generate_headers "./tools" "headers" "**"
+
+# vm
+generate_headers "./vm" "headers" "*"
+
+echo "Completed processing all sections."
