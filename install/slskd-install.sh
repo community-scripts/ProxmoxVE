@@ -5,7 +5,7 @@
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/slskd/slskd/, https://soularr.net
 
-source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
+source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
 catch_errors
@@ -28,14 +28,15 @@ JWT_KEY=$(openssl rand -base64 44)
 SLSKD_API_KEY=$(openssl rand -base64 44)
 cp /opt/${APPLICATION}/config/slskd.example.yml /opt/${APPLICATION}/config/slskd.yml
 sed -i \
-    -e "\|web:|,\|cidr|s|^#||" \
-    -e "\|https:|,\|5031|s|false|true|" \
-    -e "\|api_keys|,\|cidr|s|<some.*$|$SLSKD_API_KEY|; \
+  -e "\|web:|,\|cidr|s|^#||" \
+  -e "\|https:|,\|5031|s|false|true|" \
+  -e "\|api_keys|,\|cidr|s|<some.*$|$SLSKD_API_KEY|; \
     s|role: readonly|role: readwrite|; \
     s|0.0.0.0/0,::/0|& # Replace this with your subnet|" \
-    -e "\|soulseek|,\|write_queue|s|^#||" \
-    -e "\|jwt:|,\|ttl|s|key: ~|key: $JWT_KEY|" \
-    /opt/${APPLICATION}/config/slskd.yml
+  -e "\|soulseek|,\|write_queue|s|^#||" \
+  -e "\|jwt:|,\|ttl|s|key: ~|key: $JWT_KEY|" \
+  -e "s|^  picture|#  picture|" \
+  /opt/${APPLICATION}/config/slskd.yml
 msg_ok "Setup ${APPLICATION}"
 
 msg_info "Installing Soularr"
@@ -47,15 +48,15 @@ mv soularr-main /opt/soularr
 cd /opt/soularr
 $STD pip install -r requirements.txt
 sed -i \
-    -e "\|[Slskd]|,\|host_url|s|yourslskdapikeygoeshere|$SLSKD_API_KEY|" \
-    -e "/host_url/s/slskd/localhost/" \
-    /opt/soularr/config.ini
+  -e "\|[Slskd]|,\|host_url|s|yourslskdapikeygoeshere|$SLSKD_API_KEY|" \
+  -e "/host_url/s/slskd/localhost/" \
+  /opt/soularr/config.ini
 sed -i \
-    -e "/#This\|#Default\|INTERVAL/{N;d;}" \
-    -e "/while\|#Pass/d" \
-    -e "\|python|s|app|opt/soularr|; s|python|python3|" \
-    -e "/dt/,+2d" \
-    /opt/soularr/run.sh
+  -e "/#This\|#Default\|INTERVAL/{N;d;}" \
+  -e "/while\|#Pass/d" \
+  -e "\|python|s|app|opt/soularr|; s|python|python3|" \
+  -e "/dt/,+2d" \
+  /opt/soularr/run.sh
 sed -i -E "/(soularr.py)/s/.{5}$//; /if/,/fi/s/.{4}//" /opt/soularr/run.sh
 chmod +x /opt/soularr/run.sh
 msg_ok "Installed Soularr"
