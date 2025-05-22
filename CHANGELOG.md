@@ -16,6 +16,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-05-22
 
+### 🆕 New Scripts
+
+  - cloudflare-ddns ([#4647](https://github.com/community-scripts/ProxmoxVE/pull/4647))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
