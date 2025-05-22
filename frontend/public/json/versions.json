@@ -1,8 +1,83 @@
 [
   {
+    "name": "tobychui/zoraxy",
+    "version": "v3.1.9",
+    "date": "2025-03-01T02:24:33Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.7.0",
+    "date": "2025-05-14T23:42:30Z"
+  },
+  {
+    "name": "immich-app/immich",
+    "version": "v1.133.0",
+    "date": "2025-05-21T20:17:38Z"
+  },
+  {
+    "name": "apache/tika",
+    "version": "3.2.0-rc2",
+    "date": "2025-05-21T20:09:07Z"
+  },
+  {
+    "name": "0xERR0R/blocky",
+    "version": "v0.26.2",
+    "date": "2025-05-21T19:52:07Z"
+  },
+  {
+    "name": "tailscale/tailscale",
+    "version": "v1.84.0",
+    "date": "2025-05-21T19:39:53Z"
+  },
+  {
+    "name": "clusterzx/paperless-ai",
+    "version": "v3.0.4",
+    "date": "2025-05-21T19:03:53Z"
+  },
+  {
+    "name": "mongodb/mongo",
+    "version": "r8.0.10-rc0",
+    "date": "2025-05-21T18:22:25Z"
+  },
+  {
+    "name": "ipfs/kubo",
+    "version": "v0.35.0",
+    "date": "2025-05-21T18:00:32Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.20.10",
+    "date": "2025-05-21T17:22:32Z"
+  },
+  {
+    "name": "cross-seed/cross-seed",
+    "version": "v6.12.5",
+    "date": "2025-05-17T02:52:33Z"
+  },
+  {
+    "name": "cockpit-project/cockpit",
+    "version": "339",
+    "date": "2025-05-21T14:49:36Z"
+  },
+  {
     "name": "mattermost/mattermost",
-    "version": "v10.7.3",
-    "date": "2025-05-21T10:17:46Z"
+    "version": "v9.11.16",
+    "date": "2025-05-21T13:57:13Z"
+  },
+  {
+    "name": "theonedev/onedev",
+    "version": "v11.9.9",
+    "date": "2025-05-21T13:13:31Z"
+  },
+  {
+    "name": "glpi-project/glpi",
+    "version": "10.0.18",
+    "date": "2025-02-12T11:07:02Z"
+  },
+  {
+    "name": "zitadel/zitadel",
+    "version": "v3.1.0",
+    "date": "2025-05-21T12:40:54Z"
   },
   {
     "name": "esphome/esphome",
@@ -35,29 +110,9 @@
     "date": "2025-05-21T04:12:44Z"
   },
   {
-    "name": "cross-seed/cross-seed",
-    "version": "v6.12.5",
-    "date": "2025-05-17T02:52:33Z"
-  },
-  {
     "name": "icereed/paperless-gpt",
     "version": "v0.19.0",
     "date": "2025-05-21T03:46:14Z"
-  },
-  {
-    "name": "mongodb/mongo",
-    "version": "r6.0.24-rc0",
-    "date": "2025-05-20T21:33:16Z"
-  },
-  {
-    "name": "clusterzx/paperless-ai",
-    "version": "v3.0.3",
-    "date": "2025-05-20T19:37:45Z"
-  },
-  {
-    "name": "0xERR0R/blocky",
-    "version": "v0.26",
-    "date": "2025-05-20T19:34:05Z"
   },
   {
     "name": "matze/wastebin",
@@ -210,11 +265,6 @@
     "date": "2025-04-30T11:02:36Z"
   },
   {
-    "name": "theonedev/onedev",
-    "version": "v11.9.8",
-    "date": "2025-05-17T13:13:22Z"
-  },
-  {
     "name": "Radarr/Radarr",
     "version": "v5.23.3.9987",
     "date": "2025-05-17T12:55:29Z"
@@ -285,11 +335,6 @@
     "date": "2025-05-16T04:31:05Z"
   },
   {
-    "name": "ipfs/kubo",
-    "version": "v0.34.1",
-    "date": "2025-03-25T18:11:12Z"
-  },
-  {
     "name": "coder/code-server",
     "version": "v4.100.2",
     "date": "2025-05-15T23:02:46Z"
@@ -328,11 +373,6 @@
     "name": "FlowiseAI/Flowise",
     "version": "flowise@3.0.0",
     "date": "2025-05-15T01:49:47Z"
-  },
-  {
-    "name": "ollama/ollama",
-    "version": "v0.7.0-rc1",
-    "date": "2025-05-14T03:58:02Z"
   },
   {
     "name": "Ombi-app/Ombi",
@@ -390,11 +430,6 @@
     "date": "2025-05-13T13:31:53Z"
   },
   {
-    "name": "zitadel/zitadel",
-    "version": "v2.65.9",
-    "date": "2025-05-13T05:14:39Z"
-  },
-  {
     "name": "go-gitea/gitea",
     "version": "v1.23.8",
     "date": "2025-05-12T22:40:50Z"
@@ -418,11 +453,6 @@
     "name": "usememos/memos",
     "version": "v0.24.3",
     "date": "2025-05-12T15:23:21Z"
-  },
-  {
-    "name": "apache/tika",
-    "version": "3.2.0-rc1",
-    "date": "2025-05-12T13:06:47Z"
   },
   {
     "name": "dgtlmoon/changedetection.io",
@@ -495,6 +525,11 @@
     "date": "2025-05-07T19:22:22Z"
   },
   {
+    "name": "grafana/grafana",
+    "version": "v12.0.0+security-01",
+    "date": "2025-05-07T18:03:17Z"
+  },
+  {
     "name": "donaldzou/WGDashboard",
     "version": "v4.2.3",
     "date": "2025-05-07T15:35:04Z"
@@ -510,11 +545,6 @@
     "date": "2025-05-07T14:01:45Z"
   },
   {
-    "name": "glpi-project/glpi",
-    "version": "10.0.18",
-    "date": "2025-02-12T11:07:02Z"
-  },
-  {
     "name": "ZoeyVid/NPMplus",
     "version": "2025-05-07-r1",
     "date": "2025-05-07T12:18:42Z"
@@ -528,11 +558,6 @@
     "name": "grokability/snipe-it",
     "version": "v8.1.3",
     "date": "2025-05-07T11:09:21Z"
-  },
-  {
-    "name": "cockpit-project/cockpit",
-    "version": "338",
-    "date": "2025-05-07T10:43:29Z"
   },
   {
     "name": "jupyter/notebook",
@@ -578,16 +603,6 @@
     "name": "postgres/postgres",
     "version": "REL_13_21",
     "date": "2025-05-05T20:34:49Z"
-  },
-  {
-    "name": "msgbyte/tianji",
-    "version": "v1.20.9",
-    "date": "2025-05-05T19:24:09Z"
-  },
-  {
-    "name": "grafana/grafana",
-    "version": "v12.0.0",
-    "date": "2025-05-05T18:28:19Z"
   },
   {
     "name": "apache/couchdb",
@@ -690,11 +705,6 @@
     "date": "2025-04-28T17:55:01Z"
   },
   {
-    "name": "immich-app/immich",
-    "version": "v1.132.3",
-    "date": "2025-04-28T14:11:06Z"
-  },
-  {
     "name": "karakeep-app/karakeep",
     "version": "v0.24.1",
     "date": "2025-04-28T08:21:37Z"
@@ -708,11 +718,6 @@
     "name": "qbittorrent/qBittorrent",
     "version": "release-5.1.0",
     "date": "2025-04-27T08:53:48Z"
-  },
-  {
-    "name": "tobychui/zoraxy",
-    "version": "v3.1.9",
-    "date": "2025-03-01T02:24:33Z"
   },
   {
     "name": "openhab/openhab-core",
@@ -773,11 +778,6 @@
     "name": "caddyserver/caddy",
     "version": "v2.10.0",
     "date": "2025-04-18T20:46:28Z"
-  },
-  {
-    "name": "tailscale/tailscale",
-    "version": "v1.82.5",
-    "date": "2025-04-17T20:59:15Z"
   },
   {
     "name": "TriliumNext/Notes",
