@@ -56,7 +56,7 @@ for container in $(pct list | awk '{if(NR>1) print $1}'); do
     os=$(pct config "$container" | awk '/^ostype/ {print $2}')
     if [ "$os" != "debian" ] && [ "$os" != "ubuntu" ]; then
       header_info
-      echo -e "${BL}[Info]${GN} Skipping ${name} ${RD}$container is not Debian or Ubuntu ${CL} \n"
+      echo -e "${BL}[Info]${GN} Skipping ${RD}$container is not Debian or Ubuntu ${CL} \n"
       sleep 1
       continue
     fi
