@@ -22,6 +22,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - Paperless-AI: Add RAG chat [@tremor021](https://github.com/tremor021) ([#4635](https://github.com/community-scripts/ProxmoxVE/pull/4635))
 
+### 🧰 Maintenance
+
+  - #### 📂 Github
+
+    - [gh]: Feature: Header-Generation for vm | tools | addon [@MickLesk](https://github.com/MickLesk) ([#4643](https://github.com/community-scripts/ProxmoxVE/pull/4643))
+
 ## 2025-05-21
 
 ### 🆕 New Scripts
