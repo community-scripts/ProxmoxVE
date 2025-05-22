@@ -37,6 +37,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - [gh]: Feature: Header-Generation for vm | tools | addon [@MickLesk](https://github.com/MickLesk) ([#4643](https://github.com/community-scripts/ProxmoxVE/pull/4643))
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Commafeed: move to Documents category [@diemade](https://github.com/diemade) ([#4665](https://github.com/community-scripts/ProxmoxVE/pull/4665))
+
 ## 2025-05-21
 
 ### 🆕 New Scripts
