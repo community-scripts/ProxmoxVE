@@ -18,7 +18,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🆕 New Scripts
 
-  - cloudflare-ddns ([#4647](https://github.com/community-scripts/ProxmoxVE/pull/4647))
+  - FreePBX ([#4648](https://github.com/community-scripts/ProxmoxVE/pull/4648))
+- cloudflare-ddns ([#4647](https://github.com/community-scripts/ProxmoxVE/pull/4647))
 
 ### 🚀 Updated Scripts
 
