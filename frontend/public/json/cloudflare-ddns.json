@@ -4,7 +4,7 @@
   "categories": [
     4
   ],
-  "date_created": "2025-04-23",
+  "date_created": "2025-05-22",
   "type": "ct",
   "updateable": false,
   "privileged": false,
@@ -33,11 +33,11 @@
   },
   "notes": [
     {
-      "text": "To setup the updater you must have the Cloudflare Token and the domains, please read the Github documentation at \"Step 1: Updating the Compose File\" (only the expandable section)",
+      "text": "To setup the updater you must have the Cloudflare Token and the domains, please read the Github documentation at `https://github.com/favonia/cloudflare-ddns?tab=readme-ov-file#-step-1-updating-the-compose-file` (only the expandable section)",
       "type": "warning"
     },
     {
-      "text": "To update the configuration edit `/etc/systemd/system/cloudflare-ddns.service`. After edit please restard with `sudo systemctl restart cloudflare-ddns.service`",
+      "text": "To update the configuration edit `/etc/systemd/system/cloudflare-ddns.service`. After edit please restard with `systemctl restart cloudflare-ddns`",
       "type": "info"
     }
   ]
