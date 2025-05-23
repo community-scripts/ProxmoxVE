@@ -12,7 +12,7 @@
   "documentation": "https://configarr.raydak.de/docs/intro",
   "config_path": "/opt/configarr/config.yml",
   "website": "https://configarr.raydak.de/",
-  "logo": "https://github.com/raydak-labs/configarr/blob/main/docs/static/img/logo.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/configarr.webp",
   "description": "Configarr is an open-source tool designed to simplify configuration and synchronization for Sonarr and Radarr (and other experimental). It integrates with TRaSH Guides to automate updates of custom formats, quality profiles, and other settings, while also supporting user-defined configurations.",
   "install_methods": [
     {
