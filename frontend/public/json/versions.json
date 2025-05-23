@@ -1,8 +1,38 @@
 [
   {
+    "name": "grafana/grafana",
+    "version": "v11.6.2",
+    "date": "2025-05-22T22:28:40Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.7.0",
+    "date": "2025-05-14T23:42:30Z"
+  },
+  {
+    "name": "crowdsecurity/crowdsec",
+    "version": "v1.6.8",
+    "date": "2025-03-25T13:33:10Z"
+  },
+  {
+    "name": "traccar/traccar",
+    "version": "v6.7.0",
+    "date": "2025-05-22T14:41:14Z"
+  },
+  {
+    "name": "MariaDB/server",
+    "version": "mariadb-11.4.7",
+    "date": "2025-05-22T14:22:22Z"
+  },
+  {
+    "name": "neo4j/neo4j",
+    "version": "4.4.44",
+    "date": "2025-05-22T13:58:43Z"
+  },
+  {
     "name": "apache/cassandra",
     "version": "4.0.18-tentative",
-    "date": "2025-05-22T11:35:48Z"
+    "date": "2025-05-22T11:46:18Z"
   },
   {
     "name": "wazuh/wazuh",
@@ -23,11 +53,6 @@
     "name": "tobychui/zoraxy",
     "version": "v3.1.9",
     "date": "2025-03-01T02:24:33Z"
-  },
-  {
-    "name": "ollama/ollama",
-    "version": "v0.7.0",
-    "date": "2025-05-14T23:42:30Z"
   },
   {
     "name": "keycloak/keycloak",
@@ -251,8 +276,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v4.1.1",
-    "date": "2025-05-16T17:37:30Z"
+    "version": "nightly",
+    "date": "2025-05-18T13:00:01Z"
   },
   {
     "name": "hansmi/prometheus-paperless-exporter",
@@ -445,11 +470,6 @@
     "date": "2025-05-12T18:50:44Z"
   },
   {
-    "name": "neo4j/neo4j",
-    "version": "4.4.43",
-    "date": "2025-05-12T15:33:17Z"
-  },
-  {
     "name": "usememos/memos",
     "version": "v0.24.3",
     "date": "2025-05-12T15:23:21Z"
@@ -500,11 +520,6 @@
     "date": "2025-05-09T23:14:23Z"
   },
   {
-    "name": "crowdsecurity/crowdsec",
-    "version": "v1.6.8",
-    "date": "2025-03-25T13:33:10Z"
-  },
-  {
     "name": "pocket-id/pocket-id",
     "version": "v0.53.0",
     "date": "2025-05-08T19:56:55Z"
@@ -523,11 +538,6 @@
     "name": "readeck/readeck",
     "version": "0.18.2",
     "date": "2025-05-07T19:22:22Z"
-  },
-  {
-    "name": "grafana/grafana",
-    "version": "v12.0.0+security-01",
-    "date": "2025-05-07T18:03:17Z"
   },
   {
     "name": "donaldzou/WGDashboard",
@@ -568,11 +578,6 @@
     "name": "sysadminsmedia/homebox",
     "version": "v0.19.0",
     "date": "2025-05-06T18:05:42Z"
-  },
-  {
-    "name": "MariaDB/server",
-    "version": "mariadb-11.4.6",
-    "date": "2025-05-06T15:30:49Z"
   },
   {
     "name": "bluenviron/mediamtx",
@@ -1093,11 +1098,6 @@
     "name": "petio-team/petio",
     "version": "v0.5.7",
     "date": "2025-01-17T15:57:17Z"
-  },
-  {
-    "name": "traccar/traccar",
-    "version": "v6.6",
-    "date": "2025-01-11T17:26:49Z"
   },
   {
     "name": "ErsatzTV/ErsatzTV",
