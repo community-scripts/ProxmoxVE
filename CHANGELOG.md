@@ -22,6 +22,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - TYPO: Fix nexcloud to nextcloud (VM) [@Stoufiler](https://github.com/Stoufiler) ([#4670](https://github.com/community-scripts/ProxmoxVE/pull/4670))
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Update Icons to selfhst/icons (FreePBX & Configarr) [@MickLesk](https://github.com/MickLesk) ([#4680](https://github.com/community-scripts/ProxmoxVE/pull/4680))
+
 ## 2025-05-22
 
 ### 🆕 New Scripts
