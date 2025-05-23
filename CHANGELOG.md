@@ -28,6 +28,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - Update Icons to selfhst/icons (FreePBX & Configarr) [@MickLesk](https://github.com/MickLesk) ([#4680](https://github.com/community-scripts/ProxmoxVE/pull/4680))
 
+### 💥 Breaking Changes
+
+  - Remove rtsptoweb (deprecated) [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4686](https://github.com/community-scripts/ProxmoxVE/pull/4686))
+
 ## 2025-05-22
 
 ### 🆕 New Scripts
