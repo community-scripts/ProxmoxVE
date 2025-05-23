@@ -16,6 +16,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-05-23
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - TYPO: Fix nexcloud to nextcloud (VM) [@Stoufiler](https://github.com/Stoufiler) ([#4670](https://github.com/community-scripts/ProxmoxVE/pull/4670))
+
 ## 2025-05-22
 
 ### 🆕 New Scripts
