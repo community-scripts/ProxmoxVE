@@ -1,13 +1,38 @@
 [
   {
-    "name": "grafana/grafana",
-    "version": "v11.6.2",
-    "date": "2025-05-22T22:28:40Z"
+    "name": "nzbgetcom/nzbget",
+    "version": "v25.0",
+    "date": "2025-05-12T09:12:04Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.2",
+    "date": "2025-05-11T16:40:55Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1941",
+    "date": "2025-05-23T05:59:10Z"
   },
   {
     "name": "ollama/ollama",
-    "version": "v0.7.0",
-    "date": "2025-05-14T23:42:30Z"
+    "version": "v0.7.1-rc1",
+    "date": "2025-05-22T18:30:49Z"
+  },
+  {
+    "name": "rogerfar/rdt-client",
+    "version": "v2.0.113",
+    "date": "2025-05-23T01:47:35Z"
+  },
+  {
+    "name": "grafana/grafana",
+    "version": "v11.2.10",
+    "date": "2025-05-22T23:50:45Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.0.12",
+    "date": "2025-05-15T14:06:52Z"
   },
   {
     "name": "crowdsecurity/crowdsec",
@@ -40,9 +65,9 @@
     "date": "2025-05-22T06:45:39Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1938",
-    "date": "2025-05-22T05:50:35Z"
+    "name": "runtipi/runtipi",
+    "version": "v4.1.1",
+    "date": "2025-05-16T17:37:30Z"
   },
   {
     "name": "0xERR0R/blocky",
@@ -53,11 +78,6 @@
     "name": "tobychui/zoraxy",
     "version": "v3.1.9",
     "date": "2025-03-01T02:24:33Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.0.12",
-    "date": "2025-05-15T14:06:52Z"
   },
   {
     "name": "immich-app/immich",
@@ -260,11 +280,6 @@
     "date": "2025-05-18T18:20:43Z"
   },
   {
-    "name": "rogerfar/rdt-client",
-    "version": "v2.0.112",
-    "date": "2025-05-18T17:44:52Z"
-  },
-  {
     "name": "YunoHost/yunohost",
     "version": "debian/12.1.6.1",
     "date": "2025-05-18T17:01:42Z"
@@ -273,11 +288,6 @@
     "name": "kimai/kimai",
     "version": "2.34.0",
     "date": "2025-05-18T13:22:17Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-05-18T13:00:01Z"
   },
   {
     "name": "hansmi/prometheus-paperless-exporter",
@@ -390,11 +400,6 @@
     "date": "2025-05-15T09:59:28Z"
   },
   {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.2",
-    "date": "2025-05-11T16:40:55Z"
-  },
-  {
     "name": "FlowiseAI/Flowise",
     "version": "flowise@3.0.0",
     "date": "2025-05-15T01:49:47Z"
@@ -418,11 +423,6 @@
     "name": "motioneye-project/motioneye",
     "version": "0.42.1",
     "date": "2020-06-07T07:27:04Z"
-  },
-  {
-    "name": "nzbgetcom/nzbget",
-    "version": "v25.0",
-    "date": "2025-05-12T09:12:04Z"
   },
   {
     "name": "blakeblackshear/frigate",
