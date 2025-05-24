@@ -68,7 +68,7 @@ Environment="PROXIED=${var_cf_proxied}"
 Environment="IP6_PROVIDER=${var_cf_ip6_provider}"
 Environment="GOPATH=/root/go"
 Environment="GOCACHE=/tmp/go-build"
-ExecStart=/usr/bin/go/bin/go run github.com/favonia/cloudflare-ddns/cmd/ddns@latest
+ExecStart=/usr/local/bin/go run github.com/favonia/cloudflare-ddns/cmd/ddns@latest
 Restart=always
 RestartSec=300
 
