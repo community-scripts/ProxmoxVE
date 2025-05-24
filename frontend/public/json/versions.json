@@ -1,5 +1,25 @@
 [
   {
+    "name": "pocketbase/pocketbase",
+    "version": "v0.28.2",
+    "date": "2025-05-24T07:59:15Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1945",
+    "date": "2025-05-24T05:50:58Z"
+  },
+  {
+    "name": "traccar/traccar",
+    "version": "v6.7.1",
+    "date": "2025-05-24T04:51:02Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.13",
+    "date": "2025-05-24T04:31:52Z"
+  },
+  {
     "name": "homarr-labs/homarr",
     "version": "v1.21.0",
     "date": "2025-05-23T19:17:15Z"
@@ -45,14 +65,14 @@
     "date": "2025-05-12T09:12:04Z"
   },
   {
+    "name": "keycloak/keycloak",
+    "version": "26.0.12",
+    "date": "2025-05-15T14:06:52Z"
+  },
+  {
     "name": "morpheus65535/bazarr",
     "version": "v1.5.2",
     "date": "2025-05-11T16:40:55Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1941",
-    "date": "2025-05-23T05:59:10Z"
   },
   {
     "name": "ollama/ollama",
@@ -70,19 +90,9 @@
     "date": "2025-05-22T23:50:45Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.0.12",
-    "date": "2025-05-15T14:06:52Z"
-  },
-  {
     "name": "crowdsecurity/crowdsec",
     "version": "v1.6.8",
     "date": "2025-03-25T13:33:10Z"
-  },
-  {
-    "name": "traccar/traccar",
-    "version": "v6.7.0",
-    "date": "2025-05-22T14:41:14Z"
   },
   {
     "name": "MariaDB/server",
@@ -101,8 +111,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-05-22T06:34:13Z"
+    "version": "v4.1.1",
+    "date": "2025-05-16T17:37:30Z"
   },
   {
     "name": "0xERR0R/blocky",
@@ -268,11 +278,6 @@
     "name": "Checkmk/checkmk",
     "version": "v2.4.0p2",
     "date": "2025-05-19T17:06:15Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.12",
-    "date": "2025-04-20T19:22:17Z"
   },
   {
     "name": "n8n-io/n8n",
@@ -448,11 +453,6 @@
     "name": "netbox-community/netbox",
     "version": "v4.3.1",
     "date": "2025-05-13T19:45:00Z"
-  },
-  {
-    "name": "pocketbase/pocketbase",
-    "version": "v0.28.1",
-    "date": "2025-05-13T18:45:47Z"
   },
   {
     "name": "OctoPrint/OctoPrint",
