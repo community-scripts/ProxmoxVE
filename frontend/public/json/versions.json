@@ -1,5 +1,45 @@
 [
   {
+    "name": "homarr-labs/homarr",
+    "version": "v1.21.0",
+    "date": "2025-05-23T19:17:15Z"
+  },
+  {
+    "name": "immich-app/immich",
+    "version": "v1.133.1",
+    "date": "2025-05-23T18:14:44Z"
+  },
+  {
+    "name": "Threadfin/Threadfin",
+    "version": "1.2.33",
+    "date": "2025-05-23T15:59:05Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.5.3",
+    "date": "2025-05-23T15:10:33Z"
+  },
+  {
+    "name": "docker/compose",
+    "version": "v2.36.2",
+    "date": "2025-05-23T14:21:20Z"
+  },
+  {
+    "name": "zitadel/zitadel",
+    "version": "v3.2.0",
+    "date": "2025-05-23T13:58:07Z"
+  },
+  {
+    "name": "grokability/snipe-it",
+    "version": "v8.1.4",
+    "date": "2025-05-23T12:29:19Z"
+  },
+  {
+    "name": "wazuh/wazuh",
+    "version": "v4.10.2",
+    "date": "2025-05-23T11:56:41Z"
+  },
+  {
     "name": "nzbgetcom/nzbget",
     "version": "v25.0",
     "date": "2025-05-12T09:12:04Z"
@@ -16,8 +56,8 @@
   },
   {
     "name": "ollama/ollama",
-    "version": "v0.7.1-rc1",
-    "date": "2025-05-22T18:30:49Z"
+    "version": "v0.7.1-rc2",
+    "date": "2025-05-23T01:53:31Z"
   },
   {
     "name": "rogerfar/rdt-client",
@@ -60,14 +100,9 @@
     "date": "2025-05-22T11:46:18Z"
   },
   {
-    "name": "wazuh/wazuh",
-    "version": "v4.10.2",
-    "date": "2025-05-22T06:45:39Z"
-  },
-  {
     "name": "runtipi/runtipi",
-    "version": "v4.1.1",
-    "date": "2025-05-16T17:37:30Z"
+    "version": "nightly",
+    "date": "2025-05-22T06:34:13Z"
   },
   {
     "name": "0xERR0R/blocky",
@@ -78,11 +113,6 @@
     "name": "tobychui/zoraxy",
     "version": "v3.1.9",
     "date": "2025-03-01T02:24:33Z"
-  },
-  {
-    "name": "immich-app/immich",
-    "version": "v1.133.0",
-    "date": "2025-05-21T20:17:38Z"
   },
   {
     "name": "apache/tika",
@@ -138,11 +168,6 @@
     "name": "glpi-project/glpi",
     "version": "10.0.18",
     "date": "2025-02-12T11:07:02Z"
-  },
-  {
-    "name": "zitadel/zitadel",
-    "version": "v3.1.0",
-    "date": "2025-05-21T12:40:54Z"
   },
   {
     "name": "esphome/esphome",
@@ -255,11 +280,6 @@
     "date": "2025-05-08T12:25:10Z"
   },
   {
-    "name": "docker/compose",
-    "version": "v2.36.1",
-    "date": "2025-05-19T12:26:41Z"
-  },
-  {
     "name": "Graylog2/graylog2-server",
     "version": "6.3.0-beta.1",
     "date": "2025-05-19T11:23:27Z"
@@ -333,16 +353,6 @@
     "name": "advplyr/audiobookshelf",
     "version": "v2.23.0",
     "date": "2025-05-16T22:13:53Z"
-  },
-  {
-    "name": "home-assistant/core",
-    "version": "2025.5.2",
-    "date": "2025-05-16T21:09:45Z"
-  },
-  {
-    "name": "homarr-labs/homarr",
-    "version": "v1.20.0",
-    "date": "2025-05-16T19:18:10Z"
   },
   {
     "name": "NodeBB/NodeBB",
@@ -563,11 +573,6 @@
     "name": "openobserve/openobserve",
     "version": "v0.14.7",
     "date": "2025-05-07T11:32:23Z"
-  },
-  {
-    "name": "grokability/snipe-it",
-    "version": "v8.1.3",
-    "date": "2025-05-07T11:09:21Z"
   },
   {
     "name": "jupyter/notebook",
@@ -833,11 +838,6 @@
     "name": "sabnzbd/sabnzbd",
     "version": "4.5.1",
     "date": "2025-04-11T09:57:47Z"
-  },
-  {
-    "name": "Threadfin/Threadfin",
-    "version": "1.2.32",
-    "date": "2025-04-07T20:01:09Z"
   },
   {
     "name": "thomiceli/opengist",
