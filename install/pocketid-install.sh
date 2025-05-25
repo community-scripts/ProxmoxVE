@@ -13,12 +13,6 @@ setting_up_container
 network_check
 update_os
 
-# msg_info "Installing Dependencies"
-# $STD apt-get install -y \
-#   gpg \
-#   gcc
-# msg_ok "Installed Dependencies"
-
 read -r -p "${TAB3}What public URL do you want to use (e.g. pocketid.mydomain.com)? " public_url
 msg_info "Setup Pocket ID"
 RELEASE=$(curl -fsSL https://api.github.com/repos/pocket-id/pocket-id/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
