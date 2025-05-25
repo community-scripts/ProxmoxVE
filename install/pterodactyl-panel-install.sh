@@ -54,7 +54,7 @@ $STD mysql -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH 
 msg_ok "Set up MariaDB"
 
 read -p "${TAB3}Provide an email address for admin login, this should be a valid email address: " ADMIN_EMAIL
-read -p "${TAB3}nter your First Name: " NAME_FIRST
+read -p "${TAB3}Enter your First Name: " NAME_FIRST
 read -p "${TAB3}Enter your Last Name: " NAME_LAST
 
 msg_info "Installing pterodactyl Panel"
