@@ -16,6 +16,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-05-25
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - Pterodactyl panel read typo [@bvdberg01](https://github.com/bvdberg01) ([#4701](https://github.com/community-scripts/ProxmoxVE/pull/4701))
+
 ## 2025-05-24
 
 ## 2025-05-23
