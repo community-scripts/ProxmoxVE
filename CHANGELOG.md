@@ -18,6 +18,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Pelican-panel: back-up database if using sqlite [@bvdberg01](https://github.com/bvdberg01) ([#4700](https://github.com/community-scripts/ProxmoxVE/pull/4700))
+
   - #### 🔧 Refactor
 
     - Pterodactyl panel read typo [@bvdberg01](https://github.com/bvdberg01) ([#4701](https://github.com/community-scripts/ProxmoxVE/pull/4701))
