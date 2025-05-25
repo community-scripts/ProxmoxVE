@@ -20,63 +20,62 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
+  header_info
+  check_container_storage
+  check_container_resources
 
-    if [[ ! -d /opt/pocket-id ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-
-    RELEASE=$(curl -fsSL https://api.github.com/repos/pocket-id/pocket-id/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-    if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
-        msg_info "Updating $APP"
-
-        msg_info "Stopping $APP"
-        systemctl stop pocketid-backend.service
-        systemctl stop pocketid-frontend.service
-        systemctl stop caddy.service
-        msg_ok "Stopped $APP"
-
-        msg_info "Updating $APP to v${RELEASE}"
-        cd /opt
-        cp -r /opt/pocket-id/backend/data /opt/data
-        cp /opt/pocket-id/backend/.env /opt/backend.env
-        cp /opt/pocket-id/frontend/.env /opt/frontend.env
-        rm -r /opt/pocket-id
-        curl -fsSL "https://github.com/pocket-id/pocket-id/archive/refs/tags/v${RELEASE}.zip" -o $(basename "https://github.com/pocket-id/pocket-id/archive/refs/tags/v${RELEASE}.zip")
-        unzip -q v${RELEASE}.zip
-        mv pocket-id-${RELEASE} /opt/pocket-id
-        mv /opt/data /opt/pocket-id/backend/data
-        mv /opt/backend.env /opt/pocket-id/backend/.env
-        mv /opt/frontend.env /opt/pocket-id/frontend/.env
-
-        cd /opt/pocket-id/backend/cmd
-        go build -o ../pocket-id-backend
-        cd ../../frontend
-        npm install
-        npm run build
-        msg_ok "Updated $APP to ${RELEASE}"
-
-        msg_info "Starting $APP"
-        systemctl start pocketid-backend.service
-        systemctl start pocketid-frontend.service
-        systemctl start caddy.service
-        sleep 2
-        msg_ok "Started $APP"
-
-        # Cleaning up
-        msg_info "Cleaning Up"
-        rm -f /opt/v${RELEASE}.zip
-        msg_ok "Cleanup Completed"
-
-        echo "${RELEASE}" >/opt/${APP}_version.txt
-        msg_ok "Update Successful"
-    else
-        msg_ok "No update required. ${APP} is already at ${RELEASE}"
-    fi
+  if [[ ! -d /opt/pocket-id ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+
+  RELEASE=$(curl -fsSL https://api.github.com/repos/pocket-id/pocket-id/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+  if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
+    if [[ "$(cat /opt/${APP}_version.txt)" < "1.0.0" ]]; then
+      msg_info "Migrating ${APP} to v${RELEASE}"
+      systemctl -q disable --now pocketid-backend pocketid-frontend caddy
+      mv /etc/caddy/Caddyfile ~/Caddyfile.bak
+      $STD apt remove --purge caddy nodejs -y
+      $STD apt autoremove -y
+      rm /etc/apt/{keyrings/nodesource.gpg,sources.list.d/nodesource.list}
+      rm -r /usr/local/go
+      cp -r /opt/pocket-id/backend/data /opt/data
+      cp /opt/pocket-id/backend/.env /opt/env
+      sed -i -e 's/PUBLIC_//g' \
+        -e '/^SQLITE_DB_PATH/d' \
+        -e '/^POSTGRES/s/^/# /' \
+        -e '/^UPLOAD_PATH/d' \
+        -e 's/8080/1411/' /opt/env
+      rm -r /opt/pocket-id
+      rm /etc/systemd/system/pocketid-frontend.service
+      BACKEND="/etc/systemd/system/pocketid-backend.service"
+      sed -i -e 's/Backend/Service/' \
+        -e 's/\/backend\|-backend//g' "$BACKEND"
+      mv "$BACKEND" ${BACKEND//-backend/}
+      systemctl daemon-reload
+      systemctl -q enable pocketid
+      mkdir /opt/pocket-id
+      mv /opt/data /opt/pocket-id
+      msg_ok "Migration complete. The reverse proxy port has been changed to 1411."
+    else
+      msg_info "Updating $APP to v${RELEASE}"
+      systemctl stop pocketid
+      cp /opt/pocket-id/.env /opt/env
+    fi
+    curl -fsSL "https://github.com/pocket-id/pocket-id/releases/download/v${RELEASE}/pocket-id-linux-amd64" -o /opt/pocket-id/pocket-id
+    chmod u+x /opt/pocket-id/pocket-id
+    mv /opt/env /opt/pocket-id/.env
+
+    msg_info "Starting $APP"
+    systemctl start pocketid
+    msg_ok "Started $APP"
+
+    echo "${RELEASE}" >/opt/${APP}_version.txt
+    msg_ok "Update Successful"
+  else
+    msg_ok "No update required. ${APP} is already at ${RELEASE}"
+  fi
+  exit
 }
 
 start
@@ -85,6 +84,6 @@ description
 
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Configure your reverse proxy to point to:${BGN} ${IP}:80${CL}"
+echo -e "${INFO}${YW} Configure your reverse proxy to point to:${BGN} ${IP}:1411${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}https://{PUBLIC_URL}/login/setup${CL}"
