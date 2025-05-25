@@ -1,5 +1,30 @@
 [
   {
+    "name": "pocket-id/pocket-id",
+    "version": "v1.0.0",
+    "date": "2025-05-24T22:06:55Z"
+  },
+  {
+    "name": "minio/minio",
+    "version": "RELEASE.2025-05-24T17-08-30Z",
+    "date": "2025-05-24T21:42:19Z"
+  },
+  {
+    "name": "paperless-ngx/paperless-ngx",
+    "version": "v2.16.2",
+    "date": "2025-05-24T18:52:35Z"
+  },
+  {
+    "name": "ioBroker/ioBroker",
+    "version": "2025-05-24",
+    "date": "2025-05-24T13:56:54Z"
+  },
+  {
+    "name": "cross-seed/cross-seed",
+    "version": "v6.12.5",
+    "date": "2025-05-17T02:52:33Z"
+  },
+  {
     "name": "pocketbase/pocketbase",
     "version": "v0.28.2",
     "date": "2025-05-24T07:59:15Z"
@@ -111,8 +136,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v4.1.1",
-    "date": "2025-05-16T17:37:30Z"
+    "version": "nightly",
+    "date": "2025-05-22T06:34:13Z"
   },
   {
     "name": "0xERR0R/blocky",
@@ -153,11 +178,6 @@
     "name": "msgbyte/tianji",
     "version": "v1.20.10",
     "date": "2025-05-21T17:22:32Z"
-  },
-  {
-    "name": "cross-seed/cross-seed",
-    "version": "v6.12.5",
-    "date": "2025-05-17T02:52:33Z"
   },
   {
     "name": "cockpit-project/cockpit",
@@ -253,11 +273,6 @@
     "name": "HabitRPG/habitica",
     "version": "v5.36.4",
     "date": "2025-05-19T22:28:11Z"
-  },
-  {
-    "name": "paperless-ngx/paperless-ngx",
-    "version": "v2.16.1",
-    "date": "2025-05-19T21:26:44Z"
   },
   {
     "name": "glanceapp/glance",
@@ -530,11 +545,6 @@
     "date": "2025-05-09T23:14:23Z"
   },
   {
-    "name": "pocket-id/pocket-id",
-    "version": "v0.53.0",
-    "date": "2025-05-08T19:56:55Z"
-  },
-  {
     "name": "apache/tomcat",
     "version": "10.1.41",
     "date": "2025-05-08T12:45:44Z"
@@ -753,11 +763,6 @@
     "name": "NLnetLabs/unbound",
     "version": "release-1.23.0",
     "date": "2025-04-24T08:07:21Z"
-  },
-  {
-    "name": "minio/minio",
-    "version": "RELEASE.2025-04-22T22-12-26Z",
-    "date": "2025-04-22T22:44:34Z"
   },
   {
     "name": "OliveTin/OliveTin",
@@ -1028,11 +1033,6 @@
     "name": "drakkan/sftpgo",
     "version": "v2.6.6",
     "date": "2025-02-24T19:14:46Z"
-  },
-  {
-    "name": "ioBroker/ioBroker",
-    "version": "2025-02-23",
-    "date": "2025-02-24T16:05:06Z"
   },
   {
     "name": "ventoy/Ventoy",
