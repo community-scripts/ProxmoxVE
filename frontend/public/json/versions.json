@@ -1,5 +1,35 @@
 [
   {
+    "name": "Radarr/Radarr",
+    "version": "v5.23.3.9987",
+    "date": "2025-05-17T12:55:29Z"
+  },
+  {
+    "name": "semaphoreui/semaphore",
+    "version": "v2.14.10",
+    "date": "2025-05-07T20:23:29Z"
+  },
+  {
+    "name": "Kozea/Radicale",
+    "version": "v3.5.4",
+    "date": "2025-05-25T06:53:34Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1947",
+    "date": "2025-05-25T05:53:55Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.15",
+    "date": "2025-05-25T05:11:31Z"
+  },
+  {
+    "name": "authelia/authelia",
+    "version": "v4.39.4",
+    "date": "2025-05-25T02:27:28Z"
+  },
+  {
     "name": "pocket-id/pocket-id",
     "version": "v1.0.0",
     "date": "2025-05-24T22:06:55Z"
@@ -30,19 +60,9 @@
     "date": "2025-05-24T07:59:15Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1945",
-    "date": "2025-05-24T05:50:58Z"
-  },
-  {
     "name": "traccar/traccar",
     "version": "v6.7.1",
     "date": "2025-05-24T04:51:02Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.13",
-    "date": "2025-05-24T04:31:52Z"
   },
   {
     "name": "homarr-labs/homarr",
@@ -136,8 +156,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-05-22T06:34:13Z"
+    "version": "v4.1.1",
+    "date": "2025-05-16T17:37:30Z"
   },
   {
     "name": "0xERR0R/blocky",
@@ -340,11 +360,6 @@
     "date": "2025-04-30T11:02:36Z"
   },
   {
-    "name": "Radarr/Radarr",
-    "version": "v5.23.3.9987",
-    "date": "2025-05-17T12:55:29Z"
-  },
-  {
     "name": "bastienwirtz/homer",
     "version": "v25.05.2",
     "date": "2025-05-17T12:53:29Z"
@@ -520,16 +535,6 @@
     "date": "2025-05-11T15:50:48Z"
   },
   {
-    "name": "Kozea/Radicale",
-    "version": "v3.5.3",
-    "date": "2025-05-11T15:17:13Z"
-  },
-  {
-    "name": "authelia/authelia",
-    "version": "v4.39.3",
-    "date": "2025-05-11T11:12:15Z"
-  },
-  {
     "name": "owncast/owncast",
     "version": "v0.2.3",
     "date": "2025-05-10T21:14:45Z"
@@ -548,11 +553,6 @@
     "name": "apache/tomcat",
     "version": "10.1.41",
     "date": "2025-05-08T12:45:44Z"
-  },
-  {
-    "name": "semaphoreui/semaphore",
-    "version": "v2.14.10",
-    "date": "2025-05-07T20:23:29Z"
   },
   {
     "name": "readeck/readeck",
