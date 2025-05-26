@@ -1,0 +1,40 @@
+{
+  "name": "Pulse",
+  "slug": "pulse",
+  "categories": [
+    9
+  ],
+  "date_created": "2025-05-22",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 7655,
+  "documentation": null,
+  "website": "https://github.com/rcourtman/Pulse",
+  "logo": "https://raw.githubusercontent.com/rcourtman/Pulse/main/src/public/logos/pulse-logo-256x256.png",
+  "config_path": "/opt/pulse-proxmox/.env",
+  "description": "A lightweight monitoring application for Proxmox VE that displays real-time status for VMs and containers via a simple web interface.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/pulse.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 4,
+        "os": "debian",
+        "version": "12"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Create Proxmox-API-Token first: `https: //github.com/rcourtman/Pulse?tab=readme-ov-file#creating-a-proxmox-api-token`",
+      "type": "Info"
+    }
+  ]
+}
