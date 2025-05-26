@@ -18,7 +18,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🆕 New Scripts
 
-  - Kasm ([#4716](https://github.com/community-scripts/ProxmoxVE/pull/4716))
+  - Argus ([#4717](https://github.com/community-scripts/ProxmoxVE/pull/4717))
+- Kasm ([#4716](https://github.com/community-scripts/ProxmoxVE/pull/4716))
 
 ### 🚀 Updated Scripts
 
