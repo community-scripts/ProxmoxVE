@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/omiinaya/ProxmoxVE/refs/heads/testing/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: Omar Minaya
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -27,15 +27,14 @@ function update_script() {
   check_container_resources
   if [[ ! -d /var ]]; then
     msg_error "No ${APP} Installation Found!"
-    exit 1
+    exit
   fi
   msg_info "Updating $APP LXC"
-  $STD sudo mkdir -p /backup
-  $STD sudo chmod 750 /backup
   cd /tmp
   KASM_VERSION=$(curl -fsSL 'https://www.kasmweb.com/downloads' | grep -o 'https://kasm-static-content.s3.amazonaws.com/kasm_release_[^"]*\.tar\.gz' | head -n 1 | sed -E 's/.*release_(.*)\.tar\.gz/\1/')
   curl -O "https://kasm-static-content.s3.amazonaws.com/kasm_release_${KASM_VERSION}.tar.gz"
   tar -xf "kasm_release_${KASM_VERSION}.tar.gz"
+  $STD sudo bash kasm_release/upgrade.sh
 
   $STD apt-get update
   $STD apt-get -y upgrade
