@@ -16,6 +16,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-05-26
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - BREAKING CHANGE: Fix PocketID for v1.0.0 [@vhsdream](https://github.com/vhsdream) ([#4711](https://github.com/community-scripts/ProxmoxVE/pull/4711))
+
 ## 2025-05-25
 
 ### 🚀 Updated Scripts
