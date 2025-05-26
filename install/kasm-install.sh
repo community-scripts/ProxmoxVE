@@ -20,6 +20,7 @@ cd /opt
 tar -xf "kasm_release_${KASM_VERSION}.tar.gz"
 chmod +x /opt/kasm_release/install.sh
 printf 'y\ny\ny\n4\n' | bash /opt/kasm_release/install.sh
+touch ~/kasm-install.output
 sed -n '/Kasm UI Login Credentials/,$p' ~/kasm-install.output >~/kasm.creds
 msg_ok "Installed Kasm Workspaces"
 
