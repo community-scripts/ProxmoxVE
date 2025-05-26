@@ -1,5 +1,30 @@
 [
   {
+    "name": "stonith404/pingvin-share",
+    "version": "v1.13.0",
+    "date": "2025-05-25T20:21:13Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.21.0",
+    "date": "2025-05-25T16:41:43Z"
+  },
+  {
+    "name": "cross-seed/cross-seed",
+    "version": "v6.12.5",
+    "date": "2025-05-17T02:52:33Z"
+  },
+  {
+    "name": "Prowlarr/Prowlarr",
+    "version": "v1.36.3.5071",
+    "date": "2025-05-25T13:59:43Z"
+  },
+  {
+    "name": "Lidarr/Lidarr",
+    "version": "v2.11.2.4629",
+    "date": "2025-04-28T11:59:37Z"
+  },
+  {
     "name": "Radarr/Radarr",
     "version": "v5.23.3.9987",
     "date": "2025-05-17T12:55:29Z"
@@ -48,11 +73,6 @@
     "name": "ioBroker/ioBroker",
     "version": "2025-05-24",
     "date": "2025-05-24T13:56:54Z"
-  },
-  {
-    "name": "cross-seed/cross-seed",
-    "version": "v6.12.5",
-    "date": "2025-05-17T02:52:33Z"
   },
   {
     "name": "pocketbase/pocketbase",
@@ -193,11 +213,6 @@
     "name": "ipfs/kubo",
     "version": "v0.35.0",
     "date": "2025-05-21T18:00:32Z"
-  },
-  {
-    "name": "msgbyte/tianji",
-    "version": "v1.20.10",
-    "date": "2025-05-21T17:22:32Z"
   },
   {
     "name": "cockpit-project/cockpit",
@@ -353,11 +368,6 @@
     "name": "hansmi/prometheus-paperless-exporter",
     "version": "v0.0.8",
     "date": "2025-05-18T11:37:31Z"
-  },
-  {
-    "name": "Prowlarr/Prowlarr",
-    "version": "v1.35.1.5034",
-    "date": "2025-04-30T11:02:36Z"
   },
   {
     "name": "bastienwirtz/homer",
@@ -565,11 +575,6 @@
     "date": "2025-05-07T15:35:04Z"
   },
   {
-    "name": "stonith404/pingvin-share",
-    "version": "v1.12.0",
-    "date": "2025-05-07T14:12:11Z"
-  },
-  {
     "name": "Brandawg93/PeaNUT",
     "version": "v5.7.5",
     "date": "2025-05-07T14:01:45Z"
@@ -638,11 +643,6 @@
     "name": "moghtech/komodo",
     "version": "v1.17.5",
     "date": "2025-05-04T22:17:06Z"
-  },
-  {
-    "name": "Lidarr/Lidarr",
-    "version": "v2.11.2.4629",
-    "date": "2025-04-28T11:59:37Z"
   },
   {
     "name": "Readarr/Readarr",
