@@ -16,10 +16,17 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-05-26
 
+### 🆕 New Scripts
+
+  - Kasm ([#4716](https://github.com/community-scripts/ProxmoxVE/pull/4716))
+
 ### 🚀 Updated Scripts
+
+  - Excalidraw: increase HDD to 10GB [@MickLesk](https://github.com/MickLesk) ([#4718](https://github.com/community-scripts/ProxmoxVE/pull/4718))
 
   - #### 🐞 Bug Fixes
 
+    - InspIRCd: Fix release name in release url [@tremor021](https://github.com/tremor021) ([#4720](https://github.com/community-scripts/ProxmoxVE/pull/4720))
     - BREAKING CHANGE: Fix PocketID for v1.0.0 [@vhsdream](https://github.com/vhsdream) ([#4711](https://github.com/community-scripts/ProxmoxVE/pull/4711))
 
 ## 2025-05-25
