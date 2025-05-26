@@ -27,8 +27,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
-    - InspIRCd: Fix release name in release url [@tremor021](https://github.com/tremor021) ([#4720](https://github.com/community-scripts/ProxmoxVE/pull/4720))
     - BREAKING CHANGE: Fix PocketID for v1.0.0 [@vhsdream](https://github.com/vhsdream) ([#4711](https://github.com/community-scripts/ProxmoxVE/pull/4711))
+    - InspIRCd: Fix release name in release url [@tremor021](https://github.com/tremor021) ([#4720](https://github.com/community-scripts/ProxmoxVE/pull/4720))
 
 ## 2025-05-25
 
