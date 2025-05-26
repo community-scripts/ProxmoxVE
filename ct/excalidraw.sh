@@ -9,7 +9,7 @@ APP="Excalidraw"
 TAGS="diagrams"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-3072}"
-var_disk="${var_disk:-6}"
+var_disk="${var_disk:-10}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-12}"
 var_unprivileged="${var_unprivileged:-1}"
@@ -20,46 +20,46 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
+  header_info
+  check_container_storage
+  check_container_resources
 
-    if [[ ! -d /opt/excalidraw ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-
-    RELEASE=$(curl -fsSL https://api.github.com/repos/excalidraw/excalidraw/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-    if [[ "${RELEASE}" != "$(cat /opt/excalidraw_version.txt)" ]] || [[ ! -f /opt/excalidraw_version.txt ]]; then
-        msg_info "Stopping $APP"
-        systemctl stop excalidraw
-        msg_ok "Stopped $APP"
-
-        msg_info "Updating $APP to v${RELEASE}"
-        cd /tmp
-        temp_file=$(mktemp)
-curl -fsSL "https://github.com/excalidraw/excalidraw/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
-        tar xzf $temp_file
-        rm -rf /opt/excalidraw
-        mv excalidraw-${RELEASE} /opt/excalidraw
-        cd /opt/excalidraw
-        $STD yarn
-        msg_ok "Updated $APP to v${RELEASE}"
-
-        msg_info "Starting $APP"
-        systemctl start excalidraw
-        msg_ok "Started $APP"
-
-        msg_info "Cleaning Up"
-        rm -rf $temp_file
-        msg_ok "Cleanup Completed"
-
-        echo "${RELEASE}" >/opt/excalidraw_version.txt
-        msg_ok "Update Successful"
-    else
-        msg_ok "No update required. ${APP} is already at v${RELEASE}"
-    fi
+  if [[ ! -d /opt/excalidraw ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+
+  RELEASE=$(curl -fsSL https://api.github.com/repos/excalidraw/excalidraw/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+  if [[ "${RELEASE}" != "$(cat /opt/excalidraw_version.txt)" ]] || [[ ! -f /opt/excalidraw_version.txt ]]; then
+    msg_info "Stopping $APP"
+    systemctl stop excalidraw
+    msg_ok "Stopped $APP"
+
+    msg_info "Updating $APP to v${RELEASE}"
+    cd /tmp
+    temp_file=$(mktemp)
+    curl -fsSL "https://github.com/excalidraw/excalidraw/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
+    tar xzf $temp_file
+    rm -rf /opt/excalidraw
+    mv excalidraw-${RELEASE} /opt/excalidraw
+    cd /opt/excalidraw
+    $STD yarn
+    msg_ok "Updated $APP to v${RELEASE}"
+
+    msg_info "Starting $APP"
+    systemctl start excalidraw
+    msg_ok "Started $APP"
+
+    msg_info "Cleaning Up"
+    rm -rf $temp_file
+    msg_ok "Cleanup Completed"
+
+    echo "${RELEASE}" >/opt/excalidraw_version.txt
+    msg_ok "Update Successful"
+  else
+    msg_ok "No update required. ${APP} is already at v${RELEASE}"
+  fi
+  exit
 }
 
 start
