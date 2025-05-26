@@ -1,5 +1,55 @@
 [
   {
+    "name": "syncthing/syncthing",
+    "version": "v1.29.7-rc.2",
+    "date": "2025-05-26T11:53:05Z"
+  },
+  {
+    "name": "AdguardTeam/AdGuardHome",
+    "version": "v0.108.0-b.70",
+    "date": "2025-05-26T11:29:34Z"
+  },
+  {
+    "name": "Graylog2/graylog2-server",
+    "version": "6.3.0-beta.2",
+    "date": "2025-05-26T11:19:05Z"
+  },
+  {
+    "name": "VictoriaMetrics/VictoriaMetrics",
+    "version": "v1.102.22",
+    "date": "2025-05-26T11:06:35Z"
+  },
+  {
+    "name": "Radarr/Radarr",
+    "version": "v5.24.1.10017",
+    "date": "2025-05-26T10:23:16Z"
+  },
+  {
+    "name": "Luligu/matterbridge",
+    "version": "3.0.4",
+    "date": "2025-05-26T08:33:33Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.3.0p33-rc1",
+    "date": "2025-05-26T07:10:18Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.2",
+    "date": "2025-05-11T16:40:55Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1951",
+    "date": "2025-05-26T05:51:18Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.15",
+    "date": "2025-05-25T05:11:31Z"
+  },
+  {
     "name": "stonith404/pingvin-share",
     "version": "v1.13.0",
     "date": "2025-05-25T20:21:13Z"
@@ -25,9 +75,9 @@
     "date": "2025-04-28T11:59:37Z"
   },
   {
-    "name": "Radarr/Radarr",
-    "version": "v5.23.3.9987",
-    "date": "2025-05-17T12:55:29Z"
+    "name": "runtipi/runtipi",
+    "version": "v4.1.1",
+    "date": "2025-05-16T17:37:30Z"
   },
   {
     "name": "semaphoreui/semaphore",
@@ -38,16 +88,6 @@
     "name": "Kozea/Radicale",
     "version": "v3.5.4",
     "date": "2025-05-25T06:53:34Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1947",
-    "date": "2025-05-25T05:53:55Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.15",
-    "date": "2025-05-25T05:11:31Z"
   },
   {
     "name": "authelia/authelia",
@@ -135,11 +175,6 @@
     "date": "2025-05-15T14:06:52Z"
   },
   {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.2",
-    "date": "2025-05-11T16:40:55Z"
-  },
-  {
     "name": "ollama/ollama",
     "version": "v0.7.1-rc2",
     "date": "2025-05-23T01:53:31Z"
@@ -173,11 +208,6 @@
     "name": "apache/cassandra",
     "version": "4.0.18-tentative",
     "date": "2025-05-22T11:46:18Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "v4.1.1",
-    "date": "2025-05-16T17:37:30Z"
   },
   {
     "name": "0xERR0R/blocky",
@@ -240,11 +270,6 @@
     "date": "2025-05-21T08:32:53Z"
   },
   {
-    "name": "syncthing/syncthing",
-    "version": "v1.29.6",
-    "date": "2025-05-06T07:57:02Z"
-  },
-  {
     "name": "inventree/InvenTree",
     "version": "0.17.12",
     "date": "2025-05-21T05:44:55Z"
@@ -295,11 +320,6 @@
     "date": "2025-05-20T11:00:56Z"
   },
   {
-    "name": "Luligu/matterbridge",
-    "version": "3.0.3",
-    "date": "2025-05-20T06:51:42Z"
-  },
-  {
     "name": "crafty-controller/crafty-4",
     "version": "v4.4.9",
     "date": "2025-05-20T00:08:29Z"
@@ -325,19 +345,9 @@
     "date": "2024-12-18T14:35:37Z"
   },
   {
-    "name": "Checkmk/checkmk",
-    "version": "v2.4.0p2",
-    "date": "2025-05-19T17:06:15Z"
-  },
-  {
     "name": "n8n-io/n8n",
     "version": "n8n@1.91.3",
     "date": "2025-05-08T12:25:10Z"
-  },
-  {
-    "name": "Graylog2/graylog2-server",
-    "version": "6.3.0-beta.1",
-    "date": "2025-05-19T11:23:27Z"
   },
   {
     "name": "open-webui/open-webui",
@@ -438,11 +448,6 @@
     "name": "cloudflare/cloudflared",
     "version": "2025.5.0",
     "date": "2025-05-15T17:09:50Z"
-  },
-  {
-    "name": "VictoriaMetrics/VictoriaMetrics",
-    "version": "pmm-6401-v1.117.1",
-    "date": "2025-05-15T15:45:22Z"
   },
   {
     "name": "ellite/Wallos",
@@ -603,11 +608,6 @@
     "name": "bluenviron/mediamtx",
     "version": "v1.12.2",
     "date": "2025-05-06T15:30:10Z"
-  },
-  {
-    "name": "AdguardTeam/AdGuardHome",
-    "version": "v0.107.61",
-    "date": "2025-04-22T12:42:26Z"
   },
   {
     "name": "linkwarden/linkwarden",
