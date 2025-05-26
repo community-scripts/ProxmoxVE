@@ -6,13 +6,13 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 # Source: https://github.com/rcourtman/Pulse
 
 APP="Pulse"
-var_tags="monitoring;proxmox"
-var_cpu="1"
-var_ram="1024"
-var_disk="4"
-var_os="debian"
-var_version="12"
-var_unprivileged="1"
+var_tags="${var_tags:-monitoring,proxmox}"
+var_cpu="${var_cpu:-1}"
+var_ram="${var_ram:-1024}"
+var_disk="${var_disk:-4}"
+var_os="${var_os:-debian}"
+var_version="${var_version:-12}"
+var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
 variables
