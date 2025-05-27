@@ -18,7 +18,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🆕 New Scripts
 
-  - Pulse ([#4728](https://github.com/community-scripts/ProxmoxVE/pull/4728))
+  - Backrest ([#4766](https://github.com/community-scripts/ProxmoxVE/pull/4766))
+- Pulse ([#4728](https://github.com/community-scripts/ProxmoxVE/pull/4728))
 
 ### 🚀 Updated Scripts
 
