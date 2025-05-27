@@ -20,6 +20,7 @@ $STD apt-get install -y ca-certificates
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" install_node_and_modules
+install_mariadb
 
 msg_info "Installing FFMPEG"
 $STD apt-get install -y ffmpeg
@@ -41,7 +42,6 @@ sqluser="root"
 sqlpass="root"
 echo "mariadb-server mariadb-server/root_password password $sqlpass" | debconf-set-selections
 echo "mariadb-server mariadb-server/root_password_again password $sqlpass" | debconf-set-selections
-$STD apt-get install -y mariadb-server
 service mysql start
 mysql -u "$sqluser" -p"$sqlpass" -e "source sql/user.sql" || true
 msg_ok "Installed Database"

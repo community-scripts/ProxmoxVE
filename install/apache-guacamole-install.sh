@@ -14,30 +14,31 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-    build-essential \
-    jq \
-    libcairo2-dev \
-    libturbojpeg0 \
-    libpng-dev \
-    libtool-bin \
-    libossp-uuid-dev \
-    libvncserver-dev \
-    freerdp2-dev \
-    libssh2-1-dev \
-    libtelnet-dev \
-    libwebsockets-dev \
-    libpulse-dev \
-    libvorbis-dev \
-    libwebp-dev \
-    libssl-dev \
-    libpango1.0-dev \
-    libswscale-dev \
-    libavcodec-dev \
-    libavutil-dev \
-    libavformat-dev \
-    mariadb-server \
-    default-jdk
+  build-essential \
+  jq \
+  libcairo2-dev \
+  libturbojpeg0 \
+  libpng-dev \
+  libtool-bin \
+  libossp-uuid-dev \
+  libvncserver-dev \
+  freerdp2-dev \
+  libssh2-1-dev \
+  libtelnet-dev \
+  libwebsockets-dev \
+  libpulse-dev \
+  libvorbis-dev \
+  libwebp-dev \
+  libssl-dev \
+  libpango1.0-dev \
+  libswscale-dev \
+  libavcodec-dev \
+  libavutil-dev \
+  libavformat-dev \
+  default-jdk
 msg_ok "Installed Dependencies"
+
+install_mariadb
 
 msg_info "Setup Apache Tomcat"
 RELEASE=$(curl -fsSL https://dlcdn.apache.org/tomcat/tomcat-9/ | grep -oP '(?<=href=")v[^"/]+(?=/")' | sed 's/^v//' | sort -V | tail -n1)
@@ -79,19 +80,19 @@ mysql -u root -e "CREATE DATABASE $DB_NAME;"
 mysql -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED WITH mysql_native_password AS PASSWORD('$DB_PASS');"
 mysql -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
 {
-    echo "Guacamole-Credentials"
-    echo "Database User: $DB_USER"
-    echo "Database Password: $DB_PASS"
-    echo "Database Name: $DB_NAME"
+  echo "Guacamole-Credentials"
+  echo "Database User: $DB_USER"
+  echo "Database Password: $DB_PASS"
+  echo "Database Name: $DB_NAME"
 } >>~/guacamole.creds
 cd guacamole-auth-jdbc-1.5.5/mysql/schema
 cat *.sql | mysql -u root ${DB_NAME}
 {
-    echo "mysql-hostname: 127.0.0.1"
-    echo "mysql-port: 3306"
-    echo "mysql-database: $DB_NAME"
-    echo "mysql-username: $DB_USER"
-    echo "mysql-password: $DB_PASS"
+  echo "mysql-hostname: 127.0.0.1"
+  echo "mysql-port: 3306"
+  echo "mysql-database: $DB_NAME"
+  echo "mysql-username: $DB_USER"
+  echo "mysql-password: $DB_PASS"
 
 } >>/etc/guacamole/guacamole.properties
 msg_ok "Setup Database"

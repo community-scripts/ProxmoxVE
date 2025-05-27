@@ -17,11 +17,11 @@ msg_info "Installing Dependencies"
 $STD apt-get install -y \
   lsb-release \
   redis \
-  mariadb-server \
-  mariadb-client \
   apache2 \
   composer
 msg_ok "Installed Dependencies"
+
+install_mariadb
 
 msg_info "Adding PHP8.4 Repository"
 $STD curl -sSLo /tmp/debsuryorg-archive-keyring.deb https://packages.sury.org/debsuryorg-archive-keyring.deb

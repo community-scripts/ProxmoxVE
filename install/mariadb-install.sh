@@ -13,11 +13,12 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing MariaDB"
-$STD apt-get install -y mariadb-server
+install_mariadb
+
+msg_info "Setup MariaDB"
 sed -i 's/^# *\(port *=.*\)/\1/' /etc/mysql/my.cnf
 sed -i 's/^bind-address/#bind-address/g' /etc/mysql/mariadb.conf.d/50-server.cnf
-msg_ok "Installed MariaDB"
+msg_ok "Setup MariaDB"
 
 read -r -p "${TAB3}Would you like to add PhpMyAdmin? <y/N> " prompt
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then

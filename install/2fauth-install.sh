@@ -14,11 +14,8 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-
 $STD apt-get install -y \
-  lsb-release \
-  gpg
-
+  lsb-release
 curl -fsSL https://packages.sury.org/php/apt.gpg | gpg --dearmor -o /usr/share/keyrings/deb.sury.org-php.gpg
 echo "deb [signed-by=/usr/share/keyrings/deb.sury.org-php.gpg] https://packages.sury.org/php/ $(lsb_release -sc) main" >/etc/apt/sources.list.d/php.list
 $STD apt-get update
@@ -26,9 +23,10 @@ $STD apt-get update
 $STD apt-get install -y \
   nginx \
   composer \
-  php8.3-{bcmath,common,ctype,curl,fileinfo,fpm,gd,intl,mbstring,mysql,xml,cli} \
-  mariadb-server
+  php8.3-{bcmath,common,ctype,curl,fileinfo,fpm,gd,intl,mbstring,mysql,xml,cli}
 msg_ok "Installed Dependencies"
+
+install_mariadb
 
 msg_info "Setting up Database"
 DB_NAME=2fauth_db

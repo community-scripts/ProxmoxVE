@@ -15,12 +15,13 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-    composer \
-    git \
-    nginx \
-    php8.2-{bcmath,common,ctype,curl,fileinfo,fpm,gd,iconv,intl,mbstring,mysql,soap,xml,xsl,zip,cli} \
-    mariadb-server
+  composer \
+  git \
+  nginx \
+  php8.2-{bcmath,common,ctype,curl,fileinfo,fpm,gd,iconv,intl,mbstring,mysql,soap,xml,xsl,zip,cli}
 msg_ok "Installed Dependencies"
+
+install_mariadb
 
 msg_info "Setting up database"
 DB_NAME=snipeit_db
@@ -30,10 +31,10 @@ mysql -u root -e "CREATE DATABASE $DB_NAME;"
 mysql -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED WITH mysql_native_password AS PASSWORD('$DB_PASS');"
 mysql -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
 {
-    echo "SnipeIT-Credentials"
-    echo "SnipeIT Database User: $DB_USER"
-    echo "SnipeIT Database Password: $DB_PASS"
-    echo "SnipeIT Database Name: $DB_NAME"
+  echo "SnipeIT-Credentials"
+  echo "SnipeIT Database User: $DB_USER"
+  echo "SnipeIT Database Password: $DB_PASS"
+  echo "SnipeIT Database Name: $DB_NAME"
 } >>~/snipeit.creds
 msg_ok "Set up database"
 
@@ -48,9 +49,9 @@ cp .env.example .env
 IPADDRESS=$(hostname -I | awk '{print $1}')
 
 sed -i -e "s|^APP_URL=.*|APP_URL=http://$IPADDRESS|" \
-    -e "s|^DB_DATABASE=.*|DB_DATABASE=$DB_NAME|" \
-    -e "s|^DB_USERNAME=.*|DB_USERNAME=$DB_USER|" \
-    -e "s|^DB_PASSWORD=.*|DB_PASSWORD=$DB_PASS|" .env
+  -e "s|^DB_DATABASE=.*|DB_DATABASE=$DB_NAME|" \
+  -e "s|^DB_USERNAME=.*|DB_USERNAME=$DB_USER|" \
+  -e "s|^DB_PASSWORD=.*|DB_PASSWORD=$DB_PASS|" .env
 
 chown -R www-data: /opt/snipe-it
 chmod -R 755 /opt/snipe-it

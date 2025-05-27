@@ -16,9 +16,10 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
   nginx \
-  mariadb-server \
   ca-certificates
 msg_ok "Installed Dependencies"
+
+install_mariadb
 
 msg_info "Configuring Database"
 DB_NAME=ghost

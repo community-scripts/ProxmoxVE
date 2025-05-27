@@ -15,11 +15,12 @@ update_os
 
 msg_info "Installing Dependencies (Patience)"
 $STD apt-get install -y \
-    apache2 \
-    php8.2-{bcmath,common,cli,curl,fpm,gd,snmp,imap,mbstring,mysql,xml,zip} \
-    libapache2-mod-php \
-    mariadb-server
+  apache2 \
+  php8.2-{bcmath,common,cli,curl,fpm,gd,snmp,imap,mbstring,mysql,xml,zip} \
+  libapache2-mod-php
 msg_ok "Installed Dependencies"
+
+install_mariadb
 
 msg_info "Setting up Database"
 DB_NAME=wordpress_db
@@ -29,10 +30,10 @@ $STD mysql -u root -e "CREATE DATABASE $DB_NAME;"
 $STD mysql -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
 $STD mysql -u root -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
 {
-    echo "WordPress Credentials"
-    echo "Database User: $DB_USER"
-    echo "Database Password: $DB_PASS"
-    echo "Database Name: $DB_NAME"
+  echo "WordPress Credentials"
+  echo "Database User: $DB_USER"
+  echo "Database Password: $DB_PASS"
+  echo "Database Name: $DB_NAME"
 } >>~/wordpress.creds
 msg_ok "Set up Database"
 
@@ -46,9 +47,9 @@ find . -type d -exec chmod 755 {} \;
 find . -type f -exec chmod 644 {} \;
 mv wp-config-sample.php wp-config.php
 sed -i -e "s|^define( 'DB_NAME', '.*' );|define( 'DB_NAME', '$DB_NAME' );|" \
-    -e "s|^define( 'DB_USER', '.*' );|define( 'DB_USER', '$DB_USER' );|" \
-    -e "s|^define( 'DB_PASSWORD', '.*' );|define( 'DB_PASSWORD', '$DB_PASS' );|" \
-    /var/www/html/wordpress/wp-config.php
+  -e "s|^define( 'DB_USER', '.*' );|define( 'DB_USER', '$DB_USER' );|" \
+  -e "s|^define( 'DB_PASSWORD', '.*' );|define( 'DB_PASSWORD', '$DB_PASS' );|" \
+  /var/www/html/wordpress/wp-config.php
 msg_ok "Installed Wordpress"
 
 msg_info "Setup Services"

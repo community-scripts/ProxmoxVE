@@ -15,13 +15,13 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-  mariadb-server \
   apache2 \
   libapache2-mod-php \
   php-{bcmath,curl,dom,gd,gmp,iconv,intl,json,mbstring,mysqli,opcache,pdo-mysql,redis,tokenizer,xml,zip} \
   composer
 msg_ok "Installed Dependencies"
 
+install_mariadb
 NODE_VERSION="22" NODE_MODULE="yarn@latest" install_node_and_modules
 
 msg_info "Setting up MariaDB"
