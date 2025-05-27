@@ -35,6 +35,12 @@ All LXC instances created using this repository come pre-installed with Midnight
     - merge MariaDB to tools.func Installer [@MickLesk](https://github.com/MickLesk) ([#4753](https://github.com/community-scripts/ProxmoxVE/pull/4753))
     - merge PostgreSQL to tools.func Installer [@MickLesk](https://github.com/MickLesk) ([#4752](https://github.com/community-scripts/ProxmoxVE/pull/4752))
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Increase default RAM allocation for BunkerWeb to 8192MB [@TheophileDiot](https://github.com/TheophileDiot) ([#4762](https://github.com/community-scripts/ProxmoxVE/pull/4762))
+
 ## 2025-05-26
 
 ### 🆕 New Scripts
