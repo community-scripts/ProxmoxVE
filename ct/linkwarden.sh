@@ -27,7 +27,7 @@ function update_script() {
     exit
   fi
   RELEASE=$(curl -fsSL https://api.github.com/repos/linkwarden/linkwarden/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
+  if [[ "${RELEASE}" != "$(cat /opt/linkwarden_version.txt)" ]] || [[ ! -f /opt/linkwarden_version.txt ]]; then
     NODE_VERSION="22" NODE_MODULE="yarn@latest" install_node_and_modules
     msg_info "Stopping ${APP}"
     systemctl stop linkwarden
