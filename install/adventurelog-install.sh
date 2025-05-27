@@ -25,10 +25,9 @@ $STD apt-get install -y \
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" NODE_MODULE="pnpm@latest" install_node_and_modules
-PG_VERSION="16" install_postgresql
+PG_VERSION="16" PG_MODULES="postgis" install_postgresql
 
-msg_info "Install/Set up PostgreSQL Database"
-$STD apt-get install -y postgresql-16-postgis
+msg_info "Set up PostgreSQL Database"
 DB_NAME="adventurelog_db"
 DB_USER="adventurelog_user"
 DB_PASS="$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)"

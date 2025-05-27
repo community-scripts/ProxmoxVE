@@ -16,7 +16,6 @@ update_os
 msg_info "Installing Dependencies (Patience)"
 $STD apt-get install -y \
   redis \
-  postgresql \
   build-essential \
   imagemagick \
   fonts-liberation \
@@ -36,6 +35,8 @@ $STD apt-get install -y \
   libpng-dev \
   libleptonica-dev
 msg_ok "Installed Dependencies"
+
+PG_VERSION="16" install_postgresql
 
 msg_info "Setup Python3"
 $STD apt-get install -y \

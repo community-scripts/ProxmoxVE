@@ -15,11 +15,12 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-  postgresql \
   apache2 \
   php-{curl,dom,json,ctype,pgsql,gmp,mbstring,iconv,zip} \
   libapache2-mod-php
 msg_ok "Installed Dependencies"
+
+PG_VERSION="16" install_postgresql
 
 msg_info "Setting up PostgreSQL"
 DB_NAME=freshrss
