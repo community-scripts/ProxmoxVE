@@ -15,15 +15,15 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-    git \
-    software-properties-common \
-    apt-transport-https \
-    ca-certificates \
-    gnupg2 \
-    mariadb-server \
-    nginx \
-    redis-server
+  git \
+  software-properties-common \
+  apt-transport-https \
+  ca-certificates \
+  nginx \
+  redis-server
 msg_ok "Installed Dependencies"
+
+install_mariadb
 
 msg_info "Adding PHP Repository"
 $STD curl -sSLo /tmp/debsuryorg-archive-keyring.deb https://packages.sury.org/debsuryorg-archive-keyring.deb
@@ -35,8 +35,8 @@ msg_ok "Added PHP Repository"
 msg_info "Installing PHP"
 $STD apt-get remove -y php8.2*
 $STD apt-get install -y \
-    php8.3 \
-    php8.3-{common,cli,gd,mysql,mbstring,bcmath,xml,curl,zip,intl,fpm,redis}
+  php8.3 \
+  php8.3-{common,cli,gd,mysql,mbstring,bcmath,xml,curl,zip,intl,fpm,redis}
 msg_info "Installed PHP"
 
 msg_info "Installing Composer"
@@ -62,10 +62,10 @@ mysql -u root -e "CREATE DATABASE $DB_NAME;"
 mysql -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
 mysql -u root -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost' WITH GRANT OPTION;"
 {
-    echo "Paymenter Database Credentials"
-    echo "Database: $DB_NAME"
-    echo "Username: $DB_USER"
-    echo "Password: $DB_PASS"
+  echo "Paymenter Database Credentials"
+  echo "Database: $DB_NAME"
+  echo "Username: $DB_USER"
+  echo "Password: $DB_PASS"
 } >>~/paymenter_db.creds
 cp .env.example .env
 $STD composer install --no-dev --optimize-autoloader --no-interaction

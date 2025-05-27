@@ -15,14 +15,15 @@ update_os
 
 msg_info "Installing Dependencies (Patience)"
 $STD apt-get install -y \
-    unzip \
-    mariadb-server \
-    apache2 \
-    php8.2-{mbstring,gd,fpm,curl,intl,ldap,tidy,bz2,mysql,zip,xml} \
-    composer \
-    libapache2-mod-php \
-    make
+  unzip \
+  apache2 \
+  php8.2-{mbstring,gd,fpm,curl,intl,ldap,tidy,bz2,mysql,zip,xml} \
+  composer \
+  libapache2-mod-php \
+  make
 msg_ok "Installed Dependencies"
+
+install_mariadb
 
 msg_info "Setting up Database"
 DB_NAME=bookstack
@@ -32,10 +33,10 @@ $STD sudo mysql -u root -e "CREATE DATABASE $DB_NAME;"
 $STD sudo mysql -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED WITH mysql_native_password AS PASSWORD('$DB_PASS');"
 $STD sudo mysql -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
 {
-    echo "Bookstack-Credentials"
-    echo "Bookstack Database User: $DB_USER"
-    echo "Bookstack Database Password: $DB_PASS"
-    echo "Bookstack Database Name: $DB_NAME"
+  echo "Bookstack-Credentials"
+  echo "Bookstack Database User: $DB_USER"
+  echo "Bookstack Database Password: $DB_PASS"
+  echo "Bookstack Database Name: $DB_NAME"
 } >>~/bookstack.creds
 msg_ok "Set up database"
 

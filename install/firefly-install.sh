@@ -18,12 +18,13 @@ curl -fsSLo /usr/share/keyrings/deb.sury.org-php.gpg https://packages.sury.org/p
 echo "deb [signed-by=/usr/share/keyrings/deb.sury.org-php.gpg] https://packages.sury.org/php/ bookworm main" >/etc/apt/sources.list.d/php.list
 $STD apt-get update
 $STD apt-get install -y \
-    apache2 \
-    libapache2-mod-php8.4 \
-    php8.4-{bcmath,cli,intl,curl,zip,gd,xml,mbstring,mysql} \
-    mariadb-server \
-    composer
+  apache2 \
+  libapache2-mod-php8.4 \
+  php8.4-{bcmath,cli,intl,curl,zip,gd,xml,mbstring,mysql} \
+  composer
 msg_ok "Installed Dependencies"
+
+install_mariadb
 
 msg_info "Setting up database"
 DB_NAME=firefly
@@ -34,10 +35,10 @@ mysql -u root -e "CREATE DATABASE $DB_NAME;"
 mysql -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED WITH mysql_native_password AS PASSWORD('$DB_PASS');"
 mysql -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
 {
-    echo "Firefly-Credentials"
-    echo "Firefly Database User: $DB_USER"
-    echo "Firefly Database Password: $DB_PASS"
-    echo "Firefly Database Name: $DB_NAME"
+  echo "Firefly-Credentials"
+  echo "Firefly Database User: $DB_USER"
+  echo "Firefly Database Password: $DB_PASS"
+  echo "Firefly Database Name: $DB_NAME"
 } >>~/firefly.creds
 msg_ok "Set up database"
 
