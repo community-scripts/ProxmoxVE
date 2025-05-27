@@ -1,38 +1,103 @@
 [
   {
-    "name": "syncthing/syncthing",
-    "version": "v1.29.7-rc.2",
-    "date": "2025-05-26T11:53:05Z"
-  },
-  {
-    "name": "AdguardTeam/AdGuardHome",
-    "version": "v0.108.0-b.70",
-    "date": "2025-05-26T11:29:34Z"
-  },
-  {
-    "name": "Graylog2/graylog2-server",
-    "version": "6.3.0-beta.2",
-    "date": "2025-05-26T11:19:05Z"
-  },
-  {
-    "name": "VictoriaMetrics/VictoriaMetrics",
-    "version": "v1.102.22",
-    "date": "2025-05-26T11:06:35Z"
+    "name": "open-webui/open-webui",
+    "version": "v0.6.11",
+    "date": "2025-05-26T22:27:26Z"
   },
   {
     "name": "Radarr/Radarr",
-    "version": "v5.24.1.10017",
-    "date": "2025-05-26T10:23:16Z"
+    "version": "v5.25.0.10024",
+    "date": "2025-05-26T21:58:37Z"
+  },
+  {
+    "name": "dani-garcia/vaultwarden",
+    "version": "1.34.1",
+    "date": "2025-05-26T21:40:54Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.5.3",
+    "date": "2025-05-23T15:10:33Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "mattermost-redux@10.8.0",
+    "date": "2025-05-26T19:17:13Z"
+  },
+  {
+    "name": "semaphoreui/semaphore",
+    "version": "v2.14.12",
+    "date": "2025-05-26T19:08:26Z"
+  },
+  {
+    "name": "dgtlmoon/changedetection.io",
+    "version": "0.49.18",
+    "date": "2025-05-26T18:36:33Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.15",
+    "date": "2025-05-25T05:11:31Z"
+  },
+  {
+    "name": "MediaBrowser/Emby.Releases",
+    "version": "4.8.11.0",
+    "date": "2025-03-10T06:39:11Z"
+  },
+  {
+    "name": "nzbgetcom/nzbget",
+    "version": "v25.0",
+    "date": "2025-05-12T09:12:04Z"
+  },
+  {
+    "name": "zitadel/zitadel",
+    "version": "v3.2.1",
+    "date": "2025-05-26T14:27:59Z"
+  },
+  {
+    "name": "jupyter/notebook",
+    "version": "v7.4.3",
+    "date": "2025-05-26T14:27:27Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.3.0p33",
+    "date": "2025-05-26T13:57:51Z"
+  },
+  {
+    "name": "syncthing/syncthing",
+    "version": "v1.29.6",
+    "date": "2025-05-06T07:57:02Z"
+  },
+  {
+    "name": "VictoriaMetrics/VictoriaMetrics",
+    "version": "pmm-6401-v1.118.0",
+    "date": "2025-05-26T13:09:32Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.91.3",
+    "date": "2025-05-08T12:25:10Z"
+  },
+  {
+    "name": "Graylog2/graylog2-server",
+    "version": "6.3.0-beta.3",
+    "date": "2025-05-26T12:40:56Z"
+  },
+  {
+    "name": "AdguardTeam/AdGuardHome",
+    "version": "v0.107.61",
+    "date": "2025-04-22T12:42:26Z"
+  },
+  {
+    "name": "OliveTin/OliveTin",
+    "version": "2025.5.26",
+    "date": "2025-05-26T11:30:11Z"
   },
   {
     "name": "Luligu/matterbridge",
     "version": "3.0.4",
     "date": "2025-05-26T08:33:33Z"
-  },
-  {
-    "name": "Checkmk/checkmk",
-    "version": "v2.3.0p33-rc1",
-    "date": "2025-05-26T07:10:18Z"
   },
   {
     "name": "morpheus65535/bazarr",
@@ -43,11 +108,6 @@
     "name": "Jackett/Jackett",
     "version": "v0.22.1951",
     "date": "2025-05-26T05:51:18Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.15",
-    "date": "2025-05-25T05:11:31Z"
   },
   {
     "name": "stonith404/pingvin-share",
@@ -76,13 +136,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v4.1.1",
-    "date": "2025-05-16T17:37:30Z"
-  },
-  {
-    "name": "semaphoreui/semaphore",
-    "version": "v2.14.10",
-    "date": "2025-05-07T20:23:29Z"
+    "version": "nightly",
+    "date": "2025-05-25T09:44:06Z"
   },
   {
     "name": "Kozea/Radicale",
@@ -140,19 +195,9 @@
     "date": "2025-05-23T15:59:05Z"
   },
   {
-    "name": "home-assistant/core",
-    "version": "2025.5.3",
-    "date": "2025-05-23T15:10:33Z"
-  },
-  {
     "name": "docker/compose",
     "version": "v2.36.2",
     "date": "2025-05-23T14:21:20Z"
-  },
-  {
-    "name": "zitadel/zitadel",
-    "version": "v3.2.0",
-    "date": "2025-05-23T13:58:07Z"
   },
   {
     "name": "grokability/snipe-it",
@@ -163,11 +208,6 @@
     "name": "wazuh/wazuh",
     "version": "v4.10.2",
     "date": "2025-05-23T11:56:41Z"
-  },
-  {
-    "name": "nzbgetcom/nzbget",
-    "version": "v25.0",
-    "date": "2025-05-12T09:12:04Z"
   },
   {
     "name": "keycloak/keycloak",
@@ -250,11 +290,6 @@
     "date": "2025-05-21T14:49:36Z"
   },
   {
-    "name": "mattermost/mattermost",
-    "version": "v9.11.16",
-    "date": "2025-05-21T13:57:13Z"
-  },
-  {
     "name": "theonedev/onedev",
     "version": "v11.9.9",
     "date": "2025-05-21T13:13:31Z"
@@ -288,11 +323,6 @@
     "name": "matze/wastebin",
     "version": "3.1.0",
     "date": "2025-05-20T19:20:03Z"
-  },
-  {
-    "name": "MediaBrowser/Emby.Releases",
-    "version": "4.8.11.0",
-    "date": "2025-03-10T06:39:11Z"
   },
   {
     "name": "jenkinsci/jenkins",
@@ -343,16 +373,6 @@
     "name": "Forceu/Gokapi",
     "version": "v1.9.6",
     "date": "2024-12-18T14:35:37Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.91.3",
-    "date": "2025-05-08T12:25:10Z"
-  },
-  {
-    "name": "open-webui/open-webui",
-    "version": "v0.6.10",
-    "date": "2025-05-19T01:34:37Z"
   },
   {
     "name": "Part-DB/Part-DB-server",
@@ -530,11 +550,6 @@
     "date": "2025-05-12T15:23:21Z"
   },
   {
-    "name": "dgtlmoon/changedetection.io",
-    "version": "0.49.17",
-    "date": "2025-05-12T08:48:30Z"
-  },
-  {
     "name": "stackblitz-labs/bolt.diy",
     "version": "1.0.0",
     "date": "2025-05-12T07:39:23Z"
@@ -593,11 +608,6 @@
     "name": "openobserve/openobserve",
     "version": "v0.14.7",
     "date": "2025-05-07T11:32:23Z"
-  },
-  {
-    "name": "jupyter/notebook",
-    "version": "@jupyter-notebook/ui-components@7.5.0-alpha.0",
-    "date": "2025-05-07T09:12:08Z"
   },
   {
     "name": "sysadminsmedia/homebox",
@@ -763,11 +773,6 @@
     "name": "NLnetLabs/unbound",
     "version": "release-1.23.0",
     "date": "2025-04-24T08:07:21Z"
-  },
-  {
-    "name": "OliveTin/OliveTin",
-    "version": "2025.4.22",
-    "date": "2025-04-22T14:18:11Z"
   },
   {
     "name": "monicahq/monica",
@@ -1068,11 +1073,6 @@
     "name": "homebridge/homebridge",
     "version": "v1.9.0",
     "date": "2025-02-11T13:26:42Z"
-  },
-  {
-    "name": "dani-garcia/vaultwarden",
-    "version": "1.33.2",
-    "date": "2025-02-09T17:54:59Z"
   },
   {
     "name": "actualbudget/actual-server",
