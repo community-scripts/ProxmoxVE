@@ -355,8 +355,10 @@ install_php() {
     CURRENT_PHP=""
   fi
 
-  if [[ "$CURRENT_PHP" != "$PHP_VERSION" ]]; then
-    $STD msg_info "PHP $CURRENT_PHP detected, migrating to PHP $PHP_VERSION"
+  if [[ -z "$CURRENT_PHP" ]]; then
+    msg_info "Setup PHP $PHP_VERSION"
+  elif [[ "$CURRENT_PHP" != "$PHP_VERSION" ]]; then
+    msg_info "PHP $CURRENT_PHP detected, migrating to PHP $PHP_VERSION"
     if [[ ! -f /etc/apt/sources.list.d/php.list ]]; then
       $STD curl -fsSLo /tmp/debsuryorg-archive-keyring.deb https://packages.sury.org/debsuryorg-archive-keyring.deb
       $STD dpkg -i /tmp/debsuryorg-archive-keyring.deb
@@ -373,6 +375,9 @@ install_php() {
   for mod in "${MODULES[@]}"; do
     MODULE_LIST+=" php${PHP_VERSION}-${mod}"
   done
+  if [[ "$PHP_FPM" == "YES" ]]; then
+    MODULE_LIST+=" php${PHP_VERSION}-fpm"
+  fi
 
   if [[ "$PHP_APACHE" == "YES" ]]; then
     # Optionally disable old Apache PHP module
@@ -439,7 +444,7 @@ install_composer() {
 
   # Download and install latest composer
   curl -fsSL https://getcomposer.org/installer -o /tmp/composer-setup.php
-  php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer &>/dev/null
+  php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer >/dev/null 2>&1
 
   if [[ $? -ne 0 ]]; then
     msg_error "Failed to install Composer"
@@ -447,7 +452,9 @@ install_composer() {
   fi
 
   chmod +x "$COMPOSER_BIN"
-  msg_ok "Installed Composer $($COMPOSER_BIN --version | awk '{print $3}')"
+  composer diagnose >/dev/null 2>&1
+  msg_ok "Setup Composer"
+  #msg_ok "Installed Composer $($COMPOSER_BIN --version | awk '{print $3}')"
 }
 
 # ------------------------------------------------------------------------------
@@ -1202,4 +1209,101 @@ create_selfsigned_certs() {
     -out /etc/ssl/certs/"$app"-selfsigned.crt \
     -subj "/C=US/O=$app/OU=Domain Control Validated/CN=localhost"
   $STD msg_ok "Created Self-Signed Certificate"
+}
+
+# ------------------------------------------------------------------------------
+# Installs Rust toolchain and optional global crates via cargo.
+#
+# Description:
+#   - Installs rustup (if missing)
+#   - Installs or updates desired Rust toolchain (stable, nightly, or versioned)
+#   - Installs or updates specified global crates using `cargo install`
+#
+# Notes:
+#   - Skips crate install if exact version is already present
+#   - Updates crate if newer version or different version is requested
+#
+# Variables:
+#   RUST_TOOLCHAIN  - Rust toolchain to install (default: stable)
+#   RUST_CRATES     - Comma-separated list of crates (e.g. "cargo-edit,wasm-pack@0.12.1")
+# ------------------------------------------------------------------------------
+
+install_rust_and_crates() {
+  local RUST_TOOLCHAIN="${RUST_TOOLCHAIN:-stable}"
+  local RUST_CRATES="${RUST_CRATES:-}"
+  local CARGO_BIN="${HOME}/.cargo/bin"
+
+  # rustup & toolchain
+  if ! command -v rustup &>/dev/null; then
+    msg_info "Installing rustup"
+    curl -fsSL https://sh.rustup.rs | sh -s -- -y --default-toolchain "$RUST_TOOLCHAIN"
+    export PATH="$CARGO_BIN:$PATH"
+    echo 'export PATH="$HOME/.cargo/bin:$PATH"' >>"$HOME/.profile"
+    msg_ok "Installed rustup with $RUST_TOOLCHAIN"
+  else
+    $STD rustup install "$RUST_TOOLCHAIN"
+    $STD rustup default "$RUST_TOOLCHAIN"
+    $STD rustup update "$RUST_TOOLCHAIN"
+    msg_ok "Rust toolchain set to $RUST_TOOLCHAIN"
+  fi
+
+  # install/update crates
+  if [[ -n "$RUST_CRATES" ]]; then
+    IFS=',' read -ra CRATES <<<"$RUST_CRATES"
+    for crate in "${CRATES[@]}"; do
+      local NAME VER INSTALLED_VER
+      if [[ "$crate" == *"@"* ]]; then
+        NAME="${crate%@*}"
+        VER="${crate##*@}"
+      else
+        NAME="$crate"
+        VER=""
+      fi
+
+      INSTALLED_VER=$(cargo install --list 2>/dev/null | awk "/^$NAME v[0-9]/ {print \$2}" | tr -d 'v')
+
+      if [[ -n "$INSTALLED_VER" ]]; then
+        if [[ -n "$VER" && "$VER" != "$INSTALLED_VER" ]]; then
+          msg_info "Updating $NAME from $INSTALLED_VER to $VER"
+          $STD cargo install "$NAME" --version "$VER" --force
+        elif [[ -z "$VER" ]]; then
+          msg_info "Updating $NAME to latest"
+          $STD cargo install "$NAME" --force
+        else
+          msg_ok "$NAME@$INSTALLED_VER already up to date"
+        fi
+      else
+        msg_info "Installing $NAME ${VER:+($VER)}"
+        $STD cargo install "$NAME" ${VER:+--version "$VER"}
+      fi
+    done
+    msg_ok "All requested Rust crates processed"
+  fi
+}
+
+# ------------------------------------------------------------------------------
+# Installs Adminer (Debian/Ubuntu via APT, Alpine via direct download).
+#
+# Description:
+#   - Adds Adminer to Apache or web root
+#   - Supports Alpine and Debian-based systems
+# ------------------------------------------------------------------------------
+
+install_adminer() {
+  if grep -qi alpine /etc/os-release; then
+    msg_info "Installing Adminer (Alpine)"
+    mkdir -p /var/www/localhost/htdocs/adminer
+    if ! curl -fsSL https://github.com/vrana/adminer/releases/latest/download/adminer.php \
+      -o /var/www/localhost/htdocs/adminer/index.php; then
+      msg_error "Failed to download Adminer"
+      return 1
+    fi
+    msg_ok "Adminer available at /adminer (Alpine)"
+  else
+    msg_info "Installing Adminer (Debian/Ubuntu)"
+    $STD apt-get install -y adminer
+    $STD a2enconf adminer
+    $STD systemctl reload apache2
+    msg_ok "Adminer available at /adminer (Debian/Ubuntu)"
+  fi
 }
