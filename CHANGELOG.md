@@ -32,6 +32,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - Big NodeJS Update: Use Helper Function on all Install-Scripts [@MickLesk](https://github.com/MickLesk) ([#4744](https://github.com/community-scripts/ProxmoxVE/pull/4744))
 
+  - #### 🔧 Refactor
+
+    - merge PostgreSQL to tools.func Installer [@MickLesk](https://github.com/MickLesk) ([#4752](https://github.com/community-scripts/ProxmoxVE/pull/4752))
+
 ## 2025-05-26
 
 ### 🆕 New Scripts
