@@ -1236,7 +1236,7 @@ install_rust_and_crates() {
   # rustup & toolchain
   if ! command -v rustup &>/dev/null; then
     msg_info "Installing rustup"
-    curl -fsSL https://sh.rustup.rs | sh -s -- -y --default-toolchain "$RUST_TOOLCHAIN"
+    curl -fsSL https://sh.rustup.rs | $STD sh -s -- -y --default-toolchain "$RUST_TOOLCHAIN"
     export PATH="$CARGO_BIN:$PATH"
     echo 'export PATH="$HOME/.cargo/bin:$PATH"' >>"$HOME/.profile"
     msg_ok "Installed rustup with $RUST_TOOLCHAIN"
