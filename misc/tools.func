@@ -113,20 +113,22 @@ install_node_and_modules() {
 }
 
 # ------------------------------------------------------------------------------
-# Installs or upgrades PostgreSQL and performs data migration.
+# Installs or upgrades PostgreSQL and optional extensions/modules.
 #
 # Description:
 #   - Detects existing PostgreSQL version
 #   - Dumps all databases before upgrade
 #   - Adds PGDG repo and installs specified version
+#   - Installs optional PG_MODULES (e.g. postgis, contrib)
 #   - Restores dumped data post-upgrade
 #
 # Variables:
 #   PG_VERSION     - Major PostgreSQL version (e.g. 15, 16) (default: 16)
+#   PG_MODULES     - Comma-separated list of extensions (e.g. "postgis,contrib")
 # ------------------------------------------------------------------------------
-
 install_postgresql() {
   local PG_VERSION="${PG_VERSION:-16}"
+  local PG_MODULES="${PG_MODULES:-}"
   local CURRENT_PG_VERSION=""
   local DISTRO
   local NEED_PG_INSTALL=false
@@ -136,10 +138,10 @@ install_postgresql() {
     CURRENT_PG_VERSION="$(psql -V | awk '{print $3}' | cut -d. -f1)"
     if [[ "$CURRENT_PG_VERSION" == "$PG_VERSION" ]]; then
       msg_ok "PostgreSQL $PG_VERSION is already installed"
-      return
+    else
+      msg_info "Detected PostgreSQL $CURRENT_PG_VERSION, preparing upgrade to $PG_VERSION"
+      NEED_PG_INSTALL=true
     fi
-    msg_info "Detected PostgreSQL $CURRENT_PG_VERSION, preparing upgrade to $PG_VERSION"
-    NEED_PG_INSTALL=true
   else
     msg_info "Setup PostgreSQL $PG_VERSION"
     NEED_PG_INSTALL=true
@@ -170,19 +172,33 @@ install_postgresql() {
     $STD apt-get install -y "postgresql-${PG_VERSION}" "postgresql-client-${PG_VERSION}"
 
     if [[ -n "$CURRENT_PG_VERSION" ]]; then
-      $STD msg_info "Removing old PostgreSQL $CURRENT_PG_VERSION packages"
+      msg_info "Removing old PostgreSQL $CURRENT_PG_VERSION packages"
       $STD apt-get purge -y "postgresql-${CURRENT_PG_VERSION}" "postgresql-client-${CURRENT_PG_VERSION}" || true
     fi
 
-    $STD msg_info "Starting PostgreSQL $PG_VERSION"
+    msg_info "Starting PostgreSQL $PG_VERSION"
     systemctl enable -q --now postgresql
 
     if [[ -n "$CURRENT_PG_VERSION" ]]; then
-      $STD msg_info "Restoring dumped data"
+      msg_info "Restoring dumped data"
       su - postgres -c "psql < /var/lib/postgresql/backup_$(date +%F)_v${CURRENT_PG_VERSION}.sql"
     fi
 
     msg_ok "PostgreSQL $PG_VERSION installed"
+  fi
+
+  # Install optional PostgreSQL modules
+  if [[ -n "$PG_MODULES" ]]; then
+    IFS=',' read -ra MODULES <<<"$PG_MODULES"
+    for module in "${MODULES[@]}"; do
+      local pkg="postgresql-${PG_VERSION}-${module}"
+      msg_info "Installing PostgreSQL module: $pkg"
+      $STD apt-get install -y "$pkg" || {
+        msg_error "Failed to install $pkg"
+        continue
+      }
+    done
+    msg_ok "All requested PostgreSQL modules installed"
   fi
 }
 
