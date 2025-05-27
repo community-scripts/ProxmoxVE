@@ -22,6 +22,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
+  - Alpine-Vaultwarden: Increase min disk requirements to 1GB [@neyzm](https://github.com/neyzm) ([#4764](https://github.com/community-scripts/ProxmoxVE/pull/4764))
+
   - #### 🐞 Bug Fixes
 
     - lldap: fix update-check [@MickLesk](https://github.com/MickLesk) ([#4742](https://github.com/community-scripts/ProxmoxVE/pull/4742))
