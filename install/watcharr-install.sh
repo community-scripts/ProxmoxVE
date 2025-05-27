@@ -15,28 +15,11 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-  gcc \
-  gnupg
+  gcc
 msg_ok "Installed Dependencies"
 
-msg_info "Setup Golang"
-set +o pipefail
-temp_file=$(mktemp)
-golang_tarball=$(curl -fsSL https://go.dev/dl/ | grep -oP 'go[\d\.]+\.linux-amd64\.tar\.gz' | head -n 1)
-curl -fsSL "https://golang.org/dl/${golang_tarball}" -o "$temp_file"
-tar -C /usr/local -xzf "$temp_file"
-ln -sf /usr/local/go/bin/go /usr/local/bin/go
-rm -f "$temp_file"
-set -o pipefail
-msg_ok "Setup Golang"
-
-msg_info "Setup Node.js"
-mkdir -p /etc/apt/keyrings
-curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_22.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
-$STD apt-get update
-$STD apt-get install -y nodejs
-msg_ok "Setup Node.js"
+install_go
+NODE_VERSION="22" install_node_and_modules
 
 msg_info "Setup Watcharr"
 temp_file=$(mktemp)

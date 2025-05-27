@@ -23,13 +23,7 @@ $STD apt-get install -y {python3,python3-dev,python3-setuptools,python3-distutil
 $STD pip install --upgrade pip
 msg_ok "Setup Python3"
 
-msg_info "Installing Node.js"
-mkdir -p /etc/apt/keyrings
-curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_22.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
-$STD apt-get update
-$STD apt-get install -y nodejs
-msg_ok "Installed Node.js"
+NODE_VERSION="22" install_node_and_modules
 
 msg_info "Installing go2rtc"
 mkdir -p /usr/local/go2rtc/bin

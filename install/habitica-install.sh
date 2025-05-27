@@ -15,24 +15,14 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-    libkrb5-dev \
-    gnupg \
-    build-essential \
-    git
+  libkrb5-dev \
+  build-essential \
+  git
 curl -fsSL "http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2_amd64.deb" -o $(basename "http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2_amd64.deb")
 $STD dpkg -i libssl1.1_1.1.1f-1ubuntu2_amd64.deb
 msg_ok "Installed Dependencies"
 
-msg_info "Setting up Node.js Repository"
-mkdir -p /etc/apt/keyrings
-curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
-msg_ok "Set up Node.js Repository"
-
-msg_info "Setup Node.js"
-$STD apt-get update
-$STD apt-get install -y nodejs
-msg_ok "Setup Node.js"
+NODE_VERSION="22" install_node_and_modules
 
 msg_info "Setup ${APPLICATION}"
 temp_file=$(mktemp)

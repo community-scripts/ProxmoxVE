@@ -15,7 +15,6 @@ update_os
 
 msg_info "Installing Dependencies. Patience"
 $STD apt-get install -y \
-  gnupg \
   git
 msg_ok "Installed Dependencies"
 
@@ -23,14 +22,7 @@ msg_info "Setup Python3"
 $STD apt-get install -y python3-venv
 msg_ok "Setup Python3"
 
-msg_info "Setup Node.js & yarn"
-mkdir -p /etc/apt/keyrings
-curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_22.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
-$STD apt-get update
-$STD apt-get install -y nodejs
-$STD npm install -g yarn
-msg_ok "Setup Node.js & yarn"
+NODE_VERSION="22" NODE_MODULE="yarn@latest" install_node_and_modules
 
 msg_info "Setup Platformio"
 curl -fsSL -o get-platformio.py https://raw.githubusercontent.com/platformio/platformio-core-installer/master/get-platformio.py

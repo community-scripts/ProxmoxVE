@@ -19,11 +19,7 @@ $STD apt-get install -y \
   gpg
 msg_ok "Installed Dependencies"
 
-msg_info "Setting up Node.js Repository"
-mkdir -p /etc/apt/keyrings
-curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_22.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
-msg_ok "Set up Node.js Repository"
+NODE_VERSION="22" NODE_MODULE="yarn@latest" install_node_and_modules
 
 msg_info "Installing Node.js"
 $STD apt-get update

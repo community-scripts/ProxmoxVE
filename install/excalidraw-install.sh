@@ -15,21 +15,10 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-  gnupg \
   xdg-utils
 msg_ok "Installed Dependencies"
 
-msg_info "Setup Node.js Repository"
-mkdir -p /etc/apt/keyrings
-curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_22.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
-msg_ok "Setup Node.js Repository"
-
-msg_info "Setup Node.js"
-$STD apt-get update
-$STD apt-get install -y nodejs
-$STD npm install -g yarn
-msg_ok "Setup Node.js"
+NODE_VERSION="22" NODE_MODULE="yarn@latest" install_node_and_modules
 
 msg_info "Setup Excalidraw"
 temp_file=$(mktemp)
