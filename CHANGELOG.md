@@ -16,6 +16,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-05-27
 
+### 🆕 New Scripts
+
+  - Pulse ([#4728](https://github.com/community-scripts/ProxmoxVE/pull/4728))
+
 ## 2025-05-26
 
 ### 🆕 New Scripts
