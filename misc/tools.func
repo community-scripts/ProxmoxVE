@@ -587,11 +587,21 @@ install_java() {
 
 install_mongodb() {
   local MONGO_VERSION="${MONGO_VERSION:-8.0}"
-  local DISTRO_CODENAME
-  DISTRO_CODENAME=$(awk -F= '/VERSION_CODENAME/ { print $2 }' /etc/os-release)
+  local DISTRO_ID DISTRO_CODENAME MONGO_BASE_URL
+  DISTRO_ID=$(awk -F= '/^ID=/{ gsub(/"/,"",$2); print $2 }' /etc/os-release)
+  DISTRO_CODENAME=$(awk -F= '/^VERSION_CODENAME=/{ print $2 }' /etc/os-release)
+
+  case "$DISTRO_ID" in
+  ubuntu) MONGO_BASE_URL="https://repo.mongodb.org/apt/ubuntu" ;;
+  debian) MONGO_BASE_URL="https://repo.mongodb.org/apt/debian" ;;
+  *)
+    msg_error "Unsupported distribution: $DISTRO_ID"
+    return 1
+    ;;
+  esac
+
   local REPO_LIST="/etc/apt/sources.list.d/mongodb-org-${MONGO_VERSION}.list"
 
-  # Aktuell installierte Major-Version ermitteln
   local INSTALLED_VERSION=""
   if command -v mongod >/dev/null; then
     INSTALLED_VERSION=$(mongod --version | awk '/db version/{print $3}' | cut -d. -f1,2)
@@ -605,7 +615,6 @@ install_mongodb() {
     return 0
   fi
 
-  # Ältere Version entfernen (nur Packages, nicht Daten!)
   if [[ -n "$INSTALLED_VERSION" ]]; then
     msg_info "Replacing MongoDB $INSTALLED_VERSION with $MONGO_VERSION (data will be preserved)"
     $STD systemctl stop mongod || true
@@ -616,15 +625,17 @@ install_mongodb() {
     msg_info "Installing MongoDB $MONGO_VERSION"
   fi
 
-  # MongoDB Repo hinzufügen
   curl -fsSL "https://pgp.mongodb.com/server-${MONGO_VERSION}.asc" | gpg --dearmor -o "/etc/apt/trusted.gpg.d/mongodb-${MONGO_VERSION}.gpg"
-  echo "deb [signed-by=/etc/apt/trusted.gpg.d/mongodb-${MONGO_VERSION}.gpg] https://repo.mongodb.org/apt/debian ${DISTRO_CODENAME}/mongodb-org/${MONGO_VERSION} main" \
+  echo "deb [signed-by=/etc/apt/trusted.gpg.d/mongodb-${MONGO_VERSION}.gpg] ${MONGO_BASE_URL} ${DISTRO_CODENAME}/mongodb-org/${MONGO_VERSION} main" \
     >"$REPO_LIST"
 
-  $STD apt-get update
+  $STD apt-get update || {
+    msg_error "APT update failed — invalid MongoDB repo for ${DISTRO_ID}-${DISTRO_CODENAME}?"
+    return 1
+  }
+
   $STD apt-get install -y mongodb-org
 
-  # Sicherstellen, dass Datenverzeichnis intakt bleibt
   mkdir -p /var/lib/mongodb
   chown -R mongodb:mongodb /var/lib/mongodb
 
