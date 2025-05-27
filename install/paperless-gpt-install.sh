@@ -16,7 +16,6 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
   gcc \
-  gnupg \
   ca-certificates \
   musl-dev \
   mupdf \
@@ -24,23 +23,8 @@ $STD apt-get install -y \
   musl-tools
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" NODE_MODULE="yarn@latest" install_node_and_modules
-
-msg_info "Installing Node.js"
-$STD apt-get update
-$STD apt-get install -y nodejs
-msg_ok "Installed Node.js"
-
-msg_info "Installing Golang"
-set +o pipefail
-temp_file=$(mktemp)
-golang_tarball=$(curl -fsSL https://go.dev/dl/ | grep -oP 'go[\d\.]+\.linux-amd64\.tar\.gz' | head -n 1)
-curl -fsSL "https://golang.org/dl/${golang_tarball}" -o "$temp_file"
-tar -C /usr/local -xzf "$temp_file"
-ln -sf /usr/local/go/bin/go /usr/local/bin/go
-rm -f "$temp_file"
-set -o pipefail
-msg_ok "Installed Golang"
+NODE_VERSION="22" install_node_and_modules
+install_go
 
 msg_info "Setup Paperless-GPT"
 temp_file=$(mktemp)

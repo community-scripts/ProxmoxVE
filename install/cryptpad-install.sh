@@ -15,16 +15,10 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-  gnupg \
   git
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" NODE_MODULE="yarn@latest" install_node_and_modules
-
-msg_info "Setup Node.js"
-$STD apt-get update
-$STD apt-get install -y nodejs
-msg_ok "Setup Node.js"
+NODE_VERSION="22" install_node_and_modules
 
 read -p "${TAB3}Install OnlyOffice components instead of CKEditor? (Y/N): " onlyoffice
 

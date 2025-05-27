@@ -13,16 +13,7 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt-get install -y gnupg
-msg_ok "Installed Dependencies"
-
-NODE_VERSION="22" NODE_MODULE="yarn@latest" install_node_and_modules
-
-msg_info "Setup Node.js"
-$STD apt-get update
-$STD apt-get install -y nodejs
-msg_ok "Setup Node.js"
+NODE_VERSION="22" install_node_and_modules
 
 msg_info "Setup ${APPLICATION}"
 temp_file=$(mktemp)
