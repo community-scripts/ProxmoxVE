@@ -22,6 +22,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
+  - tools.func: little bugfixes | add rust install | add adminer install [@MickLesk](https://github.com/MickLesk) ([#4750](https://github.com/community-scripts/ProxmoxVE/pull/4750))
+
   - #### 🐞 Bug Fixes
 
     - lldap: fix update-check [@MickLesk](https://github.com/MickLesk) ([#4742](https://github.com/community-scripts/ProxmoxVE/pull/4742))
