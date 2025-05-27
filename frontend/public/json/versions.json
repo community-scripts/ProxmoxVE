@@ -1,5 +1,45 @@
 [
   {
+    "name": "mattermost/mattermost",
+    "version": "v10.5.7",
+    "date": "2025-05-27T05:34:42Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.94.1",
+    "date": "2025-05-27T10:36:43Z"
+  },
+  {
+    "name": "traefik/traefik",
+    "version": "v2.11.25",
+    "date": "2025-05-27T10:25:28Z"
+  },
+  {
+    "name": "readeck/readeck",
+    "version": "0.19.0",
+    "date": "2025-05-27T09:15:55Z"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2025.5.1",
+    "date": "2025-05-27T09:01:29Z"
+  },
+  {
+    "name": "zitadel/zitadel",
+    "version": "v2.65.10",
+    "date": "2025-05-27T08:47:06Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1956",
+    "date": "2025-05-27T05:55:21Z"
+  },
+  {
+    "name": "semaphoreui/semaphore",
+    "version": "v2.14.12",
+    "date": "2025-05-27T03:58:59Z"
+  },
+  {
     "name": "open-webui/open-webui",
     "version": "v0.6.11",
     "date": "2025-05-26T22:27:26Z"
@@ -20,14 +60,9 @@
     "date": "2025-05-23T15:10:33Z"
   },
   {
-    "name": "mattermost/mattermost",
-    "version": "mattermost-redux@10.8.0",
-    "date": "2025-05-26T19:17:13Z"
-  },
-  {
-    "name": "semaphoreui/semaphore",
-    "version": "v2.14.12",
-    "date": "2025-05-26T19:08:26Z"
+    "name": "keycloak/keycloak",
+    "version": "26.0.12",
+    "date": "2025-05-15T14:06:52Z"
   },
   {
     "name": "dgtlmoon/changedetection.io",
@@ -45,14 +80,14 @@
     "date": "2025-03-10T06:39:11Z"
   },
   {
+    "name": "wazuh/wazuh",
+    "version": "coverity-w22-4.13.0",
+    "date": "2025-05-26T15:04:48Z"
+  },
+  {
     "name": "nzbgetcom/nzbget",
     "version": "v25.0",
     "date": "2025-05-12T09:12:04Z"
-  },
-  {
-    "name": "zitadel/zitadel",
-    "version": "v3.2.1",
-    "date": "2025-05-26T14:27:59Z"
   },
   {
     "name": "jupyter/notebook",
@@ -73,11 +108,6 @@
     "name": "VictoriaMetrics/VictoriaMetrics",
     "version": "pmm-6401-v1.118.0",
     "date": "2025-05-26T13:09:32Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.91.3",
-    "date": "2025-05-08T12:25:10Z"
   },
   {
     "name": "Graylog2/graylog2-server",
@@ -103,11 +133,6 @@
     "name": "morpheus65535/bazarr",
     "version": "v1.5.2",
     "date": "2025-05-11T16:40:55Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1951",
-    "date": "2025-05-26T05:51:18Z"
   },
   {
     "name": "stonith404/pingvin-share",
@@ -136,8 +161,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-05-25T09:44:06Z"
+    "version": "v4.1.1",
+    "date": "2025-05-16T17:37:30Z"
   },
   {
     "name": "Kozea/Radicale",
@@ -203,16 +228,6 @@
     "name": "grokability/snipe-it",
     "version": "v8.1.4",
     "date": "2025-05-23T12:29:19Z"
-  },
-  {
-    "name": "wazuh/wazuh",
-    "version": "v4.10.2",
-    "date": "2025-05-23T11:56:41Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.0.12",
-    "date": "2025-05-15T14:06:52Z"
   },
   {
     "name": "ollama/ollama",
@@ -298,11 +313,6 @@
     "name": "glpi-project/glpi",
     "version": "10.0.18",
     "date": "2025-02-12T11:07:02Z"
-  },
-  {
-    "name": "esphome/esphome",
-    "version": "2025.5.0",
-    "date": "2025-05-21T08:32:53Z"
   },
   {
     "name": "inventree/InvenTree",
@@ -585,11 +595,6 @@
     "date": "2025-05-08T12:45:44Z"
   },
   {
-    "name": "readeck/readeck",
-    "version": "0.18.2",
-    "date": "2025-05-07T19:22:22Z"
-  },
-  {
     "name": "donaldzou/WGDashboard",
     "version": "v4.2.3",
     "date": "2025-05-07T15:35:04Z"
@@ -643,11 +648,6 @@
     "name": "apache/couchdb",
     "version": "3.5.0",
     "date": "2025-05-05T16:28:24Z"
-  },
-  {
-    "name": "traefik/traefik",
-    "version": "v3.4.0",
-    "date": "2025-05-05T13:59:23Z"
   },
   {
     "name": "moghtech/komodo",
