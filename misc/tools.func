@@ -32,6 +32,15 @@ install_node_and_modules() {
     NEED_NODE_INSTALL=true
   fi
 
+  if ! command -v jq &>/dev/null; then
+    $STD msg_info "Installing jq..."
+    $STD apt-get update -qq &>/dev/null
+    $STD apt-get install -y jq &>/dev/null || {
+      msg_error "Failed to install jq"
+      return 1
+    }
+  fi
+
   # Install Node.js if required
   if [[ "$NEED_NODE_INSTALL" == true ]]; then
     $STD apt-get purge -y nodejs
