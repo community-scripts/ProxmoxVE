@@ -20,6 +20,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - Pulse ([#4728](https://github.com/community-scripts/ProxmoxVE/pull/4728))
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - lldap: fix update-check [@MickLesk](https://github.com/MickLesk) ([#4742](https://github.com/community-scripts/ProxmoxVE/pull/4742))
+
 ## 2025-05-26
 
 ### 🆕 New Scripts
