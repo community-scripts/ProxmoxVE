@@ -29,17 +29,7 @@ msg_ok "Installed Caddy"
 
 read -r -p "${TAB3}Would you like to install xCaddy Addon? <y/N> " prompt
 if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
-  msg_info "Installing Golang"
-  set +o pipefail
-  temp_file=$(mktemp)
-  golang_tarball=$(curl -fsSL https://go.dev/dl/ | grep -oP 'go[\d\.]+\.linux-amd64\.tar\.gz' | head -n 1)
-  curl -fsSL "https://golang.org/dl/${golang_tarball}" -o "$temp_file"
-  tar -C /usr/local -xzf "$temp_file"
-  ln -sf /usr/local/go/bin/go /usr/local/bin/go
-  rm -f "$temp_file"
-  set -o pipefail
-  msg_ok "Installed Golang"
-
+  install_go
   msg_info "Setup xCaddy"
   $STD apt-get install -y git
   cd /opt
