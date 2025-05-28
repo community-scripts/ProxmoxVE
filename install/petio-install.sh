@@ -13,10 +13,6 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt-get install -y gnupg
-msg_ok "Installed Dependencies"
-
 msg_info "Installing MongoDB 4.4"
 curl -fsSL "https://www.mongodb.org/static/pgp/server-4.4.asc" | gpg --dearmor >/usr/share/keyrings/mongodb-server-4.4.gpg
 # Determine OS ID
