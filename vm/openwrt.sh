@@ -252,7 +252,7 @@ function default_settings() {
   echo -e "${DGN}Using LAN NETMASK: ${BGN}${LAN_NETMASK}${CL}"
   echo -e "${DGN}Using Interface MTU Size: ${BGN}Default${CL}"
   echo -e "${DGN}Start VM when completed: ${BGN}yes${CL}"
-  echo -e "${BL}Creating a OpenWRT VM using the above default settings${CL}"
+  echo -e "${BL}Creating a OpenWrt VM using the above default settings${CL}"
 }
 
 function advanced_settings() {
@@ -510,7 +510,7 @@ qm set $VMID \
   -tags community-script \
   -description "<div align='center'><a href='https://Helper-Scripts.com'><img src='https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/images/logo-81x112.png'/></a>
 
-  # OpenWRT
+  # OpenWrt
 
   <a href='https://ko-fi.com/D1D7EP4GF'><img src='https://img.shields.io/badge/&#x2615;-Buy me a coffee-blue' /></a>
   </div>" >/dev/null
