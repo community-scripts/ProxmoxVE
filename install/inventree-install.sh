@@ -14,7 +14,6 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y gnupg
 temp_file=$(mktemp)
 curl -fsSL "http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2_amd64.deb" -o "$temp_file"
 $STD dpkg -i $temp_file

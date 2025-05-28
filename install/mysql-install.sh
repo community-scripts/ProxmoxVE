@@ -16,8 +16,7 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-  lsb-release \
-  gnupg
+  lsb-release
 msg_ok "Installed Dependencies"
 
 RELEASE_REPO="mysql-8.0"

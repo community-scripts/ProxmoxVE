@@ -15,7 +15,6 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y ca-certificates
-$STD apt-get install -y gnupg
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" install_node_and_modules
