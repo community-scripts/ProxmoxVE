@@ -19,7 +19,6 @@ All LXC instances created using this repository come pre-installed with Midnight
 ### 🆕 New Scripts
 
   - Umbrel-OS [@MickLesk](https://github.com/MickLesk) ([#4788](https://github.com/community-scripts/ProxmoxVE/pull/4788))
-- refactor: use binary and randomize credentials in tinyauth [@steveiliop56](https://github.com/steveiliop56) ([#4632](https://github.com/community-scripts/ProxmoxVE/pull/4632))
 - oauth2-proxy ([#4784](https://github.com/community-scripts/ProxmoxVE/pull/4784))
 
 ### 🚀 Updated Scripts
@@ -39,6 +38,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🔧 Refactor
 
+    - refactor: use binary and randomize credentials in tinyauth [@steveiliop56](https://github.com/steveiliop56) ([#4632](https://github.com/community-scripts/ProxmoxVE/pull/4632))
     - MariaDB CLI Update, Go Install Helper & Minor Cleanup [@MickLesk](https://github.com/MickLesk) ([#4793](https://github.com/community-scripts/ProxmoxVE/pull/4793))
     - Refactor: Remove redundant dependencies & unify unzip usage [@MickLesk](https://github.com/MickLesk) ([#4780](https://github.com/community-scripts/ProxmoxVE/pull/4780))
     - Refactor: Remove gpg / gnupg from script base [@MickLesk](https://github.com/MickLesk) ([#4775](https://github.com/community-scripts/ProxmoxVE/pull/4775))
