@@ -234,7 +234,7 @@ function advanced_settings() {
       MACHINE=""
     fi
   else
-    exit_script
+    exit-script
   fi
 
   if DISK_SIZE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Disk Size in GiB (e.g., 10, 20)" 8 58 "$DISK_SIZE" --title "DISK SIZE" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
