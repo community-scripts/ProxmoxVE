@@ -14,12 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apk add newt
-$STD apk add curl
 $STD apk add openssl
-$STD apk add openssh
-$STD apk add nano
-$STD apk add mc
 $STD apk add nginx
 msg_ok "Installed Dependencies"
 

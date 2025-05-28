@@ -16,7 +16,6 @@ update_os
 msg_info "Installing Dependencies"
 $STD apk add --no-cache \
   npm \
-  curl \
   go
 msg_ok "Installed Dependencies"
 
