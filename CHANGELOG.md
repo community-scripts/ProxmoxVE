@@ -18,12 +18,14 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🆕 New Scripts
 
-  - oauth2-proxy ([#4784](https://github.com/community-scripts/ProxmoxVE/pull/4784))
+  - refactor: use binary and randomize credentials in tinyauth [@steveiliop56](https://github.com/steveiliop56) ([#4632](https://github.com/community-scripts/ProxmoxVE/pull/4632))
+- oauth2-proxy ([#4784](https://github.com/community-scripts/ProxmoxVE/pull/4784))
 
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
 
+    - Habitica: Use Node20 [@MickLesk](https://github.com/MickLesk) ([#4796](https://github.com/community-scripts/ProxmoxVE/pull/4796))
     - Alpine-Node-RED: add service to rc [@MickLesk](https://github.com/MickLesk) ([#4783](https://github.com/community-scripts/ProxmoxVE/pull/4783))
 
   - #### ✨ New Features
