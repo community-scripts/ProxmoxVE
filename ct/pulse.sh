@@ -45,12 +45,6 @@ function update_script() {
     if [[ -f /tmp/.env.backup.pulse ]]; then
       mv /tmp/.env.backup.pulse /opt/pulse-proxmox/.env
     fi
-    cd /opt/pulse-proxmox
-    $STD npm install --unsafe-perm
-    cd /opt/pulse-proxmox/server
-    $STD npm install --unsafe-perm
-    cd /opt/pulse-proxmox
-    $STD npm run build:css
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated Pulse to ${RELEASE}"
 
