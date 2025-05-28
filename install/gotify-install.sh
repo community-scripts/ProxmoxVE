@@ -18,7 +18,7 @@ RELEASE=$(curl -fsSL https://api.github.com/repos/gotify/server/releases/latest 
 mkdir -p /opt/gotify
 cd /opt/gotify
 curl -fsSL "https://github.com/gotify/server/releases/download/v${RELEASE}/gotify-linux-amd64.zip" -o $(basename "https://github.com/gotify/server/releases/download/v${RELEASE}/gotify-linux-amd64.zip")
-unzip -q gotify-linux-amd64.zip
+$STD unzip gotify-linux-amd64.zip
 rm -rf gotify-linux-amd64.zip
 chmod +x gotify-linux-amd64
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt

@@ -104,7 +104,6 @@ function update_script() {
   if [ "$UPD" == "2" ]; then
     msg_info "Installing Home Assistant Community Store (HACS)"
     $STD apt update
-    $STD apt install -y unzip
     cd /root/.homeassistant
     $STD bash <(curl -fsSL https://get.hacs.xyz)
     msg_ok "Installed Home Assistant Community Store (HACS)"

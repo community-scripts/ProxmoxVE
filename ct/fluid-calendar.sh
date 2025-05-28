@@ -39,8 +39,8 @@ function update_script() {
         cp /opt/fluid-calendar/.env /opt/fluid.env
         rm -rf /opt/fluid-calendar
         tmp_file=$(mktemp)
-curl -fsSL "https://github.com/dotnetfactory/fluid-calendar/archive/refs/tags/v${RELEASE}.zip" -o "$tmp_file"
-        unzip -q $tmp_file
+        curl -fsSL "https://github.com/dotnetfactory/fluid-calendar/archive/refs/tags/v${RELEASE}.zip" -o "$tmp_file"
+        $STD unzip $tmp_file
         mv ${APP}-${RELEASE}/ /opt/fluid-calendar
         mv /opt/fluid.env /opt/fluid-calendar/.env
         cd /opt/fluid-calendar

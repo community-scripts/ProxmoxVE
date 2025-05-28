@@ -39,7 +39,7 @@ function update_script() {
     rm -rf spoolman_bak
     mv spoolman spoolman_bak
     curl -fsSL "https://github.com/Donkie/Spoolman/releases/download/${RELEASE}/spoolman.zip" -o $(basename "https://github.com/Donkie/Spoolman/releases/download/${RELEASE}/spoolman.zip")
-    unzip -q spoolman.zip -d spoolman
+    $STD unzip spoolman.zip -d spoolman
     cd spoolman
     $STD pip3 install -r requirements.txt
     curl -fsSL "https://raw.githubusercontent.com/Donkie/Spoolman/master/.env.example" -o ".env"

@@ -50,7 +50,7 @@ function update_script() {
     fi
     rm -rf /opt/karakeep
     curl -fsSL "https://github.com/karakeep-app/karakeep/archive/refs/tags/v${RELEASE}.zip" -o "v${RELEASE}.zip"
-    unzip -q "v${RELEASE}.zip"
+    $STD unzip "v${RELEASE}.zip"
     mv karakeep-"${RELEASE}" /opt/karakeep
     cd /opt/karakeep/apps/web
     $STD pnpm install --frozen-lockfile

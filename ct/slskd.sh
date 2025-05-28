@@ -38,7 +38,7 @@ function update_script() {
     msg_info "Updating $APP to v${RELEASE}"
     tmp_file=$(mktemp)
     curl -fsSL "https://github.com/slskd/slskd/releases/download/${RELEASE}/slskd-${RELEASE}-linux-x64.zip" -o $tmp_file
-    unzip -q -oj $tmp_file slskd -d /opt/${APP}
+    $STD unzip -oj $tmp_file slskd -d /opt/${APP}
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated $APP to v${RELEASE}"
 
@@ -55,7 +55,7 @@ function update_script() {
   cd /tmp
   rm -rf /opt/soularr
   curl -fsSL -o main.zip https://github.com/mrusse/soularr/archive/refs/heads/main.zip
-  unzip -q main.zip
+  $STD unzip main.zip
   mv soularr-main /opt/soularr
   cd /opt/soularr
   $STD pip install -r requirements.txt

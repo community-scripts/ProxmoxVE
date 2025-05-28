@@ -49,7 +49,7 @@ msg_info "Installing Tianji (Extreme Patience)"
 cd /opt
 RELEASE=$(curl -fsSL https://api.github.com/repos/msgbyte/tianji/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 curl -fsSL "https://github.com/msgbyte/tianji/archive/refs/tags/v${RELEASE}.zip" -o $(basename "https://github.com/msgbyte/tianji/archive/refs/tags/v${RELEASE}.zip")
-unzip -q v${RELEASE}.zip
+$STD unzip v${RELEASE}.zip
 mv tianji-${RELEASE} /opt/tianji
 cd tianji
 $STD pnpm install --filter @tianji/client... --config.dedupe-peer-dependents=false --frozen-lockfile

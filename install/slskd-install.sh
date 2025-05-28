@@ -22,7 +22,7 @@ msg_info "Setup ${APPLICATION}"
 tmp_file=$(mktemp)
 RELEASE=$(curl -s https://api.github.com/repos/slskd/slskd/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 curl -fsSL "https://github.com/slskd/slskd/releases/download/${RELEASE}/slskd-${RELEASE}-linux-x64.zip" -o $tmp_file
-unzip -q $tmp_file -d /opt/${APPLICATION}
+$STD unzip $tmp_file -d /opt/${APPLICATION}
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 JWT_KEY=$(openssl rand -base64 44)
 SLSKD_API_KEY=$(openssl rand -base64 44)
@@ -43,7 +43,7 @@ msg_info "Installing Soularr"
 rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
 cd /tmp
 curl -fsSL -o main.zip https://github.com/mrusse/soularr/archive/refs/heads/main.zip
-unzip -q main.zip
+$STD unzip main.zip
 mv soularr-main /opt/soularr
 cd /opt/soularr
 $STD pip install -r requirements.txt

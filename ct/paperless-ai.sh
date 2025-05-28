@@ -40,7 +40,7 @@ function update_script() {
     cd /opt
     mv /opt/paperless-ai /opt/paperless-ai_bak
     curl -fsSL "https://github.com/clusterzx/paperless-ai/archive/refs/tags/v${RELEASE}.zip" -o $(basename "https://github.com/clusterzx/paperless-ai/archive/refs/tags/v${RELEASE}.zip")
-    unzip -q v${RELEASE}.zip
+    $STD unzip v${RELEASE}.zip
     mv paperless-ai-${RELEASE} /opt/paperless-ai
     mkdir -p /opt/paperless-ai/data
     cp -a /opt/paperless-ai_bak/data/. /opt/paperless-ai/data/

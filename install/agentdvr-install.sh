@@ -14,7 +14,6 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y unzip
 $STD apt-get install -y apt-transport-https
 $STD apt-get install -y alsa-utils
 $STD apt-get install -y libxext-dev

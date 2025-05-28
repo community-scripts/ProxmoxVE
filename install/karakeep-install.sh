@@ -55,7 +55,7 @@ msg_info "Installing karakeep"
 cd /opt
 RELEASE=$(curl -fsSL https://api.github.com/repos/karakeep-app/karakeep/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 curl -fsSL "https://github.com/karakeep-app/karakeep/archive/refs/tags/v${RELEASE}.zip" -o "v${RELEASE}.zip"
-unzip -q "v${RELEASE}.zip"
+$STD unzip "v${RELEASE}.zip"
 mv karakeep-"${RELEASE}" /opt/karakeep
 cd /opt/karakeep
 corepack enable

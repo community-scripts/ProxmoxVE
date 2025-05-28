@@ -42,7 +42,7 @@ RELEASE=$(curl -fsSL https://api.github.com/repos/projectsend/projectsend/releas
 cd /opt
 curl -fsSL "https://github.com/projectsend/projectsend/releases/download/r${RELEASE}/projectsend-r${RELEASE}.zip" -o $(basename "https://github.com/projectsend/projectsend/releases/download/r${RELEASE}/projectsend-r${RELEASE}.zip")
 mkdir projectsend
-unzip -q "projectsend-r${RELEASE}.zip" -d projectsend
+$STD unzip "projectsend-r${RELEASE}.zip" -d projectsend
 mv /opt/projectsend/includes/sys.config.sample.php /opt/projectsend/includes/sys.config.php
 chown -R www-data:www-data /opt/projectsend
 chmod -R 775 /opt/projectsend

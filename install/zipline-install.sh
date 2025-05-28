@@ -45,7 +45,7 @@ msg_info "Installing Zipline (Patience)"
 cd /opt
 RELEASE=$(curl -fsSL https://api.github.com/repos/diced/zipline/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 curl -fsSL "https://github.com/diced/zipline/archive/refs/tags/v${RELEASE}.zip" -o $(basename "https://github.com/diced/zipline/archive/refs/tags/v${RELEASE}.zip")
-unzip -q v"${RELEASE}".zip
+$STD unzip v"${RELEASE}".zip
 mv zipline-"${RELEASE}" /opt/zipline
 cd /opt/zipline
 cat <<EOF >/opt/zipline/.env

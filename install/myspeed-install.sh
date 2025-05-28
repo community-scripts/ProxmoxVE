@@ -25,7 +25,7 @@ msg_info "Installing MySpeed"
 RELEASE=$(curl -fsSL https://github.com/gnmyt/myspeed/releases/latest | grep "title>Release" | cut -d " " -f 5)
 cd /opt
 curl -fsSL "https://github.com/gnmyt/myspeed/releases/download/v$RELEASE/MySpeed-$RELEASE.zip" -o $(basename "https://github.com/gnmyt/myspeed/releases/download/v$RELEASE/MySpeed-$RELEASE.zip")
-unzip -q MySpeed-$RELEASE.zip -d myspeed
+$STD unzip MySpeed-$RELEASE.zip -d myspeed
 cd myspeed
 $STD npm install
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt

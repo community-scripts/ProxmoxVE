@@ -55,7 +55,7 @@ msg_info "Installing Koillection"
 RELEASE=$(curl -fsSL https://api.github.com/repos/benjaminjonard/koillection/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 cd /opt
 curl -fsSL "https://github.com/benjaminjonard/koillection/archive/refs/tags/${RELEASE}.zip" -o $(basename "https://github.com/benjaminjonard/koillection/archive/refs/tags/${RELEASE}.zip")
-unzip -q "${RELEASE}.zip"
+$STD unzip "${RELEASE}.zip"
 mv "/opt/koillection-${RELEASE}" /opt/koillection
 cd /opt/koillection
 cp /opt/koillection/.env /opt/koillection/.env.local

@@ -62,7 +62,6 @@ function update_script() {
   if [ "$UPD" == "3" ]; then
     msg_info "Installing Home Assistant Community Store (HACS)"
     $STD apt update
-    $STD apt install unzip
     cd /var/lib/docker/volumes/hass_config/_data
     $STD bash <(curl -fsSL https://get.hacs.xyz)
     msg_ok "Installed Home Assistant Community Store (HACS)"

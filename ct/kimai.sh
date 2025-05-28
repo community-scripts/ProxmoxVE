@@ -64,7 +64,7 @@ function update_script() {
     trap "echo Unable to download release file for version ${RELEASE}; try again later" ERR
     set -e
     curl -fsSL "https://github.com/kimai/kimai/archive/refs/tags/${RELEASE}.zip" -o $(basename "https://github.com/kimai/kimai/archive/refs/tags/${RELEASE}.zip")
-    unzip -q "${RELEASE}".zip
+    $STD unzip "${RELEASE}".zip
     set +e
     trap - ERR
     rm -rf /opt/kimai

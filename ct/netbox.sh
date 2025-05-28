@@ -39,7 +39,7 @@ function update_script() {
     mv /opt/netbox/ /opt/netbox-backup
     cd /opt
     curl -fsSL "https://github.com/netbox-community/netbox/archive/refs/tags/v${RELEASE}.zip" -o $(basename "https://github.com/netbox-community/netbox/archive/refs/tags/v${RELEASE}.zip")
-    unzip -q "v${RELEASE}.zip"
+    $STD unzip "v${RELEASE}.zip"
     mv /opt/netbox-${RELEASE}/ /opt/netbox/
 
     cp -r /opt/netbox-backup/netbox/netbox/configuration.py /opt/netbox/netbox/netbox/

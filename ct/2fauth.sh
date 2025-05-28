@@ -52,7 +52,7 @@ function update_script() {
                 lsb-release \
                 gpg
             curl -fsSL https://packages.sury.org/php/apt.gpg | gpg --dearmor -o /usr/share/keyrings/deb.sury.org-php.gpg
-            echo "deb [signed-by=/usr/share/keyrings/deb.sury.org-php.gpg] https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list
+            echo "deb [signed-by=/usr/share/keyrings/deb.sury.org-php.gpg] https://packages.sury.org/php/ $(lsb_release -sc) main" >/etc/apt/sources.list.d/php.list
             $STD apt-get update
             $STD apt-get install -y php8.3-{bcmath,common,ctype,curl,fileinfo,fpm,gd,mbstring,mysql,xml,cli,intl}
             sed -i 's/php8.2/php8.3/g' /etc/nginx/conf.d/2fauth.conf
@@ -60,7 +60,7 @@ function update_script() {
 
         # Execute Update
         curl -fsSL -o "${RELEASE}.zip" "https://github.com/Bubka/2FAuth/archive/refs/tags/${RELEASE}.zip"
-        unzip -q "${RELEASE}.zip"
+        $STD unzip "${RELEASE}.zip"
         mv "2FAuth-${RELEASE//v/}/" "/opt/2fauth"
         mv "/opt/2fauth-backup/.env" "/opt/2fauth/.env"
         mv "/opt/2fauth-backup/storage" "/opt/2fauth/storage"

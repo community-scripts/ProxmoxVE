@@ -36,7 +36,7 @@ function update_script() {
     curl -fsSL -o it-tools.zip "$DOWNLOAD_URL"
     mkdir -p /usr/share/nginx/html
     rm -rf /usr/share/nginx/html/*
-    unzip -q it-tools.zip -d /tmp/it-tools
+    $STD unzip it-tools.zip -d /tmp/it-tools
     cp -r /tmp/it-tools/dist/* /usr/share/nginx/html
     rm -rf /tmp/it-tools
     rm -f it-tools.zip

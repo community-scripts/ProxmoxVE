@@ -59,7 +59,7 @@ msg_ok "Set up database"
 msg_info "Installing Kimai (Patience)"
 RELEASE=$(curl -fsSL https://api.github.com/repos/kimai/kimai/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 curl -fsSL "https://github.com/kimai/kimai/archive/refs/tags/${RELEASE}.zip" -o $(basename "https://github.com/kimai/kimai/archive/refs/tags/${RELEASE}.zip")
-unzip -q "${RELEASE}".zip
+$STD unzip "${RELEASE}".zip
 mv kimai-"${RELEASE}" /opt/kimai
 cd /opt/kimai
 echo "export COMPOSER_ALLOW_SUPERUSER=1" >>~/.bashrc

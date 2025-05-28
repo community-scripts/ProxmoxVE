@@ -26,7 +26,7 @@ msg_info "Setup Pf2eTools"
 cd /opt
 RELEASE=$(curl -fsSL https://api.github.com/repos/Pf2eToolsOrg/Pf2eTools/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 curl -fsSL "https://github.com/Pf2eToolsOrg/Pf2eTools/archive/refs/tags/${RELEASE}.zip" -o $(basename "https://github.com/Pf2eToolsOrg/Pf2eTools/archive/refs/tags/${RELEASE}.zip")
-unzip -q "${RELEASE}.zip"
+$STD unzip "${RELEASE}.zip"
 mv "Pf2eTools-${RELEASE:1}" /opt/Pf2eTools
 cd /opt/Pf2eTools
 $STD npm install

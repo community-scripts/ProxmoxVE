@@ -41,7 +41,7 @@ LOCAL_IP=$(hostname -I | awk '{print $1}')
 TAG=$(curl -fsSL https://api.github.com/repos/browserless/browserless/tags?per_page=1 | grep "name" | awk '{print substr($2, 3, length($2)-4) }')
 RELEASE=$(curl -fsSL https://api.github.com/repos/AmruthPillai/Reactive-Resume/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 curl -fsSL "https://github.com/AmruthPillai/Reactive-Resume/archive/refs/tags/v${RELEASE}.zip" -o v${RELEASE}.zip
-unzip -q v${RELEASE}.zip
+$STD unzip v${RELEASE}.zip
 mv ${APPLICATION}-${RELEASE}/ /opt/${APPLICATION}
 cd /opt/${APPLICATION}
 corepack enable
@@ -58,7 +58,7 @@ msg_ok "Installed ${APPLICATION}"
 msg_info "Installing Browserless (Patience)"
 cd /tmp
 curl -fsSL https://github.com/browserless/browserless/archive/refs/tags/v${TAG}.zip -o v${TAG}.zip
-unzip -q v${TAG}.zip
+$STD unzip v${TAG}.zip
 mv browserless-${TAG} /opt/browserless
 cd /opt/browserless
 $STD npm install

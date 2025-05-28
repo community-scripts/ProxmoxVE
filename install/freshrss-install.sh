@@ -40,7 +40,7 @@ msg_info "Installing FreshRSS"
 RELEASE=$(curl -fsSL https://api.github.com/repos/FreshRSS/FreshRSS/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 cd /opt
 curl -fsSL "https://github.com/FreshRSS/FreshRSS/archive/refs/tags/${RELEASE}.zip" -o $(basename "https://github.com/FreshRSS/FreshRSS/archive/refs/tags/${RELEASE}.zip")
-unzip -q "${RELEASE}.zip"
+$STD unzip "${RELEASE}.zip"
 mv "/opt/FreshRSS-${RELEASE}" /opt/freshrss
 cd /opt/freshrss
 chown -R www-data:www-data /opt/freshrss

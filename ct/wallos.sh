@@ -35,7 +35,7 @@ function update_script() {
     mkdir -p /opt/logos
     mv /opt/wallos/db/wallos.db /opt/wallos.db
     mv /opt/wallos/images/uploads/logos /opt/logos/
-    unzip -q v${RELEASE}.zip
+    $STD unzip v${RELEASE}.zip
     rm -rf /opt/wallos
     mv Wallos-${RELEASE} /opt/wallos
     rm -rf /opt/wallos/db/wallos.empty.db

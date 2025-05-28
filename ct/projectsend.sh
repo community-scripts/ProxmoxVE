@@ -36,7 +36,7 @@ function update_script() {
     msg_info "Updating ${APP} to v${RELEASE}"
     cd /opt
     curl -fsSL "https://github.com/projectsend/projectsend/releases/download/r${RELEASE}/projectsend-r${RELEASE}.zip" -o $(basename "https://github.com/projectsend/projectsend/releases/download/r${RELEASE}/projectsend-r${RELEASE}.zip")
-    unzip -o -q "projectsend-r${RELEASE}.zip" -d projectsend
+    $STD unzip -o "projectsend-r${RELEASE}.zip" -d projectsend
     chown -R www-data:www-data /opt/projectsend
     chmod -R 775 /opt/projectsend
     echo "${RELEASE}" >/opt/${APP}_version.txt

@@ -15,7 +15,6 @@ update_os
 
 msg_info "Installing Dependencies (Patience)"
 $STD apt-get install -y \
-  unzip \
   apache2 \
   php8.2-{mbstring,gd,fpm,curl,intl,ldap,tidy,bz2,mysql,zip,xml} \
   composer \
@@ -45,7 +44,7 @@ LOCAL_IP="$(hostname -I | awk '{print $1}')"
 cd /opt
 RELEASE=$(curl -fsSL https://api.github.com/repos/BookStackApp/BookStack/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 curl -fsSL "https://github.com/BookStackApp/BookStack/archive/refs/tags/v${RELEASE}.zip" -o $(basename "https://github.com/BookStackApp/BookStack/archive/refs/tags/v${RELEASE}.zip")
-unzip -q v${RELEASE}.zip
+$STD unzip v${RELEASE}.zip
 mv BookStack-${RELEASE} /opt/bookstack
 cd /opt/bookstack
 cp .env.example .env

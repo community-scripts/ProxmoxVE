@@ -47,7 +47,7 @@ function update_script() {
     fi
     rm -rf /opt/hoarder
     curl -fsSL "https://github.com/hoarder-app/hoarder/archive/refs/tags/v${RELEASE}.zip" -o "v${RELEASE}.zip"
-    unzip -q v"${RELEASE}".zip
+    $STD unzip v"${RELEASE}".zip
     mv karakeep-"${RELEASE}" /opt/hoarder
     cd /opt/hoarder/apps/web
     $STD pnpm install --frozen-lockfile

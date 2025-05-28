@@ -24,7 +24,7 @@ RELEASE=$(curl -fsSL https://api.github.com/repos/hargata/lubelog/releases/lates
 RELEASE_TRIMMED=$(echo "${RELEASE}" | tr -d ".")
 cd /opt/lubelogger
 curl -fsSL "https://github.com/hargata/lubelog/releases/download/v${RELEASE}/LubeLogger_v${RELEASE_TRIMMED}_linux_x64.zip" -o $(basename "https://github.com/hargata/lubelog/releases/download/v${RELEASE}/LubeLogger_v${RELEASE_TRIMMED}_linux_x64.zip")
-unzip -q LubeLogger_v${RELEASE_TRIMMED}_linux_x64.zip
+$STD unzip LubeLogger_v${RELEASE_TRIMMED}_linux_x64.zip
 chmod 700 /opt/lubelogger/CarCareTracker
 cp /opt/lubelogger/appsettings.json /opt/lubelogger/appsettings_bak.json
 jq '.Kestrel = {"Endpoints": {"Http": {"Url": "http://0.0.0.0:5000"}}}' /opt/lubelogger/appsettings_bak.json >/opt/lubelogger/appsettings.json

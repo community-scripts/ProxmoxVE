@@ -28,7 +28,7 @@ msg_info "Setting up Zigbee2MQTT"
 cd /opt
 RELEASE=$(curl -fsSL https://api.github.com/repos/Koenkk/zigbee2mqtt/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 curl -fsSL "https://github.com/Koenkk/zigbee2mqtt/archive/refs/tags/${RELEASE}.zip" -o $(basename "https://github.com/Koenkk/zigbee2mqtt/archive/refs/tags/${RELEASE}.zip")
-unzip -q ${RELEASE}.zip
+$STD unzip ${RELEASE}.zip
 mv zigbee2mqtt-${RELEASE} /opt/zigbee2mqtt
 cd /opt/zigbee2mqtt/data
 mv configuration.example.yaml configuration.yaml

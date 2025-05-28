@@ -17,7 +17,7 @@ msg_info "Installing Gokapi"
 LATEST=$(curl -fsSL https://api.github.com/repos/Forceu/Gokapi/releases/latest | grep '"tag_name":' | cut -d'"' -f4)
 mkdir -p /opt/gokapi/{data,config}
 curl -fsSL "https://github.com/Forceu/Gokapi/releases/download/$LATEST/gokapi-linux_amd64.zip" -o $(basename "https://github.com/Forceu/Gokapi/releases/download/$LATEST/gokapi-linux_amd64.zip")
-unzip -q gokapi-linux_amd64.zip -d /opt/gokapi
+$STD unzip gokapi-linux_amd64.zip -d /opt/gokapi
 rm gokapi-linux_amd64.zip
 chmod +x /opt/gokapi/gokapi-linux_amd64
 msg_ok "Installed Gokapi"

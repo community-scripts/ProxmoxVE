@@ -43,7 +43,7 @@ function update_script() {
     mkdir -p /opt/zipline-upload
     cp -R /opt/zipline/upload/* /opt/zipline-upload/
     curl -fsSL "https://github.com/diced/zipline/archive/refs/tags/v${RELEASE}.zip" -o $(basename "https://github.com/diced/zipline/archive/refs/tags/v${RELEASE}.zip")
-    unzip -q v"${RELEASE}".zip
+    $STD unzip v"${RELEASE}".zip
     rm -R /opt/zipline
     mv zipline-"${RELEASE}" /opt/zipline
     cd /opt/zipline
