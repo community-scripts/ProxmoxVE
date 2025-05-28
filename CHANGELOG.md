@@ -36,6 +36,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🔧 Refactor
 
+    - MariaDB CLI Update, Go Install Helper & Minor Cleanup [@MickLesk](https://github.com/MickLesk) ([#4793](https://github.com/community-scripts/ProxmoxVE/pull/4793))
     - Refactor: Remove redundant dependencies & unify unzip usage [@MickLesk](https://github.com/MickLesk) ([#4780](https://github.com/community-scripts/ProxmoxVE/pull/4780))
     - Refactor: Remove gpg / gnupg from script base [@MickLesk](https://github.com/MickLesk) ([#4775](https://github.com/community-scripts/ProxmoxVE/pull/4775))
 
