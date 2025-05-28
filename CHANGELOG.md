@@ -24,6 +24,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🔧 Refactor
 
+    - Refactor: Remove redundant dependencies & unify unzip usage [@MickLesk](https://github.com/MickLesk) ([#4780](https://github.com/community-scripts/ProxmoxVE/pull/4780))
     - Refactor: Remove gpg / gnupg from script base [@MickLesk](https://github.com/MickLesk) ([#4775](https://github.com/community-scripts/ProxmoxVE/pull/4775))
 
 ## 2025-05-27
