@@ -14,16 +14,16 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y gnupg jsvc
+$STD apt-get install -y jsvc
 msg_ok "Installed Dependencies"
 
 msg_info "Checking CPU Features"
 if lscpu | grep -q 'avx'; then
-    MONGODB_VERSION="7.0"
-    msg_ok "AVX detected: Using MongoDB 7.0"
+  MONGODB_VERSION="7.0"
+  msg_ok "AVX detected: Using MongoDB 7.0"
 else
-    msg_error "No AVX detected: TP-Link Canceled Support for Old MongoDB for Debian 12\n https://www.tp-link.com/baltic/support/faq/4160/"
-    exit 0
+  msg_error "No AVX detected: TP-Link Canceled Support for Old MongoDB for Debian 12\n https://www.tp-link.com/baltic/support/faq/4160/"
+  exit 0
 fi
 
 msg_info "Installing Azul Zulu Java"
@@ -36,10 +36,10 @@ msg_ok "Installed Azul Zulu Java"
 
 msg_info "Installing libssl (if needed)"
 if ! dpkg -l | grep -q 'libssl1.1'; then
-    curl -fsSL "https://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.1_1.1.1w-0+deb11u2_amd64.deb" -o "/tmp/libssl.deb"
-    $STD dpkg -i /tmp/libssl.deb
-    rm -f /tmp/libssl.deb
-    msg_ok "Installed libssl1.1"
+  curl -fsSL "https://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.1_1.1.1w-0+deb11u2_amd64.deb" -o "/tmp/libssl.deb"
+  $STD dpkg -i /tmp/libssl.deb
+  rm -f /tmp/libssl.deb
+  msg_ok "Installed libssl1.1"
 fi
 
 msg_info "Installing MongoDB $MONGODB_VERSION"
@@ -51,8 +51,8 @@ msg_ok "Installed MongoDB $MONGODB_VERSION"
 
 msg_info "Installing Omada Controller"
 OMADA_URL=$(curl -fsSL "https://support.omadanetworks.com/en/download/software/omada-controller/" |
-    grep -o 'https://static\.tp-link\.com/upload/software/[^"]*linux_x64[^"]*\.deb' |
-    head -n1)
+  grep -o 'https://static\.tp-link\.com/upload/software/[^"]*linux_x64[^"]*\.deb' |
+  head -n1)
 OMADA_PKG=$(basename "$OMADA_URL")
 curl -fsSL "$OMADA_URL" -o "$OMADA_PKG"
 $STD dpkg -i "$OMADA_PKG"

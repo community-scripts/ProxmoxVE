@@ -16,7 +16,6 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt-get update
 $STD apt-get -y install \
-  gnupg \
   ca-certificates \
   apache2-utils \
   logrotate \

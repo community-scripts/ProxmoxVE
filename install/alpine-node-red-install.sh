@@ -15,7 +15,6 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apk add --no-cache \
-  gpg \
   git \
   nodejs \
   npm

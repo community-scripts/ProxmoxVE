@@ -14,21 +14,13 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
-    gnupg \
-    unzip \
-    postgresql-common
-msg_ok "Installed Dependencies"
-
-msg_info "Installing Additional Dependencies"
-mkdir -p /etc/apt/keyrings
-curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_22.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
-echo "YES" | /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh &>/dev/null
-$STD apt-get install -y postgresql-16 nodejs
 cd /tmp
 curl -fsSL https://dl.min.io/server/minio/release/linux-amd64/minio.deb -o minio.deb
 $STD dpkg -i minio.deb
+msg_ok "Installed Dependencies"
+
+PG_VERSION="16" PG_MODULES="common" install_postgresql
+NODE_VERSION="22" NODE_MODULE="pnpm@latest" install_node_and_modules
 
 msg_info "Setting up Database"
 DB_USER="rxresume"
@@ -126,11 +118,11 @@ TOKEN=${CHROME_TOKEN}
 EOF
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 {
-    echo "${APPLICATION} Credentials"
-    echo "Database User: $DB_USER"
-    echo "Database Password: $DB_PASS"
-    echo "Database Name: $DB_NAME"
-    echo "Minio Root Password: ${MINIO_PASS}"
+  echo "${APPLICATION} Credentials"
+  echo "Database User: $DB_USER"
+  echo "Database Password: $DB_PASS"
+  echo "Database Name: $DB_NAME"
+  echo "Minio Root Password: ${MINIO_PASS}"
 } >>~/${APPLICATION}.creds
 msg_ok "Configured applications"
 

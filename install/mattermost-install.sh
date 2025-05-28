@@ -13,11 +13,7 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt-get install -y \
-  gpg \
-  postgresql
-msg_ok "Installed Dependencies"
+PG_VERSION="16" install_postgresql
 
 msg_info "Setting up PostgreSQL"
 DB_NAME=mattermost

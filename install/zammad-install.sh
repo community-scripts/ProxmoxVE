@@ -16,10 +16,8 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
   git \
-  gpg \
   nginx \
-  apt-transport-https \
-  gnupg
+  apt-transport-https
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up Elasticsearch"

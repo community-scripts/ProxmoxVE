@@ -18,7 +18,6 @@ $STD apt-get install -y \
   g++ \
   build-essential \
   git \
-  gnupg \
   ca-certificates \
   chromium/stable \
   chromium-common/stable \

@@ -16,7 +16,6 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
   zip \
-  gnupg \
   postgresql-common
 msg_ok "Installed Dependencies"
 

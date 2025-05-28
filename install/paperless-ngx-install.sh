@@ -20,7 +20,6 @@ $STD apt-get install -y \
   imagemagick \
   fonts-liberation \
   optipng \
-  gnupg \
   libpq-dev \
   libmagic-dev \
   mime-support \

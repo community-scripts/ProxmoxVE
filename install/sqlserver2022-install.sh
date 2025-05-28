@@ -15,7 +15,6 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt install -y \
-  gpg \
   coreutils
 msg_ok "Installed Dependencies"
 

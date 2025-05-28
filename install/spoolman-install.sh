@@ -19,7 +19,6 @@ $STD apt-get install -y \
   build-essential \
   make \
   libpq-dev \
-  gpg \
   ca-certificates
 msg_ok "Installed Dependencies"
 
