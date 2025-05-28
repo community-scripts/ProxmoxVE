@@ -18,7 +18,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🆕 New Scripts
 
-  - refactor: use binary and randomize credentials in tinyauth [@steveiliop56](https://github.com/steveiliop56) ([#4632](https://github.com/community-scripts/ProxmoxVE/pull/4632))
+  - Umbrel-OS [@MickLesk](https://github.com/MickLesk) ([#4788](https://github.com/community-scripts/ProxmoxVE/pull/4788))
+- refactor: use binary and randomize credentials in tinyauth [@steveiliop56](https://github.com/steveiliop56) ([#4632](https://github.com/community-scripts/ProxmoxVE/pull/4632))
 - oauth2-proxy ([#4784](https://github.com/community-scripts/ProxmoxVE/pull/4784))
 
 ### 🚀 Updated Scripts
