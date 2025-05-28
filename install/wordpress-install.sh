@@ -39,7 +39,7 @@ msg_ok "Set up Database"
 
 msg_info "Installing Wordpress (Patience)"
 cd /var/www/html
-curl -fsSL "https://wordpress.org/latest.zip" -o $(basename "https://wordpress.org/latest.zip")
+curl -fsSL "https://wordpress.org/latest.zip" -o "latest.zip"
 $STD unzip latest.zip
 chown -R www-data:www-data wordpress/
 cd /var/www/html/wordpress
