@@ -16,6 +16,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-05-28
 
+### 🆕 New Scripts
+
+  - oauth2-proxy ([#4784](https://github.com/community-scripts/ProxmoxVE/pull/4784))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
