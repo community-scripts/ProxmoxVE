@@ -18,6 +18,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
+  - #### ✨ New Features
+
+    - Pulse: use prebuild tarball file / remove unneeded npm actions [@MickLesk](https://github.com/MickLesk) ([#4776](https://github.com/community-scripts/ProxmoxVE/pull/4776))
+
   - #### 💥 Breaking Changes
 
     - Refactor: Linkwarden + OS Upgrade [@MickLesk](https://github.com/MickLesk) ([#4756](https://github.com/community-scripts/ProxmoxVE/pull/4756))
