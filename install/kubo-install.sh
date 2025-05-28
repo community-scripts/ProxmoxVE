@@ -14,10 +14,6 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt-get install -y gpg
-msg_ok "Installed Dependencies"
-
 msg_info "Installing IPFS"
 RELEASE=$(curl -fsSL https://github.com/ipfs/kubo/releases/latest | grep "title>Release" | cut -d " " -f 4)
 $STD curl -fsSL "https://github.com/ipfs/kubo/releases/download/${RELEASE}/kubo_${RELEASE}_linux-amd64.tar.gz" -o "kubo_${RELEASE}_linux-amd64.tar.gz"

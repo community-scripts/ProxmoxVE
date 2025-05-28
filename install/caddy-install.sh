@@ -17,8 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt-get install -y \
   debian-keyring \
   debian-archive-keyring \
-  apt-transport-https \
-  gpg
+  apt-transport-https
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Caddy"

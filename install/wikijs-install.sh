@@ -15,8 +15,7 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-  git \
-  gpg
+  git
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="20" NODE_MODULE="yarn@latest,node-gyp" install_node_and_modules

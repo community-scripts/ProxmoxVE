@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y {gpg,arp-scan,ieee-data,libwww-perl}
+$STD apt-get install -y {arp-scan,ieee-data,libwww-perl}
 msg_ok "Installed Dependencies"
 
 msg_info "Installing WatchYourLAN"

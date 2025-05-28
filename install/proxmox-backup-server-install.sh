@@ -13,10 +13,6 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt-get install -y gpg
-msg_ok "Installed Dependencies"
-
 msg_info "Installing Proxmox Backup Server"
 curl -fsSL "https://enterprise.proxmox.com/debian/proxmox-release-bookworm.gpg" -o "/etc/apt/trusted.gpg.d/proxmox-release-bookworm.gpg"
 cat <<EOF >>/etc/apt/sources.list

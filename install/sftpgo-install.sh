@@ -14,7 +14,6 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y gpg
 $STD apt-get install -y sqlite3
 msg_ok "Installed Dependencies"
 
