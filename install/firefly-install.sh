@@ -45,7 +45,7 @@ msg_ok "Set up database"
 msg_info "Installing Firefly III (Patience)"
 RELEASE=$(curl -fsSL https://api.github.com/repos/firefly-iii/firefly-iii/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4)}')
 cd /opt
-curl -fsSL "https://github.com/firefly-iii/firefly-iii/releases/download/v${RELEASE}/FireflyIII-v${RELEASE}.tar.gz" -o $(basename "https://github.com/firefly-iii/firefly-iii/releases/download/v${RELEASE}/FireflyIII-v${RELEASE}.tar.gz")
+curl -fsSL "https://github.com/firefly-iii/firefly-iii/releases/download/v${RELEASE}/FireflyIII-v${RELEASE}.tar.gz" -o "FireflyIII-v${RELEASE}.tar.gz"
 mkdir -p /opt/firefly
 tar -xzf FireflyIII-v${RELEASE}.tar.gz -C /opt/firefly
 chown -R www-data:www-data /opt/firefly

@@ -29,7 +29,7 @@ msg_info "Setup Semaphore"
 RELEASE=$(curl -fsSL https://api.github.com/repos/semaphoreui/semaphore/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 mkdir -p /opt/semaphore
 cd /opt/semaphore
-curl -fsSL "https://github.com/semaphoreui/semaphore/releases/download/v${RELEASE}/semaphore_${RELEASE}_linux_amd64.deb" -o $(basename "https://github.com/semaphoreui/semaphore/releases/download/v${RELEASE}/semaphore_${RELEASE}_linux_amd64.deb")
+curl -fsSL "https://github.com/semaphoreui/semaphore/releases/download/v${RELEASE}/semaphore_${RELEASE}_linux_amd64.deb" -o "semaphore_${RELEASE}_linux_amd64.deb"
 $STD dpkg -i semaphore_${RELEASE}_linux_amd64.deb
 
 SEM_HASH=$(openssl rand -base64 32)

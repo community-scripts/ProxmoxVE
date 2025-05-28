@@ -24,7 +24,7 @@ NODE_VERSION="22" install_node_and_modules
 msg_info "Installing MySpeed"
 RELEASE=$(curl -fsSL https://github.com/gnmyt/myspeed/releases/latest | grep "title>Release" | cut -d " " -f 5)
 cd /opt
-curl -fsSL "https://github.com/gnmyt/myspeed/releases/download/v$RELEASE/MySpeed-$RELEASE.zip" -o $(basename "https://github.com/gnmyt/myspeed/releases/download/v$RELEASE/MySpeed-$RELEASE.zip")
+curl -fsSL "https://github.com/gnmyt/myspeed/releases/download/v$RELEASE/MySpeed-$RELEASE.zip" -o "MySpeed-$RELEASE.zip"
 $STD unzip MySpeed-$RELEASE.zip -d myspeed
 cd myspeed
 $STD npm install

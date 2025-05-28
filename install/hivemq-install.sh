@@ -22,7 +22,7 @@ msg_ok "Installed OpenJDK"
 
 msg_info "Installing HiveMQ CE"
 RELEASE=$(curl -fsSL https://api.github.com/repos/hivemq/hivemq-community-edition/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-curl -fsSL "https://github.com/hivemq/hivemq-community-edition/releases/download/${RELEASE}/hivemq-ce-${RELEASE}.zip" -o $(basename "https://github.com/hivemq/hivemq-community-edition/releases/download/${RELEASE}/hivemq-ce-${RELEASE}.zip")
+curl -fsSL "https://github.com/hivemq/hivemq-community-edition/releases/download/${RELEASE}/hivemq-ce-${RELEASE}.zip" -o "hivemq-ce-${RELEASE}.zip"
 $STD unzip hivemq-ce-${RELEASE}.zip
 mkdir -p /opt/hivemq
 mv hivemq-ce-${RELEASE}/* /opt/hivemq

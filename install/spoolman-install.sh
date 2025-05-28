@@ -33,7 +33,7 @@ msg_ok "Setup Python3"
 msg_info "Installing Spoolman"
 RELEASE=$(curl -fsSL https://github.com/Donkie/Spoolman/releases/latest | grep "title>Release" | cut -d " " -f 4)
 cd /opt
-curl -fsSL "https://github.com/Donkie/Spoolman/releases/download/$RELEASE/spoolman.zip" -o $(basename "https://github.com/Donkie/Spoolman/releases/download/$RELEASE/spoolman.zip")
+curl -fsSL "https://github.com/Donkie/Spoolman/releases/download/$RELEASE/spoolman.zip" -o "spoolman.zip"
 $STD unzip spoolman.zip -d spoolman
 rm -rf spoolman.zip
 cd spoolman

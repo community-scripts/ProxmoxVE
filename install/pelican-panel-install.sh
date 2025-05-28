@@ -56,7 +56,7 @@ msg_info "Installing Pelican Panel"
 RELEASE=$(curl -fsSL https://api.github.com/repos/pelican-dev/panel/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 mkdir /opt/pelican-panel
 cd /opt/pelican-panel
-curl -fsSL "https://github.com/pelican-dev/panel/releases/download/v${RELEASE}/panel.tar.gz" -o $(basename "https://github.com/pelican-dev/panel/releases/download/v${RELEASE}/panel.tar.gz")
+curl -fsSL "https://github.com/pelican-dev/panel/releases/download/v${RELEASE}/panel.tar.gz" -o "panel.tar.gz"
 tar -xzf "panel.tar.gz"
 $STD composer install --no-dev --optimize-autoloader --no-interaction
 $STD php artisan p:environment:setup

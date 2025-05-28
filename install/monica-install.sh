@@ -42,7 +42,7 @@ msg_ok "Set up MariaDB"
 msg_info "Installing monica"
 RELEASE=$(curl -fsSL https://api.github.com/repos/monicahq/monica/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 cd /opt
-curl -fsSL "https://github.com/monicahq/monica/releases/download/v${RELEASE}/monica-v${RELEASE}.tar.bz2" -o $(basename "https://github.com/monicahq/monica/releases/download/v${RELEASE}/monica-v${RELEASE}.tar.bz2")
+curl -fsSL "https://github.com/monicahq/monica/releases/download/v${RELEASE}/monica-v${RELEASE}.tar.bz2" -o "monica-v${RELEASE}.tar.bz2"
 tar -xjf "monica-v${RELEASE}.tar.bz2"
 mv "/opt/monica-v${RELEASE}" /opt/monica
 cd /opt/monica

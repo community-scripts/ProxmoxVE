@@ -24,7 +24,7 @@ NODE_VERSION="22" install_node_and_modules
 
 msg_info "Setting up seelf. Patience"
 RELEASE=$(curl -fsSL https://api.github.com/repos/YuukanOO/seelf/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/YuukanOO/seelf/archive/refs/tags/v${RELEASE}.tar.gz" -o $(basename "https://github.com/YuukanOO/seelf/archive/refs/tags/v${RELEASE}.tar.gz")
+curl -fsSL "https://github.com/YuukanOO/seelf/archive/refs/tags/v${RELEASE}.tar.gz" -o "v${RELEASE}.tar.gz"
 tar -xzf v"${RELEASE}".tar.gz
 mv seelf-"${RELEASE}"/ /opt/seelf
 cd /opt/seelf

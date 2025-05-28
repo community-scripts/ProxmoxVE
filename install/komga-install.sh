@@ -19,7 +19,7 @@ msg_ok "Installed Dependencies"
 
 msg_info "Installing Komga"
 RELEASE=$(curl -fsSL https://api.github.com/repos/gotson/komga/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-curl -fsSL "https://github.com/gotson/komga/releases/download/${RELEASE}/komga-${RELEASE}.jar" -o $(basename "https://github.com/gotson/komga/releases/download/${RELEASE}/komga-${RELEASE}.jar")
+curl -fsSL "https://github.com/gotson/komga/releases/download/${RELEASE}/komga-${RELEASE}.jar" -o "komga-${RELEASE}.jar"
 mkdir -p /opt/komga
 mv -f komga-${RELEASE}.jar /opt/komga/komga.jar
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"

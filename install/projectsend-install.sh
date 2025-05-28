@@ -40,7 +40,7 @@ msg_ok "Set up MariaDB"
 msg_info "Installing projectsend"
 RELEASE=$(curl -fsSL https://api.github.com/repos/projectsend/projectsend/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 cd /opt
-curl -fsSL "https://github.com/projectsend/projectsend/releases/download/r${RELEASE}/projectsend-r${RELEASE}.zip" -o $(basename "https://github.com/projectsend/projectsend/releases/download/r${RELEASE}/projectsend-r${RELEASE}.zip")
+curl -fsSL "https://github.com/projectsend/projectsend/releases/download/r${RELEASE}/projectsend-r${RELEASE}.zip" -o "projectsend-r${RELEASE}.zip"
 mkdir projectsend
 $STD unzip "projectsend-r${RELEASE}.zip" -d projectsend
 mv /opt/projectsend/includes/sys.config.sample.php /opt/projectsend/includes/sys.config.php
