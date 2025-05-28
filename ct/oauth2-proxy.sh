@@ -45,10 +45,10 @@ function update_script() {
     msg_ok "Updated ${APP} to ${RELEASE}"
 
     msg_info "Cleaning up"
-    $STD apt-get -y autoremove
-    $STD apt-get -y autoclean
     rm -f "/opt/oauth2-proxy.tar.gz"
     rm -rf "/opt/oauth2-proxy-v${RELEASE}.linux-amd64"
+    $STD apt-get -y autoremove
+    $STD apt-get -y autoclean
     msg_ok "Cleaned"
   else
     msg_ok "${APP} is already up to date (${RELEASE})"
