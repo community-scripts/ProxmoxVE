@@ -37,7 +37,7 @@ msg_ok "Installed Docker & Compose"
 
 msg_info "Fetching NPMplus"
 cd /opt
-curl -fsSL "https://raw.githubusercontent.com/ZoeyVid/NPMplus/refs/heads/develop/compose.yaml" -o $(basename "https://raw.githubusercontent.com/ZoeyVid/NPMplus/refs/heads/develop/compose.yaml")
+curl -fsSL "https://raw.githubusercontent.com/ZoeyVid/NPMplus/refs/heads/develop/compose.yaml" -o compose.yaml
 msg_ok "Fetched NPMplus"
 
 attempts=0

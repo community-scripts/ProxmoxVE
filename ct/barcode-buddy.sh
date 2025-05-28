@@ -38,7 +38,7 @@ function update_script() {
     cd /opt
     mv /opt/barcodebuddy/ /opt/barcodebuddy-backup
     curl -fsSL "https://github.com/Forceu/barcodebuddy/archive/refs/tags/v${RELEASE}.zip" -o $(basename "https://github.com/Forceu/barcodebuddy/archive/refs/tags/v${RELEASE}.zip")
-    unzip -q "v${RELEASE}.zip"
+    $STD unzip "v${RELEASE}.zip"
     mv "/opt/barcodebuddy-${RELEASE}" /opt/barcodebuddy
     cp -r /opt/barcodebuddy-backup/data/. /opt/barcodebuddy/data
     chown -R www-data:www-data /opt/barcodebuddy/data

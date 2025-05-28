@@ -23,8 +23,8 @@ msg_ok "Setup Python3"
 
 msg_info "Installing Bazarr"
 mkdir -p /var/lib/bazarr/
-curl -fsSL "https://github.com/morpheus65535/bazarr/releases/latest/download/bazarr.zip" -o $(basename "https://github.com/morpheus65535/bazarr/releases/latest/download/bazarr.zip")
-unzip -qq bazarr -d /opt/bazarr
+curl -fsSL "https://github.com/morpheus65535/bazarr/releases/latest/download/bazarr.zip" -o "bazarr.zip"
+$STD unzip bazarr -d /opt/bazarr
 chmod 775 /opt/bazarr /var/lib/bazarr/
 $STD python3 -m pip install -q -r /opt/bazarr/requirements.txt
 msg_ok "Installed Bazarr"

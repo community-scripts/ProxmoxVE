@@ -55,7 +55,7 @@ msg_ok "Installed Python Dependencies"
 
 msg_info "Installing Azul Zulu"
 curl -fsSL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xB1998361219BD9C9" -o "/etc/apt/trusted.gpg.d/zulu-repo.asc"
-curl -fsSL "https://cdn.azul.com/zulu/bin/zulu-repo_1.0.0-3_all.deb" -o $(basename "https://cdn.azul.com/zulu/bin/zulu-repo_1.0.0-3_all.deb")
+curl -fsSL "https://cdn.azul.com/zulu/bin/zulu-repo_1.0.0-3_all.deb" -o "/zulu-repo_1.0.0-3_all.deb"
 $STD dpkg -i zulu-repo_1.0.0-3_all.deb
 $STD apt-get update
 $STD apt-get -y install zulu17-jdk
@@ -76,7 +76,7 @@ msg_ok "Installed Language Packs"
 
 msg_info "Installing Stirling-PDF (Additional Patience)"
 RELEASE=$(curl -fsSL https://api.github.com/repos/Stirling-Tools/Stirling-PDF/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/Stirling-Tools/Stirling-PDF/archive/refs/tags/v${RELEASE}.tar.gz" -o $(basename "https://github.com/Stirling-Tools/Stirling-PDF/archive/refs/tags/v${RELEASE}.tar.gz")
+curl -fsSL "https://github.com/Stirling-Tools/Stirling-PDF/archive/refs/tags/v${RELEASE}.tar.gz" -o "v${RELEASE}.tar.gz"
 tar -xzf v${RELEASE}.tar.gz
 cd Stirling-PDF-$RELEASE
 chmod +x ./gradlew

@@ -19,7 +19,7 @@ msg_ok "Installed Dependencies"
 
 msg_info "Installing Azul Zulu"
 curl -fsSL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xB1998361219BD9C9" -o "/etc/apt/trusted.gpg.d/zulu-repo.asc"
-curl -fsSL "https://cdn.azul.com/zulu/bin/zulu-repo_1.0.0-3_all.deb" -o $(basename "https://cdn.azul.com/zulu/bin/zulu-repo_1.0.0-3_all.deb")
+curl -fsSL "https://cdn.azul.com/zulu/bin/zulu-repo_1.0.0-3_all.deb" -o "zulu-repo_1.0.0-3_all.deb"
 $STD dpkg -i zulu-repo_1.0.0-3_all.deb
 $STD apt-get update
 $STD apt-get -y install zulu17-jdk
@@ -28,8 +28,8 @@ msg_ok "Installed Azul Zulu"
 RELEASE=$(curl -fsSL https://api.github.com/repos/Athou/commafeed/releases/latest | grep '"tag_name":' | cut -d'"' -f4)
 msg_info "Installing CommaFeed ${RELEASE}"
 mkdir /opt/commafeed
-curl -fsSL "https://github.com/Athou/commafeed/releases/download/${RELEASE}/commafeed-${RELEASE}-h2-jvm.zip" -o $(basename "https://github.com/Athou/commafeed/releases/download/${RELEASE}/commafeed-${RELEASE}-h2-jvm.zip")
-unzip -q commafeed-${RELEASE}-h2-jvm.zip
+curl -fsSL "https://github.com/Athou/commafeed/releases/download/${RELEASE}/commafeed-${RELEASE}-h2-jvm.zip" -o "commafeed-${RELEASE}-h2-jvm.zip"
+$STD unzip commafeed-${RELEASE}-h2-jvm.zip
 mv commafeed-${RELEASE}-h2/* /opt/commafeed/
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Installed CommaFeed ${RELEASE}"

@@ -8,11 +8,11 @@
   "type": "ct",
   "updateable": true,
   "privileged": false,
-  "interface_port": 80,
+  "interface_port": 1411,
   "documentation": "https://pocket-id.org/docs/",
   "website": "https://github.com/pocket-id/pocket-id",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/pocket-id.webp",
-  "config_path": "/opt/pocket-id/backend/.env and /opt/pocket-id/frontend/.env",
+  "config_path": "/opt/pocket-id/.env",
   "description": "Pocket ID is a simple OIDC provider that allows users to authenticate with their passkeys to your services.",
   "install_methods": [
     {
@@ -35,10 +35,6 @@
     {
       "text": "Pocket ID requires https to work.",
       "type": "warning"
-    },
-    {
-      "text": "Configuration Path: `/opt/pocket-id/backend/.env`, `/opt/pocket-id/frontend/.env`.",
-      "type": "info"
     }
   ]
 }

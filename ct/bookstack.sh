@@ -36,7 +36,7 @@ function update_script() {
     msg_info "Updating ${APP} to v${RELEASE}"
     mv /opt/bookstack /opt/bookstack-backup
     curl -fsSL "https://github.com/BookStackApp/BookStack/archive/refs/tags/v${RELEASE}.zip" -o "/opt/BookStack-${RELEASE}.zip"
-    unzip -q "/opt/BookStack-${RELEASE}.zip" -d /opt
+    $STD unzip "/opt/BookStack-${RELEASE}.zip" -d /opt
     mv "/opt/BookStack-${RELEASE}" /opt/bookstack
     cp /opt/bookstack-backup/.env /opt/bookstack/.env
     [[ -d /opt/bookstack-backup/public/uploads ]] && cp -a /opt/bookstack-backup/public/uploads/. /opt/bookstack/public/uploads/

@@ -15,8 +15,7 @@ update_os
 
 msg_info "Setup MinIO"
 RELEASE=$(curl -fsSL https://api.github.com/repos/minio/minio/releases/latest | grep '"tag_name"' | awk -F '"' '{print $4}')
-curl -fsSL "https://dl.min.io/server/minio/release/linux-amd64/minio" -o $(basename "https://dl.min.io/server/minio/release/linux-amd64/minio")
-mv minio /usr/local/bin/
+curl -fsSL "https://dl.min.io/server/minio/release/linux-amd64/minio" -o /usr/local/bin/minio
 chmod +x /usr/local/bin/minio
 useradd -r minio-user -s /sbin/nologin
 mkdir -p /home/minio-user
@@ -30,10 +29,10 @@ MINIO_ROOT_USER=${MINIO_ADMIN_USER}
 MINIO_ROOT_PASSWORD=${MINIO_ADMIN_PASSWORD}
 EOF
 {
-    echo ""
-    echo "MinIO-Credentials"
-    echo "MinIO Admin User: $MINIO_ADMIN_USER"
-    echo "MinIO Admin Password: $MINIO_ADMIN_PASSWORD"
+  echo ""
+  echo "MinIO-Credentials"
+  echo "MinIO Admin User: $MINIO_ADMIN_USER"
+  echo "MinIO Admin Password: $MINIO_ADMIN_PASSWORD"
 } >>~/minio.creds
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Setup MinIO"

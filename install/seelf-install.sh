@@ -16,34 +16,15 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
   make \
-  gcc \
-  gpg
+  gcc
 msg_ok "Installed Dependencies"
 
-msg_info "Installing Golang"
-set +o pipefail
-temp_file=$(mktemp)
-golang_tarball=$(curl -fsSL https://go.dev/dl/ | grep -oP 'go[\d\.]+\.linux-amd64\.tar\.gz' | head -n 1)
-curl -fsSL "https://golang.org/dl/${golang_tarball}" -o "$temp_file"
-tar -C /usr/local -xzf "$temp_file"
-ln -sf /usr/local/go/bin/go /usr/local/bin/go
-set -o pipefail
-msg_ok "Installed Golang"
-
-msg_info "Setting up Node.js Repository"
-mkdir -p /etc/apt/keyrings
-curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_22.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
-msg_ok "Set up Node.js Repository"
-
-msg_info "Installing Node.js"
-$STD apt-get update
-$STD apt-get install -y nodejs
-msg_ok "Installed Node.js"
+install_go
+NODE_VERSION="22" install_node_and_modules
 
 msg_info "Setting up seelf. Patience"
 RELEASE=$(curl -fsSL https://api.github.com/repos/YuukanOO/seelf/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/YuukanOO/seelf/archive/refs/tags/v${RELEASE}.tar.gz" -o $(basename "https://github.com/YuukanOO/seelf/archive/refs/tags/v${RELEASE}.tar.gz")
+curl -fsSL "https://github.com/YuukanOO/seelf/archive/refs/tags/v${RELEASE}.tar.gz" -o "v${RELEASE}.tar.gz"
 tar -xzf v"${RELEASE}".tar.gz
 mv seelf-"${RELEASE}"/ /opt/seelf
 cd /opt/seelf

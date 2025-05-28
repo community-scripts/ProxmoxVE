@@ -37,7 +37,7 @@ function update_script() {
     cd /opt
     mv /opt/partdb/ /opt/partdb-backup
     curl -fsSL "https://github.com/Part-DB/Part-DB-server/archive/refs/tags/v${RELEASE}.zip" -o $(basename "https://github.com/Part-DB/Part-DB-server/archive/refs/tags/v${RELEASE}.zip")
-    unzip -q "v${RELEASE}.zip"
+    $STD unzip "v${RELEASE}.zip"
     mv /opt/Part-DB-server-${RELEASE}/ /opt/partdb
 
     cd /opt/partdb/

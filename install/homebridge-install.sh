@@ -15,7 +15,6 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y avahi-daemon
-$STD apt-get install -y gnupg2
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up Homebridge Repository"

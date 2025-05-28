@@ -50,7 +50,7 @@ function update_script() {
     [[ -e /opt/lubelogger/wwwroot/temp ]] && cp -r /opt/lubelogger/wwwroot/temp /tmp/lubeloggerData/data/
     [[ -e /opt/lubelogger/log ]] && cp -r /opt/lubelogger/log /tmp/lubeloggerData/
     rm -rf /opt/lubelogger
-    unzip -qq LubeLogger_v${RELEASE_TRIMMED}_linux_x64.zip -d lubelogger
+    $STD unzip LubeLogger_v${RELEASE_TRIMMED}_linux_x64.zip -d lubelogger
     chmod 700 /opt/lubelogger/CarCareTracker
     cp -rf /tmp/lubeloggerData/* /opt/lubelogger/
     echo "${RELEASE}" >"/opt/${APP}_version.txt"

@@ -61,7 +61,7 @@ case $DB_CHOICE in
 esac
 mkdir -p /opt/komodo
 cd /opt/komodo
-curl -fsSL "https://raw.githubusercontent.com/moghtech/komodo/main/compose/$DB_COMPOSE_FILE" -o $(basename "https://raw.githubusercontent.com/moghtech/komodo/main/compose/$DB_COMPOSE_FILE")
+curl -fsSL "https://raw.githubusercontent.com/moghtech/komodo/main/compose/$DB_COMPOSE_FILE" -o "/opt/komodo/$DB_COMPOSE_FILE"
 
 msg_info "Setup Komodo Environment"
 curl -fsSL "https://raw.githubusercontent.com/moghtech/komodo/main/compose/compose.env" -o "/opt/komodo/compose.env"

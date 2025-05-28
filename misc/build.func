@@ -59,6 +59,7 @@ color() {
   ROOTSSH="${TAB}🔑${TAB}${CL}"
   CREATING="${TAB}🚀${TAB}${CL}"
   ADVANCED="${TAB}🧩${TAB}${CL}"
+  FUSE="${TAB}🗂️${TAB}${CL}"
 }
 
 # This function enables error handling in the script by setting options and defining a trap for the ERR signal.
@@ -345,6 +346,8 @@ base_settings() {
   SSH="no"
   SSH_AUTHORIZED_KEY=""
   TAGS="community-script;"
+  ENABLE_FUSE="no"
+  ENABLE_TUN="no"
 
   # Override default settings with variables from ct script
   CT_TYPE=${var_unprivileged:-$CT_TYPE}
@@ -353,6 +356,8 @@ base_settings() {
   RAM_SIZE=${var_ram:-$RAM_SIZE}
   VERB=${var_verbose:-$VERBOSE}
   TAGS="${TAGS}${var_tags:-}"
+  ENABLE_FUSE="${var_fuse:-$ENABLE_FUSE}"
+  ENABLE_TUN="${var_tun:-$ENABLE_TUN}"
 
   # Since these 2 are only defined outside of default_settings function, we add a temporary fallback. TODO: To align everything, we should add these as constant variables (e.g. OSTYPE and OSVERSION), but that would currently require updating the default_settings function for all existing scripts
   if [ -z "$var_os" ]; then
@@ -398,8 +403,8 @@ EOF
     else
       echo -e "${INFO}${BOLD}${RD}Configuration file already exists at ${FILEPATH}${CL}"
       if whiptail --backtitle "[dev] Proxmox VE Helper Scripts" --defaultno --title "Overwrite configfile" --yesno "Do you want to overwrite the existing config file?" 10 60; then
-              rm -f "$FILEPATH"
-              cat <<EOF >"$FILEPATH"
+        rm -f "$FILEPATH"
+        cat <<EOF >"$FILEPATH"
 # ${NSAPP} Configuration File
 # Generated on $(date)
 
@@ -432,7 +437,6 @@ EOF
     fi
   fi
 }
-
 
 # This function displays the default values for various settings.
 echo_default() {
@@ -791,6 +795,12 @@ advanced_settings() {
     echo -e "${ROOTSSH}${BOLD}${DGN}Root SSH Access: ${BGN}$SSH${CL}"
   fi
 
+  if (whiptail --backtitle "[dev] Proxmox VE Helper Scripts" --defaultno --title "FUSE Support" --yesno "Enable FUSE support?\nRequired for tools like rclone, mergerfs, AppImage, etc." 10 58); then
+    ENABLE_FUSE="yes"
+  else
+    ENABLE_FUSE="no"
+  fi
+  echo -e "${FUSE}${BOLD}${DGN}Enable FUSE Support: ${BGN}$ENABLE_FUSE${CL}"
 
   if (whiptail --backtitle "Proxmox VE Helper Scripts" --defaultno --title "VERBOSE MODE" --yesno "Enable Verbose Mode?" 10 58); then
     VERB="yes"
@@ -877,7 +887,6 @@ EOF
   fi
 
 }
-
 
 install_script() {
   pve_check
@@ -1064,6 +1073,10 @@ build_container() {
     FEATURES="nesting=1"
   fi
 
+  if [ "$ENABLE_FUSE" == "yes" ]; then
+    FEATURES="$FEATURES,fuse=1"
+  fi
+
   if [[ $DIAGNOSTICS == "yes" ]]; then
     post_to_api
   fi
@@ -1088,6 +1101,8 @@ build_container() {
   export SSH_AUTHORIZED_KEY
   export CTID="$CT_ID"
   export CTTYPE="$CT_TYPE"
+  export ENABLE_FUSE="$ENABLE_FUSE"
+  export ENABLE_TUN="$ENABLE_TUN"
   export PCT_OSTYPE="$var_os"
   export PCT_OSVERSION="$var_version"
   export PCT_DISK_SIZE="$DISK_SIZE"
@@ -1153,6 +1168,13 @@ EOF
         fi
       fi
     fi
+  fi
+
+  if [ "$ENABLE_TUN" == "yes" ]; then
+    cat <<EOF >>"$LXC_CONFIG"
+lxc.cgroup2.devices.allow: c 10:200 rwm
+lxc.mount.entry: /dev/net/tun dev/net/tun none bind,create=file
+EOF
   fi
 
   # This starts the container and executes <app>-install.sh

@@ -14,6 +14,139 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 All LXC instances created using this repository come pre-installed with Midnight Commander, which is a command-line tool (`mc`) that offers a user-friendly file and directory management interface for the terminal environment.
 
 
+## 2025-05-28
+
+### 🆕 New Scripts
+
+  - oauth2-proxy ([#4784](https://github.com/community-scripts/ProxmoxVE/pull/4784))
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Alpine-Node-RED: add service to rc [@MickLesk](https://github.com/MickLesk) ([#4783](https://github.com/community-scripts/ProxmoxVE/pull/4783))
+
+  - #### ✨ New Features
+
+    - Pulse: use prebuild tarball file / remove unneeded npm actions [@MickLesk](https://github.com/MickLesk) ([#4776](https://github.com/community-scripts/ProxmoxVE/pull/4776))
+
+  - #### 💥 Breaking Changes
+
+    - Refactor: Linkwarden + OS Upgrade [@MickLesk](https://github.com/MickLesk) ([#4756](https://github.com/community-scripts/ProxmoxVE/pull/4756))
+
+  - #### 🔧 Refactor
+
+    - MariaDB CLI Update, Go Install Helper & Minor Cleanup [@MickLesk](https://github.com/MickLesk) ([#4793](https://github.com/community-scripts/ProxmoxVE/pull/4793))
+    - Refactor: Remove redundant dependencies & unify unzip usage [@MickLesk](https://github.com/MickLesk) ([#4780](https://github.com/community-scripts/ProxmoxVE/pull/4780))
+    - Refactor: Remove gpg / gnupg from script base [@MickLesk](https://github.com/MickLesk) ([#4775](https://github.com/community-scripts/ProxmoxVE/pull/4775))
+
+## 2025-05-27
+
+### 🆕 New Scripts
+
+  - Backrest ([#4766](https://github.com/community-scripts/ProxmoxVE/pull/4766))
+- Pulse ([#4728](https://github.com/community-scripts/ProxmoxVE/pull/4728))
+
+### 🚀 Updated Scripts
+
+  - Alpine-Vaultwarden: Increase min disk requirements to 1GB [@neyzm](https://github.com/neyzm) ([#4764](https://github.com/community-scripts/ProxmoxVE/pull/4764))
+
+  - #### 🐞 Bug Fixes
+
+    - lldap: fix update-check [@MickLesk](https://github.com/MickLesk) ([#4742](https://github.com/community-scripts/ProxmoxVE/pull/4742))
+
+  - #### ✨ New Features
+
+    - Big NodeJS Update: Use Helper Function on all Install-Scripts [@MickLesk](https://github.com/MickLesk) ([#4744](https://github.com/community-scripts/ProxmoxVE/pull/4744))
+
+  - #### 🔧 Refactor
+
+    - merge MariaDB to tools.func Installer [@MickLesk](https://github.com/MickLesk) ([#4753](https://github.com/community-scripts/ProxmoxVE/pull/4753))
+    - merge PostgreSQL to tools.func Installer [@MickLesk](https://github.com/MickLesk) ([#4752](https://github.com/community-scripts/ProxmoxVE/pull/4752))
+
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Increase default RAM allocation for BunkerWeb to 8192MB [@TheophileDiot](https://github.com/TheophileDiot) ([#4762](https://github.com/community-scripts/ProxmoxVE/pull/4762))
+
+## 2025-05-26
+
+### 🆕 New Scripts
+
+  - Argus ([#4717](https://github.com/community-scripts/ProxmoxVE/pull/4717))
+- Kasm ([#4716](https://github.com/community-scripts/ProxmoxVE/pull/4716))
+
+### 🚀 Updated Scripts
+
+  - Excalidraw: increase HDD to 10GB [@MickLesk](https://github.com/MickLesk) ([#4718](https://github.com/community-scripts/ProxmoxVE/pull/4718))
+
+  - #### 🐞 Bug Fixes
+
+    - BREAKING CHANGE: Fix PocketID for v1.0.0 [@vhsdream](https://github.com/vhsdream) ([#4711](https://github.com/community-scripts/ProxmoxVE/pull/4711))
+    - InspIRCd: Fix release name in release url [@tremor021](https://github.com/tremor021) ([#4720](https://github.com/community-scripts/ProxmoxVE/pull/4720))
+
+## 2025-05-25
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Pelican-panel: back-up database if using sqlite [@bvdberg01](https://github.com/bvdberg01) ([#4700](https://github.com/community-scripts/ProxmoxVE/pull/4700))
+
+  - #### 🔧 Refactor
+
+    - Pterodactyl panel read typo [@bvdberg01](https://github.com/bvdberg01) ([#4701](https://github.com/community-scripts/ProxmoxVE/pull/4701))
+
+## 2025-05-24
+
+## 2025-05-23
+
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - TYPO: Fix nexcloud to nextcloud (VM) [@Stoufiler](https://github.com/Stoufiler) ([#4670](https://github.com/community-scripts/ProxmoxVE/pull/4670))
+
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Update Icons to selfhst/icons (FreePBX & Configarr) [@MickLesk](https://github.com/MickLesk) ([#4680](https://github.com/community-scripts/ProxmoxVE/pull/4680))
+
+### 💥 Breaking Changes
+
+  - Remove rtsptoweb (deprecated) [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4686](https://github.com/community-scripts/ProxmoxVE/pull/4686))
+
+## 2025-05-22
+
+### 🆕 New Scripts
+
+  - FreePBX ([#4648](https://github.com/community-scripts/ProxmoxVE/pull/4648))
+- cloudflare-ddns ([#4647](https://github.com/community-scripts/ProxmoxVE/pull/4647))
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - slskd: fix #4649 [@vhsdream](https://github.com/vhsdream) ([#4651](https://github.com/community-scripts/ProxmoxVE/pull/4651))
+
+  - #### ✨ New Features
+
+    - Paperless-AI: Add RAG chat [@tremor021](https://github.com/tremor021) ([#4635](https://github.com/community-scripts/ProxmoxVE/pull/4635))
+
+### 🧰 Maintenance
+
+  - #### 📂 Github
+
+    - [gh]: Feature: Header-Generation for vm | tools | addon [@MickLesk](https://github.com/MickLesk) ([#4643](https://github.com/community-scripts/ProxmoxVE/pull/4643))
+
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Commafeed: move to Documents category [@diemade](https://github.com/diemade) ([#4665](https://github.com/community-scripts/ProxmoxVE/pull/4665))
+
 ## 2025-05-21
 
 ### 🆕 New Scripts
@@ -27,6 +160,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - Alpine-Node-RED: Update Service File [@MickLesk](https://github.com/MickLesk) ([#4628](https://github.com/community-scripts/ProxmoxVE/pull/4628))
     - RustDesk Server: Fix update for older installs [@tremor021](https://github.com/tremor021) ([#4612](https://github.com/community-scripts/ProxmoxVE/pull/4612))
+
+  - #### ✨ New Features
+
+    - Tandoor Recipes: Capture version information when installing [@jbolla](https://github.com/jbolla) ([#4633](https://github.com/community-scripts/ProxmoxVE/pull/4633))
 
 ## 2025-05-20
 

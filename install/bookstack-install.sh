@@ -15,27 +15,27 @@ update_os
 
 msg_info "Installing Dependencies (Patience)"
 $STD apt-get install -y \
-    unzip \
-    mariadb-server \
-    apache2 \
-    php8.2-{mbstring,gd,fpm,curl,intl,ldap,tidy,bz2,mysql,zip,xml} \
-    composer \
-    libapache2-mod-php \
-    make
+  apache2 \
+  php8.2-{mbstring,gd,fpm,curl,intl,ldap,tidy,bz2,mysql,zip,xml} \
+  composer \
+  libapache2-mod-php \
+  make
 msg_ok "Installed Dependencies"
+
+install_mariadb
 
 msg_info "Setting up Database"
 DB_NAME=bookstack
 DB_USER=bookstack
 DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
-$STD sudo mysql -u root -e "CREATE DATABASE $DB_NAME;"
-$STD sudo mysql -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED WITH mysql_native_password AS PASSWORD('$DB_PASS');"
-$STD sudo mysql -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
+$STD sudo mariadb -u root -e "CREATE DATABASE $DB_NAME;"
+$STD sudo mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED WITH mysql_native_password AS PASSWORD('$DB_PASS');"
+$STD sudo mariadb -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
 {
-    echo "Bookstack-Credentials"
-    echo "Bookstack Database User: $DB_USER"
-    echo "Bookstack Database Password: $DB_PASS"
-    echo "Bookstack Database Name: $DB_NAME"
+  echo "Bookstack-Credentials"
+  echo "Bookstack Database User: $DB_USER"
+  echo "Bookstack Database Password: $DB_PASS"
+  echo "Bookstack Database Name: $DB_NAME"
 } >>~/bookstack.creds
 msg_ok "Set up database"
 
@@ -43,8 +43,8 @@ msg_info "Setup Bookstack (Patience)"
 LOCAL_IP="$(hostname -I | awk '{print $1}')"
 cd /opt
 RELEASE=$(curl -fsSL https://api.github.com/repos/BookStackApp/BookStack/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/BookStackApp/BookStack/archive/refs/tags/v${RELEASE}.zip" -o $(basename "https://github.com/BookStackApp/BookStack/archive/refs/tags/v${RELEASE}.zip")
-unzip -q v${RELEASE}.zip
+curl -fsSL "https://github.com/BookStackApp/BookStack/archive/refs/tags/v${RELEASE}.zip" -o "v${RELEASE}.zip"
+$STD unzip v${RELEASE}.zip
 mv BookStack-${RELEASE} /opt/bookstack
 cd /opt/bookstack
 cp .env.example .env

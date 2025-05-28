@@ -38,7 +38,7 @@ function update_script() {
     rm -rf /opt/documenso
     cd /opt
     curl -fsSL "https://github.com/documenso/documenso/archive/refs/tags/v${RELEASE}.zip" -o v${RELEASE}.zip
-    unzip -q v${RELEASE}.zip
+    $STD unzip v${RELEASE}.zip
     mv documenso-${RELEASE} /opt/documenso
     cd /opt/documenso
     mv /opt/.env /opt/documenso/.env

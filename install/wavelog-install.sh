@@ -15,23 +15,24 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-    libapache2-mod-php \
-    mariadb-server \
-    php8.2-{curl,mbstring,mysql,xml,zip,gd}
+  libapache2-mod-php \
+  php8.2-{curl,mbstring,mysql,xml,zip,gd}
 msg_ok "Installed Dependencies"
+
+install_mariadb
 
 msg_info "Setting up Database"
 DB_NAME=wavelog
 DB_USER=waveloguser
 DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
-$STD mysql -u root -e "CREATE DATABASE $DB_NAME;"
-$STD mysql -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED WITH mysql_native_password AS PASSWORD('$DB_PASS');"
-$STD mysql -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
+$STD mariadb -u root -e "CREATE DATABASE $DB_NAME;"
+$STD mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED WITH mysql_native_password AS PASSWORD('$DB_PASS');"
+$STD mariadb -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
 {
-    echo "Wavelog-Credentials"
-    echo "Wavelog Database User: $DB_USER"
-    echo "Wavelog Database Password: $DB_PASS"
-    echo "Wavelog Database Name: $DB_NAME"
+  echo "Wavelog-Credentials"
+  echo "Wavelog Database User: $DB_USER"
+  echo "Wavelog Database Password: $DB_PASS"
+  echo "Wavelog Database Name: $DB_NAME"
 } >>~/wavelog.creds
 msg_ok "Set up database"
 
@@ -43,8 +44,8 @@ msg_ok "Set up PHP"
 
 msg_info "Installing Wavelog"
 RELEASE=$(curl -fsSL https://api.github.com/repos/wavelog/wavelog/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-curl -fsSL "https://github.com/wavelog/wavelog/archive/refs/tags/${RELEASE}.zip" -o $(basename "https://github.com/wavelog/wavelog/archive/refs/tags/${RELEASE}.zip")
-unzip -q ${RELEASE}.zip
+curl -fsSL "https://github.com/wavelog/wavelog/archive/refs/tags/${RELEASE}.zip" -o "${RELEASE}.zip"
+$STD unzip ${RELEASE}.zip
 mv wavelog-${RELEASE}/ /opt/wavelog
 chown -R www-data:www-data /opt/wavelog/
 find /opt/wavelog/ -type d -exec chmod 755 {} \;

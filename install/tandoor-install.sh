@@ -24,7 +24,6 @@ $STD apt-get install -y --no-install-recommends \
   libsasl2-dev \
   libldap2-dev \
   libssl-dev \
-  gpg \
   git \
   make \
   pkg-config \
@@ -43,17 +42,7 @@ $STD apt-get install -y \
 rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
 msg_ok "Setup Python3"
 
-msg_info "Setting up Node.js Repository"
-mkdir -p /etc/apt/keyrings
-curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
-msg_ok "Set up Node.js Repository"
-
-msg_info "Installing Node.js"
-$STD apt-get update
-$STD apt-get install -y nodejs
-$STD npm install -g yarn
-msg_ok "Installed Node.js"
+NODE_VERSION="20" NODE_MODULE="yarn@latest" install_node_and_modules
 
 msg_info "Installing Tandoor (Patience)"
 $STD git clone https://github.com/TandoorRecipes/recipes -b master /opt/tandoor
@@ -75,6 +64,8 @@ sed -i -e "s|SECRET_KEY=.*|SECRET_KEY=$secret_key|g" \
   -e "s|POSTGRES_DB=.*|POSTGRES_DB=$DB_NAME|g" \
   -e "s|POSTGRES_USER=.*|POSTGRES_USER=$DB_USER|g" \
   -e "\$a\STATIC_URL=/staticfiles/" /opt/tandoor/.env
+cd /opt/tandoor
+$STD python3 version.py
 msg_ok "Installed Tandoor"
 
 msg_info "Install/Set up PostgreSQL Database"

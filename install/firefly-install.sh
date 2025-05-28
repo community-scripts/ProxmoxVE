@@ -18,33 +18,34 @@ curl -fsSLo /usr/share/keyrings/deb.sury.org-php.gpg https://packages.sury.org/p
 echo "deb [signed-by=/usr/share/keyrings/deb.sury.org-php.gpg] https://packages.sury.org/php/ bookworm main" >/etc/apt/sources.list.d/php.list
 $STD apt-get update
 $STD apt-get install -y \
-    apache2 \
-    libapache2-mod-php8.4 \
-    php8.4-{bcmath,cli,intl,curl,zip,gd,xml,mbstring,mysql} \
-    mariadb-server \
-    composer
+  apache2 \
+  libapache2-mod-php8.4 \
+  php8.4-{bcmath,cli,intl,curl,zip,gd,xml,mbstring,mysql} \
+  composer
 msg_ok "Installed Dependencies"
+
+install_mariadb
 
 msg_info "Setting up database"
 DB_NAME=firefly
 DB_USER=firefly
 DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
-MYSQL_VERSION=$(mysql --version | grep -oP 'Distrib \K[0-9]+\.[0-9]+\.[0-9]+')
+MYSQL_VERSION=$(mariadb --version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -n1)
 mysql -u root -e "CREATE DATABASE $DB_NAME;"
 mysql -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED WITH mysql_native_password AS PASSWORD('$DB_PASS');"
 mysql -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
 {
-    echo "Firefly-Credentials"
-    echo "Firefly Database User: $DB_USER"
-    echo "Firefly Database Password: $DB_PASS"
-    echo "Firefly Database Name: $DB_NAME"
+  echo "Firefly-Credentials"
+  echo "Firefly Database User: $DB_USER"
+  echo "Firefly Database Password: $DB_PASS"
+  echo "Firefly Database Name: $DB_NAME"
 } >>~/firefly.creds
 msg_ok "Set up database"
 
 msg_info "Installing Firefly III (Patience)"
 RELEASE=$(curl -fsSL https://api.github.com/repos/firefly-iii/firefly-iii/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4)}')
 cd /opt
-curl -fsSL "https://github.com/firefly-iii/firefly-iii/releases/download/v${RELEASE}/FireflyIII-v${RELEASE}.tar.gz" -o $(basename "https://github.com/firefly-iii/firefly-iii/releases/download/v${RELEASE}/FireflyIII-v${RELEASE}.tar.gz")
+curl -fsSL "https://github.com/firefly-iii/firefly-iii/releases/download/v${RELEASE}/FireflyIII-v${RELEASE}.tar.gz" -o "FireflyIII-v${RELEASE}.tar.gz"
 mkdir -p /opt/firefly
 tar -xzf FireflyIII-v${RELEASE}.tar.gz -C /opt/firefly
 chown -R www-data:www-data /opt/firefly

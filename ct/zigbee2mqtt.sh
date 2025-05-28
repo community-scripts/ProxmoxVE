@@ -47,7 +47,7 @@ function update_script() {
     msg_info "Updating ${APP} to v${RELEASE}"
     cd /opt
     curl -fsSL "https://github.com/Koenkk/zigbee2mqtt/archive/refs/tags/${RELEASE}.zip" -o $(basename "https://github.com/Koenkk/zigbee2mqtt/archive/refs/tags/${RELEASE}.zip")
-    unzip -q ${RELEASE}.zip
+    $STD unzip ${RELEASE}.zip
     rm -rf /opt/zigbee2mqtt
     mv zigbee2mqtt-${RELEASE} /opt/zigbee2mqtt
     rm -rf /opt/zigbee2mqtt/data

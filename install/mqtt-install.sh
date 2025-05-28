@@ -13,10 +13,6 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt-get install -y gpg
-msg_ok "Installed Dependencies"
-
 msg_info "Installing Mosquitto MQTT Broker"
 source /etc/os-release
 curl -fsSL http://repo.mosquitto.org/debian/mosquitto-repo.gpg.key >/usr/share/keyrings/mosquitto-repo.gpg.key

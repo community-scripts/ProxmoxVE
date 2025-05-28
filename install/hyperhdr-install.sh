@@ -13,10 +13,6 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt-get install -y gpg
-msg_ok "Installed Dependencies"
-
 msg_info "Installing HyperHDR"
 curl -fsSL https://awawa-dev.github.io/hyperhdr.public.apt.gpg.key >/usr/share/keyrings/hyperhdr.public.apt.gpg.key
 chmod go+r /usr/share/keyrings/hyperhdr.public.apt.gpg.key

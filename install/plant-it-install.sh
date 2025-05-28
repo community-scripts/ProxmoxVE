@@ -15,11 +15,11 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-    gnupg2 \
-    mariadb-server \
-    redis \
-    nginx
+  redis \
+  nginx
 msg_ok "Installed Dependencies"
+
+install_mariadb
 
 msg_info "Setting up Adoptium Repository"
 mkdir -p /etc/apt/keyrings
@@ -37,20 +37,20 @@ JWT_SECRET=$(openssl rand -base64 24 | tr -d '/+=')
 DB_NAME=plantit
 DB_USER=plantit_usr
 DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
-$STD mysql -u root -e "CREATE DATABASE $DB_NAME;"
-$STD mysql -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED WITH mysql_native_password AS PASSWORD('$DB_PASS');"
-$STD mysql -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
+$STD mariadb -u root -e "CREATE DATABASE $DB_NAME;"
+$STD mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED WITH mysql_native_password AS PASSWORD('$DB_PASS');"
+$STD mariadb -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
 {
-    echo "Plant-it Credentials"
-    echo "Plant-it Database User: $DB_USER"
-    echo "Plant-it Database Password: $DB_PASS"
-    echo "Plant-it Database Name: $DB_NAME"
+  echo "Plant-it Credentials"
+  echo "Plant-it Database User: $DB_USER"
+  echo "Plant-it Database Password: $DB_PASS"
+  echo "Plant-it Database Name: $DB_NAME"
 } >>~/plant-it.creds
 msg_ok "Set up MariaDB"
 
 msg_info "Setup Plant-it"
 RELEASE=$(curl -fsSL https://api.github.com/repos/MDeLuise/plant-it/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-curl -fsSL "https://github.com/MDeLuise/plant-it/releases/download/${RELEASE}/server.jar" -o $(basename "https://github.com/MDeLuise/plant-it/releases/download/${RELEASE}/server.jar")
+curl -fsSL "https://github.com/MDeLuise/plant-it/releases/download/${RELEASE}/server.jar" -o "server.jar"
 mkdir -p /opt/plant-it/{backend,frontend}
 mkdir -p /opt/plant-it-data
 mv -f server.jar /opt/plant-it/backend/server.jar
@@ -80,7 +80,7 @@ CACHE_PORT=6379
 EOF
 
 cd /opt/plant-it/frontend
-curl -fsSL "https://github.com/MDeLuise/plant-it/releases/download/${RELEASE}/client.tar.gz" -o $(basename "https://github.com/MDeLuise/plant-it/releases/download/${RELEASE}/client.tar.gz")
+curl -fsSL "https://github.com/MDeLuise/plant-it/releases/download/${RELEASE}/client.tar.gz" -o "client.tar.gz"
 tar -xzf client.tar.gz
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Setup Plant-it"

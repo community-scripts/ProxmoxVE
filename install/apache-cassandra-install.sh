@@ -15,7 +15,6 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y apt-transport-https
-$STD apt-get install -y gpg
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Eclipse Temurin (Patience)"

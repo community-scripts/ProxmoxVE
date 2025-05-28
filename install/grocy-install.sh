@@ -32,7 +32,7 @@ msg_ok "Installed PHP8.2"
 
 msg_info "Installing grocy"
 latest=$(curl -fsSL https://api.github.com/repos/grocy/grocy/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/grocy/grocy/releases/download/v${latest}/grocy_${latest}.zip" -o $(basename "https://github.com/grocy/grocy/releases/download/v${latest}/grocy_${latest}.zip")
+curl -fsSL "https://github.com/grocy/grocy/releases/download/v${latest}/grocy_${latest}.zip" -o "grocy_${latest}.zip"
 $STD unzip grocy_${latest}.zip -d /var/www/html
 chown -R www-data:www-data /var/www/html
 cp /var/www/html/config-dist.php /var/www/html/data/config.php

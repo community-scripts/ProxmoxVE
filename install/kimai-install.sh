@@ -20,9 +20,10 @@ $STD apt-get install -y \
   git \
   expect \
   composer \
-  mariadb-server \
   lsb-release
 msg_ok "Installed Dependencies"
+
+install_mariadb
 
 msg_info "Adding PHP8.4 Repository"
 $STD curl -sSLo /tmp/debsuryorg-archive-keyring.deb https://packages.sury.org/debsuryorg-archive-keyring.deb
@@ -44,9 +45,9 @@ DB_NAME=kimai_db
 DB_USER=kimai
 DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 MYSQL_VERSION=$(mysql --version | grep -oP 'Distrib \K[0-9]+\.[0-9]+\.[0-9]+')
-mysql -u root -e "CREATE DATABASE $DB_NAME;"
-mysql -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED WITH mysql_native_password AS PASSWORD('$DB_PASS');"
-mysql -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
+mariadb -u root -e "CREATE DATABASE $DB_NAME;"
+mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED WITH mysql_native_password AS PASSWORD('$DB_PASS');"
+mariadb -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
 {
   echo "Kimai-Credentials"
   echo "Kimai Database User: $DB_USER"
@@ -57,8 +58,8 @@ msg_ok "Set up database"
 
 msg_info "Installing Kimai (Patience)"
 RELEASE=$(curl -fsSL https://api.github.com/repos/kimai/kimai/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-curl -fsSL "https://github.com/kimai/kimai/archive/refs/tags/${RELEASE}.zip" -o $(basename "https://github.com/kimai/kimai/archive/refs/tags/${RELEASE}.zip")
-unzip -q "${RELEASE}".zip
+curl -fsSL "https://github.com/kimai/kimai/archive/refs/tags/${RELEASE}.zip" -o "${RELEASE}".zip
+$STD unzip "${RELEASE}".zip
 mv kimai-"${RELEASE}" /opt/kimai
 cd /opt/kimai
 echo "export COMPOSER_ALLOW_SUPERUSER=1" >>~/.bashrc

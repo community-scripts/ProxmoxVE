@@ -15,11 +15,12 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-  postgresql \
   apache2 \
   php-{curl,dom,json,ctype,pgsql,gmp,mbstring,iconv,zip} \
   libapache2-mod-php
 msg_ok "Installed Dependencies"
+
+PG_VERSION="16" install_postgresql
 
 msg_info "Setting up PostgreSQL"
 DB_NAME=freshrss
@@ -38,8 +39,8 @@ msg_ok "Set up PostgreSQL"
 msg_info "Installing FreshRSS"
 RELEASE=$(curl -fsSL https://api.github.com/repos/FreshRSS/FreshRSS/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 cd /opt
-curl -fsSL "https://github.com/FreshRSS/FreshRSS/archive/refs/tags/${RELEASE}.zip" -o $(basename "https://github.com/FreshRSS/FreshRSS/archive/refs/tags/${RELEASE}.zip")
-unzip -q "${RELEASE}.zip"
+curl -fsSL "https://github.com/FreshRSS/FreshRSS/archive/refs/tags/${RELEASE}.zip" -o "${RELEASE}.zip"
+$STD unzip "${RELEASE}.zip"
 mv "/opt/FreshRSS-${RELEASE}" /opt/freshrss
 cd /opt/freshrss
 chown -R www-data:www-data /opt/freshrss

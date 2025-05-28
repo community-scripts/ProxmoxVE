@@ -9,7 +9,7 @@ APP="Alpine-Vaultwarden"
 var_tags="${var_tags:-alpine;vault}"
 var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-256}"
-var_disk="${var_disk:-0.5}"
+var_disk="${var_disk:-1}"
 var_os="${var_os:-alpine}"
 var_version="${var_version:-3.21}"
 var_unprivileged="${var_unprivileged:-1}"
@@ -66,4 +66,4 @@ description
 
 msg_ok "Completed Successfully!\n"
 echo -e "${APP} should be reachable by going to the following URL.
-         ${BL}http://${IP}:8000${CL} \n"
+         ${BL}https://${IP}:8000${CL} \n"

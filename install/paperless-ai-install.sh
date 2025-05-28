@@ -15,28 +15,25 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-  gpg \
   build-essential
 msg_ok "Installed Dependencies"
 
-msg_info "Setting up Node.js Repository"
-mkdir -p /etc/apt/keyrings
-curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_22.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
-msg_ok "Set up Node.js Repository"
+msg_info "Installing Python3"
+$STD apt-get install -y \
+  python3-pip
+msg_ok "Installed Python3"
 
-msg_info "Installing Node.js"
-$STD apt-get update
-$STD apt-get install -y nodejs
-msg_ok "Installed Node.js"
+install_node_and_modules
 
 msg_info "Setup Paperless-AI"
 cd /opt
 RELEASE=$(curl -fsSL https://api.github.com/repos/clusterzx/paperless-ai/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/clusterzx/paperless-ai/archive/refs/tags/v${RELEASE}.zip" -o $(basename "https://github.com/clusterzx/paperless-ai/archive/refs/tags/v${RELEASE}.zip")
-unzip -q v${RELEASE}.zip
+curl -fsSL "https://github.com/clusterzx/paperless-ai/archive/refs/tags/v${RELEASE}.zip" -o "v${RELEASE}.zip"
+$STD unzip v${RELEASE}.zip
 mv paperless-ai-${RELEASE} /opt/paperless-ai
 cd /opt/paperless-ai
+$STD pip install --no-cache-dir -r requirements.txt
+mkdir -p data/chromadb
 $STD npm install
 mkdir -p /opt/paperless-ai/data
 cat <<EOF >/opt/paperless-ai/data/.env
@@ -61,6 +58,8 @@ API_KEY=
 CUSTOM_API_KEY=
 CUSTOM_BASE_URL=
 CUSTOM_MODEL=
+RAG_SERVICE_URL=http://localhost:8000
+RAG_SERVICE_ENABLED=true
 EOF
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Setup Paperless-AI"
@@ -69,7 +68,8 @@ msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/paperless-ai.service
 [Unit]
 Description=PaperlessAI Service
-After=network.target
+After=network.target paperless-rag.service
+Requires=paperless-rag.service
 
 [Service]
 WorkingDirectory=/opt/paperless-ai
@@ -79,6 +79,22 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 EOF
+
+cat <<EOF >/etc/systemd/system/paperless-rag.service
+[Unit]
+Description=PaperlessAI-RAG Service
+After=network.target
+
+[Service]
+WorkingDirectory=/opt/paperless-ai
+ExecStart=/usr/bin/python3 main.py --host 0.0.0.0 --port 8000 --initialize
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF
+systemctl enable -q --now paperless-rag
+sleep 5
 systemctl enable -q --now paperless-ai
 msg_ok "Created Service"
 

@@ -18,7 +18,7 @@ DOCKER_CONFIG_PATH='/etc/docker/daemon.json'
 mkdir -p "$(dirname "$DOCKER_CONFIG_PATH")"
 echo -e '{\n  "log-driver": "journald"\n}' >"$DOCKER_CONFIG_PATH"
 cd /opt
-curl -fsSL "https://raw.githubusercontent.com/runtipi/runtipi/master/scripts/install.sh" -o $(basename "https://raw.githubusercontent.com/runtipi/runtipi/master/scripts/install.sh")
+curl -fsSL "https://raw.githubusercontent.com/runtipi/runtipi/master/scripts/install.sh" -o "install.sh"
 chmod +x install.sh
 $STD ./install.sh
 chmod 666 /opt/runtipi/state/settings.json

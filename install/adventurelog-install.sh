@@ -16,7 +16,6 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-  gpg \
   gdal-bin \
   libgdal-dev \
   git \
@@ -24,25 +23,10 @@ $STD apt-get install -y \
   python3-pip
 msg_ok "Installed Dependencies"
 
-msg_info "Setting up Node.js Repository"
-mkdir -p /etc/apt/keyrings
-curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_22.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
-msg_ok "Set up Node.js Repository"
+NODE_VERSION="22" NODE_MODULE="pnpm@latest" install_node_and_modules
+PG_VERSION="16" PG_MODULES="postgis" install_postgresql
 
-msg_info "Setting up PostgreSQL Repository"
-curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg
-echo "deb https://apt.postgresql.org/pub/repos/apt bookworm-pgdg main" >/etc/apt/sources.list.d/pgdg.list
-msg_ok "Set up PostgreSQL Repository"
-
-msg_info "Installing Node.js"
-$STD apt-get update
-$STD apt-get install -y nodejs
-$STD npm install -g pnpm
-msg_ok "Installed Node.js"
-
-msg_info "Install/Set up PostgreSQL Database"
-$STD apt-get install -y postgresql-16 postgresql-16-postgis
+msg_info "Set up PostgreSQL Database"
 DB_NAME="adventurelog_db"
 DB_USER="adventurelog_user"
 DB_PASS="$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)"
@@ -68,8 +52,8 @@ DJANGO_ADMIN_PASS="$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)"
 LOCAL_IP="$(hostname -I | awk '{print $1}')"
 cd /opt
 RELEASE=$(curl -fsSL https://api.github.com/repos/seanmorley15/AdventureLog/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/seanmorley15/AdventureLog/archive/refs/tags/v${RELEASE}.zip" -o $(basename "https://github.com/seanmorley15/AdventureLog/archive/refs/tags/v${RELEASE}.zip")
-unzip -q v${RELEASE}.zip
+curl -fsSL "https://github.com/seanmorley15/AdventureLog/archive/refs/tags/v${RELEASE}.zip" -o "v${RELEASE}.zip"
+$STD unzip v${RELEASE}.zip
 mv AdventureLog-${RELEASE} /opt/adventurelog
 cat <<EOF >/opt/adventurelog/backend/server/.env
 PGHOST='localhost'

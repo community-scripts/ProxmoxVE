@@ -32,10 +32,6 @@ function update_script() {
   $STD npm install -g --unsafe-perm node-red
   msg_ok "Updated Node-RED"
 
-  msg_info "Restarting Node-RED"
-  $STD rc-service nodered restart
-  msg_ok "Restarted Node-RED"
-
   exit 0
 }
 

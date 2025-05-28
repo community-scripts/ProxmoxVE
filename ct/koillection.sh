@@ -37,7 +37,7 @@ function update_script() {
     cd /opt
     mv /opt/koillection/ /opt/koillection-backup
     curl -fsSL "https://github.com/benjaminjonard/koillection/archive/refs/tags/${RELEASE}.zip" -o $(basename "https://github.com/benjaminjonard/koillection/archive/refs/tags/${RELEASE}.zip")
-    unzip -q "${RELEASE}.zip"
+    $STD unzip "${RELEASE}.zip"
     mv "/opt/koillection-${RELEASE}" /opt/koillection
     cd /opt/koillection
     cp -r /opt/koillection-backup/.env.local /opt/koillection

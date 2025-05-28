@@ -52,7 +52,7 @@ msg_info "Installing Documenso (Patience)"
 cd /opt
 RELEASE=$(curl -fsSL https://api.github.com/repos/documenso/documenso/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 curl -fsSL "https://github.com/documenso/documenso/archive/refs/tags/v${RELEASE}.zip" -o v${RELEASE}.zip
-unzip -q v${RELEASE}.zip
+$STD unzip v${RELEASE}.zip
 mv documenso-${RELEASE} /opt/documenso
 cd /opt/documenso
 mv .env.example /opt/documenso/.env

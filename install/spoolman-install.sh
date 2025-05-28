@@ -19,7 +19,6 @@ $STD apt-get install -y \
   build-essential \
   make \
   libpq-dev \
-  gpg \
   ca-certificates
 msg_ok "Installed Dependencies"
 
@@ -34,8 +33,8 @@ msg_ok "Setup Python3"
 msg_info "Installing Spoolman"
 RELEASE=$(curl -fsSL https://github.com/Donkie/Spoolman/releases/latest | grep "title>Release" | cut -d " " -f 4)
 cd /opt
-curl -fsSL "https://github.com/Donkie/Spoolman/releases/download/$RELEASE/spoolman.zip" -o $(basename "https://github.com/Donkie/Spoolman/releases/download/$RELEASE/spoolman.zip")
-unzip -q spoolman.zip -d spoolman
+curl -fsSL "https://github.com/Donkie/Spoolman/releases/download/$RELEASE/spoolman.zip" -o "spoolman.zip"
+$STD unzip spoolman.zip -d spoolman
 rm -rf spoolman.zip
 cd spoolman
 $STD pip3 install -r requirements.txt

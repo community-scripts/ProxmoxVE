@@ -16,13 +16,14 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
   php-imap \
-  debconf-utils \
-  mariadb-server
+  debconf-utils
 msg_ok "Installed Dependencies"
+
+install_mariadb
 
 msg_info "Setting up Database"
 ROOT_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
-$STD sudo mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password AS PASSWORD('$ROOT_PASS'); flush privileges;"
+$STD sudo mariadb -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password AS PASSWORD('$ROOT_PASS'); flush privileges;"
 {
   echo "Dolibarr DB Credentials"
   echo "MariaDB Root Password: $ROOT_PASS"

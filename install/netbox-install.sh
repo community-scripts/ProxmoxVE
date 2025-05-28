@@ -17,7 +17,6 @@ msg_info "Installing Dependencies"
 $STD apt-get install -y \
   apache2 \
   redis-server \
-  postgresql \
   build-essential \
   libxml2-dev \
   libxslt1-dev \
@@ -26,6 +25,8 @@ $STD apt-get install -y \
   libssl-dev \
   zlib1g-dev
 msg_ok "Installed Dependencies"
+
+PG_VERSION="16" install_postgresql
 
 msg_info "Installing Python"
 $STD apt-get install -y \
@@ -52,8 +53,8 @@ msg_ok "Set up PostgreSQL"
 msg_info "Installing NetBox (Patience)"
 cd /opt
 RELEASE=$(curl -fsSL https://api.github.com/repos/netbox-community/netbox/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/netbox-community/netbox/archive/refs/tags/v${RELEASE}.zip" -o $(basename "https://github.com/netbox-community/netbox/archive/refs/tags/v${RELEASE}.zip")
-unzip -q "v${RELEASE}.zip"
+curl -fsSL "https://github.com/netbox-community/netbox/archive/refs/tags/v${RELEASE}.zip" -o "v${RELEASE}.zip"
+$STD unzip "v${RELEASE}.zip"
 mv /opt/netbox-"${RELEASE}"/ /opt/netbox
 
 $STD adduser --system --group netbox

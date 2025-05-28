@@ -14,12 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apk add \
-  curl \
-  mc \
-  openssh \
-  nginx \
-  unzip
+$STD apk add nginx
 msg_ok "Installed Dependencies"
 
 msg_info "Installing IT-Tools"
@@ -28,7 +23,7 @@ DOWNLOAD_URL="https://github.com/CorentinTh/it-tools/releases/download/${RELEASE
 
 curl -fsSL -o it-tools.zip "$DOWNLOAD_URL"
 mkdir -p /usr/share/nginx/html
-unzip -q it-tools.zip -d /tmp/it-tools
+$STD unzip it-tools.zip -d /tmp/it-tools
 cp -r /tmp/it-tools/dist/* /usr/share/nginx/html
 cat <<'EOF' >/etc/nginx/http.d/default.conf
 server {

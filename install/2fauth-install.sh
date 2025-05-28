@@ -14,11 +14,8 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-
 $STD apt-get install -y \
-  lsb-release \
-  gpg
-
+  lsb-release
 curl -fsSL https://packages.sury.org/php/apt.gpg | gpg --dearmor -o /usr/share/keyrings/deb.sury.org-php.gpg
 echo "deb [signed-by=/usr/share/keyrings/deb.sury.org-php.gpg] https://packages.sury.org/php/ $(lsb_release -sc) main" >/etc/apt/sources.list.d/php.list
 $STD apt-get update
@@ -26,17 +23,18 @@ $STD apt-get update
 $STD apt-get install -y \
   nginx \
   composer \
-  php8.3-{bcmath,common,ctype,curl,fileinfo,fpm,gd,intl,mbstring,mysql,xml,cli} \
-  mariadb-server
+  php8.3-{bcmath,common,ctype,curl,fileinfo,fpm,gd,intl,mbstring,mysql,xml,cli}
 msg_ok "Installed Dependencies"
+
+install_mariadb
 
 msg_info "Setting up Database"
 DB_NAME=2fauth_db
 DB_USER=2fauth
 DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
-$STD mysql -u root -e "CREATE DATABASE $DB_NAME;"
-$STD mysql -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED WITH mysql_native_password AS PASSWORD('$DB_PASS');"
-$STD mysql -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
+$STD mariadb -u root -e "CREATE DATABASE $DB_NAME;"
+$STD mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED WITH mysql_native_password AS PASSWORD('$DB_PASS');"
+$STD mariadb -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
 {
   echo "2FAuth Credentials"
   echo "Database User: $DB_USER"
@@ -47,8 +45,8 @@ msg_ok "Set up Database"
 
 msg_info "Setup 2FAuth"
 RELEASE=$(curl -fsSL https://api.github.com/repos/Bubka/2FAuth/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-curl -fsSL "https://github.com/Bubka/2FAuth/archive/refs/tags/${RELEASE}.zip" -o $(basename "https://github.com/Bubka/2FAuth/archive/refs/tags/${RELEASE}.zip")
-unzip -q "${RELEASE}.zip"
+curl -fsSL "https://github.com/Bubka/2FAuth/archive/refs/tags/${RELEASE}.zip" -o "${RELEASE}.zip"
+$STD unzip "${RELEASE}.zip"
 mv "2FAuth-${RELEASE//v/}/" /opt/2fauth
 
 cd "/opt/2fauth" || return

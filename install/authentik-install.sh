@@ -37,7 +37,7 @@ $STD apt-get install -y \
 msg_ok "Installed Dependencies"
 
 setup_uv
-PG_VERSION="16" install_postgresql
+PG_VERSION="16" PG_MODULES="contrib" install_postgresql
 NODE_VERSION="22" install_node_and_modules
 install_go
 
@@ -61,8 +61,7 @@ cat <<EOF >/etc/GeoIP.conf
 EOF
 msg_ok "Installed GeoIP"
 
-msg_info "Installing PostgreSQL"
-$STD apt-get install -y postgresql-16 postgresql-contrib-16
+msg_info "Setup PostgreSQL Database"
 DB_NAME="authentik"
 DB_USER="authentik"
 DB_PASS="$(openssl rand -base64 18 | cut -c1-13)"

@@ -16,8 +16,8 @@ update_os
 msg_info "Installing InspIRCd"
 RELEASE=$(curl -fsSL https://api.github.com/repos/inspircd/inspircd/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 cd /opt
-curl -fsSL "https://github.com/inspircd/inspircd/releases/download/v${RELEASE}/inspircd_${RELEASE}.deb12u1_amd64.deb" -o $(basename "https://github.com/inspircd/inspircd/releases/download/v${RELEASE}/inspircd_${RELEASE}.deb12u1_amd64.deb")
-$STD apt-get install "./inspircd_${RELEASE}.deb12u1_amd64.deb" -y &>/dev/null
+curl -fsSL "https://github.com/inspircd/inspircd/releases/download/v${RELEASE}/inspircd_${RELEASE}.deb12u2_amd64.deb" -o "inspircd_${RELEASE}.deb12u2_amd64.deb"
+$STD apt-get install "./inspircd_${RELEASE}.deb12u2_amd64.deb" -y &>/dev/null
 cat <<EOF >/etc/inspircd/inspircd.conf
 <define name="networkDomain" value="helper-scripts.com">
 <define name="networkName" value="Proxmox VE Helper-Scripts">
@@ -40,7 +40,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -rf /opt/inspircd_${RELEASE}.deb12u1_amd64.deb
+rm -rf /opt/inspircd_${RELEASE}.deb12u2_amd64.deb
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"

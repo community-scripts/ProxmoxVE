@@ -13,23 +13,12 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt-get install -y gnupg
-msg_ok "Installed Dependencies"
-
-msg_info "Setup MongoDB"
-curl -fsSL https://www.mongodb.org/static/pgp/server-7.0.asc | gpg -o /usr/share/keyrings/mongodb-server-7.0.gpg --dearmor
-echo "deb [signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg] https://repo.mongodb.org/apt/debian bookworm/mongodb-org/7.0 main" >/etc/apt/sources.list.d/mongodb-org-7.0.list
-$STD apt-get update
-$STD apt-get install -y mongodb-org
-$STD apt-mark hold mongodb-org
-systemctl enable -q --now mongod
-msg_ok "Setup MongoDB"
+MONGO_VERSION="7.0" install_mongodb
 
 msg_info "Setup Graylog Data Node"
 PASSWORD_SECRET=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c16)
-curl -fsSL "https://packages.graylog2.org/repo/packages/graylog-6.1-repository_latest.deb" -o $(basename "https://packages.graylog2.org/repo/packages/graylog-6.1-repository_latest.deb")
-$STD dpkg -i graylog-6.1-repository_latest.deb
+curl -fsSL "https://packages.graylog2.org/repo/packages/graylog-6.3-repository_latest.deb" -o "graylog-6.3-repository_latest.deb"
+$STD dpkg -i graylog-6.3-repository_latest.deb
 $STD apt-get update
 $STD apt-get install graylog-datanode -y
 sed -i "s/password_secret =/password_secret = $PASSWORD_SECRET/g" /etc/graylog/datanode/datanode.conf

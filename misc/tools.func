@@ -32,6 +32,15 @@ install_node_and_modules() {
     NEED_NODE_INSTALL=true
   fi
 
+  if ! command -v jq &>/dev/null; then
+    $STD msg_info "Installing jq..."
+    $STD apt-get update -qq &>/dev/null
+    $STD apt-get install -y jq &>/dev/null || {
+      msg_error "Failed to install jq"
+      return 1
+    }
+  fi
+
   # Install Node.js if required
   if [[ "$NEED_NODE_INSTALL" == true ]]; then
     $STD apt-get purge -y nodejs
@@ -113,20 +122,22 @@ install_node_and_modules() {
 }
 
 # ------------------------------------------------------------------------------
-# Installs or upgrades PostgreSQL and performs data migration.
+# Installs or upgrades PostgreSQL and optional extensions/modules.
 #
 # Description:
 #   - Detects existing PostgreSQL version
 #   - Dumps all databases before upgrade
 #   - Adds PGDG repo and installs specified version
+#   - Installs optional PG_MODULES (e.g. postgis, contrib)
 #   - Restores dumped data post-upgrade
 #
 # Variables:
 #   PG_VERSION     - Major PostgreSQL version (e.g. 15, 16) (default: 16)
+#   PG_MODULES     - Comma-separated list of extensions (e.g. "postgis,contrib")
 # ------------------------------------------------------------------------------
-
 install_postgresql() {
   local PG_VERSION="${PG_VERSION:-16}"
+  local PG_MODULES="${PG_MODULES:-}"
   local CURRENT_PG_VERSION=""
   local DISTRO
   local NEED_PG_INSTALL=false
@@ -136,10 +147,10 @@ install_postgresql() {
     CURRENT_PG_VERSION="$(psql -V | awk '{print $3}' | cut -d. -f1)"
     if [[ "$CURRENT_PG_VERSION" == "$PG_VERSION" ]]; then
       msg_ok "PostgreSQL $PG_VERSION is already installed"
-      return
+    else
+      msg_info "Detected PostgreSQL $CURRENT_PG_VERSION, preparing upgrade to $PG_VERSION"
+      NEED_PG_INSTALL=true
     fi
-    msg_info "Detected PostgreSQL $CURRENT_PG_VERSION, preparing upgrade to $PG_VERSION"
-    NEED_PG_INSTALL=true
   else
     msg_info "Setup PostgreSQL $PG_VERSION"
     NEED_PG_INSTALL=true
@@ -170,19 +181,33 @@ install_postgresql() {
     $STD apt-get install -y "postgresql-${PG_VERSION}" "postgresql-client-${PG_VERSION}"
 
     if [[ -n "$CURRENT_PG_VERSION" ]]; then
-      $STD msg_info "Removing old PostgreSQL $CURRENT_PG_VERSION packages"
+      msg_info "Removing old PostgreSQL $CURRENT_PG_VERSION packages"
       $STD apt-get purge -y "postgresql-${CURRENT_PG_VERSION}" "postgresql-client-${CURRENT_PG_VERSION}" || true
     fi
 
-    $STD msg_info "Starting PostgreSQL $PG_VERSION"
+    msg_info "Starting PostgreSQL $PG_VERSION"
     systemctl enable -q --now postgresql
 
     if [[ -n "$CURRENT_PG_VERSION" ]]; then
-      $STD msg_info "Restoring dumped data"
+      msg_info "Restoring dumped data"
       su - postgres -c "psql < /var/lib/postgresql/backup_$(date +%F)_v${CURRENT_PG_VERSION}.sql"
     fi
 
     msg_ok "PostgreSQL $PG_VERSION installed"
+  fi
+
+  # Install optional PostgreSQL modules
+  if [[ -n "$PG_MODULES" ]]; then
+    IFS=',' read -ra MODULES <<<"$PG_MODULES"
+    for module in "${MODULES[@]}"; do
+      local pkg="postgresql-${PG_VERSION}-${module}"
+      msg_info "Installing PostgreSQL module: $pkg"
+      $STD apt-get install -y "$pkg" || {
+        msg_error "Failed to install $pkg"
+        continue
+      }
+    done
+    msg_ok "All requested PostgreSQL modules installed"
   fi
 }
 
@@ -221,7 +246,7 @@ install_mariadb() {
 
   local CURRENT_VERSION=""
   if command -v mariadb >/dev/null; then
-    CURRENT_VERSION="$(mariadb --version | grep -oP 'Ver\s+\K[0-9]+\.[0-9]+')"
+    CURRENT_VERSION=$(mariadb --version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
   fi
 
   if [[ "$CURRENT_VERSION" == "$MARIADB_VERSION" ]]; then
@@ -355,8 +380,10 @@ install_php() {
     CURRENT_PHP=""
   fi
 
-  if [[ "$CURRENT_PHP" != "$PHP_VERSION" ]]; then
-    $STD msg_info "PHP $CURRENT_PHP detected, migrating to PHP $PHP_VERSION"
+  if [[ -z "$CURRENT_PHP" ]]; then
+    msg_info "Setup PHP $PHP_VERSION"
+  elif [[ "$CURRENT_PHP" != "$PHP_VERSION" ]]; then
+    msg_info "PHP $CURRENT_PHP detected, migrating to PHP $PHP_VERSION"
     if [[ ! -f /etc/apt/sources.list.d/php.list ]]; then
       $STD curl -fsSLo /tmp/debsuryorg-archive-keyring.deb https://packages.sury.org/debsuryorg-archive-keyring.deb
       $STD dpkg -i /tmp/debsuryorg-archive-keyring.deb
@@ -373,6 +400,9 @@ install_php() {
   for mod in "${MODULES[@]}"; do
     MODULE_LIST+=" php${PHP_VERSION}-${mod}"
   done
+  if [[ "$PHP_FPM" == "YES" ]]; then
+    MODULE_LIST+=" php${PHP_VERSION}-fpm"
+  fi
 
   if [[ "$PHP_APACHE" == "YES" ]]; then
     # Optionally disable old Apache PHP module
@@ -439,7 +469,7 @@ install_composer() {
 
   # Download and install latest composer
   curl -fsSL https://getcomposer.org/installer -o /tmp/composer-setup.php
-  php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer &>/dev/null
+  php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer >/dev/null 2>&1
 
   if [[ $? -ne 0 ]]; then
     msg_error "Failed to install Composer"
@@ -447,7 +477,9 @@ install_composer() {
   fi
 
   chmod +x "$COMPOSER_BIN"
-  msg_ok "Installed Composer $($COMPOSER_BIN --version | awk '{print $3}')"
+  composer diagnose >/dev/null 2>&1
+  msg_ok "Setup Composer"
+  #msg_ok "Installed Composer $($COMPOSER_BIN --version | awk '{print $3}')"
 }
 
 # ------------------------------------------------------------------------------
@@ -580,11 +612,21 @@ install_java() {
 
 install_mongodb() {
   local MONGO_VERSION="${MONGO_VERSION:-8.0}"
-  local DISTRO_CODENAME
-  DISTRO_CODENAME=$(awk -F= '/VERSION_CODENAME/ { print $2 }' /etc/os-release)
+  local DISTRO_ID DISTRO_CODENAME MONGO_BASE_URL
+  DISTRO_ID=$(awk -F= '/^ID=/{ gsub(/"/,"",$2); print $2 }' /etc/os-release)
+  DISTRO_CODENAME=$(awk -F= '/^VERSION_CODENAME=/{ print $2 }' /etc/os-release)
+
+  case "$DISTRO_ID" in
+  ubuntu) MONGO_BASE_URL="https://repo.mongodb.org/apt/ubuntu" ;;
+  debian) MONGO_BASE_URL="https://repo.mongodb.org/apt/debian" ;;
+  *)
+    msg_error "Unsupported distribution: $DISTRO_ID"
+    return 1
+    ;;
+  esac
+
   local REPO_LIST="/etc/apt/sources.list.d/mongodb-org-${MONGO_VERSION}.list"
 
-  # Aktuell installierte Major-Version ermitteln
   local INSTALLED_VERSION=""
   if command -v mongod >/dev/null; then
     INSTALLED_VERSION=$(mongod --version | awk '/db version/{print $3}' | cut -d. -f1,2)
@@ -598,7 +640,6 @@ install_mongodb() {
     return 0
   fi
 
-  # Ältere Version entfernen (nur Packages, nicht Daten!)
   if [[ -n "$INSTALLED_VERSION" ]]; then
     msg_info "Replacing MongoDB $INSTALLED_VERSION with $MONGO_VERSION (data will be preserved)"
     $STD systemctl stop mongod || true
@@ -609,15 +650,17 @@ install_mongodb() {
     msg_info "Installing MongoDB $MONGO_VERSION"
   fi
 
-  # MongoDB Repo hinzufügen
   curl -fsSL "https://pgp.mongodb.com/server-${MONGO_VERSION}.asc" | gpg --dearmor -o "/etc/apt/trusted.gpg.d/mongodb-${MONGO_VERSION}.gpg"
-  echo "deb [signed-by=/etc/apt/trusted.gpg.d/mongodb-${MONGO_VERSION}.gpg] https://repo.mongodb.org/apt/debian ${DISTRO_CODENAME}/mongodb-org/${MONGO_VERSION} main" \
+  echo "deb [signed-by=/etc/apt/trusted.gpg.d/mongodb-${MONGO_VERSION}.gpg] ${MONGO_BASE_URL} ${DISTRO_CODENAME}/mongodb-org/${MONGO_VERSION} main" \
     >"$REPO_LIST"
 
-  $STD apt-get update
+  $STD apt-get update || {
+    msg_error "APT update failed — invalid MongoDB repo for ${DISTRO_ID}-${DISTRO_CODENAME}?"
+    return 1
+  }
+
   $STD apt-get install -y mongodb-org
 
-  # Sicherstellen, dass Datenverzeichnis intakt bleibt
   mkdir -p /var/lib/mongodb
   chown -R mongodb:mongodb /var/lib/mongodb
 
@@ -641,7 +684,8 @@ install_mongodb() {
 
 fetch_and_deploy_gh_release() {
   local repo="$1"
-  local app=${APP:-$(echo "${APPLICATION,,}" | tr -d ' ')}
+  local raw_app="${APP:-$APPLICATION}"
+  local app=$(echo "${raw_app,,}" | tr -d ' ')
   local api_url="https://api.github.com/repos/$repo/releases/latest"
   local header=()
   local attempt=0
@@ -1202,4 +1246,101 @@ create_selfsigned_certs() {
     -out /etc/ssl/certs/"$app"-selfsigned.crt \
     -subj "/C=US/O=$app/OU=Domain Control Validated/CN=localhost"
   $STD msg_ok "Created Self-Signed Certificate"
+}
+
+# ------------------------------------------------------------------------------
+# Installs Rust toolchain and optional global crates via cargo.
+#
+# Description:
+#   - Installs rustup (if missing)
+#   - Installs or updates desired Rust toolchain (stable, nightly, or versioned)
+#   - Installs or updates specified global crates using `cargo install`
+#
+# Notes:
+#   - Skips crate install if exact version is already present
+#   - Updates crate if newer version or different version is requested
+#
+# Variables:
+#   RUST_TOOLCHAIN  - Rust toolchain to install (default: stable)
+#   RUST_CRATES     - Comma-separated list of crates (e.g. "cargo-edit,wasm-pack@0.12.1")
+# ------------------------------------------------------------------------------
+
+install_rust_and_crates() {
+  local RUST_TOOLCHAIN="${RUST_TOOLCHAIN:-stable}"
+  local RUST_CRATES="${RUST_CRATES:-}"
+  local CARGO_BIN="${HOME}/.cargo/bin"
+
+  # rustup & toolchain
+  if ! command -v rustup &>/dev/null; then
+    msg_info "Installing rustup"
+    curl -fsSL https://sh.rustup.rs | $STD sh -s -- -y --default-toolchain "$RUST_TOOLCHAIN"
+    export PATH="$CARGO_BIN:$PATH"
+    echo 'export PATH="$HOME/.cargo/bin:$PATH"' >>"$HOME/.profile"
+    msg_ok "Installed rustup with $RUST_TOOLCHAIN"
+  else
+    $STD rustup install "$RUST_TOOLCHAIN"
+    $STD rustup default "$RUST_TOOLCHAIN"
+    $STD rustup update "$RUST_TOOLCHAIN"
+    msg_ok "Rust toolchain set to $RUST_TOOLCHAIN"
+  fi
+
+  # install/update crates
+  if [[ -n "$RUST_CRATES" ]]; then
+    IFS=',' read -ra CRATES <<<"$RUST_CRATES"
+    for crate in "${CRATES[@]}"; do
+      local NAME VER INSTALLED_VER
+      if [[ "$crate" == *"@"* ]]; then
+        NAME="${crate%@*}"
+        VER="${crate##*@}"
+      else
+        NAME="$crate"
+        VER=""
+      fi
+
+      INSTALLED_VER=$(cargo install --list 2>/dev/null | awk "/^$NAME v[0-9]/ {print \$2}" | tr -d 'v')
+
+      if [[ -n "$INSTALLED_VER" ]]; then
+        if [[ -n "$VER" && "$VER" != "$INSTALLED_VER" ]]; then
+          msg_info "Updating $NAME from $INSTALLED_VER to $VER"
+          $STD cargo install "$NAME" --version "$VER" --force
+        elif [[ -z "$VER" ]]; then
+          msg_info "Updating $NAME to latest"
+          $STD cargo install "$NAME" --force
+        else
+          msg_ok "$NAME@$INSTALLED_VER already up to date"
+        fi
+      else
+        msg_info "Installing $NAME ${VER:+($VER)}"
+        $STD cargo install "$NAME" ${VER:+--version "$VER"}
+      fi
+    done
+    msg_ok "All requested Rust crates processed"
+  fi
+}
+
+# ------------------------------------------------------------------------------
+# Installs Adminer (Debian/Ubuntu via APT, Alpine via direct download).
+#
+# Description:
+#   - Adds Adminer to Apache or web root
+#   - Supports Alpine and Debian-based systems
+# ------------------------------------------------------------------------------
+
+install_adminer() {
+  if grep -qi alpine /etc/os-release; then
+    msg_info "Installing Adminer (Alpine)"
+    mkdir -p /var/www/localhost/htdocs/adminer
+    if ! curl -fsSL https://github.com/vrana/adminer/releases/latest/download/adminer.php \
+      -o /var/www/localhost/htdocs/adminer/index.php; then
+      msg_error "Failed to download Adminer"
+      return 1
+    fi
+    msg_ok "Adminer available at /adminer (Alpine)"
+  else
+    msg_info "Installing Adminer (Debian/Ubuntu)"
+    $STD apt-get install -y adminer
+    $STD a2enconf adminer
+    $STD systemctl reload apache2
+    msg_ok "Adminer available at /adminer (Debian/Ubuntu)"
+  fi
 }

@@ -17,7 +17,6 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
   lsb-release \
-  gnupg \
   apt-transport-https \
   make
 msg_ok "Installed Dependencies"

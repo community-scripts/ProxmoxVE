@@ -15,14 +15,14 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-    snapraid \
-    avahi-daemon \
-    fdisk
+  snapraid \
+  avahi-daemon \
+  fdisk
 msg_ok "Installed Dependencies"
 
 msg_info "Install mergerfs"
 MERGERFS_VERSION="2.40.2"
-curl -fsSL "https://github.com/trapexit/mergerfs/releases/download/${MERGERFS_VERSION}/mergerfs_${MERGERFS_VERSION}.debian-bullseye_amd64.deb" -o $(basename "https://github.com/trapexit/mergerfs/releases/download/${MERGERFS_VERSION}/mergerfs_${MERGERFS_VERSION}.debian-bullseye_amd64.deb")
+curl -fsSL "https://github.com/trapexit/mergerfs/releases/download/${MERGERFS_VERSION}/mergerfs_${MERGERFS_VERSION}.debian-bullseye_amd64.deb" -o "mergerfs_${MERGERFS_VERSION}.debian-bullseye_amd64.deb"
 $STD dpkg -i "mergerfs_${MERGERFS_VERSION}.debian-bullseye_amd64.deb" || $STD apt-get install -f -y
 rm "mergerfs_${MERGERFS_VERSION}.debian-bullseye_amd64.deb"
 msg_ok "Installed mergerfs"
@@ -39,7 +39,7 @@ LATEST_RELEASE=$(curl -fsSL https://api.github.com/repos/azukaar/Cosmos-Server/r
 ZIP_FILE="cosmos-cloud-${LATEST_RELEASE#v}-amd64.zip"
 curl -fsSL "https://github.com/azukaar/Cosmos-Server/releases/download/${LATEST_RELEASE}/${ZIP_FILE}" -o "/opt/cosmos/${ZIP_FILE}"
 cd /opt/cosmos
-unzip -o -q "${ZIP_FILE}"
+$STD unzip -o -q "${ZIP_FILE}"
 LATEST_RELEASE_NO_V=${LATEST_RELEASE#v}
 mv /opt/cosmos/cosmos-cloud-${LATEST_RELEASE_NO_V}/* /opt/cosmos/
 rmdir /opt/cosmos/cosmos-cloud-${LATEST_RELEASE_NO_V}

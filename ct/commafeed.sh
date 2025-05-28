@@ -42,7 +42,7 @@ function update_script() {
 
     msg_info "Updating ${APP} to ${RELEASE}"
     curl -fsSL "https://github.com/Athou/commafeed/releases/download/${RELEASE}/commafeed-${RELEASE}-h2-jvm.zip" -o $(basename "https://github.com/Athou/commafeed/releases/download/${RELEASE}/commafeed-${RELEASE}-h2-jvm.zip")
-    unzip -q commafeed-"${RELEASE}"-h2-jvm.zip
+    $STD unzip commafeed-"${RELEASE}"-h2-jvm.zip
     rsync -a --exclude 'data/' commafeed-"${RELEASE}"-h2/ /opt/commafeed/
     rm -rf commafeed-"${RELEASE}"-h2 commafeed-"${RELEASE}"-h2-jvm.zip
     echo "${RELEASE}" >/opt/${APP}_version.txt

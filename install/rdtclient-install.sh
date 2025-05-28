@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing ASP.NET Core Runtime"
-curl -fsSL "https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb" -o $(basename "https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb")
+curl -fsSL "https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb" -o packages-microsoft-prod.deb
 $STD dpkg -i packages-microsoft-prod.deb
 rm packages-microsoft-prod.deb
 $STD apt-get update
@@ -22,8 +22,8 @@ $STD apt-get install -y dotnet-sdk-9.0
 msg_ok "Installed ASP.NET Core Runtime"
 
 msg_info "Installing rdtclient"
-curl -fsSL "https://github.com/rogerfar/rdt-client/releases/latest/download/RealDebridClient.zip" -o $(basename "https://github.com/rogerfar/rdt-client/releases/latest/download/RealDebridClient.zip")
-unzip -qq RealDebridClient.zip -d /opt/rdtc
+curl -fsSL "https://github.com/rogerfar/rdt-client/releases/latest/download/RealDebridClient.zip" -o RealDebridClient.zip
+$STD unzip RealDebridClient.zip -d /opt/rdtc
 rm RealDebridClient.zip
 cd /opt/rdtc
 mkdir -p data/{db,downloads}

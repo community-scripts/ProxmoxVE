@@ -16,7 +16,7 @@ update_os
 RELEASE=$(curl -fsSL https://api.github.com/repos/ventoy/pxe/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 msg_info "Installing iVentoy v${RELEASE}"
 mkdir -p /opt/iventoy/{data,iso}
-curl -fsSL "https://github.com/ventoy/PXE/releases/download/v${RELEASE}/iventoy-${RELEASE}-linux-free.tar.gz" -o $(basename "https://github.com/ventoy/PXE/releases/download/v${RELEASE}/iventoy-${RELEASE}-linux-free.tar.gz")
+curl -fsSL "https://github.com/ventoy/PXE/releases/download/v${RELEASE}/iventoy-${RELEASE}-linux-free.tar.gz" -o "iventoy-${RELEASE}-linux-free.tar.gz"
 tar -C /tmp -xzf iventoy*.tar.gz
 mv /tmp/iventoy*/* /opt/iventoy/
 rm -rf iventoy*.tar.gz

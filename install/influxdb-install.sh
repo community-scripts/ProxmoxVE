@@ -16,7 +16,6 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt-get install -y lsb-base
 $STD apt-get install -y lsb-release
-$STD apt-get install -y gnupg2
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up InfluxDB Repository"
@@ -37,8 +36,8 @@ if [[ $INFLUX == "2" ]]; then
   $STD apt-get install -y influxdb2
 else
   $STD apt-get install -y influxdb
-  curl -fsSL "https://dl.influxdata.com/chronograf/releases/chronograf_1.10.1_amd64.deb" -o $(basename "https://dl.influxdata.com/chronograf/releases/chronograf_1.10.1_amd64.deb")
-  $STD dpkg -i chronograf_1.10.1_amd64.deb
+  curl -fsSL "https://dl.influxdata.com/chronograf/releases/chronograf_1.10.7_amd64.deb" -o "/chronograf_1.10.7_amd64.deb"
+  $STD dpkg -i chronograf_1.10.7_amd64.deb
 fi
 $STD systemctl enable --now influxdb
 msg_ok "Installed InfluxDB"

@@ -15,10 +15,12 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-  gnupg2 postgresql \
   apache2 \
   lsb-release
 msg_ok "Installed Dependencies"
+
+NODE_VERSION="22" NODE_MODULE="yarn@latest" install_node_and_modules
+PG_VERSION="16" install_postgresql
 
 msg_info "Setup PHP8.4 Repository"
 $STD curl -fsSLo /tmp/debsuryorg-archive-keyring.deb https://packages.sury.org/debsuryorg-archive-keyring.deb
@@ -49,21 +51,11 @@ $STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER TEMP
 } >>~/koillection.creds
 msg_ok "Set up PostgreSQL"
 
-msg_info "Setting up Node.js/Yarn"
-mkdir -p /etc/apt/keyrings
-curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_22.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
-$STD apt-get update
-$STD apt-get install -y nodejs
-$STD npm install -g npm@latest
-$STD npm install -g yarn
-msg_ok "Installed Node.js/Yarn"
-
 msg_info "Installing Koillection"
 RELEASE=$(curl -fsSL https://api.github.com/repos/benjaminjonard/koillection/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 cd /opt
-curl -fsSL "https://github.com/benjaminjonard/koillection/archive/refs/tags/${RELEASE}.zip" -o $(basename "https://github.com/benjaminjonard/koillection/archive/refs/tags/${RELEASE}.zip")
-unzip -q "${RELEASE}.zip"
+curl -fsSL "https://github.com/benjaminjonard/koillection/archive/refs/tags/${RELEASE}.zip" -o "/opt/${RELEASE}.zip"
+$STD unzip "${RELEASE}.zip"
 mv "/opt/koillection-${RELEASE}" /opt/koillection
 cd /opt/koillection
 cp /opt/koillection/.env /opt/koillection/.env.local

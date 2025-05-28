@@ -14,12 +14,12 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y {gpg,arp-scan,ieee-data,libwww-perl}
+$STD apt-get install -y {arp-scan,ieee-data,libwww-perl}
 msg_ok "Installed Dependencies"
 
 msg_info "Installing WatchYourLAN"
 RELEASE=$(curl -fsSL https://api.github.com/repos/aceberg/WatchYourLAN/releases/latest | grep -o '"tag_name": *"[^"]*"' | cut -d '"' -f 4)
-curl -fsSL "https://github.com/aceberg/WatchYourLAN/releases/download/$RELEASE/watchyourlan_${RELEASE}_linux_amd64.deb" -o $(basename "https://github.com/aceberg/WatchYourLAN/releases/download/$RELEASE/watchyourlan_${RELEASE}_linux_amd64.deb")
+curl -fsSL "https://github.com/aceberg/WatchYourLAN/releases/download/$RELEASE/watchyourlan_${RELEASE}_linux_amd64.deb" -o "watchyourlan_${RELEASE}_linux_amd64.deb"
 $STD dpkg -i watchyourlan_${RELEASE}_linux_amd64.deb
 rm watchyourlan_${RELEASE}_linux_amd64.deb
 mkdir /data

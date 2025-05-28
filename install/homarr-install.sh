@@ -17,7 +17,6 @@ msg_info "Installing Dependencies"
 $STD apt-get install -y \
   redis-server \
   ca-certificates \
-  gpg \
   make \
   g++ \
   build-essential \

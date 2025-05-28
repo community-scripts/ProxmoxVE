@@ -15,8 +15,7 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-  git \
-  gpg
+  git
 
 curl -fsSL "https://keyserver.ubuntu.com/pks/lookup?fingerprint=on&op=get&search=0x6125E2A8C77F2818FB7BD15B93C4A3FD7BB9C367" | gpg --dearmour >/usr/share/keyrings/ansible-archive-keyring.gpg
 cat <<EOF >/etc/apt/sources.list.d/ansible.list
@@ -30,7 +29,7 @@ msg_info "Setup Semaphore"
 RELEASE=$(curl -fsSL https://api.github.com/repos/semaphoreui/semaphore/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 mkdir -p /opt/semaphore
 cd /opt/semaphore
-curl -fsSL "https://github.com/semaphoreui/semaphore/releases/download/v${RELEASE}/semaphore_${RELEASE}_linux_amd64.deb" -o $(basename "https://github.com/semaphoreui/semaphore/releases/download/v${RELEASE}/semaphore_${RELEASE}_linux_amd64.deb")
+curl -fsSL "https://github.com/semaphoreui/semaphore/releases/download/v${RELEASE}/semaphore_${RELEASE}_linux_amd64.deb" -o "semaphore_${RELEASE}_linux_amd64.deb"
 $STD dpkg -i semaphore_${RELEASE}_linux_amd64.deb
 
 SEM_HASH=$(openssl rand -base64 32)

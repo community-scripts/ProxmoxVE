@@ -15,7 +15,6 @@ update_os
 
 msg_info "Installing dependencies"
 $STD apk add --no-cache \
-  unzip \
   apache2-utils
 msg_ok "Installed dependencies"
 

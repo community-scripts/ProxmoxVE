@@ -21,9 +21,11 @@ $STD apt-get install -y \
   lsb-release \
   php-{opcache,curl,gd,mbstring,xml,bcmath,intl,zip,xsl,pgsql} \
   libapache2-mod-php \
-  composer \
-  postgresql
+  composer
 msg_ok "Installed Dependencies"
+
+NODE_VERSION="22" NODE_MODULE="yarn@latest" install_node_and_modules
+PG_VERSION="16" install_postgresql
 
 msg_info "Setting up PHP"
 PHPVER=$(php -r 'echo PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION . "\n";')
@@ -45,21 +47,11 @@ $STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER TEMP
 } >>~/partdb.creds
 msg_ok "Set up PostgreSQL"
 
-msg_info "Setting up Node.js/Yarn"
-mkdir -p /etc/apt/keyrings
-curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_22.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
-$STD apt-get update
-$STD apt-get install -y nodejs
-$STD npm install -g npm@latest
-$STD npm install -g yarn
-msg_ok "Installed Node.js/Yarn"
-
 msg_info "Installing Part-DB (Patience)"
 cd /opt
 RELEASE=$(curl -fsSL https://api.github.com/repos/Part-DB/Part-DB-server/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/Part-DB/Part-DB-server/archive/refs/tags/v${RELEASE}.zip" -o $(basename "https://github.com/Part-DB/Part-DB-server/archive/refs/tags/v${RELEASE}.zip")
-unzip -q "v${RELEASE}.zip"
+curl -fsSL "https://github.com/Part-DB/Part-DB-server/archive/refs/tags/v${RELEASE}.zip" -o "/opt/v${RELEASE}.zip"
+$STD unzip "v${RELEASE}.zip"
 mv /opt/Part-DB-server-${RELEASE}/ /opt/partdb
 
 cd /opt/partdb/

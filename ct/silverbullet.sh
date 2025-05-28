@@ -34,7 +34,7 @@ function update_script() {
 
     msg_info "Updating ${APP} to v${RELEASE}"
     curl -fsSL "https://github.com/silverbulletmd/silverbullet/releases/download/${RELEASE}/silverbullet-server-linux-x86_64.zip" -o $(basename "https://github.com/silverbulletmd/silverbullet/releases/download/${RELEASE}/silverbullet-server-linux-x86_64.zip")
-    unzip -q silverbullet-server-linux-x86_64.zip
+    $STD unzip silverbullet-server-linux-x86_64.zip
     mv silverbullet /opt/silverbullet/bin/
     chmod +x /opt/silverbullet/bin/silverbullet
     echo "${RELEASE}" >/opt/silverbullet/${APP}_version.txt

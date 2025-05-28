@@ -40,7 +40,6 @@ function update_script() {
       php8.4 \
       php8.4-{gd,mysql,mbstring,bcmath,xml,curl,zip,intl,fpm} \
       libapache2-mod-php8.4
-
     msg_ok "Migrated PHP $CURRENT_PHP to 8.4"
   fi
 
@@ -53,10 +52,13 @@ function update_script() {
 
     msg_info "Updating ${APP} to v${RELEASE}"
     cp -r /opt/pelican-panel/.env /opt/
+    SQLITE_INSTALL=$(ls /opt/pelican-panel/database/*.sqlite 1> /dev/null 2>&1 && echo "true" || echo "false")
+    $SQLITE_INSTALL && cp -r /opt/pelican-panel/database/*.sqlite /opt/
     rm -rf * .*
     curl -fsSL "https://github.com/pelican-dev/panel/releases/download/v${RELEASE}/panel.tar.gz" -o $(basename "https://github.com/pelican-dev/panel/releases/download/v${RELEASE}/panel.tar.gz")
     tar -xzf "panel.tar.gz"
     mv /opt/.env /opt/pelican-panel/
+    $SQLITE_INSTALL && mv /opt/*.sqlite /opt/pelican-panel/database/
     $STD composer install --no-dev --optimize-autoloader --no-interaction
     $STD php artisan p:environment:setup
     $STD php artisan view:clear

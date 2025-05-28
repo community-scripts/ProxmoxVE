@@ -15,7 +15,7 @@ update_os
 
 msg_info "Installing Ombi"
 RELEASE=$(curl -fsSL https://api.github.com/repos/Ombi-app/Ombi/releases/latest | grep '"tag_name":' | cut -d'"' -f4)
-curl -fsSL "https://github.com/Ombi-app/Ombi/releases/download/${RELEASE}/linux-x64.tar.gz" -o $(basename "https://github.com/Ombi-app/Ombi/releases/download/${RELEASE}/linux-x64.tar.gz")
+curl -fsSL "https://github.com/Ombi-app/Ombi/releases/download/${RELEASE}/linux-x64.tar.gz" -o "linux-x64.tar.gz"
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 mkdir -p /opt/ombi
 tar -xzf linux-x64.tar.gz -C /opt/ombi

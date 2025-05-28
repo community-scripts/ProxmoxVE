@@ -14,7 +14,6 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y gnupg
 $STD apt-get install -y apt-transport-https
 $STD apt-get install -y lsb-release
 $STD apt-get install -y ca-certificates

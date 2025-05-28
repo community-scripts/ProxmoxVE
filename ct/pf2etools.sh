@@ -39,7 +39,7 @@ function update_script() {
     msg_info "Updating ${APP}"
     cd /opt
     curl -fsSL "https://github.com/Pf2eToolsOrg/Pf2eTools/archive/refs/tags/${RELEASE}.zip" -o $(basename "https://github.com/Pf2eToolsOrg/Pf2eTools/archive/refs/tags/${RELEASE}.zip")
-    unzip -q ${RELEASE}.zip
+    $STD unzip ${RELEASE}.zip
     rm -rf "/opt/${APP}"
     mv ${APP}-${RELEASE:1} /opt/${APP}
     cd /opt/Pf2eTools

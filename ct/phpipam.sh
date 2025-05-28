@@ -37,7 +37,7 @@ function update_script() {
     cd /opt
     mv /opt/phpipam/ /opt/phpipam-backup
     curl -fsSL "https://github.com/phpipam/phpipam/releases/download/v${RELEASE}/phpipam-v${RELEASE}.zip" -o $(basename "https://github.com/phpipam/phpipam/releases/download/v${RELEASE}/phpipam-v${RELEASE}.zip")
-    unzip -q "phpipam-v${RELEASE}.zip"
+    $STD unzip "phpipam-v${RELEASE}.zip"
     cp /opt/phpipam-backup/config.php /opt/phpipam
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated $APP to v${RELEASE}"

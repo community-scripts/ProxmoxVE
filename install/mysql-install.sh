@@ -16,8 +16,7 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-  lsb-release \
-  gnupg
+  lsb-release
 msg_ok "Installed Dependencies"
 
 RELEASE_REPO="mysql-8.0"
@@ -44,7 +43,7 @@ msg_ok "Installed MySQL"
 
 msg_info "Configure MySQL Server"
 ADMIN_PASS="$(openssl rand -base64 18 | cut -c1-13)"
-$STD mysql -uroot -p"$ADMIN_PASS" -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH $RELEASE_AUTH BY '$ADMIN_PASS'; FLUSH PRIVILEGES;"
+$STD mariadb -uroot -p"$ADMIN_PASS" -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH $RELEASE_AUTH BY '$ADMIN_PASS'; FLUSH PRIVILEGES;"
 echo "" >~/mysql.creds
 echo -e "MySQL user: root" >>~/mysql.creds
 echo -e "MySQL password: $ADMIN_PASS" >>~/mysql.creds
@@ -63,7 +62,7 @@ if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
     php-json \
     php-curl
 
-  curl -fsSL "https://files.phpmyadmin.net/phpMyAdmin/5.2.1/phpMyAdmin-5.2.1-all-languages.tar.gz" -o $(basename "https://files.phpmyadmin.net/phpMyAdmin/5.2.1/phpMyAdmin-5.2.1-all-languages.tar.gz")
+  curl -fsSL "https://files.phpmyadmin.net/phpMyAdmin/5.2.1/phpMyAdmin-5.2.1-all-languages.tar.gz" -o "phpMyAdmin-5.2.1-all-languages.tar.gz"
   mkdir -p /var/www/html/phpMyAdmin
   tar xf phpMyAdmin-5.2.1-all-languages.tar.gz --strip-components=1 -C /var/www/html/phpMyAdmin
   cp /var/www/html/phpMyAdmin/config.sample.inc.php /var/www/html/phpMyAdmin/config.inc.php

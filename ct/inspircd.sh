@@ -35,8 +35,8 @@ function update_script() {
 
     msg_info "Updating ${APP} to v${RELEASE}"
     cd /opt
-    curl -fsSL "https://github.com/inspircd/inspircd/releases/download/v${RELEASE}/inspircd_${RELEASE}.deb12u1_amd64.deb" -o $(basename "https://github.com/inspircd/inspircd/releases/download/v${RELEASE}/inspircd_${RELEASE}.deb12u1_amd64.deb")
-    $STD apt-get install "./inspircd_${RELEASE}.deb12u1_amd64.deb" -y
+    curl -fsSL "https://github.com/inspircd/inspircd/releases/download/v${RELEASE}/inspircd_${RELEASE}.deb12u2_amd64.deb" -o $(basename "https://github.com/inspircd/inspircd/releases/download/v${RELEASE}/inspircd_${RELEASE}.deb12u2_amd64.deb")
+    $STD apt-get install "./inspircd_${RELEASE}.deb12u2_amd64.deb" -y
     echo "${RELEASE}" >"/opt/${APP}_version.txt"
     msg_ok "Updated ${APP} to v${RELEASE}"
 
@@ -45,7 +45,7 @@ function update_script() {
     msg_ok "Started Service"
 
     msg_info "Cleaning up"
-    rm -rf /opt/inspircd_${RELEASE}.deb12u1_amd64.deb
+    rm -rf /opt/inspircd_${RELEASE}.deb12u2_amd64.deb
     msg_ok "Cleaned"
     msg_ok "Updated Successfully"
   else

@@ -16,28 +16,19 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
   make \
-  gnupg \
   ca-certificates \
-  unzip \
   python3.11-venv
 msg_ok "Installed Dependencies"
 
-msg_info "Installing Node.js"
-mkdir -p /etc/apt/keyrings
-curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_22.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
-$STD apt-get update
-$STD apt-get install -y nodejs
-$STD npm install -g yarn
-msg_ok "Installed Node.js"
+NODE_VERSION="22" NODE_MODULE="yarn@latest" install_node_and_modules
 
 msg_info "Installing Grist"
 RELEASE=$(curl -fsSL https://api.github.com/repos/gristlabs/grist-core/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 export CYPRESS_INSTALL_BINARY=0
 export NODE_OPTIONS="--max-old-space-size=2048"
 cd /opt
-curl -fsSL "https://github.com/gristlabs/grist-core/archive/refs/tags/v${RELEASE}.zip" -o $(basename "https://github.com/gristlabs/grist-core/archive/refs/tags/v${RELEASE}.zip")
-unzip -q v$RELEASE.zip
+curl -fsSL "https://github.com/gristlabs/grist-core/archive/refs/tags/v${RELEASE}.zip" -o "v${RELEASE}.zip"
+$STD unzip v$RELEASE.zip
 mv grist-core-${RELEASE} grist
 cd grist
 $STD yarn install

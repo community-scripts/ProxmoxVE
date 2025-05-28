@@ -13,19 +13,7 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt-get install -y gnupg
-msg_ok "Installed Dependencies"
-
-msg_info "Setting up PostgreSQL Repository"
-VERSION="$(awk -F'=' '/^VERSION_CODENAME=/{ print $NF }' /etc/os-release)"
-echo "deb http://apt.postgresql.org/pub/repos/apt ${VERSION}-pgdg main" >/etc/apt/sources.list.d/pgdg.list
-curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor --output /etc/apt/trusted.gpg.d/postgresql.gpg
-msg_ok "Setup PostgreSQL Repository"
-
-msg_info "Installing PostgreSQL"
-$STD apt-get update
-$STD apt-get install -y postgresql
+PG_VERSION="17" install_postgresql
 
 cat <<EOF >/etc/postgresql/17/main/pg_hba.conf
 # PostgreSQL Client Authentication Configuration File
@@ -127,7 +115,7 @@ default_text_search_config = 'pg_catalog.english'
 include_dir = 'conf.d'                  
 EOF
 
-sudo systemctl restart postgresql
+systemctl restart postgresql
 msg_ok "Installed PostgreSQL"
 
 read -r -p "${TAB3}Would you like to add Adminer? <y/N> " prompt

@@ -69,7 +69,7 @@ function update_script() {
     rm -rf /opt/meilisearch-ui
     mkdir -p /opt/meilisearch-ui
     curl -fsSL "https://github.com/riccox/meilisearch-ui/archive/refs/tags/${RELEASE_UI}.zip" -o $tmp_file
-    unzip -q "$tmp_file" -d "$tmp_dir"
+    $STD unzip "$tmp_file" -d "$tmp_dir"
     mv "$tmp_dir"/*/* /opt/meilisearch-ui/
     cd /opt/meilisearch-ui
     sed -i 's|const hash = execSync("git rev-parse HEAD").toString().trim();|const hash = "unknown";|' /opt/meilisearch-ui/vite.config.ts

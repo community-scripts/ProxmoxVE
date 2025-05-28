@@ -37,7 +37,7 @@ function update_script() {
     cd /opt
     mv /opt/teddycloud /opt/teddycloud_bak
     curl -fsSL "https://github.com/toniebox-reverse-engineering/teddycloud/releases/download/${RELEASE}/teddycloud.amd64.release_v${VERSION}.zip" -o $(basename "https://github.com/toniebox-reverse-engineering/teddycloud/releases/download/${RELEASE}/teddycloud.amd64.release_v${VERSION}.zip")
-    unzip -q -d /opt/teddycloud teddycloud.amd64.release_v${VERSION}.zip
+    $STD unzip -d /opt/teddycloud teddycloud.amd64.release_v${VERSION}.zip
     cp -R /opt/teddycloud_bak/certs /opt/teddycloud_bak/config /opt/teddycloud_bak/data /opt/teddycloud
     echo "${VERSION}" >"/opt/${APP}_version.txt"
     msg_ok "Updated ${APP} to v${VERSION}"

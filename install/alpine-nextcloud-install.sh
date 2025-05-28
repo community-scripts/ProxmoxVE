@@ -14,12 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apk add newt
-$STD apk add curl
 $STD apk add openssl
-$STD apk add openssh
-$STD apk add nano
-$STD apk add mc
 $STD apk add nginx
 msg_ok "Installed Dependencies"
 
@@ -53,7 +48,7 @@ $STD apk add nextcloud-mysql mariadb mariadb-client
 $STD mariadb-install-db --user=mysql --datadir=/var/lib/mysql
 $STD service mariadb start
 $STD rc-update add mariadb
-mysql -uroot -p"$ADMIN_PASS" -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY '$ADMIN_PASS' WITH GRANT OPTION; DELETE FROM mysql.user WHERE User=''; DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1'); DROP DATABASE test; DELETE FROM mysql.db WHERE Db='test' OR Db='test\_%'; CREATE DATABASE $DB_NAME; GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS'; GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost.localdomain' IDENTIFIED BY '$DB_PASS'; FLUSH PRIVILEGES;"
+mariadb -uroot -p"$ADMIN_PASS" -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY '$ADMIN_PASS' WITH GRANT OPTION; DELETE FROM mysql.user WHERE User=''; DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1'); DROP DATABASE test; DELETE FROM mysql.db WHERE Db='test' OR Db='test\_%'; CREATE DATABASE $DB_NAME; GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS'; GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost.localdomain' IDENTIFIED BY '$DB_PASS'; FLUSH PRIVILEGES;"
 $STD apk del mariadb-client
 msg_ok "Installed MySQL Database"
 

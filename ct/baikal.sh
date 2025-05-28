@@ -37,7 +37,7 @@ function update_script() {
     cd /opt
     curl -fsSL "https://github.com/sabre-io/baikal/releases/download/${RELEASE}/baikal-${RELEASE}.zip" -o $(basename "https://github.com/sabre-io/baikal/releases/download/${RELEASE}/baikal-${RELEASE}.zip")
     mv /opt/baikal /opt/baikal-backup
-    unzip -o -q "baikal-${RELEASE}.zip"
+    $STD unzip -o "baikal-${RELEASE}.zip"
     cp -r /opt/baikal-backup/config/baikal.yaml /opt/baikal/config/
     cp -r /opt/baikal-backup/Specific/ /opt/baikal/
     chown -R www-data:www-data /opt/baikal/

@@ -41,7 +41,7 @@ function update_script() {
       cp /opt/wavelog/assets/js/sections/custom.js /opt/custom.js
     fi
     curl -fsSL "https://github.com/wavelog/wavelog/archive/refs/tags/${RELEASE}.zip" -o $(basename "https://github.com/wavelog/wavelog/archive/refs/tags/${RELEASE}.zip")
-    unzip -q ${RELEASE}.zip
+    $STD unzip ${RELEASE}.zip
     rm -rf /opt/wavelog
     mv wavelog-${RELEASE}/ /opt/wavelog
     rm -rf /opt/wavelog/install

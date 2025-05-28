@@ -13,10 +13,6 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt-get install -y gpg
-msg_ok "Installed Dependencies"
-
 msg_info "Installing OpenMediaVault (Patience)"
 curl -fsSL "https://packages.openmediavault.org/public/archive.key" | gpg --dearmor >"/etc/apt/trusted.gpg.d/openmediavault-archive-keyring.gpg"
 cat <<EOF >/etc/apt/sources.list.d/openmediavault.list

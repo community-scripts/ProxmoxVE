@@ -19,20 +19,20 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /opt/Petio ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    msg_info "Updating $APP"
-    systemctl stop petio.service
-    curl -fsSL https://petio.tv/releases/latest -o petio-latest.zip
-    unzip petio-latest.zip -d /opt/Petio
-    systemctl start petio.service
-    msg_ok "Updated $APP"
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /opt/Petio ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+  msg_info "Updating $APP"
+  systemctl stop petio.service
+  curl -fsSL https://petio.tv/releases/latest -o petio-latest.zip
+  $STD unzip petio-latest.zip -d /opt/Petio
+  systemctl start petio.service
+  msg_ok "Updated $APP"
+  exit
 }
 
 start

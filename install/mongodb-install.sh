@@ -13,10 +13,6 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt-get install -y gnupg
-msg_ok "Installed Dependencies"
-
 read -p "${TAB3}Do you want to install MongoDB 8.0 instead of 7.0? [y/N]: " install_mongodb_8
 if [[ "$install_mongodb_8" =~ ^[Yy]$ ]]; then
   MONGODB_VERSION="8.0"

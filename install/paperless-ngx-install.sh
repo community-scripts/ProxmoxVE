@@ -16,12 +16,10 @@ update_os
 msg_info "Installing Dependencies (Patience)"
 $STD apt-get install -y \
   redis \
-  postgresql \
   build-essential \
   imagemagick \
   fonts-liberation \
   optipng \
-  gnupg \
   libpq-dev \
   libmagic-dev \
   mime-support \
@@ -36,6 +34,8 @@ $STD apt-get install -y \
   libpng-dev \
   libleptonica-dev
 msg_ok "Installed Dependencies"
+
+PG_VERSION="16" install_postgresql
 
 msg_info "Setup Python3"
 $STD apt-get install -y \
@@ -59,7 +59,7 @@ $STD apt-get install -y \
   tesseract-ocr-eng
 
 cd /tmp
-curl -fsSL "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs10040/ghostscript-10.04.0.tar.gz" -o $(basename "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs10040/ghostscript-10.04.0.tar.gz")
+curl -fsSL "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs10040/ghostscript-10.04.0.tar.gz" -o "ghostscript-10.04.0.tar.gz"
 $STD tar -xzf ghostscript-10.04.0.tar.gz
 cd ghostscript-10.04.0
 $STD ./configure
