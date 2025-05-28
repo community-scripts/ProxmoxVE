@@ -54,6 +54,7 @@ chmod +x $service_path
 msg_ok "Created Node-RED Service"
 
 msg_info "Starting Node-RED"
+$STD rc-update add nodered
 $STD rc-service nodered start
 msg_ok "Started Node-RED"
 
