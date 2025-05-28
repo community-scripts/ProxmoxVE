@@ -1,5 +1,50 @@
 [
   {
+    "name": "element-hq/synapse",
+    "version": "v1.130.0",
+    "date": "2025-05-20T15:33:54Z"
+  },
+  {
+    "name": "pocket-id/pocket-id",
+    "version": "v1.1.0",
+    "date": "2025-05-28T09:39:00Z"
+  },
+  {
+    "name": "zitadel/zitadel",
+    "version": "v2.71.11",
+    "date": "2025-05-28T09:16:41Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.2.5",
+    "date": "2025-05-28T06:49:43Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.2.0p43-rc1",
+    "date": "2025-05-28T06:23:13Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1960",
+    "date": "2025-05-28T05:56:49Z"
+  },
+  {
+    "name": "Athou/commafeed",
+    "version": "5.10.0",
+    "date": "2025-05-28T05:48:20Z"
+  },
+  {
+    "name": "cross-seed/cross-seed",
+    "version": "v6.12.6",
+    "date": "2025-05-28T00:13:19Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.8.0",
+    "date": "2025-05-27T23:50:57Z"
+  },
+  {
     "name": "mongodb/mongo",
     "version": "r8.1.0-alpha3",
     "date": "2025-05-27T22:33:59Z"
@@ -20,14 +65,9 @@
     "date": "2025-05-23T15:10:33Z"
   },
   {
-    "name": "ollama/ollama",
-    "version": "v0.7.1-rc2",
-    "date": "2025-05-23T01:53:31Z"
-  },
-  {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-05-25T09:44:06Z"
+    "version": "v4.1.1",
+    "date": "2025-05-16T17:37:30Z"
   },
   {
     "name": "Threadfin/Threadfin",
@@ -90,16 +130,6 @@
     "date": "2025-05-27T09:01:29Z"
   },
   {
-    "name": "zitadel/zitadel",
-    "version": "v2.65.10",
-    "date": "2025-05-27T08:47:06Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1956",
-    "date": "2025-05-27T05:55:21Z"
-  },
-  {
     "name": "semaphoreui/semaphore",
     "version": "v2.14.12",
     "date": "2025-05-27T03:58:59Z"
@@ -118,11 +148,6 @@
     "name": "dani-garcia/vaultwarden",
     "version": "1.34.1",
     "date": "2025-05-26T21:40:54Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.0.12",
-    "date": "2025-05-15T14:06:52Z"
   },
   {
     "name": "dgtlmoon/changedetection.io",
@@ -148,11 +173,6 @@
     "name": "jupyter/notebook",
     "version": "v7.4.3",
     "date": "2025-05-26T14:27:27Z"
-  },
-  {
-    "name": "Checkmk/checkmk",
-    "version": "v2.3.0p33",
-    "date": "2025-05-26T13:57:51Z"
   },
   {
     "name": "syncthing/syncthing",
@@ -195,11 +215,6 @@
     "date": "2025-05-25T16:41:43Z"
   },
   {
-    "name": "cross-seed/cross-seed",
-    "version": "v6.12.5",
-    "date": "2025-05-17T02:52:33Z"
-  },
-  {
     "name": "Prowlarr/Prowlarr",
     "version": "v1.36.3.5071",
     "date": "2025-05-25T13:59:43Z"
@@ -218,11 +233,6 @@
     "name": "authelia/authelia",
     "version": "v4.39.4",
     "date": "2025-05-25T02:27:28Z"
-  },
-  {
-    "name": "pocket-id/pocket-id",
-    "version": "v1.0.0",
-    "date": "2025-05-24T22:06:55Z"
   },
   {
     "name": "minio/minio",
@@ -353,11 +363,6 @@
     "name": "matze/wastebin",
     "version": "3.1.0",
     "date": "2025-05-20T19:20:03Z"
-  },
-  {
-    "name": "element-hq/synapse",
-    "version": "v1.130.0",
-    "date": "2025-05-20T15:33:54Z"
   },
   {
     "name": "documenso/documenso",
@@ -508,11 +513,6 @@
     "name": "Ombi-app/Ombi",
     "version": "v4.47.1",
     "date": "2025-01-05T21:14:23Z"
-  },
-  {
-    "name": "Athou/commafeed",
-    "version": "5.9.0",
-    "date": "2025-05-14T15:29:48Z"
   },
   {
     "name": "juanfont/headscale",
