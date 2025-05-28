@@ -13,17 +13,6 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apk add \
-	newt \
-	curl \
-	openssh \
-	nano \
-	mc \
-	gpg
-
-msg_ok "Installed Dependencies"
-
 msg_info "Installing Redis"
 $STD apk add redis
 $STD sed -i 's/^bind .*/bind 0.0.0.0/' /etc/redis.conf
