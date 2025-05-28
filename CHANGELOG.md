@@ -18,6 +18,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Alpine-Node-RED: add service to rc [@MickLesk](https://github.com/MickLesk) ([#4783](https://github.com/community-scripts/ProxmoxVE/pull/4783))
+
   - #### ✨ New Features
 
     - Pulse: use prebuild tarball file / remove unneeded npm actions [@MickLesk](https://github.com/MickLesk) ([#4776](https://github.com/community-scripts/ProxmoxVE/pull/4776))
