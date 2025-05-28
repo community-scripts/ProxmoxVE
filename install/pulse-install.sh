@@ -33,7 +33,7 @@ msg_info "Setup Pulse"
 RELEASE=$(curl -fsSL https://api.github.com/repos/rcourtman/Pulse/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 temp_file=$(mktemp)
 mkdir -p /opt/pulse-proxmox
-curl -fsSL "https://github.com/rcourtman/Pulse/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
+curl -fsSL "https://github.com/rcourtman/Pulse/archive/refs/tags/v${RELEASE}/pulse-v${RELEASE}.tar.gz" -o "$temp_file"
 tar zxf "$temp_file" --strip-components=1 -C /opt/pulse-proxmox
 cd /opt/pulse-proxmox
 $STD npm install --unsafe-perm
