@@ -14,8 +14,6 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
-    unzip
 cd /tmp
 curl -fsSL https://dl.min.io/server/minio/release/linux-amd64/minio.deb -o minio.deb
 $STD dpkg -i minio.deb
