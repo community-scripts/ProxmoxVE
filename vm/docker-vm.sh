@@ -22,10 +22,10 @@ echo -e "\n Loading..."
 GEN_MAC=02:$(openssl rand -hex 5 | awk '{print toupper($0)}' | sed 's/\(..\)/\1:/g; s/.$//')
 RANDOM_UUID="$(cat /proc/sys/kernel/random/uuid)"
 METHOD=""
-NSAPP="debian12vm"
+NSAPP="docker-vm"
 var_os="debian"
 var_version="12"
-DISK_SIZE="8G"
+DISK_SIZE="10G"
 
 YW=$(echo "\033[33m")
 BL=$(echo "\033[36m")
@@ -107,7 +107,7 @@ function cleanup() {
 
 TEMP_DIR=$(mktemp -d)
 pushd $TEMP_DIR >/dev/null
-if whiptail --backtitle "Proxmox VE Helper Scripts" --title "Debian 12 VM" --yesno "This will create a New Debian 12 VM. Proceed?" 10 58; then
+if whiptail --backtitle "Proxmox VE Helper Scripts" --title "Docker VM" --yesno "This will create a New Docker VM. Proceed?" 10 58; then
   :
 else
   header_info && echo -e "${CROSS}${RD}User exited script${CL}\n" && exit
@@ -206,7 +206,7 @@ function default_settings() {
   echo -e "${VLANTAG}${BOLD}${DGN}VLAN: ${BGN}Default${CL}"
   echo -e "${DEFAULT}${BOLD}${DGN}Interface MTU Size: ${BGN}Default${CL}"
   echo -e "${GATEWAY}${BOLD}${DGN}Start VM when completed: ${BGN}yes${CL}"
-  echo -e "${CREATING}${BOLD}${DGN}Creating a Debian 12 VM using the above default settings${CL}"
+  echo -e "${CREATING}${BOLD}${DGN}Creating a Docker VM using the above default settings${CL}"
 }
 
 function advanced_settings() {
@@ -276,9 +276,9 @@ function advanced_settings() {
     exit-script
   fi
 
-  if VM_NAME=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Hostname" 8 58 debian --title "HOSTNAME" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+  if VM_NAME=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Hostname" 8 58 docker --title "HOSTNAME" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
     if [ -z $VM_NAME ]; then
-      HN="debian"
+      HN="docker"
       echo -e "${HOSTNAME}${BOLD}${DGN}Hostname: ${BGN}$HN${CL}"
     else
       HN=$(echo ${VM_NAME,,} | tr -d ' ')
@@ -382,8 +382,8 @@ function advanced_settings() {
     START_VM="no"
   fi
 
-  if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "ADVANCED SETTINGS COMPLETE" --yesno "Ready to create a Debian 12 VM?" --no-button Do-Over 10 58); then
-    echo -e "${CREATING}${BOLD}${DGN}Creating a Debian 12 VM using the above advanced settings${CL}"
+  if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "ADVANCED SETTINGS COMPLETE" --yesno "Ready to create a Docker VM?" --no-button Do-Over 10 58); then
+    echo -e "${CREATING}${BOLD}${DGN}Creating a Docker VM using the above advanced settings${CL}"
   else
     header_info
     echo -e "${ADVANCED}${BOLD}${RD}Using Advanced Settings${CL}"
@@ -468,9 +468,12 @@ for i in {0,1}; do
   eval DISK${i}_REF=${STORAGE}:${DISK_REF:-}${!disk}
 done
 
-msg_info "Installing Pre-Requisite libguestfs-tools onto Host"
-apt-get -qq update && apt-get -qq install libguestfs-tools lsb-release -y >/dev/null
-msg_ok "Installed libguestfs-tools successfully"
+if ! command -v virt-customize &>/dev/null; then
+  msg_info "Installing Pre-Requisite libguestfs-tools onto Host"
+  apt-get -qq update >/dev/null
+  apt-get -qq install libguestfs-tools lsb-release -y >/dev/null
+  msg_ok "Installed libguestfs-tools successfully"
+fi
 
 msg_info "Adding Docker and Docker Compose Plugin to Debian 12 Qcow2 Disk Image"
 virt-customize -q -a "${FILE}" --install qemu-guest-agent,apt-transport-https,ca-certificates,curl,gnupg,software-properties-common,lsb-release >/dev/null &&
@@ -478,8 +481,15 @@ virt-customize -q -a "${FILE}" --install qemu-guest-agent,apt-transport-https,ca
   virt-customize -q -a "${FILE}" --run-command "echo 'deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian bookworm stable' > /etc/apt/sources.list.d/docker.list" >/dev/null &&
   virt-customize -q -a "${FILE}" --run-command "apt-get update -qq && apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin" >/dev/null &&
   virt-customize -q -a "${FILE}" --run-command "systemctl enable docker" >/dev/null &&
+  virt-customize -q -a "${FILE}" --hostname "${HN}" >/dev/null &&
   virt-customize -q -a "${FILE}" --run-command "echo -n > /etc/machine-id" >/dev/null
 msg_ok "Added Docker and Docker Compose Plugin to Debian 12 Qcow2 Disk Image successfully"
+
+msg_info "Expanding root partition to use full disk space"
+qemu-img create -f qcow2 expanded.qcow2 ${DISK_SIZE} >/dev/null 2>&1
+virt-resize --expand /dev/sda1 ${FILE} expanded.qcow2 >/dev/null 2>&1
+mv expanded.qcow2 ${FILE} >/dev/null 2>&1
+msg_ok "Expanded image to full size"
 
 msg_info "Creating a Docker VM"
 qm create $VMID -agent 1${MACHINE} -tablet 0 -localtime 1 -bios ovmf${CPU_TYPE} -cores $CORE_COUNT -memory $RAM_SIZE \
@@ -525,14 +535,6 @@ DESCRIPTION=$(
 EOF
 )
 qm set "$VMID" -description "$DESCRIPTION" >/dev/null
-
-if [ -n "$DISK_SIZE" ]; then
-  msg_info "Resizing disk to $DISK_SIZE GB"
-  qm resize $VMID scsi0 ${DISK_SIZE} >/dev/null
-else
-  msg_info "Using default disk size of $DEFAULT_DISK_SIZE GB"
-  qm resize $VMID scsi0 ${DEFAULT_DISK_SIZE} >/dev/null
-fi
 
 msg_ok "Created a Docker VM ${CL}${BL}(${HN})"
 if [ "$START_VM" == "yes" ]; then
