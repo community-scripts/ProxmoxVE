@@ -1,5 +1,60 @@
 [
   {
+    "name": "navidrome/navidrome",
+    "version": "v0.56.0",
+    "date": "2025-05-28T23:36:58Z"
+  },
+  {
+    "name": "webmin/webmin",
+    "version": "2.400",
+    "date": "2025-05-28T22:36:05Z"
+  },
+  {
+    "name": "apache/cassandra",
+    "version": "cassandra-4.0.18",
+    "date": "2025-05-28T21:45:55Z"
+  },
+  {
+    "name": "mongodb/mongo",
+    "version": "r6.0.24",
+    "date": "2025-05-28T21:25:03Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.5.3",
+    "date": "2025-05-23T15:10:33Z"
+  },
+  {
+    "name": "influxdata/influxdb",
+    "version": "v3.1.0",
+    "date": "2025-05-28T18:48:34Z"
+  },
+  {
+    "name": "nzbgetcom/nzbget",
+    "version": "v25.0",
+    "date": "2025-05-12T09:12:04Z"
+  },
+  {
+    "name": "zwave-js/zwave-js-ui",
+    "version": "v10.6.0",
+    "date": "2025-05-28T15:45:44Z"
+  },
+  {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.504.2",
+    "date": "2025-05-28T14:36:54Z"
+  },
+  {
+    "name": "kimai/kimai",
+    "version": "2.35.0",
+    "date": "2025-05-28T12:41:09Z"
+  },
+  {
+    "name": "VictoriaMetrics/VictoriaMetrics",
+    "version": "v1.23.0-victorialogs",
+    "date": "2025-05-28T12:27:36Z"
+  },
+  {
     "name": "element-hq/synapse",
     "version": "v1.130.0",
     "date": "2025-05-20T15:33:54Z"
@@ -42,17 +97,7 @@
   {
     "name": "ollama/ollama",
     "version": "v0.8.0",
-    "date": "2025-05-27T23:50:57Z"
-  },
-  {
-    "name": "mongodb/mongo",
-    "version": "r8.1.0-alpha3",
-    "date": "2025-05-27T22:33:59Z"
-  },
-  {
-    "name": "influxdata/influxdb",
-    "version": "v1.12.1rc1",
-    "date": "2025-05-27T22:00:09Z"
+    "date": "2025-05-27T19:55:15Z"
   },
   {
     "name": "bluenviron/mediamtx",
@@ -60,14 +105,9 @@
     "date": "2025-05-27T20:43:10Z"
   },
   {
-    "name": "home-assistant/core",
-    "version": "2025.5.3",
-    "date": "2025-05-23T15:10:33Z"
-  },
-  {
     "name": "runtipi/runtipi",
-    "version": "v4.1.1",
-    "date": "2025-05-16T17:37:30Z"
+    "version": "nightly",
+    "date": "2025-05-27T19:00:14Z"
   },
   {
     "name": "Threadfin/Threadfin",
@@ -83,11 +123,6 @@
     "name": "firefly-iii/firefly-iii",
     "version": "v6.2.16",
     "date": "2025-05-27T16:27:42Z"
-  },
-  {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.512",
-    "date": "2025-05-27T16:06:07Z"
   },
   {
     "name": "neo4j/neo4j",
@@ -165,11 +200,6 @@
     "date": "2025-05-26T15:04:48Z"
   },
   {
-    "name": "nzbgetcom/nzbget",
-    "version": "v25.0",
-    "date": "2025-05-12T09:12:04Z"
-  },
-  {
     "name": "jupyter/notebook",
     "version": "v7.4.3",
     "date": "2025-05-26T14:27:27Z"
@@ -178,11 +208,6 @@
     "name": "syncthing/syncthing",
     "version": "v1.29.6",
     "date": "2025-05-06T07:57:02Z"
-  },
-  {
-    "name": "VictoriaMetrics/VictoriaMetrics",
-    "version": "pmm-6401-v1.118.0",
-    "date": "2025-05-26T13:09:32Z"
   },
   {
     "name": "Graylog2/graylog2-server",
@@ -293,11 +318,6 @@
     "name": "MariaDB/server",
     "version": "mariadb-11.4.7",
     "date": "2025-05-22T14:22:22Z"
-  },
-  {
-    "name": "apache/cassandra",
-    "version": "4.0.18-tentative",
-    "date": "2025-05-22T11:46:18Z"
   },
   {
     "name": "0xERR0R/blocky",
@@ -420,11 +440,6 @@
     "date": "2025-05-18T17:01:42Z"
   },
   {
-    "name": "kimai/kimai",
-    "version": "2.34.0",
-    "date": "2025-05-18T13:22:17Z"
-  },
-  {
     "name": "hansmi/prometheus-paperless-exporter",
     "version": "v0.0.8",
     "date": "2025-05-18T11:37:31Z"
@@ -498,11 +513,6 @@
     "name": "ellite/Wallos",
     "version": "v3.1.1",
     "date": "2025-05-15T15:17:57Z"
-  },
-  {
-    "name": "zwave-js/zwave-js-ui",
-    "version": "v10.5.1",
-    "date": "2025-05-15T09:59:28Z"
   },
   {
     "name": "FlowiseAI/Flowise",
@@ -875,11 +885,6 @@
     "date": "2025-04-05T18:05:36Z"
   },
   {
-    "name": "navidrome/navidrome",
-    "version": "v0.55.2",
-    "date": "2025-04-05T12:07:32Z"
-  },
-  {
     "name": "MagicMirrorOrg/MagicMirror",
     "version": "v2.31.0",
     "date": "2025-04-01T18:12:45Z"
@@ -963,11 +968,6 @@
     "name": "Sonarr/Sonarr",
     "version": "v4.0.14.2939",
     "date": "2025-03-17T19:12:37Z"
-  },
-  {
-    "name": "webmin/webmin",
-    "version": "2.303",
-    "date": "2025-03-17T04:54:50Z"
   },
   {
     "name": "transmission/transmission",
