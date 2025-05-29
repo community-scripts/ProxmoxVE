@@ -20,6 +20,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - SearXNG fix limiter [@CrazyWolf13](https://github.com/CrazyWolf13) ([#4834](https://github.com/community-scripts/ProxmoxVE/pull/4834))
     - Docmost: add jq before nodejs install [@MickLesk](https://github.com/MickLesk) ([#4831](https://github.com/community-scripts/ProxmoxVE/pull/4831))
     - Alpine Traefik: Fix Dashboard not beign accessible [@tremor021](https://github.com/tremor021) ([#4828](https://github.com/community-scripts/ProxmoxVE/pull/4828))
     - MySQL: Fix Wrong Command [@MickLesk](https://github.com/MickLesk) ([#4820](https://github.com/community-scripts/ProxmoxVE/pull/4820))
