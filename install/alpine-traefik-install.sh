@@ -30,6 +30,7 @@ fi
 
 msg_info "Enabling and starting Traefik service"
 $STD rc-update add traefik default
+sed -i '/^command=.*/i directory="/etc/traefik"' /etc/init.d/traefik
 $STD rc-service traefik start
 msg_ok "Traefik service started"
 
