@@ -20,7 +20,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - MySQL: Fix Wrong Command [@MickLesk](https://github.com/MickLesk) ([#4820](https://github.com/community-scripts/ProxmoxVE/pull/4820))
     - docs: fix casing of OpenWrt [@GoetzGoerisch](https://github.com/GoetzGoerisch) ([#4805](https://github.com/community-scripts/ProxmoxVE/pull/4805))
+
+  - #### ✨ New Features
+
+    - Docker-VM: set individual Hostname / Disk-Space formatting [@MickLesk](https://github.com/MickLesk) ([#4821](https://github.com/community-scripts/ProxmoxVE/pull/4821))
 
 ## 2025-05-28
 
