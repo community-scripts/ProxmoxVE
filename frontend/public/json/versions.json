@@ -1,5 +1,40 @@
 [
   {
+    "name": "mattermost/mattermost",
+    "version": "v10.5.7",
+    "date": "2025-05-27T05:34:42Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "nightly",
+    "date": "2025-05-27T19:00:14Z"
+  },
+  {
+    "name": "syncthing/syncthing",
+    "version": "v1.29.6",
+    "date": "2025-05-06T07:57:02Z"
+  },
+  {
+    "name": "duplicati/duplicati",
+    "version": "v2.1.0.119-2.1.0.119_canary_2025-05-29",
+    "date": "2025-05-29T06:14:27Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1967",
+    "date": "2025-05-29T05:56:52Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.8.0",
+    "date": "2025-05-27T19:55:15Z"
+  },
+  {
+    "name": "open-webui/open-webui",
+    "version": "v0.6.12",
+    "date": "2025-05-28T23:59:40Z"
+  },
+  {
     "name": "navidrome/navidrome",
     "version": "v0.56.0",
     "date": "2025-05-28T23:36:58Z"
@@ -28,6 +63,11 @@
     "name": "influxdata/influxdb",
     "version": "v3.1.0",
     "date": "2025-05-28T18:48:34Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.2.5",
+    "date": "2025-05-28T06:49:43Z"
   },
   {
     "name": "nzbgetcom/nzbget",
@@ -70,19 +110,9 @@
     "date": "2025-05-28T09:16:41Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.2.5",
-    "date": "2025-05-28T06:49:43Z"
-  },
-  {
     "name": "Checkmk/checkmk",
     "version": "v2.2.0p43-rc1",
     "date": "2025-05-28T06:23:13Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1960",
-    "date": "2025-05-28T05:56:49Z"
   },
   {
     "name": "Athou/commafeed",
@@ -95,19 +125,9 @@
     "date": "2025-05-28T00:13:19Z"
   },
   {
-    "name": "ollama/ollama",
-    "version": "v0.8.0",
-    "date": "2025-05-27T19:55:15Z"
-  },
-  {
     "name": "bluenviron/mediamtx",
     "version": "v1.12.3",
     "date": "2025-05-27T20:43:10Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-05-27T19:00:14Z"
   },
   {
     "name": "Threadfin/Threadfin",
@@ -150,11 +170,6 @@
     "date": "2025-05-27T12:10:19Z"
   },
   {
-    "name": "mattermost/mattermost",
-    "version": "v10.5.7",
-    "date": "2025-05-27T05:34:42Z"
-  },
-  {
     "name": "n8n-io/n8n",
     "version": "n8n@1.94.1",
     "date": "2025-05-27T10:36:43Z"
@@ -168,11 +183,6 @@
     "name": "semaphoreui/semaphore",
     "version": "v2.14.12",
     "date": "2025-05-27T03:58:59Z"
-  },
-  {
-    "name": "open-webui/open-webui",
-    "version": "v0.6.11",
-    "date": "2025-05-26T22:27:26Z"
   },
   {
     "name": "Radarr/Radarr",
@@ -203,11 +213,6 @@
     "name": "jupyter/notebook",
     "version": "v7.4.3",
     "date": "2025-05-26T14:27:27Z"
-  },
-  {
-    "name": "syncthing/syncthing",
-    "version": "v1.29.6",
-    "date": "2025-05-06T07:57:02Z"
   },
   {
     "name": "Graylog2/graylog2-server",
@@ -563,11 +568,6 @@
     "name": "leiweibau/Pi.Alert",
     "version": "v2025-05-11",
     "date": "2025-05-12T19:14:57Z"
-  },
-  {
-    "name": "duplicati/duplicati",
-    "version": "v2.1.0.118-2.1.0.118_canary_2025-05-12",
-    "date": "2025-05-12T18:50:44Z"
   },
   {
     "name": "usememos/memos",
