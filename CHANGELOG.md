@@ -16,6 +16,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-05-29
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - docs: fix casing of OpenWrt [@GoetzGoerisch](https://github.com/GoetzGoerisch) ([#4805](https://github.com/community-scripts/ProxmoxVE/pull/4805))
+
 ## 2025-05-28
 
 ### 🆕 New Scripts
