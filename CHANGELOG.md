@@ -20,6 +20,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - Docmost: add jq before nodejs install [@MickLesk](https://github.com/MickLesk) ([#4831](https://github.com/community-scripts/ProxmoxVE/pull/4831))
     - Alpine Traefik: Fix Dashboard not beign accessible [@tremor021](https://github.com/tremor021) ([#4828](https://github.com/community-scripts/ProxmoxVE/pull/4828))
     - MySQL: Fix Wrong Command [@MickLesk](https://github.com/MickLesk) ([#4820](https://github.com/community-scripts/ProxmoxVE/pull/4820))
     - docs: fix casing of OpenWrt [@GoetzGoerisch](https://github.com/GoetzGoerisch) ([#4805](https://github.com/community-scripts/ProxmoxVE/pull/4805))
