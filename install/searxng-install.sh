@@ -54,7 +54,7 @@ server:
   bind_address: "0.0.0.0"
   port: 8888
   secret_key: "${SECRET_KEY}"
-  limiter: true
+  limiter: false
   image_proxy: true
 redis:
   url: "redis://127.0.0.1:6379/0"
