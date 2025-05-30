@@ -35,7 +35,7 @@ sed -i \
     s|0.0.0.0/0,::/0|& # Replace this with your subnet|" \
   -e "\|soulseek|,\|write_queue|s|^#||" \
   -e "\|jwt:|,\|ttl|s|key: ~|key: $JWT_KEY|" \
-  -e "s|^  picture|#  picture|" \
+  -e "s|^   picture|#   picture|" \
   /opt/${APPLICATION}/config/slskd.yml
 msg_ok "Setup ${APPLICATION}"
 
