@@ -5,14 +5,20 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { analytics, basePath } from "@/config/siteConfig";
 import "@/styles/globals.css";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import React from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata : Metadata = {
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+};
+
+export const metadata: Metadata = {
   title: "Proxmox VE Helper-Scripts",
   description:
     "The official website for the Proxmox VE Helper-Scripts (Community) Repository. Featuring over 300+ scripts to help you manage your Proxmox VE environment.",
@@ -41,11 +47,6 @@ export const metadata : Metadata = {
   metadataBase: new URL(`https://community-scripts.github.io/${basePath}/`),
   alternates: {
     canonical: `https://community-scripts.github.io/${basePath}/`,
-  },
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 5,
   },
   formatDetection: {
     email: false,

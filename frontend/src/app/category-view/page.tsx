@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Category } from "@/lib/types";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
@@ -182,9 +183,11 @@ const CategoryView = () => {
                     <h3 className="text-lg font-bold script-text text-center hover:text-blue-600 transition-colors duration-300">
                       {script.name}
                     </h3>
-                    <img
+                    <Image
                       src={script.logo || defaultLogo}
                       alt={script.name || "Script logo"}
+                      width={48}
+                      height={48}
                       className="h-12 w-12 object-contain mx-auto"
                     />
                     <p className="text-sm text-gray-500 text-center">
@@ -249,10 +252,12 @@ const CategoryView = () => {
                         .slice(logoIndices[category.name] || 0, (logoIndices[category.name] || 0) + MAX_LOGOS)
                         .map((script, i) => (
                           <div key={i} className="flex flex-col items-center">
-                            <img
+                            <Image
                               src={script.logo || defaultLogo}
                               alt={script.name || "Script logo"}
                               title={script.name}
+                              width={32}
+                              height={32}
                               className="h-8 w-8 object-contain cursor-pointer"
                               onClick={(e) => {
                                 e.stopPropagation();
