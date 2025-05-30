@@ -20,6 +20,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - slskd: add space in sed command [@vhsdream](https://github.com/vhsdream) ([#4853](https://github.com/community-scripts/ProxmoxVE/pull/4853))
     - Alpine Traefik: Fix working directory and plugins [@tremor021](https://github.com/tremor021) ([#4838](https://github.com/community-scripts/ProxmoxVE/pull/4838))
 
 ### 🌐 Website
