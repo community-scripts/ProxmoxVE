@@ -22,6 +22,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - Alpine Traefik: Fix working directory and plugins [@tremor021](https://github.com/tremor021) ([#4838](https://github.com/community-scripts/ProxmoxVE/pull/4838))
 
+### 🌐 Website
+
+  - #### 🐞 Bug Fixes
+
+    - Update package dependencies in package.json and package-lock.json [@enough-jainil](https://github.com/enough-jainil) ([#4845](https://github.com/community-scripts/ProxmoxVE/pull/4845))
+
 ## 2025-05-29
 
 ### 🚀 Updated Scripts
