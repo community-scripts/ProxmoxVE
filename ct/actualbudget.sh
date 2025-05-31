@@ -24,7 +24,7 @@ function update_script() {
   check_container_storage
   check_container_resources
 
-  if [[ ! -d /opt/actualbudget ]]; then
+  if [[ ! -f /opt/actualbudget_version.txt ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
