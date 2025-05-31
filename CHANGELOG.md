@@ -16,6 +16,18 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-05-31
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Omada Controller: Fix libssl url [@tremor021](https://github.com/tremor021) ([#4868](https://github.com/community-scripts/ProxmoxVE/pull/4868))
+
+### 🌐 Website
+
+  - #### 🐞 Bug Fixes
+
+    - Revert "Update package dependencies in package.json and package-lock.json (#4845) [@BramSuurdje](https://github.com/BramSuurdje) ([#4869](https://github.com/community-scripts/ProxmoxVE/pull/4869))
+
 ## 2025-05-30
 
 ### 🚀 Updated Scripts
