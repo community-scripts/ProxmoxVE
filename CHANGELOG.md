@@ -20,6 +20,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - Silverbullet: Fix Installation (wrong path) [@MickLesk](https://github.com/MickLesk) ([#4873](https://github.com/community-scripts/ProxmoxVE/pull/4873))
     - ActualBudget: fix update check (file instead of folder check) [@MickLesk](https://github.com/MickLesk) ([#4874](https://github.com/community-scripts/ProxmoxVE/pull/4874))
     - Omada Controller: Fix libssl url [@tremor021](https://github.com/tremor021) ([#4868](https://github.com/community-scripts/ProxmoxVE/pull/4868))
 
