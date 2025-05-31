@@ -62,7 +62,7 @@ msg "Installing Tailscale..."
 pct exec "$CTID" -- bash -c '
 ID=$(grep "^ID=" /etc/os-release | cut -d"=" -f2)
 VER=$(grep "^VERSION_CODENAME=" /etc/os-release | cut -d"=" -f2)
-curl -fsSL https://pkgs.tailscale.com/stable/$ID/$VER.noarmor.gpg | tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null
+wget -q -O - --no-check-certificate https://pkgs.tailscale.com/stable/$ID/$VER.noarmor.gpg | tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null
 echo "deb [signed-by=/usr/share/keyrings/tailscale-archive-keyring.gpg] https://pkgs.tailscale.com/stable/$ID $VER main" >/etc/apt/sources.list.d/tailscale.list
 apt-get update &>/dev/null
 apt-get install -y tailscale &>/dev/null
