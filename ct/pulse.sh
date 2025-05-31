@@ -23,7 +23,7 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
-  if [[ ! -d /opt/pulse-proxmox ]]; then
+  if [[ ! -d /opt/pulse ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
@@ -34,25 +34,18 @@ function update_script() {
     msg_ok "Stopped ${APP}"
 
     msg_info "Updating Pulse"
-    if [[ -f /opt/pulse-proxmox/.env ]]; then
-      cp /opt/pulse-proxmox/.env /tmp/.env.backup.pulse
-    fi
     temp_file=$(mktemp)
-    mkdir -p /opt/pulse-proxmox
-    rm -rf /opt/pulse-proxmox/*
+    mkdir -p /opt/pulse
+    rm -rf /opt/pulse/*
     curl -fsSL "https://github.com/rcourtman/Pulse/releases/download/v${RELEASE}/pulse-v${RELEASE}.tar.gz" -o "$temp_file"
-    tar zxf "$temp_file" --strip-components=1 -C /opt/pulse-proxmox
-    if [[ -f /tmp/.env.backup.pulse ]]; then
-      mv /tmp/.env.backup.pulse /opt/pulse-proxmox/.env
-    fi
+    tar zxf "$temp_file" --strip-components=1 -C /opt/pulse
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated Pulse to ${RELEASE}"
 
-    msg_info "Setting permissions for /opt/pulse-proxmox..."
-    chown -R pulse:pulse "/opt/pulse-proxmox"
-    find "/opt/pulse-proxmox" -type d -exec chmod 755 {} \;
-    find "/opt/pulse-proxmox" -type f -exec chmod 644 {} \;
-    chmod 600 /opt/pulse-proxmox/.env
+    msg_info "Setting permissions for /opt/pulse..."
+    chown -R pulse:pulse "/opt/pulse"
+    find "/opt/pulse" -type d -exec chmod 755 {} \;
+    find "/opt/pulse" -type f -exec chmod 644 {} \;
     msg_ok "Set permissions."
 
     msg_info "Starting ${APP}"

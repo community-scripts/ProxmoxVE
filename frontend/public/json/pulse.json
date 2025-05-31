@@ -12,7 +12,7 @@
   "documentation": null,
   "website": "https://github.com/rcourtman/Pulse",
   "logo": "https://raw.githubusercontent.com/rcourtman/Pulse/main/src/public/logos/pulse-logo-256x256.png",
-  "config_path": "/opt/pulse-proxmox/.env",
+  "config_path": "/opt/pulse/.env",
   "description": "A lightweight monitoring application for Proxmox VE that displays real-time status for VMs and containers via a simple web interface.",
   "install_methods": [
     {
@@ -34,6 +34,10 @@
   "notes": [
     {
       "text": "Create Proxmox-API-Token first: `https://github.com/rcourtman/Pulse?tab=readme-ov-file#creating-a-proxmox-api-token`",
+      "type": "Info"
+    },
+    {
+      "text": "After installation, access the web interface to configure your Proxmox connection details through the built-in setup wizard",
       "type": "Info"
     }
   ]
