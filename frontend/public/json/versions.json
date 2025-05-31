@@ -1,5 +1,55 @@
 [
   {
+    "name": "goauthentik/authentik",
+    "version": "version/2025.4.1",
+    "date": "2025-05-15T17:48:29Z"
+  },
+  {
+    "name": "pi-hole/pi-hole",
+    "version": "v6.1",
+    "date": "2025-05-30T22:07:45Z"
+  },
+  {
+    "name": "moghtech/komodo",
+    "version": "v1.18.0",
+    "date": "2025-05-30T20:12:54Z"
+  },
+  {
+    "name": "homarr-labs/homarr",
+    "version": "v1.22.0",
+    "date": "2025-05-30T19:17:15Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.21.2",
+    "date": "2025-05-30T15:17:34Z"
+  },
+  {
+    "name": "element-hq/synapse",
+    "version": "test-pro",
+    "date": "2025-05-30T14:53:00Z"
+  },
+  {
+    "name": "icereed/paperless-gpt",
+    "version": "v0.20.0",
+    "date": "2025-05-30T14:39:51Z"
+  },
+  {
+    "name": "evcc-io/evcc",
+    "version": "0.204.0",
+    "date": "2025-05-30T14:39:02Z"
+  },
+  {
+    "name": "wazuh/wazuh",
+    "version": "coverity-w22-4.13.0",
+    "date": "2025-05-26T15:04:48Z"
+  },
+  {
+    "name": "nzbgetcom/nzbget",
+    "version": "v25.0",
+    "date": "2025-05-12T09:12:04Z"
+  },
+  {
     "name": "home-assistant/core",
     "version": "2025.5.3",
     "date": "2025-05-23T15:10:33Z"
@@ -80,19 +130,14 @@
     "date": "2025-05-29T14:39:17Z"
   },
   {
-    "name": "nzbgetcom/nzbget",
-    "version": "v25.0",
-    "date": "2025-05-12T09:12:04Z"
-  },
-  {
     "name": "zwave-js/zwave-js-ui",
     "version": "v10.6.1",
     "date": "2025-05-29T13:36:09Z"
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v4.1.1",
-    "date": "2025-05-16T17:37:30Z"
+    "version": "nightly",
+    "date": "2025-05-29T13:02:30Z"
   },
   {
     "name": "duplicati/duplicati",
@@ -133,11 +178,6 @@
     "name": "kimai/kimai",
     "version": "2.35.0",
     "date": "2025-05-28T12:41:09Z"
-  },
-  {
-    "name": "element-hq/synapse",
-    "version": "v1.130.0",
-    "date": "2025-05-20T15:33:54Z"
   },
   {
     "name": "pocket-id/pocket-id",
@@ -230,11 +270,6 @@
     "date": "2025-03-10T06:39:11Z"
   },
   {
-    "name": "wazuh/wazuh",
-    "version": "coverity-w22-4.13.0",
-    "date": "2025-05-26T15:04:48Z"
-  },
-  {
     "name": "jupyter/notebook",
     "version": "v7.4.3",
     "date": "2025-05-26T14:27:27Z"
@@ -263,11 +298,6 @@
     "name": "stonith404/pingvin-share",
     "version": "v1.13.0",
     "date": "2025-05-25T20:21:13Z"
-  },
-  {
-    "name": "msgbyte/tianji",
-    "version": "v1.21.0",
-    "date": "2025-05-25T16:41:43Z"
   },
   {
     "name": "Prowlarr/Prowlarr",
@@ -313,11 +343,6 @@
     "name": "traccar/traccar",
     "version": "v6.7.1",
     "date": "2025-05-24T04:51:02Z"
-  },
-  {
-    "name": "homarr-labs/homarr",
-    "version": "v1.21.0",
-    "date": "2025-05-23T19:17:15Z"
   },
   {
     "name": "docker/compose",
@@ -400,11 +425,6 @@
     "date": "2025-05-21T04:12:44Z"
   },
   {
-    "name": "icereed/paperless-gpt",
-    "version": "v0.19.0",
-    "date": "2025-05-21T03:46:14Z"
-  },
-  {
     "name": "matze/wastebin",
     "version": "3.1.0",
     "date": "2025-05-20T19:20:03Z"
@@ -480,11 +500,6 @@
     "date": "2025-05-17T10:10:36Z"
   },
   {
-    "name": "evcc-io/evcc",
-    "version": "0.203.6",
-    "date": "2025-05-17T07:30:49Z"
-  },
-  {
     "name": "prometheus/prometheus",
     "version": "v0.304.0",
     "date": "2025-05-17T07:29:09Z"
@@ -518,11 +533,6 @@
     "name": "coder/code-server",
     "version": "v4.100.2",
     "date": "2025-05-15T23:02:46Z"
-  },
-  {
-    "name": "goauthentik/authentik",
-    "version": "version/2025.4.1",
-    "date": "2025-05-15T17:48:29Z"
   },
   {
     "name": "cloudflare/cloudflared",
@@ -668,11 +678,6 @@
     "name": "apache/couchdb",
     "version": "3.5.0",
     "date": "2025-05-05T16:28:24Z"
-  },
-  {
-    "name": "moghtech/komodo",
-    "version": "v1.17.5",
-    "date": "2025-05-04T22:17:06Z"
   },
   {
     "name": "Readarr/Readarr",
@@ -908,11 +913,6 @@
     "name": "louislam/dockge",
     "version": "1.5.0",
     "date": "2025-03-30T17:42:59Z"
-  },
-  {
-    "name": "pi-hole/pi-hole",
-    "version": "v6.0.6",
-    "date": "2025-03-30T16:59:06Z"
   },
   {
     "name": "aceberg/WatchYourLAN",
