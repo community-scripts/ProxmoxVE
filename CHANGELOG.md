@@ -24,6 +24,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🌐 Website
 
+  - Remove Authentik script [@tremor021](https://github.com/tremor021) ([#4867](https://github.com/community-scripts/ProxmoxVE/pull/4867))
+
   - #### 🐞 Bug Fixes
 
     - Revert "Update package dependencies in package.json and package-lock.json (#4845) [@BramSuurdje](https://github.com/BramSuurdje) ([#4869](https://github.com/community-scripts/ProxmoxVE/pull/4869))
