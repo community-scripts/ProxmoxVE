@@ -16,6 +16,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-06-01
 
+### 🆕 New Scripts
+
+  - immich ([#4886](https://github.com/community-scripts/ProxmoxVE/pull/4886))
+
 ## 2025-05-31
 
 ### 🚀 Updated Scripts
