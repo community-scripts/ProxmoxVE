@@ -5,7 +5,7 @@ import { Script } from "@/lib/types";
 
 export default function DefaultPassword({ item }: { item: Script }) {
   const { username, password } = item.default_credentials;
-  const hasDefaultLogin = username && password;
+  const hasDefaultLogin = username || password;
 
   if (!hasDefaultLogin) return null;
 
@@ -23,14 +23,17 @@ export default function DefaultPassword({ item }: { item: Script }) {
         <p className="mb-2 text-sm">
           You can use the following credentials to login to the {item.name} {item.type}.
         </p>
-        {["username", "password"].map((type) => (
-          <div key={type} className="text-sm">
-            {type.charAt(0).toUpperCase() + type.slice(1)}:{" "}
-            <Button variant="secondary" size="null" onClick={() => copyCredential(type as "username" | "password")}>
-              {item.default_credentials[type as "username" | "password"]}
-            </Button>
-          </div>
-        ))}
+        {["username", "password"].map((type) => {
+          const value = item.default_credentials[type as "username" | "password"];
+          return value && value.trim() !== "" ? (
+            <div key={type} className="text-sm">
+              {type.charAt(0).toUpperCase() + type.slice(1)}:{" "}
+              <Button variant="secondary" size="null" onClick={() => copyCredential(type as "username" | "password")}>
+                {value}
+              </Button>
+            </div>
+          ) : null;
+        })}
       </div>
     </div>
   );
