@@ -20,6 +20,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - immich ([#4886](https://github.com/community-scripts/ProxmoxVE/pull/4886))
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - AdventureLog: add login credentials info [@tremor021](https://github.com/tremor021) ([#4887](https://github.com/community-scripts/ProxmoxVE/pull/4887))
+
 ## 2025-05-31
 
 ### 🚀 Updated Scripts
