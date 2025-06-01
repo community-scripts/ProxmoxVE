@@ -61,7 +61,15 @@ pidfile="/var/run/tinyauth.pid"
 
 start_pre() {
     if [ -f "/opt/tinyauth/.env" ]; then
-        export \$(grep -v '^#' /opt/tinyauth/.env | xargs)
+        while IFS= read -r line || [ -n "$line" ]; do
+            [ -z "$line" ] && continue
+            case "$line" in
+                '#'*)
+                    continue
+                    ;;
+            esac
+            export "$line"
+        done < "/opt/tinyauth/.env"
     fi
 }
 
