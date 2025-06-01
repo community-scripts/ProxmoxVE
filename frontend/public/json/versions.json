@@ -1,5 +1,35 @@
 [
   {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.16",
+    "date": "2025-05-27T16:27:42Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.21.3",
+    "date": "2025-06-01T10:27:50Z"
+  },
+  {
+    "name": "evcc-io/evcc",
+    "version": "0.204.1",
+    "date": "2025-06-01T08:19:18Z"
+  },
+  {
+    "name": "Radarr/Radarr",
+    "version": "v5.25.0.10024",
+    "date": "2025-05-26T21:58:37Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1975",
+    "date": "2025-06-01T05:58:55Z"
+  },
+  {
+    "name": "gethomepage/homepage",
+    "version": "v1.3.0",
+    "date": "2025-06-01T02:03:31Z"
+  },
+  {
     "name": "home-assistant/core",
     "version": "2025.5.3",
     "date": "2025-05-23T15:10:33Z"
@@ -30,14 +60,9 @@
     "date": "2024-08-29T22:32:51Z"
   },
   {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.16",
-    "date": "2025-05-27T16:27:42Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1974",
-    "date": "2025-05-31T05:50:58Z"
+    "name": "keycloak/keycloak",
+    "version": "26.2.5",
+    "date": "2025-05-28T06:49:43Z"
   },
   {
     "name": "goauthentik/authentik",
@@ -65,11 +90,6 @@
     "date": "2025-05-30T16:49:17Z"
   },
   {
-    "name": "msgbyte/tianji",
-    "version": "v1.21.2",
-    "date": "2025-05-30T15:17:34Z"
-  },
-  {
     "name": "element-hq/synapse",
     "version": "test-pro",
     "date": "2025-05-30T14:53:00Z"
@@ -80,19 +100,9 @@
     "date": "2025-05-30T14:39:51Z"
   },
   {
-    "name": "evcc-io/evcc",
-    "version": "0.204.0",
-    "date": "2025-05-30T14:39:02Z"
-  },
-  {
     "name": "wazuh/wazuh",
     "version": "coverity-w22-4.13.0",
     "date": "2025-05-26T15:04:48Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.2.5",
-    "date": "2025-05-28T06:49:43Z"
   },
   {
     "name": "nzbgetcom/nzbget",
@@ -273,11 +283,6 @@
     "name": "semaphoreui/semaphore",
     "version": "v2.14.12",
     "date": "2025-05-27T03:58:59Z"
-  },
-  {
-    "name": "Radarr/Radarr",
-    "version": "v5.25.0.10024",
-    "date": "2025-05-26T21:58:37Z"
   },
   {
     "name": "dani-garcia/vaultwarden",
@@ -748,11 +753,6 @@
     "name": "deluge-torrent/deluge",
     "version": "deluge-2.2.0",
     "date": "2025-04-28T21:31:06Z"
-  },
-  {
-    "name": "gethomepage/homepage",
-    "version": "v1.2.0",
-    "date": "2025-04-28T17:55:01Z"
   },
   {
     "name": "karakeep-app/karakeep",
