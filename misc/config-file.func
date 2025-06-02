@@ -618,6 +618,24 @@ config_file() {
     fi
   fi
 
+  if [[ -n "$ENABLE_FUSE" ]]; then
+    if [[ "$ENABLE_FUSE" == "yes" ]]; then
+      echo -e "${FUSE}${BOLD}${DGN}Enable FUSE: ${BGN}Yes${CL}"
+    elif [[ "$ENABLE_FUSE" == "no" ]]; then
+      echo -e "${FUSE}${BOLD}${DGN}Enable FUSE: ${BGN}No${CL}"
+    else
+      msg_error "Enable FUSE needs to be 'yes' or 'no', was ${ENABLE_FUSE}"
+      exit
+    fi
+  else
+    if (whiptail --backtitle "Proxmox VE Helper Scripts" --defaultno --title "FUSE" --yesno "Enable FUSE?" 10 58); then
+      ENABLE_FUSE="yes"
+    else
+      ENABLE_FUSE="no"
+    fi
+    echo -e "${FUSE}${BOLD}${DGN}Enable FUSE: ${BGN}$ENABLE_FUSE${CL}"
+  fi
+
   if [[ -n "${VERBOSE-}" ]]; then
     if [[ "$VERBOSE" == "yes" ]]; then
       echo -e "${SEARCH}${BOLD}${DGN}Verbose Mode: ${BGN}$VERBOSE${CL}"

@@ -385,7 +385,7 @@ HN="${HN}"
 BRG="${BRG}"
 APT_CACHER_IP="${APT_CACHER_IP:-none}"
 DISABLEIP6="${DISABLEIP6}"
-PW="${PW:-none}"
+PW='${PW:-none}'
 SSH="${SSH}"
 SSH_AUTHORIZED_KEY="${SSH_AUTHORIZED_KEY}"
 VERBOSE="${VERBOSE}"
@@ -397,6 +397,7 @@ SD="${SD:-none}"
 MAC="${MAC:-none}"
 NS="${NS:-none}"
 NET="${NET}"
+FUSE="${ENABLE_FUSE}"
 
 EOF
       echo -e "${INFO}${BOLD}${GN}Writing configuration to ${FILEPATH}${CL}"
@@ -416,7 +417,7 @@ HN="${HN}"
 BRG="${BRG}"
 APT_CACHER_IP="${APT_CACHER_IP:-none}"
 DISABLEIP6="${DISABLEIP6}"
-PW="${PW:-none}"
+PW='${PW:-none}'
 SSH="${SSH}"
 SSH_AUTHORIZED_KEY="${SSH_AUTHORIZED_KEY}"
 VERBOSE="${VERBOSE}"
@@ -428,6 +429,7 @@ SD="${SD:-none}"
 MAC="${MAC:-none}"
 NS="${NS:-none}"
 NET="${NET}"
+FUSE="${ENABLE_FUSE}"
 
 EOF
         echo -e "${INFO}${BOLD}${GN}Writing configuration to ${FILEPATH}${CL}"
@@ -795,7 +797,7 @@ advanced_settings() {
     echo -e "${ROOTSSH}${BOLD}${DGN}Root SSH Access: ${BGN}$SSH${CL}"
   fi
 
-  if (whiptail --backtitle "[dev] Proxmox VE Helper Scripts" --defaultno --title "FUSE Support" --yesno "Enable FUSE support?\nRequired for tools like rclone, mergerfs, AppImage, etc." 10 58); then
+  if (whiptail --backtitle "Proxmox VE Helper Scripts" --defaultno --title "FUSE Support" --yesno "Enable FUSE support?\nRequired for tools like rclone, mergerfs, AppImage, etc." 10 58); then
     ENABLE_FUSE="yes"
   else
     ENABLE_FUSE="no"
