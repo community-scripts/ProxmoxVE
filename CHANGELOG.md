@@ -16,6 +16,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-06-02
 
+### 🆕 New Scripts
+
+  - core.func - Centralized Utility and Trap Framework for Community Scripts [@MickLesk](https://github.com/MickLesk) ([#4907](https://github.com/community-scripts/ProxmoxVE/pull/4907))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
