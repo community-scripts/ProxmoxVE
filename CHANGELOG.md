@@ -16,6 +16,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-06-02
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Fix alpine-tinyauth env configuration parsing logic [@gokussjx](https://github.com/gokussjx) ([#4901](https://github.com/community-scripts/ProxmoxVE/pull/4901))
+
 ## 2025-06-01
 
 ### 🆕 New Scripts
