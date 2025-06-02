@@ -16,15 +16,15 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-06-02
 
-### 🆕 New Scripts
-
-  - core.func - Centralized Utility and Trap Framework for Community Scripts [@MickLesk](https://github.com/MickLesk) ([#4907](https://github.com/community-scripts/ProxmoxVE/pull/4907))
-
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
 
     - Fix alpine-tinyauth env configuration parsing logic [@gokussjx](https://github.com/gokussjx) ([#4901](https://github.com/community-scripts/ProxmoxVE/pull/4901))
+
+  - #### 💥 Breaking Changes
+
+    - make Pulse installation non-interactive [@rcourtman](https://github.com/rcourtman) ([#4848](https://github.com/community-scripts/ProxmoxVE/pull/4848))
 
 ### 🌐 Website
 
