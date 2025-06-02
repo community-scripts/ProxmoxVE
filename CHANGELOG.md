@@ -22,9 +22,6 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
-  - [core] tools.func: Bugfix old gpg key for mysql & little improvements [@MickLesk](https://github.com/MickLesk) ([#4916](https://github.com/community-scripts/ProxmoxVE/pull/4916))
-- [core] Varius fixes to Config file feature [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4924](https://github.com/community-scripts/ProxmoxVE/pull/4924))
-
   - #### 🐞 Bug Fixes
 
     - MySQL/MariaDB: fix create user with password [@MickLesk](https://github.com/MickLesk) ([#4918](https://github.com/community-scripts/ProxmoxVE/pull/4918))
@@ -33,6 +30,13 @@ All LXC instances created using this repository come pre-installed with Midnight
   - #### 💥 Breaking Changes
 
     - make Pulse installation non-interactive [@rcourtman](https://github.com/rcourtman) ([#4848](https://github.com/community-scripts/ProxmoxVE/pull/4848))
+
+### 🧰 Maintenance
+
+  - #### 💾 Core
+
+    - [core] tools.func: Bugfix old gpg key for mysql & little improvements [@MickLesk](https://github.com/MickLesk) ([#4916](https://github.com/community-scripts/ProxmoxVE/pull/4916))
+    - [core] Varius fixes to Config file feature [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4924](https://github.com/community-scripts/ProxmoxVE/pull/4924))
 
 ### 🌐 Website
 
