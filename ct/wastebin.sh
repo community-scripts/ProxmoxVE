@@ -64,8 +64,8 @@ EOF
 
     msg_info "Updating Wastebin"
     temp_file=$(mktemp)
-    curl -fsSL "https://github.com/matze/wastebin/releases/download/${RELEASE}/wastebin_${RELEASE}_x86_64-unknown-linux-musl.zip" -o "$temp_file"
-    $STD unzip -o $temp_file
+    curl -fsSL "https://github.com/matze/wastebin/releases/download/${RELEASE}/wastebin_${RELEASE}_x86_64-unknown-linux-musl.tar.zst" -o "$temp_file"
+    tar -xf $temp_file
     cp -f wastebin /opt/wastebin/
     chmod +x /opt/wastebin/wastebin
     echo "${RELEASE}" >/opt/${APP}_version.txt
