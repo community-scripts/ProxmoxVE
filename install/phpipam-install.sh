@@ -43,7 +43,7 @@ RELEASE=$(curl -fsSL https://api.github.com/repos/phpipam/phpipam/releases/lates
 cd /opt
 curl -fsSL "https://github.com/phpipam/phpipam/releases/download/v${RELEASE}/phpipam-v${RELEASE}.zip" -o "phpipam-v${RELEASE}.zip"
 $STD unzip "phpipam-v${RELEASE}.zip"
-mariadb -u root "${DB_NAME}" </opt/phpipam/db/SCHEMA.sql
+$STD mariadb -u root "${DB_NAME}" </opt/phpipam/db/SCHEMA.sql
 cp /opt/phpipam/config.dist.php /opt/phpipam/config.php
 sed -i -e "s/\(\$disable_installer = \).*/\1true;/" \
   -e "s/\(\$db\['user'\] = \).*/\1'$DB_USER';/" \

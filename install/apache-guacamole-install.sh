@@ -76,9 +76,9 @@ msg_info "Setup Database"
 DB_NAME=guacamole_db
 DB_USER=guacamole_user
 DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
-mariadb -u root -e "CREATE DATABASE $DB_NAME;"
-mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
-mariadb -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
+$STD mariadb -u root -e "CREATE DATABASE $DB_NAME;"
+$STD mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
+$STD mariadb -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
 {
   echo "Guacamole-Credentials"
   echo "Database User: $DB_USER"

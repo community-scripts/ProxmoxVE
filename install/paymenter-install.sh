@@ -58,9 +58,9 @@ DB_NAME=paymenter
 DB_USER=paymenter
 DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql mysql
-mariadb -u root -e "CREATE DATABASE $DB_NAME;"
-mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
-mariadb -u root -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost' WITH GRANT OPTION;"
+$STD mariadb -u root -e "CREATE DATABASE $DB_NAME;"
+$STD mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
+$STD mariadb -u root -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost' WITH GRANT OPTION;"
 {
   echo "Paymenter Database Credentials"
   echo "Database: $DB_NAME"

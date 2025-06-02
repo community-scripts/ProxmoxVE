@@ -28,9 +28,9 @@ msg_info "Setting up Database"
 DB_NAME=bookstack
 DB_USER=bookstack
 DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
-$STD sudo mariadb -u root -e "CREATE DATABASE $DB_NAME;"
-$STD sudo mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
-$STD sudo mariadb -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
+$STD mariadb -u root -e "CREATE DATABASE $DB_NAME;"
+$STD mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
+$STD mariadb -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
 {
   echo "Bookstack-Credentials"
   echo "Bookstack Database User: $DB_USER"

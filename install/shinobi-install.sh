@@ -43,7 +43,7 @@ sqlpass="root"
 echo "mariadb-server mariadb-server/root_password password $sqlpass" | debconf-set-selections
 echo "mariadb-server mariadb-server/root_password_again password $sqlpass" | debconf-set-selections
 service mysql start
-mariadb -u "$sqluser" -p"$sqlpass" -e "source sql/user.sql" || true
+$STD mariadb -u "$sqluser" -p"$sqlpass" -e "source sql/user.sql" || true
 msg_ok "Installed Database"
 
 msg_info "Installing Shinobi"
