@@ -35,6 +35,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 💾 Core
 
+    - [core] add hw-accelerated for immich, openwebui / remove scrypted [@MickLesk](https://github.com/MickLesk) ([#4927](https://github.com/community-scripts/ProxmoxVE/pull/4927))
     - [core] tools.func: Bugfix old gpg key for mysql & little improvements [@MickLesk](https://github.com/MickLesk) ([#4916](https://github.com/community-scripts/ProxmoxVE/pull/4916))
     - [core] Varius fixes to Config file feature [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#4924](https://github.com/community-scripts/ProxmoxVE/pull/4924))
 
