@@ -1141,7 +1141,7 @@ EOF
   fi
 
   if [ "$CT_TYPE" == "0" ]; then
-    if [[ "$APP" == "Channels" || "$APP" == "Emby" || "$APP" == "ErsatzTV" || "$APP" == "Frigate" || "$APP" == "Jellyfin" || "$APP" == "Plex" || "$APP" == "Scrypted" || "$APP" == "Tdarr" || "$APP" == "Unmanic" || "$APP" == "Ollama" || "$APP" == "FileFlows" ]]; then
+    if [[ "$APP" == "Channels" || "$APP" == "Emby" || "$APP" == "ErsatzTV" || "$APP" == "Frigate" || "$APP" == "Jellyfin" || "$APP" == "Plex" || "$APP" == "Immich" || "$APP" == "Tdarr" || "$APP" == "Open WebUI" || "$APP" == "Unmanic" || "$APP" == "Ollama" || "$APP" == "FileFlows" ]]; then
       cat <<EOF >>"$LXC_CONFIG"
 # VAAPI hardware transcoding
 lxc.cgroup2.devices.allow: c 226:0 rwm
@@ -1153,7 +1153,7 @@ lxc.mount.entry: /dev/dri/renderD128 dev/dri/renderD128 none bind,optional,creat
 EOF
     fi
   else
-    if [[ "$APP" == "Channels" || "$APP" == "Emby" || "$APP" == "ErsatzTV" || "$APP" == "Frigate" || "$APP" == "Jellyfin" || "$APP" == "Plex" || "$APP" == "Scrypted" || "$APP" == "Tdarr" || "$APP" == "Unmanic" || "$APP" == "Ollama" || "$APP" == "FileFlows" ]]; then
+    if [[ "$APP" == "Channels" || "$APP" == "Emby" || "$APP" == "ErsatzTV" || "$APP" == "Frigate" || "$APP" == "Jellyfin" || "$APP" == "Plex" || "$APP" == "Immich" || "$APP" == "Tdarr" || "$APP" == "Open WebUI" || "$APP" == "Unmanic" || "$APP" == "Ollama" || "$APP" == "FileFlows" ]]; then
       if [[ -e "/dev/dri/renderD128" ]]; then
         if [[ -e "/dev/dri/card0" ]]; then
           cat <<EOF >>"$LXC_CONFIG"
