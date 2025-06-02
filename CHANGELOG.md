@@ -22,6 +22,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
+  - tools.func: Bugfix old gpg key for mysql & little improvements [@MickLesk](https://github.com/MickLesk) ([#4916](https://github.com/community-scripts/ProxmoxVE/pull/4916))
+
   - #### 🐞 Bug Fixes
 
     - Fix alpine-tinyauth env configuration parsing logic [@gokussjx](https://github.com/gokussjx) ([#4901](https://github.com/community-scripts/ProxmoxVE/pull/4901))
