@@ -16,8 +16,8 @@ update_os
 msg_info "Installing Wastebin"
 temp_file=$(mktemp)
 RELEASE=$(curl -fsSL https://api.github.com/repos/matze/wastebin/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-curl -fsSL "https://github.com/matze/wastebin/releases/download/${RELEASE}/wastebin_${RELEASE}_x86_64-unknown-linux-musl.zip" -o "$temp_file"
-$STD unzip $temp_file
+curl -fsSL "https://github.com/matze/wastebin/releases/download/${RELEASE}/wastebin_${RELEASE}_x86_64-unknown-linux-musl.tar.zst" -o "$temp_file"
+tar -xf $temp_file
 mkdir -p /opt/wastebin
 mv wastebin /opt/wastebin/
 chmod +x /opt/wastebin/wastebin
