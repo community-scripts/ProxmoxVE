@@ -22,6 +22,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - Fix alpine-tinyauth env configuration parsing logic [@gokussjx](https://github.com/gokussjx) ([#4901](https://github.com/community-scripts/ProxmoxVE/pull/4901))
 
+### 🌐 Website
+
+  - #### 🐞 Bug Fixes
+
+    - Display default password even if there isn't a default username [@0risc](https://github.com/0risc) ([#4900](https://github.com/community-scripts/ProxmoxVE/pull/4900))
+
 ## 2025-06-01
 
 ### 🆕 New Scripts
