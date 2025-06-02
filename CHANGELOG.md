@@ -26,6 +26,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - MySQL/MariaDB: fix create user with password [@MickLesk](https://github.com/MickLesk) ([#4918](https://github.com/community-scripts/ProxmoxVE/pull/4918))
     - Fix alpine-tinyauth env configuration parsing logic [@gokussjx](https://github.com/gokussjx) ([#4901](https://github.com/community-scripts/ProxmoxVE/pull/4901))
 
   - #### 💥 Breaking Changes
