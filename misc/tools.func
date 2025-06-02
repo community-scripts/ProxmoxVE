@@ -302,28 +302,34 @@ install_mysql() {
       msg_info "MySQL $CURRENT_VERSION found, replacing with $MYSQL_VERSION"
       NEED_INSTALL=true
     else
-      msg_ok "MySQL $MYSQL_VERSION already installed"
+      # Check for patch-level updates
+      if apt list --upgradable 2>/dev/null | grep -q '^mysql-server/'; then
+        msg_info "MySQL $CURRENT_VERSION available for upgrade"
+        $STD apt-get update
+        $STD apt-get install --only-upgrade -y mysql-server
+        msg_ok "MySQL upgraded"
+      fi
+      return
     fi
   else
-    msg_info "MySQL not found, installing version $MYSQL_VERSION"
+    msg_info "Installing MySQL $MYSQL_VERSION"
     NEED_INSTALL=true
   fi
 
   if [[ "$NEED_INSTALL" == true ]]; then
-    msg_info "Removing conflicting MySQL packages"
     $STD systemctl stop mysql >/dev/null 2>&1 || true
-    $STD apt-get purge -y 'mysql*'
+    $STD apt-get purge -y "^mysql-server.*" "^mysql-client.*" "^mysql-common.*" || true
     rm -f /etc/apt/sources.list.d/mysql.list /etc/apt/trusted.gpg.d/mysql.gpg
 
-    msg_info "Setting up MySQL APT Repository"
+    local DISTRO_CODENAME
     DISTRO_CODENAME="$(awk -F= '/VERSION_CODENAME/ { print $2 }' /etc/os-release)"
-    curl -fsSL https://repo.mysql.com/RPM-GPG-KEY-mysql-2022 | gpg --dearmor -o /etc/apt/trusted.gpg.d/mysql.gpg
+    curl -fsSL https://repo.mysql.com/RPM-GPG-KEY-mysql-2023 | gpg --dearmor -o /etc/apt/trusted.gpg.d/mysql.gpg
     echo "deb [signed-by=/etc/apt/trusted.gpg.d/mysql.gpg] https://repo.mysql.com/apt/debian/ ${DISTRO_CODENAME} mysql-${MYSQL_VERSION}" \
       >/etc/apt/sources.list.d/mysql.list
 
+    export DEBIAN_FRONTEND=noninteractive
     $STD apt-get update
     $STD apt-get install -y mysql-server
-
     msg_ok "Installed MySQL $MYSQL_VERSION"
   fi
 }
