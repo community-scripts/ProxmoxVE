@@ -37,7 +37,7 @@ function update_script() {
   fetch_and_deploy_gh_release "YuukanOO/seelf"
   cd /opt/seelf
   $STD make build
-  msg_ok "Updated $APP to v${RELEASE}"
+  msg_ok "Updated $APP"
 
   msg_info "Starting $APP"
   systemctl start seelf
