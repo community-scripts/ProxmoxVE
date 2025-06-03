@@ -1,8 +1,43 @@
 [
   {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.95.3",
+    "date": "2025-06-03T11:09:42Z"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2025.5.2",
+    "date": "2025-06-03T08:45:14Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.2.0p43-rc4",
+    "date": "2025-06-03T06:59:25Z"
+  },
+  {
+    "name": "openobserve/openobserve",
+    "version": "v0.0.1-dev",
+    "date": "2025-06-03T06:50:25Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1984",
+    "date": "2025-06-03T06:09:13Z"
+  },
+  {
+    "name": "FlareSolverr/FlareSolverr",
+    "version": "v3.3.22",
+    "date": "2025-06-03T04:54:48Z"
+  },
+  {
     "name": "FreshRSS/FreshRSS",
     "version": "1.26.3",
     "date": "2025-06-02T22:00:14Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.2.5",
+    "date": "2025-05-28T06:49:43Z"
   },
   {
     "name": "TandoorRecipes/recipes",
@@ -40,11 +75,6 @@
     "date": "2025-05-29T15:35:16Z"
   },
   {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.94.1",
-    "date": "2025-05-27T10:36:43Z"
-  },
-  {
     "name": "NodeBB/NodeBB",
     "version": "v4.4.2",
     "date": "2025-06-02T15:06:31Z"
@@ -53,16 +83,6 @@
     "name": "wazuh/wazuh",
     "version": "coverity-w22-4.13.0",
     "date": "2025-05-26T15:04:48Z"
-  },
-  {
-    "name": "Checkmk/checkmk",
-    "version": "v2.2.0p43-rc3",
-    "date": "2025-06-02T13:53:47Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.2.5",
-    "date": "2025-05-28T06:49:43Z"
   },
   {
     "name": "inventree/InvenTree",
@@ -78,16 +98,6 @@
     "name": "zitadel/zitadel",
     "version": "v2.68.11",
     "date": "2025-06-02T09:32:57Z"
-  },
-  {
-    "name": "openobserve/openobserve",
-    "version": "v0.0.0-dev",
-    "date": "2025-06-02T08:16:35Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1978",
-    "date": "2025-06-02T05:52:50Z"
   },
   {
     "name": "firefly-iii/firefly-iii",
@@ -338,11 +348,6 @@
     "name": "AdguardTeam/AdGuardHome",
     "version": "v0.107.62",
     "date": "2025-05-27T12:10:19Z"
-  },
-  {
-    "name": "esphome/esphome",
-    "version": "2025.5.1",
-    "date": "2025-05-27T09:01:29Z"
   },
   {
     "name": "semaphoreui/semaphore",
@@ -1198,11 +1203,6 @@
     "name": "hywax/mafl",
     "version": "v0.15.4",
     "date": "2024-07-13T11:03:43Z"
-  },
-  {
-    "name": "FlareSolverr/FlareSolverr",
-    "version": "v3.3.21",
-    "date": "2024-06-26T01:14:46Z"
   },
   {
     "name": "Forceu/barcodebuddy",
