@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Copyright (c) 2021-2025 community-scripts ORG
-# Author: tremor021
+# Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/YuukanOO/seelf
 
@@ -21,21 +21,17 @@ msg_ok "Installed Dependencies"
 
 install_go
 NODE_VERSION="22" install_node_and_modules
+fetch_and_deploy_gh_release "YuukanOO/seelf"
 
 msg_info "Setting up seelf. Patience"
-RELEASE=$(curl -fsSL https://api.github.com/repos/YuukanOO/seelf/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/YuukanOO/seelf/archive/refs/tags/v${RELEASE}.tar.gz" -o "v${RELEASE}.tar.gz"
-tar -xzf v"${RELEASE}".tar.gz
-mv seelf-"${RELEASE}"/ /opt/seelf
 cd /opt/seelf
 $STD make build
 PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
+mkdir -p /opt/seelf/data
 {
   echo "ADMIN_EMAIL=admin@example.com"
   echo "ADMIN_PASSWORD=$PASS"
 } | tee .env ~/seelf.creds >/dev/null
-
-echo "${RELEASE}" >/opt/seelf_version.txt
 SEELF_ADMIN_EMAIL=admin@example.com SEELF_ADMIN_PASSWORD=$PASS ./seelf serve &>/dev/null &
 sleep 5
 kill $!
@@ -51,8 +47,10 @@ After=network.target
 Type=simple
 User=root
 Group=root
+EnvironmentFile=/opt/seelf/.env
+Environment=DATA_PATH=/opt/seelf/data
 WorkingDirectory=/opt/seelf
-ExecStart=/opt/seelf/./seelf serve
+ExecStart=/opt/seelf/./seelf -c data/conf.yml serve
 Restart=always
 
 [Install]
@@ -64,13 +62,7 @@ msg_ok "Created Service"
 motd_ssh
 customize
 
-# Cleanup
 msg_info "Cleaning up"
-rm -f ~/v"${RELEASE}".tar.gz
-rm -f "$temp_file"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
-
-motd_ssh
-customize
