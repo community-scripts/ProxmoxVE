@@ -22,6 +22,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - Kasm: Swap fix [@omiinaya](https://github.com/omiinaya) ([#4937](https://github.com/community-scripts/ProxmoxVE/pull/4937))
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - netbox: correct website URL  [@theincrediblenoone](https://github.com/theincrediblenoone) ([#4952](https://github.com/community-scripts/ProxmoxVE/pull/4952))
+
 ## 2025-06-02
 
 ### 🆕 New Scripts
