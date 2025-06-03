@@ -16,6 +16,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-06-03
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Kasm: Swap fix [@omiinaya](https://github.com/omiinaya) ([#4937](https://github.com/community-scripts/ProxmoxVE/pull/4937))
+
 ## 2025-06-02
 
 ### 🆕 New Scripts
