@@ -1,5 +1,70 @@
 [
   {
+    "name": "coder/code-server",
+    "version": "v4.100.3",
+    "date": "2025-06-03T21:06:41Z"
+  },
+  {
+    "name": "pocket-id/pocket-id",
+    "version": "v1.2.0",
+    "date": "2025-06-03T20:42:28Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "v4.2.1",
+    "date": "2025-06-03T20:04:28Z"
+  },
+  {
+    "name": "goauthentik/authentik",
+    "version": "version/2025.6.0",
+    "date": "2025-06-03T20:04:09Z"
+  },
+  {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.513",
+    "date": "2025-06-03T17:53:03Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.16",
+    "date": "2025-05-27T16:27:42Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "server/public/v0.1.14",
+    "date": "2025-05-29T15:35:16Z"
+  },
+  {
+    "name": "dgtlmoon/changedetection.io",
+    "version": "0.50.2",
+    "date": "2025-06-03T14:29:07Z"
+  },
+  {
+    "name": "element-hq/synapse",
+    "version": "v1.131.0",
+    "date": "2025-06-03T14:13:00Z"
+  },
+  {
+    "name": "zitadel/zitadel",
+    "version": "v2.71.12",
+    "date": "2025-06-03T14:11:41Z"
+  },
+  {
+    "name": "influxdata/influxdb",
+    "version": "v1.12.1rc3",
+    "date": "2025-06-03T14:05:52Z"
+  },
+  {
+    "name": "nzbgetcom/nzbget",
+    "version": "v25.0",
+    "date": "2025-05-12T09:12:04Z"
+  },
+  {
+    "name": "Pf2eToolsOrg/Pf2eTools",
+    "version": "v0.9.0",
+    "date": "2025-06-03T11:49:40Z"
+  },
+  {
     "name": "n8n-io/n8n",
     "version": "n8n@1.95.3",
     "date": "2025-06-03T11:09:42Z"
@@ -70,11 +135,6 @@
     "date": "2025-06-02T17:12:58Z"
   },
   {
-    "name": "mattermost/mattermost",
-    "version": "server/public/v0.1.14",
-    "date": "2025-05-29T15:35:16Z"
-  },
-  {
     "name": "NodeBB/NodeBB",
     "version": "v4.4.2",
     "date": "2025-06-02T15:06:31Z"
@@ -93,16 +153,6 @@
     "name": "Graylog2/graylog2-server",
     "version": "6.3.0-beta.4",
     "date": "2025-06-02T11:21:42Z"
-  },
-  {
-    "name": "zitadel/zitadel",
-    "version": "v2.68.11",
-    "date": "2025-06-02T09:32:57Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.16",
-    "date": "2025-05-27T16:27:42Z"
   },
   {
     "name": "usememos/memos",
@@ -142,11 +192,6 @@
   {
     "name": "OliveTin/OliveTin",
     "version": "2025.6.1",
-    "date": "2025-06-01T12:31:14Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "v4.2.0",
     "date": "2025-06-01T12:31:14Z"
   },
   {
@@ -190,11 +235,6 @@
     "date": "2024-08-29T22:32:51Z"
   },
   {
-    "name": "goauthentik/authentik",
-    "version": "version/2025.4.1",
-    "date": "2025-05-15T17:48:29Z"
-  },
-  {
     "name": "moghtech/komodo",
     "version": "v1.18.0",
     "date": "2025-05-30T20:12:54Z"
@@ -210,19 +250,9 @@
     "date": "2025-05-30T16:49:17Z"
   },
   {
-    "name": "element-hq/synapse",
-    "version": "test-pro",
-    "date": "2025-05-30T14:53:00Z"
-  },
-  {
     "name": "icereed/paperless-gpt",
     "version": "v0.20.0",
     "date": "2025-05-30T14:39:51Z"
-  },
-  {
-    "name": "nzbgetcom/nzbget",
-    "version": "v25.0",
-    "date": "2025-05-12T09:12:04Z"
   },
   {
     "name": "binwiederhier/ntfy",
@@ -243,11 +273,6 @@
     "name": "navidrome/navidrome",
     "version": "v0.56.1",
     "date": "2025-05-29T19:09:16Z"
-  },
-  {
-    "name": "influxdata/influxdb",
-    "version": "v2.7.12",
-    "date": "2025-05-29T17:08:26Z"
   },
   {
     "name": "HabitRPG/habitica",
@@ -293,16 +318,6 @@
     "name": "mongodb/mongo",
     "version": "r6.0.24",
     "date": "2025-05-28T21:25:03Z"
-  },
-  {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.504.2",
-    "date": "2025-05-28T14:36:54Z"
-  },
-  {
-    "name": "pocket-id/pocket-id",
-    "version": "v1.1.0",
-    "date": "2025-05-28T09:39:00Z"
   },
   {
     "name": "Athou/commafeed",
@@ -358,11 +373,6 @@
     "name": "dani-garcia/vaultwarden",
     "version": "1.34.1",
     "date": "2025-05-26T21:40:54Z"
-  },
-  {
-    "name": "dgtlmoon/changedetection.io",
-    "version": "0.49.18",
-    "date": "2025-05-26T18:36:33Z"
   },
   {
     "name": "MediaBrowser/Emby.Releases",
@@ -573,11 +583,6 @@
     "name": "gotson/komga",
     "version": "1.21.3",
     "date": "2025-05-16T04:31:05Z"
-  },
-  {
-    "name": "coder/code-server",
-    "version": "v4.100.2",
-    "date": "2025-05-15T23:02:46Z"
   },
   {
     "name": "cloudflare/cloudflared",
@@ -1193,11 +1198,6 @@
     "name": "projectsend/projectsend",
     "version": "r1720",
     "date": "2024-08-03T04:07:20Z"
-  },
-  {
-    "name": "Pf2eToolsOrg/Pf2eTools",
-    "version": "v0.8.13",
-    "date": "2024-07-29T12:54:27Z"
   },
   {
     "name": "hywax/mafl",
