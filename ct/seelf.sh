@@ -28,21 +28,22 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  if fetch_and_deploy_gh_release "YuukanOO/seelf"; then
+    echo "$APP already at the latest version. No update required."
+  else
+    msg_info "Stopping $APP"
+    systemctl stop seelf
+    msg_ok "Stopped $APP"
 
-  msg_info "Stopping $APP"
-  systemctl stop seelf
-  msg_ok "Stopped $APP"
+    msg_info "Updating $APP"
+    cd /opt/seelf
+    $STD make build
+    msg_ok "Updated $APP"
 
-  msg_info "Updating $APP"
-  fetch_and_deploy_gh_release "YuukanOO/seelf"
-  cd /opt/seelf
-  $STD make build
-  msg_ok "Updated $APP"
-
-  msg_info "Starting $APP"
-  systemctl start seelf
-  msg_ok "Started $APP"
-
+    msg_info "Starting $APP"
+    systemctl start seelf
+    msg_ok "Started $APP"
+  fi
   exit
 }
 
