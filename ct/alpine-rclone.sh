@@ -13,6 +13,7 @@ var_disk="${var_disk:-1}"
 var_os="${var_os:-alpine}"
 var_version="${var_version:-3.21}"
 var_unprivileged="${var_unprivileged:-1}"
+var_fuse="${var_fuse:-yes}"
 
 header_info "$APP"
 variables
