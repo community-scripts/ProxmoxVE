@@ -20,6 +20,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - Pulse: add correct Port for URL output  [@rcourtman](https://github.com/rcourtman) ([#4951](https://github.com/community-scripts/ProxmoxVE/pull/4951))
 
+  - #### 🐞 Bug Fixes
+
+    - [refactor] Seelf [@tremor021](https://github.com/tremor021) ([#4954](https://github.com/community-scripts/ProxmoxVE/pull/4954))
+
 ## 2025-06-03
 
 ### 🚀 Updated Scripts
