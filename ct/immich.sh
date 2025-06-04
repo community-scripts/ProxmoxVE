@@ -27,6 +27,9 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
+  setup_uv
+
   STAGING_DIR=/opt/staging
   BASE_DIR=${STAGING_DIR}/base-images
   SOURCE_DIR=${STAGING_DIR}/image-source
@@ -40,7 +43,7 @@ function update_script() {
       for url in "${INTEL_URLS[@]}"; do
         curl -fsSLO "$url"
       done
-      $STD dpkg -i ./*.deb
+      $STD apt install -y ./*.deb
       rm ./*.deb
       msg_ok "Intel iGPU dependencies updated"
     fi
@@ -177,54 +180,42 @@ function update_script() {
       msg_ok "Image-processing libraries compiled"
     fi
   fi
-  RELEASE=$(curl -s https://api.github.com/repos/immich-app/immich/releases?per_page=1 | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+  RELEASE=$(curl -fsSL https://api.github.com/repos/immich-app/immich/releases?per_page=1 | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
   if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
     msg_info "Stopping ${APP} services"
     systemctl stop immich-web
     systemctl stop immich-ml
     msg_ok "Stopped ${APP}"
-    if [[ "$(cat /opt/${APP}_version.txt)" < "1.133.0" ]]; then
-      msg_info "Upgrading to the VectorChord PostgreSQL extension"
-      NUMBER="$(
-        sed -n '2p' <(
-          sudo -u postgres psql -A -d immich <<EOF
-        SELECT atttypmod as dimsize
-          FROM pg_attribute f
-          JOIN pg_class c ON c.oid = f.attrelid
-          WHERE c.relkind = 'r'::char
-          AND f.attnum > 0
-          AND c.relname = 'smart_search'::text
-          AND f.attname = 'embedding'::text;
-EOF
-        )
-      )"
-      $STD sudo -u postgres psql -d immich <<EOF
-      DROP INDEX IF EXISTS clip_index;
-      DROP INDEX IF EXISTS face_index;
-      ALTER TABLE smart_search ALTER COLUMN embedding SET DATA TYPE real[];
-      ALTER TABLE face_search ALTER COLUMN embedding SET DATA TYPE real[];
-EOF
-      $STD apt-get update
-      $STD apt-get install postgresql-16-pgvector -y
-      curl -fsSL https://github.com/tensorchord/VectorChord/releases/download/0.3.0/postgresql-16-vchord_0.3.0-1_amd64.deb -o vchord.deb
-      $STD dpkg -i vchord.deb
-      rm vchord.deb
-      sed -i "s|vectors.so|vchord.so|" /etc/postgresql/16/main/postgresql.conf
-      systemctl restart postgresql.service
-      $STD sudo -u postgres psql -d immich <<EOF
-      CREATE EXTENSION IF NOT EXISTS vchord CASCADE;
-      ALTER TABLE smart_search ALTER COLUMN embedding SET DATA TYPE vector($NUMBER);
-      ALTER TABLE face_search ALTER COLUMN embedding SET DATA TYPE vector(512);
-EOF
-      $STD apt purge vectors-pg16 -y
-      msg_ok "Database upgrade complete"
-    fi
     INSTALL_DIR="/opt/${APP}"
     UPLOAD_DIR="$(sed -n '/^IMMICH_MEDIA_LOCATION/s/[^=]*=//p' /opt/immich/.env)"
     SRC_DIR="${INSTALL_DIR}/source"
     APP_DIR="${INSTALL_DIR}/app"
     ML_DIR="${APP_DIR}/machine-learning"
     GEO_DIR="${INSTALL_DIR}/geodata"
+    VCHORD_RELEASE="$(curl -fsSL https://api.github.com/repos/tensorchord/vectorchord/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')"
+
+    if [[ ! -f ~/.vchord_version ]] || [[ "$VCHORD_RELEASE" != "$(cat ~/.vchord_version)" ]]; then
+      msg_info "Updating VectorChord"
+      if [[ ! -f ~/.vchord_version ]] || [[ ! "$(cat ~/.vchord_version)" > "0.3.0" ]]; then
+        $STD sudo -u postgres pg_dumpall --clean --if-exists --username=postgres | gzip >/etc/postgresql/immich-db-vchord0.3.0.sql.gz
+        chown postgres /etc/postgresql/immich-db-vchord0.3.0.sql.gz
+        $STD sudo -u postgres gunzip --stdout /etc/postgresql/immich-db-vchord0.3.0.sql.gz |
+          sed -e "s/SELECT pg_catalog.set_config('search_path', '', false);/SELECT pg_catalog.set_config('search_path', 'public, pg_catalog', true);/g" \
+            -e "/vchordrq.prewarm_dim/d" |
+          sudo -u postgres psql
+      fi
+      curl -fsSL "https://github.com/tensorchord/vectorchord/releases/download/${VCHORD_RELEASE}/postgresql-16-vchord_${VCHORD_RELEASE}-1_amd64.deb" -o vchord.deb
+      $STD apt install -y ./vchord.deb
+      $STD sudo -u postgres psql -d immich -c "ALTER EXTENSION vchord UPDATE;"
+      systemctl restart postgresql
+      if [[ ! -f ~/.vchord-version ]] || [[ ! "$(cat ~/.vchord_version)" > "0.3.0" ]]; then
+        $STD sudo -u postgres psql -d immich -c "REINDEX DATABASE;"
+      fi
+      echo "$VCHORD_RELEASE" >~/.vchord_version
+      rm ./vchord.deb
+      msg_ok "Updated VectorChord to v${VCHORD_RELEASE}"
+    fi
+
     cp "$ML_DIR"/ml_start.sh "$INSTALL_DIR"
     rm -rf "${APP_DIR:?}"/*
     rm -rf "$SRC_DIR"
@@ -252,28 +243,21 @@ EOF
     msg_ok "Updated ${APP} web and microservices"
 
     cd "$SRC_DIR"/machine-learning
-    $STD python3 -m venv "$ML_DIR"/ml-venv
+    export VIRTUAL_ENV="${ML_DIR}"/ml-venv
+    $STD /usr/local/bin/uv venv "$VIRTUAL_ENV"
     if [[ -f ~/.openvino ]]; then
       msg_info "Updating HW-accelerated machine-learning"
-      (
-        source "$ML_DIR"/ml-venv/bin/activate
-        $STD pip3 install -U uv
-        uv -q sync --extra openvino --no-cache --active
-      )
-      patchelf --clear-execstack "$ML_DIR"/ml-venv/lib/python3.11/site-packages/onnxruntime/capi/onnxruntime_pybind11_state.cpython-311-x86_64-linux-gnu.so
+      /usr/local/bin/uv -q sync --extra openvino --no-cache --active
+      patchelf --clear-execstack "${VIRTUAL_ENV}/lib/python3.11/site-packages/onnxruntime/capi/onnxruntime_pybind11_state.cpython-311-x86_64-linux-gnu.so"
       msg_ok "Updated HW-accelerated machine-learning"
     else
       msg_info "Updating machine-learning"
-      (
-        source "$ML_DIR"/ml-venv/bin/activate
-        $STD pip3 install -U uv
-        uv -q sync --extra cpu --no-cache --active
-      )
+      /usr/local/bin/uv -q sync --extra cpu --no-cache --active
       msg_ok "Updated machine-learning"
     fi
     cd "$SRC_DIR"
     cp -a machine-learning/{ann,immich_ml} "$ML_DIR"
-    cp "$INSTALL_DIR"/ml_start.sh "$ML_DIR"
+    mv "$INSTALL_DIR"/ml_start.sh "$ML_DIR"
     if [[ -f ~/.openvino ]]; then
       sed -i "/intra_op/s/int = 0/int = os.cpu_count() or 0/" "$ML_DIR"/immich_ml/config.py
     fi
@@ -291,8 +275,6 @@ EOF
     rm -rf "$APP_DIR"/node_modules/@img/sharp-{libvips*,linuxmusl-x64}
     $STD npm i -g @immich/cli
     msg_ok "Updated Immich CLI"
-
-    sed -i "s|pgvecto.rs|vectorchord|" /opt/"${APP}"/.env
 
     chown -R immich:immich "$INSTALL_DIR"
     echo "$RELEASE" >/opt/"${APP}"_version.txt
