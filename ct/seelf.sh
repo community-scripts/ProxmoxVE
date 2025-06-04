@@ -29,7 +29,7 @@ function update_script() {
     exit
   fi
   if fetch_and_deploy_gh_release "YuukanOO/seelf"; then
-    echo "$APP already at the latest version. No update required."
+    msg_ok "$APP already at the latest version. No update required."
   else
     msg_info "Stopping $APP"
     systemctl stop seelf
