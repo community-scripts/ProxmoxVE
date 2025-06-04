@@ -26,6 +26,9 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  if ! command -v jq &>/dev/null; then
+    $STD apt-get install -y jq
+  fi
   if ! command -v node >/dev/null || [[ "$(/usr/bin/env node -v | grep -oP '^v\K[0-9]+')" != "22" ]]; then
     msg_info "Installing Node.js 22"
     $STD apt-get purge -y nodejs
