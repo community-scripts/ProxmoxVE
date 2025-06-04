@@ -18,7 +18,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
-  - Pulse: add correct Port for URL output  [@rcourtman](https://github.com/rcourtman) ([#4951](https://github.com/community-scripts/ProxmoxVE/pull/4951))
+  - Pulse: add polkit for sudoless web updates [@rcourtman](https://github.com/rcourtman) ([#4970](https://github.com/community-scripts/ProxmoxVE/pull/4970))
+- Pulse: add correct Port for URL output  [@rcourtman](https://github.com/rcourtman) ([#4951](https://github.com/community-scripts/ProxmoxVE/pull/4951))
 
   - #### 🐞 Bug Fixes
 
