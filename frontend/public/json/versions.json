@@ -1,5 +1,65 @@
 [
   {
+    "name": "Prowlarr/Prowlarr",
+    "version": "v1.37.0.5076",
+    "date": "2025-06-04T11:04:53Z"
+  },
+  {
+    "name": "nzbgetcom/nzbget",
+    "version": "v25.0",
+    "date": "2025-05-12T09:12:04Z"
+  },
+  {
+    "name": "zabbix/zabbix",
+    "version": "7.4.0rc1",
+    "date": "2025-06-04T09:06:57Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.5.3",
+    "date": "2025-05-23T15:10:33Z"
+  },
+  {
+    "name": "glpi-project/glpi",
+    "version": "10.0.18",
+    "date": "2025-02-12T11:07:02Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.2.0p43-rc5",
+    "date": "2025-06-04T08:14:03Z"
+  },
+  {
+    "name": "openobserve/openobserve",
+    "version": "v0.14.6-rc7-pb10",
+    "date": "2025-06-04T06:55:01Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1987",
+    "date": "2025-06-04T06:23:49Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "server/public/v0.1.14",
+    "date": "2025-05-29T15:35:16Z"
+  },
+  {
+    "name": "actualbudget/actual",
+    "version": "v25.6.0",
+    "date": "2025-06-04T05:09:24Z"
+  },
+  {
+    "name": "louislam/uptime-kuma",
+    "version": "2.0.0-beta.2-temp",
+    "date": "2025-03-28T08:45:58Z"
+  },
+  {
+    "name": "webmin/webmin",
+    "version": "2.401",
+    "date": "2025-06-04T02:53:03Z"
+  },
+  {
     "name": "coder/code-server",
     "version": "v4.100.3",
     "date": "2025-06-03T21:06:41Z"
@@ -25,14 +85,14 @@
     "date": "2025-06-03T17:53:03Z"
   },
   {
+    "name": "keycloak/keycloak",
+    "version": "26.2.5",
+    "date": "2025-05-28T06:49:43Z"
+  },
+  {
     "name": "firefly-iii/firefly-iii",
     "version": "v6.2.16",
     "date": "2025-05-27T16:27:42Z"
-  },
-  {
-    "name": "mattermost/mattermost",
-    "version": "server/public/v0.1.14",
-    "date": "2025-05-29T15:35:16Z"
   },
   {
     "name": "dgtlmoon/changedetection.io",
@@ -55,11 +115,6 @@
     "date": "2025-06-03T14:05:52Z"
   },
   {
-    "name": "nzbgetcom/nzbget",
-    "version": "v25.0",
-    "date": "2025-05-12T09:12:04Z"
-  },
-  {
     "name": "Pf2eToolsOrg/Pf2eTools",
     "version": "v0.9.0",
     "date": "2025-06-03T11:49:40Z"
@@ -75,21 +130,6 @@
     "date": "2025-06-03T08:45:14Z"
   },
   {
-    "name": "Checkmk/checkmk",
-    "version": "v2.2.0p43-rc4",
-    "date": "2025-06-03T06:59:25Z"
-  },
-  {
-    "name": "openobserve/openobserve",
-    "version": "v0.0.1-dev",
-    "date": "2025-06-03T06:50:25Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1984",
-    "date": "2025-06-03T06:09:13Z"
-  },
-  {
     "name": "FlareSolverr/FlareSolverr",
     "version": "v3.3.22",
     "date": "2025-06-03T04:54:48Z"
@@ -98,11 +138,6 @@
     "name": "FreshRSS/FreshRSS",
     "version": "1.26.3",
     "date": "2025-06-02T22:00:14Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.2.5",
-    "date": "2025-05-28T06:49:43Z"
   },
   {
     "name": "TandoorRecipes/recipes",
@@ -141,8 +176,8 @@
   },
   {
     "name": "wazuh/wazuh",
-    "version": "coverity-w22-4.13.0",
-    "date": "2025-05-26T15:04:48Z"
+    "version": "coverity-w23-4.13.0",
+    "date": "2025-05-30T15:39:11Z"
   },
   {
     "name": "inventree/InvenTree",
@@ -203,11 +238,6 @@
     "name": "Radarr/Radarr",
     "version": "v5.25.0.10024",
     "date": "2025-05-26T21:58:37Z"
-  },
-  {
-    "name": "home-assistant/core",
-    "version": "2025.5.3",
-    "date": "2025-05-23T15:10:33Z"
   },
   {
     "name": "kimai/kimai",
@@ -305,11 +335,6 @@
     "date": "2025-05-29T05:41:01Z"
   },
   {
-    "name": "webmin/webmin",
-    "version": "2.400",
-    "date": "2025-05-28T22:36:05Z"
-  },
-  {
     "name": "apache/cassandra",
     "version": "cassandra-4.0.18",
     "date": "2025-05-28T21:45:55Z"
@@ -398,11 +423,6 @@
     "name": "stonith404/pingvin-share",
     "version": "v1.13.0",
     "date": "2025-05-25T20:21:13Z"
-  },
-  {
-    "name": "Prowlarr/Prowlarr",
-    "version": "v1.36.3.5071",
-    "date": "2025-05-25T13:59:43Z"
   },
   {
     "name": "Lidarr/Lidarr",
@@ -500,11 +520,6 @@
     "date": "2025-05-21T13:13:31Z"
   },
   {
-    "name": "glpi-project/glpi",
-    "version": "10.0.18",
-    "date": "2025-02-12T11:07:02Z"
-  },
-  {
     "name": "diced/zipline",
     "version": "v4.1.0",
     "date": "2025-05-21T04:12:44Z"
@@ -523,11 +538,6 @@
     "name": "Stirling-Tools/Stirling-PDF",
     "version": "v0.46.2",
     "date": "2025-05-20T11:21:04Z"
-  },
-  {
-    "name": "zabbix/zabbix",
-    "version": "7.2.7",
-    "date": "2025-05-20T11:00:56Z"
   },
   {
     "name": "crafty-controller/crafty-4",
@@ -713,11 +723,6 @@
     "name": "Readarr/Readarr",
     "version": "v2.0.0.4645",
     "date": "2017-03-07T18:56:06Z"
-  },
-  {
-    "name": "actualbudget/actual",
-    "version": "v25.5.0",
-    "date": "2025-05-03T19:03:17Z"
   },
   {
     "name": "forgejo/forgejo",
@@ -938,11 +943,6 @@
     "name": "grocy/grocy",
     "version": "v4.5.0",
     "date": "2025-03-28T19:02:22Z"
-  },
-  {
-    "name": "louislam/uptime-kuma",
-    "version": "2.0.0-beta.2-temp",
-    "date": "2025-03-28T08:45:58Z"
   },
   {
     "name": "hakimel/reveal.js",
