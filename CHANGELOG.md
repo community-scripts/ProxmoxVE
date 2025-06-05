@@ -16,6 +16,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-06-05
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - add FUSE to rclone [@Frankmaaan](https://github.com/Frankmaaan) ([#4972](https://github.com/community-scripts/ProxmoxVE/pull/4972))
+
 ### 🌐 Website
 
   - #### 📝 Script Information
