@@ -16,6 +16,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-06-05
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Fix clean-lxcs.sh type categorization [@bitspill](https://github.com/bitspill) ([#4980](https://github.com/community-scripts/ProxmoxVE/pull/4980))
+
 ## 2025-06-04
 
 ### 🚀 Updated Scripts
