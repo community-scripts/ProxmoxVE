@@ -1,5 +1,35 @@
 [
   {
+    "name": "mattermost/mattermost",
+    "version": "server/public/v0.1.14",
+    "date": "2025-05-29T15:35:16Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1992",
+    "date": "2025-06-05T05:56:42Z"
+  },
+  {
+    "name": "MariaDB/server",
+    "version": "mariadb-11.8.2",
+    "date": "2025-06-04T13:35:16Z"
+  },
+  {
+    "name": "theonedev/onedev",
+    "version": "v11.10.1",
+    "date": "2025-06-05T03:43:29Z"
+  },
+  {
+    "name": "donaldzou/WGDashboard",
+    "version": "v4.2.3",
+    "date": "2025-05-07T15:35:04Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.2.5",
+    "date": "2025-05-28T06:49:43Z"
+  },
+  {
     "name": "actualbudget/actual",
     "version": "v25.6.1",
     "date": "2025-06-04T22:24:31Z"
@@ -30,19 +60,9 @@
     "date": "2025-06-04T16:41:44Z"
   },
   {
-    "name": "donaldzou/WGDashboard",
-    "version": "v4.2.3",
-    "date": "2025-05-07T15:35:04Z"
-  },
-  {
     "name": "openobserve/openobserve",
     "version": "v0.15.0-rc1",
     "date": "2025-06-04T15:12:56Z"
-  },
-  {
-    "name": "theonedev/onedev",
-    "version": "v11.10.0",
-    "date": "2025-06-04T14:29:05Z"
   },
   {
     "name": "goauthentik/authentik",
@@ -53,11 +73,6 @@
     "name": "crowdsecurity/crowdsec",
     "version": "v1.6.8",
     "date": "2025-03-25T13:33:10Z"
-  },
-  {
-    "name": "MariaDB/server",
-    "version": "mariadb-11.8.2",
-    "date": "2025-06-04T13:35:16Z"
   },
   {
     "name": "n8n-io/n8n",
@@ -100,16 +115,6 @@
     "date": "2025-02-12T11:07:02Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1987",
-    "date": "2025-06-04T06:23:49Z"
-  },
-  {
-    "name": "mattermost/mattermost",
-    "version": "server/public/v0.1.14",
-    "date": "2025-05-29T15:35:16Z"
-  },
-  {
     "name": "louislam/uptime-kuma",
     "version": "2.0.0-beta.2-temp",
     "date": "2025-03-28T08:45:58Z"
@@ -138,11 +143,6 @@
     "name": "jenkinsci/jenkins",
     "version": "jenkins-2.513",
     "date": "2025-06-03T17:53:03Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.2.5",
-    "date": "2025-05-28T06:49:43Z"
   },
   {
     "name": "dgtlmoon/changedetection.io",
