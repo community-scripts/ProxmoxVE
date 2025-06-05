@@ -24,6 +24,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - Zipline: Fix PostgreSQL install [@tremor021](https://github.com/tremor021) ([#4989](https://github.com/community-scripts/ProxmoxVE/pull/4989))
     - Homarr: add nodejs upgrade [@CrazyWolf13](https://github.com/CrazyWolf13) ([#4974](https://github.com/community-scripts/ProxmoxVE/pull/4974))
     - add FUSE to rclone [@Frankmaaan](https://github.com/Frankmaaan) ([#4972](https://github.com/community-scripts/ProxmoxVE/pull/4972))
 
