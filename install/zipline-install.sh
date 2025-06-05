@@ -14,11 +14,6 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt-get install -y \
-  postgresql
-msg_ok "Installed Dependencies"
-
 NODE_VERSION="22" NODE_MODULE="pnpm@latest" install_node_and_modules
 PG_VERSION="16" install_postgresql
 
