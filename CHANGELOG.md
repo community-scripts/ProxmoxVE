@@ -16,6 +16,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-06-05
 
+### 🆕 New Scripts
+
+  - gitea-mirror ([#4967](https://github.com/community-scripts/ProxmoxVE/pull/4967))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
