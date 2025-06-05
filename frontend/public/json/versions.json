@@ -1,5 +1,80 @@
 [
   {
+    "name": "actualbudget/actual",
+    "version": "v25.6.1",
+    "date": "2025-06-04T22:24:31Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.21.9",
+    "date": "2025-06-04T19:17:58Z"
+  },
+  {
+    "name": "rabbitmq/rabbitmq-server",
+    "version": "v4.1.1",
+    "date": "2025-06-04T19:10:05Z"
+  },
+  {
+    "name": "FlareSolverr/FlareSolverr",
+    "version": "v3.3.24",
+    "date": "2025-06-04T18:02:30Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.16",
+    "date": "2025-05-27T16:27:42Z"
+  },
+  {
+    "name": "cockpit-project/cockpit",
+    "version": "340",
+    "date": "2025-06-04T16:41:44Z"
+  },
+  {
+    "name": "donaldzou/WGDashboard",
+    "version": "v4.2.3",
+    "date": "2025-05-07T15:35:04Z"
+  },
+  {
+    "name": "openobserve/openobserve",
+    "version": "v0.15.0-rc1",
+    "date": "2025-06-04T15:12:56Z"
+  },
+  {
+    "name": "theonedev/onedev",
+    "version": "v11.10.0",
+    "date": "2025-06-04T14:29:05Z"
+  },
+  {
+    "name": "goauthentik/authentik",
+    "version": "version/2025.6.0",
+    "date": "2025-06-04T14:26:01Z"
+  },
+  {
+    "name": "crowdsecurity/crowdsec",
+    "version": "v1.6.8",
+    "date": "2025-03-25T13:33:10Z"
+  },
+  {
+    "name": "MariaDB/server",
+    "version": "mariadb-11.8.2",
+    "date": "2025-06-04T13:35:16Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.95.3",
+    "date": "2025-06-03T11:09:42Z"
+  },
+  {
+    "name": "Graylog2/graylog2-server",
+    "version": "6.1.12",
+    "date": "2025-06-04T12:48:55Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.4.0p3-rc1",
+    "date": "2025-06-04T11:32:09Z"
+  },
+  {
     "name": "Prowlarr/Prowlarr",
     "version": "v1.37.0.5076",
     "date": "2025-06-04T11:04:53Z"
@@ -25,16 +100,6 @@
     "date": "2025-02-12T11:07:02Z"
   },
   {
-    "name": "Checkmk/checkmk",
-    "version": "v2.2.0p43-rc5",
-    "date": "2025-06-04T08:14:03Z"
-  },
-  {
-    "name": "openobserve/openobserve",
-    "version": "v0.14.6-rc7-pb10",
-    "date": "2025-06-04T06:55:01Z"
-  },
-  {
     "name": "Jackett/Jackett",
     "version": "v0.22.1987",
     "date": "2025-06-04T06:23:49Z"
@@ -43,11 +108,6 @@
     "name": "mattermost/mattermost",
     "version": "server/public/v0.1.14",
     "date": "2025-05-29T15:35:16Z"
-  },
-  {
-    "name": "actualbudget/actual",
-    "version": "v25.6.0",
-    "date": "2025-06-04T05:09:24Z"
   },
   {
     "name": "louislam/uptime-kuma",
@@ -75,11 +135,6 @@
     "date": "2025-06-03T20:04:28Z"
   },
   {
-    "name": "goauthentik/authentik",
-    "version": "version/2025.6.0",
-    "date": "2025-06-03T20:04:09Z"
-  },
-  {
     "name": "jenkinsci/jenkins",
     "version": "jenkins-2.513",
     "date": "2025-06-03T17:53:03Z"
@@ -88,11 +143,6 @@
     "name": "keycloak/keycloak",
     "version": "26.2.5",
     "date": "2025-05-28T06:49:43Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.16",
-    "date": "2025-05-27T16:27:42Z"
   },
   {
     "name": "dgtlmoon/changedetection.io",
@@ -120,19 +170,9 @@
     "date": "2025-06-03T11:49:40Z"
   },
   {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.95.3",
-    "date": "2025-06-03T11:09:42Z"
-  },
-  {
     "name": "esphome/esphome",
     "version": "2025.5.2",
     "date": "2025-06-03T08:45:14Z"
-  },
-  {
-    "name": "FlareSolverr/FlareSolverr",
-    "version": "v3.3.22",
-    "date": "2025-06-03T04:54:48Z"
   },
   {
     "name": "FreshRSS/FreshRSS",
@@ -165,11 +205,6 @@
     "date": "2025-06-02T17:38:24Z"
   },
   {
-    "name": "msgbyte/tianji",
-    "version": "v1.21.6",
-    "date": "2025-06-02T17:12:58Z"
-  },
-  {
     "name": "NodeBB/NodeBB",
     "version": "v4.4.2",
     "date": "2025-06-02T15:06:31Z"
@@ -183,11 +218,6 @@
     "name": "inventree/InvenTree",
     "version": "0.17.13",
     "date": "2025-06-02T12:44:20Z"
-  },
-  {
-    "name": "Graylog2/graylog2-server",
-    "version": "6.3.0-beta.4",
-    "date": "2025-06-02T11:21:42Z"
   },
   {
     "name": "usememos/memos",
@@ -475,16 +505,6 @@
     "date": "2025-05-22T23:50:45Z"
   },
   {
-    "name": "crowdsecurity/crowdsec",
-    "version": "v1.6.8",
-    "date": "2025-03-25T13:33:10Z"
-  },
-  {
-    "name": "MariaDB/server",
-    "version": "mariadb-11.4.7",
-    "date": "2025-05-22T14:22:22Z"
-  },
-  {
     "name": "0xERR0R/blocky",
     "version": "v0.26.2",
     "date": "2025-05-22T05:24:42Z"
@@ -508,16 +528,6 @@
     "name": "ipfs/kubo",
     "version": "v0.35.0",
     "date": "2025-05-21T18:00:32Z"
-  },
-  {
-    "name": "cockpit-project/cockpit",
-    "version": "339",
-    "date": "2025-05-21T14:49:36Z"
-  },
-  {
-    "name": "theonedev/onedev",
-    "version": "v11.9.9",
-    "date": "2025-05-21T13:13:31Z"
   },
   {
     "name": "diced/zipline",
@@ -673,11 +683,6 @@
     "name": "apache/tomcat",
     "version": "10.1.41",
     "date": "2025-05-08T12:45:44Z"
-  },
-  {
-    "name": "donaldzou/WGDashboard",
-    "version": "v4.2.3",
-    "date": "2025-05-07T15:35:04Z"
   },
   {
     "name": "Brandawg93/PeaNUT",
@@ -848,11 +853,6 @@
     "name": "IceWhaleTech/CasaOS",
     "version": "v0.4.15",
     "date": "2024-12-19T03:19:49Z"
-  },
-  {
-    "name": "rabbitmq/rabbitmq-server",
-    "version": "v4.1.0",
-    "date": "2025-04-15T16:18:29Z"
   },
   {
     "name": "slskd/slskd",
