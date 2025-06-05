@@ -28,6 +28,10 @@ All LXC instances created using this repository come pre-installed with Midnight
     - Homarr: add nodejs upgrade [@CrazyWolf13](https://github.com/CrazyWolf13) ([#4974](https://github.com/community-scripts/ProxmoxVE/pull/4974))
     - add FUSE to rclone [@Frankmaaan](https://github.com/Frankmaaan) ([#4972](https://github.com/community-scripts/ProxmoxVE/pull/4972))
 
+  - #### ✨ New Features
+
+    - Zitadel: Upgrade Install to PSQL 17 [@MickLesk](https://github.com/MickLesk) ([#5000](https://github.com/community-scripts/ProxmoxVE/pull/5000))
+
 ### 🌐 Website
 
   - #### 📝 Script Information
