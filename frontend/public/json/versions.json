@@ -1,5 +1,30 @@
 [
   {
+    "name": "juanfont/headscale",
+    "version": "v0.26.1",
+    "date": "2025-06-06T11:22:02Z"
+  },
+  {
+    "name": "syncthing/syncthing",
+    "version": "2.0.0-rc.19",
+    "date": "2025-06-02T17:56:25Z"
+  },
+  {
+    "name": "nzbgetcom/nzbget",
+    "version": "v25.0",
+    "date": "2025-05-12T09:12:04Z"
+  },
+  {
+    "name": "diced/zipline",
+    "version": "v4.1.1",
+    "date": "2025-06-06T06:00:46Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1995",
+    "date": "2025-06-06T05:53:35Z"
+  },
+  {
     "name": "apache/tomcat",
     "version": "10.1.42",
     "date": "2025-06-05T22:39:40Z"
@@ -25,14 +50,14 @@
     "date": "2025-06-05T18:18:52Z"
   },
   {
+    "name": "keycloak/keycloak",
+    "version": "26.2.5",
+    "date": "2025-05-28T06:49:43Z"
+  },
+  {
     "name": "ollama/ollama",
     "version": "v0.9.1-ci0",
     "date": "2025-06-05T17:42:55Z"
-  },
-  {
-    "name": "nzbgetcom/nzbget",
-    "version": "v25.0",
-    "date": "2025-05-12T09:12:04Z"
   },
   {
     "name": "benjaminjonard/koillection",
@@ -65,11 +90,6 @@
     "date": "2025-05-29T15:35:16Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1992",
-    "date": "2025-06-05T05:56:42Z"
-  },
-  {
     "name": "MariaDB/server",
     "version": "mariadb-11.8.2",
     "date": "2025-06-04T13:35:16Z"
@@ -78,11 +98,6 @@
     "name": "donaldzou/WGDashboard",
     "version": "v4.2.3",
     "date": "2025-05-07T15:35:04Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.2.5",
-    "date": "2025-05-28T06:49:43Z"
   },
   {
     "name": "actualbudget/actual",
@@ -228,11 +243,6 @@
     "name": "VictoriaMetrics/VictoriaMetrics",
     "version": "v1.23.3-victorialogs",
     "date": "2025-06-02T19:44:31Z"
-  },
-  {
-    "name": "syncthing/syncthing",
-    "version": "2.0.0-rc.19",
-    "date": "2025-06-02T17:56:25Z"
   },
   {
     "name": "tailscale/tailscale",
@@ -545,11 +555,6 @@
     "date": "2025-05-21T18:00:32Z"
   },
   {
-    "name": "diced/zipline",
-    "version": "v4.1.0",
-    "date": "2025-05-21T04:12:44Z"
-  },
-  {
     "name": "matze/wastebin",
     "version": "3.1.0",
     "date": "2025-05-20T19:20:03Z"
@@ -633,11 +638,6 @@
     "name": "Ombi-app/Ombi",
     "version": "v4.47.1",
     "date": "2025-01-05T21:14:23Z"
-  },
-  {
-    "name": "juanfont/headscale",
-    "version": "v0.26.0",
-    "date": "2025-05-14T15:12:14Z"
   },
   {
     "name": "motioneye-project/motioneye",
