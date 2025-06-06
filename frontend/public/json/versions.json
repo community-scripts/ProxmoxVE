@@ -1,5 +1,65 @@
 [
   {
+    "name": "apache/tomcat",
+    "version": "10.1.42",
+    "date": "2025-06-05T22:39:40Z"
+  },
+  {
+    "name": "paperless-ngx/paperless-ngx",
+    "version": "v2.16.3",
+    "date": "2025-06-05T21:16:59Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.4.0p3",
+    "date": "2025-06-05T20:11:58Z"
+  },
+  {
+    "name": "netbox-community/netbox",
+    "version": "v4.3.2",
+    "date": "2025-06-05T19:57:01Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.21.10",
+    "date": "2025-06-05T18:18:52Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.9.1-ci0",
+    "date": "2025-06-05T17:42:55Z"
+  },
+  {
+    "name": "nzbgetcom/nzbget",
+    "version": "v25.0",
+    "date": "2025-05-12T09:12:04Z"
+  },
+  {
+    "name": "benjaminjonard/koillection",
+    "version": "1.6.14",
+    "date": "2025-06-05T16:40:52Z"
+  },
+  {
+    "name": "emqx/emqx",
+    "version": "e5.10.0-rc.1",
+    "date": "2025-06-05T16:11:30Z"
+  },
+  {
+    "name": "docker/compose",
+    "version": "v2.37.0",
+    "date": "2025-06-05T15:11:49Z"
+  },
+  {
+    "name": "theonedev/onedev",
+    "version": "v11.10.3",
+    "date": "2025-06-05T14:31:58Z"
+  },
+  {
+    "name": "pi-hole/pi-hole",
+    "version": "v6.1.2",
+    "date": "2025-06-05T11:32:45Z"
+  },
+  {
     "name": "mattermost/mattermost",
     "version": "server/public/v0.1.14",
     "date": "2025-05-29T15:35:16Z"
@@ -15,11 +75,6 @@
     "date": "2025-06-04T13:35:16Z"
   },
   {
-    "name": "theonedev/onedev",
-    "version": "v11.10.1",
-    "date": "2025-06-05T03:43:29Z"
-  },
-  {
     "name": "donaldzou/WGDashboard",
     "version": "v4.2.3",
     "date": "2025-05-07T15:35:04Z"
@@ -33,11 +88,6 @@
     "name": "actualbudget/actual",
     "version": "v25.6.1",
     "date": "2025-06-04T22:24:31Z"
-  },
-  {
-    "name": "msgbyte/tianji",
-    "version": "v1.21.9",
-    "date": "2025-06-04T19:17:58Z"
   },
   {
     "name": "rabbitmq/rabbitmq-server",
@@ -85,19 +135,9 @@
     "date": "2025-06-04T12:48:55Z"
   },
   {
-    "name": "Checkmk/checkmk",
-    "version": "v2.4.0p3-rc1",
-    "date": "2025-06-04T11:32:09Z"
-  },
-  {
     "name": "Prowlarr/Prowlarr",
     "version": "v1.37.0.5076",
     "date": "2025-06-04T11:04:53Z"
-  },
-  {
-    "name": "nzbgetcom/nzbget",
-    "version": "v25.0",
-    "date": "2025-05-12T09:12:04Z"
   },
   {
     "name": "zabbix/zabbix",
@@ -225,11 +265,6 @@
     "date": "2025-06-02T02:49:05Z"
   },
   {
-    "name": "pi-hole/pi-hole",
-    "version": "v6.1.1",
-    "date": "2025-06-02T01:36:09Z"
-  },
-  {
     "name": "advplyr/audiobookshelf",
     "version": "v2.24.0",
     "date": "2025-06-01T21:38:08Z"
@@ -305,11 +340,6 @@
     "date": "2025-05-30T19:17:15Z"
   },
   {
-    "name": "emqx/emqx",
-    "version": "e5.10.0-beta.1",
-    "date": "2025-05-30T16:49:17Z"
-  },
-  {
     "name": "icereed/paperless-gpt",
     "version": "v0.20.0",
     "date": "2025-05-30T14:39:51Z"
@@ -358,11 +388,6 @@
     "name": "duplicati/duplicati",
     "version": "v2.1.0.119-2.1.0.119_canary_2025-05-29",
     "date": "2025-05-29T06:14:27Z"
-  },
-  {
-    "name": "ollama/ollama",
-    "version": "v0.9.0",
-    "date": "2025-05-29T05:41:01Z"
   },
   {
     "name": "apache/cassandra",
@@ -475,11 +500,6 @@
     "date": "2025-05-24T21:42:19Z"
   },
   {
-    "name": "paperless-ngx/paperless-ngx",
-    "version": "v2.16.2",
-    "date": "2025-05-24T18:52:35Z"
-  },
-  {
     "name": "ioBroker/ioBroker",
     "version": "2025-05-24",
     "date": "2025-05-24T13:56:54Z"
@@ -488,11 +508,6 @@
     "name": "pocketbase/pocketbase",
     "version": "v0.28.2",
     "date": "2025-05-24T07:59:15Z"
-  },
-  {
-    "name": "docker/compose",
-    "version": "v2.36.2",
-    "date": "2025-05-23T14:21:20Z"
   },
   {
     "name": "rogerfar/rdt-client",
@@ -630,11 +645,6 @@
     "date": "2020-06-07T07:27:04Z"
   },
   {
-    "name": "netbox-community/netbox",
-    "version": "v4.3.1",
-    "date": "2025-05-13T19:45:00Z"
-  },
-  {
     "name": "OctoPrint/OctoPrint",
     "version": "1.11.1",
     "date": "2025-05-13T13:32:07Z"
@@ -678,11 +688,6 @@
     "name": "pelican-dev/panel",
     "version": "v1.0.0-beta21",
     "date": "2025-05-09T23:14:23Z"
-  },
-  {
-    "name": "apache/tomcat",
-    "version": "10.1.41",
-    "date": "2025-05-08T12:45:44Z"
   },
   {
     "name": "Brandawg93/PeaNUT",
@@ -748,11 +753,6 @@
     "name": "WordPress/WordPress",
     "version": "6.8.1",
     "date": "2025-04-30T16:44:16Z"
-  },
-  {
-    "name": "benjaminjonard/koillection",
-    "version": "1.6.13",
-    "date": "2025-04-30T16:38:35Z"
   },
   {
     "name": "docmost/docmost",
