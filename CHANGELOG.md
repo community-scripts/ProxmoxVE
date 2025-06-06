@@ -20,6 +20,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - Zot-Registry ([#5016](https://github.com/community-scripts/ProxmoxVE/pull/5016))
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - zipline: fix old upload copy from v3 to v4 [@MickLesk](https://github.com/MickLesk) ([#5015](https://github.com/community-scripts/ProxmoxVE/pull/5015))
+
 ## 2025-06-05
 
 ### 🆕 New Scripts
