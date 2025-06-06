@@ -16,6 +16,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-06-06
 
+### 🆕 New Scripts
+
+  - Zot-Registry ([#5016](https://github.com/community-scripts/ProxmoxVE/pull/5016))
+
 ## 2025-06-05
 
 ### 🆕 New Scripts
