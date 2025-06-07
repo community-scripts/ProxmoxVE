@@ -1,5 +1,45 @@
 [
   {
+    "name": "jordan-dalby/ByteStash",
+    "version": "v1.5.8",
+    "date": "2025-06-07T11:39:10Z"
+  },
+  {
+    "name": "syncthing/syncthing",
+    "version": "2.0.0-rc.19",
+    "date": "2025-06-02T17:56:25Z"
+  },
+  {
+    "name": "evcc-io/evcc",
+    "version": "0.204.2",
+    "date": "2025-06-07T11:38:28Z"
+  },
+  {
+    "name": "TriliumNext/Notes",
+    "version": "v0.94.1",
+    "date": "2025-06-07T10:32:38Z"
+  },
+  {
+    "name": "homebridge/homebridge",
+    "version": "v1.10.0",
+    "date": "2025-06-07T08:31:48Z"
+  },
+  {
+    "name": "moghtech/komodo",
+    "version": "v1.18.1",
+    "date": "2025-06-07T06:25:20Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.2",
+    "date": "2025-05-11T16:40:55Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1997",
+    "date": "2025-06-07T05:54:23Z"
+  },
+  {
     "name": "OliveTin/OliveTin",
     "version": "2025.6.6",
     "date": "2025-06-06T21:39:22Z"
@@ -18,6 +58,11 @@
     "name": "diced/zipline",
     "version": "v4.1.2",
     "date": "2025-06-06T17:44:58Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.2.5",
+    "date": "2025-05-28T06:49:43Z"
   },
   {
     "name": "documenso/documenso",
@@ -45,19 +90,9 @@
     "date": "2025-06-06T11:22:02Z"
   },
   {
-    "name": "syncthing/syncthing",
-    "version": "2.0.0-rc.19",
-    "date": "2025-06-02T17:56:25Z"
-  },
-  {
     "name": "nzbgetcom/nzbget",
     "version": "v25.0",
     "date": "2025-05-12T09:12:04Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1995",
-    "date": "2025-06-06T05:53:35Z"
   },
   {
     "name": "apache/tomcat",
@@ -83,11 +118,6 @@
     "name": "msgbyte/tianji",
     "version": "v1.21.10",
     "date": "2025-06-05T18:18:52Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.2.5",
-    "date": "2025-05-28T06:49:43Z"
   },
   {
     "name": "benjaminjonard/koillection",
@@ -305,11 +335,6 @@
     "date": "2025-06-01T21:38:08Z"
   },
   {
-    "name": "TriliumNext/Notes",
-    "version": "v0.94.0",
-    "date": "2025-06-01T21:23:25Z"
-  },
-  {
     "name": "traccar/traccar",
     "version": "v6.7.2",
     "date": "2025-06-01T20:40:00Z"
@@ -323,11 +348,6 @@
     "name": "Koenkk/zigbee2mqtt",
     "version": "2.4.0",
     "date": "2025-06-01T18:08:44Z"
-  },
-  {
-    "name": "evcc-io/evcc",
-    "version": "0.204.1",
-    "date": "2025-06-01T08:19:18Z"
   },
   {
     "name": "Radarr/Radarr",
@@ -358,11 +378,6 @@
     "name": "blakeblackshear/frigate",
     "version": "v0.14.1",
     "date": "2024-08-29T22:32:51Z"
-  },
-  {
-    "name": "moghtech/komodo",
-    "version": "v1.18.0",
-    "date": "2025-05-30T20:12:54Z"
   },
   {
     "name": "icereed/paperless-gpt",
@@ -493,11 +508,6 @@
     "name": "Luligu/matterbridge",
     "version": "3.0.4",
     "date": "2025-05-26T08:33:33Z"
-  },
-  {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.2",
-    "date": "2025-05-11T16:40:55Z"
   },
   {
     "name": "stonith404/pingvin-share",
@@ -1035,11 +1045,6 @@
     "date": "2025-03-02T04:30:50Z"
   },
   {
-    "name": "jordan-dalby/ByteStash",
-    "version": "v1.5.7",
-    "date": "2025-02-27T20:04:08Z"
-  },
-  {
     "name": "silverbulletmd/silverbullet",
     "version": "0.10.4",
     "date": "2025-02-25T18:13:42Z"
@@ -1083,11 +1088,6 @@
     "name": "TryGhost/Ghost-CLI",
     "version": "v1.27.0",
     "date": "2025-02-13T15:55:36Z"
-  },
-  {
-    "name": "homebridge/homebridge",
-    "version": "v1.9.0",
-    "date": "2025-02-11T13:26:42Z"
   },
   {
     "name": "actualbudget/actual-server",
