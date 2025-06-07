@@ -5,7 +5,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/Stremio/server
 
-APP="Stremio-Server"
+APP="Stremio-Service"
 var_tags="${var_tags:-media;stremio}"
 var_disk="${var_disk:-6}"
 var_cpu="${var_cpu:-1}"
