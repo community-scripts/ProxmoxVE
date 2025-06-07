@@ -30,7 +30,7 @@ apt-get upgrade -y
 msg_ok "OS Updated"
 
 msg_info "Installing dependencies"
-apt-get install -y curl git build-essential
+apt-get install -y curl tar
 msg_ok "Dependencies Installed"
 
 msg_info "Installing Node.js (LTS)"
@@ -38,25 +38,23 @@ curl -fsSL https://deb.nodesource.com/setup_lts.x | bash -
 apt-get install -y nodejs
 msg_ok "Node.js Installed"
 
-msg_info "Cloning Stremio server repository"
-git clone https://github.com/Stremio/server.git /opt/stremio-server
-msg_ok "Cloned Stremio server"
-
-msg_info "Installing Stremio server dependencies"
-cd /opt/stremio-server
-npm install
-msg_ok "Dependencies Installed"
+msg_info "Downloading latest Stremio Service release"
+LATEST_URL=$(curl -s https://api.github.com/repos/Stremio/stremio-service/releases/latest | grep "browser_download_url.*linux_amd64.tar.gz" | cut -d '"' -f 4)
+mkdir -p /opt/stremio-service
+curl -L "$LATEST_URL" | tar xz -C /opt/stremio-service
+chmod +x /opt/stremio-service/stremio-service
+msg_ok "Stremio Service Downloaded"
 
 msg_info "Creating systemd service"
-cat <<EOL >/etc/systemd/system/stremio-server.service
+cat <<EOL >/etc/systemd/system/stremio-service.service
 [Unit]
-Description=Stremio Server
+Description=Stremio Service (Official Backend)
 After=network.target
 
 [Service]
 Type=simple
-WorkingDirectory=/opt/stremio-server
-ExecStart=/usr/bin/node index.js
+WorkingDirectory=/opt/stremio-service
+ExecStart=/opt/stremio-service/stremio-service
 Restart=on-failure
 User=root
 
@@ -65,7 +63,7 @@ WantedBy=multi-user.target
 EOL
 
 systemctl daemon-reload
-systemctl enable --now stremio-server
+systemctl enable --now stremio-service
 msg_ok "Service Created and Started"
 
 msg_info "Cleaning up"
@@ -74,6 +72,6 @@ apt-get -y autoclean
 msg_ok "Cleaned"
 
 IP=$(hostname -I | awk '{print $1}')
-echo -e "\n${CREATING}${GN}Stremio Server setup has been successfully initialized!${CL}"
+echo -e "\n${CREATING}${GN}Stremio Service setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${BGN}http://${IP}:11470${CL}"
