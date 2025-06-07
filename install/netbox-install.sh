@@ -27,14 +27,7 @@ $STD apt-get install -y \
 msg_ok "Installed Dependencies"
 
 PG_VERSION="16" install_postgresql
-
-msg_info "Installing Python"
-$STD apt-get install -y \
-  python3 \
-  python3-pip \
-  python3-venv \
-  python3-dev
-msg_ok "Installed Python"
+PYTHON_VERSION="3.12" setup_uv
 
 msg_info "Setting up PostgreSQL"
 DB_NAME=netbox
@@ -63,8 +56,11 @@ chown --recursive netbox /opt/netbox/netbox/reports/
 chown --recursive netbox /opt/netbox/netbox/scripts/
 
 mv /opt/netbox/netbox/netbox/configuration_example.py /opt/netbox/netbox/netbox/configuration.py
+$STD uv venv /opt/netbox/.venv
+$STD /opt/netbox/.venv/bin/python -m ensurepip --upgrade
+$STD /opt/netbox/.venv/bin/python -m pip install --upgrade pip
 
-SECRET_KEY=$(python3 /opt/netbox/netbox/generate_secret_key.py)
+SECRET_KEY=$(/opt/netbox/.venv/bin/python /opt/netbox/netbox/generate_secret_key.py)
 ESCAPED_SECRET_KEY=$(printf '%s\n' "$SECRET_KEY" | sed 's/[&/\]/\\&/g')
 
 sed -i 's/ALLOWED_HOSTS = \[\]/ALLOWED_HOSTS = ["*"]/' /opt/netbox/netbox/netbox/configuration.py
@@ -95,7 +91,7 @@ DJANGO_USER=Admin
 DJANGO_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)
 
 source /opt/netbox/venv/bin/activate
-$STD python3 /opt/netbox/netbox/manage.py shell <<EOF
+$STD /opt/netbox/.venv/bin/python /opt/netbox/netbox/manage shell <<EOF
 from django.contrib.auth import get_user_model
 UserModel = get_user_model()
 user = UserModel.objects.create_user('$DJANGO_USER', password='$DJANGO_PASS')

@@ -14,20 +14,11 @@ network_check
 update_os
 
 msg_info "Installing Dependencies. Patience"
-$STD apt-get install -y \
-  git
+$STD apt-get install -y git
 msg_ok "Installed Dependencies"
 
-msg_info "Setup Python3"
-$STD apt-get install -y python3-venv
-msg_ok "Setup Python3"
-
+PYTHON_VERSION="3.12" setup_uv
 NODE_VERSION="22" NODE_MODULE="yarn@latest" install_node_and_modules
-
-msg_info "Setup Platformio"
-curl -fsSL -o get-platformio.py https://raw.githubusercontent.com/platformio/platformio-core-installer/master/get-platformio.py
-$STD python3 get-platformio.py
-msg_ok "Setup Platformio"
 
 msg_info "Setup TasmoCompiler"
 mkdir /tmp/Tasmota
@@ -37,14 +28,18 @@ cd /tmp
 tar xzf /tmp/v${RELEASE}.tar.gz
 mv tasmocompiler-${RELEASE}/ /opt/tasmocompiler/
 cd /opt/tasmocompiler
+$STD uv venv /opt/tasmocompiler/.venv
+$STD /opt/tasmocompiler/.venv/bin/python -m ensurepip --upgrade
+$STD /opt/tasmocompiler/.venv/bin/python -m pip install --upgrade pip
+$STD /opt/tasmocompiler/.venv/bin/python -m pip install platformio
 $STD yarn install
 export NODE_OPTIONS=--openssl-legacy-provider
 $STD npm i
 $STD yarn build
 mkdir -p /usr/local/bin
-ln -s ~/.platformio/penv/bin/platformio /usr/local/bin/platformio
-ln -s ~/.platformio/penv/bin/pio /usr/local/bin/pio
-ln -s ~/.platformio/penv/bin/piodebuggdb /usr/local/bin/piodebuggdb
+ln -sf /opt/tasmocompiler/.venv/bin/platformio /usr/local/bin/platformio
+ln -sf /opt/tasmocompiler/.venv/bin/pio /usr/local/bin/pio
+ln -sf /opt/tasmocompiler/.venv/bin/piodebuggdb /usr/local/bin/piodebuggdb
 echo "${RELEASE}" >"/opt/tasmocompiler_version.txt"
 msg_ok "Setup TasmoCompiler"
 

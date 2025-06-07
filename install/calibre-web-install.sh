@@ -15,13 +15,10 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y imagemagick
+$STD apt-get install -y imagemagick calibre
 msg_ok "Installed Dependencies"
 
-msg_info "Installing Python Dependencies"
-$STD apt-get -y install python3-pip
-rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
-msg_ok "Installed Python Dependencies"
+PYTHON_VERSION="3.12" setup_uv
 
 msg_info "Installing Kepubify"
 mkdir -p /opt/kepubify
@@ -32,10 +29,10 @@ msg_ok "Installed Kepubify"
 
 msg_info "Installing Calibre-Web"
 mkdir -p /opt/calibre-web
-$STD apt-get install -y calibre
 $STD curl -fsSL https://github.com/janeczku/calibre-web/raw/master/library/metadata.db -o /opt/calibre-web/metadata.db
-$STD pip install calibreweb
-$STD pip install jsonschema
+cd /opt/calibre-web
+$STD uv venv /opt/calibre-web/.venv
+$STD uv pip install calibreweb jsonschema
 msg_ok "Installed Calibre-Web"
 
 msg_info "Creating Service"
@@ -47,7 +44,7 @@ After=network.target
 [Service]
 Type=simple
 WorkingDirectory=/opt/calibre-web
-ExecStart=/usr/local/bin/cps
+ExecStart=/opt/calibre-web/.venv/bin/cps
 TimeoutStopSec=20
 KillMode=process
 Restart=on-failure
