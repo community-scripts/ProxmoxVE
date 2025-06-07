@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2025 tteck
 # Author: KellanStevens
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://github.com/Stremio/server
+# Source: https://github.com/Stremio/stremio-service
 
 color() {
   YW=$(echo "\033[33m")
