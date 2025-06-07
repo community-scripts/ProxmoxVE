@@ -22,6 +22,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - alpine-it-tools fix update [@CrazyWolf13](https://github.com/CrazyWolf13) ([#5039](https://github.com/community-scripts/ProxmoxVE/pull/5039))
 
+### 🧰 Maintenance
+
+  - #### 💾 Core
+
+    - Fix typo in build.func [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#5041](https://github.com/community-scripts/ProxmoxVE/pull/5041))
+
 ## 2025-06-06
 
 ### 🆕 New Scripts
