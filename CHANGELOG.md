@@ -16,6 +16,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-06-08
 
+### 🆕 New Scripts
+
+  - Minarca ([#5058](https://github.com/community-scripts/ProxmoxVE/pull/5058))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
