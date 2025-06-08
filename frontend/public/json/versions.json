@@ -1,5 +1,25 @@
 [
   {
+    "name": "matze/wastebin",
+    "version": "3.2.0",
+    "date": "2025-06-07T21:33:22Z"
+  },
+  {
+    "name": "cross-seed/cross-seed",
+    "version": "v6.12.6",
+    "date": "2025-05-28T00:13:19Z"
+  },
+  {
+    "name": "jellyfin/jellyfin",
+    "version": "v10.10.7",
+    "date": "2025-04-05T19:14:59Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.9.1-ci3",
+    "date": "2025-06-07T16:12:57Z"
+  },
+  {
     "name": "jordan-dalby/ByteStash",
     "version": "v1.5.8",
     "date": "2025-06-07T11:39:10Z"
@@ -43,11 +63,6 @@
     "name": "OliveTin/OliveTin",
     "version": "2025.6.6",
     "date": "2025-06-06T21:39:22Z"
-  },
-  {
-    "name": "ollama/ollama",
-    "version": "v0.9.1-ci1",
-    "date": "2025-06-06T21:28:30Z"
   },
   {
     "name": "homarr-labs/homarr",
@@ -445,11 +460,6 @@
     "date": "2025-05-28T05:48:20Z"
   },
   {
-    "name": "cross-seed/cross-seed",
-    "version": "v6.12.6",
-    "date": "2025-05-28T00:13:19Z"
-  },
-  {
     "name": "bluenviron/mediamtx",
     "version": "v1.12.3",
     "date": "2025-05-27T20:43:10Z"
@@ -573,11 +583,6 @@
     "name": "ipfs/kubo",
     "version": "v0.35.0",
     "date": "2025-05-21T18:00:32Z"
-  },
-  {
-    "name": "matze/wastebin",
-    "version": "3.1.0",
-    "date": "2025-05-20T19:20:03Z"
   },
   {
     "name": "Stirling-Tools/Stirling-PDF",
@@ -903,11 +908,6 @@
     "name": "Dolibarr/dolibarr",
     "version": "21.0.1",
     "date": "2025-04-06T19:22:59Z"
-  },
-  {
-    "name": "jellyfin/jellyfin",
-    "version": "v10.10.7",
-    "date": "2025-04-05T19:14:59Z"
   },
   {
     "name": "azukaar/Cosmos-Server",
