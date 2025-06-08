@@ -16,6 +16,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-06-08
 
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - karakeep: Add more configuration defaults [@vhsdream](https://github.com/vhsdream) ([#5054](https://github.com/community-scripts/ProxmoxVE/pull/5054))
+
 ## 2025-06-07
 
 ### 🚀 Updated Scripts
