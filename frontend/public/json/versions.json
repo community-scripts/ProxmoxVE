@@ -1,5 +1,30 @@
 [
   {
+    "name": "karakeep-app/karakeep",
+    "version": "mcp/v0.25.0",
+    "date": "2025-06-08T09:59:49Z"
+  },
+  {
+    "name": "Lidarr/Lidarr",
+    "version": "v2.11.2.4629",
+    "date": "2025-04-28T11:59:37Z"
+  },
+  {
+    "name": "Readarr/Readarr",
+    "version": "v2.0.0.4645",
+    "date": "2017-03-07T18:56:06Z"
+  },
+  {
+    "name": "Radarr/Radarr",
+    "version": "v5.25.0.10024",
+    "date": "2025-05-26T21:58:37Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.1999",
+    "date": "2025-06-08T05:53:33Z"
+  },
+  {
     "name": "matze/wastebin",
     "version": "3.2.0",
     "date": "2025-06-07T21:33:22Z"
@@ -53,11 +78,6 @@
     "name": "morpheus65535/bazarr",
     "version": "v1.5.2",
     "date": "2025-05-11T16:40:55Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1997",
-    "date": "2025-06-07T05:54:23Z"
   },
   {
     "name": "OliveTin/OliveTin",
@@ -365,11 +385,6 @@
     "date": "2025-06-01T18:08:44Z"
   },
   {
-    "name": "Radarr/Radarr",
-    "version": "v5.25.0.10024",
-    "date": "2025-05-26T21:58:37Z"
-  },
-  {
     "name": "kimai/kimai",
     "version": "2.35.1",
     "date": "2025-05-31T15:05:27Z"
@@ -523,11 +538,6 @@
     "name": "stonith404/pingvin-share",
     "version": "v1.13.0",
     "date": "2025-05-25T20:21:13Z"
-  },
-  {
-    "name": "Lidarr/Lidarr",
-    "version": "v2.11.2.4629",
-    "date": "2025-04-28T11:59:37Z"
   },
   {
     "name": "Kozea/Radicale",
@@ -745,11 +755,6 @@
     "date": "2025-05-05T16:28:24Z"
   },
   {
-    "name": "Readarr/Readarr",
-    "version": "v2.0.0.4645",
-    "date": "2017-03-07T18:56:06Z"
-  },
-  {
     "name": "forgejo/forgejo",
     "version": "v11.0.1",
     "date": "2025-05-02T17:10:30Z"
@@ -793,11 +798,6 @@
     "name": "deluge-torrent/deluge",
     "version": "deluge-2.2.0",
     "date": "2025-04-28T21:31:06Z"
-  },
-  {
-    "name": "karakeep-app/karakeep",
-    "version": "v0.24.1",
-    "date": "2025-04-28T08:21:37Z"
   },
   {
     "name": "gotify/server",
