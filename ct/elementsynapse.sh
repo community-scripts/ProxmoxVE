@@ -64,7 +64,6 @@ function update_script() {
       mv ./dist ../ && \
         rm -rf * && \
         mv ../dist ./
-      # previous service ran different binary, can be removed later
       if [[ -z $(grep "ExecStart=/usr/local/bin/serve" /etc/systemd/system/synapse-admin.service) ]]; then
         sed -i 's|^ExecStart=.*|ExecStart=/usr/local/bin/serve -s dist -l 5173|' /etc/systemd/system/synapse-admin.service
         systemctl reenable synapse-admin
