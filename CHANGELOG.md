@@ -16,6 +16,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-06-09
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Authelia: Fix the URL of the container [@tremor021](https://github.com/tremor021) ([#5064](https://github.com/community-scripts/ProxmoxVE/pull/5064))
+
 ## 2025-06-08
 
 ### 🆕 New Scripts
