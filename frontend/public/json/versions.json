@@ -1,8 +1,38 @@
 [
   {
     "name": "karakeep-app/karakeep",
-    "version": "mcp/v0.25.0",
-    "date": "2025-06-08T09:59:49Z"
+    "version": "ios/v1.7.0-1",
+    "date": "2025-06-08T22:02:33Z"
+  },
+  {
+    "name": "ellite/Wallos",
+    "version": "v3.2.0",
+    "date": "2025-06-08T16:54:37Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.21.11",
+    "date": "2025-06-08T16:49:06Z"
+  },
+  {
+    "name": "Luligu/matterbridge",
+    "version": "3.0.5",
+    "date": "2025-06-08T15:53:53Z"
+  },
+  {
+    "name": "Forceu/Gokapi",
+    "version": "v2.0.1",
+    "date": "2025-06-08T14:40:24Z"
+  },
+  {
+    "name": "redis/redis",
+    "version": "8.2-m01-int",
+    "date": "2025-06-08T13:48:51Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.16",
+    "date": "2025-05-27T16:27:42Z"
   },
   {
     "name": "Lidarr/Lidarr",
@@ -150,11 +180,6 @@
     "date": "2025-06-05T19:57:01Z"
   },
   {
-    "name": "msgbyte/tianji",
-    "version": "v1.21.10",
-    "date": "2025-06-05T18:18:52Z"
-  },
-  {
     "name": "benjaminjonard/koillection",
     "version": "1.6.14",
     "date": "2025-06-05T16:40:52Z"
@@ -208,11 +233,6 @@
     "name": "FlareSolverr/FlareSolverr",
     "version": "v3.3.24",
     "date": "2025-06-04T18:02:30Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.16",
-    "date": "2025-05-27T16:27:42Z"
   },
   {
     "name": "cockpit-project/cockpit",
@@ -400,11 +420,6 @@
     "date": "2025-05-31T13:36:23Z"
   },
   {
-    "name": "Forceu/Gokapi",
-    "version": "v2.0.0",
-    "date": "2025-05-31T12:32:40Z"
-  },
-  {
     "name": "blakeblackshear/frigate",
     "version": "v0.14.1",
     "date": "2024-08-29T22:32:51Z"
@@ -495,11 +510,6 @@
     "date": "2025-05-27T14:59:35Z"
   },
   {
-    "name": "redis/redis",
-    "version": "7.2.9",
-    "date": "2025-05-27T14:08:53Z"
-  },
-  {
     "name": "traefik/traefik",
     "version": "v3.4.1",
     "date": "2025-05-27T12:53:58Z"
@@ -528,11 +538,6 @@
     "name": "jupyter/notebook",
     "version": "v7.4.3",
     "date": "2025-05-26T14:27:27Z"
-  },
-  {
-    "name": "Luligu/matterbridge",
-    "version": "3.0.4",
-    "date": "2025-05-26T08:33:33Z"
   },
   {
     "name": "stonith404/pingvin-share",
@@ -653,11 +658,6 @@
     "name": "cloudflare/cloudflared",
     "version": "2025.5.0",
     "date": "2025-05-15T17:09:50Z"
-  },
-  {
-    "name": "ellite/Wallos",
-    "version": "v3.1.1",
-    "date": "2025-05-15T15:17:57Z"
   },
   {
     "name": "Ombi-app/Ombi",
