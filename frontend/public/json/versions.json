@@ -1,5 +1,40 @@
 [
   {
+    "name": "nzbgetcom/nzbget",
+    "version": "v25.0",
+    "date": "2025-05-12T09:12:04Z"
+  },
+  {
+    "name": "VictoriaMetrics/VictoriaMetrics",
+    "version": "v1.110.10",
+    "date": "2025-06-09T11:10:10Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.4.0p4-rc1",
+    "date": "2025-06-09T09:27:36Z"
+  },
+  {
+    "name": "silverbulletmd/silverbullet",
+    "version": "0.10.4",
+    "date": "2025-02-25T18:13:42Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.2",
+    "date": "2025-05-11T16:40:55Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2002",
+    "date": "2025-06-09T05:54:35Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "develop-20250609.1",
+    "date": "2025-06-09T03:59:04Z"
+  },
+  {
     "name": "karakeep-app/karakeep",
     "version": "ios/v1.7.0-1",
     "date": "2025-06-08T22:02:33Z"
@@ -30,11 +65,6 @@
     "date": "2025-06-08T13:48:51Z"
   },
   {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.16",
-    "date": "2025-05-27T16:27:42Z"
-  },
-  {
     "name": "Lidarr/Lidarr",
     "version": "v2.11.2.4629",
     "date": "2025-04-28T11:59:37Z"
@@ -48,11 +78,6 @@
     "name": "Radarr/Radarr",
     "version": "v5.25.0.10024",
     "date": "2025-05-26T21:58:37Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.1999",
-    "date": "2025-06-08T05:53:33Z"
   },
   {
     "name": "matze/wastebin",
@@ -105,11 +130,6 @@
     "date": "2025-06-07T06:25:20Z"
   },
   {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.2",
-    "date": "2025-05-11T16:40:55Z"
-  },
-  {
     "name": "OliveTin/OliveTin",
     "version": "2025.6.6",
     "date": "2025-06-06T21:39:22Z"
@@ -155,11 +175,6 @@
     "date": "2025-06-06T11:22:02Z"
   },
   {
-    "name": "nzbgetcom/nzbget",
-    "version": "v25.0",
-    "date": "2025-05-12T09:12:04Z"
-  },
-  {
     "name": "apache/tomcat",
     "version": "10.1.42",
     "date": "2025-06-05T22:39:40Z"
@@ -168,11 +183,6 @@
     "name": "paperless-ngx/paperless-ngx",
     "version": "v2.16.3",
     "date": "2025-06-05T21:16:59Z"
-  },
-  {
-    "name": "Checkmk/checkmk",
-    "version": "v2.4.0p3",
-    "date": "2025-06-05T20:11:58Z"
   },
   {
     "name": "netbox-community/netbox",
@@ -348,11 +358,6 @@
     "name": "TandoorRecipes/recipes",
     "version": "2.0.0-alpha-4",
     "date": "2025-05-14T05:01:45Z"
-  },
-  {
-    "name": "VictoriaMetrics/VictoriaMetrics",
-    "version": "v1.23.3-victorialogs",
-    "date": "2025-06-02T19:44:31Z"
   },
   {
     "name": "tailscale/tailscale",
@@ -1043,11 +1048,6 @@
     "name": "heiher/hev-socks5-server",
     "version": "2.8.0",
     "date": "2025-03-02T04:30:50Z"
-  },
-  {
-    "name": "silverbulletmd/silverbullet",
-    "version": "0.10.4",
-    "date": "2025-02-25T18:13:42Z"
   },
   {
     "name": "schlagmichdoch/PairDrop",
