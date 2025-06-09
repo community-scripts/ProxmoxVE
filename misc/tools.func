@@ -33,7 +33,7 @@ install_node_and_modules() {
   fi
 
   if ! command -v jq &>/dev/null; then
-    $STD msg_info "Installing jq..."
+    msg_info "Installing jq..."
     $STD apt-get update -qq &>/dev/null
     $STD apt-get install -y jq &>/dev/null || {
       msg_error "Failed to install jq"
@@ -230,7 +230,7 @@ install_mariadb() {
 
   # grab dynamic latest LTS version
   if [[ "$MARIADB_VERSION" == "latest" ]]; then
-    $STD msg_info "Resolving latest GA MariaDB version"
+    msg_info "Resolving latest GA MariaDB version"
     MARIADB_VERSION=$(curl -fsSL http://mirror.mariadb.org/repo/ |
       grep -Eo '[0-9]+\.[0-9]+\.[0-9]+/' |
       grep -vE 'rc/|rolling/' |
@@ -241,7 +241,7 @@ install_mariadb() {
       msg_error "Could not determine latest GA MariaDB version"
       return 1
     fi
-    $STD msg_ok "Latest GA MariaDB version is $MARIADB_VERSION"
+    msg_ok "Latest GA MariaDB version is $MARIADB_VERSION"
   fi
 
   local CURRENT_VERSION=""
@@ -250,15 +250,15 @@ install_mariadb() {
   fi
 
   if [[ "$CURRENT_VERSION" == "$MARIADB_VERSION" ]]; then
-    $STD msg_info "MariaDB $MARIADB_VERSION, upgrading"
+    msg_info "MariaDB $MARIADB_VERSION, upgrading"
     $STD apt-get update
     $STD apt-get install --only-upgrade -y mariadb-server mariadb-client
-    $STD msg_ok "MariaDB upgraded to $MARIADB_VERSION"
+    msg_ok "MariaDB upgraded to $MARIADB_VERSION"
     return 0
   fi
 
   if [[ -n "$CURRENT_VERSION" ]]; then
-    $STD msg_info "Replacing MariaDB $CURRENT_VERSION with $MARIADB_VERSION (data will be preserved)"
+    msg_info "Replacing MariaDB $CURRENT_VERSION with $MARIADB_VERSION (data will be preserved)"
     $STD systemctl stop mariadb >/dev/null 2>&1 || true
     $STD apt-get purge -y 'mariadb*' || true
     rm -f /etc/apt/sources.list.d/mariadb.list /etc/apt/trusted.gpg.d/mariadb.gpg
@@ -266,7 +266,7 @@ install_mariadb() {
     msg_info "Setup MariaDB $MARIADB_VERSION"
   fi
 
-  $STD msg_info "Setting up MariaDB Repository"
+  msg_info "Setting up MariaDB Repository"
   curl -fsSL "https://mariadb.org/mariadb_release_signing_key.asc" |
     gpg --dearmor -o /etc/apt/trusted.gpg.d/mariadb.gpg
 
@@ -442,12 +442,12 @@ install_php() {
 
   for ini in "${PHP_INI_PATHS[@]}"; do
     if [[ -f "$ini" ]]; then
-      $STD msg_info "Patching $ini"
+      msg_info "Patching $ini"
       sed -i "s|^memory_limit = .*|memory_limit = ${PHP_MEMORY_LIMIT}|" "$ini"
       sed -i "s|^upload_max_filesize = .*|upload_max_filesize = ${PHP_UPLOAD_MAX_FILESIZE}|" "$ini"
       sed -i "s|^post_max_size = .*|post_max_size = ${PHP_POST_MAX_SIZE}|" "$ini"
       sed -i "s|^max_execution_time = .*|max_execution_time = ${PHP_MAX_EXECUTION_TIME}|" "$ini"
-      $STD msg_ok "Patched $ini"
+      msg_ok "Patched $ini"
     fi
   done
 }
@@ -468,7 +468,7 @@ install_composer() {
   if [[ -x "$COMPOSER_BIN" ]]; then
     local CURRENT_VERSION
     CURRENT_VERSION=$("$COMPOSER_BIN" --version | awk '{print $3}')
-    $STD msg_info "Composer $CURRENT_VERSION found, updating to latest"
+    msg_info "Composer $CURRENT_VERSION found, updating to latest"
   else
     msg_info "Setup Composer"
   fi
@@ -517,7 +517,7 @@ install_go() {
       msg_error "Could not determine latest Go version"
       return 1
     fi
-    $STD msg_info "Detected latest Go version: $GO_VERSION"
+    msg_info "Detected latest Go version: $GO_VERSION"
   fi
 
   local GO_BIN="/usr/local/bin/go"
@@ -527,10 +527,10 @@ install_go() {
     local CURRENT_VERSION
     CURRENT_VERSION=$("$GO_BIN" version | awk '{print $3}' | sed 's/go//')
     if [[ "$CURRENT_VERSION" == "$GO_VERSION" ]]; then
-      $STD msg_ok "Go $GO_VERSION already installed"
+      msg_ok "Go $GO_VERSION already installed"
       return 0
     else
-      $STD msg_info "Go $CURRENT_VERSION found, upgrading to $GO_VERSION"
+      msg_info "Go $CURRENT_VERSION found, upgrading to $GO_VERSION"
       rm -rf "$GO_INSTALL_DIR"
     fi
   else
@@ -702,11 +702,11 @@ fetch_and_deploy_gh_release() {
   # Check if the app directory exists and if there's a version file
   if [[ -f "/opt/${app}_version.txt" ]]; then
     current_version=$(cat "/opt/${app}_version.txt")
-    $STD msg_info "Current version: $current_version"
+    msg_info "Current version: $current_version"
   fi
   # ensure that jq is installed
   if ! command -v jq &>/dev/null; then
-    $STD msg_info "Installing jq..."
+    msg_info "Installing jq..."
     $STD apt-get update -qq &>/dev/null
     $STD apt-get install -y jq &>/dev/null || {
       msg_error "Failed to install jq"
@@ -716,7 +716,7 @@ fetch_and_deploy_gh_release() {
   [[ -n "${GITHUB_TOKEN:-}" ]] && header=(-H "Authorization: token $GITHUB_TOKEN")
   until [[ $attempt -ge $max_attempts ]]; do
     ((attempt++)) || true
-    $STD msg_info "[$attempt/$max_attempts] Fetching GitHub release for $repo...\n"
+    msg_info "[$attempt/$max_attempts] Fetching GitHub release for $repo...\n"
     api_response=$(curl $curl_timeout -fsSL -w "%{http_code}" -o /tmp/gh_resp.json "${header[@]}" "$api_url")
     http_code="${api_response:(-3)}"
     if [[ "$http_code" == "404" ]]; then
@@ -724,7 +724,7 @@ fetch_and_deploy_gh_release() {
       return 1
     fi
     if [[ "$http_code" != "200" ]]; then
-      $STD msg_info "Request failed with HTTP $http_code, retrying...\n"
+      msg_info "Request failed with HTTP $http_code, retrying...\n"
       sleep $((attempt * 2))
       continue
     fi
@@ -741,11 +741,11 @@ fetch_and_deploy_gh_release() {
     [[ "$tag" =~ ^v[0-9] ]] && tag="${tag:1}"
     version="${tag#v}"
     if [[ -z "$tag" ]]; then
-      $STD msg_info "Empty tag received, retrying...\n"
+      msg_info "Empty tag received, retrying...\n"
       sleep $((attempt * 2))
       continue
     fi
-    $STD msg_ok "Found release: $tag for $repo"
+    msg_ok "Found release: $tag for $repo"
     break
   done
   if [[ -z "$tag" ]]; then
@@ -754,7 +754,7 @@ fetch_and_deploy_gh_release() {
   fi
   # Version comparison (if we already have this version, skip)
   if [[ "$current_version" == "$tag" ]]; then
-    $STD msg_info "Already running the latest version ($tag). Skipping update."
+    msg_info "Already running the latest version ($tag). Skipping update."
     return 0
   fi
 
@@ -779,13 +779,13 @@ fetch_and_deploy_gh_release() {
   else
     arch="unknown"
   fi
-  $STD msg_info "Detected system architecture: $arch"
+  msg_info "Detected system architecture: $arch"
   # Try to find a matching asset for our architecture
   local url=""
   for u in $assets; do
     if [[ "$u" =~ $arch.*\.tar\.gz$ ]]; then
       url="$u"
-      $STD msg_info "Found matching architecture asset: $url"
+      msg_info "Found matching architecture asset: $url"
       break
     fi
   done
@@ -794,7 +794,7 @@ fetch_and_deploy_gh_release() {
     for u in $assets; do
       if [[ "$u" =~ (x86_64|amd64|arm64|armv7|armv6).*\.tar\.gz$ ]]; then
         url="$u"
-        $STD msg_info "Architecture-specific asset not found, using: $url"
+        msg_info "Architecture-specific asset not found, using: $url"
         break
       fi
     done
@@ -804,7 +804,7 @@ fetch_and_deploy_gh_release() {
     for u in $assets; do
       if [[ "$u" =~ \.tar\.gz$ ]]; then
         url="$u"
-        $STD msg_info "Using generic tarball: $url"
+        msg_info "Using generic tarball: $url"
         break
       fi
     done
@@ -819,10 +819,10 @@ fetch_and_deploy_gh_release() {
       url="https://github.com/$repo/archive/refs/tags/v$version.tar.gz"
     fi
 
-    $STD msg_info "Using GitHub source tarball: $url"
+    msg_info "Using GitHub source tarball: $url"
   fi
   local filename="${url##*/}"
-  $STD msg_info "Downloading $url"
+  msg_info "Downloading $url"
   if ! curl $curl_timeout -fsSL -o "$tmpdir/$filename" "$url"; then
     msg_error "Failed to download release asset from $url"
     rm -rf "$tmpdir"
@@ -842,7 +842,7 @@ fetch_and_deploy_gh_release() {
     shopt -u dotglob nullglob
   fi
   echo "$version" >"/opt/${app}_version.txt"
-  $STD msg_ok "Deployed $app v$version to /opt/$app"
+  msg_ok "Deployed $app v$version to /opt/$app"
   rm -rf "$tmpdir"
 }
 
@@ -923,7 +923,7 @@ EOF
   chmod +x "$DISPATCHER_SCRIPT"
   systemctl enable -q --now networkd-dispatcher.service
 
-  $STD msg_ok "LOCAL_IP helper installed using networkd-dispatcher"
+  msg_ok "LOCAL_IP helper installed using networkd-dispatcher"
 }
 
 # ------------------------------------------------------------------------------
@@ -1015,7 +1015,7 @@ function download_with_progress() {
 # ------------------------------------------------------------------------------
 
 function setup_uv() {
-  $STD msg_info "Checking uv installation..."
+  msg_info "Checking uv installation..."
   UV_BIN="/usr/local/bin/uv"
   TMP_DIR=$(mktemp -d)
   ARCH=$(uname -m)
@@ -1042,7 +1042,7 @@ function setup_uv() {
   if [[ -x "$UV_BIN" ]]; then
     INSTALLED_VERSION=$($UV_BIN -V | awk '{print $2}')
     if [[ "$INSTALLED_VERSION" == "$LATEST_VERSION" ]]; then
-      $STD msg_ok "uv is already at the latest version ($INSTALLED_VERSION)"
+      msg_ok "uv is already at the latest version ($INSTALLED_VERSION)"
       rm -rf "$TMP_DIR"
       # set path
       if [[ ":$PATH:" != *":/usr/local/bin:"* ]]; then
@@ -1050,10 +1050,10 @@ function setup_uv() {
       fi
       return 0
     else
-      $STD msg_info "Updating uv from $INSTALLED_VERSION to $LATEST_VERSION"
+      msg_info "Updating uv from $INSTALLED_VERSION to $LATEST_VERSION"
     fi
   else
-    $STD msg_info "uv not found. Installing version $LATEST_VERSION"
+    msg_info "uv not found. Installing version $LATEST_VERSION"
   fi
 
   # install or update uv
@@ -1168,7 +1168,7 @@ setup_rbenv_stack() {
   local TMP_DIR
   TMP_DIR=$(mktemp -d)
 
-  $STD msg_info "Installing rbenv + ruby-build + Ruby $RUBY_VERSION"
+  msg_info "Installing rbenv + ruby-build + Ruby $RUBY_VERSION"
 
   # Fetch latest rbenv release tag from GitHub (e.g. v1.3.2 → 1.3.2)
   local RBENV_RELEASE
@@ -1184,7 +1184,7 @@ setup_rbenv_stack() {
   tar -xzf "$TMP_DIR/rbenv.tar.gz" -C "$TMP_DIR"
   mkdir -p "$RBENV_DIR"
   cp -r "$TMP_DIR/rbenv-${RBENV_RELEASE}/." "$RBENV_DIR/"
-  cd "$RBENV_DIR" && src/configure && make -C src
+  cd "$RBENV_DIR" && src/configure && $STD make -C src
 
   # Fetch latest ruby-build plugin release tag (e.g. v20250507 → 20250507)
   local RUBY_BUILD_RELEASE
@@ -1216,7 +1216,7 @@ setup_rbenv_stack() {
   if "$RBENV_BIN" versions --bare | grep -qx "$RUBY_VERSION"; then
     msg_ok "Ruby $RUBY_VERSION already installed"
   else
-    $STD msg_info "Installing Ruby $RUBY_VERSION"
+    msg_info "Installing Ruby ${RUBY_VERSION} (patience)"
     $STD "$RBENV_BIN" install "$RUBY_VERSION"
   fi
 
@@ -1226,7 +1226,7 @@ setup_rbenv_stack() {
 
   # Optionally install Rails via gem
   if [[ "$RUBY_INSTALL_RAILS" == "true" ]]; then
-    $STD msg_info "Installing latest Rails via gem"
+    msg_info "Installing latest Rails via gem"
     gem install rails
     msg_ok "Rails $(rails -v) installed"
   fi
@@ -1246,12 +1246,12 @@ setup_rbenv_stack() {
 # ------------------------------------------------------------------------------
 create_selfsigned_certs() {
   local app=${APP:-$(echo "${APPLICATION,,}" | tr -d ' ')}
-  $STD msg_info "Creating Self-Signed Certificate"
+  msg_info "Creating Self-Signed Certificate"
   $STD openssl req -x509 -nodes -days 365 -newkey rsa:4096 \
     -keyout /etc/ssl/private/"$app"-selfsigned.key \
     -out /etc/ssl/certs/"$app"-selfsigned.crt \
     -subj "/C=US/O=$app/OU=Domain Control Validated/CN=localhost"
-  $STD msg_ok "Created Self-Signed Certificate"
+  msg_ok "Created Self-Signed Certificate"
 }
 
 # ------------------------------------------------------------------------------
