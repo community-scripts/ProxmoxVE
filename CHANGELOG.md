@@ -22,6 +22,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - Authelia: Fix the URL of the container [@tremor021](https://github.com/tremor021) ([#5064](https://github.com/community-scripts/ProxmoxVE/pull/5064))
 
+### 🌐 Website
+
+  - GoMFT: Remove from website temporarily [@tremor021](https://github.com/tremor021) ([#5065](https://github.com/community-scripts/ProxmoxVE/pull/5065))
+
 ## 2025-06-08
 
 ### 🆕 New Scripts
