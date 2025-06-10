@@ -33,15 +33,15 @@
   },
   "notes": [
     {
-      "text": "During installation, HW-accelerated machine-learning (with OpenVINO) is an available option. This also allows for HW-accelerated transcoding, but it must be enabled in Video Transcoding Settings",
+      "text": "During installation, you will be prompted with the option to install Intel OpenVINO for hardware-accelerated machine-learning. If you opt in, increase your LXC RAM after installation, as OpenVINO is memory-intensive",
       "type": "info"
     },
     {
-      "text": "If using OpenVINO HW machine-learning, increase RAM because OpenVINO is memory-intensive",
+      "text": "HW-accelerated video transcoding is supported, but must be enabled in Immich Settings",
       "type": "info"
     },
     {
-      "text": "To change upload location, edit 'IMMICH_MEDIA_LOCATION' in `/opt/immich/.env`",
+      "text": "To change upload location, edit 'IMMICH_MEDIA_LOCATION' in `/opt/immich/.env`, and create the symlink 'upload' in /opt/immich/app & /opt/immich/app/machine-learning to your new upload location",
       "type": "info"
     }
   ]
