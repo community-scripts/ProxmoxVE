@@ -20,8 +20,9 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
-    - Dolibarr: Fix typo in SQL command [@tremor021](https://github.com/tremor021) ([#5091](https://github.com/community-scripts/ProxmoxVE/pull/5091))
+    - Element Synapse: switched from development to production mode and fixed update [@Frankmaaan](https://github.com/Frankmaaan) ([#5066](https://github.com/community-scripts/ProxmoxVE/pull/5066))
     - Tinyauth: Fix creation of service file [@tremor021](https://github.com/tremor021) ([#5090](https://github.com/community-scripts/ProxmoxVE/pull/5090))
+    - Dolibarr: Fix typo in SQL command [@tremor021](https://github.com/tremor021) ([#5091](https://github.com/community-scripts/ProxmoxVE/pull/5091))
 
 ### 🧰 Maintenance
 
