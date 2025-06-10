@@ -1,13 +1,68 @@
 [
   {
-    "name": "nzbgetcom/nzbget",
-    "version": "v25.0",
-    "date": "2025-05-12T09:12:04Z"
+    "name": "fallenbagel/jellyseerr",
+    "version": "v2.6.0",
+    "date": "2025-06-09T23:28:38Z"
+  },
+  {
+    "name": "tailscale/tailscale",
+    "version": "v1.84.2",
+    "date": "2025-06-09T23:43:27Z"
+  },
+  {
+    "name": "pocket-id/pocket-id",
+    "version": "v1.3.1",
+    "date": "2025-06-09T21:07:27Z"
+  },
+  {
+    "name": "pocketbase/pocketbase",
+    "version": "v0.28.3",
+    "date": "2025-06-09T18:11:46Z"
+  },
+  {
+    "name": "Lidarr/Lidarr",
+    "version": "v2.12.4.4658",
+    "date": "2025-06-09T17:27:45Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.9.1-ci3",
+    "date": "2025-06-07T16:12:57Z"
+  },
+  {
+    "name": "Brandawg93/PeaNUT",
+    "version": "v5.8.0",
+    "date": "2025-06-09T16:08:33Z"
+  },
+  {
+    "name": "ellite/Wallos",
+    "version": "v3.3.0",
+    "date": "2025-06-09T15:58:04Z"
+  },
+  {
+    "name": "NodeBB/NodeBB",
+    "version": "v2.8.19",
+    "date": "2025-06-09T15:32:25Z"
+  },
+  {
+    "name": "seanmorley15/AdventureLog",
+    "version": "v0.10.0",
+    "date": "2025-06-09T13:37:07Z"
+  },
+  {
+    "name": "crowdsecurity/crowdsec",
+    "version": "v1.6.8",
+    "date": "2025-03-25T13:33:10Z"
   },
   {
     "name": "VictoriaMetrics/VictoriaMetrics",
-    "version": "v1.110.10",
-    "date": "2025-06-09T11:10:10Z"
+    "version": "pmm-6401-v1.119.0",
+    "date": "2025-06-09T12:26:37Z"
+  },
+  {
+    "name": "nzbgetcom/nzbget",
+    "version": "v25.0",
+    "date": "2025-05-12T09:12:04Z"
   },
   {
     "name": "Checkmk/checkmk",
@@ -35,14 +90,14 @@
     "date": "2025-06-09T03:59:04Z"
   },
   {
+    "name": "neo4j/neo4j",
+    "version": "5.26.8",
+    "date": "2025-06-08T22:50:58Z"
+  },
+  {
     "name": "karakeep-app/karakeep",
     "version": "ios/v1.7.0-1",
     "date": "2025-06-08T22:02:33Z"
-  },
-  {
-    "name": "ellite/Wallos",
-    "version": "v3.2.0",
-    "date": "2025-06-08T16:54:37Z"
   },
   {
     "name": "msgbyte/tianji",
@@ -63,11 +118,6 @@
     "name": "redis/redis",
     "version": "8.2-m01-int",
     "date": "2025-06-08T13:48:51Z"
-  },
-  {
-    "name": "Lidarr/Lidarr",
-    "version": "v2.11.2.4629",
-    "date": "2025-04-28T11:59:37Z"
   },
   {
     "name": "Readarr/Readarr",
@@ -93,11 +143,6 @@
     "name": "jellyfin/jellyfin",
     "version": "v10.10.7",
     "date": "2025-04-05T19:14:59Z"
-  },
-  {
-    "name": "ollama/ollama",
-    "version": "v0.9.1-ci3",
-    "date": "2025-06-07T16:12:57Z"
   },
   {
     "name": "jordan-dalby/ByteStash",
@@ -255,11 +300,6 @@
     "date": "2025-06-04T15:12:56Z"
   },
   {
-    "name": "crowdsecurity/crowdsec",
-    "version": "v1.6.8",
-    "date": "2025-03-25T13:33:10Z"
-  },
-  {
     "name": "n8n-io/n8n",
     "version": "n8n@1.95.3",
     "date": "2025-06-03T11:09:42Z"
@@ -303,11 +343,6 @@
     "name": "coder/code-server",
     "version": "v4.100.3",
     "date": "2025-06-03T21:06:41Z"
-  },
-  {
-    "name": "pocket-id/pocket-id",
-    "version": "v1.2.0",
-    "date": "2025-06-03T20:42:28Z"
   },
   {
     "name": "runtipi/runtipi",
@@ -360,19 +395,9 @@
     "date": "2025-05-14T05:01:45Z"
   },
   {
-    "name": "tailscale/tailscale",
-    "version": "v1.84.1",
-    "date": "2025-06-02T18:35:35Z"
-  },
-  {
     "name": "grokability/snipe-it",
     "version": "v8.1.15",
     "date": "2025-06-02T17:38:24Z"
-  },
-  {
-    "name": "NodeBB/NodeBB",
-    "version": "v4.4.2",
-    "date": "2025-06-02T15:06:31Z"
   },
   {
     "name": "wazuh/wazuh",
@@ -510,11 +535,6 @@
     "date": "2025-05-27T17:28:27Z"
   },
   {
-    "name": "neo4j/neo4j",
-    "version": "5.26.7",
-    "date": "2025-05-27T14:59:35Z"
-  },
-  {
     "name": "traefik/traefik",
     "version": "v3.4.1",
     "date": "2025-05-27T12:53:58Z"
@@ -563,11 +583,6 @@
     "name": "minio/minio",
     "version": "RELEASE.2025-05-24T17-08-30Z",
     "date": "2025-05-24T21:42:19Z"
-  },
-  {
-    "name": "pocketbase/pocketbase",
-    "version": "v0.28.2",
-    "date": "2025-05-24T07:59:15Z"
   },
   {
     "name": "rogerfar/rdt-client",
@@ -720,11 +735,6 @@
     "date": "2025-05-09T23:14:23Z"
   },
   {
-    "name": "Brandawg93/PeaNUT",
-    "version": "v5.7.5",
-    "date": "2025-05-07T14:01:45Z"
-  },
-  {
     "name": "ZoeyVid/NPMplus",
     "version": "2025-05-07-r1",
     "date": "2025-05-07T12:18:42Z"
@@ -738,11 +748,6 @@
     "name": "linkwarden/linkwarden",
     "version": "v2.10.2",
     "date": "2025-05-06T03:12:53Z"
-  },
-  {
-    "name": "fallenbagel/jellyseerr",
-    "version": "preview-tvdb",
-    "date": "2025-05-06T01:32:52Z"
   },
   {
     "name": "autobrr/autobrr",
@@ -983,11 +988,6 @@
     "name": "nicolargo/glances",
     "version": "v4.3.1",
     "date": "2025-03-23T09:02:54Z"
-  },
-  {
-    "name": "seanmorley15/AdventureLog",
-    "version": "v0.9.0",
-    "date": "2025-03-19T13:30:02Z"
   },
   {
     "name": "Donkie/Spoolman",
