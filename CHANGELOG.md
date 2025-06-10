@@ -22,6 +22,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - [core] Prevent API form sending Data when disabled [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#5080](https://github.com/community-scripts/ProxmoxVE/pull/5080))
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Immich: Update JSON [@vhsdream](https://github.com/vhsdream) ([#5085](https://github.com/community-scripts/ProxmoxVE/pull/5085))
+
 ## 2025-06-09
 
 ### 🚀 Updated Scripts
