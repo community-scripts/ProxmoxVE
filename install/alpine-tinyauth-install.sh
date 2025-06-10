@@ -49,7 +49,7 @@ EOF
 
 sed -i -e 's/\$/\$\$/g' /opt/tinyauth/.env
 
-cat <<EOF >/etc/init.d/tinyauth
+cat <<'EOF' >/etc/init.d/tinyauth
 #!/sbin/openrc-run
 description="Tinyauth Service"
 
