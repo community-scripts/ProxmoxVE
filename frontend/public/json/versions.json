@@ -1,5 +1,55 @@
 [
   {
+    "name": "Checkmk/checkmk",
+    "version": "v2.3.0p34-rc1",
+    "date": "2025-06-10T20:08:37Z"
+  },
+  {
+    "name": "autobrr/autobrr",
+    "version": "v1.63.0",
+    "date": "2025-06-10T20:02:15Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.5.3",
+    "date": "2025-05-23T15:10:33Z"
+  },
+  {
+    "name": "emqx/emqx",
+    "version": "e5.10.0",
+    "date": "2025-06-10T16:03:18Z"
+  },
+  {
+    "name": "node-red/node-red",
+    "version": "4.1.0-beta.1",
+    "date": "2025-06-10T15:47:59Z"
+  },
+  {
+    "name": "AdguardTeam/AdGuardHome",
+    "version": "v0.107.62",
+    "date": "2025-05-27T12:10:19Z"
+  },
+  {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.514",
+    "date": "2025-06-10T14:27:57Z"
+  },
+  {
+    "name": "open-webui/open-webui",
+    "version": "v0.6.14",
+    "date": "2025-06-10T14:18:04Z"
+  },
+  {
+    "name": "element-hq/synapse",
+    "version": "v1.131.0",
+    "date": "2025-06-03T14:13:00Z"
+  },
+  {
+    "name": "Graylog2/graylog2-server",
+    "version": "6.3.0-beta.5",
+    "date": "2025-06-10T11:19:42Z"
+  },
+  {
     "name": "OctoPrint/OctoPrint",
     "version": "1.11.2",
     "date": "2025-06-10T11:07:14Z"
@@ -8,11 +58,6 @@
     "name": "VictoriaMetrics/VictoriaMetrics",
     "version": "v1.110.11",
     "date": "2025-06-10T10:00:25Z"
-  },
-  {
-    "name": "emqx/emqx",
-    "version": "e5.10.0-rc.2",
-    "date": "2025-06-10T09:46:15Z"
   },
   {
     "name": "glanceapp/glance",
@@ -108,11 +153,6 @@
     "name": "nzbgetcom/nzbget",
     "version": "v25.0",
     "date": "2025-05-12T09:12:04Z"
-  },
-  {
-    "name": "Checkmk/checkmk",
-    "version": "v2.4.0p4-rc1",
-    "date": "2025-06-09T09:27:36Z"
   },
   {
     "name": "silverbulletmd/silverbullet",
@@ -325,11 +365,6 @@
     "date": "2025-06-03T11:09:42Z"
   },
   {
-    "name": "Graylog2/graylog2-server",
-    "version": "6.1.12",
-    "date": "2025-06-04T12:48:55Z"
-  },
-  {
     "name": "Prowlarr/Prowlarr",
     "version": "v1.37.0.5076",
     "date": "2025-06-04T11:04:53Z"
@@ -338,11 +373,6 @@
     "name": "zabbix/zabbix",
     "version": "7.4.0rc1",
     "date": "2025-06-04T09:06:57Z"
-  },
-  {
-    "name": "home-assistant/core",
-    "version": "2025.5.3",
-    "date": "2025-05-23T15:10:33Z"
   },
   {
     "name": "glpi-project/glpi",
@@ -370,19 +400,9 @@
     "date": "2025-06-03T20:04:28Z"
   },
   {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.513",
-    "date": "2025-06-03T17:53:03Z"
-  },
-  {
     "name": "dgtlmoon/changedetection.io",
     "version": "0.50.2",
     "date": "2025-06-03T14:29:07Z"
-  },
-  {
-    "name": "element-hq/synapse",
-    "version": "v1.131.0",
-    "date": "2025-06-03T14:13:00Z"
   },
   {
     "name": "zitadel/zitadel",
@@ -485,11 +505,6 @@
     "date": "2025-05-30T00:26:27Z"
   },
   {
-    "name": "open-webui/open-webui",
-    "version": "v0.6.13",
-    "date": "2025-05-29T21:37:38Z"
-  },
-  {
     "name": "gristlabs/grist-core",
     "version": "v1.6.0",
     "date": "2025-05-29T19:11:21Z"
@@ -558,11 +573,6 @@
     "name": "traefik/traefik",
     "version": "v3.4.1",
     "date": "2025-05-27T12:53:58Z"
-  },
-  {
-    "name": "AdguardTeam/AdGuardHome",
-    "version": "v0.107.62",
-    "date": "2025-05-27T12:10:19Z"
   },
   {
     "name": "semaphoreui/semaphore",
@@ -753,11 +763,6 @@
     "name": "linkwarden/linkwarden",
     "version": "v2.10.2",
     "date": "2025-05-06T03:12:53Z"
-  },
-  {
-    "name": "autobrr/autobrr",
-    "version": "v1.62.0",
-    "date": "2025-05-05T20:35:18Z"
   },
   {
     "name": "postgres/postgres",
@@ -1073,11 +1078,6 @@
     "name": "recyclarr/recyclarr",
     "version": "v7.4.1",
     "date": "2025-02-15T20:54:00Z"
-  },
-  {
-    "name": "node-red/node-red",
-    "version": "4.0.9",
-    "date": "2025-02-14T17:10:20Z"
   },
   {
     "name": "mayswind/AriaNg",
