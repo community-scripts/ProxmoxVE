@@ -20,6 +20,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - Manage my Damn Life ([#5100](https://github.com/community-scripts/ProxmoxVE/pull/5100))
 
+### 🚀 Updated Scripts
+
+  - Kasm: Increase Ressources & Hint for Fuse / Swap [@MickLesk](https://github.com/MickLesk) ([#5112](https://github.com/community-scripts/ProxmoxVE/pull/5112))
+
 ## 2025-06-11
 
 ## 2025-06-10
