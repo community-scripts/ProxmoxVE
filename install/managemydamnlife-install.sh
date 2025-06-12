@@ -13,9 +13,6 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-msg_ok "Installed Dependencies"
-
 NODE_VERSION="20" install_node_and_modules
 MYSQL_VERSION="8.0" install_mysql
 
