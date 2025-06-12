@@ -16,6 +16,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-06-12
 
+### 🆕 New Scripts
+
+  - Manage my Damn Life ([#5100](https://github.com/community-scripts/ProxmoxVE/pull/5100))
+
 ## 2025-06-11
 
 ## 2025-06-10
