@@ -20,7 +20,7 @@
       "script": "ct/kasm.sh",
       "resources": {
         "cpu": 2,
-        "ram": 4096,
+        "ram": 8192,
         "hdd": 50,
         "os": "Debian",
         "version": "12"
@@ -34,6 +34,10 @@
   "notes": [
     {
       "text": "WARNING: Installation sources scripts outside of Community Scripts repo. Please check the source before installing.",
+      "type": "warning"
+    },
+    {
+      "text": "Kasm needs swap (on Proxmox host) and activated FUSE to be installed successfully!",
       "type": "warning"
     },
     {
