@@ -1,8 +1,53 @@
 [
   {
+    "name": "docker/compose",
+    "version": "v2.37.1",
+    "date": "2025-06-12T09:00:21Z"
+  },
+  {
+    "name": "redis/redis",
+    "version": "8.2-m01-int2",
+    "date": "2025-06-12T08:52:10Z"
+  },
+  {
+    "name": "hyperion-project/hyperion.ng",
+    "version": "2.1",
+    "date": "2025-06-12T06:58:03Z"
+  },
+  {
+    "name": "zitadel/zitadel",
+    "version": "v3.3.0",
+    "date": "2025-06-12T06:54:48Z"
+  },
+  {
+    "name": "bunkerity/bunkerweb",
+    "version": "v1.6.2-rc4",
+    "date": "2025-06-12T06:49:19Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2011",
+    "date": "2025-06-12T06:11:23Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.2",
+    "date": "2025-05-11T16:40:55Z"
+  },
+  {
+    "name": "documenso/documenso",
+    "version": "v1.12.0-rc.4",
+    "date": "2025-06-12T00:27:41Z"
+  },
+  {
     "name": "theonedev/onedev",
     "version": "v11.10.4",
     "date": "2025-06-11T22:36:05Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.2.5",
+    "date": "2025-05-28T06:49:43Z"
   },
   {
     "name": "Radarr/Radarr",
@@ -28,11 +73,6 @@
     "name": "MediaBrowser/Emby.Releases",
     "version": "4.8.11.0",
     "date": "2025-03-10T06:39:11Z"
-  },
-  {
-    "name": "bunkerity/bunkerweb",
-    "version": "testing",
-    "date": "2025-06-11T16:35:40Z"
   },
   {
     "name": "crowdsecurity/crowdsec",
@@ -100,11 +140,6 @@
     "date": "2025-06-11T06:50:19Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2008",
-    "date": "2025-06-11T05:58:00Z"
-  },
-  {
     "name": "openobserve/openobserve",
     "version": "v0.15.0-rc2",
     "date": "2025-06-11T04:29:22Z"
@@ -113,11 +148,6 @@
     "name": "mattermost/mattermost",
     "version": "server/public/v0.1.15",
     "date": "2025-06-11T03:56:25Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.2.5",
-    "date": "2025-05-28T06:49:43Z"
   },
   {
     "name": "emqx/emqx",
@@ -168,11 +198,6 @@
     "name": "glanceapp/glance",
     "version": "v0.8.4",
     "date": "2025-06-10T07:57:14Z"
-  },
-  {
-    "name": "documenso/documenso",
-    "version": "v1.12.0-rc.3",
-    "date": "2025-06-10T02:49:37Z"
   },
   {
     "name": "go-gitea/gitea",
@@ -245,11 +270,6 @@
     "date": "2025-02-25T18:13:42Z"
   },
   {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.2",
-    "date": "2025-05-11T16:40:55Z"
-  },
-  {
     "name": "neo4j/neo4j",
     "version": "5.26.8",
     "date": "2025-06-08T22:50:58Z"
@@ -268,11 +288,6 @@
     "name": "Forceu/Gokapi",
     "version": "v2.0.1",
     "date": "2025-06-08T14:40:24Z"
-  },
-  {
-    "name": "redis/redis",
-    "version": "8.2-m01-int",
-    "date": "2025-06-08T13:48:51Z"
   },
   {
     "name": "Readarr/Readarr",
@@ -370,11 +385,6 @@
     "date": "2025-06-05T16:40:52Z"
   },
   {
-    "name": "docker/compose",
-    "version": "v2.37.0",
-    "date": "2025-06-05T15:11:49Z"
-  },
-  {
     "name": "pi-hole/pi-hole",
     "version": "v6.1.2",
     "date": "2025-06-05T11:32:45Z"
@@ -438,11 +448,6 @@
     "name": "runtipi/runtipi",
     "version": "v4.2.1",
     "date": "2025-06-03T20:04:28Z"
-  },
-  {
-    "name": "zitadel/zitadel",
-    "version": "v2.71.12",
-    "date": "2025-06-03T14:11:41Z"
   },
   {
     "name": "influxdata/influxdb",
@@ -705,6 +710,11 @@
     "date": "2025-05-16T04:31:05Z"
   },
   {
+    "name": "Dolibarr/dolibarr",
+    "version": "18.0.7",
+    "date": "2025-05-15T08:24:30Z"
+  },
+  {
     "name": "Ombi-app/Ombi",
     "version": "v4.47.1",
     "date": "2025-01-05T21:14:23Z"
@@ -923,11 +933,6 @@
     "name": "thomiceli/opengist",
     "version": "v1.10.0",
     "date": "2025-04-07T14:32:15Z"
-  },
-  {
-    "name": "Dolibarr/dolibarr",
-    "version": "21.0.1",
-    "date": "2025-04-06T19:22:59Z"
   },
   {
     "name": "azukaar/Cosmos-Server",
@@ -1233,11 +1238,6 @@
     "name": "thelounge/thelounge-deb",
     "version": "v4.4.3",
     "date": "2024-04-06T12:24:35Z"
-  },
-  {
-    "name": "hyperion-project/hyperion.ng",
-    "version": "2.0.16",
-    "date": "2024-01-18T16:11:07Z"
   },
   {
     "name": "deepch/RTSPtoWeb",
