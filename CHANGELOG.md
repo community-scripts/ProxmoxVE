@@ -22,6 +22,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - Zigbee2MQTT: Fix missing directory [@tremor021](https://github.com/tremor021) ([#5120](https://github.com/community-scripts/ProxmoxVE/pull/5120))
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Umbrel OS: Fix bad disk size shown on website [@tremor021](https://github.com/tremor021) ([#5125](https://github.com/community-scripts/ProxmoxVE/pull/5125))
+
 ## 2025-06-12
 
 ### 🆕 New Scripts
