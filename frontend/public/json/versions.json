@@ -1,5 +1,45 @@
 [
   {
+    "name": "FlowiseAI/Flowise",
+    "version": "flowise@3.0.2",
+    "date": "2025-06-12T22:48:11Z"
+  },
+  {
+    "name": "bunkerity/bunkerweb",
+    "version": "v1.6.1",
+    "date": "2025-03-15T17:29:17Z"
+  },
+  {
+    "name": "leiweibau/Pi.Alert",
+    "version": "v2025-06-12",
+    "date": "2025-06-12T20:59:47Z"
+  },
+  {
+    "name": "hyperion-project/hyperion.ng",
+    "version": "2.1.0",
+    "date": "2025-06-12T19:56:34Z"
+  },
+  {
+    "name": "grafana/grafana",
+    "version": "v11.3.7+security-01",
+    "date": "2025-06-12T17:05:16Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.17",
+    "date": "2025-06-11T12:07:38Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.3.0p34",
+    "date": "2025-06-12T12:15:44Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.95.3",
+    "date": "2025-06-03T11:09:42Z"
+  },
+  {
     "name": "docker/compose",
     "version": "v2.37.1",
     "date": "2025-06-12T09:00:21Z"
@@ -10,19 +50,9 @@
     "date": "2025-06-12T08:52:10Z"
   },
   {
-    "name": "hyperion-project/hyperion.ng",
-    "version": "2.1",
-    "date": "2025-06-12T06:58:03Z"
-  },
-  {
     "name": "zitadel/zitadel",
     "version": "v3.3.0",
     "date": "2025-06-12T06:54:48Z"
-  },
-  {
-    "name": "bunkerity/bunkerweb",
-    "version": "v1.6.2-rc4",
-    "date": "2025-06-12T06:49:19Z"
   },
   {
     "name": "Jackett/Jackett",
@@ -90,24 +120,9 @@
     "date": "2025-06-11T15:19:52Z"
   },
   {
-    "name": "Checkmk/checkmk",
-    "version": "v2.4.0p4",
-    "date": "2025-06-11T14:31:17Z"
-  },
-  {
-    "name": "FlowiseAI/Flowise",
-    "version": "flowise@3.0.2",
-    "date": "2025-06-11T13:18:51Z"
-  },
-  {
     "name": "kimai/kimai",
     "version": "2.36.0",
     "date": "2025-06-11T12:31:07Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.17",
-    "date": "2025-06-11T12:07:38Z"
   },
   {
     "name": "cloudflare/cloudflared",
@@ -118,11 +133,6 @@
     "name": "autobrr/autobrr",
     "version": "v1.63.1",
     "date": "2025-06-11T11:05:42Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.95.3",
-    "date": "2025-06-03T11:09:42Z"
   },
   {
     "name": "fallenbagel/jellyseerr",
@@ -630,11 +640,6 @@
     "date": "2025-05-23T01:47:35Z"
   },
   {
-    "name": "grafana/grafana",
-    "version": "v11.2.10",
-    "date": "2025-05-22T23:50:45Z"
-  },
-  {
     "name": "0xERR0R/blocky",
     "version": "v0.26.2",
     "date": "2025-05-22T05:24:42Z"
@@ -723,11 +728,6 @@
     "name": "motioneye-project/motioneye",
     "version": "0.42.1",
     "date": "2020-06-07T07:27:04Z"
-  },
-  {
-    "name": "leiweibau/Pi.Alert",
-    "version": "v2025-05-11",
-    "date": "2025-05-12T19:14:57Z"
   },
   {
     "name": "stackblitz-labs/bolt.diy",
