@@ -16,6 +16,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-06-14
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Update dolibarr-install.sh - Get largest version number [@tjcomserv](https://github.com/tjcomserv) ([#5127](https://github.com/community-scripts/ProxmoxVE/pull/5127))
+
 ## 2025-06-13
 
 ### 🚀 Updated Scripts
