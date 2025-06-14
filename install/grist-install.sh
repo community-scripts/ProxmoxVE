@@ -14,12 +14,10 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
-  make \
-  ca-certificates \
-  python3.11-venv
+$STD apt-get install -y make ca-certificates
 msg_ok "Installed Dependencies"
 
+PYTHON_VERSION="3.12" setup_uv
 NODE_VERSION="22" NODE_MODULE="yarn@latest" install_node_and_modules
 
 msg_info "Installing Grist"
@@ -28,20 +26,24 @@ export CYPRESS_INSTALL_BINARY=0
 export NODE_OPTIONS="--max-old-space-size=2048"
 cd /opt
 curl -fsSL "https://github.com/gristlabs/grist-core/archive/refs/tags/v${RELEASE}.zip" -o "v${RELEASE}.zip"
-$STD unzip v$RELEASE.zip
-mv grist-core-${RELEASE} grist
-cd grist
+$STD unzip "v${RELEASE}.zip"
+mv "grist-core-${RELEASE}" /opt/grist
+cd /opt/grist
+$STD uv venv /opt/grist/sandbox_venv3
+$STD /opt/grist/sandbox_venv3/bin/python -m ensurepip --upgrade
+$STD /opt/grist/sandbox_venv3/bin/python -m pip install --upgrade pip
+$STD /opt/grist/sandbox_venv3/bin/python -m pip install -r sandbox/requirements.txt
 $STD yarn install
 $STD yarn run build:prod
-$STD yarn run install:python
+ln -sf /opt/grist/sandbox_venv3/bin/python3 /opt/grist/sandbox_venv3/bin/python
 cat <<EOF >/opt/grist/.env
 NODE_ENV=production
 GRIST_HOST=0.0.0.0
 EOF
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
+echo "${RELEASE}" >/opt/grist_version.txt
 msg_ok "Installed Grist"
 
-msg_info "Create Service"
+msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/grist.service
 [Unit]
 Description=Grist
@@ -49,9 +51,10 @@ After=network.target
 
 [Service]
 Type=exec
-WorkingDirectory=/opt/grist 
+WorkingDirectory=/opt/grist
 ExecStart=/usr/bin/yarn run start:prod
 EnvironmentFile=-/opt/grist/.env
+Restart=always
 
 [Install]
 WantedBy=multi-user.target
@@ -64,7 +67,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -rf /opt/v${RELEASE}.zip
+rm -rf "/opt/v${RELEASE}.zip"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"

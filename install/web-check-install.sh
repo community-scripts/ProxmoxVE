@@ -35,12 +35,8 @@ $STD apt-get -y install --no-install-recommends \
   x11-apps
 msg_ok "Installed Dependencies"
 
+PYTHON_VERSION="3.12" setup_uv
 NODE_VERSION="22" NODE_MODULE="yarn@latest" install_node_and_modules
-
-msg_info "Setup Python3"
-$STD apt-get install -y python3
-rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
-msg_ok "Setup Python3"
 
 msg_info "Installing Chromium"
 curl -fsSL https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /etc/apt/trusted.gpg.d/google-archive.gpg

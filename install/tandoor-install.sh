@@ -15,7 +15,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies (Patience)"
-$STD apt-get install -y --no-install-recommends \
+$STD apt-get install -y \
   build-essential \
   libpq-dev \
   libmagic-dev \
@@ -32,25 +32,22 @@ $STD apt-get install -y --no-install-recommends \
   libxmlsec1-openssl
 msg_ok "Installed Dependencies"
 
-msg_info "Setup Python3"
-$STD apt-get install -y \
-  python3 \
-  python3-dev \
-  python3-setuptools \
-  python3-pip \
-  python3-xmlsec
-rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
-msg_ok "Setup Python3"
-
+PYTHON_VERSION="3.12" setup_uv
 NODE_VERSION="20" NODE_MODULE="yarn@latest" install_node_and_modules
 
 msg_info "Installing Tandoor (Patience)"
 $STD git clone https://github.com/TandoorRecipes/recipes -b master /opt/tandoor
 mkdir -p /opt/tandoor/{config,api,mediafiles,staticfiles}
-$STD pip3 install -r /opt/tandoor/requirements.txt
+cd /opt/tandoor
+$STD uv venv /opt/tandoor/.venv
+$STD /opt/tandoor/.venv/bin/python -m ensurepip --upgrade
+$STD /opt/tandoor/.venv/bin/python -m pip install --upgrade pip
+$STD /opt/tandoor/.venv/bin/python -m pip install -r requirements.txt
+
 cd /opt/tandoor/vue
 $STD yarn install
 $STD yarn build
+
 curl -fsSL "https://raw.githubusercontent.com/TandoorRecipes/recipes/develop/.env.template" -o "/opt/tandoor/.env"
 DB_NAME=db_recipes
 DB_USER=tandoor
@@ -65,7 +62,7 @@ sed -i -e "s|SECRET_KEY=.*|SECRET_KEY=$secret_key|g" \
   -e "s|POSTGRES_USER=.*|POSTGRES_USER=$DB_USER|g" \
   -e "\$a\STATIC_URL=/staticfiles/" /opt/tandoor/.env
 cd /opt/tandoor
-$STD python3 version.py
+$STD /opt/tandoor/.venv/bin/python -m version.py
 msg_ok "Installed Tandoor"
 
 msg_info "Install/Set up PostgreSQL Database"
@@ -83,9 +80,9 @@ echo -e "Tandoor Database Name: \e[32m$DB_NAME\e[0m" >>~/tandoor.creds
 echo -e "Tandoor Database User: \e[32m$DB_USER\e[0m" >>~/tandoor.creds
 echo -e "Tandoor Database Password: \e[32m$DB_PASS\e[0m" >>~/tandoor.creds
 export $(cat /opt/tandoor/.env | grep "^[^#]" | xargs)
-/usr/bin/python3 /opt/tandoor/manage.py migrate >/dev/null 2>&1
-/usr/bin/python3 /opt/tandoor/manage.py collectstatic --no-input >/dev/null 2>&1
-/usr/bin/python3 /opt/tandoor/manage.py collectstatic_js_reverse >/dev/null 2>&1
+$STD /opt/tandoor/.venv/bin/python -m manage migrate
+$STD /opt/tandoor/.venv/bin/python -m manage collectstatic --no-input
+$STD /opt/tandoor/.venv/bin/python -m python manage collectstatic_js_reverse
 msg_ok "Set up PostgreSQL Database"
 
 msg_info "Creating Services"
@@ -100,7 +97,7 @@ Restart=always
 RestartSec=3
 WorkingDirectory=/opt/tandoor
 EnvironmentFile=/opt/tandoor/.env
-ExecStart=/usr/local/bin/gunicorn --error-logfile /tmp/gunicorn_err.log --log-level debug --capture-output --bind unix:/opt/tandoor/tandoor.sock recipes.wsgi:application
+ExecStart=/opt/tandoor/.venv/bin/gunicorn --error-logfile /tmp/gunicorn_err.log --log-level debug --capture-output --bind unix:/opt/tandoor/tandoor.sock recipes.wsgi:application
 
 [Install]
 WantedBy=multi-user.target

@@ -35,16 +35,8 @@ $STD apt-get install -y \
   libleptonica-dev
 msg_ok "Installed Dependencies"
 
+PYTHON_VERSION="3.12" setup_uv
 PG_VERSION="16" install_postgresql
-
-msg_info "Setup Python3"
-$STD apt-get install -y \
-  python3 \
-  python3-pip \
-  python3-dev \
-  python3-setuptools \
-  python3-wheel
-msg_ok "Setup Python3"
 
 msg_info "Installing OCR Dependencies (Patience)"
 $STD apt-get install -y \
@@ -85,8 +77,7 @@ $STD tar -xf "paperless-ngx-$Paperlessngx.tar.xz" -C /opt/
 mv paperless-ngx paperless
 rm "paperless-ngx-$Paperlessngx.tar.xz"
 cd /opt/paperless
-$STD pip install --upgrade pip
-$STD pip install -r requirements.txt
+$STD uv sync
 curl -fsSL "https://raw.githubusercontent.com/paperless-ngx/paperless-ngx/main/paperless.conf.example" -o /opt/paperless/paperless.conf
 mkdir -p {consume,data,media,static}
 sed -i -e 's|#PAPERLESS_REDIS=redis://localhost:6379|PAPERLESS_REDIS=redis://localhost:6379|' /opt/paperless/paperless.conf
@@ -98,7 +89,7 @@ echo "${Paperlessngx}" >/opt/"${APPLICATION}"_version.txt
 msg_ok "Installed Paperless-ngx"
 
 msg_info "Installing Natural Language Toolkit (Patience)"
-$STD python3 -m nltk.downloader -d /usr/share/nltk_data all
+$STD /opt/paperless/.venv/bin/python -m nltk.downloader -d /usr/share/nltk_data all
 msg_ok "Installed Natural Language Toolkit"
 
 msg_info "Setting up PostgreSQL database"
@@ -122,7 +113,7 @@ sed -i -e "s|#PAPERLESS_DBUSER=paperless|PAPERLESS_DBUSER=$DB_USER|" /opt/paperl
 sed -i -e "s|#PAPERLESS_DBPASS=paperless|PAPERLESS_DBPASS=$DB_PASS|" /opt/paperless/paperless.conf
 sed -i -e "s|#PAPERLESS_SECRET_KEY=change-me|PAPERLESS_SECRET_KEY=$SECRET_KEY|" /opt/paperless/paperless.conf
 cd /opt/paperless/src
-$STD python3 manage.py migrate
+$STD /opt/paperless/.venv/bin/python manage migrate
 msg_ok "Set up PostgreSQL database"
 
 read -r -p "${TAB3}Would you like to add Adminer? <y/N> " prompt
@@ -144,7 +135,7 @@ fi
 
 msg_info "Setting up admin Paperless-ngx User & Password"
 ## From https://github.com/linuxserver/docker-paperless-ngx/blob/main/root/etc/cont-init.d/99-migrations
-cat <<EOF | python3 /opt/paperless/src/manage.py shell
+cat <<EOF | /opt/paperless/.venv/bin/python /opt/paperless/src/manage shell
 from django.contrib.auth import get_user_model
 UserModel = get_user_model()
 user = UserModel.objects.create_user('admin', password='$DB_PASS')
@@ -194,7 +185,7 @@ Requires=redis.service
 [Service]
 WorkingDirectory=/opt/paperless/src
 ExecStartPre=/bin/sleep 2
-ExecStart=python3 manage.py document_consumer
+ExecStart=/opt/paperless/.venv/bin/python manage document_consumer
 
 [Install]
 WantedBy=multi-user.target

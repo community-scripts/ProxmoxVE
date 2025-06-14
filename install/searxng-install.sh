@@ -22,13 +22,7 @@ $STD apt-get install -y \
   git
 msg_ok "Installed Dependencies"
 
-msg_info "Setup Python3"
-$STD apt-get install -y \
-  python3 \
-  python3-{pip,venv,yaml,dev}
-$STD pip install --upgrade pip setuptools wheel
-$STD pip install pyyaml
-msg_ok "Setup Python3"
+PYTHON_VERSION="3.12" setup_uv
 
 msg_info "Setup SearXNG"
 mkdir -p /usr/local/searxng /etc/searxng
@@ -36,11 +30,10 @@ useradd -d /etc/searxng searxng
 chown searxng:searxng /usr/local/searxng /etc/searxng
 $STD git clone https://github.com/searxng/searxng.git /usr/local/searxng/searxng-src
 cd /usr/local/searxng/
-sudo -u searxng python3 -m venv /usr/local/searxng/searx-pyenv
-source /usr/local/searxng/searx-pyenv/bin/activate
-$STD pip install --upgrade pip setuptools wheel
-$STD pip install pyyaml
-$STD pip install --use-pep517 --no-build-isolation -e /usr/local/searxng/searxng-src
+$STD uv venv /usr/local/searxng/.venv
+$STD uv pip install --upgrade pip setuptools wheel pyyaml
+$STD uv pip install --no-build-isolation -e /usr/local/searxng/searxng-src
+
 SECRET_KEY=$(openssl rand -hex 32)
 cat <<EOF >/etc/searxng/settings.yml
 # SearXNG settings
@@ -94,7 +87,7 @@ Type=simple
 User=searxng
 Group=searxng
 Environment="SEARXNG_SETTINGS_PATH=/etc/searxng/settings.yml"
-ExecStart=/usr/local/searxng/searx-pyenv/bin/python -m searx.webapp
+ExecStart=/usr/local/searxng/searx-pyenv/bin/uv run -m searx.webapp
 WorkingDirectory=/usr/local/searxng/searxng-src
 Restart=always
 

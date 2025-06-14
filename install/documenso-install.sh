@@ -23,13 +23,12 @@ $STD apt-get install -y \
   libc6 \
   make \
   cmake \
-  jq \
-  python3 \
-  python3-bcrypt
+  jq
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" NODE_MODULE="turbo@1.9.3" install_node_and_modules
 PG_VERSION="16" install_postgresql
+PYTHON_VERSION="3.12" setup_uv
 
 msg_info "Setting up PostgreSQL"
 DB_NAME="documenso_db"
@@ -55,6 +54,10 @@ curl -fsSL "https://github.com/documenso/documenso/archive/refs/tags/v${RELEASE}
 $STD unzip v${RELEASE}.zip
 mv documenso-${RELEASE} /opt/documenso
 cd /opt/documenso
+$STD uv venv /opt/documenso/.venv
+$STD /opt/documenso/.venv/bin/python -m ensurepip --upgrade
+$STD /opt/documenso/.venv/bin/python -m pip install --upgrade pip
+$STD /opt/documenso/.venv/bin/python -m pip install bcrypt
 mv .env.example /opt/documenso/.env
 sed -i \
   -e "s|^NEXTAUTH_SECRET=.*|NEXTAUTH_SECRET='$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | cut -c1-32)'|" \
@@ -78,7 +81,7 @@ echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Installed Documenso"
 
 msg_info "Create User"
-PASSWORD_HASH=$(python3 -c "import bcrypt; print(bcrypt.hashpw(b'helper-scripts', bcrypt.gensalt(rounds=12)).decode())")
+PASSWORD_HASH=$(/opt/documenso/.venv/bin/python3 -c "import bcrypt; print(bcrypt.hashpw(b'helper-scripts', bcrypt.gensalt(rounds=12)).decode())")
 $STD sudo -u postgres psql -d documenso_db -c "INSERT INTO \"User\" (name, email, \"emailVerified\", password, \"identityProvider\", roles, \"createdAt\", \"lastSignedIn\", \"updatedAt\", \"customerId\") VALUES ('helper-scripts', 'helper-scripts@local.com', '2025-01-20 17:14:45.058', '$PASSWORD_HASH', 'DOCUMENSO', ARRAY['USER', 'ADMIN']::\"Role\"[], '2025-01-20 16:04:05.543', '2025-01-20 16:14:55.249', '2025-01-20 16:14:55.25', NULL) RETURNING id;"
 $STD npm run prisma:migrate-deploy
 msg_ok "User created"

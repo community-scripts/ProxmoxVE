@@ -22,22 +22,18 @@ $STD apt-get install -y \
   ca-certificates
 msg_ok "Installed Dependencies"
 
-msg_info "Setup Python3"
-$STD apt-get install -y \
-  python3-dev \
-  python3-setuptools \
-  python3-wheel \
-  python3-pip
-msg_ok "Setup Python3"
+PYTHON_VERSION="3.12" setup_uv
 
 msg_info "Installing Spoolman"
 RELEASE=$(curl -fsSL https://github.com/Donkie/Spoolman/releases/latest | grep "title>Release" | cut -d " " -f 4)
 cd /opt
 curl -fsSL "https://github.com/Donkie/Spoolman/releases/download/$RELEASE/spoolman.zip" -o "spoolman.zip"
 $STD unzip spoolman.zip -d spoolman
-rm -rf spoolman.zip
+rm -f spoolman.zip
 cd spoolman
-$STD pip3 install -r requirements.txt
+$STD uv venv /opt/spoolman/.venv
+$STD uv pip install -r requirements.txt
+
 curl -fsSL "https://raw.githubusercontent.com/Donkie/Spoolman/master/.env.example" -o ".env"
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Installed Spoolman"
@@ -47,13 +43,15 @@ cat <<EOF >/etc/systemd/system/spoolman.service
 [Unit]
 Description=Spoolman
 After=network.target
+
 [Service]
 Type=simple
 WorkingDirectory=/opt/spoolman
 EnvironmentFile=/opt/spoolman/.env
-ExecStart=uvicorn spoolman.main:app --host 0.0.0.0 --port 7912
+ExecStart=/opt/spoolman/.venv/bin/uvicorn spoolman.main:app --host 0.0.0.0 --port 7912
 Restart=always
 User=root
+
 [Install]
 WantedBy=multi-user.target
 EOF

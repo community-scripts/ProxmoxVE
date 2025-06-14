@@ -18,11 +18,10 @@ msg_info "Installing Dependencies"
 $STD apt-get install -y \
   gdal-bin \
   libgdal-dev \
-  git \
-  python3-venv \
-  python3-pip
+  git
 msg_ok "Installed Dependencies"
 
+PYTHON_VERSION="3.12" setup_uv
 NODE_VERSION="22" NODE_MODULE="pnpm@latest" install_node_and_modules
 PG_VERSION="16" PG_MODULES="postgis" install_postgresql
 
@@ -79,11 +78,13 @@ DISABLE_REGISTRATION=False
 EOF
 cd /opt/adventurelog/backend/server
 mkdir -p /opt/adventurelog/backend/server/media
-$STD pip install --upgrade pip
-$STD pip install -r requirements.txt
-$STD python3 manage.py collectstatic --noinput
-$STD python3 manage.py migrate
-$STD python3 manage.py download-countries
+$STD uv venv /opt/adventurelog/backend/server/.venv
+$STD /opt/adventurelog/backend/server/.venv/bin/python -m ensurepip --upgrade
+$STD /opt/adventurelog/backend/server/.venv/bin/python -m pip install --upgrade pip
+$STD /opt/adventurelog/backend/server/.venv/bin/python -m pip install -r requirements.txt
+$STD /opt/adventurelog/backend/server/.venv/bin/python -m manage collectstatic --noinput
+$STD /opt/adventurelog/backend/server/.venv/bin/python -m manage migrate
+$STD /opt/adventurelog/backend/server/.venv/bin/python -m manage download-countries
 cat <<EOF >/opt/adventurelog/frontend/.env
 PUBLIC_SERVER_URL=http://$LOCAL_IP:8000
 BODY_SIZE_LIMIT=Infinity
@@ -96,7 +97,8 @@ echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Installed AdventureLog"
 
 msg_info "Setting up Django Admin"
-$STD python3 /opt/adventurelog/backend/server/manage.py shell <<EOF
+cd /opt/adventurelog/backend/server
+$STD .venv/bin/python -m manage shell <<EOF
 from django.contrib.auth import get_user_model
 UserModel = get_user_model()
 user = UserModel.objects.create_user('$DJANGO_ADMIN_USER', password='$DJANGO_ADMIN_PASS')
@@ -120,7 +122,7 @@ After=network.target postgresql.service
 
 [Service]
 WorkingDirectory=/opt/adventurelog/backend/server
-ExecStart=python3 manage.py runserver 0.0.0.0:8000
+ExecStart=/opt/adventurelog/backend/server/.venv/bin/python -m manage runserver 0.0.0.0:8000
 Restart=always
 EnvironmentFile=/opt/adventurelog/backend/server/.env
 
