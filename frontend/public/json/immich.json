@@ -43,6 +43,10 @@
     {
       "text": "To change upload location, edit 'IMMICH_MEDIA_LOCATION' in `/opt/immich/.env`, and create the symlink 'upload' in /opt/immich/app & /opt/immich/app/machine-learning to your new upload location",
       "type": "info"
+    },
+    {
+      "text": "Logs: `/var/log/immich`",
+      "type": "info"
     }
   ]
 }
