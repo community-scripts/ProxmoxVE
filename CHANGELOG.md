@@ -22,6 +22,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - flowiseai: set NodeJS to Version 20 [@MickLesk](https://github.com/MickLesk) ([#5130](https://github.com/community-scripts/ProxmoxVE/pull/5130))
     - Update dolibarr-install.sh - Get largest version number [@tjcomserv](https://github.com/tjcomserv) ([#5127](https://github.com/community-scripts/ProxmoxVE/pull/5127))
 
 ## 2025-06-13
