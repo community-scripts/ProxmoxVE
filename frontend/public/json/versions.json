@@ -1,5 +1,35 @@
 [
   {
+    "name": "semaphoreui/semaphore",
+    "version": "v2.15.0",
+    "date": "2025-06-14T10:48:57Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.17",
+    "date": "2025-06-11T12:07:38Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2016",
+    "date": "2025-06-14T05:59:28Z"
+  },
+  {
+    "name": "FlareSolverr/FlareSolverr",
+    "version": "v3.3.25",
+    "date": "2025-06-14T02:52:44Z"
+  },
+  {
+    "name": "hyperion-project/hyperion.ng",
+    "version": "2.1.0",
+    "date": "2025-06-12T19:56:34Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.2.5",
+    "date": "2025-05-28T06:49:43Z"
+  },
+  {
     "name": "home-assistant/core",
     "version": "2025.6.1",
     "date": "2025-06-13T20:16:18Z"
@@ -25,16 +55,6 @@
     "date": "2025-06-10T14:27:57Z"
   },
   {
-    "name": "semaphoreui/semaphore",
-    "version": "v2.14.12",
-    "date": "2025-05-27T03:58:59Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2015",
-    "date": "2025-06-13T05:53:23Z"
-  },
-  {
     "name": "grafana/grafana",
     "version": "v12.0.1+security-01",
     "date": "2025-06-13T04:15:18Z"
@@ -43,11 +63,6 @@
     "name": "msgbyte/tianji",
     "version": "v1.21.13",
     "date": "2025-06-13T04:11:30Z"
-  },
-  {
-    "name": "hyperion-project/hyperion.ng",
-    "version": "2.1.0",
-    "date": "2025-06-12T19:56:34Z"
   },
   {
     "name": "FlowiseAI/Flowise",
@@ -68,16 +83,6 @@
     "name": "leiweibau/Pi.Alert",
     "version": "v2025-06-12",
     "date": "2025-06-12T20:59:47Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.2.5",
-    "date": "2025-05-28T06:49:43Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.17",
-    "date": "2025-06-11T12:07:38Z"
   },
   {
     "name": "Checkmk/checkmk",
@@ -423,11 +428,6 @@
     "name": "rabbitmq/rabbitmq-server",
     "version": "v4.1.1",
     "date": "2025-06-04T19:10:05Z"
-  },
-  {
-    "name": "FlareSolverr/FlareSolverr",
-    "version": "v3.3.24",
-    "date": "2025-06-04T18:02:30Z"
   },
   {
     "name": "cockpit-project/cockpit",
