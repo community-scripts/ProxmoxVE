@@ -227,6 +227,7 @@ install_mariadb() {
   local MARIADB_VERSION="${MARIADB_VERSION:-latest}"
   local DISTRO_CODENAME
   DISTRO_CODENAME="$(awk -F= '/^VERSION_CODENAME=/{print $2}' /etc/os-release)"
+  CURRENT_OS="$(awk -F= '/^ID=/{print $2}' /etc/os-release)"
 
   # grab dynamic latest LTS version
   if [[ "$MARIADB_VERSION" == "latest" ]]; then
@@ -270,7 +271,7 @@ install_mariadb() {
   curl -fsSL "https://mariadb.org/mariadb_release_signing_key.asc" |
     gpg --dearmor -o /etc/apt/trusted.gpg.d/mariadb.gpg
 
-  echo "deb [signed-by=/etc/apt/trusted.gpg.d/mariadb.gpg] http://mirror.mariadb.org/repo/${MARIADB_VERSION}/debian ${DISTRO_CODENAME} main" \
+  echo "deb [signed-by=/etc/apt/trusted.gpg.d/mariadb.gpg] http://mirror.mariadb.org/repo/${MARIADB_VERSION}/${CURRENT_OS} ${DISTRO_CODENAME} main" \
     >/etc/apt/sources.list.d/mariadb.list
 
   $STD apt-get update
