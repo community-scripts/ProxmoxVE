@@ -1,5 +1,30 @@
 [
   {
+    "name": "home-assistant/core",
+    "version": "2025.6.1",
+    "date": "2025-06-13T20:16:18Z"
+  },
+  {
+    "name": "homarr-labs/homarr",
+    "version": "v1.24.0",
+    "date": "2025-06-13T19:15:36Z"
+  },
+  {
+    "name": "nzbgetcom/nzbget",
+    "version": "v25.0",
+    "date": "2025-05-12T09:12:04Z"
+  },
+  {
+    "name": "Luligu/matterbridge",
+    "version": "3.0.6",
+    "date": "2025-06-13T15:02:37Z"
+  },
+  {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.514",
+    "date": "2025-06-10T14:27:57Z"
+  },
+  {
     "name": "semaphoreui/semaphore",
     "version": "v2.14.12",
     "date": "2025-05-27T03:58:59Z"
@@ -28,6 +53,11 @@
     "name": "FlowiseAI/Flowise",
     "version": "flowise@3.0.2",
     "date": "2025-06-12T22:48:11Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.9.1-rc1",
+    "date": "2025-06-12T21:18:54Z"
   },
   {
     "name": "bunkerity/bunkerweb",
@@ -105,11 +135,6 @@
     "date": "2025-06-03T08:45:14Z"
   },
   {
-    "name": "home-assistant/core",
-    "version": "2025.6.0",
-    "date": "2025-06-11T19:35:25Z"
-  },
-  {
     "name": "MediaBrowser/Emby.Releases",
     "version": "4.8.11.0",
     "date": "2025-03-10T06:39:11Z"
@@ -180,11 +205,6 @@
     "date": "2025-05-27T12:10:19Z"
   },
   {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.514",
-    "date": "2025-06-10T14:27:57Z"
-  },
-  {
     "name": "open-webui/open-webui",
     "version": "v0.6.14",
     "date": "2025-06-10T14:18:04Z"
@@ -250,11 +270,6 @@
     "date": "2025-06-09T17:27:45Z"
   },
   {
-    "name": "ollama/ollama",
-    "version": "v0.9.1-ci3",
-    "date": "2025-06-07T16:12:57Z"
-  },
-  {
     "name": "Brandawg93/PeaNUT",
     "version": "v5.8.0",
     "date": "2025-06-09T16:08:33Z"
@@ -275,11 +290,6 @@
     "date": "2025-06-09T13:37:07Z"
   },
   {
-    "name": "nzbgetcom/nzbget",
-    "version": "v25.0",
-    "date": "2025-05-12T09:12:04Z"
-  },
-  {
     "name": "silverbulletmd/silverbullet",
     "version": "0.10.4",
     "date": "2025-02-25T18:13:42Z"
@@ -293,11 +303,6 @@
     "name": "karakeep-app/karakeep",
     "version": "ios/v1.7.0-1",
     "date": "2025-06-08T22:02:33Z"
-  },
-  {
-    "name": "Luligu/matterbridge",
-    "version": "3.0.5",
-    "date": "2025-06-08T15:53:53Z"
   },
   {
     "name": "Forceu/Gokapi",
@@ -353,11 +358,6 @@
     "name": "OliveTin/OliveTin",
     "version": "2025.6.6",
     "date": "2025-06-06T21:39:22Z"
-  },
-  {
-    "name": "homarr-labs/homarr",
-    "version": "v1.23.0",
-    "date": "2025-06-06T19:16:19Z"
   },
   {
     "name": "diced/zipline",
