@@ -21,9 +21,9 @@ msg_ok "Installed Dependencies"
 
 
 
-git clone -q https://github.com/Fallenbagel/jellyseerr.git /opt/jellyseerr
+git clone -q https://github.com/michaelhthomas/jellyseerr.git /opt/jellyseerr
 cd /opt/jellyseerr
-$STD git checkout main
+$STD git checkout feat/oidc-login
 
 pnpm_desired=$(grep -Po '"pnpm":\s*"\K[^"]+' /opt/jellyseerr/package.json)
 NODE_VERSION="22" NODE_MODULE="pnpm@$pnpm_desired" install_node_and_modules
