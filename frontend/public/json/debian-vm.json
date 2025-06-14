@@ -33,11 +33,7 @@
   },
   "notes": [
     {
-      "text": "VM has no root password set. To login type in user `root` and just press enter",
-      "type": "info"
-    },
-    {
-      "text": "After installation, checkout: ´https://github.com/community-scripts/ProxmoxVE/discussions/836´ for useful Debian commands",
+      "text": "after installation, checkout: ´https://github.com/community-scripts/ProxmoxVE/discussions/272´",
       "type": "info"
     }
   ]
