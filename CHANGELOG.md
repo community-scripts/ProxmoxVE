@@ -18,6 +18,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
+  - [core] Update install_mariadb func [@tremor021](https://github.com/tremor021) ([#5138](https://github.com/community-scripts/ProxmoxVE/pull/5138))
+
   - #### 🐞 Bug Fixes
 
     - Update dolibarr-install.sh - Get largest version number [@tjcomserv](https://github.com/tjcomserv) ([#5127](https://github.com/community-scripts/ProxmoxVE/pull/5127))
