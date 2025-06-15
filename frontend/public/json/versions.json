@@ -1,5 +1,45 @@
 [
   {
+    "name": "syncthing/syncthing",
+    "version": "2.0.0-rc.19",
+    "date": "2025-06-02T17:56:25Z"
+  },
+  {
+    "name": "Prowlarr/Prowlarr",
+    "version": "v1.37.0.5076",
+    "date": "2025-06-04T11:04:53Z"
+  },
+  {
+    "name": "Readarr/Readarr",
+    "version": "v2.0.0.4645",
+    "date": "2017-03-07T18:56:06Z"
+  },
+  {
+    "name": "Lidarr/Lidarr",
+    "version": "v2.12.4.4658",
+    "date": "2025-06-09T17:27:45Z"
+  },
+  {
+    "name": "Radarr/Radarr",
+    "version": "v5.26.2.10099",
+    "date": "2025-06-11T20:10:39Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2017",
+    "date": "2025-06-15T05:54:05Z"
+  },
+  {
+    "name": "traccar/traccar",
+    "version": "v6.7.3",
+    "date": "2025-06-15T05:46:17Z"
+  },
+  {
+    "name": "hyperion-project/hyperion.ng",
+    "version": "2.1.1",
+    "date": "2025-06-14T17:45:06Z"
+  },
+  {
     "name": "advplyr/audiobookshelf",
     "version": "v2.25.1",
     "date": "2025-06-14T23:32:15Z"
@@ -8,11 +48,6 @@
     "name": "nzbgetcom/nzbget",
     "version": "v25.0",
     "date": "2025-05-12T09:12:04Z"
-  },
-  {
-    "name": "hyperion-project/hyperion.ng",
-    "version": "2.1.1",
-    "date": "2025-06-14T17:45:06Z"
   },
   {
     "name": "bunkerity/bunkerweb",
@@ -40,9 +75,9 @@
     "date": "2025-06-11T12:07:38Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2016",
-    "date": "2025-06-14T05:59:28Z"
+    "name": "runtipi/runtipi",
+    "version": "v4.2.1",
+    "date": "2025-06-03T20:04:28Z"
   },
   {
     "name": "FlareSolverr/FlareSolverr",
@@ -128,11 +163,6 @@
     "name": "documenso/documenso",
     "version": "v1.12.0-rc.4",
     "date": "2025-06-12T00:27:41Z"
-  },
-  {
-    "name": "Radarr/Radarr",
-    "version": "v5.26.2.10099",
-    "date": "2025-06-11T20:10:39Z"
   },
   {
     "name": "TandoorRecipes/recipes",
@@ -275,11 +305,6 @@
     "date": "2025-06-09T18:11:46Z"
   },
   {
-    "name": "Lidarr/Lidarr",
-    "version": "v2.12.4.4658",
-    "date": "2025-06-09T17:27:45Z"
-  },
-  {
     "name": "Brandawg93/PeaNUT",
     "version": "v5.8.0",
     "date": "2025-06-09T16:08:33Z"
@@ -320,11 +345,6 @@
     "date": "2025-06-08T14:40:24Z"
   },
   {
-    "name": "Readarr/Readarr",
-    "version": "v2.0.0.4645",
-    "date": "2017-03-07T18:56:06Z"
-  },
-  {
     "name": "matze/wastebin",
     "version": "3.2.0",
     "date": "2025-06-07T21:33:22Z"
@@ -338,11 +358,6 @@
     "name": "jordan-dalby/ByteStash",
     "version": "v1.5.8",
     "date": "2025-06-07T11:39:10Z"
-  },
-  {
-    "name": "syncthing/syncthing",
-    "version": "2.0.0-rc.19",
-    "date": "2025-06-02T17:56:25Z"
   },
   {
     "name": "evcc-io/evcc",
@@ -440,11 +455,6 @@
     "date": "2025-06-04T16:41:44Z"
   },
   {
-    "name": "Prowlarr/Prowlarr",
-    "version": "v1.37.0.5076",
-    "date": "2025-06-04T11:04:53Z"
-  },
-  {
     "name": "glpi-project/glpi",
     "version": "10.0.18",
     "date": "2025-02-12T11:07:02Z"
@@ -463,11 +473,6 @@
     "name": "coder/code-server",
     "version": "v4.100.3",
     "date": "2025-06-03T21:06:41Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "v4.2.1",
-    "date": "2025-06-03T20:04:28Z"
   },
   {
     "name": "influxdata/influxdb",
@@ -498,11 +503,6 @@
     "name": "usememos/memos",
     "version": "v0.24.4",
     "date": "2025-06-02T02:49:05Z"
-  },
-  {
-    "name": "traccar/traccar",
-    "version": "v6.7.2",
-    "date": "2025-06-01T20:40:00Z"
   },
   {
     "name": "gethomepage/homepage",
