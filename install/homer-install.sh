@@ -13,12 +13,11 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt-get install -y pip
-msg_ok "Installed Dependencies"
+PYTHON_VERSION="3.12" setup_uv
 
 msg_info "Installing Homer"
 mkdir -p /opt/homer
+$STD uv venv /opt/homer/.venv
 cd /opt/homer
 curl -fsSL "https://github.com/bastienwirtz/homer/releases/latest/download/homer.zip" -o "homer.zip"
 $STD unzip homer.zip
@@ -34,7 +33,7 @@ After=network-online.target
 [Service]
 Type=simple
 WorkingDirectory=/opt/homer
-ExecStart=python3 -m http.server 8010
+ExecStart=/opt/homer/.venv/bin/python3 -m http.server 8010
 [Install]
 WantedBy=multi-user.target
 EOF

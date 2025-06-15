@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/python_to_uv/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: Andy Grunwald (andygrunwald)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -20,26 +20,26 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -f /etc/systemd/system/prometheus-pve-exporter.service ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    msg_info "Stopping ${APP}"
-    systemctl stop prometheus-pve-exporter
-    msg_ok "Stopped ${APP}"
-
-    msg_info "Updating ${APP}"
-    $STD pip install prometheus-pve-exporter --default-timeout=300 --upgrade --root-user-action=ignore
-    msg_ok "Updated ${APP}"
-
-    msg_info "Starting ${APP}"
-    systemctl start prometheus-pve-exporter
-    msg_ok "Started ${APP}"
-    msg_ok "Updated Successfully"
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -f /etc/systemd/system/prometheus-pve-exporter.service ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+  msg_info "Stopping ${APP}"
+  systemctl stop prometheus-pve-exporter
+  msg_ok "Stopped ${APP}"
+
+  msg_info "Updating ${APP}"
+  $STD pip install prometheus-pve-exporter --default-timeout=300 --upgrade --root-user-action=ignore
+  msg_ok "Updated ${APP}"
+
+  msg_info "Starting ${APP}"
+  systemctl start prometheus-pve-exporter
+  msg_ok "Started ${APP}"
+  msg_ok "Updated Successfully"
+  exit
 }
 
 start

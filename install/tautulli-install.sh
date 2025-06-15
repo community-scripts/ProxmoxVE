@@ -15,22 +15,17 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y git
-$STD apt-get install -y pip
 msg_ok "Installed Dependencies"
 
-msg_info "Setup Python3"
-$STD apt-get install -y \
-  python3 \
-  python3-dev \
-  python3-pip
-rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
-msg_ok "Setup Python3"
+PYTHON_VERSION="3.12" setup_uv
 
 msg_info "Installing Tautulli"
 cd /opt
 $STD git clone https://github.com/Tautulli/Tautulli.git
-$STD pip install -q -r /opt/Tautulli/requirements.txt
-$STD pip install pyopenssl
+cd /opt/Tautulli
+$STD uv venv /opt/Tautulli/.venv
+$STD uv pip install -r /opt/Tautulli/requirements.txt
+$STD uv pip install pyopenssl
 msg_ok "Installed Tautulli"
 
 msg_info "Creating Service"
@@ -44,7 +39,7 @@ WorkingDirectory=/opt/Tautulli/
 Restart=on-failure
 RestartSec=5
 Type=simple
-ExecStart=/usr/bin/python3 /opt/Tautulli/Tautulli.py
+ExecStart=/opt/Tautulli/.venv/bin/python /opt/Tautulli/Tautulli.py
 KillSignal=SIGINT
 TimeoutStopSec=20
 SyslogIdentifier=tautulli

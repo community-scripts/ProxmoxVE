@@ -13,16 +13,13 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt-get install -y \
-  python3-pip
-msg_ok "Installed Dependencies"
+PYTHON_VERSION="3.12" setup_uv
 
 msg_info "Setup ${APPLICATION}"
 tmp_file=$(mktemp)
 RELEASE=$(curl -s https://api.github.com/repos/slskd/slskd/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-curl -fsSL "https://github.com/slskd/slskd/releases/download/${RELEASE}/slskd-${RELEASE}-linux-x64.zip" -o $tmp_file
-$STD unzip $tmp_file -d /opt/${APPLICATION}
+curl -fsSL "https://github.com/slskd/slskd/releases/download/${RELEASE}/slskd-${RELEASE}-linux-x64.zip" -o "$tmp_file"
+$STD unzip "$tmp_file" -d /opt/${APPLICATION}
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 JWT_KEY=$(openssl rand -base64 44)
 SLSKD_API_KEY=$(openssl rand -base64 44)
@@ -40,13 +37,13 @@ sed -i \
 msg_ok "Setup ${APPLICATION}"
 
 msg_info "Installing Soularr"
-rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
 cd /tmp
 curl -fsSL -o main.zip https://github.com/mrusse/soularr/archive/refs/heads/main.zip
 $STD unzip main.zip
 mv soularr-main /opt/soularr
 cd /opt/soularr
-$STD pip install -r requirements.txt
+$STD uv venv /opt/soularr/.venv
+$STD uv pip install -r requirements.txt
 sed -i \
   -e "\|[Slskd]|,\|host_url|s|yourslskdapikeygoeshere|$SLSKD_API_KEY|" \
   -e "/host_url/s/slskd/localhost/" \
@@ -54,7 +51,7 @@ sed -i \
 sed -i \
   -e "/#This\|#Default\|INTERVAL/{N;d;}" \
   -e "/while\|#Pass/d" \
-  -e "\|python|s|app|opt/soularr|; s|python|python3|" \
+  -e "\|python|s|app|opt/soularr|; s|python|/opt/soularr/.venv/bin/python3|" \
   -e "/dt/,+2d" \
   /opt/soularr/run.sh
 sed -i -E "/(soularr.py)/s/.{5}$//; /if/,/fi/s/.{4}//" /opt/soularr/run.sh
@@ -85,7 +82,6 @@ RefuseManualStop=no
 
 [Timer]
 Persistent=true
-# run every 5 minutes
 OnCalendar=*-*-* *:0/5:00
 Unit=soularr.service
 
@@ -106,7 +102,8 @@ ExecStart=/bin/bash -c /opt/soularr/run.sh
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now ${APPLICATION}
+
+systemctl enable -q --now soularr
 systemctl enable -q soularr.timer
 msg_ok "Created Services"
 
@@ -114,8 +111,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -rf $tmp_file
-rm -rf /tmp/main.zip
+rm -f "$tmp_file" /tmp/main.zip
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"

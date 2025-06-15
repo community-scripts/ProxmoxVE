@@ -20,19 +20,15 @@ $STD apt-get install -y \
   ffmpeg
 msg_ok "Installed Dependencies"
 
-msg_info "Setup Python3"
-$STD apt-get install -y --no-install-recommends \
-  python3 \
-  python3-pip
-msg_ok "Setup Python3"
-
+PYTHON_VERSION="3.12" setup_uv
 NODE_VERSION="22" install_node_and_modules
 
 msg_info "Installing Open WebUI (Patience)"
 $STD git clone https://github.com/open-webui/open-webui.git /opt/open-webui
 cd /opt/open-webui/backend
-$STD pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
-$STD pip3 install -r requirements.txt -U
+$STD uv venv /opt/open-webui/.venv
+$STD /opt/open-webui/.venv/bin/uv pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+$STD /opt/open-webui/.venv/bin/uv pip install -r requirements.txt -U
 cd /opt/open-webui
 cp .env.example .env
 cat <<EOF >/opt/open-webui/.env

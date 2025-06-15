@@ -13,28 +13,28 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Setup Python 3"
-$STD apt-get install python3-pip -y
-rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
-msg_ok "Setup Python 3"
+PYTHON_VERSION="3.12" setup_uv
 
-msg_info "Setup Kometa"
-temp_file=$(mktemp)
+msg_info "Installing Kometa"
+tmp_file=$(mktemp)
 RELEASE=$(curl -fsSL https://api.github.com/repos/Kometa-Team/Kometa/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/Kometa-Team/Kometa/archive/refs/tags/v${RELEASE}.tar.gz" -o """$temp_file"""
-tar -xzf "$temp_file"
-mv Kometa-"${RELEASE}" /opt/kometa
+curl -fsSL "https://github.com/Kometa-Team/Kometa/archive/refs/tags/v${RELEASE}.tar.gz" -o "$tmp_file"
+tar -xzf "$tmp_file"
+mv "Kometa-${RELEASE}" /opt/kometa
 cd /opt/kometa
-$STD pip install -r requirements.txt --ignore-installed
+$STD uv venv /home/wger/.venv
+$STD /opt/kometa/.venv/bin/python -m ensurepip --upgrade
+$STD /opt/kometa/.venv/bin/python -m pip install --upgrade pip
+$STD /opt/kometa/.venv/bin/python -m pip install -r requirements.txt
 mkdir -p config/assets
 cp config/config.yml.template config/config.yml
-echo "${RELEASE}" >/opt/kometa_version.txt
-msg_ok "Setup Kometa"
+echo "$RELEASE" >/opt/kometa_version.txt
+msg_ok "Installed Kometa"
 
-read -p "${TAB3}nter your TMDb API key: " TMDBKEY
+read -p "${TAB3}Enter your TMDb API key: " TMDBKEY
 read -p "${TAB3}Enter your Plex URL: " PLEXURL
 read -p "${TAB3}Enter your Plex token: " PLEXTOKEN
-sed -i -e "s#url: http://192.168.1.12:32400#url: $PLEXURL #g" /opt/kometa/config/config.yml
+sed -i -e "s#url: http://192.168.1.12:32400#url: $PLEXURL#g" /opt/kometa/config/config.yml
 sed -i -e "s/token: ####################/token: $PLEXTOKEN/g" /opt/kometa/config/config.yml
 sed -i -e "s/apikey: ################################/apikey: $TMDBKEY/g" /opt/kometa/config/config.yml
 
@@ -47,21 +47,21 @@ After=network-online.target
 [Service]
 Type=simple
 WorkingDirectory=/opt/kometa
-ExecStart=/usr/bin/python3 kometa.py
+ExecStart=/opt/kometa/.venv/bin/python kometa.py
 Restart=always
 RestartSec=30
 
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable --now -q kometa
+systemctl enable -q --now kometa
 msg_ok "Created Service"
 
 motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -f "$temp_file"
+rm -f "$tmp_file"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
