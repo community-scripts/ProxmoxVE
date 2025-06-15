@@ -19,15 +19,19 @@ curl -fsSL -o "/opt/kasm_release_${KASM_VERSION}.tar.gz" "https://kasm-static-co
 cd /opt
 tar -xf "kasm_release_${KASM_VERSION}.tar.gz"
 chmod +x /opt/kasm_release/install.sh
-printf 'y\ny\ny\n4\n' | bash /opt/kasm_release/install.sh | tee ~/kasm-install.output
-sed -n '/Kasm UI Login Credentials/,$p' ~/kasm-install.output >~/kasm.creds
+printf 'y\ny\ny\n4\n' | bash /opt/kasm_release/install.sh > ~/kasm-install.output 2>&1
+cat ~/kasm-install.output | grep -A 20 -i "credentials\|login\|password\|admin" | sed '1i Kasm-Workspaces-Credentials' >~/kasm.creds
 msg_ok "Installed Kasm Workspaces"
 
 motd_ssh
 customize
 
+msg_info "Displaying Kasm Credentials"
+cat ~/kasm.creds
+
 msg_info "Cleaning up"
-$STD rm -f /opt/kasm_release_${KASM_VERSION}.tar.gz
+rm -f /opt/kasm_release_${KASM_VERSION}.tar.gz
+rm -f ~/kasm-install.output
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
