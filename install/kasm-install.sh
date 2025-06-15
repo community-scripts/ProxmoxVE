@@ -17,8 +17,7 @@ msg_info "Installing Kasm Workspaces"
 KASM_VERSION=$(curl -fsSL 'https://www.kasmweb.com/downloads' | grep -o 'https://kasm-static-content.s3.amazonaws.com/kasm_release_[^"]*\.tar\.gz' | head -n 1 | sed -E 's/.*release_(.*)\.tar\.gz/\1/')
 curl -fsSL -o "/opt/kasm_release_${KASM_VERSION}.tar.gz" "https://kasm-static-content.s3.amazonaws.com/kasm_release_${KASM_VERSION}.tar.gz"
 tar -xf "/opt/kasm_release_${KASM_VERSION}.tar.gz" -C /opt
-printf 'y\ny\ny\n4\n' | bash /opt/kasm_release/install.sh
-touch ~/kasm-install.output
+printf 'y\ny\ny\n4\n' | bash /opt/kasm_release/install.sh >~/kasm-install.output
 sed -n '/Kasm UI Login Credentials/,$p' ~/kasm-install.output >~/kasm.creds
 msg_ok "Installed Kasm Workspaces"
 
