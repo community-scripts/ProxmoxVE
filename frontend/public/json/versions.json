@@ -1,5 +1,35 @@
 [
   {
+    "name": "advplyr/audiobookshelf",
+    "version": "v2.25.1",
+    "date": "2025-06-14T23:32:15Z"
+  },
+  {
+    "name": "nzbgetcom/nzbget",
+    "version": "v25.0",
+    "date": "2025-05-12T09:12:04Z"
+  },
+  {
+    "name": "hyperion-project/hyperion.ng",
+    "version": "2.1.1",
+    "date": "2025-06-14T17:45:06Z"
+  },
+  {
+    "name": "bunkerity/bunkerweb",
+    "version": "v1.6.2-rc5",
+    "date": "2025-06-14T16:44:14Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.9.1-rc1",
+    "date": "2025-06-12T21:18:54Z"
+  },
+  {
+    "name": "theonedev/onedev",
+    "version": "v11.11.0",
+    "date": "2025-06-14T13:23:36Z"
+  },
+  {
     "name": "semaphoreui/semaphore",
     "version": "v2.15.0",
     "date": "2025-06-14T10:48:57Z"
@@ -20,11 +50,6 @@
     "date": "2025-06-14T02:52:44Z"
   },
   {
-    "name": "hyperion-project/hyperion.ng",
-    "version": "2.1.0",
-    "date": "2025-06-12T19:56:34Z"
-  },
-  {
     "name": "keycloak/keycloak",
     "version": "26.2.5",
     "date": "2025-05-28T06:49:43Z"
@@ -38,11 +63,6 @@
     "name": "homarr-labs/homarr",
     "version": "v1.24.0",
     "date": "2025-06-13T19:15:36Z"
-  },
-  {
-    "name": "nzbgetcom/nzbget",
-    "version": "v25.0",
-    "date": "2025-05-12T09:12:04Z"
   },
   {
     "name": "Luligu/matterbridge",
@@ -68,16 +88,6 @@
     "name": "FlowiseAI/Flowise",
     "version": "flowise@3.0.2",
     "date": "2025-06-12T22:48:11Z"
-  },
-  {
-    "name": "ollama/ollama",
-    "version": "v0.9.1-rc1",
-    "date": "2025-06-12T21:18:54Z"
-  },
-  {
-    "name": "bunkerity/bunkerweb",
-    "version": "testing",
-    "date": "2025-06-11T16:35:40Z"
   },
   {
     "name": "leiweibau/Pi.Alert",
@@ -118,11 +128,6 @@
     "name": "documenso/documenso",
     "version": "v1.12.0-rc.4",
     "date": "2025-06-12T00:27:41Z"
-  },
-  {
-    "name": "theonedev/onedev",
-    "version": "v11.10.4",
-    "date": "2025-06-11T22:36:05Z"
   },
   {
     "name": "Radarr/Radarr",
@@ -493,11 +498,6 @@
     "name": "usememos/memos",
     "version": "v0.24.4",
     "date": "2025-06-02T02:49:05Z"
-  },
-  {
-    "name": "advplyr/audiobookshelf",
-    "version": "v2.24.0",
-    "date": "2025-06-01T21:38:08Z"
   },
   {
     "name": "traccar/traccar",
