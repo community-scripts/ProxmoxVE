@@ -177,39 +177,47 @@ function exit-script() {
 }
 
 function default_settings() {
-  VMID=$(get_valid_nextid)
-  FORMAT=",efitype=4m"
-  MACHINE=""
-  DISK_SIZE="8G"
-  DISK_CACHE=""
-  HN="debian"
-  CPU_TYPE=""
-  CORE_COUNT="2"
-  RAM_SIZE="2048"
-  BRG="vmbr0"
-  MAC="$GEN_MAC"
-  VLAN=""
-  MTU=""
-  START_VM="yes"
-  METHOD="default"
+  VMID=${VMID:-$(get_valid_nextid)}
+  FORMAT=${FORMAT:-,efitype=4m}
+  MACHINE=${MACHINE:-""}
+  DISK_SIZE=${DISK_SIZE:-"8G"}
+  DISK_CACHE=${DISK_CACHE:-""}
+  HN=${HN:-"debian"}
+  CPU_TYPE=${CPU_TYPE:-""}
+  CORE_COUNT=${CORE_COUNT:-"2"}
+  RAM_SIZE=${RAM_SIZE:-"2048"}
+  BRG=${BRG:-"vmbr0"}
+  MAC=${MAC:-"$GEN_MAC"}
+  VLAN=${VLAN:-""}
+  MTU=${MTU:-""}
+  START_VM=${START_VM:-"yes"}
+  METHOD=${METHOD:-"default"}
   echo -e "${CONTAINERID}${BOLD}${DGN}Virtual Machine ID: ${BGN}${VMID}${CL}"
-  echo -e "${CONTAINERTYPE}${BOLD}${DGN}Machine Type: ${BGN}i440fx${CL}"
+  echo -e "${CONTAINERTYPE}${BOLD}${DGN}Machine Type: ${BGN}${MACHINE:-i440fx}${CL}"
   echo -e "${DISKSIZE}${BOLD}${DGN}Disk Size: ${BGN}${DISK_SIZE}${CL}"
-  echo -e "${DISKSIZE}${BOLD}${DGN}Disk Cache: ${BGN}None${CL}"
+  echo -e "${DISKSIZE}${BOLD}${DGN}Disk Cache: ${BGN}${DISK_CACHE:-None}${CL}"
   echo -e "${HOSTNAME}${BOLD}${DGN}Hostname: ${BGN}${HN}${CL}"
-  echo -e "${OS}${BOLD}${DGN}CPU Model: ${BGN}KVM64${CL}"
+  echo -e "${OS}${BOLD}${DGN}CPU Model: ${BGN}${CPU_TYPE:-KVM64}${CL}"
   echo -e "${CPUCORE}${BOLD}${DGN}CPU Cores: ${BGN}${CORE_COUNT}${CL}"
   echo -e "${RAMSIZE}${BOLD}${DGN}RAM Size: ${BGN}${RAM_SIZE}${CL}"
   echo -e "${BRIDGE}${BOLD}${DGN}Bridge: ${BGN}${BRG}${CL}"
   echo -e "${MACADDRESS}${BOLD}${DGN}MAC Address: ${BGN}${MAC}${CL}"
-  echo -e "${VLANTAG}${BOLD}${DGN}VLAN: ${BGN}Default${CL}"
-  echo -e "${DEFAULT}${BOLD}${DGN}Interface MTU Size: ${BGN}Default${CL}"
-  echo -e "${GATEWAY}${BOLD}${DGN}Start VM when completed: ${BGN}yes${CL}"
+  echo -e "${VLANTAG}${BOLD}${DGN}VLAN: ${BGN}${VLAN:-Default}${CL}"
+  echo -e "${DEFAULT}${BOLD}${DGN}Interface MTU Size: ${BGN}${MTU:-Default}${CL}"
+  echo -e "${GATEWAY}${BOLD}${DGN}Start VM when completed: ${BGN}${START_VM}${CL}"
   echo -e "${CREATING}${BOLD}${DGN}Creating a Debian 12 VM using the above default settings${CL}"
 }
 
 function advanced_settings() {
   METHOD="advanced"
+  HN=${HN:-"debian"}
+  CORE_COUNT=${CORE_COUNT:-"2"}
+  RAM_SIZE=${RAM_SIZE:-"2048"}
+  BRG=${BRG:-"vmbr0"}
+  MAC=${MAC:-"$GEN_MAC"}
+  VLAN=${VLAN:-""}
+  MTU=${MTU:-""}
+
   [ -z "${VMID:-}" ] && VMID=$(get_valid_nextid)
   while true; do
     if VMID=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Virtual Machine ID" 8 58 $VMID --title "VIRTUAL MACHINE ID" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
@@ -229,9 +237,9 @@ function advanced_settings() {
   done
 
   if MACH=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "MACHINE TYPE" --radiolist --cancel-button Exit-Script "Choose Type" 10 58 2 \
-    "i440fx" "Machine i440fx" ON \
-    "q35" "Machine q35" OFF \
-    3>&1 1>&2 2>&3); then
+      "i440fx" "Machine i440fx" ON \
+      "q35" "Machine q35" OFF \
+      3>&1 1>&2 2>&3); then
     if [ $MACH = q35 ]; then
       echo -e "${CONTAINERTYPE}${BOLD}${DGN}Machine Type: ${BGN}$MACH${CL}"
       FORMAT=""
@@ -261,9 +269,9 @@ function advanced_settings() {
   fi
 
   if DISK_CACHE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "DISK CACHE" --radiolist "Choose" --cancel-button Exit-Script 10 58 2 \
-    "0" "None (Default)" ON \
-    "1" "Write Through" OFF \
-    3>&1 1>&2 2>&3); then
+      "0" "None (Default)" ON \
+      "1" "Write Through" OFF \
+      3>&1 1>&2 2>&3); then
     if [ $DISK_CACHE = "1" ]; then
       echo -e "${DISKSIZE}${BOLD}${DGN}Disk Cache: ${BGN}Write Through${CL}"
       DISK_CACHE="cache=writethrough,"
@@ -275,9 +283,9 @@ function advanced_settings() {
     exit-script
   fi
 
-  if VM_NAME=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Hostname" 8 58 debian --title "HOSTNAME" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
-    if [ -z $VM_NAME ]; then
-      HN="debian"
+  if VM_NAME=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Hostname" 8 58 "$HN" --title "HOSTNAME" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+    if [ -z "$VM_NAME" ]; then
+      HN=${HN:-"debian"}
       echo -e "${HOSTNAME}${BOLD}${DGN}Hostname: ${BGN}$HN${CL}"
     else
       HN=$(echo ${VM_NAME,,} | tr -d ' ')
@@ -288,9 +296,9 @@ function advanced_settings() {
   fi
 
   if CPU_TYPE1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "CPU MODEL" --radiolist "Choose" --cancel-button Exit-Script 10 58 2 \
-    "0" "KVM64 (Default)" ON \
-    "1" "Host" OFF \
-    3>&1 1>&2 2>&3); then
+      "0" "KVM64 (Default)" ON \
+      "1" "Host" OFF \
+      3>&1 1>&2 2>&3); then
     if [ $CPU_TYPE1 = "1" ]; then
       echo -e "${OS}${BOLD}${DGN}CPU Model: ${BGN}Host${CL}"
       CPU_TYPE=" -cpu host"
@@ -302,56 +310,56 @@ function advanced_settings() {
     exit-script
   fi
 
-  if CORE_COUNT=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Allocate CPU Cores" 8 58 2 --title "CORE COUNT" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
-    if [ -z $CORE_COUNT ]; then
-      CORE_COUNT="2"
-      echo -e "${CPUCORE}${BOLD}${DGN}CPU Cores: ${BGN}$CORE_COUNT${CL}"
+  CORE_COUNT_ESCAPED_FOR_PROMPT=${CORE_COUNT//\"/\\\"}
+  if CORE_COUNT_INPUT=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Allocate CPU Cores" 8 58 "$CORE_COUNT_ESCAPED_FOR_PROMPT" --title "CORE COUNT" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+    if [ -z "$CORE_COUNT_INPUT" ]; then
+      CORE_COUNT=${CORE_COUNT:-"2"}
     else
-      echo -e "${CPUCORE}${BOLD}${DGN}CPU Cores: ${BGN}$CORE_COUNT${CL}"
+      CORE_COUNT="$CORE_COUNT_INPUT"
     fi
+    echo -e "${CPUCORE}${BOLD}${DGN}CPU Cores: ${BGN}$CORE_COUNT${CL}"
   else
     exit-script
   fi
 
-  if RAM_SIZE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Allocate RAM in MiB" 8 58 2048 --title "RAM" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
-    if [ -z $RAM_SIZE ]; then
-      RAM_SIZE="2048"
-      echo -e "${RAMSIZE}${BOLD}${DGN}RAM Size: ${BGN}$RAM_SIZE${CL}"
+  if RAM_SIZE_INPUT=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Allocate RAM in MiB" 8 58 "$RAM_SIZE" --title "RAM" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+    if [ -z "$RAM_SIZE_INPUT" ]; then
+      RAM_SIZE=${RAM_SIZE:-"2048"}
     else
-      echo -e "${RAMSIZE}${BOLD}${DGN}RAM Size: ${BGN}$RAM_SIZE${CL}"
+      RAM_SIZE="$RAM_SIZE_INPUT"
     fi
+    echo -e "${RAMSIZE}${BOLD}${DGN}RAM Size: ${BGN}$RAM_SIZE${CL}"
   else
     exit-script
   fi
 
-  if BRG=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a Bridge" 8 58 vmbr0 --title "BRIDGE" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
-    if [ -z $BRG ]; then
-      BRG="vmbr0"
-      echo -e "${BRIDGE}${BOLD}${DGN}Bridge: ${BGN}$BRG${CL}"
+  if BRG_INPUT=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a Bridge" 8 58 "$BRG" --title "BRIDGE" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+    if [ -z "$BRG_INPUT" ]; then
+      BRG=${BRG:-"vmbr0"}
     else
-      echo -e "${BRIDGE}${BOLD}${DGN}Bridge: ${BGN}$BRG${CL}"
+      BRG="$BRG_INPUT"
     fi
+    echo -e "${BRIDGE}${BOLD}${DGN}Bridge: ${BGN}$BRG${CL}"
   else
     exit-script
   fi
 
-  if MAC1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a MAC Address" 8 58 $GEN_MAC --title "MAC ADDRESS" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
-    if [ -z $MAC1 ]; then
-      MAC="$GEN_MAC"
+  if MAC1_INPUT=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a MAC Address" 8 58 "$MAC" --title "MAC ADDRESS" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+    if [ -z "$MAC1_INPUT" ]; then
+      MAC=${MAC:-"$GEN_MAC"}
       echo -e "${MACADDRESS}${BOLD}${DGN}MAC Address: ${BGN}$MAC${CL}"
     else
-      MAC="$MAC1"
-      echo -e "${MACADDRESS}${BOLD}${DGN}MAC Address: ${BGN}$MAC1${CL}"
+      MAC="$MAC1_INPUT"
+      echo -e "${MACADDRESS}${BOLD}${DGN}MAC Address: ${BGN}$MAC${CL}"
     fi
   else
     exit-script
   fi
 
-  if VLAN1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a Vlan(leave blank for default)" 8 58 --title "VLAN" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
-    if [ -z $VLAN1 ]; then
-      VLAN1="Default"
+  if VLAN1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a Vlan(leave blank for default)" 8 58 "$VLAN" --title "VLAN" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+    if [ -z "$VLAN1" ]; then
       VLAN=""
-      echo -e "${VLANTAG}${BOLD}${DGN}VLAN: ${BGN}$VLAN1${CL}"
+      echo -e "${VLANTAG}${BOLD}${DGN}VLAN: ${BGN}Default${CL}"
     else
       VLAN=",tag=$VLAN1"
       echo -e "${VLANTAG}${BOLD}${DGN}VLAN: ${BGN}$VLAN1${CL}"
@@ -360,11 +368,10 @@ function advanced_settings() {
     exit-script
   fi
 
-  if MTU1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Interface MTU Size (leave blank for default)" 8 58 --title "MTU SIZE" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
-    if [ -z $MTU1 ]; then
-      MTU1="Default"
+  if MTU1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Interface MTU Size (leave blank for default)" 8 58 "$MTU" --title "MTU SIZE" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+    if [ -z "$MTU1" ]; then
       MTU=""
-      echo -e "${DEFAULT}${BOLD}${DGN}Interface MTU Size: ${BGN}$MTU1${CL}"
+      echo -e "${DEFAULT}${BOLD}${DGN}Interface MTU Size: ${BGN}Default${CL}"
     else
       MTU=",mtu=$MTU1"
       echo -e "${DEFAULT}${BOLD}${DGN}Interface MTU Size: ${BGN}$MTU1${CL}"
@@ -431,8 +438,8 @@ elif [ $((${#STORAGE_MENU[@]} / 3)) -eq 1 ]; then
 else
   while [ -z "${STORAGE:+x}" ]; do
     STORAGE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "Storage Pools" --radiolist \
-      "Which storage pool would you like to use for ${HN}?\nTo make a selection, use the Spacebar.\n" \
-      16 $(($MSG_MAX_LENGTH + 23)) 6 \
+        "Which storage pool would you like to use for ${HN}?\nTo make a selection, use the Spacebar.\n" \
+        16 $(($MSG_MAX_LENGTH + 23)) 6 \
       "${STORAGE_MENU[@]}" 3>&1 1>&2 2>&3)
   done
 fi
@@ -449,19 +456,19 @@ msg_ok "Downloaded ${CL}${BL}${FILE}${CL}"
 
 STORAGE_TYPE=$(pvesm status -storage $STORAGE | awk 'NR>1 {print $2}')
 case $STORAGE_TYPE in
-nfs | dir)
-  DISK_EXT=".qcow2"
-  DISK_REF="$VMID/"
-  DISK_IMPORT="-format qcow2"
-  THIN=""
-  ;;
-btrfs)
-  DISK_EXT=".raw"
-  DISK_REF="$VMID/"
-  DISK_IMPORT="-format raw"
-  FORMAT=",efitype=4m"
-  THIN=""
-  ;;
+  nfs | dir)
+    DISK_EXT=".qcow2"
+    DISK_REF="$VMID/"
+    DISK_IMPORT="-format qcow2"
+    THIN=""
+    ;;
+  btrfs)
+    DISK_EXT=".raw"
+    DISK_REF="$VMID/"
+    DISK_IMPORT="-format raw"
+    FORMAT=",efitype=4m"
+    THIN=""
+    ;;
 esac
 for i in {0,1}; do
   disk="DISK$i"
@@ -493,7 +500,7 @@ DESCRIPTION=$(
       <img src='https://img.shields.io/badge/&#x2615;-Buy us a coffee-blue' alt='spend Coffee' />
     </a>
   </p>
-  
+
   <span style='margin: 0 10px;'>
     <i class="fa fa-github fa-fw" style="color: #f5f5f5;"></i>
     <a href='https://github.com/community-scripts/ProxmoxVE' target='_blank' rel='noopener noreferrer' style='text-decoration: none; color: #00617f;'>GitHub</a>
