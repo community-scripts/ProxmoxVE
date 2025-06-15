@@ -106,10 +106,15 @@ function cleanup() {
 
 TEMP_DIR=$(mktemp -d)
 pushd $TEMP_DIR >/dev/null
-if whiptail --backtitle "Proxmox VE Helper Scripts" --title "Debian 12 VM" --yesno "This will create a New Debian 12 VM. Proceed?" 10 58; then
-  :
+
+if [ "$AUTO_ACCEPT" == "y" ]; then
+  echo -e "${INFO}AUTO_ACCEPT=y detected, proceeding with VM creation."
 else
-  header_info && echo -e "${CROSS}${RD}User exited script${CL}\n" && exit
+  if whiptail --backtitle "Proxmox VE Helper Scripts" --title "Debian 12 VM" --yesno "This will create a New Debian 12 VM. Proceed?" 10 58; then
+    :
+  else
+    header_info && echo -e "${CROSS}${RD}User exited script${CL}\n" && exit
+  fi
 fi
 
 function msg_info() {
@@ -160,11 +165,15 @@ function arch_check() {
 function ssh_check() {
   if command -v pveversion >/dev/null 2>&1; then
     if [ -n "${SSH_CLIENT:+x}" ]; then
-      if whiptail --backtitle "Proxmox VE Helper Scripts" --defaultno --title "SSH DETECTED" --yesno "It's suggested to use the Proxmox shell instead of SSH, since SSH can create issues while gathering variables. Would you like to proceed with using SSH?" 10 62; then
-        echo "you've been warned"
+      if [ "$AUTO_ACCEPT" == "y" ]; then
+        echo -e "${INFO}AUTO_ACCEPT=y detected, proceeding with SSH."
       else
-        clear
-        exit
+        if whiptail --backtitle "Proxmox VE Helper Scripts" --defaultno --title "SSH DETECTED" --yesno "It's suggested to use the Proxmox shell instead of SSH, since SSH can create issues while gathering variables. Would you like to proceed with using SSH?" 10 62; then
+          echo ""
+        else
+          clear
+          exit
+        fi
       fi
     fi
   fi
@@ -398,14 +407,21 @@ function advanced_settings() {
 }
 
 function start_script() {
-  if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "SETTINGS" --yesno "Use Default Settings?" --no-button Advanced 10 58); then
+  if [ "$AUTO_ACCEPT" == "y" ]; then
     header_info
-    echo -e "${DEFAULT}${BOLD}${BL}Using Default Settings${CL}"
+    echo -e "${INFO}AUTO_ACCEPT=y detected, using Default Settings and ensuring VM starts."
+    START_VM="yes"
     default_settings
   else
-    header_info
-    echo -e "${ADVANCED}${BOLD}${RD}Using Advanced Settings${CL}"
-    advanced_settings
+    if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "SETTINGS" --yesno "Use Default Settings?" --no-button Advanced 10 58); then
+      header_info
+      echo -e "${DEFAULT}${BOLD}${BL}Using Default Settings${CL}"
+      default_settings
+    else
+      header_info
+      echo -e "${ADVANCED}${BOLD}${RD}Using Advanced Settings${CL}"
+      advanced_settings
+    fi
   fi
 }
 
