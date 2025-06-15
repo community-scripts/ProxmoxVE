@@ -18,7 +18,7 @@
     "install_methods": [
         {
             "type": "default",
-            "script": "tools/addon/add-iptag.sh",
+            "script": "tools/pve/add-iptag.sh",
             "resources": {
                 "cpu": null,
                 "ram": null,
