@@ -22,7 +22,8 @@ $STD apt-get install -y \
   build-essential \
   git \
   make \
-  ca-certificates
+  ca-certificates \
+  jq
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" NODE_MODULE="pnpm@$(curl -s https://raw.githubusercontent.com/msgbyte/tianji/master/package.json | jq -r '.packageManager | split("@")[1]')" install_node_and_modules

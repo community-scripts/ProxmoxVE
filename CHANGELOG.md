@@ -14,6 +14,189 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 All LXC instances created using this repository come pre-installed with Midnight Commander, which is a command-line tool (`mc`) that offers a user-friendly file and directory management interface for the terminal environment.
 
 
+## 2025-06-16
+
+### 🚀 Updated Scripts
+
+  - Firefly: Add Data Importer to LXC [@tremor021](https://github.com/tremor021) ([#5159](https://github.com/community-scripts/ProxmoxVE/pull/5159))
+
+### 🌐 Website
+
+  - Refactor: IP-Tag [@MickLesk](https://github.com/MickLesk) ([#5152](https://github.com/community-scripts/ProxmoxVE/pull/5152))
+
+  - #### 📝 Script Information
+
+    - Intel NIC offload Fix by @rcastley [@MickLesk](https://github.com/MickLesk) ([#5155](https://github.com/community-scripts/ProxmoxVE/pull/5155))
+
+## 2025-06-15
+
+### 🆕 New Scripts
+
+  - LibreTranslate ([#5154](https://github.com/community-scripts/ProxmoxVE/pull/5154))
+
+## 2025-06-14
+
+### 🚀 Updated Scripts
+
+  - [core] Update install_mariadb func [@tremor021](https://github.com/tremor021) ([#5138](https://github.com/community-scripts/ProxmoxVE/pull/5138))
+
+  - #### 🐞 Bug Fixes
+
+    - flowiseai: set NodeJS to Version 20 [@MickLesk](https://github.com/MickLesk) ([#5130](https://github.com/community-scripts/ProxmoxVE/pull/5130))
+    - Update dolibarr-install.sh - Get largest version number [@tjcomserv](https://github.com/tjcomserv) ([#5127](https://github.com/community-scripts/ProxmoxVE/pull/5127))
+
+## 2025-06-13
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Zigbee2MQTT: Fix missing directory [@tremor021](https://github.com/tremor021) ([#5120](https://github.com/community-scripts/ProxmoxVE/pull/5120))
+
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Umbrel OS: Fix bad disk size shown on website [@tremor021](https://github.com/tremor021) ([#5125](https://github.com/community-scripts/ProxmoxVE/pull/5125))
+
+## 2025-06-12
+
+### 🆕 New Scripts
+
+  - Manage my Damn Life ([#5100](https://github.com/community-scripts/ProxmoxVE/pull/5100))
+
+### 🚀 Updated Scripts
+
+  - Kasm: Increase Ressources & Hint for Fuse / Swap [@MickLesk](https://github.com/MickLesk) ([#5112](https://github.com/community-scripts/ProxmoxVE/pull/5112))
+
+## 2025-06-11
+
+## 2025-06-10
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Element Synapse: switched from development to production mode and fixed update [@Frankmaaan](https://github.com/Frankmaaan) ([#5066](https://github.com/community-scripts/ProxmoxVE/pull/5066))
+    - Tinyauth: Fix creation of service file [@tremor021](https://github.com/tremor021) ([#5090](https://github.com/community-scripts/ProxmoxVE/pull/5090))
+    - Dolibarr: Fix typo in SQL command [@tremor021](https://github.com/tremor021) ([#5091](https://github.com/community-scripts/ProxmoxVE/pull/5091))
+
+### 🧰 Maintenance
+
+  - #### 📡 API
+
+    - [core] Prevent API form sending Data when disabled [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#5080](https://github.com/community-scripts/ProxmoxVE/pull/5080))
+
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Immich: Update JSON [@vhsdream](https://github.com/vhsdream) ([#5085](https://github.com/community-scripts/ProxmoxVE/pull/5085))
+
+## 2025-06-09
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Authelia: Fix the URL of the container [@tremor021](https://github.com/tremor021) ([#5064](https://github.com/community-scripts/ProxmoxVE/pull/5064))
+
+### 🌐 Website
+
+  - GoMFT: Remove from website temporarily [@tremor021](https://github.com/tremor021) ([#5065](https://github.com/community-scripts/ProxmoxVE/pull/5065))
+
+## 2025-06-08
+
+### 🆕 New Scripts
+
+  - Minarca ([#5058](https://github.com/community-scripts/ProxmoxVE/pull/5058))
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - zot: fix missing var (Dev -> Main) [@MickLesk](https://github.com/MickLesk) ([#5056](https://github.com/community-scripts/ProxmoxVE/pull/5056))
+
+  - #### ✨ New Features
+
+    - karakeep: Add more configuration defaults [@vhsdream](https://github.com/vhsdream) ([#5054](https://github.com/community-scripts/ProxmoxVE/pull/5054))
+
+## 2025-06-07
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - alpine-it-tools fix update [@CrazyWolf13](https://github.com/CrazyWolf13) ([#5039](https://github.com/community-scripts/ProxmoxVE/pull/5039))
+
+### 🧰 Maintenance
+
+  - #### 💾 Core
+
+    - Fix typo in build.func [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#5041](https://github.com/community-scripts/ProxmoxVE/pull/5041))
+
+## 2025-06-06
+
+### 🆕 New Scripts
+
+  - Zot-Registry ([#5016](https://github.com/community-scripts/ProxmoxVE/pull/5016))
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - zipline: fix old upload copy from v3 to v4 [@MickLesk](https://github.com/MickLesk) ([#5015](https://github.com/community-scripts/ProxmoxVE/pull/5015))
+
+## 2025-06-05
+
+### 🆕 New Scripts
+
+  - Lyrion Music Server ([#4992](https://github.com/community-scripts/ProxmoxVE/pull/4992))
+- gitea-mirror ([#4967](https://github.com/community-scripts/ProxmoxVE/pull/4967))
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Zipline: Fix PostgreSQL install [@tremor021](https://github.com/tremor021) ([#4989](https://github.com/community-scripts/ProxmoxVE/pull/4989))
+    - Homarr: add nodejs upgrade [@CrazyWolf13](https://github.com/CrazyWolf13) ([#4974](https://github.com/community-scripts/ProxmoxVE/pull/4974))
+    - add FUSE to rclone [@Frankmaaan](https://github.com/Frankmaaan) ([#4972](https://github.com/community-scripts/ProxmoxVE/pull/4972))
+
+  - #### ✨ New Features
+
+    - Zitadel: Upgrade Install to PSQL 17 [@MickLesk](https://github.com/MickLesk) ([#5000](https://github.com/community-scripts/ProxmoxVE/pull/5000))
+
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Fix clean-lxcs.sh type categorization [@bitspill](https://github.com/bitspill) ([#4980](https://github.com/community-scripts/ProxmoxVE/pull/4980))
+
+## 2025-06-04
+
+### 🚀 Updated Scripts
+
+  - Pulse: add polkit for sudoless web updates [@rcourtman](https://github.com/rcourtman) ([#4970](https://github.com/community-scripts/ProxmoxVE/pull/4970))
+- Pulse: add correct Port for URL output  [@rcourtman](https://github.com/rcourtman) ([#4951](https://github.com/community-scripts/ProxmoxVE/pull/4951))
+
+  - #### 🐞 Bug Fixes
+
+    - [refactor] Seelf [@tremor021](https://github.com/tremor021) ([#4954](https://github.com/community-scripts/ProxmoxVE/pull/4954))
+
+## 2025-06-03
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Kasm: Swap fix [@omiinaya](https://github.com/omiinaya) ([#4937](https://github.com/community-scripts/ProxmoxVE/pull/4937))
+
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - netbox: correct website URL  [@theincrediblenoone](https://github.com/theincrediblenoone) ([#4952](https://github.com/community-scripts/ProxmoxVE/pull/4952))
+
 ## 2025-06-02
 
 ### 🆕 New Scripts

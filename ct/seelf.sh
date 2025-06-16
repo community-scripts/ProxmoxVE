@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
-# Author: tremor021
+# Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/YuukanOO/seelf
 
@@ -20,49 +20,31 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
+  header_info
+  check_container_storage
+  check_container_resources
 
-    if [[ ! -d /opt/seelf ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-
-    RELEASE=$(curl -fsSL https://api.github.com/repos/YuukanOO/seelf/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-    if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
-        msg_info "Updating $APP"
-
-        msg_info "Stopping $APP"
-        systemctl stop seelf
-        msg_ok "Stopped $APP"
-
-        msg_info "Updating $APP to v${RELEASE}. Patience"
-        export PATH=$PATH:/usr/local/go/bin
-        source ~/.bashrc
-        curl -fsSL "https://github.com/YuukanOO/seelf/archive/refs/tags/v${RELEASE}.tar.gz" -o $(basename "https://github.com/YuukanOO/seelf/archive/refs/tags/v${RELEASE}.tar.gz")
-        tar -xzf v${RELEASE}.tar.gz
-        cp -r seelf-${RELEASE}/ /opt/seelf
-        cd /opt/seelf
-        $STD make build
-        msg_ok "Updated $APP to v${RELEASE}"
-
-        msg_info "Starting $APP"
-        systemctl start seelf
-        msg_ok "Started $APP"
-
-        # Cleaning up
-        msg_info "Cleaning Up"
-        rm -f ~/*.tar.gz
-        rm -rf ~/seelf-${RELEASE}
-        msg_ok "Cleanup Completed"
-
-        echo "${RELEASE}" >/opt/${APP}_version.txt
-        msg_ok "Update Successful"
-    else
-        msg_ok "No update required. ${APP} is already at v${RELEASE}"
-    fi
+  if [[ ! -d /opt/seelf ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+  if fetch_and_deploy_gh_release "YuukanOO/seelf"; then
+    msg_ok "$APP already at the latest version. No update required."
+  else
+    msg_info "Stopping $APP"
+    systemctl stop seelf
+    msg_ok "Stopped $APP"
+
+    msg_info "Updating $APP"
+    cd /opt/seelf
+    $STD make build
+    msg_ok "Updated $APP"
+
+    msg_info "Starting $APP"
+    systemctl start seelf
+    msg_ok "Started $APP"
+  fi
+  exit
 }
 
 start

@@ -47,7 +47,7 @@ function update_script() {
   $STD apt-get -y upgrade
   msg_ok "Updated $APP LXC"
 
-  if [[ -f /systemd/system/synapse-admin.service ]]; then
+  if [[ -f /etc/systemd/system/synapse-admin.service ]]; then
     msg_info "Updating Synapse-Admin"
     RELEASE=$(curl -fsSL https://api.github.com/repos/etkecc/synapse-admin/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
     if [[ "${RELEASE}" != "$(cat /opt/"${APP}"_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
@@ -58,7 +58,16 @@ function update_script() {
       curl -fsSL "https://github.com/etkecc/synapse-admin/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
       tar xzf "$temp_file" -C /opt/synapse-admin --strip-components=1
       cd /opt/synapse-admin
+      $STD yarn global add serve
       $STD yarn install --ignore-engines
+      $STD yarn build
+      mv ./dist ../ && \
+        rm -rf * && \
+        mv ../dist ./
+      if [[ -z $(grep "ExecStart=/usr/local/bin/serve" /etc/systemd/system/synapse-admin.service) ]]; then
+        sed -i 's|^ExecStart=.*|ExecStart=/usr/local/bin/serve -s dist -l 5173|' /etc/systemd/system/synapse-admin.service
+        systemctl reenable synapse-admin
+      fi
       systemctl start synapse-admin
       echo "${RELEASE}" >/opt/"${APP}"_version.txt
       rm -f "$temp_file"

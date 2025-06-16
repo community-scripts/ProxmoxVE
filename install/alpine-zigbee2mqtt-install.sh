@@ -14,8 +14,8 @@ network_check
 update_os
 
 msg_info "Installing Alpine-Zigbee2MQTT"
+mkdir -p /root/.z2m /etc/zigbee2mqtt
 $STD apk add zigbee2mqtt
-mkdir -p /root/.z2m
 ln -s /etc/zigbee2mqtt/ /root/.z2m
 chown -R root:root /etc/zigbee2mqtt /root/.z2m
 sed -i -e 's/#datadir="\/var\/lib\/zigbee2mqtt"/datadir="\/etc\/zigbee2mqtt"/' -e 's/#command_user="zigbee2mqtt"/command_user="root"/' /etc/conf.d/zigbee2mqtt

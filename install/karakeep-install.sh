@@ -91,10 +91,26 @@ BROWSER_WEB_URL="http://127.0.0.1:9222"
 
 # If you're planning to use ollama for tagging, uncomment the following lines:
 # OLLAMA_BASE_URL="<OLLAMA_ADDR>"
+# OLLAMA_KEEP_ALIVE="5m"
 
 # You can change the models used by uncommenting the following lines, and changing them according to your needs:
 # INFERENCE_TEXT_MODEL="gpt-4o-mini"
 # INFERENCE_IMAGE_MODEL="gpt-4o-mini" 
+
+# Additional inference defaults
+# INFERENCE_CONTEXT_LENGTH="2048"
+# INFERENCE_ENABLE_AUTO_TAGGING=true
+# INFERENCE_ENABLE_AUTO_SUMMARIZATION=false
+
+# Crawler defaults
+# CRAWLER_NUM_WORKERS="1"
+# CRAWLER_DOWNLOAD_BANNER_IMAGE=true
+# CRAWLER_STORE_SCREENSHOT=true
+# CRAWLER_FULL_PAGE_SCREENSHOT=false
+# CRAWLER_FULL_PAGE_ARCHIVE=false
+# CRAWLER_VIDEO_DOWNLOAD=false
+# CRAWLER_VIDEO_DOWNLOAD_MAX_SIZE="50"
+# CRAWLER_ENABLE_ADBLOCKER=true
 EOF
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Installed karakeep"

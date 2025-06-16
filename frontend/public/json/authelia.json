@@ -8,7 +8,7 @@
   "type": "ct",
   "updateable": true,
   "privileged": false,
-  "interface_port": 9091,
+  "interface_port": 443,
   "documentation": "https://www.authelia.com/integration/deployment/bare-metal/",
   "website": "https://www.authelia.com/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/authelia.webp",

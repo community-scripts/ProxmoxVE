@@ -17,8 +17,9 @@ msg_info "Installing Dependencies (Patience)"
 $STD apt-get install -y ca-certificates
 msg_ok "Installed Dependecies"
 
+PG_VERSION="17" PG_MODULES="common" install_postgresql
+
 msg_info "Installing Postgresql"
-$STD apt-get install -y postgresql postgresql-common
 DB_NAME="zitadel"
 DB_USER="zitadel"
 DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)

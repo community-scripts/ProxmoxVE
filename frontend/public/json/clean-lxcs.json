@@ -5,7 +5,7 @@
     1
   ],
   "date_created": "2024-04-29",
-  "type": "addon",
+  "type": "pve",
   "updateable": false,
   "privileged": false,
   "interface_port": null,

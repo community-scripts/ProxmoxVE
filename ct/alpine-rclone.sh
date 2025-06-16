@@ -13,6 +13,7 @@ var_disk="${var_disk:-1}"
 var_os="${var_os:-alpine}"
 var_version="${var_version:-3.21}"
 var_unprivileged="${var_unprivileged:-1}"
+var_fuse="${var_fuse:-yes}"
 
 header_info "$APP"
 variables
@@ -21,9 +22,6 @@ catch_errors
 
 function update_script() {
   header_info
-  check_container_storage
-  check_container_resources
-
   if [ ! -d /opt/rclone ]; then
     msg_error "No ${APP} Installation Found!"
     exit 1

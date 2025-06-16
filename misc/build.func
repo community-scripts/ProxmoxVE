@@ -379,7 +379,7 @@ write_config() {
 
 CT_TYPE="${CT_TYPE}"
 DISK_SIZE="${DISK_SIZE}"
-CORE_COUNT="${DISK_SIZE}"
+CORE_COUNT="${CORE_COUNT}"
 RAM_SIZE="${RAM_SIZE}"
 HN="${HN}"
 BRG="${BRG}"
@@ -411,7 +411,7 @@ EOF
 
 CT_TYPE="${CT_TYPE}"
 DISK_SIZE="${DISK_SIZE}"
-CORE_COUNT="${DISK_SIZE}"
+CORE_COUNT="${CORE_COUNT}"
 RAM_SIZE="${RAM_SIZE}"
 HN="${HN}"
 BRG="${BRG}"
@@ -1090,6 +1090,8 @@ build_container() {
   else
     export FUNCTIONS_FILE_PATH="$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/install.func)"
   fi
+
+  export DIAGNOSTICS="$DIAGNOSTICS"
   export RANDOM_UUID="$RANDOM_UUID"
   export CACHER="$APT_CACHER"
   export CACHER_IP="$APT_CACHER_IP"

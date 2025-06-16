@@ -87,7 +87,7 @@ msg_ok "Dependencies Installed"
 NODE_VERSION="22" install_node_and_modules
 PG_VERSION="16" install_postgresql
 
-read -r -p "Install OpenVINO dependencies for Intel HW-accelerated machine-learning? " prompt
+read -r -p "${TAB3}Install OpenVINO dependencies for Intel HW-accelerated machine-learning? " prompt
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   msg_info "Installing OpenVINO dependencies"
   touch ~/.openvino
