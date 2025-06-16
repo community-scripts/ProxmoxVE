@@ -44,6 +44,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - Refactor ScriptItem and ConfigFile components to conditionally render config file location. Update ConfigFile to accept configPath prop instead of item. [@BramSuurdje](https://github.com/BramSuurdje) ([#5197](https://github.com/community-scripts/ProxmoxVE/pull/5197))
     - Update default image asset in the public directory and update api route to only search for files that end with .json [@BramSuurdje](https://github.com/BramSuurdje) ([#5179](https://github.com/community-scripts/ProxmoxVE/pull/5179))
 
   - #### ✨ New Features
