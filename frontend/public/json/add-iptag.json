@@ -1,49 +1,48 @@
-
 {
-    "name": "Proxmox VE LXC IP-Tag",
-    "slug": "add-iptag",
-    "categories": [
-        1
-    ],
-    "date_created": "2025-06-15",
-    "type": "addon",
-    "updateable": false,
-    "privileged": false,
-    "interface_port": null,
-    "documentation": null,
-    "website": null,
-    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/proxmox.svg",
-    "config_path": "",
-    "description": "This script automatically adds IP address as tags to LXC containers using a Systemd service. The service also updates the tags if a LXC IP address is changed.",
-    "install_methods": [
-        {
-            "type": "default",
-            "script": "tools/pve/add-iptag.sh",
-            "resources": {
-                "cpu": null,
-                "ram": null,
-                "hdd": null,
-                "os": null,
-                "version": null
-            }
-        }
-    ],
-    "default_credentials": {
-        "username": null,
-        "password": null
+  "name": "Proxmox VE LXC IP-Tag",
+  "slug": "add-iptag",
+  "categories": [
+    1
+  ],
+  "date_created": "2025-06-16",
+  "type": "addon",
+  "updateable": false,
+  "privileged": false,
+  "interface_port": null,
+  "documentation": null,
+  "website": null,
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/proxmox.svg",
+  "config_path": "",
+  "description": "This script automatically adds IP address as tags to LXC containers using a Systemd service. The service also updates the tags if a LXC IP address is changed.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "tools/pve/add-iptag.sh",
+      "resources": {
+        "cpu": null,
+        "ram": null,
+        "hdd": null,
+        "os": null,
+        "version": null
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Execute within the Proxmox shell",
+      "type": "info"
     },
-    "notes": [
-        {
-            "text": "Execute within the Proxmox shell",
-            "type": "info"
-        },
-        {
-            "text": "Configuration: `nano /opt/iptag/iptag.conf`. iptag.service must be restarted after change.",
-            "type": "info"
-        },
-        {
-            "text": "The Proxmox Node must contain ipcalc and net-tools. `apt-get install -y ipcalc net-tools`",
-            "type": "warning"
-        }
-    ]
+    {
+      "text": "Configuration: `nano /opt/iptag/iptag.conf`. iptag.service must be restarted after change.",
+      "type": "info"
+    },
+    {
+      "text": "The Proxmox Node must contain ipcalc and net-tools. `apt-get install -y ipcalc net-tools`",
+      "type": "warning"
+    }
+  ]
 }
