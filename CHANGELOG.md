@@ -44,6 +44,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - Update default image asset in the public directory and update api route to only search for files that end with .json [@BramSuurdje](https://github.com/BramSuurdje) ([#5179](https://github.com/community-scripts/ProxmoxVE/pull/5179))
 
+  - #### ✨ New Features
+
+    - Update default image asset in the public directory [@BramSuurdje](https://github.com/BramSuurdje) ([#5189](https://github.com/community-scripts/ProxmoxVE/pull/5189))
+
 ## 2025-06-15
 
 ### 🆕 New Scripts
