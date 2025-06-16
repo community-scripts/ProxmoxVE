@@ -22,7 +22,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
-  - Firefly: Add Data Importer to LXC [@tremor021](https://github.com/tremor021) ([#5159](https://github.com/community-scripts/ProxmoxVE/pull/5159))
+  - [core] Move install_php() from VED to main [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#5182](https://github.com/community-scripts/ProxmoxVE/pull/5182))
+- Firefly: Add Data Importer to LXC [@tremor021](https://github.com/tremor021) ([#5159](https://github.com/community-scripts/ProxmoxVE/pull/5159))
 
   - #### 🐞 Bug Fixes
 
