@@ -132,7 +132,7 @@ export function ScriptItem({ item, setSelectedScript }: ScriptItemProps) {
           </button>
         </div>
 
-        <div className="rounded-xl border border-border/40 bg-gradient-to-b from-card/30 to-background/50 backdrop-blur-sm shadow-sm">
+        <div className="rounded-xl border border-border bg-gradient-to-b from-card/30 to-background/50 backdrop-blur-sm shadow-sm">
           <div className="p-6 space-y-6">
             <Suspense fallback={<div className="animate-pulse h-32 bg-accent/20 rounded-xl" />}>
               <ScriptHeader item={item} />
