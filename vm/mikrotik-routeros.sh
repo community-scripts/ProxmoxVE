@@ -38,6 +38,9 @@ CL=$(echo "\033[m")
 BFR="\\r\\033[K"
 HOLD="-"
 CM="${GN}✓${CL}"
+
+CROSS="${TAB}✖️${TAB}${CL}"
+
 set -o errexit
 set -o errtrace
 set -o nounset
@@ -111,6 +114,10 @@ function msg_info() {
 function msg_ok() {
   local msg="$1"
   echo -e "${BFR} ${CM} ${GN}${msg}${CL}"
+}
+function msg_error() {
+  local msg="$1"
+  echo -e "${BFR}${CROSS}  ${RD}${msg}${CL}"
 }
 function default_settings() {
   METHOD="default"
@@ -232,6 +239,40 @@ function start_script() {
     advanced_settings
   fi
 }
+
+function get_mikrotik_version() {
+    local mode="$1"
+    local tree_name
+
+    case "$mode" in
+        s) tree_name="Stable release tree" ;;
+        d) tree_name="Development release tree" ;;
+        l) tree_name="Long-term release tree" ;;
+        t) tree_name="Testing release tree" ;;
+        *) return 0 ;;  # not an error, just no-op
+    esac
+
+    local html
+    html=$(curl -fsSL "https://mikrotik.com/download/changelogs") || return 0
+    [ -z "$html" ] && return 0
+
+    local start_line
+    start_line=$(echo "$html" | grep -n "$tree_name$" | cut -d: -f1 | head -n1)
+    [[ "$start_line" =~ ^[0-9]+$ ]] || return 0
+
+    # Avoid any command exiting non-zero — wrap and silence
+    local line
+    line=$( (echo "$html" | tail -n +"$start_line" | grep -m 1 "c-\(stable\|longTerm\|testing\|development\)-v") 2>/dev/null || true )
+
+    local version
+    version=$(echo "$line" | sed -n 's/.*c-[^"]*-v\([0-9_.a-zA-Z-]\+\).*/\1/p' | tr '_' '.')
+
+    [[ "$version" =~ ^[0-9]+\.[0-9]+.*$ ]] && echo "$version"
+
+    return 0  # suppress ALL non-zero exits
+}
+
+
 start_script
 
 post_to_api_vm
@@ -264,12 +305,23 @@ else
 fi
 msg_ok "Using ${CL}${BL}$STORAGE${CL} ${GN}for Storage Location."
 msg_ok "Virtual Machine ID is ${CL}${BL}$VMID${CL}."
-msg_info "Getting URL for Mikrotik RouterOS CHR Disk Image"
 
-URL=https://download.mikrotik.com/routeros/7.15.3/chr-7.15.3.img.zip
+msg_info "Getting URL for Latest Mikrotik RouterOS CHR Disk Image"
+
+MIK_VER=$(get_mikrotik_version s)
+
+if [ -n "$MIK_VER" ]; then
+    msg_ok "Latest stable version: ${CL}${BL}$MIK_VER${CL}."
+else
+    msg_error "Could not get latest version"
+    msg_ok "Defaulting to version 7.19"
+    ver="7.19"
+fi
+
+URL=https://download.mikrotik.com/routeros/$MIK_VER/chr-$MIK_VER.img.zip
 
 sleep 2
-msg_ok "${CL}${BL}${URL}${CL}"
+msg_ok "Downloading from URL: ${CL}${BL}${URL}${CL}"
 curl -f#SL -o "$(basename "$URL")" "$URL"
 echo -en "\e[1A\e[0K"
 FILE=$(basename $URL)
