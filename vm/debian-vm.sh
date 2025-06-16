@@ -57,6 +57,7 @@ MACADDRESS="${TAB}🔗${TAB}${CL}"
 VLANTAG="${TAB}🏷️${TAB}${CL}"
 CREATING="${TAB}🚀${TAB}${CL}"
 ADVANCED="${TAB}🧩${TAB}${CL}"
+CLOUD="${TAB}☁️${TAB}${CL}"
 
 THIN="discard=on,ssd=1,"
 set -e
@@ -191,6 +192,7 @@ function default_settings() {
   VLAN=""
   MTU=""
   START_VM="yes"
+  CLOUD_INIT="no"
   METHOD="default"
   echo -e "${CONTAINERID}${BOLD}${DGN}Virtual Machine ID: ${BGN}${VMID}${CL}"
   echo -e "${CONTAINERTYPE}${BOLD}${DGN}Machine Type: ${BGN}i440fx${CL}"
@@ -204,6 +206,7 @@ function default_settings() {
   echo -e "${MACADDRESS}${BOLD}${DGN}MAC Address: ${BGN}${MAC}${CL}"
   echo -e "${VLANTAG}${BOLD}${DGN}VLAN: ${BGN}Default${CL}"
   echo -e "${DEFAULT}${BOLD}${DGN}Interface MTU Size: ${BGN}Default${CL}"
+  echo -e "${CLOUD}${BOLD}${DGN}Configure Cloud-init: ${BGN}no${CL}"
   echo -e "${GATEWAY}${BOLD}${DGN}Start VM when completed: ${BGN}yes${CL}"
   echo -e "${CREATING}${BOLD}${DGN}Creating a Debian 12 VM using the above default settings${CL}"
 }
@@ -373,6 +376,14 @@ function advanced_settings() {
     exit-script
   fi
 
+  if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "CLOUD-INIT" --yesno "Configure the VM with Cloud-init?" --defaultno 10 58); then
+    echo -e "${CLOUD}${BOLD}${DGN}Configure Cloud-init: ${BGN}yes${CL}"
+    CLOUD_INIT="yes"
+  else
+    echo -e "${CLOUD}${BOLD}${DGN}Configure Cloud-init: ${BGN}no${CL}"
+    CLOUD_INIT="no"
+  fi
+
   if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "START VIRTUAL MACHINE" --yesno "Start VM when completed?" 10 58); then
     echo -e "${GATEWAY}${BOLD}${DGN}Start VM when completed: ${BGN}yes${CL}"
     START_VM="yes"
@@ -439,7 +450,11 @@ fi
 msg_ok "Using ${CL}${BL}$STORAGE${CL} ${GN}for Storage Location."
 msg_ok "Virtual Machine ID is ${CL}${BL}$VMID${CL}."
 msg_info "Retrieving the URL for the Debian 12 Qcow2 Disk Image"
-URL=https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.qcow2
+if [ "$CLOUD_INIT" == "yes" ]; then
+  URL=https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.qcow2
+else
+  URL=https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-nocloud-amd64.qcow2
+fi
 sleep 2
 msg_ok "${CL}${BL}${URL}${CL}"
 curl -f#SL -o "$(basename "$URL")" "$URL"
@@ -474,12 +489,20 @@ qm create $VMID -agent 1${MACHINE} -tablet 0 -localtime 1 -bios ovmf${CPU_TYPE} 
   -name $HN -tags community-script -net0 virtio,bridge=$BRG,macaddr=$MAC$VLAN$MTU -onboot 1 -ostype l26 -scsihw virtio-scsi-pci
 pvesm alloc $STORAGE $VMID $DISK0 4M 1>&/dev/null
 qm importdisk $VMID ${FILE} $STORAGE ${DISK_IMPORT:-} 1>&/dev/null
-qm set $VMID \
-  -efidisk0 ${DISK0_REF}${FORMAT} \
-  -scsi0 ${DISK1_REF},${DISK_CACHE}${THIN}size=${DISK_SIZE} \
-  -scsi1 ${STORAGE}:cloudinit \
-  -boot order=scsi0 \
-  -serial0 socket >/dev/null
+if [ "$CLOUD_INIT" == "yes" ]; then
+  qm set $VMID \
+    -efidisk0 ${DISK0_REF}${FORMAT} \
+    -scsi0 ${DISK1_REF},${DISK_CACHE}${THIN}size=${DISK_SIZE} \
+    -scsi1 ${STORAGE}:cloudinit \
+    -boot order=scsi0 \
+    -serial0 socket >/dev/null
+else
+  qm set $VMID \
+    -efidisk0 ${DISK0_REF}${FORMAT} \
+    -scsi0 ${DISK1_REF},${DISK_CACHE}${THIN}size=${DISK_SIZE} \
+    -boot order=scsi0 \
+    -serial0 socket >/dev/null
+fi
 DESCRIPTION=$(
   cat <<EOF
 <div align='center'>
