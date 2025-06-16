@@ -28,6 +28,7 @@ customize
 
 msg_info "Displaying Kasm Credentials"
 cat ~/kasm.creds
+msg_ok "Kasm Credentials displayed"
 
 msg_info "Cleaning up"
 rm -f /opt/kasm_release_${KASM_VERSION}.tar.gz
