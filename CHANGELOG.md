@@ -16,6 +16,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-06-16
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Intel NIC offload Fix by @rcastley [@MickLesk](https://github.com/MickLesk) ([#5155](https://github.com/community-scripts/ProxmoxVE/pull/5155))
+
 ## 2025-06-15
 
 ### 🆕 New Scripts
