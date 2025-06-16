@@ -29,38 +29,55 @@ function update_script() {
   fi
   if [[ ! -f /opt/${APP}_version.txt ]]; then touch /opt/${APP}_version.txt; fi
   RELEASE=$(curl -fsSL https://api.github.com/repos/TriliumNext/Notes/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "v${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
-    msg_info "Stopping ${APP}"
-    systemctl stop trilium
-    sleep 1
-    msg_ok "Stopped ${APP}"
-
-    msg_info "Updating to ${RELEASE}"
-    mkdir -p /opt/trilium_backup
-    mv /opt/trilium/db /opt/trilium_backup/
-    rm -rf /opt/trilium
-    cd /tmp
-    curl -fsSL "https://github.com/TriliumNext/Notes/releases/download/v${RELEASE}/TriliumNextNotes-Server-v${RELEASE}-linux-x64.tar.xz" -o $(basename "https://github.com/TriliumNext/Notes/releases/download/v${RELEASE}/TriliumNextNotes-Server-v${RELEASE}-linux-x64.tar.xz")
-    tar -xf TriliumNextNotes-Server-v${RELEASE}-linux-x64.tar.xz
-    mv TriliumNextNotes-Server-$RELEASE-linux-x64 /opt/trilium
-    cp -r /opt/trilium_backup/db /opt/trilium/
-    echo "v${RELEASE}" >/opt/${APP}_version.txt
-    msg_ok "Updated to ${RELEASE}"
-
-    msg_info "Cleaning up"
-    rm -rf /tmp/TriliumNextNotes-Server-${RELEASE}-linux-x64.tar.xz
-    rm -rf /opt/trilium_backup
-    msg_ok "Cleaned"
-
-    msg_info "Starting ${APP}"
-    systemctl start trilium
-    sleep 1
-    msg_ok "Started ${APP}"
-    msg_ok "Updated Successfully"
+ if [[ "v${RELEASE}" != "$(cat /opt/${APP}_version.txt 2>/dev/null)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
+  # Determine DB path only when update is needed
+  if [[ -d /opt/trilium/db ]]; then
+    DB_PATH="/opt/trilium/db"
+    DB_RESTORE_PATH="/opt/trilium/db"
+  elif [[ -d /opt/trilium/assets/db ]]; then
+    DB_PATH="/opt/trilium/assets/db"
+    DB_RESTORE_PATH="/opt/trilium/assets/db"
   else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
+    echo "Database not found in either /opt/trilium/db or /opt/trilium/assets/db"
+    exit 1
   fi
-  exit
+
+  msg_info "Stopping ${APP}"
+  systemctl stop trilium
+  sleep 1
+  msg_ok "Stopped ${APP}"
+
+  msg_info "Updating to ${RELEASE}"
+  mkdir -p /opt/trilium_backup
+  cp -r "${DB_PATH}" /opt/trilium_backup/
+  rm -rf /opt/trilium
+  cd /tmp
+  curl -fsSL "https://github.com/TriliumNext/Notes/releases/download/v${RELEASE}/TriliumNextNotes-Server-v${RELEASE}-linux-x64.tar.xz" -o "TriliumNextNotes-Server-v${RELEASE}-linux-x64.tar.xz"
+  tar -xf "TriliumNextNotes-Server-v${RELEASE}-linux-x64.tar.xz"
+  mv "TriliumNextNotes-Server-${RELEASE}-linux-x64" /opt/trilium
+
+  # Restore database
+  mkdir -p "$(dirname "${DB_RESTORE_PATH}")"
+  cp -r /opt/trilium_backup/$(basename "${DB_PATH}") "${DB_RESTORE_PATH}"
+
+  echo "v${RELEASE}" >/opt/${APP}_version.txt
+  msg_ok "Updated to ${RELEASE}"
+
+  msg_info "Cleaning up"
+  rm -rf "/tmp/TriliumNextNotes-Server-${RELEASE}-linux-x64.tar.xz"
+  rm -rf /opt/trilium_backup
+  msg_ok "Cleaned"
+
+  msg_info "Starting ${APP}"
+  systemctl start trilium
+  sleep 1
+  msg_ok "Started ${APP}"
+  msg_ok "Updated Successfully"
+else
+  msg_ok "No update required. ${APP} is already at ${RELEASE}"
+fi
+
+exit
 }
 
 start
