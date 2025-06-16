@@ -120,7 +120,7 @@ export function ScriptItem({ item, setSelectedScript }: ScriptItemProps) {
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto">
+    <div className="w-full mx-auto">
       <div className="flex w-full flex-col">
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-2xl font-semibold tracking-tight text-foreground/90">Selected Script</h2>

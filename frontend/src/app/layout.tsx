@@ -104,7 +104,7 @@ export default function RootLayout({
             <Navbar />
             <div className="flex min-h-screen flex-col justify-center">
               <div className="flex w-full justify-center">
-                <div className="w-full max-w-7xl ">
+                <div className="w-full max-w-[1440px] ">
                   <QueryProvider>
                     <NuqsAdapter>{children}</NuqsAdapter>
                   </QueryProvider>

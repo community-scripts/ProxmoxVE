@@ -47,7 +47,7 @@ function ScriptContent() {
             setSelectedScript={setSelectedScript}
           />
         </div>
-        <div className="mx-7 w-full sm:mx-0 sm:ml-7">
+        <div className="mx-4 w-full sm:mx-0 sm:ml-4">
           {selectedScript && item ? (
             <ScriptItem item={item} setSelectedScript={setSelectedScript} />
           ) : (

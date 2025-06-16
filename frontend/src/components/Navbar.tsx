@@ -34,7 +34,7 @@ function Navbar() {
 						isScrolled ? "glass border-b bg-background/50" : ""
 					}`}
 				>
-					<div className="flex h-20 w-full max-w-7xl items-center justify-between sm:flex-row">
+					<div className="flex h-20 w-full max-w-[1440px] items-center justify-between sm:flex-row">
 						<Link
 							href={"/"}
 							className="flex cursor-pointer w-full justify-center sm:justify-start flex-row-reverse items-center gap-2 font-semibold sm:flex-row"

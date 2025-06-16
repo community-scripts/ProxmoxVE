@@ -22,7 +22,7 @@ const Sidebar = ({
 	}, [] as Script[]);
 
 	return (
-		<div className="flex min-w-72 flex-col sm:max-w-72">
+		<div className="flex min-w-[350px] flex-col sm:max-w-[350px]">
 			<div className="flex items-end justify-between pb-4">
 				<h1 className="text-xl font-bold">Categories</h1>
 				<p className="text-xs italic text-muted-foreground">
