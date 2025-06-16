@@ -1,5 +1,30 @@
 [
   {
+    "name": "jellyfin/jellyfin",
+    "version": "v10.10.7",
+    "date": "2025-04-05T19:14:59Z"
+  },
+  {
+    "name": "crafty-controller/crafty-4",
+    "version": "v4.4.11",
+    "date": "2025-06-15T21:41:02Z"
+  },
+  {
+    "name": "TriliumNext/Notes",
+    "version": "v0.95.0",
+    "date": "2025-06-15T21:12:04Z"
+  },
+  {
+    "name": "karakeep-app/karakeep",
+    "version": "cli/v0.25.0",
+    "date": "2025-06-15T17:48:29Z"
+  },
+  {
+    "name": "tobychui/zoraxy",
+    "version": "v3.1.9",
+    "date": "2025-03-01T02:24:33Z"
+  },
+  {
     "name": "syncthing/syncthing",
     "version": "2.0.0-rc.19",
     "date": "2025-06-02T17:56:25Z"
@@ -335,11 +360,6 @@
     "date": "2025-06-08T22:50:58Z"
   },
   {
-    "name": "karakeep-app/karakeep",
-    "version": "ios/v1.7.0-1",
-    "date": "2025-06-08T22:02:33Z"
-  },
-  {
     "name": "Forceu/Gokapi",
     "version": "v2.0.1",
     "date": "2025-06-08T14:40:24Z"
@@ -350,11 +370,6 @@
     "date": "2025-06-07T21:33:22Z"
   },
   {
-    "name": "jellyfin/jellyfin",
-    "version": "v10.10.7",
-    "date": "2025-04-05T19:14:59Z"
-  },
-  {
     "name": "jordan-dalby/ByteStash",
     "version": "v1.5.8",
     "date": "2025-06-07T11:39:10Z"
@@ -363,11 +378,6 @@
     "name": "evcc-io/evcc",
     "version": "0.204.2",
     "date": "2025-06-07T11:38:28Z"
-  },
-  {
-    "name": "TriliumNext/Notes",
-    "version": "v0.94.1",
-    "date": "2025-06-07T10:32:38Z"
   },
   {
     "name": "homebridge/homebridge",
@@ -645,11 +655,6 @@
     "date": "2025-05-22T05:24:42Z"
   },
   {
-    "name": "tobychui/zoraxy",
-    "version": "v3.1.9",
-    "date": "2025-03-01T02:24:33Z"
-  },
-  {
     "name": "apache/tika",
     "version": "3.2.0-rc2",
     "date": "2025-05-21T20:09:07Z"
@@ -668,11 +673,6 @@
     "name": "Stirling-Tools/Stirling-PDF",
     "version": "v0.46.2",
     "date": "2025-05-20T11:21:04Z"
-  },
-  {
-    "name": "crafty-controller/crafty-4",
-    "version": "v4.4.9",
-    "date": "2025-05-20T00:08:29Z"
   },
   {
     "name": "Part-DB/Part-DB-server",
