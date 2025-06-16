@@ -40,6 +40,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🌐 Website
 
+  - Refactor layout and component styles for improved responsiveness [@BramSuurdje](https://github.com/BramSuurdje) ([#5195](https://github.com/community-scripts/ProxmoxVE/pull/5195))
+
   - #### 🐞 Bug Fixes
 
     - Update default image asset in the public directory and update api route to only search for files that end with .json [@BramSuurdje](https://github.com/BramSuurdje) ([#5179](https://github.com/community-scripts/ProxmoxVE/pull/5179))
