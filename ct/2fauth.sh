@@ -48,9 +48,7 @@ function update_script() {
       PHP_VERSION="8.3" PHP_MODULE="common,ctype,fileinfo,fpm,mysql,cli" install_php
       sed -i 's/php8.2/php8.3/g' /etc/nginx/conf.d/2fauth.conf
     fi
-    curl -fsSL -o "${RELEASE}.zip" "https://github.com/Bubka/2FAuth/archive/refs/tags/${RELEASE}.zip"
-    $STD unzip "${RELEASE}.zip"
-    mv "2FAuth-${RELEASE//v/}/" "/opt/2fauth"
+    fetch_and_deploy_gh_release "Bubka/2FAuth"
     mv "/opt/2fauth-backup/.env" "/opt/2fauth/.env"
     mv "/opt/2fauth-backup/storage" "/opt/2fauth/storage"
     cd "/opt/2fauth" || return
