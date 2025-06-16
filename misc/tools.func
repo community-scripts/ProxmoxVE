@@ -380,26 +380,25 @@ install_php() {
   # Deduplicate modules
   COMBINED_MODULES=$(echo "$COMBINED_MODULES" | tr ',' '\n' | awk '!seen[$0]++' | paste -sd, -)
 
-  local CURRENT_PHP
+  local CURRENT_PHP=""
   if command -v php >/dev/null 2>&1; then
     CURRENT_PHP=$(php -v 2>/dev/null | awk '/^PHP/{print $2}' | cut -d. -f1,2)
-  else
-    CURRENT_PHP=""
   fi
 
   if [[ -z "$CURRENT_PHP" ]]; then
-    msg_info "Setup PHP $PHP_VERSION"
+    msg_info "No PHP found, setting up PHP $PHP_VERSION"
   elif [[ "$CURRENT_PHP" != "$PHP_VERSION" ]]; then
     msg_info "PHP $CURRENT_PHP detected, migrating to PHP $PHP_VERSION"
-    if [[ ! -f /etc/apt/sources.list.d/php.list ]]; then
-      $STD curl -fsSLo /tmp/debsuryorg-archive-keyring.deb https://packages.sury.org/debsuryorg-archive-keyring.deb
-      $STD dpkg -i /tmp/debsuryorg-archive-keyring.deb
-      echo "deb [signed-by=/usr/share/keyrings/deb.sury.org-php.gpg] https://packages.sury.org/php/ ${DISTRO_CODENAME} main" \
-        >/etc/apt/sources.list.d/php.list
-      $STD apt-get update
-    fi
-
     $STD apt-get purge -y "php${CURRENT_PHP//./}"* || true
+  fi
+
+  # Ensure Sury repo is available
+  if [[ ! -f /etc/apt/sources.list.d/php.list ]]; then
+    $STD curl -fsSLo /tmp/debsuryorg-archive-keyring.deb https://packages.sury.org/debsuryorg-archive-keyring.deb
+    $STD dpkg -i /tmp/debsuryorg-archive-keyring.deb
+    echo "deb [signed-by=/usr/share/keyrings/deb.sury.org-php.gpg] https://packages.sury.org/php/ ${DISTRO_CODENAME} main" \
+      >/etc/apt/sources.list.d/php.list
+    $STD apt-get update
   fi
 
   local MODULE_LIST="php${PHP_VERSION}"
@@ -407,18 +406,18 @@ install_php() {
   for mod in "${MODULES[@]}"; do
     MODULE_LIST+=" php${PHP_VERSION}-${mod}"
   done
+
   if [[ "$PHP_FPM" == "YES" ]]; then
     MODULE_LIST+=" php${PHP_VERSION}-fpm"
   fi
 
-  if [[ "$PHP_APACHE" == "YES" ]]; then
-    # Optionally disable old Apache PHP module
+  if [[ "$PHP_APACHE" == "YES" ]] && [[ -n "$CURRENT_PHP" ]]; then
     if [[ -f /etc/apache2/mods-enabled/php${CURRENT_PHP}.load ]]; then
       $STD a2dismod php${CURRENT_PHP} || true
     fi
   fi
 
-  if [[ "$PHP_FPM" == "YES" ]]; then
+  if [[ "$PHP_FPM" == "YES" ]] && [[ -n "$CURRENT_PHP" ]]; then
     $STD systemctl stop php${CURRENT_PHP}-fpm || true
     $STD systemctl disable php${CURRENT_PHP}-fpm || true
   fi
@@ -436,8 +435,7 @@ install_php() {
   fi
 
   # Patch all relevant php.ini files
-  local PHP_INI_PATHS=()
-  PHP_INI_PATHS+=("/etc/php/${PHP_VERSION}/cli/php.ini")
+  local PHP_INI_PATHS=("/etc/php/${PHP_VERSION}/cli/php.ini")
   [[ "$PHP_FPM" == "YES" ]] && PHP_INI_PATHS+=("/etc/php/${PHP_VERSION}/fpm/php.ini")
   [[ "$PHP_APACHE" == "YES" ]] && PHP_INI_PATHS+=("/etc/php/${PHP_VERSION}/apache2/php.ini")
 
@@ -452,7 +450,6 @@ install_php() {
     fi
   done
 }
-
 # ------------------------------------------------------------------------------
 # Installs or updates Composer globally.
 #
