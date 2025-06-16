@@ -33,6 +33,10 @@
   },
   "notes": [
     {
+      "text": "Data Importer is at `http://<LXC_IP>/dataimporter/`",
+      "type": "info"
+    },
+    {
       "text": "Database credentials: `cat ~/firefly.creds`",
       "type": "info"
     }

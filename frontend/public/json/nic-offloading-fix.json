@@ -1,23 +1,23 @@
 {
-  "name": "Proxmox VE LXC IP-Tag",
-  "slug": "add-lxc-iptag",
+  "name": "NIC Offloading Fix",
+  "slug": "nic-offloading-fix",
   "categories": [
     1
   ],
-  "date_created": "2024-12-16",
+  "date_created": "2025-05-25",
   "type": "pve",
   "updateable": false,
   "privileged": false,
   "interface_port": null,
   "documentation": null,
+  "config_path": "",
   "website": null,
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/proxmox.webp",
-  "config_path": "/opt/lxc-iptag/iptag.conf",
-  "description": "This script automatically adds IP address as tags to LXC containers using a Systemd service. The service also updates the tags if a LXC IP address is changed.",
+  "description": "This script automates the process of disabling network interface card (NIC) offloading features specifically for Intel e1000e network interfaces on Linux systems.",
   "install_methods": [
     {
       "type": "default",
-      "script": "tools/pve/add-lxc-iptag.sh",
+      "script": "tools/pve/nic-offloading-fix.sh",
       "resources": {
         "cpu": null,
         "ram": null,
@@ -35,10 +35,6 @@
     {
       "text": "Execute within the Proxmox shell",
       "type": "info"
-    },
-    {
-      "text": "The Proxmox Node must contain ipcalc and net-tools. `apt-get install -y ipcalc net-tools`",
-      "type": "warning"
     }
   ]
 }

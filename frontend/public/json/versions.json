@@ -1,5 +1,140 @@
 [
   {
+    "name": "Graylog2/graylog2-server",
+    "version": "6.3.0-rc.1",
+    "date": "2025-06-16T11:28:08Z"
+  },
+  {
+    "name": "bunkerity/bunkerweb",
+    "version": "v1.6.2-rc5",
+    "date": "2025-06-16T10:26:18Z"
+  },
+  {
+    "name": "home-assistant/operating-system",
+    "version": "15.2",
+    "date": "2025-04-14T15:37:12Z"
+  },
+  {
+    "name": "moghtech/komodo",
+    "version": "v1.18.3",
+    "date": "2025-06-16T07:03:46Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2020",
+    "date": "2025-06-16T05:56:11Z"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2025.5.2",
+    "date": "2025-06-03T08:45:14Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.17",
+    "date": "2025-06-11T12:07:38Z"
+  },
+  {
+    "name": "jellyfin/jellyfin",
+    "version": "v10.10.7",
+    "date": "2025-04-05T19:14:59Z"
+  },
+  {
+    "name": "crafty-controller/crafty-4",
+    "version": "v4.4.11",
+    "date": "2025-06-15T21:41:02Z"
+  },
+  {
+    "name": "TriliumNext/Notes",
+    "version": "v0.95.0",
+    "date": "2025-06-15T21:12:04Z"
+  },
+  {
+    "name": "karakeep-app/karakeep",
+    "version": "cli/v0.25.0",
+    "date": "2025-06-15T17:48:29Z"
+  },
+  {
+    "name": "tobychui/zoraxy",
+    "version": "v3.1.9",
+    "date": "2025-03-01T02:24:33Z"
+  },
+  {
+    "name": "syncthing/syncthing",
+    "version": "2.0.0-rc.19",
+    "date": "2025-06-02T17:56:25Z"
+  },
+  {
+    "name": "Prowlarr/Prowlarr",
+    "version": "v1.37.0.5076",
+    "date": "2025-06-04T11:04:53Z"
+  },
+  {
+    "name": "Readarr/Readarr",
+    "version": "v2.0.0.4645",
+    "date": "2017-03-07T18:56:06Z"
+  },
+  {
+    "name": "Lidarr/Lidarr",
+    "version": "v2.12.4.4658",
+    "date": "2025-06-09T17:27:45Z"
+  },
+  {
+    "name": "Radarr/Radarr",
+    "version": "v5.26.2.10099",
+    "date": "2025-06-11T20:10:39Z"
+  },
+  {
+    "name": "traccar/traccar",
+    "version": "v6.7.3",
+    "date": "2025-06-15T05:46:17Z"
+  },
+  {
+    "name": "hyperion-project/hyperion.ng",
+    "version": "2.1.1",
+    "date": "2025-06-14T17:45:06Z"
+  },
+  {
+    "name": "advplyr/audiobookshelf",
+    "version": "v2.25.1",
+    "date": "2025-06-14T23:32:15Z"
+  },
+  {
+    "name": "nzbgetcom/nzbget",
+    "version": "v25.0",
+    "date": "2025-05-12T09:12:04Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.9.1-rc1",
+    "date": "2025-06-12T21:18:54Z"
+  },
+  {
+    "name": "theonedev/onedev",
+    "version": "v11.11.0",
+    "date": "2025-06-14T13:23:36Z"
+  },
+  {
+    "name": "semaphoreui/semaphore",
+    "version": "v2.15.0",
+    "date": "2025-06-14T10:48:57Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "v4.2.1",
+    "date": "2025-06-03T20:04:28Z"
+  },
+  {
+    "name": "FlareSolverr/FlareSolverr",
+    "version": "v3.3.25",
+    "date": "2025-06-14T02:52:44Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.2.5",
+    "date": "2025-05-28T06:49:43Z"
+  },
+  {
     "name": "home-assistant/core",
     "version": "2025.6.1",
     "date": "2025-06-13T20:16:18Z"
@@ -8,11 +143,6 @@
     "name": "homarr-labs/homarr",
     "version": "v1.24.0",
     "date": "2025-06-13T19:15:36Z"
-  },
-  {
-    "name": "nzbgetcom/nzbget",
-    "version": "v25.0",
-    "date": "2025-05-12T09:12:04Z"
   },
   {
     "name": "Luligu/matterbridge",
@@ -25,16 +155,6 @@
     "date": "2025-06-10T14:27:57Z"
   },
   {
-    "name": "semaphoreui/semaphore",
-    "version": "v2.14.12",
-    "date": "2025-05-27T03:58:59Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2015",
-    "date": "2025-06-13T05:53:23Z"
-  },
-  {
     "name": "grafana/grafana",
     "version": "v12.0.1+security-01",
     "date": "2025-06-13T04:15:18Z"
@@ -45,39 +165,14 @@
     "date": "2025-06-13T04:11:30Z"
   },
   {
-    "name": "hyperion-project/hyperion.ng",
-    "version": "2.1.0",
-    "date": "2025-06-12T19:56:34Z"
-  },
-  {
     "name": "FlowiseAI/Flowise",
     "version": "flowise@3.0.2",
     "date": "2025-06-12T22:48:11Z"
   },
   {
-    "name": "ollama/ollama",
-    "version": "v0.9.1-rc1",
-    "date": "2025-06-12T21:18:54Z"
-  },
-  {
-    "name": "bunkerity/bunkerweb",
-    "version": "testing",
-    "date": "2025-06-11T16:35:40Z"
-  },
-  {
     "name": "leiweibau/Pi.Alert",
     "version": "v2025-06-12",
     "date": "2025-06-12T20:59:47Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.2.5",
-    "date": "2025-05-28T06:49:43Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.17",
-    "date": "2025-06-11T12:07:38Z"
   },
   {
     "name": "Checkmk/checkmk",
@@ -115,24 +210,9 @@
     "date": "2025-06-12T00:27:41Z"
   },
   {
-    "name": "theonedev/onedev",
-    "version": "v11.10.4",
-    "date": "2025-06-11T22:36:05Z"
-  },
-  {
-    "name": "Radarr/Radarr",
-    "version": "v5.26.2.10099",
-    "date": "2025-06-11T20:10:39Z"
-  },
-  {
     "name": "TandoorRecipes/recipes",
     "version": "2.0.0-alpha-4",
     "date": "2025-05-14T05:01:45Z"
-  },
-  {
-    "name": "esphome/esphome",
-    "version": "2025.5.2",
-    "date": "2025-06-03T08:45:14Z"
   },
   {
     "name": "MediaBrowser/Emby.Releases",
@@ -215,11 +295,6 @@
     "date": "2025-06-03T14:13:00Z"
   },
   {
-    "name": "Graylog2/graylog2-server",
-    "version": "6.3.0-beta.5",
-    "date": "2025-06-10T11:19:42Z"
-  },
-  {
     "name": "OctoPrint/OctoPrint",
     "version": "1.11.2",
     "date": "2025-06-10T11:07:14Z"
@@ -265,11 +340,6 @@
     "date": "2025-06-09T18:11:46Z"
   },
   {
-    "name": "Lidarr/Lidarr",
-    "version": "v2.12.4.4658",
-    "date": "2025-06-09T17:27:45Z"
-  },
-  {
     "name": "Brandawg93/PeaNUT",
     "version": "v5.8.0",
     "date": "2025-06-09T16:08:33Z"
@@ -300,19 +370,9 @@
     "date": "2025-06-08T22:50:58Z"
   },
   {
-    "name": "karakeep-app/karakeep",
-    "version": "ios/v1.7.0-1",
-    "date": "2025-06-08T22:02:33Z"
-  },
-  {
     "name": "Forceu/Gokapi",
     "version": "v2.0.1",
     "date": "2025-06-08T14:40:24Z"
-  },
-  {
-    "name": "Readarr/Readarr",
-    "version": "v2.0.0.4645",
-    "date": "2017-03-07T18:56:06Z"
   },
   {
     "name": "matze/wastebin",
@@ -320,19 +380,9 @@
     "date": "2025-06-07T21:33:22Z"
   },
   {
-    "name": "jellyfin/jellyfin",
-    "version": "v10.10.7",
-    "date": "2025-04-05T19:14:59Z"
-  },
-  {
     "name": "jordan-dalby/ByteStash",
     "version": "v1.5.8",
     "date": "2025-06-07T11:39:10Z"
-  },
-  {
-    "name": "syncthing/syncthing",
-    "version": "2.0.0-rc.19",
-    "date": "2025-06-02T17:56:25Z"
   },
   {
     "name": "evcc-io/evcc",
@@ -340,19 +390,9 @@
     "date": "2025-06-07T11:38:28Z"
   },
   {
-    "name": "TriliumNext/Notes",
-    "version": "v0.94.1",
-    "date": "2025-06-07T10:32:38Z"
-  },
-  {
     "name": "homebridge/homebridge",
     "version": "v1.10.0",
     "date": "2025-06-07T08:31:48Z"
-  },
-  {
-    "name": "moghtech/komodo",
-    "version": "v1.18.1",
-    "date": "2025-06-07T06:25:20Z"
   },
   {
     "name": "OliveTin/OliveTin",
@@ -425,19 +465,9 @@
     "date": "2025-06-04T19:10:05Z"
   },
   {
-    "name": "FlareSolverr/FlareSolverr",
-    "version": "v3.3.24",
-    "date": "2025-06-04T18:02:30Z"
-  },
-  {
     "name": "cockpit-project/cockpit",
     "version": "340",
     "date": "2025-06-04T16:41:44Z"
-  },
-  {
-    "name": "Prowlarr/Prowlarr",
-    "version": "v1.37.0.5076",
-    "date": "2025-06-04T11:04:53Z"
   },
   {
     "name": "glpi-project/glpi",
@@ -458,11 +488,6 @@
     "name": "coder/code-server",
     "version": "v4.100.3",
     "date": "2025-06-03T21:06:41Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "v4.2.1",
-    "date": "2025-06-03T20:04:28Z"
   },
   {
     "name": "influxdata/influxdb",
@@ -493,16 +518,6 @@
     "name": "usememos/memos",
     "version": "v0.24.4",
     "date": "2025-06-02T02:49:05Z"
-  },
-  {
-    "name": "advplyr/audiobookshelf",
-    "version": "v2.24.0",
-    "date": "2025-06-01T21:38:08Z"
-  },
-  {
-    "name": "traccar/traccar",
-    "version": "v6.7.2",
-    "date": "2025-06-01T20:40:00Z"
   },
   {
     "name": "gethomepage/homepage",
@@ -645,11 +660,6 @@
     "date": "2025-05-22T05:24:42Z"
   },
   {
-    "name": "tobychui/zoraxy",
-    "version": "v3.1.9",
-    "date": "2025-03-01T02:24:33Z"
-  },
-  {
     "name": "apache/tika",
     "version": "3.2.0-rc2",
     "date": "2025-05-21T20:09:07Z"
@@ -668,11 +678,6 @@
     "name": "Stirling-Tools/Stirling-PDF",
     "version": "v0.46.2",
     "date": "2025-05-20T11:21:04Z"
-  },
-  {
-    "name": "crafty-controller/crafty-4",
-    "version": "v4.4.9",
-    "date": "2025-05-20T00:08:29Z"
   },
   {
     "name": "Part-DB/Part-DB-server",
@@ -903,11 +908,6 @@
     "name": "slskd/slskd",
     "version": "0.22.5",
     "date": "2025-04-15T02:52:26Z"
-  },
-  {
-    "name": "home-assistant/operating-system",
-    "version": "15.2",
-    "date": "2025-04-14T15:37:12Z"
   },
   {
     "name": "Tautulli/Tautulli",

@@ -14,12 +14,42 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 All LXC instances created using this repository come pre-installed with Midnight Commander, which is a command-line tool (`mc`) that offers a user-friendly file and directory management interface for the terminal environment.
 
 
+## 2025-06-16
+
+### 🆕 New Scripts
+
+  - Intel NIC offload Fix by @rcastley [@MickLesk](https://github.com/MickLesk) ([#5155](https://github.com/community-scripts/ProxmoxVE/pull/5155))
+
+### 🚀 Updated Scripts
+
+  - [core] Move install_php() from VED to main [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#5182](https://github.com/community-scripts/ProxmoxVE/pull/5182))
+- Firefly: Add Data Importer to LXC [@tremor021](https://github.com/tremor021) ([#5159](https://github.com/community-scripts/ProxmoxVE/pull/5159))
+
+  - #### 🐞 Bug Fixes
+
+    - Kasm: Storing Creds Fix [@omiinaya](https://github.com/omiinaya) ([#5162](https://github.com/community-scripts/ProxmoxVE/pull/5162))
+
+### 🌐 Website
+
+  - #### 🐞 Bug Fixes
+
+    - Update default image asset in the public directory and update api route to only search for files that end with .json [@BramSuurdje](https://github.com/BramSuurdje) ([#5179](https://github.com/community-scripts/ProxmoxVE/pull/5179))
+
+## 2025-06-15
+
+### 🆕 New Scripts
+
+  - LibreTranslate ([#5154](https://github.com/community-scripts/ProxmoxVE/pull/5154))
+
 ## 2025-06-14
 
 ### 🚀 Updated Scripts
 
+  - [core] Update install_mariadb func [@tremor021](https://github.com/tremor021) ([#5138](https://github.com/community-scripts/ProxmoxVE/pull/5138))
+
   - #### 🐞 Bug Fixes
 
+    - flowiseai: set NodeJS to Version 20 [@MickLesk](https://github.com/MickLesk) ([#5130](https://github.com/community-scripts/ProxmoxVE/pull/5130))
     - Update dolibarr-install.sh - Get largest version number [@tjcomserv](https://github.com/tjcomserv) ([#5127](https://github.com/community-scripts/ProxmoxVE/pull/5127))
 
 ## 2025-06-13
