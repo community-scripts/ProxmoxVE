@@ -30,6 +30,10 @@ All LXC instances created using this repository come pre-installed with Midnight
     - Wastebin: Fix missing dependencies [@tremor021](https://github.com/tremor021) ([#5185](https://github.com/community-scripts/ProxmoxVE/pull/5185))
     - Kasm: Storing Creds Fix [@omiinaya](https://github.com/omiinaya) ([#5162](https://github.com/community-scripts/ProxmoxVE/pull/5162))
 
+  - #### ✨ New Features
+
+    - add optional Cloud-init support to Debian VM script  [@koendiender](https://github.com/koendiender) ([#5137](https://github.com/community-scripts/ProxmoxVE/pull/5137))
+
 ### 🌐 Website
 
   - #### 🐞 Bug Fixes
