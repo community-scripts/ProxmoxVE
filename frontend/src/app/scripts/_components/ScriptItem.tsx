@@ -15,12 +15,12 @@ import { ResourceDisplay } from "./ResourceDisplay";
 import { getDisplayValueFromType } from "./ScriptInfoBlocks";
 import Alerts from "./ScriptItems/Alerts";
 import Buttons from "./ScriptItems/Buttons";
+import ConfigFile from "./ScriptItems/ConfigFile";
 import DefaultPassword from "./ScriptItems/DefaultPassword";
 import Description from "./ScriptItems/Description";
 import InstallCommand from "./ScriptItems/InstallCommand";
 import InterFaces from "./ScriptItems/InterFaces";
 import Tooltips from "./ScriptItems/Tooltips";
-import ConfigFile from "./ScriptItems/ConfigFile";
 
 interface ScriptItemProps {
   item: Script;
@@ -152,16 +152,18 @@ export function ScriptItem({ item, setSelectedScript }: ScriptItemProps) {
               <div className="">
                 <InstallCommand item={item} />
               </div>
-              <Separator />
-              <div className="flex gap-3 px-4 py-2 bg-accent/25">
-                <h2 className="text-lg font-semibold">
-                  Location of config file
-                </h2>
-              </div>
-              <Separator />
-              <div className="">
-                <ConfigFile item={item} />
-              </div>
+              {item.config_path && (
+                <>
+                  <Separator />
+                  <div className="flex gap-3 px-4 py-2 bg-accent/25">
+                    <h2 className="text-lg font-semibold">Location of config file</h2>
+                  </div>
+                  <Separator />
+                  <div className="">
+                    <ConfigFile configPath={item.config_path} />
+                  </div>
+                </>
+              )}
             </div>
 
             <DefaultPassword item={item} />
