@@ -13,6 +13,10 @@ setting_up_container
 network_check
 update_os
 
+msg_info "Installing dependencies"
+$STD apt-get install -y zstd
+msg_ok "Installed dependencies"
+
 msg_info "Installing Wastebin"
 temp_file=$(mktemp)
 RELEASE=$(curl -fsSL https://api.github.com/repos/matze/wastebin/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
