@@ -28,6 +28,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - Kasm: Storing Creds Fix [@omiinaya](https://github.com/omiinaya) ([#5162](https://github.com/community-scripts/ProxmoxVE/pull/5162))
 
+### 🌐 Website
+
+  - #### 🐞 Bug Fixes
+
+    - Update default image asset in the public directory and update api route to only search for files that end with .json [@BramSuurdje](https://github.com/BramSuurdje) ([#5179](https://github.com/community-scripts/ProxmoxVE/pull/5179))
+
 ## 2025-06-15
 
 ### 🆕 New Scripts
