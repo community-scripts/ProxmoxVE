@@ -34,6 +34,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - add optional Cloud-init support to Debian VM script  [@koendiender](https://github.com/koendiender) ([#5137](https://github.com/community-scripts/ProxmoxVE/pull/5137))
 
+  - #### 🔧 Refactor
+
+    - Refactor: 2FAuth [@tremor021](https://github.com/tremor021) ([#5184](https://github.com/community-scripts/ProxmoxVE/pull/5184))
+
 ### 🌐 Website
 
   - #### 🐞 Bug Fixes
