@@ -1,5 +1,40 @@
 [
   {
+    "name": "Graylog2/graylog2-server",
+    "version": "6.3.0-rc.1",
+    "date": "2025-06-16T11:28:08Z"
+  },
+  {
+    "name": "bunkerity/bunkerweb",
+    "version": "v1.6.2-rc5",
+    "date": "2025-06-16T10:26:18Z"
+  },
+  {
+    "name": "home-assistant/operating-system",
+    "version": "15.2",
+    "date": "2025-04-14T15:37:12Z"
+  },
+  {
+    "name": "moghtech/komodo",
+    "version": "v1.18.3",
+    "date": "2025-06-16T07:03:46Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2020",
+    "date": "2025-06-16T05:56:11Z"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2025.5.2",
+    "date": "2025-06-03T08:45:14Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.17",
+    "date": "2025-06-11T12:07:38Z"
+  },
+  {
     "name": "jellyfin/jellyfin",
     "version": "v10.10.7",
     "date": "2025-04-05T19:14:59Z"
@@ -50,11 +85,6 @@
     "date": "2025-06-11T20:10:39Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2017",
-    "date": "2025-06-15T05:54:05Z"
-  },
-  {
     "name": "traccar/traccar",
     "version": "v6.7.3",
     "date": "2025-06-15T05:46:17Z"
@@ -75,11 +105,6 @@
     "date": "2025-05-12T09:12:04Z"
   },
   {
-    "name": "bunkerity/bunkerweb",
-    "version": "v1.6.2-rc5",
-    "date": "2025-06-14T16:44:14Z"
-  },
-  {
     "name": "ollama/ollama",
     "version": "v0.9.1-rc1",
     "date": "2025-06-12T21:18:54Z"
@@ -93,11 +118,6 @@
     "name": "semaphoreui/semaphore",
     "version": "v2.15.0",
     "date": "2025-06-14T10:48:57Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.17",
-    "date": "2025-06-11T12:07:38Z"
   },
   {
     "name": "runtipi/runtipi",
@@ -195,11 +215,6 @@
     "date": "2025-05-14T05:01:45Z"
   },
   {
-    "name": "esphome/esphome",
-    "version": "2025.5.2",
-    "date": "2025-06-03T08:45:14Z"
-  },
-  {
     "name": "MediaBrowser/Emby.Releases",
     "version": "4.8.11.0",
     "date": "2025-03-10T06:39:11Z"
@@ -278,11 +293,6 @@
     "name": "element-hq/synapse",
     "version": "v1.131.0",
     "date": "2025-06-03T14:13:00Z"
-  },
-  {
-    "name": "Graylog2/graylog2-server",
-    "version": "6.3.0-beta.5",
-    "date": "2025-06-10T11:19:42Z"
   },
   {
     "name": "OctoPrint/OctoPrint",
@@ -383,11 +393,6 @@
     "name": "homebridge/homebridge",
     "version": "v1.10.0",
     "date": "2025-06-07T08:31:48Z"
-  },
-  {
-    "name": "moghtech/komodo",
-    "version": "v1.18.1",
-    "date": "2025-06-07T06:25:20Z"
   },
   {
     "name": "OliveTin/OliveTin",
@@ -903,11 +908,6 @@
     "name": "slskd/slskd",
     "version": "0.22.5",
     "date": "2025-04-15T02:52:26Z"
-  },
-  {
-    "name": "home-assistant/operating-system",
-    "version": "15.2",
-    "date": "2025-04-14T15:37:12Z"
   },
   {
     "name": "Tautulli/Tautulli",
