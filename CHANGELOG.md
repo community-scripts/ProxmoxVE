@@ -16,17 +16,17 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-06-16
 
+### 🆕 New Scripts
+
+  - Intel NIC offload Fix by @rcastley [@MickLesk](https://github.com/MickLesk) ([#5155](https://github.com/community-scripts/ProxmoxVE/pull/5155))
+
 ### 🚀 Updated Scripts
 
   - Firefly: Add Data Importer to LXC [@tremor021](https://github.com/tremor021) ([#5159](https://github.com/community-scripts/ProxmoxVE/pull/5159))
 
-### 🌐 Website
+  - #### 🐞 Bug Fixes
 
-  - Refactor: IP-Tag [@MickLesk](https://github.com/MickLesk) ([#5152](https://github.com/community-scripts/ProxmoxVE/pull/5152))
-
-  - #### 📝 Script Information
-
-    - Intel NIC offload Fix by @rcastley [@MickLesk](https://github.com/MickLesk) ([#5155](https://github.com/community-scripts/ProxmoxVE/pull/5155))
+    - Kasm: Storing Creds Fix [@omiinaya](https://github.com/omiinaya) ([#5162](https://github.com/community-scripts/ProxmoxVE/pull/5162))
 
 ## 2025-06-15
 
