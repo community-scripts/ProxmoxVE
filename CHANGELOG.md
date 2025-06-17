@@ -20,6 +20,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - Update IP-Tag [@DesertGamer](https://github.com/DesertGamer) ([#5226](https://github.com/community-scripts/ProxmoxVE/pull/5226))
     - trilium: fix update function after db changes folder [@tjcomserv](https://github.com/tjcomserv) ([#5207](https://github.com/community-scripts/ProxmoxVE/pull/5207))
 
   - #### ✨ New Features
