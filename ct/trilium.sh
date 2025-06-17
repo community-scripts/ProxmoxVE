@@ -38,7 +38,7 @@ function update_script() {
     DB_PATH="/opt/trilium/assets/db"
     DB_RESTORE_PATH="/opt/trilium/assets/db"
   else
-    echo "Database not found in either /opt/trilium/db or /opt/trilium/assets/db"
+   msg_error "Database not found in either /opt/trilium/db or /opt/trilium/assets/db"
     exit 1
   fi
 
