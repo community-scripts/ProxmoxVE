@@ -43,6 +43,10 @@ $STD uv pip install "numpy<2"
 $STD uv pip install .
 $STD uv pip install libretranslate
 $STD .venv/bin/python scripts/install_models.py
+
+cat <<EOF >/opt/libretranslate/.env
+LT_PORT=5000
+EOF
 msg_ok "Installed LibreTranslate"
 
 msg_info "Creating Service"
@@ -56,6 +60,7 @@ User=root
 Type=idle
 Restart=always
 Environment="PATH=/usr/local/lib/python3.11/dist-packages/libretranslate"
+EnvironmentFile=/opt/libretranslate/.env
 ExecStart=/opt/libretranslate/.venv/bin/python3 /opt/libretranslate/.venv/bin/libretranslate --host * --update-models
 ExecReload=/bin/kill -s HUP
 KillMode=mixed
