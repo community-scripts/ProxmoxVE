@@ -1,5 +1,40 @@
 [
   {
+    "name": "glpi-project/glpi",
+    "version": "10.0.18",
+    "date": "2025-02-12T11:07:02Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "v10.9.1",
+    "date": "2025-06-17T07:06:51Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.2",
+    "date": "2025-05-11T16:40:55Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2024",
+    "date": "2025-06-17T05:51:55Z"
+  },
+  {
+    "name": "donaldzou/WGDashboard",
+    "version": "v4.2.4",
+    "date": "2025-06-17T05:37:06Z"
+  },
+  {
+    "name": "webmin/webmin",
+    "version": "2.402",
+    "date": "2025-06-17T05:20:42Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.2.5",
+    "date": "2025-05-28T06:49:43Z"
+  },
+  {
     "name": "kimai/kimai",
     "version": "2.36.1",
     "date": "2025-06-16T19:20:54Z"
@@ -18,6 +53,11 @@
     "name": "goauthentik/authentik",
     "version": "version/2025.6.2",
     "date": "2025-06-16T17:54:39Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "v4.2.1",
+    "date": "2025-06-03T20:04:28Z"
   },
   {
     "name": "NodeBB/NodeBB",
@@ -63,11 +103,6 @@
     "name": "moghtech/komodo",
     "version": "v1.18.3",
     "date": "2025-06-16T07:03:46Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2020",
-    "date": "2025-06-16T05:56:11Z"
   },
   {
     "name": "esphome/esphome",
@@ -165,19 +200,9 @@
     "date": "2025-06-14T10:48:57Z"
   },
   {
-    "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-06-14T07:49:50Z"
-  },
-  {
     "name": "FlareSolverr/FlareSolverr",
     "version": "v3.3.25",
     "date": "2025-06-14T02:52:44Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.2.5",
-    "date": "2025-05-28T06:49:43Z"
   },
   {
     "name": "home-assistant/core",
@@ -195,14 +220,14 @@
     "date": "2025-06-13T15:02:37Z"
   },
   {
+    "name": "grafana/grafana",
+    "version": "v11.4.6",
+    "date": "2025-06-13T14:11:41Z"
+  },
+  {
     "name": "jenkinsci/jenkins",
     "version": "jenkins-2.514",
     "date": "2025-06-10T14:27:57Z"
-  },
-  {
-    "name": "grafana/grafana",
-    "version": "v12.0.1+security-01",
-    "date": "2025-06-13T04:15:18Z"
   },
   {
     "name": "FlowiseAI/Flowise",
@@ -233,11 +258,6 @@
     "name": "zitadel/zitadel",
     "version": "v3.3.0",
     "date": "2025-06-12T06:54:48Z"
-  },
-  {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.2",
-    "date": "2025-05-11T16:40:55Z"
   },
   {
     "name": "documenso/documenso",
@@ -293,11 +313,6 @@
     "name": "openobserve/openobserve",
     "version": "v0.15.0-rc2",
     "date": "2025-06-11T04:29:22Z"
-  },
-  {
-    "name": "mattermost/mattermost",
-    "version": "server/public/v0.1.15",
-    "date": "2025-06-11T03:56:25Z"
   },
   {
     "name": "node-red/node-red",
@@ -460,11 +475,6 @@
     "date": "2025-06-04T13:35:16Z"
   },
   {
-    "name": "donaldzou/WGDashboard",
-    "version": "v4.2.3",
-    "date": "2025-05-07T15:35:04Z"
-  },
-  {
     "name": "actualbudget/actual",
     "version": "v25.6.1",
     "date": "2025-06-04T22:24:31Z"
@@ -480,19 +490,9 @@
     "date": "2025-06-04T16:41:44Z"
   },
   {
-    "name": "glpi-project/glpi",
-    "version": "10.0.18",
-    "date": "2025-02-12T11:07:02Z"
-  },
-  {
     "name": "louislam/uptime-kuma",
     "version": "2.0.0-beta.2-temp",
     "date": "2025-03-28T08:45:58Z"
-  },
-  {
-    "name": "webmin/webmin",
-    "version": "2.401",
-    "date": "2025-06-04T02:53:03Z"
   },
   {
     "name": "coder/code-server",
