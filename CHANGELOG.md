@@ -18,6 +18,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - trilium: fix update function after db changes folder [@tjcomserv](https://github.com/tjcomserv) ([#5207](https://github.com/community-scripts/ProxmoxVE/pull/5207))
+
   - #### ✨ New Features
 
     - LibreTranslate: Add .env for easier configuration [@tremor021](https://github.com/tremor021) ([#5216](https://github.com/community-scripts/ProxmoxVE/pull/5216))
