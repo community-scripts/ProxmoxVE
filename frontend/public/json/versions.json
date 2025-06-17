@@ -1,13 +1,58 @@
 [
   {
-    "name": "Graylog2/graylog2-server",
-    "version": "6.3.0-rc.1",
-    "date": "2025-06-16T11:28:08Z"
+    "name": "kimai/kimai",
+    "version": "2.36.1",
+    "date": "2025-06-16T19:20:54Z"
   },
   {
     "name": "bunkerity/bunkerweb",
-    "version": "v1.6.2-rc5",
-    "date": "2025-06-16T10:26:18Z"
+    "version": "testing",
+    "date": "2025-06-16T18:10:42Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.21.14",
+    "date": "2025-06-16T17:54:48Z"
+  },
+  {
+    "name": "goauthentik/authentik",
+    "version": "version/2025.6.2",
+    "date": "2025-06-16T17:54:39Z"
+  },
+  {
+    "name": "NodeBB/NodeBB",
+    "version": "v2.8.20",
+    "date": "2025-06-16T17:03:52Z"
+  },
+  {
+    "name": "emqx/emqx",
+    "version": "e5.9.1-alpha.1",
+    "date": "2025-06-16T15:34:01Z"
+  },
+  {
+    "name": "open-webui/open-webui",
+    "version": "v0.6.15",
+    "date": "2025-06-16T14:34:42Z"
+  },
+  {
+    "name": "grokability/snipe-it",
+    "version": "v8.1.16",
+    "date": "2025-06-16T13:49:37Z"
+  },
+  {
+    "name": "clusterzx/paperless-ai",
+    "version": "v3.0.5",
+    "date": "2025-06-16T13:25:55Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.95.3",
+    "date": "2025-06-03T11:09:42Z"
+  },
+  {
+    "name": "Graylog2/graylog2-server",
+    "version": "6.3.0-rc.1",
+    "date": "2025-06-16T11:28:08Z"
   },
   {
     "name": "home-assistant/operating-system",
@@ -121,8 +166,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v4.2.1",
-    "date": "2025-06-03T20:04:28Z"
+    "version": "nightly",
+    "date": "2025-06-14T07:49:50Z"
   },
   {
     "name": "FlareSolverr/FlareSolverr",
@@ -160,11 +205,6 @@
     "date": "2025-06-13T04:15:18Z"
   },
   {
-    "name": "msgbyte/tianji",
-    "version": "v1.21.13",
-    "date": "2025-06-13T04:11:30Z"
-  },
-  {
     "name": "FlowiseAI/Flowise",
     "version": "flowise@3.0.2",
     "date": "2025-06-12T22:48:11Z"
@@ -178,11 +218,6 @@
     "name": "Checkmk/checkmk",
     "version": "v2.3.0p34",
     "date": "2025-06-12T12:15:44Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.95.3",
-    "date": "2025-06-03T11:09:42Z"
   },
   {
     "name": "docker/compose",
@@ -230,11 +265,6 @@
     "date": "2025-06-11T15:19:52Z"
   },
   {
-    "name": "kimai/kimai",
-    "version": "2.36.0",
-    "date": "2025-06-11T12:31:07Z"
-  },
-  {
     "name": "cloudflare/cloudflared",
     "version": "2025.6.0",
     "date": "2025-06-11T11:13:21Z"
@@ -270,11 +300,6 @@
     "date": "2025-06-11T03:56:25Z"
   },
   {
-    "name": "emqx/emqx",
-    "version": "e5.10.0",
-    "date": "2025-06-10T16:03:18Z"
-  },
-  {
     "name": "node-red/node-red",
     "version": "4.1.0-beta.1",
     "date": "2025-06-10T15:47:59Z"
@@ -283,11 +308,6 @@
     "name": "AdguardTeam/AdGuardHome",
     "version": "v0.107.62",
     "date": "2025-05-27T12:10:19Z"
-  },
-  {
-    "name": "open-webui/open-webui",
-    "version": "v0.6.14",
-    "date": "2025-06-10T14:18:04Z"
   },
   {
     "name": "element-hq/synapse",
@@ -350,11 +370,6 @@
     "date": "2025-06-09T15:58:04Z"
   },
   {
-    "name": "NodeBB/NodeBB",
-    "version": "v2.8.19",
-    "date": "2025-06-09T15:32:25Z"
-  },
-  {
     "name": "seanmorley15/AdventureLog",
     "version": "v0.10.0",
     "date": "2025-06-09T13:37:07Z"
@@ -403,11 +418,6 @@
     "name": "diced/zipline",
     "version": "v4.1.2",
     "date": "2025-06-06T17:44:58Z"
-  },
-  {
-    "name": "goauthentik/authentik",
-    "version": "version/2025.6.1",
-    "date": "2025-06-06T15:28:21Z"
   },
   {
     "name": "ioBroker/ioBroker",
@@ -503,11 +513,6 @@
     "name": "FreshRSS/FreshRSS",
     "version": "1.26.3",
     "date": "2025-06-02T22:00:14Z"
-  },
-  {
-    "name": "grokability/snipe-it",
-    "version": "v8.1.15",
-    "date": "2025-06-02T17:38:24Z"
   },
   {
     "name": "inventree/InvenTree",
@@ -663,11 +668,6 @@
     "name": "apache/tika",
     "version": "3.2.0-rc2",
     "date": "2025-05-21T20:09:07Z"
-  },
-  {
-    "name": "clusterzx/paperless-ai",
-    "version": "v3.0.4",
-    "date": "2025-05-21T19:03:53Z"
   },
   {
     "name": "ipfs/kubo",
