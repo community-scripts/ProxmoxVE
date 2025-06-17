@@ -22,6 +22,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - LibreTranslate: Add .env for easier configuration [@tremor021](https://github.com/tremor021) ([#5216](https://github.com/community-scripts/ProxmoxVE/pull/5216))
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - IPTag: Better explanation [@MickLesk](https://github.com/MickLesk) ([#5213](https://github.com/community-scripts/ProxmoxVE/pull/5213))
+
 ## 2025-06-16
 
 ### 🆕 New Scripts
