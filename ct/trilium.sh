@@ -30,7 +30,7 @@ function update_script() {
   if [[ ! -f /opt/${APP}_version.txt ]]; then touch /opt/${APP}_version.txt; fi
   RELEASE=$(curl -fsSL https://api.github.com/repos/TriliumNext/Notes/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
  if [[ "v${RELEASE}" != "$(cat /opt/${APP}_version.txt 2>/dev/null)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
-  # Determine DB path only when update is needed
+ 
   if [[ -d /opt/trilium/db ]]; then
     DB_PATH="/opt/trilium/db"
     DB_RESTORE_PATH="/opt/trilium/db"
