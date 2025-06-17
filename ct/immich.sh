@@ -30,6 +30,7 @@ function update_script() {
   STAGING_DIR=/opt/staging
   BASE_DIR=${STAGING_DIR}/base-images
   SOURCE_DIR=${STAGING_DIR}/image-source
+  cd /root
   if [[ -f ~/.intel_version ]]; then
     curl -fsSLO https://raw.githubusercontent.com/immich-app/immich/refs/heads/main/machine-learning/Dockerfile
     readarray -t INTEL_URLS < <(sed -n "/intel/p" ./Dockerfile | awk '{print $3}')
