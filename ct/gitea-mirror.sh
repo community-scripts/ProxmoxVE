@@ -29,7 +29,7 @@ function update_script() {
     exit
   fi
   RELEASE=$(curl -fsSL https://api.github.com/repos/arunavo4/gitea-mirror/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+  if [[ "${RELEASE}" != "$(cat ~/.${APP} 2>/dev/null || cat /opt/${APP}_version.txt 2>/dev/null)" ]]; then
 
     msg_info "Stopping Services"
     systemctl stop gitea-mirror
@@ -48,15 +48,15 @@ function update_script() {
     msg_ok "Installed Bun"
 
     rm -rf /opt/gitea-mirror
-    fetch_and_deploy_gh_release "arunavo4/gitea-mirror"
-    
-    msg_info "Updating and rebuilding ${APP} to v${RELEASE}"  
+    fetch_and_deploy_gh_release "gitea-mirror" "arunavo4/gitea-mirror"
+
+    msg_info "Updating and rebuilding ${APP} to v${RELEASE}"
     cd /opt/gitea-mirror
     $STD bun run setup
     $STD bun run build
     APP_VERSION=$(grep -o '"version": *"[^"]*"' package.json | cut -d'"' -f4)
     sudo sed -i.bak "s|^Environment=npm_package_version=.*|Environment=npm_package_version=${APP_VERSION}|" /etc/systemd/system/gitea-mirror.service
-    msg_ok "Updated and rebuilt ${APP} to v${RELEASE}"  
+    msg_ok "Updated and rebuilt ${APP} to v${RELEASE}"
 
     msg_info "Restoring Data"
     cp /opt/gitea-mirror-backup/data/* /opt/gitea-mirror/data

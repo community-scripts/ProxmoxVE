@@ -28,7 +28,7 @@ ln -sf /opt/bun/bin/bun /usr/local/bin/bun
 ln -sf /opt/bun/bin/bun /usr/local/bin/bunx
 msg_ok "Installed Bun"
 
-fetch_and_deploy_gh_release "arunavo4/gitea-mirror"
+fetch_and_deploy_gh_release "gitea-mirror" "arunavo4/gitea-mirror"
 
 msg_info "Installing gitea-mirror"
 cd /opt/gitea-mirror

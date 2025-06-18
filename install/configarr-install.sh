@@ -19,7 +19,7 @@ $STD apt-get install -y \
 msg_ok "Installed Dependencies"
 
 NODE_MODULE="pnpm@latest" setup_nodejs
-fetch_and_deploy_gh_release "raydak-labs/configarr"
+fetch_and_deploy_gh_release "configarr" "raydak-labs/configarr"
 
 msg_info "Setup ${APPLICATION}"
 cat <<EOF >/opt/configarr/.env

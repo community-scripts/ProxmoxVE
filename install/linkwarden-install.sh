@@ -48,7 +48,7 @@ if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
 fi
 
 msg_info "Installing Linkwarden (Patience)"
-fetch_and_deploy_gh_release "linkwarden/linkwarden"
+fetch_and_deploy_gh_release "linkwarden" "linkwarden/linkwarden"
 cd /opt/linkwarden
 $STD yarn
 $STD npx playwright install-deps

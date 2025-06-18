@@ -38,7 +38,7 @@ function update_script() {
     msg_info "Updating ${APP} to ${RELEASE}"
     mv /opt/linkwarden/.env /opt/.env
     rm -rf /opt/linkwarden
-    fetch_and_deploy_gh_release "linkwarden/linkwarden"
+    fetch_and_deploy_gh_release "linkwarden" "linkwarden/linkwarden"
     cd /opt/linkwarden
     $STD yarn
     $STD npx playwright install-deps
