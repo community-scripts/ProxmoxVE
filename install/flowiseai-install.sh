@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-NODE_VERSION="20" install_node_and_modules
+NODE_VERSION="20" setup_nodejs
 
 msg_info "Installing FlowiseAI (Patience)"
 $STD npm install -g flowise \

@@ -18,7 +18,7 @@ $STD apt-get install -y \
   ca-certificates
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" install_node_and_modules
+NODE_VERSION="22" setup_nodejs
 
 msg_info "Installing n8n (Patience)"
 $STD npm install --global patch-package

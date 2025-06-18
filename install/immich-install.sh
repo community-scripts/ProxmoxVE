@@ -85,6 +85,9 @@ ln -s /usr/lib/jellyfin-ffmpeg/ffprobe /usr/bin/ffprobe
 msg_ok "Dependencies Installed"
 
 read -r -p "Install OpenVINO dependencies for Intel HW-accelerated machine-learning? y/N " prompt
+NODE_VERSION="22" setup_nodejs
+PG_VERSION="16" setup_postgresql
+
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   msg_info "Installing OpenVINO dependencies"
   touch ~/.openvino

@@ -14,12 +14,23 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 All LXC instances created using this repository come pre-installed with Midnight Commander, which is a command-line tool (`mc`) that offers a user-friendly file and directory management interface for the terminal environment.
 
 
+## 2025-06-18
+
+### 🚀 Updated Scripts
+
+  - tools.func: Standardized and Renamed Setup Functions [@MickLesk](https://github.com/MickLesk) ([#5241](https://github.com/community-scripts/ProxmoxVE/pull/5241))
+
+  - #### 🔧 Refactor
+
+    - upgrade old Scriptcalls to new tools.func calls [@MickLesk](https://github.com/MickLesk) ([#5242](https://github.com/community-scripts/ProxmoxVE/pull/5242))
+
 ## 2025-06-17
 
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
 
+    - gitea-mirror: increase build ressources  [@CrazyWolf13](https://github.com/CrazyWolf13) ([#5235](https://github.com/community-scripts/ProxmoxVE/pull/5235))
     - Immich: ensure in proper working dir when updating [@vhsdream](https://github.com/vhsdream) ([#5227](https://github.com/community-scripts/ProxmoxVE/pull/5227))
     - Update IP-Tag [@DesertGamer](https://github.com/DesertGamer) ([#5226](https://github.com/community-scripts/ProxmoxVE/pull/5226))
     - trilium: fix update function after db changes folder [@tjcomserv](https://github.com/tjcomserv) ([#5207](https://github.com/community-scripts/ProxmoxVE/pull/5207))

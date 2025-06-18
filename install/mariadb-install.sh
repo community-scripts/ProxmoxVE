@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-install_mariadb
+setup_mariadb
 
 msg_info "Setup MariaDB"
 sed -i 's/^# *\(port *=.*\)/\1/' /etc/mysql/my.cnf

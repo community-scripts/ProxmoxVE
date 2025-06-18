@@ -19,9 +19,9 @@ $STD apt-get install -y \
   build-essential
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" NODE_MODULE="yarn@latest" install_node_and_modules
-PG_VERSION="16" install_postgresql
-RUST_CRATES="monolith" install_rust_and_crates
+NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
+PG_VERSION="16" setup_postgresql
+RUST_CRATES="monolith" setup_rust
 
 msg_info "Setting up PostgreSQL DB"
 DB_NAME=linkwardendb
@@ -48,7 +48,7 @@ if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
 fi
 
 msg_info "Installing Linkwarden (Patience)"
-fetch_and_deploy_gh_release "linkwarden/linkwarden"
+fetch_and_deploy_gh_release "linkwarden" "linkwarden/linkwarden"
 cd /opt/linkwarden
 $STD yarn
 $STD npx playwright install-deps

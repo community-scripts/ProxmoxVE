@@ -20,19 +20,17 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /root/Matterbridge ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    $STD apt-get update
-    $STD apt-get upgrade -y
-    NODE_VERSION="22"
-    NODE_MODULE="matterbridge"
-    install_node_and_modules
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /root/Matterbridge ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+  $STD apt-get update
+  $STD apt-get upgrade -y
+  NODE_VERSION="22" NODE_MODULE="matterbridge" setup_nodejs
+  exit
 }
 
 start

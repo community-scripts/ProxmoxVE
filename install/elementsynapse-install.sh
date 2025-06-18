@@ -20,7 +20,7 @@ $STD apt-get install -y \
   debconf-utils
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" NODE_MODULE="yarn@latest" install_node_and_modules
+NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
 
 read -p "${TAB3}Please enter the name for your server: " servername
 
@@ -57,8 +57,8 @@ cd /opt/synapse-admin
 $STD yarn global add serve
 $STD yarn install --ignore-engines
 $STD yarn build
-mv ./dist ../ && \
-  rm -rf * && \
+mv ./dist ../ &&
+  rm -rf * &&
   mv ../dist ./
 msg_ok "Installed Element Synapse"
 

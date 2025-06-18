@@ -29,7 +29,7 @@ $STD apt-get install -y \
 msg_ok "Setup Python3"
 
 setup_uv
-fetch_and_deploy_gh_release "LibreTranslate/LibreTranslate"
+fetch_and_deploy_gh_release "LibreTranslate" "LibreTranslate/LibreTranslate"
 
 msg_info "Setup LibreTranslate (Patience)"
 cd /opt/libretranslate

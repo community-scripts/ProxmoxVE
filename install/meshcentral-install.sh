@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt-get install -y ca-certificates
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" install_node_and_modules
+NODE_VERSION="22" setup_nodejs
 
 msg_info "Installing MeshCentral"
 mkdir /opt/meshcentral

@@ -53,10 +53,10 @@ function update_script() {
 
     if [ -z "$pnpm_current" ]; then
         msg_error "pnpm not found. Installing version $pnpm_desired..."
-        NODE_VERSION="22" NODE_MODULE="pnpm@$pnpm_desired" install_node_and_modules
+        NODE_VERSION="22" NODE_MODULE="pnpm@$pnpm_desired" setup_nodejs
     elif ! node -e "const semver = require('semver'); process.exit(semver.satisfies('$pnpm_current', '$pnpm_desired') ? 0 : 1)"; then
         msg_error "Updating pnpm from version $pnpm_current to $pnpm_desired..."
-        NODE_VERSION="22" NODE_MODULE="pnpm@$pnpm_desired" install_node_and_modules
+        NODE_VERSION="22" NODE_MODULE="pnpm@$pnpm_desired" setup_nodejs
     else
         msg_ok "pnpm is already installed and satisfies version $pnpm_desired."
     fi

@@ -17,7 +17,7 @@ msg_info "Installing Dependencies (Patience)"
 $STD apt-get install -y ca-certificates
 msg_ok "Installed Dependecies"
 
-PG_VERSION="17" PG_MODULES="common" install_postgresql
+PG_VERSION="17" PG_MODULES="common" setup_postgresql
 
 msg_info "Installing Postgresql"
 DB_NAME="zitadel"

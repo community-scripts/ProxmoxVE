@@ -14,7 +14,7 @@ setting_up_container
 network_check
 update_os
 
-NODE_VERSION="22" install_node_and_modules
+NODE_VERSION="22" setup_nodejs
 
 msg_info "Installing NUT"
 $STD apt-get install -y nut-client

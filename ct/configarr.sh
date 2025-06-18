@@ -28,7 +28,7 @@ function update_script() {
     exit
   fi
   RELEASE=$(curl -fsSL https://api.github.com/repos/raydak-labs/configarr/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "${RELEASE}" != "$(cat /opt/configarr_version.txt)" ]] || [[ ! -f /opt/configarr_version.txt ]]; then
+  if [[ "${RELEASE}" != "$(cat ~/.configarr 2>/dev/null || cat /opt/configarr_version.txt 2>/dev/null)" ]]; then
     msg_info "Stopping $APP"
     systemctl stop configarr-task.timer
     msg_ok "Stopped $APP"
@@ -37,7 +37,7 @@ function update_script() {
     mkdir -p /opt/backup/
     mv /opt/configarr/{config.yml,secrets.yml,.env} "/opt/backup/"
     rm -rf /opt/configarr
-    fetch_and_deploy_gh_release "raydak-labs/configarr"
+    fetch_and_deploy_gh_release "configarr" "raydak-labs/configarr"
     mv /opt/backup/* /opt/configarr/
     cd /opt/configarr
     $STD pnpm install

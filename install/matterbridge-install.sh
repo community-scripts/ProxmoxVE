@@ -17,7 +17,7 @@ msg_info "Install Matterbridge"
 mkdir -p /root/Matterbridge
 NODE_VERSION="22"
 NODE_MODULE="matterbridge"
-install_node_and_modules
+setup_nodejs
 msg_ok "Installed Matterbridge"
 
 msg_info "Creating Service"

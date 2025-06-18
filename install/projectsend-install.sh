@@ -20,7 +20,7 @@ $STD apt-get install -y \
   php8.2-{pdo,mysql,mbstring,gettext,fileinfo,gd,xml,zip}
 msg_ok "Installed Dependencies"
 
-install_mariadb
+setup_mariadb
 
 msg_info "Setting up MariaDB"
 DB_NAME=projectsend

@@ -19,9 +19,9 @@
       "type": "default",
       "script": "ct/gitea-mirror.sh",
       "resources": {
-        "cpu": 1,
-        "ram": 1024,
-        "hdd": 5,
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 6,
         "os": "Debian",
         "version": "12"
       }

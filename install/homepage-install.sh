@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt-get install -y jq
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" NODE_MODULE="pnpm@latest" install_node_and_modules
+NODE_VERSION="22" NODE_MODULE="pnpm@latest" setup_nodejs
 
 LOCAL_IP=$(hostname -I | awk '{print $1}')
 RELEASE=$(curl -fsSL https://api.github.com/repos/gethomepage/homepage/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')

@@ -23,7 +23,7 @@ $STD apt-get install -y \
   python3-pip
 msg_ok "Installed Python3"
 
-install_node_and_modules
+setup_nodejs
 
 msg_info "Setup Paperless-AI"
 cd /opt

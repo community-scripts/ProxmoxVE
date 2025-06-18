@@ -19,7 +19,7 @@ $STD apt-get install -y \
   libcap2-bin
 msg_ok "Installed Dependencies"
 
-install_go
+setup_go
 
 RELEASE=$(curl -s https://api.github.com/repos/TwiN/gatus/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 msg_info "Setting up gatus v${RELEASE}"

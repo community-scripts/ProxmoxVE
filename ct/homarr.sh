@@ -81,7 +81,7 @@ EOF
     systemctl daemon-reload
   fi
   RELEASE=$(curl -fsSL https://api.github.com/repos/homarr-labs/homarr/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+  if [[ "${RELEASE}" != "$(cat ~/.${APP} 2>/dev/null || cat /opt/${APP}_version.txt 2>/dev/null)" ]]; then
 
     msg_info "Stopping Services (Patience)"
     systemctl stop homarr
@@ -100,10 +100,10 @@ EOF
     $STD command -v jq || $STD apt-get update && $STD apt-get install -y jq
     NODE_VERSION=$(curl -s https://raw.githubusercontent.com/homarr-labs/homarr/dev/package.json | jq -r '.engines.node | split(">=")[1] | split(".")[0]')
     NODE_MODULE="pnpm@$(curl -s https://raw.githubusercontent.com/homarr-labs/homarr/dev/package.json | jq -r '.packageManager | split("@")[1]')"
-    install_node_and_modules
-    
+    setup_nodejs
+
     rm -rf /opt/homarr
-    fetch_and_deploy_gh_release "homarr-labs/homarr"
+    fetch_and_deploy_gh_release "homarr" "homarr-labs/homarr"
 
     msg_info "Updating and rebuilding ${APP} to v${RELEASE} (Patience)"
     rm /opt/run_homarr.sh

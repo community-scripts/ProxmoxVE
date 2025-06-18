@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt-get install -y sqlite3
 msg_ok "Installed Dependencies"
 
-install_go
+setup_go
 
 msg_info "Installing SFTPGo"
 curl -fsSL https://ftp.osuosl.org/pub/sftpgo/apt/gpg.key | gpg --dearmor -o /usr/share/keyrings/sftpgo-archive-keyring.gpg

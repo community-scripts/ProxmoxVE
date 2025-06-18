@@ -19,8 +19,8 @@ $STD apt-get install -y gcc g++ cmake
 $STD apt-get install -y ca-certificates
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" install_node_and_modules
-install_mariadb
+NODE_VERSION="22" setup_nodejs
+setup_mariadb
 
 msg_info "Installing FFMPEG"
 $STD apt-get install -y ffmpeg

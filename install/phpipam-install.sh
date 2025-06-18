@@ -21,7 +21,7 @@ $STD apt-get install -y \
   php-pear
 msg_ok "Installed Dependencies"
 
-install_mariadb
+setup_mariadb
 
 msg_info "Setting up MariaDB"
 DB_NAME=phpipam

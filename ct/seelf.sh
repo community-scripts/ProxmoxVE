@@ -28,7 +28,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  if fetch_and_deploy_gh_release "YuukanOO/seelf"; then
+  if fetch_and_deploy_gh_release "seelf" "YuukanOO/seelf"; then
     msg_ok "$APP already at the latest version. No update required."
   else
     msg_info "Stopping $APP"

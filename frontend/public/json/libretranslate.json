@@ -12,7 +12,7 @@
   "documentation": "https://github.com/LibreTranslate/LibreTranslate?tab=readme-ov-file#settings--flags",
   "website": "https://libretranslate.com/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/libretranslate.webp",
-  "config_path": "",
+  "config_path": "/opt/libretranslate/.env",
   "description": "Free and Open Source Machine Translation API, entirely self-hosted. Unlike other APIs, it doesn't rely on proprietary providers such as Google or Azure to perform translations. Instead, its translation engine is powered by the open source Argos Translate library.",
   "install_methods": [
     {

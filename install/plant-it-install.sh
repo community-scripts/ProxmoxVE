@@ -15,11 +15,11 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-  redis \
-  nginx
+    redis \
+    nginx
 msg_ok "Installed Dependencies"
 
-install_mariadb
+setup_mariadb
 
 msg_info "Setting up Adoptium Repository"
 mkdir -p /etc/apt/keyrings
@@ -41,10 +41,10 @@ $STD mariadb -u root -e "CREATE DATABASE $DB_NAME;"
 $STD mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
 $STD mariadb -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
 {
-  echo "Plant-it Credentials"
-  echo "Plant-it Database User: $DB_USER"
-  echo "Plant-it Database Password: $DB_PASS"
-  echo "Plant-it Database Name: $DB_NAME"
+    echo "Plant-it Credentials"
+    echo "Plant-it Database User: $DB_USER"
+    echo "Plant-it Database Password: $DB_PASS"
+    echo "Plant-it Database Name: $DB_NAME"
 } >>~/plant-it.creds
 msg_ok "Set up MariaDB"
 

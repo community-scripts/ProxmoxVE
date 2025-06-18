@@ -15,9 +15,9 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-  git \
-  apache2 \
-  libapache2-mod-wsgi-py3
+    git \
+    apache2 \
+    libapache2-mod-wsgi-py3
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Python"
@@ -25,7 +25,7 @@ $STD apt-get install -y python3-pip
 rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
 msg_ok "Installed Python"
 
-NODE_VERSION="22" NODE_MODULE="yarn@latest,sass" install_node_and_modules
+NODE_VERSION="22" NODE_MODULE="yarn@latest,sass" setup_nodejs
 
 msg_info "Setting up wger"
 $STD adduser wger --disabled-password --gecos ""

@@ -42,7 +42,7 @@ $STD apt-get install -y \
 rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
 msg_ok "Setup Python3"
 
-NODE_VERSION="20" NODE_MODULE="yarn@latest" install_node_and_modules
+NODE_VERSION="20" NODE_MODULE="yarn@latest" setup_nodejs
 
 msg_info "Installing Tandoor (Patience)"
 $STD git clone https://github.com/TandoorRecipes/recipes -b master /opt/tandoor

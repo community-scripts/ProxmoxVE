@@ -19,7 +19,7 @@ $STD apt-get install -y \
   ca-certificates
 msg_ok "Installed Dependencies"
 
-install_mariadb
+setup_mariadb
 
 msg_info "Configuring Database"
 DB_NAME=ghost
@@ -37,7 +37,7 @@ $STD mariadb -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUS
 } >>~/ghost.creds
 msg_ok "Configured MySQL"
 
-NODE_VERSION="20" install_node_and_modules
+NODE_VERSION="20" setup_nodejs
 
 msg_info "Installing Ghost CLI"
 $STD npm install ghost-cli@latest -g

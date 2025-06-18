@@ -29,7 +29,7 @@ msg_ok "Installed Caddy"
 
 read -r -p "${TAB3}Would you like to install xCaddy Addon? <y/N> " prompt
 if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
-  install_go
+  setup_go
   msg_info "Setup xCaddy"
   $STD apt-get install -y git
   cd /opt

@@ -18,7 +18,7 @@ $STD apt-get install -y \
   build-essential
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" NODE_MODULE="yarn@latest,node-gyp" install_node_and_modules
+NODE_VERSION="22" NODE_MODULE="yarn@latest,node-gyp" setup_nodejs
 
 msg_info "Installing The Lounge"
 cd /opt

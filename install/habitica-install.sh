@@ -22,7 +22,7 @@ curl -fsSL "http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1
 $STD dpkg -i libssl1.1_1.1.1f-1ubuntu2_amd64.deb
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="20" install_node_and_modules
+NODE_VERSION="20" setup_nodejs
 
 msg_info "Setup ${APPLICATION}"
 temp_file=$(mktemp)

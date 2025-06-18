@@ -28,8 +28,8 @@ msg_ok "Installed Dependencies"
 
 NODE_VERSION=$(curl -s https://raw.githubusercontent.com/homarr-labs/homarr/dev/package.json | jq -r '.engines.node | split(">=")[1] | split(".")[0]')
 NODE_MODULE="pnpm@$(curl -s https://raw.githubusercontent.com/homarr-labs/homarr/dev/package.json | jq -r '.packageManager | split("@")[1]')"
-install_node_and_modules
-fetch_and_deploy_gh_release "homarr-labs/homarr"
+setup_nodejs
+fetch_and_deploy_gh_release "homarr" "homarr-labs/homarr"
 
 msg_info "Installing Homarr (Patience)"
 cd /opt

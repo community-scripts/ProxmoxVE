@@ -33,7 +33,7 @@ $STD apt-get install -y \
   python3-regex
 msg_ok "Installed Python Dependencies"
 
-NODE_VERSION="22" install_node_and_modules
+NODE_VERSION="22" setup_nodejs
 
 msg_info "Installing Playwright"
 $STD pip install playwright

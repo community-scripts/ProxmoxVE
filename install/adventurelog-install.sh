@@ -23,8 +23,8 @@ $STD apt-get install -y \
   python3-pip
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" NODE_MODULE="pnpm@latest" install_node_and_modules
-PG_VERSION="16" PG_MODULES="postgis" install_postgresql
+NODE_VERSION="22" NODE_MODULE="pnpm@latest" setup_nodejs
+PG_VERSION="16" PG_MODULES="postgis" setup_postgresql
 
 msg_info "Set up PostgreSQL Database"
 DB_NAME="adventurelog_db"

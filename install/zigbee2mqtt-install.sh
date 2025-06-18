@@ -22,7 +22,7 @@ $STD apt-get install -y \
   ca-certificates
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" NODE_MODULE="pnpm@latest" install_node_and_modules
+NODE_VERSION="22" NODE_MODULE="pnpm@latest" setup_nodejs
 
 msg_info "Setting up Zigbee2MQTT"
 cd /opt

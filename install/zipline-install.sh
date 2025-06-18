@@ -14,8 +14,8 @@ setting_up_container
 network_check
 update_os
 
-NODE_VERSION="22" NODE_MODULE="pnpm@latest" install_node_and_modules
-PG_VERSION="16" install_postgresql
+NODE_VERSION="22" NODE_MODULE="pnpm@latest" setup_nodejs
+PG_VERSION="16" setup_postgresql
 
 msg_info "Setting up PostgreSQL"
 DB_NAME=ziplinedb

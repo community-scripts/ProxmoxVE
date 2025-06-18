@@ -28,17 +28,17 @@ function update_script() {
   fi
   RELEASE=$(curl -fsSL https://api.github.com/repos/linkwarden/linkwarden/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
   if [[ "${RELEASE}" != "$(cat /opt/linkwarden_version.txt)" ]] || [[ ! -f /opt/linkwarden_version.txt ]]; then
-    NODE_VERSION="22" NODE_MODULE="yarn@latest" install_node_and_modules
+    NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
     msg_info "Stopping ${APP}"
     systemctl stop linkwarden
     msg_ok "Stopped ${APP}"
 
-    RUST_CRATES="monolith" install_rust_and_crates
+    RUST_CRATES="monolith" setup_rust
 
     msg_info "Updating ${APP} to ${RELEASE}"
     mv /opt/linkwarden/.env /opt/.env
     rm -rf /opt/linkwarden
-    fetch_and_deploy_gh_release "linkwarden/linkwarden"
+    fetch_and_deploy_gh_release "linkwarden" "linkwarden/linkwarden"
     cd /opt/linkwarden
     $STD yarn
     $STD npx playwright install-deps

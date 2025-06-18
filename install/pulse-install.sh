@@ -28,7 +28,7 @@ else
   exit 1
 fi
 
-NODE_VERSION="20" install_node_and_modules
+NODE_VERSION="20" setup_nodejs
 
 msg_info "Setup Pulse"
 RELEASE=$(curl -fsSL https://api.github.com/repos/rcourtman/Pulse/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
@@ -40,7 +40,6 @@ touch /opt/pulse/.env
 chown pulse:pulse /opt/pulse/.env
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Installed Pulse"
-
 
 msg_info "Setting permissions for /opt/pulse..."
 chown -R pulse:pulse "/opt/pulse"

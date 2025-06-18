@@ -19,9 +19,9 @@ $STD apt-get install -y \
   nginx
 msg_ok "Installed Dependencies"
 
-PHP_VERSION="8.3" PHP_MODULE="common,ctype,fileinfo,fpm,mysql,cli" install_php
-install_composer
-install_mariadb
+PHP_VERSION="8.3" PHP_MODULE="common,ctype,fileinfo,fpm,mysql,cli" setup_php
+setup_composer
+setup_mariadb
 
 msg_info "Setting up Database"
 DB_NAME=2fauth_db
@@ -38,7 +38,7 @@ $STD mariadb -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUS
 } >>~/2FAuth.creds
 msg_ok "Set up Database"
 
-fetch_and_deploy_gh_release "Bubka/2FAuth"
+fetch_and_deploy_gh_release "2fauth" "Bubka/2FAuth"
 
 msg_info "Setup 2FAuth"
 cd /opt/2fauth

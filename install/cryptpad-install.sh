@@ -18,7 +18,7 @@ $STD apt-get install -y \
   git
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" install_node_and_modules
+NODE_VERSION="22" setup_nodejs
 
 read -p "${TAB3}Install OnlyOffice components instead of CKEditor? (Y/N): " onlyoffice
 

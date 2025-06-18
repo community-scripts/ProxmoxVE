@@ -23,7 +23,7 @@ $STD apt-get install -y {python3,python3-dev,python3-setuptools,python3-distutil
 $STD pip install --upgrade pip
 msg_ok "Setup Python3"
 
-NODE_VERSION="22" install_node_and_modules
+NODE_VERSION="22" setup_nodejs
 
 msg_info "Installing go2rtc"
 mkdir -p /usr/local/go2rtc/bin

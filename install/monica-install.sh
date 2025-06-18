@@ -21,8 +21,8 @@ $STD apt-get install -y \
   composer
 msg_ok "Installed Dependencies"
 
-install_mariadb
-NODE_VERSION="20" NODE_MODULE="yarn@latest" install_node_and_modules
+setup_mariadb
+NODE_VERSION="20" NODE_MODULE="yarn@latest" setup_nodejs
 
 msg_info "Setting up MariaDB"
 DB_NAME=monica

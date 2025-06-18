@@ -21,8 +21,8 @@ $STD apt-get install -y \
   ca-certificates
 msg_ok "Installed Dependencies"
 
-install_mongodb
-NODE_VERSION="22" install_node_and_modules
+setup_mongodb
+NODE_VERSION="22" setup_nodejs
 
 msg_info "Configure MongoDB"
 MONGO_ADMIN_USER="admin"
