@@ -20,7 +20,7 @@ $STD apt-get install -y \
   libapache2-mod-php
 msg_ok "Installed Dependencies"
 
-PG_VERSION="16" install_postgresql
+PG_VERSION="16" setup_postgresql
 
 msg_info "Setting up PostgreSQL"
 DB_NAME=freshrss

@@ -19,8 +19,8 @@ $STD apt-get install -y \
   lsb-release
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" NODE_MODULE="yarn@latest" install_node_and_modules
-PG_VERSION="16" install_postgresql
+NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
+PG_VERSION="16" setup_postgresql
 
 msg_info "Setup PHP8.4 Repository"
 $STD curl -fsSLo /tmp/debsuryorg-archive-keyring.deb https://packages.sury.org/debsuryorg-archive-keyring.deb

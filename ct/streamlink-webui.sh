@@ -32,7 +32,7 @@ function update_script() {
   RELEASE=$(curl -fsSL https://api.github.com/repos/CrazyWolf13/streamlink-webui/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
   if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
     msg_info "Starting Update"
-    
+
     msg_info "Stopping $APP"
     systemctl stop ${APP}
     msg_ok "Stopped $APP"
@@ -40,7 +40,7 @@ function update_script() {
     rm -rf /opt/${APP}
     NODE_VERSION="22"
     NODE_MODULE="npm,yarn"
-    install_node_and_modules
+    setup_nodejs
     setup_uv
     fetch_and_deploy_gh_release "CrazyWolf13/streamlink-webui"
 

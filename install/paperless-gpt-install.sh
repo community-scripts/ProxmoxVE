@@ -23,8 +23,8 @@ $STD apt-get install -y \
   musl-tools
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" install_node_and_modules
-install_go
+NODE_VERSION="22" setup_nodejs
+setup_go
 
 msg_info "Setup Paperless-GPT"
 temp_file=$(mktemp)

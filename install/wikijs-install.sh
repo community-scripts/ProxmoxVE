@@ -18,8 +18,8 @@ $STD apt-get install -y \
   git
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="20" NODE_MODULE="yarn@latest,node-gyp" install_node_and_modules
-PG_VERSION="17" install_postgresql
+NODE_VERSION="20" NODE_MODULE="yarn@latest,node-gyp" setup_nodejs
+PG_VERSION="17" setup_postgresql
 
 msg_info "Set up PostgreSQL"
 DB_NAME="wiki"

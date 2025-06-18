@@ -22,7 +22,7 @@ $STD apt-get install -y \
   libapache2-mod-php
 msg_ok "Installed Dependencies"
 
-install_mariadb
+setup_mariadb
 
 msg_info "Setting up database"
 DB_NAME=glpi_db

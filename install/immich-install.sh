@@ -84,8 +84,8 @@ ln -s /usr/lib/jellyfin-ffmpeg/ffmpeg /usr/bin/ffmpeg
 ln -s /usr/lib/jellyfin-ffmpeg/ffprobe /usr/bin/ffprobe
 msg_ok "Dependencies Installed"
 
-NODE_VERSION="22" install_node_and_modules
-PG_VERSION="16" install_postgresql
+NODE_VERSION="22" setup_nodejs
+PG_VERSION="16" setup_postgresql
 
 read -r -p "${TAB3}Install OpenVINO dependencies for Intel HW-accelerated machine-learning? " prompt
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then

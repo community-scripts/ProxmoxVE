@@ -22,7 +22,7 @@ msg_info "Setup Python3"
 $STD apt-get install -y python3-venv
 msg_ok "Setup Python3"
 
-NODE_VERSION="22" NODE_MODULE="yarn@latest" install_node_and_modules
+NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
 
 msg_info "Setup Platformio"
 curl -fsSL -o get-platformio.py https://raw.githubusercontent.com/platformio/platformio-core-installer/master/get-platformio.py

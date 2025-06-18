@@ -35,7 +35,7 @@ $STD apt-get install -y \
   libleptonica-dev
 msg_ok "Installed Dependencies"
 
-PG_VERSION="16" install_postgresql
+PG_VERSION="16" setup_postgresql
 
 msg_info "Setup Python3"
 $STD apt-get install -y \

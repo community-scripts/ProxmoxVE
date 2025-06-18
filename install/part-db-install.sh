@@ -24,8 +24,8 @@ $STD apt-get install -y \
   composer
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" NODE_MODULE="yarn@latest" install_node_and_modules
-PG_VERSION="16" install_postgresql
+NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
+PG_VERSION="16" setup_postgresql
 
 msg_info "Setting up PHP"
 PHPVER=$(php -r 'echo PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION . "\n";')

@@ -18,7 +18,7 @@ $STD apt-get install -y \
   xdg-utils
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" NODE_MODULE="yarn@latest" install_node_and_modules
+NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
 
 msg_info "Setup Excalidraw"
 temp_file=$(mktemp)

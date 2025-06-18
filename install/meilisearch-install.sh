@@ -35,7 +35,7 @@ msg_ok "Setup ${APPLICATION}"
 
 read -r -p "${TAB3}Do you want add meilisearch-ui? [y/n]: " prompt
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
-  NODE_VERSION="22" NODE_MODULE="pnpm@latest" install_node_and_modules
+  NODE_VERSION="22" NODE_MODULE="pnpm@latest" setup_nodejs
 
   msg_info "Setup ${APPLICATION}-ui"
   tmp_file=$(mktemp)

@@ -19,7 +19,7 @@ $STD apt-get install -y \
   ca-certificates
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" install_node_and_modules
+NODE_VERSION="22" setup_nodejs
 
 msg_info "Installing MySpeed"
 RELEASE=$(curl -fsSL https://github.com/gnmyt/myspeed/releases/latest | grep "title>Release" | cut -d " " -f 5)

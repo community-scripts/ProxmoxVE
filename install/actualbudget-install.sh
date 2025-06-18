@@ -22,7 +22,7 @@ msg_info "Installing Actual Budget"
 cd /opt
 RELEASE=$(curl -fsSL https://api.github.com/repos/actualbudget/actual/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 NODE_VERSION="22"
-install_node_and_modules
+setup_nodejs
 mkdir -p /opt/actualbudget-data/{server-files,upload,migrate,user-files,migrations,config}
 chown -R root:root /opt/actualbudget-data
 chmod -R 755 /opt/actualbudget-data

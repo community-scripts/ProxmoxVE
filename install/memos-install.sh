@@ -21,8 +21,8 @@ $STD apt-get install -y \
   tzdata
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" NODE_MODULE="pnpm@latest" install_node_and_modules
-install_go
+NODE_VERSION="22" NODE_MODULE="pnpm@latest" setup_nodejs
+setup_go
 
 msg_info "Installing Memos (Patience)"
 mkdir -p /opt/memos_data

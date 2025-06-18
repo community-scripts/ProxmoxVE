@@ -45,7 +45,7 @@ function update_script() {
       $STD apt-get install -y \
         lsb-release \
         gnupg2
-      PHP_VERSION="8.3" PHP_MODULE="common,ctype,fileinfo,fpm,mysql,cli" install_php
+      PHP_VERSION="8.3" PHP_MODULE="common,ctype,fileinfo,fpm,mysql,cli" setup_php
       sed -i 's/php8.2/php8.3/g' /etc/nginx/conf.d/2fauth.conf
     fi
     fetch_and_deploy_gh_release "Bubka/2FAuth"

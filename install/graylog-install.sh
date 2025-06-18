@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-MONGO_VERSION="7.0" install_mongodb
+MONGO_VERSION="7.0" setup_mongodb
 
 msg_info "Setup Graylog Data Node"
 PASSWORD_SECRET=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c16)

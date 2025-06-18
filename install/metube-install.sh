@@ -36,7 +36,7 @@ $STD apt-get install -y \
   python3-venv
 msg_ok "Setup Python3"
 
-NODE_VERSION="22" install_node_and_modules
+NODE_VERSION="22" setup_nodejs
 
 msg_info "Installing MeTube"
 $STD git clone https://github.com/alexta69/metube /opt/metube

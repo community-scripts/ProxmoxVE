@@ -22,7 +22,7 @@ $STD apt-get install -y \
   make
 msg_ok "Installed Dependencies"
 
-install_mariadb
+setup_mariadb
 
 msg_info "Setting up Database"
 DB_NAME=bookstack

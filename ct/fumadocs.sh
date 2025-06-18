@@ -34,7 +34,7 @@ function update_script() {
     exit 1
   fi
 
-  NODE_VERSION="22" NODE_MODULE="pnpm@latest" install_node_and_modules
+  NODE_VERSION="22" NODE_MODULE="pnpm@latest" setup_nodejs
   PROJECT_NAME=$(</opt/fumadocs/.projectname)
   PROJECT_DIR="/opt/fumadocs/${PROJECT_NAME}"
   SERVICE_NAME="fumadocs_${PROJECT_NAME}.service"

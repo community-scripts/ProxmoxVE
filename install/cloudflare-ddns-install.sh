@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-install_go
+setup_go
 
 msg_info "Configure Application"
 var_cf_api_token="default"

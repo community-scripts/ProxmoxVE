@@ -23,7 +23,7 @@ $STD apt-get install -y \
   lsb-release
 msg_ok "Installed Dependencies"
 
-install_mysql
+setup_mysql
 
 msg_info "Adding PHP8.4 Repository"
 $STD curl -sSLo /tmp/debsuryorg-archive-keyring.deb https://packages.sury.org/debsuryorg-archive-keyring.deb

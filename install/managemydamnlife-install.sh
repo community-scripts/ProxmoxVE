@@ -13,8 +13,8 @@ setting_up_container
 network_check
 update_os
 
-NODE_VERSION="20" install_node_and_modules
-MYSQL_VERSION="8.0" install_mysql
+NODE_VERSION="20" setup_nodejs
+MYSQL_VERSION="8.0" setup_mysql
 
 msg_info "Setting up Database"
 DB_NAME="mmdl"

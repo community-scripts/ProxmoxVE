@@ -19,7 +19,7 @@ $STD apt-get install -y \
   ca-certificates
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" NODE_MODULE="playactor" install_node_and_modules
+NODE_VERSION="22" NODE_MODULE="playactor" setup_nodejs
 
 msg_info "Installing PS5-MQTT"
 RELEASE=$(curl -fsSL https://api.github.com/repos/FunkeyFlo/ps5-mqtt/releases/latest | jq -r '.tag_name')

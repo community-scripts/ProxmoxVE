@@ -19,7 +19,7 @@ $STD apt-get install -y \
   php8.2-{curl,mbstring,mysql,xml,zip,gd}
 msg_ok "Installed Dependencies"
 
-install_mariadb
+setup_mariadb
 
 msg_info "Setting up Database"
 DB_NAME=wavelog

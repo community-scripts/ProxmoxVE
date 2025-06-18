@@ -18,7 +18,7 @@ $STD apt-get install -y git
 $STD apt-get install -y ca-certificates
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" install_node_and_modules
+NODE_VERSION="22" setup_nodejs
 
 msg_info "Installing Uptime Kuma"
 $STD git clone https://github.com/louislam/uptime-kuma.git

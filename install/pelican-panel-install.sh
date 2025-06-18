@@ -20,7 +20,7 @@ $STD apt-get install -y \
   composer
 msg_ok "Installed Dependencies"
 
-install_mariadb
+setup_mariadb
 
 msg_info "Adding PHP8.4 Repository"
 $STD curl -sSLo /tmp/debsuryorg-archive-keyring.deb https://packages.sury.org/debsuryorg-archive-keyring.deb

@@ -21,7 +21,7 @@ $STD apt-get install -y \
   php8.2-{bcmath,common,ctype,curl,fileinfo,fpm,gd,iconv,intl,mbstring,mysql,soap,xml,xsl,zip,cli}
 msg_ok "Installed Dependencies"
 
-install_mariadb
+setup_mariadb
 
 msg_info "Setting up database"
 DB_NAME=snipeit_db

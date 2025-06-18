@@ -22,8 +22,8 @@ $STD apt-get install -y \
   build-essential
 msg_ok "Installed Dependencies"
 
-install_go
-NODE_VERSION="22" install_node_and_modules
+setup_go
+NODE_VERSION="22" setup_nodejs
 
 msg_info "Setup ${APPLICATION} (Patience)"
 temp_file=$(mktemp)

@@ -48,7 +48,7 @@ sed -i \
   /etc/meilisearch.toml
 msg_ok "Installed Meilisearch"
 
-NODE_VERSION="22" NODE_MODULE="yarn@latest" install_node_and_modules
+NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
 $STD npm install -g corepack@0.31.0
 
 msg_info "Installing karakeep"

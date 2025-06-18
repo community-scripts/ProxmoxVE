@@ -18,8 +18,8 @@ $STD apt-get install -y \
   gcc
 msg_ok "Installed Dependencies"
 
-install_go
-NODE_VERSION="22" install_node_and_modules
+setup_go
+NODE_VERSION="22" setup_nodejs
 
 msg_info "Setup Watcharr"
 temp_file=$(mktemp)

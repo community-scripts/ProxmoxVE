@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-PG_VERSION="16" install_postgresql
+PG_VERSION="16" setup_postgresql
 
 msg_info "Setting up PostgreSQL"
 DB_NAME=mattermost

@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-PG_VERSION="17" install_postgresql
+PG_VERSION="17" setup_postgresql
 
 cat <<EOF >/etc/postgresql/17/main/pg_hba.conf
 # PostgreSQL Client Authentication Configuration File
