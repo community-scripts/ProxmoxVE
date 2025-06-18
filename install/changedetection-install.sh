@@ -43,24 +43,19 @@ $STD apt-get install -y \
   ca-certificates
 msg_ok "Installed Dependencies"
 
-msg_info "Setup Python3"
-$STD apt-get install -y \
-  python3 \
-  python3-dev \
-  python3-pip
-rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
-msg_ok "Setup Python3"
-
+PYTHON_VERSION="3.12" setup_uv
 NODE_VERSION="22" install_node_and_modules
 
 msg_info "Installing Change Detection"
-mkdir /opt/changedetection
-$STD pip3 install changedetection.io
+mkdir -p /opt/changedetection
+cd /opt/changedetection
+$STD uv venv /opt/changedetection/.venv
+$STD uv pip install changedetection.io
 msg_ok "Installed Change Detection"
 
 msg_info "Installing Browserless & Playwright"
 mkdir /opt/browserless
-$STD python3 -m pip install playwright
+$STD /opt/paperless/.venv/bin/uv pip install playwright
 $STD git clone https://github.com/browserless/chrome /opt/browserless
 $STD npm install --prefix /opt/browserless
 $STD /opt/browserless/node_modules/playwright-core/cli.js install --with-deps &>/dev/null
@@ -117,7 +112,7 @@ Type=simple
 WorkingDirectory=/opt/changedetection
 Environment=WEBDRIVER_URL=http://127.0.0.1:4444/wd/hub
 Environment=PLAYWRIGHT_DRIVER_URL=ws://localhost:3000/chrome?launch={"defaultViewport":{"height":720,"width":1280},"headless":false,"stealth":true}&blockAds=true
-ExecStart=changedetection.io -d /opt/changedetection -p 5000
+ExecStart=/opt/changedetection/.venv/bin/changedetection.io -d /opt/changedetection -p 5000
 [Install]
 WantedBy=multi-user.target
 EOF

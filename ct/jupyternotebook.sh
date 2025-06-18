@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/python_to_uv/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: Dave-code-creater (Tan Dat, Ta)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -20,16 +20,16 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
+  header_info
+  check_container_storage
+  check_container_resources
 
-    msg_info "Updating ${APP} LXC"
-    $STD apt-get update
-    $STD apt-get install -y upgrade
-    $STD pip3 install jupyter --upgrade
-    msg_ok "Updated Successfully"
-    exit
+  msg_info "Updating ${APP} LXC"
+  $STD apt-get update
+  $STD apt-get install -y upgrade
+  $STD pip3 install jupyter --upgrade
+  msg_ok "Updated Successfully"
+  exit
 }
 
 start

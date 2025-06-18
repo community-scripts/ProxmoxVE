@@ -164,11 +164,7 @@ install_postgresql() {
       msg_info "Stopping PostgreSQL service"
       systemctl stop postgresql
     fi
-
-    msg_info "Removing pgdg repo and old GPG key"
     rm -f /etc/apt/sources.list.d/pgdg.list /etc/apt/trusted.gpg.d/postgresql.gpg
-
-    msg_info "Adding PostgreSQL PGDG repository"
     curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc |
       gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg
 
@@ -1006,63 +1002,163 @@ function download_with_progress() {
 
 # ------------------------------------------------------------------------------
 # Installs or upgrades uv (Python package manager) from GitHub releases.
-#
-# Description:
-#   - Downloads architecture-specific tarball
-#   - Places binary in /usr/local/bin
+#   - Downloads platform-specific tarball (no install.sh!)
+#   - Extracts uv binary
+#   - Places it in /usr/local/bin
+#   - Optionally installs a specific Python version via uv
 # ------------------------------------------------------------------------------
 
 function setup_uv() {
   $STD msg_info "Checking uv installation..."
-  UV_BIN="/usr/local/bin/uv"
+  local UV_BIN="/usr/local/bin/uv"
+  local TMP_DIR
   TMP_DIR=$(mktemp -d)
-  ARCH=$(uname -m)
 
-  if [[ "$ARCH" == "x86_64" ]]; then
-    UV_TAR="uv-x86_64-unknown-linux-gnu.tar.gz"
-  elif [[ "$ARCH" == "aarch64" ]]; then
-    UV_TAR="uv-aarch64-unknown-linux-gnu.tar.gz"
-  else
+  # Determine system architecture
+  local ARCH
+  ARCH=$(uname -m)
+  local UV_TAR
+
+  case "$ARCH" in
+  x86_64) UV_TAR="uv-x86_64-unknown-linux-gnu.tar.gz" ;;
+  aarch64) UV_TAR="uv-aarch64-unknown-linux-gnu.tar.gz" ;;
+  *)
     msg_error "Unsupported architecture: $ARCH"
     rm -rf "$TMP_DIR"
     return 1
-  fi
+    ;;
+  esac
 
-  # get current github version
-  LATEST_VERSION=$(curl -s https://api.github.com/repos/astral-sh/uv/releases/latest | grep '"tag_name":' | cut -d '"' -f4 | sed 's/^v//')
+  # Get latest version from GitHub
+  local LATEST_VERSION
+  LATEST_VERSION=$(curl -fsSL https://api.github.com/repos/astral-sh/uv/releases/latest |
+    grep '"tag_name":' | cut -d '"' -f4 | sed 's/^v//')
+
   if [[ -z "$LATEST_VERSION" ]]; then
     msg_error "Could not fetch latest uv version from GitHub."
     rm -rf "$TMP_DIR"
     return 1
   fi
 
-  # check if uv exists
+  # Check if uv is already up to date
   if [[ -x "$UV_BIN" ]]; then
+    local INSTALLED_VERSION
     INSTALLED_VERSION=$($UV_BIN -V | awk '{print $2}')
     if [[ "$INSTALLED_VERSION" == "$LATEST_VERSION" ]]; then
       $STD msg_ok "uv is already at the latest version ($INSTALLED_VERSION)"
       rm -rf "$TMP_DIR"
-      # set path
-      if [[ ":$PATH:" != *":/usr/local/bin:"* ]]; then
-        export PATH="/usr/local/bin:$PATH"
-      fi
+      [[ ":$PATH:" != *":/usr/local/bin:"* ]] && export PATH="/usr/local/bin:$PATH"
       return 0
     else
       $STD msg_info "Updating uv from $INSTALLED_VERSION to $LATEST_VERSION"
     fi
   else
-    $STD msg_info "uv not found. Installing version $LATEST_VERSION"
+    $STD msg_info "Installing uv $LATEST_VERSION"
   fi
 
-  # install or update uv
-  curl -fsSL "https://github.com/astral-sh/uv/releases/latest/download/${UV_TAR}" -o "$TMP_DIR/uv.tar.gz"
-  tar -xzf "$TMP_DIR/uv.tar.gz" -C "$TMP_DIR"
-  install -m 755 "$TMP_DIR"/*/uv "$UV_BIN"
-  rm -rf "$TMP_DIR"
+  # Download and install manually
+  local UV_URL="https://github.com/astral-sh/uv/releases/latest/download/${UV_TAR}"
+  if ! curl -fsSL "$UV_URL" -o "$TMP_DIR/uv.tar.gz"; then
+    msg_error "Failed to download $UV_URL"
+    rm -rf "$TMP_DIR"
+    return 1
+  fi
 
-  # set path
+  if ! tar -xzf "$TMP_DIR/uv.tar.gz" -C "$TMP_DIR"; then
+    msg_error "Failed to extract uv archive"
+    rm -rf "$TMP_DIR"
+    return 1
+  fi
+
+  install -m 755 "$TMP_DIR"/*/uv "$UV_BIN" || {
+    msg_error "Failed to install uv binary"
+    rm -rf "$TMP_DIR"
+    return 1
+  }
+
+  rm -rf "$TMP_DIR"
   ensure_usr_local_bin_persist
-  msg_ok "uv installed/updated to $LATEST_VERSION"
+  msg_ok "uv $LATEST_VERSION installed"
+
+  # Optional: install specific Python version
+  if [[ -n "${PYTHON_VERSION:-}" ]]; then
+    $STD msg_info "Ensuring Python $PYTHON_VERSION is available via uv..."
+
+    local VERSION_MATCH
+    VERSION_MATCH=$(uv python list --only-downloads |
+      grep -E "^cpython-${PYTHON_VERSION//./\\.}\.[0-9]+-linux" |
+      cut -d'-' -f2 | sort -V | tail -n1)
+
+    if [[ -z "$VERSION_MATCH" ]]; then
+      msg_error "No matching Python $PYTHON_VERSION.x version found via uv"
+      return 1
+    fi
+
+    if uv python list | grep -q "cpython-${VERSION_MATCH}-linux.*uv/python"; then
+      $STD msg_ok "Python $VERSION_MATCH already installed via uv"
+    else
+      if ! $STD uv python install "$VERSION_MATCH"; then
+        msg_error "Failed to install Python $VERSION_MATCH via uv"
+        return 1
+      fi
+      msg_ok "Installed Python $VERSION_MATCH"
+    fi
+  fi
+}
+
+# ------------------------------------------------------------------------------
+# Creates a uv-based venv with optional Python version and installs dependencies
+# ------------------------------------------------------------------------------
+
+function setup_uv_venv() {
+  local VENV_FOLDER="${VENV_FOLDER:?VENV_FOLDER not set}"
+  local PYTHON_VERSION="${PYTHON_VERSION:?PYTHON_VERSION not set}"
+  local REQUIREMENTS_FILE="${REQUIREMENTS_FILE:-requirements.txt}"
+  local PYTHON_BIN
+
+  setup_uv || return 1
+
+  # Install Python via uv if not already available
+  local VERSION_MATCH
+  VERSION_MATCH=$(uv python list --only-downloads |
+    grep -E "^cpython-${PYTHON_VERSION//./\\.}\.[0-9]+-linux" |
+    cut -d'-' -f2 | sort -V | tail -n1)
+
+  if [[ -z "$VERSION_MATCH" ]]; then
+    msg_error "No matching Python $PYTHON_VERSION.x version found via uv"
+    return 1
+  fi
+
+  if ! uv python list | grep -q "cpython-${VERSION_MATCH}-linux.*uv/python"; then
+    $STD msg_info "Installing Python $VERSION_MATCH via uv"
+    $STD uv python install "$VERSION_MATCH" || {
+      msg_error "Failed to install Python $VERSION_MATCH via uv"
+      return 1
+    }
+  fi
+
+  $STD msg_info "Creating uv venv in $VENV_FOLDER"
+  if ! $STD uv venv "$VENV_FOLDER" --python "$VERSION_MATCH"; then
+    msg_error "Failed to create uv venv"
+    return 1
+  fi
+
+  PYTHON_BIN="$VENV_FOLDER/bin/python"
+
+  $STD msg_info "Running ensurepip"
+  $STD "$PYTHON_BIN" -m ensurepip --upgrade || return 1
+
+  $STD msg_info "Upgrading pip"
+  $STD "$PYTHON_BIN" -m pip install --upgrade pip || return 1
+
+  if [[ -f "$REQUIREMENTS_FILE" ]]; then
+    $STD msg_info "Installing requirements from $REQUIREMENTS_FILE"
+    $STD "$PYTHON_BIN" -m pip install -r "$REQUIREMENTS_FILE" || return 1
+  else
+    msg_info "No requirements file found at $REQUIREMENTS_FILE – skipping"
+  fi
+
+  msg_ok "uv venv setup complete in $VENV_FOLDER"
 }
 
 # ------------------------------------------------------------------------------

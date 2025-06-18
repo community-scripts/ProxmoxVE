@@ -14,6 +14,8 @@ setting_up_container
 network_check
 update_os
 
+PYTHON_VERSION="3.12" setup_uv
+
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
   git-core \
@@ -29,6 +31,11 @@ msg_ok "Installed Dependencies"
 
 msg_info "Installing Medusa"
 $STD git clone https://github.com/pymedusa/Medusa.git /opt/medusa
+cd /opt/medusa
+$STD uv venv /opt/medusa/.venv
+$STD /opt/LazyLibrarian/.venv/bin/python -m ensurepip --upgrade
+$STD /opt/LazyLibrarian/.venv/bin/python -m pip install --upgrade pip
+$STD /opt/LazyLibrarian/.venv/bin/python -m pip install .
 msg_ok "Installed Medusa"
 
 msg_info "Creating Service"
@@ -39,7 +46,8 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python3 /opt/medusa/start.py -q --nolaunch --datadir=/opt/medusa
+WorkingDirectory=/opt/medusa
+ExecStart=/opt/medusa/.venv/bin/python start.py -q --nolaunch --datadir=/opt/medusa
 TimeoutStopSec=25
 KillMode=process
 Restart=on-failure

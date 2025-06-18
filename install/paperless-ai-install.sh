@@ -18,12 +18,9 @@ $STD apt-get install -y \
   build-essential
 msg_ok "Installed Dependencies"
 
-msg_info "Installing Python3"
-$STD apt-get install -y \
-  python3-pip
-msg_ok "Installed Python3"
+PYTHON_VERSION="3.12" setup_uv
 
-install_node_and_modules
+NODE_VERSION="22" install_node_and_modules
 
 msg_info "Setup Paperless-AI"
 cd /opt
@@ -32,7 +29,8 @@ curl -fsSL "https://github.com/clusterzx/paperless-ai/archive/refs/tags/v${RELEA
 $STD unzip v${RELEASE}.zip
 mv paperless-ai-${RELEASE} /opt/paperless-ai
 cd /opt/paperless-ai
-$STD pip install --no-cache-dir -r requirements.txt
+$STD uv venv .venv
+$STD .venv/bin/uv pip install --no-cache-dir -r requirements.txt
 mkdir -p data/chromadb
 $STD npm install
 mkdir -p /opt/paperless-ai/data
@@ -87,7 +85,7 @@ After=network.target
 
 [Service]
 WorkingDirectory=/opt/paperless-ai
-ExecStart=/usr/bin/python3 main.py --host 0.0.0.0 --port 8000 --initialize
+ExecStart=/opt/paperless-ai/.venv/bin/python main.py --host 0.0.0.0 --port 8000 --initialize
 Restart=always
 
 [Install]

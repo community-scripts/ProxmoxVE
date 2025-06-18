@@ -14,24 +14,23 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y python3-libtorrent
+$STD apt-get install -y python3-libtorrent build-essential
 msg_ok "Installed Dependencies"
 
-msg_info "Setup Python3"
-$STD apt-get install -y \
-  python3 \
-  python3-dev \
-  python3-pip
-rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
-msg_ok "Setup Python3"
+PYTHON_VERSION="3.12" setup_uv
 
 msg_info "Installing Deluge"
-$STD pip install deluge[all]
+mkdir -p /opt/deluge
+cd /opt/deluge
+$STD uv venv /opt/deluge/.venv
+$STD /opt/prometheus-pve-exporter/.venv/bin/python -m ensurepip --upgrade
+$STD /opt/prometheus-pve-exporter/.venv/bin/python -m pip install --upgrade pip
+$STD /opt/prometheus-pve-exporter/.venv/bin/python -m pip install deluge libtorrent
 msg_ok "Installed Deluge"
 
 msg_info "Creating Service"
-service_path="/etc/systemd/system/deluged.service"
-echo "[Unit]
+cat <<EOF >/etc/systemd/system/deluged.service
+[Unit]
 Description=Deluge Bittorrent Client Daemon
 Documentation=man:deluged
 After=network-online.target
@@ -39,15 +38,16 @@ After=network-online.target
 [Service]
 Type=simple
 UMask=007
-ExecStart=/usr/local/bin/deluged -d
+ExecStart=/opt/deluge/.venv/bin/deluged -d
 Restart=on-failure
 TimeoutStopSec=300
 
 [Install]
-WantedBy=multi-user.target" >$service_path
+WantedBy=multi-user.target
+EOF
 
-service_path="/etc/systemd/system/deluge-web.service"
-echo "[Unit]
+cat <<EOF >/etc/systemd/system/deluge-web.service
+[Unit]
 Description=Deluge Bittorrent Client Web Interface
 Documentation=man:deluge-web
 After=deluged.service
@@ -56,11 +56,13 @@ Wants=deluged.service
 [Service]
 Type=simple
 UMask=027
-ExecStart=/usr/local/bin/deluge-web -d
+ExecStart=/opt/deluge/.venv/bin/deluge-web -d
 Restart=on-failure
 
 [Install]
-WantedBy=multi-user.target" >$service_path
+WantedBy=multi-user.target
+EOF
+
 systemctl enable --now -q deluged.service
 systemctl enable --now -q deluge-web.service
 msg_ok "Created Service"

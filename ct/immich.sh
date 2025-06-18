@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/python_to_uv/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: vhsdream
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -27,6 +27,9 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
+  setup_uv
+
   STAGING_DIR=/opt/staging
   BASE_DIR=${STAGING_DIR}/base-images
   SOURCE_DIR=${STAGING_DIR}/image-source
@@ -252,23 +255,16 @@ EOF
     msg_ok "Updated ${APP} web and microservices"
 
     cd "$SRC_DIR"/machine-learning
-    $STD python3 -m venv "$ML_DIR"/ml-venv
+    export VIRTUAL_ENV="${ML_DIR}/ml-venv"
+    $STD uv venv "$VIRTUAL_ENV"
     if [[ -f ~/.openvino ]]; then
       msg_info "Updating HW-accelerated machine-learning"
-      (
-        source "$ML_DIR"/ml-venv/bin/activate
-        $STD pip3 install -U uv
-        uv -q sync --extra openvino --no-cache --active
-      )
-      patchelf --clear-execstack "$ML_DIR"/ml-venv/lib/python3.11/site-packages/onnxruntime/capi/onnxruntime_pybind11_state.cpython-311-x86_64-linux-gnu.so
+      uv -q sync --extra openvino --no-cache --active
+      patchelf --clear-execstack "${VIRTUAL_ENV}/lib/python3.11/site-packages/onnxruntime/capi/onnxruntime_pybind11_state.cpython-311-x86_64-linux-gnu.so"
       msg_ok "Updated HW-accelerated machine-learning"
     else
       msg_info "Updating machine-learning"
-      (
-        source "$ML_DIR"/ml-venv/bin/activate
-        $STD pip3 install -U uv
-        uv -q sync --extra cpu --no-cache --active
-      )
+      uv -q sync --extra cpu --no-cache --active
       msg_ok "Updated machine-learning"
     fi
     cd "$SRC_DIR"

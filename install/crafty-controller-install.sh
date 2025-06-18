@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies (a lot of patience)"
+msg_info "Installing Dependencies (Patience)"
 $STD apt-get install -y \
   git \
   sed \
@@ -22,6 +22,8 @@ $STD apt-get install -y \
   coreutils \
   software-properties-common
 msg_ok "Installed Dependencies"
+
+PYTHON_VERSION="3.12" setup_uv
 
 msg_info "Setting up TemurinJDK"
 mkdir -p /etc/apt/keyrings
@@ -32,20 +34,11 @@ $STD apt-get install -y temurin-{8,11,17,21}-jre
 sudo update-alternatives --set java /usr/lib/jvm/temurin-21-jre-amd64/bin/java
 msg_ok "Installed TemurinJDK"
 
-msg_info "Setup Python3"
-$STD apt-get install -y \
-  python3 \
-  python3-dev \
-  python3-pip \
-  python3-venv
-rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
-msg_ok "Setup Python3"
-
 msg_info "Installing Craty-Controller (Patience)"
 useradd crafty -m -s /bin/bash
 cd /opt
 mkdir -p /opt/crafty-controller/crafty /opt/crafty-controller/server
-RELEASE=$(curl -fsSL "https://gitlab.com/api/v4/projects/20430749/releases" | grep -o '"tag_name":"v[^"]*"' | head -n 1 | sed 's/"tag_name":"v//;s/"//')
+RELEASE=$(curl -fsSL "https://gitlab.com/api/v4/projects/20430749/releases" | grep -o '"tag_name":"v[^\"]*"' | head -n 1 | sed 's/"tag_name":"v//;s/"//')
 echo "${RELEASE}" >"/opt/crafty-controller_version.txt"
 curl -fsSL "https://gitlab.com/crafty-controller/crafty-4/-/archive/v${RELEASE}/crafty-4-v${RELEASE}.zip" -o "crafty-4-v${RELEASE}.zip"
 $STD unzip crafty-4-v${RELEASE}.zip
@@ -53,12 +46,11 @@ cp -a crafty-4-v${RELEASE}/. /opt/crafty-controller/crafty/crafty-4/
 rm -rf crafty-4-v${RELEASE}
 
 cd /opt/crafty-controller/crafty
-python3 -m venv .venv
+$STD uv venv /opt/crafty-controller/crafty/.venv
 chown -R crafty:crafty /opt/crafty-controller/
 $STD sudo -u crafty bash -c '
-    source /opt/crafty-controller/crafty/.venv/bin/activate
     cd /opt/crafty-controller/crafty/crafty-4
-    pip3 install --no-cache-dir -r requirements.txt
+    uv pip install --no-cache-dir -r requirements.txt
 '
 msg_ok "Installed Craft-Controller and dependencies"
 
@@ -83,8 +75,8 @@ $STD systemctl enable -q --now crafty-controller
 sleep 10
 {
   echo "Crafty-Controller-Credentials"
-  echo "Username: $(grep -oP '(?<="username": ")[^"]*' /opt/crafty-controller/crafty/crafty-4/app/config/default-creds.txt)"
-  echo "Password: $(grep -oP '(?<="password": ")[^"]*' /opt/crafty-controller/crafty/crafty-4/app/config/default-creds.txt)"
+  echo "Username: $(grep -oP '(?<="username": \")[^\"]*' /opt/crafty-controller/crafty/crafty-4/app/config/default-creds.txt)"
+  echo "Password: $(grep -oP '(?<="password": \")[^\"]*' /opt/crafty-controller/crafty/crafty-4/app/config/default-creds.txt)"
 } >>~/crafty-controller.creds
 msg_ok "Crafty-Controller service started"
 

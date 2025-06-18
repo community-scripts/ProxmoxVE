@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/python_to_uv/misc/build.func)
 # Copyright (c) 2021-2025 tteck
 # Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -27,6 +27,8 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  PYTHON_VERSION="3.12" setup_uv
+
   RELEASE=$(curl -fsSL https://api.github.com/repos/seanmorley15/AdventureLog/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
   if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
     msg_info "Stopping Services"
@@ -43,10 +45,16 @@ function update_script() {
     mv /opt/adventurelog-backup/backend/server/.env /opt/adventurelog/backend/server/.env
     mv /opt/adventurelog-backup/backend/server/media /opt/adventurelog/backend/server/media
     cd /opt/adventurelog/backend/server
-    $STD pip install --upgrade pip
-    $STD pip install -r requirements.txt
-    $STD python3 manage.py collectstatic --noinput
-    $STD python3 manage.py migrate
+    $STD uv venv --python "$UV_PYTHON_VERSION" .venv
+    if grep -q "ExecStart=.*python3 manage.py runserver" /etc/systemd/system/adventurelog-backend.service; then
+      sed -i "s|ExecStart=.*python3 manage.py runserver|ExecStart=$(pwd)/.venv/bin/python manage.py runserver|" /etc/systemd/system/adventurelog-backend.service
+      systemctl daemon-reload
+    fi
+
+    $STD uv pip install --upgrade pip --python=.venv/bin/python
+    $STD uv pip install -r requirements.txt --python=.venv/bin/python
+    $STD uv run --python=.venv/bin/python python manage.py collectstatic --noinput
+    $STD uv run --python=.venv/bin/python python manage.py migrate
 
     mv /opt/adventurelog-backup/frontend/.env /opt/adventurelog/frontend/.env
     cd /opt/adventurelog/frontend

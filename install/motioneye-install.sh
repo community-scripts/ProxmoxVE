@@ -18,13 +18,7 @@ $STD apt-get install -y git
 $STD apt-get install -y cifs-utils
 msg_ok "Installed Dependencies"
 
-msg_info "Setup Python3"
-$STD apt-get install -y \
-  python3 \
-  python3-dev \
-  python3-pip
-rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
-msg_ok "Setup Python3"
+PYTHON_VERSION="3.12" setup_uv
 
 msg_info "Installing Motion"
 $STD apt-get install -y motion
@@ -38,7 +32,11 @@ msg_ok "Installed FFmpeg"
 
 msg_info "Installing MotionEye"
 $STD apt-get update
-$STD pip install git+https://github.com/motioneye-project/motioneye.git@dev
+$STD uv venv /opt/motioneye/.venv
+$STD /opt/motioneye/.venv/bin/python -m ensurepip --upgrade
+$STD /opt/motioneye/.venv/bin/python -m pip install --upgrade pip
+$STD /opt/motioneye/.venv/bin/python -m pip install --pre motioneye
+
 mkdir -p /etc/motioneye
 chown -R root:root /etc/motioneye
 chmod -R 777 /etc/motioneye
@@ -48,6 +46,8 @@ msg_ok "Installed MotionEye"
 
 msg_info "Creating Service"
 curl -fsSL "https://raw.githubusercontent.com/motioneye-project/motioneye/dev/motioneye/extra/motioneye.systemd" -o "/etc/systemd/system/motioneye.service"
+sed -i 's|^ExecStart=.*|ExecStart=/opt/motioneye/.venv/bin/meyectl startserver -c /etc/motioneye/motioneye.conf|' /etc/systemd/system/motioneye.service
+systemctl daemon-reexec
 systemctl enable -q --now motioneye
 msg_ok "Created Service"
 
