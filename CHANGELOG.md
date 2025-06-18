@@ -20,6 +20,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - tools.func: Standardized and Renamed Setup Functions [@MickLesk](https://github.com/MickLesk) ([#5241](https://github.com/community-scripts/ProxmoxVE/pull/5241))
 
+  - #### 🐞 Bug Fixes
+
+    - Immich: fix prompt clobber issue [@vhsdream](https://github.com/vhsdream) ([#5231](https://github.com/community-scripts/ProxmoxVE/pull/5231))
+
   - #### 🔧 Refactor
 
     - upgrade old Scriptcalls to new tools.func calls [@MickLesk](https://github.com/MickLesk) ([#5242](https://github.com/community-scripts/ProxmoxVE/pull/5242))
