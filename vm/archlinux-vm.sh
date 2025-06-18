@@ -19,13 +19,12 @@ EOF
 }
 header_info
 echo -e "\n Loading..."
-#API VARIABLES
+GEN_MAC=02:$(openssl rand -hex 5 | awk '{print toupper($0)}' | sed 's/\(..\)/\1:/g; s/.$//')
 RANDOM_UUID="$(cat /proc/sys/kernel/random/uuid)"
 METHOD=""
 NSAPP="arch-linux-vm"
 var_os="arch-linux"
-var_version=" "
-GEN_MAC=02:$(openssl rand -hex 5 | awk '{print toupper($0)}' | sed 's/\(..\)/\1:/g; s/.$//')
+var_version="n.d."
 
 YW=$(echo "\033[33m")
 BL=$(echo "\033[36m")
@@ -58,6 +57,7 @@ MACADDRESS="${TAB}🔗${TAB}${CL}"
 VLANTAG="${TAB}🏷️${TAB}${CL}"
 CREATING="${TAB}🚀${TAB}${CL}"
 ADVANCED="${TAB}🧩${TAB}${CL}"
+CLOUD="${TAB}☁️${TAB}${CL}"
 
 THIN="discard=on,ssd=1,"
 set -e
@@ -69,8 +69,8 @@ function error_handler() {
   local exit_code="$?"
   local line_number="$1"
   local command="$2"
-  post_update_to_api "failed" "${commad}"
   local error_message="${RD}[ERROR]${CL} in line ${RD}$line_number${CL}: exit code ${RD}$exit_code${CL}: while executing command ${YW}$command${CL}"
+  post_update_to_api "failed" "${command}"
   echo -e "\n$error_message\n"
   cleanup_vmid
 }
@@ -101,6 +101,7 @@ function cleanup_vmid() {
 
 function cleanup() {
   popd >/dev/null
+  post_update_to_api "done" "none"
   rm -rf $TEMP_DIR
 }
 
