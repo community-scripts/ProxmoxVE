@@ -1,8 +1,53 @@
 [
   {
+    "name": "esphome/esphome",
+    "version": "2025.6.0",
+    "date": "2025-06-18T09:41:11Z"
+  },
+  {
+    "name": "forgejo/forgejo",
+    "version": "v11.0.2",
+    "date": "2025-06-18T09:38:19Z"
+  },
+  {
+    "name": "evcc-io/evcc",
+    "version": "0.204.3",
+    "date": "2025-06-18T08:31:58Z"
+  },
+  {
+    "name": "silverbulletmd/silverbullet",
+    "version": "2.0.0-pre3",
+    "date": "2025-06-18T08:01:24Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "v9.11.17",
+    "date": "2025-06-18T08:12:05Z"
+  },
+  {
+    "name": "zabbix/zabbix",
+    "version": "7.4.0rc2",
+    "date": "2025-06-18T07:23:07Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2026",
+    "date": "2025-06-18T05:51:39Z"
+  },
+  {
+    "name": "cross-seed/cross-seed",
+    "version": "v6.12.7",
+    "date": "2025-06-18T03:44:24Z"
+  },
+  {
     "name": "grafana/grafana",
     "version": "v11.5.6",
     "date": "2025-06-17T22:00:40Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.2.5",
+    "date": "2025-05-28T06:49:43Z"
   },
   {
     "name": "jenkinsci/jenkins",
@@ -65,19 +110,9 @@
     "date": "2025-02-12T11:07:02Z"
   },
   {
-    "name": "mattermost/mattermost",
-    "version": "v10.9.1",
-    "date": "2025-06-17T07:06:51Z"
-  },
-  {
     "name": "morpheus65535/bazarr",
     "version": "v1.5.2",
     "date": "2025-05-11T16:40:55Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2024",
-    "date": "2025-06-17T05:51:55Z"
   },
   {
     "name": "donaldzou/WGDashboard",
@@ -88,11 +123,6 @@
     "name": "webmin/webmin",
     "version": "2.402",
     "date": "2025-06-17T05:20:42Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.2.5",
-    "date": "2025-05-28T06:49:43Z"
   },
   {
     "name": "kimai/kimai",
@@ -111,8 +141,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-06-16T17:35:17Z"
+    "version": "v4.2.1",
+    "date": "2025-06-03T20:04:28Z"
   },
   {
     "name": "NodeBB/NodeBB",
@@ -158,11 +188,6 @@
     "name": "moghtech/komodo",
     "version": "v1.18.3",
     "date": "2025-06-16T07:03:46Z"
-  },
-  {
-    "name": "esphome/esphome",
-    "version": "2025.5.2",
-    "date": "2025-06-03T08:45:14Z"
   },
   {
     "name": "firefly-iii/firefly-iii",
@@ -330,11 +355,6 @@
     "date": "2025-06-11T11:05:42Z"
   },
   {
-    "name": "zabbix/zabbix",
-    "version": "7.2.8rc1",
-    "date": "2025-06-11T06:50:19Z"
-  },
-  {
     "name": "openobserve/openobserve",
     "version": "v0.15.0-rc2",
     "date": "2025-06-11T04:29:22Z"
@@ -375,11 +395,6 @@
     "date": "2025-03-17T19:12:37Z"
   },
   {
-    "name": "cross-seed/cross-seed",
-    "version": "v6.12.6",
-    "date": "2025-05-28T00:13:19Z"
-  },
-  {
     "name": "tailscale/tailscale",
     "version": "v1.84.2",
     "date": "2025-06-09T23:43:27Z"
@@ -410,11 +425,6 @@
     "date": "2025-06-09T13:37:07Z"
   },
   {
-    "name": "silverbulletmd/silverbullet",
-    "version": "0.10.4",
-    "date": "2025-02-25T18:13:42Z"
-  },
-  {
     "name": "neo4j/neo4j",
     "version": "5.26.8",
     "date": "2025-06-08T22:50:58Z"
@@ -433,11 +443,6 @@
     "name": "jordan-dalby/ByteStash",
     "version": "v1.5.8",
     "date": "2025-06-07T11:39:10Z"
-  },
-  {
-    "name": "evcc-io/evcc",
-    "version": "0.204.2",
-    "date": "2025-06-07T11:38:28Z"
   },
   {
     "name": "homebridge/homebridge",
@@ -793,11 +798,6 @@
     "name": "apache/couchdb",
     "version": "3.5.0",
     "date": "2025-05-05T16:28:24Z"
-  },
-  {
-    "name": "forgejo/forgejo",
-    "version": "v11.0.1",
-    "date": "2025-05-02T17:10:30Z"
   },
   {
     "name": "jhuckaby/Cronicle",
