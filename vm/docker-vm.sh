@@ -29,7 +29,6 @@ DISK_SIZE="10G"
 
 YW=$(echo "\033[33m")
 BL=$(echo "\033[36m")
-HA=$(echo "\033[1;34m")
 RD=$(echo "\033[01;31m")
 BGN=$(echo "\033[4;92m")
 GN=$(echo "\033[1;92m")
@@ -59,6 +58,8 @@ MACADDRESS="${TAB}🔗${TAB}${CL}"
 VLANTAG="${TAB}🏷️${TAB}${CL}"
 CREATING="${TAB}🚀${TAB}${CL}"
 ADVANCED="${TAB}🧩${TAB}${CL}"
+CLOUD="${TAB}☁️${TAB}${CL}"
+
 THIN="discard=on,ssd=1,"
 set -e
 trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
@@ -69,8 +70,8 @@ function error_handler() {
   local exit_code="$?"
   local line_number="$1"
   local command="$2"
-  post_update_to_api "failed" "${command}"
   local error_message="${RD}[ERROR]${CL} in line ${RD}$line_number${CL}: exit code ${RD}$exit_code${CL}: while executing command ${YW}$command${CL}"
+  post_update_to_api "failed" "${command}"
   echo -e "\n$error_message\n"
   cleanup_vmid
 }
@@ -182,7 +183,7 @@ function default_settings() {
   FORMAT=",efitype=4m"
   MACHINE=""
   DISK_CACHE=""
-  DISK_SIZE="8G"
+  DISK_SIZE="10G"
   HN="docker"
   CPU_TYPE=""
   CORE_COUNT="2"

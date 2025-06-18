@@ -19,27 +19,47 @@ EOF
 }
 header_info
 echo -e "\n Loading..."
+GEN_MAC=02:$(openssl rand -hex 5 | awk '{print toupper($0)}' | sed 's/\(..\)/\1:/g; s/.$//')
 RANDOM_UUID="$(cat /proc/sys/kernel/random/uuid)"
 METHOD=""
 NSAPP="turnkey-nextcloud"
 var_os="turnkey-nextcloud"
-var_version=" "
-DISK_SIZE="12G"
-GEN_MAC=02:$(openssl rand -hex 5 | awk '{print toupper($0)}' | sed 's/\(..\)/\1:/g; s/.$//')
-NAME="TurnKey Nextcloud VM"
+var_version="n.d."
+
 YW=$(echo "\033[33m")
 BL=$(echo "\033[36m")
-HA=$(echo "\033[1;34m")
 RD=$(echo "\033[01;31m")
 BGN=$(echo "\033[4;92m")
 GN=$(echo "\033[1;92m")
 DGN=$(echo "\033[32m")
 CL=$(echo "\033[m")
+
+CL=$(echo "\033[m")
+BOLD=$(echo "\033[1m")
 BFR="\\r\\033[K"
-HOLD="-"
-CM="${GN}✓${CL}"
-CROSS="${RD}✗${CL}"
-THIN="discard=on,ssd=1"
+HOLD=" "
+TAB="  "
+
+CM="${TAB}✔️${TAB}${CL}"
+CROSS="${TAB}✖️${TAB}${CL}"
+INFO="${TAB}💡${TAB}${CL}"
+OS="${TAB}🖥️${TAB}${CL}"
+CONTAINERTYPE="${TAB}📦${TAB}${CL}"
+DISKSIZE="${TAB}💾${TAB}${CL}"
+CPUCORE="${TAB}🧠${TAB}${CL}"
+RAMSIZE="${TAB}🛠️${TAB}${CL}"
+CONTAINERID="${TAB}🆔${TAB}${CL}"
+HOSTNAME="${TAB}🏠${TAB}${CL}"
+BRIDGE="${TAB}🌉${TAB}${CL}"
+GATEWAY="${TAB}🌐${TAB}${CL}"
+DEFAULT="${TAB}⚙️${TAB}${CL}"
+MACADDRESS="${TAB}🔗${TAB}${CL}"
+VLANTAG="${TAB}🏷️${TAB}${CL}"
+CREATING="${TAB}🚀${TAB}${CL}"
+ADVANCED="${TAB}🧩${TAB}${CL}"
+CLOUD="${TAB}☁️${TAB}${CL}"
+
+THIN="discard=on,ssd=1,"
 set -e
 trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
 trap cleanup EXIT
@@ -49,8 +69,8 @@ function error_handler() {
   local exit_code="$?"
   local line_number="$1"
   local command="$2"
-  post_update_to_api "failed" "${command}"
   local error_message="${RD}[ERROR]${CL} in line ${RD}$line_number${CL}: exit code ${RD}$exit_code${CL}: while executing command ${YW}$command${CL}"
+  post_update_to_api "failed" "${command}"
   echo -e "\n$error_message\n"
   cleanup_vmid
 }
@@ -81,30 +101,31 @@ function cleanup_vmid() {
 
 function cleanup() {
   popd >/dev/null
+  post_update_to_api "done" "none"
   rm -rf $TEMP_DIR
 }
 
 TEMP_DIR=$(mktemp -d)
 pushd $TEMP_DIR >/dev/null
-if whiptail --backtitle "Proxmox VE Helper Scripts" --title "$NAME" --yesno "This will create a New $NAME. Proceed?" 10 58; then
+if whiptail --backtitle "Proxmox VE Helper Scripts" --title "Nextcloud VM" --yesno "This will create a New Nextcloud VM. Proceed?" 10 58; then
   :
 else
-  header_info && echo -e "⚠ User exited script \n" && exit
+  header_info && echo -e "${CROSS}${RD}User exited script${CL}\n" && exit
 fi
 
 function msg_info() {
   local msg="$1"
-  echo -ne " ${HOLD} ${YW}${msg}..."
+  echo -ne "${TAB}${YW}${HOLD}${msg}${HOLD}"
 }
 
 function msg_ok() {
   local msg="$1"
-  echo -e "${BFR} ${CM} ${GN}${msg}${CL}"
+  echo -e "${BFR}${CM}${GN}${msg}${CL}"
 }
 
 function msg_error() {
   local msg="$1"
-  echo -e "${BFR} ${CROSS} ${RD}${msg}${CL}"
+  echo -e "${BFR}${CROSS}${RD}${msg}${CL}"
 }
 
 function check_root() {
@@ -119,7 +140,7 @@ function check_root() {
 
 function pve_check() {
   if ! pveversion | grep -Eq "pve-manager/8\.[1-4](\.[0-9]+)*"; then
-    msg_error "This version of Proxmox Virtual Environment is not supported"
+    msg_error "${CROSS}${RD}This version of Proxmox Virtual Environment is not supported"
     echo -e "Requires Proxmox Virtual Environment Version 8.1 or later."
     echo -e "Exiting..."
     sleep 2
@@ -129,7 +150,8 @@ function pve_check() {
 
 function arch_check() {
   if [ "$(dpkg --print-architecture)" != "amd64" ]; then
-    msg_error "This script will not work with PiMox! \n"
+    echo -e "\n ${INFO}${YWB}This script will not work with PiMox! \n"
+    echo -e "\n ${YWB}Visit https://github.com/asylumexp/Proxmox for ARM64 support. \n"
     echo -e "Exiting..."
     sleep 2
     exit
@@ -151,7 +173,7 @@ function ssh_check() {
 
 function exit-script() {
   clear
-  echo -e "⚠  User exited script \n"
+  echo -e "\n${CROSS}${RD}User exited script${CL}\n"
   exit
 }
 
@@ -159,8 +181,9 @@ function default_settings() {
   VMID=$(get_valid_nextid)
   FORMAT=",efitype=4m"
   MACHINE=""
+  DISK_SIZE="10G"
   DISK_CACHE=""
-  HN="turnkey-nextcloud-vm"
+  HN="nextcloud-vm"
   CPU_TYPE=""
   CORE_COUNT="2"
   RAM_SIZE="2048"
@@ -168,21 +191,23 @@ function default_settings() {
   MAC="$GEN_MAC"
   VLAN=""
   MTU=""
-  START_VM="no"
+  START_VM="yes"
   METHOD="default"
-  echo -e "${DGN}Using Virtual Machine ID: ${BGN}${VMID}${CL}"
-  echo -e "${DGN}Using Machine Type: ${BGN}i440fx${CL}"
-  echo -e "${DGN}Using Disk Cache: ${BGN}None${CL}"
-  echo -e "${DGN}Using Hostname: ${BGN}${HN}${CL}"
-  echo -e "${DGN}Using CPU Model: ${BGN}KVM64${CL}"
-  echo -e "${DGN}Allocated Cores: ${BGN}${CORE_COUNT}${CL}"
-  echo -e "${DGN}Allocated RAM: ${BGN}${RAM_SIZE}${CL}"
-  echo -e "${DGN}Using Bridge: ${BGN}${BRG}${CL}"
-  echo -e "${DGN}Using MAC Address: ${BGN}${MAC}${CL}"
-  echo -e "${DGN}Using VLAN: ${BGN}Default${CL}"
-  echo -e "${DGN}Using Interface MTU Size: ${BGN}Default${CL}"
-  echo -e "${DGN}Start VM when completed: ${BGN}no${CL}"
-  echo -e "${BL}Creating a $NAME using the above default settings${CL}"
+  echo -e "${CONTAINERID}${BOLD}${DGN}Virtual Machine ID: ${BGN}${VMID}${CL}"
+  echo -e "${CONTAINERTYPE}${BOLD}${DGN}Machine Type: ${BGN}i440fx${CL}"
+  echo -e "${DISKSIZE}${BOLD}${DGN}Disk Size: ${BGN}${DISK_SIZE}${CL}"
+  echo -e "${DISKSIZE}${BOLD}${DGN}Disk Cache: ${BGN}None${CL}"
+  echo -e "${HOSTNAME}${BOLD}${DGN}Hostname: ${BGN}${HN}${CL}"
+  echo -e "${OS}${BOLD}${DGN}CPU Model: ${BGN}KVM64${CL}"
+  echo -e "${CPUCORE}${BOLD}${DGN}CPU Cores: ${BGN}${CORE_COUNT}${CL}"
+  echo -e "${RAMSIZE}${BOLD}${DGN}RAM Size: ${BGN}${RAM_SIZE}${CL}"
+  echo -e "${BRIDGE}${BOLD}${DGN}Bridge: ${BGN}${BRG}${CL}"
+  echo -e "${MACADDRESS}${BOLD}${DGN}MAC Address: ${BGN}${MAC}${CL}"
+  echo -e "${VLANTAG}${BOLD}${DGN}VLAN: ${BGN}Default${CL}"
+  echo -e "${DEFAULT}${BOLD}${DGN}Interface MTU Size: ${BGN}Default${CL}"
+  echo -e "${CLOUD}${BOLD}${DGN}Configure Cloud-init: ${BGN}no${CL}"
+  echo -e "${GATEWAY}${BOLD}${DGN}Start VM when completed: ${BGN}yes${CL}"
+  echo -e "${CREATING}${BOLD}${DGN}Creating a Nextcloud VM using the above default settings${CL}"
 }
 
 function advanced_settings() {
@@ -198,7 +223,7 @@ function advanced_settings() {
         sleep 2
         continue
       fi
-      echo -e "${DGN}Virtual Machine ID: ${BGN}$VMID${CL}"
+      echo -e "${CONTAINERID}${BOLD}${DGN}Virtual Machine ID: ${BGN}$VMID${CL}"
       break
     else
       exit-script
@@ -210,13 +235,28 @@ function advanced_settings() {
     "q35" "Machine q35" OFF \
     3>&1 1>&2 2>&3); then
     if [ $MACH = q35 ]; then
-      echo -e "${DGN}Using Machine Type: ${BGN}$MACH${CL}"
+      echo -e "${CONTAINERTYPE}${BOLD}${DGN}Machine Type: ${BGN}$MACH${CL}"
       FORMAT=""
       MACHINE=" -machine q35"
     else
-      echo -e "${DGN}Using Machine Type: ${BGN}$MACH${CL}"
+      echo -e "${CONTAINERTYPE}${BOLD}${DGN}Machine Type: ${BGN}$MACH${CL}"
       FORMAT=",efitype=4m"
       MACHINE=""
+    fi
+  else
+    exit-script
+  fi
+
+  if DISK_SIZE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Disk Size in GiB (e.g., 10, 20)" 8 58 "$DISK_SIZE" --title "DISK SIZE" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+    DISK_SIZE=$(echo "$DISK_SIZE" | tr -d ' ')
+    if [[ "$DISK_SIZE" =~ ^[0-9]+$ ]]; then
+      DISK_SIZE="${DISK_SIZE}G"
+      echo -e "${DISKSIZE}${BOLD}${DGN}Disk Size: ${BGN}$DISK_SIZE${CL}"
+    elif [[ "$DISK_SIZE" =~ ^[0-9]+G$ ]]; then
+      echo -e "${DISKSIZE}${BOLD}${DGN}Disk Size: ${BGN}$DISK_SIZE${CL}"
+    else
+      echo -e "${DISKSIZE}${BOLD}${RD}Invalid Disk Size. Please use a number (e.g., 10 or 10G).${CL}"
+      exit-script
     fi
   else
     exit-script
@@ -227,23 +267,23 @@ function advanced_settings() {
     "1" "Write Through" OFF \
     3>&1 1>&2 2>&3); then
     if [ $DISK_CACHE = "1" ]; then
-      echo -e "${DGN}Using Disk Cache: ${BGN}Write Through${CL}"
+      echo -e "${DISKSIZE}${BOLD}${DGN}Disk Cache: ${BGN}Write Through${CL}"
       DISK_CACHE="cache=writethrough,"
     else
-      echo -e "${DGN}Using Disk Cache: ${BGN}None${CL}"
+      echo -e "${DISKSIZE}${BOLD}${DGN}Disk Cache: ${BGN}None${CL}"
       DISK_CACHE=""
     fi
   else
     exit-script
   fi
 
-  if VM_NAME=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Hostname" 8 58 turnkey-nextcloud-vm --title "HOSTNAME" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+  if VM_NAME=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Hostname" 8 58 nextcloud-vm --title "HOSTNAME" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
     if [ -z $VM_NAME ]; then
-      HN="$HN"
-      echo -e "${DGN}Using Hostname: ${BGN}$HN${CL}"
+      HN="nextcloud-vm"
+      echo -e "${HOSTNAME}${BOLD}${DGN}Hostname: ${BGN}$HN${CL}"
     else
       HN=$(echo ${VM_NAME,,} | tr -d ' ')
-      echo -e "${DGN}Using Hostname: ${BGN}$HN${CL}"
+      echo -e "${HOSTNAME}${BOLD}${DGN}Hostname: ${BGN}$HN${CL}"
     fi
   else
     exit-script
@@ -254,10 +294,10 @@ function advanced_settings() {
     "1" "Host" OFF \
     3>&1 1>&2 2>&3); then
     if [ $CPU_TYPE1 = "1" ]; then
-      echo -e "${DGN}Using CPU Model: ${BGN}Host${CL}"
+      echo -e "${OS}${BOLD}${DGN}CPU Model: ${BGN}Host${CL}"
       CPU_TYPE=" -cpu host"
     else
-      echo -e "${DGN}Using CPU Model: ${BGN}KVM64${CL}"
+      echo -e "${OS}${BOLD}${DGN}CPU Model: ${BGN}KVM64${CL}"
       CPU_TYPE=""
     fi
   else
@@ -267,9 +307,9 @@ function advanced_settings() {
   if CORE_COUNT=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Allocate CPU Cores" 8 58 2 --title "CORE COUNT" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
     if [ -z $CORE_COUNT ]; then
       CORE_COUNT="2"
-      echo -e "${DGN}Allocated Cores: ${BGN}$CORE_COUNT${CL}"
+      echo -e "${CPUCORE}${BOLD}${DGN}CPU Cores: ${BGN}$CORE_COUNT${CL}"
     else
-      echo -e "${DGN}Allocated Cores: ${BGN}$CORE_COUNT${CL}"
+      echo -e "${CPUCORE}${BOLD}${DGN}CPU Cores: ${BGN}$CORE_COUNT${CL}"
     fi
   else
     exit-script
@@ -278,9 +318,9 @@ function advanced_settings() {
   if RAM_SIZE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Allocate RAM in MiB" 8 58 2048 --title "RAM" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
     if [ -z $RAM_SIZE ]; then
       RAM_SIZE="2048"
-      echo -e "${DGN}Allocated RAM: ${BGN}$RAM_SIZE${CL}"
+      echo -e "${RAMSIZE}${BOLD}${DGN}RAM Size: ${BGN}$RAM_SIZE${CL}"
     else
-      echo -e "${DGN}Allocated RAM: ${BGN}$RAM_SIZE${CL}"
+      echo -e "${RAMSIZE}${BOLD}${DGN}RAM Size: ${BGN}$RAM_SIZE${CL}"
     fi
   else
     exit-script
@@ -289,9 +329,9 @@ function advanced_settings() {
   if BRG=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a Bridge" 8 58 vmbr0 --title "BRIDGE" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
     if [ -z $BRG ]; then
       BRG="vmbr0"
-      echo -e "${DGN}Using Bridge: ${BGN}$BRG${CL}"
+      echo -e "${BRIDGE}${BOLD}${DGN}Bridge: ${BGN}$BRG${CL}"
     else
-      echo -e "${DGN}Using Bridge: ${BGN}$BRG${CL}"
+      echo -e "${BRIDGE}${BOLD}${DGN}Bridge: ${BGN}$BRG${CL}"
     fi
   else
     exit-script
@@ -300,10 +340,10 @@ function advanced_settings() {
   if MAC1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a MAC Address" 8 58 $GEN_MAC --title "MAC ADDRESS" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
     if [ -z $MAC1 ]; then
       MAC="$GEN_MAC"
-      echo -e "${DGN}Using MAC Address: ${BGN}$MAC${CL}"
+      echo -e "${MACADDRESS}${BOLD}${DGN}MAC Address: ${BGN}$MAC${CL}"
     else
       MAC="$MAC1"
-      echo -e "${DGN}Using MAC Address: ${BGN}$MAC1${CL}"
+      echo -e "${MACADDRESS}${BOLD}${DGN}MAC Address: ${BGN}$MAC1${CL}"
     fi
   else
     exit-script
@@ -313,10 +353,10 @@ function advanced_settings() {
     if [ -z $VLAN1 ]; then
       VLAN1="Default"
       VLAN=""
-      echo -e "${DGN}Using Vlan: ${BGN}$VLAN1${CL}"
+      echo -e "${VLANTAG}${BOLD}${DGN}VLAN: ${BGN}$VLAN1${CL}"
     else
       VLAN=",tag=$VLAN1"
-      echo -e "${DGN}Using Vlan: ${BGN}$VLAN1${CL}"
+      echo -e "${VLANTAG}${BOLD}${DGN}VLAN: ${BGN}$VLAN1${CL}"
     fi
   else
     exit-script
@@ -326,28 +366,28 @@ function advanced_settings() {
     if [ -z $MTU1 ]; then
       MTU1="Default"
       MTU=""
-      echo -e "${DGN}Using Interface MTU Size: ${BGN}$MTU1${CL}"
+      echo -e "${DEFAULT}${BOLD}${DGN}Interface MTU Size: ${BGN}$MTU1${CL}"
     else
       MTU=",mtu=$MTU1"
-      echo -e "${DGN}Using Interface MTU Size: ${BGN}$MTU1${CL}"
+      echo -e "${DEFAULT}${BOLD}${DGN}Interface MTU Size: ${BGN}$MTU1${CL}"
     fi
   else
     exit-script
   fi
 
   if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "START VIRTUAL MACHINE" --yesno "Start VM when completed?" 10 58); then
-    echo -e "${DGN}Start VM when completed: ${BGN}yes${CL}"
+    echo -e "${GATEWAY}${BOLD}${DGN}Start VM when completed: ${BGN}yes${CL}"
     START_VM="yes"
   else
-    echo -e "${DGN}Start VM when completed: ${BGN}no${CL}"
+    echo -e "${GATEWAY}${BOLD}${DGN}Start VM when completed: ${BGN}no${CL}"
     START_VM="no"
   fi
 
-  if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "ADVANCED SETTINGS COMPLETE" --yesno "Ready to create a $NAME?" --no-button Do-Over 10 58); then
-    echo -e "${RD}Creating a $NAME using the above advanced settings${CL}"
+  if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "ADVANCED SETTINGS COMPLETE" --yesno "Ready to create a Nextcloud VM?" --no-button Do-Over 10 58); then
+    echo -e "${CREATING}${BOLD}${DGN}Creating a Nextcloud VM using the above advanced settings${CL}"
   else
     header_info
-    echo -e "${RD}Using Advanced Settings${CL}"
+    echo -e "${ADVANCED}${BOLD}${RD}Using Advanced Settings${CL}"
     advanced_settings
   fi
 }
@@ -441,13 +481,46 @@ qm set $VMID \
   -efidisk0 ${DISK0_REF}${FORMAT} \
   -scsi0 ${DISK1_REF},${DISK_CACHE}${THIN} \
   -scsi1 ${DISK2_REF},${DISK_CACHE}${THIN} \
-  -boot order='scsi1;scsi0' \
-  -description "<div align='center'><a href='https://Helper-Scripts.com'><img src='https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/images/logo-81x112.png'/></a>
+  -boot order='scsi1;scsi0' >/dev/null
+DESCRIPTION=$(
+  cat <<EOF
+<div align='center'>
+  <a href='https://Helper-Scripts.com' target='_blank' rel='noopener noreferrer'>
+    <img src='https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/images/logo-81x112.png' alt='Logo' style='width:81px;height:112px;'/>
+  </a>
 
-  # $NAME
+  <h2 style='font-size: 24px; margin: 20px 0;'>Nextcloud VM</h2>
 
-  <a href='https://ko-fi.com/D1D7EP4GF'><img src='https://img.shields.io/badge/&#x2615;-Buy me a coffee-blue' /></a>
-  </div>" >/dev/null
+  <p style='margin: 16px 0;'>
+    <a href='https://ko-fi.com/community_scripts' target='_blank' rel='noopener noreferrer'>
+      <img src='https://img.shields.io/badge/&#x2615;-Buy us a coffee-blue' alt='spend Coffee' />
+    </a>
+  </p>
+  
+  <span style='margin: 0 10px;'>
+    <i class="fa fa-github fa-fw" style="color: #f5f5f5;"></i>
+    <a href='https://github.com/community-scripts/ProxmoxVE' target='_blank' rel='noopener noreferrer' style='text-decoration: none; color: #00617f;'>GitHub</a>
+  </span>
+  <span style='margin: 0 10px;'>
+    <i class="fa fa-comments fa-fw" style="color: #f5f5f5;"></i>
+    <a href='https://github.com/community-scripts/ProxmoxVE/discussions' target='_blank' rel='noopener noreferrer' style='text-decoration: none; color: #00617f;'>Discussions</a>
+  </span>
+  <span style='margin: 0 10px;'>
+    <i class="fa fa-exclamation-circle fa-fw" style="color: #f5f5f5;"></i>
+    <a href='https://github.com/community-scripts/ProxmoxVE/issues' target='_blank' rel='noopener noreferrer' style='text-decoration: none; color: #00617f;'>Issues</a>
+  </span>
+</div>
+EOF
+)
+qm set "$VMID" -description "$DESCRIPTION" >/dev/null
+if [ -n "$DISK_SIZE" ]; then
+  msg_info "Resizing disk to $DISK_SIZE GB"
+  qm resize $VMID scsi0 ${DISK_SIZE} >/dev/null
+else
+  msg_info "Using default disk size of $DEFAULT_DISK_SIZE GB"
+  qm resize $VMID scsi0 ${DEFAULT_DISK_SIZE} >/dev/null
+fi
+
 msg_ok "Created a $NAME ${CL}${BL}(${HN})"
 if [ "$START_VM" == "yes" ]; then
   msg_info "Starting $NAME"
