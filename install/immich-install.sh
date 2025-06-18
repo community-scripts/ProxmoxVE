@@ -109,8 +109,8 @@ if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   msg_ok "Installed OpenVINO dependencies"
 fi
 
-NODE_VERSION="22" install_node_and_modules
-PG_VERSION="16" install_postgresql
+NODE_VERSION="22" setup_nodejs
+PG_VERSION="16" setup_postgresql
 
 msg_info "Setting up Postgresql Database"
 $STD apt-get install postgresql-16-pgvector
