@@ -37,7 +37,7 @@
       "type": "warning"
     },
     {
-      "text": "To update the configuration edit `/etc/systemd/system/cloudflare-ddns.service`. After edit please restard with `systemctl restart cloudflare-ddns`",
+      "text": "To update the configuration edit `/etc/systemd/system/cloudflare-ddns.service`. After edit please restart with `systemctl restart cloudflare-ddns`",
       "type": "info"
     }
   ]
