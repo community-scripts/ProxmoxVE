@@ -18,7 +18,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🆕 New Scripts
 
-  - Huntarr ([#5249](https://github.com/community-scripts/ProxmoxVE/pull/5249))
+  - FileBrowser Quantum [@MickLesk](https://github.com/MickLesk) ([#5248](https://github.com/community-scripts/ProxmoxVE/pull/5248))
+- Huntarr ([#5249](https://github.com/community-scripts/ProxmoxVE/pull/5249))
 
 ### 🚀 Updated Scripts
 
