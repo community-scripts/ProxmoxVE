@@ -16,6 +16,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-06-18
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - upgrade old Scriptcalls to new tools.func calls [@MickLesk](https://github.com/MickLesk) ([#5242](https://github.com/community-scripts/ProxmoxVE/pull/5242))
+
 ## 2025-06-17
 
 ### 🚀 Updated Scripts
