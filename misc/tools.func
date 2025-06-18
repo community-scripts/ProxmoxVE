@@ -294,6 +294,7 @@ function setup_mysql() {
   local MYSQL_VERSION="${MYSQL_VERSION:-8.0}"
   local CURRENT_VERSION=""
   local NEED_INSTALL=false
+  CURRENT_OS="$(awk -F= '/^ID=/{print $2}' /etc/os-release)"
 
   if command -v mysql >/dev/null; then
     CURRENT_VERSION="$(mysql --version | grep -oP 'Distrib\s+\K[0-9]+\.[0-9]+')"
@@ -323,7 +324,7 @@ function setup_mysql() {
     local DISTRO_CODENAME
     DISTRO_CODENAME="$(awk -F= '/VERSION_CODENAME/ { print $2 }' /etc/os-release)"
     curl -fsSL https://repo.mysql.com/RPM-GPG-KEY-mysql-2023 | gpg --dearmor -o /etc/apt/trusted.gpg.d/mysql.gpg
-    echo "deb [signed-by=/etc/apt/trusted.gpg.d/mysql.gpg] https://repo.mysql.com/apt/debian/ ${DISTRO_CODENAME} mysql-${MYSQL_VERSION}" \
+    echo "deb [signed-by=/etc/apt/trusted.gpg.d/mysql.gpg] https://repo.mysql.com/apt/${CURRENT_OS}/ ${DISTRO_CODENAME} mysql-${MYSQL_VERSION}" \
       >/etc/apt/sources.list.d/mysql.list
 
     export DEBIAN_FRONTEND=noninteractive
