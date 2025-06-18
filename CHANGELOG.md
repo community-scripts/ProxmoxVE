@@ -16,6 +16,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-06-18
 
+### 🆕 New Scripts
+
+  - Huntarr ([#5249](https://github.com/community-scripts/ProxmoxVE/pull/5249))
+
 ### 🚀 Updated Scripts
 
   - tools.func: Standardized and Renamed Setup Functions [@MickLesk](https://github.com/MickLesk) ([#5241](https://github.com/community-scripts/ProxmoxVE/pull/5241))
