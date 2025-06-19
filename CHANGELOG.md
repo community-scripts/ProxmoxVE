@@ -18,7 +18,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🆕 New Scripts
 
-  - PLANKA ([#5277](https://github.com/community-scripts/ProxmoxVE/pull/5277))
+  - Ubuntu 25.04 VM [@MickLesk](https://github.com/MickLesk) ([#5284](https://github.com/community-scripts/ProxmoxVE/pull/5284))
+- PLANKA ([#5277](https://github.com/community-scripts/ProxmoxVE/pull/5277))
 - Wizarr ([#5273](https://github.com/community-scripts/ProxmoxVE/pull/5273))
 
 ### 🚀 Updated Scripts
@@ -27,6 +28,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - immich-install.sh: restore pgvector module install [@vhsdream](https://github.com/vhsdream) ([#5286](https://github.com/community-scripts/ProxmoxVE/pull/5286))
     - Immich: prepare for v1.135.0 [@vhsdream](https://github.com/vhsdream) ([#5025](https://github.com/community-scripts/ProxmoxVE/pull/5025))
+
+### 🧰 Maintenance
+
+  - #### ✨ New Features
+
+    - [core]: add validation and replace recursion for invalid inputs in adv. settings [@MickLesk](https://github.com/MickLesk) ([#5291](https://github.com/community-scripts/ProxmoxVE/pull/5291))
 
 ### 🌐 Website
 
