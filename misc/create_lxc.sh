@@ -207,6 +207,17 @@ msg_ok "Using ${BL}$TEMPLATE_STORAGE${CL} ${GN}for Template Storage."
 CONTAINER_STORAGE=$(select_storage container)
 msg_ok "Using ${BL}$CONTAINER_STORAGE${CL} ${GN}for Container Storage."
 
+# Check Cluster Quorum if in Cluster
+if [ -f /etc/pve/corosync.conf ]; then
+  msg_info "Checking Proxmox cluster quorum status"
+  if ! pvecm status | awk -F':' '/^Quorate/ { exit ($2 ~ /Yes/) ? 0 : 1 }'; then
+    printf "\e[?25h"
+    msg_error "Cluster is not quorate. Start all nodes or configure quorum device (QDevice)."
+    exit 210
+  fi
+  msg_ok "Cluster is quorate"
+fi
+
 # Update LXC template list
 msg_info "Updating LXC Template List"
 #check_network
