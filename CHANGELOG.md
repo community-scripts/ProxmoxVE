@@ -18,7 +18,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🆕 New Scripts
 
-  - PLANKA ([#5277](https://github.com/community-scripts/ProxmoxVE/pull/5277))
+  - Ubuntu 25.04 VM [@MickLesk](https://github.com/MickLesk) ([#5284](https://github.com/community-scripts/ProxmoxVE/pull/5284))
+- PLANKA ([#5277](https://github.com/community-scripts/ProxmoxVE/pull/5277))
 - Wizarr ([#5273](https://github.com/community-scripts/ProxmoxVE/pull/5273))
 
 ### 🚀 Updated Scripts
