@@ -79,6 +79,7 @@ mediaserver Media Server
 nextcloud Nextcloud
 observium Observium
 odoo Odoo
+openldap OpenLDAP
 openvpn OpenVPN
 owncloud ownCloud
 phpbb phpBB
@@ -201,7 +202,7 @@ echo "TurnKey ${turnkey} password: ${PASS}" >>~/turnkey-${turnkey}.creds # file 
 # Start container
 msg "Starting LXC Container..."
 pct start "$CTID"
-sleep 5
+sleep 10
 
 # Get container IP
 set +euo pipefail # Turn off error checking
