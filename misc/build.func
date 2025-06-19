@@ -370,7 +370,7 @@ base_settings() {
 write_config() {
   mkdir -p /opt/community-scripts
   # This function writes the configuration to a file.
-  if whiptail --backtitle "[dev] Proxmox VE Helper Scripts" --defaultno --title "Write configfile" --yesno "Do you want to write the selections to a config file?" 10 60; then
+  if whiptail --backtitle "Proxmox VE Helper Scripts" --defaultno --title "Write configfile" --yesno "Do you want to write the selections to a config file?" 10 60; then
     FILEPATH="/opt/community-scripts/${NSAPP}.conf"
     if [[ ! -f $FILEPATH ]]; then
       cat <<EOF >"$FILEPATH"
@@ -403,7 +403,7 @@ EOF
       echo -e "${INFO}${BOLD}${GN}Writing configuration to ${FILEPATH}${CL}"
     else
       echo -e "${INFO}${BOLD}${RD}Configuration file already exists at ${FILEPATH}${CL}"
-      if whiptail --backtitle "[dev] Proxmox VE Helper Scripts" --defaultno --title "Overwrite configfile" --yesno "Do you want to overwrite the existing config file?" 10 60; then
+      if whiptail --backtitle "Proxmox VE Helper Scripts" --defaultno --title "Overwrite configfile" --yesno "Do you want to overwrite the existing config file?" 10 60; then
         rm -f "$FILEPATH"
         cat <<EOF >"$FILEPATH"
 # ${NSAPP} Configuration File
@@ -558,53 +558,72 @@ advanced_settings() {
     exit_script
   fi
 
-  if CT_NAME=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Hostname" 8 58 "$NSAPP" --title "HOSTNAME" 3>&1 1>&2 2>&3); then
-    if [ -z "$CT_NAME" ]; then
-      HN="$NSAPP"
-    else
-      HN=$(echo "${CT_NAME,,}" | tr -d ' ')
-    fi
-    echo -e "${HOSTNAME}${BOLD}${DGN}Hostname: ${BGN}$HN${CL}"
-  else
-    exit_script
-  fi
+  while true; do
+    if CT_NAME=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Hostname" 8 58 "$NSAPP" --title "HOSTNAME" 3>&1 1>&2 2>&3); then
+      if [ -z "$CT_NAME" ]; then
+        HN="$NSAPP"
+      else
+        HN=$(echo "${CT_NAME,,}" | tr -d ' ')
+      fi
 
-  if DISK_SIZE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Disk Size in GB" 8 58 "$var_disk" --title "DISK SIZE" 3>&1 1>&2 2>&3); then
+      if [[ "$HN" =~ ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$ ]]; then
+        echo -e "${HOSTNAME}${BOLD}${DGN}Hostname: ${BGN}$HN${CL}"
+        break
+      else
+        whiptail --backtitle "Proxmox VE Helper Scripts" \
+          --msgbox "❌ Invalid hostname: '$HN'\n\nOnly lowercase letters, digits and hyphens (-) are allowed.\nUnderscores (_) or other characters are not permitted!" 10 70
+      fi
+    else
+      exit_script
+    fi
+  done
+
+  while true; do
+    DISK_SIZE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Disk Size in GB" 8 58 "$var_disk" --title "DISK SIZE" 3>&1 1>&2 2>&3) || exit_script
+
     if [ -z "$DISK_SIZE" ]; then
       DISK_SIZE="$var_disk"
-      echo -e "${DISKSIZE}${BOLD}${DGN}Disk Size: ${BGN}${DISK_SIZE} GB${CL}"
-    else
-      if ! [[ $DISK_SIZE =~ $INTEGER ]]; then
-        echo -e "{INFO}${HOLD}${RD} DISK SIZE MUST BE AN INTEGER NUMBER!${CL}"
-        advanced_settings
-      fi
-      echo -e "${DISKSIZE}${BOLD}${DGN}Disk Size: ${BGN}${DISK_SIZE} GB${CL}"
     fi
-  else
-    exit_script
-  fi
 
-  if CORE_COUNT=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Allocate CPU Cores" 8 58 "$var_cpu" --title "CORE COUNT" 3>&1 1>&2 2>&3); then
+    if [[ "$DISK_SIZE" =~ ^[1-9][0-9]*$ ]]; then
+      echo -e "${DISKSIZE}${BOLD}${DGN}Disk Size: ${BGN}${DISK_SIZE} GB${CL}"
+      break
+    else
+      whiptail --msgbox "Disk size must be a positive integer!" 8 58
+    fi
+  done
+
+  while true; do
+    CORE_COUNT=$(whiptail --backtitle "Proxmox VE Helper Scripts" \
+      --inputbox "Allocate CPU Cores" 8 58 "$var_cpu" --title "CORE COUNT" 3>&1 1>&2 2>&3) || exit_script
+
     if [ -z "$CORE_COUNT" ]; then
       CORE_COUNT="$var_cpu"
-      echo -e "${CPUCORE}${BOLD}${DGN}CPU Cores: ${BGN}$CORE_COUNT${CL}"
-    else
-      echo -e "${CPUCORE}${BOLD}${DGN}CPU Cores: ${BGN}$CORE_COUNT${CL}"
     fi
-  else
-    exit_script
-  fi
 
-  if RAM_SIZE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Allocate RAM in MiB" 8 58 "$var_ram" --title "RAM" 3>&1 1>&2 2>&3); then
+    if [[ "$CORE_COUNT" =~ ^[1-9][0-9]*$ ]]; then
+      echo -e "${CPUCORE}${BOLD}${DGN}CPU Cores: ${BGN}$CORE_COUNT${CL}"
+      break
+    else
+      whiptail --msgbox "CPU core count must be a positive integer!" 8 58
+    fi
+  done
+
+  while true; do
+    RAM_SIZE=$(whiptail --backtitle "Proxmox VE Helper Scripts" \
+      --inputbox "Allocate RAM in MiB" 8 58 "$var_ram" --title "RAM" 3>&1 1>&2 2>&3) || exit_script
+
     if [ -z "$RAM_SIZE" ]; then
       RAM_SIZE="$var_ram"
-      echo -e "${RAMSIZE}${BOLD}${DGN}RAM Size: ${BGN}${RAM_SIZE} MiB${CL}"
-    else
-      echo -e "${RAMSIZE}${BOLD}${DGN}RAM Size: ${BGN}${RAM_SIZE} MiB${CL}"
     fi
-  else
-    exit_script
-  fi
+
+    if [[ "$RAM_SIZE" =~ ^[1-9][0-9]*$ ]]; then
+      echo -e "${RAMSIZE}${BOLD}${DGN}RAM Size: ${BGN}${RAM_SIZE} MiB${CL}"
+      break
+    else
+      whiptail --msgbox "RAM size must be a positive integer!" 8 58
+    fi
+  done
 
   BRIDGES=""
   IFACE_FILEPATH_LIST="/etc/network/interfaces"$'\n'$(find "/etc/network/interfaces.d/" -type f)
@@ -779,14 +798,14 @@ advanced_settings() {
     exit_script
   fi
 
-  SSH_AUTHORIZED_KEY="$(whiptail --backtitle "[dev] Proxmox VE Helper Scripts" --inputbox "SSH Authorized key for root (leave empty for none)" 8 58 --title "SSH Key" 3>&1 1>&2 2>&3)"
+  SSH_AUTHORIZED_KEY="$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "SSH Authorized key for root (leave empty for none)" 8 58 --title "SSH Key" 3>&1 1>&2 2>&3)"
 
   if [[ -z "${SSH_AUTHORIZED_KEY}" ]]; then
     SSH_AUTHORIZED_KEY=""
   fi
 
   if [[ "$PW" == -password* || -n "$SSH_AUTHORIZED_KEY" ]]; then
-    if (whiptail --backtitle "[dev] Proxmox VE Helper Scripts" --defaultno --title "SSH ACCESS" --yesno "Enable Root SSH Access?" 10 58); then
+    if (whiptail --backtitle "Proxmox VE Helper Scripts" --defaultno --title "SSH ACCESS" --yesno "Enable Root SSH Access?" 10 58); then
       SSH="yes"
     else
       SSH="no"
