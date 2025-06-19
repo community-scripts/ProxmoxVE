@@ -111,7 +111,7 @@ if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
 fi
 
 NODE_VERSION="22" setup_nodejs
-PG_VERSION="16" setup_postgresql
+PG_VERSION="16" PG_MODULES="pgvector" setup_postgresql
 
 msg_info "Setting up Postgresql Database"
 VCHORD_RELEASE="$(curl -fsSL https://api.github.com/repos/tensorchord/vectorchord/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')"
