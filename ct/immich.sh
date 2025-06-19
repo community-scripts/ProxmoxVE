@@ -226,6 +226,9 @@ function update_script() {
     mv "$APP-$RELEASE"/ "$SRC_DIR"
     mkdir -p "$ML_DIR"
     cd "$SRC_DIR"/server
+    if [[ "$RELEASE" == "1.135.1" ]]; then
+      rm ./src/schema/migrations/1750323941566-UnsetPrewarmDimParameter.ts
+    fi
     $STD npm install -g node-gyp node-pre-gyp
     $STD npm ci
     $STD npm run build

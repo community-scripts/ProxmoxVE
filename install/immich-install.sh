@@ -273,11 +273,6 @@ rm -rf "$SOURCE"/build
 } >~/.immich_library_revisions
 msg_ok "Custom Photo-processing Library Compiled"
 
-msg_info "Installing ${APPLICATION} (more patience please)"
-tmp_file=$(mktemp)
-RELEASE=$(curl -fsSL https://api.github.com/repos/immich-app/immich/releases?per_page=1 | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/immich-app/immich/archive/refs/tags/v${RELEASE}.zip" -o "$tmp_file"
-unzip -q "$tmp_file"
 INSTALL_DIR="/opt/${APPLICATION}"
 UPLOAD_DIR="${INSTALL_DIR}/upload"
 SRC_DIR="${INSTALL_DIR}/source"
@@ -285,8 +280,11 @@ APP_DIR="${INSTALL_DIR}/app"
 ML_DIR="${APP_DIR}/machine-learning"
 GEO_DIR="${INSTALL_DIR}/geodata"
 mkdir -p "$INSTALL_DIR"
-mv "$APPLICATION-$RELEASE"/ "$SRC_DIR"
 mkdir -p {"${APP_DIR}","${UPLOAD_DIR}","${GEO_DIR}","${ML_DIR}","${INSTALL_DIR}"/cache}
+
+fetch_and_deploy_gh_release "immich" "immich-app/immich" "tarball" "v1.135.0" "$SRC_DIR"
+
+msg_info "Installing ${APPLICATION} (more patience please)"
 
 cd "$SRC_DIR"/server
 $STD npm install -g node-gyp node-pre-gyp
@@ -358,7 +356,6 @@ msg_ok "Installed GeoNames data"
 
 mkdir -p /var/log/immich
 touch /var/log/immich/{web.log,ml.log}
-echo "$RELEASE" >/opt/"${APPLICATION}"_version.txt
 msg_ok "Installed ${APPLICATION}"
 
 msg_info "Creating user, env file, scripts & services"
