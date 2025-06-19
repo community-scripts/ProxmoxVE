@@ -16,6 +16,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-06-19
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Immich: prepare for v1.135.0 [@vhsdream](https://github.com/vhsdream) ([#5025](https://github.com/community-scripts/ProxmoxVE/pull/5025))
+
 ## 2025-06-18
 
 ### 🆕 New Scripts
