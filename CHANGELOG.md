@@ -22,6 +22,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - Immich: prepare for v1.135.0 [@vhsdream](https://github.com/vhsdream) ([#5025](https://github.com/community-scripts/ProxmoxVE/pull/5025))
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - cloudflare-ddns: fix typo in info-text [@LukaZagar](https://github.com/LukaZagar) ([#5263](https://github.com/community-scripts/ProxmoxVE/pull/5263))
+
 ## 2025-06-18
 
 ### 🆕 New Scripts
