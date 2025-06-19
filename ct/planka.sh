@@ -5,7 +5,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/plankanban/planka
 
-APP="planka"
+APP="PLANKA"
 var_tags="${var_tags:-Arr}"
 var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-1024}"
@@ -29,7 +29,7 @@ function update_script() {
     exit
   fi
   RELEASE=$(curl -s https://api.github.com/repos/plankanban/planka/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  if [[ "${RELEASE}" != "$(cat $HOME/.planka)" ]] || [[ ! -f $HOME/.planka ]]; then
+  if [[ "${RELEASE}" != "$(cat ~/.planka 2>/dev/null)" ]] || [[ ! -f ~/.planka ]]; then
     msg_info "Stopping $APP"
     systemctl stop planka
     msg_ok "Stopped $APP"
