@@ -1,13 +1,63 @@
 [
   {
-    "name": "plexguide/Huntarr.io",
-    "version": "8.0.9",
-    "date": "2025-06-18T13:12:23Z"
+    "name": "docmost/docmost",
+    "version": "v0.21.0",
+    "date": "2025-06-18T21:43:27Z"
+  },
+  {
+    "name": "immich-app/immich",
+    "version": "v1.135.0",
+    "date": "2025-06-18T20:37:30Z"
+  },
+  {
+    "name": "ipfs/kubo",
+    "version": "v0.35.0",
+    "date": "2025-05-21T18:00:32Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.98.2",
+    "date": "2025-06-18T18:20:16Z"
+  },
+  {
+    "name": "pterodactyl/panel",
+    "version": "v1.11.11",
+    "date": "2025-06-18T18:04:50Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.22.0",
+    "date": "2025-06-18T16:21:38Z"
   },
   {
     "name": "ollama/ollama",
     "version": "v0.9.2",
-    "date": "2025-06-18T12:45:00Z"
+    "date": "2025-06-18T14:29:39Z"
+  },
+  {
+    "name": "NodeBB/NodeBB",
+    "version": "v3.12.7",
+    "date": "2025-06-18T14:22:53Z"
+  },
+  {
+    "name": "clusterzx/paperless-ai",
+    "version": "v3.0.6",
+    "date": "2025-06-18T14:18:13Z"
+  },
+  {
+    "name": "openhab/openhab-core",
+    "version": "5.0.0.M3",
+    "date": "2025-06-18T14:18:12Z"
+  },
+  {
+    "name": "zabbix/zabbix",
+    "version": "7.2.8",
+    "date": "2025-06-18T13:46:00Z"
+  },
+  {
+    "name": "plexguide/Huntarr.io",
+    "version": "8.0.9",
+    "date": "2025-06-18T13:12:23Z"
   },
   {
     "name": "Bubka/2FAuth",
@@ -18,11 +68,6 @@
     "name": "zwave-js/zwave-js-ui",
     "version": "v10.7.0",
     "date": "2025-06-18T11:57:05Z"
-  },
-  {
-    "name": "zabbix/zabbix",
-    "version": "7.0.14",
-    "date": "2025-06-18T11:30:20Z"
   },
   {
     "name": "rclone/rclone",
@@ -105,11 +150,6 @@
     "date": "2025-06-17T18:02:25Z"
   },
   {
-    "name": "msgbyte/tianji",
-    "version": "v1.21.16",
-    "date": "2025-06-17T16:25:53Z"
-  },
-  {
     "name": "BookStackApp/BookStack",
     "version": "v25.05.1",
     "date": "2025-06-17T14:38:04Z"
@@ -176,13 +216,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v4.2.1",
-    "date": "2025-06-03T20:04:28Z"
-  },
-  {
-    "name": "NodeBB/NodeBB",
-    "version": "v2.8.20",
-    "date": "2025-06-16T17:03:52Z"
+    "version": "nightly",
+    "date": "2025-06-16T17:35:17Z"
   },
   {
     "name": "emqx/emqx",
@@ -203,16 +238,6 @@
     "name": "grokability/snipe-it",
     "version": "v8.1.16",
     "date": "2025-06-16T13:49:37Z"
-  },
-  {
-    "name": "clusterzx/paperless-ai",
-    "version": "v3.0.5",
-    "date": "2025-06-16T13:25:55Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.95.3",
-    "date": "2025-06-03T11:09:42Z"
   },
   {
     "name": "Graylog2/graylog2-server",
@@ -685,11 +710,6 @@
     "date": "2025-05-27T18:18:00Z"
   },
   {
-    "name": "immich-app/immich",
-    "version": "v1.134.0",
-    "date": "2025-05-27T17:28:27Z"
-  },
-  {
     "name": "traefik/traefik",
     "version": "v3.4.1",
     "date": "2025-05-27T12:53:58Z"
@@ -743,11 +763,6 @@
     "name": "apache/tika",
     "version": "3.2.0-rc2",
     "date": "2025-05-21T20:09:07Z"
-  },
-  {
-    "name": "ipfs/kubo",
-    "version": "v0.35.0",
-    "date": "2025-05-21T18:00:32Z"
   },
   {
     "name": "Stirling-Tools/Stirling-PDF",
@@ -895,11 +910,6 @@
     "date": "2025-04-30T16:44:16Z"
   },
   {
-    "name": "docmost/docmost",
-    "version": "v0.20.4",
-    "date": "2025-04-30T14:15:16Z"
-  },
-  {
     "name": "hivemq/hivemq-community-edition",
     "version": "2025.3",
     "date": "2025-04-30T02:52:28Z"
@@ -933,11 +943,6 @@
     "name": "qbittorrent/qBittorrent",
     "version": "release-5.1.0",
     "date": "2025-04-27T08:53:48Z"
-  },
-  {
-    "name": "openhab/openhab-core",
-    "version": "4.3.5",
-    "date": "2025-04-26T13:52:07Z"
   },
   {
     "name": "photoprism/photoprism",
@@ -1268,11 +1273,6 @@
     "name": "janeczku/calibre-web",
     "version": "0.6.24",
     "date": "2024-11-16T06:47:56Z"
-  },
-  {
-    "name": "pterodactyl/panel",
-    "version": "v1.11.10",
-    "date": "2024-11-15T02:29:18Z"
   },
   {
     "name": "sabre-io/Baikal",
