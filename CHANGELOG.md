@@ -25,6 +25,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - immich-install.sh: restore pgvector module install [@vhsdream](https://github.com/vhsdream) ([#5286](https://github.com/community-scripts/ProxmoxVE/pull/5286))
     - Immich: prepare for v1.135.0 [@vhsdream](https://github.com/vhsdream) ([#5025](https://github.com/community-scripts/ProxmoxVE/pull/5025))
 
 ### 🌐 Website
