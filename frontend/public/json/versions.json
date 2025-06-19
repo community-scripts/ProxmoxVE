@@ -1,5 +1,40 @@
 [
   {
+    "name": "rclone/rclone",
+    "version": "v1.70.1",
+    "date": "2025-06-19T10:48:53Z"
+  },
+  {
+    "name": "fallenbagel/jellyseerr",
+    "version": "preview-dns-cache-manager",
+    "date": "2025-06-19T10:11:12Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "v9.11.17",
+    "date": "2025-06-18T08:12:05Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.98.2",
+    "date": "2025-06-18T18:20:16Z"
+  },
+  {
+    "name": "redis/redis",
+    "version": "8.2-m01-int2",
+    "date": "2025-06-12T08:52:10Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2029",
+    "date": "2025-06-19T05:56:19Z"
+  },
+  {
+    "name": "prometheus-pve/prometheus-pve-exporter",
+    "version": "v3.5.5",
+    "date": "2025-06-19T05:43:47Z"
+  },
+  {
     "name": "docmost/docmost",
     "version": "v0.21.0",
     "date": "2025-06-18T21:43:27Z"
@@ -15,9 +50,9 @@
     "date": "2025-05-21T18:00:32Z"
   },
   {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.98.2",
-    "date": "2025-06-18T18:20:16Z"
+    "name": "keycloak/keycloak",
+    "version": "26.2.5",
+    "date": "2025-05-28T06:49:43Z"
   },
   {
     "name": "pterodactyl/panel",
@@ -70,11 +105,6 @@
     "date": "2025-06-18T11:57:05Z"
   },
   {
-    "name": "rclone/rclone",
-    "version": "v1.70.0",
-    "date": "2025-06-18T10:31:28Z"
-  },
-  {
     "name": "esphome/esphome",
     "version": "2025.6.0",
     "date": "2025-06-18T09:41:11Z"
@@ -95,16 +125,6 @@
     "date": "2025-06-18T08:01:24Z"
   },
   {
-    "name": "mattermost/mattermost",
-    "version": "v9.11.17",
-    "date": "2025-06-18T08:12:05Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2026",
-    "date": "2025-06-18T05:51:39Z"
-  },
-  {
     "name": "cross-seed/cross-seed",
     "version": "v6.12.7",
     "date": "2025-06-18T03:44:24Z"
@@ -118,11 +138,6 @@
     "name": "grafana/grafana",
     "version": "v11.5.6",
     "date": "2025-06-17T22:00:40Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.2.5",
-    "date": "2025-05-28T06:49:43Z"
   },
   {
     "name": "jenkinsci/jenkins",
@@ -143,11 +158,6 @@
     "name": "project-zot/zot",
     "version": "v2.1.5",
     "date": "2025-06-17T18:04:11Z"
-  },
-  {
-    "name": "fallenbagel/jellyseerr",
-    "version": "preview-sort-userlist",
-    "date": "2025-06-17T18:02:25Z"
   },
   {
     "name": "BookStackApp/BookStack",
@@ -216,8 +226,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-06-16T17:35:17Z"
+    "version": "v4.2.1",
+    "date": "2025-06-03T20:04:28Z"
   },
   {
     "name": "emqx/emqx",
@@ -388,11 +398,6 @@
     "name": "docker/compose",
     "version": "v2.37.1",
     "date": "2025-06-12T09:00:21Z"
-  },
-  {
-    "name": "redis/redis",
-    "version": "8.2-m01-int2",
-    "date": "2025-06-12T08:52:10Z"
   },
   {
     "name": "zitadel/zitadel",
@@ -898,11 +903,6 @@
     "name": "jhuckaby/Cronicle",
     "version": "v0.9.80",
     "date": "2025-05-02T16:48:15Z"
-  },
-  {
-    "name": "prometheus-pve/prometheus-pve-exporter",
-    "version": "v3.5.4",
-    "date": "2025-05-02T13:42:06Z"
   },
   {
     "name": "WordPress/WordPress",
