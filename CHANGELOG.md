@@ -33,6 +33,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### ✨ New Features
 
+    - [core]: Feature - Check Quorum Status in create_lxc to prevent issues [@MickLesk](https://github.com/MickLesk) ([#5278](https://github.com/community-scripts/ProxmoxVE/pull/5278))
     - [core]: add validation and replace recursion for invalid inputs in adv. settings [@MickLesk](https://github.com/MickLesk) ([#5291](https://github.com/community-scripts/ProxmoxVE/pull/5291))
 
 ### 🌐 Website
