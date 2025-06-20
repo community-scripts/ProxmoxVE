@@ -18,11 +18,9 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
-  - [core]: unify misc/*.func scripts with centralized logic from core.func [@MickLesk](https://github.com/MickLesk) ([#5316](https://github.com/community-scripts/ProxmoxVE/pull/5316))
-- fix planka Tags [@CrazyWolf13](https://github.com/CrazyWolf13) ([#5311](https://github.com/community-scripts/ProxmoxVE/pull/5311))
-
   - #### 🐞 Bug Fixes
 
+    - fix planka Tags [@CrazyWolf13](https://github.com/CrazyWolf13) ([#5311](https://github.com/community-scripts/ProxmoxVE/pull/5311))
     - PLANKA: Better DB password generate [@tremor021](https://github.com/tremor021) ([#5313](https://github.com/community-scripts/ProxmoxVE/pull/5313))
     - Immich: Hotfix for #5299 [@vhsdream](https://github.com/vhsdream) ([#5300](https://github.com/community-scripts/ProxmoxVE/pull/5300))
     - changedetection: add msedge as Browser dependency [@Niklas04](https://github.com/Niklas04) ([#5301](https://github.com/community-scripts/ProxmoxVE/pull/5301))
@@ -33,6 +31,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🔧 Refactor
 
+    - [core]: unify misc/*.func scripts with centralized logic from core.func [@MickLesk](https://github.com/MickLesk) ([#5316](https://github.com/community-scripts/ProxmoxVE/pull/5316))
     - Refactor: migrate AdventureLog update to uv and GitHub release logic [@MickLesk](https://github.com/MickLesk) ([#5318](https://github.com/community-scripts/ProxmoxVE/pull/5318))
     - Refactor: migrate Jupyter Notebook to uv-based installation with update support [@MickLesk](https://github.com/MickLesk) ([#5320](https://github.com/community-scripts/ProxmoxVE/pull/5320))
 
