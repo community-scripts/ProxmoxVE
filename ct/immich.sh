@@ -208,7 +208,7 @@ function update_script() {
       $STD apt install -y ./vchord.deb
       $STD sudo -u postgres psql -d immich -c "ALTER EXTENSION vchord UPDATE;"
       systemctl restart postgresql
-      if [[ ! -f ~/.vchord-version ]] || [[ ! "$(cat ~/.vchord_version)" > "0.3.0" ]]; then
+      if [[ ! -f ~/.vchord_version ]] || [[ ! "$(cat ~/.vchord_version)" > "0.3.0" ]]; then
         $STD sudo -u postgres psql -d immich -c "REINDEX DATABASE;"
       fi
       echo "$VCHORD_RELEASE" >~/.vchord_version
@@ -284,6 +284,7 @@ function update_script() {
     msg_ok "Updated ${APP} to v${RELEASE}"
 
     msg_info "Cleaning up"
+    rm -f "$immich_zip"
     $STD apt-get -y autoremove
     $STD apt-get -y autoclean
     msg_ok "Cleaned"
