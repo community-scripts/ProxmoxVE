@@ -18,6 +18,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - changedetection: add msedge as Browser dependency [@Niklas04](https://github.com/Niklas04) ([#5301](https://github.com/community-scripts/ProxmoxVE/pull/5301))
+
   - #### ✨ New Features
 
     - (turnkey) Add OpenLDAP as a TurnKey option [@mhaligowski](https://github.com/mhaligowski) ([#5305](https://github.com/community-scripts/ProxmoxVE/pull/5305))
