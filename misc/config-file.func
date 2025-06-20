@@ -53,15 +53,15 @@ config_file() {
     fi
   else
     if CT_ID=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Container ID" 8 58 "$NEXTID" --title "CONTAINER ID" 3>&1 1>&2 2>&3); then
-    if [ -z "$CT_ID" ]; then
-      CT_ID="$NEXTID"
-      echo -e "${CONTAINERID}${BOLD}${DGN}Container ID: ${BGN}$CT_ID${CL}"
+      if [ -z "$CT_ID" ]; then
+        CT_ID="$NEXTID"
+        echo -e "${CONTAINERID}${BOLD}${DGN}Container ID: ${BGN}$CT_ID${CL}"
+      else
+        echo -e "${CONTAINERID}${BOLD}${DGN}Container ID: ${BGN}$CT_ID${CL}"
+      fi
     else
-      echo -e "${CONTAINERID}${BOLD}${DGN}Container ID: ${BGN}$CT_ID${CL}"
+      exit_script
     fi
-  else
-    exit_script
-  fi
 
   fi
   if [[ -n "${CT_TYPE-}" ]]; then
@@ -75,22 +75,21 @@ config_file() {
     fi
     echo -e "${CONTAINERTYPE}${BOLD}${DGN}Container Type: ${BGN}$CT_TYPE_DESC${CL}"
   else
-   if CT_TYPE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "CONTAINER TYPE" --radiolist "Choose Type" 10 58 2 \
-        "1" "Unprivileged" ON \
-        "0" "Privileged" OFF \
-        3>&1 1>&2 2>&3); then
-        if [ -n "$CT_TYPE" ]; then
-          CT_TYPE_DESC="Unprivileged"
-          if [ "$CT_TYPE" -eq 0 ]; then
-            CT_TYPE_DESC="Privileged"
-          fi
-          echo -e "${CONTAINERTYPE}${BOLD}${DGN}Container Type: ${BGN}$CT_TYPE_DESC${CL}"
+    if CT_TYPE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "CONTAINER TYPE" --radiolist "Choose Type" 10 58 2 \
+      "1" "Unprivileged" ON \
+      "0" "Privileged" OFF \
+      3>&1 1>&2 2>&3); then
+      if [ -n "$CT_TYPE" ]; then
+        CT_TYPE_DESC="Unprivileged"
+        if [ "$CT_TYPE" -eq 0 ]; then
+          CT_TYPE_DESC="Privileged"
         fi
-      else
-        exit_script
+        echo -e "${CONTAINERTYPE}${BOLD}${DGN}Container Type: ${BGN}$CT_TYPE_DESC${CL}"
       fi
+    else
+      exit_script
+    fi
   fi
-
 
   if [[ -n "${PW-}" ]]; then
     if [[ "$PW" == "none" ]]; then
@@ -109,50 +108,50 @@ config_file() {
     fi
   else
     while true; do
-    if PW1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --passwordbox "\nSet Root Password (needed for root ssh access)" 9 58 --title "PASSWORD (leave blank for automatic login)" 3>&1 1>&2 2>&3); then
-      if [[ -n "$PW1" ]]; then
-        if [[ "$PW1" == *" "* ]]; then
-          whiptail --msgbox "Password cannot contain spaces. Please try again." 8 58
-        elif [ ${#PW1} -lt 5 ]; then
-          whiptail --msgbox "Password must be at least 5 characters long. Please try again." 8 58
-        else
-          if PW2=$(whiptail --backtitle "Proxmox VE Helper Scripts" --passwordbox "\nVerify Root Password" 9 58 --title "PASSWORD VERIFICATION" 3>&1 1>&2 2>&3); then
-            if [[ "$PW1" == "$PW2" ]]; then
-              PW="-password $PW1"
-              echo -e "${VERIFYPW}${BOLD}${DGN}Root Password: ${BGN}********${CL}"
-              break
-            else
-              whiptail --msgbox "Passwords do not match. Please try again." 8 58
-            fi
+      if PW1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --passwordbox "\nSet Root Password (needed for root ssh access)" 9 58 --title "PASSWORD (leave blank for automatic login)" 3>&1 1>&2 2>&3); then
+        if [[ -n "$PW1" ]]; then
+          if [[ "$PW1" == *" "* ]]; then
+            whiptail --msgbox "Password cannot contain spaces. Please try again." 8 58
+          elif [ ${#PW1} -lt 5 ]; then
+            whiptail --msgbox "Password must be at least 5 characters long. Please try again." 8 58
           else
-            exit_script
+            if PW2=$(whiptail --backtitle "Proxmox VE Helper Scripts" --passwordbox "\nVerify Root Password" 9 58 --title "PASSWORD VERIFICATION" 3>&1 1>&2 2>&3); then
+              if [[ "$PW1" == "$PW2" ]]; then
+                PW="-password $PW1"
+                echo -e "${VERIFYPW}${BOLD}${DGN}Root Password: ${BGN}********${CL}"
+                break
+              else
+                whiptail --msgbox "Passwords do not match. Please try again." 8 58
+              fi
+            else
+              exit_script
+            fi
           fi
+        else
+          PW1="Automatic Login"
+          PW=""
+          echo -e "${VERIFYPW}${BOLD}${DGN}Root Password: ${BGN}$PW1${CL}"
+          break
         fi
       else
-        PW1="Automatic Login"
-        PW=""
-        echo -e "${VERIFYPW}${BOLD}${DGN}Root Password: ${BGN}$PW1${CL}"
-        break
+        exit_script
       fi
-    else
-      exit_script
-    fi
-  done
+    done
   fi
 
   if [[ -n "${HN-}" ]]; then
     echo -e "${HOSTNAME}${BOLD}${DGN}Hostname: ${BGN}$HN${CL}"
   else
     if CT_NAME=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Hostname" 8 58 "$NSAPP" --title "HOSTNAME" 3>&1 1>&2 2>&3); then
-    if [ -z "$CT_NAME" ]; then
-      HN="$NSAPP"
+      if [ -z "$CT_NAME" ]; then
+        HN="$NSAPP"
+      else
+        HN=$(echo "${CT_NAME,,}" | tr -d ' ')
+      fi
+      echo -e "${HOSTNAME}${BOLD}${DGN}Hostname: ${BGN}$HN${CL}"
     else
-      HN=$(echo "${CT_NAME,,}" | tr -d ' ')
+      exit_script
     fi
-    echo -e "${HOSTNAME}${BOLD}${DGN}Hostname: ${BGN}$HN${CL}"
-  else
-    exit_script
-  fi
   fi
 
   if [[ -n "${DISK_SIZE-}" ]]; then
@@ -164,19 +163,19 @@ config_file() {
     fi
   else
     if DISK_SIZE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Disk Size in GB" 8 58 "$var_disk" --title "DISK SIZE" 3>&1 1>&2 2>&3); then
-    if [ -z "$DISK_SIZE" ]; then
-      DISK_SIZE="$var_disk"
-      echo -e "${DISKSIZE}${BOLD}${DGN}Disk Size: ${BGN}${DISK_SIZE} GB${CL}"
-    else
-      if ! [[ $DISK_SIZE =~ $INTEGER ]]; then
-        echo -e "{INFO}${HOLD}${RD} DISK SIZE MUST BE AN INTEGER NUMBER!${CL}"
-        advanced_settings
+      if [ -z "$DISK_SIZE" ]; then
+        DISK_SIZE="$var_disk"
+        echo -e "${DISKSIZE}${BOLD}${DGN}Disk Size: ${BGN}${DISK_SIZE} GB${CL}"
+      else
+        if ! [[ $DISK_SIZE =~ $INTEGER ]]; then
+          echo -e "{INFO}${HOLD}${RD} DISK SIZE MUST BE AN INTEGER NUMBER!${CL}"
+          advanced_settings
+        fi
+        echo -e "${DISKSIZE}${BOLD}${DGN}Disk Size: ${BGN}${DISK_SIZE} GB${CL}"
       fi
-      echo -e "${DISKSIZE}${BOLD}${DGN}Disk Size: ${BGN}${DISK_SIZE} GB${CL}"
+    else
+      exit_script
     fi
-  else
-    exit_script
-  fi
   fi
 
   if [[ -n "${CORE_COUNT-}" ]]; then
@@ -188,15 +187,15 @@ config_file() {
     fi
   else
     if CORE_COUNT=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Allocate CPU Cores" 8 58 "$var_cpu" --title "CORE COUNT" 3>&1 1>&2 2>&3); then
-    if [ -z "$CORE_COUNT" ]; then
-      CORE_COUNT="$var_cpu"
-      echo -e "${CPUCORE}${BOLD}${DGN}CPU Cores: ${BGN}$CORE_COUNT${CL}"
+      if [ -z "$CORE_COUNT" ]; then
+        CORE_COUNT="$var_cpu"
+        echo -e "${CPUCORE}${BOLD}${DGN}CPU Cores: ${BGN}$CORE_COUNT${CL}"
+      else
+        echo -e "${CPUCORE}${BOLD}${DGN}CPU Cores: ${BGN}$CORE_COUNT${CL}"
+      fi
     else
-      echo -e "${CPUCORE}${BOLD}${DGN}CPU Cores: ${BGN}$CORE_COUNT${CL}"
+      exit_script
     fi
-  else
-    exit_script
-  fi
   fi
 
   if [[ -n "${RAM_SIZE-}" ]]; then
@@ -208,15 +207,15 @@ config_file() {
     fi
   else
     if RAM_SIZE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Allocate RAM in MiB" 8 58 "$var_ram" --title "RAM" 3>&1 1>&2 2>&3); then
-    if [ -z "$RAM_SIZE" ]; then
-      RAM_SIZE="$var_ram"
-      echo -e "${RAMSIZE}${BOLD}${DGN}RAM Size: ${BGN}${RAM_SIZE} MiB${CL}"
+      if [ -z "$RAM_SIZE" ]; then
+        RAM_SIZE="$var_ram"
+        echo -e "${RAMSIZE}${BOLD}${DGN}RAM Size: ${BGN}${RAM_SIZE} MiB${CL}"
+      else
+        echo -e "${RAMSIZE}${BOLD}${DGN}RAM Size: ${BGN}${RAM_SIZE} MiB${CL}"
+      fi
     else
-      echo -e "${RAMSIZE}${BOLD}${DGN}RAM Size: ${BGN}${RAM_SIZE} MiB${CL}"
+      exit_script
     fi
-  else
-    exit_script
-  fi
   fi
 
   IFACE_FILEPATH_LIST="/etc/network/interfaces"$'\n'$(find "/etc/network/interfaces.d/" -type f)
@@ -227,20 +226,20 @@ config_file() {
   for iface_filepath in ${IFACE_FILEPATH_LIST}; do
 
     iface_indexes_tmpfile=$(mktemp -q -u '.iface-XXXX')
-    ( grep -Pn '^\s*iface' "${iface_filepath}" | cut -d':' -f1 && wc -l "${iface_filepath}" | cut -d' ' -f1 ) | awk 'FNR==1 {line=$0; next} {print line":"$0-1; line=$0}' > "${iface_indexes_tmpfile}" || true
+    (grep -Pn '^\s*iface' "${iface_filepath}" | cut -d':' -f1 && wc -l "${iface_filepath}" | cut -d' ' -f1) | awk 'FNR==1 {line=$0; next} {print line":"$0-1; line=$0}' >"${iface_indexes_tmpfile}" || true
 
     if [ -f "${iface_indexes_tmpfile}" ]; then
 
-        while read -r pair; do
-            start=$(echo "${pair}" | cut -d':' -f1)
-            end=$(echo "${pair}" | cut -d':' -f2)
-            if awk "NR >= ${start} && NR <= ${end}" "${iface_filepath}" | grep -qP '^\s*(bridge[-_](ports|stp|fd|vlan-aware|vids)|ovs_type\s+OVSBridge)\b'; then
-                iface_name=$(sed "${start}q;d" "${iface_filepath}" | awk '{print $2}')
-                BRIDGES="${iface_name}"$'\n'"${BRIDGES}"
-            fi
+      while read -r pair; do
+        start=$(echo "${pair}" | cut -d':' -f1)
+        end=$(echo "${pair}" | cut -d':' -f2)
+        if awk "NR >= ${start} && NR <= ${end}" "${iface_filepath}" | grep -qP '^\s*(bridge[-_](ports|stp|fd|vlan-aware|vids)|ovs_type\s+OVSBridge)\b'; then
+          iface_name=$(sed "${start}q;d" "${iface_filepath}" | awk '{print $2}')
+          BRIDGES="${iface_name}"$'\n'"${BRIDGES}"
+        fi
 
-        done < "${iface_indexes_tmpfile}"
-        rm -f "${iface_indexes_tmpfile}"
+      done <"${iface_indexes_tmpfile}"
+      rm -f "${iface_indexes_tmpfile}"
     fi
 
   done
@@ -296,7 +295,7 @@ config_file() {
         done
       fi
     elif [[ "$NET" == *-* ]]; then
-      IFS="-" read -r ip_start ip_end <<< "$NET"
+      IFS="-" read -r ip_start ip_end <<<"$NET"
 
       if [[ ! "$ip_start" =~ $ip_cidr_regex ]] || [[ ! "$ip_end" =~ $ip_cidr_regex ]]; then
         msg_error "Invalid IP range format, was $NET should be 0.0.0.0/0-0.0.0.0/0"
@@ -309,21 +308,21 @@ config_file() {
 
       ip_to_int() {
         local IFS=.
-        read -r i1 i2 i3 i4 <<< "$1"
-        echo $(( (i1 << 24) + (i2 << 16) + (i3 << 8) + i4 ))
+        read -r i1 i2 i3 i4 <<<"$1"
+        echo $(((i1 << 24) + (i2 << 16) + (i3 << 8) + i4))
       }
 
       int_to_ip() {
         local ip=$1
-        echo "$(( (ip >> 24) & 0xFF )).$(( (ip >> 16) & 0xFF )).$(( (ip >> 8) & 0xFF )).$(( ip & 0xFF ))"
+        echo "$(((ip >> 24) & 0xFF)).$(((ip >> 16) & 0xFF)).$(((ip >> 8) & 0xFF)).$((ip & 0xFF))"
       }
 
       start_int=$(ip_to_int "$ip1")
       end_int=$(ip_to_int "$ip2")
 
-      for ((ip_int=start_int; ip_int<=end_int; ip_int++)); do
+      for ((ip_int = start_int; ip_int <= end_int; ip_int++)); do
         ip=$(int_to_ip $ip_int)
-          msg_info "Checking IP: $ip"
+        msg_info "Checking IP: $ip"
         if ! ping -c 2 -W 1 "$ip" >/dev/null 2>&1; then
           NET="$ip/$cidr"
           msg_ok "Using free IP Address: ${BGN}$NET${CL}"
@@ -363,37 +362,37 @@ config_file() {
     fi
   else
     while true; do
-    NET=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a Static IPv4 CIDR Address (/24)" 8 58 dhcp --title "IP ADDRESS" 3>&1 1>&2 2>&3)
-    exit_status=$?
-    if [ $exit_status -eq 0 ]; then
-      if [ "$NET" = "dhcp" ]; then
-        echo -e "${NETWORK}${BOLD}${DGN}IP Address: ${BGN}$NET${CL}"
-        break
-      else
-        if [[ "$NET" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}/([0-9]|[1-2][0-9]|3[0-2])$ ]]; then
+      NET=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a Static IPv4 CIDR Address (/24)" 8 58 dhcp --title "IP ADDRESS" 3>&1 1>&2 2>&3)
+      exit_status=$?
+      if [ $exit_status -eq 0 ]; then
+        if [ "$NET" = "dhcp" ]; then
           echo -e "${NETWORK}${BOLD}${DGN}IP Address: ${BGN}$NET${CL}"
           break
         else
-          whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox "$NET is an invalid IPv4 CIDR address. Please enter a valid IPv4 CIDR address or 'dhcp'" 8 58
+          if [[ "$NET" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}/([0-9]|[1-2][0-9]|3[0-2])$ ]]; then
+            echo -e "${NETWORK}${BOLD}${DGN}IP Address: ${BGN}$NET${CL}"
+            break
+          else
+            whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox "$NET is an invalid IPv4 CIDR address. Please enter a valid IPv4 CIDR address or 'dhcp'" 8 58
+          fi
         fi
+      else
+        exit_script
       fi
-    else
-      exit_script
-    fi
     done
     if [ "$NET" != "dhcp" ]; then
-    while true; do
-      GATE1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter gateway IP address" 8 58 --title "Gateway IP" 3>&1 1>&2 2>&3)
-      if [ -z "$GATE1" ]; then
-        whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox "Gateway IP address cannot be empty" 8 58
-      elif [[ ! "$GATE1" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
-        whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox "Invalid IP address format" 8 58
-      else
-        GATE=",gw=$GATE1"
-        echo -e "${GATEWAY}${BOLD}${DGN}Gateway IP Address: ${BGN}$GATE1${CL}"
-        break
-      fi
-    done
+      while true; do
+        GATE1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter gateway IP address" 8 58 --title "Gateway IP" 3>&1 1>&2 2>&3)
+        if [ -z "$GATE1" ]; then
+          whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox "Gateway IP address cannot be empty" 8 58
+        elif [[ ! "$GATE1" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
+          whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox "Invalid IP address format" 8 58
+        else
+          GATE=",gw=$GATE1"
+          echo -e "${GATEWAY}${BOLD}${DGN}Gateway IP Address: ${BGN}$GATE1${CL}"
+          break
+        fi
+      done
     else
       GATE=""
       echo -e "${GATEWAY}${BOLD}${DGN}Gateway IP Address: ${BGN}Default${CL}"
@@ -406,8 +405,8 @@ config_file() {
   else
     if [[ -n "${APT_CACHER_IP-}" ]]; then
       if [[ ! $APT_CACHER_IP == "none" ]]; then
-          APT_CACHER="yes"
-          echo -e "${NETWORK}${BOLD}${DGN}APT-CACHER IP Address: ${BGN}$APT_CACHER_IP${CL}"
+        APT_CACHER="yes"
+        echo -e "${NETWORK}${BOLD}${DGN}APT-CACHER IP Address: ${BGN}$APT_CACHER_IP${CL}"
       else
         APT_CACHER=""
         echo -e "${NETWORK}${BOLD}${DGN}APT-Cacher IP Address: ${BGN}No${CL}"
@@ -416,7 +415,7 @@ config_file() {
       if APT_CACHER_IP=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set APT-Cacher IP (leave blank for none)" 8 58 --title "APT-Cacher IP" 3>&1 1>&2 2>&3); then
         APT_CACHER="${APT_CACHER_IP:+yes}"
         echo -e "${NETWORK}${BOLD}${DGN}APT-Cacher IP Address: ${BGN}${APT_CACHER_IP:-Default}${CL}"
-        if  [[ -n $APT_CACHER_IP ]]; then
+        if [[ -n $APT_CACHER_IP ]]; then
           APT_CACHER_IP="none"
         fi
       else
@@ -506,7 +505,7 @@ config_file() {
       fi
       echo -e "${NETWORK}${BOLD}${DGN}DNS Server IP Address: ${BGN}$NX${CL}"
     else
-    exit_script
+      exit_script
     fi
   fi
 
@@ -533,7 +532,7 @@ config_file() {
         echo -e "${MACADDRESS}${BOLD}${DGN}MAC Address: ${BGN}$MAC1${CL}"
       fi
     else
-    exit_script
+      exit_script
     fi
   fi
 
@@ -582,7 +581,7 @@ config_file() {
       fi
       echo -e "${NETWORK}${BOLD}${DGN}Tags: ${BGN}$TAGS${CL}"
     else
-    exit_script
+      exit_script
     fi
   fi
 
@@ -646,7 +645,7 @@ config_file() {
       exit
     fi
   else
-   if (whiptail --backtitle "Proxmox VE Helper Scripts" --defaultno --title "VERBOSE MODE" --yesno "Enable Verbose Mode?" 10 58); then
+    if (whiptail --backtitle "Proxmox VE Helper Scripts" --defaultno --title "VERBOSE MODE" --yesno "Enable Verbose Mode?" 10 58); then
       VERBOSE="yes"
     else
       VERBOSE="no"

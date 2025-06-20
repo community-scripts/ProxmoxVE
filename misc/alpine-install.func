@@ -1,13 +1,12 @@
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: tteck (tteckster)
 # Co-Author: MickLesk
-# License: MIT
-# https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
 if ! command -v curl >/dev/null 2>&1; then
   apk update && apk add curl >/dev/null 2>&1
 fi
-source <(curl -fsSL https://git.community-scripts.org/community-scripts/ProxmoxVE/raw/branch/main/misc/core.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
 load_functions
 
 # This function enables IPv6 if it's not disabled and sets verbose mode
@@ -156,6 +155,6 @@ EOF
     msg_ok "Customized Container"
   fi
 
-  echo "bash -c \"\$(curl -fsSL https://github.com/community-scripts/ProxmoxVE/raw/main/ct/${app}.sh)\"" >/usr/bin/update
+  echo "bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/${app}.sh)\"" >/usr/bin/update
   chmod +x /usr/bin/update
 }

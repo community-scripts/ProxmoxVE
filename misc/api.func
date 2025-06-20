@@ -4,7 +4,7 @@
 
 post_to_api() {
 
-  if ! command -v curl &> /dev/null; then
+  if ! command -v curl &>/dev/null; then
     return
   fi
 
@@ -20,7 +20,8 @@ post_to_api() {
   local pve_version="not found"
   pve_version=$(pveversion | awk -F'[/ ]' '{print $2}')
 
-  JSON_PAYLOAD=$(cat <<EOF
+  JSON_PAYLOAD=$(
+    cat <<EOF
 {
     "ct_type": $CT_TYPE,
     "type":"lxc",
@@ -37,12 +38,12 @@ post_to_api() {
     "random_id": "$RANDOM_UUID"
 }
 EOF
-)
+  )
 
   if [[ "$DIAGNOSTICS" == "yes" ]]; then
     RESPONSE=$(curl -s -w "%{http_code}" -L -X POST "$API_URL" --post301 --post302 \
-    -H "Content-Type: application/json" \
-    -d "$JSON_PAYLOAD") || true
+      -H "Content-Type: application/json" \
+      -d "$JSON_PAYLOAD") || true
   fi
 }
 
@@ -52,7 +53,7 @@ post_to_api_vm() {
     return
   fi
   DIAGNOSTICS=$(grep -i "^DIAGNOSTICS=" /usr/local/community-scripts/diagnostics | awk -F'=' '{print $2}')
-  if ! command -v curl &> /dev/null; then
+  if ! command -v curl &>/dev/null; then
     return
   fi
 
@@ -70,7 +71,8 @@ post_to_api_vm() {
 
   DISK_SIZE_API=${DISK_SIZE%G}
 
-  JSON_PAYLOAD=$(cat <<EOF
+  JSON_PAYLOAD=$(
+    cat <<EOF
 {
     "ct_type": 2,
     "type":"vm",
@@ -87,42 +89,43 @@ post_to_api_vm() {
     "random_id": "$RANDOM_UUID"
 }
 EOF
-)
+  )
 
   if [[ "$DIAGNOSTICS" == "yes" ]]; then
     RESPONSE=$(curl -s -w "%{http_code}" -L -X POST "$API_URL" --post301 --post302 \
-    -H "Content-Type: application/json" \
-    -d "$JSON_PAYLOAD") || true
+      -H "Content-Type: application/json" \
+      -d "$JSON_PAYLOAD") || true
   fi
 }
 
 POST_UPDATE_DONE=false
 post_update_to_api() {
 
-    if ! command -v curl &> /dev/null; then
-      return
-    fi
+  if ! command -v curl &>/dev/null; then
+    return
+  fi
 
-    if [ "$POST_UPDATE_DONE" = true ]; then
-        return 0
-    fi
-    local API_URL="http://api.community-scripts.org/upload/updatestatus"    
-    local status="${1:-failed}"
-    local error="${2:-No error message}"
+  if [ "$POST_UPDATE_DONE" = true ]; then
+    return 0
+  fi
+  local API_URL="http://api.community-scripts.org/upload/updatestatus"
+  local status="${1:-failed}"
+  local error="${2:-No error message}"
 
-    JSON_PAYLOAD=$(cat <<EOF
+  JSON_PAYLOAD=$(
+    cat <<EOF
 {
     "status": "$status",
     "error": "$error",
     "random_id": "$RANDOM_UUID"
 }
 EOF
-)
-   
+  )
+
   if [[ "$DIAGNOSTICS" == "yes" ]]; then
     RESPONSE=$(curl -s -w "%{http_code}" -L -X POST "$API_URL" --post301 --post302 \
-    -H "Content-Type: application/json" \
-    -d "$JSON_PAYLOAD") || true
+      -H "Content-Type: application/json" \
+      -d "$JSON_PAYLOAD") || true
   fi
 
   POST_UPDATE_DONE=true

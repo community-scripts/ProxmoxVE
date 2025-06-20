@@ -10,7 +10,7 @@ if ! command -v curl >/dev/null 2>&1; then
   apt-get install -y curl >/dev/null 2>&1
 fi
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
-load_functions										  
+load_functions
 # This function enables IPv6 if it's not disabled and sets verbose mode
 verb_ip6() {
   set_std_mode # Set STD mode based on VERBOSE
