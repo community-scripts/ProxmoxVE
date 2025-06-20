@@ -30,6 +30,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - (turnkey) Add OpenLDAP as a TurnKey option [@mhaligowski](https://github.com/mhaligowski) ([#5305](https://github.com/community-scripts/ProxmoxVE/pull/5305))
 
+  - #### 🔧 Refactor
+
+    - Refactor: migrate Jupyter Notebook to uv-based installation with update support [@MickLesk](https://github.com/MickLesk) ([#5320](https://github.com/community-scripts/ProxmoxVE/pull/5320))
+
 ## 2025-06-19
 
 ### 🆕 New Scripts
