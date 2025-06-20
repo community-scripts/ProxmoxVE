@@ -284,7 +284,6 @@ function update_script() {
     msg_ok "Updated ${APP} to v${RELEASE}"
 
     msg_info "Cleaning up"
-    rm -f "$immich_zip"
     $STD apt-get -y autoremove
     $STD apt-get -y autoclean
     msg_ok "Cleaned"
