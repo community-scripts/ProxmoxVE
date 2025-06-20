@@ -100,7 +100,7 @@ network_check() {
   fi
 
   # DNS resolution checks for GitHub-related domains (IPv4 and/or IPv6)
-  GITHUB_HOSTS=("github.com" "raw.githubusercontent.com" "api.github.com" "git.community-scripts.org")
+  GITHUB_HOSTS=("github.com" "raw.githubusercontent.com" "api.github.com")
   GITHUB_STATUS="GitHub DNS:"
   DNS_FAILED=false
 
