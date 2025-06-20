@@ -46,15 +46,26 @@ load_functions() {
 on_error() {
   local exit_code="$1"
   local lineno="$2"
-  msg_error "Script failed at line $lineno with exit code $exit_code"
-  # Optionally log to your API or file here
+
+  stop_spinner
+
+  case "$exit_code" in
+  1) msg_error "Generic error occurred (line $lineno)" ;;
+  2) msg_error "Shell misuse (line $lineno)" ;;
+  126) msg_error "Command cannot execute (line $lineno)" ;;
+  127) msg_error "Command not found (line $lineno)" ;;
+  128) msg_error "Invalid exit argument (line $lineno)" ;;
+  130) msg_error "Script aborted by user (CTRL+C)" ;;
+  143) msg_error "Script terminated by SIGTERM" ;;
+  *) msg_error "Script failed at line $lineno with exit code $exit_code" ;;
+  esac
+
   exit "$exit_code"
 }
 
 on_exit() {
-  # Always called on script exit, success or failure
-  cleanup_temp_files || true
-  msg_info "Script exited"
+  cleanup_spinner || true
+  [[ "${VERBOSE:-no}" == "yes" ]] && msg_info "Script exited"
 }
 
 on_interrupt() {
@@ -429,8 +440,14 @@ msg_info() {
   local msg="$1"
   [[ -z "$msg" || -n "${MSG_INFO_SHOWN["$msg"]+x}" ]] && return
   MSG_INFO_SHOWN["$msg"]=1
+
   stop_spinner
-  start_spinner "$msg"
+
+  if [[ "${VERBOSE:-no}" == "no" && -t 2 ]]; then
+    start_spinner "$msg"
+  else
+    printf "\r\e[2K%s %b"${TAB}"" "⏳" "${YW}${msg}${CL}" >&2
+  fi
 }
 
 msg_ok() {
