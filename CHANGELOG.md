@@ -35,6 +35,12 @@ All LXC instances created using this repository come pre-installed with Midnight
     - Refactor: migrate AdventureLog update to uv and GitHub release logic [@MickLesk](https://github.com/MickLesk) ([#5318](https://github.com/community-scripts/ProxmoxVE/pull/5318))
     - Refactor: migrate Jupyter Notebook to uv-based installation with update support [@MickLesk](https://github.com/MickLesk) ([#5320](https://github.com/community-scripts/ProxmoxVE/pull/5320))
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Argus: fix wrong port on website [@MickLesk](https://github.com/MickLesk) ([#5322](https://github.com/community-scripts/ProxmoxVE/pull/5322))
+
 ## 2025-06-19
 
 ### 🆕 New Scripts
