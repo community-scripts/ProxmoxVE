@@ -40,10 +40,10 @@ function update_script() {
   msg_ok "Stopped huntarr service"
 
   fetch_and_deploy_gh_release "huntarr" "plexguide/Huntarr.io"
-  msg_info "Updating $APP to v${RELEASE}"
+  msg_info "Configuring $APP"
   cd /opt/huntarr
   $STD uv pip install -r requirements.txt --python /opt/huntarr/.venv/bin/python
-  msg_ok "Updated $APP to v${RELEASE}"
+  msg_ok "Configured $APP"
 
   msg_info "Starting $APP"
   systemctl start huntarr
