@@ -20,16 +20,53 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
+  header_info
+  check_container_storage
+  check_container_resources
 
-    msg_info "Updating ${APP} LXC"
-    $STD apt-get update
-    $STD apt-get install -y upgrade
-    $STD pip3 install jupyter --upgrade
-    msg_ok "Updated Successfully"
-    exit
+  INSTALL_DIR="/opt/jupyter"
+  VENV_PYTHON="${INSTALL_DIR}/.venv/bin/python"
+  VENV_JUPYTER="${INSTALL_DIR}/.venv/bin/jupyter"
+  SERVICE_FILE="/etc/systemd/system/jupyternotebook.service"
+
+  if [[ ! -x "$VENV_JUPYTER" ]]; then
+    msg_info "Migrating to uv venv"
+    PYTHON_VERSION="3.12" setup_uv
+    mkdir -p "$INSTALL_DIR"
+    cd "$INSTALL_DIR"
+    $STD uv venv .venv
+    $STD "$VENV_PYTHON" -m ensurepip --upgrade
+    $STD "$VENV_PYTHON" -m pip install --upgrade pip
+    $STD "$VENV_PYTHON" -m pip install jupyter
+    msg_ok "Migrated to uv and installed Jupyter"
+  else
+    msg_info "Updating Jupyter"
+    $STD "$VENV_PYTHON" -m pip install --upgrade pip
+    $STD "$VENV_PYTHON" -m pip install --upgrade jupyter
+    msg_ok "Jupyter updated"
+  fi
+
+  if [[ -f "$SERVICE_FILE" && "$(grep ExecStart "$SERVICE_FILE")" != *".venv/bin/jupyter"* ]]; then
+    msg_info "Updating systemd service to use .venv"
+    cat <<EOF >"$SERVICE_FILE"
+[Unit]
+Description=Jupyter Notebook Server
+After=network.target
+[Service]
+Type=simple
+WorkingDirectory=${INSTALL_DIR}
+ExecStart=${VENV_JUPYTER} notebook --ip=0.0.0.0 --port=8888 --allow-root
+Restart=always
+RestartSec=10
+[Install]
+WantedBy=multi-user.target
+EOF
+    systemctl daemon-reexec
+    systemctl restart jupyternotebook
+    msg_ok "Service updated and restarted"
+  fi
+
+  exit
 }
 
 start

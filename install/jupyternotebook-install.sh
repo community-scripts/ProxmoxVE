@@ -13,15 +13,16 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt-get install -y \
-    python3 \
-    python3-pip
-msg_ok "Installed Dependencies"
+PYTHON_VERSION="3.12" setup_uv
 
-msg_info "Setting up Jupyter Notebook"
-$STD pip3 install jupyter
-msg_ok "Setup Jupyter Notebook"
+msg_info "Installing Jupyter"
+mkdir -p /opt/jupyter
+cd /opt/jupyter
+$STD uv venv /opt/jupyter/.venv
+$STD /opt/jupyter/.venv/bin/python -m ensurepip --upgrade
+$STD /opt/jupyter/.venv/bin/python -m pip install --upgrade pip
+$STD /opt/jupyter/.venv/bin/python -m pip install jupyter
+msg_ok "Installed Jupyter"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/jupyternotebook.service
@@ -31,7 +32,8 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart=jupyter notebook --ip=0.0.0.0 --port=8888 --allow-root
+WorkingDirectory=/opt/jupyter
+ExecStart=/opt/jupyter/.venv/bin/jupyter notebook --ip=0.0.0.0 --port=8888 --allow-root
 Restart=always
 RestartSec=10
 
@@ -39,6 +41,7 @@ RestartSec=10
 WantedBy=multi-user.target
 EOF
 systemctl enable -q --now jupyternotebook
+msg_ok "Created Service"
 
 motd_ssh
 customize
