@@ -18,7 +18,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
-  - fix planka Tags [@CrazyWolf13](https://github.com/CrazyWolf13) ([#5311](https://github.com/community-scripts/ProxmoxVE/pull/5311))
+  - [core]: unify misc/*.func scripts with centralized logic from core.func [@MickLesk](https://github.com/MickLesk) ([#5316](https://github.com/community-scripts/ProxmoxVE/pull/5316))
+- fix planka Tags [@CrazyWolf13](https://github.com/CrazyWolf13) ([#5311](https://github.com/community-scripts/ProxmoxVE/pull/5311))
 
   - #### 🐞 Bug Fixes
 
