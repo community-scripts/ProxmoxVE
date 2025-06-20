@@ -27,43 +27,51 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
   RELEASE=$(curl -fsSL https://api.github.com/repos/seanmorley15/AdventureLog/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+  if [[ "${RELEASE}" != "$(cat ~/.adventurelog 2>/dev/null)" ]] || [[ ! -f ~/.adventurelog ]]; then
     msg_info "Stopping Services"
     systemctl stop adventurelog-backend
     systemctl stop adventurelog-frontend
     msg_ok "Services Stopped"
 
-    msg_info "Updating ${APP} to ${RELEASE}"
-    mv /opt/adventurelog/ /opt/adventurelog-backup/
-    curl -fsSL -o /opt/v${RELEASE}.zip "https://github.com/seanmorley15/AdventureLog/archive/refs/tags/v${RELEASE}.zip"
-    $STD unzip /opt/v${RELEASE}.zip -d /opt/
-    mv /opt/AdventureLog-${RELEASE} /opt/adventurelog
+    fetch_and_deploy_gh_release "adventurelog" "seanmorley15/adventurelog"
+    PYTHON_VERSION="3.12" setup_uv
 
-    mv /opt/adventurelog-backup/backend/server/.env /opt/adventurelog/backend/server/.env
-    mv /opt/adventurelog-backup/backend/server/media /opt/adventurelog/backend/server/media
+    msg_info "Updating ${APP} to v${RELEASE}"
+    # Backend Migration
+    cp /opt/adventurelog-backup/backend/server/.env /opt/adventurelog/backend/server/.env
+    cp -r /opt/adventurelog-backup/backend/server/media /opt/adventurelog/backend/server/media
+
     cd /opt/adventurelog/backend/server
-    $STD pip install --upgrade pip
-    $STD pip install -r requirements.txt
-    $STD python3 manage.py collectstatic --noinput
-    $STD python3 manage.py migrate
+    if [[ ! -x .venv/bin/python ]]; then
+      $STD uv venv .venv
+      $STD .venv/bin/python -m ensurepip --upgrade
+    fi
 
-    mv /opt/adventurelog-backup/frontend/.env /opt/adventurelog/frontend/.env
+    $STD .venv/bin/python -m pip install --upgrade pip
+    $STD .venv/bin/python -m pip install -r requirements.txt
+    $STD .venv/bin/python -m manage collectstatic --noinput
+    $STD .venv/bin/python -m manage migrate
+
+    # Frontend Migration
+    cp /opt/adventurelog-backup/frontend/.env /opt/adventurelog/frontend/.env
     cd /opt/adventurelog/frontend
-    $STD pnpm install
-    $STD pnpm run build
-    echo "${RELEASE}" >/opt/${APP}_version.txt
+    $STD pnpm i
+    $STD pnpm build
     msg_ok "Updated ${APP}"
 
     msg_info "Starting Services"
+    systemctl daemon-reexec
     systemctl start adventurelog-backend
     systemctl start adventurelog-frontend
-    msg_ok "Started Services"
+    msg_ok "Services Started"
 
     msg_info "Cleaning Up"
     rm -rf /opt/v${RELEASE}.zip
     rm -rf /opt/adventurelog-backup
     msg_ok "Cleaned"
+
     msg_ok "Updated Successfully"
   else
     msg_ok "No update required. ${APP} is already at ${RELEASE}"
