@@ -22,6 +22,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - PLANKA: Better DB password generate [@tremor021](https://github.com/tremor021) ([#5313](https://github.com/community-scripts/ProxmoxVE/pull/5313))
     - Immich: Hotfix for #5299 [@vhsdream](https://github.com/vhsdream) ([#5300](https://github.com/community-scripts/ProxmoxVE/pull/5300))
     - changedetection: add msedge as Browser dependency [@Niklas04](https://github.com/Niklas04) ([#5301](https://github.com/community-scripts/ProxmoxVE/pull/5301))
 
