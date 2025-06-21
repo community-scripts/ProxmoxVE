@@ -156,13 +156,19 @@ if [ -f /etc/pve/corosync.conf ]; then
 fi
 
 # Update LXC template list
-msg_info "Updating LXC Template List"
+TEMPLATE_SEARCH="${PCT_OSTYPE}-${PCT_OSVERSION:-}"
 
-if ! timeout 10 pveam update >/dev/null 2>&1; then
-  msg_error "Failed to update LXC template list. Please check your Proxmox host's internet connection and DNS resolution."
-  exit 201
+msg_info "Updating LXC Template List"
+if ! timeout 15 pveam update >/dev/null 2>&1; then
+  TEMPLATE_FALLBACK=$(pveam list "$TEMPLATE_STORAGE" | awk "/$TEMPLATE_SEARCH/ {print \$2}" | sort -t - -k 2 -V | tail -n1)
+  if [[ -z "$TEMPLATE_FALLBACK" ]]; then
+    msg_error "Failed to update LXC template list and no local template matching '$TEMPLATE_SEARCH' found."
+    exit 201
+  fi
+  msg_info "Skipping template update – using local fallback: $TEMPLATE_FALLBACK"
+else
+  msg_ok "LXC Template List Updated"
 fi
-$STD msg_ok "LXC Template List Updated"
 
 # Get LXC template string
 TEMPLATE_SEARCH="${PCT_OSTYPE}-${PCT_OSVERSION:-}"
