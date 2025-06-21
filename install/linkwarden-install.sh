@@ -44,7 +44,7 @@ msg_ok "Set up PostgreSQL DB"
 
 read -r -p "${TAB3}Would you like to add Adminer? <y/N> " prompt
 if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
-  install_adminer
+  setup_adminer
 fi
 
 msg_info "Installing Linkwarden (Patience)"
