@@ -1,8 +1,78 @@
 [
   {
+    "name": "fallenbagel/jellyseerr",
+    "version": "preview-dns-cache-manager",
+    "date": "2025-06-20T23:03:23Z"
+  },
+  {
+    "name": "go-gitea/gitea",
+    "version": "v1.24.2",
+    "date": "2025-06-20T20:37:55Z"
+  },
+  {
+    "name": "coder/code-server",
+    "version": "v4.101.0",
+    "date": "2025-06-20T20:21:50Z"
+  },
+  {
+    "name": "immich-app/immich",
+    "version": "v1.135.3",
+    "date": "2025-06-20T20:19:20Z"
+  },
+  {
+    "name": "apache/tika",
+    "version": "3.2.1-rc1",
+    "date": "2025-06-20T19:41:10Z"
+  },
+  {
+    "name": "VictoriaMetrics/VictoriaMetrics",
+    "version": "v1.24.0-victorialogs",
+    "date": "2025-06-20T19:31:31Z"
+  },
+  {
+    "name": "homarr-labs/homarr",
+    "version": "v1.25.0",
+    "date": "2025-06-20T19:15:43Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.22.1",
+    "date": "2025-06-20T18:12:20Z"
+  },
+  {
+    "name": "mongodb/mongo",
+    "version": "r8.1.2-rc0",
+    "date": "2025-06-20T17:35:38Z"
+  },
+  {
+    "name": "nzbgetcom/nzbget",
+    "version": "v25.0",
+    "date": "2025-05-12T09:12:04Z"
+  },
+  {
+    "name": "Sonarr/Sonarr",
+    "version": "v4.0.15.2941",
+    "date": "2025-06-20T17:20:54Z"
+  },
+  {
+    "name": "bunkerity/bunkerweb",
+    "version": "testing",
+    "date": "2025-06-16T18:10:42Z"
+  },
+  {
+    "name": "plexguide/Huntarr.io",
+    "version": "8.1.6",
+    "date": "2025-06-20T14:50:59Z"
+  },
+  {
+    "name": "docker/compose",
+    "version": "v2.37.2",
+    "date": "2025-06-20T13:25:03Z"
+  },
+  {
     "name": "zabbix/zabbix",
-    "version": "7.0.15",
-    "date": "2025-06-20T10:54:31Z"
+    "version": "7.2.9",
+    "date": "2025-06-20T10:58:45Z"
   },
   {
     "name": "syncthing/syncthing",
@@ -13,11 +83,6 @@
     "name": "benzino77/tasmocompiler",
     "version": "v12.7.0",
     "date": "2025-06-20T08:31:16Z"
-  },
-  {
-    "name": "plexguide/Huntarr.io",
-    "version": "8.1.5",
-    "date": "2025-06-20T06:50:27Z"
   },
   {
     "name": "Jackett/Jackett",
@@ -35,11 +100,6 @@
     "date": "2025-06-20T04:45:37Z"
   },
   {
-    "name": "go-gitea/gitea",
-    "version": "v1.24.1",
-    "date": "2025-06-19T19:38:29Z"
-  },
-  {
     "name": "paperless-ngx/paperless-ngx",
     "version": "v2.17.1",
     "date": "2025-06-19T19:35:01Z"
@@ -50,11 +110,6 @@
     "date": "2025-06-19T18:30:11Z"
   },
   {
-    "name": "immich-app/immich",
-    "version": "v1.135.1",
-    "date": "2025-06-19T17:55:06Z"
-  },
-  {
     "name": "keycloak/keycloak",
     "version": "26.2.5",
     "date": "2025-05-28T06:49:43Z"
@@ -63,11 +118,6 @@
     "name": "rclone/rclone",
     "version": "v1.70.1",
     "date": "2025-06-19T13:19:02Z"
-  },
-  {
-    "name": "fallenbagel/jellyseerr",
-    "version": "preview-dns-cache-manager",
-    "date": "2025-06-19T12:05:10Z"
   },
   {
     "name": "icereed/paperless-gpt",
@@ -113,11 +163,6 @@
     "name": "pterodactyl/panel",
     "version": "v1.11.11",
     "date": "2025-06-18T18:04:50Z"
-  },
-  {
-    "name": "msgbyte/tianji",
-    "version": "v1.22.0",
-    "date": "2025-06-18T16:21:38Z"
   },
   {
     "name": "ollama/ollama",
@@ -190,11 +235,6 @@
     "date": "2025-06-17T19:17:56Z"
   },
   {
-    "name": "coder/code-server",
-    "version": "v4.100.3",
-    "date": "2025-06-03T21:06:41Z"
-  },
-  {
     "name": "HabitRPG/habitica",
     "version": "v5.36.6",
     "date": "2025-06-17T18:12:31Z"
@@ -255,19 +295,14 @@
     "date": "2025-06-16T19:20:54Z"
   },
   {
-    "name": "bunkerity/bunkerweb",
-    "version": "testing",
-    "date": "2025-06-16T18:10:42Z"
-  },
-  {
     "name": "goauthentik/authentik",
     "version": "version/2025.6.2",
     "date": "2025-06-16T17:54:39Z"
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v4.2.1",
-    "date": "2025-06-03T20:04:28Z"
+    "version": "nightly",
+    "date": "2025-06-16T17:35:17Z"
   },
   {
     "name": "emqx/emqx",
@@ -365,11 +400,6 @@
     "date": "2025-06-14T23:32:15Z"
   },
   {
-    "name": "nzbgetcom/nzbget",
-    "version": "v25.0",
-    "date": "2025-05-12T09:12:04Z"
-  },
-  {
     "name": "theonedev/onedev",
     "version": "v11.11.0",
     "date": "2025-06-14T13:23:36Z"
@@ -388,11 +418,6 @@
     "name": "home-assistant/core",
     "version": "2025.6.1",
     "date": "2025-06-13T20:16:18Z"
-  },
-  {
-    "name": "homarr-labs/homarr",
-    "version": "v1.24.0",
-    "date": "2025-06-13T19:15:36Z"
   },
   {
     "name": "Luligu/matterbridge",
@@ -423,11 +448,6 @@
     "name": "Checkmk/checkmk",
     "version": "v2.3.0p34",
     "date": "2025-06-12T12:15:44Z"
-  },
-  {
-    "name": "docker/compose",
-    "version": "v2.37.1",
-    "date": "2025-06-12T09:00:21Z"
   },
   {
     "name": "zitadel/zitadel",
@@ -485,19 +505,9 @@
     "date": "2025-06-10T11:07:14Z"
   },
   {
-    "name": "VictoriaMetrics/VictoriaMetrics",
-    "version": "v1.110.11",
-    "date": "2025-06-10T10:00:25Z"
-  },
-  {
     "name": "glanceapp/glance",
     "version": "v0.8.4",
     "date": "2025-06-10T07:57:14Z"
-  },
-  {
-    "name": "Sonarr/Sonarr",
-    "version": "v4.0.14.2939",
-    "date": "2025-03-17T19:12:37Z"
   },
   {
     "name": "tailscale/tailscale",
@@ -700,11 +710,6 @@
     "date": "2025-05-28T21:45:55Z"
   },
   {
-    "name": "mongodb/mongo",
-    "version": "r6.0.24",
-    "date": "2025-05-28T21:25:03Z"
-  },
-  {
     "name": "Athou/commafeed",
     "version": "5.10.0",
     "date": "2025-05-28T05:48:20Z"
@@ -768,11 +773,6 @@
     "name": "CrazyWolf13/streamlink-webui",
     "version": "0.5",
     "date": "2025-05-21T20:19:14Z"
-  },
-  {
-    "name": "apache/tika",
-    "version": "3.2.0-rc2",
-    "date": "2025-05-21T20:09:07Z"
   },
   {
     "name": "Stirling-Tools/Stirling-PDF",
