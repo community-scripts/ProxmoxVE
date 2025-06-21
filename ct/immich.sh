@@ -181,116 +181,114 @@ function update_script() {
     fi
   fi
   RELEASE=$(curl -fsSL https://api.github.com/repos/immich-app/immich/releases?per_page=1 | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
-    msg_info "Stopping ${APP} services"
-    systemctl stop immich-web
-    systemctl stop immich-ml
-    msg_ok "Stopped ${APP}"
-    INSTALL_DIR="/opt/${APP}"
-    UPLOAD_DIR="$(sed -n '/^IMMICH_MEDIA_LOCATION/s/[^=]*=//p' /opt/immich/.env)"
-    SRC_DIR="${INSTALL_DIR}/source"
-    APP_DIR="${INSTALL_DIR}/app"
-    ML_DIR="${APP_DIR}/machine-learning"
-    GEO_DIR="${INSTALL_DIR}/geodata"
-    VCHORD_RELEASE="$(curl -fsSL https://api.github.com/repos/tensorchord/vectorchord/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')"
-
-    if [[ ! -f ~/.vchord_version ]] || [[ "$VCHORD_RELEASE" != "$(cat ~/.vchord_version)" ]]; then
-      msg_info "Updating VectorChord"
-      if [[ ! -f ~/.vchord_version ]] || [[ ! "$(cat ~/.vchord_version)" > "0.3.0" ]]; then
-        $STD sudo -u postgres pg_dumpall --clean --if-exists --username=postgres | gzip >/etc/postgresql/immich-db-vchord0.3.0.sql.gz
-        chown postgres /etc/postgresql/immich-db-vchord0.3.0.sql.gz
-        $STD sudo -u postgres gunzip --stdout /etc/postgresql/immich-db-vchord0.3.0.sql.gz |
-          sed -e "s/SELECT pg_catalog.set_config('search_path', '', false);/SELECT pg_catalog.set_config('search_path', 'public, pg_catalog', true);/g" \
-            -e "/vchordrq.prewarm_dim/d" |
-          sudo -u postgres psql
-      fi
-      curl -fsSL "https://github.com/tensorchord/vectorchord/releases/download/${VCHORD_RELEASE}/postgresql-16-vchord_${VCHORD_RELEASE}-1_amd64.deb" -o vchord.deb
-      $STD apt install -y ./vchord.deb
-      $STD sudo -u postgres psql -d immich -c "ALTER EXTENSION vchord UPDATE;"
-      systemctl restart postgresql
-      if [[ ! -f ~/.vchord_version ]] || [[ ! "$(cat ~/.vchord_version)" > "0.3.0" ]]; then
-        $STD sudo -u postgres psql -d immich -c "REINDEX DATABASE;"
-      fi
-      echo "$VCHORD_RELEASE" >~/.vchord_version
-      rm ./vchord.deb
-      msg_ok "Updated VectorChord to v${VCHORD_RELEASE}"
-    fi
-
-    cp "$ML_DIR"/ml_start.sh "$INSTALL_DIR"
-    rm -rf "${APP_DIR:?}"/*
-    rm -rf "$SRC_DIR"
-    immich_zip=$(mktemp)
-    curl -fsSL "https://github.com/immich-app/immich/archive/refs/tags/v${RELEASE}.zip" -o "$immich_zip"
-    msg_info "Updating ${APP} web and microservices"
-    unzip -q "$immich_zip"
-    mv "$APP-$RELEASE"/ "$SRC_DIR"
-    mkdir -p "$ML_DIR"
-    cd "$SRC_DIR"/server
-    if [[ "$RELEASE" == "1.135.1" ]]; then
-      rm ./src/schema/migrations/1750323941566-UnsetPrewarmDimParameter.ts
-    fi
-    $STD npm install -g node-gyp node-pre-gyp
-    $STD npm ci
-    $STD npm run build
-    $STD npm prune --omit=dev --omit=optional
-    cd "$SRC_DIR"/open-api/typescript-sdk
-    $STD npm ci
-    $STD npm run build
-    cd "$SRC_DIR"/web
-    $STD npm ci
-    $STD npm run build
-    cd "$SRC_DIR"
-    cp -a server/{node_modules,dist,bin,resources,package.json,package-lock.json,start*.sh} "$APP_DIR"/
-    cp -a web/build "$APP_DIR"/www
-    cp LICENSE "$APP_DIR"
-    msg_ok "Updated ${APP} web and microservices"
-
-    cd "$SRC_DIR"/machine-learning
-    export VIRTUAL_ENV="${ML_DIR}"/ml-venv
-    $STD /usr/local/bin/uv venv "$VIRTUAL_ENV"
-    if [[ -f ~/.openvino ]]; then
-      msg_info "Updating HW-accelerated machine-learning"
-      /usr/local/bin/uv -q sync --extra openvino --no-cache --active
-      patchelf --clear-execstack "${VIRTUAL_ENV}/lib/python3.11/site-packages/onnxruntime/capi/onnxruntime_pybind11_state.cpython-311-x86_64-linux-gnu.so"
-      msg_ok "Updated HW-accelerated machine-learning"
-    else
-      msg_info "Updating machine-learning"
-      /usr/local/bin/uv -q sync --extra cpu --no-cache --active
-      msg_ok "Updated machine-learning"
-    fi
-    cd "$SRC_DIR"
-    cp -a machine-learning/{ann,immich_ml} "$ML_DIR"
-    mv "$INSTALL_DIR"/ml_start.sh "$ML_DIR"
-    if [[ -f ~/.openvino ]]; then
-      sed -i "/intra_op/s/int = 0/int = os.cpu_count() or 0/" "$ML_DIR"/immich_ml/config.py
-    fi
-    ln -sf "$APP_DIR"/resources "$INSTALL_DIR"
-    cd "$APP_DIR"
-    grep -Rl /usr/src | xargs -n1 sed -i "s|\/usr/src|$INSTALL_DIR|g"
-    grep -RlE "'/build'" | xargs -n1 sed -i "s|'/build'|'$APP_DIR'|g"
-    sed -i "s@\"/cache\"@\"$INSTALL_DIR/cache\"@g" "$ML_DIR"/immich_ml/config.py
-    ln -s "${UPLOAD_DIR:-/opt/immich/upload}" "$APP_DIR"/upload
-    ln -s "${UPLOAD_DIR:-/opt/immich/upload}" "$ML_DIR"/upload
-    ln -s "$GEO_DIR" "$APP_DIR"
-
-    msg_info "Updating Immich CLI"
-    $STD npm install --build-from-source sharp
-    rm -rf "$APP_DIR"/node_modules/@img/sharp-{libvips*,linuxmusl-x64}
-    $STD npm i -g @immich/cli
-    msg_ok "Updated Immich CLI"
-
-    chown -R immich:immich "$INSTALL_DIR"
-    echo "$RELEASE" >/opt/"${APP}"_version.txt
-    msg_ok "Updated ${APP} to v${RELEASE}"
-
-    msg_info "Cleaning up"
-    rm -f "$immich_zip"
-    $STD apt-get -y autoremove
-    $STD apt-get -y autoclean
-    msg_ok "Cleaned"
-  else
-    msg_ok "${APP} is already at v${RELEASE}"
+  if [[ -f ~/.immich && "$RELEASE" == "$(cat ~/.immich)" ]]; then
+    msg_ok "No update required. ${APP} is already at v${RELEASE}"
+    exit
   fi
+  msg_info "Stopping ${APP} services"
+  systemctl stop immich-web
+  systemctl stop immich-ml
+  msg_ok "Stopped ${APP}"
+  INSTALL_DIR="/opt/${APP}"
+  UPLOAD_DIR="$(sed -n '/^IMMICH_MEDIA_LOCATION/s/[^=]*=//p' /opt/immich/.env)"
+  SRC_DIR="${INSTALL_DIR}/source"
+  APP_DIR="${INSTALL_DIR}/app"
+  ML_DIR="${APP_DIR}/machine-learning"
+  GEO_DIR="${INSTALL_DIR}/geodata"
+  VCHORD_RELEASE="$(curl -fsSL https://api.github.com/repos/tensorchord/vectorchord/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')"
+
+  if [[ ! -f ~/.vchord_version ]] || [[ "$VCHORD_RELEASE" != "$(cat ~/.vchord_version)" ]]; then
+    msg_info "Updating VectorChord"
+    if [[ ! -f ~/.vchord_version ]] || [[ ! "$(cat ~/.vchord_version)" > "0.3.0" ]]; then
+      $STD sudo -u postgres pg_dumpall --clean --if-exists --username=postgres | gzip >/etc/postgresql/immich-db-vchord0.3.0.sql.gz
+      chown postgres /etc/postgresql/immich-db-vchord0.3.0.sql.gz
+      $STD sudo -u postgres gunzip --stdout /etc/postgresql/immich-db-vchord0.3.0.sql.gz |
+        sed -e "s/SELECT pg_catalog.set_config('search_path', '', false);/SELECT pg_catalog.set_config('search_path', 'public, pg_catalog', true);/g" \
+          -e "/vchordrq.prewarm_dim/d" |
+        sudo -u postgres psql
+    fi
+    curl -fsSL "https://github.com/tensorchord/vectorchord/releases/download/${VCHORD_RELEASE}/postgresql-16-vchord_${VCHORD_RELEASE}-1_amd64.deb" -o vchord.deb
+    $STD apt install -y ./vchord.deb
+    $STD sudo -u postgres psql -d immich -c "ALTER EXTENSION vchord UPDATE;"
+    systemctl restart postgresql
+    if [[ ! -f ~/.vchord_version ]] || [[ ! "$(cat ~/.vchord_version)" > "0.3.0" ]]; then
+      $STD sudo -u postgres psql -d immich -c "REINDEX DATABASE;"
+    fi
+    echo "$VCHORD_RELEASE" >~/.vchord_version
+    rm ./vchord.deb
+    msg_ok "Updated VectorChord to v${VCHORD_RELEASE}"
+  fi
+
+  cp "$ML_DIR"/ml_start.sh "$INSTALL_DIR"
+  rm -rf "${APP_DIR:?}"/*
+  mkdir -p "$ML_DIR"
+  rm -rf "$SRC_DIR"
+
+  fetch_and_deploy_gh_release "immich" "immich-app/immich" "tarball" "latest" "$SRC_DIR"
+
+  msg_info "Updating ${APP} web and microservices"
+  cd "$SRC_DIR"/server
+  if [[ "$RELEASE" == "1.135.1" ]]; then
+    rm ./src/schema/migrations/1750323941566-UnsetPrewarmDimParameter.ts
+  fi
+  $STD npm install -g node-gyp node-pre-gyp
+  $STD npm ci
+  $STD npm run build
+  $STD npm prune --omit=dev --omit=optional
+  cd "$SRC_DIR"/open-api/typescript-sdk
+  $STD npm ci
+  $STD npm run build
+  cd "$SRC_DIR"/web
+  $STD npm ci
+  $STD npm run build
+  cd "$SRC_DIR"
+  cp -a server/{node_modules,dist,bin,resources,package.json,package-lock.json,start*.sh} "$APP_DIR"/
+  cp -a web/build "$APP_DIR"/www
+  cp LICENSE "$APP_DIR"
+  msg_ok "Updated ${APP} web and microservices"
+
+  cd "$SRC_DIR"/machine-learning
+  export VIRTUAL_ENV="${ML_DIR}"/ml-venv
+  $STD /usr/local/bin/uv venv "$VIRTUAL_ENV"
+  if [[ -f ~/.openvino ]]; then
+    msg_info "Updating HW-accelerated machine-learning"
+    /usr/local/bin/uv -q sync --extra openvino --no-cache --active
+    patchelf --clear-execstack "${VIRTUAL_ENV}/lib/python3.11/site-packages/onnxruntime/capi/onnxruntime_pybind11_state.cpython-311-x86_64-linux-gnu.so"
+    msg_ok "Updated HW-accelerated machine-learning"
+  else
+    msg_info "Updating machine-learning"
+    /usr/local/bin/uv -q sync --extra cpu --no-cache --active
+    msg_ok "Updated machine-learning"
+  fi
+  cd "$SRC_DIR"
+  cp -a machine-learning/{ann,immich_ml} "$ML_DIR"
+  mv "$INSTALL_DIR"/ml_start.sh "$ML_DIR"
+  if [[ -f ~/.openvino ]]; then
+    sed -i "/intra_op/s/int = 0/int = os.cpu_count() or 0/" "$ML_DIR"/immich_ml/config.py
+  fi
+  ln -sf "$APP_DIR"/resources "$INSTALL_DIR"
+  cd "$APP_DIR"
+  grep -Rl /usr/src | xargs -n1 sed -i "s|\/usr/src|$INSTALL_DIR|g"
+  grep -RlE "'/build'" | xargs -n1 sed -i "s|'/build'|'$APP_DIR'|g"
+  sed -i "s@\"/cache\"@\"$INSTALL_DIR/cache\"@g" "$ML_DIR"/immich_ml/config.py
+  ln -s "${UPLOAD_DIR:-/opt/immich/upload}" "$APP_DIR"/upload
+  ln -s "${UPLOAD_DIR:-/opt/immich/upload}" "$ML_DIR"/upload
+  ln -s "$GEO_DIR" "$APP_DIR"
+
+  msg_info "Updating Immich CLI"
+  $STD npm install --build-from-source sharp
+  rm -rf "$APP_DIR"/node_modules/@img/sharp-{libvips*,linuxmusl-x64}
+  $STD npm i -g @immich/cli
+  msg_ok "Updated Immich CLI"
+
+  chown -R immich:immich "$INSTALL_DIR"
+  echo "$RELEASE" >/opt/"${APP}"_version.txt
+  msg_ok "Updated ${APP} to v${RELEASE}"
+
+  msg_info "Cleaning up"
+  $STD apt-get -y autoremove
+  $STD apt-get -y autoclean
+  msg_ok "Cleaned"
   systemctl restart immich-ml immich-web
   exit
 }
