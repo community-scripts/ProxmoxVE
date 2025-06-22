@@ -18,11 +18,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
-  - alpine: increase hdd to 1gb [@MickLesk](https://github.com/MickLesk) ([#5377](https://github.com/community-scripts/ProxmoxVE/pull/5377))
-- [core]: fix timing issues while template update & timezone setup at create new LXC [@MickLesk](https://github.com/MickLesk) ([#5358](https://github.com/community-scripts/ProxmoxVE/pull/5358))
+  - [core]: fix timing issues while template update & timezone setup at create new LXC [@MickLesk](https://github.com/MickLesk) ([#5358](https://github.com/community-scripts/ProxmoxVE/pull/5358))
+- alpine: increase hdd to 1gb [@MickLesk](https://github.com/MickLesk) ([#5377](https://github.com/community-scripts/ProxmoxVE/pull/5377))
 
   - #### 🐞 Bug Fixes
 
+    - fix: casing and naming error after #5254 [@GoetzGoerisch](https://github.com/GoetzGoerisch) ([#5380](https://github.com/community-scripts/ProxmoxVE/pull/5380))
     - fix: install_adminer > setup_adminer [@MickLesk](https://github.com/MickLesk) ([#5356](https://github.com/community-scripts/ProxmoxVE/pull/5356))
     - gitea: Update gitea.sh to stop update failures [@tystuyfzand](https://github.com/tystuyfzand) ([#5361](https://github.com/community-scripts/ProxmoxVE/pull/5361))
 
