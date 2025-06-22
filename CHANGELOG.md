@@ -23,6 +23,10 @@ All LXC instances created using this repository come pre-installed with Midnight
     - fix: install_adminer > setup_adminer [@MickLesk](https://github.com/MickLesk) ([#5356](https://github.com/community-scripts/ProxmoxVE/pull/5356))
     - gitea: Update gitea.sh to stop update failures [@tystuyfzand](https://github.com/tystuyfzand) ([#5361](https://github.com/community-scripts/ProxmoxVE/pull/5361))
 
+  - #### 🔧 Refactor
+
+    - Immich: unpin release; use fetch & deploy function for update [@vhsdream](https://github.com/vhsdream) ([#5355](https://github.com/community-scripts/ProxmoxVE/pull/5355))
+
 ## 2025-06-21
 
 ## 2025-06-20
