@@ -18,6 +18,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
+  - [core]: fix timing issues while template update & timezone setup at create new LXC [@MickLesk](https://github.com/MickLesk) ([#5358](https://github.com/community-scripts/ProxmoxVE/pull/5358))
+
   - #### 🐞 Bug Fixes
 
     - fix: install_adminer > setup_adminer [@MickLesk](https://github.com/MickLesk) ([#5356](https://github.com/community-scripts/ProxmoxVE/pull/5356))
