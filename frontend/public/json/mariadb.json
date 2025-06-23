@@ -46,6 +46,10 @@
     {
       "text": "This script requires some extra steps after the installation, Please checkout the 'documentation'",
       "type": "info"
+    },
+    {
+      "text": "Access Adminer Web UI at `http://<CONTAINER_IP>/adminer.php`",
+      "type": "info"
     }
   ]
 }
