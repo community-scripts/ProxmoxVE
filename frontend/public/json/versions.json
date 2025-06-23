@@ -1,5 +1,40 @@
 [
   {
+    "name": "Graylog2/graylog2-server",
+    "version": "6.3.0-rc.2",
+    "date": "2025-06-23T11:31:38Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "v9.11.17",
+    "date": "2025-06-18T08:12:05Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.4.0p5-rc1",
+    "date": "2025-06-23T06:14:42Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2042",
+    "date": "2025-06-23T05:54:00Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.18",
+    "date": "2025-06-20T04:45:37Z"
+  },
+  {
+    "name": "gotson/komga",
+    "version": "1.22.0",
+    "date": "2025-06-23T03:11:37Z"
+  },
+  {
+    "name": "plexguide/Huntarr.io",
+    "version": "8.1.8",
+    "date": "2025-06-23T00:21:30Z"
+  },
+  {
     "name": "OliveTin/OliveTin",
     "version": "2025.6.22",
     "date": "2025-06-22T22:41:11Z"
@@ -35,19 +70,9 @@
     "date": "2025-06-22T08:30:10Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2037",
-    "date": "2025-06-22T05:55:32Z"
-  },
-  {
     "name": "inventree/InvenTree",
     "version": "0.17.14",
     "date": "2025-06-21T23:43:04Z"
-  },
-  {
-    "name": "plexguide/Huntarr.io",
-    "version": "8.1.7",
-    "date": "2025-06-21T23:25:45Z"
   },
   {
     "name": "HabitRPG/habitica",
@@ -81,8 +106,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-06-21T09:03:46Z"
+    "version": "v4.2.1",
+    "date": "2025-06-03T20:04:28Z"
   },
   {
     "name": "pocketbase/pocketbase",
@@ -175,11 +200,6 @@
     "date": "2025-06-20T05:49:06Z"
   },
   {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.18",
-    "date": "2025-06-20T04:45:37Z"
-  },
-  {
     "name": "paperless-ngx/paperless-ngx",
     "version": "v2.17.1",
     "date": "2025-06-19T19:35:01Z"
@@ -198,11 +218,6 @@
     "name": "neo4j/neo4j",
     "version": "2025.05.1",
     "date": "2025-06-19T11:28:36Z"
-  },
-  {
-    "name": "mattermost/mattermost",
-    "version": "v9.11.17",
-    "date": "2025-06-18T08:12:05Z"
   },
   {
     "name": "n8n-io/n8n",
@@ -370,11 +385,6 @@
     "date": "2025-06-16T13:49:37Z"
   },
   {
-    "name": "Graylog2/graylog2-server",
-    "version": "6.3.0-rc.1",
-    "date": "2025-06-16T11:28:08Z"
-  },
-  {
     "name": "home-assistant/operating-system",
     "version": "15.2",
     "date": "2025-04-14T15:37:12Z"
@@ -478,11 +488,6 @@
     "name": "meilisearch/meilisearch",
     "version": "latest",
     "date": "2025-06-12T19:09:18Z"
-  },
-  {
-    "name": "Checkmk/checkmk",
-    "version": "v2.3.0p34",
-    "date": "2025-06-12T12:15:44Z"
   },
   {
     "name": "zitadel/zitadel",
@@ -818,11 +823,6 @@
     "name": "wavelog/wavelog",
     "version": "2.0.4",
     "date": "2025-05-16T15:09:53Z"
-  },
-  {
-    "name": "gotson/komga",
-    "version": "1.21.3",
-    "date": "2025-05-16T04:31:05Z"
   },
   {
     "name": "Dolibarr/dolibarr",
