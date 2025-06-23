@@ -52,7 +52,8 @@ function update_script() {
     $STD /opt/browserless/node_modules/playwright-core/cli.js install --with-deps
     # Update Chrome separately, as it has to be done with the force option. Otherwise the installation of other browsers will not be done if Chrome is already installed.
     $STD /opt/browserless/node_modules/playwright-core/cli.js install --force chrome
-    $STD /opt/browserless/node_modules/playwright-core/cli.js install chromium firefox webkit msedge
+    $STD /opt/browserless/node_modules/playwright-core/cli.js install --force msedge
+    $STD /opt/browserless/node_modules/playwright-core/cli.js install chromium firefox webkit
     $STD npm run build --prefix /opt/browserless
     $STD npm run build:function --prefix /opt/browserless
     $STD npm prune production --prefix /opt/browserless
