@@ -16,6 +16,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-06-23
 
+### 🆕 New Scripts
+
+  - Alpine-Forgejo by @Johann3s-H [@MickLesk](https://github.com/MickLesk) ([#5396](https://github.com/community-scripts/ProxmoxVE/pull/5396))
+
 ### 🚀 Updated Scripts
 
   - [core]: tools.func -> autoupdate npm to newest version on install [@MickLesk](https://github.com/MickLesk) ([#5397](https://github.com/community-scripts/ProxmoxVE/pull/5397))
