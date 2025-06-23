@@ -18,6 +18,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
+  - [core]: tools.func -> autoupdate npm to newest version on install [@MickLesk](https://github.com/MickLesk) ([#5397](https://github.com/community-scripts/ProxmoxVE/pull/5397))
+
   - #### 🐞 Bug Fixes
 
     - PLANKA: Fix the update procedure [@tremor021](https://github.com/tremor021) ([#5391](https://github.com/community-scripts/ProxmoxVE/pull/5391))
