@@ -20,6 +20,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - changed trilium github repo [@miggi92](https://github.com/miggi92) ([#5390](https://github.com/community-scripts/ProxmoxVE/pull/5390))
     - changedetection: fix: hermetic msedge [@CrazyWolf13](https://github.com/CrazyWolf13) ([#5388](https://github.com/community-scripts/ProxmoxVE/pull/5388))
 
 ## 2025-06-22
