@@ -41,19 +41,19 @@ function update_script() {
     mkdir -p /opt/planka-backup/background-images
     mkdir -p /opt/planka-backup/attachments
     mv /opt/planka/planka/.env /opt/planka-backup
-    $STD mv /opt/planka/planka/public/favicons/* /opt/planka-backup/favicons/
-    $STD mv /opt/planka/planka/public/user-avatars/* /opt/planka-backup/user-avatars/
-    $STD mv /opt/planka/planka/public/background-images/* /opt/planka-backup/background-images/
-    $STD mv /opt/planka/planka/private/attachments/* /opt/planka-backup/attachments/
+    [ -n "$(ls -A /opt/planka/planka/public/favicons 2>/dev/null)" ] && mv /opt/planka/planka/public/favicons/* /opt/planka-backup/favicons/
+    [ -n "$(ls -A /opt/planka/planka/public/user-avatars 2>/dev/null)" ] && mv /opt/planka/planka/public/user-avatars/* /opt/planka-backup/user-avatars/
+    [ -n "$(ls -A /opt/planka/planka/public/background-images 2>/dev/null)" ] && mv /opt/planka/planka/public/background-images/* /opt/planka-backup/background-images/
+    [ -n "$(ls -A /opt/planka/planka/private/attachments 2>/dev/null)" ] && mv /opt/planka/planka/private/attachments/* /opt/planka-backup/attachments/
     rm -rf /opt/planka
     fetch_and_deploy_gh_release "planka" "plankanban/planka" "prebuild" "latest" "/opt/planka" "planka-prebuild.zip"
     cd /opt/planka/planka
     $STD npm install
     mv /opt/planka-backup/.env /opt/planka/planka/
-    $STD mv /opt/planka-backup/favicons/* /opt/planka/planka/public/favicons/
-    $STD mv /opt/planka-backup/user-avatars/* /opt/planka/planka/public/user-avatars/
-    $STD mv /opt/planka-backup/background-images/* /opt/planka/planka/public/background-images/
-    $STD mv /opt/planka-backup/attachments/* /opt/planka/planka/private/attachments/
+    [ -n "$(ls -A /opt/planka-backup/favicons 2>/dev/null)" ] && mv /opt/planka-backup/favicons/* /opt/planka/planka/public/favicons/
+    [ -n "$(ls -A /opt/planka-backup/user-avatars 2>/dev/null)" ] && mv /opt/planka-backup/user-avatars/* /opt/planka/planka/public/user-avatars/
+    [ -n "$(ls -A /opt/planka-backup/background-images 2>/dev/null)" ] && mv /opt/planka-backup/background-images/* /opt/planka/planka/public/background-images/
+    [ -n "$(ls -A /opt/planka-backup/attachments 2>/dev/null)" ] && mv /opt/planka-backup/attachments/* /opt/planka/planka/private/attachments/
     msg_ok "Updated $APP to ${RELEASE}"
 
     msg_info "Starting $APP"
