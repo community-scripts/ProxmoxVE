@@ -1,8 +1,33 @@
 [
   {
+    "name": "OliveTin/OliveTin",
+    "version": "2025.6.22",
+    "date": "2025-06-22T22:41:11Z"
+  },
+  {
+    "name": "qbittorrent/qBittorrent",
+    "version": "release-5.1.1",
+    "date": "2025-06-22T21:41:17Z"
+  },
+  {
+    "name": "pocket-id/pocket-id",
+    "version": "v1.4.1",
+    "date": "2025-06-22T19:38:08Z"
+  },
+  {
     "name": "msgbyte/tianji",
-    "version": "v1.22.2",
-    "date": "2025-06-22T10:21:41Z"
+    "version": "v1.22.3",
+    "date": "2025-06-22T18:29:00Z"
+  },
+  {
+    "name": "clusterzx/paperless-ai",
+    "version": "v3.0.7",
+    "date": "2025-06-22T17:49:29Z"
+  },
+  {
+    "name": "fuma-nama/fumadocs",
+    "version": "create-fumadocs-app@15.5.4",
+    "date": "2025-06-22T13:12:24Z"
   },
   {
     "name": "TandoorRecipes/recipes",
@@ -52,12 +77,12 @@
   {
     "name": "theonedev/onedev",
     "version": "v11.11.1",
-    "date": "2025-06-21T09:23:39Z"
+    "date": "2025-06-21T07:32:15Z"
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v4.2.1",
-    "date": "2025-06-03T20:04:28Z"
+    "version": "nightly",
+    "date": "2025-06-21T09:03:46Z"
   },
   {
     "name": "pocketbase/pocketbase",
@@ -160,11 +185,6 @@
     "date": "2025-06-19T19:35:01Z"
   },
   {
-    "name": "pocket-id/pocket-id",
-    "version": "v1.4.0",
-    "date": "2025-06-19T18:30:11Z"
-  },
-  {
     "name": "rclone/rclone",
     "version": "v1.70.1",
     "date": "2025-06-19T13:19:02Z"
@@ -223,11 +243,6 @@
     "name": "NodeBB/NodeBB",
     "version": "v3.12.7",
     "date": "2025-06-18T14:22:53Z"
-  },
-  {
-    "name": "clusterzx/paperless-ai",
-    "version": "v3.0.6",
-    "date": "2025-06-18T14:18:13Z"
   },
   {
     "name": "openhab/openhab-core",
@@ -343,11 +358,6 @@
     "name": "emqx/emqx",
     "version": "e5.9.1-alpha.1",
     "date": "2025-06-16T15:34:01Z"
-  },
-  {
-    "name": "fuma-nama/fumadocs",
-    "version": "fumadocs-openapi@9.0.12",
-    "date": "2025-06-16T15:09:27Z"
   },
   {
     "name": "open-webui/open-webui",
@@ -563,11 +573,6 @@
     "name": "homebridge/homebridge",
     "version": "v1.10.0",
     "date": "2025-06-07T08:31:48Z"
-  },
-  {
-    "name": "OliveTin/OliveTin",
-    "version": "2025.6.6",
-    "date": "2025-06-06T21:39:22Z"
   },
   {
     "name": "diced/zipline",
@@ -943,11 +948,6 @@
     "name": "gotify/server",
     "version": "v2.6.3",
     "date": "2025-04-27T09:05:42Z"
-  },
-  {
-    "name": "qbittorrent/qBittorrent",
-    "version": "release-5.1.0",
-    "date": "2025-04-27T08:53:48Z"
   },
   {
     "name": "photoprism/photoprism",
