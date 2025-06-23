@@ -20,6 +20,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - PLANKA: Fix the update procedure [@tremor021](https://github.com/tremor021) ([#5391](https://github.com/community-scripts/ProxmoxVE/pull/5391))
     - changed trilium github repo [@miggi92](https://github.com/miggi92) ([#5390](https://github.com/community-scripts/ProxmoxVE/pull/5390))
     - changedetection: fix: hermetic msedge [@CrazyWolf13](https://github.com/CrazyWolf13) ([#5388](https://github.com/community-scripts/ProxmoxVE/pull/5388))
 
