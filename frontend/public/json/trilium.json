@@ -10,7 +10,7 @@
   "privileged": false,
   "interface_port": 8080,
   "documentation": "https://triliumnext.github.io/Docs/",
-  "website": "https://github.com/TriliumNext/Notes",
+  "website": "https://github.com/TriliumNext/trilium",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/triliumnext.webp",
   "config_path": "/root/trilium-data/config.ini",
   "description": "TriliumNext is an newer Fork of Trilium. TriliumNext is an open-source note-taking and personal knowledge management application. It allows users to organize and manage their notes, ideas, and information in a single place, using a hierarchical tree-like structure. Trilium offers a range of features, including rich text formatting, links, images, and attachments, making it easy to create and structure notes. The software is designed to be flexible and customizable, with a range of customization options and plugins available, including themes, export options, and more. Trilium is a self-hosted solution, and can be run on a local machine or a cloud-based server, providing users with full control over their notes and information.",
