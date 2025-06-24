@@ -1,0 +1,35 @@
+{
+  "name": "ONLYOFFICE Docs",
+  "slug": "onlyoffice",
+  "categories": [
+    9
+  ],
+  "date_created": "2025-06-17",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 80,
+  "documentation": "https://helpcenter.onlyoffice.com/docs",
+  "website": "https://onlyoffice.com/",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/onlyoffice.webp",
+  "config_path": "/etc/onlyoffice/documentserver/local.json",
+  "description": "ONLYOFFICE Docs is an open-source online office suite that provides collaborative editors for text documents, spreadsheets, and presentations, fully compatible with Microsoft Office formats (DOCX, XLSX, PPTX).",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/onlyoffice.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 10,
+        "os": "Debian",
+        "version": "12"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": "admin",
+    "password": "admin"
+  },
+  "notes": []
+}
