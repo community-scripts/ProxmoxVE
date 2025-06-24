@@ -16,6 +16,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-06-24
 
+### 🆕 New Scripts
+
+  - ONLYOFFICE Docs ([#5420](https://github.com/community-scripts/ProxmoxVE/pull/5420))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
