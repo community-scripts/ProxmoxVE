@@ -4,7 +4,7 @@
   "categories": [
     9
   ],
-  "date_created": "2025-06-17",
+  "date_created": "2025-06-24",
   "type": "ct",
   "updateable": true,
   "privileged": false,
@@ -32,9 +32,9 @@
     "password": "admin"
   },
   "notes": [
-        {
-            "text": "Database / RabbitMQ Credentials: `cat ~/onlyoffice.creds`",
-            "type": "info"
-        }    
+    {
+      "text": "Database / RabbitMQ Credentials: `cat ~/onlyoffice.creds`",
+      "type": "info"
+    }
   ]
 }
