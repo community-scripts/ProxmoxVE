@@ -1,5 +1,50 @@
 [
   {
+    "name": "rcourtman/Pulse",
+    "version": "v3.31.1",
+    "date": "2025-06-23T23:13:13Z"
+  },
+  {
+    "name": "meilisearch/meilisearch",
+    "version": "prototype-incremental-vector-store-1",
+    "date": "2025-06-23T21:37:47Z"
+  },
+  {
+    "name": "minio/minio",
+    "version": "RELEASE.2025-06-13T11-33-47Z",
+    "date": "2025-06-23T20:58:42Z"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2025.6.1",
+    "date": "2025-06-23T19:28:09Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "v4.2.1",
+    "date": "2025-06-03T20:04:28Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.6.2",
+    "date": "2025-06-23T18:38:37Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.4.0p5-rc2",
+    "date": "2025-06-23T15:50:55Z"
+  },
+  {
+    "name": "VictoriaMetrics/VictoriaMetrics",
+    "version": "pmm-6401-v1.120.0",
+    "date": "2025-06-23T15:12:12Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.98.2",
+    "date": "2025-06-18T18:20:16Z"
+  },
+  {
     "name": "Graylog2/graylog2-server",
     "version": "6.3.0-rc.2",
     "date": "2025-06-23T11:31:38Z"
@@ -8,11 +53,6 @@
     "name": "mattermost/mattermost",
     "version": "v9.11.17",
     "date": "2025-06-18T08:12:05Z"
-  },
-  {
-    "name": "Checkmk/checkmk",
-    "version": "v2.4.0p5-rc1",
-    "date": "2025-06-23T06:14:42Z"
   },
   {
     "name": "Jackett/Jackett",
@@ -85,11 +125,6 @@
     "date": "2025-06-21T13:43:58Z"
   },
   {
-    "name": "rcourtman/Pulse",
-    "version": "v3.30.0",
-    "date": "2025-06-17T16:00:01Z"
-  },
-  {
     "name": "rogerfar/rdt-client",
     "version": "v2.0.114",
     "date": "2025-06-21T11:20:21Z"
@@ -103,11 +138,6 @@
     "name": "theonedev/onedev",
     "version": "v11.11.1",
     "date": "2025-06-21T07:32:15Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "v4.2.1",
-    "date": "2025-06-03T20:04:28Z"
   },
   {
     "name": "pocketbase/pocketbase",
@@ -138,11 +168,6 @@
     "name": "apache/tika",
     "version": "3.2.1-rc1",
     "date": "2025-06-20T19:41:10Z"
-  },
-  {
-    "name": "VictoriaMetrics/VictoriaMetrics",
-    "version": "v1.24.0-victorialogs",
-    "date": "2025-06-20T19:31:31Z"
   },
   {
     "name": "homarr-labs/homarr",
@@ -220,11 +245,6 @@
     "date": "2025-06-19T11:28:36Z"
   },
   {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.98.2",
-    "date": "2025-06-18T18:20:16Z"
-  },
-  {
     "name": "redis/redis",
     "version": "8.2-m01-int2",
     "date": "2025-06-12T08:52:10Z"
@@ -273,11 +293,6 @@
     "name": "zwave-js/zwave-js-ui",
     "version": "v10.7.0",
     "date": "2025-06-18T11:57:05Z"
-  },
-  {
-    "name": "esphome/esphome",
-    "version": "2025.6.0",
-    "date": "2025-06-18T09:41:11Z"
   },
   {
     "name": "forgejo/forgejo",
@@ -465,11 +480,6 @@
     "date": "2025-06-14T02:52:44Z"
   },
   {
-    "name": "home-assistant/core",
-    "version": "2025.6.1",
-    "date": "2025-06-13T20:16:18Z"
-  },
-  {
     "name": "wazuh/wazuh",
     "version": "coverity-w25-4.13.0",
     "date": "2025-06-13T13:58:23Z"
@@ -483,11 +493,6 @@
     "name": "leiweibau/Pi.Alert",
     "version": "v2025-06-12",
     "date": "2025-06-12T20:59:47Z"
-  },
-  {
-    "name": "meilisearch/meilisearch",
-    "version": "latest",
-    "date": "2025-06-12T19:09:18Z"
   },
   {
     "name": "zitadel/zitadel",
@@ -768,11 +773,6 @@
     "name": "authelia/authelia",
     "version": "v4.39.4",
     "date": "2025-05-25T02:27:28Z"
-  },
-  {
-    "name": "minio/minio",
-    "version": "RELEASE.2025-05-24T17-08-30Z",
-    "date": "2025-05-24T21:42:19Z"
   },
   {
     "name": "0xERR0R/blocky",
