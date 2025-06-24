@@ -16,6 +16,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-06-24
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - Refactor: ESPHome to uv based install [@MickLesk](https://github.com/MickLesk) ([#5413](https://github.com/community-scripts/ProxmoxVE/pull/5413))
+
 ## 2025-06-23
 
 ### 🆕 New Scripts
