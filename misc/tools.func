@@ -747,12 +747,12 @@ function fetch_and_deploy_gh_release() {
 
   local app_lc=$(echo "${app,,}" | tr -d ' ')
   local version_file="$HOME/.${app_lc}"
-  local curl_timeout="--connect-timeout 10 --max-time 30"
+
+  local api_timeout="--connect-timeout 5 --max-time 30"
+  local download_timeout="--connect-timeout 15 --max-time 900"
 
   local current_version=""
-  if [[ -f "$version_file" ]]; then
-    current_version=$(<"$version_file")
-  fi
+  [[ -f "$version_file" ]] && current_version=$(<"$version_file")
 
   if ! command -v jq &>/dev/null; then
     $STD apt-get install -y jq &>/dev/null
@@ -763,11 +763,22 @@ function fetch_and_deploy_gh_release() {
   local header=()
   [[ -n "${GITHUB_TOKEN:-}" ]] && header=(-H "Authorization: token $GITHUB_TOKEN")
 
-  local resp http_code
-  resp=$(curl $curl_timeout -fsSL -w "%{http_code}" -o /tmp/gh_rel.json "${header[@]}" "$api_url")
+  local max_retries=3 retry_delay=2 attempt=1 success=false resp http_code
+
+  while ((attempt <= max_retries)); do
+    resp=$(curl $api_timeout -fsSL -w "%{http_code}" -o /tmp/gh_rel.json "${header[@]}" "$api_url") && success=true && break
+    sleep "$retry_delay"
+    ((attempt++))
+  done
+
+  if ! $success; then
+    msg_error "Failed to fetch release metadata after $max_retries attempts"
+    return 1
+  fi
+
   http_code="${resp:(-3)}"
   [[ "$http_code" != "200" ]] && {
-    msg_error "Failed to fetch release: HTTP $http_code"
+    msg_error "GitHub API returned HTTP $http_code"
     return 1
   }
 
@@ -785,14 +796,14 @@ function fetch_and_deploy_gh_release() {
   tmpdir=$(mktemp -d) || return 1
   local filename="" url=""
 
-  msg_info "Setup $app ($version)"
+  msg_info "Fetching GitHub release: $app ($version)"
 
   if [[ "$mode" == "tarball" || "$mode" == "source" ]]; then
     url=$(echo "$json" | jq -r '.tarball_url // empty')
     [[ -z "$url" ]] && url="https://github.com/$repo/archive/refs/tags/v$version.tar.gz"
     filename="${app_lc}-${version}.tar.gz"
 
-    curl $curl_timeout -fsSL -o "$tmpdir/$filename" "$url" || {
+    curl $download_timeout -fsSL -o "$tmpdir/$filename" "$url" || {
       msg_error "Download failed: $url"
       rm -rf "$tmpdir"
       return 1
@@ -836,7 +847,7 @@ function fetch_and_deploy_gh_release() {
     fi
 
     filename="${url_match##*/}"
-    curl $curl_timeout -fsSL -o "$tmpdir/$filename" "$url_match" || {
+    curl $download_timeout -fsSL -o "$tmpdir/$filename" "$url_match" || {
       msg_error "Download failed: $url_match"
       rm -rf "$tmpdir"
       return 1
@@ -871,7 +882,7 @@ function fetch_and_deploy_gh_release() {
     }
 
     filename="${asset_url##*/}"
-    curl $curl_timeout -fsSL -o "$tmpdir/$filename" "$asset_url" || {
+    curl $download_timeout -fsSL -o "$tmpdir/$filename" "$asset_url" || {
       msg_error "Download failed: $asset_url"
       rm -rf "$tmpdir"
       return 1
@@ -912,7 +923,7 @@ function fetch_and_deploy_gh_release() {
 
     filename="${asset_url##*/}"
     mkdir -p "$target"
-    curl $curl_timeout -fsSL -o "$target/$app" "$asset_url" || {
+    curl $download_timeout -fsSL -o "$target/$app" "$asset_url" || {
       msg_error "Download failed: $asset_url"
       rm -rf "$tmpdir"
       return 1
@@ -927,7 +938,7 @@ function fetch_and_deploy_gh_release() {
   fi
 
   echo "$version" >"$version_file"
-  msg_ok "Setup $app ($version)"
+  msg_ok "Deployed: $app ($version)"
   rm -rf "$tmpdir"
 }
 
