@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
 # Copyright (c) 2021-2025 tteck
-# Author: tteck
-# Co-Author: MickLesk (Canbiz)
+# Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/alexta69/metube
 
@@ -28,15 +27,8 @@ $STD apt-get install -y --no-install-recommends \
   ca-certificates
 msg_ok "Installed Dependencies"
 
-msg_info "Setup Python3"
-$STD apt-get install -y \
-  python3 \
-  python3-dev \
-  python3-pip \
-  python3-venv
-msg_ok "Setup Python3"
-
-NODE_VERSION="22" setup_nodejs
+PYTHON_VERSION="3.13" setup_uv
+NODE_VERSION="22" install_node_and_modules
 
 msg_info "Installing MeTube"
 $STD git clone https://github.com/alexta69/metube /opt/metube
@@ -44,8 +36,13 @@ cd /opt/metube/ui
 $STD npm install
 $STD node_modules/.bin/ng build
 cd /opt/metube
-$STD pip3 install pipenv
-$STD pipenv install
+$STD uv venv /opt/metube/.venv
+$STD /opt/metube/.venv/bin/python -m ensurepip --upgrade
+$STD /opt/metube/.venv/bin/python -m pip install --upgrade pip
+$STD /opt/metube/.venv/bin/python -m pip install pipenv
+$STD /opt/metube/.venv/bin/pipenv install
+$STD /opt/metube/.venv/bin/pipenv update yt-dlp
+
 mkdir -p /opt/metube_downloads /opt/metube_downloads/.metube /opt/metube_downloads/music /opt/metube_downloads/videos
 cat <<EOF >/opt/metube/.env
 DOWNLOAD_DIR=/opt/metube_downloads
@@ -65,7 +62,7 @@ After=network.target
 Type=simple
 WorkingDirectory=/opt/metube
 EnvironmentFile=/opt/metube/.env
-ExecStart=/usr/local/bin/pipenv run python3 app/main.py
+ExecStart=/opt/metube/.venv/bin/pipenv run python3 app/main.py
 Restart=always
 User=root
 
