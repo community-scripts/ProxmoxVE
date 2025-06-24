@@ -31,5 +31,10 @@
     "username": "admin",
     "password": "admin"
   },
-  "notes": []
+  "notes": [
+        {
+            "text": "Database / RabbitMQ Credentials: `cat ~/onlyoffice.creds`",
+            "type": "info"
+        }    
+  ]
 }
