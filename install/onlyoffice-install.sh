@@ -32,10 +32,10 @@ $STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET client_encoding TO 'utf8'
 $STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET default_transaction_isolation TO 'read committed';"
 $STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET timezone TO 'UTC'"
 {
-  echo "OnlyOffice-Credentials"
-  echo "OnlyOffice Database User: $DB_USER"
-  echo "OnlyOffice Database Password: $DB_PASS"
-  echo "OnlyOffice Database Name: $DB_NAME"
+  echo "ONLYOFFICE-Credentials"
+  echo "ONLYOFFICE Database User: $DB_USER"
+  echo "ONLYOFFICE Database Password: $DB_PASS"
+  echo "ONLYOFFICE Database Name: $DB_NAME"
 } >>~/onlyoffice.creds
 msg_ok "Set up Database"
 
@@ -78,7 +78,7 @@ echo "RabbitMQ Password: $RMQ_PASS" >>~/onlyoffice.creds
 echo "JWT Secret: $JWT_SECRET" >>~/onlyoffice.creds
 {
   echo ""
-  echo "OnlyOffice RabbitMQ Credentials"
+  echo "ONLYOFFICE RabbitMQ Credentials"
   echo "User: $RMQ_USER"
   echo "Password: $RMQ_PASS"
   echo "Secret: $JWT_SECRET"
