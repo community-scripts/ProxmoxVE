@@ -34,10 +34,10 @@
         "ram": 256,
         "hdd": 1,
         "os": "alpine",
-        "version": "3.21"
+        "version": "3.22"
       }
     }
- ],
+  ],
   "default_credentials": {
     "username": null,
     "password": null

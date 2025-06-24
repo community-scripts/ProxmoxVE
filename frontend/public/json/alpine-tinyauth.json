@@ -23,7 +23,7 @@
         "ram": 256,
         "hdd": 2,
         "os": "alpine",
-        "version": "3.21"
+        "version": "3.22"
       }
     },
     {
@@ -34,7 +34,7 @@
         "ram": 256,
         "hdd": 2,
         "os": "alpine",
-        "version": "3.21"
+        "version": "3.22"
       }
     }
   ],

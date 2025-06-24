@@ -34,7 +34,7 @@
         "ram": 1024,
         "hdd": 10,
         "os": "alpine",
-        "version": "3.21"
+        "version": "3.22"
       }
     }
   ],
