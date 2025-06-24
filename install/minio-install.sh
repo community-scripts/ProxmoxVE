@@ -64,9 +64,9 @@ EOF
   echo "MinIO Admin Password: $MINIO_ADMIN_PASSWORD"
 } >>~/minio.creds
 echo "${RELEASE}" >/opt/${APPLICATION,,}_version.txt
-msg_ok "MinIO setup complete"
+msg_ok "Setup MinIO"
 
-msg_info "Creating systemd service"
+msg_info "Creating service"
 cat <<EOF >/etc/systemd/system/minio.service
 [Unit]
 Description=MinIO
@@ -88,7 +88,7 @@ WantedBy=multi-user.target
 EOF
 
 systemctl enable -q --now minio
-msg_ok "Systemd service created"
+msg_ok "Service created"
 
 motd_ssh
 customize
