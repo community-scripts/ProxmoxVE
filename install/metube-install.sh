@@ -28,7 +28,7 @@ $STD apt-get install -y --no-install-recommends \
 msg_ok "Installed Dependencies"
 
 PYTHON_VERSION="3.13" setup_uv
-NODE_VERSION="22" install_node_and_modules
+NODE_VERSION="22" setup_nodejs
 
 msg_info "Installing MeTube"
 $STD git clone https://github.com/alexta69/metube /opt/metube
