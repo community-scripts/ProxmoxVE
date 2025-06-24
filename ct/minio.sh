@@ -36,8 +36,8 @@ function update_script() {
   if [[ "${CURRENT_VERSION}" == "${FEATURE_RICH_VERSION}" && "${RELEASE}" != "${FEATURE_RICH_VERSION}" ]]; then
     echo
     echo "You are currently running the last feature-rich community version: ${FEATURE_RICH_VERSION}"
-    echo "The latest version will REMOVE most management features from the Console UI."
-    echo "Do you want to proceed with the update to the latest version? [y/N]: "
+    echo "WARNING: Updating to the latest version will REMOVE most management features from the Console UI."
+    echo "Do you still want to upgrade to the latest version? [y/N]: "
     read -n 1 -r
     echo
     if [[ ! $REPLY =~ ^[Yy]$ ]]; then

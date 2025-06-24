@@ -38,7 +38,7 @@ if [[ "$USE_LATEST" == "true" ]]; then
   DOWNLOAD_URL="https://dl.min.io/server/minio/release/linux-amd64/minio"
 else
   RELEASE="$FEATURE_RICH_VERSION"
-  DOWNLOAD_URL="https://dl.min.io/server/minio/release/linux-amd64/archive/minio.${FEATURE_RICH_VERSION}"
+  DOWNLOAD_URL="https://dl.min.io/server/minio/release/linux-amd64/archive/minio.RELEASE.${FEATURE_RICH_VERSION}"
 fi
 
 curl -fsSL "$DOWNLOAD_URL" -o /usr/local/bin/minio
