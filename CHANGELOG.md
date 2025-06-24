@@ -24,6 +24,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### ✨ New Features
 
+    - [core]: Improve GitHub release fetch robustness with split timeouts and retry logic [@MickLesk](https://github.com/MickLesk) ([#5422](https://github.com/community-scripts/ProxmoxVE/pull/5422))
     - Minio: use latest version or latest feature rich version [@MickLesk](https://github.com/MickLesk) ([#5423](https://github.com/community-scripts/ProxmoxVE/pull/5423))
 
   - #### 🔧 Refactor
