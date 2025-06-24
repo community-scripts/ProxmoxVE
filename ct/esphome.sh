@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/python_to_uv/misc/build.func)
 # Copyright (c) 2021-2025 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -25,22 +25,57 @@ function update_script() {
   check_container_resources
   if [[ ! -f /etc/systemd/system/esphomeDashboard.service ]]; then
     msg_error "No ${APP} Installation Found!"
-    exit
+    exit 1
   fi
-  msg_info "Stopping ESPHome"
+
+  msg_info "Stopping ${APP}"
   systemctl stop esphomeDashboard
-  msg_ok "Stopped ESPHome"
+  msg_ok "Stopped ${APP}"
 
-  msg_info "Updating ESPHome"
-  if [[ -d /srv/esphome ]]; then
-    $STD source /srv/esphome/bin/activate
+  VENV_PATH="/opt/esphome/.venv"
+  ESPHOME_BIN="${VENV_PATH}/bin/esphome"
+  export PYTHON_VERSION="3.12"
+
+  if [[ ! -d "$VENV_PATH" || ! -x "$ESPHOME_BIN" ]]; then
+    PYTHON_VERSION="3.12" setup_uv
+    msg_info "Migrating to uv/venv"
+    rm -rf "$VENV_PATH"
+    mkdir -p /opt/esphome
+    cd /opt/esphome
+    $STD uv venv "$VENV_PATH"
+    $STD "$VENV_PATH/bin/python" -m ensurepip --upgrade
+    $STD "$VENV_PATH/bin/python" -m pip install --upgrade pip
+    $STD "$VENV_PATH/bin/python" -m pip install esphome tornado esptool
+    msg_ok "Migrated to uv/venv"
+  else
+    msg_info "Updating ESPHome"
+    PYTHON_VERSION="3.12" setup_uv
+    $STD "$VENV_PATH/bin/python" -m pip install --upgrade esphome tornado esptool
+    msg_ok "Updated ESPHome"
   fi
-  $STD pip3 install -U esphome
-  msg_ok "Updated ESPHome"
+  SERVICE_FILE="/etc/systemd/system/esphomeDashboard.service"
+  if ! grep -q "${VENV_PATH}/bin/esphome" "$SERVICE_FILE"; then
+    msg_info "Updating systemd service"
+    cat <<EOF >"$SERVICE_FILE"
+[Unit]
+Description=ESPHome Dashboard
+After=network.target
 
-  msg_info "Starting ESPHome"
+[Service]
+ExecStart=${VENV_PATH}/bin/esphome dashboard /root/config/
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target
+EOF
+    $STD systemctl daemon-reload
+    msg_ok "Updated systemd service"
+  fi
+
+  msg_info "Starting ${APP}"
   systemctl start esphomeDashboard
-  msg_ok "Started ESPHome"
+  msg_ok "Started ${APP}"
   msg_ok "Updated Successfully"
   exit
 }
