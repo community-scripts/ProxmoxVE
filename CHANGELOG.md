@@ -29,8 +29,12 @@ All LXC instances created using this repository come pre-installed with Midnight
   - #### ✨ New Features
 
     - general: update all alpine scripts to version 3.22 [@MickLesk](https://github.com/MickLesk) ([#5428](https://github.com/community-scripts/ProxmoxVE/pull/5428))
-    - [core]: Improve GitHub release fetch robustness with split timeouts and retry logic [@MickLesk](https://github.com/MickLesk) ([#5422](https://github.com/community-scripts/ProxmoxVE/pull/5422))
     - Minio: use latest version or latest feature rich version [@MickLesk](https://github.com/MickLesk) ([#5423](https://github.com/community-scripts/ProxmoxVE/pull/5423))
+    - [core]: Improve GitHub release fetch robustness with split timeouts and retry logic [@MickLesk](https://github.com/MickLesk) ([#5422](https://github.com/community-scripts/ProxmoxVE/pull/5422))
+
+  - #### 💥 Breaking Changes
+
+    - bump scripts (Installer) from Ubuntu 22.04 to Ubuntu 24.04 (agentdvr, emby, jellyfin, plex, shinobi) [@MickLesk](https://github.com/MickLesk) ([#5434](https://github.com/community-scripts/ProxmoxVE/pull/5434))
 
   - #### 🔧 Refactor
 
