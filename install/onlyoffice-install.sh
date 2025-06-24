@@ -42,7 +42,6 @@ msg_ok "Set up Database"
 msg_info "Adding ONLYOFFICE GPG Key"
 GPG_TMP="/tmp/onlyoffice.gpg"
 KEY_URL="https://download.onlyoffice.com/GPG-KEY-ONLYOFFICE"
-
 TMP_KEY_CONTENT=$(mktemp)
 if curl -fsSL "$KEY_URL" -o "$TMP_KEY_CONTENT" && grep -q "BEGIN PGP PUBLIC KEY BLOCK" "$TMP_KEY_CONTENT"; then
   gpg --quiet --batch --yes --no-default-keyring --keyring "gnupg-ring:$GPG_TMP" --import "$TMP_KEY_CONTENT" >/dev/null 2>&1
