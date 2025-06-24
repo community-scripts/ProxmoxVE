@@ -7,7 +7,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 
 APP="Alpine-Zigbee2MQTT"
 var_tags="${var_tags:-alpine;zigbee;mqtt;smarthome}"
-var_disk="${var_disk:-0.3}"
+var_disk="${var_disk:-1}"
 var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-256}"
 var_os="${var_os:-alpine}"
