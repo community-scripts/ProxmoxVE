@@ -18,6 +18,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Update all Alpine Scripts to atleast 1GB HDD [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#5418](https://github.com/community-scripts/ProxmoxVE/pull/5418))
+
   - #### 🔧 Refactor
 
     - Refactor: MeTube to uv based install [@MickLesk](https://github.com/MickLesk) ([#5411](https://github.com/community-scripts/ProxmoxVE/pull/5411))
