@@ -24,6 +24,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - GoMFT: tmpl bugfix to work with current version until a new release pushed [@MickLesk](https://github.com/MickLesk) ([#5435](https://github.com/community-scripts/ProxmoxVE/pull/5435))
     - Update all Alpine Scripts to atleast 1GB HDD [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#5418](https://github.com/community-scripts/ProxmoxVE/pull/5418))
 
   - #### ✨ New Features
