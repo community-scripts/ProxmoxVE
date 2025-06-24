@@ -82,7 +82,7 @@ echo "JWT Secret: $JWT_SECRET" >>~/onlyoffice.creds
   echo "User: $RMQ_USER"
   echo "Password: $RMQ_PASS"
   echo "Secret: $JWT_SECRET"
-} >>~/booklore.creds
+} >>~/onlyoffice.creds
 msg_ok "Debconf Preconfiguration Done"
 
 msg_info "Installing ttf-mscorefonts-installer"
