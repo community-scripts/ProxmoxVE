@@ -1,8 +1,33 @@
 [
   {
     "name": "rcourtman/Pulse",
-    "version": "v3.31.1",
-    "date": "2025-06-23T23:13:13Z"
+    "version": "v3.31.2",
+    "date": "2025-06-24T09:45:34Z"
+  },
+  {
+    "name": "fallenbagel/jellyseerr",
+    "version": "preview-fix-proxy-axios",
+    "date": "2025-06-24T08:50:22Z"
+  },
+  {
+    "name": "arunavo4/gitea-mirror",
+    "version": "v2.18.0",
+    "date": "2025-06-24T08:29:55Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2052",
+    "date": "2025-06-24T05:59:30Z"
+  },
+  {
+    "name": "wazuh/wazuh",
+    "version": "coverity-w26-4.13.0",
+    "date": "2025-06-24T02:02:34Z"
+  },
+  {
+    "name": "evcc-io/evcc",
+    "version": "0.204.4",
+    "date": "2025-06-23T22:21:08Z"
   },
   {
     "name": "meilisearch/meilisearch",
@@ -13,6 +38,11 @@
     "name": "minio/minio",
     "version": "RELEASE.2025-06-13T11-33-47Z",
     "date": "2025-06-23T20:58:42Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.2.5",
+    "date": "2025-05-28T06:49:43Z"
   },
   {
     "name": "esphome/esphome",
@@ -53,11 +83,6 @@
     "name": "mattermost/mattermost",
     "version": "v9.11.17",
     "date": "2025-06-18T08:12:05Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2042",
-    "date": "2025-06-23T05:54:00Z"
   },
   {
     "name": "firefly-iii/firefly-iii",
@@ -120,11 +145,6 @@
     "date": "2025-06-21T14:05:12Z"
   },
   {
-    "name": "fallenbagel/jellyseerr",
-    "version": "preview-fix-proxy-auth",
-    "date": "2025-06-21T13:43:58Z"
-  },
-  {
     "name": "rogerfar/rdt-client",
     "version": "v2.0.114",
     "date": "2025-06-21T11:20:21Z"
@@ -137,7 +157,7 @@
   {
     "name": "theonedev/onedev",
     "version": "v11.11.1",
-    "date": "2025-06-21T07:32:15Z"
+    "date": "2025-06-21T09:23:39Z"
   },
   {
     "name": "pocketbase/pocketbase",
@@ -190,11 +210,6 @@
     "date": "2025-06-20T17:20:54Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.2.5",
-    "date": "2025-05-28T06:49:43Z"
-  },
-  {
     "name": "bunkerity/bunkerweb",
     "version": "testing",
     "date": "2025-06-16T18:10:42Z"
@@ -218,11 +233,6 @@
     "name": "benzino77/tasmocompiler",
     "version": "v12.7.0",
     "date": "2025-06-20T08:31:16Z"
-  },
-  {
-    "name": "arunavo4/gitea-mirror",
-    "version": "v2.16.3",
-    "date": "2025-06-20T05:49:06Z"
   },
   {
     "name": "paperless-ngx/paperless-ngx",
@@ -298,11 +308,6 @@
     "name": "forgejo/forgejo",
     "version": "v11.0.2",
     "date": "2025-06-18T09:38:19Z"
-  },
-  {
-    "name": "evcc-io/evcc",
-    "version": "0.204.3",
-    "date": "2025-06-18T08:31:58Z"
   },
   {
     "name": "silverbulletmd/silverbullet",
@@ -478,11 +483,6 @@
     "name": "FlareSolverr/FlareSolverr",
     "version": "v3.3.25",
     "date": "2025-06-14T02:52:44Z"
-  },
-  {
-    "name": "wazuh/wazuh",
-    "version": "coverity-w25-4.13.0",
-    "date": "2025-06-13T13:58:23Z"
   },
   {
     "name": "FlowiseAI/Flowise",
