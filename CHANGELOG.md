@@ -20,6 +20,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🔧 Refactor
 
+    - Refactor: MeTube to uv based install [@MickLesk](https://github.com/MickLesk) ([#5411](https://github.com/community-scripts/ProxmoxVE/pull/5411))
+    - Refactor: Prometheus PVE Exporter to uv based install [@MickLesk](https://github.com/MickLesk) ([#5412](https://github.com/community-scripts/ProxmoxVE/pull/5412))
     - Refactor: ESPHome to uv based install [@MickLesk](https://github.com/MickLesk) ([#5413](https://github.com/community-scripts/ProxmoxVE/pull/5413))
 
 ## 2025-06-23
