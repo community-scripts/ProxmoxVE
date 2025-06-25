@@ -42,6 +42,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - Enhance InstallCommand component to support Gitea as an alternative source for installation scripts. [@BramSuurdje](https://github.com/BramSuurdje) ([#5464](https://github.com/community-scripts/ProxmoxVE/pull/5464))
 
+  - #### 📝 Script Information
+
+    - Website: mark VM's and "OS"-LXC's as updatable [@MickLesk](https://github.com/MickLesk) ([#5453](https://github.com/community-scripts/ProxmoxVE/pull/5453))
+
 ## 2025-06-24
 
 ### 🆕 New Scripts
