@@ -31,6 +31,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - Refactor: Tailscale  [@MickLesk](https://github.com/MickLesk) ([#5454](https://github.com/community-scripts/ProxmoxVE/pull/5454))
 
+### 🌐 Website
+
+  - #### 🐞 Bug Fixes
+
+    - Refactor CommandMenu to prevent duplicate scripts across categories [@BramSuurdje](https://github.com/BramSuurdje) ([#5463](https://github.com/community-scripts/ProxmoxVE/pull/5463))
+
 ## 2025-06-24
 
 ### 🆕 New Scripts
