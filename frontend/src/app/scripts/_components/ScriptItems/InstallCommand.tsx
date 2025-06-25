@@ -1,17 +1,20 @@
 import CodeCopyButton from "@/components/ui/code-copy-button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Info } from "lucide-react";
 import { basePath } from "@/config/siteConfig";
 import { Script } from "@/lib/types";
 import { getDisplayValueFromType } from "../ScriptInfoBlocks";
 
-const getInstallCommand = (scriptPath = "", isAlpine = false) => {
-  const url = `https://raw.githubusercontent.com/community-scripts/${basePath}/main/${scriptPath}`;
-  return isAlpine ? `bash -c "$(curl -fsSL ${url})"` : `bash -c "$(curl -fsSL ${url})"`;
+const getInstallCommand = (scriptPath = "", isAlpine = false, useGitea = false) => {
+  const githubUrl = `https://raw.githubusercontent.com/community-scripts/${basePath}/main/${scriptPath}`;
+  const giteaUrl = `https://git.community-scripts.org/community-scripts/${basePath}/raw/branch/main/${scriptPath}`;
+  const url = useGitea ? giteaUrl : githubUrl;
+  return `bash -c "$(curl -fsSL ${url})"`;
 };
 
 export default function InstallCommand({ item }: { item: Script }) {
   const alpineScript = item.install_methods.find((method) => method.type === "alpine");
-
   const defaultScript = item.install_methods.find((method) => method.type === "default");
 
   const renderInstructions = (isAlpine = false) => (
@@ -49,9 +52,20 @@ export default function InstallCommand({ item }: { item: Script }) {
     </>
   );
 
-  return (
-    <div className="p-4">
-      {alpineScript ? (
+  const renderGiteaInfo = () => (
+    <Alert className="mt-3 mb-3">
+      <Info className="h-4 w-4" />
+      <AlertDescription className="text-sm">
+        <strong>When to use Gitea:</strong> GitHub may have issues including slow connections, delayed updates after bug
+        fixes, no IPv6 support, API rate limits (60/hour). Use our Gitea mirror as a reliable alternative when
+        experiencing these issues.
+      </AlertDescription>
+    </Alert>
+  );
+
+  const renderScriptTabs = (useGitea = false) => {
+    if (alpineScript) {
+      return (
         <Tabs defaultValue="default" className="mt-2 w-full max-w-4xl">
           <TabsList>
             <TabsTrigger value="default">Default</TabsTrigger>
@@ -59,19 +73,40 @@ export default function InstallCommand({ item }: { item: Script }) {
           </TabsList>
           <TabsContent value="default">
             {renderInstructions()}
-            <CodeCopyButton>{getInstallCommand(defaultScript?.script)}</CodeCopyButton>
+            <CodeCopyButton>{getInstallCommand(defaultScript?.script, false, useGitea)}</CodeCopyButton>
           </TabsContent>
           <TabsContent value="alpine">
             {renderInstructions(true)}
-            <CodeCopyButton>{getInstallCommand(alpineScript.script, true)}</CodeCopyButton>
+            <CodeCopyButton>{getInstallCommand(alpineScript.script, true, useGitea)}</CodeCopyButton>
           </TabsContent>
         </Tabs>
-      ) : defaultScript?.script ? (
+      );
+    } else if (defaultScript?.script) {
+      return (
         <>
           {renderInstructions()}
-          <CodeCopyButton>{getInstallCommand(defaultScript.script)}</CodeCopyButton>
+          <CodeCopyButton>{getInstallCommand(defaultScript.script, false, useGitea)}</CodeCopyButton>
         </>
-      ) : null}
+      );
+    }
+    return null;
+  };
+
+  return (
+    <div className="p-4">
+      <Tabs defaultValue="github" className="w-full max-w-4xl">
+        <TabsList>
+          <TabsTrigger value="github">GitHub</TabsTrigger>
+          <TabsTrigger value="gitea">Gitea</TabsTrigger>
+        </TabsList>
+        <TabsContent value="github">
+          {renderScriptTabs(false)}
+        </TabsContent>
+        <TabsContent value="gitea">
+          {renderGiteaInfo()}
+          {renderScriptTabs(true)}
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
