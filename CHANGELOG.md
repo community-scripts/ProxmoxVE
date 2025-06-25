@@ -18,6 +18,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Docmost: Increase resources [@tremor021](https://github.com/tremor021) ([#5458](https://github.com/community-scripts/ProxmoxVE/pull/5458))
+
   - #### ✨ New Features
 
     - tools.func: new helper for imagemagick [@MickLesk](https://github.com/MickLesk) ([#5452](https://github.com/community-scripts/ProxmoxVE/pull/5452))
