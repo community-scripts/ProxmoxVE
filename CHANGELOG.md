@@ -20,6 +20,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### ✨ New Features
 
+    - tools.func: new helper for imagemagick [@MickLesk](https://github.com/MickLesk) ([#5452](https://github.com/community-scripts/ProxmoxVE/pull/5452))
     - YunoHost: add Update-Function [@MickLesk](https://github.com/MickLesk) ([#5450](https://github.com/community-scripts/ProxmoxVE/pull/5450))
 
   - #### 🔧 Refactor
