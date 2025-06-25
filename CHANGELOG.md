@@ -35,7 +35,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - Update Tooltips component to conditionally display updateable status based on item type [@BramSuurdje](https://github.com/BramSuurdje) ([#5461](https://github.com/community-scripts/ProxmoxVE/pull/5461))
     - Refactor CommandMenu to prevent duplicate scripts across categories [@BramSuurdje](https://github.com/BramSuurdje) ([#5463](https://github.com/community-scripts/ProxmoxVE/pull/5463))
+
+  - #### ✨ New Features
+
+    - Enhance InstallCommand component to support Gitea as an alternative source for installation scripts. [@BramSuurdje](https://github.com/BramSuurdje) ([#5464](https://github.com/community-scripts/ProxmoxVE/pull/5464))
 
 ## 2025-06-24
 
