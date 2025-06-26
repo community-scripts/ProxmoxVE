@@ -649,7 +649,7 @@ function setup_mongodb() {
     ;;
   debian)
     MONGO_BASE_URL="https://repo.mongodb.org/apt/debian"
-    REPO_COMPONENT="main" # adjust as needed
+    REPO_COMPONENT="main"
     ;;
   *)
     msg_error "Unsupported distribution: $DISTRO_ID"
