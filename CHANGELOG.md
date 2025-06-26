@@ -16,6 +16,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-06-26
 
+### 🆕 New Scripts
+
+  - ConvertX ([#5484](https://github.com/community-scripts/ProxmoxVE/pull/5484))
+
 ### 🚀 Updated Scripts
 
   - [tools] Update setup_nodejs function [@tremor021](https://github.com/tremor021) ([#5488](https://github.com/community-scripts/ProxmoxVE/pull/5488))
