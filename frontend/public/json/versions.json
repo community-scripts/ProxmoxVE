@@ -1,5 +1,30 @@
 [
   {
+    "name": "traefik/traefik",
+    "version": "v3.4.2",
+    "date": "2025-06-26T10:45:04Z"
+  },
+  {
+    "name": "Dolibarr/dolibarr",
+    "version": "18.0.7",
+    "date": "2025-06-26T09:16:33Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.9.3-rc5",
+    "date": "2025-06-26T04:47:09Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2056",
+    "date": "2025-06-26T05:51:50Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.18",
+    "date": "2025-06-20T04:45:37Z"
+  },
+  {
     "name": "mongodb/mongo",
     "version": "r8.1.2-rc1",
     "date": "2025-06-25T22:42:04Z"
@@ -35,19 +60,14 @@
     "date": "2025-06-24T13:00:12Z"
   },
   {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.18",
-    "date": "2025-06-20T04:45:37Z"
-  },
-  {
-    "name": "ollama/ollama",
-    "version": "v0.9.4-citest0",
-    "date": "2025-06-25T17:44:00Z"
-  },
-  {
     "name": "influxdata/influxdb",
     "version": "v3.2.0",
     "date": "2025-06-25T17:31:48Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.2.5",
+    "date": "2025-05-28T06:49:43Z"
   },
   {
     "name": "wavelog/wavelog",
@@ -85,11 +105,6 @@
     "date": "2025-06-23T12:48:35Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2054",
-    "date": "2025-06-25T05:54:03Z"
-  },
-  {
     "name": "moghtech/komodo",
     "version": "v1.18.4",
     "date": "2025-06-25T00:06:56Z"
@@ -98,11 +113,6 @@
     "name": "duplicati/duplicati",
     "version": "v2.1.0.120-2.1.0.120_canary_2025-06-24",
     "date": "2025-06-24T22:39:50Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.2.5",
-    "date": "2025-05-28T06:49:43Z"
   },
   {
     "name": "evcc-io/evcc",
@@ -755,11 +765,6 @@
     "date": "2025-05-27T18:18:00Z"
   },
   {
-    "name": "traefik/traefik",
-    "version": "v3.4.1",
-    "date": "2025-05-27T12:53:58Z"
-  },
-  {
     "name": "dani-garcia/vaultwarden",
     "version": "1.34.1",
     "date": "2025-05-26T21:40:54Z"
@@ -828,11 +833,6 @@
     "name": "Paymenter/Paymenter",
     "version": "v1.1.1",
     "date": "2025-05-17T10:10:36Z"
-  },
-  {
-    "name": "Dolibarr/dolibarr",
-    "version": "18.0.7",
-    "date": "2025-05-15T08:24:30Z"
   },
   {
     "name": "Ombi-app/Ombi",
