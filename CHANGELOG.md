@@ -18,7 +18,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
-  - [tools] Fix setup_mongodb function [@tremor021](https://github.com/tremor021) ([#5486](https://github.com/community-scripts/ProxmoxVE/pull/5486))
+  - [tools] Update setup_nodejs function [@tremor021](https://github.com/tremor021) ([#5488](https://github.com/community-scripts/ProxmoxVE/pull/5488))
+- [tools] Fix setup_mongodb function [@tremor021](https://github.com/tremor021) ([#5486](https://github.com/community-scripts/ProxmoxVE/pull/5486))
 
 ## 2025-06-25
 
