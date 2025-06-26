@@ -643,8 +643,14 @@ function setup_mongodb() {
   DISTRO_CODENAME=$(awk -F= '/^VERSION_CODENAME=/{ print $2 }' /etc/os-release)
 
   case "$DISTRO_ID" in
-  ubuntu) MONGO_BASE_URL="https://repo.mongodb.org/apt/ubuntu" ;;
-  debian) MONGO_BASE_URL="https://repo.mongodb.org/apt/debian" ;;
+  ubuntu)
+    MONGO_BASE_URL="https://repo.mongodb.org/apt/ubuntu"
+    REPO_COMPONENT="multiverse"
+    ;;
+  debian)
+    MONGO_BASE_URL="https://repo.mongodb.org/apt/debian"
+    REPO_COMPONENT="main" # adjust as needed
+    ;;
   *)
     msg_error "Unsupported distribution: $DISTRO_ID"
     return 1
@@ -676,7 +682,7 @@ function setup_mongodb() {
   fi
 
   curl -fsSL "https://pgp.mongodb.com/server-${MONGO_VERSION}.asc" | gpg --dearmor -o "/etc/apt/trusted.gpg.d/mongodb-${MONGO_VERSION}.gpg"
-  echo "deb [signed-by=/etc/apt/trusted.gpg.d/mongodb-${MONGO_VERSION}.gpg] ${MONGO_BASE_URL} ${DISTRO_CODENAME}/mongodb-org/${MONGO_VERSION} main" \
+  echo "deb [signed-by=/etc/apt/trusted.gpg.d/mongodb-${MONGO_VERSION}.gpg] ${MONGO_BASE_URL} ${DISTRO_CODENAME}/mongodb-org/${MONGO_VERSION} ${REPO_COMPONENT}" \
     >"$REPO_LIST"
 
   $STD apt-get update || {
