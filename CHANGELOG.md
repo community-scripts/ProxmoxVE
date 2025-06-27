@@ -28,6 +28,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🧰 Maintenance
 
+  - #### 🐞 Bug Fixes
+
+    - Remove npm legacy errors, created single source of truth for ESlint. updated analytics url. updated script background [@BramSuurdje](https://github.com/BramSuurdje) ([#5498](https://github.com/community-scripts/ProxmoxVE/pull/5498))
+
   - #### 📂 Github
 
     - New workflow to push to gitea and change links to gitea [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#5510](https://github.com/community-scripts/ProxmoxVE/pull/5510))
