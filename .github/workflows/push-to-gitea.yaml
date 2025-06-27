@@ -42,7 +42,7 @@ jobs:
           git remote add gitea https://$GITEA_USER:$GITEA_TOKEN@git.community-scripts.org/community-scripts/ProxmoxVE.git
           git add .
           git commit -m "Sync to Gitea"
-          git push gitea --all
+          git push gitea --all --force
         env:
           GITEA_USER: ${{ secrets.GITEA_USERNAME }}
           GITEA_TOKEN: ${{ secrets.GITEA_TOKEN }}
