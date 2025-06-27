@@ -1,5 +1,55 @@
 [
   {
+    "name": "rclone/rclone",
+    "version": "v1.70.2",
+    "date": "2025-06-27T11:30:28Z"
+  },
+  {
+    "name": "sabnzbd/sabnzbd",
+    "version": "4.5.1",
+    "date": "2025-04-11T09:57:47Z"
+  },
+  {
+    "name": "FlowiseAI/Flowise",
+    "version": "flowise@3.0.3",
+    "date": "2025-06-27T09:53:57Z"
+  },
+  {
+    "name": "nzbgetcom/nzbget",
+    "version": "v25.1",
+    "date": "2025-06-27T09:14:14Z"
+  },
+  {
+    "name": "documenso/documenso",
+    "version": "v1.12.0-rc.5",
+    "date": "2025-06-27T08:53:45Z"
+  },
+  {
+    "name": "cockpit-project/cockpit",
+    "version": "341.1",
+    "date": "2025-06-27T08:50:16Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.6.3",
+    "date": "2025-06-24T13:00:12Z"
+  },
+  {
+    "name": "zabbix/zabbix",
+    "version": "7.2.10",
+    "date": "2025-06-27T06:40:00Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2064",
+    "date": "2025-06-27T05:54:03Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.9.3-rc5",
+    "date": "2025-06-26T04:47:09Z"
+  },
+  {
     "name": "MediaBrowser/Emby.Releases",
     "version": "4.9.1.2",
     "date": "2025-06-26T22:08:00Z"
@@ -15,19 +65,14 @@
     "date": "2025-04-14T15:37:12Z"
   },
   {
+    "name": "keycloak/keycloak",
+    "version": "26.2.5",
+    "date": "2025-05-28T06:49:43Z"
+  },
+  {
     "name": "netbox-community/netbox",
     "version": "v4.3.3",
     "date": "2025-06-26T18:42:56Z"
-  },
-  {
-    "name": "home-assistant/core",
-    "version": "2025.6.3",
-    "date": "2025-06-24T13:00:12Z"
-  },
-  {
-    "name": "ollama/ollama",
-    "version": "v0.9.4-rc0",
-    "date": "2025-06-26T17:32:48Z"
   },
   {
     "name": "apache/tika",
@@ -75,11 +120,6 @@
     "date": "2025-06-26T09:16:33Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2056",
-    "date": "2025-06-26T05:51:50Z"
-  },
-  {
     "name": "firefly-iii/firefly-iii",
     "version": "v6.2.18",
     "date": "2025-06-20T04:45:37Z"
@@ -115,11 +155,6 @@
     "date": "2025-06-25T17:31:48Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.2.5",
-    "date": "2025-05-28T06:49:43Z"
-  },
-  {
     "name": "wavelog/wavelog",
     "version": "2.0.5",
     "date": "2025-06-25T14:53:31Z"
@@ -133,16 +168,6 @@
     "name": "bunkerity/bunkerweb",
     "version": "testing",
     "date": "2025-06-16T18:10:42Z"
-  },
-  {
-    "name": "cockpit-project/cockpit",
-    "version": "341",
-    "date": "2025-06-25T11:49:28Z"
-  },
-  {
-    "name": "nzbgetcom/nzbget",
-    "version": "v25.0",
-    "date": "2025-05-12T09:12:04Z"
   },
   {
     "name": "mattermost/mattermost",
@@ -216,8 +241,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-06-23T19:10:33Z"
+    "version": "v4.2.1",
+    "date": "2025-06-03T20:04:28Z"
   },
   {
     "name": "VictoriaMetrics/VictoriaMetrics",
@@ -315,11 +340,6 @@
     "date": "2025-06-20T17:20:54Z"
   },
   {
-    "name": "zabbix/zabbix",
-    "version": "7.2.9",
-    "date": "2025-06-20T10:58:45Z"
-  },
-  {
     "name": "syncthing/syncthing",
     "version": "2.0.0-rc.19",
     "date": "2025-06-02T17:56:25Z"
@@ -333,11 +353,6 @@
     "name": "paperless-ngx/paperless-ngx",
     "version": "v2.17.1",
     "date": "2025-06-19T19:35:01Z"
-  },
-  {
-    "name": "rclone/rclone",
-    "version": "v1.70.1",
-    "date": "2025-06-19T13:19:02Z"
   },
   {
     "name": "icereed/paperless-gpt",
@@ -428,11 +443,6 @@
     "name": "cloudflare/cloudflared",
     "version": "2025.6.1",
     "date": "2025-06-17T12:45:39Z"
-  },
-  {
-    "name": "sabnzbd/sabnzbd",
-    "version": "4.5.1",
-    "date": "2025-04-11T09:57:47Z"
   },
   {
     "name": "crowdsecurity/crowdsec",
@@ -555,11 +565,6 @@
     "date": "2025-06-14T02:52:44Z"
   },
   {
-    "name": "FlowiseAI/Flowise",
-    "version": "flowise@3.0.2",
-    "date": "2025-06-12T22:48:11Z"
-  },
-  {
     "name": "leiweibau/Pi.Alert",
     "version": "v2025-06-12",
     "date": "2025-06-12T20:59:47Z"
@@ -568,11 +573,6 @@
     "name": "zitadel/zitadel",
     "version": "v3.3.0",
     "date": "2025-06-12T06:54:48Z"
-  },
-  {
-    "name": "documenso/documenso",
-    "version": "v1.12.0-rc.4",
-    "date": "2025-06-12T00:27:41Z"
   },
   {
     "name": "autobrr/autobrr",
