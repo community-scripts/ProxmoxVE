@@ -16,6 +16,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-06-27
 
+### 🆕 New Scripts
+
+  - BookLore ([#5524](https://github.com/community-scripts/ProxmoxVE/pull/5524))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
