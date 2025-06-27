@@ -60,7 +60,6 @@ function update_script() {
 
     msg_info "Cleaning Up"
     rm -rf "$BACKUP_FILE"
-    rm /tmp/"$RELEASE".zip
     msg_ok "Cleanup Completed"
     msg_ok "Update Successful"
   else
