@@ -28,6 +28,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - New workflow to push to gitea and change links to gitea [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#5510](https://github.com/community-scripts/ProxmoxVE/pull/5510))
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Wireguard, Update Link to Documentation. [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#5514](https://github.com/community-scripts/ProxmoxVE/pull/5514))
+
 ## 2025-06-26
 
 ### 🆕 New Scripts
