@@ -30,6 +30,8 @@ function update_script() {
 
   if [ -x "/usr/bin/ollama" ]; then
     msg_info "Updating Ollama"
+    rm -rf /usr/lib/ollama
+    rm -rf /usr/bin/ollama
     OLLAMA_VERSION=$(ollama -v | awk '{print $NF}')
     RELEASE=$(curl -s https://api.github.com/repos/ollama/ollama/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4)}')
     if [ "$OLLAMA_VERSION" != "$RELEASE" ]; then
