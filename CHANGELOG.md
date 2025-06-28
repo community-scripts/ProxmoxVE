@@ -20,6 +20,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - Ollama: Clean up old Ollama files before running update [@tremor021](https://github.com/tremor021) ([#5534](https://github.com/community-scripts/ProxmoxVE/pull/5534))
     - ONLYOFFICE: Update install script to manually create RabbitMQ user [@tremor021](https://github.com/tremor021) ([#5535](https://github.com/community-scripts/ProxmoxVE/pull/5535))
 
 ### 🌐 Website
