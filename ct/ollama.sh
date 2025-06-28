@@ -38,6 +38,8 @@ function update_script() {
     TMP_TAR=$(mktemp --suffix=.tgz)
     curl -fL# -o "${TMP_TAR}" "https://github.com/ollama/ollama/releases/download/${RELEASE}/ollama-linux-amd64.tgz"
     msg_info "Updating Ollama to ${RELEASE}"
+    rm -rf /usr/local/lib/ollama
+    rm -rf /usr/local/bin/ollama
     tar -xzf "${TMP_TAR}" -C /usr/local/lib/ollama
     ln -sf /usr/local/lib/ollama/bin/ollama /usr/local/bin/ollama
     echo "${RELEASE}" >/opt/Ollama_version.txt
