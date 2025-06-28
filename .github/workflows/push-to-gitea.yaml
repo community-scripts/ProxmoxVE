@@ -26,7 +26,7 @@ jobs:
           if [ -n "$files_with_github_urls" ]; then
             echo "$files_with_github_urls" | while read file; do
               if [ -f "$file" ]; then
-                sed -i 's|https://raw\.githubusercontent\.com/community-scripts/ProxmoxVE/|https://git.community-scripts.org/community-scripts/ProxmoxVED/raw/branch/|g' "$file"
+                sed -i 's|https://raw\.githubusercontent\.com/community-scripts/ProxmoxVE/|https://git.community-scripts.org/community-scripts/ProxmoxVE/raw/branch/|g' "$file"
               fi
             done         
           else
