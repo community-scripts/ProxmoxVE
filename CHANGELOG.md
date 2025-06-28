@@ -16,6 +16,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-06-28
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - ONLYOFFICE: Update install script to manually create RabbitMQ user [@tremor021](https://github.com/tremor021) ([#5535](https://github.com/community-scripts/ProxmoxVE/pull/5535))
+
 ### 🌐 Website
 
   - #### 📝 Script Information
