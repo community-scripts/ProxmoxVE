@@ -1,8 +1,33 @@
 [
   {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2075",
+    "date": "2025-06-28T10:16:17Z"
+  },
+  {
+    "name": "Luligu/matterbridge",
+    "version": "3.1.0",
+    "date": "2025-06-28T09:02:38Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.19",
+    "date": "2025-06-28T06:53:45Z"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2025.6.2",
+    "date": "2025-06-28T03:47:16Z"
+  },
+  {
     "name": "plexguide/Huntarr.io",
-    "version": "8.1.10",
-    "date": "2025-06-27T23:24:52Z"
+    "version": "8.1.11",
+    "date": "2025-06-28T03:42:46Z"
+  },
+  {
+    "name": "tobychui/zoraxy",
+    "version": "v3.2.4",
+    "date": "2025-06-28T02:47:31Z"
   },
   {
     "name": "pocket-id/pocket-id",
@@ -21,7 +46,7 @@
   },
   {
     "name": "ollama/ollama",
-    "version": "v0.9.4-rc2",
+    "version": "v0.9.4-rc1",
     "date": "2025-06-27T18:45:33Z"
   },
   {
@@ -38,6 +63,11 @@
     "name": "goauthentik/authentik",
     "version": "version/2025.6.3",
     "date": "2025-06-27T14:01:06Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.2.5",
+    "date": "2025-05-28T06:49:43Z"
   },
   {
     "name": "rclone/rclone",
@@ -75,11 +105,6 @@
     "date": "2025-06-27T06:40:00Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2064",
-    "date": "2025-06-27T05:54:03Z"
-  },
-  {
     "name": "MediaBrowser/Emby.Releases",
     "version": "4.9.1.2",
     "date": "2025-06-26T22:08:00Z"
@@ -93,11 +118,6 @@
     "name": "home-assistant/operating-system",
     "version": "15.2",
     "date": "2025-04-14T15:37:12Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.2.5",
-    "date": "2025-05-28T06:49:43Z"
   },
   {
     "name": "netbox-community/netbox",
@@ -143,11 +163,6 @@
     "name": "Dolibarr/dolibarr",
     "version": "18.0.7",
     "date": "2025-06-26T09:16:33Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.18",
-    "date": "2025-06-20T04:45:37Z"
   },
   {
     "name": "mongodb/mongo",
@@ -255,14 +270,9 @@
     "date": "2025-06-23T20:58:42Z"
   },
   {
-    "name": "esphome/esphome",
-    "version": "2025.6.1",
-    "date": "2025-06-23T19:28:09Z"
-  },
-  {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-06-23T19:10:33Z"
+    "version": "v4.2.1",
+    "date": "2025-06-03T20:04:28Z"
   },
   {
     "name": "VictoriaMetrics/VictoriaMetrics",
@@ -313,11 +323,6 @@
     "name": "rogerfar/rdt-client",
     "version": "v2.0.114",
     "date": "2025-06-21T11:20:21Z"
-  },
-  {
-    "name": "Luligu/matterbridge",
-    "version": "3.0.7",
-    "date": "2025-06-21T09:24:21Z"
   },
   {
     "name": "theonedev/onedev",
@@ -518,11 +523,6 @@
     "name": "karakeep-app/karakeep",
     "version": "cli/v0.25.0",
     "date": "2025-06-15T17:48:29Z"
-  },
-  {
-    "name": "tobychui/zoraxy",
-    "version": "v3.1.9",
-    "date": "2025-03-01T02:24:33Z"
   },
   {
     "name": "Prowlarr/Prowlarr",
