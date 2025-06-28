@@ -62,6 +62,9 @@ msg_info "Preconfiguring ONLYOFFICE Debconf Settings"
 RMQ_USER=onlyoffice_rmq
 RMQ_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)
 JWT_SECRET=$(openssl rand -hex 16)
+$STD rabbitmqctl add_user $RMQ_USER $RMQ_PASS
+$STD rabbitmqctl set_permissions -p / $RMQ_USER ".*" ".*" ".*"
+$STD rabbitmqctl set_user_tags $RMQ_USER administrator
 
 echo onlyoffice-documentserver onlyoffice/db-host string localhost | debconf-set-selections
 echo onlyoffice-documentserver onlyoffice/db-user string $DB_USER | debconf-set-selections
