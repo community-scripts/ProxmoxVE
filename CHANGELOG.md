@@ -16,6 +16,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-06-29
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Linkwarden: Add backing up of data folder to the update function [@tremor021](https://github.com/tremor021) ([#5548](https://github.com/community-scripts/ProxmoxVE/pull/5548))
+
 ### 🌐 Website
 
   - #### 🐞 Bug Fixes
