@@ -26,6 +26,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - Add cron-job api-key env variable to homarr script [@Meierschlumpf](https://github.com/Meierschlumpf) ([#5204](https://github.com/community-scripts/ProxmoxVE/pull/5204))
 
+### 🧰 Maintenance
+
+  - #### 📝 Documentation
+
+    - update readme with valid discord link. other one expired [@BramSuurdje](https://github.com/BramSuurdje) ([#5567](https://github.com/community-scripts/ProxmoxVE/pull/5567))
+
 ### 🌐 Website
 
   - Update script-item.tsx [@ape364](https://github.com/ape364) ([#5549](https://github.com/community-scripts/ProxmoxVE/pull/5549))
