@@ -22,6 +22,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - Linkwarden: Add backing up of data folder to the update function [@tremor021](https://github.com/tremor021) ([#5548](https://github.com/community-scripts/ProxmoxVE/pull/5548))
 
+  - #### ✨ New Features
+
+    - Add cron-job api-key env variable to homarr script [@Meierschlumpf](https://github.com/Meierschlumpf) ([#5204](https://github.com/community-scripts/ProxmoxVE/pull/5204))
+
 ### 🌐 Website
 
   - Update script-item.tsx [@ape364](https://github.com/ape364) ([#5549](https://github.com/community-scripts/ProxmoxVE/pull/5549))
