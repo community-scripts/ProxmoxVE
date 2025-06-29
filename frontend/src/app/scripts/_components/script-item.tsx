@@ -60,7 +60,7 @@ function ScriptHeader({ item }: { item: Script }) {
                 </h1>
                 <div className="mt-1 flex items-center gap-3 text-sm text-muted-foreground">
                   <span>
-                    Added
+                    Added 
                     {extractDate(item.date_created)}
                   </span>
                   <span>•</span>
