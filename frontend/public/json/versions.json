@@ -1,5 +1,25 @@
 [
   {
+    "name": "home-assistant/core",
+    "version": "2025.6.3",
+    "date": "2025-06-24T13:00:12Z"
+  },
+  {
+    "name": "PrivateBin/PrivateBin",
+    "version": "1.7.7",
+    "date": "2025-06-28T19:57:56Z"
+  },
+  {
+    "name": "linkwarden/linkwarden",
+    "version": "v2.11.2",
+    "date": "2025-06-28T17:33:38Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.22.5",
+    "date": "2025-06-28T16:06:19Z"
+  },
+  {
     "name": "Jackett/Jackett",
     "version": "v0.22.2075",
     "date": "2025-06-28T10:16:17Z"
@@ -35,11 +55,6 @@
     "date": "2025-06-27T22:04:32Z"
   },
   {
-    "name": "linkwarden/linkwarden",
-    "version": "v2.11.1",
-    "date": "2025-06-27T21:21:59Z"
-  },
-  {
     "name": "homarr-labs/homarr",
     "version": "v1.26.0",
     "date": "2025-06-27T19:15:24Z"
@@ -48,11 +63,6 @@
     "name": "ollama/ollama",
     "version": "v0.9.4-rc1",
     "date": "2025-06-27T18:45:33Z"
-  },
-  {
-    "name": "home-assistant/core",
-    "version": "2025.6.3",
-    "date": "2025-06-24T13:00:12Z"
   },
   {
     "name": "mattermost/mattermost",
@@ -185,11 +195,6 @@
     "date": "2025-06-25T21:18:52Z"
   },
   {
-    "name": "msgbyte/tianji",
-    "version": "v1.22.4",
-    "date": "2025-06-25T20:46:20Z"
-  },
-  {
     "name": "influxdata/influxdb",
     "version": "v3.2.0",
     "date": "2025-06-25T17:31:48Z"
@@ -271,8 +276,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v4.2.1",
-    "date": "2025-06-03T20:04:28Z"
+    "version": "nightly",
+    "date": "2025-06-23T19:10:33Z"
   },
   {
     "name": "VictoriaMetrics/VictoriaMetrics",
@@ -1208,11 +1213,6 @@
     "name": "NginxProxyManager/nginx-proxy-manager",
     "version": "v2.12.3",
     "date": "2025-02-06T11:07:07Z"
-  },
-  {
-    "name": "PrivateBin/PrivateBin",
-    "version": "1.7.6",
-    "date": "2025-02-01T09:50:52Z"
   },
   {
     "name": "AmruthPillai/Reactive-Resume",
