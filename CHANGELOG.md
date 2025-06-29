@@ -16,6 +16,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-06-29
 
+### 🌐 Website
+
+  - #### 🐞 Bug Fixes
+
+    - fix bug in tooltip that would always render 'updateable' [@BramSuurdje](https://github.com/BramSuurdje) ([#5552](https://github.com/community-scripts/ProxmoxVE/pull/5552))
+
 ## 2025-06-28
 
 ### 🚀 Updated Scripts
