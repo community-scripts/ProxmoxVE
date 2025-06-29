@@ -24,6 +24,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🌐 Website
 
+  - Update script-item.tsx [@ape364](https://github.com/ape364) ([#5549](https://github.com/community-scripts/ProxmoxVE/pull/5549))
+
   - #### 🐞 Bug Fixes
 
     - fix bug in tooltip that would always render 'updateable' [@BramSuurdje](https://github.com/BramSuurdje) ([#5552](https://github.com/community-scripts/ProxmoxVE/pull/5552))
