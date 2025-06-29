@@ -67,9 +67,9 @@ cd /root
 curl -fsSL "https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-8.0.26.tar.gz" -o "/root/mysql-connector-java-8.0.26.tar.gz"
 $STD tar -xf ~/mysql-connector-java-8.0.26.tar.gz
 mv ~/mysql-connector-java-8.0.26/mysql-connector-java-8.0.26.jar /etc/guacamole/lib/
-curl -fsSL "https://downloads.apache.org/guacamole/1.5.5/binary/guacamole-auth-jdbc-1.5.5.tar.gz" -o "/root/guacamole-auth-jdbc-1.5.5.tar.gz"
-$STD tar -xf ~/guacamole-auth-jdbc-1.5.5.tar.gz
-mv ~/guacamole-auth-jdbc-1.5.5/mysql/guacamole-auth-jdbc-mysql-1.5.5.jar /etc/guacamole/extensions/
+curl -fsSL "https://downloads.apache.org/guacamole/${RELEASE_SERVER}/binary/guacamole-auth-jdbc-${RELEASE_SERVER}.tar.gz" -o "/root/guacamole-auth-jdbc-${RELEASE_SERVER}.tar.gz"
+$STD tar -xf ~/guacamole-auth-jdbc-$RELEASE_SERVER.tar.gz
+mv ~/guacamole-auth-jdbc-$RELEASE_SERVER/mysql/guacamole-auth-jdbc-mysql-$RELEASE_SERVER.jar /etc/guacamole/extensions/
 msg_ok "Setup Apache Guacamole"
 
 msg_info "Setup Database"
@@ -148,7 +148,7 @@ customize
 
 msg_info "Cleaning up"
 rm -rf ~/mysql-connector-java-8.0.26{,.tar.gz}
-rm -rf ~/guacamole-auth-jdbc-1.5.5{,.tar.gz}
+rm -rf ~/guacamole-auth-jdbc-$RELEASE_SERVER{,.tar.gz}
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
