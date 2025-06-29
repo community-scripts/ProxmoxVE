@@ -1,5 +1,25 @@
 [
   {
+    "name": "dgtlmoon/changedetection.io",
+    "version": "0.50.5",
+    "date": "2025-06-29T08:54:47Z"
+  },
+  {
+    "name": "emqx/emqx",
+    "version": "e5.9.1-rc.1",
+    "date": "2025-06-29T07:27:21Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2084",
+    "date": "2025-06-29T05:53:38Z"
+  },
+  {
+    "name": "theonedev/onedev",
+    "version": "v11.11.2",
+    "date": "2025-06-29T01:40:39Z"
+  },
+  {
     "name": "home-assistant/core",
     "version": "2025.6.3",
     "date": "2025-06-24T13:00:12Z"
@@ -20,9 +40,9 @@
     "date": "2025-06-28T16:06:19Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2075",
-    "date": "2025-06-28T10:16:17Z"
+    "name": "keycloak/keycloak",
+    "version": "26.2.5",
+    "date": "2025-05-28T06:49:43Z"
   },
   {
     "name": "Luligu/matterbridge",
@@ -73,11 +93,6 @@
     "name": "goauthentik/authentik",
     "version": "version/2025.6.3",
     "date": "2025-06-27T14:01:06Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.2.5",
-    "date": "2025-05-28T06:49:43Z"
   },
   {
     "name": "rclone/rclone",
@@ -276,8 +291,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-06-23T19:10:33Z"
+    "version": "v4.2.1",
+    "date": "2025-06-03T20:04:28Z"
   },
   {
     "name": "VictoriaMetrics/VictoriaMetrics",
@@ -330,19 +345,9 @@
     "date": "2025-06-21T11:20:21Z"
   },
   {
-    "name": "theonedev/onedev",
-    "version": "v11.11.1",
-    "date": "2025-06-21T09:23:39Z"
-  },
-  {
     "name": "pocketbase/pocketbase",
     "version": "v0.28.4",
     "date": "2025-06-21T08:29:04Z"
-  },
-  {
-    "name": "dgtlmoon/changedetection.io",
-    "version": "0.50.4",
-    "date": "2025-06-21T07:47:02Z"
   },
   {
     "name": "go-gitea/gitea",
@@ -493,11 +498,6 @@
     "name": "kimai/kimai",
     "version": "2.36.1",
     "date": "2025-06-16T19:20:54Z"
-  },
-  {
-    "name": "emqx/emqx",
-    "version": "e5.9.1-alpha.1",
-    "date": "2025-06-16T15:34:01Z"
   },
   {
     "name": "open-webui/open-webui",
