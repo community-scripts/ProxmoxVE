@@ -37,7 +37,7 @@ function update_script() {
 
     msg_info "Updating ${APP} to ${RELEASE}"
     mv /opt/linkwarden/.env /opt/.env
-    mv /opt/linkwarden/data /opt/data.bak
+    [ -d /opt/linkwarden/data ] && mv /opt/linkwarden/data /opt/data.bak
     rm -rf /opt/linkwarden
     fetch_and_deploy_gh_release "linkwarden" "linkwarden/linkwarden"
     cd /opt/linkwarden
@@ -48,7 +48,7 @@ function update_script() {
     $STD yarn prisma:generate
     $STD yarn web:build
     $STD yarn prisma:deploy
-    mv /opt/data.bak /opt/linkwarden/data
+    [ -d /opt/data.bak ] && mv /opt/data.bak /opt/linkwarden/data
     msg_ok "Updated ${APP} to ${RELEASE}"
 
     msg_info "Starting ${APP}"
