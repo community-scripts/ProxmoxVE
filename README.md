@@ -13,7 +13,7 @@
     <a href="https://helper-scripts.com">
       <img src="https://img.shields.io/badge/Website-4c9b3f?style=for-the-badge&logo=github&logoColor=white" alt="Website" />
     </a>
-    <a href="https://discord.gg/jsYVk5JBxq">
+    <a href="https://discord.gg/3AnUqsXnmK">
       <img src="https://img.shields.io/badge/Discord-7289da?style=for-the-badge&logo=discord&logoColor=white" alt="Discord" />
     </a> 
     <a href="https://ko-fi.com/community_scripts">
@@ -82,7 +82,7 @@ We appreciate any contributions to the project—whether it's bug reports, featu
 
 Join our community for support:
 
-- **Discord**: Join our [Proxmox Helper Scripts Discord server](https://discord.gg/jsYVk5JBxq) for real-time support.
+- **Discord**: Join our [Proxmox Helper Scripts Discord server](https://discord.gg/3AnUqsXnmK) for real-time support.
 - **GitHub Discussions**: [Ask questions or report issues](https://github.com/community-scripts/ProxmoxVE/discussions).
 
 ## 🤝 Report a Bug or Feature Request
