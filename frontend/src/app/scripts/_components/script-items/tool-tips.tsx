@@ -39,7 +39,7 @@ export default function Tooltips({ item }: { item: Script }) {
       {item.privileged && (
         <TooltipBadge variant="warning" label="Privileged" content="This script will be run in a privileged LXC" />
       )}
-      {(item.updateable || item.type !== "pve") && (
+      {item.updateable && item.type !== "pve" && (
         <TooltipBadge
           variant="success"
           label="Updateable"
