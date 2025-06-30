@@ -163,7 +163,7 @@ server:
         disableIndexing: false
         indexingIntervalMinutes: 240
         exclude:
-          folders:
+          folderPaths:
             - "/proc"
             - "/sys"
             - "/dev"
@@ -185,7 +185,7 @@ server:
         disableIndexing: false
         indexingIntervalMinutes: 240
         exclude:
-          folders:
+          folderPaths:
             - "/proc"
             - "/sys"
             - "/dev"
