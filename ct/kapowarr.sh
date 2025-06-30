@@ -30,7 +30,6 @@ function update_script() {
   fi
   RELEASE=$(curl -s https://api.github.com/repos/Casvt/Kapowarr/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
   if [[ "${RELEASE}" != "$(cat $HOME/.kapowarr)" ]] || [[ ! -f $HOME/.kapowarr ]]; then
-
     setup_uv 
     
     msg_info "Stopping $APP"
