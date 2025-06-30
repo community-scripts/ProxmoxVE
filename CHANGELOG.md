@@ -16,6 +16,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-06-30
 
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - [core]: add ipv6 configuration support [@MickLesk](https://github.com/MickLesk) ([#5575](https://github.com/community-scripts/ProxmoxVE/pull/5575))
+
 ## 2025-06-29
 
 ### 🚀 Updated Scripts
