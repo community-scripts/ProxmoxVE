@@ -834,19 +834,30 @@ function fetch_and_deploy_gh_release() {
   elif [[ "$mode" == "binary" ]]; then
     local arch
     arch=$(dpkg --print-architecture 2>/dev/null || uname -m)
-    [[ "$arch" == "x86_64" ]] && arch="x86_64"
+    [[ "$arch" == "x86_64" ]] && arch="amd64"
     [[ "$arch" == "aarch64" ]] && arch="arm64"
 
     local assets url_match=""
     assets=$(echo "$json" | jq -r '.assets[].browser_download_url')
 
-    for u in $assets; do
-      if [[ "$u" =~ ($arch|amd64|x86_64|aarch64|arm64).*\.deb$ ]]; then
-        url_match="$u"
-        break
-      fi
-    done
+    # If explicit filename pattern is provided (param $6), match that first
+    if [[ -n "$6" ]]; then
+      for u in $assets; do
+        [[ "$u" =~ $6 || "$u" == *"$6" ]] && url_match="$u" && break
+      done
+    fi
 
+    # If no match via explicit pattern, fall back to architecture heuristic
+    if [[ -z "$url_match" ]]; then
+      for u in $assets; do
+        if [[ "$u" =~ ($arch|amd64|x86_64|aarch64|arm64).*\.deb$ ]]; then
+          url_match="$u"
+          break
+        fi
+      done
+    fi
+
+    # Fallback: any .deb file
     if [[ -z "$url_match" ]]; then
       for u in $assets; do
         [[ "$u" =~ \.deb$ ]] && url_match="$u" && break
