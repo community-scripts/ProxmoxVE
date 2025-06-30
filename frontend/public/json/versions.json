@@ -1,5 +1,20 @@
 [
   {
+    "name": "rcourtman/Pulse",
+    "version": "v3.32.0",
+    "date": "2025-06-25T22:27:01Z"
+  },
+  {
+    "name": "sysadminsmedia/homebox",
+    "version": "v0.20.0",
+    "date": "2025-06-29T18:50:03Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.19",
+    "date": "2025-06-28T06:53:45Z"
+  },
+  {
     "name": "dgtlmoon/changedetection.io",
     "version": "0.50.5",
     "date": "2025-06-29T08:54:47Z"
@@ -48,11 +63,6 @@
     "name": "Luligu/matterbridge",
     "version": "3.1.0",
     "date": "2025-06-28T09:02:38Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.19",
-    "date": "2025-06-28T06:53:45Z"
   },
   {
     "name": "esphome/esphome",
@@ -195,11 +205,6 @@
     "date": "2025-06-25T22:42:04Z"
   },
   {
-    "name": "rcourtman/Pulse",
-    "version": "v3.32.0",
-    "date": "2025-06-25T22:27:01Z"
-  },
-  {
     "name": "gristlabs/grist-core",
     "version": "v1.6.1",
     "date": "2025-06-25T21:19:25Z"
@@ -291,8 +296,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v4.2.1",
-    "date": "2025-06-03T20:04:28Z"
+    "version": "nightly",
+    "date": "2025-06-23T19:10:33Z"
   },
   {
     "name": "VictoriaMetrics/VictoriaMetrics",
@@ -893,11 +898,6 @@
     "name": "ZoeyVid/NPMplus",
     "version": "2025-05-07-r1",
     "date": "2025-05-07T12:18:42Z"
-  },
-  {
-    "name": "sysadminsmedia/homebox",
-    "version": "v0.19.0",
-    "date": "2025-05-06T18:05:42Z"
   },
   {
     "name": "garethgeorge/backrest",
