@@ -20,6 +20,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - Immich: make changes to automatically enable QuickSync [@vhsdream](https://github.com/vhsdream) ([#5560](https://github.com/community-scripts/ProxmoxVE/pull/5560))
     - Apache Guacamole: Install auth-jdbc component that matches release version [@tremor021](https://github.com/tremor021) ([#5563](https://github.com/community-scripts/ProxmoxVE/pull/5563))
 
   - #### ✨ New Features
