@@ -19,8 +19,8 @@
       "type": "default",
       "script": "ct/cloudflare-ddns.sh",
       "resources": {
-        "cpu": 1,
-        "ram": 512,
+        "cpu": 2,
+        "ram": 1024,
         "hdd": 2,
         "os": "Debian",
         "version": "12"
