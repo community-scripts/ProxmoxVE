@@ -1,18 +1,68 @@
 [
   {
     "name": "rcourtman/Pulse",
-    "version": "v3.32.0",
-    "date": "2025-06-25T22:27:01Z"
+    "version": "v3.33.1",
+    "date": "2025-06-30T11:29:32Z"
   },
   {
-    "name": "sysadminsmedia/homebox",
-    "version": "v0.20.0",
-    "date": "2025-06-29T18:50:03Z"
+    "name": "Graylog2/graylog2-server",
+    "version": "6.3.0",
+    "date": "2025-06-30T11:26:45Z"
+  },
+  {
+    "name": "grokability/snipe-it",
+    "version": "v8.1.17",
+    "date": "2025-06-30T11:26:27Z"
+  },
+  {
+    "name": "prometheus/prometheus",
+    "version": "v2.53.5",
+    "date": "2025-06-30T11:01:12Z"
+  },
+  {
+    "name": "documenso/documenso",
+    "version": "v1.12.0-rc.8",
+    "date": "2025-06-30T09:47:37Z"
+  },
+  {
+    "name": "PrivateBin/PrivateBin",
+    "version": "1.7.8",
+    "date": "2025-06-30T09:00:54Z"
+  },
+  {
+    "name": "fuma-nama/fumadocs",
+    "version": "fumadocs-mdx@11.6.10",
+    "date": "2025-06-30T07:07:36Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "preview-v0.1",
+    "date": "2025-06-27T14:35:47Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2097",
+    "date": "2025-06-30T05:53:30Z"
+  },
+  {
+    "name": "typesense/typesense",
+    "version": "v29.0",
+    "date": "2025-06-30T03:52:33Z"
   },
   {
     "name": "firefly-iii/firefly-iii",
     "version": "v6.2.19",
     "date": "2025-06-28T06:53:45Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.2.5",
+    "date": "2025-05-28T06:49:43Z"
+  },
+  {
+    "name": "sysadminsmedia/homebox",
+    "version": "v0.20.0",
+    "date": "2025-06-29T18:50:03Z"
   },
   {
     "name": "dgtlmoon/changedetection.io",
@@ -25,11 +75,6 @@
     "date": "2025-06-29T07:27:21Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2084",
-    "date": "2025-06-29T05:53:38Z"
-  },
-  {
     "name": "theonedev/onedev",
     "version": "v11.11.2",
     "date": "2025-06-29T01:40:39Z"
@@ -40,11 +85,6 @@
     "date": "2025-06-24T13:00:12Z"
   },
   {
-    "name": "PrivateBin/PrivateBin",
-    "version": "1.7.7",
-    "date": "2025-06-28T19:57:56Z"
-  },
-  {
     "name": "linkwarden/linkwarden",
     "version": "v2.11.2",
     "date": "2025-06-28T17:33:38Z"
@@ -53,11 +93,6 @@
     "name": "msgbyte/tianji",
     "version": "v1.22.5",
     "date": "2025-06-28T16:06:19Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.2.5",
-    "date": "2025-05-28T06:49:43Z"
   },
   {
     "name": "Luligu/matterbridge",
@@ -95,11 +130,6 @@
     "date": "2025-06-27T18:45:33Z"
   },
   {
-    "name": "mattermost/mattermost",
-    "version": "preview-v0.1",
-    "date": "2025-06-27T14:35:47Z"
-  },
-  {
     "name": "goauthentik/authentik",
     "version": "version/2025.6.3",
     "date": "2025-06-27T14:01:06Z"
@@ -108,11 +138,6 @@
     "name": "rclone/rclone",
     "version": "v1.70.2",
     "date": "2025-06-27T13:21:17Z"
-  },
-  {
-    "name": "documenso/documenso",
-    "version": "v1.12.0-rc.7",
-    "date": "2025-06-27T12:17:45Z"
   },
   {
     "name": "sabnzbd/sabnzbd",
@@ -145,11 +170,6 @@
     "date": "2025-06-26T22:08:00Z"
   },
   {
-    "name": "prometheus/prometheus",
-    "version": "v3.4.2",
-    "date": "2025-06-26T21:45:21Z"
-  },
-  {
     "name": "home-assistant/operating-system",
     "version": "15.2",
     "date": "2025-04-14T15:37:12Z"
@@ -168,11 +188,6 @@
     "name": "tailscale/tailscale",
     "version": "v1.84.3",
     "date": "2025-06-26T16:31:57Z"
-  },
-  {
-    "name": "fuma-nama/fumadocs",
-    "version": "fumadocs-ui@15.5.5",
-    "date": "2025-06-26T15:54:17Z"
   },
   {
     "name": "traefik/traefik",
@@ -296,18 +311,13 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-06-23T19:10:33Z"
+    "version": "v4.2.1",
+    "date": "2025-06-03T20:04:28Z"
   },
   {
     "name": "VictoriaMetrics/VictoriaMetrics",
     "version": "pmm-6401-v1.120.0",
     "date": "2025-06-23T15:12:12Z"
-  },
-  {
-    "name": "Graylog2/graylog2-server",
-    "version": "6.3.0-rc.2",
-    "date": "2025-06-23T11:31:38Z"
   },
   {
     "name": "gotson/komga",
@@ -508,11 +518,6 @@
     "name": "open-webui/open-webui",
     "version": "v0.6.15",
     "date": "2025-06-16T14:34:42Z"
-  },
-  {
-    "name": "grokability/snipe-it",
-    "version": "v8.1.16",
-    "date": "2025-06-16T13:49:37Z"
   },
   {
     "name": "jellyfin/jellyfin",
@@ -1183,11 +1188,6 @@
     "name": "babybuddy/babybuddy",
     "version": "v2.7.1",
     "date": "2025-02-22T01:14:41Z"
-  },
-  {
-    "name": "typesense/typesense",
-    "version": "v28.0",
-    "date": "2025-02-18T15:49:57Z"
   },
   {
     "name": "recyclarr/recyclarr",
