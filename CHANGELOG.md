@@ -18,6 +18,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
+  - tools.func: optimize binary installs with fetch_and_deploy helper [@MickLesk](https://github.com/MickLesk) ([#5588](https://github.com/community-scripts/ProxmoxVE/pull/5588))
+
   - #### 🐞 Bug Fixes
 
     - Immich: make changes to automatically enable QuickSync [@vhsdream](https://github.com/vhsdream) ([#5560](https://github.com/community-scripts/ProxmoxVE/pull/5560))
