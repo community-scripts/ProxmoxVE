@@ -18,6 +18,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Apache Guacamole: Install auth-jdbc component that matches release version [@tremor021](https://github.com/tremor021) ([#5563](https://github.com/community-scripts/ProxmoxVE/pull/5563))
+
   - #### ✨ New Features
 
     - [core]: add ipv6 configuration support [@MickLesk](https://github.com/MickLesk) ([#5575](https://github.com/community-scripts/ProxmoxVE/pull/5575))
