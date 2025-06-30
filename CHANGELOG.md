@@ -18,7 +18,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🆕 New Scripts
 
-  - Kapowarr ([#5584](https://github.com/community-scripts/ProxmoxVE/pull/5584))
+  - Alpine Syncthing [@MickLesk](https://github.com/MickLesk) ([#5586](https://github.com/community-scripts/ProxmoxVE/pull/5586))
+- Kapowarr ([#5584](https://github.com/community-scripts/ProxmoxVE/pull/5584))
 
 ### 🚀 Updated Scripts
 
