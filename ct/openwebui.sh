@@ -30,11 +30,11 @@ function update_script() {
 
   if [ -x "/usr/bin/ollama" ]; then
     msg_info "Updating Ollama"
-    rm -rf /usr/lib/ollama
-    rm -rf /usr/bin/ollama
     OLLAMA_VERSION=$(ollama -v | awk '{print $NF}')
     RELEASE=$(curl -s https://api.github.com/repos/ollama/ollama/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4)}')
     if [ "$OLLAMA_VERSION" != "$RELEASE" ]; then
+      rm -rf /usr/lib/ollama
+      rm -rf /usr/bin/ollama
       curl -fsSLO https://ollama.com/download/ollama-linux-amd64.tgz
       tar -C /usr -xzf ollama-linux-amd64.tgz
       rm -rf ollama-linux-amd64.tgz
