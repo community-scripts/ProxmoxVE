@@ -20,11 +20,9 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 if command -v curl >/dev/null 2>&1; then
   source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
   load_functions
-  #echo "(build.func) Loaded core.func via curl"
 elif command -v wget >/dev/null 2>&1; then
   source <(wget -qO- https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
   load_functions
-  #echo "(build.func) Loaded core.func via wget"
 fi
 # This function enables error handling in the script by setting options and defining a trap for the ERR signal.
 catch_errors() {
@@ -189,17 +187,19 @@ base_settings() {
   HN=$NSAPP
   BRG="vmbr0"
   NET="dhcp"
+  IPV6_METHOD="none"
+  IPV6_STATIC=""			 			
   GATE=""
   APT_CACHER=""
   APT_CACHER_IP=""
-  DISABLEIP6="no"
+  #DISABLEIP6="no"
   MTU=""
   SD=""
   NS=""
   MAC=""
   VLAN=""
   SSH="no"
-  SSH_AUTHORIZED_KEY=""
+  SSH_AUTHORIZED_KEY=""  
   TAGS="community-script;"
   ENABLE_FUSE="${1:-no}"
   ENABLE_TUN="${1:-no}"
@@ -531,44 +531,134 @@ advanced_settings() {
     fi
   fi
 
+
+  # IPv4 methods: dhcp, static, none
   while true; do
-    NET=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set a Static IPv4 CIDR Address (/24)" 8 58 dhcp --title "IP ADDRESS" 3>&1 1>&2 2>&3)
+    IPV4_METHOD=$(whiptail --backtitle "[dev] Proxmox VE Helper Scripts" \
+      --title "IPv4 Address Management" \
+      --menu "Select IPv4 Address Assignment Method:" 12 60 2 \
+      "dhcp" "Automatic (DHCP, recommended)" \
+      "static" "Static (manual entry)" \
+      3>&1 1>&2 2>&3)
+
     exit_status=$?
-    if [ $exit_status -eq 0 ]; then
-      if [ "$NET" = "dhcp" ]; then
-        echo -e "${NETWORK}${BOLD}${DGN}IP Address: ${BGN}$NET${CL}"
-        break
-      else
-        if [[ "$NET" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}/([0-9]|[1-2][0-9]|3[0-2])$ ]]; then
-          echo -e "${NETWORK}${BOLD}${DGN}IP Address: ${BGN}$NET${CL}"
-          break
-        else
-          whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox "$NET is an invalid IPv4 CIDR address. Please enter a valid IPv4 CIDR address or 'dhcp'" 8 58
-        fi
-      fi
-    else
+    if [ $exit_status -ne 0 ]; then
       exit_script
     fi
+
+    case "$IPV4_METHOD" in
+    dhcp)
+      NET="dhcp"
+      GATE=""
+      echo -e "${NETWORK}${BOLD}${DGN}IPv4: DHCP${CL}"
+      break
+      ;;
+    static)
+      # Static: call and validate CIDR address
+      while true; do
+        NET=$(whiptail --backtitle "[dev] Proxmox VE Helper Scripts" \
+          --inputbox "Enter Static IPv4 CIDR Address (e.g. 192.168.100.50/24)" 8 58 "" \
+          --title "IPv4 ADDRESS" 3>&1 1>&2 2>&3)
+        if [ -z "$NET" ]; then
+          whiptail --msgbox "IPv4 address must not be empty." 8 58
+          continue
+        elif [[ "$NET" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}/([0-9]|[1-2][0-9]|3[0-2])$ ]]; then
+          echo -e "${NETWORK}${BOLD}${DGN}IPv4 Address: ${BGN}$NET${CL}"
+          break
+        else
+          whiptail --msgbox "$NET is not a valid IPv4 CIDR address. Please enter a correct value!" 8 58
+        fi
+      done
+
+      # call and validate Gateway
+      while true; do
+        GATE1=$(whiptail --backtitle "[dev] Proxmox VE Helper Scripts" \
+          --inputbox "Enter Gateway IP address for static IPv4" 8 58 "" \
+          --title "Gateway IP" 3>&1 1>&2 2>&3)
+        if [ -z "$GATE1" ]; then
+          whiptail --msgbox "Gateway IP address cannot be empty." 8 58
+        elif [[ ! "$GATE1" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
+          whiptail --msgbox "Invalid Gateway IP address format." 8 58
+        else
+          GATE=",gw=$GATE1"
+          echo -e "${GATEWAY}${BOLD}${DGN}Gateway IP Address: ${BGN}$GATE1${CL}"
+          break
+        fi
+      done
+      break
+      ;;
+    esac
   done
 
-  if [ "$NET" != "dhcp" ]; then
-    while true; do
-      GATE1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter gateway IP address" 8 58 --title "Gateway IP" 3>&1 1>&2 2>&3)
-      if [ -z "$GATE1" ]; then
-        whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox "Gateway IP address cannot be empty" 8 58
-      elif [[ ! "$GATE1" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
-        whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox "Invalid IP address format" 8 58
-      else
-        GATE=",gw=$GATE1"
-        echo -e "${GATEWAY}${BOLD}${DGN}Gateway IP Address: ${BGN}$GATE1${CL}"
-        break
-      fi
-    done
-  else
-    GATE=""
-    echo -e "${GATEWAY}${BOLD}${DGN}Gateway IP Address: ${BGN}Default${CL}"
-  fi
+  # IPv6 Address Management selection
+  while true; do
+    IPV6_METHOD=$(whiptail --backtitle "[dev] Proxmox VE Helper Scripts" --menu \
+      "Select IPv6 Address Management Type:" 15 58 4 \
+      "auto" "SLAAC/AUTO (recommended, default)" \
+      "dhcp" "DHCPv6" \
+      "static" "Static (manual entry)" \
+      "none" "Disabled" \
+      --default-item "auto" 3>&1 1>&2 2>&3)
+    [ $? -ne 0 ] && exit_script
 
+    case "$IPV6_METHOD" in
+    auto)
+      echo -e "${NETWORK}${BOLD}${DGN}IPv6: ${BGN}SLAAC/AUTO${CL}"
+      IPV6_ADDR=""
+      IPV6_GATE=""
+      break
+      ;;
+    dhcp)
+      echo -e "${NETWORK}${BOLD}${DGN}IPv6: ${BGN}DHCPv6${CL}"
+      IPV6_ADDR="dhcp"
+      IPV6_GATE=""
+      break
+      ;;
+    static)
+      # Ask for static IPv6 address (CIDR notation, e.g., 2001:db8::1234/64)
+      while true; do
+        IPV6_ADDR=$(whiptail --backtitle "[dev] Proxmox VE Helper Scripts" --inputbox \
+          "Set a static IPv6 CIDR address (e.g., 2001:db8::1234/64)" 8 58 "" \
+          --title "IPv6 STATIC ADDRESS" 3>&1 1>&2 2>&3) || exit_script
+        if [[ "$IPV6_ADDR" =~ ^([0-9a-fA-F:]+:+)+[0-9a-fA-F]+(/[0-9]{1,3})$ ]]; then
+          echo -e "${NETWORK}${BOLD}${DGN}IPv6 Address: ${BGN}$IPV6_ADDR${CL}"
+          break
+        else
+          whiptail --backtitle "[dev] Proxmox VE Helper Scripts" --msgbox \
+            "$IPV6_ADDR is an invalid IPv6 CIDR address. Please enter a valid IPv6 CIDR address (e.g., 2001:db8::1234/64)" 8 58
+        fi
+      done
+      # Optional: ask for IPv6 gateway for static config
+      while true; do
+        IPV6_GATE=$(whiptail --backtitle "[dev] Proxmox VE Helper Scripts" --inputbox \
+          "Enter IPv6 gateway address (optional, leave blank for none)" 8 58 "" --title "IPv6 GATEWAY" 3>&1 1>&2 2>&3)
+        if [ -z "$IPV6_GATE" ]; then
+          IPV6_GATE=""
+          break
+        elif [[ "$IPV6_GATE" =~ ^([0-9a-fA-F:]+:+)+[0-9a-fA-F]+$ ]]; then
+          break
+        else
+          whiptail --backtitle "[dev] Proxmox VE Helper Scripts" --msgbox \
+            "Invalid IPv6 gateway format." 8 58
+		
+		
+	  
+        fi
+      done
+      break
+      ;;
+    none)
+      echo -e "${NETWORK}${BOLD}${DGN}IPv6: ${BGN}Disabled${CL}"
+      IPV6_ADDR="none"
+      IPV6_GATE=""
+      break
+      ;;
+    *)
+      exit_script
+      ;;
+    esac
+  done
+  
   if [ "$var_os" == "alpine" ]; then
     APT_CACHER=""
     APT_CACHER_IP=""
@@ -581,12 +671,13 @@ advanced_settings() {
     fi
   fi
 
-  if (whiptail --backtitle "Proxmox VE Helper Scripts" --defaultno --title "IPv6" --yesno "Disable IPv6?" 10 58); then
-    DISABLEIP6="yes"
-  else
-    DISABLEIP6="no"
-  fi
-  echo -e "${DISABLEIPV6}${BOLD}${DGN}Disable IPv6: ${BGN}$DISABLEIP6${CL}"
+  # if (whiptail --backtitle "[dev] Proxmox VE Helper Scripts" --defaultno --title "IPv6" --yesno "Disable IPv6?" 10 58); then
+  #   DISABLEIP6="yes"
+  # else
+  #   DISABLEIP6="no"
+  # fi
+  # echo -e "${DISABLEIPV6}${BOLD}${DGN}Disable IPv6: ${BGN}$DISABLEIP6${CL}"
+  
 
   if MTU1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Interface MTU Size (leave blank for default [The MTU of your selected vmbr, default is 1500])" 8 58 --title "MTU SIZE" 3>&1 1>&2 2>&3); then
     if [ -z "$MTU1" ]; then
@@ -941,6 +1032,16 @@ start() {
 build_container() {
   #  if [ "$VERBOSE" == "yes" ]; then set -x; fi
 
+  NET_STRING="-net0 name=eth0,bridge=$BRG$MAC,ip=$NET$GATE$VLAN$MTU"
+  case "$IPV6_METHOD" in
+  auto) NET_STRING="$NET_STRING,ip6=auto" ;;
+  dhcp) NET_STRING="$NET_STRING,ip6=dhcp" ;;
+  static)
+    NET_STRING="$NET_STRING,ip6=$IPV6_ADDR"
+    [ -n "$IPV6_GATE" ] && NET_STRING="$NET_STRING,gw6=$IPV6_GATE"
+    ;;
+  none) ;;
+  esac
   if [ "$CT_TYPE" == "1" ]; then
     FEATURES="keyctl=1,nesting=1"
   else
@@ -968,7 +1069,7 @@ build_container() {
   export CACHER="$APT_CACHER"
   export CACHER_IP="$APT_CACHER_IP"
   export tz="$timezone"
-  export DISABLEIPV6="$DISABLEIP6"
+  #export DISABLEIPV6="$DISABLEIP6"
   export APPLICATION="$APP"
   export app="$NSAPP"
   export PASSWORD="$PW"
@@ -988,7 +1089,7 @@ build_container() {
     -tags $TAGS
     $SD
     $NS
-    -net0 name=eth0,bridge=$BRG$MAC,ip=$NET$GATE$VLAN$MTU
+    $NET_STRING
     -onboot 1
     -cores $CORE_COUNT
     -memory $RAM_SIZE
