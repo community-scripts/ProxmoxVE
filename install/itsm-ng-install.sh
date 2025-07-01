@@ -46,7 +46,7 @@ $STD a2dissite 000-default.conf
 echo "* * * * * php /usr/share/itsm-ng/front/cron.php" | crontab -
 msg_ok "Installed ITSM-NG"
 
-msg_info "Increase PHP Params"
+msg_info "Configuring PHP"
 PHP_VERSION=$(ls /etc/php/ | grep -E '^[0-9]+\.[0-9]+$' | head -n 1)
 PHP_INI="/etc/php/$PHP_VERSION/apache2/php.ini"
 sed -i 's/^upload_max_filesize = .*/upload_max_filesize = 20M/' $PHP_INI
@@ -56,7 +56,7 @@ sed -i 's/^[;]*max_input_vars *=.*/max_input_vars = 5000/' "$PHP_INI"
 sed -i 's/^memory_limit = .*/memory_limit = 256M/' $PHP_INI
 sed -i 's/^;\?\s*session.cookie_httponly\s*=.*/session.cookie_httponly = On/' $PHP_INI
 systemctl restart apache2
-msg_ok "Update PHP Params"
+msg_ok "Configured PHP"
 
 motd_ssh
 customize
