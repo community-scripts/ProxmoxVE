@@ -16,6 +16,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-07-01
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Open WebUI: Fix Ollama update procedure [@tremor021](https://github.com/tremor021) ([#5601](https://github.com/community-scripts/ProxmoxVE/pull/5601))
+
 ## 2025-06-30
 
 ### 🆕 New Scripts
