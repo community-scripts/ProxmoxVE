@@ -52,7 +52,7 @@ PHP_INI="/etc/php/$PHP_VERSION/apache2/php.ini"
 sed -i 's/^upload_max_filesize = .*/upload_max_filesize = 20M/' $PHP_INI
 sed -i 's/^post_max_size = .*/post_max_size = 20M/' $PHP_INI
 sed -i 's/^max_execution_time = .*/max_execution_time = 60/' $PHP_INI
-sed -i 's/^max_input_vars = .*/max_input_vars = 5000/' $PHP_INI
+sed -i 's/^[;]*max_input_vars *=.*/max_input_vars = 5000/' "$PHP_INI"
 sed -i 's/^memory_limit = .*/memory_limit = 256M/' $PHP_INI
 sed -i 's/^;\?\s*session.cookie_httponly\s*=.*/session.cookie_httponly = On/' $PHP_INI
 systemctl restart apache2
