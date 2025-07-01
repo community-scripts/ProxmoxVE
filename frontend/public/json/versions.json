@@ -1,8 +1,58 @@
 [
   {
+    "name": "MagicMirrorOrg/MagicMirror",
+    "version": "v2.32.0",
+    "date": "2025-06-30T22:12:48Z"
+  },
+  {
+    "name": "mongodb/mongo",
+    "version": "r8.0.11",
+    "date": "2025-06-30T20:30:31Z"
+  },
+  {
+    "name": "docker/compose",
+    "version": "v2.38.1",
+    "date": "2025-06-30T20:07:35Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.6.3",
+    "date": "2025-06-24T13:00:12Z"
+  },
+  {
     "name": "rcourtman/Pulse",
     "version": "v3.33.1",
     "date": "2025-06-30T11:29:32Z"
+  },
+  {
+    "name": "jhuckaby/Cronicle",
+    "version": "v0.9.81",
+    "date": "2025-06-30T16:40:33Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.9.4-rc2",
+    "date": "2025-06-27T18:45:33Z"
+  },
+  {
+    "name": "prometheus/prometheus",
+    "version": "v2.53.5",
+    "date": "2025-06-30T11:01:12Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.100.0",
+    "date": "2025-06-23T12:48:35Z"
+  },
+  {
+    "name": "jupyter/notebook",
+    "version": "v7.4.4",
+    "date": "2025-06-30T13:04:22Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.3.0",
+    "date": "2025-06-30T12:53:32Z"
   },
   {
     "name": "Graylog2/graylog2-server",
@@ -13,11 +63,6 @@
     "name": "grokability/snipe-it",
     "version": "v8.1.17",
     "date": "2025-06-30T11:26:27Z"
-  },
-  {
-    "name": "prometheus/prometheus",
-    "version": "v2.53.5",
-    "date": "2025-06-30T11:01:12Z"
   },
   {
     "name": "documenso/documenso",
@@ -55,11 +100,6 @@
     "date": "2025-06-28T06:53:45Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.2.5",
-    "date": "2025-05-28T06:49:43Z"
-  },
-  {
     "name": "sysadminsmedia/homebox",
     "version": "v0.20.0",
     "date": "2025-06-29T18:50:03Z"
@@ -78,11 +118,6 @@
     "name": "theonedev/onedev",
     "version": "v11.11.2",
     "date": "2025-06-29T01:40:39Z"
-  },
-  {
-    "name": "home-assistant/core",
-    "version": "2025.6.3",
-    "date": "2025-06-24T13:00:12Z"
   },
   {
     "name": "linkwarden/linkwarden",
@@ -123,11 +158,6 @@
     "name": "homarr-labs/homarr",
     "version": "v1.26.0",
     "date": "2025-06-27T19:15:24Z"
-  },
-  {
-    "name": "ollama/ollama",
-    "version": "v0.9.4-rc1",
-    "date": "2025-06-27T18:45:33Z"
   },
   {
     "name": "goauthentik/authentik",
@@ -215,11 +245,6 @@
     "date": "2025-06-26T09:16:33Z"
   },
   {
-    "name": "mongodb/mongo",
-    "version": "r8.1.2-rc1",
-    "date": "2025-06-25T22:42:04Z"
-  },
-  {
     "name": "gristlabs/grist-core",
     "version": "v1.6.1",
     "date": "2025-06-25T21:19:25Z"
@@ -248,11 +273,6 @@
     "name": "bunkerity/bunkerweb",
     "version": "testing",
     "date": "2025-06-16T18:10:42Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.100.0",
-    "date": "2025-06-23T12:48:35Z"
   },
   {
     "name": "moghtech/komodo",
@@ -285,11 +305,6 @@
     "date": "2025-06-17T13:49:30Z"
   },
   {
-    "name": "docker/compose",
-    "version": "v2.37.3",
-    "date": "2025-06-24T14:05:33Z"
-  },
-  {
     "name": "Checkmk/checkmk",
     "version": "v2.4.0p5",
     "date": "2025-06-24T13:06:53Z"
@@ -311,8 +326,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v4.2.1",
-    "date": "2025-06-03T20:04:28Z"
+    "version": "nightly",
+    "date": "2025-06-23T19:10:33Z"
   },
   {
     "name": "VictoriaMetrics/VictoriaMetrics",
@@ -790,11 +805,6 @@
     "date": "2025-05-26T21:40:54Z"
   },
   {
-    "name": "jupyter/notebook",
-    "version": "v7.4.3",
-    "date": "2025-05-26T14:27:27Z"
-  },
-  {
     "name": "stonith404/pingvin-share",
     "version": "v1.13.0",
     "date": "2025-05-25T20:21:13Z"
@@ -925,11 +935,6 @@
     "date": "2025-05-03T09:48:44Z"
   },
   {
-    "name": "jhuckaby/Cronicle",
-    "version": "v0.9.80",
-    "date": "2025-05-02T16:48:15Z"
-  },
-  {
     "name": "WordPress/WordPress",
     "version": "6.8.1",
     "date": "2025-04-30T16:44:16Z"
@@ -1043,11 +1048,6 @@
     "name": "wger-project/wger",
     "version": "2.3",
     "date": "2025-04-05T18:05:36Z"
-  },
-  {
-    "name": "MagicMirrorOrg/MagicMirror",
-    "version": "v2.31.0",
-    "date": "2025-04-01T18:12:45Z"
   },
   {
     "name": "Kometa-Team/Kometa",
