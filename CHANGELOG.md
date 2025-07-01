@@ -18,7 +18,8 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🆕 New Scripts
 
-  - ITSM-NG ([#5615](https://github.com/community-scripts/ProxmoxVE/pull/5615))
+  - Librespeed Rust ([#5614](https://github.com/community-scripts/ProxmoxVE/pull/5614))
+- ITSM-NG ([#5615](https://github.com/community-scripts/ProxmoxVE/pull/5615))
 
 ### 🚀 Updated Scripts
 
