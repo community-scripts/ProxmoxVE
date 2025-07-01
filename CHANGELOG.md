@@ -31,6 +31,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - [tools]: increase fetch_and_deploy with dns pre check [@MickLesk](https://github.com/MickLesk) ([#5608](https://github.com/community-scripts/ProxmoxVE/pull/5608))
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Jellyfin GPU Passthrough NVIDIA Note [@austinpilz](https://github.com/austinpilz) ([#5625](https://github.com/community-scripts/ProxmoxVE/pull/5625))
+
 ## 2025-06-30
 
 ### 🆕 New Scripts
