@@ -761,7 +761,7 @@ function fetch_and_deploy_gh_release() {
   local app_lc=$(echo "${app,,}" | tr -d ' ')
   local version_file="$HOME/.${app_lc}"
 
-  local api_timeout="--connect-timeout 5 --max-time 30"
+  local api_timeout="--connect-timeout 10 --max-time 60"
   local download_timeout="--connect-timeout 15 --max-time 900"
 
   local current_version=""
@@ -776,6 +776,14 @@ function fetch_and_deploy_gh_release() {
   local header=()
   [[ -n "${GITHUB_TOKEN:-}" ]] && header=(-H "Authorization: token $GITHUB_TOKEN")
 
+  # dns pre check
+  local gh_host
+  gh_host=$(awk -F/ '{print $3}' <<<"$api_url")
+  if ! getent hosts "$gh_host" &>/dev/null; then
+    msg_error "DNS resolution failed for $gh_host – check /etc/resolv.conf or networking"
+    return 1
+  fi
+
   local max_retries=3 retry_delay=2 attempt=1 success=false resp http_code
 
   while ((attempt <= max_retries)); do
@@ -785,7 +793,7 @@ function fetch_and_deploy_gh_release() {
   done
 
   if ! $success; then
-    msg_error "Failed to fetch release metadata after $max_retries attempts"
+    msg_error "Failed to fetch release metadata from $api_url after $max_retries attempts"
     return 1
   fi
 
@@ -840,14 +848,12 @@ function fetch_and_deploy_gh_release() {
     local assets url_match=""
     assets=$(echo "$json" | jq -r '.assets[].browser_download_url')
 
-    # If explicit filename pattern is provided (param $6), match that first
     if [[ -n "$6" ]]; then
       for u in $assets; do
         [[ "$u" =~ $6 || "$u" == *"$6" ]] && url_match="$u" && break
       done
     fi
 
-    # If no match via explicit pattern, fall back to architecture heuristic
     if [[ -z "$url_match" ]]; then
       for u in $assets; do
         if [[ "$u" =~ ($arch|amd64|x86_64|aarch64|arm64).*\.deb$ ]]; then
@@ -857,7 +863,6 @@ function fetch_and_deploy_gh_release() {
       done
     fi
 
-    # Fallback: any .deb file
     if [[ -z "$url_match" ]]; then
       for u in $assets; do
         [[ "$u" =~ \.deb$ ]] && url_match="$u" && break
