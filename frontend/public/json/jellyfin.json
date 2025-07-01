@@ -39,6 +39,10 @@
     {
       "text": "FFmpeg path: /usr/lib/jellyfin-ffmpeg/ffmpeg",
       "type": "info"
+    },
+     {
+      "text": "For NVIDIA graphics cards, you'll need to install the same drivers in the container that you did on the host. In the container, run the driver installation script and add the CLI arg --no-kernel-module",
+      "type": "info"
     }
   ]
 }
