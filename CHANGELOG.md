@@ -16,6 +16,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-07-02
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - Refactor & Bump to Node24: Zigbee2MQTT [@MickLesk](https://github.com/MickLesk) ([#5638](https://github.com/community-scripts/ProxmoxVE/pull/5638))
+
 ## 2025-07-01
 
 ### 🆕 New Scripts
