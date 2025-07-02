@@ -18,6 +18,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Changedetection: Base64 encode the launch options [@tremor021](https://github.com/tremor021) ([#5640](https://github.com/community-scripts/ProxmoxVE/pull/5640))
+
   - #### 🔧 Refactor
 
     - Refactor & Bump to Node24: Zigbee2MQTT [@MickLesk](https://github.com/MickLesk) ([#5638](https://github.com/community-scripts/ProxmoxVE/pull/5638))
