@@ -30,6 +30,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 💥 Breaking Changes
 
+    - Remove: Pingvin-Share [@MickLesk](https://github.com/MickLesk) ([#5635](https://github.com/community-scripts/ProxmoxVE/pull/5635))
     - Remove: Readarr [@MickLesk](https://github.com/MickLesk) ([#5636](https://github.com/community-scripts/ProxmoxVE/pull/5636))
 
 ## 2025-07-01
