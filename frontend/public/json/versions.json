@@ -1,5 +1,65 @@
 [
   {
+    "name": "wazuh/wazuh",
+    "version": "coverity-w27-4.13.0",
+    "date": "2025-07-01T03:17:32Z"
+  },
+  {
+    "name": "glpi-project/glpi",
+    "version": "10.0.18",
+    "date": "2025-02-12T11:07:02Z"
+  },
+  {
+    "name": "emqx/emqx",
+    "version": "e5.9.1",
+    "date": "2025-07-02T08:11:50Z"
+  },
+  {
+    "name": "apache/tomcat",
+    "version": "9.0.107",
+    "date": "2025-07-02T07:12:09Z"
+  },
+  {
+    "name": "nzbgetcom/nzbget",
+    "version": "v25.1",
+    "date": "2025-06-27T09:14:14Z"
+  },
+  {
+    "name": "qbittorrent/qBittorrent",
+    "version": "release-5.1.2",
+    "date": "2025-07-02T06:13:16Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.6.3",
+    "date": "2025-06-24T13:00:12Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2107",
+    "date": "2025-07-02T05:53:02Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.20",
+    "date": "2025-07-02T04:03:37Z"
+  },
+  {
+    "name": "diced/zipline",
+    "version": "v4.2.0",
+    "date": "2025-07-02T00:45:31Z"
+  },
+  {
+    "name": "sysadminsmedia/homebox",
+    "version": "v0.20.2",
+    "date": "2025-07-02T00:37:07Z"
+  },
+  {
+    "name": "hyperion-project/hyperion.ng",
+    "version": "2.1.1",
+    "date": "2025-06-14T17:45:06Z"
+  },
+  {
     "name": "mongodb/mongo",
     "version": "r8.1.2",
     "date": "2025-07-01T22:39:32Z"
@@ -10,19 +70,9 @@
     "date": "2025-07-01T21:37:20Z"
   },
   {
-    "name": "apache/tomcat",
-    "version": "10.1.43",
-    "date": "2025-07-01T21:32:34Z"
-  },
-  {
     "name": "actualbudget/actual",
     "version": "v25.7.0",
     "date": "2025-07-01T21:02:27Z"
-  },
-  {
-    "name": "home-assistant/core",
-    "version": "2025.6.3",
-    "date": "2025-06-24T13:00:12Z"
   },
   {
     "name": "TwiN/gatus",
@@ -33,6 +83,11 @@
     "name": "Koenkk/zigbee2mqtt",
     "version": "2.5.0",
     "date": "2025-07-01T18:28:01Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.3.0",
+    "date": "2025-07-01T13:18:12Z"
   },
   {
     "name": "hivemq/hivemq-community-edition",
@@ -60,16 +115,6 @@
     "date": "2025-07-01T15:13:42Z"
   },
   {
-    "name": "sysadminsmedia/homebox",
-    "version": "v0.20.1",
-    "date": "2025-07-01T14:18:32Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.3.0",
-    "date": "2025-07-01T13:18:12Z"
-  },
-  {
     "name": "syncthing/syncthing",
     "version": "v1.30.0",
     "date": "2025-07-01T11:29:11Z"
@@ -85,11 +130,6 @@
     "date": "2025-07-01T08:26:41Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2101",
-    "date": "2025-07-01T05:56:59Z"
-  },
-  {
     "name": "zabbix/zabbix",
     "version": "7.4.0",
     "date": "2025-07-01T04:36:51Z"
@@ -98,11 +138,6 @@
     "name": "openobserve/openobserve",
     "version": "v0.15.0-rc3",
     "date": "2025-07-01T04:09:37Z"
-  },
-  {
-    "name": "wazuh/wazuh",
-    "version": "coverity-w27-4.13.0",
-    "date": "2025-07-01T03:17:32Z"
   },
   {
     "name": "NginxProxyManager/nginx-proxy-manager",
@@ -180,19 +215,9 @@
     "date": "2025-06-30T03:52:33Z"
   },
   {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.19",
-    "date": "2025-06-28T06:53:45Z"
-  },
-  {
     "name": "dgtlmoon/changedetection.io",
     "version": "0.50.5",
     "date": "2025-06-29T08:54:47Z"
-  },
-  {
-    "name": "emqx/emqx",
-    "version": "e5.9.1-rc.1",
-    "date": "2025-06-29T07:27:21Z"
   },
   {
     "name": "theonedev/onedev",
@@ -258,11 +283,6 @@
     "name": "FlowiseAI/Flowise",
     "version": "flowise@3.0.3",
     "date": "2025-06-27T09:53:57Z"
-  },
-  {
-    "name": "nzbgetcom/nzbget",
-    "version": "v25.1",
-    "date": "2025-06-27T09:14:14Z"
   },
   {
     "name": "cockpit-project/cockpit",
@@ -398,11 +418,6 @@
     "name": "OliveTin/OliveTin",
     "version": "2025.6.22",
     "date": "2025-06-22T22:41:11Z"
-  },
-  {
-    "name": "qbittorrent/qBittorrent",
-    "version": "release-5.1.1",
-    "date": "2025-06-22T21:41:17Z"
   },
   {
     "name": "clusterzx/paperless-ai",
@@ -550,11 +565,6 @@
     "date": "2025-06-17T11:54:50Z"
   },
   {
-    "name": "glpi-project/glpi",
-    "version": "10.0.18",
-    "date": "2025-02-12T11:07:02Z"
-  },
-  {
     "name": "morpheus65535/bazarr",
     "version": "v1.5.2",
     "date": "2025-05-11T16:40:55Z"
@@ -623,11 +633,6 @@
     "name": "traccar/traccar",
     "version": "v6.7.3",
     "date": "2025-06-15T05:46:17Z"
-  },
-  {
-    "name": "hyperion-project/hyperion.ng",
-    "version": "2.1.1",
-    "date": "2025-06-14T17:45:06Z"
   },
   {
     "name": "advplyr/audiobookshelf",
@@ -708,11 +713,6 @@
     "name": "homebridge/homebridge",
     "version": "v1.10.0",
     "date": "2025-06-07T08:31:48Z"
-  },
-  {
-    "name": "diced/zipline",
-    "version": "v4.1.2",
-    "date": "2025-06-06T17:44:58Z"
   },
   {
     "name": "ioBroker/ioBroker",
