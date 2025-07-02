@@ -1,13 +1,83 @@
 [
   {
+    "name": "mongodb/mongo",
+    "version": "r8.1.2",
+    "date": "2025-07-01T22:39:32Z"
+  },
+  {
+    "name": "Threadfin/Threadfin",
+    "version": "1.2.35",
+    "date": "2025-07-01T21:37:20Z"
+  },
+  {
+    "name": "apache/tomcat",
+    "version": "10.1.43",
+    "date": "2025-07-01T21:32:34Z"
+  },
+  {
+    "name": "actualbudget/actual",
+    "version": "v25.7.0",
+    "date": "2025-07-01T21:02:27Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.6.3",
+    "date": "2025-06-24T13:00:12Z"
+  },
+  {
+    "name": "TwiN/gatus",
+    "version": "v5.19.0",
+    "date": "2025-07-01T19:59:32Z"
+  },
+  {
+    "name": "Koenkk/zigbee2mqtt",
+    "version": "2.5.0",
+    "date": "2025-07-01T18:28:01Z"
+  },
+  {
+    "name": "hivemq/hivemq-community-edition",
+    "version": "2025.4",
+    "date": "2025-07-01T18:01:37Z"
+  },
+  {
+    "name": "HabitRPG/habitica",
+    "version": "v5.37.1",
+    "date": "2025-07-01T16:57:43Z"
+  },
+  {
+    "name": "navidrome/navidrome",
+    "version": "v0.57.0",
+    "date": "2025-07-01T16:47:46Z"
+  },
+  {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.517",
+    "date": "2025-07-01T16:08:23Z"
+  },
+  {
+    "name": "element-hq/synapse",
+    "version": "v1.133.0",
+    "date": "2025-07-01T15:13:42Z"
+  },
+  {
+    "name": "sysadminsmedia/homebox",
+    "version": "v0.20.1",
+    "date": "2025-07-01T14:18:32Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.3.0",
+    "date": "2025-07-01T13:18:12Z"
+  },
+  {
     "name": "syncthing/syncthing",
     "version": "v1.30.0",
     "date": "2025-07-01T11:29:11Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.3.0",
-    "date": "2025-07-01T10:32:30Z"
+    "name": "Checkmk/checkmk",
+    "version": "v2.2.0p44-rc1",
+    "date": "2025-07-01T11:10:25Z"
   },
   {
     "name": "rcourtman/Pulse",
@@ -20,11 +90,6 @@
     "date": "2025-07-01T05:56:59Z"
   },
   {
-    "name": "Checkmk/checkmk",
-    "version": "v2.4.0p6-rc1",
-    "date": "2025-07-01T05:41:26Z"
-  },
-  {
     "name": "zabbix/zabbix",
     "version": "7.4.0",
     "date": "2025-07-01T04:36:51Z"
@@ -33,6 +98,11 @@
     "name": "openobserve/openobserve",
     "version": "v0.15.0-rc3",
     "date": "2025-07-01T04:09:37Z"
+  },
+  {
+    "name": "wazuh/wazuh",
+    "version": "coverity-w27-4.13.0",
+    "date": "2025-07-01T03:17:32Z"
   },
   {
     "name": "NginxProxyManager/nginx-proxy-manager",
@@ -45,19 +115,9 @@
     "date": "2025-06-30T22:12:48Z"
   },
   {
-    "name": "mongodb/mongo",
-    "version": "r8.0.11",
-    "date": "2025-06-30T20:30:31Z"
-  },
-  {
     "name": "docker/compose",
     "version": "v2.38.1",
     "date": "2025-06-30T20:07:35Z"
-  },
-  {
-    "name": "home-assistant/core",
-    "version": "2025.6.3",
-    "date": "2025-06-24T13:00:12Z"
   },
   {
     "name": "jhuckaby/Cronicle",
@@ -66,7 +126,7 @@
   },
   {
     "name": "ollama/ollama",
-    "version": "v0.9.4-rc5",
+    "version": "v0.9.4-rc6",
     "date": "2025-06-30T15:59:03Z"
   },
   {
@@ -123,11 +183,6 @@
     "name": "firefly-iii/firefly-iii",
     "version": "v6.2.19",
     "date": "2025-06-28T06:53:45Z"
-  },
-  {
-    "name": "sysadminsmedia/homebox",
-    "version": "v0.20.0",
-    "date": "2025-06-29T18:50:03Z"
   },
   {
     "name": "dgtlmoon/changedetection.io",
@@ -285,11 +340,6 @@
     "date": "2025-06-25T14:53:31Z"
   },
   {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.504.3",
-    "date": "2025-06-25T14:43:01Z"
-  },
-  {
     "name": "bunkerity/bunkerweb",
     "version": "testing",
     "date": "2025-06-16T18:10:42Z"
@@ -320,19 +370,9 @@
     "date": "2025-06-24T08:29:55Z"
   },
   {
-    "name": "element-hq/synapse",
-    "version": "v1.132.0",
-    "date": "2025-06-17T13:49:30Z"
-  },
-  {
     "name": "fallenbagel/jellyseerr",
     "version": "preview-fix-proxy-axios",
     "date": "2025-06-24T08:50:22Z"
-  },
-  {
-    "name": "wazuh/wazuh",
-    "version": "coverity-w26-4.13.0",
-    "date": "2025-06-24T02:02:34Z"
   },
   {
     "name": "minio/minio",
@@ -378,11 +418,6 @@
     "name": "inventree/InvenTree",
     "version": "0.17.14",
     "date": "2025-06-21T23:43:04Z"
-  },
-  {
-    "name": "HabitRPG/habitica",
-    "version": "v5.37.0",
-    "date": "2025-06-21T14:05:12Z"
   },
   {
     "name": "rogerfar/rdt-client",
@@ -690,11 +725,6 @@
     "date": "2025-06-06T11:22:02Z"
   },
   {
-    "name": "apache/tomcat",
-    "version": "10.1.42",
-    "date": "2025-06-05T22:39:40Z"
-  },
-  {
     "name": "benjaminjonard/koillection",
     "version": "1.6.14",
     "date": "2025-06-05T16:40:52Z"
@@ -708,11 +738,6 @@
     "name": "MariaDB/server",
     "version": "mariadb-11.8.2",
     "date": "2025-06-04T13:35:16Z"
-  },
-  {
-    "name": "actualbudget/actual",
-    "version": "v25.6.1",
-    "date": "2025-06-04T22:24:31Z"
   },
   {
     "name": "rabbitmq/rabbitmq-server",
@@ -750,16 +775,6 @@
     "date": "2025-06-01T19:02:46Z"
   },
   {
-    "name": "Koenkk/zigbee2mqtt",
-    "version": "2.4.0",
-    "date": "2025-06-01T18:08:44Z"
-  },
-  {
-    "name": "TwiN/gatus",
-    "version": "v5.18.1",
-    "date": "2025-05-31T23:06:08Z"
-  },
-  {
     "name": "blakeblackshear/frigate",
     "version": "v0.14.1",
     "date": "2024-08-29T22:32:51Z"
@@ -773,11 +788,6 @@
     "name": "release-argus/Argus",
     "version": "0.26.3",
     "date": "2025-05-29T21:18:15Z"
-  },
-  {
-    "name": "navidrome/navidrome",
-    "version": "v0.56.1",
-    "date": "2025-05-29T19:09:16Z"
   },
   {
     "name": "readeck/readeck",
@@ -798,11 +808,6 @@
     "name": "bluenviron/mediamtx",
     "version": "v1.12.3",
     "date": "2025-05-27T20:43:10Z"
-  },
-  {
-    "name": "Threadfin/Threadfin",
-    "version": "1.2.34",
-    "date": "2025-05-27T18:18:00Z"
   },
   {
     "name": "dani-garcia/vaultwarden",
@@ -943,11 +948,6 @@
     "name": "WordPress/WordPress",
     "version": "6.8.1",
     "date": "2025-04-30T16:44:16Z"
-  },
-  {
-    "name": "hivemq/hivemq-community-edition",
-    "version": "2025.3",
-    "date": "2025-04-30T02:52:28Z"
   },
   {
     "name": "hargata/lubelog",
