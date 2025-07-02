@@ -116,7 +116,7 @@ Wants=browserless.service
 Type=simple
 WorkingDirectory=/opt/changedetection
 Environment=WEBDRIVER_URL=http://127.0.0.1:4444/wd/hub
-Environment=PLAYWRIGHT_DRIVER_URL=ws://localhost:3000/chrome?launch={"defaultViewport":{"height":720,"width":1280},"headless":false,"stealth":true}&blockAds=true
+Environment=PLAYWRIGHT_DRIVER_URL=ws://localhost:3000/chrome?launch=eyJkZWZhdWx0Vmlld3BvcnQiOnsiaGVpZ2h0Ijo3MjAsIndpZHRoIjoxMjgwfSwiaGVhZGxlc3MiOmZhbHNlLCJzdGVhbHRoIjp0cnVlfQ==&blockAds=true
 ExecStart=changedetection.io -d /opt/changedetection -p 5000
 [Install]
 WantedBy=multi-user.target
