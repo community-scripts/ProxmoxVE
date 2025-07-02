@@ -19,17 +19,15 @@ $STD apt-get install -y \
   make \
   g++ \
   gcc \
-  ca-certificates
+  ca-certificates \
+  jq
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" NODE_MODULE="pnpm@latest" setup_nodejs
+NODE_VERSION="24" NODE_MODULE="pnpm@$(curl -fsSL https://raw.githubusercontent.com/Koenkk/zigbee2mqtt/master/package.json | jq -r '.packageManager | split("@")[1]')" setup_nodejs
+
+fetch_and_deploy_gh_release "Zigbee2MQTT" "Koenkk/zigbee2mqtt" "tarball" "latest" "/opt/zigbee2mqtt"
 
 msg_info "Setting up Zigbee2MQTT"
-cd /opt
-RELEASE=$(curl -fsSL https://api.github.com/repos/Koenkk/zigbee2mqtt/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-curl -fsSL "https://github.com/Koenkk/zigbee2mqtt/archive/refs/tags/${RELEASE}.zip" -o "${RELEASE}.zip"
-$STD unzip ${RELEASE}.zip
-mv zigbee2mqtt-${RELEASE} /opt/zigbee2mqtt
 cd /opt/zigbee2mqtt/data
 mv configuration.example.yaml configuration.yaml
 cd /opt/zigbee2mqtt
@@ -60,7 +58,6 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -rf /opt/${RELEASE}.zip
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"

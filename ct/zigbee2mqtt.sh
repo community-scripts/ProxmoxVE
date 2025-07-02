@@ -9,7 +9,7 @@ APP="Zigbee2MQTT"
 var_tags="${var_tags:-smarthome;zigbee;mqtt}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-1024}"
-var_disk="${var_disk:-4}"
+var_disk="${var_disk:-5}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-12}"
 var_unprivileged="${var_unprivileged:-0}"
@@ -27,15 +27,27 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
+  if [[ -f ~/.zigbee2mqtt ]]; then
+    CURRENT="$(cat ~/.zigbee2mqtt)"
+  elif [[ -f /opt/${APP}_version.txt ]]; then
+    CURRENT="$(cat /opt/${APP}_version.txt)"
+    rm -f /opt/${APP}_version.txt
+  else
+    CURRENT=""
+  fi
+
   RELEASE=$(curl -fsSL https://api.github.com/repos/Koenkk/zigbee2mqtt/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+  if [[ "$RELEASE" != "$CURRENT" ]]; then
+    if ! command -v jq &>/dev/null; then
+      $STD apt-get update
+      $STD apt-get install -y jq
+    fi
+    NODE_VERSION=24 NODE_MODULE="pnpm@$(curl -fsSL https://raw.githubusercontent.com/Koenkk/zigbee2mqtt/master/package.json | jq -r '.packageManager | split("@")[1]')" setup_nodejs
+
     msg_info "Stopping Service"
     systemctl stop zigbee2mqtt
     msg_ok "Stopped Service"
-
-    msg_info "Updating pnpm"
-    $STD npm install -g pnpm@10.4.1
-    msg_ok "Updated pnpm"
 
     msg_info "Creating Backup"
     rm -rf /opt/${APP}_backup*.tar.gz
@@ -44,12 +56,9 @@ function update_script() {
     mv /opt/zigbee2mqtt/data /opt/z2m_backup
     msg_ok "Backup Created"
 
+    fetch_and_deploy_gh_release "Zigbee2MQTT" "Koenkk/zigbee2mqtt" "tarball" "latest" "/opt/zigbee2mqtt"
+
     msg_info "Updating ${APP} to v${RELEASE}"
-    cd /opt
-    curl -fsSL "https://github.com/Koenkk/zigbee2mqtt/archive/refs/tags/${RELEASE}.zip" -o $(basename "https://github.com/Koenkk/zigbee2mqtt/archive/refs/tags/${RELEASE}.zip")
-    $STD unzip ${RELEASE}.zip
-    rm -rf /opt/zigbee2mqtt
-    mv zigbee2mqtt-${RELEASE} /opt/zigbee2mqtt
     rm -rf /opt/zigbee2mqtt/data
     mv /opt/z2m_backup/data /opt/zigbee2mqtt
     cd /opt/zigbee2mqtt
@@ -63,9 +72,7 @@ function update_script() {
 
     msg_info "Cleaning up"
     rm -rf /opt/z2m_backup
-    rm -rf /opt/${RELEASE}.zip
     msg_ok "Cleaned up"
-    echo "${RELEASE}" >/opt/${APP}_version.txt
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}."
   fi
