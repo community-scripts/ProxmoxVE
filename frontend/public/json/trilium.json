@@ -1,5 +1,5 @@
 {
-  "name": "Trilium",
+  "name": "Trilium Notes",
   "slug": "trilium",
   "categories": [
     12
@@ -13,7 +13,7 @@
   "website": "https://github.com/TriliumNext/trilium",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/trilium.svg",
   "config_path": "/root/trilium-data/config.ini",
-  "description": "Trilium is the latest and officially maintained version of the powerful, self-hosted note-taking and personal knowledge management application. It enables users to organize information in a hierarchical tree structure and supports rich text editing, internal linking, images, attachments, and powerful scripting capabilities. This version reflects the most current development efforts under the TriliumNext organization and replaces all prior forks or legacy variants. Trilium is ideal for building personal wikis, structured documentation, and long-term knowledge archives, giving users full local control and privacy.",
+  "description": "Trilium Notes is the latest and officially maintained version of the powerful, self-hosted note-taking and personal knowledge management application. It enables users to organize information in a hierarchical tree structure and supports rich text editing, internal linking, images, attachments, and powerful scripting capabilities. This version reflects the most current development efforts under the TriliumNext organization and replaces all prior forks or legacy variants. Trilium is ideal for building personal wikis, structured documentation, and long-term knowledge archives, giving users full local control and privacy.",
   "install_methods": [
     {
       "type": "default",

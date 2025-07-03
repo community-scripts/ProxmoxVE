@@ -5,7 +5,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/TriliumNext/Trilium
 
-APP="Trilium"
+APP="Trilium Notes"
 var_tags="${var_tags:-notes}"
 var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-512}"
