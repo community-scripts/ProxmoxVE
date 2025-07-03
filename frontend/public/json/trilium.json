@@ -1,5 +1,5 @@
 {
-  "name": "TriliumNext",
+  "name": "Trilium",
   "slug": "trilium",
   "categories": [
     12
@@ -9,11 +9,11 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 8080,
-  "documentation": "https://triliumnext.github.io/Docs/",
+  "documentation": "https://github.com/TriliumNext/trilium/wiki",
   "website": "https://github.com/TriliumNext/trilium",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/triliumnext.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/trilium.svg",
   "config_path": "/root/trilium-data/config.ini",
-  "description": "TriliumNext is an newer Fork of Trilium. TriliumNext is an open-source note-taking and personal knowledge management application. It allows users to organize and manage their notes, ideas, and information in a single place, using a hierarchical tree-like structure. Trilium offers a range of features, including rich text formatting, links, images, and attachments, making it easy to create and structure notes. The software is designed to be flexible and customizable, with a range of customization options and plugins available, including themes, export options, and more. Trilium is a self-hosted solution, and can be run on a local machine or a cloud-based server, providing users with full control over their notes and information.",
+  "description": "Trilium is the latest and officially maintained version of the powerful, self-hosted note-taking and personal knowledge management application. It enables users to organize information in a hierarchical tree structure and supports rich text editing, internal linking, images, attachments, and powerful scripting capabilities. This version reflects the most current development efforts under the TriliumNext organization and replaces all prior forks or legacy variants. Trilium is ideal for building personal wikis, structured documentation, and long-term knowledge archives, giving users full local control and privacy.",
   "install_methods": [
     {
       "type": "default",
