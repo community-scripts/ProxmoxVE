@@ -22,6 +22,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - Zipline: Fix typo in uploads directory path [@tremor021](https://github.com/tremor021) ([#5662](https://github.com/community-scripts/ProxmoxVE/pull/5662))
 
+  - #### ✨ New Features
+
+    - Improve asset matching in fetch_and_deploy_gh_release for prebuild and singlefile modes [@MickLesk](https://github.com/MickLesk) ([#5669](https://github.com/community-scripts/ProxmoxVE/pull/5669))
+
 ### 🌐 Website
 
   - #### 📝 Script Information
