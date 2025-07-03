@@ -40,9 +40,9 @@ function update_script() {
 
     msg_info "Updating ${APP} to ${RELEASE}"
     cp /opt/zipline/.env /opt/
-    mkdir -p /opt/zipline-upload
-    if [ -d /opt/zipline/upload ] && [ "$(ls -A /opt/zipline/upload)" ]; then
-      cp -R /opt/zipline/upload/* /opt/zipline-upload/
+    mkdir -p /opt/zipline-uploads
+    if [ -d /opt/zipline/uploads ] && [ "$(ls -A /opt/zipline/uploads)" ]; then
+      cp -R /opt/zipline/uploads/* /opt/zipline-uploads/
     fi
     curl -fsSL "https://github.com/diced/zipline/archive/refs/tags/v${RELEASE}.zip" -o $(basename "https://github.com/diced/zipline/archive/refs/tags/v${RELEASE}.zip")
     $STD unzip v"${RELEASE}".zip
