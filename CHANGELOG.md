@@ -22,6 +22,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - Zipline: Fix typo in uploads directory path [@tremor021](https://github.com/tremor021) ([#5662](https://github.com/community-scripts/ProxmoxVE/pull/5662))
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Bump Icons to selfhst repo | switch svg to webp [@MickLesk](https://github.com/MickLesk) ([#5659](https://github.com/community-scripts/ProxmoxVE/pull/5659))
+
 ## 2025-07-02
 
 ### 🚀 Updated Scripts
