@@ -938,7 +938,13 @@ function fetch_and_deploy_gh_release() {
       fi
       $STD unzip "$tmpdir/$filename" -d "$target"
     elif [[ "$filename" == *.tar.* ]]; then
-      tar -xf "$tmpdir/$filename" -C "$target"
+      tar -xf "$tmpdir/$filename" -C "$tmpdir"
+      local unpack_dir
+      unpack_dir=$(find "$tmpdir" -mindepth 1 -maxdepth 1 -type d | head -n1)
+
+      shopt -s dotglob nullglob
+      cp -r "$unpack_dir"/* "$target/"
+      shopt -u dotglob nullglob
     else
       msg_error "Unsupported archive format: $filename"
       rm -rf "$tmpdir"
