@@ -31,7 +31,7 @@ function update_script() {
     touch /opt/${APP}_version.txt
     mkdir -p $HOME/.config/qBittorrent/
     mkdir -p /opt/qbittorrent/
-    mv /.config/qBittorrent $HOME/.config/
+    [ -d "/.config/qBittorrent" ] && mv /.config/qBittorrent "$HOME/.config/"
     $STD apt-get remove --purge -y qbittorrent-nox
     sed -i 's@ExecStart=/usr/bin/qbittorrent-nox@ExecStart=/opt/qbittorrent/qbittorrent-nox@g' /etc/systemd/system/qbittorrent-nox.service
     systemctl daemon-reload
