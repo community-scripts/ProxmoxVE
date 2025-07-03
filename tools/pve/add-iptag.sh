@@ -3,7 +3,6 @@
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: MickLesk (Canbiz) && Desert_Gamer
 # License: MIT
-# Source: https://github.com/gitsang/iptag
 
 function header_info {
   clear
