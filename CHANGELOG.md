@@ -16,6 +16,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-07-03
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Zipline: Fix typo in uploads directory path [@tremor021](https://github.com/tremor021) ([#5662](https://github.com/community-scripts/ProxmoxVE/pull/5662))
+
 ## 2025-07-02
 
 ### 🚀 Updated Scripts
