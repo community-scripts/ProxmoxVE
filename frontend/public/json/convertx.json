@@ -12,7 +12,7 @@
   "interface_port": 3000,
   "documentation": "https://github.com/C4illin/ConvertX",
   "website": "https://github.com/C4illin/ConvertX",
-  "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/convertx.svg",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/convertx.webp",
   "description": "ConvertX is a self-hosted online file converter supporting over 1000 formats, including images, audio, video, documents, and more, powered by FFmpeg, GraphicsMagick, and other libraries.",
   "install_methods": [
     {

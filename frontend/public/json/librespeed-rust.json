@@ -12,7 +12,7 @@
   "interface_port": 8080,
   "documentation": "https://github.com/librespeed/speedtest-rust",
   "website": "https://github.com/librespeed/speedtest-rust",
-  "logo": "https://raw.githubusercontent.com/selfhst/icons/refs/heads/main/svg/librespeed.svg",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/librespeed.webp",
   "description": "Librespeed is a no flash, no java, no websocket speedtest server. This community script deploys the rust version for simplicity and low resource usage.",
   "install_methods": [
     {

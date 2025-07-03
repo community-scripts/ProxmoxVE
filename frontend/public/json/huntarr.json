@@ -12,7 +12,7 @@
   "documentation": "https://github.com/plexguide/Huntarr.io/wiki",
   "config_path": "/opt/huntarr",
   "website": "https://github.com/plexguide/Huntarr.io",
-  "logo": "https://raw.githubusercontent.com/plexguide/Huntarr.io/refs/heads/main/frontend/static/logo/Huntarr.svg",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/huntarr.webp",
   "description": "Huntarr is a tool that automates the search for missing or low-quality media content in your collection. It works seamlessly with applications like Sonarr, Radarr, Lidarr, Readarr, and Whisparr, enhancing their functionality with continuous background scans to identify and update missed or outdated content. Through a user-friendly web interface accessible on port 9705, Huntarr provides real-time statistics, log views, and extensive configuration options. The software is especially useful for users who want to keep their media library up to date by automatically searching for missing episodes or higher-quality versions. Huntarr is well-suited for self-hosted environments and can easily run in LXC containers or Docker setups.",
   "install_methods": [
     {
