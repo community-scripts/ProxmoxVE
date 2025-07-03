@@ -12,7 +12,7 @@
   "interface_port": 9000,
   "documentation": "https://lyrion.org/",
   "website": "https://lyrion.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/lyrion-media-server.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/lyrion-music-server.webp",
   "description": "Lyrion Music Server is an open-source server software to stream local music collections, internet radio, and music services to Squeezebox and compatible audio players.",
   "install_methods": [
     {
