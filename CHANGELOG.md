@@ -26,6 +26,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
     - Improve asset matching in fetch_and_deploy_gh_release for prebuild and singlefile modes [@MickLesk](https://github.com/MickLesk) ([#5669](https://github.com/community-scripts/ProxmoxVE/pull/5669))
 
+  - #### 🔧 Refactor
+
+    - Refactor: Trilium [@MickLesk](https://github.com/MickLesk) ([#5665](https://github.com/community-scripts/ProxmoxVE/pull/5665))
+
 ### 🌐 Website
 
   - #### 📝 Script Information
