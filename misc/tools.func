@@ -819,6 +819,7 @@ function fetch_and_deploy_gh_release() {
 
   msg_info "Fetching GitHub release: $app ($version)"
 
+  ### Tarball Mode ###
   if [[ "$mode" == "tarball" || "$mode" == "source" ]]; then
     url=$(echo "$json" | jq -r '.tarball_url // empty')
     [[ -z "$url" ]] && url="https://github.com/$repo/archive/refs/tags/v$version.tar.gz"
@@ -839,6 +840,7 @@ function fetch_and_deploy_gh_release() {
     cp -r "$unpack_dir"/* "$target/"
     shopt -u dotglob nullglob
 
+    ### Binary Mode ###
   elif [[ "$mode" == "binary" ]]; then
     local arch
     arch=$(dpkg --print-architecture 2>/dev/null || uname -m)
@@ -848,12 +850,14 @@ function fetch_and_deploy_gh_release() {
     local assets url_match=""
     assets=$(echo "$json" | jq -r '.assets[].browser_download_url')
 
+    # If explicit filename pattern is provided (param $6), match that first
     if [[ -n "$6" ]]; then
       for u in $assets; do
         [[ "$u" =~ $6 || "$u" == *"$6" ]] && url_match="$u" && break
       done
     fi
 
+    # If no match via explicit pattern, fall back to architecture heuristic
     if [[ -z "$url_match" ]]; then
       for u in $assets; do
         if [[ "$u" =~ ($arch|amd64|x86_64|aarch64|arm64).*\.deb$ ]]; then
@@ -863,6 +867,7 @@ function fetch_and_deploy_gh_release() {
       done
     fi
 
+    # Fallback: any .deb file
     if [[ -z "$url_match" ]]; then
       for u in $assets; do
         [[ "$u" =~ \.deb$ ]] && url_match="$u" && break
@@ -891,8 +896,10 @@ function fetch_and_deploy_gh_release() {
       }
     }
 
+    ### Prebuild Mode ###
   elif [[ "$mode" == "prebuild" ]]; then
-    local pattern="$6"
+    local pattern="${6%\"}"
+    pattern="${pattern#\"}"
     [[ -z "$pattern" ]] && {
       msg_error "Mode 'prebuild' requires 6th parameter (asset filename pattern)"
       rm -rf "$tmpdir"
@@ -901,7 +908,14 @@ function fetch_and_deploy_gh_release() {
 
     local asset_url=""
     for u in $(echo "$json" | jq -r '.assets[].browser_download_url'); do
-      [[ "$u" =~ $pattern || "$u" == *"$pattern" ]] && asset_url="$u" && break
+      filename_candidate="${u##*/}"
+      case "$filename_candidate" in
+      $pattern)
+        asset_url="$u"
+        break
+        ;;
+      esac
+
     done
 
     [[ -z "$asset_url" ]] && {
@@ -923,16 +937,18 @@ function fetch_and_deploy_gh_release() {
         $STD apt-get install -y unzip
       fi
       $STD unzip "$tmpdir/$filename" -d "$target"
-    elif [[ "$filename" == *.tar.gz ]]; then
-      tar -xzf "$tmpdir/$filename" -C "$target"
+    elif [[ "$filename" == *.tar.* ]]; then
+      tar -xf "$tmpdir/$filename" -C "$target"
     else
       msg_error "Unsupported archive format: $filename"
       rm -rf "$tmpdir"
       return 1
     fi
 
+    ### Singlefile Mode ###
   elif [[ "$mode" == "singlefile" ]]; then
-    local pattern="$6"
+    local pattern="${6%\"}"
+    pattern="${pattern#\"}"
     [[ -z "$pattern" ]] && {
       msg_error "Mode 'singlefile' requires 6th parameter (asset filename pattern)"
       rm -rf "$tmpdir"
@@ -941,7 +957,13 @@ function fetch_and_deploy_gh_release() {
 
     local asset_url=""
     for u in $(echo "$json" | jq -r '.assets[].browser_download_url'); do
-      [[ "$u" =~ $pattern || "$u" == *"$pattern" ]] && asset_url="$u" && break
+      filename_candidate="${u##*/}"
+      case "$filename_candidate" in
+      $pattern)
+        asset_url="$u"
+        break
+        ;;
+      esac
     done
 
     [[ -z "$asset_url" ]] && {
