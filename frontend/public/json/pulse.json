@@ -11,7 +11,7 @@
   "interface_port": 7655,
   "documentation": null,
   "website": "https://github.com/rcourtman/Pulse",
-  "logo": "https://raw.githubusercontent.com/rcourtman/Pulse/main/src/public/logos/pulse-logo-256x256.png",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/pulse.webp",
   "config_path": "/opt/pulse/.env",
   "description": "A lightweight monitoring application for Proxmox VE that displays real-time status for VMs and containers via a simple web interface.",
   "install_methods": [

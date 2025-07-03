@@ -12,7 +12,7 @@
   "interface_port": null,
   "documentation": "https://oauth2-proxy.github.io/oauth2-proxy/configuration/overview",
   "website": "https://oauth2-proxy.github.io/oauth2-proxy/",
-  "logo": "https://raw.githubusercontent.com/oauth2-proxy/oauth2-proxy/f82e90426a1881d36bf995f25de9b7b1db4c2564/docs/static/img/logos/OAuth2_Proxy_icon.svg",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/oauth2-proxy.webp",
   "config_path": "/opt/oauth2-proxy/config.toml",
   "description": "A reverse proxy that provides authentication with Google, Azure, OpenID Connect and many more identity providers.",
   "install_methods": [
