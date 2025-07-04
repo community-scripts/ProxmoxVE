@@ -20,6 +20,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - Komodo: Update Script to use FerretDB / remove psql & sqlite options [@MickLesk](https://github.com/MickLesk) ([#5690](https://github.com/community-scripts/ProxmoxVE/pull/5690))
     - ESPHome: Fix Linking issue to prevent version mismatch [@MickLesk](https://github.com/MickLesk) ([#5685](https://github.com/community-scripts/ProxmoxVE/pull/5685))
     - Update Iptag [@DesertGamer](https://github.com/DesertGamer) ([#5677](https://github.com/community-scripts/ProxmoxVE/pull/5677))
     - Cloudflare-DDNS: fix unvisible read command at install [@MickLesk](https://github.com/MickLesk) ([#5682](https://github.com/community-scripts/ProxmoxVE/pull/5682))
