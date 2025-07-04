@@ -46,8 +46,8 @@ function update_script() {
     cd /opt/mafl
     yarn install
     yarn build
-    systemctl start mafl
     mv /opt/mafl-backup/data /opt/mafl/data
+    systemctl start mafl
     msg_ok "Updated Mafl to v${RELEASE}"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}"
