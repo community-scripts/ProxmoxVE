@@ -18,14 +18,17 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
-  - Core layer refactor: centralized error traps and msg_* consistency [@MickLesk](https://github.com/MickLesk) ([#5705](https://github.com/community-scripts/ProxmoxVE/pull/5705))
-
   - #### 🐞 Bug Fixes
 
+    - Refactor: Mafl [@tremor021](https://github.com/tremor021) ([#5702](https://github.com/community-scripts/ProxmoxVE/pull/5702))
     - Outline: Fix sed command for v0.85.0 [@tremor021](https://github.com/tremor021) ([#5688](https://github.com/community-scripts/ProxmoxVE/pull/5688))
     - Komodo: Update Script to use FerretDB / remove psql & sqlite options [@MickLesk](https://github.com/MickLesk) ([#5690](https://github.com/community-scripts/ProxmoxVE/pull/5690))
     - ESPHome: Fix Linking issue to prevent version mismatch [@MickLesk](https://github.com/MickLesk) ([#5685](https://github.com/community-scripts/ProxmoxVE/pull/5685))
     - Cloudflare-DDNS: fix unvisible read command at install [@MickLesk](https://github.com/MickLesk) ([#5682](https://github.com/community-scripts/ProxmoxVE/pull/5682))
+
+  - #### ✨ New Features
+
+    - Core layer refactor: centralized error traps and msg_* consistency [@MickLesk](https://github.com/MickLesk) ([#5705](https://github.com/community-scripts/ProxmoxVE/pull/5705))
 
   - #### 💥 Breaking Changes
 
