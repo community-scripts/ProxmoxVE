@@ -29,6 +29,11 @@ $STD /opt/esphome/.venv/bin/python -m pip install --upgrade pip
 $STD /opt/esphome/.venv/bin/python -m pip install esphome tornado esptool
 msg_ok "Setup and Installed ESPHome"
 
+msg_info "Linking esphome to /usr/local/bin"
+rm -f /usr/local/bin/esphome
+ln -s /opt/esphome/.venv/bin/esphome /usr/local/bin/esphome
+msg_ok "Linked esphome binary"
+
 msg_info "Creating Service"
 mkdir -p /root/config
 cat <<EOF >/etc/systemd/system/esphomeDashboard.service

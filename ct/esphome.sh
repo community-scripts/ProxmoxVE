@@ -73,6 +73,11 @@ EOF
     msg_ok "Updated systemd service"
   fi
 
+  msg_info "Linking esphome to /usr/local/bin"
+  rm -f /usr/local/bin/esphome
+  ln -s /opt/esphome/.venv/bin/esphome /usr/local/bin/esphome
+  msg_ok "Linked esphome binary"
+
   msg_info "Starting ${APP}"
   systemctl start esphomeDashboard
   msg_ok "Started ${APP}"
