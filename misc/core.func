@@ -1,30 +1,6 @@
 # Copyright (c) 2021-2025 community-scripts ORG
 # License: MIT | https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/LICENSE
 
-# if ! declare -f wait_for >/dev/null; then
-#   echo "[DEBUG] Undefined function 'wait_for' used from: ${BASH_SOURCE[*]}" >&2
-#   wait_for() {
-#     echo "[DEBUG] Fallback: wait_for called with: $*" >&2
-#     true
-#   }
-# fi
-
-trap 'on_error $? $LINENO' ERR
-trap 'on_exit' EXIT
-trap 'on_interrupt' INT
-trap 'on_terminate' TERM
-
-if ! declare -f wait_for >/dev/null; then
-  wait_for() {
-    true
-  }
-fi
-
-declare -A MSG_INFO_SHOWN=()
-SPINNER_PID=""
-SPINNER_ACTIVE=0
-SPINNER_MSG=""
-
 # ------------------------------------------------------------------------------
 # Loads core utility groups once (colors, formatting, icons, defaults).
 # ------------------------------------------------------------------------------
@@ -43,100 +19,51 @@ load_functions() {
   # add more
 }
 
-on_error() {
-  local exit_code="$1"
-  local lineno="$2"
+# ============================================================================
+# Error & Signal Handling – robust, universal, subshell-safe
+# ============================================================================
 
-  stop_spinner
-
-  case "$exit_code" in
-  1) msg_error "Generic error occurred (line $lineno)" ;;
-  2) msg_error "Shell misuse (line $lineno)" ;;
-  126) msg_error "Command cannot execute (line $lineno)" ;;
-  127) msg_error "Command not found (line $lineno)" ;;
-  128) msg_error "Invalid exit argument (line $lineno)" ;;
-  130) msg_error "Script aborted by user (CTRL+C)" ;;
-  143) msg_error "Script terminated by SIGTERM" ;;
-  *) msg_error "Script failed at line $lineno with exit code $exit_code" ;;
-  esac
-
-  exit "$exit_code"
-}
-
-on_exit() {
-  cleanup_spinner || true
-  [[ "${VERBOSE:-no}" == "yes" ]] && msg_info "Script exited"
-}
-
-on_interrupt() {
-  msg_error "Interrupted by user (CTRL+C)"
-  exit 130
-}
-
-on_terminate() {
-  msg_error "Terminated by signal (TERM)"
-  exit 143
-}
-
-setup_trap_abort_handling() {
-  trap '__handle_signal_abort SIGINT' SIGINT
-  trap '__handle_signal_abort SIGTERM' SIGTERM
-  trap '__handle_unexpected_error $?' ERR
-}
-
-__handle_signal_abort() {
-  local signal="$1"
-  echo
-  [ -n "${SPINNER_PID:-}" ] && kill "$SPINNER_PID" 2>/dev/null && wait "$SPINNER_PID" 2>/dev/null
-
-  case "$signal" in
-  SIGINT)
-    msg_error "Script aborted by user (CTRL+C)"
-    exit 130
+_tool_error_hint() {
+  local cmd="$1"
+  local code="$2"
+  case "$cmd" in
+  curl)
+    case "$code" in
+    6) echo "Curl: Could not resolve host (DNS problem)" ;;
+    7) echo "Curl: Failed to connect to host (connection refused)" ;;
+    22) echo "Curl: HTTP error (404/403 etc)" ;;
+    28) echo "Curl: Operation timeout" ;;
+    *) echo "Curl: Unknown error ($code)" ;;
+    esac
     ;;
-  SIGTERM)
-    msg_error "Script terminated (SIGTERM)"
-    exit 143
+  wget)
+    echo "Wget failed – URL unreachable or permission denied"
     ;;
-  *)
-    msg_error "Script interrupted (unknown signal: $signal)"
-    exit 1
+  systemctl)
+    echo "Systemd unit failure – check service name and permissions"
     ;;
+  jq)
+    echo "jq parse error – malformed JSON or missing key"
+    ;;
+  mariadb | mysql)
+    echo "MySQL/MariaDB command failed – check credentials or DB"
+    ;;
+  unzip)
+    echo "unzip failed – corrupt file or missing permission"
+    ;;
+  tar)
+    echo "tar failed – invalid format or missing binary"
+    ;;
+  node | npm | pnpm | yarn)
+    echo "Node tool failed – check version compatibility or package.json"
+    ;;
+  *) echo "" ;;
   esac
 }
 
-__handle_unexpected_error() {
-  local exit_code="$1"
-  echo
-  [ -n "${SPINNER_PID:-}" ] && kill "$SPINNER_PID" 2>/dev/null && wait "$SPINNER_PID" 2>/dev/null
-
-  case "$exit_code" in
-  1)
-    msg_error "Generic error occurred (exit code 1)"
-    ;;
-  2)
-    msg_error "Misuse of shell builtins (exit code 2)"
-    ;;
-  126)
-    msg_error "Command invoked cannot execute (exit code 126)"
-    ;;
-  127)
-    msg_error "Command not found (exit code 127)"
-    ;;
-  128)
-    msg_error "Invalid exit argument (exit code 128)"
-    ;;
-  130)
-    msg_error "Script aborted by user (CTRL+C)"
-    ;;
-  143)
-    msg_error "Script terminated by SIGTERM"
-    ;;
-  *)
-    msg_error "Unexpected error occurred (exit code $exit_code)"
-    ;;
-  esac
-  exit "$exit_code"
+catch_errors() {
+  set -Eeuo pipefail
+  trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
 }
 
 # ------------------------------------------------------------------------------
@@ -151,6 +78,13 @@ color() {
   GN=$(echo "\033[1;92m")
   DGN=$(echo "\033[32m")
   CL=$(echo "\033[m")
+}
+
+# Special for spinner and colorized output via printf
+color_spinner() {
+  CS_YW=$'\033[33m'
+  CS_YWB=$'\033[93m'
+  CS_CL=$'\033[m'
 }
 
 # ------------------------------------------------------------------------------
@@ -196,6 +130,7 @@ icons() {
   ADVANCED="${TAB}🧩${TAB}${CL}"
   FUSE="${TAB}🗂️${TAB}${CL}"
   HOURGLASS="${TAB}⏳${TAB}"
+
 }
 
 # ------------------------------------------------------------------------------
@@ -227,7 +162,7 @@ silent() {
 # Function to download & save header files
 get_header() {
   local app_name=$(echo "${APP,,}" | tr -d ' ')
-  local app_type=${APP_TYPE:-ct} # Default 'ct'
+  local app_type=${APP_TYPE:-ct}
   local header_url="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/${app_type}/headers/${app_name}"
   local local_header_path="/usr/local/community-scripts/headers/${app_type}/${app_name}"
 
@@ -257,77 +192,39 @@ header_info() {
   fi
 }
 
-# ------------------------------------------------------------------------------
-# Performs a curl request with retry logic and inline feedback.
-# ------------------------------------------------------------------------------
-
-run_curl() {
-  if [ "$VERBOSE" = "no" ]; then
-    $STD curl "$@"
-  else
-    curl "$@"
+ensure_tput() {
+  if ! command -v tput >/dev/null 2>&1; then
+    if grep -qi 'alpine' /etc/os-release; then
+      apk add --no-cache ncurses >/dev/null 2>&1
+    elif command -v apt-get >/dev/null 2>&1; then
+      apt-get update -qq >/dev/null
+      apt-get install -y -qq ncurses-bin >/dev/null 2>&1
+    fi
   fi
 }
 
-curl_handler() {
-  set +e
-  trap 'set -e' RETURN
-  local args=()
-  local url=""
-  local max_retries=3
-  local delay=2
-  local attempt=1
-  local exit_code
-  local has_output_file=false
-  local result=""
+is_alpine() {
+  local os_id="${var_os:-${PCT_OSTYPE:-}}"
 
-  # Parse arguments
-  for arg in "$@"; do
-    if [[ "$arg" != -* && -z "$url" ]]; then
-      url="$arg"
-    fi
-    [[ "$arg" == "-o" || "$arg" == --output ]] && has_output_file=true
-    args+=("$arg")
-  done
-
-  if [[ -z "$url" ]]; then
-    msg_error "No valid URL or option entered for curl_handler"
-    return 1
+  if [[ -z "$os_id" && -f /etc/os-release ]]; then
+    os_id="$(
+      . /etc/os-release 2>/dev/null
+      echo "${ID:-}"
+    )"
   fi
 
-  $STD msg_info "Fetching: $url"
+  [[ "$os_id" == "alpine" ]]
+}
 
-  while [[ $attempt -le $max_retries ]]; do
-    if $has_output_file; then
-      $STD run_curl "${args[@]}"
-      exit_code=$?
-    else
-      result=$(run_curl "${args[@]}")
-      exit_code=$?
-    fi
-
-    if [[ $exit_code -eq 0 ]]; then
-      $STD msg_ok "Fetched: $url"
-      $has_output_file || printf '%s' "$result"
-      return 0
-    fi
-
-    if ((attempt >= max_retries)); then
-      # Read error log if it exists
-      if [ -s /tmp/curl_error.log ]; then
-        local curl_stderr
-        curl_stderr=$(</tmp/curl_error.log)
-        rm -f /tmp/curl_error.log
-      fi
-      __curl_err_handler "$exit_code" "$url" "${curl_stderr:-}"
-      exit
-    fi
-
-    $STD printf "\r\033[K${INFO}${YW}Retry $attempt/$max_retries in ${delay}s...${CL}" >&2
-    sleep "$delay"
-    ((attempt++))
-  done
-  set -e
+is_verbose_mode() {
+  local verbose="${VERBOSE:-${var_verbose:-no}}"
+  local tty_status
+  if [[ -t 2 ]]; then
+    tty_status="interactive"
+  else
+    tty_status="not-a-tty"
+  fi
+  [[ "$verbose" != "no" || ! -t 2 ]]
 }
 
 # ------------------------------------------------------------------------------
@@ -372,144 +269,93 @@ fatal() {
   kill -INT $$
 }
 
-# Ensure POSIX compatibility across Alpine and Debian/Ubuntu
-# === Spinner Start ===
-# Trap cleanup on various signals
-trap 'cleanup_spinner' EXIT INT TERM HUP
-
-spinner_frames=('⠋' '⠙' '⠹' '⠸' '⠼' '⠴' '⠦' '⠧' '⠇' '⠏')
-
-# === Spinner Start ===
-start_spinner() {
-  local msg="$1"
-  local spin_i=0
-  local interval=0.1
-
-  stop_spinner
-  SPINNER_MSG="$msg"
-  SPINNER_ACTIVE=1
-
-  {
-    while [[ "$SPINNER_ACTIVE" -eq 1 ]]; do
-      if [[ -t 2 ]]; then
-        printf "\r\e[2K%s %b" "${TAB}${spinner_frames[spin_i]}${TAB}" "${YW}${SPINNER_MSG}${CL}" >&2
-      else
-        printf "%s...\n" "$SPINNER_MSG" >&2
-        break
-      fi
-      spin_i=$(((spin_i + 1) % ${#spinner_frames[@]}))
-      sleep "$interval"
-    done
-  } &
-
-  local pid=$!
-  if ps -p "$pid" >/dev/null 2>&1; then
-    SPINNER_PID="$pid"
-  else
-    SPINNER_ACTIVE=0
-    SPINNER_PID=""
-  fi
+spinner() {
+  local chars=(⠋ ⠙ ⠹ ⠸ ⠼ ⠴ ⠦ ⠧ ⠇ ⠏)
+  local i=0
+  while true; do
+    local index=$((i++ % ${#chars[@]}))
+    printf "\r\033[2K%s %b" "${CS_YWB}${chars[$index]}${CS_CL}" "${CS_YWB}${SPINNER_MSG:-}${CS_CL}"
+    sleep 0.1
+  done
 }
 
-# === Spinner Stop ===
+clear_line() {
+  tput cr 2>/dev/null || echo -en "\r"
+  tput el 2>/dev/null || echo -en "\033[K"
+}
+
 stop_spinner() {
-  if [[ "$SPINNER_ACTIVE" -eq 1 && -n "$SPINNER_PID" ]]; then
-    SPINNER_ACTIVE=0
+  local pid="${SPINNER_PID:-}"
+  [[ -z "$pid" && -f /tmp/.spinner.pid ]] && pid=$(</tmp/.spinner.pid)
 
-    if kill -0 "$SPINNER_PID" 2>/dev/null; then
-      kill "$SPINNER_PID" 2>/dev/null || true
-      for _ in $(seq 1 10); do
-        sleep 0.05
-        kill -0 "$SPINNER_PID" 2>/dev/null || break
-      done
+  if [[ -n "$pid" && "$pid" =~ ^[0-9]+$ ]]; then
+    if kill "$pid" 2>/dev/null; then
+      sleep 0.05
+      kill -9 "$pid" 2>/dev/null || true
+      wait "$pid" 2>/dev/null || true
     fi
-
-    if [[ "$SPINNER_PID" =~ ^[0-9]+$ ]]; then
-      ps -p "$SPINNER_PID" -o pid= >/dev/null 2>&1 && wait "$SPINNER_PID" 2>/dev/null || true
-    fi
-
-    printf "\r\e[2K" >&2
-    SPINNER_PID=""
+    rm -f /tmp/.spinner.pid
   fi
-}
 
-cleanup_spinner() {
-  stop_spinner
+  unset SPINNER_PID SPINNER_MSG
+  stty sane 2>/dev/null || true
 }
 
 msg_info() {
   local msg="$1"
-  [[ -z "$msg" || -n "${MSG_INFO_SHOWN["$msg"]+x}" ]] && return
+  [[ -z "$msg" ]] && return
+
+  if ! declare -p MSG_INFO_SHOWN &>/dev/null || ! declare -A MSG_INFO_SHOWN &>/dev/null; then
+    declare -gA MSG_INFO_SHOWN=()
+  fi
+  [[ -n "${MSG_INFO_SHOWN["$msg"]+x}" ]] && return
   MSG_INFO_SHOWN["$msg"]=1
 
   stop_spinner
+  SPINNER_MSG="$msg"
 
-  if [[ "${VERBOSE:-no}" == "no" && -t 2 ]]; then
-    start_spinner "$msg"
-  else
+  if is_verbose_mode || is_alpine; then
+    local HOURGLASS="${TAB}⏳${TAB}"
     printf "\r\e[2K%s %b" "$HOURGLASS" "${YW}${msg}${CL}" >&2
+    return
   fi
+
+  color_spinner
+  spinner &
+  SPINNER_PID=$!
+  echo "$SPINNER_PID" >/tmp/.spinner.pid
+  disown "$SPINNER_PID" 2>/dev/null || true
 }
 
 msg_ok() {
   local msg="$1"
   [[ -z "$msg" ]] && return
   stop_spinner
-  printf "\r\e[2K%s %b\n" "$CM" "${GN}${msg}${CL}" >&2
+  clear_line
+  printf "%s %b\n" "$CM" "${GN}${msg}${CL}" >&2
   unset MSG_INFO_SHOWN["$msg"]
 }
 
 msg_error() {
-  local msg="$1"
-  [[ -z "$msg" ]] && return
   stop_spinner
-  printf "\r\e[2K%s %b\n" "$CROSS" "${RD}${msg}${CL}" >&2
+  local msg="$1"
+  echo -e "${BFR:-} ${CROSS:-✖️} ${RD}${msg}${CL}"
 }
 
 msg_warn() {
-  local msg="$1"
-  [[ -z "$msg" ]] && return
   stop_spinner
-  printf "\r\e[2K%s %b\n" "$INFO" "${YWB}${msg}${CL}" >&2
-  unset MSG_INFO_SHOWN["$msg"]
+  local msg="$1"
+  echo -e "${BFR:-} ${INFO:-ℹ️} ${YWB}${msg}${CL}"
 }
 
 msg_custom() {
   local symbol="${1:-"[*]"}"
-  local color="${2:-"\e[36m"}" # Default: Cyan
+  local color="${2:-"\e[36m"}"
   local msg="${3:-}"
-
   [[ -z "$msg" ]] && return
-  stop_spinner 2>/dev/null || true
-  printf "\r\e[2K%s %b\n" "$symbol" "${color}${msg}${CL:-\e[0m}" >&2
-}
-
-msg_progress() {
-  local current="$1"
-  local total="$2"
-  local label="$3"
-  local width=40
-  local filled percent bar empty
-  local fill_char="#"
-  local empty_char="-"
-
-  if ! [[ "$current" =~ ^[0-9]+$ ]] || ! [[ "$total" =~ ^[0-9]+$ ]] || [[ "$total" -eq 0 ]]; then
-    printf "\r\e[2K%s %b\n" "$CROSS" "${RD}Invalid progress input${CL}" >&2
-    return
-  fi
-
-  percent=$(((current * 100) / total))
-  filled=$(((current * width) / total))
-  empty=$((width - filled))
-
-  bar=$(printf "%${filled}s" | tr ' ' "$fill_char")
-  bar+=$(printf "%${empty}s" | tr ' ' "$empty_char")
-
-  printf "\r\e[2K%s [%s] %3d%% %s" "${TAB}" "$bar" "$percent" "$label" >&2
-
-  if [[ "$current" -eq "$total" ]]; then
-    printf "\n" >&2
-  fi
+  stop_spinner
+  echo -e "${BFR:-} ${symbol} ${color}${msg}${CL:-\e[0m}"
+  printf "\r\033[K\e[?25h\n"
 }
 
 run_container_safe() {
@@ -560,3 +406,5 @@ check_or_create_swap() {
     return 1
   fi
 }
+
+trap 'stop_spinner' EXIT INT TERM

@@ -21,36 +21,67 @@ fi
 # This sets error handling options and defines the error_handler function to handle errors
 set -Eeuo pipefail
 trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
+trap on_exit EXIT
+trap on_interrupt INT
+trap on_terminate TERM
 
-# This function handles errors
+function on_exit() {
+  local exit_code="$?"
+  [[ -n "${lockfile:-}" && -e "$lockfile" ]] && rm -f "$lockfile"
+  exit "$exit_code"
+}
+
 function error_handler() {
-  printf "\e[?25h"
+
   local exit_code="$?"
   local line_number="$1"
   local command="$2"
-  local error_message="${RD}[ERROR]${CL} in line ${RD}$line_number${CL}: exit code ${RD}$exit_code${CL}: while executing command ${YW}$command${CL}"
-  echo -e "\n$error_message\n"
-  exit 200
+  printf "\e[?25h"
+  echo -e "\n${RD}[ERROR]${CL} in line ${RD}$line_number${CL}: exit code ${RD}$exit_code${CL}: while executing command ${YW}$command${CL}\n"
+  exit "$exit_code"
+}
+
+function on_interrupt() {
+  echo -e "\n${RD}Interrupted by user (SIGINT)${CL}"
+  exit 130
+}
+
+function on_terminate() {
+  echo -e "\n${RD}Terminated by signal (SIGTERM)${CL}"
+  exit 143
+}
+
+function check_storage_support() {
+  local CONTENT="$1"
+  local -a VALID_STORAGES=()
+
+  while IFS= read -r line; do
+    local STORAGE=$(awk '{print $1}' <<<"$line")
+    [[ "$STORAGE" == "storage" || -z "$STORAGE" ]] && continue
+    VALID_STORAGES+=("$STORAGE")
+  done < <(pvesm status -content "$CONTENT" 2>/dev/null | awk 'NR>1')
+
+  [[ ${#VALID_STORAGES[@]} -gt 0 ]]
 }
 
 # This checks for the presence of valid Container Storage and Template Storage locations
 msg_info "Validating Storage"
-VALIDCT=$(pvesm status -content rootdir | awk 'NR>1')
-if [ -z "$VALIDCT" ]; then
-  msg_error "Unable to detect a valid Container Storage location."
+if ! check_storage_support "rootdir"; then
+
+  msg_error "No valid storage found for 'rootdir' (Container)."
   exit 1
 fi
-VALIDTMP=$(pvesm status -content vztmpl | awk 'NR>1')
-if [ -z "$VALIDTMP" ]; then
-  msg_error "Unable to detect a valid Template Storage location."
+if ! check_storage_support "vztmpl"; then
+
+  msg_error "No valid storage found for 'vztmpl' (Template)."
   exit 1
 fi
+msg_ok "Validated Storage (rootdir / vztmpl)."
 
 # This function is used to select the storage class and determine the corresponding storage content type and label.
 function select_storage() {
-  local CLASS=$1
-  local CONTENT
-  local CONTENT_LABEL
+  local CLASS=$1 CONTENT CONTENT_LABEL
+
   case $CLASS in
   container)
     CONTENT='rootdir'
@@ -60,50 +91,74 @@ function select_storage() {
     CONTENT='vztmpl'
     CONTENT_LABEL='Container template'
     ;;
-  *) false || {
-    msg_error "Invalid storage class."
-    exit 201
-  } ;;
+  iso)
+    CONTENT='iso'
+    CONTENT_LABEL='ISO image'
+    ;;
+  images)
+    CONTENT='images'
+    CONTENT_LABEL='VM Disk image'
+    ;;
+  backup)
+    CONTENT='backup'
+    CONTENT_LABEL='Backup'
+    ;;
+  snippets)
+    CONTENT='snippets'
+    CONTENT_LABEL='Snippets'
+    ;;
+  *)
+    msg_error "Invalid storage class '$CLASS'"
+    return 1
+    ;;
   esac
 
-  # Collect storage options
   local -a MENU
-  local MSG_MAX_LENGTH=0
-
-  while read -r TAG TYPE _ _ _ FREE _; do
-    local TYPE_PADDED
-    local FREE_FMT
-
-    TYPE_PADDED=$(printf "%-10s" "$TYPE")
-    FREE_FMT=$(numfmt --to=iec --from-unit=K --format %.2f <<<"$FREE")B
-    local ITEM="Type: $TYPE_PADDED Free: $FREE_FMT"
-
-    ((${#ITEM} + 2 > MSG_MAX_LENGTH)) && MSG_MAX_LENGTH=$((${#ITEM} + 2))
-
-    MENU+=("$TAG" "$ITEM" "OFF")
+  local -A STORAGE_MAP
+  local COL_WIDTH=0
+  while read -r TAG TYPE _ TOTAL USED FREE _; do
+    [[ -n "$TAG" && -n "$TYPE" ]] || continue
+    local DISPLAY="${TAG} (${TYPE})"
+    local USED_FMT=$(numfmt --to=iec --from-unit=K --format %.1f <<<"$USED")
+    local FREE_FMT=$(numfmt --to=iec --from-unit=K --format %.1f <<<"$FREE")
+    local INFO="Free: ${FREE_FMT}B  Used: ${USED_FMT}B"
+    STORAGE_MAP["$DISPLAY"]="$TAG"
+    MENU+=("$DISPLAY" "$INFO" "OFF")
+    ((${#DISPLAY} > COL_WIDTH)) && COL_WIDTH=${#DISPLAY}
   done < <(pvesm status -content "$CONTENT" | awk 'NR>1')
 
-  local OPTION_COUNT=$((${#MENU[@]} / 3))
+  if [ ${#MENU[@]} -eq 0 ]; then
+    msg_error "No storage found for content type '$CONTENT'."
+    return 2
+  fi
 
-  # Auto-select if only one option available
-  if [[ "$OPTION_COUNT" -eq 1 ]]; then
-    echo "${MENU[0]}"
+  if [ $((${#MENU[@]} / 3)) -eq 1 ]; then
+    STORAGE_RESULT="${STORAGE_MAP[${MENU[0]}]}"
+
     return 0
   fi
 
-  # Display selection menu
-  local STORAGE
-  while [[ -z "${STORAGE:+x}" ]]; do
-    STORAGE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "Storage Pools" --radiolist \
-      "Select the storage pool to use for the ${CONTENT_LABEL,,}.\nUse the spacebar to make a selection.\n" \
-      16 $((MSG_MAX_LENGTH + 23)) 6 \
-      "${MENU[@]}" 3>&1 1>&2 2>&3) || {
-      msg_error "Storage selection cancelled."
-      exit 202
-    }
-  done
+  local WIDTH=$((COL_WIDTH + 42))
 
-  echo "$STORAGE"
+  while true; do
+    local DISPLAY_SELECTED=$(
+      whiptail --backtitle "Proxmox VE Helper Scripts" \
+        --title "Storage Pools" \
+        --radiolist "Which storage pool for ${CONTENT_LABEL,,}?\n(Spacebar to select)"
+
+      16 "$WIDTH" 6 "${MENU[@]}" 3>&1 1>&2 2>&3
+    )
+
+    [[ $? -ne 0 ]] && return 3
+
+    if [[ -z "$DISPLAY_SELECTED" || -z "${STORAGE_MAP[$DISPLAY_SELECTED]+_}" ]]; then
+      whiptail --msgbox "No valid storage selected. Please try again." 8 58
+      continue
+    fi
+
+    STORAGE_RESULT="${STORAGE_MAP[$DISPLAY_SELECTED]}"
+    return 0
+  done
 }
 # Test if required variables are set
 [[ "${CTID:-}" ]] || {
@@ -137,6 +192,19 @@ msg_ok "Using ${BL}$TEMPLATE_STORAGE${CL} ${GN}for Template Storage."
 CONTAINER_STORAGE=$(select_storage container)
 msg_ok "Using ${BL}$CONTAINER_STORAGE${CL} ${GN}for Container Storage."
 
+while true; do
+  if select_storage template; then
+    TEMPLATE_STORAGE="$STORAGE_RESULT"
+    break
+  fi
+done
+
+while true; do
+  if select_storage container; then
+    CONTAINER_STORAGE="$STORAGE_RESULT"
+    break
+  fi
+done
 # Check free space on selected container storage
 STORAGE_FREE=$(pvesm status | awk -v s="$CONTAINER_STORAGE" '$1 == s { print $6 }')
 REQUIRED_KB=$((${PCT_DISK_SIZE:-8} * 1024 * 1024))
@@ -205,6 +273,8 @@ if ! pveam list "$TEMPLATE_STORAGE" | grep -q "$TEMPLATE" || ! zstdcat "$TEMPLAT
 fi
 
 msg_ok "LXC Template '$TEMPLATE' is ready to use."
+
+msg_info "Creating LXC Container"
 # Check and fix subuid/subgid
 grep -q "root:100000:65536" /etc/subuid || echo "root:100000:65536" >>/etc/subuid
 grep -q "root:100000:65536" /etc/subgid || echo "root:100000:65536" >>/etc/subgid
@@ -215,12 +285,15 @@ PCT_OPTIONS=(${PCT_OPTIONS[@]:-${DEFAULT_PCT_OPTIONS[@]}})
 
 # Secure creation of the LXC container with lock and template check
 lockfile="/tmp/template.${TEMPLATE}.lock"
-exec 9>"$lockfile"
+exec 9>"$lockfile" >/dev/null 2>&1 || {
+  msg_error "Failed to create lock file '$lockfile'."
+  exit 200
+}
 flock -w 60 9 || {
   msg_error "Timeout while waiting for template lock"
   exit 211
 }
-msg_info "Creating LXC Container"
+
 if ! pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" "${PCT_OPTIONS[@]}" &>/dev/null; then
   msg_error "Container creation failed. Checking if template is corrupted or incomplete."
 
@@ -252,16 +325,23 @@ if ! pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" "${PCT_OPTIONS[
   sleep 1 # I/O-Sync-Delay
 
   msg_ok "Re-downloaded LXC Template"
-
-  if ! pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" "${PCT_OPTIONS[@]}" &>/dev/null; then
-    msg_error "Container creation failed after re-downloading template."
-    exit 200
-  fi
 fi
 
-if ! pct status "$CTID" &>/dev/null; then
-  msg_error "Container not found after pct create – assuming failure."
-  exit 210
+if ! pct list | awk '{print $1}' | grep -qx "$CTID"; then
+  msg_error "Container ID $CTID not listed in 'pct list' – unexpected failure."
+  exit 215
+fi
+
+if ! grep -q '^rootfs:' "/etc/pve/lxc/$CTID.conf"; then
+  msg_error "RootFS entry missing in container config – storage not correctly assigned."
+  exit 216
+fi
+
+if grep -q '^hostname:' "/etc/pve/lxc/$CTID.conf"; then
+  CT_HOSTNAME=$(grep '^hostname:' "/etc/pve/lxc/$CTID.conf" | awk '{print $2}')
+  if [[ ! "$CT_HOSTNAME" =~ ^[a-z0-9-]+$ ]]; then
+    msg_warn "Hostname '$CT_HOSTNAME' contains invalid characters – may cause issues with networking or DNS."
+  fi
 fi
 
 msg_ok "LXC Container ${BL}$CTID${CL} ${GN}was successfully created."

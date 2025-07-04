@@ -304,13 +304,12 @@ echo_default() {
   fi
 
   # Output the selected values with icons
-  echo -e "${OS}${BOLD}${DGN}Operating System: ${BGN}$var_os${CL}"
-  echo -e "${OSVERSION}${BOLD}${DGN}Version: ${BGN}$var_version${CL}"
+  echo -e "${CONTAINERID}${BOLD}${DGN}Container ID: ${BGN}${CT_ID}${CL}"
+  echo -e "${OS}${BOLD}${DGN}Operating System: ${BGN}$var_os ($var_version)${CL}"
   echo -e "${CONTAINERTYPE}${BOLD}${DGN}Container Type: ${BGN}$CT_TYPE_DESC${CL}"
   echo -e "${DISKSIZE}${BOLD}${DGN}Disk Size: ${BGN}${DISK_SIZE} GB${CL}"
   echo -e "${CPUCORE}${BOLD}${DGN}CPU Cores: ${BGN}${CORE_COUNT}${CL}"
   echo -e "${RAMSIZE}${BOLD}${DGN}RAM Size: ${BGN}${RAM_SIZE} MiB${CL}"
-  echo -e "${CONTAINERID}${BOLD}${DGN}Container ID: ${BGN}${CT_ID}${CL}"
   if [ "$VERB" == "yes" ]; then
     echo -e "${SEARCH}${BOLD}${DGN}Verbose Mode: ${BGN}Enabled${CL}"
   fi
@@ -1095,7 +1094,9 @@ build_container() {
   # This executes create_lxc.sh and creates the container and .conf file
   bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/create_lxc.sh)" $?
 
-  LXC_CONFIG=/etc/pve/lxc/${CTID}.conf
+  LXC_CONFIG="/etc/pve/lxc/${CTID}.conf"
+
+  # USB passthrough for privileged LXC (CT_TYPE=0)
   if [ "$CT_TYPE" == "0" ]; then
     cat <<EOF >>"$LXC_CONFIG"
 # USB passthrough
@@ -1111,38 +1112,98 @@ lxc.mount.entry: /dev/ttyACM1       dev/ttyACM1       none bind,optional,create=
 EOF
   fi
 
-  if [ "$CT_TYPE" == "0" ]; then
-    if [[ "$APP" == "Channels" || "$APP" == "Emby" || "$APP" == "ErsatzTV" || "$APP" == "Frigate" || "$APP" == "Jellyfin" || "$APP" == "Plex" || "$APP" == "immich" || "$APP" == "Tdarr" || "$APP" == "Open WebUI" || "$APP" == "Unmanic" || "$APP" == "Ollama" || "$APP" == "FileFlows" ]]; then
-      cat <<EOF >>"$LXC_CONFIG"
-# VAAPI hardware transcoding
-lxc.cgroup2.devices.allow: c 226:0 rwm
-lxc.cgroup2.devices.allow: c 226:128 rwm
-lxc.cgroup2.devices.allow: c 29:0 rwm
-lxc.mount.entry: /dev/fb0 dev/fb0 none bind,optional,create=file
-lxc.mount.entry: /dev/dri dev/dri none bind,optional,create=dir
-lxc.mount.entry: /dev/dri/renderD128 dev/dri/renderD128 none bind,optional,create=file
-EOF
+  # VAAPI passthrough for privileged containers or known apps
+  VAAPI_APPS=(
+    "immich"
+    "Channels"
+    "Emby"
+    "ErsatzTV"
+    "Frigate"
+    "Jellyfin"
+    "Plex"
+    "Scrypted"
+    "Tdarr"
+    "Unmanic"
+    "Ollama"
+    "FileFlows"
+    "Open WebUI"
+  )
+
+  is_vaapi_app=false
+  for vaapi_app in "${VAAPI_APPS[@]}"; do
+    if [[ "$APP" == "$vaapi_app" ]]; then
+      is_vaapi_app=true
+      break
     fi
-  else
-    if [[ "$APP" == "Channels" || "$APP" == "Emby" || "$APP" == "ErsatzTV" || "$APP" == "Frigate" || "$APP" == "Jellyfin" || "$APP" == "Plex" || "$APP" == "immich" || "$APP" == "Tdarr" || "$APP" == "Open WebUI" || "$APP" == "Unmanic" || "$APP" == "Ollama" || "$APP" == "FileFlows" ]]; then
-      if [[ -e "/dev/dri/renderD128" ]]; then
-        if [[ -e "/dev/dri/card0" ]]; then
-          cat <<EOF >>"$LXC_CONFIG"
-# VAAPI hardware transcoding
-dev0: /dev/dri/card0,gid=44
-dev1: /dev/dri/renderD128,gid=104
-EOF
-        else
-          cat <<EOF >>"$LXC_CONFIG"
-# VAAPI hardware transcoding
-dev0: /dev/dri/card1,gid=44
-dev1: /dev/dri/renderD128,gid=104
-EOF
+  done
+
+  if ([ "$CT_TYPE" == "0" ] || [ "$is_vaapi_app" == "true" ]) &&
+    ([[ -e /dev/dri/renderD128 ]] || [[ -e /dev/dri/card0 ]] || [[ -e /dev/fb0 ]]); then
+
+    echo ""
+    msg_custom "⚙️ " "\e[96m" "Configuring VAAPI passthrough for LXC container"
+
+    if [ "$CT_TYPE" != "0" ]; then
+      msg_custom "⚠️ " "\e[33m" "Container is unprivileged – VAAPI passthrough may not work without additional host configuration (e.g., idmap)."
+    fi
+
+    msg_custom "ℹ️ " "\e[96m" "VAAPI enables GPU hardware acceleration (e.g., for video transcoding in Jellyfin or Plex)."
+
+    echo ""
+    read -rp "➤ Automatically mount all available VAAPI devices? [Y/n]: " VAAPI_ALL
+
+    if [[ "$VAAPI_ALL" =~ ^[Yy]$|^$ ]]; then
+      # Mount all devices automatically
+      if [[ -e /dev/dri/renderD128 ]]; then
+        echo "lxc.cgroup2.devices.allow: c 226:128 rwm" >>"$LXC_CONFIG"
+        echo "lxc.mount.entry: /dev/dri/renderD128 dev/dri/renderD128 none bind,optional,create=file" >>"$LXC_CONFIG"
+      fi
+      if [[ -e /dev/dri/card0 ]]; then
+        echo "lxc.cgroup2.devices.allow: c 226:0 rwm" >>"$LXC_CONFIG"
+
+        echo "lxc.mount.entry: /dev/dri/card0 dev/dri/card0 none bind,optional,create=file" >>"$LXC_CONFIG"
+      fi
+      if [[ -e /dev/fb0 ]]; then
+        echo "lxc.cgroup2.devices.allow: c 29:0 rwm" >>"$LXC_CONFIG"
+        echo "lxc.mount.entry: /dev/fb0 dev/fb0 none bind,optional,create=file" >>"$LXC_CONFIG"
+      fi
+      if [[ -d /dev/dri ]]; then
+        echo "lxc.mount.entry: /dev/dri dev/dri none bind,optional,create=dir" >>"$LXC_CONFIG"
+      fi
+    else
+      # Manual selection per device
+      if [[ -e /dev/dri/renderD128 ]]; then
+        read -rp "➤ Mount /dev/dri/renderD128 (GPU rendering)? [y/N]: " MOUNT_D128
+        if [[ "$MOUNT_D128" =~ ^[Yy]$ ]]; then
+          echo "lxc.cgroup2.devices.allow: c 226:128 rwm" >>"$LXC_CONFIG"
+          echo "lxc.mount.entry: /dev/dri/renderD128 dev/dri/renderD128 none bind,optional,create=file" >>"$LXC_CONFIG"
         fi
+      fi
+
+      if [[ -e /dev/dri/card0 ]]; then
+        read -rp "➤ Mount /dev/dri/card0 (GPU hardware interface)? [y/N]: " MOUNT_CARD0
+        if [[ "$MOUNT_CARD0" =~ ^[Yy]$ ]]; then
+          echo "lxc.cgroup2.devices.allow: c 226:0 rwm" >>"$LXC_CONFIG"
+          echo "lxc.mount.entry: /dev/dri/card0 dev/dri/card0 none bind,optional,create=file" >>"$LXC_CONFIG"
+
+        fi
+      fi
+
+      if [[ -e /dev/fb0 ]]; then
+        read -rp "➤ Mount /dev/fb0 (Framebuffer, GUI)? [y/N]: " MOUNT_FB0
+        if [[ "$MOUNT_FB0" =~ ^[Yy]$ ]]; then
+          echo "lxc.cgroup2.devices.allow: c 29:0 rwm" >>"$LXC_CONFIG"
+          echo "lxc.mount.entry: /dev/fb0 dev/fb0 none bind,optional,create=file" >>"$LXC_CONFIG"
+        fi
+      fi
+
+      if [[ -d /dev/dri ]]; then
+        echo "lxc.mount.entry: /dev/dri dev/dri none bind,optional,create=dir" >>"$LXC_CONFIG"
       fi
     fi
   fi
 
+  # TUN device passthrough
   if [ "$ENABLE_TUN" == "yes" ]; then
     cat <<EOF >>"$LXC_CONFIG"
 lxc.cgroup2.devices.allow: c 10:200 rwm
@@ -1172,10 +1233,13 @@ EOF'
     locale-gen >/dev/null && \
     export LANG=\$locale_line"
 
+    if [[ -z "${tz:-}" ]]; then
+      tz=$(timedatectl show --property=Timezone --value 2>/dev/null || echo "Etc/UTC")
+    fi
     if pct exec "$CTID" -- test -e "/usr/share/zoneinfo/$tz"; then
-      pct exec "$CTID" -- bash -c "echo $tz >/etc/timezone && ln -sf /usr/share/zoneinfo/$tz /etc/localtime"
+      pct exec "$CTID" -- bash -c "tz='$tz'; echo \"\$tz\" >/etc/timezone && ln -sf \"/usr/share/zoneinfo/\$tz\" /etc/localtime"
     else
-      msg_info "Skipping timezone setup – zone '$tz' not found in container"
+      msg_warn "Skipping timezone setup – zone '$tz' not found in container"
     fi
 
     pct exec "$CTID" -- bash -c "apt-get update >/dev/null && apt-get install -y sudo curl mc gnupg2 >/dev/null"
@@ -1255,7 +1319,9 @@ api_exit_script() {
   fi
 }
 
-trap 'api_exit_script' EXIT
+if command -v pveversion >/dev/null 2>&1; then
+  trap 'api_exit_script' EXIT
+fi
 trap 'post_update_to_api "failed" "$BASH_COMMAND"' ERR
 trap 'post_update_to_api "failed" "INTERRUPTED"' SIGINT
 trap 'post_update_to_api "failed" "TERMINATED"' SIGTERM

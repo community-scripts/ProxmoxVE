@@ -61,8 +61,7 @@ setting_up_container() {
   fi
   rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
   systemctl disable -q --now systemd-networkd-wait-online.service
-  msg_ok "Set up Container OS"
-  msg_custom "${CM}" "${GN}" "Network Connected: ${BL}$(hostname -I)"
+  msg_ok "Set up Container OS | Network Connected: ${BL}$(hostname -I"
 }
 
 # This function checks the network connection by pinging a known IP address and prompts the user to continue if the internet is not connected
@@ -100,25 +99,26 @@ network_check() {
   fi
 
   # DNS resolution checks for GitHub-related domains (IPv4 and/or IPv6)
-  GITHUB_HOSTS=("github.com" "raw.githubusercontent.com" "api.github.com")
-  GITHUB_STATUS="GitHub DNS:"
+  GIT_HOSTS=("github.com" "raw.githubusercontent.com" "api.github.com" "git.community-scripts.org")
+  GIT_STATUS="Git DNS:"
   DNS_FAILED=false
 
-  for HOST in "${GITHUB_HOSTS[@]}"; do
+  for HOST in "${GIT_HOSTS[@]}"; do
     RESOLVEDIP=$(getent hosts "$HOST" | awk '{ print $1 }' | grep -E '(^([0-9]{1,3}\.){3}[0-9]{1,3}$)|(^[a-fA-F0-9:]+$)' | head -n1)
     if [[ -z "$RESOLVEDIP" ]]; then
-      GITHUB_STATUS+="$HOST:($DNSFAIL)"
+      GIT_STATUS+="$HOST:($DNSFAIL)"
       DNS_FAILED=true
     else
-      GITHUB_STATUS+=" $HOST:($DNSOK)"
+      GIT_STATUS+=" $HOST:($DNSOK)"
     fi
   done
 
   if [[ "$DNS_FAILED" == true ]]; then
-    fatal "$GITHUB_STATUS"
+    fatal "$GIT_STATUS"
   else
-    msg_ok "$GITHUB_STATUS"
+    msg_ok "$GIT_STATUS"
   fi
+
   set -e
   trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
 }

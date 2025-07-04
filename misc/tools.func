@@ -239,10 +239,14 @@ setup_mariadb() {
   DISTRO_CODENAME="$(awk -F= '/^VERSION_CODENAME=/{print $2}' /etc/os-release)"
   CURRENT_OS="$(awk -F= '/^ID=/{print $2}' /etc/os-release)"
 
+  if ! curl -fsI http://mirror.mariadb.org/repo/ >/dev/null; then
+    msg_error "MariaDB mirror not reachable"
+    return 1
+  fi
+
   msg_info "Setting up MariaDB $MARIADB_VERSION"
   # grab dynamic latest LTS version
   if [[ "$MARIADB_VERSION" == "latest" ]]; then
-    $STD msg_info "Resolving latest GA MariaDB version"
     MARIADB_VERSION=$(curl -fsSL http://mirror.mariadb.org/repo/ |
       grep -Eo '[0-9]+\.[0-9]+\.[0-9]+/' |
       grep -vE 'rc/|rolling/' |
@@ -253,7 +257,6 @@ setup_mariadb() {
       msg_error "Could not determine latest GA MariaDB version"
       return 1
     fi
-    $STD msg_ok "Latest GA MariaDB version is $MARIADB_VERSION"
   fi
 
   local CURRENT_VERSION=""
@@ -278,7 +281,6 @@ setup_mariadb() {
     $STD msg_info "Setup MariaDB $MARIADB_VERSION"
   fi
 
-  $STD msg_info "Setting up MariaDB Repository"
   curl -fsSL "https://mariadb.org/mariadb_release_signing_key.asc" |
     gpg --dearmor -o /etc/apt/trusted.gpg.d/mariadb.gpg
 
