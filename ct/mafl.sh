@@ -30,12 +30,19 @@ function update_script() {
 
   RELEASE=$(curl -fsSL https://api.github.com/repos/hywax/mafl/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
   if [[ "${RELEASE}" != "$(cat ~/.mafl 2>/dev/null)" ]] || [[ ! -f ~/.mafl ]]; then
-    msg_info "Updating Mafl to v${RELEASE} (Patience)"
+    msg_info "Stopping Mafl service"
     systemctl stop mafl
+    msg_ok "Service stopped"
+
+    msg_info "Performing backup"
     mkdir -p /opt/mafl-backup/data
     mv /opt/mafl/data /opt/mafl-backup/data
     rm /opt/mafl
+    msg_ok "Backup complete"
+    
     fetch_and_deploy_gh_release "mafl" "hywax/mafl"
+
+    msg_info "Updating Mafl to v${RELEASE}"
     cd /opt/mafl
     yarn install
     yarn build
