@@ -38,7 +38,7 @@ Pin-Priority: 1001
 EOF
     apt-get update
     apt-mark unhold bunkerweb nginx
-    apt-get install -y bunkerweb=${RELEASE}
+    apt-get install -y --allow-downgrades bunkerweb=${RELEASE}
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP} to ${RELEASE}"
 
