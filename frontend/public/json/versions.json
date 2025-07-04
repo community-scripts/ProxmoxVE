@@ -1,13 +1,68 @@
 [
   {
+    "name": "Graylog2/graylog2-server",
+    "version": "6.3.1",
+    "date": "2025-07-04T11:20:48Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "preview-v0.1",
+    "date": "2025-06-27T14:35:47Z"
+  },
+  {
+    "name": "theonedev/onedev",
+    "version": "v11.11.3",
+    "date": "2025-07-04T09:04:46Z"
+  },
+  {
+    "name": "nzbgetcom/nzbget",
+    "version": "v25.2",
+    "date": "2025-07-04T08:21:42Z"
+  },
+  {
+    "name": "bunkerity/bunkerweb",
+    "version": "v1.6.2",
+    "date": "2025-07-04T08:43:44Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.2.0p44",
+    "date": "2025-07-04T06:44:06Z"
+  },
+  {
+    "name": "redis/redis",
+    "version": "8.2-rc1-int",
+    "date": "2025-07-02T19:27:08Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2117",
+    "date": "2025-07-04T05:56:05Z"
+  },
+  {
+    "name": "hyperion-project/hyperion.ng",
+    "version": "2.1.1",
+    "date": "2025-06-14T17:45:06Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.4.1",
+    "date": "2025-06-11T07:53:44Z"
+  },
+  {
     "name": "outline/outline",
     "version": "v0.85.0",
-    "date": "2025-07-03T23:31:00Z"
+    "date": "2025-07-04T00:06:47Z"
   },
   {
     "name": "home-assistant/operating-system",
     "version": "15.2",
     "date": "2025-04-14T15:37:12Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.3.0",
+    "date": "2025-07-02T12:26:44Z"
   },
   {
     "name": "cloudflare/cloudflared",
@@ -18,16 +73,6 @@
     "name": "rabbitmq/rabbitmq-server",
     "version": "v4.1.2",
     "date": "2025-07-03T16:59:29Z"
-  },
-  {
-    "name": "bunkerity/bunkerweb",
-    "version": "v1.6.1",
-    "date": "2025-03-15T17:29:17Z"
-  },
-  {
-    "name": "Checkmk/checkmk",
-    "version": "v2.4.0p6",
-    "date": "2025-07-03T16:40:42Z"
   },
   {
     "name": "influxdata/influxdb",
@@ -53,16 +98,6 @@
     "name": "fuma-nama/fumadocs",
     "version": "fumadocs-openapi@9.0.17",
     "date": "2025-07-03T06:57:48Z"
-  },
-  {
-    "name": "mattermost/mattermost",
-    "version": "preview-v0.1",
-    "date": "2025-06-27T14:35:47Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2111",
-    "date": "2025-07-03T05:50:31Z"
   },
   {
     "name": "esphome/esphome",
@@ -105,16 +140,6 @@
     "date": "2025-07-02T19:38:06Z"
   },
   {
-    "name": "redis/redis",
-    "version": "8.2-rc1-int",
-    "date": "2025-07-02T19:27:08Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.3.0",
-    "date": "2025-07-02T12:26:44Z"
-  },
-  {
     "name": "ollama/ollama",
     "version": "v0.9.5",
     "date": "2025-07-02T18:39:28Z"
@@ -128,16 +153,6 @@
     "name": "home-assistant/core",
     "version": "2025.7.0",
     "date": "2025-07-02T16:23:42Z"
-  },
-  {
-    "name": "nzbgetcom/nzbget",
-    "version": "v25.1",
-    "date": "2025-06-27T09:14:14Z"
-  },
-  {
-    "name": "Graylog2/graylog2-server",
-    "version": "6.2.5",
-    "date": "2025-07-02T13:06:30Z"
   },
   {
     "name": "wazuh/wazuh",
@@ -168,11 +183,6 @@
     "name": "sysadminsmedia/homebox",
     "version": "v0.20.2",
     "date": "2025-07-02T00:37:07Z"
-  },
-  {
-    "name": "hyperion-project/hyperion.ng",
-    "version": "2.1.1",
-    "date": "2025-06-14T17:45:06Z"
   },
   {
     "name": "Threadfin/Threadfin",
@@ -278,11 +288,6 @@
     "name": "dgtlmoon/changedetection.io",
     "version": "0.50.5",
     "date": "2025-06-29T08:54:47Z"
-  },
-  {
-    "name": "theonedev/onedev",
-    "version": "v11.11.2",
-    "date": "2025-06-29T01:40:39Z"
   },
   {
     "name": "linkwarden/linkwarden",
@@ -431,8 +436,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v4.2.1",
-    "date": "2025-06-03T20:04:28Z"
+    "version": "nightly",
+    "date": "2025-06-23T19:10:33Z"
   },
   {
     "name": "VictoriaMetrics/VictoriaMetrics",
@@ -678,11 +683,6 @@
     "name": "autobrr/autobrr",
     "version": "v1.63.1",
     "date": "2025-06-11T11:05:42Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.4.1",
-    "date": "2025-06-11T07:53:44Z"
   },
   {
     "name": "OctoPrint/OctoPrint",
