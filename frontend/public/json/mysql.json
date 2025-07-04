@@ -41,7 +41,7 @@
             "type": "info"
         },
         {
-            "text": "With an option to install phpMyAdmin. If installed, URL is case sensitive - {$containerIpAddress}/phpMyAdmin",
+            "text": "If installed, access phpMyAdmin at `http://<LXC_IP>/phpMyAdmin`, case sensitive.",
             "type": "info"
         }
     ]
