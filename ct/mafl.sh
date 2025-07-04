@@ -27,18 +27,24 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
   RELEASE=$(curl -fsSL https://api.github.com/repos/hywax/mafl/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  msg_info "Updating Mafl to v${RELEASE} (Patience)"
-  systemctl stop mafl
-  curl -fsSL "https://github.com/hywax/mafl/archive/refs/tags/v${RELEASE}.tar.gz" -o $(basename "https://github.com/hywax/mafl/archive/refs/tags/v${RELEASE}.tar.gz")
-  tar -xzf v${RELEASE}.tar.gz
-  cp -r mafl-${RELEASE}/* /opt/mafl/
-  rm -rf mafl-${RELEASE}
-  cd /opt/mafl
-  yarn install
-  yarn build
-  systemctl start mafl
-  msg_ok "Updated Mafl to v${RELEASE}"
+  if [[ "${RELEASE}" != "$(cat ~/.mafl 2>/dev/null)" ]] || [[ ! -f ~/.mafl ]]; then
+    msg_info "Updating Mafl to v${RELEASE} (Patience)"
+    systemctl stop mafl
+    mkdir -p /opt/mafl-backup/data
+    mv /opt/mafl/data /opt/mafl-backup/data
+    rm /opt/mafl
+    fetch_and_deploy_gh_release "mafl" "hywax/mafl"
+    cd /opt/mafl
+    yarn install
+    yarn build
+    systemctl start mafl
+    mv /opt/mafl-backup/data /opt/mafl/data
+    msg_ok "Updated Mafl to v${RELEASE}"
+  else
+    msg_ok "No update required. ${APP} is already at v${RELEASE}"
+  fi
   exit
 }
 

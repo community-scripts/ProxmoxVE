@@ -14,22 +14,17 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y make
-$STD apt-get install -y g++
-$STD apt-get install -y gcc
-$STD apt-get install -y ca-certificates
+$STD apt-get install -y \
+  ca-certificates \
+  build-essential
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
+fetch_and_deploy_gh_release "mafl" "hywax/mafl"
 
-RELEASE=$(curl -fsSL https://api.github.com/repos/hywax/mafl/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 msg_info "Installing Mafl v${RELEASE}"
-curl -fsSL "https://github.com/hywax/mafl/archive/refs/tags/v${RELEASE}.tar.gz" -o "v${RELEASE}.tar.gz"
-tar -xzf v${RELEASE}.tar.gz
 mkdir -p /opt/mafl/data
 curl -fsSL "https://raw.githubusercontent.com/hywax/mafl/main/.example/config.yml" -o "/opt/mafl/data/config.yml"
-mv mafl-${RELEASE}/* /opt/mafl
-rm -rf mafl-${RELEASE}
 cd /opt/mafl
 export NUXT_TELEMETRY_DISABLED=true
 $STD yarn install
