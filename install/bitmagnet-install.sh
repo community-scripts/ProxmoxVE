@@ -22,17 +22,10 @@ msg_ok "Installed Dependencies"
 
 PG_VERSION="16" setup_postgresql
 setup_go
+fetch_and_deploy_gh_release "bitmagnet" "bitmagnet-io/bitmagnet"
 RELEASE=$(curl -fsSL https://api.github.com/repos/bitmagnet-io/bitmagnet/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 
-msg_info "Installing bitmagnet v${RELEASE}"
-mkdir -p /opt/bitmagnet
-temp_file=$(mktemp)
-curl -fsSL "https://github.com/bitmagnet-io/bitmagnet/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
-tar zxf "$temp_file" --strip-components=1 -C /opt/bitmagnet
-cd /opt/bitmagnet
-VREL=v$RELEASE
-$STD go build -ldflags "-s -w -X github.com/bitmagnet-io/bitmagnet/internal/version.GitTag=$VREL"
-chmod +x bitmagnet
+msg_info "Setting up database"
 POSTGRES_PASSWORD=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 $STD sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '$POSTGRES_PASSWORD';"
 $STD sudo -u postgres psql -c "CREATE DATABASE bitmagnet;"
@@ -41,8 +34,14 @@ $STD sudo -u postgres psql -c "CREATE DATABASE bitmagnet;"
   echo ""
   echo "postgres user password: $POSTGRES_PASSWORD"
 } >>~/postgres.creds
-echo "${RELEASE}" >/opt/bitmagnet_version.txt
-msg_ok "Installed bitmagnet v${RELEASE}"
+msg_ok "Database set up"
+
+msg_info "Configuring bitmagnet v${RELEASE}"
+cd /opt/bitmagnet
+VREL=v$RELEASE
+$STD go build -ldflags "-s -w -X github.com/bitmagnet-io/bitmagnet/internal/version.GitTag=$VREL"
+chmod +x bitmagnet
+msg_ok "Configured bitmagnet v${RELEASE}"
 
 read -r -p "${TAB3}Enter your TMDB API key if you have one: " tmdbapikey
 
@@ -72,7 +71,6 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -f "$temp_file"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
