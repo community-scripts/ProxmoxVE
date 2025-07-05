@@ -15,13 +15,12 @@ update_os
 
 msg_info "Installing Dependencies (Patience)"
 $STD apt-get install -y \
-  apache2 \
-  php8.2-{mbstring,gd,fpm,curl,intl,ldap,tidy,bz2,mysql,zip,xml} \
-  composer \
-  libapache2-mod-php \
-  make
+  apache2
+make
 msg_ok "Installed Dependencies"
 
+PHP_MODULE="fpm, ldap, tidy, bz2, mysql" PHP_FPM="YES" PHP_APACHE="YES" PHP_VERSION="8.2" setup_php
+setup_composer
 setup_mariadb
 
 msg_info "Setting up Database"
@@ -39,13 +38,10 @@ $STD mariadb -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUS
 } >>~/bookstack.creds
 msg_ok "Set up database"
 
-msg_info "Setup Bookstack (Patience)"
+fetch_and_deploy_gh_release "bookstack" "BookStackApp/BookStack"
 LOCAL_IP="$(hostname -I | awk '{print $1}')"
-cd /opt
-RELEASE=$(curl -fsSL https://api.github.com/repos/BookStackApp/BookStack/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/BookStackApp/BookStack/archive/refs/tags/v${RELEASE}.zip" -o "v${RELEASE}.zip"
-$STD unzip v${RELEASE}.zip
-mv BookStack-${RELEASE} /opt/bookstack
+
+msg_info "Configuring Bookstack (Patience)"
 cd /opt/bookstack
 cp .env.example .env
 sudo sed -i "s|APP_URL=.*|APP_URL=http://$LOCAL_IP|g" /opt/bookstack/.env
@@ -61,8 +57,7 @@ chmod -R 775 /opt/bookstack/storage /opt/bookstack/bootstrap/cache /opt/bookstac
 chmod -R 640 /opt/bookstack/.env
 $STD a2enmod rewrite
 $STD a2enmod php8.2
-echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
-msg_ok "Installed Bookstack"
+msg_ok "Configured Bookstack"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/apache2/sites-available/bookstack.conf
@@ -111,7 +106,6 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -rf /opt/v${RELEASE}.zip
 $STD apt-get autoremove
 $STD apt-get autoclean
 msg_ok "Cleaned"
