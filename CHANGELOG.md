@@ -16,6 +16,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-07-05
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - Refactor: AgentDVR [@tremor021](https://github.com/tremor021) ([#5726](https://github.com/community-scripts/ProxmoxVE/pull/5726))
+
 ## 2025-07-04
 
 ### 🚀 Updated Scripts
