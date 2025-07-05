@@ -93,7 +93,7 @@ if [[ "$CTTYPE" == "0" ]]; then
 fi
 msg_ok "Dependencies Installed"
 
-read -r -p "Install OpenVINO dependencies for Intel HW-accelerated machine-learning? y/N " prompt
+read -r -p "${TAB3}Install OpenVINO dependencies for Intel HW-accelerated machine-learning? y/N " prompt
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   msg_info "Installing OpenVINO dependencies"
   touch ~/.openvino
