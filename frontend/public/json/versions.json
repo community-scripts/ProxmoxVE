@@ -1,5 +1,35 @@
 [
   {
+    "name": "fuma-nama/fumadocs",
+    "version": "fumadocs-openapi@9.0.18",
+    "date": "2025-07-05T09:36:45Z"
+  },
+  {
+    "name": "theonedev/onedev",
+    "version": "v11.11.4",
+    "date": "2025-07-05T09:23:25Z"
+  },
+  {
+    "name": "Paymenter/Paymenter",
+    "version": "v1.2.0",
+    "date": "2025-07-05T08:58:05Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2120",
+    "date": "2025-07-05T05:58:02Z"
+  },
+  {
+    "name": "linkwarden/linkwarden",
+    "version": "v2.11.3",
+    "date": "2025-07-05T04:34:46Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.4.1",
+    "date": "2025-06-11T07:53:44Z"
+  },
+  {
     "name": "cross-seed/cross-seed",
     "version": "v6.12.7",
     "date": "2025-06-18T03:44:24Z"
@@ -35,6 +65,11 @@
     "date": "2025-07-04T14:49:43Z"
   },
   {
+    "name": "keycloak/keycloak",
+    "version": "26.3.0",
+    "date": "2025-07-02T12:26:44Z"
+  },
+  {
     "name": "Graylog2/graylog2-server",
     "version": "6.3.1",
     "date": "2025-07-04T11:20:48Z"
@@ -43,11 +78,6 @@
     "name": "mattermost/mattermost",
     "version": "preview-v0.1",
     "date": "2025-06-27T14:35:47Z"
-  },
-  {
-    "name": "theonedev/onedev",
-    "version": "v11.11.3",
-    "date": "2025-07-04T09:04:46Z"
   },
   {
     "name": "nzbgetcom/nzbget",
@@ -65,19 +95,9 @@
     "date": "2025-07-02T19:27:08Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2117",
-    "date": "2025-07-04T05:56:05Z"
-  },
-  {
     "name": "hyperion-project/hyperion.ng",
     "version": "2.1.1",
     "date": "2025-06-14T17:45:06Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.4.1",
-    "date": "2025-06-11T07:53:44Z"
   },
   {
     "name": "outline/outline",
@@ -88,11 +108,6 @@
     "name": "home-assistant/operating-system",
     "version": "15.2",
     "date": "2025-04-14T15:37:12Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.3.0",
-    "date": "2025-07-02T12:26:44Z"
   },
   {
     "name": "cloudflare/cloudflared",
@@ -123,11 +138,6 @@
     "name": "Dolibarr/dolibarr",
     "version": "18.0.7",
     "date": "2025-07-03T08:57:21Z"
-  },
-  {
-    "name": "fuma-nama/fumadocs",
-    "version": "fumadocs-openapi@9.0.17",
-    "date": "2025-07-03T06:57:48Z"
   },
   {
     "name": "esphome/esphome",
@@ -310,11 +320,6 @@
     "date": "2025-06-29T08:54:47Z"
   },
   {
-    "name": "linkwarden/linkwarden",
-    "version": "v2.11.2",
-    "date": "2025-06-28T17:33:38Z"
-  },
-  {
     "name": "msgbyte/tianji",
     "version": "v1.22.5",
     "date": "2025-06-28T16:06:19Z"
@@ -446,8 +451,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-06-23T19:10:33Z"
+    "version": "v4.2.1",
+    "date": "2025-06-03T20:04:28Z"
   },
   {
     "name": "VictoriaMetrics/VictoriaMetrics",
@@ -878,11 +883,6 @@
     "name": "bastienwirtz/homer",
     "version": "v25.05.2",
     "date": "2025-05-17T12:53:29Z"
-  },
-  {
-    "name": "Paymenter/Paymenter",
-    "version": "v1.1.1",
-    "date": "2025-05-17T10:10:36Z"
   },
   {
     "name": "Ombi-app/Ombi",
