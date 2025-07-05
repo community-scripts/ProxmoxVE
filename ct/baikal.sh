@@ -23,34 +23,35 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
+
   if [[ ! -d /opt/baikal ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
   RELEASE=$(curl -fsSL https://api.github.com/repos/sabre-io/Baikal/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+  if [[ "${RELEASE}" != "$(cat ~/.baikal 2>/dev/null)" ]] || [[ ! -f ~/.baikal ]]; then
     msg_info "Stopping Service"
     systemctl stop apache2
     msg_ok "Stopped Service"
 
-    msg_info "Updating ${APP} to v${RELEASE}"
-    cd /opt
-    curl -fsSL "https://github.com/sabre-io/baikal/releases/download/${RELEASE}/baikal-${RELEASE}.zip" -o $(basename "https://github.com/sabre-io/baikal/releases/download/${RELEASE}/baikal-${RELEASE}.zip")
+    msg_info "Backing up data"
     mv /opt/baikal /opt/baikal-backup
-    $STD unzip -o "baikal-${RELEASE}.zip"
+    msg_ok "Backed up data"
+
+    fetch_and_deploy_gh_release "baikal" "sabre-io/Baikal"
+
+    msg_info "Configuring Baikal"
     cp -r /opt/baikal-backup/config/baikal.yaml /opt/baikal/config/
     cp -r /opt/baikal-backup/Specific/ /opt/baikal/
     chown -R www-data:www-data /opt/baikal/
     chmod -R 755 /opt/baikal/
-    echo "${RELEASE}" >/opt/${APP}_version.txt
-    msg_ok "Updated $APP to v${RELEASE}"
+    msg_ok "Configured Baikal"
 
     msg_info "Starting Service"
     systemctl start apache2
     msg_ok "Started Service"
 
     msg_info "Cleaning up"
-    rm -rf "/opt/baikal-${RELEASE}.zip"
     rm -rf /opt/baikal-backup
     msg_ok "Cleaned"
     msg_ok "Updated Successfully"
