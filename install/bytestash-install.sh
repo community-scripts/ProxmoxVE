@@ -14,22 +14,17 @@ network_check
 update_os
 
 NODE_VERSION="22" setup_nodejs
+fetch_and_deploy_gh_release "bytestash" "jordan-dalby/ByteStash"
 
 msg_info "Installing ByteStash"
 JWT_SECRET=$(openssl rand -base64 32 | tr -d '/+=')
-temp_file=$(mktemp)
-RELEASE=$(curl -fsSL https://api.github.com/repos/jordan-dalby/ByteStash/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/jordan-dalby/ByteStash/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
-tar zxf $temp_file
-mv ByteStash-${RELEASE} /opt/bytestash
 cd /opt/bytestash/server
 $STD npm install
 cd /opt/bytestash/client
 $STD npm install
-echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Installed ByteStash"
 
-read -p "${TAB3}Do you want to allow registration of multiple accounts? [y/n]: " allowreg
+read -rp "${TAB3}Do you want to allow registration of multiple accounts? [y/n]: " allowreg
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/bytestash-backend.service
@@ -73,7 +68,6 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -f $temp_file
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
