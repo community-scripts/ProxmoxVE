@@ -13,13 +13,9 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Authelia"
-RELEASE=$(curl -fsSL https://api.github.com/repos/authelia/authelia/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-curl -fsSL "https://github.com/authelia/authelia/releases/download/${RELEASE}/authelia_${RELEASE}_amd64.deb" -o "authelia_${RELEASE}_amd64.deb"
-$STD dpkg -i "authelia_${RELEASE}_amd64.deb"
-msg_ok "Install Authelia completed"
+fetch_and_deploy_gh_release "authelia" "authelia/authelia" "binary"
 
-read -p "${TAB3}Enter your domain (ex. example.com): " DOMAIN
+read -rp "${TAB3}Enter your domain (ex. example.com): " DOMAIN
 
 msg_info "Setting Authelia up"
 touch /etc/authelia/emails.txt
@@ -72,7 +68,6 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -f "authelia_${RELEASE}_amd64.deb"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
