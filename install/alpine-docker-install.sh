@@ -67,5 +67,14 @@ if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
   msg_ok "Installed Docker Compose $DOCKER_COMPOSE_LATEST_VERSION"
 fi
 
+read -r -p "${TAB3}Would you like to expose the Docker TCP socket? <y/N> " prompt
+if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
+  msg_info "Exposing Docker TCP socket"
+  $STD mkdir -p /etc/docker
+  $STD echo '{ "hosts": ["unix:///var/run/docker.sock", "tcp://0.0.0.0:2375"] }' > /etc/docker/daemon.json
+  $STD rc-service docker restart
+  msg_ok "Exposed Docker TCP socket at tcp://+:2375"
+fi
+
 motd_ssh
 customize
