@@ -119,22 +119,17 @@ if [[ "${install_prompt,,}" =~ ^(y|yes)$ ]]; then
     chmod 644 "$DB_PATH"
     msg_ok "Directory created successfully"
 
+    cd /usr/local/community-scripts
+    filebrowser config init &>/dev/null
+    filebrowser config set -a '0.0.0.0' -p "$PORT" -d "$DB_PATH" &>/dev/null
+    filebrowser users add admin helper-scripts.com --perm.admin --database "$DB_PATH" &>/dev/null
+    
     read -r -p "Would you like to use No Authentication? (y/N): " auth_prompt
     if [[ "${auth_prompt,,}" =~ ^(y|yes)$ ]]; then
         msg_info "Configuring No Authentication"
-        cd /usr/local/community-scripts
-        filebrowser config init -a '0.0.0.0' -p "$PORT" -d "$DB_PATH" &>/dev/null
-        filebrowser config set -a '0.0.0.0' -p "$PORT" -d "$DB_PATH" &>/dev/null
-        filebrowser config init --auth.method=noauth &>/dev/null
         filebrowser config set --auth.method=noauth &>/dev/null
-        filebrowser users add ID 1 --perm.admin &>/dev/null
         msg_ok "No Authentication configured"
     else
-        msg_info "Setting up default authentication"
-        cd /usr/local/community-scripts
-        filebrowser config init -a '0.0.0.0' -p "$PORT" -d "$DB_PATH" &>/dev/null
-        filebrowser config set -a '0.0.0.0' -p "$PORT" -d "$DB_PATH" &>/dev/null
-        filebrowser users add admin helper-scripts.com --perm.admin --database "$DB_PATH" &>/dev/null
         msg_ok "Default authentication configured (admin:helper-scripts.com)"
     fi
 
