@@ -16,20 +16,15 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
   apache2 \
-  redis \
-  php-{curl,date,json,mbstring,redis,sqlite3,sockets} \
-  libapache2-mod-php
+  redis
 msg_ok "Installed Dependencies"
 
-msg_info "Installing barcodebuddy"
-RELEASE=$(curl -fsSL https://api.github.com/repos/Forceu/barcodebuddy/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-cd /opt
-curl -fsSL "https://github.com/Forceu/barcodebuddy/archive/refs/tags/v${RELEASE}.zip" -o "v${RELEASE}.zip"
-$STD unzip "v${RELEASE}.zip"
-mv "/opt/barcodebuddy-${RELEASE}" /opt/barcodebuddy
+PHP_VERSION="8.2" PHP_APACHE="YES" PHP_MODULE="date, json, redis, sqlite3, sockets" setup_php
+fetch_and_deploy_gh_release "barcodebuddy" "Forceu/barcodebuddy"
+
+msg_info "Configuring barcodebuddy"
 chown -R www-data:www-data /opt/barcodebuddy/data
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
-msg_ok "Installed barcodebuddy"
+msg_ok "Configured barcodebuddy"
 
 msg_info "Creating Services"
 cat <<EOF >/etc/systemd/system/barcodebuddy.service
@@ -73,7 +68,6 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -rf "/opt/v${RELEASE}.zip"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"

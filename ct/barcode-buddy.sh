@@ -23,27 +23,28 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
+
   if [[ ! -d /opt/barcodebuddy ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
   RELEASE=$(curl -fsSL https://api.github.com/repos/Forceu/barcodebuddy/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+  if [[ "${RELEASE}" != "$(cat ~/.barcodebuddy 2>/dev/null)" ]] || [[ ! -f ~/.barcodebuddy ]]; then
     msg_info "Stopping Service"
     systemctl stop apache2
     systemctl stop barcodebuddy
     msg_ok "Stopped Service"
 
-    msg_info "Updating ${APP} to v${RELEASE}"
-    cd /opt
+    msg_info "Backing up data"
     mv /opt/barcodebuddy/ /opt/barcodebuddy-backup
-    curl -fsSL "https://github.com/Forceu/barcodebuddy/archive/refs/tags/v${RELEASE}.zip" -o $(basename "https://github.com/Forceu/barcodebuddy/archive/refs/tags/v${RELEASE}.zip")
-    $STD unzip "v${RELEASE}.zip"
-    mv "/opt/barcodebuddy-${RELEASE}" /opt/barcodebuddy
+    msg_ok "Backed up data"
+
+    fetch_and_deploy_gh_release "barcodebuddy" "Forceu/barcodebuddy"
+
+    msg_info "Configuring ${APP}"
     cp -r /opt/barcodebuddy-backup/data/. /opt/barcodebuddy/data
     chown -R www-data:www-data /opt/barcodebuddy/data
-    echo "${RELEASE}" >/opt/${APP}_version.txt
-    msg_ok "Updated $APP to v${RELEASE}"
+    msg_ok "Configured ${APP}"
 
     msg_info "Starting Service"
     systemctl start apache2
@@ -51,7 +52,6 @@ function update_script() {
     msg_ok "Started Service"
 
     msg_info "Cleaning up"
-    rm -r "/opt/v${RELEASE}.zip"
     rm -r /opt/barcodebuddy-backup
     msg_ok "Cleaned"
     msg_ok "Updated Successfully"
