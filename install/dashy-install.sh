@@ -14,15 +14,12 @@ network_check
 update_os
 
 NODE_VERSION="22" setup_nodejs
+fetch_and_deploy_gh_release "dashy" "Lissy93/dashy"
 
-RELEASE=$(curl -fsSL https://api.github.com/repos/Lissy93/dashy/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 msg_info "Installing Dashy ${RELEASE} (Patience)"
-mkdir -p /opt/dashy
-curl -fsSL "https://github.com/Lissy93/dashy/archive/refs/tags/${RELEASE}.tar.gz" | tar -xz -C /opt/dashy --strip-components=1
 cd /opt/dashy
 $STD npm install
 $STD npm run build
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Installed Dashy ${RELEASE}"
 
 msg_info "Creating Service"
