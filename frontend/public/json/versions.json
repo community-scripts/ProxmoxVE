@@ -1,5 +1,40 @@
 [
   {
+    "name": "cross-seed/cross-seed",
+    "version": "v6.12.7",
+    "date": "2025-06-18T03:44:24Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.7.1",
+    "date": "2025-07-04T20:02:52Z"
+  },
+  {
+    "name": "Luligu/matterbridge",
+    "version": "3.1.1",
+    "date": "2025-07-04T19:50:37Z"
+  },
+  {
+    "name": "homarr-labs/homarr",
+    "version": "v1.27.0",
+    "date": "2025-07-04T19:16:16Z"
+  },
+  {
+    "name": "zitadel/zitadel",
+    "version": "v3.3.0",
+    "date": "2025-06-12T06:54:48Z"
+  },
+  {
+    "name": "bunkerity/bunkerweb",
+    "version": "v1.6.2",
+    "date": "2025-07-04T15:21:18Z"
+  },
+  {
+    "name": "kimai/kimai",
+    "version": "2.37.0",
+    "date": "2025-07-04T14:49:43Z"
+  },
+  {
     "name": "Graylog2/graylog2-server",
     "version": "6.3.1",
     "date": "2025-07-04T11:20:48Z"
@@ -18,11 +53,6 @@
     "name": "nzbgetcom/nzbget",
     "version": "v25.2",
     "date": "2025-07-04T08:21:42Z"
-  },
-  {
-    "name": "bunkerity/bunkerweb",
-    "version": "v1.6.2",
-    "date": "2025-07-04T08:43:44Z"
   },
   {
     "name": "Checkmk/checkmk",
@@ -120,11 +150,6 @@
     "date": "2025-07-03T00:31:22Z"
   },
   {
-    "name": "cross-seed/cross-seed",
-    "version": "v6.12.7",
-    "date": "2025-06-18T03:44:24Z"
-  },
-  {
     "name": "emqx/emqx",
     "version": "v5.8.7",
     "date": "2025-07-02T21:54:54Z"
@@ -148,11 +173,6 @@
     "name": "firefly-iii/firefly-iii",
     "version": "v6.2.20",
     "date": "2025-07-02T04:03:37Z"
-  },
-  {
-    "name": "home-assistant/core",
-    "version": "2025.7.0",
-    "date": "2025-07-02T16:23:42Z"
   },
   {
     "name": "wazuh/wazuh",
@@ -300,11 +320,6 @@
     "date": "2025-06-28T16:06:19Z"
   },
   {
-    "name": "Luligu/matterbridge",
-    "version": "3.1.0",
-    "date": "2025-06-28T09:02:38Z"
-  },
-  {
     "name": "plexguide/Huntarr.io",
     "version": "8.1.11",
     "date": "2025-06-28T03:42:46Z"
@@ -318,11 +333,6 @@
     "name": "pocket-id/pocket-id",
     "version": "v1.5.0",
     "date": "2025-06-27T22:04:32Z"
-  },
-  {
-    "name": "homarr-labs/homarr",
-    "version": "v1.26.0",
-    "date": "2025-06-27T19:15:24Z"
   },
   {
     "name": "goauthentik/authentik",
@@ -600,11 +610,6 @@
     "date": "2025-06-17T05:20:42Z"
   },
   {
-    "name": "kimai/kimai",
-    "version": "2.36.1",
-    "date": "2025-06-16T19:20:54Z"
-  },
-  {
     "name": "open-webui/open-webui",
     "version": "v0.6.15",
     "date": "2025-06-16T14:34:42Z"
@@ -673,11 +678,6 @@
     "name": "leiweibau/Pi.Alert",
     "version": "v2025-06-12",
     "date": "2025-06-12T20:59:47Z"
-  },
-  {
-    "name": "zitadel/zitadel",
-    "version": "v3.3.0",
-    "date": "2025-06-12T06:54:48Z"
   },
   {
     "name": "autobrr/autobrr",
