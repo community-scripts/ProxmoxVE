@@ -20,48 +20,46 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
+  header_info
+  check_container_storage
+  check_container_resources
 
-    if [[ ! -d "/opt/cryptpad" ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    RELEASE=$(curl -fsSL https://api.github.com/repos/cryptpad/cryptpad/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-    if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
-        msg_info "Stopping $APP"
-        systemctl stop cryptpad
-        msg_ok "Stopped $APP"
-
-        msg_info "Updating $APP to ${RELEASE}"
-        temp_dir=$(mktemp -d)
-        cp -f /opt/cryptpad/config/config.js /opt/config.js
-        curl -fsSL "https://github.com/cryptpad/cryptpad/archive/refs/tags/${RELEASE}.tar.gz" -o "$temp_dir/cryptpad-${RELEASE}.tar.gz"
-        cd "$temp_dir"
-        tar zxf "cryptpad-${RELEASE}.tar.gz"
-        cp -rf "cryptpad-${RELEASE}"/* /opt/cryptpad
-        cd /opt/cryptpad
-        $STD npm ci
-        $STD npm run install:components
-        $STD npm run build
-        cp -f /opt/config.js /opt/cryptpad/config/config.js
-        echo "${RELEASE}" >/opt/${APP}_version.txt
-        msg_ok "Updated $APP to ${RELEASE}"
-
-        msg_info "Cleaning Up"
-        rm -rf $temp_dir
-        msg_ok "Cleanup Completed"
-
-        msg_info "Starting $APP"
-        systemctl start cryptpad
-        msg_ok "Started $APP"
-
-        msg_ok "Update Successful"
-    else
-        msg_ok "No update required. ${APP} is already at ${RELEASE}"
-    fi
+  if [[ ! -d "/opt/cryptpad" ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+  RELEASE=$(curl -fsSL https://api.github.com/repos/cryptpad/cryptpad/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+  if [[ "${RELEASE}" != "$(cat ~/.cryptpad 2>/dev/null)" ]] || [[ ! -f ~/.cryptpad ]]; then
+    msg_info "Stopping $APP"
+    systemctl stop cryptpad
+    msg_ok "Stopped $APP"
+
+    msg_info "Backing up configuration"
+    [ -f /opt/cryptpad/config/config.js ] && mv /opt/cryptpad/config/config.js /opt/
+    msg_ok "Backed up configuration"
+
+    fetch_and_deploy_gh_release "cryptpad" "cryptpad/cryptpad"
+
+    msg_info "Updating $APP to ${RELEASE}"
+    cd /opt/cryptpad
+    $STD npm ci
+    $STD npm run install:components
+    $STD npm run build
+    msg_ok "Updated $APP to ${RELEASE}"
+
+    msg_info "Restoring configuration"
+    mv /opt/config.js /opt/cryptpad/config/
+    msg_ok "Configuration restored"
+
+    msg_info "Starting $APP"
+    systemctl start cryptpad
+    msg_ok "Started $APP"
+
+    msg_ok "Update Successful"
+  else
+    msg_ok "No update required. ${APP} is already at ${RELEASE}"
+  fi
+  exit
 }
 
 start
