@@ -20,10 +20,11 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🔧 Refactor
 
-    - Refactor: ByteStash [@tremor021](https://github.com/tremor021) ([#5725](https://github.com/community-scripts/ProxmoxVE/pull/5725))
-    - Refactor: CryptPad [@tremor021](https://github.com/tremor021) ([#5724](https://github.com/community-scripts/ProxmoxVE/pull/5724))
-    - Refactor: Dashy [@tremor021](https://github.com/tremor021) ([#5723](https://github.com/community-scripts/ProxmoxVE/pull/5723))
+    - Refactor: BookStack [@tremor021](https://github.com/tremor021) ([#5732](https://github.com/community-scripts/ProxmoxVE/pull/5732))
     - Refactor: Authelia [@tremor021](https://github.com/tremor021) ([#5722](https://github.com/community-scripts/ProxmoxVE/pull/5722))
+    - Refactor: Dashy [@tremor021](https://github.com/tremor021) ([#5723](https://github.com/community-scripts/ProxmoxVE/pull/5723))
+    - Refactor: CryptPad [@tremor021](https://github.com/tremor021) ([#5724](https://github.com/community-scripts/ProxmoxVE/pull/5724))
+    - Refactor: ByteStash [@tremor021](https://github.com/tremor021) ([#5725](https://github.com/community-scripts/ProxmoxVE/pull/5725))
     - Refactor: AgentDVR [@tremor021](https://github.com/tremor021) ([#5726](https://github.com/community-scripts/ProxmoxVE/pull/5726))
 
 ## 2025-07-04
