@@ -27,6 +27,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🔧 Refactor
 
+    - Refactor: Bitmagnet [@tremor021](https://github.com/tremor021) ([#5733](https://github.com/community-scripts/ProxmoxVE/pull/5733))
     - Refactor: Baikal [@tremor021](https://github.com/tremor021) ([#5736](https://github.com/community-scripts/ProxmoxVE/pull/5736))
 
 ## 2025-07-05
