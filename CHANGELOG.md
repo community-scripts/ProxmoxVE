@@ -22,6 +22,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - Fix update script for Mafl: ensure directory is removed recursively [@jonalbr](https://github.com/jonalbr) ([#5759](https://github.com/community-scripts/ProxmoxVE/pull/5759))
     - BookStack: Typo fix [@tremor021](https://github.com/tremor021) ([#5746](https://github.com/community-scripts/ProxmoxVE/pull/5746))
     - Resolves incorrect URL at end of Pocket ID script [@johnsturgeon](https://github.com/johnsturgeon) ([#5743](https://github.com/community-scripts/ProxmoxVE/pull/5743))
 
