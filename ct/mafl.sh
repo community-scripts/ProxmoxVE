@@ -37,7 +37,7 @@ function update_script() {
     msg_info "Performing backup"
     mkdir -p /opt/mafl-backup/data
     mv /opt/mafl/data /opt/mafl-backup/data
-    rm /opt/mafl
+    rm -rf /opt/mafl
     msg_ok "Backup complete"
     
     fetch_and_deploy_gh_release "mafl" "hywax/mafl"
