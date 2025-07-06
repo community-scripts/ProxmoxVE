@@ -1,5 +1,40 @@
 [
   {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.4.1",
+    "date": "2025-06-11T07:53:44Z"
+  },
+  {
+    "name": "Kareadita/Kavita",
+    "version": "v0.8.7",
+    "date": "2025-07-05T20:08:58Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.22.6",
+    "date": "2025-07-05T18:38:31Z"
+  },
+  {
+    "name": "cross-seed/cross-seed",
+    "version": "v6.12.7",
+    "date": "2025-06-18T03:44:24Z"
+  },
+  {
+    "name": "fallenbagel/jellyseerr",
+    "version": "preview-seerr",
+    "date": "2025-07-05T16:51:13Z"
+  },
+  {
+    "name": "nicolargo/glances",
+    "version": "v4.3.2",
+    "date": "2025-07-05T16:00:15Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "v4.3.0",
+    "date": "2025-07-05T12:14:52Z"
+  },
+  {
     "name": "fuma-nama/fumadocs",
     "version": "fumadocs-openapi@9.0.18",
     "date": "2025-07-05T09:36:45Z"
@@ -23,16 +58,6 @@
     "name": "linkwarden/linkwarden",
     "version": "v2.11.3",
     "date": "2025-07-05T04:34:46Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.4.1",
-    "date": "2025-06-11T07:53:44Z"
-  },
-  {
-    "name": "cross-seed/cross-seed",
-    "version": "v6.12.7",
-    "date": "2025-06-18T03:44:24Z"
   },
   {
     "name": "home-assistant/core",
@@ -320,11 +345,6 @@
     "date": "2025-06-29T08:54:47Z"
   },
   {
-    "name": "msgbyte/tianji",
-    "version": "v1.22.5",
-    "date": "2025-06-28T16:06:19Z"
-  },
-  {
     "name": "plexguide/Huntarr.io",
     "version": "8.1.11",
     "date": "2025-06-28T03:42:46Z"
@@ -358,11 +378,6 @@
     "name": "FlowiseAI/Flowise",
     "version": "flowise@3.0.3",
     "date": "2025-06-27T09:53:57Z"
-  },
-  {
-    "name": "fallenbagel/jellyseerr",
-    "version": "preview-seerr",
-    "date": "2025-06-27T06:10:03Z"
   },
   {
     "name": "MediaBrowser/Emby.Releases",
@@ -448,11 +463,6 @@
     "name": "minio/minio",
     "version": "RELEASE.2025-06-13T11-33-47Z",
     "date": "2025-06-23T20:58:42Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "v4.2.1",
-    "date": "2025-06-03T20:04:28Z"
   },
   {
     "name": "VictoriaMetrics/VictoriaMetrics",
@@ -1010,11 +1020,6 @@
     "date": "2025-04-21T17:44:40Z"
   },
   {
-    "name": "Kareadita/Kavita",
-    "version": "v0.8.6.2",
-    "date": "2025-04-20T16:55:38Z"
-  },
-  {
     "name": "caddyserver/caddy",
     "version": "v2.10.0",
     "date": "2025-04-18T20:46:28Z"
@@ -1108,11 +1113,6 @@
     "name": "requarks/wiki",
     "version": "v2.5.307",
     "date": "2025-03-24T01:33:31Z"
-  },
-  {
-    "name": "nicolargo/glances",
-    "version": "v4.3.1",
-    "date": "2025-03-23T09:02:54Z"
   },
   {
     "name": "Donkie/Spoolman",
