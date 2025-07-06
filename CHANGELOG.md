@@ -20,6 +20,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 🐞 Bug Fixes
 
+    - BookStack: Typo fix [@tremor021](https://github.com/tremor021) ([#5746](https://github.com/community-scripts/ProxmoxVE/pull/5746))
     - Resolves incorrect URL at end of Pocket ID script [@johnsturgeon](https://github.com/johnsturgeon) ([#5743](https://github.com/community-scripts/ProxmoxVE/pull/5743))
 
 ## 2025-07-05
