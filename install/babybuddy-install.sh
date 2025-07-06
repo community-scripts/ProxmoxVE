@@ -24,13 +24,10 @@ $STD apt-get install -y \
 msg_ok "Installed Dependencies"
 
 setup_uv
+fetch_and_deploy_gh_release "babybuddy" "babybuddy/babybuddy"
 
 msg_info "Installing Babybuddy"
-RELEASE=$(curl -fsSL https://api.github.com/repos/babybuddy/babybuddy/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-temp_file=$(mktemp)
-mkdir -p /opt/{babybuddy,data}
-curl -fsSL "https://github.com/babybuddy/babybuddy/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
-tar zxf "$temp_file" --strip-components=1 -C /opt/babybuddy
+mkdir -p /opt/data
 cd /opt/babybuddy
 $STD uv venv .venv
 $STD source .venv/bin/activate
@@ -102,7 +99,6 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -f "$temp_file"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"

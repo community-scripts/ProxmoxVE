@@ -29,7 +29,7 @@ function update_script() {
   fi
 
   RELEASE=$(curl -fsSL https://api.github.com/repos/babybuddy/babybuddy/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/babybuddy_version.txt)" ]]; then
+  if [[ "${RELEASE}" != "$(cat ~/.babybuddy 2>/dev/null)" ]] || [[ ! -f ~/.babybuddy ]]; then
     setup_uv
 
     msg_info "Stopping Services"
@@ -42,17 +42,14 @@ function update_script() {
     find . -mindepth 1 -maxdepth 1 ! -name '.venv' -exec rm -rf {} +
     msg_ok "Cleaned old files"
 
+    fetch_and_deploy_gh_release "babybuddy" "babybuddy/babybuddy"
+
     msg_info "Updating ${APP} to v${RELEASE}"
-    temp_file=$(mktemp)
-    curl -fsSL "https://github.com/babybuddy/babybuddy/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
     cd /opt/babybuddy
-    tar zxf "$temp_file" --strip-components=1 -C /opt/babybuddy
     mv /tmp/production.py.bak babybuddy/settings/production.py
-    cd /opt/babybuddy
     source .venv/bin/activate
     $STD uv pip install -r requirements.txt
     $STD python manage.py migrate
-    echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP} to v${RELEASE}"
 
     msg_info "Fixing permissions"
@@ -67,7 +64,6 @@ function update_script() {
     msg_ok "Services Started"
 
     msg_info "Cleaning up"
-    rm -f "$temp_file"
     msg_ok "Cleaned"
     msg_ok "Updated Successfully"
   else
