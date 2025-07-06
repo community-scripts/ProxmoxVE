@@ -16,6 +16,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-07-06
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Resolves incorrect URL at end of Pocket ID script [@johnsturgeon](https://github.com/johnsturgeon) ([#5743](https://github.com/community-scripts/ProxmoxVE/pull/5743))
+
 ## 2025-07-05
 
 ### 🚀 Updated Scripts
