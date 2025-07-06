@@ -1,8 +1,23 @@
 [
   {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2123",
+    "date": "2025-07-06T06:01:32Z"
+  },
+  {
+    "name": "hyperion-project/hyperion.ng",
+    "version": "2.1.1",
+    "date": "2025-06-14T17:45:06Z"
+  },
+  {
     "name": "steveiliop56/tinyauth",
     "version": "v3.4.1",
     "date": "2025-06-11T07:53:44Z"
+  },
+  {
+    "name": "slskd/slskd",
+    "version": "0.23.0",
+    "date": "2025-07-06T00:02:35Z"
   },
   {
     "name": "Kareadita/Kavita",
@@ -48,11 +63,6 @@
     "name": "Paymenter/Paymenter",
     "version": "v1.2.0",
     "date": "2025-07-05T08:58:05Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2120",
-    "date": "2025-07-05T05:58:02Z"
   },
   {
     "name": "linkwarden/linkwarden",
@@ -118,11 +128,6 @@
     "name": "redis/redis",
     "version": "8.2-rc1-int",
     "date": "2025-07-02T19:27:08Z"
-  },
-  {
-    "name": "hyperion-project/hyperion.ng",
-    "version": "2.1.1",
-    "date": "2025-06-14T17:45:06Z"
   },
   {
     "name": "outline/outline",
@@ -1028,11 +1033,6 @@
     "name": "IceWhaleTech/CasaOS",
     "version": "v0.4.15",
     "date": "2024-12-19T03:19:49Z"
-  },
-  {
-    "name": "slskd/slskd",
-    "version": "0.22.5",
-    "date": "2025-04-15T02:52:26Z"
   },
   {
     "name": "Tautulli/Tautulli",
