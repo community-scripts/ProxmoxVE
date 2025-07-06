@@ -15,8 +15,8 @@ update_os
 
 msg_info "Installing Dependencies (Patience)"
 $STD apt-get install -y \
-  apache2
-make
+  apache2 \
+  make
 msg_ok "Installed Dependencies"
 
 PHP_MODULE="fpm, ldap, tidy, bz2, mysql" PHP_FPM="YES" PHP_APACHE="YES" PHP_VERSION="8.2" setup_php
