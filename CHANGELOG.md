@@ -18,10 +18,16 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
+  - Refactor: Barcodebuddy [@tremor021](https://github.com/tremor021) ([#5735](https://github.com/community-scripts/ProxmoxVE/pull/5735))
+
   - #### 🐞 Bug Fixes
 
     - BookStack: Typo fix [@tremor021](https://github.com/tremor021) ([#5746](https://github.com/community-scripts/ProxmoxVE/pull/5746))
     - Resolves incorrect URL at end of Pocket ID script [@johnsturgeon](https://github.com/johnsturgeon) ([#5743](https://github.com/community-scripts/ProxmoxVE/pull/5743))
+
+  - #### 🔧 Refactor
+
+    - Refactor: Baikal [@tremor021](https://github.com/tremor021) ([#5736](https://github.com/community-scripts/ProxmoxVE/pull/5736))
 
 ## 2025-07-05
 
