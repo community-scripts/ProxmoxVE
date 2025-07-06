@@ -25,6 +25,10 @@ All LXC instances created using this repository come pre-installed with Midnight
     - BookStack: Typo fix [@tremor021](https://github.com/tremor021) ([#5746](https://github.com/community-scripts/ProxmoxVE/pull/5746))
     - Resolves incorrect URL at end of Pocket ID script [@johnsturgeon](https://github.com/johnsturgeon) ([#5743](https://github.com/community-scripts/ProxmoxVE/pull/5743))
 
+  - #### ✨ New Features
+
+    - [Feature] Add option to expose Docker via TCP port (alpine docker) [@oformaniuk](https://github.com/oformaniuk) ([#5716](https://github.com/community-scripts/ProxmoxVE/pull/5716))
+
   - #### 🔧 Refactor
 
     - Refactor: Bitmagnet [@tremor021](https://github.com/tremor021) ([#5733](https://github.com/community-scripts/ProxmoxVE/pull/5733))
