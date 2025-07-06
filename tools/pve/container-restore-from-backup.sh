@@ -23,7 +23,7 @@ CM="${GN}✓${CL}"
 CROSS="${RD}✗${CL}"
 APP="Home Assistant Container"
 while true; do
-    read -p "This will restore ${APP} from a backup. Proceed(y/n)?" yn
+    read -r -p "This will restore ${APP} from a backup. Proceed(y/n)?" yn
     case $yn in
     [Yy]*) break ;;
     [Nn]*) exit ;;

@@ -71,7 +71,7 @@ if [ -z "$CHOICES" ]; then
   exit 1
 fi
 
-read -p "Delete containers manually or automatically? (Default: manual) m/a: " DELETE_MODE
+read -r -p "Delete containers manually or automatically? (Default: manual) m/a: " DELETE_MODE
 DELETE_MODE=${DELETE_MODE:-m}
 
 selected_ids=$(echo "$CHOICES" | tr -d '"' | tr -s ' ' '\n')
@@ -98,7 +98,7 @@ for container_id in $selected_ids; do
     spinner $pid
     [ $? -eq 0 ] && echo "Container $container_id deleted." || whiptail --title "Error" --msgbox "Failed to delete container $container_id." 10 60
   else
-    read -p "Delete container $container_id? (y/N): " CONFIRM
+    read -r -p "Delete container $container_id? (y/N): " CONFIRM
     if [[ "$CONFIRM" =~ ^[Yy]$ ]]; then
       echo -e "${BL}[Info]${GN} Deleting container $container_id...${CL}"
       pct destroy "$container_id" -f &

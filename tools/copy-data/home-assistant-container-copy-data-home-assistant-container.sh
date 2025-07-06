@@ -13,7 +13,7 @@ if ! command -v pveversion >/dev/null 2>&1; then
   exit
 fi
 while true; do
-  read -p "Use to copy all data from one Home Assistant LXC to another. Proceed(y/n)?" yn
+  read -r -p "Use to copy all data from one Home Assistant LXC to another. Proceed(y/n)?" yn
   case $yn in
   [Yy]*) break ;;
   [Nn]*) exit ;;

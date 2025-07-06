@@ -58,7 +58,7 @@ fi
 # Confirm removal
 echo -e "${YW}Kernels to be removed:${CL}"
 printf "%s\n" "${kernels_to_remove[@]}"
-read -rp "Proceed with removal? (y/n): " confirm
+read -r -p "Proceed with removal? (y/n): " confirm
 if [[ "$confirm" != "y" ]]; then
   echo -e "${RD}Aborted.${CL}"
   exit 1

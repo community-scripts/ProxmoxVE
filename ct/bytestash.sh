@@ -31,7 +31,7 @@ function update_script() {
   RELEASE=$(curl -fsSL https://api.github.com/repos/jordan-dalby/ByteStash/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
   if [[ "${RELEASE}" != "$(cat ~/.bytestash 2>/dev/null)" ]] || [[ ! -f ~/.bytestash ]]; then
 
-    read -rp "${TAB3}Did you make a backup via application WebUI? (y/n): " backuped
+    read -r -p "${TAB3}Did you make a backup via application WebUI? (y/n): " backuped
     if [[ "$backuped" =~ ^[Yy]$ ]]; then
       msg_info "Stopping Services"
       systemctl stop bytestash-backend

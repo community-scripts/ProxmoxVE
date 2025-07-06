@@ -17,7 +17,7 @@ EOF
 }
 header_info
 while true; do
-  read -p "This will Prepare a LXC Container for Frigate. Proceed (y/n)?" yn
+  read -r -p "This will Prepare a LXC Container for Frigate. Proceed (y/n)?" yn
   case $yn in
   [Yy]*) break ;;
   [Nn]*) exit ;;

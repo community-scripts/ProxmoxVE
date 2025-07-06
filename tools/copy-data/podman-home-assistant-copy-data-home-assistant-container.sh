@@ -13,7 +13,7 @@ if ! command -v pveversion >/dev/null 2>&1; then
   exit
 fi
 while true; do
-  read -p "Use to copy all data from a Podman Home Assistant LXC to a Docker Home Assistant LXC. Proceed(y/n)?" yn
+  read -r -p "Use to copy all data from a Podman Home Assistant LXC to a Docker Home Assistant LXC. Proceed(y/n)?" yn
   case $yn in
   [Yy]*) break ;;
   [Nn]*) exit ;;

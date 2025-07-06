@@ -31,9 +31,9 @@ cp config/config.yml.template config/config.yml
 echo "${RELEASE}" >/opt/kometa_version.txt
 msg_ok "Setup Kometa"
 
-read -p "${TAB3}nter your TMDb API key: " TMDBKEY
-read -p "${TAB3}Enter your Plex URL: " PLEXURL
-read -p "${TAB3}Enter your Plex token: " PLEXTOKEN
+read -r -p "${TAB3}nter your TMDb API key: " TMDBKEY
+read -r -p "${TAB3}Enter your Plex URL: " PLEXURL
+read -r -p "${TAB3}Enter your Plex token: " PLEXTOKEN
 sed -i -e "s#url: http://192.168.1.12:32400#url: $PLEXURL #g" /opt/kometa/config/config.yml
 sed -i -e "s/token: ####################/token: $PLEXTOKEN/g" /opt/kometa/config/config.yml
 sed -i -e "s/apikey: ################################/apikey: $TMDBKEY/g" /opt/kometa/config/config.yml

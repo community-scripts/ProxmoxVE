@@ -18,7 +18,7 @@ EOF
 
 add() {
   while true; do
-    read -p "This script will add a crontab schedule that updates all LXCs every Sunday at midnight. Proceed(y/n)?" yn
+    read -r -p "This script will add a crontab schedule that updates all LXCs every Sunday at midnight. Proceed(y/n)?" yn
     case $yn in
     [Yy]*) break ;;
     [Nn]*) exit ;;

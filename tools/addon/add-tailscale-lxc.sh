@@ -31,7 +31,7 @@ if ! command -v pveversion &>/dev/null; then
 fi
 
 while true; do
-  read -rp "This will add Tailscale to an existing LXC Container ONLY. Proceed (y/n)? " yn
+  read -r -p "This will add Tailscale to an existing LXC Container ONLY. Proceed (y/n)? " yn
   case "$yn" in
   [Yy]*) break ;;
   [Nn]*) exit 0 ;;

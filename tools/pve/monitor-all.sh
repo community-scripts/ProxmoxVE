@@ -26,7 +26,7 @@ add() {
   echo
 
   while true; do
-    read -p "This script will add Monitor All to Proxmox VE. Proceed (y/n)? " yn
+    read -r -p "This script will add Monitor All to Proxmox VE. Proceed (y/n)? " yn
     case $yn in
       [Yy]*) break ;;
       [Nn]*) exit ;;

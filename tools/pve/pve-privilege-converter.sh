@@ -35,7 +35,7 @@ select_target_storage_and_container_id() {
   done
 
   while true; do
-    read -rp "Enter number of target storage: " choice
+    read -r -p "Enter number of target storage: " choice
     if [[ "$choice" =~ ^[0-9]+$ ]] && ((choice >= 1 && choice <= ${#target_storages[@]})); then
       TARGET_STORAGE="${target_storages[$((choice - 1))]}"
       break
@@ -48,7 +48,7 @@ select_target_storage_and_container_id() {
   [[ "$next_free_id" =~ ^[0-9]+$ ]] || next_free_id=999
 
   echo ""
-  read -rp "Suggested next free container ID: $next_free_id. Enter new container ID [default: $next_free_id]: " NEW_CONTAINER_ID
+  read -r -p "Suggested next free container ID: $next_free_id. Enter new container ID [default: $next_free_id]: " NEW_CONTAINER_ID
   NEW_CONTAINER_ID="${NEW_CONTAINER_ID:-$next_free_id}"
 }
 
@@ -129,7 +129,7 @@ perform_conversion() {
 }
 
 manage_states() {
-  read -rp "Shutdown source and start new container? [Y/n]: " answer
+  read -r -p "Shutdown source and start new container? [Y/n]: " answer
   answer=${answer:-Y}
   if [[ $answer =~ ^[Yy] ]]; then
     pct shutdown "$CONTAINER_ID"
@@ -138,7 +138,7 @@ manage_states() {
       ! pct status "$CONTAINER_ID" | grep -q running && break
     done
     if pct status "$CONTAINER_ID" | grep -q running; then
-      read -rp "Timeout reached. Force shutdown? [Y/n]: " force
+      read -r -p "Timeout reached. Force shutdown? [Y/n]: " force
       if [[ ${force:-Y} =~ ^[Yy] ]]; then
         pkill -9 -f "lxc-start -F -n $CONTAINER_ID"
       fi
@@ -151,7 +151,7 @@ manage_states() {
 }
 
 cleanup_files() {
-  read -rp "Delete backup archive? [$BACKUP_PATH] [Y/n]: " cleanup
+  read -r -p "Delete backup archive? [$BACKUP_PATH] [Y/n]: " cleanup
   if [[ ${cleanup:-Y} =~ ^[Yy] ]]; then
     rm -f "$BACKUP_PATH" && msg_ok "Removed backup archive"
   else

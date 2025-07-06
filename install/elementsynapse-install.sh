@@ -22,7 +22,7 @@ msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
 
-read -p "${TAB3}Please enter the name for your server: " servername
+read -r -p "${TAB3}Please enter the name for your server: " servername
 
 msg_info "Installing Element Synapse"
 curl -fsSL "https://packages.matrix.org/debian/matrix-org-archive-keyring.gpg" -o "/usr/share/keyrings/matrix-org-archive-keyring.gpg"

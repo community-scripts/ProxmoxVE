@@ -20,7 +20,7 @@ EOF
 header_info
 set -e
 while true; do
-  read -p "This will add NetBird to an existing LXC Container ONLY. Proceed(y/n)?" yn
+  read -r -p "This will add NetBird to an existing LXC Container ONLY. Proceed(y/n)?" yn
   case $yn in
   [Yy]*) break ;;
   [Nn]*) exit ;;

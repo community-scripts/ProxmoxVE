@@ -160,7 +160,7 @@ EOF
 
 header_info
 while true; do
-  read -p "Start the Update to Proxmox Backup Server 3 Script (y/n)?" yn
+  read -r -p "Start the Update to Proxmox Backup Server 3 Script (y/n)?" yn
   case $yn in
   [Yy]*) break ;;
   [Nn]*)

@@ -42,7 +42,7 @@ function msg_ok() {
 install() {
   header_info
   while true; do
-    read -p "Are you sure you want to install NetData on Proxmox VE host. Proceed(y/n)?" yn
+    read -r -p "Are you sure you want to install NetData on Proxmox VE host. Proceed(y/n)?" yn
     case $yn in
     [Yy]*) break ;;
     [Nn]*) exit ;;

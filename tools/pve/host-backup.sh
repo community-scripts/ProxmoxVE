@@ -59,7 +59,7 @@ function perform_backup {
   # Perform the backup
   header_info
   echo -e "This will create a backup in\e[1;33m $BACKUP_PATH \e[0mfor these files and directories\e[1;33m ${selected_directories[*]} \e[0m"
-  read -p "Press ENTER to continue..."
+  read -r -p "Press ENTER to continue..."
   header_info
   echo "Working..."
   tar -czf "$BACKUP_PATH$BACKUP_FILE-$(date +%Y_%m_%d).tar.gz" --absolute-names "${selected_directories[@]}"

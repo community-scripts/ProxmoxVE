@@ -235,7 +235,7 @@ EOF
 header_info
 echo -e "\nThis script will Perform Post Install Routines.\n"
 while true; do
-  read -p "Start the Proxmox VE Post Install Script (y/n)?" yn
+  read -r -p "Start the Proxmox VE Post Install Script (y/n)?" yn
   case $yn in
   [Yy]*) break ;;
   [Nn]*)

@@ -24,7 +24,7 @@ echo "Choose which version to install:"
 echo "  [N] Feature-rich community version ($FEATURE_RICH_VERSION) [Recommended]"
 echo "  [Y] Latest version (may lack UI features)"
 echo
-read -p "Install latest MinIO version? [y/N]: " -n 1 -r
+read -r -p "Install latest MinIO version? [y/N]: " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
   USE_LATEST=true

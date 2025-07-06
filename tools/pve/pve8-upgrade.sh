@@ -110,7 +110,7 @@ EOF
 
 header_info
 while true; do
-  read -p "Start the Update to Proxmox VE 8 Script (y/n)?" yn
+  read -r -p "Start the Update to Proxmox VE 8 Script (y/n)?" yn
   case $yn in
   [Yy]*) break ;;
   [Nn]*)

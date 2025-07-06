@@ -52,7 +52,7 @@ function delete_orphaned_lvm {
         vg="${orphaned_volumes[i + 1]}"
         size="${orphaned_volumes[i + 2]}"
 
-        read -p "❓ Do you want to delete $lv (VG: $vg, Size: $size)? [y/N]: " confirm
+        read -r -p "❓ Do you want to delete $lv (VG: $vg, Size: $size)? [y/N]: " confirm
         if [[ "$confirm" =~ ^[Yy]$ ]]; then
             echo -e "🗑️  Deleting $lv from $vg..."
             lvremove -f "$vg/$lv"

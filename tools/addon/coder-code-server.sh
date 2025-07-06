@@ -55,7 +55,7 @@ if [ -e /etc/alpine-release ]; then
   exit
 fi
 while true; do
-  read -p "This will Install ${APP} on $hostname. Proceed(y/n)?" yn
+  read -r -p "This will Install ${APP} on $hostname. Proceed(y/n)?" yn
   case $yn in
   [Yy]*) break ;;
   [Nn]*) exit ;;

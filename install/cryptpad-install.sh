@@ -19,7 +19,7 @@ msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" setup_nodejs
 
-read -rp "${TAB3}Install OnlyOffice components instead of CKEditor? (Y/N): " onlyoffice
+read -r -p "${TAB3}Install OnlyOffice components instead of CKEditor? (Y/N): " onlyoffice
 fetch_and_deploy_gh_release "cryptpad" "cryptpad/cryptpad"
 
 msg_info "Setup ${APPLICATION}"

@@ -15,7 +15,7 @@ update_os
 
 fetch_and_deploy_gh_release "authelia" "authelia/authelia" "binary"
 
-read -rp "${TAB3}Enter your domain (ex. example.com): " DOMAIN
+read -r -p "${TAB3}Enter your domain (ex. example.com): " DOMAIN
 
 msg_info "Setting Authelia up"
 touch /etc/authelia/emails.txt

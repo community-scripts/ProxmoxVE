@@ -128,7 +128,7 @@ update_installation() {
   if [[ -f "/opt/iptag/iptag.conf" ]]; then
     echo -e "\n${YW}Configuration file already exists.${CL}"
     while true; do
-      read -p "Do you want to replace it with defaults? (y/n): " yn
+      read -r -p "Do you want to replace it with defaults? (y/n): " yn
       case $yn in
       [Yy]*)
         msg_info "Replacing configuration file"
@@ -1215,7 +1215,7 @@ EOF
 # Main installation process
 if check_service_exists; then
   while true; do
-    read -p "IP-Tag service is already installed. Do you want to update it? (y/n): " yn
+    read -r -p "IP-Tag service is already installed. Do you want to update it? (y/n): " yn
     case $yn in
     [Yy]*)
       update_installation
@@ -1233,7 +1233,7 @@ if check_service_exists; then
 fi
 
 while true; do
-  read -p "This will install ${APP} on ${hostname}. Proceed? (y/n): " yn
+  read -r -p "This will install ${APP} on ${hostname}. Proceed? (y/n): " yn
   case $yn in
   [Yy]*)
     break

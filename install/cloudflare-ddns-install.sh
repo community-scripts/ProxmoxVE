@@ -16,14 +16,14 @@ update_os
 setup_go
 
 var_cf_api_token="default"
-read -rp "${TAB3}Enter the Cloudflare API token: " var_cf_api_token
+read -r -p "${TAB3}Enter the Cloudflare API token: " var_cf_api_token
 
 var_cf_domains="default"
-read -rp "${TAB3}Enter the domains separated with a comma (*.example.org,www.example.org) " var_cf_domains
+read -r -p "${TAB3}Enter the domains separated with a comma (*.example.org,www.example.org) " var_cf_domains
 
 var_cf_proxied="false"
 while true; do
-  read -rp "${TAB3}Proxied? (y/n): " answer
+  read -r -p "${TAB3}Proxied? (y/n): " answer
   case "$answer" in
   [Yy]*)
     var_cf_proxied="true"
@@ -38,7 +38,7 @@ while true; do
 done
 var_cf_ip6_provider="none"
 while true; do
-  read -rp "${TAB3}Enable IPv6 support? (y/n): " answer
+  read -r -p "${TAB3}Enable IPv6 support? (y/n): " answer
   case "$answer" in
   [Yy]*)
     var_cf_ip6_provider="auto"

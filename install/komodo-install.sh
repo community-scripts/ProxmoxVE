@@ -40,7 +40,7 @@ msg_ok "Installed Docker"
 echo "${TAB3}Choose the database for Komodo installation:"
 echo "${TAB3}1) MongoDB (recommended)"
 echo "${TAB3}2) FerretDB"
-read -rp "${TAB3}Enter your choice (default: 1): " DB_CHOICE
+read -r -p "${TAB3}Enter your choice (default: 1): " DB_CHOICE
 DB_CHOICE=${DB_CHOICE:-1}
 
 case $DB_CHOICE in

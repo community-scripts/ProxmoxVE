@@ -24,7 +24,7 @@ cd /opt/bytestash/client
 $STD npm install
 msg_ok "Installed ByteStash"
 
-read -rp "${TAB3}Do you want to allow registration of multiple accounts? [y/n]: " allowreg
+read -r -p "${TAB3}Do you want to allow registration of multiple accounts? [y/n]: " allowreg
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/bytestash-backend.service
