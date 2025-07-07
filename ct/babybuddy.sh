@@ -63,8 +63,6 @@ function update_script() {
     systemctl start nginx
     msg_ok "Services Started"
 
-    msg_info "Cleaning up"
-    msg_ok "Cleaned"
     msg_ok "Updated Successfully"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}"
