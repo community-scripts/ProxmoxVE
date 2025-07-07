@@ -83,7 +83,7 @@ chmod +x ./gradlew
 $STD ./gradlew build -x spotlessApply -x spotlessCheck -x test -x sonarqube
 mkdir -p /opt/Stirling-PDF
 touch /opt/Stirling-PDF/.env
-mv ./build/libs/Stirling-PDF-*.jar /opt/Stirling-PDF/
+mv ./stirling-pdf/build/libs/*.jar /opt/Stirling-PDF/Stirling-PDF-$RELEASE.jar
 mv scripts /opt/Stirling-PDF/
 mv pipeline /opt/Stirling-PDF/
 mv stirling-pdf/src/main/resources/static/fonts/*.ttf /usr/share/fonts/opentype/noto/
