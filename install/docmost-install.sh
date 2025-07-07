@@ -22,6 +22,7 @@ msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" NODE_MODULE="pnpm@$(curl -s https://raw.githubusercontent.com/docmost/docmost/main/package.json | jq -r '.packageManager | split("@")[1]')" setup_nodejs
 PG_VERSION="16" setup_postgresql
+fetch_and_deploy_gh_release "docmost" "docmost/docmost"
 
 msg_info "Setting up PostgreSQL"
 DB_NAME="docmost_db"
@@ -40,12 +41,7 @@ $STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET timezone TO 'UTC'"
 } >>~/docmost.creds
 msg_ok "Set up PostgreSQL"
 
-msg_info "Installing Docmost (Patience)"
-temp_file=$(mktemp)
-RELEASE=$(curl -fsSL https://api.github.com/repos/docmost/docmost/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/docmost/docmost/archive/refs/tags/v${RELEASE}.tar.gz" -o ""$temp_file""
-tar -xzf "$temp_file"
-mv docmost-${RELEASE} /opt/docmost
+msg_info "Configuring Docmost (Patience)"
 cd /opt/docmost
 mv .env.example .env
 mkdir data
@@ -56,8 +52,7 @@ sed -i -e "s|APP_SECRET=.*|APP_SECRET=$(openssl rand -base64 32 | tr -dc 'a-zA-Z
 export NODE_OPTIONS="--max-old-space-size=2048"
 $STD pnpm install
 $STD pnpm build
-echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
-msg_ok "Installed Docmost"
+msg_ok "Configured Docmost"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/docmost.service
@@ -81,7 +76,6 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -f "$temp_file"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"

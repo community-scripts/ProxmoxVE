@@ -31,5 +31,10 @@
     "username": null,
     "password": null
   },
-  "notes": []
+  "notes": [
+    {
+      "text": "Use `cat ~/docmost.creds` to see database credentials.",
+      "type": "info"
+    }
+  ]
 }
