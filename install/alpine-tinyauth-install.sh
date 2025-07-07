@@ -24,13 +24,13 @@ RELEASE=$(curl -s https://api.github.com/repos/steveiliop56/tinyauth/releases/la
 curl -fsSL "https://github.com/steveiliop56/tinyauth/releases/download/v${RELEASE}/tinyauth-amd64" -o /opt/tinyauth/tinyauth
 chmod +x /opt/tinyauth/tinyauth
 
-PASSWORD=$(openssl rand -base64 8 | tr -dc 'a-zA-Z0-9' | head -c 8)
-USER=$(htpasswd -Bbn "tinyauth" "${PASSWORD}")
+PASS=$(openssl rand -base64 8 | tr -dc 'a-zA-Z0-9' | head -c 8)
+USER=$(htpasswd -Bbn "tinyauth" "${PASS}")
 
-cat <<EOF > /opt/tinyauth/credentials.txt
+cat <<EOF >/opt/tinyauth/credentials.txt
 Tinyauth Credentials
 Username: tinyauth
-Password: ${PASSWORD}
+Password: ${PASS}
 EOF
 
 echo "${RELEASE}" >/opt/tinyauth_version.txt
