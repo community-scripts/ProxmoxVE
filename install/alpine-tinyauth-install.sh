@@ -82,9 +82,9 @@ chmod +x /etc/init.d/tinyauth
 $STD rc-update add tinyauth default
 msg_ok "Enabled Tinyauth Service"
 
-motd_ssh
-customize
-
 msg_info "Starting Tinyauth"
 $STD service tinyauth start
 msg_ok "Started Tinyauth"
+
+motd_ssh
+customize
