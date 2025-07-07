@@ -22,7 +22,8 @@ $STD apt-get install -y \
   chromium/stable \
   chromium-common/stable \
   graphicsmagick \
-  ghostscript
+  ghostscript \
+  jq
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Additional Tools"
@@ -48,18 +49,13 @@ sed -i \
   /etc/meilisearch.toml
 msg_ok "Installed Meilisearch"
 
-NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
-$STD npm install -g corepack@0.31.0
+fetch_and_deploy_gh_release "karakeep" "karakeep-app/karakeep"
+cd /opt/karakeep
+MODULE_VERSION="$(jq -r '.packageManager | split("@")[1]' /opt/karakeep/package.json)"
+NODE_VERSION="22" NODE_MODULE="pnpm@${MODULE_VERSION}" setup_nodejs
 
 msg_info "Installing karakeep"
-cd /opt
-RELEASE=$(curl -fsSL https://api.github.com/repos/karakeep-app/karakeep/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/karakeep-app/karakeep/archive/refs/tags/v${RELEASE}.zip" -o "v${RELEASE}.zip"
-$STD unzip "v${RELEASE}.zip"
-mv karakeep-"${RELEASE}" /opt/karakeep
-cd /opt/karakeep
-corepack enable
-export PUPPETEER_SKIP_DOWNLOAD="true"
+export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD="true"
 export NEXT_TELEMETRY_DISABLED=1
 export CI="true"
 cd /opt/karakeep/apps/web
@@ -70,15 +66,13 @@ $STD pnpm install --frozen-lockfile
 cd /opt/karakeep/apps/cli
 $STD pnpm install --frozen-lockfile
 $STD pnpm build
-cd /opt/karakeep/apps/mcp
-$STD pnpm install --frozen-lockfile
-$STD pnpm build
+$STD pnpm store prune
 
 export DATA_DIR=/opt/karakeep_data
 karakeep_SECRET=$(openssl rand -base64 36 | cut -c1-24)
 mkdir -p /etc/karakeep
 cat <<EOF >/etc/karakeep/karakeep.env
-SERVER_VERSION=$RELEASE
+SERVER_VERSION="$(cat ~/.karakeep)"
 NEXTAUTH_SECRET="$karakeep_SECRET"
 NEXTAUTH_URL="http://localhost:3000"
 DATA_DIR="$DATA_DIR"
@@ -112,7 +106,6 @@ BROWSER_WEB_URL="http://127.0.0.1:9222"
 # CRAWLER_VIDEO_DOWNLOAD_MAX_SIZE="50"
 # CRAWLER_ENABLE_ADBLOCKER=true
 EOF
-echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Installed karakeep"
 
 msg_info "Running Database Migration"
@@ -190,7 +183,6 @@ customize
 
 msg_info "Cleaning up"
 rm -rf /tmp/meilisearch.deb
-rm -f /opt/v"${RELEASE}".zip
 $STD apt-get autoremove -y
 $STD apt-get autoclean -y
 msg_ok "Cleaned"

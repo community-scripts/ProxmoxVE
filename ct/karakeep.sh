@@ -27,59 +27,59 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/karakeep-app/karakeep/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  PREV_RELEASE=$(cat /opt/${APP}_version.txt)
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "${PREV_RELEASE}" ]]; then
-    msg_info "Stopping Services"
-    systemctl stop karakeep-web karakeep-workers karakeep-browser
-    msg_ok "Stopped Services"
-    msg_info "Updating yt-dlp"
-    $STD yt-dlp --update-to nightly
-    msg_ok "Updated yt-dlp"
-    msg_info "Updating ${APP} to v${RELEASE}"
-    if [[ $(corepack -v) < "0.31.0" ]]; then
-      $STD npm install -g corepack@0.31.0
-    fi
-    if [[ "${PREV_RELEASE}" < 0.23.0 ]]; then
-      $STD apt-get install -y graphicsmagick ghostscript
-    fi
-    cd /opt
-    if [[ -f /opt/karakeep/.env ]] && [[ ! -f /etc/karakeep/karakeep.env ]]; then
-      mkdir -p /etc/karakeep
-      mv /opt/karakeep/.env /etc/karakeep/karakeep.env
-    fi
-    rm -rf /opt/karakeep
-    curl -fsSL "https://github.com/karakeep-app/karakeep/archive/refs/tags/v${RELEASE}.zip" -o "v${RELEASE}.zip"
-    $STD unzip "v${RELEASE}.zip"
-    mv karakeep-"${RELEASE}" /opt/karakeep
-    cd /opt/karakeep/apps/web
-    $STD pnpm install --frozen-lockfile
-    $STD pnpm build
-    cd /opt/karakeep/apps/workers
-    $STD pnpm install --frozen-lockfile
-    cd /opt/karakeep/apps/cli
-    $STD pnpm install --frozen-lockfile
-    $STD pnpm build
-    cd /opt/karakeep/apps/mcp
-    $STD pnpm install --frozen-lockfile
-    $STD pnpm build
-    export DATA_DIR=/opt/karakeep_data
-    cd /opt/karakeep/packages/db
-    $STD pnpm migrate
-    sed -i "s/SERVER_VERSION=${PREV_RELEASE}/SERVER_VERSION=${RELEASE}/" /etc/karakeep/karakeep.env
-    msg_ok "Updated ${APP} to v${RELEASE}"
 
-    msg_info "Starting Services"
-    systemctl start karakeep-browser karakeep-workers karakeep-web
-    msg_ok "Started Services"
-    msg_info "Cleaning up"
-    rm -R /opt/v"${RELEASE}".zip
-    echo "${RELEASE}" >/opt/${APP}_version.txt
-    msg_ok "Cleaned"
-    msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required.  ${APP} is already at ${RELEASE}."
+  RELEASE=$(curl -fsSL https://api.github.com/repos/karakeep-app/karakeep/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+  if [[ -f ~/.karakeep && "$RELEASE" == "$(cat ~/.karakeep)" ]]; then
+    msg_ok "No update required. ${APP} is already at ${RELEASE}"
+    exit
   fi
+  msg_info "Stopping Services"
+  systemctl stop karakeep-web karakeep-workers karakeep-browser
+  msg_ok "Stopped Services"
+  msg_info "Updating yt-dlp"
+  $STD yt-dlp --update-to nightly
+  msg_ok "Updated yt-dlp"
+  msg_info "Updating ${APP} to v${RELEASE}"
+  if [[ -f /opt/${APP}_version.txt && "$(cat /opt/${APP}_version.txt)" < "0.23.0" ]]; then
+    $STD apt-get install -y graphicsmagick ghostscript
+  fi
+  if [[ -f /opt/karakeep/.env ]] && [[ ! -f /etc/karakeep/karakeep.env ]]; then
+    mkdir -p /etc/karakeep
+    mv /opt/karakeep/.env /etc/karakeep/karakeep.env
+  fi
+  rm -rf /opt/karakeep
+  fetch_and_deploy_gh_release "karakeep" "karakeep-app/karakeep"
+  if command -v corepack; then
+    $STD corepack disable
+  fi
+  MODULE_VERSION="$(jq -r '.packageManager | split("@")[1]' /opt/karakeep/package.json)"
+  NODE_VERSION="22" NODE_MODULE="pnpm@${MODULE_VERSION}" setup_nodejs
+  export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD="true"
+  export NEXT_TELEMETRY_DISABLED=1
+  export CI="true"
+  cd /opt/karakeep/apps/web
+  $STD pnpm install --frozen-lockfile
+  $STD pnpm build
+  cd /opt/karakeep/apps/workers
+  $STD pnpm install --frozen-lockfile
+  cd /opt/karakeep/apps/cli
+  $STD pnpm install --frozen-lockfile
+  $STD pnpm build
+  export DATA_DIR=/opt/karakeep_data
+  cd /opt/karakeep/packages/db
+  $STD pnpm migrate
+  $STD pnpm store prune
+  sed -i "s/^SERVER_VERSION=.*$/SERVER_VERSION=${RELEASE}/" /etc/karakeep/karakeep.env
+  msg_ok "Updated ${APP} to v${RELEASE}"
+
+  msg_info "Starting Services"
+  systemctl start karakeep-browser karakeep-workers karakeep-web
+  msg_ok "Started Services"
+  msg_info "Cleaning up"
+  $STD apt-get autoremove -y
+  $STD apt-get autoclean -y
+  msg_ok "Cleaned"
+  msg_ok "Updated Successfully"
   exit
 }
 
