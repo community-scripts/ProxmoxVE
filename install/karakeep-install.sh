@@ -48,8 +48,10 @@ sed -i \
   /etc/meilisearch.toml
 msg_ok "Installed Meilisearch"
 
-NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
-$STD npm install -g corepack@0.31.0
+NODE_VERSION="22" \
+  NODE_MODULE="pnpm@$(curl -s https://raw.githubusercontent.com/karakeep-app/karakeep/main/package.json | jq -r '.packageManager | split("@")[1]')" \
+  setup_nodejs
+# $STD npm install -g corepack@0.31.0
 
 msg_info "Installing karakeep"
 cd /opt
@@ -58,8 +60,8 @@ curl -fsSL "https://github.com/karakeep-app/karakeep/archive/refs/tags/v${RELEAS
 $STD unzip "v${RELEASE}.zip"
 mv karakeep-"${RELEASE}" /opt/karakeep
 cd /opt/karakeep
-corepack enable
-export PUPPETEER_SKIP_DOWNLOAD="true"
+# corepack enable
+export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD="true"
 export NEXT_TELEMETRY_DISABLED=1
 export CI="true"
 cd /opt/karakeep/apps/web
@@ -70,9 +72,7 @@ $STD pnpm install --frozen-lockfile
 cd /opt/karakeep/apps/cli
 $STD pnpm install --frozen-lockfile
 $STD pnpm build
-cd /opt/karakeep/apps/mcp
-$STD pnpm install --frozen-lockfile
-$STD pnpm build
+$STD pnpm store prune
 
 export DATA_DIR=/opt/karakeep_data
 karakeep_SECRET=$(openssl rand -base64 36 | cut -c1-24)

@@ -27,6 +27,11 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
+  NODE_VERSION="22" \
+    NODE_MODULE="pnpm@$(curl -s https://raw.githubusercontent.com/karakeep-app/karakeep/main/package.json | jq -r '.packageManager | split("@")[1]')" \
+    setup_nodejs
+
   RELEASE=$(curl -fsSL https://api.github.com/repos/karakeep-app/karakeep/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
   PREV_RELEASE=$(cat /opt/${APP}_version.txt)
   if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "${PREV_RELEASE}" ]]; then
@@ -37,9 +42,6 @@ function update_script() {
     $STD yt-dlp --update-to nightly
     msg_ok "Updated yt-dlp"
     msg_info "Updating ${APP} to v${RELEASE}"
-    if [[ $(corepack -v) < "0.31.0" ]]; then
-      $STD npm install -g corepack@0.31.0
-    fi
     if [[ "${PREV_RELEASE}" < 0.23.0 ]]; then
       $STD apt-get install -y graphicsmagick ghostscript
     fi
@@ -52,6 +54,9 @@ function update_script() {
     curl -fsSL "https://github.com/karakeep-app/karakeep/archive/refs/tags/v${RELEASE}.zip" -o "v${RELEASE}.zip"
     $STD unzip "v${RELEASE}.zip"
     mv karakeep-"${RELEASE}" /opt/karakeep
+    export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD="true"
+    export NEXT_TELEMETRY_DISABLED=1
+    export CI="true"
     cd /opt/karakeep/apps/web
     $STD pnpm install --frozen-lockfile
     $STD pnpm build
@@ -60,12 +65,10 @@ function update_script() {
     cd /opt/karakeep/apps/cli
     $STD pnpm install --frozen-lockfile
     $STD pnpm build
-    cd /opt/karakeep/apps/mcp
-    $STD pnpm install --frozen-lockfile
-    $STD pnpm build
     export DATA_DIR=/opt/karakeep_data
     cd /opt/karakeep/packages/db
     $STD pnpm migrate
+    $STD pnpm store prune
     sed -i "s/SERVER_VERSION=${PREV_RELEASE}/SERVER_VERSION=${RELEASE}/" /etc/karakeep/karakeep.env
     msg_ok "Updated ${APP} to v${RELEASE}"
 
