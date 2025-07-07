@@ -37,7 +37,7 @@
       "type": "info"
     },
     {
-      "text": "Configuration: `nano /opt/iptag/iptag.conf`. iptag.service must be restarted after change. See here for full documentation: `https://github.com/community-scripts/ProxmoxVE/discussions/5790`",
+      "text": "Configuration: `nano /opt/iptag/iptag.conf`. iptag Service must be restarted after change. See here for full documentation: `https://github.com/community-scripts/ProxmoxVE/discussions/5790`",
       "type": "info"
     },
     {
