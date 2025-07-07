@@ -40,6 +40,7 @@ function update_script() {
     msg_info "Updating Ollama to ${RELEASE}"
     rm -rf /usr/local/lib/ollama
     rm -rf /usr/local/bin/ollama
+    mkdir -p /usr/local/lib/ollama
     tar -xzf "${TMP_TAR}" -C /usr/local/lib/ollama
     ln -sf /usr/local/lib/ollama/bin/ollama /usr/local/bin/ollama
     echo "${RELEASE}" >/opt/Ollama_version.txt
