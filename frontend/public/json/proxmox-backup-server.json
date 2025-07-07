@@ -35,6 +35,10 @@
         {
             "text": "Set a root password if using autologin. This will be the PBS password. `passwd root`",
             "type": "warning"
+        },
+        {
+            "text": "Advanced Install is only possible without root password and root SSH access, you can configure this after installation.",
+            "type": "warning"
         }
     ]
 }
