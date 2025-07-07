@@ -27,12 +27,24 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  msg_info "Updating $APP"
-  systemctl stop threadfin.service
-  curl -fsSL "https://github.com/Threadfin/Threadfin/releases/latest/download/Threadfin_linux_amd64" -o "/opt/threadfin/threadfin"
-  chmod +x /opt/threadfin/threadfin
-  systemctl start threadfin.service
-  msg_ok "Updated $APP"
+
+  RELEASE=$(curl -fsSL https://api.github.com/repos/threadfin/threadfin/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+  if [[ "${RELEASE}" != "$(cat ~/.threadfin 2>/dev/null)" ]] || [[ ! -f ~/.threadfin ]]; then
+
+    msg_info "Stopping $APP"
+    systemctl stop threadfin
+    msg_ok "Stopped $APP"
+
+    fetch_and_deploy_gh_release "threadfin" "threadfin/threadfin" "singlefile" "latest" "/opt/threadfin" "Threadfin_linux_amd64"
+
+    msg_info "Starting $APP"
+    systemctl start threadfin
+    msg_ok "Started $APP"
+
+    msg_ok "Updated Successfully"
+  else
+    msg_ok "No update required. ${APP} is already at v${RELEASE}"
+  fi
   exit
 }
 
