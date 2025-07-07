@@ -16,6 +16,12 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ## 2025-07-07
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - EMQX: Add warning to website [@tremor021](https://github.com/tremor021) ([#5770](https://github.com/community-scripts/ProxmoxVE/pull/5770))
+
 ## 2025-07-06
 
 ### 🚀 Updated Scripts
