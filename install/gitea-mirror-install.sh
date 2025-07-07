@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: CrazyWolf13
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://github.com/arunavo4/gitea-mirror
+# Source: https://github.com/RayLabsHQ/gitea-mirror
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -28,7 +28,7 @@ ln -sf /opt/bun/bin/bun /usr/local/bin/bun
 ln -sf /opt/bun/bin/bun /usr/local/bin/bunx
 msg_ok "Installed Bun"
 
-fetch_and_deploy_gh_release "gitea-mirror" "arunavo4/gitea-mirror"
+fetch_and_deploy_gh_release "gitea-mirror" "RayLabsHQ/gitea-mirror"
 
 msg_info "Installing gitea-mirror"
 cd /opt/gitea-mirror
