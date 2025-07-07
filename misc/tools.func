@@ -651,6 +651,15 @@ function setup_mongodb() {
   DISTRO_ID=$(awk -F= '/^ID=/{ gsub(/"/,"",$2); print $2 }' /etc/os-release)
   DISTRO_CODENAME=$(awk -F= '/^VERSION_CODENAME=/{ print $2 }' /etc/os-release)
 
+  # Check AVX support
+  if ! grep -qm1 'avx[^ ]*' /proc/cpuinfo; then
+    local major="${MONGO_VERSION%%.*}"
+    if ((major > 5)); then
+      msg_error "MongoDB ${MONGO_VERSION} requires AVX support, which is not available on this system."
+      return 1
+    fi
+  fi
+
   case "$DISTRO_ID" in
   ubuntu)
     MONGO_BASE_URL="https://repo.mongodb.org/apt/ubuntu"
