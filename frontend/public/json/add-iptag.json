@@ -46,7 +46,7 @@
     },
     {
       "text": "You can execute the ip tool manually with `iptag-run`",
-      "type": "warning"
+      "type": "info"
     }
   ]
 }
