@@ -80,7 +80,7 @@ curl -fsSL "https://github.com/Stirling-Tools/Stirling-PDF/archive/refs/tags/v${
 tar -xzf v${RELEASE}.tar.gz
 cd Stirling-PDF-$RELEASE
 chmod +x ./gradlew
-$STD ./gradlew build
+$STD ./gradlew build -x spotlessApply -x spotlessCheck -x test -x sonarqube
 mkdir -p /opt/Stirling-PDF
 touch /opt/Stirling-PDF/.env
 mv ./build/libs/Stirling-PDF-*.jar /opt/Stirling-PDF/
