@@ -434,6 +434,13 @@ function setup_php() {
     $STD apt-get update
   fi
 
+  for pkg in $MODULE_LIST; do
+    if ! apt-cache show "$pkg" >/dev/null 2>&1; then
+      msg_error "Package not found: $pkg"
+      exit 1
+    fi
+  done
+
   local MODULE_LIST="php${PHP_VERSION}"
   IFS=',' read -ra MODULES <<<"$COMBINED_MODULES"
   for mod in "${MODULES[@]}"; do
@@ -442,6 +449,10 @@ function setup_php() {
 
   if [[ "$PHP_FPM" == "YES" ]]; then
     MODULE_LIST+=" php${PHP_VERSION}-fpm"
+  fi
+  if [[ "$PHP_APACHE" == "YES" ]]; then
+    $STD apt-get install -y apache2
+    $STD systemctl restart apache2 || true
   fi
 
   if [[ "$PHP_APACHE" == "YES" ]] && [[ -n "$CURRENT_PHP" ]]; then
@@ -457,10 +468,6 @@ function setup_php() {
 
   $STD apt-get install -y $MODULE_LIST
   msg_ok "Setup PHP $PHP_VERSION"
-
-  if [[ "$PHP_APACHE" == "YES" ]]; then
-    $STD systemctl restart apache2 || true
-  fi
 
   if [[ "$PHP_FPM" == "YES" ]]; then
     $STD systemctl enable php${PHP_VERSION}-fpm
