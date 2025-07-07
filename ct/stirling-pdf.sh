@@ -42,6 +42,8 @@ function update_script() {
   rm -rf /opt/Stirling-PDF/Stirling-PDF-*.jar
   cp -r ./build/libs/Stirling-PDF-*.jar /opt/Stirling-PDF/
   cp -r scripts /opt/Stirling-PDF/
+  cp -r pipeline /opt/Stirling-PDF/
+  cp -r stirling-pdf/src/main/resources/static/fonts/*.ttf /usr/share/fonts/opentype/noto/
   cd ~
   rm -rf Stirling-PDF-$RELEASE v$RELEASE.tar.gz
   ln -sf /opt/Stirling-PDF/Stirling-PDF-$RELEASE.jar /opt/Stirling-PDF/Stirling-PDF.jar

@@ -85,6 +85,8 @@ mkdir -p /opt/Stirling-PDF
 touch /opt/Stirling-PDF/.env
 mv ./build/libs/Stirling-PDF-*.jar /opt/Stirling-PDF/
 mv scripts /opt/Stirling-PDF/
+mv pipeline /opt/Stirling-PDF/
+mv stirling-pdf/src/main/resources/static/fonts/*.ttf /usr/share/fonts/opentype/noto/
 ln -s /opt/Stirling-PDF/Stirling-PDF-$RELEASE.jar /opt/Stirling-PDF/Stirling-PDF.jar
 ln -s /usr/share/tesseract-ocr/5/tessdata/ /usr/share/tessdata
 msg_ok "Installed Stirling-PDF"
