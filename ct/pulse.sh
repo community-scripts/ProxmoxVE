@@ -58,6 +58,7 @@ function update_script() {
   else
     msg_ok "No update required. ${APP} is already at ${RELEASE}."
   fi
+  exit  
 }
 
 start
