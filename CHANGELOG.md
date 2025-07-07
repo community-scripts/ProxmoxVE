@@ -14,7 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
-  - Fix/stirling pdf script [@JcMinarro](https://github.com/JcMinarro) ([#5803](https://github.com/community-scripts/ProxmoxVE/pull/5803))
+  - Refactor: Docmost [@tremor021](https://github.com/tremor021) ([#5806](https://github.com/community-scripts/ProxmoxVE/pull/5806))
+- Fix/stirling pdf script [@JcMinarro](https://github.com/JcMinarro) ([#5803](https://github.com/community-scripts/ProxmoxVE/pull/5803))
 - gitea-mirror: update repo-url [@CrazyWolf13](https://github.com/CrazyWolf13) ([#5794](https://github.com/community-scripts/ProxmoxVE/pull/5794))
 
   - #### 🐞 Bug Fixes
