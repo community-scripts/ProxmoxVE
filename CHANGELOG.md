@@ -14,6 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - gitea-mirror: update repo-url [@CrazyWolf13](https://github.com/CrazyWolf13) ([#5794](https://github.com/community-scripts/ProxmoxVE/pull/5794))
+
   - #### 🐞 Bug Fixes
 
     - Bookstack: Fix PHP Issue & Bump to PHP 8.3 [@MickLesk](https://github.com/MickLesk) ([#5779](https://github.com/community-scripts/ProxmoxVE/pull/5779))
