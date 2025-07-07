@@ -14,8 +14,14 @@ network_check
 update_os
 
 msg_info "Installing AdGuard Home"
+groupadd adguardhome
+useradd -r -g adguardhome -d /opt/AdGuardHome -s /sbin/nologin adguardhome
 $STD tar zxvf <(curl -fsSL https://static.adtidy.org/adguardhome/release/AdGuardHome_linux_amd64.tar.gz) -C /opt
+chown -R adguardhome: /opt/AdGuardHome
+chmod -R o-rwx /opt/AdGuardHome
+setcap 'CAP_NET_BIND_SERVICE=+eip CAP_NET_RAW=+eip' /opt/AdGuardHome/AdGuardHome
 msg_ok "Installed AdGuard Home"
+
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/AdGuardHome.service
@@ -27,13 +33,13 @@ After=syslog.target network-online.target
 [Service]
 StartLimitInterval=5
 StartLimitBurst=10
-ExecStart=/opt/AdGuardHome/AdGuardHome "-s" "run"
+ExecStart=/opt/AdGuardHome/AdGuardHome "-s" "run" "-l" "syslog"
 WorkingDirectory=/opt/AdGuardHome
-StandardOutput=file:/var/log/AdGuardHome.out
-StandardError=file:/var/log/AdGuardHome.err
 Restart=always
 RestartSec=10
 EnvironmentFile=-/etc/sysconfig/AdGuardHome
+User=adguardhome
+Group=adguardhome
 
 [Install]
 WantedBy=multi-user.target
