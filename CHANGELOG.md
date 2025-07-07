@@ -18,6 +18,10 @@ All LXC instances created using this repository come pre-installed with Midnight
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Bookstack: Fix PHP Issue & Bump to PHP 8.3 [@MickLesk](https://github.com/MickLesk) ([#5779](https://github.com/community-scripts/ProxmoxVE/pull/5779))
+
   - #### 🔧 Refactor
 
     - Refactor: Changed the way we install BunkerWeb by leveraging the brand new install-bunkerweb.sh [@TheophileDiot](https://github.com/TheophileDiot) ([#5707](https://github.com/community-scripts/ProxmoxVE/pull/5707))
