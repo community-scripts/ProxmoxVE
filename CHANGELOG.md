@@ -37,6 +37,7 @@ All LXC instances created using this repository come pre-installed with Midnight
 
   - #### 📝 Script Information
 
+    - PBS: add hint for advanced installs [@MickLesk](https://github.com/MickLesk) ([#5788](https://github.com/community-scripts/ProxmoxVE/pull/5788))
     - EMQX: Add warning to website [@tremor021](https://github.com/tremor021) ([#5770](https://github.com/community-scripts/ProxmoxVE/pull/5770))
 
 ## 2025-07-06
