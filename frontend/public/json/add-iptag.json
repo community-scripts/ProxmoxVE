@@ -37,11 +37,15 @@
       "type": "info"
     },
     {
-      "text": "Configuration: `nano /opt/iptag/iptag.conf`. iptag.service must be restarted after change.",
+      "text": "Configuration: `nano /opt/iptag/iptag.conf`. iptag.service must be restarted after change. See here for full documentation: `https://github.com/community-scripts/ProxmoxVE/discussions/5790`",
       "type": "info"
     },
     {
       "text": "The Proxmox Node must contain ipcalc and net-tools. `apt-get install -y ipcalc net-tools`",
+      "type": "warning"
+    },
+    {
+      "text": "You can execute the ip tool manually with `iptag-run`",
       "type": "warning"
     }
   ]

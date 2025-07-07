@@ -194,16 +194,16 @@ LXC_STATUS_CHECK_INTERVAL=300
 FORCE_UPDATE_INTERVAL=7200
 
 # Performance optimizations
-VM_IP_CACHE_TTL=120
-MAX_PARALLEL_VM_CHECKS=5
+VM_IP_CACHE_TTL=300
+MAX_PARALLEL_VM_CHECKS=2
 
 # LXC performance optimizations  
-LXC_IP_CACHE_TTL=0
-MAX_PARALLEL_LXC_CHECKS=7
+LXC_IP_CACHE_TTL=300
+MAX_PARALLEL_LXC_CHECKS=2
 
 # Extreme LXC optimizations
-LXC_BATCH_SIZE=20
-LXC_STATUS_CACHE_TTL=30
+LXC_BATCH_SIZE=3
+LXC_STATUS_CACHE_TTL=300
 LXC_AGGRESSIVE_CACHING=true
 LXC_SKIP_SLOW_METHODS=true
 
@@ -222,8 +222,8 @@ After=network.target
 [Service]
 Type=simple
 ExecStart=/opt/iptag/iptag
-Restart=always
-RestartSec=1
+Restart=on-failure
+RestartSec=10
 
 [Install]
 WantedBy=multi-user.target
@@ -872,7 +872,11 @@ main() {
     echo -e "${BLUE}ℹ${NC} Tag format: ${WHITE}${TAG_FORMAT:-$DEFAULT_TAG_FORMAT}${NC}"
     echo -e "${BLUE}ℹ${NC} Allowed CIDRs: ${WHITE}${CIDR_LIST[*]}${NC}"
     echo -e "${PURPLE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}\n"
-    check
+    
+    while true; do
+        check
+        sleep "${LOOP_INTERVAL:-300}"
+    done
 }
 
 # Cache cleanup function
@@ -1309,6 +1313,21 @@ msg_ok "Started Service"
 msg_info "Restarting Service with optimizations"
 systemctl restart iptag.service &>/dev/null
 msg_ok "Service restarted with CPU optimizations"
+
+msg_info "Creating manual run command"
+cat <<'EOF' >/usr/local/bin/iptag-run
+#!/usr/bin/env bash
+CONFIG_FILE="/opt/iptag/iptag.conf"
+SCRIPT_FILE="/opt/iptag/iptag"
+if [[ ! -f "$SCRIPT_FILE" ]]; then
+  echo "❌ Main script not found: $SCRIPT_FILE"
+  exit 1
+fi
+export FORCE_SINGLE_RUN=true
+exec "$SCRIPT_FILE"
+EOF
+chmod +x /usr/local/bin/iptag-run
+msg_ok "Created iptag-run executable - You can execute this manually by entering “iptag-run” in the Proxmox host, so the script is executed by hand."
 
 SPINNER_PID=""
 echo -e "\n${APP} installation completed successfully! ${CL}\n"
