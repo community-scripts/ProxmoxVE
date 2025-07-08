@@ -1,8 +1,48 @@
 [
   {
+    "name": "mattermost/mattermost",
+    "version": "preview-v0.1",
+    "date": "2025-06-27T14:35:47Z"
+  },
+  {
+    "name": "docker/compose",
+    "version": "v2.38.2",
+    "date": "2025-07-08T09:35:14Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2132",
+    "date": "2025-07-08T05:52:22Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.4.0p7",
+    "date": "2025-07-08T05:51:08Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.9.5",
+    "date": "2025-07-02T18:39:28Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.4.1",
+    "date": "2025-06-11T07:53:44Z"
+  },
+  {
+    "name": "mongodb/mongo",
+    "version": "r8.0.12-rc0",
+    "date": "2025-07-07T23:35:35Z"
+  },
+  {
     "name": "Stirling-Tools/Stirling-PDF",
     "version": "v1.0.1",
     "date": "2025-07-07T23:01:28Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.3.0",
+    "date": "2025-07-02T12:26:44Z"
   },
   {
     "name": "duplicati/duplicati",
@@ -33,11 +73,6 @@
     "name": "photoprism/photoprism",
     "version": "250707-d28b3101e",
     "date": "2025-07-07T15:15:21Z"
-  },
-  {
-    "name": "Checkmk/checkmk",
-    "version": "v2.4.0p7-rc2",
-    "date": "2025-07-07T15:07:57Z"
   },
   {
     "name": "traccar/traccar",
@@ -75,16 +110,6 @@
     "date": "2025-05-11T16:40:55Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2125",
-    "date": "2025-07-07T05:56:33Z"
-  },
-  {
-    "name": "mattermost/mattermost",
-    "version": "preview-v0.1",
-    "date": "2025-06-27T14:35:47Z"
-  },
-  {
     "name": "MediaBrowser/Emby.Releases",
     "version": "4.9.1.2",
     "date": "2025-06-26T22:08:00Z"
@@ -93,11 +118,6 @@
     "name": "firefly-iii/firefly-iii",
     "version": "v6.2.20",
     "date": "2025-07-02T04:03:37Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.4.1",
-    "date": "2025-06-11T07:53:44Z"
   },
   {
     "name": "slskd/slskd",
@@ -220,11 +240,6 @@
     "date": "2025-07-04T14:49:43Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.3.0",
-    "date": "2025-07-02T12:26:44Z"
-  },
-  {
     "name": "Graylog2/graylog2-server",
     "version": "6.3.1",
     "date": "2025-07-04T11:20:48Z"
@@ -275,11 +290,6 @@
     "date": "2025-07-03T01:03:18Z"
   },
   {
-    "name": "mongodb/mongo",
-    "version": "r6.0.25-rc0",
-    "date": "2025-07-03T00:44:52Z"
-  },
-  {
     "name": "documenso/documenso",
     "version": "v1.12.2-rc.0",
     "date": "2025-07-03T00:31:22Z"
@@ -293,11 +303,6 @@
     "name": "Koenkk/zigbee2mqtt",
     "version": "2.5.1",
     "date": "2025-07-02T19:38:06Z"
-  },
-  {
-    "name": "ollama/ollama",
-    "version": "v0.9.5",
-    "date": "2025-07-02T18:39:28Z"
   },
   {
     "name": "wazuh/wazuh",
@@ -388,11 +393,6 @@
     "name": "MagicMirrorOrg/MagicMirror",
     "version": "v2.32.0",
     "date": "2025-06-30T22:12:48Z"
-  },
-  {
-    "name": "docker/compose",
-    "version": "v2.38.1",
-    "date": "2025-06-30T20:07:35Z"
   },
   {
     "name": "jhuckaby/Cronicle",
