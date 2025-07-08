@@ -20,20 +20,15 @@ $STD apt-get install -y \
 msg_ok "Installed Dependencies"
 
 setup_go
+fetch_and_deploy_gh_release "gatus" "TwiN/gatus"
 
-RELEASE=$(curl -s https://api.github.com/repos/TwiN/gatus/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-msg_info "Setting up gatus v${RELEASE}"
-temp_file=$(mktemp)
-mkdir -p /opt/gatus
-curl -fsSL "https://github.com/TwiN/gatus/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
-tar zxf "$temp_file" --strip-components=1 -C /opt/gatus
+msg_info "Configuring gatus"
 cd /opt/gatus
 $STD go mod tidy
 CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o gatus .
 setcap CAP_NET_RAW+ep gatus
 mv config.yaml config
-echo "${RELEASE}" >/opt/gatus_version.txt
-msg_ok "Done setting up gatus"
+msg_ok "Configured gatus"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/gatus.service
@@ -58,10 +53,6 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -f "$temp_file"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
-
-motd_ssh
-customize
