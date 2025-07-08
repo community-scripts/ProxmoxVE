@@ -20,51 +20,43 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
+  header_info
+  check_container_storage
+  check_container_resources
 
-    if [[ ! -d /opt/fluid-calendar ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-
-    RELEASE=$(curl -fsSL https://api.github.com/repos/dotnetfactory/fluid-calendar/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-    if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
-        msg_info "Stopping $APP"
-        systemctl stop fluid-calendar.service
-        msg_ok "Stopped $APP"
-
-        msg_info "Updating $APP to v${RELEASE}"
-        cp /opt/fluid-calendar/.env /opt/fluid.env
-        rm -rf /opt/fluid-calendar
-        tmp_file=$(mktemp)
-        curl -fsSL "https://github.com/dotnetfactory/fluid-calendar/archive/refs/tags/v${RELEASE}.zip" -o "$tmp_file"
-        $STD unzip $tmp_file
-        mv ${APP}-${RELEASE}/ /opt/fluid-calendar
-        mv /opt/fluid.env /opt/fluid-calendar/.env
-        cd /opt/fluid-calendar
-        export NEXT_TELEMETRY_DISABLED=1
-        $STD npm install --legacy-peer-deps
-        $STD npm run prisma:generate
-        $STD npx prisma migrate deploy
-        $STD npm run build:os
-        msg_ok "Updated $APP to v${RELEASE}"
-
-        msg_info "Starting $APP"
-        systemctl start fluid-calendar.service
-        msg_ok "Started $APP"
-
-        msg_info "Cleaning Up"
-        rm -rf $tmp_file
-        msg_ok "Cleanup Completed"
-
-        echo "${RELEASE}" >/opt/${APP}_version.txt
-        msg_ok "Update Successful"
-    else
-        msg_ok "No update required. ${APP} is already at v${RELEASE}"
-    fi
+  if [[ ! -d /opt/fluid-calendar ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+  RELEASE=$(curl -fsSL https://api.github.com/repos/dotnetfactory/fluid-calendar/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+  if [[ "${RELEASE}" != "$(cat ~/.fluid-calendar 2>/dev/null)" ]] || [[ ! -f ~/.fluid-calendar ]]; then
+    msg_info "Stopping $APP"
+    systemctl stop fluid-calendar.service
+    msg_ok "Stopped $APP"
+
+    cp /opt/fluid-calendar/.env /opt/fluid.env
+    rm -rf /opt/fluid-calendar
+    fetch_and_deploy_gh_release "fluid-calendar" "dotnetfactory/fluid-calendar"
+
+    msg_info "Updating $APP to v${RELEASE}"
+    mv /opt/fluid.env /opt/fluid-calendar/.env
+    cd /opt/fluid-calendar
+    export NEXT_TELEMETRY_DISABLED=1
+    $STD npm install --legacy-peer-deps
+    $STD npm run prisma:generate
+    $STD npx prisma migrate deploy
+    $STD npm run build:os
+    msg_ok "Updated $APP to v${RELEASE}"
+
+    msg_info "Starting $APP"
+    systemctl start fluid-calendar.service
+    msg_ok "Started $APP"
+
+    msg_ok "Update Successful"
+  else
+    msg_ok "No update required. ${APP} is already at v${RELEASE}"
+  fi
+  exit
 }
 
 start

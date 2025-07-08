@@ -14,17 +14,11 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
-  zip \
-  postgresql-common
+$STD apt-get install -y zip
 msg_ok "Installed Dependencies"
 
-msg_info "Installing Additional Dependencies"
-curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
-echo "YES" | /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh &>/dev/null
-$STD apt-get install -y postgresql-17 nodejs
-msg_ok "Installed Additional Dependencies"
+PG_VERSION="17" setup_postgresql
+NODE_VERSION="20" setup_nodejs
 
 msg_info "Setting up Postgresql Database"
 DB_NAME="fluiddb"
@@ -44,14 +38,9 @@ $STD sudo -u postgres psql -c "ALTER USER $DB_USER WITH SUPERUSER;"
 } >>~/$APPLICATION.creds
 msg_ok "Set up Postgresql Database"
 
-msg_info "Setup ${APPLICATION}"
-tmp_file=$(mktemp)
-RELEASE=$(curl -fsSL https://api.github.com/repos/dotnetfactory/fluid-calendar/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/dotnetfactory/fluid-calendar/archive/refs/tags/v${RELEASE}.zip" -o "$tmp_file"
-$STD unzip $tmp_file
-mv ${APPLICATION}-${RELEASE}/ /opt/${APPLICATION}
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
+fetch_and_deploy_gh_release "fluid-calendar" "dotnetfactory/fluid-calendar"
 
+msg_info "Configuring ${APPLICATION}"
 cat <<EOF >/opt/fluid-calendar/.env
 DATABASE_URL="postgresql://${DB_USER}:${DB_PASS}@localhost:5432/${DB_NAME}"
 
@@ -72,7 +61,7 @@ $STD npm install --legacy-peer-deps
 $STD npm run prisma:generate
 $STD npx prisma migrate deploy
 $STD npm run build:os
-msg_ok "Setup ${APPLICATION}"
+msg_ok "Configuring ${APPLICATION}"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/fluid-calendar.service
@@ -95,7 +84,6 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -f $tmp_file
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
