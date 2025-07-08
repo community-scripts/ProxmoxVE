@@ -14,12 +14,10 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
-  apache2 \
-  php-{curl,dom,json,ctype,pgsql,gmp,mbstring,iconv,zip} \
-  libapache2-mod-php
+$STD apt-get install -y libapache2-mod-php
 msg_ok "Installed Dependencies"
 
+PHP_VERSION="8.2" PHP_MODULE="dom,json,ctype,pgsql,gmp,iconv" PHP_APACHE="YES" setup_php
 PG_VERSION="16" setup_postgresql
 
 msg_info "Setting up PostgreSQL"
@@ -36,17 +34,14 @@ $STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER TEMP
 } >>~/freshrss.creds
 msg_ok "Set up PostgreSQL"
 
-msg_info "Installing FreshRSS"
-RELEASE=$(curl -fsSL https://api.github.com/repos/FreshRSS/FreshRSS/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-cd /opt
-curl -fsSL "https://github.com/FreshRSS/FreshRSS/archive/refs/tags/${RELEASE}.zip" -o "${RELEASE}.zip"
-$STD unzip "${RELEASE}.zip"
-mv "/opt/FreshRSS-${RELEASE}" /opt/freshrss
+fetch_and_deploy_gh_release "freshrss" "FreshRSS/FreshRSS"
+
+msg_info "Configuring FreshRSS"
 cd /opt/freshrss
 chown -R www-data:www-data /opt/freshrss
 chmod -R g+rX /opt/freshrss
 chmod -R g+w /opt/freshrss/data/
-msg_ok "Installed FreshRSS"
+msg_ok "Configured FreshRSS"
 
 msg_info "Setting up cron job for feed refresh"
 cat <<EOF >/etc/cron.d/freshrss-actualize
@@ -83,7 +78,6 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -rf "/opt/${RELEASE}.zip"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
