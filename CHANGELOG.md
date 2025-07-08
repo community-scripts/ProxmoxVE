@@ -22,6 +22,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - tools.func: add ffmpeg + minor improvement [@MickLesk](https://github.com/MickLesk) ([#5834](https://github.com/community-scripts/ProxmoxVE/pull/5834))
 
+  - #### 🔧 Refactor
+
+    - Refactor: ErsatzTV [@MickLesk](https://github.com/MickLesk) ([#5835](https://github.com/community-scripts/ProxmoxVE/pull/5835))
+
 ## 2025-07-07
 
 ### 🚀 Updated Scripts
