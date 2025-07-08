@@ -14,6 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - Refactor: Emby [@tremor021](https://github.com/tremor021) ([#5839](https://github.com/community-scripts/ProxmoxVE/pull/5839))
+
   - #### 🐞 Bug Fixes
 
     - Ollama: fix update script [@lucacome](https://github.com/lucacome) ([#5819](https://github.com/community-scripts/ProxmoxVE/pull/5819))
