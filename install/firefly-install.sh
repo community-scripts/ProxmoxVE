@@ -14,17 +14,14 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-curl -fsSLo /usr/share/keyrings/deb.sury.org-php.gpg https://packages.sury.org/php/apt.gpg
-echo "deb [signed-by=/usr/share/keyrings/deb.sury.org-php.gpg] https://packages.sury.org/php/ bookworm main" >/etc/apt/sources.list.d/php.list
-$STD apt-get update
-$STD apt-get install -y \
-  apache2 \
-  libapache2-mod-php8.4 \
-  php8.4-{bcmath,cli,intl,curl,zip,gd,xml,mbstring,mysql} \
-  composer
+$STD apt-get install -y apache2
 msg_ok "Installed Dependencies"
 
+PHP_VERSION="8.4" PHP_APACHE="YES" PHP_MODULE="mysql" setup_php
+setup_composer
 setup_mariadb
+fetch_and_deploy_gh_release "firefly" "firefly-iii/firefly-iii"
+LOCAL_IP=$(hostname -I | awk '{print $1}')
 
 msg_info "Setting up database"
 DB_NAME=firefly
@@ -41,13 +38,7 @@ mariadb -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRI
 } >>~/firefly.creds
 msg_ok "Set up database"
 
-msg_info "Installing Firefly III (Patience)"
-LOCAL_IP=$(hostname -I | awk '{print $1}')
-RELEASE=$(curl -fsSL https://api.github.com/repos/firefly-iii/firefly-iii/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4)}')
-cd /opt
-curl -fsSL "https://github.com/firefly-iii/firefly-iii/releases/download/v${RELEASE}/FireflyIII-v${RELEASE}.tar.gz" -o "FireflyIII-v${RELEASE}.tar.gz"
-mkdir -p /opt/firefly
-tar -xzf FireflyIII-v${RELEASE}.tar.gz -C /opt/firefly
+msg_info "Configuring Firefly III (Patience)"
 chown -R www-data:www-data /opt/firefly
 chmod -R 775 /opt/firefly/storage
 cd /opt/firefly
@@ -69,8 +60,7 @@ tar -xzf "DataImporter-v${IMPORTER_RELEASE}.tar.gz" -C /opt/firefly/dataimporter
 cp /opt/firefly/dataimporter/.env.example /opt/firefly/dataimporter/.env
 sed -i "s#FIREFLY_III_URL=#FIREFLY_III_URL=http://${LOCAL_IP}#g" /opt/firefly/dataimporter/.env
 chown -R www-data:www-data /opt/firefly
-echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
-msg_ok "Installed Firefly III"
+msg_ok "Configured Firefly III"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/apache2/sites-available/firefly.conf
@@ -112,7 +102,6 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -rf "/opt/FireflyIII-v${RELEASE}.tar.gz"
 rm -rf "/opt/DataImporter-v${IMPORTER_RELEASE}.tar.gz"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
