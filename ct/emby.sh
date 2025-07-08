@@ -27,22 +27,21 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  LATEST=$(curl -fsSL https://api.github.com/repos/MediaBrowser/Emby.Releases/releases/latest | grep '"tag_name":' | cut -d'"' -f4)
-  msg_info "Stopping ${APP}"
-  systemctl stop emby-server
-  msg_ok "Stopped ${APP}"
+  RELEASE=$(curl -fsSL https://api.github.com/repos/MediaBrowser/Emby.Releases/releases/latest | grep '"tag_name":' | cut -d'"' -f4)
+  if [[ "${RELEASE}" != "$(cat ~/.emby 2>/dev/null)" ]] || [[ ! -f ~/.emby ]]; then
+    msg_info "Stopping ${APP}"
+    systemctl stop emby-server
+    msg_ok "Stopped ${APP}"
 
-  msg_info "Updating ${APP}"
-  $STD curl -fsSL "https://github.com/MediaBrowser/Emby.Releases/releases/download/${LATEST}/emby-server-deb_${LATEST}_amd64.deb" -o "emby-server-deb_${LATEST}_amd64.deb"
-  $STD dpkg -i "emby-server-deb_${LATEST}_amd64.deb"
-  rm "emby-server-deb_${LATEST}_amd64.deb"
-  msg_ok "Updated ${APP}"
+    fetch_and_deploy_gh_release "emby" "MediaBrowser/Emby.Releases" "binary"
 
-  msg_info "Starting ${APP}"
-  systemctl start emby-server
-  msg_ok "Started ${APP}"
-  msg_ok "Updated Successfully"
-  exit
+    msg_info "Starting ${APP}"
+    systemctl start emby-server
+    msg_ok "Started ${APP}"
+
+    msg_ok "Updated Successfully"
+    exit
+  fi
 }
 
 start

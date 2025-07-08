@@ -24,17 +24,15 @@ if [[ "$CTTYPE" == "0" ]]; then
 fi
 msg_ok "Set Up Hardware Acceleration"
 
-LATEST=$(curl -fsSL https://api.github.com/repos/MediaBrowser/Emby.Releases/releases/latest | grep '"tag_name":' | cut -d'"' -f4)
+fetch_and_deploy_gh_release "emby" "MediaBrowser/Emby.Releases" "binary"
 
-msg_info "Installing Emby"
-curl -fsSL "https://github.com/MediaBrowser/Emby.Releases/releases/download/${LATEST}/emby-server-deb_${LATEST}_amd64.deb" -o "emby-server-deb_${LATEST}_amd64.deb"
-$STD dpkg -i emby-server-deb_${LATEST}_amd64.deb
+msg_info "Configuring Emby"
 if [[ "$CTTYPE" == "0" ]]; then
   sed -i -e 's/^ssl-cert:x:104:$/render:x:104:root,emby/' -e 's/^render:x:108:root,emby$/ssl-cert:x:108:/' /etc/group
 else
   sed -i -e 's/^ssl-cert:x:104:$/render:x:104:emby/' -e 's/^render:x:108:emby$/ssl-cert:x:108:/' /etc/group
 fi
-msg_ok "Installed Emby"
+msg_ok "Configured Emby"
 
 motd_ssh
 customize
@@ -42,5 +40,4 @@ customize
 msg_info "Cleaning up"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
-rm emby-server-deb_${LATEST}_amd64.deb
 msg_ok "Cleaned"
