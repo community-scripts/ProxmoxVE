@@ -29,7 +29,7 @@ function update_script() {
     exit
   fi
   RELEASE=$(curl -fsSL https://api.github.com/repos/FlareSolverr/FlareSolverr/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4)}')
-  if [[ "${RELEASE}" != "$(cat ~/.planka 2>/dev/null)" ]] || [[ ! -f ~/.planka ]]; then
+  if [[ "${RELEASE}" != "$(cat ~/.flaresolverr 2>/dev/null)" ]] || [[ ! -f ~/.flaresolverr ]]; then
     msg_info "Stopping service"
     systemctl stop flaresolverr
     msg_ok "Stopped service"
