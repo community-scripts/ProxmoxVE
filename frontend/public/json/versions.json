@@ -1,8 +1,53 @@
 [
   {
+    "name": "Stirling-Tools/Stirling-PDF",
+    "version": "v1.0.1",
+    "date": "2025-07-07T23:01:28Z"
+  },
+  {
+    "name": "duplicati/duplicati",
+    "version": "v2.1.0.122-2.1.0.122_canary_2025-07-07",
+    "date": "2025-07-07T17:54:52Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.23.2",
+    "date": "2025-07-07T16:51:43Z"
+  },
+  {
+    "name": "TandoorRecipes/recipes",
+    "version": "1.5.35",
+    "date": "2025-06-22T08:30:10Z"
+  },
+  {
     "name": "VictoriaMetrics/VictoriaMetrics",
-    "version": "v1.121.0",
-    "date": "2025-07-07T11:32:39Z"
+    "version": "pmm-6401-v1.121.0",
+    "date": "2025-07-07T16:16:13Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.100.0",
+    "date": "2025-06-23T12:48:35Z"
+  },
+  {
+    "name": "photoprism/photoprism",
+    "version": "250707-d28b3101e",
+    "date": "2025-07-07T15:15:21Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.4.0p7-rc2",
+    "date": "2025-07-07T15:07:57Z"
+  },
+  {
+    "name": "traccar/traccar",
+    "version": "v6.8.1",
+    "date": "2025-07-07T14:40:11Z"
+  },
+  {
+    "name": "BookStackApp/BookStack",
+    "version": "v25.05.2",
+    "date": "2025-07-07T14:08:25Z"
   },
   {
     "name": "meilisearch/meilisearch",
@@ -13,11 +58,6 @@
     "name": "Paymenter/Paymenter",
     "version": "v1.2.1",
     "date": "2025-07-07T10:11:26Z"
-  },
-  {
-    "name": "Checkmk/checkmk",
-    "version": "v2.4.0p7-rc1",
-    "date": "2025-07-07T09:25:01Z"
   },
   {
     "name": "nzbgetcom/nzbget",
@@ -93,21 +133,6 @@
     "name": "syncthing/syncthing",
     "version": "v1.30.0",
     "date": "2025-07-01T11:29:11Z"
-  },
-  {
-    "name": "traccar/traccar",
-    "version": "v6.8.0",
-    "date": "2025-07-06T18:19:05Z"
-  },
-  {
-    "name": "msgbyte/tianji",
-    "version": "v1.23.0",
-    "date": "2025-07-06T16:01:58Z"
-  },
-  {
-    "name": "TandoorRecipes/recipes",
-    "version": "1.5.35",
-    "date": "2025-06-22T08:30:10Z"
   },
   {
     "name": "Part-DB/Part-DB-server",
@@ -233,11 +258,6 @@
     "name": "cockpit-project/cockpit",
     "version": "310.5",
     "date": "2025-07-03T14:05:25Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.100.0",
-    "date": "2025-06-23T12:48:35Z"
   },
   {
     "name": "Dolibarr/dolibarr",
@@ -490,11 +510,6 @@
     "date": "2025-06-25T00:06:56Z"
   },
   {
-    "name": "duplicati/duplicati",
-    "version": "v2.1.0.120-2.1.0.120_canary_2025-06-24",
-    "date": "2025-06-24T22:39:50Z"
-  },
-  {
     "name": "evcc-io/evcc",
     "version": "0.204.5",
     "date": "2025-06-24T19:17:16Z"
@@ -633,11 +648,6 @@
     "name": "project-zot/zot",
     "version": "v2.1.5",
     "date": "2025-06-17T18:04:11Z"
-  },
-  {
-    "name": "BookStackApp/BookStack",
-    "version": "v25.05.1",
-    "date": "2025-06-17T14:38:04Z"
   },
   {
     "name": "crowdsecurity/crowdsec",
@@ -885,11 +895,6 @@
     "date": "2025-05-21T20:19:14Z"
   },
   {
-    "name": "Stirling-Tools/Stirling-PDF",
-    "version": "v0.46.2",
-    "date": "2025-05-20T11:21:04Z"
-  },
-  {
     "name": "sbondCo/Watcharr",
     "version": "v2.1.0",
     "date": "2025-05-18T18:20:43Z"
@@ -988,11 +993,6 @@
     "name": "gotify/server",
     "version": "v2.6.3",
     "date": "2025-04-27T09:05:42Z"
-  },
-  {
-    "name": "photoprism/photoprism",
-    "version": "250426-27ec7a128",
-    "date": "2025-04-26T11:51:39Z"
   },
   {
     "name": "TechnitiumSoftware/DnsServer",
