@@ -442,7 +442,6 @@ function setup_php() {
     fi
   done
 
-  
   IFS=',' read -ra MODULES <<<"$COMBINED_MODULES"
   for mod in "${MODULES[@]}"; do
     MODULE_LIST+=" php${PHP_VERSION}-${mod}"
@@ -952,7 +951,7 @@ function fetch_and_deploy_gh_release() {
     }
 
     mkdir -p "$target"
-        if [[ "$filename" == *.zip ]]; then
+    if [[ "$filename" == *.zip ]]; then
       if ! command -v unzip &>/dev/null; then
         $STD apt-get install -y unzip
       fi
