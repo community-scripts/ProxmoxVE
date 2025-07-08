@@ -35,10 +35,6 @@
     {
       "text": "Setup-Steps: Access Control ➡ Authentication ➡ Create ➡ Next ➡ Next ➡ Create ➡ Users ➡ Add ➡ Username / Password (to authenicate with MQTT) ➡ Save. You're now ready to enjoy a high-performance MQTT Broker.",
       "type": "info"
-    },
-    {
-      "text": "WARNING: Installation sources scripts outside of Community Scripts repo. Please check the source before installing.",
-      "type": "warning"
     }
   ]
 }

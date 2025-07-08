@@ -13,16 +13,23 @@ setting_up_container
 network_check
 update_os
 
+msg_info "Installing dependencies"
+$STD apt-get install -y \
+  apt-transport-https \
+  ca-certificates \
+  lsb-release
+msg_ok "Installed dependencies"
+
 msg_info "Installing EMQX"
-$STD bash <(curl -fsSL https://packagecloud.io/install/repositories/emqx/emqx/script.deb.sh)
+curl -fsSL https://packagecloud.io/emqx/emqx/gpgkey | gpg --dearmor -o /usr/share/keyrings/emqx-archive-keyring.gpg
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/emqx-archive-keyring.gpg] https://packagecloud.io/emqx/emqx/debian/ bookworm main" >/etc/apt/sources.list.d/emqx.list
 $STD apt-get install -y emqx
-$STD systemctl enable --now emqx
 msg_ok "Installed EMQX"
 
 motd_ssh
 customize
 
 msg_info "Cleaning up"
-apt-get autoremove >/dev/null
-apt-get autoclean >/dev/null
+$STD apt-get autoremove
+$STD apt-get autoclean
 msg_ok "Cleaned"
