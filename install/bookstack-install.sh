@@ -57,7 +57,7 @@ chmod -R 755 /opt/bookstack /opt/bookstack/bootstrap/cache /opt/bookstack/public
 chmod -R 775 /opt/bookstack/storage /opt/bookstack/bootstrap/cache /opt/bookstack/public/uploads
 chmod -R 640 /opt/bookstack/.env
 $STD a2enmod rewrite
-$STD a2enmod php8.2
+$STD a2enmod php8.3
 msg_ok "Configured Bookstack"
 
 msg_info "Creating Service"
