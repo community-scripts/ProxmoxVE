@@ -1013,13 +1013,20 @@ function fetch_and_deploy_gh_release() {
 
     filename="${asset_url##*/}"
     mkdir -p "$target"
-    curl $download_timeout -fsSL -o "$target/$app" "$asset_url" || {
+
+    local use_filename="${USE_ORIGINAL_FILENAME:-false}"
+    local target_file="$app"
+    [[ "$use_filename" == "true" ]] && target_file="$filename"
+
+    curl $download_timeout -fsSL -o "$target/$target_file" "$asset_url" || {
       msg_error "Download failed: $asset_url"
       rm -rf "$tmpdir"
       return 1
     }
 
-    chmod +x "$target/$app"
+    if [[ "$target_file" != *.jar && -f "$target/$target_file" ]]; then
+      chmod +x "$target/$target_file"
+    fi
 
   else
     msg_error "Unknown mode: $mode"
@@ -1697,4 +1704,155 @@ function setup_imagemagick() {
   rm -rf "$TMP_DIR"
   ensure_usr_local_bin_persist
   msg_ok "Setup ImageMagick $VERSION"
+}
+
+# ------------------------------------------------------------------------------
+# Installs FFmpeg from source or prebuilt binary (Debian/Ubuntu only).
+#
+# Description:
+#   - Downloads and builds FFmpeg from GitHub (https://github.com/FFmpeg/FFmpeg)
+#   - Supports specific version override via FFMPEG_VERSION (e.g. n7.1.1)
+#   - Supports build profile via FFMPEG_TYPE:
+#       - minimal : x264, vpx, mp3 only
+#       - medium  : adds subtitles, fonts, opus, vorbis
+#       - full    : adds dav1d, svt-av1, zlib, numa
+#       - binary  : downloads static build (johnvansickle.com)
+#   - Defaults to latest stable version and full feature set
+#
+# Notes:
+#   - Requires: curl, jq, build-essential, and matching codec libraries
+#   - Result is installed to /usr/local/bin/ffmpeg
+# ------------------------------------------------------------------------------
+
+function setup_ffmpeg() {
+  local TMP_DIR
+  TMP_DIR=$(mktemp -d)
+  local GITHUB_REPO="FFmpeg/FFmpeg"
+  local VERSION="${FFMPEG_VERSION:-latest}"
+  local TYPE="${FFMPEG_TYPE:-full}"
+  local BIN_PATH="/usr/local/bin/ffmpeg"
+
+  # Binary fallback mode
+  if [[ "$TYPE" == "binary" ]]; then
+    msg_info "Installing FFmpeg (static binary)"
+    curl -fsSL https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz -o "$TMP_DIR/ffmpeg.tar.xz"
+    tar -xf "$TMP_DIR/ffmpeg.tar.xz" -C "$TMP_DIR"
+    local EXTRACTED_DIR
+    EXTRACTED_DIR=$(find "$TMP_DIR" -maxdepth 1 -type d -name "ffmpeg-*")
+    cp "$EXTRACTED_DIR/ffmpeg" "$BIN_PATH"
+    cp "$EXTRACTED_DIR/ffprobe" /usr/local/bin/ffprobe
+    chmod +x "$BIN_PATH" /usr/local/bin/ffprobe
+    rm -rf "$TMP_DIR"
+    msg_ok "Installed FFmpeg binary ($($BIN_PATH -version | head -n1))"
+    return
+  fi
+
+  if ! command -v jq &>/dev/null; then
+    $STD apt-get update
+    $STD apt-get install -y jq
+  fi
+
+  # Auto-detect latest stable version if none specified
+  if [[ "$VERSION" == "latest" || -z "$VERSION" ]]; then
+    msg_info "Resolving latest FFmpeg tag"
+    VERSION=$(curl -fsSL "https://api.github.com/repos/${GITHUB_REPO}/tags" |
+      jq -r '.[].name' |
+      grep -E '^n[0-9]+\.[0-9]+\.[0-9]+$' |
+      sort -V | tail -n1)
+  fi
+
+  if [[ -z "$VERSION" ]]; then
+    msg_error "Could not determine FFmpeg version"
+    rm -rf "$TMP_DIR"
+    return 1
+  fi
+
+  msg_info "Installing FFmpeg ${VERSION} ($TYPE)"
+
+  # Dependency selection
+  local DEPS=(build-essential yasm nasm pkg-config)
+  case "$TYPE" in
+  minimal)
+    DEPS+=(libx264-dev libvpx-dev libmp3lame-dev)
+    ;;
+  medium)
+    DEPS+=(libx264-dev libvpx-dev libmp3lame-dev libfreetype6-dev libass-dev libopus-dev libvorbis-dev)
+    ;;
+  full)
+    DEPS+=(
+      libx264-dev libx265-dev libvpx-dev libmp3lame-dev
+      libfreetype6-dev libass-dev libopus-dev libvorbis-dev
+      libdav1d-dev libsvtav1-dev zlib1g-dev libnuma-dev
+    )
+    ;;
+  *)
+    msg_error "Invalid FFMPEG_TYPE: $TYPE"
+    rm -rf "$TMP_DIR"
+    return 1
+    ;;
+  esac
+
+  $STD apt-get update
+  $STD apt-get install -y "${DEPS[@]}"
+
+  curl -fsSL "https://github.com/${GITHUB_REPO}/archive/refs/tags/${VERSION}.tar.gz" -o "$TMP_DIR/ffmpeg.tar.gz"
+  tar -xzf "$TMP_DIR/ffmpeg.tar.gz" -C "$TMP_DIR"
+  cd "$TMP_DIR/FFmpeg-"* || {
+    msg_error "Source extraction failed"
+    rm -rf "$TMP_DIR"
+    return 1
+  }
+
+  local args=(
+    --enable-gpl
+    --enable-shared
+    --enable-nonfree
+    --disable-static
+    --enable-libx264
+    --enable-libvpx
+    --enable-libmp3lame
+  )
+
+  if [[ "$TYPE" != "minimal" ]]; then
+    args+=(--enable-libfreetype --enable-libass --enable-libopus --enable-libvorbis)
+  fi
+
+  if [[ "$TYPE" == "full" ]]; then
+    args+=(--enable-libx265 --enable-libdav1d --enable-zlib)
+  fi
+
+  if [[ ${#args[@]} -eq 0 ]]; then
+    msg_error "FFmpeg configure args array is empty – aborting."
+    rm -rf "$TMP_DIR"
+    return 1
+  fi
+
+  ./configure "${args[@]}" >"$TMP_DIR/configure.log" 2>&1 || {
+    msg_error "FFmpeg ./configure failed (see $TMP_DIR/configure.log)"
+    cat "$TMP_DIR/configure.log" | tail -n 20
+    rm -rf "$TMP_DIR"
+    return 1
+  }
+
+  $STD make -j"$(nproc)"
+  $STD make install
+  echo "/usr/local/lib" >/etc/ld.so.conf.d/ffmpeg.conf
+  ldconfig
+
+  ldconfig -p | grep libavdevice >/dev/null || {
+    msg_error "libavdevice not registered with dynamic linker"
+    return 1
+  }
+
+  if ! command -v ffmpeg &>/dev/null; then
+    msg_error "FFmpeg installation failed"
+    rm -rf "$TMP_DIR"
+    return 1
+  fi
+
+  local FINAL_VERSION
+  FINAL_VERSION=$(ffmpeg -version | head -n1 | awk '{print $3}')
+  rm -rf "$TMP_DIR"
+  ensure_usr_local_bin_persist
+  msg_ok "Setup FFmpeg $FINAL_VERSION"
 }
