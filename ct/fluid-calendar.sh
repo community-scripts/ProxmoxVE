@@ -31,7 +31,7 @@ function update_script() {
   RELEASE=$(curl -fsSL https://api.github.com/repos/dotnetfactory/fluid-calendar/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
   if [[ "${RELEASE}" != "$(cat ~/.fluid-calendar 2>/dev/null)" ]] || [[ ! -f ~/.fluid-calendar ]]; then
     msg_info "Stopping $APP"
-    systemctl stop fluid-calendar.service
+    systemctl stop fluid-calendar
     msg_ok "Stopped $APP"
 
     cp /opt/fluid-calendar/.env /opt/fluid.env
@@ -49,7 +49,7 @@ function update_script() {
     msg_ok "Updated $APP to v${RELEASE}"
 
     msg_info "Starting $APP"
-    systemctl start fluid-calendar.service
+    systemctl start fluid-calendar
     msg_ok "Started $APP"
 
     msg_ok "Update Successful"
