@@ -19,8 +19,6 @@ msg_ok "Installed Dependencies"
 
 JAVA_VERSION="17" setup_java
 fetch_and_deploy_gh_release "commafeed" "Athou/commafeed" "prebuild" "latest" "/opt/commafeed" "commafeed-*-h2-jvm.zip"
-d=(/opt/commafeed/commafeed-*/)
-mv "${d[0]}"* /opt/commafeed/ && rmdir "${d[0]}"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/commafeed.service
