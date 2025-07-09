@@ -368,25 +368,6 @@ function setup_mysql() {
 #   PHP_MAX_EXECUTION_TIME     - (default: 300)
 # ------------------------------------------------------------------------------
 
-# ------------------------------------------------------------------------------
-# Installs PHP with selected modules and configures Apache/FPM support.
-#
-# Description:
-#   - Adds Sury PHP repo if needed
-#   - Installs default and user-defined modules
-#   - Patches php.ini for CLI, Apache, and FPM as needed
-#
-# Variables:
-#   PHP_VERSION                - PHP version to install (default: 8.4)
-#   PHP_MODULE                 - Additional comma-separated modules
-#   PHP_APACHE                 - Set YES to enable PHP with Apache
-#   PHP_FPM                    - Set YES to enable PHP-FPM
-#   PHP_MEMORY_LIMIT           - (default: 512M)
-#   PHP_UPLOAD_MAX_FILESIZE    - (default: 128M)
-#   PHP_POST_MAX_SIZE          - (default: 128M)
-#   PHP_MAX_EXECUTION_TIME     - (default: 300)
-# ------------------------------------------------------------------------------
-
 function setup_php() {
   local PHP_VERSION="${PHP_VERSION:-8.4}"
   local PHP_MODULE="${PHP_MODULE:-}"
@@ -917,7 +898,7 @@ function fetch_and_deploy_gh_release() {
       }
     }
 
-    ### Prebuild Mode ###
+  ### Prebuild Mode ###
   elif [[ "$mode" == "prebuild" ]]; then
     local pattern="${6%\"}"
     pattern="${pattern#\"}"
@@ -936,7 +917,6 @@ function fetch_and_deploy_gh_release() {
         break
         ;;
       esac
-
     done
 
     [[ -z "$asset_url" ]] && {
@@ -952,38 +932,41 @@ function fetch_and_deploy_gh_release() {
       return 1
     }
 
+    local unpack_tmp
+    unpack_tmp=$(mktemp -d)
     mkdir -p "$target"
+
     if [[ "$filename" == *.zip ]]; then
       if ! command -v unzip &>/dev/null; then
         $STD apt-get install -y unzip
       fi
-
-      local top_level_entries
-      top_level_entries=$(unzip -l "$tmpdir/$filename" | awk '{print $4}' | grep -v '^$' | cut -d/ -f1 | sort -u)
-
-      if [[ $(wc -l <<<"$top_level_entries") -eq 1 ]]; then
-        unzip -q "$tmpdir/$filename" -d "$tmpdir/unzip"
-        shopt -s dotglob nullglob
-        cp -r "$tmpdir/unzip/"* "$target/"
-        shopt -u dotglob nullglob
-      else
-        unzip -q "$tmpdir/$filename" -d "$target"
-      fi
-
+      unzip -q "$tmpdir/$filename" -d "$unpack_tmp"
     elif [[ "$filename" == *.tar.* ]]; then
-      local top_level_entries
-      top_level_entries=$(tar -tf "$tmpdir/$filename" | cut -d/ -f1 | sort -u)
-
-      if [[ $(wc -l <<<"$top_level_entries") -eq 1 ]]; then
-        tar --strip-components=1 -xf "$tmpdir/$filename" -C "$target"
-      else
-        tar -xf "$tmpdir/$filename" -C "$target"
-      fi
+      tar -xf "$tmpdir/$filename" -C "$unpack_tmp"
     else
       msg_error "Unsupported archive format: $filename"
-      rm -rf "$tmpdir"
+      rm -rf "$tmpdir" "$unpack_tmp"
       return 1
     fi
+
+    local top_dirs
+    top_dirs=$(find "$unpack_tmp" -mindepth 1 -maxdepth 1 -type d | wc -l)
+
+    if [[ "$top_dirs" -eq 1 ]]; then
+      # Strip leading folder
+      local inner_dir
+      inner_dir=$(find "$unpack_tmp" -mindepth 1 -maxdepth 1 -type d)
+      shopt -s dotglob nullglob
+      cp -r "$inner_dir"/* "$target/"
+      shopt -u dotglob nullglob
+    else
+      # Copy all contents
+      shopt -s dotglob nullglob
+      cp -r "$unpack_tmp"/* "$target/"
+      shopt -u dotglob nullglob
+    fi
+
+    rm -rf "$unpack_tmp"
 
     ### Singlefile Mode ###
   elif [[ "$mode" == "singlefile" ]]; then
