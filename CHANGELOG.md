@@ -31,6 +31,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Refactor: Excalidraw [@tremor021](https://github.com/tremor021) ([#5841](https://github.com/community-scripts/ProxmoxVE/pull/5841))
     - Refactor: gatus [@tremor021](https://github.com/tremor021) ([#5849](https://github.com/community-scripts/ProxmoxVE/pull/5849))
 
+### 🧰 Maintenance
+
+  - #### 📂 Github
+
+    - Github: AutoLabler | ChangeLog (Refactor) [@MickLesk](https://github.com/MickLesk) ([#5868](https://github.com/community-scripts/ProxmoxVE/pull/5868))
+
 ## 2025-07-08
 
 ### 🚀 Updated Scripts
