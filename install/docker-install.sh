@@ -29,6 +29,16 @@ echo -e '{\n  "log-driver": "journald"\n}' >/etc/docker/daemon.json
 $STD sh <(curl -fsSL https://get.docker.com)
 msg_ok "Installed Docker $DOCKER_LATEST_VERSION"
 
+read -r -p "${TAB3}Install Docker Compose v2 plugin? <y/N> " prompt_compose
+if [[ ${prompt_compose,,} =~ ^(y|yes)$ ]]; then
+  msg_info "Installing Docker Compose $DOCKER_COMPOSE_LATEST_VERSION"
+  mkdir -p /usr/local/lib/docker/cli-plugins
+  curl -fsSL "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_LATEST_VERSION}/docker-compose-$(uname -s)-$(uname -m)" \
+    -o /usr/local/lib/docker/cli-plugins/docker-compose
+  chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
+  msg_ok "Installed Docker Compose $DOCKER_COMPOSE_LATEST_VERSION"
+fi
+
 read -r -p "${TAB3}Would you like to add Portainer (UI)? <y/N> " prompt
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   msg_info "Installing Portainer $PORTAINER_LATEST_VERSION"
@@ -57,12 +67,25 @@ else
   fi
 fi
 
-read -r -p "${TAB3}Expose Docker TCP socket (⚠️ insecure)? <y/N> " prompt
-if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
-  msg_info "Enabling Docker TCP socket on port 2375 (insecure)"
-  
-  mkdir -p /etc/docker
-  echo '{ "hosts": ["unix:///var/run/docker.sock", "tcp://0.0.0.0:2375"] }' > /etc/docker/daemon.json
+read -r -p "${TAB3}Expose Docker TCP socket (insecure) ? [n = No, l = Local only (127.0.0.1), a = All interfaces (0.0.0.0)] <n/l/a>: " socket_choice
+case "${socket_choice,,}" in
+  l)
+    socket="tcp://127.0.0.1:2375"
+    ;;
+  a)
+    socket="tcp://0.0.0.0:2375"
+    ;;
+  *)
+    socket=""
+    ;;
+esac
+
+if [[ -n "$socket" ]]; then
+  msg_info "Enabling Docker TCP socket on $socket"
+  $STD apt-get install -y jq
+
+  tmpfile=$(mktemp)
+  jq --arg sock "$socket" '. + { "hosts": ["unix:///var/run/docker.sock", $sock] }' /etc/docker/daemon.json > "$tmpfile" && mv "$tmpfile" /etc/docker/daemon.json
 
   mkdir -p /etc/systemd/system/docker.service.d
   cat <<EOF > /etc/systemd/system/docker.service.d/override.conf
@@ -75,13 +98,12 @@ EOF
   $STD systemctl daemon-reload
 
   if systemctl restart docker; then
-    msg_ok "Docker TCP socket now available on tcp://0.0.0.0:2375"
+    msg_ok "Docker TCP socket available on $socket"
   else
     msg_error "Docker failed to restart. Check journalctl -xeu docker.service"
     exit 1
   fi
 fi
-
 
 motd_ssh
 customize
