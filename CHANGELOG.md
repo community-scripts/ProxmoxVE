@@ -26,6 +26,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: Ghost (use now MySQL)  [@MickLesk](https://github.com/MickLesk) ([#5871](https://github.com/community-scripts/ProxmoxVE/pull/5871))
     - Refactor: Glance [@tremor021](https://github.com/tremor021) ([#5874](https://github.com/community-scripts/ProxmoxVE/pull/5874))
     - Refactor: Commafeed [@tremor021](https://github.com/tremor021) ([#5802](https://github.com/community-scripts/ProxmoxVE/pull/5802))
     - Refactor: FlareSolverr [@tremor021](https://github.com/tremor021) ([#5845](https://github.com/community-scripts/ProxmoxVE/pull/5845))
