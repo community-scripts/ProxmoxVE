@@ -21,6 +21,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: Fluid-Calendar [@tremor021](https://github.com/tremor021) ([#5846](https://github.com/community-scripts/ProxmoxVE/pull/5846))
     - Refactor: EMQX [@tremor021](https://github.com/tremor021) ([#5840](https://github.com/community-scripts/ProxmoxVE/pull/5840))
     - Refactor: Excalidraw [@tremor021](https://github.com/tremor021) ([#5841](https://github.com/community-scripts/ProxmoxVE/pull/5841))
     - Refactor: gatus [@tremor021](https://github.com/tremor021) ([#5849](https://github.com/community-scripts/ProxmoxVE/pull/5849))
