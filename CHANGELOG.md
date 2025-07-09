@@ -21,6 +21,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - Refactor: Commafeed [@tremor021](https://github.com/tremor021) ([#5802](https://github.com/community-scripts/ProxmoxVE/pull/5802))
     - tools.func: strip leading folders for prebuild assets [@MickLesk](https://github.com/MickLesk) ([#5865](https://github.com/community-scripts/ProxmoxVE/pull/5865))
 
   - #### 🔧 Refactor
