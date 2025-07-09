@@ -451,7 +451,7 @@ function setup_php() {
     MODULE_LIST+=" php${PHP_VERSION}-fpm"
   fi
   if [[ "$PHP_APACHE" == "YES" ]]; then
-    $STD apt-get install -y apache2
+    $STD apt-get install -y apache2 libapache2-mod-php${PHP_VERSION}
     $STD systemctl restart apache2 || true
   fi
 
@@ -459,6 +459,8 @@ function setup_php() {
     if [[ -f /etc/apache2/mods-enabled/php${CURRENT_PHP}.load ]]; then
       $STD a2dismod php${CURRENT_PHP} || true
     fi
+    $STD a2enmod php${PHP_VERSION}
+    $STD systemctl restart apache2 || true
   fi
 
   if [[ "$PHP_FPM" == "YES" ]] && [[ -n "$CURRENT_PHP" ]]; then
