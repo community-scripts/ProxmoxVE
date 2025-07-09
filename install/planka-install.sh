@@ -45,12 +45,12 @@ fetch_and_deploy_gh_release "planka" "plankanban/planka" "prebuild" "latest" "/o
 msg_info "Configuring PLANKA"
 LOCAL_IP=$(hostname -I | awk '{print $1}')
 SECRET_KEY=$(openssl rand -hex 64)
-cd /opt/planka/planka
+cd /opt/planka
 $STD npm install
 cp .env.sample .env
-sed -i "s#http://localhost:1337#http://$LOCAL_IP:1337#g" /opt/planka/planka/.env
-sed -i "s#postgres@localhost#planka:$DB_PASS@localhost#g" /opt/planka/planka/.env
-sed -i "s#notsecretkey#$SECRET_KEY#g" /opt/planka/planka/.env
+sed -i "s#http://localhost:1337#http://$LOCAL_IP:1337#g" /opt/planka/.env
+sed -i "s#postgres@localhost#planka:$DB_PASS@localhost#g" /opt/planka/.env
+sed -i "s#notsecretkey#$SECRET_KEY#g" /opt/planka/.env
 $STD npm run db:init
 msg_ok "Configured PLANKA"
 
@@ -84,7 +84,7 @@ Description=planka Service
 After=network.target
 
 [Service]
-WorkingDirectory=/opt/planka/planka
+WorkingDirectory=/opt/planka
 ExecStart=/usr/bin/npm start --prod
 Restart=always
 
