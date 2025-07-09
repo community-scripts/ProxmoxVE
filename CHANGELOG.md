@@ -19,6 +19,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - BabyBuddy: fix path issues for update [@MickLesk](https://github.com/MickLesk) ([#5856](https://github.com/community-scripts/ProxmoxVE/pull/5856))
     - tools.func: fix an bug while php libapache2-mod breaks [@MickLesk](https://github.com/MickLesk) ([#5857](https://github.com/community-scripts/ProxmoxVE/pull/5857))
 
+  - #### ✨ New Features
+
+    - tools.func: strip leading folders for prebuild assets [@MickLesk](https://github.com/MickLesk) ([#5865](https://github.com/community-scripts/ProxmoxVE/pull/5865))
+
   - #### 🔧 Refactor
 
     - Refactor: FreshRSS [@tremor021](https://github.com/tremor021) ([#5847](https://github.com/community-scripts/ProxmoxVE/pull/5847))
