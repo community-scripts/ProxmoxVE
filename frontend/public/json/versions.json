@@ -1,5 +1,60 @@
 [
   {
+    "name": "Prowlarr/Prowlarr",
+    "version": "v1.37.0.5076",
+    "date": "2025-06-04T11:04:53Z"
+  },
+  {
+    "name": "Radarr/Radarr",
+    "version": "v5.26.2.10099",
+    "date": "2025-06-11T20:10:39Z"
+  },
+  {
+    "name": "ipfs/kubo",
+    "version": "v0.35.0",
+    "date": "2025-05-21T18:00:32Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.4.1",
+    "date": "2025-06-11T07:53:44Z"
+  },
+  {
+    "name": "rcourtman/Pulse",
+    "version": "v3.40.1",
+    "date": "2025-07-08T21:06:54Z"
+  },
+  {
+    "name": "grokability/snipe-it",
+    "version": "v8.1.18",
+    "date": "2025-07-08T20:36:37Z"
+  },
+  {
+    "name": "Stirling-Tools/Stirling-PDF",
+    "version": "v1.0.2",
+    "date": "2025-07-08T19:14:31Z"
+  },
+  {
+    "name": "TwiN/gatus",
+    "version": "v5.20.0",
+    "date": "2025-07-08T16:27:11Z"
+  },
+  {
+    "name": "fuma-nama/fumadocs",
+    "version": "create-fumadocs-app@15.6.2",
+    "date": "2025-07-08T14:26:05Z"
+  },
+  {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.518",
+    "date": "2025-07-08T13:52:55Z"
+  },
+  {
+    "name": "bunkerity/bunkerweb",
+    "version": "v1.6.2",
+    "date": "2025-07-08T13:52:33Z"
+  },
+  {
     "name": "mattermost/mattermost",
     "version": "preview-v0.1",
     "date": "2025-06-27T14:35:47Z"
@@ -21,23 +76,13 @@
   },
   {
     "name": "ollama/ollama",
-    "version": "v0.9.5",
-    "date": "2025-07-02T18:39:28Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.4.1",
-    "date": "2025-06-11T07:53:44Z"
+    "version": "v0.9.6",
+    "date": "2025-07-08T01:26:29Z"
   },
   {
     "name": "mongodb/mongo",
     "version": "r8.0.12-rc0",
     "date": "2025-07-07T23:35:35Z"
-  },
-  {
-    "name": "Stirling-Tools/Stirling-PDF",
-    "version": "v1.0.1",
-    "date": "2025-07-07T23:01:28Z"
   },
   {
     "name": "keycloak/keycloak",
@@ -195,11 +240,6 @@
     "date": "2025-07-05T12:14:52Z"
   },
   {
-    "name": "fuma-nama/fumadocs",
-    "version": "fumadocs-openapi@9.0.18",
-    "date": "2025-07-05T09:36:45Z"
-  },
-  {
     "name": "theonedev/onedev",
     "version": "v11.11.4",
     "date": "2025-07-05T09:23:25Z"
@@ -223,11 +263,6 @@
     "name": "zitadel/zitadel",
     "version": "v3.3.0",
     "date": "2025-06-12T06:54:48Z"
-  },
-  {
-    "name": "bunkerity/bunkerweb",
-    "version": "v1.6.2",
-    "date": "2025-07-04T15:21:18Z"
   },
   {
     "name": "emqx/emqx",
@@ -340,11 +375,6 @@
     "date": "2025-07-01T21:37:20Z"
   },
   {
-    "name": "TwiN/gatus",
-    "version": "v5.19.0",
-    "date": "2025-07-01T19:59:32Z"
-  },
-  {
     "name": "hivemq/hivemq-community-edition",
     "version": "2025.4",
     "date": "2025-07-01T18:01:37Z"
@@ -360,19 +390,9 @@
     "date": "2025-07-01T16:47:46Z"
   },
   {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.517",
-    "date": "2025-07-01T16:08:23Z"
-  },
-  {
     "name": "element-hq/synapse",
     "version": "v1.133.0",
     "date": "2025-07-01T15:13:42Z"
-  },
-  {
-    "name": "rcourtman/Pulse",
-    "version": "v99.99.99",
-    "date": "2025-07-01T08:26:41Z"
   },
   {
     "name": "zabbix/zabbix",
@@ -408,11 +428,6 @@
     "name": "jupyter/notebook",
     "version": "v7.4.4",
     "date": "2025-06-30T13:04:22Z"
-  },
-  {
-    "name": "grokability/snipe-it",
-    "version": "v8.1.17",
-    "date": "2025-06-30T11:26:27Z"
   },
   {
     "name": "PrivateBin/PrivateBin",
@@ -605,11 +620,6 @@
     "date": "2025-06-18T21:43:27Z"
   },
   {
-    "name": "ipfs/kubo",
-    "version": "v0.35.0",
-    "date": "2025-05-21T18:00:32Z"
-  },
-  {
     "name": "pterodactyl/panel",
     "version": "v1.11.11",
     "date": "2025-06-18T18:04:50Z"
@@ -690,11 +700,6 @@
     "date": "2025-06-15T17:48:29Z"
   },
   {
-    "name": "Prowlarr/Prowlarr",
-    "version": "v1.37.0.5076",
-    "date": "2025-06-04T11:04:53Z"
-  },
-  {
     "name": "Readarr/Readarr",
     "version": "v2.0.0.4645",
     "date": "2017-03-07T18:56:06Z"
@@ -703,11 +708,6 @@
     "name": "Lidarr/Lidarr",
     "version": "v2.12.4.4658",
     "date": "2025-06-09T17:27:45Z"
-  },
-  {
-    "name": "Radarr/Radarr",
-    "version": "v5.26.2.10099",
-    "date": "2025-06-11T20:10:39Z"
   },
   {
     "name": "advplyr/audiobookshelf",
