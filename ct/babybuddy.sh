@@ -38,7 +38,7 @@ function update_script() {
     msg_ok "Services Stopped"
 
     msg_info "Cleaning old files"
-    cp babybuddy/settings/production.py /tmp/production.py.bak
+    cp /opt/babybuddy/babybuddy/settings/production.py /tmp/production.py.bak
     find . -mindepth 1 -maxdepth 1 ! -name '.venv' -exec rm -rf {} +
     msg_ok "Cleaned old files"
 
@@ -46,7 +46,7 @@ function update_script() {
 
     msg_info "Updating ${APP} to v${RELEASE}"
     cd /opt/babybuddy
-    mv /tmp/production.py.bak babybuddy/settings/production.py
+    mv /tmp/production.py.bak /opt/babybuddy/babybuddy/settings/production.py
     source .venv/bin/activate
     $STD uv pip install -r requirements.txt
     $STD python manage.py migrate
