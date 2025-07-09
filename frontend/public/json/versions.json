@@ -1,5 +1,55 @@
 [
   {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.102.0",
+    "date": "2025-07-07T15:32:29Z"
+  },
+  {
+    "name": "rclone/rclone",
+    "version": "v1.70.3",
+    "date": "2025-07-09T10:02:39Z"
+  },
+  {
+    "name": "fuma-nama/fumadocs",
+    "version": "fumadocs-ui@15.6.3",
+    "date": "2025-07-09T09:28:42Z"
+  },
+  {
+    "name": "cockpit-project/cockpit",
+    "version": "342",
+    "date": "2025-07-09T08:48:21Z"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2025.6.3",
+    "date": "2025-07-03T01:07:26Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2135",
+    "date": "2025-07-09T05:58:50Z"
+  },
+  {
+    "name": "MediaBrowser/Emby.Releases",
+    "version": "4.9.1.2",
+    "date": "2025-06-26T22:08:00Z"
+  },
+  {
+    "name": "NginxProxyManager/nginx-proxy-manager",
+    "version": "v2.14.5",
+    "date": "2025-07-09T04:41:02Z"
+  },
+  {
+    "name": "henrygd/beszel",
+    "version": "v0.11.1",
+    "date": "2025-04-29T01:14:35Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.4.1",
+    "date": "2025-06-11T07:53:44Z"
+  },
+  {
     "name": "Prowlarr/Prowlarr",
     "version": "v1.37.0.5076",
     "date": "2025-06-04T11:04:53Z"
@@ -13,11 +63,6 @@
     "name": "ipfs/kubo",
     "version": "v0.35.0",
     "date": "2025-05-21T18:00:32Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.4.1",
-    "date": "2025-06-11T07:53:44Z"
   },
   {
     "name": "rcourtman/Pulse",
@@ -35,14 +80,14 @@
     "date": "2025-07-08T19:14:31Z"
   },
   {
+    "name": "keycloak/keycloak",
+    "version": "26.3.0",
+    "date": "2025-07-02T12:26:44Z"
+  },
+  {
     "name": "TwiN/gatus",
     "version": "v5.20.0",
     "date": "2025-07-08T16:27:11Z"
-  },
-  {
-    "name": "fuma-nama/fumadocs",
-    "version": "create-fumadocs-app@15.6.2",
-    "date": "2025-07-08T14:26:05Z"
   },
   {
     "name": "jenkinsci/jenkins",
@@ -65,11 +110,6 @@
     "date": "2025-07-08T09:35:14Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2132",
-    "date": "2025-07-08T05:52:22Z"
-  },
-  {
     "name": "Checkmk/checkmk",
     "version": "v2.4.0p7",
     "date": "2025-07-08T05:51:08Z"
@@ -83,11 +123,6 @@
     "name": "mongodb/mongo",
     "version": "r8.0.12-rc0",
     "date": "2025-07-07T23:35:35Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.3.0",
-    "date": "2025-07-02T12:26:44Z"
   },
   {
     "name": "duplicati/duplicati",
@@ -108,11 +143,6 @@
     "name": "VictoriaMetrics/VictoriaMetrics",
     "version": "pmm-6401-v1.121.0",
     "date": "2025-07-07T16:16:13Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.100.0",
-    "date": "2025-06-23T12:48:35Z"
   },
   {
     "name": "photoprism/photoprism",
@@ -153,11 +183,6 @@
     "name": "morpheus65535/bazarr",
     "version": "v1.5.2",
     "date": "2025-05-11T16:40:55Z"
-  },
-  {
-    "name": "MediaBrowser/Emby.Releases",
-    "version": "4.9.1.2",
-    "date": "2025-06-26T22:08:00Z"
   },
   {
     "name": "firefly-iii/firefly-iii",
@@ -305,19 +330,9 @@
     "date": "2025-07-03T16:09:19Z"
   },
   {
-    "name": "cockpit-project/cockpit",
-    "version": "310.5",
-    "date": "2025-07-03T14:05:25Z"
-  },
-  {
     "name": "Dolibarr/dolibarr",
     "version": "18.0.7",
     "date": "2025-07-03T08:57:21Z"
-  },
-  {
-    "name": "esphome/esphome",
-    "version": "2025.6.3",
-    "date": "2025-07-03T01:07:26Z"
   },
   {
     "name": "actualbudget/actual",
@@ -405,11 +420,6 @@
     "date": "2025-07-01T04:09:37Z"
   },
   {
-    "name": "NginxProxyManager/nginx-proxy-manager",
-    "version": "v2.12.4",
-    "date": "2025-07-01T01:45:42Z"
-  },
-  {
     "name": "MagicMirrorOrg/MagicMirror",
     "version": "v2.32.0",
     "date": "2025-06-30T22:12:48Z"
@@ -458,11 +468,6 @@
     "name": "goauthentik/authentik",
     "version": "version/2025.6.3",
     "date": "2025-06-27T14:01:06Z"
-  },
-  {
-    "name": "rclone/rclone",
-    "version": "v1.70.2",
-    "date": "2025-06-27T13:21:17Z"
   },
   {
     "name": "sabnzbd/sabnzbd",
@@ -973,11 +978,6 @@
     "name": "WordPress/WordPress",
     "version": "6.8.1",
     "date": "2025-04-30T16:44:16Z"
-  },
-  {
-    "name": "henrygd/beszel",
-    "version": "v0.11.1",
-    "date": "2025-04-29T01:14:35Z"
   },
   {
     "name": "deluge-torrent/deluge",
