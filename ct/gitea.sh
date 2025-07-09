@@ -20,24 +20,33 @@ color
 catch_errors
 
 function update_script() {
-   header_info
-   check_container_storage
-   check_container_resources
-   if [[ ! -f /usr/local/bin/gitea ]]; then
-      msg_error "No ${APP} Installation Found!"
-      exit
-   fi
-   RELEASE=$(curl -fsSL https://github.com/go-gitea/gitea/releases/latest | grep "title>Release" | cut -d " " -f 4 | sed 's/^v//')
-   msg_info "Updating $APP to ${RELEASE}"
-   FILENAME="gitea-$RELEASE-linux-amd64"
-   curl -fsSL "https://github.com/go-gitea/gitea/releases/download/v$RELEASE/gitea-$RELEASE-linux-amd64" -o $FILENAME
-   systemctl stop gitea
-   rm -rf /usr/local/bin/gitea
-   mv $FILENAME /usr/local/bin/gitea
-   chmod +x /usr/local/bin/gitea
-   systemctl start gitea
-   msg_ok "Updated $APP Successfully"
-   exit
+  header_info
+  check_container_storage
+  check_container_resources
+
+  if [[ ! -f /usr/local/bin/gitea ]]; then
+    msg_error "No ${APP} Installation Found!"
+    exit
+  fi
+  RELEASE=$(curl -fsSL https://github.com/go-gitea/gitea/releases/latest | grep "title>Release" | cut -d " " -f 4 | sed 's/^v//')
+  if [[ "${RELEASE}" != "$(cat ~/.gitea 2>/dev/null)" ]] || [[ ! -f ~/.gitea ]]; then
+    msg_info "Stopping service"
+    systemctl stop gitea
+    msg_ok "Service stopped"
+
+    rm -rf /usr/local/bin/gitea
+    fetch_and_deploy_gh_release "gitea" "go-gitea/gitea" "singlefile" "latest" "/usr/local/bin" "gitea-*-linux-amd64"
+    chmod +x /usr/local/bin/gitea
+
+    msg_info "Starting service"
+    systemctl start gitea
+    msg_ok "Started service"
+
+    msg_ok "Update Successful"
+  else
+    msg_ok "No update required. ${APP} is already at ${RELEASE}"
+  fi
+  exit
 }
 
 start

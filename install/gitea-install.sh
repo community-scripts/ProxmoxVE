@@ -19,10 +19,9 @@ $STD apt-get install -y git
 $STD apt-get install -y sqlite3
 msg_ok "Installed Dependencies"
 
-msg_info "Installing Gitea"
-RELEASE=$(curl -fsSL https://github.com/go-gitea/gitea/releases/latest | grep "title>Release" | cut -d " " -f 4 | sed 's/^v//')
-curl -fsSL "https://github.com/go-gitea/gitea/releases/download/v$RELEASE/gitea-$RELEASE-linux-amd64" -o "gitea-$RELEASE-linux-amd64"
-mv gitea* /usr/local/bin/gitea
+fetch_and_deploy_gh_release "gitea" "go-gitea/gitea" "singlefile" "latest" "/usr/local/bin" "gitea-*-linux-amd64"
+
+msg_info "Configuring Gitea"
 chmod +x /usr/local/bin/gitea
 adduser --system --group --disabled-password --shell /bin/bash --home /etc/gitea gitea >/dev/null
 mkdir -p /var/lib/gitea/{custom,data,log}
@@ -31,7 +30,7 @@ chmod -R 750 /var/lib/gitea/
 chown root:gitea /etc/gitea
 chmod 770 /etc/gitea
 sudo -u gitea ln -s /var/lib/gitea/data/.ssh/ /etc/gitea/.ssh
-msg_ok "Installed Gitea"
+msg_ok "Configured Gitea"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/gitea.service
