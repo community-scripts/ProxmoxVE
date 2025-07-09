@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - FreshRSS: fix needed php modules [@MickLesk](https://github.com/MickLesk) ([#5886](https://github.com/community-scripts/ProxmoxVE/pull/5886))
     - core: Fix VAAPI passthrough for unprivileged LXC containers via devX  [@MickLesk](https://github.com/MickLesk) ([#5875](https://github.com/community-scripts/ProxmoxVE/pull/5875))
     - tools.func: fix an bug while php libapache2-mod breaks [@MickLesk](https://github.com/MickLesk) ([#5857](https://github.com/community-scripts/ProxmoxVE/pull/5857))
     - BabyBuddy: fix path issues for update [@MickLesk](https://github.com/MickLesk) ([#5856](https://github.com/community-scripts/ProxmoxVE/pull/5856))
