@@ -13,10 +13,6 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt-get install -y libapache2-mod-php
-msg_ok "Installed Dependencies"
-
 PHP_VERSION="8.2" PHP_MODULE="dom,json,ctype,pgsql,gmp,iconv" PHP_APACHE="YES" setup_php
 PG_VERSION="16" setup_postgresql
 
