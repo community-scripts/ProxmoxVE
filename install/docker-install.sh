@@ -29,7 +29,7 @@ echo -e '{\n  "log-driver": "journald"\n}' >/etc/docker/daemon.json
 $STD sh <(curl -fsSL https://get.docker.com)
 msg_ok "Installed Docker $DOCKER_LATEST_VERSION"
 
-read -r -p "${TAB3}Would you like to add Portainer? <y/N> " prompt
+read -r -p "${TAB3}Would you like to add Portainer (UI)? <y/N> " prompt
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   msg_info "Installing Portainer $PORTAINER_LATEST_VERSION"
   docker volume create portainer_data >/dev/null
@@ -43,9 +43,9 @@ if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
     portainer/portainer-ce:latest
   msg_ok "Installed Portainer $PORTAINER_LATEST_VERSION"
 else
-  read -r -p "${TAB3}Would you like to add the Portainer Agent? <y/N> " prompt
-  if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
-    msg_info "Installing Portainer agent $PORTAINER_AGENT_LATEST_VERSION"
+  read -r -p "${TAB3}Would you like to install the Portainer Agent (for remote management)? <y/N> " prompt_agent
+  if [[ ${prompt_agent,,} =~ ^(y|yes)$ ]]; then
+    msg_info "Installing Portainer Agent $PORTAINER_AGENT_LATEST_VERSION"
     $STD docker run -d \
       -p 9001:9001 \
       --name portainer_agent \
