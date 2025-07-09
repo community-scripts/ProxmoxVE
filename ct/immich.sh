@@ -51,134 +51,12 @@ function update_script() {
   fi
   if [[ -f ~/.immich_library_revisions ]]; then
     libraries=("libjxl" "libheif" "libraw" "imagemagick" "libvips")
-    readarray -d '' NEW_REVISIONS < <(for library in "${libraries[@]}"; do
-      echo "$library: $(curl -fsSL https://raw.githubusercontent.com/immich-app/base-images/refs/heads/main/server/sources/"$library".json | jq -cr '.revision' -)"
-    done)
-    UPDATED_REVISIONS="$(comm -13 <(sort ~/.immich_library_revisions) <(echo -n "${NEW_REVISIONS[@]}" | sort))"
-    if [[ "$UPDATED_REVISIONS" ]]; then
-      readarray -t NAMES < <(echo "$UPDATED_REVISIONS" | awk -F ':' '{print $1}')
-      rm -rf "$SOURCE_DIR"
-      mkdir -p "$SOURCE_DIR"
-      cd "$BASE_DIR"
-      $STD git pull
-      cd "$STAGING_DIR"
-      for name in "${NAMES[@]}"; do
-        if [[ "$name" == "libjxl" ]]; then
-          msg_info "Recompiling libjxl"
-          SOURCE=${SOURCE_DIR}/libjxl
-          JPEGLI_LIBJPEG_LIBRARY_SOVERSION="62"
-          JPEGLI_LIBJPEG_LIBRARY_VERSION="62.3.0"
-          : "${LIBJXL_REVISION:=$(jq -cr '.revision' $BASE_DIR/server/sources/libjxl.json)}"
-          $STD git clone https://github.com/libjxl/libjxl.git "$SOURCE"
-          cd "$SOURCE"
-          $STD git reset --hard "$LIBJXL_REVISION"
-          $STD git submodule update --init --recursive --depth 1 --recommend-shallow
-          $STD git apply "$BASE_DIR"/server/sources/libjxl-patches/jpegli-empty-dht-marker.patch
-          $STD git apply "$BASE_DIR"/server/sources/libjxl-patches/jpegli-icc-warning.patch
-          mkdir build
-          cd build
-          $STD cmake \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DBUILD_TESTING=OFF \
-            -DJPEGXL_ENABLE_DOXYGEN=OFF \
-            -DJPEGXL_ENABLE_MANPAGES=OFF \
-            -DJPEGXL_ENABLE_PLUGIN_GIMP210=OFF \
-            -DJPEGXL_ENABLE_BENCHMARK=OFF \
-            -DJPEGXL_ENABLE_EXAMPLES=OFF \
-            -DJPEGXL_FORCE_SYSTEM_BROTLI=ON \
-            -DJPEGXL_FORCE_SYSTEM_HWY=ON \
-            -DJPEGXL_ENABLE_JPEGLI=ON \
-            -DJPEGXL_ENABLE_JPEGLI_LIBJPEG=ON \
-            -DJPEGXL_INSTALL_JPEGLI_LIBJPEG=ON \
-            -DJPEGXL_ENABLE_PLUGINS=ON \
-            -DJPEGLI_LIBJPEG_LIBRARY_SOVERSION="$JPEGLI_LIBJPEG_LIBRARY_SOVERSION" \
-            -DJPEGLI_LIBJPEG_LIBRARY_VERSION="$JPEGLI_LIBJPEG_LIBRARY_VERSION" \
-            -DLIBJPEG_TURBO_VERSION_NUMBER=2001005 \
-            ..
-          $STD cmake --build . -- -j"$(nproc)"
-          $STD cmake --install .
-          ldconfig /usr/local/lib
-          $STD make clean
-          cd "$STAGING_DIR"
-          rm -rf "$SOURCE"/{build,third_party}
-          msg_ok "Recompiled libjxl"
-        fi
-        if [[ "$name" == "libheif" ]]; then
-          msg_info "Recompiling libheif"
-          SOURCE=${SOURCE_DIR}/libheif
-          : "${LIBHEIF_REVISION:=$(jq -cr '.revision' $BASE_DIR/server/sources/libheif.json)}"
-          $STD git clone https://github.com/strukturag/libheif.git "$SOURCE"
-          cd "$SOURCE"
-          $STD git reset --hard "$LIBHEIF_REVISION"
-          mkdir build
-          cd build
-          $STD cmake --preset=release-noplugins \
-            -DWITH_DAV1D=ON \
-            -DENABLE_PARALLEL_TILE_DECODING=ON \
-            -DWITH_LIBSHARPYUV=ON \
-            -DWITH_LIBDE265=ON \
-            -DWITH_AOM_DECODER=OFF \
-            -DWITH_AOM_ENCODER=OFF \
-            -DWITH_X265=OFF \
-            -DWITH_EXAMPLES=OFF \
-            ..
-          $STD make install -j "$(nproc)"
-          ldconfig /usr/local/lib
-          $STD make clean
-          cd "$STAGING_DIR"
-          rm -rf "$SOURCE"/build
-          msg_ok "Recompiled libheif"
-        fi
-        if [[ "$name" == "libraw" ]]; then
-          msg_info "Recompiling libraw"
-          SOURCE=${SOURCE_DIR}/libraw
-          : "${LIBRAW_REVISION:=$(jq -cr '.revision' $BASE_DIR/server/sources/libraw.json)}"
-          $STD git clone https://github.com/libraw/libraw.git "$SOURCE"
-          cd "$SOURCE"
-          $STD git reset --hard "$LIBRAW_REVISION"
-          $STD autoreconf --install
-          $STD ./configure
-          $STD make -j"$(nproc)"
-          $STD make install
-          ldconfig /usr/local/lib
-          $STD make clean
-          cd "$STAGING_DIR"
-          msg_ok "Recompiled libraw"
-        fi
-        if [[ "$name" == "imagemagick" ]]; then
-          msg_info "Recompiling ImageMagick"
-          SOURCE=$SOURCE_DIR/imagemagick
-          : "${IMAGEMAGICK_REVISION:=$(jq -cr '.revision' $BASE_DIR/server/sources/imagemagick.json)}"
-          $STD git clone https://github.com/ImageMagick/ImageMagick.git "$SOURCE"
-          cd "$SOURCE"
-          $STD git reset --hard "$IMAGEMAGICK_REVISION"
-          $STD ./configure --with-modules
-          $STD make -j"$(nproc)"
-          $STD make install
-          ldconfig /usr/local/lib
-          $STD make clean
-          cd "$STAGING_DIR"
-          msg_ok "Recompiled ImageMagick"
-        fi
-        if [[ "$name" == "libvips" ]]; then
-          msg_info "Recompiling libvips"
-          SOURCE=$SOURCE_DIR/libvips
-          : "${LIBVIPS_REVISION:=$(jq -cr '.revision' $BASE_DIR/server/sources/libvips.json)}"
-          $STD git clone https://github.com/libvips/libvips.git "$SOURCE"
-          cd "$SOURCE"
-          $STD git reset --hard "$LIBVIPS_REVISION"
-          $STD meson setup build --buildtype=release --libdir=lib -Dintrospection=disabled -Dtiff=disabled
-          cd build
-          $STD ninja install
-          ldconfig /usr/local/lib
-          cd "$STAGING_DIR"
-          rm -rf "$SOURCE"/build
-          msg_ok "Recompiled libvips"
-        fi
-      done
-      echo -n "${NEW_REVISIONS[@]}" >~/.immich_library_revisions
-      msg_ok "Image-processing libraries compiled"
-    fi
+    cd "$BASE_DIR"
+    $STD git pull
+    for library in "${libraries[@]}"; do
+      compile_"$library"
+    done
+    msg_ok "Image-processing libraries updated"
   fi
   RELEASE=$(curl -fsSL https://api.github.com/repos/immich-app/immich/releases?per_page=1 | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
   if [[ -f ~/.immich && "$RELEASE" == "$(cat ~/.immich)" ]]; then
@@ -291,6 +169,143 @@ function update_script() {
   msg_ok "Cleaned"
   systemctl restart immich-ml immich-web
   exit
+}
+
+function compile_libjxl() {
+  SOURCE=${SOURCE_DIR}/libjxl
+  JPEGLI_LIBJPEG_LIBRARY_SOVERSION="62"
+  JPEGLI_LIBJPEG_LIBRARY_VERSION="62.3.0"
+  : "${LIBJXL_REVISION:=$(jq -cr '.revision' "$BASE_DIR"/server/sources/libjxl.json)}"
+  if [[ "${update:-}" ]] || [[ "$LIBJXL_REVISION" != "$(grep 'libjxl' ~/.immich_library_revisions | awk '{print $2}')" ]]; then
+    msg_info "Recompiling libjxl"
+    if [[ -d "$SOURCE" ]]; then rm -rf "$SOURCE"; fi
+    $STD git clone https://github.com/libjxl/libjxl.git "$SOURCE"
+    cd "$SOURCE"
+    $STD git reset --hard "$LIBJXL_REVISION"
+    $STD git submodule update --init --recursive --depth 1 --recommend-shallow
+    $STD git apply "$BASE_DIR"/server/sources/libjxl-patches/jpegli-empty-dht-marker.patch
+    $STD git apply "$BASE_DIR"/server/sources/libjxl-patches/jpegli-icc-warning.patch
+    mkdir build
+    cd build
+    $STD cmake \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DBUILD_TESTING=OFF \
+      -DJPEGXL_ENABLE_DOXYGEN=OFF \
+      -DJPEGXL_ENABLE_MANPAGES=OFF \
+      -DJPEGXL_ENABLE_PLUGIN_GIMP210=OFF \
+      -DJPEGXL_ENABLE_BENCHMARK=OFF \
+      -DJPEGXL_ENABLE_EXAMPLES=OFF \
+      -DJPEGXL_FORCE_SYSTEM_BROTLI=ON \
+      -DJPEGXL_FORCE_SYSTEM_HWY=ON \
+      -DJPEGXL_ENABLE_JPEGLI=ON \
+      -DJPEGXL_ENABLE_JPEGLI_LIBJPEG=ON \
+      -DJPEGXL_INSTALL_JPEGLI_LIBJPEG=ON \
+      -DJPEGXL_ENABLE_PLUGINS=ON \
+      -DJPEGLI_LIBJPEG_LIBRARY_SOVERSION="$JPEGLI_LIBJPEG_LIBRARY_SOVERSION" \
+      -DJPEGLI_LIBJPEG_LIBRARY_VERSION="$JPEGLI_LIBJPEG_LIBRARY_VERSION" \
+      -DLIBJPEG_TURBO_VERSION_NUMBER=2001005 \
+      ..
+    $STD cmake --build . -- -j"$(nproc)"
+    $STD cmake --install .
+    ldconfig /usr/local/lib
+    $STD make clean
+    cd "$STAGING_DIR"
+    rm -rf "$SOURCE"/{build,third_party}
+    msg_ok "Recompiled libjxl"
+  fi
+}
+
+function compile_libheif() {
+  SOURCE=${SOURCE_DIR}/libheif
+  if ! dpkg -l | grep -q libaom; then
+    $STD apt-get install -y libaom-dev
+    local update="required"
+  fi
+  : "${LIBHEIF_REVISION:=$(jq -cr '.revision' "$BASE_DIR"/server/sources/libheif.json)}"
+  if [[ "${update:-}" ]] || [[ "$LIBHEIF_REVISION" != "$(grep 'libheif' ~/.immich_library_revisions | awk '{print $2}')" ]]; then
+    msg_info "Recompiling libheif"
+    if [[ -d "$SOURCE" ]]; then rm -rf "$SOURCE"; fi
+    $STD git clone https://github.com/strukturag/libheif.git "$SOURCE"
+    cd "$SOURCE"
+    $STD git reset --hard "$LIBHEIF_REVISION"
+    mkdir build
+    cd build
+    $STD cmake --preset=release-noplugins \
+      -DWITH_DAV1D=ON \
+      -DENABLE_PARALLEL_TILE_DECODING=ON \
+      -DWITH_LIBSHARPYUV=ON \
+      -DWITH_LIBDE265=ON \
+      -DWITH_AOM_DECODER=OFF \
+      -DWITH_AOM_ENCODER=ON \
+      -DWITH_X265=OFF \
+      -DWITH_EXAMPLES=OFF \
+      ..
+    $STD make install -j "$(nproc)"
+    ldconfig /usr/local/lib
+    $STD make clean
+    cd "$STAGING_DIR"
+    rm -rf "$SOURCE"/build
+    msg_ok "Recompiled libheif"
+  fi
+}
+
+function compile_libraw() {
+  SOURCE=${SOURCE_DIR}/libraw
+  local update
+  : "${LIBRAW_REVISION:=$(jq -cr '.revision' "$BASE_DIR"/server/sources/libraw.json)}"
+  if [[ "${update:-}" ]] || [[ "$LIBRAW_REVISION" != "$(grep 'libraw' ~/.immich_library_revisions | awk '{print $2}')" ]]; then
+    msg_info "Recompiling libraw"
+    if [[ -d "$SOURCE" ]]; then rm -rf "$SOURCE"; fi
+    $STD git clone https://github.com/libraw/libraw.git "$SOURCE"
+    cd "$SOURCE"
+    $STD git reset --hard "$LIBRAW_REVISION"
+    $STD autoreconf --install
+    $STD ./configure
+    $STD make -j"$(nproc)"
+    $STD make install
+    ldconfig /usr/local/lib
+    $STD make clean
+    cd "$STAGING_DIR"
+    msg_ok "Recompiled libraw"
+  fi
+}
+
+function compile_imagemagick() {
+  SOURCE=$SOURCE_DIR/imagemagick
+  : "${IMAGEMAGICK_REVISION:=$(jq -cr '.revision' "$BASE_DIR"/server/sources/imagemagick.json)}"
+  if [[ "${update:-}" ]] || [[ "$IMAGEMAGICK_REVISION" != "$(grep 'imagemagick' ~/.immich_library_revisions | awk '{print $2}')" ]]; then
+    msg_info "Recompiling ImageMagick"
+    if [[ -d "$SOURCE" ]]; then rm -rf "$SOURCE"; fi
+    $STD git clone https://github.com/ImageMagick/ImageMagick.git "$SOURCE"
+    cd "$SOURCE"
+    $STD git reset --hard "$IMAGEMAGICK_REVISION"
+    $STD ./configure --with-modules
+    $STD make -j"$(nproc)"
+    $STD make install
+    ldconfig /usr/local/lib
+    $STD make clean
+    cd "$STAGING_DIR"
+    msg_ok "Recompiled ImageMagick"
+  fi
+}
+
+function compile_libvips() {
+  SOURCE=$SOURCE_DIR/libvips
+  : "${LIBVIPS_REVISION:=$(jq -cr '.revision' "$BASE_DIR"/server/sources/libvips.json)}"
+  if [[ "${update:-}" ]] || [[ "$LIBVIPS_REVISION" != "$(grep 'libvips' ~/.immich_library_revisions | awk '{print $2}')" ]]; then
+    msg_info "Recompiling libvips"
+    if [[ -d "$SOURCE" ]]; then rm -rf "$SOURCE"; fi
+    $STD git clone https://github.com/libvips/libvips.git "$SOURCE"
+    cd "$SOURCE"
+    $STD git reset --hard "$LIBVIPS_REVISION"
+    $STD meson setup build --buildtype=release --libdir=lib -Dintrospection=disabled -Dtiff=disabled
+    cd build
+    $STD ninja install
+    ldconfig /usr/local/lib
+    cd "$STAGING_DIR"
+    rm -rf "$SOURCE"/build
+    msg_ok "Recompiled libvips"
+  fi
 }
 
 start
