@@ -44,9 +44,7 @@ function update_script() {
       mv /opt/commafeed/data /opt/data.bak
     fi
     fetch_and_deploy_gh_release "commafeed" "Athou/commafeed" "prebuild" "latest" "/opt/commafeed" "commafeed-*-h2-jvm.zip"
-    d=(/opt/commafeed/commafeed-*/)
-    mv "${d[0]}"* /opt/commafeed/ && rmdir "${d[0]}"
-
+    
     msg_info "Updating ${APP} to ${RELEASE}"
     if [ -d /opt/commafeed/data.bak ] && [ "$(ls -A /opt/commafeed/data.bak)" ]; then
       mv /opt/commafeed/data.bak /opt/commafeed/data
