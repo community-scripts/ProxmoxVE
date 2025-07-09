@@ -13,12 +13,9 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Glance"
-RELEASE=$(curl -fsSL https://api.github.com/repos/glanceapp/glance/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-cd /opt
-curl -fsSL "https://github.com/glanceapp/glance/releases/download/v${RELEASE}/glance-linux-amd64.tar.gz" -o "glance-linux-amd64.tar.gz"
-mkdir -p /opt/glance
-tar -xzf glance-linux-amd64.tar.gz -C /opt/glance
+fetch_and_deploy_gh_release "glance" "glanceapp/glance" "prebuild" "latest" "/opt/glance" "glance-linux-amd64.tar.gz"
+
+msg_info "Configuring Glance"
 cat <<EOF >/opt/glance/glance.yml
 pages:
   - name: Startpage
@@ -39,9 +36,7 @@ pages:
                   - title: Helper Scripts
                     url: https://github.com/community-scripts/ProxmoxVE
 EOF
-
-echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
-msg_ok "Installed Glance"
+msg_ok "Configured Glance"
 
 msg_info "Creating Service"
 service_path="/etc/systemd/system/glance.service"
@@ -67,7 +62,6 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -rf /opt/glance-linux-amd64.tar.gz
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
