@@ -1,5 +1,25 @@
 [
   {
+    "name": "meilisearch/meilisearch",
+    "version": "prototype-incremental-vector-store-3",
+    "date": "2025-07-07T10:27:19Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "preview-v0.1",
+    "date": "2025-06-27T14:35:47Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2140",
+    "date": "2025-07-10T05:54:59Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.20",
+    "date": "2025-07-02T04:03:37Z"
+  },
+  {
     "name": "steveiliop56/tinyauth",
     "version": "v3.6.0",
     "date": "2025-07-09T23:15:25Z"
@@ -100,11 +120,6 @@
     "date": "2025-07-03T01:07:26Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2135",
-    "date": "2025-07-09T05:58:50Z"
-  },
-  {
     "name": "MediaBrowser/Emby.Releases",
     "version": "4.9.1.2",
     "date": "2025-06-26T22:08:00Z"
@@ -165,11 +180,6 @@
     "date": "2025-07-08T11:25:24Z"
   },
   {
-    "name": "mattermost/mattermost",
-    "version": "preview-v0.1",
-    "date": "2025-06-27T14:35:47Z"
-  },
-  {
     "name": "docker/compose",
     "version": "v2.38.2",
     "date": "2025-07-08T09:35:14Z"
@@ -215,11 +225,6 @@
     "date": "2025-07-07T14:08:25Z"
   },
   {
-    "name": "meilisearch/meilisearch",
-    "version": "prototype-incremental-vector-store-3",
-    "date": "2025-07-07T10:27:19Z"
-  },
-  {
     "name": "Paymenter/Paymenter",
     "version": "v1.2.1",
     "date": "2025-07-07T10:11:26Z"
@@ -238,11 +243,6 @@
     "name": "morpheus65535/bazarr",
     "version": "v1.5.2",
     "date": "2025-05-11T16:40:55Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.20",
-    "date": "2025-07-02T04:03:37Z"
   },
   {
     "name": "slskd/slskd",
