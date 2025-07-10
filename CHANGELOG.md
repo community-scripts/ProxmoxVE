@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - core: fix breaking re-download of lxc containers  [@MickLesk](https://github.com/MickLesk) ([#5906](https://github.com/community-scripts/ProxmoxVE/pull/5906))
     - PLANKA: Fix paths to application directory [@tremor021](https://github.com/tremor021) ([#5900](https://github.com/community-scripts/ProxmoxVE/pull/5900))
 
 ## 2025-07-09
