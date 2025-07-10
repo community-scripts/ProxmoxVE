@@ -19,6 +19,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - core: fix breaking re-download of lxc containers  [@MickLesk](https://github.com/MickLesk) ([#5906](https://github.com/community-scripts/ProxmoxVE/pull/5906))
     - PLANKA: Fix paths to application directory [@tremor021](https://github.com/tremor021) ([#5900](https://github.com/community-scripts/ProxmoxVE/pull/5900))
 
+  - #### 🔧 Refactor
+
+    - Refactor: EMQX + Update-Function + Improved NodeJS Crawling [@MickLesk](https://github.com/MickLesk) ([#5907](https://github.com/community-scripts/ProxmoxVE/pull/5907))
+
 ## 2025-07-09
 
 ### 🚀 Updated Scripts
