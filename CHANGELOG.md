@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-07-10
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - PLANKA: Fix paths to application directory [@tremor021](https://github.com/tremor021) ([#5900](https://github.com/community-scripts/ProxmoxVE/pull/5900))
+
 ## 2025-07-09
 
 ### 🚀 Updated Scripts
