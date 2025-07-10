@@ -14,6 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - Refactor: Habitica [@MickLesk](https://github.com/MickLesk) ([#5911](https://github.com/community-scripts/ProxmoxVE/pull/5911))
+
   - #### 🐞 Bug Fixes
 
     - core: fix breaking re-download of lxc containers  [@MickLesk](https://github.com/MickLesk) ([#5906](https://github.com/community-scripts/ProxmoxVE/pull/5906))
