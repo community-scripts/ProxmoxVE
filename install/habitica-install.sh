@@ -15,9 +15,9 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-  libkrb5-dev \
-  build-essential \
-  git
+libkrb5-dev \
+build-essential \
+git
 curl -fsSL "http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2_amd64.deb" -o "libssl1.1_1.1.1f-1ubuntu2_amd64.deb"
 $STD dpkg -i libssl1.1_1.1.1f-1ubuntu2_amd64.deb
 msg_ok "Installed Dependencies"
@@ -32,6 +32,7 @@ tar zxf $temp_file
 mv habitica-${RELEASE}/ /opt/habitica
 cd /opt/habitica
 $STD npm i
+$STD npm run client:build
 cp config.json.example config.json
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Setup ${APPLICATION}"
