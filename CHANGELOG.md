@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-07-11
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - Immich: handle custom library dependency updates; other fixes [@vhsdream](https://github.com/vhsdream) ([#5896](https://github.com/community-scripts/ProxmoxVE/pull/5896))
+
 ## 2025-07-10
 
 ### 🚀 Updated Scripts
