@@ -123,6 +123,10 @@ function update_script() {
   cp -a server/{node_modules,dist,bin,resources,package.json,package-lock.json,start*.sh} "$APP_DIR"/
   cp -a web/build "$APP_DIR"/www
   cp LICENSE "$APP_DIR"
+  cd "$APP_DIR"
+  export SHARP_FORCE_GLOBAL_LIBVIPS=true
+  $STD npm install sharp
+  rm -rf "$APP_DIR"/node_modules/@img/sharp-{libvips*,linuxmusl-x64}
   msg_ok "Updated ${APP} web and microservices"
 
   cd "$SRC_DIR"/machine-learning
@@ -154,8 +158,6 @@ function update_script() {
   ln -s "$GEO_DIR" "$APP_DIR"
 
   msg_info "Updating Immich CLI"
-  $STD npm install --build-from-source sharp
-  rm -rf "$APP_DIR"/node_modules/@img/sharp-{libvips*,linuxmusl-x64}
   $STD npm i -g @immich/cli
   msg_ok "Updated Immich CLI"
 
@@ -291,7 +293,8 @@ function compile_imagemagick() {
 
 function compile_libvips() {
   SOURCE=$SOURCE_DIR/libvips
-  : "${LIBVIPS_REVISION:=$(jq -cr '.revision' "$BASE_DIR"/server/sources/libvips.json)}"
+  # : "${LIBVIPS_REVISION:=$(jq -cr '.revision' "$BASE_DIR"/server/sources/libvips.json)}"
+  : "${LIBVIPS_REVISION:=8fa37a64547e392d3808eed8d72adab7e02b3d00}"
   if [[ "${update:-}" ]] || [[ "$LIBVIPS_REVISION" != "$(grep 'libvips' ~/.immich_library_revisions | awk '{print $2}')" ]]; then
     msg_info "Recompiling libvips"
     if [[ -d "$SOURCE" ]]; then rm -rf "$SOURCE"; fi
