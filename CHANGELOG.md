@@ -14,6 +14,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### ✨ New Features
+
+    - Refactor & Function Bump: Docker [@MickLesk](https://github.com/MickLesk) ([#5889](https://github.com/community-scripts/ProxmoxVE/pull/5889))
+
   - #### 🔧 Refactor
 
     - Immich: handle custom library dependency updates; other fixes [@vhsdream](https://github.com/vhsdream) ([#5896](https://github.com/community-scripts/ProxmoxVE/pull/5896))
