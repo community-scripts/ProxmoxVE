@@ -49,9 +49,9 @@ function update_script() {
 
   if docker ps -a --format '{{.Names}}' | grep -q '^portainer$'; then
     msg_info "Updating Portainer"
-    docker pull portainer/portainer-ce:latest
-    docker stop portainer && docker rm portainer
-    docker volume create portainer_data >/dev/null 2>&1
+    $STD docker pull portainer/portainer-ce:latest
+    $STD docker stop portainer && docker rm portainer
+    $STD docker volume create portainer_data >/dev/null 2>&1
     $STD docker run -d \
       -p 8000:8000 \
       -p 9443:9443 \
@@ -65,8 +65,8 @@ function update_script() {
 
   if docker ps -a --format '{{.Names}}' | grep -q '^portainer_agent$'; then
     msg_info "Updating Portainer Agent"
-    docker pull portainer/agent:latest
-    docker stop portainer_agent && docker rm portainer_agent
+    $STD docker pull portainer/agent:latest
+    $STD docker stop portainer_agent && docker rm portainer_agent
     $STD docker run -d \
       -p 9001:9001 \
       --name=portainer_agent \
