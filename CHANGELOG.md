@@ -14,6 +14,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Quickfix: Immich: revert install sequence [@vhsdream](https://github.com/vhsdream) ([#5932](https://github.com/community-scripts/ProxmoxVE/pull/5932))
+
   - #### ✨ New Features
 
     - Refactor & Function Bump: Docker [@MickLesk](https://github.com/MickLesk) ([#5889](https://github.com/community-scripts/ProxmoxVE/pull/5889))
