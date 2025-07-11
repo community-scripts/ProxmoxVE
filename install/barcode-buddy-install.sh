@@ -14,12 +14,10 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
-  apache2 \
-  redis
+$STD apt-get install -y redis
 msg_ok "Installed Dependencies"
 
-PHP_VERSION="8.2" PHP_APACHE="YES" PHP_MODULE="date, json, redis, sqlite3, sockets" setup_php
+PHP_VERSION="8.2" PHP_APACHE="YES" PHP_MODULE="redis, sqlite3" setup_php
 fetch_and_deploy_gh_release "barcodebuddy" "Forceu/barcodebuddy"
 
 msg_info "Configuring barcodebuddy"
