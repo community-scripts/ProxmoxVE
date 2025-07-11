@@ -1,5 +1,55 @@
 [
   {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.518",
+    "date": "2025-07-08T13:52:55Z"
+  },
+  {
+    "name": "rcourtman/Pulse",
+    "version": "v3.41.1",
+    "date": "2025-07-10T17:10:46Z"
+  },
+  {
+    "name": "LibreTranslate/LibreTranslate",
+    "version": "v1.7.2",
+    "date": "2025-07-10T19:29:26Z"
+  },
+  {
+    "name": "binwiederhier/ntfy",
+    "version": "v2.13.0",
+    "date": "2025-07-10T19:27:54Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.9.6",
+    "date": "2025-07-08T01:26:29Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.23.4",
+    "date": "2025-07-10T18:13:38Z"
+  },
+  {
+    "name": "mongodb/mongo",
+    "version": "r6.0.25",
+    "date": "2025-07-10T16:59:44Z"
+  },
+  {
+    "name": "forgejo/forgejo",
+    "version": "v11.0.3",
+    "date": "2025-07-10T13:12:00Z"
+  },
+  {
+    "name": "crowdsecurity/crowdsec",
+    "version": "v1.6.10",
+    "date": "2025-07-10T12:04:30Z"
+  },
+  {
+    "name": "neo4j/neo4j",
+    "version": "5.26.9",
+    "date": "2025-07-10T10:04:29Z"
+  },
+  {
     "name": "meilisearch/meilisearch",
     "version": "prototype-incremental-vector-store-3",
     "date": "2025-07-07T10:27:19Z"
@@ -50,11 +100,6 @@
     "date": "2025-07-09T17:23:01Z"
   },
   {
-    "name": "msgbyte/tianji",
-    "version": "v1.23.3",
-    "date": "2025-07-09T16:39:30Z"
-  },
-  {
     "name": "hargata/lubelog",
     "version": "v1.4.9",
     "date": "2025-07-09T16:27:46Z"
@@ -93,11 +138,6 @@
     "name": "AdguardTeam/AdGuardHome",
     "version": "v0.107.63",
     "date": "2025-06-26T14:34:19Z"
-  },
-  {
-    "name": "crowdsecurity/crowdsec",
-    "version": "v1.6.9",
-    "date": "2025-06-17T11:54:50Z"
   },
   {
     "name": "n8n-io/n8n",
@@ -145,11 +185,6 @@
     "date": "2025-05-21T18:00:32Z"
   },
   {
-    "name": "rcourtman/Pulse",
-    "version": "v3.40.1",
-    "date": "2025-07-08T21:06:54Z"
-  },
-  {
     "name": "grokability/snipe-it",
     "version": "v8.1.18",
     "date": "2025-07-08T20:36:37Z"
@@ -163,11 +198,6 @@
     "name": "TwiN/gatus",
     "version": "v5.20.0",
     "date": "2025-07-08T16:27:11Z"
-  },
-  {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.518",
-    "date": "2025-07-08T13:52:55Z"
   },
   {
     "name": "bunkerity/bunkerweb",
@@ -188,16 +218,6 @@
     "name": "Checkmk/checkmk",
     "version": "v2.4.0p7",
     "date": "2025-07-08T05:51:08Z"
-  },
-  {
-    "name": "ollama/ollama",
-    "version": "v0.9.6",
-    "date": "2025-07-08T01:26:29Z"
-  },
-  {
-    "name": "mongodb/mongo",
-    "version": "r8.0.12-rc0",
-    "date": "2025-07-07T23:35:35Z"
   },
   {
     "name": "TandoorRecipes/recipes",
@@ -620,11 +640,6 @@
     "date": "2025-06-19T11:54:59Z"
   },
   {
-    "name": "neo4j/neo4j",
-    "version": "2025.05.1",
-    "date": "2025-06-19T11:28:36Z"
-  },
-  {
     "name": "prometheus-pve/prometheus-pve-exporter",
     "version": "v3.5.5",
     "date": "2025-06-19T05:43:47Z"
@@ -653,11 +668,6 @@
     "name": "Bubka/2FAuth",
     "version": "v5.6.0",
     "date": "2025-06-18T12:19:54Z"
-  },
-  {
-    "name": "forgejo/forgejo",
-    "version": "v11.0.2",
-    "date": "2025-06-18T09:38:19Z"
   },
   {
     "name": "silverbulletmd/silverbullet",
@@ -848,11 +858,6 @@
     "name": "blakeblackshear/frigate",
     "version": "v0.14.1",
     "date": "2024-08-29T22:32:51Z"
-  },
-  {
-    "name": "binwiederhier/ntfy",
-    "version": "v2.12.0",
-    "date": "2025-05-30T00:26:27Z"
   },
   {
     "name": "release-argus/Argus",
@@ -1098,11 +1103,6 @@
     "name": "sct/overseerr",
     "version": "v1.34.0",
     "date": "2025-03-26T08:48:34Z"
-  },
-  {
-    "name": "LibreTranslate/LibreTranslate",
-    "version": "v1.6.5",
-    "date": "2025-03-25T20:27:29Z"
   },
   {
     "name": "nextcloud/nextcloudpi",
