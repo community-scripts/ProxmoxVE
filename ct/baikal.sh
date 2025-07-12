@@ -45,6 +45,8 @@ function update_script() {
     cp -r /opt/baikal-backup/Specific/ /opt/baikal/
     chown -R www-data:www-data /opt/baikal/
     chmod -R 755 /opt/baikal/
+    cd /opt/baikal
+    $STD composer install
     msg_ok "Configured Baikal"
 
     msg_info "Starting Service"
