@@ -15,7 +15,7 @@ update_os
 
 msg_info "Installing Mosquitto MQTT Broker"
 source /etc/os-release
-curl -fsSL http://repo.mosquitto.org/debian/mosquitto-repo.gpg.key >/usr/share/keyrings/mosquitto-repo.gpg.key
+curl -fsSL http://repo.mosquitto.org/debian/mosquitto-repo.gpg >/usr/share/keyrings/mosquitto-repo.gpg.key
 chmod go+r /usr/share/keyrings/mosquitto-repo.gpg.key
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/mosquitto-repo.gpg.key] http://repo.mosquitto.org/debian ${VERSION_CODENAME} main" >/etc/apt/sources.list.d/mosquitto.list
 $STD apt-get update
