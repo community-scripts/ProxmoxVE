@@ -20,7 +20,7 @@ msg_ok "Installed Dependencies"
 PHP_VERSION="8.4" PHP_APACHE="YES" PHP_MODULE="mysql" setup_php
 setup_composer
 setup_mariadb
-fetch_and_deploy_gh_release "firefly" "firefly-iii/firefly-iii"
+fetch_and_deploy_gh_release "firefly" "firefly-iii/firefly-iii" "prebuild" "latest" "/opt/firefly" "FireflyIII-*.zip"
 LOCAL_IP=$(hostname -I | awk '{print $1}')
 
 msg_info "Setting up database"

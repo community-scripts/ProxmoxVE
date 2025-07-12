@@ -39,7 +39,7 @@ function update_script() {
     cp -r /opt/firefly/storage /opt/storage
     msg_ok "Backed up data"
 
-    fetch_and_deploy_gh_release "firefly" "firefly-iii/firefly-iii"
+    fetch_and_deploy_gh_release "firefly" "firefly-iii/firefly-iii" "prebuild" "latest" "/opt/firefly" "FireflyIII-*.zip"
 
     msg_info "Updating ${APP} to v${RELEASE}"
     rm -rf /opt/firefly/storage
