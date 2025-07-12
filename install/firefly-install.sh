@@ -13,14 +13,9 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt-get install -y apache2
-msg_ok "Installed Dependencies"
-
 PHP_VERSION="8.4" PHP_APACHE="YES" PHP_MODULE="mysql" setup_php
 setup_composer
 setup_mariadb
-fetch_and_deploy_gh_release "firefly" "firefly-iii/firefly-iii"
 LOCAL_IP=$(hostname -I | awk '{print $1}')
 
 msg_info "Setting up database"
@@ -38,6 +33,8 @@ mariadb -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRI
 } >>~/firefly.creds
 msg_ok "Set up database"
 
+fetch_and_deploy_gh_release "firefly" "firefly-iii/firefly-iii" "prebuild" "latest" "/opt/firefly" "FireflyIII-*.zip"
+
 msg_info "Configuring Firefly III (Patience)"
 chown -R www-data:www-data /opt/firefly
 chmod -R 775 /opt/firefly/storage
@@ -45,8 +42,6 @@ cd /opt/firefly
 cp .env.example .env
 sed -i "s/DB_HOST=.*/DB_HOST=localhost/" /opt/firefly/.env
 sed -i "s/DB_PASSWORD=.*/DB_PASSWORD=$DB_PASS/" /opt/firefly/.env
-echo "export COMPOSER_ALLOW_SUPERUSER=1" >>~/.bashrc
-source ~/.bashrc
 $STD composer install --no-dev --no-plugins --no-interaction
 $STD php artisan firefly:upgrade-database
 $STD php artisan firefly:correct-database
