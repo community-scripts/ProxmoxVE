@@ -1,6 +1,6 @@
 {
   "name": "Intel e1000e NIC Offloading Fix",
-  "slug": "intel-e1000e-nic-offloading-fix",
+  "slug": "nic-offloading-fix",
   "categories": [
     1
   ],
