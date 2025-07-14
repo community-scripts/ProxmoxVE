@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-07-14
 
+### 🆕 New Scripts
+
+  - Mealie ([#5968](https://github.com/community-scripts/ProxmoxVE/pull/5968))
+
 ### 🌐 Website
 
   - #### 📝 Script Information
