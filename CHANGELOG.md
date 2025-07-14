@@ -21,6 +21,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - add --break-system-packages certbot-dns-cloudflare to the nginxproxym… [@tug-benson](https://github.com/tug-benson) ([#5957](https://github.com/community-scripts/ProxmoxVE/pull/5957))
     - Dashy: remove unbound variable (RELEASE) [@MickLesk](https://github.com/MickLesk) ([#5974](https://github.com/community-scripts/ProxmoxVE/pull/5974))
 
 ### 🌐 Website
