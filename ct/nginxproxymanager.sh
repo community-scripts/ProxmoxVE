@@ -27,15 +27,32 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
   if ! command -v pnpm &>/dev/null; then
     msg_info "Installing pnpm"
     #export NODE_OPTIONS=--openssl-legacy-provider
     $STD npm install -g pnpm@8.15
     msg_ok "Installed pnpm"
   fi
+
   RELEASE=$(curl -fsSL https://api.github.com/repos/NginxProxyManager/nginx-proxy-manager/releases/latest |
     grep "tag_name" |
     awk '{print substr($2, 3, length($2)-4) }')
+
+  msg_info "Downloading NPM v${RELEASE}"
+  curl -fsSL "https://codeload.github.com/NginxProxyManager/nginx-proxy-manager/tar.gz/v${RELEASE}" | tar -xz
+  cd nginx-proxy-manager-"${RELEASE}" || exit
+  msg_ok "Downloaded NPM v${RELEASE}"
+
+  msg_info "Building Frontend"
+  (
+    cd ./frontend || exit
+    $STD pnpm install
+    $STD pnpm upgrade
+    $STD pnpm run build
+  )
+  msg_ok "Built Frontend"
+
   msg_info "Stopping Services"
   systemctl stop openresty
   systemctl stop npm
@@ -50,12 +67,7 @@ function update_script() {
     "$STD" /var/cache/nginx
   msg_ok "Cleaned Old Files"
 
-  msg_info "Downloading NPM v${RELEASE}"
-  curl -fsSL "https://codeload.github.com/NginxProxyManager/nginx-proxy-manager/tar.gz/v${RELEASE}" | tar -xz
-  cd nginx-proxy-manager-"${RELEASE}"
-  msg_ok "Downloaded NPM v${RELEASE}"
-
-  msg_info "Setting up Enviroment"
+  msg_info "Setting up Environment"
   ln -sf /usr/bin/python3 /usr/bin/python
   ln -sf /usr/bin/certbot /opt/certbot/bin/certbot
   ln -sf /usr/local/openresty/nginx/sbin/nginx /usr/sbin/nginx
@@ -97,19 +109,12 @@ function update_script() {
     $STD openssl req -new -newkey rsa:2048 -days 3650 -nodes -x509 -subj "/O=Nginx Proxy Manager/OU=Dummy Certificate/CN=localhost" -keyout /data/nginx/dummykey.pem -out /data/nginx/dummycert.pem
   fi
   mkdir -p /app/global /app/frontend/images
+  cp -r frontend/dist/* /app/frontend
+  cp -r frontend/app-images/* /app/frontend/images
   cp -r backend/* /app
   cp -r global/* /app/global
   $STD python3 -m pip install --no-cache-dir certbot-dns-cloudflare
-  msg_ok "Setup Enviroment"
-
-  msg_info "Building Frontend"
-  cd ./frontend
-  $STD pnpm install
-  $STD pnpm upgrade
-  $STD pnpm run build
-  cp -r dist/* /app/frontend
-  cp -r app-images/* /app/frontend/images
-  msg_ok "Built Frontend"
+  msg_ok "Setup Environment"
 
   msg_info "Initializing Backend"
   $STD rm -rf /app/config/default.json
@@ -128,7 +133,7 @@ function update_script() {
 }
 EOF
   fi
-  cd /app
+  cd /app || exit
   $STD pnpm install
   msg_ok "Initialized Backend"
 
