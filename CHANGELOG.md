@@ -19,6 +19,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - Config-File: Some Addons, Bugfixes...  [@MickLesk](https://github.com/MickLesk) ([#5978](https://github.com/community-scripts/ProxmoxVE/pull/5978))
+
   - #### 🐞 Bug Fixes
 
     - add --break-system-packages certbot-dns-cloudflare to the nginxproxym… [@tug-benson](https://github.com/tug-benson) ([#5957](https://github.com/community-scripts/ProxmoxVE/pull/5957))
