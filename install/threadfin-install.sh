@@ -20,6 +20,8 @@ $STD apt-get install -y \
 msg_ok "Installed Dependencies"
 
 fetch_and_deploy_gh_release "threadfin" "threadfin/threadfin" "singlefile" "latest" "/opt/threadfin" "Threadfin_linux_amd64"
+mv /root/.threadfin /root/.threadfin_version
+mkdir -p /root/.threadfin
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/threadfin.service

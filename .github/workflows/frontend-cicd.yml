@@ -26,7 +26,7 @@ concurrency:
 jobs:
   build:
     if: github.repository == 'community-scripts/ProxmoxVE'
-    runs-on: runner-cluster-htl-set
+    runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: frontend  # Set default working directory for all run steps

@@ -29,7 +29,7 @@ function update_script() {
   fi
 
   RELEASE=$(curl -fsSL https://api.github.com/repos/threadfin/threadfin/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  if [[ "${RELEASE}" != "$(cat ~/.threadfin 2>/dev/null)" ]] || [[ ! -f ~/.threadfin ]]; then
+  if [[ "${RELEASE}" != "$(cat ~/.threadfin_version 2>/dev/null)" ]] || [[ ! -f ~/.threadfin_version ]]; then
 
     msg_info "Stopping $APP"
     systemctl stop threadfin

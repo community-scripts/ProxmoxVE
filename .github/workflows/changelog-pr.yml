@@ -8,7 +8,7 @@ on:
 jobs:
   update-changelog-pull-request:
     if: github.repository == 'community-scripts/ProxmoxVE'
-    runs-on: runner-cluster-htl-set
+    runs-on: ubuntu-latest
     env:
       CONFIG_PATH: .github/changelog-pr-config.json
       BRANCH_NAME: github-action-update-changelog

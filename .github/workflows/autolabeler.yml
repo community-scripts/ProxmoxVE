@@ -9,7 +9,7 @@ on:
 jobs:
   autolabeler:
     if: github.repository == 'community-scripts/ProxmoxVE'
-    runs-on: runner-cluster-htl-set
+    runs-on: ubuntu-latest
     permissions:
       pull-requests: write
     env:

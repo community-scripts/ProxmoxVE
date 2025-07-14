@@ -11,7 +11,7 @@ on:
 jobs:
   update-app-files:
     if: github.repository == 'community-scripts/ProxmoxVE'
-    runs-on: runner-cluster-htl-set
+    runs-on: ubuntu-latest
 
     permissions:
       contents: write
