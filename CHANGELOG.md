@@ -10,6 +10,14 @@
 > [!CAUTION]
 Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit the project's popularity for potentially malicious purposes.
 
+## 2025-07-14
+
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Update nic-offloading-fix: add Intel as search Text  [@calvin-li-developer](https://github.com/calvin-li-developer) ([#5954](https://github.com/community-scripts/ProxmoxVE/pull/5954))
+
 ## 2025-07-12
 
 ## 2025-07-11
