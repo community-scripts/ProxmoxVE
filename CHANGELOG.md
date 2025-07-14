@@ -17,6 +17,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - Bar Assistant ([#5977](https://github.com/community-scripts/ProxmoxVE/pull/5977))
 - Mealie ([#5968](https://github.com/community-scripts/ProxmoxVE/pull/5968))
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Dashy: remove unbound variable (RELEASE) [@MickLesk](https://github.com/MickLesk) ([#5974](https://github.com/community-scripts/ProxmoxVE/pull/5974))
+
 ### 🌐 Website
 
   - #### 📝 Script Information
