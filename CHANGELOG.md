@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-07-15
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - checkmk: change password crawling based on there docs [@MickLesk](https://github.com/MickLesk) ([#6001](https://github.com/community-scripts/ProxmoxVE/pull/6001))
+
 ## 2025-07-14
 
 ### 🆕 New Scripts
