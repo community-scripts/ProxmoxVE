@@ -1,5 +1,55 @@
 [
   {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.1",
+    "date": "2025-07-12T13:41:57Z"
+  },
+  {
+    "name": "rcourtman/Pulse",
+    "version": "v3.42.0",
+    "date": "2025-07-14T22:07:28Z"
+  },
+  {
+    "name": "pi-hole/pi-hole",
+    "version": "v6.1.4",
+    "date": "2025-07-14T21:22:17Z"
+  },
+  {
+    "name": "ipfs/kubo",
+    "version": "v0.36.0",
+    "date": "2025-07-14T18:59:57Z"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2025.6.3",
+    "date": "2025-07-03T01:07:26Z"
+  },
+  {
+    "name": "open-webui/open-webui",
+    "version": "v0.6.16",
+    "date": "2025-07-14T17:39:38Z"
+  },
+  {
+    "name": "prometheus/prometheus",
+    "version": "v3.5.0",
+    "date": "2025-07-14T16:54:21Z"
+  },
+  {
+    "name": "Paymenter/Paymenter",
+    "version": "v1.2.3",
+    "date": "2025-07-14T16:28:03Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.102.3",
+    "date": "2025-07-14T14:53:08Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.7.2",
+    "date": "2025-07-14T11:29:58Z"
+  },
+  {
     "name": "theonedev/onedev",
     "version": "v12.0.0",
     "date": "2025-07-14T06:19:59Z"
@@ -28,11 +78,6 @@
     "name": "firefly-iii/firefly-iii",
     "version": "v6.2.20",
     "date": "2025-07-02T04:03:37Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.1",
-    "date": "2025-07-12T13:41:57Z"
   },
   {
     "name": "homebridge/homebridge",
@@ -70,11 +115,6 @@
     "date": "2025-07-13T12:27:31Z"
   },
   {
-    "name": "rcourtman/Pulse",
-    "version": "v3.41.1",
-    "date": "2025-07-10T17:10:46Z"
-  },
-  {
     "name": "authelia/authelia",
     "version": "v4.39.5",
     "date": "2025-07-13T06:12:47Z"
@@ -83,11 +123,6 @@
     "name": "henrygd/beszel",
     "version": "v0.11.1",
     "date": "2025-04-29T01:14:35Z"
-  },
-  {
-    "name": "esphome/esphome",
-    "version": "2025.6.3",
-    "date": "2025-07-03T01:07:26Z"
   },
   {
     "name": "OliveTin/OliveTin",
@@ -175,11 +210,6 @@
     "date": "2025-07-11T18:03:51Z"
   },
   {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.101.2",
-    "date": "2025-07-11T12:03:41Z"
-  },
-  {
     "name": "FlowiseAI/Flowise",
     "version": "flowise@3.0.4",
     "date": "2025-07-11T13:26:54Z"
@@ -193,16 +223,6 @@
     "name": "zitadel/zitadel",
     "version": "v3.3.1",
     "date": "2025-07-11T11:51:48Z"
-  },
-  {
-    "name": "prometheus/prometheus",
-    "version": "v2.53.5",
-    "date": "2025-06-30T11:01:12Z"
-  },
-  {
-    "name": "Paymenter/Paymenter",
-    "version": "v1.2.2",
-    "date": "2025-07-11T10:09:47Z"
   },
   {
     "name": "traefik/traefik",
@@ -330,11 +350,6 @@
     "date": "2025-06-11T20:10:39Z"
   },
   {
-    "name": "ipfs/kubo",
-    "version": "v0.35.0",
-    "date": "2025-05-21T18:00:32Z"
-  },
-  {
     "name": "grokability/snipe-it",
     "version": "v8.1.18",
     "date": "2025-07-08T20:36:37Z"
@@ -443,11 +458,6 @@
     "name": "linkwarden/linkwarden",
     "version": "v2.11.3",
     "date": "2025-07-05T04:34:46Z"
-  },
-  {
-    "name": "home-assistant/core",
-    "version": "2025.7.1",
-    "date": "2025-07-04T20:02:52Z"
   },
   {
     "name": "emqx/emqx",
@@ -740,11 +750,6 @@
     "date": "2025-06-17T05:20:42Z"
   },
   {
-    "name": "open-webui/open-webui",
-    "version": "v0.6.15",
-    "date": "2025-06-16T14:34:42Z"
-  },
-  {
     "name": "crafty-controller/crafty-4",
     "version": "v4.4.11",
     "date": "2025-06-15T21:41:02Z"
@@ -838,11 +843,6 @@
     "name": "benjaminjonard/koillection",
     "version": "1.6.14",
     "date": "2025-06-05T16:40:52Z"
-  },
-  {
-    "name": "pi-hole/pi-hole",
-    "version": "v6.1.2",
-    "date": "2025-06-05T11:32:45Z"
   },
   {
     "name": "MariaDB/server",
