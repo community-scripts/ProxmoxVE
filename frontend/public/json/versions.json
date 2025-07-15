@@ -1,8 +1,48 @@
 [
   {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.3-beta.10",
+    "date": "2025-07-15T06:07:03Z"
+  },
+  {
+    "name": "zabbix/zabbix",
+    "version": "7.0.17rc1",
+    "date": "2025-07-15T08:51:36Z"
+  },
+  {
+    "name": "gotson/komga",
+    "version": "1.22.1",
+    "date": "2025-07-15T06:44:29Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2159",
+    "date": "2025-07-15T05:47:35Z"
+  },
+  {
+    "name": "go-gitea/gitea",
+    "version": "v1.24.3",
+    "date": "2025-07-15T04:56:24Z"
+  },
+  {
+    "name": "jhuckaby/Cronicle",
+    "version": "v0.9.82",
+    "date": "2025-07-15T03:45:44Z"
+  },
+  {
+    "name": "mongodb/mongo",
+    "version": "r8.2.0-alpha1",
+    "date": "2025-07-15T00:48:01Z"
+  },
+  {
     "name": "steveiliop56/tinyauth",
     "version": "v3.6.1",
     "date": "2025-07-12T13:41:57Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.3.1",
+    "date": "2025-07-09T15:41:43Z"
   },
   {
     "name": "rcourtman/Pulse",
@@ -52,7 +92,7 @@
   {
     "name": "theonedev/onedev",
     "version": "v12.0.0",
-    "date": "2025-07-14T06:19:59Z"
+    "date": "2025-07-14T10:08:45Z"
   },
   {
     "name": "wazuh/wazuh",
@@ -63,16 +103,6 @@
     "name": "Luligu/matterbridge",
     "version": "3.1.3",
     "date": "2025-07-14T07:14:31Z"
-  },
-  {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.3-beta.9",
-    "date": "2025-07-14T06:07:20Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2154",
-    "date": "2025-07-14T06:00:33Z"
   },
   {
     "name": "firefly-iii/firefly-iii",
@@ -175,11 +205,6 @@
     "date": "2025-07-12T07:53:52Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.3.1",
-    "date": "2025-07-09T15:41:43Z"
-  },
-  {
     "name": "fuma-nama/fumadocs",
     "version": "fumadocs-openapi@9.1.2",
     "date": "2025-07-12T03:58:47Z"
@@ -188,11 +213,6 @@
     "name": "eclipse-mosquitto/mosquitto",
     "version": "v2.0.22",
     "date": "2025-07-11T21:34:20Z"
-  },
-  {
-    "name": "mongodb/mongo",
-    "version": "r8.2.0-alpha0",
-    "date": "2025-07-11T21:06:26Z"
   },
   {
     "name": "duplicati/duplicati",
@@ -550,11 +570,6 @@
     "date": "2025-07-01T16:47:46Z"
   },
   {
-    "name": "zabbix/zabbix",
-    "version": "7.4.0",
-    "date": "2025-07-01T04:36:51Z"
-  },
-  {
     "name": "openobserve/openobserve",
     "version": "v0.15.0-rc3",
     "date": "2025-07-01T04:09:37Z"
@@ -563,11 +578,6 @@
     "name": "MagicMirrorOrg/MagicMirror",
     "version": "v2.32.0",
     "date": "2025-06-30T22:12:48Z"
-  },
-  {
-    "name": "jhuckaby/Cronicle",
-    "version": "v0.9.81",
-    "date": "2025-06-30T16:40:33Z"
   },
   {
     "name": "jupyter/notebook",
@@ -645,11 +655,6 @@
     "date": "2025-06-23T20:58:42Z"
   },
   {
-    "name": "gotson/komga",
-    "version": "1.22.0",
-    "date": "2025-06-23T03:11:37Z"
-  },
-  {
     "name": "clusterzx/paperless-ai",
     "version": "v3.0.7",
     "date": "2025-06-22T17:49:29Z"
@@ -668,11 +673,6 @@
     "name": "pocketbase/pocketbase",
     "version": "v0.28.4",
     "date": "2025-06-21T08:29:04Z"
-  },
-  {
-    "name": "go-gitea/gitea",
-    "version": "v1.24.2",
-    "date": "2025-06-20T20:37:55Z"
   },
   {
     "name": "immich-app/immich",
