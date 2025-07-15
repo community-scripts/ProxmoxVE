@@ -16,9 +16,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - checkmk: change password crawling based on there docs [@MickLesk](https://github.com/MickLesk) ([#6001](https://github.com/community-scripts/ProxmoxVE/pull/6001))
     - Whiptail: Improve Dialogue to work with ESC [@MickLesk](https://github.com/MickLesk) ([#6003](https://github.com/community-scripts/ProxmoxVE/pull/6003))
     - 2FAuth: Improve Update-Check [@MickLesk](https://github.com/MickLesk) ([#5998](https://github.com/community-scripts/ProxmoxVE/pull/5998))
-    - checkmk: change password crawling based on there docs [@MickLesk](https://github.com/MickLesk) ([#6001](https://github.com/community-scripts/ProxmoxVE/pull/6001))
 
   - #### 💥 Breaking Changes
 
