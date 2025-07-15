@@ -18,6 +18,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - checkmk: change password crawling based on there docs [@MickLesk](https://github.com/MickLesk) ([#6001](https://github.com/community-scripts/ProxmoxVE/pull/6001))
 
+  - #### 🔧 Refactor
+
+    - Refactor: PeaNUT [@MickLesk](https://github.com/MickLesk) ([#6002](https://github.com/community-scripts/ProxmoxVE/pull/6002))
+
 ## 2025-07-14
 
 ### 🆕 New Scripts
