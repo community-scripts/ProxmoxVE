@@ -192,7 +192,6 @@ base_settings() {
   GATE=""
   APT_CACHER=""
   APT_CACHER_IP=""
-  #DISABLEIP6="no"
   MTU=""
   SD=""
   NS=""
@@ -228,7 +227,7 @@ write_config() {
   if whiptail --backtitle "Proxmox VE Helper Scripts" --defaultno --title "Write configfile" --yesno "Do you want to write the selections to a config file?" 10 60; then
     FILEPATH="/opt/community-scripts/${NSAPP}.conf"
     if [[ ! -f $FILEPATH ]]; then
-      cat <<EOF >"$FILEPATH"
+  cat <<EOF >"$FILEPATH"
 # ${NSAPP} Configuration File
 # Generated on $(date)
 
@@ -236,31 +235,36 @@ CT_TYPE="${CT_TYPE}"
 DISK_SIZE="${DISK_SIZE}"
 CORE_COUNT="${CORE_COUNT}"
 RAM_SIZE="${RAM_SIZE}"
+VERBOSE="${VERBOSE}"
+PW="${PW##-password }"
+#CT_ID=$NEXTID
 HN="${HN}"
 BRG="${BRG}"
+NET="${NET}"
+IPV6_METHOD="${IPV6_METHOD:-none}"
+# Set this only if using "IPV6_METHOD=static"
+#IPV6STATIC="fd00::1234/64"
+
+GATE="${GATE:-none}"
 APT_CACHER_IP="${APT_CACHER_IP:-none}"
-DISABLEIP6=""
-PW='${PW:-none}'
+MTU="${MTU:-1500}"
+SD="${SD:-none}"
+NS="${NS:-none}"
+MAC="${MAC:-none}"
+VLAN="${VLAN:-none}"
 SSH="${SSH}"
 SSH_AUTHORIZED_KEY="${SSH_AUTHORIZED_KEY}"
-VERBOSE="${VERBOSE}"
 TAGS="${TAGS:-none}"
-VLAN="${VLAN:-none}"
-MTU="${MTU:-1500}"
-GATE="${GATE:-none}"
-SD="${SD:-none}"
-MAC="${MAC:-none}"
-NS="${NS:-none}"
-NET="${NET}"
-FUSE="${ENABLE_FUSE}"
-
+ENABLE_FUSE="$ENABLE_FUSE"
+ENABLE_TUN="$ENABLE_TUN"
 EOF
+
       echo -e "${INFO}${BOLD}${GN}Writing configuration to ${FILEPATH}${CL}"
     else
       echo -e "${INFO}${BOLD}${RD}Configuration file already exists at ${FILEPATH}${CL}"
       if whiptail --backtitle "Proxmox VE Helper Scripts" --defaultno --title "Overwrite configfile" --yesno "Do you want to overwrite the existing config file?" 10 60; then
         rm -f "$FILEPATH"
-        cat <<EOF >"$FILEPATH"
+          cat <<EOF >"$FILEPATH"
 # ${NSAPP} Configuration File
 # Generated on $(date)
 
@@ -268,24 +272,29 @@ CT_TYPE="${CT_TYPE}"
 DISK_SIZE="${DISK_SIZE}"
 CORE_COUNT="${CORE_COUNT}"
 RAM_SIZE="${RAM_SIZE}"
+VERBOSE="${VERBOSE}"
+PW="${PW##-password }"
+#CT_ID=$NEXTID
 HN="${HN}"
 BRG="${BRG}"
+NET="${NET}"
+IPV6_METHOD="${IPV6_METHOD:-none}"
+
+# Set this only if using "IPV6_METHOD=static"
+#IPV6STATIC="fd00::1234/64"
+
+GATE="${GATE:-none}"
 APT_CACHER_IP="${APT_CACHER_IP:-none}"
-DISABLEIP6=""
-PW='${PW:-none}'
+MTU="${MTU:-1500}"
+SD="${SD:-none}"
+NS="${NS:-none}"
+MAC="${MAC:-none}"
+VLAN="${VLAN:-none}"
 SSH="${SSH}"
 SSH_AUTHORIZED_KEY="${SSH_AUTHORIZED_KEY}"
-VERBOSE="${VERBOSE}"
 TAGS="${TAGS:-none}"
-VLAN="${VLAN:-none}"
-MTU="${MTU:-1500}"
-GATE="${GATE:-none}"
-SD="${SD:-none}"
-MAC="${MAC:-none}"
-NS="${NS:-none}"
-NET="${NET}"
-FUSE="${ENABLE_FUSE}"
-
+ENABLE_FUSE="$ENABLE_FUSE"
+ENABLE_TUN="$ENABLE_TUN"
 EOF
         echo -e "${INFO}${BOLD}${GN}Writing configuration to ${FILEPATH}${CL}"
       else
@@ -667,13 +676,6 @@ advanced_settings() {
     fi
   fi
 
-  # if (whiptail --backtitle "Proxmox VE Helper Scripts" --defaultno --title "IPv6" --yesno "Disable IPv6?" 10 58); then
-  #   DISABLEIP6="yes"
-  # else
-  #   DISABLEIP6="no"
-  # fi
-  # echo -e "${DISABLEIPV6}${BOLD}${DGN}Disable IPv6: ${BGN}$DISABLEIP6${CL}"
-
   if MTU1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Interface MTU Size (leave blank for default [The MTU of your selected vmbr, default is 1500])" 8 58 --title "MTU SIZE" 3>&1 1>&2 2>&3); then
     if [ -z "$MTU1" ]; then
       MTU1="Default"
@@ -815,7 +817,6 @@ DIAGNOSTICS=yes
 #"ram_size"
 #"os_type"
 #"os_version"
-#"disableip6"
 #"nsapp"
 #"method"
 #"pve_version"
@@ -842,7 +843,6 @@ DIAGNOSTICS=no
 #"ram_size"
 #"os_type"
 #"os_version"
-#"disableip6"
 #"nsapp"
 #"method"
 #"pve_version"
@@ -1064,7 +1064,6 @@ build_container() {
   export CACHER="$APT_CACHER"
   export CACHER_IP="$APT_CACHER_IP"
   export tz="$timezone"
-  #export DISABLEIPV6="$DISABLEIP6"
   export APPLICATION="$APP"
   export app="$NSAPP"
   export PASSWORD="$PW"

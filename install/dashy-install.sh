@@ -16,11 +16,11 @@ update_os
 NODE_VERSION="22" setup_nodejs
 fetch_and_deploy_gh_release "dashy" "Lissy93/dashy"
 
-msg_info "Installing Dashy ${RELEASE} (Patience)"
+msg_info "Installing Dashy"
 cd /opt/dashy
 $STD npm install
 $STD npm run build
-msg_ok "Installed Dashy ${RELEASE}"
+msg_ok "Installed Dashy"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/dashy.service

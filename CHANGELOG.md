@@ -10,11 +10,23 @@
 > [!CAUTION]
 Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit the project's popularity for potentially malicious purposes.
 
+## 2025-07-15
+
 ## 2025-07-14
 
 ### 🆕 New Scripts
 
-  - Mealie ([#5968](https://github.com/community-scripts/ProxmoxVE/pull/5968))
+  - Bar Assistant ([#5977](https://github.com/community-scripts/ProxmoxVE/pull/5977))
+- Mealie ([#5968](https://github.com/community-scripts/ProxmoxVE/pull/5968))
+
+### 🚀 Updated Scripts
+
+  - Config-File: Some Addons, Bugfixes...  [@MickLesk](https://github.com/MickLesk) ([#5978](https://github.com/community-scripts/ProxmoxVE/pull/5978))
+
+  - #### 🐞 Bug Fixes
+
+    - add --break-system-packages certbot-dns-cloudflare to the nginxproxym… [@tug-benson](https://github.com/tug-benson) ([#5957](https://github.com/community-scripts/ProxmoxVE/pull/5957))
+    - Dashy: remove unbound variable (RELEASE) [@MickLesk](https://github.com/MickLesk) ([#5974](https://github.com/community-scripts/ProxmoxVE/pull/5974))
 
 ### 🌐 Website
 

@@ -113,7 +113,7 @@ function update_script() {
   cp -r frontend/app-images/* /app/frontend/images
   cp -r backend/* /app
   cp -r global/* /app/global
-  $STD python3 -m pip install --no-cache-dir certbot-dns-cloudflare
+  $STD python3 -m pip install --no-cache-dir --break-system-packages certbot-dns-cloudflare
   msg_ok "Setup Environment"
 
   msg_info "Initializing Backend"

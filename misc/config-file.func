@@ -446,6 +446,22 @@ config_file() {
     fi
   fi
 
+  if [[ "$IPV6_METHOD" == "static" ]]; then
+    if [[ -n "$IPV6STATIC" ]]; then
+      IP6=",ip6=${IPV6STATIC}"
+      echo -e "${NETWORK}${BOLD}${DGN}IPv6 Address: ${BGN}${IPV6STATIC}${CL}"
+    else
+      msg_error "IPV6_METHOD is set to static but IPV6STATIC is empty"
+      exit
+    fi
+  elif [[ "$IPV6_METHOD" == "auto" ]]; then
+    IP6=",ip6=auto"
+    echo -e "${NETWORK}${BOLD}${DGN}IPv6 Address: ${BGN}auto${CL}"
+  else
+    IP6=""
+    echo -e "${NETWORK}${BOLD}${DGN}IPv6 Address: ${BGN}none${CL}"
+  fi
+
   if [[ -n "${SD-}" ]]; then
     if [[ "$SD" == "none" ]]; then
       SD=""
@@ -620,6 +636,24 @@ config_file() {
       ENABLE_FUSE="no"
     fi
     echo -e "${FUSE}${BOLD}${DGN}Enable FUSE: ${BGN}$ENABLE_FUSE${CL}"
+  fi
+
+  if [[ -n "$ENABLE_TUN" ]]; then
+    if [[ "$ENABLE_TUN" == "yes" ]]; then
+      echo -e "${FUSE}${BOLD}${DGN}Enable TUN: ${BGN}Yes${CL}"
+    elif [[ "$ENABLE_TUN" == "no" ]]; then
+      echo -e "${FUSE}${BOLD}${DGN}Enable TUN: ${BGN}No${CL}"
+    else
+      msg_error "Enable TUN needs to be 'yes' or 'no', was ${ENABLE_TUN}"
+      exit
+    fi
+  else
+    if (whiptail --backtitle "Proxmox VE Helper Scripts" --defaultno --title "TUN" --yesno "Enable TUN?" 10 58); then
+      ENABLE_TUN="yes"
+    else
+      ENABLE_TUN="no"
+    fi
+    echo -e "${FUSE}${BOLD}${DGN}Enable TUN: ${BGN}$ENABLE_TUN${CL}"
   fi
 
   if [[ -n "${VERBOSE-}" ]]; then
