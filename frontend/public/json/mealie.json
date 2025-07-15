@@ -9,7 +9,7 @@
   "updateable": true,
   "privileged": false,
   "config_path": "/opt/mealie/mealie.env",
-  "interface_port": 3000,
+  "interface_port": 9000,
   "documentation": "https://mealie.io/",
   "website": "https://mealie.io/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/mealie.webp",
