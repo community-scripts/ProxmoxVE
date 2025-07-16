@@ -14,6 +14,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - karakeep-install: Disable Playwright browser download, remove MCP build [@vhsdream](https://github.com/vhsdream) ([#5833](https://github.com/community-scripts/ProxmoxVE/pull/5833))
+
   - #### 🔧 Refactor
 
     - chore: reorganize nginxproxymanager update script [@Kirbo](https://github.com/Kirbo) ([#5971](https://github.com/community-scripts/ProxmoxVE/pull/5971))
