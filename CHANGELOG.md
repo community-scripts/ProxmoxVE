@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-07-16
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - chore: reorganize nginxproxymanager update script [@Kirbo](https://github.com/Kirbo) ([#5971](https://github.com/community-scripts/ProxmoxVE/pull/5971))
+
 ## 2025-07-15
 
 ### 🚀 Updated Scripts
