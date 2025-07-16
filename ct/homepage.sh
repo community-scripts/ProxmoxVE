@@ -56,7 +56,7 @@ function update_script() {
     rm -rf homepage-${RELEASE}
     cd /opt/homepage
     $STD pnpm install
-    $STD npx --yes update-browserslist-db@latest
+    $STD pnpm update --no-save caniuse-lite
     export NEXT_PUBLIC_VERSION="v$RELEASE"
     export NEXT_PUBLIC_REVISION="source"
     export NEXT_PUBLIC_BUILDTIME=$(curl -fsSL https://api.github.com/repos/gethomepage/homepage/releases/latest | jq -r '.published_at')
