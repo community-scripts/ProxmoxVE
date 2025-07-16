@@ -36,10 +36,12 @@ function update_script() {
   msg_info "Stopping Services"
   systemctl stop karakeep-web karakeep-workers karakeep-browser
   msg_ok "Stopped Services"
+  
   msg_info "Updating yt-dlp"
   $STD yt-dlp --update-to nightly
   msg_ok "Updated yt-dlp"
-  msg_info "Updating ${APP} to v${RELEASE}"
+  
+  msg_info "Prepare update"
   if [[ -f /opt/${APP}_version.txt && "$(cat /opt/${APP}_version.txt)" < "0.23.0" ]]; then
     $STD apt-get install -y graphicsmagick ghostscript
   fi
@@ -48,12 +50,17 @@ function update_script() {
     mv /opt/karakeep/.env /etc/karakeep/karakeep.env
   fi
   rm -rf /opt/karakeep
+  msg_ok "Update prepared"
+  
   fetch_and_deploy_gh_release "karakeep" "karakeep-app/karakeep"
   if command -v corepack; then
     $STD corepack disable
   fi
   MODULE_VERSION="$(jq -r '.packageManager | split("@")[1]' /opt/karakeep/package.json)"
   NODE_VERSION="22" NODE_MODULE="pnpm@${MODULE_VERSION}" setup_nodejs
+
+  
+  msg_info "Updating ${APP} to v${RELEASE}"
   export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD="true"
   export NEXT_TELEMETRY_DISABLED=1
   export CI="true"
@@ -75,6 +82,7 @@ function update_script() {
   msg_info "Starting Services"
   systemctl start karakeep-browser karakeep-workers karakeep-web
   msg_ok "Started Services"
+  
   msg_info "Cleaning up"
   $STD apt-get autoremove -y
   $STD apt-get autoclean -y
