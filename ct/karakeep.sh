@@ -60,6 +60,7 @@ function update_script() {
   NODE_VERSION="22" NODE_MODULE="pnpm@${MODULE_VERSION}" setup_nodejs
   
   msg_info "Updating ${APP} to v${RELEASE}"
+  export PUPPETEER_SKIP_DOWNLOAD="true"
   export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD="true"
   export NEXT_TELEMETRY_DISABLED=1
   export CI="true"
