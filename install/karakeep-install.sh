@@ -55,6 +55,7 @@ MODULE_VERSION="$(jq -r '.packageManager | split("@")[1]' /opt/karakeep/package.
 NODE_VERSION="22" NODE_MODULE="pnpm@${MODULE_VERSION}" setup_nodejs
 
 msg_info "Installing karakeep"
+export PUPPETEER_SKIP_DOWNLOAD="true"
 export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD="true"
 export NEXT_TELEMETRY_DISABLED=1
 export CI="true"
