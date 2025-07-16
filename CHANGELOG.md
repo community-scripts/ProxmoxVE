@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - homepage.sh: resolves #6028 [@vhsdream](https://github.com/vhsdream) ([#6032](https://github.com/community-scripts/ProxmoxVE/pull/6032))
     - karakeep-install: Disable Playwright browser download, remove MCP build [@vhsdream](https://github.com/vhsdream) ([#5833](https://github.com/community-scripts/ProxmoxVE/pull/5833))
 
   - #### 🔧 Refactor
