@@ -1,18 +1,38 @@
 [
   {
-    "name": "esphome/esphome",
-    "version": "2025.6.3",
-    "date": "2025-07-03T01:07:26Z"
+    "name": "glpi-project/glpi",
+    "version": "10.0.19",
+    "date": "2025-07-16T09:45:14Z"
   },
   {
-    "name": "coder/code-server",
-    "version": "v4.101.2",
-    "date": "2025-06-25T21:18:52Z"
+    "name": "NLnetLabs/unbound",
+    "version": "release-1.23.1",
+    "date": "2025-07-16T09:20:27Z"
+  },
+  {
+    "name": "meilisearch/meilisearch",
+    "version": "prototype-chat-completions-with-filters-0",
+    "date": "2025-07-16T08:54:57Z"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2025.7.0",
+    "date": "2025-07-16T08:46:37Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2161",
+    "date": "2025-07-16T05:55:36Z"
   },
   {
     "name": "steveiliop56/tinyauth",
     "version": "v3.6.1",
     "date": "2025-07-12T13:41:57Z"
+  },
+  {
+    "name": "coder/code-server",
+    "version": "v4.101.2",
+    "date": "2025-06-25T21:18:52Z"
   },
   {
     "name": "sbondCo/Watcharr",
@@ -35,14 +55,14 @@
     "date": "2025-07-15T20:06:24Z"
   },
   {
-    "name": "netbox-community/netbox",
-    "version": "v4.3.4",
-    "date": "2025-07-15T18:01:50Z"
-  },
-  {
     "name": "keycloak/keycloak",
     "version": "26.0.13",
     "date": "2025-07-15T17:22:26Z"
+  },
+  {
+    "name": "netbox-community/netbox",
+    "version": "v4.3.4",
+    "date": "2025-07-15T18:01:50Z"
   },
   {
     "name": "gethomepage/homepage",
@@ -108,11 +128,6 @@
     "name": "gotson/komga",
     "version": "1.22.1",
     "date": "2025-07-15T06:44:29Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2159",
-    "date": "2025-07-15T05:47:35Z"
   },
   {
     "name": "go-gitea/gitea",
@@ -271,8 +286,8 @@
   },
   {
     "name": "ollama/ollama",
-    "version": "v0.9.7-rc1",
-    "date": "2025-07-11T22:15:00Z"
+    "version": "v0.9.6",
+    "date": "2025-07-08T01:26:29Z"
   },
   {
     "name": "eclipse-mosquitto/mosquitto",
@@ -338,11 +353,6 @@
     "name": "crowdsecurity/crowdsec",
     "version": "v1.6.10",
     "date": "2025-07-10T12:04:30Z"
-  },
-  {
-    "name": "meilisearch/meilisearch",
-    "version": "prototype-incremental-vector-store-3",
-    "date": "2025-07-07T10:27:19Z"
   },
   {
     "name": "pocket-id/pocket-id",
@@ -558,11 +568,6 @@
     "name": "Koenkk/zigbee2mqtt",
     "version": "2.5.1",
     "date": "2025-07-02T19:38:06Z"
-  },
-  {
-    "name": "glpi-project/glpi",
-    "version": "10.0.18",
-    "date": "2025-02-12T11:07:02Z"
   },
   {
     "name": "apache/tomcat",
@@ -1018,11 +1023,6 @@
     "name": "dotnetfactory/fluid-calendar",
     "version": "v1.4.0",
     "date": "2025-04-24T16:20:17Z"
-  },
-  {
-    "name": "NLnetLabs/unbound",
-    "version": "release-1.23.0",
-    "date": "2025-04-24T08:07:21Z"
   },
   {
     "name": "monicahq/monica",
