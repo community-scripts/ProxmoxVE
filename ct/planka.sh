@@ -35,25 +35,21 @@ function update_script() {
     msg_ok "Stopped $APP"
 
     msg_info "Updating $APP to ${RELEASE}"
-    mkdir -p /opt/planka-backup
-    mkdir -p /opt/planka-backup/favicons
-    mkdir -p /opt/planka-backup/user-avatars
-    mkdir -p /opt/planka-backup/background-images
-    mkdir -p /opt/planka-backup/attachments
+    mkdir -p /opt/planka-backup/{favicons,user-avatars,background-images,attachments}
     mv /opt/planka/.env /opt/planka-backup
-    [ -n "$(ls -A /opt/planka/public/favicons 2>/dev/null)" ] && mv /opt/planka/public/favicons/* /opt/planka-backup/favicons/
-    [ -n "$(ls -A /opt/planka/public/user-avatars 2>/dev/null)" ] && mv /opt/planka/public/user-avatars/* /opt/planka-backup/user-avatars/
-    [ -n "$(ls -A /opt/planka/public/background-images 2>/dev/null)" ] && mv /opt/planka/public/background-images/* /opt/planka-backup/background-images/
-    [ -n "$(ls -A /opt/planka/private/attachments 2>/dev/null)" ] && mv /opt/planka/private/attachments/* /opt/planka-backup/attachments/
+    [ -d /opt/planka/public/favicons ] && [ "$(ls -A /opt/planka/public/favicons)" ] && mv /opt/planka/public/favicons/* /opt/planka-backup/favicons/
+    [ -d /opt/planka/public/user-avatars ] && [ "$(ls -A /opt/planka/public/user-avatars)" ] && mv /opt/planka/public/user-avatars/* /opt/planka-backup/user-avatars/
+    [ -d /opt/planka/public/background-images ] && [ "$(ls -A /opt/planka/public/background-images)" ] && mv /opt/planka/public/background-images/* /opt/planka-backup/background-images/
+    [ -d /opt/planka/private/attachments ] && [ "$(ls -A /opt/planka/private/attachments)" ] && mv /opt/planka/private/attachments/* /opt/planka-backup/attachments/
     rm -rf /opt/planka
     fetch_and_deploy_gh_release "planka" "plankanban/planka" "prebuild" "latest" "/opt/planka" "planka-prebuild.zip"
     cd /opt/planka
     $STD npm install
     mv /opt/planka-backup/.env /opt/planka/
-    [ -n "$(ls -A /opt/planka-backup/favicons 2>/dev/null)" ] && mv /opt/planka-backup/favicons/* /opt/planka/public/favicons/
-    [ -n "$(ls -A /opt/planka-backup/user-avatars 2>/dev/null)" ] && mv /opt/planka-backup/user-avatars/* /opt/planka/public/user-avatars/
-    [ -n "$(ls -A /opt/planka-backup/background-images 2>/dev/null)" ] && mv /opt/planka-backup/background-images/* /opt/planka/public/background-images/
-    [ -n "$(ls -A /opt/planka-backup/attachments 2>/dev/null)" ] && mv /opt/planka-backup/attachments/* /opt/planka/private/attachments/
+    [ -d /opt/planka-backup/favicons ] && [ "$(ls -A /opt/planka-backup/favicons)" ] && mv /opt/planka-backup/favicons/* /opt/planka/public/favicons/
+    [ -d /opt/planka-backup/user-avatars ] && [ "$(ls -A /opt/planka-backup/user-avatars)" ] && mv /opt/planka-backup/user-avatars/* /opt/planka/public/user-avatars/
+    [ -d /opt/planka-backup/background-images ] && [ "$(ls -A /opt/planka-backup/background-images)" ] && mv /opt/planka-backup/background-images/* /opt/planka/public/background-images/
+    [ -d /opt/planka-backup/attachments ] && [ "$(ls -A /opt/planka-backup/attachments)" ] && mv /opt/planka-backup/attachments/* /opt/planka/private/attachments/
     msg_ok "Updated $APP to ${RELEASE}"
 
     msg_info "Starting $APP"
