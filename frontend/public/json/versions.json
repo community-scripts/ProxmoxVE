@@ -1,13 +1,108 @@
 [
   {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.3-beta.10",
-    "date": "2025-07-15T06:07:03Z"
+    "name": "esphome/esphome",
+    "version": "2025.6.3",
+    "date": "2025-07-03T01:07:26Z"
+  },
+  {
+    "name": "coder/code-server",
+    "version": "v4.101.2",
+    "date": "2025-06-25T21:18:52Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.1",
+    "date": "2025-07-12T13:41:57Z"
+  },
+  {
+    "name": "sbondCo/Watcharr",
+    "version": "v2.1.1",
+    "date": "2025-07-15T22:38:01Z"
+  },
+  {
+    "name": "rcourtman/Pulse",
+    "version": "v3.42.0",
+    "date": "2025-07-14T22:07:28Z"
+  },
+  {
+    "name": "mongodb/mongo",
+    "version": "r8.2.0-alpha2",
+    "date": "2025-07-15T20:47:00Z"
+  },
+  {
+    "name": "plexguide/Huntarr.io",
+    "version": "8.1.12",
+    "date": "2025-07-15T20:06:24Z"
+  },
+  {
+    "name": "netbox-community/netbox",
+    "version": "v4.3.4",
+    "date": "2025-07-15T18:01:50Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.0.13",
+    "date": "2025-07-15T17:22:26Z"
+  },
+  {
+    "name": "gethomepage/homepage",
+    "version": "v1.4.0",
+    "date": "2025-07-15T16:43:28Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.24.0",
+    "date": "2025-07-15T16:02:44Z"
+  },
+  {
+    "name": "duplicati/duplicati",
+    "version": "v2.1.0.125-2.1.0.125_canary_2025-07-15",
+    "date": "2025-07-15T15:39:11Z"
+  },
+  {
+    "name": "zitadel/zitadel",
+    "version": "v2.70.14",
+    "date": "2025-07-15T15:27:51Z"
+  },
+  {
+    "name": "WordPress/WordPress",
+    "version": "6.8.2",
+    "date": "2025-07-15T15:14:16Z"
+  },
+  {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.519",
+    "date": "2025-07-15T14:43:59Z"
+  },
+  {
+    "name": "fallenbagel/jellyseerr",
+    "version": "v2.7.1",
+    "date": "2025-07-15T14:22:46Z"
+  },
+  {
+    "name": "element-hq/synapse",
+    "version": "v1.134.0",
+    "date": "2025-07-15T13:43:39Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.4.0p8-rc1",
+    "date": "2025-07-15T12:09:17Z"
   },
   {
     "name": "zabbix/zabbix",
-    "version": "7.0.17rc1",
-    "date": "2025-07-15T08:51:36Z"
+    "version": "7.2.11rc1",
+    "date": "2025-07-15T11:47:53Z"
+  },
+  {
+    "name": "dgtlmoon/changedetection.io",
+    "version": "0.50.7",
+    "date": "2025-07-15T11:29:29Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.3-beta.10",
+    "date": "2025-07-15T06:07:03Z"
   },
   {
     "name": "gotson/komga",
@@ -30,39 +125,19 @@
     "date": "2025-07-15T03:45:44Z"
   },
   {
-    "name": "mongodb/mongo",
-    "version": "r8.2.0-alpha1",
-    "date": "2025-07-15T00:48:01Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.1",
-    "date": "2025-07-12T13:41:57Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.3.1",
-    "date": "2025-07-09T15:41:43Z"
-  },
-  {
-    "name": "rcourtman/Pulse",
-    "version": "v3.42.0",
-    "date": "2025-07-14T22:07:28Z"
-  },
-  {
     "name": "pi-hole/pi-hole",
     "version": "v6.1.4",
     "date": "2025-07-14T21:22:17Z"
   },
   {
+    "name": "postgres/postgres",
+    "version": "REL_18_BETA2",
+    "date": "2025-07-14T20:12:49Z"
+  },
+  {
     "name": "ipfs/kubo",
     "version": "v0.36.0",
     "date": "2025-07-14T18:59:57Z"
-  },
-  {
-    "name": "esphome/esphome",
-    "version": "2025.6.3",
-    "date": "2025-07-03T01:07:26Z"
   },
   {
     "name": "open-webui/open-webui",
@@ -92,7 +167,7 @@
   {
     "name": "theonedev/onedev",
     "version": "v12.0.0",
-    "date": "2025-07-14T10:08:45Z"
+    "date": "2025-07-14T06:19:59Z"
   },
   {
     "name": "wazuh/wazuh",
@@ -130,11 +205,6 @@
     "date": "2025-07-13T16:04:39Z"
   },
   {
-    "name": "msgbyte/tianji",
-    "version": "v1.23.5",
-    "date": "2025-07-13T15:23:02Z"
-  },
-  {
     "name": "mayswind/AriaNg",
     "version": "1.3.11",
     "date": "2025-07-13T13:33:48Z"
@@ -165,11 +235,6 @@
     "date": "2025-01-05T21:14:23Z"
   },
   {
-    "name": "dgtlmoon/changedetection.io",
-    "version": "0.50.6",
-    "date": "2025-07-12T19:52:52Z"
-  },
-  {
     "name": "advplyr/audiobookshelf",
     "version": "v2.26.0",
     "date": "2025-07-12T19:31:21Z"
@@ -195,11 +260,6 @@
     "date": "2025-07-12T08:50:59Z"
   },
   {
-    "name": "fallenbagel/jellyseerr",
-    "version": "preview-seerr",
-    "date": "2025-07-12T08:15:55Z"
-  },
-  {
     "name": "leiweibau/Pi.Alert",
     "version": "v2025-07-12",
     "date": "2025-07-12T07:53:52Z"
@@ -210,14 +270,14 @@
     "date": "2025-07-12T03:58:47Z"
   },
   {
+    "name": "ollama/ollama",
+    "version": "v0.9.7-rc1",
+    "date": "2025-07-11T22:15:00Z"
+  },
+  {
     "name": "eclipse-mosquitto/mosquitto",
     "version": "v2.0.22",
     "date": "2025-07-11T21:34:20Z"
-  },
-  {
-    "name": "duplicati/duplicati",
-    "version": "v2.1.0.124-2.1.0.124_canary_2025-07-11",
-    "date": "2025-07-11T20:09:08Z"
   },
   {
     "name": "TandoorRecipes/recipes",
@@ -240,11 +300,6 @@
     "date": "2025-07-11T12:57:54Z"
   },
   {
-    "name": "zitadel/zitadel",
-    "version": "v3.3.1",
-    "date": "2025-07-11T11:51:48Z"
-  },
-  {
     "name": "traefik/traefik",
     "version": "v3.4.4",
     "date": "2025-07-11T08:41:34Z"
@@ -265,11 +320,6 @@
     "date": "2025-07-11T01:17:53Z"
   },
   {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.518",
-    "date": "2025-07-08T13:52:55Z"
-  },
-  {
     "name": "LibreTranslate/LibreTranslate",
     "version": "v1.7.2",
     "date": "2025-07-10T19:29:26Z"
@@ -278,11 +328,6 @@
     "name": "binwiederhier/ntfy",
     "version": "v2.13.0",
     "date": "2025-07-10T19:27:54Z"
-  },
-  {
-    "name": "ollama/ollama",
-    "version": "v0.9.6",
-    "date": "2025-07-08T01:26:29Z"
   },
   {
     "name": "forgejo/forgejo",
@@ -345,11 +390,6 @@
     "date": "2025-07-09T13:28:43Z"
   },
   {
-    "name": "element-hq/synapse",
-    "version": "v1.133.0",
-    "date": "2025-07-01T15:13:42Z"
-  },
-  {
     "name": "AdguardTeam/AdGuardHome",
     "version": "v0.107.63",
     "date": "2025-06-26T14:34:19Z"
@@ -393,11 +433,6 @@
     "name": "docker/compose",
     "version": "v2.38.2",
     "date": "2025-07-08T09:35:14Z"
-  },
-  {
-    "name": "Checkmk/checkmk",
-    "version": "v2.4.0p7",
-    "date": "2025-07-08T05:51:08Z"
   },
   {
     "name": "VictoriaMetrics/VictoriaMetrics",
@@ -595,11 +630,6 @@
     "date": "2025-06-30T03:52:33Z"
   },
   {
-    "name": "plexguide/Huntarr.io",
-    "version": "8.1.11",
-    "date": "2025-06-28T03:42:46Z"
-  },
-  {
     "name": "tobychui/zoraxy",
     "version": "v3.2.4",
     "date": "2025-06-28T02:47:31Z"
@@ -608,11 +638,6 @@
     "name": "goauthentik/authentik",
     "version": "version/2025.6.3",
     "date": "2025-06-27T14:01:06Z"
-  },
-  {
-    "name": "netbox-community/netbox",
-    "version": "v4.3.3",
-    "date": "2025-06-26T18:42:56Z"
   },
   {
     "name": "tailscale/tailscale",
@@ -628,11 +653,6 @@
     "name": "gristlabs/grist-core",
     "version": "v1.6.1",
     "date": "2025-06-25T21:19:25Z"
-  },
-  {
-    "name": "coder/code-server",
-    "version": "v4.101.2",
-    "date": "2025-06-25T21:18:52Z"
   },
   {
     "name": "moghtech/komodo",
@@ -875,11 +895,6 @@
     "date": "2025-06-02T02:49:05Z"
   },
   {
-    "name": "gethomepage/homepage",
-    "version": "v1.3.2",
-    "date": "2025-06-01T19:02:46Z"
-  },
-  {
     "name": "release-argus/Argus",
     "version": "0.26.3",
     "date": "2025-05-29T21:18:15Z"
@@ -923,11 +938,6 @@
     "name": "CrazyWolf13/streamlink-webui",
     "version": "0.5",
     "date": "2025-05-21T20:19:14Z"
-  },
-  {
-    "name": "sbondCo/Watcharr",
-    "version": "v2.1.0",
-    "date": "2025-05-18T18:20:43Z"
   },
   {
     "name": "YunoHost/yunohost",
@@ -980,19 +990,9 @@
     "date": "2025-05-06T04:27:00Z"
   },
   {
-    "name": "postgres/postgres",
-    "version": "REL_13_21",
-    "date": "2025-05-05T20:34:49Z"
-  },
-  {
     "name": "apache/couchdb",
     "version": "3.5.0",
     "date": "2025-05-05T16:28:24Z"
-  },
-  {
-    "name": "WordPress/WordPress",
-    "version": "6.8.1",
-    "date": "2025-04-30T16:44:16Z"
   },
   {
     "name": "deluge-torrent/deluge",
