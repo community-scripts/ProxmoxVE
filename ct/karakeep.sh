@@ -58,7 +58,6 @@ function update_script() {
   fi
   MODULE_VERSION="$(jq -r '.packageManager | split("@")[1]' /opt/karakeep/package.json)"
   NODE_VERSION="22" NODE_MODULE="pnpm@${MODULE_VERSION}" setup_nodejs
-
   
   msg_info "Updating ${APP} to v${RELEASE}"
   export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD="true"
