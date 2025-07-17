@@ -20,6 +20,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - add "setup_composer" in update_script (baikal, bar-assistant, firefly) [@MickLesk](https://github.com/MickLesk) ([#6047](https://github.com/community-scripts/ProxmoxVE/pull/6047))
     - PLANKA: Fix update procedure [@tremor021](https://github.com/tremor021) ([#6031](https://github.com/community-scripts/ProxmoxVE/pull/6031))
 
   - #### ✨ New Features
