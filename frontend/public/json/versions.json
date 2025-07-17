@@ -1,5 +1,40 @@
 [
   {
+    "name": "esphome/esphome",
+    "version": "2025.7.1",
+    "date": "2025-07-17T09:54:45Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.102.3",
+    "date": "2025-07-14T14:53:08Z"
+  },
+  {
+    "name": "icereed/paperless-gpt",
+    "version": "v0.22.0",
+    "date": "2025-07-17T06:35:43Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2162",
+    "date": "2025-07-17T06:00:37Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.21",
+    "date": "2025-07-17T04:46:25Z"
+  },
+  {
+    "name": "coder/code-server",
+    "version": "v4.102.0",
+    "date": "2025-07-17T02:39:06Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.1",
+    "date": "2025-07-12T13:41:57Z"
+  },
+  {
     "name": "Brandawg93/PeaNUT",
     "version": "v5.9.1",
     "date": "2025-07-16T23:39:51Z"
@@ -15,11 +50,6 @@
     "date": "2025-07-16T21:53:45Z"
   },
   {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.1",
-    "date": "2025-07-12T13:41:57Z"
-  },
-  {
     "name": "Luligu/matterbridge",
     "version": "3.1.4",
     "date": "2025-07-16T20:53:12Z"
@@ -28,6 +58,11 @@
     "name": "mongodb/mongo",
     "version": "r7.0.22",
     "date": "2025-07-16T20:06:11Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.0.13",
+    "date": "2025-07-15T17:22:26Z"
   },
   {
     "name": "ollama/ollama",
@@ -90,21 +125,6 @@
     "date": "2025-07-16T08:54:57Z"
   },
   {
-    "name": "esphome/esphome",
-    "version": "2025.7.0",
-    "date": "2025-07-16T08:46:37Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2161",
-    "date": "2025-07-16T05:55:36Z"
-  },
-  {
-    "name": "coder/code-server",
-    "version": "v4.101.2",
-    "date": "2025-06-25T21:18:52Z"
-  },
-  {
     "name": "sbondCo/Watcharr",
     "version": "v2.1.1",
     "date": "2025-07-15T22:38:01Z"
@@ -113,11 +133,6 @@
     "name": "rcourtman/Pulse",
     "version": "v3.42.0",
     "date": "2025-07-14T22:07:28Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.0.13",
-    "date": "2025-07-15T17:22:26Z"
   },
   {
     "name": "netbox-community/netbox",
@@ -225,11 +240,6 @@
     "date": "2025-07-14T16:28:03Z"
   },
   {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.102.3",
-    "date": "2025-07-14T14:53:08Z"
-  },
-  {
     "name": "home-assistant/core",
     "version": "2025.7.2",
     "date": "2025-07-14T11:29:58Z"
@@ -238,11 +248,6 @@
     "name": "theonedev/onedev",
     "version": "v12.0.0",
     "date": "2025-07-14T10:08:45Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.20",
-    "date": "2025-07-02T04:03:37Z"
   },
   {
     "name": "homebridge/homebridge",
@@ -738,11 +743,6 @@
     "name": "paperless-ngx/paperless-ngx",
     "version": "v2.17.1",
     "date": "2025-06-19T19:35:01Z"
-  },
-  {
-    "name": "icereed/paperless-gpt",
-    "version": "v0.21.0",
-    "date": "2025-06-19T11:54:59Z"
   },
   {
     "name": "prometheus-pve/prometheus-pve-exporter",
