@@ -18,6 +18,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - config-file: set GATE [@ahmaddxb](https://github.com/ahmaddxb) ([#6042](https://github.com/community-scripts/ProxmoxVE/pull/6042))
+
   - #### 🐞 Bug Fixes
 
     - add "setup_composer" in update_script (baikal, bar-assistant, firefly) [@MickLesk](https://github.com/MickLesk) ([#6047](https://github.com/community-scripts/ProxmoxVE/pull/6047))
