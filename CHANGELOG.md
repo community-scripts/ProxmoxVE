@@ -22,6 +22,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - PLANKA: Fix update procedure [@tremor021](https://github.com/tremor021) ([#6031](https://github.com/community-scripts/ProxmoxVE/pull/6031))
 
+  - #### ✨ New Features
+
+    - Reactive Resume: switch source to community-maintained fork [@vhsdream](https://github.com/vhsdream) ([#6051](https://github.com/community-scripts/ProxmoxVE/pull/6051))
+
 ## 2025-07-16
 
 ### 🚀 Updated Scripts
