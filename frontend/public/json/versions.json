@@ -1,5 +1,80 @@
 [
   {
+    "name": "Brandawg93/PeaNUT",
+    "version": "v5.9.1",
+    "date": "2025-07-16T23:39:51Z"
+  },
+  {
+    "name": "advplyr/audiobookshelf",
+    "version": "v2.26.1",
+    "date": "2025-07-16T22:48:43Z"
+  },
+  {
+    "name": "linkwarden/linkwarden",
+    "version": "v2.11.4",
+    "date": "2025-07-16T21:53:45Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.1",
+    "date": "2025-07-12T13:41:57Z"
+  },
+  {
+    "name": "Luligu/matterbridge",
+    "version": "3.1.4",
+    "date": "2025-07-16T20:53:12Z"
+  },
+  {
+    "name": "mongodb/mongo",
+    "version": "r7.0.22",
+    "date": "2025-07-16T20:06:11Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.10.0-rc0",
+    "date": "2025-07-16T18:18:16Z"
+  },
+  {
+    "name": "plexguide/Huntarr.io",
+    "version": "8.1.15",
+    "date": "2025-07-16T18:06:03Z"
+  },
+  {
+    "name": "benjaminjonard/koillection",
+    "version": "1.6.15",
+    "date": "2025-07-16T16:47:57Z"
+  },
+  {
+    "name": "usememos/memos",
+    "version": "v0.25.0",
+    "date": "2025-07-16T14:57:02Z"
+  },
+  {
+    "name": "fuma-nama/fumadocs",
+    "version": "fumadocs-ui@15.6.4",
+    "date": "2025-07-16T14:34:07Z"
+  },
+  {
+    "name": "TryGhost/Ghost-CLI",
+    "version": "v1.27.1",
+    "date": "2025-07-16T13:29:00Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.4.0p8-rc2",
+    "date": "2025-07-16T13:21:20Z"
+  },
+  {
+    "name": "wazuh/wazuh",
+    "version": "coverity-w29-4.13.0",
+    "date": "2025-07-16T12:35:22Z"
+  },
+  {
+    "name": "emqx/emqx",
+    "version": "e6.0.0-M1.202507-beta.1",
+    "date": "2025-07-16T12:35:12Z"
+  },
+  {
     "name": "glpi-project/glpi",
     "version": "10.0.19",
     "date": "2025-07-16T09:45:14Z"
@@ -25,11 +100,6 @@
     "date": "2025-07-16T05:55:36Z"
   },
   {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.1",
-    "date": "2025-07-12T13:41:57Z"
-  },
-  {
     "name": "coder/code-server",
     "version": "v4.101.2",
     "date": "2025-06-25T21:18:52Z"
@@ -43,16 +113,6 @@
     "name": "rcourtman/Pulse",
     "version": "v3.42.0",
     "date": "2025-07-14T22:07:28Z"
-  },
-  {
-    "name": "mongodb/mongo",
-    "version": "r8.2.0-alpha2",
-    "date": "2025-07-15T20:47:00Z"
-  },
-  {
-    "name": "plexguide/Huntarr.io",
-    "version": "8.1.12",
-    "date": "2025-07-15T20:06:24Z"
   },
   {
     "name": "keycloak/keycloak",
@@ -103,11 +163,6 @@
     "name": "element-hq/synapse",
     "version": "v1.134.0",
     "date": "2025-07-15T13:43:39Z"
-  },
-  {
-    "name": "Checkmk/checkmk",
-    "version": "v2.4.0p8-rc1",
-    "date": "2025-07-15T12:09:17Z"
   },
   {
     "name": "zabbix/zabbix",
@@ -182,17 +237,7 @@
   {
     "name": "theonedev/onedev",
     "version": "v12.0.0",
-    "date": "2025-07-14T06:19:59Z"
-  },
-  {
-    "name": "wazuh/wazuh",
-    "version": "coverity-w28-4.13.0",
-    "date": "2025-07-08T11:25:24Z"
-  },
-  {
-    "name": "Luligu/matterbridge",
-    "version": "3.1.3",
-    "date": "2025-07-14T07:14:31Z"
+    "date": "2025-07-14T10:08:45Z"
   },
   {
     "name": "firefly-iii/firefly-iii",
@@ -250,11 +295,6 @@
     "date": "2025-01-05T21:14:23Z"
   },
   {
-    "name": "advplyr/audiobookshelf",
-    "version": "v2.26.0",
-    "date": "2025-07-12T19:31:21Z"
-  },
-  {
     "name": "jellyfin/jellyfin",
     "version": "v10.10.7",
     "date": "2025-04-05T19:14:59Z"
@@ -278,16 +318,6 @@
     "name": "leiweibau/Pi.Alert",
     "version": "v2025-07-12",
     "date": "2025-07-12T07:53:52Z"
-  },
-  {
-    "name": "fuma-nama/fumadocs",
-    "version": "fumadocs-openapi@9.1.2",
-    "date": "2025-07-12T03:58:47Z"
-  },
-  {
-    "name": "ollama/ollama",
-    "version": "v0.9.6",
-    "date": "2025-07-08T01:26:29Z"
   },
   {
     "name": "eclipse-mosquitto/mosquitto",
@@ -518,16 +548,6 @@
     "name": "runtipi/runtipi",
     "version": "v4.3.0",
     "date": "2025-07-05T12:14:52Z"
-  },
-  {
-    "name": "linkwarden/linkwarden",
-    "version": "v2.11.3",
-    "date": "2025-07-05T04:34:46Z"
-  },
-  {
-    "name": "emqx/emqx",
-    "version": "e6.0.0-M1.202507-alpha.1",
-    "date": "2025-07-04T14:58:23Z"
   },
   {
     "name": "kimai/kimai",
@@ -825,11 +845,6 @@
     "date": "2025-06-10T07:57:14Z"
   },
   {
-    "name": "Brandawg93/PeaNUT",
-    "version": "v5.8.0",
-    "date": "2025-06-09T16:08:33Z"
-  },
-  {
     "name": "ellite/Wallos",
     "version": "v3.3.0",
     "date": "2025-06-09T15:58:04Z"
@@ -865,11 +880,6 @@
     "date": "2025-06-06T11:22:02Z"
   },
   {
-    "name": "benjaminjonard/koillection",
-    "version": "1.6.14",
-    "date": "2025-06-05T16:40:52Z"
-  },
-  {
     "name": "MariaDB/server",
     "version": "mariadb-11.8.2",
     "date": "2025-06-04T13:35:16Z"
@@ -893,11 +903,6 @@
     "name": "FreshRSS/FreshRSS",
     "version": "1.26.3",
     "date": "2025-06-02T22:00:14Z"
-  },
-  {
-    "name": "usememos/memos",
-    "version": "v0.24.4",
-    "date": "2025-06-02T02:49:05Z"
   },
   {
     "name": "release-argus/Argus",
@@ -1203,11 +1208,6 @@
     "name": "recyclarr/recyclarr",
     "version": "v7.4.1",
     "date": "2025-02-15T20:54:00Z"
-  },
-  {
-    "name": "TryGhost/Ghost-CLI",
-    "version": "v1.27.0",
-    "date": "2025-02-13T15:55:36Z"
   },
   {
     "name": "actualbudget/actual-server",
