@@ -34,23 +34,27 @@ function update_script() {
     systemctl stop planka
     msg_ok "Stopped $APP"
 
-    msg_info "Updating $APP to ${RELEASE}"
+    msg_info "Backing up data"
     mkdir -p /opt/planka-backup/{favicons,user-avatars,background-images,attachments}
     mv /opt/planka/.env /opt/planka-backup
-    [ -d /opt/planka/public/favicons ] && [ "$(ls -A /opt/planka/public/favicons)" ] && mv /opt/planka/public/favicons/* /opt/planka-backup/favicons/
-    [ -d /opt/planka/public/user-avatars ] && [ "$(ls -A /opt/planka/public/user-avatars)" ] && mv /opt/planka/public/user-avatars/* /opt/planka-backup/user-avatars/
-    [ -d /opt/planka/public/background-images ] && [ "$(ls -A /opt/planka/public/background-images)" ] && mv /opt/planka/public/background-images/* /opt/planka-backup/background-images/
-    [ -d /opt/planka/private/attachments ] && [ "$(ls -A /opt/planka/private/attachments)" ] && mv /opt/planka/private/attachments/* /opt/planka-backup/attachments/
+    [ -d /opt/planka/public/favicons ] && find /opt/planka/public/favicons -maxdepth 1 -type f -exec mv -t /opt/planka-backup/favicons {} +
+    [ -d /opt/planka/public/user-avatars ] && find /opt/planka/public/user-avatars -maxdepth 1 -type f -exec mv -t /opt/planka-backup/user-avatars {} +
+    [ -d /opt/planka/public/background-images ] && find /opt/planka/public/background-images -maxdepth 1 -type f -exec mv -t /opt/planka-backup/background-images {} +
+    [ -d /opt/planka/private/attachments ] && find /opt/planka/private/attachments -maxdepth 1 -type f -exec mv -t /opt/planka-backup/attachments {} +
     rm -rf /opt/planka
+    msg_ok "Backed up data"
+
     fetch_and_deploy_gh_release "planka" "plankanban/planka" "prebuild" "latest" "/opt/planka" "planka-prebuild.zip"
     cd /opt/planka
     $STD npm install
+    
+    msg_info "Restoring data"
     mv /opt/planka-backup/.env /opt/planka/
-    [ -d /opt/planka-backup/favicons ] && [ "$(ls -A /opt/planka-backup/favicons)" ] && mv /opt/planka-backup/favicons/* /opt/planka/public/favicons/
-    [ -d /opt/planka-backup/user-avatars ] && [ "$(ls -A /opt/planka-backup/user-avatars)" ] && mv /opt/planka-backup/user-avatars/* /opt/planka/public/user-avatars/
-    [ -d /opt/planka-backup/background-images ] && [ "$(ls -A /opt/planka-backup/background-images)" ] && mv /opt/planka-backup/background-images/* /opt/planka/public/background-images/
-    [ -d /opt/planka-backup/attachments ] && [ "$(ls -A /opt/planka-backup/attachments)" ] && mv /opt/planka-backup/attachments/* /opt/planka/private/attachments/
-    msg_ok "Updated $APP to ${RELEASE}"
+    [ -d /opt/planka-backup/favicons ] && find /opt/planka-backup/favicons -maxdepth 1 -type f -exec mv -t /opt/planka/public/favicons {} +
+    [ -d /opt/planka-backup/user-avatars ] && find /opt/planka-backup/user-avatars -maxdepth 1 -type f -exec mv -t /opt/planka/public/user-avatars {} +
+    [ -d /opt/planka-backup/background-images ] && find /opt/planka-backup/background-images -maxdepth 1 -type f -exec mv -t /opt/planka/public/background-images {} +
+    [ -d /opt/planka-backup/attachments ] && find /opt/planka-backup/attachments -maxdepth 1 -type f -exec mv -t /opt/planka/private/attachments {} +
+    msg_ok "Restored data"
 
     msg_info "Starting $APP"
     systemctl start planka
