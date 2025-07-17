@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-07-17
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - PLANKA: Fix update procedure [@tremor021](https://github.com/tremor021) ([#6031](https://github.com/community-scripts/ProxmoxVE/pull/6031))
+
 ## 2025-07-16
 
 ### 🚀 Updated Scripts
