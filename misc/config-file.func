@@ -269,6 +269,7 @@ config_file() {
     if [ "$NET" == "dhcp" ]; then
       echo -e "${NETWORK}${BOLD}${DGN}IP Address: ${BGN}DHCP${CL}"
       echo -e "${GATEWAY}${BOLD}${DGN}Gateway IP Address: ${BGN}Default${CL}"
+      GATE=""
     elif [[ "$NET" =~ $ip_cidr_regex ]]; then
       echo -e "${NETWORK}${BOLD}${DGN}IP Address: ${BGN}$NET${CL}"
       if [ ! -z "$GATE" ]; then
