@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-07-17
 
+### 🆕 New Scripts
+
+  - Cloudreve ([#6044](https://github.com/community-scripts/ProxmoxVE/pull/6044))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
