@@ -71,6 +71,8 @@ msg_ok "Created Service MeiliSearch"
 msg_info "Installing Bar Assistant"
 cd /opt/bar-assistant
 cp /opt/bar-assistant/.env.dist /opt/bar-assistant/.env
+mkdir -p /opt/bar-assistant/resources/data
+curl -fsSL https://github.com/bar-assistant/data/archive/refs/heads/v5.tar.gz | tar -xz --strip-components=1 -C /opt/bar-assistant/resources/data
 MeiliSearch_API_KEY=$(curl -s -X GET 'http://127.0.0.1:7700/keys' -H "Authorization: Bearer $MASTER_KEY" | grep -o '"key":"[^"]*"' | head -n 1 | sed 's/"key":"//;s/"//')
 MeiliSearch_API_KEY_UID=$(curl -s -X GET 'http://127.0.0.1:7700/keys' -H "Authorization: Bearer $MASTER_KEY" | grep -o '"uid":"[^"]*"' | head -n 1 | sed 's/"uid":"//;s/"//')
 LOCAL_IP=$(hostname -I | awk '{print $1}')
