@@ -18,6 +18,11 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - AdventureLog: add backup folder before update [@MickLesk](https://github.com/MickLesk) ([#6066](https://github.com/community-scripts/ProxmoxVE/pull/6066))
 
+  - #### ✨ New Features
+
+    - Bar-Assistant: add Cocktail database [@MickLesk](https://github.com/MickLesk) ([#6068](https://github.com/community-scripts/ProxmoxVE/pull/6068))
+    - ErsatzTV: use project prebuild ffmpeg version [@MickLesk](https://github.com/MickLesk) ([#6067](https://github.com/community-scripts/ProxmoxVE/pull/6067))
+
 ## 2025-07-17
 
 ### 🆕 New Scripts
