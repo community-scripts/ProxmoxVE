@@ -1,5 +1,35 @@
 [
   {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.102.4",
+    "date": "2025-07-17T11:27:58Z"
+  },
+  {
+    "name": "emqx/emqx",
+    "version": "e6.0.0-M1.202507-rc.1",
+    "date": "2025-07-18T07:48:52Z"
+  },
+  {
+    "name": "meilisearch/meilisearch",
+    "version": "prototype-chat-completions-with-filters-0",
+    "date": "2025-07-16T08:54:57Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2163",
+    "date": "2025-07-18T05:46:27Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.9.7-rc1",
+    "date": "2025-07-11T22:15:00Z"
+  },
+  {
     "name": "cross-seed/cross-seed",
     "version": "v6.13.1",
     "date": "2025-07-17T21:36:42Z"
@@ -8,6 +38,11 @@
     "name": "coder/code-server",
     "version": "v4.102.1",
     "date": "2025-07-17T21:20:36Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.2.6",
+    "date": "2025-07-17T11:16:34Z"
   },
   {
     "name": "duplicati/duplicati",
@@ -60,21 +95,6 @@
     "date": "2025-07-17T12:08:40Z"
   },
   {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.102.4",
-    "date": "2025-07-17T11:27:58Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.2.6",
-    "date": "2025-07-17T11:16:34Z"
-  },
-  {
     "name": "esphome/esphome",
     "version": "2025.7.1",
     "date": "2025-07-17T09:54:45Z"
@@ -83,11 +103,6 @@
     "name": "icereed/paperless-gpt",
     "version": "v0.22.0",
     "date": "2025-07-17T06:35:43Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2162",
-    "date": "2025-07-17T06:00:37Z"
   },
   {
     "name": "firefly-iii/firefly-iii",
@@ -108,11 +123,6 @@
     "name": "Luligu/matterbridge",
     "version": "3.1.4",
     "date": "2025-07-16T20:53:12Z"
-  },
-  {
-    "name": "ollama/ollama",
-    "version": "v0.10.0-rc0",
-    "date": "2025-07-16T18:18:16Z"
   },
   {
     "name": "plexguide/Huntarr.io",
@@ -150,11 +160,6 @@
     "date": "2025-07-16T12:35:22Z"
   },
   {
-    "name": "emqx/emqx",
-    "version": "e6.0.0-M1.202507-beta.1",
-    "date": "2025-07-16T12:35:12Z"
-  },
-  {
     "name": "glpi-project/glpi",
     "version": "10.0.19",
     "date": "2025-07-16T09:45:14Z"
@@ -163,11 +168,6 @@
     "name": "NLnetLabs/unbound",
     "version": "release-1.23.1",
     "date": "2025-07-16T09:20:27Z"
-  },
-  {
-    "name": "meilisearch/meilisearch",
-    "version": "prototype-chat-completions-with-filters-0",
-    "date": "2025-07-16T08:54:57Z"
   },
   {
     "name": "sbondCo/Watcharr",
