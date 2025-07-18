@@ -1,13 +1,83 @@
 [
   {
-    "name": "esphome/esphome",
-    "version": "2025.7.1",
-    "date": "2025-07-17T09:54:45Z"
+    "name": "cross-seed/cross-seed",
+    "version": "v6.13.1",
+    "date": "2025-07-17T21:36:42Z"
+  },
+  {
+    "name": "coder/code-server",
+    "version": "v4.102.1",
+    "date": "2025-07-17T21:20:36Z"
+  },
+  {
+    "name": "duplicati/duplicati",
+    "version": "v2.1.1.0-2.1.1.0_experimental_2025-07-17",
+    "date": "2025-07-17T20:11:33Z"
+  },
+  {
+    "name": "grafana/grafana",
+    "version": "v12.0.2+security-01",
+    "date": "2025-07-17T19:13:19Z"
+  },
+  {
+    "name": "jhuckaby/Cronicle",
+    "version": "v0.9.83",
+    "date": "2025-07-17T17:48:01Z"
+  },
+  {
+    "name": "mongodb/mongo",
+    "version": "r8.0.12",
+    "date": "2025-07-17T17:43:01Z"
+  },
+  {
+    "name": "wavelog/wavelog",
+    "version": "2.0.7",
+    "date": "2025-07-17T15:33:14Z"
+  },
+  {
+    "name": "Brandawg93/PeaNUT",
+    "version": "v5.9.2",
+    "date": "2025-07-17T15:31:21Z"
+  },
+  {
+    "name": "forgejo/forgejo",
+    "version": "v12.0.0",
+    "date": "2025-07-17T14:38:30Z"
+  },
+  {
+    "name": "linuxserver/Heimdall",
+    "version": "v2.7.0",
+    "date": "2025-07-17T14:08:16Z"
+  },
+  {
+    "name": "openhab/openhab-core",
+    "version": "4.3.6",
+    "date": "2025-07-17T13:07:42Z"
+  },
+  {
+    "name": "oauth2-proxy/oauth2-proxy",
+    "version": "v7.10.0",
+    "date": "2025-07-17T12:08:40Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
   },
   {
     "name": "n8n-io/n8n",
-    "version": "n8n@1.102.3",
-    "date": "2025-07-14T14:53:08Z"
+    "version": "n8n@1.102.4",
+    "date": "2025-07-17T11:27:58Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.2.6",
+    "date": "2025-07-17T11:16:34Z"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2025.7.1",
+    "date": "2025-07-17T09:54:45Z"
   },
   {
     "name": "icereed/paperless-gpt",
@@ -25,21 +95,6 @@
     "date": "2025-07-17T04:46:25Z"
   },
   {
-    "name": "coder/code-server",
-    "version": "v4.102.0",
-    "date": "2025-07-17T02:39:06Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.1",
-    "date": "2025-07-12T13:41:57Z"
-  },
-  {
-    "name": "Brandawg93/PeaNUT",
-    "version": "v5.9.1",
-    "date": "2025-07-16T23:39:51Z"
-  },
-  {
     "name": "advplyr/audiobookshelf",
     "version": "v2.26.1",
     "date": "2025-07-16T22:48:43Z"
@@ -53,16 +108,6 @@
     "name": "Luligu/matterbridge",
     "version": "3.1.4",
     "date": "2025-07-16T20:53:12Z"
-  },
-  {
-    "name": "mongodb/mongo",
-    "version": "r7.0.22",
-    "date": "2025-07-16T20:06:11Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.0.13",
-    "date": "2025-07-15T17:22:26Z"
   },
   {
     "name": "ollama/ollama",
@@ -150,11 +195,6 @@
     "date": "2025-07-15T16:02:44Z"
   },
   {
-    "name": "duplicati/duplicati",
-    "version": "v2.1.0.125-2.1.0.125_canary_2025-07-15",
-    "date": "2025-07-15T15:39:11Z"
-  },
-  {
     "name": "zitadel/zitadel",
     "version": "v2.70.14",
     "date": "2025-07-15T15:27:51Z"
@@ -205,11 +245,6 @@
     "date": "2025-07-15T04:56:24Z"
   },
   {
-    "name": "jhuckaby/Cronicle",
-    "version": "v0.9.82",
-    "date": "2025-07-15T03:45:44Z"
-  },
-  {
     "name": "pi-hole/pi-hole",
     "version": "v6.1.4",
     "date": "2025-07-14T21:22:17Z"
@@ -255,19 +290,9 @@
     "date": "2025-07-13T19:22:47Z"
   },
   {
-    "name": "wavelog/wavelog",
-    "version": "2.0.6",
-    "date": "2025-07-13T19:10:15Z"
-  },
-  {
     "name": "MediaBrowser/Emby.Releases",
     "version": "4.9.1.2",
     "date": "2025-06-26T22:08:00Z"
-  },
-  {
-    "name": "openhab/openhab-core",
-    "version": "5.0.0.M4",
-    "date": "2025-07-13T16:04:39Z"
   },
   {
     "name": "mayswind/AriaNg",
@@ -303,11 +328,6 @@
     "name": "jellyfin/jellyfin",
     "version": "v10.10.7",
     "date": "2025-04-05T19:14:59Z"
-  },
-  {
-    "name": "cross-seed/cross-seed",
-    "version": "v6.13.0",
-    "date": "2025-07-12T15:52:03Z"
   },
   {
     "name": "blakeblackshear/frigate",
@@ -378,11 +398,6 @@
     "name": "binwiederhier/ntfy",
     "version": "v2.13.0",
     "date": "2025-07-10T19:27:54Z"
-  },
-  {
-    "name": "forgejo/forgejo",
-    "version": "v11.0.3",
-    "date": "2025-07-10T13:12:00Z"
   },
   {
     "name": "crowdsecurity/crowdsec",
@@ -775,11 +790,6 @@
     "date": "2025-06-18T08:01:24Z"
   },
   {
-    "name": "grafana/grafana",
-    "version": "v11.5.6",
-    "date": "2025-06-17T22:00:40Z"
-  },
-  {
     "name": "project-zot/zot",
     "version": "v2.1.5",
     "date": "2025-06-17T18:04:11Z"
@@ -1008,11 +1018,6 @@
     "name": "deluge-torrent/deluge",
     "version": "deluge-2.2.0",
     "date": "2025-04-28T21:31:06Z"
-  },
-  {
-    "name": "oauth2-proxy/oauth2-proxy",
-    "version": "v7.9.0",
-    "date": "2025-04-28T16:28:42Z"
   },
   {
     "name": "gotify/server",
@@ -1283,11 +1288,6 @@
     "name": "caddyserver/xcaddy",
     "version": "v0.4.4",
     "date": "2024-11-05T23:06:11Z"
-  },
-  {
-    "name": "linuxserver/Heimdall",
-    "version": "v2.6.3",
-    "date": "2024-11-05T11:00:43Z"
   },
   {
     "name": "zerotier/ZeroTierOne",
