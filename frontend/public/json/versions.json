@@ -1,5 +1,55 @@
 [
   {
+    "name": "minio/minio",
+    "version": "RELEASE.2025-07-18T21-56-31Z",
+    "date": "2025-07-18T23:56:46Z"
+  },
+  {
+    "name": "Brandawg93/PeaNUT",
+    "version": "v5.9.4",
+    "date": "2025-07-18T21:50:31Z"
+  },
+  {
+    "name": "rcourtman/Pulse",
+    "version": "v3.42.0",
+    "date": "2025-07-14T22:07:28Z"
+  },
+  {
+    "name": "homarr-labs/homarr",
+    "version": "v1.29.0",
+    "date": "2025-07-18T19:17:21Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.24.1",
+    "date": "2025-07-18T17:40:16Z"
+  },
+  {
+    "name": "bunkerity/bunkerweb",
+    "version": "v1.6.2",
+    "date": "2025-07-08T13:52:33Z"
+  },
+  {
+    "name": "theonedev/onedev",
+    "version": "v12.0.1",
+    "date": "2025-07-18T15:02:25Z"
+  },
+  {
+    "name": "TandoorRecipes/recipes",
+    "version": "1.5.35",
+    "date": "2025-06-22T08:30:10Z"
+  },
+  {
+    "name": "openhab/openhab-core",
+    "version": "5.0.0.RC1",
+    "date": "2025-07-18T13:17:28Z"
+  },
+  {
+    "name": "wazuh/wazuh",
+    "version": "coverity-w29-4.13.0",
+    "date": "2025-07-16T12:35:22Z"
+  },
+  {
     "name": "n8n-io/n8n",
     "version": "n8n@1.102.4",
     "date": "2025-07-17T11:27:58Z"
@@ -70,11 +120,6 @@
     "date": "2025-07-17T15:33:14Z"
   },
   {
-    "name": "Brandawg93/PeaNUT",
-    "version": "v5.9.2",
-    "date": "2025-07-17T15:31:21Z"
-  },
-  {
     "name": "forgejo/forgejo",
     "version": "v12.0.0",
     "date": "2025-07-17T14:38:30Z"
@@ -83,11 +128,6 @@
     "name": "linuxserver/Heimdall",
     "version": "v2.7.0",
     "date": "2025-07-17T14:08:16Z"
-  },
-  {
-    "name": "openhab/openhab-core",
-    "version": "4.3.6",
-    "date": "2025-07-17T13:07:42Z"
   },
   {
     "name": "oauth2-proxy/oauth2-proxy",
@@ -155,11 +195,6 @@
     "date": "2025-07-16T13:21:20Z"
   },
   {
-    "name": "wazuh/wazuh",
-    "version": "coverity-w29-4.13.0",
-    "date": "2025-07-16T12:35:22Z"
-  },
-  {
     "name": "glpi-project/glpi",
     "version": "10.0.19",
     "date": "2025-07-16T09:45:14Z"
@@ -175,11 +210,6 @@
     "date": "2025-07-15T22:38:01Z"
   },
   {
-    "name": "rcourtman/Pulse",
-    "version": "v3.42.0",
-    "date": "2025-07-14T22:07:28Z"
-  },
-  {
     "name": "netbox-community/netbox",
     "version": "v4.3.4",
     "date": "2025-07-15T18:01:50Z"
@@ -188,11 +218,6 @@
     "name": "gethomepage/homepage",
     "version": "v1.4.0",
     "date": "2025-07-15T16:43:28Z"
-  },
-  {
-    "name": "msgbyte/tianji",
-    "version": "v1.24.0",
-    "date": "2025-07-15T16:02:44Z"
   },
   {
     "name": "zitadel/zitadel",
@@ -280,11 +305,6 @@
     "date": "2025-07-14T11:29:58Z"
   },
   {
-    "name": "theonedev/onedev",
-    "version": "v12.0.0",
-    "date": "2025-07-14T10:08:45Z"
-  },
-  {
     "name": "homebridge/homebridge",
     "version": "v1.11.0",
     "date": "2025-07-13T19:22:47Z"
@@ -335,11 +355,6 @@
     "date": "2024-08-29T22:32:51Z"
   },
   {
-    "name": "homarr-labs/homarr",
-    "version": "v1.28.1",
-    "date": "2025-07-12T08:50:59Z"
-  },
-  {
     "name": "leiweibau/Pi.Alert",
     "version": "v2025-07-12",
     "date": "2025-07-12T07:53:52Z"
@@ -348,11 +363,6 @@
     "name": "eclipse-mosquitto/mosquitto",
     "version": "v2.0.22",
     "date": "2025-07-11T21:34:20Z"
-  },
-  {
-    "name": "TandoorRecipes/recipes",
-    "version": "1.5.35",
-    "date": "2025-06-22T08:30:10Z"
   },
   {
     "name": "neo4j/neo4j",
@@ -483,11 +493,6 @@
     "name": "TwiN/gatus",
     "version": "v5.20.0",
     "date": "2025-07-08T16:27:11Z"
-  },
-  {
-    "name": "bunkerity/bunkerweb",
-    "version": "v1.6.2",
-    "date": "2025-07-08T13:52:33Z"
   },
   {
     "name": "docker/compose",
@@ -713,11 +718,6 @@
     "name": "arunavo4/gitea-mirror",
     "version": "v2.18.0",
     "date": "2025-06-24T08:29:55Z"
-  },
-  {
-    "name": "minio/minio",
-    "version": "RELEASE.2025-06-13T11-33-47Z",
-    "date": "2025-06-23T20:58:42Z"
   },
   {
     "name": "clusterzx/paperless-ai",
