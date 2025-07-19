@@ -14,7 +14,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
-  - Fixed nag script on ProxMox 8.4.5 [@imcrazytwkr](https://github.com/imcrazytwkr) ([#6084](https://github.com/community-scripts/ProxmoxVE/pull/6084))
+  - #### 🐞 Bug Fixes
+
+    - Fixed nag script on ProxMox 8.4.5 [@imcrazytwkr](https://github.com/imcrazytwkr) ([#6084](https://github.com/community-scripts/ProxmoxVE/pull/6084))
 
 ## 2025-07-18
 
