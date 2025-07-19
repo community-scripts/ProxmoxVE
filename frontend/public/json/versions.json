@@ -1,5 +1,40 @@
 [
   {
+    "name": "bunkerity/bunkerweb",
+    "version": "v1.6.3-rc1",
+    "date": "2025-07-19T11:19:52Z"
+  },
+  {
+    "name": "pocketbase/pocketbase",
+    "version": "v0.29.0",
+    "date": "2025-07-19T08:54:54Z"
+  },
+  {
+    "name": "Paymenter/Paymenter",
+    "version": "v1.2.4",
+    "date": "2025-07-19T07:42:25Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.3-beta.10",
+    "date": "2025-07-15T06:07:03Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2165",
+    "date": "2025-07-19T05:55:51Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2025.7.2",
+    "date": "2025-07-19T00:05:00Z"
+  },
+  {
     "name": "minio/minio",
     "version": "RELEASE.2025-07-18T21-56-31Z",
     "date": "2025-07-18T23:56:46Z"
@@ -15,6 +50,11 @@
     "date": "2025-07-14T22:07:28Z"
   },
   {
+    "name": "keycloak/keycloak",
+    "version": "26.2.6",
+    "date": "2025-07-17T11:16:34Z"
+  },
+  {
     "name": "homarr-labs/homarr",
     "version": "v1.29.0",
     "date": "2025-07-18T19:17:21Z"
@@ -23,11 +63,6 @@
     "name": "msgbyte/tianji",
     "version": "v1.24.1",
     "date": "2025-07-18T17:40:16Z"
-  },
-  {
-    "name": "bunkerity/bunkerweb",
-    "version": "v1.6.2",
-    "date": "2025-07-08T13:52:33Z"
   },
   {
     "name": "theonedev/onedev",
@@ -65,16 +100,6 @@
     "date": "2025-07-16T08:54:57Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2163",
-    "date": "2025-07-18T05:46:27Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
-  },
-  {
     "name": "ollama/ollama",
     "version": "v0.9.7-rc1",
     "date": "2025-07-11T22:15:00Z"
@@ -88,11 +113,6 @@
     "name": "coder/code-server",
     "version": "v4.102.1",
     "date": "2025-07-17T21:20:36Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.2.6",
-    "date": "2025-07-17T11:16:34Z"
   },
   {
     "name": "duplicati/duplicati",
@@ -133,11 +153,6 @@
     "name": "oauth2-proxy/oauth2-proxy",
     "version": "v7.10.0",
     "date": "2025-07-17T12:08:40Z"
-  },
-  {
-    "name": "esphome/esphome",
-    "version": "2025.7.1",
-    "date": "2025-07-17T09:54:45Z"
   },
   {
     "name": "icereed/paperless-gpt",
@@ -255,11 +270,6 @@
     "date": "2025-07-15T11:29:29Z"
   },
   {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.3-beta.10",
-    "date": "2025-07-15T06:07:03Z"
-  },
-  {
     "name": "gotson/komga",
     "version": "1.22.1",
     "date": "2025-07-15T06:44:29Z"
@@ -293,11 +303,6 @@
     "name": "prometheus/prometheus",
     "version": "v3.5.0",
     "date": "2025-07-14T16:54:21Z"
-  },
-  {
-    "name": "Paymenter/Paymenter",
-    "version": "v1.2.3",
-    "date": "2025-07-14T16:28:03Z"
   },
   {
     "name": "home-assistant/core",
@@ -733,11 +738,6 @@
     "name": "rogerfar/rdt-client",
     "version": "v2.0.114",
     "date": "2025-06-21T11:20:21Z"
-  },
-  {
-    "name": "pocketbase/pocketbase",
-    "version": "v0.28.4",
-    "date": "2025-06-21T08:29:04Z"
   },
   {
     "name": "immich-app/immich",
