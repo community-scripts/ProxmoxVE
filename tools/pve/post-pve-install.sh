@@ -133,7 +133,8 @@ EOF
     ;;
   esac
 
-  if [[ ! -f /etc/apt/apt.conf.d/no-nag-script ]]; then
+  read -r NO_NAG_HASH _ 2>/dev/null < <(md5sum /etc/apt/apt.conf.d/no-nag-script)
+  if [[ ! -f /etc/apt/apt.conf.d/no-nag-script ]] || [[ $NO_NAG_HASH != "b6aefb53bb5eb04dcc389b3c9b31c842" ]]; then
     CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "SUBSCRIPTION NAG" --menu "This will disable the nag message reminding you to purchase a subscription every time you log in to the web interface.\n \nDisable subscription nag?" 14 58 2 \
       "yes" " " \
       "no" " " 3>&2 2>&1 1>&3)
