@@ -57,7 +57,7 @@ function update_script() {
     exit
   fi
   systemctl stop open-webui.service
-  $STD npm install
+  $STD npm install --force
   export NODE_OPTIONS="--max-old-space-size=3584"
   $STD npm run build
   cd ./backend
