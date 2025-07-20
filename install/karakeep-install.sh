@@ -80,6 +80,7 @@ DATA_DIR="$DATA_DIR"
 MEILI_ADDR="http://127.0.0.1:7700"
 MEILI_MASTER_KEY="$MASTER_KEY"
 BROWSER_WEB_URL="http://127.0.0.1:9222"
+DB_WAL_MODE=true
 
 # If you're planning to use OpenAI for tagging. Uncomment the following line:
 # OPENAI_API_KEY="<API_KEY>"
