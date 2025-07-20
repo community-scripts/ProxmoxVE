@@ -9,10 +9,10 @@ header_info() {
   cat <<"EOF"
     ____  __  _________   ____             __     ____           __        ____
    / __ \/  |/  / ____/  / __ \____  _____/ /_   /  _/___  _____/ /_____ _/ / /
-  / /_/ / /|_/ / / __   / /_/ / __ \/ ___/ __/   / // __ \/ ___/ __/ __ `/ / / 
- / ____/ /  / / /_/ /  / ____/ /_/ (__  ) /_   _/ // / / (__  ) /_/ /_/ / / /  
-/_/   /_/  /_/\____/  /_/    \____/____/\__/  /___/_/ /_/____/\__/\__,_/_/_/   
-                                                                               
+  / /_/ / /|_/ / / __   / /_/ / __ \/ ___/ __/   / // __ \/ ___/ __/ __ `/ / /
+ / ____/ /  / / /_/ /  / ____/ /_/ (__  ) /_   _/ // / / (__  ) /_/ /_/ / / /
+/_/   /_/  /_/\____/  /_/    \____/____/\__/  /___/_/ /_/____/\__/\__,_/_/_/
+
 EOF
 }
 
@@ -112,27 +112,25 @@ EOF
     ;;
   esac
 
-  if [[ ! -f /etc/apt/apt.conf.d/no-nag-script ]]; then
-    CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "SUBSCRIPTION NAG" --menu "This will disable the nag message reminding you to purchase a subscription every time you log in to the web interface.\n \nDisable subscription nag?" 14 58 2 \
-      "yes" " " \
-      "no" " " 3>&2 2>&1 1>&3)
-    case $CHOICE in
-    yes)
-      whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox --title "Support Subscriptions" "Supporting the software's development team is essential. Check their official website's Support Subscriptions for pricing. Without their dedicated work, we wouldn't have this exceptional software." 10 58
-      msg_info "Disabling subscription nag"
-      # Normal GUI:
-      echo "DPkg::Post-Invoke { \"dpkg -V proxmox-widget-toolkit | grep -q '/proxmoxlib\.js$'; if [ \$? -eq 1 ]; then { echo 'Removing subscription nag from UI...'; sed -i '/.*data\.status.*{/{s/\!//;s/active/NoMoreNagging/}' /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js; }; fi\"; };" >/etc/apt/apt.conf.d/no-nag-script
-      # JS-Library used when accessing via mobile device browser
-      echo "DPkg::Post-Invoke { \"dpkg -V pmg-gui | grep -q '/pmgmanagerlib-mobile\.js$'; if [ \$? -eq 1 ]; then { echo 'Removing subscription nag from Mobile UI...'; sed -i '/data\.status.*{/{s/\!//;s/active/NoMoreNagging/}' /usr/share/javascript/pmg-gui/js/pmgmanagerlib-mobile.js; }; fi\"; };" >>/etc/apt/apt.conf.d/no-nag-script
-      apt --reinstall install proxmox-widget-toolkit pmg-gui &>/dev/null
-      msg_ok "Disabled subscription nag (Delete browser cache)"
-      ;;
-    no)
-      whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox --title "Support Subscriptions" "Supporting the software's development team is essential. Check their official website's Support Subscriptions for pricing. Without their dedicated work, we wouldn't have this exceptional software." 10 58
-      msg_error "Selected no to disabling subscription nag"
-      ;;
-    esac
-  fi
+  CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "SUBSCRIPTION NAG" --menu "This will disable the nag message reminding you to purchase a subscription every time you log in to the web interface.\n \nDisable subscription nag?" 14 58 2 \
+    "yes" " " \
+    "no" " " 3>&2 2>&1 1>&3)
+  case $CHOICE in
+  yes)
+    whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox --title "Support Subscriptions" "Supporting the software's development team is essential. Check their official website's Support Subscriptions for pricing. Without their dedicated work, we wouldn't have this exceptional software." 10 58
+    msg_info "Disabling subscription nag"
+    # Normal GUI (proxmox-widget-toolkit)
+    echo "DPkg::Post-Invoke { \"if [ -s /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js ] && ! grep -q -F 'NoMoreNagging' /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js; then echo 'Removing subscription nag from UI...'; sed -i '/data\.status/{s/\!//;s/active/NoMoreNagging/}' /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js; fi\" };" >/etc/apt/apt.conf.d/no-nag-script
+    # JS library used when accessing via mobile device browser
+    echo "DPkg::Post-Invoke { \"if [ -s /usr/share/javascript/pmg-gui/js/pmgmanagerlib-mobile.js ] && ! grep -q -F 'NoMoreNagging' /usr/share/javascript/pmg-gui/js/pmgmanagerlib-mobile.js; then echo 'Removing subscription nag from mobile UI...'; sed -i '/data\.status/{s/\!//;s/active/NoMoreNagging/}' /usr/share/javascript/pmg-gui/js/pmgmanagerlib-mobile.js; fi\" };" >/etc/apt/apt.conf.d/no-nag-script-pmgmanagerlib-mobile
+    msg_ok "Disabled subscription nag (Delete browser cache)"
+    ;;
+  no)
+    whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox --title "Support Subscriptions" "Supporting the software's development team is essential. Check their official website's Support Subscriptions for pricing. Without their dedicated work, we wouldn't have this exceptional software." 10 58
+    msg_error "Selected no to disabling subscription nag"
+    ;;
+  esac
+  apt --reinstall install proxmox-widget-toolkit pmg-gui &>/dev/null
 
   CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "UPDATE" --menu "\nUpdate Proxmox Mail Gateway now?" 11 58 2 \
     "yes" " " \
