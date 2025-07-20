@@ -18,6 +18,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Fix OpenWebUI install/update scripts [@karamanliev](https://github.com/karamanliev) ([#6093](https://github.com/community-scripts/ProxmoxVE/pull/6093))
 
+  - #### ✨ New Features
+
+    - karakeep: add DB_WAL_MODE; suppress test output [@vhsdream](https://github.com/vhsdream) ([#6101](https://github.com/community-scripts/ProxmoxVE/pull/6101))
+
 ## 2025-07-19
 
 ### 🚀 Updated Scripts
