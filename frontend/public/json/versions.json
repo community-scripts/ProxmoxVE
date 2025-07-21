@@ -1,5 +1,40 @@
 [
   {
+    "name": "openhab/openhab-core",
+    "version": "5.0.0",
+    "date": "2025-07-21T07:16:58Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "preview-v0.1",
+    "date": "2025-06-27T14:35:47Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2178",
+    "date": "2025-07-21T05:53:32Z"
+  },
+  {
+    "name": "pocket-id/pocket-id",
+    "version": "v1.6.4",
+    "date": "2025-07-21T05:53:30Z"
+  },
+  {
+    "name": "lazy-media/Reactive-Resume",
+    "version": "1.2.1",
+    "date": "2025-07-21T03:40:58Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.21",
+    "date": "2025-07-17T04:46:25Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
     "name": "fallenbagel/jellyseerr",
     "version": "preview-seerr",
     "date": "2025-07-20T22:47:08Z"
@@ -8,11 +43,6 @@
     "name": "Dolibarr/dolibarr",
     "version": "21.0.2",
     "date": "2025-07-20T17:02:07Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.21",
-    "date": "2025-07-17T04:46:25Z"
   },
   {
     "name": "msgbyte/tianji",
@@ -28,6 +58,11 @@
     "name": "karakeep-app/karakeep",
     "version": "sdk/v0.26.0",
     "date": "2025-07-20T13:26:30Z"
+  },
+  {
+    "name": "wizarrrr/wizarr",
+    "version": "2025.7.6",
+    "date": "2025-07-20T13:02:43Z"
   },
   {
     "name": "OliveTin/OliveTin",
@@ -55,24 +90,24 @@
     "date": "2025-07-15T06:07:03Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2174",
-    "date": "2025-07-20T05:56:23Z"
-  },
-  {
     "name": "linkwarden/linkwarden",
     "version": "v2.11.5",
     "date": "2025-07-20T03:14:42Z"
   },
   {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
+    "name": "adityachandelgit/BookLore",
+    "version": "v0.34.0",
+    "date": "2025-07-19T22:17:45Z"
   },
   {
     "name": "Luligu/matterbridge",
     "version": "3.1.5",
     "date": "2025-07-19T21:50:47Z"
+  },
+  {
+    "name": "gtsteffaniak/filebrowser",
+    "version": "v0.7.15-beta",
+    "date": "2025-07-19T20:57:34Z"
   },
   {
     "name": "ellite/Wallos",
@@ -98,6 +133,11 @@
     "name": "open-webui/open-webui",
     "version": "v0.6.18",
     "date": "2025-07-19T19:26:14Z"
+  },
+  {
+    "name": "karlomikus/bar-assistant",
+    "version": "v5.6.0",
+    "date": "2025-07-19T13:34:36Z"
   },
   {
     "name": "bunkerity/bunkerweb",
@@ -153,11 +193,6 @@
     "name": "TandoorRecipes/recipes",
     "version": "1.5.35",
     "date": "2025-06-22T08:30:10Z"
-  },
-  {
-    "name": "openhab/openhab-core",
-    "version": "5.0.0.RC1",
-    "date": "2025-07-18T13:17:28Z"
   },
   {
     "name": "wazuh/wazuh",
@@ -325,6 +360,11 @@
     "date": "2025-07-15T11:29:29Z"
   },
   {
+    "name": "cloudreve/cloudreve",
+    "version": "4.3.0",
+    "date": "2025-07-15T09:54:38Z"
+  },
+  {
     "name": "gotson/komga",
     "version": "1.22.1",
     "date": "2025-07-15T06:44:29Z"
@@ -363,6 +403,11 @@
     "name": "homebridge/homebridge",
     "version": "v1.11.0",
     "date": "2025-07-13T19:22:47Z"
+  },
+  {
+    "name": "mealie-recipes/mealie",
+    "version": "v3.0.1",
+    "date": "2025-07-13T14:40:57Z"
   },
   {
     "name": "mayswind/AriaNg",
@@ -430,11 +475,6 @@
     "date": "2025-07-11T08:41:34Z"
   },
   {
-    "name": "mattermost/mattermost",
-    "version": "preview-v0.1",
-    "date": "2025-06-27T14:35:47Z"
-  },
-  {
     "name": "outline/outline",
     "version": "v0.85.1",
     "date": "2025-07-11T01:17:53Z"
@@ -453,11 +493,6 @@
     "name": "crowdsecurity/crowdsec",
     "version": "v1.6.10",
     "date": "2025-07-10T12:04:30Z"
-  },
-  {
-    "name": "pocket-id/pocket-id",
-    "version": "v1.6.2",
-    "date": "2025-07-09T22:14:10Z"
   },
   {
     "name": "NginxProxyManager/nginx-proxy-manager",
@@ -705,6 +740,11 @@
     "date": "2025-06-30T03:52:33Z"
   },
   {
+    "name": "librespeed/speedtest-rust",
+    "version": "v1.3.8",
+    "date": "2025-06-29T07:41:53Z"
+  },
+  {
     "name": "goauthentik/authentik",
     "version": "version/2025.6.3",
     "date": "2025-06-27T14:01:06Z"
@@ -738,6 +778,11 @@
     "name": "arunavo4/gitea-mirror",
     "version": "v2.18.0",
     "date": "2025-06-24T08:29:55Z"
+  },
+  {
+    "name": "itsmng/itsm-ng",
+    "version": "v2.0.7",
+    "date": "2025-06-23T14:35:40Z"
   },
   {
     "name": "clusterzx/paperless-ai",
@@ -893,6 +938,16 @@
     "name": "MariaDB/server",
     "version": "mariadb-11.8.2",
     "date": "2025-06-04T13:35:16Z"
+  },
+  {
+    "name": "plankanban/planka",
+    "version": "planka-1.0.3",
+    "date": "2025-06-04T10:26:07Z"
+  },
+  {
+    "name": "C4illin/ConvertX",
+    "version": "v0.14.1",
+    "date": "2025-06-04T08:57:15Z"
   },
   {
     "name": "intri-in/manage-my-damn-life-nextjs",
@@ -1060,6 +1115,11 @@
     "date": "2024-12-19T03:19:49Z"
   },
   {
+    "name": "Casvt/Kapowarr",
+    "version": "V1.2.0",
+    "date": "2025-04-16T14:55:28Z"
+  },
+  {
     "name": "Tautulli/Tautulli",
     "version": "v2.15.2",
     "date": "2025-04-12T23:27:51Z"
@@ -1220,11 +1280,6 @@
     "date": "2025-02-06T20:41:28Z"
   },
   {
-    "name": "AmruthPillai/Reactive-Resume",
-    "version": "v4.4.4",
-    "date": "2025-01-30T16:57:47Z"
-  },
-  {
     "name": "rustdesk/rustdesk-server",
     "version": "1.1.14",
     "date": "2025-01-25T12:48:28Z"
@@ -1343,10 +1398,5 @@
     "name": "CrazyWolf13/web-check",
     "version": "1.0.0",
     "date": "2024-05-05T02:01:51Z"
-  },
-  {
-    "name": "thelounge/thelounge-deb",
-    "version": "v4.4.3",
-    "date": "2024-04-06T12:24:35Z"
   }
 ]
