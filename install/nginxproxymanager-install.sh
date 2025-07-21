@@ -32,9 +32,8 @@ $STD apt-get install -y \
   python3-cffi \
   python3-certbot \
   python3-certbot-dns-cloudflare
-$STD pip3 install certbot-dns-multi
+$STD pip3 install --break-system-packages certbot-dns-multi
 $STD python3 -m venv /opt/certbot/
-rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
 msg_ok "Installed Python Dependencies"
 
 VERSION="$(awk -F'=' '/^VERSION_CODENAME=/{ print $NF }' /etc/os-release)"
@@ -85,8 +84,6 @@ else
   sed -i "s|\"version\": \"0.0.0\"|\"version\": \"$RELEASE\"|" backend/package.json
   sed -i "s|\"version\": \"0.0.0\"|\"version\": \"$RELEASE\"|" frontend/package.json
 fi
-sed -i 's|"fork-me": ".*"|"fork-me": "Proxmox VE Helper-Scripts"|' frontend/js/i18n/messages.json
-sed -i "s|https://github.com.*source=nginx-proxy-manager|https://helper-scripts.com|g" frontend/js/app/ui/footer/main.ejs
 sed -i 's+^daemon+#daemon+g' docker/rootfs/etc/nginx/nginx.conf
 NGINX_CONFS=$(find "$(pwd)" -type f -name "*.conf")
 for NGINX_CONF in $NGINX_CONFS; do
