@@ -1,13 +1,33 @@
 [
   {
+    "name": "fallenbagel/jellyseerr",
+    "version": "preview-seerr",
+    "date": "2025-07-20T22:47:08Z"
+  },
+  {
+    "name": "Dolibarr/dolibarr",
+    "version": "21.0.2",
+    "date": "2025-07-20T17:02:07Z"
+  },
+  {
     "name": "firefly-iii/firefly-iii",
     "version": "v6.2.21",
     "date": "2025-07-17T04:46:25Z"
   },
   {
-    "name": "fallenbagel/jellyseerr",
-    "version": "preview-fix-proxy-imagecaching",
-    "date": "2025-07-20T10:02:18Z"
+    "name": "msgbyte/tianji",
+    "version": "v1.24.4",
+    "date": "2025-07-20T16:35:14Z"
+  },
+  {
+    "name": "fuma-nama/fumadocs",
+    "version": "fumadocs-openapi@9.1.4",
+    "date": "2025-07-20T13:38:10Z"
+  },
+  {
+    "name": "karakeep-app/karakeep",
+    "version": "sdk/v0.26.0",
+    "date": "2025-07-20T13:26:30Z"
   },
   {
     "name": "OliveTin/OliveTin",
@@ -78,11 +98,6 @@
     "name": "open-webui/open-webui",
     "version": "v0.6.18",
     "date": "2025-07-19T19:26:14Z"
-  },
-  {
-    "name": "msgbyte/tianji",
-    "version": "v1.24.3",
-    "date": "2025-07-19T13:12:44Z"
   },
   {
     "name": "bunkerity/bunkerweb",
@@ -243,11 +258,6 @@
     "name": "usememos/memos",
     "version": "v0.25.0",
     "date": "2025-07-16T14:57:02Z"
-  },
-  {
-    "name": "fuma-nama/fumadocs",
-    "version": "fumadocs-ui@15.6.4",
-    "date": "2025-07-16T14:34:07Z"
   },
   {
     "name": "TryGhost/Ghost-CLI",
@@ -620,11 +630,6 @@
     "date": "2025-07-03T16:09:19Z"
   },
   {
-    "name": "Dolibarr/dolibarr",
-    "version": "18.0.7",
-    "date": "2025-07-03T08:57:21Z"
-  },
-  {
     "name": "actualbudget/actual",
     "version": "v25.7.1",
     "date": "2025-07-03T01:03:18Z"
@@ -823,11 +828,6 @@
     "name": "TriliumNext/Notes",
     "version": "v0.95.0",
     "date": "2025-06-15T21:12:04Z"
-  },
-  {
-    "name": "karakeep-app/karakeep",
-    "version": "cli/v0.25.0",
-    "date": "2025-06-15T17:48:29Z"
   },
   {
     "name": "Readarr/Readarr",
