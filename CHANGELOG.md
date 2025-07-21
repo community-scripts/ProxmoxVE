@@ -18,6 +18,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - pve-post-installer: remove Nag-File if already exist [@luckman212](https://github.com/luckman212) ([#6098](https://github.com/community-scripts/ProxmoxVE/pull/6098))
+
   - #### 🐞 Bug Fixes
 
     - nginxproxymanager: remove injected footer link (tteck) [@MickLesk](https://github.com/MickLesk) ([#6117](https://github.com/community-scripts/ProxmoxVE/pull/6117))
