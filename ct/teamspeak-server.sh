@@ -38,6 +38,7 @@ function update_script() {
     curl -fsSL "https://files.teamspeak-services.com/releases/server/${RELEASE}/teamspeak3-server_linux_amd64-${RELEASE}.tar.bz2" -o ts3server.tar.bz2
     tar -xf ./ts3server.tar.bz2
     cp -ru teamspeak3-server_linux_amd64/* /opt/teamspeak-server/
+    echo "${RELEASE}" >~/.teamspeak-server
     msg_ok "Updated $APP"
 
     msg_info "Starting Service"
