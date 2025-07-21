@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-07-21
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - nginxproxymanager: remove injected footer link (tteck) [@MickLesk](https://github.com/MickLesk) ([#6117](https://github.com/community-scripts/ProxmoxVE/pull/6117))
+
 ## 2025-07-20
 
 ### 🚀 Updated Scripts
