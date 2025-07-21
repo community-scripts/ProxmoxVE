@@ -1,5 +1,25 @@
 [
   {
+    "name": "VictoriaMetrics/VictoriaMetrics",
+    "version": "pmm-6401-v1.122.0",
+    "date": "2025-07-21T10:40:07Z"
+  },
+  {
+    "name": "linuxserver/Heimdall",
+    "version": "v2.7.1",
+    "date": "2025-07-21T09:13:14Z"
+  },
+  {
+    "name": "homarr-labs/homarr",
+    "version": "v1.30.0",
+    "date": "2025-07-21T08:43:19Z"
+  },
+  {
+    "name": "nzbgetcom/nzbget",
+    "version": "v25.2",
+    "date": "2025-07-04T08:21:42Z"
+  },
+  {
     "name": "openhab/openhab-core",
     "version": "5.0.0",
     "date": "2025-07-21T07:16:58Z"
@@ -180,11 +200,6 @@
     "date": "2025-07-17T11:16:34Z"
   },
   {
-    "name": "homarr-labs/homarr",
-    "version": "v1.29.0",
-    "date": "2025-07-18T19:17:21Z"
-  },
-  {
     "name": "theonedev/onedev",
     "version": "v12.0.1",
     "date": "2025-07-18T15:02:25Z"
@@ -258,11 +273,6 @@
     "name": "forgejo/forgejo",
     "version": "v12.0.0",
     "date": "2025-07-17T14:38:30Z"
-  },
-  {
-    "name": "linuxserver/Heimdall",
-    "version": "v2.7.0",
-    "date": "2025-07-17T14:08:16Z"
   },
   {
     "name": "oauth2-proxy/oauth2-proxy",
@@ -575,11 +585,6 @@
     "date": "2025-07-08T09:35:14Z"
   },
   {
-    "name": "VictoriaMetrics/VictoriaMetrics",
-    "version": "pmm-6401-v1.121.0",
-    "date": "2025-07-07T16:16:13Z"
-  },
-  {
     "name": "photoprism/photoprism",
     "version": "250707-d28b3101e",
     "date": "2025-07-07T15:15:21Z"
@@ -593,11 +598,6 @@
     "name": "BookStackApp/BookStack",
     "version": "v25.05.2",
     "date": "2025-07-07T14:08:25Z"
-  },
-  {
-    "name": "nzbgetcom/nzbget",
-    "version": "v25.2",
-    "date": "2025-07-04T08:21:42Z"
   },
   {
     "name": "slskd/slskd",
