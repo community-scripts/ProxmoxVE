@@ -22,6 +22,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - firefly: fix permissions at update [@MickLesk](https://github.com/MickLesk) ([#6119](https://github.com/community-scripts/ProxmoxVE/pull/6119))
     - nginxproxymanager: remove injected footer link (tteck) [@MickLesk](https://github.com/MickLesk) ([#6117](https://github.com/community-scripts/ProxmoxVE/pull/6117))
 
 ## 2025-07-20
