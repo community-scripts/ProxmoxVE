@@ -30,6 +30,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - gitea-mirror: add: migration to 3.0 [@CrazyWolf13](https://github.com/CrazyWolf13) ([#6138](https://github.com/community-scripts/ProxmoxVE/pull/6138))
 
+  - #### 🔧 Refactor
+
+    - [core]: tools.func: increase setup_php function [@MickLesk](https://github.com/MickLesk) ([#6141](https://github.com/community-scripts/ProxmoxVE/pull/6141))
+
 ## 2025-07-21
 
 ### 🆕 New Scripts
