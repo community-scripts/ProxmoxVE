@@ -1,5 +1,45 @@
 [
   {
+    "name": "home-assistant/core",
+    "version": "2025.7.3",
+    "date": "2025-07-22T08:30:59Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.3.0p35-rc1",
+    "date": "2025-07-22T07:29:21Z"
+  },
+  {
+    "name": "zabbix/zabbix",
+    "version": "7.2.11",
+    "date": "2025-07-22T07:05:26Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "v9.11.18",
+    "date": "2025-07-22T06:18:08Z"
+  },
+  {
+    "name": "adityachandelgit/BookLore",
+    "version": "v0.34.1",
+    "date": "2025-07-22T05:57:50Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2182",
+    "date": "2025-07-22T05:55:20Z"
+  },
+  {
+    "name": "lazy-media/Reactive-Resume",
+    "version": "v1.2.2",
+    "date": "2025-07-22T03:12:54Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
     "name": "MediaBrowser/Emby.Releases",
     "version": "4.9.1.2",
     "date": "2025-06-26T22:08:00Z"
@@ -25,9 +65,9 @@
     "date": "2025-07-21T20:56:33Z"
   },
   {
-    "name": "Checkmk/checkmk",
-    "version": "v2.4.0p8",
-    "date": "2025-07-21T19:25:40Z"
+    "name": "keycloak/keycloak",
+    "version": "26.2.6",
+    "date": "2025-07-17T11:16:34Z"
   },
   {
     "name": "mongodb/mongo",
@@ -75,11 +115,6 @@
     "date": "2025-07-21T10:40:07Z"
   },
   {
-    "name": "zabbix/zabbix",
-    "version": "7.0.17rc2",
-    "date": "2025-07-21T10:37:33Z"
-  },
-  {
     "name": "linuxserver/Heimdall",
     "version": "v2.7.1",
     "date": "2025-07-21T09:13:14Z"
@@ -100,34 +135,14 @@
     "date": "2025-07-21T07:16:58Z"
   },
   {
-    "name": "mattermost/mattermost",
-    "version": "preview-v0.1",
-    "date": "2025-06-27T14:35:47Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2178",
-    "date": "2025-07-21T05:53:32Z"
-  },
-  {
     "name": "pocket-id/pocket-id",
     "version": "v1.6.4",
     "date": "2025-07-21T05:53:30Z"
   },
   {
-    "name": "lazy-media/Reactive-Resume",
-    "version": "1.2.1",
-    "date": "2025-07-21T03:40:58Z"
-  },
-  {
     "name": "firefly-iii/firefly-iii",
     "version": "v6.2.21",
     "date": "2025-07-17T04:46:25Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
   },
   {
     "name": "Dolibarr/dolibarr",
@@ -173,11 +188,6 @@
     "name": "linkwarden/linkwarden",
     "version": "v2.11.5",
     "date": "2025-07-20T03:14:42Z"
-  },
-  {
-    "name": "adityachandelgit/BookLore",
-    "version": "v0.34.0",
-    "date": "2025-07-19T22:17:45Z"
   },
   {
     "name": "Luligu/matterbridge",
@@ -238,11 +248,6 @@
     "name": "rcourtman/Pulse",
     "version": "v3.42.0",
     "date": "2025-07-14T22:07:28Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.2.6",
-    "date": "2025-07-17T11:16:34Z"
   },
   {
     "name": "theonedev/onedev",
@@ -425,11 +430,6 @@
     "date": "2025-07-14T16:54:21Z"
   },
   {
-    "name": "home-assistant/core",
-    "version": "2025.7.2",
-    "date": "2025-07-14T11:29:58Z"
-  },
-  {
     "name": "homebridge/homebridge",
     "version": "v1.11.0",
     "date": "2025-07-13T19:22:47Z"
@@ -568,6 +568,11 @@
     "name": "cockpit-project/cockpit",
     "version": "342",
     "date": "2025-07-09T08:48:21Z"
+  },
+  {
+    "name": "mysql/mysql-server",
+    "version": "mysql-cluster-9.4.0",
+    "date": "2025-07-09T08:35:30Z"
   },
   {
     "name": "Prowlarr/Prowlarr",
@@ -1148,11 +1153,6 @@
     "name": "Kometa-Team/Kometa",
     "version": "v2.2.0",
     "date": "2025-03-31T21:31:48Z"
-  },
-  {
-    "name": "mysql/mysql-server",
-    "version": "mysql-cluster-9.3.0",
-    "date": "2025-03-31T07:42:45Z"
   },
   {
     "name": "louislam/dockge",
