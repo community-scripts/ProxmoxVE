@@ -35,6 +35,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - [core]: tools.func: increase setup_php function [@MickLesk](https://github.com/MickLesk) ([#6141](https://github.com/community-scripts/ProxmoxVE/pull/6141))
 
+### 🌐 Website
+
+  - Bump form-data from 4.0.3 to 4.0.4 in /frontend [@dependabot[bot]](https://github.com/dependabot[bot]) ([#6150](https://github.com/community-scripts/ProxmoxVE/pull/6150))
+
 ## 2025-07-21
 
 ### 🆕 New Scripts
