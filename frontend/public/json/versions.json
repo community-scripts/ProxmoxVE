@@ -1,8 +1,83 @@
 [
   {
+    "name": "MediaBrowser/Emby.Releases",
+    "version": "4.9.1.2",
+    "date": "2025-06-26T22:08:00Z"
+  },
+  {
+    "name": "advplyr/audiobookshelf",
+    "version": "v2.26.2",
+    "date": "2025-07-21T22:47:38Z"
+  },
+  {
+    "name": "ellite/Wallos",
+    "version": "v4.0.0",
+    "date": "2025-07-21T21:05:02Z"
+  },
+  {
+    "name": "gtsteffaniak/filebrowser",
+    "version": "v0.7.16-beta",
+    "date": "2025-07-21T20:58:02Z"
+  },
+  {
+    "name": "autobrr/autobrr",
+    "version": "v1.64.0",
+    "date": "2025-07-21T20:56:33Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.4.0p8",
+    "date": "2025-07-21T19:25:40Z"
+  },
+  {
+    "name": "mongodb/mongo",
+    "version": "r8.2.0-rc0",
+    "date": "2025-07-21T19:07:52Z"
+  },
+  {
+    "name": "fallenbagel/jellyseerr",
+    "version": "v2.7.2",
+    "date": "2025-07-21T18:19:05Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.24.5",
+    "date": "2025-07-21T17:04:25Z"
+  },
+  {
+    "name": "HabitRPG/habitica",
+    "version": "v5.37.2",
+    "date": "2025-07-21T14:08:35Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.102.4",
+    "date": "2025-07-17T11:27:58Z"
+  },
+  {
+    "name": "tobychui/zoraxy",
+    "version": "v3.2.5r2",
+    "date": "2025-07-21T12:52:26Z"
+  },
+  {
+    "name": "mealie-recipes/mealie",
+    "version": "v3.0.2",
+    "date": "2025-07-21T12:33:19Z"
+  },
+  {
+    "name": "bluenviron/mediamtx",
+    "version": "v1.13.1",
+    "date": "2025-07-21T11:57:03Z"
+  },
+  {
     "name": "VictoriaMetrics/VictoriaMetrics",
     "version": "pmm-6401-v1.122.0",
     "date": "2025-07-21T10:40:07Z"
+  },
+  {
+    "name": "zabbix/zabbix",
+    "version": "7.0.17rc2",
+    "date": "2025-07-21T10:37:33Z"
   },
   {
     "name": "linuxserver/Heimdall",
@@ -55,19 +130,9 @@
     "date": "2025-07-17T12:08:03Z"
   },
   {
-    "name": "fallenbagel/jellyseerr",
-    "version": "preview-seerr",
-    "date": "2025-07-20T22:47:08Z"
-  },
-  {
     "name": "Dolibarr/dolibarr",
     "version": "21.0.2",
     "date": "2025-07-20T17:02:07Z"
-  },
-  {
-    "name": "msgbyte/tianji",
-    "version": "v1.24.4",
-    "date": "2025-07-20T16:35:14Z"
   },
   {
     "name": "fuma-nama/fumadocs",
@@ -95,11 +160,6 @@
     "date": "2025-07-20T09:43:36Z"
   },
   {
-    "name": "tobychui/zoraxy",
-    "version": "v3.2.5",
-    "date": "2025-07-20T07:28:22Z"
-  },
-  {
     "name": "documenso/documenso",
     "version": "v1.12.2-rc.2",
     "date": "2025-07-20T07:05:19Z"
@@ -125,16 +185,6 @@
     "date": "2025-07-19T21:50:47Z"
   },
   {
-    "name": "gtsteffaniak/filebrowser",
-    "version": "v0.7.15-beta",
-    "date": "2025-07-19T20:57:34Z"
-  },
-  {
-    "name": "ellite/Wallos",
-    "version": "v3.3.1",
-    "date": "2025-07-19T20:51:00Z"
-  },
-  {
     "name": "pelican-dev/panel",
     "version": "v1.0.0-beta23",
     "date": "2025-07-19T19:49:28Z"
@@ -143,11 +193,6 @@
     "name": "pelican-dev/wings",
     "version": "v1.0.0-beta15",
     "date": "2025-07-19T19:46:52Z"
-  },
-  {
-    "name": "MediaBrowser/Emby.Releases",
-    "version": "4.9.1.2",
-    "date": "2025-06-26T22:08:00Z"
   },
   {
     "name": "open-webui/open-webui",
@@ -211,13 +256,8 @@
   },
   {
     "name": "wazuh/wazuh",
-    "version": "coverity-w29-4.13.0",
-    "date": "2025-07-16T12:35:22Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.102.4",
-    "date": "2025-07-17T11:27:58Z"
+    "version": "coverity-w30-4.13.0",
+    "date": "2025-07-18T12:05:26Z"
   },
   {
     "name": "emqx/emqx",
@@ -260,11 +300,6 @@
     "date": "2025-07-17T17:48:01Z"
   },
   {
-    "name": "mongodb/mongo",
-    "version": "r8.0.12",
-    "date": "2025-07-17T17:43:01Z"
-  },
-  {
     "name": "wavelog/wavelog",
     "version": "2.0.7",
     "date": "2025-07-17T15:33:14Z"
@@ -285,11 +320,6 @@
     "date": "2025-07-17T06:35:43Z"
   },
   {
-    "name": "advplyr/audiobookshelf",
-    "version": "v2.26.1",
-    "date": "2025-07-16T22:48:43Z"
-  },
-  {
     "name": "plexguide/Huntarr.io",
     "version": "8.1.15",
     "date": "2025-07-16T18:06:03Z"
@@ -308,11 +338,6 @@
     "name": "TryGhost/Ghost-CLI",
     "version": "v1.27.1",
     "date": "2025-07-16T13:29:00Z"
-  },
-  {
-    "name": "Checkmk/checkmk",
-    "version": "v2.4.0p8-rc2",
-    "date": "2025-07-16T13:21:20Z"
   },
   {
     "name": "glpi-project/glpi",
@@ -358,11 +383,6 @@
     "name": "element-hq/synapse",
     "version": "v1.134.0",
     "date": "2025-07-15T13:43:39Z"
-  },
-  {
-    "name": "zabbix/zabbix",
-    "version": "7.2.11rc1",
-    "date": "2025-07-15T11:47:53Z"
   },
   {
     "name": "dgtlmoon/changedetection.io",
@@ -413,11 +433,6 @@
     "name": "homebridge/homebridge",
     "version": "v1.11.0",
     "date": "2025-07-13T19:22:47Z"
-  },
-  {
-    "name": "mealie-recipes/mealie",
-    "version": "v3.0.1",
-    "date": "2025-07-13T14:40:57Z"
   },
   {
     "name": "mayswind/AriaNg",
@@ -605,11 +620,6 @@
     "date": "2025-07-06T23:57:52Z"
   },
   {
-    "name": "bluenviron/mediamtx",
-    "version": "v1.13.0",
-    "date": "2025-07-06T19:23:55Z"
-  },
-  {
     "name": "syncthing/syncthing",
     "version": "v1.30.0",
     "date": "2025-07-01T11:29:11Z"
@@ -703,11 +713,6 @@
     "name": "hivemq/hivemq-community-edition",
     "version": "2025.4",
     "date": "2025-07-01T18:01:37Z"
-  },
-  {
-    "name": "HabitRPG/habitica",
-    "version": "v5.37.1",
-    "date": "2025-07-01T16:57:43Z"
   },
   {
     "name": "navidrome/navidrome",
@@ -888,11 +893,6 @@
     "name": "FlareSolverr/FlareSolverr",
     "version": "v3.3.25",
     "date": "2025-06-14T02:52:44Z"
-  },
-  {
-    "name": "autobrr/autobrr",
-    "version": "v1.63.1",
-    "date": "2025-06-11T11:05:42Z"
   },
   {
     "name": "OctoPrint/OctoPrint",
