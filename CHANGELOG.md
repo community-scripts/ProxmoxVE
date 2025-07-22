@@ -19,15 +19,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
-  - Fixed the previous fix of the anti-nag hook and propagated fixes everywhere [@imcrazytwkr](https://github.com/imcrazytwkr) ([#6162](https://github.com/community-scripts/ProxmoxVE/pull/6162))
-- tools.func - fix typo for target_file [@tjcomserv](https://github.com/tjcomserv) ([#6156](https://github.com/community-scripts/ProxmoxVE/pull/6156))
-
   - #### 🐞 Bug Fixes
 
+    - tools.func - fix typo for target_file [@tjcomserv](https://github.com/tjcomserv) ([#6156](https://github.com/community-scripts/ProxmoxVE/pull/6156))
     - fix(nginxproxymanager.sh): Set the version number before build. [@JMarcosHP](https://github.com/JMarcosHP) ([#6139](https://github.com/community-scripts/ProxmoxVE/pull/6139))
 
   - #### ✨ New Features
 
+    - Fixed the previous fix of the anti-nag hook and propagated fixes everywhere [@imcrazytwkr](https://github.com/imcrazytwkr) ([#6162](https://github.com/community-scripts/ProxmoxVE/pull/6162))
     - [core]: Improved LXC Container Startup Handling [@MickLesk](https://github.com/MickLesk) ([#6142](https://github.com/community-scripts/ProxmoxVE/pull/6142))
     - wallos: add cron in installer for yearly cost [@CrazyWolf13](https://github.com/CrazyWolf13) ([#6133](https://github.com/community-scripts/ProxmoxVE/pull/6133))
 
