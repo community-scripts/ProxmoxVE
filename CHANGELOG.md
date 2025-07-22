@@ -10,6 +10,14 @@
 > [!CAUTION]
 Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit the project's popularity for potentially malicious purposes.
 
+## 2025-07-22
+
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - wallos: add cron in installer for yearly cost [@CrazyWolf13](https://github.com/CrazyWolf13) ([#6133](https://github.com/community-scripts/ProxmoxVE/pull/6133))
+
 ## 2025-07-21
 
 ### 🆕 New Scripts
