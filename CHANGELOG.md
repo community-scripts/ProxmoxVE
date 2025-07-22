@@ -18,6 +18,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - tools.func - fix typo for target_file [@tjcomserv](https://github.com/tjcomserv) ([#6156](https://github.com/community-scripts/ProxmoxVE/pull/6156))
+
   - #### 🐞 Bug Fixes
 
     - fix(nginxproxymanager.sh): Set the version number before build. [@JMarcosHP](https://github.com/JMarcosHP) ([#6139](https://github.com/community-scripts/ProxmoxVE/pull/6139))
