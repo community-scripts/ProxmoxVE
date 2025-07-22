@@ -46,6 +46,8 @@ function update_script() {
 
   msg_info "Building Frontend"
   (
+    sed -i "s|\"version\": \"0.0.0\"|\"version\": \"$RELEASE\"|" backend/package.json
+    sed -i "s|\"version\": \"0.0.0\"|\"version\": \"$RELEASE\"|" frontend/package.json
     cd ./frontend || exit
     $STD pnpm install
     $STD pnpm upgrade
@@ -72,8 +74,6 @@ function update_script() {
   ln -sf /usr/bin/certbot /opt/certbot/bin/certbot
   ln -sf /usr/local/openresty/nginx/sbin/nginx /usr/sbin/nginx
   ln -sf /usr/local/openresty/nginx/ /etc/nginx
-  sed -i "s|\"version\": \"0.0.0\"|\"version\": \"$RELEASE\"|" backend/package.json
-  sed -i "s|\"version\": \"0.0.0\"|\"version\": \"$RELEASE\"|" frontend/package.json
   sed -i 's+^daemon+#daemon+g' docker/rootfs/etc/nginx/nginx.conf
   NGINX_CONFS=$(find "$(pwd)" -type f -name "*.conf")
   for NGINX_CONF in $NGINX_CONFS; do
