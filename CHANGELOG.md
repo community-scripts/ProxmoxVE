@@ -26,6 +26,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - wallos: add cron in installer for yearly cost [@CrazyWolf13](https://github.com/CrazyWolf13) ([#6133](https://github.com/community-scripts/ProxmoxVE/pull/6133))
 
+  - #### 💥 Breaking Changes
+
+    - gitea-mirror: add: migration to 3.0 [@CrazyWolf13](https://github.com/CrazyWolf13) ([#6138](https://github.com/community-scripts/ProxmoxVE/pull/6138))
+
 ## 2025-07-21
 
 ### 🆕 New Scripts
