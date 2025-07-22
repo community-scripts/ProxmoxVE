@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-07-22
 
+### 🆕 New Scripts
+
+  - LinkStack ([#6137](https://github.com/community-scripts/ProxmoxVE/pull/6137))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
