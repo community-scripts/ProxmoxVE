@@ -29,7 +29,6 @@ function update_script() {
   fi
   if [[ -f /opt/${APP}_version.txt ]]; then
     mv /opt/"${APP}_version.txt" ~/.headscale
-    exit
   fi
 
   RELEASE=$(curl -fsSL https://api.github.com/repos/juanfont/headscale/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
