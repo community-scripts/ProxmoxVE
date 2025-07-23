@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-07-23
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - documenso: remove customerId by creating initial user [@MickLesk](https://github.com/MickLesk) ([#6171](https://github.com/community-scripts/ProxmoxVE/pull/6171))
+
 ## 2025-07-22
 
 ### 🆕 New Scripts
