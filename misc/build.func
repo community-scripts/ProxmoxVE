@@ -1234,7 +1234,7 @@ EOF
           pct set "$CTID" --nameserver 8.8.8.8
           if pct exec "$CTID" -- ping -c1 -W1 deb.debian.org >/dev/null 2>&1; then
             msg_ok "Network reachable after DNS fallback"
-			break
+			      break
           else
             msg_error "Still no network in LXC after DNS fallback!"
           fi
