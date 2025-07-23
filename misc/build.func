@@ -1227,23 +1227,33 @@ EOF
         sleep 3
       else
         msg_error "No network in LXC after waiting."
-        read -r -p "Set fallback DNS (1.1.1.1/8.8.8.8)? [y/N]: " choice
-        case "$choice" in
+        read -r -p "Set fallback DNS (1.1.1.1/8.8.8.8)? [y/N]: " dns_choice
+        case "$dns_choice" in
         [yY]*)
           pct set "$CTID" --nameserver 1.1.1.1
           pct set "$CTID" --nameserver 8.8.8.8
           if pct exec "$CTID" -- ping -c1 -W1 deb.debian.org >/dev/null 2>&1; then
             msg_ok "Network reachable after DNS fallback"
+			break
           else
-            msg_error "Still no network/DNS in LXC! Aborting customization."
-            exit 1
+            msg_error "Still no network in LXC after DNS fallback!"
           fi
           ;;
         *)
-          msg_error "Aborted by user – no DNS fallback set."
-          exit 1
-          ;;
-        esac
+          msg_warn "No DNS fallback set."
+		  ;;
+		esac
+          read -r -p "Do you want to continue despite network/DNS issues in the LXC? This may cause issues. [y/N]: " continue_choice
+          case "$continue_choice" in
+          [yY]*)
+            msg_warn "Continuing despite network/DNS issues in LXC as requested."
+			break
+            ;;
+          *)
+            msg_error "Aborting customization due to network/DNS issues in LXC."
+            exit 1
+            ;;
+          esac
       fi
     done
   fi
