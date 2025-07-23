@@ -27,18 +27,18 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  if [[ -f /opt/${APP}_version.txt ]]; then
+    mv /opt/"${APP}_version.txt" ~/.headscale
+    exit
+  fi
+
   RELEASE=$(curl -fsSL https://api.github.com/repos/juanfont/headscale/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
+  if [[ "${RELEASE}" != "$(cat ~/.headscale 2>/dev/null)" ]] || [[ ! -f ~/.headscale ]]; then
     msg_info "Stopping ${APP}"
     systemctl stop headscale
     msg_ok "Stopped ${APP}"
 
-    msg_info "Updating $APP to v${RELEASE}"
-    curl -fsSL "https://github.com/juanfont/headscale/releases/download/v${RELEASE}/headscale_${RELEASE}_linux_amd64.deb" -o $(basename "https://github.com/juanfont/headscale/releases/download/v${RELEASE}/headscale_${RELEASE}_linux_amd64.deb")
-    dpkg -i headscale_${RELEASE}_linux_amd64.deb
-    rm headscale_${RELEASE}_linux_amd64.deb
-    echo "${RELEASE}" >/opt/${APP}_version.txt
-    msg_ok "Updated $APP to ${RELEASE}"
+    fetch_and_deploy_gh_release "headscale" "juanfont/headscale" "binary"
 
     msg_info "Starting ${APP}"
     # Temporary fix until headscale project resolves service getting disabled on updates.
