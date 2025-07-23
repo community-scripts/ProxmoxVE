@@ -1,8 +1,53 @@
 [
   {
+    "name": "cockpit-project/cockpit",
+    "version": "343",
+    "date": "2025-07-23T11:21:34Z"
+  },
+  {
+    "name": "semaphoreui/semaphore",
+    "version": "v2.15.4",
+    "date": "2025-07-23T11:01:51Z"
+  },
+  {
+    "name": "traefik/traefik",
+    "version": "v3.4.5",
+    "date": "2025-07-23T09:35:46Z"
+  },
+  {
+    "name": "zabbix/zabbix",
+    "version": "7.0.17",
+    "date": "2025-07-23T08:11:47Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2185",
+    "date": "2025-07-23T05:51:56Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.21",
+    "date": "2025-07-17T04:46:25Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
+    "name": "jhuckaby/Cronicle",
+    "version": "v0.9.85",
+    "date": "2025-07-22T23:49:53Z"
+  },
+  {
     "name": "raydak-labs/configarr",
     "version": "v1.13.7",
     "date": "2025-07-22T20:41:45Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.9.7-rc1",
+    "date": "2025-07-11T22:15:00Z"
   },
   {
     "name": "TasmoAdmin/TasmoAdmin",
@@ -15,6 +60,11 @@
     "date": "2025-07-22T20:09:49Z"
   },
   {
+    "name": "keycloak/keycloak",
+    "version": "26.2.6",
+    "date": "2025-07-17T11:16:34Z"
+  },
+  {
     "name": "rcourtman/Pulse",
     "version": "v3.42.0",
     "date": "2025-07-14T22:07:28Z"
@@ -25,19 +75,9 @@
     "date": "2025-07-22T17:14:21Z"
   },
   {
-    "name": "semaphoreui/semaphore",
-    "version": "v2.16.0-beta4",
-    "date": "2025-07-22T15:56:46Z"
-  },
-  {
     "name": "Dolibarr/dolibarr",
     "version": "21.0.2",
     "date": "2025-07-22T16:58:05Z"
-  },
-  {
-    "name": "jhuckaby/Cronicle",
-    "version": "v0.9.84",
-    "date": "2025-07-22T16:35:18Z"
   },
   {
     "name": "jenkinsci/jenkins",
@@ -85,11 +125,6 @@
     "date": "2025-07-17T11:27:58Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.2.6",
-    "date": "2025-07-17T11:16:34Z"
-  },
-  {
     "name": "home-assistant/core",
     "version": "2025.7.3",
     "date": "2025-07-22T08:30:59Z"
@@ -98,11 +133,6 @@
     "name": "Checkmk/checkmk",
     "version": "v2.3.0p35-rc1",
     "date": "2025-07-22T07:29:21Z"
-  },
-  {
-    "name": "zabbix/zabbix",
-    "version": "7.2.11",
-    "date": "2025-07-22T07:05:26Z"
   },
   {
     "name": "mattermost/mattermost",
@@ -115,19 +145,9 @@
     "date": "2025-07-22T05:57:50Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2182",
-    "date": "2025-07-22T05:55:20Z"
-  },
-  {
     "name": "lazy-media/Reactive-Resume",
     "version": "v1.2.2",
     "date": "2025-07-22T03:12:54Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
   },
   {
     "name": "MediaBrowser/Emby.Releases",
@@ -208,11 +228,6 @@
     "name": "pocket-id/pocket-id",
     "version": "v1.6.4",
     "date": "2025-07-21T05:53:30Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.21",
-    "date": "2025-07-17T04:46:25Z"
   },
   {
     "name": "fuma-nama/fumadocs",
@@ -313,11 +328,6 @@
     "name": "emqx/emqx",
     "version": "e6.0.0-M1.202507-rc.1",
     "date": "2025-07-18T07:48:52Z"
-  },
-  {
-    "name": "ollama/ollama",
-    "version": "v0.9.7-rc1",
-    "date": "2025-07-11T22:15:00Z"
   },
   {
     "name": "cross-seed/cross-seed",
@@ -520,11 +530,6 @@
     "date": "2025-07-11T12:57:54Z"
   },
   {
-    "name": "traefik/traefik",
-    "version": "v3.4.4",
-    "date": "2025-07-11T08:41:34Z"
-  },
-  {
     "name": "outline/outline",
     "version": "v0.85.1",
     "date": "2025-07-11T01:17:53Z"
@@ -578,11 +583,6 @@
     "name": "AdguardTeam/AdGuardHome",
     "version": "v0.107.63",
     "date": "2025-06-26T14:34:19Z"
-  },
-  {
-    "name": "cockpit-project/cockpit",
-    "version": "342",
-    "date": "2025-07-09T08:48:21Z"
   },
   {
     "name": "mysql/mysql-server",
