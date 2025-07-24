@@ -38,6 +38,7 @@ function update_script() {
     msg_ok "Stopped ${APP}"
 
     fetch_and_deploy_gh_release "headscale" "juanfont/headscale" "binary"
+    fetch_and_deploy_gh_release "headscale-admin" "GoodiesHQ/headscale-admin" "prebuild" "latest" "/opt/headscale-admin" "admin.zip"
 
     msg_info "Starting ${APP}"
     # Temporary fix until headscale project resolves service getting disabled on updates.
