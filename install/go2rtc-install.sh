@@ -13,15 +13,10 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing go2rtc"
-mkdir -p /opt/go2rtc
-cd /opt/go2rtc
-curl -fsSL "https://github.com/AlexxIT/go2rtc/releases/latest/download/go2rtc_linux_amd64" -o "go2rtc_linux_amd64"
-chmod +x go2rtc_linux_amd64
-msg_ok "Installed go2rtc"
+fetch_and_deploy_gh_release "go2rtc" "AlexxIT/go2rtc" "singlefile" "latest" "/opt/go2rtc" "go2rtc_linux_amd64"
 
 msg_info "Creating Service"
-service_path="/etc/systemd/system/go2rtc.service"
+cat <<EOF >/etc/systemd/system/go2rtc.service
 echo "[Unit]
 Description=go2rtc service
 After=network.target
@@ -32,7 +27,8 @@ User=root
 ExecStart=/opt/go2rtc/go2rtc_linux_amd64
 
 [Install]
-WantedBy=multi-user.target" >$service_path
+WantedBy=multi-user.target
+EOF
 systemctl enable -q --now go2rtc
 msg_ok "Created Service"
 

@@ -27,14 +27,26 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  msg_info "Updating $APP"
-  systemctl stop go2rtc
-  cd /opt/go2rtc
-  rm go2rtc_linux_amd64
-  curl -fsSL "https://github.com/AlexxIT/go2rtc/releases/latest/download/go2rtc_linux_amd64" -o $(basename "https://github.com/AlexxIT/go2rtc/releases/latest/download/go2rtc_linux_amd64")
-  chmod +x go2rtc_linux_amd64
-  systemctl start go2rtc
-  msg_ok "Updated $APP"
+  if [[ -f /opt/${APP}_version.txt ]]; then
+    mv /opt/${APP}_version.txt ~/.go2rtc
+  fi
+
+  RELEASE=$(curl -fsSL https://api.github.com/repos/AlexxIT/go2rtc/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+  if [[ "${RELEASE}" != "$(cat ~/.go2rtc 2>/dev/null)" ]] || [[ ! -f ~/.go2rtc ]]; then
+    msg_info "Stopping service"
+    systemctl stop go2rtc
+    msg_ok "Stopped service"
+
+    fetch_and_deploy_gh_release "go2rtc" "AlexxIT/go2rtc" "singlefile" "latest" "/opt/go2rtc" "go2rtc_linux_amd64"
+
+    msg_info "Starting service"
+    systemctl start go2rtc
+    msg_ok "Started service"
+
+    msg_ok "Updated Successfully"
+  else
+    msg_ok "No update required. ${APP} is already at ${RELEASE}"
+  fi
   exit
 }
 
