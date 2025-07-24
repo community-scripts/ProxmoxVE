@@ -1243,7 +1243,7 @@ EOF
           msg_warn "No DNS fallback set."
 		      ;;
 		    esac
-          read -r -p "Do you want to continue despite network/DNS issues in the LXC? This may cause issues. [y/N]: " continue_choice
+          read -r -p "Do you want to continue despite network/DNS issues in the LXC? This will likely fail. [y/N]: " continue_choice
           case "$continue_choice" in
           [yY]*)
             msg_warn "Continuing despite network/DNS issues in LXC as requested."
