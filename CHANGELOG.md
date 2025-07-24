@@ -24,6 +24,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Habitica: force npm to 10 [@MickLesk](https://github.com/MickLesk) ([#6192](https://github.com/community-scripts/ProxmoxVE/pull/6192))
     - sabnzbd: add uv setup in update [@MickLesk](https://github.com/MickLesk) ([#6191](https://github.com/community-scripts/ProxmoxVE/pull/6191))
 
+  - #### ✨ New Features
+
+    - Headscale: Add headscale-admin UI as option [@tremor021](https://github.com/tremor021) ([#6205](https://github.com/community-scripts/ProxmoxVE/pull/6205))
+
   - #### 🔧 Refactor
 
     - Refactor: go2rtc [@tremor021](https://github.com/tremor021) ([#6198](https://github.com/community-scripts/ProxmoxVE/pull/6198))
