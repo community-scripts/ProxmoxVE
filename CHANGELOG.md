@@ -20,6 +20,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Immich: Pin Version to v1.135.3 [@MickLesk](https://github.com/MickLesk) ([#6212](https://github.com/community-scripts/ProxmoxVE/pull/6212))
     - Habitica: force npm to 10 [@MickLesk](https://github.com/MickLesk) ([#6192](https://github.com/community-scripts/ProxmoxVE/pull/6192))
     - sabnzbd: add uv setup in update [@MickLesk](https://github.com/MickLesk) ([#6191](https://github.com/community-scripts/ProxmoxVE/pull/6191))
 
