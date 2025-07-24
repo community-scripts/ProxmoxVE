@@ -20,19 +20,16 @@ $STD apt-get install -y \
   libfontconfig1
 msg_ok "Installed Dependencies"
 
-msg_info "Setting up Duplicati"
-RELEASE=$(curl -fsSL https://api.github.com/repos/duplicati/duplicati/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4)}')
-curl -fsSL "https://github.com/duplicati/duplicati/releases/download/v${RELEASE}/duplicati-${RELEASE}-linux-x64-gui.deb" -o "duplicati-${RELEASE}-linux-x64-gui.deb"
-$STD dpkg -i duplicati-${RELEASE}-linux-x64-gui.deb
-echo "${RELEASE}" >/opt/Duplicati_version.txt
-msg_ok "Finished setting up Duplicati"
+fetch_and_deploy_gh_release "duplicati" "duplicati/duplicati" "binary" "latest" "/opt/duplicati" "linux-x64-gui.deb"
 
+msg_info "Configuring duplicati"
 DECRYPTKEY=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 ADMINPASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 {
   echo "Admin password = ${ADMINPASS}"
   echo "Database encryption key = ${DECRYPTKEY}"
 } >>~/duplicati.creds
+msg_ok "Configured duplicati"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/duplicati.service
@@ -54,10 +51,6 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -f duplicati-${RELEASE}-linux-x64-gui.deb
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
-
-motd_ssh
-customize
