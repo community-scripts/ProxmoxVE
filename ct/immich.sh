@@ -58,7 +58,8 @@ function update_script() {
     done
     msg_ok "Image-processing libraries updated"
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/immich-app/immich/releases?per_page=1 | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+  RELEASE="1.135.3"
+  #RELEASE=$(curl -fsSL https://api.github.com/repos/immich-app/immich/releases?per_page=1 | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
   if [[ -f ~/.immich && "$RELEASE" == "$(cat ~/.immich)" ]]; then
     msg_ok "No update required. ${APP} is already at v${RELEASE}"
     exit
@@ -102,7 +103,7 @@ function update_script() {
   mkdir -p "$ML_DIR"
   rm -rf "$SRC_DIR"
 
-  fetch_and_deploy_gh_release "immich" "immich-app/immich" "tarball" "latest" "$SRC_DIR"
+  fetch_and_deploy_gh_release "immich" "immich-app/immich" "tarball" "v1.135.3" "$SRC_DIR"
 
   msg_info "Updating ${APP} web and microservices"
   cd "$SRC_DIR"/server
