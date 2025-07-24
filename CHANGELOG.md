@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-07-24
 
+### 🆕 New Scripts
+
+  - Alpine TeamSpeak Server [@tremor021](https://github.com/tremor021) ([#6201](https://github.com/community-scripts/ProxmoxVE/pull/6201))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
