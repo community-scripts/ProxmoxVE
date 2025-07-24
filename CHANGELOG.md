@@ -25,6 +25,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: go2rtc [@tremor021](https://github.com/tremor021) ([#6198](https://github.com/community-scripts/ProxmoxVE/pull/6198))
     - Refactor: Headscale [@tremor021](https://github.com/tremor021) ([#6180](https://github.com/community-scripts/ProxmoxVE/pull/6180))
 
 ## 2025-07-23
