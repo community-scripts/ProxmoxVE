@@ -35,6 +35,10 @@
     {
       "text": "Configuration settings: `/etc/headscale/config.yaml`",
       "type": "info"
+    },
+    {
+      "text": "Access headscale-admin UI via `http://<LXC-IP>/admin/`",
+      "type": "info"
     }
   ]
 }
