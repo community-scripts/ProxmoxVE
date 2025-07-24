@@ -27,8 +27,27 @@ function update_script() {
       msg_error "No ${APP} Installation Found!"
       exit
    fi
-   msg_error "Currently we don't provide an update function for this ${APP}."
-   exit
+   if [[ -f /opt/${APP}_version.txt ]]; then
+      mv /opt/${APP}_version ~/.gokapi
+   fi
+
+   RELEASE=$(curl -fsSL https://api.github.com/repos/Forceu/Gokapi/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+   if [[ "${RELEASE}" != "$(cat ~/.gokapi 2>/dev/null)" ]] || [[ ! -f ~/.gokapi ]]; then
+    msg_info "Stopping ${APP}"
+    systemctl stop gokapi
+    msg_ok "Stopped ${APP}"
+
+    fetch_and_deploy_gh_release "gokapi" "Forceu/Gokapi" "prebuild" "latest" "/opt/gokapi" "gokapi-linux_amd64.zip"
+
+    msg_info "Starting ${APP}"
+    systemctl start gokapi
+    msg_ok "Started ${APP}"
+
+    msg_ok "Updated Successfully"
+  else
+    msg_ok "No update required. ${APP} is already at ${RELEASE}"
+  fi
+  exit
 }
 
 start

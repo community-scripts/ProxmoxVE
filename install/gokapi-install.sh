@@ -13,14 +13,12 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Gokapi"
-LATEST=$(curl -fsSL https://api.github.com/repos/Forceu/Gokapi/releases/latest | grep '"tag_name":' | cut -d'"' -f4)
+fetch_and_deploy_gh_release "gokapi" "Forceu/Gokapi" "prebuild" "latest" "/opt/gokapi" "gokapi-linux_amd64.zip"
+
+msg_info "Configuring Gokapi"
 mkdir -p /opt/gokapi/{data,config}
-curl -fsSL "https://github.com/Forceu/Gokapi/releases/download/$LATEST/gokapi-linux_amd64.zip" -o "gokapi-linux_amd64.zip"
-$STD unzip gokapi-linux_amd64.zip -d /opt/gokapi
-rm gokapi-linux_amd64.zip
 chmod +x /opt/gokapi/gokapi-linux_amd64
-msg_ok "Installed Gokapi"
+msg_ok "Configured Gokapi"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/gokapi.service
