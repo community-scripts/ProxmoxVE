@@ -1,18 +1,68 @@
 [
   {
-    "name": "cockpit-project/cockpit",
-    "version": "343",
-    "date": "2025-07-23T11:21:34Z"
+    "name": "advplyr/audiobookshelf",
+    "version": "v2.26.3",
+    "date": "2025-07-23T23:16:46Z"
+  },
+  {
+    "name": "minio/minio",
+    "version": "RELEASE.2025-07-23T15-54-02Z",
+    "date": "2025-07-23T20:35:39Z"
+  },
+  {
+    "name": "grafana/grafana",
+    "version": "v12.1.0",
+    "date": "2025-07-23T19:35:52Z"
   },
   {
     "name": "semaphoreui/semaphore",
-    "version": "v2.15.4",
-    "date": "2025-07-23T11:01:51Z"
+    "version": "v2.16.0-beta6",
+    "date": "2025-07-23T19:18:14Z"
+  },
+  {
+    "name": "fallenbagel/jellyseerr",
+    "version": "preview-plex-home-profile",
+    "date": "2025-07-23T16:40:31Z"
+  },
+  {
+    "name": "meilisearch/meilisearch",
+    "version": "prototype-cellulite-0",
+    "date": "2025-07-23T16:21:26Z"
+  },
+  {
+    "name": "grokability/snipe-it",
+    "version": "v8.2.0",
+    "date": "2025-07-23T15:26:10Z"
+  },
+  {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.516.1",
+    "date": "2025-07-23T14:16:23Z"
   },
   {
     "name": "traefik/traefik",
-    "version": "v3.4.5",
-    "date": "2025-07-23T09:35:46Z"
+    "version": "v3.5.0",
+    "date": "2025-07-23T14:06:54Z"
+  },
+  {
+    "name": "Radarr/Radarr",
+    "version": "v5.26.2.10099",
+    "date": "2025-06-11T20:10:39Z"
+  },
+  {
+    "name": "Prowlarr/Prowlarr",
+    "version": "v1.37.0.5076",
+    "date": "2025-06-04T11:04:53Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.103.2",
+    "date": "2025-07-22T11:22:26Z"
+  },
+  {
+    "name": "cockpit-project/cockpit",
+    "version": "343",
+    "date": "2025-07-23T11:21:34Z"
   },
   {
     "name": "zabbix/zabbix",
@@ -80,11 +130,6 @@
     "date": "2025-07-22T16:58:05Z"
   },
   {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.520",
-    "date": "2025-07-22T15:13:15Z"
-  },
-  {
     "name": "linuxserver/Heimdall",
     "version": "v2.7.2",
     "date": "2025-07-22T15:00:08Z"
@@ -110,19 +155,9 @@
     "date": "2025-07-22T12:22:34Z"
   },
   {
-    "name": "meilisearch/meilisearch",
-    "version": "prototype-arroy-becomes-hannoy-0",
-    "date": "2025-07-21T20:38:21Z"
-  },
-  {
     "name": "crowdsecurity/crowdsec",
     "version": "v1.6.11",
     "date": "2025-07-22T12:11:38Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.102.4",
-    "date": "2025-07-17T11:27:58Z"
   },
   {
     "name": "home-assistant/core",
@@ -155,11 +190,6 @@
     "date": "2025-06-26T22:08:00Z"
   },
   {
-    "name": "advplyr/audiobookshelf",
-    "version": "v2.26.2",
-    "date": "2025-07-21T22:47:38Z"
-  },
-  {
     "name": "ellite/Wallos",
     "version": "v4.0.0",
     "date": "2025-07-21T21:05:02Z"
@@ -178,11 +208,6 @@
     "name": "mongodb/mongo",
     "version": "r8.2.0-rc0",
     "date": "2025-07-21T19:07:52Z"
-  },
-  {
-    "name": "fallenbagel/jellyseerr",
-    "version": "v2.7.2",
-    "date": "2025-07-21T18:19:05Z"
   },
   {
     "name": "HabitRPG/habitica",
@@ -300,11 +325,6 @@
     "date": "2025-07-19T07:42:25Z"
   },
   {
-    "name": "minio/minio",
-    "version": "RELEASE.2025-07-18T21-56-31Z",
-    "date": "2025-07-18T23:56:46Z"
-  },
-  {
     "name": "Brandawg93/PeaNUT",
     "version": "v5.9.4",
     "date": "2025-07-18T21:50:31Z"
@@ -343,11 +363,6 @@
     "name": "duplicati/duplicati",
     "version": "v2.1.1.0-2.1.1.0_experimental_2025-07-17",
     "date": "2025-07-17T20:11:33Z"
-  },
-  {
-    "name": "grafana/grafana",
-    "version": "v12.0.2+security-01",
-    "date": "2025-07-17T19:13:19Z"
   },
   {
     "name": "wavelog/wavelog",
@@ -588,21 +603,6 @@
     "name": "mysql/mysql-server",
     "version": "mysql-cluster-9.4.0",
     "date": "2025-07-09T08:35:30Z"
-  },
-  {
-    "name": "Prowlarr/Prowlarr",
-    "version": "v1.37.0.5076",
-    "date": "2025-06-04T11:04:53Z"
-  },
-  {
-    "name": "Radarr/Radarr",
-    "version": "v5.26.2.10099",
-    "date": "2025-06-11T20:10:39Z"
-  },
-  {
-    "name": "grokability/snipe-it",
-    "version": "v8.1.18",
-    "date": "2025-07-08T20:36:37Z"
   },
   {
     "name": "Stirling-Tools/Stirling-PDF",
