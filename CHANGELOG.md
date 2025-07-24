@@ -26,6 +26,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - SnipeIT - Update dependencies  [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#6217](https://github.com/community-scripts/ProxmoxVE/pull/6217))
     - Refactor: VictoriaMetrics [@tremor021](https://github.com/tremor021) ([#6210](https://github.com/community-scripts/ProxmoxVE/pull/6210))
     - Headscale: Add headscale-admin UI as option [@tremor021](https://github.com/tremor021) ([#6205](https://github.com/community-scripts/ProxmoxVE/pull/6205))
 
