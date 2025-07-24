@@ -27,9 +27,6 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  if [[ -f /opt/${APP}_version.txt ]]; then
-    mv /opt/${APP}_version.txt ~/.go2rtc
-  fi
 
   RELEASE=$(curl -fsSL https://api.github.com/repos/AlexxIT/go2rtc/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
   if [[ "${RELEASE}" != "$(cat ~/.go2rtc 2>/dev/null)" ]] || [[ ! -f ~/.go2rtc ]]; then
