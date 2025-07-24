@@ -45,13 +45,13 @@ function update_script() {
 
     msg_info "Updating $APP to v${RELEASE}"
     cd /opt/wizarr
-    uv -q sync --locked
-    $STD uv -q run pybabel compile -d app/translations
+    /usr/local/bin/uv -q sync --locked
+    $STD /usr/local/bin/uv -q run pybabel compile -d app/translations
     $STD npm --prefix app/static install
     $STD npm --prefix app/static run build:css
     mkdir -p ./.cache
     $STD tar -xf "$BACKUP_FILE" --directory=/
-    $STD uv -q run flask db upgrade
+    $STD /usr/local/bin/uv -q run flask db upgrade
     msg_ok "Updated $APP to v${RELEASE}"
 
     msg_info "Starting $APP"

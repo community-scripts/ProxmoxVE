@@ -23,12 +23,12 @@ fetch_and_deploy_gh_release "wizarr" "wizarrrr/wizarr"
 
 msg_info "Configure ${APPLICATION}"
 cd /opt/wizarr
-uv -q sync --locked
-$STD uv -q run pybabel compile -d app/translations
+/usr/local/bin/uv -q sync --locked
+$STD /usr/local/bin/uv -q run pybabel compile -d app/translations
 $STD npm --prefix app/static install
 $STD npm --prefix app/static run build:css
 mkdir -p ./.cache
-$STD uv -q run flask db upgrade
+$STD /usr/local/bin/uv -q run flask db upgrade
 msg_ok "Configure ${APPLICATION}"
 
 msg_info "Creating env, start script and service"
