@@ -48,7 +48,6 @@ handle_path /admin* {
 
 EOF
   caddy fmt --overwrite /etc/caddy/Caddyfile
-  systemctl daemon-reload
   systemctl start caddy
   msg_ok "Configured headscale-admin"
 fi
