@@ -18,7 +18,7 @@ $STD apt-get install -y \
   composer \
   git \
   nginx \
-  php8.2-{bcmath,common,ctype,curl,fileinfo,fpm,gd,iconv,intl,mbstring,mysql,soap,xml,xsl,zip,cli}
+  php8.2-{bcmath,common,ctype,ldap,curl,fileinfo,fpm,gd,iconv,intl,mbstring,mysql,soap,xml,xsl,zip,cli}
 msg_ok "Installed Dependencies"
 
 setup_mariadb
