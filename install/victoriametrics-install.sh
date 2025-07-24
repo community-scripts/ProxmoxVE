@@ -13,15 +13,13 @@ setting_up_container
 network_check
 update_os
 
+fetch_and_deploy_gh_release "victoriametrics" "VictoriaMetrics/VictoriaMetrics" "prebuild" "latest" "/opt/victoriametrics" "victoria-metrics-linux-amd64-v+([0-9.]).tar.gz"
+fetch_and_deploy_gh_release "vmutils" "VictoriaMetrics/VictoriaMetrics" "prebuild" "latest" "/opt/victoriametrics" "vmutils-linux-amd64-v+([0-9.]).tar.gz"
+fetch_and_deploy_gh_release "victorialogs" "VictoriaMetrics/VictoriaLogs" "prebuild" "latest" "/opt/victoriametrics" "victoria-logs-linux-amd64*.tar.gz"
+fetch_and_deploy_gh_release "vlutils" "VictoriaMetrics/VictoriaLogs" "prebuild" "latest" "/opt/victoriametrics" "vlutils-linux-amd64*.tar.gz"
+
 msg_info "Setup VictoriaMetrics"
-temp_dir=$(mktemp -d)
-cd $temp_dir
 mkdir -p /opt/victoriametrics/data
-RELEASE=$(curl -fsSL https://api.github.com/repos/VictoriaMetrics/VictoriaMetrics/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/v${RELEASE}/victoria-metrics-linux-amd64-v${RELEASE}.tar.gz" -o "victoria-metrics-linux-amd64-v${RELEASE}.tar.gz"
-curl -fsSL "https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/v${RELEASE}/vmutils-linux-amd64-v${RELEASE}.tar.gz" -o "vmutils-linux-amd64-v${RELEASE}.tar.gz"
-tar -xf victoria-metrics-linux-amd64-v${RELEASE}.tar.gz -C /opt/victoriametrics
-tar -xf vmutils-linux-amd64-v${RELEASE}.tar.gz -C /opt/victoriametrics
 chmod +x /opt/victoriametrics/*
 msg_ok "Setup VictoriaMetrics"
 
@@ -40,7 +38,23 @@ ExecStart=/opt/victoriametrics/victoria-metrics-prod --storageDataPath="/opt/vic
 [Install]
 WantedBy=multi-user.target
 EOF
+
+cat <<EOF >/etc/systemd/system/victoriametrics-logs.service
+[Unit]
+Description=VictoriaMetrics Service
+
+[Service]
+Type=simple
+Restart=always
+User=root
+WorkingDirectory=/opt/victoriametrics
+ExecStart=/opt/victoriametrics/victoria-logs-prod
+
+[Install]
+WantedBy=multi-user.target
+EOF
 systemctl enable -q --now victoriametrics
+systemctl enable -q --now victoriametrics-logs
 msg_ok "Created Service"
 
 motd_ssh

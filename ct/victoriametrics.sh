@@ -27,31 +27,25 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  
   RELEASE=$(curl -fsSL https://api.github.com/repos/VictoriaMetrics/VictoriaMetrics/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+  if [[ ! -f ~/.victoriametrics ]] || [[ "${RELEASE}" != "$(cat ~/.victoriametrics)" ]]; then
     msg_info "Stopping $APP"
     systemctl stop victoriametrics
+    [[ -f /etc/systemd/system/victoriametrics-logs.service ]] && systemctl stop victoriametrics-logs
     msg_ok "Stopped $APP"
 
-    msg_info "Updating ${APP} to v${RELEASE}"
-    temp_dir=$(mktemp -d)
-    cd $temp_dir
-    curl -fsSL "https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/v${RELEASE}/victoria-metrics-linux-amd64-v${RELEASE}.tar.gz" -o $(basename "https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/v${RELEASE}/victoria-metrics-linux-amd64-v${RELEASE}.tar.gz")
-    curl -fsSL "https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/v${RELEASE}/vmutils-linux-amd64-v${RELEASE}.tar.gz" -o $(basename "https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/v${RELEASE}/vmutils-linux-amd64-v${RELEASE}.tar.gz")
-    find /opt/victoriametrics -maxdepth 1 -type f -executable -delete
-    tar -xf victoria-metrics-linux-amd64-v${RELEASE}.tar.gz -C /opt/victoriametrics
-    tar -xf vmutils-linux-amd64-v${RELEASE}.tar.gz -C /opt/victoriametrics
+    fetch_and_deploy_gh_release "victoriametrics" "VictoriaMetrics/VictoriaMetrics" "prebuild" "latest" "/opt/victoriametrics" "victoria-metrics-linux-amd64-v+([0-9.]).tar.gz"
+    fetch_and_deploy_gh_release "vmutils" "VictoriaMetrics/VictoriaMetrics" "prebuild" "latest" "/opt/victoriametrics" "vmutils-linux-amd64-v+([0-9.]).tar.gz"
+    fetch_and_deploy_gh_release "victorialogs" "VictoriaMetrics/VictoriaLogs" "prebuild" "latest" "/opt/victoriametrics" "victoria-logs-linux-amd64*.tar.gz"
+    fetch_and_deploy_gh_release "vlutils" "VictoriaMetrics/VictoriaLogs" "prebuild" "latest" "/opt/victoriametrics" "vlutils-linux-amd64*.tar.gz"
     chmod +x /opt/victoriametrics/*
-    echo "${RELEASE}" >/opt/${APP}_version.txt
-    msg_ok "Updated $APP to v${RELEASE}"
 
     msg_info "Starting $APP"
     systemctl start victoriametrics
+    [[ -f /etc/systemd/system/victoriametrics-logs.service ]] && systemctl start victoriametrics-logs
     msg_ok "Started $APP"
 
-    msg_info "Cleaning Up"
-    rm -rf $temp_dir
-    msg_ok "Cleaned"
     msg_ok "Updated Successfully"
   else
     msg_ok "No update required. ${APP} is already at ${RELEASE}"
