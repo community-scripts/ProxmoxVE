@@ -9,7 +9,7 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 11011,
-  "documentation": null,
+  "documentation": "https://cleanuparr.github.io/Cleanuparr/docs/",
   "website": "https://github.com/Cleanuparr/Cleanuparr",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/cleanuparr.webp",
   "config_path": "/opt/cleanuparr/config ",
