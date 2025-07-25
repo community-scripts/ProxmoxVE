@@ -60,10 +60,6 @@ function update_script() {
   fi
   RELEASE="1.136.0"
   #RELEASE=$(curl -fsSL https://api.github.com/repos/immich-app/immich/releases?per_page=1 | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ -f ~/.immich && "$RELEASE" == "$(cat ~/.immich)" ]]; then
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
-    exit
-  fi
   msg_info "Stopping ${APP} services"
   systemctl stop immich-web
   systemctl stop immich-ml
