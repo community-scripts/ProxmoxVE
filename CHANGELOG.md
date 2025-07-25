@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-07-25
 
+### 🆕 New Scripts
+
+  - Cleanuparr ([#6238](https://github.com/community-scripts/ProxmoxVE/pull/6238))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
