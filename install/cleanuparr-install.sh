@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Copyright (c) 2021-2025 community-scripts ORG
-# Author: community-scripts ORG
+# Author: Lucas Zampieri (zampierilucas) | MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/Cleanuparr/Cleanuparr
 
@@ -14,7 +14,6 @@ network_check
 update_os
 
 fetch_and_deploy_gh_release "Cleanuparr" "Cleanuparr/Cleanuparr" "prebuild" "latest" "/opt/cleanuparr" "*linux-amd64.zip"
-msg_ok "Installed Cleanuparr"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/cleanuparr.service
