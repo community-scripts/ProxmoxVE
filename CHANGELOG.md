@@ -20,6 +20,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Immich: fix #6236 [@vhsdream](https://github.com/vhsdream) ([#6243](https://github.com/community-scripts/ProxmoxVE/pull/6243))
     - Wizarr: use absolute path to uv [@vhsdream](https://github.com/vhsdream) ([#6221](https://github.com/community-scripts/ProxmoxVE/pull/6221))
     - Immich v1.136.0 [@vhsdream](https://github.com/vhsdream) ([#6219](https://github.com/community-scripts/ProxmoxVE/pull/6219))
 
