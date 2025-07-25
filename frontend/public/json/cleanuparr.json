@@ -12,7 +12,7 @@
   "documentation": "https://cleanuparr.github.io/Cleanuparr/docs/",
   "website": "https://github.com/Cleanuparr/Cleanuparr",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/cleanuparr.webp",
-  "config_path": "/opt/cleanuparr/config ",
+  "config_path": "/opt/cleanuparr/config",
   "description": "Cleanuparr is a tool for automating the cleanup of unwanted or blocked files in Sonarr, Radarr, and supported download clients like qBittorrent, Transmission, and Deluge. It removes incomplete, blocked, or malicious downloads and can trigger replacement searches to ensure your media library stays complete and up-to-date.",
   "install_methods": [
     {
