@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
-# Author: community-scripts ORG
+# Author: Lucas Zampieri (zampierilucas) | MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/Cleanuparr/Cleanuparr
 
@@ -28,7 +28,7 @@ function update_script() {
         exit
     fi
 
-    RELEASE=$(curl -fsSL https://api.github.com/repos/Cleanuparr/Cleanuparr/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+    RELEASE=$(curl -fsSL https://api.github.com/repos/Cleanuparr/Cleanuparr/releases/latest | jq -r '.tag_name' | sed 's/^v//')
     if [[ "${RELEASE}" != "$(cat ~/.Cleanuparr 2>/dev/null)" ]] || [[ ! -f ~/.Cleanuparr ]]; then
         msg_info "Stopping ${APP}"
         systemctl stop cleanuparr
