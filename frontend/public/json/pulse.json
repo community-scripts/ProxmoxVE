@@ -33,7 +33,7 @@
   },
   "notes": [
     {
-      "text": "Create Proxmox-API-Token first: `https://github.com/rcourtman/Pulse?tab=readme-ov-file#creating-a-proxmox-api-token`",
+      "text": "Create Proxmox-API-Token first: `https://github.com/rcourtman/Pulse?tab=readme-ov-file#creating-api-token`",
       "type": "Info"
     },
     {
