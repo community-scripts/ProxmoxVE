@@ -299,7 +299,7 @@ cd "$SRC_DIR"/web
 $STD npm ci
 $STD npm run build
 cd "$SRC_DIR"
-cp -a server/{node_modules,dist,bin,resources,package.json,package-lock.json,start*.sh} "$APP_DIR"/
+cp -a server/{node_modules,dist,bin,resources,package.json,package-lock.json,bin/start.sh} "$APP_DIR"/
 cp -a web/build "$APP_DIR"/www
 cp LICENSE "$APP_DIR"
 cd "$APP_DIR"
