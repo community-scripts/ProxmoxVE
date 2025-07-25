@@ -35,7 +35,6 @@ function update_script() {
         msg_ok "Stopped ${APP}"
 
         fetch_and_deploy_gh_release "Cleanuparr" "Cleanuparr/Cleanuparr" "prebuild" "$RELEASE" "/opt/cleanuparr" "*linux-amd64.zip"
-        msg_ok "Updated ${APP}"
 
         msg_info "Starting ${APP}"
         systemctl start cleanuparr
