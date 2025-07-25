@@ -27,7 +27,9 @@ $STD apt-get -y install \
   libwww-perl \
   nmap \
   aria2 \
-  wakeonlan
+  wakeonlan \
+  fping \
+  zip
 msg_ok "Installed Dependencies"
 
 msg_info "Installing PHP Dependencies"
@@ -47,12 +49,15 @@ $STD apt-get -y install \
   python3-pip \
   python3-requests \
   python3-tz \
-  python3-tzlocal
+  python3-tzlocal \
+  python3-aiohttp
 rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
 $STD pip3 install mac-vendor-lookup
 $STD pip3 install fritzconnection
 $STD pip3 install cryptography
 $STD pip3 install pyunifi
+$STD pip3 install openwrt-luci-rpc
+$STD pip3 install asusrouter
 msg_ok "Installed Python Dependencies"
 
 msg_info "Installing Pi.Alert"
