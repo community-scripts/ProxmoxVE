@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-07-25
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Wizarr: use absolute path to uv [@vhsdream](https://github.com/vhsdream) ([#6221](https://github.com/community-scripts/ProxmoxVE/pull/6221))
+
 ## 2025-07-24
 
 ### 🆕 New Scripts
