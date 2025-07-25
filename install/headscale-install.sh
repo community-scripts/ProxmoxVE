@@ -23,7 +23,7 @@ if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   $STD apt-get install -y caddy
   $STD caddy stop
   rm /etc/caddy/Caddyfile
-  cat <<EOF >/etc/caddy/Caddyfile
+  cat <<'EOF' >/etc/caddy/Caddyfile
 :{$PORT:80}
 
 handle_path /admin* {
