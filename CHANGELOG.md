@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-07-26
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - PiAlert: Update dependencies [@leiweibau](https://github.com/leiweibau) ([#6251](https://github.com/community-scripts/ProxmoxVE/pull/6251))
+
 ## 2025-07-25
 
 ### 🆕 New Scripts
