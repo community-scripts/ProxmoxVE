@@ -272,7 +272,8 @@ config_file() {
       GATE=""
     elif [[ "$NET" =~ $ip_cidr_regex ]]; then
       echo -e "${NETWORK}${BOLD}${DGN}IP Address: ${BGN}$NET${CL}"
-      if [ ! -z "$GATE" ]; then
+      if [[ -n "$GATE" ]]; then
+        [[ "$GATE" =~ ",gw=" ]] && GATE="${GATE##,gw=}"
         if [[ "$GATE" =~ $ip_regex ]]; then
           echo -e "${GATEWAY}${BOLD}${DGN}Gateway IP Address: ${BGN}$GATE${CL}"
           GATE=",gw=$GATE"

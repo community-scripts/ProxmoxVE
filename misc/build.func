@@ -226,6 +226,7 @@ write_config() {
   # This function writes the configuration to a file.
   if whiptail --backtitle "Proxmox VE Helper Scripts" --defaultno --title "Write configfile" --yesno "Do you want to write the selections to a config file?" 10 60; then
     FILEPATH="/opt/community-scripts/${NSAPP}.conf"
+    [[ "$GATE" =~ ",gw=" ]] && local GATE="${GATE##,gw=}"
     if [[ ! -f $FILEPATH ]]; then
       cat <<EOF >"$FILEPATH"
 # ${NSAPP} Configuration File
