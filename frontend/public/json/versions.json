@@ -1,5 +1,15 @@
 [
   {
+    "name": "aceberg/WatchYourLAN",
+    "version": "2.1.3",
+    "date": "2025-07-26T14:19:00Z"
+  },
+  {
+    "name": "blakeblackshear/frigate",
+    "version": "v0.14.1",
+    "date": "2024-08-29T22:32:51Z"
+  },
+  {
     "name": "MediaBrowser/Emby.Releases",
     "version": "4.9.1.2",
     "date": "2025-06-26T22:08:00Z"
@@ -26,8 +36,8 @@
   },
   {
     "name": "ollama/ollama",
-    "version": "v0.10.0-rc1",
-    "date": "2025-07-22T20:40:47Z"
+    "version": "v0.10.0-rc2",
+    "date": "2025-07-25T21:24:06Z"
   },
   {
     "name": "homarr-labs/homarr",
@@ -553,11 +563,6 @@
     "name": "jellyfin/jellyfin",
     "version": "v10.10.7",
     "date": "2025-04-05T19:14:59Z"
-  },
-  {
-    "name": "blakeblackshear/frigate",
-    "version": "v0.14.1",
-    "date": "2024-08-29T22:32:51Z"
   },
   {
     "name": "leiweibau/Pi.Alert",
@@ -1168,11 +1173,6 @@
     "name": "louislam/dockge",
     "version": "1.5.0",
     "date": "2025-03-30T17:42:59Z"
-  },
-  {
-    "name": "aceberg/WatchYourLAN",
-    "version": "2.1.2-alpine",
-    "date": "2025-03-30T06:25:22Z"
   },
   {
     "name": "inspircd/inspircd",
