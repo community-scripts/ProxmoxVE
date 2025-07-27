@@ -64,6 +64,7 @@ $STD pnpm install --frozen-lockfile
 $STD pnpm build
 cd /opt/karakeep/apps/workers
 $STD pnpm install --frozen-lockfile
+$STD pnpm build
 cd /opt/karakeep/apps/cli
 $STD pnpm install --frozen-lockfile
 $STD pnpm build
@@ -167,7 +168,7 @@ Wants=network.target karakeep-browser.service meilisearch.service
 After=network.target karakeep-browser.service meilisearch.service
 
 [Service]
-ExecStart=pnpm start:prod
+ExecStart=/usr/bin/node dist/index.mjs
 WorkingDirectory=/opt/karakeep/apps/workers
 EnvironmentFile=/etc/karakeep/karakeep.env
 Restart=always
