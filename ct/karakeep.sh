@@ -60,6 +60,7 @@ function update_script() {
   NODE_VERSION="22" NODE_MODULE="pnpm@${MODULE_VERSION}" setup_nodejs
 
   msg_info "Updating ${APP} to v${RELEASE}"
+  corepack enable
   export PUPPETEER_SKIP_DOWNLOAD="true"
   export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD="true"
   export NEXT_TELEMETRY_DISABLED=1
@@ -72,7 +73,8 @@ function update_script() {
   cd /opt/karakeep/apps/cli
   $STD pnpm install --frozen-lockfile
   $STD pnpm build
-  export DATA_DIR=/opt/karakeep_data
+  DATA_DIR="$(sed -n '/^DATA_DIR/p' /etc/karakeep/karakeep.env | awk -F= '{print $2}')"
+  export DATA_DIR="${DATA_DIR:-/opt/karakeep_data}"
   cd /opt/karakeep/packages/db
   $STD pnpm migrate
   $STD pnpm store prune
