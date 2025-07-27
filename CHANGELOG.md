@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-07-27
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - go2rtc: Fix release download handling [@tremor021](https://github.com/tremor021) ([#6280](https://github.com/community-scripts/ProxmoxVE/pull/6280))
+
 ## 2025-07-26
 
 ### 🚀 Updated Scripts
