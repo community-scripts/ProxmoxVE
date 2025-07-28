@@ -27,22 +27,24 @@ function update_script() {
         msg_error "No ${APP} Installation Found!"
         exit
     fi
-    msg_info "Stopping ${APP} LXC"
-    systemctl stop autobrr.service
-    msg_ok "Stopped ${APP} LXC"
 
-    msg_info "Updating ${APP} LXC"
-    rm -rf /usr/local/bin/*
-    curl -fsSL "$(curl -fsSL https://api.github.com/repos/autobrr/autobrr/releases/latest | grep download | grep linux_x86_64 | cut -d\" -f4)" -o $(basename "$(curl -fsSL https://api.github.com/repos/autobrr/autobrr/releases/latest | grep download | grep linux_x86_64 | cut -d\" -f4)")
-    tar -C /usr/local/bin -xzf autobrr*.tar.gz
-    rm -rf autobrr*.tar.gz
-    msg_ok "Updated ${APP} LXC"
+    RELEASE=$(curl -fsSL https://api.github.com/repos/autobrr/autobrr/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+    if [[ "${RELEASE}" != "$(cat ~/.autobrr 2>/dev/null)" ]] || [[ ! -f ~/.autobrr ]]; then
+      msg_info "Stopping ${APP} LXC"
+      systemctl stop autobrr.service
+      msg_ok "Stopped ${APP} LXC"
 
-    msg_info "Starting ${APP} LXC"
-    systemctl start autobrr.service
-    msg_ok "Started ${APP} LXC"
-    msg_ok "Updated Successfully"
-    exit
+      fetch_and_deploy_gh_release "autobrr" "autobrr/autobrr" "prebuild" "latest" "/usr/local/bin" "autobrr_*_linux_x86_64.tar.gz"
+
+      msg_info "Starting ${APP} LXC"
+      systemctl start autobrr.service
+      msg_ok "Started ${APP} LXC"
+      
+      msg_ok "Updated Successfully"
+    else
+      msg_ok "No update required. ${APP} is already at ${RELEASE}"
+    fi
+  exit
 }
 
 start
