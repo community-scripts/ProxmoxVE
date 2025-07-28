@@ -14,7 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
-  - Refactor: HiveMQ [@tremor021](https://github.com/tremor021) ([#6313](https://github.com/community-scripts/ProxmoxVE/pull/6313))
+  - Refactor: Cronicle [@tremor021](https://github.com/tremor021) ([#6314](https://github.com/community-scripts/ProxmoxVE/pull/6314))
+- Refactor: HiveMQ [@tremor021](https://github.com/tremor021) ([#6313](https://github.com/community-scripts/ProxmoxVE/pull/6313))
 
   - #### 🐞 Bug Fixes
 
