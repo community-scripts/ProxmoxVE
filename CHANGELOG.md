@@ -14,6 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - Refactor: Navidrome [@tremor021](https://github.com/tremor021) ([#6300](https://github.com/community-scripts/ProxmoxVE/pull/6300))
+
   - #### 🐞 Bug Fixes
 
     - add 'g++' to actualbudget-install.sh [@saivishnu725](https://github.com/saivishnu725) ([#6293](https://github.com/community-scripts/ProxmoxVE/pull/6293))
