@@ -311,7 +311,7 @@ PCT_OPTIONS=(${PCT_OPTIONS[@]:-${DEFAULT_PCT_OPTIONS[@]}})
 
 # Secure creation of the LXC container with lock and template check
 lockfile="/tmp/template.${TEMPLATE}.lock"
-exec 9>"$lockfile" >/dev/null 2>&1 || {
+exec 9>"$lockfile" || {
   msg_error "Failed to create lock file '$lockfile'."
   exit 200
 }
