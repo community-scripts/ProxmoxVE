@@ -36,6 +36,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Refactor: Argus [@tremor021](https://github.com/tremor021) ([#6305](https://github.com/community-scripts/ProxmoxVE/pull/6305))
     - n8n: refactor environmentfile [@CrazyWolf13](https://github.com/CrazyWolf13) ([#6297](https://github.com/community-scripts/ProxmoxVE/pull/6297))
 
+### 🌐 Website
+
+  - #### 🐞 Bug Fixes
+
+    - temp change the analytics url to one that works untill community one is fixed [@BramSuurdje](https://github.com/BramSuurdje) ([#6319](https://github.com/community-scripts/ProxmoxVE/pull/6319))
+
 ## 2025-07-27
 
 ### 🚀 Updated Scripts
