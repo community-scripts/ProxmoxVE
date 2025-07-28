@@ -20,6 +20,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - ProxmoxVE 9.0 Beta: add BETA Version as test in pve_check [@MickLesk](https://github.com/MickLesk) ([#6295](https://github.com/community-scripts/ProxmoxVE/pull/6295))
     - karakeep: Run workers in prod without tsx [@vhsdream](https://github.com/vhsdream) ([#6285](https://github.com/community-scripts/ProxmoxVE/pull/6285))
 
 ## 2025-07-27
