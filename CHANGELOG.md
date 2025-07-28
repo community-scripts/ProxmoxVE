@@ -18,6 +18,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - fix: SSH authorized keys not added in Alpine install script [@enihsyou](https://github.com/enihsyou) ([#6316](https://github.com/community-scripts/ProxmoxVE/pull/6316))
     - fix: removing ",gw=" from GATE var when reading/writing from/to config. [@teohz](https://github.com/teohz) ([#6177](https://github.com/community-scripts/ProxmoxVE/pull/6177))
     - add 'g++' to actualbudget-install.sh [@saivishnu725](https://github.com/saivishnu725) ([#6293](https://github.com/community-scripts/ProxmoxVE/pull/6293))
 
