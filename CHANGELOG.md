@@ -14,6 +14,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - add 'g++' to actualbudget-install.sh [@saivishnu725](https://github.com/saivishnu725) ([#6293](https://github.com/community-scripts/ProxmoxVE/pull/6293))
+
   - #### ✨ New Features
 
     - karakeep: Run workers in prod without tsx [@vhsdream](https://github.com/vhsdream) ([#6285](https://github.com/community-scripts/ProxmoxVE/pull/6285))
