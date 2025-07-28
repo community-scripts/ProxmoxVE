@@ -28,6 +28,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: Argus [@tremor021](https://github.com/tremor021) ([#6305](https://github.com/community-scripts/ProxmoxVE/pull/6305))
     - n8n: refactor environmentfile [@CrazyWolf13](https://github.com/CrazyWolf13) ([#6297](https://github.com/community-scripts/ProxmoxVE/pull/6297))
 
 ## 2025-07-27
