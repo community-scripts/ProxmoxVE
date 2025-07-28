@@ -35,6 +35,7 @@ function update_script() {
     msg_ok "Stopped ${APP}"
 
     fetch_and_deploy_gh_release "gotify" "gotify/server" "prebuild" "latest" "/opt/gotify" "gotify-linux-amd64.zip"
+    chmod +x /opt/gotify/gotify-linux-amd64
 
     msg_info "Starting ${APP}"
     systemctl start gotify
