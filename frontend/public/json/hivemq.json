@@ -9,7 +9,7 @@
   "updateable": false,
   "privileged": false,
   "interface_port": 1883,
-  "documentation": null,
+  "documentation": "https://github.com/hivemq/hivemq-community-edition/wiki",
   "website": "https://www.hivemq.com/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/hivemq.webp",
   "config_path": "/opt/hivemq/conf/config.xml",
