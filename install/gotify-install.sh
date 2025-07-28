@@ -13,16 +13,8 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Gotify"
-RELEASE=$(curl -fsSL https://api.github.com/repos/gotify/server/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-mkdir -p /opt/gotify
-cd /opt/gotify
-curl -fsSL "https://github.com/gotify/server/releases/download/v${RELEASE}/gotify-linux-amd64.zip" -o "gotify-linux-amd64.zip"
-$STD unzip gotify-linux-amd64.zip
-rm -rf gotify-linux-amd64.zip
-chmod +x gotify-linux-amd64
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
-msg_ok "Installed Gotify"
+fetch_and_deploy_gh_release "gotify" "gotify/server" "prebuild" "latest" "/opt/gotify" "gotify-linux-amd64.zip"
+chmod +x /opt/gotify/gotify-linux-amd64
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/gotify.service

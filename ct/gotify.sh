@@ -29,23 +29,17 @@ function update_script() {
   fi
 
   RELEASE=$(curl -fsSL https://api.github.com/repos/gotify/server/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+  if [[ "${RELEASE}" != "$(cat ~/.gotify 2>/dev/null)" ]] || [[ ! -f ~/.gotify ]]; then
     msg_info "Stopping ${APP}"
     systemctl stop gotify
     msg_ok "Stopped ${APP}"
 
-    msg_info "Updating ${APP} to ${RELEASE}"
-    cd /opt/gotify
-    curl -fsSL "https://github.com/gotify/server/releases/download/v${RELEASE}/gotify-linux-amd64.zip" -o $(basename "https://github.com/gotify/server/releases/download/v${RELEASE}/gotify-linux-amd64.zip")
-    $STD unzip -o gotify-linux-amd64.zip
-    rm -rf gotify-linux-amd64.zip
-    chmod +x gotify-linux-amd64
-    echo "${RELEASE}" >/opt/${APP}_version.txt
-    msg_ok "Updated ${APP} to ${RELEASE}"
+    fetch_and_deploy_gh_release "gotify" "gotify/server" "prebuild" "latest" "/opt/gotify" "gotify-linux-amd64.zip"
 
     msg_info "Starting ${APP}"
     systemctl start gotify
     msg_ok "Started ${APP}"
+
     msg_ok "Updated Successfully"
   else
     msg_ok "No update required. ${APP} is already at ${RELEASE}"
