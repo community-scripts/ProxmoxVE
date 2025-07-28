@@ -137,14 +137,37 @@ function check_root() {
   fi
 }
 
-function pve_check() {
-  if ! pveversion | grep -Eq "pve-manager/8\.[1-4](\.[0-9]+)*"; then
-    msg_error "${CROSS}${RD}This version of Proxmox Virtual Environment is not supported"
-    echo -e "Requires Proxmox Virtual Environment Version 8.1 or later."
-    echo -e "Exiting..."
-    sleep 2
-    exit
+pve_check() {
+  local PVE_VER
+  PVE_VER="$(pveversion | awk -F'/' '{print $2}' | awk -F'-' '{print $1}')"
+
+  # Check for Proxmox VE 8.x
+  if [[ "$PVE_VER" =~ ^8\.([0-9]+) ]]; then
+    local MINOR="${BASH_REMATCH[1]}"
+    if ((MINOR < 1 || MINOR > 4)); then
+      msg_error "This version of Proxmox VE is not supported."
+      echo -e "Required: Proxmox VE version 8.1 – 8.4"
+      exit 1
+    fi
+    return 0
   fi
+
+  # Check for Proxmox VE 9.x (Beta) — require confirmation
+  if [[ "$PVE_VER" =~ ^9\.([0-9]+) ]]; then
+    if whiptail --title "Proxmox 9.x Detected (Beta)" \
+      --yesno "You are using Proxmox VE $PVE_VER, which is currently in Beta state.\n\nThis version is experimentally supported.\n\nDo you want to proceed anyway?" 12 70; then
+      msg_ok "Confirmed: Continuing with Proxmox VE $PVE_VER"
+      return 0
+    else
+      msg_error "Aborted by user: Proxmox VE 9.x was not confirmed."
+      exit 1
+    fi
+  fi
+
+  # All other unsupported versions
+  msg_error "This version of Proxmox VE is not supported."
+  echo -e "Supported versions: Proxmox VE 8.1 – 8.4 or 9.x (Beta, with confirmation)"
+  exit 1
 }
 
 function arch_check() {
