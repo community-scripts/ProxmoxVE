@@ -1,5 +1,30 @@
 [
   {
+    "name": "umami-software/umami",
+    "version": "v2.19.0",
+    "date": "2025-07-27T22:25:00Z"
+  },
+  {
+    "name": "moghtech/komodo",
+    "version": "v1.18.4",
+    "date": "2025-06-25T00:06:56Z"
+  },
+  {
+    "name": "dani-garcia/vaultwarden",
+    "version": "1.34.2",
+    "date": "2025-07-27T18:49:05Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.24.7",
+    "date": "2025-07-27T18:34:18Z"
+  },
+  {
+    "name": "benjaminjonard/koillection",
+    "version": "1.6.16",
+    "date": "2025-07-27T14:48:37Z"
+  },
+  {
     "name": "Jackett/Jackett",
     "version": "v0.22.2200",
     "date": "2025-07-27T05:52:33Z"
@@ -46,8 +71,8 @@
   },
   {
     "name": "ollama/ollama",
-    "version": "v0.10.0-rc1",
-    "date": "2025-07-22T20:40:47Z"
+    "version": "v0.10.0-rc2",
+    "date": "2025-07-25T21:24:06Z"
   },
   {
     "name": "homarr-labs/homarr",
@@ -255,11 +280,6 @@
     "date": "2025-07-14T22:07:28Z"
   },
   {
-    "name": "msgbyte/tianji",
-    "version": "v1.24.6",
-    "date": "2025-07-22T17:14:21Z"
-  },
-  {
     "name": "Dolibarr/dolibarr",
     "version": "21.0.2",
     "date": "2025-07-22T16:58:05Z"
@@ -458,11 +478,6 @@
     "name": "plexguide/Huntarr.io",
     "version": "8.1.15",
     "date": "2025-07-16T18:06:03Z"
-  },
-  {
-    "name": "benjaminjonard/koillection",
-    "version": "1.6.15",
-    "date": "2025-07-16T16:47:57Z"
   },
   {
     "name": "usememos/memos",
@@ -810,11 +825,6 @@
     "date": "2025-06-25T21:19:25Z"
   },
   {
-    "name": "moghtech/komodo",
-    "version": "v1.18.4",
-    "date": "2025-06-25T00:06:56Z"
-  },
-  {
     "name": "arunavo4/gitea-mirror",
     "version": "v2.18.0",
     "date": "2025-06-24T08:29:55Z"
@@ -1015,11 +1025,6 @@
     "date": "2025-05-28T05:48:20Z"
   },
   {
-    "name": "dani-garcia/vaultwarden",
-    "version": "1.34.1",
-    "date": "2025-05-26T21:40:54Z"
-  },
-  {
     "name": "stonith404/pingvin-share",
     "version": "v1.13.0",
     "date": "2025-05-25T20:21:13Z"
@@ -1063,11 +1068,6 @@
     "name": "stackblitz-labs/bolt.diy",
     "version": "1.0.0",
     "date": "2025-05-12T07:39:23Z"
-  },
-  {
-    "name": "umami-software/umami",
-    "version": "v2.18.1",
-    "date": "2025-05-12T07:16:12Z"
   },
   {
     "name": "owncast/owncast",
