@@ -41,7 +41,7 @@ $STD apt-get install -y \
 rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
 msg_ok "Setup Python3"
 
-msg_info "Installing Craty-Controller (Patience)"
+msg_info "Installing Crafty-Controller (Patience)"
 useradd crafty -m -s /bin/bash
 cd /opt
 mkdir -p /opt/crafty-controller/crafty /opt/crafty-controller/server
