@@ -27,27 +27,19 @@ function update_script() {
         msg_error "No ${APP} Installation Found!"
         exit
     fi
-    RELEASE=$(curl -fsSL https://api.github.com/repos/navidrome/navidrome/releases/latest | grep "tag_name" | awk -F '"' '{print $4}')
-    if [[ ! -f /opt/${APP}_version.txt ]]; then touch /opt/${APP}_version.txt; fi
-    if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+    
+    RELEASE=$(curl -fsSL https://api.github.com/repos/navidrome/navidrome/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+    if [[ "${RELEASE}" != "$(cat ~/.navidrome 2>/dev/null)" ]] || [[ ! -f ~/.navidrome ]]; then
         msg_info "Stopping Services"
         systemctl stop navidrome
         msg_ok "Services Stopped"
 
-        msg_info "Updating ${APP} to ${RELEASE}"
-        TMP_DEB=$(mktemp --suffix=.deb)
-        curl -fsSL -o "${TMP_DEB}" "https://github.com/navidrome/navidrome/releases/download/${RELEASE}/navidrome_${RELEASE#v}_linux_amd64.deb"
-        $STD apt-get install -y "${TMP_DEB}"
-        echo "${RELEASE}" >/opt/"${APP}_version.txt"
-        msg_ok "Updated Navidrome"
+        fetch_and_deploy_gh_release "navidrome" "navidrome/navidrome" "binary"
 
         msg_info "Starting Services"
         systemctl start navidrome
         msg_ok "Started Services"
 
-        msg_info "Cleaning Up"
-        rm -f "${TMP_DEB}"
-        msg_ok "Cleaned"
         msg_ok "Updated Successfully"
     else
         msg_ok "No update required. ${APP} is already at ${RELEASE}"
