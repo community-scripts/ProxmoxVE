@@ -23,20 +23,23 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
-
   if [[ ! -d /opt/argus ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
 
   RELEASE=$(curl -fsSL https://api.github.com/repos/release-argus/Argus/releases/latest | jq -r .tag_name | sed 's/^v//')
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
-    msg_info "Updating $APP to ${RELEASE}"
-    rm -f /opt/argus/Argus
-    curl -fsSL "https://github.com/release-argus/Argus/releases/download/${RELEASE}/Argus-${RELEASE}.linux-amd64" -o /opt/argus/Argus
-    chmod +x /opt/argus/Argus
-    systemctl restart argus
-    echo "${RELEASE}" >/opt/${APP}_version.txt
+  if [[ "${RELEASE}" != "$(cat ~/.Argus 2>/dev/null)" ]] || [[ ! -f ~/.Argus ]]; then
+    msg_info "Stopping service"
+    systemctl stop argus
+    msg_ok "Service stopped"
+
+    fetch_and_deploy_gh_release "Argus" "release-argus/Argus" "singlefile" "latest" "/opt/argus" "Argus*linux-amd64"
+
+    msg_info "Starting service"
+    systemctl start argus
+    msg_ok "Service started"
+
     msg_ok "Updated ${APP} to ${RELEASE}"
   else
     msg_ok "${APP} is already up to date (${RELEASE})"

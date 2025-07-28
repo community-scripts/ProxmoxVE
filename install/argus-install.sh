@@ -13,17 +13,7 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt-get install -y \
-  jq
-msg_ok "Installed Dependencies"
-
-msg_info "Setup Argus"
-RELEASE=$(curl -fsSL https://api.github.com/repos/release-argus/Argus/releases/latest | jq -r .tag_name | sed 's/^v//')
-mkdir -p /opt/argus
-curl -fsSL "https://github.com/release-argus/Argus/releases/download/${RELEASE}/Argus-${RELEASE}.linux-amd64" -o /opt/argus/Argus
-chmod +x /opt/argus/Argus
-msg_ok "Setup Argus"
+fetch_and_deploy_gh_release "Argus" "release-argus/Argus" "singlefile" "latest" "/opt/argus" "Argus*linux-amd64"
 
 msg_info "Setup Argus Config"
 cat <<EOF >/opt/argus/config.yml
@@ -71,7 +61,6 @@ service:
       icon_link_to: https://helper-scripts.com/
       web_url: https://github.com/community-scripts/ProxmoxVE/releases
 EOF
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Setup Config"
 
 msg_info "Creating Service"
