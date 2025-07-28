@@ -17,23 +17,10 @@ msg_info "Installing Dependencies"
 $STD apt-get install -y apt-transport-https
 msg_ok "Installed Dependencies"
 
-msg_info "Installing PHP8.2"
-VERSION="$(awk -F'=' '/^VERSION_CODENAME=/{ print $NF }' /etc/os-release)"
-curl -fsSLo /usr/share/keyrings/deb.sury.org-php.gpg https://packages.sury.org/php/apt.gpg
-echo -e "deb [signed-by=/usr/share/keyrings/deb.sury.org-php.gpg] https://packages.sury.org/php/ $VERSION main" >/etc/apt/sources.list.d/php.list
-$STD apt-get update
-$STD apt-get install -y php8.2
-$STD apt-get install -y libapache2-mod-php8.2
-$STD apt-get install -y php8.2-sqlite3
-$STD apt-get install -y php8.2-gd
-$STD apt-get install -y php8.2-intl
-$STD apt-get install -y php8.2-mbstring
-msg_ok "Installed PHP8.2"
+PHP_VERSION="8.3" PHP_MODULE="sqlite3" PHP_APACHE="yes" setup_php
+fetch_and_deploy_gh_release "grocy" "grocy/grocy" "prebuild" "latest" "/var/www/html" "grocy*.zip"
 
-msg_info "Installing grocy"
-latest=$(curl -fsSL https://api.github.com/repos/grocy/grocy/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/grocy/grocy/releases/download/v${latest}/grocy_${latest}.zip" -o "grocy_${latest}.zip"
-$STD unzip grocy_${latest}.zip -d /var/www/html
+msg_info "Configuring grocy"
 chown -R www-data:www-data /var/www/html
 cp /var/www/html/config-dist.php /var/www/html/data/config.php
 chmod +x /var/www/html/update.sh
@@ -64,5 +51,4 @@ customize
 msg_info "Cleaning up"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
-rm -rf /root/grocy_${latest}.zip
 msg_ok "Cleaned"
