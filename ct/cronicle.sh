@@ -56,30 +56,18 @@ function update_script() {
     LATEST=$(curl -fsSL https://api.github.com/repos/jhuckaby/Cronicle/releases/latest | grep '"tag_name":' | cut -d'"' -f4)
     IP=$(hostname -I | awk '{print $1}')
     msg_info "Installing Dependencies"
-
-    $STD apt-get install -y git
-    $STD apt-get install -y make
-    $STD apt-get install -y g++
-    $STD apt-get install -y gcc
-    $STD apt-get install -y ca-certificates
-    $STD apt-get install -y gnupg
+    $STD apt-get install -y \
+      git \
+      build-essential \
+      ca-certificates \
+      gnupg2
     msg_ok "Installed Dependencies"
 
-    msg_info "Setting up Node.js Repository"
-    mkdir -p /etc/apt/keyrings
-    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_22.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
-    msg_ok "Set up Node.js Repository"
+    NODE_VERSION="22" setup_nodejs
+    fetch_and_deploy_gh_release "cronicle" "jhuckaby/Cronicle"
 
-    msg_info "Installing Node.js"
-    $STD apt-get update
-    $STD apt-get install -y nodejs
-    msg_ok "Installed Node.js"
-
-    msg_info "Installing Cronicle Worker"
-    mkdir -p /opt/cronicle
+    msg_info "Configuring Cronicle Worker"
     cd /opt/cronicle
-    $STD tar zxvf <(curl -fsSL https://github.com/jhuckaby/Cronicle/archive/${LATEST}.tar.gz) --strip-components 1
     $STD npm install
     $STD node bin/build.js dist
     sed -i "s/localhost:3012/${IP}:3012/g" /opt/cronicle/conf/config.json
@@ -88,6 +76,7 @@ function update_script() {
     chmod 775 /etc/init.d/cronicled
     $STD update-rc.d cronicled defaults
     msg_ok "Installed Cronicle Worker"
+    
     echo -e "\n Add Masters secret key to /opt/cronicle/conf/config.json \n"
     exit
   fi

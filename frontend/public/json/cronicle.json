@@ -9,7 +9,7 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 3012,
-  "documentation": null,
+  "documentation": "https://github.com/jhuckaby/Cronicle/blob/master/README.md",
   "website": "https://github.com/jhuckaby/Cronicle",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/chronicle.webp",
   "config_path": "/opt/cronicle/conf/config.json",
