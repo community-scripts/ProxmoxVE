@@ -29,6 +29,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: Gotify [@tremor021](https://github.com/tremor021) ([#6301](https://github.com/community-scripts/ProxmoxVE/pull/6301))
     - Refactor: Grafana [@tremor021](https://github.com/tremor021) ([#6306](https://github.com/community-scripts/ProxmoxVE/pull/6306))
     - Refactor: Argus [@tremor021](https://github.com/tremor021) ([#6305](https://github.com/community-scripts/ProxmoxVE/pull/6305))
     - n8n: refactor environmentfile [@CrazyWolf13](https://github.com/CrazyWolf13) ([#6297](https://github.com/community-scripts/ProxmoxVE/pull/6297))
