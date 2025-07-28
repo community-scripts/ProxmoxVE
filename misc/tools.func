@@ -959,7 +959,7 @@ function fetch_and_deploy_gh_release() {
         $STD apt-get install -y unzip
       fi
       unzip -q "$tmpdir/$filename" -d "$unpack_tmp"
-    elif [[ "$filename" == *.tar.* ]]; then
+    elif [[ "$filename" == *.tar.* || "$filename" == *.tgz ]]; then
       tar -xf "$tmpdir/$filename" -C "$unpack_tmp"
     else
       msg_error "Unsupported archive format: $filename"
@@ -969,22 +969,40 @@ function fetch_and_deploy_gh_release() {
 
     local top_dirs
     top_dirs=$(find "$unpack_tmp" -mindepth 1 -maxdepth 1 -type d | wc -l)
-
-    if [[ "$top_dirs" -eq 1 ]]; then
+    local top_entries inner_dir
+    top_entries=$(find "$unpack_tmp" -mindepth 1 -maxdepth 1)
+    if [[ "$(echo "$top_entries" | wc -l)" -eq 1 && -d "$top_entries" ]]; then
       # Strip leading folder
-      local inner_dir
-      inner_dir=$(find "$unpack_tmp" -mindepth 1 -maxdepth 1 -type d)
+      inner_dir="$top_entries"
       shopt -s dotglob nullglob
-      cp -r "$inner_dir"/* "$target/"
+      if compgen -G "$inner_dir/*" >/dev/null; then
+        cp -r "$inner_dir"/* "$target/" || {
+          msg_error "Failed to copy contents from $inner_dir to $target"
+          rm -rf "$tmpdir" "$unpack_tmp"
+          return 1
+        }
+      else
+        msg_error "Inner directory is empty: $inner_dir"
+        rm -rf "$tmpdir" "$unpack_tmp"
+        return 1
+      fi
       shopt -u dotglob nullglob
     else
       # Copy all contents
       shopt -s dotglob nullglob
-      cp -r "$unpack_tmp"/* "$target/"
+      if compgen -G "$unpack_tmp/*" >/dev/null; then
+        cp -r "$unpack_tmp"/* "$target/" || {
+          msg_error "Failed to copy contents to $target"
+          rm -rf "$tmpdir" "$unpack_tmp"
+          return 1
+        }
+      else
+        msg_error "Unpacked archive is empty"
+        rm -rf "$tmpdir" "$unpack_tmp"
+        return 1
+      fi
       shopt -u dotglob nullglob
     fi
-
-    rm -rf "$unpack_tmp"
 
     ### Singlefile Mode ###
   elif [[ "$mode" == "singlefile" ]]; then
