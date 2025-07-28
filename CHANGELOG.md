@@ -14,7 +14,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
-  - Refactor: Navidrome [@tremor021](https://github.com/tremor021) ([#6300](https://github.com/community-scripts/ProxmoxVE/pull/6300))
+  - Refactor: HiveMQ [@tremor021](https://github.com/tremor021) ([#6313](https://github.com/community-scripts/ProxmoxVE/pull/6313))
 
   - #### 🐞 Bug Fixes
 
@@ -29,6 +29,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: Navidrome [@tremor021](https://github.com/tremor021) ([#6300](https://github.com/community-scripts/ProxmoxVE/pull/6300))
     - Refactor: Gotify [@tremor021](https://github.com/tremor021) ([#6301](https://github.com/community-scripts/ProxmoxVE/pull/6301))
     - Refactor: Grafana [@tremor021](https://github.com/tremor021) ([#6306](https://github.com/community-scripts/ProxmoxVE/pull/6306))
     - Refactor: Argus [@tremor021](https://github.com/tremor021) ([#6305](https://github.com/community-scripts/ProxmoxVE/pull/6305))
