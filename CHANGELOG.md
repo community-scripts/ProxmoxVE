@@ -20,6 +20,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - [core]: create_lxc: better handling, fix lock handling, improve template validation & storage selection UX [@MickLesk](https://github.com/MickLesk) ([#6296](https://github.com/community-scripts/ProxmoxVE/pull/6296))
     - ProxmoxVE 9.0 Beta: add BETA Version as test in pve_check [@MickLesk](https://github.com/MickLesk) ([#6295](https://github.com/community-scripts/ProxmoxVE/pull/6295))
     - karakeep: Run workers in prod without tsx [@vhsdream](https://github.com/vhsdream) ([#6285](https://github.com/community-scripts/ProxmoxVE/pull/6285))
 
