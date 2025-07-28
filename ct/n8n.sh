@@ -34,6 +34,18 @@ function update_script() {
       echo "Installed NPM..."
     fi
   fi
+  if [ ! -f /opt/n8n.env ]; then
+    sed -i 's|^Environment="N8N_SECURE_COOKIE=false"$|EnvironmentFile="/opt/n8n.env"|' /etc/systemd/system/n8n.service
+    HOST_IP=$(hostname -I | awk '{print $1}')
+    mkdir -p /opt
+    cat <<EOF >/opt/n8n.env
+    N8N_SECURE_COOKIE=false
+    N8N_PORT=5678
+    N8N_PROTOCOL=http
+    N8N_HOST=$HOST_IP
+    EOF
+  fi
+
   msg_info "Updating ${APP} LXC"
   $STD npm update -g n8n
   systemctl restart n8n
