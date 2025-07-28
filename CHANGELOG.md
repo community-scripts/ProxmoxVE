@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-07-28
 
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - karakeep: Run workers in prod without tsx [@vhsdream](https://github.com/vhsdream) ([#6285](https://github.com/community-scripts/ProxmoxVE/pull/6285))
+
 ## 2025-07-27
 
 ### 🚀 Updated Scripts
