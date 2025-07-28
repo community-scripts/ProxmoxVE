@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-JAVA_VERSION="17" setup_java
+JAVA_VERSION="21" setup_java
 fetch_and_deploy_gh_release "hivemq" "hivemq/hivemq-community-edition" "prebuild" "latest" "/opt/hivemq" "hivemq-ce-*.zip"
 
 msg_info "Configuring HiveMQ CE"
