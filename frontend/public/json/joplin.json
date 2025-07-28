@@ -1,0 +1,44 @@
+{
+  "name": "Joplin Server",
+  "slug": "joplin",
+  "categories": [
+    10
+  ],
+  "date_created": "2025-07-24",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 22300,
+  "documentation": "https://joplinapp.org/help/",
+  "website": "https://joplinapp.org/",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/joplin.webp",
+  "config_path": "/opt/joplin/docker-compose.yml",
+  "description": "Joplin Server es una plataforma de sincronización para la aplicación Joplin, que permite a los usuarios sincronizar sus notas, tareas y archivos adjuntos entre múltiples dispositivos. Proporciona una alternativa autohospedada a los servicios de sincronización en la nube.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/joplin.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 4,
+        "os": "debian",
+        "version": "12"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": "admin@localhost",
+    "password": "admin"
+  },
+  "notes": [
+    {
+      "text": "Después de la instalación, accede a http://IP:22300 y crea un nuevo usuario administrador. Las credenciales por defecto solo funcionan en la primera configuración.",
+      "type": "info"
+    },
+    {
+      "text": "Los datos se almacenan en /opt/joplin/data/",
+      "type": "info"
+    }
+  ]
+}
