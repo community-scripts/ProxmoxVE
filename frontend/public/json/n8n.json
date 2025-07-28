@@ -32,7 +32,7 @@
     "password": null
   },
   "notes": [
-      {
+    {
       "text": "You may need to configure the `WEBHOOK_URL` in the config file when using a domain.",
       "type": "info"
     }
