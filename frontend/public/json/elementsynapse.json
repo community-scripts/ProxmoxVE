@@ -20,7 +20,7 @@
       "script": "ct/elementsynapse.sh",
       "resources": {
         "cpu": 1,
-        "ram": 1024,
+        "ram": 2048,
         "hdd": 4,
         "os": "debian",
         "version": "12"
