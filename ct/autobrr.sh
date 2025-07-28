@@ -37,7 +37,7 @@ function update_script() {
       fetch_and_deploy_gh_release "autobrr" "autobrr/autobrr" "prebuild" "latest" "/usr/local/bin" "autobrr_*_linux_x86_64.tar.gz"
 
       msg_info "Starting ${APP} LXC"
-      systemctl start autobrr.service
+      systemctl start autobrr
       msg_ok "Started ${APP} LXC"
       
       msg_ok "Updated Successfully"
