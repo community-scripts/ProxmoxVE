@@ -1,5 +1,75 @@
 [
   {
+    "name": "Graylog2/graylog2-server",
+    "version": "7.0.0-alpha.1",
+    "date": "2025-07-28T11:28:22Z"
+  },
+  {
+    "name": "OliveTin/OliveTin",
+    "version": "2025.7.28",
+    "date": "2025-07-28T10:19:38Z"
+  },
+  {
+    "name": "Paymenter/Paymenter",
+    "version": "v1.2.6",
+    "date": "2025-07-28T09:31:34Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "v9.11.18",
+    "date": "2025-07-22T06:18:08Z"
+  },
+  {
+    "name": "gotson/komga",
+    "version": "1.23.0",
+    "date": "2025-07-28T08:44:47Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.3.0p35",
+    "date": "2025-07-28T08:32:54Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.7.4",
+    "date": "2025-07-28T08:15:50Z"
+  },
+  {
+    "name": "PrivateBin/PrivateBin",
+    "version": "2.0.0",
+    "date": "2025-07-28T07:48:40Z"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2025.7.4",
+    "date": "2025-07-28T07:33:36Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2202",
+    "date": "2025-07-28T06:00:10Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.21",
+    "date": "2025-07-17T04:46:25Z"
+  },
+  {
+    "name": "theonedev/onedev",
+    "version": "v12.0.2",
+    "date": "2025-07-28T03:34:53Z"
+  },
+  {
+    "name": "TryGhost/Ghost-CLI",
+    "version": "v1.28.1",
+    "date": "2025-07-28T01:39:35Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
     "name": "umami-software/umami",
     "version": "v2.19.0",
     "date": "2025-07-27T22:25:00Z"
@@ -25,19 +95,14 @@
     "date": "2025-07-27T14:48:37Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2200",
-    "date": "2025-07-27T05:52:33Z"
+    "name": "keycloak/keycloak",
+    "version": "26.3.2",
+    "date": "2025-07-24T10:14:27Z"
   },
   {
     "name": "project-zot/zot",
     "version": "v2.1.6",
     "date": "2025-07-27T01:14:14Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
   },
   {
     "name": "aceberg/WatchYourLAN",
@@ -48,11 +113,6 @@
     "name": "blakeblackshear/frigate",
     "version": "v0.14.1",
     "date": "2024-08-29T22:32:51Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.3.2",
-    "date": "2025-07-24T10:14:27Z"
   },
   {
     "name": "MediaBrowser/Emby.Releases",
@@ -71,8 +131,8 @@
   },
   {
     "name": "ollama/ollama",
-    "version": "v0.10.0-rc2",
-    "date": "2025-07-25T21:24:06Z"
+    "version": "v0.10.0-rc1",
+    "date": "2025-07-22T20:40:47Z"
   },
   {
     "name": "homarr-labs/homarr",
@@ -93,6 +153,11 @@
     "name": "fuma-nama/fumadocs",
     "version": "fumadocs-openapi@9.1.5",
     "date": "2025-07-25T16:20:20Z"
+  },
+  {
+    "name": "emqx/emqx",
+    "version": "e6.0.0-M2.202508-alpha.1",
+    "date": "2025-07-25T16:01:00Z"
   },
   {
     "name": "heiher/hev-socks5-server",
@@ -118,11 +183,6 @@
     "name": "ErsatzTV/ErsatzTV",
     "version": "v25.3.1",
     "date": "2025-07-25T03:39:31Z"
-  },
-  {
-    "name": "TryGhost/Ghost-CLI",
-    "version": "v1.28.0",
-    "date": "2025-07-25T01:21:13Z"
   },
   {
     "name": "Brandawg93/PeaNUT",
@@ -175,24 +235,9 @@
     "date": "2025-07-16T09:45:14Z"
   },
   {
-    "name": "Paymenter/Paymenter",
-    "version": "v1.2.5",
-    "date": "2025-07-24T11:52:16Z"
-  },
-  {
-    "name": "Checkmk/checkmk",
-    "version": "v2.3.0p35-rc2",
-    "date": "2025-07-24T07:00:54Z"
-  },
-  {
     "name": "zwave-js/zwave-js-ui",
     "version": "v10.10.0",
     "date": "2025-07-24T06:15:19Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.21",
-    "date": "2025-07-17T04:46:25Z"
   },
   {
     "name": "advplyr/audiobookshelf",
@@ -270,11 +315,6 @@
     "date": "2025-07-22T20:10:08Z"
   },
   {
-    "name": "esphome/esphome",
-    "version": "2025.7.3",
-    "date": "2025-07-22T20:09:49Z"
-  },
-  {
     "name": "rcourtman/Pulse",
     "version": "v3.42.0",
     "date": "2025-07-14T22:07:28Z"
@@ -303,16 +343,6 @@
     "name": "crowdsecurity/crowdsec",
     "version": "v1.6.11",
     "date": "2025-07-22T12:11:38Z"
-  },
-  {
-    "name": "home-assistant/core",
-    "version": "2025.7.3",
-    "date": "2025-07-22T08:30:59Z"
-  },
-  {
-    "name": "mattermost/mattermost",
-    "version": "v9.11.18",
-    "date": "2025-07-22T06:18:08Z"
   },
   {
     "name": "adityachandelgit/BookLore",
@@ -385,11 +415,6 @@
     "date": "2025-07-20T13:26:30Z"
   },
   {
-    "name": "OliveTin/OliveTin",
-    "version": "2025.7.19",
-    "date": "2025-07-20T09:44:35Z"
-  },
-  {
     "name": "documenso/documenso",
     "version": "v1.12.2-rc.2",
     "date": "2025-07-20T07:05:19Z"
@@ -430,11 +455,6 @@
     "date": "2025-07-19T08:54:54Z"
   },
   {
-    "name": "theonedev/onedev",
-    "version": "v12.0.1",
-    "date": "2025-07-18T15:02:25Z"
-  },
-  {
     "name": "TandoorRecipes/recipes",
     "version": "1.5.35",
     "date": "2025-06-22T08:30:10Z"
@@ -443,11 +463,6 @@
     "name": "wazuh/wazuh",
     "version": "coverity-w30-4.13.0",
     "date": "2025-07-18T12:05:26Z"
-  },
-  {
-    "name": "emqx/emqx",
-    "version": "e6.0.0-M1.202507-rc.1",
-    "date": "2025-07-18T07:48:52Z"
   },
   {
     "name": "cross-seed/cross-seed",
@@ -523,11 +538,6 @@
     "name": "cloudreve/cloudreve",
     "version": "4.3.0",
     "date": "2025-07-15T09:54:38Z"
-  },
-  {
-    "name": "gotson/komga",
-    "version": "1.22.1",
-    "date": "2025-07-15T06:44:29Z"
   },
   {
     "name": "go-gitea/gitea",
@@ -725,11 +735,6 @@
     "date": "2025-07-04T14:49:43Z"
   },
   {
-    "name": "Graylog2/graylog2-server",
-    "version": "6.3.1",
-    "date": "2025-07-04T11:20:48Z"
-  },
-  {
     "name": "cloudflare/cloudflared",
     "version": "2025.7.0",
     "date": "2025-07-03T17:08:15Z"
@@ -798,11 +803,6 @@
     "name": "jupyter/notebook",
     "version": "v7.4.4",
     "date": "2025-06-30T13:04:22Z"
-  },
-  {
-    "name": "PrivateBin/PrivateBin",
-    "version": "1.7.8",
-    "date": "2025-06-30T09:00:54Z"
   },
   {
     "name": "typesense/typesense",
