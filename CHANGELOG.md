@@ -30,6 +30,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: grocy [@tremor021](https://github.com/tremor021) ([#6307](https://github.com/community-scripts/ProxmoxVE/pull/6307))
     - Refactor: Navidrome [@tremor021](https://github.com/tremor021) ([#6300](https://github.com/community-scripts/ProxmoxVE/pull/6300))
     - Refactor: Gotify [@tremor021](https://github.com/tremor021) ([#6301](https://github.com/community-scripts/ProxmoxVE/pull/6301))
     - Refactor: Grafana [@tremor021](https://github.com/tremor021) ([#6306](https://github.com/community-scripts/ProxmoxVE/pull/6306))
