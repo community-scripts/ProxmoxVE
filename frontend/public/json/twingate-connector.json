@@ -1,0 +1,40 @@
+{
+  "name": "twingate-connector",
+  "slug": "twingate-connector",
+  "categories": [
+    4
+  ],
+  "date_created": "2025-07-17",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": null,
+  "documentation": "https://www.twingate.com/docs/",
+  "config_path": "/etc/twingate/connector.conf",
+  "website": "https://www.twingate.com",
+  "logo": "https://avatars.githubusercontent.com/u/97470429?s=200&v=4",
+  "description": "Twingate Connectors are lightweight software components that establish secure, least-privileged access between private network resources and authorized users without exposing the network to the internet. They act as outbound-only bridges between your protected resources and the Twingate infrastructure, ensuring zero-trust access without the need for a VPN.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/twingate-connector.sh",
+      "resources": {
+        "cpu": 1,
+        "ram": 2048,
+        "hdd": 2,
+        "os": "Ubuntu",
+        "version": "22.04"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "If you need to update your access or refresh tokens, they can be found in /etc/twingate/connector.conf",
+      "type": "info"
+    }
+  ]
+}
