@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-07-29
 
+### 🆕 New Scripts
+
+  - Jeedom ([#6336](https://github.com/community-scripts/ProxmoxVE/pull/6336))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
