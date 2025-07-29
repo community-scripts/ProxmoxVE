@@ -41,7 +41,7 @@ Description=n8n
 
 [Service]
 Type=simple
-EnvironmentFile="/opt/n8n.env"
+EnvironmentFile=/opt/n8n.env
 ExecStart=n8n start
 [Install]
 WantedBy=multi-user.target
