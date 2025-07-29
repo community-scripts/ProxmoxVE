@@ -42,6 +42,7 @@ Description=n8n
 Type=simple
 EnvironmentFile=/opt/n8n.env
 ExecStart=n8n start
+
 [Install]
 WantedBy=multi-user.target
 EOF
