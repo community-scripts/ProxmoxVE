@@ -46,7 +46,7 @@ ExecStart=n8n start
 [Install]
 WantedBy=multi-user.target
 EOF
-$STD systemctl enable --now n8n
+systemctl enable -q --now n8n
 msg_ok "Created Service"
 
 motd_ssh
