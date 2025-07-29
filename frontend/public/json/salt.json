@@ -9,7 +9,7 @@
   "updateable": true,
   "privileged": false,
   "config_path": "/opt/salt/.env",
-  "interface_port": 3000,
+  "interface_port": null,
   "documentation": "https://docs.saltproject.io/salt/install-guide/en/latest/",
   "website": "https://saltproject.io/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/salt.webp",
