@@ -21,6 +21,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: HomeBox [@tremor021](https://github.com/tremor021) ([#6338](https://github.com/community-scripts/ProxmoxVE/pull/6338))
     - Refactor: InspIRCd [@tremor021](https://github.com/tremor021) ([#6343](https://github.com/community-scripts/ProxmoxVE/pull/6343))
     - Refactor: Jackett [@tremor021](https://github.com/tremor021) ([#6344](https://github.com/community-scripts/ProxmoxVE/pull/6344))
     - Update keycloak script to support configuration of latest release (v26) [@remz1337](https://github.com/remz1337) ([#6322](https://github.com/community-scripts/ProxmoxVE/pull/6322))
