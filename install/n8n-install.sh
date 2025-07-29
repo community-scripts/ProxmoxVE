@@ -14,8 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
-  ca-certificates
+$STD apt-get install -y ca-certificates
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" setup_nodejs
