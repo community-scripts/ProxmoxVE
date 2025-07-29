@@ -13,20 +13,14 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Jackett"
-RELEASE=$(curl -fsSL https://github.com/Jackett/Jackett/releases/latest | grep "title>Release" | cut -d " " -f 4)
-cd /opt
-curl -fsSL "https://github.com/Jackett/Jackett/releases/download/$RELEASE/Jackett.Binaries.LinuxAMDx64.tar.gz" -o "Jackett.Binaries.LinuxAMDx64.tar.gz"
-tar -xzf Jackett.Binaries.LinuxAMDx64.tar.gz -C /opt
-rm -rf Jackett.Binaries.LinuxAMDx64.tar.gz
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
-msg_ok "Installed Jackett"
+fetch_and_deploy_gh_release "jackett" "Jackett/Jackett" "prebuild" "latest" "/opt/Jackett" "Jackett.Binaries.LinuxAMDx64.tar.gz"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/jackett.service
 [Unit]
 Description=Jackett Daemon
 After=network.target
+
 [Service]
 SyslogIdentifier=jackett
 Restart=always
@@ -36,6 +30,7 @@ WorkingDirectory=/opt/Jackett
 ExecStart=/bin/sh /opt/Jackett/jackett_launcher.sh
 TimeoutStopSec=30
 Environment="DisableRootWarning=true"
+
 [Install]
 WantedBy=multi-user.target
 EOF
