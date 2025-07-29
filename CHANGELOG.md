@@ -20,6 +20,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: Photoprism [@MickLesk](https://github.com/MickLesk) ([#6335](https://github.com/community-scripts/ProxmoxVE/pull/6335))
     - Refactor: Autobrr [@tremor021](https://github.com/tremor021) ([#6302](https://github.com/community-scripts/ProxmoxVE/pull/6302))
 
 ## 2025-07-28
