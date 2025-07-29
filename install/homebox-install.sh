@@ -33,7 +33,7 @@ Description=Start Homebox Service
 After=network.target
 
 [Service]
-WorkingDirectory=/opt
+WorkingDirectory=/opt/homebox
 ExecStart=/opt/homebox/homebox
 EnvironmentFile=/opt/homebox/.env
 Restart=on-failure
