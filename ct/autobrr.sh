@@ -31,7 +31,7 @@ function update_script() {
     RELEASE=$(curl -fsSL https://api.github.com/repos/autobrr/autobrr/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
     if [[ "${RELEASE}" != "$(cat ~/.autobrr 2>/dev/null)" ]] || [[ ! -f ~/.autobrr ]]; then
       msg_info "Stopping ${APP} LXC"
-      systemctl stop autobrr.service
+      systemctl stop autobrr
       msg_ok "Stopped ${APP} LXC"
 
       fetch_and_deploy_gh_release "autobrr" "autobrr/autobrr" "prebuild" "latest" "/usr/local/bin" "autobrr_*_linux_x86_64.tar.gz"
