@@ -27,26 +27,19 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
   RELEASE=$(curl -fsSL https://api.github.com/repos/inspircd/inspircd/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+  if [[ "${RELEASE}" != "$(cat ~/.inspircd 2>/dev/null)" ]] || [[ ! -f ~/.inspircd ]]; then
     msg_info "Stopping Service"
     systemctl stop inspircd
     msg_ok "Stopped Service"
 
-    msg_info "Updating ${APP} to v${RELEASE}"
-    cd /opt
-    curl -fsSL "https://github.com/inspircd/inspircd/releases/download/v${RELEASE}/inspircd_${RELEASE}.deb12u2_amd64.deb" -o $(basename "https://github.com/inspircd/inspircd/releases/download/v${RELEASE}/inspircd_${RELEASE}.deb12u2_amd64.deb")
-    $STD apt-get install "./inspircd_${RELEASE}.deb12u2_amd64.deb" -y
-    echo "${RELEASE}" >"/opt/${APP}_version.txt"
-    msg_ok "Updated ${APP} to v${RELEASE}"
+    fetch_and_deploy_gh_release "inspircd" "inspircd/inspircd" "binary"
 
     msg_info "Starting Service"
     systemctl start inspircd
     msg_ok "Started Service"
 
-    msg_info "Cleaning up"
-    rm -rf /opt/inspircd_${RELEASE}.deb12u2_amd64.deb
-    msg_ok "Cleaned"
     msg_ok "Updated Successfully"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}."
