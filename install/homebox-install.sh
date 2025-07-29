@@ -14,18 +14,17 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Homebox"
-RELEASE=$(curl -fsSL https://api.github.com/repos/sysadminsmedia/homebox/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-curl -fsSL "https://github.com/sysadminsmedia/homebox/releases/download/${RELEASE}/homebox_Linux_x86_64.tar.gz" | tar -xzf - -C /opt
-chmod +x /opt/homebox
-cat <<EOF >/opt/.env
+fetch_and_deploy_gh_release "homebox" "sysadminsmedia/homebox" "prebuild" "latest" "/opt/homebox" "homebox_Linux_x86_64.tar.gz"
+
+msg_info "Configuring Homebox"
+chmod +x /opt/homebox/homebox
+cat <<EOF >/opt/homebox/.env
 # For possible environment variables check here: https://homebox.software/en/configure-homebox
 HBOX_MODE=production
 HBOX_WEB_PORT=7745
 HBOX_WEB_HOST=0.0.0.0
 EOF
-echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
-msg_ok "Installed Homebox"
+msg_ok "Configured Homebox"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/homebox.service
@@ -35,8 +34,8 @@ After=network.target
 
 [Service]
 WorkingDirectory=/opt
-ExecStart=/opt/homebox
-EnvironmentFile=/opt/.env
+ExecStart=/opt/homebox/homebox
+EnvironmentFile=/opt/homebox/.env
 Restart=on-failure
 
 [Install]

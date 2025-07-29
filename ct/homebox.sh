@@ -22,26 +22,19 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
-  if [[ ! -f /opt/homebox ]]; then
+  if [[ ! -d /opt/homebox ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/sysadminsmedia/homebox/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+
+  RELEASE=$(curl -fsSL https://api.github.com/repos/sysadminsmedia/homebox/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+  if [[ "${RELEASE}" != "$(cat ~/.homebox 2>/dev/null)" ]] || [[ ! -f ~/.homebox ]]; then
     msg_info "Stopping ${APP}"
     systemctl stop homebox
     msg_ok "${APP} Stopped"
 
-    msg_info "Updating ${APP} to ${RELEASE}"
-    cd /opt
-    rm -rf homebox_bak
-    rm -rf /tmp/homebox.tar.gz
-    mv homebox homebox_bak
-curl -fsSL "https://github.com/sysadminsmedia/homebox/releases/download/${RELEASE}/homebox_Linux_x86_64.tar.gz" -o "/tmp/homebox.tar.gz"
-    tar -xzf /tmp/homebox.tar.gz -C /opt
-    chmod +x /opt/homebox
-    echo "${RELEASE}" >/opt/${APP}_version.txt
-    msg_ok "Updated Homebox"
+    fetch_and_deploy_gh_release "homebox" "sysadminsmedia/homebox" "prebuild" "latest" "/opt/homebox" "homebox_Linux_x86_64.tar.gz"
+    chmod +x /opt/homebox/homebox
 
     msg_info "Starting ${APP}"
     systemctl start homebox
