@@ -16,11 +16,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
-    - Element Synapse CT RAM increased from 1024 to 2048 [@tjcomserv](https://github.com/tjcomserv) ([#6330](https://github.com/community-scripts/ProxmoxVE/pull/6330))
-
-  - #### ✨ New Features
-
     - PiAlert: add new dependencies [@leiweibau](https://github.com/leiweibau) ([#6337](https://github.com/community-scripts/ProxmoxVE/pull/6337))
+    - Element Synapse CT RAM increased from 1024 to 2048 [@tjcomserv](https://github.com/tjcomserv) ([#6330](https://github.com/community-scripts/ProxmoxVE/pull/6330))
 
   - #### 🔧 Refactor
 
