@@ -29,7 +29,8 @@ $STD apt-get -y install \
   aria2 \
   wakeonlan \
   fping \
-  zip
+  zip \
+  libtext-csv-perl
 msg_ok "Installed Dependencies"
 
 msg_info "Installing PHP Dependencies"
@@ -50,7 +51,9 @@ $STD apt-get -y install \
   python3-requests \
   python3-tz \
   python3-tzlocal \
-  python3-aiohttp
+  python3-aiohttp \
+  python3-paho-mqtt \
+  python3-cryptography
 rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
 $STD pip3 install mac-vendor-lookup
 $STD pip3 install fritzconnection
