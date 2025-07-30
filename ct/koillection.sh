@@ -28,17 +28,18 @@ function update_script() {
     exit
   fi
   RELEASE=$(curl -fsSL https://api.github.com/repos/benjaminjonard/koillection/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+  if [[ ! -f ~/.koillection ]] || [[ "${RELEASE}" != "$(cat ~/.koillection)" ]]; then
     msg_info "Stopping Service"
     systemctl stop apache2
     msg_ok "Stopped Service"
 
-    msg_info "Updating ${APP} to v${RELEASE}"
-    cd /opt
+    msg_info "Creating a backup"
     mv /opt/koillection/ /opt/koillection-backup
-    curl -fsSL "https://github.com/benjaminjonard/koillection/archive/refs/tags/${RELEASE}.zip" -o $(basename "https://github.com/benjaminjonard/koillection/archive/refs/tags/${RELEASE}.zip")
-    $STD unzip "${RELEASE}.zip"
-    mv "/opt/koillection-${RELEASE}" /opt/koillection
+    msg_ok "Backup created"
+    
+    fetch_and_deploy_gh_release "koillection" "benjaminjonard/koillection"
+
+    msg_info "Updating ${APP} to v${RELEASE}"
     cd /opt/koillection
     cp -r /opt/koillection-backup/.env.local /opt/koillection
     cp -r /opt/koillection-backup/public/uploads/. /opt/koillection/public/uploads/
@@ -50,7 +51,6 @@ function update_script() {
     $STD yarn install
     $STD yarn build
     chown -R www-data:www-data /opt/koillection/public/uploads
-    echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated $APP to v${RELEASE}"
 
     msg_info "Starting Service"
@@ -58,9 +58,9 @@ function update_script() {
     msg_ok "Started Service"
 
     msg_info "Cleaning up"
-    rm -r "/opt/${RELEASE}.zip"
     rm -r /opt/koillection-backup
     msg_ok "Cleaned"
+
     msg_ok "Updated Successfully"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}"
