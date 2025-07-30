@@ -15,28 +15,20 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-  g++ \
   build-essential \
   git \
   ca-certificates \
   chromium/stable \
   chromium-common/stable \
   graphicsmagick \
-  ghostscript \
-  jq
+  ghostscript
 msg_ok "Installed Dependencies"
 
-msg_info "Installing Additional Tools"
-curl -fsSL "https://github.com/Y2Z/monolith/releases/latest/download/monolith-gnu-linux-x86_64" -o "/usr/bin/monolith"
-chmod +x /usr/bin/monolith
-curl -fsSL "https://github.com/yt-dlp/yt-dlp-nightly-builds/releases/latest/download/yt-dlp_linux" -o "/usr/bin/yt-dlp"
-chmod +x /usr/bin/yt-dlp
-msg_ok "Installed Additional Tools"
+fetch_and_deploy_gh_release "monolith" "Y2Z/monolith" "singlefile" "latest" "/usr/bin" "monolith-gnu-linux-x86_64"
+fetch_and_deploy_gh_release "yt-dlp" "yt-dlp/yt-dlp-nightly-builds" "singlefile" "latest" "/usr/bin" "yt-dlp_linux"
+fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary"
 
-msg_info "Installing Meilisearch"
-cd /tmp
-curl -fsSL "https://github.com/meilisearch/meilisearch/releases/latest/download/meilisearch.deb" -o "meilisearch.deb"
-$STD dpkg -i meilisearch.deb
+msg_info "Configuring Meilisearch"
 curl -fsSL "https://raw.githubusercontent.com/meilisearch/meilisearch/latest/config.toml" -o "/etc/meilisearch.toml"
 MASTER_KEY=$(openssl rand -base64 12)
 sed -i \
@@ -47,7 +39,7 @@ sed -i \
   -e 's|^snapshot_dir =.*|snapshot_dir = "/var/lib/meilisearch/snapshots"|' \
   -e 's|^# no_analytics = true|no_analytics = true|' \
   /etc/meilisearch.toml
-msg_ok "Installed Meilisearch"
+msg_ok "Configured Meilisearch"
 
 fetch_and_deploy_gh_release "karakeep" "karakeep-app/karakeep"
 cd /opt/karakeep
@@ -185,7 +177,6 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -rf /tmp/meilisearch.deb
 $STD apt-get autoremove -y
 $STD apt-get autoclean -y
 msg_ok "Cleaned"
