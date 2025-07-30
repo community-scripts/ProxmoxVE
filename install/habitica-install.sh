@@ -26,10 +26,12 @@ NODE_VERSION="20" NODE_MODULE="gulp-cli,mocha,npm@10" setup_nodejs
 fetch_and_deploy_gh_release "habitica" "HabitRPG/habitica" "tarball" "latest" "/opt/habitica"
 
 msg_info "Setup ${APPLICATION}"
+IPADDRESS=$(hostname -I | awk '{print $1}')
 cd /opt/habitica
 $STD npm i
 $STD npm run postinstall
 cp config.json.example config.json
+sed -i "s/\"TRUSTED_DOMAINS\": \"/&http:\/\/$IPADDRESS,/" config.json
 $STD npm run client:build
 $STD gulp build:prod
 
