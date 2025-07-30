@@ -38,13 +38,7 @@ function update_script() {
     systemctl stop meilisearch
     msg_ok "Stopped Meilisearch"
 
-    msg_info "Updating Meilisearch"
-    tmp_file=$(mktemp)
-    RELEASE=$(curl -s https://api.github.com/repos/meilisearch/meilisearch/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-    curl -fsSL https://github.com/meilisearch/meilisearch/releases/latest/download/meilisearch.deb -o $tmp_file
-    $STD dpkg -i $tmp_file
-    echo "$RELEASE" >/opt/meilisearch_version.txt
-    msg_ok "Updated Meilisearch"
+    fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary"
 
     msg_info "Starting Meilisearch"
     systemctl start meilisearch
@@ -61,22 +55,16 @@ function update_script() {
     systemctl stop meilisearch-ui
     msg_ok "Stopped Meilisearch-UI"
 
-    msg_info "Updating Meilisearch-UI"
-    tmp_file=$(mktemp)
-    tmp_dir=$(mktemp -d)
-    RELEASE_UI=$(curl -s https://api.github.com/repos/riccox/meilisearch-ui/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
     cp /opt/meilisearch-ui/.env.local /tmp/.env.local.bak
     rm -rf /opt/meilisearch-ui
-    mkdir -p /opt/meilisearch-ui
-    curl -fsSL "https://github.com/riccox/meilisearch-ui/archive/refs/tags/${RELEASE_UI}.zip" -o $tmp_file
-    $STD unzip "$tmp_file" -d "$tmp_dir"
-    mv "$tmp_dir"/*/* /opt/meilisearch-ui/
+    fetch_and_deploy_gh_release "meilisearch-ui" "riccox/meilisearch-ui" "tarball"
+
+    msg_info "Configuring Meilisearch-UI"
     cd /opt/meilisearch-ui
     sed -i 's|const hash = execSync("git rev-parse HEAD").toString().trim();|const hash = "unknown";|' /opt/meilisearch-ui/vite.config.ts
     mv /tmp/.env.local.bak /opt/meilisearch-ui/.env.local
     $STD pnpm install
-    echo "$RELEASE_UI" >/opt/meilisearch-ui_version.txt
-    msg_ok "Updated Meilisearch-UI"
+    msg_ok "Configured Meilisearch-UI"
 
     msg_info "Starting Meilisearch-UI"
     systemctl start meilisearch-ui

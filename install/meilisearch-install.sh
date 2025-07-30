@@ -13,11 +13,10 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Setup ${APPLICATION}"
-tmp_file=$(mktemp)
-RELEASE=$(curl -s https://api.github.com/repos/meilisearch/meilisearch/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-curl -fsSL https://github.com/meilisearch/meilisearch/releases/latest/download/meilisearch.deb -o $tmp_file
-$STD dpkg -i $tmp_file
+fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary"
+
+msg_info "Configuring ${APPLICATION}"
+cd /opt/meilisearch
 curl -fsSL https://raw.githubusercontent.com/meilisearch/meilisearch/latest/config.toml -o /etc/meilisearch.toml
 MASTER_KEY=$(openssl rand -base64 12)
 LOCAL_IP="$(hostname -I | awk '{print $1}')"
@@ -30,21 +29,14 @@ sed -i \
   -e 's|^# no_analytics = true|no_analytics = true|' \
   -e 's|^http_addr =.*|http_addr = "0.0.0.0:7700"|' \
   /etc/meilisearch.toml
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
-msg_ok "Setup ${APPLICATION}"
+msg_ok "Configured ${APPLICATION}"
 
 read -r -p "${TAB3}Do you want add meilisearch-ui? [y/n]: " prompt
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   NODE_VERSION="22" NODE_MODULE="pnpm@latest" setup_nodejs
+  fetch_and_deploy_gh_release "meilisearch-ui" "riccox/meilisearch-ui" "tarball"
 
-  msg_info "Setup ${APPLICATION}-ui"
-  tmp_file=$(mktemp)
-  tmp_dir=$(mktemp -d)
-  mkdir -p /opt/meilisearch-ui
-  RELEASE_UI=$(curl -s https://api.github.com/repos/riccox/meilisearch-ui/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  curl -fsSL "https://github.com/riccox/meilisearch-ui/archive/refs/tags/${RELEASE_UI}.zip" -o "$tmp_file"
-  $STD unzip "$tmp_file" -d "$tmp_dir"
-  mv "$tmp_dir"/*/* /opt/meilisearch-ui/
+  msg_info "Configuring ${APPLICATION}-ui"
   cd /opt/meilisearch-ui
   sed -i 's|const hash = execSync("git rev-parse HEAD").toString().trim();|const hash = "unknown";|' /opt/meilisearch-ui/vite.config.ts
   $STD pnpm install
@@ -53,11 +45,10 @@ VITE_SINGLETON_MODE=true
 VITE_SINGLETON_HOST=http://${LOCAL_IP}:7700
 VITE_SINGLETON_API_KEY=${MASTER_KEY}
 EOF
-  echo "${RELEASE_UI}" >/opt/${APPLICATION}-ui_version.txt
-  msg_ok "Setup ${APPLICATION}-ui"
+  msg_ok "Configured ${APPLICATION}-ui"
 fi
 
-msg_info "Setting up Services"
+msg_info "Creating service"
 cat <<EOF >/etc/systemd/system/meilisearch.service
 [Unit]
 Description=Meilisearch
@@ -94,8 +85,7 @@ WantedBy=multi-user.target
 EOF
   systemctl enable -q --now meilisearch-ui
 fi
-
-msg_ok "Set up Services"
+msg_ok "Service created"
 
 motd_ssh
 customize
