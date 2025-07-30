@@ -27,23 +27,21 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  msg_info "Updating ${APP}"
+
   RELEASE=$(curl -fsSL https://api.github.com/repos/gotson/komga/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+  if [[ ! -f ~/.komga ]] || [[ "${RELEASE}" != "$(cat ~/.komga)" ]]; then
     msg_info "Stopping ${APP}"
     systemctl stop komga
     msg_ok "Stopped ${APP}"
 
-    msg_info "Updating ${APP} to ${RELEASE}"
-    curl -fsSL "https://github.com/gotson/komga/releases/download/${RELEASE}/komga-${RELEASE}.jar" -o $(basename "https://github.com/gotson/komga/releases/download/${RELEASE}/komga-${RELEASE}.jar")
-    rm -rf /opt/komga/komga.jar
-    mv -f komga-${RELEASE}.jar /opt/komga/komga.jar
-    echo "${RELEASE}" >/opt/${APP}_version.txt
-    msg_ok "Updated ${APP} to ${RELEASE}"
+    rm -f /opt/komga/komga.jar
+    USE_ORIGINAL_FILENAME="true" fetch_and_deploy_gh_release "komga" "gotson/komga" "singlefile" "latest" "/opt/komga" "komga*.jar"
+    mv /opt/komga/komga-*.jar /opt/komga/komga.jar
 
     msg_info "Starting ${APP}"
     systemctl start komga
     msg_ok "Started ${APP}"
+
     msg_ok "Updated Successfully"
   else
     msg_ok "No update required. ${APP} is already at ${RELEASE}."

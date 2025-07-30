@@ -13,17 +13,9 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt-get install -y openjdk-17-jre
-msg_ok "Installed Dependencies"
-
-msg_info "Installing Komga"
-RELEASE=$(curl -fsSL https://api.github.com/repos/gotson/komga/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-curl -fsSL "https://github.com/gotson/komga/releases/download/${RELEASE}/komga-${RELEASE}.jar" -o "komga-${RELEASE}.jar"
-mkdir -p /opt/komga
-mv -f komga-${RELEASE}.jar /opt/komga/komga.jar
-echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
-msg_ok "Installed Komga"
+JAVA_VERSION="21" setup_java
+USE_ORIGINAL_FILENAME="true" fetch_and_deploy_gh_release "komga" "gotson/komga" "singlefile" "latest" "/opt/komga" "komga*.jar"
+mv /opt/komga/komga-*.jar /opt/komga/komga.jar
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/komga.service
@@ -42,7 +34,7 @@ Restart=on-failure
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable --now -q komga
+systemctl enable -q --now komga
 msg_ok "Created Service"
 
 motd_ssh
