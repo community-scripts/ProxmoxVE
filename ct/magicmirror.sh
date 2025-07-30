@@ -27,16 +27,14 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/MagicMirrorOrg/MagicMirror/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f /opt/${APP}_version.txt ]]; then touch /opt/${APP}_version.txt; fi
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+
+  RELEASE=$(curl -fsSL https://api.github.com/repos/MagicMirrorOrg/MagicMirror/releases/latest | jq -r '.tag_name' | sed 's/^v//')
+  if [[ ! -f ~/.magicmirror ]] || [[ "${RELEASE}" != "$(cat ~/.magicmirror)" ]]; then
     msg_info "Stopping Service"
     systemctl stop magicmirror
     msg_ok "Stopped Service"
 
-    msg_info "Updating ${APP} to v${RELEASE}"
-    $STD apt-get update
-    $STD apt-get upgrade -y
+    msg_info "Backing up data"
     rm -rf /opt/magicmirror-backup
     mkdir /opt/magicmirror-backup
     cp /opt/magicmirror/config/config.js /opt/magicmirror-backup
@@ -44,27 +42,23 @@ function update_script() {
       cp /opt/magicmirror/css/custom.css /opt/magicmirror-backup
     fi
     cp -r /opt/magicmirror/modules /opt/magicmirror-backup
-    temp_file=$(mktemp)
-curl -fsSL "https://github.com/MagicMirrorOrg/MagicMirror/archive/refs/tags/v${RELEASE}.tar.gz" -o ""$temp_file""
-    tar -xzf "$temp_file"
-    rm -rf /opt/magicmirror
-    mv MagicMirror-${RELEASE} /opt/magicmirror
+    msg_ok "Backed up data"
+
+    fetch_and_deploy_gh_release "magicmirror" "MagicMirrorOrg/MagicMirror" "tarball"
+
+    msg_info "Configuring MagicMirror"
     cd /opt/magicmirror
     $STD npm run install-mm
     cp /opt/magicmirror-backup/config.js /opt/magicmirror/config/
     if [[ -f /opt/magicmirror-backup/custom.css ]]; then
       cp /opt/magicmirror-backup/custom.css /opt/magicmirror/css/
     fi
-    echo "${RELEASE}" >"/opt/${APP}_version.txt"
-    msg_ok "Updated ${APP} to v${RELEASE}"
+    msg_ok "Configured MagicMirror"
 
     msg_info "Starting Service"
     systemctl start magicmirror
     msg_ok "Started Service"
 
-    msg_info "Cleaning up"
-    rm -f $temp_file
-    msg_ok "Cleaned"
     msg_ok "Updated Successfully"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}."
