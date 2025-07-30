@@ -31,13 +31,10 @@ $STD mysql -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH 
 } >>~/mmdl.creds
 msg_ok "Set up Database"
 
-msg_info "Installing ${APPLICATION}"
-RELEASE=$(curl -fsSL https://api.github.com/repos/intri-in/manage-my-damn-life-nextjs/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSLO "https://github.com/intri-in/manage-my-damn-life-nextjs/archive/refs/tags/v${RELEASE}.zip"
-unzip -q v"$RELEASE".zip
-mv manage-my-damn-life-nextjs-"$RELEASE"/ /opt/mmdl
-cp /opt/mmdl/sample.env.local /opt/mmdl/.env
+fetch_and_deploy_gh_release "mmdl" "intri-in/manage-my-damn-life-nextjs" "tarball"
 
+msg_info "Configuring ${APPLICATION}"
+cp /opt/mmdl/sample.env.local /opt/mmdl/.env
 sed -i -e 's|db|localhost|' \
   -e "s|myuser|${DB_USER}|" \
   -e "s|mypassword|${DB_PASS}|" \
@@ -46,15 +43,13 @@ sed -i -e 's|db|localhost|' \
   -e "s|sample_install_mmdm|${DB_NAME}|" \
   -e "s|=PASSWORD|=$(openssl rand -base64 40 | tr -dc 'a-zA-Z0-9' | head -c40)|" \
   /opt/mmdl/.env
-
 cd /opt/mmdl
 export NEXT_TELEMETRY_DISABLE=1
 export CI="true"
 $STD npm install
 $STD npm run migrate
 $STD npm run build
-echo "${RELEASE}" >/opt/mmdl_version.txt
-msg_ok "Installed ${APPLICATION}"
+msg_ok "Configured ${APPLICATION}"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/mmdl.service
@@ -78,7 +73,6 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -f ~/v${RELEASE}.zip
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
