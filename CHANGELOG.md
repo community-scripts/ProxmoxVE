@@ -14,6 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - [core] fix: expand $CACHER_IP in apt-proxy-detect.sh (revert quoted heredoc) [@MickLesk](https://github.com/MickLesk) ([#6385](https://github.com/community-scripts/ProxmoxVE/pull/6385))
+
   - #### 🐞 Bug Fixes
 
     - Habitica: Fix trusted domains [@tremor021](https://github.com/tremor021) ([#6380](https://github.com/community-scripts/ProxmoxVE/pull/6380))
@@ -21,6 +23,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: Kubo [@tremor021](https://github.com/tremor021) ([#6376](https://github.com/community-scripts/ProxmoxVE/pull/6376))
     - Refactor: Komga [@tremor021](https://github.com/tremor021) ([#6374](https://github.com/community-scripts/ProxmoxVE/pull/6374))
     - Refactor: Koillection [@tremor021](https://github.com/tremor021) ([#6373](https://github.com/community-scripts/ProxmoxVE/pull/6373))
     - Refactor: Karakeep [@tremor021](https://github.com/tremor021) ([#6372](https://github.com/community-scripts/ProxmoxVE/pull/6372))
