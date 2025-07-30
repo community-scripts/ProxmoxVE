@@ -14,13 +14,9 @@ network_check
 update_os
 
 NODE_VERSION="22" setup_nodejs
+fetch_and_deploy_gh_release "magicmirror" "MagicMirrorOrg/MagicMirror" "tarball"
 
-msg_info "Setup MagicMirror"
-temp_file=$(mktemp)
-RELEASE=$(curl -fsSL https://api.github.com/repos/MagicMirrorOrg/MagicMirror/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/MagicMirrorOrg/MagicMirror/archive/refs/tags/v${RELEASE}.tar.gz" -o ""$temp_file""
-tar -xzf "$temp_file"
-mv MagicMirror-${RELEASE} /opt/magicmirror
+msg_info "Configuring MagicMirror"
 cd /opt/magicmirror
 $STD npm run install-mm
 cat <<EOF >/opt/magicmirror/config/config.js
@@ -112,8 +108,7 @@ let config = {
 /*************** DO NOT EDIT THE LINE BELOW ***************/
 if (typeof module !== "undefined") {module.exports = config;}
 EOF
-echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
-msg_ok "Setup MagicMirror"
+msg_ok "Configured MagicMirror"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/magicmirror.service
@@ -133,14 +128,13 @@ ExecStart=/usr/bin/npm run server
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable --now magicmirror
+systemctl enable -q --now magicmirror
 msg_ok "Created Service"
 
 motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -rf $temp_file
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
