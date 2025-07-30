@@ -52,7 +52,6 @@ $STD apt-get -y install \
   python3-tz \
   python3-tzlocal \
   python3-aiohttp \
-  python3-paho-mqtt \
   python3-cryptography
 rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
 $STD pip3 install mac-vendor-lookup
@@ -61,6 +60,7 @@ $STD pip3 install cryptography
 $STD pip3 install pyunifi
 $STD pip3 install openwrt-luci-rpc
 $STD pip3 install asusrouter
+$STD pip3 install paho-mqtt
 msg_ok "Installed Python Dependencies"
 
 msg_info "Installing Pi.Alert"
