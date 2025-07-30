@@ -27,6 +27,9 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  if ! command -v jq &>/dev/null; then
+    $STD apt-get install -y jq
+  fi
 
   RELEASE=$(curl -fsSL https://api.github.com/repos/hargata/lubelog/releases/latest | jq -r '.tag_name' | sed 's/^v//')
   if [[ ! -f ~/.lubelogger ]] || [[ "${RELEASE}" != "$(cat ~/.lubelogger)" ]]; then
