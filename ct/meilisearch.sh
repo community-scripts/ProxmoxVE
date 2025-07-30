@@ -24,7 +24,7 @@ function update_script() {
   check_container_storage
   check_container_resources
 
-  if [[ ! -f /opt/Meilisearch_version.txt ]]; then
+  if [[ ! -d /opt/meilisearch ]]; then
     msg_error "No Meilisearch Installation Found!"
     exit
   fi
@@ -47,7 +47,7 @@ function update_script() {
   fi
 
   if [ "$UPD" == "2" ]; then
-    if [[ ! -f /opt/Meilisearch-ui_version.txt ]]; then
+    if [[ ! -d /opt/meilisearch-ui ]]; then
       msg_error "No Meilisearch-UI Installation Found!"
       exit
     fi
