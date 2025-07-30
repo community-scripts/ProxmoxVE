@@ -1,5 +1,95 @@
 [
   {
+    "name": "dgtlmoon/changedetection.io",
+    "version": "0.50.8",
+    "date": "2025-07-30T11:33:00Z"
+  },
+  {
+    "name": "bunkerity/bunkerweb",
+    "version": "testing",
+    "date": "2025-07-30T11:09:03Z"
+  },
+  {
+    "name": "fuma-nama/fumadocs",
+    "version": "create-fumadocs-app@15.6.7",
+    "date": "2025-07-30T11:07:48Z"
+  },
+  {
+    "name": "wizarrrr/wizarr",
+    "version": "2025.7.8",
+    "date": "2025-07-30T10:30:02Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "server/public/v0.1.16",
+    "date": "2025-07-28T22:46:46Z"
+  },
+  {
+    "name": "evcc-io/evcc",
+    "version": "0.206.0",
+    "date": "2025-07-30T09:39:42Z"
+  },
+  {
+    "name": "dani-garcia/vaultwarden",
+    "version": "1.34.3",
+    "date": "2025-07-30T09:10:59Z"
+  },
+  {
+    "name": "BookStackApp/BookStack",
+    "version": "v25.07",
+    "date": "2025-07-30T08:52:20Z"
+  },
+  {
+    "name": "zabbix/zabbix",
+    "version": "7.4.1",
+    "date": "2025-07-30T08:43:04Z"
+  },
+  {
+    "name": "wazuh/wazuh",
+    "version": "coverity-w30-4.13.0",
+    "date": "2025-07-18T12:05:26Z"
+  },
+  {
+    "name": "meilisearch/meilisearch",
+    "version": "prototype-arroy-becomes-hannoy-5",
+    "date": "2025-07-30T07:39:55Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.21",
+    "date": "2025-07-17T04:46:25Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.3-beta.10",
+    "date": "2025-07-15T06:07:03Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2208",
+    "date": "2025-07-30T05:56:51Z"
+  },
+  {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.521",
+    "date": "2025-07-30T03:38:59Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
+    "name": "docmost/docmost",
+    "version": "v0.22.0",
+    "date": "2025-07-30T00:09:03Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.10.0-rc4",
+    "date": "2025-07-29T23:41:25Z"
+  },
+  {
     "name": "OliveTin/OliveTin",
     "version": "2025.7.29",
     "date": "2025-07-29T22:20:13Z"
@@ -28,11 +118,6 @@
     "name": "MediaBrowser/Emby.Releases",
     "version": "4.9.1.2",
     "date": "2025-06-26T22:08:00Z"
-  },
-  {
-    "name": "bunkerity/bunkerweb",
-    "version": "v1.6.2",
-    "date": "2025-07-08T13:52:33Z"
   },
   {
     "name": "msgbyte/tianji",
@@ -65,14 +150,9 @@
     "date": "2025-07-29T14:06:44Z"
   },
   {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.521",
-    "date": "2025-07-29T13:10:02Z"
-  },
-  {
-    "name": "meilisearch/meilisearch",
-    "version": "prototype-arroy-becomes-hannoy-4",
-    "date": "2025-07-29T11:53:01Z"
+    "name": "keycloak/keycloak",
+    "version": "26.3.2",
+    "date": "2025-07-24T10:14:27Z"
   },
   {
     "name": "apache/cassandra",
@@ -80,29 +160,9 @@
     "date": "2025-07-29T10:00:00Z"
   },
   {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.3-beta.10",
-    "date": "2025-07-15T06:07:03Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2207",
-    "date": "2025-07-29T05:57:09Z"
-  },
-  {
     "name": "rogerfar/rdt-client",
     "version": "v2.0.115",
     "date": "2025-07-29T04:38:35Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
-  },
-  {
-    "name": "mattermost/mattermost",
-    "version": "server/public/v0.1.16",
-    "date": "2025-07-28T22:46:46Z"
   },
   {
     "name": "Luligu/matterbridge",
@@ -123,16 +183,6 @@
     "name": "navidrome/navidrome",
     "version": "v0.58.0",
     "date": "2025-07-28T18:59:50Z"
-  },
-  {
-    "name": "ollama/ollama",
-    "version": "v0.10.0-rc2",
-    "date": "2025-07-25T21:24:06Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.3.2",
-    "date": "2025-07-24T10:14:27Z"
   },
   {
     "name": "AdguardTeam/AdGuardHome",
@@ -190,11 +240,6 @@
     "date": "2025-07-28T07:33:36Z"
   },
   {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.21",
-    "date": "2025-07-17T04:46:25Z"
-  },
-  {
     "name": "theonedev/onedev",
     "version": "v12.0.2",
     "date": "2025-07-28T03:34:53Z"
@@ -213,11 +258,6 @@
     "name": "moghtech/komodo",
     "version": "v1.18.4",
     "date": "2025-06-25T00:06:56Z"
-  },
-  {
-    "name": "dani-garcia/vaultwarden",
-    "version": "1.34.2",
-    "date": "2025-07-27T18:49:05Z"
   },
   {
     "name": "benjaminjonard/koillection",
@@ -260,11 +300,6 @@
     "date": "2025-07-25T16:50:34Z"
   },
   {
-    "name": "fuma-nama/fumadocs",
-    "version": "fumadocs-openapi@9.1.5",
-    "date": "2025-07-25T16:20:20Z"
-  },
-  {
     "name": "emqx/emqx",
     "version": "e6.0.0-M2.202508-alpha.1",
     "date": "2025-07-25T16:01:00Z"
@@ -303,11 +338,6 @@
     "name": "docker/compose",
     "version": "v2.39.1",
     "date": "2025-07-24T17:02:01Z"
-  },
-  {
-    "name": "wizarrrr/wizarr",
-    "version": "2025.7.7",
-    "date": "2025-07-24T16:44:19Z"
   },
   {
     "name": "immich-app/immich",
@@ -368,11 +398,6 @@
     "name": "Prowlarr/Prowlarr",
     "version": "v1.37.0.5076",
     "date": "2025-06-04T11:04:53Z"
-  },
-  {
-    "name": "zabbix/zabbix",
-    "version": "7.4.1rc1",
-    "date": "2025-07-23T11:54:39Z"
   },
   {
     "name": "cockpit-project/cockpit",
@@ -515,11 +540,6 @@
     "date": "2025-07-19T08:54:54Z"
   },
   {
-    "name": "wazuh/wazuh",
-    "version": "coverity-w30-4.13.0",
-    "date": "2025-07-18T12:05:26Z"
-  },
-  {
     "name": "cross-seed/cross-seed",
     "version": "v6.13.1",
     "date": "2025-07-17T21:36:42Z"
@@ -575,11 +595,6 @@
     "date": "2025-07-15T15:14:16Z"
   },
   {
-    "name": "dgtlmoon/changedetection.io",
-    "version": "0.50.7",
-    "date": "2025-07-15T11:29:29Z"
-  },
-  {
     "name": "cloudreve/cloudreve",
     "version": "4.3.0",
     "date": "2025-07-15T09:54:38Z"
@@ -618,11 +633,6 @@
     "name": "mayswind/AriaNg",
     "version": "1.3.11",
     "date": "2025-07-13T13:33:48Z"
-  },
-  {
-    "name": "evcc-io/evcc",
-    "version": "0.205.0",
-    "date": "2025-07-13T12:27:31Z"
   },
   {
     "name": "authelia/authelia",
@@ -728,11 +738,6 @@
     "name": "traccar/traccar",
     "version": "v6.8.1",
     "date": "2025-07-07T14:40:11Z"
-  },
-  {
-    "name": "BookStackApp/BookStack",
-    "version": "v25.05.2",
-    "date": "2025-07-07T14:08:25Z"
   },
   {
     "name": "slskd/slskd",
@@ -883,11 +888,6 @@
     "name": "prometheus-pve/prometheus-pve-exporter",
     "version": "v3.5.5",
     "date": "2025-06-19T05:43:47Z"
-  },
-  {
-    "name": "docmost/docmost",
-    "version": "v0.21.0",
-    "date": "2025-06-18T21:43:27Z"
   },
   {
     "name": "pterodactyl/panel",
