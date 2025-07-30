@@ -19,6 +19,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - PiAlert: bugfix dependencies [@leiweibau](https://github.com/leiweibau) ([#6396](https://github.com/community-scripts/ProxmoxVE/pull/6396))
     - Librespeed-Rust: Fix service name and RELEASE var fetching [@tremor021](https://github.com/tremor021) ([#6378](https://github.com/community-scripts/ProxmoxVE/pull/6378))
     - n8n: add build-essential as dependency [@MickLesk](https://github.com/MickLesk) ([#6392](https://github.com/community-scripts/ProxmoxVE/pull/6392))
     - Habitica: Fix trusted domains [@tremor021](https://github.com/tremor021) ([#6380](https://github.com/community-scripts/ProxmoxVE/pull/6380))
