@@ -27,16 +27,14 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/hargata/lubelog/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  RELEASE_TRIMMED=$(echo "${RELEASE}" | tr -d ".")
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+
+  RELEASE=$(curl -fsSL https://api.github.com/repos/hargata/lubelog/releases/latest | jq -r '.tag_name' | sed 's/^v//')
+  if [[ ! -f ~/.lubelogger ]] || [[ "${RELEASE}" != "$(cat ~/.lubelogger)" ]]; then
     msg_info "Stopping Service"
     systemctl stop lubelogger
     msg_ok "Stopped Service"
 
-    msg_info "Updating ${APP} to v${RELEASE}"
-    cd /opt
-    curl -fsSL "https://github.com/hargata/lubelog/releases/download/v${RELEASE}/LubeLogger_v${RELEASE_TRIMMED}_linux_x64.zip" -o $(basename "https://github.com/hargata/lubelog/releases/download/v${RELEASE}/LubeLogger_v${RELEASE_TRIMMED}_linux_x64.zip")
+    msg_info "Backing up data"
     mkdir -p /tmp/lubeloggerData/data
     cp /opt/lubelogger/appsettings.json /tmp/lubeloggerData/appsettings.json
     cp -r /opt/lubelogger/data/ /tmp/lubeloggerData/
@@ -50,20 +48,23 @@ function update_script() {
     [[ -e /opt/lubelogger/wwwroot/temp ]] && cp -r /opt/lubelogger/wwwroot/temp /tmp/lubeloggerData/data/
     [[ -e /opt/lubelogger/log ]] && cp -r /opt/lubelogger/log /tmp/lubeloggerData/
     rm -rf /opt/lubelogger
-    $STD unzip LubeLogger_v${RELEASE_TRIMMED}_linux_x64.zip -d lubelogger
+    msg_ok "Backed up data"
+
+    fetch_and_deploy_gh_release "lubelogger" "hargata/lubelog" "prebuild" "latest" "/opt/lubelogger" "LubeLogger*linux_x64.zip"
+
+    msg_info "Configuring LubeLogger"
     chmod 700 /opt/lubelogger/CarCareTracker
     cp -rf /tmp/lubeloggerData/* /opt/lubelogger/
-    echo "${RELEASE}" >"/opt/${APP}_version.txt"
-    msg_ok "Updated ${APP} to v${RELEASE}"
+    msg_ok "Configured LubeLogger"
 
     msg_info "Starting Service"
     systemctl start lubelogger
     msg_ok "Started Service"
 
     msg_info "Cleaning up"
-    rm -rf /opt/LubeLogger_v${RELEASE_TRIMMED}_linux_x64.zip
     rm -rf /tmp/lubeloggerData
     msg_ok "Cleaned"
+    
     msg_ok "Updated Successfully"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}."

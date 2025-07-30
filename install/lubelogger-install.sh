@@ -13,23 +13,14 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt-get install -y jq
-msg_ok "Installed Dependencies"
+fetch_and_deploy_gh_release "lubelogger" "hargata/lubelog" "prebuild" "latest" "/opt/lubelogger" "LubeLogger*linux_x64.zip"
 
-msg_info "Installing LubeLogger"
-cd /opt
-mkdir -p /opt/lubelogger
-RELEASE=$(curl -fsSL https://api.github.com/repos/hargata/lubelog/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-RELEASE_TRIMMED=$(echo "${RELEASE}" | tr -d ".")
+msg_info "Configuring LubeLogger"
 cd /opt/lubelogger
-curl -fsSL "https://github.com/hargata/lubelog/releases/download/v${RELEASE}/LubeLogger_v${RELEASE_TRIMMED}_linux_x64.zip" -o "LubeLogger_v${RELEASE_TRIMMED}_linux_x64.zip"
-$STD unzip LubeLogger_v${RELEASE_TRIMMED}_linux_x64.zip
 chmod 700 /opt/lubelogger/CarCareTracker
 cp /opt/lubelogger/appsettings.json /opt/lubelogger/appsettings_bak.json
 jq '.Kestrel = {"Endpoints": {"Http": {"Url": "http://0.0.0.0:5000"}}}' /opt/lubelogger/appsettings_bak.json >/opt/lubelogger/appsettings.json
-echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
-msg_ok "Installed LubeLogger"
+msg_ok "Configured LubeLogger"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/lubelogger.service
@@ -51,7 +42,7 @@ Restart=on-failure
 WantedBy=multi-user.target
 EOF
 
-systemctl enable --now -q lubelogger.service
+systemctl enable -q --now lubelogger
 msg_ok "Created Service"
 
 motd_ssh
@@ -59,7 +50,6 @@ customize
 
 msg_info "Cleaning up"
 rm -rf /opt/lubelogger/appsettings_bak.json
-rm -rf /opt/lubelogger/LubeLogger_v${RELEASE_TRIMMED}_linux_x64.zip
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
