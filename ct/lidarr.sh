@@ -29,19 +29,24 @@ function update_script() {
     exit
   fi
 
-  msg_info "Updating $APP LXC"
-  temp_file="$(mktemp)"
-  rm -rf /opt/Lidarr
-  RELEASE=$(curl -fsSL https://api.github.com/repos/Lidarr/Lidarr/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  curl -fsSL "https://github.com/Lidarr/Lidarr/releases/download/v${RELEASE}/Lidarr.master.${RELEASE}.linux-core-x64.tar.gz" -o "$temp_file"
-  $STD tar -xvzf "$temp_file"
-  mv Lidarr /opt
-  chmod 775 /opt/Lidarr
-  msg_ok "Updated $APP LXC"
+  RELEASE=$(curl -fsSL https://api.github.com/repos/Lidarr/Lidarr/releases/latest | jq -r '.tag_name' | sed 's/^v//')
+  if [[ "${RELEASE}" != "$(cat ~/.lidarr)" ]] || [[ ! -f ~/.lidarr ]]; then
 
-  msg_info "Cleaning up"
-  rm -rf "$temp_file"
-  msg_ok "Cleaned up"
+    msg_info "Stopping service"
+    systemctl stop lidarr
+    msg_ok "Service stopped"
+
+    fetch_and_deploy_gh_release "lidarr" "Lidarr/Lidarr" "prebuild" "latest" "/opt/Lidarr" "Lidarr.master*linux-core-x64.tar.gz"
+    chmod 775 /opt/Lidarr
+    
+    msg_info "Starting service"
+    systemctl start lidarr
+    msg_ok "Service started"
+
+    msg_ok "Updated successfully"
+  else
+    msg_ok "No update required. ${APP} is already at ${RELEASE}"
+  fi
   exit
 }
 
