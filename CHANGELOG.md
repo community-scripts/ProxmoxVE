@@ -14,11 +14,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
-  - Refactor: Lidarr [@tremor021](https://github.com/tremor021) ([#6379](https://github.com/community-scripts/ProxmoxVE/pull/6379))
-- [core] fix: expand $CACHER_IP in apt-proxy-detect.sh (revert quoted heredoc) [@MickLesk](https://github.com/MickLesk) ([#6385](https://github.com/community-scripts/ProxmoxVE/pull/6385))
-
   - #### 🐞 Bug Fixes
 
+    - Strip SD and NS prefixes before writing to config file [@mattv8](https://github.com/mattv8) ([#6356](https://github.com/community-scripts/ProxmoxVE/pull/6356))
+    - [core] fix: expand $CACHER_IP in apt-proxy-detect.sh (revert quoted heredoc) [@MickLesk](https://github.com/MickLesk) ([#6385](https://github.com/community-scripts/ProxmoxVE/pull/6385))
     - PiAlert: bugfix dependencies [@leiweibau](https://github.com/leiweibau) ([#6396](https://github.com/community-scripts/ProxmoxVE/pull/6396))
     - Librespeed-Rust: Fix service name and RELEASE var fetching [@tremor021](https://github.com/tremor021) ([#6378](https://github.com/community-scripts/ProxmoxVE/pull/6378))
     - n8n: add build-essential as dependency [@MickLesk](https://github.com/MickLesk) ([#6392](https://github.com/community-scripts/ProxmoxVE/pull/6392))
@@ -27,6 +26,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: Lidarr [@tremor021](https://github.com/tremor021) ([#6379](https://github.com/community-scripts/ProxmoxVE/pull/6379))
     - Refactor: Kubo [@tremor021](https://github.com/tremor021) ([#6376](https://github.com/community-scripts/ProxmoxVE/pull/6376))
     - Refactor: Komga [@tremor021](https://github.com/tremor021) ([#6374](https://github.com/community-scripts/ProxmoxVE/pull/6374))
     - Refactor: Koillection [@tremor021](https://github.com/tremor021) ([#6373](https://github.com/community-scripts/ProxmoxVE/pull/6373))
