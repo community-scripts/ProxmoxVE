@@ -131,8 +131,8 @@ network_check() {
 update_os() {
   msg_info "Updating Container OS"
   if [[ "$CACHER" == "yes" ]]; then
-    echo "Acquire::http::Proxy-Auto-Detect \"/usr/local/bin/apt-proxy-detect.sh\";" >/etc/apt/apt.conf.d/00aptproxy
-    cat <<'EOF' >/usr/local/bin/apt-proxy-detect.sh
+    echo 'Acquire::http::Proxy-Auto-Detect "/usr/local/bin/apt-proxy-detect.sh";' >/etc/apt/apt.conf.d/00aptproxy
+    cat <<EOF >/usr/local/bin/apt-proxy-detect.sh
 #!/bin/bash
 if nc -w1 -z "${CACHER_IP}" 3142; then
   echo -n "http://${CACHER_IP}:3142"
