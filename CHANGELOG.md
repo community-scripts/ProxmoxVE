@@ -19,6 +19,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Habitica: Fix trusted domains [@tremor021](https://github.com/tremor021) ([#6380](https://github.com/community-scripts/ProxmoxVE/pull/6380))
     - Mafl: Fix undeclared var [@tremor021](https://github.com/tremor021) ([#6371](https://github.com/community-scripts/ProxmoxVE/pull/6371))
 
+  - #### 🔧 Refactor
+
+    - Refactor: Karakeep [@tremor021](https://github.com/tremor021) ([#6372](https://github.com/community-scripts/ProxmoxVE/pull/6372))
+
 ## 2025-07-29
 
 ### 🆕 New Scripts
