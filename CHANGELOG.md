@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-07-30
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Mafl: Fix undeclared var [@tremor021](https://github.com/tremor021) ([#6371](https://github.com/community-scripts/ProxmoxVE/pull/6371))
+
 ## 2025-07-29
 
 ### 🆕 New Scripts
