@@ -23,21 +23,24 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
-  if [[ ! -f /usr/local/kubo ]]; then
+  if [[ ! -f /usr/local/kubo/ipfs ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://github.com/ipfs/kubo/releases/latest | grep "title>Release" | cut -d " " -f 4)
-  if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
-    msg_info "Updating $APP LXC"
-    $STD apt-get update
-    $STD apt-get -y upgrade
-    curl -fsSL "https://github.com/ipfs/kubo/releases/download/${RELEASE}/kubo_${RELEASE}_linux-amd64.tar.gz" -o $(basename "https://github.com/ipfs/kubo/releases/download/${RELEASE}/kubo_${RELEASE}_linux-amd64.tar.gz")
-    tar -xzf "kubo_${RELEASE}_linux-amd64.tar.gz" -C /usr/local
-    systemctl restart ipfs.service
-    echo "${RELEASE}" >/opt/${APP}_version.txt
-    rm "kubo_${RELEASE}_linux-amd64.tar.gz"
-    msg_ok "Updated $APP LXC"
+
+  RELEASE=$(curl -fsSL https://api.github.com/repos/ipfs/kubo/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+  if [[ "${RELEASE}" != "$(cat ~/.kubo)" ]] || [[ ! -f ~/.kubo ]]; then
+    msg_info "Stopping service"
+    systemctl stop ipfs
+    msg_ok "Stopped service"
+
+    fetch_and_deploy_gh_release "kubo" "ipfs/kubo" "prebuild" "latest" "/usr/local/kubo" "kubo*linux-amd64.tar.gz"
+
+    msg_info "Starting service"
+    systemctl start ipfs
+    msg_ok "Service started"
+
+    msg_ok "Updated successfuly"
   else
     msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
