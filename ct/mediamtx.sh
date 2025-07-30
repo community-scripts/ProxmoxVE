@@ -20,15 +20,34 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /opt/mediamtx/ ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    msg_error "Currently we don't provide an update function for this ${APP}."
-    exit
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /opt/mediamtx/ ]]; then
+      msg_error "No ${APP} Installation Found!"
+      exit
+  fi
+  if ! command -v jq &>/dev/null; then
+    $STD apt-get install -y jq
+  fi
+
+  RELEASE=$(curl -fsSL https://api.github.com/repos/bluenviron/mediamtx/releases/latest | jq -r '.tag_name' | sed 's/^v//')
+  if [[ "${RELEASE}" != "$(cat ~/.mediamtx)" ]] || [[ ! -f ~/.mediamtx ]]; then
+    msg_info "Stopping service"
+    systemctl stop mediamtx
+    msg_ok "Service stopped"
+
+    fetch_and_deploy_gh_release "mediamtx" "bluenviron/mediamtx" "prebuild" "latest" "/opt/mediamtx" "mediamtx*linux_amd64.tar.gz"
+    
+    msg_info "Starting service"
+    systemctl start mediamtx
+    msg_ok "Service started"
+
+    msg_ok "Updated successfully"
+  else
+    msg_ok "No update required. ${APP} is already at ${RELEASE}"
+  fi
+  exit
 }
 
 start
