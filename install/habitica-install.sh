@@ -31,7 +31,7 @@ cd /opt/habitica
 $STD npm i
 $STD npm run postinstall
 cp config.json.example config.json
-sed -i "s/\"TRUSTED_DOMAINS\": \"/&http:\/\/$IPADDRESS,/" config.json
+sed -i "s/\"TRUSTED_DOMAINS\": \"/&http:\/\/$IPADDRESS:3000,/" config.json
 $STD npm run client:build
 $STD gulp build:prod
 
