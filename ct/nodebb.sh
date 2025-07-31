@@ -40,6 +40,7 @@ function update_script() {
     msg_info "Updating ${APP} to v${RELEASE}"
     cd /opt/nodebb
     $STD ./nodebb upgrade
+    echo "${RELEASE}" > ~/.nodebb
     msg_ok "Updated ${APP} to v${RELEASE}"
 
     msg_info "Starting ${APP}"
