@@ -27,10 +27,23 @@ function update_script() {
         msg_error "No ${APP} Installation Found!"
         exit
     fi
-    msg_info "Updating $APP LXC"
-    $STD apt-get update
-    $STD apt-get -y upgrade
-    msg_ok "Updated $APP LXC"
+
+    RELEASE=$(curl -fsSL https://api.github.com/repos/owncast/owncast/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+    if [[ ! -f ~/.owncast ]] || [[ "${RELEASE}" != "$(cat ~/.owncast)" ]]; then
+      msg_info "Stopping ${APP}"
+      systemctl stop owncast
+      msg_ok "Stopped ${APP}"
+
+      fetch_and_deploy_gh_release "owncast" "owncast/owncast" "prebuild" "latest" "/opt/owncast" "owncast*linux-64bit.zip"
+      
+      msg_info "Starting ${APP}"
+      systemctl start owncast
+      msg_ok "Started ${APP}"
+
+      msg_ok "Updated Successfully"
+    else
+      msg_ok "No update required. ${APP} is already at ${RELEASE}."
+    fi
     exit
 }
 
