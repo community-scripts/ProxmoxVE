@@ -32,7 +32,7 @@ function update_script() {
   fi
 
   RELEASE=$(curl -fsSL https://api.github.com/repos/NodeBB/NodeBB/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
+  if [[ "${RELEASE}" != "$(cat ~/.nodebb)" ]] || [[ ! -f ~/.nodebb ]]; then
     msg_info "Stopping ${APP}"
     systemctl stop nodebb
     msg_ok "Stopped ${APP}"
@@ -40,13 +40,13 @@ function update_script() {
     msg_info "Updating ${APP} to v${RELEASE}"
     cd /opt/nodebb
     $STD ./nodebb upgrade
-    echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP} to v${RELEASE}"
 
     msg_info "Starting ${APP}"
     systemctl start nodebb
     msg_ok "Started ${APP}"
-    msg_ok "Updated Successfully"
+
+    msg_ok "Updated Successfully\n"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}."
   fi
