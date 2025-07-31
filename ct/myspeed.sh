@@ -28,30 +28,27 @@ function update_script() {
     exit
   fi
   RELEASE=$(curl -fsSL https://github.com/gnmyt/myspeed/releases/latest | grep "title>Release" | cut -d " " -f 5)
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
-
+  if [[ ! -f ~/.myspeed ]] || [[ "${RELEASE}" != "$(cat ~/.myspeed)" ]]; then
     msg_info "Stopping ${APP} Service"
     systemctl stop myspeed
     msg_ok "Stopped ${APP} Service"
 
-    msg_info "Updating ${APP} to ${RELEASE}"
+    msg_info "Creating backup"
     cd /opt
     rm -rf myspeed_bak
     mv myspeed myspeed_bak
-    curl -fsSL "https://github.com/gnmyt/myspeed/releases/download/v$RELEASE/MySpeed-$RELEASE.zip" -o $(basename "https://github.com/gnmyt/myspeed/releases/download/v$RELEASE/MySpeed-$RELEASE.zip")
-    $STD unzip MySpeed-$RELEASE.zip -d myspeed
-    cd myspeed
+    msg_ok "Backup created"
+
+    fetch_and_deploy_gh_release "myspeed" "gnmyt/myspeed" "prebuild" "latest" "/opt/myspeed" "MySpeed-*.zip"
+
+    msg_info "Updating ${APP} to ${RELEASE}"
+    cd /opt/myspeed
     $STD npm install
-    echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP} to ${RELEASE}"
 
     msg_info "Starting ${APP} Service"
     systemctl start myspeed
     msg_ok "Started ${APP} Service"
-
-    msg_info "Cleaning up"
-    rm -rf MySpeed-$RELEASE.zip
-    msg_ok "Cleaned"
 
     msg_ok "Updated Successfully!\n"
   else

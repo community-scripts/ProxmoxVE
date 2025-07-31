@@ -20,15 +20,11 @@ $STD apt-get install -y \
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" setup_nodejs
+fetch_and_deploy_gh_release "myspeed" "gnmyt/myspeed" "prebuild" "latest" "/opt/myspeed" "MySpeed-*.zip"
 
-msg_info "Installing MySpeed"
-RELEASE=$(curl -fsSL https://github.com/gnmyt/myspeed/releases/latest | grep "title>Release" | cut -d " " -f 5)
-cd /opt
-curl -fsSL "https://github.com/gnmyt/myspeed/releases/download/v$RELEASE/MySpeed-$RELEASE.zip" -o "MySpeed-$RELEASE.zip"
-$STD unzip MySpeed-$RELEASE.zip -d myspeed
-cd myspeed
+msg_info "Configuring MySpeed"
+cd /opt/myspeed
 $STD npm install
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Installed MySpeed"
 
 msg_info "Creating Service"
@@ -56,6 +52,5 @@ customize
 
 msg_info "Cleaning up"
 $STD apt-get -y autoremove
-rm -rf /opt/MySpeed-$RELEASE.zip
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
