@@ -27,27 +27,27 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  if ! [[ $(dpkg -s python3-xmlsec 2>/dev/null) ]]; then
-    $STD apt-get update
-    $STD apt-get install -y python3-xmlsec
-  fi
-  if cd /opt/tandoor && git pull | grep -q 'Already up to date'; then
+  #if ! [[ $(dpkg -s python3-xmlsec 2>/dev/null) ]]; then
+    #$STD apt-get update
+    #$STD apt-get install -y python3-xmlsec
+  #fi
+  #if cd /opt/tandoor && git pull | grep -q 'Already up to date'; then
     msg_ok "There is currently no update available."
-  else
-    msg_info "Updating ${APP} (Patience)"
-    export $(cat /opt/tandoor/.env | grep "^[^#]" | xargs)
-    cd /opt/tandoor/
-    $STD pip3 install -r requirements.txt
-    $STD /usr/bin/python3 /opt/tandoor/manage.py migrate
-    $STD /usr/bin/python3 /opt/tandoor/manage.py collectstatic --no-input
-    $STD /usr/bin/python3 /opt/tandoor/manage.py collectstatic_js_reverse
-    cd /opt/tandoor/vue
-    $STD yarn install
-    $STD yarn build
-    cd /opt/tandoor
-    $STD python3 version.py
-    systemctl restart gunicorn_tandoor
-    msg_ok "Updated ${APP}"
+  #else
+    #msg_info "Updating ${APP} (Patience)"
+    #export $(cat /opt/tandoor/.env | grep "^[^#]" | xargs)
+    #cd /opt/tandoor/
+    #$STD pip3 install -r requirements.txt
+    #$STD /usr/bin/python3 /opt/tandoor/manage.py migrate
+    #$STD /usr/bin/python3 /opt/tandoor/manage.py collectstatic --no-input
+    #$STD /usr/bin/python3 /opt/tandoor/manage.py collectstatic_js_reverse
+    #cd /opt/tandoor/vue
+    #$STD yarn install
+    #$STD yarn build
+    #cd /opt/tandoor
+    #$STD python3 version.py
+    #systemctl restart gunicorn_tandoor
+    #msg_ok "Updated ${APP}"
   fi
   exit
 }
