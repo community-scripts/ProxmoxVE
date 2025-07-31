@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-07-31
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - OpenObserve: Fix release fetching [@tremor021](https://github.com/tremor021) ([#6409](https://github.com/community-scripts/ProxmoxVE/pull/6409))
+
 ## 2025-07-30
 
 ### 🚀 Updated Scripts
