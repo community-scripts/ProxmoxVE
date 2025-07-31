@@ -1,23 +1,98 @@
 [
   {
+    "name": "gtsteffaniak/filebrowser",
+    "version": "v0.7.18-beta",
+    "date": "2025-07-30T21:26:00Z"
+  },
+  {
+    "name": "benjaminjonard/koillection",
+    "version": "1.6.17",
+    "date": "2025-07-30T20:24:17Z"
+  },
+  {
+    "name": "mongodb/mongo",
+    "version": "r8.3.0-alpha0",
+    "date": "2025-07-30T20:23:07Z"
+  },
+  {
+    "name": "gristlabs/grist-core",
+    "version": "v1.7.0",
+    "date": "2025-07-30T20:19:50Z"
+  },
+  {
+    "name": "semaphoreui/semaphore",
+    "version": "v2.16.0-beta6",
+    "date": "2025-07-23T19:18:14Z"
+  },
+  {
+    "name": "wizarrrr/wizarr",
+    "version": "2025.7.8",
+    "date": "2025-07-30T18:17:51Z"
+  },
+  {
+    "name": "oauth2-proxy/oauth2-proxy",
+    "version": "v7.11.0",
+    "date": "2025-07-30T18:16:38Z"
+  },
+  {
+    "name": "leiweibau/Pi.Alert",
+    "version": "v2025-07-30",
+    "date": "2025-07-30T17:13:40Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.10.0-rc4",
+    "date": "2025-07-29T23:41:25Z"
+  },
+  {
+    "name": "meilisearch/meilisearch",
+    "version": "prototype-arroy-becomes-hannoy-6",
+    "date": "2025-07-30T15:24:55Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.7.4",
+    "date": "2025-07-28T08:15:50Z"
+  },
+  {
+    "name": "zwave-js/zwave-js-ui",
+    "version": "v11.0.0",
+    "date": "2025-07-30T13:50:13Z"
+  },
+  {
+    "name": "influxdata/influxdb",
+    "version": "v3.3.0",
+    "date": "2025-07-30T13:27:54Z"
+  },
+  {
+    "name": "element-hq/synapse",
+    "version": "v1.134.0",
+    "date": "2025-07-15T13:43:39Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.21",
+    "date": "2025-07-17T04:46:25Z"
+  },
+  {
+    "name": "bunkerity/bunkerweb",
+    "version": "v1.6.2",
+    "date": "2025-07-08T13:52:33Z"
+  },
+  {
+    "name": "crowdsecurity/crowdsec",
+    "version": "v1.6.11",
+    "date": "2025-07-22T12:11:38Z"
+  },
+  {
     "name": "dgtlmoon/changedetection.io",
     "version": "0.50.8",
     "date": "2025-07-30T11:33:00Z"
   },
   {
-    "name": "bunkerity/bunkerweb",
-    "version": "testing",
-    "date": "2025-07-30T11:09:03Z"
-  },
-  {
     "name": "fuma-nama/fumadocs",
     "version": "create-fumadocs-app@15.6.7",
     "date": "2025-07-30T11:07:48Z"
-  },
-  {
-    "name": "wizarrrr/wizarr",
-    "version": "2025.7.8",
-    "date": "2025-07-30T10:30:02Z"
   },
   {
     "name": "mattermost/mattermost",
@@ -50,16 +125,6 @@
     "date": "2025-07-18T12:05:26Z"
   },
   {
-    "name": "meilisearch/meilisearch",
-    "version": "prototype-arroy-becomes-hannoy-5",
-    "date": "2025-07-30T07:39:55Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.21",
-    "date": "2025-07-17T04:46:25Z"
-  },
-  {
     "name": "morpheus65535/bazarr",
     "version": "v1.5.3-beta.10",
     "date": "2025-07-15T06:07:03Z"
@@ -85,24 +150,9 @@
     "date": "2025-07-30T00:09:03Z"
   },
   {
-    "name": "ollama/ollama",
-    "version": "v0.10.0-rc4",
-    "date": "2025-07-29T23:41:25Z"
-  },
-  {
     "name": "OliveTin/OliveTin",
     "version": "2025.7.29",
     "date": "2025-07-29T22:20:13Z"
-  },
-  {
-    "name": "mongodb/mongo",
-    "version": "r8.2.0-rc1",
-    "date": "2025-07-29T20:59:27Z"
-  },
-  {
-    "name": "influxdata/influxdb",
-    "version": "v3.3.0",
-    "date": "2025-07-29T20:49:38Z"
   },
   {
     "name": "netbox-community/netbox",
@@ -143,11 +193,6 @@
     "name": "node-red/node-red",
     "version": "4.1.0",
     "date": "2025-07-29T15:15:26Z"
-  },
-  {
-    "name": "zwave-js/zwave-js-ui",
-    "version": "v10.11.0",
-    "date": "2025-07-29T14:06:44Z"
   },
   {
     "name": "keycloak/keycloak",
@@ -225,11 +270,6 @@
     "date": "2025-07-28T08:32:54Z"
   },
   {
-    "name": "home-assistant/core",
-    "version": "2025.7.4",
-    "date": "2025-07-28T08:15:50Z"
-  },
-  {
     "name": "PrivateBin/PrivateBin",
     "version": "2.0.0",
     "date": "2025-07-28T07:48:40Z"
@@ -260,11 +300,6 @@
     "date": "2025-06-25T00:06:56Z"
   },
   {
-    "name": "benjaminjonard/koillection",
-    "version": "1.6.16",
-    "date": "2025-07-27T14:48:37Z"
-  },
-  {
     "name": "project-zot/zot",
     "version": "v2.1.6",
     "date": "2025-07-27T01:14:14Z"
@@ -283,11 +318,6 @@
     "name": "henrygd/beszel",
     "version": "v0.12.1",
     "date": "2025-07-25T23:53:12Z"
-  },
-  {
-    "name": "gtsteffaniak/filebrowser",
-    "version": "v0.7.17-beta",
-    "date": "2025-07-25T22:03:43Z"
   },
   {
     "name": "homarr-labs/homarr",
@@ -375,11 +405,6 @@
     "date": "2025-07-23T19:35:52Z"
   },
   {
-    "name": "semaphoreui/semaphore",
-    "version": "v2.16.0-beta6",
-    "date": "2025-07-23T19:18:14Z"
-  },
-  {
     "name": "fallenbagel/jellyseerr",
     "version": "preview-plex-home-profile",
     "date": "2025-07-23T16:40:31Z"
@@ -403,6 +428,11 @@
     "name": "cockpit-project/cockpit",
     "version": "343",
     "date": "2025-07-23T11:21:34Z"
+  },
+  {
+    "name": "neo4j/neo4j",
+    "version": "2025.07.0",
+    "date": "2025-07-23T10:13:43Z"
   },
   {
     "name": "jhuckaby/Cronicle",
@@ -435,19 +465,9 @@
     "date": "2025-07-22T14:39:54Z"
   },
   {
-    "name": "element-hq/synapse",
-    "version": "v1.134.0",
-    "date": "2025-07-15T13:43:39Z"
-  },
-  {
     "name": "goauthentik/authentik",
     "version": "version/2025.4.4",
     "date": "2025-07-22T13:08:15Z"
-  },
-  {
-    "name": "crowdsecurity/crowdsec",
-    "version": "v1.6.11",
-    "date": "2025-07-22T12:11:38Z"
   },
   {
     "name": "lazy-media/Reactive-Resume",
@@ -555,11 +575,6 @@
     "date": "2025-07-17T15:33:14Z"
   },
   {
-    "name": "oauth2-proxy/oauth2-proxy",
-    "version": "v7.10.0",
-    "date": "2025-07-17T12:08:40Z"
-  },
-  {
     "name": "icereed/paperless-gpt",
     "version": "v0.22.0",
     "date": "2025-07-17T06:35:43Z"
@@ -650,19 +665,9 @@
     "date": "2025-04-05T19:14:59Z"
   },
   {
-    "name": "leiweibau/Pi.Alert",
-    "version": "v2025-07-12",
-    "date": "2025-07-12T07:53:52Z"
-  },
-  {
     "name": "eclipse-mosquitto/mosquitto",
     "version": "v2.0.22",
     "date": "2025-07-11T21:34:20Z"
-  },
-  {
-    "name": "neo4j/neo4j",
-    "version": "2025.06.2",
-    "date": "2025-07-11T18:03:51Z"
   },
   {
     "name": "FlowiseAI/Flowise",
@@ -843,11 +848,6 @@
     "name": "librespeed/speedtest-rust",
     "version": "v1.3.8",
     "date": "2025-06-29T07:41:53Z"
-  },
-  {
-    "name": "gristlabs/grist-core",
-    "version": "v1.6.1",
-    "date": "2025-06-25T21:19:25Z"
   },
   {
     "name": "arunavo4/gitea-mirror",
