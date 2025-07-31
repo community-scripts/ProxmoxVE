@@ -27,34 +27,27 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
   RELEASE=$(curl -fsSL https://api.github.com/repos/thomiceli/opengist/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+  if [[ ! -f ~/.opengist ]] || [[ "${RELEASE}" != "$(cat ~/.opengist)" ]]; then
     msg_info "Stopping Service"
-    systemctl stop opengist.service
+    systemctl stop opengist
     msg_ok "Stopped Service"
 
-    msg_info "Updating ${APP} to v${RELEASE}"
-    $STD apt-get update
-    $STD apt-get -y upgrade
-    cd /opt
+    msg_info "Creating backup"
     mv /opt/opengist /opt/opengist-backup
-    curl -fsSL "https://github.com/thomiceli/opengist/releases/download/v${RELEASE}/opengist${RELEASE}-linux-amd64.tar.gz" -o $(basename "https://github.com/thomiceli/opengist/releases/download/v${RELEASE}/opengist${RELEASE}-linux-amd64.tar.gz")
-    tar -xzf opengist${RELEASE}-linux-amd64.tar.gz
+    msg_ok "Backup created"
+    
+    fetch_and_deploy_gh_release "opengist" "thomiceli/opengist" "prebuild" "latest" "/opt/opengist" "opengist*linux-amd64.tar.gz"
+
+    msg_info "Configuring ${APP}"
     mv /opt/opengist-backup/config.yml /opt/opengist/config.yml
-    chmod +x /opt/opengist/opengist
-    echo "${RELEASE}" >"/opt/${APP}_version.txt"
-    msg_ok "Updated ${APP} LXC"
+    msg_ok "Configured ${APP}"
 
     msg_info "Starting Service"
-    systemctl start opengist.service
+    systemctl start opengist
     msg_ok "Started Service"
 
-    msg_info "Cleaning up"
-    rm -rf /opt/opengist${RELEASE}-linux-amd64.tar.gz
-    rm -rf /opt/opengist-backup
-    $STD apt-get -y autoremove
-    $STD apt-get -y autoclean
-    msg_ok "Cleaned"
     msg_ok "Updated Successfully"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}."

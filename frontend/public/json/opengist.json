@@ -9,7 +9,7 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 6157,
-  "documentation": null,
+  "documentation": "https://opengist.io/docs/",
   "website": "https://opengist.io/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/opengist.webp",
   "config_path": "/opt/opengist/config.yml",
