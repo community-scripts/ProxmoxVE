@@ -27,22 +27,29 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/Ombi-app/Ombi/releases/latest | grep '"tag_name":' | cut -d'"' -f4)
-  if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
-    msg_info "Stopping ${APP}"
+
+  RELEASE=$(curl -fsSL https://api.github.com/repos/Ombi-app/Ombi/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+  if [[ "${RELEASE}" != "$(cat ~/.ombi)" ]] || [[ ! -f ~/.ombi ]]; then
+    msg_info "Stopping ${APP} service"
     systemctl stop ombi
-    msg_ok "Stopped ${APP}"
+    msg_ok "Stopped ${APP} service"
 
-    msg_info "Updating ${APP} to ${RELEASE}"
-    curl -fsSL "https://github.com/Ombi-app/Ombi/releases/download/${RELEASE}/linux-x64.tar.gz" -o $(basename "https://github.com/Ombi-app/Ombi/releases/download/${RELEASE}/linux-x64.tar.gz")
-    tar -xzf linux-x64.tar.gz -C /opt/ombi
-    rm -rf linux-x64.tar.gz
-    echo "${RELEASE}" >/opt/${APP}_version.txt
-    msg_ok "Updated ${APP} to ${RELEASE}"
+    msg_info "Creating backup"
+    [[ -f /opt/ombi/Ombi.db ]] && mv /opt/ombi/Ombi.db /opt
+    [[ -f /opt/ombi/OmbiExternal.db ]] && mv /opt/ombi/OmbiExternal.db /opt
+    [[ -f /opt/ombi/OmbiSettings.db ]] && mv /opt/ombi/OmbiSettings.db /opt
+    msg_ok "Backup created"
 
-    msg_info "Starting ${APP}"
+    rm -rf /opt/ombi
+    fetch_and_deploy_gh_release "ombi" "Ombi-app/Ombi" "prebuild" "latest" "/opt/ombi" "linux-x64.tar.gz"
+    [[ -f /opt/Ombi.db ]] && mv /opt/Ombi.db /opt/ombi
+    [[ -f /opt/OmbiExternal.db ]] && mv /opt/OmbiExternal.db /opt/ombi
+    [[ -f /opt/OmbiSettings.db ]] && mv /opt/OmbiSettings.db /opt/ombi
+
+    msg_info "Starting ${APP} service"
     systemctl start ombi
-    msg_ok "Started ${APP}"
+    msg_ok "Started ${APP} service"
+
     msg_ok "Updated Successfully"
   else
     msg_ok "No update required.  ${APP} ia already at ${RELEASE}."
