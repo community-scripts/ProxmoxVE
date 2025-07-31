@@ -20,6 +20,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: Opengist [@tremor021](https://github.com/tremor021) ([#6423](https://github.com/community-scripts/ProxmoxVE/pull/6423))
     - Refactor: Ombi [@tremor021](https://github.com/tremor021) ([#6422](https://github.com/community-scripts/ProxmoxVE/pull/6422))
     - Refactor: MySpeed [@tremor021](https://github.com/tremor021) ([#6417](https://github.com/community-scripts/ProxmoxVE/pull/6417))
 
