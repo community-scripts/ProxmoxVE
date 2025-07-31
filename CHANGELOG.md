@@ -18,6 +18,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - OpenObserve: Fix release fetching [@tremor021](https://github.com/tremor021) ([#6409](https://github.com/community-scripts/ProxmoxVE/pull/6409))
 
+  - #### 🔧 Refactor
+
+    - Refactor: MySpeed [@tremor021](https://github.com/tremor021) ([#6417](https://github.com/community-scripts/ProxmoxVE/pull/6417))
+
 ## 2025-07-30
 
 ### 🚀 Updated Scripts
