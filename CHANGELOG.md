@@ -20,6 +20,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: Monica [@tremor021](https://github.com/tremor021) ([#6416](https://github.com/community-scripts/ProxmoxVE/pull/6416))
     - Refactor: Memos [@tremor021](https://github.com/tremor021) ([#6415](https://github.com/community-scripts/ProxmoxVE/pull/6415))
     - Refactor: Opengist [@tremor021](https://github.com/tremor021) ([#6423](https://github.com/community-scripts/ProxmoxVE/pull/6423))
     - Refactor: Ombi [@tremor021](https://github.com/tremor021) ([#6422](https://github.com/community-scripts/ProxmoxVE/pull/6422))
