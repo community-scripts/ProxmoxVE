@@ -14,29 +14,8 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt-get install -y \
-  build-essential \
-  git \
-  tzdata
-msg_ok "Installed Dependencies"
-
-NODE_VERSION="22" NODE_MODULE="pnpm@latest" setup_nodejs
-setup_go
-
-msg_info "Installing Memos (Patience)"
+fetch_and_deploy_gh_release "memos" "usememos/memos" "prebuild" "latest" "/opt/memos" "memos*linux_amd64.tar.gz"
 mkdir -p /opt/memos_data
-export NODE_OPTIONS="--max-old-space-size=2048"
-$STD git clone https://github.com/usememos/memos.git /opt/memos
-cd /opt/memos/web
-$STD pnpm i --frozen-lockfile
-$STD pnpm build
-cd /opt/memos
-mkdir -p /opt/memos/server/dist
-cp -r web/dist/* /opt/memos/server/dist/
-cp -r web/dist/* /opt/memos/server/router/frontend/dist/
-$STD go build -o /opt/memos/memos -tags=embed bin/memos/main.go
-msg_ok "Installed Memos"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/memos.service
