@@ -14,19 +14,17 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
-  git \
-  ca-certificates
+$STD apt-get install -y ca-certificates
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
+fetch_and_deploy_gh_release "overseerr" "sct/overseerr" "tarball"
 
-msg_info "Installing Overseerr (Patience)"
-git clone -q https://github.com/sct/overseerr.git /opt/overseerr
+msg_info "Configuring Overseerr (Patience)"
 cd /opt/overseerr
 $STD yarn install
 $STD yarn build
-msg_ok "Installed Overseerr"
+msg_ok "Configured Overseerr"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/overseerr.service
