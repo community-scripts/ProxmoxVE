@@ -58,7 +58,7 @@ function update_script() {
     done
     msg_ok "Image-processing libraries updated"
   fi
-  RELEASE="1.136.0"
+  RELEASE="1.137.3"
   #RELEASE=$(curl -fsSL https://api.github.com/repos/immich-app/immich/releases?per_page=1 | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
   if [[ -f ~/.immich && "$RELEASE" == "$(cat ~/.immich)" ]]; then
     msg_ok "No update required. ${APP} is already at v${RELEASE}"
@@ -99,11 +99,25 @@ function update_script() {
   fi
 
   cp "$ML_DIR"/ml_start.sh "$INSTALL_DIR"
+  if grep -qs "set -a" "$APP_DIR"/bin/start.sh; then
+    cp "$APP_DIR"/bin/start.sh "$INSTALL_DIR"
+  else
+    cat <<EOF >"$INSTALL_DIR"/start.sh
+#!/usr/bin/env bash
+
+set -a
+. "$INSTALL_DIR"/.env
+set +a
+
+/usr/bin/node "$APP_DIR"/dist/main.js "\$@"
+EOF
+    chmod +x "$INSTALL_DIR"/start.sh
+  fi
   rm -rf "${APP_DIR:?}"/*
   mkdir -p "$ML_DIR"
   rm -rf "$SRC_DIR"
 
-  fetch_and_deploy_gh_release "immich" "immich-app/immich" "tarball" "v1.136.0" "$SRC_DIR"
+  fetch_and_deploy_gh_release "immich" "immich-app/immich" "tarball" "v${RELEASE}" "$SRC_DIR"
 
   msg_info "Updating ${APP} web and microservices"
   cd "$SRC_DIR"/server
@@ -114,6 +128,10 @@ function update_script() {
   $STD npm ci
   $STD npm run build
   $STD npm prune --omit=dev --omit=optional
+  cp -a {bin,dist,node_modules,resources,package*.json} "$APP_DIR"/
+  cp package.json "$APP_DIR"/bin
+  mv "$INSTALL_DIR"/start.sh "$APP_DIR"/bin
+  sed -i 's|^start|./start|' "$APP_DIR"/bin/immich-admin
   cd "$SRC_DIR"/open-api/typescript-sdk
   $STD npm ci
   $STD npm run build
@@ -121,7 +139,6 @@ function update_script() {
   $STD npm ci
   $STD npm run build
   cd "$SRC_DIR"
-  cp -a server/{node_modules,dist,bin,resources,package.json,package-lock.json,bin/start.sh} "$APP_DIR"/
   cp -a web/build "$APP_DIR"/www
   cp LICENSE "$APP_DIR"
   cd "$APP_DIR"
@@ -151,8 +168,8 @@ function update_script() {
   fi
   ln -sf "$APP_DIR"/resources "$INSTALL_DIR"
   cd "$APP_DIR"
-  grep -Rl /usr/src | xargs -n1 sed -i "s|\/usr/src|$INSTALL_DIR|g"
-  grep -RlE "'/build'" | xargs -n1 sed -i "s|'/build'|'$APP_DIR'|g"
+  grep -rl /usr/src | xargs -n1 sed -i "s|\/usr/src|$INSTALL_DIR|g"
+  grep -rlE "'/build'" | xargs -n1 sed -i "s|'/build'|'$APP_DIR'|g"
   sed -i "s@\"/cache\"@\"$INSTALL_DIR/cache\"@g" "$ML_DIR"/immich_ml/config.py
   ln -s "${UPLOAD_DIR:-/opt/immich/upload}" "$APP_DIR"/upload
   ln -s "${UPLOAD_DIR:-/opt/immich/upload}" "$ML_DIR"/upload
@@ -214,6 +231,7 @@ function compile_libjxl() {
     $STD make clean
     cd "$STAGING_DIR"
     rm -rf "$SOURCE"/{build,third_party}
+    sed -i "s/libjxl: .*$/libjxl: $LIBJXL_REVISION/" ~/.immich_library_revisions
     msg_ok "Recompiled libjxl"
   fi
 }
@@ -248,6 +266,7 @@ function compile_libheif() {
     $STD make clean
     cd "$STAGING_DIR"
     rm -rf "$SOURCE"/build
+    sed -i "s/libheif: .*$/libheif: $LIBHEIF_REVISION/" ~/.immich_library_revisions
     msg_ok "Recompiled libheif"
   fi
 }
@@ -269,6 +288,7 @@ function compile_libraw() {
     ldconfig /usr/local/lib
     $STD make clean
     cd "$STAGING_DIR"
+    sed -i "s/libraw: .*$/libraw: $LIBRAW_REVISION/" ~/.immich_library_revisions
     msg_ok "Recompiled libraw"
   fi
 }
@@ -288,6 +308,7 @@ function compile_imagemagick() {
     ldconfig /usr/local/lib
     $STD make clean
     cd "$STAGING_DIR"
+    sed -i "s/imagemagick: .*$/imagemagick: $IMAGEMAGICK_REVISION/" ~/.immich_library_revisions
     msg_ok "Recompiled ImageMagick"
   fi
 }
@@ -308,6 +329,7 @@ function compile_libvips() {
     ldconfig /usr/local/lib
     cd "$STAGING_DIR"
     rm -rf "$SOURCE"/build
+    sed -i "s/libvips: .*$/libvips: $LIBVIPS_REVISION/" ~/.immich_library_revisions
     msg_ok "Recompiled libvips"
   fi
 }

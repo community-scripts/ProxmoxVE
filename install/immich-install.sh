@@ -283,7 +283,7 @@ GEO_DIR="${INSTALL_DIR}/geodata"
 mkdir -p "$INSTALL_DIR"
 mkdir -p {"${APP_DIR}","${UPLOAD_DIR}","${GEO_DIR}","${ML_DIR}","${INSTALL_DIR}"/cache}
 
-fetch_and_deploy_gh_release "immich" "immich-app/immich" "tarball" "v1.136.0" "$SRC_DIR"
+fetch_and_deploy_gh_release "immich" "immich-app/immich" "tarball" "v1.137.3" "$SRC_DIR"
 
 msg_info "Installing ${APPLICATION} (more patience please)"
 
@@ -292,21 +292,22 @@ $STD npm install -g node-gyp node-pre-gyp
 $STD npm ci
 $STD npm run build
 $STD npm prune --omit=dev --omit=optional
+cp -a {bin,dist,node_modules,resources,package*.json} "$APP_DIR"/
+cp package.json "$APP_DIR"/bin
+sed -i 's|^start|./start|' "$APP_DIR"/bin/immich-admin
 cd "$SRC_DIR"/open-api/typescript-sdk
 $STD npm ci
 $STD npm run build
 cd "$SRC_DIR"/web
 $STD npm ci
 $STD npm run build
-cd "$SRC_DIR"
-cp -a server/{node_modules,dist,bin,resources,package.json,package-lock.json,bin/start.sh} "$APP_DIR"/
-cp -a web/build "$APP_DIR"/www
+cp -a web "$APP_DIR"/www
 cp LICENSE "$APP_DIR"
 cd "$APP_DIR"
 export SHARP_FORCE_GLOBAL_LIBVIPS=true
 $STD npm install sharp
 rm -rf "$APP_DIR"/node_modules/@img/sharp-{libvips*,linuxmusl-x64}
-msg_ok "Installed Immich Web Components"
+msg_ok "Installed Immich Server and Web Components"
 
 cd "$SRC_DIR"/machine-learning
 export VIRTUAL_ENV="${ML_DIR}/ml-venv"
@@ -329,8 +330,8 @@ fi
 ln -sf "$APP_DIR"/resources "$INSTALL_DIR"
 
 cd "$APP_DIR"
-grep -Rl /usr/src | xargs -n1 sed -i "s|\/usr/src|$INSTALL_DIR|g"
-grep -RlE "'/build'" | xargs -n1 sed -i "s|'/build'|'$APP_DIR'|g"
+grep -rl /usr/src | xargs -n1 sed -i "s|\/usr/src|$INSTALL_DIR|g"
+grep -rlE "'/build'" | xargs -n1 sed -i "s|'/build'|'$APP_DIR'|g"
 sed -i "s@\"/cache\"@\"$INSTALL_DIR/cache\"@g" "$ML_DIR"/immich_ml/config.py
 ln -s "$UPLOAD_DIR" "$APP_DIR"/upload
 ln -s "$UPLOAD_DIR" "$ML_DIR"/upload
@@ -394,7 +395,16 @@ set +a
 
 python3 -m immich_ml
 EOF
-chmod +x "$ML_DIR"/ml_start.sh
+cat <<EOF >"$APP_DIR"/bin/start.sh
+#!/usr/bin/env bash
+
+set -a
+. "$INSTALL_DIR"/.env
+set +a
+
+/usr/bin/node "$APP_DIR"/dist/main.js "\$@"
+EOF
+chmod +x "$ML_DIR"/ml_start.sh "$APP_DIR"/bin/start.sh
 cat <<EOF >/etc/systemd/system/"${APPLICATION}"-web.service
 [Unit]
 Description=${APPLICATION} Web Service
