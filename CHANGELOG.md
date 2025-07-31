@@ -20,6 +20,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: listmonk [@tremor021](https://github.com/tremor021) ([#6399](https://github.com/community-scripts/ProxmoxVE/pull/6399))
     - Refactor: Neo4j [@tremor021](https://github.com/tremor021) ([#6418](https://github.com/community-scripts/ProxmoxVE/pull/6418))
     - Refactor: Monica [@tremor021](https://github.com/tremor021) ([#6416](https://github.com/community-scripts/ProxmoxVE/pull/6416))
     - Refactor: Memos [@tremor021](https://github.com/tremor021) ([#6415](https://github.com/community-scripts/ProxmoxVE/pull/6415))
