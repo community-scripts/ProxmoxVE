@@ -13,20 +13,8 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt-get install -y \
-  jq
-msg_ok "Installed Dependencies"
-
-msg_info "Setup OAuth2-Proxy"
-RELEASE=$(curl -fsSL https://api.github.com/repos/oauth2-proxy/oauth2-proxy/releases/latest | jq -r .tag_name | sed 's/^v//')
-mkdir -p /opt/oauth2-proxy
-curl -fsSL "https://github.com/oauth2-proxy/oauth2-proxy/releases/download/v${RELEASE}/oauth2-proxy-v${RELEASE}.linux-amd64.tar.gz" -o /opt/oauth2-proxy.tar.gz
-tar -xzf /opt/oauth2-proxy.tar.gz -C /opt
-mv /opt/oauth2-proxy-v${RELEASE}.linux-amd64/oauth2-proxy /opt/oauth2-proxy
+fetch_and_deploy_gh_release "oauth2-proxy" "oauth2-proxy/oauth2-proxy" "prebuild" "latest" "/opt/oauth2-proxy" "oauth2-proxy*linux-amd64.tar.gz"
 touch /opt/oauth2-proxy/config.toml
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
-msg_ok "Setup OAuth2-Proxy"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/oauth2-proxy.service
@@ -51,8 +39,6 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -f "/opt/oauth2-proxy.tar.gz"
-rm -rf "/opt/oauth2-proxy-v${RELEASE}.linux-amd64"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
