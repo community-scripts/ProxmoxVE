@@ -28,16 +28,7 @@ function update_script() {
     exit
   fi
   if ! dpkg -l | grep -q temurin-21-jre; then
-    msg_info "Installing Adoptium JDK"
-    $STD apt-get install -y \
-      gnupg2 \
-      lsb-release
-    mkdir -p /etc/apt/keyrings
-    curl -fsSL https://packages.adoptium.net/artifactory/api/gpg/key/public | gpg --dearmor >/etc/apt/trusted.gpg.d/adoptium.gpg
-    echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" >/etc/apt/sources.list.d/adoptium.list
-    $STD apt-get update
-    $STD apt-get install -y temurin-21-jre
-    msg_ok "Adoptium JDK installed"
+    JAVA_VERSION="21" setup_java
   fi
   msg_info "Updating ${APP}"
   $STD apt-get update
