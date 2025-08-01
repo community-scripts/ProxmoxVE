@@ -19,6 +19,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: LubeLogger [@tremor021](https://github.com/tremor021) ([#6400](https://github.com/community-scripts/ProxmoxVE/pull/6400))
     - Refactor: MagicMirror [@tremor021](https://github.com/tremor021) ([#6402](https://github.com/community-scripts/ProxmoxVE/pull/6402))
     - Refactor: Manage My Damn Life [@tremor021](https://github.com/tremor021) ([#6403](https://github.com/community-scripts/ProxmoxVE/pull/6403))
     - Refactor: Meilisearch [@tremor021](https://github.com/tremor021) ([#6407](https://github.com/community-scripts/ProxmoxVE/pull/6407))
