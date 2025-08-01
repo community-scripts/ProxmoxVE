@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Update homepage.sh to use setup_nodejs [@burgerga](https://github.com/burgerga) ([#6462](https://github.com/community-scripts/ProxmoxVE/pull/6462))
     - Refactor: Owncast [@tremor021](https://github.com/tremor021) ([#6434](https://github.com/community-scripts/ProxmoxVE/pull/6434))
     - Refactor: MediaMTX [@tremor021](https://github.com/tremor021) ([#6406](https://github.com/community-scripts/ProxmoxVE/pull/6406))
     - Refactor: LubeLogger [@tremor021](https://github.com/tremor021) ([#6400](https://github.com/community-scripts/ProxmoxVE/pull/6400))
