@@ -18,14 +18,7 @@ $STD apt-get install -y libc++-dev
 msg_ok "Installed Dependencies"
 
 JAVA_VERSION=21 setup_java
-
-msg_info "Settting up Suwayomi-Server"
-temp_file=$(mktemp)
-RELEASE=$(curl -fsSL https://api.github.com/repos/Suwayomi/Suwayomi-Server/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-curl -fsSL "https://github.com/Suwayomi/Suwayomi-Server/releases/download/${RELEASE}/Suwayomi-Server-${RELEASE}-debian-all.deb" -o "$temp_file"
-$STD dpkg -i "$temp_file"
-echo "${RELEASE}" >/opt/suwayomi-server_version.txt
-msg_ok "Done setting up Suwayomi-Server"
+fetch_and_deploy_gh_release "suwayomi-server" "Suwayomi/Suwayomi-Server" "binary"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/suwayomi-server.service
@@ -47,7 +40,6 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -f "$temp_file"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
