@@ -14,6 +14,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Immich: Fix immich-admin script; other fixes | pin to v.137.3 [@vhsdream](https://github.com/vhsdream) ([#6443](https://github.com/community-scripts/ProxmoxVE/pull/6443))
+
   - #### ✨ New Features
 
     - Re-Add: Suwayomi-Server [@MickLesk](https://github.com/MickLesk) ([#6458](https://github.com/community-scripts/ProxmoxVE/pull/6458))
