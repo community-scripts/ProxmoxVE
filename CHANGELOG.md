@@ -18,6 +18,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: oauth2-proxy [@tremor021](https://github.com/tremor021) ([#6421](https://github.com/community-scripts/ProxmoxVE/pull/6421))
     - Refactor: Outline [@tremor021](https://github.com/tremor021) ([#6424](https://github.com/community-scripts/ProxmoxVE/pull/6424))
     - Refactor: Overseerr [@tremor021](https://github.com/tremor021) ([#6425](https://github.com/community-scripts/ProxmoxVE/pull/6425))
 
