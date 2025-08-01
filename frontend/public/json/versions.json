@@ -1,8 +1,53 @@
 [
   {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.21",
+    "date": "2025-07-17T04:46:25Z"
+  },
+  {
+    "name": "inspircd/inspircd",
+    "version": "v4.7.0",
+    "date": "2025-03-29T03:50:50Z"
+  },
+  {
+    "name": "crowdsecurity/crowdsec",
+    "version": "v1.6.11",
+    "date": "2025-07-22T12:11:38Z"
+  },
+  {
+    "name": "zwave-js/zwave-js-ui",
+    "version": "v11.0.1",
+    "date": "2025-08-01T07:43:59Z"
+  },
+  {
+    "name": "meilisearch/meilisearch",
+    "version": "prototype-arroy-becomes-hannoy-8",
+    "date": "2025-08-01T07:34:21Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "server/public/v0.1.16",
+    "date": "2025-07-28T22:46:46Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2217",
+    "date": "2025-08-01T05:54:13Z"
+  },
+  {
+    "name": "gotson/komga",
+    "version": "1.23.1",
+    "date": "2025-08-01T04:30:24Z"
+  },
+  {
     "name": "immich-app/immich",
-    "version": "v1.137.1",
-    "date": "2025-07-31T23:19:24Z"
+    "version": "v1.137.2",
+    "date": "2025-08-01T02:45:16Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
   },
   {
     "name": "gristlabs/grist-core",
@@ -30,6 +75,11 @@
     "date": "2025-07-31T18:08:43Z"
   },
   {
+    "name": "keycloak/keycloak",
+    "version": "26.3.2",
+    "date": "2025-07-24T10:14:27Z"
+  },
+  {
     "name": "TandoorRecipes/recipes",
     "version": "2.0.1",
     "date": "2025-07-31T17:29:38Z"
@@ -38,16 +88,6 @@
     "name": "home-assistant/core",
     "version": "2025.7.4",
     "date": "2025-07-28T08:15:50Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.21",
-    "date": "2025-07-17T04:46:25Z"
-  },
-  {
-    "name": "meilisearch/meilisearch",
-    "version": "prototype-sharding-split-docs-1",
-    "date": "2025-07-31T15:32:45Z"
   },
   {
     "name": "TryGhost/Ghost-CLI",
@@ -90,11 +130,6 @@
     "date": "2025-07-31T09:01:24Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2213",
-    "date": "2025-07-31T05:56:37Z"
-  },
-  {
     "name": "ollama/ollama",
     "version": "v0.10.1",
     "date": "2025-07-31T04:39:49Z"
@@ -115,19 +150,9 @@
     "date": "2025-06-14T17:45:06Z"
   },
   {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
-  },
-  {
     "name": "gtsteffaniak/filebrowser",
     "version": "v0.7.18-beta",
     "date": "2025-07-30T21:26:00Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.3.2",
-    "date": "2025-07-24T10:14:27Z"
   },
   {
     "name": "fallenbagel/jellyseerr",
@@ -160,11 +185,6 @@
     "date": "2025-07-30T17:13:40Z"
   },
   {
-    "name": "zwave-js/zwave-js-ui",
-    "version": "v11.0.0",
-    "date": "2025-07-30T13:50:13Z"
-  },
-  {
     "name": "influxdata/influxdb",
     "version": "v3.3.0",
     "date": "2025-07-30T13:27:54Z"
@@ -180,19 +200,9 @@
     "date": "2025-07-08T13:52:33Z"
   },
   {
-    "name": "crowdsecurity/crowdsec",
-    "version": "v1.6.11",
-    "date": "2025-07-22T12:11:38Z"
-  },
-  {
     "name": "dgtlmoon/changedetection.io",
     "version": "0.50.8",
     "date": "2025-07-30T11:33:00Z"
-  },
-  {
-    "name": "mattermost/mattermost",
-    "version": "server/public/v0.1.16",
-    "date": "2025-07-28T22:46:46Z"
   },
   {
     "name": "evcc-io/evcc",
@@ -313,11 +323,6 @@
     "name": "Graylog2/graylog2-server",
     "version": "7.0.0-alpha.1",
     "date": "2025-07-28T11:28:22Z"
-  },
-  {
-    "name": "gotson/komga",
-    "version": "1.23.0",
-    "date": "2025-07-28T08:44:47Z"
   },
   {
     "name": "Checkmk/checkmk",
@@ -1183,11 +1188,6 @@
     "name": "louislam/dockge",
     "version": "1.5.0",
     "date": "2025-03-30T17:42:59Z"
-  },
-  {
-    "name": "inspircd/inspircd",
-    "version": "v4.7.0",
-    "date": "2025-03-29T03:50:50Z"
   },
   {
     "name": "grocy/grocy",
