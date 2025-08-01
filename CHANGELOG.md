@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Fumadocs: add git as dependency [@MickLesk](https://github.com/MickLesk) ([#6459](https://github.com/community-scripts/ProxmoxVE/pull/6459))
     - Immich: Fix immich-admin script; other fixes | pin to v.137.3 [@vhsdream](https://github.com/vhsdream) ([#6443](https://github.com/community-scripts/ProxmoxVE/pull/6443))
 
   - #### ✨ New Features
