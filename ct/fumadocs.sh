@@ -43,6 +43,9 @@ function update_script() {
     msg_error "Project directory does not exist: $PROJECT_DIR"
     exit 1
   fi
+  if ! command -v git &>/dev/null; then
+    $STD apt-get install -y git
+  fi
 
   msg_info "Stopping service $SERVICE_NAME"
   systemctl stop "$SERVICE_NAME"
