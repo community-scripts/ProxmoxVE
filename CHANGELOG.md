@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-08-01
 
+### 🚀 Updated Scripts
+
+  - Refactor: Owncast [@tremor021](https://github.com/tremor021) ([#6434](https://github.com/community-scripts/ProxmoxVE/pull/6434))
+
 ## 2025-07-31
 
 ### 🚀 Updated Scripts
