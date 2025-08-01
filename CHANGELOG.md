@@ -14,6 +14,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### ✨ New Features
+
+    - Re-Add: Suwayomi-Server [@MickLesk](https://github.com/MickLesk) ([#6458](https://github.com/community-scripts/ProxmoxVE/pull/6458))
+
   - #### 🔧 Refactor
 
     - Update homepage.sh to use setup_nodejs [@burgerga](https://github.com/burgerga) ([#6462](https://github.com/community-scripts/ProxmoxVE/pull/6462))
