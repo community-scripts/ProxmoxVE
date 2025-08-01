@@ -1286,6 +1286,11 @@ EOF
         msg_ok "Network in LXC is reachable"
         break
       fi
+      # Try with curl since ping may be blocked.
+      if pct exec "$CTID" -- curl -sfI --max-time 10 -sfI deb.debian.org >/dev/null 2>&1; then
+        msg_ok "Network in LXC is reachable"
+        break
+      fi
       if [ "$i" -lt 10 ]; then
         msg_warn "No network yet in LXC (try $i/10) – waiting..."
         sleep 3
