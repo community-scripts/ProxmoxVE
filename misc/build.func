@@ -1287,7 +1287,7 @@ EOF
         break
       fi
       # Try with curl since ping may be blocked
-      if pct exec "$CTID" -- curl -fsSL --max-time 10 deb.debian.org >/dev/null 2>&1; then
+      if pct exec "$CTID" -- curl -fsSIL --max-time 10 deb.debian.org >/dev/null 2>&1; then
         msg_ok "Network in LXC is reachable"
         break
       fi
