@@ -27,14 +27,9 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  if [[ "$(node -v | cut -d 'v' -f 2)" == "18."* ]]; then
-    if ! command -v npm >/dev/null 2>&1; then
-      echo "Installing NPM..."
-      $STD apt-get install -y npm
-      $STD npm install -g pnpm
-      echo "Installed NPM..."
-    fi
-  fi
+
+  NODE_VERSION="22" NODE_MODULE="pnpm@latest" setup_nodejs
+
   # ensure that jq is installed
   if ! command -v jq &>/dev/null; then
     $STD msg_info "Installing jq..."
