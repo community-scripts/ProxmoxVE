@@ -51,6 +51,7 @@ function update_script() {
 
     msg_info "Configuring MagicMirror"
     cd /opt/magicmirror
+    sed -i -E 's/("postinstall": )".*"/\1""/; s/("prepare": )".*"/\1""/' package.json
     $STD npm run install-mm
     cp /opt/magicmirror-backup/config.js /opt/magicmirror/config/
     if [[ -f /opt/magicmirror-backup/custom.css ]]; then
