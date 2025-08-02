@@ -14,6 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - Alternative connectivity checks for LXC [@mariano-dagostino](https://github.com/mariano-dagostino) ([#6472](https://github.com/community-scripts/ProxmoxVE/pull/6472))
+
   - #### 🐞 Bug Fixes
 
     - Immich: fix copy error during install [@vhsdream](https://github.com/vhsdream) ([#6497](https://github.com/community-scripts/ProxmoxVE/pull/6497))
