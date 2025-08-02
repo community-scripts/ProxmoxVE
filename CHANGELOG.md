@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-08-02
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - chore: BookLore repo change [@vhsdream](https://github.com/vhsdream) ([#6493](https://github.com/community-scripts/ProxmoxVE/pull/6493))
+
 ## 2025-08-01
 
 ### 🚀 Updated Scripts
