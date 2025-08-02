@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - MagicMirror: Fix install process [@tremor021](https://github.com/tremor021) ([#6492](https://github.com/community-scripts/ProxmoxVE/pull/6492))
     - chore: BookLore repo change [@vhsdream](https://github.com/vhsdream) ([#6493](https://github.com/community-scripts/ProxmoxVE/pull/6493))
 
   - #### ✨ New Features
