@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://github.com/adityachandelgit/BookLore
+# Source: https://github.com/booklore-app/BookLore
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt-get install -y nginx
 msg_ok "Installed Dependencies"
 
-fetch_and_deploy_gh_release "booklore" "adityachandelgit/BookLore"
+fetch_and_deploy_gh_release "booklore" "booklore-app/BookLore"
 JAVA_VERSION="21" setup_java
 NODE_VERSION="22" setup_nodejs
 setup_mariadb
@@ -59,7 +59,7 @@ msg_ok "Created Environment"
 
 msg_info "Building Backend"
 cd /opt/booklore/booklore-api
-APP_VERSION=$(curl -fsSL https://api.github.com/repos/adityachandelgit/BookLore/releases/latest | yq '.tag_name' | sed 's/^v//')
+APP_VERSION=$(curl -fsSL https://api.github.com/repos/booklore-app/BookLore/releases/latest | yq '.tag_name' | sed 's/^v//')
 yq eval ".app.version = \"${APP_VERSION}\"" -i src/main/resources/application.yaml
 $STD ./gradlew clean build --no-daemon
 mkdir -p /opt/booklore/dist

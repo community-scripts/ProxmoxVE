@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://github.com/adityachandelgit/BookLore
+# Source: https://github.com/booklore-app/BookLore
 
 APP="BookLore"
 var_tags="${var_tags:-books;library}"
@@ -29,13 +29,13 @@ function update_script() {
     exit
   fi
 
-  RELEASE=$(curl -fsSL https://api.github.com/repos/adityachandelgit/BookLore/releases/latest | yq '.tag_name' | sed 's/^v//')
+  RELEASE=$(curl -fsSL https://api.github.com/repos/booklore-app/BookLore/releases/latest | yq '.tag_name' | sed 's/^v//')
   if [[ "${RELEASE}" != "$(cat ~/.booklore 2>/dev/null)" ]] || [[ ! -f ~/.booklore ]]; then
     msg_info "Stopping $APP"
     systemctl stop booklore
     msg_ok "Stopped $APP"
 
-    fetch_and_deploy_gh_release "booklore" "adityachandelgit/BookLore"
+    fetch_and_deploy_gh_release "booklore" "booklore-app/BookLore"
 
     msg_info "Building Frontend"
     cd /opt/booklore/booklore-ui
@@ -45,7 +45,7 @@ function update_script() {
 
     msg_info "Building Backend"
     cd /opt/booklore/booklore-api
-    APP_VERSION=$(curl -fsSL https://api.github.com/repos/adityachandelgit/BookLore/releases/latest | yq '.tag_name' | sed 's/^v//')
+    APP_VERSION=$(curl -fsSL https://api.github.com/repos/booklore-app/BookLore/releases/latest | yq '.tag_name' | sed 's/^v//')
     yq eval ".app.version = \"${APP_VERSION}\"" -i src/main/resources/application.yaml
     $STD ./gradlew clean build --no-daemon
     mkdir -p /opt/booklore/dist
