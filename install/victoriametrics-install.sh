@@ -15,8 +15,13 @@ update_os
 
 fetch_and_deploy_gh_release "victoriametrics" "VictoriaMetrics/VictoriaMetrics" "prebuild" "latest" "/opt/victoriametrics" "victoria-metrics-linux-amd64-v+([0-9.]).tar.gz"
 fetch_and_deploy_gh_release "vmutils" "VictoriaMetrics/VictoriaMetrics" "prebuild" "latest" "/opt/victoriametrics" "vmutils-linux-amd64-v+([0-9.]).tar.gz"
-fetch_and_deploy_gh_release "victorialogs" "VictoriaMetrics/VictoriaLogs" "prebuild" "latest" "/opt/victoriametrics" "victoria-logs-linux-amd64*.tar.gz"
-fetch_and_deploy_gh_release "vlutils" "VictoriaMetrics/VictoriaLogs" "prebuild" "latest" "/opt/victoriametrics" "vlutils-linux-amd64*.tar.gz"
+
+read -r -p "${TAB3}Would you like to add VictoriaLogs? <y/N> " prompt
+
+if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
+  fetch_and_deploy_gh_release "victorialogs" "VictoriaMetrics/VictoriaLogs" "prebuild" "latest" "/opt/victoriametrics" "victoria-logs-linux-amd64*.tar.gz"
+  fetch_and_deploy_gh_release "vlutils" "VictoriaMetrics/VictoriaLogs" "prebuild" "latest" "/opt/victoriametrics" "vlutils-linux-amd64*.tar.gz"
+fi
 
 msg_info "Setup VictoriaMetrics"
 mkdir -p /opt/victoriametrics/data
@@ -38,8 +43,10 @@ ExecStart=/opt/victoriametrics/victoria-metrics-prod --storageDataPath="/opt/vic
 [Install]
 WantedBy=multi-user.target
 EOF
+systemctl enable -q --now victoriametrics
 
-cat <<EOF >/etc/systemd/system/victoriametrics-logs.service
+if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
+  cat <<EOF >/etc/systemd/system/victoriametrics-logs.service
 [Unit]
 Description=VictoriaMetrics Service
 
@@ -53,15 +60,14 @@ ExecStart=/opt/victoriametrics/victoria-logs-prod
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now victoriametrics
-systemctl enable -q --now victoriametrics-logs
+  systemctl enable -q --now victoriametrics-logs
+fi
 msg_ok "Created Service"
 
 motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -rf $temp_dir
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
