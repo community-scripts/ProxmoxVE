@@ -31,5 +31,10 @@
     "username": null,
     "password": null
   },
-  "notes": []
+  "notes": [
+    {
+      "text": "Included option to install VictoriaLogs.",
+      "type": "info"
+    }
+  ]
 }
