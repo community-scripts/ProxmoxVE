@@ -1,8 +1,78 @@
 [
   {
+    "name": "docmost/docmost",
+    "version": "v0.22.2",
+    "date": "2025-08-01T23:27:06Z"
+  },
+  {
+    "name": "influxdata/influxdb",
+    "version": "v1.12.2rc0",
+    "date": "2025-08-01T21:48:30Z"
+  },
+  {
+    "name": "homarr-labs/homarr",
+    "version": "v1.31.0",
+    "date": "2025-08-01T19:18:16Z"
+  },
+  {
+    "name": "MediaBrowser/Emby.Releases",
+    "version": "4.9.1.2",
+    "date": "2025-06-26T22:08:00Z"
+  },
+  {
+    "name": "mongodb/mongo",
+    "version": "r8.0.13-rc0",
+    "date": "2025-08-01T18:05:23Z"
+  },
+  {
     "name": "firefly-iii/firefly-iii",
     "version": "v6.2.21",
     "date": "2025-07-17T04:46:25Z"
+  },
+  {
+    "name": "Koenkk/zigbee2mqtt",
+    "version": "2.6.0",
+    "date": "2025-08-01T15:42:21Z"
+  },
+  {
+    "name": "immich-app/immich",
+    "version": "v1.137.3",
+    "date": "2025-08-01T15:06:36Z"
+  },
+  {
+    "name": "Luligu/matterbridge",
+    "version": "3.2.0",
+    "date": "2025-08-01T14:49:29Z"
+  },
+  {
+    "name": "documenso/documenso",
+    "version": "v1.12.2-rc.3",
+    "date": "2025-08-01T14:46:22Z"
+  },
+  {
+    "name": "alexta69/metube",
+    "version": "2025.07.31",
+    "date": "2025-08-01T14:44:48Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.104.2",
+    "date": "2025-07-31T13:14:26Z"
+  },
+  {
+    "name": "element-hq/synapse",
+    "version": "v1.135.0",
+    "date": "2025-08-01T12:43:17Z"
+  },
+  {
+    "name": "evcc-io/evcc",
+    "version": "0.206.1",
+    "date": "2025-08-01T11:48:40Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.0.14",
+    "date": "2025-08-01T11:29:12Z"
   },
   {
     "name": "inspircd/inspircd",
@@ -40,11 +110,6 @@
     "date": "2025-08-01T04:30:24Z"
   },
   {
-    "name": "immich-app/immich",
-    "version": "v1.137.2",
-    "date": "2025-08-01T02:45:16Z"
-  },
-  {
     "name": "steveiliop56/tinyauth",
     "version": "v3.6.2",
     "date": "2025-07-17T12:08:03Z"
@@ -75,11 +140,6 @@
     "date": "2025-07-31T18:08:43Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.3.2",
-    "date": "2025-07-24T10:14:27Z"
-  },
-  {
     "name": "TandoorRecipes/recipes",
     "version": "2.0.1",
     "date": "2025-07-31T17:29:38Z"
@@ -103,11 +163,6 @@
     "name": "fuma-nama/fumadocs",
     "version": "fumadocs-mdx@11.7.3",
     "date": "2025-07-31T13:53:15Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.104.2",
-    "date": "2025-07-31T13:14:26Z"
   },
   {
     "name": "Stirling-Tools/Stirling-PDF",
@@ -138,11 +193,6 @@
     "name": "coder/code-server",
     "version": "v4.102.3",
     "date": "2025-07-31T03:41:16Z"
-  },
-  {
-    "name": "mongodb/mongo",
-    "version": "r7.0.23-rc0",
-    "date": "2025-07-31T01:24:14Z"
   },
   {
     "name": "hyperion-project/hyperion.ng",
@@ -185,16 +235,6 @@
     "date": "2025-07-30T17:13:40Z"
   },
   {
-    "name": "influxdata/influxdb",
-    "version": "v3.3.0",
-    "date": "2025-07-30T13:27:54Z"
-  },
-  {
-    "name": "element-hq/synapse",
-    "version": "v1.134.0",
-    "date": "2025-07-15T13:43:39Z"
-  },
-  {
     "name": "bunkerity/bunkerweb",
     "version": "v1.6.2",
     "date": "2025-07-08T13:52:33Z"
@@ -203,11 +243,6 @@
     "name": "dgtlmoon/changedetection.io",
     "version": "0.50.8",
     "date": "2025-07-30T11:33:00Z"
-  },
-  {
-    "name": "evcc-io/evcc",
-    "version": "0.206.0",
-    "date": "2025-07-30T09:39:42Z"
   },
   {
     "name": "dani-garcia/vaultwarden",
@@ -226,8 +261,8 @@
   },
   {
     "name": "wazuh/wazuh",
-    "version": "coverity-w30-4.13.0",
-    "date": "2025-07-18T12:05:26Z"
+    "version": "coverity-w31-4.13.0",
+    "date": "2025-07-30T08:30:15Z"
   },
   {
     "name": "morpheus65535/bazarr",
@@ -238,11 +273,6 @@
     "name": "jenkinsci/jenkins",
     "version": "jenkins-2.521",
     "date": "2025-07-30T03:38:59Z"
-  },
-  {
-    "name": "docmost/docmost",
-    "version": "v0.22.0",
-    "date": "2025-07-30T00:09:03Z"
   },
   {
     "name": "OliveTin/OliveTin",
@@ -258,11 +288,6 @@
     "name": "tailscale/tailscale",
     "version": "v1.86.2",
     "date": "2025-07-29T19:16:24Z"
-  },
-  {
-    "name": "MediaBrowser/Emby.Releases",
-    "version": "4.9.1.2",
-    "date": "2025-06-26T22:08:00Z"
   },
   {
     "name": "msgbyte/tianji",
@@ -285,11 +310,6 @@
     "date": "2025-07-29T04:38:35Z"
   },
   {
-    "name": "Luligu/matterbridge",
-    "version": "3.1.8",
-    "date": "2025-07-28T21:28:33Z"
-  },
-  {
     "name": "diced/zipline",
     "version": "v4.2.1",
     "date": "2025-07-28T19:25:48Z"
@@ -308,11 +328,6 @@
     "name": "AdguardTeam/AdGuardHome",
     "version": "v0.107.64",
     "date": "2025-07-28T14:24:56Z"
-  },
-  {
-    "name": "alexta69/metube",
-    "version": "2025-07-27",
-    "date": "2025-07-28T15:57:09Z"
   },
   {
     "name": "booklore-app/BookLore",
@@ -373,11 +388,6 @@
     "name": "henrygd/beszel",
     "version": "v0.12.1",
     "date": "2025-07-25T23:53:12Z"
-  },
-  {
-    "name": "homarr-labs/homarr",
-    "version": "v1.30.1",
-    "date": "2025-07-25T19:18:09Z"
   },
   {
     "name": "openobserve/openobserve",
@@ -553,11 +563,6 @@
     "name": "karakeep-app/karakeep",
     "version": "sdk/v0.26.0",
     "date": "2025-07-20T13:26:30Z"
-  },
-  {
-    "name": "documenso/documenso",
-    "version": "v1.12.2-rc.2",
-    "date": "2025-07-20T07:05:19Z"
   },
   {
     "name": "linkwarden/linkwarden",
@@ -818,11 +823,6 @@
     "name": "actualbudget/actual",
     "version": "v25.7.1",
     "date": "2025-07-03T01:03:18Z"
-  },
-  {
-    "name": "Koenkk/zigbee2mqtt",
-    "version": "2.5.1",
-    "date": "2025-07-02T19:38:06Z"
   },
   {
     "name": "qbittorrent/qBittorrent",
