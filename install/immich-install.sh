@@ -301,7 +301,8 @@ $STD npm run build
 cd "$SRC_DIR"/web
 $STD npm ci
 $STD npm run build
-cp -a web "$APP_DIR"/www
+cd "$SRC_DIR"
+cp -a web/build "$APP_DIR"/www
 cp LICENSE "$APP_DIR"
 cd "$APP_DIR"
 export SHARP_FORCE_GLOBAL_LIBVIPS=true
