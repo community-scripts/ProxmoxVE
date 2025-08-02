@@ -6,7 +6,7 @@
   ],
   "date_created": "2025-05-22",
   "type": "ct",
-  "updateable": false,
+  "updateable": true,
   "privileged": false,
   "interface_port": 80,
   "documentation": "https://sangomakb.atlassian.net/wiki/spaces/FP/overview?homepageId=8454359",
