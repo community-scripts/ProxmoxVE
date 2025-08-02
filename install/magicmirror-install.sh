@@ -13,10 +13,6 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Setup Dependencies"
-$STD apt-get install -y git 
-msg_ok "Setup Dependencies"
-
 NODE_VERSION="22" setup_nodejs
 fetch_and_deploy_gh_release "magicmirror" "MagicMirrorOrg/MagicMirror" "tarball"
 
