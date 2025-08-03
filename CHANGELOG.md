@@ -23,6 +23,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Remove: Ubuntu 24.10-VM [@MickLesk](https://github.com/MickLesk) ([#6515](https://github.com/community-scripts/ProxmoxVE/pull/6515))
 
+  - #### 🔧 Refactor
+
+    - Refactor: OpenProject [@tremor021](https://github.com/tremor021) ([#6525](https://github.com/community-scripts/ProxmoxVE/pull/6525))
+
 ## 2025-08-02
 
 ### 🚀 Updated Scripts
