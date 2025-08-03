@@ -49,7 +49,6 @@ function update_script() {
     mv /opt/.env /opt/docmost/.env
     mv /opt/data /opt/docmost/data
     $STD pnpm install --force
-    $STD pnpm nx run server:build # Dirty fix https://github.com/community-scripts/ProxmoxVE/issues/6377
     $STD pnpm build
     msg_ok "Updated ${APP}"
 
