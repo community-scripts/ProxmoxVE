@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - docmost: remove build step due new version [@MickLesk](https://github.com/MickLesk) ([#6513](https://github.com/community-scripts/ProxmoxVE/pull/6513))
     - Fix: Komga uses .komga as storage / so it fails after install [@MickLesk](https://github.com/MickLesk) ([#6517](https://github.com/community-scripts/ProxmoxVE/pull/6517))
 
 ## 2025-08-02
