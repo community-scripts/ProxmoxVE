@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-08-03
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Fix: Komga uses .komga as storage / so it fails after install [@MickLesk](https://github.com/MickLesk) ([#6517](https://github.com/community-scripts/ProxmoxVE/pull/6517))
+
 ## 2025-08-02
 
 ### 🚀 Updated Scripts
