@@ -13,15 +13,10 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt-get install -y \
-  git
-msg_ok "Installed Dependencies"
-
 NODE_VERSION="22" setup_nodejs
+fetch_and_deploy_gh_release "pairdrop" "schlagmichdoch/PairDrop" "tarball"
 
-msg_info "Installing PairDrop"
-git clone -q https://github.com/schlagmichdoch/PairDrop.git /opt/pairdrop
+msg_info "Configuring PairDrop"
 cd /opt/pairdrop
 $STD npm install
 msg_ok "Installed PairDrop"
