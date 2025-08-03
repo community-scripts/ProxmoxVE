@@ -19,12 +19,7 @@ $STD apt-get install -y \
   apt-transport-https
 msg_ok "Installed Dependencies"
 
-msg_info "Installing Azul Zulu17"
-curl -fsSL https://repos.azul.com/azul-repo.key | gpg --dearmor -o /usr/share/keyrings/azul.gpg
-echo "deb [signed-by=/usr/share/keyrings/azul.gpg] https://repos.azul.com/zulu/deb stable main" >/etc/apt/sources.list.d/zulu.list
-$STD apt-get update
-$STD apt-get -y install zulu17-jdk
-msg_ok "Installed Azul Zulu17"
+JAVA_VERSION="21" setup_java
 
 msg_info "Installing openHAB"
 curl -fsSL "https://openhab.jfrog.io/artifactory/api/gpg/key/public" | gpg --dearmor -o /usr/share/keyrings/openhab.gpg
