@@ -14,7 +14,7 @@ network_check
 update_os
 
 JAVA_VERSION="21" setup_java
-USE_ORIGINAL_FILENAME="true" fetch_and_deploy_gh_release "komga" "gotson/komga" "singlefile" "latest" "/opt/komga" "komga*.jar"
+USE_ORIGINAL_FILENAME="true" fetch_and_deploy_gh_release "komga-org" "gotson/komga" "singlefile" "latest" "/opt/komga" "komga*.jar"
 mv /opt/komga/komga-*.jar /opt/komga/komga.jar
 
 msg_info "Creating Service"
