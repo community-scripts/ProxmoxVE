@@ -203,11 +203,11 @@ pct create $CTID ${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE} ${PCT_OPTIONS[@]} >/dev/
 echo "TurnKey ${turnkey} password: ${PASS}" >>~/turnkey-${turnkey}.creds # file is located in the Proxmox root directory
 
 # If turnkey is "OpenVPN", add access to the tun device
-NAT_DEVICE_REQUIRED=("OpenVPN") # Setup this way in case future turnkeys also need tun access
-if printf '%s\n' "${NAT_DEVICE_REQUIRED[@]}" | grep -qw "${turnkey}"; then
+TUN_DEVICE_REQUIRED=("openvpn") # Setup this way in case future turnkeys also need tun access
+if printf '%s\n' "${TUN_DEVICE_REQUIRED[@]}" | grep -qw "${turnkey}"; then
   info "${turnkey} requires access to /dev/net/tun on the host. Modifying the container configuration to allow this."
-  echo "lxc.cgroup2.devices.allow: c 10:200 rwm" >> /etc/pve/lxc/$CTID.conf
-  echo "lxc.mount.entry: /dev/net/tun dev/net/tun none bind,create=file 0 0" >> /etc/pve/lxc/$CTID.conf
+  echo "lxc.cgroup2.devices.allow: c 10:200 rwm" >> /etc/pve/lxc/${CTID}.conf
+  echo "lxc.mount.entry: /dev/net/tun dev/net/tun none bind,create=file 0 0" >> /etc/pve/lxc/${CTID}.conf
   sleep 5
 fi
 
@@ -251,5 +251,5 @@ info "Proceed to the LXC console to complete the setup."
 echo
 info "login: root"
 info "password: $PASS"
-info "(credentials also stored in the root user's root directory in 'turnkey-$(${turnkey}.creds)'.)"
+info "(credentials also stored in the root user's root directory in the 'turnkey-${turnkey}.creds' file.)"
 echo
