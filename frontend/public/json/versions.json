@@ -1,5 +1,35 @@
 [
   {
+    "name": "advplyr/audiobookshelf",
+    "version": "v2.27.0",
+    "date": "2025-08-02T23:35:37Z"
+  },
+  {
+    "name": "gethomepage/homepage",
+    "version": "v1.4.2",
+    "date": "2025-08-02T22:52:30Z"
+  },
+  {
+    "name": "TwiN/gatus",
+    "version": "v5.21.0",
+    "date": "2025-08-02T18:56:03Z"
+  },
+  {
+    "name": "linuxserver/Heimdall",
+    "version": "v2.7.4",
+    "date": "2025-08-02T16:51:19Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.24.9",
+    "date": "2025-08-02T16:46:17Z"
+  },
+  {
+    "name": "actualbudget/actual",
+    "version": "v25.8.0",
+    "date": "2025-08-02T16:17:45Z"
+  },
+  {
     "name": "fuma-nama/fumadocs",
     "version": "fumadocs-core@15.6.8",
     "date": "2025-08-02T09:44:14Z"
@@ -256,8 +286,8 @@
   },
   {
     "name": "bunkerity/bunkerweb",
-    "version": "testing",
-    "date": "2025-07-30T11:09:03Z"
+    "version": "v1.6.2",
+    "date": "2025-07-08T13:52:33Z"
   },
   {
     "name": "dgtlmoon/changedetection.io",
@@ -308,11 +338,6 @@
     "name": "tailscale/tailscale",
     "version": "v1.86.2",
     "date": "2025-07-29T19:16:24Z"
-  },
-  {
-    "name": "msgbyte/tianji",
-    "version": "v1.24.8",
-    "date": "2025-07-29T17:40:35Z"
   },
   {
     "name": "caddyserver/xcaddy",
@@ -430,11 +455,6 @@
     "date": "2025-07-24T23:33:09Z"
   },
   {
-    "name": "linuxserver/Heimdall",
-    "version": "v2.7.3",
-    "date": "2025-07-24T18:07:21Z"
-  },
-  {
     "name": "docker/compose",
     "version": "v2.39.1",
     "date": "2025-07-24T17:02:01Z"
@@ -448,11 +468,6 @@
     "name": "glpi-project/glpi",
     "version": "10.0.19",
     "date": "2025-07-16T09:45:14Z"
-  },
-  {
-    "name": "advplyr/audiobookshelf",
-    "version": "v2.26.3",
-    "date": "2025-07-23T23:16:46Z"
   },
   {
     "name": "minio/minio",
@@ -640,11 +655,6 @@
     "date": "2025-07-15T22:38:01Z"
   },
   {
-    "name": "gethomepage/homepage",
-    "version": "v1.4.0",
-    "date": "2025-07-15T16:43:28Z"
-  },
-  {
     "name": "WordPress/WordPress",
     "version": "6.8.2",
     "date": "2025-07-15T15:14:16Z"
@@ -770,11 +780,6 @@
     "date": "2025-07-09T08:35:30Z"
   },
   {
-    "name": "TwiN/gatus",
-    "version": "v5.20.0",
-    "date": "2025-07-08T16:27:11Z"
-  },
-  {
     "name": "photoprism/photoprism",
     "version": "250707-d28b3101e",
     "date": "2025-07-07T15:15:21Z"
@@ -823,11 +828,6 @@
     "name": "rabbitmq/rabbitmq-server",
     "version": "v4.1.2",
     "date": "2025-07-03T16:59:29Z"
-  },
-  {
-    "name": "actualbudget/actual",
-    "version": "v25.7.1",
-    "date": "2025-07-03T01:03:18Z"
   },
   {
     "name": "qbittorrent/qBittorrent",
