@@ -1,13 +1,38 @@
 [
   {
-    "name": "advplyr/audiobookshelf",
-    "version": "v2.27.0",
-    "date": "2025-08-02T23:35:37Z"
+    "name": "Lidarr/Lidarr",
+    "version": "v2.12.4.4658",
+    "date": "2025-06-09T17:27:45Z"
+  },
+  {
+    "name": "Radarr/Radarr",
+    "version": "v5.26.2.10099",
+    "date": "2025-06-11T20:10:39Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2223",
+    "date": "2025-08-03T06:03:15Z"
+  },
+  {
+    "name": "MediaBrowser/Emby.Releases",
+    "version": "4.9.1.2",
+    "date": "2025-06-26T22:08:00Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
   },
   {
     "name": "gethomepage/homepage",
     "version": "v1.4.2",
-    "date": "2025-08-02T22:52:30Z"
+    "date": "2025-08-02T23:44:05Z"
+  },
+  {
+    "name": "advplyr/audiobookshelf",
+    "version": "v2.27.0",
+    "date": "2025-08-02T23:35:37Z"
   },
   {
     "name": "TwiN/gatus",
@@ -55,11 +80,6 @@
     "date": "2025-08-02T08:16:46Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2219",
-    "date": "2025-08-02T06:00:23Z"
-  },
-  {
     "name": "pocketbase/pocketbase",
     "version": "v0.29.1",
     "date": "2025-08-02T05:51:37Z"
@@ -68,11 +88,6 @@
     "name": "henrygd/beszel",
     "version": "v0.12.2",
     "date": "2025-08-02T01:12:52Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
   },
   {
     "name": "mongodb/mongo",
@@ -93,11 +108,6 @@
     "name": "homarr-labs/homarr",
     "version": "v1.31.0",
     "date": "2025-08-01T19:18:16Z"
-  },
-  {
-    "name": "MediaBrowser/Emby.Releases",
-    "version": "4.9.1.2",
-    "date": "2025-06-26T22:08:00Z"
   },
   {
     "name": "firefly-iii/firefly-iii",
@@ -483,11 +493,6 @@
     "name": "traefik/traefik",
     "version": "v3.5.0",
     "date": "2025-07-23T14:06:54Z"
-  },
-  {
-    "name": "Radarr/Radarr",
-    "version": "v5.26.2.10099",
-    "date": "2025-06-11T20:10:39Z"
   },
   {
     "name": "Prowlarr/Prowlarr",
@@ -943,11 +948,6 @@
     "name": "Readarr/Readarr",
     "version": "v2.0.0.4645",
     "date": "2017-03-07T18:56:06Z"
-  },
-  {
-    "name": "Lidarr/Lidarr",
-    "version": "v2.12.4.4658",
-    "date": "2025-06-09T17:27:45Z"
   },
   {
     "name": "FlareSolverr/FlareSolverr",
