@@ -51,7 +51,6 @@ sed -i -e "s|APP_SECRET=.*|APP_SECRET=$(openssl rand -base64 32 | tr -dc 'a-zA-Z
   /opt/docmost/.env
 export NODE_OPTIONS="--max-old-space-size=2048"
 $STD pnpm install
-$STD pnpm nx run server:build # Dirty fix https://github.com/community-scripts/ProxmoxVE/issues/6377
 $STD pnpm build
 msg_ok "Configured Docmost"
 
