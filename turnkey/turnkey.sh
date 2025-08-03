@@ -98,11 +98,13 @@ turnkey=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "TurnKey LXCs
 
 # Setup script environment
 PASS="$(openssl rand -base64 8)"
-#CTID=$(pvesh get /cluster/nextid)
-CTID=$(whiptail --backtitle "Container ID" --title "Choose the Container ID" --inputbox "Enter the conatiner ID..." 8 40 $(pvesh get /cluster/nextid) 3>&1 1>&2 2>&3)
+# Prompt user to confirm container ID
+  CTID=$(whiptail --backtitle "Container ID" --title "Choose the Container ID" --inputbox "Enter the conatiner ID..." 8 40 $(pvesh get /cluster/nextid) 3>&1 1>&2 2>&3)
+# Prompt user to confirm Hostname
+  HOST_NAME=$(whiptail --backtitle "Hostname" --title "Choose the Hostname" --inputbox "Enter the containers Hostname..." 8 40 "turnkey-${turnkey}" 3>&1 1>&2 2>&3)
 PCT_OPTIONS="
     -features keyctl=1,nesting=1
-    -hostname turnkey-${turnkey}
+    -hostname $HOST_NAME
     -tags community-script
     -onboot 1
     -cores 2
@@ -110,8 +112,6 @@ PCT_OPTIONS="
     -password $PASS
     -net0 name=eth0,bridge=vmbr0,ip=dhcp
     -unprivileged 1
-    -lxc.cgroup2.devices.allow: c 10:200 rwm
-    -lxc.mount.entry: /dev/net/tun dev/net/tun none bind,create=file 0 0
   "
 DEFAULT_PCT_OPTIONS=(
   -arch $(dpkg --print-architecture)
@@ -202,6 +202,15 @@ pct create $CTID ${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE} ${PCT_OPTIONS[@]} >/dev/
 # Save password
 echo "TurnKey ${turnkey} password: ${PASS}" >>~/turnkey-${turnkey}.creds # file is located in the Proxmox root directory
 
+# If turnkey is "OpenVPN", add access to the tun device
+NAT_DEVICE_REQUIRED=("OpenVPN") # Setup this way in case future turnkeys also need tun access
+if printf '%s\n' "${NAT_DEVICE_REQUIRED[@]}" | grep -qw "${turnkey}"; then
+  info "${turnkey} requires access to /dev/net/tun on the host. Modifying the container configuration to allow this."
+  echo "lxc.cgroup2.devices.allow: c 10:200 rwm" >> /etc/pve/lxc/$CTID.conf
+  echo "lxc.mount.entry: /dev/net/tun dev/net/tun none bind,create=file 0 0" >> /etc/pve/lxc/$CTID.conf
+  sleep 5
+fi
+
 # Start container
 msg "Starting LXC Container..."
 pct start "$CTID"
@@ -242,5 +251,5 @@ info "Proceed to the LXC console to complete the setup."
 echo
 info "login: root"
 info "password: $PASS"
-info "(credentials also stored at /turnkey-$(${turnkey}.creds))"
+info "(credentials also stored in the root user's root directory in 'turnkey-$(${turnkey}.creds)'.)"
 echo
