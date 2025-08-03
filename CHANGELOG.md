@@ -25,6 +25,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: openHAB [@tremor021](https://github.com/tremor021) ([#6524](https://github.com/community-scripts/ProxmoxVE/pull/6524))
     - Refactor: OpenProject [@tremor021](https://github.com/tremor021) ([#6525](https://github.com/community-scripts/ProxmoxVE/pull/6525))
 
 ## 2025-08-02
