@@ -13,6 +13,7 @@ var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-12}"
 var_unprivileged="${var_unprivileged:-1}"
+var_tun="${var_tun:-1}"
 
 header_info "$APP"
 variables
@@ -20,20 +21,20 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /etc/wireguard ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    apt-get update
-    apt-get -y upgrade
-    sleep 2
-    cd /etc/wgdashboard/src
-    ./wgd.sh update
-    ./wgd.sh start
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /etc/wireguard ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+  apt-get update
+  apt-get -y upgrade
+  sleep 2
+  cd /etc/wgdashboard/src
+  ./wgd.sh update
+  ./wgd.sh start
+  exit
 }
 
 start
