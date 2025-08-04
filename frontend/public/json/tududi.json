@@ -1,0 +1,44 @@
+{
+  "name": "Tududi",
+  "slug": "tududi",
+  "categories": [
+    12
+  ],
+  "date_created": "2025-07-22",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 3002,
+  "documentation": null,
+  "config_path": "/opt/tududi/backend/.env",
+  "website": "https://tududi.com/",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/tududi.webp",
+  "description": "Self-hosted task management with functional programming architecture, hierarchical organization, and multi-language support.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/tududi.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 4,
+        "os": "Debian",
+        "version": "12"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Create users like this: `cd /opt/tududi` => `npm run user:create <email> <password>`",
+      "type": "info"
+    },
+    {
+      "text": "Database location: `/opt/tududi-db`. Uploads: `/opt/tududi-uploads`",
+      "type": "info"
+    }
+  ]
+}
