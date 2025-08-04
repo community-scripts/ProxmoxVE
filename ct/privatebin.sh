@@ -27,22 +27,25 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
   RELEASE=$(curl -fsSL https://api.github.com/repos/PrivateBin/PrivateBin/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
-    msg_info "Updating ${APP} to v${RELEASE}"
-    echo "${RELEASE}" >/opt/${APP}_version.txt
+  if [[ ! -f ~/.privatebin ]] || [[ "${RELEASE}" != "$(cat ~/.privatebin)" ]]; then
+    msg_info "Creating backup"
     cp -f /opt/privatebin/cfg/conf.php /tmp/privatebin_conf.bak
-    curl -fsSL "https://github.com/PrivateBin/PrivateBin/archive/refs/tags/${RELEASE}.zip" -o $(basename "https://github.com/PrivateBin/PrivateBin/archive/refs/tags/${RELEASE}.zip")
-    $STD unzip ${RELEASE}.zip
+    msg_ok "Backup created"
+
     rm -rf /opt/privatebin/*
-    mv PrivateBin-${RELEASE}/* /opt/privatebin/
+    fetch_and_deploy_gh_release "privatebin" "PrivateBin/PrivateBin" "tarball"
+
+    msg_info "Configuring ${APP}"
+    mkdir -p /opt/privatebin/data
     mv /tmp/privatebin_conf.bak /opt/privatebin/cfg/conf.php
     chown -R www-data:www-data /opt/privatebin
-    chmod -R 0755 /opt/privatebin/data
-    echo "${RELEASE}" >/opt/${APP}_version.txt
-    rm -rf ${RELEASE}.zip PrivateBin-${RELEASE}
+    chmod -R 0755 /opt/privatebin/data}
     systemctl reload nginx php8.2-fpm
-    msg_ok "Updated ${APP} to v${RELEASE}"
+    msg_ok "Configured ${APP}"
+
+    msg_ok "Successfully updated"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi

@@ -16,20 +16,11 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
   nginx \
-  php8.2-fpm \
-  php8.2-{common,cli,gd,mbstring,xml,fpm,curl,zip} \
   openssl
 msg_ok "Installed Dependencies"
 
-msg_info "Installing PrivateBin"
-RELEASE=$(curl -fsSL https://api.github.com/repos/PrivateBin/PrivateBin/releases/latest | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
-mkdir -p /opt/privatebin
-cd /opt/privatebin
-curl -fsSL "https://github.com/PrivateBin/PrivateBin/archive/refs/tags/${RELEASE}.zip" -o "${RELEASE}.zip"
-$STD unzip ${RELEASE}.zip
-mv PrivateBin-${RELEASE}/* .
-msg_ok "Installed PrivateBin"
+PHP_VERSION="8.2" PHP_MODULE="common,fpm" setup_php
+fetch_and_deploy_gh_release "privatebin" "PrivateBin/PrivateBin" "tarball"
 
 msg_info "Generating Universal SSL Certificate"
 mkdir -p /etc/ssl/privatebin
@@ -96,12 +87,10 @@ rm -f /etc/nginx/sites-enabled/default
 systemctl reload nginx
 msg_ok "Nginx Configured"
 
+motd_ssh
+customize
+
 msg_info "Cleaning up"
-rm -rf /opt/privatebin/${RELEASE}.zip
-rm -rf /opt/privatebin/PrivateBin-${RELEASE}
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
-
-motd_ssh
-customize
