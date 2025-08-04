@@ -1,0 +1,40 @@
+{
+    "name": "OTS",
+    "slug": "ots",
+    "categories": [
+        6
+    ],
+    "date_created": "2025-07-28",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": 443,
+    "documentation": "https://github.com/Luzifer/ots/wiki",
+    "config_path": "/opt/ots/.env",
+    "website": "https://github.com/Luzifer/ots",
+    "logo": null,
+    "description": "One-Time-Secret sharing platform with a symmetric 256bit AES encryption in the browser.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/ots.sh",
+            "resources": {
+                "cpu": 1,
+                "ram": 512,
+                "hdd": 3,
+                "os": "Debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": [
+        {
+            "text": "When it is in used external please use it behind reverse proxy or create your own certificates",
+            "type": "info"
+        }
+    ]
+}
