@@ -492,13 +492,6 @@ function setup_php() {
     fi
   fi
 }
-# ------------------------------------------------------------------------------
-# Installs or updates Composer globally.
-#
-# Description:
-#   - Downloads latest version from getcomposer.org
-#   - Installs to /usr/local/bin/composer
-# ------------------------------------------------------------------------------
 
 # ------------------------------------------------------------------------------
 # Installs or updates Composer globally (robust, idempotent).
