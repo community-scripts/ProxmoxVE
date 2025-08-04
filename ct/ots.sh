@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: bvdberg01
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -30,7 +30,6 @@ function update_script() {
 
     RELEASE=$(curl -fsSL https://api.github.com/repos/Luzifer/ots/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
     if [[ "${RELEASE}" != "$(cat ~/.ots 2>/dev/null)" ]] || [[ ! -f ~/.ots ]]; then
-
         msg_info "Stopping ${APP} Service"
         systemctl stop ots
         systemctl stop nginx
@@ -42,7 +41,7 @@ function update_script() {
         systemctl start ots
         systemctl start nginx
         msg_ok "Stopped ${APP} Service"
-
+        msg_ok "Updated Successfully"
     else
         msg_ok "No update required. ${APP} is already at ${RELEASE}"
     fi
