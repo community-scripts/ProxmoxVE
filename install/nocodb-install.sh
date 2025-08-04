@@ -13,15 +13,10 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing NocoDB"
-mkdir -p /opt/nocodb
-cd /opt/nocodb
-curl -fsSL http://get.nocodb.com/linux-x64 -o nocodb -L
-chmod +x nocodb
-msg_ok "Installed NocoDB"
+fetch_and_deploy_gh_release "nocodb" "nocodb/nocodb" "singlefile" "latest" "/opt/nocodb/" "Noco-linux-x64"
 
 msg_info "Creating Service"
-service_path="/etc/systemd/system/nocodb.service"
+cat <<EOF >/etc/systemd/system/nocodb.service
 echo "[Unit]
 Description=nocodb
 
@@ -33,7 +28,8 @@ WorkingDirectory=/opt/nocodb
 ExecStart=/opt/nocodb/./nocodb
 
 [Install]
-WantedBy=multi-user.target" >$service_path
+WantedBy=multi-user.target
+EOF
 systemctl enable -q --now nocodb
 msg_ok "Created Service"
 

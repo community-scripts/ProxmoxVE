@@ -27,15 +27,24 @@ function update_script() {
         msg_error "No ${APP} Installation Found!"
         exit
     fi
-    msg_info "Updating ${APP}"
-    systemctl stop nocodb.service
-    cd /opt/nocodb
-    rm -rf nocodb
-    curl -fsSL http://get.nocodb.com/linux-x64 -o nocodb -L
-    chmod +x nocodb
-    systemctl start nocodb.service
+
+    RELEASE=$(curl -fsSL https://api.github.com/repos/nocodb/nocodb/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+    if [[ ! -f ~/.nocodb ]] || [[ "${RELEASE}" != "$(cat ~/.nocodb)" ]]; then
+    msg_info "Stopping Service"
+    systemctl stop nocodb
+    msg_ok "Stopped Service"
+
+    fetch_and_deploy_gh_release "nocodb" "nocodb/nocodb" "singlefile" "latest" "/opt/nocodb/" "Noco-linux-x64"
+
+    msg_info "Starting Service"
+    systemctl start nocodb
+    msg_ok "Started Service"
+
     msg_ok "Updated Successfully"
-    exit
+  else
+    msg_ok "No update required. ${APP} is already at v${RELEASE}"
+  fi
+  exit
 }
 
 start
