@@ -28,6 +28,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: PrivateBin [@tremor021](https://github.com/tremor021) ([#6559](https://github.com/community-scripts/ProxmoxVE/pull/6559))
     - Refactor: PocketID [@tremor021](https://github.com/tremor021) ([#6556](https://github.com/community-scripts/ProxmoxVE/pull/6556))
     - Refactor: Pocketbase [@tremor021](https://github.com/tremor021) ([#6554](https://github.com/community-scripts/ProxmoxVE/pull/6554))
     - Refactor: NocoDB [@tremor021](https://github.com/tremor021) ([#6548](https://github.com/community-scripts/ProxmoxVE/pull/6548))
