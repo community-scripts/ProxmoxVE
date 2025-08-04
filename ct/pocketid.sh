@@ -29,9 +29,10 @@ function update_script() {
     exit
   fi
 
+  [[ ! -f /opt/${APP}_version.txt ]] && mv /opt/${APP}_version.txt ~/.pocket-id
   RELEASE=$(curl -fsSL https://api.github.com/repos/pocket-id/pocket-id/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
-    if [[ "$(cat /opt/${APP}_version.txt)" < "1.0.0" ]]; then
+  if [[ "${RELEASE}" != "$(cat ~/.pocket-id)" ]] || [[ ! -f ~/.pocket-id ]]; then
+    if [[ "$(cat ~/.pocket-id)" < "1.0.0" ]]; then
       msg_info "Migrating ${APP} to v${RELEASE}"
       systemctl -q disable --now pocketid-backend pocketid-frontend caddy
       mv /etc/caddy/Caddyfile ~/Caddyfile.bak
@@ -58,19 +59,19 @@ function update_script() {
       mv /opt/data /opt/pocket-id
       msg_ok "Migration complete. The reverse proxy port has been changed to 1411."
     else
-      msg_info "Updating $APP to v${RELEASE}"
+      msg_info "Stopping ${APP}"
       systemctl stop pocketid
+      msg_ok "Stopped ${APP}"
       cp /opt/pocket-id/.env /opt/env
     fi
-    curl -fsSL "https://github.com/pocket-id/pocket-id/releases/download/v${RELEASE}/pocket-id-linux-amd64" -o /opt/pocket-id/pocket-id
-    chmod u+x /opt/pocket-id/pocket-id
+
+    fetch_and_deploy_gh_release "pocket-id" "pocket-id/pocket-id" "singlefile" "latest" "/opt/pocket-id/" "pocket-id-linux-amd64"
     mv /opt/env /opt/pocket-id/.env
 
     msg_info "Starting $APP"
     systemctl start pocketid
     msg_ok "Started $APP"
 
-    echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Update Successful"
   else
     msg_ok "No update required. ${APP} is already at ${RELEASE}"

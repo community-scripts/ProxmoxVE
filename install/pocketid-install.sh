@@ -14,12 +14,9 @@ network_check
 update_os
 
 read -r -p "${TAB3}What public URL do you want to use (e.g. pocketid.mydomain.com)? " public_url
-msg_info "Setup Pocket ID"
-RELEASE=$(curl -fsSL https://api.github.com/repos/pocket-id/pocket-id/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-mkdir -p /opt/pocket-id
-curl -fsSL "https://github.com/pocket-id/pocket-id/releases/download/v${RELEASE}/pocket-id-linux-amd64" -o /opt/pocket-id/pocket-id
-chmod u+x /opt/pocket-id/pocket-id
+fetch_and_deploy_gh_release "pocket-id" "pocket-id/pocket-id" "singlefile" "latest" "/opt/pocket-id/" "pocket-id-linux-amd64"
 
+msg_info "Configuring Pocket ID"
 cat <<EOF >/opt/pocket-id/.env
 APP_ENV=production
 APP_URL=https://${public_url}
@@ -28,8 +25,7 @@ TRUST_PROXY=false
 PORT=1411
 HOST=0.0.0.0
 EOF
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
-msg_ok "Setup Pocket ID"
+msg_ok "Configured Pocket ID"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/pocketid.service
@@ -63,6 +59,3 @@ msg_info "Cleaning up"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
-
-motd_ssh
-customize
