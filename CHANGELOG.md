@@ -19,6 +19,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - Composer: PATH Issues when updating [@MickLesk](https://github.com/MickLesk) ([#6543](https://github.com/community-scripts/ProxmoxVE/pull/6543))
+
   - #### 🔧 Refactor
 
     - Refactor: PairDrop [@tremor021](https://github.com/tremor021) ([#6528](https://github.com/community-scripts/ProxmoxVE/pull/6528))
