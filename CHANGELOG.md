@@ -23,6 +23,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - MySpeed: fix update and copy old tests back [@MickLesk](https://github.com/MickLesk) ([#6550](https://github.com/community-scripts/ProxmoxVE/pull/6550))
     - Composer: PATH Issues when updating [@MickLesk](https://github.com/MickLesk) ([#6543](https://github.com/community-scripts/ProxmoxVE/pull/6543))
 
   - #### 🔧 Refactor
