@@ -29,7 +29,7 @@ function update_script() {
     exit
   fi
 
-  [[ ! -f /opt/${APP}_version.txt ]] && mv /opt/${APP}_version.txt ~/.pocket-id
+  [[ -f /opt/${APP}_version.txt ]] && mv /opt/${APP}_version.txt ~/.pocket-id
   RELEASE=$(curl -fsSL https://api.github.com/repos/pocket-id/pocket-id/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
   if [[ "${RELEASE}" != "$(cat ~/.pocket-id)" ]] || [[ ! -f ~/.pocket-id ]]; then
     if [[ "$(cat ~/.pocket-id)" < "1.0.0" ]]; then
