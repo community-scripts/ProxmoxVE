@@ -1,5 +1,50 @@
 [
   {
+    "name": "benjaminjonard/koillection",
+    "version": "1.6.18",
+    "date": "2025-08-03T21:41:45Z"
+  },
+  {
+    "name": "jellyfin/jellyfin",
+    "version": "v10.10.7",
+    "date": "2025-04-05T19:14:59Z"
+  },
+  {
+    "name": "Tautulli/Tautulli",
+    "version": "v2.15.3",
+    "date": "2025-08-03T17:27:16Z"
+  },
+  {
+    "name": "project-zot/zot",
+    "version": "v2.1.7",
+    "date": "2025-08-03T16:35:59Z"
+  },
+  {
+    "name": "karakeep-app/karakeep",
+    "version": "mcp/v0.26.0",
+    "date": "2025-08-03T16:21:47Z"
+  },
+  {
+    "name": "gethomepage/homepage",
+    "version": "v1.4.3",
+    "date": "2025-08-03T15:19:16Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.21",
+    "date": "2025-07-17T04:46:25Z"
+  },
+  {
+    "name": "blakeblackshear/frigate",
+    "version": "v0.14.1",
+    "date": "2024-08-29T22:32:51Z"
+  },
+  {
+    "name": "Dolibarr/dolibarr",
+    "version": "22.0.0",
+    "date": "2025-08-03T12:07:59Z"
+  },
+  {
     "name": "Lidarr/Lidarr",
     "version": "v2.12.4.4658",
     "date": "2025-06-09T17:27:45Z"
@@ -23,11 +68,6 @@
     "name": "steveiliop56/tinyauth",
     "version": "v3.6.2",
     "date": "2025-07-17T12:08:03Z"
-  },
-  {
-    "name": "gethomepage/homepage",
-    "version": "v1.4.2",
-    "date": "2025-08-02T23:44:05Z"
   },
   {
     "name": "advplyr/audiobookshelf",
@@ -108,11 +148,6 @@
     "name": "homarr-labs/homarr",
     "version": "v1.31.0",
     "date": "2025-08-01T19:18:16Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.21",
-    "date": "2025-07-17T04:46:25Z"
   },
   {
     "name": "Koenkk/zigbee2mqtt",
@@ -270,11 +305,6 @@
     "date": "2025-07-30T20:30:29Z"
   },
   {
-    "name": "benjaminjonard/koillection",
-    "version": "1.6.17",
-    "date": "2025-07-30T20:24:17Z"
-  },
-  {
     "name": "semaphoreui/semaphore",
     "version": "v2.16.0-beta6",
     "date": "2025-07-23T19:18:14Z"
@@ -420,19 +450,9 @@
     "date": "2025-06-25T00:06:56Z"
   },
   {
-    "name": "project-zot/zot",
-    "version": "v2.1.6",
-    "date": "2025-07-27T01:14:14Z"
-  },
-  {
     "name": "aceberg/WatchYourLAN",
     "version": "2.1.3",
     "date": "2025-07-26T14:19:00Z"
-  },
-  {
-    "name": "blakeblackshear/frigate",
-    "version": "v0.14.1",
-    "date": "2024-08-29T22:32:51Z"
   },
   {
     "name": "openobserve/openobserve",
@@ -530,11 +550,6 @@
     "date": "2025-07-14T22:07:28Z"
   },
   {
-    "name": "Dolibarr/dolibarr",
-    "version": "21.0.2",
-    "date": "2025-07-22T16:58:05Z"
-  },
-  {
     "name": "PCJones/UmlautAdaptarr",
     "version": "v0.7.3",
     "date": "2025-07-22T14:39:54Z"
@@ -588,11 +603,6 @@
     "name": "pocket-id/pocket-id",
     "version": "v1.6.4",
     "date": "2025-07-21T05:53:30Z"
-  },
-  {
-    "name": "karakeep-app/karakeep",
-    "version": "sdk/v0.26.0",
-    "date": "2025-07-20T13:26:30Z"
   },
   {
     "name": "linkwarden/linkwarden",
@@ -713,11 +723,6 @@
     "name": "Ombi-app/Ombi",
     "version": "v4.47.1",
     "date": "2025-01-05T21:14:23Z"
-  },
-  {
-    "name": "jellyfin/jellyfin",
-    "version": "v10.10.7",
-    "date": "2025-04-05T19:14:59Z"
   },
   {
     "name": "eclipse-mosquitto/mosquitto",
@@ -1153,11 +1158,6 @@
     "name": "Casvt/Kapowarr",
     "version": "V1.2.0",
     "date": "2025-04-16T14:55:28Z"
-  },
-  {
-    "name": "Tautulli/Tautulli",
-    "version": "v2.15.2",
-    "date": "2025-04-12T23:27:51Z"
   },
   {
     "name": "StarFleetCPTN/GoMFT",
