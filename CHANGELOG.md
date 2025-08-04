@@ -19,12 +19,15 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
-  - Increase: Core Network check (pre-LXC Creation)  [@MickLesk](https://github.com/MickLesk) ([#6546](https://github.com/community-scripts/ProxmoxVE/pull/6546))
-
   - #### 🐞 Bug Fixes
 
     - MySpeed: fix update and copy old tests back [@MickLesk](https://github.com/MickLesk) ([#6550](https://github.com/community-scripts/ProxmoxVE/pull/6550))
     - Composer: PATH Issues when updating [@MickLesk](https://github.com/MickLesk) ([#6543](https://github.com/community-scripts/ProxmoxVE/pull/6543))
+
+  - #### ✨ New Features
+
+    - turnkey: add hostname & Fix TUN access [@masterofrpm](https://github.com/masterofrpm) ([#6512](https://github.com/community-scripts/ProxmoxVE/pull/6512))
+    - Increase: Core Network check (pre-LXC Creation)  [@MickLesk](https://github.com/MickLesk) ([#6546](https://github.com/community-scripts/ProxmoxVE/pull/6546))
 
   - #### 🔧 Refactor
 
