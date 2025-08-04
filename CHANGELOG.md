@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-08-04
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - Refactor: PairDrop [@tremor021](https://github.com/tremor021) ([#6528](https://github.com/community-scripts/ProxmoxVE/pull/6528))
+
 ## 2025-08-03
 
 ### 🚀 Updated Scripts
