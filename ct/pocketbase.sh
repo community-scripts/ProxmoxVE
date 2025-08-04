@@ -27,18 +27,26 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  msg_info "Stopping ${APP}"
-  systemctl stop pocketbase
-  msg_ok "Stopped ${APP}"
 
-  msg_info "Updating ${APP}"
-  /opt/pocketbase/pocketbase update
-  msg_ok "Updated ${APP}"
+  RELEASE=$(curl -s https://api.github.com/repos/pocketbase/pocketbase/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+  if [[ "${RELEASE}" != "$(cat ~/.pocketbase 2>/dev/null)" ]] || [[ ! -f ~/.pocketbase ]]; then
+    msg_info "Stopping ${APP}"
+    systemctl stop pocketbase
+    msg_ok "Stopped ${APP}"
 
-  msg_info "Starting ${APP}"
-  systemctl start pocketbase
-  msg_ok "Started ${APP}"
-  msg_ok "Updated Successfully"
+    msg_info "Updating ${APP}"
+    /opt/pocketbase/pocketbase update
+    echo "${RELEASE}" > ~/.pocketbase
+    msg_ok "Updated ${APP}"
+
+    msg_info "Starting ${APP}"
+    systemctl start pocketbase
+    msg_ok "Started ${APP}"
+    
+    msg_ok "Update Successful"
+  else
+    msg_ok "No update required. ${APP} is already at ${RELEASE}"
+  fi
   exit
 }
 
