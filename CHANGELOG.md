@@ -12,6 +12,11 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-08-04
 
+### 🆕 New Scripts
+
+  - Tududi ([#6534](https://github.com/community-scripts/ProxmoxVE/pull/6534))
+- ots ([#6532](https://github.com/community-scripts/ProxmoxVE/pull/6532))
+
 ### 🚀 Updated Scripts
 
   - #### 🔧 Refactor
