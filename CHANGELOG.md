@@ -26,6 +26,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - Feat: enable tun for VPN services (wireguard) [@MickLesk](https://github.com/MickLesk) ([#6562](https://github.com/community-scripts/ProxmoxVE/pull/6562))
     - turnkey: add hostname & Fix TUN access [@masterofrpm](https://github.com/masterofrpm) ([#6512](https://github.com/community-scripts/ProxmoxVE/pull/6512))
     - Increase: Core Network check (pre-LXC Creation)  [@MickLesk](https://github.com/MickLesk) ([#6546](https://github.com/community-scripts/ProxmoxVE/pull/6546))
 
