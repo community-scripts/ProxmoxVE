@@ -19,7 +19,11 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
-  - Composer: PATH Issues when updating [@MickLesk](https://github.com/MickLesk) ([#6543](https://github.com/community-scripts/ProxmoxVE/pull/6543))
+  - Increase: Core Network check (pre-LXC Creation)  [@MickLesk](https://github.com/MickLesk) ([#6546](https://github.com/community-scripts/ProxmoxVE/pull/6546))
+
+  - #### 🐞 Bug Fixes
+
+    - Composer: PATH Issues when updating [@MickLesk](https://github.com/MickLesk) ([#6543](https://github.com/community-scripts/ProxmoxVE/pull/6543))
 
   - #### 🔧 Refactor
 
