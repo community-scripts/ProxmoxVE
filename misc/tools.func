@@ -500,9 +500,26 @@ function setup_php() {
 #   - Installs to /usr/local/bin/composer
 # ------------------------------------------------------------------------------
 
+# ------------------------------------------------------------------------------
+# Installs or updates Composer globally (robust, idempotent).
+#
+# - Installs to /usr/local/bin/composer
+# - Removes old binaries/symlinks in /usr/bin, /bin, /root/.composer, etc.
+# - Ensures /usr/local/bin is in PATH (permanent)
+# ------------------------------------------------------------------------------
+
 function setup_composer() {
   local COMPOSER_BIN="/usr/local/bin/composer"
   export COMPOSER_ALLOW_SUPERUSER=1
+
+  # Clean up old Composer binaries/symlinks (if any)
+  for old in /usr/bin/composer /bin/composer /root/.composer/vendor/bin/composer; do
+    [[ -e "$old" && "$old" != "$COMPOSER_BIN" ]] && rm -f "$old"
+  done
+
+  # Ensure /usr/local/bin is in PATH for future logins (and current shell)
+  ensure_usr_local_bin_persist
+  export PATH="/usr/local/bin:$PATH"
 
   # Check if composer is already installed
   if [[ -x "$COMPOSER_BIN" ]]; then
@@ -510,21 +527,22 @@ function setup_composer() {
     CURRENT_VERSION=$("$COMPOSER_BIN" --version | awk '{print $3}')
     $STD msg_info "Old Composer $CURRENT_VERSION found, updating to latest"
   else
-    msg_info "Setup Composer"
+    msg_info "Installing Composer"
   fi
 
-  # Download and install latest composer
+  # Download and install latest Composer
   curl -fsSL https://getcomposer.org/installer -o /tmp/composer-setup.php
   php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer >/dev/null 2>&1
 
-  if [[ $? -ne 0 ]]; then
-    msg_error "Failed to install Composer"
+  if [[ ! -x "$COMPOSER_BIN" ]]; then
+    msg_error "Composer was not successfully installed (no binary at $COMPOSER_BIN)"
     return 1
   fi
 
   chmod +x "$COMPOSER_BIN"
-  $STD composer diagnose
-  msg_ok "Setup Composer"
+  $STD "$COMPOSER_BIN" self-update --no-interaction || true # safe if already latest
+  $STD "$COMPOSER_BIN" diagnose
+  msg_ok "Composer is ready at $COMPOSER_BIN"
 }
 
 # ------------------------------------------------------------------------------
