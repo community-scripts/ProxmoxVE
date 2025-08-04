@@ -1282,36 +1282,42 @@ EOF
   if [ "$var_os" != "alpine" ]; then
     msg_info "Waiting for network in LXC container"
     for i in {1..10}; do
+      # 1. Primary check: ICMP ping (fastest, but may be blocked by ISP/firewall)
       if pct exec "$CTID" -- ping -c1 -W1 deb.debian.org >/dev/null 2>&1; then
-        msg_ok "Network in LXC is reachable"
+        msg_ok "Network in LXC is reachable (ping)"
         break
       fi
-      if pct exec "$CTID" -- curl -fsSIL --max-time 10 deb.debian.org >/dev/null 2>&1; then
-        msg_ok "Network in LXC is reachable"
-        break
-      fi
+      # Wait and retry if not reachable yet
       if [ "$i" -lt 10 ]; then
-        msg_warn "No network yet in LXC (try $i/10) – waiting..."
+        msg_warn "No network in LXC yet (try $i/10) – waiting..."
         sleep 3
       else
-        msg_error "No network in LXC after waiting."
-        read -r -p "Set fallback DNS (1.1.1.1/8.8.8.8)? [y/N]: " choice
-        case "$choice" in
-        [yY]*)
-          pct set "$CTID" --nameserver 1.1.1.1
-          pct set "$CTID" --nameserver 8.8.8.8
-          if pct exec "$CTID" -- ping -c1 -W1 deb.debian.org >/dev/null 2>&1; then
-            msg_ok "Network reachable after DNS fallback"
-          else
-            msg_error "Still no network/DNS in LXC! Aborting customization."
-            exit 1
-          fi
-          ;;
-        *)
-          msg_error "Aborted by user – no DNS fallback set."
-          exit 1
-          ;;
-        esac
+        # After 10 unsuccessful ping attempts, try HTTP connectivity via wget as fallback
+        msg_warn "Ping failed 10 times. Trying HTTP connectivity check (wget) as fallback..."
+        if pct exec "$CTID" -- wget -q --spider http://deb.debian.org; then
+          msg_ok "Network in LXC is reachable (wget fallback)"
+        else
+          msg_error "No network in LXC after all checks."
+          read -r -p "Set fallback DNS (1.1.1.1/8.8.8.8)? [y/N]: " choice
+          case "$choice" in
+          [yY]*)
+            pct set "$CTID" --nameserver 1.1.1.1
+            pct set "$CTID" --nameserver 8.8.8.8
+            # Final attempt with wget after DNS change
+            if pct exec "$CTID" -- wget -q --spider http://deb.debian.org; then
+              msg_ok "Network reachable after DNS fallback"
+            else
+              msg_error "Still no network/DNS in LXC! Aborting customization."
+              exit_script
+            fi
+            ;;
+          *)
+            msg_error "Aborted by user – no DNS fallback set."
+            exit_script
+            ;;
+          esac
+        fi
+        break
       fi
     done
   fi
