@@ -27,10 +27,11 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  sed -i 's/^\([[:space:]]*limiter:\)[[:space:]]*true/\1 false/' /etc/searxng/settings.yml
-  if cd /usr/local/searxng/searxng-src && git pull | grep -q 'Already up to date'; then
-    msg_ok "There is currently no update available."
-  fi
+  msg_ok "There is currently no update available."
+  # sed -i 's/^\([[:space:]]*limiter:\)[[:space:]]*true/\1 false/' /etc/searxng/settings.yml
+  # if cd /usr/local/searxng/searxng-src && git pull | grep -q 'Already up to date'; then
+  #   msg_ok "There is currently no update available."
+  # fi
   exit
 }
 start
