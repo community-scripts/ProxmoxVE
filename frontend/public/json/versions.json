@@ -1,8 +1,68 @@
 [
   {
+    "name": "cloudreve/cloudreve",
+    "version": "4.4.0",
+    "date": "2025-08-05T11:51:08Z"
+  },
+  {
+    "name": "sabnzbd/sabnzbd",
+    "version": "4.5.2",
+    "date": "2025-07-09T19:08:28Z"
+  },
+  {
+    "name": "zitadel/zitadel",
+    "version": "v2.71.14",
+    "date": "2025-08-05T09:48:52Z"
+  },
+  {
+    "name": "binwiederhier/ntfy",
+    "version": "v2.14.0",
+    "date": "2025-08-05T08:31:35Z"
+  },
+  {
+    "name": "bunkerity/bunkerweb",
+    "version": "v1.6.3",
+    "date": "2025-08-05T07:46:45Z"
+  },
+  {
+    "name": "jupyter/notebook",
+    "version": "v7.4.5",
+    "date": "2025-08-05T07:41:04Z"
+  },
+  {
     "name": "rcourtman/Pulse",
-    "version": "v4.0.0",
-    "date": "2025-08-04T20:20:02Z"
+    "version": "v4.0.1",
+    "date": "2025-08-05T07:05:41Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "server/public/v0.1.16",
+    "date": "2025-07-28T22:46:46Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2231",
+    "date": "2025-08-05T05:55:13Z"
+  },
+  {
+    "name": "semaphoreui/semaphore",
+    "version": "v2.16.0-beta8",
+    "date": "2025-08-05T05:52:00Z"
+  },
+  {
+    "name": "rogerfar/rdt-client",
+    "version": "v2.0.116",
+    "date": "2025-08-05T04:45:21Z"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2025.7.5",
+    "date": "2025-08-05T03:37:52Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
   },
   {
     "name": "mongodb/mongo",
@@ -15,19 +75,24 @@
     "date": "2025-08-04T18:58:27Z"
   },
   {
+    "name": "keycloak/keycloak",
+    "version": "26.0.14",
+    "date": "2025-08-01T11:29:12Z"
+  },
+  {
     "name": "firefly-iii/firefly-iii",
     "version": "v6.2.21",
     "date": "2025-07-17T04:46:25Z"
   },
   {
+    "name": "runtipi/runtipi",
+    "version": "v4.3.0",
+    "date": "2025-07-05T12:14:52Z"
+  },
+  {
     "name": "Dolibarr/dolibarr",
     "version": "22.0.0",
     "date": "2025-08-04T16:23:05Z"
-  },
-  {
-    "name": "bunkerity/bunkerweb",
-    "version": "v1.6.2",
-    "date": "2025-07-08T13:52:33Z"
   },
   {
     "name": "YunoHost/yunohost",
@@ -105,19 +170,9 @@
     "date": "2025-08-04T06:56:14Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2225",
-    "date": "2025-08-04T06:35:27Z"
-  },
-  {
     "name": "henrygd/beszel",
     "version": "v0.12.3",
     "date": "2025-08-04T02:21:16Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
   },
   {
     "name": "garethgeorge/backrest",
@@ -250,11 +305,6 @@
     "date": "2025-08-01T14:49:29Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.0.14",
-    "date": "2025-08-01T11:29:12Z"
-  },
-  {
     "name": "documenso/documenso",
     "version": "v1.12.2-rc.3",
     "date": "2025-08-01T14:46:22Z"
@@ -265,14 +315,14 @@
     "date": "2025-08-01T14:44:48Z"
   },
   {
+    "name": "neo4j/neo4j",
+    "version": "2025.07.1",
+    "date": "2025-08-01T14:40:28Z"
+  },
+  {
     "name": "element-hq/synapse",
     "version": "v1.135.0",
     "date": "2025-08-01T12:43:17Z"
-  },
-  {
-    "name": "neo4j/neo4j",
-    "version": "5.26.10",
-    "date": "2025-08-01T09:43:18Z"
   },
   {
     "name": "crowdsecurity/crowdsec",
@@ -285,11 +335,6 @@
     "date": "2025-08-01T07:43:59Z"
   },
   {
-    "name": "mattermost/mattermost",
-    "version": "server/public/v0.1.16",
-    "date": "2025-07-28T22:46:46Z"
-  },
-  {
     "name": "gotson/komga",
     "version": "1.23.1",
     "date": "2025-08-01T04:30:24Z"
@@ -298,11 +343,6 @@
     "name": "gristlabs/grist-core",
     "version": "v1.7.1",
     "date": "2025-07-31T22:26:54Z"
-  },
-  {
-    "name": "zitadel/zitadel",
-    "version": "v4.0.0",
-    "date": "2025-07-31T20:05:45Z"
   },
   {
     "name": "lazy-media/Reactive-Resume",
@@ -363,11 +403,6 @@
     "name": "fallenbagel/jellyseerr",
     "version": "preview-fix-invalid-blacklisttag",
     "date": "2025-07-30T20:30:29Z"
-  },
-  {
-    "name": "semaphoreui/semaphore",
-    "version": "v2.16.0-beta6",
-    "date": "2025-07-23T19:18:14Z"
   },
   {
     "name": "oauth2-proxy/oauth2-proxy",
@@ -440,11 +475,6 @@
     "date": "2025-07-29T15:15:26Z"
   },
   {
-    "name": "rogerfar/rdt-client",
-    "version": "v2.0.115",
-    "date": "2025-07-29T04:38:35Z"
-  },
-  {
     "name": "diced/zipline",
     "version": "v4.2.1",
     "date": "2025-07-28T19:25:48Z"
@@ -478,11 +508,6 @@
     "name": "PrivateBin/PrivateBin",
     "version": "2.0.0",
     "date": "2025-07-28T07:48:40Z"
-  },
-  {
-    "name": "esphome/esphome",
-    "version": "2025.7.4",
-    "date": "2025-07-28T07:33:36Z"
   },
   {
     "name": "umami-software/umami",
@@ -700,11 +725,6 @@
     "date": "2025-07-15T15:14:16Z"
   },
   {
-    "name": "cloudreve/cloudreve",
-    "version": "4.3.0",
-    "date": "2025-07-15T09:54:38Z"
-  },
-  {
     "name": "pi-hole/pi-hole",
     "version": "v6.1.4",
     "date": "2025-07-14T21:22:17Z"
@@ -765,11 +785,6 @@
     "date": "2025-07-10T19:29:26Z"
   },
   {
-    "name": "binwiederhier/ntfy",
-    "version": "v2.13.0",
-    "date": "2025-07-10T19:27:54Z"
-  },
-  {
     "name": "NginxProxyManager/nginx-proxy-manager",
     "version": "v2.12.6",
     "date": "2025-07-09T21:52:15Z"
@@ -778,11 +793,6 @@
     "name": "apache/tika",
     "version": "3.2.1",
     "date": "2025-07-09T20:47:29Z"
-  },
-  {
-    "name": "sabnzbd/sabnzbd",
-    "version": "4.5.2",
-    "date": "2025-07-09T19:08:28Z"
   },
   {
     "name": "hargata/lubelog",
@@ -835,11 +845,6 @@
     "date": "2025-07-05T20:08:58Z"
   },
   {
-    "name": "runtipi/runtipi",
-    "version": "v4.3.0",
-    "date": "2025-07-05T12:14:52Z"
-  },
-  {
     "name": "kimai/kimai",
     "version": "2.37.0",
     "date": "2025-07-04T14:49:43Z"
@@ -873,11 +878,6 @@
     "name": "MagicMirrorOrg/MagicMirror",
     "version": "v2.32.0",
     "date": "2025-06-30T22:12:48Z"
-  },
-  {
-    "name": "jupyter/notebook",
-    "version": "v7.4.4",
-    "date": "2025-06-30T13:04:22Z"
   },
   {
     "name": "typesense/typesense",
