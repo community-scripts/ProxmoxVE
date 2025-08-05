@@ -14,6 +14,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### ✨ New Features
+
+    - NIC offloading: e1000 support [@rcastley](https://github.com/rcastley) ([#6575](https://github.com/community-scripts/ProxmoxVE/pull/6575))
+
   - #### 💥 Breaking Changes
 
     - Temporary Remove: SearXNG [@MickLesk](https://github.com/MickLesk) ([#6578](https://github.com/community-scripts/ProxmoxVE/pull/6578))
