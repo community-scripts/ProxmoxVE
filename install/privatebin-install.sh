@@ -32,7 +32,7 @@ msg_ok "Certificate Generated"
 
 msg_info "Configuring Environment"
 mkdir -p /opt/privatebin/data
-cp cfg/conf.sample.php /opt/privatebin/cfg/conf.php
+cp /opt/privatebin/cfg/conf.sample.php /opt/privatebin/cfg/conf.php
 sed -i "s|// 'traffic'|'traffic'|g" /opt/privatebin/cfg/conf.php
 chown -R www-data:www-data /opt/privatebin
 chmod -R 0755 /opt/privatebin/data
