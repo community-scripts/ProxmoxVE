@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-08-05
 
+### 🚀 Updated Scripts
+
+  - #### 💥 Breaking Changes
+
+    - Temporary Remove: SearXNG [@MickLesk](https://github.com/MickLesk) ([#6578](https://github.com/community-scripts/ProxmoxVE/pull/6578))
+
 ## 2025-08-04
 
 ### 🆕 New Scripts
