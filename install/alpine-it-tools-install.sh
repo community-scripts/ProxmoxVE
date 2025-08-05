@@ -18,13 +18,11 @@ $STD apk add nginx
 msg_ok "Installed Dependencies"
 
 msg_info "Installing IT-Tools"
-RELEASE=$(curl -fsSL https://api.github.com/repos/CorentinTh/it-tools/releases/latest | grep '"tag_name":' | cut -d '"' -f4)
-DOWNLOAD_URL="https://github.com/CorentinTh/it-tools/releases/download/${RELEASE}/it-tools-${RELEASE#v}.zip"
-
-curl -fsSL -o it-tools.zip "$DOWNLOAD_URL"
+RELEASE=$(curl -fsSL https://api.github.com/repos/sharevb/it-tools/releases/latest | grep '"tag_name":' | cut -d '"' -f4)
+curl -fsSL "https://github.com/sharevb/it-tools/releases/download/${RELEASE}/it-tools-${RELEASE#v}.zip" -o it-tools.zip
 mkdir -p /usr/share/nginx/html
-$STD unzip it-tools.zip -d /tmp/it-tools
-cp -r /tmp/it-tools/dist/* /usr/share/nginx/html
+$STD unzip it-tools.zip -d /tmp/
+mv /tmp/dist/* /usr/share/nginx/html
 cat <<'EOF' >/etc/nginx/http.d/default.conf
 server {
   listen 80;
@@ -46,7 +44,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -rf /tmp/it-tools
+rm -rf /tmp/dist
 rm -f it-tools.zip
 $STD apk cache clean
 msg_ok "Cleaned"
