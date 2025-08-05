@@ -22,6 +22,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Temporary Remove: SearXNG [@MickLesk](https://github.com/MickLesk) ([#6578](https://github.com/community-scripts/ProxmoxVE/pull/6578))
 
+  - #### 🔧 Refactor
+
+    - Refactor: Prometheus Alertmanager [@tremor021](https://github.com/tremor021) ([#6577](https://github.com/community-scripts/ProxmoxVE/pull/6577))
+
 ## 2025-08-04
 
 ### 🆕 New Scripts
