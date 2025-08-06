@@ -1,8 +1,103 @@
 [
   {
+    "name": "rcourtman/Pulse",
+    "version": "v4.0.3",
+    "date": "2025-08-05T21:20:46Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.11.2",
+    "date": "2025-08-05T21:18:07Z"
+  },
+  {
+    "name": "autobrr/autobrr",
+    "version": "v1.65.0",
+    "date": "2025-08-05T21:12:35Z"
+  },
+  {
+    "name": "influxdata/influxdb",
+    "version": "v1.12.2rc1",
+    "date": "2025-08-05T20:22:13Z"
+  },
+  {
+    "name": "HabitRPG/habitica",
+    "version": "v5.38.1",
+    "date": "2025-08-05T19:33:40Z"
+  },
+  {
+    "name": "mongodb/mongo",
+    "version": "r8.0.13-rc1",
+    "date": "2025-08-05T18:57:03Z"
+  },
+  {
+    "name": "YunoHost/yunohost",
+    "version": "debian/12.1.7.1",
+    "date": "2025-08-05T17:30:05Z"
+  },
+  {
+    "name": "WordPress/WordPress",
+    "version": "4.7.30",
+    "date": "2025-08-05T17:23:06Z"
+  },
+  {
+    "name": "ErsatzTV/ErsatzTV",
+    "version": "v25.4.0",
+    "date": "2025-08-05T17:10:01Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.24.10",
+    "date": "2025-08-05T16:56:01Z"
+  },
+  {
+    "name": "meilisearch/meilisearch",
+    "version": "prototype-webhooks-0",
+    "date": "2025-08-05T16:55:32Z"
+  },
+  {
+    "name": "fallenbagel/jellyseerr",
+    "version": "preview-fix-user-save",
+    "date": "2025-08-05T16:37:50Z"
+  },
+  {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.522",
+    "date": "2025-08-05T15:33:22Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.105.3",
+    "date": "2025-08-05T13:06:29Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.4.0p9-rc2",
+    "date": "2025-08-05T13:03:51Z"
+  },
+  {
+    "name": "apache/cassandra",
+    "version": "cassandra-5.0.5",
+    "date": "2025-08-05T12:08:49Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.7.4",
+    "date": "2025-07-28T08:15:50Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.21",
+    "date": "2025-07-17T04:46:25Z"
+  },
+  {
     "name": "cloudreve/cloudreve",
     "version": "4.4.0",
     "date": "2025-08-05T11:51:08Z"
+  },
+  {
+    "name": "semaphoreui/semaphore",
+    "version": "v2.15.5",
+    "date": "2025-08-05T11:49:45Z"
   },
   {
     "name": "sabnzbd/sabnzbd",
@@ -30,11 +125,6 @@
     "date": "2025-08-05T07:41:04Z"
   },
   {
-    "name": "rcourtman/Pulse",
-    "version": "v4.0.1",
-    "date": "2025-08-05T07:05:41Z"
-  },
-  {
     "name": "mattermost/mattermost",
     "version": "server/public/v0.1.16",
     "date": "2025-07-28T22:46:46Z"
@@ -43,11 +133,6 @@
     "name": "Jackett/Jackett",
     "version": "v0.22.2231",
     "date": "2025-08-05T05:55:13Z"
-  },
-  {
-    "name": "semaphoreui/semaphore",
-    "version": "v2.16.0-beta8",
-    "date": "2025-08-05T05:52:00Z"
   },
   {
     "name": "rogerfar/rdt-client",
@@ -65,11 +150,6 @@
     "date": "2025-07-17T12:08:03Z"
   },
   {
-    "name": "mongodb/mongo",
-    "version": "r8.1.3-rc0",
-    "date": "2025-08-04T19:23:12Z"
-  },
-  {
     "name": "go-gitea/gitea",
     "version": "v1.24.4",
     "date": "2025-08-04T18:58:27Z"
@@ -80,11 +160,6 @@
     "date": "2025-08-01T11:29:12Z"
   },
   {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.21",
-    "date": "2025-07-17T04:46:25Z"
-  },
-  {
     "name": "runtipi/runtipi",
     "version": "v4.3.0",
     "date": "2025-07-05T12:14:52Z"
@@ -93,11 +168,6 @@
     "name": "Dolibarr/dolibarr",
     "version": "22.0.0",
     "date": "2025-08-04T16:23:05Z"
-  },
-  {
-    "name": "YunoHost/yunohost",
-    "version": "debian/12.1.7",
-    "date": "2025-08-04T15:33:31Z"
   },
   {
     "name": "wizarrrr/wizarr",
@@ -130,21 +200,6 @@
     "date": "2025-08-04T13:17:59Z"
   },
   {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.104.2",
-    "date": "2025-07-31T13:14:26Z"
-  },
-  {
-    "name": "meilisearch/meilisearch",
-    "version": "latest",
-    "date": "2025-08-04T12:41:18Z"
-  },
-  {
-    "name": "Checkmk/checkmk",
-    "version": "v2.4.0p9-rc1",
-    "date": "2025-08-04T12:19:49Z"
-  },
-  {
     "name": "rabbitmq/rabbitmq-server",
     "version": "v4.1.3",
     "date": "2025-08-04T12:13:45Z"
@@ -158,11 +213,6 @@
     "name": "raydak-labs/configarr",
     "version": "v1.14.0",
     "date": "2025-08-04T10:55:20Z"
-  },
-  {
-    "name": "home-assistant/core",
-    "version": "2025.7.4",
-    "date": "2025-07-28T08:15:50Z"
   },
   {
     "name": "evcc-io/evcc",
@@ -245,11 +295,6 @@
     "date": "2025-08-02T16:51:19Z"
   },
   {
-    "name": "msgbyte/tianji",
-    "version": "v1.24.9",
-    "date": "2025-08-02T16:46:17Z"
-  },
-  {
     "name": "actualbudget/actual",
     "version": "v25.8.0",
     "date": "2025-08-02T16:17:45Z"
@@ -278,11 +323,6 @@
     "name": "docmost/docmost",
     "version": "v0.22.2",
     "date": "2025-08-01T23:27:06Z"
-  },
-  {
-    "name": "influxdata/influxdb",
-    "version": "v1.12.2rc0",
-    "date": "2025-08-01T21:48:30Z"
   },
   {
     "name": "homarr-labs/homarr",
@@ -375,16 +415,6 @@
     "date": "2025-07-31T12:16:54Z"
   },
   {
-    "name": "apache/cassandra",
-    "version": "5.0.5-tentative",
-    "date": "2025-07-31T09:40:54Z"
-  },
-  {
-    "name": "ollama/ollama",
-    "version": "v0.10.1",
-    "date": "2025-07-31T04:39:49Z"
-  },
-  {
     "name": "coder/code-server",
     "version": "v4.102.3",
     "date": "2025-07-31T03:41:16Z"
@@ -398,11 +428,6 @@
     "name": "gtsteffaniak/filebrowser",
     "version": "v0.7.18-beta",
     "date": "2025-07-30T21:26:00Z"
-  },
-  {
-    "name": "fallenbagel/jellyseerr",
-    "version": "preview-fix-invalid-blacklisttag",
-    "date": "2025-07-30T20:30:29Z"
   },
   {
     "name": "oauth2-proxy/oauth2-proxy",
@@ -445,11 +470,6 @@
     "date": "2025-07-15T06:07:03Z"
   },
   {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.521",
-    "date": "2025-07-30T03:38:59Z"
-  },
-  {
     "name": "OliveTin/OliveTin",
     "version": "2025.7.29",
     "date": "2025-07-29T22:20:13Z"
@@ -480,11 +500,6 @@
     "date": "2025-07-28T19:25:48Z"
   },
   {
-    "name": "HabitRPG/habitica",
-    "version": "v5.38.0",
-    "date": "2025-07-28T19:17:42Z"
-  },
-  {
     "name": "navidrome/navidrome",
     "version": "v0.58.0",
     "date": "2025-07-28T18:59:50Z"
@@ -495,7 +510,7 @@
     "date": "2025-07-28T14:24:56Z"
   },
   {
-    "name": "booklore-app/BookLore",
+    "name": "booklore-app/booklore",
     "version": "v0.35.0",
     "date": "2025-07-28T14:20:30Z"
   },
@@ -543,11 +558,6 @@
     "name": "forgejo/forgejo",
     "version": "v12.0.1",
     "date": "2025-07-25T11:54:30Z"
-  },
-  {
-    "name": "ErsatzTV/ErsatzTV",
-    "version": "v25.3.1",
-    "date": "2025-07-25T03:39:31Z"
   },
   {
     "name": "Brandawg93/PeaNUT",
@@ -618,11 +628,6 @@
     "name": "ellite/Wallos",
     "version": "v4.0.0",
     "date": "2025-07-21T21:05:02Z"
-  },
-  {
-    "name": "autobrr/autobrr",
-    "version": "v1.64.0",
-    "date": "2025-07-21T20:56:33Z"
   },
   {
     "name": "tobychui/zoraxy",
@@ -718,11 +723,6 @@
     "name": "sbondCo/Watcharr",
     "version": "v2.1.1",
     "date": "2025-07-15T22:38:01Z"
-  },
-  {
-    "name": "WordPress/WordPress",
-    "version": "6.8.2",
-    "date": "2025-07-15T15:14:16Z"
   },
   {
     "name": "pi-hole/pi-hole",
