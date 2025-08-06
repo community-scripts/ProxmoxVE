@@ -18,6 +18,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - fix: update Pulse scripts for v4 Go rewrite support [@rcourtman](https://github.com/rcourtman) ([#6574](https://github.com/community-scripts/ProxmoxVE/pull/6574))
 
+  - #### ✨ New Features
+
+    - PVE9: Remove Beta Whiptail / add correct version check [@MickLesk](https://github.com/MickLesk) ([#6599](https://github.com/community-scripts/ProxmoxVE/pull/6599))
+
 ## 2025-08-05
 
 ### 🚀 Updated Scripts
