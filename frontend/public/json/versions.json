@@ -1,13 +1,73 @@
 [
   {
+    "name": "outline/outline",
+    "version": "v0.86.0",
+    "date": "2025-08-06T11:59:00Z"
+  },
+  {
+    "name": "nzbgetcom/nzbget",
+    "version": "v25.2",
+    "date": "2025-07-04T08:21:42Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.7.4",
+    "date": "2025-07-28T08:15:50Z"
+  },
+  {
+    "name": "Graylog2/graylog2-server",
+    "version": "6.3.2",
+    "date": "2025-08-06T11:26:36Z"
+  },
+  {
+    "name": "openobserve/openobserve",
+    "version": "v0.15.0-rc5",
+    "date": "2025-08-06T08:55:10Z"
+  },
+  {
     "name": "rcourtman/Pulse",
-    "version": "v4.0.3",
-    "date": "2025-08-05T21:20:46Z"
+    "version": "v4.0.4",
+    "date": "2025-08-06T07:11:08Z"
+  },
+  {
+    "name": "theonedev/onedev",
+    "version": "v12.0.4",
+    "date": "2025-08-06T06:30:07Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2233",
+    "date": "2025-08-06T05:56:01Z"
+  },
+  {
+    "name": "garethgeorge/backrest",
+    "version": "v1.9.1",
+    "date": "2025-08-06T05:48:33Z"
+  },
+  {
+    "name": "fuma-nama/fumadocs",
+    "version": "fumadocs-openapi@9.1.9",
+    "date": "2025-08-06T04:54:06Z"
+  },
+  {
+    "name": "MediaBrowser/Emby.Releases",
+    "version": "4.9.1.2",
+    "date": "2025-06-26T22:08:00Z"
+  },
+  {
+    "name": "cockpit-project/cockpit",
+    "version": "334.2",
+    "date": "2025-08-06T04:17:45Z"
   },
   {
     "name": "ollama/ollama",
     "version": "v0.11.2",
     "date": "2025-08-05T21:18:07Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
   },
   {
     "name": "autobrr/autobrr",
@@ -18,6 +78,11 @@
     "name": "influxdata/influxdb",
     "version": "v1.12.2rc1",
     "date": "2025-08-05T20:22:13Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.0.14",
+    "date": "2025-08-01T11:29:12Z"
   },
   {
     "name": "HabitRPG/habitica",
@@ -80,11 +145,6 @@
     "date": "2025-08-05T12:08:49Z"
   },
   {
-    "name": "home-assistant/core",
-    "version": "2025.7.4",
-    "date": "2025-07-28T08:15:50Z"
-  },
-  {
     "name": "firefly-iii/firefly-iii",
     "version": "v6.2.21",
     "date": "2025-07-17T04:46:25Z"
@@ -130,11 +190,6 @@
     "date": "2025-07-28T22:46:46Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2231",
-    "date": "2025-08-05T05:55:13Z"
-  },
-  {
     "name": "rogerfar/rdt-client",
     "version": "v2.0.116",
     "date": "2025-08-05T04:45:21Z"
@@ -145,19 +200,9 @@
     "date": "2025-08-05T03:37:52Z"
   },
   {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
-  },
-  {
     "name": "go-gitea/gitea",
     "version": "v1.24.4",
     "date": "2025-08-04T18:58:27Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.0.14",
-    "date": "2025-08-01T11:29:12Z"
   },
   {
     "name": "runtipi/runtipi",
@@ -173,11 +218,6 @@
     "name": "wizarrrr/wizarr",
     "version": "2025.8.1",
     "date": "2025-08-04T15:23:03Z"
-  },
-  {
-    "name": "fuma-nama/fumadocs",
-    "version": "fumadocs-ui@15.6.9",
-    "date": "2025-08-04T15:14:52Z"
   },
   {
     "name": "VictoriaMetrics/VictoriaMetrics",
@@ -225,11 +265,6 @@
     "date": "2025-08-04T02:21:16Z"
   },
   {
-    "name": "garethgeorge/backrest",
-    "version": "v1.9.0",
-    "date": "2025-08-04T00:12:47Z"
-  },
-  {
     "name": "benjaminjonard/koillection",
     "version": "1.6.18",
     "date": "2025-08-03T21:41:45Z"
@@ -275,11 +310,6 @@
     "date": "2025-06-11T20:10:39Z"
   },
   {
-    "name": "MediaBrowser/Emby.Releases",
-    "version": "4.9.1.2",
-    "date": "2025-06-26T22:08:00Z"
-  },
-  {
     "name": "advplyr/audiobookshelf",
     "version": "v2.27.0",
     "date": "2025-08-02T23:35:37Z"
@@ -308,11 +338,6 @@
     "name": "donaldzou/WGDashboard",
     "version": "v4.2.5",
     "date": "2025-08-02T08:58:21Z"
-  },
-  {
-    "name": "theonedev/onedev",
-    "version": "v12.0.3",
-    "date": "2025-08-02T08:16:46Z"
   },
   {
     "name": "pocketbase/pocketbase",
@@ -515,11 +540,6 @@
     "date": "2025-07-28T14:20:30Z"
   },
   {
-    "name": "Graylog2/graylog2-server",
-    "version": "7.0.0-alpha.1",
-    "date": "2025-07-28T11:28:22Z"
-  },
-  {
     "name": "PrivateBin/PrivateBin",
     "version": "2.0.0",
     "date": "2025-07-28T07:48:40Z"
@@ -538,11 +558,6 @@
     "name": "aceberg/WatchYourLAN",
     "version": "2.1.3",
     "date": "2025-07-26T14:19:00Z"
-  },
-  {
-    "name": "openobserve/openobserve",
-    "version": "v0.15.0-rc4",
-    "date": "2025-07-25T16:50:34Z"
   },
   {
     "name": "emqx/emqx",
@@ -600,11 +615,6 @@
     "date": "2025-06-04T11:04:53Z"
   },
   {
-    "name": "cockpit-project/cockpit",
-    "version": "343",
-    "date": "2025-07-23T11:21:34Z"
-  },
-  {
     "name": "jhuckaby/Cronicle",
     "version": "v0.9.85",
     "date": "2025-07-22T23:49:53Z"
@@ -643,11 +653,6 @@
     "name": "bluenviron/mediamtx",
     "version": "v1.13.1",
     "date": "2025-07-21T11:57:03Z"
-  },
-  {
-    "name": "nzbgetcom/nzbget",
-    "version": "v25.2",
-    "date": "2025-07-04T08:21:42Z"
   },
   {
     "name": "openhab/openhab-core",
@@ -773,11 +778,6 @@
     "name": "FlowiseAI/Flowise",
     "version": "flowise@3.0.4",
     "date": "2025-07-11T13:26:54Z"
-  },
-  {
-    "name": "outline/outline",
-    "version": "v0.85.1",
-    "date": "2025-07-11T01:17:53Z"
   },
   {
     "name": "LibreTranslate/LibreTranslate",
