@@ -15,7 +15,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies (Patience)"
-$STD apt-get install -y {git,ca-certificates,automake,build-essential,xz-utils,libtool,ccache,pkg-config,libgtk-3-dev,libavcodec-dev,libavformat-dev,libswscale-dev,libv4l-dev,libxvidcore-dev,libx264-dev,libjpeg-dev,libpng-dev,libtiff-dev,gfortran,openexr,libatlas-base-dev,libssl-dev,libtbb2,libtbb-dev,libdc1394-22-dev,libopenexr-dev,libgstreamer-plugins-base1.0-dev,libgstreamer1.0-dev,gcc,gfortran,libopenblas-dev,liblapack-dev,libusb-1.0-0-dev,jq,moreutils}
+$STD apt-get install -y {git,ca-certificates,automake,build-essential,xz-utils,libtool,ccache,pkg-config,libgtk-3-dev,libavcodec-dev,libavformat-dev,libswscale-dev,libv4l-dev,libxvidcore-dev,libx264-dev,libjpeg-dev,libpng-dev,libtiff-dev,gfortran,openexr,libatlas-base-dev,libssl-dev,libtbbmalloc2,libtbb-dev,libdc1394-dev,libopenexr-dev,libgstreamer-plugins-base1.0-dev,libgstreamer1.0-dev,gcc,gfortran,libopenblas-dev,liblapack-dev,libusb-1.0-0-dev,jq,moreutils}
 msg_ok "Installed Dependencies"
 
 msg_info "Setup Python3"
@@ -42,10 +42,10 @@ if [[ "$CTTYPE" == "0" ]]; then
 fi
 msg_ok "Set Up Hardware Acceleration"
 
-msg_info "Installing Frigate v0.14.1 (Perseverance)"
+msg_info "Installing Frigate v0.16.0-rc2"
 cd ~
 mkdir -p /opt/frigate/models
-curl -fsSL "https://github.com/blakeblackshear/frigate/archive/refs/tags/v0.14.1.tar.gz" -o "frigate.tar.gz"
+curl -fsSL "https://github.com/blakeblackshear/frigate/archive/refs/tags/v0.16.0-rc2.tar.gz" -o "frigate.tar.gz"
 tar -xzf frigate.tar.gz -C /opt/frigate --strip-components 1
 rm -rf frigate.tar.gz
 cd /opt/frigate
@@ -161,6 +161,8 @@ msg_ok "Installed Coral Object Detection Model"
 
 msg_info "Building Nginx with Custom Modules"
 $STD /opt/frigate/docker/main/build_nginx.sh
+# Although theoriticaly from version 12 debian uses the new debian.sources file format, in practice the contianer does not use this:
+sed -i 's/if \[\[ "\$VERSION_ID" == "12" \]\]; then/if \[\[ "\$VERSION_ID" == "13" \]\]; then/' /opt/frigate/docker/main/build_nginx.sh
 sed -e '/s6-notifyoncheck/ s/^#*/#/' -i /opt/frigate/docker/main/rootfs/etc/s6-overlay/s6-rc.d/nginx/run
 ln -sf /usr/local/nginx/sbin/nginx /usr/local/bin/nginx
 msg_ok "Built Nginx"
@@ -252,6 +254,25 @@ WantedBy=multi-user.target
 EOF
 systemctl enable -q --now nginx
 msg_ok "Configured Services"
+
+msg_info "Setting environmental variables"
+cat <<EOF >>/root/.bashrc
+export TERM='xterm-256color'
+export DEFAULT_FFMPEG_VERSION='7.0'
+export NVIDIA_VISIBLE_DEVICES='all'
+export ENV NVIDIA_DRIVER_CAPABILITIES='compute,video,utility'
+export PATH="/usr/local/go2rtc/bin:/usr/local/tempio/bin:/usr/local/nginx/sbin:${PATH}"
+export TOKENIZERS_PARALLELISM=true
+export TRANSFORMERS_NO_ADVISORY_WARNINGS=1
+export OPENCV_FFMPEG_LOGLEVEL=8
+export HAILORT_LOGGER_PATH=NONE
+export INCLUDED_FFMPEG_VERSIONS="${DEFAULT_FFMPEG_VERSION}:5.0"
+export S6_LOGGING_SCRIPT="T 1 n0 s10000000 T"
+export S6_CMD_WAIT_FOR_SERVICES_MAXTIME=0
+export CCACHE_DIR=/root/.ccache
+export CCACHE_MAXSIZE=2G
+EOF
+msg_ok "Environment set"
 
 motd_ssh
 customize
