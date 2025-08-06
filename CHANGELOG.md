@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - OpenProject: Fix missing apt update [@tremor021](https://github.com/tremor021) ([#6598](https://github.com/community-scripts/ProxmoxVE/pull/6598))
     - fix: update Pulse scripts for v4 Go rewrite support [@rcourtman](https://github.com/rcourtman) ([#6574](https://github.com/community-scripts/ProxmoxVE/pull/6574))
 
   - #### ✨ New Features
