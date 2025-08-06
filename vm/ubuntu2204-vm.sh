@@ -134,36 +134,37 @@ function check_root() {
   fi
 }
 
+# This function checks the version of Proxmox Virtual Environment (PVE) and exits if the version is not supported.
+# Supported: Proxmox VE 8.0.x – 8.9.x and 9.0 (NOT 9.1+)
 pve_check() {
   local PVE_VER
   PVE_VER="$(pveversion | awk -F'/' '{print $2}' | awk -F'-' '{print $1}')"
 
-  # Check for Proxmox VE 8.x
+  # Check for Proxmox VE 8.x: allow 8.0–8.9
   if [[ "$PVE_VER" =~ ^8\.([0-9]+) ]]; then
     local MINOR="${BASH_REMATCH[1]}"
-    if ((MINOR < 1 || MINOR > 4)); then
+    if ((MINOR < 0 || MINOR > 9)); then
       msg_error "This version of Proxmox VE is not supported."
-      echo -e "Required: Proxmox VE version 8.1 – 8.4"
+      msg_error "Supported: Proxmox VE version 8.0 – 8.9"
       exit 1
     fi
     return 0
   fi
 
-  # Check for Proxmox VE 9.x (Beta) — require confirmation
+  # Check for Proxmox VE 9.x: allow ONLY 9.0
   if [[ "$PVE_VER" =~ ^9\.([0-9]+) ]]; then
-    if whiptail --title "Proxmox 9.x Detected (Beta)" \
-      --yesno "You are using Proxmox VE $PVE_VER, which is currently in Beta state.\n\nThis version is experimentally supported.\n\nDo you want to proceed anyway?" 12 70; then
-      msg_ok "Confirmed: Continuing with Proxmox VE $PVE_VER"
-      return 0
-    else
-      msg_error "Aborted by user: Proxmox VE 9.x was not confirmed."
+    local MINOR="${BASH_REMATCH[1]}"
+    if ((MINOR != 0)); then
+      msg_error "This version of Proxmox VE is not yet supported."
+      msg_error "Supported: Proxmox VE version 9.0"
       exit 1
     fi
+    return 0
   fi
 
   # All other unsupported versions
   msg_error "This version of Proxmox VE is not supported."
-  echo -e "Supported versions: Proxmox VE 8.1 – 8.4 or 9.x (Beta, with confirmation)"
+  msg_error "Supported versions: Proxmox VE 8.0 – 8.x or 9.0"
   exit 1
 }
 
