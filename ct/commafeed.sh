@@ -41,19 +41,19 @@ function update_script() {
       msg_ok "Installed Dependencies"
     fi
 
-    msg_info "Backing up existing data"
     if [ -d /opt/commafeed/data ] && [ "$(ls -A /opt/commafeed/data)" ]; then
+      msg_info "Backing up existing data"
       mv /opt/commafeed/data /opt/data.bak
+      msg_ok "Backed up existing data"
     fi
-    msg_ok "Backed up existing data"
 
     fetch_and_deploy_gh_release "commafeed" "Athou/commafeed" "prebuild" "latest" "/opt/commafeed" "commafeed-*-h2-jvm.zip"
 
-    msg_info "Restoring data"
-    if [ -d /opt/data.bak ]; then
+    if [ -d /opt/data.bak ] && [ "$(ls -A /opt/data.bak)" ]; then
+      msg_info "Restoring data"
       mv /opt/data.bak /opt/commafeed/data
+      msg_ok "Restored data"
     fi
-    msg_ok "Restored data"
 
     msg_info "Starting ${APP}"
     systemctl start commafeed
