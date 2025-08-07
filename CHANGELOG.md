@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Commafeed: Fix Backup Handling while Update [@MickLesk](https://github.com/MickLesk) ([#6629](https://github.com/community-scripts/ProxmoxVE/pull/6629))
     - VictoriaMetrics: Fix release fetching [@tremor021](https://github.com/tremor021) ([#6632](https://github.com/community-scripts/ProxmoxVE/pull/6632))
 
   - #### ✨ New Features
