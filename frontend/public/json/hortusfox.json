@@ -1,0 +1,45 @@
+{
+  "name": "HortusFox",
+  "slug": "hortusfox",
+  "categories": [
+    21,
+    26
+  ],
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "date_created": "2025-08-04",
+  "config_path": "/opt/hortusfox/.env",
+  "interface_port": 80,
+  "documentation": "https://github.com/danielbrendel/hortusfox-web",
+  "website": "https://www.hortusfox.com/",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/hortusfox.webp",
+  "description": "HortusFox is a collaborative plant management system for plant enthusiasts. Manage, document and track your entire plant collection – self-hosted and privacy-friendly.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/hortusfox.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 6,
+        "os": "Debian",
+        "version": "12"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": "admin@example.com",
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Initial password is generated and saved in ~/hortusfox.creds after install.",
+      "type": "info"
+    },
+    {
+      "text": "After installation, access the web UI on http://<CT-IP>/ and log in as admin@example.com with the generated password.",
+      "type": "info"
+    }
+  ]
+}
