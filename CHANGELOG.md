@@ -23,6 +23,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Feature: Clean-LXC now supports Alpine based containers [@MickLesk](https://github.com/MickLesk) ([#6628](https://github.com/community-scripts/ProxmoxVE/pull/6628))
 
+  - #### 🔧 Refactor
+
+    - Refactor: Paymenter [@tremor021](https://github.com/tremor021) ([#6589](https://github.com/community-scripts/ProxmoxVE/pull/6589))
+
 ## 2025-08-06
 
 ### 🚀 Updated Scripts
