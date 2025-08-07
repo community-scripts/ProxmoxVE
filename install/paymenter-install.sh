@@ -16,9 +16,6 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
   git \
-  software-properties-common \
-  apt-transport-https \
-  ca-certificates \
   nginx \
   redis-server
 msg_ok "Installed Dependencies"
