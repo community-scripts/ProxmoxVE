@@ -1,5 +1,60 @@
 [
   {
+    "name": "rcourtman/Pulse",
+    "version": "v4.0.9",
+    "date": "2025-08-07T10:04:38Z"
+  },
+  {
+    "name": "syncthing/syncthing",
+    "version": "v1.30.0",
+    "date": "2025-07-01T11:29:11Z"
+  },
+  {
+    "name": "glpi-project/glpi",
+    "version": "10.0.19",
+    "date": "2025-07-16T09:45:14Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "server/public/v0.1.16",
+    "date": "2025-07-28T22:46:46Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.2.7",
+    "date": "2025-08-07T08:19:29Z"
+  },
+  {
+    "name": "crowdsecurity/crowdsec",
+    "version": "v1.6.11",
+    "date": "2025-07-22T12:11:38Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2235",
+    "date": "2025-08-07T05:48:41Z"
+  },
+  {
+    "name": "cloudreve/cloudreve",
+    "version": "4.4.1",
+    "date": "2025-08-07T04:25:37Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.21",
+    "date": "2025-07-17T04:46:25Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.11.4-rc0",
+    "date": "2025-08-07T02:02:23Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
     "name": "influxdata/influxdb",
     "version": "v1.12.2rc2",
     "date": "2025-08-06T23:12:18Z"
@@ -8,11 +63,6 @@
     "name": "mongodb/mongo",
     "version": "r8.2.0-rc3",
     "date": "2025-08-06T22:48:18Z"
-  },
-  {
-    "name": "rcourtman/Pulse",
-    "version": "v4.0.8",
-    "date": "2025-08-06T22:04:29Z"
   },
   {
     "name": "fallenbagel/jellyseerr",
@@ -43,11 +93,6 @@
     "name": "msgbyte/tianji",
     "version": "v1.24.12",
     "date": "2025-08-06T18:42:07Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.21",
-    "date": "2025-07-17T04:46:25Z"
   },
   {
     "name": "home-assistant/core",
@@ -110,11 +155,6 @@
     "date": "2025-08-06T06:30:07Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2233",
-    "date": "2025-08-06T05:56:01Z"
-  },
-  {
     "name": "garethgeorge/backrest",
     "version": "v1.9.1",
     "date": "2025-08-06T05:48:33Z"
@@ -130,24 +170,9 @@
     "date": "2025-06-26T22:08:00Z"
   },
   {
-    "name": "ollama/ollama",
-    "version": "v0.11.3",
-    "date": "2025-08-06T01:29:59Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
-  },
-  {
     "name": "autobrr/autobrr",
     "version": "v1.65.0",
     "date": "2025-08-05T21:12:35Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.0.14",
-    "date": "2025-08-01T11:29:12Z"
   },
   {
     "name": "HabitRPG/habitica",
@@ -190,11 +215,6 @@
     "date": "2025-08-05T12:08:49Z"
   },
   {
-    "name": "cloudreve/cloudreve",
-    "version": "4.4.0",
-    "date": "2025-08-05T11:51:08Z"
-  },
-  {
     "name": "semaphoreui/semaphore",
     "version": "v2.15.5",
     "date": "2025-08-05T11:49:45Z"
@@ -225,11 +245,6 @@
     "date": "2025-08-05T07:41:04Z"
   },
   {
-    "name": "mattermost/mattermost",
-    "version": "server/public/v0.1.16",
-    "date": "2025-07-28T22:46:46Z"
-  },
-  {
     "name": "rogerfar/rdt-client",
     "version": "v2.0.116",
     "date": "2025-08-05T04:45:21Z"
@@ -246,8 +261,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-08-04T18:08:42Z"
+    "version": "v4.3.0",
+    "date": "2025-07-05T12:14:52Z"
   },
   {
     "name": "Dolibarr/dolibarr",
@@ -430,11 +445,6 @@
     "date": "2025-08-01T12:43:17Z"
   },
   {
-    "name": "crowdsecurity/crowdsec",
-    "version": "v1.6.11",
-    "date": "2025-07-22T12:11:38Z"
-  },
-  {
     "name": "zwave-js/zwave-js-ui",
     "version": "v11.0.1",
     "date": "2025-08-01T07:43:59Z"
@@ -516,7 +526,7 @@
   },
   {
     "name": "wazuh/wazuh",
-    "version": "coverity-w31-4.13.0",
+    "version": "coverity-w32-4.13.0",
     "date": "2025-07-30T08:30:15Z"
   },
   {
@@ -613,11 +623,6 @@
     "name": "grokability/snipe-it",
     "version": "v8.2.1",
     "date": "2025-07-24T14:37:54Z"
-  },
-  {
-    "name": "glpi-project/glpi",
-    "version": "10.0.19",
-    "date": "2025-07-16T09:45:14Z"
   },
   {
     "name": "minio/minio",
@@ -843,11 +848,6 @@
     "name": "slskd/slskd",
     "version": "0.23.1",
     "date": "2025-07-06T23:57:52Z"
-  },
-  {
-    "name": "syncthing/syncthing",
-    "version": "v1.30.0",
-    "date": "2025-07-01T11:29:11Z"
   },
   {
     "name": "Part-DB/Part-DB-server",
