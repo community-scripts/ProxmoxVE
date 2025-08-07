@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-08-07
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - VictoriaMetrics: Fix release fetching [@tremor021](https://github.com/tremor021) ([#6632](https://github.com/community-scripts/ProxmoxVE/pull/6632))
+
 ## 2025-08-06
 
 ### 🚀 Updated Scripts
