@@ -40,16 +40,20 @@ function update_script() {
       $STD apt-get install -y rsync
       msg_ok "Installed Dependencies"
     fi
+
+    msg_info "Backing up existing data"
     if [ -d /opt/commafeed/data ] && [ "$(ls -A /opt/commafeed/data)" ]; then
       mv /opt/commafeed/data /opt/data.bak
     fi
+    msg_ok "Backed up existing data"
+
     fetch_and_deploy_gh_release "commafeed" "Athou/commafeed" "prebuild" "latest" "/opt/commafeed" "commafeed-*-h2-jvm.zip"
-    
-    msg_info "Updating ${APP} to ${RELEASE}"
-    if [ -d /opt/commafeed/data.bak ] && [ "$(ls -A /opt/commafeed/data.bak)" ]; then
-      mv /opt/commafeed/data.bak /opt/commafeed/data
+
+    msg_info "Restoring data"
+    if [ -d /opt/data.bak ]; then
+      mv /opt/data.bak /opt/commafeed/data
     fi
-    msg_ok "Updated ${APP} to ${RELEASE}"
+    msg_ok "Restored data"
 
     msg_info "Starting ${APP}"
     systemctl start commafeed
