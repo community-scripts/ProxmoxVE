@@ -21,6 +21,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - Feature: Post-PVE-Script (PVE9 Support + some Features) [@MickLesk](https://github.com/MickLesk) ([#6626](https://github.com/community-scripts/ProxmoxVE/pull/6626))
     - Feature: Clean-LXC now supports Alpine based containers [@MickLesk](https://github.com/MickLesk) ([#6628](https://github.com/community-scripts/ProxmoxVE/pull/6628))
 
   - #### 🔧 Refactor
