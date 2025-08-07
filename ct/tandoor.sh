@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
+# Copyright (c) 2021-2025 community-scripts ORG
 # Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://tandoor.dev/
@@ -27,27 +27,57 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  #if ! [[ $(dpkg -s python3-xmlsec 2>/dev/null) ]]; then
-    #$STD apt-get update
-    #$STD apt-get install -y python3-xmlsec
-  #fi
-  #if cd /opt/tandoor && git pull | grep -q 'Already up to date'; then
-    msg_ok "There is currently no update available."
-  #else
-    #msg_info "Updating ${APP} (Patience)"
-    #export $(cat /opt/tandoor/.env | grep "^[^#]" | xargs)
-    #cd /opt/tandoor/
-    #$STD pip3 install -r requirements.txt
-    #$STD /usr/bin/python3 /opt/tandoor/manage.py migrate
-    #$STD /usr/bin/python3 /opt/tandoor/manage.py collectstatic --no-input
-    #$STD /usr/bin/python3 /opt/tandoor/manage.py collectstatic_js_reverse
-    #cd /opt/tandoor/vue
-    #$STD yarn install
-    #$STD yarn build
-    #cd /opt/tandoor
-    #$STD python3 version.py
-    #systemctl restart gunicorn_tandoor
-    #msg_ok "Updated ${APP}"
+
+  if [[ ! -f ~/.tandoor ]]; then
+    msg_error "v1 Installation found, please export your data and create an new LXC."
+    exit
+  fi
+
+  RELEASE=$(curl -fsSL https://api.github.com/repos/TandoorRecipes/recipes/releases/latest | jq -r '.tag_name' | sed 's/^v//')
+  if [[ "${RELEASE}" != "$(cat ~/.tandoor 2>/dev/null)" ]] || [[ ! -f ~/.tandoor ]]; then
+    msg_info "Stopping $APP"
+    systemctl stop tandoor
+    msg_ok "Stopped $APP"
+
+    msg_info "Creating Backup"
+    mv /opt/tandoor /opt/tandoor.bak
+    msg_ok "Backup Created"
+
+    NODE_VERSION="20" NODE_MODULE="yarn" setup_nodejs
+    PYTHON_VERSION="3.13" setup_uv
+    fetch_and_deploy_gh_release "tandoor" "TandoorRecipes/recipes" "tarball" "latest" "/opt/tandoor"
+
+    msg_info "Updating $APP to ${RELEASE}"
+    cp -r /opt/tandoor.bak/{config,api,mediafiles,staticfiles} /opt/tandoor/
+    mv /opt/.env /opt/tandoor/.env
+    cd /opt/tandoor
+    $STD uv venv .venv --python=python3
+    $STD uv pip install -r requirements.txt --python .venv/bin/python
+    cd /opt/tandoor/vue3
+    $STD yarn install
+    $STD yarn build
+    TANDOOR_VERSION="$(curl -fsSL https://api.github.com/repos/TandoorRecipes/recipes/releases/latest | jq -r .tag_name)"
+    cat <<EOF >/opt/tandoor/cookbook/version_info.py
+TANDOOR_VERSION = "$TANDOOR_VERSION"
+TANDOOR_REF = "bare-metal"
+VERSION_INFO = []
+EOF
+    cd /opt/tandoor
+    $STD /opt/tandoor/.venv/bin/python manage.py migrate
+    $STD /opt/tandoor/.venv/bin/python manage.py collectstatic --no-input
+    msg_ok "Updated $APP to ${RELEASE}"
+
+    msg_info "Starting $APP"
+    systemctl start tandoor
+    systemctl reload nginx
+    msg_ok "Started $APP"
+
+    msg_info "Cleaning Up"
+    rm -rf /opt/tandoor.bak
+    msg_ok "Cleanup Completed"
+    msg_ok "Update Successful"
+  else
+    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }
