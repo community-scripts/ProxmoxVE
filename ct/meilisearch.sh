@@ -24,10 +24,6 @@ function update_script() {
   check_container_storage
   check_container_resources
 
-  if [[ ! -d /opt/meilisearch ]]; then
-    msg_error "No Meilisearch Installation Found!"
-    exit
-  fi
   UPD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "Meilisearch Update" --radiolist --cancel-button Exit-Script "Spacebar = Select" 10 58 2 \
     "1" "Update Meilisearch" ON \
     "2" "Update Meilisearch-UI" OFF \
