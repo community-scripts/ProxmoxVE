@@ -61,9 +61,9 @@ function update_script() {
     $STD pnpm db:migrate:apply
     msg_ok "Updated ${APP}"
 
-    msg_info "Update AppRise"
+    msg_info "Updating AppRise"
     $STD uv pip install apprise cryptography --system
-    msg_ok "Update AppRise"
+    msg_ok "Updated AppRise"
 
     msg_info "Starting ${APP}"
     systemctl start tianji
