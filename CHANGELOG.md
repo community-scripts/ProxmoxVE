@@ -36,6 +36,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - IP Tag: Allow installation on PVE 9.x [@webhdx](https://github.com/webhdx) ([#6679](https://github.com/community-scripts/ProxmoxVE/pull/6679))
 
+  - #### 🔧 Refactor
+
+    - Refactor: Kometa [@MickLesk](https://github.com/MickLesk) ([#6673](https://github.com/community-scripts/ProxmoxVE/pull/6673))
+
 ## 2025-08-07
 
 ### 🚀 Updated Scripts
