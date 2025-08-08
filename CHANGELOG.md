@@ -25,6 +25,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Unifi: Update libssl dependency [@tremor021](https://github.com/tremor021) ([#6680](https://github.com/community-scripts/ProxmoxVE/pull/6680))
     - HomeBox: Fix checking for existing install [@tremor021](https://github.com/tremor021) ([#6677](https://github.com/community-scripts/ProxmoxVE/pull/6677))
     - Immich: unpin libvips revision [@vhsdream](https://github.com/vhsdream) ([#6669](https://github.com/community-scripts/ProxmoxVE/pull/6669))
     - Meilisearch: fix wrong path switch [@MickLesk](https://github.com/MickLesk) ([#6668](https://github.com/community-scripts/ProxmoxVE/pull/6668))
