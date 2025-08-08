@@ -250,7 +250,7 @@ setup_mariadb() {
   fi
 
   msg_info "Setting up MariaDB $MARIADB_VERSION"
-  # grab dynamic latest LTS version
+  # Grab dynamic latest LTS version
   if [[ "$MARIADB_VERSION" == "latest" ]]; then
     MARIADB_VERSION=$(curl -fsSL http://mirror.mariadb.org/repo/ |
       grep -Eo '[0-9]+\.[0-9]+\.[0-9]+/' |
@@ -293,7 +293,17 @@ setup_mariadb() {
     >/etc/apt/sources.list.d/mariadb.list
 
   $STD apt-get update
-  $STD apt-get install -y mariadb-server mariadb-client
+
+  local MARIADB_MAJOR_MINOR
+  MARIADB_MAJOR_MINOR=$(echo "$MARIADB_VERSION" | awk -F. '{print $1"."$2}')
+  if [[ -n "$MARIADB_MAJOR_MINOR" ]]; then
+    echo "mariadb-server-$MARIADB_MAJOR_MINOR mariadb-server/feedback boolean false" | debconf-set-selections
+  else
+    for ver in 12.1 12.0 11.4 11.3 11.2 11.1 11.0 10.11 10.6 10.5 10.4 10.3; do
+      echo "mariadb-server-$ver mariadb-server/feedback boolean false" | debconf-set-selections
+    done
+  fi
+  DEBIAN_FRONTEND=noninteractive $STD apt-get install -y mariadb-server mariadb-client
 
   msg_ok "Setup MariaDB $MARIADB_VERSION"
 }
