@@ -37,13 +37,14 @@ function update_script() {
     cp /opt/palmr/apps/server/.env /opt/palmr.env
     rm -rf /opt/palmr
     fetch_and_deploy_gh_release "Palmr" "kyantech/Palmr" "tarball" "latest" "/opt/palmr"
-    msg_info "Updating ${APP}"
+    
     PNPM="$(jq -r '.packageManager' /opt/palmr/package.json)"
     NODE_VERSION="20" NODE_MODULE="$PNPM" setup_nodejs
+    
+    msg_info "Updating ${APP}"
     cd /opt/palmr/apps/server
-    PALMR_DIR="/opt/palmr_data"
+    mv /opt/palmr.env /opt/palmr/apps/server/.env
     $STD pnpm install
-    mv /opt/palmr.env ./.env
     $STD pnpm dlx prisma generate
     $STD pnpm dlx prisma migrate deploy
     $STD pnpm dlx prisma db push
@@ -55,7 +56,7 @@ function update_script() {
     mv ./.env.example ./.env
     $STD pnpm install
     $STD pnpm build
-    chown -R palmr:palmr "$PALMR_DIR" /opt/palmr
+    chown -R palmr:palmr /opt/palmr_data /opt/palmr
     msg_ok "Updated $APP"
 
     msg_info "Starting Services"
