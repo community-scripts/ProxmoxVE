@@ -20,29 +20,38 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /opt/archivebox ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    msg_info "Stopping ${APP}"
-    systemctl stop archivebox
-    msg_ok "Stopped ${APP}"
-
-    msg_info "Updating ${APP}"
-    cd /opt/archivebox/data
-    pip install --upgrade --ignore-installed archivebox
-    sudo -u archivebox archivebox init
-    msg_ok "Updated ${APP}"
-
-    msg_info "Starting ${APP}"
-    systemctl start archivebox
-    msg_ok "Started ${APP}"
-
-    msg_ok "Updated Successfully"
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /opt/archivebox ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+
+  NODE_VERSION="22" setup_nodejs
+  PYTHON_VERSION="3.13" setup_uv
+
+  msg_info "Stopping ArchiveBox"
+  systemctl stop archivebox
+  msg_ok "Stopped ArchiveBox"
+
+  msg_info "Upgrading Playwright"
+  $STD uv pip install playwright --system
+  $STD playwright install-deps chromium
+  msg_ok "Upgraded Playwright"
+
+  msg_info "Updating ArchiveBox"
+  cd /opt/archivebox/data
+  uv --system pip install --upgrade --ignore-installed archivebox
+  sudo -u archivebox archivebox init
+  msg_ok "Updated ArchiveBox"
+
+  msg_info "Starting ArchiveBox"
+  systemctl start archivebox
+  msg_ok "Started ArchiveBox"
+
+  msg_ok "Updated Successfully"
+  exit
 }
 
 start
