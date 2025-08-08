@@ -14,7 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - HortusFox ([#6641](https://github.com/community-scripts/ProxmoxVE/pull/6641))
+  - Palmr ([#6642](https://github.com/community-scripts/ProxmoxVE/pull/6642))
+- HortusFox ([#6641](https://github.com/community-scripts/ProxmoxVE/pull/6641))
 
 ### 🚀 Updated Scripts
 
