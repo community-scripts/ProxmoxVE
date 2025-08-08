@@ -19,10 +19,6 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
-  - Refactor: ArchiveBox [@MickLesk](https://github.com/MickLesk) ([#6670](https://github.com/community-scripts/ProxmoxVE/pull/6670))
-- Refactor: Alpine IT-Tools [@tremor021](https://github.com/tremor021) ([#6579](https://github.com/community-scripts/ProxmoxVE/pull/6579))
-- Feature: FSTrim (Filesystem Trim) - Log / LVM Check / ZFS [@MickLesk](https://github.com/MickLesk) ([#6660](https://github.com/community-scripts/ProxmoxVE/pull/6660))
-
   - #### 🐞 Bug Fixes
 
     - Unifi: Update libssl dependency [@tremor021](https://github.com/tremor021) ([#6680](https://github.com/community-scripts/ProxmoxVE/pull/6680))
@@ -34,10 +30,13 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - Feature: FSTrim (Filesystem Trim) - Log / LVM Check / ZFS [@MickLesk](https://github.com/MickLesk) ([#6660](https://github.com/community-scripts/ProxmoxVE/pull/6660))
     - IP Tag: Allow installation on PVE 9.x [@webhdx](https://github.com/webhdx) ([#6679](https://github.com/community-scripts/ProxmoxVE/pull/6679))
 
   - #### 🔧 Refactor
 
+    - Refactor: Alpine IT-Tools [@tremor021](https://github.com/tremor021) ([#6579](https://github.com/community-scripts/ProxmoxVE/pull/6579))
+    - Refactor: ArchiveBox [@MickLesk](https://github.com/MickLesk) ([#6670](https://github.com/community-scripts/ProxmoxVE/pull/6670))
     - Refactor: Bazarr [@MickLesk](https://github.com/MickLesk) ([#6663](https://github.com/community-scripts/ProxmoxVE/pull/6663))
     - Refactor: Kometa [@MickLesk](https://github.com/MickLesk) ([#6673](https://github.com/community-scripts/ProxmoxVE/pull/6673))
 
