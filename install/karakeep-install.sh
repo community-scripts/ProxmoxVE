@@ -69,7 +69,7 @@ cat <<EOF >/etc/karakeep/karakeep.env
 SERVER_VERSION="$(cat ~/.karakeep)"
 NEXTAUTH_SECRET="$karakeep_SECRET"
 NEXTAUTH_URL="http://localhost:3000"
-DATA_DIR="$DATA_DIR"
+DATA_DIR=${DATA_DIR}
 MEILI_ADDR="http://127.0.0.1:7700"
 MEILI_MASTER_KEY="$MASTER_KEY"
 BROWSER_WEB_URL="http://127.0.0.1:9222"

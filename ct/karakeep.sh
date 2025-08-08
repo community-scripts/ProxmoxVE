@@ -78,7 +78,7 @@ function update_script() {
   cd /opt/karakeep/apps/cli
   $STD pnpm install --frozen-lockfile
   $STD pnpm build
-  DATA_DIR="$(sed -n '/^DATA_DIR/p' /etc/karakeep/karakeep.env | awk -F= '{print $2}')"
+  DATA_DIR="$(sed -n '/^DATA_DIR/p' /etc/karakeep/karakeep.env | awk -F= '{print $2}' | tr -d '="=')"
   export DATA_DIR="${DATA_DIR:-/opt/karakeep_data}"
   cd /opt/karakeep/packages/db
   $STD pnpm migrate
