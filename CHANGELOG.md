@@ -19,10 +19,11 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
-  - MariaDB: fix "feedback" (statistical informations) whiptail  [@MickLesk](https://github.com/MickLesk) ([#6657](https://github.com/community-scripts/ProxmoxVE/pull/6657))
+  - Feature: FSTrim (Filesystem Trim) - Log / LVM Check / ZFS [@MickLesk](https://github.com/MickLesk) ([#6660](https://github.com/community-scripts/ProxmoxVE/pull/6660))
 
   - #### 🐞 Bug Fixes
 
+    - MariaDB: fix "feedback" (statistical informations) whiptail  [@MickLesk](https://github.com/MickLesk) ([#6657](https://github.com/community-scripts/ProxmoxVE/pull/6657))
     - Karakeep: workaround/fix for #6593 [@vhsdream](https://github.com/vhsdream) ([#6648](https://github.com/community-scripts/ProxmoxVE/pull/6648))
 
 ## 2025-08-07
