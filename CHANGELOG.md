@@ -24,6 +24,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Immich: unpin libvips revision [@vhsdream](https://github.com/vhsdream) ([#6669](https://github.com/community-scripts/ProxmoxVE/pull/6669))
     - Meilisearch: fix wrong path switch [@MickLesk](https://github.com/MickLesk) ([#6668](https://github.com/community-scripts/ProxmoxVE/pull/6668))
     - MariaDB: fix "feedback" (statistical informations) whiptail  [@MickLesk](https://github.com/MickLesk) ([#6657](https://github.com/community-scripts/ProxmoxVE/pull/6657))
     - Karakeep: workaround/fix for #6593 [@vhsdream](https://github.com/vhsdream) ([#6648](https://github.com/community-scripts/ProxmoxVE/pull/6648))
