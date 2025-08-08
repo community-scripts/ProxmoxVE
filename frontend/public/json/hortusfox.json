@@ -2,13 +2,12 @@
   "name": "HortusFox",
   "slug": "hortusfox",
   "categories": [
-    21,
-    26
+    24
   ],
   "type": "ct",
   "updateable": true,
   "privileged": false,
-  "date_created": "2025-08-04",
+  "date_created": "2025-08-08",
   "config_path": "/opt/hortusfox/.env",
   "interface_port": 80,
   "documentation": "https://github.com/danielbrendel/hortusfox-web",
@@ -22,23 +21,19 @@
       "resources": {
         "cpu": 2,
         "ram": 2048,
-        "hdd": 6,
+        "hdd": 5,
         "os": "Debian",
         "version": "12"
       }
     }
   ],
   "default_credentials": {
-    "username": "admin@example.com",
+    "username": null,
     "password": null
   },
   "notes": [
     {
-      "text": "Initial password is generated and saved in ~/hortusfox.creds after install.",
-      "type": "info"
-    },
-    {
-      "text": "After installation, access the web UI on http://<CT-IP>/ and log in as admin@example.com with the generated password.",
+      "text": "Login Credentials : `cat ~/hortusfox.creds`",
       "type": "info"
     }
   ]
