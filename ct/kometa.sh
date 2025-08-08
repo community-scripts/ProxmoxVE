@@ -20,51 +20,46 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
+  header_info
+  check_container_storage
+  check_container_resources
 
-    if [[ ! -f "/opt/kometa/kometa.py" ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    RELEASE=$(curl -fsSL https://api.github.com/repos/Kometa-Team/Kometa/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-    if [[ "${RELEASE}" != "$(cat /opt/kometa_version.txt)" ]] || [[ ! -f /opt/kometa_version.txt ]]; then
-        msg_info "Updating $APP"
-        msg_info "Stopping $APP"
-        systemctl stop kometa
-        msg_ok "Stopped $APP"
-
-        msg_info "Updating $APP to ${RELEASE}"
-        cd /tmp
-        temp_file=$(mktemp)
-        RELEASE=$(curl -fsSL https://api.github.com/repos/Kometa-Team/Kometa/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/Kometa-Team/Kometa/archive/refs/tags/v${RELEASE}.tar.gz" -o ""$temp_file""
-        tar -xzf "$temp_file"
-        cp /opt/kometa/config/config.yml /opt
-        rm -rf /opt/kometa
-        mv Kometa-${RELEASE} /opt/kometa
-        cd /opt/kometa
-        rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
-        $STD pip install -r requirements.txt --ignore-installed
-        mkdir -p config/assets
-        cp /opt/config.yml config/config.yml
-        echo "${RELEASE}" >/opt/kometa_version.txt
-        msg_ok "Updated $APP to ${RELEASE}"
-
-        msg_info "Starting $APP"
-        systemctl start kometa
-        msg_ok "Started $APP"
-
-        msg_info "Cleaning Up"
-        rm -f $temp_file
-        msg_ok "Cleanup Completed"
-
-        msg_ok "Update Successful"
-    else
-        msg_ok "No update required. ${APP} is already at ${RELEASE}"
-    fi
+  if [[ ! -d "/opt/kometa" ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+  if ! command -v jq &>/dev/null; then
+    $STD apt-get install -y jq
+  fi
+
+  RELEASE=$(curl -fsSL https://api.github.com/repos/Kometa-Team/Kometa/releases/latest | jq -r '.tag_name | sub("^v";"")')
+  if [[ "${RELEASE}" != "$(cat ~/.kometa 2>/dev/null)" ]] || [[ ! -f ~/.kometa ]]; then
+    msg_info "Stopping Service"
+    systemctl stop kometa
+    msg_ok "Stopped Service"
+
+    msg_info "Backing up data"
+    cp /opt/kometa/config/config.yml /opt
+    msg_ok "Backup completed"
+
+    PYTHON_VERSION="3.12" setup_uv
+    $STD uv python update-shell
+    fetch_and_deploy_gh_release "kometa" "Kometa-Team/Kometa"
+
+    msg_info "Updating Kometa"
+    $STD uv pip install -r requirements.txt --system
+    mkdir -p config/assets
+    cp /opt/config.yml config/config.yml
+    msg_ok "Updated Kometa"
+
+    msg_info "Starting Service"
+    systemctl start kometa
+    msg_ok "Started Service"
+    msg_ok "Update Successful"
+  else
+    msg_ok "No update required. ${APP} is already at v${RELEASE}"
+  fi
+  exit
 }
 
 start

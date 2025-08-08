@@ -13,25 +13,18 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Setup Python 3"
-$STD apt-get install python3-pip -y
-rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
-msg_ok "Setup Python 3"
+PYTHON_VERSION="3.12" setup_uv
+$STD uv python update-shell
+fetch_and_deploy_gh_release "kometa" "Kometa-Team/Kometa"
 
 msg_info "Setup Kometa"
-temp_file=$(mktemp)
-RELEASE=$(curl -fsSL https://api.github.com/repos/Kometa-Team/Kometa/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/Kometa-Team/Kometa/archive/refs/tags/v${RELEASE}.tar.gz" -o """$temp_file"""
-tar -xzf "$temp_file"
-mv Kometa-"${RELEASE}" /opt/kometa
 cd /opt/kometa
-$STD pip install -r requirements.txt --ignore-installed
+$STD uv pip install -r requirements.txt --system
 mkdir -p config/assets
 cp config/config.yml.template config/config.yml
-echo "${RELEASE}" >/opt/kometa_version.txt
 msg_ok "Setup Kometa"
 
-read -p "${TAB3}nter your TMDb API key: " TMDBKEY
+read -p "${TAB3}Enter your TMDb API key: " TMDBKEY
 read -p "${TAB3}Enter your Plex URL: " PLEXURL
 read -p "${TAB3}Enter your Plex token: " PLEXTOKEN
 sed -i -e "s#url: http://192.168.1.12:32400#url: $PLEXURL #g" /opt/kometa/config/config.yml
@@ -54,14 +47,13 @@ RestartSec=30
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable --now -q kometa
+systemctl enable -q --now kometa
 msg_ok "Created Service"
 
 motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -f "$temp_file"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
