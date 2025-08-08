@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apk add nginx
+$STD apk add --no-cache nginx 
 msg_ok "Installed Dependencies"
 
 msg_info "Installing IT-Tools"
@@ -37,7 +37,7 @@ server {
 EOF
 $STD rc-update add nginx default
 $STD rc-service nginx start
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
+echo "${RELEASE}" >/opt/"${APPLICATION}"_version.txt
 msg_ok "Installed IT-Tools"
 
 motd_ssh
