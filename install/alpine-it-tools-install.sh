@@ -14,7 +14,9 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apk add --no-cache nginx 
+$STD apk add --no-cache \
+  nginx \
+  python3
 msg_ok "Installed Dependencies"
 
 msg_info "Installing IT-Tools"
