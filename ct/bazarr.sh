@@ -20,20 +20,36 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /var/lib/bazarr/ ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    msg_info "Updating $APP LXC"
-    $STD apt-get update
-    $STD apt-get -y upgrade
-    msg_ok "Updated $APP LXC"
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /var/lib/bazarr/ ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
-}
+  fi
 
+  if ! command -v jq &>/dev/null; then
+    $STD apt-get install -y jq
+  fi
+
+  RELEASE=$(curl -fsSL https://api.github.com/repos/morpheus65535/bazarr/releases/latest | jq -r '.tag_name' | sed 's/^v//')
+  if [[ "${RELEASE}" != "$(cat ~/.bazarr 2>/dev/null)" ]] || [[ ! -f ~/.bazarr ]]; then
+
+    PYTHON_VERSION="3.13" setup_uv
+    fetch_and_deploy_gh_release "bazarr" "morpheus65535/bazarr" "prebuild" "latest" "/opt/bazarr" "bazarr.zip"
+
+    msg_info "Setup Bazarr"
+    mkdir -p /var/lib/bazarr/
+    chmod 775 /opt/bazarr /var/lib/bazarr/
+    $STD uv pip install -r /opt/bazarr/requirements.txt --system
+    msg_ok "Setup Bazarr"
+
+    msg_ok "Update Successful"
+  else
+    msg_ok "No update required. ${APP} is already at v${RELEASE}"
+  fi
+  exit
+}
 start
 build_container
 description
