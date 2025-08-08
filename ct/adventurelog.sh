@@ -36,10 +36,7 @@ function update_script() {
     msg_ok "Services Stopped"
 
     msg_info "Backup Old Installation"
-    mkdir -p /opt/adventurelog-backup
-    cp /opt/adventurelog/backend/server/.env /opt/adventurelog-backup/backend/server/.env
-    cp -r /opt/adventurelog/backend/server/media /opt/adventurelog-backup/backend/server/media
-    cp /opt/adventurelog/frontend/.env /opt/adventurelog-backup/frontend/.env
+    cp -r /opt/adventurelog /opt/adventurelog-backup
     msg_ok "Backup done"
 
     fetch_and_deploy_gh_release "adventurelog" "seanmorley15/adventurelog"
