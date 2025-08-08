@@ -54,13 +54,13 @@ $STD composer install --no-dev --optimize-autoloader
 msg_ok "Composer dependencies installed"
 
 msg_info "Running DB migration"
-php asatru migrate:fresh
+$STD php asatru migrate:fresh
 msg_ok "Migration finished"
 
 msg_info "Setting up HortusFox"
 $STD mariadb -u root -D $DB_NAME -e "INSERT IGNORE INTO AppModel (workspace, language, created_at) VALUES ('Default Workspace', 'en', NOW());"
-php asatru plants:attributes
-php asatru calendar:classes
+$STD php asatru plants:attributes
+$STD php asatru calendar:classes
 ADMIN_EMAIL="admin@example.com"
 ADMIN_PASS="$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)"
 ADMIN_HASH=$(php -r "echo password_hash('$ADMIN_PASS', PASSWORD_BCRYPT);")
