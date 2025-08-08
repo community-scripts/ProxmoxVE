@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-08-08
 
+### 🆕 New Scripts
+
+  - HortusFox ([#6641](https://github.com/community-scripts/ProxmoxVE/pull/6641))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
