@@ -19,7 +19,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
-  - Refactor: Alpine IT-Tools [@tremor021](https://github.com/tremor021) ([#6579](https://github.com/community-scripts/ProxmoxVE/pull/6579))
+  - Refactor: ArchiveBox [@MickLesk](https://github.com/MickLesk) ([#6670](https://github.com/community-scripts/ProxmoxVE/pull/6670))
+- Refactor: Alpine IT-Tools [@tremor021](https://github.com/tremor021) ([#6579](https://github.com/community-scripts/ProxmoxVE/pull/6579))
 - Feature: FSTrim (Filesystem Trim) - Log / LVM Check / ZFS [@MickLesk](https://github.com/MickLesk) ([#6660](https://github.com/community-scripts/ProxmoxVE/pull/6660))
 
   - #### 🐞 Bug Fixes
