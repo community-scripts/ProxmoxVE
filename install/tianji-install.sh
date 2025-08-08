@@ -21,9 +21,7 @@ $STD apt-get install -y \
   g++ \
   build-essential \
   git \
-  make \
-  ca-certificates \
-  jq
+  ca-certificates
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" NODE_MODULE="pnpm@$(curl -s https://raw.githubusercontent.com/msgbyte/tianji/master/package.json | jq -r '.packageManager | split("@")[1]')" setup_nodejs
@@ -39,27 +37,25 @@ $STD sudo -u postgres psql -c "CREATE USER $DB_USER WITH PASSWORD '$DB_PASS';"
 $STD sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE $DB_NAME TO $DB_USER;"
 $STD sudo -u postgres psql -c "ALTER DATABASE $DB_NAME OWNER TO $DB_USER;"
 $STD sudo -u postgres psql -c "ALTER USER $DB_USER WITH SUPERUSER;"
-echo "" >>~/tianji.creds
-echo -e "Tianji Database User: $DB_USER" >>~/tianji.creds
-echo -e "Tianji Database Password: $DB_PASS" >>~/tianji.creds
-echo -e "Tianji Database Name: $DB_NAME" >>~/tianji.creds
-echo -e "Tianji Secret: $TIANJI_SECRET" >>~/tianji.creds
+{
+  echo ""
+  echo "Database User: $DB_USER"
+  echo "Database Password: $DB_PASS"
+  echo "Database Name: $DB_NAME"
+  echo "Tianji Secret: $TIANJI_SECRET"
+} >>~/tianji.creds
 msg_ok "Set up PostgreSQL"
 
-msg_info "Installing Tianji (Extreme Patience)"
-cd /opt
-RELEASE=$(curl -fsSL https://api.github.com/repos/msgbyte/tianji/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/msgbyte/tianji/archive/refs/tags/v${RELEASE}.zip" -o "v${RELEASE}.zip"
-$STD unzip v${RELEASE}.zip
-mv tianji-${RELEASE} /opt/tianji
-cd tianji
+fetch_and_deploy_gh_release "tianji" "msgbyte/tianji"
+
+msg_info "Setup Tianji"
+cd /opt/tianji
 $STD pnpm install --filter @tianji/client... --config.dedupe-peer-dependents=false --frozen-lockfile
 $STD pnpm build:static
 $STD pnpm install --filter @tianji/server... --config.dedupe-peer-dependents=false
 mkdir -p ./src/server/public
 cp -r ./geo ./src/server/public
 $STD pnpm build:server
-echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 cat <<EOF >/opt/tianji/src/server/.env
 DATABASE_URL="postgresql://$DB_USER:$DB_PASS@localhost:5432/$DB_NAME?schema=public"
 OPENAI_API_KEY=""
@@ -67,7 +63,11 @@ JWT_SECRET="$TIANJI_SECRET"
 EOF
 cd /opt/tianji/src/server
 $STD pnpm db:migrate:apply
-msg_ok "Installed Tianji"
+msg_ok "Setup Tianji"
+
+msg_info "Setup AppRise"
+$STD uv pip install apprise cryptography --system
+msg_ok "Setup AppRise"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/tianji.service
@@ -93,7 +93,6 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -R /opt/v${RELEASE}.zip
 rm -rf /opt/tianji/src/client
 rm -rf /opt/tianji/website
 rm -rf /opt/tianji/reporter

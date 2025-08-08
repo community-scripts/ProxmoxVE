@@ -29,33 +29,26 @@ function update_script() {
   if ! command -v jq &>/dev/null; then
     $STD apt-get install -y jq
   fi
-  if ! command -v node >/dev/null || [[ "$(/usr/bin/env node -v | grep -oP '^v\K[0-9]+')" != "22" ]]; then
-    msg_info "Installing Node.js 22"
-    $STD apt-get purge -y nodejs
-    rm -f /etc/apt/sources.list.d/nodesource.list
-    rm -f /etc/apt/keyrings/nodesource.gpg
-    mkdir -p /etc/apt/keyrings
-    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_22.x nodistro main" >/etc/apt/sources.list.d/nodesource.list
-    $STD apt-get update
-    $STD apt-get install -y nodejs
-    $STD npm install -g pnpm@9.7.1
-    msg_ok "Node.js 22 installed"
-  fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/msgbyte/tianji/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
-    msg_info "Stopping ${APP} Service"
-    systemctl stop tianji
-    msg_ok "Stopped ${APP} Service"
 
-    msg_info "Updating ${APP} to v${RELEASE}"
-    cd /opt
+  RELEASE=$(curl -fsSL https://api.github.com/repos/msgbyte/tianji/releases/latest | jq -r '.tag_name' | sed 's/^v//')
+  if [[ "${RELEASE}" != "$(cat ~/.tianji 2>/dev/null)" ]] || [[ ! -f ~/.tianji ]]; then
+
+    setup_uv
+    NODE_VERSION="22" NODE_MODULE="pnpm@$(curl -s https://raw.githubusercontent.com/msgbyte/tianji/master/package.json | jq -r '.packageManager | split("@")[1]')" setup_nodejs
+
+    msg_info "Stopping Service"
+    systemctl stop tianji
+    msg_ok "Stopped Service"
+
+    msg_info "Backing up data"
     cp /opt/tianji/src/server/.env /opt/.env
     mv /opt/tianji /opt/tianji_bak
-    curl -fsSL "https://github.com/msgbyte/tianji/archive/refs/tags/v${RELEASE}.zip" -o $(basename "https://github.com/msgbyte/tianji/archive/refs/tags/v${RELEASE}.zip")
-    $STD unzip v${RELEASE}.zip
-    mv tianji-${RELEASE} /opt/tianji
-    cd tianji
+    msg_ok "Backed up data"
+
+    fetch_and_deploy_gh_release "tianji" "msgbyte/tianji"
+
+    msg_info "Updating ${APP}"
+    cd /opt/tianji
     export NODE_OPTIONS="--max_old_space_size=4096"
     $STD pnpm install --filter @tianji/client... --config.dedupe-peer-dependents=false --frozen-lockfile
     $STD pnpm build:static
@@ -66,15 +59,17 @@ function update_script() {
     mv /opt/.env /opt/tianji/src/server/.env
     cd src/server
     $STD pnpm db:migrate:apply
-    echo "${RELEASE}" >/opt/${APP}_version.txt
-    msg_ok "Updated ${APP} to v${RELEASE}"
+    msg_ok "Updated ${APP}"
+
+    msg_info "Update AppRise"
+    $STD uv pip install apprise cryptography --system
+    msg_ok "Update AppRise"
 
     msg_info "Starting ${APP}"
     systemctl start tianji
     msg_ok "Started ${APP}"
 
     msg_info "Cleaning up"
-    rm -R /opt/v${RELEASE}.zip
     rm -rf /opt/tianji_bak
     rm -rf /opt/tianji/src/client
     rm -rf /opt/tianji/website
