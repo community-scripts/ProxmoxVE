@@ -16,7 +16,6 @@ update_os
 fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary"
 
 msg_info "Configuring ${APPLICATION}"
-cd /opt/meilisearch
 curl -fsSL https://raw.githubusercontent.com/meilisearch/meilisearch/latest/config.toml -o /etc/meilisearch.toml
 MASTER_KEY=$(openssl rand -base64 12)
 LOCAL_IP="$(hostname -I | awk '{print $1}')"
