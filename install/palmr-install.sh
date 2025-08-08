@@ -13,13 +13,8 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing dependencies"
-$STD apt-get install yq -y
-msg_ok "Installed dependencies"
-
 fetch_and_deploy_gh_release "Palmr" "kyantech/Palmr" "tarball" "latest" "/opt/palmr"
-PNPM="$(jq -r '.packageManager' /opt/palmr/package.json)"
-NODE_VERSION="20" NODE_MODULE="$PNPM" setup_nodejs
+PNPM="$(jq -r '.packageManager' /opt/palmr/package.json)" NODE_VERSION="20" NODE_MODULE="$PNPM" setup_nodejs
 
 msg_info "Configuring palmr backend"
 PALMR_DIR="/opt/palmr_data"
@@ -51,7 +46,7 @@ $STD pnpm install
 $STD pnpm build
 msg_ok "Configured palmr frontend"
 
-msg_info "Creating user & services"
+msg_info "Creating service"
 useradd -d "$PALMR_DIR" -M -s /usr/sbin/nologin -U palmr
 chown -R palmr:palmr "$PALMR_DIR" /opt/palmr
 cat <<EOF >/etc/systemd/system/palmr-backend.service
@@ -86,7 +81,7 @@ ExecStart=/usr/bin/pnpm start
 WantedBy=multi-user.target
 EOF
 systemctl enable -q --now palmr-backend palmr-frontend
-msg_ok "Created user & services"
+msg_ok "Created service"
 
 motd_ssh
 customize
