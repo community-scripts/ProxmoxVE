@@ -28,8 +28,8 @@ if ! grep -q -m1 'avx[^ ]*' /proc/cpuinfo; then
   msg_ok "No AVX Support Detected"
   msg_info "Installing MongoDB 4.4"
   if ! dpkg -l | grep -q "libssl1.1"; then
-    curl -fsSL "http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.1_1.1.1n-0+deb10u6_amd64.deb" -o "libssl1.1_1.1.1n-0+deb10u6_amd64.deb"
-    $STD dpkg -i libssl1.1_1.1.1n-0+deb10u6_amd64.deb
+    curl -fsSL "https://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.1_1.1.1w-0+deb11u3_amd64.deb" -o "libssl1.1_1.1.1w-0+deb11u3_amd64.deb"
+    $STD dpkg -i libssl1.1_1.1.1w-0+deb11u3_amd64.deb
   fi
   curl -fsSL "https://www.mongodb.org/static/pgp/server-4.4.asc" | gpg --dearmor >/usr/share/keyrings/mongodb-server-4.4.gpg
   echo "deb [signed-by=/usr/share/keyrings/mongodb-server-4.4.gpg] https://repo.mongodb.org/apt/debian buster/mongodb-org/4.4 main" >/etc/apt/sources.list.d/mongodb-org-4.4.list
