@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Fix: Bazarr requirements.txt file not parse-able by UV [@Xerovoxx98](https://github.com/Xerovoxx98) ([#6701](https://github.com/community-scripts/ProxmoxVE/pull/6701))
     - Improve backup of adventurelog folder [@ThomasDetemmerman](https://github.com/ThomasDetemmerman) ([#6653](https://github.com/community-scripts/ProxmoxVE/pull/6653))
     - HomeBox: Fixes for update procedure [@tremor021](https://github.com/tremor021) ([#6702](https://github.com/community-scripts/ProxmoxVE/pull/6702))
 
