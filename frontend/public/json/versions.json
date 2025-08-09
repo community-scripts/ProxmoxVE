@@ -1,5 +1,100 @@
 [
   {
+    "name": "rcourtman/Pulse",
+    "version": "v4.0.12",
+    "date": "2025-08-07T16:14:05Z"
+  },
+  {
+    "name": "duplicati/duplicati",
+    "version": "v2.1.1.100-2.1.1.100_canary_2025-08-08",
+    "date": "2025-08-08T22:04:15Z"
+  },
+  {
+    "name": "mongodb/mongo",
+    "version": "r6.0.26-rc0",
+    "date": "2025-08-08T22:06:18Z"
+  },
+  {
+    "name": "kimai/kimai",
+    "version": "2.38.0",
+    "date": "2025-08-08T21:47:19Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "v4.3.0",
+    "date": "2025-07-05T12:14:52Z"
+  },
+  {
+    "name": "homarr-labs/homarr",
+    "version": "v1.32.0",
+    "date": "2025-08-08T19:17:28Z"
+  },
+  {
+    "name": "HabitRPG/habitica",
+    "version": "v5.38.2",
+    "date": "2025-08-08T19:09:53Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.2.21",
+    "date": "2025-07-17T04:46:25Z"
+  },
+  {
+    "name": "Brandawg93/PeaNUT",
+    "version": "v5.11.0",
+    "date": "2025-08-08T17:52:12Z"
+  },
+  {
+    "name": "bunkerity/bunkerweb",
+    "version": "v1.6.3",
+    "date": "2025-08-08T17:41:35Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.105.4",
+    "date": "2025-08-07T13:58:23Z"
+  },
+  {
+    "name": "docker/compose",
+    "version": "v2.39.2",
+    "date": "2025-08-08T16:06:06Z"
+  },
+  {
+    "name": "cloudflare/cloudflared",
+    "version": "2025.8.0",
+    "date": "2025-08-08T15:50:42Z"
+  },
+  {
+    "name": "gethomepage/homepage",
+    "version": "v1.4.4",
+    "date": "2025-08-08T15:33:04Z"
+  },
+  {
+    "name": "zitadel/zitadel",
+    "version": "v3.3.3",
+    "date": "2025-08-08T14:29:30Z"
+  },
+  {
+    "name": "fallenbagel/jellyseerr",
+    "version": "preview-seerr",
+    "date": "2025-08-08T14:21:20Z"
+  },
+  {
+    "name": "nzbgetcom/nzbget",
+    "version": "v25.2",
+    "date": "2025-07-04T08:21:42Z"
+  },
+  {
+    "name": "wazuh/wazuh",
+    "version": "coverity-w32-4.13.0",
+    "date": "2025-07-30T08:30:15Z"
+  },
+  {
+    "name": "emqx/emqx",
+    "version": "e6.0.0-M2.202508-beta.1",
+    "date": "2025-08-08T10:29:09Z"
+  },
+  {
     "name": "fuma-nama/fumadocs",
     "version": "fumadocs-openapi@9.1.10",
     "date": "2025-08-08T07:29:07Z"
@@ -13,11 +108,6 @@
     "name": "Jackett/Jackett",
     "version": "v0.22.2238",
     "date": "2025-08-08T06:13:13Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.2.21",
-    "date": "2025-07-17T04:46:25Z"
   },
   {
     "name": "apache/tika",
@@ -45,11 +135,6 @@
     "date": "2025-08-07T17:17:41Z"
   },
   {
-    "name": "fallenbagel/jellyseerr",
-    "version": "preview-seerr",
-    "date": "2025-08-07T21:00:53Z"
-  },
-  {
     "name": "semaphoreui/semaphore",
     "version": "v2.16.1",
     "date": "2025-08-07T20:54:27Z"
@@ -65,16 +150,6 @@
     "date": "2025-08-07T08:19:29Z"
   },
   {
-    "name": "rcourtman/Pulse",
-    "version": "v4.0.12",
-    "date": "2025-08-07T16:14:05Z"
-  },
-  {
-    "name": "mongodb/mongo",
-    "version": "r7.0.23",
-    "date": "2025-08-07T17:25:30Z"
-  },
-  {
     "name": "tailscale/tailscale",
     "version": "v1.86.4",
     "date": "2025-08-07T16:48:40Z"
@@ -83,11 +158,6 @@
     "name": "jenkinsci/jenkins",
     "version": "jenkins-2.522",
     "date": "2025-08-05T15:33:22Z"
-  },
-  {
-    "name": "bunkerity/bunkerweb",
-    "version": "v1.6.3",
-    "date": "2025-08-07T16:17:27Z"
   },
   {
     "name": "rabbitmq/rabbitmq-server",
@@ -113,11 +183,6 @@
     "name": "karlomikus/bar-assistant",
     "version": "v5.6.1",
     "date": "2025-08-07T14:46:03Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.105.4",
-    "date": "2025-08-07T13:58:23Z"
   },
   {
     "name": "blakeblackshear/frigate",
@@ -205,11 +270,6 @@
     "date": "2025-08-06T12:20:31Z"
   },
   {
-    "name": "nzbgetcom/nzbget",
-    "version": "v25.2",
-    "date": "2025-07-04T08:21:42Z"
-  },
-  {
     "name": "openobserve/openobserve",
     "version": "v0.15.0-rc5",
     "date": "2025-08-06T08:55:10Z"
@@ -228,11 +288,6 @@
     "name": "autobrr/autobrr",
     "version": "v1.65.0",
     "date": "2025-08-05T21:12:35Z"
-  },
-  {
-    "name": "HabitRPG/habitica",
-    "version": "v5.38.1",
-    "date": "2025-08-05T19:33:40Z"
   },
   {
     "name": "YunoHost/yunohost",
@@ -265,11 +320,6 @@
     "date": "2025-07-09T19:08:28Z"
   },
   {
-    "name": "zitadel/zitadel",
-    "version": "v2.71.14",
-    "date": "2025-08-05T09:48:52Z"
-  },
-  {
     "name": "binwiederhier/ntfy",
     "version": "v2.14.0",
     "date": "2025-08-05T08:31:35Z"
@@ -293,11 +343,6 @@
     "name": "go-gitea/gitea",
     "version": "v1.24.4",
     "date": "2025-08-04T18:58:27Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "v4.3.0",
-    "date": "2025-07-05T12:14:52Z"
   },
   {
     "name": "Dolibarr/dolibarr",
@@ -375,11 +420,6 @@
     "date": "2025-08-03T16:21:47Z"
   },
   {
-    "name": "gethomepage/homepage",
-    "version": "v1.4.3",
-    "date": "2025-08-03T15:19:16Z"
-  },
-  {
     "name": "Lidarr/Lidarr",
     "version": "v2.12.4.4658",
     "date": "2025-06-09T17:27:45Z"
@@ -428,11 +468,6 @@
     "name": "docmost/docmost",
     "version": "v0.22.2",
     "date": "2025-08-01T23:27:06Z"
-  },
-  {
-    "name": "homarr-labs/homarr",
-    "version": "v1.31.0",
-    "date": "2025-08-01T19:18:16Z"
   },
   {
     "name": "Koenkk/zigbee2mqtt",
@@ -540,11 +575,6 @@
     "date": "2025-07-30T08:43:04Z"
   },
   {
-    "name": "wazuh/wazuh",
-    "version": "coverity-w32-4.13.0",
-    "date": "2025-07-30T08:30:15Z"
-  },
-  {
     "name": "morpheus65535/bazarr",
     "version": "v1.5.3-beta.10",
     "date": "2025-07-15T06:07:03Z"
@@ -600,11 +630,6 @@
     "date": "2025-07-26T14:19:00Z"
   },
   {
-    "name": "emqx/emqx",
-    "version": "e6.0.0-M2.202508-alpha.1",
-    "date": "2025-07-25T16:01:00Z"
-  },
-  {
     "name": "heiher/hev-socks5-server",
     "version": "2.9.0",
     "date": "2025-07-25T14:20:25Z"
@@ -613,16 +638,6 @@
     "name": "forgejo/forgejo",
     "version": "v12.0.1",
     "date": "2025-07-25T11:54:30Z"
-  },
-  {
-    "name": "Brandawg93/PeaNUT",
-    "version": "v5.10.0",
-    "date": "2025-07-24T23:33:09Z"
-  },
-  {
-    "name": "docker/compose",
-    "version": "v2.39.1",
-    "date": "2025-07-24T17:02:01Z"
   },
   {
     "name": "grokability/snipe-it",
@@ -718,11 +733,6 @@
     "name": "open-webui/open-webui",
     "version": "v0.6.18",
     "date": "2025-07-19T19:26:14Z"
-  },
-  {
-    "name": "duplicati/duplicati",
-    "version": "v2.1.1.0-2.1.1.0_experimental_2025-07-17",
-    "date": "2025-07-17T20:11:33Z"
   },
   {
     "name": "wavelog/wavelog",
@@ -858,16 +868,6 @@
     "name": "Kareadita/Kavita",
     "version": "v0.8.7",
     "date": "2025-07-05T20:08:58Z"
-  },
-  {
-    "name": "kimai/kimai",
-    "version": "2.37.0",
-    "date": "2025-07-04T14:49:43Z"
-  },
-  {
-    "name": "cloudflare/cloudflared",
-    "version": "2025.7.0",
-    "date": "2025-07-03T17:08:15Z"
   },
   {
     "name": "qbittorrent/qBittorrent",
