@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Improve backup of adventurelog folder [@ThomasDetemmerman](https://github.com/ThomasDetemmerman) ([#6653](https://github.com/community-scripts/ProxmoxVE/pull/6653))
     - HomeBox: Fixes for update procedure [@tremor021](https://github.com/tremor021) ([#6702](https://github.com/community-scripts/ProxmoxVE/pull/6702))
 
   - #### 🔧 Refactor
