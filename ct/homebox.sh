@@ -29,6 +29,7 @@ function update_script() {
   if [[ -x /opt/homebox ]]; then
     sed -i 's|/opt\b|/opt/homebox|g' /etc/systemd/system/homebox.service
     sed -i 's|^ExecStart=/opt/homebox$|ExecStart=/opt/homebox/homebox|' /etc/systemd/system/homebox.service
+    systemctl daemon-reload
   fi
 
   RELEASE=$(curl -fsSL https://api.github.com/repos/sysadminsmedia/homebox/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
@@ -37,9 +38,11 @@ function update_script() {
     systemctl stop homebox
     msg_ok "${APP} Stopped"
 
+    [ -x /opt/homebox ] && rm -f /opt/homebox
     fetch_and_deploy_gh_release "homebox" "sysadminsmedia/homebox" "prebuild" "latest" "/opt/homebox" "homebox_Linux_x86_64.tar.gz"
     chmod +x /opt/homebox/homebox
     [ -f /opt/.env ] && mv /opt/.env /opt/homebox/.env
+    [ -d /opt/.data ] && mv /opt/.data /opt/homebox/.data
 
     msg_info "Starting ${APP}"
     systemctl start homebox
