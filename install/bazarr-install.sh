@@ -25,7 +25,8 @@ fetch_and_deploy_gh_release "bazarr" "morpheus65535/bazarr" "prebuild" "latest" 
 msg_info "Installing Bazarr"
 mkdir -p /var/lib/bazarr/
 chmod 775 /opt/bazarr /var/lib/bazarr/
-$STD uv pip install -r /opt/bazarr/requirements.txt --system
+sed -i.bak '/--only-binary=Pillow/d' /opt/bazarr/requirements.txt
+$STD uv pip install -r /opt/bazarr/requirements.txt --system --only-binary=Pillow
 msg_ok "Installed Bazarr"
 
 msg_info "Creating Service"
