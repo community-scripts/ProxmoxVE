@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-08-09
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - HomeBox: Fixes for update procedure [@tremor021](https://github.com/tremor021) ([#6702](https://github.com/community-scripts/ProxmoxVE/pull/6702))
+
 ## 2025-08-08
 
 ### 🆕 New Scripts
