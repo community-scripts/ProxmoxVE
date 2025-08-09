@@ -18,6 +18,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - HomeBox: Fixes for update procedure [@tremor021](https://github.com/tremor021) ([#6702](https://github.com/community-scripts/ProxmoxVE/pull/6702))
 
+  - #### 🔧 Refactor
+
+    - Refactor: Tianji [@MickLesk](https://github.com/MickLesk) ([#6662](https://github.com/community-scripts/ProxmoxVE/pull/6662))
+
 ## 2025-08-08
 
 ### 🆕 New Scripts
