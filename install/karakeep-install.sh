@@ -16,10 +16,8 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
   build-essential \
-  git \
   ca-certificates \
-  chromium/stable \
-  chromium-common/stable \
+  chromium \
   graphicsmagick \
   ghostscript
 msg_ok "Installed Dependencies"
