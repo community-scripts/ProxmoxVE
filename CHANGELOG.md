@@ -14,6 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - Fix/thinpool detection as it allows to delete active thinpool with different name than "data" [@onethree7](https://github.com/onethree7) ([#6730](https://github.com/community-scripts/ProxmoxVE/pull/6730))
+
   - #### 🐞 Bug Fixes
 
     - Karakeep: chromium fix [@vhsdream](https://github.com/vhsdream) ([#6729](https://github.com/community-scripts/ProxmoxVE/pull/6729))
