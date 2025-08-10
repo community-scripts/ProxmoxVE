@@ -1,13 +1,48 @@
 [
   {
-    "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-08-08T20:14:39Z"
+    "name": "open-webui/open-webui",
+    "version": "v0.6.20",
+    "date": "2025-08-09T22:59:26Z"
+  },
+  {
+    "name": "rcourtman/Pulse",
+    "version": "v4.0.12",
+    "date": "2025-08-07T16:14:05Z"
+  },
+  {
+    "name": "outline/outline",
+    "version": "v0.86.1",
+    "date": "2025-08-09T22:05:10Z"
   },
   {
     "name": "firefly-iii/firefly-iii",
     "version": "v6.2.21",
     "date": "2025-07-17T04:46:25Z"
+  },
+  {
+    "name": "wizarrrr/wizarr",
+    "version": "2025.8.2",
+    "date": "2025-08-09T18:11:46Z"
+  },
+  {
+    "name": "Stirling-Tools/Stirling-PDF",
+    "version": "v1.2.0",
+    "date": "2025-08-09T14:30:52Z"
+  },
+  {
+    "name": "fallenbagel/jellyseerr",
+    "version": "preview-seerr",
+    "date": "2025-08-09T13:12:09Z"
+  },
+  {
+    "name": "Dolibarr/dolibarr",
+    "version": "22.0.0",
+    "date": "2025-08-09T12:48:17Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "nightly",
+    "date": "2025-08-08T20:14:39Z"
   },
   {
     "name": "authelia/authelia",
@@ -43,11 +78,6 @@
     "name": "steveiliop56/tinyauth",
     "version": "v3.6.2",
     "date": "2025-07-17T12:08:03Z"
-  },
-  {
-    "name": "rcourtman/Pulse",
-    "version": "v4.0.12",
-    "date": "2025-08-07T16:14:05Z"
   },
   {
     "name": "duplicati/duplicati",
@@ -110,11 +140,6 @@
     "date": "2025-08-08T14:29:30Z"
   },
   {
-    "name": "fallenbagel/jellyseerr",
-    "version": "preview-seerr",
-    "date": "2025-08-08T14:21:20Z"
-  },
-  {
     "name": "nzbgetcom/nzbget",
     "version": "v25.2",
     "date": "2025-07-04T08:21:42Z"
@@ -157,7 +182,7 @@
   {
     "name": "ollama/ollama",
     "version": "v0.11.4",
-    "date": "2025-08-07T21:23:55Z"
+    "date": "2025-08-07T17:17:41Z"
   },
   {
     "name": "MediaBrowser/Emby.Releases",
@@ -275,11 +300,6 @@
     "date": "2025-08-06T12:32:02Z"
   },
   {
-    "name": "outline/outline",
-    "version": "v0.86.0",
-    "date": "2025-08-06T12:20:31Z"
-  },
-  {
     "name": "openobserve/openobserve",
     "version": "v0.15.0-rc5",
     "date": "2025-08-06T08:55:10Z"
@@ -353,16 +373,6 @@
     "name": "go-gitea/gitea",
     "version": "v1.24.4",
     "date": "2025-08-04T18:58:27Z"
-  },
-  {
-    "name": "Dolibarr/dolibarr",
-    "version": "22.0.0",
-    "date": "2025-08-04T16:23:05Z"
-  },
-  {
-    "name": "wizarrrr/wizarr",
-    "version": "2025.8.1",
-    "date": "2025-08-04T15:23:03Z"
   },
   {
     "name": "VictoriaMetrics/VictoriaMetrics",
@@ -528,11 +538,6 @@
     "name": "TandoorRecipes/recipes",
     "version": "2.0.1",
     "date": "2025-07-31T17:29:38Z"
-  },
-  {
-    "name": "Stirling-Tools/Stirling-PDF",
-    "version": "v1.1.1",
-    "date": "2025-07-31T12:16:54Z"
   },
   {
     "name": "coder/code-server",
@@ -733,11 +738,6 @@
     "name": "pelican-dev/wings",
     "version": "v1.0.0-beta15",
     "date": "2025-07-19T19:46:52Z"
-  },
-  {
-    "name": "open-webui/open-webui",
-    "version": "v0.6.18",
-    "date": "2025-07-19T19:26:14Z"
   },
   {
     "name": "wavelog/wavelog",
