@@ -19,7 +19,7 @@ curl -fsSL https://dl.min.io/server/minio/release/linux-amd64/minio.deb -o minio
 $STD dpkg -i minio.deb
 msg_ok "Installed Dependencies"
 
-PG_VERSION="16" PG_MODULES="common" setup_postgresql
+PG_VERSION="16" setup_postgresql
 NODE_VERSION="22" NODE_MODULE="pnpm@latest" setup_nodejs
 
 msg_info "Setting up Database"
@@ -32,7 +32,6 @@ $STD sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE $DB_NAME to $DB_
 $STD sudo -u postgres psql -c "ALTER USER $DB_USER WITH SUPERUSER;"
 msg_ok "Set up Database"
 
-msg_info "Installing $APPLICATION"
 MINIO_PASS=$(openssl rand -base64 48)
 ACCESS_TOKEN=$(openssl rand -base64 48)
 REFRESH_TOKEN=$(openssl rand -base64 48)
@@ -41,6 +40,8 @@ LOCAL_IP=$(hostname -I | awk '{print $1}')
 TAG=$(curl -fsSL https://api.github.com/repos/browserless/browserless/tags?per_page=1 | grep "name" | awk '{print substr($2, 3, length($2)-4) }')
 
 fetch_and_deploy_gh_release "Reactive-Resume" "lazy-media/Reactive-Resume"
+
+msg_info "Installing $APPLICATION"
 cd /opt/"$APPLICATION"
 export CI="true"
 export PUPPETEER_SKIP_DOWNLOAD="true"
@@ -48,7 +49,6 @@ export NODE_ENV="production"
 export NEXT_TELEMETRY_DISABLED=1
 $STD pnpm install --frozen-lockfile
 $STD pnpm run build
-$STD pnpm install --prod --frozen-lockfile
 $STD pnpm run prisma:generate
 msg_ok "Installed $APPLICATION"
 

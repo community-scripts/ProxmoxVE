@@ -8,7 +8,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 APP="Reactive-Resume"
 var_tags="${var_tags:-documents}"
 var_cpu="${var_cpu:-2}"
-var_ram="${var_ram:-3072}"
+var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-12}"
@@ -28,15 +28,16 @@ function update_script() {
     msg_error "No $APP Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/lazy-media/Reactive-Resume/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+  RELEASE=$(curl -fsSL https://api.github.com/repos/lazy-media/Reactive-Resume/releases/latest | jq -r '.tag_name' | sed 's/^v//')
   if [[ ! -f "$HOME"/.reactive-resume ]] || [[ "$RELEASE" != "$(cat "$HOME"/.reactive-resume)" ]]; then
     msg_info "Stopping services"
     systemctl stop Reactive-Resume
     msg_ok "Stopped services"
 
     cp /opt/"$APP"/.env /opt/rxresume.env
-    rm -rf /opt/"$APP"
-    fetch_and_deploy_gh_release "Reactive-Resume" "lazy-media/Reactive-Resume"
+
+    fetch_and_deploy_gh_release "Reactive-Resume" "lazy-media/Reactive-Resume" "tarball" "latest" "/opt/Reactive-Resume"
+
     msg_info "Updating $APP to v${RELEASE}"
     cd /opt/"$APP"
     export PUPPETEER_SKIP_DOWNLOAD="true"
@@ -84,9 +85,9 @@ function update_script() {
     rm -f "$brwsr_tmp"
     msg_ok "Cleanup Completed"
 
-    msg_ok "Update Successful"
+    msg_ok "Updated Successfully"
   else
-    msg_ok "No update required. $APP is already at v{$RELEASE}"
+    msg_ok "No update required. $APP is already at v${RELEASE}"
   fi
   exit
 }

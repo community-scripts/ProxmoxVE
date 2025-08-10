@@ -20,7 +20,7 @@
       "script": "ct/reactive-resume.sh",
       "resources": {
         "cpu": 2,
-        "ram": 3072,
+        "ram": 4096,
         "hdd": 8,
         "os": "Debian",
         "version": "12"
