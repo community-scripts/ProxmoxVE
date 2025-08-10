@@ -18,6 +18,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Pulse: fix binary path [@vhsdream](https://github.com/vhsdream) ([#6740](https://github.com/community-scripts/ProxmoxVE/pull/6740))
     - Karakeep: chromium fix [@vhsdream](https://github.com/vhsdream) ([#6729](https://github.com/community-scripts/ProxmoxVE/pull/6729))
 
 ## 2025-08-09
