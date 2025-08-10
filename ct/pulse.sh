@@ -41,6 +41,11 @@ function update_script() {
 
     fetch_and_deploy_gh_release "pulse" "rcourtman/Pulse" "prebuild" "latest" "/opt/pulse" "*-linux-amd64.tar.gz"
     chown -R pulse:pulse /etc/pulse /opt/pulse
+    sed -i 's|pulse/pulse|pulse/bin/pulse|' /etc/systemd/system/pulse.service
+    systemctl daemon-reload
+    if [[ -f /opt/pulse/pulse ]]; then
+      rm -rf /opt/pulse/{pulse,frontend-modern}
+    fi
 
     msg_info "Starting ${APP}"
     systemctl start pulse
