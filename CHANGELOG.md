@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-08-10
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Karakeep: chromium fix [@vhsdream](https://github.com/vhsdream) ([#6729](https://github.com/community-scripts/ProxmoxVE/pull/6729))
+
 ## 2025-08-09
 
 ### 🚀 Updated Scripts
