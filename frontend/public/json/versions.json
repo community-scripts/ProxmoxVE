@@ -1,8 +1,58 @@
 [
   {
+    "name": "Luligu/matterbridge",
+    "version": "3.2.1",
+    "date": "2025-08-10T23:48:06Z"
+  },
+  {
+    "name": "advplyr/audiobookshelf",
+    "version": "v2.28.0",
+    "date": "2025-08-10T23:09:55Z"
+  },
+  {
+    "name": "YunoHost/yunohost",
+    "version": "debian/12.1.9",
+    "date": "2025-08-10T20:17:50Z"
+  },
+  {
     "name": "rcourtman/Pulse",
-    "version": "v4.1.3",
-    "date": "2025-08-10T11:01:02Z"
+    "version": "v4.1.7",
+    "date": "2025-08-10T20:10:13Z"
+  },
+  {
+    "name": "fallenbagel/jellyseerr",
+    "version": "preview-dns-cache-manager",
+    "date": "2025-08-10T19:53:44Z"
+  },
+  {
+    "name": "pocket-id/pocket-id",
+    "version": "v1.7.0",
+    "date": "2025-08-10T18:10:25Z"
+  },
+  {
+    "name": "booklore-app/booklore",
+    "version": "v0.36.1",
+    "date": "2025-08-10T18:02:35Z"
+  },
+  {
+    "name": "evcc-io/evcc",
+    "version": "0.207.2",
+    "date": "2025-08-10T14:40:21Z"
+  },
+  {
+    "name": "blakeblackshear/frigate",
+    "version": "v0.14.1",
+    "date": "2024-08-29T22:32:51Z"
+  },
+  {
+    "name": "ioBroker/ioBroker",
+    "version": "1012-08-09",
+    "date": "2025-08-10T13:50:58Z"
+  },
+  {
+    "name": "open-webui/open-webui",
+    "version": "v0.6.21",
+    "date": "2025-08-10T13:40:10Z"
   },
   {
     "name": "firefly-iii/firefly-iii",
@@ -30,19 +80,14 @@
     "date": "2025-07-17T12:08:03Z"
   },
   {
-    "name": "open-webui/open-webui",
-    "version": "v0.6.20",
-    "date": "2025-08-09T22:59:26Z"
-  },
-  {
     "name": "outline/outline",
     "version": "v0.86.1",
     "date": "2025-08-09T22:05:10Z"
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v4.3.0",
-    "date": "2025-07-05T12:14:52Z"
+    "version": "nightly",
+    "date": "2025-08-09T21:57:09Z"
   },
   {
     "name": "wizarrrr/wizarr",
@@ -53,11 +98,6 @@
     "name": "Stirling-Tools/Stirling-PDF",
     "version": "v1.2.0",
     "date": "2025-08-09T14:30:52Z"
-  },
-  {
-    "name": "fallenbagel/jellyseerr",
-    "version": "preview-seerr",
-    "date": "2025-08-09T13:12:09Z"
   },
   {
     "name": "Dolibarr/dolibarr",
@@ -83,11 +123,6 @@
     "name": "gethomepage/homepage",
     "version": "v1.4.4",
     "date": "2025-08-09T02:35:14Z"
-  },
-  {
-    "name": "booklore-app/booklore",
-    "version": "v0.36.0",
-    "date": "2025-08-09T02:24:05Z"
   },
   {
     "name": "duplicati/duplicati",
@@ -187,7 +222,7 @@
   {
     "name": "ollama/ollama",
     "version": "v0.11.4",
-    "date": "2025-08-07T17:17:41Z"
+    "date": "2025-08-07T21:23:55Z"
   },
   {
     "name": "MediaBrowser/Emby.Releases",
@@ -228,11 +263,6 @@
     "name": "karlomikus/bar-assistant",
     "version": "v5.6.1",
     "date": "2025-08-07T14:46:03Z"
-  },
-  {
-    "name": "blakeblackshear/frigate",
-    "version": "v0.14.1",
-    "date": "2024-08-29T22:32:51Z"
   },
   {
     "name": "syncthing/syncthing",
@@ -325,11 +355,6 @@
     "date": "2025-08-05T21:12:35Z"
   },
   {
-    "name": "YunoHost/yunohost",
-    "version": "debian/12.1.7.1",
-    "date": "2025-08-05T17:30:05Z"
-  },
-  {
     "name": "WordPress/WordPress",
     "version": "4.7.30",
     "date": "2025-08-05T17:23:06Z"
@@ -410,11 +435,6 @@
     "date": "2025-08-04T10:55:20Z"
   },
   {
-    "name": "evcc-io/evcc",
-    "version": "0.207.1",
-    "date": "2025-08-04T06:56:14Z"
-  },
-  {
     "name": "henrygd/beszel",
     "version": "v0.12.3",
     "date": "2025-08-04T02:21:16Z"
@@ -455,11 +475,6 @@
     "date": "2025-06-11T20:10:39Z"
   },
   {
-    "name": "advplyr/audiobookshelf",
-    "version": "v2.27.0",
-    "date": "2025-08-02T23:35:37Z"
-  },
-  {
     "name": "TwiN/gatus",
     "version": "v5.21.0",
     "date": "2025-08-02T18:56:03Z"
@@ -498,11 +513,6 @@
     "name": "immich-app/immich",
     "version": "v1.137.3",
     "date": "2025-08-01T15:06:36Z"
-  },
-  {
-    "name": "Luligu/matterbridge",
-    "version": "3.2.0",
-    "date": "2025-08-01T14:49:29Z"
   },
   {
     "name": "documenso/documenso",
@@ -718,11 +728,6 @@
     "name": "openhab/openhab-core",
     "version": "5.0.0",
     "date": "2025-07-21T07:16:58Z"
-  },
-  {
-    "name": "pocket-id/pocket-id",
-    "version": "v1.6.4",
-    "date": "2025-07-21T05:53:30Z"
   },
   {
     "name": "linkwarden/linkwarden",
@@ -1013,11 +1018,6 @@
     "name": "jordan-dalby/ByteStash",
     "version": "v1.5.8",
     "date": "2025-06-07T11:39:10Z"
-  },
-  {
-    "name": "ioBroker/ioBroker",
-    "version": "2025-05-31",
-    "date": "2025-06-06T14:50:56Z"
   },
   {
     "name": "juanfont/headscale",
