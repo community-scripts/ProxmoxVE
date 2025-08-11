@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-08-11
 
+### 🚀 Updated Scripts
+
+  - Reactive Resume: use new release parsing; other fixes [@vhsdream](https://github.com/vhsdream) ([#6744](https://github.com/community-scripts/ProxmoxVE/pull/6744))
+
 ## 2025-08-10
 
 ### 🚀 Updated Scripts
