@@ -1,5 +1,50 @@
 [
   {
+    "name": "rcourtman/Pulse",
+    "version": "v4.2.1",
+    "date": "2025-08-12T10:55:05Z"
+  },
+  {
+    "name": "zabbix/zabbix",
+    "version": "6.0.41rc1",
+    "date": "2025-08-12T10:19:14Z"
+  },
+  {
+    "name": "meilisearch/meilisearch",
+    "version": "latest",
+    "date": "2025-08-12T10:18:11Z"
+  },
+  {
+    "name": "fuma-nama/fumadocs",
+    "version": "fumadocs-core@15.6.10",
+    "date": "2025-08-12T07:46:58Z"
+  },
+  {
+    "name": "cloudreve/cloudreve",
+    "version": "4.5.0",
+    "date": "2025-08-12T07:03:15Z"
+  },
+  {
+    "name": "syncthing/syncthing",
+    "version": "v2.0.0",
+    "date": "2025-08-12T06:13:55Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2280",
+    "date": "2025-08-12T05:53:50Z"
+  },
+  {
+    "name": "booklore-app/booklore",
+    "version": "v0.36.3",
+    "date": "2025-08-12T04:52:59Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
     "name": "ellite/Wallos",
     "version": "v4.1.0",
     "date": "2025-08-11T22:54:58Z"
@@ -13,6 +58,11 @@
     "name": "pelican-dev/wings",
     "version": "v1.0.0-beta16",
     "date": "2025-08-11T21:19:48Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.2.7",
+    "date": "2025-08-07T08:19:29Z"
   },
   {
     "name": "mongodb/mongo",
@@ -30,11 +80,6 @@
     "date": "2025-08-11T18:10:47Z"
   },
   {
-    "name": "syncthing/syncthing",
-    "version": "v1.30.0",
-    "date": "2025-07-01T11:29:11Z"
-  },
-  {
     "name": "coder/code-server",
     "version": "v4.102.3",
     "date": "2025-07-31T03:41:16Z"
@@ -48,16 +93,6 @@
     "name": "jhuckaby/Cronicle",
     "version": "v0.9.86",
     "date": "2025-08-11T16:21:10Z"
-  },
-  {
-    "name": "rcourtman/Pulse",
-    "version": "v4.2.0",
-    "date": "2025-08-11T16:08:02Z"
-  },
-  {
-    "name": "meilisearch/meilisearch",
-    "version": "prototype-arroy-becomes-hannoy-10",
-    "date": "2025-08-11T16:05:17Z"
   },
   {
     "name": "n8n-io/n8n",
@@ -125,16 +160,6 @@
     "date": "2025-06-25T00:06:56Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2258",
-    "date": "2025-08-11T05:53:38Z"
-  },
-  {
-    "name": "booklore-app/booklore",
-    "version": "v0.36.2",
-    "date": "2025-08-11T05:36:26Z"
-  },
-  {
     "name": "Prowlarr/Prowlarr",
     "version": "v1.37.0.5076",
     "date": "2025-06-04T11:04:53Z"
@@ -143,11 +168,6 @@
     "name": "firefly-iii/firefly-iii",
     "version": "v6.2.21",
     "date": "2025-07-17T04:46:25Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
   },
   {
     "name": "Luligu/matterbridge",
@@ -206,8 +226,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-08-09T21:57:09Z"
+    "version": "v4.3.0",
+    "date": "2025-07-05T12:14:52Z"
   },
   {
     "name": "wizarrrr/wizarr",
@@ -270,11 +290,6 @@
     "date": "2025-08-08T17:41:35Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.2.7",
-    "date": "2025-08-07T08:19:29Z"
-  },
-  {
     "name": "docker/compose",
     "version": "v2.39.2",
     "date": "2025-08-08T16:06:06Z"
@@ -295,11 +310,6 @@
     "date": "2025-07-30T08:30:15Z"
   },
   {
-    "name": "fuma-nama/fumadocs",
-    "version": "fumadocs-openapi@9.1.10",
-    "date": "2025-08-08T07:29:07Z"
-  },
-  {
     "name": "mattermost/mattermost",
     "version": "server/public/v0.1.16",
     "date": "2025-07-28T22:46:46Z"
@@ -317,7 +327,7 @@
   {
     "name": "ollama/ollama",
     "version": "v0.11.4",
-    "date": "2025-08-07T21:23:55Z"
+    "date": "2025-08-07T17:17:41Z"
   },
   {
     "name": "MediaBrowser/Emby.Releases",
@@ -363,11 +373,6 @@
     "name": "crowdsecurity/crowdsec",
     "version": "v1.6.11",
     "date": "2025-07-22T12:11:38Z"
-  },
-  {
-    "name": "cloudreve/cloudreve",
-    "version": "4.4.1",
-    "date": "2025-08-07T04:25:37Z"
   },
   {
     "name": "influxdata/influxdb",
@@ -633,11 +638,6 @@
     "name": "dani-garcia/vaultwarden",
     "version": "1.34.3",
     "date": "2025-07-30T09:10:59Z"
-  },
-  {
-    "name": "zabbix/zabbix",
-    "version": "7.4.1",
-    "date": "2025-07-30T08:43:04Z"
   },
   {
     "name": "OliveTin/OliveTin",
