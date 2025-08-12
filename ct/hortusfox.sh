@@ -47,6 +47,7 @@ function update_script() {
     $STD php asatru migrate --no-interaction
     $STD php asatru plants:attributes
     $STD php asatru calendar:classes
+    chown -R www-data:www-data /opt/hortusfox
     msg_ok "Updated HortusFox"
 
     msg_info "Starting Service"

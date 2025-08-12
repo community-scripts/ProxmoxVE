@@ -88,6 +88,7 @@ cat <<EOF >/etc/apache2/sites-available/hortusfox.conf
     CustomLog \${APACHE_LOG_DIR}/hortusfox_access.log combined
 </VirtualHost>
 EOF
+chown -R www-data:www-data /opt/hortusfox
 $STD a2dissite 000-default
 $STD a2ensite hortusfox
 $STD a2enmod rewrite
