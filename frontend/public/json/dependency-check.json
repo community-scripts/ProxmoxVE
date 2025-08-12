@@ -1,0 +1,48 @@
+{
+    "name": "Proxmox VE VM Startup Dependency Check",
+    "slug": "dependency-check",
+    "categories": [
+        1
+    ],
+    "date_created": "2025-08-12",
+    "type": "pve",
+    "updateable": false,
+    "privileged": false,
+    "interface_port": null,
+    "documentation": null,
+    "website": null,
+    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/proxmox.webp",
+    "config_path": "/etc/default/pve-auto-hook",
+    "description": "This script checks for the presence of required dependencies before starting a VM or LXC container in Proxmox. It ensures that all referenced storages are available and, additionally, supports the usage of tags to check for specific dependencies. If any required dependency is missing, the VM or container will not start until the issue is resolved. This script is designed to be used as a Proxmox hookscript, which can be applied to both QEMU VMs and LXC containers.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "tools/pve/dependency-check.sh",
+            "resources": {
+                "cpu": null,
+                "ram": null,
+                "hdd": null,
+                "os": null,
+                "version": null
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": [
+        {
+            "text": "Execute within the Proxmox shell",
+            "type": "info"
+        },
+        {
+            "text": "To wait until a certain host is available, tag the VM or container with `dep_ping_<hostname>` where `<hostname>` is the name or IP of the host to ping. The script will wait until the host is reachable before proceeding with the startup.",
+            "type": "info"
+        },
+        {
+            "text": "To wait until a certain TCP port is open, tag the VM or container with `dep_tcp_<hostname>_<port>` where `<hostname>` is the name or IP of the host and `<port>` is the TCP port number. The script will wait until the port is open before proceeding with the startup.",
+            "type": "info"
+        }
+    ]
+}
