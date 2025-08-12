@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-08-12
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - change owner of hortusfox directory [@snow2k9](https://github.com/snow2k9) ([#6763](https://github.com/community-scripts/ProxmoxVE/pull/6763))
+
 ## 2025-08-11
 
 ### 🚀 Updated Scripts
