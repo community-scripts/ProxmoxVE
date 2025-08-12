@@ -15,6 +15,12 @@ update_os
 
 msg_info "Setup Syncthing"
 $STD apk add --no-cache syncthing
+
+# let syncthing create default config
+rc-service syncthing start
+sleep 3
+rc-service syncthing stop
+
 sed -i "{s/127.0.0.1:8384/0.0.0.0:8384/g}" /var/lib/syncthing/.local/state/syncthing/config.xml
 msg_ok "Setup Syncthing"
 
