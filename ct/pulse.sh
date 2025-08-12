@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
-# Author: rcourtman
+# Author: rcourtman & vhsdream
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/rcourtman/Pulse
 
@@ -39,12 +39,19 @@ function update_script() {
     systemctl stop pulse
     msg_ok "Stopped ${APP}"
 
+    dirs=(/opt/pulse/bin /opt/pulse/frontend-modern)
+    for dir in "${dirs[@]}"; do
+      if [[ -d "$dir" ]]; then
+        rm -rf "$dir"
+      fi
+    done
+
     fetch_and_deploy_gh_release "pulse" "rcourtman/Pulse" "prebuild" "latest" "/opt/pulse" "*-linux-amd64.tar.gz"
     chown -R pulse:pulse /etc/pulse /opt/pulse
-    sed -i 's|pulse/pulse|pulse/bin/pulse|' /etc/systemd/system/pulse.service
+    sed -i 's|bin/pulse|pulse|' /etc/systemd/system/pulse.service
     systemctl daemon-reload
-    if [[ -f /opt/pulse/pulse ]]; then
-      rm -rf /opt/pulse/{pulse,frontend-modern}
+    if grep -q 'pulse-home:/bin/bash' /etc/passwd; then
+      usermod -s /usr/sbin/nologin pulse
     fi
 
     msg_info "Starting ${APP}"

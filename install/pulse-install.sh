@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Copyright (c) 2021-2025 community-scripts ORG
-# Author: rcourtman
+# Author: rcourtman & vhsdream
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/rcourtman/Pulse
 
@@ -21,7 +21,7 @@ $STD apt-get install -y \
 msg_ok "Installed Dependencies"
 
 msg_info "Creating User"
-if useradd -r -m -d /opt/pulse-home -s /bin/bash pulse; then
+if useradd -r -m -d /opt/pulse-home -s /usr/sbin/nologin pulse; then
   msg_ok "Created User"
 else
   msg_error "User creation failed"
@@ -44,7 +44,7 @@ Type=simple
 User=pulse
 Group=pulse
 WorkingDirectory=/opt/pulse
-ExecStart=/opt/pulse/bin/pulse
+ExecStart=/opt/pulse/pulse
 Restart=always
 RestartSec=3
 StandardOutput=journal
