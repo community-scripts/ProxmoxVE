@@ -15,6 +15,10 @@ update_os
 
 install -d -m 0700 /etc/twingate
 
+access_token=""
+refresh_token=""
+network=""
+
 while [[ -z "$access_token" ]]; do
   read -rp "${TAB3}Please enter your access token: " access_token
 done
@@ -40,6 +44,8 @@ msg_info "Writing config"
   echo "TWINGATE_NETWORK=${network}"
   echo "TWINGATE_ACCESS_TOKEN=${access_token}"
   echo "TWINGATE_REFRESH_TOKEN=${refresh_token}"
+  echo "TWINGATE_LABEL_HOSTNAME=$(hostname)"
+  echo "TWINGATE_LABEL_DEPLOYED_BY=proxmox"
 } > /etc/twingate/connector.conf
 chmod 600 /etc/twingate/connector.conf
 msg_ok "Config written"
