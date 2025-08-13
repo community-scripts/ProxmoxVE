@@ -24,6 +24,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - Docker LXC: Add Portainer info [@tremor021](https://github.com/tremor021) ([#6803](https://github.com/community-scripts/ProxmoxVE/pull/6803))
     - AgentDVR: Added update function [@tremor021](https://github.com/tremor021) ([#6804](https://github.com/community-scripts/ProxmoxVE/pull/6804))
 
 ## 2025-08-12
