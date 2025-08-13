@@ -44,7 +44,10 @@ function update_script() {
     msg_info "Updating ${APP} to ${RELEASE}"
     cd /opt/myspeed
     $STD npm install
-    cp -r /opt/myspeed_bak/data/* /opt/myspeed/data/
+    if [[ -d /opt/myspeed_bak/data ]]; then
+      mkdir -p /opt/myspeed/data/
+      cp -r /opt/myspeed_bak/data/* /opt/myspeed/data/
+    fi
     msg_ok "Updated ${APP} to ${RELEASE}"
 
     msg_info "Starting ${APP} Service"
