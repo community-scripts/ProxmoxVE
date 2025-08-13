@@ -54,11 +54,11 @@ sed -i "s/user:pass@postgres/${DB_USER}:${DB_PASS}@localhost/g" /opt/outline/.en
 sed -i 's/redis:6379/localhost:6379/g' /opt/outline/.env
 sed -i "5s#URL=#URL=http://${LOCAL_IP}#g" /opt/outline/.env
 sed -i 's/FORCE_HTTPS=true/FORCE_HTTPS=false/g' /opt/outline/.env
-$STD yarn install --frozen-lockfile
 export NODE_OPTIONS="--max-old-space-size=3584"
-$STD yarn build
-sed -i 's/NODE_ENV=development/NODE_ENV=production/g' /opt/outline/.env
+$STD yarn install --frozen-lockfile
 export NODE_ENV=production
+sed -i 's/NODE_ENV=development/NODE_ENV=production/g' /opt/outline/.env
+$STD yarn build
 msg_ok "Configured Outline"
 
 msg_info "Creating Service"

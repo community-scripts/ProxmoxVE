@@ -42,11 +42,12 @@ function update_script() {
 
     msg_info "Updating ${APP} to ${RELEASE}"
     cd /opt/outline
+    mv /opt/.env /opt/outline
     export NODE_ENV=development
     export NODE_OPTIONS="--max-old-space-size=3584"
     $STD yarn install --frozen-lockfile
+    export NODE_ENV=production
     $STD yarn build
-    mv /opt/.env /opt/outline
     msg_ok "Updated ${APP}"
 
     msg_info "Starting Services"
