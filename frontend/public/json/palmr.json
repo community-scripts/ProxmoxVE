@@ -20,7 +20,7 @@
       "script": "ct/palmr.sh",
       "resources": {
         "cpu": 4,
-        "ram": 4096,
+        "ram": 6144,
         "hdd": 6,
         "os": "Debian",
         "version": "12"
@@ -32,6 +32,10 @@
     "password": null
   },
   "notes": [
+    {
+      "text": "This LXC is very memory-hungry when updating; it requires at least 6GB RAM, but RAM may be reduced to as low as 2GB when running normally",
+      "type": "warning"
+    },
     {
       "text": "To use a bind mount for storage, create symlinks to your mount for both `uploads` and `temp-uploads` in `/opt/palmr_data`",
       "type": "info"

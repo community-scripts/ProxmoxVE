@@ -8,7 +8,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 APP="Palmr"
 var_tags="${var_tags:-files}"
 var_cpu="${var_cpu:-4}"
-var_ram="${var_ram:-4096}"
+var_ram="${var_ram:-6144}"
 var_disk="${var_disk:-6}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-12}"
@@ -28,19 +28,18 @@ function update_script() {
     exit
   fi
 
-  RELEASE=$(curl -fsSL https://api.github.com/repos/kyantech/palmr/releases/latest | jq '.tag_name' | sed 's/^v//')
+  RELEASE=$(curl -fsSL https://api.github.com/repos/kyantech/palmr/releases/latest | jq '.tag_name' | sed 's/^"v//;s/"$//')
   if [[ "${RELEASE}" != "$(cat ~/.palmr 2>/dev/null)" ]] || [[ ! -f ~/.palmr ]]; then
     msg_info "Stopping Services"
     systemctl stop palmr-frontend palmr-backend
     msg_ok "Stopped Services"
 
     cp /opt/palmr/apps/server/.env /opt/palmr.env
-    rm -rf /opt/palmr
     fetch_and_deploy_gh_release "Palmr" "kyantech/Palmr" "tarball" "latest" "/opt/palmr"
-    
+
     PNPM="$(jq -r '.packageManager' /opt/palmr/package.json)"
     NODE_VERSION="20" NODE_MODULE="$PNPM" setup_nodejs
-    
+
     msg_info "Updating ${APP}"
     cd /opt/palmr/apps/server
     mv /opt/palmr.env /opt/palmr/apps/server/.env
