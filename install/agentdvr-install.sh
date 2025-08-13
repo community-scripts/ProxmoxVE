@@ -29,6 +29,7 @@ cd /opt/agentdvr/agent
 curl -fsSL "$RELEASE" -o $(basename "$RELEASE")
 $STD unzip Agent_Linux64*.zip
 chmod +x ./Agent
+echo $RELEASE > ~/.agentdvr
 msg_ok "Installed AgentDVR"
 
 msg_info "Creating Service"
