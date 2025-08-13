@@ -41,8 +41,10 @@ function update_script() {
     msg_ok "Started ${APP}"
 
     msg_ok "Updated Successfully"
-    exit
+  else
+    msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
+  exit
 }
 
 start
