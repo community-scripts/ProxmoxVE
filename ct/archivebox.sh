@@ -42,7 +42,7 @@ function update_script() {
 
   msg_info "Updating ArchiveBox"
   cd /opt/archivebox/data
-  uv --system pip install --upgrade --ignore-installed archivebox
+  $STD uv pip install --system --upgrade --no-reinstall archivebox
   sudo -u archivebox archivebox init
   msg_ok "Updated ArchiveBox"
 
