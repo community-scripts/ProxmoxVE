@@ -180,7 +180,10 @@ EOF
   msg_ok "Updated Immich CLI"
 
   chown -R immich:immich "$INSTALL_DIR"
-  echo "$RELEASE" >/opt/"${APP}"_version.txt
+  if [[ ! -f ~/.debian_version.bak ]]; then
+    cp /etc/debian_version ~/.debian_version.bak
+    sed -i 's/.*/13.0/' /etc/debian_version
+  fi
   msg_ok "Updated ${APP} to v${RELEASE}"
 
   msg_info "Cleaning up"
