@@ -257,6 +257,7 @@ mapfile -t TEMPLATES < <( (pveam update >/dev/null 2>&1 && pveam available -sect
 if [ ${#TEMPLATES[@]} -eq 0 ]; then
   msg_info "Online search failed or no template found. Checking for local fallbacks..."
   
+  # Grabs the first column which contains the full Volume ID
   mapfile -t TEMPLATES < <(pveam list "$TEMPLATE_STORAGE" | awk "/$TEMPLATE_SEARCH/ {print \$1}" | sort -t - -k 2 -V)
   
   # If the fallback search ALSO finds nothing, then we must exit.
@@ -268,10 +269,16 @@ if [ ${#TEMPLATES[@]} -eq 0 ]; then
   msg_ok "Found local fallback template."
 fi
 
-# 🎯 THE FIX IS HERE: Add this line to strip the prefix from the variable
-TEMPLATE=$(echo "${TEMPLATES[-1]}" | sed 's/.*vztmpl\///')
+# By this point, the TEMPLATES array contains either the online list or the local list.
+# The last element is always the newest version available.
+TEMPLATE="${TEMPLATES[-1]}"
 
-# Now the variable is clean before being used
+# 🎯 **THE FIX IS HERE:** This line strips the "storage:vztmpl/" prefix,
+# leaving only the clean filename required by the commands below.
+TEMPLATE=$(echo "$TEMPLATE" | sed 's/.*vztmpl\///')
+
+# --- Start of Validation Logic ---
+
 msg_ok "Using template: $TEMPLATE"
 TEMPLATE_PATH="$(pvesm path $TEMPLATE_STORAGE:vztmpl/$TEMPLATE 2>/dev/null || echo "/var/lib/vz/template/cache/$TEMPLATE")"
 
