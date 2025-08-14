@@ -25,6 +25,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Pulse: v4.3.2+ [@vhsdream](https://github.com/vhsdream) ([#6859](https://github.com/community-scripts/ProxmoxVE/pull/6859))
     - rustdeskserver: fix API version file [@steadfasterX](https://github.com/steadfasterX) ([#6847](https://github.com/community-scripts/ProxmoxVE/pull/6847))
     - Immich: quickfix #6836 [@vhsdream](https://github.com/vhsdream) ([#6848](https://github.com/community-scripts/ProxmoxVE/pull/6848))
 
