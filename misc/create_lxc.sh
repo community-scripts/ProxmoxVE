@@ -257,7 +257,6 @@ mapfile -t TEMPLATES < <( (pveam update >/dev/null 2>&1 && pveam available -sect
 if [ ${#TEMPLATES[@]} -eq 0 ]; then
   msg_info "Online search failed or no template found. Checking for local fallbacks..."
   
-  # 🎯 THE FIX IS HERE: Change '$2' to the correct column number (e.g., '$6')
   mapfile -t TEMPLATES < <(pveam list "$TEMPLATE_STORAGE" | awk "/$TEMPLATE_SEARCH/ {print \$1}" | sort -t - -k 2 -V)
   
   # If the fallback search ALSO finds nothing, then we must exit.
@@ -269,10 +268,10 @@ if [ ${#TEMPLATES[@]} -eq 0 ]; then
   msg_ok "Found local fallback template."
 fi
 
-# By this point, the TEMPLATES array contains either the online list or the local list.
-# The last element is always the newest version available.
-TEMPLATE="${TEMPLATES[-1]}"
+# 🎯 THE FIX IS HERE: Add this line to strip the prefix from the variable
+TEMPLATE=$(echo "${TEMPLATES[-1]}" | sed 's/.*vztmpl\///')
 
+# Now the variable is clean before being used
 msg_ok "Using template: $TEMPLATE"
 TEMPLATE_PATH="$(pvesm path $TEMPLATE_STORAGE:vztmpl/$TEMPLATE 2>/dev/null || echo "/var/lib/vz/template/cache/$TEMPLATE")"
 
