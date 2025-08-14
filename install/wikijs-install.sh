@@ -20,6 +20,7 @@ msg_ok "Installed Dependencies"
 
 NODE_VERSION="20" NODE_MODULE="yarn@latest,node-gyp" setup_nodejs
 PG_VERSION="17" setup_postgresql
+fetch_and_deploy_gh_release "wikijs" "requarks/wiki" "prebuild" "latest" "/opt/wikijs" "wiki-js.tar.gz"
 
 msg_info "Set up PostgreSQL"
 DB_NAME="wiki"
@@ -39,17 +40,11 @@ $STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET timezone TO 'UTC';"
 } >>~/wikijs.creds
 msg_ok "Set up PostgreSQL"
 
-msg_info "Setup Wiki.js"
-temp_file=$(mktemp)
-RELEASE=$(curl -fsSL https://api.github.com/repos/Requarks/wiki/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/requarks/wiki/releases/download/v${RELEASE}/wiki-js.tar.gz" -o ""$temp_file""
-mkdir /opt/wikijs
-tar -xzf "$temp_file" -C /opt/wikijs
+msg_info "Configuring Wiki.js"
 mv /opt/wikijs/config.sample.yml /opt/wikijs/config.yml
 sed -i -E 's|^( *user: ).*|\1'"$DB_USER"'|' /opt/wikijs/config.yml
 sed -i -E 's|^( *pass: ).*|\1'"$DB_PASS"'|' /opt/wikijs/config.yml
-echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
-msg_ok "Installed Wiki.js"
+msg_ok "Configured Wiki.js"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/wikijs.service
@@ -75,7 +70,6 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -f "$temp_file"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"

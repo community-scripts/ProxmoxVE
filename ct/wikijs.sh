@@ -27,8 +27,9 @@ function update_script() {
         msg_error "No ${APP} Installation Found!"
         exit
     fi
+
     RELEASE=$(curl -fsSL https://api.github.com/repos/Requarks/wiki/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-    if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
+    if [[ "${RELEASE}" != "$(cat ~/.wikijs)" ]] || [[ ! -f ~/.wikijs ]]; then
         msg_info "Verifying whether ${APP}' new release is v3.x+ and current install uses SQLite."
         SQLITE_INSTALL=$([ -f /opt/wikijs/db.sqlite ] && echo "true" || echo "false")
         if [[ "${SQLITE_INSTALL}" == "true" && "${RELEASE}" =~ ^3.* ]]; then
@@ -47,13 +48,9 @@ function update_script() {
         cp -R /opt/wikijs/{config.yml,/data} /opt/wikijs-backup
         msg_ok "Backed up Data"
 
-        msg_info "Updating ${APP}"
         rm -rf /opt/wikijs/*
-        cd /opt/wikijs
-        curl -fsSL "https://github.com/requarks/wiki/releases/download/v${RELEASE}/wiki-js.tar.gz" -o $(basename "https://github.com/requarks/wiki/releases/download/v${RELEASE}/wiki-js.tar.gz")
-        tar -xzf wiki-js.tar.gz
-        msg_ok "Updated ${APP}"
-
+        fetch_and_deploy_gh_release "wikijs" "requarks/wiki" "prebuild" "latest" "/opt/wikijs" "wiki-js.tar.gz"
+        
         msg_info "Restoring Data"
         cp -R /opt/wikijs-backup/* /opt/wikijs
         $SQLITE_INSTALL && $STD npm rebuild sqlite3
@@ -64,9 +61,9 @@ function update_script() {
         msg_ok "Started ${APP}"
 
         msg_info "Cleaning Up"
-        rm -rf /opt/wikijs/wiki-js.tar.gz
         rm -rf /opt/wikijs-backup
         msg_ok "Cleanup Completed"
+        
         msg_ok "Updated Successfully"
     else
         msg_ok "No update required. ${APP} is already at v${RELEASE}"
