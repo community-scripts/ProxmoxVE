@@ -19,19 +19,21 @@ DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::="--force-confnew" inst
 $STD netfilter-persistent reload
 msg_ok "Installed WireGuard"
 
-fetch_and_deploy_gh_release "wgdashboard" "donaldzou/WGDashboard" "tarball" "latest" "/etc/wgdashboard"
+read -r -p "${TAB3}Would you like to add WGDashboard? <y/N> " prompt
+if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
+  fetch_and_deploy_gh_release "wgdashboard" "donaldzou/WGDashboard" "tarball" "latest" "/etc/wgdashboard"
 
-msg_info "Installing WGDashboard"
-cd /etc/wgdashboard/src
-chmod u+x wgd.sh
-$STD ./wgd.sh install
-echo "net.ipv4.ip_forward=1" >>/etc/sysctl.conf
-$STD sysctl -p /etc/sysctl.conf
-msg_ok "Installed WGDashboard"
+  msg_info "Installing WGDashboard"
+  cd /etc/wgdashboard/src
+  chmod u+x wgd.sh
+  $STD ./wgd.sh install
+  echo "net.ipv4.ip_forward=1" >>/etc/sysctl.conf
+  $STD sysctl -p /etc/sysctl.conf
+  msg_ok "Installed WGDashboard"
 
-msg_info "Create Example Config for WGDashboard"
-private_key=$(wg genkey)
-cat <<EOF >/etc/wireguard/wg0.conf
+  msg_info "Create Example Config for WGDashboard"
+  private_key=$(wg genkey)
+  cat <<EOF >/etc/wireguard/wg0.conf
 [Interface]
 PrivateKey = ${private_key}
 Address = 10.0.0.1/24
@@ -40,10 +42,10 @@ PostUp = iptables -A FORWARD -i wg0 -j ACCEPT; iptables -A FORWARD -o wg0 -j ACC
 PostDown = iptables -D FORWARD -i wg0 -j ACCEPT; iptables -D FORWARD -o wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE;
 ListenPort = 51820
 EOF
-msg_ok "Created Example Config for WGDashboard"
+  msg_ok "Created Example Config for WGDashboard"
 
-msg_info "Creating Service"
-cat <<EOF >/etc/systemd/system/wg-dashboard.service
+  msg_info "Creating Service"
+  cat <<EOF >/etc/systemd/system/wg-dashboard.service
 [Unit]
 After=syslog.target network-online.target
 Wants=wg-quick.target
@@ -63,8 +65,9 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now wg-dashboard
-msg_ok "Created Service"
+  systemctl enable -q --now wg-dashboard
+  msg_ok "Created Service"
+fi
 
 motd_ssh
 customize
