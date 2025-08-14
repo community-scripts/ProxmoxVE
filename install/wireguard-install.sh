@@ -13,18 +13,15 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt-get install -y git
-msg_ok "Installed Dependencies"
-
 msg_info "Installing WireGuard"
 $STD apt-get install -y wireguard wireguard-tools net-tools iptables
 DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::="--force-confnew" install -y iptables-persistent &>/dev/null
 $STD netfilter-persistent reload
 msg_ok "Installed WireGuard"
 
+fetch_and_deploy_gh_release "wgdashboard" "donaldzou/WGDashboard" "tarball" "latest" "/etc/wgdashboard"
+
 msg_info "Installing WGDashboard"
-git clone -q https://github.com/donaldzou/WGDashboard.git /etc/wgdashboard
 cd /etc/wgdashboard/src
 chmod u+x wgd.sh
 $STD ./wgd.sh install
