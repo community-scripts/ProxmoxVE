@@ -32,36 +32,32 @@ function update_script() {
     $STD npm install -g pnpm@latest
     msg_ok "Installed pnpm"
   fi
+
   RELEASE=$(curl -fsSL https://api.github.com/repos/diced/zipline/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+  if [[ ! -f ~/.zipline ]] || [[ "${RELEASE}" != "$(cat ~/.zipline)" ]]; then
     msg_info "Stopping ${APP}"
     systemctl stop zipline
     msg_ok "${APP} Stopped"
 
-    msg_info "Updating ${APP} to ${RELEASE}"
-    cp /opt/zipline/.env /opt/
     mkdir -p /opt/zipline-uploads
     if [ -d /opt/zipline/uploads ] && [ "$(ls -A /opt/zipline/uploads)" ]; then
       cp -R /opt/zipline/uploads/* /opt/zipline-uploads/
     fi
-    curl -fsSL "https://github.com/diced/zipline/archive/refs/tags/v${RELEASE}.zip" -o $(basename "https://github.com/diced/zipline/archive/refs/tags/v${RELEASE}.zip")
-    $STD unzip v"${RELEASE}".zip
+    cp /opt/zipline/.env /opt/
     rm -R /opt/zipline
-    mv zipline-"${RELEASE}" /opt/zipline
+    fetch_and_deploy_gh_release "zipline" "diced/zipline" "tarball"
+
+    msg_info "Updating ${APP} to ${RELEASE}"
     cd /opt/zipline
     mv /opt/.env /opt/zipline/.env
     $STD pnpm install
     $STD pnpm build
-    echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP}"
 
     msg_info "Starting ${APP}"
     systemctl start zipline
     msg_ok "Started ${APP}"
 
-    msg_info "Cleaning Up"
-    rm -rf v"${RELEASE}".zip
-    msg_ok "Cleaned"
     msg_ok "Updated Successfully"
   else
     msg_ok "No update required. ${APP} is already at ${RELEASE}"

@@ -9,7 +9,7 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 3000,
-  "documentation": null,
+  "documentation": "https://zipline.diced.sh/docs/get-started",
   "website": "https://zipline.diced.sh/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/zipline.webp",
   "config_path": "/opt/zipline/.env",
