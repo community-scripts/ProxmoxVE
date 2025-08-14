@@ -39,11 +39,7 @@ $STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME OWNER $DB_ADMIN_USER;"
 } >>~/zitadel.creds
 msg_ok "Installed PostgreSQL"
 
-msg_info "Installing Zitadel"
-RELEASE=$(curl -fsSL https://api.github.com/repos/zitadel/zitadel/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/zitadel/zitadel/releases/download/v$RELEASE/zitadel-linux-amd64.tar.gz" | tar -xz
-mv zitadel-linux-amd64/zitadel /usr/local/bin
-msg_ok "Installed Zitadel"
+fetch_and_deploy_gh_release "zitadel" "zitadel/zitadel" "prebuild" "latest" "/usr/local/bin" "zitadel-linux-amd64.tar.gz"
 
 msg_info "Setting up Zitadel Environments"
 mkdir -p /opt/zitadel
@@ -114,7 +110,7 @@ NoNewPrivileges=true
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q zitadel.service
+systemctl enable -q --now zitadel
 msg_ok "Created Services"
 
 msg_info "Zitadel initial setup"
@@ -122,7 +118,6 @@ zitadel start-from-init --masterkeyFile /opt/zitadel/.masterkey --config /opt/zi
 sleep 60
 kill $(lsof -i | awk '/zitadel/ {print $2}' | head -n1)
 useradd zitadel
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Zitadel initialized"
 
 msg_info "Set ExternalDomain to current IP and restart Zitadel"
@@ -145,7 +140,6 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -rf ~/zitadel-linux-amd64
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
