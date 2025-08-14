@@ -13,15 +13,8 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Zoraxy (Patience)"
-RELEASE=$(curl -fsSL https://api.github.com/repos/tobychui/zoraxy/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-curl -fsSL "https://github.com/tobychui/zoraxy/releases/download/${RELEASE}/zoraxy_linux_amd64" -o zoraxy_linux_amd64
-mkdir -p /opt/zoraxy
-mv zoraxy_linux_amd64 /opt/zoraxy/zoraxy
-chmod +x /opt/zoraxy/zoraxy
+fetch_and_deploy_gh_release "zoraxy" "tobychui/zoraxy" "singlefile" "latest" "/opt/zoraxy" "zoraxy_linux_amd64"
 ln -s /opt/zoraxy/zoraxy /usr/local/bin/zoraxy
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
-msg_ok "Installed Zoraxy"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/zoraxy.service

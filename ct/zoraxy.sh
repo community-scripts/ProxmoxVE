@@ -27,17 +27,21 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/tobychui/zoraxy/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
-    msg_info "Updating $APP to ${RELEASE}"
+
+  RELEASE=$(curl -fsSL https://api.github.com/repos/tobychui/zoraxy/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+  if [[ ! -f ~/.zoraxy ]] || [[ "${RELEASE}" != "$(cat ~/.zoraxy)" ]]; then
+    msg_info "Stopping service"
     systemctl stop zoraxy
-    curl -fsSL "https://github.com/tobychui/zoraxy/releases/download/${RELEASE}/zoraxy_linux_amd64" -o $(basename "https://github.com/tobychui/zoraxy/releases/download/${RELEASE}/zoraxy_linux_amd64")
+    msg_ok "Service stopped"
+
     rm -rf /opt/zoraxy/zoraxy
-    mv zoraxy_linux_amd64 /opt/zoraxy/zoraxy
-    chmod +x /opt/zoraxy/zoraxy
+    fetch_and_deploy_gh_release "zoraxy" "tobychui/zoraxy" "singlefile" "latest" "/opt/zoraxy" "zoraxy_linux_amd64"
+
+    msg_info "Starting service"
     systemctl start zoraxy
-    echo "${RELEASE}" >/opt/${APP}_version.txt
-    msg_ok "Updated $APP"
+    msg_ok "Service started"
+
+    msg_ok "Updated successfully"
   else
     msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
