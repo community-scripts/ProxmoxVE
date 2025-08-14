@@ -28,21 +28,20 @@ function update_script() {
       exit
    fi
 
-   msg_info "Updating yt-dlp"
-   $STD yt-dlp -U
-   msg_ok "Updated yt-dlp"
+
    RELEASE=$(curl -fsSL https://api.github.com/repos/marcopiovanello/yt-dlp-web-ui/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-   if [[ "${RELEASE}" != "$(cat /opt/yt-dlp-webui_version.txt)" ]] || [[ ! -f /opt/yt-dlp-webui_version.txt ]]; then
+   if [[ "${RELEASE}" != "$(cat ~/.yt-dlp-webui)" ]] || [[ ! -f ~/.yt-dlp-webui ]]; then
 
       msg_info "Stopping $APP"
       systemctl stop yt-dlp-webui
       msg_ok "Stopped $APP"
 
-      msg_info "Updating $APP to v${RELEASE}"
+      msg_info "Updating yt-dlp"
+      $STD yt-dlp -U
+      msg_ok "Updated yt-dlp"
+      
       rm -rf /usr/local/bin/yt-dlp-webui
-curl -fsSL "https://github.com/marcopiovanello/yt-dlp-web-ui/releases/download/v${RELEASE}/yt-dlp-webui_linux-amd64" -o "/usr/local/bin/yt-dlp-webui"
-      chmod +x /usr/local/bin/yt-dlp-webui
-      msg_ok "Updated $APP LXC"
+      fetch_and_deploy_gh_release "yt-dlp-webui" "marcopiovanello/yt-dlp-web-ui" "singlefile" "latest" "/usr/local/bin" "yt-dlp-webui_linux-amd64"
 
       msg_info "Starting $APP"
       systemctl start yt-dlp-webui
