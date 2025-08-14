@@ -246,7 +246,6 @@ if [ -f /etc/pve/corosync.conf ]; then
 fi
 
 # Update LXC template list
-# Define the search pattern early
 TEMPLATE_SEARCH="${PCT_OSTYPE}-${PCT_OSVERSION:-}"
 
 # Attempt to update the list and get available online templates in one go
@@ -269,17 +268,11 @@ if [ ${#TEMPLATES[@]} -eq 0 ]; then
   msg_ok "Found local fallback template."
 fi
 
-# By this point, the TEMPLATES array contains either the online list or the local list.
-# The last element is always the newest version available.
 TEMPLATE="${TEMPLATES[-1]}"
-
-# 🎯 **THE FIX IS HERE:** This line strips the "storage:vztmpl/" prefix,
-# leaving only the clean filename required by the commands below.
 TEMPLATE=$(echo "$TEMPLATE" | sed 's/.*vztmpl\///')
 
-# --- Start of Validation Logic ---
-
 msg_ok "Using template: $TEMPLATE"
+
 TEMPLATE_PATH="$(pvesm path $TEMPLATE_STORAGE:vztmpl/$TEMPLATE 2>/dev/null || echo "/var/lib/vz/template/cache/$TEMPLATE")"
 
 TEMPLATE_VALID=1
