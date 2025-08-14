@@ -21,6 +21,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - rustdeskserver: fix API version file [@steadfasterX](https://github.com/steadfasterX) ([#6847](https://github.com/community-scripts/ProxmoxVE/pull/6847))
     - Immich: quickfix #6836 [@vhsdream](https://github.com/vhsdream) ([#6848](https://github.com/community-scripts/ProxmoxVE/pull/6848))
 
   - #### 🔧 Refactor
