@@ -39,6 +39,10 @@
     {
       "text": "After installation, access the web interface to configure your Proxmox connection details through the built-in setup wizard",
       "type": "Info"
+    },
+    {
+      "text": "Configure authentication in the Web UI => Settings => Security",
+      "type": "Info"
     }
   ]
 }

@@ -34,28 +34,30 @@ function update_script() {
   fi
 
   RELEASE=$(curl -fsSL https://api.github.com/repos/rcourtman/Pulse/releases/latest | jq -r '.tag_name' | sed 's/^v//')
+  SERVICE_PATH="/etc/systemd/system"
   if [[ "${RELEASE}" != "$(cat ~/.pulse 2>/dev/null)" ]] || [[ ! -f ~/.pulse ]]; then
     msg_info "Stopping ${APP}"
-    systemctl stop pulse
+    systemctl stop pulse*.service
     msg_ok "Stopped ${APP}"
 
-    dirs=(/opt/pulse/bin /opt/pulse/frontend-modern)
-    for dir in "${dirs[@]}"; do
-      if [[ -d "$dir" ]]; then
-        rm -rf "$dir"
-      fi
-    done
+    if [[ -f /opt/pulse/pulse ]]; then
+      rm -f /opt/pulse/pulse
+    fi
 
     fetch_and_deploy_gh_release "pulse" "rcourtman/Pulse" "prebuild" "latest" "/opt/pulse" "*-linux-amd64.tar.gz"
     chown -R pulse:pulse /etc/pulse /opt/pulse
-    sed -i 's|bin/pulse|pulse|' /etc/systemd/system/pulse.service
+    if [[ -f "$SERVICE_PATH"/pulse.service ]]; then
+      mv "$SERVICE_PATH"/pulse.service "$SERVICE_PATH"/pulse-backend.service
+    fi
+    sed -i -e 's|pulse/pulse|pulse/bin/pulse|' \
+      -e 's/^Environment="API.*$//' "$SERVICE_PATH"/pulse-backend.service
     systemctl daemon-reload
     if grep -q 'pulse-home:/bin/bash' /etc/passwd; then
       usermod -s /usr/sbin/nologin pulse
     fi
 
     msg_info "Starting ${APP}"
-    systemctl start pulse
+    systemctl start pulse-backend
     msg_ok "Started ${APP}"
 
     msg_ok "Updated Successfully"

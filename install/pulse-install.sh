@@ -34,7 +34,7 @@ chown -R pulse:pulse /etc/pulse /opt/pulse
 msg_ok "Installed Pulse"
 
 msg_info "Creating Service"
-cat <<EOF >/etc/systemd/system/pulse.service
+cat <<EOF >/etc/systemd/system/pulse-backend.service
 [Unit]
 Description=Pulse Monitoring Server
 After=network.target
@@ -44,7 +44,7 @@ Type=simple
 User=pulse
 Group=pulse
 WorkingDirectory=/opt/pulse
-ExecStart=/opt/pulse/pulse
+ExecStart=/opt/pulse/bin/pulse
 Restart=always
 RestartSec=3
 StandardOutput=journal
@@ -55,7 +55,7 @@ Environment="PULSE_DATA_DIR=/etc/pulse"
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now pulse
+systemctl enable -q --now pulse-backend
 msg_ok "Created Service"
 
 motd_ssh
