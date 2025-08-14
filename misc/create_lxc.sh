@@ -253,13 +253,12 @@ TEMPLATE_SEARCH="${PCT_OSTYPE}-${PCT_OSVERSION:-}"
 msg_info "Searching for online LXC template for '$TEMPLATE_SEARCH'..."
 mapfile -t TEMPLATES < <( (pveam update >/dev/null 2>&1 && pveam available -section system) | sed -n "s/.*\($TEMPLATE_SEARCH.*\)/\1/p" | sort -t - -k 2 -V)
 
-# Check if the online search was successful. If the array is empty, it means either
-# the update failed OR no matching online template was found.
+# Check if the online search was successful.
 if [ ${#TEMPLATES[@]} -eq 0 ]; then
   msg_info "Online search failed or no template found. Checking for local fallbacks..."
   
-  # Run the fallback logic ONCE.
-  mapfile -t TEMPLATES < <(pveam list "$TEMPLATE_STORAGE" | awk "/$TEMPLATE_SEARCH/ {print \$2}" | sort -t - -k 2 -V)
+  # 🎯 THE FIX IS HERE: Change '$2' to the correct column number (e.g., '$6')
+  mapfile -t TEMPLATES < <(pveam list "$TEMPLATE_STORAGE" | awk "/$TEMPLATE_SEARCH/ {print \$6}" | sort -t - -k 2 -V)
   
   # If the fallback search ALSO finds nothing, then we must exit.
   if [ ${#TEMPLATES[@]} -eq 0 ]; then
