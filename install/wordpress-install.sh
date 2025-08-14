@@ -13,13 +13,7 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies (Patience)"
-$STD apt-get install -y \
-  apache2 \
-  php8.2-{bcmath,common,cli,curl,fpm,gd,snmp,imap,mbstring,mysql,xml,zip} \
-  libapache2-mod-php
-msg_ok "Installed Dependencies"
-
+PHP_VERSION="8.4" PHP_MODULE="common,fpm,snmp,imap,mysql" PHP_APACHE="YES" setup_php
 setup_mariadb
 
 msg_info "Setting up Database"
