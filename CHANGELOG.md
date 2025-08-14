@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-08-14
 
+### 🆕 New Scripts
+
+  - ProxmoxVE svg logo [@LuisPalacios](https://github.com/LuisPalacios) ([#6846](https://github.com/community-scripts/ProxmoxVE/pull/6846))
+
 ### 🚀 Updated Scripts
 
   - Refactor: WikiJS [@tremor021](https://github.com/tremor021) ([#6840](https://github.com/community-scripts/ProxmoxVE/pull/6840))
