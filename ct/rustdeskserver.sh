@@ -34,7 +34,7 @@ function update_script() {
   fi
   RELEASE=$(curl -fsSL https://api.github.com/repos/rustdesk/rustdesk-server/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
   APIRELEASE=$(curl -fsSL https://api.github.com/repos/lejianwen/rustdesk-api/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "${RELEASE}" != "$(cat /opt/rustdesk_version.txt)" ]] || [[ "${APIRELEASE}" != "$(cat /opt/rustdesk-api.txt)" ]] || [[ ! -f /opt/rustdesk_version.txt ]] || [[ ! -f /opt/rustdesk-api.txt ]]; then
+  if [[ "${RELEASE}" != "$(cat /opt/rustdesk_version.txt)" ]] || [[ "${APIRELEASE}" != "$(cat /opt/rustdeskapi_version.txt)" ]] || [[ ! -f /opt/rustdesk_version.txt ]] || [[ ! -f /opt/rustdeskapi_version.txt ]]; then
     msg_info "Stopping $APP"
     systemctl stop rustdesk-hbbr
     systemctl stop rustdesk-hbbs
