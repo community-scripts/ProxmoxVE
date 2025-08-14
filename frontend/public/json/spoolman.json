@@ -9,7 +9,7 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 7912,
-  "documentation": null,
+  "documentation": "https://github.com/Donkie/Spoolman/wiki/Installation",
   "website": "https://github.com/Donkie/Spoolman",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/spoolman.webp",
   "config_path": "/opt/spoolman/.env",

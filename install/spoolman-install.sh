@@ -43,17 +43,19 @@ echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Installed Spoolman"
 
 msg_info "Creating Service"
-cat <<EOF >/etc/systemd/system/spoolman.service
+cat <<'EOF' >/etc/systemd/system/spoolman.service
 [Unit]
 Description=Spoolman
 After=network.target
+
 [Service]
 Type=simple
 WorkingDirectory=/opt/spoolman
 EnvironmentFile=/opt/spoolman/.env
-ExecStart=uvicorn spoolman.main:app --host 0.0.0.0 --port 7912
+ExecStart=uvicorn spoolman.main:app --host "${SPOOLMAN_HOST}" --port "${SPOOLMAN_PORT}"
 Restart=always
 User=root
+
 [Install]
 WantedBy=multi-user.target
 EOF
