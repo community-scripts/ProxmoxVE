@@ -456,7 +456,7 @@ msg_ok "Created user, env file, scripts and services"
 
 sed -i "$ a VERSION_ID=12" /etc/os-release # otherwise the motd_ssh function will fail
 cp /etc/debian_version ~/.debian_version.bak
-sed -i 's/.*/13.0' /etc/debian_version
+sed -i 's/.*/13.0/' /etc/debian_version
 motd_ssh
 customize
 
