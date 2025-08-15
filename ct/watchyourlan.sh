@@ -46,6 +46,9 @@ function update_script() {
       msg_info "Starting service"
       systemctl enable -q --now watchyourlan
       msg_ok "Service started"
+    else
+      msg_ok "No update required. ${APP} is already at v${RELEASE}"
+    fi
     exit
 }
 
