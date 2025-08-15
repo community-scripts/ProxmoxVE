@@ -1,13 +1,73 @@
 [
   {
-    "name": "Paymenter/Paymenter",
-    "version": "v1.2.9",
-    "date": "2025-08-14T11:17:26Z"
+    "name": "ollama/ollama",
+    "version": "v0.11.5-rc0",
+    "date": "2025-08-14T22:24:01Z"
+  },
+  {
+    "name": "wizarrrr/wizarr",
+    "version": "2025.8.3",
+    "date": "2025-08-14T22:05:27Z"
   },
   {
     "name": "rcourtman/Pulse",
-    "version": "v4.3.1",
-    "date": "2025-08-14T10:41:33Z"
+    "version": "v4.3.8",
+    "date": "2025-08-14T22:01:41Z"
+  },
+  {
+    "name": "mongodb/mongo",
+    "version": "r6.0.26",
+    "date": "2025-08-14T21:10:05Z"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2025.7.5",
+    "date": "2025-08-05T03:37:52Z"
+  },
+  {
+    "name": "fallenbagel/jellyseerr",
+    "version": "v2.7.3",
+    "date": "2025-08-14T20:43:46Z"
+  },
+  {
+    "name": "immich-app/immich",
+    "version": "v1.138.0",
+    "date": "2025-08-14T19:34:54Z"
+  },
+  {
+    "name": "gristlabs/grist-core",
+    "version": "v1.7.2",
+    "date": "2025-08-14T19:07:57Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "v10.10.2",
+    "date": "2025-08-14T18:18:41Z"
+  },
+  {
+    "name": "linkwarden/linkwarden",
+    "version": "v2.11.7",
+    "date": "2025-08-14T17:14:33Z"
+  },
+  {
+    "name": "meilisearch/meilisearch",
+    "version": "prototype-arroy-becomes-hannoy-11",
+    "date": "2025-08-14T13:10:45Z"
+  },
+  {
+    "name": "AdguardTeam/AdGuardHome",
+    "version": "v0.107.64",
+    "date": "2025-07-28T14:24:56Z"
+  },
+  {
+    "name": "goauthentik/authentik",
+    "version": "version/2025.8.0-rc2",
+    "date": "2025-08-12T21:12:08Z"
+  },
+  {
+    "name": "Paymenter/Paymenter",
+    "version": "v1.2.9",
+    "date": "2025-08-14T11:17:26Z"
   },
   {
     "name": "n8n-io/n8n",
@@ -33,11 +93,6 @@
     "name": "Jackett/Jackett",
     "version": "v0.22.2286",
     "date": "2025-08-14T05:57:10Z"
-  },
-  {
-    "name": "linkwarden/linkwarden",
-    "version": "v2.11.6",
-    "date": "2025-08-14T03:46:56Z"
   },
   {
     "name": "booklore-app/booklore",
@@ -90,11 +145,6 @@
     "date": "2025-06-26T22:08:00Z"
   },
   {
-    "name": "immich-app/immich",
-    "version": "v1.138.0",
-    "date": "2025-08-13T17:08:29Z"
-  },
-  {
     "name": "go-gitea/gitea",
     "version": "v1.24.5",
     "date": "2025-08-13T16:35:52Z"
@@ -123,11 +173,6 @@
     "name": "ellite/Wallos",
     "version": "v4.1.1",
     "date": "2025-08-13T11:58:04Z"
-  },
-  {
-    "name": "esphome/esphome",
-    "version": "2025.7.5",
-    "date": "2025-08-05T03:37:52Z"
   },
   {
     "name": "raydak-labs/configarr",
@@ -165,29 +210,14 @@
     "date": "2025-08-13T05:40:30Z"
   },
   {
-    "name": "goauthentik/authentik",
-    "version": "version/2025.8.0-rc2",
-    "date": "2025-08-12T21:12:08Z"
-  },
-  {
     "name": "coder/code-server",
     "version": "v4.103.0",
     "date": "2025-08-12T22:29:54Z"
   },
   {
-    "name": "meilisearch/meilisearch",
-    "version": "prototype-fix-task-deletion-on-ebs-0",
-    "date": "2025-08-12T17:27:54Z"
-  },
-  {
     "name": "netbox-community/netbox",
     "version": "v4.3.6",
     "date": "2025-08-12T17:16:42Z"
-  },
-  {
-    "name": "fallenbagel/jellyseerr",
-    "version": "preview-dns-cache-manager",
-    "date": "2025-08-12T15:29:51Z"
   },
   {
     "name": "Brandawg93/PeaNUT",
@@ -228,11 +258,6 @@
     "name": "postgres/postgres",
     "version": "REL_13_22",
     "date": "2025-08-11T21:10:58Z"
-  },
-  {
-    "name": "mongodb/mongo",
-    "version": "r8.2.0-rc4",
-    "date": "2025-08-11T19:20:25Z"
   },
   {
     "name": "home-assistant/core",
@@ -340,11 +365,6 @@
     "date": "2025-08-09T22:05:10Z"
   },
   {
-    "name": "wizarrrr/wizarr",
-    "version": "2025.8.2",
-    "date": "2025-08-09T18:11:46Z"
-  },
-  {
     "name": "Stirling-Tools/Stirling-PDF",
     "version": "v1.2.0",
     "date": "2025-08-09T14:30:52Z"
@@ -405,11 +425,6 @@
     "date": "2025-07-04T08:21:42Z"
   },
   {
-    "name": "mattermost/mattermost",
-    "version": "server/public/v0.1.16",
-    "date": "2025-07-28T22:46:46Z"
-  },
-  {
     "name": "apache/tika",
     "version": "3.2.2",
     "date": "2025-08-08T03:40:40Z"
@@ -418,11 +433,6 @@
     "name": "MariaDB/server",
     "version": "mariadb-12.0.2",
     "date": "2025-08-07T21:23:15Z"
-  },
-  {
-    "name": "ollama/ollama",
-    "version": "v0.11.4",
-    "date": "2025-08-07T17:17:41Z"
   },
   {
     "name": "tailscale/tailscale",
@@ -635,11 +645,6 @@
     "date": "2025-08-01T04:30:24Z"
   },
   {
-    "name": "gristlabs/grist-core",
-    "version": "v1.7.1",
-    "date": "2025-07-31T22:26:54Z"
-  },
-  {
     "name": "lazy-media/Reactive-Resume",
     "version": "v1.2.3",
     "date": "2025-07-31T19:18:36Z"
@@ -703,11 +708,6 @@
     "name": "navidrome/navidrome",
     "version": "v0.58.0",
     "date": "2025-07-28T18:59:50Z"
-  },
-  {
-    "name": "AdguardTeam/AdGuardHome",
-    "version": "v0.107.64",
-    "date": "2025-07-28T14:24:56Z"
   },
   {
     "name": "PrivateBin/PrivateBin",
