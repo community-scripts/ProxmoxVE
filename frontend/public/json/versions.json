@@ -1,8 +1,38 @@
 [
   {
+    "name": "zabbix/zabbix",
+    "version": "7.0.18rc2",
+    "date": "2025-08-15T11:50:47Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "v10.9.5",
+    "date": "2025-08-15T11:08:40Z"
+  },
+  {
+    "name": "intri-in/manage-my-damn-life-nextjs",
+    "version": "v0.8.0-release",
+    "date": "2025-08-15T06:19:12Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2288",
+    "date": "2025-08-15T05:57:52Z"
+  },
+  {
+    "name": "cloudreve/cloudreve",
+    "version": "4.5.1",
+    "date": "2025-08-15T05:53:22Z"
+  },
+  {
     "name": "ollama/ollama",
     "version": "v0.11.5-rc0",
     "date": "2025-08-14T22:24:01Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
   },
   {
     "name": "wizarrrr/wizarr",
@@ -40,9 +70,9 @@
     "date": "2025-08-14T19:07:57Z"
   },
   {
-    "name": "mattermost/mattermost",
-    "version": "v10.10.2",
-    "date": "2025-08-14T18:18:41Z"
+    "name": "keycloak/keycloak",
+    "version": "26.2.7",
+    "date": "2025-08-07T08:19:29Z"
   },
   {
     "name": "linkwarden/linkwarden",
@@ -90,19 +120,9 @@
     "date": "2025-07-15T06:07:03Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2286",
-    "date": "2025-08-14T05:57:10Z"
-  },
-  {
     "name": "booklore-app/booklore",
     "version": "v0.37.0",
     "date": "2025-08-14T00:37:49Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
   },
   {
     "name": "jellyfin/jellyfin",
@@ -136,8 +156,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-08-13T17:14:49Z"
+    "version": "v4.3.0",
+    "date": "2025-07-05T12:14:52Z"
   },
   {
     "name": "MediaBrowser/Emby.Releases",
@@ -148,16 +168,6 @@
     "name": "go-gitea/gitea",
     "version": "v1.24.5",
     "date": "2025-08-13T16:35:52Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.2.7",
-    "date": "2025-08-07T08:19:29Z"
-  },
-  {
-    "name": "zabbix/zabbix",
-    "version": "7.4.2rc1",
-    "date": "2025-08-13T14:15:08Z"
   },
   {
     "name": "Part-DB/Part-DB-server",
@@ -238,11 +248,6 @@
     "name": "bluenviron/mediamtx",
     "version": "v1.14.0",
     "date": "2025-08-12T13:58:46Z"
-  },
-  {
-    "name": "cloudreve/cloudreve",
-    "version": "4.5.0",
-    "date": "2025-08-12T07:03:15Z"
   },
   {
     "name": "pelican-dev/panel",
@@ -1043,11 +1048,6 @@
     "name": "C4illin/ConvertX",
     "version": "v0.14.1",
     "date": "2025-06-04T08:57:15Z"
-  },
-  {
-    "name": "intri-in/manage-my-damn-life-nextjs",
-    "version": "v0.7.1",
-    "date": "2025-06-04T04:39:36Z"
   },
   {
     "name": "louislam/uptime-kuma",
