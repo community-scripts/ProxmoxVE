@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-08-15
 
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - Bump Immich to v1.138.0 [@vhsdream](https://github.com/vhsdream) ([#6813](https://github.com/community-scripts/ProxmoxVE/pull/6813))
+
 ## 2025-08-14
 
 ### 🚀 Updated Scripts
