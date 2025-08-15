@@ -27,22 +27,20 @@ function update_script() {
         msg_error "No ${APP} Installation Found!"
         exit
     fi
+
     RELEASE=$(curl -fsSL https://api.github.com/repos/sbondCo/Watcharr/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-    if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
+    if [[ "${RELEASE}" != "$(cat ~/.watcharr)" ]] || [[ ! -f ~/.watcharr ]]; then
         msg_info "Updating $APP"
 
         msg_info "Stopping $APP"
         systemctl stop watcharr
         msg_ok "Stopped $APP"
 
-        msg_info "Updating $APP to v${RELEASE}"
-        temp_file=$(mktemp)
-        temp_folder=$(mktemp -d)
-        curl -fsSL "https://github.com/sbondCo/Watcharr/archive/refs/tags/v${RELEASE}.tar.gz" -o ""$temp_file""
-        tar -xzf "$temp_file" -C "$temp_folder"
         rm -f /opt/watcharr/server/watcharr
         rm -rf /opt/watcharr/server/ui
-        cp -rf ${temp_folder}/Watcharr-${RELEASE}/* /opt/watcharr
+        fetch_and_deploy_gh_release "watcharr" "sbondCo/Watcharr" "tarball"
+
+        msg_info "Updating $APP to v${RELEASE}"
         cd /opt/watcharr
         export GOOS=linux
         $STD npm i
@@ -57,12 +55,6 @@ function update_script() {
         systemctl start watcharr
         msg_ok "Started $APP"
 
-        msg_info "Cleaning Up"
-        rm -f ${temp_file}
-        rm -rf ${temp_folder}
-        msg_ok "Cleanup Completed"
-
-        echo "${RELEASE}" >/opt/${APP}_version.txt
         msg_ok "Update Successful"
     else
         msg_ok "No update required. ${APP} is already at v${RELEASE}"
