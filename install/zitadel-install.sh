@@ -110,7 +110,7 @@ NoNewPrivileges=true
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now zitadel
+systemctl enable -q zitadel
 msg_ok "Created Services"
 
 msg_info "Zitadel initial setup"
