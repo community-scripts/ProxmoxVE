@@ -14,14 +14,15 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y {arp-scan,ieee-data,libwww-perl}
+$STD apt-get install -y \
+  arp-scan \
+  ieee-data \
+  libwww-perl
 msg_ok "Installed Dependencies"
 
-msg_info "Installing WatchYourLAN"
-RELEASE=$(curl -fsSL https://api.github.com/repos/aceberg/WatchYourLAN/releases/latest | grep -o '"tag_name": *"[^"]*"' | cut -d '"' -f 4)
-curl -fsSL "https://github.com/aceberg/WatchYourLAN/releases/download/$RELEASE/watchyourlan_${RELEASE}_linux_amd64.deb" -o "watchyourlan_${RELEASE}_linux_amd64.deb"
-$STD dpkg -i watchyourlan_${RELEASE}_linux_amd64.deb
-rm watchyourlan_${RELEASE}_linux_amd64.deb
+fetch_and_deploy_gh_release "watchyourlan" "aceberg/WatchYourLAN" "binary"
+
+msg_info "Configuring WatchYourLAN"
 mkdir /data
 cat <<EOF >/data/config.yaml
 arp_timeout: "500"
@@ -41,7 +42,7 @@ shoutrrr_url: ""
 theme: solar
 timeout: 60
 EOF
-msg_ok "Installed WatchYourLAN"
+msg_ok "Configured WatchYourLAN"
 
 msg_info "Creating Service"
 sed -i 's|/etc/watchyourlan/config.yaml|/data/config.yaml|' /lib/systemd/system/watchyourlan.service
