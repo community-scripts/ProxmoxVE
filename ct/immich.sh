@@ -74,7 +74,8 @@ function update_script() {
   APP_DIR="${INSTALL_DIR}/app"
   ML_DIR="${APP_DIR}/machine-learning"
   GEO_DIR="${INSTALL_DIR}/geodata"
-  VCHORD_RELEASE="$(curl -fsSL https://api.github.com/repos/tensorchord/vectorchord/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')"
+  VCHORD_RELEASE="0.4.3"
+  # VCHORD_RELEASE="$(curl -fsSL https://api.github.com/repos/tensorchord/vectorchord/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')"
 
   if [[ ! -f ~/.vchord_version ]] || [[ "$VCHORD_RELEASE" != "$(cat ~/.vchord_version)" ]]; then
     msg_info "Updating VectorChord"
@@ -91,7 +92,8 @@ function update_script() {
     $STD sudo -u postgres psql -d immich -c "ALTER EXTENSION vchord UPDATE;"
     systemctl restart postgresql
     if [[ ! -f ~/.vchord_version ]] || [[ ! "$(cat ~/.vchord_version)" > "0.3.0" ]]; then
-      $STD sudo -u postgres psql -d immich -c "REINDEX DATABASE;"
+      $STD sudo -u postgres psql -d immich -c "REINDEX INDEX face_index;"
+      $STD sudo -u postgres psql -d immich -c "REINDEX INDEX clip_index;"
     fi
     echo "$VCHORD_RELEASE" >~/.vchord_version
     rm ./vchord.deb

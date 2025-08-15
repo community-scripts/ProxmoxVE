@@ -115,7 +115,8 @@ NODE_VERSION="22" setup_nodejs
 PG_VERSION="16" PG_MODULES="pgvector" setup_postgresql
 
 msg_info "Setting up Postgresql Database"
-VCHORD_RELEASE="$(curl -fsSL https://api.github.com/repos/tensorchord/vectorchord/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')"
+VCHORD_RELEASE="0.4.3"
+# VCHORD_RELEASE="$(curl -fsSL https://api.github.com/repos/tensorchord/vectorchord/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')"
 curl -fsSL "https://github.com/tensorchord/VectorChord/releases/download/${VCHORD_RELEASE}/postgresql-16-vchord_${VCHORD_RELEASE}-1_amd64.deb" -o vchord.deb
 $STD apt install -y ./vchord.deb
 rm vchord.deb
