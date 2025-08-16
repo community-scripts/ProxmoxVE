@@ -34,27 +34,29 @@ function update_script() {
       echo "Installed NPM..."
     fi
   fi
-  LATEST=$(curl -fsSL https://api.github.com/repos/louislam/uptime-kuma/releases/latest | grep '"tag_name":' | cut -d'"' -f4)
-  msg_info "Stopping ${APP}"
-  $STD sudo systemctl stop uptime-kuma
-  msg_ok "Stopped ${APP}"
 
-  cd /opt/uptime-kuma
+  RELEASE=$(curl -fsSL https://api.github.com/repos/louislam/uptime-kuma/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}')
+  if [[ ! -f ~/.uptime-kuma ]] || [[ "${RELEASE}" != "$(cat ~/.uptime-kuma)" ]]; then
+    msg_info "Stopping ${APP}"
+    $STD systemctl stop uptime-kuma
+    msg_ok "Stopped ${APP}"
 
-  msg_info "Pulling ${APP} ${LATEST}"
-  $STD git fetch --all
-  $STD git checkout $LATEST --force
-  msg_ok "Pulled ${APP} ${LATEST}"
+    fetch_and_deploy_gh_release "uptime-kuma" "louislam/uptime-kuma" "tarball"
+    cd /opt/uptime-kuma
 
-  msg_info "Updating ${APP} to ${LATEST}"
-  $STD npm install --production
-  $STD npm run download-dist
-  msg_ok "Updated ${APP}"
+    msg_info "Updating ${APP} to ${LATEST}"
+    $STD npm install --omit dev
+    $STD npm run download-dist
+    msg_ok "Updated ${APP}"
 
-  msg_info "Starting ${APP}"
-  $STD sudo systemctl start uptime-kuma
-  msg_ok "Started ${APP}"
-  msg_ok "Updated Successfully"
+    msg_info "Starting ${APP}"
+    $STD sudo systemctl start uptime-kuma
+    msg_ok "Started ${APP}"
+
+    msg_ok "Updated Successfully"
+  else
+    msg_ok "No update required. ${APP} is already at ${RELEASE}"
+  fi
   exit
 }
 
