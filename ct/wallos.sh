@@ -27,17 +27,19 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
   RELEASE=$(curl -fsSL https://api.github.com/repos/ellite/Wallos/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
-    msg_info "Updating ${APP} to ${RELEASE}"
-    cd /opt
-    curl -fsSL "https://github.com/ellite/Wallos/archive/refs/tags/v${RELEASE}.zip" -o $(basename "https://github.com/ellite/Wallos/archive/refs/tags/v${RELEASE}.zip")
+  if [[ ! -f ~/.wallos ]] || [[ "${RELEASE}" != "$(cat ~/.wallos)" ]]; then
+    msg_info "Creating backup"
     mkdir -p /opt/logos
     mv /opt/wallos/db/wallos.db /opt/wallos.db
     mv /opt/wallos/images/uploads/logos /opt/logos/
-    $STD unzip v${RELEASE}.zip
+    msg_ok "Backup created"
+
     rm -rf /opt/wallos
-    mv Wallos-${RELEASE} /opt/wallos
+    fetch_and_deploy_gh_release "wallos" "ellite/Wallos" "tarball"
+
+    msg_info "Configuring ${APP}"
     rm -rf /opt/wallos/db/wallos.empty.db
     mv /opt/wallos.db /opt/wallos/db/wallos.db
     mv /opt/logos/* /opt/wallos/images/uploads/logos
@@ -48,16 +50,12 @@ function update_script() {
     chmod -R 755 /opt/wallos
     mkdir -p /var/log/cron
     $STD curl http://localhost/endpoints/db/migrate.php
-    echo "${RELEASE}" >/opt/${APP}_version.txt
-    msg_ok "Updated ${APP}"
+    msg_ok "Configured ${APP}"
 
     msg_info "Reload Apache2"
     systemctl reload apache2
     msg_ok "Apache2 Reloaded"
 
-    msg_info "Cleaning Up"
-    rm -R /opt/v${RELEASE}.zip
-    msg_ok "Cleaned"
     msg_ok "Updated Successfully"
   else
     msg_ok "No update required. ${APP} is already at ${RELEASE}"
