@@ -73,7 +73,7 @@ POSTGRES_USER=$DB_USER
 POSTGRES_PASSWORD=$DB_PASS
 
 STATIC_URL=/staticfiles/
-MEDIA_URL=/mediafiles/
+MEDIA_URL=/media/
 EOF
 
 TANDOOR_VERSION="$(curl -s https://api.github.com/repos/TandoorRecipes/recipes/releases/latest | jq -r .tag_name)"
@@ -125,7 +125,7 @@ server {
         proxy_set_header Host $http_host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Proto $http_x_forwarded_proto;
         proxy_pass http://unix:/opt/tandoor/tandoor.sock;
     }
 }
