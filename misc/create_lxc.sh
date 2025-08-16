@@ -3,6 +3,7 @@
 # Copyright (c) 2021-2025 tteck
 # Author: tteck (tteckster)
 # Co-Author: MickLesk
+# Co-Author: rvbatista
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
 # This sets verbose mode if the global variable is set to "yes"
@@ -248,28 +249,31 @@ fi
 # Update LXC template list
 TEMPLATE_SEARCH="${PCT_OSTYPE}-${PCT_OSVERSION:-}"
 
-msg_info "Updating LXC Template List"
-if ! pveam update >/dev/null 2>&1; then
-  TEMPLATE_FALLBACK=$(pveam list "$TEMPLATE_STORAGE" | awk "/$TEMPLATE_SEARCH/ {print \$2}" | sort -t - -k 2 -V | tail -n1)
-  if [[ -z "$TEMPLATE_FALLBACK" ]]; then
-    msg_error "Failed to update LXC template list and no local template matching '$TEMPLATE_SEARCH' found."
-    exit 201
-  fi
-  msg_info "Skipping template update – using local fallback: $TEMPLATE_FALLBACK"
-else
-  msg_ok "LXC Template List Updated"
-fi
+# Attempt to update the list and get available online templates in one go
+msg_info "Searching for online LXC template for '$TEMPLATE_SEARCH'..."
+mapfile -t TEMPLATES < <( (pveam update >/dev/null 2>&1 && pveam available -section system) | sed -n "s/.*\($TEMPLATE_SEARCH.*\)/\1/p" | sort -t - -k 2 -V)
 
-# Get LXC template string
-TEMPLATE_SEARCH="${PCT_OSTYPE}-${PCT_OSVERSION:-}"
-mapfile -t TEMPLATES < <(pveam available -section system | sed -n "s/.*\($TEMPLATE_SEARCH.*\)/\1/p" | sort -t - -k 2 -V)
-
+# Check if the online search was successful.
 if [ ${#TEMPLATES[@]} -eq 0 ]; then
-  msg_error "No matching LXC template found for '${TEMPLATE_SEARCH}'. Make sure your host can reach the Proxmox template repository."
-  exit 207
+  msg_info "Online search failed or no template found. Checking for local fallbacks..."
+  
+  # Grabs the first column which contains the full Volume ID
+  mapfile -t TEMPLATES < <(pveam list "$TEMPLATE_STORAGE" | awk "/$TEMPLATE_SEARCH/ {print \$1}" | sort -t - -k 2 -V)
+  
+  # If the fallback search ALSO finds nothing, then we must exit.
+  if [ ${#TEMPLATES[@]} -eq 0 ]; then
+    msg_error "No online or local LXC template found for '${TEMPLATE_SEARCH}'. Please check network or install a template manually."
+    exit 207
+  fi
+  
+  msg_ok "Found local fallback template."
 fi
 
 TEMPLATE="${TEMPLATES[-1]}"
+TEMPLATE=$(echo "$TEMPLATE" | sed 's/.*vztmpl\///')
+
+msg_ok "Using template: $TEMPLATE"
+
 TEMPLATE_PATH="$(pvesm path $TEMPLATE_STORAGE:vztmpl/$TEMPLATE 2>/dev/null || echo "/var/lib/vz/template/cache/$TEMPLATE")"
 
 TEMPLATE_VALID=1
