@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-08-16
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Tandoor Images Fix [@WarLord185](https://github.com/WarLord185) ([#6892](https://github.com/community-scripts/ProxmoxVE/pull/6892))
+
 ## 2025-08-15
 
 ### 🚀 Updated Scripts
