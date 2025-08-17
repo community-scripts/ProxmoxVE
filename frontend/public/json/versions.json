@@ -1,23 +1,53 @@
 [
   {
-    "name": "cross-seed/cross-seed",
-    "version": "v6.13.1",
-    "date": "2025-07-17T21:36:42Z"
+    "name": "fuma-nama/fumadocs",
+    "version": "fumadocs-core@15.6.12",
+    "date": "2025-08-17T10:37:31Z"
   },
   {
-    "name": "semaphoreui/semaphore",
-    "version": "v2.16.16",
-    "date": "2025-08-16T18:59:08Z"
-  },
-  {
-    "name": "MediaBrowser/Emby.Releases",
-    "version": "4.9.1.2",
-    "date": "2025-06-26T22:08:00Z"
+    "name": "rcourtman/Pulse",
+    "version": "v4.3.8",
+    "date": "2025-08-14T22:01:41Z"
   },
   {
     "name": "firefly-iii/firefly-iii",
     "version": "v6.3.0",
     "date": "2025-08-16T17:54:45Z"
+  },
+  {
+    "name": "TandoorRecipes/recipes",
+    "version": "2.0.2",
+    "date": "2025-08-17T09:24:37Z"
+  },
+  {
+    "name": "semaphoreui/semaphore",
+    "version": "v2.16.17",
+    "date": "2025-08-17T07:27:39Z"
+  },
+  {
+    "name": "mylar3/mylar3",
+    "version": "v0.8.3",
+    "date": "2025-08-17T06:24:54Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2301",
+    "date": "2025-08-17T05:54:52Z"
+  },
+  {
+    "name": "cross-seed/cross-seed",
+    "version": "v6.13.1",
+    "date": "2025-07-17T21:36:42Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
+    "name": "MediaBrowser/Emby.Releases",
+    "version": "4.9.1.2",
+    "date": "2025-06-26T22:08:00Z"
   },
   {
     "name": "paperless-ngx/paperless-ngx",
@@ -26,8 +56,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-08-13T17:14:49Z"
+    "version": "v4.3.0",
+    "date": "2025-07-05T12:14:52Z"
   },
   {
     "name": "blakeblackshear/frigate",
@@ -38,11 +68,6 @@
     "name": "Paymenter/Paymenter",
     "version": "v1.2.10",
     "date": "2025-08-16T11:45:23Z"
-  },
-  {
-    "name": "fuma-nama/fumadocs",
-    "version": "create-fumadocs-app@15.6.11",
-    "date": "2025-08-16T10:03:00Z"
   },
   {
     "name": "documenso/documenso",
@@ -60,11 +85,6 @@
     "date": "2025-08-16T07:59:43Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2294",
-    "date": "2025-08-16T05:54:33Z"
-  },
-  {
     "name": "syncthing/syncthing",
     "version": "v2.0.2",
     "date": "2025-08-16T05:32:58Z"
@@ -78,11 +98,6 @@
     "name": "coder/code-server",
     "version": "v4.103.1",
     "date": "2025-08-16T01:59:28Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
   },
   {
     "name": "mongodb/mongo",
@@ -158,11 +173,6 @@
     "name": "wizarrrr/wizarr",
     "version": "2025.8.3",
     "date": "2025-08-14T22:05:27Z"
-  },
-  {
-    "name": "rcourtman/Pulse",
-    "version": "v4.3.8",
-    "date": "2025-08-14T22:01:41Z"
   },
   {
     "name": "esphome/esphome",
@@ -663,11 +673,6 @@
     "name": "Suwayomi/Suwayomi-Server",
     "version": "v2.1.1867",
     "date": "2025-07-31T18:08:43Z"
-  },
-  {
-    "name": "TandoorRecipes/recipes",
-    "version": "2.0.1",
-    "date": "2025-07-31T17:29:38Z"
   },
   {
     "name": "hyperion-project/hyperion.ng",
@@ -1228,11 +1233,6 @@
     "name": "excalidraw/excalidraw",
     "version": "v0.18.0",
     "date": "2025-03-11T12:47:22Z"
-  },
-  {
-    "name": "mylar3/mylar3",
-    "version": "v0.8.2",
-    "date": "2025-03-11T05:20:22Z"
   },
   {
     "name": "AlexxIT/go2rtc",
