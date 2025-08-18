@@ -27,7 +27,38 @@ function update_script() {
         msg_error "No ${APP} Installation Found!"
         exit
     fi
-    msg_error "Currently we don't provide an update function for this ${APP}."
+    
+    RELEASE=$(curl -fsSL https://api.github.com/repos/traccar/traccar/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+    if [[ "${RELEASE}" != "$(cat ~/.traccar)" ]] || [[ ! -f ~/.traccar ]]; then
+      msg_info "Stopping service"
+      systemctl stop traccar
+      msg_ok "Service stopped"
+
+      msg_info "Creating backup"
+      mv /opt/traccar/conf/traccar.xml /opt
+      [[ -d /opt/traccar/data ]] && mv /opt/traccar/data /opt
+      [[ -d /opt/traccar/media ]] && mv /opt/traccar/media /opt
+      msg_ok "Backup created"
+
+      rm -rf /opt/traccar
+      fetch_and_deploy_gh_release "traccar" "traccar/traccar" "prebuild" "latest" "/opt/traccar" "traccar-linux-64*.zip"
+      cd /opt/traccar
+      $STD ./traccar.run
+
+      msg_info "Restoring data"
+      mv /opt/traccar.xml /opt/traccar/conf
+      [[ -d /opt/data ]] && mv /opt/data /opt/traccar
+      [[ -d /opt/media ]] && mv /opt/media /opt/traccar
+      msg_ok "Data restored"
+
+      msg_info "Starting ${APP}"
+      systemctl start traccar
+      msg_ok "Started ${APP}"
+
+      msg_ok "Successfully updated ${APP}"
+    else
+      msg_ok "No update required. ${APP} is already at ${RELEASE}"
+    fi
     exit
 }
 
