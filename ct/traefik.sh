@@ -27,16 +27,20 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/traefik/traefik/releases | grep -oP '"tag_name":\s*"v\K[\d.]+?(?=")' | sort -V | tail -n 1)
-  msg_info "Updating $APP LXC"
-  if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
-    curl -fsSL "https://github.com/traefik/traefik/releases/download/v${RELEASE}/traefik_v${RELEASE}_linux_amd64.tar.gz" -o $(basename "https://github.com/traefik/traefik/releases/download/v${RELEASE}/traefik_v${RELEASE}_linux_amd64.tar.gz")
-    tar -C /tmp -xzf traefik*.tar.gz
-    mv /tmp/traefik /usr/bin/
-    rm -rf traefik*.tar.gz
-    systemctl restart traefik.service
-    echo "${RELEASE}" >/opt/${APP}_version.txt
-    msg_ok "Updated $APP LXC"
+
+  RELEASE=$(curl -fsSL https://api.github.com/repos/traefik/traefik/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+  if [[ "${RELEASE}" != "$(cat ~/.traefik)" ]] || [[ ! -f ~/.traefik ]]; then
+    msg_info "Stopping service"
+    systemctl stop traefik
+    msg_ok "Service stopped"
+
+    fetch_and_deploy_gh_release "traefik" "traefik/traefik" "prebuild" "latest" "/usr/bin" "traefik_v*_linux_amd64.tar.gz"
+
+    msg_info "Starting ${APP}"
+    systemctl start traefik
+    msg_ok "Started ${APP}"
+
+    msg_ok "Successfully update ${APP}"
   else
     msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi

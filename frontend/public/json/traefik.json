@@ -9,7 +9,7 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 8080,
-  "documentation": null,
+  "documentation": "https://doc.traefik.io/",
   "website": "https://traefik.io/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/traefik.webp",
   "config_path": "/etc/traefik/traefik.yaml",
