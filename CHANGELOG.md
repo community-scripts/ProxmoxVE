@@ -12,7 +12,15 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-08-18
 
+### 🆕 New Scripts
+
+  - Twingate-Connector ([#6921](https://github.com/community-scripts/ProxmoxVE/pull/6921))
+
 ### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - fix(uptimekuma): unbound env variable [@vidonnus](https://github.com/vidonnus) ([#6922](https://github.com/community-scripts/ProxmoxVE/pull/6922))
 
   - #### 🔧 Refactor
 
