@@ -52,11 +52,12 @@ function update_script() {
   if [[ -f ~/.immich_library_revisions ]]; then
     libraries=("libjxl" "libheif" "libraw" "imagemagick" "libvips")
     cd "$BASE_DIR"
+    msg_info "Checking for updates to custom image-processing libraries"
     $STD git pull
     for library in "${libraries[@]}"; do
       compile_"$library"
     done
-    msg_ok "Image-processing libraries updated"
+    msg_ok "Image-processing libraries up to date"
   fi
   RELEASE="1.138.0"
   #RELEASE=$(curl -fsSL https://api.github.com/repos/immich-app/immich/releases?per_page=1 | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
