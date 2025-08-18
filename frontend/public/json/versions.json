@@ -1,5 +1,65 @@
 [
   {
+    "name": "VictoriaMetrics/VictoriaMetrics",
+    "version": "v1.124.0",
+    "date": "2025-08-18T11:41:07Z"
+  },
+  {
+    "name": "rcourtman/Pulse",
+    "version": "v4.4.0",
+    "date": "2025-08-17T18:47:35Z"
+  },
+  {
+    "name": "dgtlmoon/changedetection.io",
+    "version": "0.50.9",
+    "date": "2025-08-18T09:37:22Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.3.0",
+    "date": "2025-08-16T17:54:45Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.4.0p10-rc1",
+    "date": "2025-08-18T09:07:06Z"
+  },
+  {
+    "name": "zabbix/zabbix",
+    "version": "7.4.2rc2",
+    "date": "2025-08-18T08:39:03Z"
+  },
+  {
+    "name": "jupyter/notebook",
+    "version": "@jupyter-notebook/ui-components@7.5.0-alpha.2",
+    "date": "2025-08-18T07:39:41Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2306",
+    "date": "2025-08-18T05:50:56Z"
+  },
+  {
+    "name": "ventoy/Ventoy",
+    "version": "v1.1.06",
+    "date": "2025-08-18T03:35:41Z"
+  },
+  {
+    "name": "moghtech/komodo",
+    "version": "v1.19.0",
+    "date": "2025-08-18T01:22:47Z"
+  },
+  {
+    "name": "TwiN/gatus",
+    "version": "v5.23.0",
+    "date": "2025-08-18T00:52:22Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
     "name": "lldap/lldap",
     "version": "v0.6.2",
     "date": "2025-08-17T22:07:10Z"
@@ -23,11 +83,6 @@
     "name": "matze/wastebin",
     "version": "3.3.0",
     "date": "2025-08-17T19:57:11Z"
-  },
-  {
-    "name": "rcourtman/Pulse",
-    "version": "v4.4.0",
-    "date": "2025-08-17T18:47:35Z"
   },
   {
     "name": "Radarr/Radarr",
@@ -55,11 +110,6 @@
     "date": "2025-01-05T21:14:23Z"
   },
   {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.3.0",
-    "date": "2025-08-16T17:54:45Z"
-  },
-  {
     "name": "semaphoreui/semaphore",
     "version": "v2.16.17",
     "date": "2025-08-17T13:13:52Z"
@@ -80,19 +130,9 @@
     "date": "2025-08-17T06:24:54Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2301",
-    "date": "2025-08-17T05:54:52Z"
-  },
-  {
     "name": "cross-seed/cross-seed",
     "version": "v6.13.1",
     "date": "2025-07-17T21:36:42Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
   },
   {
     "name": "MediaBrowser/Emby.Releases",
@@ -181,8 +221,8 @@
   },
   {
     "name": "zitadel/zitadel",
-    "version": "v3.3.6",
-    "date": "2025-08-15T14:18:31Z"
+    "version": "v4.0.2",
+    "date": "2025-08-15T14:12:26Z"
   },
   {
     "name": "n8n-io/n8n",
@@ -193,11 +233,6 @@
     "name": "mattermost/mattermost",
     "version": "v10.5.10",
     "date": "2025-08-15T12:12:06Z"
-  },
-  {
-    "name": "zabbix/zabbix",
-    "version": "7.0.18rc2",
-    "date": "2025-08-15T11:50:47Z"
   },
   {
     "name": "intri-in/manage-my-damn-life-nextjs",
@@ -365,11 +400,6 @@
     "date": "2025-08-11T21:10:58Z"
   },
   {
-    "name": "TwiN/gatus",
-    "version": "v5.22.0",
-    "date": "2025-08-11T14:05:35Z"
-  },
-  {
     "name": "BookStackApp/BookStack",
     "version": "v25.07.1",
     "date": "2025-08-11T13:53:22Z"
@@ -385,16 +415,6 @@
     "date": "2025-08-11T13:01:45Z"
   },
   {
-    "name": "Checkmk/checkmk",
-    "version": "v2.2.0p45",
-    "date": "2025-08-11T12:10:07Z"
-  },
-  {
-    "name": "jupyter/notebook",
-    "version": "@jupyter-notebook/ui-components@7.5.0-alpha.1",
-    "date": "2025-08-11T11:44:30Z"
-  },
-  {
     "name": "emqx/emqx",
     "version": "e5.10.1-beta.1",
     "date": "2025-08-11T11:35:41Z"
@@ -403,11 +423,6 @@
     "name": "sabnzbd/sabnzbd",
     "version": "4.5.2",
     "date": "2025-07-09T19:08:28Z"
-  },
-  {
-    "name": "moghtech/komodo",
-    "version": "v1.18.4",
-    "date": "2025-06-25T00:06:56Z"
   },
   {
     "name": "slskd/slskd",
@@ -610,11 +625,6 @@
     "date": "2025-08-05T04:45:21Z"
   },
   {
-    "name": "VictoriaMetrics/VictoriaMetrics",
-    "version": "pmm-6401-v1.123.0",
-    "date": "2025-08-04T15:11:36Z"
-  },
-  {
     "name": "apache/tomcat",
     "version": "10.1.44",
     "date": "2025-08-04T13:17:59Z"
@@ -718,11 +728,6 @@
     "name": "leiweibau/Pi.Alert",
     "version": "v2025-07-30",
     "date": "2025-07-30T17:13:40Z"
-  },
-  {
-    "name": "dgtlmoon/changedetection.io",
-    "version": "0.50.8",
-    "date": "2025-07-30T11:33:00Z"
   },
   {
     "name": "dani-garcia/vaultwarden",
@@ -1283,11 +1288,6 @@
     "name": "drakkan/sftpgo",
     "version": "v2.6.6",
     "date": "2025-02-24T19:14:46Z"
-  },
-  {
-    "name": "ventoy/Ventoy",
-    "version": "v1.1.05",
-    "date": "2025-02-24T11:53:12Z"
   },
   {
     "name": "babybuddy/babybuddy",
