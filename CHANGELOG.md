@@ -21,6 +21,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Keycloak: fix update function [@MickLesk](https://github.com/MickLesk) ([#6943](https://github.com/community-scripts/ProxmoxVE/pull/6943))
     - Immich: add message to indicate image-processing library update check [@vhsdream](https://github.com/vhsdream) ([#6935](https://github.com/community-scripts/ProxmoxVE/pull/6935))
     - fix(uptimekuma): unbound env variable [@vidonnus](https://github.com/vidonnus) ([#6922](https://github.com/community-scripts/ProxmoxVE/pull/6922))
 
