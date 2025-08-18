@@ -54,7 +54,6 @@ function update_script() {
     cp -a keycloak.old/conf/. keycloak/conf/
     cp -a keycloak.old/providers/. keycloak/providers/ 2>/dev/null || true
     cp -a keycloak.old/themes/. keycloak/themes/ 2>/dev/null || true
-    rm -rf keycloak.old
     msg_ok "Updated ${APP} LXC"
   
     msg_info "Restarting Keycloak"
