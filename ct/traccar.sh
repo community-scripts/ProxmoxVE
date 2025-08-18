@@ -55,6 +55,10 @@ function update_script() {
       systemctl start traccar
       msg_ok "Started ${APP}"
 
+      msg_info "Cleaning up"
+      [ -f README.txt ] || [ -f traccar.run ] && rm -f README.txt traccar.run
+      msg_ok "Cleaned up"
+
       msg_ok "Successfully updated ${APP}"
     else
       msg_ok "No update required. ${APP} is already at ${RELEASE}"
