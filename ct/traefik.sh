@@ -40,7 +40,7 @@ function update_script() {
     systemctl start traefik
     msg_ok "Started ${APP}"
 
-    msg_ok "Successfully update ${APP}"
+    msg_ok "Successfully updated ${APP}"
   else
     msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
