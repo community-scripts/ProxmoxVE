@@ -13,12 +13,9 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt-get install -y git
-msg_ok "Installed Dependencies"
-
 NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
 PG_VERSION="16" setup_postgresql
+fetch_and_deploy_gh_release "umami" "umami-software/umami" "tarball"
 
 msg_info "Setting up postgresql"
 DB_NAME=umamidb
@@ -39,17 +36,16 @@ $STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET timezone TO 'UTC'"
 } >>~/umami.creds
 msg_ok "Set up postgresql"
 
-msg_info "Installing Umami (Patience)"
-git clone -q https://github.com/umami-software/umami.git /opt/umami
+msg_info "Configuring Umami"
 cd /opt/umami
 $STD yarn install
 echo -e "DATABASE_URL=postgresql://$DB_USER:$DB_PASS@localhost:5432/$DB_NAME" >>/opt/umami/.env
 $STD yarn run build
-msg_ok "Installed Umami"
+msg_ok "Configured Umami"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/umami.service
-echo "[Unit]
+[Unit]
 Description=umami
 
 [Service]

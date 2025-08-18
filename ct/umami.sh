@@ -32,11 +32,12 @@ function update_script() {
     systemctl stop umami
     msg_ok "Stopped $APP"
 
+    fetch_and_deploy_gh_release "umami" "umami-software/umami" "tarball"
+
     msg_info "Updating ${APP}"
     cd /opt/umami
-    git pull
-    yarn install
-    yarn build
+    $STD yarn install
+    $STD yarn run build
     msg_ok "Updated ${APP}"
 
     msg_info "Starting ${APP}"
