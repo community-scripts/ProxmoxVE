@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-08-18
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - Refactor: GoMFT [@tremor021](https://github.com/tremor021) ([#6916](https://github.com/community-scripts/ProxmoxVE/pull/6916))
+
 ## 2025-08-17
 
 ## 2025-08-16
