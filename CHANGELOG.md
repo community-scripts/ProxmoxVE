@@ -14,7 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Twingate-Connector ([#6921](https://github.com/community-scripts/ProxmoxVE/pull/6921))
+  - CopyParty [@MickLesk](https://github.com/MickLesk) ([#6929](https://github.com/community-scripts/ProxmoxVE/pull/6929))
+- Twingate-Connector ([#6921](https://github.com/community-scripts/ProxmoxVE/pull/6921))
 
 ### 🚀 Updated Scripts
 
