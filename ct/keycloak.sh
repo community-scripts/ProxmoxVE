@@ -32,7 +32,7 @@ function update_script() {
   fi
   
   RELEASE=$(curl -fsSL https://api.github.com/repos/keycloak/keycloak/releases/latest | jq -r '.tag_name' | sed 's/^v//')
-  if [[ "${RELEASE}" != "$(cat ~/.keycloak 2>/dev/null)" ]] || [[ ! -f ~/.keycloak ]]; then
+  if [[ "${RELEASE}" != "$(cat ~/.keycloak_app 2>/dev/null)" ]] || [[ ! -f ~/.keycloak_app ]]; then
     msg_info "Stopping Keycloak"
     systemctl stop keycloak
     msg_ok "Stopped Keycloak"
@@ -47,7 +47,7 @@ function update_script() {
     mv keycloak keycloak.old
     msg_ok "Backup done"
   
-    fetch_and_deploy_gh_release "keycloak" "keycloak/keycloak" "prebuild" "latest" "/opt/keycloak" "keycloak-*.tar.gz"
+    fetch_and_deploy_gh_release "keycloak_app" "keycloak/keycloak" "prebuild" "latest" "/opt/keycloak" "keycloak-*.tar.gz"
   
     msg_info "Updating ${APP}"
     cd /opt
