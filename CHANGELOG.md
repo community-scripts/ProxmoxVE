@@ -32,6 +32,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Refactor: Umami [@tremor021](https://github.com/tremor021) ([#6939](https://github.com/community-scripts/ProxmoxVE/pull/6939))
     - Refactor: GoMFT [@tremor021](https://github.com/tremor021) ([#6916](https://github.com/community-scripts/ProxmoxVE/pull/6916))
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - OpenWRT: add info for VLAN-aware in frontend [@MickLesk](https://github.com/MickLesk) ([#6944](https://github.com/community-scripts/ProxmoxVE/pull/6944))
+
 ## 2025-08-17
 
 ## 2025-08-16
