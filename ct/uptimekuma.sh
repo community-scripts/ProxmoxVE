@@ -44,7 +44,7 @@ function update_script() {
     fetch_and_deploy_gh_release "uptime-kuma" "louislam/uptime-kuma" "tarball"
     cd /opt/uptime-kuma
 
-    msg_info "Updating ${APP} to ${LATEST}"
+    msg_info "Updating ${APP} to ${RELEASE}"
     $STD npm install --omit dev
     $STD npm run download-dist
     msg_ok "Updated ${APP}"
