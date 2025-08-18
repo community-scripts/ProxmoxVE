@@ -15,7 +15,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies (Patience)"
-$STD apt-get install -y {git,ca-certificates,automake,build-essential,xz-utils,libtool,ccache,pkg-config,libgtk-3-dev,libavcodec-dev,libavformat-dev,libswscale-dev,libv4l-dev,libxvidcore-dev,libx264-dev,libjpeg-dev,libpng-dev,libtiff-dev,gfortran,openexr,libatlas-base-dev,libssl-dev,libtbb2,libtbb-dev,libdc1394-22-dev,libopenexr-dev,libgstreamer-plugins-base1.0-dev,libgstreamer1.0-dev,gcc,gfortran,libopenblas-dev,liblapack-dev,libusb-1.0-0-dev,jq,moreutils}
+$STD apt-get install -y {git,ca-certificates,automake,build-essential,xz-utils,libtool,ccache,pkg-config,libgtk-3-dev,libavcodec-dev,libavformat-dev,libswscale-dev,libv4l-dev,libxvidcore-dev,libx264-dev,libjpeg-dev,libpng-dev,libtiff-dev,gfortran,openexr,libatlas-base-dev,libssl-dev,libtbb-dev,libdc1394-dev,libopenexr-dev,libgstreamer-plugins-base1.0-dev,libgstreamer1.0-dev,gcc,gfortran,libopenblas-dev,liblapack-dev,libusb-1.0-0-dev,jq,moreutils}
 msg_ok "Installed Dependencies"
 
 msg_info "Setup Python3"
@@ -42,10 +42,10 @@ if [[ "$CTTYPE" == "0" ]]; then
 fi
 msg_ok "Set Up Hardware Acceleration"
 
-msg_info "Installing Frigate v0.14.1 (Perseverance)"
+msg_info "Installing Frigate v0.16.0 (Perseverance)"
 cd ~
 mkdir -p /opt/frigate/models
-curl -fsSL "https://github.com/blakeblackshear/frigate/archive/refs/tags/v0.14.1.tar.gz" -o "frigate.tar.gz"
+curl -fsSL "https://github.com/blakeblackshear/frigate/archive/refs/tags/v0.16.0.tar.gz" -o "frigate.tar.gz"
 tar -xzf frigate.tar.gz -C /opt/frigate --strip-components 1
 rm -rf frigate.tar.gz
 cd /opt/frigate
@@ -53,7 +53,43 @@ $STD pip3 wheel --wheel-dir=/wheels -r /opt/frigate/docker/main/requirements-whe
 cp -a /opt/frigate/docker/main/rootfs/. /
 export TARGETARCH="amd64"
 echo 'libc6 libraries/restart-without-asking boolean true' | debconf-set-selections
-$STD /opt/frigate/docker/main/install_deps.sh
+# Intel has blocked access to its repository with drivers in some regions, for example, in Ukraine.
+$STD apt-get -qq install tor
+cat > /etc/tor/torsocks.conf << 'EOF'
+SocksPort 9050
+DataDirectory /var/lib/tor
+User debian-tor
+ExitNodes {us},{gb},{ie},{nl},{de},{se},{ch}
+ExcludeNodes {cn},{ru},{ir},{kp},{by}
+ExcludeExitNodes {cn},{ru},{ir},{kp},{by}
+StrictNodes 0
+Log notice file /var/log/tor/tor.log
+EOF
+cat > /etc/tor/torsocks.conf << 'EOF'
+TorAddress 127.0.0.1
+TorPort 9050
+OnionAddrRange 127.42.42.0/24
+AllowInbound 1
+EOF
+TorTimeout=5
+$STD systemctl -q start tor
+for i in $(seq 1 $TorTimeout); do
+  if ss -tlnp | grep -q ":9050"; then
+     $STD echo "Tor is ready!"
+    break
+  fi 
+  if [ "$i" -eq $TorTimeout ]; then
+    $STD echo "Tor did not start in $TorTimeout seconds"
+    exit 1
+  fi
+  $STD echo "Waiting Tor... ($i/$TorTimeout)"
+  sleep 1
+done
+$STD torify /opt/frigate/docker/main/install_deps.sh
+systemctl -q stop tor
+systemctl -q disable tor 
+$STD apt-get -qq remove --purge tor 
+rm -rf /etc/tor /var/lib/tor /var/log/tor
 $STD apt update
 $STD ln -svf /usr/lib/btbn-ffmpeg/bin/ffmpeg /usr/local/bin/ffmpeg
 $STD ln -svf /usr/lib/btbn-ffmpeg/bin/ffprobe /usr/local/bin/ffprobe
@@ -160,6 +196,8 @@ curl -fsSL "https://github.com/intel-iot-devkit/sample-videos/raw/master/person-
 msg_ok "Installed Coral Object Detection Model"
 
 msg_info "Building Nginx with Custom Modules"
+#Fix for xlc 
+sed -i 's/if \[\[ "$VERSION_ID" == "12" \]\]; then/if [[ -f \/etc\/apt\/sources.list.d\/debian.sources ]]; then/' /opt/frigate/docker/main/build_nginx.sh
 $STD /opt/frigate/docker/main/build_nginx.sh
 sed -e '/s6-notifyoncheck/ s/^#*/#/' -i /opt/frigate/docker/main/rootfs/etc/s6-overlay/s6-rc.d/nginx/run
 ln -sf /usr/local/nginx/sbin/nginx /usr/local/bin/nginx
@@ -197,6 +235,8 @@ Type=simple
 Restart=always
 RestartSec=1
 User=root
+Environment=DEFAULT_FFMPEG_VERSION=7.0
+Environment=INCLUDED_FFMPEG_VERSIONS=5.0
 ExecStartPre=+rm /dev/shm/logs/go2rtc/current
 ExecStart=/bin/bash -c "bash /opt/frigate/docker/main/rootfs/etc/s6-overlay/s6-rc.d/go2rtc/run 2> >(/usr/bin/ts '%%Y-%%m-%%d %%H:%%M:%%.S ' >&2) | /usr/bin/ts '%%Y-%%m-%%d %%H:%%M:%%.S '"
 StandardOutput=file:/dev/shm/logs/go2rtc/current
@@ -220,6 +260,8 @@ Restart=always
 RestartSec=1
 User=root
 # Environment=PLUS_API_KEY=
+Environment=DEFAULT_FFMPEG_VERSION=7.0
+Environment=INCLUDED_FFMPEG_VERSIONS=5.0
 ExecStartPre=+rm /dev/shm/logs/frigate/current
 ExecStart=/bin/bash -c "bash /opt/frigate/docker/main/rootfs/etc/s6-overlay/s6-rc.d/frigate/run 2> >(/usr/bin/ts '%%Y-%%m-%%d %%H:%%M:%%.S ' >&2) | /usr/bin/ts '%%Y-%%m-%%d %%H:%%M:%%.S '"
 StandardOutput=file:/dev/shm/logs/frigate/current
