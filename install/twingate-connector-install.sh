@@ -14,11 +14,9 @@ network_check
 update_os
 
 install -d -m 0700 /etc/twingate
-
 access_token=""
 refresh_token=""
 network=""
-
 while [[ -z "$access_token" ]]; do
   read -rp "${TAB3}Please enter your access token: " access_token
 done
@@ -39,7 +37,7 @@ msg_info "Setup Twingate Connector"
 $STD apt-get install -y twingate-connector
 msg_ok "Setup Twingate Connector"
 
-msg_info "Writing config"
+msg_info "Configure Twingate-Connector"
 {
   echo "TWINGATE_NETWORK=${network}"
   echo "TWINGATE_ACCESS_TOKEN=${access_token}"
@@ -48,7 +46,7 @@ msg_info "Writing config"
   echo "TWINGATE_LABEL_DEPLOYED_BY=proxmox"
 } > /etc/twingate/connector.conf
 chmod 600 /etc/twingate/connector.conf
-msg_ok "Config written"
+msg_ok "Configured Twingate-Connector"
 
 msg_info "Starting Service"
 systemctl enable -q --now twingate-connector
@@ -60,4 +58,4 @@ customize
 msg_info "Cleaning up"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
-msg_ok "Done cleaning up"
+msg_ok "Cleaned"
