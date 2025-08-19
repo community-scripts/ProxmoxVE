@@ -26,6 +26,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - OpenObserve: Fix release fetching [@tremor021](https://github.com/tremor021) ([#6961](https://github.com/community-scripts/ProxmoxVE/pull/6961))
     - Update hev-socks5-server-install.sh [@iAzamat2](https://github.com/iAzamat2) ([#6953](https://github.com/community-scripts/ProxmoxVE/pull/6953))
 
+  - #### 🔧 Refactor
+
+    - Refactor: Technitium DNS [@tremor021](https://github.com/tremor021) ([#6968](https://github.com/community-scripts/ProxmoxVE/pull/6968))
+
 ## 2025-08-18
 
 ### 🆕 New Scripts
