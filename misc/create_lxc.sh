@@ -250,12 +250,23 @@ fi
 
 # Update LXC template list
 TEMPLATE_SEARCH="${PCT_OSTYPE}-${PCT_OSVERSION:-}"
+case "$PCT_OSTYPE" in
+  debian|ubuntu)
+    TEMPLATE_PATTERN="-standard_"
+    ;;
+  alpine|fedora|rocky|centos)
+    TEMPLATE_PATTERN="-default_"
+    ;;
+  *)
+    TEMPLATE_PATTERN=""
+    ;;
+esac
 
 # 1. Check local templates first
 msg_info "Searching for template '$TEMPLATE_SEARCH'"
 mapfile -t TEMPLATES < <(
   pveam list "$TEMPLATE_STORAGE" |
-    awk -v s="$TEMPLATE_SEARCH" '$1 ~ s && $1 ~ /-standard_/ {print $1}' |
+    awk -v s="$TEMPLATE_SEARCH" -v p="$TEMPLATE_PATTERN" '$1 ~ s && $1 ~ p {print $1}' |
     sed 's/.*\///' | sort -t - -k 2 -V
 )
 
@@ -267,8 +278,8 @@ else
   mapfile -t TEMPLATES < <(
     pveam update >/dev/null 2>&1 &&
       pveam available -section system |
-      sed -n "s/.*\($TEMPLATE_SEARCH.*-standard_.*\)/\1/p" |
-        sort -t - -k 2 -V
+      sed -n "s/.*\($TEMPLATE_SEARCH.*$TEMPLATE_PATTERN.*\)/\1/p" |
+      sort -t - -k 2 -V
   )
   TEMPLATE_SOURCE="online"
 fi
