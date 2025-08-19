@@ -34,6 +34,10 @@ function update_script() {
     curl -fsSL "https://download.technitium.com/dns/DnsServerPortable.tar.gz" -o /opt/DnsServerPortable.tar.gz
     $STD tar zxvf /opt/DnsServerPortable.tar.gz -C /opt/technitium/dns/
     msg_ok "Updated Successfully"
+
+    msg_info "Cleaning up"
+    rm -f /opt/DnsServerPortable.tar.gz
+    msg_ok "Cleaned up"
   else
     msg_ok "No update required.  ${APP} is already at v${RELEASE}."
   fi
