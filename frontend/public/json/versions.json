@@ -1,18 +1,73 @@
 [
   {
-    "name": "plexguide/Huntarr.io",
-    "version": "8.2.6",
-    "date": "2025-08-18T23:31:31Z"
+    "name": "duplicati/duplicati",
+    "version": "v2.1.1.101-2.1.1.101_canary_2025-08-19",
+    "date": "2025-08-19T10:45:40Z"
   },
   {
-    "name": "YunoHost/yunohost",
-    "version": "debian/12.1.10.1",
-    "date": "2025-08-18T21:59:08Z"
+    "name": "element-hq/synapse",
+    "version": "v1.137.0rc1",
+    "date": "2025-08-19T10:37:34Z"
   },
   {
     "name": "crowdsecurity/crowdsec",
     "version": "v1.6.11",
     "date": "2025-07-22T12:11:38Z"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2025.7.5",
+    "date": "2025-08-05T03:37:52Z"
+  },
+  {
+    "name": "zabbix/zabbix",
+    "version": "6.0.41",
+    "date": "2025-08-19T07:58:21Z"
+  },
+  {
+    "name": "oauth2-proxy/oauth2-proxy",
+    "version": "v7.12.0",
+    "date": "2025-08-19T06:57:20Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2311",
+    "date": "2025-08-19T06:11:09Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.3-beta.10",
+    "date": "2025-07-15T06:07:03Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.3.2",
+    "date": "2025-08-19T04:08:36Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.11.5-rc5",
+    "date": "2025-08-19T00:45:40Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
+    "name": "YunoHost/yunohost",
+    "version": "debian/12.1.10.2",
+    "date": "2025-08-19T00:16:17Z"
+  },
+  {
+    "name": "plexguide/Huntarr.io",
+    "version": "8.2.6",
+    "date": "2025-08-18T23:31:31Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.2.7",
+    "date": "2025-08-07T08:19:29Z"
   },
   {
     "name": "rcourtman/Pulse",
@@ -48,11 +103,6 @@
     "name": "TwiN/gatus",
     "version": "v5.23.1",
     "date": "2025-08-18T18:20:55Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.3.1",
-    "date": "2025-08-18T18:08:43Z"
   },
   {
     "name": "msgbyte/tianji",
@@ -100,29 +150,14 @@
     "date": "2025-08-18T09:07:06Z"
   },
   {
-    "name": "zabbix/zabbix",
-    "version": "7.4.2rc2",
-    "date": "2025-08-18T08:39:03Z"
-  },
-  {
     "name": "jupyter/notebook",
     "version": "@jupyter-notebook/ui-components@7.5.0-alpha.2",
     "date": "2025-08-18T07:39:41Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2306",
-    "date": "2025-08-18T05:50:56Z"
-  },
-  {
     "name": "moghtech/komodo",
     "version": "v1.19.0",
     "date": "2025-08-18T01:22:47Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
   },
   {
     "name": "lldap/lldap",
@@ -206,8 +241,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "e2e",
-    "date": "2025-08-08T20:14:39Z"
+    "version": "v4.3.0",
+    "date": "2025-07-05T12:14:52Z"
   },
   {
     "name": "blakeblackshear/frigate",
@@ -243,11 +278,6 @@
     "name": "mongodb/mongo",
     "version": "r8.2.0",
     "date": "2025-08-15T22:02:15Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.2.7",
-    "date": "2025-08-07T08:19:29Z"
   },
   {
     "name": "homarr-labs/homarr",
@@ -295,16 +325,6 @@
     "date": "2025-08-15T05:53:22Z"
   },
   {
-    "name": "ollama/ollama",
-    "version": "v0.11.5-rc0",
-    "date": "2025-08-14T22:24:01Z"
-  },
-  {
-    "name": "esphome/esphome",
-    "version": "2025.7.5",
-    "date": "2025-08-05T03:37:52Z"
-  },
-  {
     "name": "fallenbagel/jellyseerr",
     "version": "v2.7.3",
     "date": "2025-08-14T20:43:46Z"
@@ -328,11 +348,6 @@
     "name": "Luligu/matterbridge",
     "version": "Matter-1.4.1",
     "date": "2025-08-14T07:37:23Z"
-  },
-  {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.3-beta.10",
-    "date": "2025-07-15T06:07:03Z"
   },
   {
     "name": "booklore-app/booklore",
@@ -403,11 +418,6 @@
     "name": "jenkinsci/jenkins",
     "version": "jenkins-2.523",
     "date": "2025-08-12T14:54:07Z"
-  },
-  {
-    "name": "element-hq/synapse",
-    "version": "v1.136.0",
-    "date": "2025-08-12T14:26:27Z"
   },
   {
     "name": "bluenviron/mediamtx",
@@ -503,11 +513,6 @@
     "name": "pocketbase/pocketbase",
     "version": "v0.29.2",
     "date": "2025-08-09T07:28:08Z"
-  },
-  {
-    "name": "duplicati/duplicati",
-    "version": "v2.1.1.100-2.1.1.100_canary_2025-08-08",
-    "date": "2025-08-08T22:04:15Z"
   },
   {
     "name": "kimai/kimai",
@@ -728,11 +733,6 @@
     "name": "gtsteffaniak/filebrowser",
     "version": "v0.7.18-beta",
     "date": "2025-07-30T21:26:00Z"
-  },
-  {
-    "name": "oauth2-proxy/oauth2-proxy",
-    "version": "v7.11.0",
-    "date": "2025-07-30T18:16:38Z"
   },
   {
     "name": "leiweibau/Pi.Alert",
