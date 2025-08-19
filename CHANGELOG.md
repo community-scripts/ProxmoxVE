@@ -19,10 +19,11 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
-  - OpenObserve: Fix release fetching [@tremor021](https://github.com/tremor021) ([#6961](https://github.com/community-scripts/ProxmoxVE/pull/6961))
+  - [core]: extend setup_uv to work with alpine [@MickLesk](https://github.com/MickLesk) ([#6978](https://github.com/community-scripts/ProxmoxVE/pull/6978))
 
   - #### 🐞 Bug Fixes
 
+    - OpenObserve: Fix release fetching [@tremor021](https://github.com/tremor021) ([#6961](https://github.com/community-scripts/ProxmoxVE/pull/6961))
     - Update hev-socks5-server-install.sh [@iAzamat2](https://github.com/iAzamat2) ([#6953](https://github.com/community-scripts/ProxmoxVE/pull/6953))
 
 ## 2025-08-18
