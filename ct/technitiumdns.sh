@@ -27,17 +27,16 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  msg_info "Updating ${APP}"
 
-  if ! dpkg -s aspnetcore-runtime-8.0 >/dev/null 2>&1; then
-    curl -fsSL "https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb" -o $(basename "https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb")
-    $STD dpkg -i packages-microsoft-prod.deb
-    $STD apt-get update
-    $STD apt-get install -y aspnetcore-runtime-8.0
-    rm packages-microsoft-prod.deb
+  RELEASE=$(curl -fsSL https://technitium.com/dns/ | grep -oP 'Version \K[\d.]+')
+  if [[ ! -f ~/.technitium || "${VERSION}" != "$(cat ~/.technitium)" ]]; then
+    msg_info "Updating ${APP}"
+    curl -fsSL "https://download.technitium.com/dns/DnsServerPortable.tar.gz" -o /opt/DnsServerPortable.tar.gz
+    $STD tar zxvf /opt/DnsServerPortable.tar.gz -C /opt/technitium/dns/
+    msg_ok "Updated Successfully"
+  else
+    msg_ok "No update required.  ${APP} is already at v${RELEASE}."
   fi
-  $STD bash <(curl -fsSL https://download.technitium.com/dns/install.sh)
-  msg_ok "Updated Successfully"
   exit
 }
 

@@ -21,14 +21,24 @@ $STD apt-get update
 $STD apt-get install -y aspnetcore-runtime-8.0
 msg_ok "Installed ASP.NET Core Runtime"
 
+RELEASE=$(curl -fsSL https://technitium.com/dns/ | grep -oP 'Version \K[\d.]+')
 msg_info "Installing Technitium DNS"
-$STD bash <(curl -fsSL https://download.technitium.com/dns/install.sh)
+mkdir -p /opt/technitium/dns
+curl -fsSL "https://download.technitium.com/dns/DnsServerPortable.tar.gz" -o /opt/DnsServerPortable.tar.gz
+$STD tar zxvf /opt/DnsServerPortable.tar.gz -C /opt/technitium/dns/
+echo "${RELEASE}" > ~/.technitium
 msg_ok "Installed Technitium DNS"
+
+msg_info "Creating service"
+cp /opt/technitium/dns/systemd.service /etc/systemd/system/technitium.service
+systemctl enable -q --now technitium
+msg_ok "Service created"
 
 motd_ssh
 customize
 
 msg_info "Cleaning up"
+rm -f /opt/DnsServerPortable.tar.gz
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
