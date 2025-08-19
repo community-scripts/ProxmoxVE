@@ -26,30 +26,32 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  
   RELEASE="$(curl -fsSL https://api.github.com/repos/toniebox-reverse-engineering/teddycloud/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')"
-  VERSION="${RELEASE#tc_v}"
-  if [[ ! -f "/opt/${APP}_version.txt" || "${VERSION}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+  if [[ ! -f ~/.teddycloud || "${RELEASE}" != "$(cat ~/.teddycloud)" ]]; then
     msg_info "Stopping ${APP}"
     systemctl stop teddycloud
     msg_ok "Stopped ${APP}"
 
-    msg_info "Updating ${APP} to v${VERSION}"
-    cd /opt
+    msg_info "Creating backup"
     mv /opt/teddycloud /opt/teddycloud_bak
-    curl -fsSL "https://github.com/toniebox-reverse-engineering/teddycloud/releases/download/${RELEASE}/teddycloud.amd64.release_v${VERSION}.zip" -o $(basename "https://github.com/toniebox-reverse-engineering/teddycloud/releases/download/${RELEASE}/teddycloud.amd64.release_v${VERSION}.zip")
-    $STD unzip -d /opt/teddycloud teddycloud.amd64.release_v${VERSION}.zip
+    msg_ok "Backup created"
+
+    fetch_and_deploy_gh_release "teddycloud" "toniebox-reverse-engineering/teddycloud" "prebuild" "latest" "/opt/teddycloud" "teddycloud.amd64.release*.zip"
+
+    msg_info "Restoring data"
     cp -R /opt/teddycloud_bak/certs /opt/teddycloud_bak/config /opt/teddycloud_bak/data /opt/teddycloud
-    echo "${VERSION}" >"/opt/${APP}_version.txt"
-    msg_ok "Updated ${APP} to v${VERSION}"
+    msg_ok "Data restored"
 
     msg_info "Starting ${APP}"
     systemctl start teddycloud
     msg_ok "Started ${APP}"
 
     msg_info "Cleaning up"
-    rm -rf /opt/teddycloud.amd64.release_v${VERSION}.zip
     rm -rf /opt/teddycloud_bak
     msg_ok "Cleaned"
+
+    msg_ok "Updated successfully"
   else
     msg_ok "No update required. ${APP} is already at v${VERSION}"
   fi

@@ -20,15 +20,7 @@ $STD apt-get install -y \
   ca-certificates
 msg_ok "Installed Dependencies"
 
-msg_info "Installing TeddyCloud"
-RELEASE="$(curl -fsSL https://api.github.com/repos/toniebox-reverse-engineering/teddycloud/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')"
-VERSION="${RELEASE#tc_v}"
-curl -fsSL "https://github.com/toniebox-reverse-engineering/teddycloud/releases/download/${RELEASE}/teddycloud.amd64.release_v${VERSION}.zip" -o "teddycloud.amd64.release_v${VERSION}.zip"
-$STD unzip -d "/opt/teddycloud-${VERSION}" "teddycloud.amd64.release_v${VERSION}.zip"
-ln -fns "/opt/teddycloud-${VERSION}" /opt/teddycloud
-rm -rf teddycloud.amd64.release_v${VERSION}.zip
-echo "${VERSION}" >"/opt/${APPLICATION}_version.txt"
-msg_ok "Installed TeddyCloud"
+fetch_and_deploy_gh_release "teddycloud" "toniebox-reverse-engineering/teddycloud" "prebuild" "latest" "/opt/teddycloud" "teddycloud.amd64.release*.zip"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/teddycloud.service
@@ -55,5 +47,4 @@ customize
 msg_info "Cleaning up"
 $STD apt-get --yes autoremove
 $STD apt-get --yes autoclean
-rm -rf "teddycloud.amd64.release_v${VERSION}.zip"
 msg_ok "Cleaned"
