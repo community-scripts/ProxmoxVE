@@ -53,7 +53,7 @@ function update_script() {
 
     msg_ok "Updated successfully"
   else
-    msg_ok "No update required. ${APP} is already at v${VERSION}"
+    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }
