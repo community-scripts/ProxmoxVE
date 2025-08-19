@@ -59,7 +59,7 @@ function update_script() {
     done
     msg_ok "Image-processing libraries up to date"
   fi
-  RELEASE="1.138.0"
+  RELEASE="1.138.1"
   #RELEASE=$(curl -fsSL https://api.github.com/repos/immich-app/immich/releases?per_page=1 | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
   if [[ -f ~/.immich && "$RELEASE" == "$(cat ~/.immich)" ]]; then
     msg_ok "No update required. ${APP} is already at v${RELEASE}"
