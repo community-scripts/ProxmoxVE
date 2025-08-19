@@ -33,16 +33,20 @@
 	},
 	"notes": [
 		{
-			"text": "It is very recommended to install at least the 'panel' for web access, and 'nginx' for easy access to other apps.",
-			"type": "warning"
-		},
-		{
 			"text": "Installation might take a long time if choosing to install many apps. Be patient.",
-			"type": "warning"
+			"type": "info"
 		},
 		{
 			"text": "Swizzin is a management suite, not a single application. Use the 'box' command inside the container to install/manage individual apps like rTorrent, Sonarr, etc. A full list can be found in documentation.",
 			"type": "info"
-		}
+		},
+    {
+			"text": "It is very recommended to install at least the 'panel' for web access, and 'nginx' for easy access to other apps.",
+			"type": "warning"
+		},
+    {
+      "text": "WARNING: Installation sources scripts outside of Community Scripts repo. Please check the source before installing.",
+      "type": "warning"
+    }
 	]
 }
