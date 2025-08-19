@@ -30,7 +30,19 @@ function update_script() {
   msg_info "Updating $APP LXC"
   $STD apt-get update
   $STD apt-get -y upgrade
+  rm -rf /opt/tdarr/Tdarr_Updater
+  cd /opt/tdarr
+  RELEASE=$(curl -fsSL https://f000.backblazeb2.com/file/tdarrs/versions.json | grep -oP '(?<="Tdarr_Updater": ")[^"]+' | grep linux_x64 | head -n 1)
+  curl -fsSL "$RELEASE" -o Tdarr_Updater.zip
+  $STD unzip Tdarr_Updater.zip
+  chmod +x Tdarr_Updater
+  $STD ./Tdarr_Updater
   msg_ok "Updated $APP LXC"
+
+  msg_info "Cleaning up"
+  rm -rf /opt/tdarr/Tdarr_Updater.zip
+  msg_ok "Cleaned"
+  msg_ok "$APP has been successfully updated!"
   exit
 }
 
