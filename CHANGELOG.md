@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Barcode Buddy: Fix missing dependency [@tremor021](https://github.com/tremor021) ([#7020](https://github.com/community-scripts/ProxmoxVE/pull/7020))
     - PBS: ifupdown2 reload [@MickLesk](https://github.com/MickLesk) ([#7013](https://github.com/community-scripts/ProxmoxVE/pull/7013))
 
   - #### ✨ New Features
