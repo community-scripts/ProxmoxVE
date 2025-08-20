@@ -18,8 +18,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
-    - Komga: Fix update [@tremor021](https://github.com/tremor021) ([#7027](https://github.com/community-scripts/ProxmoxVE/pull/7027))
+    - Immich: fix small issue with immich-admin "start" script [@vhsdream](https://github.com/vhsdream) ([#7035](https://github.com/community-scripts/ProxmoxVE/pull/7035))
     - WasteBin: Small fixes [@tremor021](https://github.com/tremor021) ([#7018](https://github.com/community-scripts/ProxmoxVE/pull/7018))
+    - Komga: Fix update [@tremor021](https://github.com/tremor021) ([#7027](https://github.com/community-scripts/ProxmoxVE/pull/7027))
     - Barcode Buddy: Fix missing dependency [@tremor021](https://github.com/tremor021) ([#7020](https://github.com/community-scripts/ProxmoxVE/pull/7020))
     - PBS: ifupdown2 reload [@MickLesk](https://github.com/MickLesk) ([#7013](https://github.com/community-scripts/ProxmoxVE/pull/7013))
 
@@ -29,8 +30,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
-    - ghost: fix: verbose [@CrazyWolf13](https://github.com/CrazyWolf13) ([#7023](https://github.com/community-scripts/ProxmoxVE/pull/7023))
     - Refactor: RustDesk Server [@tremor021](https://github.com/tremor021) ([#7008](https://github.com/community-scripts/ProxmoxVE/pull/7008))
+    - ghost: fix: verbose [@CrazyWolf13](https://github.com/CrazyWolf13) ([#7023](https://github.com/community-scripts/ProxmoxVE/pull/7023))
     - Refactor: Paperless-ngx [@MickLesk](https://github.com/MickLesk) ([#6938](https://github.com/community-scripts/ProxmoxVE/pull/6938))
 
 ## 2025-08-19
