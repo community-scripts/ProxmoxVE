@@ -29,7 +29,7 @@ function update_script() {
   fi
 
   RELEASE=$(curl -fsSL https://api.github.com/repos/gotson/komga/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  if [[ ! -f ~/.komga ]] || [[ "${RELEASE}" != "$(cat ~/.komga)" ]]; then
+  if [[ ! -f ~/.komga-org ]] || [[ "${RELEASE}" != "$(cat ~/.komga-org)" ]]; then
     msg_info "Stopping ${APP}"
     systemctl stop komga
     msg_ok "Stopped ${APP}"
