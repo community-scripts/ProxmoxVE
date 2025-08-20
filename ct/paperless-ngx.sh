@@ -38,7 +38,7 @@ function update_script() {
 
     if grep -q "uv run" /etc/systemd/system/paperless-webserver.service; then
 
-      msg_info "backing up data"
+      msg_info "Backing up data"
       mkdir -p /opt/paperless/backup
       cp -r /opt/paperless/data /opt/paperless/backup/
       cp -r /opt/paperless/media /opt/paperless/backup/
@@ -99,7 +99,7 @@ function update_script() {
       done
 
       $STD systemctl daemon-reload
-      msg_info "backing up data"
+      msg_info "Backing up data"
       mkdir -p /opt/paperless/backup
       cp -r /opt/paperless/data /opt/paperless/backup/
       cp -r /opt/paperless/media /opt/paperless/backup/
