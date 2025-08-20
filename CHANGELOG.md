@@ -29,6 +29,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - ghost: fix: verbose [@CrazyWolf13](https://github.com/CrazyWolf13) ([#7023](https://github.com/community-scripts/ProxmoxVE/pull/7023))
     - Refactor: RustDesk Server [@tremor021](https://github.com/tremor021) ([#7008](https://github.com/community-scripts/ProxmoxVE/pull/7008))
     - Refactor: Paperless-ngx [@MickLesk](https://github.com/MickLesk) ([#6938](https://github.com/community-scripts/ProxmoxVE/pull/6938))
 
