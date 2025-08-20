@@ -27,6 +27,10 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  if ! [[ $(dpkg -s zstd 2>/dev/null) ]]; then
+    $STD apt-get update
+    $STD apt-get install -y zstd
+  fi
   RELEASE=$(curl -fsSL https://api.github.com/repos/matze/wastebin/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
   # Dirty-Fix 03/2025 for missing APP_version.txt on old installations, set to pre-latest release
   msg_info "Running Migration"
