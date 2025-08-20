@@ -494,10 +494,10 @@ EOF
 # Types: deb
 # URIs: http://download.proxmox.com/debian/pve
 # Suites: trixie
-# Components: pvetest
+# Components: pve-test
 # Signed-By: /usr/share/keyrings/proxmox-archive-keyring.gpg
 EOF
-      msg_ok "Added 'pvetest' repository"
+      msg_ok "Added 'pve-test' repository"
       ;;
     no) msg_error "Selected no to Adding 'pvetest' repository" ;;
     esac
