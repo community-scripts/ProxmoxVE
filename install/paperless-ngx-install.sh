@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Copyright (c) 2021-2025 tteck
-# Author: tteck (tteckster)
+# Author: tteck (tteckster) | MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://docs.paperless-ngx.com/
 
@@ -36,7 +36,7 @@ msg_ok "Installed Dependencies"
 
 PG_VERSION="16" setup_postgresql
 PYTHON_VERSION="3.13" setup_uv
-fetch_and_deploy_gh_release "paperless" "paperless-ngx/paperless-ngx" "tarball" "latest" "/opt/paperless"
+fetch_and_deploy_gh_release "paperless" "paperless-ngx/paperless-ngx" "prebuild" "latest" "/opt/paperless" "paperless*tar.xz"
 fetch_and_deploy_gh_release "jbig2enc" "ie13/jbig2enc" "tarball" "latest" "/opt/jbig2enc"
 setup_gs
 
@@ -114,11 +114,15 @@ user.is_superuser = True
 user.is_staff = True
 user.save()
 EOF
-
-echo "" >>~/paperless.creds
-echo -e "Paperless-ngx WebUI User: \e[32madmin\e[0m" >>~/paperless.creds
-echo -e "Paperless-ngx WebUI Password: \e[32m$DB_PASS\e[0m" >>~/paperless.creds
-echo "" >>~/paperless.creds
+{
+  echo "Paperless-ngx-Credentials"
+  echo "Paperless-ngx Database Name: $DB_NAME"
+  echo "Paperless-ngx Database User: $DB_USER"
+  echo "Paperless-ngx Database Password: $DB_PASS"
+  echo "Paperless-ngx Secret Key: $SECRET_KEY\n"
+  echo "Paperless-ngx WebUI User: admin"
+  echo "Paperless-ngx WebUI Password: $DB_PASS"
+} >>~/paperless-ngx.creds
 msg_ok "Set up admin Paperless-ngx User & Password"
 
 msg_info "Creating Services"
