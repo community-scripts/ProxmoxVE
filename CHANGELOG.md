@@ -14,6 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - Post-Install, change pve-test for trixie [@MickLesk](https://github.com/MickLesk) ([#7031](https://github.com/community-scripts/ProxmoxVE/pull/7031))
+
   - #### 🐞 Bug Fixes
 
     - Komga: Fix update [@tremor021](https://github.com/tremor021) ([#7027](https://github.com/community-scripts/ProxmoxVE/pull/7027))
