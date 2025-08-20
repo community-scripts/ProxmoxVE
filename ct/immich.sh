@@ -29,6 +29,8 @@ function update_script() {
   fi
 
   setup_uv
+  PNPM_VERSION="$(curl -fsSL "https://raw.githubusercontent.com/immich-app/immich/refs/heads/main/package.json" | jq -r '.packageManager | split("@")[1]')"
+  NODE_VERSION="22" NODE_MODULE="pnpm@${PNPM_VERSION}" setup_nodejs
 
   STAGING_DIR=/opt/staging
   BASE_DIR=${STAGING_DIR}/base-images
@@ -116,8 +118,12 @@ set +a
 EOF
     chmod +x "$INSTALL_DIR"/start.sh
   fi
-  rm -rf "${APP_DIR:?}"/*
-  mkdir -p "$ML_DIR"
+
+  (
+    shopt -s dotglob
+    rm -rf "${APP_DIR:?}"/*
+  )
+
   rm -rf "$SRC_DIR"
 
   fetch_and_deploy_gh_release "immich" "immich-app/immich" "tarball" "v${RELEASE}" "$SRC_DIR"
@@ -127,30 +133,34 @@ EOF
   if [[ "$RELEASE" == "1.135.1" ]]; then
     rm ./src/schema/migrations/1750323941566-UnsetPrewarmDimParameter.ts
   fi
-  $STD npm install -g node-gyp node-pre-gyp
-  $STD npm ci
-  $STD npm run build
-  $STD npm prune --omit=dev --omit=optional
-  cp -a {bin,dist,node_modules,resources,package*.json} "$APP_DIR"/
-  cp package.json "$APP_DIR"/bin
-  mv "$INSTALL_DIR"/start.sh "$APP_DIR"/bin
+  export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+  export CI=1
+  export SHARP_FORCE_GLOBAL_LIBVIPS=true
+  corepack enable
+
+  # server build
+  $STD pnpm --filter immich --frozen-lockfile build
+  $STD pnpm --filter immich --frozen-lockfile --prod --no-optional deploy "$APP_DIR"
+  cp "$APP_DIR"/package.json "$APP_DIR"/bin
   sed -i 's|^start|./start|' "$APP_DIR"/bin/immich-admin
-  cd "$SRC_DIR"/open-api/typescript-sdk
-  $STD npm ci
-  $STD npm run build
-  cd "$SRC_DIR"/web
-  $STD npm ci
-  $STD npm run build
+
+  # openapi & web build
   cd "$SRC_DIR"
+  $STD pnpm --filter @immich/sdk --filter immich-web --frozen-lockfile --force install
+  $STD pnpm --filter @immich/sdk --filter immich-web build
   cp -a web/build "$APP_DIR"/www
   cp LICENSE "$APP_DIR"
+
+  # cli build
+  $STD pnpm --filter @immich/sdk --filter @immich/cli --frozen-lockfile install
+  $STD pnpm --filter @immich/sdk --filter @immich/cli build
+  $STD pnpm --filter @immich/cli --prod --no-optional deploy "$APP_DIR"/cli
   cd "$APP_DIR"
-  export SHARP_FORCE_GLOBAL_LIBVIPS=true
-  $STD npm install sharp
-  rm -rf "$APP_DIR"/node_modules/@img/sharp-{libvips*,linuxmusl-x64}
+  mv "$INSTALL_DIR"/start.sh "$APP_DIR"/bin
   msg_ok "Updated ${APP} web and microservices"
 
   cd "$SRC_DIR"/machine-learning
+  mkdir -p "$ML_DIR"
   export VIRTUAL_ENV="${ML_DIR}"/ml-venv
   $STD /usr/local/bin/uv venv "$VIRTUAL_ENV"
   if [[ -f ~/.openvino ]]; then
@@ -177,10 +187,6 @@ EOF
   ln -s "${UPLOAD_DIR:-/opt/immich/upload}" "$APP_DIR"/upload
   ln -s "${UPLOAD_DIR:-/opt/immich/upload}" "$ML_DIR"/upload
   ln -s "$GEO_DIR" "$APP_DIR"
-
-  msg_info "Updating Immich CLI"
-  $STD npm i -g @immich/cli
-  msg_ok "Updated Immich CLI"
 
   chown -R immich:immich "$INSTALL_DIR"
   if [[ ! -f ~/.debian_version.bak ]]; then

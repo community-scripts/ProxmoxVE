@@ -111,7 +111,8 @@ if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   msg_ok "Installed OpenVINO dependencies"
 fi
 
-NODE_VERSION="22" setup_nodejs
+PNPM_VERSION="$(curl -fsSL "https://raw.githubusercontent.com/immich-app/immich/refs/heads/main/package.json" | jq -r '.packageManager | split("@")[1]')"
+NODE_VERSION="22" NODE_MODULE="pnpm@${PNPM_VERSION}" setup_nodejs
 PG_VERSION="16" PG_MODULES="pgvector" setup_postgresql
 
 msg_info "Setting up Postgresql Database"
@@ -281,36 +282,40 @@ APP_DIR="${INSTALL_DIR}/app"
 ML_DIR="${APP_DIR}/machine-learning"
 GEO_DIR="${INSTALL_DIR}/geodata"
 mkdir -p "$INSTALL_DIR"
-mkdir -p {"${APP_DIR}","${UPLOAD_DIR}","${GEO_DIR}","${ML_DIR}","${INSTALL_DIR}"/cache}
+mkdir -p {"${APP_DIR}","${UPLOAD_DIR}","${GEO_DIR}","${INSTALL_DIR}"/cache}
 
 fetch_and_deploy_gh_release "immich" "immich-app/immich" "tarball" "v1.138.1" "$SRC_DIR"
 
 msg_info "Installing ${APPLICATION} (more patience please)"
 
 cd "$SRC_DIR"/server
-$STD npm install -g node-gyp node-pre-gyp
-$STD npm ci
-$STD npm run build
-$STD npm prune --omit=dev --omit=optional
-cp -a {bin,dist,node_modules,resources,package*.json} "$APP_DIR"/
-cp package.json "$APP_DIR"/bin
+export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+export CI=1
+export SHARP_FORCE_GLOBAL_LIBVIPS=true
+corepack enable
+
+# server build
+$STD pnpm --filter immich --frozen-lockfile build
+$STD pnpm --filter immich --frozen-lockfile --prod --no-optional deploy "$APP_DIR"
+cp "$APP_DIR"/package.json "$APP_DIR"/bin
 sed -i 's|^start|./start|' "$APP_DIR"/bin/immich-admin
-cd "$SRC_DIR"/open-api/typescript-sdk
-$STD npm ci
-$STD npm run build
-cd "$SRC_DIR"/web
-$STD npm ci
-$STD npm run build
+
+# openapi & web build
 cd "$SRC_DIR"
+$STD pnpm --filter @immich/sdk --filter immich-web --frozen-lockfile --force install
+$STD pnpm --filter @immich/sdk --filter immich-web build
 cp -a web/build "$APP_DIR"/www
 cp LICENSE "$APP_DIR"
+
+# cli build
+$STD pnpm --filter @immich/sdk --filter @immich/cli --frozen-lockfile install
+$STD pnpm --filter @immich/sdk --filter @immich/cli build
+$STD pnpm --filter @immich/cli --prod --no-optional deploy "$APP_DIR"/cli
 cd "$APP_DIR"
-export SHARP_FORCE_GLOBAL_LIBVIPS=true
-$STD npm install sharp
-rm -rf "$APP_DIR"/node_modules/@img/sharp-{libvips*,linuxmusl-x64}
 msg_ok "Installed Immich Server and Web Components"
 
 cd "$SRC_DIR"/machine-learning
+mkdir -p "$ML_DIR"
 export VIRTUAL_ENV="${ML_DIR}/ml-venv"
 $STD uv venv "$VIRTUAL_ENV"
 if [[ -f ~/.openvino ]]; then
@@ -336,10 +341,6 @@ grep -rlE "'/build'" | xargs -n1 sed -i "s|'/build'|'$APP_DIR'|g"
 sed -i "s@\"/cache\"@\"$INSTALL_DIR/cache\"@g" "$ML_DIR"/immich_ml/config.py
 ln -s "$UPLOAD_DIR" "$APP_DIR"/upload
 ln -s "$UPLOAD_DIR" "$ML_DIR"/upload
-
-msg_info "Installing Immich CLI"
-$STD npm i -g @immich/cli
-msg_ok "Installed Immich CLI"
 
 msg_info "Installing GeoNames data"
 cd "$GEO_DIR"
@@ -400,10 +401,10 @@ cat <<EOF >"$APP_DIR"/bin/start.sh
 #!/usr/bin/env bash
 
 set -a
-. "$INSTALL_DIR"/.env
+. ${INSTALL_DIR}/.env
 set +a
 
-/usr/bin/node "$APP_DIR"/dist/main.js "\$@"
+/usr/bin/node ${APP_DIR}/dist/main.js "\$@"
 EOF
 chmod +x "$ML_DIR"/ml_start.sh "$APP_DIR"/bin/start.sh
 cat <<EOF >/etc/systemd/system/"${APPLICATION}"-web.service
