@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - technitiumdns: fix unbound variable [@MickLesk](https://github.com/MickLesk) ([#7047](https://github.com/community-scripts/ProxmoxVE/pull/7047))
     - [core]: improve binary globbing for gh releases [@MickLesk](https://github.com/MickLesk) ([#7044](https://github.com/community-scripts/ProxmoxVE/pull/7044))
 
 ## 2025-08-20
