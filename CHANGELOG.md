@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - duplicati: fix release pattern [@MickLesk](https://github.com/MickLesk) ([#7049](https://github.com/community-scripts/ProxmoxVE/pull/7049))
     - technitiumdns: fix unbound variable [@MickLesk](https://github.com/MickLesk) ([#7047](https://github.com/community-scripts/ProxmoxVE/pull/7047))
     - [core]: improve binary globbing for gh releases [@MickLesk](https://github.com/MickLesk) ([#7044](https://github.com/community-scripts/ProxmoxVE/pull/7044))
 
