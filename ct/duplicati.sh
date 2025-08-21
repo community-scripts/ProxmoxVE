@@ -34,7 +34,7 @@ function update_script() {
         systemctl stop duplicati
         msg_ok "Stopped $APP"
         
-        fetch_and_deploy_gh_release "duplicati" "duplicati/duplicati" "binary" "latest" "/opt/duplicati" "linux-x64-gui.deb"
+        fetch_and_deploy_gh_release "duplicati" "duplicati/duplicati" "binary" "latest" "/opt/duplicati" "duplicati-*-linux-x64-gui.deb"
 
         msg_info "Starting $APP"
         systemctl start duplicati
