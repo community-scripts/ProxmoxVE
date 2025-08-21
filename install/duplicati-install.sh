@@ -20,7 +20,7 @@ $STD apt-get install -y \
   libfontconfig1
 msg_ok "Installed Dependencies"
 
-fetch_and_deploy_gh_release "duplicati" "duplicati/duplicati" "binary" "latest" "/opt/duplicati" "linux-x64-gui.deb"
+fetch_and_deploy_gh_release "duplicati" "duplicati/duplicati" "binary" "latest" "/opt/duplicati" "duplicati-*-linux-x64-gui.deb"
 
 msg_info "Configuring duplicati"
 DECRYPTKEY=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
