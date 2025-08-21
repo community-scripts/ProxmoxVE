@@ -29,7 +29,7 @@ function update_script() {
   fi
 
   RELEASE=$(curl -fsSL https://technitium.com/dns/ | grep -oP 'Version \K[\d.]+')
-  if [[ ! -f ~/.technitium || "${VERSION}" != "$(cat ~/.technitium)" ]]; then
+  if [[ ! -f ~/.technitium || "${RELEASE}" != "$(cat ~/.technitium)" ]]; then
     msg_info "Updating ${APP}"
     curl -fsSL "https://download.technitium.com/dns/DnsServerPortable.tar.gz" -o /opt/DnsServerPortable.tar.gz
     $STD tar zxvf /opt/DnsServerPortable.tar.gz -C /opt/technitium/dns/
