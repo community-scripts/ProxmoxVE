@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Paperless-NGX: create direction for nltk [@MickLesk](https://github.com/MickLesk) ([#7064](https://github.com/community-scripts/ProxmoxVE/pull/7064))
     - Immich: hotfix - revert 7035 [@vhsdream](https://github.com/vhsdream) ([#7054](https://github.com/community-scripts/ProxmoxVE/pull/7054))
     - duplicati: fix release pattern [@MickLesk](https://github.com/MickLesk) ([#7049](https://github.com/community-scripts/ProxmoxVE/pull/7049))
     - technitiumdns: fix unbound variable [@MickLesk](https://github.com/MickLesk) ([#7047](https://github.com/community-scripts/ProxmoxVE/pull/7047))
