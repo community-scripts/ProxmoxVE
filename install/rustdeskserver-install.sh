@@ -13,10 +13,20 @@ setting_up_container
 network_check
 update_os
 
-fetch_and_deploy_gh_release "rustdesk-hbbr" "rustdesk/rustdesk-server" "binary" "latest" "/opt/rustdesk" "rustdesk-server-hbbr*amd64.deb"
-fetch_and_deploy_gh_release "rustdesk-hbbs" "rustdesk/rustdesk-server" "binary" "latest" "/opt/rustdesk" "rustdesk-server-hbbs*amd64.deb"
-fetch_and_deploy_gh_release "rustdesk-utils" "rustdesk/rustdesk-server" "binary" "latest" "/opt/rustdesk" "rustdesk-server-utils*amd64.deb"
-fetch_and_deploy_gh_release "rustdesk-api" "lejianwen/rustdesk-api" "binary" "latest" "/opt/rustdesk" "rustdesk-api-server*amd64.deb"
+hbbr_filename=$(curl -fsSL "https://api.github.com/repos/rustdesk/rustdesk-server/releases/latest" |
+  jq -r '.assets[].name' |
+  grep -E '^rustdesk-server-hbbr_[0-9]+\.[0-9]+\.[0-9]+_amd64\.deb$')
+hbbs_filename=$(curl -fsSL "https://api.github.com/repos/rustdesk/rustdesk-server/releases/latest" |
+  jq -r '.assets[].name' |
+  grep -E '^rustdesk-server-hbbs_[0-9]+\.[0-9]+\.[0-9]+_amd64\.deb$')
+utils_filename=$(curl -fsSL "https://api.github.com/repos/rustdesk/rustdesk-server/releases/latest" |
+  jq -r '.assets[].name' |
+  grep -E '^rustdesk-server-utils_[0-9]+\.[0-9]+\.[0-9]+_amd64\.deb$')
+
+fetch_and_deploy_gh_release "rustdesk-hbbr" "rustdesk/rustdesk-server" "binary" "latest" "/opt/rustdesk" "$hbbr_filename"
+fetch_and_deploy_gh_release "rustdesk-hbbs" "rustdesk/rustdesk-server" "binary" "latest" "/opt/rustdesk" "$hbbs_filename"
+fetch_and_deploy_gh_release "rustdesk-utils" "rustdesk/rustdesk-server" "binary" "latest" "/opt/rustdesk" "$utils_filename"
+fetch_and_deploy_gh_release "rustdesk-api" "lejianwen/rustdesk-api" "binary" "latest" "/opt/rustdesk" "rustdesk-api-server_*_amd64.deb"
 
 msg_info "Configuring RustDesk Server"
 ADMINPASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
