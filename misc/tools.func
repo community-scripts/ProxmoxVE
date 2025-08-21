@@ -894,7 +894,12 @@ function fetch_and_deploy_gh_release() {
     # If explicit filename pattern is provided (param $6), match that first
     if [[ -n "$asset_pattern" ]]; then
       for u in $assets; do
-        [[ "$u" =~ $asset_pattern || "$u" == *"$asset_pattern" ]] && url_match="$u" && break
+        case "${u##*/}" in
+        $asset_pattern)
+          url_match="$u"
+          break
+          ;;
+        esac
       done
     fi
 
