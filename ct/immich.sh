@@ -148,7 +148,6 @@ EOF
   export SHARP_FORCE_GLOBAL_LIBVIPS=true
   $STD npm install sharp
   rm -rf "$APP_DIR"/node_modules/@img/sharp-{libvips*,linuxmusl-x64}
-  mv "$INSTALL_DIR"/start.sh "$APP_DIR"/bin
   msg_ok "Updated ${APP} web and microservices"
 
   cd "$SRC_DIR"/machine-learning
