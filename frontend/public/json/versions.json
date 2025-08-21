@@ -1,8 +1,53 @@
 [
   {
+    "name": "fuma-nama/fumadocs",
+    "version": "fumadocs-core@15.7.0",
+    "date": "2025-08-21T10:12:00Z"
+  },
+  {
+    "name": "emqx/emqx",
+    "version": "e6.0.0-M2.202508-rc.1",
+    "date": "2025-08-20T18:02:55Z"
+  },
+  {
+    "name": "semaphoreui/semaphore",
+    "version": "v2.16.18",
+    "date": "2025-08-21T08:19:58Z"
+  },
+  {
+    "name": "theonedev/onedev",
+    "version": "v12.0.5",
+    "date": "2025-08-21T07:12:27Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.3-beta.10",
+    "date": "2025-07-15T06:07:03Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2319",
+    "date": "2025-08-21T05:52:32Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.19",
+    "date": "2025-08-21T00:27:08Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.3.3",
+    "date": "2025-08-20T10:12:51Z"
+  },
+  {
     "name": "ollama/ollama",
-    "version": "v0.11.5-rc5",
-    "date": "2025-08-19T00:45:40Z"
+    "version": "v0.11.6",
+    "date": "2025-08-20T21:00:13Z"
   },
   {
     "name": "rcourtman/Pulse",
@@ -23,11 +68,6 @@
     "name": "goauthentik/authentik",
     "version": "version/2025.8.0",
     "date": "2025-08-20T18:09:17Z"
-  },
-  {
-    "name": "emqx/emqx",
-    "version": "e6.0.0-M2.202508-rc.1",
-    "date": "2025-08-20T18:02:55Z"
   },
   {
     "name": "jenkinsci/jenkins",
@@ -65,11 +105,6 @@
     "date": "2025-08-20T10:20:25Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.3.3",
-    "date": "2025-08-20T10:12:51Z"
-  },
-  {
     "name": "duplicati/duplicati",
     "version": "v2.1.2.0-2.1.2.0_beta_2025-08-20",
     "date": "2025-08-20T08:15:46Z"
@@ -90,24 +125,9 @@
     "date": "2025-08-15T12:12:06Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2315",
-    "date": "2025-08-20T05:53:14Z"
-  },
-  {
     "name": "gtsteffaniak/filebrowser",
     "version": "v0.8.0-beta",
     "date": "2025-08-20T01:02:10Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.4.19",
-    "date": "2025-08-20T00:27:12Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
   },
   {
     "name": "TwiN/gatus",
@@ -193,11 +213,6 @@
     "name": "oauth2-proxy/oauth2-proxy",
     "version": "v7.12.0",
     "date": "2025-08-19T06:57:20Z"
-  },
-  {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.3-beta.10",
-    "date": "2025-07-15T06:07:03Z"
   },
   {
     "name": "firefly-iii/firefly-iii",
@@ -315,16 +330,6 @@
     "date": "2025-01-05T21:14:23Z"
   },
   {
-    "name": "semaphoreui/semaphore",
-    "version": "v2.16.17",
-    "date": "2025-08-17T13:13:52Z"
-  },
-  {
-    "name": "fuma-nama/fumadocs",
-    "version": "fumadocs-core@15.6.12",
-    "date": "2025-08-17T10:37:31Z"
-  },
-  {
     "name": "TandoorRecipes/recipes",
     "version": "2.0.2",
     "date": "2025-08-17T09:24:37Z"
@@ -336,8 +341,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-08-16T16:04:53Z"
+    "version": "v4.3.0",
+    "date": "2025-07-05T12:14:52Z"
   },
   {
     "name": "blakeblackshear/frigate",
@@ -648,11 +653,6 @@
     "name": "openobserve/openobserve",
     "version": "v0.15.0-rc5",
     "date": "2025-08-06T08:55:10Z"
-  },
-  {
-    "name": "theonedev/onedev",
-    "version": "v12.0.4",
-    "date": "2025-08-06T06:30:07Z"
   },
   {
     "name": "garethgeorge/backrest",
