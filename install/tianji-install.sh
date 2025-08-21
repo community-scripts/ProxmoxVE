@@ -26,6 +26,7 @@ msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" NODE_MODULE="pnpm@$(curl -s https://raw.githubusercontent.com/msgbyte/tianji/master/package.json | jq -r '.packageManager | split("@")[1]')" setup_nodejs
 PG_VERSION="16" setup_postgresql
+PYTHON_VERSION="3.12" setup_uv
 
 msg_info "Setting up PostgreSQL"
 DB_NAME=tianji_db
