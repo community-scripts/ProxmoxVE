@@ -28,7 +28,7 @@ function update_script() {
     exit
   fi
 
-  RELEASE=$(curl -fsSL https://api.github.com/repos/chrisvel/tududi/releases/latest | yq '.tag_name' | sed 's/^v//')
+  RELEASE=$(curl -fsSL https://api.github.com/repos/chrisvel/tududi/releases/latest | yq '.tag_name' | sed 's/^"v//;s/"$//')
   if [[ "${RELEASE}" != "$(cat ~/.tududi 2>/dev/null)" ]] || [[ ! -f ~/.tududi ]]; then
     msg_info "Stopping Service"
     systemctl stop tududi
