@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-08-21
 
+### 🆕 New Scripts
+
+  - LiteLLM ([#7052](https://github.com/community-scripts/ProxmoxVE/pull/7052))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
