@@ -23,29 +23,25 @@ function update_script() {
     header_info
     check_container_storage
     check_container_resources
-
     if [[ ! -d "/opt/revealjs" ]]; then
         msg_error "No ${APP} Installation Found!"
         exit
     fi
+    
     RELEASE=$(curl -fsSL https://api.github.com/repos/hakimel/reveal.js/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-    if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
+    if [[ "${RELEASE}" != "$(cat ~/.revealjs)" ]] || [[ ! -f ~/.revealjs ]]; then
         msg_info "Stopping $APP"
         systemctl stop revealjs
         msg_ok "Stopped $APP"
 
-        msg_info "Updating $APP to ${RELEASE}"
-        temp_file=$(mktemp)
-curl -fsSL "https://github.com/hakimel/reveal.js/archive/refs/tags/${RELEASE}.tar.gz" -o "$temp_file"
-        tar zxf $temp_file
-        rm -rf /opt/revealjs/node_modules/*
         cp /opt/revealjs/index.html /opt
-        cp -rf reveal.js-${RELEASE}/* /opt/revealjs
+        fetch_and_deploy_gh_release "revealjs" "hakimel/reveal.js" "tarball"
+
+        msg_info "Updating $APP to ${RELEASE}"
         cd /opt/revealjs
         $STD npm install
         cp -f /opt/index.html /opt/revealjs
         sed -i '25s/localhost/0.0.0.0/g' /opt/revealjs/gulpfile.js
-        echo "${RELEASE}" >/opt/${APP}_version.txt
         msg_ok "Updated $APP to ${RELEASE}"
 
         msg_info "Starting $APP"
@@ -53,8 +49,7 @@ curl -fsSL "https://github.com/hakimel/reveal.js/archive/refs/tags/${RELEASE}.ta
         msg_ok "Started $APP"
 
         msg_info "Cleaning Up"
-        rm -f $temp_file
-        rm -rf ~/reveal.js-${RELEASE}
+        rm -f /opt/index.html
         msg_ok "Cleanup Completed"
 
         msg_ok "Update Successful"

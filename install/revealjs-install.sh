@@ -14,17 +14,12 @@ network_check
 update_os
 
 NODE_VERSION="22" setup_nodejs
+fetch_and_deploy_gh_release "revealjs" "hakimel/reveal.js" "tarball"
 
-msg_info "Setup ${APPLICATION}"
-temp_file=$(mktemp)
-RELEASE=$(curl -fsSL https://api.github.com/repos/hakimel/reveal.js/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-curl -fsSL "https://github.com/hakimel/reveal.js/archive/refs/tags/${RELEASE}.tar.gz" -o "$temp_file"
-tar zxf $temp_file
-mv reveal.js-${RELEASE}/ /opt/revealjs
+msg_info "Configuring ${APPLICATION}"
 cd /opt/revealjs
 $STD npm install
 sed -i '25s/localhost/0.0.0.0/g' /opt/revealjs/gulpfile.js
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Setup ${APPLICATION}"
 
 msg_info "Creating Service"
@@ -50,7 +45,6 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -f $temp_file
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
