@@ -28,27 +28,19 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
   RELEASE=$(curl -s https://api.github.com/repos/rclone/rclone/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+  if [[ ! -f ~/.rclone ]] || [[ "${RELEASE}" != "$(cat ~/.rclone)" ]]; then
     msg_info "Stopping Service"
     systemctl stop rclone-web
     msg_ok "Stopped Service"
 
-    msg_info "Updating ${APP} to v${RELEASE}"
-    temp_file=$(mktemp)
-    rm -rf /opt/rclone/*
-    curl -fsSL "https://github.com/rclone/rclone/releases/download/v${RELEASE}/rclone-v${RELEASE}-linux-amd64.zip" -o "$temp_file"
-    $STD unzip -j "$temp_file" '*/**' -d /opt/rclone
-    echo "${RELEASE}" >/opt/${APP}_version.txt
-    msg_ok "Updated $APP to v${RELEASE}"
+    fetch_and_deploy_gh_release "rclone" "rclone/rclone" "prebuild" "latest" "/opt/rclone" "rclone*linux-amd64.zip"
 
     msg_info "Starting Service"
     systemctl start rclone-web
     msg_ok "Started Service"
 
-    msg_info "Cleaning up"
-    rm -f "$temp_file"
-    msg_ok "Cleaned"
     msg_ok "Updated Successfully"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}"
