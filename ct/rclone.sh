@@ -30,7 +30,7 @@ function update_script() {
   fi
 
   RELEASE=$(curl -s https://api.github.com/repos/rclone/rclone/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f ~/.rclone ]] || [[ "${RELEASE}" != "$(cat ~/.rclone)" ]]; then
+  if [[ ! -f ~/.rclone ]] || [[ "${RELEASE}" != "$(cat ~/.rclone 2>/dev/null)" ]]; then
     msg_info "Stopping Service"
     systemctl stop rclone-web
     msg_ok "Stopped Service"
