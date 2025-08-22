@@ -79,8 +79,8 @@ echo -e "Paperless-ngx Database Password: \e[32m$DB_PASS\e[0m" >>~/paperless.cre
 echo -e "Paperless-ngx Database Name: \e[32m$DB_NAME\e[0m" >>~/paperless.creds
 
 msg_info "Installing Natural Language Toolkit (Patience)"
-$STD uv pip install nltk --system
-$STD uv run -- python -m nltk.downloader -d /usr/share/nltk_data all
+$STD uv pip install --python 3.13 nltk
+$STD uv run --python 3.13 --with nltk -- python -m nltk.downloader -d /usr/share/nltk_data all
 sed -i -e 's/rights="none" pattern="PDF"/rights="read|write" pattern="PDF"/' /etc/ImageMagick-6/policy.xml
 msg_ok "Installed Natural Language Toolkit"
 
