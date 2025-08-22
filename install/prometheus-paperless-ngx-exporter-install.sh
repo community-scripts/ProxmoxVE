@@ -13,17 +13,14 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Prometheus Paperless NGX Exporter"
-RELEASE=$(curl -fsSL https://api.github.com/repos/hansmi/prometheus-paperless-exporter/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/hansmi/prometheus-paperless-exporter/releases/download/v${RELEASE}/prometheus-paperless-exporter_${RELEASE}_linux_amd64.tar.gz" -o "prometheus-paperless-exporter_${RELEASE}_linux_amd64.tar.gz"
-tar -xf prometheus-paperless-exporter_${RELEASE}_linux_amd64.tar.gz
-mv prometheus-paperless-exporter_${RELEASE}_linux_amd64/prometheus-paperless-exporter /usr/local/bin/
+fetch_and_deploy_gh_release "prom-paperless-exp" "hansmi/prometheus-paperless-exporter" "binary"
+
+msg_info "Configuring Prometheus Paperless NGX Exporter"
 mkdir -p /etc/prometheus-paperless-ngx-exporter
 cat <<EOF >/etc/prometheus-paperless-ngx-exporter/paperless_auth_token_file
 SECRET_AUTH_TOKEN
 EOF
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
-msg_ok "Installed Prometheus Paperless NGX Exporter"
+msg_ok "Configured Prometheus Paperless NGX Exporter"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/prometheus-paperless-ngx-exporter.service
@@ -53,5 +50,4 @@ customize
 msg_info "Cleaning up"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
-rm -rf prometheus-paperless-exporter_${RELEASE}_linux_amd64/ prometheus-paperless-exporter_${RELEASE}_linux_amd64.tar.gz
 msg_ok "Cleaned"

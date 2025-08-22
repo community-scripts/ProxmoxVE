@@ -27,24 +27,19 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  
   RELEASE=$(curl -fsSL https://api.github.com/repos/hansmi/prometheus-paperless-exporter/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+  if [[ ! -f ~/.prom-paperless-exp ]] || [[ "${RELEASE}" != "$(cat prom-paperless-exp 2>/dev/null)" ]]; then
     msg_info "Stopping ${APP}"
     systemctl stop prometheus-paperless-ngx-exporter
     msg_ok "Stopped ${APP}"
 
-    msg_info "Updating ${APP} to v${RELEASE}"
-    cd /opt
-    curl -fsSL "https://github.com/hansmi/prometheus-paperless-exporter/releases/download/v${RELEASE}/prometheus-paperless-exporter_${RELEASE}_linux_amd64.tar.gz" -o $(basename "https://github.com/hansmi/prometheus-paperless-exporter/releases/download/v${RELEASE}/prometheus-paperless-exporter_${RELEASE}_linux_amd64.tar.gz")
-    tar -xf prometheus-paperless-exporter_${RELEASE}_linux_amd64.tar.gz
-    cp -rf prometheus-paperless-exporter_${RELEASE}_linux_amd64/prometheus-paperless-exporter /usr/local/bin/
-    rm -rf prometheus-paperless-exporter_${RELEASE}_linux_amd64/ prometheus-paperless-exporter_${RELEASE}_linux_amd64.tar.gz
-    echo "${RELEASE}" >/opt/${APP}_version.txt
-    msg_ok "Updated ${APP} to v${RELEASE}"
+    fetch_and_deploy_gh_release "prom-paperless-exp" "hansmi/prometheus-paperless-exporter" "binary"
 
     msg_info "Starting ${APP}"
     systemctl start prometheus-paperless-ngx-exporter
     msg_ok "Started ${APP}"
+
     msg_ok "Updated Successfully"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}"
