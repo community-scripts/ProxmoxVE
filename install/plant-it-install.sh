@@ -20,17 +20,7 @@ $STD apt-get install -y \
 msg_ok "Installed Dependencies"
 
 setup_mariadb
-
-msg_info "Setting up Adoptium Repository"
-mkdir -p /etc/apt/keyrings
-curl -fsSL "https://packages.adoptium.net/artifactory/api/gpg/key/public" | gpg --dearmor >/etc/apt/trusted.gpg.d/adoptium.gpg
-echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" >/etc/apt/sources.list.d/adoptium.list
-$STD apt-get update
-msg_ok "Set up Adoptium Repository"
-
-msg_info "Installing Temurin JDK 21 (LTS)"
-$STD apt-get install -y temurin-21-jdk
-msg_ok "Setup Temurin JDK 21 (LTS)"
+JAVA_VERSION="21" setup_java
 
 msg_info "Setting up MariaDB"
 JWT_SECRET=$(openssl rand -base64 24 | tr -d '/+=')
@@ -48,13 +38,11 @@ $STD mariadb -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUS
 } >>~/plant-it.creds
 msg_ok "Set up MariaDB"
 
-msg_info "Setup Plant-it"
-RELEASE=$(curl -fsSL https://api.github.com/repos/MDeLuise/plant-it/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-curl -fsSL "https://github.com/MDeLuise/plant-it/releases/download/${RELEASE}/server.jar" -o "server.jar"
-mkdir -p /opt/plant-it/{backend,frontend}
-mkdir -p /opt/plant-it-data
-mv -f server.jar /opt/plant-it/backend/server.jar
+USE_ORIGINAL_FILENAME="true" fetch_and_deploy_gh_release "plant-it" "MDeLuise/plant-it" "singlefile" "latest" "/opt/plant-it/backend" "server.jar"
+fetch_and_deploy_gh_release "plant-it-front" "MDeLuise/plant-it" "prebuild" "latest" "/opt/plant-it/frontend" "client.tar.gz"
 
+msg_info "Configured Plant-it"
+mkdir -p /opt/plant-it-data
 cat <<EOF >/opt/plant-it/backend/server.env
 MYSQL_HOST=localhost
 MYSQL_PORT=3306
@@ -78,12 +66,7 @@ CACHE_TTL=86400
 CACHE_HOST=localhost
 CACHE_PORT=6379
 EOF
-
-cd /opt/plant-it/frontend
-curl -fsSL "https://github.com/MDeLuise/plant-it/releases/download/${RELEASE}/client.tar.gz" -o "client.tar.gz"
-tar -xzf client.tar.gz
-echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
-msg_ok "Setup Plant-it"
+msg_ok "Configured Plant-it"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/plant-it.service
@@ -136,7 +119,6 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -rf /opt/plant-it/frontend/client.tar.gz
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
