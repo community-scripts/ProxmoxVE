@@ -27,6 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
   RELEASE=$(curl -fsSL https://api.github.com/repos/snipe/snipe-it/releases/latest | grep '"tag_name"' | sed -E 's/.*"tag_name": "v([^"]+).*/\1/')
   if [[ ! -f ~/.snipe-it ]] || [[ "${RELEASE}" != "$(cat ~/.snipe-it 2>/dev/null)" ]]; then
     msg_info "Stopping Services"
@@ -38,6 +39,8 @@ function update_script() {
     msg_ok "Backup created"
 
     fetch_and_deploy_gh_release "snipe-it" "snipe/snipe-it" "tarball"
+    [[ "$(php -v 2>/dev/null)" == PHP\ 8.2* ]] && PHP_VERSION="8.3" PHP_MODULE="common,ctype,ldap,fileinfo,iconv,mysql,soap,xsl" PHP_FPM="YES" setup_php
+    setup_composer
 
     msg_info "Updating ${APP} to v${RELEASE}"
     $STD apt-get update
