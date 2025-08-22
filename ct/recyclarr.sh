@@ -29,7 +29,7 @@ function update_script() {
   fi
 
   RELEASE=$(curl -fsSL https://api.github.com/repos/recyclarr/recyclarr/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "${RELEASE}" != "$(cat ~/.recyclarr)" ]] || [[ ! -f ~/.recyclarr ]]; then
+  if [[ "${RELEASE}" != "$(cat ~/.recyclarr 2>/dev/null)" ]] || [[ ! -f ~/.recyclarr ]]; then
     fetch_and_deploy_gh_release "recyclarr" "recyclarr/recyclarr" "prebuild" "latest" "/usr/local/bin" "recyclarr-linux-x64.tar.xz"
     msg_ok "Updated Successfully"
   else
