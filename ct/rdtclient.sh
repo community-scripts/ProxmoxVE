@@ -27,30 +27,37 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  msg_info "Stopping ${APP}"
-  systemctl stop rdtc
-  msg_ok "Stopped ${APP}"
 
-  msg_info "Updating ${APP}"
-  if dpkg-query -W dotnet-sdk-8.0 >/dev/null 2>&1; then
-    $STD apt-get remove --purge -y dotnet-sdk-8.0
-    $STD apt-get install -y dotnet-sdk-9.0
+  RELEASE=$(curl -s https://api.github.com/repos/rogerfar/rdt-client/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+  if [[ ! -f ~/.rdt-client ]] || [[ "${RELEASE}" != "$(cat ~/.rdt-client)" ]]; then
+    msg_info "Stopping ${APP}"
+    systemctl stop rdtc
+    msg_ok "Stopped ${APP}"
+
+    msg_info "Creating backup"
+    mkdir -p /opt/rdtc-backup
+    cp -R /opt/rdtc/appsettings.json /opt/rdtc-backup/
+    msg_ok "Backup created"
+
+    fetch_and_deploy_gh_release "rdt-client" "rogerfar/rdt-client" "prebuild" "latest" "/opt/rdtc" "RealDebridClient.zip"
+    cp -R /opt/rdtc-backup/appsettings.json /opt/rdtc/
+    if dpkg-query -W dotnet-sdk-8.0 >/dev/null 2>&1; then
+      $STD apt-get remove --purge -y dotnet-sdk-8.0
+      $STD apt-get install -y dotnet-sdk-9.0
+    fi
+
+    msg_info "Starting ${APP}"
+    systemctl start rdtc
+    msg_ok "Started ${APP}"
+
+    msg_info "Cleaning Up"
+    rm -rf /opt/rdtc-backup
+    msg_ok "Cleaned"
+    
+    msg_ok "Updated Successfully"
+  else
+    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
-  mkdir -p rdtc-backup
-  cp -R /opt/rdtc/appsettings.json rdtc-backup/
-  curl -fsSL "https://github.com/rogerfar/rdt-client/releases/latest/download/RealDebridClient.zip" -o $(basename "https://github.com/rogerfar/rdt-client/releases/latest/download/RealDebridClient.zip")
-  $STD unzip -o RealDebridClient.zip -d /opt/rdtc
-  cp -R rdtc-backup/appsettings.json /opt/rdtc/
-  msg_ok "Updated ${APP}"
-
-  msg_info "Starting ${APP}"
-  systemctl start rdtc
-  msg_ok "Started ${APP}"
-
-  msg_info "Cleaning Up"
-  rm -rf rdtc-backup RealDebridClient.zip
-  msg_ok "Cleaned"
-  msg_ok "Updated Successfully"
   exit
 }
 
