@@ -17,18 +17,17 @@ msg_info "Installing Dependencies"
 $STD apt-get install -y git
 msg_ok "Installed Dependencies"
 
-msg_info "Installing Recyclarr"
-curl -fsSL "$(curl -fsSL https://api.github.com/repos/recyclarr/recyclarr/releases/latest | grep download | grep linux-x64 | cut -d\" -f4)" -o $(basename "$(curl -fsSL https://api.github.com/repos/recyclarr/recyclarr/releases/latest | grep download | grep linux-x64 | cut -d\" -f4)")
-tar -C /usr/local/bin -xJf recyclarr*.tar.xz
+fetch_and_deploy_gh_release "recyclarr" "recyclarr/recyclarr" "prebuild" "latest" "/usr/local/bin" "recyclarr-linux-x64.tar.xz"
+
+msg_info "Configuring Recyclarr"
 mkdir -p /root/.config/recyclarr
 recyclarr config create
-msg_ok "Installed Recyclarr"
+msg_ok "Configured Recyclarr"
 
 motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -rf recyclarr*.tar.xz
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"

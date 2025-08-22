@@ -20,22 +20,23 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -f /root/.config/recyclarr/recyclarr.yml ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-
-    msg_info "Updating ${APP}"
-    curl -fsSL "$(curl -fsSL https://api.github.com/repos/recyclarr/recyclarr/releases/latest | grep download | grep linux-x64 | cut -d\" -f4)" -o $(basename "$(curl -fsSL https://api.github.com/repos/recyclarr/recyclarr/releases/latest | grep download | grep linux-x64 | cut -d\" -f4)")
-    tar -C /usr/local/bin -xJf recyclarr*.tar.xz
-    rm -rf recyclarr*.tar.xz
-    msg_ok "Updated ${APP}"
-
-    msg_ok "Updated Successfully"
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -f /root/.config/recyclarr/recyclarr.yml ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+
+  RELEASE=$(curl -fsSL https://api.github.com/repos/recyclarr/recyclarr/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+  if [[ "${RELEASE}" != "$(cat ~/.recyclarr)" ]] || [[ ! -f ~/.recyclarr ]]; then
+    fetch_and_deploy_gh_release "recyclarr" "recyclarr/recyclarr" "prebuild" "latest" "/usr/local/bin" "recyclarr-linux-x64.tar.xz"
+    msg_ok "Updated Successfully"
+  else
+    msg_ok "No update required. ${APP} is already at ${RELEASE}"
+  fi
+
+  exit
 }
 
 start
