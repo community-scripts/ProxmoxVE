@@ -61,7 +61,7 @@ function update_script() {
     done
     msg_ok "Image-processing libraries up to date"
   fi
-  RELEASE="1.138.1"
+  RELEASE="1.139.2"
   #RELEASE=$(curl -fsSL https://api.github.com/repos/immich-app/immich/releases?per_page=1 | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
   if [[ -f ~/.immich && "$RELEASE" == "$(cat ~/.immich)" ]]; then
     msg_ok "No update required. ${APP} is already at v${RELEASE}"
@@ -135,7 +135,6 @@ EOF
   fi
   export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
   export CI=1
-  export SHARP_FORCE_GLOBAL_LIBVIPS=true
   corepack enable
 
   # server build
@@ -146,6 +145,7 @@ EOF
 
   # openapi & web build
   cd "$SRC_DIR"
+  export SHARP_FORCE_GLOBAL_LIBVIPS=true
   $STD pnpm --filter @immich/sdk --filter immich-web --frozen-lockfile --force install
   $STD pnpm --filter @immich/sdk --filter immich-web build
   cp -a web/build "$APP_DIR"/www

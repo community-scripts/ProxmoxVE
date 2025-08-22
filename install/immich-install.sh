@@ -280,14 +280,13 @@ GEO_DIR="${INSTALL_DIR}/geodata"
 mkdir -p "$INSTALL_DIR"
 mkdir -p {"${APP_DIR}","${UPLOAD_DIR}","${GEO_DIR}","${INSTALL_DIR}"/cache}
 
-fetch_and_deploy_gh_release "immich" "immich-app/immich" "tarball" "v1.138.1" "$SRC_DIR"
+fetch_and_deploy_gh_release "immich" "immich-app/immich" "tarball" "v1.139.2" "$SRC_DIR"
 
 msg_info "Installing ${APPLICATION} (more patience please)"
 
 cd "$SRC_DIR"/server
 export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 export CI=1
-export SHARP_FORCE_GLOBAL_LIBVIPS=true
 corepack enable
 
 # server build
@@ -298,6 +297,7 @@ sed -i 's|^start|./start|' "$APP_DIR"/bin/immich-admin
 
 # openapi & web build
 cd "$SRC_DIR"
+export SHARP_FORCE_GLOBAL_LIBVIPS=true
 $STD pnpm --filter @immich/sdk --filter immich-web --frozen-lockfile --force install
 $STD pnpm --filter @immich/sdk --filter immich-web build
 cp -a web/build "$APP_DIR"/www
