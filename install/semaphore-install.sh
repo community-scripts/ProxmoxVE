@@ -14,24 +14,21 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
-  git
-
-curl -fsSL "https://keyserver.ubuntu.com/pks/lookup?fingerprint=on&op=get&search=0x6125E2A8C77F2818FB7BD15B93C4A3FD7BB9C367" | gpg --dearmour >/usr/share/keyrings/ansible-archive-keyring.gpg
-cat <<EOF >/etc/apt/sources.list.d/ansible.list
-deb [signed-by=/usr/share/keyrings/ansible-archive-keyring.gpg] http://ppa.launchpad.net/ansible/ansible/ubuntu jammy main
-EOF
-$STD apt update
-$STD apt install -y ansible
+$STD apt-get install -y git
 msg_ok "Installed Dependencies"
 
-msg_info "Setup Semaphore"
-RELEASE=$(curl -fsSL https://api.github.com/repos/semaphoreui/semaphore/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+msg_info "Setting up Ansible"
+curl -fsSL "https://keyserver.ubuntu.com/pks/lookup?fingerprint=on&op=get&search=0x6125E2A8C77F2818FB7BD15B93C4A3FD7BB9C367" | gpg --dearmor -o /usr/share/keyrings/ansible-archive-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/ansible-archive-keyring.gpg] http://ppa.launchpad.net/ansible/ansible/ubuntu jammy main" >/etc/apt/sources.list.d/ansible.list
+$STD apt update
+$STD apt install -y ansible
+msg_ok "Set up Ansible"
+
+fetch_and_deploy_gh_release "semaphore" "semaphoreui/semaphore" "binary"
+
+msg_info "Configuring Semaphore"
 mkdir -p /opt/semaphore
 cd /opt/semaphore
-curl -fsSL "https://github.com/semaphoreui/semaphore/releases/download/v${RELEASE}/semaphore_${RELEASE}_linux_amd64.deb" -o "semaphore_${RELEASE}_linux_amd64.deb"
-$STD dpkg -i semaphore_${RELEASE}_linux_amd64.deb
-
 SEM_HASH=$(openssl rand -base64 32)
 SEM_ENCRYPTION=$(openssl rand -base64 32)
 SEM_KEY=$(openssl rand -base64 32)
@@ -47,10 +44,8 @@ cat <<EOF >/opt/semaphore/config.json
   "access_key_encryption": "${SEM_KEY}"
 }
 EOF
-
-$STD semaphore user add --admin --login admin --email admin@helper-scripts.com --name Administrator --password ${SEM_PW} --config /opt/semaphore/config.json
+$STD semaphore user add --admin --login admin --email admin@helper-scripts.com --name Administrator --password "${SEM_PW}" --config /opt/semaphore/config.json
 echo "${SEM_PW}" >~/semaphore.creds
-echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Setup Semaphore"
 
 msg_info "Creating Service"
@@ -70,14 +65,13 @@ RestartSec=10s
 WantedBy=multi-user.target
 EOF
 
-systemctl enable --now -q semaphore.service
+systemctl enable -q --now semaphore
 msg_ok "Created Service"
 
 motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -rf semaphore_${RELEASE}_linux_amd64.deb
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"

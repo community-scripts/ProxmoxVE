@@ -29,25 +29,17 @@ function update_script() {
     exit
   fi
   RELEASE=$(curl -fsSL https://api.github.com/repos/semaphoreui/semaphore/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+  if [[ ! -f ~/.semaphore ]] || [[ "${RELEASE}" != "$(cat ~/.semaphore)" ]]; then
     msg_info "Stopping Service"
     systemctl stop semaphore
     msg_ok "Stopped Service"
 
-    msg_info "Updating ${APP} to v${RELEASE}"
-    cd /opt
-    curl -fsSL "https://github.com/semaphoreui/semaphore/releases/download/v${RELEASE}/semaphore_${RELEASE}_linux_amd64.deb" -o $(basename "https://github.com/semaphoreui/semaphore/releases/download/v${RELEASE}/semaphore_${RELEASE}_linux_amd64.deb")
-    $STD dpkg -i semaphore_${RELEASE}_linux_amd64.deb
-    echo "${RELEASE}" >"/opt/${APP}_version.txt"
-    msg_ok "Updated ${APP} to v${RELEASE}"
+    fetch_and_deploy_gh_release "semaphore" "semaphoreui/semaphore" "binary"
 
     msg_info "Starting Service"
     systemctl start semaphore
     msg_ok "Started Service"
 
-    msg_info "Cleaning up"
-    rm -rf /opt/semaphore_${RELEASE}_linux_amd64.deb
-    msg_ok "Cleaned"
     msg_ok "Updated Successfully"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}."
