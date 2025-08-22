@@ -28,7 +28,7 @@ function update_script() {
     exit
   fi
   RELEASE=$(curl -fsSL https://api.github.com/repos/snipe/snipe-it/releases/latest | grep '"tag_name"' | sed -E 's/.*"tag_name": "v([^"]+).*/\1/')
-  if [[ ! -f ~/.snipe-it ]] || [[ "${RELEASE}" != "$(cat ~/.snipe-it)" ]]; then
+  if [[ ! -f ~/.snipe-it ]] || [[ "${RELEASE}" != "$(cat ~/.snipe-it 2>/dev/null)" ]]; then
     msg_info "Stopping Services"
     systemctl stop nginx
     msg_ok "Services Stopped"
