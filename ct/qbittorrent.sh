@@ -28,13 +28,8 @@ function update_script() {
     exit
   fi
   if [[ ! -f ~/.qbittorrent ]]; then
-    touch ~/.qbittorrent
-    mkdir -p ~/.config/qBittorrent/
-    mkdir -p /opt/qbittorrent/
-    [ -d "/.config/qBittorrent" ] && mv /.config/qBittorrent "$HOME/.config/"
-    $STD apt-get remove --purge -y qbittorrent-nox
-    sed -i 's@ExecStart=/usr/bin/qbittorrent-nox@ExecStart=/opt/qbittorrent/qbittorrent-nox@g' /etc/systemd/system/qbittorrent-nox.service
-    systemctl daemon-reload
+    msg_error "Please create new qBittorrent LXC. Updating from v4.x to v5.x is not supported!"
+    exit
   fi
 
   RELEASE=$(curl -fsSL https://api.github.com/repos/userdocs/qbittorrent-nox-static/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
