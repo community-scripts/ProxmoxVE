@@ -54,7 +54,7 @@ if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   msg_info "Installing Portainer $PORTAINER_LATEST_VERSION"
   podman volume create portainer_data >/dev/null
   $STD podman run -d \
-    -p 8000:8000 \
+    -p 9000:9000 \
     -p 9443:9443 \
     --name=portainer \
     --restart=always \
