@@ -13,14 +13,12 @@ setting_up_container
 network_check
 update_os
 
+fetch_and_deploy_gh_release "qbittorrent" "userdocs/qbittorrent-nox-static" "singlefile" "latest" "/opt/qbittorrent" "x86_64-qbittorrent-nox"
+
 msg_info "Setup qBittorrent-nox"
-FULLRELEASE=$(curl -fsSL https://api.github.com/repos/userdocs/qbittorrent-nox-static/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-RELEASE=$(echo $FULLRELEASE | cut -c 9-13)
-mkdir -p /opt/qbittorrent
-curl -fsSL "https://github.com/userdocs/qbittorrent-nox-static/releases/download/${FULLRELEASE}/x86_64-qbittorrent-nox" -o /opt/qbittorrent/qbittorrent-nox
-chmod +x /opt/qbittorrent/qbittorrent-nox
-mkdir -p $HOME/.config/qBittorrent/
-cat <<EOF >$HOME/.config/qBittorrent/qBittorrent.conf
+mv /opt/qbittorrent/x86_64-qbittorrent-nox /opt/qbittorrent/qbittorrent-nox
+mkdir -p ~/.config/qBittorrent/
+cat <<EOF >~/.config/qBittorrent/qBittorrent.conf
 [LegalNotice]
 Accepted=true
 
@@ -30,7 +28,6 @@ WebUI\Port=8090
 WebUI\UseUPnP=false
 WebUI\Username=admin
 EOF
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Setup qBittorrent-nox"
 
 msg_info "Creating Service"
