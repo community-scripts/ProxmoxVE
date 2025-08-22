@@ -9,7 +9,7 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 9090,
-  "documentation": null,
+  "documentation": "https://prometheus.io/docs/introduction/overview/",
   "website": "https://prometheus.io/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/prometheus.webp",
   "config_path": "/etc/prometheus/prometheus.yml",

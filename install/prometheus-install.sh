@@ -13,19 +13,17 @@ setting_up_container
 network_check
 update_os
 
+fetch_and_deploy_gh_release "prometheus" "prometheus/prometheus" "prebuild" "latest" "/usr/local/bin" "*linux-amd64.tar.gz"
+
 msg_info "Installing Prometheus"
-RELEASE=$(curl -fsSL https://api.github.com/repos/prometheus/prometheus/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
 mkdir -p /etc/prometheus
 mkdir -p /var/lib/prometheus
-curl -fsSL "https://github.com/prometheus/prometheus/releases/download/v${RELEASE}/prometheus-${RELEASE}.linux-amd64.tar.gz" -o "prometheus-${RELEASE}.linux-amd64.tar.gz"
-tar -xf prometheus-${RELEASE}.linux-amd64.tar.gz
-mv prometheus-${RELEASE}.linux-amd64/prometheus prometheus-${RELEASE}.linux-amd64/promtool /usr/local/bin/
-mv prometheus-${RELEASE}.linux-amd64/prometheus.yml /etc/prometheus/prometheus.yml
+mv /usr/local/bin/prometheus.yml /etc/prometheus/prometheus.yml
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Installed Prometheus"
 
 msg_info "Creating Service"
-cat <<EOF >/etc/systemd/system/prometheus.service
+cat <<'EOF' >/etc/systemd/system/prometheus.service
 [Unit]
 Description=Prometheus
 Wants=network-online.target
@@ -53,5 +51,4 @@ customize
 msg_info "Cleaning up"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
-rm -rf prometheus-${RELEASE}.linux-amd64 prometheus-${RELEASE}.linux-amd64.tar.gz
 msg_ok "Cleaned"
