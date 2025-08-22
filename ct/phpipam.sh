@@ -27,29 +27,25 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
   RELEASE=$(curl -fsSL https://api.github.com/repos/phpipam/phpipam/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+  if [[ ! -f ~/.phpipam ]] || [[ "${RELEASE}" != "$(cat ~/.phpipam 2>/dev/null)" ]]; then
     msg_info "Stopping Service"
     systemctl stop apache2
     msg_ok "Stopped Service"
 
-    msg_info "Updating ${APP} to v${RELEASE}"
-    cd /opt
     mv /opt/phpipam/ /opt/phpipam-backup
-    curl -fsSL "https://github.com/phpipam/phpipam/releases/download/v${RELEASE}/phpipam-v${RELEASE}.zip" -o $(basename "https://github.com/phpipam/phpipam/releases/download/v${RELEASE}/phpipam-v${RELEASE}.zip")
-    $STD unzip "phpipam-v${RELEASE}.zip"
+    fetch_and_deploy_gh_release "phpipam" "phpipam/phpipam" "prebuild" "latest" "/opt/phpipam" "phpipam-v*.zip"
     cp /opt/phpipam-backup/config.php /opt/phpipam
-    echo "${RELEASE}" >/opt/${APP}_version.txt
-    msg_ok "Updated $APP to v${RELEASE}"
 
     msg_info "Starting Service"
     systemctl start apache2
     msg_ok "Started Service"
 
     msg_info "Cleaning up"
-    rm -r "/opt/phpipam-v${RELEASE}.zip"
     rm -r /opt/phpipam-backup
     msg_ok "Cleaned"
+    
     msg_ok "Updated Successfully"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}"
