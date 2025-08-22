@@ -39,8 +39,6 @@ function update_script() {
 
   RELEASE=$(curl -fsSL https://api.github.com/repos/userdocs/qbittorrent-nox-static/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
   if [[ ! -f ~/.qbittorrent ]] || [[ "${RELEASE}" != "$(cat ~/.qbittorrent)" ]]; then
-
-
     msg_info "Stopping Service"
     systemctl stop qbittorrent-nox
     msg_ok "Stopped Service"
@@ -51,7 +49,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start qbittorrent-nox
     msg_ok "Started Service"
-    
+
     msg_ok "Updated Successfully"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}"
