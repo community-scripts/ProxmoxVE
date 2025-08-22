@@ -15,12 +15,13 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-  composer \
   git \
-  nginx \
-  php8.2-{bcmath,common,ctype,ldap,curl,fileinfo,fpm,gd,iconv,intl,mbstring,mysql,soap,xml,xsl,zip,cli}
+  nginx
 msg_ok "Installed Dependencies"
 
+PHP_VERSION="8.3" PHP_MODULE="common,ctype,ldap,fileinfo,iconv,mysql,soap,xsl" PHP_FPM="YES" setup_php
+setup_composer
+fetch_and_deploy_gh_release "snipe-it" "snipe/snipe-it" "tarball"
 setup_mariadb
 
 msg_info "Setting up database"
@@ -38,12 +39,7 @@ $STD mariadb -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUS
 } >>~/snipeit.creds
 msg_ok "Set up database"
 
-msg_info "Installing Snipe-IT"
-temp_file=$(mktemp)
-RELEASE=$(curl -fsSL https://api.github.com/repos/snipe/snipe-it/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/snipe/snipe-it/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
-tar zxf $temp_file
-mv snipe-it-${RELEASE} /opt/snipe-it
+msg_info "Configuring Snipe-IT"
 cd /opt/snipe-it
 cp .env.example .env
 IPADDRESS=$(hostname -I | awk '{print $1}')
@@ -56,11 +52,9 @@ sed -i -e "s|^APP_URL=.*|APP_URL=http://$IPADDRESS|" \
 chown -R www-data: /opt/snipe-it
 chmod -R 755 /opt/snipe-it
 export COMPOSER_ALLOW_SUPERUSER=1
-#$STD composer update --no-plugins --no-scripts
 $STD composer install --no-dev --optimize-autoloader --no-interaction
 $STD php artisan key:generate --force
-echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
-msg_ok "Installed SnipeIT"
+msg_ok "Configured SnipeIT"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/nginx/conf.d/snipeit.conf
@@ -84,15 +78,13 @@ server {
         }
 }
 EOF
-
 systemctl reload nginx
-msg_ok "Configured Service"
+msg_ok "Created Service"
 
 motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -f $temp_file
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
