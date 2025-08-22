@@ -30,7 +30,7 @@ function update_script() {
   fi
 
   RELEASE=$(curl -fsSL https://api.github.com/repos/Radarr/Radarr/releases/latest | jq -r '.tag_name' | sed 's/^v//')
-  if [[ ! -f ~/.radarr ]] || [[ "$RELEASE" != "$(cat ~/.radarr )" ]]; then
+  if [[ ! -f ~/.radarr ]] || [[ "$RELEASE" != "$(cat ~/.radarr 2>/dev/null)" ]]; then
     rm -rf /opt/Radarr
     fetch_and_deploy_gh_release "Radarr" "Radarr/Radarr" "prebuild" "latest" "/opt/Radarr" "Radarr.master*linux-core-x64.tar.gz"
     chmod 775 /opt/Radarr
