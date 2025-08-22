@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-08-22
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Tududi Fix: use correct tag parsing for release during update check [@vhsdream](https://github.com/vhsdream) ([#7072](https://github.com/community-scripts/ProxmoxVE/pull/7072))
+
 ## 2025-08-21
 
 ### 🆕 New Scripts
