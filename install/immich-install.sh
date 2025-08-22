@@ -30,8 +30,12 @@ $STD apt-get install --no-install-recommends -y \
   autoconf \
   build-essential \
   python3-dev \
+  automake \
   cmake \
   jq \
+  libtool \
+  libltdl-dev \
+  libgdk-pixbuf-2.0-dev \
   libbrotli-dev \
   libde265-dev \
   libexif-dev \
@@ -39,37 +43,28 @@ $STD apt-get install --no-install-recommends -y \
   libglib2.0-dev \
   libgsf-1-dev \
   libjpeg62-turbo-dev \
-  librsvg2-dev \
   libspng-dev \
+  liblcms2-dev \
+  libopenexr-dev \
+  libgif-dev \
+  librsvg2-dev \
+  libexpat1 \
+  libgcc-s1 \
+  libgomp1 \
+  liblqr-1-0 \
+  libltdl7 \
+  libmimalloc2.0 \
+  libopenjp2-7 \
   meson \
   ninja-build \
   pkg-config \
   cpanminus \
-  libde265-0 \
-  libexif12 \
-  libexpat1 \
-  libgcc-s1 \
-  libglib2.0-0 \
-  libgomp1 \
-  libgsf-1-114 \
-  liblcms2-dev \
-  liblqr-1-0 \
-  libltdl7 \
-  libmimalloc2.0 \
-  libopenexr-dev \
-  libgif-dev \
-  libopenjp2-7 \
-  librsvg2-2 \
-  libspng0 \
   mesa-utils \
   mesa-va-drivers \
   mesa-vulkan-drivers \
   ocl-icd-libopencl1 \
   tini \
-  libaom-dev \
   zlib1g
-$STD apt-get install -y \
-  libgdk-pixbuf-2.0-dev librsvg2-dev libtool
 curl -fsSL https://repo.jellyfin.org/jellyfin_team.gpg.key | gpg --dearmor -o /etc/apt/keyrings/jellyfin.gpg
 DPKG_ARCHITECTURE="$(dpkg --print-architecture)"
 export DPKG_ARCHITECTURE
@@ -150,7 +145,8 @@ $STD apt-get install -t testing --no-install-recommends -y \
   libhwy1t64 \
   libdav1d-dev \
   libhwy-dev \
-  libwebp-dev
+  libwebp-dev \
+  libaom-dev
 if [[ -f ~/.openvino ]]; then
   $STD apt-get install -t testing -y patchelf
 fi
@@ -311,7 +307,6 @@ cp LICENSE "$APP_DIR"
 $STD pnpm --filter @immich/sdk --filter @immich/cli --frozen-lockfile install
 $STD pnpm --filter @immich/sdk --filter @immich/cli build
 $STD pnpm --filter @immich/cli --prod --no-optional deploy "$APP_DIR"/cli
-cd "$APP_DIR"
 msg_ok "Installed Immich Server and Web Components"
 
 cd "$SRC_DIR"/machine-learning
