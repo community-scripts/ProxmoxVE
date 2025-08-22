@@ -1,5 +1,90 @@
 [
   {
+    "name": "9001/copyparty",
+    "version": "v1.19.5",
+    "date": "2025-08-21T23:45:57Z"
+  },
+  {
+    "name": "rcourtman/Pulse",
+    "version": "v4.6.0",
+    "date": "2025-08-20T20:53:43Z"
+  },
+  {
+    "name": "immich-app/immich",
+    "version": "v1.139.2",
+    "date": "2025-08-21T22:35:59Z"
+  },
+  {
+    "name": "ipfs/kubo",
+    "version": "v0.36.0",
+    "date": "2025-07-14T18:59:57Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "nightly",
+    "date": "2025-08-16T16:04:53Z"
+  },
+  {
+    "name": "HabitRPG/habitica",
+    "version": "v5.39.0",
+    "date": "2025-08-21T18:40:00Z"
+  },
+  {
+    "name": "zitadel/zitadel",
+    "version": "v4.0.2",
+    "date": "2025-08-15T14:12:26Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.8.3",
+    "date": "2025-08-21T18:23:10Z"
+  },
+  {
+    "name": "open-webui/open-webui",
+    "version": "v0.6.23",
+    "date": "2025-08-21T18:21:20Z"
+  },
+  {
+    "name": "hargata/lubelog",
+    "version": "v1.5.0",
+    "date": "2025-08-21T17:33:22Z"
+  },
+  {
+    "name": "evcc-io/evcc",
+    "version": "0.207.4",
+    "date": "2025-08-21T17:20:43Z"
+  },
+  {
+    "name": "kyantech/Palmr",
+    "version": "v3.2.0-beta",
+    "date": "2025-08-21T16:51:45Z"
+  },
+  {
+    "name": "cloudflare/cloudflared",
+    "version": "2025.8.1",
+    "date": "2025-08-21T15:39:34Z"
+  },
+  {
+    "name": "gethomepage/homepage",
+    "version": "v1.4.6",
+    "date": "2025-08-21T14:05:58Z"
+  },
+  {
+    "name": "prometheus/prometheus",
+    "version": "v0.306.0-rc.0",
+    "date": "2025-08-21T13:31:03Z"
+  },
+  {
+    "name": "glpi-project/glpi",
+    "version": "10.0.19",
+    "date": "2025-07-16T09:45:14Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "v10.5.10",
+    "date": "2025-08-15T12:12:06Z"
+  },
+  {
     "name": "fuma-nama/fumadocs",
     "version": "fumadocs-core@15.7.0",
     "date": "2025-08-21T10:12:00Z"
@@ -48,11 +133,6 @@
     "name": "ollama/ollama",
     "version": "v0.11.6",
     "date": "2025-08-20T21:00:13Z"
-  },
-  {
-    "name": "rcourtman/Pulse",
-    "version": "v4.6.0",
-    "date": "2025-08-20T20:53:43Z"
   },
   {
     "name": "YunoHost/yunohost",
@@ -120,11 +200,6 @@
     "date": "2025-08-20T07:57:58Z"
   },
   {
-    "name": "mattermost/mattermost",
-    "version": "v10.5.10",
-    "date": "2025-08-15T12:12:06Z"
-  },
-  {
     "name": "gtsteffaniak/filebrowser",
     "version": "v0.8.0-beta",
     "date": "2025-08-20T01:02:10Z"
@@ -138,11 +213,6 @@
     "name": "mealie-recipes/mealie",
     "version": "v3.1.1",
     "date": "2025-08-19T20:23:43Z"
-  },
-  {
-    "name": "HabitRPG/habitica",
-    "version": "v5.38.4",
-    "date": "2025-08-19T19:27:18Z"
   },
   {
     "name": "wazuh/wazuh",
@@ -230,11 +300,6 @@
     "date": "2025-08-18T20:22:07Z"
   },
   {
-    "name": "immich-app/immich",
-    "version": "v1.138.1",
-    "date": "2025-08-18T18:51:50Z"
-  },
-  {
     "name": "ventoy/Ventoy",
     "version": "v1.1.07",
     "date": "2025-08-18T16:13:54Z"
@@ -320,11 +385,6 @@
     "date": "2025-06-09T17:27:45Z"
   },
   {
-    "name": "9001/copyparty",
-    "version": "v1.19.4",
-    "date": "2025-08-17T16:11:52Z"
-  },
-  {
     "name": "Ombi-app/Ombi",
     "version": "v4.47.1",
     "date": "2025-01-05T21:14:23Z"
@@ -338,11 +398,6 @@
     "name": "mylar3/mylar3",
     "version": "v0.8.3",
     "date": "2025-08-17T06:24:54Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "v4.3.0",
-    "date": "2025-07-05T12:14:52Z"
   },
   {
     "name": "blakeblackshear/frigate",
@@ -388,21 +443,6 @@
     "name": "netbox-community/netbox",
     "version": "v4.3.6",
     "date": "2025-08-12T17:16:42Z"
-  },
-  {
-    "name": "home-assistant/core",
-    "version": "2025.8.2",
-    "date": "2025-08-15T16:00:26Z"
-  },
-  {
-    "name": "evcc-io/evcc",
-    "version": "0.207.3",
-    "date": "2025-08-15T15:32:33Z"
-  },
-  {
-    "name": "zitadel/zitadel",
-    "version": "v4.0.2",
-    "date": "2025-08-15T14:12:26Z"
   },
   {
     "name": "intri-in/manage-my-damn-life-nextjs",
@@ -455,11 +495,6 @@
     "date": "2025-08-13T14:04:44Z"
   },
   {
-    "name": "gethomepage/homepage",
-    "version": "v1.4.5",
-    "date": "2025-08-13T13:52:09Z"
-  },
-  {
     "name": "ellite/Wallos",
     "version": "v4.1.1",
     "date": "2025-08-13T11:58:04Z"
@@ -508,11 +543,6 @@
     "name": "BookStackApp/BookStack",
     "version": "v25.07.1",
     "date": "2025-08-11T13:53:22Z"
-  },
-  {
-    "name": "open-webui/open-webui",
-    "version": "v0.6.22",
-    "date": "2025-08-11T13:15:39Z"
   },
   {
     "name": "FlowiseAI/Flowise",
@@ -585,11 +615,6 @@
     "date": "2025-08-08T16:06:06Z"
   },
   {
-    "name": "cloudflare/cloudflared",
-    "version": "2025.8.0",
-    "date": "2025-08-08T15:50:42Z"
-  },
-  {
     "name": "apache/tika",
     "version": "3.2.2",
     "date": "2025-08-08T03:40:40Z"
@@ -613,11 +638,6 @@
     "name": "zwave-js/zwave-js-ui",
     "version": "v11.1.0",
     "date": "2025-08-07T14:57:29Z"
-  },
-  {
-    "name": "glpi-project/glpi",
-    "version": "10.0.19",
-    "date": "2025-07-16T09:45:14Z"
   },
   {
     "name": "influxdata/influxdb",
@@ -753,11 +773,6 @@
     "name": "neo4j/neo4j",
     "version": "2025.07.1",
     "date": "2025-08-01T14:40:28Z"
-  },
-  {
-    "name": "kyantech/Palmr",
-    "version": "v3.1.8-beta",
-    "date": "2025-08-01T13:35:28Z"
   },
   {
     "name": "gotson/komga",
@@ -900,16 +915,6 @@
     "date": "2025-07-14T21:22:17Z"
   },
   {
-    "name": "ipfs/kubo",
-    "version": "v0.36.0",
-    "date": "2025-07-14T18:59:57Z"
-  },
-  {
-    "name": "prometheus/prometheus",
-    "version": "v3.5.0",
-    "date": "2025-07-14T16:54:21Z"
-  },
-  {
     "name": "homebridge/homebridge",
     "version": "v1.11.0",
     "date": "2025-07-13T19:22:47Z"
@@ -938,11 +943,6 @@
     "name": "NginxProxyManager/nginx-proxy-manager",
     "version": "v2.12.6",
     "date": "2025-07-09T21:52:15Z"
-  },
-  {
-    "name": "hargata/lubelog",
-    "version": "v1.4.9",
-    "date": "2025-07-09T16:27:46Z"
   },
   {
     "name": "nicolargo/glances",
