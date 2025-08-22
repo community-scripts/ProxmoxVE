@@ -38,7 +38,7 @@ function update_script() {
   fi
 
   RELEASE=$(curl -fsSL https://api.github.com/repos/userdocs/qbittorrent-nox-static/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  if [[ ! -f ~/.qbittorrent ]] || [[ "${RELEASE}" != "$(cat ~/.qbittorrent)" ]]; then
+  if [[ ! -f ~/.qbittorrent ]] || [[ "${RELEASE}" != "$(cat ~/.qbittorrent 2>/dev/null)" ]]; then
     msg_info "Stopping Service"
     systemctl stop qbittorrent-nox
     msg_ok "Stopped Service"
