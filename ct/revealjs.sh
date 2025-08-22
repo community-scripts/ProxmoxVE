@@ -29,7 +29,7 @@ function update_script() {
     fi
     
     RELEASE=$(curl -fsSL https://api.github.com/repos/hakimel/reveal.js/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-    if [[ "${RELEASE}" != "$(cat ~/.revealjs)" ]] || [[ ! -f ~/.revealjs ]]; then
+    if [[ "${RELEASE}" != "$(cat ~/.revealjs 2>/dev/null)" ]] || [[ ! -f ~/.revealjs ]]; then
         msg_info "Stopping $APP"
         systemctl stop revealjs
         msg_ok "Stopped $APP"
