@@ -29,7 +29,7 @@ function update_script() {
     exit
   fi
   RELEASE=$(curl -fsSL https://api.github.com/repos/semaphoreui/semaphore/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f ~/.semaphore ]] || [[ "${RELEASE}" != "$(cat ~/.semaphore)" ]]; then
+  if [[ ! -f ~/.semaphore ]] || [[ "${RELEASE}" != "$(cat ~/.semaphore 2>/dev/null)" ]]; then
     msg_info "Stopping Service"
     systemctl stop semaphore
     msg_ok "Stopped Service"
