@@ -21,6 +21,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: Prometheus Paperless NGX Exporter [@tremor021](https://github.com/tremor021) ([#7092](https://github.com/community-scripts/ProxmoxVE/pull/7092))
     - Refactor: PS5-MQTT [@tremor021](https://github.com/tremor021) ([#7090](https://github.com/community-scripts/ProxmoxVE/pull/7090))
     - Refactor: qBittorrent [@tremor021](https://github.com/tremor021) ([#7089](https://github.com/community-scripts/ProxmoxVE/pull/7089))
     - Refactor: RDTClient [@tremor021](https://github.com/tremor021) ([#7086](https://github.com/community-scripts/ProxmoxVE/pull/7086))
