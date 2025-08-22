@@ -29,7 +29,7 @@ function update_script() {
   fi
 
   RELEASE=$(curl -s https://api.github.com/repos/rogerfar/rdt-client/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f ~/.rdt-client ]] || [[ "${RELEASE}" != "$(cat ~/.rdt-client)" ]]; then
+  if [[ ! -f ~/.rdt-client ]] || [[ "${RELEASE}" != "$(cat ~/.rdt-client 2>/dev/null)" ]]; then
     msg_info "Stopping ${APP}"
     systemctl stop rdtc
     msg_ok "Stopped ${APP}"
