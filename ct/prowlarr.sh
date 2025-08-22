@@ -23,25 +23,21 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
-
   if [[ ! -d /var/lib/prowlarr/ ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
 
-  msg_info "Updating $APP LXC"
-  temp_file="$(mktemp)"
-  rm -rf /opt/Prowlarr
   RELEASE=$(curl -fsSL https://api.github.com/repos/Prowlarr/Prowlarr/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  curl -fsSL "https://github.com/Prowlarr/Prowlarr/releases/download/v${RELEASE}/Prowlarr.master.${RELEASE}.linux-core-x64.tar.gz" -o "$temp_file"
-  $STD tar -xvzf "$temp_file"
-  mv Prowlarr /opt
-  chmod 775 /opt/Prowlarr
-  msg_ok "Updated $APP LXC"
+  if [[ "${RELEASE}" != "$(cat ~/.prowlarr 2>/dev/null)" ]] || [[ ! -f ~/.prowlarr ]]; then
+    rm -rf /opt/Prowlarr
+    fetch_and_deploy_gh_release "prowlarr" "Prowlarr/Prowlarr" "prebuild" "latest" "/opt/Prowlarr" "Prowlarr.master*linux-core-x64.tar.gz"
+    chmod 775 /opt/Prowlarr
+    msg_ok "Successfully updated"
+  else
+    msg_ok "No update required. ${APP} is already at ${RELEASE}"
+  fi
 
-  msg_info "Cleaning up"
-  rm -f "$temp_file"
-  msg_ok "Cleaned up"
   exit
 }
 
