@@ -28,7 +28,7 @@ function update_script() {
   fi
   
   RELEASE=$(curl -fsSL https://api.github.com/repos/silverbulletmd/silverbullet/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  if [[ ! -f ~/.silverbullet || "${RELEASE}" != "$(cat ~/.silverbullet)" ]]; then
+  if [[ ! -f ~/.silverbullet || "${RELEASE}" != "$(cat ~/.silverbullet 2>/dev/null)" ]]; then
     msg_info "Stopping ${APP}"
     systemctl stop silverbullet
     msg_ok "Stopped ${APP}"
