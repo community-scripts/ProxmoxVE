@@ -21,6 +21,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: RDTClient [@tremor021](https://github.com/tremor021) ([#7086](https://github.com/community-scripts/ProxmoxVE/pull/7086))
     - Refactor: Recyclarr [@tremor021](https://github.com/tremor021) ([#7085](https://github.com/community-scripts/ProxmoxVE/pull/7085))
     - Refactor: RevealJS [@tremor021](https://github.com/tremor021) ([#7084](https://github.com/community-scripts/ProxmoxVE/pull/7084))
     - Refactor: Rclone [@tremor021](https://github.com/tremor021) ([#7087](https://github.com/community-scripts/ProxmoxVE/pull/7087))
