@@ -1,5 +1,50 @@
 [
   {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.3.2",
+    "date": "2025-08-19T04:08:36Z"
+  },
+  {
+    "name": "prometheus/prometheus",
+    "version": "v0.306.0-rc.0",
+    "date": "2025-08-21T13:31:03Z"
+  },
+  {
+    "name": "rcourtman/Pulse",
+    "version": "v4.7.2",
+    "date": "2025-08-23T07:47:53Z"
+  },
+  {
+    "name": "TandoorRecipes/recipes",
+    "version": "2.0.3",
+    "date": "2025-08-23T07:08:13Z"
+  },
+  {
+    "name": "pocketbase/pocketbase",
+    "version": "v0.29.3",
+    "date": "2025-08-23T06:37:44Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2325",
+    "date": "2025-08-23T05:51:50Z"
+  },
+  {
+    "name": "caddyserver/caddy",
+    "version": "v2.10.2",
+    "date": "2025-08-23T03:10:31Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.19",
+    "date": "2025-08-23T00:27:09Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
     "name": "paperless-ngx/paperless-ngx",
     "version": "v2.18.2",
     "date": "2025-08-22T23:56:41Z"
@@ -10,14 +55,14 @@
     "date": "2025-08-22T21:18:11Z"
   },
   {
-    "name": "rcourtman/Pulse",
-    "version": "v4.7.0",
-    "date": "2025-08-22T19:58:51Z"
-  },
-  {
     "name": "homarr-labs/homarr",
     "version": "v1.34.0",
     "date": "2025-08-22T19:16:24Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.3.3",
+    "date": "2025-08-20T10:12:51Z"
   },
   {
     "name": "immich-app/immich",
@@ -38,11 +83,6 @@
     "name": "rclone/rclone",
     "version": "v1.71.0",
     "date": "2025-08-22T16:41:23Z"
-  },
-  {
-    "name": "caddyserver/caddy",
-    "version": "v2.10.1",
-    "date": "2025-08-22T16:14:52Z"
   },
   {
     "name": "goauthentik/authentik",
@@ -105,16 +145,6 @@
     "date": "2025-08-22T06:57:33Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2321",
-    "date": "2025-08-22T05:54:29Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.3.2",
-    "date": "2025-08-19T04:08:36Z"
-  },
-  {
     "name": "traccar/traccar",
     "version": "v6.9.1",
     "date": "2025-08-22T04:04:12Z"
@@ -123,16 +153,6 @@
     "name": "cloudreve/cloudreve",
     "version": "4.6.0",
     "date": "2025-08-22T02:21:40Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.4.19",
-    "date": "2025-08-22T00:27:23Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
   },
   {
     "name": "9001/copyparty",
@@ -146,13 +166,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-08-21T19:17:27Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.3.3",
-    "date": "2025-08-20T10:12:51Z"
+    "version": "v4.3.0",
+    "date": "2025-07-05T12:14:52Z"
   },
   {
     "name": "HabitRPG/habitica",
@@ -188,11 +203,6 @@
     "name": "gethomepage/homepage",
     "version": "v1.4.6",
     "date": "2025-08-21T14:05:58Z"
-  },
-  {
-    "name": "prometheus/prometheus",
-    "version": "v0.306.0-rc.0",
-    "date": "2025-08-21T13:31:03Z"
   },
   {
     "name": "glpi-project/glpi",
@@ -430,11 +440,6 @@
     "date": "2025-01-05T21:14:23Z"
   },
   {
-    "name": "TandoorRecipes/recipes",
-    "version": "2.0.2",
-    "date": "2025-08-17T09:24:37Z"
-  },
-  {
     "name": "mylar3/mylar3",
     "version": "v0.8.3",
     "date": "2025-08-17T06:24:54Z"
@@ -623,11 +628,6 @@
     "name": "authelia/authelia",
     "version": "v4.39.6",
     "date": "2025-08-09T08:11:44Z"
-  },
-  {
-    "name": "pocketbase/pocketbase",
-    "version": "v0.29.2",
-    "date": "2025-08-09T07:28:08Z"
   },
   {
     "name": "kimai/kimai",
