@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - qBittorrent: Fix file names [@tremor021](https://github.com/tremor021) ([#7136](https://github.com/community-scripts/ProxmoxVE/pull/7136))
     - Tandoor: Fix env path [@tremor021](https://github.com/tremor021) ([#7130](https://github.com/community-scripts/ProxmoxVE/pull/7130))
 
   - #### 💥 Breaking Changes
