@@ -61,7 +61,7 @@ function update_script() {
     done
     msg_ok "Image-processing libraries up to date"
   fi
-  RELEASE="1.139.2"
+  RELEASE="1.139.4"
   #RELEASE=$(curl -fsSL https://api.github.com/repos/immich-app/immich/releases?per_page=1 | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
   if [[ -f ~/.immich && "$RELEASE" == "$(cat ~/.immich)" ]]; then
     msg_ok "No update required. ${APP} is already at v${RELEASE}"
@@ -138,14 +138,16 @@ EOF
   corepack enable
 
   # server build
+  export SHARP_IGNORE_GLOBAL_LIBVIPS=true
   $STD pnpm --filter immich --frozen-lockfile build
+  unset SHARP_IGNORE_GLOBAL_LIBVIPS
+  export SHARP_FORCE_GLOBAL_LIBVIPS=true
   $STD pnpm --filter immich --frozen-lockfile --prod --no-optional deploy "$APP_DIR"
   cp "$APP_DIR"/package.json "$APP_DIR"/bin
   sed -i 's|^start|./start|' "$APP_DIR"/bin/immich-admin
 
   # openapi & web build
   cd "$SRC_DIR"
-  export SHARP_FORCE_GLOBAL_LIBVIPS=true
   $STD pnpm --filter @immich/sdk --filter immich-web --frozen-lockfile --force install
   $STD pnpm --filter @immich/sdk --filter immich-web build
   cp -a web/build "$APP_DIR"/www
