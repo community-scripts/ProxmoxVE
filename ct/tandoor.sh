@@ -49,7 +49,7 @@ function update_script() {
 
     msg_info "Updating $APP to ${RELEASE}"
     cp -r /opt/tandoor.bak/{config,api,mediafiles,staticfiles} /opt/tandoor/
-    mv /opt/.env /opt/tandoor/.env
+    mv /opt/tandoor.bak/.env /opt/tandoor/.env
     cd /opt/tandoor
     $STD uv venv .venv --python=python3
     $STD uv pip install -r requirements.txt --python .venv/bin/python
