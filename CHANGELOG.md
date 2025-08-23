@@ -20,6 +20,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: Pf2eTools [@tremor021](https://github.com/tremor021) ([#7096](https://github.com/community-scripts/ProxmoxVE/pull/7096))
+    - Refactor: Prowlarr [@tremor021](https://github.com/tremor021) ([#7091](https://github.com/community-scripts/ProxmoxVE/pull/7091))
     - Refactor: Radarr [@tremor021](https://github.com/tremor021) ([#7088](https://github.com/community-scripts/ProxmoxVE/pull/7088))
     - Refactor: Snipe-IT [@tremor021](https://github.com/tremor021) ([#7081](https://github.com/community-scripts/ProxmoxVE/pull/7081))
 
