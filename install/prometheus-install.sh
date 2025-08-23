@@ -19,7 +19,6 @@ msg_info "Installing Prometheus"
 mkdir -p /etc/prometheus
 mkdir -p /var/lib/prometheus
 mv /usr/local/bin/prometheus.yml /etc/prometheus/prometheus.yml
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Installed Prometheus"
 
 msg_info "Creating Service"
