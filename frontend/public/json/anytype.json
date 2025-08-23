@@ -1,0 +1,44 @@
+{
+    "name": "Anytype (any-sync)",
+    "slug": "anytype",
+    "categories": [
+        12
+    ],
+    "date_created": "2025-08-23",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": null,
+    "documentation": "https://github.com/anyproto/any-sync-dockercompose/wiki",
+    "website": "https://github.com/anyproto/any-sync-dockercompose",
+    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/anytype.webp",
+    "config_path": "/opt/anytype/.env.override",
+    "description": "Self-hosted Anytype any-sync network via Docker Compose for personal use, review and testing.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/anytype.sh",
+            "resources": {
+                "cpu": 2,
+                "ram": 4096,
+                "hdd": 20,
+                "os": "debian",
+                "version": "12"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": [
+        {
+            "text": "Configure settings in `/opt/anytype/.env.override` (e.g., `EXTERNAL_LISTEN_HOSTS`).",
+            "type": "info"
+        },
+        {
+            "text": "Project uses Docker Compose; services include MongoDB, Redis and MinIO.",
+            "type": "info"
+        }
+    ]
+}

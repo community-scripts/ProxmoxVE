@@ -1135,6 +1135,11 @@
     "date": "2025-06-03T11:49:40Z"
   },
   {
+    "name": "anyproto/any-sync-dockercompose",
+    "version": "v6.3.0",
+    "date": "2025-05-27T18:39:00Z"
+  },
+  {
     "name": "release-argus/Argus",
     "version": "0.26.3",
     "date": "2025-05-29T21:18:15Z"
