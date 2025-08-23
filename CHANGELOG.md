@@ -14,6 +14,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Tandoor: Fix env path [@tremor021](https://github.com/tremor021) ([#7130](https://github.com/community-scripts/ProxmoxVE/pull/7130))
+
   - #### 💥 Breaking Changes
 
     - Immich: v1.139.2 [@vhsdream](https://github.com/vhsdream) ([#7116](https://github.com/community-scripts/ProxmoxVE/pull/7116))
