@@ -1,13 +1,73 @@
 [
   {
+    "name": "paperless-ngx/paperless-ngx",
+    "version": "v2.18.2",
+    "date": "2025-08-22T23:56:41Z"
+  },
+  {
+    "name": "gtsteffaniak/filebrowser",
+    "version": "v0.8.1-beta",
+    "date": "2025-08-22T21:18:11Z"
+  },
+  {
     "name": "rcourtman/Pulse",
-    "version": "v4.6.0",
-    "date": "2025-08-20T20:53:43Z"
+    "version": "v4.7.0",
+    "date": "2025-08-22T19:58:51Z"
+  },
+  {
+    "name": "homarr-labs/homarr",
+    "version": "v1.34.0",
+    "date": "2025-08-22T19:16:24Z"
+  },
+  {
+    "name": "immich-app/immich",
+    "version": "v1.139.2",
+    "date": "2025-08-22T18:07:48Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.24.20",
+    "date": "2025-08-22T18:03:58Z"
+  },
+  {
+    "name": "tailscale/tailscale",
+    "version": "v1.86.5",
+    "date": "2025-08-22T17:13:13Z"
+  },
+  {
+    "name": "rclone/rclone",
+    "version": "v1.71.0",
+    "date": "2025-08-22T16:41:23Z"
+  },
+  {
+    "name": "caddyserver/caddy",
+    "version": "v2.10.1",
+    "date": "2025-08-22T16:14:52Z"
+  },
+  {
+    "name": "goauthentik/authentik",
+    "version": "version/2025.8.1",
+    "date": "2025-08-22T14:55:30Z"
+  },
+  {
+    "name": "MediaBrowser/Emby.Releases",
+    "version": "4.9.1.2",
+    "date": "2025-06-26T22:08:00Z"
   },
   {
     "name": "open-webui/open-webui",
-    "version": "v0.6.24",
-    "date": "2025-08-22T10:06:16Z"
+    "version": "v0.6.25",
+    "date": "2025-08-22T13:22:43Z"
+  },
+  {
+    "name": "wazuh/wazuh",
+    "version": "v4.10.3",
+    "date": "2025-08-19T18:51:00Z"
+  },
+  {
+    "name": "crowdsecurity/crowdsec",
+    "version": "v1.6.11",
+    "date": "2025-07-22T12:11:38Z"
   },
   {
     "name": "theonedev/onedev",
@@ -80,19 +140,14 @@
     "date": "2025-08-21T23:45:57Z"
   },
   {
-    "name": "immich-app/immich",
-    "version": "v1.139.2",
-    "date": "2025-08-21T22:35:59Z"
-  },
-  {
     "name": "ipfs/kubo",
     "version": "v0.36.0",
     "date": "2025-07-14T18:59:57Z"
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v4.3.0",
-    "date": "2025-07-05T12:14:52Z"
+    "version": "nightly",
+    "date": "2025-08-21T19:17:27Z"
   },
   {
     "name": "keycloak/keycloak",
@@ -170,16 +225,6 @@
     "date": "2025-08-20T20:52:44Z"
   },
   {
-    "name": "MediaBrowser/Emby.Releases",
-    "version": "4.9.1.2",
-    "date": "2025-06-26T22:08:00Z"
-  },
-  {
-    "name": "goauthentik/authentik",
-    "version": "version/2025.8.0",
-    "date": "2025-08-20T18:09:17Z"
-  },
-  {
     "name": "jenkinsci/jenkins",
     "version": "jenkins-2.516.2",
     "date": "2025-08-20T17:15:26Z"
@@ -230,11 +275,6 @@
     "date": "2025-08-20T07:57:58Z"
   },
   {
-    "name": "gtsteffaniak/filebrowser",
-    "version": "v0.8.0-beta",
-    "date": "2025-08-20T01:02:10Z"
-  },
-  {
     "name": "TwiN/gatus",
     "version": "v5.23.2",
     "date": "2025-08-19T21:24:45Z"
@@ -243,11 +283,6 @@
     "name": "mealie-recipes/mealie",
     "version": "v3.1.1",
     "date": "2025-08-19T20:23:43Z"
-  },
-  {
-    "name": "wazuh/wazuh",
-    "version": "v4.10.3",
-    "date": "2025-08-19T18:51:00Z"
   },
   {
     "name": "cross-seed/cross-seed",
@@ -263,11 +298,6 @@
     "name": "dgtlmoon/changedetection.io",
     "version": "0.50.10",
     "date": "2025-08-19T17:21:44Z"
-  },
-  {
-    "name": "msgbyte/tianji",
-    "version": "v1.24.18",
-    "date": "2025-08-19T16:57:09Z"
   },
   {
     "name": "karlomikus/bar-assistant",
@@ -293,11 +323,6 @@
     "name": "zabbix/zabbix",
     "version": "7.2.12",
     "date": "2025-08-19T11:16:17Z"
-  },
-  {
-    "name": "crowdsecurity/crowdsec",
-    "version": "v1.6.11",
-    "date": "2025-07-22T12:11:38Z"
   },
   {
     "name": "chrisvel/tududi",
@@ -363,11 +388,6 @@
     "name": "lldap/lldap",
     "version": "v0.6.2",
     "date": "2025-08-17T22:07:10Z"
-  },
-  {
-    "name": "paperless-ngx/paperless-ngx",
-    "version": "v2.18.1",
-    "date": "2025-08-17T21:16:28Z"
   },
   {
     "name": "wizarrrr/wizarr",
@@ -443,11 +463,6 @@
     "name": "mongodb/mongo",
     "version": "r8.2.0",
     "date": "2025-08-15T22:02:15Z"
-  },
-  {
-    "name": "homarr-labs/homarr",
-    "version": "v1.33.0",
-    "date": "2025-08-15T19:17:31Z"
   },
   {
     "name": "jhuckaby/Cronicle",
@@ -633,11 +648,6 @@
     "name": "MariaDB/server",
     "version": "mariadb-12.0.2",
     "date": "2025-08-07T21:23:15Z"
-  },
-  {
-    "name": "tailscale/tailscale",
-    "version": "v1.86.4",
-    "date": "2025-08-07T16:48:40Z"
   },
   {
     "name": "rabbitmq/rabbitmq-server",
@@ -955,11 +965,6 @@
     "date": "2025-07-09T15:35:44Z"
   },
   {
-    "name": "rclone/rclone",
-    "version": "v1.70.3",
-    "date": "2025-07-09T15:06:31Z"
-  },
-  {
     "name": "mysql/mysql-server",
     "version": "mysql-cluster-9.4.0",
     "date": "2025-07-09T08:35:30Z"
@@ -1208,11 +1213,6 @@
     "name": "monicahq/monica",
     "version": "v4.1.2",
     "date": "2024-05-04T08:06:50Z"
-  },
-  {
-    "name": "caddyserver/caddy",
-    "version": "v2.10.0",
-    "date": "2025-04-18T20:46:28Z"
   },
   {
     "name": "IceWhaleTech/CasaOS",
