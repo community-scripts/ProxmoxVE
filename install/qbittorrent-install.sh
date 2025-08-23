@@ -16,7 +16,7 @@ update_os
 fetch_and_deploy_gh_release "qbittorrent" "userdocs/qbittorrent-nox-static" "singlefile" "latest" "/opt/qbittorrent" "x86_64-qbittorrent-nox"
 
 msg_info "Setup qBittorrent-nox"
-mv /opt/qbittorrent/x86_64-qbittorrent-nox /opt/qbittorrent/qbittorrent-nox
+mv /opt/qbittorrent/qbittorrent /opt/qbittorrent/qbittorrent-nox
 mkdir -p ~/.config/qBittorrent/
 cat <<EOF >~/.config/qBittorrent/qBittorrent.conf
 [LegalNotice]
