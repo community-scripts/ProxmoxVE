@@ -41,7 +41,7 @@
       "type": "warning"
     },
     {
-      "text": "Show password: `cat ~/kasm.creds`",
+      "text": "Show credentials: `cat ~/kasm.creds`",
       "type": "info"
     }
   ]
