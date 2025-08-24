@@ -1,5 +1,50 @@
 [
   {
+    "name": "Lidarr/Lidarr",
+    "version": "v2.12.4.4658",
+    "date": "2025-06-09T17:27:45Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.24.22",
+    "date": "2025-08-24T09:51:24Z"
+  },
+  {
+    "name": "janeczku/calibre-web",
+    "version": "0.6.25",
+    "date": "2025-08-24T08:51:55Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.3-beta.10",
+    "date": "2025-07-15T06:07:03Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2329",
+    "date": "2025-08-24T05:53:12Z"
+  },
+  {
+    "name": "plexguide/Huntarr.io",
+    "version": "8.2.9",
+    "date": "2025-08-24T04:51:15Z"
+  },
+  {
+    "name": "moghtech/komodo",
+    "version": "v1.19.0",
+    "date": "2025-08-18T01:22:47Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.19",
+    "date": "2025-08-24T00:27:11Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
     "name": "rcourtman/Pulse",
     "version": "v4.7.6",
     "date": "2025-08-23T22:49:00Z"
@@ -28,11 +73,6 @@
     "name": "pocket-id/pocket-id",
     "version": "v1.8.0",
     "date": "2025-08-23T17:08:01Z"
-  },
-  {
-    "name": "plexguide/Huntarr.io",
-    "version": "8.2.7",
-    "date": "2025-08-23T16:55:46Z"
   },
   {
     "name": "immich-app/immich",
@@ -65,29 +105,19 @@
     "date": "2025-08-23T06:37:44Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2325",
-    "date": "2025-08-23T05:51:50Z"
-  },
-  {
     "name": "caddyserver/caddy",
     "version": "v2.10.2",
     "date": "2025-08-23T03:10:31Z"
   },
   {
-    "name": "jeedom/core",
-    "version": "4.4.19",
-    "date": "2025-08-23T00:27:09Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
-  },
-  {
     "name": "paperless-ngx/paperless-ngx",
     "version": "v2.18.2",
     "date": "2025-08-22T23:56:41Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.11.7-rc0",
+    "date": "2025-08-22T23:26:48Z"
   },
   {
     "name": "gtsteffaniak/filebrowser",
@@ -103,11 +133,6 @@
     "name": "keycloak/keycloak",
     "version": "26.3.3",
     "date": "2025-08-20T10:12:51Z"
-  },
-  {
-    "name": "msgbyte/tianji",
-    "version": "v1.24.20",
-    "date": "2025-08-22T18:03:58Z"
   },
   {
     "name": "tailscale/tailscale",
@@ -201,8 +226,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-08-21T19:17:27Z"
+    "version": "v4.3.0",
+    "date": "2025-07-05T12:14:52Z"
   },
   {
     "name": "HabitRPG/habitica",
@@ -253,16 +278,6 @@
     "name": "semaphoreui/semaphore",
     "version": "v2.16.18",
     "date": "2025-08-21T08:19:58Z"
-  },
-  {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.3-beta.10",
-    "date": "2025-07-15T06:07:03Z"
-  },
-  {
-    "name": "ollama/ollama",
-    "version": "v0.11.6",
-    "date": "2025-08-20T21:00:13Z"
   },
   {
     "name": "jenkinsci/jenkins",
@@ -415,11 +430,6 @@
     "date": "2025-08-18T07:39:41Z"
   },
   {
-    "name": "moghtech/komodo",
-    "version": "v1.19.0",
-    "date": "2025-08-18T01:22:47Z"
-  },
-  {
     "name": "lldap/lldap",
     "version": "v0.6.2",
     "date": "2025-08-17T22:07:10Z"
@@ -448,11 +458,6 @@
     "name": "Radarr/Radarr",
     "version": "v5.26.2.10099",
     "date": "2025-06-11T20:10:39Z"
-  },
-  {
-    "name": "Lidarr/Lidarr",
-    "version": "v2.12.4.4658",
-    "date": "2025-06-09T17:27:45Z"
   },
   {
     "name": "mylar3/mylar3",
@@ -1373,11 +1378,6 @@
     "name": "phpipam/phpipam",
     "version": "v1.7.3",
     "date": "2024-11-27T21:26:11Z"
-  },
-  {
-    "name": "janeczku/calibre-web",
-    "version": "0.6.24",
-    "date": "2024-11-16T06:47:56Z"
   },
   {
     "name": "swizzin/swizzin",
