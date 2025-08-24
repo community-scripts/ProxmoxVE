@@ -28,8 +28,12 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  if ! command -v jq &>/dev/null; then
+    $STD apt-get update
+    $STD apt-get install -y jq
+  fi
 
-  RELEASE=$(curl -fsSL https://api.github.com/repos/Lidarr/Lidarr/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+  RELEASE=$(curl -fsSL https://api.github.com/repos/Lidarr/Lidarr/releases/latest | jq -r '.tag_name' | sed 's/^v//')
   if [[ "${RELEASE}" != "$(cat ~/.lidarr)" ]] || [[ ! -f ~/.lidarr ]]; then
 
     msg_info "Stopping service"
