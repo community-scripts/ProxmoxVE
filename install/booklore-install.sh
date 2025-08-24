@@ -47,7 +47,6 @@ msg_ok "Built Frontend"
 
 msg_info "Creating Environment"
 mkdir -p /opt/booklore_storage{/data,/books}
-export BOOKLORE_PORT=6060
 cat <<EOF >/opt/booklore_storage/.env
 DATABASE_URL=jdbc:mariadb://localhost:3306/$DB_NAME
 DATABASE_USERNAME=$DB_USER
@@ -77,6 +76,7 @@ msg_info "Configure Nginx"
 rm -rf /usr/share/nginx/html
 ln -s /opt/booklore/booklore-ui/dist/booklore/browser /usr/share/nginx/html
 cp /opt/booklore/nginx.conf /etc/nginx/nginx.conf
+sed -i "s/listen \${BOOKLORE_PORT};/listen 6060;/" /etc/nginx/nginx.conf
 systemctl restart nginx
 msg_ok "Configured Nginx"
 
