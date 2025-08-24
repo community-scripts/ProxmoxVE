@@ -13,16 +13,19 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Syncthing"
-curl -fsSL -o /usr/share/keyrings/syncthing-archive-keyring.gpg https://syncthing.net/release-key.gpg
-sh -c 'echo "deb [signed-by=/usr/share/keyrings/syncthing-archive-keyring.gpg] https://apt.syncthing.net/ syncthing stable" > /etc/apt/sources.list.d/syncthing.list'
+msg_info "Setting up Syncthing repo"
+mkdir -p /etc/apt/keyrings
+curl -fsSL "https://syncthing.net/release-key.gpg" -o /etc/apt/keyrings/syncthing-archive-keyring.gpg
+echo "deb [signed-by=/etc/apt/keyrings/syncthing-archive-keyring.gpg] https://apt.syncthing.net/ syncthing stable-v2" >/etc/apt/sources.list.d/syncthing.list
 $STD apt-get update
+msg_ok "Set up Syncthing repo"
+
+msg_info "Installing Syncthing"
 $STD apt-get install -y syncthing
-$STD systemctl enable syncthing@root.service
-systemctl start syncthing@root.service
+systemctl enable -q --now syncthing@root
 sleep 5
 sed -i "{s/127.0.0.1:8384/0.0.0.0:8384/g}" /root/.local/state/syncthing/config.xml
-systemctl restart syncthing@root.service
+systemctl restart syncthing@root
 msg_ok "Installed Syncthing"
 
 motd_ssh
