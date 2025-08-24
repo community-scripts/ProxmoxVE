@@ -1,5 +1,50 @@
 [
   {
+    "name": "rcourtman/Pulse",
+    "version": "v4.7.6",
+    "date": "2025-08-23T22:49:00Z"
+  },
+  {
+    "name": "Prowlarr/Prowlarr",
+    "version": "v2.0.5.5160",
+    "date": "2025-08-23T21:23:11Z"
+  },
+  {
+    "name": "Ombi-app/Ombi",
+    "version": "v4.47.1",
+    "date": "2025-01-05T21:14:23Z"
+  },
+  {
+    "name": "YunoHost/yunohost",
+    "version": "debian/12.1.15.1",
+    "date": "2025-08-23T20:07:50Z"
+  },
+  {
+    "name": "sysadminsmedia/homebox",
+    "version": "v0.21.0",
+    "date": "2025-08-23T18:33:53Z"
+  },
+  {
+    "name": "pocket-id/pocket-id",
+    "version": "v1.8.0",
+    "date": "2025-08-23T17:08:01Z"
+  },
+  {
+    "name": "plexguide/Huntarr.io",
+    "version": "8.2.7",
+    "date": "2025-08-23T16:55:46Z"
+  },
+  {
+    "name": "immich-app/immich",
+    "version": "v1.139.3",
+    "date": "2025-08-23T16:37:46Z"
+  },
+  {
+    "name": "booklore-app/booklore",
+    "version": "v0.38.0",
+    "date": "2025-08-23T14:36:32Z"
+  },
+  {
     "name": "firefly-iii/firefly-iii",
     "version": "v6.3.2",
     "date": "2025-08-19T04:08:36Z"
@@ -8,11 +53,6 @@
     "name": "prometheus/prometheus",
     "version": "v0.306.0-rc.0",
     "date": "2025-08-21T13:31:03Z"
-  },
-  {
-    "name": "rcourtman/Pulse",
-    "version": "v4.7.2",
-    "date": "2025-08-23T07:47:53Z"
   },
   {
     "name": "TandoorRecipes/recipes",
@@ -63,11 +103,6 @@
     "name": "keycloak/keycloak",
     "version": "26.3.3",
     "date": "2025-08-20T10:12:51Z"
-  },
-  {
-    "name": "immich-app/immich",
-    "version": "v1.139.2",
-    "date": "2025-08-22T18:07:48Z"
   },
   {
     "name": "msgbyte/tianji",
@@ -166,8 +201,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v4.3.0",
-    "date": "2025-07-05T12:14:52Z"
+    "version": "nightly",
+    "date": "2025-08-21T19:17:27Z"
   },
   {
     "name": "HabitRPG/habitica",
@@ -228,11 +263,6 @@
     "name": "ollama/ollama",
     "version": "v0.11.6",
     "date": "2025-08-20T21:00:13Z"
-  },
-  {
-    "name": "YunoHost/yunohost",
-    "version": "debian/12.1.14",
-    "date": "2025-08-20T20:52:44Z"
   },
   {
     "name": "jenkinsci/jenkins",
@@ -345,11 +375,6 @@
     "date": "2025-08-19T06:57:20Z"
   },
   {
-    "name": "plexguide/Huntarr.io",
-    "version": "8.2.6",
-    "date": "2025-08-18T23:31:31Z"
-  },
-  {
     "name": "bunkerity/bunkerweb",
     "version": "v1.6.4",
     "date": "2025-08-18T20:22:07Z"
@@ -425,19 +450,9 @@
     "date": "2025-06-11T20:10:39Z"
   },
   {
-    "name": "Prowlarr/Prowlarr",
-    "version": "v1.37.0.5076",
-    "date": "2025-06-04T11:04:53Z"
-  },
-  {
     "name": "Lidarr/Lidarr",
     "version": "v2.12.4.4658",
     "date": "2025-06-09T17:27:45Z"
-  },
-  {
-    "name": "Ombi-app/Ombi",
-    "version": "v4.47.1",
-    "date": "2025-01-05T21:14:23Z"
   },
   {
     "name": "mylar3/mylar3",
@@ -493,11 +508,6 @@
     "name": "linkwarden/linkwarden",
     "version": "v2.11.7",
     "date": "2025-08-14T17:14:33Z"
-  },
-  {
-    "name": "booklore-app/booklore",
-    "version": "v0.37.0",
-    "date": "2025-08-14T00:37:49Z"
   },
   {
     "name": "jellyfin/jellyfin",
@@ -593,11 +603,6 @@
     "name": "advplyr/audiobookshelf",
     "version": "v2.28.0",
     "date": "2025-08-10T23:09:55Z"
-  },
-  {
-    "name": "pocket-id/pocket-id",
-    "version": "v1.7.0",
-    "date": "2025-08-10T18:10:25Z"
   },
   {
     "name": "ioBroker/ioBroker",
@@ -983,11 +988,6 @@
     "name": "qbittorrent/qBittorrent",
     "version": "release-5.1.2",
     "date": "2025-07-02T06:13:16Z"
-  },
-  {
-    "name": "sysadminsmedia/homebox",
-    "version": "v0.20.2",
-    "date": "2025-07-02T00:37:07Z"
   },
   {
     "name": "hivemq/hivemq-community-edition",
