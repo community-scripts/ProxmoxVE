@@ -47,10 +47,12 @@ msg_ok "Built Frontend"
 
 msg_info "Creating Environment"
 mkdir -p /opt/booklore_storage{/data,/books}
+export BOOKLORE_PORT=6060
 cat <<EOF >/opt/booklore_storage/.env
 DATABASE_URL=jdbc:mariadb://localhost:3306/$DB_NAME
 DATABASE_USERNAME=$DB_USER
 DATABASE_PASSWORD=$DB_PASS
+BOOKLORE_PORT=6060 
 
 BOOKLORE_DATA_PATH=/opt/booklore_storage/data
 BOOKLORE_BOOKS_PATH=/opt/booklore_storage/books
