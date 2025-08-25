@@ -1329,7 +1329,11 @@ function setup_uv() {
   }
 
   rm -rf "$TMP_DIR"
-  ensure_usr_local_bin_persist
+  #ensure_usr_local_bin_persist
+  $STD uv python update-shell || {
+    msg_error "Failed to update uv shell integration"
+    return 1
+  }
   msg_ok "Setup uv $LATEST_VERSION"
 
   # Optional: install specific Python version
