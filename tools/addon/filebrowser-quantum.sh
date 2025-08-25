@@ -120,30 +120,18 @@ fi
     read -r update_prompt
   if [[ "${update_prompt,,}" =~ ^(y|yes)$ ]]; then
     msg_info "Updating ${APP}"
-  
-    # Download to same filesystem as INSTALL_PATH so rename is atomic
     tmp="${INSTALL_PATH}.tmp.$$"
-  
     if ! curl -fSL https://github.com/gtsteffaniak/filebrowser/releases/latest/download/linux-amd64-filebrowser -o "$tmp"; then
       msg_error "Download failed"
       rm -f "$tmp"
       exit 1
     fi
-  
     chmod 0755 "$tmp"
-  
-    # Swap in atomically; if mv fails, don't claim success
     if ! mv -f "$tmp" "$INSTALL_PATH"; then
       msg_error "Install failed (cannot move into $INSTALL_PATH)"
       rm -f "$tmp"
       exit 1
     fi
-  
-    # (Optional) restart so the new binary is used immediately;
-    # if command -v systemctl >/dev/null 2>&1 && systemctl is-active --quiet filebrowser; then
-    #   systemctl restart filebrowser || true
-    # fi
-  
     msg_ok "Updated ${APP}"
     exit 0
   else
