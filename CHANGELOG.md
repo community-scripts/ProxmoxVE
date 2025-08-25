@@ -19,6 +19,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - SnipeIT: Update nginx config to v8.3 [@tremor021](https://github.com/tremor021) ([#7171](https://github.com/community-scripts/ProxmoxVE/pull/7171))
     - Lidarr: Fix RELEASE variable fetching [@tremor021](https://github.com/tremor021) ([#7162](https://github.com/community-scripts/ProxmoxVE/pull/7162))
 
+  - #### ✨ New Features
+
+    - n8n: Force update to NodeJS v22 [@tremor021](https://github.com/tremor021) ([#7176](https://github.com/community-scripts/ProxmoxVE/pull/7176))
+
 ## 2025-08-24
 
 ### 🚀 Updated Scripts
