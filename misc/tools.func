@@ -1328,12 +1328,13 @@ function setup_uv() {
     return 1
   }
 
-  rm -rf "$TMP_DIR"
-  #ensure_usr_local_bin_persist
-  $STD uv python update-shell || {
-    msg_error "Failed to update uv shell integration"
-    return 1
-  }
+  if [[ ":$PATH:" != *":/usr/local/bin:"* ]]; then
+    export PATH="/usr/local/bin:$PATH"
+  fi
+  ensure_usr_local_bin_persist
+  if ! $STD uv python update-shell; then
+    msg_error "uv shell integration failed – continuing anyway"
+  fi
   msg_ok "Setup uv $LATEST_VERSION"
 
   # Optional: install specific Python version
