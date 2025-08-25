@@ -20,7 +20,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
-  - Komodo: Generate admin users password [@tremor021](https://github.com/tremor021) ([#7193](https://github.com/community-scripts/ProxmoxVE/pull/7193))
+  - FileBrowser Quantum: safer update (tmp download + atomic replace + arch autodetect) [@CommanderPaladin](https://github.com/CommanderPaladin) ([#7174](https://github.com/community-scripts/ProxmoxVE/pull/7174))
+- Komodo: Generate admin users password [@tremor021](https://github.com/tremor021) ([#7193](https://github.com/community-scripts/ProxmoxVE/pull/7193))
 
   - #### 🐞 Bug Fixes
 
