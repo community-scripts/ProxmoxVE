@@ -25,6 +25,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Immich: bump to v1.139.4 [@vhsdream](https://github.com/vhsdream) ([#7138](https://github.com/community-scripts/ProxmoxVE/pull/7138))
     - Komodo: Fix compose.env path [@tremor021](https://github.com/tremor021) ([#7202](https://github.com/community-scripts/ProxmoxVE/pull/7202))
     - Komodo: Fix update procedure and missing env var [@tremor021](https://github.com/tremor021) ([#7198](https://github.com/community-scripts/ProxmoxVE/pull/7198))
     - SnipeIT: Update nginx config to v8.3 [@tremor021](https://github.com/tremor021) ([#7171](https://github.com/community-scripts/ProxmoxVE/pull/7171))
