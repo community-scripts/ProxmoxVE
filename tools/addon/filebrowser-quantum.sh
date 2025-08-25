@@ -97,73 +97,52 @@ if [[ -f "$LEGACY_DB" || -f "$LEGACY_BIN" && ! -f "$CONFIG_PATH" ]]; then
 fi
 
 # Check existing installation
-if [[ -f "$INSTALL_PATH" ]]; then
-  echo -e "${YW}⚠️ ${APP} is already installed.${CL}"
-  echo -n "Uninstall ${APP}? (y/N): "
-  read -r uninstall_prompt
-  if [[ "${uninstall_prompt,,}" =~ ^(y|yes)$ ]]; then
-    msg_info "Uninstalling ${APP}"
-    if [[ "$OS" == "Debian" ]]; then
-      systemctl disable --now filebrowser.service &>/dev/null
-      rm -f "$SERVICE_PATH"
-    else
-      rc-service filebrowser stop &>/dev/null
-      rc-update del filebrowser &>/dev/null
-      rm -f "$SERVICE_PATH"
+  if [[ -f "$INSTALL_PATH" ]]; then
+    echo -e "${YW}⚠️ ${APP} is already installed.${CL}"
+    echo -n "Uninstall ${APP}? (y/N): "
+    read -r uninstall_prompt
+    if [[ "${uninstall_prompt,,}" =~ ^(y|yes)$ ]]; then
+      msg_info "Uninstalling ${APP}"
+      if [[ "$OS" == "Debian" ]]; then
+        systemctl disable --now filebrowser.service &>/dev/null
+        rm -f "$SERVICE_PATH"
+      else
+        rc-service filebrowser stop &>/dev/null
+        rc-update del filebrowser &>/dev/null
+        rm -f "$SERVICE_PATH"
+      fi
+      rm -f "$INSTALL_PATH" "$CONFIG_PATH"
+      msg_ok "${APP} has been uninstalled."
+      exit 0
     fi
-    rm -f "$INSTALL_PATH" "$CONFIG_PATH"
-    msg_ok "${APP} has been uninstalled."
-    exit 0
-  fi
-
-  echo -n "Update ${APP}? (y/N): "
-  read -r update_prompt
+  
+    echo -n "Update ${APP}? (y/N): "
+    read -r update_prompt
   if [[ "${update_prompt,,}" =~ ^(y|yes)$ ]]; then
     msg_info "Updating ${APP}"
   
-    # pick asset by CPU arch
-    arch="$(uname -m)"
-    case "$arch" in
-      x86_64|amd64) asset="linux-amd64-filebrowser" ;;
-      aarch64|arm64) asset="linux-arm64-filebrowser" ;;
-      armv7l|armv7) asset="linux-armv7-filebrowser" ;;
-      armv6l|armv6) asset="linux-armv6-filebrowser" ;;
-      *) msg_error "Unsupported architecture: $arch"; exit 1 ;;
-    esac
-    url="https://github.com/gtsteffaniak/filebrowser/releases/latest/download/${asset}"
+    # Download to same filesystem as INSTALL_PATH so rename is atomic
+    tmp="${INSTALL_PATH}.tmp.$$"
   
-    tmp="${TMPDIR:-/tmp}/.filebrowser.$$"
-    trap 'rm -f "$tmp"' EXIT
-  
-    # stop service if running
-    stopped=0
-    if command -v systemctl >/dev/null 2>&1 && systemctl is-active --quiet filebrowser; then
-      systemctl stop filebrowser || true
-      stopped=1
-    fi
-    pkill -TERM -x filebrowser 2>/dev/null || true
-  
-    if ! curl -fSL "$url" -o "$tmp"; then
+    if ! curl -fSL https://github.com/gtsteffaniak/filebrowser/releases/latest/download/linux-amd64-filebrowser -o "$tmp"; then
       msg_error "Download failed"
-      [[ "$stopped" = 1 ]] && systemctl start filebrowser || true
+      rm -f "$tmp"
       exit 1
     fi
-    chmod +x "$tmp"
   
-    # optional backup
-    [[ -x "$INSTALL_PATH" ]] && cp -a "$INSTALL_PATH" "${INSTALL_PATH}.bak.$(date +%Y%m%d-%H%M%S)" || true
+    chmod 0755 "$tmp"
   
-    # atomic replace
-    mv -f "$tmp" "$INSTALL_PATH"
-    chmod 755 "$INSTALL_PATH" || true
-  
-    [[ "$stopped" = 1 ]] && systemctl start filebrowser || true
-  
-    # verify
-    if ! "$INSTALL_PATH" --version >/dev/null 2>&1 && ! "$INSTALL_PATH" version >/dev/null 2>&1; then
-      msg_error "Updated binary installed, but version check failed"
+    # Swap in atomically; if mv fails, don't claim success
+    if ! mv -f "$tmp" "$INSTALL_PATH"; then
+      msg_error "Install failed (cannot move into $INSTALL_PATH)"
+      rm -f "$tmp"
       exit 1
     fi
+  
+    # (Optional) restart so the new binary is used immediately;
+    # if command -v systemctl >/dev/null 2>&1 && systemctl is-active --quiet filebrowser; then
+    #   systemctl restart filebrowser || true
+    # fi
   
     msg_ok "Updated ${APP}"
     exit 0
