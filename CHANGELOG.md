@@ -12,7 +12,13 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-08-25
 
+### 🆕 New Scripts
+
+  - healthchecks ([#7177](https://github.com/community-scripts/ProxmoxVE/pull/7177))
+
 ### 🚀 Updated Scripts
+
+  - [core]: tools.func - better verbose for postgresql [@MickLesk](https://github.com/MickLesk) ([#7173](https://github.com/community-scripts/ProxmoxVE/pull/7173))
 
   - #### 🐞 Bug Fixes
 
