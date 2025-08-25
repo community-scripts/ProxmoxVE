@@ -12,8 +12,8 @@
   "documentation": "https://tracktor.bytedge.in/introduction.html",
   "config_path": "/opt/tracktor/app/server/.env",
   "website": "https://tracktor.bytedge.in/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/tracktor.svg",
-  "description": "Tracktor is an open-source web application for comprehensive vehicle management.\nEasily track ⛽ fuel consumption, 🛠️ maintenance, 🛡️ insurance, and 📄 regulatory documents for all your vehicles in one place. ",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/tracktor.webp",
+  "description": "Tracktor is an open-source web application for comprehensive vehicle management.\nEasily track fuel consumption, maintenance, insurance, and regulatory documents for all your vehicles in one place.",
   "install_methods": [
     {
       "type": "default",
