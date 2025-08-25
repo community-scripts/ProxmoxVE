@@ -35,6 +35,10 @@
     {
       "text": "if you change your LXC-IP, you need to update /etc/caddy/Caddyfile & /opt/healthchecks/hc/local_settings.py",
       "type": "info"
+    },
+    {
+      "text": "Show credentials: `cat ~/healthchecks.creds`",
+      "type": "info"
     }
   ]
 }
