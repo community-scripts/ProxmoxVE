@@ -1,13 +1,88 @@
 [
   {
+    "name": "gotson/komga",
+    "version": "1.23.2",
+    "date": "2025-08-25T09:39:42Z"
+  },
+  {
+    "name": "zabbix/zabbix",
+    "version": "7.0.18",
+    "date": "2025-08-25T09:27:59Z"
+  },
+  {
+    "name": "rcourtman/Pulse",
+    "version": "v4.7.6",
+    "date": "2025-08-23T22:49:00Z"
+  },
+  {
+    "name": "meilisearch/meilisearch",
+    "version": "latest",
+    "date": "2025-08-25T09:14:19Z"
+  },
+  {
+    "name": "emqx/emqx",
+    "version": "e5.10.1-beta.2",
+    "date": "2025-08-25T08:51:40Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.3.0p36-rc1",
+    "date": "2025-08-25T06:14:27Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.3-beta.10",
+    "date": "2025-07-15T06:07:03Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2343",
+    "date": "2025-08-25T05:50:39Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.3.2",
+    "date": "2025-08-19T04:08:36Z"
+  },
+  {
+    "name": "FlareSolverr/FlareSolverr",
+    "version": "v3.4.0",
+    "date": "2025-08-25T03:22:00Z"
+  },
+  {
+    "name": "immich-app/immich",
+    "version": "v1.139.4",
+    "date": "2025-08-25T02:39:18Z"
+  },
+  {
+    "name": "plexguide/Huntarr.io",
+    "version": "8.2.10",
+    "date": "2025-08-25T01:26:55Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.19",
+    "date": "2025-08-25T00:27:05Z"
+  },
+  {
+    "name": "gtsteffaniak/filebrowser",
+    "version": "v0.8.2-beta",
+    "date": "2025-08-25T00:26:03Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
     "name": "crafty-controller/crafty-4",
     "version": "v4.5.1",
     "date": "2025-08-24T23:58:52Z"
   },
   {
-    "name": "gtsteffaniak/filebrowser",
-    "version": "v0.8.2-beta",
-    "date": "2025-08-24T22:58:03Z"
+    "name": "documenso/documenso",
+    "version": "v1.12.2-rc.5",
+    "date": "2025-08-24T23:48:04Z"
   },
   {
     "name": "Ombi-app/Ombi",
@@ -25,19 +100,14 @@
     "date": "2025-08-24T20:16:32Z"
   },
   {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.3.2",
-    "date": "2025-08-19T04:08:36Z"
+    "name": "runtipi/runtipi",
+    "version": "v4.3.0",
+    "date": "2025-07-05T12:14:52Z"
   },
   {
     "name": "wavelog/wavelog",
     "version": "2.1",
     "date": "2025-08-24T15:42:19Z"
-  },
-  {
-    "name": "rcourtman/Pulse",
-    "version": "v4.7.6",
-    "date": "2025-08-23T22:49:00Z"
   },
   {
     "name": "Radarr/Radarr",
@@ -55,6 +125,11 @@
     "date": "2025-08-24T12:48:14Z"
   },
   {
+    "name": "keycloak/keycloak",
+    "version": "26.3.3",
+    "date": "2025-08-20T10:12:51Z"
+  },
+  {
     "name": "Lidarr/Lidarr",
     "version": "v2.12.4.4658",
     "date": "2025-06-09T17:27:45Z"
@@ -70,31 +145,6 @@
     "date": "2025-08-24T08:51:55Z"
   },
   {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.3-beta.10",
-    "date": "2025-07-15T06:07:03Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2329",
-    "date": "2025-08-24T05:53:12Z"
-  },
-  {
-    "name": "plexguide/Huntarr.io",
-    "version": "8.2.9",
-    "date": "2025-08-24T04:51:15Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.4.19",
-    "date": "2025-08-24T00:27:11Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
-  },
-  {
     "name": "YunoHost/yunohost",
     "version": "debian/12.1.15.1",
     "date": "2025-08-23T20:07:50Z"
@@ -103,11 +153,6 @@
     "name": "sysadminsmedia/homebox",
     "version": "v0.21.0",
     "date": "2025-08-23T18:33:53Z"
-  },
-  {
-    "name": "immich-app/immich",
-    "version": "v1.139.3",
-    "date": "2025-08-23T16:37:46Z"
   },
   {
     "name": "booklore-app/booklore",
@@ -141,18 +186,13 @@
   },
   {
     "name": "ollama/ollama",
-    "version": "v0.11.7-rc0",
+    "version": "v0.11.7-rc1",
     "date": "2025-08-22T23:26:48Z"
   },
   {
     "name": "homarr-labs/homarr",
     "version": "v1.34.0",
     "date": "2025-08-22T19:16:24Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.3.3",
-    "date": "2025-08-20T10:12:51Z"
   },
   {
     "name": "tailscale/tailscale",
@@ -163,11 +203,6 @@
     "name": "rclone/rclone",
     "version": "v1.71.0",
     "date": "2025-08-22T16:41:23Z"
-  },
-  {
-    "name": "emqx/emqx",
-    "version": "e5.9.2-beta.2",
-    "date": "2025-08-22T15:34:17Z"
   },
   {
     "name": "goauthentik/authentik",
@@ -245,11 +280,6 @@
     "date": "2025-07-14T18:59:57Z"
   },
   {
-    "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-08-21T19:17:27Z"
-  },
-  {
     "name": "HabitRPG/habitica",
     "version": "v5.39.0",
     "date": "2025-08-21T18:40:00Z"
@@ -298,11 +328,6 @@
     "name": "jenkinsci/jenkins",
     "version": "jenkins-2.516.2",
     "date": "2025-08-20T17:15:26Z"
-  },
-  {
-    "name": "Checkmk/checkmk",
-    "version": "v2.4.0p10",
-    "date": "2025-08-20T14:05:06Z"
   },
   {
     "name": "AdguardTeam/AdGuardHome",
@@ -390,11 +415,6 @@
     "date": "2025-08-12T14:26:27Z"
   },
   {
-    "name": "zabbix/zabbix",
-    "version": "7.2.12",
-    "date": "2025-08-19T11:16:17Z"
-  },
-  {
     "name": "chrisvel/tududi",
     "version": "v0.80",
     "date": "2025-07-24T14:12:39Z"
@@ -428,11 +448,6 @@
     "name": "nzbgetcom/nzbget",
     "version": "v25.2",
     "date": "2025-07-04T08:21:42Z"
-  },
-  {
-    "name": "meilisearch/meilisearch",
-    "version": "prototype-arroy-becomes-hannoy-with-sharding-0",
-    "date": "2025-08-18T14:48:37Z"
   },
   {
     "name": "VictoriaMetrics/VictoriaMetrics",
@@ -483,11 +498,6 @@
     "name": "Paymenter/Paymenter",
     "version": "v1.2.10",
     "date": "2025-08-16T11:45:23Z"
-  },
-  {
-    "name": "documenso/documenso",
-    "version": "v1.12.2-rc.4",
-    "date": "2025-08-16T09:16:29Z"
   },
   {
     "name": "coder/code-server",
@@ -815,11 +825,6 @@
     "date": "2025-08-01T14:40:28Z"
   },
   {
-    "name": "gotson/komga",
-    "version": "1.23.1",
-    "date": "2025-08-01T04:30:24Z"
-  },
-  {
     "name": "Suwayomi/Suwayomi-Server",
     "version": "v2.1.1867",
     "date": "2025-07-31T18:08:43Z"
@@ -1083,11 +1088,6 @@
     "name": "Readarr/Readarr",
     "version": "v2.0.0.4645",
     "date": "2017-03-07T18:56:06Z"
-  },
-  {
-    "name": "FlareSolverr/FlareSolverr",
-    "version": "v3.3.25",
-    "date": "2025-06-14T02:52:44Z"
   },
   {
     "name": "OctoPrint/OctoPrint",
