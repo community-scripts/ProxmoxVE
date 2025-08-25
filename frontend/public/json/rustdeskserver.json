@@ -25,6 +25,17 @@
         "os": "debian",
         "version": "12"
       }
+    },
+    {
+      "type": "alpine",
+      "script": "ct/alpine-rustdeskserver.sh",
+      "resources": {
+        "cpu": 1,
+        "ram": 512,
+        "hdd": 2,
+        "os": "alpine",
+        "version": "3.22"
+      }
     }
   ],
   "default_credentials": {
