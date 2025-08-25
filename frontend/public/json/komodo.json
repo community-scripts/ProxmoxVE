@@ -44,7 +44,7 @@
   },
   "notes": [
     {
-      "text": "After the initial installation: Enter your desired admin user and password and then click on Sign Up",
+      "text": "For admin username and password type `cat ~/.komodo.creds` inside LXC.",
       "type": "info"
     }
   ]
