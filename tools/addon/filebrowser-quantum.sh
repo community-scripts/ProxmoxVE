@@ -120,15 +120,58 @@ if [[ -f "$INSTALL_PATH" ]]; then
   read -r update_prompt
   if [[ "${update_prompt,,}" =~ ^(y|yes)$ ]]; then
     msg_info "Updating ${APP}"
-    curl -fsSL https://github.com/gtsteffaniak/filebrowser/releases/latest/download/linux-amd64-filebrowser -o "$INSTALL_PATH"
-    chmod +x "$INSTALL_PATH"
+  
+    # pick asset by CPU arch
+    arch="$(uname -m)"
+    case "$arch" in
+      x86_64|amd64) asset="linux-amd64-filebrowser" ;;
+      aarch64|arm64) asset="linux-arm64-filebrowser" ;;
+      armv7l|armv7) asset="linux-armv7-filebrowser" ;;
+      armv6l|armv6) asset="linux-armv6-filebrowser" ;;
+      *) msg_error "Unsupported architecture: $arch"; exit 1 ;;
+    esac
+    url="https://github.com/gtsteffaniak/filebrowser/releases/latest/download/${asset}"
+  
+    tmp="${TMPDIR:-/tmp}/.filebrowser.$$"
+    trap 'rm -f "$tmp"' EXIT
+  
+    # stop service if running
+    stopped=0
+    if command -v systemctl >/dev/null 2>&1 && systemctl is-active --quiet filebrowser; then
+      systemctl stop filebrowser || true
+      stopped=1
+    fi
+    pkill -TERM -x filebrowser 2>/dev/null || true
+  
+    if ! curl -fSL "$url" -o "$tmp"; then
+      msg_error "Download failed"
+      [[ "$stopped" = 1 ]] && systemctl start filebrowser || true
+      exit 1
+    fi
+    chmod +x "$tmp"
+  
+    # optional backup
+    [[ -x "$INSTALL_PATH" ]] && cp -a "$INSTALL_PATH" "${INSTALL_PATH}.bak.$(date +%Y%m%d-%H%M%S)" || true
+  
+    # atomic replace
+    mv -f "$tmp" "$INSTALL_PATH"
+    chmod 755 "$INSTALL_PATH" || true
+  
+    [[ "$stopped" = 1 ]] && systemctl start filebrowser || true
+  
+    # verify
+    if ! "$INSTALL_PATH" --version >/dev/null 2>&1 && ! "$INSTALL_PATH" version >/dev/null 2>&1; then
+      msg_error "Updated binary installed, but version check failed"
+      exit 1
+    fi
+  
     msg_ok "Updated ${APP}"
     exit 0
   else
     echo -e "${YW}⚠️ Update skipped. Exiting.${CL}"
     exit 0
   fi
-fi
+
 
 echo -e "${YW}⚠️ ${APP} is not installed.${CL}"
 echo -n "Enter port number (Default: ${DEFAULT_PORT}): "
