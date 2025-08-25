@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-08-25
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Lidarr: Fix RELEASE variable fetching [@tremor021](https://github.com/tremor021) ([#7162](https://github.com/community-scripts/ProxmoxVE/pull/7162))
+
 ## 2025-08-24
 
 ### 🚀 Updated Scripts
