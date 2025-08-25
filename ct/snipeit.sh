@@ -40,6 +40,7 @@ function update_script() {
 
     fetch_and_deploy_gh_release "snipe-it" "snipe/snipe-it" "tarball"
     [[ "$(php -v 2>/dev/null)" == PHP\ 8.2* ]] && PHP_VERSION="8.3" PHP_MODULE="common,ctype,ldap,fileinfo,iconv,mysql,soap,xsl" PHP_FPM="YES" setup_php
+    sed -i 's/php8.2/php8.3/g' /etc/nginx/conf.d/snipeit.conf
     setup_composer
 
     msg_info "Updating ${APP} to v${RELEASE}"
