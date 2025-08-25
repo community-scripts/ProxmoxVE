@@ -14,7 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - healthchecks ([#7177](https://github.com/community-scripts/ProxmoxVE/pull/7177))
+  - Alpine-Redlib ([#7178](https://github.com/community-scripts/ProxmoxVE/pull/7178))
+- healthchecks ([#7177](https://github.com/community-scripts/ProxmoxVE/pull/7177))
 
 ### 🚀 Updated Scripts
 
