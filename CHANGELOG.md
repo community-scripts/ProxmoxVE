@@ -20,6 +20,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - Komodo: Generate admin users password [@tremor021](https://github.com/tremor021) ([#7193](https://github.com/community-scripts/ProxmoxVE/pull/7193))
+
   - #### 🐞 Bug Fixes
 
     - SnipeIT: Update nginx config to v8.3 [@tremor021](https://github.com/tremor021) ([#7171](https://github.com/community-scripts/ProxmoxVE/pull/7171))
