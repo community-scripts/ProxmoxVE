@@ -171,7 +171,7 @@ if [[ -f "$INSTALL_PATH" ]]; then
     echo -e "${YW}⚠️ Update skipped. Exiting.${CL}"
     exit 0
   fi
-
+fi
 
 echo -e "${YW}⚠️ ${APP} is not installed.${CL}"
 echo -n "Enter port number (Default: ${DEFAULT_PORT}): "
