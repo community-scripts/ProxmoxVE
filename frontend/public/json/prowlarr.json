@@ -9,7 +9,7 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 9696,
-  "documentation": null,
+  "documentation": "https://wiki.servarr.com/prowlarr",
   "website": "https://github.com/Prowlarr/Prowlarr",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/prowlarr.webp",
   "config_path": "",

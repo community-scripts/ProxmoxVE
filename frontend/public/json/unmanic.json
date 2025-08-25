@@ -9,7 +9,7 @@
   "updateable": true,
   "privileged": true,
   "interface_port": 8888,
-  "documentation": null,
+  "documentation": "https://docs.unmanic.app/docs/",
   "website": "https://docs.unmanic.app/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/unmanic.webp",
   "config_path": "",

@@ -9,7 +9,7 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 8088,
-  "documentation": null,
+  "documentation": "https://github.com/matze/wastebin/blob/a297749b932ed9ff32569f3af7ee8e4a5b499834/README.md",
   "website": "https://github.com/matze/wastebin",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/wastebin.webp",
   "config_path": "/opt/wastebin-data/.env",

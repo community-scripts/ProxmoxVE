@@ -9,7 +9,7 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 5432,
-  "documentation": null,
+  "documentation": "https://www.postgresql.org/docs/",
   "website": "https://www.postgresql.org/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/postgresql.webp",
   "config_path": "",

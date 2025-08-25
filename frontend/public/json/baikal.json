@@ -9,7 +9,7 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 80,
-  "documentation": null,
+  "documentation": "https://sabre.io/dav/",
   "website": "https://sabre.io/baikal/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/baikal.webp",
   "config_path": "/opt/baikal/config/baikal.yaml",

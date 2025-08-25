@@ -9,7 +9,7 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 3000,
-  "documentation": null,
+  "documentation": "https://forgejo.org/docs/latest/",
   "website": "https://forgejo.org/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/forgejo.webp",
   "config_path": "/etc/forgejo/app.ini",

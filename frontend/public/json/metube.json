@@ -9,7 +9,7 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 8081,
-  "documentation": null,
+  "documentation": "https://github.com/alexta69/metube/blob/master/README.md",
   "website": "https://github.com/alexta69/metube",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/metube.webp",
   "config_path": "/opt/metube/.env",

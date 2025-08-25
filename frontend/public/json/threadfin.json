@@ -9,7 +9,7 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 34400,
-  "documentation": null,
+  "documentation": "https://github.com/xteve-project/xTeVe-Documentation/blob/master/en/configuration.md",
   "website": "https://github.com/Threadfin/Threadfin",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/threadfin.webp",
   "config_path": "",

@@ -9,7 +9,7 @@
   "updateable": false,
   "privileged": false,
   "interface_port": 1337,
-  "documentation": null,
+  "documentation": "https://docs.olivetin.app/",
   "website": "https://www.olivetin.app/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/olivetin.webp",
   "config_path": "/etc/OliveTin/config.yaml",

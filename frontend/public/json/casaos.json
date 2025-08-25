@@ -9,7 +9,7 @@
   "updateable": false,
   "privileged": false,
   "interface_port": 80,
-  "documentation": null,
+  "documentation": "https://wiki.casaos.io/en/home",
   "website": "https://www.casaos.io/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/casaos.webp",
   "config_path": "",

@@ -9,7 +9,7 @@
   "updateable": false,
   "privileged": false,
   "interface_port": 8086,
-  "documentation": null,
+  "documentation": "https://docs.influxdata.com/",
   "website": "https://www.influxdata.com/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/influxdb.webp",
   "config_path": "",

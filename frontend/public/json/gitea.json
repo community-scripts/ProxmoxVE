@@ -9,7 +9,7 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 3000,
-  "documentation": null,
+  "documentation": "https://docs.gitea.com/",
   "website": "https://gitea.com",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/gitea.webp",
   "config_path": "/etc/gitea/app.ini",

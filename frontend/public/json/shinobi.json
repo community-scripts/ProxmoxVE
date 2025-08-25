@@ -9,7 +9,7 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 8080,
-  "documentation": null,
+  "documentation": "https://docs.shinobi.video/",
   "website": "https://shinobi.video/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/shinobi.webp",
   "config_path": "/opt/Shinobi/conf.json",

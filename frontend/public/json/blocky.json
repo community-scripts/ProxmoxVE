@@ -9,7 +9,7 @@
   "updateable": false,
   "privileged": false,
   "interface_port": 4000,
-  "documentation": null,
+  "documentation": "https://0xerr0r.github.io/blocky/latest/configuration/",
   "website": "https://0xerr0r.github.io/blocky/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/blocky.webp",
   "config_path": "/opt/blocky/config.yml",

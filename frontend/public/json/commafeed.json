@@ -9,7 +9,7 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 8082,
-  "documentation": null,
+  "documentation": "https://athou.github.io/commafeed/documentation/",
   "website": "https://www.commafeed.com/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/commafeed.webp",
   "config_path": "",

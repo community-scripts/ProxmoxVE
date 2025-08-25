@@ -9,7 +9,7 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 80,
-  "documentation": null,
+  "documentation": "https://docs.nextcloud.com/server/21/admin_manual/contents.html",
   "website": "https://www.turnkeylinux.org/nextcloud",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/nextcloud.webp",
   "config_path": "",

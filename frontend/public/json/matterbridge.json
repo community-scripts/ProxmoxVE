@@ -9,7 +9,7 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 8283,
-  "documentation": null,
+  "documentation": "https://github.com/Luligu/matterbridge/blob/main/README.md",
   "website": "https://github.com/Luligu/matterbridge",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/matterbridge.webp",
   "config_path": "",

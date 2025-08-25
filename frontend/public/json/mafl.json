@@ -9,7 +9,7 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 3000,
-  "documentation": null,
+  "documentation": "https://mafl.hywax.space/reference/configuration.html",
   "website": "https://mafl.hywax.space/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/mafl.webp",
   "config_path": "/opt/mafl/data/config.yml",

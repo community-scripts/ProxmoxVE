@@ -9,7 +9,7 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 8002,
-  "documentation": null,
+  "documentation": "https://docs.tandoor.dev/",
   "website": "https://tandoor.dev/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/tandoor-recipes.webp",
   "config_path": "/opt/tandoor/.env",

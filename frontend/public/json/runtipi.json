@@ -9,7 +9,7 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 80,
-  "documentation": null,
+  "documentation": "https://runtipi.io/docs/introduction",
   "website": "https://runtipi.io/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/runtipi.webp",
   "config_path": "opt/runtipi/state/settings.json",

@@ -9,7 +9,7 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 5055,
-  "documentation": null,
+  "documentation": "https://docs.jellyseerr.dev/",
   "website": "https://github.com/Fallenbagel/jellyseerr",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/jellyseerr.webp",
   "config_path": "/etc/jellyseerr/jellyseerr.conf",

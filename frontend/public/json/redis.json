@@ -9,7 +9,7 @@
   "updateable": false,
   "privileged": false,
   "interface_port": null,
-  "documentation": null,
+  "documentation": "https://redis.io/docs/latest/",
   "website": "https://redis.io/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/redis.webp",
   "config_path": "Debian /etc/redis/redis.conf | Alpine: /etc/redis.conf",

@@ -9,7 +9,7 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 80,
-  "documentation": null,
+  "documentation": "https://doc.owncloud.com/",
   "website": "https://www.turnkeylinux.org/owncloud",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/owncloud.webp",
   "config_path": "",

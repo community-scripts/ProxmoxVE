@@ -9,7 +9,7 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 8010,
-  "documentation": null,
+  "documentation": "https://github.com/bastienwirtz/homer/blob/main/README.md#table-of-contents",
   "website": "https://github.com/bastienwirtz/homer",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/homer.webp",
   "config_path": "/opt/homer/assets/config.yml",

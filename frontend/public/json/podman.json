@@ -9,7 +9,7 @@
   "updateable": false,
   "privileged": false,
   "interface_port": null,
-  "documentation": null,
+  "documentation": "https://podman.io/docs",
   "website": "https://podman.io/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/podman.webp",
   "config_path": "",

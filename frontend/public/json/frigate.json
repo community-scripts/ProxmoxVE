@@ -9,7 +9,7 @@
   "updateable": false,
   "privileged": true,
   "interface_port": 5000,
-  "documentation": null,
+  "documentation": "https://docs.frigate.video/",
   "website": "https://frigate.video/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/frigate.webp",
   "config_path": "",

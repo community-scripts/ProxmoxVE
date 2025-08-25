@@ -9,7 +9,7 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 3000,
-  "documentation": null,
+  "documentation": "https://github.com/Brandawg93/PeaNUT/blob/main/README.md",
   "website": "https://github.com/Brandawg93/PeaNUT/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/peanut.webp",
   "config_path": "/etc/peanut/settings.yml",

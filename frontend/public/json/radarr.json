@@ -9,7 +9,7 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 7878,
-  "documentation": null,
+  "documentation": "https://wiki.servarr.com/radarr",
   "website": "https://radarr.video/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/radarr.webp",
   "config_path": "",

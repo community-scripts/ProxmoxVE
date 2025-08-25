@@ -9,7 +9,7 @@
   "updateable": false,
   "privileged": false,
   "interface_port": null,
-  "documentation": null,
+  "documentation": "https://doc.crowdsec.net/",
   "website": "https://crowdsec.net/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/crowdsec.webp",
   "config_path": "",

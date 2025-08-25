@@ -9,7 +9,7 @@
   "updateable": false,
   "privileged": false,
   "interface_port": 26000,
-  "documentation": null,
+  "documentation": "https://www.iventoy.com/en/doc_news.html",
   "website": "https://www.iventoy.com/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/iventoy.webp",
   "config_path": "",

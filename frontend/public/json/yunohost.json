@@ -9,7 +9,7 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 80,
-  "documentation": null,
+  "documentation": "https://doc.yunohost.org/",
   "website": "https://yunohost.org/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/yunohost.webp",
   "config_path": "",

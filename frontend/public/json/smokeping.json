@@ -9,7 +9,7 @@
   "updateable": false,
   "privileged": false,
   "interface_port": null,
-  "documentation": null,
+  "documentation": "https://oss.oetiker.ch/smokeping/doc/index.en.html",
   "website": "https://oss.oetiker.ch/smokeping/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/smokeping.webp",
   "config_path": "/etc/smokeping/config.d/Targets",

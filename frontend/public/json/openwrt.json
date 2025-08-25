@@ -10,7 +10,7 @@
   "updateable": true,
   "privileged": false,
   "interface_port": null,
-  "documentation": null,
+  "documentation": "https://openwrt.org/docs/start",
   "website": "https://openwrt.org/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/openwrt.webp",
   "config_path": "",

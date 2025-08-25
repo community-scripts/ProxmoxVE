@@ -9,7 +9,7 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 81,
-  "documentation": null,
+  "documentation": "https://nginxproxymanager.com/guide/",
   "website": "https://nginxproxymanager.com/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/nginx-proxy-manager.webp",
   "config_path": "",

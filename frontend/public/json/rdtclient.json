@@ -9,7 +9,7 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 6500,
-  "documentation": null,
+  "documentation": "https://github.com/rogerfar/rdt-client/blob/main/README.md",
   "website": "https://github.com/rogerfar/rdt-client",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/real-debrid.webp",
   "config_path": "/opt/rdtc/appsettings.json",

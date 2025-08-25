@@ -9,7 +9,7 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 8265,
-  "documentation": null,
+  "documentation": "https://docs.tdarr.io/docs/welcome/what",
   "website": "https://tdarr.io/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/tdarr.webp",
   "config_path": "",

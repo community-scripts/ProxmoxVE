@@ -9,10 +9,10 @@
   "updateable": false,
   "privileged": false,
   "interface_port": 3142,
-  "documentation": null,
+  "documentation": "https://www.unix-ag.uni-kl.de/~bloch/acng/html/index.html",
   "website": "https://www.unix-ag.uni-kl.de/~bloch/acng/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/linux.webp",
-  "config_path": "",
+  "config_path": "/etc/apt-cacher-ng/acng.conf",
   "description": "Apt-Cacher-NG is a caching proxy. Specialized for package files from Linux distributors, primarily for Debian (and Debian based) distributions.",
   "install_methods": [
     {

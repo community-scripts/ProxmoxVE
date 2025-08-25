@@ -9,7 +9,7 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 1080,
-  "documentation": null,
+  "documentation": "https://github.com/heiher/hev-socks5-server/blob/main/README.md",
   "website": "https://github.com/heiher/hev-socks5-server",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/hev.webp",
   "config_path": "/opt/hivemq/conf/config.xml",

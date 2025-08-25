@@ -9,7 +9,7 @@
   "updateable": false,
   "privileged": false,
   "interface_port": 10000,
-  "documentation": null,
+  "documentation": "https://webmin.com/docs/",
   "website": "https://webmin.com/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/webmin.webp",
   "config_path": "",

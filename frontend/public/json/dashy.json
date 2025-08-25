@@ -1,5 +1,4 @@
 {
-
   "name": "Dashy",
   "slug": "dashy",
   "categories": [
@@ -10,7 +9,7 @@
   "updateable": false,
   "privileged": false,
   "interface_port": 4000,
-  "documentation": null,
+  "documentation": "https://dashy.to/docs",
   "website": "https://dashy.to/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/dashy.webp",
   "config_path": "/opt/dashy/user-data/conf.yml",

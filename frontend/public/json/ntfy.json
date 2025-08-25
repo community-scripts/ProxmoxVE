@@ -9,7 +9,7 @@
   "updateable": false,
   "privileged": false,
   "interface_port": 80,
-  "documentation": null,
+  "documentation": "https://docs.ntfy.sh/",
   "website": "https://ntfy.sh/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/ntfy.webp",
   "config_path": "/etc/ntfy/server.yml",
