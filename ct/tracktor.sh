@@ -38,9 +38,10 @@ function update_script() {
     cp /opt/tracktor/app/backend/.env /opt/tracktor.env
     msg_ok "Created Backup"
 
-    msg_info "Updating ${APP}"
     setup_nodejs
     fetch_and_deploy_gh_release "tracktor" "javedh-dev/tracktor" "tarball" "latest" "/opt/tracktor"
+    
+    msg_info "Updating ${APP}"
     cd /opt/tracktor
     $STD npm install
     $STD npm run build
@@ -53,6 +54,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start tracktor
     msg_ok "Started Service"
+    
     msg_ok "Updated Successfully"
   else
     msg_ok "Already up to date"
