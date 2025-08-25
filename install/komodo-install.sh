@@ -73,6 +73,12 @@ sed -i "s/^KOMODO_INIT_ADMIN_PASSWORD=changeme/KOMODO_INIT_ADMIN_PASSWORD=${ADMI
 sed -i "s/^KOMODO_PASSKEY=.*/KOMODO_PASSKEY=${PASSKEY}/" /opt/komodo/compose.env
 sed -i "s/^KOMODO_WEBHOOK_SECRET=.*/KOMODO_WEBHOOK_SECRET=${WEBHOOK_SECRET}/" /opt/komodo/compose.env
 sed -i "s/^KOMODO_JWT_SECRET=.*/KOMODO_JWT_SECRET=${JWT_SECRET}/" /opt/komodo/compose.env
+{
+  echo "Komodo Credentials"
+  echo ""
+  echo "Admin User    : admin"
+  echo "Admin Password: $ADMIN_PASSWORD"
+} >>~/komodo.creds
 msg_ok "Setup Komodo Environment"
 
 msg_info "Initialize Komodo"

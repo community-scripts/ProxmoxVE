@@ -44,7 +44,7 @@
   },
   "notes": [
     {
-      "text": "For admin username and password type `cat ~/.komodo.creds` inside LXC.",
+      "text": "For admin username and password type `cat ~/komodo.creds` inside LXC.",
       "type": "info"
     }
   ]
