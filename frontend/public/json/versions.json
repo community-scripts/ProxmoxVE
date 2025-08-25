@@ -1,5 +1,60 @@
 [
   {
+    "name": "crafty-controller/crafty-4",
+    "version": "v4.5.1",
+    "date": "2025-08-24T23:58:52Z"
+  },
+  {
+    "name": "gtsteffaniak/filebrowser",
+    "version": "v0.8.2-beta",
+    "date": "2025-08-24T22:58:03Z"
+  },
+  {
+    "name": "Ombi-app/Ombi",
+    "version": "v4.47.1",
+    "date": "2025-01-05T21:14:23Z"
+  },
+  {
+    "name": "pocket-id/pocket-id",
+    "version": "v1.9.1",
+    "date": "2025-08-24T21:27:58Z"
+  },
+  {
+    "name": "moghtech/komodo",
+    "version": "v1.19.1",
+    "date": "2025-08-24T20:16:32Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.3.2",
+    "date": "2025-08-19T04:08:36Z"
+  },
+  {
+    "name": "wavelog/wavelog",
+    "version": "2.1",
+    "date": "2025-08-24T15:42:19Z"
+  },
+  {
+    "name": "rcourtman/Pulse",
+    "version": "v4.7.6",
+    "date": "2025-08-23T22:49:00Z"
+  },
+  {
+    "name": "Radarr/Radarr",
+    "version": "v5.26.2.10099",
+    "date": "2025-06-11T20:10:39Z"
+  },
+  {
+    "name": "Prowlarr/Prowlarr",
+    "version": "v2.0.5.5160",
+    "date": "2025-08-23T21:23:11Z"
+  },
+  {
+    "name": "fuma-nama/fumadocs",
+    "version": "fumadocs-openapi@9.2.3",
+    "date": "2025-08-24T12:48:14Z"
+  },
+  {
     "name": "Lidarr/Lidarr",
     "version": "v2.12.4.4658",
     "date": "2025-06-09T17:27:45Z"
@@ -30,11 +85,6 @@
     "date": "2025-08-24T04:51:15Z"
   },
   {
-    "name": "moghtech/komodo",
-    "version": "v1.19.0",
-    "date": "2025-08-18T01:22:47Z"
-  },
-  {
     "name": "jeedom/core",
     "version": "4.4.19",
     "date": "2025-08-24T00:27:11Z"
@@ -43,21 +93,6 @@
     "name": "steveiliop56/tinyauth",
     "version": "v3.6.2",
     "date": "2025-07-17T12:08:03Z"
-  },
-  {
-    "name": "rcourtman/Pulse",
-    "version": "v4.7.6",
-    "date": "2025-08-23T22:49:00Z"
-  },
-  {
-    "name": "Prowlarr/Prowlarr",
-    "version": "v2.0.5.5160",
-    "date": "2025-08-23T21:23:11Z"
-  },
-  {
-    "name": "Ombi-app/Ombi",
-    "version": "v4.47.1",
-    "date": "2025-01-05T21:14:23Z"
   },
   {
     "name": "YunoHost/yunohost",
@@ -70,11 +105,6 @@
     "date": "2025-08-23T18:33:53Z"
   },
   {
-    "name": "pocket-id/pocket-id",
-    "version": "v1.8.0",
-    "date": "2025-08-23T17:08:01Z"
-  },
-  {
     "name": "immich-app/immich",
     "version": "v1.139.3",
     "date": "2025-08-23T16:37:46Z"
@@ -83,11 +113,6 @@
     "name": "booklore-app/booklore",
     "version": "v0.38.0",
     "date": "2025-08-23T14:36:32Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.3.2",
-    "date": "2025-08-19T04:08:36Z"
   },
   {
     "name": "prometheus/prometheus",
@@ -120,11 +145,6 @@
     "date": "2025-08-22T23:26:48Z"
   },
   {
-    "name": "gtsteffaniak/filebrowser",
-    "version": "v0.8.1-beta",
-    "date": "2025-08-22T21:18:11Z"
-  },
-  {
     "name": "homarr-labs/homarr",
     "version": "v1.34.0",
     "date": "2025-08-22T19:16:24Z"
@@ -143,6 +163,11 @@
     "name": "rclone/rclone",
     "version": "v1.71.0",
     "date": "2025-08-22T16:41:23Z"
+  },
+  {
+    "name": "emqx/emqx",
+    "version": "e5.9.2-beta.2",
+    "date": "2025-08-22T15:34:17Z"
   },
   {
     "name": "goauthentik/authentik",
@@ -173,11 +198,6 @@
     "name": "theonedev/onedev",
     "version": "v12.0.7",
     "date": "2025-08-22T10:00:28Z"
-  },
-  {
-    "name": "fuma-nama/fumadocs",
-    "version": "fumadocs-openapi@9.2.2",
-    "date": "2025-08-22T09:35:27Z"
   },
   {
     "name": "syncthing/syncthing",
@@ -226,8 +246,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v4.3.0",
-    "date": "2025-07-05T12:14:52Z"
+    "version": "nightly",
+    "date": "2025-08-21T19:17:27Z"
   },
   {
     "name": "HabitRPG/habitica",
@@ -268,11 +288,6 @@
     "name": "glpi-project/glpi",
     "version": "10.0.19",
     "date": "2025-07-16T09:45:14Z"
-  },
-  {
-    "name": "emqx/emqx",
-    "version": "e6.0.0-M2.202508-rc.1",
-    "date": "2025-08-20T18:02:55Z"
   },
   {
     "name": "semaphoreui/semaphore",
@@ -453,11 +468,6 @@
     "name": "matze/wastebin",
     "version": "3.3.0",
     "date": "2025-08-17T19:57:11Z"
-  },
-  {
-    "name": "Radarr/Radarr",
-    "version": "v5.26.2.10099",
-    "date": "2025-06-11T20:10:39Z"
   },
   {
     "name": "mylar3/mylar3",
@@ -910,11 +920,6 @@
     "date": "2025-07-21T12:52:26Z"
   },
   {
-    "name": "wavelog/wavelog",
-    "version": "2.0.7",
-    "date": "2025-07-17T15:33:14Z"
-  },
-  {
     "name": "icereed/paperless-gpt",
     "version": "v0.22.0",
     "date": "2025-07-17T06:35:43Z"
@@ -1068,11 +1073,6 @@
     "name": "webmin/webmin",
     "version": "2.402",
     "date": "2025-06-17T05:20:42Z"
-  },
-  {
-    "name": "crafty-controller/crafty-4",
-    "version": "v4.4.11",
-    "date": "2025-06-15T21:41:02Z"
   },
   {
     "name": "TriliumNext/Notes",
