@@ -62,12 +62,14 @@ curl -fsSL "https://raw.githubusercontent.com/moghtech/komodo/main/compose/$DB_C
 msg_info "Setup Komodo Environment"
 curl -fsSL "https://raw.githubusercontent.com/moghtech/komodo/main/compose/compose.env" -o "/opt/komodo/compose.env"
 DB_PASSWORD=$(openssl rand -base64 16 | tr -d '/+=')
+ADMIN_PASSWORD=$(openssl rand -base64 8 | tr -d '/+=')
 PASSKEY=$(openssl rand -base64 24 | tr -d '/+=')
 WEBHOOK_SECRET=$(openssl rand -base64 24 | tr -d '/+=')
 JWT_SECRET=$(openssl rand -base64 24 | tr -d '/+=')
 
 sed -i "s/^KOMODO_DB_USERNAME=.*/KOMODO_DB_USERNAME=komodo_admin/" /opt/komodo/compose.env
 sed -i "s/^KOMODO_DB_PASSWORD=.*/KOMODO_DB_PASSWORD=${DB_PASSWORD}/" /opt/komodo/compose.env
+sed -i "s/^KOMODO_INIT_ADMIN_PASSWORD=changeme/KOMODO_INIT_ADMIN_PASSWORD=${ADMIN_PASSWORD}/" /opt/komodo/compose.env
 sed -i "s/^KOMODO_PASSKEY=.*/KOMODO_PASSKEY=${PASSKEY}/" /opt/komodo/compose.env
 sed -i "s/^KOMODO_WEBHOOK_SECRET=.*/KOMODO_WEBHOOK_SECRET=${WEBHOOK_SECRET}/" /opt/komodo/compose.env
 sed -i "s/^KOMODO_JWT_SECRET=.*/KOMODO_JWT_SECRET=${JWT_SECRET}/" /opt/komodo/compose.env
