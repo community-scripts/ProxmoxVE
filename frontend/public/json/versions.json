@@ -1,18 +1,83 @@
 [
   {
-    "name": "gotson/komga",
-    "version": "1.23.2",
-    "date": "2025-08-25T09:39:42Z"
+    "name": "coder/code-server",
+    "version": "v4.103.2",
+    "date": "2025-08-25T23:30:54Z"
   },
   {
-    "name": "zabbix/zabbix",
-    "version": "7.0.18",
-    "date": "2025-08-25T09:27:59Z"
+    "name": "advplyr/audiobookshelf",
+    "version": "v2.29.0",
+    "date": "2025-08-25T22:43:20Z"
+  },
+  {
+    "name": "booklore-app/booklore",
+    "version": "v0.38.2",
+    "date": "2025-08-25T22:41:41Z"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2025.8.1",
+    "date": "2025-08-25T20:48:19Z"
+  },
+  {
+    "name": "Brandawg93/PeaNUT",
+    "version": "v5.13.0",
+    "date": "2025-08-25T19:19:51Z"
+  },
+  {
+    "name": "immich-app/immich",
+    "version": "v1.139.4",
+    "date": "2025-08-25T18:31:13Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.11.7",
+    "date": "2025-08-25T18:04:05Z"
+  },
+  {
+    "name": "mealie-recipes/mealie",
+    "version": "v3.1.2",
+    "date": "2025-08-25T18:00:52Z"
+  },
+  {
+    "name": "linkwarden/linkwarden",
+    "version": "v2.11.8",
+    "date": "2025-08-25T16:27:12Z"
   },
   {
     "name": "rcourtman/Pulse",
     "version": "v4.7.6",
     "date": "2025-08-23T22:49:00Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.3.0p36",
+    "date": "2025-08-25T15:32:14Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.107.4",
+    "date": "2025-08-20T12:23:06Z"
+  },
+  {
+    "name": "crowdsecurity/crowdsec",
+    "version": "v1.6.11",
+    "date": "2025-07-22T12:11:38Z"
+  },
+  {
+    "name": "sabnzbd/sabnzbd",
+    "version": "4.5.3",
+    "date": "2025-08-25T13:59:56Z"
+  },
+  {
+    "name": "zabbix/zabbix",
+    "version": "7.4.2",
+    "date": "2025-08-25T12:38:14Z"
+  },
+  {
+    "name": "gotson/komga",
+    "version": "1.23.2",
+    "date": "2025-08-25T09:39:42Z"
   },
   {
     "name": "meilisearch/meilisearch",
@@ -23,11 +88,6 @@
     "name": "emqx/emqx",
     "version": "e5.10.1-beta.2",
     "date": "2025-08-25T08:51:40Z"
-  },
-  {
-    "name": "Checkmk/checkmk",
-    "version": "v2.3.0p36-rc1",
-    "date": "2025-08-25T06:14:27Z"
   },
   {
     "name": "morpheus65535/bazarr",
@@ -48,11 +108,6 @@
     "name": "FlareSolverr/FlareSolverr",
     "version": "v3.4.0",
     "date": "2025-08-25T03:22:00Z"
-  },
-  {
-    "name": "immich-app/immich",
-    "version": "v1.139.4",
-    "date": "2025-08-25T02:39:18Z"
   },
   {
     "name": "plexguide/Huntarr.io",
@@ -155,11 +210,6 @@
     "date": "2025-08-23T18:33:53Z"
   },
   {
-    "name": "booklore-app/booklore",
-    "version": "v0.38.0",
-    "date": "2025-08-23T14:36:32Z"
-  },
-  {
     "name": "prometheus/prometheus",
     "version": "v0.306.0-rc.0",
     "date": "2025-08-21T13:31:03Z"
@@ -183,11 +233,6 @@
     "name": "paperless-ngx/paperless-ngx",
     "version": "v2.18.2",
     "date": "2025-08-22T23:56:41Z"
-  },
-  {
-    "name": "ollama/ollama",
-    "version": "v0.11.7-rc1",
-    "date": "2025-08-22T23:26:48Z"
   },
   {
     "name": "homarr-labs/homarr",
@@ -223,11 +268,6 @@
     "name": "wazuh/wazuh",
     "version": "v4.10.3",
     "date": "2025-08-19T18:51:00Z"
-  },
-  {
-    "name": "crowdsecurity/crowdsec",
-    "version": "v1.6.11",
-    "date": "2025-07-22T12:11:38Z"
   },
   {
     "name": "theonedev/onedev",
@@ -335,11 +375,6 @@
     "date": "2025-08-20T14:02:28Z"
   },
   {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.107.4",
-    "date": "2025-08-20T12:23:06Z"
-  },
-  {
     "name": "cockpit-project/cockpit",
     "version": "345",
     "date": "2025-08-20T11:52:24Z"
@@ -360,11 +395,6 @@
     "date": "2025-08-20T08:15:46Z"
   },
   {
-    "name": "esphome/esphome",
-    "version": "2025.8.0",
-    "date": "2025-08-20T07:58:12Z"
-  },
-  {
     "name": "Luligu/matterbridge",
     "version": "3.2.3",
     "date": "2025-08-20T07:57:58Z"
@@ -373,11 +403,6 @@
     "name": "TwiN/gatus",
     "version": "v5.23.2",
     "date": "2025-08-19T21:24:45Z"
-  },
-  {
-    "name": "mealie-recipes/mealie",
-    "version": "v3.1.1",
-    "date": "2025-08-19T20:23:43Z"
   },
   {
     "name": "cross-seed/cross-seed",
@@ -398,11 +423,6 @@
     "name": "karlomikus/bar-assistant",
     "version": "v5.8.0",
     "date": "2025-08-19T16:46:00Z"
-  },
-  {
-    "name": "sabnzbd/sabnzbd",
-    "version": "4.5.2",
-    "date": "2025-07-09T19:08:28Z"
   },
   {
     "name": "fallenbagel/jellyseerr",
@@ -500,11 +520,6 @@
     "date": "2025-08-16T11:45:23Z"
   },
   {
-    "name": "coder/code-server",
-    "version": "v4.103.1",
-    "date": "2025-08-16T01:59:28Z"
-  },
-  {
     "name": "mongodb/mongo",
     "version": "r8.2.0",
     "date": "2025-08-15T22:02:15Z"
@@ -528,11 +543,6 @@
     "name": "gristlabs/grist-core",
     "version": "v1.7.2",
     "date": "2025-08-14T19:07:57Z"
-  },
-  {
-    "name": "linkwarden/linkwarden",
-    "version": "v2.11.7",
-    "date": "2025-08-14T17:14:33Z"
   },
   {
     "name": "jellyfin/jellyfin",
@@ -580,11 +590,6 @@
     "date": "2025-08-13T07:09:29Z"
   },
   {
-    "name": "Brandawg93/PeaNUT",
-    "version": "v5.12.0",
-    "date": "2025-08-12T15:09:35Z"
-  },
-  {
     "name": "bluenviron/mediamtx",
     "version": "v1.14.0",
     "date": "2025-08-12T13:58:46Z"
@@ -623,11 +628,6 @@
     "name": "slskd/slskd",
     "version": "0.23.2",
     "date": "2025-08-10T23:35:07Z"
-  },
-  {
-    "name": "advplyr/audiobookshelf",
-    "version": "v2.28.0",
-    "date": "2025-08-10T23:09:55Z"
   },
   {
     "name": "ioBroker/ioBroker",
