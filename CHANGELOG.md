@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-08-26
 
+### 🆕 New Scripts
+
+  - PBS: Upgrade Script for v4 [@MickLesk](https://github.com/MickLesk) ([#7214](https://github.com/community-scripts/ProxmoxVE/pull/7214))
+
 ### 🚀 Updated Scripts
 
   - Refactor: Post-PMG-Script [@MickLesk](https://github.com/MickLesk) ([#7212](https://github.com/community-scripts/ProxmoxVE/pull/7212))
