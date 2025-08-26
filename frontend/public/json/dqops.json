@@ -1,0 +1,52 @@
+{
+  "name": "DQOps Data Quality Operations Center",
+  "slug": "dqops",
+  "categories": [
+    16
+  ],
+  "date_created": "2025-08-26",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 8888,
+  "documentation": "https://dqops.com/docs/",
+  "website": "https://dqops.com/",
+  "logo": "https://dqops.com/docs/images/dqops-logo.png",
+  "config_path": "/opt/dqops/.dqops/",
+  "description": "DQOps is a DataOps platform for monitoring the quality of data using data observability. DQOps can track and detect issues in the quality of data stored in data lakes, data warehouses, and database tables.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/dqops.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 4,
+        "os": "ubuntu",
+        "version": "24.04"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "First startup may take several minutes as DQOps downloads and installs Java JDK 17",
+      "type": "info"
+    },
+    {
+      "text": "DQOps user home directory is located at /opt/dqops/.dqops/",
+      "type": "info"
+    },
+    {
+      "text": "Python 3.8+ is required and automatically installed",
+      "type": "info"
+    },
+    {
+      "text": "Optional DQOps Cloud account registration available for enhanced features",
+      "type": "info"
+    }
+  ]
+}
