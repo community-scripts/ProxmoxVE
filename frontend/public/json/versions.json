@@ -1,8 +1,63 @@
 [
   {
+    "name": "element-hq/synapse",
+    "version": "v1.137.0",
+    "date": "2025-08-26T09:51:47Z"
+  },
+  {
+    "name": "MediaBrowser/Emby.Releases",
+    "version": "4.9.1.2",
+    "date": "2025-06-26T22:08:00Z"
+  },
+  {
+    "name": "evcc-io/evcc",
+    "version": "0.207.5",
+    "date": "2025-08-26T06:57:07Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.3-beta.10",
+    "date": "2025-07-15T06:07:03Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2349",
+    "date": "2025-08-26T05:58:15Z"
+  },
+  {
+    "name": "henrygd/beszel",
+    "version": "v0.12.4",
+    "date": "2025-08-26T01:45:02Z"
+  },
+  {
+    "name": "documenso/documenso",
+    "version": "v1.12.2-rc.6",
+    "date": "2025-08-26T01:17:43Z"
+  },
+  {
+    "name": "hyperion-project/hyperion.ng",
+    "version": "2.1.1",
+    "date": "2025-06-14T17:45:06Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.19",
+    "date": "2025-08-26T00:27:08Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
     "name": "coder/code-server",
     "version": "v4.103.2",
     "date": "2025-08-25T23:30:54Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.3.3",
+    "date": "2025-08-20T10:12:51Z"
   },
   {
     "name": "advplyr/audiobookshelf",
@@ -55,6 +110,11 @@
     "date": "2025-08-25T15:32:14Z"
   },
   {
+    "name": "wazuh/wazuh",
+    "version": "coverity-w35-4.13.0",
+    "date": "2025-08-25T15:17:33Z"
+  },
+  {
     "name": "n8n-io/n8n",
     "version": "n8n@1.107.4",
     "date": "2025-08-20T12:23:06Z"
@@ -90,16 +150,6 @@
     "date": "2025-08-25T08:51:40Z"
   },
   {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.3-beta.10",
-    "date": "2025-07-15T06:07:03Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2343",
-    "date": "2025-08-25T05:50:39Z"
-  },
-  {
     "name": "firefly-iii/firefly-iii",
     "version": "v6.3.2",
     "date": "2025-08-19T04:08:36Z"
@@ -115,29 +165,14 @@
     "date": "2025-08-25T01:26:55Z"
   },
   {
-    "name": "jeedom/core",
-    "version": "4.4.19",
-    "date": "2025-08-25T00:27:05Z"
-  },
-  {
     "name": "gtsteffaniak/filebrowser",
     "version": "v0.8.2-beta",
     "date": "2025-08-25T00:26:03Z"
   },
   {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
-  },
-  {
     "name": "crafty-controller/crafty-4",
     "version": "v4.5.1",
     "date": "2025-08-24T23:58:52Z"
-  },
-  {
-    "name": "documenso/documenso",
-    "version": "v1.12.2-rc.5",
-    "date": "2025-08-24T23:48:04Z"
   },
   {
     "name": "Ombi-app/Ombi",
@@ -178,11 +213,6 @@
     "name": "fuma-nama/fumadocs",
     "version": "fumadocs-openapi@9.2.3",
     "date": "2025-08-24T12:48:14Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.3.3",
-    "date": "2025-08-20T10:12:51Z"
   },
   {
     "name": "Lidarr/Lidarr",
@@ -255,19 +285,9 @@
     "date": "2025-08-22T14:55:30Z"
   },
   {
-    "name": "MediaBrowser/Emby.Releases",
-    "version": "4.9.1.2",
-    "date": "2025-06-26T22:08:00Z"
-  },
-  {
     "name": "open-webui/open-webui",
     "version": "v0.6.25",
     "date": "2025-08-22T13:22:43Z"
-  },
-  {
-    "name": "wazuh/wazuh",
-    "version": "v4.10.3",
-    "date": "2025-08-19T18:51:00Z"
   },
   {
     "name": "theonedev/onedev",
@@ -333,11 +353,6 @@
     "name": "hargata/lubelog",
     "version": "v1.5.0",
     "date": "2025-08-21T17:33:22Z"
-  },
-  {
-    "name": "evcc-io/evcc",
-    "version": "0.207.4",
-    "date": "2025-08-21T17:20:43Z"
   },
   {
     "name": "kyantech/Palmr",
@@ -428,11 +443,6 @@
     "name": "fallenbagel/jellyseerr",
     "version": "preview-dns-cache-manager",
     "date": "2025-08-19T11:57:00Z"
-  },
-  {
-    "name": "element-hq/synapse",
-    "version": "v1.136.0",
-    "date": "2025-08-12T14:26:27Z"
   },
   {
     "name": "chrisvel/tududi",
@@ -760,11 +770,6 @@
     "date": "2025-08-04T13:17:59Z"
   },
   {
-    "name": "henrygd/beszel",
-    "version": "v0.12.3",
-    "date": "2025-08-04T02:21:16Z"
-  },
-  {
     "name": "benjaminjonard/koillection",
     "version": "1.6.18",
     "date": "2025-08-03T21:41:45Z"
@@ -828,11 +833,6 @@
     "name": "Suwayomi/Suwayomi-Server",
     "version": "v2.1.1867",
     "date": "2025-07-31T18:08:43Z"
-  },
-  {
-    "name": "hyperion-project/hyperion.ng",
-    "version": "2.1.1",
-    "date": "2025-06-14T17:45:06Z"
   },
   {
     "name": "leiweibau/Pi.Alert",
