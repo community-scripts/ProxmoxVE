@@ -1,18 +1,17 @@
 #!/usr/bin/env bash
 
-# Copyright (c) 2021-2025 tteck
-# Author: tteck (tteckster)
-# License: MIT
-# https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Copyright (c) 2021-2025 community-scripts ORG
+# Author: tteck (tteckster) | MickLesk (CanbiZ) | thost96
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
 header_info() {
   clear
   cat <<"EOF"
     ____  ____ _____    ____             __     ____           __        ____
    / __ \/ __ ) ___/   / __ \____  _____/ /_   /  _/___  _____/ /_____ _/ / /
-  / /_/ / __  \__ \   / /_/ / __ \/ ___/ __/   / // __ \/ ___/ __/ __ `/ / /
- / ____/ /_/ /__/ /  / ____/ /_/ (__  ) /_   _/ // / / (__  ) /_/ /_/ / / /
-/_/   /_____/____/  /_/    \____/____/\__/  /___/_/ /_/____/\__/\__,_/_/_/
+  / /_/ / __  \__ \   / /_/ / __ \/ ___/ __/   / // __ \/ ___/ __/ __ `/ / / 
+ / ____/ /_/ /__/ /  / ____/ /_/ (__  ) /_   _/ // / / (__  ) /_/ /_/ / / /  
+/_/   /_____/____/  /_/    \____/____/\__/  /___/_/ /_/____/\__/\__,_/_/_/   
 
 EOF
 }
@@ -29,156 +28,276 @@ CROSS="${RD}✗${CL}"
 set -euo pipefail
 shopt -s inherit_errexit nullglob
 
-msg_info() {
-  local msg="$1"
-  echo -ne " ${HOLD} ${YW}${msg}..."
+msg_info() { echo -ne " ${HOLD} ${YW}$1..."; }
+msg_ok() { echo -e "${BFR} ${CM} ${GN}$1${CL}"; }
+msg_error() { echo -e "${BFR} ${CROSS} ${RD}$1${CL}"; }
+
+# ---- helpers ----
+get_pbs_codename() {
+  awk -F'=' '/^VERSION_CODENAME=/{print $2}' /etc/os-release
 }
 
-msg_ok() {
-  local msg="$1"
-  echo -e "${BFR} ${CM} ${GN}${msg}${CL}"
+repo_state_list() {
+  local repo="$1"
+  local file=""
+  local state="missing"
+  for f in /etc/apt/sources.list /etc/apt/sources.list.d/*.list; do
+    [[ -f "$f" ]] || continue
+    if grep -q "$repo" "$f"; then
+      file="$f"
+      if grep -qE "^[^#].*${repo}" "$f"; then
+        state="active"
+      elif grep -qE "^#.*${repo}" "$f"; then
+        state="disabled"
+      fi
+      break
+    fi
+  done
+  echo "$state $file"
 }
 
-msg_error() {
-  local msg="$1"
-  echo -e "${BFR} ${CROSS} ${RD}${msg}${CL}"
+component_exists_in_sources() {
+  local component="$1"
+  grep -h -E "^[^#]*Components:[^#]*\b${component}\b" /etc/apt/sources.list.d/*.sources 2>/dev/null | grep -q .
 }
 
-start_routines() {
+# ---- main ----
+main() {
   header_info
-  VERSION="$(awk -F'=' '/^VERSION_CODENAME=/{ print $NF }' /etc/os-release)"
-  CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "PBS SOURCES" --menu "This will set the correct sources to update and install Proxmox Backup Server.\n \nChange to Proxmox Backup Server sources?" 14 58 2 \
-    "yes" " " \
-    "no" " " 3>&2 2>&1 1>&3)
+  echo -e "\nThis script will Perform Post Install Routines.\n"
+  while true; do
+    read -rp "Start the Proxmox Backup Server Post Install Script (y/n)? " yn
+    case $yn in
+    [Yy]*) break ;;
+    [Nn]*)
+      clear
+      exit
+      ;;
+    *) echo "Please answer yes or no." ;;
+    esac
+  done
+
+  if command -v pveversion >/dev/null 2>&1; then
+    echo -e "\n🛑  PVE Detected, Wrong Script!\n"
+    exit 1
+  fi
+
+  local CODENAME
+  CODENAME="$(get_pbs_codename)"
+
+  case "$CODENAME" in
+  bookworm) start_routines_3 ;;
+  trixie) start_routines_4 ;;
+  *)
+    msg_error "Unsupported Debian codename: $CODENAME"
+    echo -e "Supported: bookworm (PBS 3.x) and trixie (PBS 4.x)"
+    exit 1
+    ;;
+  esac
+}
+
+# ---- PBS 3.x (Bookworm) ----
+start_routines_3() {
+  header_info
+  local VERSION="bookworm"
+
+  # --- Debian sources ---
+  CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "PBS SOURCES" --menu \
+    "Correct Debian sources for Proxmox Backup Server 3.x?" 14 58 2 "yes" " " "no" " " 3>&2 2>&1 1>&3)
   case $CHOICE in
   yes)
-    msg_info "Changing to Proxmox Backup Server Sources"
+    msg_info "Correcting Debian Sources"
     cat <<EOF >/etc/apt/sources.list
 deb http://deb.debian.org/debian ${VERSION} main contrib
 deb http://deb.debian.org/debian ${VERSION}-updates main contrib
 deb http://security.debian.org/debian-security ${VERSION}-security main contrib
 EOF
-    msg_ok "Changed to Proxmox Backup Server Sources"
+    msg_ok "Corrected Debian Sources"
     ;;
-  no)
-    msg_error "Selected no to Correcting Proxmox Backup Server Sources"
-    ;;
+  no) msg_error "Selected no to Correcting Debian Sources" ;;
   esac
 
-  CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "PBS-ENTERPRISE" --menu "The 'pbs-enterprise' repository is only available to users who have purchased a Proxmox VE subscription.\n \nDisable 'pbs-enterprise' repository?" 14 58 2 \
-    "yes" " " \
-    "no" " " 3>&2 2>&1 1>&3)
-  case $CHOICE in
-  yes)
-    msg_info "Disabling 'pbs-enterprise' repository"
-    cat <<EOF >/etc/apt/sources.list.d/pbs-enterprise.list
-# deb https://enterprise.proxmox.com/debian/pbs ${VERSION} pbs-enterprise
-EOF
+  # --- Enterprise repo ---
+  read -r state file <<<"$(repo_state_list pbs-enterprise)"
+  case $state in
+  active)
+    sed -i "s/^[^#].*pbs-enterprise/# &/" "$file"
     msg_ok "Disabled 'pbs-enterprise' repository"
     ;;
-  no)
-    msg_error "Selected no to Disabling 'pbs-enterprise' repository"
+  disabled) msg_ok "'pbs-enterprise' already disabled" ;;
+  missing)
+    cat >/etc/apt/sources.list.d/pbs-enterprise.list <<EOF
+# deb https://enterprise.proxmox.com/debian/pbs ${VERSION} pbs-enterprise
+EOF
+    msg_ok "Added 'pbs-enterprise' repository (disabled)"
     ;;
   esac
 
-  CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "PBS-NO-SUBSCRIPTION" --menu "The 'pbs-no-subscription' repository provides access to all of the open-source components of Proxmox Backup Server.\n \nEnable 'pbs-no-subscription' repository?" 14 58 2 \
-    "yes" " " \
-    "no" " " 3>&2 2>&1 1>&3)
-  case $CHOICE in
-  yes)
-    msg_info "Enabling 'pbs-no-subscription' repository"
-    cat <<EOF >/etc/apt/sources.list.d/pbs-install-repo.list
+  # --- No-subscription repo ---
+  read -r state file <<<"$(repo_state_list pbs-no-subscription)"
+  if [[ "$state" == "missing" ]]; then
+    cat >/etc/apt/sources.list.d/pbs-install-repo.list <<EOF
 deb http://download.proxmox.com/debian/pbs ${VERSION} pbs-no-subscription
 EOF
     msg_ok "Enabled 'pbs-no-subscription' repository"
-    ;;
-  no)
-    msg_error "Selected no to Enabling 'pbs-no-subscription' repository"
-    ;;
-  esac
+  else
+    msg_ok "'pbs-no-subscription' repository already present"
+  fi
 
-  CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "PBS TEST" --menu "The 'pbstest' repository can give advanced users access to new features and updates before they are officially released.\n \nAdd (Disabled) 'pbstest' repository?" 14 58 2 \
-    "yes" " " \
-    "no" " " 3>&2 2>&1 1>&3)
-  case $CHOICE in
-  yes)
-    msg_info "Adding 'pbstest' repository and set disabled"
-    cat <<EOF >/etc/apt/sources.list.d/pbstest-for-beta.list
+  # --- Test repo (legacy name pbstest) ---
+  read -r state file <<<"$(repo_state_list pbstest)"
+  if [[ "$state" == "missing" ]]; then
+    cat >/etc/apt/sources.list.d/pbstest-for-beta.list <<EOF
 # deb http://download.proxmox.com/debian/pbs ${VERSION} pbstest
 EOF
-    msg_ok "Added 'pbstest' repository"
-    ;;
-  no)
-    msg_error "Selected no to Adding 'pbstest' repository"
-    ;;
-  esac
+    msg_ok "Added 'pbstest' repository (disabled)"
+  else
+    msg_ok "'pbstest' repository already exists"
+  fi
 
-  CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "SUBSCRIPTION NAG" --menu "This will disable the nag message reminding you to purchase a subscription every time you log in to the web interface.\n \nDisable subscription nag?" 14 58 2 \
-    "yes" " " \
-    "no" " " 3>&2 2>&1 1>&3)
+  post_routines_common
+}
+
+# ---- PBS 4.x (Trixie, deb822) ----
+start_routines_4() {
+  header_info
+  local VERSION="trixie"
+
+  # --- Debian sources (deb822) ---
+  CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "PBS SOURCES" --menu \
+    "Correct Debian sources for Proxmox Backup Server 4.x (deb822)?" 14 58 2 "yes" " " "no" " " 3>&2 2>&1 1>&3)
   case $CHOICE in
   yes)
-    whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox --title "Support Subscriptions" "Supporting the software's development team is essential. Check their official website's Support Subscriptions for pricing. Without their dedicated work, we wouldn't have this exceptional software." 10 58
+    msg_info "Correcting Debian Sources (deb822)"
+    rm -f /etc/apt/sources.list.d/*.list
+    sed -i '/proxmox/d;/bookworm/d' /etc/apt/sources.list || true
+    cat >/etc/apt/sources.list.d/debian.sources <<EOF
+Types: deb
+URIs: http://deb.debian.org/debian
+Suites: trixie
+Components: main contrib
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
+
+Types: deb
+URIs: http://security.debian.org/debian-security
+Suites: trixie-security
+Components: main contrib
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
+
+Types: deb
+URIs: http://deb.debian.org/debian
+Suites: trixie-updates
+Components: main contrib
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
+EOF
+    msg_ok "Corrected Debian Sources"
+    ;;
+  no) msg_error "Selected no to Correcting Debian Sources" ;;
+  esac
+
+  # --- Enterprise repo ---
+  if ! component_exists_in_sources "pbs-enterprise"; then
+    cat >/etc/apt/sources.list.d/pbs-enterprise.sources <<EOF
+Types: deb
+URIs: https://enterprise.proxmox.com/debian/pbs
+Suites: trixie
+Components: pbs-enterprise
+Signed-By: /usr/share/keyrings/proxmox-archive-keyring.gpg
+EOF
+    msg_ok "Added 'pbs-enterprise' repository"
+  else
+    msg_ok "'pbs-enterprise' repository already present"
+  fi
+
+  # --- No-subscription repo ---
+  if ! component_exists_in_sources "pbs-no-subscription"; then
+    cat >/etc/apt/sources.list.d/proxmox.sources <<EOF
+Types: deb
+URIs: http://download.proxmox.com/debian/pbs
+Suites: trixie
+Components: pbs-no-subscription
+Signed-By: /usr/share/keyrings/proxmox-archive-keyring.gpg
+EOF
+    msg_ok "Added 'pbs-no-subscription' repository"
+  else
+    msg_ok "'pbs-no-subscription' repository already present"
+  fi
+
+  # --- Test repo (pbs-test, renamed) ---
+  if ! component_exists_in_sources "pbs-test"; then
+    cat >/etc/apt/sources.list.d/pbs-test.sources <<EOF
+# Types: deb
+# URIs: http://download.proxmox.com/debian/pbs
+# Suites: trixie
+# Components: pbs-test
+# Signed-By: /usr/share/keyrings/proxmox-archive-keyring.gpg
+EOF
+    msg_ok "Added 'pbs-test' repository (disabled)"
+  else
+    msg_ok "'pbs-test' repository already present"
+  fi
+
+  post_routines_common
+}
+
+# ---- Shared routines ----
+post_routines_common() {
+  # Subscription nag
+  CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "SUBSCRIPTION NAG" --menu \
+    "Disable subscription nag in PBS UI?" 14 58 2 "yes" " " "no" " " 3>&2 2>&1 1>&3)
+  case $CHOICE in
+  yes)
+    whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox \
+      "Supporting the software's development team is essential.\nPlease consider buying a subscription." 10 58
     msg_info "Disabling subscription nag"
-    echo "DPkg::Post-Invoke { \"if [ -s /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js ] && ! grep -q -F 'NoMoreNagging' /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js; then echo 'Removing subscription nag from UI...'; sed -i '/data\.status/{s/\!//;s/active/NoMoreNagging/}' /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js; fi\" };" >/etc/apt/apt.conf.d/no-nag-script
-    msg_ok "Disabled subscription nag (Delete browser cache)"
+    echo "DPkg::Post-Invoke { \"if [ -s /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js ] && ! grep -q -F 'NoMoreNagging' /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js; then sed -i '/data\\.status/{s/\\!//;s/active/NoMoreNagging/}' /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js; fi\" };" >/etc/apt/apt.conf.d/no-nag-script
+    msg_ok "Disabled subscription nag (clear browser cache!)"
     ;;
   no)
-    whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox --title "Support Subscriptions" "Supporting the software's development team is essential. Check their official website's Support Subscriptions for pricing. Without their dedicated work, we wouldn't have this exceptional software." 10 58
     msg_error "Selected no to Disabling subscription nag"
+    rm -f /etc/apt/apt.conf.d/no-nag-script 2>/dev/null
     ;;
   esac
-  apt --reinstall install proxmox-widget-toolkit &>/dev/null
+  apt --reinstall install proxmox-widget-toolkit &>/dev/null || msg_error "Widget toolkit reinstall failed"
 
-  CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "UPDATE" --menu "\nUpdate Proxmox Backup Server now?" 11 58 2 \
-    "yes" " " \
-    "no" " " 3>&2 2>&1 1>&3)
+  # Update
+  CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "UPDATE" --menu \
+    "Update Proxmox Backup Server now?" 11 58 2 "yes" " " "no" " " 3>&2 2>&1 1>&3)
   case $CHOICE in
   yes)
     msg_info "Updating Proxmox Backup Server (Patience)"
-    apt-get update &>/dev/null
-    apt-get -y dist-upgrade &>/dev/null
+    apt update &>/dev/null || msg_error "apt update failed"
+    apt -y dist-upgrade &>/dev/null || msg_error "apt dist-upgrade failed"
     msg_ok "Updated Proxmox Backup Server"
     ;;
-  no)
-    msg_error "Selected no to Updating Proxmox Backup Server"
-    ;;
+  no) msg_error "Selected no to updating Proxmox Backup Server" ;;
   esac
 
-  CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "REBOOT" --menu "\nReboot Proxmox Backup Server now? (recommended)" 11 58 2 \
-    "yes" " " \
-    "no" " " 3>&2 2>&1 1>&3)
+  # Reminder
+  whiptail --backtitle "Proxmox VE Helper Scripts" --title "Post-Install Reminder" --msgbox \
+    "IMPORTANT:
+
+Please run this script on every PBS node individually if you have multiple nodes.
+
+After completing these steps, it is strongly recommended to REBOOT your node.
+
+After the upgrade or post-install routines, always clear your browser cache or perform a hard reload (Ctrl+Shift+R) before using the PBS Web UI to avoid UI display issues." 20 80
+
+  # Reboot
+  CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "REBOOT" --menu \
+    "Reboot Proxmox Backup Server now? (recommended)" 11 58 2 "yes" " " "no" " " 3>&2 2>&1 1>&3)
   case $CHOICE in
   yes)
-    msg_info "Rebooting Proxmox Backup Server"
+    msg_info "Rebooting PBS"
     sleep 2
     msg_ok "Completed Post Install Routines"
     reboot
     ;;
   no)
-    msg_error "Selected no to Rebooting Proxmox Backup Server (Reboot recommended)"
+    msg_error "Selected no to Reboot (Reboot recommended)"
     msg_ok "Completed Post Install Routines"
     ;;
   esac
 }
 
-header_info
-echo -e "\nThis script will Perform Post Install Routines.\n"
-while true; do
-  read -p "Start the Proxmox Backup Server Post Install Script (y/n)?" yn
-  case $yn in
-  [Yy]*) break ;;
-  [Nn]*)
-    clear
-    exit
-    ;;
-  *) echo "Please answer yes or no." ;;
-  esac
-done
-
-if command -v pveversion >/dev/null 2>&1; then
-  echo -e "\n🛑  PVE Detected, Wrong Script!\n"
-  exit 1
-fi
-
-start_routines
+main
