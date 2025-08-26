@@ -1,0 +1,52 @@
+{
+  "name": "PBS 4 Upgrade",
+  "slug": "pbs4-upgrade",
+  "categories": [
+    1
+  ],
+  "date_created": "2025-08-26",
+  "type": "pve",
+  "updateable": false,
+  "privileged": false,
+  "interface_port": null,
+  "documentation": "https://pbs.proxmox.com/wiki/Upgrade_from_3_to_4",
+  "website": "https://www.proxmox.com/en/proxmox-backup-server",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/proxmox.webp",
+  "config_path": "",
+  "description": "This script guides you through upgrading Proxmox Backup Server from version 3.x (Debian 12 Bookworm) to version 4.0 (Debian 13 Trixie). It adjusts the Debian base sources, configures PBS 4 repositories in deb822 format, updates enterprise/no-subscription/test repos, runs a full system upgrade, and finalizes with a reboot.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "tools/pve/pbs4-upgrade.sh",
+      "resources": {
+        "cpu": null,
+        "ram": null,
+        "hdd": null,
+        "os": null,
+        "version": null
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Execute this script directly on the PBS 3.x host as root.",
+      "type": "info"
+    },
+    {
+      "text": "Ensure you have a verified backup of /etc/proxmox-backup before starting.",
+      "type": "warning"
+    },
+    {
+      "text": "Do not run this on an already upgraded PBS 4.x system.",
+      "type": "warning"
+    },
+    {
+      "text": "A reboot is strongly recommended after upgrade to activate the new kernel and services.",
+      "type": "info"
+    }
+  ]
+}
