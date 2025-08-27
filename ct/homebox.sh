@@ -38,7 +38,7 @@ function update_script() {
     systemctl stop homebox
     msg_ok "${APP} Stopped"
 
-    [ -x /opt/homebox ] && rm -f /opt/homebox
+    [ -x /opt/homebox/homebox ] && rm -f /opt/homebox/homebox
     fetch_and_deploy_gh_release "homebox" "sysadminsmedia/homebox" "prebuild" "latest" "/opt/homebox" "homebox_Linux_x86_64.tar.gz"
     chmod +x /opt/homebox/homebox
     [ -f /opt/.env ] && mv /opt/.env /opt/homebox/.env
