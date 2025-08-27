@@ -37,8 +37,19 @@ $STD bun run build
 msg_ok "Installed gitea-mirror"
 
 msg_info "Creating Services"
-JWT_SECRET=$(openssl rand -hex 32)
+APP_SECRET=$(openssl rand -base64 32)
 APP_VERSION=$(grep -o '"version": *"[^"]*"' package.json | cut -d'"' -f4)
+cat <<EOF >/opt/gitea-mirror.env
+# See here for config options: https://github.com/RayLabsHQ/gitea-mirror/blob/main/docs/ENVIRONMENT_VARIABLES.md
+NODE_ENV=production
+HOST=0.0.0.0
+PORT=4321
+DATABASE_URL=sqlite://opt/gitea-mirror/data/gitea-mirror.db
+# BETTER_AUTH_URL=https://my.domain.example
+BETTER_AUTH_SECRET={APP_SECRET}
+npm_package_version=${APP_VERSION}
+EOF
+
 cat <<EOF >/etc/systemd/system/gitea-mirror.service
 [Unit]
 Description=Gitea Mirror
@@ -49,12 +60,7 @@ WorkingDirectory=/opt/gitea-mirror
 ExecStart=/usr/local/bin/bun dist/server/entry.mjs
 Restart=on-failure
 RestartSec=10
-Environment=NODE_ENV=production
-Environment=HOST=0.0.0.0
-Environment=PORT=4321
-Environment=DATABASE_URL=file:/opt/gitea-mirror/data/gitea-mirror.db
-Environment=JWT_SECRET=${JWT_SECRET}
-Environment=npm_package_version=${APP_VERSION}
+EnvironmentFile=/opt/gitea-mirror.env
 [Install]
 WantedBy=multi-user.target
 EOF
