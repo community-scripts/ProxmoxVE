@@ -50,7 +50,7 @@ function update_script() {
 
   if [[ ! -f /opt/gitea-mirror.env ]]; then
       msg_info "Detected old Enviroment, updating files"
-      JWT_SECRET=$(openssl rand -hex 32)
+      APP_SECRET=$(openssl rand -base64 32)
       cat <<EOF >/opt/gitea-mirror.env
 # See here for config options: https://github.com/RayLabsHQ/gitea-mirror/blob/main/docs/ENVIRONMENT_VARIABLES.md
 NODE_ENV=production
