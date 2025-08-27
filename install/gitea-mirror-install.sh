@@ -44,7 +44,7 @@ cat <<EOF >/opt/gitea-mirror.env
 NODE_ENV=production
 HOST=0.0.0.0
 PORT=4321
-DATABASE_URL=sqlite://opt/gitea-mirror/data/gitea-mirror.db
+DATABASE_URL=sqlite://data/gitea-mirror.db
 # BETTER_AUTH_URL=https://my.domain.example
 BETTER_AUTH_SECRET={APP_SECRET}
 npm_package_version=${APP_VERSION}
