@@ -1,5 +1,40 @@
 [
   {
+    "name": "keycloak/keycloak",
+    "version": "26.2.8",
+    "date": "2025-08-27T11:44:29Z"
+  },
+  {
+    "name": "traefik/traefik",
+    "version": "v3.5.1",
+    "date": "2025-08-27T09:21:19Z"
+  },
+  {
+    "name": "theonedev/onedev",
+    "version": "v12.0.8",
+    "date": "2025-08-27T06:22:32Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2353",
+    "date": "2025-08-27T05:54:54Z"
+  },
+  {
+    "name": "henrygd/beszel",
+    "version": "v0.12.5",
+    "date": "2025-08-27T01:15:16Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.19",
+    "date": "2025-08-27T00:27:09Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
     "name": "Threadfin/Threadfin",
     "version": "1.2.36",
     "date": "2025-08-26T20:40:14Z"
@@ -30,9 +65,9 @@
     "date": "2025-08-26T14:14:42Z"
   },
   {
-    "name": "traefik/traefik",
-    "version": "v2.11.29",
-    "date": "2025-08-26T13:14:55Z"
+    "name": "neo4j/neo4j",
+    "version": "5.26.11",
+    "date": "2025-08-26T10:49:38Z"
   },
   {
     "name": "element-hq/synapse",
@@ -55,16 +90,6 @@
     "date": "2025-07-15T06:07:03Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2349",
-    "date": "2025-08-26T05:58:15Z"
-  },
-  {
-    "name": "henrygd/beszel",
-    "version": "v0.12.4",
-    "date": "2025-08-26T01:45:02Z"
-  },
-  {
     "name": "documenso/documenso",
     "version": "v1.12.2-rc.6",
     "date": "2025-08-26T01:17:43Z"
@@ -75,24 +100,9 @@
     "date": "2025-06-14T17:45:06Z"
   },
   {
-    "name": "jeedom/core",
-    "version": "4.4.19",
-    "date": "2025-08-26T00:27:08Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
-  },
-  {
     "name": "coder/code-server",
     "version": "v4.103.2",
     "date": "2025-08-25T23:30:54Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.3.3",
-    "date": "2025-08-20T10:12:51Z"
   },
   {
     "name": "advplyr/audiobookshelf",
@@ -221,8 +231,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-08-24T18:27:58Z"
+    "version": "v4.3.0",
+    "date": "2025-07-05T12:14:52Z"
   },
   {
     "name": "wavelog/wavelog",
@@ -313,11 +323,6 @@
     "name": "open-webui/open-webui",
     "version": "v0.6.25",
     "date": "2025-08-22T13:22:43Z"
-  },
-  {
-    "name": "theonedev/onedev",
-    "version": "v12.0.7",
-    "date": "2025-08-22T10:00:28Z"
   },
   {
     "name": "syncthing/syncthing",
@@ -828,11 +833,6 @@
     "name": "alexta69/metube",
     "version": "2025.07.31",
     "date": "2025-08-01T14:44:48Z"
-  },
-  {
-    "name": "neo4j/neo4j",
-    "version": "2025.07.1",
-    "date": "2025-08-01T14:40:28Z"
   },
   {
     "name": "Suwayomi/Suwayomi-Server",
