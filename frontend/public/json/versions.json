@@ -1,5 +1,40 @@
 [
   {
+    "name": "Threadfin/Threadfin",
+    "version": "1.2.36",
+    "date": "2025-08-26T20:40:14Z"
+  },
+  {
+    "name": "influxdata/influxdb",
+    "version": "v3.4.0",
+    "date": "2025-08-26T20:10:23Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.24.23",
+    "date": "2025-08-26T18:02:18Z"
+  },
+  {
+    "name": "netbox-community/netbox",
+    "version": "v4.3.7",
+    "date": "2025-08-26T17:54:25Z"
+  },
+  {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.525",
+    "date": "2025-08-26T14:28:44Z"
+  },
+  {
+    "name": "meilisearch/meilisearch",
+    "version": "latest",
+    "date": "2025-08-26T14:14:42Z"
+  },
+  {
+    "name": "traefik/traefik",
+    "version": "v2.11.29",
+    "date": "2025-08-26T13:14:55Z"
+  },
+  {
     "name": "element-hq/synapse",
     "version": "v1.137.0",
     "date": "2025-08-26T09:51:47Z"
@@ -140,11 +175,6 @@
     "date": "2025-08-25T09:39:42Z"
   },
   {
-    "name": "meilisearch/meilisearch",
-    "version": "latest",
-    "date": "2025-08-25T09:14:19Z"
-  },
-  {
     "name": "emqx/emqx",
     "version": "e5.10.1-beta.2",
     "date": "2025-08-25T08:51:40Z"
@@ -191,8 +221,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v4.3.0",
-    "date": "2025-07-05T12:14:52Z"
+    "version": "nightly",
+    "date": "2025-08-24T18:27:58Z"
   },
   {
     "name": "wavelog/wavelog",
@@ -218,11 +248,6 @@
     "name": "Lidarr/Lidarr",
     "version": "v2.12.4.4658",
     "date": "2025-06-09T17:27:45Z"
-  },
-  {
-    "name": "msgbyte/tianji",
-    "version": "v1.24.22",
-    "date": "2025-08-24T09:51:24Z"
   },
   {
     "name": "janeczku/calibre-web",
@@ -380,11 +405,6 @@
     "date": "2025-08-21T08:19:58Z"
   },
   {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.516.2",
-    "date": "2025-08-20T17:15:26Z"
-  },
-  {
     "name": "AdguardTeam/AdGuardHome",
     "version": "v0.107.65",
     "date": "2025-08-20T14:02:28Z"
@@ -423,11 +443,6 @@
     "name": "cross-seed/cross-seed",
     "version": "v6.13.2",
     "date": "2025-08-19T18:18:40Z"
-  },
-  {
-    "name": "Threadfin/Threadfin",
-    "version": "1.3.0",
-    "date": "2025-08-19T17:37:44Z"
   },
   {
     "name": "dgtlmoon/changedetection.io",
@@ -538,11 +553,6 @@
     "name": "jhuckaby/Cronicle",
     "version": "v0.9.90",
     "date": "2025-08-15T19:14:52Z"
-  },
-  {
-    "name": "netbox-community/netbox",
-    "version": "v4.3.6",
-    "date": "2025-08-12T17:16:42Z"
   },
   {
     "name": "intri-in/manage-my-damn-life-nextjs",
@@ -698,11 +708,6 @@
     "name": "zwave-js/zwave-js-ui",
     "version": "v11.1.0",
     "date": "2025-08-07T14:57:29Z"
-  },
-  {
-    "name": "influxdata/influxdb",
-    "version": "v1.12.2rc2",
-    "date": "2025-08-06T23:12:18Z"
   },
   {
     "name": "Athou/commafeed",
@@ -903,11 +908,6 @@
     "name": "minio/minio",
     "version": "RELEASE.2025-07-23T15-54-02Z",
     "date": "2025-07-23T20:35:39Z"
-  },
-  {
-    "name": "traefik/traefik",
-    "version": "v3.5.0",
-    "date": "2025-07-23T14:06:54Z"
   },
   {
     "name": "TasmoAdmin/TasmoAdmin",
