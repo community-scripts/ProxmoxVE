@@ -33,12 +33,12 @@ $STD sudo -H -u searxng git clone https://github.com/searxng/searxng /usr/local/
 msg_ok "Cloned SearXNG"
 
 msg_info "Creating Python virtual environment"
-sudo -H -u searxng bash -c "
+sudo -H -u searxng bash -c '
   python3 -m venv /usr/local/searxng/searx-pyenv &&
   . /usr/local/searxng/searx-pyenv/bin/activate &&
-  $STD pip install -U pip setuptools wheel pyyaml &&
-  $STD pip install --use-pep517 --no-build-isolation -e /usr/local/searxng/searxng-src
-"
+  pip install -U pip setuptools wheel pyyaml &&
+  pip install --use-pep517 --no-build-isolation -e /usr/local/searxng/searxng-src
+'
 msg_ok "Python environment ready"
 
 msg_info "Configuring SearXNG settings"
