@@ -52,6 +52,7 @@ function update_script() {
       msg_info "Detected old Enviroment, updating files"
       JWT_SECRET=$(openssl rand -hex 32)
       cat <<EOF >/opt/gitea-mirror.env
+# See here for config options: https://github.com/RayLabsHQ/gitea-mirror/blob/main/docs/ENVIRONMENT_VARIABLES.md
 NODE_ENV=production
 HOST=0.0.0.0
 PORT=4321
