@@ -47,6 +47,36 @@ function update_script() {
         "Proceeding with version $APP_VERSION update.\n\nAll configuration will be cleared as warned." 8 50
     rm -rf /opt/gitea-mirror
   fi
+
+  if [[ ! -f /opt/gitea-mirror.env ]]; then
+      msg_info "Detected old Enviroment, updating files"
+      JWT_SECRET=$(openssl rand -hex 32)
+      cat <<EOF >/opt/gitea-mirror.env
+NODE_ENV=production
+HOST=0.0.0.0
+PORT=4321
+DATABASE_URL=file:/opt/gitea-mirror/data/gitea-mirror.db
+JWT_SECRET=${JWT_SECRET}
+npm_package_version=${APP_VERSION}
+EOF
+    rm /etc/systemd/system/gitea-mirror.service
+    cat <<EOF >/etc/systemd/system/gitea-mirror.service
+[Unit]
+Description=Gitea Mirror
+After=network.target
+[Service]
+Type=simple
+WorkingDirectory=/opt/gitea-mirror
+ExecStart=/usr/local/bin/bun dist/server/entry.mjs
+Restart=on-failure
+RestartSec=10
+EnvironmentFile=/opt/gitea-mirror.env
+[Install]
+WantedBy=multi-user.target
+EOF
+    systemctl daemon-reload
+    msg_ok "Old Enviroment fixed"
+fi
   
   RELEASE=$(curl -fsSL https://api.github.com/repos/RayLabsHQ/gitea-mirror/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
   if [[ "${RELEASE}" != "$(cat ~/.${APP} 2>/dev/null || cat /opt/${APP}_version.txt 2>/dev/null)" ]]; then
@@ -75,16 +105,14 @@ function update_script() {
     $STD bun run setup
     $STD bun run build
     APP_VERSION=$(grep -o '"version": *"[^"]*"' package.json | cut -d'"' -f4)
-    sudo sed -i.bak "s|^Environment=npm_package_version=.*|Environment=npm_package_version=${APP_VERSION}|" /etc/systemd/system/gitea-mirror.service
+    sudo sed -i.bak "s|^Environment=npm_package_version=.*|Environment=npm_package_version=${APP_VERSION}|" /opt/gitea-mirror.env
     msg_ok "Updated and rebuilt ${APP} to v${RELEASE}"
 
     msg_info "Restoring Data"
     cp /opt/gitea-mirror-backup/data/* /opt/gitea-mirror/data
-    echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Restored Data"
 
     msg_info "Starting Service"
-    systemctl daemon-reload
     systemctl start gitea-mirror
     msg_ok "Service Started"
   else
