@@ -108,7 +108,7 @@ fi
     $STD bun run setup
     $STD bun run build
     APP_VERSION=$(grep -o '"version": *"[^"]*"' package.json | cut -d'"' -f4)
-    sudo sed -i.bak "s|^Environment=npm_package_version=.*|Environment=npm_package_version=${APP_VERSION}|" /opt/gitea-mirror.env
+    sudo sed -i.bak "s|^npm_package_version=.*|npm_package_version=${APP_VERSION}|" /opt/gitea-mirror.env
     msg_ok "Updated and rebuilt ${APP} to v${RELEASE}"
 
     msg_info "Restoring Data"
