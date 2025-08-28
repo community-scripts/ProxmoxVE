@@ -15,14 +15,7 @@ update_os
 
 setup_uv
 
-msg_info "Configuring apt and installing dependencies"
-echo "deb http://deb.debian.org/debian testing main contrib" >/etc/apt/sources.list.d/immich.list
-cat <<EOF >/etc/apt/preferences.d/immich
-Package: *
-Pin: release a=testing
-Pin-Priority: -10
-EOF
-
+msg_info "Installing dependencies"
 $STD apt-get update
 $STD apt-get install --no-install-recommends -y \
   git \
@@ -53,7 +46,7 @@ $STD apt-get install --no-install-recommends -y \
   libgomp1 \
   liblqr-1-0 \
   libltdl7 \
-  libmimalloc2.0 \
+  libmimalloc3 \
   libopenjp2-7 \
   meson \
   ninja-build \
@@ -64,14 +57,23 @@ $STD apt-get install --no-install-recommends -y \
   mesa-vulkan-drivers \
   ocl-icd-libopencl1 \
   tini \
-  zlib1g
+  zlib1g \
+  libio-compress-brotli-perl \
+  libwebp7 \
+  libwebpdemux2 \
+  libwebpmux3 \
+  libhwy1t64 \
+  libdav1d-dev \
+  libhwy-dev \
+  libwebp-dev \
+  libaom-dev
 curl -fsSL https://repo.jellyfin.org/jellyfin_team.gpg.key | gpg --dearmor -o /etc/apt/keyrings/jellyfin.gpg
 DPKG_ARCHITECTURE="$(dpkg --print-architecture)"
 export DPKG_ARCHITECTURE
 cat <<EOF >/etc/apt/sources.list.d/jellyfin.sources
 Types: deb
 URIs: https://repo.jellyfin.org/debian
-Suites: bookworm
+Suites: trixie
 Components: main
 Architectures: ${DPKG_ARCHITECTURE}
 Signed-By: /etc/apt/keyrings/jellyfin.gpg
@@ -93,6 +95,7 @@ read -r -p "${TAB3}Install OpenVINO dependencies for Intel HW-accelerated machin
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   msg_info "Installing OpenVINO dependencies"
   touch ~/.openvino
+  $STD apt-get install -y --no-install-recommends patchelf
   tmp_dir=$(mktemp -d)
   $STD pushd "$tmp_dir"
   curl -fsSLO https://github.com/intel/intel-graphics-compiler/releases/download/igc-1.0.17384.11/intel-igc-core_1.0.17384.11_amd64.deb
@@ -134,26 +137,8 @@ $STD sudo -u postgres psql -c "ALTER USER $DB_USER WITH SUPERUSER;"
 } >>~/"$APPLICATION".creds
 msg_ok "Set up Postgresql Database"
 
-msg_info "Installing Packages from Testing Repo"
-export APT_LISTCHANGES_FRONTEND=none
-export DEBIAN_FRONTEND=noninteractive
-$STD apt-get install -t testing --no-install-recommends -y \
-  libio-compress-brotli-perl \
-  libwebp7 \
-  libwebpdemux2 \
-  libwebpmux3 \
-  libhwy1t64 \
-  libdav1d-dev \
-  libhwy-dev \
-  libwebp-dev \
-  libaom-dev
-if [[ -f ~/.openvino ]]; then
-  $STD apt-get install -t testing -y patchelf
-fi
-msg_ok "Packages from Testing Repo Installed"
-
-$STD sudo -u postgres psql -c "ALTER DATABASE postgres REFRESH COLLATION VERSION;"
-$STD sudo -u postgres psql -c "ALTER DATABASE $DB_NAME REFRESH COLLATION VERSION;"
+# $STD sudo -u postgres psql -c "ALTER DATABASE postgres REFRESH COLLATION VERSION;"
+# $STD sudo -u postgres psql -c "ALTER DATABASE $DB_NAME REFRESH COLLATION VERSION;"
 
 msg_info "Compiling Custom Photo-processing Library (extreme patience)"
 LD_LIBRARY_PATH=/usr/local/lib
@@ -458,9 +443,9 @@ chown -R immich:immich "$INSTALL_DIR" /var/log/immich
 systemctl enable -q --now "$APPLICATION"-ml.service "$APPLICATION"-web.service
 msg_ok "Created user, env file, scripts and services"
 
-sed -i "$ a VERSION_ID=12" /etc/os-release # otherwise the motd_ssh function will fail
-cp /etc/debian_version ~/.debian_version.bak
-sed -i 's/.*/13.0/' /etc/debian_version
+# sed -i "$ a VERSION_ID=12" /etc/os-release # otherwise the motd_ssh function will fail
+# cp /etc/debian_version ~/.debian_version.bak
+# sed -i 's/.*/13.0/' /etc/debian_version
 motd_ssh
 customize
 
