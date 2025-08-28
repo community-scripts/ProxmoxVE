@@ -84,7 +84,6 @@ cat <<EOF >"$MM_DIR"/start.sh
 export CONFIG_DIR="$CONFIG_DIR"
 export FRONTEND_FILES_DIR="$FRONTEND_FILES_DIR"
 export BASE_PATH=""
-
 cd "$MM_DIR"
 source ./venv/bin/activate
 /usr/local/bin/uv run alembic upgrade head
