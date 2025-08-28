@@ -1,8 +1,83 @@
 [
   {
+    "name": "9001/copyparty",
+    "version": "v1.19.6",
+    "date": "2025-08-27T21:11:44Z"
+  },
+  {
+    "name": "pocket-id/pocket-id",
+    "version": "v1.10.0",
+    "date": "2025-08-27T20:35:47Z"
+  },
+  {
+    "name": "gristlabs/grist-core",
+    "version": "v1.7.3",
+    "date": "2025-08-27T20:26:39Z"
+  },
+  {
+    "name": "ipfs/kubo",
+    "version": "v0.37.0",
+    "date": "2025-08-27T20:03:52Z"
+  },
+  {
+    "name": "rcourtman/Pulse",
+    "version": "v4.9.0",
+    "date": "2025-08-27T19:52:36Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.11.7",
+    "date": "2025-08-25T18:04:05Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.8.3",
+    "date": "2025-08-21T18:23:10Z"
+  },
+  {
+    "name": "gtsteffaniak/filebrowser",
+    "version": "v0.8.3-beta",
+    "date": "2025-08-27T18:18:48Z"
+  },
+  {
+    "name": "linkwarden/linkwarden",
+    "version": "v2.12.1",
+    "date": "2025-08-27T17:41:58Z"
+  },
+  {
+    "name": "raydak-labs/configarr",
+    "version": "v1.15.0",
+    "date": "2025-08-27T17:12:03Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.108.2",
+    "date": "2025-08-27T13:05:35Z"
+  },
+  {
+    "name": "zwave-js/zwave-js-ui",
+    "version": "v11.2.1",
+    "date": "2025-08-27T15:19:02Z"
+  },
+  {
+    "name": "influxdata/influxdb",
+    "version": "v3.4.0",
+    "date": "2025-08-27T14:31:44Z"
+  },
+  {
+    "name": "fuma-nama/fumadocs",
+    "version": "create-fumadocs-app@15.7.3",
+    "date": "2025-08-27T12:54:44Z"
+  },
+  {
     "name": "keycloak/keycloak",
-    "version": "26.2.8",
-    "date": "2025-08-27T11:44:29Z"
+    "version": "26.0.15",
+    "date": "2025-08-27T12:12:03Z"
+  },
+  {
+    "name": "Paymenter/Paymenter",
+    "version": "v1.2.11",
+    "date": "2025-08-27T11:23:09Z"
   },
   {
     "name": "traefik/traefik",
@@ -38,11 +113,6 @@
     "name": "Threadfin/Threadfin",
     "version": "1.2.36",
     "date": "2025-08-26T20:40:14Z"
-  },
-  {
-    "name": "influxdata/influxdb",
-    "version": "v3.4.0",
-    "date": "2025-08-26T20:10:23Z"
   },
   {
     "name": "msgbyte/tianji",
@@ -130,24 +200,9 @@
     "date": "2025-08-25T18:31:13Z"
   },
   {
-    "name": "ollama/ollama",
-    "version": "v0.11.7",
-    "date": "2025-08-25T18:04:05Z"
-  },
-  {
     "name": "mealie-recipes/mealie",
     "version": "v3.1.2",
     "date": "2025-08-25T18:00:52Z"
-  },
-  {
-    "name": "linkwarden/linkwarden",
-    "version": "v2.11.8",
-    "date": "2025-08-25T16:27:12Z"
-  },
-  {
-    "name": "rcourtman/Pulse",
-    "version": "v4.7.6",
-    "date": "2025-08-23T22:49:00Z"
   },
   {
     "name": "Checkmk/checkmk",
@@ -158,11 +213,6 @@
     "name": "wazuh/wazuh",
     "version": "coverity-w35-4.13.0",
     "date": "2025-08-25T15:17:33Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.107.4",
-    "date": "2025-08-20T12:23:06Z"
   },
   {
     "name": "crowdsecurity/crowdsec",
@@ -205,11 +255,6 @@
     "date": "2025-08-25T01:26:55Z"
   },
   {
-    "name": "gtsteffaniak/filebrowser",
-    "version": "v0.8.2-beta",
-    "date": "2025-08-25T00:26:03Z"
-  },
-  {
     "name": "crafty-controller/crafty-4",
     "version": "v4.5.1",
     "date": "2025-08-24T23:58:52Z"
@@ -218,11 +263,6 @@
     "name": "Ombi-app/Ombi",
     "version": "v4.47.1",
     "date": "2025-01-05T21:14:23Z"
-  },
-  {
-    "name": "pocket-id/pocket-id",
-    "version": "v1.9.1",
-    "date": "2025-08-24T21:27:58Z"
   },
   {
     "name": "moghtech/komodo",
@@ -248,11 +288,6 @@
     "name": "Prowlarr/Prowlarr",
     "version": "v2.0.5.5160",
     "date": "2025-08-23T21:23:11Z"
-  },
-  {
-    "name": "fuma-nama/fumadocs",
-    "version": "fumadocs-openapi@9.2.3",
-    "date": "2025-08-24T12:48:14Z"
   },
   {
     "name": "Lidarr/Lidarr",
@@ -360,24 +395,9 @@
     "date": "2025-08-22T02:21:40Z"
   },
   {
-    "name": "9001/copyparty",
-    "version": "v1.19.5",
-    "date": "2025-08-21T23:45:57Z"
-  },
-  {
-    "name": "ipfs/kubo",
-    "version": "v0.36.0",
-    "date": "2025-07-14T18:59:57Z"
-  },
-  {
     "name": "HabitRPG/habitica",
     "version": "v5.39.0",
     "date": "2025-08-21T18:40:00Z"
-  },
-  {
-    "name": "home-assistant/core",
-    "version": "2025.8.3",
-    "date": "2025-08-21T18:23:10Z"
   },
   {
     "name": "hargata/lubelog",
@@ -545,11 +565,6 @@
     "date": "2024-08-29T22:32:51Z"
   },
   {
-    "name": "Paymenter/Paymenter",
-    "version": "v1.2.10",
-    "date": "2025-08-16T11:45:23Z"
-  },
-  {
     "name": "mongodb/mongo",
     "version": "r8.2.0",
     "date": "2025-08-15T22:02:15Z"
@@ -563,11 +578,6 @@
     "name": "intri-in/manage-my-damn-life-nextjs",
     "version": "v0.8.0-release",
     "date": "2025-08-15T06:19:12Z"
-  },
-  {
-    "name": "gristlabs/grist-core",
-    "version": "v1.7.2",
-    "date": "2025-08-14T19:07:57Z"
   },
   {
     "name": "jellyfin/jellyfin",
@@ -598,11 +608,6 @@
     "name": "ellite/Wallos",
     "version": "v4.1.1",
     "date": "2025-08-13T11:58:04Z"
-  },
-  {
-    "name": "raydak-labs/configarr",
-    "version": "v1.14.1",
-    "date": "2025-08-13T09:34:15Z"
   },
   {
     "name": "home-assistant/operating-system",
@@ -708,11 +713,6 @@
     "name": "rabbitmq/rabbitmq-server",
     "version": "v4.1.3",
     "date": "2025-08-04T12:13:45Z"
-  },
-  {
-    "name": "zwave-js/zwave-js-ui",
-    "version": "v11.1.0",
-    "date": "2025-08-07T14:57:29Z"
   },
   {
     "name": "Athou/commafeed",
