@@ -1,8 +1,73 @@
 [
   {
+    "name": "open-webui/open-webui",
+    "version": "v0.6.26",
+    "date": "2025-08-28T10:40:30Z"
+  },
+  {
+    "name": "neo4j/neo4j",
+    "version": "4.4.45",
+    "date": "2025-08-28T10:12:16Z"
+  },
+  {
+    "name": "apache/cassandra",
+    "version": "4.1.10-tentative",
+    "date": "2025-08-28T10:02:40Z"
+  },
+  {
+    "name": "fuma-nama/fumadocs",
+    "version": "fumadocs-ui@15.7.4",
+    "date": "2025-08-28T08:58:06Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.108.2",
+    "date": "2025-08-27T13:05:35Z"
+  },
+  {
+    "name": "garethgeorge/backrest",
+    "version": "v1.9.2",
+    "date": "2025-08-28T07:06:14Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2360",
+    "date": "2025-08-28T05:55:58Z"
+  },
+  {
+    "name": "gotson/komga",
+    "version": "1.23.3",
+    "date": "2025-08-28T02:50:06Z"
+  },
+  {
+    "name": "influxdata/influxdb",
+    "version": "v3.4.1",
+    "date": "2025-08-28T02:17:45Z"
+  },
+  {
+    "name": "rabbitmq/rabbitmq-server",
+    "version": "v4.1.3",
+    "date": "2025-08-04T12:13:45Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.19",
+    "date": "2025-08-28T00:27:14Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
     "name": "9001/copyparty",
     "version": "v1.19.6",
     "date": "2025-08-27T21:11:44Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.0.15",
+    "date": "2025-08-27T12:12:03Z"
   },
   {
     "name": "pocket-id/pocket-id",
@@ -50,29 +115,9 @@
     "date": "2025-08-27T17:12:03Z"
   },
   {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.108.2",
-    "date": "2025-08-27T13:05:35Z"
-  },
-  {
     "name": "zwave-js/zwave-js-ui",
     "version": "v11.2.1",
     "date": "2025-08-27T15:19:02Z"
-  },
-  {
-    "name": "influxdata/influxdb",
-    "version": "v3.4.0",
-    "date": "2025-08-27T14:31:44Z"
-  },
-  {
-    "name": "fuma-nama/fumadocs",
-    "version": "create-fumadocs-app@15.7.3",
-    "date": "2025-08-27T12:54:44Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.0.15",
-    "date": "2025-08-27T12:12:03Z"
   },
   {
     "name": "Paymenter/Paymenter",
@@ -90,24 +135,9 @@
     "date": "2025-08-27T06:22:32Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2353",
-    "date": "2025-08-27T05:54:54Z"
-  },
-  {
     "name": "henrygd/beszel",
     "version": "v0.12.5",
     "date": "2025-08-27T01:15:16Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.4.19",
-    "date": "2025-08-27T00:27:09Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
   },
   {
     "name": "Threadfin/Threadfin",
@@ -133,11 +163,6 @@
     "name": "meilisearch/meilisearch",
     "version": "latest",
     "date": "2025-08-26T14:14:42Z"
-  },
-  {
-    "name": "neo4j/neo4j",
-    "version": "5.26.11",
-    "date": "2025-08-26T10:49:38Z"
   },
   {
     "name": "element-hq/synapse",
@@ -228,11 +253,6 @@
     "name": "zabbix/zabbix",
     "version": "7.4.2",
     "date": "2025-08-25T12:38:14Z"
-  },
-  {
-    "name": "gotson/komga",
-    "version": "1.23.2",
-    "date": "2025-08-25T09:39:42Z"
   },
   {
     "name": "emqx/emqx",
@@ -355,11 +375,6 @@
     "date": "2025-08-22T14:55:30Z"
   },
   {
-    "name": "open-webui/open-webui",
-    "version": "v0.6.25",
-    "date": "2025-08-22T13:22:43Z"
-  },
-  {
     "name": "syncthing/syncthing",
     "version": "v2.0.3",
     "date": "2025-08-22T08:12:47Z"
@@ -443,11 +458,6 @@
     "name": "openhab/openhab-core",
     "version": "4.3.7",
     "date": "2025-08-20T10:26:21Z"
-  },
-  {
-    "name": "apache/cassandra",
-    "version": "4.1.10-tentative",
-    "date": "2025-08-20T10:20:25Z"
   },
   {
     "name": "duplicati/duplicati",
@@ -710,11 +720,6 @@
     "date": "2025-08-07T21:23:15Z"
   },
   {
-    "name": "rabbitmq/rabbitmq-server",
-    "version": "v4.1.3",
-    "date": "2025-08-04T12:13:45Z"
-  },
-  {
     "name": "Athou/commafeed",
     "version": "5.11.0",
     "date": "2025-08-06T21:14:18Z"
@@ -743,11 +748,6 @@
     "name": "openobserve/openobserve",
     "version": "v0.15.0-rc5",
     "date": "2025-08-06T08:55:10Z"
-  },
-  {
-    "name": "garethgeorge/backrest",
-    "version": "v1.9.1",
-    "date": "2025-08-06T05:48:33Z"
   },
   {
     "name": "autobrr/autobrr",
