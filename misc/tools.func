@@ -165,7 +165,7 @@ function setup_postgresql() {
       NEED_PG_INSTALL=true
     fi
   else
-										   
+
     NEED_PG_INSTALL=true
   fi
 
@@ -186,22 +186,18 @@ function setup_postgresql() {
 
     echo "deb https://apt.postgresql.org/pub/repos/apt ${DISTRO}-pgdg main" \
       >/etc/apt/sources.list.d/pgdg.list
-								  
 
     $STD apt-get update
     $STD msg_ok "Repository added"
 
     msg_info "Setup PostgreSQL $PG_VERSION"
     $STD apt-get install -y "postgresql-${PG_VERSION}" "postgresql-client-${PG_VERSION}"
-										 
 
     if [[ -n "$CURRENT_PG_VERSION" ]]; then
       $STD apt-get purge -y "postgresql-${CURRENT_PG_VERSION}" "postgresql-client-${CURRENT_PG_VERSION}" || true
     fi
 
-												   
     systemctl enable -q --now postgresql
-												
 
     if [[ -n "$CURRENT_PG_VERSION" ]]; then
       $STD msg_info "Restoring dumped data"
@@ -1923,4 +1919,70 @@ function setup_ffmpeg() {
   rm -rf "$TMP_DIR"
   ensure_usr_local_bin_persist
   msg_ok "Setup FFmpeg $FINAL_VERSION"
+}
+
+# ------------------------------------------------------------------------------
+# Checks for new GitHub release (latest tag).
+#
+# Description:
+#   - Queries the GitHub API for the latest release tag
+#   - Compares it to a local cached version (~/.<app>)
+#   - If newer, sets global CHECK_UPDATE_RELEASE and returns 0
+#
+# Usage:
+#   check_for_gh_release "AppName" "user/repo"
+#   if [[ $? -eq 0 ]]; then
+#     echo "New version available: $CHECK_UPDATE_RELEASE"
+#     # trigger update...
+#   fi
+#
+# Notes:
+#   - Requires `jq` (auto-installed if missing)
+#   - Does not modify anything, only checks version state
+#   - Does not support pre-releases
+# ------------------------------------------------------------------------------
+check_for_gh_release() {
+  local app="$1"
+  local source="$2"
+  local current_file="$HOME/.${app,,}"
+
+  msg_info "Check for update: ${app}"
+
+  # DNS check for GitHub
+  if ! getent hosts api.github.com >/dev/null 2>&1; then
+    msg_error "Network error: cannot resolve api.github.com"
+    return 1
+  fi
+
+  # jq check
+  if ! command -v jq &>/dev/null; then
+    $STD apt-get update
+    $STD apt-get install -y jq || {
+      msg_error "Failed to install jq"
+      return 1
+    }
+  fi
+
+  # get latest release
+  local release
+  release=$(curl -fsSL "https://api.github.com/repos/${source}/releases/latest" |
+    jq -r '.tag_name' | sed 's/^v//')
+
+  if [[ -z "$release" ]]; then
+    msg_error "Unable to determine latest release for ${app}"
+    return 1
+  fi
+
+  local current=""
+  if [[ -f "$current_file" ]]; then
+    current=$(<"$current_file")
+  fi
+
+  if [[ "$release" != "$current" ]] || [[ ! -f "$current_file" ]]; then
+    CHECK_UPDATE_RELEASE="$release"
+    return 0
+  else
+    msg_ok "${app} is up to date (v${release})"
+    return 1
+  fi
 }
