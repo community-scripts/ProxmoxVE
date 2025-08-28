@@ -1930,11 +1930,11 @@ function setup_ffmpeg() {
 #   - If newer, sets global CHECK_UPDATE_RELEASE and returns 0
 #
 # Usage:
-#   check_for_gh_release "AppName" "user/repo"
-#   if [[ $? -eq 0 ]]; then
-#     echo "New version available: $CHECK_UPDATE_RELEASE"
-#     # trigger update...
-#   fi
+#     if check_for_gh_release "flaresolverr" "FlareSolverr/FlareSolverr"; then
+#       # trigger update...
+#     fi
+#     exit 0
+#     } (end of update_script not from the function)
 #
 # Notes:
 #   - Requires `jq` (auto-installed if missing)
