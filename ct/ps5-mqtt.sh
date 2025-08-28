@@ -20,38 +20,32 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /opt/ps5-mqtt ]]; then
-        msg_error "No ${APP} installation found!"
-        exit
-    fi
-
-    RELEASE=$(curl -fsSL https://api.github.com/repos/FunkeyFlo/ps5-mqtt/releases/latest | jq -r '.tag_name' | sed 's/^v//')
-    if [[ "${RELEASE}" != "$(cat ~/.ps5-mqtt 2>/dev/null)" ]] || [[ ! -f ~/.ps5-mqtt ]]; then
-        msg_info "Stopping service"
-        systemctl stop ps5-mqtt
-        msg_ok "Stopped service"
-
-        fetch_and_deploy_gh_release "ps5-mqtt" "FunkeyFlo/ps5-mqtt" "tarball"
-
-        msg_info "Configuring ${APP}"
-        cd /opt/ps5-mqtt/ps5-mqtt/
-        $STD npm install
-        $STD npm run build
-        msg_ok "Configured ${APP}"
-
-        msg_info "Starting service"
-        systemctl start ps5-mqtt
-        msg_ok "Started service"
-
-        msg_ok "Updated successfully"
-    else
-        msg_ok "No update required. ${APP} is already at ${RELEASE}"
-    fi
-
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /opt/ps5-mqtt ]]; then
+    msg_error "No ${APP} installation found!"
     exit
+  fi
+  if check_for_gh_release "ps5-mqtt" "FunkeyFlo/ps5-mqtt"; then
+    msg_info "Stopping service"
+    systemctl stop ps5-mqtt
+    msg_ok "Stopped service"
+
+    fetch_and_deploy_gh_release "ps5-mqtt" "FunkeyFlo/ps5-mqtt" "tarball"
+
+    msg_info "Configuring ${APP}"
+    cd /opt/ps5-mqtt/ps5-mqtt/
+    $STD npm install
+    $STD npm run build
+    msg_ok "Configured ${APP}"
+
+    msg_info "Starting service"
+    systemctl start ps5-mqtt
+    msg_ok "Started service"
+    msg_ok "Updated successfully"
+  fi
+  exit
 }
 
 start

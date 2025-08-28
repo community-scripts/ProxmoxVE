@@ -27,14 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-
-  if ! command -v jq &>/dev/null; then
-    $STD apt-get install -y jq
-  fi
-
-  RELEASE=$(curl -fsSL https://api.github.com/repos/morpheus65535/bazarr/releases/latest | jq -r '.tag_name' | sed 's/^v//')
-  if [[ "${RELEASE}" != "$(cat ~/.bazarr 2>/dev/null)" ]] || [[ ! -f ~/.bazarr ]]; then
-
+  if check_for_gh_release "bazarr" "morpheus65535/bazarr"; then
     PYTHON_VERSION="3.13" setup_uv
     fetch_and_deploy_gh_release "bazarr" "morpheus65535/bazarr" "prebuild" "latest" "/opt/bazarr" "bazarr.zip"
 
@@ -44,10 +37,7 @@ function update_script() {
     sed -i.bak 's/--only-binary=Pillow//g' /opt/bazarr/requirements.txt
     $STD uv pip install -r /opt/bazarr/requirements.txt --system
     msg_ok "Setup Bazarr"
-
-    msg_ok "Update Successful"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
+    msg_ok "Updated Successfully"
   fi
   exit
 }

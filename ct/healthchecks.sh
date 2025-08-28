@@ -28,9 +28,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-
-  RELEASE=$(curl -fsSL https://api.github.com/repos/healthchecks/healthchecks/releases/latest | jq '.tag_name' | sed 's/^"v//;s/"$//')
-  if [[ "${RELEASE}" != "$(cat ~/.healthchecks 2>/dev/null)" ]] || [[ ! -f ~/.healthchecks ]]; then
+  if check_for_gh_release "healthchecks" "healthchecks/healthchecks"; then
     msg_info "Stopping $APP"
     systemctl stop healthchecks
     msg_ok "Stopped $APP"
@@ -38,7 +36,7 @@ function update_script() {
     setup_uv
     fetch_and_deploy_gh_release "healthchecks" "healthchecks/healthchecks"
 
-    msg_info "Updating $APP to v${RELEASE}"
+    msg_info "Updating $APP"
     cd /opt/healthchecks
     mkdir -p /opt/healthchecks/static-collected/
     $STD uv pip install wheel gunicorn -r requirements.txt --system
@@ -46,16 +44,13 @@ function update_script() {
     $STD uv run -- python manage.py migrate --noinput
     $STD uv run -- python manage.py collectstatic --noinput
     $STD uv run -- python manage.py compress
-    msg_ok "Updated $APP to v${RELEASE}"
+    msg_ok "Updated $APP"
 
     msg_info "Starting $APP"
     systemctl start healthchecks
     systemctl restart caddy
     msg_ok "Started $APP"
-
     msg_ok "Update Successful"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }

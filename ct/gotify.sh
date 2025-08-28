@@ -27,9 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-
-  RELEASE=$(curl -fsSL https://api.github.com/repos/gotify/server/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "${RELEASE}" != "$(cat ~/.gotify 2>/dev/null)" ]] || [[ ! -f ~/.gotify ]]; then
+  if check_for_gh_release "gotify" "gotify/server"; then
     msg_info "Stopping ${APP}"
     systemctl stop gotify
     msg_ok "Stopped ${APP}"
@@ -40,10 +38,7 @@ function update_script() {
     msg_info "Starting ${APP}"
     systemctl start gotify
     msg_ok "Started ${APP}"
-
     msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
   exit
 }

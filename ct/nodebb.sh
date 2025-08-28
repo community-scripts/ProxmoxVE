@@ -30,26 +30,21 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-
-  RELEASE=$(curl -fsSL https://api.github.com/repos/NodeBB/NodeBB/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "${RELEASE}" != "$(cat ~/.nodebb)" ]] || [[ ! -f ~/.nodebb ]]; then
+  if check_for_gh_release "nodebb" "NodeBB/NodeBB"; then
     msg_info "Stopping ${APP}"
     systemctl stop nodebb
     msg_ok "Stopped ${APP}"
 
-    msg_info "Updating ${APP} to v${RELEASE}"
+    msg_info "Updating ${APP}"
     cd /opt/nodebb
     $STD ./nodebb upgrade
-    echo "${RELEASE}" > ~/.nodebb
-    msg_ok "Updated ${APP} to v${RELEASE}"
+    echo "${CHECK_UPDATE_RELEASE}" >~/.nodebb
+    msg_ok "Updated ${APP}"
 
     msg_info "Starting ${APP}"
     systemctl start nodebb
     msg_ok "Started ${APP}"
-
     msg_ok "Updated Successfully\n"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}."
   fi
   exit
 }

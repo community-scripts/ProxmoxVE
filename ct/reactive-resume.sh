@@ -28,8 +28,7 @@ function update_script() {
     msg_error "No $APP Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/lazy-media/Reactive-Resume/releases/latest | jq -r '.tag_name' | sed 's/^v//')
-  if [[ ! -f "$HOME"/.reactive-resume ]] || [[ "$RELEASE" != "$(cat "$HOME"/.reactive-resume)" ]]; then
+  if check_for_gh_release "Reactive-Resume" "lazy-media/Reactive-Resume"; then
     msg_info "Stopping services"
     systemctl stop Reactive-Resume
     msg_ok "Stopped services"
@@ -38,7 +37,7 @@ function update_script() {
 
     fetch_and_deploy_gh_release "Reactive-Resume" "lazy-media/Reactive-Resume" "tarball" "latest" "/opt/Reactive-Resume"
 
-    msg_info "Updating $APP to v${RELEASE}"
+    msg_info "Updating $APP"
     cd /opt/"$APP"
     export PUPPETEER_SKIP_DOWNLOAD="true"
     export NEXT_TELEMETRY_DISABLED=1
@@ -48,7 +47,7 @@ function update_script() {
     $STD pnpm run build
     $STD pnpm run prisma:generate
     mv /opt/rxresume.env /opt/"$APP"/.env
-    msg_ok "Updated $APP to v${RELEASE}"
+    msg_ok "Updated $APP"
 
     msg_info "Updating Minio"
     systemctl stop minio
@@ -84,10 +83,7 @@ function update_script() {
     rm -f /tmp/minio.deb
     rm -f "$brwsr_tmp"
     msg_ok "Cleanup Completed"
-
     msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. $APP is already at v${RELEASE}"
   fi
   exit
 }

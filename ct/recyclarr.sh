@@ -27,15 +27,18 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  if check_for_gh_release "recyclarr" "recyclarr/recyclarr"; then
 
-  RELEASE=$(curl -fsSL https://api.github.com/repos/recyclarr/recyclarr/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "${RELEASE}" != "$(cat ~/.recyclarr 2>/dev/null)" ]] || [[ ! -f ~/.recyclarr ]]; then
+    msg_info "Stopping Service"
+    systemctl stop recyclarr
+    msg_ok "Stopped Service"
+
     fetch_and_deploy_gh_release "recyclarr" "recyclarr/recyclarr" "prebuild" "latest" "/usr/local/bin" "recyclarr-linux-x64.tar.xz"
+    msg_info "Starting Service"
+    systemctl start recyclarr
+    msg_ok "Started Service"
     msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
-
   exit
 }
 

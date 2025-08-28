@@ -27,22 +27,19 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/prometheus/prometheus/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f ~/.prometheus ]] || [[ "${RELEASE}" != "$(cat ~/.prometheus 2>/dev/null)" ]]; then
-    msg_info "Stopping ${APP}"
+  if check_for_gh_release "prometheus" "prometheus/prometheus"; then
+    msg_info "Stopping Service"
     systemctl stop prometheus
-    msg_ok "Stopped ${APP}"
+    msg_ok "Stopped Service"
 
     fetch_and_deploy_gh_release "prometheus" "prometheus/prometheus" "prebuild" "latest" "/usr/local/bin" "*linux-amd64.tar.gz"
     rm -f /usr/local/bin/prometheus.yml
 
-    msg_info "Starting ${APP}"
+    msg_info "Starting Service"
     systemctl start prometheus
-    msg_ok "Started ${APP}"
+    msg_ok "Started Service"
 
     msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }

@@ -27,9 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-
-  RELEASE=$(curl -fsSL https://api.github.com/repos/release-argus/Argus/releases/latest | jq -r .tag_name | sed 's/^v//')
-  if [[ "${RELEASE}" != "$(cat ~/.Argus 2>/dev/null)" ]] || [[ ! -f ~/.Argus ]]; then
+  if check_for_gh_release "argus" "release-argus/Argus"; then
     msg_info "Stopping service"
     systemctl stop argus
     msg_ok "Service stopped"
@@ -39,11 +37,9 @@ function update_script() {
     msg_info "Starting service"
     systemctl start argus
     msg_ok "Service started"
-
-    msg_ok "Updated ${APP} to ${RELEASE}"
-  else
-    msg_ok "${APP} is already up to date (${RELEASE})"
+    msg_ok "Updated Successfully"
   fi
+  exit
 }
 
 start

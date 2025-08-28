@@ -27,9 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-
-  RELEASE=$(curl -fsSL https://api.github.com/repos/monicahq/monica/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f ~/.monica ]] || [[ "${RELEASE}" != "$(cat ~/.monica)" ]]; then
+  if check_for_gh_release "monica" "monicahq/monica"; then
     msg_info "Stopping Service"
     systemctl stop apache2
     msg_ok "Stopped Service"
@@ -40,7 +38,7 @@ function update_script() {
 
     fetch_and_deploy_gh_release "monica" "monicahq/monica" "prebuild" "latest" "/opt/monica" "monica-v*.tar.bz2"
 
-    msg_info "Configuring monica"    
+    msg_info "Configuring monica"
     cd /opt/monica/
     cp -r /opt/monica-backup/.env /opt/monica
     cp -r /opt/monica-backup/storage/* /opt/monica/storage/
@@ -59,10 +57,7 @@ function update_script() {
     msg_info "Cleaning up"
     rm -r /opt/monica-backup
     msg_ok "Cleaned"
-
     msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }

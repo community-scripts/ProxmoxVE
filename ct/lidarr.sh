@@ -28,28 +28,19 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  if ! command -v jq &>/dev/null; then
-    $STD apt-get update
-    $STD apt-get install -y jq
-  fi
 
-  RELEASE=$(curl -fsSL https://api.github.com/repos/Lidarr/Lidarr/releases/latest | jq -r '.tag_name' | sed 's/^v//')
-  if [[ "${RELEASE}" != "$(cat ~/.lidarr)" ]] || [[ ! -f ~/.lidarr ]]; then
-
+  if check_for_gh_release "lidarr" "Lidarr/Lidarr"; then
     msg_info "Stopping service"
     systemctl stop lidarr
     msg_ok "Service stopped"
 
     fetch_and_deploy_gh_release "lidarr" "Lidarr/Lidarr" "prebuild" "latest" "/opt/Lidarr" "Lidarr.master*linux-core-x64.tar.gz"
     chmod 775 /opt/Lidarr
-    
+
     msg_info "Starting service"
     systemctl start lidarr
     msg_ok "Service started"
-
     msg_ok "Updated successfully"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
   exit
 }

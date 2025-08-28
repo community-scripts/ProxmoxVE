@@ -28,8 +28,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/MediaBrowser/Emby.Releases/releases/latest | grep '"tag_name":' | cut -d'"' -f4)
-  if [[ "${RELEASE}" != "$(cat ~/.emby 2>/dev/null)" ]] || [[ ! -f ~/.emby ]]; then
+  if check_for_gh_release "emby" "MediaBrowser/Emby.Releases"; then
     msg_info "Stopping ${APP}"
     systemctl stop emby-server
     msg_ok "Stopped ${APP}"
@@ -39,10 +38,7 @@ function update_script() {
     msg_info "Starting ${APP}"
     systemctl start emby-server
     msg_ok "Started ${APP}"
-
     msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
   exit
 }

@@ -27,22 +27,17 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  
-  RELEASE=$(curl -fsSL https://api.github.com/repos/hansmi/prometheus-paperless-exporter/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f ~/.prom-paperless-exp ]] || [[ "${RELEASE}" != "$(cat prom-paperless-exp 2>/dev/null)" ]]; then
-    msg_info "Stopping ${APP}"
+  if check_for_gh_release "prom-paperless-exp" "hansmi/prometheus-paperless-exporter"; then
+    msg_info "Stopping Service"
     systemctl stop prometheus-paperless-ngx-exporter
-    msg_ok "Stopped ${APP}"
+    msg_ok "Stopped Service"
 
     fetch_and_deploy_gh_release "prom-paperless-exp" "hansmi/prometheus-paperless-exporter" "binary"
 
-    msg_info "Starting ${APP}"
+    msg_info "Starting Service"
     systemctl start prometheus-paperless-ngx-exporter
-    msg_ok "Started ${APP}"
-
+    msg_ok "Started Service"
     msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }

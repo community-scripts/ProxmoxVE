@@ -28,10 +28,10 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -s https://api.github.com/repos/Casvt/Kapowarr/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  if [[ "${RELEASE}" != "$(cat $HOME/.kapowarr)" ]] || [[ ! -f $HOME/.kapowarr ]]; then
-    setup_uv 
-    
+
+  setup_uv
+
+  if check_for_gh_release "kapowarr" "Casvt/Kapowarr"; then
     msg_info "Stopping $APP"
     systemctl stop kapowarr
     msg_ok "Stopped $APP"
@@ -41,17 +41,15 @@ function update_script() {
     msg_ok "Backup Created"
 
     fetch_and_deploy_gh_release "kapowarr" "Casvt/Kapowarr"
-    msg_info "Updating $APP to ${RELEASE}"
+
+    msg_info "Updating $APP"
     mv /opt/db /opt/kapowarr
-    msg_ok "Updated $APP to ${RELEASE}"
+    msg_ok "Updated $APP"
 
     msg_info "Starting $APP"
     systemctl start kapowarr
     msg_ok "Started $APP"
-
     msg_ok "Update Successful"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
   exit
 }

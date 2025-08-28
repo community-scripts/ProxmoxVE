@@ -27,9 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-
-  RELEASE=$(curl -fsSL https://api.github.com/repos/thomiceli/opengist/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f ~/.opengist ]] || [[ "${RELEASE}" != "$(cat ~/.opengist)" ]]; then
+  if check_for_gh_release "opengist" "thomiceli/opengist"; then
     msg_info "Stopping Service"
     systemctl stop opengist
     msg_ok "Stopped Service"
@@ -37,20 +35,17 @@ function update_script() {
     msg_info "Creating backup"
     mv /opt/opengist /opt/opengist-backup
     msg_ok "Backup created"
-    
+
     fetch_and_deploy_gh_release "opengist" "thomiceli/opengist" "prebuild" "latest" "/opt/opengist" "opengist*linux-amd64.tar.gz"
 
-    msg_info "Configuring ${APP}"
+    msg_info "Restoring Configuration"
     mv /opt/opengist-backup/config.yml /opt/opengist/config.yml
-    msg_ok "Configured ${APP}"
+    msg_ok "Configuration Restored"
 
     msg_info "Starting Service"
     systemctl start opengist
     msg_ok "Started Service"
-
     msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}."
   fi
   exit
 }

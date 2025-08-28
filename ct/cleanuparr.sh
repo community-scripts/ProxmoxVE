@@ -20,32 +20,27 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -f /opt/cleanuparr/Cleanuparr ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-
-    RELEASE=$(curl -fsSL https://api.github.com/repos/Cleanuparr/Cleanuparr/releases/latest | jq -r '.tag_name' | sed 's/^v//')
-    if [[ "${RELEASE}" != "$(cat ~/.Cleanuparr 2>/dev/null)" ]] || [[ ! -f ~/.Cleanuparr ]]; then
-        msg_info "Stopping ${APP}"
-        systemctl stop cleanuparr
-        msg_ok "Stopped ${APP}"
-
-        fetch_and_deploy_gh_release "Cleanuparr" "Cleanuparr/Cleanuparr" "prebuild" "latest" "/opt/cleanuparr" "*linux-amd64.zip"
-
-        msg_info "Starting ${APP}"
-        systemctl start cleanuparr
-        msg_ok "Started ${APP}"
-        msg_ok "Updated Successfully"
-    else
-        msg_ok "No update required. ${APP} is already at v${RELEASE}"
-    fi
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -f /opt/cleanuparr/Cleanuparr ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
-}
+  fi
+  if check_for_gh_release "cleanuparr" "Cleanuparr/Cleanuparr"; then
+    msg_info "Stopping ${APP}"
+    systemctl stop cleanuparr
+    msg_ok "Stopped ${APP}"
 
+    fetch_and_deploy_gh_release "Cleanuparr" "Cleanuparr/Cleanuparr" "prebuild" "latest" "/opt/cleanuparr" "*linux-amd64.zip"
+
+    msg_info "Starting ${APP}"
+    systemctl start cleanuparr
+    msg_ok "Started ${APP}"
+    msg_ok "Updated Successfully"
+  fi
+  exit
+}
 start
 build_container
 description

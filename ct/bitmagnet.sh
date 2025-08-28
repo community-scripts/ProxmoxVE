@@ -27,8 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/bitmagnet-io/bitmagnet/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "${RELEASE}" != "$(cat ~/.bitmagnet 2>/dev/null)" ]] || [[ ! -f ~/.bitmagnet ]]; then
+  if check_for_gh_release "bitmagnet" "bitmagnet-io/bitmagnet"; then
     msg_info "Stopping Service"
     systemctl stop bitmagnet-web
     msg_ok "Stopped Service"
@@ -63,22 +62,19 @@ function update_script() {
     rm -rf /opt/bitmagnet
     fetch_and_deploy_gh_release "bitmagnet" "bitmagnet-io/bitmagnet"
 
-    msg_info "Updating ${APP} to v${RELEASE}"
+    msg_info "Updating ${APP}"
     cd /opt/bitmagnet
-    VREL=v$RELEASE
+    VREL=v$(curl -fsSL https://api.github.com/repos/bitmagnet-io/bitmagnet/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
     $STD go build -ldflags "-s -w -X github.com/bitmagnet-io/bitmagnet/internal/version.GitTag=$VREL"
     chmod +x bitmagnet
     [ -f "/opt/.env" ] && cp "/opt/.env" /opt/bitmagnet/
     [ -f "/opt/config.yml" ] && cp "/opt/config.yml" /opt/bitmagnet/
-    msg_ok "Updated $APP to v${RELEASE}"
+    msg_ok "Updated $APP"
 
     msg_info "Starting Service"
     systemctl start bitmagnet-web
     msg_ok "Started Service"
-
     msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }

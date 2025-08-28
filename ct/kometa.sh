@@ -28,12 +28,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  if ! command -v jq &>/dev/null; then
-    $STD apt-get install -y jq
-  fi
-
-  RELEASE=$(curl -fsSL https://api.github.com/repos/Kometa-Team/Kometa/releases/latest | jq -r '.tag_name | sub("^v";"")')
-  if [[ "${RELEASE}" != "$(cat ~/.kometa 2>/dev/null)" ]] || [[ ! -f ~/.kometa ]]; then
+  if check_for_gh_release "kometa" "Kometa-Team/Kometa"; then
     msg_info "Stopping Service"
     systemctl stop kometa
     msg_ok "Stopped Service"
@@ -56,8 +51,6 @@ function update_script() {
     systemctl start kometa
     msg_ok "Started Service"
     msg_ok "Update Successful"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }

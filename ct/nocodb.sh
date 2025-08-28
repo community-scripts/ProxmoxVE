@@ -20,16 +20,14 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -f /etc/systemd/system/nocodb.service ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-
-    RELEASE=$(curl -fsSL https://api.github.com/repos/nocodb/nocodb/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-    if [[ ! -f ~/.nocodb ]] || [[ "${RELEASE}" != "$(cat ~/.nocodb)" ]]; then
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -f /etc/systemd/system/nocodb.service ]]; then
+    msg_error "No ${APP} Installation Found!"
+    exit
+  fi
+  if check_for_gh_release "nocodb" "nocodb/nocodb"; then
     msg_info "Stopping Service"
     systemctl stop nocodb
     msg_ok "Stopped Service"
@@ -39,10 +37,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start nocodb
     msg_ok "Started Service"
-
     msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }

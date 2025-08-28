@@ -28,8 +28,7 @@ function update_script() {
     exit
   fi
 
-  RELEASE=$(curl -fsSL https://api.github.com/repos/outline/outline/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f ~/.outline ]] || [[ "${RELEASE}" != "$(cat ~/.outline)" ]]; then
+  if check_for_gh_release "outline" "outline/outline"; then
     msg_info "Stopping Services"
     systemctl stop outline
     msg_ok "Services Stopped"
@@ -40,7 +39,7 @@ function update_script() {
 
     fetch_and_deploy_gh_release "outline" "outline/outline" "tarball"
 
-    msg_info "Updating ${APP} to ${RELEASE}"
+    msg_info "Updating ${APP}"
     cd /opt/outline
     mv /opt/.env /opt/outline
     export NODE_ENV=development
@@ -53,10 +52,7 @@ function update_script() {
     msg_info "Starting Services"
     systemctl start outline
     msg_ok "Started Services"
-
     msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
   exit
 }

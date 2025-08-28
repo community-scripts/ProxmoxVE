@@ -29,9 +29,7 @@ function update_script() {
     exit
   fi
   NODE_VERSION="20" NODE_MODULE="gulp-cli,mocha" setup_nodejs
-  RELEASE=$(curl -fsSL https://api.github.com/repos/HabitRPG/habitica/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "${RELEASE}" != "$(cat ~/.habitica 2>/dev/null)" ]] || [[ ! -f ~/.habitica ]]; then
-
+  if check_for_gh_release "habitica" "HabitRPG/habitica"; then
     msg_info "Stopping $APP"
     systemctl stop habitica-mongodb
     systemctl stop habitica
@@ -48,13 +46,13 @@ function update_script() {
 
     fetch_and_deploy_gh_release "habitica" "HabitRPG/habitica" "tarball" "latest" "/opt/habitica"
 
-    msg_info "Updating $APP to ${RELEASE}"
+    msg_info "Updating $APP"
     cd /opt/habitica
     $STD npm i
     $STD npm run postinstall
     $STD npm run client:build
     $STD gulp build:prod
-    msg_ok "Updated $APP to ${RELEASE}"
+    msg_ok "Updated $APP"
 
     msg_info "Restoring configuration"
     if [[ -f ~/config.json ]]; then
@@ -69,10 +67,7 @@ function update_script() {
     systemctl start habitica
     systemctl start habitica-client
     msg_ok "Started $APP"
-
     msg_ok "Update Successful"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
   exit
 }

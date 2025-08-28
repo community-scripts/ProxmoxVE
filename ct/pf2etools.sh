@@ -28,9 +28,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-
-  RELEASE=$(curl -fsSL https://api.github.com/repos/Pf2eToolsOrg/Pf2eTools/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "${RELEASE}" != "$(cat ~/.pf2etools 2>/dev/null)" ]] || [[ ! -f ~/.pf2etools ]]; then
+  if check_for_gh_release "pf2etools" "Pf2eToolsOrg/Pf2eTools"; then
     msg_info "Updating System"
     $STD apt-get update
     $STD apt-get -y upgrade
@@ -46,10 +44,7 @@ function update_script() {
     chown -R www-data: "/opt/${APP}"
     chmod -R 755 "/opt/${APP}"
     msg_ok "Updated ${APP}"
-
     msg_ok "Updated successfully"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
   exit
 }

@@ -28,12 +28,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  if ! command -v jq &>/dev/null; then
-    $STD apt-get install -y jq
-  fi
-
-  RELEASE=$(curl -fsSL https://api.github.com/repos/intri-in/manage-my-damn-life-nextjs/releases/latest | jq -r '.tag_name' | sed 's/^v//')
-  if [[ "${RELEASE}" != "$(cat ~/.mmdl)" ]] || [[ ! -f ~/.mmdl ]]; then
+  if check_for_gh_release "mmdl" "intri-in/manage-my-damn-life-nextjs"; then
     msg_info "Stopping service"
     systemctl stop mmdl
     msg_ok "Stopped service"
@@ -54,10 +49,7 @@ function update_script() {
     msg_info "Starting service"
     systemctl start mmdl
     msg_ok "Started service"
-
     msg_ok "Update Successful"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }

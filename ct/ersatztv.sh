@@ -26,10 +26,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/ErsatzTV/ErsatzTV/releases | grep -oP '"tag_name": "\Kv\K[^"]+' | head -n1)
-  RELEASE_FFMPEG=$(curl -fsSL https://api.github.com/repos/ErsatzTV/ErsatzTV-ffmpeg/releases | grep -oP '"tag_name": "\K[^"]+' | head -n 1)
-
-  if [[ "${RELEASE}" != "$(cat ~/.ersatztv 2>/dev/null)" ]] || [[ ! -f ~/.ersatztv ]]; then
+  if check_for_gh_release "ersatztv" "ErsatzTV/ErsatzTV"; then
     msg_info "Stopping ErsatzTV"
     systemctl stop ersatzTV
     msg_ok "Stopped ErsatzTV"
@@ -41,11 +38,9 @@ function update_script() {
     msg_ok "Started ErsatzTV"
 
     msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
 
-  if [[ "${RELEASE_FFMPEG}" != "$(cat ~/.ersatztv-ffmpeg 2>/dev/null)" ]] || [[ ! -f ~/.ersatztv-ffmpeg ]]; then
+  if check_for_gh_release "ersatztv-ffmpeg" "ErsatzTV/ErsatzTV-ffmpeg"; then
     msg_info "Stopping ErsatzTV"
     systemctl stop ersatzTV
     msg_ok "Stopped ErsatzTV"
@@ -62,10 +57,7 @@ function update_script() {
     msg_info "Starting ErsatzTV"
     systemctl start ersatzTV
     msg_ok "Started ErsatzTV"
-
     msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ErsatzTV-ffmpeg is already at ${RELEASE_FFMPEG}"
   fi
   exit
 }

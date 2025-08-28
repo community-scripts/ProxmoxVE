@@ -28,8 +28,8 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/Forceu/barcodebuddy/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "${RELEASE}" != "$(cat ~/.barcodebuddy 2>/dev/null)" ]] || [[ ! -f ~/.barcodebuddy ]]; then
+
+  if check_for_gh_release "barcodebuddy" "Forceu/barcodebuddy"; then
     msg_info "Stopping Service"
     systemctl stop apache2
     systemctl stop barcodebuddy
@@ -55,8 +55,6 @@ function update_script() {
     rm -r /opt/barcodebuddy-backup
     msg_ok "Cleaned"
     msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }

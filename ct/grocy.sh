@@ -27,19 +27,14 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  
   php_ver=$(php -v | head -n 1 | awk '{print $2}')
   if [[ ! $php_ver == "8.3"* ]]; then
     PHP_VERSION="8.3" PHP_MODULE="sqlite3,bz2" PHP_APACHE="yes" setup_php
   fi
-  
-  RELEASE=$(curl -fsSL https://api.github.com/repos/grocy/grocy/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "${RELEASE}" != "$(cat ~/.grocy 2>/dev/null)" ]] || [[ ! -f ~/.grocy ]]; then
+  if check_for_gh_release "grocy" "grocy/grocy"; then
     msg_info "Updating ${APP}"
     bash /var/www/html/update.sh
     msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
   exit
 }

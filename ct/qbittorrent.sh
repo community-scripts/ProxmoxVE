@@ -31,9 +31,7 @@ function update_script() {
     msg_error "Please create new qBittorrent LXC. Updating from v4.x to v5.x is not supported!"
     exit
   fi
-
-  RELEASE=$(curl -fsSL https://api.github.com/repos/userdocs/qbittorrent-nox-static/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  if [[ ! -f ~/.qbittorrent ]] || [[ "${RELEASE}" != "$(cat ~/.qbittorrent 2>/dev/null)" ]]; then
+  if check_for_gh_release "qbittorrent" "userdocs/qbittorrent-nox-static"; then
     msg_info "Stopping Service"
     systemctl stop qbittorrent-nox
     msg_ok "Stopped Service"
@@ -45,10 +43,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start qbittorrent-nox
     msg_ok "Started Service"
-
     msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }

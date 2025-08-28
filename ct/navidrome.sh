@@ -20,31 +20,27 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /var/lib/navidrome ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    
-    RELEASE=$(curl -fsSL https://api.github.com/repos/navidrome/navidrome/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-    if [[ "${RELEASE}" != "$(cat ~/.navidrome 2>/dev/null)" ]] || [[ ! -f ~/.navidrome ]]; then
-        msg_info "Stopping Services"
-        systemctl stop navidrome
-        msg_ok "Services Stopped"
-
-        fetch_and_deploy_gh_release "navidrome" "navidrome/navidrome" "binary"
-
-        msg_info "Starting Services"
-        systemctl start navidrome
-        msg_ok "Started Services"
-
-        msg_ok "Updated Successfully"
-    else
-        msg_ok "No update required. ${APP} is already at ${RELEASE}"
-    fi
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /var/lib/navidrome ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+
+  if check_for_gh_release "navidrome" "navidrome/navidrome"; then
+    msg_info "Stopping Services"
+    systemctl stop navidrome
+    msg_ok "Services Stopped"
+
+    fetch_and_deploy_gh_release "navidrome" "navidrome/navidrome" "binary"
+
+    msg_info "Starting Services"
+    systemctl start navidrome
+    msg_ok "Started Services"
+    msg_ok "Updated Successfully"
+  fi
+  exit
 }
 
 start

@@ -28,9 +28,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-
-  RELEASE=$(curl -fsSL https://api.github.com/repos/booklore-app/BookLore/releases/latest | yq '.tag_name' | sed 's/^v//')
-  if [[ "${RELEASE}" != "$(cat ~/.booklore 2>/dev/null)" ]] || [[ ! -f ~/.booklore ]]; then
+  if check_for_gh_release "booklore" "booklore-app/BookLore"; then
     msg_info "Stopping $APP"
     systemctl stop booklore
     msg_ok "Stopped $APP"
@@ -61,10 +59,7 @@ function update_script() {
     systemctl start booklore
     systemctl reload nginx
     msg_ok "Started $APP"
-
-    msg_ok "Update Successful"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
+    msg_ok "Updated Successfully"
   fi
   exit
 }

@@ -28,8 +28,7 @@ function update_script() {
     exit
   fi
 
-  RELEASE=$(curl -fsSL https://api.github.com/repos/phpipam/phpipam/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f ~/.phpipam ]] || [[ "${RELEASE}" != "$(cat ~/.phpipam 2>/dev/null)" ]]; then
+  if check_for_gh_release "phpipam" "phpipam/phpipam"; then
     msg_info "Stopping Service"
     systemctl stop apache2
     msg_ok "Stopped Service"
@@ -45,10 +44,7 @@ function update_script() {
     msg_info "Cleaning up"
     rm -r /opt/phpipam-backup
     msg_ok "Cleaned"
-    
     msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }

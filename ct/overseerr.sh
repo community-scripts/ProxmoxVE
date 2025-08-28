@@ -27,10 +27,8 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  
-  RELEASE=$(curl -fsSL https://api.github.com/repos/sct/overseerr/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f ~/.overseerr ]] || [[ "${RELEASE}" != "$(cat ~/.overseerr)" ]]; then
-    msg_info "Stopping ${APP} service"
+  if check_for_gh_release "overseerr" "sct/overseerr"; then
+    msg_info "Stopping Service"
     systemctl stop overseerr
     msg_ok "Service stopped"
 
@@ -48,13 +46,10 @@ function update_script() {
     mv /opt/config_backup /opt/overseerr/config
     msg_ok "Configured ${APP}"
 
-    msg_info "Starting ${APP} service"
+    msg_info "Starting Service"
     systemctl start overseerr
-    msg_ok "Started ${APP} service"
-
+    msg_ok "Started Service"
     msg_ok "Updated successfully!"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
   exit
 }

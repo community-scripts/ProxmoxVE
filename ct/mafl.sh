@@ -27,30 +27,30 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-
-  RELEASE=$(curl -fsSL https://api.github.com/repos/hywax/mafl/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "${RELEASE}" != "$(cat ~/.mafl 2>/dev/null)" ]] || [[ ! -f ~/.mafl ]]; then
+  if check_for_gh_release "mafl" "hywax/mafl"; then
     msg_info "Stopping Mafl service"
     systemctl stop mafl
     msg_ok "Service stopped"
 
-    msg_info "Performing backup"
+    msg_info "Backing up data"
     mkdir -p /opt/mafl-backup/data
     mv /opt/mafl/data /opt/mafl-backup/data
     rm -rf /opt/mafl
     msg_ok "Backup complete"
-    
+
     fetch_and_deploy_gh_release "mafl" "hywax/mafl"
 
-    msg_info "Updating Mafl to v${RELEASE}"
+    msg_info "Updating Mafl"
     cd /opt/mafl
-    yarn install
-    yarn build
+    $STD yarn install
+    $STD yarn build
     mv /opt/mafl-backup/data /opt/mafl/data
+    msg_ok "Mafl updated"
+
+    msg_info "Starting Service"
     systemctl start mafl
-    msg_ok "Updated Mafl to v${RELEASE}"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
+    msg_ok "Service started"
+    msg_ok "Update successfully"
   fi
   exit
 }

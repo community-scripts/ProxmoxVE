@@ -28,8 +28,7 @@ function update_script() {
     exit
   fi
 
-  RELEASE=$(curl -fsSL https://api.github.com/repos/babybuddy/babybuddy/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "${RELEASE}" != "$(cat ~/.babybuddy 2>/dev/null)" ]] || [[ ! -f ~/.babybuddy ]]; then
+  if check_for_gh_release "babybuddy" "babybuddy/babybuddy"; then
     setup_uv
 
     msg_info "Stopping Services"
@@ -44,13 +43,13 @@ function update_script() {
 
     fetch_and_deploy_gh_release "babybuddy" "babybuddy/babybuddy"
 
-    msg_info "Updating ${APP} to v${RELEASE}"
+    msg_info "Updating ${APP}"
     cd /opt/babybuddy
     mv /tmp/production.py.bak /opt/babybuddy/babybuddy/settings/production.py
     source .venv/bin/activate
     $STD uv pip install -r requirements.txt
     $STD python manage.py migrate
-    msg_ok "Updated ${APP} to v${RELEASE}"
+    msg_ok "Updated ${APP}"
 
     msg_info "Fixing permissions"
     chown -R www-data:www-data /opt/data
@@ -62,14 +61,10 @@ function update_script() {
     systemctl start uwsgi
     systemctl start nginx
     msg_ok "Services Started"
-
     msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }
-
 start
 build_container
 description

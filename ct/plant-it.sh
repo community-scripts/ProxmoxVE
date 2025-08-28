@@ -27,9 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-
-  RELEASE=$(curl -fsSL https://api.github.com/repos/MDeLuise/plant-it/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  if [[ "${RELEASE}" != "$(cat ~/.plant-it 2>/dev/null)" ]] || [[ ! -f ~/.plant-it ]]; then
+  if check_for_gh_release "plant-it" "MDeLuise/plant-it"; then
     msg_info "Stopping $APP"
     systemctl stop plant-it
     msg_ok "Stopped $APP"
@@ -41,8 +39,6 @@ function update_script() {
     systemctl start plant-it
     msg_ok "Started $APP"
     msg_ok "Update Successful"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }

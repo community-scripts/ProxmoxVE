@@ -29,8 +29,8 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/authelia/authelia/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  if [[ "${RELEASE}" != "$(/usr/bin/authelia -v | awk '{print substr($3, 2, length($2)) }')" ]]; then
+
+  if check_for_gh_release "authelia" "authelia/authelia"; then
     $STD apt-get update
     $STD apt-get -y upgrade
 
@@ -40,14 +40,10 @@ function update_script() {
     $STD apt-get -y autoremove
     $STD apt-get -y autoclean
     msg_ok "Cleanup Completed"
-
-    msg_ok "Updated $APP to ${RELEASE}"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
+    msg_ok "Updated Successfully"
   fi
   exit
 }
-
 start
 build_container
 description

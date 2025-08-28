@@ -28,8 +28,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/excalidraw/excalidraw/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "${RELEASE}" != "$(cat ~/.excalidraw 2>/dev/null)" ]] || [[ ! -f ~/.excalidraw ]]; then
+  if check_for_gh_release "excalidraw" "excalidraw/excalidraw"; then
     msg_info "Stopping $APP"
     systemctl stop excalidraw
     msg_ok "Stopped $APP"
@@ -37,18 +36,15 @@ function update_script() {
     rm -rf /opt/excalidraw
     fetch_and_deploy_gh_release "excalidraw" "excalidraw/excalidraw"
 
-    msg_info "Updating $APP to v${RELEASE}"
+    msg_info "Updating $APP"
     cd /opt/excalidraw
     $STD yarn
-    msg_ok "Updated $APP to v${RELEASE}"
+    msg_ok "Updated $APP"
 
     msg_info "Starting $APP"
     systemctl start excalidraw
     msg_ok "Started $APP"
-
-    msg_ok "Update Successful"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
+    msg_ok "Updated Successfully"
   fi
   exit
 }

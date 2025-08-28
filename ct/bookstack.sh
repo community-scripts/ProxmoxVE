@@ -28,8 +28,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/BookStackApp/BookStack/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "${RELEASE}" != "$(cat ~/.bookstack 2>/dev/null)" ]] || [[ ! -f ~/.bookstack ]]; then
+  if check_for_gh_release "bookstack" "BookStackApp/BookStack"; then
     msg_info "Stopping Apache2"
     systemctl stop apache2
     msg_ok "Services Stopped"
@@ -58,7 +57,6 @@ function update_script() {
     chmod -R 755 /opt/bookstack /opt/bookstack/bootstrap/cache /opt/bookstack/public/uploads /opt/bookstack/storage
     chmod -R 775 /opt/bookstack/storage /opt/bookstack/bootstrap/cache /opt/bookstack/public/uploads
     chmod -R 640 /opt/bookstack/.env
-    echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Configured BookStack"
 
     msg_info "Starting Apache2"
@@ -69,12 +67,9 @@ function update_script() {
     rm -rf /opt/bookstack-backup
     msg_ok "Cleaned"
     msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }
-
 start
 build_container
 description

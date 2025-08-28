@@ -28,9 +28,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  
-  RELEASE=$(curl -fsSL "https://api.github.com/repos/StarFleetCPTN/GoMFT/releases/latest" | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "${RELEASE}" != "$(cat ~/.gomft)" ]] || [[ ! -f ~/.gomft ]]; then
+  if check_for_gh_release "gomft" "StarFleetCPTN/GoMFT"; then
     msg_info "Stopping $APP"
     systemctl stop gomft
     msg_ok "Stopped $APP"
@@ -40,10 +38,7 @@ function update_script() {
     msg_info "Starting $APP"
     systemctl start gomft
     msg_ok "Started $APP"
-
     msg_ok "Update Successful"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
   exit
 }
