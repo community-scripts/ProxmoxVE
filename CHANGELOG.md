@@ -28,6 +28,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Flaresolverr: Pin to 3.3.25 (Python Issue) [@MickLesk](https://github.com/MickLesk) ([#7248](https://github.com/community-scripts/ProxmoxVE/pull/7248))
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Keycloak: Update website [@tremor021](https://github.com/tremor021) ([#7256](https://github.com/community-scripts/ProxmoxVE/pull/7256))
+
 ## 2025-08-27
 
 ### 🚀 Updated Scripts
