@@ -54,7 +54,6 @@ $STD npm ci
 $STD npm run build
 mkdir -p {"$MM_DIR"/web,"$MEDIA_DIR","$CONFIG_DIR"}
 cp -r build "$FRONTEND_FILES_DIR"
-
 export BASE_PATH=""
 export VIRTUAL_ENV="${MM_DIR}/venv"
 cd /opt/mediamanager
