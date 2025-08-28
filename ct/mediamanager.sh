@@ -50,7 +50,6 @@ function update_script() {
     $STD npm run build
     rm -rf "$FRONTEND_FILES_DIR"/build
     cp -r build "$FRONTEND_FILES_DIR"
-
     export BASE_PATH=""
     export VIRTUAL_ENV="/opt/${MM_DIR}/venv"
     cd /opt/mediamanager
