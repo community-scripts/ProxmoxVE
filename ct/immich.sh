@@ -62,52 +62,48 @@ function update_script() {
     msg_ok "Image-processing libraries up to date"
   fi
   RELEASE="1.139.4"
-  #RELEASE=$(curl -fsSL https://api.github.com/repos/immich-app/immich/releases?per_page=1 | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ -f ~/.immich && "$RELEASE" == "$(cat ~/.immich)" ]]; then
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
-    exit
-  fi
-  msg_info "Stopping ${APP} services"
-  systemctl stop immich-web
-  systemctl stop immich-ml
-  msg_ok "Stopped ${APP}"
-  INSTALL_DIR="/opt/${APP}"
-  UPLOAD_DIR="$(sed -n '/^IMMICH_MEDIA_LOCATION/s/[^=]*=//p' /opt/immich/.env)"
-  SRC_DIR="${INSTALL_DIR}/source"
-  APP_DIR="${INSTALL_DIR}/app"
-  ML_DIR="${APP_DIR}/machine-learning"
-  GEO_DIR="${INSTALL_DIR}/geodata"
-  VCHORD_RELEASE="0.4.3"
-  # VCHORD_RELEASE="$(curl -fsSL https://api.github.com/repos/tensorchord/vectorchord/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')"
+  if check_for_gh_release "immich" "immich-app/immich" "${RELEASE}"; then
+    msg_info "Stopping Services"
+    systemctl stop immich-web
+    systemctl stop immich-ml
+    msg_ok "Stopped ${APP}"
+    INSTALL_DIR="/opt/${APP}"
+    UPLOAD_DIR="$(sed -n '/^IMMICH_MEDIA_LOCATION/s/[^=]*=//p' /opt/immich/.env)"
+    SRC_DIR="${INSTALL_DIR}/source"
+    APP_DIR="${INSTALL_DIR}/app"
+    ML_DIR="${APP_DIR}/machine-learning"
+    GEO_DIR="${INSTALL_DIR}/geodata"
+    VCHORD_RELEASE="0.4.3"
+    # VCHORD_RELEASE="$(curl -fsSL https://api.github.com/repos/tensorchord/vectorchord/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')"
 
-  if [[ ! -f ~/.vchord_version ]] || [[ "$VCHORD_RELEASE" != "$(cat ~/.vchord_version)" ]]; then
-    msg_info "Updating VectorChord"
-    if [[ ! -f ~/.vchord_version ]] || [[ ! "$(cat ~/.vchord_version)" > "0.3.0" ]]; then
-      $STD sudo -u postgres pg_dumpall --clean --if-exists --username=postgres | gzip >/etc/postgresql/immich-db-vchord0.3.0.sql.gz
-      chown postgres /etc/postgresql/immich-db-vchord0.3.0.sql.gz
-      $STD sudo -u postgres gunzip --stdout /etc/postgresql/immich-db-vchord0.3.0.sql.gz |
-        sed -e "s/SELECT pg_catalog.set_config('search_path', '', false);/SELECT pg_catalog.set_config('search_path', 'public, pg_catalog', true);/g" \
-          -e "/vchordrq.prewarm_dim/d" |
-        sudo -u postgres psql
+    if [[ ! -f ~/.vchord_version ]] || [[ "$VCHORD_RELEASE" != "$(cat ~/.vchord_version)" ]]; then
+      msg_info "Updating VectorChord"
+      if [[ ! -f ~/.vchord_version ]] || [[ ! "$(cat ~/.vchord_version)" > "0.3.0" ]]; then
+        $STD sudo -u postgres pg_dumpall --clean --if-exists --username=postgres | gzip >/etc/postgresql/immich-db-vchord0.3.0.sql.gz
+        chown postgres /etc/postgresql/immich-db-vchord0.3.0.sql.gz
+        $STD sudo -u postgres gunzip --stdout /etc/postgresql/immich-db-vchord0.3.0.sql.gz |
+          sed -e "s/SELECT pg_catalog.set_config('search_path', '', false);/SELECT pg_catalog.set_config('search_path', 'public, pg_catalog', true);/g" \
+            -e "/vchordrq.prewarm_dim/d" |
+          sudo -u postgres psql
+      fi
+      curl -fsSL "https://github.com/tensorchord/vectorchord/releases/download/${VCHORD_RELEASE}/postgresql-16-vchord_${VCHORD_RELEASE}-1_amd64.deb" -o vchord.deb
+      $STD apt install -y ./vchord.deb
+      $STD sudo -u postgres psql -d immich -c "ALTER EXTENSION vchord UPDATE;"
+      systemctl restart postgresql
+      if [[ ! -f ~/.vchord_version ]] || [[ ! "$(cat ~/.vchord_version)" > "0.3.0" ]]; then
+        $STD sudo -u postgres psql -d immich -c "REINDEX INDEX face_index;"
+        $STD sudo -u postgres psql -d immich -c "REINDEX INDEX clip_index;"
+      fi
+      echo "$VCHORD_RELEASE" >~/.vchord_version
+      rm ./vchord.deb
+      msg_ok "Updated VectorChord to v${VCHORD_RELEASE}"
     fi
-    curl -fsSL "https://github.com/tensorchord/vectorchord/releases/download/${VCHORD_RELEASE}/postgresql-16-vchord_${VCHORD_RELEASE}-1_amd64.deb" -o vchord.deb
-    $STD apt install -y ./vchord.deb
-    $STD sudo -u postgres psql -d immich -c "ALTER EXTENSION vchord UPDATE;"
-    systemctl restart postgresql
-    if [[ ! -f ~/.vchord_version ]] || [[ ! "$(cat ~/.vchord_version)" > "0.3.0" ]]; then
-      $STD sudo -u postgres psql -d immich -c "REINDEX INDEX face_index;"
-      $STD sudo -u postgres psql -d immich -c "REINDEX INDEX clip_index;"
-    fi
-    echo "$VCHORD_RELEASE" >~/.vchord_version
-    rm ./vchord.deb
-    msg_ok "Updated VectorChord to v${VCHORD_RELEASE}"
-  fi
 
-  cp "$ML_DIR"/ml_start.sh "$INSTALL_DIR"
-  if grep -qs "set -a" "$APP_DIR"/bin/start.sh; then
-    cp "$APP_DIR"/bin/start.sh "$INSTALL_DIR"
-  else
-    cat <<EOF >"$INSTALL_DIR"/start.sh
+    cp "$ML_DIR"/ml_start.sh "$INSTALL_DIR"
+    if grep -qs "set -a" "$APP_DIR"/bin/start.sh; then
+      cp "$APP_DIR"/bin/start.sh "$INSTALL_DIR"
+    else
+      cat <<EOF >"$INSTALL_DIR"/start.sh
 #!/usr/bin/env bash
 
 set -a
@@ -116,93 +112,94 @@ set +a
 
 /usr/bin/node ${APP_DIR}/dist/main.js "\$@"
 EOF
-    chmod +x "$INSTALL_DIR"/start.sh
+      chmod +x "$INSTALL_DIR"/start.sh
+    fi
+
+    (
+      shopt -s dotglob
+      rm -rf "${APP_DIR:?}"/*
+    )
+
+    rm -rf "$SRC_DIR"
+
+    fetch_and_deploy_gh_release "immich" "immich-app/immich" "tarball" "v${RELEASE}" "$SRC_DIR"
+
+    msg_info "Updating ${APP} web and microservices"
+    cd "$SRC_DIR"/server
+    if [[ "$RELEASE" == "1.135.1" ]]; then
+      rm ./src/schema/migrations/1750323941566-UnsetPrewarmDimParameter.ts
+    fi
+    export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+    export CI=1
+    corepack enable
+
+    # server build
+    export SHARP_IGNORE_GLOBAL_LIBVIPS=true
+    $STD pnpm --filter immich --frozen-lockfile build
+    unset SHARP_IGNORE_GLOBAL_LIBVIPS
+    export SHARP_FORCE_GLOBAL_LIBVIPS=true
+    $STD pnpm --filter immich --frozen-lockfile --prod --no-optional deploy "$APP_DIR"
+    cp "$APP_DIR"/package.json "$APP_DIR"/bin
+    sed -i 's|^start|./start|' "$APP_DIR"/bin/immich-admin
+
+    # openapi & web build
+    cd "$SRC_DIR"
+    $STD pnpm --filter @immich/sdk --filter immich-web --frozen-lockfile --force install
+    $STD pnpm --filter @immich/sdk --filter immich-web build
+    cp -a web/build "$APP_DIR"/www
+    cp LICENSE "$APP_DIR"
+
+    # cli build
+    $STD pnpm --filter @immich/sdk --filter @immich/cli --frozen-lockfile install
+    $STD pnpm --filter @immich/sdk --filter @immich/cli build
+    $STD pnpm --filter @immich/cli --prod --no-optional deploy "$APP_DIR"/cli
+    cd "$APP_DIR"
+    mv "$INSTALL_DIR"/start.sh "$APP_DIR"/bin
+    msg_ok "Updated ${APP} web and microservices"
+
+    cd "$SRC_DIR"/machine-learning
+    mkdir -p "$ML_DIR"
+    export VIRTUAL_ENV="${ML_DIR}"/ml-venv
+    $STD /usr/local/bin/uv venv "$VIRTUAL_ENV"
+    if [[ -f ~/.openvino ]]; then
+      msg_info "Updating HW-accelerated machine-learning"
+      /usr/local/bin/uv -q sync --extra openvino --no-cache --active
+      patchelf --clear-execstack "${VIRTUAL_ENV}/lib/python3.11/site-packages/onnxruntime/capi/onnxruntime_pybind11_state.cpython-311-x86_64-linux-gnu.so"
+      msg_ok "Updated HW-accelerated machine-learning"
+    else
+      msg_info "Updating machine-learning"
+      /usr/local/bin/uv -q sync --extra cpu --no-cache --active
+      msg_ok "Updated machine-learning"
+    fi
+    cd "$SRC_DIR"
+    cp -a machine-learning/{ann,immich_ml} "$ML_DIR"
+    mv "$INSTALL_DIR"/ml_start.sh "$ML_DIR"
+    if [[ -f ~/.openvino ]]; then
+      sed -i "/intra_op/s/int = 0/int = os.cpu_count() or 0/" "$ML_DIR"/immich_ml/config.py
+    fi
+    ln -sf "$APP_DIR"/resources "$INSTALL_DIR"
+    cd "$APP_DIR"
+    grep -rl /usr/src | xargs -n1 sed -i "s|\/usr/src|$INSTALL_DIR|g"
+    grep -rlE "'/build'" | xargs -n1 sed -i "s|'/build'|'$APP_DIR'|g"
+    sed -i "s@\"/cache\"@\"$INSTALL_DIR/cache\"@g" "$ML_DIR"/immich_ml/config.py
+    ln -s "${UPLOAD_DIR:-/opt/immich/upload}" "$APP_DIR"/upload
+    ln -s "${UPLOAD_DIR:-/opt/immich/upload}" "$ML_DIR"/upload
+    ln -s "$GEO_DIR" "$APP_DIR"
+
+    chown -R immich:immich "$INSTALL_DIR"
+    if [[ ! -f ~/.debian_version.bak ]]; then
+      cp /etc/debian_version ~/.debian_version.bak
+      sed -i 's/.*/13.0/' /etc/debian_version
+    fi
+    msg_ok "Updated ${APP} to v${RELEASE}"
+
+    msg_info "Cleaning up"
+    $STD apt-get -y autoremove
+    $STD apt-get -y autoclean
+    msg_ok "Cleaned"
+    systemctl restart immich-ml immich-web
+    exit
   fi
-
-  (
-    shopt -s dotglob
-    rm -rf "${APP_DIR:?}"/*
-  )
-
-  rm -rf "$SRC_DIR"
-
-  fetch_and_deploy_gh_release "immich" "immich-app/immich" "tarball" "v${RELEASE}" "$SRC_DIR"
-
-  msg_info "Updating ${APP} web and microservices"
-  cd "$SRC_DIR"/server
-  if [[ "$RELEASE" == "1.135.1" ]]; then
-    rm ./src/schema/migrations/1750323941566-UnsetPrewarmDimParameter.ts
-  fi
-  export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
-  export CI=1
-  corepack enable
-
-  # server build
-  export SHARP_IGNORE_GLOBAL_LIBVIPS=true
-  $STD pnpm --filter immich --frozen-lockfile build
-  unset SHARP_IGNORE_GLOBAL_LIBVIPS
-  export SHARP_FORCE_GLOBAL_LIBVIPS=true
-  $STD pnpm --filter immich --frozen-lockfile --prod --no-optional deploy "$APP_DIR"
-  cp "$APP_DIR"/package.json "$APP_DIR"/bin
-  sed -i 's|^start|./start|' "$APP_DIR"/bin/immich-admin
-
-  # openapi & web build
-  cd "$SRC_DIR"
-  $STD pnpm --filter @immich/sdk --filter immich-web --frozen-lockfile --force install
-  $STD pnpm --filter @immich/sdk --filter immich-web build
-  cp -a web/build "$APP_DIR"/www
-  cp LICENSE "$APP_DIR"
-
-  # cli build
-  $STD pnpm --filter @immich/sdk --filter @immich/cli --frozen-lockfile install
-  $STD pnpm --filter @immich/sdk --filter @immich/cli build
-  $STD pnpm --filter @immich/cli --prod --no-optional deploy "$APP_DIR"/cli
-  cd "$APP_DIR"
-  mv "$INSTALL_DIR"/start.sh "$APP_DIR"/bin
-  msg_ok "Updated ${APP} web and microservices"
-
-  cd "$SRC_DIR"/machine-learning
-  mkdir -p "$ML_DIR"
-  export VIRTUAL_ENV="${ML_DIR}"/ml-venv
-  $STD /usr/local/bin/uv venv "$VIRTUAL_ENV"
-  if [[ -f ~/.openvino ]]; then
-    msg_info "Updating HW-accelerated machine-learning"
-    /usr/local/bin/uv -q sync --extra openvino --no-cache --active
-    patchelf --clear-execstack "${VIRTUAL_ENV}/lib/python3.11/site-packages/onnxruntime/capi/onnxruntime_pybind11_state.cpython-311-x86_64-linux-gnu.so"
-    msg_ok "Updated HW-accelerated machine-learning"
-  else
-    msg_info "Updating machine-learning"
-    /usr/local/bin/uv -q sync --extra cpu --no-cache --active
-    msg_ok "Updated machine-learning"
-  fi
-  cd "$SRC_DIR"
-  cp -a machine-learning/{ann,immich_ml} "$ML_DIR"
-  mv "$INSTALL_DIR"/ml_start.sh "$ML_DIR"
-  if [[ -f ~/.openvino ]]; then
-    sed -i "/intra_op/s/int = 0/int = os.cpu_count() or 0/" "$ML_DIR"/immich_ml/config.py
-  fi
-  ln -sf "$APP_DIR"/resources "$INSTALL_DIR"
-  cd "$APP_DIR"
-  grep -rl /usr/src | xargs -n1 sed -i "s|\/usr/src|$INSTALL_DIR|g"
-  grep -rlE "'/build'" | xargs -n1 sed -i "s|'/build'|'$APP_DIR'|g"
-  sed -i "s@\"/cache\"@\"$INSTALL_DIR/cache\"@g" "$ML_DIR"/immich_ml/config.py
-  ln -s "${UPLOAD_DIR:-/opt/immich/upload}" "$APP_DIR"/upload
-  ln -s "${UPLOAD_DIR:-/opt/immich/upload}" "$ML_DIR"/upload
-  ln -s "$GEO_DIR" "$APP_DIR"
-
-  chown -R immich:immich "$INSTALL_DIR"
-  if [[ ! -f ~/.debian_version.bak ]]; then
-    cp /etc/debian_version ~/.debian_version.bak
-    sed -i 's/.*/13.0/' /etc/debian_version
-  fi
-  msg_ok "Updated ${APP} to v${RELEASE}"
-
-  msg_info "Cleaning up"
-  $STD apt-get -y autoremove
-  $STD apt-get -y autoclean
-  msg_ok "Cleaned"
-  systemctl restart immich-ml immich-web
-  exit
 }
 
 function compile_libjxl() {

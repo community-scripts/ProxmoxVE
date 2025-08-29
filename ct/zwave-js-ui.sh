@@ -27,9 +27,8 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  
-  RELEASE=$(curl -fsSL https://api.github.com/repos/zwave-js/zwave-js-ui/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f ~/.zwave-js-ui ]] || [[ "${RELEASE}" != "$(cat ~/.zwave-js-ui)" ]]; then
+
+  if check_for_gh_release "zwave-js-ui" "zwave-js/zwave-js-ui"; then
     msg_info "Stopping Service"
     systemctl stop zwave-js-ui
     msg_ok "Stopped Service"
@@ -44,10 +43,7 @@ function update_script() {
     msg_info "Cleanup"
     rm -rf /opt/zwave-js-ui/store
     msg_ok "Cleaned"
-
-    msg_ok "Updated Successfully!\n"
-  else
-    msg_ok "No update required.  ${APP} is already at ${RELEASE}."
+    msg_ok "Updated Successfully"
   fi
   exit
 }

@@ -33,8 +33,7 @@ function update_script() {
     exit
   fi
 
-  RELEASE=$(curl -fsSL https://api.github.com/repos/TandoorRecipes/recipes/releases/latest | jq -r '.tag_name' | sed 's/^v//')
-  if [[ "${RELEASE}" != "$(cat ~/.tandoor 2>/dev/null)" ]] || [[ ! -f ~/.tandoor ]]; then
+  if check_for_gh_release "tandoor" "TandoorRecipes/recipes"; then
     msg_info "Stopping $APP"
     systemctl stop tandoor
     msg_ok "Stopped $APP"
@@ -47,7 +46,7 @@ function update_script() {
     PYTHON_VERSION="3.13" setup_uv
     fetch_and_deploy_gh_release "tandoor" "TandoorRecipes/recipes" "tarball" "latest" "/opt/tandoor"
 
-    msg_info "Updating $APP to ${RELEASE}"
+    msg_info "Updating $APP"
     cp -r /opt/tandoor.bak/{config,api,mediafiles,staticfiles} /opt/tandoor/
     mv /opt/tandoor.bak/.env /opt/tandoor/.env
     cd /opt/tandoor
@@ -65,7 +64,7 @@ EOF
     cd /opt/tandoor
     $STD /opt/tandoor/.venv/bin/python manage.py migrate
     $STD /opt/tandoor/.venv/bin/python manage.py collectstatic --no-input
-    msg_ok "Updated $APP to ${RELEASE}"
+    msg_ok "Updated $APP"
 
     msg_info "Starting $APP"
     systemctl start tandoor
@@ -76,8 +75,6 @@ EOF
     rm -rf /opt/tandoor.bak
     msg_ok "Cleanup Completed"
     msg_ok "Update Successful"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }

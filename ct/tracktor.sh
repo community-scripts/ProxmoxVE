@@ -28,8 +28,7 @@ function update_script() {
     exit
   fi
 
-  RELEASE=$(curl -fsSL https://api.github.com/repos/javedh-dev/tracktor/releases/latest | jq -r '.tag_name' | sed 's/^v//')
-  if [[ "${RELEASE}" != "$(cat ~/.tracktor 2>/dev/null)" ]] || [[ ! -f ~/.tracktor ]]; then
+  if check_for_gh_release "tracktor" "javedh-dev/tracktor"; then
     msg_info "Stopping Service"
     systemctl stop tracktor
     msg_ok "Stopped Service"
@@ -40,7 +39,7 @@ function update_script() {
 
     setup_nodejs
     fetch_and_deploy_gh_release "tracktor" "javedh-dev/tracktor" "tarball" "latest" "/opt/tracktor"
-    
+
     msg_info "Updating ${APP}"
     cd /opt/tracktor
     $STD npm install
@@ -54,10 +53,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start tracktor
     msg_ok "Started Service"
-    
     msg_ok "Updated Successfully"
-  else
-    msg_ok "Already up to date"
   fi
   exit
 }

@@ -36,15 +36,12 @@ function update_script() {
     $STD systemctl reload nginx
   fi
 
-  RELEASE=$(curl -fsSL https://api.github.com/repos/paymenter/paymenter/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f ~/.paymenter ]] || [[ "${RELEASE}" != "$(cat ~/.paymenter)" ]]; then
-    msg_info "Updating ${APP} to ${RELEASE}"
+  if check_for_gh_release "paymenter" "paymenter/paymenter"; then
+    msg_info "Updating ${APP}"
     cd /opt/paymenter
     $STD php artisan p:upgrade --no-interaction
-    echo "${RELEASE}" >~/.paymenter
+    echo "${CHECK_UPDATE_RELEASE}" >~/.paymenter
     msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}."
   fi
   exit
 }

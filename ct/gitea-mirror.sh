@@ -32,25 +32,21 @@ function update_script() {
   APP_VERSION=$(grep -o '"version": *"[^"]*"' /opt/gitea-mirror/package.json | cut -d'"' -f4)
   if [[ $APP_VERSION =~ ^2\. ]]; then
     if ! whiptail --backtitle "Gitea Mirror Update" --title "⚠️  VERSION 2.x DETECTED" --yesno \
-      "WARNING: Version $APP_VERSION detected!\n\nUpdating from version 2.x will CLEAR ALL CONFIGURATION.\n\nThis includes:\n• API tokens\n• User settings\n• Repository configurations\n• All custom settings\n\nDo you want to continue with the update process?" 15 70 --defaultno
-    then
+      "WARNING: Version $APP_VERSION detected!\n\nUpdating from version 2.x will CLEAR ALL CONFIGURATION.\n\nThis includes:\n• API tokens\n• User settings\n• Repository configurations\n• All custom settings\n\nDo you want to continue with the update process?" 15 70 --defaultno; then
       exit 0
     fi
 
     if ! whiptail --backtitle "Gitea Mirror Update" --title "⚠️  FINAL CONFIRMATION" --yesno \
-        "FINAL WARNING: This update WILL clear all configuration!\n\nBEFORE PROCEEDING, please:\n\n• Copy API tokens to a safe location\n• Backup any custom configurations\n• Note down repository settings\n\nThis action CANNOT be undone!" 18 70 --defaultno 
-    then
-        whiptail --backtitle "Gitea Mirror Update" --title "Update Cancelled" --msgbox "Update process cancelled. Please backup your configuration before proceeding." 8 60
-        exit 0
+      "FINAL WARNING: This update WILL clear all configuration!\n\nBEFORE PROCEEDING, please:\n\n• Copy API tokens to a safe location\n• Backup any custom configurations\n• Note down repository settings\n\nThis action CANNOT be undone!" 18 70 --defaultno; then
+      whiptail --backtitle "Gitea Mirror Update" --title "Update Cancelled" --msgbox "Update process cancelled. Please backup your configuration before proceeding." 8 60
+      exit 0
     fi
     whiptail --backtitle "Gitea Mirror Update" --title "Proceeding with Update" --msgbox \
-        "Proceeding with version $APP_VERSION update.\n\nAll configuration will be cleared as warned." 8 50
+      "Proceeding with version $APP_VERSION update.\n\nAll configuration will be cleared as warned." 8 50
     rm -rf /opt/gitea-mirror
   fi
-  
-  RELEASE=$(curl -fsSL https://api.github.com/repos/RayLabsHQ/gitea-mirror/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "${RELEASE}" != "$(cat ~/.${APP} 2>/dev/null || cat /opt/${APP}_version.txt 2>/dev/null)" ]]; then
 
+  if check_for_gh_release "gitea-mirror" "RayLabsHQ/gitea-mirror"; then
     msg_info "Stopping Services"
     systemctl stop gitea-mirror
     msg_ok "Services Stopped"
@@ -70,25 +66,23 @@ function update_script() {
     rm -rf /opt/gitea-mirror
     fetch_and_deploy_gh_release "gitea-mirror" "RayLabsHQ/gitea-mirror"
 
-    msg_info "Updating and rebuilding ${APP} to v${RELEASE}"
+    msg_info "Updating and rebuilding ${APP}"
     cd /opt/gitea-mirror
     $STD bun run setup
     $STD bun run build
     APP_VERSION=$(grep -o '"version": *"[^"]*"' package.json | cut -d'"' -f4)
     sudo sed -i.bak "s|^Environment=npm_package_version=.*|Environment=npm_package_version=${APP_VERSION}|" /etc/systemd/system/gitea-mirror.service
-    msg_ok "Updated and rebuilt ${APP} to v${RELEASE}"
+    msg_ok "Updated and rebuilt ${APP}"
 
     msg_info "Restoring Data"
     cp /opt/gitea-mirror-backup/data/* /opt/gitea-mirror/data
-    echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Restored Data"
 
     msg_info "Starting Service"
     systemctl daemon-reload
     systemctl start gitea-mirror
     msg_ok "Service Started"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
+    msg_ok "Update Successfully"
   fi
   exit
 }

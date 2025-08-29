@@ -27,9 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-
-  RELEASE=$(curl -fsSL https://api.github.com/repos/tobychui/zoraxy/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f ~/.zoraxy ]] || [[ "${RELEASE}" != "$(cat ~/.zoraxy)" ]]; then
+  if check_for_gh_release "zoraxy" "tobychui/zoraxy"; then
     msg_info "Stopping service"
     systemctl stop zoraxy
     msg_ok "Service stopped"
@@ -40,10 +38,7 @@ function update_script() {
     msg_info "Starting service"
     systemctl start zoraxy
     msg_ok "Service started"
-
     msg_ok "Updated successfully"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
   exit
 }

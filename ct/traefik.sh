@@ -28,8 +28,7 @@ function update_script() {
     exit
   fi
 
-  RELEASE=$(curl -fsSL https://api.github.com/repos/traefik/traefik/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "${RELEASE}" != "$(cat ~/.traefik)" ]] || [[ ! -f ~/.traefik ]]; then
+  if check_for_gh_release "traefik" "traefik/traefik"; then
     msg_info "Stopping service"
     systemctl stop traefik
     msg_ok "Service stopped"
@@ -39,10 +38,7 @@ function update_script() {
     msg_info "Starting ${APP}"
     systemctl start traefik
     msg_ok "Started ${APP}"
-
-    msg_ok "Successfully updated ${APP}"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
+    msg_ok "Updated Successfully"
   fi
   exit
 }

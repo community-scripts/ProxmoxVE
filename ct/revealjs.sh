@@ -20,43 +20,39 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d "/opt/revealjs" ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    
-    RELEASE=$(curl -fsSL https://api.github.com/repos/hakimel/reveal.js/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-    if [[ "${RELEASE}" != "$(cat ~/.revealjs 2>/dev/null)" ]] || [[ ! -f ~/.revealjs ]]; then
-        msg_info "Stopping $APP"
-        systemctl stop revealjs
-        msg_ok "Stopped $APP"
-
-        cp /opt/revealjs/index.html /opt
-        fetch_and_deploy_gh_release "revealjs" "hakimel/reveal.js" "tarball"
-
-        msg_info "Updating $APP to ${RELEASE}"
-        cd /opt/revealjs
-        $STD npm install
-        cp -f /opt/index.html /opt/revealjs
-        sed -i '25s/localhost/0.0.0.0/g' /opt/revealjs/gulpfile.js
-        msg_ok "Updated $APP to ${RELEASE}"
-
-        msg_info "Starting $APP"
-        systemctl start revealjs
-        msg_ok "Started $APP"
-
-        msg_info "Cleaning Up"
-        rm -f /opt/index.html
-        msg_ok "Cleanup Completed"
-
-        msg_ok "Update Successful"
-    else
-        msg_ok "No update required. ${APP} is already at ${RELEASE}"
-    fi
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d "/opt/revealjs" ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+
+  if check_for_gh_release "revealjs" "hakimel/reveal.js"; then
+    msg_info "Stopping $APP"
+    systemctl stop revealjs
+    msg_ok "Stopped $APP"
+
+    cp /opt/revealjs/index.html /opt
+    fetch_and_deploy_gh_release "revealjs" "hakimel/reveal.js" "tarball"
+
+    msg_info "Updating $APP"
+    cd /opt/revealjs
+    $STD npm install
+    cp -f /opt/index.html /opt/revealjs
+    sed -i '25s/localhost/0.0.0.0/g' /opt/revealjs/gulpfile.js
+    msg_ok "Updated $APP"
+
+    msg_info "Starting $APP"
+    systemctl start revealjs
+    msg_ok "Started $APP"
+
+    msg_info "Cleaning Up"
+    rm -f /opt/index.html
+    msg_ok "Cleanup Completed"
+    msg_ok "Update Successful"
+  fi
+  exit
 }
 
 start

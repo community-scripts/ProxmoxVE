@@ -27,35 +27,26 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  if [[ "$(node -v | cut -d 'v' -f 2)" == "18."* ]]; then
-    if ! command -v npm >/dev/null 2>&1; then
-      echo "Installing NPM..."
-      $STD apt-get install -y npm
-      echo "Installed NPM..."
-    fi
-  fi
 
-  RELEASE=$(curl -fsSL https://api.github.com/repos/louislam/uptime-kuma/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}')
-  if [[ ! -f ~/.uptime-kuma ]] || [[ "${RELEASE}" != "$(cat ~/.uptime-kuma)" ]]; then
+  NODE_VERSION="22" setup_nodejs
+
+  if check_for_gh_release "uptime-kuma" "louislam/uptime-kuma"; then
     msg_info "Stopping ${APP}"
-    $STD systemctl stop uptime-kuma
+    systemctl stop uptime-kuma
     msg_ok "Stopped ${APP}"
 
     fetch_and_deploy_gh_release "uptime-kuma" "louislam/uptime-kuma" "tarball"
-    cd /opt/uptime-kuma
 
-    msg_info "Updating ${APP} to ${RELEASE}"
+    msg_info "Updating ${APP}"
+    cd /opt/uptime-kuma
     $STD npm install --omit dev
     $STD npm run download-dist
     msg_ok "Updated ${APP}"
 
     msg_info "Starting ${APP}"
-    $STD sudo systemctl start uptime-kuma
+    systemctl start uptime-kuma
     msg_ok "Started ${APP}"
-
     msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
   exit
 }

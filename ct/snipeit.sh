@@ -28,8 +28,7 @@ function update_script() {
     exit
   fi
 
-  RELEASE=$(curl -fsSL https://api.github.com/repos/snipe/snipe-it/releases/latest | grep '"tag_name"' | sed -E 's/.*"tag_name": "v([^"]+).*/\1/')
-  if [[ ! -f ~/.snipe-it ]] || [[ "${RELEASE}" != "$(cat ~/.snipe-it 2>/dev/null)" ]]; then
+  if check_for_gh_release "snipe-it" "snipe/snipe-it"; then
     msg_info "Stopping Services"
     systemctl stop nginx
     msg_ok "Services Stopped"
@@ -43,7 +42,7 @@ function update_script() {
     sed -i 's/php8.2/php8.3/g' /etc/nginx/conf.d/snipeit.conf
     setup_composer
 
-    msg_info "Updating ${APP} to v${RELEASE}"
+    msg_info "Updating ${APP}"
     $STD apt-get update
     $STD apt-get -y upgrade
     cp /opt/snipe-it-backup/.env /opt/snipe-it/.env
@@ -66,8 +65,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start nginx
     msg_ok "Started Service"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
+    msg_ok "Update Successful"
   fi
   exit
 }

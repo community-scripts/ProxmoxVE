@@ -28,7 +28,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  
+
   RELEASE=$(curl -fsSL https://api.github.com/repos/rustdesk/rustdesk-server/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
   APIRELEASE=$(curl -fsSL https://api.github.com/repos/lejianwen/rustdesk-api/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
   if [[ "${RELEASE}" != "$(cat ~/.rustdesk-hbbr)" ]] || [[ "${APIRELEASE}" != "$(cat ~/.rustdesk-api)" ]] || [[ ! -f ~/.rustdesk-hbbr ]] || [[ ! -f ~/.rustdesk-api ]]; then

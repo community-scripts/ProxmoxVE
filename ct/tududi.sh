@@ -27,9 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-
-  RELEASE=$(curl -fsSL https://api.github.com/repos/chrisvel/tududi/releases/latest | yq '.tag_name' | sed 's/^"v//;s/"$//')
-  if [[ "${RELEASE}" != "$(cat ~/.tududi 2>/dev/null)" ]] || [[ ! -f ~/.tududi ]]; then
+  if check_for_gh_release "tududi" "chrisvel/tududi"; then
     msg_info "Stopping Service"
     systemctl stop tududi
     msg_ok "Stopped Service"
@@ -56,8 +54,6 @@ function update_script() {
     systemctl start tududi
     msg_ok "Started Service"
     msg_ok "Updated Successfully"
-  else
-    msg_ok "Already up to date"
   fi
   exit
 }

@@ -30,15 +30,18 @@ function update_script() {
     3>&1 1>&2 2>&3)
 
   if [ "$UPD" == "1" ]; then
-    msg_info "Stopping Meilisearch"
-    systemctl stop meilisearch
-    msg_ok "Stopped Meilisearch"
+    if check_for_gh_release "meilisearch" "meilisearch/meilisearch"; then
+      msg_info "Stopping Meilisearch"
+      systemctl stop meilisearch
+      msg_ok "Stopped Meilisearch"
 
-    fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary"
+      fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary"
 
-    msg_info "Starting Meilisearch"
-    systemctl start meilisearch
-    msg_ok "Started Meilisearch"
+      msg_info "Starting Meilisearch"
+      systemctl start meilisearch
+      msg_ok "Started Meilisearch"
+      msg_ok "Update Successfully"
+    fi
     exit
   fi
 
@@ -47,24 +50,27 @@ function update_script() {
       msg_error "No Meilisearch-UI Installation Found!"
       exit
     fi
-    msg_info "Stopping Meilisearch-UI"
-    systemctl stop meilisearch-ui
-    msg_ok "Stopped Meilisearch-UI"
+    if check_for_gh_release "meilisearch-ui" "riccox/meilisearch-ui"; then
+      msg_info "Stopping Meilisearch-UI"
+      systemctl stop meilisearch-ui
+      msg_ok "Stopped Meilisearch-UI"
 
-    cp /opt/meilisearch-ui/.env.local /tmp/.env.local.bak
-    rm -rf /opt/meilisearch-ui
-    fetch_and_deploy_gh_release "meilisearch-ui" "riccox/meilisearch-ui" "tarball"
+      cp /opt/meilisearch-ui/.env.local /tmp/.env.local.bak
+      rm -rf /opt/meilisearch-ui
+      fetch_and_deploy_gh_release "meilisearch-ui" "riccox/meilisearch-ui" "tarball"
 
-    msg_info "Configuring Meilisearch-UI"
-    cd /opt/meilisearch-ui
-    sed -i 's|const hash = execSync("git rev-parse HEAD").toString().trim();|const hash = "unknown";|' /opt/meilisearch-ui/vite.config.ts
-    mv /tmp/.env.local.bak /opt/meilisearch-ui/.env.local
-    $STD pnpm install
-    msg_ok "Configured Meilisearch-UI"
+      msg_info "Configuring Meilisearch-UI"
+      cd /opt/meilisearch-ui
+      sed -i 's|const hash = execSync("git rev-parse HEAD").toString().trim();|const hash = "unknown";|' /opt/meilisearch-ui/vite.config.ts
+      mv /tmp/.env.local.bak /opt/meilisearch-ui/.env.local
+      $STD pnpm install
+      msg_ok "Configured Meilisearch-UI"
 
-    msg_info "Starting Meilisearch-UI"
-    systemctl start meilisearch-ui
-    msg_ok "Started Meilisearch-UI"
+      msg_info "Starting Meilisearch-UI"
+      systemctl start meilisearch-ui
+      msg_ok "Started Meilisearch-UI"
+      msg_ok "Update Successfully"
+    fi
     exit
   fi
 }

@@ -28,17 +28,17 @@ function update_script() {
     exit
   fi
 
-  RELEASE=$(curl -fsSL https://api.github.com/repos/thelounge/thelounge-deb/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f ~/.thelounge ]] || [[ "${RELEASE}" != "$(cat ~/.thelounge)" ]]; then
+  if check_for_gh_release "thelounge" "thelounge/thelounge-deb"; then
     msg_info "Stopping Service"
     systemctl stop thelounge
     msg_ok "Stopped Service"
 
     fetch_and_deploy_gh_release "thelounge" "thelounge/thelounge-deb" "binary"
 
+    msg_info "Starting Service"
+    systemctl start thelounge
+    msg_ok "Started Service"
     msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required.  ${APP} is already at v${RELEASE}."
   fi
   exit
 }

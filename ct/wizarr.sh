@@ -29,8 +29,9 @@ function update_script() {
     exit
   fi
 
-  RELEASE=$(curl -fsSL https://api.github.com/repos/wizarrrr/wizarr/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  if [[ "${RELEASE}" != "$(cat ~/.wizarr 2>/dev/null)" ]] || [[ ! -f ~/.wizarr ]]; then
+  setup_uv
+
+  if check_for_gh_release "wizarr" "wizarrrr/wizarr"; then
     msg_info "Stopping $APP"
     systemctl stop wizarr
     msg_ok "Stopped $APP"
@@ -40,10 +41,9 @@ function update_script() {
     $STD tar -czf "$BACKUP_FILE" /opt/wizarr/{.env,start.sh} /opt/wizarr/database/ &>/dev/null
     msg_ok "Backup Created"
 
-    setup_uv
     fetch_and_deploy_gh_release "wizarr" "wizarrrr/wizarr"
 
-    msg_info "Updating $APP to v${RELEASE}"
+    msg_info "Updating $APP"
     cd /opt/wizarr
     /usr/local/bin/uv -q sync --locked
     $STD /usr/local/bin/uv -q run pybabel compile -d app/translations
@@ -52,7 +52,7 @@ function update_script() {
     mkdir -p ./.cache
     $STD tar -xf "$BACKUP_FILE" --directory=/
     $STD /usr/local/bin/uv -q run flask db upgrade
-    msg_ok "Updated $APP to v${RELEASE}"
+    msg_ok "Updated $APP"
 
     msg_info "Starting $APP"
     systemctl start wizarr
@@ -61,9 +61,7 @@ function update_script() {
     msg_info "Cleaning Up"
     rm -rf "$BACKUP_FILE"
     msg_ok "Cleanup Completed"
-    msg_ok "Update Successful"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
+    msg_ok "Update Successfully"
   fi
   exit
 }

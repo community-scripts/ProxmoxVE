@@ -29,22 +29,17 @@ function update_script() {
     exit
   fi
 
-  RELEASE=$(curl -fsSL https://api.github.com/repos/CrazyWolf13/streamlink-webui/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  if [[ "${RELEASE}" != "$(cat ~/.${APP} 2>/dev/null || cat /opt/${APP}_version.txt 2>/dev/null)" ]]; then
-    msg_info "Starting Update"
-
+  if check_for_gh_release "streamlink-webui" "CrazyWolf13/streamlink-webui"; then
     msg_info "Stopping $APP"
     systemctl stop ${APP}
     msg_ok "Stopped $APP"
 
     rm -rf /opt/${APP}
-    NODE_VERSION="22"
-    NODE_MODULE="npm,yarn"
-    setup_nodejs
+    NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
     setup_uv
     fetch_and_deploy_gh_release "streamlink-webui" "CrazyWolf13/streamlink-webui"
 
-    msg_info "Updating $APP to v${RELEASE}"
+    msg_info "Updating $APP"
     $STD uv venv /opt/"${APP}"/backend/src/.venv
     source /opt/"${APP}"/backend/src/.venv/bin/activate
     $STD uv pip install -r /opt/"${APP}"/backend/src/requirements.txt --python=/opt/"${APP}"/backend/src/.venv
@@ -52,15 +47,12 @@ function update_script() {
     $STD yarn install
     $STD yarn build
     chmod +x /opt/"${APP}"/start.sh
-    msg_ok "Updated $APP to v${RELEASE}"
+    msg_ok "Updated $APP"
 
     msg_info "Starting $APP"
     systemctl start ${APP}
     msg_ok "Started $APP"
-
     msg_ok "Update Successful"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }

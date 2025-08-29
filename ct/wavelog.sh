@@ -28,8 +28,7 @@ function update_script() {
     exit
   fi
 
-  RELEASE=$(curl -fsSL https://api.github.com/repos/wavelog/wavelog/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}')
-  if [[ ! -f ~/.wavelog ]] || [[ "${RELEASE}" != "$(cat ~/.wavelog)" ]]; then
+  if check_for_gh_release "wavelog" "wavelog/wavelog"; then
     msg_info "Stopping Services"
     systemctl stop apache2
     msg_ok "Services Stopped"
@@ -46,7 +45,7 @@ function update_script() {
     rm -rf /opt/wavelog
     fetch_and_deploy_gh_release "wavelog" "wavelog/wavelog" "tarball"
 
-    msg_info "Updating ${APP} to ${RELEASE}"
+    msg_info "Updating ${APP}"
     rm -rf /opt/wavelog/install
     mv /opt/config.php /opt/wavelog/application/config/config.php
     mv /opt/database.php /opt/wavelog/application/config/database.php
@@ -63,10 +62,7 @@ function update_script() {
     msg_info "Starting Services"
     systemctl start apache2
     msg_ok "Started Services"
-
     msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
   exit
 }
