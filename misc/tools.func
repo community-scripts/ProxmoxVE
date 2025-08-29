@@ -1958,7 +1958,7 @@ check_for_gh_release() {
   # jq check
   if ! command -v jq &>/dev/null; then
     $STD apt-get update -qq 
-    $STD apt-get install -y jq &>/dev/null || {
+    $STD apt-get install -y jq || {
       msg_error "Failed to install jq"
       return 1
     }
