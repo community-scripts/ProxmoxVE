@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - fix version check for pocket-id migration [@MickLesk](https://github.com/MickLesk) ([#7298](https://github.com/community-scripts/ProxmoxVE/pull/7298))
     - fix: remove file creation at release fetching and version checking logic [@MickLesk](https://github.com/MickLesk) ([#7299](https://github.com/community-scripts/ProxmoxVE/pull/7299))
     - Zitadel: Fix initial setup [@tremor021](https://github.com/tremor021) ([#7284](https://github.com/community-scripts/ProxmoxVE/pull/7284))
     - post-pbs: increase enterprise recognition [@MickLesk](https://github.com/MickLesk) ([#7280](https://github.com/community-scripts/ProxmoxVE/pull/7280))
