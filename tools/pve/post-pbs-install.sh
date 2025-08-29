@@ -196,17 +196,30 @@ EOF
   esac
 
   # --- Enterprise repo ---
-  if ! component_exists_in_sources "pbs-enterprise"; then
-    cat >/etc/apt/sources.list.d/pbs-enterprise.sources <<EOF
-Types: deb
-URIs: https://enterprise.proxmox.com/debian/pbs
-Suites: trixie
-Components: pbs-enterprise
-Signed-By: /usr/share/keyrings/proxmox-archive-keyring.gpg
-EOF
-    msg_ok "Added 'pbs-enterprise' repository"
+  if component_exists_in_sources "pbs-enterprise"; then
+    CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "PBS Enterprise Repository" --menu \
+      "Enterprise repository detected.
+
+You normally need a valid subscription for this.
+Disable it (recommended)?" 14 58 2 "yes" " " "no" " " 3>&2 2>&1 1>&3)
+    case $CHOICE in
+    yes)
+      sed -i '/pbs-enterprise/ s/^/# /' /etc/apt/sources.list.d/pbs-enterprise.sources
+      msg_ok "Disabled 'pbs-enterprise' repository"
+      ;;
+    no)
+      msg_error "Keeping 'pbs-enterprise' active (subscription required!)"
+      ;;
+    esac
   else
-    msg_ok "'pbs-enterprise' repository already present"
+    cat >/etc/apt/sources.list.d/pbs-enterprise.sources <<EOF
+# Types: deb
+# URIs: https://enterprise.proxmox.com/debian/pbs
+# Suites: trixie
+# Components: pbs-enterprise
+# Signed-By: /usr/share/keyrings/proxmox-archive-keyring.gpg
+EOF
+    msg_ok "Added 'pbs-enterprise' repository (disabled)"
   fi
 
   # --- No-subscription repo ---
