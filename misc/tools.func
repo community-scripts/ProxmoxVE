@@ -1965,7 +1965,7 @@ check_for_gh_release() {
   fi
 
   # Fetch releases (newest → oldest)
-  local releases=""
+  local releases
   releases=$(
     curl -fsSL --max-time 15 \
       -H 'Accept: application/vnd.github+json' \
@@ -1983,18 +1983,13 @@ check_for_gh_release() {
   local latest current
   latest=$(echo "$releases" | head -n1)
   current=""
-  if [[ -f "$current_file" ]]; then
-    current="$(<"$current_file")"
-  fi
+  [[ -f "$current_file" ]] && current="$(<"$current_file")"
 
   # Helper: get index of a version (lower = newer)
   get_index() {
     local ver="${1:-}"
     [[ -z "$ver" ]] && return 1
-    local idx
-    idx=$(nl -ba <<<"$releases" | awk -v v="$ver" '$2==v{print $1; exit}')
-    [[ -n "$idx" ]] || return 1
-    echo "$idx"
+    nl -ba <<<"$releases" | awk -v v="$ver" '$2==v{print $1; exit}'
   }
 
   # Pinning enabled
@@ -2007,7 +2002,6 @@ check_for_gh_release() {
     if [[ -z "$current" ]]; then
       msg_info "${app} pinned to v${pinned_version}, no local version → install required"
       CHECK_UPDATE_RELEASE="$pinned_version"
-      touch "$current_file"
       return 0
     fi
 
@@ -2027,14 +2021,12 @@ check_for_gh_release() {
     if [[ -z "$current_index" ]] || [[ "$current_index" -gt "$pinned_index" ]]; then
       msg_info "${app} pinned to v${pinned_version} (installed v${current:-none}) → update required"
       CHECK_UPDATE_RELEASE="$pinned_version"
-      : >"$current_file"
       return 0
     fi
 
     if [[ "$current_index" -lt "$pinned_index" ]]; then
       msg_info "${app} pinned to v${pinned_version} (installed newer v${current}) → downgrade required"
       CHECK_UPDATE_RELEASE="$pinned_version"
-      : >"$current_file"
       return 0
     fi
 
@@ -2045,7 +2037,6 @@ check_for_gh_release() {
   if [[ -z "$current" || "$current" != "$latest" ]]; then
     CHECK_UPDATE_RELEASE="$latest"
     msg_info "New release available: v${latest} (current: v${current:-none})"
-    : >"$current_file"
     return 0
   fi
 
