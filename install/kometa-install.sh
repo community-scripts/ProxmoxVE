@@ -14,7 +14,6 @@ network_check
 update_os
 
 PYTHON_VERSION="3.12" setup_uv
-$STD uv python update-shell
 fetch_and_deploy_gh_release "kometa" "Kometa-Team/Kometa"
 
 msg_info "Setup Kometa"

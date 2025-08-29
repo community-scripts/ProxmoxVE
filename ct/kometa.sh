@@ -38,7 +38,6 @@ function update_script() {
     msg_ok "Backup completed"
 
     PYTHON_VERSION="3.12" setup_uv
-    $STD uv python update-shell
     fetch_and_deploy_gh_release "kometa" "Kometa-Team/Kometa"
 
     msg_info "Updating Kometa"
