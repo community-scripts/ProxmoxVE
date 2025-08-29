@@ -118,7 +118,7 @@ systemctl enable -q zitadel
 msg_ok "Created Services"
 
 msg_info "Zitadel initial setup"
-$STD zitadel start-from-init --masterkeyFile /opt/zitadel/.masterkey --config /opt/zitadel/config.yaml
+zitadel start-from-init --masterkeyFile /opt/zitadel/.masterkey --config /opt/zitadel/config.yaml &>/dev/null &
 sleep 60
 kill $(lsof -i | awk '/zitadel/ {print $2}' | head -n1)
 useradd zitadel
