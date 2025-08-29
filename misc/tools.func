@@ -1930,11 +1930,11 @@ function setup_ffmpeg() {
 #   - If newer, sets global CHECK_UPDATE_RELEASE and returns 0
 #
 # Usage:
-#     if check_for_gh_release "flaresolverr" "FlareSolverr/FlareSolverr"; then
-#       # trigger update...
-#     fi
-#     exit 0
-#     } (end of update_script not from the function)
+#   check_for_gh_release "AppName" "user/repo"
+#   if [[ $? -eq 0 ]]; then
+#     echo "New version available: $CHECK_UPDATE_RELEASE"
+#     # trigger update...
+#   fi
 #
 # Notes:
 #   - Requires `jq` (auto-installed if missing)
@@ -1944,6 +1944,7 @@ function setup_ffmpeg() {
 check_for_gh_release() {
   local app="$1"
   local source="$2"
+  local pinned_version="${3:-}"   # optional
   local current_file="$HOME/.${app,,}"
 
   msg_info "Check for update: ${app}"
@@ -1956,15 +1957,14 @@ check_for_gh_release() {
 
   # jq check
   if ! command -v jq &>/dev/null; then
-    $STD apt-get update
-    $STD apt-get install -y jq || {
+    apt-get update -qq &>/dev/null && apt-get install -y jq &>/dev/null || {
       msg_error "Failed to install jq"
       return 1
     }
   fi
 
   # get latest release
-  local release
+local release
   release=$(curl -fsSL "https://api.github.com/repos/${source}/releases/latest" |
     jq -r '.tag_name' | sed 's/^v//')
 
@@ -1974,12 +1974,27 @@ check_for_gh_release() {
   fi
 
   local current=""
-  if [[ -f "$current_file" ]]; then
-    current=$(<"$current_file")
+  [[ -f "$current_file" ]] && current=$(<"$current_file")
+
+  # PINNED Releases
+  if [[ -n "$pinned_version" ]]; then
+    if [[ "$pinned_version" == "$release" ]]; then
+      msg_ok "${app} pinned to v${pinned_version} (no update needed)"
+      return 1
+    else
+      if [[ "$current" == "$pinned_version" ]]; then
+        msg_ok "${app} pinned to v${pinned_version} (already installed, upstream v${release})"
+        return 1
+      fi
+      msg_info "${app} pinned to v${pinned_version} (upstream v${release}) → update/downgrade required"
+      CHECK_UPDATE_RELEASE="$pinned_version"
+      return 0
+    fi
   fi
 
   if [[ "$release" != "$current" ]] || [[ ! -f "$current_file" ]]; then
     CHECK_UPDATE_RELEASE="$release"
+    msg_info "New release available: v${release} (current: v${current:-none})"
     return 0
   else
     msg_ok "${app} is up to date (v${release})"
