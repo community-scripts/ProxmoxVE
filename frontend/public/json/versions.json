@@ -1,5 +1,70 @@
 [
   {
+    "name": "rcourtman/Pulse",
+    "version": "v4.10.1",
+    "date": "2025-08-29T23:15:05Z"
+  },
+  {
+    "name": "booklore-app/booklore",
+    "version": "v1.0.0",
+    "date": "2025-08-29T21:59:46Z"
+  },
+  {
+    "name": "henrygd/beszel",
+    "version": "v0.12.6",
+    "date": "2025-08-29T21:40:09Z"
+  },
+  {
+    "name": "HabitRPG/habitica",
+    "version": "v5.39.1",
+    "date": "2025-08-29T21:02:00Z"
+  },
+  {
+    "name": "bunkerity/bunkerweb",
+    "version": "v1.6.4",
+    "date": "2025-08-18T20:22:07Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.24.26",
+    "date": "2025-08-29T20:26:08Z"
+  },
+  {
+    "name": "homarr-labs/homarr",
+    "version": "v1.35.0",
+    "date": "2025-08-29T19:14:25Z"
+  },
+  {
+    "name": "immich-app/immich",
+    "version": "v1.140.0",
+    "date": "2025-08-29T17:55:39Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.8.3",
+    "date": "2025-08-21T18:23:10Z"
+  },
+  {
+    "name": "silverbulletmd/silverbullet",
+    "version": "2.0.0",
+    "date": "2025-08-29T13:38:35Z"
+  },
+  {
+    "name": "nzbgetcom/nzbget",
+    "version": "v25.2",
+    "date": "2025-07-04T08:21:42Z"
+  },
+  {
+    "name": "Forceu/Gokapi",
+    "version": "v2.1.0",
+    "date": "2025-08-29T12:45:42Z"
+  },
+  {
+    "name": "Luligu/matterbridge",
+    "version": "3.2.4",
+    "date": "2025-08-29T12:19:53Z"
+  },
+  {
     "name": "Graylog2/graylog2-server",
     "version": "7.0.0-alpha.2",
     "date": "2025-08-29T10:57:06Z"
@@ -95,11 +160,6 @@
     "date": "2025-08-28T19:08:13Z"
   },
   {
-    "name": "immich-app/immich",
-    "version": "v1.140.0",
-    "date": "2025-08-28T18:50:45Z"
-  },
-  {
     "name": "benjaminjonard/koillection",
     "version": "1.7.0",
     "date": "2025-08-28T18:10:59Z"
@@ -108,16 +168,6 @@
     "name": "grokability/snipe-it",
     "version": "v8.3.0",
     "date": "2025-08-28T17:49:06Z"
-  },
-  {
-    "name": "rcourtman/Pulse",
-    "version": "v4.9.1",
-    "date": "2025-08-28T13:34:45Z"
-  },
-  {
-    "name": "msgbyte/tianji",
-    "version": "v1.24.24",
-    "date": "2025-08-28T17:27:37Z"
   },
   {
     "name": "gristlabs/grist-core",
@@ -195,11 +245,6 @@
     "date": "2025-08-27T20:03:52Z"
   },
   {
-    "name": "home-assistant/core",
-    "version": "2025.8.3",
-    "date": "2025-08-21T18:23:10Z"
-  },
-  {
     "name": "gtsteffaniak/filebrowser",
     "version": "v0.8.3-beta",
     "date": "2025-08-27T18:18:48Z"
@@ -228,11 +273,6 @@
     "name": "theonedev/onedev",
     "version": "v12.0.8",
     "date": "2025-08-27T06:22:32Z"
-  },
-  {
-    "name": "henrygd/beszel",
-    "version": "v0.12.5",
-    "date": "2025-08-27T01:15:16Z"
   },
   {
     "name": "netbox-community/netbox",
@@ -288,11 +328,6 @@
     "name": "advplyr/audiobookshelf",
     "version": "v2.29.0",
     "date": "2025-08-25T22:43:20Z"
-  },
-  {
-    "name": "booklore-app/booklore",
-    "version": "v0.38.2",
-    "date": "2025-08-25T22:41:41Z"
   },
   {
     "name": "Brandawg93/PeaNUT",
@@ -420,11 +455,6 @@
     "date": "2025-08-22T23:56:41Z"
   },
   {
-    "name": "homarr-labs/homarr",
-    "version": "v1.34.0",
-    "date": "2025-08-22T19:16:24Z"
-  },
-  {
     "name": "tailscale/tailscale",
     "version": "v1.86.5",
     "date": "2025-08-22T17:13:13Z"
@@ -468,11 +498,6 @@
     "name": "cloudreve/cloudreve",
     "version": "4.6.0",
     "date": "2025-08-22T02:21:40Z"
-  },
-  {
-    "name": "HabitRPG/habitica",
-    "version": "v5.39.0",
-    "date": "2025-08-21T18:40:00Z"
   },
   {
     "name": "hargata/lubelog",
@@ -520,11 +545,6 @@
     "date": "2025-08-20T08:15:46Z"
   },
   {
-    "name": "Luligu/matterbridge",
-    "version": "3.2.3",
-    "date": "2025-08-20T07:57:58Z"
-  },
-  {
     "name": "TwiN/gatus",
     "version": "v5.23.2",
     "date": "2025-08-19T21:24:45Z"
@@ -555,11 +575,6 @@
     "date": "2025-08-19T06:57:20Z"
   },
   {
-    "name": "bunkerity/bunkerweb",
-    "version": "v1.6.4",
-    "date": "2025-08-18T20:22:07Z"
-  },
-  {
     "name": "ventoy/Ventoy",
     "version": "v1.1.07",
     "date": "2025-08-18T16:13:54Z"
@@ -573,11 +588,6 @@
     "name": "redis/redis",
     "version": "8.2.1",
     "date": "2025-08-18T15:42:48Z"
-  },
-  {
-    "name": "nzbgetcom/nzbget",
-    "version": "v25.2",
-    "date": "2025-07-04T08:21:42Z"
   },
   {
     "name": "VictoriaMetrics/VictoriaMetrics",
@@ -1070,11 +1080,6 @@
     "date": "2025-06-18T12:19:54Z"
   },
   {
-    "name": "silverbulletmd/silverbullet",
-    "version": "2.0.0-pre3",
-    "date": "2025-06-18T08:01:24Z"
-  },
-  {
     "name": "webmin/webmin",
     "version": "2.402",
     "date": "2025-06-17T05:20:42Z"
@@ -1103,11 +1108,6 @@
     "name": "seanmorley15/AdventureLog",
     "version": "v0.10.0",
     "date": "2025-06-09T13:37:07Z"
-  },
-  {
-    "name": "Forceu/Gokapi",
-    "version": "v2.0.1",
-    "date": "2025-06-08T14:40:24Z"
   },
   {
     "name": "jordan-dalby/ByteStash",
