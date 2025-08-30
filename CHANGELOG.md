@@ -16,6 +16,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Immich: bump version to 1.140.0 [@vhsdream](https://github.com/vhsdream) ([#7275](https://github.com/community-scripts/ProxmoxVE/pull/7275))
 
+  - #### 🔧 Refactor
+
+    - Refactor gitea-mirror env-file [@CrazyWolf13](https://github.com/CrazyWolf13) ([#7240](https://github.com/community-scripts/ProxmoxVE/pull/7240))
+
 ## 2025-08-29
 
 ### 🚀 Updated Scripts
