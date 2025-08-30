@@ -514,7 +514,42 @@ post_routines_common() {
   yes)
     whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox --title "Support Subscriptions" "Supporting the software's development team is essential. Check their official website's Support Subscriptions for pricing. Without their dedicated work, we wouldn't have this exceptional software." 10 58
     msg_info "Disabling subscription nag"
-    echo "DPkg::Post-Invoke { \"if [ -s /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js ] && ! grep -q -F 'NoMoreNagging' /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js; then echo 'Removing subscription nag from UI...'; sed -i '/data\.status/{s/\\!//;s/active/NoMoreNagging/}' /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js; fi\" };" >/etc/apt/apt.conf.d/no-nag-script
+    # Create external script, this is needed because DPkg::Post-Invoke is fidly with quote interpretation
+    cat >/usr/local/bin/pve-remove-nag.sh <<'EOF'
+#!/bin/sh
+WEB_JS=/usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js
+if [ -s "$WEB_JS" ] && ! grep -q NoMoreNagging "$WEB_JS"; then
+    echo "Patching Web UI nag..."
+    sed -i -e "/data\.status/ s/!//" -e "/data\.status/ s/active/NoMoreNagging/" "$WEB_JS"
+fi
+
+MOBILE_TPL=/usr/share/pve-yew-mobile-gui/index.html.tpl
+MARKER="<!-- MANAGED BLOCK FOR MOBILE NAG -->"
+if [ -f "$MOBILE_TPL" ] && ! grep -q "$MARKER" "$MOBILE_TPL"; then
+    echo "Patching Mobile UI nag..."
+    printf "%s\n" \
+      "$MARKER" \
+      "<script>" \
+      "  function watchAndRemoveDialog() {" \
+      "    const observer = new MutationObserver(() => {" \
+      "      const dialog = document.querySelector('dialog[aria-label=\"No valid subscription\"]');" \
+      "      if (dialog) { dialog.remove(); console.log('Removed dialog: No valid subscription'); observer.disconnect(); }" \
+      "    });" \
+      "    observer.observe(document.body, { childList: true, subtree: true });" \
+      "  }" \
+      "  setTimeout(watchAndRemoveDialog, 100);" \
+      "</script>" \
+      "" >> "$MOBILE_TPL"
+fi
+EOF
+
+    chmod 755 /usr/local/bin/pve-remove-nag.sh
+    
+    cat >/etc/apt/apt.conf.d/no-nag-script <<'EOF'
+DPkg::Post-Invoke { "/usr/local/bin/pve-remove-nag.sh"; };
+EOF
+    chmod 644 /etc/apt/apt.conf.d/no-nag-script
+
     msg_ok "Disabled subscription nag (Delete browser cache)"
     ;;
   no)
