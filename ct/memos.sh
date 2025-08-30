@@ -27,9 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  
-  RELEASE=$(curl -fsSL https://api.github.com/repos/usememos/memos/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "${RELEASE}" != "$(cat ~/.memos 2>/dev/null)" ]] || [[ ! -f ~/.memos ]]; then
+  if check_for_gh_release "memos" "usememos/memos"; then
     msg_info "Stopping service"
     systemctl stop memos
     msg_ok "Service stopped"
@@ -39,10 +37,7 @@ function update_script() {
     msg_info "Starting service"
     systemctl start memos
     msg_ok "Service started"
-
     msg_ok "Updated successfully"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }

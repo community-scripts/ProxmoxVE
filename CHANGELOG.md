@@ -10,6 +10,56 @@
 > [!CAUTION]
 Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit the project's popularity for potentially malicious purposes.
 
+## 2025-08-30
+
+### 🚀 Updated Scripts
+
+  - Immich: bump version to 1.140.0 [@vhsdream](https://github.com/vhsdream) ([#7275](https://github.com/community-scripts/ProxmoxVE/pull/7275))
+
+## 2025-08-29
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - fix version check for pocket-id migration [@MickLesk](https://github.com/MickLesk) ([#7298](https://github.com/community-scripts/ProxmoxVE/pull/7298))
+    - fix: remove file creation at release fetching and version checking logic [@MickLesk](https://github.com/MickLesk) ([#7299](https://github.com/community-scripts/ProxmoxVE/pull/7299))
+    - Zitadel: Fix initial setup [@tremor021](https://github.com/tremor021) ([#7284](https://github.com/community-scripts/ProxmoxVE/pull/7284))
+    - post-pbs: increase enterprise recognition [@MickLesk](https://github.com/MickLesk) ([#7280](https://github.com/community-scripts/ProxmoxVE/pull/7280))
+    - Fix typo where install mode was changed instead of pinned version [@Brandsma](https://github.com/Brandsma) ([#7277](https://github.com/community-scripts/ProxmoxVE/pull/7277))
+
+  - #### ✨ New Features
+
+    - [core]: feature - check_for_gh_release - version pinning [@MickLesk](https://github.com/MickLesk) ([#7279](https://github.com/community-scripts/ProxmoxVE/pull/7279))
+    - [feat]: migrate all update_scripts to new version helper (gh) [@MickLesk](https://github.com/MickLesk) ([#7262](https://github.com/community-scripts/ProxmoxVE/pull/7262))
+
+## 2025-08-28
+
+### 🆕 New Scripts
+
+  - MediaManager ([#7238](https://github.com/community-scripts/ProxmoxVE/pull/7238))
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - MMDL: add build-essential as dep [@vhsdream](https://github.com/vhsdream) ([#7266](https://github.com/community-scripts/ProxmoxVE/pull/7266))
+
+  - #### ✨ New Features
+
+    - add support for multiple ip addresses in monitor-all.sh [@moshekv](https://github.com/moshekv) ([#7244](https://github.com/community-scripts/ProxmoxVE/pull/7244))
+    - [core]: feature - check_for_gh_release as update-handler [@MickLesk](https://github.com/MickLesk) ([#7254](https://github.com/community-scripts/ProxmoxVE/pull/7254))
+
+  - #### 💥 Breaking Changes
+
+    - Flaresolverr: Pin to 3.3.25 (Python Issue) [@MickLesk](https://github.com/MickLesk) ([#7248](https://github.com/community-scripts/ProxmoxVE/pull/7248))
+
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Keycloak: Update website [@tremor021](https://github.com/tremor021) ([#7256](https://github.com/community-scripts/ProxmoxVE/pull/7256))
+
 ## 2025-08-27
 
 ### 🚀 Updated Scripts

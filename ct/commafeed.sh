@@ -28,8 +28,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/Athou/commafeed/releases/latest | grep '"tag_name":' | cut -d'"' -f4)
-  if [[ "${RELEASE}" != "$(cat ~/.commafeed 2>/dev/null)" ]] || [[ ! -f ~/.commafeed ]]; then
+  if check_for_gh_release "commafeed" "Athou/commafeed"; then
     msg_info "Stopping ${APP}"
     systemctl stop commafeed
     msg_ok "Stopped ${APP}"
@@ -59,8 +58,6 @@ function update_script() {
     systemctl start commafeed
     msg_ok "Started ${APP}"
     msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
   exit
 }

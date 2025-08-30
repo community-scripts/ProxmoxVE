@@ -93,7 +93,7 @@ while true; do
       fi
     else
       # Container: get IP and ping
-      IP=$(pct exec $instance ip a s dev eth0 | awk '/inet / {print $2}' | cut -d/ -f1)
+      IP=$(pct exec $instance ip a s dev eth0 | awk '/inet / {print $2}' | cut -d/ -f1 | head -n1)
       if ! ping -c 1 $IP >/dev/null 2>&1; then
         echo "$(date): CT $instance is not responding, restarting..."
         pct stop $instance >/dev/null 2>&1

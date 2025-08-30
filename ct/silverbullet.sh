@@ -26,9 +26,8 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  
-  RELEASE=$(curl -fsSL https://api.github.com/repos/silverbulletmd/silverbullet/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  if [[ ! -f ~/.silverbullet || "${RELEASE}" != "$(cat ~/.silverbullet 2>/dev/null)" ]]; then
+
+  if check_for_gh_release "silverbullet" "silverbulletmd/silverbullet"; then
     msg_info "Stopping ${APP}"
     systemctl stop silverbullet
     msg_ok "Stopped ${APP}"
@@ -38,8 +37,7 @@ function update_script() {
     msg_info "Starting ${APP}"
     systemctl start silverbullet
     msg_ok "Started ${APP}"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
+    msg_ok "Update Successful"
   fi
   exit
 }

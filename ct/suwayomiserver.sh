@@ -28,8 +28,8 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/Suwayomi/Suwayomi-Server/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  if [[ "${RELEASE}" != "$(cat ~/.suwayomi-server 2>/dev/null)" ]] || [[ ! -f ~/.suwayomi-server ]]; then
+
+  if check_for_gh_release "suwayomi-server" "Suwayomi/Suwayomi-Server"; then
     JAVA_VERSION=21 setup_java
 
     msg_info "Stopping $APP"
@@ -41,10 +41,7 @@ function update_script() {
     msg_info "Starting $APP"
     systemctl start suwayomi-server
     msg_ok "Started $APP"
-
     msg_ok "Update Successful"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }

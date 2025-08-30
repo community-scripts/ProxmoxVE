@@ -20,46 +20,40 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /opt/watcharr ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-
-    RELEASE=$(curl -fsSL https://api.github.com/repos/sbondCo/Watcharr/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-    if [[ "${RELEASE}" != "$(cat ~/.watcharr)" ]] || [[ ! -f ~/.watcharr ]]; then
-        msg_info "Updating $APP"
-
-        msg_info "Stopping $APP"
-        systemctl stop watcharr
-        msg_ok "Stopped $APP"
-
-        rm -f /opt/watcharr/server/watcharr
-        rm -rf /opt/watcharr/server/ui
-        fetch_and_deploy_gh_release "watcharr" "sbondCo/Watcharr" "tarball"
-
-        msg_info "Updating $APP to v${RELEASE}"
-        cd /opt/watcharr
-        export GOOS=linux
-        $STD npm i
-        $STD npm run build
-        mv ./build ./server/ui
-        cd server
-        go mod download
-        go build -o ./watcharr
-        msg_ok "Updated $APP to v${RELEASE}"
-
-        msg_info "Starting $APP"
-        systemctl start watcharr
-        msg_ok "Started $APP"
-
-        msg_ok "Update Successful"
-    else
-        msg_ok "No update required. ${APP} is already at v${RELEASE}"
-    fi
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /opt/watcharr ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+
+  if check_for_gh_release "watcharr" "sbondCo/Watcharr"; then
+    msg_info "Stopping $APP"
+    systemctl stop watcharr
+    msg_ok "Stopped $APP"
+
+    rm -f /opt/watcharr/server/watcharr
+    rm -rf /opt/watcharr/server/ui
+    fetch_and_deploy_gh_release "watcharr" "sbondCo/Watcharr" "tarball"
+
+    msg_info "Updating $APP"
+    cd /opt/watcharr
+    export GOOS=linux
+    $STD npm i
+    $STD npm run build
+    mv ./build ./server/ui
+    cd server
+    $STD go mod download
+    $STD go build -o ./watcharr
+    msg_ok "Updated $APP"
+
+    msg_info "Starting $APP"
+    systemctl start watcharr
+    msg_ok "Started $APP"
+    msg_ok "Update Successfully"
+  fi
+  exit
 }
 
 start

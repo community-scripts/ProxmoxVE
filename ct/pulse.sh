@@ -32,13 +32,11 @@ function update_script() {
     msg_error "Old Installation Found! Please recreate the container due big changes in the software."
     exit 1
   fi
-
-  RELEASE=$(curl -fsSL https://api.github.com/repos/rcourtman/Pulse/releases/latest | jq -r '.tag_name' | sed 's/^v//')
-  SERVICE_PATH="/etc/systemd/system"
-  if [[ "${RELEASE}" != "$(cat ~/.pulse 2>/dev/null)" ]] || [[ ! -f ~/.pulse ]]; then
-    msg_info "Stopping ${APP}"
+  if check_for_gh_release "pulse" "rcourtman/Pulse"; then
+    SERVICE_PATH="/etc/systemd/system"
+    msg_info "Stopping Services"
     systemctl stop pulse*.service
-    msg_ok "Stopped ${APP}"
+    msg_ok "Stopped Services"
 
     if [[ -f /opt/pulse/pulse ]]; then
       rm -f /opt/pulse/pulse
@@ -56,13 +54,10 @@ function update_script() {
       usermod -s /usr/sbin/nologin pulse
     fi
 
-    msg_info "Starting ${APP}"
+    msg_info "Starting Services"
     systemctl start pulse-backend
-    msg_ok "Started ${APP}"
-
+    msg_ok "Started Services"
     msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }

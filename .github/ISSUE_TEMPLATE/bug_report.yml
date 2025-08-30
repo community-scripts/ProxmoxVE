@@ -67,6 +67,14 @@ body:
     validations:
       required: true
 
+  - type: input
+    id: pve_version
+    attributes:
+      label: 📈 Which Proxmox version are you on?
+      placeholder: "run pveversion in your PVE node console"
+    validations:
+      required: true
+
   - type: textarea
     id: issue_description
     attributes:

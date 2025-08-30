@@ -20,31 +20,26 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /opt/owncast ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-
-    RELEASE=$(curl -fsSL https://api.github.com/repos/owncast/owncast/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-    if [[ ! -f ~/.owncast ]] || [[ "${RELEASE}" != "$(cat ~/.owncast)" ]]; then
-      msg_info "Stopping ${APP}"
-      systemctl stop owncast
-      msg_ok "Stopped ${APP}"
-
-      fetch_and_deploy_gh_release "owncast" "owncast/owncast" "prebuild" "latest" "/opt/owncast" "owncast*linux-64bit.zip"
-      
-      msg_info "Starting ${APP}"
-      systemctl start owncast
-      msg_ok "Started ${APP}"
-
-      msg_ok "Updated Successfully"
-    else
-      msg_ok "No update required. ${APP} is already at ${RELEASE}."
-    fi
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /opt/owncast ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+  if check_for_gh_release "owncast" "owncast/owncast"; then
+    msg_info "Stopping Service"
+    systemctl stop owncast
+    msg_ok "Stopped Service"
+
+    fetch_and_deploy_gh_release "owncast" "owncast/owncast" "prebuild" "latest" "/opt/owncast" "owncast*linux-64bit.zip"
+
+    msg_info "Starting Service"
+    systemctl start owncast
+    msg_ok "Started Service"
+    msg_ok "Updated Successfully"
+  fi
+  exit
 }
 
 start

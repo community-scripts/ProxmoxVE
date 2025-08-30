@@ -26,14 +26,10 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  if ! command -v jq &>/dev/null; then
-    $STD apt-get install -y jq
-  fi
 
-  RELEASE=$(curl -fsSL https://api.github.com/repos/msgbyte/tianji/releases/latest | jq -r '.tag_name' | sed 's/^v//')
-  if [[ "${RELEASE}" != "$(cat ~/.tianji 2>/dev/null)" ]] || [[ ! -f ~/.tianji ]]; then
+  setup_uv
 
-    setup_uv
+  if check_for_gh_release "tianji" "msgbyte/tianji"; then
     NODE_VERSION="22" NODE_MODULE="pnpm@$(curl -s https://raw.githubusercontent.com/msgbyte/tianji/master/package.json | jq -r '.packageManager | split("@")[1]')" setup_nodejs
 
     msg_info "Stopping Service"
@@ -76,8 +72,6 @@ function update_script() {
     rm -rf /opt/tianji/reporter
     msg_ok "Cleaned"
     msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required.  ${APP} is already at v${RELEASE}."
   fi
   exit
 }

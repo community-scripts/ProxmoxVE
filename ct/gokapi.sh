@@ -20,19 +20,14 @@ color
 catch_errors
 
 function update_script() {
-   header_info
-   check_container_storage
-   check_container_resources
-   if [[ ! -d /opt/gokapi ]]; then
-      msg_error "No ${APP} Installation Found!"
-      exit
-   fi
-   if [[ -f /opt/${APP}_version.txt ]]; then
-      mv /opt/${APP}_version ~/.gokapi
-   fi
-
-   RELEASE=$(curl -fsSL https://api.github.com/repos/Forceu/Gokapi/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-   if [[ "${RELEASE}" != "$(cat ~/.gokapi 2>/dev/null)" ]] || [[ ! -f ~/.gokapi ]]; then
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /opt/gokapi ]]; then
+    msg_error "No ${APP} Installation Found!"
+    exit
+  fi
+  if check_for_gh_release "gokapi" "Forceu/Gokapi"; then
     msg_info "Stopping ${APP}"
     systemctl stop gokapi
     msg_ok "Stopped ${APP}"
@@ -42,10 +37,7 @@ function update_script() {
     msg_info "Starting ${APP}"
     systemctl start gokapi
     msg_ok "Started ${APP}"
-
     msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
   exit
 }

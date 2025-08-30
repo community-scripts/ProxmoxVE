@@ -27,17 +27,20 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  if check_for_gh_release "prowlarr" "Prowlarr/Prowlarr"; then
+    msg_info "Stopping Service"
+    systemctl stop prowlarr
+    msg_ok "Stopped Service"
 
-  RELEASE=$(curl -fsSL https://api.github.com/repos/Prowlarr/Prowlarr/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "${RELEASE}" != "$(cat ~/.prowlarr 2>/dev/null)" ]] || [[ ! -f ~/.prowlarr ]]; then
     rm -rf /opt/Prowlarr
     fetch_and_deploy_gh_release "prowlarr" "Prowlarr/Prowlarr" "prebuild" "latest" "/opt/Prowlarr" "Prowlarr.master*linux-core-x64.tar.gz"
     chmod 775 /opt/Prowlarr
-    msg_ok "Successfully updated"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
-  fi
 
+    msg_info "Starting Service"
+    systemctl start prowlarr
+    msg_ok "Started Service"
+    msg_ok "Updated Successfully"
+  fi
   exit
 }
 

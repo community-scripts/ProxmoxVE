@@ -33,52 +33,42 @@ function update_script() {
       msg_error "No ${APP} Installation Found!"
       exit
     fi
-    if [[ "$(node -v | cut -d 'v' -f 2)" == "18."* ]]; then
-      if ! command -v npm >/dev/null 2>&1; then
-        echo "Installing NPM..."
-        $STD apt-get install -y npm
-        echo "Installed NPM..."
-      fi
-    fi
+    NODE_VERSION="22" setup_nodejs
+
     msg_info "Updating ${APP}"
     $STD /opt/cronicle/bin/control.sh upgrade
     msg_ok "Updated ${APP}"
     exit
   fi
   if [ "$UPD" == "2" ]; then
-    if [[ "$(node -v | cut -d 'v' -f 2)" == "18."* ]]; then
-      if ! command -v npm >/dev/null 2>&1; then
-        echo "Installing NPM..."
-        $STD apt-get install -y npm
-        echo "Installed NPM..."
-      fi
-    fi
-    LATEST=$(curl -fsSL https://api.github.com/repos/jhuckaby/Cronicle/releases/latest | grep '"tag_name":' | cut -d'"' -f4)
-    IP=$(hostname -I | awk '{print $1}')
-    msg_info "Installing Dependencies"
-    $STD apt-get install -y \
-      git \
-      build-essential \
-      ca-certificates \
-      gnupg2
-    msg_ok "Installed Dependencies"
-
     NODE_VERSION="22" setup_nodejs
-    fetch_and_deploy_gh_release "cronicle" "jhuckaby/Cronicle"
+    if check_for_gh_release "cronicle" "jhuckaby/Cronicle"; then
+      IP=$(hostname -I | awk '{print $1}')
+      msg_info "Installing Dependencies"
+      $STD apt-get install -y \
+        git \
+        build-essential \
+        ca-certificates \
+        gnupg2
+      msg_ok "Installed Dependencies"
 
-    msg_info "Configuring Cronicle Worker"
-    cd /opt/cronicle
-    $STD npm install
-    $STD node bin/build.js dist
-    sed -i "s/localhost:3012/${IP}:3012/g" /opt/cronicle/conf/config.json
-    $STD /opt/cronicle/bin/control.sh start
-    $STD cp /opt/cronicle/bin/cronicled.init /etc/init.d/cronicled
-    chmod 775 /etc/init.d/cronicled
-    $STD update-rc.d cronicled defaults
-    msg_ok "Installed Cronicle Worker"
-    
-    echo -e "\n Add Masters secret key to /opt/cronicle/conf/config.json \n"
-    exit
+      NODE_VERSION="22" setup_nodejs
+      fetch_and_deploy_gh_release "cronicle" "jhuckaby/Cronicle"
+
+      msg_info "Configuring Cronicle Worker"
+      cd /opt/cronicle
+      $STD npm install
+      $STD node bin/build.js dist
+      sed -i "s/localhost:3012/${IP}:3012/g" /opt/cronicle/conf/config.json
+      $STD /opt/cronicle/bin/control.sh start
+      $STD cp /opt/cronicle/bin/cronicled.init /etc/init.d/cronicled
+      chmod 775 /etc/init.d/cronicled
+      $STD update-rc.d cronicled defaults
+      msg_ok "Installed Cronicle Worker"
+
+      echo -e "\n Add Masters secret key to /opt/cronicle/conf/config.json \n"
+      exit
+    fi
   fi
 }
 

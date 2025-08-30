@@ -27,9 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-
-  RELEASE=$(curl -fsSL https://api.github.com/repos/gotson/komga/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  if [[ ! -f ~/.komga-org ]] || [[ "${RELEASE}" != "$(cat ~/.komga-org)" ]]; then
+  if check_for_gh_release "komga" "gotson/komga"; then
     msg_info "Stopping ${APP}"
     systemctl stop komga
     msg_ok "Stopped ${APP}"
@@ -41,10 +39,7 @@ function update_script() {
     msg_info "Starting ${APP}"
     systemctl start komga
     msg_ok "Started ${APP}"
-
     msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}."
   fi
   exit
 }

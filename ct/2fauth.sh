@@ -28,12 +28,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  if ! command -v jq &>/dev/null; then
-    $STD apt-get install -y jq
-  fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/Bubka/2FAuth/releases/latest | jq -r '.tag_name' | sed 's/^v//')
-  if [[ "${RELEASE}" != "$(cat ~/.2fauth 2>/dev/null)" ]] || [[ ! -f ~/.2fauth ]]; then
-    msg_info "Updating $APP to ${RELEASE}"
+  if check_for_gh_release "2fauth" "Bubka/2FAuth"; then
     $STD apt-get update
     $STD apt-get -y upgrade
 
@@ -64,18 +59,13 @@ function update_script() {
     $STD systemctl restart nginx
 
     msg_info "Cleaning Up"
-    rm -rf "v${RELEASE}.zip"
     if dpkg -l | grep -q 'php8.2'; then
       $STD apt-get remove --purge -y php8.2*
     fi
     $STD apt-get -y autoremove
     $STD apt-get -y autoclean
     msg_ok "Cleanup Completed"
-
-    echo "${RELEASE}" >/opt/2fauth_version.txt
-    msg_ok "Updated $APP to ${RELEASE}"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
+    msg_ok "Updated Successfully"
   fi
   exit
 }

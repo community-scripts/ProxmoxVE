@@ -28,9 +28,7 @@ function update_script() {
     exit
   fi
 
-  RELEASE=$(curl -fsSL https://api.github.com/repos/threadfin/threadfin/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  if [[ "${RELEASE}" != "$(cat ~/.threadfin_version 2>/dev/null)" ]] || [[ ! -f ~/.threadfin_version ]]; then
-
+  if check_for_gh_release "threadfin" "threadfin/threadfin"; then
     msg_info "Stopping $APP"
     systemctl stop threadfin
     msg_ok "Stopped $APP"
@@ -40,10 +38,7 @@ function update_script() {
     msg_info "Starting $APP"
     systemctl start threadfin
     msg_ok "Started $APP"
-
     msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }

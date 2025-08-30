@@ -28,9 +28,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/jordan-dalby/ByteStash/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "${RELEASE}" != "$(cat ~/.bytestash 2>/dev/null)" ]] || [[ ! -f ~/.bytestash ]]; then
-
+  if check_for_gh_release "bytestash" "jordan-dalby/ByteStash"; then
     read -rp "${TAB3}Did you make a backup via application WebUI? (y/n): " backuped
     if [[ "$backuped" =~ ^[Yy]$ ]]; then
       msg_info "Stopping Services"
@@ -57,10 +55,7 @@ function update_script() {
       exit
     fi
     msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
-  exit
 }
 
 start

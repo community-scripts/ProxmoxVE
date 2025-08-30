@@ -26,9 +26,8 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  
-  RELEASE="$(curl -fsSL https://api.github.com/repos/toniebox-reverse-engineering/teddycloud/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')"
-  if [[ ! -f ~/.teddycloud || "${RELEASE}" != "$(cat ~/.teddycloud)" ]]; then
+
+  if check_for_gh_release "teddycloud" "toniebox-reverse-engineering/teddycloud"; then
     msg_info "Stopping ${APP}"
     systemctl stop teddycloud
     msg_ok "Stopped ${APP}"
@@ -49,11 +48,8 @@ function update_script() {
 
     msg_info "Cleaning up"
     rm -rf /opt/teddycloud_bak
-    msg_ok "Cleaned"
-
+    msg_ok "Cleaned up"
     msg_ok "Updated successfully"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }

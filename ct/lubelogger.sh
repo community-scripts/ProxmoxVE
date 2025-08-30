@@ -27,12 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  if ! command -v jq &>/dev/null; then
-    $STD apt-get install -y jq
-  fi
-
-  RELEASE=$(curl -fsSL https://api.github.com/repos/hargata/lubelog/releases/latest | jq -r '.tag_name' | sed 's/^v//')
-  if [[ ! -f ~/.lubelogger ]] || [[ "${RELEASE}" != "$(cat ~/.lubelogger)" ]]; then
+  if check_for_gh_release "lubelogger" "hargata/lubelog"; then
     msg_info "Stopping Service"
     systemctl stop lubelogger
     msg_ok "Stopped Service"
@@ -67,10 +62,7 @@ function update_script() {
     msg_info "Cleaning up"
     rm -rf /tmp/lubeloggerData
     msg_ok "Cleaned"
-    
     msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}."
   fi
   exit
 }

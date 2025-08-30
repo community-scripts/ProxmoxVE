@@ -28,8 +28,7 @@ function update_script() {
     exit
   fi
 
-  RELEASE=$(curl -fsSL https://api.github.com/repos/ellite/Wallos/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f ~/.wallos ]] || [[ "${RELEASE}" != "$(cat ~/.wallos)" ]]; then
+  if check_for_gh_release "wallos" "ellite/Wallos"; then
     msg_info "Creating backup"
     mkdir -p /opt/logos
     mv /opt/wallos/db/wallos.db /opt/wallos.db
@@ -44,7 +43,7 @@ function update_script() {
     mv /opt/wallos.db /opt/wallos/db/wallos.db
     mv /opt/logos/* /opt/wallos/images/uploads/logos
     if ! grep -q "storetotalyearlycost.php" /opt/wallos.cron; then
-      echo "30 1 * * 1 php /opt/wallos/endpoints/cronjobs/storetotalyearlycost.php >> /var/log/cron/storetotalyearlycost.log 2>&1" >> /opt/wallos.cron
+      echo "30 1 * * 1 php /opt/wallos/endpoints/cronjobs/storetotalyearlycost.php >> /var/log/cron/storetotalyearlycost.log 2>&1" >>/opt/wallos.cron
     fi
     chown -R www-data:www-data /opt/wallos
     chmod -R 755 /opt/wallos
@@ -55,10 +54,7 @@ function update_script() {
     msg_info "Reload Apache2"
     systemctl reload apache2
     msg_ok "Apache2 Reloaded"
-
     msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
   exit
 }

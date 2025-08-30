@@ -27,11 +27,10 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://github.com/gnmyt/myspeed/releases/latest | grep "title>Release" | cut -d " " -f 5)
-  if [[ ! -f ~/.myspeed ]] || [[ "${RELEASE}" != "$(cat ~/.myspeed)" ]]; then
-    msg_info "Stopping ${APP} Service"
+  if check_for_gh_release "myspeed" "gnmyt/myspeed"; then
+    msg_info "Stopping Service"
     systemctl stop myspeed
-    msg_ok "Stopped ${APP} Service"
+    msg_ok "Stopped Service"
 
     msg_info "Creating backup"
     cd /opt
@@ -41,22 +40,19 @@ function update_script() {
 
     fetch_and_deploy_gh_release "myspeed" "gnmyt/myspeed" "prebuild" "latest" "/opt/myspeed" "MySpeed-*.zip"
 
-    msg_info "Updating ${APP} to ${RELEASE}"
+    msg_info "Updating ${APP}"
     cd /opt/myspeed
     $STD npm install
     if [[ -d /opt/myspeed_bak/data ]]; then
       mkdir -p /opt/myspeed/data/
       cp -r /opt/myspeed_bak/data/* /opt/myspeed/data/
     fi
-    msg_ok "Updated ${APP} to ${RELEASE}"
+    msg_ok "Updated ${APP}"
 
-    msg_info "Starting ${APP} Service"
+    msg_info "Starting Service"
     systemctl start myspeed
-    msg_ok "Started ${APP} Service"
-
+    msg_ok "Started Service"
     msg_ok "Updated Successfully!\n"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
   exit
 }

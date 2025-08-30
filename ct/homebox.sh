@@ -33,8 +33,7 @@ function update_script() {
     systemctl daemon-reload
   fi
 
-  RELEASE=$(curl -fsSL https://api.github.com/repos/sysadminsmedia/homebox/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "${RELEASE}" != "$(cat ~/.homebox 2>/dev/null)" ]] || [[ ! -f ~/.homebox ]]; then
+  if check_for_gh_release "homebox" "sysadminsmedia/homebox"; then
     msg_info "Stopping ${APP}"
     systemctl stop homebox
     msg_ok "${APP} Stopped"
@@ -50,10 +49,7 @@ function update_script() {
     msg_info "Starting ${APP}"
     systemctl start homebox
     msg_ok "Started ${APP}"
-
     msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
   exit
 }

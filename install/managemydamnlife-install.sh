@@ -13,6 +13,10 @@ setting_up_container
 network_check
 update_os
 
+msg_info "Installing dependencies"
+$STD apt-get install --no-install-recommends -y build-essential
+msg_ok "Installed dependencies"
+
 NODE_VERSION="20" setup_nodejs
 MYSQL_VERSION="8.0" setup_mysql
 

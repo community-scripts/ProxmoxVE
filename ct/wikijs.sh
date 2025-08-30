@@ -20,55 +20,51 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /opt/wikijs ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-
-    RELEASE=$(curl -fsSL https://api.github.com/repos/Requarks/wiki/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-    if [[ "${RELEASE}" != "$(cat ~/.wikijs)" ]] || [[ ! -f ~/.wikijs ]]; then
-        msg_info "Verifying whether ${APP}' new release is v3.x+ and current install uses SQLite."
-        SQLITE_INSTALL=$([ -f /opt/wikijs/db.sqlite ] && echo "true" || echo "false")
-        if [[ "${SQLITE_INSTALL}" == "true" && "${RELEASE}" =~ ^3.* ]]; then
-            echo "SQLite is not supported in v3.x+, currently there is no update path availble."
-            exit
-        fi
-        msg_ok "There is an update path available for ${APP} to v${RELEASE}"
-
-        msg_info "Stopping ${APP}"
-        systemctl stop wikijs
-        msg_ok "Stopped ${APP}"
-
-        msg_info "Backing up Data"
-        mkdir /opt/wikijs-backup
-        $SQLITE_INSTALL && cp /opt/wikijs/db.sqlite /opt/wikijs-backup
-        cp -R /opt/wikijs/{config.yml,/data} /opt/wikijs-backup
-        msg_ok "Backed up Data"
-
-        rm -rf /opt/wikijs/*
-        fetch_and_deploy_gh_release "wikijs" "requarks/wiki" "prebuild" "latest" "/opt/wikijs" "wiki-js.tar.gz"
-        
-        msg_info "Restoring Data"
-        cp -R /opt/wikijs-backup/* /opt/wikijs
-        $SQLITE_INSTALL && $STD npm rebuild sqlite3
-        msg_ok "Restored Data"
-
-        msg_info "Starting ${APP}"
-        systemctl start wikijs
-        msg_ok "Started ${APP}"
-
-        msg_info "Cleaning Up"
-        rm -rf /opt/wikijs-backup
-        msg_ok "Cleanup Completed"
-        
-        msg_ok "Updated Successfully"
-    else
-        msg_ok "No update required. ${APP} is already at v${RELEASE}"
-    fi
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /opt/wikijs ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+
+  if check_for_gh_release "wikijs" "requarks/wiki"; then
+    msg_info "Verifying whether ${APP}' new release is v3.x+ and current install uses SQLite."
+    SQLITE_INSTALL=$([ -f /opt/wikijs/db.sqlite ] && echo "true" || echo "false")
+    if [[ "${SQLITE_INSTALL}" == "true" && "${CHECK_UPDATE_RELEASE}" =~ ^3.* ]]; then
+      echo "SQLite is not supported in v3.x+, currently there is no update path availble."
+      exit
+    fi
+    msg_ok "There is an update path available for ${APP}"
+
+    msg_info "Stopping ${APP}"
+    systemctl stop wikijs
+    msg_ok "Stopped ${APP}"
+
+    msg_info "Backing up Data"
+    mkdir /opt/wikijs-backup
+    $SQLITE_INSTALL && cp /opt/wikijs/db.sqlite /opt/wikijs-backup
+    cp -R /opt/wikijs/{config.yml,/data} /opt/wikijs-backup
+    msg_ok "Backed up Data"
+
+    rm -rf /opt/wikijs/*
+    fetch_and_deploy_gh_release "wikijs" "requarks/wiki" "prebuild" "latest" "/opt/wikijs" "wiki-js.tar.gz"
+
+    msg_info "Restoring Data"
+    cp -R /opt/wikijs-backup/* /opt/wikijs
+    $SQLITE_INSTALL && $STD npm rebuild sqlite3
+    msg_ok "Restored Data"
+
+    msg_info "Starting ${APP}"
+    systemctl start wikijs
+    msg_ok "Started ${APP}"
+
+    msg_info "Cleaning Up"
+    rm -rf /opt/wikijs-backup
+    msg_ok "Cleanup Completed"
+    msg_ok "Updated Successfully"
+  fi
+  exit
 }
 
 start

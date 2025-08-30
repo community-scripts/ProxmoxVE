@@ -81,9 +81,8 @@ EOF
     msg_ok "Updated Services"
     systemctl daemon-reload
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/homarr-labs/homarr/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "${RELEASE}" != "$(cat ~/.${APP} 2>/dev/null || cat /opt/${APP}_version.txt 2>/dev/null)" ]]; then
 
+  if check_for_gh_release "homarr" "homarr-labs/homarr"; then
     msg_info "Stopping Services (Patience)"
     systemctl stop homarr
     msg_ok "Services Stopped"
@@ -98,7 +97,6 @@ EOF
     $STD apt upgrade nodejs -y
     msg_ok "Updated Nodejs"
 
-    $STD command -v jq || $STD apt-get update && $STD apt-get install -y jq
     NODE_VERSION=$(curl -s https://raw.githubusercontent.com/homarr-labs/homarr/dev/package.json | jq -r '.engines.node | split(">=")[1] | split(".")[0]')
     NODE_MODULE="pnpm@$(curl -s https://raw.githubusercontent.com/homarr-labs/homarr/dev/package.json | jq -r '.packageManager | split("@")[1]')"
     setup_nodejs
@@ -106,7 +104,7 @@ EOF
     rm -rf /opt/homarr
     fetch_and_deploy_gh_release "homarr" "homarr-labs/homarr"
 
-    msg_info "Updating and rebuilding ${APP} to v${RELEASE} (Patience)"
+    msg_info "Updating and rebuilding ${APP} (Patience)"
     rm /opt/run_homarr.sh
     cat <<'EOF' >/opt/run_homarr.sh
 #!/bin/bash
@@ -153,7 +151,6 @@ EOF
 
     mkdir /opt/homarr/build
     cp ./node_modules/better-sqlite3/build/Release/better_sqlite3.node ./build/better_sqlite3.node
-    echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP}"
 
     msg_info "Starting Services"
@@ -164,8 +161,6 @@ EOF
     if [[ "$choice" =~ ^[Yy]$ ]]; then
       reboot
     fi
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }

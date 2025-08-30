@@ -27,9 +27,8 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  
-  RELEASE=$(curl -fsSL https://api.github.com/repos/VictoriaMetrics/VictoriaMetrics/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f ~/.victoriametrics ]] || [[ "${RELEASE}" != "$(cat ~/.victoriametrics)" ]]; then
+
+  if check_for_gh_release "victoriametrics" "VictoriaMetrics/VictoriaMetrics"; then
     msg_info "Stopping $APP"
     systemctl stop victoriametrics
     [[ -f /etc/systemd/system/victoriametrics-logs.service ]] && systemctl stop victoriametrics-logs
@@ -55,10 +54,7 @@ function update_script() {
     systemctl start victoriametrics
     [[ -f /etc/systemd/system/victoriametrics-logs.service ]] && systemctl start victoriametrics-logs
     msg_ok "Started $APP"
-
     msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
   exit
 }

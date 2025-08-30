@@ -34,13 +34,18 @@ function update_script() {
 DisableRootWarning=true
 EOF
   fi
+  if check_for_gh_release "Jackett" "Jackett/Jackett"; then
+    msg_info "Stopping Service"
+    systemctl stop jackett
+    msg_ok "Stopped Service"
 
-  RELEASE=$(curl -s https://api.github.com/repos/Jackett/Jackett/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "${RELEASE}" != "$(cat ~/.jackett 2>/dev/null)" ]] || [[ ! -f ~/.jackett ]]; then
     rm -rf /opt/Jackett
-    fetch_and_deploy_gh_release "jackett" "Jackett/Jackett" "prebuild" "latest" "/opt/Jackett" "Jackett.Binaries.LinuxAMDx64.tar.gz" 
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
+    fetch_and_deploy_gh_release "jackett" "Jackett/Jackett" "prebuild" "latest" "/opt/Jackett" "Jackett.Binaries.LinuxAMDx64.tar.gz"
+
+    msg_info "Starting Service"
+    systemctl start jackett
+    msg_ok "Started Service"
+    msg_ok "Updated Successfully"
   fi
   exit
 }

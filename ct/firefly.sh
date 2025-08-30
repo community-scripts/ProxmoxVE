@@ -28,8 +28,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/firefly-iii/firefly-iii/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4)}')
-  if [[ "${RELEASE}" != "$(cat ~/.firefly 2>/dev/null)" ]] || [[ ! -f ~/.firefly ]]; then
+  if check_for_gh_release "firefly" "firefly-iii/firefly-iii"; then
     msg_info "Stopping Apache2"
     systemctl stop apache2
     msg_ok "Stopped Apache2"
@@ -42,11 +41,11 @@ function update_script() {
     fetch_and_deploy_gh_release "firefly" "firefly-iii/firefly-iii" "prebuild" "latest" "/opt/firefly" "FireflyIII-*.zip"
     setup_composer
 
-    msg_info "Updating ${APP} to v${RELEASE}"
+    msg_info "Updating ${APP}"
     rm -rf /opt/firefly/storage
     cp /opt/.env /opt/firefly/.env
     cp -r /opt/storage /opt/firefly/storage
-    
+
     chown -R www-data:www-data /opt/firefly
     find /opt/firefly/storage -type d -exec chmod 775 {} \;
     find /opt/firefly/storage -type f -exec chmod 664 {} \;
@@ -58,15 +57,12 @@ function update_script() {
     $STD php artisan view:clear
     $STD php artisan firefly-iii:upgrade-database
     $STD php artisan firefly-iii:laravel-passport-keys
-    msg_ok "Updated ${APP} to v${RELEASE}"
+    msg_ok "Updated ${APP}"
 
     msg_info "Starting Apache2"
     systemctl start apache2
     msg_ok "Started Apache2"
-
     msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}."
   fi
   exit
 }

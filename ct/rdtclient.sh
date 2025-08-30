@@ -27,12 +27,10 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-
-  RELEASE=$(curl -s https://api.github.com/repos/rogerfar/rdt-client/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f ~/.rdt-client ]] || [[ "${RELEASE}" != "$(cat ~/.rdt-client 2>/dev/null)" ]]; then
-    msg_info "Stopping ${APP}"
+  if check_for_gh_release "rdt-client" "rogerfar/rdt-client"; then
+    msg_info "Stopping Service"
     systemctl stop rdtc
-    msg_ok "Stopped ${APP}"
+    msg_ok "Stopped Service"
 
     msg_info "Creating backup"
     mkdir -p /opt/rdtc-backup
@@ -46,17 +44,14 @@ function update_script() {
       $STD apt-get install -y dotnet-sdk-9.0
     fi
 
-    msg_info "Starting ${APP}"
+    msg_info "Starting Service"
     systemctl start rdtc
-    msg_ok "Started ${APP}"
+    msg_ok "Started Service"
 
     msg_info "Cleaning Up"
     rm -rf /opt/rdtc-backup
     msg_ok "Cleaned"
-    
     msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }

@@ -27,23 +27,21 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/checkmk/checkmk/tags | grep "name" | awk '{print substr($2, 3, length($2)-4) }' | tr ' ' '\n' | grep -Ev 'rc|b' | sort -V | tail -n 1)
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+  if check_for_gh_release "checkmk" "checkmk/checkmk"; then
+    RELEASE=$(curl -fsSL https://api.github.com/repos/checkmk/checkmk/tags | grep "name" | awk '{print substr($2, 3, length($2)-4) }' | tr ' ' '\n' | grep -Ev 'rc|b' | sort -V | tail -n 1)
     msg_info "Updating ${APP} to v${RELEASE}"
     $STD omd stop monitoring
     $STD omd cp monitoring monitoringbackup
-curl -fsSL "https://download.checkmk.com/checkmk/${RELEASE}/check-mk-raw-${RELEASE}_0.bookworm_amd64.deb" -o "/opt/checkmk.deb"
+    curl -fsSL "https://download.checkmk.com/checkmk/${RELEASE}/check-mk-raw-${RELEASE}_0.bookworm_amd64.deb" -o "/opt/checkmk.deb"
     $STD apt-get install -y /opt/checkmk.deb
     $STD omd --force -V ${RELEASE}.cre update --conflict=install monitoring
     $STD omd start monitoring
     $STD omd -f rm monitoringbackup
     $STD omd cleanup
     rm -rf /opt/checkmk.deb
-    msg_ok "Updated ${APP} to v${RELEASE}"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}."
+    msg_ok "Updated ${APP}"
+    msg_ok "Updated Successfully"
   fi
-
   exit
 }
 

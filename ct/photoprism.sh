@@ -27,9 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-
-  RELEASE=$(curl -fsSL https://api.github.com/repos/photoprism/photoprism/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  if [[ "${RELEASE}" != "$(cat ~/.photoprism 2>/dev/null)" ]] || [[ ! -f ~/.photoprism ]]; then
+  if check_for_gh_release "photoprism" "photoprism/photoprism"; then
     msg_info "Stopping PhotoPrism"
     systemctl stop photoprism
     msg_ok "Stopped PhotoPrism"
@@ -51,11 +49,10 @@ function update_script() {
     systemctl start photoprism
     msg_ok "Started PhotoPrism"
     msg_ok "Update Successful"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }
+
 start
 build_container
 description

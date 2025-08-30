@@ -28,8 +28,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://github.com/go-gitea/gitea/releases/latest | grep "title>Release" | cut -d " " -f 4 | sed 's/^v//')
-  if [[ "${RELEASE}" != "$(cat ~/.gitea 2>/dev/null)" ]] || [[ ! -f ~/.gitea ]]; then
+  if check_for_gh_release "gitea" "go-gitea/gitea"; then
     msg_info "Stopping service"
     systemctl stop gitea
     msg_ok "Service stopped"
@@ -41,10 +40,7 @@ function update_script() {
     msg_info "Starting service"
     systemctl start gitea
     msg_ok "Started service"
-
     msg_ok "Update Successful"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
   exit
 }

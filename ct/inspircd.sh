@@ -27,9 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-
-  RELEASE=$(curl -fsSL https://api.github.com/repos/inspircd/inspircd/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "${RELEASE}" != "$(cat ~/.inspircd 2>/dev/null)" ]] || [[ ! -f ~/.inspircd ]]; then
+  if check_for_gh_release "inspircd" "inspircd/inspircd"; then
     msg_info "Stopping Service"
     systemctl stop inspircd
     msg_ok "Stopped Service"
@@ -39,10 +37,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start inspircd
     msg_ok "Started Service"
-
     msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}."
   fi
   exit
 }

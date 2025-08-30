@@ -27,9 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-
-  RELEASE=$(curl -fsSL https://api.github.com/repos/PrivateBin/PrivateBin/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  if [[ ! -f ~/.privatebin ]] || [[ "${RELEASE}" != "$(cat ~/.privatebin)" ]]; then
+  if check_for_gh_release "privatebin" "PrivateBin/PrivateBin"; then
     msg_info "Creating backup"
     cp -f /opt/privatebin/cfg/conf.php /tmp/privatebin_conf.bak
     msg_ok "Backup created"
@@ -44,10 +42,7 @@ function update_script() {
     chmod -R 0755 /opt/privatebin/data}
     systemctl reload nginx php8.2-fpm
     msg_ok "Configured ${APP}"
-
     msg_ok "Successfully updated"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }

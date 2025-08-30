@@ -27,11 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  if ! command -v jq &>/dev/null; then
-    $STD apt-get install -y jq
-  fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/paperless-ngx/paperless-ngx/releases/latest | jq -r .tag_name | sed 's/^v//')
-  if [[ "${RELEASE}" != "$(cat ~/.paperless 2>/dev/null)" ]] || [[ ! -f ~/.paperless ]]; then
+  if check_for_gh_release "paperless" "paperless-ngx/paperless-ngx"; then
     msg_info "Stopping all Paperless-ngx Services"
     systemctl stop paperless-consumer paperless-webserver paperless-scheduler paperless-task-queue
     msg_ok "Stopped all Paperless-ngx Services"
@@ -50,13 +46,13 @@ function update_script() {
       fetch_and_deploy_gh_release "jbig2enc" "ie13/jbig2enc" "tarball" "latest" "/opt/jbig2enc"
       setup_gs
 
-      msg_info "Updating to ${RELEASE}"
+      msg_info "Updating Paperless-ngx"
       cp -r /opt/paperless/backup/* /opt/paperless/
       cd /opt/paperless
       $STD uv sync --all-extras
       cd /opt/paperless/src
       $STD uv run -- python manage.py migrate
-      msg_ok "Updated to ${RELEASE}"
+      msg_ok "Updated Paperless-ngx"
     else
       msg_warn "You are about to migrate your Paperless-ngx installation to uv!"
       msg_custom "🔒" "It is strongly recommended to take a Proxmox snapshot first:"
@@ -117,7 +113,7 @@ function update_script() {
       $STD uv sync --all-extras
       cd /opt/paperless/src
       $STD uv run -- python manage.py migrate
-      msg_ok "Paperless-ngx migration and update to ${RELEASE} completed"
+      msg_ok "Paperless-ngx migration and update completed"
     fi
 
     msg_info "Starting all Paperless-ngx Services"
@@ -125,8 +121,6 @@ function update_script() {
     sleep 1
     msg_ok "Started all Paperless-ngx Services"
     msg_ok "Updated Successfully!\n"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }
@@ -139,4 +133,3 @@ msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8000${CL}"
-

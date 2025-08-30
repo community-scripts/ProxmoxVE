@@ -165,7 +165,7 @@ function setup_postgresql() {
       NEED_PG_INSTALL=true
     fi
   else
-										   
+
     NEED_PG_INSTALL=true
   fi
 
@@ -186,22 +186,18 @@ function setup_postgresql() {
 
     echo "deb https://apt.postgresql.org/pub/repos/apt ${DISTRO}-pgdg main" \
       >/etc/apt/sources.list.d/pgdg.list
-								  
 
     $STD apt-get update
     $STD msg_ok "Repository added"
 
     msg_info "Setup PostgreSQL $PG_VERSION"
     $STD apt-get install -y "postgresql-${PG_VERSION}" "postgresql-client-${PG_VERSION}"
-										 
 
     if [[ -n "$CURRENT_PG_VERSION" ]]; then
       $STD apt-get purge -y "postgresql-${CURRENT_PG_VERSION}" "postgresql-client-${CURRENT_PG_VERSION}" || true
     fi
 
-												   
     systemctl enable -q --now postgresql
-												
 
     if [[ -n "$CURRENT_PG_VERSION" ]]; then
       $STD msg_info "Restoring dumped data"
@@ -1923,4 +1919,127 @@ function setup_ffmpeg() {
   rm -rf "$TMP_DIR"
   ensure_usr_local_bin_persist
   msg_ok "Setup FFmpeg $FINAL_VERSION"
+}
+
+# ------------------------------------------------------------------------------
+# Checks for new GitHub release (latest tag).
+#
+# Description:
+#   - Queries the GitHub API for the latest release tag
+#   - Compares it to a local cached version (~/.<app>)
+#   - If newer, sets global CHECK_UPDATE_RELEASE and returns 0
+#
+# Usage:
+#     if check_for_gh_release "flaresolverr" "FlareSolverr/FlareSolverr" [optional] "v1.1.1"; then
+#       # trigger update...
+#     fi
+#     exit 0
+#     } (end of update_script not from the function)
+#
+# Notes:
+#   - Requires `jq` (auto-installed if missing)
+#   - Does not modify anything, only checks version state
+#   - Does not support pre-releases
+# ------------------------------------------------------------------------------
+check_for_gh_release() {
+  local app="$1"
+  local source="$2"
+  local pinned_version="${3:-}" # optional
+  local current_file="$HOME/.${app,,}"
+
+  msg_info "Checking for update: ${app}"
+
+  # DNS check
+  if ! getent hosts api.github.com >/dev/null 2>&1; then
+    msg_error "Network error: cannot resolve api.github.com"
+    return 1
+  fi
+
+  # jq check
+  if ! command -v jq &>/dev/null; then
+    $STD apt-get update -qq
+    $STD apt-get install -y jq || {
+      msg_error "Failed to install jq"
+      return 1
+    }
+  fi
+
+  # Fetch releases (newest → oldest)
+  local releases
+  releases=$(
+    curl -fsSL --max-time 15 \
+      -H 'Accept: application/vnd.github+json' \
+      -H 'X-GitHub-Api-Version: 2022-11-28' \
+      "https://api.github.com/repos/${source}/releases" |
+      jq -r '.[].tag_name' | sed 's/^v//'
+  ) || true
+
+  if [[ -z "$releases" ]]; then
+    msg_error "Unable to fetch releases for ${app}"
+    return 1
+  fi
+
+  # Define current and latest versions
+  local latest current
+  latest=$(echo "$releases" | head -n1)
+  current=""
+  [[ -f "$current_file" ]] && current="$(<"$current_file")"
+
+  # Helper: get index of a version (lower = newer)
+  get_index() {
+    local ver="${1:-}"
+    [[ -z "$ver" ]] && return 1
+    nl -ba <<<"$releases" | awk -v v="$ver" '$2==v{print $1; exit}'
+  }
+
+  # Pinning enabled
+  if [[ -n "$pinned_version" ]]; then
+    if ! grep -qxF "$pinned_version" <<<"$releases"; then
+      msg_error "Pinned version v${pinned_version} not found upstream"
+      return 1
+    fi
+
+    if [[ -z "$current" ]]; then
+      msg_info "${app} pinned to v${pinned_version}, no local version → install required"
+      CHECK_UPDATE_RELEASE="$pinned_version"
+      return 0
+    fi
+
+    if [[ "$current" == "$pinned_version" ]]; then
+      if [[ "$pinned_version" == "$latest" ]]; then
+        msg_ok "${app} pinned to v${pinned_version} (up to date)"
+      else
+        msg_ok "${app} pinned to v${pinned_version} (already installed, upstream v${latest})"
+      fi
+      return 1
+    fi
+
+    local pinned_index current_index
+    pinned_index="$(get_index "$pinned_version" || true)"
+    current_index="$(get_index "$current" || true)"
+
+    if [[ -z "$current_index" ]] || [[ "$current_index" -gt "$pinned_index" ]]; then
+      msg_info "${app} pinned to v${pinned_version} (installed v${current:-none}) → update required"
+      CHECK_UPDATE_RELEASE="$pinned_version"
+      return 0
+    fi
+
+    if [[ "$current_index" -lt "$pinned_index" ]]; then
+      msg_info "${app} pinned to v${pinned_version} (installed newer v${current}) → downgrade required"
+      CHECK_UPDATE_RELEASE="$pinned_version"
+      return 0
+    fi
+
+    return 1
+  fi
+
+  # No pinning → compare against latest
+  if [[ -z "$current" || "$current" != "$latest" ]]; then
+    CHECK_UPDATE_RELEASE="$latest"
+    msg_info "New release available: v${latest} (current: v${current:-none})"
+    return 0
+  fi
+
+  msg_ok "${app} is up to date (v${latest})"
+  return 1
 }

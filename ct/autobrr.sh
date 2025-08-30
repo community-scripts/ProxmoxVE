@@ -20,30 +20,26 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -f /root/.config/autobrr/config.toml ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -f /root/.config/autobrr/config.toml ]]; then
+    msg_error "No ${APP} Installation Found!"
+    exit
+  fi
 
-    RELEASE=$(curl -fsSL https://api.github.com/repos/autobrr/autobrr/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-    if [[ "${RELEASE}" != "$(cat ~/.autobrr 2>/dev/null)" ]] || [[ ! -f ~/.autobrr ]]; then
-      msg_info "Stopping ${APP} LXC"
-      systemctl stop autobrr
-      msg_ok "Stopped ${APP} LXC"
+  if check_for_gh_release "autobrr" "autobrr/autobrr"; then
+    msg_info "Stopping ${APP} LXC"
+    systemctl stop autobrr
+    msg_ok "Stopped ${APP} LXC"
 
-      fetch_and_deploy_gh_release "autobrr" "autobrr/autobrr" "prebuild" "latest" "/usr/local/bin" "autobrr_*_linux_x86_64.tar.gz"
+    fetch_and_deploy_gh_release "autobrr" "autobrr/autobrr" "prebuild" "latest" "/usr/local/bin" "autobrr_*_linux_x86_64.tar.gz"
 
-      msg_info "Starting ${APP} LXC"
-      systemctl start autobrr
-      msg_ok "Started ${APP} LXC"
-      
-      msg_ok "Updated Successfully"
-    else
-      msg_ok "No update required. ${APP} is already at ${RELEASE}"
-    fi
+    msg_info "Starting ${APP} LXC"
+    systemctl start autobrr
+    msg_ok "Started ${APP} LXC"
+    msg_ok "Updated Successfully"
+  fi
   exit
 }
 

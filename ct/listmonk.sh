@@ -27,12 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  if ! command -v jq &>/dev/null; then
-    $STD apt-get install -y jq
-  fi
-
-  RELEASE=$(curl -fsSL https://api.github.com/repos/knadh/listmonk/releases/latest | jq -r '.tag_name' | sed 's/^v//')
-  if [[ "${RELEASE}" != "$(cat ~/.listmonk)" ]] || [[ ! -f ~/.listmonk ]]; then
+  if check_for_gh_release "listmonk" "knadh/listmonk"; then
     msg_info "Stopping ${APP}"
     systemctl stop listmonk
     msg_ok "Stopped ${APP}"
@@ -56,10 +51,7 @@ function update_script() {
     msg_info "Cleaning up"
     rm -rf /opt/listmonk-backup/
     msg_ok "Cleaned"
-
     msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }

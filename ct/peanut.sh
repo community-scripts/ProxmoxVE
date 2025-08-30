@@ -27,33 +27,29 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  if ! command -v jq &>/dev/null; then
-    $STD apt-get install -y jq
-  fi
-  NODE_VERSION="22" NODE_MODULE="pnpm" setup_nodejs
-  RELEASE=$(curl -fsSL https://api.github.com/repos/Brandawg93/PeaNUT/releases/latest | jq -r '.tag_name' | sed 's/^v//')
-  if [[ "${RELEASE}" != "$(cat ~/.peanut 2>/dev/null)" ]] || [[ ! -f ~/.peanut ]]; then
 
+  NODE_VERSION="22" NODE_MODULE="pnpm" setup_nodejs
+
+  if check_for_gh_release "peanut" "Brandawg93/PeaNUT"; then
     msg_info "Stopping $APP"
     systemctl stop peanut
     msg_ok "Stopped $APP"
 
     fetch_and_deploy_gh_release "peanut" "Brandawg93/PeaNUT" "tarball" "latest" "/opt/peanut"
 
-    msg_info "Updating $APP to ${RELEASE}"
+    msg_info "Updating $APP"
     cd /opt/peanut
     $STD pnpm i
     $STD pnpm run build:local
     cp -r .next/static .next/standalone/.next/
     mkdir -p /opt/peanut/.next/standalone/config
     ln -sf /etc/peanut/settings.yml /opt/peanut/.next/standalone/config/settings.yml
-    msg_ok "Updated $APP to ${RELEASE}"
+    msg_ok "Updated $APP"
 
     msg_info "Starting $APP"
     systemctl start peanut
     msg_ok "Started $APP"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
+    msg_ok "Updated Successfully"
   fi
   exit
 }

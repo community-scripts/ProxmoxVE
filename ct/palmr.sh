@@ -27,9 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-
-  RELEASE=$(curl -fsSL https://api.github.com/repos/kyantech/palmr/releases/latest | jq '.tag_name' | sed 's/^"v//;s/"$//')
-  if [[ "${RELEASE}" != "$(cat ~/.palmr 2>/dev/null)" ]] || [[ ! -f ~/.palmr ]]; then
+  if check_for_gh_release "palmr" "kyantech/Palmr"; then
     msg_info "Stopping Services"
     systemctl stop palmr-frontend palmr-backend
     msg_ok "Stopped Services"
@@ -56,15 +54,12 @@ function update_script() {
     $STD pnpm install
     $STD pnpm build
     chown -R palmr:palmr /opt/palmr_data /opt/palmr
-    msg_ok "Updated $APP"
+    msg_ok "Updated ${APP}"
 
     msg_info "Starting Services"
     systemctl start palmr-backend palmr-frontend
     msg_ok "Started Services"
-
     msg_ok "Updated Successfully"
-  else
-    msg_ok "Already up to date"
   fi
   exit
 }

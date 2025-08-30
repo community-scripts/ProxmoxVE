@@ -29,11 +29,10 @@ function update_script() {
     exit
   fi
 
-  [[ -f /opt/${APP}_version.txt ]] && mv /opt/${APP}_version.txt ~/.pocket-id
-  RELEASE=$(curl -fsSL https://api.github.com/repos/pocket-id/pocket-id/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "${RELEASE}" != "$(cat ~/.pocket-id)" ]] || [[ ! -f ~/.pocket-id ]]; then
-    if [[ "$(cat ~/.pocket-id)" < "1.0.0" ]]; then
-      msg_info "Migrating ${APP} to v${RELEASE}"
+  if check_for_gh_release "pocket-id" "pocket-id/pocket-id"; then
+    if [ "$(printf '%s\n%s' "$(cat ~/.pocket-id 2>/dev/null || echo 0.0.0)" "1.0.0" | sort -V | head -n1)" = "$(cat ~/.pocket-id 2>/dev/null || echo 0.0.0)" ] \
+      && [ "$(cat ~/.pocket-id 2>/dev/null || echo 0.0.0)" != "1.0.0" ]; then      
+      msg_info "Migrating ${APP}"
       systemctl -q disable --now pocketid-backend pocketid-frontend caddy
       mv /etc/caddy/Caddyfile ~/Caddyfile.bak
       $STD apt remove --purge caddy nodejs -y
@@ -71,10 +70,7 @@ function update_script() {
     msg_info "Starting $APP"
     systemctl start pocketid
     msg_ok "Started $APP"
-
     msg_ok "Update Successful"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
   exit
 }

@@ -27,9 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/TriliumNext/Trilium/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "${RELEASE}" != "$(cat ~/.Trilium 2>/dev/null)" ]] || [[ ! -f ~/.Trilium ]]; then
-
+  if check_for_gh_release "Trilium" "TriliumNext/Trilium"; then
     if [[ -d /opt/trilium/db ]]; then
       DB_PATH="/opt/trilium/db"
       DB_RESTORE_PATH="/opt/trilium/db"
@@ -68,10 +66,7 @@ function update_script() {
     sleep 1
     msg_ok "Started ${APP}"
     msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
-
   exit
 }
 

@@ -26,8 +26,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/linkwarden/linkwarden/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-  if [[ "${RELEASE}" != "$(cat /opt/linkwarden_version.txt)" ]] || [[ ! -f /opt/linkwarden_version.txt ]]; then
+  if check_for_gh_release "linkwarden" "linkwarden/linkwarden"; then
     NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
     msg_info "Stopping ${APP}"
     systemctl stop linkwarden
@@ -35,11 +34,15 @@ function update_script() {
 
     RUST_CRATES="monolith" setup_rust
 
-    msg_info "Updating ${APP} to ${RELEASE}"
+    msg_info "Backing up data"
     mv /opt/linkwarden/.env /opt/.env
     [ -d /opt/linkwarden/data ] && mv /opt/linkwarden/data /opt/data.bak
     rm -rf /opt/linkwarden
+    msg_ok "Backed up data"
+
     fetch_and_deploy_gh_release "linkwarden" "linkwarden/linkwarden"
+
+    msg_info "Updating ${APP}"
     cd /opt/linkwarden
     $STD yarn
     $STD npx playwright install-deps
@@ -49,7 +52,7 @@ function update_script() {
     $STD yarn web:build
     $STD yarn prisma:deploy
     [ -d /opt/data.bak ] && mv /opt/data.bak /opt/linkwarden/data
-    msg_ok "Updated ${APP} to ${RELEASE}"
+    msg_ok "Updated ${APP}"
 
     msg_info "Starting ${APP}"
     systemctl start linkwarden
@@ -61,8 +64,6 @@ function update_script() {
     rm -rf /opt/linkwarden/.next/cache
     msg_ok "Cleaned"
     msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required.  ${APP} is already at ${RELEASE}."
   fi
   exit
 }

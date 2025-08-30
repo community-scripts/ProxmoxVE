@@ -20,36 +20,32 @@ color
 catch_errors
 
 function update_script() {
-   header_info
-   check_container_storage
-   check_container_resources
-   if [[ ! -f /usr/local/bin/yt-dlp-webui ]]; then
-      msg_error "No ${APP} Installation Found!"
-      exit
-   fi
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -f /usr/local/bin/yt-dlp-webui ]]; then
+    msg_error "No ${APP} Installation Found!"
+    exit
+  fi
 
+  if check_for_gh_release "yt-dlp-webui" "marcopiovanello/yt-dlp-web-ui"; then
+    msg_info "Stopping $APP"
+    systemctl stop yt-dlp-webui
+    msg_ok "Stopped $APP"
 
-   RELEASE=$(curl -fsSL https://api.github.com/repos/marcopiovanello/yt-dlp-web-ui/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-   if [[ "${RELEASE}" != "$(cat ~/.yt-dlp-webui)" ]] || [[ ! -f ~/.yt-dlp-webui ]]; then
+    msg_info "Updating yt-dlp"
+    $STD yt-dlp -U
+    msg_ok "Updated yt-dlp"
 
-      msg_info "Stopping $APP"
-      systemctl stop yt-dlp-webui
-      msg_ok "Stopped $APP"
+    rm -rf /usr/local/bin/yt-dlp-webui
+    fetch_and_deploy_gh_release "yt-dlp-webui" "marcopiovanello/yt-dlp-web-ui" "singlefile" "latest" "/usr/local/bin" "yt-dlp-webui_linux-amd64"
 
-      msg_info "Updating yt-dlp"
-      $STD yt-dlp -U
-      msg_ok "Updated yt-dlp"
-      
-      rm -rf /usr/local/bin/yt-dlp-webui
-      fetch_and_deploy_gh_release "yt-dlp-webui" "marcopiovanello/yt-dlp-web-ui" "singlefile" "latest" "/usr/local/bin" "yt-dlp-webui_linux-amd64"
-
-      msg_info "Starting $APP"
-      systemctl start yt-dlp-webui
-      msg_ok "Started $APP"
-   else
-      msg_ok "No update required. ${APP} is already at v${RELEASE}"
-   fi
-   exit
+    msg_info "Starting $APP"
+    systemctl start yt-dlp-webui
+    msg_ok "Started $APP"
+    msg_ok "Updated Successfully"
+  fi
+  exit
 }
 
 start

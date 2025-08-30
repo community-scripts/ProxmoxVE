@@ -31,5 +31,10 @@
     "username": null,
     "password": null
   },
-  "notes": []
+  "notes": [
+    {
+      "text": "Flaresolverr is pinned to Version 3.3.25 because they add an breaking python package which doesn't work with debian 12.`",
+      "type": "info"
+    }
+  ]
 }

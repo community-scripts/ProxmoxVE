@@ -28,8 +28,7 @@ function update_script() {
     exit
   fi
 
-  RELEASE=$(curl -fsSL https://api.github.com/repos/project-zot/zot/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4)}')
-  if [[ ! -f ~/.${APP} ]] || [[ "${RELEASE}" != "$(cat ~/.${APP})" ]]; then
+  if check_for_gh_release "zot" "project-zot/zot"; then
     msg_info "Stopping Zot service"
     systemctl stop zot
     msg_ok "Stopped Zot service"
@@ -44,12 +43,8 @@ function update_script() {
     msg_info "Starting service"
     systemctl start zot
     msg_ok "Service started"
-
-    msg_ok "Updated successfuly"
-  else
-    msg_ok "Zot is already up to date (${RELEASE})"
+    msg_ok "Updated successfully"
   fi
-
   exit
 }
 

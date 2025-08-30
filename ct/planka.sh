@@ -28,8 +28,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -s https://api.github.com/repos/plankanban/planka/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "${RELEASE}" != "$(cat ~/.planka 2>/dev/null)" ]] || [[ ! -f ~/.planka ]]; then
+  if check_for_gh_release "planka" "plankanban/planka"; then
     msg_info "Stopping $APP"
     systemctl stop planka
     msg_ok "Stopped $APP"
@@ -45,9 +44,12 @@ function update_script() {
     msg_ok "Backed up data"
 
     fetch_and_deploy_gh_release "planka" "plankanban/planka" "prebuild" "latest" "/opt/planka" "planka-prebuild.zip"
+
+    msg_info "Update Frontend"
     cd /opt/planka
     $STD npm install
-    
+    msg_ok "Updated Frontend"
+
     msg_info "Restoring data"
     mv /opt/planka-backup/.env /opt/planka/
     [ -d /opt/planka-backup/favicons ] && find /opt/planka-backup/favicons -maxdepth 1 -type f -exec mv -t /opt/planka/public/favicons {} +
@@ -59,10 +61,7 @@ function update_script() {
     msg_info "Starting $APP"
     systemctl start planka
     msg_ok "Started $APP"
-
     msg_ok "Update Successful"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
   exit
 }

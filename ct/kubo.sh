@@ -27,9 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-
-  RELEASE=$(curl -fsSL https://api.github.com/repos/ipfs/kubo/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "${RELEASE}" != "$(cat ~/.kubo)" ]] || [[ ! -f ~/.kubo ]]; then
+  if check_for_gh_release "kubo" "ipfs/kubo"; then
     msg_info "Stopping service"
     systemctl stop ipfs
     msg_ok "Stopped service"
@@ -39,10 +37,7 @@ function update_script() {
     msg_info "Starting service"
     systemctl start ipfs
     msg_ok "Service started"
-
-    msg_ok "Updated successfuly"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
+    msg_ok "Updated successfully"
   fi
   exit
 }
