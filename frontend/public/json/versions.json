@@ -1,5 +1,35 @@
 [
   {
+    "name": "bunkerity/bunkerweb",
+    "version": "testing",
+    "date": "2025-08-29T20:40:03Z"
+  },
+  {
+    "name": "readeck/readeck",
+    "version": "0.20.0",
+    "date": "2025-08-30T08:26:43Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2374",
+    "date": "2025-08-30T05:55:07Z"
+  },
+  {
+    "name": "fuma-nama/fumadocs",
+    "version": "fumadocs-core@15.7.6",
+    "date": "2025-08-30T02:58:08Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.19",
+    "date": "2025-08-30T00:27:11Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
     "name": "rcourtman/Pulse",
     "version": "v4.10.1",
     "date": "2025-08-29T23:15:05Z"
@@ -18,11 +48,6 @@
     "name": "HabitRPG/habitica",
     "version": "v5.39.1",
     "date": "2025-08-29T21:02:00Z"
-  },
-  {
-    "name": "bunkerity/bunkerweb",
-    "version": "v1.6.4",
-    "date": "2025-08-18T20:22:07Z"
   },
   {
     "name": "msgbyte/tianji",
@@ -55,6 +80,11 @@
     "date": "2025-07-04T08:21:42Z"
   },
   {
+    "name": "keycloak/keycloak",
+    "version": "26.0.15",
+    "date": "2025-08-27T12:12:03Z"
+  },
+  {
     "name": "Forceu/Gokapi",
     "version": "v2.1.0",
     "date": "2025-08-29T12:45:42Z"
@@ -70,19 +100,9 @@
     "date": "2025-08-29T10:57:06Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2367",
-    "date": "2025-08-29T06:34:38Z"
-  },
-  {
     "name": "semaphoreui/semaphore",
     "version": "v2.16.19",
     "date": "2025-08-29T05:53:48Z"
-  },
-  {
-    "name": "fuma-nama/fumadocs",
-    "version": "@fumadocs/cli@1.0.1",
-    "date": "2025-08-29T05:41:26Z"
   },
   {
     "name": "firefly-iii/firefly-iii",
@@ -103,21 +123,6 @@
     "name": "esphome/esphome",
     "version": "2025.8.2",
     "date": "2025-08-29T00:38:54Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.4.19",
-    "date": "2025-08-29T00:27:09Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.0.15",
-    "date": "2025-08-27T12:12:03Z"
   },
   {
     "name": "Dolibarr/dolibarr",
@@ -1143,11 +1148,6 @@
     "name": "release-argus/Argus",
     "version": "0.26.3",
     "date": "2025-05-29T21:18:15Z"
-  },
-  {
-    "name": "readeck/readeck",
-    "version": "0.19.2",
-    "date": "2025-05-29T14:39:17Z"
   },
   {
     "name": "stonith404/pingvin-share",
