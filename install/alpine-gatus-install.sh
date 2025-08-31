@@ -16,23 +16,19 @@ update_os
 msg_info "Installing dependencies"
 $STD apk add --no-cache \
   ca-certificates \
-  libcap-setcap
-$STD apk add --no-cache --repository=https://dl-cdn.alpinelinux.org/alpine/edge/community go
+  libcap-setcap \
+  go
 msg_ok "Installed dependencies"
 
-RELEASE=$(curl -s https://api.github.com/repos/TwiN/gatus/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-msg_info "Installing gatus v${RELEASE}"
-temp_file=$(mktemp)
-mkdir -p /opt/gatus
-curl -fsSL "https://github.com/TwiN/gatus/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
-tar zxf "$temp_file" --strip-components=1 -C /opt/gatus
+fetch_and_deploy_gh_release "gatus" "TwiN/gatus" "tarball"
+
+msg_info "Installing gatus"
 cd /opt/gatus
 $STD go mod tidy
 CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o gatus .
 setcap CAP_NET_RAW+ep gatus
 mv config.yaml config
-echo "${RELEASE}" >/opt/gatus_version.txt
-msg_ok "Installed gatus v${RELEASE}"
+msg_ok "Installed gatus"
 
 msg_info "Enabling gatus Service"
 cat <<EOF >/etc/init.d/gatus
@@ -65,6 +61,5 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -f "$temp_file"
 $STD apk cache clean
 msg_ok "Cleaned"
