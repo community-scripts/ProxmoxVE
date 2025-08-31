@@ -1,8 +1,43 @@
 [
   {
+    "name": "Part-DB/Part-DB-server",
+    "version": "v2.0.1",
+    "date": "2025-08-30T23:49:53Z"
+  },
+  {
+    "name": "jhuckaby/Cronicle",
+    "version": "v0.9.91",
+    "date": "2025-08-30T21:49:57Z"
+  },
+  {
+    "name": "YunoHost/yunohost",
+    "version": "debian/12.1.16",
+    "date": "2025-08-30T20:09:13Z"
+  },
+  {
+    "name": "immich-app/immich",
+    "version": "v1.140.1",
+    "date": "2025-08-30T19:46:34Z"
+  },
+  {
+    "name": "Brandawg93/PeaNUT",
+    "version": "v5.14.0",
+    "date": "2025-08-30T18:41:03Z"
+  },
+  {
+    "name": "fuma-nama/fumadocs",
+    "version": "fumadocs-mdx@11.8.2",
+    "date": "2025-08-30T13:36:36Z"
+  },
+  {
+    "name": "rcourtman/Pulse",
+    "version": "v4.10.2",
+    "date": "2025-08-30T12:44:11Z"
+  },
+  {
     "name": "bunkerity/bunkerweb",
-    "version": "testing",
-    "date": "2025-08-29T20:40:03Z"
+    "version": "v1.6.4",
+    "date": "2025-08-18T20:22:07Z"
   },
   {
     "name": "readeck/readeck",
@@ -15,11 +50,6 @@
     "date": "2025-08-30T05:55:07Z"
   },
   {
-    "name": "fuma-nama/fumadocs",
-    "version": "fumadocs-core@15.7.6",
-    "date": "2025-08-30T02:58:08Z"
-  },
-  {
     "name": "jeedom/core",
     "version": "4.4.19",
     "date": "2025-08-30T00:27:11Z"
@@ -28,11 +58,6 @@
     "name": "steveiliop56/tinyauth",
     "version": "v3.6.2",
     "date": "2025-07-17T12:08:03Z"
-  },
-  {
-    "name": "rcourtman/Pulse",
-    "version": "v4.10.1",
-    "date": "2025-08-29T23:15:05Z"
   },
   {
     "name": "booklore-app/booklore",
@@ -58,11 +83,6 @@
     "name": "homarr-labs/homarr",
     "version": "v1.35.0",
     "date": "2025-08-29T19:14:25Z"
-  },
-  {
-    "name": "immich-app/immich",
-    "version": "v1.140.0",
-    "date": "2025-08-29T17:55:39Z"
   },
   {
     "name": "home-assistant/core",
@@ -128,11 +148,6 @@
     "name": "Dolibarr/dolibarr",
     "version": "21.0.3",
     "date": "2025-08-28T21:05:15Z"
-  },
-  {
-    "name": "Part-DB/Part-DB-server",
-    "version": "v1.17.4",
-    "date": "2025-08-28T21:00:53Z"
   },
   {
     "name": "9001/copyparty",
@@ -335,11 +350,6 @@
     "date": "2025-08-25T22:43:20Z"
   },
   {
-    "name": "Brandawg93/PeaNUT",
-    "version": "v5.13.0",
-    "date": "2025-08-25T19:19:51Z"
-  },
-  {
     "name": "mealie-recipes/mealie",
     "version": "v3.1.2",
     "date": "2025-08-25T18:00:52Z"
@@ -401,8 +411,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v4.3.0",
-    "date": "2025-07-05T12:14:52Z"
+    "version": "nightly",
+    "date": "2025-08-24T18:27:58Z"
   },
   {
     "name": "wavelog/wavelog",
@@ -423,11 +433,6 @@
     "name": "janeczku/calibre-web",
     "version": "0.6.25",
     "date": "2025-08-24T08:51:55Z"
-  },
-  {
-    "name": "YunoHost/yunohost",
-    "version": "debian/12.1.15.1",
-    "date": "2025-08-23T20:07:50Z"
   },
   {
     "name": "sysadminsmedia/homebox",
@@ -638,11 +643,6 @@
     "name": "blakeblackshear/frigate",
     "version": "v0.14.1",
     "date": "2024-08-29T22:32:51Z"
-  },
-  {
-    "name": "jhuckaby/Cronicle",
-    "version": "v0.9.90",
-    "date": "2025-08-15T19:14:52Z"
   },
   {
     "name": "intri-in/manage-my-damn-life-nextjs",
