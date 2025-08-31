@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-08-31
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - n8n: Increase disk size [@tremor021](https://github.com/tremor021) ([#7320](https://github.com/community-scripts/ProxmoxVE/pull/7320))
+
 ## 2025-08-30
 
 ### 🚀 Updated Scripts
