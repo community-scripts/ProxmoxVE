@@ -21,11 +21,11 @@ catch_errors
 
 function update_script() {
   header_info
-
   if [[ ! -d /opt/gatus ]]; then
     msg_error "No ${APP} Installation Found!"
     exit 1
   fi
+  
   RELEASE=$(curl -s https://api.github.com/repos/TwiN/gatus/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
   if [ "${RELEASE}" != "$(cat ~/.gatus 2>/dev/null)" ] || [ ! -f ~/.gatus ]; then
     msg_info "Stopping ${APP} service"
