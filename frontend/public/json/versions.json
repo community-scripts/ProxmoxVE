@@ -1,5 +1,40 @@
 [
   {
+    "name": "syncthing/syncthing",
+    "version": "v2.0.3",
+    "date": "2025-08-22T08:12:47Z"
+  },
+  {
+    "name": "rcourtman/Pulse",
+    "version": "v4.11.0",
+    "date": "2025-08-31T08:54:59Z"
+  },
+  {
+    "name": "Lidarr/Lidarr",
+    "version": "v2.13.3.4711",
+    "date": "2025-08-28T20:06:24Z"
+  },
+  {
+    "name": "authelia/authelia",
+    "version": "v4.39.7",
+    "date": "2025-08-31T06:43:13Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2384",
+    "date": "2025-08-31T05:57:46Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.19",
+    "date": "2025-08-31T00:27:07Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
     "name": "Part-DB/Part-DB-server",
     "version": "v2.0.1",
     "date": "2025-08-30T23:49:53Z"
@@ -30,11 +65,6 @@
     "date": "2025-08-30T13:36:36Z"
   },
   {
-    "name": "rcourtman/Pulse",
-    "version": "v4.10.2",
-    "date": "2025-08-30T12:44:11Z"
-  },
-  {
     "name": "bunkerity/bunkerweb",
     "version": "v1.6.4",
     "date": "2025-08-18T20:22:07Z"
@@ -43,21 +73,6 @@
     "name": "readeck/readeck",
     "version": "0.20.0",
     "date": "2025-08-30T08:26:43Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2374",
-    "date": "2025-08-30T05:55:07Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.4.19",
-    "date": "2025-08-30T00:27:11Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
   },
   {
     "name": "booklore-app/booklore",
@@ -163,11 +178,6 @@
     "name": "dgtlmoon/changedetection.io",
     "version": "0.50.11",
     "date": "2025-08-28T20:12:30Z"
-  },
-  {
-    "name": "Lidarr/Lidarr",
-    "version": "v2.13.3.4711",
-    "date": "2025-08-28T20:06:24Z"
   },
   {
     "name": "ollama/ollama",
@@ -411,8 +421,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-08-24T18:27:58Z"
+    "version": "v4.3.0",
+    "date": "2025-07-05T12:14:52Z"
   },
   {
     "name": "wavelog/wavelog",
@@ -478,11 +488,6 @@
     "name": "goauthentik/authentik",
     "version": "version/2025.8.1",
     "date": "2025-08-22T14:55:30Z"
-  },
-  {
-    "name": "syncthing/syncthing",
-    "version": "v2.0.3",
-    "date": "2025-08-22T08:12:47Z"
   },
   {
     "name": "mattermost/mattermost",
@@ -733,11 +738,6 @@
     "name": "Stirling-Tools/Stirling-PDF",
     "version": "v1.2.0",
     "date": "2025-08-09T14:30:52Z"
-  },
-  {
-    "name": "authelia/authelia",
-    "version": "v4.39.6",
-    "date": "2025-08-09T08:11:44Z"
   },
   {
     "name": "kimai/kimai",
