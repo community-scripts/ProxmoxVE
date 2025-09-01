@@ -434,7 +434,29 @@ pve_check
 ssh_check
 start_script
 
+msg_info "Validating Storage"
+STORAGE_MENU=()
+while read -r tag type free; do
+  ITEM="Type: $type Free: $free"
+  STORAGE_MENU+=("$tag" "$ITEM" "OFF")
+done < <(pvesm status -content images | awk 'NR>1 {printf "%s %s %s\n", $1, $2, $6}')
+
+if [ ${#STORAGE_MENU[@]} -eq 0 ]; then
+  msg_error "Unable to detect a valid storage location."
+  exit 1
+elif [ $((${#STORAGE_MENU[@]} / 3)) -eq 1 ]; then
+  STORAGE=${STORAGE_MENU[0]}
+else
+  while [ -z "${STORAGE:+x}" ]; do
+    STORAGE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "Storage Pools" --radiolist \
+      "Which storage pool would you like to use for ${HN}?\nTo make a selection, use the Spacebar.\n" \
+      16 70 6 \
+      "${STORAGE_MENU[@]}" 3>&1 1>&2 2>&3)
+  done
+fi
 msg_ok "Using ${CL}${BL}$STORAGE${CL} ${GN}for Storage Location."
+
+msg_ok "Virtual Machine ID is ${CL}${BL}$VMID${CL}."
 msg_ok "Virtual Machine ID is ${CL}${BL}$VMID${CL}."
 msg_info "Retrieving the URL for $APP"
 URL="https://download.umbrel.com/release/latest/umbrelos-amd64.img.xz"
@@ -445,7 +467,7 @@ curl -f#SL -o "$FILE" "$URL"
 msg_ok "Downloaded ${CL}${BL}${FILE}${CL}"
 
 if ! command -v pv &>/dev/null; then
-  apt-get update &>/dev/null && apt-get install -y pv &>/dev/null
+  apt-get update -qq &>/dev/null && apt-get install -y pv &>/dev/null
 fi
 
 set -o pipefail
@@ -455,7 +477,7 @@ qm create $VMID -machine q35 -bios ovmf -agent 1 -tablet 0 -localtime 1 ${CPU_TY
   -net0 virtio,bridge=$BRG,macaddr=$MAC$VLAN$MTU -onboot 1 -ostype l26 -scsihw virtio-scsi-pci >/dev/null
 msg_ok "Created VM shell"
 
-# Decompress image to disk (not /tmp, but persistent path)
+# Decompress image to persistent path (not /tmp)
 FILE_IMG="/var/lib/vz/template/tmp/${FILE%.xz}"
 mkdir -p "$(dirname "$FILE_IMG")"
 
@@ -464,14 +486,14 @@ xz -dc "$FILE" | pv -N "Extracting" >"$FILE_IMG"
 msg_ok "Decompressed to $FILE_IMG"
 
 # Import disk into storage
-msg_info "Importing disk into storage"
+msg_info "Importing disk into storage ($STORAGE)"
 DISK_REF=$(qm importdisk "$VMID" "$FILE_IMG" "$STORAGE" --format raw | awk '{print $6}')
 msg_ok "Imported disk into storage"
 
-# Clean up downloaded/temporary files
+# Clean up
 rm -f "$FILE" "$FILE_IMG"
 
-# Attach EFI and imported disk
+# Attach EFI and root disk
 msg_info "Attaching EFI and root disk"
 qm set $VMID \
   -efidisk0 ${STORAGE}:0,efitype=4m \
@@ -480,7 +502,7 @@ qm set $VMID \
 qm set $VMID --agent enabled=1 >/dev/null
 msg_ok "Attached EFI and root disk"
 
-# Resize disk if needed
+# Resize root disk
 msg_info "Resizing disk to $DISK_SIZE"
 qm resize $VMID scsi0 ${DISK_SIZE} >/dev/null
 msg_ok "Resized disk"
