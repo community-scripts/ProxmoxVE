@@ -310,17 +310,20 @@ function advanced_settings() {
     exit-script
   fi
 
-  if CPU_TYPE1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "CPU MODEL" --radiolist "Choose" --cancel-button Exit-Script 10 58 2 \
-    "0" "KVM64 (Default)" ON \
-    "1" "Host" OFF \
+  if CPU_TYPE1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "CPU MODEL" --radiolist "Choose CPU Model" --cancel-button Exit-Script 10 58 2 \
+    "KVM64" "Default – safe for migration/compatibility" ON \
+    "Host" "Use host CPU features (faster, no migration)" OFF \
     3>&1 1>&2 2>&3); then
-    if [ $CPU_TYPE1 = "1" ]; then
+    case "$CPU_TYPE1" in
+    "Host")
       echo -e "${OS}${BOLD}${DGN}CPU Model: ${BGN}Host${CL}"
       CPU_TYPE=" -cpu host"
-    else
+      ;;
+    *)
       echo -e "${OS}${BOLD}${DGN}CPU Model: ${BGN}KVM64${CL}"
       CPU_TYPE=""
-    fi
+      ;;
+    esac
   else
     exit-script
   fi
@@ -453,7 +456,7 @@ qm create $VMID -machine q35 -bios ovmf -agent 1 -tablet 0 -localtime 1 ${CPU_TY
 msg_ok "Created VM shell"
 
 msg_info "Importing disk directly from compressed image"
-DISK_REF=$(xzcat "$FILE" | pv -N "Extracting" | qm importdisk $VMID - $STORAGE -format raw | awk '{print $6}')
+DISK_REF=$(xzcat "$FILE" | pv -N "Extracting" | qm disk import $VMID - $STORAGE -format raw | awk '{print $6}')
 msg_ok "Imported disk from ${CL}${BL}${FILE}${CL}"
 rm -f "$FILE"
 
