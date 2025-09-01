@@ -469,7 +469,7 @@ if [[ ! -s "$CACHE_FILE" ]]; then
   msg_info "Downloading Umbrel OS image"
   curl -f#SL -o "$CACHE_FILE" "$URL"
 else
-  msg_info "Using cached Umbrel OS image"
+  msg_ok "Using cached Umbrel OS image"
 fi
 
 if ! command -v pv &>/dev/null; then
@@ -481,7 +481,7 @@ qm create "$VMID" -machine q35 -bios ovmf -agent 1 -tablet 0 -localtime 1 ${CPU_
   -cores "$CORE_COUNT" -memory "$RAM_SIZE" -name "$HN" -tags community-script \
   -net0 "virtio,bridge=$BRG,macaddr=$MAC$VLAN$MTU" -onboot 1 -ostype l26 -scsihw virtio-scsi-pci >/dev/null
 
-xz -dc "$CACHE_FILE" | pv -N "Extracting" >"$FILE_IMG"
+xz -dc "$CACHE_FILE" | pv -N "\nExtracting" >"$FILE_IMG"
 
 if qm disk import --help >/dev/null 2>&1; then
   IMPORT_CMD=(qm disk import)
