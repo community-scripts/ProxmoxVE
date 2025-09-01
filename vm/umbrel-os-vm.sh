@@ -203,10 +203,9 @@ function exit-script() {
 
 function default_settings() {
   VMID=$(get_valid_nextid)
-  FORMAT=",efitype=4m"
-  MACHINE=""
+  MACHINE="q35"
+  FORMAT=""
   DISK_SIZE="32G"
-  DISK_CACHE=""
   HN="umbrelos"
   CPU_TYPE=""
   CORE_COUNT="2"
@@ -218,9 +217,8 @@ function default_settings() {
   START_VM="yes"
   METHOD="default"
   echo -e "${CONTAINERID}${BOLD}${DGN}Virtual Machine ID: ${BGN}${VMID}${CL}"
-  echo -e "${CONTAINERTYPE}${BOLD}${DGN}Machine Type: ${BGN}i440fx${CL}"
+  echo -e "${CONTAINERTYPE}${BOLD}${DGN}Machine Type: ${BGN}q35${CL}"
   echo -e "${DISKSIZE}${BOLD}${DGN}Disk Size: ${BGN}${DISK_SIZE}${CL}"
-  echo -e "${DISKSIZE}${BOLD}${DGN}Disk Cache: ${BGN}None${CL}"
   echo -e "${HOSTNAME}${BOLD}${DGN}Hostname: ${BGN}${HN}${CL}"
   echo -e "${OS}${BOLD}${DGN}CPU Model: ${BGN}KVM64${CL}"
   echo -e "${CPUCORE}${BOLD}${DGN}CPU Cores: ${BGN}${CORE_COUNT}${CL}"
@@ -501,15 +499,16 @@ for i in {0,1,2}; do
 done
 
 msg_info "Creating a Umbrel OS VM"
-qm create $VMID -agent 1${MACHINE} -tablet 0 -localtime 1 -bios ovmf${CPU_TYPE} -cores $CORE_COUNT -memory $RAM_SIZE \
-  -name $HN -tags community-script -net0 virtio,bridge=$BRG,macaddr=$MAC$VLAN$MTU -onboot 1 -ostype l26 -scsihw virtio-scsi-pci >/dev/null
-pvesm alloc $STORAGE $VMID $DISK0 4M >/dev/null
-qm set $VMID \
-  -efidisk0 ${DISK0_REF}${FORMAT} \
-  -scsi0 ${DISK1_REF},${DISK_CACHE}${THIN}size=${DISK_SIZE} \
-  -boot order=scsi0 \
-  -serial0 socket >/dev/null
+qm create $VMID -machine q35 -bios ovmf -agent 1 -tablet 0 -localtime 1 ${CPU_TYPE} \
+  -cores $CORE_COUNT -memory $RAM_SIZE -name $HN -tags community-script \
+  -net0 virtio,bridge=$BRG,macaddr=$MAC$VLAN$MTU -onboot 1 -ostype l26 -scsihw virtio-scsi-pci >/dev/null
+pvesm alloc $STORAGE $VMID vm-${VMID}-efidisk0 4M >/dev/null
+xzcat "$FILE" | pv -N "Extracting" | qm importdisk $VMID - $STORAGE -format raw >/dev/null
+qm set $VMID -efidisk0 ${STORAGE}:vm-${VMID}-efidisk0,efitype=4m \
+  -scsi0 ${STORAGE}:vm-${VMID}-disk-0,ssd=1,discard=on,size=${DISK_SIZE} \
+  -boot order=scsi0 -serial0 socket >/dev/null
 qm set $VMID --agent enabled=1 >/dev/null
+rm -f "$FILE"
 
 if [ -n "$DISK_SIZE" ]; then
   msg_info "Resizing disk to $DISK_SIZE GB"
