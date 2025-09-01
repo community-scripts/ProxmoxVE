@@ -445,11 +445,11 @@ if ! command -v pv &>/dev/null; then
   apt-get update &>/dev/null && apt-get install -y pv &>/dev/null
 fi
 
+set -o pipefail
 msg_info "Creating Umbrel OS VM shell"
 qm create $VMID -machine q35 -bios ovmf -agent 1 -tablet 0 -localtime 1 ${CPU_TYPE} \
   -cores $CORE_COUNT -memory $RAM_SIZE -name $HN -tags community-script \
   -net0 virtio,bridge=$BRG,macaddr=$MAC$VLAN$MTU -onboot 1 -ostype l26 -scsihw virtio-scsi-pci >/dev/null
-pvesm alloc $STORAGE $VMID vm-${VMID}-efidisk0 4M >/dev/null
 msg_ok "Created VM shell"
 
 msg_info "Importing disk directly from compressed image"
@@ -457,12 +457,15 @@ DISK_REF=$(xzcat "$FILE" | pv -N "Extracting" | qm importdisk $VMID - $STORAGE -
 msg_ok "Imported disk from ${CL}${BL}${FILE}${CL}"
 rm -f "$FILE"
 
-qm set $VMID -efidisk0 ${STORAGE}:vm-${VMID}-efidisk0,efitype=4m \
+msg_info "Attaching disks"
+qm set $VMID \
+  -efidisk0 ${STORAGE}:0,efitype=4m \
   -scsi0 ${DISK_REF},ssd=1,discard=on,size=${DISK_SIZE} \
   -boot order=scsi0 -serial0 socket >/dev/null
 qm set $VMID --agent enabled=1 >/dev/null
+msg_ok "Attached EFI and root disk"
 
-msg_info "Resizing disk to $DISK_SIZE GB"
+msg_info "Resizing disk to $DISK_SIZE"
 qm resize $VMID scsi0 ${DISK_SIZE} >/dev/null
 msg_ok "Resized disk"
 
