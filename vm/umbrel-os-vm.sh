@@ -431,33 +431,6 @@ pve_check
 ssh_check
 start_script
 
-post_to_api_vm
-msg_info "Validating Storage"
-while read -r line; do
-  TAG=$(echo $line | awk '{print $1}')
-  TYPE=$(echo $line | awk '{printf "%-10s", $2}')
-  FREE=$(echo $line | numfmt --field 4-6 --from-unit=K --to=iec --format %.2f | awk '{printf( "%9sB", $6)}')
-  ITEM="  Type: $TYPE Free: $FREE "
-  OFFSET=2
-  if [[ $((${#ITEM} + $OFFSET)) -gt ${MSG_MAX_LENGTH:-} ]]; then
-    MSG_MAX_LENGTH=$((${#ITEM} + $OFFSET))
-  fi
-  STORAGE_MENU+=("$TAG" "$ITEM" "OFF")
-done < <(pvesm status -content images | awk 'NR>1')
-VALID=$(pvesm status -content images | awk 'NR>1')
-if [ -z "$VALID" ]; then
-  msg_error "Unable to detect a valid storage location."
-  exit
-elif [ $((${#STORAGE_MENU[@]} / 3)) -eq 1 ]; then
-  STORAGE=${STORAGE_MENU[0]}
-else
-  while [ -z "${STORAGE:+x}" ]; do
-    STORAGE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "Storage Pools" --radiolist \
-      "Which storage pool would you like to use for ${HN}?\nTo make a selection, use the Spacebar.\n" \
-      16 $(($MSG_MAX_LENGTH + 23)) 6 \
-      "${STORAGE_MENU[@]}" 3>&1 1>&2 2>&3)
-  done
-fi
 msg_ok "Using ${CL}${BL}$STORAGE${CL} ${GN}for Storage Location."
 msg_ok "Virtual Machine ID is ${CL}${BL}$VMID${CL}."
 msg_info "Retrieving the URL for $APP"
@@ -472,51 +445,26 @@ if ! command -v pv &>/dev/null; then
   apt-get update &>/dev/null && apt-get install -y pv &>/dev/null
 fi
 
-msg_info "Importing disk directly from compressed image"
-xzcat "$FILE" | pv -N "Extracting" | qm importdisk $VMID - $STORAGE ${DISK_IMPORT:-} >/dev/null
-msg_ok "Imported disk from ${CL}${BL}${FILE}${CL}"
-
-STORAGE_TYPE=$(pvesm status -storage $STORAGE | awk 'NR>1 {print $2}')
-case $STORAGE_TYPE in
-nfs | dir)
-  DISK_EXT=".raw"
-  DISK_REF="$VMID/"
-  DISK_IMPORT="-format raw"
-  THIN=""
-  ;;
-btrfs)
-  DISK_EXT=".raw"
-  DISK_REF="$VMID/"
-  DISK_IMPORT="-format raw"
-  FORMAT=",efitype=4m"
-  THIN=""
-  ;;
-esac
-for i in {0,1,2}; do
-  disk="DISK$i"
-  eval DISK${i}=vm-${VMID}-disk-${i}${DISK_EXT:-}
-  eval DISK${i}_REF=${STORAGE}:${DISK_REF:-}${!disk}
-done
-
-msg_info "Creating a Umbrel OS VM"
+msg_info "Creating Umbrel OS VM shell"
 qm create $VMID -machine q35 -bios ovmf -agent 1 -tablet 0 -localtime 1 ${CPU_TYPE} \
   -cores $CORE_COUNT -memory $RAM_SIZE -name $HN -tags community-script \
   -net0 virtio,bridge=$BRG,macaddr=$MAC$VLAN$MTU -onboot 1 -ostype l26 -scsihw virtio-scsi-pci >/dev/null
 pvesm alloc $STORAGE $VMID vm-${VMID}-efidisk0 4M >/dev/null
-xzcat "$FILE" | pv -N "Extracting" | qm importdisk $VMID - $STORAGE -format raw >/dev/null
-qm set $VMID -efidisk0 ${STORAGE}:vm-${VMID}-efidisk0,efitype=4m \
-  -scsi0 ${STORAGE}:vm-${VMID}-disk-0,ssd=1,discard=on,size=${DISK_SIZE} \
-  -boot order=scsi0 -serial0 socket >/dev/null
-qm set $VMID --agent enabled=1 >/dev/null
+msg_ok "Created VM shell"
+
+msg_info "Importing disk directly from compressed image"
+DISK_REF=$(xzcat "$FILE" | pv -N "Extracting" | qm importdisk $VMID - $STORAGE -format raw | awk '{print $6}')
+msg_ok "Imported disk from ${CL}${BL}${FILE}${CL}"
 rm -f "$FILE"
 
-if [ -n "$DISK_SIZE" ]; then
-  msg_info "Resizing disk to $DISK_SIZE GB"
-  qm resize $VMID scsi0 ${DISK_SIZE} >/dev/null
-else
-  msg_info "Using default disk size of $DEFAULT_DISK_SIZE GB"
-  qm resize $VMID scsi0 ${DEFAULT_DISK_SIZE} >/dev/null
-fi
+qm set $VMID -efidisk0 ${STORAGE}:vm-${VMID}-efidisk0,efitype=4m \
+  -scsi0 ${DISK_REF},ssd=1,discard=on,size=${DISK_SIZE} \
+  -boot order=scsi0 -serial0 socket >/dev/null
+qm set $VMID --agent enabled=1 >/dev/null
+
+msg_info "Resizing disk to $DISK_SIZE GB"
+qm resize $VMID scsi0 ${DISK_SIZE} >/dev/null
+msg_ok "Resized disk"
 
 DESCRIPTION=$(
   cat <<EOF
