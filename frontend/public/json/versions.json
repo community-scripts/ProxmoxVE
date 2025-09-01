@@ -1,5 +1,80 @@
 [
   {
+    "name": "zitadel/zitadel",
+    "version": "v4.1.0",
+    "date": "2025-09-01T12:03:04Z"
+  },
+  {
+    "name": "outline/outline",
+    "version": "v0.87.3-0",
+    "date": "2025-09-01T11:46:53Z"
+  },
+  {
+    "name": "VictoriaMetrics/VictoriaMetrics",
+    "version": "pmm-6401-v1.125.0",
+    "date": "2025-09-01T11:01:54Z"
+  },
+  {
+    "name": "grokability/snipe-it",
+    "version": "v8.3.1",
+    "date": "2025-09-01T11:00:07Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.3.2",
+    "date": "2025-08-19T04:08:36Z"
+  },
+  {
+    "name": "apache/tomcat",
+    "version": "11.0.11",
+    "date": "2025-09-01T10:40:14Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.8.3",
+    "date": "2025-08-21T18:23:10Z"
+  },
+  {
+    "name": "crowdsecurity/crowdsec",
+    "version": "v1.6.11",
+    "date": "2025-07-22T12:11:38Z"
+  },
+  {
+    "name": "nzbgetcom/nzbget",
+    "version": "v25.3",
+    "date": "2025-09-01T09:47:06Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.4.0p11-rc1",
+    "date": "2025-09-01T07:55:46Z"
+  },
+  {
+    "name": "readeck/readeck",
+    "version": "0.20.1",
+    "date": "2025-09-01T07:35:48Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2390",
+    "date": "2025-09-01T05:57:06Z"
+  },
+  {
+    "name": "moghtech/komodo",
+    "version": "v1.19.2",
+    "date": "2025-09-01T02:33:52Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.19",
+    "date": "2025-09-01T00:27:07Z"
+  },
+  {
     "name": "crafty-controller/crafty-4",
     "version": "v4.5.2",
     "date": "2025-08-31T22:21:50Z"
@@ -18,11 +93,6 @@
     "name": "wizarrrr/wizarr",
     "version": "2025.8.5",
     "date": "2025-08-31T17:56:37Z"
-  },
-  {
-    "name": "outline/outline",
-    "version": "v0.87.1",
-    "date": "2025-08-31T16:45:06Z"
   },
   {
     "name": "karakeep-app/karakeep",
@@ -60,6 +130,11 @@
     "date": "2025-08-22T08:12:47Z"
   },
   {
+    "name": "keycloak/keycloak",
+    "version": "26.0.15",
+    "date": "2025-08-27T12:12:03Z"
+  },
+  {
     "name": "Lidarr/Lidarr",
     "version": "v2.13.3.4711",
     "date": "2025-08-28T20:06:24Z"
@@ -68,21 +143,6 @@
     "name": "authelia/authelia",
     "version": "v4.39.7",
     "date": "2025-08-31T06:43:13Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2384",
-    "date": "2025-08-31T05:57:46Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.4.19",
-    "date": "2025-08-31T00:27:07Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
   },
   {
     "name": "jhuckaby/Cronicle",
@@ -105,11 +165,6 @@
     "date": "2025-08-18T20:22:07Z"
   },
   {
-    "name": "readeck/readeck",
-    "version": "0.20.0",
-    "date": "2025-08-30T08:26:43Z"
-  },
-  {
     "name": "henrygd/beszel",
     "version": "v0.12.6",
     "date": "2025-08-29T21:40:09Z"
@@ -130,24 +185,9 @@
     "date": "2025-08-29T19:14:25Z"
   },
   {
-    "name": "home-assistant/core",
-    "version": "2025.8.3",
-    "date": "2025-08-21T18:23:10Z"
-  },
-  {
     "name": "silverbulletmd/silverbullet",
     "version": "2.0.0",
     "date": "2025-08-29T13:38:35Z"
-  },
-  {
-    "name": "nzbgetcom/nzbget",
-    "version": "v25.2",
-    "date": "2025-07-04T08:21:42Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.0.15",
-    "date": "2025-08-27T12:12:03Z"
   },
   {
     "name": "Forceu/Gokapi",
@@ -168,11 +208,6 @@
     "name": "semaphoreui/semaphore",
     "version": "v2.16.19",
     "date": "2025-08-29T05:53:48Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.3.2",
-    "date": "2025-08-19T04:08:36Z"
   },
   {
     "name": "openobserve/openobserve",
@@ -212,7 +247,7 @@
   {
     "name": "ollama/ollama",
     "version": "v0.11.8",
-    "date": "2025-08-28T19:27:13Z"
+    "date": "2025-08-27T18:43:44Z"
   },
   {
     "name": "mongodb/mongo",
@@ -223,11 +258,6 @@
     "name": "benjaminjonard/koillection",
     "version": "1.7.0",
     "date": "2025-08-28T18:10:59Z"
-  },
-  {
-    "name": "grokability/snipe-it",
-    "version": "v8.3.0",
-    "date": "2025-08-28T17:49:06Z"
   },
   {
     "name": "gristlabs/grist-core",
@@ -253,11 +283,6 @@
     "name": "influxdata/influxdb",
     "version": "v3.4.1",
     "date": "2025-08-28T13:56:00Z"
-  },
-  {
-    "name": "zitadel/zitadel",
-    "version": "v4.0.3",
-    "date": "2025-08-22T07:43:52Z"
   },
   {
     "name": "open-webui/open-webui",
@@ -395,19 +420,9 @@
     "date": "2025-08-25T18:00:52Z"
   },
   {
-    "name": "Checkmk/checkmk",
-    "version": "v2.3.0p36",
-    "date": "2025-08-25T15:32:14Z"
-  },
-  {
     "name": "wazuh/wazuh",
     "version": "coverity-w35-4.13.0",
     "date": "2025-08-25T15:17:33Z"
-  },
-  {
-    "name": "crowdsecurity/crowdsec",
-    "version": "v1.6.11",
-    "date": "2025-07-22T12:11:38Z"
   },
   {
     "name": "sabnzbd/sabnzbd",
@@ -438,11 +453,6 @@
     "name": "Ombi-app/Ombi",
     "version": "v4.47.1",
     "date": "2025-01-05T21:14:23Z"
-  },
-  {
-    "name": "moghtech/komodo",
-    "version": "v1.19.1",
-    "date": "2025-08-24T20:16:32Z"
   },
   {
     "name": "runtipi/runtipi",
@@ -630,11 +640,6 @@
     "date": "2025-08-18T15:42:48Z"
   },
   {
-    "name": "VictoriaMetrics/VictoriaMetrics",
-    "version": "pmm-6401-v1.124.0",
-    "date": "2025-08-18T12:14:50Z"
-  },
-  {
     "name": "jupyter/notebook",
     "version": "@jupyter-notebook/ui-components@7.5.0-alpha.2",
     "date": "2025-08-18T07:39:41Z"
@@ -818,11 +823,6 @@
     "name": "rogerfar/rdt-client",
     "version": "v2.0.116",
     "date": "2025-08-05T04:45:21Z"
-  },
-  {
-    "name": "apache/tomcat",
-    "version": "10.1.44",
-    "date": "2025-08-04T13:17:59Z"
   },
   {
     "name": "Tautulli/Tautulli",
