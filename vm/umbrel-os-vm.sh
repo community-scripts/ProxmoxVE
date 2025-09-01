@@ -494,10 +494,10 @@ msg_ok "Imported disk into storage"
 rm -f "$FILE" "$FILE_IMG"
 
 # Attach EFI and root disk
-msg_info "Attaching EFI and root disk \n"
+msg_info "Attaching EFI and root disk"
 qm set $VMID \
   -efidisk0 ${STORAGE}:0,efitype=4m \
-  -scsi0 ${DISK_REF},ssd=1,discard=on,size=${DISK_SIZE} \
+  -scsi0 ${DISK_REF},ssd=1,discard=on \
   --boot order=scsi0 -serial0 socket >/dev/null
 qm set $VMID --agent enabled=1 >/dev/null
 msg_ok "Attached EFI and root disk"
