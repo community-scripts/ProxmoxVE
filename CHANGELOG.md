@@ -14,6 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - Refactor + Feature Bump: HomeAssistant OS [@MickLesk](https://github.com/MickLesk) ([#7336](https://github.com/community-scripts/ProxmoxVE/pull/7336))
+
   - #### 🐞 Bug Fixes
 
     - Update configarr.sh to mv backep up .env correctly [@finkerle](https://github.com/finkerle) ([#7323](https://github.com/community-scripts/ProxmoxVE/pull/7323))
