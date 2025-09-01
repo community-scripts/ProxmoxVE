@@ -457,7 +457,7 @@ fi
 msg_ok "Using ${CL}${BL}$STORAGE${CL} ${GN}for Storage Location."
 
 msg_ok "Virtual Machine ID is ${CL}${BL}$VMID${CL}."
-msg_ok "Virtual Machine ID is ${CL}${BL}$VMID${CL}."
+
 msg_info "Retrieving the URL for $APP"
 URL="https://download.umbrel.com/release/latest/umbrelos-amd64.img.xz"
 FILE="$(basename "$URL")"
@@ -481,7 +481,7 @@ msg_ok "Created VM shell"
 FILE_IMG="/var/lib/vz/template/tmp/${FILE%.xz}"
 mkdir -p "$(dirname "$FILE_IMG")"
 
-msg_info "Decompressing $FILE to $FILE_IMG"
+msg_info "Decompressing $FILE to $FILE_IMG\n"
 xz -dc "$FILE" | pv -N "Extracting" >"$FILE_IMG"
 msg_ok "Decompressed to $FILE_IMG"
 
@@ -494,11 +494,11 @@ msg_ok "Imported disk into storage"
 rm -f "$FILE" "$FILE_IMG"
 
 # Attach EFI and root disk
-msg_info "Attaching EFI and root disk"
+msg_info "Attaching EFI and root disk \n"
 qm set $VMID \
   -efidisk0 ${STORAGE}:0,efitype=4m \
   -scsi0 ${DISK_REF},ssd=1,discard=on,size=${DISK_SIZE} \
-  -boot order=scsi0 -serial0 socket >/dev/null
+  --boot order=scsi0 -serial0 socket >/dev/null
 qm set $VMID --agent enabled=1 >/dev/null
 msg_ok "Attached EFI and root disk"
 
