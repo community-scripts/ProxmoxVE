@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-09-01
 
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - Harmonize GH Release Check (excl. Pre-Releases & Migrate old "_version.txt" [@MickLesk](https://github.com/MickLesk) ([#7328](https://github.com/community-scripts/ProxmoxVE/pull/7328))
+
 ## 2025-08-31
 
 ### 🚀 Updated Scripts
