@@ -37,7 +37,7 @@
             "type": "warning"
         },
         {
-            "text": "Advanced Install is only possible without root password and root SSH access, you can configure this after installation.",
+            "text": "Advanced Install is only possible with disabled IPV6! Otherwise the installation sometimes stuck.",
             "type": "warning"
         }
     ]
