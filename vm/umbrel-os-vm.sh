@@ -455,6 +455,7 @@ qm create $VMID -machine q35 -bios ovmf -agent 1 -tablet 0 -localtime 1 ${CPU_TY
   -net0 virtio,bridge=$BRG,macaddr=$MAC$VLAN$MTU -onboot 1 -ostype l26 -scsihw virtio-scsi-pci >/dev/null
 msg_ok "Created VM shell"
 
+# Decompress image to disk (not /tmp, but persistent path)
 FILE_IMG="/var/lib/vz/template/tmp/${FILE%.xz}"
 mkdir -p "$(dirname "$FILE_IMG")"
 
@@ -462,13 +463,16 @@ msg_info "Decompressing $FILE to $FILE_IMG"
 xz -dc "$FILE" | pv -N "Extracting" >"$FILE_IMG"
 msg_ok "Decompressed to $FILE_IMG"
 
+# Import disk into storage
 msg_info "Importing disk into storage"
-DISK_REF=$(qm importdisk $VMID "$FILE_IMG" $STORAGE -format raw | awk '{print $6}')
-msg_ok "Imported disk from $FILE_IMG"
+DISK_REF=$(qm importdisk "$VMID" "$FILE_IMG" "$STORAGE" --format raw | awk '{print $6}')
+msg_ok "Imported disk into storage"
 
+# Clean up downloaded/temporary files
 rm -f "$FILE" "$FILE_IMG"
 
-msg_info "Attaching disks"
+# Attach EFI and imported disk
+msg_info "Attaching EFI and root disk"
 qm set $VMID \
   -efidisk0 ${STORAGE}:0,efitype=4m \
   -scsi0 ${DISK_REF},ssd=1,discard=on,size=${DISK_SIZE} \
@@ -476,6 +480,7 @@ qm set $VMID \
 qm set $VMID --agent enabled=1 >/dev/null
 msg_ok "Attached EFI and root disk"
 
+# Resize disk if needed
 msg_info "Resizing disk to $DISK_SIZE"
 qm resize $VMID scsi0 ${DISK_SIZE} >/dev/null
 msg_ok "Resized disk"
