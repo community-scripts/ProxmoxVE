@@ -14,18 +14,19 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
-  - Refactor + Feature Bump: HomeAssistant OS [@MickLesk](https://github.com/MickLesk) ([#7336](https://github.com/community-scripts/ProxmoxVE/pull/7336))
-
   - #### 🐞 Bug Fixes
 
     - Update configarr.sh to mv backep up .env correctly [@finkerle](https://github.com/finkerle) ([#7323](https://github.com/community-scripts/ProxmoxVE/pull/7323))
 
   - #### ✨ New Features
 
+    - Refactor + Feature Bump: HomeAssistant OS [@MickLesk](https://github.com/MickLesk) ([#7336](https://github.com/community-scripts/ProxmoxVE/pull/7336))
     - UmbrelOS: Refactor / use q35 / better import [@MickLesk](https://github.com/MickLesk) ([#7329](https://github.com/community-scripts/ProxmoxVE/pull/7329))
     - Harmonize GH Release Check (excl. Pre-Releases & Migrate old "_version.txt" [@MickLesk](https://github.com/MickLesk) ([#7328](https://github.com/community-scripts/ProxmoxVE/pull/7328))
 
 ### 🌐 Website
+
+  - Bump next from 15.2.4 to 15.5.2 in /frontend [@dependabot[bot]](https://github.com/dependabot[bot]) ([#7309](https://github.com/community-scripts/ProxmoxVE/pull/7309))
 
   - #### 📝 Script Information
 
