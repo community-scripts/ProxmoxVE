@@ -1944,8 +1944,9 @@ function setup_ffmpeg() {
 check_for_gh_release() {
   local app="$1"
   local source="$2"
-  local pinned_version="${3:-}" # optional
-  local current_file="$HOME/.${app,,}"
+  local pinned_version_in="${3:-}" # optional
+  local app_lc="${app,,}"
+  local current_file="$HOME/.${app_lc}"
 
   msg_info "Checking for update: ${app}"
 
@@ -1964,82 +1965,83 @@ check_for_gh_release() {
     }
   fi
 
-  # Fetch releases (newest → oldest)
-  local releases
-  releases=$(
-    curl -fsSL --max-time 15 \
-      -H 'Accept: application/vnd.github+json' \
-      -H 'X-GitHub-Api-Version: 2022-11-28' \
-      "https://api.github.com/repos/${source}/releases" |
-      jq -r '.[].tag_name' | sed 's/^v//'
-  ) || true
-
-  if [[ -z "$releases" ]]; then
+  # Fetch releases and exclude drafts/prereleases
+  local releases_json
+  releases_json=$(curl -fsSL --max-time 20 \
+    -H 'Accept: application/vnd.github+json' \
+    -H 'X-GitHub-Api-Version: 2022-11-28' \
+    "https://api.github.com/repos/${source}/releases") || {
     msg_error "Unable to fetch releases for ${app}"
     return 1
-  fi
-
-  # Define current and latest versions
-  local latest current
-  latest=$(echo "$releases" | head -n1)
-  current=""
-  [[ -f "$current_file" ]] && current="$(<"$current_file")"
-
-  # Helper: get index of a version (lower = newer)
-  get_index() {
-    local ver="${1:-}"
-    [[ -z "$ver" ]] && return 1
-    nl -ba <<<"$releases" | awk -v v="$ver" '$2==v{print $1; exit}'
   }
 
-  # Pinning enabled
-  if [[ -n "$pinned_version" ]]; then
-    if ! grep -qxF "$pinned_version" <<<"$releases"; then
-      msg_error "Pinned version v${pinned_version} not found upstream"
-      return 1
-    fi
-
-    if [[ -z "$current" ]]; then
-      msg_info "${app} pinned to v${pinned_version}, no local version → install required"
-      CHECK_UPDATE_RELEASE="$pinned_version"
-      return 0
-    fi
-
-    if [[ "$current" == "$pinned_version" ]]; then
-      if [[ "$pinned_version" == "$latest" ]]; then
-        msg_ok "${app} pinned to v${pinned_version} (up to date)"
-      else
-        msg_ok "${app} pinned to v${pinned_version} (already installed, upstream v${latest})"
-      fi
-      return 1
-    fi
-
-    local pinned_index current_index
-    pinned_index="$(get_index "$pinned_version" || true)"
-    current_index="$(get_index "$current" || true)"
-
-    if [[ -z "$current_index" ]] || [[ "$current_index" -gt "$pinned_index" ]]; then
-      msg_info "${app} pinned to v${pinned_version} (installed v${current:-none}) → update required"
-      CHECK_UPDATE_RELEASE="$pinned_version"
-      return 0
-    fi
-
-    if [[ "$current_index" -lt "$pinned_index" ]]; then
-      msg_info "${app} pinned to v${pinned_version} (installed newer v${current}) → downgrade required"
-      CHECK_UPDATE_RELEASE="$pinned_version"
-      return 0
-    fi
-
+  mapfile -t raw_tags < <(jq -r '.[] | select(.draft==false and .prerelease==false) | .tag_name' <<<"$releases_json")
+  if ((${#raw_tags[@]} == 0)); then
+    msg_error "No stable releases found for ${app}"
     return 1
   fi
 
-  # No pinning → compare against latest
-  if [[ -z "$current" || "$current" != "$latest" ]]; then
-    CHECK_UPDATE_RELEASE="$latest"
-    msg_info "New release available: v${latest} (current: v${current:-none})"
+  local clean_tags=()
+  for t in "${raw_tags[@]}"; do
+    clean_tags+=("${t#v}")
+  done
+
+  local latest_raw="${raw_tags[0]}"
+  local latest_clean="${clean_tags[0]}"
+
+  # current installed (stored without v)
+  local current=""
+  if [[ -f "$current_file" ]]; then
+    current="$(<"$current_file")"
+  else
+    # Migration: search for any /opt/*_version.txt
+    local legacy_files
+    mapfile -t legacy_files < <(find /opt -maxdepth 1 -type f -name "*_version.txt" 2>/dev/null)
+    if ((${#legacy_files[@]} == 1)); then
+      current="$(<"${legacy_files[0]}")"
+      echo "${current#v}" >"$current_file"
+      rm -f "${legacy_files[0]}"
+    fi
+  fi
+  current="${current#v}"
+
+  # Pinned version handling
+  if [[ -n "$pinned_version_in" ]]; then
+    local pin_clean="${pinned_version_in#v}"
+    local match_raw=""
+    for i in "${!clean_tags[@]}"; do
+      if [[ "${clean_tags[$i]}" == "$pin_clean" ]]; then
+        match_raw="${raw_tags[$i]}"
+        break
+      fi
+    done
+
+    if [[ -z "$match_raw" ]]; then
+      msg_error "Pinned version ${pinned_version_in} not found upstream"
+      return 1
+    fi
+
+    if [[ "$current" != "$pin_clean" ]]; then
+      msg_info "${app} pinned to ${pinned_version_in} (installed ${current:-none}) → update required"
+      CHECK_UPDATE_RELEASE="$match_raw"
+      return 0
+    fi
+
+    if [[ "$pin_clean" == "$latest_clean" ]]; then
+      msg_ok "${app} pinned to ${pinned_version_in} (up to date)"
+    else
+      msg_ok "${app} pinned to ${pinned_version_in} (already installed, upstream ${latest_raw})"
+    fi
+    return 1
+  fi
+
+  # No pinning → use latest
+  if [[ -z "$current" || "$current" != "$latest_clean" ]]; then
+    CHECK_UPDATE_RELEASE="$latest_raw"
+    msg_info "New release available: ${latest_raw} (current: v${current:-none})"
     return 0
   fi
 
-  msg_ok "${app} is up to date (v${latest})"
+  msg_ok "${app} is up to date (${latest_raw})"
   return 1
 }
