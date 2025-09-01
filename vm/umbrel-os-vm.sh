@@ -474,11 +474,9 @@ if ! command -v pv &>/dev/null; then
   apt-get update &>/dev/null && apt-get install -y pv &>/dev/null
 fi
 
-msg_info "Decompressing $FILE with progress${CL}\n"
-FILE_IMG="${FILE%.xz}"
-SIZE=$(xz --robot -l "$FILE" | awk -F '\t' '/^totals/ { print $5 }') &>/dev/null
-xz -dc "$FILE" | pv -s "$SIZE" -N "Extracting" >"$FILE_IMG"
-msg_ok "Decompressed to ${CL}${BL}${FILE%.xz}${CL}"
+msg_info "Importing disk directly from compressed image"
+xzcat "$FILE" | pv -N "Extracting" | qm importdisk $VMID - $STORAGE ${DISK_IMPORT:-} >/dev/null
+msg_ok "Imported disk from ${CL}${BL}${FILE}${CL}"
 
 STORAGE_TYPE=$(pvesm status -storage $STORAGE | awk 'NR>1 {print $2}')
 case $STORAGE_TYPE in
@@ -506,13 +504,20 @@ msg_info "Creating a Umbrel OS VM"
 qm create $VMID -agent 1${MACHINE} -tablet 0 -localtime 1 -bios ovmf${CPU_TYPE} -cores $CORE_COUNT -memory $RAM_SIZE \
   -name $HN -tags community-script -net0 virtio,bridge=$BRG,macaddr=$MAC$VLAN$MTU -onboot 1 -ostype l26 -scsihw virtio-scsi-pci >/dev/null
 pvesm alloc $STORAGE $VMID $DISK0 4M >/dev/null
-qm importdisk $VMID ${FILE_IMG} $STORAGE ${DISK_IMPORT:-} >/dev/null
 qm set $VMID \
   -efidisk0 ${DISK0_REF}${FORMAT} \
   -scsi0 ${DISK1_REF},${DISK_CACHE}${THIN}size=${DISK_SIZE} \
   -boot order=scsi0 \
   -serial0 socket >/dev/null
 qm set $VMID --agent enabled=1 >/dev/null
+
+if [ -n "$DISK_SIZE" ]; then
+  msg_info "Resizing disk to $DISK_SIZE GB"
+  qm resize $VMID scsi0 ${DISK_SIZE} >/dev/null
+else
+  msg_info "Using default disk size of $DEFAULT_DISK_SIZE GB"
+  qm resize $VMID scsi0 ${DEFAULT_DISK_SIZE} >/dev/null
+fi
 
 DESCRIPTION=$(
   cat <<EOF
@@ -545,14 +550,6 @@ DESCRIPTION=$(
 EOF
 )
 qm set "$VMID" -description "$DESCRIPTION" >/dev/null
-
-if [ -n "$DISK_SIZE" ]; then
-  msg_info "Resizing disk to $DISK_SIZE GB"
-  qm resize $VMID scsi0 ${DISK_SIZE} >/dev/null
-else
-  msg_info "Using default disk size of $DEFAULT_DISK_SIZE GB"
-  qm resize $VMID scsi0 ${DEFAULT_DISK_SIZE} >/dev/null
-fi
 
 msg_ok "Created a Umbrel OS VM ${CL}${BL}(${HN})"
 if [ "$START_VM" == "yes" ]; then
