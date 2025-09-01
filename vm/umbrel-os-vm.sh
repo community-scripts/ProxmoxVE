@@ -455,10 +455,18 @@ qm create $VMID -machine q35 -bios ovmf -agent 1 -tablet 0 -localtime 1 ${CPU_TY
   -net0 virtio,bridge=$BRG,macaddr=$MAC$VLAN$MTU -onboot 1 -ostype l26 -scsihw virtio-scsi-pci >/dev/null
 msg_ok "Created VM shell"
 
-msg_info "Importing disk directly from compressed image"
-DISK_REF=$(xzcat "$FILE" | pv -N "Extracting" | qm disk import $VMID - $STORAGE -format raw | awk '{print $6}')
-msg_ok "Imported disk from ${CL}${BL}${FILE}${CL}"
-rm -f "$FILE"
+FILE_IMG="/var/lib/vz/template/tmp/${FILE%.xz}"
+mkdir -p "$(dirname "$FILE_IMG")"
+
+msg_info "Decompressing $FILE to $FILE_IMG"
+xz -dc "$FILE" | pv -N "Extracting" >"$FILE_IMG"
+msg_ok "Decompressed to $FILE_IMG"
+
+msg_info "Importing disk into storage"
+DISK_REF=$(qm importdisk $VMID "$FILE_IMG" $STORAGE -format raw | awk '{print $6}')
+msg_ok "Imported disk from $FILE_IMG"
+
+rm -f "$FILE" "$FILE_IMG"
 
 msg_info "Attaching disks"
 qm set $VMID \
