@@ -458,54 +458,47 @@ msg_ok "Using ${CL}${BL}$STORAGE${CL} ${GN}for Storage Location."
 
 msg_ok "Virtual Machine ID is ${CL}${BL}$VMID${CL}."
 
-msg_info "Retrieving the URL for $APP"
 URL="https://download.umbrel.com/release/latest/umbrelos-amd64.img.xz"
-FILE="$(basename "$URL")"
-sleep 2
-msg_ok "${CL}${BL}${URL}${CL}"
-curl -f#SL -o "$FILE" "$URL"
-msg_ok "Downloaded ${CL}${BL}${FILE}${CL}"
+CACHE_DIR="/var/lib/vz/template/cache"
+CACHE_FILE="$CACHE_DIR/$(basename "$URL")"
+FILE_IMG="/var/lib/vz/template/tmp/${CACHE_FILE##*/%.xz}"
+
+mkdir -p "$CACHE_DIR" "$(dirname "$FILE_IMG")"
+
+if [[ ! -s "$CACHE_FILE" ]]; then
+  msg_info "Downloading Umbrel OS image"
+  curl -f#SL -o "$CACHE_FILE" "$URL"
+else
+  msg_info "Using cached Umbrel OS image"
+fi
 
 if ! command -v pv &>/dev/null; then
   apt-get update -qq &>/dev/null && apt-get install -y pv &>/dev/null
 fi
 
 set -o pipefail
-msg_info "Creating Umbrel OS VM shell"
-qm create $VMID -machine q35 -bios ovmf -agent 1 -tablet 0 -localtime 1 ${CPU_TYPE} \
-  -cores $CORE_COUNT -memory $RAM_SIZE -name $HN -tags community-script \
-  -net0 virtio,bridge=$BRG,macaddr=$MAC$VLAN$MTU -onboot 1 -ostype l26 -scsihw virtio-scsi-pci >/dev/null
-msg_ok "Created VM shell"
+qm create "$VMID" -machine q35 -bios ovmf -agent 1 -tablet 0 -localtime 1 ${CPU_TYPE} \
+  -cores "$CORE_COUNT" -memory "$RAM_SIZE" -name "$HN" -tags community-script \
+  -net0 "virtio,bridge=$BRG,macaddr=$MAC$VLAN$MTU" -onboot 1 -ostype l26 -scsihw virtio-scsi-pci >/dev/null
 
-# Decompress image to persistent path (not /tmp)
-FILE_IMG="/var/lib/vz/template/tmp/${FILE%.xz}"
-mkdir -p "$(dirname "$FILE_IMG")"
+xz -dc "$CACHE_FILE" | pv -N "Extracting" >"$FILE_IMG"
 
-msg_info "Decompressing $FILE to $FILE_IMG\n"
-xz -dc "$FILE" | pv -N "Extracting" >"$FILE_IMG"
-msg_ok "Decompressed to $FILE_IMG"
+if qm disk import --help >/dev/null 2>&1; then
+  IMPORT_CMD=(qm disk import)
+else
+  IMPORT_CMD=(qm importdisk)
+fi
+IMPORT_OUT="$("${IMPORT_CMD[@]}" "$VMID" "$FILE_IMG" "$STORAGE" --format raw 2>&1 || true)"
+DISK_REF="$(printf '%s\n' "$IMPORT_OUT" | sed -n "s/.*imported disk '\([^']\+\)'.*/\1/p" | tr -d "\r\"'")"
+[[ -z "$DISK_REF" ]] && DISK_REF="$(pvesm list "$STORAGE" | awk -v id="$VMID" '$5 ~ ("vm-"id"-disk-") {print $1":"$5}' | sort | tail -n1)"
 
-# Import disk into storage
-msg_info "Importing disk into storage ($STORAGE)"
-DISK_REF=$(qm importdisk "$VMID" "$FILE_IMG" "$STORAGE" --format raw | awk '{print $6}')
-msg_ok "Imported disk into storage"
-
-# Clean up
-rm -f "$FILE" "$FILE_IMG"
-
-# Attach EFI and root disk
-msg_info "Attaching EFI and root disk"
-qm set $VMID \
-  -efidisk0 ${STORAGE}:0,efitype=4m \
-  -scsi0 ${DISK_REF},ssd=1,discard=on \
-  --boot order=scsi0 -serial0 socket >/dev/null
-qm set $VMID --agent enabled=1 >/dev/null
-msg_ok "Attached EFI and root disk"
-
-# Resize root disk
-msg_info "Resizing disk to $DISK_SIZE"
-qm resize $VMID scsi0 ${DISK_SIZE} >/dev/null
-msg_ok "Resized disk"
+qm set "$VMID" \
+  --efidisk0 "${STORAGE}:0,efitype=4m" \
+  --scsi0 "${DISK_REF},ssd=1,discard=on" \
+  --boot order=scsi0 \
+  --serial0 socket >/dev/null
+qm set "$VMID" --agent enabled=1 >/dev/null
+qm resize "$VMID" scsi0 "${DISK_SIZE}" >/dev/null
 
 DESCRIPTION=$(
   cat <<EOF
@@ -538,6 +531,15 @@ DESCRIPTION=$(
 EOF
 )
 qm set "$VMID" -description "$DESCRIPTION" >/dev/null
+
+if whiptail --backtitle "Proxmox VE Helper Scripts" --title "Image Cache" \
+  --yesno "Keep downloaded Umbrel OS image for future VMs?\n\nFile: $CACHE_FILE" 10 70; then
+  msg_ok "Keeping cached image"
+else
+  rm -f "$CACHE_FILE"
+  msg_ok "Deleted cached image"
+fi
+rm -f "$FILE_IMG"
 
 msg_ok "Created a Umbrel OS VM ${CL}${BL}(${HN})"
 if [ "$START_VM" == "yes" ]; then
