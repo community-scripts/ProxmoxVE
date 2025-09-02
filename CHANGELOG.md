@@ -14,6 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - Increase default disk size for Apt-Cacher-NG [@MickLesk](https://github.com/MickLesk) ([#7352](https://github.com/community-scripts/ProxmoxVE/pull/7352))
+
   - #### 🐞 Bug Fixes
 
     - booklore: remove folder before update [@MickLesk](https://github.com/MickLesk) ([#7351](https://github.com/community-scripts/ProxmoxVE/pull/7351))
