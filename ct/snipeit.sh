@@ -27,6 +27,9 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  if ! grep -q "client_max_body_size[[:space:]]\+100M;" /etc/nginx/conf.d/snipeit.conf; then
+    sed -i '/index index.php;/i \        client_max_body_size 100M;' /etc/nginx/conf.d/snipeit.conf
+  fi
 
   if check_for_gh_release "snipe-it" "snipe/snipe-it"; then
     msg_info "Stopping Services"

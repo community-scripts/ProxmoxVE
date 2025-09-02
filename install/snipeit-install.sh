@@ -62,6 +62,7 @@ server {
         listen 80;
         root /opt/snipe-it/public;
         server_name $IPADDRESS;
+        client_max_body_size 100M;
         index index.php;
 
         location / {
