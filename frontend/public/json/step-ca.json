@@ -1,0 +1,36 @@
+{
+  "name": "Step CA",
+  "slug": "step-ca",
+  "categories": [
+    11
+  ],
+  "date_created": "2024-05-21",
+  "type": "ct",
+  "updateable": false,
+  "privileged": false,
+  "interface_port": 443,
+  "documentation": "https://smallstep.com/docs/step-ca/configuration/",
+  "website": "https://smallstep.com/docs/step-ca/",
+  "logo": "https://avatars.githubusercontent.com/u/23183426?v=4",
+  "description": "Step CA is an open-source Certificate Authority that provides secure, automated X.509 and SSH certificate management. This script creates a step-ca instance as your local online Certificate Authority with optional ACME support.",
+  "install_methods": [
+    {
+      "type": "alpine",
+      "script": "/ct/alpine-step-ca.sh",
+      "resources": {
+        "cpu": 1,
+        "ram": 512,
+        "hdd": 2,
+        "os": "alpine",
+        "version": "3.20"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    "The CA fingerprint and ACME URL (if enabled) will be displayed in the container's MOTD upon login."
+  ]
+}
