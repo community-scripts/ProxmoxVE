@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-09-02
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - pbs: increase note on website for ipv6 [@MickLesk](https://github.com/MickLesk) ([#7339](https://github.com/community-scripts/ProxmoxVE/pull/7339))
+
 ## 2025-09-01
 
 ### 🚀 Updated Scripts
