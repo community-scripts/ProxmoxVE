@@ -33,6 +33,10 @@ function update_script() {
     systemctl stop booklore
     msg_ok "Stopped $APP"
 
+    msg_info "backup old install"
+    mv /opt/booklore /opt/booklore_bak
+    msg_ok "backup done"
+
     fetch_and_deploy_gh_release "booklore" "booklore-app/BookLore"
 
     msg_info "Building Frontend"
@@ -58,6 +62,7 @@ function update_script() {
     msg_info "Starting $APP"
     systemctl start booklore
     systemctl reload nginx
+    rm -rf /opt/booklore_bak
     msg_ok "Started $APP"
     msg_ok "Updated Successfully"
   fi
