@@ -33,6 +33,10 @@
   },
   "notes": [
     {
+      "text": "Please be aware that Immich releases are pinned to specific versions until compatibility has been confirmed by the Community Scripts maintainers; as a result, the version installed by the helper script may not be the most current version of Immich",
+      "type": "info"
+    },
+    {
       "text": "During installation, you will be prompted with the option to install Intel OpenVINO for hardware-accelerated machine-learning. If you opt in, increase your LXC RAM after installation, as OpenVINO is memory-intensive",
       "type": "info"
     },
