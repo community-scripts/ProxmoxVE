@@ -628,10 +628,15 @@ update_tags() {
         return
     fi
 
-    # Add new IP tags
+    # Prepend new IP tags to the beginning of the tag list
+    local final_tags=()
     for new_ip in "${formatted_ips[@]}"; do
-        next_tags+=("$new_ip")
+        final_tags+=("$new_ip")
     done
+    for tag in "${next_tags[@]}"; do
+        final_tags+=("$tag")
+    done
+    next_tags=("${final_tags[@]}")
 
     # Update tags if there are changes
     local old_tags_str=$(IFS=';'; echo "${current_tags[*]}")
