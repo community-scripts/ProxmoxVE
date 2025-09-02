@@ -14,6 +14,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - booklore: remove folder before update [@MickLesk](https://github.com/MickLesk) ([#7351](https://github.com/community-scripts/ProxmoxVE/pull/7351))
+
   - #### ✨ New Features
 
     - Immich: bump version to 1.140.1 [@vhsdream](https://github.com/vhsdream) ([#7349](https://github.com/community-scripts/ProxmoxVE/pull/7349))
