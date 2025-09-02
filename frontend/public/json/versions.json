@@ -1,13 +1,83 @@
 [
   {
-    "name": "zitadel/zitadel",
-    "version": "v4.1.0",
-    "date": "2025-09-01T12:03:04Z"
+    "name": "MediaBrowser/Emby.Releases",
+    "version": "4.9.1.2",
+    "date": "2025-06-26T22:08:00Z"
+  },
+  {
+    "name": "booklore-app/booklore",
+    "version": "v1.1.1",
+    "date": "2025-09-01T22:05:26Z"
+  },
+  {
+    "name": "syncthing/syncthing",
+    "version": "v2.0.3",
+    "date": "2025-08-22T08:12:47Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "nightly",
+    "date": "2025-09-01T19:23:40Z"
+  },
+  {
+    "name": "project-zot/zot",
+    "version": "v2.1.8",
+    "date": "2025-09-01T19:20:42Z"
+  },
+  {
+    "name": "Koenkk/zigbee2mqtt",
+    "version": "2.6.1",
+    "date": "2025-09-01T19:05:18Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.3.2",
+    "date": "2025-08-19T04:08:36Z"
   },
   {
     "name": "outline/outline",
-    "version": "v0.87.3-0",
-    "date": "2025-09-01T11:46:53Z"
+    "version": "v0.87.3",
+    "date": "2025-09-01T16:25:43Z"
+  },
+  {
+    "name": "home-assistant/operating-system",
+    "version": "16.1",
+    "date": "2025-08-13T07:58:10Z"
+  },
+  {
+    "name": "seanmorley15/AdventureLog",
+    "version": "v0.11.0",
+    "date": "2025-09-01T16:19:38Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.108.2",
+    "date": "2025-08-27T13:05:35Z"
+  },
+  {
+    "name": "grafana/grafana",
+    "version": "rrc_steady_12.2.0-17245430286.patch1",
+    "date": "2025-09-01T14:19:14Z"
+  },
+  {
+    "name": "apache/tomcat",
+    "version": "9.0.109",
+    "date": "2025-09-01T12:36:02Z"
+  },
+  {
+    "name": "fallenbagel/jellyseerr",
+    "version": "preview-issue-description",
+    "date": "2025-09-01T12:21:58Z"
+  },
+  {
+    "name": "nzbgetcom/nzbget",
+    "version": "v25.3",
+    "date": "2025-09-01T09:47:06Z"
+  },
+  {
+    "name": "zitadel/zitadel",
+    "version": "v4.1.0",
+    "date": "2025-09-01T12:03:04Z"
   },
   {
     "name": "VictoriaMetrics/VictoriaMetrics",
@@ -20,16 +90,6 @@
     "date": "2025-09-01T11:00:07Z"
   },
   {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.3.2",
-    "date": "2025-08-19T04:08:36Z"
-  },
-  {
-    "name": "apache/tomcat",
-    "version": "11.0.11",
-    "date": "2025-09-01T10:40:14Z"
-  },
-  {
     "name": "home-assistant/core",
     "version": "2025.8.3",
     "date": "2025-08-21T18:23:10Z"
@@ -38,11 +98,6 @@
     "name": "crowdsecurity/crowdsec",
     "version": "v1.6.11",
     "date": "2025-07-22T12:11:38Z"
-  },
-  {
-    "name": "nzbgetcom/nzbget",
-    "version": "v25.3",
-    "date": "2025-09-01T09:47:06Z"
   },
   {
     "name": "Checkmk/checkmk",
@@ -105,11 +160,6 @@
     "date": "2025-08-31T15:59:43Z"
   },
   {
-    "name": "booklore-app/booklore",
-    "version": "v1.1.0",
-    "date": "2025-08-31T15:18:42Z"
-  },
-  {
     "name": "Part-DB/Part-DB-server",
     "version": "v2.0.2",
     "date": "2025-08-31T13:52:49Z"
@@ -123,11 +173,6 @@
     "name": "fuma-nama/fumadocs",
     "version": "fumadocs-openapi@9.3.4",
     "date": "2025-08-31T11:48:08Z"
-  },
-  {
-    "name": "syncthing/syncthing",
-    "version": "v2.0.3",
-    "date": "2025-08-22T08:12:47Z"
   },
   {
     "name": "keycloak/keycloak",
@@ -183,6 +228,11 @@
     "name": "homarr-labs/homarr",
     "version": "v1.35.0",
     "date": "2025-08-29T19:14:25Z"
+  },
+  {
+    "name": "emqx/emqx",
+    "version": "e6.0.0-alpha.1",
+    "date": "2025-08-29T13:59:45Z"
   },
   {
     "name": "silverbulletmd/silverbullet",
@@ -275,11 +325,6 @@
     "date": "2025-08-28T16:25:55Z"
   },
   {
-    "name": "home-assistant/operating-system",
-    "version": "16.1",
-    "date": "2025-08-13T07:58:10Z"
-  },
-  {
     "name": "influxdata/influxdb",
     "version": "v3.4.1",
     "date": "2025-08-28T13:56:00Z"
@@ -298,11 +343,6 @@
     "name": "apache/cassandra",
     "version": "4.1.10-tentative",
     "date": "2025-08-28T10:02:40Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.108.2",
-    "date": "2025-08-27T13:05:35Z"
   },
   {
     "name": "garethgeorge/backrest",
@@ -380,11 +420,6 @@
     "date": "2025-08-26T09:51:47Z"
   },
   {
-    "name": "MediaBrowser/Emby.Releases",
-    "version": "4.9.1.2",
-    "date": "2025-06-26T22:08:00Z"
-  },
-  {
     "name": "evcc-io/evcc",
     "version": "0.207.5",
     "date": "2025-08-26T06:57:07Z"
@@ -435,11 +470,6 @@
     "date": "2025-08-25T12:38:14Z"
   },
   {
-    "name": "emqx/emqx",
-    "version": "e5.10.1-beta.2",
-    "date": "2025-08-25T08:51:40Z"
-  },
-  {
     "name": "FlareSolverr/FlareSolverr",
     "version": "v3.4.0",
     "date": "2025-08-25T03:22:00Z"
@@ -453,11 +483,6 @@
     "name": "Ombi-app/Ombi",
     "version": "v4.47.1",
     "date": "2025-01-05T21:14:23Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "v4.3.0",
-    "date": "2025-07-05T12:14:52Z"
   },
   {
     "name": "wavelog/wavelog",
@@ -610,11 +635,6 @@
     "date": "2025-08-19T16:46:00Z"
   },
   {
-    "name": "fallenbagel/jellyseerr",
-    "version": "preview-dns-cache-manager",
-    "date": "2025-08-19T11:57:00Z"
-  },
-  {
     "name": "chrisvel/tududi",
     "version": "v0.80",
     "date": "2025-07-24T14:12:39Z"
@@ -688,11 +708,6 @@
     "name": "Kometa-Team/Kometa",
     "version": "v2.2.1",
     "date": "2025-08-13T19:49:01Z"
-  },
-  {
-    "name": "grafana/grafana",
-    "version": "v12.1.1",
-    "date": "2025-08-13T17:54:07Z"
   },
   {
     "name": "go-gitea/gitea",
@@ -830,11 +845,6 @@
     "date": "2025-08-03T17:27:16Z"
   },
   {
-    "name": "project-zot/zot",
-    "version": "v2.1.7",
-    "date": "2025-08-03T16:35:59Z"
-  },
-  {
     "name": "linuxserver/Heimdall",
     "version": "v2.7.4",
     "date": "2025-08-02T16:51:19Z"
@@ -858,11 +868,6 @@
     "name": "docmost/docmost",
     "version": "v0.22.2",
     "date": "2025-08-01T23:27:06Z"
-  },
-  {
-    "name": "Koenkk/zigbee2mqtt",
-    "version": "2.6.0",
-    "date": "2025-08-01T15:42:21Z"
   },
   {
     "name": "alexta69/metube",
@@ -1108,11 +1113,6 @@
     "name": "glanceapp/glance",
     "version": "v0.8.4",
     "date": "2025-06-10T07:57:14Z"
-  },
-  {
-    "name": "seanmorley15/AdventureLog",
-    "version": "v0.10.0",
-    "date": "2025-06-09T13:37:07Z"
   },
   {
     "name": "jordan-dalby/ByteStash",
