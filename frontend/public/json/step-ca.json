@@ -22,7 +22,7 @@
         "ram": 512,
         "hdd": 2,
         "os": "alpine",
-        "version": "3.20"
+        "version": "3.22"
       }
     }
   ],
