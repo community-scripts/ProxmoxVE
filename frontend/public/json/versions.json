@@ -1,13 +1,83 @@
 [
   {
+    "name": "mongodb/mongo",
+    "version": "r8.0.14-rc0",
+    "date": "2025-09-02T22:46:40Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "server/public/v0.1.17",
+    "date": "2025-09-02T21:38:40Z"
+  },
+  {
+    "name": "Cleanuparr/Cleanuparr",
+    "version": "v2.2.0",
+    "date": "2025-09-02T20:30:49Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.11.8",
+    "date": "2025-08-28T19:27:13Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "v4.4.0",
+    "date": "2025-09-02T17:52:03Z"
+  },
+  {
+    "name": "syncthing/syncthing",
+    "version": "v2.0.5",
+    "date": "2025-09-02T19:18:08Z"
+  },
+  {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.526",
+    "date": "2025-09-02T18:44:42Z"
+  },
+  {
+    "name": "Luligu/matterbridge",
+    "version": "3.2.5",
+    "date": "2025-09-02T17:25:13Z"
+  },
+  {
+    "name": "netbox-community/netbox",
+    "version": "v4.4.0",
+    "date": "2025-09-02T17:04:25Z"
+  },
+  {
+    "name": "element-hq/synapse",
+    "version": "v1.137.0",
+    "date": "2025-08-26T09:51:47Z"
+  },
+  {
+    "name": "rabbitmq/rabbitmq-server",
+    "version": "v4.1.4",
+    "date": "2025-09-02T14:26:24Z"
+  },
+  {
+    "name": "HabitRPG/habitica",
+    "version": "v5.40.0",
+    "date": "2025-09-02T14:09:11Z"
+  },
+  {
+    "name": "apache/tomcat",
+    "version": "10.1.45",
+    "date": "2025-09-02T12:46:34Z"
+  },
+  {
+    "name": "emqx/emqx",
+    "version": "v5.8.8-rc.1",
+    "date": "2025-09-02T12:00:55Z"
+  },
+  {
     "name": "fuma-nama/fumadocs",
     "version": "fumadocs-ui@15.7.8",
     "date": "2025-09-02T11:29:00Z"
   },
   {
     "name": "Dolibarr/dolibarr",
-    "version": "21.0.4",
-    "date": "2025-09-02T10:24:34Z"
+    "version": "22.0.1",
+    "date": "2025-09-02T10:29:08Z"
   },
   {
     "name": "home-assistant/core",
@@ -25,11 +95,6 @@
     "date": "2025-09-02T06:53:18Z"
   },
   {
-    "name": "syncthing/syncthing",
-    "version": "v2.0.4",
-    "date": "2025-09-02T06:10:33Z"
-  },
-  {
     "name": "Jackett/Jackett",
     "version": "v0.22.2404",
     "date": "2025-09-02T06:08:35Z"
@@ -43,11 +108,6 @@
     "name": "cloudreve/cloudreve",
     "version": "4.7.0",
     "date": "2025-09-02T06:02:43Z"
-  },
-  {
-    "name": "mattermost/mattermost",
-    "version": "v10.11.2",
-    "date": "2025-08-22T06:50:56Z"
   },
   {
     "name": "firefly-iii/firefly-iii",
@@ -90,9 +150,9 @@
     "date": "2025-09-01T22:05:26Z"
   },
   {
-    "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-09-01T20:03:36Z"
+    "name": "postgres/postgres",
+    "version": "REL_18_RC1",
+    "date": "2025-09-01T20:03:08Z"
   },
   {
     "name": "project-zot/zot",
@@ -130,11 +190,6 @@
     "date": "2025-09-01T14:19:14Z"
   },
   {
-    "name": "apache/tomcat",
-    "version": "9.0.109",
-    "date": "2025-09-01T12:36:02Z"
-  },
-  {
     "name": "fallenbagel/jellyseerr",
     "version": "preview-issue-description",
     "date": "2025-09-01T12:21:58Z"
@@ -161,8 +216,8 @@
   },
   {
     "name": "crowdsecurity/crowdsec",
-    "version": "v1.6.11",
-    "date": "2025-07-22T12:11:38Z"
+    "version": "v1.7.0",
+    "date": "2025-09-01T10:10:34Z"
   },
   {
     "name": "readeck/readeck",
@@ -245,11 +300,6 @@
     "date": "2025-08-29T21:40:09Z"
   },
   {
-    "name": "HabitRPG/habitica",
-    "version": "v5.39.1",
-    "date": "2025-08-29T21:02:00Z"
-  },
-  {
     "name": "msgbyte/tianji",
     "version": "v1.24.26",
     "date": "2025-08-29T20:26:08Z"
@@ -260,11 +310,6 @@
     "date": "2025-08-29T19:14:25Z"
   },
   {
-    "name": "emqx/emqx",
-    "version": "e6.0.0-alpha.1",
-    "date": "2025-08-29T13:59:45Z"
-  },
-  {
     "name": "silverbulletmd/silverbullet",
     "version": "2.0.0",
     "date": "2025-08-29T13:38:35Z"
@@ -272,12 +317,7 @@
   {
     "name": "Forceu/Gokapi",
     "version": "v2.1.0",
-    "date": "2025-08-29T12:45:42Z"
-  },
-  {
-    "name": "Luligu/matterbridge",
-    "version": "3.2.4",
-    "date": "2025-08-29T12:19:53Z"
+    "date": "2025-08-29T12:56:13Z"
   },
   {
     "name": "Graylog2/graylog2-server",
@@ -318,16 +358,6 @@
     "name": "dgtlmoon/changedetection.io",
     "version": "0.50.11",
     "date": "2025-08-28T20:12:30Z"
-  },
-  {
-    "name": "ollama/ollama",
-    "version": "v0.11.8",
-    "date": "2025-08-27T18:43:44Z"
-  },
-  {
-    "name": "mongodb/mongo",
-    "version": "r7.0.24-rc0",
-    "date": "2025-08-28T19:08:13Z"
   },
   {
     "name": "benjaminjonard/koillection",
@@ -380,11 +410,6 @@
     "date": "2025-08-28T02:50:06Z"
   },
   {
-    "name": "rabbitmq/rabbitmq-server",
-    "version": "v4.1.3",
-    "date": "2025-08-04T12:13:45Z"
-  },
-  {
     "name": "pocket-id/pocket-id",
     "version": "v1.10.0",
     "date": "2025-08-27T20:35:47Z"
@@ -425,24 +450,9 @@
     "date": "2025-08-27T06:22:32Z"
   },
   {
-    "name": "netbox-community/netbox",
-    "version": "v4.3.7",
-    "date": "2025-08-26T17:54:25Z"
-  },
-  {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.525",
-    "date": "2025-08-26T14:28:44Z"
-  },
-  {
     "name": "meilisearch/meilisearch",
     "version": "latest",
     "date": "2025-08-26T14:14:42Z"
-  },
-  {
-    "name": "element-hq/synapse",
-    "version": "v1.137.0",
-    "date": "2025-08-26T09:51:47Z"
   },
   {
     "name": "evcc-io/evcc",
@@ -745,19 +755,9 @@
     "date": "2025-08-11T21:19:48Z"
   },
   {
-    "name": "postgres/postgres",
-    "version": "REL_13_22",
-    "date": "2025-08-11T21:10:58Z"
-  },
-  {
     "name": "FlowiseAI/Flowise",
     "version": "flowise@3.0.5",
     "date": "2025-08-11T13:01:45Z"
-  },
-  {
-    "name": "Cleanuparr/Cleanuparr",
-    "version": "v2.1.6",
-    "date": "2025-08-11T08:04:09Z"
   },
   {
     "name": "slskd/slskd",
