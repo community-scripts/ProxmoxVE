@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-09-03
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - Enhanced IP-Tag installation script with interactive configuration, improved VM IP detection, and better visual indicators [@DesertGamer](https://github.com/DesertGamer) ([#7366](https://github.com/community-scripts/ProxmoxVE/pull/7366))
+
 ## 2025-09-02
 
 ### 🚀 Updated Scripts
