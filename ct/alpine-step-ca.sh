@@ -7,13 +7,13 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 
 # App Default Values
 APP="Alpine-Step-CA"
-var_tags="alpine;step-ca"
-var_cpu="1"
-var_ram="512"
-var_disk="2" # Increased to 2GB to be safer with certs/keys
-var_os="alpine"
-var_version="3.20"
-var_unprivileged="1"
+var_tags="${var_tags:-alpine;step-ca}"
+var_cpu="${var_cpu:-1}"
+var_ram="${var_ram:-512}"
+var_disk="${var_disk:-2}"
+var_os="${var_os:-alpine}"
+var_version="${var_version:-3.22}"
+var_unprivileged="${var_unprivileged:-1}"
 
 # App Output & Base Settings
 header_info "$APP"
