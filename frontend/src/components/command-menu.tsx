@@ -202,7 +202,7 @@ const CommandMenu = () => {
               {scripts.map(script => (
                 <CommandItem
                   key={`script:${script.slug}`}
-                  value={`${script.name}`}
+                  value={`${script.name}-${script.type}`}
                   onSelect={() => {
                     setOpen(false);
                     router.push(`/scripts?id=${script.slug}`);
