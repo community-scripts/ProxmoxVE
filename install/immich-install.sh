@@ -233,7 +233,7 @@ SOURCE=$SOURCE_DIR/imagemagick
 $STD git clone https://github.com/ImageMagick/ImageMagick.git "$SOURCE"
 cd "$SOURCE"
 $STD git reset --hard "$IMAGEMAGICK_REVISION"
-$STD ./configure --with-modules
+$STD ./configure --with-modules CPPFLAGS="-DMAGICK_LIBRAW_VERSION_TAIL=202502"
 $STD make -j"$(nproc)"
 $STD make install
 ldconfig /usr/local/lib
