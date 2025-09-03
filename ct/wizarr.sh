@@ -45,13 +45,14 @@ function update_script() {
 
     msg_info "Updating $APP"
     cd /opt/wizarr
-    /usr/local/bin/uv -q sync --locked
-    $STD /usr/local/bin/uv -q run pybabel compile -d app/translations
+    $STD /usr/local/bin/uv lock
+    $STD /usr/local/bin/uv sync --locked
+    $STD /usr/local/bin/uv run pybabel compile -d app/translations
     $STD npm --prefix app/static install
     $STD npm --prefix app/static run build:css
     mkdir -p ./.cache
     $STD tar -xf "$BACKUP_FILE" --directory=/
-    $STD /usr/local/bin/uv -q run flask db upgrade
+    $STD /usr/local/bin/uv run flask db upgrade
     msg_ok "Updated $APP"
 
     msg_info "Starting $APP"
@@ -61,7 +62,7 @@ function update_script() {
     msg_info "Cleaning Up"
     rm -rf "$BACKUP_FILE"
     msg_ok "Cleanup Completed"
-    msg_ok "Update Successfully"
+    msg_ok "Updated Successfully"
   fi
   exit
 }
