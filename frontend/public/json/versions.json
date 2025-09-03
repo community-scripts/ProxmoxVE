@@ -1,13 +1,83 @@
 [
   {
-    "name": "mongodb/mongo",
-    "version": "r8.0.14-rc0",
-    "date": "2025-09-02T22:46:40Z"
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.109.2",
+    "date": "2025-09-03T07:50:21Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.4.0p11",
+    "date": "2025-09-03T09:58:14Z"
   },
   {
     "name": "mattermost/mattermost",
     "version": "server/public/v0.1.17",
     "date": "2025-09-02T21:38:40Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.8.3",
+    "date": "2025-08-21T18:23:10Z"
+  },
+  {
+    "name": "cockpit-project/cockpit",
+    "version": "346",
+    "date": "2025-09-03T09:13:05Z"
+  },
+  {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.526",
+    "date": "2025-09-02T18:44:42Z"
+  },
+  {
+    "name": "apache/cassandra",
+    "version": "cassandra-4.1.10",
+    "date": "2025-09-03T08:46:02Z"
+  },
+  {
+    "name": "syncthing/syncthing",
+    "version": "v2.0.6",
+    "date": "2025-09-03T07:55:14Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.3-beta.10",
+    "date": "2025-07-15T06:07:03Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2411",
+    "date": "2025-09-03T05:51:25Z"
+  },
+  {
+    "name": "booklore-app/booklore",
+    "version": "v1.1.2",
+    "date": "2025-09-03T03:18:53Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.19",
+    "date": "2025-09-03T00:27:10Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
+    "name": "crafty-controller/crafty-4",
+    "version": "v4.5.3",
+    "date": "2025-09-02T23:52:26Z"
+  },
+  {
+    "name": "mongodb/mongo",
+    "version": "r8.0.14-rc0",
+    "date": "2025-09-02T22:46:40Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.0.15",
+    "date": "2025-08-27T12:12:03Z"
   },
   {
     "name": "Cleanuparr/Cleanuparr",
@@ -17,22 +87,12 @@
   {
     "name": "ollama/ollama",
     "version": "v0.11.8",
-    "date": "2025-08-28T19:27:13Z"
+    "date": "2025-08-27T18:43:44Z"
   },
   {
     "name": "runtipi/runtipi",
     "version": "v4.4.0",
-    "date": "2025-09-02T17:52:03Z"
-  },
-  {
-    "name": "syncthing/syncthing",
-    "version": "v2.0.5",
-    "date": "2025-09-02T19:18:08Z"
-  },
-  {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.526",
-    "date": "2025-09-02T18:44:42Z"
+    "date": "2025-09-02T19:26:18Z"
   },
   {
     "name": "Luligu/matterbridge",
@@ -80,31 +140,6 @@
     "date": "2025-09-02T10:29:08Z"
   },
   {
-    "name": "home-assistant/core",
-    "version": "2025.8.3",
-    "date": "2025-08-21T18:23:10Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.108.2",
-    "date": "2025-08-27T13:05:35Z"
-  },
-  {
-    "name": "Checkmk/checkmk",
-    "version": "v2.4.0p11-rc3",
-    "date": "2025-09-02T06:53:18Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2404",
-    "date": "2025-09-02T06:08:35Z"
-  },
-  {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.3-beta.10",
-    "date": "2025-07-15T06:07:03Z"
-  },
-  {
     "name": "cloudreve/cloudreve",
     "version": "4.7.0",
     "date": "2025-09-02T06:02:43Z"
@@ -130,24 +165,9 @@
     "date": "2025-09-02T00:44:45Z"
   },
   {
-    "name": "jeedom/core",
-    "version": "4.4.19",
-    "date": "2025-09-02T00:27:05Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
-  },
-  {
     "name": "MediaBrowser/Emby.Releases",
     "version": "4.9.1.2",
     "date": "2025-06-26T22:08:00Z"
-  },
-  {
-    "name": "booklore-app/booklore",
-    "version": "v1.1.1",
-    "date": "2025-09-01T22:05:26Z"
   },
   {
     "name": "postgres/postgres",
@@ -163,11 +183,6 @@
     "name": "Koenkk/zigbee2mqtt",
     "version": "2.6.1",
     "date": "2025-09-01T19:05:18Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.0.15",
-    "date": "2025-08-27T12:12:03Z"
   },
   {
     "name": "outline/outline",
@@ -205,6 +220,11 @@
     "date": "2025-09-01T12:03:04Z"
   },
   {
+    "name": "wazuh/wazuh",
+    "version": "coverity-w36-4.13.0",
+    "date": "2025-09-01T11:40:11Z"
+  },
+  {
     "name": "VictoriaMetrics/VictoriaMetrics",
     "version": "pmm-6401-v1.125.0",
     "date": "2025-09-01T11:01:54Z"
@@ -228,11 +248,6 @@
     "name": "moghtech/komodo",
     "version": "v1.19.2",
     "date": "2025-09-01T02:33:52Z"
-  },
-  {
-    "name": "crafty-controller/crafty-4",
-    "version": "v4.5.2",
-    "date": "2025-08-31T22:21:50Z"
   },
   {
     "name": "YunoHost/yunohost",
@@ -395,11 +410,6 @@
     "date": "2025-08-28T10:12:16Z"
   },
   {
-    "name": "apache/cassandra",
-    "version": "4.1.10-tentative",
-    "date": "2025-08-28T10:02:40Z"
-  },
-  {
     "name": "garethgeorge/backrest",
     "version": "v1.9.2",
     "date": "2025-08-28T07:06:14Z"
@@ -483,11 +493,6 @@
     "name": "mealie-recipes/mealie",
     "version": "v3.1.2",
     "date": "2025-08-25T18:00:52Z"
-  },
-  {
-    "name": "wazuh/wazuh",
-    "version": "coverity-w35-4.13.0",
-    "date": "2025-08-25T15:17:33Z"
   },
   {
     "name": "sabnzbd/sabnzbd",
@@ -618,11 +623,6 @@
     "name": "AdguardTeam/AdGuardHome",
     "version": "v0.107.65",
     "date": "2025-08-20T14:02:28Z"
-  },
-  {
-    "name": "cockpit-project/cockpit",
-    "version": "345",
-    "date": "2025-08-20T11:52:24Z"
   },
   {
     "name": "openhab/openhab-core",
