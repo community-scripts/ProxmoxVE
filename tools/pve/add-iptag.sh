@@ -28,15 +28,22 @@ RD=$(echo "\033[01;31m")
 CL=$(echo "\033[m")
 BFR="\\r\\033[K"
 HOLD=" "
-CM=" ✔️ ${CL}"
-CROSS=" ✖️ ${CL}"
+CM="${GN}✓${CL} "
+CROSS="${RD}✗${CL} "
+
+# Stop any running spinner
+stop_spinner() {
+  if [ -n "$SPINNER_PID" ] && kill -0 "$SPINNER_PID" 2>/dev/null; then
+    kill -TERM "$SPINNER_PID" 2>/dev/null
+    wait "$SPINNER_PID" 2>/dev/null
+  fi
+  SPINNER_PID=""
+  printf "\e[?25h\r"
+}
 
 # Error handler for displaying error messages
 error_handler() {
-  if [ -n "$SPINNER_PID" ] && ps -p $SPINNER_PID >/dev/null; then
-    kill $SPINNER_PID >/dev/null
-  fi
-  printf "\e[?25h"
+  stop_spinner
   local exit_code="$?"
   local line_number="$1"
   local command="$2"
@@ -46,44 +53,40 @@ error_handler() {
 
 # Spinner for progress indication
 spinner() {
+  local msg="$1"
   local frames=('⠋' '⠙' '⠹' '⠸' '⠼' '⠴' '⠦' '⠧' '⠇' '⠏')
   local spin_i=0
   local interval=0.1
-  printf "\e[?25l"
-
-  local color="${YWB}"
+  
+  trap 'exit 0' TERM INT
+  printf "\e[?25l" 2>/dev/null
 
   while true; do
-    printf "\r ${color}%s${CL}" "${frames[spin_i]}"
+    printf "\r%s ${YW}%s${CL}" "${frames[spin_i]}" "$msg" 2>/dev/null || exit 0
     spin_i=$(((spin_i + 1) % ${#frames[@]}))
-    sleep "$interval"
+    sleep "$interval" || exit 0
   done
 }
 
 # Info message
 msg_info() {
   local msg="$1"
-  echo -ne "${TAB}${YW}${HOLD}${msg}${HOLD}"
-  spinner &
+  stop_spinner
+  spinner "$msg" &
   SPINNER_PID=$!
+  disown $SPINNER_PID 2>/dev/null
 }
 
 # Success message
 msg_ok() {
-  if [ -n "$SPINNER_PID" ] && ps -p $SPINNER_PID >/dev/null; then
-    kill $SPINNER_PID >/dev/null
-  fi
-  printf "\e[?25h"
+  stop_spinner
   local msg="$1"
   echo -e "${BFR}${CM}${GN}${msg}${CL}"
 }
 
 # Error message
 msg_error() {
-  if [ -n "$SPINNER_PID" ] && ps -p $SPINNER_PID >/dev/null; then
-    kill $SPINNER_PID >/dev/null
-  fi
-  printf "\e[?25h"
+  stop_spinner
   local msg="$1"
   echo -e "${BFR}${CROSS}${RD}${msg}${CL}"
 }
@@ -131,7 +134,7 @@ update_installation() {
         break
         ;;
       [Nn]*)
-        echo -e "${GN}✔️ Keeping existing configuration file${CL}"
+        echo -e "${GN}✓ Keeping existing configuration file${CL}"
         break
         ;;
       *)
@@ -163,7 +166,7 @@ update_installation() {
 CONFIG_FILE="/opt/iptag/iptag.conf"
 SCRIPT_FILE="/opt/iptag/iptag"
 if [[ ! -f "$SCRIPT_FILE" ]]; then
-  echo "❌ Main script not found: $SCRIPT_FILE"
+  echo "✗ Main script not found: $SCRIPT_FILE"
   exit 1
 fi
 export FORCE_SINGLE_RUN=true
@@ -193,18 +196,27 @@ install_command_only() {
   # Migrate config if needed
   migrate_config
 
-  # Interactive configuration setup for new installations
+  # Interactive configuration setup
   if [[ ! -f /opt/iptag/iptag.conf ]]; then
-    interactive_config_setup
-  fi
-
-  # Setup config
-  msg_info "Setup Configuration"
-  if [[ ! -f /opt/iptag/iptag.conf ]]; then
+    interactive_config_setup_command
+    msg_info "Setup Configuration"
     generate_config >/opt/iptag/iptag.conf
     msg_ok "Created configuration file at /opt/iptag/iptag.conf"
   else
-    msg_ok "Configuration file already exists"
+    stop_spinner
+    echo -e "\n${YW}Configuration file already exists.${CL}"
+    read -p "Do you want to reconfigure tag format? (y/n): " reconfigure
+    case $reconfigure in
+      [Yy]*)
+        interactive_config_setup_command
+        msg_info "Updating Configuration"
+        generate_config >/opt/iptag/iptag.conf
+        msg_ok "Updated configuration file"
+        ;;
+      *)
+        msg_ok "Keeping existing configuration file"
+        ;;
+    esac
   fi
 
   # Setup main script
@@ -220,7 +232,7 @@ install_command_only() {
 CONFIG_FILE="/opt/iptag/iptag.conf"
 SCRIPT_FILE="/opt/iptag/iptag"
 if [[ ! -f "$SCRIPT_FILE" ]]; then
-  echo "❌ Main script not found: $SCRIPT_FILE"
+  echo "✗ Main script not found: $SCRIPT_FILE"
   exit 1
 fi
 export FORCE_SINGLE_RUN=true
@@ -230,33 +242,74 @@ EOF
   msg_ok "Created iptag-run command"
   
   msg_ok "IP-Tag Command installed successfully! Use 'iptag-run' to run manually."
-  
-  # Show configuration information
-  show_post_install_info
 }
 
 # Show post-installation information
 show_post_install_info() {
-  echo -e "\n${YW}=== IMPORTANT: Configuration Required ===${CL}"
-  echo -e "${RD}⚠️${CL}  ${YW}Please configure your network subnets before using IP-Tag!${CL}"
+  stop_spinner
+  echo -e "\n${YW}=== Next Steps ===${CL}"
+  
+  # Show usage information
+  if command -v iptag-run >/dev/null 2>&1; then
+    echo -e "${YW}Run IP tagging manually: ${GN}iptag-run${CL}"
+    echo -e "${YW}Add to cron for scheduled execution if needed${CL}"
+    echo -e ""
+  fi
+  
+  echo -e "${RD}IMPORTANT: Configure your network subnets!${CL}"
   echo -e ""
-  echo -e "${GN}Configuration file location:${CL} /opt/iptag/iptag.conf"
+  echo -e "${YW}Configuration file: ${GN}/opt/iptag/iptag.conf${CL}"
   echo -e ""
-  echo -e "${YW}Edit the CIDR_LIST section with your actual subnets:${CL}"
+  echo -e "${YW}Edit CIDR_LIST with your actual subnets:${CL}"
+  echo -e "${GN}nano /opt/iptag/iptag.conf${CL} ${YW}or${CL} ${GN}vim /opt/iptag/iptag.conf${CL}"
+  echo -e ""
+  echo -e "${YW}Example configuration:${CL}"
   echo -e "${GN}CIDR_LIST=(${CL}"
-  echo -e "${GN}  192.168.0.0/16    # Replace with your actual subnets${CL}"
-  echo -e "${GN}  10.0.0.0/8        # Example: 192.168.1.0/24${CL}"
-  echo -e "${GN}  100.64.0.0/10     # Example: 10.10.0.0/16${CL}"
+  echo -e "${GN}  192.168.1.0/24    # Your actual subnet${CL}"
+  echo -e "${GN}  10.10.0.0/16      # Another subnet${CL}"
   echo -e "${GN})${CL}"
-  echo -e ""
-  echo -e "${YW}Example commands to edit configuration:${CL}"
-  echo -e "${GN}nano /opt/iptag/iptag.conf${CL}"
-  echo -e "${YW}or${CL}"
-  echo -e "${GN}vim /opt/iptag/iptag.conf${CL}"
   echo -e ""
 }
 
-# Interactive configuration setup
+# Interactive configuration setup for command-only (TAG_FORMAT only)
+interactive_config_setup_command() {
+  echo -e "\n${YW}=== Configuration Setup ===${CL}"
+  
+  # TAG_FORMAT configuration
+  echo -e "\n${YW}Select tag format:${CL}"
+  echo -e "${GN}1)${CL} last_two_octets - Show last two octets (e.g., 0.100) [Default]"
+  echo -e "${GN}2)${CL} last_octet - Show only last octet (e.g., 100)"
+  echo -e "${GN}3)${CL} full - Show full IP address (e.g., 192.168.0.100)"
+  
+  while true; do
+    read -p "Enter your choice (1-3) [1]: " tag_choice
+    case ${tag_choice:-1} in
+      1)
+        TAG_FORMAT="last_two_octets"
+        echo -e "${GN}✓ Selected: last_two_octets${CL}"
+        break
+        ;;
+      2)
+        TAG_FORMAT="last_octet"
+        echo -e "${GN}✓ Selected: last_octet${CL}"
+        break
+        ;;
+      3)
+        TAG_FORMAT="full"
+        echo -e "${GN}✓ Selected: full${CL}"
+        break
+        ;;
+      *)
+        echo -e "${RD}Please enter 1, 2, or 3.${CL}"
+        ;;
+    esac
+  done
+  
+  # Set default LOOP_INTERVAL for command mode
+  LOOP_INTERVAL=300
+}
+
+# Interactive configuration setup for service (TAG_FORMAT + LOOP_INTERVAL)
 interactive_config_setup() {
   echo -e "\n${YW}=== Configuration Setup ===${CL}"
   
@@ -293,18 +346,18 @@ interactive_config_setup() {
   # LOOP_INTERVAL configuration
   echo -e "\n${YW}Set check interval (in seconds):${CL}"
   echo -e "${YW}Default: 300 seconds (5 minutes)${CL}"
-  echo -e "${YW}Recommended range: 60-3600 seconds${CL}"
+  echo -e "${YW}Recommended range: 300-3600 seconds${CL}"
   
   while true; do
     read -p "Enter interval in seconds [300]: " interval_input
     interval_input=${interval_input:-300}
     
-    if [[ $interval_input =~ ^[0-9]+$ ]] && [ $interval_input -ge 30 ] && [ $interval_input -le 7200 ]; then
+    if [[ $interval_input =~ ^[0-9]+$ ]] && [ $interval_input -ge 300 ] && [ $interval_input -le 7200 ]; then
       LOOP_INTERVAL=$interval_input
       echo -e "${GN}✓ Selected: ${LOOP_INTERVAL} seconds${CL}"
       break
     else
-      echo -e "${RD}Please enter a valid number between 30 and 7200 seconds.${CL}"
+      echo -e "${RD}Please enter a valid number between 300 and 7200 seconds.${CL}"
     fi
   done
 }
@@ -932,7 +985,7 @@ done
 
 if ! pveversion | grep -Eq "pve-manager/(8\.[0-4]|9\.[0-9]+)(\.[0-9]+)*"; then
   msg_error "This version of Proxmox Virtual Environment is not supported"
-  msg_error "⚠️ Requires Proxmox Virtual Environment Version 8.0–8.4 or 9.x."
+  msg_error "⚠ Requires Proxmox Virtual Environment Version 8.0–8.4 or 9.x."
   msg_error "Exiting..."
   sleep 2
   exit
@@ -953,17 +1006,27 @@ if [[ "$INSTALL_MODE" == "service" ]]; then
   # Migrate config if needed
   migrate_config
 
-  # Interactive configuration setup for new installations
+  # Interactive configuration setup
   if [[ ! -f /opt/iptag/iptag.conf ]]; then
     interactive_config_setup
-  fi
-
-  msg_info "Setup Default Config"
-  if [[ ! -f /opt/iptag/iptag.conf ]]; then
+    msg_info "Setup Default Config"
     generate_config >/opt/iptag/iptag.conf
     msg_ok "Setup default config"
   else
-    msg_ok "Default config already exists"
+    stop_spinner
+    echo -e "\n${YW}Configuration file already exists.${CL}"
+    read -p "Do you want to reconfigure tag format and loop interval? (y/n): " reconfigure
+    case $reconfigure in
+      [Yy]*)
+        interactive_config_setup
+        msg_info "Updating Configuration"
+        generate_config >/opt/iptag/iptag.conf
+        msg_ok "Updated configuration file"
+        ;;
+      *)
+        msg_ok "Keeping existing configuration file"
+        ;;
+    esac
   fi
 
   msg_info "Setup Main Function"
@@ -986,7 +1049,7 @@ if [[ "$INSTALL_MODE" == "service" ]]; then
 CONFIG_FILE="/opt/iptag/iptag.conf"
 SCRIPT_FILE="/opt/iptag/iptag"
 if [[ ! -f "$SCRIPT_FILE" ]]; then
-  echo "❌ Main script not found: $SCRIPT_FILE"
+  echo "✗ Main script not found: $SCRIPT_FILE"
   exit 1
 fi
 export FORCE_SINGLE_RUN=true
@@ -1005,15 +1068,14 @@ EOF
 elif [[ "$INSTALL_MODE" == "command" ]]; then
   # Command-only installation
   install_command_only
+  
+  stop_spinner
   echo -e "\n${GN}${APP} command installation completed successfully! ${CL}"
-  echo -e "${YW}Use '${GN}iptag-run${YW}' to execute IP tagging manually.${CL}"
-  echo -e "${YW}Add it to cron for scheduled execution if needed.${CL}\n"
   
   # Show configuration information
   show_post_install_info
 fi
 
-SPINNER_PID=""
-
-# Proper script termination
+# Clean up any running spinner and exit
+stop_spinner
 exit 0
