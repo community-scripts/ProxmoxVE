@@ -36,12 +36,10 @@ export function formattedBadge(type: string) {
   return null;
 }
 
-const getRandomScript = (
-  categories: Category[],
-  previouslySelected: Set<string> = new Set()
-): Script | null => {
+function getRandomScript(categories: Category[], previouslySelected: Set<string> = new Set()): Script | null {
   const allScripts = categories.flatMap(cat => cat.scripts || []);
-  if (allScripts.length === 0) return null;
+  if (allScripts.length === 0)
+    return null;
 
   const availableScripts = allScripts.filter(script => !previouslySelected.has(script.slug));
   if (availableScripts.length === 0) {
@@ -49,9 +47,9 @@ const getRandomScript = (
   }
   const idx = Math.floor(Math.random() * availableScripts.length);
   return availableScripts[idx];
-};
+}
 
-const CommandMenu = () => {
+function CommandMenu() {
   const [open, setOpen] = React.useState(false);
   const [links, setLinks] = React.useState<Category[]>([]);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -94,10 +92,12 @@ const CommandMenu = () => {
           setSelectedScripts(prev => new Set([...prev, randomScript.slug]));
           router.push(`/scripts?id=${randomScript.slug}`);
         }
-      } finally {
+      }
+      finally {
         setIsLoading(false);
       }
-    } else {
+    }
+    else {
       const randomScript = getRandomScript(links, selectedScripts);
       if (randomScript) {
         setSelectedScripts(prev => new Set([...prev, randomScript.slug]));
@@ -130,13 +130,15 @@ const CommandMenu = () => {
     for (const { script, categoryName } of scriptMap.values()) {
       if (grouped[categoryName]) {
         grouped[categoryName].push(script);
-      } else {
+      }
+      else {
         grouped[categoryName] = [script];
       }
     }
 
-    Object.keys(grouped).forEach(cat => {
-      if (grouped[cat].length === 0) delete grouped[cat];
+    Object.keys(grouped).forEach((cat) => {
+      if (grouped[cat].length === 0)
+        delete grouped[cat];
     });
 
     return grouped;
@@ -175,7 +177,7 @@ const CommandMenu = () => {
                 className="hidden lg:flex"
                 aria-label="Open Random Script"
                 tabIndex={0}
-                onKeyDown={e => {
+                onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
                     handleOpenRandomScript();
                   }
@@ -209,7 +211,7 @@ const CommandMenu = () => {
                   }}
                   tabIndex={0}
                   aria-label={`Open script ${script.name}`}
-                  onKeyDown={e => {
+                  onKeyDown={(e) => {
                     if (e.key === "Enter" || e.key === " ") {
                       setOpen(false);
                       router.push(`/scripts?id=${script.slug}`);
@@ -237,6 +239,6 @@ const CommandMenu = () => {
       </CommandDialog>
     </>
   );
-};
+}
 
 export default CommandMenu;
