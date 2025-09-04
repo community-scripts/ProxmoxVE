@@ -1,11 +1,11 @@
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
 
 import type { Category } from "@/lib/types";
 
-import { formattedBadge } from "@/components/command-menu";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { formattedBadge } from "@/components/command-menu";
 import { basePath } from "@/config/site-config";
 import { cn } from "@/lib/utils";
 
@@ -43,14 +43,14 @@ export default function ScriptAccordion({
       // If we have a selected category, try to find the script in that specific category
       if (selectedCategory) {
         category = items.find(
-          (cat) => cat.name === selectedCategory && cat.scripts.some((script) => script.slug === selectedScript),
+          cat => cat.name === selectedCategory && cat.scripts.some(script => script.slug === selectedScript),
         );
       }
 
       // Fallback: if no category is selected or script not found in selected category,
       // use the first category containing the script (backward compatibility)
       if (!category) {
-        category = items.find((category) => category.scripts.some((script) => script.slug === selectedScript));
+        category = items.find(category => category.scripts.some(script => script.slug === selectedScript));
       }
 
       if (category) {
@@ -67,7 +67,7 @@ export default function ScriptAccordion({
       collapsible
       className="overflow-y-scroll max-h-[calc(100vh-225px)] overflow-x-hidden p-2"
     >
-      {items.map((category) => (
+      {items.map(category => (
         <AccordionItem
           key={`${category.id}:category`}
           value={category.name}
@@ -81,11 +81,15 @@ export default function ScriptAccordion({
             )}
           >
             <div className="mr-2 flex w-full items-center justify-between">
-              <span className="pl-2 text-left">{category.name} </span>
+              <span className="pl-2 text-left">
+                {category.name}
+                {" "}
+              </span>
               <span className="rounded-full bg-gray-200 px-2 py-1 text-xs text-muted-foreground hover:no-underline dark:bg-blue-800/20">
                 {category.scripts.length}
               </span>
-            </div>{" "}
+            </div>
+            {" "}
           </AccordionTrigger>
           <AccordionContent data-state={expandedItem === category.name ? "open" : "closed"} className="pt-0">
             {category.scripts
@@ -118,7 +122,7 @@ export default function ScriptAccordion({
                         height={16}
                         width={16}
                         unoptimized
-                        onError={(e) => ((e.currentTarget as HTMLImageElement).src = `/${basePath}/logo.png`)}
+                        onError={e => ((e.currentTarget as HTMLImageElement).src = `/${basePath}/logo.png`)}
                         alt={script.name}
                         className="mr-1 w-4 h-4 rounded-full"
                       />
