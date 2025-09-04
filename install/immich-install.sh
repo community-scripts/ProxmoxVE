@@ -165,20 +165,20 @@ SOURCE_DIR=${STAGING_DIR}/image-source
 $STD git clone -b main "$BASE_REPO" "$BASE_DIR"
 mkdir -p "$SOURCE_DIR"
 
-cd "$STAGING_DIR" || exit
+cd "$STAGING_DIR"
 SOURCE=${SOURCE_DIR}/libjxl
 JPEGLI_LIBJPEG_LIBRARY_SOVERSION="62"
 JPEGLI_LIBJPEG_LIBRARY_VERSION="62.3.0"
 # : "${LIBJXL_REVISION:=$(jq -cr '.revision' $BASE_DIR/server/sources/libjxl.json)}"
 : "${LIBJXL_REVISION:=794a5dcf0d54f9f0b20d288a12e87afb91d20dfc}"
 $STD git clone https://github.com/libjxl/libjxl.git "$SOURCE"
-cd "$SOURCE" || exit
+cd "$SOURCE"
 $STD git reset --hard "$LIBJXL_REVISION"
 $STD git submodule update --init --recursive --depth 1 --recommend-shallow
 $STD git apply "$BASE_DIR"/server/sources/libjxl-patches/jpegli-empty-dht-marker.patch
 $STD git apply "$BASE_DIR"/server/sources/libjxl-patches/jpegli-icc-warning.patch
 mkdir build
-cd build || exit
+cd build
 $STD cmake \
   -DCMAKE_BUILD_TYPE=Release \
   -DBUILD_TESTING=OFF \
@@ -201,17 +201,17 @@ $STD cmake --build . -- -j"$(nproc)"
 $STD cmake --install .
 ldconfig /usr/local/lib
 $STD make clean
-cd "$STAGING_DIR" || exit
+cd "$STAGING_DIR"
 rm -rf "$SOURCE"/{build,third_party}
 
 SOURCE=${SOURCE_DIR}/libheif
 # : "${LIBHEIF_REVISION:=$(jq -cr '.revision' $BASE_DIR/server/sources/libheif.json)}"
 : "${LIBHEIF_REVISION:=35dad50a9145332a7bfdf1ff6aef6801fb613d68}"
 $STD git clone https://github.com/strukturag/libheif.git "$SOURCE"
-cd "$SOURCE" || exit
+cd "$SOURCE"
 $STD git reset --hard "$LIBHEIF_REVISION"
 mkdir build
-cd build || exit
+cd build
 $STD cmake --preset=release-noplugins \
   -DWITH_DAV1D=ON \
   -DENABLE_PARALLEL_TILE_DECODING=ON \
@@ -225,14 +225,14 @@ $STD cmake --preset=release-noplugins \
 $STD make install -j "$(nproc)"
 ldconfig /usr/local/lib
 $STD make clean
-cd "$STAGING_DIR" || exit
+cd "$STAGING_DIR"
 rm -rf "$SOURCE"/build
 
 SOURCE=${SOURCE_DIR}/libraw
 # : "${LIBRAW_REVISION:=$(jq -cr '.revision' $BASE_DIR/server/sources/libraw.json)}"
 : "${LIBRAW_REVISION:=09bea31181b43e97959ee5452d91e5bc66365f1f}"
 $STD git clone https://github.com/libraw/libraw.git "$SOURCE"
-cd "$SOURCE" || exit
+cd "$SOURCE"
 $STD git reset --hard "$LIBRAW_REVISION"
 $STD autoreconf --install
 $STD ./configure
@@ -240,32 +240,32 @@ $STD make -j"$(nproc)"
 $STD make install
 ldconfig /usr/local/lib
 $STD make clean
-cd "$STAGING_DIR" || exit
+cd "$STAGING_DIR"
 
 SOURCE=$SOURCE_DIR/imagemagick
 # : "${IMAGEMAGICK_REVISION:=$(jq -cr '.revision' $BASE_DIR/server/sources/imagemagick.json)}"
 : "${IMAGEMAGICK_REVISION:=8289a3388a085ad5ae81aa6812f21554bdfd54f2}"
 $STD git clone https://github.com/ImageMagick/ImageMagick.git "$SOURCE"
-cd "$SOURCE" || exit
+cd "$SOURCE"
 $STD git reset --hard "$IMAGEMAGICK_REVISION"
 $STD ./configure --with-modules
 $STD make -j"$(nproc)"
 $STD make install
 ldconfig /usr/local/lib
 $STD make clean
-cd "$STAGING_DIR" || exit
+cd "$STAGING_DIR"
 
 SOURCE=$SOURCE_DIR/libvips
 # : "${LIBVIPS_REVISION:=$(jq -cr '.revision' $BASE_DIR/server/sources/libvips.json)}"
 : "${LIBVIPS_REVISION:=8fa37a64547e392d3808eed8d72adab7e02b3d00}"
 $STD git clone https://github.com/libvips/libvips.git "$SOURCE"
-cd "$SOURCE" || exit
+cd "$SOURCE"
 $STD git reset --hard "$LIBVIPS_REVISION"
 $STD meson setup build --buildtype=release --libdir=lib -Dintrospection=disabled -Dtiff=disabled
-cd build || exit
+cd build
 $STD ninja install
 ldconfig /usr/local/lib
-cd "$STAGING_DIR" || exit
+cd "$STAGING_DIR"
 rm -rf "$SOURCE"/build
 {
   echo "imagemagick: $IMAGEMAGICK_REVISION"
@@ -289,7 +289,7 @@ fetch_and_deploy_gh_release "immich" "immich-app/immich" "tarball" "v1.140.1" "$
 
 msg_info "Installing ${APPLICATION} (more patience please)"
 
-cd "$SRC_DIR"/server || exit
+cd "$SRC_DIR"/server
 export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 export CI=1
 corepack enable
@@ -304,7 +304,7 @@ cp "$APP_DIR"/package.json "$APP_DIR"/bin
 sed -i 's|^start|./start|' "$APP_DIR"/bin/immich-admin
 
 # openapi & web build
-cd "$SRC_DIR" || exit
+cd "$SRC_DIR"
 $STD pnpm --filter @immich/sdk --filter immich-web --frozen-lockfile --force install
 $STD pnpm --filter @immich/sdk --filter immich-web build
 cp -a web/build "$APP_DIR"/www
@@ -316,7 +316,7 @@ $STD pnpm --filter @immich/sdk --filter @immich/cli build
 $STD pnpm --filter @immich/cli --prod --no-optional deploy "$APP_DIR"/cli
 msg_ok "Installed Immich Server and Web Components"
 
-cd "$SRC_DIR"/machine-learning || exit
+cd "$SRC_DIR"/machine-learning
 mkdir -p "$ML_DIR"
 export VIRTUAL_ENV="${ML_DIR}/ml-venv"
 $STD uv venv "$VIRTUAL_ENV"
@@ -330,14 +330,14 @@ else
   uv -q sync --extra cpu --no-cache --active
   msg_ok "Installed machine-learning"
 fi
-cd "$SRC_DIR" || exit
+cd "$SRC_DIR"
 cp -a machine-learning/{ann,immich_ml} "$ML_DIR"
 if [[ -f ~/.openvino ]]; then
   sed -i "/intra_op/s/int = 0/int = os.cpu_count() or 0/" "$ML_DIR"/immich_ml/config.py
 fi
 ln -sf "$APP_DIR"/resources "$INSTALL_DIR"
 
-cd "$APP_DIR" || exit
+cd "$APP_DIR"
 grep -rl /usr/src | xargs -n1 sed -i "s|\/usr/src|$INSTALL_DIR|g"
 grep -rlE "'/build'" | xargs -n1 sed -i "s|'/build'|'$APP_DIR'|g"
 sed -i "s@\"/cache\"@\"$INSTALL_DIR/cache\"@g" "$ML_DIR"/immich_ml/config.py
@@ -345,7 +345,7 @@ ln -s "$UPLOAD_DIR" "$APP_DIR"/upload
 ln -s "$UPLOAD_DIR" "$ML_DIR"/upload
 
 msg_info "Installing GeoNames data"
-cd "$GEO_DIR" || exit
+cd "$GEO_DIR"
 URL_LIST=(
   https://download.geonames.org/export/dump/admin1CodesASCII.txt
   https://download.geonames.org/export/dump/admin2Codes.txt
@@ -358,7 +358,7 @@ done
 unzip -q cities500.zip
 date --iso-8601=seconds | tr -d "\n" >geodata-date.txt
 rm cities500.zip
-cd "$INSTALL_DIR" || exit
+cd "$INSTALL_DIR"
 ln -s "$GEO_DIR" "$APP_DIR"
 msg_ok "Installed GeoNames data"
 
