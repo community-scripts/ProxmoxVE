@@ -18,6 +18,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Netdata: Fix pve_check for 8 [@MickLesk](https://github.com/MickLesk) ([#7392](https://github.com/community-scripts/ProxmoxVE/pull/7392))
 
+  - #### 🔧 Refactor
+
+    - Immich: pin compiled photo library revisions [@vhsdream](https://github.com/vhsdream) ([#7395](https://github.com/community-scripts/ProxmoxVE/pull/7395))
+
 ## 2025-09-03
 
 ### 🚀 Updated Scripts
