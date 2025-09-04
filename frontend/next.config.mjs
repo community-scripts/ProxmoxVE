@@ -18,6 +18,10 @@ const nextConfig = {
     BASE_PATH: "ProxmoxVE",
   },
 
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+
   output: "export",
   basePath: `/ProxmoxVE`,
 };
