@@ -169,7 +169,8 @@ cd "$STAGING_DIR"
 SOURCE=${SOURCE_DIR}/libjxl
 JPEGLI_LIBJPEG_LIBRARY_SOVERSION="62"
 JPEGLI_LIBJPEG_LIBRARY_VERSION="62.3.0"
-: "${LIBJXL_REVISION:=$(jq -cr '.revision' $BASE_DIR/server/sources/libjxl.json)}"
+# : "${LIBJXL_REVISION:=$(jq -cr '.revision' $BASE_DIR/server/sources/libjxl.json)}"
+: "${LIBJXL_REVISION:=794a5dcf0d54f9f0b20d288a12e87afb91d20dfc"
 $STD git clone https://github.com/libjxl/libjxl.git "$SOURCE"
 cd "$SOURCE"
 $STD git reset --hard "$LIBJXL_REVISION"
@@ -204,7 +205,8 @@ cd "$STAGING_DIR"
 rm -rf "$SOURCE"/{build,third_party}
 
 SOURCE=${SOURCE_DIR}/libheif
-: "${LIBHEIF_REVISION:=$(jq -cr '.revision' $BASE_DIR/server/sources/libheif.json)}"
+# : "${LIBHEIF_REVISION:=$(jq -cr '.revision' $BASE_DIR/server/sources/libheif.json)}"
+: "${LIBHEIF_REVISION:=35dad50a9145332a7bfdf1ff6aef6801fb613d68"
 $STD git clone https://github.com/strukturag/libheif.git "$SOURCE"
 cd "$SOURCE"
 $STD git reset --hard "$LIBHEIF_REVISION"
@@ -227,7 +229,8 @@ cd "$STAGING_DIR"
 rm -rf "$SOURCE"/build
 
 SOURCE=${SOURCE_DIR}/libraw
-: "${LIBRAW_REVISION:=$(jq -cr '.revision' $BASE_DIR/server/sources/libraw.json)}"
+# : "${LIBRAW_REVISION:=$(jq -cr '.revision' $BASE_DIR/server/sources/libraw.json)}"
+: "${LIBRAW_REVISION:=09bea31181b43e97959ee5452d91e5bc66365f1f"
 $STD git clone https://github.com/libraw/libraw.git "$SOURCE"
 cd "$SOURCE"
 $STD git reset --hard "$LIBRAW_REVISION"
@@ -240,7 +243,8 @@ $STD make clean
 cd "$STAGING_DIR"
 
 SOURCE=$SOURCE_DIR/imagemagick
-: "${IMAGEMAGICK_REVISION:=$(jq -cr '.revision' $BASE_DIR/server/sources/imagemagick.json)}"
+# : "${IMAGEMAGICK_REVISION:=$(jq -cr '.revision' $BASE_DIR/server/sources/imagemagick.json)}"
+: "${IMAGEMAGICK_REVISION:=8289a3388a085ad5ae81aa6812f21554bdfd54f2"
 $STD git clone https://github.com/ImageMagick/ImageMagick.git "$SOURCE"
 cd "$SOURCE"
 $STD git reset --hard "$IMAGEMAGICK_REVISION"
@@ -252,7 +256,8 @@ $STD make clean
 cd "$STAGING_DIR"
 
 SOURCE=$SOURCE_DIR/libvips
-: "${LIBVIPS_REVISION:=$(jq -cr '.revision' $BASE_DIR/server/sources/libvips.json)}"
+# : "${LIBVIPS_REVISION:=$(jq -cr '.revision' $BASE_DIR/server/sources/libvips.json)}"
+: "${LIBVIPS_REVISION:=8fa37a64547e392d3808eed8d72adab7e02b3d00"
 $STD git clone https://github.com/libvips/libvips.git "$SOURCE"
 cd "$SOURCE"
 $STD git reset --hard "$LIBVIPS_REVISION"
