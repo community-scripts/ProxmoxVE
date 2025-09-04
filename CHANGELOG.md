@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-09-04
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Netdata: Fix pve_check for 8 [@MickLesk](https://github.com/MickLesk) ([#7392](https://github.com/community-scripts/ProxmoxVE/pull/7392))
+
 ## 2025-09-03
 
 ### 🚀 Updated Scripts
