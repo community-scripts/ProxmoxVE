@@ -17,7 +17,9 @@ msg_info "Installing Dependencies"
 $STD apt-get install -y \
   gdal-bin \
   libgdal-dev \
-  git
+  git \
+  memcached \
+  libmemcached-tools
 msg_ok "Installed Dependencies"
 
 PYTHON_VERSION="3.12" setup_uv
