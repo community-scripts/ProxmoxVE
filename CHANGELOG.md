@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-09-05
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - AdventureLog: Update dependencies [@tremor021](https://github.com/tremor021) ([#7404](https://github.com/community-scripts/ProxmoxVE/pull/7404))
+
 ### 🌐 Website
 
   - refactor: Enhance ScriptAccordion and Sidebar components to support selectedCategory state [@BramSuurdje](https://github.com/BramSuurdje) ([#7405](https://github.com/community-scripts/ProxmoxVE/pull/7405))
