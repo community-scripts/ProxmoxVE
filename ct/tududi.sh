@@ -37,7 +37,7 @@ function update_script() {
     rm -rf /opt/tududi/backend/dist
     msg_ok "Backup and removed Files"
 
-    fetch_and_deploy_gh_release "tududi" "chrisvel/tududi"
+    fetch_and_deploy_gh_release "tududi" "chrisvel/tududi" "tarball" "v0.80" "/opt/tududi"
 
     msg_info "Updating ${APP}"
     cd /opt/tududi
