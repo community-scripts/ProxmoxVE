@@ -5,6 +5,91 @@
     "date": "2025-09-01T11:40:11Z"
   },
   {
+    "name": "docmost/docmost",
+    "version": "v0.23.0",
+    "date": "2025-09-04T22:40:29Z"
+  },
+  {
+    "name": "pelican-dev/panel",
+    "version": "v1.0.0-beta25",
+    "date": "2025-09-04T21:42:46Z"
+  },
+  {
+    "name": "pelican-dev/wings",
+    "version": "v1.0.0-beta17",
+    "date": "2025-09-04T21:30:14Z"
+  },
+  {
+    "name": "rcourtman/Pulse",
+    "version": "v4.13.0",
+    "date": "2025-09-03T13:48:17Z"
+  },
+  {
+    "name": "TandoorRecipes/recipes",
+    "version": "2.1.0",
+    "date": "2025-09-04T20:24:47Z"
+  },
+  {
+    "name": "mongodb/mongo",
+    "version": "r7.0.24",
+    "date": "2025-09-04T19:50:49Z"
+  },
+  {
+    "name": "immich-app/immich",
+    "version": "v1.141.0",
+    "date": "2025-09-04T19:42:02Z"
+  },
+  {
+    "name": "Cleanuparr/Cleanuparr",
+    "version": "v2.2.3",
+    "date": "2025-09-04T19:24:39Z"
+  },
+  {
+    "name": "HabitRPG/habitica",
+    "version": "v5.40.1",
+    "date": "2025-09-04T19:10:45Z"
+  },
+  {
+    "name": "AdguardTeam/AdGuardHome",
+    "version": "v0.107.65",
+    "date": "2025-08-20T14:02:28Z"
+  },
+  {
+    "name": "webmin/webmin",
+    "version": "2.500",
+    "date": "2025-09-04T17:44:27Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.11.10",
+    "date": "2025-09-04T17:27:40Z"
+  },
+  {
+    "name": "MediaBrowser/Emby.Releases",
+    "version": "4.9.1.2",
+    "date": "2025-06-26T22:08:00Z"
+  },
+  {
+    "name": "NodeBB/NodeBB",
+    "version": "v4.5.1",
+    "date": "2025-09-04T16:02:49Z"
+  },
+  {
+    "name": "semaphoreui/semaphore",
+    "version": "v2.16.19",
+    "date": "2025-09-04T14:22:02Z"
+  },
+  {
+    "name": "raydak-labs/configarr",
+    "version": "v1.15.1",
+    "date": "2025-09-04T14:00:59Z"
+  },
+  {
+    "name": "plankanban/planka",
+    "version": "planka-1.0.4",
+    "date": "2025-09-04T13:49:40Z"
+  },
+  {
     "name": "blakeblackshear/frigate",
     "version": "v0.14.1",
     "date": "2024-08-29T22:32:51Z"
@@ -55,11 +140,6 @@
     "date": "2025-07-17T12:08:03Z"
   },
   {
-    "name": "Cleanuparr/Cleanuparr",
-    "version": "v2.2.2",
-    "date": "2025-09-03T20:58:13Z"
-  },
-  {
     "name": "VictoriaMetrics/VictoriaMetrics",
     "version": "pmm-6401-v1.125.1",
     "date": "2025-09-03T20:17:18Z"
@@ -80,11 +160,6 @@
     "date": "2025-09-03T17:58:41Z"
   },
   {
-    "name": "NodeBB/NodeBB",
-    "version": "v4.5.0",
-    "date": "2025-09-03T17:42:18Z"
-  },
-  {
     "name": "zitadel/zitadel",
     "version": "v4.1.1",
     "date": "2025-09-03T15:12:56Z"
@@ -93,11 +168,6 @@
     "name": "Graylog2/graylog2-server",
     "version": "6.1.15",
     "date": "2025-09-03T14:51:37Z"
-  },
-  {
-    "name": "rcourtman/Pulse",
-    "version": "v4.13.0",
-    "date": "2025-09-03T13:48:17Z"
   },
   {
     "name": "glpi-project/glpi",
@@ -160,19 +230,9 @@
     "date": "2025-09-02T23:52:26Z"
   },
   {
-    "name": "mongodb/mongo",
-    "version": "r8.0.14-rc0",
-    "date": "2025-09-02T22:46:40Z"
-  },
-  {
-    "name": "ollama/ollama",
-    "version": "v0.11.9",
-    "date": "2025-09-02T20:14:18Z"
-  },
-  {
     "name": "runtipi/runtipi",
-    "version": "v4.4.0",
-    "date": "2025-09-02T17:52:03Z"
+    "version": "nightly",
+    "date": "2025-09-02T19:26:18Z"
   },
   {
     "name": "Luligu/matterbridge",
@@ -193,11 +253,6 @@
     "name": "rabbitmq/rabbitmq-server",
     "version": "v4.1.4",
     "date": "2025-09-02T14:26:24Z"
-  },
-  {
-    "name": "HabitRPG/habitica",
-    "version": "v5.40.0",
-    "date": "2025-09-02T14:09:11Z"
   },
   {
     "name": "apache/tomcat",
@@ -238,11 +293,6 @@
     "name": "authelia/authelia",
     "version": "v4.39.8",
     "date": "2025-09-02T00:44:45Z"
-  },
-  {
-    "name": "MediaBrowser/Emby.Releases",
-    "version": "4.9.1.2",
-    "date": "2025-06-26T22:08:00Z"
   },
   {
     "name": "postgres/postgres",
@@ -350,19 +400,14 @@
     "date": "2025-08-30T21:49:57Z"
   },
   {
-    "name": "immich-app/immich",
-    "version": "v1.140.1",
-    "date": "2025-08-30T19:46:34Z"
-  },
-  {
     "name": "Brandawg93/PeaNUT",
     "version": "v5.14.0",
     "date": "2025-08-30T18:41:03Z"
   },
   {
     "name": "bunkerity/bunkerweb",
-    "version": "testing",
-    "date": "2025-08-29T20:40:03Z"
+    "version": "v1.6.4",
+    "date": "2025-08-18T20:22:07Z"
   },
   {
     "name": "henrygd/beszel",
@@ -383,11 +428,6 @@
     "name": "Forceu/Gokapi",
     "version": "v2.1.0",
     "date": "2025-08-29T12:56:13Z"
-  },
-  {
-    "name": "semaphoreui/semaphore",
-    "version": "v2.16.19",
-    "date": "2025-08-29T05:53:48Z"
   },
   {
     "name": "saltstack/salt",
@@ -463,11 +503,6 @@
     "name": "gtsteffaniak/filebrowser",
     "version": "v0.8.3-beta",
     "date": "2025-08-27T18:18:48Z"
-  },
-  {
-    "name": "raydak-labs/configarr",
-    "version": "v1.15.0",
-    "date": "2025-08-27T17:12:03Z"
   },
   {
     "name": "zwave-js/zwave-js-ui",
@@ -570,11 +605,6 @@
     "date": "2025-08-21T13:31:03Z"
   },
   {
-    "name": "TandoorRecipes/recipes",
-    "version": "2.0.3",
-    "date": "2025-08-23T07:08:13Z"
-  },
-  {
     "name": "pocketbase/pocketbase",
     "version": "v0.29.3",
     "date": "2025-08-23T06:37:44Z"
@@ -633,11 +663,6 @@
     "name": "gethomepage/homepage",
     "version": "v1.4.6",
     "date": "2025-08-21T14:05:58Z"
-  },
-  {
-    "name": "AdguardTeam/AdGuardHome",
-    "version": "v0.107.65",
-    "date": "2025-08-20T14:02:28Z"
   },
   {
     "name": "openhab/openhab-core",
@@ -755,16 +780,6 @@
     "date": "2025-08-12T13:58:46Z"
   },
   {
-    "name": "pelican-dev/panel",
-    "version": "v1.0.0-beta24",
-    "date": "2025-08-11T21:22:01Z"
-  },
-  {
-    "name": "pelican-dev/wings",
-    "version": "v1.0.0-beta16",
-    "date": "2025-08-11T21:19:48Z"
-  },
-  {
     "name": "FlowiseAI/Flowise",
     "version": "flowise@3.0.5",
     "date": "2025-08-11T13:01:45Z"
@@ -863,11 +878,6 @@
     "name": "donaldzou/WGDashboard",
     "version": "v4.2.5",
     "date": "2025-08-02T08:58:21Z"
-  },
-  {
-    "name": "docmost/docmost",
-    "version": "v0.22.2",
-    "date": "2025-08-01T23:27:06Z"
   },
   {
     "name": "alexta69/metube",
@@ -1090,11 +1100,6 @@
     "date": "2025-06-18T12:19:54Z"
   },
   {
-    "name": "webmin/webmin",
-    "version": "2.402",
-    "date": "2025-06-17T05:20:42Z"
-  },
-  {
     "name": "TriliumNext/Notes",
     "version": "v0.95.0",
     "date": "2025-06-15T21:12:04Z"
@@ -1123,11 +1128,6 @@
     "name": "juanfont/headscale",
     "version": "v0.26.1",
     "date": "2025-06-06T11:22:02Z"
-  },
-  {
-    "name": "plankanban/planka",
-    "version": "planka-1.0.3",
-    "date": "2025-06-04T10:26:07Z"
   },
   {
     "name": "C4illin/ConvertX",
