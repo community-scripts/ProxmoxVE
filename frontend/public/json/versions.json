@@ -1,5 +1,65 @@
 [
   {
+    "name": "chrisvel/tududi",
+    "version": "v0.80",
+    "date": "2025-07-24T14:12:39Z"
+  },
+  {
+    "name": "wizarrrr/wizarr",
+    "version": "2025.8.5",
+    "date": "2025-08-31T17:56:37Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.9.1",
+    "date": "2025-09-05T11:15:21Z"
+  },
+  {
+    "name": "Stirling-Tools/Stirling-PDF",
+    "version": "v1.3.0",
+    "date": "2025-09-05T11:12:14Z"
+  },
+  {
+    "name": "syncthing/syncthing",
+    "version": "v2.0.7",
+    "date": "2025-09-05T10:18:24Z"
+  },
+  {
+    "name": "zitadel/zitadel",
+    "version": "v4.1.2",
+    "date": "2025-09-05T08:23:30Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2429",
+    "date": "2025-09-05T06:05:30Z"
+  },
+  {
+    "name": "CrazyWolf13/streamlink-webui",
+    "version": "0.6",
+    "date": "2025-09-05T06:05:04Z"
+  },
+  {
+    "name": "louislam/uptime-kuma",
+    "version": "2.0.0-beta.2-temp",
+    "date": "2025-03-28T08:45:58Z"
+  },
+  {
+    "name": "Brandawg93/PeaNUT",
+    "version": "v5.14.1",
+    "date": "2025-09-05T00:43:16Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.19",
+    "date": "2025-09-05T00:27:15Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
     "name": "wazuh/wazuh",
     "version": "coverity-w36-4.13.0",
     "date": "2025-09-01T11:40:11Z"
@@ -50,6 +110,11 @@
     "date": "2025-09-04T19:10:45Z"
   },
   {
+    "name": "runtipi/runtipi",
+    "version": "nightly",
+    "date": "2025-09-04T18:29:10Z"
+  },
+  {
     "name": "AdguardTeam/AdGuardHome",
     "version": "v0.107.65",
     "date": "2025-08-20T14:02:28Z"
@@ -73,6 +138,11 @@
     "name": "NodeBB/NodeBB",
     "version": "v4.5.1",
     "date": "2025-09-04T16:02:49Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.0.15",
+    "date": "2025-08-27T12:12:03Z"
   },
   {
     "name": "semaphoreui/semaphore",
@@ -115,19 +185,9 @@
     "date": "2025-07-15T06:07:03Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2418",
-    "date": "2025-09-04T05:53:46Z"
-  },
-  {
     "name": "actualbudget/actual",
     "version": "v25.9.0",
     "date": "2025-09-04T01:12:37Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.4.19",
-    "date": "2025-09-04T00:27:08Z"
   },
   {
     "name": "hyperion-project/hyperion.ng",
@@ -135,34 +195,14 @@
     "date": "2025-06-14T17:45:06Z"
   },
   {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
-  },
-  {
     "name": "VictoriaMetrics/VictoriaMetrics",
     "version": "pmm-6401-v1.125.1",
     "date": "2025-09-03T20:17:18Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.0.15",
-    "date": "2025-08-27T12:12:03Z"
-  },
-  {
     "name": "homarr-labs/homarr",
     "version": "v1.35.1",
     "date": "2025-09-03T18:53:36Z"
-  },
-  {
-    "name": "home-assistant/core",
-    "version": "2025.9.0",
-    "date": "2025-09-03T17:58:41Z"
-  },
-  {
-    "name": "zitadel/zitadel",
-    "version": "v4.1.1",
-    "date": "2025-09-03T15:12:56Z"
   },
   {
     "name": "Graylog2/graylog2-server",
@@ -215,11 +255,6 @@
     "date": "2025-09-03T08:46:02Z"
   },
   {
-    "name": "syncthing/syncthing",
-    "version": "v2.0.6",
-    "date": "2025-09-03T07:55:14Z"
-  },
-  {
     "name": "booklore-app/booklore",
     "version": "v1.1.2",
     "date": "2025-09-03T03:18:53Z"
@@ -228,11 +263,6 @@
     "name": "crafty-controller/crafty-4",
     "version": "v4.5.3",
     "date": "2025-09-02T23:52:26Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-09-02T19:26:18Z"
   },
   {
     "name": "Luligu/matterbridge",
@@ -365,11 +395,6 @@
     "date": "2025-08-31T21:38:21Z"
   },
   {
-    "name": "wizarrrr/wizarr",
-    "version": "2025.8.5",
-    "date": "2025-08-31T17:56:37Z"
-  },
-  {
     "name": "karakeep-app/karakeep",
     "version": "ios/v1.8.0-1",
     "date": "2025-08-31T16:06:00Z"
@@ -398,11 +423,6 @@
     "name": "jhuckaby/Cronicle",
     "version": "v0.9.91",
     "date": "2025-08-30T21:49:57Z"
-  },
-  {
-    "name": "Brandawg93/PeaNUT",
-    "version": "v5.14.0",
-    "date": "2025-08-30T18:41:03Z"
   },
   {
     "name": "bunkerity/bunkerweb",
@@ -690,11 +710,6 @@
     "date": "2025-08-19T16:46:00Z"
   },
   {
-    "name": "chrisvel/tududi",
-    "version": "v0.80",
-    "date": "2025-07-24T14:12:39Z"
-  },
-  {
     "name": "oauth2-proxy/oauth2-proxy",
     "version": "v7.12.0",
     "date": "2025-08-19T06:57:20Z"
@@ -798,11 +813,6 @@
     "name": "diced/zipline",
     "version": "v4.2.3",
     "date": "2025-08-10T05:53:43Z"
-  },
-  {
-    "name": "Stirling-Tools/Stirling-PDF",
-    "version": "v1.2.0",
-    "date": "2025-08-09T14:30:52Z"
   },
   {
     "name": "kimai/kimai",
@@ -1135,11 +1145,6 @@
     "date": "2025-06-04T08:57:15Z"
   },
   {
-    "name": "louislam/uptime-kuma",
-    "version": "2.0.0-beta.2-temp",
-    "date": "2025-03-28T08:45:58Z"
-  },
-  {
     "name": "Pf2eToolsOrg/Pf2eTools",
     "version": "v0.9.0",
     "date": "2025-06-03T11:49:40Z"
@@ -1158,11 +1163,6 @@
     "name": "0xERR0R/blocky",
     "version": "v0.26.2",
     "date": "2025-05-22T05:24:42Z"
-  },
-  {
-    "name": "CrazyWolf13/streamlink-webui",
-    "version": "0.5",
-    "date": "2025-05-21T20:19:14Z"
   },
   {
     "name": "hansmi/prometheus-paperless-exporter",
