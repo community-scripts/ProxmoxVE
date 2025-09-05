@@ -1,0 +1,35 @@
+{
+  "name": "Leantime",
+  "slug": "leantime",
+  "categories": [
+    12
+  ],
+  "date_created": "2025-06-27",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 80,
+  "documentation": "https://docs.leantime.io/",
+  "config_path": "/opt/Leantime/config/.env",
+  "website": "https://leantime.io",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/leantime.webp",
+  "description": "Leantime is a goals focused project management system for non-project managers. Building with ADHD, Autism, and dyslexia in mind. ",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/leantime.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 20,
+        "os": "Debian",
+        "version": "12"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": []
+}
