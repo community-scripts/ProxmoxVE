@@ -14,6 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - Tududi: Pin version to 0.80 [@vhsdream](https://github.com/vhsdream) ([#7420](https://github.com/community-scripts/ProxmoxVE/pull/7420))
+
   - #### 🐞 Bug Fixes
 
     - AdventureLog: Update dependencies [@tremor021](https://github.com/tremor021) ([#7404](https://github.com/community-scripts/ProxmoxVE/pull/7404))
