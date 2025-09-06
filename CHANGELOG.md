@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 📝 Script Information
 
+    - MediaManager Configuration Path [@austinpilz](https://github.com/austinpilz) ([#7408](https://github.com/community-scripts/ProxmoxVE/pull/7408))
     - Paperless-NGX: Remove default credentials from json [@tremor021](https://github.com/tremor021) ([#7403](https://github.com/community-scripts/ProxmoxVE/pull/7403))
 
 ## 2025-09-05
