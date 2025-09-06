@@ -14,7 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - leantime ([#7414](https://github.com/community-scripts/ProxmoxVE/pull/7414))
+  - Resilio Sync ([#7442](https://github.com/community-scripts/ProxmoxVE/pull/7442))
+- leantime ([#7414](https://github.com/community-scripts/ProxmoxVE/pull/7414))
 
 ### 🚀 Updated Scripts
 
