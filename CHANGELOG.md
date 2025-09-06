@@ -16,6 +16,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - leantime ([#7414](https://github.com/community-scripts/ProxmoxVE/pull/7414))
 
+### 🚀 Updated Scripts
+
+  - use debian source for direct installation of MQTT [@EtlamGit](https://github.com/EtlamGit) ([#7423](https://github.com/community-scripts/ProxmoxVE/pull/7423))
+
 ### 🌐 Website
 
   - #### 📝 Script Information
