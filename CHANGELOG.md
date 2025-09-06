@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-09-06
 
+### 🆕 New Scripts
+
+  - leantime ([#7414](https://github.com/community-scripts/ProxmoxVE/pull/7414))
+
 ### 🌐 Website
 
   - #### 📝 Script Information
