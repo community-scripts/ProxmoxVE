@@ -1,23 +1,78 @@
 [
   {
+    "name": "moghtech/komodo",
+    "version": "v1.19.3",
+    "date": "2025-09-05T21:32:38Z"
+  },
+  {
+    "name": "homarr-labs/homarr",
+    "version": "v1.36.1",
+    "date": "2025-09-05T21:14:40Z"
+  },
+  {
+    "name": "booklore-app/booklore",
+    "version": "v1.2.0",
+    "date": "2025-09-05T20:43:03Z"
+  },
+  {
+    "name": "immich-app/immich",
+    "version": "v1.141.1",
+    "date": "2025-09-05T19:44:39Z"
+  },
+  {
+    "name": "gtsteffaniak/filebrowser",
+    "version": "v0.8.4-beta",
+    "date": "2025-09-05T19:34:44Z"
+  },
+  {
+    "name": "Stirling-Tools/Stirling-PDF",
+    "version": "v1.3.2",
+    "date": "2025-09-05T18:44:15Z"
+  },
+  {
+    "name": "diced/zipline",
+    "version": "v4.3.0",
+    "date": "2025-09-05T18:43:28Z"
+  },
+  {
+    "name": "rcourtman/Pulse",
+    "version": "v4.14.0",
+    "date": "2025-09-05T18:28:28Z"
+  },
+  {
+    "name": "henrygd/beszel",
+    "version": "v0.12.7",
+    "date": "2025-09-05T18:11:36Z"
+  },
+  {
+    "name": "Brandawg93/PeaNUT",
+    "version": "v5.14.2",
+    "date": "2025-09-05T17:24:12Z"
+  },
+  {
+    "name": "fuma-nama/fumadocs",
+    "version": "create-fumadocs-app@15.7.9",
+    "date": "2025-09-05T14:33:41Z"
+  },
+  {
+    "name": "wizarrrr/wizarr",
+    "version": "2025.9.0",
+    "date": "2025-09-05T14:21:34Z"
+  },
+  {
+    "name": "cross-seed/cross-seed",
+    "version": "v6.13.2",
+    "date": "2025-08-19T18:18:40Z"
+  },
+  {
     "name": "chrisvel/tududi",
     "version": "v0.80",
     "date": "2025-07-24T14:12:39Z"
   },
   {
-    "name": "wizarrrr/wizarr",
-    "version": "2025.8.5",
-    "date": "2025-08-31T17:56:37Z"
-  },
-  {
     "name": "home-assistant/core",
     "version": "2025.9.1",
     "date": "2025-09-05T11:15:21Z"
-  },
-  {
-    "name": "Stirling-Tools/Stirling-PDF",
-    "version": "v1.3.0",
-    "date": "2025-09-05T11:12:14Z"
   },
   {
     "name": "syncthing/syncthing",
@@ -43,11 +98,6 @@
     "name": "louislam/uptime-kuma",
     "version": "2.0.0-beta.2-temp",
     "date": "2025-03-28T08:45:58Z"
-  },
-  {
-    "name": "Brandawg93/PeaNUT",
-    "version": "v5.14.1",
-    "date": "2025-09-05T00:43:16Z"
   },
   {
     "name": "jeedom/core",
@@ -80,11 +130,6 @@
     "date": "2025-09-04T21:30:14Z"
   },
   {
-    "name": "rcourtman/Pulse",
-    "version": "v4.13.0",
-    "date": "2025-09-03T13:48:17Z"
-  },
-  {
     "name": "TandoorRecipes/recipes",
     "version": "2.1.0",
     "date": "2025-09-04T20:24:47Z"
@@ -93,11 +138,6 @@
     "name": "mongodb/mongo",
     "version": "r7.0.24",
     "date": "2025-09-04T19:50:49Z"
-  },
-  {
-    "name": "immich-app/immich",
-    "version": "v1.141.0",
-    "date": "2025-09-04T19:42:02Z"
   },
   {
     "name": "Cleanuparr/Cleanuparr",
@@ -200,11 +240,6 @@
     "date": "2025-09-03T20:17:18Z"
   },
   {
-    "name": "homarr-labs/homarr",
-    "version": "v1.35.1",
-    "date": "2025-09-03T18:53:36Z"
-  },
-  {
     "name": "Graylog2/graylog2-server",
     "version": "6.1.15",
     "date": "2025-09-03T14:51:37Z"
@@ -255,11 +290,6 @@
     "date": "2025-09-03T08:46:02Z"
   },
   {
-    "name": "booklore-app/booklore",
-    "version": "v1.1.2",
-    "date": "2025-09-03T03:18:53Z"
-  },
-  {
     "name": "crafty-controller/crafty-4",
     "version": "v4.5.3",
     "date": "2025-09-02T23:52:26Z"
@@ -288,11 +318,6 @@
     "name": "apache/tomcat",
     "version": "10.1.45",
     "date": "2025-09-02T12:46:34Z"
-  },
-  {
-    "name": "fuma-nama/fumadocs",
-    "version": "fumadocs-ui@15.7.8",
-    "date": "2025-09-02T11:29:00Z"
   },
   {
     "name": "Dolibarr/dolibarr",
@@ -385,11 +410,6 @@
     "date": "2025-09-01T07:35:48Z"
   },
   {
-    "name": "moghtech/komodo",
-    "version": "v1.19.2",
-    "date": "2025-09-01T02:33:52Z"
-  },
-  {
     "name": "YunoHost/yunohost",
     "version": "debian/12.1.17.1",
     "date": "2025-08-31T21:38:21Z"
@@ -428,11 +448,6 @@
     "name": "bunkerity/bunkerweb",
     "version": "v1.6.4",
     "date": "2025-08-18T20:22:07Z"
-  },
-  {
-    "name": "henrygd/beszel",
-    "version": "v0.12.6",
-    "date": "2025-08-29T21:40:09Z"
   },
   {
     "name": "msgbyte/tianji",
@@ -518,11 +533,6 @@
     "name": "ipfs/kubo",
     "version": "v0.37.0",
     "date": "2025-08-27T20:03:52Z"
-  },
-  {
-    "name": "gtsteffaniak/filebrowser",
-    "version": "v0.8.3-beta",
-    "date": "2025-08-27T18:18:48Z"
   },
   {
     "name": "zwave-js/zwave-js-ui",
@@ -700,11 +710,6 @@
     "date": "2025-08-19T21:24:45Z"
   },
   {
-    "name": "cross-seed/cross-seed",
-    "version": "v6.13.2",
-    "date": "2025-08-19T18:18:40Z"
-  },
-  {
     "name": "karlomikus/bar-assistant",
     "version": "v5.8.0",
     "date": "2025-08-19T16:46:00Z"
@@ -808,11 +813,6 @@
     "name": "ioBroker/ioBroker",
     "version": "1012-08-09",
     "date": "2025-08-10T13:50:58Z"
-  },
-  {
-    "name": "diced/zipline",
-    "version": "v4.2.3",
-    "date": "2025-08-10T05:53:43Z"
   },
   {
     "name": "kimai/kimai",
