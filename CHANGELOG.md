@@ -21,6 +21,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - use debian source for direct installation of MQTT [@EtlamGit](https://github.com/EtlamGit) ([#7423](https://github.com/community-scripts/ProxmoxVE/pull/7423))
 
+  - #### ✨ New Features
+
+    - feat: added mobile ui subscription nag removal [@ivan-penchev](https://github.com/ivan-penchev) ([#7164](https://github.com/community-scripts/ProxmoxVE/pull/7164))
+
 ### 🌐 Website
 
   - #### 📝 Script Information
