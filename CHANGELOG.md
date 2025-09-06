@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-09-06
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Paperless-NGX: Remove default credentials from json [@tremor021](https://github.com/tremor021) ([#7403](https://github.com/community-scripts/ProxmoxVE/pull/7403))
+
 ## 2025-09-05
 
 ### 🚀 Updated Scripts
