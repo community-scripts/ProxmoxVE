@@ -1,8 +1,28 @@
 [
   {
+    "name": "rcourtman/Pulse",
+    "version": "v4.14.0",
+    "date": "2025-09-05T18:28:28Z"
+  },
+  {
+    "name": "bunkerity/bunkerweb",
+    "version": "v1.6.4",
+    "date": "2025-08-18T20:22:07Z"
+  },
+  {
+    "name": "autobrr/autobrr",
+    "version": "v1.66.0",
+    "date": "2025-09-06T15:07:16Z"
+  },
+  {
+    "name": "cross-seed/cross-seed",
+    "version": "v6.13.2",
+    "date": "2025-08-19T18:18:40Z"
+  },
+  {
     "name": "semaphoreui/semaphore",
-    "version": "v2.16.28",
-    "date": "2025-09-06T11:17:27Z"
+    "version": "v2.16.29",
+    "date": "2025-09-06T12:11:01Z"
   },
   {
     "name": "fuma-nama/fumadocs",
@@ -85,11 +105,6 @@
     "date": "2025-09-05T18:43:28Z"
   },
   {
-    "name": "rcourtman/Pulse",
-    "version": "v4.14.0",
-    "date": "2025-09-05T18:28:28Z"
-  },
-  {
     "name": "henrygd/beszel",
     "version": "v0.12.7",
     "date": "2025-09-05T18:11:36Z"
@@ -108,11 +123,6 @@
     "name": "wizarrrr/wizarr",
     "version": "2025.9.0",
     "date": "2025-09-05T14:21:34Z"
-  },
-  {
-    "name": "cross-seed/cross-seed",
-    "version": "v6.13.2",
-    "date": "2025-08-19T18:18:40Z"
   },
   {
     "name": "chrisvel/tududi",
@@ -186,8 +196,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v4.4.0",
-    "date": "2025-09-02T19:26:18Z"
+    "version": "nightly",
+    "date": "2025-09-04T18:29:10Z"
   },
   {
     "name": "AdguardTeam/AdGuardHome",
@@ -453,11 +463,6 @@
     "name": "jhuckaby/Cronicle",
     "version": "v0.9.91",
     "date": "2025-08-30T21:49:57Z"
-  },
-  {
-    "name": "bunkerity/bunkerweb",
-    "version": "v1.6.4",
-    "date": "2025-08-18T20:22:07Z"
   },
   {
     "name": "msgbyte/tianji",
@@ -848,11 +853,6 @@
     "name": "TryGhost/Ghost-CLI",
     "version": "v1.28.3",
     "date": "2025-08-06T12:32:02Z"
-  },
-  {
-    "name": "autobrr/autobrr",
-    "version": "v1.65.0",
-    "date": "2025-08-05T21:12:35Z"
   },
   {
     "name": "WordPress/WordPress",
