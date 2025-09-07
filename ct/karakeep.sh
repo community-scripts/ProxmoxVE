@@ -53,6 +53,11 @@ function update_script() {
       systemctl daemon-reload
     fi
 
+    if grep -q '^ExecStart=/usr/bin/node\s\+dist/index\.mjs$' /etc/systemd/system/karakeep-workers.service; then
+      sed -i -E 's#^(ExecStart=/usr/bin/node\s+dist/)index\.mjs$#\1index.js#' /etc/systemd/system/karakeep-workers.service
+      systemctl daemon-reload
+    fi
+
     fetch_and_deploy_gh_release "karakeep" "karakeep-app/karakeep"
     if command -v corepack >/dev/null; then
       $STD corepack disable
