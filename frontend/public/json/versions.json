@@ -1,5 +1,55 @@
 [
   {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.3.2",
+    "date": "2025-08-19T04:08:36Z"
+  },
+  {
+    "name": "semaphoreui/semaphore",
+    "version": "v2.17.0-beta1",
+    "date": "2025-09-07T08:56:50Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2438",
+    "date": "2025-09-07T06:00:21Z"
+  },
+  {
+    "name": "Radarr/Radarr",
+    "version": "v5.27.5.10198",
+    "date": "2025-09-03T12:08:43Z"
+  },
+  {
+    "name": "Prowlarr/Prowlarr",
+    "version": "v2.0.5.5160",
+    "date": "2025-08-23T21:23:11Z"
+  },
+  {
+    "name": "pocketbase/pocketbase",
+    "version": "v0.30.0",
+    "date": "2025-09-07T05:25:44Z"
+  },
+  {
+    "name": "minio/minio",
+    "version": "RELEASE.2025-09-06T17-38-46Z",
+    "date": "2025-09-07T05:14:04Z"
+  },
+  {
+    "name": "Lidarr/Lidarr",
+    "version": "v2.13.3.4711",
+    "date": "2025-08-28T20:06:24Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.19",
+    "date": "2025-09-07T00:27:07Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
     "name": "rcourtman/Pulse",
     "version": "v4.14.0",
     "date": "2025-09-05T18:28:28Z"
@@ -18,11 +68,6 @@
     "name": "cross-seed/cross-seed",
     "version": "v6.13.2",
     "date": "2025-08-19T18:18:40Z"
-  },
-  {
-    "name": "semaphoreui/semaphore",
-    "version": "v2.16.29",
-    "date": "2025-09-06T12:11:01Z"
   },
   {
     "name": "fuma-nama/fumadocs",
@@ -45,11 +90,6 @@
     "date": "2025-09-06T07:01:44Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2431",
-    "date": "2025-09-06T05:58:01Z"
-  },
-  {
     "name": "MediaBrowser/Emby.Releases",
     "version": "4.9.1.2",
     "date": "2025-06-26T22:08:00Z"
@@ -58,16 +98,6 @@
     "name": "theonedev/onedev",
     "version": "v12.0.9",
     "date": "2025-09-06T00:39:00Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.4.19",
-    "date": "2025-09-06T00:27:09Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
   },
   {
     "name": "moghtech/komodo",
@@ -196,8 +226,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-09-04T18:29:10Z"
+    "version": "v4.4.0",
+    "date": "2025-09-02T19:26:18Z"
   },
   {
     "name": "AdguardTeam/AdGuardHome",
@@ -280,11 +310,6 @@
     "date": "2025-07-16T09:45:14Z"
   },
   {
-    "name": "Radarr/Radarr",
-    "version": "v5.27.5.10198",
-    "date": "2025-09-03T12:08:43Z"
-  },
-  {
     "name": "neo4j/neo4j",
     "version": "5.26.12",
     "date": "2025-09-03T12:03:22Z"
@@ -353,11 +378,6 @@
     "name": "cloudreve/cloudreve",
     "version": "4.7.0",
     "date": "2025-09-02T06:02:43Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.3.2",
-    "date": "2025-08-19T04:08:36Z"
   },
   {
     "name": "paperless-ngx/paperless-ngx",
@@ -453,11 +473,6 @@
     "name": "Part-DB/Part-DB-server",
     "version": "v2.0.2",
     "date": "2025-08-31T13:52:49Z"
-  },
-  {
-    "name": "Lidarr/Lidarr",
-    "version": "v2.13.3.4711",
-    "date": "2025-08-28T20:06:24Z"
   },
   {
     "name": "jhuckaby/Cronicle",
@@ -620,11 +635,6 @@
     "date": "2025-08-24T15:42:19Z"
   },
   {
-    "name": "Prowlarr/Prowlarr",
-    "version": "v2.0.5.5160",
-    "date": "2025-08-23T21:23:11Z"
-  },
-  {
     "name": "janeczku/calibre-web",
     "version": "0.6.25",
     "date": "2025-08-24T08:51:55Z"
@@ -638,11 +648,6 @@
     "name": "prometheus/prometheus",
     "version": "v0.306.0-rc.0",
     "date": "2025-08-21T13:31:03Z"
-  },
-  {
-    "name": "pocketbase/pocketbase",
-    "version": "v0.29.3",
-    "date": "2025-08-23T06:37:44Z"
   },
   {
     "name": "caddyserver/caddy",
@@ -953,11 +958,6 @@
     "name": "heiher/hev-socks5-server",
     "version": "2.9.0",
     "date": "2025-07-25T14:20:25Z"
-  },
-  {
-    "name": "minio/minio",
-    "version": "RELEASE.2025-07-23T15-54-02Z",
-    "date": "2025-07-23T20:35:39Z"
   },
   {
     "name": "TasmoAdmin/TasmoAdmin",
