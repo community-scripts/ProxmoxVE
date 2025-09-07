@@ -7,7 +7,7 @@ import { navbarLinks } from "@/config/site-config";
 import { Button } from "@/components/ui/button";
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
-import StarOnGithubButton from "./ui/star-on-github-button";
+import { GitHubStarsButton } from "./animate-ui/components/buttons/github-stars";
 import { ThemeToggle } from "./ui/theme-toggle";
 import CommandMenu from "./command-menu";
 
@@ -39,31 +39,18 @@ function Navbar() {
             href="/"
             className="flex cursor-pointer w-full justify-center sm:justify-start flex-row-reverse items-center gap-2 font-semibold sm:flex-row"
           >
-            <Image
-              height={18}
-              unoptimized
-              width={18}
-              alt="logo"
-              src="/ProxmoxVE/logo.png"
-              className=""
-            />
+            <Image height={18} unoptimized width={18} alt="logo" src="/ProxmoxVE/logo.png" className="" />
             <span className="hidden md:block">Proxmox VE Helper-Scripts</span>
           </Link>
           <div className="flex gap-2">
             <CommandMenu />
-            <StarOnGithubButton />
+            <GitHubStarsButton username="community-scripts" repo="ProxmoxVE" />
             {navbarLinks.map(({ href, event, icon, text, mobileHidden }) => (
               <TooltipProvider key={event}>
                 <Tooltip delayDuration={100}>
-                  <TooltipTrigger
-                    className={mobileHidden ? "hidden lg:block" : ""}
-                  >
+                  <TooltipTrigger className={mobileHidden ? "hidden lg:block" : ""}>
                     <Button variant="ghost" size="icon" asChild>
-                      <Link
-                        target="_blank"
-                        href={href}
-                        data-umami-event={event}
-                      >
+                      <Link target="_blank" href={href} data-umami-event={event}>
                         {icon}
                         <span className="sr-only">{text}</span>
                       </Link>
