@@ -4,10 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { navbarLinks } from "@/config/site-config";
-import { Button } from "@/components/ui/button";
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
 import { GitHubStarsButton } from "./animate-ui/components/buttons/github-stars";
+import { Button } from "./animate-ui/components/buttons/button";
 import { ThemeToggle } from "./ui/theme-toggle";
 import CommandMenu from "./command-menu";
 
