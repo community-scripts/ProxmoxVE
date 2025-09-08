@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/debian_13/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: tremor021
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -61,8 +61,8 @@ function update_script() {
       $STD yarn global add serve
       $STD yarn install --ignore-engines
       $STD yarn build
-      mv ./dist ../ && \
-        rm -rf * && \
+      mv ./dist ../ &&
+        rm -rf * &&
         mv ../dist ./
       if [[ -z $(grep "ExecStart=/usr/local/bin/serve" /etc/systemd/system/synapse-admin.service) ]]; then
         sed -i 's|^ExecStart=.*|ExecStart=/usr/local/bin/serve -s dist -l 5173|' /etc/systemd/system/synapse-admin.service

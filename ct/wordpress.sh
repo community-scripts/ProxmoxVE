@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/debian_13/misc/build.func)
 # Copyright (c) 2021-2025 communtiy-scripts ORG
 # Author: MickLesk (Canbiz)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -12,7 +12,7 @@ var_disk="${var_disk:-5}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 
 header_info "$APP"
 variables

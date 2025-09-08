@@ -23,7 +23,7 @@
         "ram": 512,
         "hdd": 3,
         "os": "Debian",
-        "version": "12"
+        "version": "13"
       }
     }
   ],
