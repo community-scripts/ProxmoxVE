@@ -48,7 +48,11 @@
       "type": "info"
     },
     {
-      "text": "Login credentials: `cat ~/rustdesk.creds`",
+      "text": "To set admin password on Debian, type `cd /var/lib/rustdesk-api && rustdesk-api reset-admin-pwd <yournewpasswordhere>` inside LXC.",
+      "type": "info"
+    },
+    {
+      "text": "To see admin password on Alpine, type `cat ~/rustdesk.creds` inside LXC.",
       "type": "info"
     }
   ]
