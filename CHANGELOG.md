@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-09-08
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Update searxng-install.sh [@sebguy](https://github.com/sebguy) ([#7469](https://github.com/community-scripts/ProxmoxVE/pull/7469))
+
 ## 2025-09-07
 
 ### 🚀 Updated Scripts
