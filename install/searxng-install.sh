@@ -36,7 +36,7 @@ msg_info "Creating Python virtual environment"
 sudo -H -u searxng bash -c '
   python3 -m venv /usr/local/searxng/searx-pyenv &&
   . /usr/local/searxng/searx-pyenv/bin/activate &&
-  pip install -U pip setuptools wheel pyyaml &&
+  pip install -U pip setuptools wheel pyyaml lxml &&
   pip install --use-pep517 --no-build-isolation -e /usr/local/searxng/searxng-src
 '
 msg_ok "Python environment ready"
