@@ -1,8 +1,53 @@
 [
   {
+    "name": "9001/copyparty",
+    "version": "v1.19.8",
+    "date": "2025-09-07T23:36:42Z"
+  },
+  {
+    "name": "paperless-ngx/paperless-ngx",
+    "version": "v2.18.4",
+    "date": "2025-09-07T23:57:32Z"
+  },
+  {
+    "name": "Part-DB/Part-DB-server",
+    "version": "v2.1.1",
+    "date": "2025-09-07T21:59:53Z"
+  },
+  {
+    "name": "minio/minio",
+    "version": "RELEASE.2025-09-07T16-13-09Z",
+    "date": "2025-09-07T18:53:04Z"
+  },
+  {
+    "name": "MediaBrowser/Emby.Releases",
+    "version": "4.9.1.2",
+    "date": "2025-06-26T22:08:00Z"
+  },
+  {
+    "name": "karakeep-app/karakeep",
+    "version": "sdk/v0.27.0",
+    "date": "2025-09-07T17:49:04Z"
+  },
+  {
+    "name": "dgtlmoon/changedetection.io",
+    "version": "0.50.12",
+    "date": "2025-09-07T14:16:07Z"
+  },
+  {
+    "name": "cross-seed/cross-seed",
+    "version": "v6.13.2",
+    "date": "2025-08-19T18:18:40Z"
+  },
+  {
     "name": "firefly-iii/firefly-iii",
     "version": "v6.3.2",
     "date": "2025-08-19T04:08:36Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "nightly",
+    "date": "2025-09-07T12:16:33Z"
   },
   {
     "name": "semaphoreui/semaphore",
@@ -28,11 +73,6 @@
     "name": "pocketbase/pocketbase",
     "version": "v0.30.0",
     "date": "2025-09-07T05:25:44Z"
-  },
-  {
-    "name": "minio/minio",
-    "version": "RELEASE.2025-09-06T17-38-46Z",
-    "date": "2025-09-07T05:14:04Z"
   },
   {
     "name": "Lidarr/Lidarr",
@@ -65,11 +105,6 @@
     "date": "2025-09-06T15:07:16Z"
   },
   {
-    "name": "cross-seed/cross-seed",
-    "version": "v6.13.2",
-    "date": "2025-08-19T18:18:40Z"
-  },
-  {
     "name": "fuma-nama/fumadocs",
     "version": "create-fumadocs-app@15.7.10",
     "date": "2025-09-06T10:13:43Z"
@@ -88,11 +123,6 @@
     "name": "forgejo/forgejo",
     "version": "v12.0.3",
     "date": "2025-09-06T07:01:44Z"
-  },
-  {
-    "name": "MediaBrowser/Emby.Releases",
-    "version": "4.9.1.2",
-    "date": "2025-06-26T22:08:00Z"
   },
   {
     "name": "theonedev/onedev",
@@ -223,11 +253,6 @@
     "name": "HabitRPG/habitica",
     "version": "v5.40.1",
     "date": "2025-09-04T19:10:45Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "v4.4.0",
-    "date": "2025-09-02T19:26:18Z"
   },
   {
     "name": "AdguardTeam/AdGuardHome",
@@ -380,11 +405,6 @@
     "date": "2025-09-02T06:02:43Z"
   },
   {
-    "name": "paperless-ngx/paperless-ngx",
-    "version": "v2.18.3",
-    "date": "2025-09-02T01:16:49Z"
-  },
-  {
     "name": "ErsatzTV/ErsatzTV",
     "version": "v25.5.0",
     "date": "2025-09-02T01:00:11Z"
@@ -460,19 +480,9 @@
     "date": "2025-08-31T21:38:21Z"
   },
   {
-    "name": "karakeep-app/karakeep",
-    "version": "ios/v1.8.0-1",
-    "date": "2025-08-31T16:06:00Z"
-  },
-  {
     "name": "LibreTranslate/LibreTranslate",
     "version": "v1.7.3",
     "date": "2025-08-31T15:59:43Z"
-  },
-  {
-    "name": "Part-DB/Part-DB-server",
-    "version": "v2.0.2",
-    "date": "2025-08-31T13:52:49Z"
   },
   {
     "name": "jhuckaby/Cronicle",
@@ -500,19 +510,9 @@
     "date": "2025-08-29T01:19:08Z"
   },
   {
-    "name": "9001/copyparty",
-    "version": "v1.19.7",
-    "date": "2025-08-28T20:42:58Z"
-  },
-  {
     "name": "linkwarden/linkwarden",
     "version": "v2.12.2",
     "date": "2025-08-28T20:34:30Z"
-  },
-  {
-    "name": "dgtlmoon/changedetection.io",
-    "version": "0.50.11",
-    "date": "2025-08-28T20:12:30Z"
   },
   {
     "name": "benjaminjonard/koillection",
