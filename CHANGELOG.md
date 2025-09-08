@@ -18,6 +18,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Update searxng-install.sh [@sebguy](https://github.com/sebguy) ([#7469](https://github.com/community-scripts/ProxmoxVE/pull/7469))
 
+  - #### ✨ New Features
+
+    - [core]: switch all base_settings to variables [@MickLesk](https://github.com/MickLesk) ([#7479](https://github.com/community-scripts/ProxmoxVE/pull/7479))
+
   - #### 💥 Breaking Changes
 
     - RustDesk Server: Update the credentials info [@tremor021](https://github.com/tremor021) ([#7473](https://github.com/community-scripts/ProxmoxVE/pull/7473))
