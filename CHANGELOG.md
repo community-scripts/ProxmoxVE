@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - karakeep: fix service file [@CrazyWolf13](https://github.com/CrazyWolf13) ([#7482](https://github.com/community-scripts/ProxmoxVE/pull/7482))
     - Update searxng-install.sh [@sebguy](https://github.com/sebguy) ([#7469](https://github.com/community-scripts/ProxmoxVE/pull/7469))
 
   - #### ✨ New Features
