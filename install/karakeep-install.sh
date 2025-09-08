@@ -158,7 +158,7 @@ Wants=network.target karakeep-browser.service meilisearch.service
 After=network.target karakeep-browser.service meilisearch.service
 
 [Service]
-ExecStart=/usr/bin/node dist/index.mjs
+ExecStart=/usr/bin/node dist/index.js
 WorkingDirectory=/opt/karakeep/apps/workers
 EnvironmentFile=/etc/karakeep/karakeep.env
 Restart=always
