@@ -2,6 +2,7 @@ import type { VariantProps } from "class-variance-authority";
 
 import { cva } from "class-variance-authority";
 import { StarIcon } from "lucide-react";
+import Link from "next/link";
 
 import type { ButtonProps as ButtonPrimitiveProps } from "@/components/animate-ui/primitives/buttons/button";
 import type { GithubStarsProps } from "@/components/animate-ui/primitives/animate/github-stars";
@@ -71,30 +72,37 @@ function GitHubStarsButton({
   ...props
 }: GitHubStarsButtonProps) {
   return (
-    <GithubStars
-      asChild
-      username={username}
-      repo={repo}
-      value={value}
-      delay={delay}
-      inView={inView}
-      inViewMargin={inViewMargin}
-      inViewOnce={inViewOnce}
+    <Link
+      target="_blank"
+      rel="noopener noreferrer"
+      data-umami-event="github-stars"
+      href={`https://github.com/${username}/${repo}`}
     >
-      <ButtonPrimitive className={cn(buttonVariants({ variant, size, className }))} {...props}>
-        <GithubStarsLogo />
-        <GithubStarsNumber />
-        <GithubStarsParticles className="text-yellow-500">
-          <GithubStarsIcon
-            icon={StarIcon}
-            data-variant={variant}
-            className={cn(buttonStarVariants({ variant }))}
-            activeClassName="text-yellow-500"
-            size={18}
-          />
-        </GithubStarsParticles>
-      </ButtonPrimitive>
-    </GithubStars>
+      <GithubStars
+        asChild
+        username={username}
+        repo={repo}
+        value={value}
+        delay={delay}
+        inView={inView}
+        inViewMargin={inViewMargin}
+        inViewOnce={inViewOnce}
+      >
+        <ButtonPrimitive className={cn(buttonVariants({ variant, size, className }))} {...props}>
+          <GithubStarsLogo />
+          <GithubStarsNumber />
+          <GithubStarsParticles className="text-yellow-500">
+            <GithubStarsIcon
+              icon={StarIcon}
+              data-variant={variant}
+              className={cn(buttonStarVariants({ variant }))}
+              activeClassName="text-yellow-500"
+              size={18}
+            />
+          </GithubStarsParticles>
+        </ButtonPrimitive>
+      </GithubStars>
+    </Link>
   );
 }
 
