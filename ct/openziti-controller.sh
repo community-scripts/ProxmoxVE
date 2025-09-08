@@ -6,13 +6,13 @@ source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/m
 # Source: https://github.com/openziti/ziti
 
 APP="openziti-controller"
-var_tags="network;openziti-controller"
-var_cpu="2"
-var_ram="1024"
-var_disk="8"
-var_os="debian"
-var_version="12"
-var_unprivileged="1"
+var_tags="${var_tags:-network;openziti-controller}"
+var_cpu="${var_cpu:-2}"
+var_ram="${var_ram:-1024}"
+var_disk="${var_disk:-8}"
+var_os="${var_os:-debian}"
+var_version="${var_version:-12}"
+var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
 variables
@@ -20,18 +20,18 @@ color
 catch_errors
 
 function update_script() {
-   header_info
-   check_container_storage
-   check_container_resources
-   if [[ ! -d /opt/openziti ]]; then
-      msg_error "No ${APP} Installation Found!"
-      exit
-   fi
-   msg_info "Updating $APP LXC"
-   $STD apt-get update
-   $STD apt-get -y upgrade
-   msg_ok "Updated $APP LXC"
-   exit
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /opt/openziti ]]; then
+    msg_error "No ${APP} Installation Found!"
+    exit
+  fi
+  msg_info "Updating $APP LXC"
+  $STD apt-get update
+  $STD apt-get -y upgrade
+  msg_ok "Updated $APP LXC"
+  exit
 }
 
 start
