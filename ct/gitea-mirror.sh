@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-6}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -47,10 +47,10 @@ function update_script() {
   fi
 
   if [[ ! -f /opt/gitea-mirror.env ]]; then
-      msg_info "Detected old Enviroment, updating files"
-      APP_SECRET=$(openssl rand -base64 32)
-      HOST_IP=$(hostname -I | awk '{print $1}')
-      cat <<EOF >/opt/gitea-mirror.env
+    msg_info "Detected old Enviroment, updating files"
+    APP_SECRET=$(openssl rand -base64 32)
+    HOST_IP=$(hostname -I | awk '{print $1}')
+    cat <<EOF >/opt/gitea-mirror.env
 # See here for config options: https://github.com/RayLabsHQ/gitea-mirror/blob/main/docs/ENVIRONMENT_VARIABLES.md
 NODE_ENV=production
 HOST=0.0.0.0
@@ -77,7 +77,7 @@ WantedBy=multi-user.target
 EOF
     systemctl daemon-reload
     msg_ok "Old Enviroment fixed"
-fi
+  fi
 
   if check_for_gh_release "gitea-mirror" "RayLabsHQ/gitea-mirror"; then
     msg_info "Stopping Services"

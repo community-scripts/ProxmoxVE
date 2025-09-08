@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-512}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -29,7 +29,7 @@ function update_script() {
   if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
     msg_info "Updating ${APP} to ${RELEASE}"
     rm -rf /opt/mylar3/* /opt/mylar3/.*
-curl -fsSL "https://github.com/mylar3/mylar3/archive/refs/tags/${RELEASE}.tar.gz" | tar -xz --strip-components=1 -C /opt/mylar3
+    curl -fsSL "https://github.com/mylar3/mylar3/archive/refs/tags/${RELEASE}.tar.gz" | tar -xz --strip-components=1 -C /opt/mylar3
     systemctl restart mylar3
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP} to ${RELEASE}"

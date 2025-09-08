@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-3}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-7}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -35,7 +35,7 @@ function update_script() {
 
         msg_info "Updating Paperless-GPT to ${RELEASE}"
         temp_file=$(mktemp)
-curl -fsSL "https://github.com/icereed/paperless-gpt/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
+        curl -fsSL "https://github.com/icereed/paperless-gpt/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
         tar zxf $temp_file
         rm -rf /opt/paperless-gpt
         mv paperless-gpt-${RELEASE} /opt/paperless-gpt

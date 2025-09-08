@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -30,8 +30,8 @@ function update_script() {
   fi
 
   if check_for_gh_release "pocket-id" "pocket-id/pocket-id"; then
-    if [ "$(printf '%s\n%s' "$(cat ~/.pocket-id 2>/dev/null || echo 0.0.0)" "1.0.0" | sort -V | head -n1)" = "$(cat ~/.pocket-id 2>/dev/null || echo 0.0.0)" ] \
-      && [ "$(cat ~/.pocket-id 2>/dev/null || echo 0.0.0)" != "1.0.0" ]; then      
+    if [ "$(printf '%s\n%s' "$(cat ~/.pocket-id 2>/dev/null || echo 0.0.0)" "1.0.0" | sort -V | head -n1)" = "$(cat ~/.pocket-id 2>/dev/null || echo 0.0.0)" ] &&
+      [ "$(cat ~/.pocket-id 2>/dev/null || echo 0.0.0)" != "1.0.0" ]; then
       msg_info "Migrating ${APP}"
       systemctl -q disable --now pocketid-backend pocketid-frontend caddy
       mv /etc/caddy/Caddyfile ~/Caddyfile.bak

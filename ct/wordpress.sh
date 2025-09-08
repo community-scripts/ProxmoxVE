@@ -12,7 +12,7 @@ var_disk="${var_disk:-5}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 
 header_info "$APP"
 variables
