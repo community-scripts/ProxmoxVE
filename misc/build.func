@@ -200,41 +200,32 @@ ssh_check() {
 
 base_settings() {
   # Default Settings
-  CT_TYPE="1"
-  DISK_SIZE="4"
-  CORE_COUNT="1"
-  RAM_SIZE="1024"
-  VERBOSE="${1:-no}"
-  PW=""
-  CT_ID=$NEXTID
-  HN=$NSAPP
-  BRG="vmbr0"
-  NET="dhcp"
-  IPV6_METHOD="none"
-  IPV6_STATIC=""
-  GATE=""
-  APT_CACHER=""
-  APT_CACHER_IP=""
-  MTU=""
-  SD=""
-  NS=""
-  MAC=""
-  VLAN=""
-  SSH="no"
-  SSH_AUTHORIZED_KEY=""
-  TAGS="community-script;"
-  ENABLE_FUSE="${1:-no}"
-  ENABLE_TUN="${1:-no}"
-
-  # Override default settings with variables from ct script
-  CT_TYPE=${var_unprivileged:-$CT_TYPE}
-  DISK_SIZE=${var_disk:-$DISK_SIZE}
-  CORE_COUNT=${var_cpu:-$CORE_COUNT}
-  RAM_SIZE=${var_ram:-$RAM_SIZE}
-  VERB=${var_verbose:-$VERBOSE}
-  TAGS="${TAGS}${var_tags:-}"
-  ENABLE_FUSE="${var_fuse:-$ENABLE_FUSE}"
-  ENABLE_TUN="${var_tun:-$ENABLE_TUN}"
+  CT_TYPE=${var_unprivileged:-"1"}
+  DISK_SIZE=${var_disk:-"4"}
+  CORE_COUNT=${var_cpu:-"1"}
+  RAM_SIZE=${var_ram:-"1024"}
+  VERBOSE=${var_verbose:-"${1:-no}"}
+  PW=${var_pw:-""}
+  CT_ID=${var_ctid:-$NEXTID}
+  HN=${var_hostname:-$NSAPP}
+  BRG=${var_brg:-"vmbr0"}
+  NET=${var_net:-"dhcp"}
+  IPV6_METHOD=${var_ipv6_method:-"none"}
+  IPV6_STATIC=${var_ipv6_static:-""}
+  GATE=${var_gateway:-""}
+  APT_CACHER=${var_apt_cacher:-""}
+  APT_CACHER_IP=${var_apt_cacher_ip:-""}
+  MTU=${var_mtu:-""}
+  SD=${var_storage:-""}
+  NS=${var_ns:-""}
+  MAC=${var_mac:-""}
+  VLAN=${var_vlan:-""}
+  SSH=${var_ssh:-"no"}
+  SSH_AUTHORIZED_KEY=${var_ssh_authorized_key:-""}
+  UDHCPC_FIX=${var_udhcpc_fix:-""}
+  TAGS="community-script;${var_tags:-}"
+  ENABLE_FUSE=${var_fuse:-"${1:-no}"}
+  ENABLE_TUN=${var_tun:-"${1:-no}"}
 
   # Since these 2 are only defined outside of default_settings function, we add a temporary fallback. TODO: To align everything, we should add these as constant variables (e.g. OSTYPE and OSVERSION), but that would currently require updating the default_settings function for all existing scripts
   if [ -z "$var_os" ]; then
@@ -244,6 +235,7 @@ base_settings() {
     var_version="12"
   fi
 }
+
 write_config() {
   mkdir -p /opt/community-scripts
   # This function writes the configuration to a file.
