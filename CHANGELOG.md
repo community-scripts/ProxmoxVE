@@ -24,6 +24,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🌐 Website
 
+  - #### 🐞 Bug Fixes
+
+    - Format numerical values in DataFetcher component for better readability [@BramSuurdje](https://github.com/BramSuurdje) ([#7477](https://github.com/community-scripts/ProxmoxVE/pull/7477))
+
   - #### ✨ New Features
 
     - feat: enhance github stars button to be better looking and more compact [@BramSuurdje](https://github.com/BramSuurdje) ([#7464](https://github.com/community-scripts/ProxmoxVE/pull/7464))
