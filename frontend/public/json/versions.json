@@ -1,13 +1,63 @@
 [
   {
-    "name": "9001/copyparty",
-    "version": "v1.19.8",
-    "date": "2025-09-07T23:36:42Z"
+    "name": "autobrr/autobrr",
+    "version": "v1.66.1",
+    "date": "2025-09-08T10:49:03Z"
+  },
+  {
+    "name": "meilisearch/meilisearch",
+    "version": "latest",
+    "date": "2025-09-08T10:03:11Z"
+  },
+  {
+    "name": "syncthing/syncthing",
+    "version": "v2.0.8",
+    "date": "2025-09-08T08:07:18Z"
+  },
+  {
+    "name": "nzbgetcom/nzbget",
+    "version": "v25.3",
+    "date": "2025-09-01T09:47:06Z"
+  },
+  {
+    "name": "TandoorRecipes/recipes",
+    "version": "2.1.1",
+    "date": "2025-09-08T06:39:30Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.3.2",
+    "date": "2025-08-19T04:08:36Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.22.2441",
+    "date": "2025-09-08T06:01:57Z"
+  },
+  {
+    "name": "webmin/webmin",
+    "version": "2.501",
+    "date": "2025-09-08T04:50:25Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.19",
+    "date": "2025-09-08T00:27:05Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
   },
   {
     "name": "paperless-ngx/paperless-ngx",
     "version": "v2.18.4",
     "date": "2025-09-07T23:57:32Z"
+  },
+  {
+    "name": "9001/copyparty",
+    "version": "v1.19.8",
+    "date": "2025-09-07T23:36:42Z"
   },
   {
     "name": "Part-DB/Part-DB-server",
@@ -40,24 +90,14 @@
     "date": "2025-08-19T18:18:40Z"
   },
   {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.3.2",
-    "date": "2025-08-19T04:08:36Z"
-  },
-  {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-09-07T12:16:33Z"
+    "version": "v4.4.0",
+    "date": "2025-09-02T19:26:18Z"
   },
   {
     "name": "semaphoreui/semaphore",
     "version": "v2.17.0-beta1",
     "date": "2025-09-07T08:56:50Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.22.2438",
-    "date": "2025-09-07T06:00:21Z"
   },
   {
     "name": "Radarr/Radarr",
@@ -80,16 +120,6 @@
     "date": "2025-08-28T20:06:24Z"
   },
   {
-    "name": "jeedom/core",
-    "version": "4.4.19",
-    "date": "2025-09-07T00:27:07Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
-  },
-  {
     "name": "rcourtman/Pulse",
     "version": "v4.14.0",
     "date": "2025-09-05T18:28:28Z"
@@ -98,11 +128,6 @@
     "name": "bunkerity/bunkerweb",
     "version": "v1.6.4",
     "date": "2025-08-18T20:22:07Z"
-  },
-  {
-    "name": "autobrr/autobrr",
-    "version": "v1.66.0",
-    "date": "2025-09-06T15:07:16Z"
   },
   {
     "name": "fuma-nama/fumadocs",
@@ -195,11 +220,6 @@
     "date": "2025-09-05T11:15:21Z"
   },
   {
-    "name": "syncthing/syncthing",
-    "version": "v2.0.7",
-    "date": "2025-09-05T10:18:24Z"
-  },
-  {
     "name": "zitadel/zitadel",
     "version": "v4.1.2",
     "date": "2025-09-05T08:23:30Z"
@@ -235,11 +255,6 @@
     "date": "2025-09-04T21:30:14Z"
   },
   {
-    "name": "TandoorRecipes/recipes",
-    "version": "2.1.0",
-    "date": "2025-09-04T20:24:47Z"
-  },
-  {
     "name": "mongodb/mongo",
     "version": "r7.0.24",
     "date": "2025-09-04T19:50:49Z"
@@ -258,11 +273,6 @@
     "name": "AdguardTeam/AdGuardHome",
     "version": "v0.107.65",
     "date": "2025-08-20T14:02:28Z"
-  },
-  {
-    "name": "webmin/webmin",
-    "version": "2.500",
-    "date": "2025-09-04T17:44:27Z"
   },
   {
     "name": "ollama/ollama",
@@ -455,11 +465,6 @@
     "date": "2025-09-01T12:21:58Z"
   },
   {
-    "name": "nzbgetcom/nzbget",
-    "version": "v25.3",
-    "date": "2025-09-01T09:47:06Z"
-  },
-  {
     "name": "grokability/snipe-it",
     "version": "v8.3.1",
     "date": "2025-09-01T11:00:07Z"
@@ -573,11 +578,6 @@
     "name": "traefik/traefik",
     "version": "v3.5.1",
     "date": "2025-08-27T09:21:19Z"
-  },
-  {
-    "name": "meilisearch/meilisearch",
-    "version": "latest",
-    "date": "2025-08-26T14:14:42Z"
   },
   {
     "name": "evcc-io/evcc",
