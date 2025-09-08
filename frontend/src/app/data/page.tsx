@@ -38,6 +38,7 @@ const DataFetcher: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(25);
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: "ascending" | "descending" } | null>(null);
+  const nf = new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 });
 
   useEffect(() => {
     const fetchSummary = async () => {
@@ -129,19 +130,24 @@ const DataFetcher: React.FC = () => {
       <p className="text-lg font-bold mt-4"> </p>
       <div className="mb-4 flex justify-between items-center">
         <p className="text-lg font-bold">
-          {summary?.total_entries}
+          {nf.format(
+            summary?.total_entries ?? 0,
+          )}
           {" "}
           results found
         </p>
         <p className="text-lg font">
           Status Legend: 🔄 installing
-          {summary?.status_count.installing ?? 0}
+          {" "}
+          {nf.format(summary?.status_count.installing ?? 0)}
           {" "}
           | ✔️ completed
-          {summary?.status_count.done ?? 0}
+          {" "}
+          {nf.format(summary?.status_count.done ?? 0)}
           {" "}
           | ❌ failed
-          {summary?.status_count.failed ?? 0}
+          {" "}
+          {nf.format(summary?.status_count.failed ?? 0)}
           {" "}
           | ❓ unknown
         </p>
