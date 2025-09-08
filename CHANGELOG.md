@@ -18,6 +18,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Update searxng-install.sh [@sebguy](https://github.com/sebguy) ([#7469](https://github.com/community-scripts/ProxmoxVE/pull/7469))
 
+### 🌐 Website
+
+  - #### ✨ New Features
+
+    - feat: enhance github stars button to be better looking and more compact [@BramSuurdje](https://github.com/BramSuurdje) ([#7464](https://github.com/community-scripts/ProxmoxVE/pull/7464))
+
 ## 2025-09-07
 
 ### 🚀 Updated Scripts
