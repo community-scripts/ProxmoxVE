@@ -297,17 +297,17 @@ $STD pnpm --filter @immich/cli --prod --no-optional deploy "$APP_DIR"/cli
 msg_ok "Installed Immich Server and Web Components"
 
 cd "$SRC_DIR"/machine-learning
-mkdir -p "$ML_DIR"
+$STD useradd -U -s /usr/sbin/nologin -r -M -d "$INSTALL_DIR" immich
+mkdir -p "$ML_DIR" && chown -R immich:immich "$INSTALL_DIR"
 export VIRTUAL_ENV="${ML_DIR}/ml-venv"
-$STD uv venv "$VIRTUAL_ENV"
 if [[ -f ~/.openvino ]]; then
   msg_info "Installing HW-accelerated machine-learning"
-  uv -q sync --extra openvino --no-cache --active
+  $STD sudo --preserve-env=VIRTUAL_ENV -nu immich uv sync --extra openvino --active -n -p python3.11 --managed-python
   patchelf --clear-execstack "${VIRTUAL_ENV}/lib/python3.11/site-packages/onnxruntime/capi/onnxruntime_pybind11_state.cpython-311-x86_64-linux-gnu.so"
   msg_ok "Installed HW-accelerated machine-learning"
 else
   msg_info "Installing machine-learning"
-  uv -q sync --extra cpu --no-cache --active
+  $STD sudo --preserve-env=VIRTUAL_ENV -nu immich uv sync --extra cpu --active -n -p python3.11 --managed-python
   msg_ok "Installed machine-learning"
 fi
 cd "$SRC_DIR"
@@ -346,8 +346,7 @@ mkdir -p /var/log/immich
 touch /var/log/immich/{web.log,ml.log}
 msg_ok "Installed ${APPLICATION}"
 
-msg_info "Creating user, env file, scripts & services"
-$STD useradd -U -s /usr/sbin/nologin -r -M -d "$INSTALL_DIR" immich
+msg_info "Modifying user, creating env file, scripts & services"
 usermod -aG video,render immich
 
 cat <<EOF >"${INSTALL_DIR}"/.env
@@ -436,11 +435,8 @@ WantedBy=multi-user.target
 EOF
 chown -R immich:immich "$INSTALL_DIR" /var/log/immich
 systemctl enable -q --now "$APPLICATION"-ml.service "$APPLICATION"-web.service
-msg_ok "Created user, env file, scripts and services"
+msg_ok "Modified user, created env file, scripts and services"
 
-# sed -i "$ a VERSION_ID=12" /etc/os-release # otherwise the motd_ssh function will fail
-# cp /etc/debian_version ~/.debian_version.bak
-# sed -i 's/.*/13.0/' /etc/debian_version
 motd_ssh
 customize
 
