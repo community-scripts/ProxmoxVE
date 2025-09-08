@@ -22,6 +22,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - Immich: bump to version 1.141.1 [@vhsdream](https://github.com/vhsdream) ([#7418](https://github.com/community-scripts/ProxmoxVE/pull/7418))
     - [core]: switch all base_settings to variables [@MickLesk](https://github.com/MickLesk) ([#7479](https://github.com/community-scripts/ProxmoxVE/pull/7479))
 
   - #### 💥 Breaking Changes
