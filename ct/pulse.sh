@@ -28,10 +28,6 @@ function update_script() {
     exit
   fi
 
-  if [[ ! -f ~/.pulse ]]; then
-    msg_error "Old Installation Found! Please recreate the container due big changes in the software."
-    exit 1
-  fi
   if check_for_gh_release "pulse" "rcourtman/Pulse"; then
     SERVICE_PATH="/etc/systemd/system"
     msg_info "Stopping Services"
@@ -43,19 +39,20 @@ function update_script() {
     fi
 
     fetch_and_deploy_gh_release "pulse" "rcourtman/Pulse" "prebuild" "latest" "/opt/pulse" "*-linux-amd64.tar.gz"
+    ln -sf /opt/pulse/bin/pulse /usr/local/bin/pulse
     chown -R pulse:pulse /etc/pulse /opt/pulse
-    if [[ -f "$SERVICE_PATH"/pulse.service ]]; then
-      mv "$SERVICE_PATH"/pulse.service "$SERVICE_PATH"/pulse-backend.service
+    if [[ -f "$SERVICE_PATH"/pulse-backend.service ]]; then
+      mv "$SERVICE_PATH"/pulse-backend.service "$SERVICE_PATH"/pulse.service
     fi
     sed -i -e 's|pulse/pulse|pulse/bin/pulse|' \
-      -e 's/^Environment="API.*$//' "$SERVICE_PATH"/pulse-backend.service
+      -e 's/^Environment="API.*$//' "$SERVICE_PATH"/pulse.service
     systemctl daemon-reload
     if grep -q 'pulse-home:/bin/bash' /etc/passwd; then
       usermod -s /usr/sbin/nologin pulse
     fi
 
     msg_info "Starting Services"
-    systemctl start pulse-backend
+    systemctl start pulse
     msg_ok "Started Services"
     msg_ok "Updated Successfully"
   fi
