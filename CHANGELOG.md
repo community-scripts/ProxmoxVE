@@ -28,11 +28,13 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🌐 Website
 
-  - Bump vite from 7.0.0 to 7.1.5 in /frontend [@dependabot[bot]](https://github.com/dependabot[bot]) ([#7522](https://github.com/community-scripts/ProxmoxVE/pull/7522))
-
   - #### 🐞 Bug Fixes
 
     - Refactor GitHubStarsButton to wrap in Link component for external navigation [@BramSuurdje](https://github.com/BramSuurdje) ([#7492](https://github.com/community-scripts/ProxmoxVE/pull/7492))
+
+  - #### ✨ New Features
+
+    - Bump vite from 7.0.0 to 7.1.5 in /frontend [@dependabot[bot]](https://github.com/dependabot[bot]) ([#7522](https://github.com/community-scripts/ProxmoxVE/pull/7522))
 
   - #### 📝 Script Information
 
