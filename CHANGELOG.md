@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-09-09
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Recyclarr: Suppress config creation output [@tremor021](https://github.com/tremor021) ([#7502](https://github.com/community-scripts/ProxmoxVE/pull/7502))
+
 ### 🌐 Website
 
   - #### 🐞 Bug Fixes
