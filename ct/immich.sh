@@ -61,7 +61,7 @@ function update_script() {
     done
     msg_ok "Image-processing libraries up to date"
   fi
-  RELEASE="1.140.1"
+  RELEASE="1.142.0"
   if check_for_gh_release "immich" "immich-app/immich" "${RELEASE}"; then
     msg_info "Stopping Services"
     systemctl stop immich-web
@@ -126,9 +126,6 @@ EOF
 
     msg_info "Updating ${APP} web and microservices"
     cd "$SRC_DIR"/server
-    if [[ "$RELEASE" == "1.135.1" ]]; then
-      rm ./src/schema/migrations/1750323941566-UnsetPrewarmDimParameter.ts
-    fi
     export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
     export CI=1
     corepack enable
