@@ -103,6 +103,7 @@ if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   curl -fsSLO https://github.com/intel/compute-runtime/releases/download/24.31.30508.7/intel-opencl-icd_24.31.30508.7_amd64.deb
   curl -fsSLO https://github.com/intel/compute-runtime/releases/download/24.31.30508.7/libigdgmm12_22.4.1_amd64.deb
   $STD apt install -y ./*.deb
+  $STD apt-mark hold libigdgmm12
   $STD popd
   rm -rf "$tmp_dir"
   dpkg -l | grep "intel-opencl-icd" | awk '{print $3}' >~/.intel_version
@@ -136,9 +137,6 @@ $STD sudo -u postgres psql -c "ALTER USER $DB_USER WITH SUPERUSER;"
   echo "Database Name: $DB_NAME"
 } >>~/"$APPLICATION".creds
 msg_ok "Set up Postgresql Database"
-
-# $STD sudo -u postgres psql -c "ALTER DATABASE postgres REFRESH COLLATION VERSION;"
-# $STD sudo -u postgres psql -c "ALTER DATABASE $DB_NAME REFRESH COLLATION VERSION;"
 
 msg_info "Compiling Custom Photo-processing Library (extreme patience)"
 LD_LIBRARY_PATH=/usr/local/lib

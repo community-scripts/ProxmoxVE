@@ -47,6 +47,7 @@ function update_script() {
       done
       $STD apt install -y ./*.deb
       rm ./*.deb
+      $STD apt-mark hold libigdgmm12
       msg_ok "Intel iGPU dependencies updated"
     fi
     rm ~/Dockerfile
