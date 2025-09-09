@@ -33,11 +33,7 @@
   },
   "notes": [
     {
-      "text": "This LXC is very memory-hungry when updating; it requires at least 6GB RAM, but RAM may be reduced to as low as 2GB when running normally",
-      "type": "warning"
-    },
-    {
-      "text": "To use a bind mount for storage, create symlinks to your mount for both `uploads` and `temp-uploads` in `/opt/palmr_data`",
+      "text": "To use a bind mount for storage, create symlinks to your mount for both `uploads` and `temp-uploads` in `/opt/palmr_data`, and uncomment `CUSTOM_PATH` to add the path to your bind mount",
       "type": "info"
     },
     {
