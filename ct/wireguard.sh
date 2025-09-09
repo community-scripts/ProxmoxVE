@@ -28,6 +28,12 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  if ! dpkg -s git >/dev/null 2>&1; then
+    msg_info "Installing git"
+    $STD apt-get update
+    $STD apt-get install -y git
+    msg_ok "Installed git"
+  fi
   apt-get update
   apt-get -y upgrade
   if [[ -d /etc/wgdashboard ]]; then
