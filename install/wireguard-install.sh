@@ -13,6 +13,10 @@ setting_up_container
 network_check
 update_os
 
+msg_info "Installing Dependencies"
+$STD apt-get install -y git
+msg_ok "Installed Dependencies"
+
 msg_info "Installing WireGuard"
 $STD apt-get install -y wireguard wireguard-tools net-tools iptables
 DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::="--force-confnew" install -y iptables-persistent &>/dev/null
@@ -21,7 +25,7 @@ msg_ok "Installed WireGuard"
 
 read -r -p "${TAB3}Would you like to add WGDashboard? <y/N> " prompt
 if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
-  fetch_and_deploy_gh_release "wgdashboard" "donaldzou/WGDashboard" "tarball" "latest" "/etc/wgdashboard"
+  git clone -q https://github.com/donaldzou/WGDashboard.git /etc/wgdashboard
 
   msg_info "Installing WGDashboard"
   cd /etc/wgdashboard/src
