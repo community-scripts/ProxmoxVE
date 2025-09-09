@@ -19,8 +19,8 @@ $STD apt-get install -y \
   yq
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="20" setup_nodejs
-fetch_and_deploy_gh_release "tududi" "chrisvel/tududi" "tarball" "v0.80" "/opt/tududi"
+NODE_VERSION="22" setup_nodejs
+fetch_and_deploy_gh_release "tududi" "chrisvel/tududi" "tarball" "latest" "/opt/tududi"
 
 msg_info "Configuring Tududi"
 cd /opt/tududi
@@ -37,15 +37,16 @@ DB_LOCATION="/opt/tududi-db"
 UPLOAD_DIR="/opt/tududi-uploads"
 mkdir -p {"$DB_LOCATION","$UPLOAD_DIR"}
 SECRET="$(openssl rand -hex 64)"
-sed -e 's/^GOOGLE/# &/' \
-  -e '/TUDUDI_SESSION/s/^# //' \
-  -e '/NODE_ENV/s/^# //' \
-  -e "s/your_session_secret_here/$SECRET/" \
-  -e 's/development/production/' \
-  -e "\$a\DB_FILE=$DB_LOCATION/production.sqlite3" \
-  -e "\$a\TUDUDI_UPLOAD_PATH=$UPLOAD_DIR" \
-  /opt/tududi/backend/.env.example >/opt/tududi/backend/.env
-export DB_FILE="$DB_LOCATION/production.sqlite3"
+cat <<EOF >/opt/tududi/backend/.env
+TUDUDI_SESSION_SECRET=${SECRET}
+TUDUDI_ALLOWED_ORIGINS=<your tududi IP or FQDN>
+NODE_ENV=production
+DB_FILE=${DB_LOCATION}/production.sqlite3
+TUDUDI_UPLOAD_PATH=${UPLOAD_DIR}
+DISABLE_TELEGRAM=true
+DIABLE_SCHEDULER=false
+EOF
+export DB_FILE="${DB_LOCATION}/production.sqlite3"
 $STD npm run db:init
 msg_ok "Created env and database"
 
@@ -57,9 +58,9 @@ After=network.target
 
 [Service]
 Type=simple
-WorkingDirectory=/opt/tududi
+WorkingDirectory=/opt/tududi/backend
 EnvironmentFile=/opt/tududi/backend/.env
-ExecStart=/usr/bin/npm run start
+ExecStart=/usr/bin/bash /opt/tududi/backend/cmd/start.sh
 
 [Install]
 WantedBy=multi-user.target

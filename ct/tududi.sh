@@ -27,17 +27,22 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
+  NODE_VERSION="22" setup_nodejs
+
   if check_for_gh_release "tududi" "chrisvel/tududi"; then
     msg_info "Stopping Service"
     systemctl stop tududi
     msg_ok "Stopped Service"
 
     msg_info "Remove and backup Files"
+    DB="$(sed -n '/^DB_FILE/s/[^=]*=//p' /opt/tududi/backend/.env)"
+    export DB_FILE="$DB"
     cp /opt/tududi/backend/.env /opt/tududi.env
     rm -rf /opt/tududi/backend/dist
     msg_ok "Backup and removed Files"
 
-    fetch_and_deploy_gh_release "tududi" "chrisvel/tududi" "tarball" "v0.80" "/opt/tududi"
+    fetch_and_deploy_gh_release "tududi" "chrisvel/tududi" "tarball" "latest" "/opt/tududi"
 
     msg_info "Updating ${APP}"
     cd /opt/tududi
@@ -48,6 +53,10 @@ function update_script() {
     mv ./public/locales ./backend/dist
     mv ./public/favicon.* ./backend/dist
     mv /opt/tududi.env /opt/tududi/.env
+    sed -i -e 's|/tududi$|/tududi/backend|' \
+      -e 's|npm run start|bash /opt/tududi/backend/cmd/start.sh|' \
+      /etc/systemd/system/tududi.service
+    systemctl daemon-reload
     msg_ok "Updated $APP"
 
     msg_info "Starting Service"
