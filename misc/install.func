@@ -171,7 +171,7 @@ motd_ssh() {
   echo "echo \"\"" >>"$PROFILE_FILE"
   echo -e "echo -e \"${TAB}${OS}${YW} OS: ${GN}${OS_NAME} - Version: ${OS_VERSION}${CL}\"" >>"$PROFILE_FILE"
   echo -e "echo -e \"${TAB}${HOSTNAME}${YW} Hostname: ${GN}\$(hostname)${CL}\"" >>"$PROFILE_FILE"
-  echo -e "echo -e \"${TAB}${INFO}${YW} IP Address: ${GN}\$(hostname -I | awk '{print \$1}')${CL}\"" >>"$PROFILE_FILE"
+  echo -e "echo -e \"${TAB}${INFO}${YW} IP Addresses: ${GN}\$(hostname -I)${CL}\"" >>"$PROFILE_FILE"
 
   # Disable default MOTD scripts
   chmod -x /etc/update-motd.d/*
