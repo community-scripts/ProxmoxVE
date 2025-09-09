@@ -22,6 +22,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - PLANKA: Fix backup and restore commands [@tremor021](https://github.com/tremor021) ([#7505](https://github.com/community-scripts/ProxmoxVE/pull/7505))
     - Recyclarr: Suppress config creation output [@tremor021](https://github.com/tremor021) ([#7502](https://github.com/community-scripts/ProxmoxVE/pull/7502))
 
+  - #### 🔧 Refactor
+
+    - Pulse: standardise install/update with Pulse repo script [@vhsdream](https://github.com/vhsdream) ([#7519](https://github.com/community-scripts/ProxmoxVE/pull/7519))
+
 ### 🌐 Website
 
   - #### 🐞 Bug Fixes
