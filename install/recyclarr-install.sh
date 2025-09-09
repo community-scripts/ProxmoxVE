@@ -21,7 +21,7 @@ fetch_and_deploy_gh_release "recyclarr" "recyclarr/recyclarr" "prebuild" "latest
 
 msg_info "Configuring Recyclarr"
 mkdir -p /root/.config/recyclarr
-recyclarr config create
+$STD recyclarr config create
 msg_ok "Configured Recyclarr"
 
 motd_ssh

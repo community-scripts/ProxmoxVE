@@ -34,6 +34,7 @@ function update_script() {
     msg_ok "Stopped Service"
 
     fetch_and_deploy_gh_release "recyclarr" "recyclarr/recyclarr" "prebuild" "latest" "/usr/local/bin" "recyclarr-linux-x64.tar.xz"
+
     msg_info "Starting Service"
     systemctl start recyclarr
     msg_ok "Started Service"
