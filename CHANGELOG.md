@@ -26,6 +26,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Refactor GitHubStarsButton to wrap in Link component for external navigation [@BramSuurdje](https://github.com/BramSuurdje) ([#7492](https://github.com/community-scripts/ProxmoxVE/pull/7492))
 
+  - #### 📝 Script Information
+
+    - swizzin: Change category from nvr to media [@MickLesk](https://github.com/MickLesk) ([#7511](https://github.com/community-scripts/ProxmoxVE/pull/7511))
+
 ## 2025-09-08
 
 ### 🚀 Updated Scripts
