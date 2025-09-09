@@ -230,9 +230,7 @@ EOF
 chmod +x "$SCRIPTS_DIR"/{ingest_watcher.sh,auto_zipper_wrapper.sh,metadata_change_detector_wrapper.sh}
 chown -R "$SERVICE_USER":"$SERVICE_GROUP" {"$INSTALL_DIR","$CONFIG_DIR","$INGEST_DIR","$CALIBRE_LIB_DIR"}
 
-# systemd service files
-SYS_PATH="/etc/systemd/system"
-cat <<EOF >"$SYS_PATH"/autocaliweb.service
+cat <<EOF >/etc/systemd/system/autocaliweb.service
 [Unit]
 Description=Autocaliweb
 After=network.target
@@ -261,7 +259,7 @@ StandardError=journal
 WantedBy=multi-user.target
 EOF
 
-cat <<EOF >"$SYS_PATH"/acw-ingest-service.service
+cat <<EOF >/etc/systemd/system/acw-ingest-service.service
 [Unit]
 Description=Autocaliweb Ingest Processor Service
 After=autocaliweb.service
@@ -282,7 +280,7 @@ StandardError=journal
 WantedBy=multi-user.target
 EOF
 
-cat <<EOF >"$SYS_PATH"/acw-auto-zipper.service
+cat <<EOF >/etc/systemd/system/acw-auto-zipper.service
 [Unit]
 Description=Autocaliweb Auto Zipper Service
 After=network.target
@@ -301,7 +299,7 @@ StandardError=journal
 WantedBy=multi-user.target
 EOF
 
-cat <<EOF >"$SYS_PATH"/metadata-change-detector.service
+cat <<EOF >/etc/systemd/system/metadata-change-detector.service
 [Unit]
 Description=Autocaliweb Metadata Change Detector
 After=network.target
