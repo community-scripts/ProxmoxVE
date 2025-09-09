@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-09-09
 
+### 🌐 Website
+
+  - #### 🐞 Bug Fixes
+
+    - Refactor GitHubStarsButton to wrap in Link component for external navigation [@BramSuurdje](https://github.com/BramSuurdje) ([#7492](https://github.com/community-scripts/ProxmoxVE/pull/7492))
+
 ## 2025-09-08
 
 ### 🚀 Updated Scripts
