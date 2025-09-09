@@ -39,6 +39,7 @@ function update_script() {
 
     msg_info "Backup Old Installation"
     cp -r /opt/adventurelog /opt/adventurelog-backup
+    rm -rf /opt/adventurelog
     msg_ok "Backup done"
 
     fetch_and_deploy_gh_release "adventurelog" "seanmorley15/adventurelog"
