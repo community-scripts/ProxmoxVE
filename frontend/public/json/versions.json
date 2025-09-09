@@ -1,5 +1,85 @@
 [
   {
+    "name": "YunoHost/yunohost",
+    "version": "debian/12.1.20",
+    "date": "2025-09-08T23:47:21Z"
+  },
+  {
+    "name": "mongodb/mongo",
+    "version": "r8.0.14-rc1",
+    "date": "2025-09-08T22:50:53Z"
+  },
+  {
+    "name": "diced/zipline",
+    "version": "v4.3.1",
+    "date": "2025-09-08T22:26:23Z"
+  },
+  {
+    "name": "cross-seed/cross-seed",
+    "version": "v6.13.3",
+    "date": "2025-09-08T21:45:15Z"
+  },
+  {
+    "name": "HabitRPG/habitica",
+    "version": "v5.40.2",
+    "date": "2025-09-08T20:59:44Z"
+  },
+  {
+    "name": "booklore-app/booklore",
+    "version": "v1.2.1",
+    "date": "2025-09-08T19:31:07Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "server/public/v0.1.18",
+    "date": "2025-09-08T18:04:10Z"
+  },
+  {
+    "name": "immich-app/immich",
+    "version": "v1.141.1",
+    "date": "2025-09-08T17:15:33Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.24.27",
+    "date": "2025-09-08T16:23:37Z"
+  },
+  {
+    "name": "Paymenter/Paymenter",
+    "version": "v1.3.1",
+    "date": "2025-09-08T15:26:01Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.109.2",
+    "date": "2025-09-03T07:50:21Z"
+  },
+  {
+    "name": "apache/tomcat",
+    "version": "10.1.46",
+    "date": "2025-09-08T14:29:54Z"
+  },
+  {
+    "name": "home-assistant/operating-system",
+    "version": "16.2",
+    "date": "2025-09-08T14:03:25Z"
+  },
+  {
+    "name": "zitadel/zitadel",
+    "version": "v4.1.3",
+    "date": "2025-09-08T13:36:08Z"
+  },
+  {
+    "name": "theonedev/onedev",
+    "version": "v12.0.10",
+    "date": "2025-09-08T13:20:16Z"
+  },
+  {
+    "name": "evcc-io/evcc",
+    "version": "0.207.6",
+    "date": "2025-09-08T11:52:00Z"
+  },
+  {
     "name": "autobrr/autobrr",
     "version": "v1.66.1",
     "date": "2025-09-08T10:49:03Z"
@@ -85,14 +165,9 @@
     "date": "2025-09-07T14:16:07Z"
   },
   {
-    "name": "cross-seed/cross-seed",
-    "version": "v6.13.2",
-    "date": "2025-08-19T18:18:40Z"
-  },
-  {
     "name": "runtipi/runtipi",
-    "version": "v4.4.0",
-    "date": "2025-09-02T19:26:18Z"
+    "version": "nightly",
+    "date": "2025-09-07T12:25:06Z"
   },
   {
     "name": "semaphoreui/semaphore",
@@ -135,11 +210,6 @@
     "date": "2025-09-06T10:13:43Z"
   },
   {
-    "name": "Paymenter/Paymenter",
-    "version": "v1.3.0",
-    "date": "2025-09-06T09:02:08Z"
-  },
-  {
     "name": "Luligu/matterbridge",
     "version": "3.2.6",
     "date": "2025-09-06T07:50:15Z"
@@ -148,11 +218,6 @@
     "name": "forgejo/forgejo",
     "version": "v12.0.3",
     "date": "2025-09-06T07:01:44Z"
-  },
-  {
-    "name": "theonedev/onedev",
-    "version": "v12.0.9",
-    "date": "2025-09-06T00:39:00Z"
   },
   {
     "name": "moghtech/komodo",
@@ -165,16 +230,6 @@
     "date": "2025-09-05T21:14:40Z"
   },
   {
-    "name": "booklore-app/booklore",
-    "version": "v1.2.0",
-    "date": "2025-09-05T20:43:03Z"
-  },
-  {
-    "name": "immich-app/immich",
-    "version": "v1.141.1",
-    "date": "2025-09-05T19:44:39Z"
-  },
-  {
     "name": "gtsteffaniak/filebrowser",
     "version": "v0.8.4-beta",
     "date": "2025-09-05T19:34:44Z"
@@ -183,11 +238,6 @@
     "name": "Stirling-Tools/Stirling-PDF",
     "version": "v1.3.2",
     "date": "2025-09-05T18:44:15Z"
-  },
-  {
-    "name": "diced/zipline",
-    "version": "v4.3.0",
-    "date": "2025-09-05T18:43:28Z"
   },
   {
     "name": "henrygd/beszel",
@@ -220,11 +270,6 @@
     "date": "2025-09-05T11:15:21Z"
   },
   {
-    "name": "zitadel/zitadel",
-    "version": "v4.1.2",
-    "date": "2025-09-05T08:23:30Z"
-  },
-  {
     "name": "CrazyWolf13/streamlink-webui",
     "version": "0.6",
     "date": "2025-09-05T06:05:04Z"
@@ -255,19 +300,9 @@
     "date": "2025-09-04T21:30:14Z"
   },
   {
-    "name": "mongodb/mongo",
-    "version": "r7.0.24",
-    "date": "2025-09-04T19:50:49Z"
-  },
-  {
     "name": "Cleanuparr/Cleanuparr",
     "version": "v2.2.3",
     "date": "2025-09-04T19:24:39Z"
-  },
-  {
-    "name": "HabitRPG/habitica",
-    "version": "v5.40.1",
-    "date": "2025-09-04T19:10:45Z"
   },
   {
     "name": "AdguardTeam/AdGuardHome",
@@ -350,19 +385,9 @@
     "date": "2025-09-03T12:03:22Z"
   },
   {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.109.2",
-    "date": "2025-09-03T07:50:21Z"
-  },
-  {
     "name": "Checkmk/checkmk",
     "version": "v2.4.0p11",
     "date": "2025-09-03T09:58:14Z"
-  },
-  {
-    "name": "mattermost/mattermost",
-    "version": "server/public/v0.1.17",
-    "date": "2025-09-02T21:38:40Z"
   },
   {
     "name": "cockpit-project/cockpit",
@@ -398,11 +423,6 @@
     "name": "rabbitmq/rabbitmq-server",
     "version": "v4.1.4",
     "date": "2025-09-02T14:26:24Z"
-  },
-  {
-    "name": "apache/tomcat",
-    "version": "10.1.45",
-    "date": "2025-09-02T12:46:34Z"
   },
   {
     "name": "Dolibarr/dolibarr",
@@ -445,11 +465,6 @@
     "date": "2025-09-01T16:25:43Z"
   },
   {
-    "name": "home-assistant/operating-system",
-    "version": "16.1",
-    "date": "2025-08-13T07:58:10Z"
-  },
-  {
     "name": "seanmorley15/AdventureLog",
     "version": "v0.11.0",
     "date": "2025-09-01T16:19:38Z"
@@ -480,11 +495,6 @@
     "date": "2025-09-01T07:35:48Z"
   },
   {
-    "name": "YunoHost/yunohost",
-    "version": "debian/12.1.17.1",
-    "date": "2025-08-31T21:38:21Z"
-  },
-  {
     "name": "LibreTranslate/LibreTranslate",
     "version": "v1.7.3",
     "date": "2025-08-31T15:59:43Z"
@@ -493,11 +503,6 @@
     "name": "jhuckaby/Cronicle",
     "version": "v0.9.91",
     "date": "2025-08-30T21:49:57Z"
-  },
-  {
-    "name": "msgbyte/tianji",
-    "version": "v1.24.26",
-    "date": "2025-08-29T20:26:08Z"
   },
   {
     "name": "silverbulletmd/silverbullet",
@@ -578,11 +583,6 @@
     "name": "traefik/traefik",
     "version": "v3.5.1",
     "date": "2025-08-27T09:21:19Z"
-  },
-  {
-    "name": "evcc-io/evcc",
-    "version": "0.207.5",
-    "date": "2025-08-26T06:57:07Z"
   },
   {
     "name": "documenso/documenso",
