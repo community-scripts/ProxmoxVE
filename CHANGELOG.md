@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Tududi: v0.81 [@vhsdream](https://github.com/vhsdream) ([#7517](https://github.com/community-scripts/ProxmoxVE/pull/7517))
     - WGDashboard: Revert back to old update method [@tremor021](https://github.com/tremor021) ([#7500](https://github.com/community-scripts/ProxmoxVE/pull/7500))
     - AdventureLog: remove folder during update process [@MickLesk](https://github.com/MickLesk) ([#7507](https://github.com/community-scripts/ProxmoxVE/pull/7507))
     - PLANKA: Fix backup and restore commands [@tremor021](https://github.com/tremor021) ([#7505](https://github.com/community-scripts/ProxmoxVE/pull/7505))
