@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2025 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://0xerr0r.github.io/blocky/latest/
+# Source: https://0xerr0r.github.io/blocky
 
 APP="Blocky"
 var_tags="${var_tags:-adblock}"
@@ -20,18 +20,38 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /var ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    msg_info "Updating $APP LXC"
-    $STD apt-get update
-    $STD apt-get -y upgrade
-    msg_ok "Updated $APP LXC"
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /opt/blocky ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+  if check_for_gh_release "blocky" "0xERR0R/blocky"; then
+    msg_info "Stopping Service"
+    systemctl stop blocky
+    msg_ok "Stopped Service"
+
+    msg_info "Backup Config"
+    mv /opt/blocky/config.yml /opt/config.yml
+    msg_ok "Backed Up Config"
+
+    msg_info "Removing Old Version"
+    rm -rf /opt/blocky
+    msg_ok "Removed Old Version"
+
+    fetch_and_deploy_gh_release "blocky" "0xERR0R/blocky" "prebuild" "latest" "/opt/blocky" "blocky_*_linux_x86_64.tar.gz"
+
+    msg_info "Restore Config"
+    mv /opt/config.yml /opt/blocky/config.yml
+    msg_ok "Restored Config"
+
+    msg_info "Starting Service"
+    systemctl start blocky
+    msg_ok "Started Service"
+    msg_ok "Updated Successfully"
+  fi
+  exit
 }
 
 start

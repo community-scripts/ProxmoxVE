@@ -6,7 +6,7 @@
   ],
   "date_created": "2024-05-02",
   "type": "ct",
-  "updateable": false,
+  "updateable": true,
   "privileged": false,
   "interface_port": 4000,
   "documentation": "https://0xerr0r.github.io/blocky/latest/configuration/",
