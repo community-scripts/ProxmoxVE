@@ -28,6 +28,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: Blocky [@MickLesk](https://github.com/MickLesk) ([#7537](https://github.com/community-scripts/ProxmoxVE/pull/7537))
     - Improve npmplus credential retrieval and messaging [@MickLesk](https://github.com/MickLesk) ([#7532](https://github.com/community-scripts/ProxmoxVE/pull/7532))
 
 ### 🌐 Website
