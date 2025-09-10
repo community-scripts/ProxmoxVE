@@ -1,5 +1,50 @@
 [
   {
+    "name": "authelia/authelia",
+    "version": "v4.39.9",
+    "date": "2025-09-09T22:48:24Z"
+  },
+  {
+    "name": "MediaBrowser/Emby.Releases",
+    "version": "4.9.1.2",
+    "date": "2025-06-26T22:08:00Z"
+  },
+  {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.527",
+    "date": "2025-09-09T19:58:28Z"
+  },
+  {
+    "name": "kyantech/Palmr",
+    "version": "v3.2.1-beta",
+    "date": "2025-09-09T19:47:13Z"
+  },
+  {
+    "name": "Part-DB/Part-DB-server",
+    "version": "v2.1.2",
+    "date": "2025-09-09T19:34:11Z"
+  },
+  {
+    "name": "hargata/lubelog",
+    "version": "v1.5.1",
+    "date": "2025-09-09T16:56:49Z"
+  },
+  {
+    "name": "open-webui/open-webui",
+    "version": "v0.6.27",
+    "date": "2025-09-09T14:34:27Z"
+  },
+  {
+    "name": "chrisvel/tududi",
+    "version": "v0.81",
+    "date": "2025-09-09T14:06:41Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.3.2",
+    "date": "2025-08-19T04:08:36Z"
+  },
+  {
     "name": "element-hq/synapse",
     "version": "v1.138.0",
     "date": "2025-09-09T11:25:50Z"
@@ -8,16 +53,6 @@
     "name": "traefik/traefik",
     "version": "v3.5.2",
     "date": "2025-09-09T10:28:12Z"
-  },
-  {
-    "name": "authelia/authelia",
-    "version": "v4.39.9",
-    "date": "2025-09-09T10:20:45Z"
-  },
-  {
-    "name": "chrisvel/tududi",
-    "version": "v0.80",
-    "date": "2025-07-24T14:12:39Z"
   },
   {
     "name": "docker/compose",
@@ -100,6 +135,11 @@
     "date": "2025-09-08T19:31:07Z"
   },
   {
+    "name": "fallenbagel/jellyseerr",
+    "version": "preview-OIDC",
+    "date": "2025-09-08T18:08:15Z"
+  },
+  {
     "name": "mattermost/mattermost",
     "version": "server/public/v0.1.18",
     "date": "2025-09-08T18:04:10Z"
@@ -170,11 +210,6 @@
     "date": "2025-09-01T09:47:06Z"
   },
   {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.3.2",
-    "date": "2025-08-19T04:08:36Z"
-  },
-  {
     "name": "webmin/webmin",
     "version": "2.501",
     "date": "2025-09-08T04:50:25Z"
@@ -190,19 +225,9 @@
     "date": "2025-09-07T23:36:42Z"
   },
   {
-    "name": "Part-DB/Part-DB-server",
-    "version": "v2.1.1",
-    "date": "2025-09-07T21:59:53Z"
-  },
-  {
     "name": "minio/minio",
     "version": "RELEASE.2025-09-07T16-13-09Z",
     "date": "2025-09-07T18:53:04Z"
-  },
-  {
-    "name": "MediaBrowser/Emby.Releases",
-    "version": "4.9.1.2",
-    "date": "2025-06-26T22:08:00Z"
   },
   {
     "name": "karakeep-app/karakeep",
@@ -435,11 +460,6 @@
     "date": "2025-09-03T09:13:05Z"
   },
   {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.526",
-    "date": "2025-09-02T18:44:42Z"
-  },
-  {
     "name": "apache/cassandra",
     "version": "cassandra-4.1.10",
     "date": "2025-09-03T08:46:02Z"
@@ -505,11 +525,6 @@
     "date": "2025-09-01T14:19:14Z"
   },
   {
-    "name": "fallenbagel/jellyseerr",
-    "version": "preview-issue-description",
-    "date": "2025-09-01T12:21:58Z"
-  },
-  {
     "name": "grokability/snipe-it",
     "version": "v8.3.1",
     "date": "2025-09-01T11:00:07Z"
@@ -573,11 +588,6 @@
     "name": "influxdata/influxdb",
     "version": "v3.4.1",
     "date": "2025-08-28T13:56:00Z"
-  },
-  {
-    "name": "open-webui/open-webui",
-    "version": "v0.6.26",
-    "date": "2025-08-28T10:40:30Z"
   },
   {
     "name": "garethgeorge/backrest",
@@ -698,16 +708,6 @@
     "name": "traccar/traccar",
     "version": "v6.9.1",
     "date": "2025-08-22T04:04:12Z"
-  },
-  {
-    "name": "hargata/lubelog",
-    "version": "v1.5.0",
-    "date": "2025-08-21T17:33:22Z"
-  },
-  {
-    "name": "kyantech/Palmr",
-    "version": "v3.2.0-beta",
-    "date": "2025-08-21T16:51:45Z"
   },
   {
     "name": "cloudflare/cloudflared",
