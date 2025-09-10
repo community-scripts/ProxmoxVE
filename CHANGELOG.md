@@ -22,6 +22,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - add external installer warnings and user confirmation in several LXC's [@MickLesk](https://github.com/MickLesk) ([#7539](https://github.com/community-scripts/ProxmoxVE/pull/7539))
     - Booklore: Add Bookdrop location to .env [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#7533](https://github.com/community-scripts/ProxmoxVE/pull/7533))
 
   - #### 🔧 Refactor
