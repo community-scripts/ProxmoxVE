@@ -52,7 +52,7 @@
       "type": "info"
     },
     {
-      "text": "Application credentials: `cat /opt/.npm_pwd`",
+      "text": "Application credentials: `cat /opt/.npm_pwd` - if file not exist in LXC check docker logs for password with `docker logs npmplus`",
       "type": "info"
     }
   ]

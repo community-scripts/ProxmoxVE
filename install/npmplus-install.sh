@@ -89,19 +89,36 @@ customize
 
 msg_info "Retrieving Default Login (Patience)"
 PASSWORD_FOUND=0
+
 for i in {1..60}; do
-  PASSWORD_LINE=$(docker logs "$CONTAINER_ID" 2>&1 | awk '/Creating a new user:/ { print; exit }')
-  if [[ -n "$PASSWORD_LINE" ]]; then
-    PASSWORD=$(echo "$PASSWORD_LINE" | awk -F 'password: ' '{print $2}')
-    echo -e "username: admin@example.org\npassword: $PASSWORD" >/opt/.npm_pwd
+  PASSWORD_LINE=$(
+    { awk '/Creating a new user:/{print; exit}' < <(docker logs "$CONTAINER_ID" 2>&1); } || true
+  )
+
+  if [[ -n "${PASSWORD_LINE:-}" ]]; then
+    PASSWORD="${PASSWORD_LINE#*password: }"
+    printf 'username: admin@example.org\npassword: %s\n' "$PASSWORD" >/opt/.npm_pwd
     msg_ok "Saved default login to /opt/.npm_pwd"
     PASSWORD_FOUND=1
     break
   fi
   sleep 2
 done
+if [[ $PASSWORD_FOUND -eq 0 ]]; then
+  PASSWORD_LINE=$(
+    timeout 30s bash -c '
+      docker logs -f --since=0s --tail=0 "$1" 2>&1 | awk "/Creating a new user:/{print; exit}"
+    ' _ "$CONTAINER_ID" || true
+  )
+  if [[ -n "${PASSWORD_LINE:-}" ]]; then
+    PASSWORD="${PASSWORD_LINE#*password: }"
+    printf 'username: admin@example.org\npassword: %s\n' "$PASSWORD" >/opt/.npm_pwd
+    msg_ok "Saved default login to /opt/.npm_pwd (live)"
+    PASSWORD_FOUND=1
+  fi
+fi
 
 if [[ $PASSWORD_FOUND -eq 0 ]]; then
-  msg_error "Could not retrieve default login after 60 seconds."
+  msg_error "Could not retrieve default login after 120s."
   echo -e "\nYou can manually check the container logs with:\n  docker logs $CONTAINER_ID | grep 'Creating a new user:'\n"
 fi
