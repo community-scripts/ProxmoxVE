@@ -12,6 +12,16 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-09-10
 
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - Booklore: Add Bookdrop location to .env [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#7533](https://github.com/community-scripts/ProxmoxVE/pull/7533))
+
+  - #### 🔧 Refactor
+
+    - Improve npmplus credential retrieval and messaging [@MickLesk](https://github.com/MickLesk) ([#7532](https://github.com/community-scripts/ProxmoxVE/pull/7532))
+
 ## 2025-09-09
 
 ### 🚀 Updated Scripts
