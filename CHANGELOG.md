@@ -20,6 +20,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Palmr: fix #7556 [@vhsdream](https://github.com/vhsdream) ([#7558](https://github.com/community-scripts/ProxmoxVE/pull/7558))
     - Wizarr: Fix DB migrations [@vhsdream](https://github.com/vhsdream) ([#7552](https://github.com/community-scripts/ProxmoxVE/pull/7552))
     - fix: pmg - split no-nag script into separate config files [@MickLesk](https://github.com/MickLesk) ([#7540](https://github.com/community-scripts/ProxmoxVE/pull/7540))
 
