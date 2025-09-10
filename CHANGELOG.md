@@ -18,7 +18,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
-  - fix: pmg - split no-nag script into separate config files [@MickLesk](https://github.com/MickLesk) ([#7540](https://github.com/community-scripts/ProxmoxVE/pull/7540))
+  - Palmr v3.2.1-beta [@vhsdream](https://github.com/vhsdream) ([#7526](https://github.com/community-scripts/ProxmoxVE/pull/7526))
+- fix: pmg - split no-nag script into separate config files [@MickLesk](https://github.com/MickLesk) ([#7540](https://github.com/community-scripts/ProxmoxVE/pull/7540))
 
   - #### ✨ New Features
 
