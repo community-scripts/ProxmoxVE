@@ -32,9 +32,9 @@ sed -e 's/_ENCRYPTION=true/_ENCRYPTION=false/' \
 # CUSTOM_PATH=<path-to-your-bind-mount>" \
   .env.example >./.env
 $STD pnpm install
-$STD pnpm dlx prisma generate
-$STD pnpm dlx prisma migrate deploy
-$STD pnpm dlx prisma db push
+$STD npx prisma generate
+$STD npx prisma migrate deploy
+$STD npx prisma db push
 $STD pnpm db:seed
 $STD pnpm build
 msg_ok "Configured palmr backend"
