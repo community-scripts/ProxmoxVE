@@ -39,7 +39,7 @@
     }
   ],
   "default_credentials": {
-    "username": "root",
+    "username": "admin@example.org",
     "password": null
   },
   "notes": [
