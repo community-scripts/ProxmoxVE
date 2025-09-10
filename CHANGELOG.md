@@ -37,6 +37,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🌐 Website
 
+  - #### 💥 Breaking Changes
+
+    - Remove Pingvin Share [@CrazyWolf13](https://github.com/CrazyWolf13) ([#7553](https://github.com/community-scripts/ProxmoxVE/pull/7553))
+
   - #### 📝 Script Information
 
     - set updateable to true for several lxc JSON-configs [@MickLesk](https://github.com/MickLesk) ([#7534](https://github.com/community-scripts/ProxmoxVE/pull/7534))
