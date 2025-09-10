@@ -39,20 +39,23 @@ function update_script() {
     msg_info "Creating Backup"
     BACKUP_FILE="/opt/wizarr_backup_$(date +%F).tar.gz"
     $STD tar -czf "$BACKUP_FILE" /opt/wizarr/{.env,start.sh} /opt/wizarr/database/ &>/dev/null
+    rm -rf /opt/wizarr/migrations/versions/*
     msg_ok "Backup Created"
 
     fetch_and_deploy_gh_release "wizarr" "wizarrrr/wizarr"
 
     msg_info "Updating $APP"
     cd /opt/wizarr
-    $STD /usr/local/bin/uv lock
-    $STD /usr/local/bin/uv sync --locked
-    $STD /usr/local/bin/uv run pybabel compile -d app/translations
+    $STD /usr/local/bin/uv sync --frozen
+    $STD /usr/local/bin/uv run --frozen pybabel compile -d app/translations
     $STD npm --prefix app/static install
     $STD npm --prefix app/static run build:css
     mkdir -p ./.cache
     $STD tar -xf "$BACKUP_FILE" --directory=/
-    $STD /usr/local/bin/uv run flask db upgrade
+    $STD /usr/local/bin/uv run --frozen flask db upgrade
+    if ! grep -q 'frozen' /opt/wizarr/start.sh; then
+      sed -i 's/run/& --frozen/' /opt/wizarr/start.sh
+    fi
     msg_ok "Updated $APP"
 
     msg_info "Starting $APP"
