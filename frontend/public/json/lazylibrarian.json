@@ -6,7 +6,7 @@
   ],
   "date_created": "2024-05-02",
   "type": "ct",
-  "updateable": false,
+  "updateable": true,
   "privileged": false,
   "interface_port": 5299,
   "documentation": "https://lazylibrarian.gitlab.io/lazylibrarian.gitlab.io/",

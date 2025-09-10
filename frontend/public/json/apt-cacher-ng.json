@@ -6,7 +6,7 @@
   ],
   "date_created": "2024-05-02",
   "type": "ct",
-  "updateable": false,
+  "updateable": true,
   "privileged": false,
   "interface_port": 3142,
   "documentation": "https://www.unix-ag.uni-kl.de/~bloch/acng/html/index.html",

@@ -6,7 +6,7 @@
   ],
   "date_created": "2025-05-22",
   "type": "ct",
-  "updateable": false,
+  "updateable": true,
   "privileged": false,
   "interface_port": null,
   "documentation": "https://github.com/favonia/cloudflare-ddns/blob/main/README.markdown",

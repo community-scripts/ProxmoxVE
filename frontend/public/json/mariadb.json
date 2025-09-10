@@ -6,7 +6,7 @@
   ],
   "date_created": "2024-05-02",
   "type": "ct",
-  "updateable": false,
+  "updateable": true,
   "privileged": false,
   "interface_port": 3306,
   "documentation": "https://github.com/community-scripts/ProxmoxVE/discussions/192",

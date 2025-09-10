@@ -7,7 +7,7 @@
   ],
   "date_created": "2024-05-02",
   "type": "addon",
-  "updateable": false,
+  "updateable": true,
   "privileged": false,
   "interface_port": 8080,
   "documentation": null,

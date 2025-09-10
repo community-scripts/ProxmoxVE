@@ -6,7 +6,7 @@
   ],
   "date_created": "2024-05-02",
   "type": "ct",
-  "updateable": false,
+  "updateable": true,
   "privileged": true,
   "interface_port": 80,
   "documentation": "https://github.com/dresden-elektronik/deconz-rest-plugin/wiki",

@@ -6,7 +6,7 @@
   ],
   "date_created": "2025-01-30",
   "type": "ct",
-  "updateable": false,
+  "updateable": true,
   "privileged": false,
   "interface_port": 8065,
   "documentation": "https://docs.mattermost.com/",

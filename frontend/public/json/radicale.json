@@ -6,7 +6,7 @@
   ],
   "date_created": "2025-02-02",
   "type": "ct",
-  "updateable": false,
+  "updateable": true,
   "privileged": false,
   "interface_port": 5232,
   "documentation": "https://radicale.org/master.html#documentation-1",

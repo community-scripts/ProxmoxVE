@@ -6,7 +6,7 @@
   ],
   "date_created": "2025-01-20",
   "type": "ct",
-  "updateable": false,
+  "updateable": true,
   "privileged": false,
   "interface_port": 8090,
   "documentation": "https://beszel.dev/guide/what-is-beszel",
