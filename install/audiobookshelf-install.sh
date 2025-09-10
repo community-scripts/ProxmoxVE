@@ -13,12 +13,18 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing audiobookshelf"
+msg_info "Installing Dependencies"
+$STD apt-get install -y ffmpeg
+msg_ok "Installed Dependencies"
+
+msg_info "Setup audiobookshelf"
 curl -fsSL https://advplyr.github.io/audiobookshelf-ppa/KEY.gpg >/etc/apt/trusted.gpg.d/audiobookshelf-ppa.asc
 echo "deb [signed-by=/etc/apt/trusted.gpg.d/audiobookshelf-ppa.asc] https://advplyr.github.io/audiobookshelf-ppa ./" >/etc/apt/sources.list.d/audiobookshelf.list
-$STD apt-get update
-$STD apt install audiobookshelf
-msg_ok "Installed audiobookshelf"
+$STD apt update
+$STD apt install -y audiobookshelf
+echo "FFMPEG_PATH=/usr/bin/ffmpeg" >>/etc/default/audiobookshelf
+echo "FFPROBE_PATH=/usr/bin/ffprobe" >>/etc/default/audiobookshelf
+msg_ok "Setup audiobookshelf"
 
 motd_ssh
 customize

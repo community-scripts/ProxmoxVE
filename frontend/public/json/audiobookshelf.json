@@ -6,7 +6,7 @@
   ],
   "date_created": "2024-05-02",
   "type": "ct",
-  "updateable": false,
+  "updateable": true,
   "privileged": false,
   "interface_port": 13378,
   "documentation": "https://www.audiobookshelf.org/guides/",
@@ -21,7 +21,7 @@
       "resources": {
         "cpu": 2,
         "ram": 2048,
-        "hdd": 4,
+        "hdd": 5,
         "os": "debian",
         "version": "12"
       }
