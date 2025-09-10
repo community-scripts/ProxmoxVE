@@ -6,7 +6,7 @@
   ],
   "date_created": "2025-03-13",
   "type": "ct",
-  "updateable": false,
+  "updateable": true,
   "privileged": false,
   "interface_port": 81,
   "documentation": "https://github.com/ZoeyVid/NPMplus/blob/develop/README.md",
