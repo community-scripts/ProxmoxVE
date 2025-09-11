@@ -27,6 +27,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Add margin-bottom to Most Viewed Scripts header to unifi UI [@BramSuurdje](https://github.com/BramSuurdje) ([#7572](https://github.com/community-scripts/ProxmoxVE/pull/7572))
 
+  - #### 📝 Script Information
+
+    - Fix frontend url [@r1cebank](https://github.com/r1cebank) ([#7578](https://github.com/community-scripts/ProxmoxVE/pull/7578))
+
 ## 2025-09-10
 
 ### 🆕 New Scripts
