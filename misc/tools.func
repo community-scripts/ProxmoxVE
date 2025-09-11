@@ -1,747 +1,196 @@
 #!/bin/bash
 
 # ------------------------------------------------------------------------------
-# Installs Node.js and optional global modules.
+# Checks for new GitHub release (latest tag).
 #
 # Description:
-#   - Installs specified Node.js version using NodeSource APT repo
-#   - Optionally installs or updates global npm modules
+#   - Queries the GitHub API for the latest release tag
+#   - Compares it to a local cached version (~/.<app>)
+#   - If newer, sets global CHECK_UPDATE_RELEASE and returns 0
 #
-# Variables:
-#   NODE_VERSION   - Node.js version to install (default: 22)
-#   NODE_MODULE    - Comma-separated list of global modules (e.g. "yarn,@vue/cli@5.0.0")
+# Usage:
+#     if check_for_gh_release "flaresolverr" "FlareSolverr/FlareSolverr" [optional] "v1.1.1"; then
+#       # trigger update...
+#     fi
+#     exit 0
+#     } (end of update_script not from the function)
+#
+# Notes:
+#   - Requires `jq` (auto-installed if missing)
+#   - Does not modify anything, only checks version state
+#   - Does not support pre-releases
 # ------------------------------------------------------------------------------
+check_for_gh_release() {
+  local app="$1"
+  local source="$2"
+  local pinned_version_in="${3:-}" # optional
+  local app_lc="${app,,}"
+  local current_file="$HOME/.${app_lc}"
 
-function setup_nodejs() {
-  local NODE_VERSION="${NODE_VERSION:-22}"
-  local NODE_MODULE="${NODE_MODULE:-}"
-  local CURRENT_NODE_VERSION=""
-  local NEED_NODE_INSTALL=false
+  msg_info "Checking for update: ${app}"
 
-  # Check if Node.js is already installed
-  if command -v node >/dev/null; then
-    CURRENT_NODE_VERSION="$(node -v | grep -oP '^v\K[0-9]+')"
-    if [[ "$CURRENT_NODE_VERSION" != "$NODE_VERSION" ]]; then
-      msg_info "Old Node.js $CURRENT_NODE_VERSION found, replacing with $NODE_VERSION"
-      NEED_NODE_INSTALL=true
-    fi
-  else
-    msg_info "Setup Node.js $NODE_VERSION"
-    NEED_NODE_INSTALL=true
+  # DNS check
+  if ! getent hosts api.github.com >/dev/null 2>&1; then
+    msg_error "Network error: cannot resolve api.github.com"
+    return 1
   fi
 
+  # jq check
   if ! command -v jq &>/dev/null; then
-    $STD apt-get update
+    $STD apt-get update -qq
     $STD apt-get install -y jq || {
       msg_error "Failed to install jq"
       return 1
     }
   fi
 
-  # Install Node.js if required
-  if [[ "$NEED_NODE_INSTALL" == true ]]; then
-    $STD apt-get purge -y nodejs
-    rm -f /etc/apt/sources.list.d/nodesource.list /etc/apt/keyrings/nodesource.gpg
-
-    mkdir -p /etc/apt/keyrings
-
-    if ! curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key |
-      gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg; then
-      msg_error "Failed to download or import NodeSource GPG key"
-      exit 1
-    fi
-
-    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_${NODE_VERSION}.x nodistro main" \
-      >/etc/apt/sources.list.d/nodesource.list
-
-    sleep 2
-    if ! apt-get update >/dev/null 2>&1; then
-      msg_warn "APT update failed – retrying in 5s"
-      sleep 5
-      if ! apt-get update >/dev/null 2>&1; then
-        msg_error "Failed to update APT repositories after adding NodeSource"
-        exit 1
-      fi
-    fi
-
-    if ! apt-get install -y nodejs >/dev/null 2>&1; then
-      msg_error "Failed to install Node.js ${NODE_VERSION} from NodeSource"
-      exit 1
-    fi
-
-    # Update to latest npm
-    $STD npm install -g npm@latest || {
-      msg_error "Failed to update npm to latest version"
-    }
-    msg_ok "Setup Node.js ${NODE_VERSION}"
-  fi
-
-  export NODE_OPTIONS="--max-old-space-size=4096"
-
-  # Ensure valid working directory for npm (avoids uv_cwd error)
-  if [[ ! -d /opt ]]; then
-    mkdir -p /opt
-  fi
-  cd /opt || {
-    msg_error "Failed to set safe working directory before npm install"
-    exit 1
+  # Fetch releases and exclude drafts/prereleases
+  local releases_json
+  releases_json=$(curl -fsSL --max-time 20 \
+    -H 'Accept: application/vnd.github+json' \
+    -H 'X-GitHub-Api-Version: 2022-11-28' \
+    "https://api.github.com/repos/${source}/releases") || {
+    msg_error "Unable to fetch releases for ${app}"
+    return 1
   }
 
-  # Install global Node modules
-  if [[ -n "$NODE_MODULE" ]]; then
-    IFS=',' read -ra MODULES <<<"$NODE_MODULE"
-    for mod in "${MODULES[@]}"; do
-      local MODULE_NAME MODULE_REQ_VERSION MODULE_INSTALLED_VERSION
-      if [[ "$mod" == @*/*@* ]]; then
-        # Scoped package with version, e.g. @vue/cli-service@latest
-        MODULE_NAME="${mod%@*}"
-        MODULE_REQ_VERSION="${mod##*@}"
-      elif [[ "$mod" == *"@"* ]]; then
-        # Unscoped package with version, e.g. yarn@latest
-        MODULE_NAME="${mod%@*}"
-        MODULE_REQ_VERSION="${mod##*@}"
-      else
-        # No version specified
-        MODULE_NAME="$mod"
-        MODULE_REQ_VERSION="latest"
-      fi
-
-      # Check if the module is already installed
-      if npm list -g --depth=0 "$MODULE_NAME" >/dev/null 2>&1; then
-        MODULE_INSTALLED_VERSION="$(npm list -g --depth=0 "$MODULE_NAME" | grep "$MODULE_NAME@" | awk -F@ '{print $2}' | tr -d '[:space:]')"
-        if [[ "$MODULE_REQ_VERSION" != "latest" && "$MODULE_REQ_VERSION" != "$MODULE_INSTALLED_VERSION" ]]; then
-          msg_info "Updating $MODULE_NAME from v$MODULE_INSTALLED_VERSION to v$MODULE_REQ_VERSION"
-          if ! $STD npm install -g "${MODULE_NAME}@${MODULE_REQ_VERSION}"; then
-            msg_error "Failed to update $MODULE_NAME to version $MODULE_REQ_VERSION"
-            exit 1
-          fi
-        elif [[ "$MODULE_REQ_VERSION" == "latest" ]]; then
-          msg_info "Updating $MODULE_NAME to latest version"
-          if ! $STD npm install -g "${MODULE_NAME}@latest"; then
-            msg_error "Failed to update $MODULE_NAME to latest version"
-            exit 1
-          fi
-        fi
-      else
-        msg_info "Installing $MODULE_NAME@$MODULE_REQ_VERSION"
-        if ! $STD npm install -g "${MODULE_NAME}@${MODULE_REQ_VERSION}"; then
-          msg_error "Failed to install $MODULE_NAME@$MODULE_REQ_VERSION"
-          exit 1
-        fi
-      fi
-    done
-    msg_ok "Installed Node.js modules: $NODE_MODULE"
-  fi
-}
-
-# ------------------------------------------------------------------------------
-# Installs or upgrades PostgreSQL and optional extensions/modules.
-#
-# Description:
-#   - Detects existing PostgreSQL version
-#   - Dumps all databases before upgrade
-#   - Adds PGDG repo and installs specified version
-#   - Installs optional PG_MODULES (e.g. postgis, contrib)
-#   - Restores dumped data post-upgrade
-#
-# Variables:
-#   PG_VERSION     - Major PostgreSQL version (e.g. 15, 16) (default: 16)
-#   PG_MODULES     - Comma-separated list of extensions (e.g. "postgis,contrib")
-# ------------------------------------------------------------------------------
-function setup_postgresql() {
-  local PG_VERSION="${PG_VERSION:-16}"
-  local PG_MODULES="${PG_MODULES:-}"
-  local CURRENT_PG_VERSION=""
-  local DISTRO
-  local NEED_PG_INSTALL=false
-  DISTRO="$(awk -F'=' '/^VERSION_CODENAME=/{ print $NF }' /etc/os-release)"
-
-  if command -v psql >/dev/null; then
-    CURRENT_PG_VERSION="$(psql -V | awk '{print $3}' | cut -d. -f1)"
-    if [[ "$CURRENT_PG_VERSION" == "$PG_VERSION" ]]; then
-      : # PostgreSQL is already at the desired version – no action needed
-    else
-      $STD msg_info "Detected PostgreSQL $CURRENT_PG_VERSION, preparing upgrade to $PG_VERSION"
-      NEED_PG_INSTALL=true
-    fi
-  else
-
-    NEED_PG_INSTALL=true
-  fi
-
-  if [[ "$NEED_PG_INSTALL" == true ]]; then
-    if [[ -n "$CURRENT_PG_VERSION" ]]; then
-      $STD msg_info "Dumping PostgreSQL $CURRENT_PG_VERSION data"
-      su - postgres -c "pg_dumpall > /var/lib/postgresql/backup_$(date +%F)_v${CURRENT_PG_VERSION}.sql"
-      $STD msg_ok "Data dump completed"
-
-      systemctl stop postgresql
-    fi
-
-    rm -f /etc/apt/sources.list.d/pgdg.list /etc/apt/trusted.gpg.d/postgresql.gpg
-
-    $STD msg_info "Adding PostgreSQL PGDG repository"
-    curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc |
-      gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg
-
-    echo "deb https://apt.postgresql.org/pub/repos/apt ${DISTRO}-pgdg main" \
-      >/etc/apt/sources.list.d/pgdg.list
-
-    $STD apt-get update
-    $STD msg_ok "Repository added"
-
-    msg_info "Setup PostgreSQL $PG_VERSION"
-    $STD apt-get install -y "postgresql-${PG_VERSION}" "postgresql-client-${PG_VERSION}"
-
-    if [[ -n "$CURRENT_PG_VERSION" ]]; then
-      $STD apt-get purge -y "postgresql-${CURRENT_PG_VERSION}" "postgresql-client-${CURRENT_PG_VERSION}" || true
-    fi
-
-    systemctl enable -q --now postgresql
-
-    if [[ -n "$CURRENT_PG_VERSION" ]]; then
-      $STD msg_info "Restoring dumped data"
-      su - postgres -c "psql < /var/lib/postgresql/backup_$(date +%F)_v${CURRENT_PG_VERSION}.sql"
-      $STD msg_ok "Data restored"
-    fi
-
-    $STD msg_ok "PostgreSQL $PG_VERSION installed"
-  fi
-
-  # Install optional PostgreSQL modules
-  if [[ -n "$PG_MODULES" ]]; then
-    IFS=',' read -ra MODULES <<<"$PG_MODULES"
-    for module in "${MODULES[@]}"; do
-      local pkg="postgresql-${PG_VERSION}-${module}"
-      $STD msg_info "Setup PostgreSQL module/s: $pkg"
-      $STD apt-get install -y "$pkg" || {
-        msg_error "Failed to install $pkg"
-        continue
-      }
-    done
-    $STD msg_ok "Setup PostgreSQL modules"
-  fi
-}
-
-# ------------------------------------------------------------------------------
-# Installs or updates MariaDB from official repo.
-#
-# Description:
-#   - Detects current MariaDB version and replaces it if necessary
-#   - Preserves existing database data
-#   - Dynamically determines latest GA version if "latest" is given
-#
-# Variables:
-#   MARIADB_VERSION - MariaDB version to install (e.g. 10.11, latest) (default: latest)
-# ------------------------------------------------------------------------------
-
-setup_mariadb() {
-  local MARIADB_VERSION="${MARIADB_VERSION:-latest}"
-  local DISTRO_CODENAME
-  DISTRO_CODENAME="$(awk -F= '/^VERSION_CODENAME=/{print $2}' /etc/os-release)"
-  CURRENT_OS="$(awk -F= '/^ID=/{print $2}' /etc/os-release)"
-
-  if ! curl -fsI http://mirror.mariadb.org/repo/ >/dev/null; then
-    msg_error "MariaDB mirror not reachable"
+  mapfile -t raw_tags < <(jq -r '.[] | select(.draft==false and .prerelease==false) | .tag_name' <<<"$releases_json")
+  if ((${#raw_tags[@]} == 0)); then
+    msg_error "No stable releases found for ${app}"
     return 1
   fi
 
-  msg_info "Setting up MariaDB $MARIADB_VERSION"
-  # Grab dynamic latest LTS version
-  if [[ "$MARIADB_VERSION" == "latest" ]]; then
-    MARIADB_VERSION=$(curl -fsSL http://mirror.mariadb.org/repo/ |
-      grep -Eo '[0-9]+\.[0-9]+\.[0-9]+/' |
-      grep -vE 'rc/|rolling/' |
-      sed 's|/||' |
-      sort -Vr |
-      head -n1)
-    if [[ -z "$MARIADB_VERSION" ]]; then
-      msg_error "Could not determine latest GA MariaDB version"
+  local clean_tags=()
+  for t in "${raw_tags[@]}"; do
+    clean_tags+=("${t#v}")
+  done
+
+  local latest_raw="${raw_tags[0]}"
+  local latest_clean="${clean_tags[0]}"
+
+  # current installed (stored without v)
+  local current=""
+  if [[ -f "$current_file" ]]; then
+    current="$(<"$current_file")"
+  else
+    # Migration: search for any /opt/*_version.txt
+    local legacy_files
+    mapfile -t legacy_files < <(find /opt -maxdepth 1 -type f -name "*_version.txt" 2>/dev/null)
+    if ((${#legacy_files[@]} == 1)); then
+      current="$(<"${legacy_files[0]}")"
+      echo "${current#v}" >"$current_file"
+      rm -f "${legacy_files[0]}"
+    fi
+  fi
+  current="${current#v}"
+
+  # Pinned version handling
+  if [[ -n "$pinned_version_in" ]]; then
+    local pin_clean="${pinned_version_in#v}"
+    local match_raw=""
+    for i in "${!clean_tags[@]}"; do
+      if [[ "${clean_tags[$i]}" == "$pin_clean" ]]; then
+        match_raw="${raw_tags[$i]}"
+        break
+      fi
+    done
+
+    if [[ -z "$match_raw" ]]; then
+      msg_error "Pinned version ${pinned_version_in} not found upstream"
       return 1
     fi
-  fi
 
-  local CURRENT_VERSION=""
-  if command -v mariadb >/dev/null; then
-    CURRENT_VERSION=$(mariadb --version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
-  fi
-
-  if [[ "$CURRENT_VERSION" == "$MARIADB_VERSION" ]]; then
-    $STD msg_info "MariaDB $MARIADB_VERSION, upgrading"
-    $STD apt-get update
-    $STD apt-get install --only-upgrade -y mariadb-server mariadb-client
-    $STD msg_ok "MariaDB upgraded to $MARIADB_VERSION"
-    return 0
-  fi
-
-  if [[ -n "$CURRENT_VERSION" ]]; then
-    $STD msg_info "Upgrading MariaDB $CURRENT_VERSION to $MARIADB_VERSION"
-    $STD systemctl stop mariadb >/dev/null 2>&1 || true
-    $STD apt-get purge -y 'mariadb*' || true
-    rm -f /etc/apt/sources.list.d/mariadb.list /etc/apt/trusted.gpg.d/mariadb.gpg
-  else
-    $STD msg_info "Setup MariaDB $MARIADB_VERSION"
-  fi
-
-  curl -fsSL "https://mariadb.org/mariadb_release_signing_key.asc" |
-    gpg --dearmor -o /etc/apt/trusted.gpg.d/mariadb.gpg
-
-  echo "deb [signed-by=/etc/apt/trusted.gpg.d/mariadb.gpg] http://mirror.mariadb.org/repo/${MARIADB_VERSION}/${CURRENT_OS} ${DISTRO_CODENAME} main" \
-    >/etc/apt/sources.list.d/mariadb.list
-
-  $STD apt-get update
-
-  local MARIADB_MAJOR_MINOR
-  MARIADB_MAJOR_MINOR=$(echo "$MARIADB_VERSION" | awk -F. '{print $1"."$2}')
-  if [[ -n "$MARIADB_MAJOR_MINOR" ]]; then
-    echo "mariadb-server-$MARIADB_MAJOR_MINOR mariadb-server/feedback boolean false" | debconf-set-selections
-  else
-    for ver in 12.1 12.0 11.4 11.3 11.2 11.1 11.0 10.11 10.6 10.5 10.4 10.3; do
-      echo "mariadb-server-$ver mariadb-server/feedback boolean false" | debconf-set-selections
-    done
-  fi
-  DEBIAN_FRONTEND=noninteractive $STD apt-get install -y mariadb-server mariadb-client
-
-  msg_ok "Setup MariaDB $MARIADB_VERSION"
-}
-
-# ------------------------------------------------------------------------------
-# Installs or upgrades MySQL and configures APT repo.
-#
-# Description:
-#   - Detects existing MySQL installation
-#   - Purges conflicting packages before installation
-#   - Supports clean upgrade
-#
-# Variables:
-#   MYSQL_VERSION  - MySQL version to install (e.g. 5.7, 8.0) (default: 8.0)
-# ------------------------------------------------------------------------------
-
-function setup_mysql() {
-  local MYSQL_VERSION="${MYSQL_VERSION:-8.0}"
-  local CURRENT_VERSION=""
-  local NEED_INSTALL=false
-  CURRENT_OS="$(awk -F= '/^ID=/{print $2}' /etc/os-release)"
-
-  if command -v mysql >/dev/null; then
-    CURRENT_VERSION="$(mysql --version | grep -oP 'Distrib\s+\K[0-9]+\.[0-9]+')"
-    if [[ "$CURRENT_VERSION" != "$MYSQL_VERSION" ]]; then
-      $STD msg_info "MySQL $CURRENT_VERSION will be upgraded to $MYSQL_VERSION"
-      NEED_INSTALL=true
-    else
-      # Check for patch-level updates
-      if apt list --upgradable 2>/dev/null | grep -q '^mysql-server/'; then
-        $STD msg_info "MySQL $CURRENT_VERSION available for upgrade"
-        $STD apt-get update
-        $STD apt-get install --only-upgrade -y mysql-server
-        $STD msg_ok "MySQL upgraded"
-      fi
-      return
-    fi
-  else
-    msg_info "Setup MySQL $MYSQL_VERSION"
-    NEED_INSTALL=true
-  fi
-
-  if [[ "$NEED_INSTALL" == true ]]; then
-    $STD systemctl stop mysql || true
-    $STD apt-get purge -y "^mysql-server.*" "^mysql-client.*" "^mysql-common.*" || true
-    rm -f /etc/apt/sources.list.d/mysql.list /etc/apt/trusted.gpg.d/mysql.gpg
-
-    local DISTRO_CODENAME
-    DISTRO_CODENAME="$(awk -F= '/VERSION_CODENAME/ { print $2 }' /etc/os-release)"
-    curl -fsSL https://repo.mysql.com/RPM-GPG-KEY-mysql-2023 | gpg --dearmor -o /etc/apt/trusted.gpg.d/mysql.gpg
-    echo "deb [signed-by=/etc/apt/trusted.gpg.d/mysql.gpg] https://repo.mysql.com/apt/${CURRENT_OS}/ ${DISTRO_CODENAME} mysql-${MYSQL_VERSION}" \
-      >/etc/apt/sources.list.d/mysql.list
-
-    export DEBIAN_FRONTEND=noninteractive
-    $STD apt-get update
-    $STD apt-get install -y mysql-server
-    msg_ok "Setup MySQL $MYSQL_VERSION"
-  fi
-}
-
-# ------------------------------------------------------------------------------
-# Installs PHP with selected modules and configures Apache/FPM support.
-#
-# Description:
-#   - Adds Sury PHP repo if needed
-#   - Installs default and user-defined modules
-#   - Patches php.ini for CLI, Apache, and FPM as needed
-#
-# Variables:
-#   PHP_VERSION                - PHP version to install (default: 8.4)
-#   PHP_MODULE                 - Additional comma-separated modules
-#   PHP_APACHE                 - Set YES to enable PHP with Apache
-#   PHP_FPM                    - Set YES to enable PHP-FPM
-#   PHP_MEMORY_LIMIT           - (default: 512M)
-#   PHP_UPLOAD_MAX_FILESIZE    - (default: 128M)
-#   PHP_POST_MAX_SIZE          - (default: 128M)
-#   PHP_MAX_EXECUTION_TIME     - (default: 300)
-# ------------------------------------------------------------------------------
-
-function setup_php() {
-  local PHP_VERSION="${PHP_VERSION:-8.4}"
-  local PHP_MODULE="${PHP_MODULE:-}"
-  local PHP_APACHE="${PHP_APACHE:-NO}"
-  local PHP_FPM="${PHP_FPM:-NO}"
-  local DISTRO_CODENAME
-  DISTRO_CODENAME=$(awk -F= '/VERSION_CODENAME/ { print $2 }' /etc/os-release)
-
-  local DEFAULT_MODULES="bcmath,cli,curl,gd,intl,mbstring,opcache,readline,xml,zip"
-  local COMBINED_MODULES
-
-  local PHP_MEMORY_LIMIT="${PHP_MEMORY_LIMIT:-512M}"
-  local PHP_UPLOAD_MAX_FILESIZE="${PHP_UPLOAD_MAX_FILESIZE:-128M}"
-  local PHP_POST_MAX_SIZE="${PHP_POST_MAX_SIZE:-128M}"
-  local PHP_MAX_EXECUTION_TIME="${PHP_MAX_EXECUTION_TIME:-300}"
-
-  # Merge default + user-defined modules
-  if [[ -n "$PHP_MODULE" ]]; then
-    COMBINED_MODULES="${DEFAULT_MODULES},${PHP_MODULE}"
-  else
-    COMBINED_MODULES="${DEFAULT_MODULES}"
-  fi
-
-  # Deduplicate
-  COMBINED_MODULES=$(echo "$COMBINED_MODULES" | tr ',' '\n' | awk '!seen[$0]++' | paste -sd, -)
-
-  # Get current PHP-CLI version
-  local CURRENT_PHP=""
-  if command -v php >/dev/null 2>&1; then
-    CURRENT_PHP=$(php -v 2>/dev/null | awk '/^PHP/{print $2}' | cut -d. -f1,2)
-  fi
-
-  if [[ -z "$CURRENT_PHP" ]]; then
-    msg_info "Setup PHP $PHP_VERSION"
-  elif [[ "$CURRENT_PHP" != "$PHP_VERSION" ]]; then
-    msg_info "Old PHP $CURRENT_PHP detected, Setup new PHP $PHP_VERSION"
-    $STD apt-get purge -y "php${CURRENT_PHP//./}"* || true
-  fi
-
-  # Ensure Sury repo is available
-  if [[ ! -f /etc/apt/sources.list.d/php.list ]]; then
-    $STD curl -fsSLo /tmp/debsuryorg-archive-keyring.deb https://packages.sury.org/debsuryorg-archive-keyring.deb
-    $STD dpkg -i /tmp/debsuryorg-archive-keyring.deb
-    echo "deb [signed-by=/usr/share/keyrings/deb.sury.org-php.gpg] https://packages.sury.org/php/ ${DISTRO_CODENAME} main" \
-      >/etc/apt/sources.list.d/php.list
-    $STD apt-get update
-  fi
-
-  # Build module list
-  local MODULE_LIST="php${PHP_VERSION}"
-  IFS=',' read -ra MODULES <<<"$COMBINED_MODULES"
-  for mod in "${MODULES[@]}"; do
-    if apt-cache show "php${PHP_VERSION}-${mod}" >/dev/null 2>&1; then
-      MODULE_LIST+=" php${PHP_VERSION}-${mod}"
-    else
-      msg_warn "PHP-Module ${mod} for PHP ${PHP_VERSION} not found – skipping"
-    fi
-  done
-  if [[ "$PHP_FPM" == "YES" ]]; then
-    MODULE_LIST+=" php${PHP_VERSION}-fpm"
-  fi
-
-  # install apache2 with PHP support if requested
-  if [[ "$PHP_APACHE" == "YES" ]]; then
-    if ! dpkg -l | grep -q "libapache2-mod-php${PHP_VERSION}"; then
-      msg_info "Installing Apache with PHP${PHP_VERSION} support"
-      $STD apt-get install -y apache2 libapache2-mod-php${PHP_VERSION}
-    else
-      msg_info "Apache with PHP${PHP_VERSION} already installed – skipping install"
-    fi
-  fi
-
-  # setup / update PHP modules
-  $STD apt-get install -y $MODULE_LIST
-  msg_ok "Setup PHP $PHP_VERSION"
-
-  # optional stop old PHP-FPM service
-  if [[ "$PHP_FPM" == "YES" && -n "$CURRENT_PHP" && "$CURRENT_PHP" != "$PHP_VERSION" ]]; then
-    $STD systemctl stop php"${CURRENT_PHP}"-fpm || true
-    $STD systemctl disable php"${CURRENT_PHP}"-fpm || true
-  fi
-
-  # Patch all relevant php.ini files
-  local PHP_INI_PATHS=("/etc/php/${PHP_VERSION}/cli/php.ini")
-  [[ "$PHP_FPM" == "YES" ]] && PHP_INI_PATHS+=("/etc/php/${PHP_VERSION}/fpm/php.ini")
-  [[ "$PHP_APACHE" == "YES" ]] && PHP_INI_PATHS+=("/etc/php/${PHP_VERSION}/apache2/php.ini")
-  for ini in "${PHP_INI_PATHS[@]}"; do
-    if [[ -f "$ini" ]]; then
-      $STD msg_info "Patching $ini"
-      sed -i "s|^memory_limit = .*|memory_limit = ${PHP_MEMORY_LIMIT}|" "$ini"
-      sed -i "s|^upload_max_filesize = .*|upload_max_filesize = ${PHP_UPLOAD_MAX_FILESIZE}|" "$ini"
-      sed -i "s|^post_max_size = .*|post_max_size = ${PHP_POST_MAX_SIZE}|" "$ini"
-      sed -i "s|^max_execution_time = .*|max_execution_time = ${PHP_MAX_EXECUTION_TIME}|" "$ini"
-      $STD msg_ok "Patched $ini"
-    fi
-  done
-
-  # patch Apache configuration if needed
-  if [[ "$PHP_APACHE" == "YES" ]]; then
-    for mod in $(ls /etc/apache2/mods-enabled/ 2>/dev/null | grep -E '^php[0-9]\.[0-9]\.conf$' | sed 's/\.conf//'); do
-      if [[ "$mod" != "php${PHP_VERSION}" ]]; then
-        $STD a2dismod "$mod" || true
-      fi
-    done
-    $STD a2enmod mpm_prefork
-    $STD a2enmod "php${PHP_VERSION}"
-    $STD systemctl restart apache2 || true
-  fi
-
-  # enable and restart PHP-FPM if requested
-  if [[ "$PHP_FPM" == "YES" ]]; then
-    if systemctl list-unit-files | grep -q "php${PHP_VERSION}-fpm.service"; then
-      $STD systemctl enable php${PHP_VERSION}-fpm
-      $STD systemctl restart php${PHP_VERSION}-fpm
-    else
-      msg_warn "FPM requested but service php${PHP_VERSION}-fpm not found"
-    fi
-  fi
-}
-
-# ------------------------------------------------------------------------------
-# Installs or updates Composer globally (robust, idempotent).
-#
-# - Installs to /usr/local/bin/composer
-# - Removes old binaries/symlinks in /usr/bin, /bin, /root/.composer, etc.
-# - Ensures /usr/local/bin is in PATH (permanent)
-# ------------------------------------------------------------------------------
-
-function setup_composer() {
-  local COMPOSER_BIN="/usr/local/bin/composer"
-  export COMPOSER_ALLOW_SUPERUSER=1
-
-  # Clean up old Composer binaries/symlinks (if any)
-  for old in /usr/bin/composer /bin/composer /root/.composer/vendor/bin/composer; do
-    [[ -e "$old" && "$old" != "$COMPOSER_BIN" ]] && rm -f "$old"
-  done
-
-  # Ensure /usr/local/bin is in PATH for future logins (and current shell)
-  ensure_usr_local_bin_persist
-  export PATH="/usr/local/bin:$PATH"
-
-  # Check if composer is already installed
-  if [[ -x "$COMPOSER_BIN" ]]; then
-    local CURRENT_VERSION
-    CURRENT_VERSION=$("$COMPOSER_BIN" --version | awk '{print $3}')
-    $STD msg_info "Old Composer $CURRENT_VERSION found, updating to latest"
-  else
-    msg_info "Installing Composer"
-  fi
-
-  # Download and install latest Composer
-  curl -fsSL https://getcomposer.org/installer -o /tmp/composer-setup.php
-  php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer >/dev/null 2>&1
-
-  if [[ ! -x "$COMPOSER_BIN" ]]; then
-    msg_error "Composer was not successfully installed (no binary at $COMPOSER_BIN)"
-    return 1
-  fi
-
-  chmod +x "$COMPOSER_BIN"
-  $STD "$COMPOSER_BIN" self-update --no-interaction || true # safe if already latest
-  $STD "$COMPOSER_BIN" diagnose
-  msg_ok "Composer is ready at $COMPOSER_BIN"
-}
-
-# ------------------------------------------------------------------------------
-# Installs Go (Golang) from official tarball.
-#
-# Description:
-#   - Determines system architecture
-#   - Downloads latest version if GO_VERSION not set
-#
-# Variables:
-#   GO_VERSION     - Version to install (e.g. 1.22.2 or latest)
-# ------------------------------------------------------------------------------
-
-function setup_go() {
-  local ARCH
-  case "$(uname -m)" in
-  x86_64) ARCH="amd64" ;;
-  aarch64) ARCH="arm64" ;;
-  *)
-    msg_error "Unsupported architecture: $(uname -m)"
-    return 1
-    ;;
-  esac
-
-  # Determine version
-  if [[ -z "${GO_VERSION:-}" || "${GO_VERSION}" == "latest" ]]; then
-    GO_VERSION=$(curl -fsSL https://go.dev/VERSION?m=text | head -n1 | sed 's/^go//')
-    if [[ -z "$GO_VERSION" ]]; then
-      msg_error "Could not determine latest Go version"
-      return 1
-    fi
-  fi
-
-  local GO_BIN="/usr/local/bin/go"
-  local GO_INSTALL_DIR="/usr/local/go"
-
-  if [[ -x "$GO_BIN" ]]; then
-    local CURRENT_VERSION
-    CURRENT_VERSION=$("$GO_BIN" version | awk '{print $3}' | sed 's/go//')
-    if [[ "$CURRENT_VERSION" == "$GO_VERSION" ]]; then
+    if [[ "$current" != "$pin_clean" ]]; then
+      msg_info "${app} pinned to ${pinned_version_in} (installed ${current:-none}) → update required"
+      CHECK_UPDATE_RELEASE="$match_raw"
       return 0
+    fi
+
+    if [[ "$pin_clean" == "$latest_clean" ]]; then
+      msg_ok "${app} pinned to ${pinned_version_in} (up to date)"
     else
-      $STD msg_info "Old Go Installation ($CURRENT_VERSION) found, upgrading to $GO_VERSION"
-      rm -rf "$GO_INSTALL_DIR"
+      msg_ok "${app} pinned to ${pinned_version_in} (already installed, upstream ${latest_raw})"
     fi
-  else
-    msg_info "Setup Go $GO_VERSION"
-  fi
-
-  local TARBALL="go${GO_VERSION}.linux-${ARCH}.tar.gz"
-  local URL="https://go.dev/dl/${TARBALL}"
-  local TMP_TAR=$(mktemp)
-
-  curl -fsSL "$URL" -o "$TMP_TAR" || {
-    msg_error "Failed to download $TARBALL"
     return 1
-  }
-
-  tar -C /usr/local -xzf "$TMP_TAR"
-  ln -sf /usr/local/go/bin/go /usr/local/bin/go
-  ln -sf /usr/local/go/bin/gofmt /usr/local/bin/gofmt
-  rm -f "$TMP_TAR"
-
-  msg_ok "Setup Go $GO_VERSION"
-}
-
-# ------------------------------------------------------------------------------
-# Installs Temurin JDK via Adoptium APT repository.
-#
-# Description:
-#   - Removes previous JDK if version mismatch
-#   - Installs or upgrades to specified JAVA_VERSION
-#
-# Variables:
-#   JAVA_VERSION   - Temurin JDK version to install (e.g. 17, 21)
-# ------------------------------------------------------------------------------
-
-function setup_java() {
-  local JAVA_VERSION="${JAVA_VERSION:-21}"
-  local DISTRO_CODENAME
-  DISTRO_CODENAME=$(awk -F= '/VERSION_CODENAME/ { print $2 }' /etc/os-release)
-  local DESIRED_PACKAGE="temurin-${JAVA_VERSION}-jdk"
-
-  # Add Adoptium repo if missing
-  if [[ ! -f /etc/apt/sources.list.d/adoptium.list ]]; then
-    $STD msg_info "Setting up Adoptium Repository"
-    mkdir -p /etc/apt/keyrings
-    curl -fsSL "https://packages.adoptium.net/artifactory/api/gpg/key/public" | gpg --dearmor -o /etc/apt/trusted.gpg.d/adoptium.gpg
-    echo "deb [signed-by=/etc/apt/trusted.gpg.d/adoptium.gpg] https://packages.adoptium.net/artifactory/deb ${DISTRO_CODENAME} main" \
-      >/etc/apt/sources.list.d/adoptium.list
-    $STD apt-get update
-    $STD msg_ok "Set up Adoptium Repository"
   fi
 
-  # Detect currently installed temurin version
-  local INSTALLED_VERSION=""
-  if dpkg -l | grep -q "temurin-.*-jdk"; then
-    INSTALLED_VERSION=$(dpkg -l | awk '/temurin-.*-jdk/{print $2}' | grep -oP 'temurin-\K[0-9]+')
-  fi
-
-  if [[ "$INSTALLED_VERSION" == "$JAVA_VERSION" ]]; then
-    $STD msg_info "Upgrading Temurin JDK $JAVA_VERSION"
-    $STD apt-get update
-    $STD apt-get install --only-upgrade -y "$DESIRED_PACKAGE"
-    $STD msg_ok "Upgraded Temurin JDK $JAVA_VERSION"
-  else
-    if [[ -n "$INSTALLED_VERSION" ]]; then
-      $STD msg_info "Removing Temurin JDK $INSTALLED_VERSION"
-      $STD apt-get purge -y "temurin-${INSTALLED_VERSION}-jdk"
-    fi
-
-    msg_info "Setup Temurin JDK $JAVA_VERSION"
-    $STD apt-get install -y "$DESIRED_PACKAGE"
-    msg_ok "Setup Temurin JDK $JAVA_VERSION"
-  fi
-}
-
-# ------------------------------------------------------------------------------
-# Installs or updates MongoDB to specified major version.
-#
-# Description:
-#   - Preserves data across installations
-#   - Adds official MongoDB repo
-#
-# Variables:
-#   MONGO_VERSION  - MongoDB major version to install (e.g. 7.0, 8.0)
-# ------------------------------------------------------------------------------
-
-function setup_mongodb() {
-  local MONGO_VERSION="${MONGO_VERSION:-8.0}"
-  local DISTRO_ID DISTRO_CODENAME MONGO_BASE_URL
-  DISTRO_ID=$(awk -F= '/^ID=/{ gsub(/"/,"",$2); print $2 }' /etc/os-release)
-  DISTRO_CODENAME=$(awk -F= '/^VERSION_CODENAME=/{ print $2 }' /etc/os-release)
-
-  # Check AVX support
-  if ! grep -qm1 'avx[^ ]*' /proc/cpuinfo; then
-    local major="${MONGO_VERSION%%.*}"
-    if ((major > 5)); then
-      msg_error "MongoDB ${MONGO_VERSION} requires AVX support, which is not available on this system."
-      return 1
-    fi
-  fi
-
-  case "$DISTRO_ID" in
-  ubuntu)
-    MONGO_BASE_URL="https://repo.mongodb.org/apt/ubuntu"
-    REPO_COMPONENT="multiverse"
-    ;;
-  debian)
-    MONGO_BASE_URL="https://repo.mongodb.org/apt/debian"
-    REPO_COMPONENT="main"
-    ;;
-  *)
-    msg_error "Unsupported distribution: $DISTRO_ID"
-    return 1
-    ;;
-  esac
-
-  local REPO_LIST="/etc/apt/sources.list.d/mongodb-org-${MONGO_VERSION}.list"
-
-  local INSTALLED_VERSION=""
-  if command -v mongod >/dev/null; then
-    INSTALLED_VERSION=$(mongod --version | awk '/db version/{print $3}' | cut -d. -f1,2)
-  fi
-
-  if [[ "$INSTALLED_VERSION" == "$MONGO_VERSION" ]]; then
-    $STD msg_info "Upgrading MongoDB $MONGO_VERSION"
-    $STD apt-get update
-    $STD apt-get install --only-upgrade -y mongodb-org
-    $STD msg_ok "Upgraded MongoDB $MONGO_VERSION"
+  # No pinning → use latest
+  if [[ -z "$current" || "$current" != "$latest_clean" ]]; then
+    CHECK_UPDATE_RELEASE="$latest_raw"
+    msg_info "New release available: ${latest_raw} (current: v${current:-none})"
     return 0
   fi
 
-  if [[ -n "$INSTALLED_VERSION" ]]; then
-    $STD systemctl stop mongod || true
-    $STD apt-get purge -y mongodb-org || true
-    rm -f /etc/apt/sources.list.d/mongodb-org-*.list
-    rm -f /etc/apt/trusted.gpg.d/mongodb-*.gpg
-  else
-    msg_info "Setup MongoDB $MONGO_VERSION"
+  msg_ok "${app} is up to date (${latest_raw})"
+  return 1
+}
+
+# ------------------------------------------------------------------------------
+# Creates and installs self-signed certificates.
+#
+# Description:
+#   - Create a self-signed certificate with option to override application name
+#
+# Variables:
+#   APP   - Application name (default: $APPLICATION variable)
+# ------------------------------------------------------------------------------
+function create_selfsigned_certs() {
+  local app=${APP:-$(echo "${APPLICATION,,}" | tr -d ' ')}
+  $STD openssl req -x509 -nodes -days 365 -newkey rsa:4096 \
+    -keyout /etc/ssl/private/"$app"-selfsigned.key \
+    -out /etc/ssl/certs/"$app"-selfsigned.crt \
+    -subj "/C=US/O=$app/OU=Domain Control Validated/CN=localhost"
+}
+
+# ------------------------------------------------------------------------------
+# Downloads file with optional progress indicator using pv.
+#
+# Arguments:
+#   $1 - URL
+#   $2 - Destination path
+# ------------------------------------------------------------------------------
+
+function download_with_progress() {
+  local url="$1"
+  local output="$2"
+  if [ -n "$SPINNER_PID" ] && ps -p "$SPINNER_PID" >/dev/null; then kill "$SPINNER_PID" >/dev/null; fi
+
+  if ! command -v pv &>/dev/null; then
+    $STD apt-get install -y pv
   fi
+  set -o pipefail
 
-  curl -fsSL "https://pgp.mongodb.com/server-${MONGO_VERSION}.asc" | gpg --dearmor -o "/etc/apt/trusted.gpg.d/mongodb-${MONGO_VERSION}.gpg"
-  echo "deb [signed-by=/etc/apt/trusted.gpg.d/mongodb-${MONGO_VERSION}.gpg] ${MONGO_BASE_URL} ${DISTRO_CODENAME}/mongodb-org/${MONGO_VERSION} ${REPO_COMPONENT}" \
-    >"$REPO_LIST"
+  # Content-Length aus HTTP-Header holen
+  local content_length
+  content_length=$(curl -fsSLI "$url" | awk '/Content-Length/ {print $2}' | tr -d '\r' || true)
 
-  $STD apt-get update || {
-    msg_error "APT update failed — invalid MongoDB repo for ${DISTRO_ID}-${DISTRO_CODENAME}?"
-    return 1
-  }
+  if [[ -z "$content_length" ]]; then
+    if ! curl -fL# -o "$output" "$url"; then
+      msg_error "Download failed"
+      return 1
+    fi
+  else
+    if ! curl -fsSL "$url" | pv -s "$content_length" >"$output"; then
+      msg_error "Download failed"
+      return 1
+    fi
+  fi
+}
 
-  $STD apt-get install -y mongodb-org
+# ------------------------------------------------------------------------------
+# Ensures /usr/local/bin is permanently in system PATH.
+#
+# Description:
+#   - Adds to /etc/profile.d if not present
+# ------------------------------------------------------------------------------
 
-  mkdir -p /var/lib/mongodb
-  chown -R mongodb:mongodb /var/lib/mongodb
+function ensure_usr_local_bin_persist() {
+  local PROFILE_FILE="/etc/profile.d/custom_path.sh"
 
-  $STD systemctl enable mongod
-  $STD systemctl start mongod
-  msg_ok "Setup MongoDB $MONGO_VERSION"
+  if [[ ! -f "$PROFILE_FILE" ]] && ! command -v pveversion &>/dev/null; then
+    echo 'export PATH="/usr/local/bin:$PATH"' >"$PROFILE_FILE"
+    chmod +x "$PROFILE_FILE"
+  fi
 }
 
 # ------------------------------------------------------------------------------
@@ -1083,84 +532,6 @@ function fetch_and_deploy_gh_release() {
 }
 
 # ------------------------------------------------------------------------------
-# Installs a local IP updater script using networkd-dispatcher.
-#
-# Description:
-#   - Stores current IP in /run/local-ip.env
-#   - Automatically runs on network changes
-# ------------------------------------------------------------------------------
-
-function setup_local_ip_helper() {
-  local BASE_DIR="/usr/local/community-scripts/ip-management"
-  local SCRIPT_PATH="$BASE_DIR/update_local_ip.sh"
-  local IP_FILE="/run/local-ip.env"
-  local DISPATCHER_SCRIPT="/etc/networkd-dispatcher/routable.d/10-update-local-ip.sh"
-
-  mkdir -p "$BASE_DIR"
-
-  # Install networkd-dispatcher if not present
-  if ! dpkg -s networkd-dispatcher >/dev/null 2>&1; then
-    $STD apt-get update
-    $STD apt-get install -y networkd-dispatcher
-  fi
-
-  # Write update_local_ip.sh
-  cat <<'EOF' >"$SCRIPT_PATH"
-#!/bin/bash
-set -euo pipefail
-
-IP_FILE="/run/local-ip.env"
-mkdir -p "$(dirname "$IP_FILE")"
-
-get_current_ip() {
-    local targets=("8.8.8.8" "1.1.1.1" "192.168.1.1" "10.0.0.1" "172.16.0.1" "default")
-    local ip
-
-    for target in "${targets[@]}"; do
-        if [[ "$target" == "default" ]]; then
-            ip=$(ip route get 1 2>/dev/null | awk '{for(i=1;i<=NF;i++) if ($i=="src") print $(i+1)}')
-        else
-            ip=$(ip route get "$target" 2>/dev/null | awk '{for(i=1;i<=NF;i++) if ($i=="src") print $(i+1)}')
-        fi
-        if [[ -n "$ip" ]]; then
-            echo "$ip"
-            return 0
-        fi
-    done
-
-    return 1
-}
-
-current_ip="$(get_current_ip)"
-
-if [[ -z "$current_ip" ]]; then
-    echo "[ERROR] Could not detect local IP" >&2
-    exit 1
-fi
-
-if [[ -f "$IP_FILE" ]]; then
-    source "$IP_FILE"
-    [[ "$LOCAL_IP" == "$current_ip" ]] && exit 0
-fi
-
-echo "LOCAL_IP=$current_ip" > "$IP_FILE"
-echo "[INFO] LOCAL_IP updated to $current_ip"
-EOF
-
-  chmod +x "$SCRIPT_PATH"
-
-  # Install dispatcher hook
-  mkdir -p "$(dirname "$DISPATCHER_SCRIPT")"
-  cat <<EOF >"$DISPATCHER_SCRIPT"
-#!/bin/bash
-$SCRIPT_PATH
-EOF
-
-  chmod +x "$DISPATCHER_SCRIPT"
-  systemctl enable -q --now networkd-dispatcher.service
-}
-
-# ------------------------------------------------------------------------------
 # Loads LOCAL_IP from persistent store or detects if missing.
 #
 # Description:
@@ -1205,402 +576,6 @@ function import_local_ip() {
 }
 
 # ------------------------------------------------------------------------------
-# Downloads file with optional progress indicator using pv.
-#
-# Arguments:
-#   $1 - URL
-#   $2 - Destination path
-# ------------------------------------------------------------------------------
-
-function download_with_progress() {
-  local url="$1"
-  local output="$2"
-  if [ -n "$SPINNER_PID" ] && ps -p "$SPINNER_PID" >/dev/null; then kill "$SPINNER_PID" >/dev/null; fi
-
-  if ! command -v pv &>/dev/null; then
-    $STD apt-get install -y pv
-  fi
-  set -o pipefail
-
-  # Content-Length aus HTTP-Header holen
-  local content_length
-  content_length=$(curl -fsSLI "$url" | awk '/Content-Length/ {print $2}' | tr -d '\r' || true)
-
-  if [[ -z "$content_length" ]]; then
-    if ! curl -fL# -o "$output" "$url"; then
-      msg_error "Download failed"
-      return 1
-    fi
-  else
-    if ! curl -fsSL "$url" | pv -s "$content_length" >"$output"; then
-      msg_error "Download failed"
-      return 1
-    fi
-  fi
-}
-
-# ------------------------------------------------------------------------------
-# Installs or upgrades uv (Python package manager) from GitHub releases.
-#   - Downloads platform-specific tarball (no install.sh!)
-#   - Extracts uv binary
-#   - Places it in /usr/local/bin
-#   - Optionally installs a specific Python version via uv
-# ------------------------------------------------------------------------------
-
-function setup_uv() {
-  local UV_BIN="/usr/local/bin/uv"
-  local TMP_DIR
-  TMP_DIR=$(mktemp -d)
-
-  # Determine system architecture
-  local ARCH
-  ARCH=$(uname -m)
-  local UV_TAR
-
-  case "$ARCH" in
-  x86_64)
-    if grep -qi "alpine" /etc/os-release; then
-      UV_TAR="uv-x86_64-unknown-linux-musl.tar.gz"
-    else
-      UV_TAR="uv-x86_64-unknown-linux-gnu.tar.gz"
-    fi
-    ;;
-  aarch64)
-    if grep -qi "alpine" /etc/os-release; then
-      UV_TAR="uv-aarch64-unknown-linux-musl.tar.gz"
-    else
-      UV_TAR="uv-aarch64-unknown-linux-gnu.tar.gz"
-    fi
-    ;;
-  *)
-    msg_error "Unsupported architecture: $ARCH"
-    rm -rf "$TMP_DIR"
-    return 1
-    ;;
-  esac
-
-  # Get latest version from GitHub
-  local LATEST_VERSION
-  LATEST_VERSION=$(curl -fsSL https://api.github.com/repos/astral-sh/uv/releases/latest |
-    grep '"tag_name":' | cut -d '"' -f4 | sed 's/^v//')
-
-  if [[ -z "$LATEST_VERSION" ]]; then
-    msg_error "Could not fetch latest uv version from GitHub."
-    rm -rf "$TMP_DIR"
-    return 1
-  fi
-
-  # Check if uv is already up to date
-  if [[ -x "$UV_BIN" ]]; then
-    local INSTALLED_VERSION
-    INSTALLED_VERSION=$($UV_BIN -V | awk '{print $2}')
-    if [[ "$INSTALLED_VERSION" == "$LATEST_VERSION" ]]; then
-      rm -rf "$TMP_DIR"
-      [[ ":$PATH:" != *":/usr/local/bin:"* ]] && export PATH="/usr/local/bin:$PATH"
-      return 0
-    else
-      msg_info "Updating uv from $INSTALLED_VERSION to $LATEST_VERSION"
-    fi
-  else
-    msg_info "Setup uv $LATEST_VERSION"
-  fi
-
-  # Download and install manually
-  local UV_URL="https://github.com/astral-sh/uv/releases/latest/download/${UV_TAR}"
-  if ! curl -fsSL "$UV_URL" -o "$TMP_DIR/uv.tar.gz"; then
-    msg_error "Failed to download $UV_URL"
-    rm -rf "$TMP_DIR"
-    return 1
-  fi
-
-  if ! tar -xzf "$TMP_DIR/uv.tar.gz" -C "$TMP_DIR"; then
-    msg_error "Failed to extract uv archive"
-    rm -rf "$TMP_DIR"
-    return 1
-  fi
-
-  install -m 755 "$TMP_DIR"/*/uv "$UV_BIN" || {
-    msg_error "Failed to install uv binary"
-    rm -rf "$TMP_DIR"
-    return 1
-  }
-
-  if [[ ":$PATH:" != *":/usr/local/bin:"* ]]; then
-    export PATH="/usr/local/bin:$PATH"
-  fi
-  ensure_usr_local_bin_persist
-  if ! $STD uv python update-shell; then
-    msg_error "uv shell integration failed – continuing anyway"
-  fi
-  msg_ok "Setup uv $LATEST_VERSION"
-
-  # Optional: install specific Python version
-  if [[ -n "${PYTHON_VERSION:-}" ]]; then
-    local VERSION_MATCH
-    VERSION_MATCH=$(uv python list --only-downloads |
-      grep -E "^cpython-${PYTHON_VERSION//./\\.}\.[0-9]+-linux" |
-      cut -d'-' -f2 | sort -V | tail -n1)
-
-    if [[ -z "$VERSION_MATCH" ]]; then
-      msg_error "No matching Python $PYTHON_VERSION.x version found via uv"
-      return 1
-    fi
-
-    if ! uv python list | grep -q "cpython-${VERSION_MATCH}-linux.*uv/python"; then
-      if ! $STD uv python install "$VERSION_MATCH"; then
-        msg_error "Failed to install Python $VERSION_MATCH via uv"
-        return 1
-      fi
-      msg_ok "Setup Python $VERSION_MATCH via uv"
-    fi
-  fi
-}
-
-# ------------------------------------------------------------------------------
-# Ensures /usr/local/bin is permanently in system PATH.
-#
-# Description:
-#   - Adds to /etc/profile.d if not present
-# ------------------------------------------------------------------------------
-
-function ensure_usr_local_bin_persist() {
-  local PROFILE_FILE="/etc/profile.d/custom_path.sh"
-
-  if [[ ! -f "$PROFILE_FILE" ]] && ! command -v pveversion &>/dev/null; then
-    echo 'export PATH="/usr/local/bin:$PATH"' >"$PROFILE_FILE"
-    chmod +x "$PROFILE_FILE"
-  fi
-}
-
-# ------------------------------------------------------------------------------
-# Installs or updates Ghostscript (gs) from source.
-#
-# Description:
-#   - Fetches latest release
-#   - Builds and installs system-wide
-# ------------------------------------------------------------------------------
-
-function setup_gs() {
-  mkdir -p /tmp
-  TMP_DIR=$(mktemp -d)
-  CURRENT_VERSION=$(gs --version 2>/dev/null || echo "0")
-
-  RELEASE_JSON=$(curl -fsSL https://api.github.com/repos/ArtifexSoftware/ghostpdl-downloads/releases/latest)
-  LATEST_VERSION=$(echo "$RELEASE_JSON" | grep '"tag_name":' | head -n1 | cut -d '"' -f4 | sed 's/^gs//')
-  LATEST_VERSION_DOTTED=$(echo "$RELEASE_JSON" | grep '"name":' | head -n1 | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+')
-
-  if [[ -z "$LATEST_VERSION" ]]; then
-    msg_error "Could not determine latest Ghostscript version from GitHub."
-    rm -rf "$TMP_DIR"
-    return
-  fi
-
-  if dpkg --compare-versions "$CURRENT_VERSION" ge "$LATEST_VERSION_DOTTED"; then
-    rm -rf "$TMP_DIR"
-    return
-  fi
-
-  msg_info "Setup Ghostscript $LATEST_VERSION_DOTTED"
-  curl -fsSL "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs${LATEST_VERSION}/ghostscript-${LATEST_VERSION_DOTTED}.tar.gz" -o "$TMP_DIR/ghostscript.tar.gz"
-
-  if ! tar -xzf "$TMP_DIR/ghostscript.tar.gz" -C "$TMP_DIR"; then
-    msg_error "Failed to extract Ghostscript archive."
-    rm -rf "$TMP_DIR"
-    return
-  fi
-
-  cd "$TMP_DIR/ghostscript-${LATEST_VERSION_DOTTED}" || {
-    msg_error "Failed to enter Ghostscript source directory."
-    rm -rf "$TMP_DIR"
-  }
-  $STD apt-get install -y build-essential libpng-dev zlib1g-dev
-  $STD ./configure >/dev/null
-  $STD make
-  $STD sudo make install
-  local EXIT_CODE=$?
-  hash -r
-  if [[ ! -x "$(command -v gs)" ]]; then
-    if [[ -x /usr/local/bin/gs ]]; then
-      ln -sf /usr/local/bin/gs /usr/bin/gs
-    fi
-  fi
-
-  rm -rf "$TMP_DIR"
-
-  if [[ $EXIT_CODE -eq 0 ]]; then
-    msg_ok "Setup Ghostscript $LATEST_VERSION_DOTTED"
-  else
-    msg_error "Ghostscript installation failed"
-  fi
-}
-
-# ------------------------------------------------------------------------------
-# Installs rbenv and ruby-build, installs Ruby and optionally Rails.
-#
-# Description:
-#   - Downloads rbenv and ruby-build from GitHub
-#   - Compiles and installs target Ruby version
-#   - Optionally installs Rails via gem
-#
-# Variables:
-#   RUBY_VERSION         - Ruby version to install (default: 3.4.4)
-#   RUBY_INSTALL_RAILS   - true/false to install Rails (default: true)
-# ------------------------------------------------------------------------------
-
-function setup_ruby() {
-  local RUBY_VERSION="${RUBY_VERSION:-3.4.4}"
-  local RUBY_INSTALL_RAILS="${RUBY_INSTALL_RAILS:-true}"
-
-  local RBENV_DIR="$HOME/.rbenv"
-  local RBENV_BIN="$RBENV_DIR/bin/rbenv"
-  local PROFILE_FILE="$HOME/.profile"
-  local TMP_DIR
-  TMP_DIR=$(mktemp -d)
-
-  msg_info "Setup Ruby $RUBY_VERSION"
-
-  local RBENV_RELEASE
-  RBENV_RELEASE=$(curl -fsSL https://api.github.com/repos/rbenv/rbenv/releases/latest | grep '"tag_name":' | cut -d '"' -f4 | sed 's/^v//')
-  if [[ -z "$RBENV_RELEASE" ]]; then
-    msg_error "Failed to fetch latest rbenv version"
-    rm -rf "$TMP_DIR"
-    return 1
-  fi
-
-  curl -fsSL "https://github.com/rbenv/rbenv/archive/refs/tags/v${RBENV_RELEASE}.tar.gz" -o "$TMP_DIR/rbenv.tar.gz"
-  tar -xzf "$TMP_DIR/rbenv.tar.gz" -C "$TMP_DIR"
-  mkdir -p "$RBENV_DIR"
-  cp -r "$TMP_DIR/rbenv-${RBENV_RELEASE}/." "$RBENV_DIR/"
-  cd "$RBENV_DIR" && src/configure && $STD make -C src
-
-  local RUBY_BUILD_RELEASE
-  RUBY_BUILD_RELEASE=$(curl -fsSL https://api.github.com/repos/rbenv/ruby-build/releases/latest | grep '"tag_name":' | cut -d '"' -f4 | sed 's/^v//')
-  if [[ -z "$RUBY_BUILD_RELEASE" ]]; then
-    msg_error "Failed to fetch latest ruby-build version"
-    rm -rf "$TMP_DIR"
-    return 1
-  fi
-
-  curl -fsSL "https://github.com/rbenv/ruby-build/archive/refs/tags/v${RUBY_BUILD_RELEASE}.tar.gz" -o "$TMP_DIR/ruby-build.tar.gz"
-  tar -xzf "$TMP_DIR/ruby-build.tar.gz" -C "$TMP_DIR"
-  mkdir -p "$RBENV_DIR/plugins/ruby-build"
-  cp -r "$TMP_DIR/ruby-build-${RUBY_BUILD_RELEASE}/." "$RBENV_DIR/plugins/ruby-build/"
-  echo "$RUBY_BUILD_RELEASE" >"$RBENV_DIR/plugins/ruby-build/RUBY_BUILD_version.txt"
-
-  if ! grep -q 'rbenv init' "$PROFILE_FILE"; then
-    echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >>"$PROFILE_FILE"
-    echo 'eval "$(rbenv init -)"' >>"$PROFILE_FILE"
-  fi
-
-  export PATH="$RBENV_DIR/bin:$PATH"
-  eval "$("$RBENV_BIN" init - bash)"
-
-  if ! "$RBENV_BIN" versions --bare | grep -qx "$RUBY_VERSION"; then
-    $STD "$RBENV_BIN" install "$RUBY_VERSION"
-  fi
-
-  "$RBENV_BIN" global "$RUBY_VERSION"
-  hash -r
-
-  if [[ "$RUBY_INSTALL_RAILS" == "true" ]]; then
-    msg_info "Setup Rails via gem"
-    gem install rails
-    msg_ok "Setup Rails $(rails -v)"
-  fi
-
-  rm -rf "$TMP_DIR"
-  msg_ok "Setup Ruby $RUBY_VERSION"
-}
-
-# ------------------------------------------------------------------------------
-# Creates and installs self-signed certificates.
-#
-# Description:
-#   - Create a self-signed certificate with option to override application name
-#
-# Variables:
-#   APP   - Application name (default: $APPLICATION variable)
-# ------------------------------------------------------------------------------
-function create_selfsigned_certs() {
-  local app=${APP:-$(echo "${APPLICATION,,}" | tr -d ' ')}
-  $STD openssl req -x509 -nodes -days 365 -newkey rsa:4096 \
-    -keyout /etc/ssl/private/"$app"-selfsigned.key \
-    -out /etc/ssl/certs/"$app"-selfsigned.crt \
-    -subj "/C=US/O=$app/OU=Domain Control Validated/CN=localhost"
-}
-
-# ------------------------------------------------------------------------------
-# Installs Rust toolchain and optional global crates via cargo.
-#
-# Description:
-#   - Installs rustup (if missing)
-#   - Installs or updates desired Rust toolchain (stable, nightly, or versioned)
-#   - Installs or updates specified global crates using `cargo install`
-#
-# Notes:
-#   - Skips crate install if exact version is already present
-#   - Updates crate if newer version or different version is requested
-#
-# Variables:
-#   RUST_TOOLCHAIN  - Rust toolchain to install (default: stable)
-#   RUST_CRATES     - Comma-separated list of crates (e.g. "cargo-edit,wasm-pack@0.12.1")
-# ------------------------------------------------------------------------------
-
-function setup_rust() {
-  local RUST_TOOLCHAIN="${RUST_TOOLCHAIN:-stable}"
-  local RUST_CRATES="${RUST_CRATES:-}"
-  local CARGO_BIN="${HOME}/.cargo/bin"
-
-  # rustup & toolchain
-  if ! command -v rustup &>/dev/null; then
-    msg_info "Setup Rust"
-    curl -fsSL https://sh.rustup.rs | $STD sh -s -- -y --default-toolchain "$RUST_TOOLCHAIN"
-    export PATH="$CARGO_BIN:$PATH"
-    echo 'export PATH="$HOME/.cargo/bin:$PATH"' >>"$HOME/.profile"
-    msg_ok "Setup Rust"
-  else
-    $STD rustup install "$RUST_TOOLCHAIN"
-    $STD rustup default "$RUST_TOOLCHAIN"
-    $STD rustup update "$RUST_TOOLCHAIN"
-    msg_ok "Rust toolchain set to $RUST_TOOLCHAIN"
-  fi
-
-  # install/update crates
-  if [[ -n "$RUST_CRATES" ]]; then
-    IFS=',' read -ra CRATES <<<"$RUST_CRATES"
-    for crate in "${CRATES[@]}"; do
-      local NAME VER INSTALLED_VER
-      if [[ "$crate" == *"@"* ]]; then
-        NAME="${crate%@*}"
-        VER="${crate##*@}"
-      else
-        NAME="$crate"
-        VER=""
-      fi
-
-      INSTALLED_VER=$(cargo install --list 2>/dev/null | awk "/^$NAME v[0-9]/ {print \$2}" | tr -d 'v')
-
-      if [[ -n "$INSTALLED_VER" ]]; then
-        if [[ -n "$VER" && "$VER" != "$INSTALLED_VER" ]]; then
-          msg_info "Update $NAME: $INSTALLED_VER → $VER"
-          $STD cargo install "$NAME" --version "$VER" --force
-          msg_ok "Updated $NAME to $VER"
-        elif [[ -z "$VER" ]]; then
-          msg_info "Update $NAME: $INSTALLED_VER → latest"
-          $STD cargo install "$NAME" --force
-          msg_ok "Updated $NAME to latest"
-        fi
-      else
-        msg_info "Setup $NAME ${VER:+($VER)}"
-        $STD cargo install "$NAME" ${VER:+--version "$VER"}
-        msg_ok "Setup $NAME ${VER:-latest}"
-      fi
-    done
-    msg_ok "Setup Rust"
-  fi
-}
-
-# ------------------------------------------------------------------------------
 # Installs Adminer (Debian/Ubuntu via APT, Alpine via direct download).
 #
 # Description:
@@ -1628,144 +603,48 @@ function setup_adminer() {
 }
 
 # ------------------------------------------------------------------------------
-# Installs or updates yq (mikefarah/yq - Go version).
+# Installs or updates Composer globally (robust, idempotent).
 #
-# Description:
-#   - Checks if yq is installed and from correct source
-#   - Compares with latest release on GitHub
-#   - Updates if outdated or wrong implementation
+# - Installs to /usr/local/bin/composer
+# - Removes old binaries/symlinks in /usr/bin, /bin, /root/.composer, etc.
+# - Ensures /usr/local/bin is in PATH (permanent)
 # ------------------------------------------------------------------------------
 
-function setup_yq() {
-  local TMP_DIR
-  TMP_DIR=$(mktemp -d)
-  local CURRENT_VERSION=""
-  local BINARY_PATH="/usr/local/bin/yq"
-  local GITHUB_REPO="mikefarah/yq"
+function setup_composer() {
+  local COMPOSER_BIN="/usr/local/bin/composer"
+  export COMPOSER_ALLOW_SUPERUSER=1
 
-  if ! command -v jq &>/dev/null; then
-    $STD apt-get update
-    $STD apt-get install -y jq || {
-      msg_error "Failed to install jq"
-      rm -rf "$TMP_DIR"
-      return 1
-    }
-  fi
+  # Clean up old Composer binaries/symlinks (if any)
+  for old in /usr/bin/composer /bin/composer /root/.composer/vendor/bin/composer; do
+    [[ -e "$old" && "$old" != "$COMPOSER_BIN" ]] && rm -f "$old"
+  done
 
-  if command -v yq &>/dev/null; then
-    if ! yq --version 2>&1 | grep -q 'mikefarah'; then
-      rm -f "$(command -v yq)"
-    else
-      CURRENT_VERSION=$(yq --version | awk '{print $NF}' | sed 's/^v//')
-    fi
-  fi
-
-  local RELEASE_JSON
-  RELEASE_JSON=$(curl -fsSL "https://api.github.com/repos/${GITHUB_REPO}/releases/latest")
-  local LATEST_VERSION
-  LATEST_VERSION=$(echo "$RELEASE_JSON" | jq -r '.tag_name' | sed 's/^v//')
-
-  if [[ -z "$LATEST_VERSION" ]]; then
-    msg_error "Could not determine latest yq version from GitHub."
-    rm -rf "$TMP_DIR"
-    return 1
-  fi
-
-  if [[ -n "$CURRENT_VERSION" && "$CURRENT_VERSION" == "$LATEST_VERSION" ]]; then
-    return
-  fi
-
-  msg_info "Setup yq ($LATEST_VERSION)"
-  curl -fsSL "https://github.com/${GITHUB_REPO}/releases/download/v${LATEST_VERSION}/yq_linux_amd64" -o "$TMP_DIR/yq"
-  chmod +x "$TMP_DIR/yq"
-  mv "$TMP_DIR/yq" "$BINARY_PATH"
-
-  if [[ ! -x "$BINARY_PATH" ]]; then
-    msg_error "Failed to install yq to $BINARY_PATH"
-    rm -rf "$TMP_DIR"
-    return 1
-  fi
-
-  rm -rf "$TMP_DIR"
-  hash -r
-
-  local FINAL_VERSION
-  FINAL_VERSION=$("$BINARY_PATH" --version 2>/dev/null | awk '{print $NF}')
-  if [[ "$FINAL_VERSION" == "v$LATEST_VERSION" ]]; then
-    msg_ok "Setup yq ($LATEST_VERSION)"
-  else
-    msg_error "yq installation incomplete or version mismatch"
-  fi
-}
-
-# ------------------------------------------------------------------------------
-# Installs ImageMagick 7 from source (Debian/Ubuntu only).
-#
-# Description:
-#   - Downloads the latest ImageMagick source tarball
-#   - Builds and installs ImageMagick to /usr/local
-#   - Configures dynamic linker (ldconfig)
-#
-# Notes:
-#   - Requires: build-essential, libtool, libjpeg-dev, libpng-dev, etc.
-# ------------------------------------------------------------------------------
-function setup_imagemagick() {
-  local TMP_DIR
-  TMP_DIR=$(mktemp -d)
-  local VERSION=""
-  local BINARY_PATH="/usr/local/bin/magick"
-
-  if command -v magick &>/dev/null; then
-    VERSION=$(magick -version | awk '/^Version/ {print $3}')
-    msg_ok "ImageMagick already installed ($VERSION)"
-    return 0
-  fi
-
-  msg_info "Setup ImageMagick (Patience)"
-  $STD apt-get update
-  $STD apt-get install -y \
-    build-essential \
-    libtool \
-    libjpeg-dev \
-    libpng-dev \
-    libtiff-dev \
-    libwebp-dev \
-    libheif-dev \
-    libde265-dev \
-    libopenjp2-7-dev \
-    libxml2-dev \
-    liblcms2-dev \
-    libfreetype6-dev \
-    libraw-dev \
-    libfftw3-dev \
-    liblqr-1-0-dev \
-    libgsl-dev \
-    pkg-config \
-    ghostscript
-
-  curl -fsSL https://imagemagick.org/archive/ImageMagick.tar.gz -o "$TMP_DIR/ImageMagick.tar.gz"
-  tar -xzf "$TMP_DIR/ImageMagick.tar.gz" -C "$TMP_DIR"
-  cd "$TMP_DIR"/ImageMagick-* || {
-    msg_error "Source extraction failed"
-    rm -rf "$TMP_DIR"
-    return 1
-  }
-
-  ./configure --disable-static >/dev/null
-  $STD make
-  $STD make install
-  $STD ldconfig /usr/local/lib
-
-  if [[ ! -x "$BINARY_PATH" ]]; then
-    msg_error "ImageMagick installation failed"
-    rm -rf "$TMP_DIR"
-    return 1
-  fi
-
-  VERSION=$("$BINARY_PATH" -version | awk '/^Version/ {print $3}')
-  rm -rf "$TMP_DIR"
+  # Ensure /usr/local/bin is in PATH for future logins (and current shell)
   ensure_usr_local_bin_persist
-  msg_ok "Setup ImageMagick $VERSION"
+  export PATH="/usr/local/bin:$PATH"
+
+  # Check if composer is already installed
+  if [[ -x "$COMPOSER_BIN" ]]; then
+    local CURRENT_VERSION
+    CURRENT_VERSION=$("$COMPOSER_BIN" --version | awk '{print $3}')
+    $STD msg_info "Old Composer $CURRENT_VERSION found, updating to latest"
+  else
+    msg_info "Installing Composer"
+  fi
+
+  # Download and install latest Composer
+  curl -fsSL https://getcomposer.org/installer -o /tmp/composer-setup.php
+  php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer >/dev/null 2>&1
+
+  if [[ ! -x "$COMPOSER_BIN" ]]; then
+    msg_error "Composer was not successfully installed (no binary at $COMPOSER_BIN)"
+    return 1
+  fi
+
+  chmod +x "$COMPOSER_BIN"
+  $STD "$COMPOSER_BIN" self-update --no-interaction || true # safe if already latest
+  $STD "$COMPOSER_BIN" diagnose
+  msg_ok "Composer is ready at $COMPOSER_BIN"
 }
 
 # ------------------------------------------------------------------------------
@@ -1922,126 +801,1247 @@ function setup_ffmpeg() {
 }
 
 # ------------------------------------------------------------------------------
-# Checks for new GitHub release (latest tag).
+# Installs Go (Golang) from official tarball.
 #
 # Description:
-#   - Queries the GitHub API for the latest release tag
-#   - Compares it to a local cached version (~/.<app>)
-#   - If newer, sets global CHECK_UPDATE_RELEASE and returns 0
+#   - Determines system architecture
+#   - Downloads latest version if GO_VERSION not set
 #
-# Usage:
-#     if check_for_gh_release "flaresolverr" "FlareSolverr/FlareSolverr" [optional] "v1.1.1"; then
-#       # trigger update...
-#     fi
-#     exit 0
-#     } (end of update_script not from the function)
+# Variables:
+#   GO_VERSION     - Version to install (e.g. 1.22.2 or latest)
+# ------------------------------------------------------------------------------
+
+function setup_go() {
+  local ARCH
+  case "$(uname -m)" in
+  x86_64) ARCH="amd64" ;;
+  aarch64) ARCH="arm64" ;;
+  *)
+    msg_error "Unsupported architecture: $(uname -m)"
+    return 1
+    ;;
+  esac
+
+  # Determine version
+  if [[ -z "${GO_VERSION:-}" || "${GO_VERSION}" == "latest" ]]; then
+    GO_VERSION=$(curl -fsSL https://go.dev/VERSION?m=text | head -n1 | sed 's/^go//')
+    if [[ -z "$GO_VERSION" ]]; then
+      msg_error "Could not determine latest Go version"
+      return 1
+    fi
+  fi
+
+  local GO_BIN="/usr/local/bin/go"
+  local GO_INSTALL_DIR="/usr/local/go"
+
+  if [[ -x "$GO_BIN" ]]; then
+    local CURRENT_VERSION
+    CURRENT_VERSION=$("$GO_BIN" version | awk '{print $3}' | sed 's/go//')
+    if [[ "$CURRENT_VERSION" == "$GO_VERSION" ]]; then
+      return 0
+    else
+      $STD msg_info "Old Go Installation ($CURRENT_VERSION) found, upgrading to $GO_VERSION"
+      rm -rf "$GO_INSTALL_DIR"
+    fi
+  else
+    msg_info "Setup Go $GO_VERSION"
+  fi
+
+  local TARBALL="go${GO_VERSION}.linux-${ARCH}.tar.gz"
+  local URL="https://go.dev/dl/${TARBALL}"
+  local TMP_TAR=$(mktemp)
+
+  curl -fsSL "$URL" -o "$TMP_TAR" || {
+    msg_error "Failed to download $TARBALL"
+    return 1
+  }
+
+  tar -C /usr/local -xzf "$TMP_TAR"
+  ln -sf /usr/local/go/bin/go /usr/local/bin/go
+  ln -sf /usr/local/go/bin/gofmt /usr/local/bin/gofmt
+  rm -f "$TMP_TAR"
+
+  msg_ok "Setup Go $GO_VERSION"
+}
+
+# ------------------------------------------------------------------------------
+# Installs or updates Ghostscript (gs) from source.
+#
+# Description:
+#   - Fetches latest release
+#   - Builds and installs system-wide
+# ------------------------------------------------------------------------------
+
+function setup_gs() {
+  mkdir -p /tmp
+  TMP_DIR=$(mktemp -d)
+  CURRENT_VERSION=$(gs --version 2>/dev/null || echo "0")
+
+  RELEASE_JSON=$(curl -fsSL https://api.github.com/repos/ArtifexSoftware/ghostpdl-downloads/releases/latest)
+  LATEST_VERSION=$(echo "$RELEASE_JSON" | grep '"tag_name":' | head -n1 | cut -d '"' -f4 | sed 's/^gs//')
+  LATEST_VERSION_DOTTED=$(echo "$RELEASE_JSON" | grep '"name":' | head -n1 | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+')
+
+  if [[ -z "$LATEST_VERSION" ]]; then
+    msg_error "Could not determine latest Ghostscript version from GitHub."
+    rm -rf "$TMP_DIR"
+    return
+  fi
+
+  if dpkg --compare-versions "$CURRENT_VERSION" ge "$LATEST_VERSION_DOTTED"; then
+    rm -rf "$TMP_DIR"
+    return
+  fi
+
+  msg_info "Setup Ghostscript $LATEST_VERSION_DOTTED"
+  curl -fsSL "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs${LATEST_VERSION}/ghostscript-${LATEST_VERSION_DOTTED}.tar.gz" -o "$TMP_DIR/ghostscript.tar.gz"
+
+  if ! tar -xzf "$TMP_DIR/ghostscript.tar.gz" -C "$TMP_DIR"; then
+    msg_error "Failed to extract Ghostscript archive."
+    rm -rf "$TMP_DIR"
+    return
+  fi
+
+  cd "$TMP_DIR/ghostscript-${LATEST_VERSION_DOTTED}" || {
+    msg_error "Failed to enter Ghostscript source directory."
+    rm -rf "$TMP_DIR"
+  }
+  $STD apt-get install -y build-essential libpng-dev zlib1g-dev
+  $STD ./configure >/dev/null
+  $STD make
+  $STD sudo make install
+  local EXIT_CODE=$?
+  hash -r
+  if [[ ! -x "$(command -v gs)" ]]; then
+    if [[ -x /usr/local/bin/gs ]]; then
+      ln -sf /usr/local/bin/gs /usr/bin/gs
+    fi
+  fi
+
+  rm -rf "$TMP_DIR"
+
+  if [[ $EXIT_CODE -eq 0 ]]; then
+    msg_ok "Setup Ghostscript $LATEST_VERSION_DOTTED"
+  else
+    msg_error "Ghostscript installation failed"
+  fi
+}
+
+# ------------------------------------------------------------------------------
+# Installs ImageMagick 7 from source (Debian/Ubuntu only).
+#
+# Description:
+#   - Downloads the latest ImageMagick source tarball
+#   - Builds and installs ImageMagick to /usr/local
+#   - Configures dynamic linker (ldconfig)
 #
 # Notes:
-#   - Requires `jq` (auto-installed if missing)
-#   - Does not modify anything, only checks version state
-#   - Does not support pre-releases
+#   - Requires: build-essential, libtool, libjpeg-dev, libpng-dev, etc.
 # ------------------------------------------------------------------------------
-check_for_gh_release() {
-  local app="$1"
-  local source="$2"
-  local pinned_version_in="${3:-}" # optional
-  local app_lc="${app,,}"
-  local current_file="$HOME/.${app_lc}"
+function setup_imagemagick() {
+  local TMP_DIR
+  TMP_DIR=$(mktemp -d)
+  local VERSION=""
+  local BINARY_PATH="/usr/local/bin/magick"
 
-  msg_info "Checking for update: ${app}"
+  if command -v magick &>/dev/null; then
+    VERSION=$(magick -version | awk '/^Version/ {print $3}')
+    msg_ok "ImageMagick already installed ($VERSION)"
+    return 0
+  fi
 
-  # DNS check
-  if ! getent hosts api.github.com >/dev/null 2>&1; then
-    msg_error "Network error: cannot resolve api.github.com"
+  msg_info "Setup ImageMagick (Patience)"
+  $STD apt-get update
+  $STD apt-get install -y \
+    build-essential \
+    libtool \
+    libjpeg-dev \
+    libpng-dev \
+    libtiff-dev \
+    libwebp-dev \
+    libheif-dev \
+    libde265-dev \
+    libopenjp2-7-dev \
+    libxml2-dev \
+    liblcms2-dev \
+    libfreetype6-dev \
+    libraw-dev \
+    libfftw3-dev \
+    liblqr-1-0-dev \
+    libgsl-dev \
+    pkg-config \
+    ghostscript
+
+  curl -fsSL https://imagemagick.org/archive/ImageMagick.tar.gz -o "$TMP_DIR/ImageMagick.tar.gz"
+  tar -xzf "$TMP_DIR/ImageMagick.tar.gz" -C "$TMP_DIR"
+  cd "$TMP_DIR"/ImageMagick-* || {
+    msg_error "Source extraction failed"
+    rm -rf "$TMP_DIR"
+    return 1
+  }
+
+  ./configure --disable-static >/dev/null
+  $STD make
+  $STD make install
+  $STD ldconfig /usr/local/lib
+
+  if [[ ! -x "$BINARY_PATH" ]]; then
+    msg_error "ImageMagick installation failed"
+    rm -rf "$TMP_DIR"
     return 1
   fi
 
-  # jq check
+  VERSION=$("$BINARY_PATH" -version | awk '/^Version/ {print $3}')
+  rm -rf "$TMP_DIR"
+  ensure_usr_local_bin_persist
+  msg_ok "Setup ImageMagick $VERSION"
+}
+
+# ------------------------------------------------------------------------------
+# Installs Temurin JDK via Adoptium APT repository.
+#
+# Description:
+#   - Removes previous JDK if version mismatch
+#   - Installs or upgrades to specified JAVA_VERSION
+#
+# Variables:
+#   JAVA_VERSION   - Temurin JDK version to install (e.g. 17, 21)
+# ------------------------------------------------------------------------------
+
+function setup_java() {
+  local JAVA_VERSION="${JAVA_VERSION:-21}"
+  local DISTRO_CODENAME
+  DISTRO_CODENAME=$(awk -F= '/VERSION_CODENAME/ { print $2 }' /etc/os-release)
+  local DESIRED_PACKAGE="temurin-${JAVA_VERSION}-jdk"
+
+  # Add Adoptium repo if missing
+  if [[ ! -f /etc/apt/sources.list.d/adoptium.list ]]; then
+    $STD msg_info "Setting up Adoptium Repository"
+    mkdir -p /etc/apt/keyrings
+    curl -fsSL "https://packages.adoptium.net/artifactory/api/gpg/key/public" | gpg --dearmor -o /etc/apt/trusted.gpg.d/adoptium.gpg
+    echo "deb [signed-by=/etc/apt/trusted.gpg.d/adoptium.gpg] https://packages.adoptium.net/artifactory/deb ${DISTRO_CODENAME} main" \
+      >/etc/apt/sources.list.d/adoptium.list
+    $STD apt-get update
+    $STD msg_ok "Set up Adoptium Repository"
+  fi
+
+  # Detect currently installed temurin version
+  local INSTALLED_VERSION=""
+  if dpkg -l | grep -q "temurin-.*-jdk"; then
+    INSTALLED_VERSION=$(dpkg -l | awk '/temurin-.*-jdk/{print $2}' | grep -oP 'temurin-\K[0-9]+')
+  fi
+
+  if [[ "$INSTALLED_VERSION" == "$JAVA_VERSION" ]]; then
+    $STD msg_info "Upgrading Temurin JDK $JAVA_VERSION"
+    $STD apt-get update
+    $STD apt-get install --only-upgrade -y "$DESIRED_PACKAGE"
+    $STD msg_ok "Upgraded Temurin JDK $JAVA_VERSION"
+  else
+    if [[ -n "$INSTALLED_VERSION" ]]; then
+      $STD msg_info "Removing Temurin JDK $INSTALLED_VERSION"
+      $STD apt-get purge -y "temurin-${INSTALLED_VERSION}-jdk"
+    fi
+
+    msg_info "Setup Temurin JDK $JAVA_VERSION"
+    $STD apt-get install -y "$DESIRED_PACKAGE"
+    msg_ok "Setup Temurin JDK $JAVA_VERSION"
+  fi
+}
+
+# ------------------------------------------------------------------------------
+# Installs a local IP updater script using networkd-dispatcher.
+#
+# Description:
+#   - Stores current IP in /run/local-ip.env
+#   - Automatically runs on network changes
+# ------------------------------------------------------------------------------
+
+function setup_local_ip_helper() {
+  local BASE_DIR="/usr/local/community-scripts/ip-management"
+  local SCRIPT_PATH="$BASE_DIR/update_local_ip.sh"
+  local IP_FILE="/run/local-ip.env"
+  local DISPATCHER_SCRIPT="/etc/networkd-dispatcher/routable.d/10-update-local-ip.sh"
+
+  mkdir -p "$BASE_DIR"
+
+  # Install networkd-dispatcher if not present
+  if ! dpkg -s networkd-dispatcher >/dev/null 2>&1; then
+    $STD apt-get update
+    $STD apt-get install -y networkd-dispatcher
+  fi
+
+  # Write update_local_ip.sh
+  cat <<'EOF' >"$SCRIPT_PATH"
+#!/bin/bash
+set -euo pipefail
+
+IP_FILE="/run/local-ip.env"
+mkdir -p "$(dirname "$IP_FILE")"
+
+get_current_ip() {
+    local targets=("8.8.8.8" "1.1.1.1" "192.168.1.1" "10.0.0.1" "172.16.0.1" "default")
+    local ip
+
+    for target in "${targets[@]}"; do
+        if [[ "$target" == "default" ]]; then
+            ip=$(ip route get 1 2>/dev/null | awk '{for(i=1;i<=NF;i++) if ($i=="src") print $(i+1)}')
+        else
+            ip=$(ip route get "$target" 2>/dev/null | awk '{for(i=1;i<=NF;i++) if ($i=="src") print $(i+1)}')
+        fi
+        if [[ -n "$ip" ]]; then
+            echo "$ip"
+            return 0
+        fi
+    done
+
+    return 1
+}
+
+current_ip="$(get_current_ip)"
+
+if [[ -z "$current_ip" ]]; then
+    echo "[ERROR] Could not detect local IP" >&2
+    exit 1
+fi
+
+if [[ -f "$IP_FILE" ]]; then
+    source "$IP_FILE"
+    [[ "$LOCAL_IP" == "$current_ip" ]] && exit 0
+fi
+
+echo "LOCAL_IP=$current_ip" > "$IP_FILE"
+echo "[INFO] LOCAL_IP updated to $current_ip"
+EOF
+
+  chmod +x "$SCRIPT_PATH"
+
+  # Install dispatcher hook
+  mkdir -p "$(dirname "$DISPATCHER_SCRIPT")"
+  cat <<EOF >"$DISPATCHER_SCRIPT"
+#!/bin/bash
+$SCRIPT_PATH
+EOF
+
+  chmod +x "$DISPATCHER_SCRIPT"
+  systemctl enable -q --now networkd-dispatcher.service
+}
+
+# ------------------------------------------------------------------------------
+# Installs or updates MariaDB from official repo.
+#
+# Description:
+#   - Detects current MariaDB version and replaces it if necessary
+#   - Preserves existing database data
+#   - Dynamically determines latest GA version if "latest" is given
+#
+# Variables:
+#   MARIADB_VERSION - MariaDB version to install (e.g. 10.11, latest) (default: latest)
+# ------------------------------------------------------------------------------
+
+setup_mariadb() {
+  local MARIADB_VERSION="${MARIADB_VERSION:-latest}"
+  local DISTRO_CODENAME
+  DISTRO_CODENAME="$(awk -F= '/^VERSION_CODENAME=/{print $2}' /etc/os-release)"
+  CURRENT_OS="$(awk -F= '/^ID=/{print $2}' /etc/os-release)"
+
+  if ! curl -fsI http://mirror.mariadb.org/repo/ >/dev/null; then
+    msg_error "MariaDB mirror not reachable"
+    return 1
+  fi
+
+  msg_info "Setting up MariaDB $MARIADB_VERSION"
+  # Grab dynamic latest LTS version
+  if [[ "$MARIADB_VERSION" == "latest" ]]; then
+    MARIADB_VERSION=$(curl -fsSL http://mirror.mariadb.org/repo/ |
+      grep -Eo '[0-9]+\.[0-9]+\.[0-9]+/' |
+      grep -vE 'rc/|rolling/' |
+      sed 's|/||' |
+      sort -Vr |
+      head -n1)
+    if [[ -z "$MARIADB_VERSION" ]]; then
+      msg_error "Could not determine latest GA MariaDB version"
+      return 1
+    fi
+  fi
+
+  local CURRENT_VERSION=""
+  if command -v mariadb >/dev/null; then
+    CURRENT_VERSION=$(mariadb --version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+  fi
+
+  if [[ "$CURRENT_VERSION" == "$MARIADB_VERSION" ]]; then
+    $STD msg_info "MariaDB $MARIADB_VERSION, upgrading"
+    $STD apt-get update
+    $STD apt-get install --only-upgrade -y mariadb-server mariadb-client
+    $STD msg_ok "MariaDB upgraded to $MARIADB_VERSION"
+    return 0
+  fi
+
+  if [[ -n "$CURRENT_VERSION" ]]; then
+    $STD msg_info "Upgrading MariaDB $CURRENT_VERSION to $MARIADB_VERSION"
+    $STD systemctl stop mariadb >/dev/null 2>&1 || true
+    $STD apt-get purge -y 'mariadb*' || true
+    rm -f /etc/apt/sources.list.d/mariadb.list /etc/apt/trusted.gpg.d/mariadb.gpg
+  else
+    $STD msg_info "Setup MariaDB $MARIADB_VERSION"
+  fi
+
+  curl -fsSL "https://mariadb.org/mariadb_release_signing_key.asc" |
+    gpg --dearmor -o /etc/apt/trusted.gpg.d/mariadb.gpg
+
+  echo "deb [signed-by=/etc/apt/trusted.gpg.d/mariadb.gpg] http://mirror.mariadb.org/repo/${MARIADB_VERSION}/${CURRENT_OS} ${DISTRO_CODENAME} main" \
+    >/etc/apt/sources.list.d/mariadb.list
+
+  $STD apt-get update
+
+  local MARIADB_MAJOR_MINOR
+  MARIADB_MAJOR_MINOR=$(echo "$MARIADB_VERSION" | awk -F. '{print $1"."$2}')
+  if [[ -n "$MARIADB_MAJOR_MINOR" ]]; then
+    echo "mariadb-server-$MARIADB_MAJOR_MINOR mariadb-server/feedback boolean false" | debconf-set-selections
+  else
+    for ver in 12.1 12.0 11.4 11.3 11.2 11.1 11.0 10.11 10.6 10.5 10.4 10.3; do
+      echo "mariadb-server-$ver mariadb-server/feedback boolean false" | debconf-set-selections
+    done
+  fi
+  DEBIAN_FRONTEND=noninteractive $STD apt-get install -y mariadb-server mariadb-client
+
+  msg_ok "Setup MariaDB $MARIADB_VERSION"
+}
+
+# ------------------------------------------------------------------------------
+# Installs or updates MongoDB to specified major version.
+#
+# Description:
+#   - Preserves data across installations
+#   - Adds official MongoDB repo
+#
+# Variables:
+#   MONGO_VERSION  - MongoDB major version to install (e.g. 7.0, 8.0)
+# ------------------------------------------------------------------------------
+
+function setup_mongodb() {
+  local MONGO_VERSION="${MONGO_VERSION:-8.0}"
+  local DISTRO_ID DISTRO_CODENAME MONGO_BASE_URL
+  DISTRO_ID=$(awk -F= '/^ID=/{ gsub(/"/,"",$2); print $2 }' /etc/os-release)
+  DISTRO_CODENAME=$(awk -F= '/^VERSION_CODENAME=/{ print $2 }' /etc/os-release)
+
+  # Check AVX support
+  if ! grep -qm1 'avx[^ ]*' /proc/cpuinfo; then
+    local major="${MONGO_VERSION%%.*}"
+    if ((major > 5)); then
+      msg_error "MongoDB ${MONGO_VERSION} requires AVX support, which is not available on this system."
+      return 1
+    fi
+  fi
+
+  case "$DISTRO_ID" in
+  ubuntu)
+    MONGO_BASE_URL="https://repo.mongodb.org/apt/ubuntu"
+    REPO_COMPONENT="multiverse"
+    ;;
+  debian)
+    MONGO_BASE_URL="https://repo.mongodb.org/apt/debian"
+    REPO_COMPONENT="main"
+    ;;
+  *)
+    msg_error "Unsupported distribution: $DISTRO_ID"
+    return 1
+    ;;
+  esac
+
+  local REPO_LIST="/etc/apt/sources.list.d/mongodb-org-${MONGO_VERSION}.list"
+
+  local INSTALLED_VERSION=""
+  if command -v mongod >/dev/null; then
+    INSTALLED_VERSION=$(mongod --version | awk '/db version/{print $3}' | cut -d. -f1,2)
+  fi
+
+  if [[ "$INSTALLED_VERSION" == "$MONGO_VERSION" ]]; then
+    $STD msg_info "Upgrading MongoDB $MONGO_VERSION"
+    $STD apt-get update
+    $STD apt-get install --only-upgrade -y mongodb-org
+    $STD msg_ok "Upgraded MongoDB $MONGO_VERSION"
+    return 0
+  fi
+
+  if [[ -n "$INSTALLED_VERSION" ]]; then
+    $STD systemctl stop mongod || true
+    $STD apt-get purge -y mongodb-org || true
+    rm -f /etc/apt/sources.list.d/mongodb-org-*.list
+    rm -f /etc/apt/trusted.gpg.d/mongodb-*.gpg
+  else
+    msg_info "Setup MongoDB $MONGO_VERSION"
+  fi
+
+  curl -fsSL "https://pgp.mongodb.com/server-${MONGO_VERSION}.asc" | gpg --dearmor -o "/etc/apt/trusted.gpg.d/mongodb-${MONGO_VERSION}.gpg"
+  echo "deb [signed-by=/etc/apt/trusted.gpg.d/mongodb-${MONGO_VERSION}.gpg] ${MONGO_BASE_URL} ${DISTRO_CODENAME}/mongodb-org/${MONGO_VERSION} ${REPO_COMPONENT}" \
+    >"$REPO_LIST"
+
+  $STD apt-get update || {
+    msg_error "APT update failed — invalid MongoDB repo for ${DISTRO_ID}-${DISTRO_CODENAME}?"
+    return 1
+  }
+
+  $STD apt-get install -y mongodb-org
+
+  mkdir -p /var/lib/mongodb
+  chown -R mongodb:mongodb /var/lib/mongodb
+
+  $STD systemctl enable mongod
+  $STD systemctl start mongod
+  msg_ok "Setup MongoDB $MONGO_VERSION"
+}
+
+# ------------------------------------------------------------------------------
+# Installs or upgrades MySQL and configures APT repo.
+#
+# Description:
+#   - Detects existing MySQL installation
+#   - Purges conflicting packages before installation
+#   - Supports clean upgrade
+#
+# Variables:
+#   MYSQL_VERSION  - MySQL version to install (e.g. 5.7, 8.0) (default: 8.0)
+# ------------------------------------------------------------------------------
+
+function setup_mysql() {
+  local MYSQL_VERSION="${MYSQL_VERSION:-8.0}"
+  local CURRENT_VERSION=""
+  local NEED_INSTALL=false
+  CURRENT_OS="$(awk -F= '/^ID=/{print $2}' /etc/os-release)"
+
+  if command -v mysql >/dev/null; then
+    CURRENT_VERSION="$(mysql --version | grep -oP 'Distrib\s+\K[0-9]+\.[0-9]+')"
+    if [[ "$CURRENT_VERSION" != "$MYSQL_VERSION" ]]; then
+      $STD msg_info "MySQL $CURRENT_VERSION will be upgraded to $MYSQL_VERSION"
+      NEED_INSTALL=true
+    else
+      # Check for patch-level updates
+      if apt list --upgradable 2>/dev/null | grep -q '^mysql-server/'; then
+        $STD msg_info "MySQL $CURRENT_VERSION available for upgrade"
+        $STD apt-get update
+        $STD apt-get install --only-upgrade -y mysql-server
+        $STD msg_ok "MySQL upgraded"
+      fi
+      return
+    fi
+  else
+    msg_info "Setup MySQL $MYSQL_VERSION"
+    NEED_INSTALL=true
+  fi
+
+  if [[ "$NEED_INSTALL" == true ]]; then
+    $STD systemctl stop mysql || true
+    $STD apt-get purge -y "^mysql-server.*" "^mysql-client.*" "^mysql-common.*" || true
+    rm -f /etc/apt/sources.list.d/mysql.list /etc/apt/trusted.gpg.d/mysql.gpg
+
+    local DISTRO_CODENAME
+    DISTRO_CODENAME="$(awk -F= '/VERSION_CODENAME/ { print $2 }' /etc/os-release)"
+    curl -fsSL https://repo.mysql.com/RPM-GPG-KEY-mysql-2023 | gpg --dearmor -o /etc/apt/trusted.gpg.d/mysql.gpg
+    echo "deb [signed-by=/etc/apt/trusted.gpg.d/mysql.gpg] https://repo.mysql.com/apt/${CURRENT_OS}/ ${DISTRO_CODENAME} mysql-${MYSQL_VERSION}" \
+      >/etc/apt/sources.list.d/mysql.list
+
+    export DEBIAN_FRONTEND=noninteractive
+    $STD apt-get update
+    $STD apt-get install -y mysql-server
+    msg_ok "Setup MySQL $MYSQL_VERSION"
+  fi
+}
+
+# ------------------------------------------------------------------------------
+# Installs Node.js and optional global modules.
+#
+# Description:
+#   - Installs specified Node.js version using NodeSource APT repo
+#   - Optionally installs or updates global npm modules
+#
+# Variables:
+#   NODE_VERSION   - Node.js version to install (default: 22)
+#   NODE_MODULE    - Comma-separated list of global modules (e.g. "yarn,@vue/cli@5.0.0")
+# ------------------------------------------------------------------------------
+
+function setup_nodejs() {
+  local NODE_VERSION="${NODE_VERSION:-22}"
+  local NODE_MODULE="${NODE_MODULE:-}"
+  local CURRENT_NODE_VERSION=""
+  local NEED_NODE_INSTALL=false
+
+  # Check if Node.js is already installed
+  if command -v node >/dev/null; then
+    CURRENT_NODE_VERSION="$(node -v | grep -oP '^v\K[0-9]+')"
+    if [[ "$CURRENT_NODE_VERSION" != "$NODE_VERSION" ]]; then
+      msg_info "Old Node.js $CURRENT_NODE_VERSION found, replacing with $NODE_VERSION"
+      NEED_NODE_INSTALL=true
+    fi
+  else
+    msg_info "Setup Node.js $NODE_VERSION"
+    NEED_NODE_INSTALL=true
+  fi
+
   if ! command -v jq &>/dev/null; then
-    $STD apt-get update -qq
+    $STD apt-get update
     $STD apt-get install -y jq || {
       msg_error "Failed to install jq"
       return 1
     }
   fi
 
-  # Fetch releases and exclude drafts/prereleases
-  local releases_json
-  releases_json=$(curl -fsSL --max-time 20 \
-    -H 'Accept: application/vnd.github+json' \
-    -H 'X-GitHub-Api-Version: 2022-11-28' \
-    "https://api.github.com/repos/${source}/releases") || {
-    msg_error "Unable to fetch releases for ${app}"
+  # Install Node.js if required
+  if [[ "$NEED_NODE_INSTALL" == true ]]; then
+    $STD apt-get purge -y nodejs
+    rm -f /etc/apt/sources.list.d/nodesource.list /etc/apt/keyrings/nodesource.gpg
+
+    mkdir -p /etc/apt/keyrings
+
+    if ! curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key |
+      gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg; then
+      msg_error "Failed to download or import NodeSource GPG key"
+      exit 1
+    fi
+
+    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_${NODE_VERSION}.x nodistro main" \
+      >/etc/apt/sources.list.d/nodesource.list
+
+    sleep 2
+    if ! apt-get update >/dev/null 2>&1; then
+      msg_warn "APT update failed – retrying in 5s"
+      sleep 5
+      if ! apt-get update >/dev/null 2>&1; then
+        msg_error "Failed to update APT repositories after adding NodeSource"
+        exit 1
+      fi
+    fi
+
+    if ! apt-get install -y nodejs >/dev/null 2>&1; then
+      msg_error "Failed to install Node.js ${NODE_VERSION} from NodeSource"
+      exit 1
+    fi
+
+    # Update to latest npm
+    $STD npm install -g npm@latest || {
+      msg_error "Failed to update npm to latest version"
+    }
+    msg_ok "Setup Node.js ${NODE_VERSION}"
+  fi
+
+  export NODE_OPTIONS="--max-old-space-size=4096"
+
+  # Ensure valid working directory for npm (avoids uv_cwd error)
+  if [[ ! -d /opt ]]; then
+    mkdir -p /opt
+  fi
+  cd /opt || {
+    msg_error "Failed to set safe working directory before npm install"
+    exit 1
+  }
+
+  # Install global Node modules
+  if [[ -n "$NODE_MODULE" ]]; then
+    IFS=',' read -ra MODULES <<<"$NODE_MODULE"
+    for mod in "${MODULES[@]}"; do
+      local MODULE_NAME MODULE_REQ_VERSION MODULE_INSTALLED_VERSION
+      if [[ "$mod" == @*/*@* ]]; then
+        # Scoped package with version, e.g. @vue/cli-service@latest
+        MODULE_NAME="${mod%@*}"
+        MODULE_REQ_VERSION="${mod##*@}"
+      elif [[ "$mod" == *"@"* ]]; then
+        # Unscoped package with version, e.g. yarn@latest
+        MODULE_NAME="${mod%@*}"
+        MODULE_REQ_VERSION="${mod##*@}"
+      else
+        # No version specified
+        MODULE_NAME="$mod"
+        MODULE_REQ_VERSION="latest"
+      fi
+
+      # Check if the module is already installed
+      if npm list -g --depth=0 "$MODULE_NAME" >/dev/null 2>&1; then
+        MODULE_INSTALLED_VERSION="$(npm list -g --depth=0 "$MODULE_NAME" | grep "$MODULE_NAME@" | awk -F@ '{print $2}' | tr -d '[:space:]')"
+        if [[ "$MODULE_REQ_VERSION" != "latest" && "$MODULE_REQ_VERSION" != "$MODULE_INSTALLED_VERSION" ]]; then
+          msg_info "Updating $MODULE_NAME from v$MODULE_INSTALLED_VERSION to v$MODULE_REQ_VERSION"
+          if ! $STD npm install -g "${MODULE_NAME}@${MODULE_REQ_VERSION}"; then
+            msg_error "Failed to update $MODULE_NAME to version $MODULE_REQ_VERSION"
+            exit 1
+          fi
+        elif [[ "$MODULE_REQ_VERSION" == "latest" ]]; then
+          msg_info "Updating $MODULE_NAME to latest version"
+          if ! $STD npm install -g "${MODULE_NAME}@latest"; then
+            msg_error "Failed to update $MODULE_NAME to latest version"
+            exit 1
+          fi
+        fi
+      else
+        msg_info "Installing $MODULE_NAME@$MODULE_REQ_VERSION"
+        if ! $STD npm install -g "${MODULE_NAME}@${MODULE_REQ_VERSION}"; then
+          msg_error "Failed to install $MODULE_NAME@$MODULE_REQ_VERSION"
+          exit 1
+        fi
+      fi
+    done
+    msg_ok "Installed Node.js modules: $NODE_MODULE"
+  fi
+}
+
+# ------------------------------------------------------------------------------
+# Installs PHP with selected modules and configures Apache/FPM support.
+#
+# Description:
+#   - Adds Sury PHP repo if needed
+#   - Installs default and user-defined modules
+#   - Patches php.ini for CLI, Apache, and FPM as needed
+#
+# Variables:
+#   PHP_VERSION                - PHP version to install (default: 8.4)
+#   PHP_MODULE                 - Additional comma-separated modules
+#   PHP_APACHE                 - Set YES to enable PHP with Apache
+#   PHP_FPM                    - Set YES to enable PHP-FPM
+#   PHP_MEMORY_LIMIT           - (default: 512M)
+#   PHP_UPLOAD_MAX_FILESIZE    - (default: 128M)
+#   PHP_POST_MAX_SIZE          - (default: 128M)
+#   PHP_MAX_EXECUTION_TIME     - (default: 300)
+# ------------------------------------------------------------------------------
+
+function setup_php() {
+  local PHP_VERSION="${PHP_VERSION:-8.4}"
+  local PHP_MODULE="${PHP_MODULE:-}"
+  local PHP_APACHE="${PHP_APACHE:-NO}"
+  local PHP_FPM="${PHP_FPM:-NO}"
+  local DISTRO_CODENAME
+  DISTRO_CODENAME=$(awk -F= '/VERSION_CODENAME/ { print $2 }' /etc/os-release)
+
+  local DEFAULT_MODULES="bcmath,cli,curl,gd,intl,mbstring,opcache,readline,xml,zip"
+  local COMBINED_MODULES
+
+  local PHP_MEMORY_LIMIT="${PHP_MEMORY_LIMIT:-512M}"
+  local PHP_UPLOAD_MAX_FILESIZE="${PHP_UPLOAD_MAX_FILESIZE:-128M}"
+  local PHP_POST_MAX_SIZE="${PHP_POST_MAX_SIZE:-128M}"
+  local PHP_MAX_EXECUTION_TIME="${PHP_MAX_EXECUTION_TIME:-300}"
+
+  # Merge default + user-defined modules
+  if [[ -n "$PHP_MODULE" ]]; then
+    COMBINED_MODULES="${DEFAULT_MODULES},${PHP_MODULE}"
+  else
+    COMBINED_MODULES="${DEFAULT_MODULES}"
+  fi
+
+  # Deduplicate
+  COMBINED_MODULES=$(echo "$COMBINED_MODULES" | tr ',' '\n' | awk '!seen[$0]++' | paste -sd, -)
+
+  # Get current PHP-CLI version
+  local CURRENT_PHP=""
+  if command -v php >/dev/null 2>&1; then
+    CURRENT_PHP=$(php -v 2>/dev/null | awk '/^PHP/{print $2}' | cut -d. -f1,2)
+  fi
+
+  if [[ -z "$CURRENT_PHP" ]]; then
+    msg_info "Setup PHP $PHP_VERSION"
+  elif [[ "$CURRENT_PHP" != "$PHP_VERSION" ]]; then
+    msg_info "Old PHP $CURRENT_PHP detected, Setup new PHP $PHP_VERSION"
+    $STD apt-get purge -y "php${CURRENT_PHP//./}"* || true
+  fi
+
+  # Ensure Sury repo is available
+  if [[ ! -f /etc/apt/sources.list.d/php.list ]]; then
+    $STD curl -fsSLo /tmp/debsuryorg-archive-keyring.deb https://packages.sury.org/debsuryorg-archive-keyring.deb
+    $STD dpkg -i /tmp/debsuryorg-archive-keyring.deb
+    echo "deb [signed-by=/usr/share/keyrings/deb.sury.org-php.gpg] https://packages.sury.org/php/ ${DISTRO_CODENAME} main" \
+      >/etc/apt/sources.list.d/php.list
+    $STD apt-get update
+  fi
+
+  # Build module list
+  local MODULE_LIST="php${PHP_VERSION}"
+  IFS=',' read -ra MODULES <<<"$COMBINED_MODULES"
+  for mod in "${MODULES[@]}"; do
+    if apt-cache show "php${PHP_VERSION}-${mod}" >/dev/null 2>&1; then
+      MODULE_LIST+=" php${PHP_VERSION}-${mod}"
+    else
+      msg_warn "PHP-Module ${mod} for PHP ${PHP_VERSION} not found – skipping"
+    fi
+  done
+  if [[ "$PHP_FPM" == "YES" ]]; then
+    MODULE_LIST+=" php${PHP_VERSION}-fpm"
+  fi
+
+  # install apache2 with PHP support if requested
+  if [[ "$PHP_APACHE" == "YES" ]]; then
+    if ! dpkg -l | grep -q "libapache2-mod-php${PHP_VERSION}"; then
+      msg_info "Installing Apache with PHP${PHP_VERSION} support"
+      $STD apt-get install -y apache2 libapache2-mod-php${PHP_VERSION}
+    else
+      msg_info "Apache with PHP${PHP_VERSION} already installed – skipping install"
+    fi
+  fi
+
+  # setup / update PHP modules
+  $STD apt-get install -y $MODULE_LIST
+  msg_ok "Setup PHP $PHP_VERSION"
+
+  # optional stop old PHP-FPM service
+  if [[ "$PHP_FPM" == "YES" && -n "$CURRENT_PHP" && "$CURRENT_PHP" != "$PHP_VERSION" ]]; then
+    $STD systemctl stop php"${CURRENT_PHP}"-fpm || true
+    $STD systemctl disable php"${CURRENT_PHP}"-fpm || true
+  fi
+
+  # Patch all relevant php.ini files
+  local PHP_INI_PATHS=("/etc/php/${PHP_VERSION}/cli/php.ini")
+  [[ "$PHP_FPM" == "YES" ]] && PHP_INI_PATHS+=("/etc/php/${PHP_VERSION}/fpm/php.ini")
+  [[ "$PHP_APACHE" == "YES" ]] && PHP_INI_PATHS+=("/etc/php/${PHP_VERSION}/apache2/php.ini")
+  for ini in "${PHP_INI_PATHS[@]}"; do
+    if [[ -f "$ini" ]]; then
+      $STD msg_info "Patching $ini"
+      sed -i "s|^memory_limit = .*|memory_limit = ${PHP_MEMORY_LIMIT}|" "$ini"
+      sed -i "s|^upload_max_filesize = .*|upload_max_filesize = ${PHP_UPLOAD_MAX_FILESIZE}|" "$ini"
+      sed -i "s|^post_max_size = .*|post_max_size = ${PHP_POST_MAX_SIZE}|" "$ini"
+      sed -i "s|^max_execution_time = .*|max_execution_time = ${PHP_MAX_EXECUTION_TIME}|" "$ini"
+      $STD msg_ok "Patched $ini"
+    fi
+  done
+
+  # patch Apache configuration if needed
+  if [[ "$PHP_APACHE" == "YES" ]]; then
+    for mod in $(ls /etc/apache2/mods-enabled/ 2>/dev/null | grep -E '^php[0-9]\.[0-9]\.conf$' | sed 's/\.conf//'); do
+      if [[ "$mod" != "php${PHP_VERSION}" ]]; then
+        $STD a2dismod "$mod" || true
+      fi
+    done
+    $STD a2enmod mpm_prefork
+    $STD a2enmod "php${PHP_VERSION}"
+    $STD systemctl restart apache2 || true
+  fi
+
+  # enable and restart PHP-FPM if requested
+  if [[ "$PHP_FPM" == "YES" ]]; then
+    if systemctl list-unit-files | grep -q "php${PHP_VERSION}-fpm.service"; then
+      $STD systemctl enable php${PHP_VERSION}-fpm
+      $STD systemctl restart php${PHP_VERSION}-fpm
+    else
+      msg_warn "FPM requested but service php${PHP_VERSION}-fpm not found"
+    fi
+  fi
+}
+
+# ------------------------------------------------------------------------------
+# Installs or upgrades PostgreSQL and optional extensions/modules.
+#
+# Description:
+#   - Detects existing PostgreSQL version
+#   - Dumps all databases before upgrade
+#   - Adds PGDG repo and installs specified version
+#   - Installs optional PG_MODULES (e.g. postgis, contrib)
+#   - Restores dumped data post-upgrade
+#
+# Variables:
+#   PG_VERSION     - Major PostgreSQL version (e.g. 15, 16) (default: 16)
+#   PG_MODULES     - Comma-separated list of extensions (e.g. "postgis,contrib")
+# ------------------------------------------------------------------------------
+function setup_postgresql() {
+  local PG_VERSION="${PG_VERSION:-16}"
+  local PG_MODULES="${PG_MODULES:-}"
+  local CURRENT_PG_VERSION=""
+  local DISTRO
+  local NEED_PG_INSTALL=false
+  DISTRO="$(awk -F'=' '/^VERSION_CODENAME=/{ print $NF }' /etc/os-release)"
+
+  if command -v psql >/dev/null; then
+    CURRENT_PG_VERSION="$(psql -V | awk '{print $3}' | cut -d. -f1)"
+    if [[ "$CURRENT_PG_VERSION" == "$PG_VERSION" ]]; then
+      : # PostgreSQL is already at the desired version – no action needed
+    else
+      $STD msg_info "Detected PostgreSQL $CURRENT_PG_VERSION, preparing upgrade to $PG_VERSION"
+      NEED_PG_INSTALL=true
+    fi
+  else
+
+    NEED_PG_INSTALL=true
+  fi
+
+  if [[ "$NEED_PG_INSTALL" == true ]]; then
+    if [[ -n "$CURRENT_PG_VERSION" ]]; then
+      $STD msg_info "Dumping PostgreSQL $CURRENT_PG_VERSION data"
+      su - postgres -c "pg_dumpall > /var/lib/postgresql/backup_$(date +%F)_v${CURRENT_PG_VERSION}.sql"
+      $STD msg_ok "Data dump completed"
+
+      systemctl stop postgresql
+    fi
+
+    rm -f /etc/apt/sources.list.d/pgdg.list /etc/apt/trusted.gpg.d/postgresql.gpg
+
+    $STD msg_info "Adding PostgreSQL PGDG repository"
+    curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc |
+      gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg
+
+    echo "deb https://apt.postgresql.org/pub/repos/apt ${DISTRO}-pgdg main" \
+      >/etc/apt/sources.list.d/pgdg.list
+
+    $STD apt-get update
+    $STD msg_ok "Repository added"
+
+    msg_info "Setup PostgreSQL $PG_VERSION"
+    $STD apt-get install -y "postgresql-${PG_VERSION}" "postgresql-client-${PG_VERSION}"
+
+    if [[ -n "$CURRENT_PG_VERSION" ]]; then
+      $STD apt-get purge -y "postgresql-${CURRENT_PG_VERSION}" "postgresql-client-${CURRENT_PG_VERSION}" || true
+    fi
+
+    systemctl enable -q --now postgresql
+
+    if [[ -n "$CURRENT_PG_VERSION" ]]; then
+      $STD msg_info "Restoring dumped data"
+      su - postgres -c "psql < /var/lib/postgresql/backup_$(date +%F)_v${CURRENT_PG_VERSION}.sql"
+      $STD msg_ok "Data restored"
+    fi
+
+    $STD msg_ok "PostgreSQL $PG_VERSION installed"
+  fi
+
+  # Install optional PostgreSQL modules
+  if [[ -n "$PG_MODULES" ]]; then
+    IFS=',' read -ra MODULES <<<"$PG_MODULES"
+    for module in "${MODULES[@]}"; do
+      local pkg="postgresql-${PG_VERSION}-${module}"
+      $STD msg_info "Setup PostgreSQL module/s: $pkg"
+      $STD apt-get install -y "$pkg" || {
+        msg_error "Failed to install $pkg"
+        continue
+      }
+    done
+    $STD msg_ok "Setup PostgreSQL modules"
+  fi
+}
+
+# ------------------------------------------------------------------------------
+# Installs rbenv and ruby-build, installs Ruby and optionally Rails.
+#
+# Description:
+#   - Downloads rbenv and ruby-build from GitHub
+#   - Compiles and installs target Ruby version
+#   - Optionally installs Rails via gem
+#
+# Variables:
+#   RUBY_VERSION         - Ruby version to install (default: 3.4.4)
+#   RUBY_INSTALL_RAILS   - true/false to install Rails (default: true)
+# ------------------------------------------------------------------------------
+
+function setup_ruby() {
+  local RUBY_VERSION="${RUBY_VERSION:-3.4.4}"
+  local RUBY_INSTALL_RAILS="${RUBY_INSTALL_RAILS:-true}"
+
+  local RBENV_DIR="$HOME/.rbenv"
+  local RBENV_BIN="$RBENV_DIR/bin/rbenv"
+  local PROFILE_FILE="$HOME/.profile"
+  local TMP_DIR
+  TMP_DIR=$(mktemp -d)
+
+  msg_info "Setup Ruby $RUBY_VERSION"
+
+  local RBENV_RELEASE
+  RBENV_RELEASE=$(curl -fsSL https://api.github.com/repos/rbenv/rbenv/releases/latest | grep '"tag_name":' | cut -d '"' -f4 | sed 's/^v//')
+  if [[ -z "$RBENV_RELEASE" ]]; then
+    msg_error "Failed to fetch latest rbenv version"
+    rm -rf "$TMP_DIR"
+    return 1
+  fi
+
+  curl -fsSL "https://github.com/rbenv/rbenv/archive/refs/tags/v${RBENV_RELEASE}.tar.gz" -o "$TMP_DIR/rbenv.tar.gz"
+  tar -xzf "$TMP_DIR/rbenv.tar.gz" -C "$TMP_DIR"
+  mkdir -p "$RBENV_DIR"
+  cp -r "$TMP_DIR/rbenv-${RBENV_RELEASE}/." "$RBENV_DIR/"
+  cd "$RBENV_DIR" && src/configure && $STD make -C src
+
+  local RUBY_BUILD_RELEASE
+  RUBY_BUILD_RELEASE=$(curl -fsSL https://api.github.com/repos/rbenv/ruby-build/releases/latest | grep '"tag_name":' | cut -d '"' -f4 | sed 's/^v//')
+  if [[ -z "$RUBY_BUILD_RELEASE" ]]; then
+    msg_error "Failed to fetch latest ruby-build version"
+    rm -rf "$TMP_DIR"
+    return 1
+  fi
+
+  curl -fsSL "https://github.com/rbenv/ruby-build/archive/refs/tags/v${RUBY_BUILD_RELEASE}.tar.gz" -o "$TMP_DIR/ruby-build.tar.gz"
+  tar -xzf "$TMP_DIR/ruby-build.tar.gz" -C "$TMP_DIR"
+  mkdir -p "$RBENV_DIR/plugins/ruby-build"
+  cp -r "$TMP_DIR/ruby-build-${RUBY_BUILD_RELEASE}/." "$RBENV_DIR/plugins/ruby-build/"
+  echo "$RUBY_BUILD_RELEASE" >"$RBENV_DIR/plugins/ruby-build/RUBY_BUILD_version.txt"
+
+  if ! grep -q 'rbenv init' "$PROFILE_FILE"; then
+    echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >>"$PROFILE_FILE"
+    echo 'eval "$(rbenv init -)"' >>"$PROFILE_FILE"
+  fi
+
+  export PATH="$RBENV_DIR/bin:$PATH"
+  eval "$("$RBENV_BIN" init - bash)"
+
+  if ! "$RBENV_BIN" versions --bare | grep -qx "$RUBY_VERSION"; then
+    $STD "$RBENV_BIN" install "$RUBY_VERSION"
+  fi
+
+  "$RBENV_BIN" global "$RUBY_VERSION"
+  hash -r
+
+  if [[ "$RUBY_INSTALL_RAILS" == "true" ]]; then
+    msg_info "Setup Rails via gem"
+    gem install rails
+    msg_ok "Setup Rails $(rails -v)"
+  fi
+
+  rm -rf "$TMP_DIR"
+  msg_ok "Setup Ruby $RUBY_VERSION"
+}
+
+# ------------------------------------------------------------------------------
+# Installs Rust toolchain and optional global crates via cargo.
+#
+# Description:
+#   - Installs rustup (if missing)
+#   - Installs or updates desired Rust toolchain (stable, nightly, or versioned)
+#   - Installs or updates specified global crates using `cargo install`
+#
+# Notes:
+#   - Skips crate install if exact version is already present
+#   - Updates crate if newer version or different version is requested
+#
+# Variables:
+#   RUST_TOOLCHAIN  - Rust toolchain to install (default: stable)
+#   RUST_CRATES     - Comma-separated list of crates (e.g. "cargo-edit,wasm-pack@0.12.1")
+# ------------------------------------------------------------------------------
+
+function setup_rust() {
+  local RUST_TOOLCHAIN="${RUST_TOOLCHAIN:-stable}"
+  local RUST_CRATES="${RUST_CRATES:-}"
+  local CARGO_BIN="${HOME}/.cargo/bin"
+
+  # rustup & toolchain
+  if ! command -v rustup &>/dev/null; then
+    msg_info "Setup Rust"
+    curl -fsSL https://sh.rustup.rs | $STD sh -s -- -y --default-toolchain "$RUST_TOOLCHAIN"
+    export PATH="$CARGO_BIN:$PATH"
+    echo 'export PATH="$HOME/.cargo/bin:$PATH"' >>"$HOME/.profile"
+    msg_ok "Setup Rust"
+  else
+    $STD rustup install "$RUST_TOOLCHAIN"
+    $STD rustup default "$RUST_TOOLCHAIN"
+    $STD rustup update "$RUST_TOOLCHAIN"
+    msg_ok "Rust toolchain set to $RUST_TOOLCHAIN"
+  fi
+
+  # install/update crates
+  if [[ -n "$RUST_CRATES" ]]; then
+    IFS=',' read -ra CRATES <<<"$RUST_CRATES"
+    for crate in "${CRATES[@]}"; do
+      local NAME VER INSTALLED_VER
+      if [[ "$crate" == *"@"* ]]; then
+        NAME="${crate%@*}"
+        VER="${crate##*@}"
+      else
+        NAME="$crate"
+        VER=""
+      fi
+
+      INSTALLED_VER=$(cargo install --list 2>/dev/null | awk "/^$NAME v[0-9]/ {print \$2}" | tr -d 'v')
+
+      if [[ -n "$INSTALLED_VER" ]]; then
+        if [[ -n "$VER" && "$VER" != "$INSTALLED_VER" ]]; then
+          msg_info "Update $NAME: $INSTALLED_VER → $VER"
+          $STD cargo install "$NAME" --version "$VER" --force
+          msg_ok "Updated $NAME to $VER"
+        elif [[ -z "$VER" ]]; then
+          msg_info "Update $NAME: $INSTALLED_VER → latest"
+          $STD cargo install "$NAME" --force
+          msg_ok "Updated $NAME to latest"
+        fi
+      else
+        msg_info "Setup $NAME ${VER:+($VER)}"
+        $STD cargo install "$NAME" ${VER:+--version "$VER"}
+        msg_ok "Setup $NAME ${VER:-latest}"
+      fi
+    done
+    msg_ok "Setup Rust"
+  fi
+}
+
+# ------------------------------------------------------------------------------
+# Installs or upgrades uv (Python package manager) from GitHub releases.
+#   - Downloads platform-specific tarball (no install.sh!)
+#   - Extracts uv binary
+#   - Places it in /usr/local/bin
+#   - Optionally installs a specific Python version via uv
+# ------------------------------------------------------------------------------
+
+function setup_uv() {
+  local UV_BIN="/usr/local/bin/uv"
+  local TMP_DIR
+  TMP_DIR=$(mktemp -d)
+
+  # Determine system architecture
+  local ARCH
+  ARCH=$(uname -m)
+  local UV_TAR
+
+  case "$ARCH" in
+  x86_64)
+    if grep -qi "alpine" /etc/os-release; then
+      UV_TAR="uv-x86_64-unknown-linux-musl.tar.gz"
+    else
+      UV_TAR="uv-x86_64-unknown-linux-gnu.tar.gz"
+    fi
+    ;;
+  aarch64)
+    if grep -qi "alpine" /etc/os-release; then
+      UV_TAR="uv-aarch64-unknown-linux-musl.tar.gz"
+    else
+      UV_TAR="uv-aarch64-unknown-linux-gnu.tar.gz"
+    fi
+    ;;
+  *)
+    msg_error "Unsupported architecture: $ARCH"
+    rm -rf "$TMP_DIR"
+    return 1
+    ;;
+  esac
+
+  # Get latest version from GitHub
+  local LATEST_VERSION
+  LATEST_VERSION=$(curl -fsSL https://api.github.com/repos/astral-sh/uv/releases/latest |
+    grep '"tag_name":' | cut -d '"' -f4 | sed 's/^v//')
+
+  if [[ -z "$LATEST_VERSION" ]]; then
+    msg_error "Could not fetch latest uv version from GitHub."
+    rm -rf "$TMP_DIR"
+    return 1
+  fi
+
+  # Check if uv is already up to date
+  if [[ -x "$UV_BIN" ]]; then
+    local INSTALLED_VERSION
+    INSTALLED_VERSION=$($UV_BIN -V | awk '{print $2}')
+    if [[ "$INSTALLED_VERSION" == "$LATEST_VERSION" ]]; then
+      rm -rf "$TMP_DIR"
+      [[ ":$PATH:" != *":/usr/local/bin:"* ]] && export PATH="/usr/local/bin:$PATH"
+      return 0
+    else
+      msg_info "Updating uv from $INSTALLED_VERSION to $LATEST_VERSION"
+    fi
+  else
+    msg_info "Setup uv $LATEST_VERSION"
+  fi
+
+  # Download and install manually
+  local UV_URL="https://github.com/astral-sh/uv/releases/latest/download/${UV_TAR}"
+  if ! curl -fsSL "$UV_URL" -o "$TMP_DIR/uv.tar.gz"; then
+    msg_error "Failed to download $UV_URL"
+    rm -rf "$TMP_DIR"
+    return 1
+  fi
+
+  if ! tar -xzf "$TMP_DIR/uv.tar.gz" -C "$TMP_DIR"; then
+    msg_error "Failed to extract uv archive"
+    rm -rf "$TMP_DIR"
+    return 1
+  fi
+
+  install -m 755 "$TMP_DIR"/*/uv "$UV_BIN" || {
+    msg_error "Failed to install uv binary"
+    rm -rf "$TMP_DIR"
     return 1
   }
 
-  mapfile -t raw_tags < <(jq -r '.[] | select(.draft==false and .prerelease==false) | .tag_name' <<<"$releases_json")
-  if ((${#raw_tags[@]} == 0)); then
-    msg_error "No stable releases found for ${app}"
-    return 1
+  if [[ ":$PATH:" != *":/usr/local/bin:"* ]]; then
+    export PATH="/usr/local/bin:$PATH"
   fi
-
-  local clean_tags=()
-  for t in "${raw_tags[@]}"; do
-    clean_tags+=("${t#v}")
-  done
-
-  local latest_raw="${raw_tags[0]}"
-  local latest_clean="${clean_tags[0]}"
-
-  # current installed (stored without v)
-  local current=""
-  if [[ -f "$current_file" ]]; then
-    current="$(<"$current_file")"
-  else
-    # Migration: search for any /opt/*_version.txt
-    local legacy_files
-    mapfile -t legacy_files < <(find /opt -maxdepth 1 -type f -name "*_version.txt" 2>/dev/null)
-    if ((${#legacy_files[@]} == 1)); then
-      current="$(<"${legacy_files[0]}")"
-      echo "${current#v}" >"$current_file"
-      rm -f "${legacy_files[0]}"
-    fi
+  ensure_usr_local_bin_persist
+  if ! $STD uv python update-shell; then
+    msg_error "uv shell integration failed – continuing anyway"
   fi
-  current="${current#v}"
+  msg_ok "Setup uv $LATEST_VERSION"
 
-  # Pinned version handling
-  if [[ -n "$pinned_version_in" ]]; then
-    local pin_clean="${pinned_version_in#v}"
-    local match_raw=""
-    for i in "${!clean_tags[@]}"; do
-      if [[ "${clean_tags[$i]}" == "$pin_clean" ]]; then
-        match_raw="${raw_tags[$i]}"
-        break
-      fi
-    done
+  # Optional: install specific Python version
+  if [[ -n "${PYTHON_VERSION:-}" ]]; then
+    local VERSION_MATCH
+    VERSION_MATCH=$(uv python list --only-downloads |
+      grep -E "^cpython-${PYTHON_VERSION//./\\.}\.[0-9]+-linux" |
+      cut -d'-' -f2 | sort -V | tail -n1)
 
-    if [[ -z "$match_raw" ]]; then
-      msg_error "Pinned version ${pinned_version_in} not found upstream"
+    if [[ -z "$VERSION_MATCH" ]]; then
+      msg_error "No matching Python $PYTHON_VERSION.x version found via uv"
       return 1
     fi
 
-    if [[ "$current" != "$pin_clean" ]]; then
-      msg_info "${app} pinned to ${pinned_version_in} (installed ${current:-none}) → update required"
-      CHECK_UPDATE_RELEASE="$match_raw"
-      return 0
+    if ! uv python list | grep -q "cpython-${VERSION_MATCH}-linux.*uv/python"; then
+      if ! $STD uv python install "$VERSION_MATCH"; then
+        msg_error "Failed to install Python $VERSION_MATCH via uv"
+        return 1
+      fi
+      msg_ok "Setup Python $VERSION_MATCH via uv"
     fi
+  fi
+}
 
-    if [[ "$pin_clean" == "$latest_clean" ]]; then
-      msg_ok "${app} pinned to ${pinned_version_in} (up to date)"
+# ------------------------------------------------------------------------------
+# Installs or updates yq (mikefarah/yq - Go version).
+#
+# Description:
+#   - Checks if yq is installed and from correct source
+#   - Compares with latest release on GitHub
+#   - Updates if outdated or wrong implementation
+# ------------------------------------------------------------------------------
+
+function setup_yq() {
+  local TMP_DIR
+  TMP_DIR=$(mktemp -d)
+  local CURRENT_VERSION=""
+  local BINARY_PATH="/usr/local/bin/yq"
+  local GITHUB_REPO="mikefarah/yq"
+
+  if ! command -v jq &>/dev/null; then
+    $STD apt-get update
+    $STD apt-get install -y jq || {
+      msg_error "Failed to install jq"
+      rm -rf "$TMP_DIR"
+      return 1
+    }
+  fi
+
+  if command -v yq &>/dev/null; then
+    if ! yq --version 2>&1 | grep -q 'mikefarah'; then
+      rm -f "$(command -v yq)"
     else
-      msg_ok "${app} pinned to ${pinned_version_in} (already installed, upstream ${latest_raw})"
+      CURRENT_VERSION=$(yq --version | awk '{print $NF}' | sed 's/^v//')
     fi
+  fi
+
+  local RELEASE_JSON
+  RELEASE_JSON=$(curl -fsSL "https://api.github.com/repos/${GITHUB_REPO}/releases/latest")
+  local LATEST_VERSION
+  LATEST_VERSION=$(echo "$RELEASE_JSON" | jq -r '.tag_name' | sed 's/^v//')
+
+  if [[ -z "$LATEST_VERSION" ]]; then
+    msg_error "Could not determine latest yq version from GitHub."
+    rm -rf "$TMP_DIR"
     return 1
   fi
 
-  # No pinning → use latest
-  if [[ -z "$current" || "$current" != "$latest_clean" ]]; then
-    CHECK_UPDATE_RELEASE="$latest_raw"
-    msg_info "New release available: ${latest_raw} (current: v${current:-none})"
-    return 0
+  if [[ -n "$CURRENT_VERSION" && "$CURRENT_VERSION" == "$LATEST_VERSION" ]]; then
+    return
   fi
 
-  msg_ok "${app} is up to date (${latest_raw})"
-  return 1
+  msg_info "Setup yq ($LATEST_VERSION)"
+  curl -fsSL "https://github.com/${GITHUB_REPO}/releases/download/v${LATEST_VERSION}/yq_linux_amd64" -o "$TMP_DIR/yq"
+  chmod +x "$TMP_DIR/yq"
+  mv "$TMP_DIR/yq" "$BINARY_PATH"
+
+  if [[ ! -x "$BINARY_PATH" ]]; then
+    msg_error "Failed to install yq to $BINARY_PATH"
+    rm -rf "$TMP_DIR"
+    return 1
+  fi
+
+  rm -rf "$TMP_DIR"
+  hash -r
+
+  local FINAL_VERSION
+  FINAL_VERSION=$("$BINARY_PATH" --version 2>/dev/null | awk '{print $NF}')
+  if [[ "$FINAL_VERSION" == "v$LATEST_VERSION" ]]; then
+    msg_ok "Setup yq ($LATEST_VERSION)"
+  else
+    msg_error "yq installation incomplete or version mismatch"
+  fi
 }
