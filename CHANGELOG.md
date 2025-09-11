@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-09-11
 
+### 🆕 New Scripts
+
+  - telegraf ([#7576](https://github.com/community-scripts/ProxmoxVE/pull/7576))
+
 ### 🚀 Updated Scripts
 
   - [core] Sort tools.func functions alphabeticaly [@tremor021](https://github.com/tremor021) ([#7569](https://github.com/community-scripts/ProxmoxVE/pull/7569))
