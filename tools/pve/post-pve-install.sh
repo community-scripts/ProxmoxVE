@@ -530,14 +530,26 @@ if [ -f "$MOBILE_TPL" ] && ! grep -q "$MARKER" "$MOBILE_TPL"; then
     printf "%s\n" \
       "$MARKER" \
       "<script>" \
-      "  function watchAndRemoveDialog() {" \
-      "    const observer = new MutationObserver(() => {" \
-      "      const dialog = document.querySelector('dialog[aria-label=\"No valid subscription\"]');" \
-      "      if (dialog) { dialog.remove(); console.log('Removed dialog: No valid subscription'); observer.disconnect(); }" \
+      "  function removeSubscriptionElements() {" \
+      "    const dialogs = document.querySelectorAll('dialog.pwt-outer-dialog');" \
+      "    dialogs.forEach(dialog => {" \
+      "      const closeButton = dialog.querySelector('.fa-close');" \
+      "      const exclamationIcon = dialog.querySelector('.fa-exclamation-triangle');" \
+      "      const continueButton = dialog.querySelector('button');" \
+      "      if (closeButton && exclamationIcon && continueButton) { dialog.remove(); console.log('Removed subscription dialog'); }" \
       "    });" \
-      "    observer.observe(document.body, { childList: true, subtree: true });" \
+      "    const cards = document.querySelectorAll('.pwt-card.pwt-p-2.pwt-d-flex.pwt-interactive.pwt-justify-content-center');" \
+      "    cards.forEach(card => {" \
+      "      const hasInteractiveElements = card.querySelector('button, input, a');" \
+      "      const hasComplexStructure = card.querySelector('.pwt-grid, .pwt-flex, .pwt-button');" \
+      "      if (!hasInteractiveElements && !hasComplexStructure) { card.remove(); console.log('Removed subscription card'); }" \
+      "    });" \
       "  }" \
-      "  setTimeout(watchAndRemoveDialog, 100);" \
+      "  const observer = new MutationObserver(removeSubscriptionElements);" \
+      "  observer.observe(document.body, { childList: true, subtree: true });" \
+      "  removeSubscriptionElements();" \
+      "  setInterval(removeSubscriptionElements, 300);" \
+      "  setTimeout(() => {observer.disconnect();}, 10000);" \
       "</script>" \
       "" >> "$MOBILE_TPL"
 fi
