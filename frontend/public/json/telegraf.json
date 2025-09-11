@@ -33,7 +33,7 @@
   },
   "notes": [
     {
-      "text": "Check out the config afterwards and adapt to your needs.",
+      "text": "Make sure to configure an output for the telegraf config and start the service with `systemctl start telegraf`.",
       "type": "info"
     }
   ]
