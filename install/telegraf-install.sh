@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Adding Telegraf key and repository"
-curl --silent --location -O https://repos.influxdata.com/influxdata-archive.key
+curl -fsSL -O https://repos.influxdata.com/influxdata-archive.key
 gpg --show-keys --with-fingerprint --with-colons ./influxdata-archive.key 2>&1 \
 | grep -q '^fpr:\+24C975CBA61A024EE1B631787C3D57159FC2F927:$' \
 && cat influxdata-archive.key \
@@ -26,7 +26,7 @@ msg_ok "Added Telegraf Repository"
 
 msg_info "Installing Telegraf"
 $STD apt-get update
-$STD apt-get install telegraf
+$STD apt-get install telegraf -y
 msg_ok "Installed Telegraf"
 
 motd_ssh
