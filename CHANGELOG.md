@@ -14,12 +14,18 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
-  - mobile subscription nag fix [@dvino](https://github.com/dvino) ([#7567](https://github.com/community-scripts/ProxmoxVE/pull/7567))
-- [core] Sort tools.func functions alphabeticaly [@tremor021](https://github.com/tremor021) ([#7569](https://github.com/community-scripts/ProxmoxVE/pull/7569))
+  - [core] Sort tools.func functions alphabeticaly [@tremor021](https://github.com/tremor021) ([#7569](https://github.com/community-scripts/ProxmoxVE/pull/7569))
+- mobile subscription nag fix [@dvino](https://github.com/dvino) ([#7567](https://github.com/community-scripts/ProxmoxVE/pull/7567))
 
   - #### 🐞 Bug Fixes
 
     - alpine-install: switch to using GitHub to fetch tools when using GitHub [@burritosoftware](https://github.com/burritosoftware) ([#7566](https://github.com/community-scripts/ProxmoxVE/pull/7566))
+
+### 🌐 Website
+
+  - #### 🐞 Bug Fixes
+
+    - Add margin-bottom to Most Viewed Scripts header to unifi UI [@BramSuurdje](https://github.com/BramSuurdje) ([#7572](https://github.com/community-scripts/ProxmoxVE/pull/7572))
 
 ## 2025-09-10
 
