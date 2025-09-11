@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-09-11
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - alpine-install: switch to using GitHub to fetch tools when using GitHub [@burritosoftware](https://github.com/burritosoftware) ([#7566](https://github.com/community-scripts/ProxmoxVE/pull/7566))
+
 ## 2025-09-10
 
 ### 🆕 New Scripts
