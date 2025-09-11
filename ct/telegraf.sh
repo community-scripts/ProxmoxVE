@@ -50,4 +50,3 @@ description
 
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW} Check out /etc/telegraf/telegraf.conf to configure telegraf${CL}"
