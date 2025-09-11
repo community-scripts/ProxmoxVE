@@ -143,7 +143,7 @@ export function MostViewedScripts({ items }: { items: Category[] }) {
     <div className="">
       {mostViewedScripts.length > 0 && (
         <>
-          <h2 className="text-lg font-semibold">Most Viewed Scripts</h2>
+          <h2 className="text-lg font-semibold mb-1">Most Viewed Scripts</h2>
         </>
       )}
       <div className="min-w flex w-full flex-row flex-wrap gap-4">
