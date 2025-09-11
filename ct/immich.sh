@@ -32,6 +32,10 @@ function update_script() {
   PNPM_VERSION="$(curl -fsSL "https://raw.githubusercontent.com/immich-app/immich/refs/heads/main/package.json" | jq -r '.packageManager | split("@")[1]')"
   NODE_VERSION="22" NODE_MODULE="pnpm@${PNPM_VERSION}" setup_nodejs
 
+  if grep -q '13' /etc/os-release && dpkg -l | grep -q "libmimalloc2.0"; then
+    $STD apt-get update && $STD apt-get install -y libmimalloc3
+  fi
+
   STAGING_DIR=/opt/staging
   BASE_DIR=${STAGING_DIR}/base-images
   SOURCE_DIR=${STAGING_DIR}/image-source
@@ -200,7 +204,7 @@ function compile_libjxl() {
   JPEGLI_LIBJPEG_LIBRARY_SOVERSION="62"
   JPEGLI_LIBJPEG_LIBRARY_VERSION="62.3.0"
   : "${LIBJXL_REVISION:=$(jq -cr '.revision' "$BASE_DIR"/server/sources/libjxl.json)}"
-  if [[ "${update:-}" ]] || [[ "$LIBJXL_REVISION" != "$(grep 'libjxl' ~/.immich_library_revisions | awk '{print $2}')" ]]; then
+  if [[ "$LIBJXL_REVISION" != "$(grep 'libjxl' ~/.immich_library_revisions | awk '{print $2}')" ]]; then
     msg_info "Recompiling libjxl"
     if [[ -d "$SOURCE" ]]; then rm -rf "$SOURCE"; fi
     $STD git clone https://github.com/libjxl/libjxl.git "$SOURCE"
@@ -277,9 +281,8 @@ function compile_libheif() {
 
 function compile_libraw() {
   SOURCE=${SOURCE_DIR}/libraw
-  local update
   : "${LIBRAW_REVISION:=$(jq -cr '.revision' "$BASE_DIR"/server/sources/libraw.json)}"
-  if [[ "${update:-}" ]] || [[ "$LIBRAW_REVISION" != "$(grep 'libraw' ~/.immich_library_revisions | awk '{print $2}')" ]]; then
+  if [[ "$LIBRAW_REVISION" != "$(grep 'libraw' ~/.immich_library_revisions | awk '{print $2}')" ]]; then
     msg_info "Recompiling libraw"
     if [[ -d "$SOURCE" ]]; then rm -rf "$SOURCE"; fi
     $STD git clone https://github.com/libraw/libraw.git "$SOURCE"
@@ -300,7 +303,8 @@ function compile_libraw() {
 function compile_imagemagick() {
   SOURCE=$SOURCE_DIR/imagemagick
   : "${IMAGEMAGICK_REVISION:=$(jq -cr '.revision' "$BASE_DIR"/server/sources/imagemagick.json)}"
-  if [[ "${update:-}" ]] || [[ "$IMAGEMAGICK_REVISION" != "$(grep 'imagemagick' ~/.immich_library_revisions | awk '{print $2}')" ]]; then
+  if [[ "$IMAGEMAGICK_REVISION" != "$(grep 'imagemagick' ~/.immich_library_revisions | awk '{print $2}')" ]] ||
+    ! grep -q 'DMAGICK_LIBRAW' /usr/local/lib/ImageMagick-7*/config-Q16HDRI/configure.xml; then
     msg_info "Recompiling ImageMagick"
     if [[ -d "$SOURCE" ]]; then rm -rf "$SOURCE"; fi
     $STD git clone https://github.com/ImageMagick/ImageMagick.git "$SOURCE"
@@ -320,7 +324,7 @@ function compile_imagemagick() {
 function compile_libvips() {
   SOURCE=$SOURCE_DIR/libvips
   : "${LIBVIPS_REVISION:=$(jq -cr '.revision' "$BASE_DIR"/server/sources/libvips.json)}"
-  if [[ "${update:-}" ]] || [[ "$LIBVIPS_REVISION" != "$(grep 'libvips' ~/.immich_library_revisions | awk '{print $2}')" ]]; then
+  if [[ "$LIBVIPS_REVISION" != "$(grep 'libvips' ~/.immich_library_revisions | awk '{print $2}')" ]]; then
     msg_info "Recompiling libvips"
     if [[ -d "$SOURCE" ]]; then rm -rf "$SOURCE"; fi
     $STD git clone https://github.com/libvips/libvips.git "$SOURCE"
