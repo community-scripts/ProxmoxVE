@@ -17,7 +17,7 @@
   "install_methods": [
     {
       "type": "default",
-      "script": "ct/resilio-sync.sh",
+      "script": "ct/resiliosync.sh",
       "resources": {
         "cpu": 2,
         "ram": 2048,
