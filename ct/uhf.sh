@@ -32,10 +32,10 @@ function update_script() {
     systemctl stop uhf-server
     msg_ok "Stopped Service"
 
-    msg_info "Updating APT packages"
+    msg_info "Updating ${APP} LXC"
     $STD apt-get update
     $STD apt-get -y upgrade
-    msg_ok "Package list updated"
+    msg_ok "Updated ${APP} LXC"
 
     fetch_and_deploy_gh_release "comskip" "swapplications/comskip" "prebuild" "latest" "/opt/comskip" "comskip-x64-*.zip"
     fetch_and_deploy_gh_release "uhf-server" "swapplications/uhf-server-dist" "prebuild" "latest" "/opt/uhf-server" "UHF.Server-linux-x64-*.zip"
