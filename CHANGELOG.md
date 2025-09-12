@@ -14,7 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - UHF ([#7589](https://github.com/community-scripts/ProxmoxVE/pull/7589))
+  - Stylus ([#7588](https://github.com/community-scripts/ProxmoxVE/pull/7588))
+- UHF ([#7589](https://github.com/community-scripts/ProxmoxVE/pull/7589))
 
 ### 🚀 Updated Scripts
 
