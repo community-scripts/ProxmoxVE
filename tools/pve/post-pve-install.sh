@@ -515,7 +515,8 @@ post_routines_common() {
     whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox --title "Support Subscriptions" "Supporting the software's development team is essential. Check their official website's Support Subscriptions for pricing. Without their dedicated work, we wouldn't have this exceptional software." 10 58
     msg_info "Disabling subscription nag"
     # Create external script, this is needed because DPkg::Post-Invoke is fidly with quote interpretation
-    cat >/usr/local/bin/pve-remove-nag.sh <<'EOF'
+    
+    cat > /etc/apt/apt.conf.d/pve-remove-nag.sh <<'EOF'
 #!/bin/sh
 WEB_JS=/usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js
 if [ -s "$WEB_JS" ] && ! grep -q NoMoreNagging "$WEB_JS"; then
@@ -555,10 +556,10 @@ if [ -f "$MOBILE_TPL" ] && ! grep -q "$MARKER" "$MOBILE_TPL"; then
 fi
 EOF
 
-    chmod 755 /usr/local/bin/pve-remove-nag.sh
+    chmod 755 /etc/apt/apt.conf.d/pve-remove-nag.sh
     
     cat >/etc/apt/apt.conf.d/no-nag-script <<'EOF'
-DPkg::Post-Invoke { "/usr/local/bin/pve-remove-nag.sh"; };
+DPkg::Post-Invoke { "/etc/apt/apt.conf.d/pve-remove-nag.sh"; };
 EOF
     chmod 644 /etc/apt/apt.conf.d/no-nag-script
 
