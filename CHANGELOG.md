@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-09-12
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Update openwebui.sh [@webmogul1](https://github.com/webmogul1) ([#7582](https://github.com/community-scripts/ProxmoxVE/pull/7582))
+
 ## 2025-09-11
 
 ### 🆕 New Scripts
