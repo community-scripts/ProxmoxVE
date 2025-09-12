@@ -1,5 +1,45 @@
 [
   {
+    "name": "chrisvel/tududi",
+    "version": "v0.82-rc2",
+    "date": "2025-09-12T09:59:30Z"
+  },
+  {
+    "name": "fallenbagel/jellyseerr",
+    "version": "preview-debug-plex-watchlist",
+    "date": "2025-09-12T09:54:22Z"
+  },
+  {
+    "name": "cloudreve/cloudreve",
+    "version": "4.8.0",
+    "date": "2025-09-12T09:48:11Z"
+  },
+  {
+    "name": "wazuh/wazuh",
+    "version": "coverity-w37-4.13.0",
+    "date": "2025-09-10T15:46:01Z"
+  },
+  {
+    "name": "MediaBrowser/Emby.Releases",
+    "version": "4.9.1.2",
+    "date": "2025-06-26T22:08:00Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.23.12",
+    "date": "2025-09-12T06:07:52Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-09-12T00:27:05Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
     "name": "inventree/InvenTree",
     "version": "0.17.14",
     "date": "2025-06-21T23:43:04Z"
@@ -43,6 +83,11 @@
     "name": "immich-app/immich",
     "version": "v1.142.0",
     "date": "2025-09-11T19:39:05Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.0.15",
+    "date": "2025-08-27T12:12:03Z"
   },
   {
     "name": "msgbyte/tianji",
@@ -110,16 +155,6 @@
     "date": "2025-09-11T07:01:00Z"
   },
   {
-    "name": "MediaBrowser/Emby.Releases",
-    "version": "4.9.1.2",
-    "date": "2025-06-26T22:08:00Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.23.8",
-    "date": "2025-09-11T05:58:05Z"
-  },
-  {
     "name": "zitadel/zitadel",
     "version": "v4.1.4",
     "date": "2025-09-11T05:20:51Z"
@@ -130,24 +165,9 @@
     "date": "2025-09-11T04:20:27Z"
   },
   {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-09-11T00:27:13Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
-  },
-  {
     "name": "wizarrrr/wizarr",
     "version": "v2025.9.2",
     "date": "2025-09-10T22:36:54Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.0.15",
-    "date": "2025-08-27T12:12:03Z"
   },
   {
     "name": "esphome/esphome",
@@ -163,11 +183,6 @@
     "name": "YunoHost/yunohost",
     "version": "debian/12.1.22",
     "date": "2025-09-10T16:40:32Z"
-  },
-  {
-    "name": "wazuh/wazuh",
-    "version": "coverity-w37-4.13.0",
-    "date": "2025-09-10T15:46:01Z"
   },
   {
     "name": "fuma-nama/fumadocs",
@@ -235,11 +250,6 @@
     "date": "2025-09-09T16:56:49Z"
   },
   {
-    "name": "chrisvel/tududi",
-    "version": "v0.81",
-    "date": "2025-09-09T14:06:41Z"
-  },
-  {
     "name": "element-hq/synapse",
     "version": "v1.138.0",
     "date": "2025-09-09T11:25:50Z"
@@ -283,11 +293,6 @@
     "name": "booklore-app/booklore",
     "version": "v1.2.1",
     "date": "2025-09-08T19:31:07Z"
-  },
-  {
-    "name": "fallenbagel/jellyseerr",
-    "version": "preview-OIDC",
-    "date": "2025-09-08T18:08:15Z"
   },
   {
     "name": "n8n-io/n8n",
@@ -361,8 +366,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-09-07T12:25:06Z"
+    "version": "v4.4.0",
+    "date": "2025-09-02T19:26:18Z"
   },
   {
     "name": "semaphoreui/semaphore",
@@ -548,11 +553,6 @@
     "name": "rabbitmq/rabbitmq-server",
     "version": "v4.1.4",
     "date": "2025-09-02T14:26:24Z"
-  },
-  {
-    "name": "cloudreve/cloudreve",
-    "version": "4.7.0",
-    "date": "2025-09-02T06:02:43Z"
   },
   {
     "name": "ErsatzTV/ErsatzTV",
