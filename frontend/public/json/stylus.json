@@ -31,10 +31,5 @@
     "username": null,
     "password": null
   },
-  "notes": [
-    {
-      "text": "Configuration Path: `/opt/stylus/config.yaml`",
-      "type": "info"
-    }
-  ]
+  "notes": []
 }
