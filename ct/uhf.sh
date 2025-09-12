@@ -49,6 +49,8 @@ function update_script() {
     $STD apt-get -y autoclean
     msg_ok "Cleaned"
     msg_ok "Updated Successfully"
+  else
+    msg_ok "No update required. Latest version already installed."
   fi
   exit
 }
