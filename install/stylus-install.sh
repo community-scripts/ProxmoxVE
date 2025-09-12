@@ -34,7 +34,6 @@ RestartSec=5
 [Install]
 WantedBy=multi-user.target
 EOF
-
 systemctl enable -q --now stylus
 msg_ok "Created service"
 
