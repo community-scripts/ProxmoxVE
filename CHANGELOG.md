@@ -24,6 +24,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Tweak: post-pve-install: create folder if Not exist  [@JVKeller](https://github.com/JVKeller) ([#7598](https://github.com/community-scripts/ProxmoxVE/pull/7598))
     - Update openwebui.sh [@webmogul1](https://github.com/webmogul1) ([#7582](https://github.com/community-scripts/ProxmoxVE/pull/7582))
 
+  - #### ✨ New Features
+
+    - ESPHome: Increase default disk size [@tremor021](https://github.com/tremor021) ([#7600](https://github.com/community-scripts/ProxmoxVE/pull/7600))
+
 ## 2025-09-11
 
 ### 🆕 New Scripts
