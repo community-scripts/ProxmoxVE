@@ -34,10 +34,7 @@ function update_script() {
     systemctl stop stylus
     msg_ok "Stopped $APP"
 
-    msg_info "Updating $APP"
     fetch_and_deploy_gh_release "stylus" "mmastrac/stylus" "singlefile" "latest" "/usr/bin/" "*_linux_amd64"
-
-    msg_ok "Updated $APP"
 
     msg_info "Starting $APP"
     systemctl start stylus
