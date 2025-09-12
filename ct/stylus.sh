@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: luismco
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -40,8 +40,6 @@ function update_script() {
     systemctl start stylus
     msg_ok "Started $APP"
     msg_ok "Update Successful"
-  else
-    msg_ok "No update required. Latest version already installed."
   fi
   exit
 }
