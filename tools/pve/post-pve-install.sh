@@ -515,6 +515,7 @@ post_routines_common() {
     whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox --title "Support Subscriptions" "Supporting the software's development team is essential. Check their official website's Support Subscriptions for pricing. Without their dedicated work, we wouldn't have this exceptional software." 10 58
     msg_info "Disabling subscription nag"
     # Create external script, this is needed because DPkg::Post-Invoke is fidly with quote interpretation
+    mkdir -p /usr/local/bin
     cat >/usr/local/bin/pve-remove-nag.sh <<'EOF'
 #!/bin/sh
 WEB_JS=/usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js
