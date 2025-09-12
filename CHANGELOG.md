@@ -14,12 +14,13 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - uhf ([#7589](https://github.com/community-scripts/ProxmoxVE/pull/7589))
+  - UHF ([#7589](https://github.com/community-scripts/ProxmoxVE/pull/7589))
 
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
 
+    - Tweak: post-pve-install: create folder if Not exist  [@JVKeller](https://github.com/JVKeller) ([#7598](https://github.com/community-scripts/ProxmoxVE/pull/7598))
     - Update openwebui.sh [@webmogul1](https://github.com/webmogul1) ([#7582](https://github.com/community-scripts/ProxmoxVE/pull/7582))
 
 ## 2025-09-11
