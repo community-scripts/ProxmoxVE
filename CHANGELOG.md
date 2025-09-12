@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-09-12
 
+### 🆕 New Scripts
+
+  - uhf ([#7589](https://github.com/community-scripts/ProxmoxVE/pull/7589))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
