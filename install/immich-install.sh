@@ -155,7 +155,6 @@ msg_ok "Packages from Testing Repo Installed"
 $STD sudo -u postgres psql -c "ALTER DATABASE postgres REFRESH COLLATION VERSION;"
 $STD sudo -u postgres psql -c "ALTER DATABASE $DB_NAME REFRESH COLLATION VERSION;"
 
-msg_info "Compiling Custom Photo-processing Library (extreme patience)"
 LD_LIBRARY_PATH=/usr/local/lib
 export LD_RUN_PATH=/usr/local/lib
 STAGING_DIR=/opt/staging
@@ -165,6 +164,7 @@ SOURCE_DIR=${STAGING_DIR}/image-source
 $STD git clone -b main "$BASE_REPO" "$BASE_DIR"
 mkdir -p "$SOURCE_DIR"
 
+msg_info "(1/5) Compiling libjxl"
 cd "$STAGING_DIR"
 SOURCE=${SOURCE_DIR}/libjxl
 JPEGLI_LIBJPEG_LIBRARY_SOVERSION="62"
@@ -203,7 +203,9 @@ ldconfig /usr/local/lib
 $STD make clean
 cd "$STAGING_DIR"
 rm -rf "$SOURCE"/{build,third_party}
+msg_ok "(1/5) Compiled libjxl"
 
+msg_info "(2/5) Compiling libheif"
 SOURCE=${SOURCE_DIR}/libheif
 # : "${LIBHEIF_REVISION:=$(jq -cr '.revision' $BASE_DIR/server/sources/libheif.json)}"
 : "${LIBHEIF_REVISION:=35dad50a9145332a7bfdf1ff6aef6801fb613d68}"
@@ -227,7 +229,9 @@ ldconfig /usr/local/lib
 $STD make clean
 cd "$STAGING_DIR"
 rm -rf "$SOURCE"/build
+msg_ok "(2/5) Compiled libheif"
 
+msg_info "(3/5) Compiling libraw"
 SOURCE=${SOURCE_DIR}/libraw
 # : "${LIBRAW_REVISION:=$(jq -cr '.revision' $BASE_DIR/server/sources/libraw.json)}"
 : "${LIBRAW_REVISION:=09bea31181b43e97959ee5452d91e5bc66365f1f}"
@@ -241,7 +245,9 @@ $STD make install
 ldconfig /usr/local/lib
 $STD make clean
 cd "$STAGING_DIR"
+msg_ok "(3/5) Compiled libraw"
 
+msg_info "(4/5) Compiling imagemagick"
 SOURCE=$SOURCE_DIR/imagemagick
 # : "${IMAGEMAGICK_REVISION:=$(jq -cr '.revision' $BASE_DIR/server/sources/imagemagick.json)}"
 : "${IMAGEMAGICK_REVISION:=8289a3388a085ad5ae81aa6812f21554bdfd54f2}"
@@ -254,7 +260,9 @@ $STD make install
 ldconfig /usr/local/lib
 $STD make clean
 cd "$STAGING_DIR"
+msg_ok "(4/5) Compiled imagemagick"
 
+msg_info "(5/5) Compiling libvips"
 SOURCE=$SOURCE_DIR/libvips
 # : "${LIBVIPS_REVISION:=$(jq -cr '.revision' $BASE_DIR/server/sources/libvips.json)}"
 : "${LIBVIPS_REVISION:=8fa37a64547e392d3808eed8d72adab7e02b3d00}"
@@ -267,6 +275,7 @@ $STD ninja install
 ldconfig /usr/local/lib
 cd "$STAGING_DIR"
 rm -rf "$SOURCE"/build
+msg_ok "(5/5) Compiled libvips"
 {
   echo "imagemagick: $IMAGEMAGICK_REVISION"
   echo "libheif: $LIBHEIF_REVISION"
@@ -274,7 +283,7 @@ rm -rf "$SOURCE"/build
   echo "libraw: $LIBRAW_REVISION"
   echo "libvips: $LIBVIPS_REVISION"
 } >~/.immich_library_revisions
-msg_ok "Custom Photo-processing Library Compiled"
+msg_ok "Custom Photo-processing Libraries Compiled Successfully"
 
 INSTALL_DIR="/opt/${APPLICATION}"
 UPLOAD_DIR="${INSTALL_DIR}/upload"
@@ -287,7 +296,7 @@ mkdir -p {"${APP_DIR}","${UPLOAD_DIR}","${GEO_DIR}","${INSTALL_DIR}"/cache}
 
 fetch_and_deploy_gh_release "immich" "immich-app/immich" "tarball" "v1.141.1" "$SRC_DIR"
 
-msg_info "Installing ${APPLICATION} (more patience please)"
+msg_info "Installing ${APPLICATION} (patience)"
 
 cd "$SRC_DIR"/server
 export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
@@ -319,15 +328,14 @@ msg_ok "Installed Immich Server and Web Components"
 cd "$SRC_DIR"/machine-learning
 mkdir -p "$ML_DIR"
 export VIRTUAL_ENV="${ML_DIR}/ml-venv"
-$STD uv venv "$VIRTUAL_ENV"
 if [[ -f ~/.openvino ]]; then
   msg_info "Installing HW-accelerated machine-learning"
-  uv -q sync --extra openvino --no-cache --active
+  $STD uv sync --extra openvino --no-cache --active
   patchelf --clear-execstack "${VIRTUAL_ENV}/lib/python3.11/site-packages/onnxruntime/capi/onnxruntime_pybind11_state.cpython-311-x86_64-linux-gnu.so"
   msg_ok "Installed HW-accelerated machine-learning"
 else
   msg_info "Installing machine-learning"
-  uv -q sync --extra cpu --no-cache --active
+  $STD uv sync --extra cpu --no-cache --active
   msg_ok "Installed machine-learning"
 fi
 cd "$SRC_DIR"
