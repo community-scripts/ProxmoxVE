@@ -1202,7 +1202,19 @@ setup_mariadb() {
       echo "mariadb-server-$ver mariadb-server/feedback boolean false" | debconf-set-selections
     done
   fi
-  DEBIAN_FRONTEND=noninteractive $STD apt-get install -y mariadb-server mariadb-client
+  DEBIAN_FRONTEND=noninteractive $STD apt-get install -y mariadb-server mariadb-client || {
+    msg_warn "Failed to install MariaDB ${MARIADB_VERSION} from upstream repo – trying distro package as fallback..."
+    # Cleanup, remove upstream repo to avoid conflicts
+    rm -f /etc/apt/sources.list.d/mariadb.list /etc/apt/trusted.gpg.d/mariadb.gpg
+    $STD apt-get update
+    # Final fallback: distro package
+    DEBIAN_FRONTEND=noninteractive $STD apt-get install -y mariadb-server mariadb-client || {
+      msg_error "MariaDB installation failed even with distro fallback!"
+      return 1
+    }
+    msg_ok "Setup MariaDB (distro fallback)"
+    return 0
+  }
 
   msg_ok "Setup MariaDB $MARIADB_VERSION"
 }
