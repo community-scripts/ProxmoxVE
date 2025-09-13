@@ -20,6 +20,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - pdm: refactor for beta version [@CrazyWolf13](https://github.com/CrazyWolf13) ([#7619](https://github.com/community-scripts/ProxmoxVE/pull/7619))
     - Immich: bump to v1.142.0 [@vhsdream](https://github.com/vhsdream) ([#7594](https://github.com/community-scripts/ProxmoxVE/pull/7594))
 
 ### 🌐 Website
