@@ -113,8 +113,8 @@ export default function Page() {
                 <p>
                   With 300+ scripts to help you manage your
                   {" "}
-                  <b>Proxmox VE environment</b>
-                  . Whether you&#39;re a seasoned
+                  <b>Proxmox VE</b>
+                  , whether you&#39;re a seasoned
                   user or a newcomer, we&#39;ve got you covered.
                 </p>
               </div>
