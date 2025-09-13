@@ -33,6 +33,7 @@ function update_script() {
     msg_ok "Stopped Services"
 
     cp /opt/palmr/apps/server/.env /opt/palmr.env
+    rm -rf /opt/palmr
     fetch_and_deploy_gh_release "Palmr" "kyantech/Palmr" "tarball" "latest" "/opt/palmr"
 
     PNPM="$(jq -r '.packageManager' /opt/palmr/package.json)"
