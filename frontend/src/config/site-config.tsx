@@ -10,9 +10,9 @@ export const basePath = process.env.BASE_PATH || "";
 export const navbarLinks = [
   {
     href: `https://github.com/community-scripts/${basePath}`,
-    event: "Github",
+    event: "GitHub",
     icon: <FaGithub className="h-4 w-4" />,
-    text: "Github",
+    text: "GitHub",
   },
   {
     href: `https://discord.gg/2wvnMDgdnU`,
@@ -22,9 +22,9 @@ export const navbarLinks = [
   },
   {
     href: `https://github.com/community-scripts/${basePath}/blob/main/CHANGELOG.md`,
-    event: "Change Log",
+    event: "Changelog",
     icon: <Scroll className="h-4 w-4" />,
-    text: "Change Log",
+    text: "Changelog",
     mobileHidden: true,
   },
   {

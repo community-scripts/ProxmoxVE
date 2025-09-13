@@ -17,7 +17,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Proxmox VE Helper-Scripts",
   description:
-    "The official website for the Proxmox VE Helper-Scripts (Community) Repository. Featuring over 300+ scripts to help you manage your Proxmox VE environment.",
+    "The official website for the Proxmox VE Helper-Scripts (Community) repository. Featuring over 300+ scripts to help you manage your Proxmox Virtual Environment.",
   applicationName: "Proxmox VE Helper-Scripts",
   generator: "Next.js",
   referrer: "origin-when-cross-origin",
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Proxmox VE Helper-Scripts",
     description:
-      "The official website for the Proxmox VE Helper-Scripts (Community) Repository. Featuring over 300+ scripts to help you manage your Proxmox VE environment.",
+      "The official website for the Proxmox VE Helper-Scripts (Community) repository. Featuring over 300+ scripts to help you manage your Proxmox Virtual Environment.",
     url: `https://community-scripts.github.io/${basePath}/`,
     siteName: "Proxmox VE Helper-Scripts",
     images: [
@@ -76,7 +76,7 @@ export const metadata: Metadata = {
     title: "Proxmox VE Helper-Scripts",
     creator: "@BramSuurdje",
     description:
-      "The official website for the Proxmox VE Helper-Scripts (Community) Repository. Featuring over 300+ scripts to help you manage your Proxmox VE environment.",
+      "The official website for the Proxmox VE Helper-Scripts (Community) repository. Featuring over 300+ scripts to help you manage your Proxmox Virtual Environment.",
     images: [`https://community-scripts.github.io/${basePath}/defaultimg.png`],
   },
   manifest: "/manifest.webmanifest",
