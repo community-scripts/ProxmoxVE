@@ -1,8 +1,78 @@
 [
   {
+    "name": "ollama/ollama",
+    "version": "v0.11.11-rc2",
+    "date": "2025-09-12T23:40:14Z"
+  },
+  {
+    "name": "coder/code-server",
+    "version": "v4.103.2",
+    "date": "2025-08-25T23:30:54Z"
+  },
+  {
+    "name": "YunoHost/yunohost",
+    "version": "debian/12.1.23",
+    "date": "2025-09-12T22:15:47Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.9.2",
+    "date": "2025-09-12T21:11:21Z"
+  },
+  {
     "name": "chrisvel/tududi",
     "version": "v0.82-rc2",
     "date": "2025-09-12T09:59:30Z"
+  },
+  {
+    "name": "homarr-labs/homarr",
+    "version": "v1.37.0",
+    "date": "2025-09-12T19:19:14Z"
+  },
+  {
+    "name": "booklore-app/booklore",
+    "version": "v1.3.0",
+    "date": "2025-09-12T19:06:32Z"
+  },
+  {
+    "name": "immich-app/immich",
+    "version": "v1.142.0",
+    "date": "2025-09-12T18:52:03Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.25.5",
+    "date": "2025-09-12T18:07:32Z"
+  },
+  {
+    "name": "VictoriaMetrics/VictoriaMetrics",
+    "version": "pmm-6401-v1.125.1",
+    "date": "2025-09-03T20:17:18Z"
+  },
+  {
+    "name": "nzbgetcom/nzbget",
+    "version": "v25.3",
+    "date": "2025-09-01T09:47:06Z"
+  },
+  {
+    "name": "wizarrrr/wizarr",
+    "version": "v2025.9.3",
+    "date": "2025-09-12T15:13:50Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.3.4",
+    "date": "2025-09-12T13:28:51Z"
+  },
+  {
+    "name": "emqx/emqx",
+    "version": "e5.8.6-hotfix1",
+    "date": "2025-09-12T13:23:03Z"
+  },
+  {
+    "name": "documenso/documenso",
+    "version": "v1.12.3",
+    "date": "2025-09-12T13:02:59Z"
   },
   {
     "name": "fallenbagel/jellyseerr",
@@ -65,11 +135,6 @@
     "date": "2025-09-08T21:45:15Z"
   },
   {
-    "name": "ollama/ollama",
-    "version": "v0.11.10",
-    "date": "2025-09-04T17:27:40Z"
-  },
-  {
     "name": "influxdata/influxdb",
     "version": "v3.4.2",
     "date": "2025-09-11T20:43:23Z"
@@ -78,21 +143,6 @@
     "name": "HabitRPG/habitica",
     "version": "v5.41.0",
     "date": "2025-09-11T19:46:20Z"
-  },
-  {
-    "name": "immich-app/immich",
-    "version": "v1.142.0",
-    "date": "2025-09-11T19:39:05Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.0.15",
-    "date": "2025-08-27T12:12:03Z"
-  },
-  {
-    "name": "msgbyte/tianji",
-    "version": "v1.25.0",
-    "date": "2025-09-11T18:53:33Z"
   },
   {
     "name": "Ombi-app/Ombi",
@@ -150,11 +200,6 @@
     "date": "2025-09-11T07:05:16Z"
   },
   {
-    "name": "emqx/emqx",
-    "version": "e5.10.1-rc.1",
-    "date": "2025-09-11T07:01:00Z"
-  },
-  {
     "name": "zitadel/zitadel",
     "version": "v4.1.4",
     "date": "2025-09-11T05:20:51Z"
@@ -163,11 +208,6 @@
     "name": "go-gitea/gitea",
     "version": "v1.24.6",
     "date": "2025-09-11T04:20:27Z"
-  },
-  {
-    "name": "wizarrrr/wizarr",
-    "version": "v2025.9.2",
-    "date": "2025-09-10T22:36:54Z"
   },
   {
     "name": "esphome/esphome",
@@ -180,11 +220,6 @@
     "date": "2025-09-10T18:36:56Z"
   },
   {
-    "name": "YunoHost/yunohost",
-    "version": "debian/12.1.22",
-    "date": "2025-09-10T16:40:32Z"
-  },
-  {
     "name": "fuma-nama/fumadocs",
     "version": "fumadocs-mdx@11.9.1",
     "date": "2025-09-10T15:26:47Z"
@@ -193,11 +228,6 @@
     "name": "linuxserver/Heimdall",
     "version": "v2.7.5",
     "date": "2025-09-10T15:16:49Z"
-  },
-  {
-    "name": "nzbgetcom/nzbget",
-    "version": "v25.3",
-    "date": "2025-09-01T09:47:06Z"
   },
   {
     "name": "mongodb/mongo",
@@ -290,11 +320,6 @@
     "date": "2025-09-08T22:26:23Z"
   },
   {
-    "name": "booklore-app/booklore",
-    "version": "v1.2.1",
-    "date": "2025-09-08T19:31:07Z"
-  },
-  {
     "name": "n8n-io/n8n",
     "version": "n8n@1.109.2",
     "date": "2025-09-03T07:50:21Z"
@@ -366,8 +391,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v4.4.0",
-    "date": "2025-09-02T19:26:18Z"
+    "version": "nightly",
+    "date": "2025-09-07T12:25:06Z"
   },
   {
     "name": "semaphoreui/semaphore",
@@ -410,11 +435,6 @@
     "date": "2025-09-05T21:32:38Z"
   },
   {
-    "name": "homarr-labs/homarr",
-    "version": "v1.36.1",
-    "date": "2025-09-05T21:14:40Z"
-  },
-  {
     "name": "gtsteffaniak/filebrowser",
     "version": "v0.8.4-beta",
     "date": "2025-09-05T19:34:44Z"
@@ -433,11 +453,6 @@
     "name": "Brandawg93/PeaNUT",
     "version": "v5.14.2",
     "date": "2025-09-05T17:24:12Z"
-  },
-  {
-    "name": "home-assistant/core",
-    "version": "2025.9.1",
-    "date": "2025-09-05T11:15:21Z"
   },
   {
     "name": "CrazyWolf13/streamlink-webui",
@@ -513,11 +528,6 @@
     "name": "hyperion-project/hyperion.ng",
     "version": "2.1.1",
     "date": "2025-06-14T17:45:06Z"
-  },
-  {
-    "name": "VictoriaMetrics/VictoriaMetrics",
-    "version": "pmm-6401-v1.125.1",
-    "date": "2025-09-03T20:17:18Z"
   },
   {
     "name": "Graylog2/graylog2-server",
@@ -663,16 +673,6 @@
     "name": "zwave-js/zwave-js-ui",
     "version": "v11.2.1",
     "date": "2025-08-27T15:19:02Z"
-  },
-  {
-    "name": "documenso/documenso",
-    "version": "v1.12.2-rc.6",
-    "date": "2025-08-26T01:17:43Z"
-  },
-  {
-    "name": "coder/code-server",
-    "version": "v4.103.2",
-    "date": "2025-08-25T23:30:54Z"
   },
   {
     "name": "advplyr/audiobookshelf",
