@@ -25,7 +25,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🌐 Website
 
-  - fix: grammar/capitalization for links and taglines [@jonathanwuki](https://github.com/jonathanwuki) ([#7609](https://github.com/community-scripts/ProxmoxVE/pull/7609))
+  - fix: tagline grammar [@jonathanwuki](https://github.com/jonathanwuki) ([#7621](https://github.com/community-scripts/ProxmoxVE/pull/7621))
+- fix: grammar/capitalization for links and taglines [@jonathanwuki](https://github.com/jonathanwuki) ([#7609](https://github.com/community-scripts/ProxmoxVE/pull/7609))
 
 ## 2025-09-12
 
