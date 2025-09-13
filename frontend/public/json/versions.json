@@ -1,8 +1,48 @@
 [
   {
+    "name": "wizarrrr/wizarr",
+    "version": "v2025.9.3",
+    "date": "2025-09-13T11:44:41Z"
+  },
+  {
+    "name": "syncthing/syncthing",
+    "version": "v2.0.9",
+    "date": "2025-09-13T09:37:24Z"
+  },
+  {
+    "name": "gotify/server",
+    "version": "v2.7.1",
+    "date": "2025-09-13T08:50:25Z"
+  },
+  {
+    "name": "documenso/documenso",
+    "version": "v1.12.4",
+    "date": "2025-09-13T08:08:55Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.23.17",
+    "date": "2025-09-13T05:50:21Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.3.2",
+    "date": "2025-08-19T04:08:36Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-09-13T00:27:13Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
     "name": "ollama/ollama",
-    "version": "v0.11.11-rc2",
-    "date": "2025-09-12T23:40:14Z"
+    "version": "v0.11.11-rc1",
+    "date": "2025-09-12T14:59:14Z"
   },
   {
     "name": "coder/code-server",
@@ -40,6 +80,11 @@
     "date": "2025-09-12T18:52:03Z"
   },
   {
+    "name": "keycloak/keycloak",
+    "version": "26.3.4",
+    "date": "2025-09-12T13:28:51Z"
+  },
+  {
     "name": "msgbyte/tianji",
     "version": "v1.25.5",
     "date": "2025-09-12T18:07:32Z"
@@ -55,24 +100,9 @@
     "date": "2025-09-01T09:47:06Z"
   },
   {
-    "name": "wizarrrr/wizarr",
-    "version": "v2025.9.3",
-    "date": "2025-09-12T15:13:50Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.3.4",
-    "date": "2025-09-12T13:28:51Z"
-  },
-  {
     "name": "emqx/emqx",
     "version": "e5.8.6-hotfix1",
     "date": "2025-09-12T13:23:03Z"
-  },
-  {
-    "name": "documenso/documenso",
-    "version": "v1.12.3",
-    "date": "2025-09-12T13:02:59Z"
   },
   {
     "name": "fallenbagel/jellyseerr",
@@ -93,21 +123,6 @@
     "name": "MediaBrowser/Emby.Releases",
     "version": "4.9.1.2",
     "date": "2025-06-26T22:08:00Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.23.12",
-    "date": "2025-09-12T06:07:52Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-09-12T00:27:05Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
   },
   {
     "name": "inventree/InvenTree",
@@ -250,11 +265,6 @@
     "date": "2025-09-10T10:53:42Z"
   },
   {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.3.2",
-    "date": "2025-08-19T04:08:36Z"
-  },
-  {
     "name": "authelia/authelia",
     "version": "v4.39.9",
     "date": "2025-09-09T22:48:24Z"
@@ -355,11 +365,6 @@
     "date": "2025-09-08T10:03:11Z"
   },
   {
-    "name": "syncthing/syncthing",
-    "version": "v2.0.8",
-    "date": "2025-09-08T08:07:18Z"
-  },
-  {
     "name": "webmin/webmin",
     "version": "2.501",
     "date": "2025-09-08T04:50:25Z"
@@ -391,8 +396,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-09-07T12:25:06Z"
+    "version": "v4.4.0",
+    "date": "2025-09-02T19:26:18Z"
   },
   {
     "name": "semaphoreui/semaphore",
@@ -1203,11 +1208,6 @@
     "name": "apache/couchdb",
     "version": "3.5.0",
     "date": "2025-05-05T16:28:24Z"
-  },
-  {
-    "name": "gotify/server",
-    "version": "v2.6.3",
-    "date": "2025-04-27T09:05:42Z"
   },
   {
     "name": "TechnitiumSoftware/DnsServer",
