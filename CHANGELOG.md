@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Palmr: hotfix #7622 [@vhsdream](https://github.com/vhsdream) ([#7625](https://github.com/community-scripts/ProxmoxVE/pull/7625))
     - ollama: fix: ccurl continue on interrupts [@CrazyWolf13](https://github.com/CrazyWolf13) ([#7620](https://github.com/community-scripts/ProxmoxVE/pull/7620))
 
   - #### 🔧 Refactor
