@@ -1,5 +1,40 @@
 [
   {
+    "name": "gtsteffaniak/filebrowser",
+    "version": "v0.8.5-beta",
+    "date": "2025-09-13T22:53:30Z"
+  },
+  {
+    "name": "mealie-recipes/mealie",
+    "version": "v3.2.0",
+    "date": "2025-09-13T21:27:07Z"
+  },
+  {
+    "name": "Ombi-app/Ombi",
+    "version": "v4.47.1",
+    "date": "2025-01-05T21:14:23Z"
+  },
+  {
+    "name": "karakeep-app/karakeep",
+    "version": "v0.27.1",
+    "date": "2025-09-13T19:56:29Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.4.0",
+    "date": "2025-09-13T16:38:21Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.9.3",
+    "date": "2025-09-13T12:44:37Z"
+  },
+  {
+    "name": "gotify/server",
+    "version": "v2.7.2",
+    "date": "2025-09-13T12:11:38Z"
+  },
+  {
     "name": "wizarrrr/wizarr",
     "version": "v2025.9.3",
     "date": "2025-09-13T11:44:41Z"
@@ -10,11 +45,6 @@
     "date": "2025-09-13T09:37:24Z"
   },
   {
-    "name": "gotify/server",
-    "version": "v2.7.1",
-    "date": "2025-09-13T08:50:25Z"
-  },
-  {
     "name": "documenso/documenso",
     "version": "v1.12.4",
     "date": "2025-09-13T08:08:55Z"
@@ -23,11 +53,6 @@
     "name": "Jackett/Jackett",
     "version": "v0.23.17",
     "date": "2025-09-13T05:50:21Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.3.2",
-    "date": "2025-08-19T04:08:36Z"
   },
   {
     "name": "jeedom/core",
@@ -53,11 +78,6 @@
     "name": "YunoHost/yunohost",
     "version": "debian/12.1.23",
     "date": "2025-09-12T22:15:47Z"
-  },
-  {
-    "name": "home-assistant/core",
-    "version": "2025.9.2",
-    "date": "2025-09-12T21:11:21Z"
   },
   {
     "name": "chrisvel/tududi",
@@ -158,11 +178,6 @@
     "name": "HabitRPG/habitica",
     "version": "v5.41.0",
     "date": "2025-09-11T19:46:20Z"
-  },
-  {
-    "name": "Ombi-app/Ombi",
-    "version": "v4.47.1",
-    "date": "2025-01-05T21:14:23Z"
   },
   {
     "name": "zerotier/ZeroTierOne",
@@ -385,19 +400,14 @@
     "date": "2025-09-07T18:53:04Z"
   },
   {
-    "name": "karakeep-app/karakeep",
-    "version": "sdk/v0.27.0",
-    "date": "2025-09-07T17:49:04Z"
-  },
-  {
     "name": "dgtlmoon/changedetection.io",
     "version": "0.50.12",
     "date": "2025-09-07T14:16:07Z"
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v4.4.0",
-    "date": "2025-09-02T19:26:18Z"
+    "version": "nightly",
+    "date": "2025-09-07T12:25:06Z"
   },
   {
     "name": "semaphoreui/semaphore",
@@ -438,11 +448,6 @@
     "name": "moghtech/komodo",
     "version": "v1.19.3",
     "date": "2025-09-05T21:32:38Z"
-  },
-  {
-    "name": "gtsteffaniak/filebrowser",
-    "version": "v0.8.4-beta",
-    "date": "2025-09-05T19:34:44Z"
   },
   {
     "name": "Stirling-Tools/Stirling-PDF",
@@ -683,11 +688,6 @@
     "name": "advplyr/audiobookshelf",
     "version": "v2.29.0",
     "date": "2025-08-25T22:43:20Z"
-  },
-  {
-    "name": "mealie-recipes/mealie",
-    "version": "v3.1.2",
-    "date": "2025-08-25T18:00:52Z"
   },
   {
     "name": "sabnzbd/sabnzbd",
