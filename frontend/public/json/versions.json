@@ -1,5 +1,35 @@
 [
   {
+    "name": "msgbyte/tianji",
+    "version": "v1.25.6",
+    "date": "2025-09-14T10:32:16Z"
+  },
+  {
+    "name": "intri-in/manage-my-damn-life-nextjs",
+    "version": "v0.8.1",
+    "date": "2025-09-14T06:45:23Z"
+  },
+  {
+    "name": "Luligu/matterbridge",
+    "version": "3.2.7",
+    "date": "2025-09-14T06:35:13Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.23.20",
+    "date": "2025-09-14T05:53:28Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-09-14T00:27:06Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
     "name": "gtsteffaniak/filebrowser",
     "version": "v0.8.5-beta",
     "date": "2025-09-13T22:53:30Z"
@@ -50,21 +80,6 @@
     "date": "2025-09-13T08:08:55Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.23.17",
-    "date": "2025-09-13T05:50:21Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-09-13T00:27:13Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
-  },
-  {
     "name": "ollama/ollama",
     "version": "v0.11.11-rc1",
     "date": "2025-09-12T14:59:14Z"
@@ -103,11 +118,6 @@
     "name": "keycloak/keycloak",
     "version": "26.3.4",
     "date": "2025-09-12T13:28:51Z"
-  },
-  {
-    "name": "msgbyte/tianji",
-    "version": "v1.25.5",
-    "date": "2025-09-12T18:07:32Z"
   },
   {
     "name": "VictoriaMetrics/VictoriaMetrics",
@@ -406,8 +416,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-09-07T12:25:06Z"
+    "version": "v4.4.0",
+    "date": "2025-09-02T19:26:18Z"
   },
   {
     "name": "semaphoreui/semaphore",
@@ -433,11 +443,6 @@
     "name": "Lidarr/Lidarr",
     "version": "v2.13.3.4711",
     "date": "2025-08-28T20:06:24Z"
-  },
-  {
-    "name": "Luligu/matterbridge",
-    "version": "3.2.6",
-    "date": "2025-09-06T07:50:15Z"
   },
   {
     "name": "forgejo/forgejo",
@@ -828,11 +833,6 @@
     "name": "mylar3/mylar3",
     "version": "v0.8.3",
     "date": "2025-08-17T06:24:54Z"
-  },
-  {
-    "name": "intri-in/manage-my-damn-life-nextjs",
-    "version": "v0.8.0-release",
-    "date": "2025-08-15T06:19:12Z"
   },
   {
     "name": "jellyfin/jellyfin",
