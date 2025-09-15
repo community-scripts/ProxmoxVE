@@ -66,7 +66,7 @@ Restart=on-failure
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now  zookeeper
+systemctl enable -q --now zookeeper
 msg_ok "Setup Zookeeper"
 
 msg_info "Configuring ClickHouse"
