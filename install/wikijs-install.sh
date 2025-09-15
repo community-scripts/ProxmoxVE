@@ -18,7 +18,7 @@ $STD apt-get install -y \
   git
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="20" NODE_MODULE="yarn@latest,node-gyp" setup_nodejs
+NODE_VERSION="22" NODE_MODULE="yarn@latest,node-gyp" setup_nodejs
 PG_VERSION="17" setup_postgresql
 fetch_and_deploy_gh_release "wikijs" "requarks/wiki" "prebuild" "latest" "/opt/wikijs" "wiki-js.tar.gz"
 
