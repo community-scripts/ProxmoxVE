@@ -27,7 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-
+  NODE_VERSION="22" NODE_MODULE="yarn@latest,node-gyp" setup_nodejs
   if check_for_gh_release "wikijs" "requarks/wiki"; then
     msg_info "Verifying whether ${APP}' new release is v3.x+ and current install uses SQLite."
     SQLITE_INSTALL=$([ -f /opt/wikijs/db.sqlite ] && echo "true" || echo "false")
