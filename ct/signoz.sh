@@ -5,7 +5,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://signoz.io/
 
-APP="signoz"
+APP="SigNoz"
 var_tags="${var_tags:-notes}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-4096}"
@@ -48,7 +48,6 @@ function update_script() {
     systemctl start signoz-otel-collector
     systemctl start signoz
     msg_ok "Started Services"
-
     msg_ok "Updated Successfully"
   fi
   exit
