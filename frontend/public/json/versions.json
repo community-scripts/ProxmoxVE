@@ -1,5 +1,90 @@
 [
   {
+    "name": "meilisearch/meilisearch",
+    "version": "latest",
+    "date": "2025-09-15T11:12:14Z"
+  },
+  {
+    "name": "FlowiseAI/Flowise",
+    "version": "flowise@3.0.6",
+    "date": "2025-09-15T11:07:20Z"
+  },
+  {
+    "name": "VictoriaMetrics/VictoriaMetrics",
+    "version": "v1.126.0",
+    "date": "2025-09-15T10:43:35Z"
+  },
+  {
+    "name": "zitadel/zitadel",
+    "version": "v4.2.0",
+    "date": "2025-09-15T09:29:55Z"
+  },
+  {
+    "name": "authelia/authelia",
+    "version": "v4.39.10",
+    "date": "2025-09-15T09:11:13Z"
+  },
+  {
+    "name": "emqx/emqx",
+    "version": "e5.8.6-hotfix2",
+    "date": "2025-09-15T08:31:12Z"
+  },
+  {
+    "name": "Checkmk/checkmk",
+    "version": "v2.4.0p12-rc1",
+    "date": "2025-09-15T07:21:11Z"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2025.8.4",
+    "date": "2025-09-10T05:03:47Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.23.23",
+    "date": "2025-09-15T05:57:33Z"
+  },
+  {
+    "name": "mealie-recipes/mealie",
+    "version": "v3.2.1",
+    "date": "2025-09-15T03:45:31Z"
+  },
+  {
+    "name": "Prowlarr/Prowlarr",
+    "version": "v2.0.5.5160",
+    "date": "2025-08-23T21:23:11Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.4.0",
+    "date": "2025-09-13T16:38:21Z"
+  },
+  {
+    "name": "cross-seed/cross-seed",
+    "version": "v6.13.3",
+    "date": "2025-09-08T21:45:15Z"
+  },
+  {
+    "name": "9001/copyparty",
+    "version": "v1.19.9",
+    "date": "2025-09-15T00:54:27Z"
+  },
+  {
+    "name": "crafty-controller/crafty-4",
+    "version": "v4.5.4",
+    "date": "2025-09-15T00:49:53Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-09-15T00:27:09Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
     "name": "inventree/InvenTree",
     "version": "1.0.0",
     "date": "2025-09-14T23:37:56Z"
@@ -60,39 +145,14 @@
     "date": "2025-09-14T06:35:13Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.23.20",
-    "date": "2025-09-14T05:53:28Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-09-14T00:27:06Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
-  },
-  {
     "name": "gtsteffaniak/filebrowser",
     "version": "v0.8.5-beta",
     "date": "2025-09-13T22:53:30Z"
   },
   {
-    "name": "mealie-recipes/mealie",
-    "version": "v3.2.0",
-    "date": "2025-09-13T21:27:07Z"
-  },
-  {
     "name": "Ombi-app/Ombi",
     "version": "v4.47.1",
     "date": "2025-01-05T21:14:23Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.4.0",
-    "date": "2025-09-13T16:38:21Z"
   },
   {
     "name": "home-assistant/core",
@@ -160,19 +220,9 @@
     "date": "2025-09-12T13:28:51Z"
   },
   {
-    "name": "VictoriaMetrics/VictoriaMetrics",
-    "version": "pmm-6401-v1.125.1",
-    "date": "2025-09-03T20:17:18Z"
-  },
-  {
     "name": "nzbgetcom/nzbget",
     "version": "v25.3",
     "date": "2025-09-01T09:47:06Z"
-  },
-  {
-    "name": "emqx/emqx",
-    "version": "e5.8.6-hotfix1",
-    "date": "2025-09-12T13:23:03Z"
   },
   {
     "name": "cloudreve/cloudreve",
@@ -203,11 +253,6 @@
     "name": "tailscale/tailscale",
     "version": "v1.88.1",
     "date": "2025-09-11T22:19:51Z"
-  },
-  {
-    "name": "cross-seed/cross-seed",
-    "version": "v6.13.3",
-    "date": "2025-09-08T21:45:15Z"
   },
   {
     "name": "influxdata/influxdb",
@@ -270,19 +315,9 @@
     "date": "2025-09-11T07:05:16Z"
   },
   {
-    "name": "zitadel/zitadel",
-    "version": "v4.1.4",
-    "date": "2025-09-11T05:20:51Z"
-  },
-  {
     "name": "go-gitea/gitea",
     "version": "v1.24.6",
     "date": "2025-09-11T04:20:27Z"
-  },
-  {
-    "name": "esphome/esphome",
-    "version": "2025.8.4",
-    "date": "2025-09-10T05:03:47Z"
   },
   {
     "name": "TandoorRecipes/recipes",
@@ -318,11 +353,6 @@
     "name": "open-webui/open-webui",
     "version": "v0.6.28",
     "date": "2025-09-10T10:53:42Z"
-  },
-  {
-    "name": "authelia/authelia",
-    "version": "v4.39.9",
-    "date": "2025-09-09T22:48:24Z"
   },
   {
     "name": "jenkinsci/jenkins",
@@ -415,11 +445,6 @@
     "date": "2025-09-08T10:49:03Z"
   },
   {
-    "name": "meilisearch/meilisearch",
-    "version": "latest",
-    "date": "2025-09-08T10:03:11Z"
-  },
-  {
     "name": "webmin/webmin",
     "version": "2.501",
     "date": "2025-09-08T04:50:25Z"
@@ -428,11 +453,6 @@
     "name": "paperless-ngx/paperless-ngx",
     "version": "v2.18.4",
     "date": "2025-09-07T23:57:32Z"
-  },
-  {
-    "name": "9001/copyparty",
-    "version": "v1.19.8",
-    "date": "2025-09-07T23:36:42Z"
   },
   {
     "name": "minio/minio",
@@ -453,11 +473,6 @@
     "name": "Radarr/Radarr",
     "version": "v5.27.5.10198",
     "date": "2025-09-03T12:08:43Z"
-  },
-  {
-    "name": "Prowlarr/Prowlarr",
-    "version": "v2.0.5.5160",
-    "date": "2025-08-23T21:23:11Z"
   },
   {
     "name": "pocketbase/pocketbase",
@@ -565,19 +580,9 @@
     "date": "2025-09-03T12:03:22Z"
   },
   {
-    "name": "Checkmk/checkmk",
-    "version": "v2.4.0p11",
-    "date": "2025-09-03T09:58:14Z"
-  },
-  {
     "name": "apache/cassandra",
     "version": "cassandra-4.1.10",
     "date": "2025-09-03T08:46:02Z"
-  },
-  {
-    "name": "crafty-controller/crafty-4",
-    "version": "v4.5.3",
-    "date": "2025-09-02T23:52:26Z"
   },
   {
     "name": "netbox-community/netbox",
@@ -858,11 +863,6 @@
     "name": "bluenviron/mediamtx",
     "version": "v1.14.0",
     "date": "2025-08-12T13:58:46Z"
-  },
-  {
-    "name": "FlowiseAI/Flowise",
-    "version": "flowise@3.0.5",
-    "date": "2025-08-11T13:01:45Z"
   },
   {
     "name": "slskd/slskd",
