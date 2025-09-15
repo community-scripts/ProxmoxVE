@@ -589,36 +589,40 @@ msg_info "OpenWrt is being started in order to configure the network interfaces.
 qm start $VMID
 sleep 15
 msg_ok "Network interfaces are being configured as OpenWrt initiates."
-send_line_to_vm ""
-send_line_to_vm "uci delete network.@device[0]"
-send_line_to_vm "uci set network.wan=interface"
-send_line_to_vm "uci set network.wan.device=eth1"
-send_line_to_vm "uci set network.wan.proto=dhcp"
-send_line_to_vm "uci delete network.lan"
-send_line_to_vm "uci set network.lan=interface"
-send_line_to_vm "uci set network.lan.device=eth0"
-send_line_to_vm "uci set network.lan.proto=static"
-send_line_to_vm "uci set network.lan.ipaddr=${LAN_IP_ADDR}"
-send_line_to_vm "uci set network.lan.netmask=${LAN_NETMASK}"
-send_line_to_vm "uci commit"
-send_line_to_vm "halt"
-msg_ok "Network interfaces have been successfully configured."
-until qm status $VMID | grep -q "stopped"; do
+for _ in {1..30}; do
+  if qm status "$VMID" | grep -q "stopped"; then break; fi
+  send_line_to_vm ""
+  send_line_to_vm "uci delete network.@device[0]"
+  send_line_to_vm "uci set network.wan=interface"
+  send_line_to_vm "uci set network.wan.device=eth1"
+  send_line_to_vm "uci set network.wan.proto=dhcp"
+  send_line_to_vm "uci delete network.lan"
+  send_line_to_vm "uci set network.lan=interface"
+  send_line_to_vm "uci set network.lan.device=eth0"
+  send_line_to_vm "uci set network.lan.proto=static"
+  send_line_to_vm "uci set network.lan.ipaddr=${LAN_IP_ADDR}"
+  send_line_to_vm "uci set network.lan.netmask=${LAN_NETMASK}"
+  send_line_to_vm "uci commit"
+  send_line_to_vm "halt"
   sleep 2
 done
-msg_info "Bridge interfaces are being added."
-qm set $VMID \
-  -net0 virtio,bridge=${LAN_BRG},macaddr=${LAN_MAC}${LAN_VLAN}${MTU} \
-  -net1 virtio,bridge=${BRG},macaddr=${MAC}${VLAN}${MTU} >/dev/null 2>/dev/null
-msg_ok "Bridge interfaces have been successfully added."
-if [ "$START_VM" == "yes" ]; then
+msg_ok "Network interfaces configured in OpenWrt"
+
+msg_info "Adding bridge interfaces on Proxmox side"
+qm set "$VMID" \
+  -net0 virtio,bridge="${LAN_BRG}",macaddr="${LAN_MAC}${LAN_VLAN}${MTU}" \
+  -net1 virtio,bridge="${BRG}",macaddr="${MAC}${VLAN}${MTU}" >/dev/null
+msg_ok "Bridge interfaces added"
+
+if [ "$START_VM" = "yes" ]; then
   msg_info "Starting OpenWrt VM"
-  qm start $VMID
+  qm start "$VMID"
   msg_ok "Started OpenWrt VM"
 fi
+
 VLAN_FINISH=""
-if [ "$VLAN" == "" ] && [ "$VLAN2" != "999" ]; then
+if [ -z "$VLAN" ] && [ "$VLAN2" != "999" ]; then
   VLAN_FINISH=" Please remember to adjust the VLAN tags to suit your network."
 fi
 post_update_to_api "done" "none"
-msg_ok "Completed Successfully!\n${VLAN_FINISH}"
+msg_ok "Completed Successfully!${VLAN_FINISH:+\n$VLAN_FINISH}"
