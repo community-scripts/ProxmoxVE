@@ -41,7 +41,7 @@ while true; do
   read -rp "${TAB3}Enable IPv6 support? (y/n): " answer
   case "$answer" in
   [Yy]*)
-    var_cf_ip6_provider="auto"
+    var_cf_ip6_provider="cloudflare.trace"
     break
     ;;
   [Nn]*)
