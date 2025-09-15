@@ -17,6 +17,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - SigNoz ([#7648](https://github.com/community-scripts/ProxmoxVE/pull/7648))
 - Scraparr ([#7644](https://github.com/community-scripts/ProxmoxVE/pull/7644))
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Wikijs: Bump Node.js version to 22 [@MickLesk](https://github.com/MickLesk) ([#7643](https://github.com/community-scripts/ProxmoxVE/pull/7643))
+
 ## 2025-09-14
 
 ## 2025-09-13
