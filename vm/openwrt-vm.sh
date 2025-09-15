@@ -28,7 +28,7 @@ METHOD=""
 NSAPP="openwrt-vm"
 var_os="openwrt"
 var_version=" "
-DISK_SIZE="0.5G"
+DISK_SIZE="1G"
 GEN_MAC=02:$(openssl rand -hex 5 | awk '{print toupper($0)}' | sed 's/\(..\)/\1:/g; s/.$//')
 GEN_MAC_LAN=02:$(openssl rand -hex 5 | awk '{print toupper($0)}' | sed 's/\(..\)/\1:/g; s/.$//')
 

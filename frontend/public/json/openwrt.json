@@ -1,6 +1,6 @@
 {
   "name": "OpenWrt",
-  "slug": "openwrt",
+  "slug": "openwrt-vm",
   "categories": [
     4,
     2
@@ -18,7 +18,7 @@
   "install_methods": [
     {
       "type": "default",
-      "script": "vm/openwrt.sh",
+      "script": "vm/openwrt-vm.sh",
       "resources": {
         "cpu": 1,
         "ram": 256,
