@@ -532,7 +532,7 @@ msg_info "Creating OpenWrt VM"
 qm create $VMID -cores $CORE_COUNT -memory $RAM_SIZE -name $HN \
   -onboot 1 -ostype l26 -scsihw virtio-scsi-pci --tablet 0
 pvesm alloc $STORAGE $VMID $DISK0 4M 1>&/dev/null
-qm importdisk "$VMID" "${FILE%.*}" "$STORAGE" --format raw >/dev/null
+qm importdisk "$VMID" "${FILE%.*}" "$STORAGE" --format raw
 DISK_REF="$(pvesm list "$STORAGE" | awk -v id="$VMID" '$5 ~ ("vm-"id"-disk-") {print $1":"$5}' | sort | tail -n1)"
 
 if [[ -z "$DISK_REF" ]]; then
@@ -543,7 +543,7 @@ qm set "$VMID" \
   -efidisk0 "${STORAGE}:0,efitype=4m,size=4M" \
   -scsi0 "${DISK_REF},size=${DISK_SIZE}" \
   -boot order=scsi0 \
-  -tags community-script >/dev/null
+  -tags community-script
 
 DESCRIPTION=$(
   cat <<EOF
