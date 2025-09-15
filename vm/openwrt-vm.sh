@@ -22,7 +22,7 @@ function header_info {
 EOF
 }
 header_info
-echo -e "Loading..."
+echo -e "\n Loading..."
 RANDOM_UUID="$(cat /proc/sys/kernel/random/uuid)"
 METHOD=""
 NSAPP="openwrt-vm"
