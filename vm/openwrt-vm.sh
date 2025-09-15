@@ -518,53 +518,39 @@ response=$(curl -fsSL https://openwrt.org)
 stableversion=$(echo "$response" | sed -n 's/.*Current stable release - OpenWrt \([0-9.]\+\).*/\1/p' | head -n 1)
 URL="https://downloads.openwrt.org/releases/$stableversion/targets/x86/64/openwrt-$stableversion-x86-64-generic-ext4-combined.img.gz"
 
-sleep 2
 msg_ok "${CL}${BL}${URL}${CL}"
 curl -f#SL -o "$(basename "$URL")" "$URL"
-echo -en "\e[1A\e[0K"
-FILE=$(basename $URL)
+FILE=$(basename "$URL")
 msg_ok "Downloaded ${CL}${BL}$FILE${CL}"
-gunzip -f $FILE >/dev/null 2>/dev/null || true
-NEWFILE="${FILE%.*}"
-FILE="$NEWFILE"
-mv $FILE ${FILE%.*}
-qemu-img resize -f raw ${FILE%.*} 512M >/dev/null 2>/dev/null
-msg_ok "Extracted & Resized OpenWrt Disk Image ${CL}${BL}$FILE${CL}"
-STORAGE_TYPE=$(pvesm status -storage $STORAGE | awk 'NR>1 {print $2}')
-case $STORAGE_TYPE in
-nfs | dir)
-  DISK_EXT=".qcow2"
-  DISK_REF="$VMID/"
-  DISK_IMPORT="-format qcow2"
-  ;;
-btrfs)
-  DISK_EXT=".raw"
-  DISK_REF="$VMID/"
-  DISK_IMPORT="-format raw"
-  ;;
-esac
-for i in {0,1}; do
-  disk="DISK$i"
-  eval DISK${i}=vm-${VMID}-disk-${i}${DISK_EXT:-}
-  eval DISK${i}_REF=${STORAGE}:${DISK_REF:-}${!disk}
-done
+
+gunzip -f "$FILE" >/dev/null 2>&1 || true
+FILE="${FILE%.*}"
+msg_ok "Extracted OpenWrt Disk Image ${CL}${BL}$FILE${CL}"
 
 msg_info "Creating OpenWrt VM"
-qm create $VMID -cores $CORE_COUNT -memory $RAM_SIZE -name $HN \
+qm create "$VMID" -cores "$CORE_COUNT" -memory "$RAM_SIZE" -name "$HN" \
   -onboot 1 -ostype l26 -scsihw virtio-scsi-pci --tablet 0
-pvesm alloc $STORAGE $VMID $DISK0 4M 1>&/dev/null
-qm importdisk "$VMID" "${FILE%.*}" "$STORAGE" --format raw
-DISK_REF="$(pvesm list "$STORAGE" | awk -v id="$VMID" '$5 ~ ("vm-"id"-disk-") {print $1":"$5}' | sort | tail -n1)"
+pvesm alloc "$STORAGE" "$VMID" "vm-$VMID-disk-0" 4M >/dev/null
+
+IMPORT_OUT="$(qm importdisk "$VMID" "$FILE" "$STORAGE" --format raw 2>&1 || true)"
+DISK_REF="$(printf '%s\n' "$IMPORT_OUT" | sed -n "s/.*successfully imported disk '\([^']\+\)'.*/\1/p")"
+
+if [[ -z "$DISK_REF" ]]; then
+  DISK_REF="$(pvesm list "$STORAGE" | awk -v id="$VMID" '$1 ~ ("vm-"id"-disk-") {print $1}' | sort | tail -n1)"
+fi
 
 if [[ -z "$DISK_REF" ]]; then
   msg_error "Unable to determine imported disk reference."
+  echo "$IMPORT_OUT"
   exit 1
 fi
+
 qm set "$VMID" \
   -efidisk0 "${STORAGE}:0,efitype=4m,size=4M" \
   -scsi0 "${DISK_REF},size=${DISK_SIZE}" \
   -boot order=scsi0 \
-  -tags community-script
+  -tags community-script >/dev/null
+msg_ok "Attached disk (${DISK_SIZE})"
 
 DESCRIPTION=$(
   cat <<EOF
