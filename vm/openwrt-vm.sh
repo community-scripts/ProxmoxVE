@@ -604,9 +604,14 @@ for _ in {1..30}; do
   send_line_to_vm "uci set network.lan.netmask=${LAN_NETMASK}"
   send_line_to_vm "uci commit"
   send_line_to_vm "halt"
-  sleep 2
 done
 msg_ok "Network interfaces configured in OpenWrt"
+
+msg_info "Waiting for OpenWrt to shut down..."
+until qm status "$VMID" | grep -q "stopped"; do
+  sleep 2
+done
+msg_ok "OpenWrt has shut down"
 
 msg_info "Adding bridge interfaces on Proxmox side"
 qm set "$VMID" \
