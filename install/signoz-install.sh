@@ -112,7 +112,6 @@ fetch_and_deploy_gh_release "signoz" "SigNoz/signoz" "prebuild" "latest" "/opt/s
 
 msg_info "Setting up SigNoz"
 mkdir -p /var/lib/signoz
-
 cat <<EOF >/opt/signoz/conf/systemd.env
 SIGNOZ_INSTRUMENTATION_LOGS_LEVEL=info
 INVITE_EMAIL_TEMPLATE=/opt/signoz/templates/invitation_email_template.html
@@ -150,7 +149,6 @@ fetch_and_deploy_gh_release "signoz-otel-collector" "SigNoz/signoz-otel-collecto
 
 msg_info "Setting up SigNoz OTel Collector"
 mkdir -p /var/lib/signoz-otel-collector
-
 cat <<EOF >/opt/signoz-otel-collector/conf/config.yaml
 receivers:
   otlp:
