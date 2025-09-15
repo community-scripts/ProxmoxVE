@@ -534,6 +534,11 @@ qm create $VMID -cores $CORE_COUNT -memory $RAM_SIZE -name $HN \
 pvesm alloc $STORAGE $VMID $DISK0 4M 1>&/dev/null
 qm importdisk "$VMID" "${FILE%.*}" "$STORAGE" --format raw >/dev/null
 DISK_REF="$(pvesm list "$STORAGE" | awk -v id="$VMID" '$5 ~ ("vm-"id"-disk-") {print $1":"$5}' | sort | tail -n1)"
+
+if [[ -z "$DISK_REF" ]]; then
+  msg_error "Unable to determine imported disk reference."
+  exit 1
+fi
 qm set "$VMID" \
   -efidisk0 "${STORAGE}:0,efitype=4m,size=4M" \
   -scsi0 "${DISK_REF},size=${DISK_SIZE}" \
