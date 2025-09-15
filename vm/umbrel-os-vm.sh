@@ -201,6 +201,15 @@ function exit-script() {
   exit
 }
 
+function ensure_pv() {
+  if ! command -v pv &>/dev/null; then
+    msg_info "Installing required package: pv"
+    apt-get update -qq &>/dev/null
+    apt-get install -y pv &>/dev/null
+    msg_ok "Installed pv"
+  fi
+}
+
 function default_settings() {
   VMID=$(get_valid_nextid)
   MACHINE="q35"
@@ -432,6 +441,7 @@ check_root
 arch_check
 pve_check
 ssh_check
+ensure_pv
 start_script
 
 msg_info "Validating Storage"
@@ -470,10 +480,6 @@ if [[ ! -s "$CACHE_FILE" ]]; then
   curl -f#SL -o "$CACHE_FILE" "$URL"
 else
   msg_ok "Using cached Umbrel OS image"
-fi
-
-if ! command -v pv &>/dev/null; then
-  apt-get update -qq &>/dev/null && apt-get install -y pv &>/dev/null
 fi
 
 set -o pipefail

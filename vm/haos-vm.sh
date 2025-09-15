@@ -205,6 +205,15 @@ function exit-script() {
   exit
 }
 
+function ensure_pv() {
+  if ! command -v pv &>/dev/null; then
+    msg_info "Installing required package: pv"
+    apt-get update -qq &>/dev/null
+    apt-get install -y pv &>/dev/null
+    msg_ok "Installed pv"
+  fi
+}
+
 function default_settings() {
   BRANCH="$stable"
   VMID=$(get_valid_nextid)
@@ -448,8 +457,8 @@ check_root
 arch_check
 pve_check
 ssh_check
+ensure_pv
 start_script
-
 post_to_api_vm
 
 msg_info "Validating Storage"
@@ -503,10 +512,6 @@ if [[ ! -s "$CACHE_FILE" ]]; then
   msg_ok "Downloaded ${CL}${BL}$(basename "$CACHE_FILE")${CL}"
 else
   msg_ok "Using cached image ${CL}${BL}$(basename "$CACHE_FILE")${CL}"
-fi
-
-if ! command -v pv &>/dev/null; then
-  apt-get update -qq &>/dev/null && apt-get install -y pv &>/dev/null
 fi
 
 set -o pipefail
