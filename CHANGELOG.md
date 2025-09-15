@@ -19,10 +19,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
-  - vm: move pv installation into ensure_pv function [@MickLesk](https://github.com/MickLesk) ([#7642](https://github.com/community-scripts/ProxmoxVE/pull/7642))
-
   - #### 🐞 Bug Fixes
 
+    - vm: move pv installation into ensure_pv function [@MickLesk](https://github.com/MickLesk) ([#7642](https://github.com/community-scripts/ProxmoxVE/pull/7642))
     - Cloudflare-DDNS: Fix the IP6_PROVIDER variable [@hugodantas](https://github.com/hugodantas) ([#7660](https://github.com/community-scripts/ProxmoxVE/pull/7660))
     - Wikijs: Bump Node.js version to 22 [@MickLesk](https://github.com/MickLesk) ([#7643](https://github.com/community-scripts/ProxmoxVE/pull/7643))
 
