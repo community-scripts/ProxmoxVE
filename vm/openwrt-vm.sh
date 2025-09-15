@@ -248,35 +248,30 @@ function exit-script() {
 
 function default_settings() {
   VMID=$(get_valid_nextid)
-  HN=openwrt
+  HN="openwrt"
   CORE_COUNT="1"
   RAM_SIZE="256"
   BRG="vmbr0"
-  VLAN=""
+  LAN_BRG="vmbr0"
   MAC=$GEN_MAC
   LAN_MAC=$GEN_MAC_LAN
-  LAN_BRG="vmbr0"
+  VLAN=""
+  LAN_VLAN=",tag=999"
   LAN_IP_ADDR="192.168.1.1"
   LAN_NETMASK="255.255.255.0"
-  LAN_VLAN=",tag=999"
   MTU=""
   START_VM="yes"
   METHOD="default"
-  echo -e "${DGN}Using Virtual Machine ID: ${BGN}${VMID}${CL}"
-  echo -e "${DGN}Using Hostname: ${BGN}${HN}${CL}"
-  echo -e "${DGN}Allocated Cores: ${BGN}${CORE_COUNT}${CL}"
-  echo -e "${DGN}Allocated RAM: ${BGN}${RAM_SIZE}${CL}"
-  echo -e "${DGN}Using WAN Bridge: ${BGN}${BRG}${CL}"
-  echo -e "${DGN}Using WAN VLAN: ${BGN}Default${CL}"
-  echo -e "${DGN}Using WAN MAC Address: ${BGN}${MAC}${CL}"
-  echo -e "${DGN}Using LAN MAC Address: ${BGN}${LAN_MAC}${CL}"
-  echo -e "${DGN}Using LAN Bridge: ${BGN}${LAN_BRG}${CL}"
-  echo -e "${DGN}Using LAN VLAN: ${BGN}999${CL}"
-  echo -e "${DGN}Using LAN IP Address: ${BGN}${LAN_IP_ADDR}${CL}"
-  echo -e "${DGN}Using LAN NETMASK: ${BGN}${LAN_NETMASK}${CL}"
-  echo -e "${DGN}Using Interface MTU Size: ${BGN}Default${CL}"
-  echo -e "${DGN}Start VM when completed: ${BGN}yes${CL}"
-  echo -e "${BL}Creating a OpenWrt VM using the above default settings${CL}"
+  DISK_SIZE="1G"
+  echo -e "${CONTAINERID}${BOLD}${DGN}VMID: ${BGN}${VMID}${CL}"
+  echo -e "${HOSTNAME}${BOLD}${DGN}Hostname: ${BGN}${HN}${CL}"
+  echo -e "${CPUCORE}${BOLD}${DGN}CPU Cores: ${BGN}${CORE_COUNT}${CL}"
+  echo -e "${RAMSIZE}${BOLD}${DGN}RAM: ${BGN}${RAM_SIZE}${CL}"
+  echo -e "${DISKSIZE}${BOLD}${DGN}Disk Size: ${BGN}${DISK_SIZE}${CL}"
+  echo -e "${BRIDGE}${BOLD}${DGN}WAN Bridge: ${BGN}${BRG}${CL}"
+  echo -e "${BRIDGE}${BOLD}${DGN}LAN Bridge: ${BGN}${LAN_BRG}${CL}"
+  echo -e "${MACADDRESS}${BOLD}${DGN}WAN MAC: ${BGN}${MAC}${CL}"
+  echo -e "${MACADDRESS}${BOLD}${DGN}LAN MAC: ${BGN}${LAN_MAC}${CL}"
 }
 
 function advanced_settings() {
@@ -324,6 +319,17 @@ function advanced_settings() {
       RAM_SIZE="256"
     fi
     echo -e "${DGN}Allocated RAM: ${BGN}$RAM_SIZE${CL}"
+  else
+    exit-script
+  fi
+
+  if DISK_SIZE=$(whiptail --backtitle "Proxmox VE Helper Scripts" \
+    --inputbox "Set Disk Size in GiB (e.g., 1, 2, 4)" 8 58 "1" \
+    --title "DISK SIZE" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
+    if [[ "$DISK_SIZE" =~ ^[0-9]+$ ]]; then
+      DISK_SIZE="${DISK_SIZE}G"
+    fi
+    echo -e "${DISKSIZE}${BOLD}${DGN}Disk Size: ${BGN}${DISK_SIZE}${CL}"
   else
     exit-script
   fi
@@ -526,10 +532,11 @@ msg_info "Creating OpenWrt VM"
 qm create $VMID -cores $CORE_COUNT -memory $RAM_SIZE -name $HN \
   -onboot 1 -ostype l26 -scsihw virtio-scsi-pci --tablet 0
 pvesm alloc $STORAGE $VMID $DISK0 4M 1>&/dev/null
-qm importdisk $VMID ${FILE%.*} $STORAGE ${DISK_IMPORT:-} 1>&/dev/null
-qm set $VMID \
-  -efidisk0 ${DISK0_REF},efitype=4m,size=4M \
-  -scsi0 ${DISK1_REF},size=512M \
+qm importdisk "$VMID" "${FILE%.*}" "$STORAGE" --format raw >/dev/null
+DISK_REF="$(pvesm list "$STORAGE" | awk -v id="$VMID" '$5 ~ ("vm-"id"-disk-") {print $1":"$5}' | sort | tail -n1)"
+qm set "$VMID" \
+  -efidisk0 "${STORAGE}:0,efitype=4m,size=4M" \
+  -scsi0 "${DISK_REF},size=${DISK_SIZE}" \
   -boot order=scsi0 \
   -tags community-script >/dev/null
 
