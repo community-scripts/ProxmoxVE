@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-09-15
 
+### 🆕 New Scripts
+
+  - Scraparr ([#7644](https://github.com/community-scripts/ProxmoxVE/pull/7644))
+
 ## 2025-09-14
 
 ## 2025-09-13
