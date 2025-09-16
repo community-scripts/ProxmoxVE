@@ -77,7 +77,7 @@ function error_handler() {
   post_update_to_api "failed" "$command"
   local error_message="${RD}[ERROR]${CL} in line ${RD}$line_number${CL}: exit code ${RD}$exit_code${CL}: while executing command ${YW}$command${CL}"
   echo -e "\n$error_message\n"
-  #cleanup_vmid
+  cleanup_vmid
 }
 
 function get_valid_nextid() {
@@ -97,12 +97,12 @@ function get_valid_nextid() {
   echo "$try_id"
 }
 
-# function cleanup_vmid() {
-#   if qm status $VMID &>/dev/null; then
-#     qm stop $VMID &>/dev/null
-#     #qm destroy $VMID &>/dev/null
-#   fi
-# }
+function cleanup_vmid() {
+  if qm status $VMID &>/dev/null; then
+    qm stop $VMID &>/dev/null
+    qm destroy $VMID &>/dev/null
+  fi
+}
 
 function cleanup() {
   popd >/dev/null
