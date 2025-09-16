@@ -1,13 +1,58 @@
 [
   {
-    "name": "coder/code-server",
-    "version": "v4.104.0",
-    "date": "2025-09-15T22:24:49Z"
+    "name": "bunkerity/bunkerweb",
+    "version": "v1.6.4",
+    "date": "2025-08-18T20:22:07Z"
+  },
+  {
+    "name": "zitadel/zitadel",
+    "version": "v4.2.0",
+    "date": "2025-09-15T09:29:55Z"
   },
   {
     "name": "fallenbagel/jellyseerr",
     "version": "preview-debug-plex-watchlist",
-    "date": "2025-09-15T21:39:34Z"
+    "date": "2025-09-16T09:20:58Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.109.2",
+    "date": "2025-09-03T07:50:21Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "v10.11.3",
+    "date": "2025-09-16T07:39:13Z"
+  },
+  {
+    "name": "readeck/readeck",
+    "version": "0.20.3",
+    "date": "2025-09-16T07:29:49Z"
+  },
+  {
+    "name": "wavelog/wavelog",
+    "version": "2.1.1",
+    "date": "2025-09-16T06:21:32Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.23.28",
+    "date": "2025-09-16T05:57:39Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-09-16T00:27:04Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
+    "name": "coder/code-server",
+    "version": "v4.104.0",
+    "date": "2025-09-15T22:24:49Z"
   },
   {
     "name": "Paymenter/Paymenter",
@@ -28,6 +73,11 @@
     "name": "Kozea/Radicale",
     "version": "v3.5.6",
     "date": "2025-09-15T18:43:31Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.3.4",
+    "date": "2025-09-12T13:28:51Z"
   },
   {
     "name": "apache/tika",
@@ -115,11 +165,6 @@
     "date": "2025-09-15T13:39:52Z"
   },
   {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.109.2",
-    "date": "2025-09-03T07:50:21Z"
-  },
-  {
     "name": "fuma-nama/fumadocs",
     "version": "fumadocs-core@15.7.12",
     "date": "2025-09-15T12:37:01Z"
@@ -140,11 +185,6 @@
     "date": "2025-09-15T11:12:14Z"
   },
   {
-    "name": "zitadel/zitadel",
-    "version": "v4.2.0",
-    "date": "2025-09-15T09:29:55Z"
-  },
-  {
     "name": "authelia/authelia",
     "version": "v4.39.10",
     "date": "2025-09-15T09:11:13Z"
@@ -163,11 +203,6 @@
     "name": "esphome/esphome",
     "version": "2025.8.4",
     "date": "2025-09-10T05:03:47Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.23.23",
-    "date": "2025-09-15T05:57:33Z"
   },
   {
     "name": "mealie-recipes/mealie",
@@ -193,16 +228,6 @@
     "name": "crafty-controller/crafty-4",
     "version": "v4.5.4",
     "date": "2025-09-15T00:49:53Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-09-15T00:27:09Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
   },
   {
     "name": "inventree/InvenTree",
@@ -305,11 +330,6 @@
     "date": "2025-09-12T19:19:14Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.3.4",
-    "date": "2025-09-12T13:28:51Z"
-  },
-  {
     "name": "cloudreve/cloudreve",
     "version": "4.8.0",
     "date": "2025-09-12T09:48:11Z"
@@ -323,11 +343,6 @@
     "name": "MediaBrowser/Emby.Releases",
     "version": "4.9.1.2",
     "date": "2025-06-26T22:08:00Z"
-  },
-  {
-    "name": "mattermost/mattermost",
-    "version": "server/public/v0.1.19",
-    "date": "2025-09-11T22:57:26Z"
   },
   {
     "name": "go-vikunja/vikunja",
@@ -368,11 +383,6 @@
     "name": "rcourtman/Pulse",
     "version": "v4.14.0",
     "date": "2025-09-05T18:28:28Z"
-  },
-  {
-    "name": "bunkerity/bunkerweb",
-    "version": "v1.6.4",
-    "date": "2025-08-18T20:22:07Z"
   },
   {
     "name": "cockpit-project/cockpit",
@@ -450,11 +460,6 @@
     "date": "2025-09-09T08:03:31Z"
   },
   {
-    "name": "readeck/readeck",
-    "version": "0.20.2",
-    "date": "2025-09-09T06:09:25Z"
-  },
-  {
     "name": "gotson/komga",
     "version": "1.23.4",
     "date": "2025-09-09T02:47:05Z"
@@ -511,8 +516,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-09-07T12:25:06Z"
+    "version": "v4.4.0",
+    "date": "2025-09-02T19:26:18Z"
   },
   {
     "name": "Radarr/Radarr",
@@ -740,11 +745,6 @@
     "date": "2025-08-25T01:26:55Z"
   },
   {
-    "name": "wavelog/wavelog",
-    "version": "2.1",
-    "date": "2025-08-24T15:42:19Z"
-  },
-  {
     "name": "janeczku/calibre-web",
     "version": "0.6.25",
     "date": "2025-08-24T08:51:55Z"
@@ -925,7 +925,7 @@
     "date": "2025-08-02T09:12:10Z"
   },
   {
-    "name": "donaldzou/WGDashboard",
+    "name": "WGDashboard/WGDashboard",
     "version": "v4.2.5",
     "date": "2025-08-02T08:58:21Z"
   },
