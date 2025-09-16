@@ -27,7 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  if check_for_gh_release "danielbrendel" "hortusfox-web"; then
+  if check_for_gh_release "hortusfox" "danielbrendel/hortusfox-web"; then
     msg_info "Stopping Service"
     systemctl stop apache2
     msg_ok "Stopped Service"
