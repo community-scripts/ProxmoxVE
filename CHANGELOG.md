@@ -14,6 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - Improve OpenWrt VM boot and readiness check [@MickLesk](https://github.com/MickLesk) ([#7669](https://github.com/community-scripts/ProxmoxVE/pull/7669))
+
   - #### 🐞 Bug Fixes
 
     - hortusfox: fix update check [@MickLesk](https://github.com/MickLesk) ([#7667](https://github.com/community-scripts/ProxmoxVE/pull/7667))
