@@ -598,20 +598,27 @@ for i in {1..30}; do
   sleep 1
 done
 
-send_line_to_vm ""
-send_line_to_vm "uci delete network.@device[0]"
-send_line_to_vm "uci set network.wan=interface"
-send_line_to_vm "uci set network.wan.device=eth1"
-send_line_to_vm "uci set network.wan.proto=dhcp"
-send_line_to_vm "uci delete network.lan"
-send_line_to_vm "uci set network.lan=interface"
-send_line_to_vm "uci set network.lan.device=eth0"
-send_line_to_vm "uci set network.lan.proto=static"
-send_line_to_vm "uci set network.lan.ipaddr=${LAN_IP_ADDR}"
-send_line_to_vm "uci set network.lan.netmask=${LAN_NETMASK}"
-send_line_to_vm "uci commit"
-send_line_to_vm "halt"
-msg_ok "Network interfaces configured in OpenWrt"
+msg_ok "Network interfaces are being configured as OpenWrt initiates."
+
+if qm status "$VMID" | grep -q "running"; then
+  send_line_to_vm ""
+  send_line_to_vm "uci delete network.@device[0]"
+  send_line_to_vm "uci set network.wan=interface"
+  send_line_to_vm "uci set network.wan.device=eth1"
+  send_line_to_vm "uci set network.wan.proto=dhcp"
+  send_line_to_vm "uci delete network.lan"
+  send_line_to_vm "uci set network.lan=interface"
+  send_line_to_vm "uci set network.lan.device=eth0"
+  send_line_to_vm "uci set network.lan.proto=static"
+  send_line_to_vm "uci set network.lan.ipaddr=${LAN_IP_ADDR}"
+  send_line_to_vm "uci set network.lan.netmask=${LAN_NETMASK}"
+  send_line_to_vm "uci commit"
+  send_line_to_vm "halt"
+  msg_ok "Network interfaces configured in OpenWrt"
+else
+  msg_error "VM is not running"
+  exit 1
+fi
 
 msg_info "Waiting for OpenWrt to shut down..."
 until qm status "$VMID" | grep -q "stopped"; do
