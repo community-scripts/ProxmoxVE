@@ -590,11 +590,12 @@ qm start $VMID
 sleep 15
 msg_info "Waiting for OpenWrt to boot..."
 for i in {1..30}; do
-  if qm agent $VMID ping 2>/dev/null; then
-    msg_ok "OpenWrt is ready"
+  if qm status "$VMID" | grep -q "running"; then
+    sleep 5
+    msg_ok "OpenWrt is running"
     break
   fi
-  sleep 2
+  sleep 1
 done
 
 send_line_to_vm ""
