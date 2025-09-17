@@ -14,6 +14,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Komodo: Add docker compose pull for actually updating docker container [@hanneshier](https://github.com/hanneshier) ([#7682](https://github.com/community-scripts/ProxmoxVE/pull/7682))
+
   - #### ✨ New Features
 
     - Debian-LXC: Bump to Debian 13 Trixie [@MickLesk](https://github.com/MickLesk) ([#7683](https://github.com/community-scripts/ProxmoxVE/pull/7683))
