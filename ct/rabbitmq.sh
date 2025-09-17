@@ -27,7 +27,6 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-
   if grep -q "dl.cloudsmith.io" /etc/apt/sources.list.d/rabbitmq.list; then
     rm -f /etc/apt/sources.list.d/rabbitmq.list
     cat <<EOF >/etc/apt/sources.list.d/rabbitmq.list
