@@ -16,14 +16,9 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
   make \
-  ca-certificates
+  ca-certificates \
+  python3-venv
 msg_ok "Installed Dependencies"
-
-if grep -q '^13' /etc/debian_version; then
-  $STD apt-get install -y python3.13-venv
-else
-  $STD apt-get install -y python3.11-venv
-fi
 NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
 fetch_and_deploy_gh_release "grist" "gristlabs/grist-core" "tarball"
 
