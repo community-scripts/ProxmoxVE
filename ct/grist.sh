@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+# Copyright (c) 2021-2025 community-scripts ORG
+# Author: cfurrow | Co-Author: Slaviša Arežina (tremor021)
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/gristlabs/grist-core
 
 APP="Grist"
@@ -26,57 +29,34 @@ function update_script() {
     exit
   fi
 
-  RELEASE=$(curl -fsSL https://api.github.com/repos/gristlabs/grist-core/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
-
+  if check_for_gh_release "grist" "gristlabs/grist-core"; then
     msg_info "Stopping ${APP} Service"
     systemctl stop grist
     msg_ok "Stopped ${APP} Service"
 
-    msg_info "Updating ${APP} to v${RELEASE}"
-
-    cd /opt
-    rm -rf grist_bak
+    msg_info "Creating backup"
+    rm -rf /opt/grist_bak
     mv grist grist_bak
-    curl -fsSL "https://github.com/gristlabs/grist-core/archive/refs/tags/v${RELEASE}.zip" -o $(basename "https://github.com/gristlabs/grist-core/archive/refs/tags/v${RELEASE}.zip")
-    $STD unzip v$RELEASE.zip
-    mv grist-core-${RELEASE} grist
+    msg_ok "Backup created"
 
+    fetch_and_deploy_gh_release "grist" "gristlabs/grist-core" "tarball"
+
+    msg_info "Updating ${APP}"
     mkdir -p grist/docs
-
-    cp -n grist_bak/.env grist/.env || true
-    cp -r grist_bak/docs/* grist/docs/ || true
-    cp grist_bak/grist-sessions.db grist/grist-sessions.db || true
-    cp grist_bak/landing.db grist/landing.db || true
-
-    cd grist
-    msg_info "Installing Dependencies"
+    cp -n /opt/grist_bak/.env /opt/grist/.env
+    cp -r /opt/grist_bak/docs/* /opt/grist/docs/
+    cp /opt/grist_bak/grist-sessions.db /opt/grist/grist-sessions.db
+    cp /opt/grist_bak/landing.db /opt/grist/landing.db
     $STD yarn install
-    msg_ok "Installed Dependencies"
-
-    msg_info "Building"
     $STD yarn run build:prod
-    msg_ok "Done building"
-
-    msg_info "Installing Python"
     $STD yarn run install:python
-    msg_ok "Installed Python"
-
-    echo "${RELEASE}" >/opt/${APP}_version.txt
-
-    msg_ok "Updated ${APP} to v${RELEASE}"
+    msg_ok "Updated ${APP}"
 
     msg_info "Starting ${APP} Service"
     systemctl start grist
     msg_ok "Started ${APP} Service"
 
-    msg_info "Cleaning up"
-    rm -rf /opt/v$RELEASE.zip
-    msg_ok "Cleaned"
-
-    msg_ok "Updated Successfully!\n"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
+    msg_ok "Updated Successfully"
   fi
   exit
 }
