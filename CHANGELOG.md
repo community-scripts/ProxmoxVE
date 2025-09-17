@@ -24,6 +24,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Debian-LXC: Bump to Debian 13 Trixie [@MickLesk](https://github.com/MickLesk) ([#7683](https://github.com/community-scripts/ProxmoxVE/pull/7683))
     - Bump Immich to v1.142.1 [@vhsdream](https://github.com/vhsdream) ([#7675](https://github.com/community-scripts/ProxmoxVE/pull/7675))
 
+  - #### 🔧 Refactor
+
+    - Refactor: Grist [@tremor021](https://github.com/tremor021) ([#7681](https://github.com/community-scripts/ProxmoxVE/pull/7681))
+
 ## 2025-09-16
 
 ### 🚀 Updated Scripts
