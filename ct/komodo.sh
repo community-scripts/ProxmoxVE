@@ -59,6 +59,7 @@ function update_script() {
   if ! grep -qxF 'COMPOSE_KOMODO_BACKUPS_PATH=/etc/komodo/backups' /opt/komodo/compose.env; then
     sed -i '/^COMPOSE_KOMODO_IMAGE_TAG=latest$/a COMPOSE_KOMODO_BACKUPS_PATH=/etc/komodo/backups' /opt/komodo/compose.env
   fi
+  $STD docker compose -p komodo -f "$COMPOSE_FILE" --env-file /opt/komodo/compose.env pull
   $STD docker compose -p komodo -f "$COMPOSE_FILE" --env-file /opt/komodo/compose.env up -d
   msg_ok "Updated ${APP}"
   exit
