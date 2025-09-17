@@ -20,26 +20,40 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /etc/rabbitmq ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    msg_info "Stopping ${APP} Service"
-    systemctl stop rabbitmq-server
-    msg_ok "Stopped ${APP} Service"
-
-    msg_info "Updating..."
-    $STD apt install --only-upgrade rabbitmq-server
-    msg_ok "Update Successfully"
-
-    msg_info "Starting ${APP}"
-    systemctl start rabbitmq-server
-    msg_ok "Started ${APP}"
-    msg_ok "Updated Successfully"
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /etc/rabbitmq ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+
+  if grep -q "dl.cloudsmith.io" /etc/apt/sources.list.d/rabbitmq.list; then
+    rm -f /etc/apt/sources.list.d/rabbitmq.list
+    cat <<EOF >/etc/apt/sources.list.d/rabbitmq.list
+## Modern Erlang/OTP releases
+deb [arch=amd64 signed-by=/usr/share/keyrings/com.rabbitmq.team.gpg] https://deb1.rabbitmq.com/rabbitmq-erlang/debian/bookworm bookworm main
+deb [arch=amd64 signed-by=/usr/share/keyrings/com.rabbitmq.team.gpg] https://deb2.rabbitmq.com/rabbitmq-erlang/debian/bookworm bookworm main
+
+## Provides modern RabbitMQ releases
+deb [arch=amd64 signed-by=/usr/share/keyrings/com.rabbitmq.team.gpg] https://deb1.rabbitmq.com/rabbitmq-server/debian/bookworm bookworm main
+deb [arch=amd64 signed-by=/usr/share/keyrings/com.rabbitmq.team.gpg] https://deb2.rabbitmq.com/rabbitmq-server/debian/bookworm bookworm main
+EOF
+  fi
+
+  msg_info "Stopping ${APP} Service"
+  systemctl stop rabbitmq-server
+  msg_ok "Stopped ${APP} Service"
+
+  msg_info "Updating..."
+  $STD apt install --only-upgrade rabbitmq-server
+  msg_ok "Update Successfully"
+
+  msg_info "Starting ${APP}"
+  systemctl start rabbitmq-server
+  msg_ok "Started ${APP}"
+  msg_ok "Updated Successfully"
+  exit
 }
 
 start
