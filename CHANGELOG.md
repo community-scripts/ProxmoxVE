@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - RabbitMQ: Update repositories [@tremor021](https://github.com/tremor021) ([#7689](https://github.com/community-scripts/ProxmoxVE/pull/7689))
     - Komodo: Add docker compose pull for actually updating docker container [@hanneshier](https://github.com/hanneshier) ([#7682](https://github.com/community-scripts/ProxmoxVE/pull/7682))
 
   - #### ✨ New Features
