@@ -33,6 +33,11 @@ function update_script() {
     systemctl stop gatus
     msg_ok "Stopped $APP"
 
+    if [[ :$PATH: != *":/usr/local/bin:"* ]]; then
+      echo 'export PATH="/usr/local/bin:$PATH"' >>~/.bashrc
+      source ~/.bashrc
+    fi
+
     mv /opt/gatus/config/config.yaml /opt
     rm -rf /opt/gatus
     fetch_and_deploy_gh_release "gatus" "TwiN/gatus"
