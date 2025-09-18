@@ -13,9 +13,7 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing AdGuard Home"
-$STD tar zxvf <(curl -fsSL https://static.adtidy.org/adguardhome/release/AdGuardHome_linux_amd64.tar.gz) -C /opt
-msg_ok "Installed AdGuard Home"
+fetch_and_deploy_gh_release "AdGuardHome" "AdguardTeam/AdGuardHome" "prebuild" "latest" "/opt/AdGuardHome" "AdGuardHome_linux_amd64.tar.gz"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/AdGuardHome.service
@@ -45,6 +43,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"
