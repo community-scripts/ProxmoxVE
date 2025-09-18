@@ -31,7 +31,7 @@ function update_script() {
     msg_error "Wrong Debian version detected!"
     msg_error "You must upgrade your LXC to Debian Trixie before updating."
     msg_error "Please visit https://github.com/community-scripts/ProxmoxVE/discussions/7726 for details."
-    echo "${TAB3}  If you have upgraded your LXC to Trixie and you still see this message, please open an Issue in the Community Scripts repo."
+    echo "${TAB3}  If you have upgraded your LXC to Trixie and you still see this message, please open an Issue in the Community-Scripts repo."
     exit
   fi
 
