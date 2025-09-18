@@ -33,6 +33,10 @@
     },
     "notes": [
         {
+            "text": "Containerized version doesn't allow Home Assistant add-ons.",
+            "type": "warning"
+        },
+        {
             "text": "If the LXC is created Privileged, the script will automatically set up USB passthrough.",
             "type": "warning"
         },
