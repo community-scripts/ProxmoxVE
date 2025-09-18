@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVED/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: cobalt (cobaltgit)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -20,21 +20,21 @@ color
 init_error_traps
 
 function update_script() {
-   header_info
-   check_container_storage
-   check_container_resources
-   if [[ ! -d /etc/caddy ]]; then
-      msg_error "No ${APP} Installation Found!"
-      exit
-   fi
-   msg_info "Updating $APP LXC"
-   $STD apk -U upgrade
-   msg_ok "Updated $APP LXC"
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /etc/caddy ]]; then
+    msg_error "No ${APP} Installation Found!"
+    exit
+  fi
+  msg_info "Updating $APP LXC"
+  $STD apk -U upgrade
+  msg_ok "Updated $APP LXC"
 
-   msg_info "Restarting Caddy"
-   rc-service caddy restart
-   msg_ok "Restarted Caddy"
-   exit
+  msg_info "Restarting Caddy"
+  rc-service caddy restart
+  msg_ok "Restarted Caddy"
+  exit
 }
 
 start
