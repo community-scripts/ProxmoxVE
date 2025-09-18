@@ -15,11 +15,16 @@ update_os
 
 msg_info "Installing Cloudflared"
 mkdir -p --mode=0755 /usr/share/keyrings
-VERSION="$(awk -F'=' '/^VERSION_CODENAME=/{ print $NF }' /etc/os-release)"
 curl -fsSL https://pkg.cloudflare.com/cloudflare-main.gpg >/usr/share/keyrings/cloudflare-main.gpg
-echo "deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared $VERSION main" >/etc/apt/sources.list.d/cloudflared.list
-$STD apt-get update
-$STD apt-get install -y cloudflared
+cat <<EOF >/etc/apt/sources.list.d/cloudflared.sources
+Types: deb
+URIs: https://pkg.cloudflare.com/cloudflared/
+Suites: any
+Components: main
+Signed-By: /usr/share/keyrings/cloudflare-main.gpg
+EOF
+$STD apt update
+$STD apt install -y cloudflared
 msg_ok "Installed Cloudflared"
 
 read -r -p "${TAB3}Would you like to configure cloudflared as a DNS-over-HTTPS (DoH) proxy? <y/N> " prompt
@@ -61,6 +66,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"
