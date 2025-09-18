@@ -51,7 +51,6 @@ $STD apt-get install --no-install-recommends -y \
   meson \
   ninja-build \
   pkg-config \
-  cpanminus \
   mesa-utils \
   mesa-va-drivers \
   mesa-vulkan-drivers \
