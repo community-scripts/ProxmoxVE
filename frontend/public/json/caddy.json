@@ -4,7 +4,7 @@
   "categories": [
     21
   ],
-  "date_created": "2024-05-11",
+  "date_created": "2025-09-17",
   "type": "ct",
   "updateable": true,
   "privileged": false,
@@ -24,6 +24,17 @@
         "hdd": 4,
         "os": "debian",
         "version": "12"
+      }
+    },
+    {
+      "type": "alpine",
+      "script": "ct/alpine-caddy.sh",
+      "resources": {
+        "cpu": 1,
+        "ram": 256,
+        "hdd": 3,
+        "os": "alpine",
+        "version": "3.22"
       }
     }
   ],
