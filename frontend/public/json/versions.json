@@ -1,5 +1,70 @@
 [
   {
+    "name": "henrygd/beszel",
+    "version": "v0.12.9",
+    "date": "2025-09-17T20:13:59Z"
+  },
+  {
+    "name": "TasmoAdmin/TasmoAdmin",
+    "version": "v4.3.1",
+    "date": "2025-07-22T20:10:08Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.25.14",
+    "date": "2025-09-17T19:00:05Z"
+  },
+  {
+    "name": "eclipse-mosquitto/mosquitto",
+    "version": "2.1.0-test1",
+    "date": "2025-09-17T18:21:45Z"
+  },
+  {
+    "name": "open-webui/open-webui",
+    "version": "v0.6.30",
+    "date": "2025-09-17T17:25:37Z"
+  },
+  {
+    "name": "tailscale/tailscale",
+    "version": "v1.88.2",
+    "date": "2025-09-17T17:25:12Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.2.9",
+    "date": "2025-09-17T15:11:25Z"
+  },
+  {
+    "name": "heiher/hev-socks5-server",
+    "version": "2.10.0",
+    "date": "2025-09-17T14:47:00Z"
+  },
+  {
+    "name": "glpi-project/glpi",
+    "version": "10.0.20",
+    "date": "2025-09-10T12:00:00Z"
+  },
+  {
+    "name": "silverbulletmd/silverbullet",
+    "version": "2.0.0",
+    "date": "2025-08-29T13:38:35Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.109.2",
+    "date": "2025-09-03T07:50:21Z"
+  },
+  {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.528",
+    "date": "2025-09-17T13:09:51Z"
+  },
+  {
+    "name": "cockpit-project/cockpit",
+    "version": "347",
+    "date": "2025-09-17T12:03:45Z"
+  },
+  {
     "name": "dgtlmoon/changedetection.io",
     "version": "0.50.14",
     "date": "2025-09-17T11:44:22Z"
@@ -90,11 +155,6 @@
     "date": "2025-09-13T16:38:21Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.3.4",
-    "date": "2025-09-12T13:28:51Z"
-  },
-  {
     "name": "bunkerity/bunkerweb",
     "version": "v1.6.4",
     "date": "2025-08-18T20:22:07Z"
@@ -103,11 +163,6 @@
     "name": "AdguardTeam/AdGuardHome",
     "version": "v0.107.66",
     "date": "2025-09-15T13:39:52Z"
-  },
-  {
-    "name": "msgbyte/tianji",
-    "version": "v1.25.11",
-    "date": "2025-09-16T16:24:18Z"
   },
   {
     "name": "wazuh/wazuh",
@@ -168,11 +223,6 @@
     "name": "fallenbagel/jellyseerr",
     "version": "preview-debug-plex-watchlist",
     "date": "2025-09-16T09:20:58Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.109.2",
-    "date": "2025-09-03T07:50:21Z"
   },
   {
     "name": "mattermost/mattermost",
@@ -390,11 +440,6 @@
     "date": "2025-08-17T18:47:15Z"
   },
   {
-    "name": "tailscale/tailscale",
-    "version": "v1.88.1",
-    "date": "2025-09-11T22:19:51Z"
-  },
-  {
     "name": "influxdata/influxdb",
     "version": "v3.4.2",
     "date": "2025-09-11T20:43:23Z"
@@ -420,11 +465,6 @@
     "date": "2025-09-05T18:28:28Z"
   },
   {
-    "name": "cockpit-project/cockpit",
-    "version": "345.2",
-    "date": "2025-09-11T09:06:44Z"
-  },
-  {
     "name": "NLnetLabs/unbound",
     "version": "release-1.24.0rc1",
     "date": "2025-09-11T07:05:16Z"
@@ -443,21 +483,6 @@
     "name": "aceberg/WatchYourLAN",
     "version": "2.1.4",
     "date": "2025-09-10T12:08:09Z"
-  },
-  {
-    "name": "glpi-project/glpi",
-    "version": "10.0.20",
-    "date": "2025-09-10T12:00:00Z"
-  },
-  {
-    "name": "open-webui/open-webui",
-    "version": "v0.6.28",
-    "date": "2025-09-10T10:53:42Z"
-  },
-  {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.527",
-    "date": "2025-09-09T19:58:28Z"
   },
   {
     "name": "kyantech/Palmr",
@@ -546,8 +571,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v4.4.0",
-    "date": "2025-09-02T19:26:18Z"
+    "version": "nightly",
+    "date": "2025-09-07T12:25:06Z"
   },
   {
     "name": "Radarr/Radarr",
@@ -568,11 +593,6 @@
     "name": "Stirling-Tools/Stirling-PDF",
     "version": "v1.3.2",
     "date": "2025-09-05T18:44:15Z"
-  },
-  {
-    "name": "henrygd/beszel",
-    "version": "v0.12.7",
-    "date": "2025-09-05T18:11:36Z"
   },
   {
     "name": "CrazyWolf13/streamlink-webui",
@@ -688,11 +708,6 @@
     "name": "LibreTranslate/LibreTranslate",
     "version": "v1.7.3",
     "date": "2025-08-31T15:59:43Z"
-  },
-  {
-    "name": "silverbulletmd/silverbullet",
-    "version": "2.0.0",
-    "date": "2025-08-29T13:38:35Z"
   },
   {
     "name": "Forceu/Gokapi",
@@ -995,16 +1010,6 @@
     "date": "2025-07-27T22:25:00Z"
   },
   {
-    "name": "heiher/hev-socks5-server",
-    "version": "2.9.0",
-    "date": "2025-07-25T14:20:25Z"
-  },
-  {
-    "name": "TasmoAdmin/TasmoAdmin",
-    "version": "v4.3.1",
-    "date": "2025-07-22T20:10:08Z"
-  },
-  {
     "name": "PCJones/UmlautAdaptarr",
     "version": "v0.7.3",
     "date": "2025-07-22T14:39:54Z"
@@ -1028,11 +1033,6 @@
     "name": "mayswind/AriaNg",
     "version": "1.3.11",
     "date": "2025-07-13T13:33:48Z"
-  },
-  {
-    "name": "eclipse-mosquitto/mosquitto",
-    "version": "v2.0.22",
-    "date": "2025-07-11T21:34:20Z"
   },
   {
     "name": "NginxProxyManager/nginx-proxy-manager",
