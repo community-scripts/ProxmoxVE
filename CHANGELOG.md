@@ -14,7 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - pve-tool: execute.sh by @jeroenzwart [@MickLesk](https://github.com/MickLesk) ([#7708](https://github.com/community-scripts/ProxmoxVE/pull/7708))
+  - Alpine-Caddy [@tremor021](https://github.com/tremor021) ([#7711](https://github.com/community-scripts/ProxmoxVE/pull/7711))
+- pve-tool: execute.sh by @jeroenzwart [@MickLesk](https://github.com/MickLesk) ([#7708](https://github.com/community-scripts/ProxmoxVE/pull/7708))
 - GlobaLeaks ([#7707](https://github.com/community-scripts/ProxmoxVE/pull/7707))
 
 ### 🚀 Updated Scripts
