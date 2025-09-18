@@ -24,6 +24,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Gatus: check for GO path before update [@vhsdream](https://github.com/vhsdream) ([#7705](https://github.com/community-scripts/ProxmoxVE/pull/7705))
 
+  - #### ✨ New Features
+
+    - AdGuard Home: Bump to Debian 13 [@MickLesk](https://github.com/MickLesk) ([#7720](https://github.com/community-scripts/ProxmoxVE/pull/7720))
+
 ### 🌐 Website
 
   - #### 📝 Script Information
