@@ -33,7 +33,7 @@ function update_script() {
 
     msg_info "Updating $APP"
     $STD /opt/beszel/beszel update
-    chmod +x /opt/beszel/beszel
+    sleep 2 && chmod +x /opt/beszel/beszel
     msg_ok "Updated $APP"
 
     msg_info "Starting $APP"
