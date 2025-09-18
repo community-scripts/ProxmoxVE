@@ -8,14 +8,14 @@
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
 verb_ip6
-init_error_traps
+catch_errors
 setting_up_container
 network_check
 update_os
 
 msg_info "Installing Caddy"
 $STD apk add --no-cache caddy caddy-openrc
-cat<<EOF >/etc/caddy/Caddyfile
+cat <<EOF >/etc/caddy/Caddyfile
 :80 {
         # Set this path to your site's directory.
         root * /var/www/html
@@ -31,7 +31,7 @@ cat<<EOF >/etc/caddy/Caddyfile
 }
 EOF
 mkdir -p /var/www/html
-cat<<EOF >/var/www/html/index.html
+cat <<EOF >/var/www/html/index.html
 <!DOCTYPE html>
 <html>
   <head>
