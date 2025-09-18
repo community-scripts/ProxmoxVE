@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-09-18
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Gatus: check for GO path before update [@vhsdream](https://github.com/vhsdream) ([#7705](https://github.com/community-scripts/ProxmoxVE/pull/7705))
+
 ## 2025-09-17
 
 ### 🚀 Updated Scripts
