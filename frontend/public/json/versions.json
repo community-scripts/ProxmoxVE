@@ -1,5 +1,65 @@
 [
   {
+    "name": "zitadel/zitadel",
+    "version": "v4.2.2",
+    "date": "2025-09-18T10:45:22Z"
+  },
+  {
+    "name": "cloudflare/cloudflared",
+    "version": "2025.9.0",
+    "date": "2025-09-18T10:23:49Z"
+  },
+  {
+    "name": "wazuh/wazuh",
+    "version": "coverity-w38-4.14.0",
+    "date": "2025-09-18T10:14:08Z"
+  },
+  {
+    "name": "NLnetLabs/unbound",
+    "version": "release-1.24.0",
+    "date": "2025-09-18T08:36:55Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.23.38",
+    "date": "2025-09-18T05:55:28Z"
+  },
+  {
+    "name": "outline/outline",
+    "version": "v0.87.4",
+    "date": "2025-09-18T00:47:08Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.12.0-rc0",
+    "date": "2025-09-18T00:43:17Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-09-18T00:27:06Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
+    "name": "MediaBrowser/Emby.Releases",
+    "version": "4.9.1.2",
+    "date": "2025-06-26T22:08:00Z"
+  },
+  {
+    "name": "TwiN/gatus",
+    "version": "v5.24.0",
+    "date": "2025-09-17T23:46:05Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.2.9",
+    "date": "2025-09-17T15:11:25Z"
+  },
+  {
     "name": "henrygd/beszel",
     "version": "v0.12.9",
     "date": "2025-09-17T20:13:59Z"
@@ -28,11 +88,6 @@
     "name": "tailscale/tailscale",
     "version": "v1.88.2",
     "date": "2025-09-17T17:25:12Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.2.9",
-    "date": "2025-09-17T15:11:25Z"
   },
   {
     "name": "heiher/hev-socks5-server",
@@ -95,19 +150,9 @@
     "date": "2025-09-17T06:51:31Z"
   },
   {
-    "name": "MediaBrowser/Emby.Releases",
-    "version": "4.9.1.2",
-    "date": "2025-06-26T22:08:00Z"
-  },
-  {
     "name": "morpheus65535/bazarr",
     "version": "v1.5.3-beta.10",
     "date": "2025-07-15T06:07:03Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.23.32",
-    "date": "2025-09-17T06:01:29Z"
   },
   {
     "name": "HabitRPG/habitica",
@@ -118,16 +163,6 @@
     "name": "gtsteffaniak/filebrowser",
     "version": "v0.8.6-beta",
     "date": "2025-09-17T00:57:54Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-09-17T00:27:05Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
   },
   {
     "name": "Ombi-app/Ombi",
@@ -163,11 +198,6 @@
     "name": "AdguardTeam/AdGuardHome",
     "version": "v0.107.66",
     "date": "2025-09-15T13:39:52Z"
-  },
-  {
-    "name": "wazuh/wazuh",
-    "version": "v4.13.0-rc5",
-    "date": "2025-09-16T16:12:20Z"
   },
   {
     "name": "booklore-app/booklore",
@@ -213,11 +243,6 @@
     "name": "Checkmk/checkmk",
     "version": "v2.4.0p12",
     "date": "2025-09-16T12:53:03Z"
-  },
-  {
-    "name": "zitadel/zitadel",
-    "version": "v4.2.0",
-    "date": "2025-09-15T09:29:55Z"
   },
   {
     "name": "fallenbagel/jellyseerr",
@@ -415,11 +440,6 @@
     "date": "2025-09-13T08:08:55Z"
   },
   {
-    "name": "ollama/ollama",
-    "version": "v0.11.11-rc3",
-    "date": "2025-09-12T23:40:14Z"
-  },
-  {
     "name": "chrisvel/tududi",
     "version": "v0.82-rc2",
     "date": "2025-09-12T09:59:30Z"
@@ -463,11 +483,6 @@
     "name": "rcourtman/Pulse",
     "version": "v4.14.0",
     "date": "2025-09-05T18:28:28Z"
-  },
-  {
-    "name": "NLnetLabs/unbound",
-    "version": "release-1.24.0rc1",
-    "date": "2025-09-11T07:05:16Z"
   },
   {
     "name": "go-gitea/gitea",
@@ -571,8 +586,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-09-07T12:25:06Z"
+    "version": "v4.4.0",
+    "date": "2025-09-02T19:26:18Z"
   },
   {
     "name": "Radarr/Radarr",
@@ -678,11 +693,6 @@
     "name": "Koenkk/zigbee2mqtt",
     "version": "2.6.1",
     "date": "2025-09-01T19:05:18Z"
-  },
-  {
-    "name": "outline/outline",
-    "version": "v0.87.3",
-    "date": "2025-09-01T16:25:43Z"
   },
   {
     "name": "seanmorley15/AdventureLog",
@@ -805,11 +815,6 @@
     "date": "2025-08-22T04:04:12Z"
   },
   {
-    "name": "cloudflare/cloudflared",
-    "version": "2025.8.1",
-    "date": "2025-08-21T15:39:34Z"
-  },
-  {
     "name": "gethomepage/homepage",
     "version": "v1.4.6",
     "date": "2025-08-21T14:05:58Z"
@@ -823,11 +828,6 @@
     "name": "duplicati/duplicati",
     "version": "v2.1.2.0-2.1.2.0_beta_2025-08-20",
     "date": "2025-08-20T08:15:46Z"
-  },
-  {
-    "name": "TwiN/gatus",
-    "version": "v5.23.2",
-    "date": "2025-08-19T21:24:45Z"
   },
   {
     "name": "karlomikus/bar-assistant",
