@@ -16,7 +16,7 @@ var_version="${var_version:-13}"
 header_info "$APP"
 variables
 color
-init_error_traps
+catch_error
 
 function update_script() {
   header_info
