@@ -16,6 +16,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Tunarr ([#7735](https://github.com/community-scripts/ProxmoxVE/pull/7735))
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - SigNoz: Fix wrong URL for Zookeeper [@tremor021](https://github.com/tremor021) ([#7742](https://github.com/community-scripts/ProxmoxVE/pull/7742))
+
 ## 2025-09-18
 
 ### 🆕 New Scripts
