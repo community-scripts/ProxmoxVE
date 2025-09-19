@@ -30,7 +30,8 @@ $STD apt-get install -y clickhouse-server clickhouse-client
 msg_ok "Setup ClickHouse"
 
 msg_info "Setting up Zookeeper"
-curl -fsSL "https://dlcdn.apache.org/zookeeper/current/$(curl -fsSL https://dlcdn.apache.org/zookeeper/current/ | grep -o 'apache-zookeeper-[0-9.]\+-bin\.tar\.gz' | head -n1)" -o ~/zookeeper.tar.gz
+ZOOURL=$(curl -fsSL https://dlcdn.apache.org/zookeeper/current/ | grep -o 'apache-zookeeper-[0-9.]\+-bin\.tar\.gz' | head -n1)
+curl -fsSL "https://dlcdn.apache.org/zookeeper/current/$ZOOURL" -o ~/zookeeper.tar.gz
 tar -xzf "$HOME/zookeeper.tar.gz" -C "$HOME"
 mkdir -p /opt/zookeeper
 mkdir -p /var/lib/zookeeper
