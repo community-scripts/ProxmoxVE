@@ -1,13 +1,13 @@
 [
   {
-    "name": "ollama/ollama",
-    "version": "v0.11.11-rc3",
-    "date": "2025-09-12T23:40:14Z"
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.111.1",
+    "date": "2025-09-19T09:26:05Z"
   },
   {
-    "name": "pocket-id/pocket-id",
-    "version": "v1.11.1",
-    "date": "2025-09-18T20:55:56Z"
+    "name": "fuma-nama/fumadocs",
+    "version": "fumadocs-mdx@11.10.1",
+    "date": "2025-09-19T10:43:04Z"
   },
   {
     "name": "mattermost/mattermost",
@@ -15,9 +15,64 @@
     "date": "2025-09-18T20:15:19Z"
   },
   {
+    "name": "docker/compose",
+    "version": "v2.39.4",
+    "date": "2025-09-19T08:49:23Z"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2025.9.1",
+    "date": "2025-09-19T08:47:03Z"
+  },
+  {
+    "name": "wazuh/wazuh",
+    "version": "v4.13.0",
+    "date": "2025-09-19T07:02:27Z"
+  },
+  {
+    "name": "theonedev/onedev",
+    "version": "v13.0.0",
+    "date": "2025-09-19T06:05:50Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.23.43",
+    "date": "2025-09-19T05:57:38Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-09-19T00:27:22Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.12.0-rc1",
+    "date": "2025-09-18T23:11:08Z"
+  },
+  {
+    "name": "pocket-id/pocket-id",
+    "version": "v1.11.1",
+    "date": "2025-09-18T20:55:56Z"
+  },
+  {
     "name": "saltstack/salt",
     "version": "v3007.8",
     "date": "2025-09-18T18:19:04Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "v4.4.0",
+    "date": "2025-09-02T19:26:18Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.2.9",
+    "date": "2025-09-17T15:11:25Z"
   },
   {
     "name": "docmost/docmost",
@@ -50,11 +105,6 @@
     "date": "2025-09-18T13:55:58Z"
   },
   {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.109.2",
-    "date": "2025-09-03T07:50:21Z"
-  },
-  {
     "name": "zitadel/zitadel",
     "version": "v4.2.2",
     "date": "2025-09-18T10:45:22Z"
@@ -65,9 +115,9 @@
     "date": "2025-09-18T10:23:49Z"
   },
   {
-    "name": "wazuh/wazuh",
-    "version": "coverity-w38-4.14.0",
-    "date": "2025-09-18T10:14:08Z"
+    "name": "chrisvel/tududi",
+    "version": "v0.82-rc5",
+    "date": "2025-09-18T09:57:28Z"
   },
   {
     "name": "NLnetLabs/unbound",
@@ -75,24 +125,9 @@
     "date": "2025-09-18T08:36:55Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.23.38",
-    "date": "2025-09-18T05:55:28Z"
-  },
-  {
     "name": "outline/outline",
     "version": "v0.87.4",
     "date": "2025-09-18T00:47:08Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-09-18T00:27:06Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
   },
   {
     "name": "MediaBrowser/Emby.Releases",
@@ -103,11 +138,6 @@
     "name": "TwiN/gatus",
     "version": "v5.24.0",
     "date": "2025-09-17T23:46:05Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.2.9",
-    "date": "2025-09-17T15:11:25Z"
   },
   {
     "name": "henrygd/beszel",
@@ -188,11 +218,6 @@
     "name": "WGDashboard/WGDashboard",
     "version": "v4.3.0.1",
     "date": "2025-09-17T08:50:39Z"
-  },
-  {
-    "name": "esphome/esphome",
-    "version": "2025.9.0",
-    "date": "2025-09-17T06:51:31Z"
   },
   {
     "name": "morpheus65535/bazarr",
@@ -365,11 +390,6 @@
     "date": "2025-09-15T14:57:30Z"
   },
   {
-    "name": "fuma-nama/fumadocs",
-    "version": "fumadocs-core@15.7.12",
-    "date": "2025-09-15T12:37:01Z"
-  },
-  {
     "name": "VictoriaMetrics/VictoriaMetrics",
     "version": "pmm-6401-v1.126.0",
     "date": "2025-09-15T11:32:31Z"
@@ -465,11 +485,6 @@
     "date": "2025-09-13T08:08:55Z"
   },
   {
-    "name": "chrisvel/tududi",
-    "version": "v0.82-rc2",
-    "date": "2025-09-12T09:59:30Z"
-  },
-  {
     "name": "homarr-labs/homarr",
     "version": "v1.37.0",
     "date": "2025-09-12T19:19:14Z"
@@ -545,11 +560,6 @@
     "date": "2025-09-09T10:28:12Z"
   },
   {
-    "name": "docker/compose",
-    "version": "v2.39.3",
-    "date": "2025-09-09T08:27:27Z"
-  },
-  {
     "name": "OctoPrint/OctoPrint",
     "version": "1.11.3",
     "date": "2025-09-09T08:03:31Z"
@@ -580,11 +590,6 @@
     "date": "2025-09-08T14:03:25Z"
   },
   {
-    "name": "theonedev/onedev",
-    "version": "v12.0.10",
-    "date": "2025-09-08T13:20:16Z"
-  },
-  {
     "name": "evcc-io/evcc",
     "version": "0.207.6",
     "date": "2025-09-08T11:52:00Z"
@@ -603,11 +608,6 @@
     "name": "minio/minio",
     "version": "RELEASE.2025-09-07T16-13-09Z",
     "date": "2025-09-07T18:53:04Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-09-07T12:25:06Z"
   },
   {
     "name": "Radarr/Radarr",
