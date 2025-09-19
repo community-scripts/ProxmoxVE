@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-09-19
 
+### 🆕 New Scripts
+
+  - Tunarr ([#7735](https://github.com/community-scripts/ProxmoxVE/pull/7735))
+
 ## 2025-09-18
 
 ### 🆕 New Scripts
