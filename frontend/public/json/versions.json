@@ -1,5 +1,60 @@
 [
   {
+    "name": "ollama/ollama",
+    "version": "v0.11.11-rc3",
+    "date": "2025-09-12T23:40:14Z"
+  },
+  {
+    "name": "pocket-id/pocket-id",
+    "version": "v1.11.1",
+    "date": "2025-09-18T20:55:56Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "mattermost-redux@10.12.0",
+    "date": "2025-09-18T20:15:19Z"
+  },
+  {
+    "name": "saltstack/salt",
+    "version": "v3007.8",
+    "date": "2025-09-18T18:19:04Z"
+  },
+  {
+    "name": "docmost/docmost",
+    "version": "v0.23.2",
+    "date": "2025-09-18T17:18:59Z"
+  },
+  {
+    "name": "bluenviron/mediamtx",
+    "version": "v1.15.0",
+    "date": "2025-09-18T17:14:15Z"
+  },
+  {
+    "name": "emqx/emqx",
+    "version": "e5.10.1",
+    "date": "2025-09-18T16:43:47Z"
+  },
+  {
+    "name": "TandoorRecipes/recipes",
+    "version": "2.2.1",
+    "date": "2025-09-18T16:18:17Z"
+  },
+  {
+    "name": "YunoHost/yunohost",
+    "version": "debian/12.1.25",
+    "date": "2025-09-18T15:40:25Z"
+  },
+  {
+    "name": "grokability/snipe-it",
+    "version": "v8.3.2",
+    "date": "2025-09-18T13:55:58Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.109.2",
+    "date": "2025-09-03T07:50:21Z"
+  },
+  {
     "name": "zitadel/zitadel",
     "version": "v4.2.2",
     "date": "2025-09-18T10:45:22Z"
@@ -28,11 +83,6 @@
     "name": "outline/outline",
     "version": "v0.87.4",
     "date": "2025-09-18T00:47:08Z"
-  },
-  {
-    "name": "ollama/ollama",
-    "version": "v0.12.0-rc0",
-    "date": "2025-09-18T00:43:17Z"
   },
   {
     "name": "jeedom/core",
@@ -105,11 +155,6 @@
     "date": "2025-08-29T13:38:35Z"
   },
   {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.109.2",
-    "date": "2025-09-03T07:50:21Z"
-  },
-  {
     "name": "jenkinsci/jenkins",
     "version": "jenkins-2.528",
     "date": "2025-09-17T13:09:51Z"
@@ -180,11 +225,6 @@
     "date": "2025-09-16T20:28:37Z"
   },
   {
-    "name": "YunoHost/yunohost",
-    "version": "debian/12.1.24",
-    "date": "2025-09-16T19:55:04Z"
-  },
-  {
     "name": "firefly-iii/firefly-iii",
     "version": "v6.4.0",
     "date": "2025-09-13T16:38:21Z"
@@ -230,11 +270,6 @@
     "date": "2025-09-16T13:53:44Z"
   },
   {
-    "name": "emqx/emqx",
-    "version": "e5.10.1-rc.2",
-    "date": "2025-09-16T13:41:59Z"
-  },
-  {
     "name": "tobychui/zoraxy",
     "version": "v3.2.5r2",
     "date": "2025-07-21T12:52:26Z"
@@ -248,11 +283,6 @@
     "name": "fallenbagel/jellyseerr",
     "version": "preview-debug-plex-watchlist",
     "date": "2025-09-16T09:20:58Z"
-  },
-  {
-    "name": "mattermost/mattermost",
-    "version": "v10.11.3",
-    "date": "2025-09-16T07:39:13Z"
   },
   {
     "name": "readeck/readeck",
@@ -405,11 +435,6 @@
     "date": "2025-09-14T14:48:48Z"
   },
   {
-    "name": "docmost/docmost",
-    "version": "v0.23.1",
-    "date": "2025-09-14T14:31:45Z"
-  },
-  {
     "name": "intri-in/manage-my-damn-life-nextjs",
     "version": "v0.8.1",
     "date": "2025-09-14T06:45:23Z"
@@ -488,11 +513,6 @@
     "name": "go-gitea/gitea",
     "version": "v1.24.6",
     "date": "2025-09-11T04:20:27Z"
-  },
-  {
-    "name": "TandoorRecipes/recipes",
-    "version": "2.2.0",
-    "date": "2025-09-10T18:36:56Z"
   },
   {
     "name": "aceberg/WatchYourLAN",
@@ -586,8 +606,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v4.4.0",
-    "date": "2025-09-02T19:26:18Z"
+    "version": "nightly",
+    "date": "2025-09-07T12:25:06Z"
   },
   {
     "name": "Radarr/Radarr",
@@ -705,11 +725,6 @@
     "date": "2025-09-01T14:19:14Z"
   },
   {
-    "name": "grokability/snipe-it",
-    "version": "v8.3.1",
-    "date": "2025-09-01T11:00:07Z"
-  },
-  {
     "name": "crowdsecurity/crowdsec",
     "version": "v1.7.0",
     "date": "2025-09-01T10:10:34Z"
@@ -723,11 +738,6 @@
     "name": "Forceu/Gokapi",
     "version": "v2.1.0",
     "date": "2025-08-29T12:56:13Z"
-  },
-  {
-    "name": "saltstack/salt",
-    "version": "v3007.7",
-    "date": "2025-08-29T01:19:08Z"
   },
   {
     "name": "linkwarden/linkwarden",
@@ -753,11 +763,6 @@
     "name": "garethgeorge/backrest",
     "version": "v1.9.2",
     "date": "2025-08-28T07:06:14Z"
-  },
-  {
-    "name": "pocket-id/pocket-id",
-    "version": "v1.10.0",
-    "date": "2025-08-27T20:35:47Z"
   },
   {
     "name": "ipfs/kubo",
@@ -893,11 +898,6 @@
     "name": "requarks/wiki",
     "version": "v2.5.308",
     "date": "2025-08-13T07:09:29Z"
-  },
-  {
-    "name": "bluenviron/mediamtx",
-    "version": "v1.14.0",
-    "date": "2025-08-12T13:58:46Z"
   },
   {
     "name": "slskd/slskd",
