@@ -60,7 +60,7 @@ body:
         - Alpine
         - Debian 11
         - Debian 12
-        - Ubuntu 20.04
+        - Debian 13
         - Ubuntu 22.04
         - Ubuntu 24.04
         - Ubuntu 24.10
