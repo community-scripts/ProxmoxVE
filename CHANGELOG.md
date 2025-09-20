@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-09-20
 
+### 🧰 Maintenance
+
+  - #### 📂 Github
+
+    - Add Debian 13 in bug report template [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#7757](https://github.com/community-scripts/ProxmoxVE/pull/7757))
+
 ## 2025-09-19
 
 ### 🆕 New Scripts
