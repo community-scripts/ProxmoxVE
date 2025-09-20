@@ -1322,7 +1322,7 @@ function setup_mysql() {
   CURRENT_OS="$(awk -F= '/^ID=/{print $2}' /etc/os-release)"
 
   if command -v mysql >/dev/null; then
-    CURRENT_VERSION="$(mysql --version | grep -oP 'Distrib\s+\K[0-9]+\.[0-9]+')"
+    CURRENT_VERSION="$(mysql --version | grep -oP '[0-9]+\.[0-9]+' | head -n1)"
     if [[ "$CURRENT_VERSION" != "$MYSQL_VERSION" ]]; then
       $STD msg_info "MySQL $CURRENT_VERSION will be upgraded to $MYSQL_VERSION"
       NEED_INSTALL=true
