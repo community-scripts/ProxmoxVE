@@ -1,5 +1,5 @@
 {
-  "name": "Proxmox Clean Orphaned LVM",
+  "name": "PVE Clean Orphaned LVM",
   "slug": "clean-orphaned-lvm",
   "categories": [
     1

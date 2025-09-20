@@ -1,5 +1,5 @@
 {
-    "name": "Proxmox Mail Gateway",
+    "name": "Proxmox Mail Gateway (PMG)",
     "slug": "proxmox-mail-gateway",
     "categories": [
         1

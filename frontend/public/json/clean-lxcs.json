@@ -1,5 +1,5 @@
 {
-  "name": "Proxmox VE LXC Cleaner",
+  "name": "PVE LXC Cleaner",
   "slug": "clean-lxcs",
   "categories": [
     1

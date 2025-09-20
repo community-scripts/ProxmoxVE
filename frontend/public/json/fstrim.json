@@ -1,5 +1,5 @@
 {
-  "name": "Proxmox VE LXC Filesystem Trim",
+  "name": "PVE LXC Filesystem Trim",
   "slug": "fstrim",
   "categories": [
     1

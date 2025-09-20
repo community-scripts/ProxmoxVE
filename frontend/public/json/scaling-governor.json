@@ -1,5 +1,5 @@
 {
-  "name": "Proxmox VE CPU Scaling Governor",
+  "name": "PVE CPU Scaling Governor",
   "slug": "scaling-governor",
   "categories": [
     1

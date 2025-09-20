@@ -1,5 +1,5 @@
 {
-  "name": "Proxmox VE LXC Updater",
+  "name": "PVE LXC Updater",
   "slug": "update-lxcs",
   "categories": [
     1

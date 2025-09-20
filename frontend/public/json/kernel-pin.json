@@ -1,5 +1,5 @@
 {
-  "name": "Proxmox VE Kernel Pin",
+  "name": "PVE Kernel Pin",
   "slug": "kernel-pin",
   "categories": [
     1

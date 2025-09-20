@@ -1,5 +1,5 @@
 {
-  "name": "Proxmox VE Post Install",
+  "name": "PVE Post Install",
   "slug": "post-pve-install",
   "categories": [
     1

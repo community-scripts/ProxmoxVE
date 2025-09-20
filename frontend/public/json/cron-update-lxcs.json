@@ -1,5 +1,5 @@
 {
-  "name": "Proxmox VE Cron LXC Updater",
+  "name": "PVE Cron LXC Updater",
   "slug": "cron-update-lxcs",
   "categories": [
     1

@@ -1,5 +1,5 @@
 {
-  "name": "Proxmox VE Kernel Clean",
+  "name": "PVE Kernel Clean",
   "slug": "kernel-clean",
   "categories": [
     1
