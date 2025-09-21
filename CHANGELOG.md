@@ -18,6 +18,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Fix regex to extract MySQL version correctly [@MickLesk](https://github.com/MickLesk) ([#7774](https://github.com/community-scripts/ProxmoxVE/pull/7774))
 
+  - #### ✨ New Features
+
+    - caddy: modify disk size and implement xCaddy update [@MickLesk](https://github.com/MickLesk) ([#7775](https://github.com/community-scripts/ProxmoxVE/pull/7775))
+
 ## 2025-09-20
 
 ### 🚀 Updated Scripts
