@@ -16,12 +16,19 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
-    - Update Ollama Installer in OpenWebUI to resume downloads if interrupted [@HeedfulCrayon](https://github.com/HeedfulCrayon) ([#7779](https://github.com/community-scripts/ProxmoxVE/pull/7779))
     - Fix regex to extract MySQL version correctly [@MickLesk](https://github.com/MickLesk) ([#7774](https://github.com/community-scripts/ProxmoxVE/pull/7774))
+    - Update Ollama Installer in OpenWebUI to resume downloads if interrupted [@HeedfulCrayon](https://github.com/HeedfulCrayon) ([#7779](https://github.com/community-scripts/ProxmoxVE/pull/7779))
 
   - #### ✨ New Features
 
+    - Implement clean install option in tools.func (fetch_and_deploy_gh_release) [@MickLesk](https://github.com/MickLesk) ([#7785](https://github.com/community-scripts/ProxmoxVE/pull/7785))
     - caddy: modify disk size and implement xCaddy update [@MickLesk](https://github.com/MickLesk) ([#7775](https://github.com/community-scripts/ProxmoxVE/pull/7775))
+
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Harmonize  and shorten JSON Names for PVE/PBS/PMG [@MickLesk](https://github.com/MickLesk) ([#7773](https://github.com/community-scripts/ProxmoxVE/pull/7773))
 
 ## 2025-09-20
 
