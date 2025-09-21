@@ -39,7 +39,7 @@ function update_script() {
   if check_for_gh_release "paymenter" "paymenter/paymenter"; then
     msg_info "Updating ${APP}"
     cd /opt/paymenter
-    $STD php artisan p:upgrade --no-interaction
+    $STD php artisan app:upgrade --no-interaction
     echo "${CHECK_UPDATE_RELEASE}" >~/.paymenter
     msg_ok "Updated Successfully"
   fi
