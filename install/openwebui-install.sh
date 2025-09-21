@@ -48,7 +48,7 @@ msg_ok "Installed Open WebUI"
 read -r -p "${TAB3}Would you like to add Ollama? <y/N> " prompt
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   msg_info "Installing Ollama"
-  curl -fsCSLO https://ollama.com/download/ollama-linux-amd64.tgz
+  curl -fsSLO -C - https://ollama.com/download/ollama-linux-amd64.tgz
   tar -C /usr -xzf ollama-linux-amd64.tgz
   rm -rf ollama-linux-amd64.tgz
   cat <<EOF >/etc/systemd/system/ollama.service
