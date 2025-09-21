@@ -306,6 +306,9 @@ function fetch_and_deploy_gh_release() {
 
   msg_info "Fetching GitHub release: $app ($version)"
 
+  local clean_install=false
+  [[ -n "${CLEAN_INSTALL:-}" && "$CLEAN_INSTALL" == "1" ]] && clean_install=true
+
   ### Tarball Mode ###
   if [[ "$mode" == "tarball" || "$mode" == "source" ]]; then
     url=$(echo "$json" | jq -r '.tarball_url // empty')
@@ -319,6 +322,10 @@ function fetch_and_deploy_gh_release() {
     }
 
     mkdir -p "$target"
+    if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
+      rm -rf "${target:?}/"*
+    fi
+
     tar -xzf "$tmpdir/$filename" -C "$tmpdir"
     local unpack_dir
     unpack_dir=$(find "$tmpdir" -mindepth 1 -maxdepth 1 -type d | head -n1)
@@ -388,7 +395,7 @@ function fetch_and_deploy_gh_release() {
       }
     }
 
-  ### Prebuild Mode ###
+    ### Prebuild Mode ###
   elif [[ "$mode" == "prebuild" ]]; then
     local pattern="${6%\"}"
     pattern="${pattern#\"}"
@@ -425,6 +432,9 @@ function fetch_and_deploy_gh_release() {
     local unpack_tmp
     unpack_tmp=$(mktemp -d)
     mkdir -p "$target"
+    if [[ "${CLEAN_INSTALL:-0}" == "1" ]]; then
+      rm -rf "${target:?}/"*
+    fi
 
     if [[ "$filename" == *.zip ]]; then
       if ! command -v unzip &>/dev/null; then
