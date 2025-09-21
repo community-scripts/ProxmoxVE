@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - tracktor: add: cleanup before upgrade [@CrazyWolf13](https://github.com/CrazyWolf13) ([#7782](https://github.com/community-scripts/ProxmoxVE/pull/7782))
     - Fix regex to extract MySQL version correctly [@MickLesk](https://github.com/MickLesk) ([#7774](https://github.com/community-scripts/ProxmoxVE/pull/7774))
     - Update Ollama Installer in OpenWebUI to resume downloads if interrupted [@HeedfulCrayon](https://github.com/HeedfulCrayon) ([#7779](https://github.com/community-scripts/ProxmoxVE/pull/7779))
 
