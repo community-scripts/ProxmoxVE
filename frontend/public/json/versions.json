@@ -1,5 +1,45 @@
 [
   {
+    "name": "Luligu/matterbridge",
+    "version": "3.2.8",
+    "date": "2025-09-20T22:08:35Z"
+  },
+  {
+    "name": "fallenbagel/jellyseerr",
+    "version": "preview-fix-watchlist-error",
+    "date": "2025-09-20T21:07:50Z"
+  },
+  {
+    "name": "bunkerity/bunkerweb",
+    "version": "v1.6.4",
+    "date": "2025-08-18T20:22:07Z"
+  },
+  {
+    "name": "pocket-id/pocket-id",
+    "version": "v1.11.2",
+    "date": "2025-09-20T20:15:40Z"
+  },
+  {
+    "name": "cross-seed/cross-seed",
+    "version": "v6.13.4",
+    "date": "2025-09-20T20:03:29Z"
+  },
+  {
+    "name": "traccar/traccar",
+    "version": "v6.10.0",
+    "date": "2025-09-20T15:40:36Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "e2e",
+    "date": "2025-09-20T15:06:59Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.3",
+    "date": "2025-09-20T12:12:33Z"
+  },
+  {
     "name": "9001/copyparty",
     "version": "v1.19.11",
     "date": "2025-09-20T10:25:33Z"
@@ -125,19 +165,9 @@
     "date": "2025-09-18T23:11:08Z"
   },
   {
-    "name": "pocket-id/pocket-id",
-    "version": "v1.11.1",
-    "date": "2025-09-18T20:55:56Z"
-  },
-  {
     "name": "saltstack/salt",
     "version": "v3007.8",
     "date": "2025-09-18T18:19:04Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-09-18T17:45:50Z"
   },
   {
     "name": "docmost/docmost",
@@ -270,11 +300,6 @@
     "date": "2025-09-17T08:50:39Z"
   },
   {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.3-beta.10",
-    "date": "2025-07-15T06:07:03Z"
-  },
-  {
     "name": "gtsteffaniak/filebrowser",
     "version": "v0.8.6-beta",
     "date": "2025-09-17T00:57:54Z"
@@ -293,11 +318,6 @@
     "name": "firefly-iii/firefly-iii",
     "version": "v6.4.0",
     "date": "2025-09-13T16:38:21Z"
-  },
-  {
-    "name": "bunkerity/bunkerweb",
-    "version": "v1.6.4",
-    "date": "2025-08-18T20:22:07Z"
   },
   {
     "name": "AdguardTeam/AdGuardHome",
@@ -343,11 +363,6 @@
     "name": "Checkmk/checkmk",
     "version": "v2.4.0p12",
     "date": "2025-09-16T12:53:03Z"
-  },
-  {
-    "name": "fallenbagel/jellyseerr",
-    "version": "preview-debug-plex-watchlist",
-    "date": "2025-09-16T09:20:58Z"
   },
   {
     "name": "readeck/readeck",
@@ -450,11 +465,6 @@
     "date": "2025-08-23T21:23:11Z"
   },
   {
-    "name": "cross-seed/cross-seed",
-    "version": "v6.13.3",
-    "date": "2025-09-08T21:45:15Z"
-  },
-  {
     "name": "crafty-controller/crafty-4",
     "version": "v4.5.4",
     "date": "2025-09-15T00:49:53Z"
@@ -483,11 +493,6 @@
     "name": "intri-in/manage-my-damn-life-nextjs",
     "version": "v0.8.1",
     "date": "2025-09-14T06:45:23Z"
-  },
-  {
-    "name": "Luligu/matterbridge",
-    "version": "3.2.7",
-    "date": "2025-09-14T06:35:13Z"
   },
   {
     "name": "gotify/server",
@@ -813,11 +818,6 @@
     "name": "lazy-media/Reactive-Resume",
     "version": "v1.2.4",
     "date": "2025-08-22T07:40:01Z"
-  },
-  {
-    "name": "traccar/traccar",
-    "version": "v6.9.1",
-    "date": "2025-08-22T04:04:12Z"
   },
   {
     "name": "gethomepage/homepage",
