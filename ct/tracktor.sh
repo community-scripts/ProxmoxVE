@@ -38,6 +38,7 @@ function update_script() {
     msg_ok "Created Backup"
 
     setup_nodejs
+    rm -rf /opt/tracktor && sleep 2
     fetch_and_deploy_gh_release "tracktor" "javedh-dev/tracktor" "tarball" "latest" "/opt/tracktor"
 
     msg_info "Updating ${APP}"
