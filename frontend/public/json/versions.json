@@ -1,5 +1,35 @@
 [
   {
+    "name": "TwiN/gatus",
+    "version": "v5.24.2",
+    "date": "2025-09-21T11:09:36Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.4.0",
+    "date": "2025-09-13T16:38:21Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.23.48",
+    "date": "2025-09-21T05:52:38Z"
+  },
+  {
+    "name": "thomiceli/opengist",
+    "version": "v1.11.0",
+    "date": "2025-09-21T02:53:18Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-09-21T00:27:05Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
     "name": "Luligu/matterbridge",
     "version": "3.2.8",
     "date": "2025-09-20T22:08:35Z"
@@ -25,14 +55,19 @@
     "date": "2025-09-20T20:03:29Z"
   },
   {
+    "name": "ollama/ollama",
+    "version": "v0.12.1-rc0",
+    "date": "2025-09-20T19:40:33Z"
+  },
+  {
     "name": "traccar/traccar",
     "version": "v6.10.0",
     "date": "2025-09-20T15:40:36Z"
   },
   {
     "name": "runtipi/runtipi",
-    "version": "e2e",
-    "date": "2025-09-20T15:06:59Z"
+    "version": "nightly",
+    "date": "2025-09-20T15:21:44Z"
   },
   {
     "name": "morpheus65535/bazarr",
@@ -50,24 +85,14 @@
     "date": "2025-09-20T09:52:40Z"
   },
   {
+    "name": "keycloak/keycloak",
+    "version": "26.2.9",
+    "date": "2025-09-17T15:11:25Z"
+  },
+  {
     "name": "forgejo/forgejo",
     "version": "v12.0.4",
     "date": "2025-09-20T07:16:15Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.23.45",
-    "date": "2025-09-20T06:02:02Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-09-20T00:27:06Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
   },
   {
     "name": "theonedev/onedev",
@@ -83,11 +108,6 @@
     "name": "HabitRPG/habitica",
     "version": "v5.41.2",
     "date": "2025-09-19T21:47:42Z"
-  },
-  {
-    "name": "TwiN/gatus",
-    "version": "v5.24.1",
-    "date": "2025-09-19T21:25:48Z"
   },
   {
     "name": "ipfs/kubo",
@@ -118,11 +138,6 @@
     "name": "MediaBrowser/Emby.Releases",
     "version": "4.9.1.2",
     "date": "2025-06-26T22:08:00Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.2.9",
-    "date": "2025-09-17T15:11:25Z"
   },
   {
     "name": "wazuh/wazuh",
@@ -158,11 +173,6 @@
     "name": "esphome/esphome",
     "version": "2025.9.1",
     "date": "2025-09-19T08:47:03Z"
-  },
-  {
-    "name": "ollama/ollama",
-    "version": "v0.12.0-rc1",
-    "date": "2025-09-18T23:11:08Z"
   },
   {
     "name": "saltstack/salt",
@@ -313,11 +323,6 @@
     "name": "webmin/webmin",
     "version": "2.510",
     "date": "2025-09-16T20:28:37Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.4.0",
-    "date": "2025-09-13T16:38:21Z"
   },
   {
     "name": "AdguardTeam/AdGuardHome",
@@ -1238,11 +1243,6 @@
     "name": "StarFleetCPTN/GoMFT",
     "version": "v0.2.11",
     "date": "2025-04-12T21:13:08Z"
-  },
-  {
-    "name": "thomiceli/opengist",
-    "version": "v1.10.0",
-    "date": "2025-04-07T14:32:15Z"
   },
   {
     "name": "azukaar/Cosmos-Server",
