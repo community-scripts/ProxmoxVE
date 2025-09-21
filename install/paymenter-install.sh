@@ -30,7 +30,7 @@ msg_info "Setting up database"
 DB_NAME=paymenter
 DB_USER=paymenter
 DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
-$STD mariadb-tzinfo-to-sql /usr/share/zoneinfo | mariadb mysql
+mariadb-tzinfo-to-sql /usr/share/zoneinfo | mariadb mysql
 $STD mariadb -u root -e "CREATE DATABASE $DB_NAME;"
 $STD mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
 $STD mariadb -u root -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost' WITH GRANT OPTION;"
