@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - [core]: Update detection of current running subshell [@tremor021](https://github.com/tremor021) ([#7796](https://github.com/community-scripts/ProxmoxVE/pull/7796))
     - Paymenter: Installation and update fixes [@tremor021](https://github.com/tremor021) ([#7792](https://github.com/community-scripts/ProxmoxVE/pull/7792))
 
 ## 2025-09-21
