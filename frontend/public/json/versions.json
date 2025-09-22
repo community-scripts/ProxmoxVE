@@ -1,13 +1,63 @@
 [
   {
-    "name": "TwiN/gatus",
-    "version": "v5.24.2",
-    "date": "2025-09-21T11:09:36Z"
+    "name": "9001/copyparty",
+    "version": "v1.19.12",
+    "date": "2025-09-21T22:39:26Z"
+  },
+  {
+    "name": "Radarr/Radarr",
+    "version": "v5.27.5.10198",
+    "date": "2025-09-03T12:08:43Z"
+  },
+  {
+    "name": "Prowlarr/Prowlarr",
+    "version": "v2.0.5.5160",
+    "date": "2025-08-23T21:23:11Z"
+  },
+  {
+    "name": "Lidarr/Lidarr",
+    "version": "v2.13.3.4711",
+    "date": "2025-08-28T20:06:24Z"
+  },
+  {
+    "name": "prometheus/prometheus",
+    "version": "v0.306.0",
+    "date": "2025-09-21T19:49:23Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.26.0",
+    "date": "2025-09-21T17:48:02Z"
+  },
+  {
+    "name": "Ombi-app/Ombi",
+    "version": "v4.47.1",
+    "date": "2025-01-05T21:14:23Z"
   },
   {
     "name": "firefly-iii/firefly-iii",
     "version": "v6.4.0",
     "date": "2025-09-13T16:38:21Z"
+  },
+  {
+    "name": "wizarrrr/wizarr",
+    "version": "v2025.9.5",
+    "date": "2025-09-21T13:26:53Z"
+  },
+  {
+    "name": "openhab/openhab-core",
+    "version": "5.1.0.M1",
+    "date": "2025-09-21T13:17:32Z"
+  },
+  {
+    "name": "gotify/server",
+    "version": "v2.7.3",
+    "date": "2025-09-21T12:07:19Z"
+  },
+  {
+    "name": "TwiN/gatus",
+    "version": "v5.24.2",
+    "date": "2025-09-21T11:09:36Z"
   },
   {
     "name": "Jackett/Jackett",
@@ -75,11 +125,6 @@
     "date": "2025-09-20T12:12:33Z"
   },
   {
-    "name": "9001/copyparty",
-    "version": "v1.19.11",
-    "date": "2025-09-20T10:25:33Z"
-  },
-  {
     "name": "fuma-nama/fumadocs",
     "version": "fumadocs-openapi@9.3.11",
     "date": "2025-09-20T09:52:40Z"
@@ -118,11 +163,6 @@
     "name": "home-assistant/core",
     "version": "2025.9.4",
     "date": "2025-09-19T21:09:39Z"
-  },
-  {
-    "name": "Ombi-app/Ombi",
-    "version": "v4.47.1",
-    "date": "2025-01-05T21:14:23Z"
   },
   {
     "name": "coder/code-server",
@@ -240,11 +280,6 @@
     "date": "2025-07-22T20:10:08Z"
   },
   {
-    "name": "msgbyte/tianji",
-    "version": "v1.25.14",
-    "date": "2025-09-17T19:00:05Z"
-  },
-  {
     "name": "eclipse-mosquitto/mosquitto",
     "version": "2.1.0-test1",
     "date": "2025-09-17T18:21:45Z"
@@ -348,11 +383,6 @@
     "name": "immich-app/immich",
     "version": "v1.142.1",
     "date": "2025-09-16T14:51:53Z"
-  },
-  {
-    "name": "wizarrrr/wizarr",
-    "version": "v2025.9.4",
-    "date": "2025-09-16T14:12:49Z"
   },
   {
     "name": "zwave-js/zwave-js-ui",
@@ -465,11 +495,6 @@
     "date": "2025-09-15T03:45:31Z"
   },
   {
-    "name": "Prowlarr/Prowlarr",
-    "version": "v2.0.5.5160",
-    "date": "2025-08-23T21:23:11Z"
-  },
-  {
     "name": "crafty-controller/crafty-4",
     "version": "v4.5.4",
     "date": "2025-09-15T00:49:53Z"
@@ -485,11 +510,6 @@
     "date": "2025-09-14T17:55:21Z"
   },
   {
-    "name": "Lidarr/Lidarr",
-    "version": "v2.13.3.4711",
-    "date": "2025-08-28T20:06:24Z"
-  },
-  {
     "name": "karakeep-app/karakeep",
     "version": "cli/v0.27.1",
     "date": "2025-09-14T14:48:48Z"
@@ -498,11 +518,6 @@
     "name": "intri-in/manage-my-damn-life-nextjs",
     "version": "v0.8.1",
     "date": "2025-09-14T06:45:23Z"
-  },
-  {
-    "name": "gotify/server",
-    "version": "v2.7.2",
-    "date": "2025-09-13T12:11:38Z"
   },
   {
     "name": "syncthing/syncthing",
@@ -538,11 +553,6 @@
     "name": "Threadfin/Threadfin",
     "version": "1.2.37",
     "date": "2025-09-11T16:13:41Z"
-  },
-  {
-    "name": "prometheus/prometheus",
-    "version": "v0.306.0-rc.1",
-    "date": "2025-09-11T13:37:41Z"
   },
   {
     "name": "rcourtman/Pulse",
@@ -628,11 +638,6 @@
     "name": "minio/minio",
     "version": "RELEASE.2025-09-07T16-13-09Z",
     "date": "2025-09-07T18:53:04Z"
-  },
-  {
-    "name": "Radarr/Radarr",
-    "version": "v5.27.5.10198",
-    "date": "2025-09-03T12:08:43Z"
   },
   {
     "name": "pocketbase/pocketbase",
@@ -828,11 +833,6 @@
     "name": "gethomepage/homepage",
     "version": "v1.4.6",
     "date": "2025-08-21T14:05:58Z"
-  },
-  {
-    "name": "openhab/openhab-core",
-    "version": "4.3.7",
-    "date": "2025-08-20T10:26:21Z"
   },
   {
     "name": "duplicati/duplicati",
