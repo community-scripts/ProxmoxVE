@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-09-22
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Paymenter: Installation and update fixes [@tremor021](https://github.com/tremor021) ([#7792](https://github.com/community-scripts/ProxmoxVE/pull/7792))
+
 ## 2025-09-21
 
 ### 🚀 Updated Scripts
