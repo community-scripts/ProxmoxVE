@@ -40,7 +40,7 @@ function update_script() {
     rm -rf /opt/blocky
     msg_ok "Removed Old Version"
 
-    fetch_and_deploy_gh_release "blocky" "0xERR0R/blocky" "prebuild" "latest" "/opt/blocky" "blocky_*_linux_x86_64.tar.gz"
+    fetch_and_deploy_gh_release "blocky" "0xERR0R/blocky" "prebuild" "latest" "/opt/blocky" "blocky_*_Linux_x86_64.tar.gz"
 
     msg_info "Restore Config"
     mv /opt/config.yml /opt/blocky/config.yml
