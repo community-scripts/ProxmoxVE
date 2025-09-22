@@ -1,5 +1,60 @@
 [
   {
+    "name": "itsmng/itsm-ng",
+    "version": "v2.1.0",
+    "date": "2025-09-22T09:23:37Z"
+  },
+  {
+    "name": "prometheus/prometheus",
+    "version": "v3.6.0",
+    "date": "2025-09-22T08:24:59Z"
+  },
+  {
+    "name": "MediaBrowser/Emby.Releases",
+    "version": "4.9.1.2",
+    "date": "2025-06-26T22:08:00Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.23.52",
+    "date": "2025-09-22T05:54:10Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.4.0",
+    "date": "2025-09-13T16:38:21Z"
+  },
+  {
+    "name": "immich-app/immich",
+    "version": "v1.143.0",
+    "date": "2025-09-22T02:33:20Z"
+  },
+  {
+    "name": "Athou/commafeed",
+    "version": "5.11.1",
+    "date": "2025-09-22T02:21:27Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-09-22T00:27:08Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
+    "name": "TwiN/gatus",
+    "version": "v5.24.3",
+    "date": "2025-09-22T00:04:38Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.12.0-rc1",
+    "date": "2025-09-18T23:11:08Z"
+  },
+  {
     "name": "9001/copyparty",
     "version": "v1.19.12",
     "date": "2025-09-21T22:39:26Z"
@@ -20,9 +75,9 @@
     "date": "2025-08-28T20:06:24Z"
   },
   {
-    "name": "prometheus/prometheus",
-    "version": "v0.306.0",
-    "date": "2025-09-21T19:49:23Z"
+    "name": "runtipi/runtipi",
+    "version": "v4.4.0",
+    "date": "2025-09-02T19:26:18Z"
   },
   {
     "name": "msgbyte/tianji",
@@ -33,11 +88,6 @@
     "name": "Ombi-app/Ombi",
     "version": "v4.47.1",
     "date": "2025-01-05T21:14:23Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.4.0",
-    "date": "2025-09-13T16:38:21Z"
   },
   {
     "name": "wizarrrr/wizarr",
@@ -55,29 +105,9 @@
     "date": "2025-09-21T12:07:19Z"
   },
   {
-    "name": "TwiN/gatus",
-    "version": "v5.24.2",
-    "date": "2025-09-21T11:09:36Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.23.48",
-    "date": "2025-09-21T05:52:38Z"
-  },
-  {
     "name": "thomiceli/opengist",
     "version": "v1.11.0",
     "date": "2025-09-21T02:53:18Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-09-21T00:27:05Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
   },
   {
     "name": "Luligu/matterbridge",
@@ -105,19 +135,9 @@
     "date": "2025-09-20T20:03:29Z"
   },
   {
-    "name": "ollama/ollama",
-    "version": "v0.12.1-rc0",
-    "date": "2025-09-20T19:40:33Z"
-  },
-  {
     "name": "traccar/traccar",
     "version": "v6.10.0",
     "date": "2025-09-20T15:40:36Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-09-20T15:21:44Z"
   },
   {
     "name": "morpheus65535/bazarr",
@@ -173,11 +193,6 @@
     "name": "homarr-labs/homarr",
     "version": "v1.38.0",
     "date": "2025-09-19T19:14:55Z"
-  },
-  {
-    "name": "MediaBrowser/Emby.Releases",
-    "version": "4.9.1.2",
-    "date": "2025-06-26T22:08:00Z"
   },
   {
     "name": "wazuh/wazuh",
@@ -378,11 +393,6 @@
     "name": "goauthentik/authentik",
     "version": "version/2025.8.3",
     "date": "2025-09-16T15:19:06Z"
-  },
-  {
-    "name": "immich-app/immich",
-    "version": "v1.142.1",
-    "date": "2025-09-16T14:51:53Z"
   },
   {
     "name": "zwave-js/zwave-js-ui",
@@ -925,11 +935,6 @@
     "date": "2025-08-07T21:23:15Z"
   },
   {
-    "name": "Athou/commafeed",
-    "version": "5.11.0",
-    "date": "2025-08-06T21:14:18Z"
-  },
-  {
     "name": "bastienwirtz/homer",
     "version": "v25.08.1",
     "date": "2025-08-06T21:04:07Z"
@@ -1093,11 +1098,6 @@
     "name": "arunavo4/gitea-mirror",
     "version": "v2.18.0",
     "date": "2025-06-24T08:29:55Z"
-  },
-  {
-    "name": "itsmng/itsm-ng",
-    "version": "v2.0.7",
-    "date": "2025-06-23T14:35:40Z"
   },
   {
     "name": "clusterzx/paperless-ai",
