@@ -81,8 +81,6 @@ $STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET timezone TO 'UTC'"
   echo "Zabbix Database User: $DB_USER"
   echo "Zabbix Database Password: $DB_PASS"
   echo "Zabbix Database Name: $DB_NAME"
-  echo "Zabbix Admin Email: $ADMIN_EMAIL"
-  echo "Zabbix Admin Password: $ADMIN_PASSWORD"
 } >>~/zabbix.creds
 
 zcat /usr/share/zabbix/sql-scripts/postgresql/server.sql.gz | sudo -u $DB_USER psql $DB_NAME &>/dev/null
