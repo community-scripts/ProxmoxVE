@@ -25,6 +25,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - tracktor: bump to debian 13 | feature bump [@CrazyWolf13](https://github.com/CrazyWolf13) ([#7818](https://github.com/community-scripts/ProxmoxVE/pull/7818))
     - LiteLLM: Bump to Debian 13 & add deps [@MickLesk](https://github.com/MickLesk) ([#7815](https://github.com/community-scripts/ProxmoxVE/pull/7815))
     - Immich: bump to v1.143.0 [@vhsdream](https://github.com/vhsdream) ([#7801](https://github.com/community-scripts/ProxmoxVE/pull/7801))
 
