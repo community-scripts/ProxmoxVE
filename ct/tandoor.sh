@@ -42,7 +42,7 @@ function update_script() {
     mv /opt/tandoor /opt/tandoor.bak
     msg_ok "Backup Created"
 
-    NODE_VERSION="20" NODE_MODULE="yarn" setup_nodejs
+    NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
     PYTHON_VERSION="3.13" setup_uv
     fetch_and_deploy_gh_release "tandoor" "TandoorRecipes/recipes" "tarball" "latest" "/opt/tandoor"
 
