@@ -35,12 +35,15 @@ function update_script() {
 
     msg_info "Creating Backup"
     cp /opt/mmdl/.env /opt/mmdl.env
+    rm -rf /opt/mmdl
     msg_ok "Backup Created"
 
     fetch_and_deploy_gh_release "mmdl" "intri-in/manage-my-damn-life-nextjs" "tarball"
+    NODE_VERSION="22" setup_nodejs
 
     msg_info "Configuring ${APP}"
     cd /opt/mmdl
+    export NEXT_TELEMETRY_DISABLED=1
     $STD npm install
     $STD npm run migrate
     $STD npm run build
