@@ -22,7 +22,7 @@ $STD npm install
 $STD npm run build
 mkdir /opt/tracktor-data
 HOST_IP=$(hostname -I | awk '{print $1}')
-cat <<EOF >/opt/tracktor/app/backend/.env
+cat <<EOF >/opt/tracktor.env
 NODE_ENV=production
 PUBLIC_DEMO_MODE=false
 DB_PATH=/opt/tracktor-data/tracktor.db
@@ -31,6 +31,7 @@ PUBLIC_API_BASE_URL=http://$HOST_IP:3000
 # Here add the reverse proxy url as well to avoid cross errors from the app. 
 CORS_ORIGINS=http://$HOST_IP:3000 
 PORT=3000
+AUTH_PIN=123456
 EOF
 msg_ok "Configured Tracktor"
 
@@ -43,7 +44,7 @@ After=network.target
 [Service]
 Type=simple
 WorkingDirectory=/opt/tracktor
-EnvironmentFile=/opt/tracktor/app/backend/.env
+EnvironmentFile=/opt/tracktor.env
 ExecStart=/usr/bin/npm start
 
 [Install]
