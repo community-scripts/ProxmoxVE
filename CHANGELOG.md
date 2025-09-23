@@ -44,6 +44,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 📝 Script Information
 
+    - cosmos: add info note for configuration file [@MickLesk](https://github.com/MickLesk) ([#7824](https://github.com/community-scripts/ProxmoxVE/pull/7824))
     - ElementSynapse: add note for Bridge Install Methods [@MickLesk](https://github.com/MickLesk) ([#7820](https://github.com/community-scripts/ProxmoxVE/pull/7820))
 
 ## 2025-09-22
