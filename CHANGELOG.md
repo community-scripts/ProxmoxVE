@@ -25,6 +25,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - LiteLLM: Bump to Debian 13 & add deps [@MickLesk](https://github.com/MickLesk) ([#7815](https://github.com/community-scripts/ProxmoxVE/pull/7815))
     - Immich: bump to v1.143.0 [@vhsdream](https://github.com/vhsdream) ([#7801](https://github.com/community-scripts/ProxmoxVE/pull/7801))
 
 ### 🧰 Maintenance
