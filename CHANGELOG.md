@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-09-23
 
+### 🆕 New Scripts
+
+  - UpSnap ([#7825](https://github.com/community-scripts/ProxmoxVE/pull/7825))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
