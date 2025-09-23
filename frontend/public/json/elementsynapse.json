@@ -39,6 +39,10 @@
     {
       "type": "info",
       "text": "Synapse-Admin is running on port 5173"
+    },
+    {
+      "type": "info",
+      "text": "For bridges Installation methods (WhatsApp, Signal, Discord, etc.), see: ´https://docs.mau.fi/bridges/go/setup.html´"
     }
   ]
 }
