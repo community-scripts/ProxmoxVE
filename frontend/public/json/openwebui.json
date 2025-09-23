@@ -31,5 +31,10 @@
     "username": null,
     "password": null
   },
-  "notes": []
+  "notes": [
+    {
+      "text": "Script contains optional installation of Ollama.",
+      "type": "info"
+    }
+  ]
 }
