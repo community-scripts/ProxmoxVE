@@ -16,7 +16,7 @@ update_os
 PHP_VERSION="8.2" PHP_APACHE="YES" PHP_MODULE="dom,gmp,iconv,mysqli,pdo-mysql,redis,tokenizer" setup_php
 setup_composer
 setup_mariadb
-NODE_VERSION="20" NODE_MODULE="yarn@latest" setup_nodejs
+NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
 
 msg_info "Setting up MariaDB"
 DB_NAME=monica

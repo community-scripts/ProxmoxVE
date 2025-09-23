@@ -20,7 +20,7 @@ $STD apt-get install -y \
   redis
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="20" NODE_MODULE="yarn@latest" setup_nodejs
+NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
 PG_VERSION="16" setup_postgresql
 
 msg_info "Set up PostgreSQL Database"

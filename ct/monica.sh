@@ -27,6 +27,9 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
+  NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
+
   if check_for_gh_release "monica" "monicahq/monica"; then
     msg_info "Stopping Service"
     systemctl stop apache2
