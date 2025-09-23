@@ -1,0 +1,40 @@
+{
+  "name": "UpSnap",
+  "slug": "upsnap",
+  "categories": [
+    4
+  ],
+  "date_created": "2025-09-12",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 8090,
+  "documentation": "https://github.com/seriousm4x/UpSnap/wiki",
+  "config_path": "",
+  "website": "https://github.com/seriousm4x/UpSnap",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/upsnap.webp",
+  "description": "A simple wake on lan web app written with SvelteKit, Go and PocketBase.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/upsnap.sh",
+      "resources": {
+        "cpu": 1,
+        "ram": 512,
+        "hdd": 2,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "The first user you register will be the admin user.",
+      "type": "info"
+    }
+  ]
+}
