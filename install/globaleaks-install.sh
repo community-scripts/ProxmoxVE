@@ -18,7 +18,7 @@ curl -fsSL https://deb.globaleaks.org/globaleaks.asc | gpg --dearmor -o /etc/apt
 echo "deb [signed-by=/etc/apt/trusted.gpg.d/globaleaks.gpg] http://deb.globaleaks.org $DISTRO_CODENAME/" >/etc/apt/sources.list.d/globaleaks.list
 echo 'APPARMOR_SANDBOXING=0' >/etc/default/globaleaks
 $STD apt update
-$STD apt -y install globaleaks
+$STD apt -y -o Dpkg::Options::=--force-confdef -o Dpkg::Options::=--force-confold install globaleaks
 msg_ok "Setup GlobaLeaks"
 
 motd_ssh
