@@ -20,6 +20,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Suppress wrong errors from uv shell integration in setup_uv [@MickLesk](https://github.com/MickLesk) ([#7822](https://github.com/community-scripts/ProxmoxVE/pull/7822))
     - Refactor Caddyfile configuration for headscale-admin [@MickLesk](https://github.com/MickLesk) ([#7821](https://github.com/community-scripts/ProxmoxVE/pull/7821))
     - Improve subscription element removal (mobile) in post-pve script [@MickLesk](https://github.com/MickLesk) ([#7814](https://github.com/community-scripts/ProxmoxVE/pull/7814))
     - Blocky: Fix release fetching [@tremor021](https://github.com/tremor021) ([#7807](https://github.com/community-scripts/ProxmoxVE/pull/7807))
