@@ -27,6 +27,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - VM: Increase pv & xz functions (HA OS / Umbrel OS) [@MickLesk](https://github.com/MickLesk) ([#7838](https://github.com/community-scripts/ProxmoxVE/pull/7838))
     - Tandoor: update for newer dependencies (psql) + bump nodejs to 22 [@MickLesk](https://github.com/MickLesk) ([#7826](https://github.com/community-scripts/ProxmoxVE/pull/7826))
     - Update Monica and Outline to use Node.js 22 [@MickLesk](https://github.com/MickLesk) ([#7833](https://github.com/community-scripts/ProxmoxVE/pull/7833))
     - Update Zabbix install for Debian 13 and agent selection [@MickLesk](https://github.com/MickLesk) ([#7819](https://github.com/community-scripts/ProxmoxVE/pull/7819))
