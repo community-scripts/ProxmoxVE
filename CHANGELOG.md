@@ -18,8 +18,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
-  - BookLore: increase RAM [@vhsdream](https://github.com/vhsdream) ([#7855](https://github.com/community-scripts/ProxmoxVE/pull/7855))
+  - Improve globaleaks install ensuring install can proceed without user … [@evilaliv3](https://github.com/evilaliv3) ([#7860](https://github.com/community-scripts/ProxmoxVE/pull/7860))
 - tools.func: Check for /usr/local/bin in PATH during yq setup [@vhsdream](https://github.com/vhsdream) ([#7856](https://github.com/community-scripts/ProxmoxVE/pull/7856))
+- BookLore: increase RAM [@vhsdream](https://github.com/vhsdream) ([#7855](https://github.com/community-scripts/ProxmoxVE/pull/7855))
 
   - #### 🐞 Bug Fixes
 
