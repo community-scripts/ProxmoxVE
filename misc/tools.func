@@ -1970,9 +1970,8 @@ function setup_uv() {
     export PATH="/usr/local/bin:$PATH"
   fi
   ensure_usr_local_bin_persist
-  if ! $STD uv python update-shell; then
-    msg_error "uv shell integration failed – continuing anyway"
-  fi
+
+  $STD uv python update-shell >/dev/null 2>&1 || true
   msg_ok "Setup uv $LATEST_VERSION"
 
   # Optional: install specific Python version
