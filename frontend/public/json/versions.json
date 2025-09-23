@@ -1,5 +1,65 @@
 [
   {
+    "name": "henrygd/beszel",
+    "version": "v0.12.10",
+    "date": "2025-09-22T22:40:43Z"
+  },
+  {
+    "name": "immich-app/immich",
+    "version": "v1.143.0",
+    "date": "2025-09-22T19:57:20Z"
+  },
+  {
+    "name": "gtsteffaniak/filebrowser",
+    "version": "v0.8.7-beta",
+    "date": "2025-09-22T18:24:54Z"
+  },
+  {
+    "name": "bunkerity/bunkerweb",
+    "version": "v1.6.4",
+    "date": "2025-08-18T20:22:07Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.26.1",
+    "date": "2025-09-22T16:46:29Z"
+  },
+  {
+    "name": "gethomepage/homepage",
+    "version": "v1.5.0",
+    "date": "2025-09-22T15:28:49Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.111.1",
+    "date": "2025-09-19T09:26:05Z"
+  },
+  {
+    "name": "cloudflare/cloudflared",
+    "version": "2025.9.1",
+    "date": "2025-09-22T13:32:14Z"
+  },
+  {
+    "name": "sabnzbd/sabnzbd",
+    "version": "4.5.3",
+    "date": "2025-08-25T13:59:56Z"
+  },
+  {
+    "name": "nzbgetcom/nzbget",
+    "version": "v25.3",
+    "date": "2025-09-01T09:47:06Z"
+  },
+  {
+    "name": "Graylog2/graylog2-server",
+    "version": "7.0.0-beta.1",
+    "date": "2025-09-22T11:53:27Z"
+  },
+  {
     "name": "itsmng/itsm-ng",
     "version": "v2.1.0",
     "date": "2025-09-22T09:23:37Z"
@@ -25,11 +85,6 @@
     "date": "2025-09-13T16:38:21Z"
   },
   {
-    "name": "immich-app/immich",
-    "version": "v1.143.0",
-    "date": "2025-09-22T02:33:20Z"
-  },
-  {
     "name": "Athou/commafeed",
     "version": "5.11.1",
     "date": "2025-09-22T02:21:27Z"
@@ -38,11 +93,6 @@
     "name": "jeedom/core",
     "version": "4.4.20",
     "date": "2025-09-22T00:27:08Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
   },
   {
     "name": "TwiN/gatus",
@@ -76,13 +126,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v4.4.0",
-    "date": "2025-09-02T19:26:18Z"
-  },
-  {
-    "name": "msgbyte/tianji",
-    "version": "v1.26.0",
-    "date": "2025-09-21T17:48:02Z"
+    "version": "nightly",
+    "date": "2025-09-21T18:15:06Z"
   },
   {
     "name": "Ombi-app/Ombi",
@@ -118,11 +163,6 @@
     "name": "fallenbagel/jellyseerr",
     "version": "preview-fix-watchlist-error",
     "date": "2025-09-20T21:07:50Z"
-  },
-  {
-    "name": "bunkerity/bunkerweb",
-    "version": "v1.6.4",
-    "date": "2025-08-18T20:22:07Z"
   },
   {
     "name": "pocket-id/pocket-id",
@@ -197,7 +237,7 @@
   {
     "name": "wazuh/wazuh",
     "version": "v4.13.0",
-    "date": "2025-09-19T07:02:27Z"
+    "date": "2025-09-19T16:35:02Z"
   },
   {
     "name": "TandoorRecipes/recipes",
@@ -208,11 +248,6 @@
     "name": "hargata/lubelog",
     "version": "v1.5.2",
     "date": "2025-09-19T14:18:53Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.111.1",
-    "date": "2025-09-19T09:26:05Z"
   },
   {
     "name": "mattermost/mattermost",
@@ -265,11 +300,6 @@
     "date": "2025-09-18T10:45:22Z"
   },
   {
-    "name": "cloudflare/cloudflared",
-    "version": "2025.9.0",
-    "date": "2025-09-18T10:23:49Z"
-  },
-  {
     "name": "chrisvel/tududi",
     "version": "v0.82-rc5",
     "date": "2025-09-18T09:57:28Z"
@@ -283,11 +313,6 @@
     "name": "outline/outline",
     "version": "v0.87.4",
     "date": "2025-09-18T00:47:08Z"
-  },
-  {
-    "name": "henrygd/beszel",
-    "version": "v0.12.9",
-    "date": "2025-09-17T20:13:59Z"
   },
   {
     "name": "TasmoAdmin/TasmoAdmin",
@@ -350,19 +375,9 @@
     "date": "2025-09-17T09:57:55Z"
   },
   {
-    "name": "nzbgetcom/nzbget",
-    "version": "v25.3",
-    "date": "2025-09-01T09:47:06Z"
-  },
-  {
     "name": "WGDashboard/WGDashboard",
     "version": "v4.3.0.1",
     "date": "2025-09-17T08:50:39Z"
-  },
-  {
-    "name": "gtsteffaniak/filebrowser",
-    "version": "v0.8.6-beta",
-    "date": "2025-09-17T00:57:54Z"
   },
   {
     "name": "Cleanuparr/Cleanuparr",
@@ -715,11 +730,6 @@
     "date": "2025-06-14T17:45:06Z"
   },
   {
-    "name": "Graylog2/graylog2-server",
-    "version": "6.1.15",
-    "date": "2025-09-03T14:51:37Z"
-  },
-  {
     "name": "neo4j/neo4j",
     "version": "5.26.12",
     "date": "2025-09-03T12:03:22Z"
@@ -800,11 +810,6 @@
     "date": "2025-08-25T22:43:20Z"
   },
   {
-    "name": "sabnzbd/sabnzbd",
-    "version": "4.5.3",
-    "date": "2025-08-25T13:59:56Z"
-  },
-  {
     "name": "zabbix/zabbix",
     "version": "7.4.2",
     "date": "2025-08-25T12:38:14Z"
@@ -838,11 +843,6 @@
     "name": "lazy-media/Reactive-Resume",
     "version": "v1.2.4",
     "date": "2025-08-22T07:40:01Z"
-  },
-  {
-    "name": "gethomepage/homepage",
-    "version": "v1.4.6",
-    "date": "2025-08-21T14:05:58Z"
   },
   {
     "name": "duplicati/duplicati",
