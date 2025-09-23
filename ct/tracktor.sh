@@ -45,11 +45,11 @@ function update_script() {
     setup_nodejs
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "tracktor" "javedh-dev/tracktor" "tarball" "latest" "/opt/tracktor"
 
-    msg_info "Updating ${APP}"
+    msg_info "Updating tracktor"
     cd /opt/tracktor
     $STD npm install
     $STD npm run build
-    msg_ok "Updated $APP"
+    msg_ok "Updated tracktor"
 
     msg_info "Starting Service"
     systemctl start tracktor
