@@ -33,9 +33,14 @@ function update_script() {
     systemctl stop tracktor
     msg_ok "Stopped Service"
 
-    msg_info "Creating Backup"
-    cp /opt/tracktor/app/backend/.env /opt/tracktor.env
-    msg_ok "Created Backup"
+    msg_info "Correcting Services"
+    if [ -f /opt/tracktor/app/backend/.env ]; then
+        mv /opt/tracktor/app/backend/.env /opt/tracktor.env
+        echo 'AUTH_PIN=123456' >> /opt/tracktor.env
+        sed -i 's|^EnvironmentFile=.*|EnvironmentFile=/opt/tracktor.env|' /etc/systemd/system/tracktor.service
+        systemctl daemon-reload
+    fi
+    msg_ok "Corrected Services"
 
     setup_nodejs
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "tracktor" "javedh-dev/tracktor" "tarball" "latest" "/opt/tracktor"
@@ -45,10 +50,6 @@ function update_script() {
     $STD npm install
     $STD npm run build
     msg_ok "Updated $APP"
-
-    msg_info "Restoring Backup"
-    cp /opt/tracktor.env /opt/tracktor/app/backend/.env
-    msg_ok "Restored Backup"
 
     msg_info "Starting Service"
     systemctl start tracktor
