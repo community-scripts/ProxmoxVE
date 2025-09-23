@@ -20,6 +20,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Improve subscription element removal (mobile) in post-pve script [@MickLesk](https://github.com/MickLesk) ([#7814](https://github.com/community-scripts/ProxmoxVE/pull/7814))
     - Blocky: Fix release fetching [@tremor021](https://github.com/tremor021) ([#7807](https://github.com/community-scripts/ProxmoxVE/pull/7807))
 
   - #### ✨ New Features
