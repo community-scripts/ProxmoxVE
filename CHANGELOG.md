@@ -37,6 +37,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - gh: remove ai autolabel test [@MickLesk](https://github.com/MickLesk) ([#7817](https://github.com/community-scripts/ProxmoxVE/pull/7817))
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - ElementSynapse: add note for Bridge Install Methods [@MickLesk](https://github.com/MickLesk) ([#7820](https://github.com/community-scripts/ProxmoxVE/pull/7820))
+
 ## 2025-09-22
 
 ### 🚀 Updated Scripts
