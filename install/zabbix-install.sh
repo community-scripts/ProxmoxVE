@@ -27,7 +27,7 @@ $STD apt install -y zabbix-server-pgsql zabbix-frontend-php php8.4-pgsql zabbix-
 msg_ok "Installed Zabbix"
 
 while true; do
-  read -rp "Install which agent? [1=agent (classic), 2=agent2 (modern), default=1]: " AGENT_CHOICE
+  read -rp "Which agent do you want to install? [1=agent (classic), 2=agent2 (modern), default=1]: " AGENT_CHOICE
   case "$AGENT_CHOICE" in
   2)
     AGENT_PKG="zabbix-agent2"
