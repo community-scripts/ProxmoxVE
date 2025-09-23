@@ -22,6 +22,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Immich: bump to v1.143.0 [@vhsdream](https://github.com/vhsdream) ([#7801](https://github.com/community-scripts/ProxmoxVE/pull/7801))
 
+### 🧰 Maintenance
+
+  - #### 📂 Github
+
+    - gh: remove ai autolabel test [@MickLesk](https://github.com/MickLesk) ([#7817](https://github.com/community-scripts/ProxmoxVE/pull/7817))
+
 ## 2025-09-22
 
 ### 🚀 Updated Scripts
