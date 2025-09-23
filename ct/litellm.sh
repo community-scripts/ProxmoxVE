@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -29,23 +29,24 @@ function update_script() {
     exit
   fi
 
-  msg_info "Stopping ${APP}"
+  msg_info "Stopping Service"
   systemctl stop litellm
-  msg_ok "Stopped ${APP}"
+  msg_ok "Stopped Service"
 
   VENV_PATH="/opt/litellm/.venv"
   PYTHON_VERSION="3.13" setup_uv
 
-  msg_info "Updating $APP"
+  msg_info "Updating LiteLLM"
   $STD "$VENV_PATH/bin/python" -m pip install --upgrade litellm[proxy] prisma
+  msg_ok "LiteLLM updated"
 
   msg_info "Updating DB Schema"
   $STD uv --directory=/opt/litellm run litellm --config /opt/litellm/litellm.yaml --use_prisma_db_push --skip_server_startup
   msg_ok "DB Schema Updated"
 
-  msg_info "Starting ${APP}"
+  msg_info "Starting Service"
   systemctl start litellm
-  msg_ok "Started ${APP}"
+  msg_ok "Started Service"
   msg_ok "Updated Successfully"
   exit
 }
