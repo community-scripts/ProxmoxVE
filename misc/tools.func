@@ -2021,6 +2021,8 @@ function setup_yq() {
     }
   fi
 
+  [[ ":$PATH:" != *":/usr/local/bin:"* ]] && echo 'export PATH="/usr/local/bin:$PATH"' >>~/.bashrc && source ~/.bashrc
+
   if command -v yq &>/dev/null; then
     if ! yq --version 2>&1 | grep -q 'mikefarah'; then
       rm -f "$(command -v yq)"
