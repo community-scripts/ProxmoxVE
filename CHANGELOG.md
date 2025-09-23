@@ -26,6 +26,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - Tandoor: update for newer dependencies (psql) + bump nodejs to 22 [@MickLesk](https://github.com/MickLesk) ([#7826](https://github.com/community-scripts/ProxmoxVE/pull/7826))
     - Update Monica and Outline to use Node.js 22 [@MickLesk](https://github.com/MickLesk) ([#7833](https://github.com/community-scripts/ProxmoxVE/pull/7833))
     - Update Zabbix install for Debian 13 and agent selection [@MickLesk](https://github.com/MickLesk) ([#7819](https://github.com/community-scripts/ProxmoxVE/pull/7819))
     - tracktor: bump to debian 13 | feature bump [@CrazyWolf13](https://github.com/CrazyWolf13) ([#7818](https://github.com/community-scripts/ProxmoxVE/pull/7818))
