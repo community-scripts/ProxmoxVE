@@ -10,7 +10,7 @@
   "privileged": false,
   "interface_port": 3000,
   "documentation": "https://tracktor.bytedge.in/introduction.html",
-  "config_path": "/opt/tracktor/app/server/.env",
+  "config_path": "/opt/tracktor.env",
   "website": "https://tracktor.bytedge.in/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/tracktor.webp",
   "description": "Tracktor is an open-source web application for comprehensive vehicle management.\nEasily track fuel consumption, maintenance, insurance, and regulatory documents for all your vehicles in one place.",
@@ -29,11 +29,11 @@
   ],
   "default_credentials": {
     "username": null,
-    "password": null
+    "password": "123456"
   },
   "notes": [
     {
-      "text": "Please check and update the '/opt/tracktor/app/backend/.env' file if using behind reverse proxy.",
+      "text": "Please check and update the '/opt/tracktor.env' file if using behind reverse proxy.",
       "type": "info"
     }
   ]
