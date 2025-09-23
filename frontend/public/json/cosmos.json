@@ -32,5 +32,10 @@
     "username": null,
     "password": null
   },
-  "notes": []
+  "notes": [
+    {
+      "type": "info",
+      "text": "The file `/etc/sysconfig/CosmosCloud` is optional. If you need custom settings, you can create it yourself."
+    }
+  ]
 }
