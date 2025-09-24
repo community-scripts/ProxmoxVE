@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-09-24
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Monica: Fix dependencies [@tremor021](https://github.com/tremor021) ([#7877](https://github.com/community-scripts/ProxmoxVE/pull/7877))
+
 ### 🌐 Website
 
   - #### 📝 Script Information
