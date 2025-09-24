@@ -5,7 +5,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://joplinapp.org/
 
-APP="joplin-server"
+APP="Joplin-Server"
 var_tags="${var_tags:-notes}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-4096}"
