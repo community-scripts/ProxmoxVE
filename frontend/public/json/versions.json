@@ -1,13 +1,53 @@
 [
   {
-    "name": "9001/copyparty",
-    "version": "v1.19.14",
-    "date": "2025-09-23T22:57:50Z"
+    "name": "element-hq/synapse",
+    "version": "v1.138.1",
+    "date": "2025-09-24T10:58:37Z"
+  },
+  {
+    "name": "jupyter/notebook",
+    "version": "@jupyter-notebook/ui-components@7.5.0-alpha.3",
+    "date": "2025-09-24T09:14:14Z"
+  },
+  {
+    "name": "meilisearch/meilisearch",
+    "version": "latest",
+    "date": "2025-09-24T08:45:07Z"
+  },
+  {
+    "name": "wazuh/wazuh",
+    "version": "coverity-w39-4.14.0",
+    "date": "2025-09-24T08:44:08Z"
+  },
+  {
+    "name": "syncthing/syncthing",
+    "version": "v2.0.10",
+    "date": "2025-09-24T08:33:37Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.23.59",
+    "date": "2025-09-24T06:04:32Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-09-24T00:27:13Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
   },
   {
     "name": "grafana/grafana",
     "version": "v12.2.0",
     "date": "2025-09-23T23:47:02Z"
+  },
+  {
+    "name": "9001/copyparty",
+    "version": "v1.19.14",
+    "date": "2025-09-23T22:57:50Z"
   },
   {
     "name": "HabitRPG/habitica",
@@ -55,19 +95,9 @@
     "date": "2025-08-18T20:22:07Z"
   },
   {
-    "name": "element-hq/synapse",
-    "version": "v1.139.0rc1",
-    "date": "2025-09-23T13:28:58Z"
-  },
-  {
     "name": "jenkinsci/jenkins",
     "version": "jenkins-2.529",
     "date": "2025-09-23T14:40:20Z"
-  },
-  {
-    "name": "wazuh/wazuh",
-    "version": "v4.13.0",
-    "date": "2025-09-19T16:35:02Z"
   },
   {
     "name": "zabbix/zabbix",
@@ -80,11 +110,6 @@
     "date": "2025-09-23T13:32:25Z"
   },
   {
-    "name": "syncthing/syncthing",
-    "version": "v2.0.9",
-    "date": "2025-09-13T09:37:24Z"
-  },
-  {
     "name": "n8n-io/n8n",
     "version": "n8n@1.112.4",
     "date": "2025-09-23T11:10:21Z"
@@ -95,9 +120,9 @@
     "date": "2025-09-23T11:00:48Z"
   },
   {
-    "name": "meilisearch/meilisearch",
-    "version": "prototype-speedup-post-processing-1",
-    "date": "2025-09-23T09:02:57Z"
+    "name": "keycloak/keycloak",
+    "version": "26.2.9",
+    "date": "2025-09-17T15:11:25Z"
   },
   {
     "name": "chrisvel/tududi",
@@ -115,34 +140,14 @@
     "date": "2025-09-20T12:12:33Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.23.56",
-    "date": "2025-09-23T05:54:39Z"
-  },
-  {
     "name": "booklore-app/booklore",
     "version": "v1.3.3",
     "date": "2025-09-23T00:41:08Z"
   },
   {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-09-23T00:27:09Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
-  },
-  {
     "name": "henrygd/beszel",
     "version": "v0.12.10",
     "date": "2025-09-22T22:40:43Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.2.9",
-    "date": "2025-09-17T15:11:25Z"
   },
   {
     "name": "postgres/postgres",
@@ -221,8 +226,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-09-21T18:15:06Z"
+    "version": "v4.4.0",
+    "date": "2025-09-02T19:26:18Z"
   },
   {
     "name": "Ombi-app/Ombi",
@@ -878,11 +883,6 @@
     "name": "redis/redis",
     "version": "8.2.1",
     "date": "2025-08-18T15:42:48Z"
-  },
-  {
-    "name": "jupyter/notebook",
-    "version": "@jupyter-notebook/ui-components@7.5.0-alpha.2",
-    "date": "2025-08-18T07:39:41Z"
   },
   {
     "name": "lldap/lldap",
