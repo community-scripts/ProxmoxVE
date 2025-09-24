@@ -41,7 +41,7 @@ function update_script() {
     $STD yarn config set --home enableTelemetry 0
     export BUILD_SEQUENCIAL=1
     $STD yarn install --inline-builds
-    msg_ok "Updated $APP"
+    msg_ok "Updated ${APP}"
 
     msg_info "Starting Services"
     systemctl start joplin-server
