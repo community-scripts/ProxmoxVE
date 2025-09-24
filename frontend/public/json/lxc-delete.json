@@ -1,5 +1,5 @@
 {
-  "name": "Container LXC Deletion",
+  "name": "PVE LXC Deletion",
   "slug": "lxc-delete",
   "categories": [
     1
