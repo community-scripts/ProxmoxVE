@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-09-24
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Update name in lxc-delete.json to 'PVE LXC Deletion' [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#7872](https://github.com/community-scripts/ProxmoxVE/pull/7872))
+
 ## 2025-09-23
 
 ### 🆕 New Scripts
