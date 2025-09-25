@@ -41,6 +41,8 @@ export type Category = {
   name: string;
   id: number;
   sort_order: number;
+  description: string;
+  icon: string;
   scripts: Script[];
 };
 

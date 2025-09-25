@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import * as Icons from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -8,6 +9,17 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { formattedBadge } from "@/components/command-menu";
 import { basePath } from "@/config/site-config";
 import { cn } from "@/lib/utils";
+
+function getCategoryIcon(iconName: string) {
+  // Convert kebab-case to PascalCase for Lucide icon names
+  const pascalCaseName = iconName
+    .split("-")
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join("");
+
+  const IconComponent = (Icons as any)[pascalCaseName];
+  return IconComponent ? <IconComponent className="size-4 text-[#0083c3] mr-2" /> : null;
+}
 
 export default function ScriptAccordion({
   items,
@@ -81,10 +93,13 @@ export default function ScriptAccordion({
             )}
           >
             <div className="mr-2 flex w-full items-center justify-between">
-              <span className="pl-2 text-left">
-                {category.name}
-                {" "}
-              </span>
+              <div className="flex items-center pl-2 text-left">
+                {getCategoryIcon(category.icon)}
+                <span>
+                  {category.name}
+                  {" "}
+                </span>
+              </div>
               <span className="rounded-full bg-gray-200 px-2 py-1 text-xs text-muted-foreground hover:no-underline dark:bg-blue-800/20">
                 {category.scripts.length}
               </span>
@@ -103,10 +118,9 @@ export default function ScriptAccordion({
                       query: { id: script.slug, category: category.name },
                     }}
                     prefetch={false}
-                    className={`flex cursor-pointer items-center justify-between gap-1 px-1 py-1 text-muted-foreground hover:rounded-lg hover:bg-accent/60 hover:dark:bg-accent/20 ${
-                      selectedScript === script.slug
-                        ? "rounded-lg bg-accent font-semibold dark:bg-accent/30 dark:text-white"
-                        : ""
+                    className={`flex cursor-pointer items-center justify-between gap-1 px-1 py-1 text-muted-foreground hover:rounded-lg hover:bg-accent/60 hover:dark:bg-accent/20 ${selectedScript === script.slug
+                      ? "rounded-lg bg-accent font-semibold dark:bg-accent/30 dark:text-white"
+                      : ""
                     }`}
                     onClick={() => {
                       handleSelected(script.slug);
