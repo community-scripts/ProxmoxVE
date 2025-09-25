@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-09-25
 
+### 🌐 Website
+
+  - #### ✨ New Features
+
+    - feat: add menu icons to website [@BramSuurdje](https://github.com/BramSuurdje) ([#7894](https://github.com/community-scripts/ProxmoxVE/pull/7894))
+
 ## 2025-09-24
 
 ### 🆕 New Scripts
