@@ -16,7 +16,7 @@ update_os
 msg_info "Installing ntfy"
 mkdir -p /etc/apt/keyrings
 curl -fsSL -o /etc/apt/keyrings/ntfy.gpg https://archive.ntfy.sh/apt/keyring.gpg
-cat <<'EOF' >/etc/apt/sources.list.d/ntfy.sources 
+cat <<EOF >/etc/apt/sources.list.d/ntfy.sources 
 Types: deb
 URIs: https://archive.ntfy.sh/apt/
 Suites: stable
