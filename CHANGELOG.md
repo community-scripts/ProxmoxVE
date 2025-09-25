@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-09-25
 
+### 🆕 New Scripts
+
+  - GoAway ([#7900](https://github.com/community-scripts/ProxmoxVE/pull/7900))
+
 ### 🚀 Updated Scripts
 
   - #### ✨ New Features
