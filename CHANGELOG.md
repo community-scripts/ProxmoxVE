@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-09-25
 
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - ntfy: bump to debian 13 [@CrazyWolf13](https://github.com/CrazyWolf13) ([#7895](https://github.com/community-scripts/ProxmoxVE/pull/7895))
+
 ### 🌐 Website
 
   - #### ✨ New Features
