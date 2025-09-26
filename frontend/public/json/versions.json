@@ -1,13 +1,83 @@
 [
   {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.112.6",
+    "date": "2025-09-26T10:56:27Z"
+  },
+  {
+    "name": "silverbulletmd/silverbullet",
+    "version": "2.1.4",
+    "date": "2025-09-26T10:20:10Z"
+  },
+  {
+    "name": "traefik/traefik",
+    "version": "v3.5.3",
+    "date": "2025-09-26T09:31:01Z"
+  },
+  {
+    "name": "wazuh/wazuh",
+    "version": "v4.13.1",
+    "date": "2025-09-25T15:43:49Z"
+  },
+  {
+    "name": "jupyter/notebook",
+    "version": "v7.4.6",
+    "date": "2025-09-26T06:40:06Z"
+  },
+  {
+    "name": "emqx/emqx",
+    "version": "e6.0.0-beta.1",
+    "date": "2025-09-26T06:28:11Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.23.69",
+    "date": "2025-09-26T05:55:57Z"
+  },
+  {
+    "name": "nzbgetcom/nzbget",
+    "version": "v25.3",
+    "date": "2025-09-01T09:47:06Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.12.2",
+    "date": "2025-09-24T21:19:20Z"
+  },
+  {
+    "name": "theonedev/onedev",
+    "version": "v13.0.2",
+    "date": "2025-09-26T01:52:13Z"
+  },
+  {
+    "name": "influxdata/influxdb",
+    "version": "v3.5.0-0.rc.1",
+    "date": "2025-09-26T01:17:22Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-09-26T00:27:15Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
+    "name": "documenso/documenso",
+    "version": "v1.12.7",
+    "date": "2025-09-25T23:57:34Z"
+  },
+  {
     "name": "henrygd/beszel",
     "version": "v0.12.12",
     "date": "2025-09-25T23:46:01Z"
   },
   {
     "name": "javedh-dev/tracktor",
-    "version": "0.3.10",
-    "date": "2025-09-25T21:32:07Z"
+    "version": "0.3.9",
+    "date": "2025-09-22T21:25:10Z"
   },
   {
     "name": "booklore-app/booklore",
@@ -45,6 +115,11 @@
     "date": "2025-09-19T21:09:39Z"
   },
   {
+    "name": "keycloak/keycloak",
+    "version": "26.3.5",
+    "date": "2025-09-25T06:23:28Z"
+  },
+  {
     "name": "pommee/goaway",
     "version": "v0.62.2",
     "date": "2025-09-25T17:21:23Z"
@@ -63,11 +138,6 @@
     "name": "tailscale/tailscale",
     "version": "v1.88.3",
     "date": "2025-09-25T15:49:37Z"
-  },
-  {
-    "name": "wazuh/wazuh",
-    "version": "v4.13.1",
-    "date": "2025-09-25T15:43:49Z"
   },
   {
     "name": "duplicati/duplicati",
@@ -95,11 +165,6 @@
     "date": "2025-09-25T13:35:14Z"
   },
   {
-    "name": "silverbulletmd/silverbullet",
-    "version": "2.1.3",
-    "date": "2025-09-25T13:31:27Z"
-  },
-  {
     "name": "forgejo/forgejo",
     "version": "v14.0.0-dev",
     "date": "2025-09-25T13:19:45Z"
@@ -108,16 +173,6 @@
     "name": "laurent22/joplin",
     "version": "server-v3.4.4",
     "date": "2025-09-25T13:19:26Z"
-  },
-  {
-    "name": "documenso/documenso",
-    "version": "v1.12.6",
-    "date": "2025-09-25T12:14:44Z"
-  },
-  {
-    "name": "influxdata/influxdb",
-    "version": "v1.10.9",
-    "date": "2025-09-25T11:52:08Z"
   },
   {
     "name": "element-hq/synapse",
@@ -130,21 +185,6 @@
     "date": "2025-09-25T09:34:35Z"
   },
   {
-    "name": "nzbgetcom/nzbget",
-    "version": "v25.3",
-    "date": "2025-09-01T09:47:06Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.3.5",
-    "date": "2025-09-25T06:23:28Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.23.62",
-    "date": "2025-09-25T05:54:23Z"
-  },
-  {
     "name": "rabbitmq/rabbitmq-server",
     "version": "v4.1.4",
     "date": "2025-09-02T14:26:24Z"
@@ -155,24 +195,9 @@
     "date": "2025-04-05T19:14:59Z"
   },
   {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-09-25T00:27:07Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
-  },
-  {
     "name": "MediaBrowser/Emby.Releases",
     "version": "4.9.1.2",
     "date": "2025-06-26T22:08:00Z"
-  },
-  {
-    "name": "ollama/ollama",
-    "version": "v0.12.2",
-    "date": "2025-09-24T21:19:20Z"
   },
   {
     "name": "mongodb/mongo",
@@ -200,11 +225,6 @@
     "date": "2025-09-24T16:32:16Z"
   },
   {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.112.5",
-    "date": "2025-09-24T14:44:25Z"
-  },
-  {
     "name": "alexta69/metube",
     "version": "2025.09.24",
     "date": "2025-09-24T13:51:23Z"
@@ -223,11 +243,6 @@
     "name": "zwave-js/zwave-js-ui",
     "version": "v11.3.1",
     "date": "2025-09-24T11:58:00Z"
-  },
-  {
-    "name": "jupyter/notebook",
-    "version": "@jupyter-notebook/ui-components@7.5.0-alpha.3",
-    "date": "2025-09-24T09:14:14Z"
   },
   {
     "name": "syncthing/syncthing",
@@ -361,8 +376,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-09-21T18:15:06Z"
+    "version": "v4.4.0",
+    "date": "2025-09-02T19:26:18Z"
   },
   {
     "name": "Ombi-app/Ombi",
@@ -420,11 +435,6 @@
     "date": "2025-09-20T15:40:36Z"
   },
   {
-    "name": "theonedev/onedev",
-    "version": "v13.0.1",
-    "date": "2025-09-20T00:15:38Z"
-  },
-  {
     "name": "inventree/InvenTree",
     "version": "1.0.1",
     "date": "2025-09-19T22:28:31Z"
@@ -478,11 +488,6 @@
     "name": "docmost/docmost",
     "version": "v0.23.2",
     "date": "2025-09-18T17:18:59Z"
-  },
-  {
-    "name": "emqx/emqx",
-    "version": "e5.10.1",
-    "date": "2025-09-18T16:43:47Z"
   },
   {
     "name": "YunoHost/yunohost",
@@ -723,11 +728,6 @@
     "name": "aceberg/WatchYourLAN",
     "version": "2.1.4",
     "date": "2025-09-10T12:08:09Z"
-  },
-  {
-    "name": "traefik/traefik",
-    "version": "v3.5.2",
-    "date": "2025-09-09T10:28:12Z"
   },
   {
     "name": "OctoPrint/OctoPrint",
