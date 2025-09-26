@@ -18,6 +18,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - OpenWebUI: Update NODE_OPTIONS to increase memory limit [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#7919](https://github.com/community-scripts/ProxmoxVE/pull/7919))
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Clarify descriptions of update scripts [@tremor021](https://github.com/tremor021) ([#7929](https://github.com/community-scripts/ProxmoxVE/pull/7929))
+
 ## 2025-09-25
 
 ### 🆕 New Scripts
