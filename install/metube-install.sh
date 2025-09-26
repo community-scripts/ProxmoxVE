@@ -22,7 +22,6 @@ $STD apt-get install -y --no-install-recommends \
   g++ \
   musl-dev \
   ffmpeg \
-  git \
   make \
   ca-certificates
 msg_ok "Installed Dependencies"
@@ -30,25 +29,29 @@ msg_ok "Installed Dependencies"
 PYTHON_VERSION="3.13" setup_uv
 NODE_VERSION="22" setup_nodejs
 
+msg_info "Installing Deno"
+export DENO_INSTALL="/usr/local"
+curl -fsSL https://deno.land/install.sh | $STD sh -s -- -y
+[[ ":$PATH:" != *":/usr/local/bin:"* ]] &&
+  echo 'export PATH="/usr/local/bin:$PATH"' >>~/.bashrc &&
+  source ~/.bashrc
+msg_ok "Installed Deno"
+
+fetch_and_deploy_gh_release "metube" "alexta69/metube" "tarball" "latest"
+
 msg_info "Installing MeTube"
-$STD git clone https://github.com/alexta69/metube /opt/metube
 cd /opt/metube/ui
 $STD npm install
 $STD node_modules/.bin/ng build
 cd /opt/metube
-$STD uv venv /opt/metube/.venv
-$STD /opt/metube/.venv/bin/python -m ensurepip --upgrade
-$STD /opt/metube/.venv/bin/python -m pip install --upgrade pip
-$STD /opt/metube/.venv/bin/python -m pip install pipenv
-$STD /opt/metube/.venv/bin/pipenv install
-$STD /opt/metube/.venv/bin/pipenv update yt-dlp
+$STD uv sync --frozen --no-dev
 
 mkdir -p /opt/metube_downloads /opt/metube_downloads/.metube /opt/metube_downloads/music /opt/metube_downloads/videos
 cat <<EOF >/opt/metube/.env
 DOWNLOAD_DIR=/opt/metube_downloads
 STATE_DIR=/opt/metube_downloads/.metube
 TEMP_DIR=/opt/metube_downloads
-YTDL_OPTIONS={"trim_file_name":10}
+YTDL_OPTIONS={"trim_file_name":10,"extractor_args":{"youtube":{"player_client":["default","-tv_simply"]}}}
 EOF
 msg_ok "Installed MeTube"
 
@@ -62,7 +65,7 @@ After=network.target
 Type=simple
 WorkingDirectory=/opt/metube
 EnvironmentFile=/opt/metube/.env
-ExecStart=/opt/metube/.venv/bin/pipenv run python3 app/main.py
+ExecStart=/opt/metube/.venv/bin/python3 app/main.py
 Restart=always
 User=root
 
