@@ -16,8 +16,13 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
   build-essential \
-  make
+  make \
+  python3-lxml
+curl -fsSL "http://archive.ubuntu.com/ubuntu/pool/universe/l/lxml-html-clean/python3-lxml-html-clean_0.1.1-1_all.deb" -o /opt/python3-lxml-html-clean.deb
+$STD dpkg -i /opt/python3-lxml-html-clean.deb
 msg_ok "Installed Dependencies"
+
+PG_VERSION="18" setup_postgresql
 
 RELEASE=$(curl -fsSL https://nightly.odoo.com/ | grep -oE 'href="[0-9]+\.[0-9]+/nightly"' | head -n1 | cut -d'"' -f2 | cut -d/ -f1)
 LATEST_VERSION=$(curl -fsSL "https://nightly.odoo.com/${RELEASE}/nightly/deb/" |
@@ -69,6 +74,7 @@ customize
 
 msg_info "Cleaning up"
 rm -f /opt/odoo.deb
+rm -f /opt/python3-lxml-html-clean.deb
 $STD apt-get autoremove
 $STD apt-get autoclean
 msg_ok "Cleaned"

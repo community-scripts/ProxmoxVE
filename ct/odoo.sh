@@ -28,6 +28,13 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit 1
   fi
+  if ! [[ $(dpkg -s python3-lxml-html-clean 2>/dev/null) ]]; then
+    $STD apt-get install python-lxml
+    curl -fsSL "http://archive.ubuntu.com/ubuntu/pool/universe/l/lxml-html-clean/python3-lxml-html-clean_0.1.1-1_all.deb" -o /opt/python3-lxml-html-clean.deb
+    $STD dpkg -i /opt/python3-lxml-html-clean.deb
+    rm -f /opt/python3-lxml-html-clean.deb
+  fi
+
   RELEASE=$(curl -fsSL https://nightly.odoo.com/ | grep -oE 'href="[0-9]+\.[0-9]+/nightly"' | head -n1 | cut -d'"' -f2 | cut -d/ -f1)
   LATEST_VERSION=$(curl -fsSL "https://nightly.odoo.com/${RELEASE}/nightly/deb/" |
     grep -oP "odoo_${RELEASE}\.\d+_all\.deb" |
