@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Odoo: Fix missing dependencies [@tremor021](https://github.com/tremor021) ([#7931](https://github.com/community-scripts/ProxmoxVE/pull/7931))
     - OpenWebUI: Update NODE_OPTIONS to increase memory limit [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#7919](https://github.com/community-scripts/ProxmoxVE/pull/7919))
 
 ### 🌐 Website
