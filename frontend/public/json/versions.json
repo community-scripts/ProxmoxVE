@@ -1,5 +1,70 @@
 [
   {
+    "name": "javedh-dev/tracktor",
+    "version": "0.3.18",
+    "date": "2025-09-27T10:32:09Z"
+  },
+  {
+    "name": "fuma-nama/fumadocs",
+    "version": "fumadocs-ui@15.8.1",
+    "date": "2025-09-27T09:57:41Z"
+  },
+  {
+    "name": "lazy-media/Reactive-Resume",
+    "version": "v1.2.5",
+    "date": "2025-09-27T09:28:11Z"
+  },
+  {
+    "name": "jupyter/notebook",
+    "version": "v7.4.7",
+    "date": "2025-09-27T08:00:30Z"
+  },
+  {
+    "name": "Kozea/Radicale",
+    "version": "v3.5.7",
+    "date": "2025-09-27T06:12:51Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.23.71",
+    "date": "2025-09-27T06:00:26Z"
+  },
+  {
+    "name": "silverbulletmd/silverbullet",
+    "version": "2.1.5",
+    "date": "2025-09-27T04:43:40Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.4.0",
+    "date": "2025-09-13T16:38:21Z"
+  },
+  {
+    "name": "ipfs/kubo",
+    "version": "v0.37.0",
+    "date": "2025-08-27T20:03:52Z"
+  },
+  {
+    "name": "Dolibarr/dolibarr",
+    "version": "22.0.2",
+    "date": "2025-09-27T01:43:20Z"
+  },
+  {
+    "name": "cross-seed/cross-seed",
+    "version": "v6.13.5",
+    "date": "2025-09-27T01:10:59Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-09-27T00:27:06Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
     "name": "wizarrrr/wizarr",
     "version": "v2025.9.6",
     "date": "2025-09-26T22:38:58Z"
@@ -30,9 +95,9 @@
     "date": "2025-01-05T21:14:23Z"
   },
   {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.4.0",
-    "date": "2025-09-13T16:38:21Z"
+    "name": "keycloak/keycloak",
+    "version": "26.3.5",
+    "date": "2025-09-25T06:23:28Z"
   },
   {
     "name": "bastienwirtz/homer",
@@ -50,11 +115,6 @@
     "date": "2025-09-26T18:34:22Z"
   },
   {
-    "name": "javedh-dev/tracktor",
-    "version": "0.3.16",
-    "date": "2025-09-26T16:33:48Z"
-  },
-  {
     "name": "theonedev/onedev",
     "version": "v13.0.3",
     "date": "2025-09-26T13:53:41Z"
@@ -70,11 +130,6 @@
     "date": "2025-09-26T10:56:27Z"
   },
   {
-    "name": "silverbulletmd/silverbullet",
-    "version": "2.1.4",
-    "date": "2025-09-26T10:20:10Z"
-  },
-  {
     "name": "traefik/traefik",
     "version": "v3.5.3",
     "date": "2025-09-26T09:31:01Z"
@@ -85,19 +140,9 @@
     "date": "2025-09-25T15:43:49Z"
   },
   {
-    "name": "jupyter/notebook",
-    "version": "v7.4.6",
-    "date": "2025-09-26T06:40:06Z"
-  },
-  {
     "name": "emqx/emqx",
     "version": "e6.0.0-beta.1",
     "date": "2025-09-26T06:28:11Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.23.69",
-    "date": "2025-09-26T05:55:57Z"
   },
   {
     "name": "nzbgetcom/nzbget",
@@ -106,18 +151,8 @@
   },
   {
     "name": "ollama/ollama",
-    "version": "v0.12.2",
-    "date": "2025-09-24T21:19:20Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-09-26T00:27:15Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
+    "version": "v0.12.3",
+    "date": "2025-09-26T05:08:26Z"
   },
   {
     "name": "documenso/documenso",
@@ -158,11 +193,6 @@
     "name": "kyantech/Palmr",
     "version": "v3.2.2-beta",
     "date": "2025-09-25T18:44:52Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.3.5",
-    "date": "2025-09-25T06:23:28Z"
   },
   {
     "name": "pommee/goaway",
@@ -273,11 +303,6 @@
     "name": "AlexxIT/go2rtc",
     "version": "v1.9.10",
     "date": "2025-09-24T13:49:53Z"
-  },
-  {
-    "name": "fuma-nama/fumadocs",
-    "version": "fumadocs-typescript@4.0.9",
-    "date": "2025-09-24T12:52:59Z"
   },
   {
     "name": "zwave-js/zwave-js-ui",
@@ -445,11 +470,6 @@
     "date": "2025-09-20T20:15:40Z"
   },
   {
-    "name": "cross-seed/cross-seed",
-    "version": "v6.13.4",
-    "date": "2025-09-20T20:03:29Z"
-  },
-  {
     "name": "traccar/traccar",
     "version": "v6.10.0",
     "date": "2025-09-20T15:40:36Z"
@@ -463,11 +483,6 @@
     "name": "mmastrac/stylus",
     "version": "v0.17.0",
     "date": "2025-09-19T22:23:28Z"
-  },
-  {
-    "name": "ipfs/kubo",
-    "version": "v0.37.0",
-    "date": "2025-08-27T20:03:52Z"
   },
   {
     "name": "hargata/lubelog",
@@ -630,11 +645,6 @@
     "date": "2025-09-15T20:48:02Z"
   },
   {
-    "name": "Kozea/Radicale",
-    "version": "v3.5.6",
-    "date": "2025-09-15T18:43:31Z"
-  },
-  {
     "name": "apache/tika",
     "version": "3.2.0",
     "date": "2025-09-15T18:03:08Z"
@@ -663,11 +673,6 @@
     "name": "FlowiseAI/Flowise",
     "version": "flowise@3.0.7",
     "date": "2025-09-15T16:08:09Z"
-  },
-  {
-    "name": "Dolibarr/dolibarr",
-    "version": "22.0.1",
-    "date": "2025-09-15T16:01:02Z"
   },
   {
     "name": "linuxserver/Heimdall",
@@ -943,11 +948,6 @@
     "name": "caddyserver/caddy",
     "version": "v2.10.2",
     "date": "2025-08-23T03:10:31Z"
-  },
-  {
-    "name": "lazy-media/Reactive-Resume",
-    "version": "v1.2.4",
-    "date": "2025-08-22T07:40:01Z"
   },
   {
     "name": "karlomikus/bar-assistant",
