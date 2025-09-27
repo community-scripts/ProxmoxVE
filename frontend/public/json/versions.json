@@ -1,5 +1,70 @@
 [
   {
+    "name": "wizarrrr/wizarr",
+    "version": "v2025.9.6",
+    "date": "2025-09-26T22:38:58Z"
+  },
+  {
+    "name": "coder/code-server",
+    "version": "v4.104.2",
+    "date": "2025-09-26T22:34:32Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "nightly",
+    "date": "2025-09-21T18:15:06Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.9.4",
+    "date": "2025-09-19T21:09:39Z"
+  },
+  {
+    "name": "evcc-io/evcc",
+    "version": "0.208.0",
+    "date": "2025-09-26T21:26:14Z"
+  },
+  {
+    "name": "Ombi-app/Ombi",
+    "version": "v4.47.1",
+    "date": "2025-01-05T21:14:23Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.4.0",
+    "date": "2025-09-13T16:38:21Z"
+  },
+  {
+    "name": "bastienwirtz/homer",
+    "version": "v25.09.1",
+    "date": "2025-09-26T19:22:16Z"
+  },
+  {
+    "name": "homarr-labs/homarr",
+    "version": "v1.39.0",
+    "date": "2025-09-26T19:15:10Z"
+  },
+  {
+    "name": "influxdata/influxdb",
+    "version": "v3.5.0-1.rc.1",
+    "date": "2025-09-26T18:34:22Z"
+  },
+  {
+    "name": "javedh-dev/tracktor",
+    "version": "0.3.16",
+    "date": "2025-09-26T16:33:48Z"
+  },
+  {
+    "name": "theonedev/onedev",
+    "version": "v13.0.3",
+    "date": "2025-09-26T13:53:41Z"
+  },
+  {
+    "name": "bunkerity/bunkerweb",
+    "version": "v1.6.4",
+    "date": "2025-08-18T20:22:07Z"
+  },
+  {
     "name": "n8n-io/n8n",
     "version": "n8n@1.112.6",
     "date": "2025-09-26T10:56:27Z"
@@ -45,16 +110,6 @@
     "date": "2025-09-24T21:19:20Z"
   },
   {
-    "name": "theonedev/onedev",
-    "version": "v13.0.2",
-    "date": "2025-09-26T01:52:13Z"
-  },
-  {
-    "name": "influxdata/influxdb",
-    "version": "v3.5.0-0.rc.1",
-    "date": "2025-09-26T01:17:22Z"
-  },
-  {
     "name": "jeedom/core",
     "version": "4.4.20",
     "date": "2025-09-26T00:27:15Z"
@@ -73,11 +128,6 @@
     "name": "henrygd/beszel",
     "version": "v0.12.12",
     "date": "2025-09-25T23:46:01Z"
-  },
-  {
-    "name": "javedh-dev/tracktor",
-    "version": "0.3.9",
-    "date": "2025-09-22T21:25:10Z"
   },
   {
     "name": "booklore-app/booklore",
@@ -110,11 +160,6 @@
     "date": "2025-09-25T18:44:52Z"
   },
   {
-    "name": "home-assistant/core",
-    "version": "2025.9.4",
-    "date": "2025-09-19T21:09:39Z"
-  },
-  {
     "name": "keycloak/keycloak",
     "version": "26.3.5",
     "date": "2025-09-25T06:23:28Z"
@@ -123,11 +168,6 @@
     "name": "pommee/goaway",
     "version": "v0.62.2",
     "date": "2025-09-25T17:21:23Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.4.0",
-    "date": "2025-09-13T16:38:21Z"
   },
   {
     "name": "Threadfin/Threadfin",
@@ -285,11 +325,6 @@
     "date": "2025-05-09T08:54:49Z"
   },
   {
-    "name": "bunkerity/bunkerweb",
-    "version": "v1.6.4",
-    "date": "2025-08-18T20:22:07Z"
-  },
-  {
     "name": "jenkinsci/jenkins",
     "version": "jenkins-2.529",
     "date": "2025-09-23T14:40:20Z"
@@ -375,21 +410,6 @@
     "date": "2025-08-28T20:06:24Z"
   },
   {
-    "name": "runtipi/runtipi",
-    "version": "v4.4.0",
-    "date": "2025-09-02T19:26:18Z"
-  },
-  {
-    "name": "Ombi-app/Ombi",
-    "version": "v4.47.1",
-    "date": "2025-01-05T21:14:23Z"
-  },
-  {
-    "name": "wizarrrr/wizarr",
-    "version": "v2025.9.5",
-    "date": "2025-09-21T13:26:53Z"
-  },
-  {
     "name": "openhab/openhab-core",
     "version": "5.1.0.M1",
     "date": "2025-09-21T13:17:32Z"
@@ -450,16 +470,6 @@
     "date": "2025-08-27T20:03:52Z"
   },
   {
-    "name": "coder/code-server",
-    "version": "v4.104.1",
-    "date": "2025-09-19T19:36:44Z"
-  },
-  {
-    "name": "homarr-labs/homarr",
-    "version": "v1.38.0",
-    "date": "2025-09-19T19:14:55Z"
-  },
-  {
     "name": "hargata/lubelog",
     "version": "v1.5.2",
     "date": "2025-09-19T14:18:53Z"
@@ -493,6 +503,11 @@
     "name": "YunoHost/yunohost",
     "version": "debian/12.1.25",
     "date": "2025-09-18T15:40:25Z"
+  },
+  {
+    "name": "neo4j/neo4j",
+    "version": "2025.09.0",
+    "date": "2025-09-18T15:07:01Z"
   },
   {
     "name": "sassanix/Warracker",
@@ -765,11 +780,6 @@
     "date": "2025-09-08T14:03:25Z"
   },
   {
-    "name": "evcc-io/evcc",
-    "version": "0.207.6",
-    "date": "2025-09-08T11:52:00Z"
-  },
-  {
     "name": "autobrr/autobrr",
     "version": "v1.66.1",
     "date": "2025-09-08T10:49:03Z"
@@ -848,11 +858,6 @@
     "name": "hyperion-project/hyperion.ng",
     "version": "2.1.1",
     "date": "2025-06-14T17:45:06Z"
-  },
-  {
-    "name": "neo4j/neo4j",
-    "version": "5.26.12",
-    "date": "2025-09-03T12:03:22Z"
   },
   {
     "name": "apache/cassandra",
@@ -1033,11 +1038,6 @@
     "name": "MariaDB/server",
     "version": "mariadb-12.0.2",
     "date": "2025-08-07T21:23:15Z"
-  },
-  {
-    "name": "bastienwirtz/homer",
-    "version": "v25.08.1",
-    "date": "2025-08-06T21:04:07Z"
   },
   {
     "name": "TryGhost/Ghost-CLI",
