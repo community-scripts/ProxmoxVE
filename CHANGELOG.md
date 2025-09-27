@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-09-27
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Oddo: Fix typo in update procedure [@tremor021](https://github.com/tremor021) ([#7941](https://github.com/community-scripts/ProxmoxVE/pull/7941))
+
 ## 2025-09-26
 
 ### 🚀 Updated Scripts
