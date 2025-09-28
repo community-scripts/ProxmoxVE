@@ -44,7 +44,7 @@ cd /opt/metube/ui
 $STD npm install
 $STD node_modules/.bin/ng build
 cd /opt/metube
-$STD uv sync --frozen --no-dev
+$STD uv sync
 
 mkdir -p /opt/metube_downloads /opt/metube_downloads/.metube /opt/metube_downloads/music /opt/metube_downloads/videos
 cat <<EOF >/opt/metube/.env

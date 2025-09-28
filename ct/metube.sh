@@ -64,7 +64,7 @@ function update_script() {
 
     msg_info "Installing Backend Requirements"
     cd /opt/metube
-    $STD uv sync --frozen --no-dev
+    $STD uv sync
     msg_ok "Installed Backend"
 
     msg_info "Restoring Environment File"
