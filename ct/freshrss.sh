@@ -27,8 +27,16 @@ function update_script() {
         msg_error "No ${APP} Installation Found!"
         exit
     fi
-    msg_error "FreshRSS should be updated via the user interface."
-    exit
+
+    if [ ! -x /opt/freshrss/cli/sensitive-log.sh ]; then
+        msg_info "Fixing wrong permissions"
+        chmod +x /opt/freshrss/cli/sensitive-log.sh
+        systemctl restart apache2
+        msg_ok "Fixed wrong permissions"
+    else
+        msg_error "FreshRSS should be updated via the user interface."
+        exit
+    fi
 }
 
 start
