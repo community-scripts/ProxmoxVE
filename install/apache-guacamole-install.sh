@@ -13,7 +13,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   build-essential \
   jq \
   libcairo2-dev \
@@ -22,7 +22,7 @@ $STD apt-get install -y \
   libtool-bin \
   libossp-uuid-dev \
   libvncserver-dev \
-  freerdp2-dev \
+  freerdp3-dev \
   libssh2-1-dev \
   libtelnet-dev \
   libwebsockets-dev \
@@ -56,8 +56,9 @@ mkdir -p /etc/guacamole/{extensions,lib}
 RELEASE_SERVER=$(curl -fsSL https://api.github.com/repos/apache/guacamole-server/tags | jq -r '.[].name' | grep -v -- '-RC' | head -n 1)
 curl -fsSL "https://api.github.com/repos/apache/guacamole-server/tarball/refs/tags/${RELEASE_SERVER}" | tar -xz --strip-components=1 -C /opt/apache-guacamole/server
 cd /opt/apache-guacamole/server
+export CPPFLAGS="-Wno-error=deprecated-declarations"
 $STD autoreconf -fi
-$STD ./configure --with-init-dir=/etc/init.d --enable-allow-freerdp-snapshots
+$STD ./configure --with-init-dir=/etc/init.d --enable-allow-freerdp-snapshots --disable-guaclog
 $STD make
 $STD make install
 $STD ldconfig
@@ -149,6 +150,6 @@ customize
 msg_info "Cleaning up"
 rm -rf ~/mysql-connector-j-9.3.0{,.tar.gz}
 rm -rf ~/guacamole-auth-jdbc-$RELEASE_SERVER{,.tar.gz}
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
 msg_ok "Cleaned"
