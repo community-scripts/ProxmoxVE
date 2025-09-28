@@ -1,5 +1,55 @@
 [
   {
+    "name": "Pf2eToolsOrg/Pf2eTools",
+    "version": "v0.10.1",
+    "date": "2025-09-28T08:55:44Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.77.5-nightly",
+    "date": "2025-09-28T07:32:46Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.27.0",
+    "date": "2025-09-28T07:13:45Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.3",
+    "date": "2025-09-20T12:12:33Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.23.74",
+    "date": "2025-09-28T05:54:49Z"
+  },
+  {
+    "name": "theonedev/onedev",
+    "version": "v13.0.4",
+    "date": "2025-09-28T02:38:33Z"
+  },
+  {
+    "name": "mealie-recipes/mealie",
+    "version": "v3.3.0",
+    "date": "2025-09-28T00:49:34Z"
+  },
+  {
+    "name": "hyperion-project/hyperion.ng",
+    "version": "2.1.1",
+    "date": "2025-06-14T17:45:06Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-09-28T00:27:04Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
     "name": "jellyfin/jellyfin",
     "version": "v10.10.7",
     "date": "2025-04-05T19:14:59Z"
@@ -8,11 +58,6 @@
     "name": "moghtech/komodo",
     "version": "v1.19.5",
     "date": "2025-09-27T20:59:46Z"
-  },
-  {
-    "name": "BerriAI/litellm",
-    "version": "v1.77.3-stable",
-    "date": "2025-09-27T18:17:59Z"
   },
   {
     "name": "Luligu/matterbridge",
@@ -40,11 +85,6 @@
     "date": "2025-09-27T13:07:26Z"
   },
   {
-    "name": "theonedev/onedev",
-    "version": "v13.0.3",
-    "date": "2025-09-26T13:53:41Z"
-  },
-  {
     "name": "evcc-io/evcc",
     "version": "0.208.1",
     "date": "2025-09-27T12:57:22Z"
@@ -70,6 +110,11 @@
     "date": "2025-09-27T09:28:11Z"
   },
   {
+    "name": "keycloak/keycloak",
+    "version": "26.3.5",
+    "date": "2025-09-25T06:23:28Z"
+  },
+  {
     "name": "jupyter/notebook",
     "version": "v7.4.7",
     "date": "2025-09-27T08:00:30Z"
@@ -77,12 +122,7 @@
   {
     "name": "Kozea/Radicale",
     "version": "v3.5.7",
-    "date": "2025-09-27T06:16:00Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.23.71",
-    "date": "2025-09-27T06:00:26Z"
+    "date": "2025-09-27T06:12:51Z"
   },
   {
     "name": "silverbulletmd/silverbullet",
@@ -110,24 +150,14 @@
     "date": "2025-09-27T01:10:59Z"
   },
   {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-09-27T00:27:06Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
-  },
-  {
     "name": "coder/code-server",
     "version": "v4.104.2",
     "date": "2025-09-26T22:34:32Z"
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-09-21T18:15:06Z"
+    "version": "v4.4.0",
+    "date": "2025-09-02T19:26:18Z"
   },
   {
     "name": "home-assistant/core",
@@ -138,11 +168,6 @@
     "name": "Ombi-app/Ombi",
     "version": "v4.47.1",
     "date": "2025-01-05T21:14:23Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.3.5",
-    "date": "2025-09-25T06:23:28Z"
   },
   {
     "name": "bastienwirtz/homer",
@@ -310,11 +335,6 @@
     "date": "2025-09-24T18:23:36Z"
   },
   {
-    "name": "msgbyte/tianji",
-    "version": "v1.26.3",
-    "date": "2025-09-24T17:37:55Z"
-  },
-  {
     "name": "rclone/rclone",
     "version": "v1.71.1",
     "date": "2025-09-24T16:32:16Z"
@@ -388,11 +408,6 @@
     "name": "chrisvel/tududi",
     "version": "v0.82-rc5",
     "date": "2025-09-23T07:31:12Z"
-  },
-  {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.3",
-    "date": "2025-09-20T12:12:33Z"
   },
   {
     "name": "postgres/postgres",
@@ -715,11 +730,6 @@
     "date": "2025-09-15T09:11:13Z"
   },
   {
-    "name": "mealie-recipes/mealie",
-    "version": "v3.2.1",
-    "date": "2025-09-15T03:45:31Z"
-  },
-  {
     "name": "crafty-controller/crafty-4",
     "version": "v4.5.4",
     "date": "2025-09-15T00:49:53Z"
@@ -868,11 +878,6 @@
     "name": "actualbudget/actual",
     "version": "v25.9.0",
     "date": "2025-09-04T01:12:37Z"
-  },
-  {
-    "name": "hyperion-project/hyperion.ng",
-    "version": "2.1.1",
-    "date": "2025-06-14T17:45:06Z"
   },
   {
     "name": "apache/cassandra",
@@ -1258,11 +1263,6 @@
     "name": "C4illin/ConvertX",
     "version": "v0.14.1",
     "date": "2025-06-04T08:57:15Z"
-  },
-  {
-    "name": "Pf2eToolsOrg/Pf2eTools",
-    "version": "v0.9.0",
-    "date": "2025-06-03T11:49:40Z"
   },
   {
     "name": "release-argus/Argus",
