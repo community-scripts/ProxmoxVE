@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-09-28
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - freshrss: fix for broken permissions after update [@CrazyWolf13](https://github.com/CrazyWolf13) ([#7953](https://github.com/community-scripts/ProxmoxVE/pull/7953))
+
 ## 2025-09-27
 
 ### 🚀 Updated Scripts
