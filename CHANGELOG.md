@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Metube: remove uv flags [@vhsdream](https://github.com/vhsdream) ([#7962](https://github.com/community-scripts/ProxmoxVE/pull/7962))
     - freshrss: fix for broken permissions after update [@CrazyWolf13](https://github.com/CrazyWolf13) ([#7953](https://github.com/community-scripts/ProxmoxVE/pull/7953))
 
 ## 2025-09-27
