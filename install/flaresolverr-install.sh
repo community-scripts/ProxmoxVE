@@ -41,6 +41,7 @@ RestartSec=5
 Type=simple
 Environment="LOG_LEVEL=info"
 Environment="CAPTCHA_SOLVER=none"
+Environment="FLARESOLVERR_ARGS=--ignore-certificate-errors --disable-web-security"
 WorkingDirectory=/opt/flaresolverr
 ExecStart=/opt/flaresolverr/flaresolverr
 TimeoutStopSec=30
