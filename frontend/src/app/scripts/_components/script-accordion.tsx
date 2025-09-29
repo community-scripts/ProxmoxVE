@@ -27,12 +27,14 @@ export default function ScriptAccordion({
   setSelectedScript,
   selectedCategory,
   setSelectedCategory,
+  onItemSelect,
 }: {
   items: Category[];
   selectedScript: string | null;
   setSelectedScript: (script: string | null) => void;
   selectedCategory: string | null;
   setSelectedCategory: (category: string | null) => void;
+  onItemSelect?: () => void;
 }) {
   const [expandedItem, setExpandedItem] = useState<string | undefined>(undefined);
   const linkRefs = useRef<{ [key: string]: HTMLAnchorElement | null }>({});
@@ -77,7 +79,7 @@ export default function ScriptAccordion({
       value={expandedItem}
       onValueChange={handleAccordionChange}
       collapsible
-      className="overflow-y-scroll max-h-[calc(100vh-225px)] overflow-x-hidden p-2"
+      className="overflow-y-scroll sm:max-h-[calc(100vh-209px)] overflow-x-hidden p-1"
     >
       {items.map(category => (
         <AccordionItem
@@ -125,6 +127,7 @@ export default function ScriptAccordion({
                     onClick={() => {
                       handleSelected(script.slug);
                       setSelectedCategory(category.name);
+                      onItemSelect?.();
                     }}
                     ref={(el) => {
                       linkRefs.current[script.slug] = el;

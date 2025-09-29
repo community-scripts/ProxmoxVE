@@ -103,18 +103,22 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
           <div className="flex w-full flex-col justify-center">
-            <Navbar />
-            <div className="flex min-h-screen flex-col justify-center">
-              <div className="flex w-full justify-center">
-                <div className="w-full max-w-[1440px] ">
-                  <QueryProvider>
-                    <NuqsAdapter>{children}</NuqsAdapter>
-                  </QueryProvider>
-                  <Toaster richColors />
+            <NuqsAdapter>
+              <QueryProvider>
+
+                <Navbar />
+                <div className="flex min-h-screen flex-col justify-center">
+                  <div className="flex w-full justify-center">
+                    <div className="w-full max-w-[1440px] ">
+                      {children}
+                      <Toaster richColors />
+                    </div>
+                  </div>
+                  <Footer />
                 </div>
-              </div>
-              <Footer />
-            </div>
+              </QueryProvider>
+
+            </NuqsAdapter>
           </div>
         </ThemeProvider>
       </body>
