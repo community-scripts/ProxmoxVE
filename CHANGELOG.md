@@ -21,6 +21,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🌐 Website
 
+  - #### 🐞 Bug Fixes
+
+    - fix sidebar loading issues and navbar on mobile [@BramSuurdje](https://github.com/BramSuurdje) ([#7991](https://github.com/community-scripts/ProxmoxVE/pull/7991))
+
   - #### ✨ New Features
 
     - Improve mobile ui: added a hamburger navigation to the mobile view. [@BramSuurdje](https://github.com/BramSuurdje) ([#7987](https://github.com/community-scripts/ProxmoxVE/pull/7987))
