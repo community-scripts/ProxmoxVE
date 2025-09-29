@@ -42,32 +42,34 @@ function Navbar() {
             <Image height={18} unoptimized width={18} alt="logo" src="/ProxmoxVE/logo.png" className="" />
             <span className="">Proxmox VE Helper-Scripts</span>
           </Link>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center justify-between gap-2 w-full">
             <div className="flex sm:hidden">
               <Suspense>
                 <MobileSidebar />
               </Suspense>
             </div>
-            <CommandMenu />
-            <GitHubStarsButton username="community-scripts" repo="ProxmoxVE" className="hidden md:flex" />
-            {navbarLinks.map(({ href, event, icon, text, mobileHidden }) => (
-              <TooltipProvider key={event}>
-                <Tooltip delayDuration={100}>
-                  <TooltipTrigger className={mobileHidden ? "hidden lg:block" : ""}>
-                    <Button variant="ghost" size="icon" asChild>
-                      <Link target="_blank" href={href} data-umami-event={event}>
-                        {icon}
-                        <span className="sr-only">{text}</span>
-                      </Link>
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent side="bottom" className="text-xs">
-                    {text}
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            ))}
-            <ThemeToggle />
+            <div className="flex sm:gap-2">
+              <CommandMenu />
+              <GitHubStarsButton username="community-scripts" repo="ProxmoxVE" className="hidden md:flex" />
+              {navbarLinks.map(({ href, event, icon, text, mobileHidden }) => (
+                <TooltipProvider key={event}>
+                  <Tooltip delayDuration={100}>
+                    <TooltipTrigger className={mobileHidden ? "hidden lg:block" : ""}>
+                      <Button variant="ghost" size="icon" asChild>
+                        <Link target="_blank" href={href} data-umami-event={event}>
+                          {icon}
+                          <span className="sr-only">{text}</span>
+                        </Link>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom" className="text-xs">
+                      {text}
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              ))}
+              <ThemeToggle />
+            </div>
           </div>
         </div>
       </div>
