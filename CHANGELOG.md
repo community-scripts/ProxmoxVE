@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-09-29
 
+### 🆕 New Scripts
+
+  - Verdaccio ([#7967](https://github.com/community-scripts/ProxmoxVE/pull/7967))
+
 ## 2025-09-28
 
 ### 🚀 Updated Scripts
