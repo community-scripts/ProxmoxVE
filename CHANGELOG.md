@@ -14,7 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Verdaccio ([#7967](https://github.com/community-scripts/ProxmoxVE/pull/7967))
+  - MyIP ([#7974](https://github.com/community-scripts/ProxmoxVE/pull/7974))
+- Verdaccio ([#7967](https://github.com/community-scripts/ProxmoxVE/pull/7967))
 
 ### 🌐 Website
 
