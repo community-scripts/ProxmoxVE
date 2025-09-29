@@ -14,7 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Warracker ([#7977](https://github.com/community-scripts/ProxmoxVE/pull/7977))
+  - Ghostfolio ([#7982](https://github.com/community-scripts/ProxmoxVE/pull/7982))
+- Warracker ([#7977](https://github.com/community-scripts/ProxmoxVE/pull/7977))
 - MyIP ([#7974](https://github.com/community-scripts/ProxmoxVE/pull/7974))
 - Verdaccio ([#7967](https://github.com/community-scripts/ProxmoxVE/pull/7967))
 
