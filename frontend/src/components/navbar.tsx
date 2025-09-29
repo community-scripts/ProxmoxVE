@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -44,7 +44,9 @@ function Navbar() {
           </Link>
           <div className="flex items-center gap-2">
             <div className="flex sm:hidden">
-              <MobileSidebar />
+              <Suspense>
+                <MobileSidebar />
+              </Suspense>
             </div>
             <CommandMenu />
             <GitHubStarsButton username="community-scripts" repo="ProxmoxVE" className="hidden md:flex" />
