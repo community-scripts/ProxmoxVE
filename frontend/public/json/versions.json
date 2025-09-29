@@ -1,5 +1,50 @@
 [
   {
+    "name": "MDeLuise/plant-it",
+    "version": "1.0.0",
+    "date": "2025-09-29T10:22:14Z"
+  },
+  {
+    "name": "jupyter/notebook",
+    "version": "@jupyter-notebook/ui-components@7.5.0-beta.0",
+    "date": "2025-09-29T09:16:42Z"
+  },
+  {
+    "name": "open-webui/open-webui",
+    "version": "v0.6.32",
+    "date": "2025-09-29T06:13:12Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.23.87",
+    "date": "2025-09-29T05:54:12Z"
+  },
+  {
+    "name": "inventree/InvenTree",
+    "version": "1.0.2",
+    "date": "2025-09-29T04:02:44Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.4.0",
+    "date": "2025-09-13T16:38:21Z"
+  },
+  {
+    "name": "theonedev/onedev",
+    "version": "v13.0.5",
+    "date": "2025-09-29T03:13:18Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-09-29T00:27:05Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
     "name": "autobrr/autobrr",
     "version": "v1.67.0",
     "date": "2025-09-28T20:49:34Z"
@@ -13,6 +58,11 @@
     "name": "TwiN/gatus",
     "version": "v5.25.0",
     "date": "2025-09-28T19:02:02Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "v4.4.0",
+    "date": "2025-09-02T19:26:18Z"
   },
   {
     "name": "lazy-media/Reactive-Resume",
@@ -55,16 +105,6 @@
     "date": "2025-09-20T12:12:33Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.23.74",
-    "date": "2025-09-28T05:54:49Z"
-  },
-  {
-    "name": "theonedev/onedev",
-    "version": "v13.0.4",
-    "date": "2025-09-28T02:38:33Z"
-  },
-  {
     "name": "mealie-recipes/mealie",
     "version": "v3.3.0",
     "date": "2025-09-28T00:49:34Z"
@@ -73,16 +113,6 @@
     "name": "hyperion-project/hyperion.ng",
     "version": "2.1.1",
     "date": "2025-06-14T17:45:06Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-09-28T00:27:04Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
   },
   {
     "name": "moghtech/komodo",
@@ -126,8 +156,8 @@
   },
   {
     "name": "javedh-dev/tracktor",
-    "version": "0.3.18",
-    "date": "2025-09-27T10:32:09Z"
+    "version": "0.3.17",
+    "date": "2025-09-27T07:00:36Z"
   },
   {
     "name": "fuma-nama/fumadocs",
@@ -140,11 +170,6 @@
     "date": "2025-09-25T06:23:28Z"
   },
   {
-    "name": "jupyter/notebook",
-    "version": "v7.4.7",
-    "date": "2025-09-27T08:00:30Z"
-  },
-  {
     "name": "Kozea/Radicale",
     "version": "v3.5.7",
     "date": "2025-09-27T06:12:51Z"
@@ -153,11 +178,6 @@
     "name": "silverbulletmd/silverbullet",
     "version": "2.1.5",
     "date": "2025-09-27T04:43:40Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.4.0",
-    "date": "2025-09-13T16:38:21Z"
   },
   {
     "name": "ipfs/kubo",
@@ -178,11 +198,6 @@
     "name": "coder/code-server",
     "version": "v4.104.2",
     "date": "2025-09-26T22:34:32Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "v4.4.0",
-    "date": "2025-09-02T19:26:18Z"
   },
   {
     "name": "home-assistant/core",
@@ -258,11 +273,6 @@
     "name": "booklore-app/booklore",
     "version": "v1.3.4",
     "date": "2025-09-25T21:19:48Z"
-  },
-  {
-    "name": "open-webui/open-webui",
-    "version": "v0.6.31",
-    "date": "2025-09-25T20:28:17Z"
   },
   {
     "name": "go-gitea/gitea",
@@ -523,11 +533,6 @@
     "name": "traccar/traccar",
     "version": "v6.10.0",
     "date": "2025-09-20T15:40:36Z"
-  },
-  {
-    "name": "inventree/InvenTree",
-    "version": "1.0.1",
-    "date": "2025-09-19T22:28:31Z"
   },
   {
     "name": "mmastrac/stylus",
@@ -1468,11 +1473,6 @@
     "name": "pymedusa/Medusa",
     "version": "v1.0.22",
     "date": "2024-12-13T12:22:19Z"
-  },
-  {
-    "name": "MDeLuise/plant-it",
-    "version": "0.10.0",
-    "date": "2024-12-10T09:35:26Z"
   },
   {
     "name": "phpipam/phpipam",
