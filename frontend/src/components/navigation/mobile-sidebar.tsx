@@ -78,7 +78,7 @@ function MobileSidebar() {
           <Menu className="size-5" aria-hidden="true" />
         </Button>
       </SheetTrigger>
-      <SheetHeader className="border-b border-border px-6 pb-4 pt-2 sr-only"><SheetTitle className="sr-only">Categories</SheetTitle></SheetHeader>
+      <SheetHeader className="border-b border-border px-6 pb-4 pt-2"><SheetTitle className="sr-only">Categories</SheetTitle></SheetHeader>
       <SheetContent side="left" className="flex w-full max-w-xs flex-col gap-4 overflow-hidden px-0 pb-6">
         <div className="flex h-full flex-col gap-4 overflow-y-auto">
           {isLoading && !hasLinks
