@@ -1,18 +1,53 @@
 [
   {
-    "name": "Pf2eToolsOrg/Pf2eTools",
-    "version": "v0.10.1",
-    "date": "2025-09-28T08:55:44Z"
+    "name": "autobrr/autobrr",
+    "version": "v1.67.0",
+    "date": "2025-09-28T20:49:34Z"
   },
   {
-    "name": "BerriAI/litellm",
-    "version": "v1.77.5-nightly",
-    "date": "2025-09-28T07:32:46Z"
+    "name": "Radarr/Radarr",
+    "version": "v5.27.5.10198",
+    "date": "2025-09-03T12:08:43Z"
+  },
+  {
+    "name": "TwiN/gatus",
+    "version": "v5.25.0",
+    "date": "2025-09-28T19:02:02Z"
+  },
+  {
+    "name": "lazy-media/Reactive-Resume",
+    "version": "v1.2.6",
+    "date": "2025-09-28T18:09:21Z"
   },
   {
     "name": "msgbyte/tianji",
-    "version": "v1.27.0",
-    "date": "2025-09-28T07:13:45Z"
+    "version": "v1.27.1",
+    "date": "2025-09-28T17:38:54Z"
+  },
+  {
+    "name": "jellyfin/jellyfin",
+    "version": "v10.10.7",
+    "date": "2025-04-05T19:14:59Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.77.6.dev.1",
+    "date": "2025-09-28T16:42:42Z"
+  },
+  {
+    "name": "YunoHost/yunohost",
+    "version": "debian/12.1.26",
+    "date": "2025-09-28T14:50:47Z"
+  },
+  {
+    "name": "karlomikus/bar-assistant",
+    "version": "v5.8.1",
+    "date": "2025-09-28T14:47:06Z"
+  },
+  {
+    "name": "Pf2eToolsOrg/Pf2eTools",
+    "version": "v0.10.1",
+    "date": "2025-09-28T08:55:44Z"
   },
   {
     "name": "morpheus65535/bazarr",
@@ -48,11 +83,6 @@
     "name": "steveiliop56/tinyauth",
     "version": "v3.6.2",
     "date": "2025-07-17T12:08:03Z"
-  },
-  {
-    "name": "jellyfin/jellyfin",
-    "version": "v10.10.7",
-    "date": "2025-04-05T19:14:59Z"
   },
   {
     "name": "moghtech/komodo",
@@ -103,11 +133,6 @@
     "name": "fuma-nama/fumadocs",
     "version": "fumadocs-ui@15.8.1",
     "date": "2025-09-27T09:57:41Z"
-  },
-  {
-    "name": "lazy-media/Reactive-Resume",
-    "version": "v1.2.5",
-    "date": "2025-09-27T09:28:11Z"
   },
   {
     "name": "keycloak/keycloak",
@@ -455,16 +480,6 @@
     "date": "2025-09-22T02:21:27Z"
   },
   {
-    "name": "TwiN/gatus",
-    "version": "v5.24.3",
-    "date": "2025-09-22T00:04:38Z"
-  },
-  {
-    "name": "Radarr/Radarr",
-    "version": "v5.27.5.10198",
-    "date": "2025-09-03T12:08:43Z"
-  },
-  {
     "name": "Prowlarr/Prowlarr",
     "version": "v2.0.5.5160",
     "date": "2025-08-23T21:23:11Z"
@@ -548,11 +563,6 @@
     "name": "docmost/docmost",
     "version": "v0.23.2",
     "date": "2025-09-18T17:18:59Z"
-  },
-  {
-    "name": "YunoHost/yunohost",
-    "version": "debian/12.1.25",
-    "date": "2025-09-18T15:40:25Z"
   },
   {
     "name": "neo4j/neo4j",
@@ -810,11 +820,6 @@
     "date": "2025-09-08T14:03:25Z"
   },
   {
-    "name": "autobrr/autobrr",
-    "version": "v1.66.1",
-    "date": "2025-09-08T10:49:03Z"
-  },
-  {
     "name": "paperless-ngx/paperless-ngx",
     "version": "v2.18.4",
     "date": "2025-09-07T23:57:32Z"
@@ -963,11 +968,6 @@
     "name": "caddyserver/caddy",
     "version": "v2.10.2",
     "date": "2025-08-23T03:10:31Z"
-  },
-  {
-    "name": "karlomikus/bar-assistant",
-    "version": "v5.8.0",
-    "date": "2025-08-19T16:46:00Z"
   },
   {
     "name": "oauth2-proxy/oauth2-proxy",
