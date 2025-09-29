@@ -1,10 +1,10 @@
 "use client";
 import { Suspense, useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
+import { useQueryState } from "nuqs";
 
 import type { Category, Script } from "@/lib/types";
 
-import { useSuspenseQueryState } from "@/hooks/use-suspense-query-state";
 import { ScriptItem } from "@/app/scripts/_components/script-item";
 import { fetchCategories } from "@/lib/data";
 
@@ -14,8 +14,8 @@ import Sidebar from "./_components/sidebar";
 export const dynamic = "force-static";
 
 function ScriptContent() {
-  const [selectedScript, setSelectedScript] = useSuspenseQueryState("id");
-  const [selectedCategory, setSelectedCategory] = useSuspenseQueryState("category");
+  const [selectedScript, setSelectedScript] = useQueryState("id");
+  const [selectedCategory, setSelectedCategory] = useQueryState("category");
   const [links, setLinks] = useState<Category[]>([]);
   const [item, setItem] = useState<Script>();
 
