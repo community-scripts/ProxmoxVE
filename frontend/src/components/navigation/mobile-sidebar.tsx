@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { useQueryState } from "nuqs";
 import { Menu } from "lucide-react";
 
@@ -18,8 +19,19 @@ function MobileSidebar() {
   const [isLoading, setIsLoading] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [lastViewedScript, setLastViewedScript] = useState<Script | undefined>(undefined);
+  const pathname = usePathname();
+
+  // Always call the hooks (React hooks can't be conditional)
   const [selectedScript, setSelectedScript] = useQueryState("id");
   const [selectedCategory, setSelectedCategory] = useQueryState("category");
+
+  // For non-scripts pages, we'll manage state locally
+  const [tempSelectedScript, setTempSelectedScript] = useState<string | null>(null);
+  const [tempSelectedCategory, setTempSelectedCategory] = useState<string | null>(null);
+
+  const isOnScriptsPage = pathname === "/scripts";
+  const currentSelectedScript = isOnScriptsPage ? selectedScript : tempSelectedScript;
+  const currentSelectedCategory = isOnScriptsPage ? selectedCategory : tempSelectedCategory;
 
   const loadCategories = useCallback(async () => {
     setIsLoading(true);
@@ -40,16 +52,16 @@ function MobileSidebar() {
   }, [loadCategories]);
 
   useEffect(() => {
-    if (!selectedScript || categories.length === 0) {
+    if (!currentSelectedScript || categories.length === 0) {
       return;
     }
 
     const scriptMatch = categories
       .flatMap(category => category.scripts)
-      .find(script => script.slug === selectedScript);
+      .find(script => script.slug === currentSelectedScript);
 
     setLastViewedScript(scriptMatch);
-  }, [selectedScript, categories]);
+  }, [currentSelectedScript, categories]);
 
   const handleOpenChange = (openState: boolean) => {
     setIsOpen(openState);
@@ -78,7 +90,9 @@ function MobileSidebar() {
           <Menu className="size-5" aria-hidden="true" />
         </Button>
       </SheetTrigger>
-      <SheetHeader className="border-b border-border px-6 pb-4 pt-2"><SheetTitle className="sr-only">Categories</SheetTitle></SheetHeader>
+      <SheetHeader className="border-b border-border px-6 pb-4 pt-2 sr-only">
+        <SheetTitle className="sr-only">Categories</SheetTitle>
+      </SheetHeader>
       <SheetContent side="left" className="flex w-full max-w-xs flex-col gap-4 overflow-hidden px-0 pb-6">
         <div className="flex h-full flex-col gap-4 overflow-y-auto">
           {isLoading && !hasLinks
@@ -91,19 +105,22 @@ function MobileSidebar() {
                 <div className="flex flex-col gap-4 px-4">
                   <Sidebar
                     items={categories}
-                    selectedScript={selectedScript}
-                    setSelectedScript={setSelectedScript}
-                    selectedCategory={selectedCategory}
-                    setSelectedCategory={setSelectedCategory}
+                    selectedScript={currentSelectedScript}
+                    setSelectedScript={isOnScriptsPage ? setSelectedScript : setTempSelectedScript}
+                    selectedCategory={currentSelectedCategory}
+                    setSelectedCategory={isOnScriptsPage ? setSelectedCategory : setTempSelectedCategory}
                     onItemSelect={handleItemSelect}
                   />
                 </div>
               )}
-          {selectedScript && lastViewedScript
+          {currentSelectedScript && lastViewedScript
             ? (
                 <div className="flex flex-col gap-3 px-4">
                   <p className="text-sm font-medium">Last Viewed</p>
-                  <ScriptItem item={lastViewedScript} setSelectedScript={setSelectedScript} />
+                  <ScriptItem
+                    item={lastViewedScript}
+                    setSelectedScript={isOnScriptsPage ? setSelectedScript : setTempSelectedScript}
+                  />
                 </div>
               )
             : null}
