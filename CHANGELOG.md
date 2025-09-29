@@ -16,6 +16,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Verdaccio ([#7967](https://github.com/community-scripts/ProxmoxVE/pull/7967))
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Remove Frigate from Website [@MickLesk](https://github.com/MickLesk) ([#7972](https://github.com/community-scripts/ProxmoxVE/pull/7972))
+
 ## 2025-09-28
 
 ### 🚀 Updated Scripts
