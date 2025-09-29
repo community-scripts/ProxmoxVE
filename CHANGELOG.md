@@ -21,6 +21,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🌐 Website
 
+  - #### ✨ New Features
+
+    - Improve mobile ui: added a hamburger navigation to the mobile view. [@BramSuurdje](https://github.com/BramSuurdje) ([#7987](https://github.com/community-scripts/ProxmoxVE/pull/7987))
+
   - #### 📝 Script Information
 
     - Remove Frigate from Website [@MickLesk](https://github.com/MickLesk) ([#7972](https://github.com/community-scripts/ProxmoxVE/pull/7972))
