@@ -41,10 +41,6 @@
       "type": "info"
     },
     {
-      "text": "Configuration file: `/opt/ghostfolio/.env`",
-      "type": "info"
-    },
-    {
       "text": "Optional: CoinGecko API keys can be added during installation or later in the .env file for enhanced cryptocurrency data.",
       "type": "info"
     },
