@@ -1,11 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { useQueryState } from "nuqs";
+import { Suspense, useCallback, useEffect, useState } from "react";
 import { Menu } from "lucide-react";
 
 import type { Category, Script } from "@/lib/types";
 
+import { useSuspenseQueryState } from "@/hooks/use-suspense-query-state";
 import { ScriptItem } from "@/app/scripts/_components/script-item";
 import Sidebar from "@/app/scripts/_components/sidebar";
 import { fetchCategories } from "@/lib/data";
@@ -13,13 +13,13 @@ import { fetchCategories } from "@/lib/data";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
 
-function MobileSidebar() {
+function MobileSidebarContent() {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [lastViewedScript, setLastViewedScript] = useState<Script | undefined>(undefined);
-  const [selectedScript, setSelectedScript] = useQueryState("id");
-  const [selectedCategory, setSelectedCategory] = useQueryState("category");
+  const [selectedScript, setSelectedScript] = useSuspenseQueryState("id");
+  const [selectedCategory, setSelectedCategory] = useSuspenseQueryState("category");
 
   const loadCategories = useCallback(async () => {
     setIsLoading(true);
@@ -110,6 +110,14 @@ function MobileSidebar() {
         </div>
       </SheetContent>
     </Sheet>
+  );
+}
+
+function MobileSidebar() {
+  return (
+    <Suspense fallback={null}>
+      <MobileSidebarContent />
+    </Suspense>
   );
 }
 
