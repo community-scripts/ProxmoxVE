@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+#source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/h-stoyanov/ProxmoxVE/refs/heads/changedetection/misc/build.func)
 # Copyright (c) 2021-2025 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -51,7 +52,7 @@ function update_script() {
     $STD git -C /opt/browserless/ fetch --all
     $STD git -C /opt/browserless/ reset --hard origin/main
     $STD npm update --prefix /opt/browserless
-    $STD npm ci --include=optional --prefix /opt/browserless
+    $STD npm ci --include=optional --include=dev --prefix /opt/browserless
     $STD /opt/browserless/node_modules/playwright-core/cli.js install --with-deps
     # Update Chrome separately, as it has to be done with the force option. Otherwise the installation of other browsers will not be done if Chrome is already installed.
     $STD /opt/browserless/node_modules/playwright-core/cli.js install --force chrome
