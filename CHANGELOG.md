@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - n8n: Update procedure workaround [@tremor021](https://github.com/tremor021) ([#8004](https://github.com/community-scripts/ProxmoxVE/pull/8004))
     - Changedetection: Bump nodejs to 24 [@MickLesk](https://github.com/MickLesk) ([#8002](https://github.com/community-scripts/ProxmoxVE/pull/8002))
 
 ## 2025-09-29
