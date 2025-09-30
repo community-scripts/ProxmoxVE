@@ -51,7 +51,7 @@ $STD apt-get install -y \
 rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
 msg_ok "Setup Python3"
 
-NODE_VERSION="22" NODE_MODULE="typescript" setup_nodejs
+NODE_VERSION="22" NODE_MODULE="typescript@next" setup_nodejs
 
 msg_info "Installing Change Detection"
 mkdir /opt/changedetection
