@@ -41,7 +41,8 @@ EOF
   NODE_VERSION="22" setup_nodejs
 
   msg_info "Updating ${APP} LXC"
-  $STD npm update -g n8n
+  rm -rf /usr/lib/node_modules/.n8n-* /usr/lib/node_modules/n8n
+  $STD npm install -g n8n --force
   systemctl restart n8n
   msg_ok "Updated Successfully"
   exit

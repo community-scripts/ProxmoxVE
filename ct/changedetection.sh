@@ -36,6 +36,8 @@ function update_script() {
     msg_ok "Updated Dependencies"
   fi
 
+  NODE_VERSION="24" setup_nodejs
+
   msg_info "Updating ${APP}"
   $STD pip3 install changedetection.io --upgrade
   msg_ok "Updated ${APP}"

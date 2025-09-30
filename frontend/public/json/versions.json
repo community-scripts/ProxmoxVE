@@ -1,8 +1,83 @@
 [
   {
+    "name": "keycloak/keycloak",
+    "version": "26.4.0",
+    "date": "2025-09-30T11:49:13Z"
+  },
+  {
+    "name": "element-hq/synapse",
+    "version": "v1.139.0",
+    "date": "2025-09-30T11:01:45Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "mattermost-redux@10.12.0",
+    "date": "2025-09-18T20:15:19Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.9.4",
+    "date": "2025-09-19T21:09:39Z"
+  },
+  {
+    "name": "silverbulletmd/silverbullet",
+    "version": "2.1.6",
+    "date": "2025-09-30T09:09:13Z"
+  },
+  {
+    "name": "chrisvel/tududi",
+    "version": "v0.82-rc5",
+    "date": "2025-09-23T07:31:12Z"
+  },
+  {
+    "name": "zitadel/zitadel",
+    "version": "v4.3.0",
+    "date": "2025-09-30T06:54:15Z"
+  },
+  {
+    "name": "emqx/emqx",
+    "version": "e6.0.0",
+    "date": "2025-09-30T06:42:58Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.7",
+    "date": "2025-09-30T05:56:20Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.77.5.rc.2",
+    "date": "2025-09-30T03:04:10Z"
+  },
+  {
+    "name": "TwiN/gatus",
+    "version": "v5.25.1",
+    "date": "2025-09-30T03:01:47Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-09-30T00:27:06Z"
+  },
+  {
+    "name": "thomiceli/opengist",
+    "version": "v1.11.1",
+    "date": "2025-09-30T00:24:16Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
     "name": "goauthentik/authentik",
     "version": "version/2025.8.4",
-    "date": "2025-09-29T22:01:27Z"
+    "date": "2025-09-30T00:03:11Z"
+  },
+  {
+    "name": "9001/copyparty",
+    "version": "v1.19.15",
+    "date": "2025-09-29T23:42:38Z"
   },
   {
     "name": "verdaccio/verdaccio",
@@ -40,9 +115,9 @@
     "date": "2025-09-29T18:50:13Z"
   },
   {
-    "name": "emqx/emqx",
-    "version": "e6.0.0-rc.1",
-    "date": "2025-09-29T18:31:17Z"
+    "name": "zabbix/zabbix",
+    "version": "7.0.19",
+    "date": "2025-09-29T17:38:12Z"
   },
   {
     "name": "influxdata/influxdb",
@@ -115,11 +190,6 @@
     "date": "2025-09-29T06:13:12Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.23.87",
-    "date": "2025-09-29T05:54:12Z"
-  },
-  {
     "name": "inventree/InvenTree",
     "version": "1.0.2",
     "date": "2025-09-29T04:02:44Z"
@@ -128,16 +198,6 @@
     "name": "firefly-iii/firefly-iii",
     "version": "v6.4.0",
     "date": "2025-09-13T16:38:21Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-09-29T00:27:05Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
   },
   {
     "name": "autobrr/autobrr",
@@ -150,14 +210,9 @@
     "date": "2025-09-03T12:08:43Z"
   },
   {
-    "name": "TwiN/gatus",
-    "version": "v5.25.0",
-    "date": "2025-09-28T19:02:02Z"
-  },
-  {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-09-28T18:26:30Z"
+    "version": "v4.4.0",
+    "date": "2025-09-02T19:26:18Z"
   },
   {
     "name": "lazy-media/Reactive-Resume",
@@ -168,11 +223,6 @@
     "name": "jellyfin/jellyfin",
     "version": "v10.10.7",
     "date": "2025-04-05T19:14:59Z"
-  },
-  {
-    "name": "BerriAI/litellm",
-    "version": "v1.77.6.dev.1",
-    "date": "2025-09-28T16:42:42Z"
   },
   {
     "name": "YunoHost/yunohost",
@@ -241,8 +291,8 @@
   },
   {
     "name": "javedh-dev/tracktor",
-    "version": "0.3.17",
-    "date": "2025-09-27T07:00:36Z"
+    "version": "0.3.18",
+    "date": "2025-09-27T10:32:09Z"
   },
   {
     "name": "fuma-nama/fumadocs",
@@ -250,19 +300,9 @@
     "date": "2025-09-27T09:57:41Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.3.5",
-    "date": "2025-09-25T06:23:28Z"
-  },
-  {
     "name": "Kozea/Radicale",
     "version": "v3.5.7",
     "date": "2025-09-27T06:12:51Z"
-  },
-  {
-    "name": "silverbulletmd/silverbullet",
-    "version": "2.1.5",
-    "date": "2025-09-27T04:43:40Z"
   },
   {
     "name": "ipfs/kubo",
@@ -283,11 +323,6 @@
     "name": "coder/code-server",
     "version": "v4.104.2",
     "date": "2025-09-26T22:34:32Z"
-  },
-  {
-    "name": "home-assistant/core",
-    "version": "2025.9.4",
-    "date": "2025-09-19T21:09:39Z"
   },
   {
     "name": "Ombi-app/Ombi",
@@ -400,11 +435,6 @@
     "date": "2025-09-25T13:19:26Z"
   },
   {
-    "name": "element-hq/synapse",
-    "version": "v1.138.2",
-    "date": "2025-09-24T12:45:13Z"
-  },
-  {
     "name": "rabbitmq/rabbitmq-server",
     "version": "v4.1.4",
     "date": "2025-09-02T14:26:24Z"
@@ -460,11 +490,6 @@
     "date": "2025-09-23T23:47:02Z"
   },
   {
-    "name": "9001/copyparty",
-    "version": "v1.19.14",
-    "date": "2025-09-23T22:57:50Z"
-  },
-  {
     "name": "HabitRPG/habitica",
     "version": "v5.41.3",
     "date": "2025-09-23T22:21:04Z"
@@ -483,16 +508,6 @@
     "name": "jenkinsci/jenkins",
     "version": "jenkins-2.529",
     "date": "2025-09-23T14:40:20Z"
-  },
-  {
-    "name": "zabbix/zabbix",
-    "version": "7.4.3rc1",
-    "date": "2025-09-23T13:54:56Z"
-  },
-  {
-    "name": "chrisvel/tududi",
-    "version": "v0.82-rc5",
-    "date": "2025-09-23T07:31:12Z"
   },
   {
     "name": "postgres/postgres",
@@ -560,11 +575,6 @@
     "date": "2025-09-21T07:40:35Z"
   },
   {
-    "name": "thomiceli/opengist",
-    "version": "v1.11.0",
-    "date": "2025-09-21T02:53:18Z"
-  },
-  {
     "name": "fallenbagel/jellyseerr",
     "version": "preview-fix-watchlist-error",
     "date": "2025-09-20T21:07:50Z"
@@ -590,11 +600,6 @@
     "date": "2025-09-19T14:18:53Z"
   },
   {
-    "name": "mattermost/mattermost",
-    "version": "mattermost-redux@10.12.0",
-    "date": "2025-09-18T20:15:19Z"
-  },
-  {
     "name": "docker/compose",
     "version": "v2.39.4",
     "date": "2025-09-19T08:49:23Z"
@@ -618,11 +623,6 @@
     "name": "grokability/snipe-it",
     "version": "v8.3.2",
     "date": "2025-09-18T13:55:58Z"
-  },
-  {
-    "name": "zitadel/zitadel",
-    "version": "v4.2.2",
-    "date": "2025-09-18T10:45:22Z"
   },
   {
     "name": "NLnetLabs/unbound",
