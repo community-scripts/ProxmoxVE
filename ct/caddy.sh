@@ -33,7 +33,7 @@ function update_script() {
    msg_ok "Updated $APP LXC"
 
     if command -v xcaddy >/dev/null 2>&1; then
-      install_go
+      setup_go
       msg_info "Updating xCaddy"
       cd /opt
       RELEASE=$(curl -fsSL https://api.github.com/repos/caddyserver/xcaddy/releases/latest | grep "tag_name" | awk -F '"' '{print $4}')
