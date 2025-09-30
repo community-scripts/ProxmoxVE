@@ -20,6 +20,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - n8n: Update procedure workaround [@tremor021](https://github.com/tremor021) ([#8004](https://github.com/community-scripts/ProxmoxVE/pull/8004))
     - Changedetection: Bump nodejs to 24 [@MickLesk](https://github.com/MickLesk) ([#8002](https://github.com/community-scripts/ProxmoxVE/pull/8002))
 
+  - #### ✨ New Features
+
+    - Bump Guacamole to Debian 13 [@burgerga](https://github.com/burgerga) ([#8010](https://github.com/community-scripts/ProxmoxVE/pull/8010))
+
 ## 2025-09-29
 
 ### 🆕 New Scripts
