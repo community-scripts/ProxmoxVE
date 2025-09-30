@@ -61,7 +61,7 @@ msg_ok "Installed Change Detection"
 msg_info "Installing Browserless & Playwright"
 mkdir /opt/browserless
 $STD python3 -m pip install playwright
-$STD npm install typescript
+$STD npm install typescript esbuild
 $STD git clone https://github.com/browserless/chrome /opt/browserless
 $STD npm install --prefix /opt/browserless
 $STD /opt/browserless/node_modules/playwright-core/cli.js install --with-deps &>/dev/null
