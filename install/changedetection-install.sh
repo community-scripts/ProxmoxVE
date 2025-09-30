@@ -51,7 +51,7 @@ $STD apt-get install -y \
 rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
 msg_ok "Setup Python3"
 
-NODE_VERSION="24" NODE_MODULE="typescript" setup_nodejs
+NODE_VERSION="24" setup_nodejs
 
 msg_info "Installing Change Detection"
 mkdir /opt/changedetection
@@ -61,6 +61,7 @@ msg_ok "Installed Change Detection"
 msg_info "Installing Browserless & Playwright"
 mkdir /opt/browserless
 $STD python3 -m pip install playwright
+$STD npm install typescript
 $STD git clone https://github.com/browserless/chrome /opt/browserless
 $STD npm install --prefix /opt/browserless
 $STD /opt/browserless/node_modules/playwright-core/cli.js install --with-deps &>/dev/null
