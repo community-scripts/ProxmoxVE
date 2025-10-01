@@ -74,7 +74,7 @@ function update_script() {
     done
     msg_ok "Image-processing libraries up to date"
   fi
-  RELEASE="1.144.1"
+  RELEASE="2.0.0"
   if check_for_gh_release "immich" "immich-app/immich" "${RELEASE}"; then
     msg_info "Stopping Services"
     systemctl stop immich-web
@@ -191,6 +191,7 @@ EOF
     msg_info "Cleaning up"
     $STD apt-get -y autoremove
     $STD apt-get -y autoclean
+    $STD apt clean -y
     msg_ok "Cleaned"
     systemctl restart immich-ml immich-web
   fi
