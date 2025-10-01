@@ -1,5 +1,55 @@
 [
   {
+    "name": "rcourtman/Pulse",
+    "version": "v4.17.0",
+    "date": "2025-10-01T11:16:03Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.9.4",
+    "date": "2025-09-19T21:09:39Z"
+  },
+  {
+    "name": "glpi-project/glpi",
+    "version": "11.0.0",
+    "date": "2025-10-01T09:45:23Z"
+  },
+  {
+    "name": "apache/tomcat",
+    "version": "9.0.110",
+    "date": "2025-10-01T09:24:07Z"
+  },
+  {
+    "name": "element-hq/synapse",
+    "version": "v1.139.0",
+    "date": "2025-10-01T08:24:16Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.17",
+    "date": "2025-10-01T05:59:28Z"
+  },
+  {
+    "name": "Kozea/Radicale",
+    "version": "v3.5.7.pypi",
+    "date": "2025-10-01T05:32:27Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-10-01T00:27:05Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
+    "name": "booklore-app/booklore",
+    "version": "v1.4.0",
+    "date": "2025-09-30T23:52:34Z"
+  },
+  {
     "name": "HabitRPG/habitica",
     "version": "v5.41.4",
     "date": "2025-09-30T22:26:11Z"
@@ -13,11 +63,6 @@
     "name": "mongodb/mongo",
     "version": "r8.2.1",
     "date": "2025-09-30T21:46:28Z"
-  },
-  {
-    "name": "rcourtman/Pulse",
-    "version": "v4.16.0",
-    "date": "2025-09-30T21:12:11Z"
   },
   {
     "name": "immich-app/immich",
@@ -45,6 +90,11 @@
     "date": "2025-09-30T20:15:40Z"
   },
   {
+    "name": "zabbix/zabbix",
+    "version": "7.2.13",
+    "date": "2025-09-30T19:47:05Z"
+  },
+  {
     "name": "pommee/goaway",
     "version": "v0.62.7",
     "date": "2025-09-30T19:36:37Z"
@@ -70,6 +120,11 @@
     "date": "2025-09-30T15:42:52Z"
   },
   {
+    "name": "wazuh/wazuh",
+    "version": "coverity-w40-4.14.0",
+    "date": "2025-09-30T15:35:54Z"
+  },
+  {
     "name": "gristlabs/grist-core",
     "version": "v1.7.4",
     "date": "2025-09-30T13:34:30Z"
@@ -90,29 +145,19 @@
     "date": "2025-09-30T12:50:15Z"
   },
   {
-    "name": "emqx/emqx",
-    "version": "e6.0.0",
-    "date": "2025-09-30T12:04:20Z"
-  },
-  {
     "name": "keycloak/keycloak",
     "version": "26.4.0",
     "date": "2025-09-30T11:49:13Z"
   },
   {
-    "name": "element-hq/synapse",
-    "version": "v1.139.0",
-    "date": "2025-09-30T11:01:45Z"
+    "name": "emqx/emqx",
+    "version": "e6.0.0",
+    "date": "2025-09-30T12:04:20Z"
   },
   {
     "name": "mattermost/mattermost",
     "version": "mattermost-redux@10.12.0",
     "date": "2025-09-18T20:15:19Z"
-  },
-  {
-    "name": "home-assistant/core",
-    "version": "2025.9.4",
-    "date": "2025-09-19T21:09:39Z"
   },
   {
     "name": "silverbulletmd/silverbullet",
@@ -130,24 +175,9 @@
     "date": "2025-09-30T06:54:15Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.7",
-    "date": "2025-09-30T05:56:20Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-09-30T00:27:06Z"
-  },
-  {
     "name": "thomiceli/opengist",
     "version": "v1.11.1",
     "date": "2025-09-30T00:24:16Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
   },
   {
     "name": "goauthentik/authentik",
@@ -178,11 +208,6 @@
     "name": "esphome/esphome",
     "version": "2025.9.2",
     "date": "2025-09-29T18:50:27Z"
-  },
-  {
-    "name": "zabbix/zabbix",
-    "version": "7.0.19",
-    "date": "2025-09-29T17:38:12Z"
   },
   {
     "name": "influxdata/influxdb",
@@ -355,11 +380,6 @@
     "date": "2025-09-27T09:57:41Z"
   },
   {
-    "name": "Kozea/Radicale",
-    "version": "v3.5.7",
-    "date": "2025-09-27T06:16:00Z"
-  },
-  {
     "name": "ipfs/kubo",
     "version": "v0.37.0",
     "date": "2025-08-27T20:03:52Z"
@@ -405,11 +425,6 @@
     "date": "2025-09-26T09:31:01Z"
   },
   {
-    "name": "wazuh/wazuh",
-    "version": "v4.13.1",
-    "date": "2025-09-25T15:43:49Z"
-  },
-  {
     "name": "nzbgetcom/nzbget",
     "version": "v25.3",
     "date": "2025-09-01T09:47:06Z"
@@ -423,11 +438,6 @@
     "name": "henrygd/beszel",
     "version": "v0.12.12",
     "date": "2025-09-25T23:46:01Z"
-  },
-  {
-    "name": "booklore-app/booklore",
-    "version": "v1.3.4",
-    "date": "2025-09-25T21:19:48Z"
   },
   {
     "name": "go-gitea/gitea",
@@ -675,11 +685,6 @@
     "date": "2025-09-17T14:47:00Z"
   },
   {
-    "name": "glpi-project/glpi",
-    "version": "10.0.20",
-    "date": "2025-09-10T12:00:00Z"
-  },
-  {
     "name": "cockpit-project/cockpit",
     "version": "347",
     "date": "2025-09-17T12:03:45Z"
@@ -843,11 +848,6 @@
     "name": "diced/zipline",
     "version": "v4.3.1",
     "date": "2025-09-08T22:26:23Z"
-  },
-  {
-    "name": "apache/tomcat",
-    "version": "10.1.46",
-    "date": "2025-09-08T14:29:54Z"
   },
   {
     "name": "home-assistant/operating-system",
