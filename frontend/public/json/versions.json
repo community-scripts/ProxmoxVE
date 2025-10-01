@@ -1,5 +1,100 @@
 [
   {
+    "name": "HabitRPG/habitica",
+    "version": "v5.41.4",
+    "date": "2025-09-30T22:26:11Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.77.5.rc.3",
+    "date": "2025-09-30T22:18:41Z"
+  },
+  {
+    "name": "mongodb/mongo",
+    "version": "r8.2.1",
+    "date": "2025-09-30T21:46:28Z"
+  },
+  {
+    "name": "rcourtman/Pulse",
+    "version": "v4.16.0",
+    "date": "2025-09-30T21:12:11Z"
+  },
+  {
+    "name": "immich-app/immich",
+    "version": "v1.144.1",
+    "date": "2025-09-30T20:51:13Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "nightly",
+    "date": "2025-09-28T18:26:30Z"
+  },
+  {
+    "name": "MediaBrowser/Emby.Releases",
+    "version": "4.9.1.80",
+    "date": "2025-09-30T20:25:16Z"
+  },
+  {
+    "name": "netbox-community/netbox",
+    "version": "v4.4.2",
+    "date": "2025-09-30T20:16:13Z"
+  },
+  {
+    "name": "redis/redis",
+    "version": "8.4-m01-int",
+    "date": "2025-09-30T20:15:40Z"
+  },
+  {
+    "name": "pommee/goaway",
+    "version": "v0.62.7",
+    "date": "2025-09-30T19:36:37Z"
+  },
+  {
+    "name": "TwiN/gatus",
+    "version": "v5.25.2",
+    "date": "2025-09-30T18:32:35Z"
+  },
+  {
+    "name": "WordPress/WordPress",
+    "version": "4.7.31",
+    "date": "2025-09-30T18:00:06Z"
+  },
+  {
+    "name": "MagicMirrorOrg/MagicMirror",
+    "version": "v2.33.0",
+    "date": "2025-09-30T16:18:10Z"
+  },
+  {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.530",
+    "date": "2025-09-30T15:42:52Z"
+  },
+  {
+    "name": "gristlabs/grist-core",
+    "version": "v1.7.4",
+    "date": "2025-09-30T13:34:30Z"
+  },
+  {
+    "name": "neo4j/neo4j",
+    "version": "4.4.46",
+    "date": "2025-09-30T13:21:24Z"
+  },
+  {
+    "name": "meilisearch/meilisearch",
+    "version": "latest",
+    "date": "2025-09-30T13:14:19Z"
+  },
+  {
+    "name": "fallenbagel/jellyseerr",
+    "version": "preview-rename-tags",
+    "date": "2025-09-30T12:50:15Z"
+  },
+  {
+    "name": "emqx/emqx",
+    "version": "e6.0.0",
+    "date": "2025-09-30T12:04:20Z"
+  },
+  {
     "name": "keycloak/keycloak",
     "version": "26.4.0",
     "date": "2025-09-30T11:49:13Z"
@@ -35,24 +130,9 @@
     "date": "2025-09-30T06:54:15Z"
   },
   {
-    "name": "emqx/emqx",
-    "version": "e6.0.0",
-    "date": "2025-09-30T06:42:58Z"
-  },
-  {
     "name": "Jackett/Jackett",
     "version": "v0.24.7",
     "date": "2025-09-30T05:56:20Z"
-  },
-  {
-    "name": "BerriAI/litellm",
-    "version": "v1.77.5.rc.2",
-    "date": "2025-09-30T03:04:10Z"
-  },
-  {
-    "name": "TwiN/gatus",
-    "version": "v5.25.1",
-    "date": "2025-09-30T03:01:47Z"
   },
   {
     "name": "jeedom/core",
@@ -85,16 +165,6 @@
     "date": "2025-09-29T20:59:23Z"
   },
   {
-    "name": "gristlabs/grist-core",
-    "version": "v1.7.4",
-    "date": "2025-09-29T20:19:43Z"
-  },
-  {
-    "name": "immich-app/immich",
-    "version": "v1.144.1",
-    "date": "2025-09-29T19:49:34Z"
-  },
-  {
     "name": "influxdata/telegraf",
     "version": "v1.36.2",
     "date": "2025-09-29T19:16:49Z"
@@ -108,11 +178,6 @@
     "name": "esphome/esphome",
     "version": "2025.9.2",
     "date": "2025-09-29T18:50:27Z"
-  },
-  {
-    "name": "pommee/goaway",
-    "version": "v0.62.6",
-    "date": "2025-09-29T18:50:13Z"
   },
   {
     "name": "zabbix/zabbix",
@@ -138,11 +203,6 @@
     "name": "msgbyte/tianji",
     "version": "v1.27.2",
     "date": "2025-09-29T16:16:21Z"
-  },
-  {
-    "name": "meilisearch/meilisearch",
-    "version": "prototype-v1.22.1.personalization-00",
-    "date": "2025-09-29T15:47:10Z"
   },
   {
     "name": "n8n-io/n8n",
@@ -208,11 +268,6 @@
     "name": "Radarr/Radarr",
     "version": "v5.27.5.10198",
     "date": "2025-09-03T12:08:43Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "v4.4.0",
-    "date": "2025-09-02T19:26:18Z"
   },
   {
     "name": "lazy-media/Reactive-Resume",
@@ -302,7 +357,7 @@
   {
     "name": "Kozea/Radicale",
     "version": "v3.5.7",
-    "date": "2025-09-27T06:12:51Z"
+    "date": "2025-09-27T06:16:00Z"
   },
   {
     "name": "ipfs/kubo",
@@ -440,16 +495,6 @@
     "date": "2025-09-02T14:26:24Z"
   },
   {
-    "name": "MediaBrowser/Emby.Releases",
-    "version": "4.9.1.2",
-    "date": "2025-06-26T22:08:00Z"
-  },
-  {
-    "name": "mongodb/mongo",
-    "version": "r8.2.1-rc1",
-    "date": "2025-09-24T19:54:34Z"
-  },
-  {
     "name": "gelbphoenix/autocaliweb",
     "version": "v0.10.2",
     "date": "2025-09-24T18:23:36Z"
@@ -490,11 +535,6 @@
     "date": "2025-09-23T23:47:02Z"
   },
   {
-    "name": "HabitRPG/habitica",
-    "version": "v5.41.3",
-    "date": "2025-09-23T22:21:04Z"
-  },
-  {
     "name": "Part-DB/Part-DB-server",
     "version": "v2.2.0",
     "date": "2025-09-23T21:46:21Z"
@@ -503,11 +543,6 @@
     "name": "getumbrel/umbrel",
     "version": "1.4.2",
     "date": "2025-05-09T08:54:49Z"
-  },
-  {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.529",
-    "date": "2025-09-23T14:40:20Z"
   },
   {
     "name": "postgres/postgres",
@@ -575,11 +610,6 @@
     "date": "2025-09-21T07:40:35Z"
   },
   {
-    "name": "fallenbagel/jellyseerr",
-    "version": "preview-fix-watchlist-error",
-    "date": "2025-09-20T21:07:50Z"
-  },
-  {
     "name": "pocket-id/pocket-id",
     "version": "v1.11.2",
     "date": "2025-09-20T20:15:40Z"
@@ -613,11 +643,6 @@
     "name": "docmost/docmost",
     "version": "v0.23.2",
     "date": "2025-09-18T17:18:59Z"
-  },
-  {
-    "name": "neo4j/neo4j",
-    "version": "2025.09.0",
-    "date": "2025-09-18T15:07:01Z"
   },
   {
     "name": "grokability/snipe-it",
@@ -683,11 +708,6 @@
     "name": "webmin/webmin",
     "version": "2.510",
     "date": "2025-09-16T20:28:37Z"
-  },
-  {
-    "name": "netbox-community/netbox",
-    "version": "v4.4.1",
-    "date": "2025-09-16T15:58:14Z"
   },
   {
     "name": "tobychui/zoraxy",
@@ -798,11 +818,6 @@
     "name": "zerotier/ZeroTierOne",
     "version": "1.16.0",
     "date": "2025-09-11T18:01:57Z"
-  },
-  {
-    "name": "rcourtman/Pulse",
-    "version": "v4.14.0",
-    "date": "2025-09-05T18:28:28Z"
   },
   {
     "name": "aceberg/WatchYourLAN",
@@ -990,11 +1005,6 @@
     "date": "2025-08-18T16:13:54Z"
   },
   {
-    "name": "redis/redis",
-    "version": "8.2.1",
-    "date": "2025-08-18T15:42:48Z"
-  },
-  {
     "name": "lldap/lldap",
     "version": "v0.6.2",
     "date": "2025-08-17T22:07:10Z"
@@ -1058,11 +1068,6 @@
     "name": "TryGhost/Ghost-CLI",
     "version": "v1.28.3",
     "date": "2025-08-06T12:32:02Z"
-  },
-  {
-    "name": "WordPress/WordPress",
-    "version": "4.7.30",
-    "date": "2025-08-05T17:23:06Z"
   },
   {
     "name": "binwiederhier/ntfy",
@@ -1188,11 +1193,6 @@
     "name": "hivemq/hivemq-community-edition",
     "version": "2025.4",
     "date": "2025-07-01T18:01:37Z"
-  },
-  {
-    "name": "MagicMirrorOrg/MagicMirror",
-    "version": "v2.32.0",
-    "date": "2025-06-30T22:12:48Z"
   },
   {
     "name": "typesense/typesense",
