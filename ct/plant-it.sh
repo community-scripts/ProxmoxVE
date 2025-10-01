@@ -32,8 +32,10 @@ function update_script() {
     systemctl stop plant-it
     msg_ok "Stopped $APP"
 
-    USE_ORIGINAL_FILENAME="true" fetch_and_deploy_gh_release "plant-it" "MDeLuise/plant-it" "singlefile" "latest" "/opt/plant-it/backend" "server.jar"
-    fetch_and_deploy_gh_release "plant-it-front" "MDeLuise/plant-it" "prebuild" "latest" "/opt/plant-it/frontend" "client.tar.gz"
+    USE_ORIGINAL_FILENAME="true" fetch_and_deploy_gh_release "plant-it" "MDeLuise/plant-it" "singlefile" "0.10.0" "/opt/plant-it/backend" "server.jar"
+    fetch_and_deploy_gh_release "plant-it-front" "MDeLuise/plant-it" "prebuild" "0.10.0" "/opt/plant-it/frontend" "client.tar.gz"
+    msg_warn "Application is updated to latest Web version (v0.10.0). There will be no more updates available."
+    msg_warn "Please read: https://github.com/MDeLuise/plant-it/releases/tag/1.0.0"
 
     msg_info "Starting $APP"
     systemctl start plant-it

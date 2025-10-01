@@ -15,8 +15,8 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-    redis \
-    nginx
+  redis \
+  nginx
 msg_ok "Installed Dependencies"
 
 setup_mariadb
@@ -31,15 +31,15 @@ $STD mariadb -u root -e "CREATE DATABASE $DB_NAME;"
 $STD mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
 $STD mariadb -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
 {
-    echo "Plant-it Credentials"
-    echo "Plant-it Database User: $DB_USER"
-    echo "Plant-it Database Password: $DB_PASS"
-    echo "Plant-it Database Name: $DB_NAME"
+  echo "Plant-it Credentials"
+  echo "Plant-it Database User: $DB_USER"
+  echo "Plant-it Database Password: $DB_PASS"
+  echo "Plant-it Database Name: $DB_NAME"
 } >>~/plant-it.creds
 msg_ok "Set up MariaDB"
 
-USE_ORIGINAL_FILENAME="true" fetch_and_deploy_gh_release "plant-it" "MDeLuise/plant-it" "singlefile" "latest" "/opt/plant-it/backend" "server.jar"
-fetch_and_deploy_gh_release "plant-it-front" "MDeLuise/plant-it" "prebuild" "latest" "/opt/plant-it/frontend" "client.tar.gz"
+USE_ORIGINAL_FILENAME="true" fetch_and_deploy_gh_release "plant-it" "MDeLuise/plant-it" "singlefile" "0.10.0" "/opt/plant-it/backend" "server.jar"
+fetch_and_deploy_gh_release "plant-it-front" "MDeLuise/plant-it" "prebuild" "0.10.0" "/opt/plant-it/frontend" "client.tar.gz"
 
 msg_info "Configured Plant-it"
 mkdir -p /opt/plant-it-data
