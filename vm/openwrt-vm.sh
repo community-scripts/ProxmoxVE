@@ -530,7 +530,12 @@ msg_ok "Extracted OpenWrt Disk Image ${CL}${BL}$FILE${CL}"
 msg_info "Creating OpenWrt VM"
 qm create "$VMID" -cores "$CORE_COUNT" -memory "$RAM_SIZE" -name "$HN" \
   -onboot 1 -ostype l26 -scsihw virtio-scsi-pci --tablet 0
-pvesm alloc "$STORAGE" "$VMID" "vm-$VMID-disk-0" 4M >/dev/null
+if [[ "$(pvesm status | awk -v s=$STORAGE '$1==s {print $2}')" == "dir" ]]; then
+  qm set "$VMID" -efidisk0 "${STORAGE}:0,efitype=4m,size=4M"
+else
+  pvesm alloc "$STORAGE" "$VMID" "vm-$VMID-disk-0" 4M >/dev/null
+  qm set "$VMID" -efidisk0 "${STORAGE}:vm-$VMID-disk-0,efitype=4m,size=4M"
+fi
 
 IMPORT_OUT="$(qm importdisk "$VMID" "$FILE" "$STORAGE" --format raw 2>&1 || true)"
 DISK_REF="$(printf '%s\n' "$IMPORT_OUT" | sed -n "s/.*successfully imported disk '\([^']\+\)'.*/\1/p")"
