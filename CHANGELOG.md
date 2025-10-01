@@ -20,7 +20,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - openwrt: Add conditional logic for EFI disk allocation [@MickLesk](https://github.com/MickLesk) ([#8024](https://github.com/community-scripts/ProxmoxVE/pull/8024))
     - Plant-IT: Pin version to v0.10.0 [@tremor021](https://github.com/tremor021) ([#8023](https://github.com/community-scripts/ProxmoxVE/pull/8023))
+
+  - #### ✨ New Features
+
+    - Immich: bump version to 2.0.0 stable [@vhsdream](https://github.com/vhsdream) ([#8041](https://github.com/community-scripts/ProxmoxVE/pull/8041))
 
   - #### 🔧 Refactor
 
