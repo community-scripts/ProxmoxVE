@@ -35,6 +35,10 @@
         {
             "text": "Execute within an existing LXC Console",
             "type": "warning"
+        },
+		{
+            "text": "To update or uninstall run bash call again",
+            "type": "info"
         }
     ]
 }
