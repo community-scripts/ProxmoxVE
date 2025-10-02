@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - EMQX: removal logic in emqx update [@MickLesk](https://github.com/MickLesk) ([#8050](https://github.com/community-scripts/ProxmoxVE/pull/8050))
     - fix FlareSolverr version check to v3.3.25 [@MickLesk](https://github.com/MickLesk) ([#8051](https://github.com/community-scripts/ProxmoxVE/pull/8051))
 
 ## 2025-10-01
