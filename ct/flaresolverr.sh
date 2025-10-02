@@ -28,7 +28,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  if check_for_gh_release "flaresolverr" "FlareSolverr/FlareSolverr" "3.3.5"; then
+  if check_for_gh_release "flaresolverr" "FlareSolverr/FlareSolverr" "v3.3.25"; then
     msg_info "Stopping service"
     systemctl stop flaresolverr
     msg_ok "Stopped service"
