@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-10-02
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - fix FlareSolverr version check to v3.3.25 [@MickLesk](https://github.com/MickLesk) ([#8051](https://github.com/community-scripts/ProxmoxVE/pull/8051))
+
 ## 2025-10-01
 
 ### 🆕 New Scripts
