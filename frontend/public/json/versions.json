@@ -1,5 +1,60 @@
 [
   {
+    "name": "actualbudget/actual",
+    "version": "v25.10.0",
+    "date": "2025-10-02T10:55:47Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.112.6",
+    "date": "2025-09-26T10:56:27Z"
+  },
+  {
+    "name": "meilisearch/meilisearch",
+    "version": "prototype-search-metadata-00",
+    "date": "2025-10-02T09:04:19Z"
+  },
+  {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.530",
+    "date": "2025-09-30T15:42:52Z"
+  },
+  {
+    "name": "laurent22/joplin",
+    "version": "server-v3.4.4",
+    "date": "2025-09-25T13:19:26Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.24",
+    "date": "2025-10-02T05:54:50Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.4.0",
+    "date": "2025-09-13T16:38:21Z"
+  },
+  {
+    "name": "ipfs/kubo",
+    "version": "v0.38.0",
+    "date": "2025-10-02T01:46:06Z"
+  },
+  {
+    "name": "hyperion-project/hyperion.ng",
+    "version": "2.1.1",
+    "date": "2025-06-14T17:45:06Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-10-02T00:27:05Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
     "name": "jhuckaby/Cronicle",
     "version": "v0.9.94",
     "date": "2025-10-01T23:23:11Z"
@@ -20,9 +75,9 @@
     "date": "2025-10-01T19:35:14Z"
   },
   {
-    "name": "ipfs/kubo",
-    "version": "v0.38.0",
-    "date": "2025-10-01T18:14:53Z"
+    "name": "keycloak/keycloak",
+    "version": "26.4.0",
+    "date": "2025-09-30T11:49:13Z"
   },
   {
     "name": "NodeBB/NodeBB",
@@ -36,8 +91,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-09-28T18:26:30Z"
+    "version": "v4.4.0",
+    "date": "2025-09-02T19:26:18Z"
   },
   {
     "name": "home-assistant/core",
@@ -58,11 +113,6 @@
     "name": "Graylog2/graylog2-server",
     "version": "6.1.16",
     "date": "2025-10-01T14:58:20Z"
-  },
-  {
-    "name": "meilisearch/meilisearch",
-    "version": "prototype-speedup-post-processing-2",
-    "date": "2025-10-01T14:19:58Z"
   },
   {
     "name": "glpi-project/glpi",
@@ -90,24 +140,9 @@
     "date": "2025-10-01T08:24:16Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.17",
-    "date": "2025-10-01T05:59:28Z"
-  },
-  {
     "name": "Kozea/Radicale",
     "version": "v3.5.7.pypi",
     "date": "2025-10-01T05:32:27Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-10-01T00:27:05Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
   },
   {
     "name": "booklore-app/booklore",
@@ -160,11 +195,6 @@
     "date": "2025-09-30T16:18:10Z"
   },
   {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.530",
-    "date": "2025-09-30T15:42:52Z"
-  },
-  {
     "name": "wazuh/wazuh",
     "version": "coverity-w40-4.14.0",
     "date": "2025-09-30T15:35:54Z"
@@ -183,11 +213,6 @@
     "name": "fallenbagel/jellyseerr",
     "version": "preview-rename-tags",
     "date": "2025-09-30T12:50:15Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.4.0",
-    "date": "2025-09-30T11:49:13Z"
   },
   {
     "name": "emqx/emqx",
@@ -260,11 +285,6 @@
     "date": "2025-09-29T16:16:21Z"
   },
   {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.112.6",
-    "date": "2025-09-26T10:56:27Z"
-  },
-  {
     "name": "AdguardTeam/AdGuardHome",
     "version": "v0.107.67",
     "date": "2025-09-29T14:45:57Z"
@@ -298,11 +318,6 @@
     "name": "inventree/InvenTree",
     "version": "1.0.2",
     "date": "2025-09-29T04:02:44Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.4.0",
-    "date": "2025-09-13T16:38:21Z"
   },
   {
     "name": "autobrr/autobrr",
@@ -348,11 +363,6 @@
     "name": "mealie-recipes/mealie",
     "version": "v3.3.0",
     "date": "2025-09-28T00:49:34Z"
-  },
-  {
-    "name": "hyperion-project/hyperion.ng",
-    "version": "2.1.1",
-    "date": "2025-06-14T17:45:06Z"
   },
   {
     "name": "moghtech/komodo",
@@ -426,8 +436,8 @@
   },
   {
     "name": "bunkerity/bunkerweb",
-    "version": "v1.6.4",
-    "date": "2025-08-18T20:22:07Z"
+    "version": "testing",
+    "date": "2025-09-26T11:55:36Z"
   },
   {
     "name": "traefik/traefik",
@@ -503,11 +513,6 @@
     "name": "forgejo/forgejo",
     "version": "v14.0.0-dev",
     "date": "2025-09-25T13:19:45Z"
-  },
-  {
-    "name": "laurent22/joplin",
-    "version": "server-v3.4.4",
-    "date": "2025-09-25T13:19:26Z"
   },
   {
     "name": "rabbitmq/rabbitmq-server",
@@ -913,11 +918,6 @@
     "name": "openobserve/openobserve",
     "version": "v0.15.1",
     "date": "2025-09-04T10:37:23Z"
-  },
-  {
-    "name": "actualbudget/actual",
-    "version": "v25.9.0",
-    "date": "2025-09-04T01:12:37Z"
   },
   {
     "name": "apache/cassandra",
