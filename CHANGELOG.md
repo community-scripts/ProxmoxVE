@@ -26,6 +26,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - fix: ensure /etc/pulse exists before chown in update script [@rcourtman](https://github.com/rcourtman) ([#8068](https://github.com/community-scripts/ProxmoxVE/pull/8068))
     - grist: remove unneeded var [@MickLesk](https://github.com/MickLesk) ([#8060](https://github.com/community-scripts/ProxmoxVE/pull/8060))
 
+  - #### 🔧 Refactor
+
+    - Immich: bump version to 2.0.1 [@vhsdream](https://github.com/vhsdream) ([#8090](https://github.com/community-scripts/ProxmoxVE/pull/8090))
+
 ### 🌐 Website
 
   - #### 🐞 Bug Fixes
