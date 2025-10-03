@@ -169,7 +169,7 @@ export default function Page() {
                     <strong>One-command installation:</strong> Run this on your Proxmox host to deploy
                   </p>
                   <code className="block mt-2 p-2 bg-background rounded text-xs font-mono">
-                    bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE-Local/main/install.sh)"
+                    bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/pve-scripts-local.sh)"
                   </code>
                 </div>
               </div>
