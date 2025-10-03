@@ -81,7 +81,7 @@ $STD apt-get update
 $STD apt-get install -y jellyfin-ffmpeg7
 ln -s /usr/lib/jellyfin-ffmpeg/ffmpeg /usr/bin/ffmpeg
 ln -s /usr/lib/jellyfin-ffmpeg/ffprobe /usr/bin/ffprobe
-if [[ "$CTTYPE" == "0" ]]; then
+if [[ "$CTTYPE" == "0" && -d /dev/dri ]]; then
   chgrp video /dev/dri
   chmod 755 /dev/dri
   chmod 660 /dev/dri/*
