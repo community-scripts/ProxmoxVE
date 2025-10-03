@@ -40,7 +40,13 @@ function update_script() {
 
     fetch_and_deploy_gh_release "pulse" "rcourtman/Pulse" "prebuild" "latest" "/opt/pulse" "*-linux-amd64.tar.gz"
     ln -sf /opt/pulse/bin/pulse /usr/local/bin/pulse
-    chown -R pulse:pulse /etc/pulse /opt/pulse
+
+    # Ensure /etc/pulse exists and set ownership
+    # Use non-recursive chown on /etc/pulse to preserve existing file permissions
+    mkdir -p /etc/pulse
+    chown pulse:pulse /etc/pulse
+    chown -R pulse:pulse /opt/pulse
+    chmod 700 /etc/pulse
     if [[ -f "$SERVICE_PATH"/pulse-backend.service ]]; then
       mv "$SERVICE_PATH"/pulse-backend.service "$SERVICE_PATH"/pulse.service
     fi
