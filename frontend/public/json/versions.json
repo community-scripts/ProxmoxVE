@@ -1,8 +1,28 @@
 [
   {
-    "name": "actualbudget/actual",
-    "version": "v25.10.0",
-    "date": "2025-10-02T10:55:47Z"
+    "name": "rcourtman/Pulse",
+    "version": "v4.19.1",
+    "date": "2025-10-02T23:46:18Z"
+  },
+  {
+    "name": "wizarrrr/wizarr",
+    "version": "v2025.10.0",
+    "date": "2025-10-02T21:16:09Z"
+  },
+  {
+    "name": "pommee/goaway",
+    "version": "v0.62.9",
+    "date": "2025-10-02T19:20:42Z"
+  },
+  {
+    "name": "mealie-recipes/mealie",
+    "version": "v3.3.1",
+    "date": "2025-10-02T17:10:34Z"
+  },
+  {
+    "name": "jhuckaby/Cronicle",
+    "version": "v0.9.95",
+    "date": "2025-10-02T16:07:18Z"
   },
   {
     "name": "n8n-io/n8n",
@@ -10,9 +30,44 @@
     "date": "2025-09-26T10:56:27Z"
   },
   {
+    "name": "theonedev/onedev",
+    "version": "v13.0.7",
+    "date": "2025-10-02T14:33:22Z"
+  },
+  {
+    "name": "cockpit-project/cockpit",
+    "version": "348",
+    "date": "2025-10-02T13:51:28Z"
+  },
+  {
+    "name": "kyantech/Palmr",
+    "version": "v3.2.3-beta",
+    "date": "2025-10-02T13:48:14Z"
+  },
+  {
     "name": "meilisearch/meilisearch",
-    "version": "prototype-search-metadata-00",
-    "date": "2025-10-02T09:04:19Z"
+    "version": "prototype-docker-alpine-3-22-v2",
+    "date": "2025-10-02T13:11:08Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "mattermost-redux@10.12.0",
+    "date": "2025-09-18T20:15:19Z"
+  },
+  {
+    "name": "apache/tomcat",
+    "version": "10.1.47",
+    "date": "2025-10-02T12:12:04Z"
+  },
+  {
+    "name": "bunkerity/bunkerweb",
+    "version": "v1.6.4",
+    "date": "2025-08-18T20:22:07Z"
+  },
+  {
+    "name": "actualbudget/actual",
+    "version": "v25.10.0",
+    "date": "2025-10-02T11:34:39Z"
   },
   {
     "name": "jenkinsci/jenkins",
@@ -55,11 +110,6 @@
     "date": "2025-07-17T12:08:03Z"
   },
   {
-    "name": "jhuckaby/Cronicle",
-    "version": "v0.9.94",
-    "date": "2025-10-01T23:23:11Z"
-  },
-  {
     "name": "BerriAI/litellm",
     "version": "v1.77.5.rc.4",
     "date": "2025-10-01T22:52:14Z"
@@ -68,11 +118,6 @@
     "name": "immich-app/immich",
     "version": "v2.0.0",
     "date": "2025-10-01T21:39:09Z"
-  },
-  {
-    "name": "rcourtman/Pulse",
-    "version": "v4.18.0",
-    "date": "2025-10-01T19:35:14Z"
   },
   {
     "name": "keycloak/keycloak",
@@ -91,18 +136,13 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v4.4.0",
-    "date": "2025-09-02T19:26:18Z"
+    "version": "nightly",
+    "date": "2025-10-01T16:56:39Z"
   },
   {
     "name": "home-assistant/core",
     "version": "2025.10.0",
     "date": "2025-10-01T16:38:38Z"
-  },
-  {
-    "name": "pommee/goaway",
-    "version": "v0.62.8",
-    "date": "2025-10-01T15:58:55Z"
   },
   {
     "name": "fuma-nama/fumadocs",
@@ -128,11 +168,6 @@
     "name": "esphome/esphome",
     "version": "2025.9.3",
     "date": "2025-10-01T11:30:07Z"
-  },
-  {
-    "name": "apache/tomcat",
-    "version": "9.0.110",
-    "date": "2025-10-01T09:24:07Z"
   },
   {
     "name": "element-hq/synapse",
@@ -220,11 +255,6 @@
     "date": "2025-09-30T12:04:20Z"
   },
   {
-    "name": "mattermost/mattermost",
-    "version": "mattermost-redux@10.12.0",
-    "date": "2025-09-18T20:15:19Z"
-  },
-  {
     "name": "silverbulletmd/silverbullet",
     "version": "2.1.6",
     "date": "2025-09-30T09:09:13Z"
@@ -300,11 +330,6 @@
     "date": "2025-09-29T13:22:59Z"
   },
   {
-    "name": "theonedev/onedev",
-    "version": "v13.0.6",
-    "date": "2025-09-29T12:13:09Z"
-  },
-  {
     "name": "jupyter/notebook",
     "version": "@jupyter-notebook/ui-components@7.5.0-beta.0",
     "date": "2025-09-29T09:16:42Z"
@@ -360,11 +385,6 @@
     "date": "2025-09-20T12:12:33Z"
   },
   {
-    "name": "mealie-recipes/mealie",
-    "version": "v3.3.0",
-    "date": "2025-09-28T00:49:34Z"
-  },
-  {
     "name": "moghtech/komodo",
     "version": "v1.19.5",
     "date": "2025-09-27T20:59:46Z"
@@ -373,11 +393,6 @@
     "name": "Luligu/matterbridge",
     "version": "3.2.9",
     "date": "2025-09-27T17:58:53Z"
-  },
-  {
-    "name": "wizarrrr/wizarr",
-    "version": "v2025.9.7",
-    "date": "2025-09-27T17:52:44Z"
   },
   {
     "name": "raydak-labs/configarr",
@@ -435,11 +450,6 @@
     "date": "2025-09-26T19:15:10Z"
   },
   {
-    "name": "bunkerity/bunkerweb",
-    "version": "testing",
-    "date": "2025-09-26T11:55:36Z"
-  },
-  {
     "name": "traefik/traefik",
     "version": "v3.5.3",
     "date": "2025-09-26T09:31:01Z"
@@ -473,11 +483,6 @@
     "name": "TandoorRecipes/recipes",
     "version": "2.2.7",
     "date": "2025-09-25T19:04:38Z"
-  },
-  {
-    "name": "kyantech/Palmr",
-    "version": "v3.2.2-beta",
-    "date": "2025-09-25T18:44:52Z"
   },
   {
     "name": "Threadfin/Threadfin",
@@ -698,11 +703,6 @@
     "name": "heiher/hev-socks5-server",
     "version": "2.10.0",
     "date": "2025-09-17T14:47:00Z"
-  },
-  {
-    "name": "cockpit-project/cockpit",
-    "version": "347",
-    "date": "2025-09-17T12:03:45Z"
   },
   {
     "name": "dgtlmoon/changedetection.io",
