@@ -47,7 +47,7 @@ RELEASE=$(curl -fsSL https://api.github.com/repos/glpi-project/glpi/releases/lat
 curl -fsSL "https://github.com/glpi-project/glpi/releases/download/${RELEASE}/glpi-${RELEASE}.tgz" -o "glpi-${RELEASE}.tgz"
 $STD tar -xzvf glpi-${RELEASE}.tgz
 cd /opt/glpi
-$STD php bin/console db:install --db-name=$DB_NAME --db-user=$DB_USER --db-password=$DB_PASS --no-interaction
+$STD php bin/console db:install --db-name=$DB_NAME --db-user=$DB_USER --db-password=$DB_PASS --no-interaction --allow-superuser
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Installed GLPi"
 
