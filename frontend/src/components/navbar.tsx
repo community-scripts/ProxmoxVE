@@ -42,7 +42,7 @@ function Navbar() {
             <Image height={18} unoptimized width={18} alt="logo" src="/ProxmoxVE/logo.png" className="" />
             <span className="">Proxmox VE Helper-Scripts</span>
           </Link>
-          <div className="flex items-center justify-between gap-2 w-full">
+          <div className="flex items-center justify-between sm:justify-end gap-2 w-full">
             <div className="flex sm:hidden">
               <Suspense>
                 <MobileSidebar />
