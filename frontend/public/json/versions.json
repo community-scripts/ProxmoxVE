@@ -1,5 +1,70 @@
 [
   {
+    "name": "mattermost/mattermost",
+    "version": "mattermost-redux@10.12.0",
+    "date": "2025-09-18T20:15:19Z"
+  },
+  {
+    "name": "duplicati/duplicati",
+    "version": "v2.1.2.1-2.1.2.1_beta_2025-10-03",
+    "date": "2025-10-03T09:31:16Z"
+  },
+  {
+    "name": "pocket-id/pocket-id",
+    "version": "v1.12.0",
+    "date": "2025-10-03T10:11:17Z"
+  },
+  {
+    "name": "docker/compose",
+    "version": "v2.40.0",
+    "date": "2025-10-03T09:32:15Z"
+  },
+  {
+    "name": "nzbgetcom/nzbget",
+    "version": "v25.3",
+    "date": "2025-09-01T09:47:06Z"
+  },
+  {
+    "name": "pocketbase/pocketbase",
+    "version": "v0.30.1",
+    "date": "2025-10-03T06:55:25Z"
+  },
+  {
+    "name": "booklore-app/booklore",
+    "version": "v1.4.1",
+    "date": "2025-10-03T06:52:35Z"
+  },
+  {
+    "name": "redis/redis",
+    "version": "8.2.2",
+    "date": "2025-10-03T06:22:38Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.31",
+    "date": "2025-10-03T05:48:49Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.4.0",
+    "date": "2025-09-13T16:38:21Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.12.4-rc3",
+    "date": "2025-10-03T03:31:18Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-10-03T00:27:06Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
     "name": "rcourtman/Pulse",
     "version": "v4.19.1",
     "date": "2025-10-02T23:46:18Z"
@@ -8,6 +73,11 @@
     "name": "wizarrrr/wizarr",
     "version": "v2025.10.0",
     "date": "2025-10-02T21:16:09Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.4.0",
+    "date": "2025-09-30T11:49:13Z"
   },
   {
     "name": "pommee/goaway",
@@ -50,11 +120,6 @@
     "date": "2025-10-02T13:11:08Z"
   },
   {
-    "name": "mattermost/mattermost",
-    "version": "mattermost-redux@10.12.0",
-    "date": "2025-09-18T20:15:19Z"
-  },
-  {
     "name": "apache/tomcat",
     "version": "10.1.47",
     "date": "2025-10-02T12:12:04Z"
@@ -80,16 +145,6 @@
     "date": "2025-09-25T13:19:26Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.24",
-    "date": "2025-10-02T05:54:50Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.4.0",
-    "date": "2025-09-13T16:38:21Z"
-  },
-  {
     "name": "ipfs/kubo",
     "version": "v0.38.0",
     "date": "2025-10-02T01:46:06Z"
@@ -100,16 +155,6 @@
     "date": "2025-06-14T17:45:06Z"
   },
   {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-10-02T00:27:05Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
-  },
-  {
     "name": "BerriAI/litellm",
     "version": "v1.77.5.rc.4",
     "date": "2025-10-01T22:52:14Z"
@@ -118,11 +163,6 @@
     "name": "immich-app/immich",
     "version": "v2.0.0",
     "date": "2025-10-01T21:39:09Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.4.0",
-    "date": "2025-09-30T11:49:13Z"
   },
   {
     "name": "NodeBB/NodeBB",
@@ -180,11 +220,6 @@
     "date": "2025-10-01T05:32:27Z"
   },
   {
-    "name": "booklore-app/booklore",
-    "version": "v1.4.0",
-    "date": "2025-09-30T23:52:34Z"
-  },
-  {
     "name": "HabitRPG/habitica",
     "version": "v5.41.4",
     "date": "2025-09-30T22:26:11Z"
@@ -208,11 +243,6 @@
     "name": "netbox-community/netbox",
     "version": "v4.4.2",
     "date": "2025-09-30T20:16:13Z"
-  },
-  {
-    "name": "redis/redis",
-    "version": "8.4-m01-int",
-    "date": "2025-09-30T20:15:40Z"
   },
   {
     "name": "TwiN/gatus",
@@ -455,16 +485,6 @@
     "date": "2025-09-26T09:31:01Z"
   },
   {
-    "name": "nzbgetcom/nzbget",
-    "version": "v25.3",
-    "date": "2025-09-01T09:47:06Z"
-  },
-  {
-    "name": "ollama/ollama",
-    "version": "v0.12.3",
-    "date": "2025-09-26T05:08:26Z"
-  },
-  {
     "name": "henrygd/beszel",
     "version": "v0.12.12",
     "date": "2025-09-25T23:46:01Z"
@@ -493,11 +513,6 @@
     "name": "tailscale/tailscale",
     "version": "v1.88.3",
     "date": "2025-09-25T15:49:37Z"
-  },
-  {
-    "name": "duplicati/duplicati",
-    "version": "v2.1.1.103-2.1.1.103_canary_2025-09-25",
-    "date": "2025-09-25T15:17:46Z"
   },
   {
     "name": "linkwarden/linkwarden",
@@ -640,11 +655,6 @@
     "date": "2025-09-21T07:40:35Z"
   },
   {
-    "name": "pocket-id/pocket-id",
-    "version": "v1.11.2",
-    "date": "2025-09-20T20:15:40Z"
-  },
-  {
     "name": "traccar/traccar",
     "version": "v6.10.0",
     "date": "2025-09-20T15:40:36Z"
@@ -658,11 +668,6 @@
     "name": "hargata/lubelog",
     "version": "v1.5.2",
     "date": "2025-09-19T14:18:53Z"
-  },
-  {
-    "name": "docker/compose",
-    "version": "v2.39.4",
-    "date": "2025-09-19T08:49:23Z"
   },
   {
     "name": "saltstack/salt",
@@ -873,11 +878,6 @@
     "name": "minio/minio",
     "version": "RELEASE.2025-09-07T16-13-09Z",
     "date": "2025-09-07T18:53:04Z"
-  },
-  {
-    "name": "pocketbase/pocketbase",
-    "version": "v0.30.0",
-    "date": "2025-09-07T05:25:44Z"
   },
   {
     "name": "Stirling-Tools/Stirling-PDF",
