@@ -134,6 +134,48 @@ export default function Page() {
             </div>
           </div>
 
+          {/* PVE-Local-Scripts*/}
+          <div className="py-2" id="local-scripts">
+            <div className="max-w-6xl mx-auto px-4">
+              <div className="text-center mb-12">
+                <h2 className="text-3xl font-bold tracking-tighter md:text-5xl mb-4">
+                  🚀 New: PVE Scripts Local
+                </h2>
+                <p className="text-muted-foreground text-lg max-w-3xl mx-auto">
+                  Run Proxmox scripts directly from your local environment with our new web-based interface.
+                  No more SSH sessions or command-line complexity - manage everything through a beautiful, intuitive UI.
+                </p>
+              </div>
+
+
+
+              <div className="text-center">
+                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                  <Button size="lg" asChild className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+                    <a
+                      href="https://github.com/community-scripts/ProxmoxVE-Local"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center"
+                    >
+                      <FaGithub className="mr-2 h-5 w-5" />
+                      View on GitHub
+                    </a>
+                  </Button>
+                </div>
+
+                <div className="mt-6 p-4 bg-muted/50 rounded-lg max-w-2xl mx-auto">
+                  <p className="text-sm text-muted-foreground">
+                    <strong>One-command installation:</strong> Run this on your Proxmox host to deploy
+                  </p>
+                  <code className="block mt-2 p-2 bg-background rounded text-xs font-mono">
+                    bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE-Local/main/install.sh)"
+                  </code>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* FAQ Section */}
           <div className="py-20" id="faq">
             <div className="max-w-4xl mx-auto px-4">
