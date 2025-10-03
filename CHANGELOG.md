@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-10-03
 
+### 🆕 New Scripts
+
+  - pve-scripts-local ([#8083](https://github.com/community-scripts/ProxmoxVE/pull/8083))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
