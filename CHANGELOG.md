@@ -20,11 +20,17 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
-    - Overseerr: Increase resources [@tremor021](https://github.com/tremor021) ([#8086](https://github.com/community-scripts/ProxmoxVE/pull/8086))
     - GLPI: Fix database setup [@tremor021](https://github.com/tremor021) ([#8074](https://github.com/community-scripts/ProxmoxVE/pull/8074))
+    - Overseerr: Increase resources [@tremor021](https://github.com/tremor021) ([#8086](https://github.com/community-scripts/ProxmoxVE/pull/8086))
     - FIX: post-pve-install.sh just quitting [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#8070](https://github.com/community-scripts/ProxmoxVE/pull/8070))
     - fix: ensure /etc/pulse exists before chown in update script [@rcourtman](https://github.com/rcourtman) ([#8068](https://github.com/community-scripts/ProxmoxVE/pull/8068))
     - grist: remove unneeded var [@MickLesk](https://github.com/MickLesk) ([#8060](https://github.com/community-scripts/ProxmoxVE/pull/8060))
+
+### 🌐 Website
+
+  - #### 🐞 Bug Fixes
+
+    - Adjust navbar layout for large screen [@BramSuurdje](https://github.com/BramSuurdje) ([#8087](https://github.com/community-scripts/ProxmoxVE/pull/8087))
 
 ## 2025-10-02
 
