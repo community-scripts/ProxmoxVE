@@ -189,7 +189,7 @@ start_routines_9() {
   # check if deb822 Sources (*.sources) exist
   if find /etc/apt/sources.list.d/ -maxdepth 1 -name '*.sources' | grep -q .; then
     whiptail --backtitle "Proxmox VE Helper Scripts" --title "Deb822 sources detected" \
-      --msgbox "Modern deb822 sources (*.sources) already exist.\n\nNo changes to sources format required.\n\nYou may still have legacy sources.list or .list files, which you can disable in the next step." 12 65
+      --msgbox "Modern deb822 sources (*.sources) already exist.\n\nNo changes to sources format required.\n\nYou may still have legacy sources.list or .list files, which you can disable in the next step." 12 65 || true
   else
     check_and_disable_legacy_sources() {
       local LEGACY_COUNT=0
@@ -197,7 +197,7 @@ start_routines_9() {
 
       # Check sources.list
       if [[ -f "$listfile" ]] && grep -qE '^\s*deb ' "$listfile"; then
-        ((LEGACY_COUNT++))
+        (( ++LEGACY_COUNT ))
       fi
 
       # Check .list files
