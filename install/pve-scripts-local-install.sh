@@ -17,6 +17,7 @@ $STD apt-get update
 $STD apt-get install -y \
   build-essential \
   sshpass \
+  rsync \
   expect
 msg_ok "Dependencies installed."
 
