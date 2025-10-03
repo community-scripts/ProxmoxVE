@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-10-03
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - grist: remove unneeded var [@MickLesk](https://github.com/MickLesk) ([#8060](https://github.com/community-scripts/ProxmoxVE/pull/8060))
+
 ## 2025-10-02
 
 ### 🚀 Updated Scripts
