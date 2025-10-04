@@ -13,9 +13,9 @@ setting_up_container
 network_check
 update_os
 
-PG_VERSION="17" setup_postgresql
+PG_VERSION="18" setup_postgresql
 
-cat <<EOF >/etc/postgresql/17/main/pg_hba.conf
+cat <<EOF >/etc/postgresql/18/main/pg_hba.conf
 # PostgreSQL Client Authentication Configuration File
 local   all             postgres                                peer
 # TYPE  DATABASE        USER            ADDRESS                 METHOD
@@ -34,7 +34,7 @@ host    replication     all             127.0.0.1/32            scram-sha-256
 host    replication     all             ::1/128                 scram-sha-256
 EOF
 
-cat <<EOF >/etc/postgresql/17/main/postgresql.conf
+cat <<EOF >/etc/postgresql/18/main/postgresql.conf
 # -----------------------------
 # PostgreSQL configuration file
 # -----------------------------
@@ -43,10 +43,10 @@ cat <<EOF >/etc/postgresql/17/main/postgresql.conf
 # FILE LOCATIONS
 #------------------------------------------------------------------------------
 
-data_directory = '/var/lib/postgresql/17/main'       
-hba_file = '/etc/postgresql/17/main/pg_hba.conf'     
-ident_file = '/etc/postgresql/17/main/pg_ident.conf'   
-external_pid_file = '/var/run/postgresql/17-main.pid'                   
+data_directory = '/var/lib/postgresql/18/main'       
+hba_file = '/etc/postgresql/18/main/pg_hba.conf'     
+ident_file = '/etc/postgresql/18/main/pg_ident.conf'   
+external_pid_file = '/var/run/postgresql/18-main.pid'                   
 
 #------------------------------------------------------------------------------
 # CONNECTIONS AND AUTHENTICATION
