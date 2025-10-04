@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-read -r -p "Enter PostgreSQL version (15/16/17): " ver
+read -r -p "${TAB3}Enter PostgreSQL version (15/16/17): " ver
 [[ $ver =~ ^(15|16|17)$ ]] || { echo "Invalid version"; exit 1; }
 
 msg_info "Installing PostgreSQL ${ver}"
