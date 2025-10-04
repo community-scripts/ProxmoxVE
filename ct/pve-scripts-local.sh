@@ -6,7 +6,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Source: https://www.debian.org/
 
 APP="PVE-Scripts-Local"
-var_tags="${var_tags:-pve-scritps-local}"
+var_tags="${var_tags:-pve-scripts-local}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-4}"
