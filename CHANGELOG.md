@@ -16,6 +16,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - immich: guard /dev/dri permissions so CPU-only installs don’t fail [@mlongwell](https://github.com/mlongwell) ([#8094](https://github.com/community-scripts/ProxmoxVE/pull/8094))
 
+  - #### ✨ New Features
+
+    - PosgreSQL: Add version choice [@tremor021](https://github.com/tremor021) ([#8103](https://github.com/community-scripts/ProxmoxVE/pull/8103))
+
 ## 2025-10-03
 
 ### 🆕 New Scripts
