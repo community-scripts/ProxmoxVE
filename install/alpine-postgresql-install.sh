@@ -13,9 +13,12 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing PostgreSQL"
-$STD apk add --no-cache postgresql16 postgresql16-contrib postgresql16-openrc sudo
-msg_ok "Installed PostgreSQL"
+read -r -p "Enter PostgreSQL version (15/16/17): " ver
+[[ $ver =~ ^(15|16|17)$ ]] || { echo "Invalid version"; exit 1; }
+
+msg_info "Installing PostgreSQL ${ver}"
+$STD apk add --no-cache postgresql${ver} postgresql${ver}-contrib postgresql${ver}-openrc sudo
+msg_ok "Installed PostgreSQL ${ver}"
 
 msg_info "Enabling PostgreSQL Service"
 $STD rc-update add postgresql default
@@ -26,8 +29,8 @@ $STD rc-service postgresql start
 msg_ok "Started PostgreSQL"
 
 msg_info "Configuring PostgreSQL for External Access"
-conf_file="/etc/postgresql16/postgresql.conf"
-hba_file="/etc/postgresql16/pg_hba.conf"
+conf_file="/etc/postgresql${ver}/postgresql.conf"
+hba_file="/etc/postgresql${ver}/pg_hba.conf"
 sed -i 's/^#listen_addresses =.*/listen_addresses = '\''*'\''/' "$conf_file"
 sed -i '/^host\s\+all\s\+all\s\+127.0.0.1\/32\s\+md5/ s/.*/host all all 0.0.0.0\/0 md5/' "$hba_file"
 $STD rc-service postgresql restart
