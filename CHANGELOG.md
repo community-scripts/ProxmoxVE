@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - AdventureLog: bump to debian 13 [@MickLesk](https://github.com/MickLesk) ([#8125](https://github.com/community-scripts/ProxmoxVE/pull/8125))
     - Update cockpit to Debian 13 [@burgerga](https://github.com/burgerga) ([#8119](https://github.com/community-scripts/ProxmoxVE/pull/8119))
 
 ## 2025-10-04
