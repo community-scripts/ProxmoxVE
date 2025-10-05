@@ -1,5 +1,40 @@
 [
   {
+    "name": "BerriAI/litellm",
+    "version": "v1.77.5-stable",
+    "date": "2025-10-04T23:34:11Z"
+  },
+  {
+    "name": "Ombi-app/Ombi",
+    "version": "v4.47.1",
+    "date": "2025-01-05T21:14:23Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.12.4-rc6",
+    "date": "2025-10-04T18:46:45Z"
+  },
+  {
+    "name": "wizarrrr/wizarr",
+    "version": "v2025.10.1",
+    "date": "2025-10-04T16:59:38Z"
+  },
+  {
+    "name": "SigNoz/signoz",
+    "version": "v0.97.0-rc.2",
+    "date": "2025-10-04T16:21:45Z"
+  },
+  {
+    "name": "gtsteffaniak/filebrowser",
+    "version": "v0.8.8-beta",
+    "date": "2025-10-04T15:56:29Z"
+  },
+  {
+    "name": "silverbulletmd/silverbullet",
+    "version": "2.1.7",
+    "date": "2025-10-04T13:41:43Z"
+  },
+  {
     "name": "msgbyte/tianji",
     "version": "v1.27.5",
     "date": "2025-10-04T11:35:50Z"
@@ -60,11 +95,6 @@
     "date": "2025-10-03T19:14:46Z"
   },
   {
-    "name": "SigNoz/signoz",
-    "version": "v0.97.0-rc.1",
-    "date": "2025-10-03T19:04:42Z"
-  },
-  {
     "name": "home-assistant/core",
     "version": "2025.10.1",
     "date": "2025-10-03T18:10:59Z"
@@ -83,11 +113,6 @@
     "name": "bunkerity/bunkerweb",
     "version": "v1.6.5",
     "date": "2025-10-03T16:43:34Z"
-  },
-  {
-    "name": "ollama/ollama",
-    "version": "v0.12.4-rc3",
-    "date": "2025-10-03T03:31:18Z"
   },
   {
     "name": "immich-app/immich",
@@ -143,11 +168,6 @@
     "name": "firefly-iii/firefly-iii",
     "version": "v6.4.0",
     "date": "2025-09-13T16:38:21Z"
-  },
-  {
-    "name": "wizarrrr/wizarr",
-    "version": "v2025.10.0",
-    "date": "2025-10-02T21:16:09Z"
   },
   {
     "name": "mealie-recipes/mealie",
@@ -208,11 +228,6 @@
     "name": "ipfs/kubo",
     "version": "v0.38.0",
     "date": "2025-10-02T01:46:06Z"
-  },
-  {
-    "name": "BerriAI/litellm",
-    "version": "v1.77.5.rc.4",
-    "date": "2025-10-01T22:52:14Z"
   },
   {
     "name": "NodeBB/NodeBB",
@@ -323,11 +338,6 @@
     "name": "emqx/emqx",
     "version": "e6.0.0",
     "date": "2025-09-30T12:04:20Z"
-  },
-  {
-    "name": "silverbulletmd/silverbullet",
-    "version": "2.1.6",
-    "date": "2025-09-30T09:09:13Z"
   },
   {
     "name": "chrisvel/tududi",
@@ -495,11 +505,6 @@
     "date": "2025-09-26T22:34:32Z"
   },
   {
-    "name": "Ombi-app/Ombi",
-    "version": "v4.47.1",
-    "date": "2025-01-05T21:14:23Z"
-  },
-  {
     "name": "bastienwirtz/homer",
     "version": "v25.09.1",
     "date": "2025-09-26T19:22:16Z"
@@ -608,11 +613,6 @@
     "name": "postgres/postgres",
     "version": "REL_18_0",
     "date": "2025-09-22T20:11:33Z"
-  },
-  {
-    "name": "gtsteffaniak/filebrowser",
-    "version": "v0.8.7-beta",
-    "date": "2025-09-22T18:24:54Z"
   },
   {
     "name": "gethomepage/homepage",
