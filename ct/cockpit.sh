@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -36,15 +36,15 @@ function update_script() {
 
   if [ "$UPD" == "1" ]; then
     msg_info "Updating ${APP} LXC"
-    $STD apt-get update
-    $STD apt-get -y upgrade
+    $STD apt update
+    $STD apt -y upgrade
     msg_ok "Updated ${APP} LXC"
     exit
   fi
 
   if [ "$UPD" == "2" ]; then
     msg_info "Installing dependencies (patience)"
-    $STD apt-get install -y \
+    $STD apt install -y \
       attr \
       nfs-kernel-server \
       samba \
@@ -56,7 +56,7 @@ function update_script() {
     URL=$(curl -fsSL https://api.github.com/repos/45Drives/cockpit-file-sharing/releases/latest | grep download | grep focal_all.deb | cut -d\" -f4)
     FILE=$(basename "$URL")
     curl -fsSL "$URL" -o "$FILE"
-    $STD dpkg -i "$FILE" || $STD apt-get install -f -y
+    $STD dpkg -i "$FILE" || $STD apt install -f -y
     rm -f "$FILE"
     msg_ok "Installed Cockpit file sharing"
     exit
@@ -64,7 +64,7 @@ function update_script() {
 
   if [ "$UPD" == "3" ]; then
     msg_info "Installing dependencies (patience)"
-    $STD apt-get install -y \
+    $STD apt install -y \
       psmisc \
       samba \
       samba-common-bin
@@ -73,7 +73,7 @@ function update_script() {
     URL=$(curl -fsSL https://api.github.com/repos/45Drives/cockpit-identities/releases/latest | grep download | grep focal_all.deb | cut -d\" -f4)
     FILE=$(basename "$URL")
     curl -fsSL "$URL" -o "$FILE"
-    $STD dpkg -i "$FILE" || $STD apt-get install -f -y
+    $STD dpkg -i "$FILE" || $STD apt install -f -y
     rm -f "$FILE"
     msg_ok "Installed Cockpit identities"
     exit
@@ -81,7 +81,7 @@ function update_script() {
 
   if [ "$UPD" == "4" ]; then
     msg_info "Installing dependencies"
-    $STD apt-get install -y \
+    $STD apt install -y \
       rsync \
       zip
     msg_ok "Installed dependencies"
@@ -89,7 +89,7 @@ function update_script() {
     URL=$(curl -fsSL https://api.github.com/repos/45Drives/cockpit-navigator/releases/latest | grep download | grep focal_all.deb | cut -d\" -f4)
     FILE=$(basename "$URL")
     curl -fsSL "$URL" -o "$FILE"
-    $STD dpkg -i "$FILE" || $STD apt-get install -f -y
+    $STD dpkg -i "$FILE" || $STD apt install -f -y
     rm -f "$FILE"
     msg_ok "Installed Cockpit navigator"
     exit

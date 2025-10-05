@@ -17,8 +17,8 @@ update_os
 msg_info "Installing Cockpit"
 source /etc/os-release
 echo "deb http://deb.debian.org/debian ${VERSION_CODENAME}-backports main" >/etc/apt/sources.list.d/backports.list
-$STD apt-get update
-$STD apt-get install -t ${VERSION_CODENAME}-backports cockpit --no-install-recommends -y
+$STD apt update
+$STD apt install -t ${VERSION_CODENAME}-backports cockpit --no-install-recommends -y
 sed -i "s/root//g" /etc/cockpit/disallowed-users
 msg_ok "Installed Cockpit"
 
@@ -26,6 +26,6 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
 msg_ok "Cleaned"
