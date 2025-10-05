@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   make \
   g++
 msg_ok "Installed Dependencies"
@@ -22,8 +22,7 @@ msg_ok "Installed Dependencies"
 msg_info "Installing Actual Budget"
 cd /opt
 RELEASE=$(curl -fsSL https://api.github.com/repos/actualbudget/actual/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-NODE_VERSION="22"
-setup_nodejs
+NODE_VERSION="22" setup_nodejs
 mkdir -p /opt/actualbudget-data/{server-files,upload,migrate,user-files,migrations,config}
 chown -R root:root /opt/actualbudget-data
 chmod -R 755 /opt/actualbudget-data
@@ -50,7 +49,7 @@ cat <<EOF >/opt/actualbudget-data/config.json
 EOF
 
 mkdir -p /opt/actualbudget
-cd /opt/actualbudget
+cd /opt/actualbudget || exit
 $STD npm install --location=global @actual-app/sync-server
 $STD openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout selfhost.key -out selfhost.crt <<EOF
 US
@@ -92,6 +91,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"
