@@ -1,8 +1,63 @@
 [
   {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.4.0",
+    "date": "2025-09-13T16:38:21Z"
+  },
+  {
+    "name": "Radarr/Radarr",
+    "version": "v5.27.5.10198",
+    "date": "2025-09-03T12:08:43Z"
+  },
+  {
+    "name": "Lidarr/Lidarr",
+    "version": "v2.13.3.4711",
+    "date": "2025-08-28T20:06:24Z"
+  },
+  {
+    "name": "seriousm4x/UpSnap",
+    "version": "5.2.2",
+    "date": "2025-10-05T09:12:17Z"
+  },
+  {
+    "name": "evcc-io/evcc",
+    "version": "0.209.0",
+    "date": "2025-10-05T07:45:18Z"
+  },
+  {
+    "name": "pommee/goaway",
+    "version": "v0.62.11",
+    "date": "2025-10-05T07:31:57Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.72",
+    "date": "2025-10-05T05:52:56Z"
+  },
+  {
+    "name": "YunoHost/yunohost",
+    "version": "debian/12.1.27",
+    "date": "2025-10-05T02:16:42Z"
+  },
+  {
     "name": "BerriAI/litellm",
-    "version": "v1.77.5-stable",
-    "date": "2025-10-04T23:34:11Z"
+    "version": "v1.77.7-nightly",
+    "date": "2025-10-05T01:43:25Z"
+  },
+  {
+    "name": "webmin/webmin",
+    "version": "2.520",
+    "date": "2025-10-05T00:51:34Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-10-05T00:27:07Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
   },
   {
     "name": "Ombi-app/Ombi",
@@ -11,8 +66,13 @@
   },
   {
     "name": "ollama/ollama",
-    "version": "v0.12.4-rc6",
-    "date": "2025-10-04T18:46:45Z"
+    "version": "v0.12.4-rc5",
+    "date": "2025-10-04T16:18:42Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "v4.4.0",
+    "date": "2025-09-02T19:26:18Z"
   },
   {
     "name": "wizarrrr/wizarr",
@@ -45,34 +105,14 @@
     "date": "2025-10-04T08:06:12Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.37",
-    "date": "2025-10-04T05:44:18Z"
-  },
-  {
-    "name": "pommee/goaway",
-    "version": "v0.62.10",
-    "date": "2025-10-04T04:41:19Z"
-  },
-  {
     "name": "ErsatzTV/ErsatzTV",
     "version": "v25.7.0",
     "date": "2025-10-04T00:36:45Z"
   },
   {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-10-04T00:27:10Z"
-  },
-  {
     "name": "hyperion-project/hyperion.ng",
     "version": "2.1.1",
     "date": "2025-06-14T17:45:06Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
   },
   {
     "name": "rcourtman/Pulse",
@@ -120,11 +160,6 @@
     "date": "2025-10-03T16:32:01Z"
   },
   {
-    "name": "Lidarr/Lidarr",
-    "version": "v2.13.3.4711",
-    "date": "2025-08-28T20:06:24Z"
-  },
-  {
     "name": "duplicati/duplicati",
     "version": "v2.1.1.104-2.1.1.104_canary_2025-10-03",
     "date": "2025-10-03T13:14:48Z"
@@ -165,11 +200,6 @@
     "date": "2025-10-03T06:22:38Z"
   },
   {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.4.0",
-    "date": "2025-09-13T16:38:21Z"
-  },
-  {
     "name": "mealie-recipes/mealie",
     "version": "v3.3.1",
     "date": "2025-10-02T17:10:34Z"
@@ -178,6 +208,11 @@
     "name": "jhuckaby/Cronicle",
     "version": "v0.9.95",
     "date": "2025-10-02T16:07:18Z"
+  },
+  {
+    "name": "meilisearch/meilisearch",
+    "version": "prototype-shorten-snapshot-creation-0",
+    "date": "2025-10-02T15:16:05Z"
   },
   {
     "name": "n8n-io/n8n",
@@ -198,11 +233,6 @@
     "name": "kyantech/Palmr",
     "version": "v3.2.3-beta",
     "date": "2025-10-02T13:48:14Z"
-  },
-  {
-    "name": "meilisearch/meilisearch",
-    "version": "prototype-docker-alpine-3-22-v2",
-    "date": "2025-10-02T13:11:08Z"
   },
   {
     "name": "apache/tomcat",
@@ -238,11 +268,6 @@
     "name": "Koenkk/zigbee2mqtt",
     "version": "2.6.2",
     "date": "2025-10-01T17:51:09Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "v4.4.0",
-    "date": "2025-09-02T19:26:18Z"
   },
   {
     "name": "Graylog2/graylog2-server",
@@ -425,11 +450,6 @@
     "date": "2025-09-28T20:49:34Z"
   },
   {
-    "name": "Radarr/Radarr",
-    "version": "v5.27.5.10198",
-    "date": "2025-09-03T12:08:43Z"
-  },
-  {
     "name": "lazy-media/Reactive-Resume",
     "version": "v1.2.6",
     "date": "2025-09-28T18:09:21Z"
@@ -438,11 +458,6 @@
     "name": "jellyfin/jellyfin",
     "version": "v10.10.7",
     "date": "2025-04-05T19:14:59Z"
-  },
-  {
-    "name": "YunoHost/yunohost",
-    "version": "debian/12.1.26",
-    "date": "2025-09-28T14:50:47Z"
   },
   {
     "name": "karlomikus/bar-assistant",
@@ -478,11 +493,6 @@
     "name": "FreshRSS/FreshRSS",
     "version": "1.27.1",
     "date": "2025-09-27T13:07:26Z"
-  },
-  {
-    "name": "evcc-io/evcc",
-    "version": "0.208.1",
-    "date": "2025-09-27T12:57:22Z"
   },
   {
     "name": "javedh-dev/tracktor",
@@ -735,11 +745,6 @@
     "date": "2025-09-17T08:50:39Z"
   },
   {
-    "name": "webmin/webmin",
-    "version": "2.510",
-    "date": "2025-09-16T20:28:37Z"
-  },
-  {
     "name": "tobychui/zoraxy",
     "version": "v3.2.5r2",
     "date": "2025-07-21T12:52:26Z"
@@ -758,11 +763,6 @@
     "name": "wavelog/wavelog",
     "version": "2.1.1",
     "date": "2025-09-16T06:21:32Z"
-  },
-  {
-    "name": "seriousm4x/UpSnap",
-    "version": "5.2.1",
-    "date": "2025-09-15T21:26:25Z"
   },
   {
     "name": "Paymenter/Paymenter",
