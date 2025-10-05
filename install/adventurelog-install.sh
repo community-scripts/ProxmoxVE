@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   gdal-bin \
   libgdal-dev \
   git \
@@ -22,9 +22,9 @@ $STD apt-get install -y \
   libmemcached-tools
 msg_ok "Installed Dependencies"
 
-PYTHON_VERSION="3.12" setup_uv
+PYTHON_VERSION="3.13" setup_uv
 NODE_VERSION="22" NODE_MODULE="pnpm@latest" setup_nodejs
-PG_VERSION="16" PG_MODULES="postgis" setup_postgresql
+PG_VERSION="17" PG_MODULES="postgis" setup_postgresql
 
 msg_info "Set up PostgreSQL Database"
 DB_NAME="adventurelog_db"
@@ -74,7 +74,7 @@ DISABLE_REGISTRATION=False
 # EMAIL_HOST_PASSWORD='password'
 # DEFAULT_FROM_EMAIL='user@example.com'
 EOF
-cd /opt/adventurelog/backend/server
+cd /opt/adventurelog/backend/server || exit
 mkdir -p /opt/adventurelog/backend/server/media
 $STD uv venv /opt/adventurelog/backend/server/.venv
 $STD /opt/adventurelog/backend/server/.venv/bin/python -m ensurepip --upgrade
@@ -88,13 +88,13 @@ PUBLIC_SERVER_URL=http://$LOCAL_IP:8000
 BODY_SIZE_LIMIT=Infinity
 ORIGIN='http://$LOCAL_IP:3000'
 EOF
-cd /opt/adventurelog/frontend
+cd /opt/adventurelog/frontend || exit
 $STD pnpm i
 $STD pnpm build
 msg_ok "Installed AdventureLog"
 
 msg_info "Setting up Django Admin"
-cd /opt/adventurelog/backend/server
+cd /opt/adventurelog/backend/server || exit
 $STD .venv/bin/python -m manage shell <<EOF
 from django.contrib.auth import get_user_model
 UserModel = get_user_model()
@@ -148,6 +148,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

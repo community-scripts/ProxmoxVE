@@ -11,7 +11,7 @@ var_disk="${var_disk:-7}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -28,8 +28,8 @@ function update_script() {
     exit
   fi
   if ! command -v memcached >/dev/null 2>&1; then
-    $STD apt-get update
-    $STD apt-get install -y memcached libmemcached-tools
+    $STD apt update
+    $STD apt install -y memcached libmemcached-tools
   fi
   if check_for_gh_release "adventurelog" "seanmorley15/adventurelog"; then
     msg_info "Stopping Services"
@@ -43,12 +43,12 @@ function update_script() {
     msg_ok "Backup done"
 
     fetch_and_deploy_gh_release "adventurelog" "seanmorley15/adventurelog"
-    PYTHON_VERSION="3.12" setup_uv
+    PYTHON_VERSION="3.13" setup_uv
 
     msg_info "Updating ${APP}"
     cp /opt/adventurelog-backup/backend/server/.env /opt/adventurelog/backend/server/.env
     cp -r /opt/adventurelog-backup/backend/server/media /opt/adventurelog/backend/server/media
-    cd /opt/adventurelog/backend/server
+    cd /opt/adventurelog/backend/server || exit
     if [[ ! -x .venv/bin/python ]]; then
       $STD uv venv .venv
       $STD .venv/bin/python -m ensurepip --upgrade
@@ -59,7 +59,7 @@ function update_script() {
     $STD .venv/bin/python -m manage migrate
 
     cp /opt/adventurelog-backup/frontend/.env /opt/adventurelog/frontend/.env
-    cd /opt/adventurelog/frontend
+    cd /opt/adventurelog/frontend || exit
     $STD pnpm i
     $STD pnpm build
     msg_ok "Updated ${APP}"
