@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-10-05
 
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - Update cockpit to Debian 13 [@burgerga](https://github.com/burgerga) ([#8119](https://github.com/community-scripts/ProxmoxVE/pull/8119))
+
 ## 2025-10-04
 
 ### 🚀 Updated Scripts
