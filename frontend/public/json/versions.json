@@ -1,5 +1,70 @@
 [
   {
+    "name": "Graylog2/graylog2-server",
+    "version": "7.0.0-beta.3",
+    "date": "2025-10-06T11:25:12Z"
+  },
+  {
+    "name": "inventree/InvenTree",
+    "version": "1.0.4",
+    "date": "2025-10-06T11:12:04Z"
+  },
+  {
+    "name": "wizarrrr/wizarr",
+    "version": "v2025.10.2",
+    "date": "2025-10-06T11:10:37Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "mattermost-redux@10.12.0",
+    "date": "2025-09-18T20:15:19Z"
+  },
+  {
+    "name": "jordan-dalby/ByteStash",
+    "version": "v1.5.9",
+    "date": "2025-10-06T08:34:01Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.82",
+    "date": "2025-10-06T07:56:13Z"
+  },
+  {
+    "name": "dgtlmoon/changedetection.io",
+    "version": "0.50.15",
+    "date": "2025-10-06T07:15:01Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.4.0",
+    "date": "2025-09-13T16:38:21Z"
+  },
+  {
+    "name": "moghtech/komodo",
+    "version": "v1.19.5",
+    "date": "2025-09-27T20:59:46Z"
+  },
+  {
+    "name": "henrygd/beszel",
+    "version": "v0.13.1",
+    "date": "2025-10-06T01:27:46Z"
+  },
+  {
+    "name": "hyperion-project/hyperion.ng",
+    "version": "2.1.1",
+    "date": "2025-06-14T17:45:06Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-10-06T00:27:06Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
     "name": "9001/copyparty",
     "version": "v1.19.16",
     "date": "2025-10-05T23:28:59Z"
@@ -13,11 +78,6 @@
     "name": "outline/outline",
     "version": "v1.0.0-0",
     "date": "2025-10-05T20:30:31Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
   },
   {
     "name": "plankanban/planka",
@@ -41,8 +101,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-10-04T18:14:42Z"
+    "version": "v4.4.0",
+    "date": "2025-09-02T19:26:18Z"
   },
   {
     "name": "Prowlarr/Prowlarr",
@@ -51,18 +111,13 @@
   },
   {
     "name": "chrisvel/tududi",
-    "version": "v0.83-rc9",
-    "date": "2025-10-05T13:20:23Z"
+    "version": "v0.82-rc5",
+    "date": "2025-09-23T07:31:12Z"
   },
   {
     "name": "TandoorRecipes/recipes",
     "version": "2.3.0",
     "date": "2025-10-05T11:13:58Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.4.0",
-    "date": "2025-09-13T16:38:21Z"
   },
   {
     "name": "Radarr/Radarr",
@@ -90,11 +145,6 @@
     "date": "2025-10-05T07:31:57Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.72",
-    "date": "2025-10-05T05:52:56Z"
-  },
-  {
     "name": "YunoHost/yunohost",
     "version": "debian/12.1.27",
     "date": "2025-10-05T02:16:42Z"
@@ -110,11 +160,6 @@
     "date": "2025-10-05T00:51:34Z"
   },
   {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-10-05T00:27:07Z"
-  },
-  {
     "name": "Ombi-app/Ombi",
     "version": "v4.47.1",
     "date": "2025-01-05T21:14:23Z"
@@ -123,11 +168,6 @@
     "name": "ollama/ollama",
     "version": "v0.12.4-rc5",
     "date": "2025-10-04T16:18:42Z"
-  },
-  {
-    "name": "wizarrrr/wizarr",
-    "version": "v2025.10.1",
-    "date": "2025-10-04T16:59:38Z"
   },
   {
     "name": "SigNoz/signoz",
@@ -155,11 +195,6 @@
     "date": "2025-10-04T00:36:45Z"
   },
   {
-    "name": "hyperion-project/hyperion.ng",
-    "version": "2.1.1",
-    "date": "2025-06-14T17:45:06Z"
-  },
-  {
     "name": "rcourtman/Pulse",
     "version": "v4.21.0",
     "date": "2025-10-03T22:38:32Z"
@@ -180,14 +215,14 @@
     "date": "2025-10-03T19:14:46Z"
   },
   {
+    "name": "wazuh/wazuh",
+    "version": "coverity-w41-4.14.0",
+    "date": "2025-10-03T18:56:57Z"
+  },
+  {
     "name": "home-assistant/core",
     "version": "2025.10.1",
     "date": "2025-10-03T18:10:59Z"
-  },
-  {
-    "name": "henrygd/beszel",
-    "version": "v0.13.0",
-    "date": "2025-10-03T18:04:07Z"
   },
   {
     "name": "fuma-nama/fumadocs",
@@ -213,11 +248,6 @@
     "name": "docker/compose",
     "version": "v2.40.0",
     "date": "2025-10-03T12:56:38Z"
-  },
-  {
-    "name": "mattermost/mattermost",
-    "version": "mattermost-redux@10.12.0",
-    "date": "2025-09-18T20:15:19Z"
   },
   {
     "name": "nzbgetcom/nzbget",
@@ -310,11 +340,6 @@
     "date": "2025-10-01T17:51:09Z"
   },
   {
-    "name": "Graylog2/graylog2-server",
-    "version": "6.1.16",
-    "date": "2025-10-01T14:58:20Z"
-  },
-  {
     "name": "glpi-project/glpi",
     "version": "11.0.0",
     "date": "2025-10-01T12:00:01Z"
@@ -378,11 +403,6 @@
     "name": "MagicMirrorOrg/MagicMirror",
     "version": "v2.33.0",
     "date": "2025-09-30T16:18:10Z"
-  },
-  {
-    "name": "wazuh/wazuh",
-    "version": "coverity-w40-4.14.0",
-    "date": "2025-09-30T15:35:54Z"
   },
   {
     "name": "gristlabs/grist-core",
@@ -470,11 +490,6 @@
     "date": "2025-09-29T06:13:12Z"
   },
   {
-    "name": "inventree/InvenTree",
-    "version": "1.0.2",
-    "date": "2025-09-29T04:02:44Z"
-  },
-  {
     "name": "autobrr/autobrr",
     "version": "v1.67.0",
     "date": "2025-09-28T20:49:34Z"
@@ -505,11 +520,6 @@
     "date": "2025-09-20T12:12:33Z"
   },
   {
-    "name": "moghtech/komodo",
-    "version": "v1.19.5",
-    "date": "2025-09-27T20:59:46Z"
-  },
-  {
     "name": "raydak-labs/configarr",
     "version": "v1.16.0",
     "date": "2025-09-27T16:19:27Z"
@@ -526,8 +536,8 @@
   },
   {
     "name": "javedh-dev/tracktor",
-    "version": "0.3.18",
-    "date": "2025-09-27T10:32:09Z"
+    "version": "0.3.17",
+    "date": "2025-09-27T07:00:36Z"
   },
   {
     "name": "Dolibarr/dolibarr",
@@ -733,11 +743,6 @@
     "name": "heiher/hev-socks5-server",
     "version": "2.10.0",
     "date": "2025-09-17T14:47:00Z"
-  },
-  {
-    "name": "dgtlmoon/changedetection.io",
-    "version": "0.50.14",
-    "date": "2025-09-17T11:44:22Z"
   },
   {
     "name": "icereed/paperless-gpt",
@@ -1253,11 +1258,6 @@
     "name": "glanceapp/glance",
     "version": "v0.8.4",
     "date": "2025-06-10T07:57:14Z"
-  },
-  {
-    "name": "jordan-dalby/ByteStash",
-    "version": "v1.5.8",
-    "date": "2025-06-07T11:39:10Z"
   },
   {
     "name": "juanfont/headscale",
