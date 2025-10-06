@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -32,25 +32,20 @@ function update_script() {
     "2" "Install Themes" OFF \
     3>&1 1>&2 2>&3)
   if [ "$UPD" == "1" ]; then
-    if [[ "$(node -v | cut -d 'v' -f 2)" == "18."* ]]; then
-      if ! command -v npm >/dev/null 2>&1; then
-        msg_info "Installing NPM"
-        $STD apt-get install -y npm
-        msg_ok "Installed NPM"
-      fi
-    fi
-    msg_info "Stopping ${APP}"
+    NODE_VERSION="22" setup_nodejs
+
+    msg_info "Stopping Service"
     systemctl stop nodered
-    msg_ok "Stopped ${APP}"
+    msg_ok "Stopped Service"
 
-    msg_info "Updating ${APP}"
+    msg_info "Updating Node-Red"
     $STD npm install -g --unsafe-perm node-red
-    msg_ok "Updated ${APP}"
+    msg_ok "Updated Node-Red"
 
-    msg_info "Starting ${APP}"
+    msg_info "Starting Service"
     systemctl start nodered
-    msg_ok "Started ${APP}"
-    msg_ok "Update Successful"
+    msg_ok "Started Service"
+    msg_ok "Update Successfully!"
     exit
   fi
   if [ "$UPD" == "2" ]; then
