@@ -1,5 +1,65 @@
 [
   {
+    "name": "9001/copyparty",
+    "version": "v1.19.16",
+    "date": "2025-10-05T23:28:59Z"
+  },
+  {
+    "name": "sabnzbd/sabnzbd",
+    "version": "4.5.3",
+    "date": "2025-08-25T13:59:56Z"
+  },
+  {
+    "name": "outline/outline",
+    "version": "v1.0.0-0",
+    "date": "2025-10-05T20:30:31Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
+    "name": "plankanban/planka",
+    "version": "planka-1.0.5",
+    "date": "2025-10-05T18:54:25Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.27.6",
+    "date": "2025-10-05T17:27:46Z"
+  },
+  {
+    "name": "pocket-id/pocket-id",
+    "version": "v1.13.0",
+    "date": "2025-10-05T15:41:31Z"
+  },
+  {
+    "name": "BookStackApp/BookStack",
+    "version": "v25.07.3",
+    "date": "2025-10-05T14:47:20Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "nightly",
+    "date": "2025-10-04T18:14:42Z"
+  },
+  {
+    "name": "Prowlarr/Prowlarr",
+    "version": "v2.0.5.5160",
+    "date": "2025-08-23T21:23:11Z"
+  },
+  {
+    "name": "chrisvel/tududi",
+    "version": "v0.83-rc9",
+    "date": "2025-10-05T13:20:23Z"
+  },
+  {
+    "name": "TandoorRecipes/recipes",
+    "version": "2.3.0",
+    "date": "2025-10-05T11:13:58Z"
+  },
+  {
     "name": "firefly-iii/firefly-iii",
     "version": "v6.4.0",
     "date": "2025-09-13T16:38:21Z"
@@ -55,11 +115,6 @@
     "date": "2025-10-05T00:27:07Z"
   },
   {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
-  },
-  {
     "name": "Ombi-app/Ombi",
     "version": "v4.47.1",
     "date": "2025-01-05T21:14:23Z"
@@ -68,11 +123,6 @@
     "name": "ollama/ollama",
     "version": "v0.12.4-rc5",
     "date": "2025-10-04T16:18:42Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "v4.4.0",
-    "date": "2025-09-02T19:26:18Z"
   },
   {
     "name": "wizarrrr/wizarr",
@@ -93,11 +143,6 @@
     "name": "silverbulletmd/silverbullet",
     "version": "2.1.7",
     "date": "2025-10-04T13:41:43Z"
-  },
-  {
-    "name": "msgbyte/tianji",
-    "version": "v1.27.5",
-    "date": "2025-10-04T11:35:50Z"
   },
   {
     "name": "globaleaks/globaleaks-whistleblowing-software",
@@ -173,11 +218,6 @@
     "name": "mattermost/mattermost",
     "version": "mattermost-redux@10.12.0",
     "date": "2025-09-18T20:15:19Z"
-  },
-  {
-    "name": "pocket-id/pocket-id",
-    "version": "v1.12.0",
-    "date": "2025-10-03T10:11:17Z"
   },
   {
     "name": "nzbgetcom/nzbget",
@@ -365,11 +405,6 @@
     "date": "2025-09-30T12:04:20Z"
   },
   {
-    "name": "chrisvel/tududi",
-    "version": "v0.82-rc5",
-    "date": "2025-09-23T07:31:12Z"
-  },
-  {
     "name": "zitadel/zitadel",
     "version": "v4.3.0",
     "date": "2025-09-30T06:54:15Z"
@@ -383,11 +418,6 @@
     "name": "goauthentik/authentik",
     "version": "version/2025.8.4",
     "date": "2025-09-30T00:03:11Z"
-  },
-  {
-    "name": "9001/copyparty",
-    "version": "v1.19.15",
-    "date": "2025-09-29T23:42:38Z"
   },
   {
     "name": "verdaccio/verdaccio",
@@ -535,11 +565,6 @@
     "date": "2025-09-01T10:10:34Z"
   },
   {
-    "name": "TandoorRecipes/recipes",
-    "version": "2.2.7",
-    "date": "2025-09-25T19:04:38Z"
-  },
-  {
     "name": "Threadfin/Threadfin",
     "version": "1.2.39",
     "date": "2025-09-25T15:57:02Z"
@@ -635,11 +660,6 @@
     "date": "2025-09-22T13:32:14Z"
   },
   {
-    "name": "sabnzbd/sabnzbd",
-    "version": "4.5.3",
-    "date": "2025-08-25T13:59:56Z"
-  },
-  {
     "name": "itsmng/itsm-ng",
     "version": "v2.1.0",
     "date": "2025-09-22T09:23:37Z"
@@ -653,11 +673,6 @@
     "name": "Athou/commafeed",
     "version": "5.11.1",
     "date": "2025-09-22T02:21:27Z"
-  },
-  {
-    "name": "Prowlarr/Prowlarr",
-    "version": "v2.0.5.5160",
-    "date": "2025-08-23T21:23:11Z"
   },
   {
     "name": "openhab/openhab-core",
@@ -703,11 +718,6 @@
     "name": "NLnetLabs/unbound",
     "version": "release-1.24.0",
     "date": "2025-09-18T08:36:55Z"
-  },
-  {
-    "name": "outline/outline",
-    "version": "v0.87.4",
-    "date": "2025-09-18T00:47:08Z"
   },
   {
     "name": "TasmoAdmin/TasmoAdmin",
@@ -905,11 +915,6 @@
     "date": "2025-09-04T21:30:14Z"
   },
   {
-    "name": "plankanban/planka",
-    "version": "planka-1.0.4",
-    "date": "2025-09-04T13:49:40Z"
-  },
-  {
     "name": "blakeblackshear/frigate",
     "version": "v0.14.1",
     "date": "2024-08-29T22:32:51Z"
@@ -953,11 +958,6 @@
     "name": "benjaminjonard/koillection",
     "version": "1.7.0",
     "date": "2025-08-28T18:10:59Z"
-  },
-  {
-    "name": "BookStackApp/BookStack",
-    "version": "v25.07.2",
-    "date": "2025-08-28T16:46:05Z"
   },
   {
     "name": "garethgeorge/backrest",
