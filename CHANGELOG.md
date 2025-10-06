@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - Node-Red: bump to Debian 13 [@MickLesk](https://github.com/MickLesk) ([#8141](https://github.com/community-scripts/ProxmoxVE/pull/8141))
     - NocoDB: bump to Debian 13 [@MickLesk](https://github.com/MickLesk) ([#8140](https://github.com/community-scripts/ProxmoxVE/pull/8140))
     - Navidrome: bump to Debian 13 [@MickLesk](https://github.com/MickLesk) ([#8139](https://github.com/community-scripts/ProxmoxVE/pull/8139))
     - pve-scripts-local: add update function [@MickLesk](https://github.com/MickLesk) ([#8138](https://github.com/community-scripts/ProxmoxVE/pull/8138))
