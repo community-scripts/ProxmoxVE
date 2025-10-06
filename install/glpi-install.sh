@@ -47,7 +47,7 @@ cd /opt
 curl -fsSL "https://github.com/glpi-project/glpi/releases/download/10.0.20/glpi-10.0.20.tgz" -o "glpi-10.0.20.tgz"
 $STD tar -xzvf glpi-10.0.20.tgz
 cd /opt/glpi
-$STD php bin/console db:install --db-name=$DB_NAME --db-user=$DB_USER --db-password=$DB_PASS --no-interaction --allow-superuser
+$STD php bin/console db:install --db-name=$DB_NAME --db-user=$DB_USER --db-password=$DB_PASS --no-interaction
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Installed GLPi"
 
