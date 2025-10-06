@@ -25,6 +25,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Navidrome: bump to Debian 13 [@MickLesk](https://github.com/MickLesk) ([#8139](https://github.com/community-scripts/ProxmoxVE/pull/8139))
     - pve-scripts-local: add update function [@MickLesk](https://github.com/MickLesk) ([#8138](https://github.com/community-scripts/ProxmoxVE/pull/8138))
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Update config_path for Zigbee2MQTT configuration [@MickLesk](https://github.com/MickLesk) ([#8153](https://github.com/community-scripts/ProxmoxVE/pull/8153))
+
 ## 2025-10-05
 
 ### 🚀 Updated Scripts
