@@ -14,6 +14,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - GLPI: Revert fix for v11 [@tremor021](https://github.com/tremor021) ([#8148](https://github.com/community-scripts/ProxmoxVE/pull/8148))
+
   - #### ✨ New Features
 
     - Node-Red: bump to Debian 13 [@MickLesk](https://github.com/MickLesk) ([#8141](https://github.com/community-scripts/ProxmoxVE/pull/8141))
