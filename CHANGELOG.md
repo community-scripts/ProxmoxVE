@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-10-06
 
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - pve-scripts-local: add update function [@MickLesk](https://github.com/MickLesk) ([#8138](https://github.com/community-scripts/ProxmoxVE/pull/8138))
+
 ## 2025-10-05
 
 ### 🚀 Updated Scripts
