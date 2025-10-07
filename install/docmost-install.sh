@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   redis \
   jq \
   make
@@ -48,6 +48,8 @@ mkdir data
 sed -i -e "s|APP_SECRET=.*|APP_SECRET=$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | cut -c1-32)|" \
   -e "s|DATABASE_URL=.*|DATABASE_URL=postgres://$DB_USER:$DB_PASS@localhost:5432/$DB_NAME|" \
   -e "s|FILE_UPLOAD_SIZE_LIMIT=.*|FILE_UPLOAD_SIZE_LIMIT=50mb|" \
+  -e "s|DRAWIO_URL=.*|DRAWIO_URL=https://embed.diagrams.net|" \
+  -e "s|DISABLE_TELEMETRY=.*|DISABLE_TELEMETRY=true|" \
   /opt/docmost/.env
 export NODE_OPTIONS="--max-old-space-size=2048"
 $STD pnpm install
@@ -76,6 +78,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"
