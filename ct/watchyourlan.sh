@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-512}"
 var_disk="${var_disk:-2}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -30,7 +30,7 @@ function update_script() {
 
   if check_for_gh_release "watchyourlan" "aceberg/WatchYourLAN"; then
     msg_info "Stopping service"
-    systemctl stop watchyourlan.service
+    systemctl stop watchyourlan
     msg_ok "Service stopped"
 
     cp -R /data/config.yaml ~/config.yaml
@@ -45,7 +45,7 @@ function update_script() {
     msg_info "Starting service"
     systemctl enable -q --now watchyourlan
     msg_ok "Service started"
-    msg_ok "Updated Successfully"
+    msg_ok "Updated Successfully!"
   fi
   exit
 }

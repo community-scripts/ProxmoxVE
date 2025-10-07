@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-4}"
 var_ram="${var_ram:-6144}"
 var_disk="${var_disk:-20}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -42,14 +42,14 @@ function update_script() {
     3>&1 1>&2 2>&3)
 
   if [ "$UPD" == "1" ]; then
-    msg_info "Stopping Vaultwarden"
-    systemctl stop vaultwarden.service
-    msg_ok "Stopped Vaultwarden"
+    msg_info "Stopping Service"
+    systemctl stop vaultwarden
+    msg_ok "Stopped Service"
 
     msg_info "Updating VaultWarden to $VAULT (Patience)"
     cd ~ && rm -rf vaultwarden
     $STD git clone https://github.com/dani-garcia/vaultwarden
-    cd vaultwarden
+    cd vaultwarden || exit
     $STD cargo build --features "sqlite,mysql,postgresql" --release
     DIR=/usr/bin/vaultwarden
     if [ -d "$DIR" ]; then
@@ -63,17 +63,17 @@ function update_script() {
     cd ~ && rm -rf vaultwarden
     msg_ok "Cleaned"
 
-    msg_info "Starting Vaultwarden"
-    systemctl start vaultwarden.service
-    msg_ok "Started Vaultwarden"
+    msg_info "Starting Service"
+    systemctl start vaultwarden
+    msg_ok "Started Service"
 
     msg_ok "$VAULT Update Successful"
     exit
   fi
   if [ "$UPD" == "2" ]; then
-    msg_info "Stopping Vaultwarden"
-    systemctl stop vaultwarden.service
-    msg_ok "Stopped Vaultwarden"
+    msg_info "Stopping Service"
+    systemctl stop vaultwarden
+    msg_ok "Stopped Service"
 
     msg_info "Updating Web-Vault to $WVRELEASE"
     $STD curl -fsSLO https://github.com/dani-garcia/bw_web_builds/releases/download/"$WVRELEASE"/bw_web_"$WVRELEASE".tar.gz
@@ -84,9 +84,9 @@ function update_script() {
     rm bw_web_"$WVRELEASE".tar.gz
     msg_ok "Cleaned"
 
-    msg_info "Starting Vaultwarden"
-    systemctl start vaultwarden.service
-    msg_ok "Started Vaultwarden"
+    msg_info "Starting Service"
+    systemctl start vaultwarden
+    msg_ok "Started Service"
     msg_ok "$WVRELEASE Update Successful"
     exit
   fi

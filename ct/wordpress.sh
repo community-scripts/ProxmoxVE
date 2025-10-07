@@ -12,7 +12,7 @@ var_disk="${var_disk:-5}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 
 header_info "$APP"
 variables
@@ -20,15 +20,15 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /var/www/html/wordpress ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    msg_error "Wordpress should be updated via the user interface."
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /var/www/html/wordpress ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+  msg_error "Wordpress should be updated via the user interface."
+  exit
 }
 
 start

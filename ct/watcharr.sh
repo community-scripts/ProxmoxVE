@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -29,29 +29,29 @@ function update_script() {
   fi
 
   if check_for_gh_release "watcharr" "sbondCo/Watcharr"; then
-    msg_info "Stopping $APP"
+    msg_info "Stopping Service"
     systemctl stop watcharr
-    msg_ok "Stopped $APP"
+    msg_ok "Stopped Service"
 
     rm -f /opt/watcharr/server/watcharr
     rm -rf /opt/watcharr/server/ui
     fetch_and_deploy_gh_release "watcharr" "sbondCo/Watcharr" "tarball"
 
-    msg_info "Updating $APP"
-    cd /opt/watcharr
+    msg_info "Updating Watcharr"
+    cd /opt/watcharr || exit
     export GOOS=linux
     $STD npm i
     $STD npm run build
     mv ./build ./server/ui
-    cd server
+    cd server || exit
     $STD go mod download
     $STD go build -o ./watcharr
-    msg_ok "Updated $APP"
+    msg_ok "Updated Watcharr"
 
-    msg_info "Starting $APP"
+    msg_info "Starting Service"
     systemctl start watcharr
-    msg_ok "Started $APP"
-    msg_ok "Update Successfully"
+    msg_ok "Started Service"
+    msg_ok "Update Successfully!"
   fi
   exit
 }

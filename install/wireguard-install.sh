@@ -14,12 +14,12 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y git
+$STD apt install -y git
 msg_ok "Installed Dependencies"
 
 msg_info "Installing WireGuard"
-$STD apt-get install -y wireguard wireguard-tools net-tools iptables
-DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::="--force-confnew" install -y iptables-persistent &>/dev/null
+$STD apt install -y wireguard wireguard-tools net-tools iptables
+DEBIAN_FRONTEND=noninteractive apt -o Dpkg::Options::="--force-confnew" install -y iptables-persistent &>/dev/null
 $STD netfilter-persistent reload
 msg_ok "Installed WireGuard"
 
@@ -28,7 +28,7 @@ if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
   git clone -q https://github.com/donaldzou/WGDashboard.git /etc/wgdashboard
 
   msg_info "Installing WGDashboard"
-  cd /etc/wgdashboard/src
+  cd /etc/wgdashboard/src || exit
   chmod u+x wgd.sh
   $STD ./wgd.sh install
   echo "net.ipv4.ip_forward=1" >>/etc/sysctl.conf
@@ -77,6 +77,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

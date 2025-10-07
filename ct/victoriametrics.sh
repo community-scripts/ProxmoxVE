@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-16}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -29,10 +29,10 @@ function update_script() {
   fi
 
   if check_for_gh_release "victoriametrics" "VictoriaMetrics/VictoriaMetrics"; then
-    msg_info "Stopping $APP"
+    msg_info "Stopping Service"
     systemctl stop victoriametrics
     [[ -f /etc/systemd/system/victoriametrics-logs.service ]] && systemctl stop victoriametrics-logs
-    msg_ok "Stopped $APP"
+    msg_ok "Stopped Service"
 
     victoriametrics_filename=$(curl -fsSL "https://api.github.com/repos/VictoriaMetrics/VictoriaMetrics/releases/latest" |
       jq -r '.assets[].name' |
@@ -50,11 +50,11 @@ function update_script() {
     fi
     chmod +x /opt/victoriametrics/*
 
-    msg_info "Starting $APP"
+    msg_info "Starting Service"
     systemctl start victoriametrics
     [[ -f /etc/systemd/system/victoriametrics-logs.service ]] && systemctl start victoriametrics-logs
-    msg_ok "Started $APP"
-    msg_ok "Updated Successfully"
+    msg_ok "Started Service"
+    msg_ok "Updated Successfully!"
   fi
   exit
 }
