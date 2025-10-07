@@ -18,7 +18,7 @@ $STD apt-get install -y nginx
 msg_ok "Installed Dependencies"
 
 fetch_and_deploy_gh_release "booklore" "booklore-app/BookLore"
-JAVA_VERSION="21" setup_java
+JAVA_VERSION="25" setup_java
 NODE_VERSION="22" setup_nodejs
 setup_mariadb
 setup_yq
