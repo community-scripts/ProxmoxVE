@@ -19,7 +19,7 @@ curl -fsSL https://install.zerotier.com -o /tmp/zerotier-install.sh
 if gpg --verify /tmp/zerotier-install.sh >/dev/null 2>&1; then
   $STD bash /tmp/zerotier-install.sh
 else
-  echo "❌ Signature invalid — aborting install!"
+  msg_warn "Could not verify signature of Zerotier-One install script. Exiting..."
   exit 1
 fi
 msg_ok "Setup Zerotier-One"
