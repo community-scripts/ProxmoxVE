@@ -6,7 +6,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Source: https://www.authelia.com/
 
 APP="Authelia"
-TAGS=""
+var_tags="${var_tags:-authenticator}"
 var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-512}"
 var_disk="${var_disk:-2}"
@@ -25,7 +25,7 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
-  if [[ ! -d "/etc/authelia/" ]]; then
+  if [[ ! -d /etc/authelia/ ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi

@@ -6,7 +6,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Source: https://github.com/excalidraw/excalidraw
 
 APP="Excalidraw"
-TAGS="diagrams"
+var_tags="${var_tags:-diagrams}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-3072}"
 var_disk="${var_disk:-10}"

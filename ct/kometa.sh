@@ -6,7 +6,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Source: https://github.com/Kometa-Team/Kometa
 
 APP="Kometa"
-TAGS="media;streaming"
+var_tags="${var_tags:-media;streaming}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-8}"

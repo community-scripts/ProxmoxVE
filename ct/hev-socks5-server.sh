@@ -6,7 +6,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Source: https://github.com/heiher/hev-socks5-server
 
 APP="hev-socks5-server"
-TAGS="proxy,socks5"
+var_tags="${var_tags:-proxy;socks5}"
 var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-512}"
 var_disk="${var_disk:-2}"
