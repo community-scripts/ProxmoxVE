@@ -92,31 +92,34 @@ EOF
     done
     msg_ok "Image-processing libraries up to date"
   fi
-  RELEASE="2.0.1"
+
+  RELEASE="2.1.1"
   if check_for_gh_release "immich" "immich-app/immich" "${RELEASE}"; then
     msg_info "Stopping Services"
     systemctl stop immich-web
     systemctl stop immich-ml
-    msg_ok "Stopped Service"
+    msg_ok "Stopped Services"
+    VCHORD_RELEASE="0.5.3"
+    if [[ ! -f ~/.vchord_version ]] || [[ "$VCHORD_RELEASE" != "$(cat ~/.vchord_version)" ]]; then
+      msg_info "Upgrading VectorChord"
+      curl -fsSL "https://github.com/tensorchord/vectorchord/releases/download/${VCHORD_RELEASE}/postgresql-16-vchord_${VCHORD_RELEASE}-1_amd64.deb" -o vchord.deb
+      $STD apt install -y ./vchord.deb
+      systemctl restart postgresql
+      $STD sudo -u postgres psql -d immich -c "ALTER EXTENSION vector UPDATE;"
+      $STD sudo -u postgres psql -d immich -c "ALTER EXTENSION vchord UPDATE;"
+      $STD sudo -u postgres psql -d immich -c "REINDEX INDEX face_index;"
+      $STD sudo -u postgres psql -d immich -c "REINDEX INDEX clip_index;"
+      echo "$VCHORD_RELEASE" >~/.vchord_version
+      rm ./vchord.deb
+      msg_ok "Upgraded VectorChord to v${VCHORD_RELEASE}"
+    fi
+
     INSTALL_DIR="/opt/${APP}"
     UPLOAD_DIR="$(sed -n '/^IMMICH_MEDIA_LOCATION/s/[^=]*=//p' /opt/immich/.env)"
     SRC_DIR="${INSTALL_DIR}/source"
     APP_DIR="${INSTALL_DIR}/app"
     ML_DIR="${APP_DIR}/machine-learning"
     GEO_DIR="${INSTALL_DIR}/geodata"
-    VCHORD_RELEASE="0.4.3"
-    # VCHORD_RELEASE="$(curl -fsSL https://api.github.com/repos/tensorchord/vectorchord/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')"
-
-    if [[ ! -f ~/.vchord_version ]] || [[ "$VCHORD_RELEASE" != "$(cat ~/.vchord_version)" ]]; then
-      msg_info "Updating VectorChord"
-      curl -fsSL "https://github.com/tensorchord/vectorchord/releases/download/${VCHORD_RELEASE}/postgresql-16-vchord_${VCHORD_RELEASE}-1_amd64.deb" -o vchord.deb
-      $STD apt install -y ./vchord.deb
-      $STD sudo -u postgres psql -d immich -c "ALTER EXTENSION vchord UPDATE;"
-      systemctl restart postgresql
-      echo "$VCHORD_RELEASE" >~/.vchord_version
-      rm ./vchord.deb
-      msg_ok "Updated VectorChord to v${VCHORD_RELEASE}"
-    fi
 
     cp "$ML_DIR"/ml_start.sh "$INSTALL_DIR"
     if grep -qs "set -a" "$APP_DIR"/bin/start.sh; then
@@ -162,6 +165,8 @@ EOF
     cd "$SRC_DIR"
     echo "packageImportMethod: hardlink" >>./pnpm-workspace.yaml
     $STD pnpm --filter @immich/sdk --filter immich-web --frozen-lockfile --force install
+    unset SHARP_FORCE_GLOBAL_LIBVIPS
+    export SHARP_IGNORE_GLOBAL_LIBVIPS=true
     $STD pnpm --filter @immich/sdk --filter immich-web build
     cp -a web/build "$APP_DIR"/www
     cp LICENSE "$APP_DIR"
