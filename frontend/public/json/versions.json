@@ -1,5 +1,85 @@
 [
   {
+    "name": "sassanix/Warracker",
+    "version": "0.10.1.14",
+    "date": "2025-10-06T23:35:16Z"
+  },
+  {
+    "name": "outline/outline",
+    "version": "v1.0.0-1",
+    "date": "2025-10-06T23:16:32Z"
+  },
+  {
+    "name": "Ombi-app/Ombi",
+    "version": "v4.47.1",
+    "date": "2025-01-05T21:14:23Z"
+  },
+  {
+    "name": "Kometa-Team/Kometa",
+    "version": "v2.2.2",
+    "date": "2025-10-06T21:31:07Z"
+  },
+  {
+    "name": "booklore-app/booklore",
+    "version": "v1.5.0",
+    "date": "2025-10-06T20:56:57Z"
+  },
+  {
+    "name": "grokability/snipe-it",
+    "version": "v8.3.3",
+    "date": "2025-10-06T19:57:17Z"
+  },
+  {
+    "name": "meilisearch/meilisearch",
+    "version": "prototype-shorten-snapshot-creation-2",
+    "date": "2025-10-06T19:36:54Z"
+  },
+  {
+    "name": "TwiN/gatus",
+    "version": "v5.26.0",
+    "date": "2025-10-06T17:57:27Z"
+  },
+  {
+    "name": "seerr-team/seerr",
+    "version": "preview-seerr",
+    "date": "2025-10-06T16:50:29Z"
+  },
+  {
+    "name": "zwave-js/zwave-js-ui",
+    "version": "v11.4.0",
+    "date": "2025-10-06T16:08:51Z"
+  },
+  {
+    "name": "fuma-nama/fumadocs",
+    "version": "fumadocs-ui@15.8.4",
+    "date": "2025-10-06T15:41:49Z"
+  },
+  {
+    "name": "bunkerity/bunkerweb",
+    "version": "v1.6.5",
+    "date": "2025-10-06T15:25:17Z"
+  },
+  {
+    "name": "bastienwirtz/homer",
+    "version": "v25.10.1",
+    "date": "2025-10-06T14:23:20Z"
+  },
+  {
+    "name": "chrisvel/tududi",
+    "version": "v0.83",
+    "date": "2025-10-06T13:49:52Z"
+  },
+  {
+    "name": "dgtlmoon/changedetection.io",
+    "version": "0.50.16",
+    "date": "2025-10-06T13:40:13Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.114.3",
+    "date": "2025-10-06T12:22:22Z"
+  },
+  {
     "name": "Graylog2/graylog2-server",
     "version": "7.0.0-beta.3",
     "date": "2025-10-06T11:25:12Z"
@@ -28,11 +108,6 @@
     "name": "Jackett/Jackett",
     "version": "v0.24.82",
     "date": "2025-10-06T07:56:13Z"
-  },
-  {
-    "name": "dgtlmoon/changedetection.io",
-    "version": "0.50.15",
-    "date": "2025-10-06T07:15:01Z"
   },
   {
     "name": "firefly-iii/firefly-iii",
@@ -75,11 +150,6 @@
     "date": "2025-08-25T13:59:56Z"
   },
   {
-    "name": "outline/outline",
-    "version": "v1.0.0-0",
-    "date": "2025-10-05T20:30:31Z"
-  },
-  {
     "name": "plankanban/planka",
     "version": "planka-1.0.5",
     "date": "2025-10-05T18:54:25Z"
@@ -101,18 +171,13 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v4.4.0",
-    "date": "2025-09-02T19:26:18Z"
+    "version": "nightly",
+    "date": "2025-10-05T14:13:25Z"
   },
   {
     "name": "Prowlarr/Prowlarr",
     "version": "v2.0.5.5160",
     "date": "2025-08-23T21:23:11Z"
-  },
-  {
-    "name": "chrisvel/tududi",
-    "version": "v0.82-rc5",
-    "date": "2025-09-23T07:31:12Z"
   },
   {
     "name": "TandoorRecipes/recipes",
@@ -158,11 +223,6 @@
     "name": "webmin/webmin",
     "version": "2.520",
     "date": "2025-10-05T00:51:34Z"
-  },
-  {
-    "name": "Ombi-app/Ombi",
-    "version": "v4.47.1",
-    "date": "2025-01-05T21:14:23Z"
   },
   {
     "name": "ollama/ollama",
@@ -225,16 +285,6 @@
     "date": "2025-10-03T18:10:59Z"
   },
   {
-    "name": "fuma-nama/fumadocs",
-    "version": "@fumadocs/mdx-remote@1.4.2",
-    "date": "2025-10-03T17:01:32Z"
-  },
-  {
-    "name": "bunkerity/bunkerweb",
-    "version": "v1.6.5",
-    "date": "2025-10-03T16:43:34Z"
-  },
-  {
     "name": "immich-app/immich",
     "version": "v2.0.1",
     "date": "2025-10-03T16:32:01Z"
@@ -260,11 +310,6 @@
     "date": "2025-10-03T06:55:25Z"
   },
   {
-    "name": "booklore-app/booklore",
-    "version": "v1.4.1",
-    "date": "2025-10-03T06:52:35Z"
-  },
-  {
     "name": "redis/redis",
     "version": "8.2.2",
     "date": "2025-10-03T06:22:38Z"
@@ -278,16 +323,6 @@
     "name": "jhuckaby/Cronicle",
     "version": "v0.9.95",
     "date": "2025-10-02T16:07:18Z"
-  },
-  {
-    "name": "meilisearch/meilisearch",
-    "version": "prototype-shorten-snapshot-creation-0",
-    "date": "2025-10-02T15:16:05Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.112.6",
-    "date": "2025-09-26T10:56:27Z"
   },
   {
     "name": "theonedev/onedev",
@@ -390,11 +425,6 @@
     "date": "2025-09-30T20:16:13Z"
   },
   {
-    "name": "TwiN/gatus",
-    "version": "v5.25.2",
-    "date": "2025-09-30T18:32:35Z"
-  },
-  {
     "name": "WordPress/WordPress",
     "version": "4.7.31",
     "date": "2025-09-30T18:00:06Z"
@@ -413,11 +443,6 @@
     "name": "neo4j/neo4j",
     "version": "4.4.46",
     "date": "2025-09-30T13:21:24Z"
-  },
-  {
-    "name": "fallenbagel/jellyseerr",
-    "version": "preview-rename-tags",
-    "date": "2025-09-30T12:50:15Z"
   },
   {
     "name": "emqx/emqx",
@@ -458,11 +483,6 @@
     "name": "influxdata/influxdb",
     "version": "v2.7.12",
     "date": "2025-05-29T17:08:26Z"
-  },
-  {
-    "name": "sassanix/Warracker",
-    "version": "0.10.1.13",
-    "date": "2025-09-29T17:11:25Z"
   },
   {
     "name": "AdguardTeam/AdGuardHome",
@@ -536,8 +556,8 @@
   },
   {
     "name": "javedh-dev/tracktor",
-    "version": "0.3.17",
-    "date": "2025-09-27T07:00:36Z"
+    "version": "0.3.18",
+    "date": "2025-09-27T10:32:09Z"
   },
   {
     "name": "Dolibarr/dolibarr",
@@ -553,11 +573,6 @@
     "name": "coder/code-server",
     "version": "v4.104.2",
     "date": "2025-09-26T22:34:32Z"
-  },
-  {
-    "name": "bastienwirtz/homer",
-    "version": "v25.09.1",
-    "date": "2025-09-26T19:22:16Z"
   },
   {
     "name": "traefik/traefik",
@@ -623,11 +638,6 @@
     "name": "AlexxIT/go2rtc",
     "version": "v1.9.10",
     "date": "2025-09-24T13:49:53Z"
-  },
-  {
-    "name": "zwave-js/zwave-js-ui",
-    "version": "v11.3.1",
-    "date": "2025-09-24T11:58:00Z"
   },
   {
     "name": "syncthing/syncthing",
@@ -718,11 +728,6 @@
     "name": "docmost/docmost",
     "version": "v0.23.2",
     "date": "2025-09-18T17:18:59Z"
-  },
-  {
-    "name": "grokability/snipe-it",
-    "version": "v8.3.2",
-    "date": "2025-09-18T13:55:58Z"
   },
   {
     "name": "NLnetLabs/unbound",
@@ -1038,11 +1043,6 @@
     "name": "Leantime/leantime",
     "version": "latest",
     "date": "2025-08-15T15:33:51Z"
-  },
-  {
-    "name": "Kometa-Team/Kometa",
-    "version": "v2.2.1",
-    "date": "2025-08-13T19:49:01Z"
   },
   {
     "name": "swapplications/uhf-server-dist",
