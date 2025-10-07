@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-t install -y sqlite3
+$STD apt install -y sqlite3
 msg_ok "Installed Dependencies"
 
 setup_uv
