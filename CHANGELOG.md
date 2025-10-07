@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Palmr: Fix NodeJS setup [@tremor021](https://github.com/tremor021) ([#8173](https://github.com/community-scripts/ProxmoxVE/pull/8173))
     - GLPI: Fix UNBOUND variable [@tremor021](https://github.com/tremor021) ([#8167](https://github.com/community-scripts/ProxmoxVE/pull/8167))
     - BookLore: upgrade to Java 25/Gradle 9 [@vhsdream](https://github.com/vhsdream) ([#8165](https://github.com/community-scripts/ProxmoxVE/pull/8165))
     - Alpine-Wireguard: Fix for update failing in normal mode [@tremor021](https://github.com/tremor021) ([#8160](https://github.com/community-scripts/ProxmoxVE/pull/8160))
