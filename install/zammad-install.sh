@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   git \
   nginx \
   apt-transport-https
@@ -22,9 +22,15 @@ msg_ok "Installed Dependencies"
 
 msg_info "Setting up Elasticsearch"
 curl -fsSL https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo gpg --dearmor -o /usr/share/keyrings/elasticsearch-keyring.gpg
-echo "deb [signed-by=/usr/share/keyrings/elasticsearch-keyring.gpg] https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee /etc/apt/sources.list.d/elastic-7.x.list >/dev/null
-$STD apt-get update
-$STD apt-get -y install elasticsearch
+cat <<EOF | sudo tee /etc/apt/sources.list.d/elasticsearch.sources >/dev/null
+Types: deb
+URIs: https://artifacts.elastic.co/packages/7.x/apt
+Suites: stable
+Components: main
+Signed-By: /usr/share/keyrings/elasticsearch-keyring.gpg
+EOF
+$STD apt update
+$STD apt -y install elasticsearch
 echo "-Xms2g" >>/etc/elasticsearch/jvm.options
 echo "-Xmx2g" >>/etc/elasticsearch/jvm.options
 $STD /usr/share/elasticsearch/bin/elasticsearch-plugin install ingest-attachment -b
@@ -34,9 +40,15 @@ msg_ok "Setup Elasticsearch"
 
 msg_info "Installing Zammad"
 curl -fsSL https://dl.packager.io/srv/zammad/zammad/key | gpg --dearmor | sudo tee /etc/apt/keyrings/pkgr-zammad.gpg >/dev/null
-echo "deb [signed-by=/etc/apt/keyrings/pkgr-zammad.gpg] https://dl.packager.io/srv/deb/zammad/zammad/stable/debian 12 main" | sudo tee /etc/apt/sources.list.d/zammad.list >/dev/null
-$STD apt-get update
-$STD apt-get -y install zammad
+cat <<EOF | sudo tee /etc/apt/sources.list.d/zammad.sources >/dev/null
+Types: deb
+URIs: https://dl.packager.io/srv/deb/zammad/zammad/stable/debian
+Suites: 13
+Components: main
+Signed-By: /etc/apt/keyrings/pkgr-zammad.gpg
+EOF
+$STD apt update
+$STD apt -y install zammad
 $STD zammad run rails r "Setting.set('es_url', 'http://localhost:9200')"
 $STD zammad run rake zammad:searchindex:rebuild
 msg_ok "Installed Zammad"
@@ -52,6 +64,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

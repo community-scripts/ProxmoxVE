@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -29,9 +29,9 @@ function update_script() {
   fi
 
   if check_for_gh_release "yt-dlp-webui" "marcopiovanello/yt-dlp-web-ui"; then
-    msg_info "Stopping $APP"
+    msg_info "Stopping Service"
     systemctl stop yt-dlp-webui
-    msg_ok "Stopped $APP"
+    msg_ok "Stopped Service"
 
     msg_info "Updating yt-dlp"
     $STD yt-dlp -U
@@ -40,9 +40,9 @@ function update_script() {
     rm -rf /usr/local/bin/yt-dlp-webui
     fetch_and_deploy_gh_release "yt-dlp-webui" "marcopiovanello/yt-dlp-web-ui" "singlefile" "latest" "/usr/local/bin" "yt-dlp-webui_linux-amd64"
 
-    msg_info "Starting $APP"
+    msg_info "Starting Service"
     systemctl start yt-dlp-webui
-    msg_ok "Started $APP"
+    msg_ok "Started Service"
     msg_ok "Updated Successfully"
   fi
   exit

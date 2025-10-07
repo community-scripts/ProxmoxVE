@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-5}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -26,12 +26,8 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  if ! command -v pnpm &>/dev/null; then
-    msg_info "Installing pnpm"
-    #export NODE_OPTIONS=--openssl-legacy-provider
-    $STD npm install -g pnpm@latest
-    msg_ok "Installed pnpm"
-  fi
+
+  NODE_VERSION="22" NODE_MODULE="pnpm" setup_nodejs
 
   if check_for_gh_release "zipline" "diced/zipline"; then
     msg_info "Stopping Service"
@@ -47,7 +43,7 @@ function update_script() {
     fetch_and_deploy_gh_release "zipline" "diced/zipline" "tarball"
 
     msg_info "Updating ${APP}"
-    cd /opt/zipline
+    cd /opt/zipline || exit
     mv /opt/.env /opt/zipline/.env
     $STD pnpm install
     $STD pnpm build
