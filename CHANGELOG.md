@@ -14,6 +14,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Alpine-Wireguard: Fix for update failing in normal mode [@tremor021](https://github.com/tremor021) ([#8160](https://github.com/community-scripts/ProxmoxVE/pull/8160))
+
   - #### ✨ New Features
 
     - Docmost: Fixes and updates [@tremor021](https://github.com/tremor021) ([#8158](https://github.com/community-scripts/ProxmoxVE/pull/8158))
