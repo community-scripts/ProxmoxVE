@@ -23,6 +23,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - Bump Z-Y Scripts to Debian 13 [@MickLesk](https://github.com/MickLesk) ([#8174](https://github.com/community-scripts/ProxmoxVE/pull/8174))
     - Docmost: Fixes and updates [@tremor021](https://github.com/tremor021) ([#8158](https://github.com/community-scripts/ProxmoxVE/pull/8158))
 
 ## 2025-10-06
