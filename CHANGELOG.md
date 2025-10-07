@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-10-07
 
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - Docmost: Fixes and updates [@tremor021](https://github.com/tremor021) ([#8158](https://github.com/community-scripts/ProxmoxVE/pull/8158))
+
 ## 2025-10-06
 
 ### 🚀 Updated Scripts
