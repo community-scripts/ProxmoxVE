@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Alpine-Caddy: remove functions [@MickLesk](https://github.com/MickLesk) ([#8177](https://github.com/community-scripts/ProxmoxVE/pull/8177))
     - Palmr: Fix NodeJS setup [@tremor021](https://github.com/tremor021) ([#8173](https://github.com/community-scripts/ProxmoxVE/pull/8173))
     - GLPI: Fix UNBOUND variable [@tremor021](https://github.com/tremor021) ([#8167](https://github.com/community-scripts/ProxmoxVE/pull/8167))
     - BookLore: upgrade to Java 25/Gradle 9 [@vhsdream](https://github.com/vhsdream) ([#8165](https://github.com/community-scripts/ProxmoxVE/pull/8165))
