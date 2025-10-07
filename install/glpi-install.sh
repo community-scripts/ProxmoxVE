@@ -48,7 +48,7 @@ curl -fsSL "https://github.com/glpi-project/glpi/releases/download/10.0.20/glpi-
 $STD tar -xzvf glpi-10.0.20.tgz
 cd /opt/glpi
 $STD php bin/console db:install --db-name=$DB_NAME --db-user=$DB_USER --db-password=$DB_PASS --no-interaction
-#echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
+echo "10.0.20" >/opt/${APPLICATION}_version.txt
 msg_ok "Installed GLPi"
 
 msg_info "Setting Downstream file"
