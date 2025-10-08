@@ -1,5 +1,70 @@
 [
   {
+    "name": "prometheus/prometheus",
+    "version": "v0.307.0-rc.0",
+    "date": "2025-10-08T11:25:44Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.114.4",
+    "date": "2025-10-07T14:28:46Z"
+  },
+  {
+    "name": "authelia/authelia",
+    "version": "v4.39.12",
+    "date": "2025-10-08T08:03:01Z"
+  },
+  {
+    "name": "gotson/komga",
+    "version": "1.23.5",
+    "date": "2025-10-08T07:31:37Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.4.2",
+    "date": "2025-10-07T08:11:58Z"
+  },
+  {
+    "name": "SigNoz/signoz",
+    "version": "v0.97.0-rc.3",
+    "date": "2025-10-08T06:53:48Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.3",
+    "date": "2025-09-20T12:12:33Z"
+  },
+  {
+    "name": "TandoorRecipes/recipes",
+    "version": "2.3.1",
+    "date": "2025-10-08T05:58:37Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.90",
+    "date": "2025-10-08T05:52:50Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.0.16",
+    "date": "2025-10-08T04:44:28Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.77.7.dev6",
+    "date": "2025-10-08T02:01:27Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-10-08T00:27:04Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
     "name": "booklore-app/booklore",
     "version": "v1.5.1",
     "date": "2025-10-07T21:57:21Z"
@@ -20,14 +85,9 @@
     "date": "2025-10-07T20:30:56Z"
   },
   {
-    "name": "BerriAI/litellm",
-    "version": "v1.77.7.dev4",
-    "date": "2025-10-07T20:05:00Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.4.2",
-    "date": "2025-10-07T08:11:58Z"
+    "name": "runtipi/runtipi",
+    "version": "v4.4.0",
+    "date": "2025-09-02T19:26:18Z"
   },
   {
     "name": "MediaBrowser/Emby.Releases",
@@ -46,8 +106,8 @@
   },
   {
     "name": "element-hq/synapse",
-    "version": "v1.139.2",
-    "date": "2025-10-07T15:30:19Z"
+    "version": "v1.138.4",
+    "date": "2025-10-08T09:11:57Z"
   },
   {
     "name": "VictoriaMetrics/VictoriaMetrics",
@@ -60,19 +120,9 @@
     "date": "2025-10-07T14:30:15Z"
   },
   {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.114.4",
-    "date": "2025-10-07T14:28:46Z"
-  },
-  {
     "name": "jenkinsci/jenkins",
     "version": "jenkins-2.531",
     "date": "2025-10-07T13:42:39Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
   },
   {
     "name": "zitadel/zitadel",
@@ -110,16 +160,6 @@
     "date": "2025-10-07T06:07:11Z"
   },
   {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.3",
-    "date": "2025-09-20T12:12:33Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.87",
-    "date": "2025-10-07T05:50:32Z"
-  },
-  {
     "name": "rogerfar/rdt-client",
     "version": "v2.0.117",
     "date": "2025-10-07T02:21:37Z"
@@ -128,11 +168,6 @@
     "name": "inventree/InvenTree",
     "version": "1.0.5",
     "date": "2025-10-07T00:37:08Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-10-07T00:27:05Z"
   },
   {
     "name": "sassanix/Warracker",
@@ -168,11 +203,6 @@
     "name": "TwiN/gatus",
     "version": "v5.26.0",
     "date": "2025-10-06T17:57:27Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.4.0",
-    "date": "2025-09-30T11:49:13Z"
   },
   {
     "name": "seerr-team/seerr",
@@ -255,19 +285,9 @@
     "date": "2025-10-05T14:47:20Z"
   },
   {
-    "name": "runtipi/runtipi",
-    "version": "v4.4.0",
-    "date": "2025-09-02T19:26:18Z"
-  },
-  {
     "name": "Prowlarr/Prowlarr",
     "version": "v2.0.5.5160",
     "date": "2025-08-23T21:23:11Z"
-  },
-  {
-    "name": "TandoorRecipes/recipes",
-    "version": "2.3.0",
-    "date": "2025-10-05T11:13:58Z"
   },
   {
     "name": "Lidarr/Lidarr",
@@ -298,11 +318,6 @@
     "name": "ollama/ollama",
     "version": "v0.12.4-rc5",
     "date": "2025-10-04T16:18:42Z"
-  },
-  {
-    "name": "SigNoz/signoz",
-    "version": "v0.97.0-rc.2",
-    "date": "2025-10-04T16:21:45Z"
   },
   {
     "name": "gtsteffaniak/filebrowser",
@@ -438,11 +453,6 @@
     "name": "glpi-project/glpi",
     "version": "11.0.0",
     "date": "2025-10-01T12:00:01Z"
-  },
-  {
-    "name": "authelia/authelia",
-    "version": "v4.39.11",
-    "date": "2025-10-01T11:42:23Z"
   },
   {
     "name": "esphome/esphome",
@@ -710,11 +720,6 @@
     "date": "2025-09-22T09:23:37Z"
   },
   {
-    "name": "prometheus/prometheus",
-    "version": "v3.6.0",
-    "date": "2025-09-22T08:24:59Z"
-  },
-  {
     "name": "Athou/commafeed",
     "version": "5.11.1",
     "date": "2025-09-22T02:21:27Z"
@@ -888,11 +893,6 @@
     "name": "OctoPrint/OctoPrint",
     "version": "1.11.3",
     "date": "2025-09-09T08:03:31Z"
-  },
-  {
-    "name": "gotson/komga",
-    "version": "1.23.4",
-    "date": "2025-09-09T02:47:05Z"
   },
   {
     "name": "Tautulli/Tautulli",
