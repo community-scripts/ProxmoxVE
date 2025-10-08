@@ -31,8 +31,14 @@ if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
   cd /etc/wgdashboard/src || exit
   chmod u+x wgd.sh
   $STD ./wgd.sh install
-  echo "net.ipv4.ip_forward=1" >>/etc/sysctl.conf
-  $STD sysctl -p /etc/sysctl.conf
+  . /etc/os-release
+  if [ "$VERSION_CODENAME" = "trixie" ]; then
+    echo "net.ipv4.ip_forward=1" >>/etc/sysctl.d/sysctl.conf
+    $STD sysctl -p /etc/sysctl.d/sysctl.conf
+  else
+    echo "net.ipv4.ip_forward=1" >>/etc/sysctl.conf
+    $STD sysctl -p /etc/sysctl.conf
+  fi
   msg_ok "Installed WGDashboard"
 
   msg_info "Create Example Config for WGDashboard"
