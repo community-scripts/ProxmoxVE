@@ -14,14 +14,14 @@ network_check
 update_os
 
 msg_info "Installing dependencies"
-$STD apt-get install -y zstd
+$STD apt install -y zstd
 msg_ok "Installed dependencies"
 
 msg_info "Installing Wastebin"
 temp_file=$(mktemp)
 RELEASE=$(curl -fsSL https://api.github.com/repos/matze/wastebin/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 curl -fsSL "https://github.com/matze/wastebin/releases/download/${RELEASE}/wastebin_${RELEASE}_x86_64-unknown-linux-musl.tar.zst" -o "$temp_file"
-tar -xf $temp_file
+tar -xf "$temp_file"
 mkdir -p /opt/wastebin
 mv wastebin* /opt/wastebin/
 chmod +x /opt/wastebin/wastebin
@@ -60,7 +60,8 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -f $temp_file
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+rm -f "$temp_file"
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

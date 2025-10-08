@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-PHP_VERSION="8.3" PHP_MODULE="mysql" PHP_APACHE="YES" PHP_MAX_EXECUTION_TIME="600" setup_php
+PHP_VERSION="8.4" PHP_MODULE="mysql" PHP_APACHE="YES" PHP_MAX_EXECUTION_TIME="600" setup_php
 setup_mariadb
 fetch_and_deploy_gh_release "wavelog" "wavelog/wavelog" "tarball"
 
@@ -63,6 +63,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

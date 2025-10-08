@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   ca-certificates \
   build-essential
 msg_ok "Installed Dependencies"
@@ -84,7 +84,6 @@ EOF
 
 systemctl enable -q --now verdaccio
 msg_ok "Created Service"
-
 
 motd_ssh
 customize

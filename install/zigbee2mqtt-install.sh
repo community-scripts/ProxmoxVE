@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   git \
   make \
   g++ \
@@ -28,9 +28,9 @@ NODE_VERSION="24" NODE_MODULE="pnpm@$(curl -fsSL https://raw.githubusercontent.c
 fetch_and_deploy_gh_release "Zigbee2MQTT" "Koenkk/zigbee2mqtt" "tarball" "latest" "/opt/zigbee2mqtt"
 
 msg_info "Setting up Zigbee2MQTT"
-cd /opt/zigbee2mqtt/data
+cd /opt/zigbee2mqtt/data || exit
 mv configuration.example.yaml configuration.yaml
-cd /opt/zigbee2mqtt
+cd /opt/zigbee2mqtt || exit
 $STD pnpm install --no-frozen-lockfile
 $STD pnpm build
 msg_ok "Installed Zigbee2MQTT"
@@ -58,6 +58,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

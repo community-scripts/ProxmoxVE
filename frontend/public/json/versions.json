@@ -1,8 +1,98 @@
 [
   {
+    "name": "booklore-app/booklore",
+    "version": "v1.5.1",
+    "date": "2025-10-07T21:57:21Z"
+  },
+  {
+    "name": "open-webui/open-webui",
+    "version": "v0.6.33",
+    "date": "2025-10-07T21:20:37Z"
+  },
+  {
+    "name": "pelican-dev/wings",
+    "version": "v1.0.0-beta18",
+    "date": "2025-10-07T21:05:57Z"
+  },
+  {
+    "name": "C4illin/ConvertX",
+    "version": "v0.15.1",
+    "date": "2025-10-07T20:30:56Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.77.7.dev4",
+    "date": "2025-10-07T20:05:00Z"
+  },
+  {
     "name": "firefly-iii/firefly-iii",
     "version": "v6.4.2",
     "date": "2025-10-07T08:11:58Z"
+  },
+  {
+    "name": "MediaBrowser/Emby.Releases",
+    "version": "4.9.1.80",
+    "date": "2025-09-30T20:25:16Z"
+  },
+  {
+    "name": "coder/code-server",
+    "version": "v4.104.3",
+    "date": "2025-10-07T17:42:11Z"
+  },
+  {
+    "name": "meilisearch/meilisearch",
+    "version": "prototype-v1.22.2-compaction-task-1",
+    "date": "2025-10-07T15:40:03Z"
+  },
+  {
+    "name": "element-hq/synapse",
+    "version": "v1.139.2",
+    "date": "2025-10-07T15:30:19Z"
+  },
+  {
+    "name": "VictoriaMetrics/VictoriaMetrics",
+    "version": "pmm-6401-v1.127.0",
+    "date": "2025-10-07T14:31:32Z"
+  },
+  {
+    "name": "chrisvel/tududi",
+    "version": "v0.83.2",
+    "date": "2025-10-07T14:30:15Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.114.4",
+    "date": "2025-10-07T14:28:46Z"
+  },
+  {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.531",
+    "date": "2025-10-07T13:42:39Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v3.6.2",
+    "date": "2025-07-17T12:08:03Z"
+  },
+  {
+    "name": "zitadel/zitadel",
+    "version": "v4.3.1",
+    "date": "2025-10-07T12:55:04Z"
+  },
+  {
+    "name": "zwave-js/zwave-js-ui",
+    "version": "v11.4.1",
+    "date": "2025-10-07T12:45:24Z"
+  },
+  {
+    "name": "thecfu/scraparr",
+    "version": "v2.2.5",
+    "date": "2025-10-07T12:34:31Z"
+  },
+  {
+    "name": "evcc-io/evcc",
+    "version": "0.209.1",
+    "date": "2025-10-07T11:29:11Z"
   },
   {
     "name": "mattermost/mattermost",
@@ -45,11 +135,6 @@
     "date": "2025-10-07T00:27:05Z"
   },
   {
-    "name": "steveiliop56/tinyauth",
-    "version": "v3.6.2",
-    "date": "2025-07-17T12:08:03Z"
-  },
-  {
     "name": "sassanix/Warracker",
     "version": "0.10.1.14",
     "date": "2025-10-06T23:35:16Z"
@@ -75,19 +160,9 @@
     "date": "2025-10-06T21:31:07Z"
   },
   {
-    "name": "booklore-app/booklore",
-    "version": "v1.5.0",
-    "date": "2025-10-06T20:56:57Z"
-  },
-  {
     "name": "grokability/snipe-it",
     "version": "v8.3.3",
     "date": "2025-10-06T19:57:17Z"
-  },
-  {
-    "name": "meilisearch/meilisearch",
-    "version": "prototype-shorten-snapshot-creation-2",
-    "date": "2025-10-06T19:36:54Z"
   },
   {
     "name": "TwiN/gatus",
@@ -105,11 +180,6 @@
     "date": "2025-10-06T16:50:29Z"
   },
   {
-    "name": "zwave-js/zwave-js-ui",
-    "version": "v11.4.0",
-    "date": "2025-10-06T16:08:51Z"
-  },
-  {
     "name": "fuma-nama/fumadocs",
     "version": "fumadocs-ui@15.8.4",
     "date": "2025-10-06T15:41:49Z"
@@ -125,19 +195,9 @@
     "date": "2025-10-06T14:23:20Z"
   },
   {
-    "name": "chrisvel/tududi",
-    "version": "v0.83",
-    "date": "2025-10-06T13:49:52Z"
-  },
-  {
     "name": "dgtlmoon/changedetection.io",
     "version": "0.50.16",
     "date": "2025-10-06T13:40:13Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.114.3",
-    "date": "2025-10-06T12:22:22Z"
   },
   {
     "name": "Graylog2/graylog2-server",
@@ -220,11 +280,6 @@
     "date": "2025-10-05T09:12:17Z"
   },
   {
-    "name": "evcc-io/evcc",
-    "version": "0.209.0",
-    "date": "2025-10-05T07:45:18Z"
-  },
-  {
     "name": "pommee/goaway",
     "version": "v0.62.11",
     "date": "2025-10-05T07:31:57Z"
@@ -233,11 +288,6 @@
     "name": "YunoHost/yunohost",
     "version": "debian/12.1.27",
     "date": "2025-10-05T02:16:42Z"
-  },
-  {
-    "name": "BerriAI/litellm",
-    "version": "v1.77.7-nightly",
-    "date": "2025-10-05T01:43:25Z"
   },
   {
     "name": "webmin/webmin",
@@ -365,11 +415,6 @@
     "date": "2025-10-02T11:34:39Z"
   },
   {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.530",
-    "date": "2025-09-30T15:42:52Z"
-  },
-  {
     "name": "laurent22/joplin",
     "version": "server-v3.4.4",
     "date": "2025-09-25T13:19:26Z"
@@ -405,11 +450,6 @@
     "date": "2025-10-01T11:30:07Z"
   },
   {
-    "name": "element-hq/synapse",
-    "version": "v1.139.0",
-    "date": "2025-10-01T08:24:16Z"
-  },
-  {
     "name": "Kozea/Radicale",
     "version": "v3.5.7.pypi",
     "date": "2025-10-01T05:32:27Z"
@@ -428,11 +468,6 @@
     "name": "mongodb/mongo",
     "version": "r8.2.1",
     "date": "2025-09-30T21:46:28Z"
-  },
-  {
-    "name": "MediaBrowser/Emby.Releases",
-    "version": "4.9.1.80",
-    "date": "2025-09-30T20:25:16Z"
   },
   {
     "name": "netbox-community/netbox",
@@ -463,11 +498,6 @@
     "name": "emqx/emqx",
     "version": "e6.0.0",
     "date": "2025-09-30T12:04:20Z"
-  },
-  {
-    "name": "zitadel/zitadel",
-    "version": "v4.3.0",
-    "date": "2025-09-30T06:54:15Z"
   },
   {
     "name": "thomiceli/opengist",
@@ -513,11 +543,6 @@
     "name": "jupyter/notebook",
     "version": "@jupyter-notebook/ui-components@7.5.0-beta.0",
     "date": "2025-09-29T09:16:42Z"
-  },
-  {
-    "name": "open-webui/open-webui",
-    "version": "v0.6.32",
-    "date": "2025-09-29T06:13:12Z"
   },
   {
     "name": "autobrr/autobrr",
@@ -573,11 +598,6 @@
     "name": "cross-seed/cross-seed",
     "version": "v6.13.5",
     "date": "2025-09-27T01:10:59Z"
-  },
-  {
-    "name": "coder/code-server",
-    "version": "v4.104.2",
-    "date": "2025-09-26T22:34:32Z"
   },
   {
     "name": "traefik/traefik",
@@ -830,11 +850,6 @@
     "date": "2025-09-15T14:57:30Z"
   },
   {
-    "name": "VictoriaMetrics/VictoriaMetrics",
-    "version": "pmm-6401-v1.126.0",
-    "date": "2025-09-15T11:32:31Z"
-  },
-  {
     "name": "crafty-controller/crafty-4",
     "version": "v4.5.4",
     "date": "2025-09-15T00:49:53Z"
@@ -923,11 +938,6 @@
     "name": "pelican-dev/panel",
     "version": "v1.0.0-beta25",
     "date": "2025-09-04T21:42:46Z"
-  },
-  {
-    "name": "pelican-dev/wings",
-    "version": "v1.0.0-beta17",
-    "date": "2025-09-04T21:30:14Z"
   },
   {
     "name": "blakeblackshear/frigate",
@@ -1033,11 +1043,6 @@
     "name": "matze/wastebin",
     "version": "3.3.0",
     "date": "2025-08-17T19:57:11Z"
-  },
-  {
-    "name": "thecfu/scraparr",
-    "version": "v2.2.4",
-    "date": "2025-08-17T10:12:21Z"
   },
   {
     "name": "mylar3/mylar3",
@@ -1263,11 +1268,6 @@
     "name": "juanfont/headscale",
     "version": "v0.26.1",
     "date": "2025-06-06T11:22:02Z"
-  },
-  {
-    "name": "C4illin/ConvertX",
-    "version": "v0.14.1",
-    "date": "2025-06-04T08:57:15Z"
   },
   {
     "name": "release-argus/Argus",

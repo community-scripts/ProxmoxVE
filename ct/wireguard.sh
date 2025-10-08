@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-512}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 var_tun="${var_tun:-1}"
 
@@ -30,18 +30,19 @@ function update_script() {
   fi
   if ! dpkg -s git >/dev/null 2>&1; then
     msg_info "Installing git"
-    $STD apt-get update
-    $STD apt-get install -y git
+    $STD apt update
+    $STD apt install -y git
     msg_ok "Installed git"
   fi
-  apt-get update
-  apt-get -y upgrade
+  apt update
+  apt -y upgrade
   if [[ -d /etc/wgdashboard ]]; then
     sleep 2
-    cd /etc/wgdashboard/src
+    cd /etc/wgdashboard/src || exit
     ./wgd.sh update
     ./wgd.sh start
   fi
+  msg_ok "Updated Successfully!"
   exit
 }
 

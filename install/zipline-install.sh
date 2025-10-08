@@ -14,8 +14,8 @@ setting_up_container
 network_check
 update_os
 
-NODE_VERSION="22" NODE_MODULE="pnpm@latest" setup_nodejs
-PG_VERSION="16" setup_postgresql
+NODE_VERSION="22" NODE_MODULE="pnpm" setup_nodejs
+PG_VERSION="17" setup_postgresql
 fetch_and_deploy_gh_release "zipline" "diced/zipline" "tarball"
 
 msg_info "Setting up PostgreSQL"
@@ -38,7 +38,7 @@ $STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET timezone TO 'UTC'"
 msg_ok "Set up PostgreSQL"
 
 msg_info "Installing Zipline (Patience)"
-cd /opt/zipline
+cd /opt/zipline || exit
 cat <<EOF >/opt/zipline/.env
 DATABASE_URL=postgres://$DB_USER:$DB_PASS@localhost:5432/$DB_NAME
 CORE_SECRET=$SECRET_KEY
@@ -74,6 +74,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

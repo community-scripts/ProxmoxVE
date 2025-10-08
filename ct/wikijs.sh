@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-10}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -27,7 +27,9 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  NODE_VERSION="22" NODE_MODULE="yarn@latest,node-gyp" setup_nodejs
+
+  NODE_VERSION="22" NODE_MODULE="yarn,node-gyp" setup_nodejs
+
   if check_for_gh_release "wikijs" "requarks/wiki"; then
     msg_info "Verifying whether ${APP}' new release is v3.x+ and current install uses SQLite."
     SQLITE_INSTALL=$([ -f /opt/wikijs/db.sqlite ] && echo "true" || echo "false")
@@ -37,9 +39,9 @@ function update_script() {
     fi
     msg_ok "There is an update path available for ${APP}"
 
-    msg_info "Stopping ${APP}"
+    msg_info "Stopping Service"
     systemctl stop wikijs
-    msg_ok "Stopped ${APP}"
+    msg_ok "Stopped Service"
 
     msg_info "Backing up Data"
     mkdir /opt/wikijs-backup
@@ -47,22 +49,21 @@ function update_script() {
     cp -R /opt/wikijs/{config.yml,/data} /opt/wikijs-backup
     msg_ok "Backed up Data"
 
-    rm -rf /opt/wikijs/*
-    fetch_and_deploy_gh_release "wikijs" "requarks/wiki" "prebuild" "latest" "/opt/wikijs" "wiki-js.tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "wikijs" "requarks/wiki" "prebuild" "latest" "/opt/wikijs" "wiki-js.tar.gz"
 
     msg_info "Restoring Data"
     cp -R /opt/wikijs-backup/* /opt/wikijs
     $SQLITE_INSTALL && $STD npm rebuild sqlite3
     msg_ok "Restored Data"
 
-    msg_info "Starting ${APP}"
+    msg_info "Starting Service"
     systemctl start wikijs
-    msg_ok "Started ${APP}"
+    msg_ok "Started Service"
 
     msg_info "Cleaning Up"
     rm -rf /opt/wikijs-backup
     msg_ok "Cleanup Completed"
-    msg_ok "Updated Successfully"
+    msg_ok "Updated Successfully!"
   fi
   exit
 }

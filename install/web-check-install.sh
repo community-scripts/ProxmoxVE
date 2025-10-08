@@ -15,7 +15,7 @@ update_os
 
 msg_info "Installing Dependencies"
 export DEBIAN_FRONTEND=noninteractive
-$STD apt-get -y install --no-install-recommends \
+$STD apt -y install --no-install-recommends \
   git \
   traceroute \
   make \
@@ -35,18 +35,25 @@ $STD apt-get -y install --no-install-recommends \
   x11-apps
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
+NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
 
 msg_info "Setup Python3"
-$STD apt-get install -y python3
+$STD apt install -y python3
 rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
 msg_ok "Setup Python3"
 
 msg_info "Installing Chromium"
-curl -fsSL https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /etc/apt/trusted.gpg.d/google-archive.gpg
-echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >/etc/apt/sources.list.d/google.list
-$STD apt-get update
-$STD apt-get -y install \
+curl -fsSL https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/google-chrome-keyring.gpg
+cat <<EOF | sudo tee /etc/apt/sources.list.d/google-chrome.sources >/dev/null
+Types: deb
+URIs: http://dl.google.com/linux/chrome/deb/
+Suites: stable
+Components: main
+Architectures: amd64
+Signed-By: /usr/share/keyrings/google-chrome-keyring.gpg
+EOF
+$STD apt update
+$STD apt -y install \
   chromium \
   libxss1 \
   lsb-release
@@ -61,9 +68,9 @@ msg_info "Installing Web-Check (Patience)"
 temp_file=$(mktemp)
 RELEASE="patch-1"
 curl -fsSL "https://github.com/CrazyWolf13/web-check/archive/refs/heads/${RELEASE}.tar.gz" -o "$temp_file"
-tar xzf $temp_file
+tar xzf "$temp_file"
 mv web-check-${RELEASE} /opt/web-check
-cd /opt/web-check
+cd /opt/web-check || exit
 cat <<'EOF' >/opt/web-check/.env
 CHROME_PATH=/usr/bin/chromium
 PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
@@ -87,7 +94,7 @@ REACT_APP_API_ENDPOINT='/api'
 ENABLE_ANALYTICS='false'
 EOF
 $STD yarn install --frozen-lockfile --network-timeout 100000
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
+echo "${RELEASE}" >/opt/"${APPLICATION}"_version.txt
 msg_ok "Installed Web-Check"
 
 msg_info "Building Web-Check"
@@ -136,10 +143,10 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -rf $temp_file
+rm -rf "$temp_file"
 rm -rf /var/lib/apt/lists/* /app/node_modules/.cache
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
 msg_ok "Cleaned"
 
 motd_ssh

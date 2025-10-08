@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-512}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -20,26 +20,28 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
+  header_info
+  check_container_storage
+  check_container_resources
 
-    if [[ ! -f /usr/sbin/zerotier-one ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    msg_info "Stopping Service"
-    systemctl stop zerotier-one
-    msg_ok "Stopping Service"
-    msg_info "Updating ${APP}"
-    $STD apt-get update
-    apt-get -y upgrade
-    msg_ok "Updated ${APP}"
-
-    msg_info "Starting Service"
-    systemctl start zerotier-one
-    msg_ok "Started Service"
+  if [[ ! -f /usr/sbin/zerotier-one ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+
+  msg_info "Stopping Service"
+  systemctl stop zerotier-one
+  msg_ok "Stopping Service"
+
+  msg_info "Updating ${APP}"
+  $STD apt update
+  $STD apt -y upgrade
+  msg_ok "Updated ${APP}"
+
+  msg_info "Starting Service"
+  systemctl start zerotier-one
+  msg_ok "Started Service"
+  exit
 }
 
 start

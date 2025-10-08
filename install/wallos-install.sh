@@ -18,7 +18,7 @@ PHP_VERSION="8.4" PHP_APACHE="YES" PHP_MODULE="imagick,bz2,sqlite3" setup_php
 fetch_and_deploy_gh_release "wallos" "ellite/Wallos" "tarball"
 
 msg_info "Installing Wallos (Patience)"
-cd /opt/wallos
+cd /opt/wallos || exit
 mv /opt/wallos/db/wallos.empty.db /opt/wallos/db/wallos.db
 chown -R www-data:www-data /opt/wallos
 chmod -R 755 /opt/wallos
@@ -62,6 +62,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"
