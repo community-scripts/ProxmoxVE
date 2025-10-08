@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-10-08
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - ZeroTier One: Fix install output [@tremor021](https://github.com/tremor021) ([#8179](https://github.com/community-scripts/ProxmoxVE/pull/8179))
+
 ## 2025-10-07
 
 ### 🚀 Updated Scripts
