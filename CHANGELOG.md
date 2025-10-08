@@ -18,6 +18,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Wireguard: Fix sysctl for Trixie [@tremor021](https://github.com/tremor021) ([#8209](https://github.com/community-scripts/ProxmoxVE/pull/8209))
     - Update prompt for Stirling-PDF login option [@EarMaster](https://github.com/EarMaster) ([#8196](https://github.com/community-scripts/ProxmoxVE/pull/8196))
 
   - #### 🔧 Refactor
