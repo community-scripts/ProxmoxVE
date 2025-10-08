@@ -32,7 +32,7 @@ msg_ok "Installed Dependencies"
 PYTHON_VERSION="3.12" setup_uv
 JAVA_VERSION="21" setup_java
 
-read -r -p "${TAB3}Do you want to Stirling-PDF with Login? (no/n = without Login) [Y/n] " response
+read -r -p "${TAB3}Do you want to Stirling-PDF use with Login? (no/n = without Login) [Y/n] " response
 response=${response,,} # Convert to lowercase
 login_mode="false"
 if [[ "$response" == "y" || "$response" == "yes" || -z "$response" ]]; then
