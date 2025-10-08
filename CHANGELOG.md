@@ -14,6 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - MyIP: Increase resources [@tremor021](https://github.com/tremor021) ([#8199](https://github.com/community-scripts/ProxmoxVE/pull/8199))
+
   - #### 🐞 Bug Fixes
 
     - Update prompt for Stirling-PDF login option [@EarMaster](https://github.com/EarMaster) ([#8196](https://github.com/community-scripts/ProxmoxVE/pull/8196))
