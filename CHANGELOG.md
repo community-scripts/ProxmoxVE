@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: Fixed incorrect tag variables in several scripts [@tremor021](https://github.com/tremor021) ([#8182](https://github.com/community-scripts/ProxmoxVE/pull/8182))
     - ZeroTier One: Fix install output [@tremor021](https://github.com/tremor021) ([#8179](https://github.com/community-scripts/ProxmoxVE/pull/8179))
 
 ## 2025-10-07
