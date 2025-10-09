@@ -32,9 +32,9 @@ function update_script() {
   export NODE_OPTIONS="--max_old_space_size=4096"
 
   if check_for_gh_release "docmost" "docmost/docmost"; then
-    msg_info "Stopping ${APP}"
+    msg_info "Stopping Service"
     systemctl stop docmost
-    msg_ok "${APP} Stopped"
+    msg_ok "Stopped Service"
 
     msg_info "Backing up data"
     cp /opt/docmost/.env /opt/
@@ -52,9 +52,9 @@ function update_script() {
     $STD pnpm build
     msg_ok "Updated ${APP}"
 
-    msg_info "Starting ${APP}"
+    msg_info "Starting Service"
     systemctl start docmost
-    msg_ok "Started ${APP}"
+    msg_ok "Started Service"
     msg_ok "Updated Successfully"
   fi
   exit

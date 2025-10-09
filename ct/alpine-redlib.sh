@@ -24,23 +24,23 @@ function update_script() {
   check_container_resources
 
   if [[ ! -d /opt/redlib ]]; then
-      msg_error "No ${APP} Installation Found!"
-      exit
+    msg_error "No ${APP} Installation Found!"
+    exit
   fi
 
   msg_info "Updating Alpine Packages"
   $STD apk -U upgrade
   msg_ok "Updated Alpine Packages"
 
-  msg_info "Stopping ${APP} Service"
+  msg_info "Stopping Service"
   $STD rc-service redlib stop
-  msg_ok "Stopped ${APP} Service"
+  msg_ok "Stopped Service"
 
   fetch_and_deploy_gh_release "redlib" "redlib-org/redlib" "prebuild" "latest" "/opt/redlib" "redlib-x86_64-unknown-linux-musl.tar.gz"
 
-  msg_info "Starting ${APP} Service"
+  msg_info "Starting Service"
   $STD rc-service redlib start
-  msg_ok "Started ${APP} Service"
+  msg_ok "Started Service"
 
   msg_ok "Update Successful"
   exit

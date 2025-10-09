@@ -30,9 +30,9 @@ function update_script() {
   fi
 
   if check_for_gh_release "rwMarkable" "fccview/rwMarkable"; then
-    msg_info "Stopping ${APP}"
+    msg_info "Stopping Service"
     systemctl stop rwmarkable
-    msg_ok "Stopped ${APP}"
+    msg_ok "Stopped Service"
 
     msg_info "Backing up configuration & data"
     cd /opt/rwmarkable

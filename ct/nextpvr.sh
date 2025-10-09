@@ -28,9 +28,9 @@ function update_script() {
         msg_error "No ${APP} Installation Found!"
         exit
     fi
-    msg_info "Stopping ${APP}"
+    msg_info "Stopping Service"
     systemctl stop nextpvr-server
-    msg_ok "Stopped ${APP}"
+    msg_ok "Stopped Service"
 
     msg_info "Updating LXC packages"
     $STD apt-get update
@@ -43,9 +43,9 @@ function update_script() {
     $STD dpkg -i nextpvr-helper.deb
     msg_ok "Updated ${APP}"
 
-    msg_info "Starting ${APP}"
+    msg_info "Starting Service"
     systemctl start nextpvr-server
-    msg_ok "Started ${APP}"
+    msg_ok "Started Service"
 
     msg_info "Cleaning Up"
     rm -rf /opt/nextpvr-helper.deb

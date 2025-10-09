@@ -28,9 +28,9 @@ function update_script() {
   fi
 
   if check_for_gh_release "teddycloud" "toniebox-reverse-engineering/teddycloud"; then
-    msg_info "Stopping ${APP}"
+    msg_info "Stopping Service"
     systemctl stop teddycloud
-    msg_ok "Stopped ${APP}"
+    msg_ok "Stopped Service"
 
     msg_info "Creating backup"
     mv /opt/teddycloud /opt/teddycloud_bak
@@ -42,9 +42,9 @@ function update_script() {
     cp -R /opt/teddycloud_bak/certs /opt/teddycloud_bak/config /opt/teddycloud_bak/data /opt/teddycloud
     msg_ok "Data restored"
 
-    msg_info "Starting ${APP}"
+    msg_info "Starting Service"
     systemctl start teddycloud
-    msg_ok "Started ${APP}"
+    msg_ok "Started Service"
 
     msg_info "Cleaning up"
     rm -rf /opt/teddycloud_bak

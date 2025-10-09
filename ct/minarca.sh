@@ -29,18 +29,18 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  msg_info "Stopping ${APP}"
+  msg_info "Stopping Service"
   systemctl stop minarca-server
-  msg_ok "${APP} Stopped"
+  msg_ok "Stopped Service"
 
   msg_info "Updating ${APP} LXC"
   $STD apt-get update
   $STD apt-get upgrade -y
   msg_ok "Updated ${APP} LXC"
 
-  msg_info "Starting ${APP}"
+  msg_info "Starting Service"
   systemctl start minarca-server
-  msg_ok "Restarted ${APP}"
+  msg_ok "Started Service"
   exit
 }
 

@@ -41,17 +41,17 @@ EOF
     $STD apt-get update
   fi
 
-  msg_info "Stopping ${APP} Service"
+  msg_info "Stopping Service"
   systemctl stop rabbitmq-server
-  msg_ok "Stopped ${APP} Service"
+  msg_ok "Stopped Service"
 
   msg_info "Updating..."
   $STD apt install --only-upgrade rabbitmq-server
   msg_ok "Update Successfully"
 
-  msg_info "Starting ${APP}"
+  msg_info "Starting Service"
   systemctl start rabbitmq-server
-  msg_ok "Started ${APP}"
+  msg_ok "Started Service"
   msg_ok "Updated Successfully"
   exit
 }

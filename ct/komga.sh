@@ -28,17 +28,17 @@ function update_script() {
     exit
   fi
   if check_for_gh_release "komga" "gotson/komga"; then
-    msg_info "Stopping ${APP}"
+    msg_info "Stopping Service"
     systemctl stop komga
-    msg_ok "Stopped ${APP}"
+    msg_ok "Stopped Service"
 
     rm -f /opt/komga/komga.jar
     USE_ORIGINAL_FILENAME="true" fetch_and_deploy_gh_release "komga-org" "gotson/komga" "singlefile" "latest" "/opt/komga" "komga*.jar"
     mv /opt/komga/komga-*.jar /opt/komga/komga.jar
 
-    msg_info "Starting ${APP}"
+    msg_info "Starting Service"
     systemctl start komga
-    msg_ok "Started ${APP}"
+    msg_ok "Started Service"
     msg_ok "Updated Successfully"
   fi
   exit

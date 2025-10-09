@@ -30,9 +30,9 @@ function update_script() {
   RELEASE=$(curl -fsSL https://github.com/Donkie/Spoolman/releases/latest | grep "title>Release" | cut -d " " -f 4)
   if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
 
-    msg_info "Stopping ${APP} Service"
+    msg_info "Stopping Service"
     systemctl stop spoolman
-    msg_ok "Stopped ${APP} Service"
+    msg_ok "Stopped Service"
 
     msg_info "Updating ${APP} to ${RELEASE}"
     cd /opt
@@ -46,9 +46,9 @@ function update_script() {
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP} to ${RELEASE}"
 
-    msg_info "Starting ${APP} Service"
+    msg_info "Starting Service"
     systemctl start spoolman
-    msg_ok "Started ${APP} Service"
+    msg_ok "Started Service"
 
     msg_info "Cleaning up"
     rm -rf /opt/spoolman.zip

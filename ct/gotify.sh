@@ -28,16 +28,16 @@ function update_script() {
     exit
   fi
   if check_for_gh_release "gotify" "gotify/server"; then
-    msg_info "Stopping ${APP}"
+    msg_info "Stopping Service"
     systemctl stop gotify
-    msg_ok "Stopped ${APP}"
+    msg_ok "Stopped Service"
 
     fetch_and_deploy_gh_release "gotify" "gotify/server" "prebuild" "latest" "/opt/gotify" "gotify-linux-amd64.zip"
     chmod +x /opt/gotify/gotify-linux-amd64
 
-    msg_info "Starting ${APP}"
+    msg_info "Starting Service"
     systemctl start gotify
-    msg_ok "Started ${APP}"
+    msg_ok "Started Service"
     msg_ok "Updated Successfully"
   fi
   exit

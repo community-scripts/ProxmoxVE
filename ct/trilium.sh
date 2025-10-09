@@ -39,10 +39,10 @@ function update_script() {
       exit 1
     fi
 
-    msg_info "Stopping ${APP}"
+    msg_info "Stopping Service"
     systemctl stop trilium
     sleep 1
-    msg_ok "Stopped ${APP}"
+    msg_ok "Stopped Service"
 
     msg_info "Backing up Database"
     mkdir -p /opt/trilium_backup
@@ -61,10 +61,10 @@ function update_script() {
     rm -rf /opt/trilium_backup
     msg_ok "Cleaned"
 
-    msg_info "Starting ${APP}"
+    msg_info "Starting Service"
     systemctl start trilium
     sleep 1
-    msg_ok "Started ${APP}"
+    msg_ok "Started Service"
     msg_ok "Updated Successfully"
   fi
   exit

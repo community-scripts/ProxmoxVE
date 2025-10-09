@@ -32,18 +32,18 @@ function update_script() {
   RELEASE=$(curl -fsSL https://api.github.com/repos/actualbudget/actual/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
   if [[ -f /opt/actualbudget-data/config.json ]]; then
     if [[ ! -f /opt/actualbudget_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/actualbudget_version.txt)" ]]; then
-      msg_info "Stopping ${APP}"
+      msg_info "Stopping Service"
       systemctl stop actualbudget
-      msg_ok "${APP} Stopped"
+      msg_ok "Stopped Service"
 
       msg_info "Updating ${APP} to ${RELEASE}"
       $STD npm update -g @actual-app/sync-server
       echo "${RELEASE}" >/opt/actualbudget_version.txt
       msg_ok "Updated ${APP} to ${RELEASE}"
 
-      msg_info "Starting ${APP}"
+      msg_info "Starting Service"
       systemctl start actualbudget
-      msg_ok "Restarted ${APP}"
+      msg_ok "Started Service"
     else
       msg_info "${APP} is already up to date"
     fi

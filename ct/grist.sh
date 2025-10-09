@@ -30,9 +30,9 @@ function update_script() {
   fi
 
   if check_for_gh_release "grist" "gristlabs/grist-core"; then
-    msg_info "Stopping ${APP} Service"
+    msg_info "Stopping Service"
     systemctl stop grist
-    msg_ok "Stopped ${APP} Service"
+    msg_ok "Stopped Service"
 
     msg_info "Creating backup"
     rm -rf /opt/grist_bak
@@ -52,9 +52,9 @@ function update_script() {
     $STD yarn run install:python
     msg_ok "Updated ${APP}"
 
-    msg_info "Starting ${APP} Service"
+    msg_info "Starting Service"
     systemctl start grist
-    msg_ok "Started ${APP} Service"
+    msg_ok "Started Service"
 
     msg_ok "Updated Successfully"
   fi

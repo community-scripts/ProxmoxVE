@@ -28,15 +28,15 @@ function update_script() {
   fi
 
   if check_for_gh_release "silverbullet" "silverbulletmd/silverbullet"; then
-    msg_info "Stopping ${APP}"
+    msg_info "Stopping Service"
     systemctl stop silverbullet
-    msg_ok "Stopped ${APP}"
+    msg_ok "Stopped Service"
 
     fetch_and_deploy_gh_release "silverbullet" "silverbulletmd/silverbullet" "prebuild" "latest" "/opt/silverbullet/bin" "silverbullet-server-linux-x86_64.zip"
 
-    msg_info "Starting ${APP}"
+    msg_info "Starting Service"
     systemctl start silverbullet
-    msg_ok "Started ${APP}"
+    msg_ok "Started Service"
     msg_ok "Update Successful"
   fi
   exit

@@ -53,9 +53,9 @@ function update_script() {
     [[ -d /opt/media ]] && mv /opt/media /opt/traccar
     msg_ok "Data restored"
 
-    msg_info "Starting ${APP}"
+    msg_info "Starting Service"
     systemctl start traccar
-    msg_ok "Started ${APP}"
+    msg_ok "Started Service"
 
     msg_info "Cleaning up"
     [ -f README.txt ] || [ -f traccar.run ] && rm -f README.txt traccar.run

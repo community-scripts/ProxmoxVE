@@ -31,9 +31,9 @@ function update_script() {
   RELEASE=$(curl -fsSL https://api.github.com/repos/netbox-community/netbox/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
   if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
 
-    msg_info "Stopping ${APP}"
+    msg_info "Stopping Service"
     systemctl stop netbox netbox-rq
-    msg_ok "Stopped ${APP}"
+    msg_ok "Stopped Service"
 
     msg_info "Updating $APP to v${RELEASE}"
     mv /opt/netbox/ /opt/netbox-backup
@@ -60,9 +60,9 @@ function update_script() {
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated $APP to v${RELEASE}"
 
-    msg_info "Starting ${APP}"
+    msg_info "Starting Service"
     systemctl start netbox netbox-rq
-    msg_ok "Started ${APP}"
+    msg_ok "Started Service"
 
     msg_info "Cleaning up"
     rm -r "/opt/v${RELEASE}.zip"

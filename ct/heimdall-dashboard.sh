@@ -29,10 +29,10 @@ function update_script() {
   fi
   RELEASE=$(curl -fsSL "https://api.github.com/repos/linuxserver/Heimdall/releases/latest" | awk '/tag_name/{print $4;exit}' FS='[""]')
   if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
-    msg_info "Stopping ${APP}"
+    msg_info "Stopping Service"
     systemctl stop heimdall
     sleep 1
-    msg_ok "Stopped ${APP}"
+    msg_ok "Stopped Service"
     msg_info "Backing up Data"
     cp -R /opt/Heimdall/database database-backup
     cp -R /opt/Heimdall/public public-backup
@@ -59,10 +59,10 @@ function update_script() {
     rm -rf {"${RELEASE}".tar.gz,Heimdall-"${VER}",public-backup,database-backup,Heimdall}
     sleep 1
     msg_ok "Cleaned"
-    msg_info "Starting ${APP}"
+    msg_info "Starting Service"
     systemctl start heimdall.service
     sleep 2
-    msg_ok "Started ${APP}"
+    msg_ok "Started Service"
     msg_ok "Updated Successfully"
   else
     msg_ok "No update required.  ${APP} is already at ${RELEASE}."

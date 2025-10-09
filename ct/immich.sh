@@ -79,7 +79,7 @@ function update_script() {
     msg_info "Stopping Services"
     systemctl stop immich-web
     systemctl stop immich-ml
-    msg_ok "Stopped ${APP}"
+    msg_ok "Stopped Service"
     INSTALL_DIR="/opt/${APP}"
     UPLOAD_DIR="$(sed -n '/^IMMICH_MEDIA_LOCATION/s/[^=]*=//p' /opt/immich/.env)"
     SRC_DIR="${INSTALL_DIR}/source"

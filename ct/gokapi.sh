@@ -28,15 +28,15 @@ function update_script() {
     exit
   fi
   if check_for_gh_release "gokapi" "Forceu/Gokapi"; then
-    msg_info "Stopping ${APP}"
+    msg_info "Stopping Service"
     systemctl stop gokapi
-    msg_ok "Stopped ${APP}"
+    msg_ok "Stopped Service"
 
     fetch_and_deploy_gh_release "gokapi" "Forceu/Gokapi" "prebuild" "latest" "/opt/gokapi" "gokapi-linux_amd64.zip"
 
-    msg_info "Starting ${APP}"
+    msg_info "Starting Service"
     systemctl start gokapi
-    msg_ok "Started ${APP}"
+    msg_ok "Started Service"
     msg_ok "Updated Successfully"
   fi
   exit

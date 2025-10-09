@@ -28,9 +28,9 @@ function update_script() {
     exit 1
   fi
 
-  msg_info "Stopping ${APP}"
+  msg_info "Stopping Service"
   systemctl stop prometheus-pve-exporter
-  msg_ok "Stopped ${APP}"
+  msg_ok "Stopped Service"
 
   export PVE_VENV_PATH="/opt/prometheus-pve-exporter/.venv"
   export PVE_EXPORTER_BIN="${PVE_VENV_PATH}/bin/pve_exporter"
@@ -77,9 +77,9 @@ EOF
     msg_ok "Updated systemd service"
   fi
 
-  msg_info "Starting ${APP}"
+  msg_info "Starting Service"
   systemctl start prometheus-pve-exporter
-  msg_ok "Started ${APP}"
+  msg_ok "Started Service"
 
   msg_ok "Updated Successfully"
   exit 0

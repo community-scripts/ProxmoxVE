@@ -29,15 +29,15 @@ function update_script() {
     exit
   fi
   if check_for_gh_release "emby" "MediaBrowser/Emby.Releases"; then
-    msg_info "Stopping ${APP}"
+    msg_info "Stopping Service"
     systemctl stop emby-server
-    msg_ok "Stopped ${APP}"
+    msg_ok "Stopped Service"
 
     fetch_and_deploy_gh_release "emby" "MediaBrowser/Emby.Releases" "binary"
 
-    msg_info "Starting ${APP}"
+    msg_info "Starting Service"
     systemctl start emby-server
-    msg_ok "Started ${APP}"
+    msg_ok "Started Service"
     msg_ok "Updated Successfully"
   fi
   exit

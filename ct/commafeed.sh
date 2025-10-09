@@ -29,9 +29,9 @@ function update_script() {
     exit
   fi
   if check_for_gh_release "commafeed" "Athou/commafeed"; then
-    msg_info "Stopping ${APP}"
+    msg_info "Stopping Service"
     systemctl stop commafeed
-    msg_ok "Stopped ${APP}"
+    msg_ok "Stopped Service"
 
     if ! [[ $(dpkg -s rsync 2>/dev/null) ]]; then
       msg_info "Installing Dependencies"
@@ -54,9 +54,9 @@ function update_script() {
       msg_ok "Restored data"
     fi
 
-    msg_info "Starting ${APP}"
+    msg_info "Starting Service"
     systemctl start commafeed
-    msg_ok "Started ${APP}"
+    msg_ok "Started Service"
     msg_ok "Updated Successfully"
   fi
   exit

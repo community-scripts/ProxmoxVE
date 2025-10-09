@@ -31,9 +31,9 @@ function update_script() {
   NODE_VERSION="22" setup_nodejs
 
   if check_for_gh_release "uptime-kuma" "louislam/uptime-kuma"; then
-    msg_info "Stopping ${APP}"
+    msg_info "Stopping Service"
     systemctl stop uptime-kuma
-    msg_ok "Stopped ${APP}"
+    msg_ok "Stopped Service"
 
     fetch_and_deploy_gh_release "uptime-kuma" "louislam/uptime-kuma" "tarball"
 
@@ -43,9 +43,9 @@ function update_script() {
     $STD npm run download-dist
     msg_ok "Updated ${APP}"
 
-    msg_info "Starting ${APP}"
+    msg_info "Starting Service"
     systemctl start uptime-kuma
-    msg_ok "Started ${APP}"
+    msg_ok "Started Service"
     msg_ok "Updated Successfully"
   fi
   exit

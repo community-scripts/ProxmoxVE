@@ -29,7 +29,7 @@ function update_script() {
   fi
 
   if check_for_gh_release "umami" "umami-software/umami"; then
-    msg_info "Stopping ${APP}"
+    msg_info "Stopping Service"
     systemctl stop umami
     msg_ok "Stopped $APP"
 
@@ -41,9 +41,9 @@ function update_script() {
     $STD yarn run build
     msg_ok "Updated ${APP}"
 
-    msg_info "Starting ${APP}"
+    msg_info "Starting Service"
     systemctl start umami
-    msg_ok "Started ${APP}"
+    msg_ok "Started Service"
     msg_ok "Updated Successfully"
   fi
   exit

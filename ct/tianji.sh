@@ -61,9 +61,9 @@ function update_script() {
     $STD uv pip install apprise cryptography --system
     msg_ok "Updated AppRise"
 
-    msg_info "Starting ${APP}"
+    msg_info "Starting Service"
     systemctl start tianji
-    msg_ok "Started ${APP}"
+    msg_ok "Started Service"
 
     msg_info "Cleaning up"
     rm -rf /opt/tianji_bak

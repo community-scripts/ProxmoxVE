@@ -35,9 +35,9 @@ function update_script() {
 
     fetch_and_deploy_gh_release "traefik" "traefik/traefik" "prebuild" "latest" "/usr/bin" "traefik_v*_linux_amd64.tar.gz"
 
-    msg_info "Starting ${APP}"
+    msg_info "Starting Service"
     systemctl start traefik
-    msg_ok "Started ${APP}"
+    msg_ok "Started Service"
     msg_ok "Updated Successfully"
   fi
   exit

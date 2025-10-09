@@ -47,9 +47,9 @@ function update_script() {
   fi
 
   if [[ "${CURRENT_VERSION}" != "${RELEASE}" ]]; then
-    msg_info "Stopping ${APP}"
+    msg_info "Stopping Service"
     systemctl stop minio
-    msg_ok "${APP} Stopped"
+    msg_ok "Stopped Service"
 
     msg_info "Updating ${APP} to ${RELEASE}"
     mv /usr/local/bin/minio /usr/local/bin/minio_bak
@@ -58,9 +58,9 @@ function update_script() {
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP}"
 
-    msg_info "Starting ${APP}"
+    msg_info "Starting Service"
     systemctl start minio
-    msg_ok "Started ${APP}"
+    msg_ok "Started Service"
 
     msg_info "Cleaning up"
     rm -f /usr/local/bin/minio_bak

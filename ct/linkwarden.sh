@@ -28,9 +28,9 @@ function update_script() {
   fi
   if check_for_gh_release "linkwarden" "linkwarden/linkwarden"; then
     NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
-    msg_info "Stopping ${APP}"
+    msg_info "Stopping Service"
     systemctl stop linkwarden
-    msg_ok "Stopped ${APP}"
+    msg_ok "Stopped Service"
 
     RUST_CRATES="monolith" setup_rust
 
@@ -54,9 +54,9 @@ function update_script() {
     [ -d /opt/data.bak ] && mv /opt/data.bak /opt/linkwarden/data
     msg_ok "Updated ${APP}"
 
-    msg_info "Starting ${APP}"
+    msg_info "Starting Service"
     systemctl start linkwarden
-    msg_ok "Started ${APP}"
+    msg_ok "Started Service"
 
     msg_info "Cleaning up"
     rm -rf ~/.cargo/registry ~/.cargo/git ~/.cargo/.package-cache ~/.rustup

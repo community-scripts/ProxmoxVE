@@ -27,9 +27,9 @@ function update_script() {
         msg_error "No ${APP} Installation Found!"
         exit
     fi
-    msg_info "Stopping ${APP}"
+    msg_info "Stopping Service"
     systemctl stop homer
-    msg_ok "Stopped ${APP}"
+    msg_ok "Stopped Service"
 
     msg_info "Backing up assets directory"
     cd ~
@@ -53,9 +53,9 @@ function update_script() {
     rm -rf assets-backup /opt/homer/homer.zip
     msg_ok "Cleaned"
 
-    msg_info "Starting ${APP}"
+    msg_info "Starting Service"
     systemctl start homer
-    msg_ok "Started ${APP}"
+    msg_ok "Started Service"
     msg_ok "Updated Successfully"
     exit
 }

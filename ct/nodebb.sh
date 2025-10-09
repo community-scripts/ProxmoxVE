@@ -31,9 +31,9 @@ function update_script() {
     exit
   fi
   if check_for_gh_release "nodebb" "NodeBB/NodeBB"; then
-    msg_info "Stopping ${APP}"
+    msg_info "Stopping Service"
     systemctl stop nodebb
-    msg_ok "Stopped ${APP}"
+    msg_ok "Stopped Service"
 
     msg_info "Updating ${APP}"
     cd /opt/nodebb
@@ -41,9 +41,9 @@ function update_script() {
     echo "${CHECK_UPDATE_RELEASE}" >~/.nodebb
     msg_ok "Updated ${APP}"
 
-    msg_info "Starting ${APP}"
+    msg_info "Starting Service"
     systemctl start nodebb
-    msg_ok "Started ${APP}"
+    msg_ok "Started Service"
     msg_ok "Updated Successfully\n"
   fi
   exit
