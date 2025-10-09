@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-10-09
 
+### 🆕 New Scripts
+
+  - New Script: rwMarkable ([#8215](https://github.com/community-scripts/ProxmoxVE/pull/8215))
+
 ## 2025-10-08
 
 ### 🚀 Updated Scripts
