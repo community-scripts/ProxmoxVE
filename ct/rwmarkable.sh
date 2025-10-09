@@ -41,9 +41,7 @@ function update_script() {
     msg_ok "Backed up configuration & data"
 
     NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
-    cd /opt
-    export CLEAN_INSTALL=1
-    fetch_and_deploy_gh_release "rwMarkable" "fccview/rwMarkable" "tarball" "latest" "/opt/rwmarkable"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "rwMarkable" "fccview/rwMarkable" "tarball" "latest" "/opt/rwmarkable"
 
     msg_info "Updating app"
     cd /opt/rwmarkable
