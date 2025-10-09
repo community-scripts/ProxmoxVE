@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-12}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -29,22 +29,22 @@ function update_script() {
   fi
 
   if check_for_gh_release "umami" "umami-software/umami"; then
-    msg_info "Stopping ${APP}"
+    msg_info "Stopping Service"
     systemctl stop umami
-    msg_ok "Stopped $APP"
+    msg_ok "Stopped Service"
 
     fetch_and_deploy_gh_release "umami" "umami-software/umami" "tarball"
 
-    msg_info "Updating ${APP}"
+    msg_info "Updating Umami"
     cd /opt/umami
     $STD yarn install
     $STD yarn run build
-    msg_ok "Updated ${APP}"
+    msg_ok "Updated Umami"
 
-    msg_info "Starting ${APP}"
+    msg_info "Starting Service"
     systemctl start umami
-    msg_ok "Started ${APP}"
-    msg_ok "Updated Successfully"
+    msg_ok "Started Service"
+    msg_ok "Updated Successfully!"
   fi
   exit
 }

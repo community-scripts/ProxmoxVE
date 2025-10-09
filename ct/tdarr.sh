@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -27,9 +27,9 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  msg_info "Updating $APP LXC"
-  $STD apt-get update
-  $STD apt-get -y upgrade
+  msg_info "Updating Tdarr"
+  $STD apt update
+  $STD apt upgrade -y
   rm -rf /opt/tdarr/Tdarr_Updater
   cd /opt/tdarr
   RELEASE=$(curl -fsSL https://f000.backblazeb2.com/file/tdarrs/versions.json | grep -oP '(?<="Tdarr_Updater": ")[^"]+' | grep linux_x64 | head -n 1)
@@ -37,12 +37,12 @@ function update_script() {
   $STD unzip Tdarr_Updater.zip
   chmod +x Tdarr_Updater
   $STD ./Tdarr_Updater
-  msg_ok "Updated $APP LXC"
+  msg_ok "Updated Tdarr"
 
   msg_info "Cleaning up"
   rm -rf /opt/tdarr/Tdarr_Updater.zip
-  msg_ok "Cleaned"
-  msg_ok "$APP has been successfully updated!"
+  msg_ok "Cleaned up"
+  msg_ok "Updated Successfully!"
   exit
 }
 

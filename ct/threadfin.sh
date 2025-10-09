@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -29,16 +29,16 @@ function update_script() {
   fi
 
   if check_for_gh_release "threadfin" "threadfin/threadfin"; then
-    msg_info "Stopping $APP"
+    msg_info "Stopping Service"
     systemctl stop threadfin
-    msg_ok "Stopped $APP"
+    msg_ok "Stopped Service"
 
     fetch_and_deploy_gh_release "threadfin" "threadfin/threadfin" "singlefile" "latest" "/opt/threadfin" "Threadfin_linux_amd64"
 
-    msg_info "Starting $APP"
+    msg_info "Starting Service"
     systemctl start threadfin
-    msg_ok "Started $APP"
-    msg_ok "Updated Successfully"
+    msg_ok "Started Service"
+    msg_ok "Updated Successfully!"
   fi
   exit
 }

@@ -14,7 +14,7 @@ network_check
 update_os
 
 NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
-PG_VERSION="16" setup_postgresql
+PG_VERSION="17" setup_postgresql
 fetch_and_deploy_gh_release "umami" "umami-software/umami" "tarball"
 
 msg_info "Setting up postgresql"
@@ -65,6 +65,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

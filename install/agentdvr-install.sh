@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   apt-transport-https \
   alsa-utils \
   libxext-dev \
@@ -29,7 +29,7 @@ cd /opt/agentdvr/agent
 curl -fsSL "$RELEASE" -o $(basename "$RELEASE")
 $STD unzip Agent_Linux64*.zip
 chmod +x ./Agent
-echo $RELEASE > ~/.agentdvr
+echo $RELEASE >~/.agentdvr
 msg_ok "Installed AgentDVR"
 
 msg_info "Creating Service"
@@ -56,6 +56,7 @@ customize
 
 msg_info "Cleaning up"
 rm -rf Agent_Linux64*.zip
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

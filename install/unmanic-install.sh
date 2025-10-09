@@ -14,27 +14,40 @@ network_check
 update_os
 
 msg_info "Installing Dependencies (Patience)"
-$STD apt-get install -y ffmpeg
-$STD apt-get install -y python3-pip
+$STD apt install -y \
+  ffmpeg \
+  python3-pip
 msg_ok "Installed Dependencies"
 
+msg_info "Setting Up Hardware Acceleration"
+$STD apt -y install \
+  va-driver-all \
+  ocl-icd-libopencl1 \
+  vainfo \
+  intel-gpu-tools \
+  mesa-va-drivers \
+  mesa-vdpau-drivers \
+  intel-media-va-driver
 if [[ "$CTTYPE" == "0" ]]; then
-  msg_info "Setting Up Hardware Acceleration"
-  $STD apt-get -y install \
-    va-driver-all \
-    ocl-icd-libopencl1 \
-    intel-opencl-icd
   chgrp video /dev/dri
   chmod 755 /dev/dri
   chmod 660 /dev/dri/*
   $STD adduser $(id -u -n) video
   $STD adduser $(id -u -n) render
-  msg_ok "Set Up Hardware Acceleration"
+  VIDEO_GID=$(getent group video | cut -d: -f3)
+  RENDER_GID=$(getent group render | cut -d: -f3)
+  if [[ -n "$VIDEO_GID" && -n "$RENDER_GID" ]]; then
+    sed -i "s/^video:x:[0-9]*:/video:x:$VIDEO_GID:/" /etc/group
+    sed -i "s/^render:x:[0-9]*:/render:x:$RENDER_GID:/" /etc/group
+  fi
+else
+  VIDEO_GID=$(getent group video | cut -d: -f3)
+  RENDER_GID=$(getent group render | cut -d: -f3)
 fi
+msg_ok "Set Up Hardware Acceleration"
 
 msg_info "Installing Unmanic"
 $STD pip3 install unmanic
-sed -i -e 's/^sgx:x:104:$/render:x:104:root/' -e 's/^render:x:106:root$/sgx:x:106:/' /etc/group
 msg_ok "Installed Unmanic"
 
 msg_info "Creating Service"
@@ -61,6 +74,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -31,22 +31,22 @@ function update_script() {
   NODE_VERSION="22" setup_nodejs
 
   if check_for_gh_release "uptime-kuma" "louislam/uptime-kuma"; then
-    msg_info "Stopping ${APP}"
+    msg_info "Stopping Service"
     systemctl stop uptime-kuma
-    msg_ok "Stopped ${APP}"
+    msg_ok "Stopped Service"
 
     fetch_and_deploy_gh_release "uptime-kuma" "louislam/uptime-kuma" "tarball"
 
-    msg_info "Updating ${APP}"
+    msg_info "Updating Uptime Kuma"
     cd /opt/uptime-kuma
     $STD npm install --omit dev
     $STD npm run download-dist
-    msg_ok "Updated ${APP}"
+    msg_ok "Updated Uptime Kuma"
 
-    msg_info "Starting ${APP}"
+    msg_info "Starting Service"
     systemctl start uptime-kuma
-    msg_ok "Started ${APP}"
-    msg_ok "Updated Successfully"
+    msg_ok "Started Service"
+    msg_ok "Updated Successfully!"
   fi
   exit
 }

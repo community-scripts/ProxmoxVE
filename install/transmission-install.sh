@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Transmission"
-$STD apt-get install -y transmission-daemon
+$STD apt install -y transmission-daemon
 systemctl stop transmission-daemon
 sed -i '{s/"rpc-whitelist-enabled": true/"rpc-whitelist-enabled": false/g; s/"rpc-host-whitelist-enabled": true,/"rpc-host-whitelist-enabled": false,/g}' /etc/transmission-daemon/settings.json
 systemctl start transmission-daemon
@@ -24,6 +24,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

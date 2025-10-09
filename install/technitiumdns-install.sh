@@ -17,8 +17,8 @@ msg_info "Installing ASP.NET Core Runtime"
 curl -fsSL "https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb" -o "packages-microsoft-prod.deb"
 $STD dpkg -i packages-microsoft-prod.deb
 rm -rf packages-microsoft-prod.deb
-$STD apt-get update
-$STD apt-get install -y aspnetcore-runtime-8.0
+$STD apt update
+$STD apt install -y aspnetcore-runtime-8.0
 msg_ok "Installed ASP.NET Core Runtime"
 
 RELEASE=$(curl -fsSL https://technitium.com/dns/ | grep -oP 'Version \K[\d.]+')
@@ -26,7 +26,7 @@ msg_info "Installing Technitium DNS"
 mkdir -p /opt/technitium/dns
 curl -fsSL "https://download.technitium.com/dns/DnsServerPortable.tar.gz" -o /opt/DnsServerPortable.tar.gz
 $STD tar zxvf /opt/DnsServerPortable.tar.gz -C /opt/technitium/dns/
-echo "${RELEASE}" > ~/.technitium
+echo "${RELEASE}" >~/.technitium
 msg_ok "Installed Technitium DNS"
 
 msg_info "Creating service"
@@ -39,6 +39,7 @@ customize
 
 msg_info "Cleaning up"
 rm -f /opt/DnsServerPortable.tar.gz
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -44,7 +44,7 @@ function update_script() {
 
     fetch_and_deploy_gh_release "tududi" "chrisvel/tududi" "tarball" "latest" "/opt/tududi"
 
-    msg_info "Updating ${APP}"
+    msg_info "Updating Tududi"
     cd /opt/tududi
     $STD npm install
     export NODE_ENV=production
@@ -57,12 +57,12 @@ function update_script() {
       -e 's|npm run start|bash /opt/tududi/backend/cmd/start.sh|' \
       /etc/systemd/system/tududi.service
     systemctl daemon-reload
-    msg_ok "Updated $APP"
+    msg_ok "Updated Tududi"
 
     msg_info "Starting Service"
     systemctl start tududi
     msg_ok "Started Service"
-    msg_ok "Updated Successfully"
+    msg_ok "Updated Successfully!"
   fi
   exit
 }

@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-10}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -20,43 +20,46 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /opt/tasmocompiler ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    RELEASE=$(curl -fsSL https://api.github.com/repos/benzino77/tasmocompiler/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-    if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
-        msg_info "Stopping $APP"
-        systemctl stop tasmocompiler
-        msg_ok "Stopped $APP"
-        msg_info "Updating $APP to v${RELEASE}"
-        cd /opt
-        rm -rf /opt/tasmocompiler
-        RELEASE=$(curl -fsSL https://api.github.com/repos/benzino77/tasmocompiler/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-        curl -fsSL "https://github.com/benzino77/tasmocompiler/archive/refs/tags/v${RELEASE}.tar.gz" -o $(basename "https://github.com/benzino77/tasmocompiler/archive/refs/tags/v${RELEASE}.tar.gz")
-        tar xzf v${RELEASE}.tar.gz
-        mv tasmocompiler-${RELEASE}/ /opt/tasmocompiler/
-        cd /opt/tasmocompiler
-        $STD yarn install
-        export NODE_OPTIONS=--openssl-legacy-provider
-        $STD npm i
-        $STD yarn build
-        msg_ok "Updated $APP to v${RELEASE}"
-        msg_info "Starting $APP"
-        systemctl start tasmocompiler
-        msg_ok "Started $APP"
-        echo "${RELEASE}" >/opt/${APP}_version.txt
-        msg_info "Cleaning up"
-        rm -r "/opt/v${RELEASE}.tar.gz"
-        msg_ok "Cleaned"
-        msg_ok "Update Successful"
-    else
-        msg_ok "No update required. ${APP} is already at v${RELEASE}"
-    fi
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /opt/tasmocompiler ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+  RELEASE=$(curl -fsSL https://api.github.com/repos/benzino77/tasmocompiler/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+    msg_info "Stopping Service"
+    systemctl stop tasmocompiler
+    msg_ok "Stopped Service"
+
+    msg_info "Updating TasmoCompiler"
+    cd /opt
+    rm -rf /opt/tasmocompiler
+    RELEASE=$(curl -fsSL https://api.github.com/repos/benzino77/tasmocompiler/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+    curl -fsSL "https://github.com/benzino77/tasmocompiler/archive/refs/tags/v${RELEASE}.tar.gz" -o $(basename "https://github.com/benzino77/tasmocompiler/archive/refs/tags/v${RELEASE}.tar.gz")
+    tar xzf v${RELEASE}.tar.gz
+    mv tasmocompiler-${RELEASE}/ /opt/tasmocompiler/
+    cd /opt/tasmocompiler
+    $STD yarn install
+    export NODE_OPTIONS=--openssl-legacy-provider
+    $STD npm i
+    $STD yarn build
+    msg_ok "Updated TasmoCompiler"
+
+    msg_info "Starting Service"
+    systemctl start tasmocompiler
+    msg_ok "Started Service"
+
+    echo "${RELEASE}" >/opt/${APP}_version.txt
+    msg_info "Cleaning up"
+    rm -r "/opt/v${RELEASE}.tar.gz"
+    msg_ok "Cleaned"
+    msg_ok "Update Successfully!"
+  else
+    msg_ok "No update required. ${APP} is already at v${RELEASE}"
+  fi
+  exit
 }
 
 start
