@@ -22,6 +22,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Alpine-Tinyauth: Fixes for v4 release [@tremor021](https://github.com/tremor021) ([#8225](https://github.com/community-scripts/ProxmoxVE/pull/8225))
 
+  - #### ✨ New Features
+
+    - Bump U-T Scripts to Debian 13 [@MickLesk](https://github.com/MickLesk) ([#8227](https://github.com/community-scripts/ProxmoxVE/pull/8227))
+
 ## 2025-10-08
 
 ### 🚀 Updated Scripts
