@@ -14,7 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - SonarQube ([#8256](https://github.com/community-scripts/ProxmoxVE/pull/8256))
+  - Prometheus-Blackbox-Exporter ([#8255](https://github.com/community-scripts/ProxmoxVE/pull/8255))
+- SonarQube ([#8256](https://github.com/community-scripts/ProxmoxVE/pull/8256))
 
 ### 🚀 Updated Scripts
 
