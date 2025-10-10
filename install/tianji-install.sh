@@ -15,7 +15,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   python3 \
   cmake \
   g++ \
@@ -25,8 +25,8 @@ $STD apt-get install -y \
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" NODE_MODULE="pnpm@$(curl -s https://raw.githubusercontent.com/msgbyte/tianji/master/package.json | jq -r '.packageManager | split("@")[1]')" setup_nodejs
-PG_VERSION="16" setup_postgresql
-PYTHON_VERSION="3.12" setup_uv
+PG_VERSION="17" setup_postgresql
+PYTHON_VERSION="3.13" setup_uv
 
 msg_info "Setting up PostgreSQL"
 DB_NAME=tianji_db
@@ -97,6 +97,7 @@ msg_info "Cleaning up"
 rm -rf /opt/tianji/src/client
 rm -rf /opt/tianji/website
 rm -rf /opt/tianji/reporter
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

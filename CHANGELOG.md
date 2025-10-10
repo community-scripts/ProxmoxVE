@@ -10,11 +10,23 @@
 > [!CAUTION]
 Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit the project's popularity for potentially malicious purposes.
 
+## 2025-10-10
+
 ## 2025-10-09
 
 ### 🆕 New Scripts
 
   - New Script: rwMarkable ([#8215](https://github.com/community-scripts/ProxmoxVE/pull/8215))
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Alpine-Tinyauth: Fixes for v4 release [@tremor021](https://github.com/tremor021) ([#8225](https://github.com/community-scripts/ProxmoxVE/pull/8225))
+
+  - #### ✨ New Features
+
+    - Bump U-T Scripts to Debian 13 [@MickLesk](https://github.com/MickLesk) ([#8227](https://github.com/community-scripts/ProxmoxVE/pull/8227))
 
 ## 2025-10-08
 

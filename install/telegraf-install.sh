@@ -15,25 +15,31 @@ update_os
 
 msg_info "Adding Telegraf key and repository"
 curl -fsSL -O https://repos.influxdata.com/influxdata-archive.key
-gpg --show-keys --with-fingerprint --with-colons ./influxdata-archive.key 2>&1 \
-| grep -q '^fpr:\+24C975CBA61A024EE1B631787C3D57159FC2F927:$' \
-&& cat influxdata-archive.key \
-| gpg --dearmor \
-| tee /etc/apt/keyrings/influxdata-archive.gpg > /dev/null \
-&& echo 'deb [signed-by=/etc/apt/keyrings/influxdata-archive.gpg] https://repos.influxdata.com/debian stable main' \
-| tee /etc/apt/sources.list.d/influxdata.list > /dev/null
+gpg --show-keys --with-fingerprint --with-colons ./influxdata-archive.key 2>&1 |
+  grep -q '^fpr:\+24C975CBA61A024EE1B631787C3D57159FC2F927:$' &&
+  cat influxdata-archive.key |
+  gpg --dearmor |
+    tee /etc/apt/keyrings/influxdata-archive.gpg >/dev/null
+cat <<EOF | sudo tee /etc/apt/sources.list.d/influxdata.sources >/dev/null
+Types: deb
+URIs: https://repos.influxdata.com/debian
+Suites: stable
+Components: main
+Signed-By: /etc/apt/keyrings/influxdata-archive.gpg
+EOF
 msg_ok "Added Telegraf Repository"
 
 msg_info "Installing Telegraf"
-$STD apt-get update
-$STD apt-get install telegraf -y
+$STD apt update
+$STD apt install telegraf -y
 msg_ok "Installed Telegraf"
 
 motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 rm /influxdata-archive.key
 msg_ok "Cleaned"

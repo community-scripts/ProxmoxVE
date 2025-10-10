@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -32,10 +32,10 @@ function update_script() {
     systemctl stop uhf-server
     msg_ok "Stopped Service"
 
-    msg_info "Updating ${APP} LXC"
-    $STD apt-get update
-    $STD apt-get -y upgrade
-    msg_ok "Updated ${APP} LXC"
+    msg_info "Updating LXC"
+    $STD apt update
+    $STD apt -y upgrade
+    msg_ok "Updated LXC"
 
     fetch_and_deploy_gh_release "comskip" "swapplications/comskip" "prebuild" "latest" "/opt/comskip" "comskip-x64-*.zip"
     fetch_and_deploy_gh_release "uhf-server" "swapplications/uhf-server-dist" "prebuild" "latest" "/opt/uhf-server" "UHF.Server-linux-x64-*.zip"
@@ -45,8 +45,9 @@ function update_script() {
     msg_ok "Started Service"
 
     msg_info "Cleaning up"
-    $STD apt-get -y autoremove
-    $STD apt-get -y autoclean
+    $STD apt -y autoremove
+    $STD apt -y autoclean
+    $STD apt -y clean
     msg_ok "Cleaned"
     msg_ok "Updated Successfully"
   fi

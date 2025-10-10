@@ -14,17 +14,14 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y git
-$STD apt-get install -y pip
-msg_ok "Installed Dependencies"
-
-msg_info "Setup Python3"
-$STD apt-get install -y \
+$STD apt install -y \
+  git \
+  pip \
   python3 \
   python3-dev \
   python3-pip
 rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
-msg_ok "Setup Python3"
+msg_ok "Installed Dependencies"
 
 msg_info "Installing Tautulli"
 cd /opt
@@ -59,6 +56,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

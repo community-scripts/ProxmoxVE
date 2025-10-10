@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-4}"
 var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-10}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -34,9 +34,9 @@ function update_script() {
   fi
 
   if check_for_gh_release "tandoor" "TandoorRecipes/recipes"; then
-    msg_info "Stopping $APP"
+    msg_info "Stopping Service"
     systemctl stop tandoor
-    msg_ok "Stopped $APP"
+    msg_ok "Stopped Service"
 
     msg_info "Creating Backup"
     mv /opt/tandoor /opt/tandoor.bak
@@ -46,7 +46,7 @@ function update_script() {
     PYTHON_VERSION="3.13" setup_uv
     fetch_and_deploy_gh_release "tandoor" "TandoorRecipes/recipes" "tarball" "latest" "/opt/tandoor"
 
-    msg_info "Updating $APP"
+    msg_info "Updating Tandoor"
     cp -r /opt/tandoor.bak/{config,api,mediafiles,staticfiles} /opt/tandoor/
     mv /opt/tandoor.bak/.env /opt/tandoor/.env
     cd /opt/tandoor
@@ -64,17 +64,17 @@ EOF
     cd /opt/tandoor
     $STD /opt/tandoor/.venv/bin/python manage.py migrate
     $STD /opt/tandoor/.venv/bin/python manage.py collectstatic --no-input
-    msg_ok "Updated $APP"
+    msg_ok "Updated Trandoor"
 
-    msg_info "Starting $APP"
+    msg_info "Starting Service"
     systemctl start tandoor
     systemctl reload nginx
-    msg_ok "Started $APP"
+    msg_ok "Started Service"
 
     msg_info "Cleaning Up"
     rm -rf /opt/tandoor.bak
     msg_ok "Cleanup Completed"
-    msg_ok "Update Successful"
+    msg_ok "Update Successfully!"
   fi
   exit
 }

@@ -14,10 +14,16 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD curl -fsSL https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb -o packages-microsoft-prod.deb
-$STD dpkg -i packages-microsoft-prod.deb
-$STD apt-get update
-$STD apt-get install -y \
+curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o /usr/share/keyrings/microsoft-prod.gpg
+cat <<EOF | sudo tee /etc/apt/sources.list.d/microsoft-prod.sources >/dev/null
+Types: deb
+URIs: https://packages.microsoft.com/debian/13/prod/
+Suites: trixie
+Components: main
+Signed-By: /usr/share/keyrings/microsoft-prod.gpg
+EOF
+$STD apt update
+$STD apt install -y \
   dotnet-sdk-8.0 \
   aspnetcore-runtime-8.0
 msg_ok "Installed Dependencies"
@@ -117,6 +123,7 @@ customize
 
 msg_info "Cleaning up"
 rm -f $temp_file
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

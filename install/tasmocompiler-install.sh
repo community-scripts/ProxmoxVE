@@ -15,12 +15,9 @@ update_os
 
 msg_info "Installing Dependencies. Patience"
 $STD apt-get install -y \
-  git
+  git \
+  python3-venv
 msg_ok "Installed Dependencies"
-
-msg_info "Setup Python3"
-$STD apt-get install -y python3-venv
-msg_ok "Setup Python3"
 
 NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
 
@@ -70,6 +67,7 @@ customize
 
 msg_info "Cleaning up"
 rm -f /tmp/v${RELEASE}.tar.gz
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

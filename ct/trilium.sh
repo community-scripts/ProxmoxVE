@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-512}"
 var_disk="${var_disk:-2}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -59,6 +59,9 @@ function update_script() {
 
     msg_info "Cleaning up"
     rm -rf /opt/trilium_backup
+    $STD apt -y autoremove
+    $STD apt -y autoclean
+    $STD apt -y clean
     msg_ok "Cleaned"
 
     msg_info "Starting Service"

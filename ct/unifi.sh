@@ -20,18 +20,18 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /usr/lib/unifi ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    msg_info "Updating ${APP}"
-    $STD apt-get update --allow-releaseinfo-change
-    $STD apt-get install -y unifi
-    msg_ok "Updated Successfully"
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /usr/lib/unifi ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+  msg_info "Updating ${APP}"
+  $STD apt update --allow-releaseinfo-change
+  $STD apt install -y unifi
+  msg_ok "Updated Successfully"
+  exit
 }
 
 start

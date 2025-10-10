@@ -14,21 +14,27 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
-  coreutils
+$STD apt install -y coreutils
 msg_ok "Installed Dependencies"
 
 msg_info "Installing UrBackup Server"
-curl -fsSL https://download.opensuse.org/repositories/home:uroni/Debian_12/Release.key | gpg --dearmor >/etc/apt/trusted.gpg.d/home_uroni.gpg
-echo 'deb [signed-by=/etc/apt/trusted.gpg.d/home_uroni.gpg] http://download.opensuse.org/repositories/home:/uroni/Debian_12/ /' >/etc/apt/sources.list.d/home:uroni.list
-$STD apt-get update -y
-apt-get install -y -qq urbackup-server
+curl -fsSL https://download.opensuse.org/repositories/home:uroni/Debian_12/Release.key | gpg --dearmor -o /usr/share/keyrings/home-uroni.gpg
+cat <<EOF | sudo tee /etc/apt/sources.list.d/home-uroni.sources >/dev/null
+Types: deb
+URIs: http://download.opensuse.org/repositories/home:/uroni/Debian_12/
+Suites: ./
+Components: 
+Signed-By: /usr/share/keyrings/home-uroni.gpg
+EOF
+$STD apt update
+$STD apt install -y urbackup-server
 msg_ok "Installed UrBackup Server"
 
 motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

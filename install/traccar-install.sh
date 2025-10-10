@@ -29,6 +29,7 @@ customize
 
 msg_info "Cleaning up"
 [ -f README.txt ] || [ -f traccar.run ] && rm -f README.txt traccar.run
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

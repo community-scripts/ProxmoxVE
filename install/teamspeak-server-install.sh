@@ -51,6 +51,7 @@ customize
 
 msg_info "Cleaning up"
 rm -f ~/ts3server.tar.bz*
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

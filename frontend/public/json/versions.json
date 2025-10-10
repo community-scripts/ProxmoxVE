@@ -1,13 +1,93 @@
 [
   {
-    "name": "wazuh/wazuh",
-    "version": "coverity-w41-4.14.0",
-    "date": "2025-10-03T18:56:57Z"
+    "name": "rcourtman/Pulse",
+    "version": "v4.22.0",
+    "date": "2025-10-09T08:23:58Z"
   },
   {
     "name": "dgtlmoon/changedetection.io",
-    "version": "0.50.18",
-    "date": "2025-10-09T10:58:01Z"
+    "version": "0.50.19",
+    "date": "2025-10-09T23:19:31Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.77.7.dev10",
+    "date": "2025-10-09T22:25:13Z"
+  },
+  {
+    "name": "gelbphoenix/autocaliweb",
+    "version": "v0.10.3",
+    "date": "2025-10-09T21:55:26Z"
+  },
+  {
+    "name": "raydak-labs/configarr",
+    "version": "v1.17.0",
+    "date": "2025-10-09T19:15:06Z"
+  },
+  {
+    "name": "Ombi-app/Ombi",
+    "version": "v4.47.1",
+    "date": "2025-01-05T21:14:23Z"
+  },
+  {
+    "name": "FlareSolverr/FlareSolverr",
+    "version": "v3.4.2",
+    "date": "2025-10-09T19:05:48Z"
+  },
+  {
+    "name": "henrygd/beszel",
+    "version": "v0.13.2",
+    "date": "2025-10-09T18:33:46Z"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2025.9.3",
+    "date": "2025-10-01T11:30:07Z"
+  },
+  {
+    "name": "MediaBrowser/Emby.Releases",
+    "version": "4.9.1.80",
+    "date": "2025-09-30T20:25:16Z"
+  },
+  {
+    "name": "azukaar/Cosmos-Server",
+    "version": "v0.18.4",
+    "date": "2025-04-05T19:12:57Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.12.4-rc7",
+    "date": "2025-10-09T02:13:38Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "server/public/v0.1.20",
+    "date": "2025-10-09T17:22:46Z"
+  },
+  {
+    "name": "ErsatzTV/ErsatzTV",
+    "version": "v25.7.1",
+    "date": "2025-10-09T15:42:11Z"
+  },
+  {
+    "name": "silverbulletmd/silverbullet",
+    "version": "2.1.9",
+    "date": "2025-10-09T13:57:14Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.27.8",
+    "date": "2025-10-09T13:49:59Z"
+  },
+  {
+    "name": "tobychui/zoraxy",
+    "version": "v3.2.7",
+    "date": "2025-10-09T12:50:53Z"
+  },
+  {
+    "name": "glpi-project/glpi",
+    "version": "11.0.1",
+    "date": "2025-10-09T12:34:15Z"
   },
   {
     "name": "nzbgetcom/nzbget",
@@ -15,19 +95,14 @@
     "date": "2025-10-09T10:27:01Z"
   },
   {
+    "name": "wazuh/wazuh",
+    "version": "coverity-w41-4.14.0",
+    "date": "2025-10-03T18:56:57Z"
+  },
+  {
     "name": "firefly-iii/firefly-iii",
     "version": "v6.4.2",
     "date": "2025-10-07T08:11:58Z"
-  },
-  {
-    "name": "rcourtman/Pulse",
-    "version": "v4.22.0",
-    "date": "2025-10-09T08:23:58Z"
-  },
-  {
-    "name": "silverbulletmd/silverbullet",
-    "version": "2.1.8",
-    "date": "2025-10-09T08:21:31Z"
   },
   {
     "name": "meilisearch/meilisearch",
@@ -37,7 +112,7 @@
   {
     "name": "theonedev/onedev",
     "version": "v13.0.8",
-    "date": "2025-10-09T07:13:00Z"
+    "date": "2025-10-09T06:36:42Z"
   },
   {
     "name": "Jackett/Jackett",
@@ -53,16 +128,6 @@
     "name": "rogerfar/rdt-client",
     "version": "v2.0.118",
     "date": "2025-10-09T03:33:01Z"
-  },
-  {
-    "name": "BerriAI/litellm",
-    "version": "v1.77.7.dev9",
-    "date": "2025-10-09T03:23:44Z"
-  },
-  {
-    "name": "ollama/ollama",
-    "version": "v0.12.4-rc6",
-    "date": "2025-10-04T18:46:45Z"
   },
   {
     "name": "jeedom/core",
@@ -88,16 +153,6 @@
     "name": "pelican-dev/panel",
     "version": "v1.0.0-beta26",
     "date": "2025-10-08T20:12:11Z"
-  },
-  {
-    "name": "azukaar/Cosmos-Server",
-    "version": "v0.18.4",
-    "date": "2025-04-05T19:12:57Z"
-  },
-  {
-    "name": "msgbyte/tianji",
-    "version": "v1.27.7",
-    "date": "2025-10-08T18:44:23Z"
   },
   {
     "name": "autobrr/autobrr",
@@ -206,13 +261,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v4.4.0",
-    "date": "2025-09-02T19:26:18Z"
-  },
-  {
-    "name": "MediaBrowser/Emby.Releases",
-    "version": "4.9.1.80",
-    "date": "2025-09-30T20:25:16Z"
+    "version": "nightly",
+    "date": "2025-10-07T18:00:49Z"
   },
   {
     "name": "coder/code-server",
@@ -255,11 +305,6 @@
     "date": "2025-10-07T11:29:11Z"
   },
   {
-    "name": "mattermost/mattermost",
-    "version": "mattermost-redux@10.12.0",
-    "date": "2025-09-18T20:15:19Z"
-  },
-  {
     "name": "pocket-id/pocket-id",
     "version": "v1.13.1",
     "date": "2025-10-07T06:32:50Z"
@@ -278,11 +323,6 @@
     "name": "outline/outline",
     "version": "v1.0.0-1",
     "date": "2025-10-06T23:16:32Z"
-  },
-  {
-    "name": "Ombi-app/Ombi",
-    "version": "v4.47.1",
-    "date": "2025-01-05T21:14:23Z"
   },
   {
     "name": "Radarr/Radarr",
@@ -338,11 +378,6 @@
     "name": "moghtech/komodo",
     "version": "v1.19.5",
     "date": "2025-09-27T20:59:46Z"
-  },
-  {
-    "name": "henrygd/beszel",
-    "version": "v0.13.1",
-    "date": "2025-10-06T01:27:46Z"
   },
   {
     "name": "hyperion-project/hyperion.ng",
@@ -403,11 +438,6 @@
     "name": "globaleaks/globaleaks-whistleblowing-software",
     "version": "v5.0.84",
     "date": "2025-10-04T08:06:12Z"
-  },
-  {
-    "name": "ErsatzTV/ErsatzTV",
-    "version": "v25.7.0",
-    "date": "2025-10-04T00:36:45Z"
   },
   {
     "name": "Luligu/matterbridge",
@@ -488,16 +518,6 @@
     "name": "Koenkk/zigbee2mqtt",
     "version": "2.6.2",
     "date": "2025-10-01T17:51:09Z"
-  },
-  {
-    "name": "glpi-project/glpi",
-    "version": "11.0.0",
-    "date": "2025-10-01T12:00:01Z"
-  },
-  {
-    "name": "esphome/esphome",
-    "version": "2025.9.3",
-    "date": "2025-10-01T11:30:07Z"
   },
   {
     "name": "Kozea/Radicale",
@@ -610,11 +630,6 @@
     "date": "2025-09-28T08:55:44Z"
   },
   {
-    "name": "raydak-labs/configarr",
-    "version": "v1.16.0",
-    "date": "2025-09-27T16:19:27Z"
-  },
-  {
     "name": "kimai/kimai",
     "version": "2.40.0",
     "date": "2025-09-27T16:19:26Z"
@@ -678,11 +693,6 @@
     "name": "forgejo/forgejo",
     "version": "v14.0.0-dev",
     "date": "2025-09-25T13:19:45Z"
-  },
-  {
-    "name": "gelbphoenix/autocaliweb",
-    "version": "v0.10.2",
-    "date": "2025-09-24T18:23:36Z"
   },
   {
     "name": "rclone/rclone",
@@ -820,11 +830,6 @@
     "date": "2025-09-17T08:50:39Z"
   },
   {
-    "name": "tobychui/zoraxy",
-    "version": "v3.2.5r2",
-    "date": "2025-07-21T12:52:26Z"
-  },
-  {
     "name": "Checkmk/checkmk",
     "version": "v2.4.0p12",
     "date": "2025-09-16T12:53:03Z"
@@ -848,11 +853,6 @@
     "name": "apache/tika",
     "version": "3.2.0",
     "date": "2025-09-15T18:03:08Z"
-  },
-  {
-    "name": "FlareSolverr/FlareSolverr",
-    "version": "v3.4.1",
-    "date": "2025-09-15T18:01:24Z"
   },
   {
     "name": "ellite/Wallos",

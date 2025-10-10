@@ -42,6 +42,7 @@ msg_info "Creating Tinyauth Service"
 SECRET=$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | head -c 32)
 
 cat <<EOF >/opt/tinyauth/.env
+DATABASE_PATH=/opt/tinyauth/database.db
 SECRET=${SECRET}
 USERS=${USER}
 APP_URL=${app_url}
@@ -53,25 +54,16 @@ cat <<'EOF' >/etc/init.d/tinyauth
 #!/sbin/openrc-run
 description="Tinyauth Service"
 
+set -a
+ENV_FILE="/opt/tinyauth/.env"
+[ -f "$ENV_FILE" ] && . "$ENV_FILE"
+set +a
+
 command="/opt/tinyauth/tinyauth"
 directory="/opt/tinyauth"
 command_user="root"
 command_background="true"
 pidfile="/var/run/tinyauth.pid"
-
-start_pre() {
-    if [ -f "/opt/tinyauth/.env" ]; then
-        while IFS= read -r line || [ -n "$line" ]; do
-            [ -z "$line" ] && continue
-            case "$line" in
-                '#'*)
-                    continue
-                    ;;
-            esac
-            export "$line"
-        done < "/opt/tinyauth/.env"
-    fi
-}
 
 depend() {
     use net
