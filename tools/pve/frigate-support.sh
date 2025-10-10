@@ -89,5 +89,5 @@ EOF
 echo -e "\e[1;33m \nFinished....Reboot ${CTID} LXC to apply the changes.\n \e[0m"
 
 # In the Proxmox web shell run
-# bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/tools/pve/frigate-support.sh)"
+# bash -c "$(curl -fsSL https://raw.githubusercontent.com/knightfall/ProxmoxVE/refs/heads/unifi-sh-fix/tools/pve/frigate-support.sh)"
 # Reboot the LXC to apply the changes
