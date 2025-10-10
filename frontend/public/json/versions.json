@@ -1,23 +1,98 @@
 [
   {
+    "name": "semaphoreui/semaphore",
+    "version": "v2.16.33",
+    "date": "2025-10-10T11:08:58Z"
+  },
+  {
+    "name": "azukaar/Cosmos-Server",
+    "version": "v0.18.4",
+    "date": "2025-04-05T19:12:57Z"
+  },
+  {
+    "name": "dgtlmoon/changedetection.io",
+    "version": "0.50.20",
+    "date": "2025-10-10T08:40:37Z"
+  },
+  {
+    "name": "zitadel/zitadel",
+    "version": "v4.3.2",
+    "date": "2025-10-10T08:39:41Z"
+  },
+  {
+    "name": "moghtech/komodo",
+    "version": "v1.19.5",
+    "date": "2025-09-27T20:59:46Z"
+  },
+  {
+    "name": "emqx/emqx",
+    "version": "e6.0.1-alpha.1",
+    "date": "2025-10-10T06:57:48Z"
+  },
+  {
+    "name": "SigNoz/signoz",
+    "version": "v0.97.0",
+    "date": "2025-10-10T06:52:42Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.3",
+    "date": "2025-09-20T12:12:33Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.101",
+    "date": "2025-10-10T05:51:54Z"
+  },
+  {
+    "name": "nzbgetcom/nzbget",
+    "version": "v25.4",
+    "date": "2025-10-09T10:27:01Z"
+  },
+  {
+    "name": "mealie-recipes/mealie",
+    "version": "v3.3.2",
+    "date": "2025-10-10T03:45:06Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.77.7.dev-gemma",
+    "date": "2025-10-10T02:30:31Z"
+  },
+  {
+    "name": "projectsend/projectsend",
+    "version": "r1945",
+    "date": "2025-10-10T02:30:05Z"
+  },
+  {
+    "name": "prometheus/alertmanager",
+    "version": "v0.29.0-rc.0",
+    "date": "2025-10-10T01:13:27Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-10-10T00:27:06Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.0.0",
+    "date": "2025-10-08T16:12:11Z"
+  },
+  {
     "name": "rcourtman/Pulse",
     "version": "v4.22.0",
     "date": "2025-10-09T08:23:58Z"
   },
   {
-    "name": "dgtlmoon/changedetection.io",
-    "version": "0.50.19",
-    "date": "2025-10-09T23:19:31Z"
-  },
-  {
-    "name": "BerriAI/litellm",
-    "version": "v1.77.7.dev10",
-    "date": "2025-10-09T22:25:13Z"
-  },
-  {
     "name": "gelbphoenix/autocaliweb",
     "version": "v0.10.3",
     "date": "2025-10-09T21:55:26Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.0.16",
+    "date": "2025-10-08T04:44:28Z"
   },
   {
     "name": "raydak-labs/configarr",
@@ -50,11 +125,6 @@
     "date": "2025-09-30T20:25:16Z"
   },
   {
-    "name": "azukaar/Cosmos-Server",
-    "version": "v0.18.4",
-    "date": "2025-04-05T19:12:57Z"
-  },
-  {
     "name": "ollama/ollama",
     "version": "v0.12.4-rc7",
     "date": "2025-10-09T02:13:38Z"
@@ -68,6 +138,11 @@
     "name": "ErsatzTV/ErsatzTV",
     "version": "v25.7.1",
     "date": "2025-10-09T15:42:11Z"
+  },
+  {
+    "name": "wazuh/wazuh",
+    "version": "coverity-w41-4.14.0",
+    "date": "2025-10-03T18:56:57Z"
   },
   {
     "name": "silverbulletmd/silverbullet",
@@ -90,16 +165,6 @@
     "date": "2025-10-09T12:34:15Z"
   },
   {
-    "name": "nzbgetcom/nzbget",
-    "version": "v25.4",
-    "date": "2025-10-09T10:27:01Z"
-  },
-  {
-    "name": "wazuh/wazuh",
-    "version": "coverity-w41-4.14.0",
-    "date": "2025-10-03T18:56:57Z"
-  },
-  {
     "name": "firefly-iii/firefly-iii",
     "version": "v6.4.2",
     "date": "2025-10-07T08:11:58Z"
@@ -112,12 +177,7 @@
   {
     "name": "theonedev/onedev",
     "version": "v13.0.8",
-    "date": "2025-10-09T06:36:42Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.95",
-    "date": "2025-10-09T05:58:58Z"
+    "date": "2025-10-09T07:13:00Z"
   },
   {
     "name": "documenso/documenso",
@@ -128,16 +188,6 @@
     "name": "rogerfar/rdt-client",
     "version": "v2.0.118",
     "date": "2025-10-09T03:33:01Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-10-09T00:27:04Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.0.0",
-    "date": "2025-10-08T16:12:11Z"
   },
   {
     "name": "rabbitmq/rabbitmq-server",
@@ -158,11 +208,6 @@
     "name": "autobrr/autobrr",
     "version": "v1.68.0",
     "date": "2025-10-08T18:33:12Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.0.16",
-    "date": "2025-10-08T04:44:28Z"
   },
   {
     "name": "AdguardTeam/AdGuardHome",
@@ -225,16 +270,6 @@
     "date": "2025-10-08T07:31:37Z"
   },
   {
-    "name": "SigNoz/signoz",
-    "version": "v0.97.0-rc.3",
-    "date": "2025-10-08T06:53:48Z"
-  },
-  {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.3",
-    "date": "2025-09-20T12:12:33Z"
-  },
-  {
     "name": "TandoorRecipes/recipes",
     "version": "2.3.1",
     "date": "2025-10-08T05:58:37Z"
@@ -261,8 +296,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-10-07T18:00:49Z"
+    "version": "v4.4.0",
+    "date": "2025-09-02T19:26:18Z"
   },
   {
     "name": "coder/code-server",
@@ -283,11 +318,6 @@
     "name": "jenkinsci/jenkins",
     "version": "jenkins-2.531",
     "date": "2025-10-07T13:42:39Z"
-  },
-  {
-    "name": "zitadel/zitadel",
-    "version": "v4.3.1",
-    "date": "2025-10-07T12:55:04Z"
   },
   {
     "name": "zwave-js/zwave-js-ui",
@@ -373,11 +403,6 @@
     "name": "jordan-dalby/ByteStash",
     "version": "v1.5.9",
     "date": "2025-10-06T08:34:01Z"
-  },
-  {
-    "name": "moghtech/komodo",
-    "version": "v1.19.5",
-    "date": "2025-09-27T20:59:46Z"
   },
   {
     "name": "hyperion-project/hyperion.ng",
@@ -475,9 +500,9 @@
     "date": "2025-10-03T06:22:38Z"
   },
   {
-    "name": "mealie-recipes/mealie",
-    "version": "v3.3.1",
-    "date": "2025-10-02T17:10:34Z"
+    "name": "redis/redis",
+    "version": "8.2.2",
+    "date": "2025-10-03T06:22:38Z"
   },
   {
     "name": "jhuckaby/Cronicle",
@@ -503,11 +528,6 @@
     "name": "actualbudget/actual",
     "version": "v25.10.0",
     "date": "2025-10-02T11:34:39Z"
-  },
-  {
-    "name": "laurent22/joplin",
-    "version": "server-v3.4.4",
-    "date": "2025-09-25T13:19:26Z"
   },
   {
     "name": "NodeBB/NodeBB",
@@ -563,11 +583,6 @@
     "name": "neo4j/neo4j",
     "version": "4.4.46",
     "date": "2025-09-30T13:21:24Z"
-  },
-  {
-    "name": "emqx/emqx",
-    "version": "e6.0.0",
-    "date": "2025-09-30T12:04:20Z"
   },
   {
     "name": "thomiceli/opengist",
@@ -818,11 +833,6 @@
     "name": "icereed/paperless-gpt",
     "version": "v0.23.0",
     "date": "2025-09-17T10:15:51Z"
-  },
-  {
-    "name": "semaphoreui/semaphore",
-    "version": "v2.16.31",
-    "date": "2025-09-17T09:57:55Z"
   },
   {
     "name": "WGDashboard/WGDashboard",
@@ -1410,11 +1420,6 @@
     "date": "2025-03-08T10:49:04Z"
   },
   {
-    "name": "prometheus/alertmanager",
-    "version": "v0.28.1",
-    "date": "2025-03-07T15:41:35Z"
-  },
-  {
     "name": "toniebox-reverse-engineering/teddycloud",
     "version": "tc_v0.6.4",
     "date": "2025-03-05T15:43:40Z"
@@ -1503,11 +1508,6 @@
     "name": "FunkeyFlo/ps5-mqtt",
     "version": "v1.4.0",
     "date": "2024-08-06T19:57:33Z"
-  },
-  {
-    "name": "projectsend/projectsend",
-    "version": "r1720",
-    "date": "2024-08-03T04:07:20Z"
   },
   {
     "name": "hywax/mafl",
