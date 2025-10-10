@@ -1,0 +1,47 @@
+name: Auto-Close Wrong Template Issues
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  close_tteck_issues:
+    if: github.repository == 'community-scripts/ProxmoxVE'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Auto-close if wrong Template issue detected
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const content = `${issue.title}\n${issue.body}`;
+            const issueNumber = issue.number;
+
+            // Check for tteck script mention
+            if (content.includes("Template debian-13-standard_13.1-2_amd64.tar.zst [local]") || content.includes("Container creation failed. Checking if template is corrupted or incomplete.") || content.includes("Template is valid, but container creation still failed.")){
+              const message = `Hello, it looks like you are referencing a container creation issue!.
+
+              We get many simmilar issues with this topic, so please check disscusion #8126.
+              If this did not solve your problem, please reopen this issue.
+
+              This issue is being closed automatically by a bot.`;
+
+              await github.rest.issues.createComment({
+                ...context.repo,
+                issue_number: issueNumber,
+                body: message
+              });
+
+              // Optionally apply a label like "not planned"
+              await github.rest.issues.addLabels({
+                ...context.repo,
+                issue_number: issueNumber,
+                labels: ["not planned"]
+              });
+
+              // Close the issue
+              await github.rest.issues.update({
+                ...context.repo,
+                issue_number: issueNumber,
+                state: "closed"
+              });
+            }
