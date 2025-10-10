@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-10-10
 
+### 🆕 New Scripts
+
+  - SonarQube ([#8256](https://github.com/community-scripts/ProxmoxVE/pull/8256))
+
 ### 🚀 Updated Scripts
 
   - Unifi installation script fix [@knightfall](https://github.com/knightfall) ([#8242](https://github.com/community-scripts/ProxmoxVE/pull/8242))
