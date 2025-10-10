@@ -29,25 +29,25 @@ function update_script() {
   fi
 
   if check_for_gh_release "blackbox-exporter" "prometheus/blackbox_exporter"; then
-    msg_info "Stopping $APP"
+    msg_info "Stopping Service"
     systemctl stop blackbox-exporter
-    msg_ok "Stopped $APP"
+    msg_ok "Stopped Service"
 
     msg_info "Creating backup"
     mv /opt/blackbox-exporter/blackbox.yml /opt
     msg_ok "Backup created"
 
-    fetch_and_deploy_gh_release "blackbox-exporter" "prometheus/blackbox_exporter" "prebuild" "latest" "/opt/blackbox-exporter" "blackbox_exporter-*.linux-amd64.tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "blackbox-exporter" "prometheus/blackbox_exporter" "prebuild" "latest" "/opt/blackbox-exporter" "blackbox_exporter-*.linux-amd64.tar.gz"
 
     msg_info "Restoring backup"
     cp -r /opt/blackbox.yml /opt/blackbox-exporter
     rm -f /opt/blackbox.yml
     msg_ok "Backup restored"
     
-    msg_info "Starting $APP"
+    msg_info "Starting Service"
     systemctl start blackbox-exporter
-    msg_ok "Started $APP"
-    msg_ok "Update Successful"
+    msg_ok "Started Service"
+    msg_ok "Update Successfully!"
   fi
   exit
 }
