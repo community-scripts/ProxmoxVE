@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-4}"
 var_ram="${var_ram:-6144}"
 var_disk="${var_disk:-25}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -29,9 +29,9 @@ function update_script() {
   fi
 
   if check_for_gh_release "sonarqube" "SonarSource/sonarqube"; then
-    msg_info "Stopping service"
+    msg_info "Stopping Service"
     systemctl stop sonarqube
-    msg_ok "Service stopped"
+    msg_ok "Stopped Service"
 
     msg_info "Creating backup"
     BACKUP_DIR="/opt/sonarqube-backup"
@@ -53,10 +53,10 @@ function update_script() {
     chown -R sonarqube:sonarqube /opt/sonarqube
     msg_ok "Backup restored"
 
-    msg_info "Starting service"
+    msg_info "Starting Service"
     systemctl start sonarqube
     msg_ok "Service started"
-    msg_ok "Updated Successfully"
+    msg_ok "Updated Successfully!"
   fi
   exit
 }
