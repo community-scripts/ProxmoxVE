@@ -14,6 +14,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Docmost: Fix env variables [@tremor021](https://github.com/tremor021) ([#8244](https://github.com/community-scripts/ProxmoxVE/pull/8244))
+
   - #### 🔧 Refactor
 
     - Harmonize Service MSG-Blocks [@MickLesk](https://github.com/MickLesk) ([#8233](https://github.com/community-scripts/ProxmoxVE/pull/8233))
