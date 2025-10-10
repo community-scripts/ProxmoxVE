@@ -20,6 +20,7 @@ $STD apt install -y \
   make
 msg_ok "Installed Dependencies"
 
+HOST_IP=$(hostname -I | awk '{print $1}')
 NODE_VERSION="22" NODE_MODULE="pnpm@$(curl -s https://raw.githubusercontent.com/docmost/docmost/main/package.json | jq -r '.packageManager | split("@")[1]')" setup_nodejs
 PG_VERSION="16" setup_postgresql
 fetch_and_deploy_gh_release "docmost" "docmost/docmost"
@@ -50,6 +51,7 @@ sed -i -e "s|APP_SECRET=.*|APP_SECRET=$(openssl rand -base64 32 | tr -dc 'a-zA-Z
   -e "s|FILE_UPLOAD_SIZE_LIMIT=.*|FILE_UPLOAD_SIZE_LIMIT=50mb|" \
   -e "s|DRAWIO_URL=.*|DRAWIO_URL=https://embed.diagrams.net|" \
   -e "s|DISABLE_TELEMETRY=.*|DISABLE_TELEMETRY=true|" \
+  -e "s|APP_URL=.*|APP_URL=http://$HOST_IP:3000|" \
   /opt/docmost/.env
 export NODE_OPTIONS="--max-old-space-size=2048"
 $STD pnpm install
