@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-10-10
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - Harmonize Service MSG-Blocks [@MickLesk](https://github.com/MickLesk) ([#8233](https://github.com/community-scripts/ProxmoxVE/pull/8233))
+
 ## 2025-10-09
 
 ### 🆕 New Scripts
