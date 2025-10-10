@@ -54,7 +54,7 @@ else
   cat <<EOF | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.sources >/dev/null
 Types: deb
 URIs: http://repo.mongodb.org/apt/debian
-Suites: trixie/mongodb-org/7.0
+Suites: bookworm/mongodb-org/7.0
 Components: main
 Signed-By: /usr/share/keyrings/mongodb-server-7.0.gpg
 EOF
