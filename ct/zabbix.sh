@@ -42,7 +42,12 @@ function update_script() {
   fi
 
   msg_info "Stopping Services"
-  systemctl stop zabbix-server $AGENT_SERVICE
+  $STD systemctl stop zabbix-server
+  if systemctl list-unit-files | grep -q zabbix-agent2; then
+    $STD systemctl stop zabbix-agent2
+  else
+    $STD systemctl stop zabbix-agent
+  fi
   msg_ok "Stopped Services"
 
   msg_info "Updating Zabbix"
@@ -83,14 +88,21 @@ function update_script() {
   msg_ok "Updated Zabbix"
 
   msg_info "Starting Services"
-  systemctl start zabbix-server $AGENT_SERVICE
+  $STD systemctl start zabbix-server
+  if systemctl list-unit-files | grep -q zabbix-agent2; then
+    $STD systemctl start zabbix-agent2
+  else
+    $STD systemctl start zabbix-agent
+  fi
   systemctl restart apache2
   msg_ok "Started Services"
 
   msg_info "Cleaning Up"
   rm -rf /tmp/zabbix-release_latest+debian13_all.deb
+  $STD apt -y autoremove
+  $STD apt -y autoclean
   msg_ok "Cleaned"
-  msg_ok "Updated Successfully"
+  msg_ok "Updated Successfully!"
   exit
 }
 

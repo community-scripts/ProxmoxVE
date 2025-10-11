@@ -102,8 +102,14 @@ fi
 msg_ok "Configured Fping"
 
 msg_info "Starting Services"
-systemctl restart zabbix-server zabbix-agent2 apache2
-systemctl enable -q --now zabbix-server zabbix-agent2 apache2
+if [ "$AGENT_PKG" = "zabbix-agent2" ]; then
+  AGENT_SERVICE="zabbix-agent2"
+else
+  AGENT_SERVICE="zabbix-agent"
+fi
+
+systemctl restart zabbix-server
+systemctl enable -q --now zabbix-server $AGENT_SERVICE apache2
 msg_ok "Started Services"
 
 motd_ssh
