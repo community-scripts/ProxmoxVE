@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-10-11
 
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - Komga: Update dependencies and enable RAR5 support [@tremor021](https://github.com/tremor021) ([#8257](https://github.com/community-scripts/ProxmoxVE/pull/8257))
+
 ## 2025-10-10
 
 ### 🆕 New Scripts
