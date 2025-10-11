@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing SearXNG dependencies"
-echo "deb http://deb.debian.org/debian bookworm-backports main" > /etc/apt/sources.list.d/backports.list
+echo "deb http://deb.debian.org/debian bookworm-backports main" >/etc/apt/sources.list.d/backports.list
 $STD apt-get update
 $STD apt-get install -y \
   python3-dev python3-babel python3-venv python-is-python3 \
@@ -36,7 +36,7 @@ msg_info "Creating Python virtual environment"
 sudo -H -u searxng bash -c '
   python3 -m venv /usr/local/searxng/searx-pyenv &&
   . /usr/local/searxng/searx-pyenv/bin/activate &&
-  pip install -U pip setuptools wheel pyyaml lxml &&
+  pip install -U pip setuptools wheel pyyaml lxml msgspec &&
   pip install --use-pep517 --no-build-isolation -e /usr/local/searxng/searxng-src
 '
 msg_ok "Python environment ready"
