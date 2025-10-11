@@ -23,6 +23,8 @@ $STD apt-get install -y \
     mariadb-server
 msg_ok "Installed Dependencies"
 
+setup_mariadb
+
 msg_info "Setting up database"
 DB_NAME=glpi_db
 DB_USER=glpi
