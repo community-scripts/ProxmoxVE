@@ -27,7 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  if check_for_gh_release "komga" "gotson/komga"; then
+  if check_for_gh_release "komga-org" "gotson/komga"; then
     msg_info "Stopping Service"
     systemctl stop komga
     msg_ok "Stopped Service"
