@@ -39,16 +39,18 @@ function update_script() {
     tar xzf "$temp_file"
     cp -rf wger-"$RELEASE"/* /home/wger/src
     cd /home/wger/src || exit
+    $STD pip install -r requirements_prod.txt --ignore-installed
+    $STD pip install -e .
     $STD python3 manage.py migrate
+    $STD python3 manage.py collectstatic --no-input
     $STD yarn install
     $STD yarn build:css:sass
-    $STD python3 manage.py collectstatic --noinput
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated $APP to v${RELEASE}"
 
-    msg_info "Starting $APP"
+    msg_info "Starting Service"
     systemctl start wger
-    msg_ok "Started $APP"
+    msg_ok "Started Service"
 
     msg_info "Cleaning Up"
     rm -rf "$temp_file"

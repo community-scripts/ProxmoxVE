@@ -42,7 +42,7 @@ curl -fsSL "https://github.com/wger-project/wger/archive/refs/tags/$RELEASE.tar.
 tar xzf "$RELEASE".tar.gz
 mv wger-"$RELEASE" /home/wger/src
 cd /home/wger/src || exit
-$STD pip install -r requirements_prod.txt
+$STD pip install -r requirements_prod.txt --ignore-installed
 $STD pip install -e .
 $STD wger create-settings --database-path /home/wger/db/database.sqlite
 sed -i "s#home/wger/src/media#home/wger/media#g" /home/wger/src/settings.py
