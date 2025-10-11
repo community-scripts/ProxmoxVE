@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
-# Author: finkerle
+# Author: finkerle,BlackDark
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/raydak-labs/configarr
 
@@ -17,6 +17,31 @@ header_info "$APP"
 variables
 color
 catch_errors
+
+function get_configarr_architecture() {
+    local arch
+    local configarr_tar
+    
+    # Determine system architecture
+    arch=$(uname -m)
+    
+    case "$arch" in
+        x86_64)
+            configarr_tar="configarr-linux-x64.tar.xz"
+            ;;
+        aarch64)
+            configarr_tar="configarr-linux-arm64.tar.xz"
+            ;;
+        *)
+            echo "Unsupported architecture: $arch" >&2
+            return 1
+            ;;
+    esac
+    
+    # Return the filename via stdout
+    echo "$configarr_tar"
+    return 0
+}
 
 function update_script() {
   header_info
@@ -36,11 +61,15 @@ function update_script() {
     mkdir -p /opt/backup/
     mv /opt/configarr/{config.yml,secrets.yml,.env} "/opt/backup/"
     rm -rf /opt/configarr
-    fetch_and_deploy_gh_release "configarr" "raydak-labs/configarr"
+
+    # Call the function and capture the result
+    if configarr_file=$(get_configarr_architecture); then
+      fetch_and_deploy_gh_release "configarr" "raydak-labs/configarr" "prebuild" "latest" "/opt/configarr" "$configarr_file"
+    else
+      exit 1
+    fi
+
     mv /opt/backup/{config.yml,secrets.yml,.env} "/opt/configarr/"
-    cd /opt/configarr
-    $STD pnpm install
-    $STD pnpm run build
     msg_ok "Updated $APP"
 
     msg_info "Starting $APP"
