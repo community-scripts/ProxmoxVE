@@ -101,6 +101,7 @@ function update_script() {
   rm -rf /tmp/zabbix-release_latest+debian13_all.deb
   $STD apt -y autoremove
   $STD apt -y autoclean
+  $STD apt -y clean
   msg_ok "Cleaned"
   msg_ok "Updated Successfully!"
   exit
