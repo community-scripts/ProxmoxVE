@@ -97,7 +97,7 @@ jobs:
               success = test_json_files()
               sys.exit(0 if success else 1)
           EOF
-  
+
   build:
     if: github.repository == 'community-scripts/ProxmoxVE'
     needs: test-json-files
@@ -109,15 +109,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: "20"
-          cache: npm
-          cache-dependency-path: frontend/package-lock.json
+          bun-version: latest
 
       - name: Install dependencies
-        run: npm ci --prefer-offline --legacy-peer-deps
+        run: bun install --frozen-lockfile
 
       - name: Configure Next.js for pages
         uses: actions/configure-pages@v5
@@ -125,7 +123,7 @@ jobs:
           static_site_generator: next
 
       - name: Build with Next.js
-        run: npm run build
+        run: bun run build
 
       - name: Upload artifact
         if: github.ref == 'refs/heads/main'
