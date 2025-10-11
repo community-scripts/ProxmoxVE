@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - keycloak: fix update check [@MickLesk](https://github.com/MickLesk) ([#8275](https://github.com/community-scripts/ProxmoxVE/pull/8275))
     - komga: fix update check [@MickLesk](https://github.com/MickLesk) ([#8285](https://github.com/community-scripts/ProxmoxVE/pull/8285))
 
   - #### ✨ New Features
