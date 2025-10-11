@@ -69,7 +69,7 @@ function perform_backup {
   read -p "Press ENTER to continue..."
   header_info
   echo "Working..."
-  tar -czf "$BACKUP_PATH$BACKUP_FILE-$(date +%Y_%m_%d).tar.gz" --absolute-names "${selected_directories[@]}"
+  tar -czf "$BACKUP_PATH$BACKUP_FILE-$(date +%Y_%m_%dT%H_%M).tar.gz" --absolute-names "${selected_directories[@]}"
   header_info
   echo -e "\nFinished"
   echo -e "\e[1;33m \nA backup is rendered ineffective when it remains stored on the host.\n \e[0m"
