@@ -41,6 +41,7 @@ function perform_backup {
 
   # Build a list of directories for backup
   local CTID_MENU=()
+  CTID_MENU=("ALL" "Backup all folders" "OFF")
   while read -r dir; do
     CTID_MENU+=("$(basename "$dir")" "$dir " "OFF")
   done < <(ls -d "${DIR}"*)
@@ -52,7 +53,13 @@ function perform_backup {
       "\nSelect what files/directories to backup:\n" 16 $(((${#DIRNAME} + 2) + 88)) 6 "${CTID_MENU[@]}" 3>&1 1>&2 2>&3) || return
 
     for selected_dir in ${HOST_BACKUP//\"/}; do
-      selected_directories+=("${DIR}$selected_dir")
+      if [[ "$selected_dir" == "ALL" ]]; then
+        # if ALL was chosen, secure all folders
+        selected_directories=("${DIR}"*/)
+        break
+      else
+        selected_directories+=("${DIR}$selected_dir")
+      fi
     done
   done
 
