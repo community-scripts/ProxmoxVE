@@ -14,6 +14,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - komga: fix update check [@MickLesk](https://github.com/MickLesk) ([#8285](https://github.com/community-scripts/ProxmoxVE/pull/8285))
+
   - #### ✨ New Features
 
     - host-backup.sh: Added "ALL" option and include timestamp in backup filename [@stumpyofpain](https://github.com/stumpyofpain) ([#8276](https://github.com/community-scripts/ProxmoxVE/pull/8276))
@@ -21,8 +25,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🌐 Website
 
-  - Refactor CI workflow to use Bun instead of Node.js. [@BramSuurdje](https://github.com/BramSuurdje) ([#8277](https://github.com/community-scripts/ProxmoxVE/pull/8277))
-- Update script count in metadata and page content from 300+ to 400+ [@BramSuurdje](https://github.com/BramSuurdje) ([#8279](https://github.com/community-scripts/ProxmoxVE/pull/8279))
+  - Update script count in metadata and page content from 300+ to 400+ [@BramSuurdje](https://github.com/BramSuurdje) ([#8279](https://github.com/community-scripts/ProxmoxVE/pull/8279))
+- Refactor CI workflow to use Bun instead of Node.js. [@BramSuurdje](https://github.com/BramSuurdje) ([#8277](https://github.com/community-scripts/ProxmoxVE/pull/8277))
 
 ## 2025-10-10
 
