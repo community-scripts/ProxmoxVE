@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Immich: add Debian Testing repo [@vhsdream](https://github.com/vhsdream) ([#8310](https://github.com/community-scripts/ProxmoxVE/pull/8310))
     - Tinyauth: Fix install issues for v4 [@tremor021](https://github.com/tremor021) ([#8309](https://github.com/community-scripts/ProxmoxVE/pull/8309))
 
 ## 2025-10-11
