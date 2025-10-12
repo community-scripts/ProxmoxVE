@@ -39,8 +39,26 @@ function update_script() {
   PNPM_VERSION="$(curl -fsSL "https://raw.githubusercontent.com/immich-app/immich/refs/heads/main/package.json" | jq -r '.packageManager | split("@")[1]')"
   NODE_VERSION="22" NODE_MODULE="pnpm@${PNPM_VERSION}" setup_nodejs
 
-  if dpkg -l | grep -q "libmimalloc2.0"; then
-    $STD apt-get update && $STD apt-get install -y libmimalloc3
+  if [[ ! -f /etc/apt/preferences.d/preferences ]]; then
+    msg_info "Adding Debian Testing repo"
+    sed -i 's/ trixie-updates/ trixie-updates testing/g' /etc/apt/sources.list.d/debian.sources
+    cat <<EOF >/etc/apt/preferences.d/preferences
+Package: *
+Pin: release a=unstable
+Pin-Priority: 450
+
+Package: *
+Pin:release a=testing
+Pin-Priority: 450
+EOF
+    if [[ -f /etc/apt/preferences.d/immich ]]; then
+      rm /etc/apt/preferences.d/immich
+    fi
+    $STD apt-get update
+    msg_ok "Added Debian Testing repo"
+    msg_info "Installing libmimalloc3"
+    $STD apt-get install -t testing --no-install-recommends libmimalloc3
+    msg_ok "Installed libmimalloc3"
   fi
 
   STAGING_DIR=/opt/staging

@@ -46,7 +46,6 @@ $STD apt-get install --no-install-recommends -y \
   libgomp1 \
   liblqr-1-0 \
   libltdl7 \
-  libmimalloc3 \
   libopenjp2-7 \
   meson \
   ninja-build \
@@ -108,6 +107,23 @@ if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   dpkg -l | grep "intel-opencl-icd" | awk '{print $3}' >~/.intel_version
   msg_ok "Installed OpenVINO dependencies"
 fi
+
+msg_info "Configuring Debian Testing Repo"
+sed -i 's/ trixie-updates/ trixie-updates testing/g' /etc/apt/sources.list.d/debian.sources
+cat <<EOF >/etc/apt/preferences.d/preferences
+Package: *
+Pin: release a=unstable
+Pin-Priority: 450
+
+Package: *
+Pin:release a=testing
+Pin-Priority: 450
+EOF
+$STD apt-get update
+msg_ok "Configured Debian Testing repo"
+msg_info "Installing libmimalloc3"
+$STD apt-get install -t testing --no-install-recommends -yqq libmimalloc3
+msg_ok "Installed libmimalloc3"
 
 PNPM_VERSION="$(curl -fsSL "https://raw.githubusercontent.com/immich-app/immich/refs/heads/main/package.json" | jq -r '.packageManager | split("@")[1]')"
 NODE_VERSION="22" NODE_MODULE="pnpm@${PNPM_VERSION}" setup_nodejs
