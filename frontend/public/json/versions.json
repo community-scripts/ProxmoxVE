@@ -1,8 +1,33 @@
 [
   {
+    "name": "PrivateBin/PrivateBin",
+    "version": "2.0.1",
+    "date": "2025-10-12T10:00:52Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.0.0",
+    "date": "2025-10-08T16:12:11Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.115",
+    "date": "2025-10-12T05:54:52Z"
+  },
+  {
+    "name": "authelia/authelia",
+    "version": "v4.39.13",
+    "date": "2025-10-12T05:45:48Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-10-12T00:27:08Z"
+  },
+  {
     "name": "rcourtman/Pulse",
     "version": "v4.22.0",
-    "date": "2025-10-11T23:34:34Z"
+    "date": "2025-10-11T23:46:18Z"
   },
   {
     "name": "BerriAI/litellm",
@@ -12,7 +37,7 @@
   {
     "name": "runtipi/runtipi",
     "version": "nightly",
-    "date": "2025-10-07T18:00:49Z"
+    "date": "2025-10-11T19:50:32Z"
   },
   {
     "name": "gelbphoenix/autocaliweb",
@@ -45,11 +70,6 @@
     "date": "2025-10-07T08:11:58Z"
   },
   {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.0.0",
-    "date": "2025-10-08T16:12:11Z"
-  },
-  {
     "name": "TandoorRecipes/recipes",
     "version": "2.3.2",
     "date": "2025-10-11T09:59:27Z"
@@ -68,16 +88,6 @@
     "name": "morpheus65535/bazarr",
     "version": "v1.5.3",
     "date": "2025-09-20T12:12:33Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.111",
-    "date": "2025-10-11T05:50:36Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-10-11T00:27:06Z"
   },
   {
     "name": "home-assistant/core",
@@ -323,11 +333,6 @@
     "name": "prometheus/prometheus",
     "version": "v0.307.0-rc.0",
     "date": "2025-10-08T11:25:44Z"
-  },
-  {
-    "name": "authelia/authelia",
-    "version": "v4.39.12",
-    "date": "2025-10-08T08:03:01Z"
   },
   {
     "name": "gotson/komga",
@@ -1158,11 +1163,6 @@
     "name": "navidrome/navidrome",
     "version": "v0.58.0",
     "date": "2025-07-28T18:59:50Z"
-  },
-  {
-    "name": "PrivateBin/PrivateBin",
-    "version": "2.0.0",
-    "date": "2025-07-28T07:48:40Z"
   },
   {
     "name": "umami-software/umami",
