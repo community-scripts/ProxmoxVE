@@ -25,12 +25,6 @@ chmod +x /opt/tinyauth/tinyauth
 PASS=$(openssl rand -base64 8 | tr -dc 'a-zA-Z0-9' | head -c 8)
 USER=$(htpasswd -Bbn "tinyauth" "${PASS}")
 
-cat <<EOF >/opt/tinyauth/.env
-DATABASE_PATH=/opt/tinyauth/database.db
-USERS='${USER}'
-APP_URL=${app_url}
-EOF
-
 cat <<EOF >/opt/tinyauth/credentials.txt
 Tinyauth Credentials
 Username: tinyauth
@@ -40,6 +34,12 @@ echo "${RELEASE}" >~/.tinyauth
 msg_ok "Installed Tinyauth"
 
 read -r -p "${TAB3}Enter your Tinyauth subdomain (e.g. https://tinyauth.example.com): " app_url
+
+cat <<EOF >/opt/tinyauth/.env
+DATABASE_PATH=/opt/tinyauth/database.db
+USERS='${USER}'
+APP_URL=${app_url}
+EOF
 
 msg_info "Creating Service"
 cat <<'EOF' >/etc/init.d/tinyauth
