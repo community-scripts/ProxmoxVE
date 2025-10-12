@@ -29,15 +29,19 @@ function update_script() {
   $STD apk -U upgrade
   msg_ok "Updated packages"
 
-  msg_info "Updating Tinyauth"
   RELEASE=$(curl -s https://api.github.com/repos/steveiliop56/tinyauth/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-
-  if [ "${RELEASE}" != "$(cat /opt/tinyauth_version.txt)" ] || [ ! -f /opt/tinyauth_version.txt ]; then
+  if [ "${RELEASE}" != "$(cat ~/.tinyauth 2>/dev/null)" ] || [ ! -f ~/.tinyauth ]; then
+    msg_info "Stopping Service"
     $STD service tinyauth stop
+    msg_ok "Service Stopped"
+
+    msg_info "Updating Tinyauth"
     rm -f /opt/tinyauth/tinyauth
     curl -fsSL "https://github.com/steveiliop56/tinyauth/releases/download/v${RELEASE}/tinyauth-amd64" -o /opt/tinyauth/tinyauth
     chmod +x /opt/tinyauth/tinyauth
-    echo "${RELEASE}" >/opt/tinyauth_version.txt
+    echo "${RELEASE}" >~/.tinyauth
+    msg_ok "Updated Tinyauth"
+
     msg_info "Restarting Tinyauth"
     $STD service tinyauth start
     msg_ok "Restarted Tinyauth"
