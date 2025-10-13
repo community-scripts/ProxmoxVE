@@ -15,11 +15,11 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-    git \
-    apache2 \
-    php8.4-{apcu,cli,common,curl,gd,ldap,mysql,xmlrpc,xml,mbstring,bcmath,intl,zip,redis,bz2,soap} \
-    php-cas \
-    libapache2-mod-php
+  git \
+  apache2 \
+  php8.4-{apcu,cli,common,curl,gd,ldap,mysql,xmlrpc,xml,mbstring,bcmath,intl,zip,redis,bz2,soap} \
+  php-cas \
+  libapache2-mod-php
 msg_ok "Installed Dependencies"
 
 setup_mariadb
