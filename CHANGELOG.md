@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - GLPI: fix version 11 [@opastorello](https://github.com/opastorello) ([#8238](https://github.com/community-scripts/ProxmoxVE/pull/8238))
     - Keycloak: Fix typo in update function [@tremor021](https://github.com/tremor021) ([#8316](https://github.com/community-scripts/ProxmoxVE/pull/8316))
 
 ## 2025-10-12
