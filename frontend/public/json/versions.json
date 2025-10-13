@@ -1,5 +1,65 @@
 [
   {
+    "name": "Graylog2/graylog2-server",
+    "version": "7.0.0-beta.4",
+    "date": "2025-10-13T11:20:35Z"
+  },
+  {
+    "name": "dgtlmoon/changedetection.io",
+    "version": "0.50.23",
+    "date": "2025-10-13T09:55:01Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "server/public/v0.1.20",
+    "date": "2025-10-09T17:22:46Z"
+  },
+  {
+    "name": "SigNoz/signoz",
+    "version": "v0.97.1",
+    "date": "2025-10-13T07:42:50Z"
+  },
+  {
+    "name": "zitadel/zitadel",
+    "version": "v4.3.3",
+    "date": "2025-10-13T07:17:02Z"
+  },
+  {
+    "name": "moghtech/komodo",
+    "version": "v1.19.5",
+    "date": "2025-09-27T20:59:46Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.3",
+    "date": "2025-09-20T12:12:33Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.124",
+    "date": "2025-10-13T05:52:57Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.4.2",
+    "date": "2025-10-07T08:11:58Z"
+  },
+  {
+    "name": "prometheus/alertmanager",
+    "version": "v0.29.0-rc.1",
+    "date": "2025-10-13T00:51:45Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-10-13T00:27:04Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.0.0",
+    "date": "2025-10-08T16:12:11Z"
+  },
+  {
     "name": "esphome/esphome",
     "version": "2025.9.3",
     "date": "2025-10-01T11:30:07Z"
@@ -10,14 +70,9 @@
     "date": "2025-10-12T21:30:43Z"
   },
   {
-    "name": "dgtlmoon/changedetection.io",
-    "version": "0.50.22",
-    "date": "2025-10-12T20:49:21Z"
-  },
-  {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-10-11T19:50:32Z"
+    "version": "v4.4.0",
+    "date": "2025-09-02T19:26:18Z"
   },
   {
     "name": "globaleaks/globaleaks-whistleblowing-software",
@@ -45,34 +100,14 @@
     "date": "2025-10-12T14:55:27Z"
   },
   {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.4.2",
-    "date": "2025-10-07T08:11:58Z"
-  },
-  {
     "name": "PrivateBin/PrivateBin",
     "version": "2.0.1",
     "date": "2025-10-12T10:00:52Z"
   },
   {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.0.0",
-    "date": "2025-10-08T16:12:11Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.115",
-    "date": "2025-10-12T05:54:52Z"
-  },
-  {
     "name": "authelia/authelia",
     "version": "v4.39.13",
     "date": "2025-10-12T05:45:48Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-10-12T00:27:08Z"
   },
   {
     "name": "BerriAI/litellm",
@@ -100,11 +135,6 @@
     "date": "2025-09-30T20:25:16Z"
   },
   {
-    "name": "SigNoz/signoz",
-    "version": "v0.97.0-515a1bda0",
-    "date": "2025-10-11T15:06:55Z"
-  },
-  {
     "name": "TandoorRecipes/recipes",
     "version": "2.3.2",
     "date": "2025-10-11T09:59:27Z"
@@ -118,11 +148,6 @@
     "name": "duplicati/duplicati",
     "version": "v2.1.2.3-2.1.2.3_beta_2025-10-11",
     "date": "2025-10-11T06:49:43Z"
-  },
-  {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.3",
-    "date": "2025-09-20T12:12:33Z"
   },
   {
     "name": "home-assistant/core",
@@ -210,16 +235,6 @@
     "date": "2025-04-05T19:12:57Z"
   },
   {
-    "name": "zitadel/zitadel",
-    "version": "v4.3.2",
-    "date": "2025-10-10T08:39:41Z"
-  },
-  {
-    "name": "moghtech/komodo",
-    "version": "v1.19.5",
-    "date": "2025-09-27T20:59:46Z"
-  },
-  {
     "name": "emqx/emqx",
     "version": "e6.0.1-alpha.1",
     "date": "2025-10-10T06:57:48Z"
@@ -240,11 +255,6 @@
     "date": "2025-10-10T02:30:05Z"
   },
   {
-    "name": "prometheus/alertmanager",
-    "version": "v0.29.0-rc.0",
-    "date": "2025-10-10T01:13:27Z"
-  },
-  {
     "name": "FlareSolverr/FlareSolverr",
     "version": "v3.4.2",
     "date": "2025-10-09T19:05:48Z"
@@ -253,11 +263,6 @@
     "name": "henrygd/beszel",
     "version": "v0.13.2",
     "date": "2025-10-09T18:33:46Z"
-  },
-  {
-    "name": "mattermost/mattermost",
-    "version": "server/public/v0.1.20",
-    "date": "2025-10-09T17:22:46Z"
   },
   {
     "name": "ErsatzTV/ErsatzTV",
@@ -287,7 +292,7 @@
   {
     "name": "theonedev/onedev",
     "version": "v13.0.8",
-    "date": "2025-10-09T07:13:00Z"
+    "date": "2025-10-09T06:36:42Z"
   },
   {
     "name": "documenso/documenso",
@@ -473,11 +478,6 @@
     "name": "bastienwirtz/homer",
     "version": "v25.10.1",
     "date": "2025-10-06T14:23:20Z"
-  },
-  {
-    "name": "Graylog2/graylog2-server",
-    "version": "7.0.0-beta.3",
-    "date": "2025-10-06T11:25:12Z"
   },
   {
     "name": "jordan-dalby/ByteStash",
