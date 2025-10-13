@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
-# Author: finkerle,BlackDark
+# Author: finkerle
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/raydak-labs/configarr
 
@@ -10,38 +10,13 @@ var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-512}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
 variables
 color
 catch_errors
-
-function get_configarr_architecture() {
-    local arch
-    local configarr_tar
-    
-    # Determine system architecture
-    arch=$(uname -m)
-    
-    case "$arch" in
-        x86_64)
-            configarr_tar="configarr-linux-x64.tar.xz"
-            ;;
-        aarch64)
-            configarr_tar="configarr-linux-arm64.tar.xz"
-            ;;
-        *)
-            echo "Unsupported architecture: $arch" >&2
-            return 1
-            ;;
-    esac
-    
-    # Return the filename via stdout
-    echo "$configarr_tar"
-    return 0
-}
 
 function update_script() {
   header_info
@@ -60,15 +35,8 @@ function update_script() {
     msg_info "Updating $APP"
     mkdir -p /opt/backup/
     mv /opt/configarr/{config.yml,secrets.yml,.env} "/opt/backup/"
-    rm -rf /opt/configarr
-
-    # Call the function and capture the result
-    if configarr_file=$(get_configarr_architecture); then
-      fetch_and_deploy_gh_release "configarr" "raydak-labs/configarr" "prebuild" "latest" "/opt/configarr" "$configarr_file"
-    else
-      exit 1
-    fi
-
+    rm -f /opt/configarr/configarr
+    fetch_and_deploy_gh_release "configarr" "raydak-labs/configarr" "prebuild" "latest" "/opt/configarr" "configarr-linux-x64.tar.xz"
     mv /opt/backup/{config.yml,secrets.yml,.env} "/opt/configarr/"
     msg_ok "Updated $APP"
 
@@ -76,7 +44,9 @@ function update_script() {
     systemctl start configarr-task.timer
     msg_ok "Started configarr"
 
+    msg_info "Cleaning up"
     rm -rf /opt/backup
+    msg_ok "Cleanup complete"
     msg_ok "Updated Successfully"
   fi
   exit
