@@ -19,6 +19,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - GLPI: fix version 11 [@opastorello](https://github.com/opastorello) ([#8238](https://github.com/community-scripts/ProxmoxVE/pull/8238))
     - Keycloak: Fix typo in update function [@tremor021](https://github.com/tremor021) ([#8316](https://github.com/community-scripts/ProxmoxVE/pull/8316))
 
+  - #### 🔧 Refactor
+
+    - fix: adjust configarr to use binaries [@BlackDark](https://github.com/BlackDark) ([#8254](https://github.com/community-scripts/ProxmoxVE/pull/8254))
+
 ## 2025-10-12
 
 ### 🚀 Updated Scripts
