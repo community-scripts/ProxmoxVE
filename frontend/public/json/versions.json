@@ -1,5 +1,55 @@
 [
   {
+    "name": "esphome/esphome",
+    "version": "2025.9.3",
+    "date": "2025-10-01T11:30:07Z"
+  },
+  {
+    "name": "Luligu/matterbridge",
+    "version": "3.3.2",
+    "date": "2025-10-12T21:30:43Z"
+  },
+  {
+    "name": "dgtlmoon/changedetection.io",
+    "version": "0.50.22",
+    "date": "2025-10-12T20:49:21Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "nightly",
+    "date": "2025-10-11T19:50:32Z"
+  },
+  {
+    "name": "globaleaks/globaleaks-whistleblowing-software",
+    "version": "v5.0.85",
+    "date": "2025-10-12T19:55:18Z"
+  },
+  {
+    "name": "rcourtman/Pulse",
+    "version": "v4.23.0",
+    "date": "2025-10-12T18:41:33Z"
+  },
+  {
+    "name": "booklore-app/booklore",
+    "version": "v1.6.0",
+    "date": "2025-10-12T16:09:29Z"
+  },
+  {
+    "name": "ellite/Wallos",
+    "version": "v4.4.1",
+    "date": "2025-10-12T15:38:24Z"
+  },
+  {
+    "name": "YunoHost/yunohost",
+    "version": "debian/12.1.28",
+    "date": "2025-10-12T14:55:27Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.4.2",
+    "date": "2025-10-07T08:11:58Z"
+  },
+  {
     "name": "PrivateBin/PrivateBin",
     "version": "2.0.1",
     "date": "2025-10-12T10:00:52Z"
@@ -25,19 +75,9 @@
     "date": "2025-10-12T00:27:08Z"
   },
   {
-    "name": "rcourtman/Pulse",
-    "version": "v4.22.0",
-    "date": "2025-10-11T23:46:18Z"
-  },
-  {
     "name": "BerriAI/litellm",
     "version": "v1.78.0.rc.1",
     "date": "2025-10-11T22:11:56Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-10-11T19:50:32Z"
   },
   {
     "name": "gelbphoenix/autocaliweb",
@@ -65,18 +105,13 @@
     "date": "2025-10-11T15:06:55Z"
   },
   {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.4.2",
-    "date": "2025-10-07T08:11:58Z"
-  },
-  {
     "name": "TandoorRecipes/recipes",
     "version": "2.3.2",
     "date": "2025-10-11T09:59:27Z"
   },
   {
     "name": "meilisearch/meilisearch",
-    "version": "prototype-docker-alpine-3-22-v4",
+    "version": "prototype-docker-alpine-3-22-v5",
     "date": "2025-10-11T09:04:29Z"
   },
   {
@@ -128,11 +163,6 @@
     "name": "ollama/ollama",
     "version": "v0.12.5",
     "date": "2025-10-10T16:30:53Z"
-  },
-  {
-    "name": "dgtlmoon/changedetection.io",
-    "version": "0.50.21",
-    "date": "2025-10-10T16:18:56Z"
   },
   {
     "name": "Brandawg93/PeaNUT",
@@ -223,11 +253,6 @@
     "name": "henrygd/beszel",
     "version": "v0.13.2",
     "date": "2025-10-09T18:33:46Z"
-  },
-  {
-    "name": "esphome/esphome",
-    "version": "2025.9.3",
-    "date": "2025-10-01T11:30:07Z"
   },
   {
     "name": "mattermost/mattermost",
@@ -338,11 +363,6 @@
     "name": "gotson/komga",
     "version": "1.23.5",
     "date": "2025-10-08T07:31:37Z"
-  },
-  {
-    "name": "booklore-app/booklore",
-    "version": "v1.5.1",
-    "date": "2025-10-07T21:57:21Z"
   },
   {
     "name": "open-webui/open-webui",
@@ -505,11 +525,6 @@
     "date": "2025-10-05T07:31:57Z"
   },
   {
-    "name": "YunoHost/yunohost",
-    "version": "debian/12.1.27",
-    "date": "2025-10-05T02:16:42Z"
-  },
-  {
     "name": "webmin/webmin",
     "version": "2.520",
     "date": "2025-10-05T00:51:34Z"
@@ -518,16 +533,6 @@
     "name": "gtsteffaniak/filebrowser",
     "version": "v0.8.8-beta",
     "date": "2025-10-04T15:56:29Z"
-  },
-  {
-    "name": "globaleaks/globaleaks-whistleblowing-software",
-    "version": "v5.0.84",
-    "date": "2025-10-04T08:06:12Z"
-  },
-  {
-    "name": "Luligu/matterbridge",
-    "version": "3.3.0",
-    "date": "2025-10-03T21:22:14Z"
   },
   {
     "name": "immich-app/immich",
@@ -883,11 +888,6 @@
     "name": "apache/tika",
     "version": "3.2.0",
     "date": "2025-09-15T18:03:08Z"
-  },
-  {
-    "name": "ellite/Wallos",
-    "version": "v4.3.0",
-    "date": "2025-09-15T17:34:48Z"
   },
   {
     "name": "linuxserver/Heimdall",
