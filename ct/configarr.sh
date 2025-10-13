@@ -28,17 +28,16 @@ function update_script() {
     exit
   fi
   if check_for_gh_release "configarr" "raydak-labs/configarr"; then
-    msg_info "Stopping $APP"
+    msg_info "Stopping Service"
     systemctl stop configarr-task.timer
-    msg_ok "Stopped $APP"
+    msg_ok "Stopped Service"
 
-    rm -f /opt/configarr/configarr
-    fetch_and_deploy_gh_release "configarr" "raydak-labs/configarr" "prebuild" "latest" "/opt/configarr" "configarr-linux-x64.tar.xz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "configarr" "raydak-labs/configarr" "prebuild" "latest" "/opt/configarr" "configarr-linux-x64.tar.xz"
 
-    msg_info "Starting $APP"
+    msg_info "Starting Service"
     systemctl start configarr-task.timer
-    msg_ok "Started configarr"
-    msg_ok "Updated Successfully"
+    msg_ok "Started Service"
+    msg_ok "Updated Successfully!"
   fi
   exit
 }
