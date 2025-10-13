@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-10-13
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Keycloak: Fix typo in update function [@tremor021](https://github.com/tremor021) ([#8316](https://github.com/community-scripts/ProxmoxVE/pull/8316))
+
 ## 2025-10-12
 
 ### 🚀 Updated Scripts
