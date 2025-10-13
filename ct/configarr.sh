@@ -32,21 +32,12 @@ function update_script() {
     systemctl stop configarr-task.timer
     msg_ok "Stopped $APP"
 
-    msg_info "Updating $APP"
-    mkdir -p /opt/backup/
-    mv /opt/configarr/{config.yml,secrets.yml,.env} "/opt/backup/"
     rm -f /opt/configarr/configarr
     fetch_and_deploy_gh_release "configarr" "raydak-labs/configarr" "prebuild" "latest" "/opt/configarr" "configarr-linux-x64.tar.xz"
-    mv /opt/backup/{config.yml,secrets.yml,.env} "/opt/configarr/"
-    msg_ok "Updated $APP"
 
     msg_info "Starting $APP"
     systemctl start configarr-task.timer
     msg_ok "Started configarr"
-
-    msg_info "Cleaning up"
-    rm -rf /opt/backup
-    msg_ok "Cleanup complete"
     msg_ok "Updated Successfully"
   fi
   exit
