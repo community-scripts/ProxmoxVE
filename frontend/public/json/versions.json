@@ -1,5 +1,75 @@
 [
   {
+    "name": "rogerfar/rdt-client",
+    "version": "v2.0.119",
+    "date": "2025-10-13T23:15:11Z"
+  },
+  {
+    "name": "jellyfin/jellyfin",
+    "version": "v10.10.7",
+    "date": "2025-04-05T19:14:59Z"
+  },
+  {
+    "name": "outline/outline",
+    "version": "v1.0.0-2",
+    "date": "2025-10-13T20:23:43Z"
+  },
+  {
+    "name": "hargata/lubelog",
+    "version": "v1.5.3",
+    "date": "2025-10-13T19:59:30Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.0.0",
+    "date": "2025-10-08T16:12:11Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.78.0.rc.2",
+    "date": "2025-10-13T18:10:50Z"
+  },
+  {
+    "name": "rcourtman/Pulse",
+    "version": "v4.24.0-rc.3",
+    "date": "2025-10-13T17:51:08Z"
+  },
+  {
+    "name": "bluenviron/mediamtx",
+    "version": "v1.15.2",
+    "date": "2025-10-13T17:03:15Z"
+  },
+  {
+    "name": "jhuckaby/Cronicle",
+    "version": "v0.9.97",
+    "date": "2025-10-13T16:13:50Z"
+  },
+  {
+    "name": "sabnzbd/sabnzbd",
+    "version": "4.5.3",
+    "date": "2025-08-25T13:59:56Z"
+  },
+  {
+    "name": "meilisearch/meilisearch",
+    "version": "latest",
+    "date": "2025-10-13T14:43:53Z"
+  },
+  {
+    "name": "node-red/node-red",
+    "version": "4.1.1",
+    "date": "2025-10-13T14:23:53Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.114.4",
+    "date": "2025-10-07T14:28:46Z"
+  },
+  {
+    "name": "prometheus/alertmanager",
+    "version": "v0.29.0-rc.0",
+    "date": "2025-10-10T01:13:27Z"
+  },
+  {
     "name": "Graylog2/graylog2-server",
     "version": "7.0.0-beta.4",
     "date": "2025-10-13T11:20:35Z"
@@ -45,19 +115,9 @@
     "date": "2025-10-07T08:11:58Z"
   },
   {
-    "name": "prometheus/alertmanager",
-    "version": "v0.29.0-rc.1",
-    "date": "2025-10-13T00:51:45Z"
-  },
-  {
     "name": "jeedom/core",
     "version": "4.4.20",
     "date": "2025-10-13T00:27:04Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.0.0",
-    "date": "2025-10-08T16:12:11Z"
   },
   {
     "name": "esphome/esphome",
@@ -71,18 +131,13 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v4.4.0",
-    "date": "2025-09-02T19:26:18Z"
+    "version": "nightly",
+    "date": "2025-10-12T20:01:20Z"
   },
   {
     "name": "globaleaks/globaleaks-whistleblowing-software",
     "version": "v5.0.85",
     "date": "2025-10-12T19:55:18Z"
-  },
-  {
-    "name": "rcourtman/Pulse",
-    "version": "v4.23.0",
-    "date": "2025-10-12T18:41:33Z"
   },
   {
     "name": "booklore-app/booklore",
@@ -110,19 +165,9 @@
     "date": "2025-10-12T05:45:48Z"
   },
   {
-    "name": "BerriAI/litellm",
-    "version": "v1.78.0.rc.1",
-    "date": "2025-10-11T22:11:56Z"
-  },
-  {
     "name": "gelbphoenix/autocaliweb",
     "version": "v0.10.4",
     "date": "2025-10-11T19:53:39Z"
-  },
-  {
-    "name": "jhuckaby/Cronicle",
-    "version": "v0.9.96",
-    "date": "2025-10-11T18:33:27Z"
   },
   {
     "name": "Stirling-Tools/Stirling-PDF",
@@ -138,11 +183,6 @@
     "name": "TandoorRecipes/recipes",
     "version": "2.3.2",
     "date": "2025-10-11T09:59:27Z"
-  },
-  {
-    "name": "meilisearch/meilisearch",
-    "version": "prototype-docker-alpine-3-22-v5",
-    "date": "2025-10-11T09:04:29Z"
   },
   {
     "name": "duplicati/duplicati",
@@ -220,11 +260,6 @@
     "date": "2025-09-01T10:10:34Z"
   },
   {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.114.4",
-    "date": "2025-10-07T14:28:46Z"
-  },
-  {
     "name": "semaphoreui/semaphore",
     "version": "v2.16.34",
     "date": "2025-10-10T11:57:38Z"
@@ -292,17 +327,12 @@
   {
     "name": "theonedev/onedev",
     "version": "v13.0.8",
-    "date": "2025-10-09T06:36:42Z"
+    "date": "2025-10-09T07:13:00Z"
   },
   {
     "name": "documenso/documenso",
     "version": "v1.12.10",
     "date": "2025-10-09T04:32:35Z"
-  },
-  {
-    "name": "rogerfar/rdt-client",
-    "version": "v2.0.118",
-    "date": "2025-10-09T03:33:01Z"
   },
   {
     "name": "rabbitmq/rabbitmq-server",
@@ -435,11 +465,6 @@
     "date": "2025-10-06T23:35:16Z"
   },
   {
-    "name": "outline/outline",
-    "version": "v1.0.0-1",
-    "date": "2025-10-06T23:16:32Z"
-  },
-  {
     "name": "Radarr/Radarr",
     "version": "v5.28.0.10274",
     "date": "2025-10-06T21:31:07Z"
@@ -493,11 +518,6 @@
     "name": "9001/copyparty",
     "version": "v1.19.16",
     "date": "2025-10-05T23:28:59Z"
-  },
-  {
-    "name": "sabnzbd/sabnzbd",
-    "version": "4.5.3",
-    "date": "2025-08-25T13:59:56Z"
   },
   {
     "name": "plankanban/planka",
@@ -665,11 +685,6 @@
     "date": "2025-09-28T18:09:21Z"
   },
   {
-    "name": "jellyfin/jellyfin",
-    "version": "v10.10.7",
-    "date": "2025-04-05T19:14:59Z"
-  },
-  {
     "name": "karlomikus/bar-assistant",
     "version": "v5.8.1",
     "date": "2025-09-28T14:47:06Z"
@@ -691,8 +706,8 @@
   },
   {
     "name": "javedh-dev/tracktor",
-    "version": "0.3.18",
-    "date": "2025-09-27T10:32:09Z"
+    "version": "0.3.17",
+    "date": "2025-09-27T07:00:36Z"
   },
   {
     "name": "Dolibarr/dolibarr",
@@ -728,11 +743,6 @@
     "name": "linkwarden/linkwarden",
     "version": "v2.13.0",
     "date": "2025-09-25T15:19:02Z"
-  },
-  {
-    "name": "bluenviron/mediamtx",
-    "version": "v1.15.1",
-    "date": "2025-09-25T13:35:14Z"
   },
   {
     "name": "forgejo/forgejo",
@@ -818,11 +828,6 @@
     "name": "mmastrac/stylus",
     "version": "v0.17.0",
     "date": "2025-09-19T22:23:28Z"
-  },
-  {
-    "name": "hargata/lubelog",
-    "version": "v1.5.2",
-    "date": "2025-09-19T14:18:53Z"
   },
   {
     "name": "saltstack/salt",
@@ -1153,11 +1158,6 @@
     "name": "caddyserver/xcaddy",
     "version": "v0.4.5",
     "date": "2025-07-29T16:39:18Z"
-  },
-  {
-    "name": "node-red/node-red",
-    "version": "4.1.0",
-    "date": "2025-07-29T15:15:26Z"
   },
   {
     "name": "navidrome/navidrome",
