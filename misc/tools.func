@@ -1777,48 +1777,30 @@ function setup_postgresql() {
 
   if command -v psql >/dev/null; then
     CURRENT_PG_VERSION="$(psql -V | awk '{print $3}' | cut -d. -f1)"
-    if [[ "$CURRENT_PG_VERSION" == "$PG_VERSION" ]]; then
-      : # PostgreSQL is already at the desired version
-    else
-      msg_info "Detected PostgreSQL $CURRENT_PG_VERSION, preparing upgrade to $PG_VERSION"
-      NEED_PG_INSTALL=true
-    fi
+    [[ "$CURRENT_PG_VERSION" != "$PG_VERSION" ]] && NEED_PG_INSTALL=true
   else
     NEED_PG_INSTALL=true
   fi
 
   if [[ "$NEED_PG_INSTALL" == true ]]; then
+    msg_info "Installing PostgreSQL $PG_VERSION"
+
     if [[ -n "$CURRENT_PG_VERSION" ]]; then
-      msg_info "Dumping PostgreSQL $CURRENT_PG_VERSION data"
-      su - postgres -c "pg_dumpall > /var/lib/postgresql/backup_$(date +%F)_v${CURRENT_PG_VERSION}.sql"
-      msg_ok "Data dump completed"
-      systemctl stop postgresql
+      $STD su - postgres -c "pg_dumpall > /var/lib/postgresql/backup_$(date +%F)_v${CURRENT_PG_VERSION}.sql"
+      $STD systemctl stop postgresql
     fi
 
     rm -f /etc/apt/sources.list.d/pgdg.* /etc/apt/keyrings/postgresql.gpg
 
-    msg_info "Adding PostgreSQL PGDG repository"
     curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc |
       gpg --dearmor -o /etc/apt/keyrings/postgresql.gpg
 
-    # Fallback logic for PostgreSQL repos
     local SUITE="$DISTRO_CODENAME"
     if ! curl -fsSL "https://apt.postgresql.org/pub/repos/apt/dists/${DISTRO_CODENAME}-pgdg/Release" &>/dev/null; then
       case "$DISTRO_ID" in
-      debian)
-        case "$DISTRO_CODENAME" in
-        trixie) SUITE="bookworm" ;;
-        *) SUITE="bookworm" ;;
-        esac
-        ;;
-      ubuntu)
-        case "$DISTRO_CODENAME" in
-        oracular | noble) SUITE="jammy" ;;
-        *) SUITE="jammy" ;;
-        esac
-        ;;
+      debian) SUITE="bookworm" ;;
+      ubuntu) SUITE="jammy" ;;
       esac
-      msg_info "Using fallback suite: $SUITE (original: $DISTRO_CODENAME)"
     fi
 
     cat <<EOF >/etc/apt/sources.list.d/pgdg.sources
@@ -1831,38 +1813,27 @@ Signed-By: /etc/apt/keyrings/postgresql.gpg
 EOF
 
     $STD apt update
-    msg_ok "Repository added"
-
-    msg_info "Setup PostgreSQL $PG_VERSION"
     $STD apt install -y "postgresql-${PG_VERSION}" "postgresql-client-${PG_VERSION}"
 
     if [[ -n "$CURRENT_PG_VERSION" ]]; then
       $STD apt purge -y "postgresql-${CURRENT_PG_VERSION}" "postgresql-client-${CURRENT_PG_VERSION}" || true
+      $STD su - postgres -c "psql < /var/lib/postgresql/backup_$(date +%F)_v${CURRENT_PG_VERSION}.sql"
     fi
 
-    systemctl enable -q --now postgresql
-
-    if [[ -n "$CURRENT_PG_VERSION" ]]; then
-      msg_info "Restoring dumped data"
-      su - postgres -c "psql < /var/lib/postgresql/backup_$(date +%F)_v${CURRENT_PG_VERSION}.sql"
-      msg_ok "Data restored"
-    fi
-
-    msg_ok "PostgreSQL $PG_VERSION installed"
+    $STD systemctl enable --now postgresql
+    msg_ok "Installed PostgreSQL $PG_VERSION"
   fi
 
-  # Install optional PostgreSQL modules
   if [[ -n "$PG_MODULES" ]]; then
+    msg_info "Installing PostgreSQL modules"
     IFS=',' read -ra MODULES <<<"$PG_MODULES"
     for module in "${MODULES[@]}"; do
-      local pkg="postgresql-${PG_VERSION}-${module}"
-      msg_info "Setup PostgreSQL module/s: $pkg"
-      $STD apt install -y "$pkg" || {
-        msg_error "Failed to install $pkg"
+      $STD apt install -y "postgresql-${PG_VERSION}-${module}" || {
+        msg_warn "Failed to install postgresql-${PG_VERSION}-${module}"
         continue
       }
     done
-    msg_ok "Setup PostgreSQL modules"
+    msg_ok "Installed PostgreSQL modules"
   fi
 }
 
