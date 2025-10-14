@@ -18,6 +18,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - MediaManager: Use managed Python 3.13 [@vhsdream](https://github.com/vhsdream) ([#8343](https://github.com/community-scripts/ProxmoxVE/pull/8343))
 
+  - #### 🔧 Refactor
+
+    - Update cockpit installation/update [@burgerga](https://github.com/burgerga) ([#8346](https://github.com/community-scripts/ProxmoxVE/pull/8346))
+
 ## 2025-10-13
 
 ### 🚀 Updated Scripts
