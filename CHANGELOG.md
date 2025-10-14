@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-10-14
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - MediaManager: Use managed Python 3.13 [@vhsdream](https://github.com/vhsdream) ([#8343](https://github.com/community-scripts/ProxmoxVE/pull/8343))
+
 ## 2025-10-13
 
 ### 🚀 Updated Scripts
