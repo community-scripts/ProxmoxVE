@@ -27,73 +27,12 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  UPD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "SUPPORT" --radiolist --cancel-button Exit-Script "Spacebar = Select" 11 58 4 \
-    "1" "Update LXC" ON \
-    "2" "Install cockpit-file-sharing" OFF \
-    "3" "Install cockpit-identities" OFF \
-    "4" "Install cockpit-navigator" OFF \
-    3>&1 1>&2 2>&3)
-
-  if [ "$UPD" == "1" ]; then
-    msg_info "Updating ${APP} LXC"
-    $STD apt update
-    $STD apt -y upgrade
-    msg_ok "Updated ${APP} LXC"
-    exit
-  fi
-
-  if [ "$UPD" == "2" ]; then
-    msg_info "Installing dependencies (patience)"
-    $STD apt install -y \
-      attr \
-      nfs-kernel-server \
-      samba \
-      samba-common-bin \
-      winbind \
-      gawk
-    msg_ok "Installed dependencies"
-    msg_info "Installing Cockpit file sharing"
-    URL=$(curl -fsSL https://api.github.com/repos/45Drives/cockpit-file-sharing/releases/latest | grep download | grep focal_all.deb | cut -d\" -f4)
-    FILE=$(basename "$URL")
-    curl -fsSL "$URL" -o "$FILE"
-    $STD dpkg -i "$FILE" || $STD apt install -f -y
-    rm -f "$FILE"
-    msg_ok "Installed Cockpit file sharing"
-    exit
-  fi
-
-  if [ "$UPD" == "3" ]; then
-    msg_info "Installing dependencies (patience)"
-    $STD apt install -y \
-      psmisc \
-      samba \
-      samba-common-bin
-    msg_ok "Installed dependencies"
-    msg_info "Installing Cockpit identities"
-    URL=$(curl -fsSL https://api.github.com/repos/45Drives/cockpit-identities/releases/latest | grep download | grep focal_all.deb | cut -d\" -f4)
-    FILE=$(basename "$URL")
-    curl -fsSL "$URL" -o "$FILE"
-    $STD dpkg -i "$FILE" || $STD apt install -f -y
-    rm -f "$FILE"
-    msg_ok "Installed Cockpit identities"
-    exit
-  fi
-
-  if [ "$UPD" == "4" ]; then
-    msg_info "Installing dependencies"
-    $STD apt install -y \
-      rsync \
-      zip
-    msg_ok "Installed dependencies"
-    msg_info "Installing Cockpit navigator"
-    URL=$(curl -fsSL https://api.github.com/repos/45Drives/cockpit-navigator/releases/latest | grep download | grep focal_all.deb | cut -d\" -f4)
-    FILE=$(basename "$URL")
-    curl -fsSL "$URL" -o "$FILE"
-    $STD dpkg -i "$FILE" || $STD apt install -f -y
-    rm -f "$FILE"
-    msg_ok "Installed Cockpit navigator"
-    exit
-  fi
+  
+  msg_info "Updating ${APP} LXC"
+  $STD apt update
+  $STD apt -y upgrade
+  msg_ok "Updated ${APP} LXC"
+  exit
 }
 
 start
