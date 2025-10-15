@@ -21,6 +21,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Update omada-install.sh to use correct libssl version [@punctualwesley](https://github.com/punctualwesley) ([#8380](https://github.com/community-scripts/ProxmoxVE/pull/8380))
     - zigbee2mqtt: Use hardlinks for PNPM packages [@mikeage](https://github.com/mikeage) ([#8357](https://github.com/community-scripts/ProxmoxVE/pull/8357))
 
   - #### ✨ New Features
