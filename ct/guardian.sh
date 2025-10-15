@@ -35,9 +35,9 @@ if check_for_gh_release "guardian" "HydroshieldMKII/Guardian" ; then
   msg_ok "Stopped Services"
 
   if [[ -f "/opt/guardian/backend/plex-guard.db" ]] ; then
-    msg_info "Saving Database"
+    msg_info "Backing up Database"
     cp "/opt/guardian/backend/plex-guard.db" "/tmp/plex-guard.db.backup"
-    msg_ok "Database backed up"
+    msg_ok "Backed up Database"
   fi
 
   cp /opt/guardian/.env /opt
@@ -48,7 +48,7 @@ if check_for_gh_release "guardian" "HydroshieldMKII/Guardian" ; then
     msg_info "Restoring Database"
     cp "/tmp/plex-guard.db.backup" "/opt/guardian/backend/plex-guard.db"
     rm "/tmp/plex-guard.db.backup"
-    msg_ok "Database restored"
+    msg_ok "Restored Database"
   fi
 
   msg_info "Updating Guardian"
