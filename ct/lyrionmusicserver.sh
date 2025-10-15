@@ -45,6 +45,7 @@ function update_script() {
     $STD rm -f "$DEB_FILE"
     $STD apt -y autoremove
     $STD apt -y autoclean
+    $STD apt -y clean
     msg_ok "Cleaned"
   else
     msg_ok "$APP is already up to date (${RELEASE})"
