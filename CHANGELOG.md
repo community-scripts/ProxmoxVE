@@ -17,6 +17,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - LimeSurvey ([#8364](https://github.com/community-scripts/ProxmoxVE/pull/8364))
 - Guardian ([#8365](https://github.com/community-scripts/ProxmoxVE/pull/8365))
 
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - Immich: v2.1.0 - VectorChord 0.5+ support [@vhsdream](https://github.com/vhsdream) ([#8348](https://github.com/community-scripts/ProxmoxVE/pull/8348))
+
 ## 2025-10-14
 
 ### 🚀 Updated Scripts
