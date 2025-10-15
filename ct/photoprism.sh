@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-3072}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -37,7 +37,7 @@ function update_script() {
     LIBHEIF_URL=$(curl -fsSL "https://dl.photoprism.app/dist/libheif/" | grep -oP "libheif-$(lsb_release -cs)-amd64-v[0-9\.]+\.tar\.gz" | sort -V | tail -n 1)
     if [[ "${LIBHEIF_URL}" != "$(cat ~/.photoprism_libheif 2>/dev/null)" ]] || [[ ! -f ~/.photoprism_libheif ]]; then
       msg_info "Updating PhotoPrism LibHeif"
-      $STD apt-get install -y libvips42
+      $STD apt install -y libvips42
       curl -fsSL "https://dl.photoprism.app/dist/libheif/$LIBHEIF_URL" -o /tmp/libheif.tar.gz
       tar -xzf /tmp/libheif.tar.gz -C /usr/local
       ldconfig

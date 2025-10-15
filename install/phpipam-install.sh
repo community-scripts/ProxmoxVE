@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y php-pear
+$STD apt install -y php-pear
 msg_ok "Installed Dependencies"
 
 PHP_VERSION="8.2" PHP_APACHE="YES" PHP_FPM="YES" PHP_MODULE="mysql,imap,apcu,pspell,tidy,xmlrpc,gmp,ldap,common,snmp" setup_php
@@ -73,6 +73,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

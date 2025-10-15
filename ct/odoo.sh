@@ -11,7 +11,7 @@ var_disk="${var_disk:-6}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -29,7 +29,7 @@ function update_script() {
     exit 1
   fi
   if ! [[ $(dpkg -s python3-lxml-html-clean 2>/dev/null) ]]; then
-    $STD apt-get install python3-lxml
+    $STD apt install python3-lxml
     curl -fsSL "http://archive.ubuntu.com/ubuntu/pool/universe/l/lxml-html-clean/python3-lxml-html-clean_0.1.1-1_all.deb" -o /opt/python3-lxml-html-clean.deb
     $STD dpkg -i /opt/python3-lxml-html-clean.deb
     rm -f /opt/python3-lxml-html-clean.deb

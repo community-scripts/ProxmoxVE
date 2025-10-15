@@ -15,10 +15,16 @@ update_os
 
 msg_info "Installing Proxmox Datacenter Manager"
 curl -fsSL https://enterprise.proxmox.com/debian/proxmox-archive-keyring-trixie.gpg -o /usr/share/keyrings/proxmox-archive-keyring.gpg
-echo "deb [signed-by=/usr/share/keyrings/proxmox-archive-keyring.gpg] http://download.proxmox.com/debian/pdm bookworm pdm-test  " >/etc/apt/sources.list.d/pdm-test.list
-$STD apt-get update
+cat <<EOF >/etc/apt/sources.list.d/pdm-test.sources
+Types: deb
+URIs: http://download.proxmox.com/debian/pdm
+Suites: bookworm
+Components: pdm-test
+Signed-By: /usr/share/keyrings/proxmox-archive-keyring.gpg
+EOF
+$STD apt update
 DEBIAN_FRONTEND=noninteractive
-$STD apt-get -o Dpkg::Options::="--force-confdef" \
+$STD apt -o Dpkg::Options::="--force-confdef" \
         -o Dpkg::Options::="--force-confold" \
         install -y proxmox-datacenter-manager \
         proxmox-datacenter-manager-ui
@@ -28,6 +34,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

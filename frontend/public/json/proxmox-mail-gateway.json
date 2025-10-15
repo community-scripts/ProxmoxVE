@@ -23,7 +23,7 @@
                 "ram": 4096,
                 "hdd": 10,
                 "os": "debian",
-                "version": "12"
+                "version": "13"
             }
         }
     ],

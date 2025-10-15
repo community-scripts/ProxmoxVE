@@ -13,7 +13,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   nginx \
   rabbitmq-server \
   ca-certificates \
@@ -48,8 +48,14 @@ if curl -fsSL "$KEY_URL" -o "$TMP_KEY_CONTENT" && grep -q "BEGIN PGP PUBLIC KEY 
   chmod 644 "$GPG_TMP"
   chown root:root "$GPG_TMP"
   mv "$GPG_TMP" /usr/share/keyrings/onlyoffice.gpg
-  echo "deb [signed-by=/usr/share/keyrings/onlyoffice.gpg] https://download.onlyoffice.com/repo/debian squeeze main" >/etc/apt/sources.list.d/onlyoffice.list
-  $STD apt-get update
+  cat <<EOF >/etc/apt/sources.list.d/onlyoffice.sources
+Types: deb
+URIs: https://download.onlyoffice.com/repo/debian
+Suites: squeeze
+Components: main
+Signed-By: /usr/share/keyrings/onlyoffice.gpg
+EOF
+  $STD apt update
   msg_ok "GPG Key Added"
 else
   msg_error "Failed to download or verify GPG key from $KEY_URL"
@@ -90,17 +96,18 @@ msg_ok "Debconf Preconfiguration Done"
 
 msg_info "Installing ttf-mscorefonts-installer"
 echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | debconf-set-selections
-$STD apt-get install -y ttf-mscorefonts-installer
+$STD apt install -y ttf-mscorefonts-installer
 msg_ok "Installed Microsoft Core Fonts"
 
 msg_info "Installing ONLYOFFICE Docs"
-$STD apt-get install -y onlyoffice-documentserver
+$STD apt install -y onlyoffice-documentserver
 msg_ok "ONLYOFFICE Docs Installed"
 
 motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

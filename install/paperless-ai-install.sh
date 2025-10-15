@@ -14,12 +14,12 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   build-essential
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Python3"
-$STD apt-get install -y \
+$STD apt install -y \
   python3-pip
 msg_ok "Installed Python3"
 
@@ -103,6 +103,7 @@ customize
 
 msg_info "Cleaning up"
 rm -rf /opt/v${RELEASE}.zip
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

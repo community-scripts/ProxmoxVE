@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies (Patience)"
-$STD apt-get install -y \
+$STD apt install -y \
   redis \
   build-essential \
   imagemagick \
@@ -41,7 +41,7 @@ fetch_and_deploy_gh_release "jbig2enc" "ie13/jbig2enc" "tarball" "latest" "/opt/
 setup_gs
 
 msg_info "Installing OCR Dependencies (Patience)"
-$STD apt-get install -y \
+$STD apt install -y \
   unpaper \
   icc-profiles-free \
   qpdf \
@@ -202,6 +202,7 @@ customize
 msg_info "Cleaning up"
 rm -rf /opt/paperless/docker
 rm -rf /tmp/ghostscript*
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get -y install \
+$STD apt -y install \
   apt-utils \
   avahi-utils \
   lighttpd \
@@ -34,7 +34,7 @@ $STD apt-get -y install \
 msg_ok "Installed Dependencies"
 
 msg_info "Installing PHP Dependencies"
-$STD apt-get -y install \
+$STD apt -y install \
   php \
   php-cgi \
   php-fpm \
@@ -46,7 +46,7 @@ service lighttpd force-reload
 msg_ok "Installed PHP Dependencies"
 
 msg_info "Installing Python Dependencies"
-$STD apt-get -y install \
+$STD apt -y install \
   python3-pip \
   python3-requests \
   python3-tz \
@@ -101,6 +101,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

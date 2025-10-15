@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   ca-certificates \
   apt-transport-https
 msg_ok "Installed Dependencies"
@@ -24,9 +24,15 @@ JAVA_VERSION="21" setup_java
 msg_info "Installing openHAB"
 curl -fsSL "https://openhab.jfrog.io/artifactory/api/gpg/key/public" | gpg --dearmor -o /usr/share/keyrings/openhab.gpg
 chmod u=rw,g=r,o=r /usr/share/keyrings/openhab.gpg
-echo "deb [signed-by=/usr/share/keyrings/openhab.gpg] https://openhab.jfrog.io/artifactory/openhab-linuxpkg stable main" >/etc/apt/sources.list.d/openhab.list
+cat <<EOF >/etc/apt/sources.list.d/openhab.sources
+Types: deb
+URIs: https://openhab.jfrog.io/artifactory/openhab-linuxpkg
+Suites: stable
+Components: main
+Signed-By: /usr/share/keyrings/openhab.gpg
+EOF
 $STD apt update
-$STD apt-get -y install openhab
+$STD apt -y install openhab
 systemctl daemon-reload
 systemctl enable -q --now openhab
 msg_ok "Installed openHAB"
@@ -35,6 +41,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

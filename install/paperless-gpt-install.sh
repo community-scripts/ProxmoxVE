@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   gcc \
   ca-certificates \
   musl-dev \
@@ -110,6 +110,7 @@ customize
 
 msg_info "Cleaning up"
 rm -f "$temp_file"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

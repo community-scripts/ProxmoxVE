@@ -15,7 +15,7 @@ network_check
 update_os
 
 msg_info "Installing NUT"
-$STD apt-get install -y nut-client
+$STD apt install -y nut-client
 msg_ok "Installed NUT"
 
 NODE_VERSION="22" NODE_MODULE="pnpm" setup_nodejs
@@ -65,6 +65,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

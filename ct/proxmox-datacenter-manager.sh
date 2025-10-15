@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-10}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -33,13 +33,13 @@ function update_script() {
         echo "deb [signed-by=/usr/share/keyrings/proxmox-archive-keyring.gpg] http://download.proxmox.com/debian/pdm bookworm pdm-test" > /etc/apt/sources.list.d/pdm-test.list
         curl -fsSL https://enterprise.proxmox.com/debian/proxmox-archive-keyring-trixie.gpg -o /usr/share/keyrings/proxmox-archive-keyring.gpg
         rm -f /etc/apt/keyrings/proxmox-release-bookworm.gpg /etc/apt/sources.list.d/proxmox-release-bookworm.list
-        $STD apt-get update
+        $STD apt update
         msg_ok "Updated old sources"
     fi
 
     msg_info "Updating $APP LXC"
-    $STD apt-get update
-    $STD apt-get -y upgrade
+    $STD apt update
+    $STD apt -y upgrade
     msg_ok "Updated $APP LXC"
     exit
 }

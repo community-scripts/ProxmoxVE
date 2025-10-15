@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y jsvc
+$STD apt install -y jsvc
 msg_ok "Installed Dependencies"
 
 msg_info "Checking CPU Features"
@@ -30,8 +30,8 @@ msg_info "Installing Azul Zulu Java"
 curl -fsSL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xB1998361219BD9C9" -o "/etc/apt/trusted.gpg.d/zulu-repo.asc"
 curl -fsSL "https://cdn.azul.com/zulu/bin/zulu-repo_1.0.0-3_all.deb" -o zulu-repo.deb
 $STD dpkg -i zulu-repo.deb
-$STD apt-get update
-$STD apt-get -y install zulu21-jre-headless
+$STD apt update
+$STD apt -y install zulu21-jre-headless
 msg_ok "Installed Azul Zulu Java"
 
 msg_info "Installing libssl (if needed)"
@@ -44,9 +44,15 @@ fi
 
 msg_info "Installing MongoDB $MONGODB_VERSION"
 curl -fsSL "https://www.mongodb.org/static/pgp/server-${MONGODB_VERSION}.asc" | gpg --dearmor >/usr/share/keyrings/mongodb-server-${MONGODB_VERSION}.gpg
-echo "deb [signed-by=/usr/share/keyrings/mongodb-server-${MONGODB_VERSION}.gpg] http://repo.mongodb.org/apt/debian $(grep '^VERSION_CODENAME=' /etc/os-release | cut -d'=' -f2)/mongodb-org/${MONGODB_VERSION} main" >/etc/apt/sources.list.d/mongodb-org-${MONGODB_VERSION}.list
-$STD apt-get update
-$STD apt-get install -y mongodb-org
+cat <<EOF >/etc/apt/sources.list.d/mongodb-org-${MONGODB_VERSION}.sources
+Types: deb
+URIs: http://repo.mongodb.org/apt/debian
+Suites: $(grep '^VERSION_CODENAME=' /etc/os-release | cut -d'=' -f2)/mongodb-org/${MONGODB_VERSION}
+Components: main
+Signed-By: /usr/share/keyrings/mongodb-server-${MONGODB_VERSION}.gpg
+EOF
+$STD apt update
+$STD apt install -y mongodb-org
 msg_ok "Installed MongoDB $MONGODB_VERSION"
 
 msg_info "Installing Omada Controller"
@@ -63,6 +69,7 @@ customize
 
 msg_info "Cleaning up"
 rm -rf "$OMADA_PKG" zulu-repo.deb
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

@@ -18,16 +18,17 @@ curl -fsSL "https://enterprise.proxmox.com/debian/proxmox-release-bookworm.gpg" 
 cat <<EOF >>/etc/apt/sources.list
 deb http://download.proxmox.com/debian/pbs bookworm pbs-no-subscription
 EOF
-$STD apt-get update
+$STD apt update
 export DEBIAN_FRONTEND=noninteractive
 export IFUPDOWN2_NO_IFRELOAD=1
-$STD apt-get install -y proxmox-backup-server
+$STD apt install -y proxmox-backup-server
 msg_ok "Installed Proxmox Backup Server"
 
 motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

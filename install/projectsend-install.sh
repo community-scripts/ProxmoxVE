@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   apache2 \
   libapache2-mod-php \
   php8.2-{pdo,mysql,mbstring,gettext,fileinfo,gd,xml,zip}
@@ -85,6 +85,7 @@ customize
 
 msg_info "Cleaning up"
 rm -rf "/opt/projectsend-r${RELEASE}.zip"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

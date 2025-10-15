@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-20}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -28,7 +28,7 @@ function update_script() {
     exit
   fi
   if ! dpkg -s python3-pip >/dev/null 2>&1; then
-    $STD apt-get install -y python3-pip
+    $STD apt install -y python3-pip
   fi
   RELEASE=$(curl -fsSL https://api.github.com/repos/clusterzx/paperless-ai/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
   if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then

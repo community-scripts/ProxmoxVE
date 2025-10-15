@@ -33,8 +33,8 @@ function update_script() {
     3>&1 1>&2 2>&3)
   if [ "$UPD" == "1" ]; then
     msg_info "Updating ${APP} LXC"
-    $STD apt-get update
-    $STD apt-get -y upgrade
+    $STD apt update
+    $STD apt -y upgrade
     msg_ok "Updated ${APP} LXC"
     exit
   fi

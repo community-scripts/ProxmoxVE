@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   ca-certificates \
   software-properties-common \
   apt-transport-https \
@@ -101,6 +101,7 @@ customize
 msg_info "Cleaning up"
 rm -rf ~/database-migration-output
 rm -rf "/opt/v${RELEASE}.zip"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

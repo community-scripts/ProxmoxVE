@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   apache2 \
   ca-certificates \
   git
@@ -44,8 +44,9 @@ chmod -R 755 "/opt/Pf2eTools"
 msg_ok "Created Service"
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"
 
 motd_ssh

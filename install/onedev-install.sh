@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   default-jdk \
   git \
   git-lfs
@@ -36,6 +36,7 @@ customize
 
 msg_info "Cleaning up"
 rm -rf /opt/onedev-latest.tar.gz
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

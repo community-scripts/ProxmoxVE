@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-3072}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -38,15 +38,15 @@ function update_script() {
 
   curl -fsSL "https://www.mongodb.org/static/pgp/server-${MONGODB_VERSION}.asc" | gpg --dearmor >/usr/share/keyrings/mongodb-server-${MONGODB_VERSION}.gpg
   echo "deb [signed-by=/usr/share/keyrings/mongodb-server-${MONGODB_VERSION}.gpg] http://repo.mongodb.org/apt/debian $(grep '^VERSION_CODENAME=' /etc/os-release | cut -d'=' -f2)/mongodb-org/${MONGODB_VERSION} main" >/etc/apt/sources.list.d/mongodb-org-${MONGODB_VERSION}.list
-  $STD apt-get update
-  $STD apt-get install -y --only-upgrade mongodb-org
+  $STD apt update
+  $STD apt install -y --only-upgrade mongodb-org
   msg_ok "Updated MongoDB to $MONGODB_VERSION"
 
   msg_info "Checking if right Azul Zulu Java is installed"
   java_version=$(java -version 2>&1 | awk -F[\"_] '/version/ {print $2}')
   if [[ "$java_version" =~ ^1\.8\.* ]]; then
-    $STD apt-get remove --purge -y zulu8-jdk
-    $STD apt-get -y install zulu21-jre-headless
+    $STD apt remove --purge -y zulu8-jdk
+    $STD apt -y install zulu21-jre-headless
     msg_ok "Updated Azul Zulu Java to 21"
   else
     msg_ok "Azul Zulu Java 21 already installed"

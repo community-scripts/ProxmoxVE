@@ -25,7 +25,7 @@ if [[ ! "$CONFIRM" =~ ^([yY][eE][sS]|[yY])$ ]]; then
 fi
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y ufw
+$STD apt install -y ufw
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Pi-hole"
@@ -69,7 +69,7 @@ read -r -p "${TAB3}Would you like to add Unbound? <y/N> " prompt
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   read -r -p "${TAB3}Unbound is configured as a recursive DNS server by default, would you like it to be configured as a forwarding DNS server (using DNS-over-TLS (DoT)) instead? <y/N> " prompt
   msg_info "Installing Unbound"
-  $STD apt-get install -y unbound
+  $STD apt install -y unbound
   cat <<EOF >/etc/unbound/unbound.conf.d/pi-hole.conf
 server:
   verbosity: 0
@@ -158,6 +158,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"
