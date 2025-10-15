@@ -23,7 +23,7 @@ msg_ok "Installed Dependencies"
 
 setup_mariadb
 
-msg_info "Adding PHP8.4 Repository"
+msg_info "Adding PHP Repository"
 $STD curl -sSLo /tmp/debsuryorg-archive-keyring.deb https://packages.sury.org/debsuryorg-archive-keyring.deb
 $STD dpkg -i /tmp/debsuryorg-archive-keyring.deb
 cat <<EOF >/etc/apt/sources.list.d/php.sources
@@ -34,7 +34,7 @@ Components: main
 Signed-By: /usr/share/keyrings/deb.sury.org-php.gpg
 EOF
 $STD apt update
-msg_ok "Added PHP8.4 Repository"
+msg_ok "Added PHP Repository"
 
 msg_info "Installing PHP"
 $STD apt remove -y php8.2*
