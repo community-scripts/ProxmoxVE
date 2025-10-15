@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y sqlite3
+$STD apt install -y sqlite3
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Readarr"
@@ -51,6 +51,7 @@ customize
 
 msg_info "Cleaning up"
 rm -rf Readarr.develop.*.tar.gz
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

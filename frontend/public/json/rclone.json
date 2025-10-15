@@ -20,10 +20,10 @@
       "script": "ct/rclone.sh",
       "resources": {
         "cpu": 1,
-        "ram": 256,
-        "hdd": 1,
+        "ram": 512,
+        "hdd": 2,
         "os": "debian",
-        "version": "12"
+        "version": "13"
       }
     },
     {

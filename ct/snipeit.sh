@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -46,8 +46,8 @@ function update_script() {
     setup_composer
 
     msg_info "Updating ${APP}"
-    $STD apt-get update
-    $STD apt-get -y upgrade
+    $STD apt update
+    $STD apt -y upgrade
     cp /opt/snipe-it-backup/.env /opt/snipe-it/.env
     cp -r /opt/snipe-it-backup/public/uploads/ /opt/snipe-it/public/uploads/
     cp -r /opt/snipe-it-backup/storage/private_uploads /opt/snipe-it/storage/private_uploads

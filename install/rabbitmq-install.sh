@@ -15,7 +15,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   lsb-release \
   apt-transport-https \
   make
@@ -38,11 +38,11 @@ EOF
 msg_ok "RabbitMQ repository added"
 
 msg_info "Updating package list"
-$STD apt-get update -y
+$STD apt update -y
 msg_ok "Package list updated"
 
 msg_info "Installing Erlang & RabbitMQ server"
-$STD apt-get install -y erlang-base \
+$STD apt install -y erlang-base \
   erlang-asn1 erlang-crypto erlang-eldap erlang-ftp erlang-inets \
   erlang-mnesia erlang-os-mon erlang-parsetools erlang-public-key \
   erlang-runtime-tools erlang-snmp erlang-ssl \
@@ -69,6 +69,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

@@ -14,13 +14,19 @@ network_check
 update_os
 
 msg_info "Setting up Resilio Sync Repository"
-curl -fsSL "https://linux-packages.resilio.com/resilio-sync/key.asc" >/etc/apt/trusted.gpg.d/resilio-sync.asc
-echo "deb [signed-by=/etc/apt/trusted.gpg.d/resilio-sync.asc] http://linux-packages.resilio.com/resilio-sync/deb resilio-sync non-free" >/etc/apt/sources.list.d/resilio-sync.list
-$STD apt-get update
+curl -fsSL "https://linux-packages.resilio.com/resilio-sync/key.asc" >/usr/share/keyrings/resilio-sync-archive-keyring.asc
+cat <<EOF >/etc/apt/sources.list.d/resilio-sync.sources
+Types: deb
+URIs: http://linux-packages.resilio.com/resilio-sync/deb
+Suites: resilio-sync
+Components: non-free
+Signed-By: /usr/share/keyrings/resilio-sync-archive-keyring.asc
+EOF
+$STD apt update
 msg_ok "Resilio Sync Repository Setup"
 
 msg_info "Installing Resilio Sync"
-$STD apt-get install -y resilio-sync
+$STD apt install -y resilio-sync
 sed -i "s/127.0.0.1:8888/0.0.0.0:8888/g" /etc/resilio-sync/config.json
 systemctl enable -q resilio-sync
 systemctl restart resilio-sync
@@ -30,6 +36,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

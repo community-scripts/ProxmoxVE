@@ -14,14 +14,14 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y jq
+$STD apt install -y jq
 msg_ok "Installed Dependencies"
 
 msg_info "Setup Salt Repo"
 mkdir -p /etc/apt/keyrings
 curl -fsSL https://packages.broadcom.com/artifactory/api/security/keypair/SaltProjectKey/public -o /etc/apt/keyrings/salt-archive-keyring.pgp
 curl -fsSL https://github.com/saltstack/salt-install-guide/releases/latest/download/salt.sources -o /etc/apt/sources.list.d/salt.sources
-$STD apt-get update
+$STD apt update
 msg_ok "Setup Salt Repo"
 
 msg_info "Installing Salt"
@@ -31,7 +31,7 @@ Package: salt-*
 Pin: version ${RELEASE}
 Pin-Priority: 1001
 EOF
-$STD apt-get install -y salt-master
+$STD apt install -y salt-master
 echo "${RELEASE}" >/~.salt
 msg_ok "Installed Salt"
 
@@ -39,6 +39,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

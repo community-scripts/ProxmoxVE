@@ -14,14 +14,20 @@ network_check
 update_os
 
 msg_info "Setting up Syncthing repo"
-mkdir -p /etc/apt/keyrings
-curl -fsSL "https://syncthing.net/release-key.gpg" -o /etc/apt/keyrings/syncthing-archive-keyring.gpg
-echo "deb [signed-by=/etc/apt/keyrings/syncthing-archive-keyring.gpg] https://apt.syncthing.net/ syncthing stable-v2" >/etc/apt/sources.list.d/syncthing.list
-$STD apt-get update
+mkdir -p /usr/share/keyrings
+curl -fsSL "https://syncthing.net/release-key.gpg" -o /usr/share/keyrings/syncthing-archive-keyring.gpg
+cat <<EOF >/etc/apt/sources.list.d/syncthing.sources
+Types: deb
+URIs: https://apt.syncthing.net/
+Suites: syncthing
+Components: stable-v2
+Signed-By: /usr/share/keyrings/syncthing-archive-keyring.gpg
+EOF
+$STD apt update
 msg_ok "Set up Syncthing repo"
 
 msg_info "Installing Syncthing"
-$STD apt-get install -y syncthing
+$STD apt install -y syncthing
 systemctl enable -q --now syncthing@root
 sleep 5
 sed -i "{s/127.0.0.1:8384/0.0.0.0:8384/g}" /root/.local/state/syncthing/config.xml
@@ -32,6 +38,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

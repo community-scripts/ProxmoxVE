@@ -16,8 +16,8 @@ update_os
 msg_info "Installing ASP.NET Core Runtime"
 curl -fsSL "https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb" -o packages-microsoft-prod.deb
 $STD dpkg -i packages-microsoft-prod.deb
-$STD apt-get update
-$STD apt-get install -y dotnet-sdk-9.0
+$STD apt update
+$STD apt install -y dotnet-sdk-9.0
 msg_ok "Installed ASP.NET Core Runtime"
 
 fetch_and_deploy_gh_release "rdt-client" "rogerfar/rdt-client" "prebuild" "latest" "/opt/rdtc" "RealDebridClient.zip"
@@ -50,6 +50,7 @@ customize
 
 msg_info "Cleaning up"
 rm -f ~/packages-microsoft-prod.deb
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

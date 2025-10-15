@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-20}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -40,8 +40,8 @@ function update_script() {
 
     msg_info "Updating ${APP}"
     cd /opt/signoz-schema-migrator/bin
-    $STD ./signoz-schema-migrator sync --dsn="tcp://localhost:9000?password=" --replication=true  --up=
-    $STD ./signoz-schema-migrator async --dsn="tcp://localhost:9000?password=" --replication=true  --up=
+    $STD ./signoz-schema-migrator sync --dsn="tcp://localhost:9000?password=" --replication=true --up=
+    $STD ./signoz-schema-migrator async --dsn="tcp://localhost:9000?password=" --replication=true --up=
     msg_ok "Updated $APP"
 
     msg_info "Starting Services"

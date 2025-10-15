@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing SmokePing"
-$STD apt-get install -y smokeping
+$STD apt install -y smokeping
 cat <<EOF >/etc/smokeping/config.d/Targets
 *** Targets ***
 probe = FPing
@@ -66,6 +66,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

@@ -14,12 +14,18 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y git
+$STD apt install -y git
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up Ansible"
 curl -fsSL "https://keyserver.ubuntu.com/pks/lookup?fingerprint=on&op=get&search=0x6125E2A8C77F2818FB7BD15B93C4A3FD7BB9C367" | gpg --dearmor -o /usr/share/keyrings/ansible-archive-keyring.gpg
-echo "deb [signed-by=/usr/share/keyrings/ansible-archive-keyring.gpg] http://ppa.launchpad.net/ansible/ansible/ubuntu jammy main" >/etc/apt/sources.list.d/ansible.list
+cat <<EOF >/etc/apt/sources.list.d/ansible.sources
+Types: deb
+URIs: http://ppa.launchpad.net/ansible/ansible/ubuntu
+Suites: jammy
+Components: main
+Signed-By: /usr/share/keyrings/ansible-archive-keyring.gpg
+EOF
 $STD apt update
 $STD apt install -y ansible
 msg_ok "Set up Ansible"
@@ -72,6 +78,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

@@ -15,7 +15,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   build-essential \
   make \
   libpq-dev \
@@ -23,7 +23,7 @@ $STD apt-get install -y \
 msg_ok "Installed Dependencies"
 
 msg_info "Setup Python3"
-$STD apt-get install -y \
+$STD apt install -y \
   python3-dev \
   python3-setuptools \
   python3-wheel \
@@ -66,6 +66,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

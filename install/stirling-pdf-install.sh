@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies (Patience)"
-$STD apt-get install -y \
+$STD apt install -y \
   automake \
   autoconf \
   libtool \
@@ -45,7 +45,7 @@ else
 fi
 
 msg_info "Installing LibreOffice Components"
-$STD apt-get install -y \
+$STD apt install -y \
   libreoffice-writer \
   libreoffice-calc \
   libreoffice-impress \
@@ -71,7 +71,7 @@ $STD uv pip install \
   pillow \
   pdf2image
 
-$STD apt-get install -y python3-uno python3-pip
+$STD apt install -y python3-uno python3-pip
 $STD pip3 install --break-system-packages unoserver
 ln -sf /opt/.venv/bin/python3 /usr/local/bin/python3
 ln -sf /opt/.venv/bin/pip /usr/local/bin/pip
@@ -89,7 +89,7 @@ $STD make install
 msg_ok "Installed JBIG2"
 
 msg_info "Installing Language Packs (Patience)"
-$STD apt-get install -y 'tesseract-ocr-*'
+$STD apt install -y 'tesseract-ocr-*'
 msg_ok "Installed Language Packs"
 
 msg_info "Creating Environment Variables"
@@ -196,6 +196,7 @@ customize
 
 msg_info "Cleaning up"
 rm -f /tmp/jbig2enc.tar.gz
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

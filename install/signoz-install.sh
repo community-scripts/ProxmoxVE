@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   apt-transport-https \
   ca-certificates
 msg_ok "Installed Dependencies"
@@ -23,10 +23,17 @@ JAVA_VERSION="21" setup_java
 
 msg_info "Setting up ClickHouse"
 curl -fsSL "https://packages.clickhouse.com/rpm/lts/repodata/repomd.xml.key" | gpg --dearmor -o /usr/share/keyrings/clickhouse-keyring.gpg
-echo "deb [signed-by=/usr/share/keyrings/clickhouse-keyring.gpg arch=amd64] https://packages.clickhouse.com/deb stable main" >/etc/apt/sources.list.d/clickhouse.list
-$STD apt-get update
+cat <<EOF >/etc/apt/sources.list.d/clickhouse.sources
+Types: deb
+URIs: https://packages.clickhouse.com/deb
+Suites: stable
+Components: main
+Architectures: amd64
+Signed-By: /usr/share/keyrings/clickhouse-keyring.gpg
+EOF
+$STD apt update
 export DEBIAN_FRONTEND=noninteractive
-$STD apt-get install -y clickhouse-server clickhouse-client
+$STD apt install -y clickhouse-server clickhouse-client
 msg_ok "Setup ClickHouse"
 
 msg_info "Setting up Zookeeper"
@@ -258,6 +265,7 @@ customize
 msg_info "Cleaning up"
 rm -rf ~/zookeeper.tar.gz
 rm -rf ~/apache-zookeeper-*-bin
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

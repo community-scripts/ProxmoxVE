@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -40,8 +40,8 @@ function update_script() {
     fetch_and_deploy_gh_release "rdt-client" "rogerfar/rdt-client" "prebuild" "latest" "/opt/rdtc" "RealDebridClient.zip"
     cp -R /opt/rdtc-backup/appsettings.json /opt/rdtc/
     if dpkg-query -W dotnet-sdk-8.0 >/dev/null 2>&1; then
-      $STD apt-get remove --purge -y dotnet-sdk-8.0
-      $STD apt-get install -y dotnet-sdk-9.0
+      $STD apt remove --purge -y dotnet-sdk-8.0
+      $STD apt install -y dotnet-sdk-9.0
     fi
 
     msg_info "Starting Service"
