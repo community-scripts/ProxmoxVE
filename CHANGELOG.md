@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-10-15
 
+### 🆕 New Scripts
+
+  - Guardian ([#8365](https://github.com/community-scripts/ProxmoxVE/pull/8365))
+
 ## 2025-10-14
 
 ### 🚀 Updated Scripts
