@@ -33,7 +33,7 @@
   },
   "notes": [
     {
-      "text": "You will need to input database credentials into LimeSurvey installer. Use `cat ~/limesurvey.creds` inside LXC.",
+      "text": "You will need to input database credentials into LimeSurvey installer. Use `nano ~/limesurvey.creds` inside LXC.",
       "type": "info"
     }
   ]
