@@ -34,6 +34,13 @@ function update_script() {
     $STD curl -fsSLo /tmp/debsuryorg-archive-keyring.deb https://packages.sury.org/debsuryorg-archive-keyring.deb
     $STD dpkg -i /tmp/debsuryorg-archive-keyring.deb
     $STD sh -c 'echo "deb [signed-by=/usr/share/keyrings/deb.sury.org-php.gpg] https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list'
+    cat <<EOF >/etc/apt/sources.list.d/php.sources
+Types: deb
+URIs: https://packages.sury.org/php/
+Suites: $(lsb_release -sc)
+Components: main
+Signed-By: /usr/share/keyrings/deb.sury.org-php.gpg
+EOF
     $STD apt update
     $STD apt remove -y php"${CURRENT_PHP//./}"*
     $STD apt install -y \
