@@ -58,12 +58,11 @@ sed -i \
   -e "s|^;*db_password *=.*|db_password = $DB_PASS|" \
   /etc/odoo/odoo.conf
 $STD sudo -u odoo odoo -c /etc/odoo/odoo.conf -d odoo -i base --stop-after-init
-systemctl restart odoo
 echo "${LATEST_VERSION}" >/opt/${APPLICATION}_version.txt
 msg_ok "Configured Odoo"
 
 msg_info "Restarting Odoo"
-
+systemctl restart odoo
 msg_ok "Restarted Odoo"
 
 motd_ssh
@@ -72,6 +71,7 @@ customize
 msg_info "Cleaning up"
 rm -f /opt/odoo.deb
 rm -f /opt/python3-lxml-html-clean.deb
-$STD apt autoremove
-$STD apt autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"
