@@ -18,7 +18,7 @@ curl -fsSL https://enterprise.proxmox.com/debian/proxmox-archive-keyring-trixie.
 cat <<EOF >/etc/apt/sources.list.d/pdm-test.sources
 Types: deb
 URIs: http://download.proxmox.com/debian/pdm
-Suites: bookworm
+Suites: trixie
 Components: pdm-test
 Signed-By: /usr/share/keyrings/proxmox-archive-keyring.gpg
 EOF
