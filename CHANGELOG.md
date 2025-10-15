@@ -19,8 +19,13 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - zigbee2mqtt: Use hardlinks for PNPM packages [@mikeage](https://github.com/mikeage) ([#8357](https://github.com/community-scripts/ProxmoxVE/pull/8357))
+
   - #### ✨ New Features
 
+    - Bump Q to S-Scripts to Debian 13 (Trixie) [@MickLesk](https://github.com/MickLesk) ([#8366](https://github.com/community-scripts/ProxmoxVE/pull/8366))
     - Bump O to P-Scripts to Debian 13 (Trixie) [@MickLesk](https://github.com/MickLesk) ([#8367](https://github.com/community-scripts/ProxmoxVE/pull/8367))
     - Bump L to N-Scripts to Debian 13 (Trixie) [@MickLesk](https://github.com/MickLesk) ([#8368](https://github.com/community-scripts/ProxmoxVE/pull/8368))
     - Immich: v2.1.0 - VectorChord 0.5+ support [@vhsdream](https://github.com/vhsdream) ([#8348](https://github.com/community-scripts/ProxmoxVE/pull/8348))
