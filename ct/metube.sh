@@ -100,6 +100,7 @@ EOF
     rm -rf /opt/metube_bak
     $STD apt -y autoremove
     $STD apt -y autoclean
+    $STD apt -y clean
     msg_ok "Cleaned Up"
 
     msg_info "Starting Service"
