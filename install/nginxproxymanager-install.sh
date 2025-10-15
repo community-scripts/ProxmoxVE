@@ -14,8 +14,8 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get update
-$STD apt-get -y install \
+$STD apt update
+$STD apt -y install \
   ca-certificates \
   apache2-utils \
   logrotate \
@@ -24,7 +24,7 @@ $STD apt-get -y install \
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Python Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   python3 \
   python3-dev \
   python3-pip \
@@ -41,8 +41,8 @@ VERSION="$(awk -F'=' '/^VERSION_CODENAME=/{ print $NF }' /etc/os-release)"
 msg_info "Installing Openresty"
 curl -fsSL "https://openresty.org/package/pubkey.gpg" | gpg --dearmor -o /etc/apt/trusted.gpg.d/openresty-archive-keyring.gpg
 echo -e "deb http://openresty.org/package/debian bullseye openresty" >/etc/apt/sources.list.d/openresty.list
-$STD apt-get update
-$STD apt-get -y install openresty
+$STD apt update
+$STD apt -y install openresty
 msg_ok "Installed Openresty"
 
 msg_info "Installing Node.js"
@@ -193,6 +193,7 @@ msg_ok "Started Services"
 msg_info "Cleaning up"
 rm -rf ../nginx-proxy-manager-*
 systemctl restart openresty
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

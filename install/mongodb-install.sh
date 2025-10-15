@@ -22,9 +22,15 @@ fi
 
 msg_info "Installing MongoDB $MONGODB_VERSION"
 curl -fsSL "https://www.mongodb.org/static/pgp/server-${MONGODB_VERSION}.asc" | gpg --dearmor >/usr/share/keyrings/mongodb-server-${MONGODB_VERSION}.gpg
-echo "deb [signed-by=/usr/share/keyrings/mongodb-server-${MONGODB_VERSION}.gpg] http://repo.mongodb.org/apt/debian $(grep '^VERSION_CODENAME=' /etc/os-release | cut -d'=' -f2)/mongodb-org/${MONGODB_VERSION} main" >/etc/apt/sources.list.d/mongodb-org-${MONGODB_VERSION}.list
-$STD apt-get update
-$STD apt-get install -y mongodb-org
+cat <<EOF >/etc/apt/sources.list.d/mongodb-org-${MONGODB_VERSION}.sources
+Types: deb
+URIs: http://repo.mongodb.org/apt/debian
+Suites: $(grep '^VERSION_CODENAME=' /etc/os-release | cut -d'=' -f2)/mongodb-org/${MONGODB_VERSION}
+Components: main
+Signed-By: /usr/share/keyrings/mongodb-server-${MONGODB_VERSION}.gpg
+EOF
+$STD apt update
+$STD apt install -y mongodb-org
 sed -i 's/bindIp: 127.0.0.1/bindIp: 0.0.0.0/' /etc/mongod.conf
 systemctl enable -q --now mongod
 msg_ok "Installed MongoDB $MONGODB_VERSION"
@@ -33,6 +39,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

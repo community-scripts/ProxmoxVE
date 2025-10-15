@@ -13,11 +13,10 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   nginx \
   rabbitmq-server \
-  ca-certificates \
-  software-properties-common
+  ca-certificates
 msg_ok "Installed Dependencies"
 
 PG_VERSION="16" setup_postgresql

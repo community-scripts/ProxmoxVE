@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies (Patience)"
-$STD apt-get install -y \
+$STD apt install -y \
   mediainfo \
   libmediainfo-dev \
   libc6 \
@@ -38,6 +38,6 @@ customize
 
 msg_info "Cleaning up"
 rm -rf /opt/nextpvr-helper.deb
-$STD apt-get autoremove
-$STD apt-get autoclean
+$STD apt autoremove
+$STD apt autoclean
 msg_ok "Cleaned"

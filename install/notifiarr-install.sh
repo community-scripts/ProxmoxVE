@@ -17,15 +17,22 @@ msg_info "Installing Notifiarr"
 $STD groupadd notifiarr
 $STD useradd -g notifiarr notifiarr
 curl -fsSL "https://packagecloud.io/golift/pkgs/gpgkey" | gpg --dearmor >/usr/share/keyrings/golift-archive-keyring.gpg
-echo "deb [signed-by=/usr/share/keyrings/golift-archive-keyring.gpg] https://packagecloud.io/golift/pkgs/ubuntu focal main" >/etc/apt/sources.list.d/golift.list
-$STD apt-get update
-$STD apt-get install -y notifiarr
+cat <<EOF >/etc/apt/sources.list.d/golift.sources
+Types: deb
+URIs: https://packagecloud.io/golift/pkgs/ubuntu
+Suites: focal
+Components: main
+Signed-By: /usr/share/keyrings/golift-archive-keyring.gpg
+EOF
+$STD apt update
+$STD apt install -y notifiarr
 msg_ok "Installed Notifiarr"
 
 motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

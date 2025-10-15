@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   apache2 \
   redis-server \
   build-essential \
@@ -29,7 +29,7 @@ msg_ok "Installed Dependencies"
 PG_VERSION="16" setup_postgresql
 
 msg_info "Installing Python"
-$STD apt-get install -y \
+$STD apt install -y \
   python3 \
   python3-pip \
   python3-venv \
@@ -117,6 +117,7 @@ customize
 
 msg_info "Cleaning up"
 rm "/opt/v${RELEASE}.zip"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

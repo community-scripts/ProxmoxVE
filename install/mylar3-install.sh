@@ -14,15 +14,20 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y jq
-echo "deb http://deb.debian.org/debian bookworm non-free non-free-firmware" >/etc/apt/sources.list.d/non-free.list
-$STD apt-get update
-$STD apt-get install -y unrar
-rm /etc/apt/sources.list.d/non-free.list
+$STD apt install -y jq
+cat <<EOF >/etc/apt/sources.list.d/non-free.sources
+Types: deb
+URIs: http://deb.debian.org/debian
+Suites: bookworm
+Components: non-free non-free-firmware
+EOF
+$STD apt update
+$STD apt install -y unrar
+rm /etc/apt/sources.list.d/non-free.sources
 msg_ok "Installed Dependencies"
 
 msg_info "Setup Python3"
-$STD apt-get install -y python3-pip
+$STD apt install -y python3-pip
 rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
 $STD pip install -U --no-cache-dir pip
 msg_ok "Setup Python3"
@@ -58,6 +63,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

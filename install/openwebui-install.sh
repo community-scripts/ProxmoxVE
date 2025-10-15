@@ -15,13 +15,14 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   git \
-  ffmpeg
+  ffmpeg \
+  libpq-dev
 msg_ok "Installed Dependencies"
 
 msg_info "Setup Python3"
-$STD apt-get install -y --no-install-recommends \
+$STD apt install -y --no-install-recommends \
   python3 \
   python3-pip
 msg_ok "Setup Python3"

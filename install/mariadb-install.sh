@@ -23,7 +23,7 @@ msg_ok "Setup MariaDB"
 read -r -p "${TAB3}Would you like to add PhpMyAdmin? <y/N> " prompt
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   msg_info "Installing phpMyAdmin"
-  $STD apt-get install -y \
+  $STD apt install -y \
     apache2 \
     php \
     php-mysqli \
@@ -49,6 +49,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

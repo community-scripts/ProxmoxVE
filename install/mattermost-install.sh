@@ -47,8 +47,8 @@ msg_info "Installing Mattermost"
 IPADDRESS=$(hostname -I | awk '{print $1}')
 curl -fsSL -o /usr/share/keyrings/mattermost-archive-keyring.gpg https://deb.packages.mattermost.com/pubkey.gpg
 sh -c 'curl -fsSL https://deb.packages.mattermost.com/repo-setup.sh | sudo bash -s mattermost' >/dev/null
-$STD apt-get update
-$STD apt-get install -y mattermost
+$STD apt update
+$STD apt install -y mattermost
 $STD install -C -m 600 -o mattermost -g mattermost /opt/mattermost/config/config.defaults.json /opt/mattermost/config/config.json
 sed -i -e "/DataSource/c\   \"DataSource\": \"postgres://$DB_USER:$DB_PASS@localhost:5432/$DB_NAME?sslmode=disable&connect_timeout=10\"," \
   -e "/SiteURL/c\   \"SiteURL\": \"http://$IPADDRESS:8065\"," /opt/mattermost/config/config.json
@@ -59,6 +59,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

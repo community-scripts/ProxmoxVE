@@ -15,15 +15,15 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   git-core \
   mediainfo
 
 cat <<EOF >/etc/apt/sources.list.d/non-free.list
 deb http://deb.debian.org/debian bookworm main contrib non-free non-free-firmware
 EOF
-$STD apt-get update
-$STD apt-get install -y unrar
+$STD apt update
+$STD apt install -y unrar
 rm /etc/apt/sources.list.d/non-free.list
 msg_ok "Installed Dependencies"
 
@@ -54,6 +54,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   make \
   build-essential
 msg_ok "Installed Dependencies"
@@ -89,6 +89,7 @@ msg_info "Cleaning up"
 rm -rf ~/.cargo/registry ~/.cargo/git ~/.cargo/.package-cache ~/.rustup
 rm -rf /root/.cache/yarn
 rm -rf /opt/linkwarden/.next/cache
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

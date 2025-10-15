@@ -50,6 +50,7 @@ customize
 
 msg_info "Cleaning up"
 rm -rf /opt/lubelogger/appsettings_bak.json
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

@@ -15,9 +15,9 @@ update_os
 
 msg_info "Installing Mosquitto MQTT Broker"
 source /etc/os-release
-$STD apt-get update
-$STD apt-get -y install mosquitto
-$STD apt-get -y install mosquitto-clients
+$STD apt update
+$STD apt -y install mosquitto
+$STD apt -y install mosquitto-clients
 
 cat <<EOF >/etc/mosquitto/conf.d/default.conf
 allow_anonymous false
@@ -31,6 +31,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"
