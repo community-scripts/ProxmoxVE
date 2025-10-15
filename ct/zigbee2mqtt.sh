@@ -47,6 +47,7 @@ function update_script() {
     rm -rf /opt/zigbee2mqtt/data
     mv /opt/z2m_backup/data /opt/zigbee2mqtt
     cd /opt/zigbee2mqtt
+    echo "packageImportMethod: hardlink" >>./pnpm-workspace.yaml
     $STD pnpm install --frozen-lockfile
     $STD pnpm build
     msg_ok "Updated Zigbee2MQTT"

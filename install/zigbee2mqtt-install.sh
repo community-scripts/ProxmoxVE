@@ -31,6 +31,7 @@ msg_info "Setting up Zigbee2MQTT"
 cd /opt/zigbee2mqtt/data || exit
 mv configuration.example.yaml configuration.yaml
 cd /opt/zigbee2mqtt || exit
+echo "packageImportMethod: hardlink" >>./pnpm-workspace.yaml
 $STD pnpm install --no-frozen-lockfile
 $STD pnpm build
 msg_ok "Installed Zigbee2MQTT"
