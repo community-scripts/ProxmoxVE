@@ -68,7 +68,8 @@ msg_ok "Created Service"
 motd_ssh
 customize
 
-apt -y autoremove
-apt -y autoclean
-apt -y clean
+msg_info "Cleaning up"
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"
