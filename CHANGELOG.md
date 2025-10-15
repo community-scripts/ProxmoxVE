@@ -14,7 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Guardian ([#8365](https://github.com/community-scripts/ProxmoxVE/pull/8365))
+  - LimeSurvey ([#8364](https://github.com/community-scripts/ProxmoxVE/pull/8364))
+- Guardian ([#8365](https://github.com/community-scripts/ProxmoxVE/pull/8365))
 
 ## 2025-10-14
 
