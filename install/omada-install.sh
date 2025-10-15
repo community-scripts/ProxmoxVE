@@ -36,7 +36,7 @@ msg_ok "Installed Azul Zulu Java"
 
 msg_info "Installing libssl (if needed)"
 if ! dpkg -l | grep -q 'libssl1.1'; then
-  curl -fsSL "https://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.1_1.1.1w-0+deb11u3_amd64.deb" -o "/tmp/libssl.deb"
+  curl -fsSL "https://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.1_1.1.1w-0+deb11u4_amd64.deb" -o "/tmp/libssl.deb"
   $STD dpkg -i /tmp/libssl.deb
   rm -f /tmp/libssl.deb
   msg_ok "Installed libssl1.1"
