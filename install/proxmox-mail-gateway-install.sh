@@ -14,13 +14,13 @@ network_check
 update_os
 
 msg_info "Installing Proxmox Mail Gateway"
-curl -fsSL "https://enterprise.proxmox.com/debian/proxmox-release-bookworm.gpg" -o "/usr/share/keyrings/proxmox-release-bookworm.gpg"
+curl -fsSL "https://enterprise.proxmox.com/debian/proxmox-release-trixie.gpg" -o "/usr/share/keyrings/proxmox-release-trixie.gpg"
 cat <<EOF >/etc/apt/sources.list.d/pmg.sources
 Types: deb
 URIs: http://download.proxmox.com/debian/pmg
-Suites: bookworm
+Suites: trixie
 Components: pmg-no-subscription
-Signed-By: /usr/share/keyrings/proxmox-release-bookworm.gpg
+Signed-By: /usr/share/keyrings/proxmox-release-trixie.gpg
 EOF
 $STD apt update
 $STD apt -y install proxmox-mailgateway-container
