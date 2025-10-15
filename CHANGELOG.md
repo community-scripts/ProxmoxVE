@@ -21,6 +21,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - Bump O to P-Scripts to Debian 13 (Trixie) [@MickLesk](https://github.com/MickLesk) ([#8367](https://github.com/community-scripts/ProxmoxVE/pull/8367))
     - Bump L to N-Scripts to Debian 13 (Trixie) [@MickLesk](https://github.com/MickLesk) ([#8368](https://github.com/community-scripts/ProxmoxVE/pull/8368))
     - Immich: v2.1.0 - VectorChord 0.5+ support [@vhsdream](https://github.com/vhsdream) ([#8348](https://github.com/community-scripts/ProxmoxVE/pull/8348))
 
