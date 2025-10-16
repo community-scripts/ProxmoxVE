@@ -17,8 +17,8 @@ msg_info "Installing Dependencies"
 curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o /usr/share/keyrings/microsoft-prod.gpg
 cat <<EOF | sudo tee /etc/apt/sources.list.d/microsoft-prod.sources >/dev/null
 Types: deb
-URIs: https://packages.microsoft.com/debian/13/prod/
-Suites: trixie
+URIs: https://packages.microsoft.com/debian/12/prod/
+Suites: bookworm
 Components: main
 Signed-By: /usr/share/keyrings/microsoft-prod.gpg
 EOF
