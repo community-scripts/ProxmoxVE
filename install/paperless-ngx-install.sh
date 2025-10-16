@@ -22,7 +22,7 @@ $STD apt install -y \
   optipng \
   libpq-dev \
   libmagic-dev \
-  libzbar0 \
+  libzbar0t64 \
   poppler-utils \
   default-libmysqlclient-dev \
   automake \
@@ -30,17 +30,7 @@ $STD apt install -y \
   pkg-config \
   libtiff-dev \
   libpng-dev \
-  libleptonica-dev
-msg_ok "Installed Dependencies"
-
-PG_VERSION="16" setup_postgresql
-PYTHON_VERSION="3.13" setup_uv
-fetch_and_deploy_gh_release "paperless" "paperless-ngx/paperless-ngx" "prebuild" "latest" "/opt/paperless" "paperless*tar.xz"
-fetch_and_deploy_gh_release "jbig2enc" "ie13/jbig2enc" "tarball" "latest" "/opt/jbig2enc"
-setup_gs
-
-msg_info "Installing OCR Dependencies (Patience)"
-$STD apt install -y \
+  libleptonica-dev \
   unpaper \
   icc-profiles-free \
   qpdf \
@@ -49,18 +39,13 @@ $STD apt install -y \
   pngquant \
   zlib1g \
   tesseract-ocr \
-  tesseract-ocr-eng
-msg_ok "Installed OCR Dependencies"
+  tesseract-ocr-eng \
+  ghostscript
+msg_ok "Installed Dependencies"
 
-msg_info "Setup JBIG2"
-cd /opt/jbig2enc
-$STD bash ./autogen.sh
-$STD bash ./configure
-$STD make
-$STD make install
-cd /
-rm -rf /opt/jbig2enc
-msg_ok "Installed JBIG2"
+PG_VERSION="16" setup_postgresql
+PYTHON_VERSION="3.13" setup_uv
+fetch_and_deploy_gh_release "paperless" "paperless-ngx/paperless-ngx" "prebuild" "latest" "/opt/paperless" "paperless*tar.xz"
 
 msg_info "Setting up PostgreSQL database"
 DB_NAME=paperlessdb
