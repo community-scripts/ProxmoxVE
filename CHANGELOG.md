@@ -14,6 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - post-pve/post-pbs: Disable 'pve-enterprise' and 'ceph enterprise' repositories [@MickLesk](https://github.com/MickLesk) ([#8399](https://github.com/community-scripts/ProxmoxVE/pull/8399))
+
   - #### 🐞 Bug Fixes
 
     - paperless-ngx: remove unneeded deps, use static ghostscript [@MickLesk](https://github.com/MickLesk) ([#8397](https://github.com/community-scripts/ProxmoxVE/pull/8397))
