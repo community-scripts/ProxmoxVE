@@ -13,6 +13,8 @@ setting_up_container
 network_check
 update_os
 
+setup_go
+
 msg_info "Installing Dependencies"
 $STD apt update
 $STD apt -y install \
@@ -33,48 +35,38 @@ $STD apt install -y \
   python3-certbot \
   python3-certbot-dns-cloudflare
 $STD pip3 install --break-system-packages certbot-dns-multi
-$STD python3 -m venv /opt/certbot/
 msg_ok "Installed Python Dependencies"
 
 VERSION="$(awk -F'=' '/^VERSION_CODENAME=/{ print $NF }' /etc/os-release)"
 
 msg_info "Installing Openresty"
 curl -fsSL "https://openresty.org/package/pubkey.gpg" | gpg --dearmor -o /etc/apt/trusted.gpg.d/openresty-archive-keyring.gpg
-echo -e "deb http://openresty.org/package/debian bullseye openresty" >/etc/apt/sources.list.d/openresty.list
+case "$VERSION" in
+trixie)
+  echo -e "deb http://openresty.org/package/debian bookworm openresty" >/etc/apt/sources.list.d/openresty.list
+  ;;
+*)
+  echo -e "deb http://openresty.org/package/debian $VERSION openresty" >/etc/apt/sources.list.d/openresty.list
+  ;;
+esac
 $STD apt update
 $STD apt -y install openresty
 msg_ok "Installed Openresty"
 
-msg_info "Installing Node.js"
-$STD bash <(curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh)
-source ~/.bashrc
-$STD nvm install 16.20.2
-ln -sf /root/.nvm/versions/node/v16.20.2/bin/node /usr/bin/node
-msg_ok "Installed Node.js"
-
-msg_info "Installing pnpm"
-$STD npm install -g pnpm@8.15
-msg_ok "Installed pnpm"
+NODE_VERSION="22" NODE_MODULE="pnpm@latest" setup_nodejs
 
 RELEASE=$(curl -fsSL https://api.github.com/repos/NginxProxyManager/nginx-proxy-manager/releases/latest |
   grep "tag_name" |
   awk '{print substr($2, 3, length($2)-4) }')
 
-read -r -p "${TAB3}Would you like to install an older version (v2.10.4)? <y/N> " prompt
-if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
-  msg_info "Downloading Nginx Proxy Manager v2.10.4"
-  curl -fsSL "https://codeload.github.com/NginxProxyManager/nginx-proxy-manager/tar.gz/v2.10.4" | tar -xz
-  cd ./nginx-proxy-manager-2.10.4
-  msg_ok "Downloaded Nginx Proxy Manager v2.10.4"
-else
-  msg_info "Downloading Nginx Proxy Manager v${RELEASE}"
-  curl -fsSL "https://codeload.github.com/NginxProxyManager/nginx-proxy-manager/tar.gz/v${RELEASE}" | tar -xz
-  cd ./nginx-proxy-manager-"${RELEASE}"
-  msg_ok "Downloaded Nginx Proxy Manager v${RELEASE}"
-fi
+msg_info "Downloading Nginx Proxy Manager v${RELEASE}"
+curl -fsSL "https://codeload.github.com/NginxProxyManager/nginx-proxy-manager/tar.gz/v${RELEASE}" | tar -xz
+cd ./nginx-proxy-manager-"${RELEASE}"
+msg_ok "Downloaded Nginx Proxy Manager v${RELEASE}"
+
 msg_info "Setting up Environment"
 ln -sf /usr/bin/python3 /usr/bin/python
-ln -sf /usr/bin/certbot /opt/certbot/bin/certbot
+ln -sf /usr/bin/certbot /usr/local/bin/certbot
 ln -sf /usr/local/openresty/nginx/sbin/nginx /usr/sbin/nginx
 ln -sf /usr/local/openresty/nginx/ /etc/nginx
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
@@ -185,7 +177,6 @@ customize
 msg_info "Starting Services"
 sed -i 's/user npm/user root/g; s/^pid/#pid/g' /usr/local/openresty/nginx/conf/nginx.conf
 sed -r -i 's/^([[:space:]]*)su npm npm/\1#su npm npm/g;' /etc/logrotate.d/nginx-proxy-manager
-sed -i 's/include-system-site-packages = false/include-system-site-packages = true/g' /opt/certbot/pyvenv.cfg
 systemctl enable -q --now openresty
 systemctl enable -q --now npm
 msg_ok "Started Services"
