@@ -19,6 +19,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - paperless-ngx: remove unneeded deps, use static ghostscript [@MickLesk](https://github.com/MickLesk) ([#8397](https://github.com/community-scripts/ProxmoxVE/pull/8397))
     - UmlautAdaptarr: Revert back to bookworm repo [@tremor021](https://github.com/tremor021) ([#8392](https://github.com/community-scripts/ProxmoxVE/pull/8392))
 
+  - #### 🔧 Refactor
+
+    - Enhance nginx proxy manager install script [@MickLesk](https://github.com/MickLesk) ([#8400](https://github.com/community-scripts/ProxmoxVE/pull/8400))
+
 ## 2025-10-15
 
 ### 🆕 New Scripts
