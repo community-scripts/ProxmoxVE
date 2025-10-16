@@ -204,7 +204,13 @@ You normally need a valid subscription for this.
 Disable it (recommended)?" 14 58 2 "yes" " " "no" " " 3>&2 2>&1 1>&3)
     case $CHOICE in
     yes)
-      sed -i '/pbs-enterprise/ s/^/# /' /etc/apt/sources.list.d/pbs-enterprise.sources
+      msg_info "Disabling 'pbs-enterprise' repository"
+      # Use Enabled: false instead of commenting to avoid malformed entry
+      if grep -q "^Enabled:" /etc/apt/sources.list.d/pbs-enterprise.sources 2>/dev/null; then
+        sed -i 's/^Enabled:.*/Enabled: false/' /etc/apt/sources.list.d/pbs-enterprise.sources
+      else
+        echo "Enabled: false" >>/etc/apt/sources.list.d/pbs-enterprise.sources
+      fi
       msg_ok "Disabled 'pbs-enterprise' repository"
       ;;
     no)
@@ -213,11 +219,12 @@ Disable it (recommended)?" 14 58 2 "yes" " " "no" " " 3>&2 2>&1 1>&3)
     esac
   else
     cat >/etc/apt/sources.list.d/pbs-enterprise.sources <<EOF
-# Types: deb
-# URIs: https://enterprise.proxmox.com/debian/pbs
-# Suites: trixie
-# Components: pbs-enterprise
-# Signed-By: /usr/share/keyrings/proxmox-archive-keyring.gpg
+Types: deb
+URIs: https://enterprise.proxmox.com/debian/pbs
+Suites: trixie
+Components: pbs-enterprise
+Signed-By: /usr/share/keyrings/proxmox-archive-keyring.gpg
+Enabled: false
 EOF
     msg_ok "Added 'pbs-enterprise' repository (disabled)"
   fi
@@ -239,11 +246,12 @@ EOF
   # --- Test repo (pbs-test, renamed) ---
   if ! component_exists_in_sources "pbs-test"; then
     cat >/etc/apt/sources.list.d/pbs-test.sources <<EOF
-# Types: deb
-# URIs: http://download.proxmox.com/debian/pbs
-# Suites: trixie
-# Components: pbs-test
-# Signed-By: /usr/share/keyrings/proxmox-archive-keyring.gpg
+Types: deb
+URIs: http://download.proxmox.com/debian/pbs
+Suites: trixie
+Components: pbs-test
+Signed-By: /usr/share/keyrings/proxmox-archive-keyring.gpg
+Enabled: false
 EOF
     msg_ok "Added 'pbs-test' repository (disabled)"
   else
