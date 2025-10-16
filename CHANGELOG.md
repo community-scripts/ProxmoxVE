@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - paperless-ngx: remove unneeded deps, use static ghostscript [@MickLesk](https://github.com/MickLesk) ([#8397](https://github.com/community-scripts/ProxmoxVE/pull/8397))
     - UmlautAdaptarr: Revert back to bookworm repo [@tremor021](https://github.com/tremor021) ([#8392](https://github.com/community-scripts/ProxmoxVE/pull/8392))
 
 ## 2025-10-15
