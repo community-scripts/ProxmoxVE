@@ -1,5 +1,65 @@
 [
   {
+    "name": "Stirling-Tools/Stirling-PDF",
+    "version": "v1.5.0",
+    "date": "2025-10-16T23:14:45Z"
+  },
+  {
+    "name": "chrisbenincasa/tunarr",
+    "version": "v0.23.0-alpha.11",
+    "date": "2025-10-16T22:42:05Z"
+  },
+  {
+    "name": "openhab/openhab-core",
+    "version": "5.0.2",
+    "date": "2025-10-16T21:27:35Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.12.6-rc1",
+    "date": "2025-10-16T16:36:25Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "v4.5.0",
+    "date": "2025-10-16T16:28:57Z"
+  },
+  {
+    "name": "minio/minio",
+    "version": "RELEASE.2025-10-15T17-29-55Z",
+    "date": "2025-10-16T19:33:51Z"
+  },
+  {
+    "name": "SigNoz/signoz",
+    "version": "v0.98.0-rc.1",
+    "date": "2025-10-16T17:49:50Z"
+  },
+  {
+    "name": "open-webui/open-webui",
+    "version": "v0.6.34",
+    "date": "2025-10-16T16:55:58Z"
+  },
+  {
+    "name": "dgtlmoon/changedetection.io",
+    "version": "0.50.25",
+    "date": "2025-10-16T15:00:16Z"
+  },
+  {
+    "name": "tobychui/zoraxy",
+    "version": "v3.2.8",
+    "date": "2025-10-16T14:21:48Z"
+  },
+  {
+    "name": "forgejo/forgejo",
+    "version": "v13.0.0",
+    "date": "2025-10-16T13:48:56Z"
+  },
+  {
+    "name": "wazuh/wazuh",
+    "version": "coverity-w42-4.14.0",
+    "date": "2025-10-16T12:13:42Z"
+  },
+  {
     "name": "esphome/esphome",
     "version": "2025.10.1",
     "date": "2025-10-16T10:00:10Z"
@@ -65,24 +125,9 @@
     "date": "2025-10-07T17:42:11Z"
   },
   {
-    "name": "ollama/ollama",
-    "version": "v0.12.5",
-    "date": "2025-10-10T16:30:53Z"
-  },
-  {
     "name": "inventree/InvenTree",
     "version": "1.0.6",
     "date": "2025-10-15T22:10:17Z"
-  },
-  {
-    "name": "openhab/openhab-core",
-    "version": "4.3.8",
-    "date": "2025-10-15T20:28:39Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-10-15T20:01:29Z"
   },
   {
     "name": "Ombi-app/Ombi",
@@ -123,11 +168,6 @@
     "name": "zwave-js/zwave-js-ui",
     "version": "v11.5.0",
     "date": "2025-10-15T16:00:17Z"
-  },
-  {
-    "name": "chrisbenincasa/tunarr",
-    "version": "v0.22.7",
-    "date": "2025-10-15T13:30:47Z"
   },
   {
     "name": "linkwarden/linkwarden",
@@ -245,11 +285,6 @@
     "date": "2025-10-14T14:40:17Z"
   },
   {
-    "name": "dgtlmoon/changedetection.io",
-    "version": "0.50.24",
-    "date": "2025-10-14T09:04:27Z"
-  },
-  {
     "name": "Prowlarr/Prowlarr",
     "version": "v2.0.5.5160",
     "date": "2025-08-23T21:23:11Z"
@@ -293,11 +328,6 @@
     "name": "prometheus/alertmanager",
     "version": "v0.29.0-rc.0",
     "date": "2025-10-10T01:13:27Z"
-  },
-  {
-    "name": "SigNoz/signoz",
-    "version": "v0.97.1",
-    "date": "2025-10-13T07:42:50Z"
   },
   {
     "name": "moghtech/komodo",
@@ -348,11 +378,6 @@
     "name": "gelbphoenix/autocaliweb",
     "version": "v0.10.4",
     "date": "2025-10-11T19:53:39Z"
-  },
-  {
-    "name": "Stirling-Tools/Stirling-PDF",
-    "version": "v1.4.0",
-    "date": "2025-10-11T18:16:32Z"
   },
   {
     "name": "duplicati/duplicati",
@@ -440,19 +465,9 @@
     "date": "2025-10-09T15:42:11Z"
   },
   {
-    "name": "wazuh/wazuh",
-    "version": "coverity-w41-4.14.0",
-    "date": "2025-10-03T18:56:57Z"
-  },
-  {
     "name": "silverbulletmd/silverbullet",
     "version": "2.1.9",
     "date": "2025-10-09T13:57:14Z"
-  },
-  {
-    "name": "tobychui/zoraxy",
-    "version": "v3.2.7",
-    "date": "2025-10-09T12:50:53Z"
   },
   {
     "name": "glpi-project/glpi",
@@ -523,11 +538,6 @@
     "name": "gotson/komga",
     "version": "1.23.5",
     "date": "2025-10-08T07:31:37Z"
-  },
-  {
-    "name": "open-webui/open-webui",
-    "version": "v0.6.33",
-    "date": "2025-10-07T21:20:37Z"
   },
   {
     "name": "pelican-dev/wings",
@@ -800,11 +810,6 @@
     "date": "2025-09-25T15:57:02Z"
   },
   {
-    "name": "forgejo/forgejo",
-    "version": "v14.0.0-dev",
-    "date": "2025-09-25T13:19:45Z"
-  },
-  {
     "name": "rclone/rclone",
     "version": "v1.71.1",
     "date": "2025-09-24T16:32:16Z"
@@ -983,11 +988,6 @@
     "name": "paperless-ngx/paperless-ngx",
     "version": "v2.18.4",
     "date": "2025-09-07T23:57:32Z"
-  },
-  {
-    "name": "minio/minio",
-    "version": "RELEASE.2025-09-07T16-13-09Z",
-    "date": "2025-09-07T18:53:04Z"
   },
   {
     "name": "CrazyWolf13/streamlink-webui",
