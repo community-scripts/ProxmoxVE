@@ -23,7 +23,7 @@
         "ram": 8192,
         "hdd": 25,
         "os": "debian",
-        "version": "13"
+        "version": "12"
       }
     }
   ],
