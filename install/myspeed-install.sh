@@ -21,7 +21,7 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" setup_nodejs
-fetch_and_deploy_gh_release "myspeed" "npm " "prebuild" "latest" "/opt/myspeed" "MySpeed-*.zip"
+fetch_and_deploy_gh_release "myspeed" "gnmyt/myspeed" "prebuild" "latest" "/opt/myspeed" "MySpeed-*.zip"
 
 msg_info "Configuring MySpeed"
 cd /opt/myspeed
