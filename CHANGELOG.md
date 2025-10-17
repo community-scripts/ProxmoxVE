@@ -21,6 +21,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - [FIX]Pulse: replace policykit-1 with polkitd [@vhsdream](https://github.com/vhsdream) ([#8439](https://github.com/community-scripts/ProxmoxVE/pull/8439))
     - MySpeed: Fix build step [@tremor021](https://github.com/tremor021) ([#8427](https://github.com/community-scripts/ProxmoxVE/pull/8427))
 
+  - #### ✨ New Features
+
+    - GLPI: Bump to Debian 13 base [@tremor021](https://github.com/tremor021) ([#8443](https://github.com/community-scripts/ProxmoxVE/pull/8443))
+
   - #### 🔧 Refactor
 
     - refactor: fix pve-scripts local install script [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#8418](https://github.com/community-scripts/ProxmoxVE/pull/8418))
