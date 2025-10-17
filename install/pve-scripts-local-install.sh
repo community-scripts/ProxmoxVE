@@ -29,6 +29,10 @@ $STD npm install
 cp .env.example .env
 mkdir -p data
 chmod 755 data
+
+$STD npx prisma generate
+$STD npx prisma migrate deploy
+
 $STD npm run build
 msg_ok "Installed PVE Scripts local"
 
