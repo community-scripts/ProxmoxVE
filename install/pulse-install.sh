@@ -17,7 +17,7 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt install -y \
   diffutils \
-  policykit-1
+  polkitd
 msg_ok "Installed Dependencies"
 
 msg_info "Creating User"
