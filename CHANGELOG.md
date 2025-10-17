@@ -14,6 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - Revert back to debian 12 template for various apps [@tremor021](https://github.com/tremor021) ([#8431](https://github.com/community-scripts/ProxmoxVE/pull/8431))
+
   - #### 🐞 Bug Fixes
 
     - MySpeed: Fix build step [@tremor021](https://github.com/tremor021) ([#8427](https://github.com/community-scripts/ProxmoxVE/pull/8427))
