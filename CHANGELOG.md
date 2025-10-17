@@ -18,6 +18,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - [FIX]Pulse: replace policykit-1 with polkitd [@vhsdream](https://github.com/vhsdream) ([#8439](https://github.com/community-scripts/ProxmoxVE/pull/8439))
     - MySpeed: Fix build step [@tremor021](https://github.com/tremor021) ([#8427](https://github.com/community-scripts/ProxmoxVE/pull/8427))
 
   - #### 🔧 Refactor
