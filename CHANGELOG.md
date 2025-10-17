@@ -18,6 +18,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - refactor: fix pve-scripts local install script [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#8418](https://github.com/community-scripts/ProxmoxVE/pull/8418))
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - PLANKA: Fix config path [@tremor021](https://github.com/tremor021) ([#8422](https://github.com/community-scripts/ProxmoxVE/pull/8422))
+
 ## 2025-10-16
 
 ### 🚀 Updated Scripts
