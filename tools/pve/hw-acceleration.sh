@@ -5,7 +5,7 @@
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Execute within the Proxmox shell
-# bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/tools/pve/hw-acceleration.sh)"
+# bash -c "$(curl -fsSL https://raw.githubusercontent.com/ji2k/ProxmoxVE/main/tools/pve/hw-acceleration.sh)"
 
 set -e
 function header_info {

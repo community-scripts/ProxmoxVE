@@ -21,7 +21,7 @@ jobs:
           echo "Searching for files containing raw.githubusercontent.com URLs..."
 
           # Find all files containing GitHub raw URLs, excluding certain directories
-          files_with_github_urls=$(grep -r "https://raw.githubusercontent.com/community-scripts/ProxmoxVE" . --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=.github/workflows --files-with-matches || true)
+          files_with_github_urls=$(grep -r "https://raw.githubusercontent.com/ji2k/ProxmoxVE" . --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=.github/workflows --files-with-matches || true)
 
           if [ -n "$files_with_github_urls" ]; then
             echo "$files_with_github_urls" | while read file; do
