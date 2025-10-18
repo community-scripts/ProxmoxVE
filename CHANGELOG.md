@@ -16,6 +16,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Open-Archiver ([#8452](https://github.com/community-scripts/ProxmoxVE/pull/8452))
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Cronicle: Dont copy init.d service file [@tremor021](https://github.com/tremor021) ([#8451](https://github.com/community-scripts/ProxmoxVE/pull/8451))
+
 ## 2025-10-17
 
 ### 🚀 Updated Scripts
