@@ -22,6 +22,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Cronicle: Dont copy init.d service file [@tremor021](https://github.com/tremor021) ([#8451](https://github.com/community-scripts/ProxmoxVE/pull/8451))
 
+  - #### 🔧 Refactor
+
+    - Refactor: Nginx Proxy Manager [@MickLesk](https://github.com/MickLesk) ([#8453](https://github.com/community-scripts/ProxmoxVE/pull/8453))
+
 ## 2025-10-17
 
 ### 🚀 Updated Scripts
