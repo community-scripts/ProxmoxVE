@@ -28,12 +28,13 @@ function update_script() {
     exit
   fi
 
-  if ! command -v pnpm &>/dev/null; then
-    msg_info "Installing pnpm"
-    #export NODE_OPTIONS=--openssl-legacy-provider
-    $STD npm install -g pnpm@8.15
-    msg_ok "Installed pnpm"
+  if ! command -v yarn &>/dev/null; then
+    msg_info "Installing Yarn"
+    $STD npm install -g yarn
+    msg_ok "Installed Yarn"
   fi
+
+  export NODE_OPTIONS="--openssl-legacy-provider"
 
   RELEASE=$(curl -fsSL https://api.github.com/repos/NginxProxyManager/nginx-proxy-manager/releases/latest |
     grep "tag_name" |
@@ -49,9 +50,10 @@ function update_script() {
     sed -i "s|\"version\": \"0.0.0\"|\"version\": \"$RELEASE\"|" backend/package.json
     sed -i "s|\"version\": \"0.0.0\"|\"version\": \"$RELEASE\"|" frontend/package.json
     cd ./frontend || exit
-    $STD pnpm install
-    $STD pnpm upgrade
-    $STD pnpm run build
+    # Replace node-sass with sass in package.json before installation
+    sed -i 's/"node-sass".*$/"sass": "^1.92.1",/g' package.json
+    $STD yarn install --network-timeout 600000
+    $STD yarn build
   )
   msg_ok "Built Frontend"
 
@@ -71,7 +73,7 @@ function update_script() {
 
   msg_info "Setting up Environment"
   ln -sf /usr/bin/python3 /usr/bin/python
-  ln -sf /usr/bin/certbot /opt/certbot/bin/certbot
+  ln -sf /opt/certbot/bin/certbot /usr/local/bin/certbot
   ln -sf /usr/local/openresty/nginx/sbin/nginx /usr/sbin/nginx
   ln -sf /usr/local/openresty/nginx/ /etc/nginx
   sed -i 's+^daemon+#daemon+g' docker/rootfs/etc/nginx/nginx.conf
@@ -113,7 +115,12 @@ function update_script() {
   cp -r frontend/app-images/* /app/frontend/images
   cp -r backend/* /app
   cp -r global/* /app/global
-  $STD python3 -m pip install --no-cache-dir --break-system-packages certbot-dns-cloudflare
+
+  # Update Certbot and plugins in virtual environment
+  if [ -d /opt/certbot ]; then
+    $STD /opt/certbot/bin/pip install --upgrade pip setuptools wheel
+    $STD /opt/certbot/bin/pip install --upgrade certbot certbot-dns-cloudflare
+  fi
   msg_ok "Setup Environment"
 
   msg_info "Initializing Backend"
@@ -134,7 +141,8 @@ function update_script() {
 EOF
   fi
   cd /app || exit
-  $STD pnpm install
+  export NODE_OPTIONS="--openssl-legacy-provider"
+  $STD yarn install --network-timeout 600000
   msg_ok "Initialized Backend"
 
   msg_info "Starting Services"
