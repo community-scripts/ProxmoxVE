@@ -13,8 +13,6 @@ setting_up_container
 network_check
 update_os
 
-setup_go
-
 msg_info "Installing Dependencies"
 $STD apt update
 $STD apt -y install \
@@ -31,11 +29,15 @@ $STD apt install -y \
   python3-dev \
   python3-pip \
   python3-venv \
-  python3-cffi \
-  python3-certbot \
-  python3-certbot-dns-cloudflare
-$STD pip3 install --break-system-packages certbot-dns-multi
+  python3-cffi
 msg_ok "Installed Python Dependencies"
+
+msg_info "Setting up Certbot"
+$STD python3 -m venv /opt/certbot
+$STD /opt/certbot/bin/pip install --upgrade pip setuptools wheel
+$STD /opt/certbot/bin/pip install certbot certbot-dns-cloudflare
+ln -sf /opt/certbot/bin/certbot /usr/local/bin/certbot
+msg_ok "Set up Certbot"
 
 VERSION="$(awk -F'=' '/^VERSION_CODENAME=/{ print $NF }' /etc/os-release)"
 
@@ -53,7 +55,7 @@ $STD apt update
 $STD apt -y install openresty
 msg_ok "Installed Openresty"
 
-NODE_VERSION="22" NODE_MODULE="pnpm@latest" setup_nodejs
+NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
 
 RELEASE=$(curl -fsSL https://api.github.com/repos/NginxProxyManager/nginx-proxy-manager/releases/latest |
   grep "tag_name" |
@@ -66,7 +68,6 @@ msg_ok "Downloaded Nginx Proxy Manager v${RELEASE}"
 
 msg_info "Setting up Environment"
 ln -sf /usr/bin/python3 /usr/bin/python
-ln -sf /usr/bin/certbot /usr/local/bin/certbot
 ln -sf /usr/local/openresty/nginx/sbin/nginx /usr/sbin/nginx
 ln -sf /usr/local/openresty/nginx/ /etc/nginx
 sed -i "s|\"version\": \"0.0.0\"|\"version\": \"$RELEASE\"|" backend/package.json
@@ -118,9 +119,11 @@ msg_ok "Set up Environment"
 
 msg_info "Building Frontend"
 cd ./frontend
-$STD pnpm install
-$STD pnpm upgrade
-$STD pnpm run build
+export NODE_OPTIONS="--openssl-legacy-provider"
+# Replace node-sass with sass in package.json before installation
+sed -i 's/"node-sass".*$/"sass": "^1.92.1",/g' package.json
+$STD yarn install --network-timeout 600000
+$STD yarn build
 cp -r dist/* /app/frontend
 cp -r app-images/* /app/frontend/images
 msg_ok "Built Frontend"
@@ -143,7 +146,8 @@ if [ ! -f /app/config/production.json ]; then
 EOF
 fi
 cd /app
-$STD pnpm install
+export NODE_OPTIONS="--openssl-legacy-provider"
+$STD yarn install --network-timeout 600000
 msg_ok "Initialized Backend"
 
 msg_info "Creating Service"
