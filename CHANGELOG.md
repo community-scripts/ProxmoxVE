@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-10-18
 
+### 🆕 New Scripts
+
+  - Open-Archiver ([#8452](https://github.com/community-scripts/ProxmoxVE/pull/8452))
+
 ## 2025-10-17
 
 ### 🚀 Updated Scripts
