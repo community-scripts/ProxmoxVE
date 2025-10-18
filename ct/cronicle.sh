@@ -61,9 +61,6 @@ function update_script() {
       $STD node bin/build.js dist
       sed -i "s/localhost:3012/${IP}:3012/g" /opt/cronicle/conf/config.json
       $STD /opt/cronicle/bin/control.sh start
-      $STD cp /opt/cronicle/bin/cronicled.init /etc/init.d/cronicled
-      chmod 775 /etc/init.d/cronicled
-      $STD update-rc.d cronicled defaults
       msg_ok "Installed Cronicle Worker"
 
       echo -e "\n Add Masters secret key to /opt/cronicle/conf/config.json \n"
