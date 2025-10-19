@@ -57,7 +57,7 @@ function update_script() {
     $STD /opt/browserless/node_modules/playwright-core/cli.js install --force chrome
     $STD /opt/browserless/node_modules/playwright-core/cli.js install --force msedge
     $STD /opt/browserless/node_modules/playwright-core/cli.js install chromium firefox webkit
-    $STD npm install --prefix /opt/browserless esbuild typescript ts-node @types/node
+    $STD npm install --prefix /opt/browserless esbuild typescript ts-node @types/node --save-dev
     $STD npm run build --prefix /opt/browserless
     $STD npm run build:function --prefix /opt/browserless
     $STD npm prune production --prefix /opt/browserless
