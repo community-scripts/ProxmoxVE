@@ -1,5 +1,80 @@
 [
   {
+    "name": "henrygd/beszel",
+    "version": "v0.14.0",
+    "date": "2025-10-18T23:54:15Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.78.5.rc.1",
+    "date": "2025-10-18T23:17:14Z"
+  },
+  {
+    "name": "Luligu/matterbridge",
+    "version": "3.3.3",
+    "date": "2025-10-18T22:27:42Z"
+  },
+  {
+    "name": "ellite/Wallos",
+    "version": "v4.5.0",
+    "date": "2025-10-18T22:00:50Z"
+  },
+  {
+    "name": "leiweibau/Pi.Alert",
+    "version": "v2025-10-18",
+    "date": "2025-10-18T20:35:54Z"
+  },
+  {
+    "name": "chrisvel/tududi",
+    "version": "v0.84",
+    "date": "2025-10-18T19:39:04Z"
+  },
+  {
+    "name": "moghtech/komodo",
+    "version": "v1.19.5",
+    "date": "2025-09-27T20:59:46Z"
+  },
+  {
+    "name": "project-zot/zot",
+    "version": "v2.1.10",
+    "date": "2025-10-18T18:46:36Z"
+  },
+  {
+    "name": "homarr-labs/homarr",
+    "version": "v1.42.1",
+    "date": "2025-10-18T18:31:38Z"
+  },
+  {
+    "name": "YunoHost/yunohost",
+    "version": "debian/12.1.29",
+    "date": "2025-10-18T17:35:19Z"
+  },
+  {
+    "name": "Notifiarr/notifiarr",
+    "version": "v0.9.0",
+    "date": "2025-10-18T17:03:56Z"
+  },
+  {
+    "name": "booklore-app/booklore",
+    "version": "v1.8.0",
+    "date": "2025-10-18T16:22:25Z"
+  },
+  {
+    "name": "chrisbenincasa/tunarr",
+    "version": "v0.23.0-alpha.14",
+    "date": "2025-10-18T15:43:53Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.29.1",
+    "date": "2025-10-18T13:14:21Z"
+  },
+  {
+    "name": "TasmoAdmin/TasmoAdmin",
+    "version": "v4.3.2",
+    "date": "2025-10-18T12:11:00Z"
+  },
+  {
     "name": "laurent22/joplin",
     "version": "server-v3.4.4",
     "date": "2025-09-25T13:19:26Z"
@@ -16,8 +91,8 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v4.5.0",
-    "date": "2025-10-16T16:28:57Z"
+    "version": "v4.5.1",
+    "date": "2025-10-18T08:12:19Z"
   },
   {
     "name": "Jackett/Jackett",
@@ -70,19 +145,9 @@
     "date": "2025-10-17T19:55:55Z"
   },
   {
-    "name": "BerriAI/litellm",
-    "version": "v1.78.3-nightly",
-    "date": "2025-10-17T19:38:04Z"
-  },
-  {
     "name": "MediaBrowser/Emby.Releases",
     "version": "4.9.1.80",
     "date": "2025-09-30T20:25:16Z"
-  },
-  {
-    "name": "homarr-labs/homarr",
-    "version": "v1.42.0",
-    "date": "2025-10-17T19:15:35Z"
   },
   {
     "name": "forgejo/forgejo",
@@ -98,16 +163,6 @@
     "name": "grokability/snipe-it",
     "version": "v8.3.4",
     "date": "2025-10-17T18:13:24Z"
-  },
-  {
-    "name": "msgbyte/tianji",
-    "version": "v1.29.0",
-    "date": "2025-10-17T17:03:33Z"
-  },
-  {
-    "name": "chrisvel/tududi",
-    "version": "v0.83.2",
-    "date": "2025-10-07T14:30:15Z"
   },
   {
     "name": "NodeBB/NodeBB",
@@ -155,19 +210,9 @@
     "date": "2025-06-06T11:22:02Z"
   },
   {
-    "name": "booklore-app/booklore",
-    "version": "v1.7.0",
-    "date": "2025-10-17T05:51:41Z"
-  },
-  {
     "name": "diced/zipline",
     "version": "v4.3.2",
     "date": "2025-10-17T04:13:23Z"
-  },
-  {
-    "name": "chrisbenincasa/tunarr",
-    "version": "v0.22.8",
-    "date": "2025-10-16T23:57:39Z"
   },
   {
     "name": "Stirling-Tools/Stirling-PDF",
@@ -181,8 +226,8 @@
   },
   {
     "name": "ollama/ollama",
-    "version": "v0.12.6-rc1",
-    "date": "2025-10-16T16:36:25Z"
+    "version": "v0.12.6",
+    "date": "2025-10-16T20:07:41Z"
   },
   {
     "name": "minio/minio",
@@ -345,11 +390,6 @@
     "date": "2025-09-08T14:03:25Z"
   },
   {
-    "name": "project-zot/zot",
-    "version": "v2.1.9",
-    "date": "2025-10-14T16:18:49Z"
-  },
-  {
     "name": "element-hq/synapse",
     "version": "v1.140.0",
     "date": "2025-10-14T15:57:12Z"
@@ -405,34 +445,14 @@
     "date": "2025-10-10T01:13:27Z"
   },
   {
-    "name": "moghtech/komodo",
-    "version": "v1.19.5",
-    "date": "2025-09-27T20:59:46Z"
-  },
-  {
     "name": "firefly-iii/firefly-iii",
     "version": "v6.4.2",
     "date": "2025-10-07T08:11:58Z"
   },
   {
-    "name": "Luligu/matterbridge",
-    "version": "3.3.2",
-    "date": "2025-10-12T21:30:43Z"
-  },
-  {
     "name": "globaleaks/globaleaks-whistleblowing-software",
     "version": "v5.0.85",
     "date": "2025-10-12T19:55:18Z"
-  },
-  {
-    "name": "ellite/Wallos",
-    "version": "v4.4.1",
-    "date": "2025-10-12T15:38:24Z"
-  },
-  {
-    "name": "YunoHost/yunohost",
-    "version": "debian/12.1.28",
-    "date": "2025-10-12T14:55:27Z"
   },
   {
     "name": "PrivateBin/PrivateBin",
@@ -508,11 +528,6 @@
     "name": "FlareSolverr/FlareSolverr",
     "version": "v3.4.2",
     "date": "2025-10-09T19:05:48Z"
-  },
-  {
-    "name": "henrygd/beszel",
-    "version": "v0.13.2",
-    "date": "2025-10-09T18:33:46Z"
   },
   {
     "name": "ErsatzTV/ErsatzTV",
@@ -905,11 +920,6 @@
     "date": "2025-09-18T08:36:55Z"
   },
   {
-    "name": "TasmoAdmin/TasmoAdmin",
-    "version": "v4.3.1",
-    "date": "2025-07-22T20:10:08Z"
-  },
-  {
     "name": "eclipse-mosquitto/mosquitto",
     "version": "2.1.0-test1",
     "date": "2025-09-17T18:21:45Z"
@@ -1138,11 +1148,6 @@
     "name": "Suwayomi/Suwayomi-Server",
     "version": "v2.1.1867",
     "date": "2025-07-31T18:08:43Z"
-  },
-  {
-    "name": "leiweibau/Pi.Alert",
-    "version": "v2025-07-30",
-    "date": "2025-07-30T17:13:40Z"
   },
   {
     "name": "danielbrendel/hortusfox-web",
@@ -1498,11 +1503,6 @@
     "name": "CorentinTh/it-tools",
     "version": "v2024.10.22-7ca5933",
     "date": "2024-10-22T09:58:03Z"
-  },
-  {
-    "name": "Notifiarr/notifiarr",
-    "version": "v0.8.3",
-    "date": "2024-10-04T23:49:07Z"
   },
   {
     "name": "FunkeyFlo/ps5-mqtt",
