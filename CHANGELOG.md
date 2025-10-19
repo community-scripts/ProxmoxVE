@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - rwMarkable: Increase RAM [@vhsdream](https://github.com/vhsdream) ([#8482](https://github.com/community-scripts/ProxmoxVE/pull/8482))
     - changedetection: fix: update [@CrazyWolf13](https://github.com/CrazyWolf13) ([#8480](https://github.com/community-scripts/ProxmoxVE/pull/8480))
 
 ## 2025-10-18
