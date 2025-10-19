@@ -1,5 +1,40 @@
 [
   {
+    "name": "benzino77/tasmocompiler",
+    "version": "v13.0.0",
+    "date": "2025-10-19T10:03:18Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.3",
+    "date": "2025-09-20T12:12:33Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.156",
+    "date": "2025-10-19T05:56:03Z"
+  },
+  {
+    "name": "Prowlarr/Prowlarr",
+    "version": "v2.0.5.5160",
+    "date": "2025-08-23T21:23:11Z"
+  },
+  {
+    "name": "Lidarr/Lidarr",
+    "version": "v2.14.5.4836",
+    "date": "2025-10-08T15:30:50Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-10-19T00:27:05Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.0.1",
+    "date": "2025-10-15T16:53:55Z"
+  },
+  {
     "name": "henrygd/beszel",
     "version": "v0.14.0",
     "date": "2025-10-18T23:54:15Z"
@@ -95,16 +130,6 @@
     "date": "2025-10-18T08:12:19Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.153",
-    "date": "2025-10-18T06:07:01Z"
-  },
-  {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.3",
-    "date": "2025-09-20T12:12:33Z"
-  },
-  {
     "name": "nzbgetcom/nzbget",
     "version": "v25.4",
     "date": "2025-10-09T10:27:01Z"
@@ -113,16 +138,6 @@
     "name": "TwiN/gatus",
     "version": "v5.27.0",
     "date": "2025-10-18T02:44:26Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-10-18T00:27:08Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.0.1",
-    "date": "2025-10-15T16:53:55Z"
   },
   {
     "name": "9001/copyparty",
@@ -226,8 +241,8 @@
   },
   {
     "name": "ollama/ollama",
-    "version": "v0.12.6",
-    "date": "2025-10-16T20:07:41Z"
+    "version": "v0.12.6-rc1",
+    "date": "2025-10-16T16:36:25Z"
   },
   {
     "name": "minio/minio",
@@ -398,11 +413,6 @@
     "name": "n8n-io/n8n",
     "version": "n8n@1.115.3",
     "date": "2025-10-14T14:40:17Z"
-  },
-  {
-    "name": "Prowlarr/Prowlarr",
-    "version": "v2.0.5.5160",
-    "date": "2025-08-23T21:23:11Z"
   },
   {
     "name": "rogerfar/rdt-client",
@@ -583,11 +593,6 @@
     "name": "nicolargo/glances",
     "version": "v4.3.3",
     "date": "2025-10-08T15:45:21Z"
-  },
-  {
-    "name": "Lidarr/Lidarr",
-    "version": "v2.14.5.4836",
-    "date": "2025-10-08T15:30:50Z"
   },
   {
     "name": "wizarrrr/wizarr",
@@ -1258,11 +1263,6 @@
     "name": "Sonarr/Sonarr",
     "version": "v4.0.15.2941",
     "date": "2025-06-20T17:20:54Z"
-  },
-  {
-    "name": "benzino77/tasmocompiler",
-    "version": "v12.7.0",
-    "date": "2025-06-20T08:31:16Z"
   },
   {
     "name": "prometheus-pve/prometheus-pve-exporter",
