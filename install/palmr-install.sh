@@ -15,7 +15,7 @@ update_os
 
 fetch_and_deploy_gh_release "Palmr" "kyantech/Palmr" "tarball" "latest" "/opt/palmr"
 PNPM="$(jq -r '.packageManager' /opt/palmr/package.json)"
-NODE_VERSION="20" NODE_MODULE="$PNPM" setup_nodejs
+NODE_VERSION="24" NODE_MODULE="$PNPM" setup_nodejs
 
 msg_info "Configuring palmr backend"
 PALMR_DIR="/opt/palmr_data"
