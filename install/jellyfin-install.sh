@@ -27,7 +27,7 @@ msg_ok "Set Up Hardware Acceleration"
 msg_info "Installing Jellyfin"
 VERSION="$(awk -F'=' '/^VERSION_CODENAME=/{ print $NF }' /etc/os-release)"
 if ! dpkg -s libjemalloc2 >/dev/null 2>&1; then
-  $STD apt-get install -y libjemalloc2
+  $STD apt install -y libjemalloc2
 fi
 if [[ ! -f /usr/lib/libjemalloc.so ]]; then
   ln -sf /usr/lib/x86_64-linux-gnu/libjemalloc.so.2 /usr/lib/libjemalloc.so
