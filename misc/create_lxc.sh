@@ -345,7 +345,7 @@ if ! pct create "$CTID" "${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}" "${PCT_OPTIONS[
     msg_error "Template appears to be corrupted – re-downloading."
     rm -f "$TEMPLATE_PATH"
   else
-    msg_error "Template is valid, but container creation still failed."
+    msg_error "Template is valid, but container creation failed. Update your whole Proxmox System (pve-container) first or check https://github.com/community-scripts/ProxmoxVE/discussions/8126"
     exit 209
   fi
 
