@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Setting Up Hardware Acceleration"
-if [ "$(lsb_release -is 2>/dev/null)" != "Ubuntu" ]; then
+if ! grep -qEi 'ubuntu' /etc/os-release; then
   fetch_and_deploy_gh_release "intel-igc-core-2" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-core-2_*_amd64.deb"
   fetch_and_deploy_gh_release "intel-igc-opencl-2" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-opencl-2_*_amd64.deb"
   fetch_and_deploy_gh_release "intel-libgdgmm12" "intel/compute-runtime" "binary" "latest" "" "libigdgmm12_*_amd64.deb"
