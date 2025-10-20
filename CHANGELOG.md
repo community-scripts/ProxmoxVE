@@ -20,6 +20,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - Enhance error message for container creation failure [@MickLesk](https://github.com/MickLesk) ([#8511](https://github.com/community-scripts/ProxmoxVE/pull/8511))
     - Filebrowser-Quantum: change initial config to newer default [@MickLesk](https://github.com/MickLesk) ([#8497](https://github.com/community-scripts/ProxmoxVE/pull/8497))
 
   - #### 💥 Breaking Changes
