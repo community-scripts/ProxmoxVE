@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-10-20
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - Jellyfin: ensure libjemalloc is used / increase hdd space [@MickLesk](https://github.com/MickLesk) ([#8494](https://github.com/community-scripts/ProxmoxVE/pull/8494))
+
 ## 2025-10-19
 
 ### 🚀 Updated Scripts
