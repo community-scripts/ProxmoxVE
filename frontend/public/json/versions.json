@@ -1,5 +1,65 @@
 [
   {
+    "name": "crowdsecurity/crowdsec",
+    "version": "v1.7.1",
+    "date": "2025-10-15T10:44:03Z"
+  },
+  {
+    "name": "wizarrrr/wizarr",
+    "version": "v2025.10.4",
+    "date": "2025-10-20T10:45:54Z"
+  },
+  {
+    "name": "apache/cassandra",
+    "version": "cassandra-4.0.19",
+    "date": "2025-10-20T09:08:49Z"
+  },
+  {
+    "name": "jupyter/notebook",
+    "version": "@jupyter-notebook/ui-components@7.5.0-beta.1",
+    "date": "2025-10-20T07:01:38Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.159",
+    "date": "2025-10-20T05:53:23Z"
+  },
+  {
+    "name": "inventree/InvenTree",
+    "version": "1.0.7",
+    "date": "2025-10-20T05:23:10Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.4.2",
+    "date": "2025-10-07T08:11:58Z"
+  },
+  {
+    "name": "jellyfin/jellyfin",
+    "version": "v10.11.0",
+    "date": "2025-10-20T00:45:19Z"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2025.10.2",
+    "date": "2025-10-20T00:42:57Z"
+  },
+  {
+    "name": "pelican-dev/panel",
+    "version": "v1.0.0-beta27",
+    "date": "2025-10-20T00:38:13Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-10-20T00:27:05Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.0.1",
+    "date": "2025-10-15T16:53:55Z"
+  },
+  {
     "name": "seriousm4x/UpSnap",
     "version": "5.2.3",
     "date": "2025-10-19T20:50:15Z"
@@ -30,11 +90,6 @@
     "date": "2025-09-20T12:12:33Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.156",
-    "date": "2025-10-19T05:56:03Z"
-  },
-  {
     "name": "Prowlarr/Prowlarr",
     "version": "v2.0.5.5160",
     "date": "2025-08-23T21:23:11Z"
@@ -43,16 +98,6 @@
     "name": "Lidarr/Lidarr",
     "version": "v2.14.5.4836",
     "date": "2025-10-08T15:30:50Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-10-19T00:27:05Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.0.1",
-    "date": "2025-10-15T16:53:55Z"
   },
   {
     "name": "henrygd/beszel",
@@ -280,11 +325,6 @@
     "date": "2025-10-16T14:21:48Z"
   },
   {
-    "name": "esphome/esphome",
-    "version": "2025.10.1",
-    "date": "2025-10-16T10:00:10Z"
-  },
-  {
     "name": "rcourtman/Pulse",
     "version": "v4.24.0",
     "date": "2025-10-16T09:08:47Z"
@@ -303,11 +343,6 @@
     "name": "outline/outline",
     "version": "v1.0.0-test8",
     "date": "2025-10-16T01:32:14Z"
-  },
-  {
-    "name": "inventree/InvenTree",
-    "version": "1.0.6",
-    "date": "2025-10-15T22:10:17Z"
   },
   {
     "name": "Ombi-app/Ombi",
@@ -365,11 +400,6 @@
     "date": "2024-08-29T22:32:51Z"
   },
   {
-    "name": "crowdsecurity/crowdsec",
-    "version": "v1.7.1",
-    "date": "2025-10-15T10:44:03Z"
-  },
-  {
     "name": "openobserve/openobserve",
     "version": "v0.15.2",
     "date": "2025-10-15T07:42:29Z"
@@ -383,11 +413,6 @@
     "name": "seerr-team/seerr",
     "version": "preview-seerr",
     "date": "2025-10-14T22:21:33Z"
-  },
-  {
-    "name": "apache/cassandra",
-    "version": "5.0.6-tentative",
-    "date": "2025-10-14T20:36:34Z"
   },
   {
     "name": "cloudflare/cloudflared",
@@ -435,11 +460,6 @@
     "date": "2025-10-13T23:15:11Z"
   },
   {
-    "name": "jellyfin/jellyfin",
-    "version": "v10.10.7",
-    "date": "2025-04-05T19:14:59Z"
-  },
-  {
     "name": "hargata/lubelog",
     "version": "v1.5.3",
     "date": "2025-10-13T19:59:30Z"
@@ -468,11 +488,6 @@
     "name": "prometheus/alertmanager",
     "version": "v0.29.0-rc.0",
     "date": "2025-10-10T01:13:27Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.4.2",
-    "date": "2025-10-07T08:11:58Z"
   },
   {
     "name": "globaleaks/globaleaks-whistleblowing-software",
@@ -585,11 +600,6 @@
     "date": "2025-10-08T21:34:07Z"
   },
   {
-    "name": "pelican-dev/panel",
-    "version": "v1.0.0-beta26",
-    "date": "2025-10-08T20:12:11Z"
-  },
-  {
     "name": "autobrr/autobrr",
     "version": "v1.68.0",
     "date": "2025-10-08T18:33:12Z"
@@ -608,11 +618,6 @@
     "name": "nicolargo/glances",
     "version": "v4.3.3",
     "date": "2025-10-08T15:45:21Z"
-  },
-  {
-    "name": "wizarrrr/wizarr",
-    "version": "v2025.10.3",
-    "date": "2025-10-08T15:29:15Z"
   },
   {
     "name": "FlowiseAI/Flowise",
@@ -793,11 +798,6 @@
     "name": "MDeLuise/plant-it",
     "version": "1.0.0",
     "date": "2025-09-29T13:53:50Z"
-  },
-  {
-    "name": "jupyter/notebook",
-    "version": "@jupyter-notebook/ui-components@7.5.0-beta.0",
-    "date": "2025-09-29T09:16:42Z"
   },
   {
     "name": "lazy-media/Reactive-Resume",
