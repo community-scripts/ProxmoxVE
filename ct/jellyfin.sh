@@ -28,7 +28,7 @@ function update_script() {
     exit
   fi
 
-  if [ "$(lsb_release -is 2>/dev/null)" != "Ubuntu" ]; then
+  if ! grep -qEi 'ubuntu' /etc/os-release; then
     msg_info "Updating Intel Dependencies"
     fetch_and_deploy_gh_release "intel-igc-core-2" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-core-2_*_amd64.deb"
     fetch_and_deploy_gh_release "intel-igc-opencl-2" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-opencl-2_*_amd64.deb"
