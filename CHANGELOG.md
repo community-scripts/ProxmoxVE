@@ -28,6 +28,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - jellyfin: add: intel dependencies [@CrazyWolf13](https://github.com/CrazyWolf13) ([#8508](https://github.com/community-scripts/ProxmoxVE/pull/8508))
     - Jellyfin: ensure libjemalloc is used / increase hdd space [@MickLesk](https://github.com/MickLesk) ([#8494](https://github.com/community-scripts/ProxmoxVE/pull/8494))
 
 ## 2025-10-19
