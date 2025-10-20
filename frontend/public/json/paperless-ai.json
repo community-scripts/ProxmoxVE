@@ -19,8 +19,8 @@
       "type": "default",
       "script": "ct/paperless-ai.sh",
       "resources": {
-        "cpu": 2,
-        "ram": 2048,
+        "cpu": 4,
+        "ram": 4096,
         "hdd": 20,
         "os": "debian",
         "version": "13"
