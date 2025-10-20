@@ -27,11 +27,18 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  msg_info "Updating ${APP} LXC"
-  $STD apt-get update
-  $STD apt-get -y upgrade
-  $STD apt-get -y --with-new-pkgs upgrade jellyfin jellyfin-server
-  msg_ok "Updated ${APP} LXC"
+  msg_info "Updating Jellyfin"
+  if ! dpkg -s libjemalloc2 >/dev/null 2>&1; then
+    $STD apt install -y libjemalloc2
+  fi
+  if [[ ! -f /usr/lib/libjemalloc.so ]]; then
+    ln -sf /usr/lib/x86_64-linux-gnu/libjemalloc.so.2 /usr/lib/libjemalloc.so
+  fi
+  $STD apt update
+  $STD apt -y upgrade
+  $STD apt -y --with-new-pkgs upgrade jellyfin jellyfin-server
+  msg_ok "Updated Jellyfin"
+  msg_ok "Update Successfully!"
   exit
 }
 
