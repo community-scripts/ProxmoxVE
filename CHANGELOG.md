@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - jellyfin: fix: version conflict [@CrazyWolf13](https://github.com/CrazyWolf13) ([#8520](https://github.com/community-scripts/ProxmoxVE/pull/8520))
     - Paperless-AI: Increase CPU and RAM [@MickLesk](https://github.com/MickLesk) ([#8507](https://github.com/community-scripts/ProxmoxVE/pull/8507))
 
   - #### ✨ New Features
