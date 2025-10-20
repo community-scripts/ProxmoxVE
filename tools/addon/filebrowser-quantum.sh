@@ -152,20 +152,20 @@ if [[ "${noauth_prompt,,}" =~ ^(y|yes)$ ]]; then
 server:
   port: $PORT
   sources:
-    - path: "$SRC_DIR"
+    - path: "$SRC_DIR"      
+      name: "RootFS"
       config:
+        denyByDefault: false
         disableIndexing: false
         indexingIntervalMinutes: 240
         conditionals:
-          ignoreHidden: true
-          ignoreZeroSizeFolders: true
           rules:
-            - folderPaths: "/proc"
-            - folderPaths: "/sys"
-            - folderPaths: "/dev"
-            - folderPaths: "/run"
-            - folderPaths: "/tmp"
-            - folderPaths: "/lost+found"
+            - neverWatchPath: "/proc"
+            - neverWatchPath: "/sys"
+            - neverWatchPath: "/dev"
+            - neverWatchPath: "/run"
+            - neverWatchPath: "/tmp"
+            - neverWatchPath: "/lost+found"
 auth:
   methods:
     noauth: true
@@ -177,19 +177,19 @@ server:
   port: $PORT
   sources:
     - path: "$SRC_DIR"
+      name: "RootFS"
       config:
+        denyByDefault: false
         disableIndexing: false
         indexingIntervalMinutes: 240
         conditionals:
-          ignoreHidden: true
-          ignoreZeroSizeFolders: true
           rules:
-            - folderPaths: "/proc"
-            - folderPaths: "/sys"
-            - folderPaths: "/dev"
-            - folderPaths: "/run"
-            - folderPaths: "/tmp"
-            - folderPaths: "/lost+found"
+            - neverWatchPath: "/proc"
+            - neverWatchPath: "/sys"
+            - neverWatchPath: "/dev"
+            - neverWatchPath: "/run"
+            - neverWatchPath: "/tmp"
+            - neverWatchPath: "/lost+found"
 auth:
   adminUsername: admin
   adminPassword: helper-scripts.com
