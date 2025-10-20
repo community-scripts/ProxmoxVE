@@ -14,6 +14,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### ✨ New Features
+
+    - Filebrowser-Quantum: change initial config to newer default [@MickLesk](https://github.com/MickLesk) ([#8497](https://github.com/community-scripts/ProxmoxVE/pull/8497))
+
   - #### 🔧 Refactor
 
     - Jellyfin: ensure libjemalloc is used / increase hdd space [@MickLesk](https://github.com/MickLesk) ([#8494](https://github.com/community-scripts/ProxmoxVE/pull/8494))
