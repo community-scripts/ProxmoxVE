@@ -40,9 +40,9 @@ if check_for_gh_release "guardian" "HydroshieldMKII/Guardian" ; then
     msg_ok "Backed up Database"
   fi
 
-  cp /opt/guardian/.env /opt
+  [[ -f "/opt/guardian/.env" ]] && cp "/opt/guardian/.env" "/opt"
   CLEAN_INSTALL=1 fetch_and_deploy_gh_release "guardian" "HydroshieldMKII/Guardian" "tarball" "latest" "/opt/guardian"
-  mv /opt/.env /opt/guardian
+  [[ -f "/opt/.env" ]] && mv "/opt/.env" "/opt/guardian"
 
   if [[ -f "/tmp/plex-guard.db.backup" ]] ; then
     msg_info "Restoring Database"
@@ -58,7 +58,8 @@ if check_for_gh_release "guardian" "HydroshieldMKII/Guardian" ; then
 
   cd /opt/guardian/frontend
   $STD npm ci
-  $STD DEPLOYMENT_MODE=standalone npm run build
+  export DEPLOYMENT_MODE=standalone
+  $STD npm run build
   msg_ok "Updated Guardian"
 
   msg_info "Starting Services"
