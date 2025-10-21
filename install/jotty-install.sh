@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: vhsdream
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://github.com/fccview/rwMarkable
+# Source: https://github.com/fccview/jotty
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -14,16 +14,16 @@ network_check
 update_os
 
 NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
-fetch_and_deploy_gh_release "rwMarkable" "fccview/rwMarkable" "tarball" "latest" "/opt/rwmarkable"
+fetch_and_deploy_gh_release "jotty" "fccview/jotty" "tarball" "latest" "/opt/jotty"
 
 msg_info "Installing ${APPLICATION}"
-cd /opt/rwmarkable
+cd /opt/jotty
 $STD yarn --frozen-lockfile
 $STD yarn next telemetry disable
 $STD yarn build
 mkdir -p data/{users,checklists,notes}
 
-cat <<EOF >/opt/rwmarkable/.env
+cat <<EOF >/opt/jotty/.env
 NODE_ENV=production
 # HTTPS=true
 
@@ -39,21 +39,21 @@ EOF
 msg_ok "Installed ${APPLICATION}"
 
 msg_info "Creating Service"
-cat <<EOF >/etc/systemd/system/rwmarkable.service
+cat <<EOF >/etc/systemd/system/jotty.service
 [Unit]
-Description=rwMarkable server
+Description=jotty server
 After=network.target
 
 [Service]
-WorkingDirectory=/opt/rwmarkable
-EnvironmentFile=/opt/rwmarkable/.env
+WorkingDirectory=/opt/jotty
+EnvironmentFile=/opt/jotty/.env
 ExecStart=yarn start
 Restart=on-abnormal
 
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now rwmarkable
+systemctl enable -q --now jotty
 msg_ok "Created Service"
 
 motd_ssh

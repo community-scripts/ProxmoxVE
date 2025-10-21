@@ -29,38 +29,41 @@ function update_script() {
     exit
   fi
 
-  if check_for_gh_release "rwMarkable" "fccview/rwMarkable"; then
-    msg_info "Stopping Service"
-    systemctl stop rwmarkable
-    msg_ok "Stopped Service"
+  msg_info "Stopping service"
+  systemctl -q disable --now rwmarkable
+  msg_ok "Stopped Service"
 
-    msg_info "Backing up configuration & data"
-    cd /opt/rwmarkable
-    cp ./.env /opt/app.env
-    $STD tar -cf /opt/data_config.tar ./data ./config
-    msg_ok "Backed up configuration & data"
+  NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
+  CLEAN_INSTALL=1 fetch_and_deploy_gh_release "jotty" "fccview/jotty" "tarball" "latest" "/opt/jotty"
 
-    NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "rwMarkable" "fccview/rwMarkable" "tarball" "latest" "/opt/rwmarkable"
+  msg_info "Updating app"
+  cd /opt/jotty
+  $STD yarn --frozen-lockfile
+  $STD yarn next telemetry disable
+  $STD yarn build
+  msg_ok "Updated app"
 
-    msg_info "Updating app"
-    cd /opt/rwmarkable
-    $STD yarn --frozen-lockfile
-    $STD yarn next telemetry disable
-    $STD yarn build
-    msg_ok "Updated app"
+  msg_info "Migrating configuration & data"
+  cp /opt/rwmarkable/.env /opt/jotty/.env
+  mkdir -p /opt/jotty/data
+  cp -r /opt/rwmarkable/data/* /opt/jotty/data
+  cp -r /opt/rwmarkable/config/* /opt/jotty/config
+  msg_ok "Migrated configuration & data"
 
-    msg_info "Restoring configuration & data"
-    mv /opt/app.env /opt/rwmarkable/.env
-    $STD tar -xf /opt/data_config.tar
-    msg_ok "Restored configuration & data"
+  msg_info "Patching systemd service file"
+  sed -i 's/rw[M|m]arkable/jotty/g' /etc/systemd/system/rwmarkable.service
+  mv /etc/systemd/system/rwmarkable.service /etc/systemd/system/jotty.service
+  systemctl daemon-reload
+  msg_ok "Patched systemd service file"
 
-    msg_info "Restarting ${APP} service"
-    systemctl start rwmarkable
-    msg_ok "Restarted ${APP} service"
-    rm /opt/data_config.tar
-    msg_ok "Updated Successfully"
-  fi
+  msg_info "Patching update script"
+  sed -i 's/rwmarkable/jotty/g' /usr/bin/update
+  msg_ok "Patched update script"
+
+  msg_info "Starting jotty service"
+  systemctl -q enable --now jotty
+  msg_ok "Started jotty service"
+  msg_ok "Migrated Successfully!"
   exit
 }
 
