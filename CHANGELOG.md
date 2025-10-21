@@ -20,6 +20,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Guardian: Added validation before copying file and fix build command error [@HydroshieldMKII](https://github.com/HydroshieldMKII) ([#8553](https://github.com/community-scripts/ProxmoxVE/pull/8553))
     - Unifi: Bump libssl debian version to new update [@fastiuk](https://github.com/fastiuk) ([#8547](https://github.com/community-scripts/ProxmoxVE/pull/8547))
     - Alpine-TeamSpeak-Server: Fix release version fetching [@tremor021](https://github.com/tremor021) ([#8537](https://github.com/community-scripts/ProxmoxVE/pull/8537))
     - jellyfin: fix opencl dep for ubuntu [@MickLesk](https://github.com/MickLesk) ([#8535](https://github.com/community-scripts/ProxmoxVE/pull/8535))
