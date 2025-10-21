@@ -1,8 +1,93 @@
 [
   {
+    "name": "goauthentik/authentik",
+    "version": "version/2025.10.0-rc1",
+    "date": "2025-10-20T23:43:29Z"
+  },
+  {
+    "name": "henrygd/beszel",
+    "version": "v0.14.1",
+    "date": "2025-10-20T22:10:56Z"
+  },
+  {
+    "name": "booklore-app/booklore",
+    "version": "v1.8.1",
+    "date": "2025-10-20T20:53:56Z"
+  },
+  {
+    "name": "coder/code-server",
+    "version": "v4.105.1",
+    "date": "2025-10-20T20:19:23Z"
+  },
+  {
+    "name": "pymedusa/Medusa",
+    "version": "v1.0.23",
+    "date": "2025-10-20T19:51:33Z"
+  },
+  {
+    "name": "chrisbenincasa/tunarr",
+    "version": "v0.23.0-alpha.16",
+    "date": "2025-10-20T19:29:20Z"
+  },
+  {
+    "name": "MediaBrowser/Emby.Releases",
+    "version": "4.9.1.80",
+    "date": "2025-09-30T20:25:16Z"
+  },
+  {
+    "name": "kyantech/Palmr",
+    "version": "v3.2.4-beta",
+    "date": "2025-10-20T17:58:55Z"
+  },
+  {
+    "name": "tailscale/tailscale",
+    "version": "v1.91.0-pre",
+    "date": "2025-10-20T16:18:51Z"
+  },
+  {
+    "name": "meilisearch/meilisearch",
+    "version": "prototype-v1.24.0.ignore-embedding-failures-1",
+    "date": "2025-10-20T16:17:45Z"
+  },
+  {
+    "name": "louislam/uptime-kuma",
+    "version": "2.0.1",
+    "date": "2025-10-20T16:11:12Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.29.2",
+    "date": "2025-10-20T16:07:20Z"
+  },
+  {
+    "name": "chrisvel/tududi",
+    "version": "v0.84.1",
+    "date": "2025-10-20T15:32:24Z"
+  },
+  {
+    "name": "rclone/rclone",
+    "version": "v1.71.2",
+    "date": "2025-10-20T15:25:52Z"
+  },
+  {
+    "name": "openobserve/openobserve",
+    "version": "v0.16.0-rc1",
+    "date": "2025-10-20T13:16:20Z"
+  },
+  {
     "name": "crowdsecurity/crowdsec",
     "version": "v1.7.1",
     "date": "2025-10-15T10:44:03Z"
+  },
+  {
+    "name": "Graylog2/graylog2-server",
+    "version": "7.0.0-rc.1",
+    "date": "2025-10-20T11:53:31Z"
+  },
+  {
+    "name": "Kareadita/Kavita",
+    "version": "v0.8.8",
+    "date": "2025-10-20T11:26:24Z"
   },
   {
     "name": "wizarrrr/wizarr",
@@ -100,11 +185,6 @@
     "date": "2025-10-08T15:30:50Z"
   },
   {
-    "name": "henrygd/beszel",
-    "version": "v0.14.0",
-    "date": "2025-10-18T23:54:15Z"
-  },
-  {
     "name": "BerriAI/litellm",
     "version": "v1.78.5.rc.1",
     "date": "2025-10-18T23:17:14Z"
@@ -123,11 +203,6 @@
     "name": "leiweibau/Pi.Alert",
     "version": "v2025-10-18",
     "date": "2025-10-18T20:35:54Z"
-  },
-  {
-    "name": "chrisvel/tududi",
-    "version": "v0.84",
-    "date": "2025-10-18T19:39:04Z"
   },
   {
     "name": "moghtech/komodo",
@@ -153,21 +228,6 @@
     "name": "Notifiarr/notifiarr",
     "version": "v0.9.0",
     "date": "2025-10-18T17:03:56Z"
-  },
-  {
-    "name": "booklore-app/booklore",
-    "version": "v1.8.0",
-    "date": "2025-10-18T16:22:25Z"
-  },
-  {
-    "name": "chrisbenincasa/tunarr",
-    "version": "v0.23.0-alpha.14",
-    "date": "2025-10-18T15:43:53Z"
-  },
-  {
-    "name": "msgbyte/tianji",
-    "version": "v1.29.1",
-    "date": "2025-10-18T13:14:21Z"
   },
   {
     "name": "TasmoAdmin/TasmoAdmin",
@@ -220,16 +280,6 @@
     "date": "2025-10-17T21:15:07Z"
   },
   {
-    "name": "coder/code-server",
-    "version": "v4.105.0",
-    "date": "2025-10-17T19:55:55Z"
-  },
-  {
-    "name": "MediaBrowser/Emby.Releases",
-    "version": "4.9.1.80",
-    "date": "2025-09-30T20:25:16Z"
-  },
-  {
     "name": "forgejo/forgejo",
     "version": "v13.0.1",
     "date": "2025-10-17T18:54:16Z"
@@ -253,6 +303,11 @@
     "name": "docker/compose",
     "version": "v2.40.1",
     "date": "2025-10-17T13:42:04Z"
+  },
+  {
+    "name": "neo4j/neo4j",
+    "version": "5.26.14",
+    "date": "2025-10-17T12:38:22Z"
   },
   {
     "name": "mattermost/mattermost",
@@ -370,11 +425,6 @@
     "date": "2025-10-15T13:29:37Z"
   },
   {
-    "name": "meilisearch/meilisearch",
-    "version": "prototype-docker-alpine-3-22-v8",
-    "date": "2025-10-15T13:20:20Z"
-  },
-  {
     "name": "TandoorRecipes/recipes",
     "version": "2.3.3",
     "date": "2025-10-15T13:18:27Z"
@@ -385,11 +435,6 @@
     "date": "2025-10-15T12:51:20Z"
   },
   {
-    "name": "Graylog2/graylog2-server",
-    "version": "7.0.0-beta.5",
-    "date": "2025-10-15T11:43:16Z"
-  },
-  {
     "name": "cockpit-project/cockpit",
     "version": "349",
     "date": "2025-10-15T11:43:12Z"
@@ -398,11 +443,6 @@
     "name": "blakeblackshear/frigate",
     "version": "v0.14.1",
     "date": "2024-08-29T22:32:51Z"
-  },
-  {
-    "name": "openobserve/openobserve",
-    "version": "v0.15.2",
-    "date": "2025-10-15T07:42:29Z"
   },
   {
     "name": "wavelog/wavelog",
@@ -428,11 +468,6 @@
     "name": "crafty-controller/crafty-4",
     "version": "v4.5.5",
     "date": "2025-10-14T18:48:36Z"
-  },
-  {
-    "name": "tailscale/tailscale",
-    "version": "v1.88.4",
-    "date": "2025-10-14T17:57:52Z"
   },
   {
     "name": "plankanban/planka",
@@ -715,11 +750,6 @@
     "date": "2025-10-03T06:22:38Z"
   },
   {
-    "name": "kyantech/Palmr",
-    "version": "v3.2.3-beta",
-    "date": "2025-10-02T13:48:14Z"
-  },
-  {
     "name": "actualbudget/actual",
     "version": "v25.10.0",
     "date": "2025-10-02T11:34:39Z"
@@ -765,19 +795,9 @@
     "date": "2025-09-30T13:34:30Z"
   },
   {
-    "name": "neo4j/neo4j",
-    "version": "4.4.46",
-    "date": "2025-09-30T13:21:24Z"
-  },
-  {
     "name": "thomiceli/opengist",
     "version": "v1.11.1",
     "date": "2025-09-30T00:24:16Z"
-  },
-  {
-    "name": "goauthentik/authentik",
-    "version": "version/2025.8.4",
-    "date": "2025-09-30T00:03:11Z"
   },
   {
     "name": "influxdata/telegraf",
@@ -848,11 +868,6 @@
     "name": "Threadfin/Threadfin",
     "version": "1.2.39",
     "date": "2025-09-25T15:57:02Z"
-  },
-  {
-    "name": "rclone/rclone",
-    "version": "v1.71.1",
-    "date": "2025-09-24T16:32:16Z"
   },
   {
     "name": "alexta69/metube",
@@ -1013,11 +1028,6 @@
     "name": "CrazyWolf13/streamlink-webui",
     "version": "0.6",
     "date": "2025-09-05T06:05:04Z"
-  },
-  {
-    "name": "louislam/uptime-kuma",
-    "version": "2.0.0-beta.2-temp",
-    "date": "2025-03-28T08:45:58Z"
   },
   {
     "name": "healthchecks/healthchecks",
@@ -1223,11 +1233,6 @@
     "name": "photoprism/photoprism",
     "version": "250707-d28b3101e",
     "date": "2025-07-07T15:15:21Z"
-  },
-  {
-    "name": "Kareadita/Kavita",
-    "version": "v0.8.7",
-    "date": "2025-07-05T20:08:58Z"
   },
   {
     "name": "qbittorrent/qBittorrent",
@@ -1478,11 +1483,6 @@
     "name": "ArchiveBox/ArchiveBox",
     "version": "v0.7.3",
     "date": "2024-12-15T10:18:06Z"
-  },
-  {
-    "name": "pymedusa/Medusa",
-    "version": "v1.0.22",
-    "date": "2024-12-13T12:22:19Z"
   },
   {
     "name": "phpipam/phpipam",
