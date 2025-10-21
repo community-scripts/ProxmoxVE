@@ -1,13 +1,88 @@
 [
   {
+    "name": "apache/cassandra",
+    "version": "5.0.6-tentative",
+    "date": "2025-10-21T11:42:35Z"
+  },
+  {
+    "name": "evcc-io/evcc",
+    "version": "0.209.3",
+    "date": "2025-10-21T10:53:07Z"
+  },
+  {
+    "name": "grafana/grafana",
+    "version": "v11.5.10",
+    "date": "2025-10-21T10:46:47Z"
+  },
+  {
+    "name": "zabbix/zabbix",
+    "version": "7.0.20rc1",
+    "date": "2025-10-21T09:14:14Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.115.3",
+    "date": "2025-10-14T14:40:17Z"
+  },
+  {
+    "name": "VictoriaMetrics/VictoriaMetrics",
+    "version": "pmm-6401-v1.128.0",
+    "date": "2025-10-21T08:30:52Z"
+  },
+  {
+    "name": "crowdsecurity/crowdsec",
+    "version": "v1.7.1",
+    "date": "2025-10-15T10:44:03Z"
+  },
+  {
+    "name": "meilisearch/meilisearch",
+    "version": "prototype-v1.24.0.ignore-embedding-failures-2",
+    "date": "2025-10-21T07:36:22Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.166",
+    "date": "2025-10-21T05:54:33Z"
+  },
+  {
+    "name": "openobserve/openobserve",
+    "version": "v0.16.0-rc1",
+    "date": "2025-10-21T00:37:47Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-10-21T00:27:05Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.0.1",
+    "date": "2025-10-15T16:53:55Z"
+  },
+  {
+    "name": "documenso/documenso",
+    "version": "v1.13.0",
+    "date": "2025-10-21T00:21:04Z"
+  },
+  {
     "name": "goauthentik/authentik",
-    "version": "version/2025.10.0-rc1",
-    "date": "2025-10-20T23:43:29Z"
+    "version": "version/2025.10.0-rc2",
+    "date": "2025-10-21T00:19:36Z"
+  },
+  {
+    "name": "TwiN/gatus",
+    "version": "v5.27.1",
+    "date": "2025-10-21T00:01:36Z"
   },
   {
     "name": "henrygd/beszel",
     "version": "v0.14.1",
     "date": "2025-10-20T22:10:56Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.4.1",
+    "date": "2025-10-16T07:21:53Z"
   },
   {
     "name": "booklore-app/booklore",
@@ -45,11 +120,6 @@
     "date": "2025-10-20T16:18:51Z"
   },
   {
-    "name": "meilisearch/meilisearch",
-    "version": "prototype-v1.24.0.ignore-embedding-failures-1",
-    "date": "2025-10-20T16:17:45Z"
-  },
-  {
     "name": "louislam/uptime-kuma",
     "version": "2.0.1",
     "date": "2025-10-20T16:11:12Z"
@@ -70,16 +140,6 @@
     "date": "2025-10-20T15:25:52Z"
   },
   {
-    "name": "openobserve/openobserve",
-    "version": "v0.16.0-rc1",
-    "date": "2025-10-20T13:16:20Z"
-  },
-  {
-    "name": "crowdsecurity/crowdsec",
-    "version": "v1.7.1",
-    "date": "2025-10-15T10:44:03Z"
-  },
-  {
     "name": "Graylog2/graylog2-server",
     "version": "7.0.0-rc.1",
     "date": "2025-10-20T11:53:31Z"
@@ -95,19 +155,9 @@
     "date": "2025-10-20T10:45:54Z"
   },
   {
-    "name": "apache/cassandra",
-    "version": "cassandra-4.0.19",
-    "date": "2025-10-20T09:08:49Z"
-  },
-  {
     "name": "jupyter/notebook",
     "version": "@jupyter-notebook/ui-components@7.5.0-beta.1",
     "date": "2025-10-20T07:01:38Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.159",
-    "date": "2025-10-20T05:53:23Z"
   },
   {
     "name": "inventree/InvenTree",
@@ -133,16 +183,6 @@
     "name": "pelican-dev/panel",
     "version": "v1.0.0-beta27",
     "date": "2025-10-20T00:38:13Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-10-20T00:27:05Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.0.1",
-    "date": "2025-10-15T16:53:55Z"
   },
   {
     "name": "seriousm4x/UpSnap",
@@ -260,11 +300,6 @@
     "date": "2025-10-09T10:27:01Z"
   },
   {
-    "name": "TwiN/gatus",
-    "version": "v5.27.0",
-    "date": "2025-10-18T02:44:26Z"
-  },
-  {
     "name": "9001/copyparty",
     "version": "v1.19.17",
     "date": "2025-10-17T23:40:02Z"
@@ -283,11 +318,6 @@
     "name": "forgejo/forgejo",
     "version": "v13.0.1",
     "date": "2025-10-17T18:54:16Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.4.1",
-    "date": "2025-10-16T07:21:53Z"
   },
   {
     "name": "grokability/snipe-it",
@@ -460,11 +490,6 @@
     "date": "2025-10-14T19:07:37Z"
   },
   {
-    "name": "evcc-io/evcc",
-    "version": "0.209.2",
-    "date": "2025-10-14T18:55:44Z"
-  },
-  {
     "name": "crafty-controller/crafty-4",
     "version": "v4.5.5",
     "date": "2025-10-14T18:48:36Z"
@@ -483,11 +508,6 @@
     "name": "element-hq/synapse",
     "version": "v1.140.0",
     "date": "2025-10-14T15:57:12Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.115.3",
-    "date": "2025-10-14T14:40:17Z"
   },
   {
     "name": "rogerfar/rdt-client",
@@ -620,11 +640,6 @@
     "date": "2025-10-09T12:34:15Z"
   },
   {
-    "name": "documenso/documenso",
-    "version": "v1.12.10",
-    "date": "2025-10-09T04:32:35Z"
-  },
-  {
     "name": "rabbitmq/rabbitmq-server",
     "version": "v4.1.4",
     "date": "2025-09-02T14:26:24Z"
@@ -673,11 +688,6 @@
     "name": "C4illin/ConvertX",
     "version": "v0.15.1",
     "date": "2025-10-07T20:30:56Z"
-  },
-  {
-    "name": "VictoriaMetrics/VictoriaMetrics",
-    "version": "pmm-6401-v1.127.0",
-    "date": "2025-10-07T14:31:32Z"
   },
   {
     "name": "thecfu/scraparr",
@@ -768,11 +778,6 @@
     "name": "HabitRPG/habitica",
     "version": "v5.41.4",
     "date": "2025-09-30T22:26:11Z"
-  },
-  {
-    "name": "zabbix/zabbix",
-    "version": "7.4.3",
-    "date": "2025-09-30T21:49:53Z"
   },
   {
     "name": "mongodb/mongo",
@@ -883,11 +888,6 @@
     "name": "syncthing/syncthing",
     "version": "v2.0.10",
     "date": "2025-09-24T08:33:37Z"
-  },
-  {
-    "name": "grafana/grafana",
-    "version": "v12.2.0",
-    "date": "2025-09-23T23:47:02Z"
   },
   {
     "name": "postgres/postgres",
