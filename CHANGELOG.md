@@ -25,6 +25,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Alpine-TeamSpeak-Server: Fix release version fetching [@tremor021](https://github.com/tremor021) ([#8537](https://github.com/community-scripts/ProxmoxVE/pull/8537))
     - jellyfin: fix opencl dep for ubuntu [@MickLesk](https://github.com/MickLesk) ([#8535](https://github.com/community-scripts/ProxmoxVE/pull/8535))
 
+  - #### ✨ New Features
+
+    - Refactor: ProjectSend [@tremor021](https://github.com/tremor021) ([#8552](https://github.com/community-scripts/ProxmoxVE/pull/8552))
+
 ### 🌐 Website
 
   - #### 📝 Script Information
