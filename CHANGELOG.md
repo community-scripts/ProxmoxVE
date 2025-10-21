@@ -16,8 +16,15 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Unifi: Bump libssl debian version to new update [@fastiuk](https://github.com/fastiuk) ([#8547](https://github.com/community-scripts/ProxmoxVE/pull/8547))
     - Alpine-TeamSpeak-Server: Fix release version fetching [@tremor021](https://github.com/tremor021) ([#8537](https://github.com/community-scripts/ProxmoxVE/pull/8537))
     - jellyfin: fix opencl dep for ubuntu [@MickLesk](https://github.com/MickLesk) ([#8535](https://github.com/community-scripts/ProxmoxVE/pull/8535))
+
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Open Archiver: Fix application icon [@tremor021](https://github.com/tremor021) ([#8542](https://github.com/community-scripts/ProxmoxVE/pull/8542))
 
 ## 2025-10-20
 
