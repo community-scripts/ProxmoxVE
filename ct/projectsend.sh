@@ -27,31 +27,28 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/projectsend/projectsend/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+
+  if check_for_gh_release "projectsend" "projectsend/projectsend"; then
     msg_info "Stopping Service"
     systemctl stop apache2
     msg_ok "Stopped Service"
 
-    msg_info "Updating ${APP} to v${RELEASE}"
-    cd /opt
-    curl -fsSL "https://github.com/projectsend/projectsend/releases/download/r${RELEASE}/projectsend-r${RELEASE}.zip" -o $(basename "https://github.com/projectsend/projectsend/releases/download/r${RELEASE}/projectsend-r${RELEASE}.zip")
-    $STD unzip -o "projectsend-r${RELEASE}.zip" -d projectsend
+    php_ver=$(php -v | head -n 1 | awk '{print $2}')
+    if [[ ! $php_ver == "8.4"* ]]; then
+      PHP_VERSION="8.4" PHP_APACHE="YES" PHP_MODULE="pdo,mysql,gettext,fileinfo" setup_php
+    fi
+
+    mv /opt/projectsend/includes/sys.config.php /opt/sys.config.php
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "projectsend" "projectsend/projectsend" "prebuild" "latest" "/opt/projectsend" "projectsend-r*.zip"
+    mv /opt/sys.config.php /opt/projectsend/includes/sys.config.php
     chown -R www-data:www-data /opt/projectsend
     chmod -R 775 /opt/projectsend
-    echo "${RELEASE}" >/opt/${APP}_version.txt
-    msg_ok "Updated $APP to v${RELEASE}"
 
     msg_info "Starting Service"
     systemctl start apache2
     msg_ok "Started Service"
 
-    msg_info "Cleaning up"
-    rm -rf "/opt/projectsend-r${RELEASE}.zip"
-    msg_ok "Cleaned"
     msg_ok "Updated Successfully"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }

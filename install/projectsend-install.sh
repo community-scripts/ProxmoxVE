@@ -13,14 +13,9 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt install -y \
-  apache2 \
-  libapache2-mod-php \
-  php8.2-{pdo,mysql,mbstring,gettext,fileinfo,gd,xml,zip}
-msg_ok "Installed Dependencies"
-
+PHP_VERSION="8.4" PHP_APACHE="YES" PHP_MODULE="pdo,mysql,gettext,fileinfo" setup_php
 setup_mariadb
+fetch_and_deploy_gh_release "projectsend" "projectsend/projectsend" "prebuild" "latest" "/opt/projectsend" "projectsend-r*.zip"
 
 msg_info "Setting up MariaDB"
 DB_NAME=projectsend
@@ -37,12 +32,7 @@ $STD mariadb -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUS
 } >>~/projectsend.creds
 msg_ok "Set up MariaDB"
 
-msg_info "Installing projectsend"
-RELEASE=$(curl -fsSL https://api.github.com/repos/projectsend/projectsend/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-cd /opt
-curl -fsSL "https://github.com/projectsend/projectsend/releases/download/r${RELEASE}/projectsend-r${RELEASE}.zip" -o "projectsend-r${RELEASE}.zip"
-mkdir projectsend
-$STD unzip "projectsend-r${RELEASE}.zip" -d projectsend
+msg_info "Installing ProjectSend"
 mv /opt/projectsend/includes/sys.config.sample.php /opt/projectsend/includes/sys.config.php
 chown -R www-data:www-data /opt/projectsend
 chmod -R 775 /opt/projectsend
@@ -55,8 +45,7 @@ sed -i -e "s/^\(memory_limit = \).*/\1 256M/" \
   -e "s/^\(post_max_size = \).*/\1 256M/" \
   -e "s/^\(upload_max_filesize = \).*/\1 256M/" \
   -e "s/^\(max_execution_time = \).*/\1 300/" \
-  /etc/php/8.2/apache2/php.ini
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
+  /etc/php/8.4/apache2/php.ini
 msg_ok "Installed projectsend"
 
 msg_info "Creating Service"
@@ -84,7 +73,6 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -rf "/opt/projectsend-r${RELEASE}.zip"
 $STD apt -y autoremove
 $STD apt -y autoclean
 $STD apt -y clean
