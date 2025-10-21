@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-10-21
 
+### 🆕 New Scripts
+
+  - rwMarkable: migrate from rwMarkable => jotty [@vhsdream](https://github.com/vhsdream) ([#8554](https://github.com/community-scripts/ProxmoxVE/pull/8554))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
