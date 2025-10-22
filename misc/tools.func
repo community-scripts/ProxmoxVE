@@ -16,7 +16,12 @@ cache_installed_version() {
 
 get_cached_version() {
   local app="$1"
-  [[ -f "/var/cache/app-versions/${app}_version.txt" ]] && cat "/var/cache/app-versions/${app}_version.txt"
+  mkdir -p /var/cache/app-versions
+  if [[ -f "/var/cache/app-versions/${app}_version.txt" ]]; then
+    cat "/var/cache/app-versions/${app}_version.txt"
+    return 0
+  fi
+  return 0
 }
 
 # ------------------------------------------------------------------------------
@@ -24,7 +29,6 @@ get_cached_version() {
 # ------------------------------------------------------------------------------
 upgrade_package() {
   local package="$1"
-  msg_info "Upgrading $package"
 
   # Use same caching logic as ensure_dependencies
   local apt_cache_file="/var/cache/apt-update-timestamp"
@@ -41,7 +45,6 @@ upgrade_package() {
   fi
 
   $STD apt install --only-upgrade -y "$package"
-  msg_ok "Upgraded $package"
 }
 
 # ------------------------------------------------------------------------------
@@ -71,8 +74,6 @@ ensure_dependencies() {
   done
 
   if [[ ${#missing[@]} -gt 0 ]]; then
-    msg_info "Installing dependencies: ${missing[*]}"
-
     # Only run apt update if not done recently (within last 5 minutes)
     local apt_cache_file="/var/cache/apt-update-timestamp"
     local current_time=$(date +%s)
@@ -83,12 +84,19 @@ ensure_dependencies() {
     fi
 
     if ((current_time - last_update > 300)); then
-      $STD apt update
+      # Ensure orphaned sources are cleaned before updating
+      cleanup_orphaned_sources 2>/dev/null || true
+
+      if ! $STD apt update; then
+        ensure_apt_working || return 1
+      fi
       echo "$current_time" >"$apt_cache_file"
     fi
 
-    $STD apt install -y "${missing[@]}"
-    msg_ok "Installed dependencies"
+    $STD apt install -y "${missing[@]}" || {
+      msg_error "Failed to install dependencies: ${missing[*]}"
+      return 1
+    }
   fi
 }
 
@@ -497,7 +505,6 @@ wait_for_apt() {
       return 1
     fi
 
-    debug_log "Waiting for apt to be available... (${waited}s)"
     sleep 5
     waited=$((waited + 5))
   done
@@ -520,11 +527,72 @@ cleanup_old_repo_files() {
   # Remove old GPG keys from trusted.gpg.d
   rm -f /etc/apt/trusted.gpg.d/"${app}"*.gpg
 
-  # Remove duplicate .sources files (keep only the main one)
-  local sources_file="/etc/apt/sources.list.d/${app}.sources"
-  if [[ -f "$sources_file" ]]; then
-    find /etc/apt/sources.list.d/ -name "${app}*.sources" ! -name "${app}.sources" -delete 2>/dev/null || true
+  # Remove keyrings from /etc/apt/keyrings
+  rm -f /etc/apt/keyrings/"${app}"*.gpg
+
+  # Remove ALL .sources files for this app (including the main one)
+  # This ensures no orphaned .sources files reference deleted keyrings
+  rm -f /etc/apt/sources.list.d/"${app}"*.sources
+}
+
+# ------------------------------------------------------------------------------
+# Cleanup orphaned .sources files that reference missing keyrings
+# This prevents APT signature verification errors
+# Call this at the start of any setup function to ensure APT is in a clean state
+# ------------------------------------------------------------------------------
+cleanup_orphaned_sources() {
+  local sources_dir="/etc/apt/sources.list.d"
+  local keyrings_dir="/etc/apt/keyrings"
+
+  [[ ! -d "$sources_dir" ]] && return 0
+
+  while IFS= read -r -d '' sources_file; do
+    local basename_file
+    basename_file=$(basename "$sources_file")
+
+    # NEVER remove debian.sources - this is the standard Debian repository
+    if [[ "$basename_file" == "debian.sources" ]]; then
+      continue
+    fi
+
+    # Extract Signed-By path from .sources file
+    local keyring_path
+    keyring_path=$(grep -E '^Signed-By:' "$sources_file" 2>/dev/null | awk '{print $2}')
+
+    # If keyring doesn't exist, remove the .sources file
+    if [[ -n "$keyring_path" ]] && [[ ! -f "$keyring_path" ]]; then
+      rm -f "$sources_file"
+    fi
+  done < <(find "$sources_dir" -name "*.sources" -print0 2>/dev/null)
+
+  # Also check for broken symlinks in keyrings directory
+  if [[ -d "$keyrings_dir" ]]; then
+    find "$keyrings_dir" -type l ! -exec test -e {} \; -delete 2>/dev/null || true
   fi
+}
+
+# ------------------------------------------------------------------------------
+# Ensure APT is in a working state before installing packages
+# This should be called at the start of any setup function
+# ------------------------------------------------------------------------------
+ensure_apt_working() {
+  # Clean up orphaned sources first
+  cleanup_orphaned_sources
+
+  # Try to update package lists
+  if ! apt-get update -qq 2>/dev/null; then
+    # More aggressive cleanup
+    rm -f /etc/apt/sources.list.d/*.sources 2>/dev/null || true
+    cleanup_orphaned_sources
+
+    # Try again
+    if ! apt-get update -qq 2>/dev/null; then
+      msg_error "Cannot update package lists - APT is critically broken"
+      return 1
+    fi
+  fi
+
+  return 0
 }
 
 # ------------------------------------------------------------------------------
@@ -538,16 +606,20 @@ setup_deb822_repo() {
   local component="${5:-main}"
   local architectures="${6:-amd64 arm64}"
 
-  msg_info "Setting up $name repository"
-
-  # Cleanup old configs
+  # Cleanup old configs for this app
   cleanup_old_repo_files "$name"
+
+  # Cleanup any orphaned .sources files from other apps
+  cleanup_orphaned_sources
 
   # Ensure keyring directory exists
   mkdir -p /etc/apt/keyrings
 
-  # Download GPG key
-  curl -fsSL "$gpg_url" | gpg --dearmor -o "/etc/apt/keyrings/${name}.gpg"
+  # Download GPG key (with --yes to avoid interactive prompts)
+  curl -fsSL "$gpg_url" | gpg --dearmor --yes -o "/etc/apt/keyrings/${name}.gpg" || {
+    msg_error "Failed to download or import GPG key for ${name}"
+    return 1
+  }
 
   # Create deb822 sources file
   cat <<EOF >/etc/apt/sources.list.d/${name}.sources
@@ -573,8 +645,6 @@ EOF
     $STD apt update
     echo "$current_time" >"$apt_cache_file"
   fi
-
-  msg_ok "Set up $name repository"
 }
 
 # ------------------------------------------------------------------------------
@@ -617,7 +687,7 @@ enable_and_start_service() {
   local service="$1"
 
   if ! systemctl enable "$service" &>/dev/null; then
-    msg_warn "Could not enable $service (may not be installed yet)"
+    return 1
   fi
 
   if ! systemctl start "$service" &>/dev/null; then
@@ -712,7 +782,6 @@ end_timer() {
   local label="${2:-Operation}"
   local end_time=$(date +%s)
   local duration=$((end_time - start_time))
-  debug_log "$label took ${duration}s"
 }
 
 # ------------------------------------------------------------------------------
@@ -831,27 +900,23 @@ check_for_gh_release() {
     fi
 
     if [[ "$current" != "$pin_clean" ]]; then
-      msg_info "${app} pinned to ${pinned_version_in} (installed ${current:-none}) → update required"
       CHECK_UPDATE_RELEASE="$match_raw"
+      msg_ok "Checking for update: ${app}"
       return 0
     fi
 
-    if [[ "$pin_clean" == "$latest_clean" ]]; then
-      msg_ok "${app} pinned to ${pinned_version_in} (up to date)"
-    else
-      msg_ok "${app} pinned to ${pinned_version_in} (already installed, upstream ${latest_raw})"
-    fi
+    msg_ok "Checking for update: ${app}"
     return 1
   fi
 
   # No pinning → use latest
   if [[ -z "$current" || "$current" != "$latest_clean" ]]; then
     CHECK_UPDATE_RELEASE="$latest_raw"
-    msg_info "New release available: ${latest_raw} (current: v${current:-none})"
+    msg_ok "Checking for update: ${app}"
     return 0
   fi
 
-  msg_ok "${app} is up to date (${latest_raw})"
+  msg_ok "Checking for update: ${app}"
   return 1
 }
 
@@ -874,14 +939,23 @@ create_self_signed_cert() {
     return 0
   fi
 
-  $STD apt update
-  $STD apt install -y openssl
+  $STD apt update || {
+    msg_error "Failed to update package list"
+    return 1
+  }
+  $STD apt install -y openssl || {
+    msg_error "Failed to install OpenSSL"
+    return 1
+  }
 
   mkdir -p "$CERT_DIR"
   $STD openssl req -new -newkey rsa:2048 -days 365 -nodes -x509 \
     -subj "/C=US/ST=State/L=City/O=Organization/CN=${APP_NAME}" \
     -keyout "$CERT_KEY" \
-    -out "$CERT_CRT"
+    -out "$CERT_CRT" || {
+    msg_error "Failed to create self-signed certificate"
+    return 1
+  }
 
   chmod 600 "$CERT_KEY"
   chmod 644 "$CERT_CRT"
@@ -1067,7 +1141,11 @@ function fetch_and_deploy_gh_release() {
       rm -rf "${target:?}/"*
     fi
 
-    tar -xzf "$tmpdir/$filename" -C "$tmpdir"
+    tar -xzf "$tmpdir/$filename" -C "$tmpdir" || {
+      msg_error "Failed to extract tarball"
+      rm -rf "$tmpdir"
+      return 1
+    }
     local unpack_dir
     unpack_dir=$(find "$tmpdir" -mindepth 1 -maxdepth 1 -type d | head -n1)
 
@@ -1179,9 +1257,17 @@ function fetch_and_deploy_gh_release() {
 
     if [[ "$filename" == *.zip ]]; then
       ensure_dependencies unzip
-      unzip -q "$tmpdir/$filename" -d "$unpack_tmp"
+      unzip -q "$tmpdir/$filename" -d "$unpack_tmp" || {
+        msg_error "Failed to extract ZIP archive"
+        rm -rf "$tmpdir" "$unpack_tmp"
+        return 1
+      }
     elif [[ "$filename" == *.tar.* || "$filename" == *.tgz ]]; then
-      tar -xf "$tmpdir/$filename" -C "$unpack_tmp"
+      tar -xf "$tmpdir/$filename" -C "$unpack_tmp" || {
+        msg_error "Failed to extract TAR archive"
+        rm -rf "$tmpdir" "$unpack_tmp"
+        return 1
+      }
     else
       msg_error "Unsupported archive format: $filename"
       rm -rf "$tmpdir" "$unpack_tmp"
@@ -1337,7 +1423,7 @@ function setup_adminer() {
   CACHED_VERSION=$(get_cached_version "adminer")
 
   if grep -qi alpine /etc/os-release; then
-    msg_info "Installing Adminer (Alpine)"
+    msg_info "Setup Adminer (Alpine)"
     mkdir -p /var/www/localhost/htdocs/adminer
     curl -fsSL https://github.com/vrana/adminer/releases/latest/download/adminer.php \
       -o /var/www/localhost/htdocs/adminer/index.php || {
@@ -1345,16 +1431,22 @@ function setup_adminer() {
       return 1
     }
     cache_installed_version "adminer" "latest-alpine"
-    msg_ok "Installed Adminer (Alpine)"
+    msg_ok "Setup Adminer (Alpine)"
   else
-    msg_info "Installing Adminer (Debian/Ubuntu)"
+    msg_info "Setup Adminer (Debian/Ubuntu)"
     ensure_dependencies adminer
-    $STD a2enconf adminer
-    $STD systemctl reload apache2
+    $STD a2enconf adminer || {
+      msg_error "Failed to enable Adminer Apache config"
+      return 1
+    }
+    $STD systemctl reload apache2 || {
+      msg_error "Failed to reload Apache"
+      return 1
+    }
     local VERSION
     VERSION=$(dpkg -s adminer 2>/dev/null | grep '^Version:' | awk '{print $2}')
     cache_installed_version "adminer" "${VERSION:-unknown}"
-    msg_ok "Installed Adminer (Debian/Ubuntu)"
+    msg_ok "Setup Adminer (Debian/Ubuntu)"
   fi
 }
 
@@ -1372,6 +1464,8 @@ function setup_composer() {
   CACHED_VERSION=$(get_cached_version "composer")
   export COMPOSER_ALLOW_SUPERUSER=1
 
+  msg_info "Setup Composer"
+
   for old in /usr/bin/composer /bin/composer /root/.composer/vendor/bin/composer; do
     [[ -e "$old" && "$old" != "$COMPOSER_BIN" ]] && rm -f "$old"
   done
@@ -1379,20 +1473,16 @@ function setup_composer() {
   ensure_usr_local_bin_persist
   export PATH="/usr/local/bin:$PATH"
 
-  if [[ -x "$COMPOSER_BIN" ]]; then
-    local CURRENT_VERSION
-    CURRENT_VERSION=$("$COMPOSER_BIN" --version 2>/dev/null | awk '{print $3}')
-    msg_info "Updating Composer from $CURRENT_VERSION to latest"
-  else
-    msg_info "Installing Composer"
-  fi
-
   curl -fsSL https://getcomposer.org/installer -o /tmp/composer-setup.php || {
     msg_error "Failed to download Composer installer"
     return 1
   }
 
-  $STD php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer
+  $STD php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer || {
+    msg_error "Failed to install Composer"
+    rm -f /tmp/composer-setup.php
+    return 1
+  }
   rm -f /tmp/composer-setup.php
 
   if [[ ! -x "$COMPOSER_BIN" ]]; then
@@ -1406,7 +1496,7 @@ function setup_composer() {
   local FINAL_VERSION
   FINAL_VERSION=$("$COMPOSER_BIN" --version 2>/dev/null | awk '{print $3}')
   cache_installed_version "composer" "$FINAL_VERSION"
-  msg_ok "Installed Composer $FINAL_VERSION"
+  msg_ok "Setup Composer"
 }
 
 # ------------------------------------------------------------------------------
@@ -1436,15 +1526,20 @@ function setup_ffmpeg() {
   local CACHED_VERSION
   CACHED_VERSION=$(get_cached_version "ffmpeg")
 
+  msg_info "Setup FFmpeg ${VERSION} ($TYPE)"
+
   # Binary fallback mode
   if [[ "$TYPE" == "binary" ]]; then
-    msg_info "Installing FFmpeg (static binary)"
     curl -fsSL https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz -o "$TMP_DIR/ffmpeg.tar.xz" || {
       msg_error "Failed to download FFmpeg binary"
       rm -rf "$TMP_DIR"
       return 1
     }
-    tar -xf "$TMP_DIR/ffmpeg.tar.xz" -C "$TMP_DIR"
+    tar -xf "$TMP_DIR/ffmpeg.tar.xz" -C "$TMP_DIR" || {
+      msg_error "Failed to extract FFmpeg binary"
+      rm -rf "$TMP_DIR"
+      return 1
+    }
     local EXTRACTED_DIR
     EXTRACTED_DIR=$(find "$TMP_DIR" -maxdepth 1 -type d -name "ffmpeg-*")
     cp "$EXTRACTED_DIR/ffmpeg" "$BIN_PATH"
@@ -1454,7 +1549,7 @@ function setup_ffmpeg() {
     rm -rf "$TMP_DIR"
     cache_installed_version "ffmpeg" "$FINAL_VERSION"
     ensure_usr_local_bin_persist
-    msg_ok "Installed FFmpeg binary $FINAL_VERSION"
+    msg_ok "Setup FFmpeg"
     return 0
   fi
 
@@ -1473,8 +1568,6 @@ function setup_ffmpeg() {
     rm -rf "$TMP_DIR"
     return 1
   fi
-
-  msg_info "Installing FFmpeg ${VERSION} ($TYPE)"
 
   # Dependency selection
   local DEPS=(build-essential yasm nasm pkg-config)
@@ -1545,9 +1638,21 @@ function setup_ffmpeg() {
     return 1
   fi
 
-  $STD ./configure "${args[@]}"
-  $STD make -j"$(nproc)"
-  $STD make install
+  $STD ./configure "${args[@]}" || {
+    msg_error "FFmpeg configure failed"
+    rm -rf "$TMP_DIR"
+    return 1
+  }
+  $STD make -j"$(nproc)" || {
+    msg_error "FFmpeg compilation failed"
+    rm -rf "$TMP_DIR"
+    return 1
+  }
+  $STD make install || {
+    msg_error "FFmpeg installation failed"
+    rm -rf "$TMP_DIR"
+    return 1
+  }
   echo "/usr/local/lib" >/etc/ld.so.conf.d/ffmpeg.conf
   $STD ldconfig
 
@@ -1568,7 +1673,7 @@ function setup_ffmpeg() {
   rm -rf "$TMP_DIR"
   cache_installed_version "ffmpeg" "$FINAL_VERSION"
   ensure_usr_local_bin_persist
-  msg_ok "Installed FFmpeg $FINAL_VERSION"
+  msg_ok "Setup FFmpeg"
 }
 
 # ------------------------------------------------------------------------------
@@ -1617,12 +1722,11 @@ function setup_go() {
       cache_installed_version "go" "$GO_VERSION"
       return 0
     else
-      msg_info "Upgrading Go from $CURRENT_VERSION to $GO_VERSION"
       rm -rf "$GO_INSTALL_DIR"
     fi
-  else
-    msg_info "Installing Go $GO_VERSION"
   fi
+
+  msg_info "Setup Go $GO_VERSION"
 
   local TARBALL="go${GO_VERSION}.linux-${ARCH}.tar.gz"
   local URL="https://go.dev/dl/${TARBALL}"
@@ -1634,14 +1738,18 @@ function setup_go() {
     return 1
   }
 
-  $STD tar -C /usr/local -xzf "$TMP_TAR"
+  $STD tar -C /usr/local -xzf "$TMP_TAR" || {
+    msg_error "Failed to extract Go tarball"
+    rm -f "$TMP_TAR"
+    return 1
+  }
   ln -sf /usr/local/go/bin/go /usr/local/bin/go
   ln -sf /usr/local/go/bin/gofmt /usr/local/bin/gofmt
   rm -f "$TMP_TAR"
 
   cache_installed_version "go" "$GO_VERSION"
   ensure_usr_local_bin_persist
-  msg_ok "Installed Go $GO_VERSION"
+  msg_ok "Setup Go $GO_VERSION"
 }
 
 # ------------------------------------------------------------------------------
@@ -1683,7 +1791,7 @@ function setup_gs() {
     return 0
   fi
 
-  msg_info "Installing Ghostscript $LATEST_VERSION_DOTTED"
+  msg_info "Setup Ghostscript $LATEST_VERSION_DOTTED"
 
   curl -fsSL "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs${LATEST_VERSION}/ghostscript-${LATEST_VERSION_DOTTED}.tar.gz" -o "$TMP_DIR/ghostscript.tar.gz" || {
     msg_error "Failed to download Ghostscript"
@@ -1705,9 +1813,21 @@ function setup_gs() {
 
   ensure_dependencies build-essential libpng-dev zlib1g-dev
 
-  $STD ./configure
-  $STD make -j"$(nproc)"
-  $STD make install
+  $STD ./configure || {
+    msg_error "Ghostscript configure failed"
+    rm -rf "$TMP_DIR"
+    return 1
+  }
+  $STD make -j"$(nproc)" || {
+    msg_error "Ghostscript compilation failed"
+    rm -rf "$TMP_DIR"
+    return 1
+  }
+  $STD make install || {
+    msg_error "Ghostscript installation failed"
+    rm -rf "$TMP_DIR"
+    return 1
+  }
 
   hash -r
   if [[ ! -x "$(command -v gs)" ]]; then
@@ -1719,7 +1839,99 @@ function setup_gs() {
   rm -rf "$TMP_DIR"
   cache_installed_version "ghostscript" "$LATEST_VERSION_DOTTED"
   ensure_usr_local_bin_persist
-  msg_ok "Installed Ghostscript $LATEST_VERSION_DOTTED"
+  msg_ok "Setup Ghostscript $LATEST_VERSION_DOTTED"
+}
+
+# ------------------------------------------------------------------------------
+# Sets up Hardware Acceleration on debian or ubuntu.
+#
+# Description:
+#   - Determites CPU/GPU/APU Vendor
+#   - Installs the correct libraries and packages
+#   - Sets up Hardware Acceleration
+#
+# Notes:
+#   - Some things are fetched from intel repositories due to not being in debian repositories.
+# ------------------------------------------------------------------------------
+function setup_hwaccel() {
+  msg_info "Setup Hardware Acceleration"
+
+  if ! command -v lspci &>/dev/null; then
+    $STD apt -y update || {
+      msg_error "Failed to update package list"
+      return 1
+    }
+    $STD apt -y install pciutils || {
+      msg_error "Failed to install pciutils"
+      return 1
+    }
+  fi
+
+  # Detect GPU vendor (Intel, AMD, NVIDIA)
+  local gpu_vendor
+  gpu_vendor=$(lspci | grep -Ei 'vga|3d|display' | grep -Eo 'Intel|AMD|NVIDIA' | head -n1)
+
+  # Detect CPU vendor (relevant for AMD APUs)
+  local cpu_vendor
+  cpu_vendor=$(lscpu | grep -i 'Vendor ID' | awk '{print $3}')
+
+  if [[ -z "$gpu_vendor" && -z "$cpu_vendor" ]]; then
+    msg_error "No GPU or CPU vendor detected (missing lspci/lscpu output)"
+    return 1
+  fi
+
+  # Detect OS
+  local os_id os_codename
+  os_id=$(grep -oP '(?<=^ID=).+' /etc/os-release | tr -d '"')
+  os_codename=$(grep -oP '(?<=^VERSION_CODENAME=).+' /etc/os-release | tr -d '"')
+
+  # Determine if we are on a VM or LXC
+  local in_ct="${CTTYPE:-0}"
+
+  case "$gpu_vendor" in
+  Intel)
+    if [[ "$os_id" == "ubuntu" ]]; then
+      $STD apt -y install intel-opencl-icd || msg_error "Failed to install intel-opencl-icd"
+    else
+      fetch_and_deploy_gh_release "intel-igc-core-2" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-core-2_*_amd64.deb"
+      fetch_and_deploy_gh_release "intel-igc-opencl-2" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-opencl-2_*_amd64.deb"
+      fetch_and_deploy_gh_release "intel-libgdgmm12" "intel/compute-runtime" "binary" "latest" "" "libigdgmm12_*_amd64.deb"
+      fetch_and_deploy_gh_release "intel-opencl-icd" "intel/compute-runtime" "binary" "latest" "" "intel-opencl-icd_*_amd64.deb"
+    fi
+
+    $STD apt -y install va-driver-all ocl-icd-libopencl1 vainfo intel-gpu-tools || msg_error "Failed to install GPU dependencies"
+    ;;
+  AMD)
+    $STD apt -y install mesa-va-drivers mesa-vdpau-drivers mesa-opencl-icd vainfo clinfo || msg_error "Failed to install AMD GPU dependencies"
+
+    # For AMD CPUs without discrete GPU (APUs)
+    if [[ "$cpu_vendor" == "AuthenticAMD" && "$gpu_vendor" != "AMD" ]]; then
+      $STD apt -y install libdrm-amdgpu1 firmware-amd-graphics || true
+    fi
+    ;;
+  NVIDIA)
+    # NVIDIA needs manual driver setup
+    ;;
+  *)
+    # If no discrete GPU, but AMD CPU (e.g., Ryzen APU)
+    if [[ "$cpu_vendor" == "AuthenticAMD" ]]; then
+      $STD apt -y install mesa-opencl-icd ocl-icd-libopencl1 clinfo || msg_error "Failed to install Mesa OpenCL stack"
+    else
+      msg_error "No supported GPU vendor detected"
+      return 1
+    fi
+    ;;
+  esac
+
+  if [[ "$in_ct" == "0" ]]; then
+    chgrp video /dev/dri 2>/dev/null || true
+    chmod 755 /dev/dri 2>/dev/null || true
+    chmod 660 /dev/dri/* 2>/dev/null || true
+    $STD adduser "$(id -u -n)" video
+    $STD adduser "$(id -u -n)" render
+  fi
+
+  msg_ok "Setup Hardware Acceleration"
 }
 
 # ------------------------------------------------------------------------------
@@ -1751,7 +1963,7 @@ function setup_imagemagick() {
     return 0
   fi
 
-  msg_info "Installing ImageMagick (Patience)"
+  msg_info "Setup ImageMagick"
 
   ensure_dependencies \
     build-essential \
@@ -1791,9 +2003,21 @@ function setup_imagemagick() {
     return 1
   }
 
-  $STD ./configure --disable-static
-  $STD make -j"$(nproc)"
-  $STD make install
+  $STD ./configure --disable-static || {
+    msg_error "ImageMagick configure failed"
+    rm -rf "$TMP_DIR"
+    return 1
+  }
+  $STD make -j"$(nproc)" || {
+    msg_error "ImageMagick compilation failed"
+    rm -rf "$TMP_DIR"
+    return 1
+  }
+  $STD make install || {
+    msg_error "ImageMagick installation failed"
+    rm -rf "$TMP_DIR"
+    return 1
+  }
   $STD ldconfig /usr/local/lib
 
   if [[ ! -x "$BINARY_PATH" ]]; then
@@ -1806,7 +2030,7 @@ function setup_imagemagick() {
   rm -rf "$TMP_DIR"
   cache_installed_version "imagemagick" "$VERSION"
   ensure_usr_local_bin_persist
-  msg_ok "Installed ImageMagick $VERSION"
+  msg_ok "Setup ImageMagick"
 }
 
 # ------------------------------------------------------------------------------
@@ -1860,23 +2084,22 @@ function setup_java() {
       # Already at correct version, just upgrade if available
       upgrade_package "$DESIRED_PACKAGE"
     else
-      msg_info "Upgrading Temurin JDK $JAVA_VERSION"
       $STD apt update
       $STD apt install --only-upgrade -y "$DESIRED_PACKAGE"
       cache_installed_version "temurin-jdk" "$JAVA_VERSION"
-      msg_ok "Upgraded Temurin JDK $JAVA_VERSION"
     fi
   else
+    msg_info "Setup Temurin JDK $JAVA_VERSION"
     if [[ -n "$INSTALLED_VERSION" ]]; then
-      msg_info "Removing old Temurin JDK $INSTALLED_VERSION"
       $STD apt purge -y "temurin-${INSTALLED_VERSION}-jdk"
-      msg_ok "Removed old Temurin JDK"
     fi
 
-    msg_info "Installing Temurin JDK $JAVA_VERSION"
-    $STD apt install -y "$DESIRED_PACKAGE"
+    $STD apt install -y "$DESIRED_PACKAGE" || {
+      msg_error "Failed to install Temurin JDK $JAVA_VERSION"
+      return 1
+    }
     cache_installed_version "temurin-jdk" "$JAVA_VERSION"
-    msg_ok "Installed Temurin JDK $JAVA_VERSION"
+    msg_ok "Setup Temurin JDK $JAVA_VERSION"
   fi
 }
 
@@ -1898,8 +2121,14 @@ function setup_local_ip_helper() {
 
   # Install networkd-dispatcher if not present
   if ! dpkg -s networkd-dispatcher >/dev/null 2>&1; then
-    $STD apt update
-    $STD apt install -y networkd-dispatcher
+    $STD apt update || {
+      msg_error "Failed to update package list"
+      return 1
+    }
+    $STD apt install -y networkd-dispatcher || {
+      msg_error "Failed to install networkd-dispatcher"
+      return 1
+    }
   fi
 
   # Write update_local_ip.sh
@@ -2007,24 +2236,43 @@ setup_mariadb() {
       upgrade_package mariadb-server
       upgrade_package mariadb-client
     else
-      msg_info "Upgrading MariaDB $MARIADB_VERSION"
-      $STD apt update
-      $STD apt install --only-upgrade -y mariadb-server mariadb-client
+      $STD apt update || {
+        msg_error "Failed to update package list"
+        return 1
+      }
+      $STD apt install --only-upgrade -y mariadb-server mariadb-client || {
+        msg_error "Failed to upgrade MariaDB"
+        return 1
+      }
       cache_installed_version "mariadb" "$MARIADB_VERSION"
-      msg_ok "Upgraded MariaDB $MARIADB_VERSION"
     fi
     return 0
   fi
 
-  msg_info "Installing MariaDB $MARIADB_VERSION"
+  msg_info "Setup MariaDB $MARIADB_VERSION"
 
   if [[ -n "$CURRENT_VERSION" ]]; then
     $STD systemctl stop mariadb >/dev/null 2>&1 || true
     $STD apt purge -y 'mariadb*' || true
   fi
 
+  # Ensure APT is working before proceeding
+  ensure_apt_working || return 1
+
   # Cleanup old repository files
   cleanup_old_repo_files "mariadb"
+
+  # Install required dependencies first (MariaDB needs these from main repos)
+  local mariadb_deps=()
+  for dep in gawk rsync socat libdbi-perl pv; do
+    if apt-cache search "^${dep}$" 2>/dev/null | grep -q .; then
+      mariadb_deps+=("$dep")
+    fi
+  done
+
+  if [[ ${#mariadb_deps[@]} -gt 0 ]]; then
+    $STD apt install -y "${mariadb_deps[@]}" 2>/dev/null || true
+  fi
 
   # Use helper function to get fallback suite
   local SUITE
@@ -2048,11 +2296,14 @@ setup_mariadb() {
   DEBIAN_FRONTEND=noninteractive $STD apt install -y mariadb-server mariadb-client || {
     cleanup_old_repo_files "mariadb"
     $STD apt update
-    DEBIAN_FRONTEND=noninteractive $STD apt install -y mariadb-server mariadb-client
+    DEBIAN_FRONTEND=noninteractive $STD apt install -y mariadb-server mariadb-client || {
+      msg_error "Failed to install MariaDB packages"
+      return 1
+    }
   }
 
   cache_installed_version "mariadb" "$MARIADB_VERSION"
-  msg_ok "Installed MariaDB $MARIADB_VERSION"
+  msg_ok "Setup MariaDB $MARIADB_VERSION"
 }
 
 # ------------------------------------------------------------------------------
@@ -2108,16 +2359,20 @@ function setup_mongodb() {
     if [[ "$CACHED_VERSION" == "$MONGO_VERSION" ]]; then
       upgrade_package mongodb-org
     else
-      msg_info "Upgrading MongoDB $MONGO_VERSION"
-      $STD apt update
-      $STD apt install --only-upgrade -y mongodb-org
+      $STD apt update || {
+        msg_error "Failed to update package list"
+        return 1
+      }
+      $STD apt install --only-upgrade -y mongodb-org || {
+        msg_error "Failed to upgrade MongoDB"
+        return 1
+      }
       cache_installed_version "mongodb" "$MONGO_VERSION"
-      msg_ok "Upgraded MongoDB $MONGO_VERSION"
     fi
     return 0
   fi
 
-  msg_info "Installing MongoDB $MONGO_VERSION"
+  msg_info "Setup MongoDB $MONGO_VERSION"
 
   if [[ -n "$INSTALLED_VERSION" ]]; then
     $STD systemctl stop mongod || true
@@ -2127,13 +2382,19 @@ function setup_mongodb() {
   # Cleanup old repository files
   cleanup_old_repo_files "mongodb-org-${MONGO_VERSION}"
 
+  # Cleanup any orphaned .sources files from other apps
+  cleanup_orphaned_sources
+
   # Use helper function to get fallback suite
   local SUITE
   SUITE=$(get_fallback_suite "$DISTRO_ID" "$DISTRO_CODENAME" "$MONGO_BASE_URL")
 
   # Use standardized repo setup
   mkdir -p /etc/apt/keyrings
-  curl -fsSL "https://pgp.mongodb.com/server-${MONGO_VERSION}.asc" | gpg --dearmor -o "/etc/apt/keyrings/mongodb-${MONGO_VERSION}.gpg"
+  curl -fsSL "https://pgp.mongodb.com/server-${MONGO_VERSION}.asc" | gpg --dearmor --yes -o "/etc/apt/keyrings/mongodb-${MONGO_VERSION}.gpg" || {
+    msg_error "Failed to download or import MongoDB GPG key"
+    return 1
+  }
 
   cat <<EOF >/etc/apt/sources.list.d/mongodb-org-${MONGO_VERSION}.sources
 Types: deb
@@ -2149,7 +2410,10 @@ EOF
     return 1
   }
 
-  $STD apt install -y mongodb-org
+  $STD apt install -y mongodb-org || {
+    msg_error "Failed to install MongoDB packages"
+    return 1
+  }
 
   mkdir -p /var/lib/mongodb
   chown -R mongodb:mongodb /var/lib/mongodb
@@ -2157,7 +2421,7 @@ EOF
   $STD systemctl enable mongod
   safe_service_restart mongod
   cache_installed_version "mongodb" "$MONGO_VERSION"
-  msg_ok "Installed MongoDB $MONGO_VERSION"
+  msg_ok "Setup MongoDB $MONGO_VERSION"
 }
 
 # ------------------------------------------------------------------------------
@@ -2167,6 +2431,7 @@ EOF
 #   - Detects existing MySQL installation
 #   - Purges conflicting packages before installation
 #   - Supports clean upgrade
+#   - Handles Debian Trixie libaio1t64 transition
 #
 # Variables:
 #   MYSQL_VERSION  - MySQL version to install (e.g. 5.7, 8.0) (default: 8.0)
@@ -2183,32 +2448,100 @@ function setup_mysql() {
   if command -v mysql >/dev/null; then
     CURRENT_VERSION="$(mysql --version | grep -oP '[0-9]+\.[0-9]+' | head -n1)"
     if [[ "$CURRENT_VERSION" != "$MYSQL_VERSION" ]]; then
-      msg_info "MySQL $CURRENT_VERSION will be upgraded to $MYSQL_VERSION"
       NEED_INSTALL=true
     else
       if apt list --upgradable 2>/dev/null | grep -q '^mysql-server/'; then
-        msg_info "MySQL $CURRENT_VERSION available for upgrade"
-        $STD apt update
-        $STD apt install --only-upgrade -y mysql-server
-        msg_ok "MySQL upgraded"
+        $STD apt update || {
+          msg_error "Failed to update package list"
+          return 1
+        }
+        $STD apt install --only-upgrade -y mysql-server || {
+          msg_error "Failed to upgrade MySQL"
+          return 1
+        }
       fi
       return
     fi
   else
-    msg_info "Setup MySQL $MYSQL_VERSION"
     NEED_INSTALL=true
   fi
 
   if [[ "$NEED_INSTALL" == true ]]; then
-    $STD systemctl stop mysql || true
-    $STD apt purge -y "^mysql-server.*" "^mysql-client.*" "^mysql-common.*" || true
+    msg_info "Setup MySQL $MYSQL_VERSION"
 
     # Cleanup old repository files
     cleanup_old_repo_files "mysql"
 
-    # Use helper function to get fallback suite
+    # Determine suite - use bookworm for Debian testing/unstable
     local SUITE
-    SUITE=$(get_fallback_suite "$DISTRO_ID" "$DISTRO_CODENAME" "https://repo.mysql.com/apt/${DISTRO_ID}")
+    if [[ "$DISTRO_ID" == "debian" ]]; then
+      case "$DISTRO_CODENAME" in
+      bookworm | bullseye)
+        SUITE="$DISTRO_CODENAME"
+        ;;
+      trixie | forky | sid)
+        SUITE="bookworm"
+        ;;
+      *)
+        SUITE="bookworm" # Fallback to bookworm for unknown Debian versions
+        ;;
+      esac
+    else
+      # For Ubuntu - use fallback detection
+      SUITE=$(get_fallback_suite "$DISTRO_ID" "$DISTRO_CODENAME" "https://repo.mysql.com/apt/${DISTRO_ID}")
+    fi
+
+    # Stop existing MySQL if running
+    $STD systemctl stop mysql 2>/dev/null || true
+
+    # Only purge if MySQL is actually installed
+    if dpkg -l 2>/dev/null | grep -q "^ii.*mysql-server"; then
+      $STD apt purge -y mysql-server* mysql-client* mysql-common 2>/dev/null || true
+    fi
+
+    # Handle libaio dependency for Debian Trixie+ (time64 transition)
+    if [[ "$DISTRO_ID" == "debian" ]] && [[ "$DISTRO_CODENAME" =~ ^(trixie|forky|sid)$ ]]; then
+      # Install libaio1t64 if not present
+      if ! dpkg -l libaio1t64 2>/dev/null | grep -q "^ii"; then
+        $STD apt update || {
+          msg_error "Failed to update package list"
+          return 1
+        }
+        $STD apt install -y libaio1t64 || {
+          msg_error "Failed to install libaio1t64"
+          return 1
+        }
+      fi
+
+      # Create dummy libaio1 package for dependency satisfaction
+      local TEMP_DIR="/tmp/libaio1-compat-$$"
+      mkdir -p "$TEMP_DIR"
+      cd "$TEMP_DIR"
+
+      # Create control file
+      mkdir -p DEBIAN
+      cat >DEBIAN/control <<EOF
+Package: libaio1
+Version: 0.3.113-99~compat
+Architecture: amd64
+Maintainer: Local Build
+Depends: libaio1t64
+Provides: libaio1
+Description: Compatibility package for libaio1 -> libaio1t64 transition
+ This is a transitional dummy package to satisfy dependencies on libaio1
+ while actually using libaio1t64 (time64 transition).
+EOF
+
+      # Build the dummy package
+      cd /tmp
+      dpkg-deb -b "$TEMP_DIR" libaio1-compat.deb >/dev/null 2>&1
+
+      # Install it
+      $STD dpkg -i libaio1-compat.deb
+
+      # Cleanup
+      rm -rf "$TEMP_DIR" libaio1-compat.deb
+    fi
 
     # Use standardized repo setup
     setup_deb822_repo \
@@ -2220,9 +2553,47 @@ function setup_mysql() {
       "amd64 arm64"
 
     export DEBIAN_FRONTEND=noninteractive
-    $STD apt install -y mysql-server
+
+    # Update apt
+    if ! $STD apt update; then
+      msg_error "APT update failed for MySQL repository"
+      return 1
+    fi
+
+    # Try multiple MySQL package patterns
+    local mysql_install_success=false
+
+    # First try: mysql-server (most common)
+    if apt-cache search "^mysql-server$" 2>/dev/null | grep -q . && $STD apt install -y mysql-server mysql-client 2>/dev/null; then
+      mysql_install_success=true
+    fi
+
+    # Second try: mysql-community-server (when official repo)
+    if [[ "$mysql_install_success" == false ]] && apt-cache search "^mysql-community-server$" 2>/dev/null | grep -q . && $STD apt install -y mysql-community-server mysql-community-client 2>/dev/null; then
+      mysql_install_success=true
+    fi
+
+    # Third try: just mysql meta package
+    if [[ "$mysql_install_success" == false ]] && apt-cache search "^mysql$" 2>/dev/null | grep -q . && $STD apt install -y mysql 2>/dev/null; then
+      mysql_install_success=true
+    fi
+
+    if [[ "$mysql_install_success" == false ]]; then
+      msg_error "MySQL ${MYSQL_VERSION} package not available for suite ${SUITE}"
+      return 1
+    fi
+
+    # Verify installation
+    if ! command -v mysql >/dev/null 2>&1; then
+      hash -r
+      if ! command -v mysql >/dev/null 2>&1; then
+        msg_error "MySQL installed but mysql command still not found"
+        return 1
+      fi
+    fi
+
     cache_installed_version "mysql" "$MYSQL_VERSION"
-    msg_ok "Installed MySQL $MYSQL_VERSION"
+    msg_ok "Setup MySQL $MYSQL_VERSION"
   fi
 }
 
@@ -2250,17 +2621,17 @@ function setup_nodejs() {
   if command -v node >/dev/null; then
     CURRENT_NODE_VERSION="$(node -v | grep -oP '^v\K[0-9]+')"
     if [[ "$CURRENT_NODE_VERSION" != "$NODE_VERSION" ]]; then
-      msg_info "Old Node.js $CURRENT_NODE_VERSION found, replacing with $NODE_VERSION"
       NEED_NODE_INSTALL=true
     fi
   else
-    msg_info "Setup Node.js $NODE_VERSION"
     NEED_NODE_INSTALL=true
   fi
 
-  ensure_dependencies jq
-
   if [[ "$NEED_NODE_INSTALL" == true ]]; then
+    msg_info "Setup Node.js $NODE_VERSION"
+
+    ensure_dependencies jq
+
     $STD apt purge -y nodejs
 
     # Cleanup old repository files
@@ -2281,12 +2652,10 @@ function setup_nodejs() {
       return 1
     fi
 
-    $STD npm install -g npm@latest || {
-      msg_warn "Failed to update npm to latest version"
-    }
+    $STD npm install -g npm@latest 2>/dev/null || true
 
     cache_installed_version "nodejs" "$NODE_VERSION"
-    msg_ok "Installed Node.js ${NODE_VERSION}"
+    msg_ok "Setup Node.js $NODE_VERSION"
   fi
 
   export NODE_OPTIONS="--max-old-space-size=4096"
@@ -2317,27 +2686,23 @@ function setup_nodejs() {
       if npm list -g --depth=0 "$MODULE_NAME" >/dev/null 2>&1; then
         MODULE_INSTALLED_VERSION="$(npm list -g --depth=0 "$MODULE_NAME" | grep "$MODULE_NAME@" | awk -F@ '{print $2}' | tr -d '[:space:]')"
         if [[ "$MODULE_REQ_VERSION" != "latest" && "$MODULE_REQ_VERSION" != "$MODULE_INSTALLED_VERSION" ]]; then
-          msg_info "Updating $MODULE_NAME from v$MODULE_INSTALLED_VERSION to v$MODULE_REQ_VERSION"
           if ! $STD npm install -g "${MODULE_NAME}@${MODULE_REQ_VERSION}"; then
             msg_error "Failed to update $MODULE_NAME to version $MODULE_REQ_VERSION"
             return 1
           fi
         elif [[ "$MODULE_REQ_VERSION" == "latest" ]]; then
-          msg_info "Updating $MODULE_NAME to latest version"
           if ! $STD npm install -g "${MODULE_NAME}@latest"; then
             msg_error "Failed to update $MODULE_NAME to latest version"
             return 1
           fi
         fi
       else
-        msg_info "Installing $MODULE_NAME@$MODULE_REQ_VERSION"
         if ! $STD npm install -g "${MODULE_NAME}@${MODULE_REQ_VERSION}"; then
           msg_error "Failed to install $MODULE_NAME@$MODULE_REQ_VERSION"
           return 1
         fi
       fi
     done
-    msg_ok "Installed Node.js modules: $NODE_MODULE"
   fi
 }
 
@@ -2393,10 +2758,9 @@ function setup_php() {
     CURRENT_PHP=$(php -v 2>/dev/null | awk '/^PHP/{print $2}' | cut -d. -f1,2)
   fi
 
-  if [[ -z "$CURRENT_PHP" ]]; then
-    msg_info "Setup PHP $PHP_VERSION"
-  elif [[ "$CURRENT_PHP" != "$PHP_VERSION" ]]; then
-    msg_info "Old PHP $CURRENT_PHP detected, Setup new PHP $PHP_VERSION"
+  msg_info "Setup PHP $PHP_VERSION"
+
+  if [[ -n "$CURRENT_PHP" && "$CURRENT_PHP" != "$PHP_VERSION" ]]; then
     $STD apt purge -y "php${CURRENT_PHP//./}"* || true
   fi
 
@@ -2405,8 +2769,15 @@ function setup_php() {
     # Cleanup old repository files
     cleanup_old_repo_files "php"
 
-    $STD curl -fsSLo /tmp/debsuryorg-archive-keyring.deb https://packages.sury.org/debsuryorg-archive-keyring.deb
-    $STD dpkg -i /tmp/debsuryorg-archive-keyring.deb
+    $STD curl -fsSLo /tmp/debsuryorg-archive-keyring.deb https://packages.sury.org/debsuryorg-archive-keyring.deb || {
+      msg_error "Failed to download PHP repository keyring"
+      return 1
+    }
+    $STD dpkg -i /tmp/debsuryorg-archive-keyring.deb || {
+      msg_error "Failed to install PHP repository keyring"
+      rm -f /tmp/debsuryorg-archive-keyring.deb
+      return 1
+    }
 
     # Use helper function to get fallback suite
     local SUITE
@@ -2420,7 +2791,10 @@ Components: main
 Architectures: amd64 arm64
 Signed-By: /usr/share/keyrings/deb.sury.org-php.gpg
 EOF
-    $STD apt update
+    $STD apt update || {
+      msg_error "APT update failed for PHP repository"
+      return 1
+    }
   fi
 
   # Build module list
@@ -2429,8 +2803,6 @@ EOF
   for mod in "${MODULES[@]}"; do
     if apt-cache show "php${PHP_VERSION}-${mod}" >/dev/null 2>&1; then
       MODULE_LIST+=" php${PHP_VERSION}-${mod}"
-    else
-      msg_warn "PHP-Module ${mod} for PHP ${PHP_VERSION} not found – skipping"
     fi
   done
   if [[ "$PHP_FPM" == "YES" ]]; then
@@ -2440,17 +2812,19 @@ EOF
   # install apache2 with PHP support if requested
   if [[ "$PHP_APACHE" == "YES" ]]; then
     if ! dpkg -l | grep -q "libapache2-mod-php${PHP_VERSION}"; then
-      msg_info "Installing Apache with PHP${PHP_VERSION} support"
-      $STD apt install -y apache2 libapache2-mod-php${PHP_VERSION}
-    else
-      msg_info "Apache with PHP${PHP_VERSION} already installed – skipping install"
+      $STD apt install -y apache2 libapache2-mod-php${PHP_VERSION} || {
+        msg_error "Failed to install Apache with PHP module"
+        return 1
+      }
     fi
   fi
 
   # setup / update PHP modules
-  $STD apt install -y $MODULE_LIST
+  $STD apt install -y $MODULE_LIST || {
+    msg_error "Failed to install PHP packages"
+    return 1
+  }
   cache_installed_version "php" "$PHP_VERSION"
-  msg_ok "Installed PHP $PHP_VERSION"
 
   # optional stop old PHP-FPM service
   if [[ "$PHP_FPM" == "YES" && -n "$CURRENT_PHP" && "$CURRENT_PHP" != "$PHP_VERSION" ]]; then
@@ -2488,10 +2862,10 @@ EOF
     if systemctl list-unit-files | grep -q "php${PHP_VERSION}-fpm.service"; then
       $STD systemctl enable php${PHP_VERSION}-fpm
       safe_service_restart php${PHP_VERSION}-fpm
-    else
-      msg_warn "FPM requested but service php${PHP_VERSION}-fpm not found"
     fi
   fi
+
+  msg_ok "Setup PHP $PHP_VERSION"
 }
 
 # ------------------------------------------------------------------------------
@@ -2525,22 +2899,35 @@ function setup_postgresql() {
   fi
 
   if [[ "$NEED_PG_INSTALL" == true ]]; then
-    msg_info "Installing PostgreSQL $PG_VERSION"
+    msg_info "Setup PostgreSQL $PG_VERSION"
 
     if [[ -n "$CURRENT_PG_VERSION" ]]; then
-      $STD su - postgres -c "pg_dumpall > /var/lib/postgresql/backup_$(date +%F)_v${CURRENT_PG_VERSION}.sql"
+      $STD runuser -u postgres -- pg_dumpall >/var/lib/postgresql/backup_$(date +%F)_v${CURRENT_PG_VERSION}.sql
       $STD systemctl stop postgresql
     fi
 
     # Cleanup old repository files
     cleanup_old_repo_files "pgdg"
 
-    # Use helper function to get fallback suite
+    # PostgreSQL PGDG repository uses special suite naming
+    # For unstable/testing Debian, we need to check what's actually available
     local SUITE
-    SUITE=$(get_fallback_suite "$DISTRO_ID" "$DISTRO_CODENAME" "https://apt.postgresql.org/pub/repos/apt")
-
-    # PGDG uses special suite naming: ${SUITE}-pgdg
-    SUITE="${SUITE}-pgdg"
+    case "$DISTRO_CODENAME" in
+    trixie | forky | sid)
+      # Try trixie-pgdg first, fallback to bookworm-pgdg if not available
+      if verify_repo_available "https://apt.postgresql.org/pub/repos/apt" "trixie-pgdg"; then
+        SUITE="trixie-pgdg"
+      else
+        SUITE="bookworm-pgdg"
+      fi
+      ;;
+    *)
+      # Use helper function for stable releases
+      SUITE=$(get_fallback_suite "$DISTRO_ID" "$DISTRO_CODENAME" "https://apt.postgresql.org/pub/repos/apt")
+      # PGDG uses special suite naming: ${SUITE}-pgdg
+      SUITE="${SUITE}-pgdg"
+      ;;
+    esac
 
     # Use standardized repo setup
     setup_deb822_repo \
@@ -2551,28 +2938,67 @@ function setup_postgresql() {
       "main" \
       "amd64 arm64"
 
-    $STD apt install -y "postgresql-${PG_VERSION}" "postgresql-client-${PG_VERSION}"
-
-    if [[ -n "$CURRENT_PG_VERSION" ]]; then
-      $STD apt purge -y "postgresql-${CURRENT_PG_VERSION}" "postgresql-client-${CURRENT_PG_VERSION}" || true
-      $STD su - postgres -c "psql < /var/lib/postgresql/backup_$(date +%F)_v${CURRENT_PG_VERSION}.sql"
+    # Update apt
+    if ! $STD apt update; then
+      msg_error "APT update failed for PostgreSQL repository"
+      return 1
     fi
 
-    $STD systemctl enable --now postgresql
+    # Try multiple PostgreSQL package patterns
+    local pg_install_success=false
+
+    # First, ensure ssl-cert is available (PostgreSQL dependency)
+    if apt-cache search "^ssl-cert$" 2>/dev/null | grep -q .; then
+      $STD apt install -y ssl-cert 2>/dev/null || true
+    fi
+
+    # First try: postgresql-X (common in most repos)
+    if apt-cache search "^postgresql-${PG_VERSION}$" 2>/dev/null | grep -q . && $STD apt install -y "postgresql-${PG_VERSION}" "postgresql-client-${PG_VERSION}" 2>/dev/null; then
+      pg_install_success=true
+    fi
+
+    # Second try: postgresql-server-X (some repos use this)
+    if [[ "$pg_install_success" == false ]] && apt-cache search "^postgresql-server-${PG_VERSION}$" 2>/dev/null | grep -q . && $STD apt install -y "postgresql-server-${PG_VERSION}" "postgresql-client-${PG_VERSION}" 2>/dev/null; then
+      pg_install_success=true
+    fi
+
+    # Third try: just postgresql (any version)
+    if [[ "$pg_install_success" == false ]] && apt-cache search "^postgresql$" 2>/dev/null | grep -q . && $STD apt install -y postgresql postgresql-client 2>/dev/null; then
+      pg_install_success=true
+    fi
+
+    if [[ "$pg_install_success" == false ]]; then
+      msg_error "PostgreSQL package not available for suite ${SUITE}"
+      return 1
+    fi
+
+    # Verify installation
+    if ! command -v psql >/dev/null 2>&1; then
+      msg_error "PostgreSQL installed but psql command not found"
+      return 1
+    fi
+
+    if [[ -n "$CURRENT_PG_VERSION" ]]; then
+      $STD apt purge -y "postgresql-${CURRENT_PG_VERSION}" "postgresql-client-${CURRENT_PG_VERSION}" 2>/dev/null || true
+      $STD runuser -u postgres -- psql </var/lib/postgresql/backup_$(date +%F)_v${CURRENT_PG_VERSION}.sql 2>/dev/null || true
+    fi
+
+    $STD systemctl enable --now postgresql 2>/dev/null || true
+
+    # Add PostgreSQL binaries to PATH for the install script
+    if ! grep -q '/usr/lib/postgresql' /etc/environment 2>/dev/null; then
+      echo 'PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/postgresql/'"${PG_VERSION}"'/bin"' >/etc/environment
+    fi
+
     cache_installed_version "postgresql" "$PG_VERSION"
-    msg_ok "Installed PostgreSQL $PG_VERSION"
+    msg_ok "Setup PostgreSQL $PG_VERSION"
   fi
 
   if [[ -n "$PG_MODULES" ]]; then
-    msg_info "Installing PostgreSQL modules"
     IFS=',' read -ra MODULES <<<"$PG_MODULES"
     for module in "${MODULES[@]}"; do
-      $STD apt install -y "postgresql-${PG_VERSION}-${module}" || {
-        msg_warn "Failed to install postgresql-${PG_VERSION}-${module}"
-        continue
-      }
+      $STD apt install -y "postgresql-${PG_VERSION}-${module}" 2>/dev/null || true
     done
-    msg_ok "Installed PostgreSQL modules"
   fi
 }
 
@@ -2599,9 +3025,56 @@ function setup_ruby() {
   local CACHED_VERSION
   CACHED_VERSION=$(get_cached_version "ruby")
 
-  msg_info "Installing Ruby $RUBY_VERSION"
+  msg_info "Setup Ruby $RUBY_VERSION"
 
-  ensure_dependencies jq
+  # Ensure APT is working before installing dependencies
+  ensure_apt_working || return 1
+
+  # Install build dependencies - with fallback for different Debian versions
+  # In Trixie: libreadline6-dev -> libreadline-dev, libncurses5-dev -> libncurses-dev
+  local ruby_deps=()
+  local dep_variations=(
+    "jq"
+    "autoconf"
+    "patch"
+    "build-essential"
+    "libssl-dev"
+    "libyaml-dev"
+    "libreadline-dev|libreadline6-dev"
+    "zlib1g-dev"
+    "libgmp-dev"
+    "libncurses-dev|libncurses5-dev"
+    "libffi-dev"
+    "libgdbm-dev"
+    "libdb-dev"
+    "uuid-dev"
+  )
+
+  for dep_pattern in "${dep_variations[@]}"; do
+    if [[ "$dep_pattern" == *"|"* ]]; then
+      # Try multiple variations
+      IFS='|' read -ra variations <<<"$dep_pattern"
+      local found=false
+      for var in "${variations[@]}"; do
+        if apt-cache search "^${var}$" 2>/dev/null | grep -q .; then
+          ruby_deps+=("$var")
+          found=true
+          break
+        fi
+      done
+    else
+      if apt-cache search "^${dep_pattern}$" 2>/dev/null | grep -q .; then
+        ruby_deps+=("$dep_pattern")
+      fi
+    fi
+  done
+
+  if [[ ${#ruby_deps[@]} -gt 0 ]]; then
+    $STD apt install -y "${ruby_deps[@]}" 2>/dev/null || true
+  else
+    msg_error "No Ruby build dependencies available"
+    return 1
+  fi
 
   local RBENV_RELEASE
   RBENV_RELEASE=$(curl -fsSL https://api.github.com/repos/rbenv/rbenv/releases/latest | jq -r '.tag_name' | sed 's/^v//')
@@ -2625,7 +3098,11 @@ function setup_ruby() {
 
   mkdir -p "$RBENV_DIR"
   cp -r "$TMP_DIR/rbenv-${RBENV_RELEASE}/." "$RBENV_DIR/"
-  cd "$RBENV_DIR" && src/configure && $STD make -C src
+  cd "$RBENV_DIR" && src/configure && $STD make -C src || {
+    msg_error "Failed to build rbenv"
+    rm -rf "$TMP_DIR"
+    return 1
+  }
 
   local RUBY_BUILD_RELEASE
   RUBY_BUILD_RELEASE=$(curl -fsSL https://api.github.com/repos/rbenv/ruby-build/releases/latest | jq -r '.tag_name' | sed 's/^v//')
@@ -2660,21 +3137,27 @@ function setup_ruby() {
   eval "$("$RBENV_BIN" init - bash)"
 
   if ! "$RBENV_BIN" versions --bare | grep -qx "$RUBY_VERSION"; then
-    $STD "$RBENV_BIN" install "$RUBY_VERSION"
+    $STD "$RBENV_BIN" install "$RUBY_VERSION" || {
+      msg_error "Failed to install Ruby $RUBY_VERSION"
+      rm -rf "$TMP_DIR"
+      return 1
+    }
   fi
 
   "$RBENV_BIN" global "$RUBY_VERSION"
   hash -r
 
   if [[ "$RUBY_INSTALL_RAILS" == "true" ]]; then
-    $STD gem install rails
-    local RAILS_VERSION=$(rails -v 2>/dev/null | awk '{print $2}')
-    msg_ok "Installed Rails $RAILS_VERSION"
+    $STD gem install rails || {
+      msg_error "Failed to install Rails"
+      rm -rf "$TMP_DIR"
+      return 1
+    }
   fi
 
   rm -rf "$TMP_DIR"
   cache_installed_version "ruby" "$RUBY_VERSION"
-  msg_ok "Installed Ruby $RUBY_VERSION"
+  msg_ok "Setup Ruby $RUBY_VERSION"
 }
 
 # ------------------------------------------------------------------------------
@@ -2698,10 +3181,27 @@ function setup_clickhouse() {
 
   # Determine latest version if needed
   if [[ "$CLICKHOUSE_VERSION" == "latest" ]]; then
-    CLICKHOUSE_VERSION=$(curl -fsSL https://packages.clickhouse.com/tgz/stable/ |
+    # Try multiple methods to get the latest version
+    CLICKHOUSE_VERSION=$(curl -fsSL https://packages.clickhouse.com/tgz/stable/ 2>/dev/null |
       grep -oP 'clickhouse-common-static-\K[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' |
       sort -V |
       tail -n1)
+
+    # Fallback: Try GitHub releases API
+    if [[ -z "$CLICKHOUSE_VERSION" ]]; then
+      CLICKHOUSE_VERSION=$(curl -fsSL https://api.github.com/repos/ClickHouse/ClickHouse/releases/latest 2>/dev/null |
+        grep -oP '"tag_name":\s*"v\K[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' |
+        head -n1)
+    fi
+
+    # Final fallback: Parse HTML more liberally
+    if [[ -z "$CLICKHOUSE_VERSION" ]]; then
+      CLICKHOUSE_VERSION=$(curl -fsSL https://packages.clickhouse.com/tgz/stable/ 2>/dev/null |
+        grep -oP '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(?=/clickhouse)' |
+        sort -V |
+        tail -n1)
+    fi
+
     if [[ -z "$CLICKHOUSE_VERSION" ]]; then
       msg_error "Could not determine latest ClickHouse version"
       return 1
@@ -2722,16 +3222,22 @@ function setup_clickhouse() {
       upgrade_package clickhouse-server
       upgrade_package clickhouse-client
     else
-      msg_info "Upgrading ClickHouse $CLICKHOUSE_VERSION"
-      $STD apt update
-      $STD apt install --only-upgrade -y clickhouse-server clickhouse-client
+      msg_info "Setup ClickHouse $CLICKHOUSE_VERSION"
+      $STD apt update || {
+        msg_error "Failed to update package list"
+        return 1
+      }
+      $STD apt install --only-upgrade -y clickhouse-server clickhouse-client || {
+        msg_error "Failed to upgrade ClickHouse"
+        return 1
+      }
       cache_installed_version "clickhouse" "$CLICKHOUSE_VERSION"
-      msg_ok "Upgraded ClickHouse $CLICKHOUSE_VERSION"
+      msg_ok "Setup ClickHouse $CLICKHOUSE_VERSION"
     fi
     return 0
   fi
 
-  msg_info "Installing ClickHouse $CLICKHOUSE_VERSION"
+  msg_info "Setup ClickHouse $CLICKHOUSE_VERSION"
 
   # Stop existing service if upgrading
   if [[ -n "$CURRENT_VERSION" ]]; then
@@ -2744,9 +3250,8 @@ function setup_clickhouse() {
   # Ensure dependencies
   ensure_dependencies apt-transport-https ca-certificates dirmngr gnupg
 
-  # Use helper function to get fallback suite
-  local SUITE
-  SUITE=$(get_fallback_suite "$DISTRO_ID" "$DISTRO_CODENAME" "https://packages.clickhouse.com/deb")
+  # ClickHouse uses 'stable' instead of distro codenames
+  local SUITE="stable"
 
   # Use standardized repo setup
   setup_deb822_repo \
@@ -2757,20 +3262,38 @@ function setup_clickhouse() {
     "main" \
     "amd64 arm64"
 
-  # Install ClickHouse packages
+  # Update and install ClickHouse packages
   export DEBIAN_FRONTEND=noninteractive
-  $STD apt install -y clickhouse-server clickhouse-client
+  if ! $STD apt update; then
+    msg_error "APT update failed for ClickHouse repository"
+    return 1
+  fi
+
+  if ! $STD apt install -y clickhouse-server clickhouse-client; then
+    msg_error "Failed to install ClickHouse packages"
+    return 1
+  fi
+
+  # Verify installation
+  if ! command -v clickhouse-server >/dev/null 2>&1; then
+    msg_error "ClickHouse installation completed but clickhouse-server command not found"
+    return 1
+  fi
 
   # Create data directory if it doesn't exist
   mkdir -p /var/lib/clickhouse
-  chown -R clickhouse:clickhouse /var/lib/clickhouse
+
+  # Check if clickhouse user exists before chown
+  if id clickhouse >/dev/null 2>&1; then
+    chown -R clickhouse:clickhouse /var/lib/clickhouse
+  fi
 
   # Enable and start service
   $STD systemctl enable clickhouse-server
-  safe_service_restart clickhouse-server
+  safe_service_restart clickhouse-server || true
 
   cache_installed_version "clickhouse" "$CLICKHOUSE_VERSION"
-  msg_ok "Installed ClickHouse $CLICKHOUSE_VERSION"
+  msg_ok "Setup ClickHouse $CLICKHOUSE_VERSION"
 }
 
 # ------------------------------------------------------------------------------
@@ -2798,7 +3321,7 @@ function setup_rust() {
   CACHED_VERSION=$(get_cached_version "rust")
 
   if ! command -v rustup &>/dev/null; then
-    msg_info "Installing Rust"
+    msg_info "Setup Rust"
     curl -fsSL https://sh.rustup.rs | $STD sh -s -- -y --default-toolchain "$RUST_TOOLCHAIN" || {
       msg_error "Failed to install Rust"
       return 1
@@ -2807,14 +3330,21 @@ function setup_rust() {
     echo 'export PATH="$HOME/.cargo/bin:$PATH"' >>"$HOME/.profile"
     local RUST_VERSION=$(rustc --version 2>/dev/null | awk '{print $2}')
     cache_installed_version "rust" "$RUST_VERSION"
-    msg_ok "Installed Rust $RUST_VERSION"
+    msg_ok "Setup Rust $RUST_VERSION"
   else
-    $STD rustup install "$RUST_TOOLCHAIN"
-    $STD rustup default "$RUST_TOOLCHAIN"
+    msg_info "Setup Rust"
+    $STD rustup install "$RUST_TOOLCHAIN" || {
+      msg_error "Failed to install Rust toolchain"
+      return 1
+    }
+    $STD rustup default "$RUST_TOOLCHAIN" || {
+      msg_error "Failed to set default Rust toolchain"
+      return 1
+    }
     $STD rustup update "$RUST_TOOLCHAIN"
     local RUST_VERSION=$(rustc --version 2>/dev/null | awk '{print $2}')
     cache_installed_version "rust" "$RUST_VERSION"
-    msg_ok "Updated Rust toolchain to $RUST_TOOLCHAIN ($RUST_VERSION)"
+    msg_ok "Setup Rust $RUST_VERSION"
   fi
 
   if [[ -n "$RUST_CRATES" ]]; then
@@ -2833,19 +3363,12 @@ function setup_rust() {
 
       if [[ -n "$INSTALLED_VER" ]]; then
         if [[ -n "$VER" && "$VER" != "$INSTALLED_VER" ]]; then
-          msg_info "Updating $NAME: $INSTALLED_VER → $VER"
           $STD cargo install "$NAME" --version "$VER" --force
-          msg_ok "Updated $NAME to $VER"
         elif [[ -z "$VER" ]]; then
-          msg_info "Updating $NAME: $INSTALLED_VER → latest"
           $STD cargo install "$NAME" --force
-          local NEW_VER=$(cargo install --list 2>/dev/null | awk "/^$NAME v[0-9]/ {print \$2}" | tr -d 'v')
-          msg_ok "Updated $NAME to $NEW_VER"
         fi
       else
-        msg_info "Installing $NAME ${VER:+$VER}"
         $STD cargo install "$NAME" ${VER:+--version "$VER"}
-        msg_ok "Installed $NAME ${VER:-latest}"
       fi
     done
   fi
@@ -2913,12 +3436,10 @@ function setup_uv() {
       cache_installed_version "uv" "$LATEST_VERSION"
       rm -rf "$TMP_DIR"
       return 0
-    else
-      msg_info "Updating uv from $INSTALLED_VERSION to $LATEST_VERSION"
     fi
-  else
-    msg_info "Installing uv $LATEST_VERSION"
   fi
+
+  msg_info "Setup uv $LATEST_VERSION"
 
   local UV_URL="https://github.com/astral-sh/uv/releases/latest/download/${UV_TAR}"
   curl -fsSL "$UV_URL" -o "$TMP_DIR/uv.tar.gz" || {
@@ -2945,7 +3466,7 @@ function setup_uv() {
 
   $STD uv python update-shell || true
   cache_installed_version "uv" "$LATEST_VERSION"
-  msg_ok "Installed uv $LATEST_VERSION"
+  msg_ok "Setup uv $LATEST_VERSION"
 
   if [[ -n "${PYTHON_VERSION:-}" ]]; then
     local VERSION_MATCH
@@ -2963,7 +3484,6 @@ function setup_uv() {
         msg_error "Failed to install Python $VERSION_MATCH"
         return 1
       }
-      msg_ok "Installed Python $VERSION_MATCH"
     fi
   fi
 }
@@ -3016,7 +3536,7 @@ function setup_yq() {
     return 0
   fi
 
-  msg_info "Installing yq $LATEST_VERSION"
+  msg_info "Setup yq $LATEST_VERSION"
   curl -fsSL "https://github.com/${GITHUB_REPO}/releases/download/v${LATEST_VERSION}/yq_linux_amd64" -o "$TMP_DIR/yq" || {
     msg_error "Failed to download yq"
     rm -rf "$TMP_DIR"
@@ -3038,5 +3558,5 @@ function setup_yq() {
   local FINAL_VERSION
   FINAL_VERSION=$("$BINARY_PATH" --version 2>/dev/null | awk '{print $NF}' | sed 's/^v//')
   cache_installed_version "yq" "$FINAL_VERSION"
-  msg_ok "Installed yq $FINAL_VERSION"
+  msg_ok "Setup yq $FINAL_VERSION"
 }
