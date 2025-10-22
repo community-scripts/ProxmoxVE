@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-10-22
 
+### 🚀 Updated Scripts
+
+  - Refactor: Full Change & Feature-Bump of tools.func [@MickLesk](https://github.com/MickLesk) ([#8409](https://github.com/community-scripts/ProxmoxVE/pull/8409))
+
 ## 2025-10-21
 
 ### 🆕 New Scripts
