@@ -18,6 +18,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - part-db: use helper-script php function [@MickLesk](https://github.com/MickLesk) ([#8575](https://github.com/community-scripts/ProxmoxVE/pull/8575))
     - omada: remove static mongodb install [@MickLesk](https://github.com/MickLesk) ([#8577](https://github.com/community-scripts/ProxmoxVE/pull/8577))
 
 ## 2025-10-21
