@@ -16,6 +16,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Refactor: Full Change & Feature-Bump of tools.func [@MickLesk](https://github.com/MickLesk) ([#8409](https://github.com/community-scripts/ProxmoxVE/pull/8409))
 
+  - #### 🐞 Bug Fixes
+
+    - omada: remove static mongodb install [@MickLesk](https://github.com/MickLesk) ([#8577](https://github.com/community-scripts/ProxmoxVE/pull/8577))
+
 ## 2025-10-21
 
 ### 🆕 New Scripts
