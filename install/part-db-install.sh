@@ -13,19 +13,10 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt install -y \
-  ca-certificates \
-  software-properties-common \
-  apt-transport-https \
-  lsb-release \
-  php-{opcache,curl,gd,mbstring,xml,bcmath,intl,zip,xsl,pgsql} \
-  libapache2-mod-php \
-  composer
-msg_ok "Installed Dependencies"
-
 NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
 PG_VERSION="16" setup_postgresql
+PHP_VERSION="8.4" PHP_APACHE="YES" PHP_MODULE="xsl,pgsql" setup_php
+setup_composer
 
 msg_info "Setting up PHP"
 PHPVER=$(php -r 'echo PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION . "\n";')
