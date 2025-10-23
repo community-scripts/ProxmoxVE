@@ -33,7 +33,7 @@ msg_info "Installing Deno"
 export DENO_INSTALL="/usr/local"
 curl -fsSL https://deno.land/install.sh | $STD sh -s -- -y
 [[ ":$PATH:" != *":/usr/local/bin:"* ]] &&
-  echo 'export PATH="/usr/local/bin:$PATH"' >>~/.bashrc &&
+  echo -e "\nexport PATH=\"/usr/local/bin:\$PATH\"" >>~/.bashrc &&
   source ~/.bashrc
 msg_ok "Installed Deno"
 
