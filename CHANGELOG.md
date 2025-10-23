@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Radicale: Update dependencies [@ilofX](https://github.com/ilofX) ([#8603](https://github.com/community-scripts/ProxmoxVE/pull/8603))
     - Various Downgrades to Debian 12 (MySQL / OMW / Technitium)  [@MickLesk](https://github.com/MickLesk) ([#8595](https://github.com/community-scripts/ProxmoxVE/pull/8595))
     - MeTube: Fix inserting path into .bashrc [@tremor021](https://github.com/tremor021) ([#8589](https://github.com/community-scripts/ProxmoxVE/pull/8589))
 
