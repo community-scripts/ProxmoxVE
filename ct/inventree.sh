@@ -29,8 +29,8 @@ function update_script() {
     exit
   fi
   msg_info "Updating $APP"
-  $STD apt update
-  $STD apt install --only-upgrade inventree -y
+  $STD apt-get update
+  $STD apt-get install --only-upgrade inventree -y
   msg_ok "Updated $APP"
   exit
 }
