@@ -1,5 +1,35 @@
 [
   {
+    "name": "duplicati/duplicati",
+    "version": "v2.2.0.0-2.2.0.0_stable_2025-10-23",
+    "date": "2025-10-23T11:25:25Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.4.2",
+    "date": "2025-10-23T06:59:32Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.175",
+    "date": "2025-10-23T05:50:23Z"
+  },
+  {
+    "name": "YunoHost/yunohost",
+    "version": "debian/12.1.31",
+    "date": "2025-10-23T00:45:04Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-10-23T00:27:05Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.0.1",
+    "date": "2025-10-15T16:53:55Z"
+  },
+  {
     "name": "BerriAI/litellm",
     "version": "v1.78.7-nightly",
     "date": "2025-10-22T22:33:31Z"
@@ -8,11 +38,6 @@
     "name": "jhuckaby/Cronicle",
     "version": "v0.9.99",
     "date": "2025-10-22T22:20:33Z"
-  },
-  {
-    "name": "YunoHost/yunohost",
-    "version": "debian/12.1.30",
-    "date": "2025-10-22T22:18:18Z"
   },
   {
     "name": "sabnzbd/sabnzbd",
@@ -90,11 +115,6 @@
     "date": "2025-09-20T12:12:33Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.170",
-    "date": "2025-10-22T05:55:43Z"
-  },
-  {
     "name": "fuma-nama/fumadocs",
     "version": "create-fumadocs-app@16.0.1",
     "date": "2025-10-22T05:44:06Z"
@@ -105,24 +125,9 @@
     "date": "2025-10-22T00:33:47Z"
   },
   {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-10-22T00:27:04Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.0.1",
-    "date": "2025-10-15T16:53:55Z"
-  },
-  {
     "name": "msgbyte/tianji",
     "version": "v1.30.0",
     "date": "2025-10-21T21:37:52Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.4.1",
-    "date": "2025-10-16T07:21:53Z"
   },
   {
     "name": "bluenviron/mediamtx",
@@ -178,6 +183,11 @@
     "name": "laurent22/joplin",
     "version": "server-v3.4.4",
     "date": "2025-09-25T13:19:26Z"
+  },
+  {
+    "name": "wazuh/wazuh",
+    "version": "v4.14.0",
+    "date": "2025-10-21T13:39:55Z"
   },
   {
     "name": "goauthentik/authentik",
@@ -420,11 +430,6 @@
     "date": "2025-10-17T12:38:22Z"
   },
   {
-    "name": "wazuh/wazuh",
-    "version": "coverity-w43-4.14.0",
-    "date": "2025-10-17T09:07:27Z"
-  },
-  {
     "name": "zwave-js/zwave-js-ui",
     "version": "v11.5.2",
     "date": "2025-10-17T08:20:13Z"
@@ -598,11 +603,6 @@
     "name": "gelbphoenix/autocaliweb",
     "version": "v0.10.4",
     "date": "2025-10-11T19:53:39Z"
-  },
-  {
-    "name": "duplicati/duplicati",
-    "version": "v2.1.2.3-2.1.2.3_beta_2025-10-11",
-    "date": "2025-10-11T06:49:43Z"
   },
   {
     "name": "0xERR0R/blocky",
