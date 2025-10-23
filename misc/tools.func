@@ -901,22 +901,22 @@ check_for_gh_release() {
 
     if [[ "$current" != "$pin_clean" ]]; then
       CHECK_UPDATE_RELEASE="$match_raw"
-      msg_ok "Checking for update: ${app}"
+      msg_ok "Update available: ${app} ${current:-not installed} → ${pin_clean}"
       return 0
     fi
 
-    msg_ok "Checking for update: ${app}"
+    msg_ok "No update available: ${app} (${pin_clean})"
     return 1
   fi
 
   # No pinning → use latest
   if [[ -z "$current" || "$current" != "$latest_clean" ]]; then
     CHECK_UPDATE_RELEASE="$latest_raw"
-    msg_ok "Checking for update: ${app}"
+    msg_ok "Update available: ${app} ${current:-not installed} → ${latest_clean}"
     return 0
   fi
 
-  msg_ok "Checking for update: ${app}"
+  msg_ok "No update available: ${app} (${latest_clean})"
   return 1
 }
 
