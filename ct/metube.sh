@@ -109,8 +109,8 @@ EOF
     msg_ok "Started Service"
 
     msg_ok "Updated Successfully!"
-    exit
   fi
+  exit
 }
 
 start
