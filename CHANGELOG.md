@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-10-23
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - tools.func: update update_check messages for clarity [@MickLesk](https://github.com/MickLesk) ([#8588](https://github.com/community-scripts/ProxmoxVE/pull/8588))
+
 ## 2025-10-22
 
 ### 🚀 Updated Scripts
