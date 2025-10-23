@@ -14,6 +14,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - MeTube: Fix inserting path into .bashrc [@tremor021](https://github.com/tremor021) ([#8589](https://github.com/community-scripts/ProxmoxVE/pull/8589))
+
   - #### 🔧 Refactor
 
     - tools.func: update update_check messages for clarity [@MickLesk](https://github.com/MickLesk) ([#8588](https://github.com/community-scripts/ProxmoxVE/pull/8588))
