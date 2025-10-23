@@ -1,8 +1,68 @@
 [
   {
+    "name": "BerriAI/litellm",
+    "version": "v1.78.7-nightly",
+    "date": "2025-10-22T22:33:31Z"
+  },
+  {
+    "name": "jhuckaby/Cronicle",
+    "version": "v0.9.99",
+    "date": "2025-10-22T22:20:33Z"
+  },
+  {
+    "name": "YunoHost/yunohost",
+    "version": "debian/12.1.30",
+    "date": "2025-10-22T22:18:18Z"
+  },
+  {
+    "name": "sabnzbd/sabnzbd",
+    "version": "4.5.4",
+    "date": "2025-10-22T21:23:17Z"
+  },
+  {
+    "name": "moghtech/komodo",
+    "version": "v1.19.5",
+    "date": "2025-09-27T20:59:46Z"
+  },
+  {
+    "name": "paperless-ngx/paperless-ngx",
+    "version": "v2.19.1",
+    "date": "2025-10-22T20:40:07Z"
+  },
+  {
     "name": "rcourtman/Pulse",
-    "version": "v4.25.0",
-    "date": "2025-10-22T11:21:00Z"
+    "version": "issue-596",
+    "date": "2025-10-22T19:48:56Z"
+  },
+  {
+    "name": "gtsteffaniak/filebrowser",
+    "version": "v0.8.10-beta",
+    "date": "2025-10-22T18:41:54Z"
+  },
+  {
+    "name": "docker/compose",
+    "version": "v2.40.2",
+    "date": "2025-10-22T17:38:12Z"
+  },
+  {
+    "name": "louislam/uptime-kuma",
+    "version": "2.0.2",
+    "date": "2025-10-22T17:03:54Z"
+  },
+  {
+    "name": "chrisvel/tududi",
+    "version": "v0.84.2",
+    "date": "2025-10-22T17:03:48Z"
+  },
+  {
+    "name": "prometheus/prometheus",
+    "version": "v0.307.2",
+    "date": "2025-10-22T16:00:08Z"
+  },
+  {
+    "name": "thecfu/scraparr",
+    "version": "v3.0.0-beta",
+    "date": "2025-10-22T13:12:10Z"
   },
   {
     "name": "NLnetLabs/unbound",
@@ -75,11 +135,6 @@
     "date": "2025-10-21T19:51:28Z"
   },
   {
-    "name": "BerriAI/litellm",
-    "version": "v1.78.6-nightly",
-    "date": "2025-10-21T19:12:46Z"
-  },
-  {
     "name": "mongodb/mongo",
     "version": "r8.0.15",
     "date": "2025-10-21T19:03:20Z"
@@ -93,16 +148,6 @@
     "name": "TwiN/gatus",
     "version": "v5.27.2",
     "date": "2025-10-21T18:03:22Z"
-  },
-  {
-    "name": "paperless-ngx/paperless-ngx",
-    "version": "v2.19.0",
-    "date": "2025-10-21T17:41:30Z"
-  },
-  {
-    "name": "jhuckaby/Cronicle",
-    "version": "v0.9.98",
-    "date": "2025-10-21T17:21:13Z"
   },
   {
     "name": "kyantech/Palmr",
@@ -210,16 +255,6 @@
     "date": "2025-10-20T16:18:51Z"
   },
   {
-    "name": "louislam/uptime-kuma",
-    "version": "2.0.1",
-    "date": "2025-10-20T16:11:12Z"
-  },
-  {
-    "name": "chrisvel/tududi",
-    "version": "v0.84.1",
-    "date": "2025-10-20T15:32:24Z"
-  },
-  {
     "name": "rclone/rclone",
     "version": "v1.71.2",
     "date": "2025-10-20T15:25:52Z"
@@ -315,11 +350,6 @@
     "date": "2025-10-18T20:35:54Z"
   },
   {
-    "name": "moghtech/komodo",
-    "version": "v1.19.5",
-    "date": "2025-09-27T20:59:46Z"
-  },
-  {
     "name": "project-zot/zot",
     "version": "v2.1.10",
     "date": "2025-10-18T18:46:36Z"
@@ -328,11 +358,6 @@
     "name": "homarr-labs/homarr",
     "version": "v1.42.1",
     "date": "2025-10-18T18:31:38Z"
-  },
-  {
-    "name": "YunoHost/yunohost",
-    "version": "debian/12.1.29",
-    "date": "2025-10-18T17:35:19Z"
   },
   {
     "name": "Notifiarr/notifiarr",
@@ -370,11 +395,6 @@
     "date": "2025-10-17T23:40:02Z"
   },
   {
-    "name": "gtsteffaniak/filebrowser",
-    "version": "v0.8.9-beta",
-    "date": "2025-10-17T21:51:21Z"
-  },
-  {
     "name": "home-assistant/core",
     "version": "2025.10.3",
     "date": "2025-10-17T21:15:07Z"
@@ -395,11 +415,6 @@
     "date": "2025-10-17T15:21:59Z"
   },
   {
-    "name": "docker/compose",
-    "version": "v2.40.1",
-    "date": "2025-10-17T13:42:04Z"
-  },
-  {
     "name": "neo4j/neo4j",
     "version": "5.26.14",
     "date": "2025-10-17T12:38:22Z"
@@ -408,11 +423,6 @@
     "name": "wazuh/wazuh",
     "version": "coverity-w43-4.14.0",
     "date": "2025-10-17T09:07:27Z"
-  },
-  {
-    "name": "prometheus/prometheus",
-    "version": "v0.307.1",
-    "date": "2025-10-17T08:41:04Z"
   },
   {
     "name": "zwave-js/zwave-js-ui",
@@ -446,8 +456,8 @@
   },
   {
     "name": "ollama/ollama",
-    "version": "v0.12.6-rc1",
-    "date": "2025-10-16T16:36:25Z"
+    "version": "v0.12.6",
+    "date": "2025-10-16T20:07:41Z"
   },
   {
     "name": "minio/minio",
@@ -558,11 +568,6 @@
     "name": "hargata/lubelog",
     "version": "v1.5.3",
     "date": "2025-10-13T19:59:30Z"
-  },
-  {
-    "name": "sabnzbd/sabnzbd",
-    "version": "4.5.3",
-    "date": "2025-08-25T13:59:56Z"
   },
   {
     "name": "node-red/node-red",
@@ -718,11 +723,6 @@
     "name": "C4illin/ConvertX",
     "version": "v0.15.1",
     "date": "2025-10-07T20:30:56Z"
-  },
-  {
-    "name": "thecfu/scraparr",
-    "version": "v2.2.5",
-    "date": "2025-10-07T12:34:31Z"
   },
   {
     "name": "pocket-id/pocket-id",
