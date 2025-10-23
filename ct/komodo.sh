@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-10}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -29,7 +29,7 @@ function update_script() {
     exit 1
   }
 
-  msg_info "Updating ${APP}"
+  msg_info "Updating Komodo"
   COMPOSE_FILE=$(find /opt/komodo -maxdepth 1 -type f -name '*.compose.yaml' ! -name 'compose.env' | head -n1)
   if [[ -z "$COMPOSE_FILE" ]]; then
     msg_error "No valid compose file found in /opt/komodo!"
@@ -61,7 +61,7 @@ function update_script() {
   fi
   $STD docker compose -p komodo -f "$COMPOSE_FILE" --env-file /opt/komodo/compose.env pull
   $STD docker compose -p komodo -f "$COMPOSE_FILE" --env-file /opt/komodo/compose.env up -d
-  msg_ok "Updated ${APP}"
+  msg_ok "Updated Komodo"
   exit
 }
 
