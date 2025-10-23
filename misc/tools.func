@@ -905,7 +905,7 @@ check_for_gh_release() {
       return 0
     fi
 
-    msg_ok "No update available: ${app} (${pin_clean})"
+    msg_error "No update available: ${app} is not installed!"
     return 1
   fi
 
