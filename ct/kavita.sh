@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -20,23 +20,28 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /opt/Kavita ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    msg_info "Updating $APP LXC"
-    systemctl stop kavita
-    RELEASE=$(curl -fsSL https://api.github.com/repos/Kareadita/Kavita/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-    $STD tar -xvzf <(curl -fsSL https://github.com/Kareadita/Kavita/releases/download/$RELEASE/kavita-linux-x64.tar.gz) --no-same-owner
-    rm -rf Kavita/config
-    cp -r Kavita/* /opt/Kavita
-    rm -rf Kavita
-    systemctl start kavita
-    msg_ok "Updated $APP LXC"
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /opt/Kavita ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+
+  if check_for_gh_release "kavita" "Kareadita/Kavita"; then
+    msg_info "Stopping Service"
+    systemctl stop kavita
+    msg_ok "Service Stopped"
+
+    fetch_and_deploy_gh_release "kavita" "Kareadita/Kavita" "prebuild" "latest" "/opt/Kavita" "kavita-linux-x64.tar.gz"
+    chmod +x /opt/Kavita/Kavita && chown root:root /opt/Kavita/Kavita
+
+    msg_info "Starting Service"
+    systemctl start kavita
+    msg_ok "Service Started"
+    msg_ok "Update Successfully!"
+  fi
+  exit
 }
 
 start

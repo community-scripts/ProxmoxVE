@@ -13,15 +13,11 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Kavita"
-cd /opt
-RELEASE=$(curl -fsSL https://api.github.com/repos/Kareadita/Kavita/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-$STD tar -xvzf <(curl -fsSL https://github.com/Kareadita/Kavita/releases/download/$RELEASE/kavita-linux-x64.tar.gz) --no-same-owner
-msg_ok "Installed Kavita"
+fetch_and_deploy_gh_release "Kavita" "Kareadita/Kavita" "prebuild" "latest" "/opt/Kavita" "kavita-linux-x64.tar.gz"
 
 msg_info "Creating Service"
-service_path="/etc/systemd/system/kavita.service"
-echo "[Unit]
+cat <<EOF >/etc/systemd/system/kavita.service
+[Unit]
 Description=Kavita Server
 After=network.target
 
@@ -34,15 +30,17 @@ KillMode=process
 Restart=on-failure
 
 [Install]
-WantedBy=multi-user.target" >$service_path
-chmod +x /opt/Kavita/* && chown root /opt/Kavita/*
-systemctl enable --now -q kavita.service
+WantedBy=multi-user.target
+EOF
+chmod +x /opt/Kavita/Kavita && chown root:root /opt/Kavita/Kavita
+systemctl enable -q --now kavita
 msg_ok "Created Service"
 
 motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"
