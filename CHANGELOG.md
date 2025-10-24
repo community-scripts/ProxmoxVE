@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 📝 Script Information
 
+    - Fix config path for BunkerWeb [@Nonolanlan1007](https://github.com/Nonolanlan1007) ([#8618](https://github.com/community-scripts/ProxmoxVE/pull/8618))
     - Update logo URL in guardian.json [@HydroshieldMKII](https://github.com/HydroshieldMKII) ([#8615](https://github.com/community-scripts/ProxmoxVE/pull/8615))
 
 ## 2025-10-23
