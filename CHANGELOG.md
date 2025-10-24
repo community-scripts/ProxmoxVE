@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-10-24
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Update logo URL in guardian.json [@HydroshieldMKII](https://github.com/HydroshieldMKII) ([#8615](https://github.com/community-scripts/ProxmoxVE/pull/8615))
+
 ## 2025-10-23
 
 ### 🚀 Updated Scripts
