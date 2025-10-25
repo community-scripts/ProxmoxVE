@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -28,9 +28,9 @@ function update_script() {
     exit
   fi
   if check_for_gh_release "keycloak_app" "keycloak/keycloak"; then
-    msg_info "Stopping Keycloak"
+    msg_info "Stopping Service"
     systemctl stop keycloak
-    msg_ok "Stopped Keycloak"
+    msg_ok "Stopped Service"
 
     msg_info "Updating packages"
     $STD apt-get update
@@ -44,16 +44,16 @@ function update_script() {
 
     fetch_and_deploy_gh_release "keycloak_app" "keycloak/keycloak" "prebuild" "latest" "/opt/keycloak" "keycloak-*.tar.gz"
 
-    msg_info "Updating ${APP}"
+    msg_info "Updating Keycloak"
     cd /opt
     cp -a keycloak.old/conf/. keycloak/conf/
     cp -a keycloak.old/providers/. keycloak/providers/ 2>/dev/null || true
     cp -a keycloak.old/themes/. keycloak/themes/ 2>/dev/null || true
-    msg_ok "Updated ${APP} LXC"
+    msg_ok "Updated Keycloak"
 
-    msg_info "Restarting Keycloak"
+    msg_info "Restarting Service"
     systemctl restart keycloak
-    msg_ok "Restarted Keycloak"
+    msg_ok "Restarted Service"
 
     msg_info "Cleaning up"
     rm -rf keycloak.old
