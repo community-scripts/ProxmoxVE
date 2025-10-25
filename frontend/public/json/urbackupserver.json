@@ -35,6 +35,10 @@
     {
       "text": "You probably want to drastically extend the storage space to fit whatever clients you want to back up",
       "type": "info"
+    },
+    {
+      "text": "Directory `/opt/urbackup/backups` is set as initial backup path. Change it to your liking",
+      "type": "info"
     }
   ]
 }
