@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-10-25
 
+### 🆕 New Scripts
+
+  - PatchMon ([#8632](https://github.com/community-scripts/ProxmoxVE/pull/8632))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
