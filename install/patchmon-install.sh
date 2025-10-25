@@ -16,7 +16,6 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt install -y \
   build-essential \
-  gcc \
   nginx \
   redis-server
 msg_ok "Installed Dependencies"
@@ -24,7 +23,7 @@ msg_ok "Installed Dependencies"
 NODE_VERSION="24" setup_nodejs
 PG_VERSION="17" setup_postgresql
 
-msg_info "Creating PostgreSQL Database"
+msg_info "Setup PostgreSQL Database"
 DB_NAME=patchmon_db
 DB_USER=patchmon_usr
 DB_PASS="$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)"
@@ -32,14 +31,13 @@ $STD sudo -u postgres psql -c "CREATE ROLE $DB_USER WITH LOGIN PASSWORD '$DB_PAS
 $STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER ENCODING 'UTF8' TEMPLATE template0;"
 $STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET client_encoding TO 'utf8';"
 $STD sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE $DB_NAME TO $DB_USER;"
-
-cat <<EOF >~/patchmon.creds
-PatchMon Credentials
-PatchMon Database Name: $DB_NAME
-PatchMon Database User: $DB_USER
-PatchMon Database Password: $DB_PASS
-EOF
-msg_ok "Created PostgreSQL Database"
+{
+  echo "PatchMon Credentials"
+  echo "PatchMon Database Name: $DB_NAME"
+  echo "PatchMon Database User: $DB_USER"
+  echo "PatchMon Database Password: $DB_PASS"
+} >>~/patchmon.creds
+msg_ok "Setup PostgreSQL Database"
 
 fetch_and_deploy_gh_release "PatchMon" "PatchMon/PatchMon" "tarball" "latest" "/opt/patchmon"
 
