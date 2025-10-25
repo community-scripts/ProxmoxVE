@@ -6,7 +6,6 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Source: https://github.com/PatchMon/PatchMon
 
 APP="PatchMon"
-APP_NAME=${APP,,}
 var_tags="${var_tags:-monitoring}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
@@ -31,22 +30,19 @@ function update_script() {
   fi
 
   NODE_VERSION="24" setup_nodejs
-
   if check_for_gh_release "PatchMon" "PatchMon/PatchMon"; then
-
-    msg_info "Stopping $APP"
+    msg_info "Stopping Service"
     systemctl stop patchmon-server
-    msg_ok "Stopped $APP"
+    msg_ok "Stopped Service"
 
     msg_info "Creating Backup"
     cp /opt/patchmon/backend/.env /opt/backend.env
     cp /opt/patchmon/frontend/.env /opt/frontend.env
     msg_ok "Backup Created"
 
-    rm -rf /opt/patchmon
-    fetch_and_deploy_gh_release "PatchMon" "PatchMon/PatchMon" "tarball" "latest" "/opt/patchmon"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "PatchMon" "PatchMon/PatchMon" "tarball" "latest" "/opt/patchmon"
 
-    msg_info "Updating ${APP}"
+    msg_info "Updating PatchMon"
     cd /opt/patchmon
     export NODE_ENV=production
     $STD npm install --no-audit --no-fund --no-save --ignore-scripts
@@ -60,11 +56,12 @@ function update_script() {
     mv /opt/frontend.env /opt/patchmon/frontend/.env
     $STD npx prisma migrate deploy
     $STD npx prisma generate
-    msg_ok "Updated ${APP}"
+    msg_ok "Updated PatchMon"
 
-    msg_info "Starting $APP"
+    msg_info "Starting Service"
     systemctl start patchmon-server
-    msg_ok "Started $APP"
+    msg_ok "Started Service"
+    msg_ok "Updated Successfully!"
   fi
   exit
 }
