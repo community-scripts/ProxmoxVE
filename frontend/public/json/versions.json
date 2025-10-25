@@ -1,5 +1,75 @@
 [
   {
+    "name": "mongodb/mongo",
+    "version": "r7.0.26-rc0",
+    "date": "2025-10-24T22:33:52Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "v4.5.2",
+    "date": "2025-10-24T21:42:54Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.30.3",
+    "date": "2025-10-24T21:21:10Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.10.4",
+    "date": "2025-10-24T20:03:03Z"
+  },
+  {
+    "name": "homarr-labs/homarr",
+    "version": "v1.43.0",
+    "date": "2025-10-24T19:16:05Z"
+  },
+  {
+    "name": "dgtlmoon/changedetection.io",
+    "version": "0.50.30",
+    "date": "2025-10-24T18:41:49Z"
+  },
+  {
+    "name": "tailscale/tailscale",
+    "version": "v1.90.2",
+    "date": "2025-10-24T18:02:03Z"
+  },
+  {
+    "name": "OliveTin/OliveTin",
+    "version": "3000.0.2",
+    "date": "2025-10-24T17:55:28Z"
+  },
+  {
+    "name": "influxdata/influxdb",
+    "version": "v2.7.12",
+    "date": "2025-05-29T17:08:26Z"
+  },
+  {
+    "name": "booklore-app/booklore",
+    "version": "v1.9.0",
+    "date": "2025-10-24T17:44:24Z"
+  },
+  {
+    "name": "verdaccio/verdaccio",
+    "version": "v6.2.1",
+    "date": "2025-10-24T15:40:49Z"
+  },
+  {
+    "name": "usememos/memos",
+    "version": "v0.25.2",
+    "date": "2025-10-24T12:30:04Z"
+  },
+  {
+    "name": "pocket-id/pocket-id",
+    "version": "v1.14.0",
+    "date": "2025-10-24T11:59:09Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.116.2",
+    "date": "2025-10-21T11:39:58Z"
+  },
+  {
     "name": "sabnzbd/sabnzbd",
     "version": "4.5.5",
     "date": "2025-10-24T11:12:22Z"
@@ -11,8 +81,8 @@
   },
   {
     "name": "crowdsecurity/crowdsec",
-    "version": "v1.7.2",
-    "date": "2025-10-21T14:36:48Z"
+    "version": "v1.7.3",
+    "date": "2025-10-24T10:51:12Z"
   },
   {
     "name": "meilisearch/meilisearch",
@@ -45,11 +115,6 @@
     "date": "2025-10-24T01:08:22Z"
   },
   {
-    "name": "OliveTin/OliveTin",
-    "version": "3000.0.1",
-    "date": "2025-10-24T00:31:50Z"
-  },
-  {
     "name": "jeedom/core",
     "version": "4.4.20",
     "date": "2025-10-24T00:27:06Z"
@@ -65,11 +130,6 @@
     "date": "2025-10-23T23:52:45Z"
   },
   {
-    "name": "mongodb/mongo",
-    "version": "r8.2.2-rc0",
-    "date": "2025-10-23T22:12:44Z"
-  },
-  {
     "name": "Cleanuparr/Cleanuparr",
     "version": "v2.4.0",
     "date": "2025-10-23T21:12:48Z"
@@ -78,16 +138,6 @@
     "name": "wizarrrr/wizarr",
     "version": "v2025.10.6",
     "date": "2025-10-23T20:20:21Z"
-  },
-  {
-    "name": "tailscale/tailscale",
-    "version": "v1.90.1",
-    "date": "2025-10-23T19:12:48Z"
-  },
-  {
-    "name": "dgtlmoon/changedetection.io",
-    "version": "0.50.29",
-    "date": "2025-10-23T18:59:35Z"
   },
   {
     "name": "wazuh/wazuh",
@@ -108,11 +158,6 @@
     "name": "zitadel/zitadel",
     "version": "v4.4.0",
     "date": "2025-10-16T07:20:34Z"
-  },
-  {
-    "name": "msgbyte/tianji",
-    "version": "v1.30.1",
-    "date": "2025-10-23T16:20:50Z"
   },
   {
     "name": "TwiN/gatus",
@@ -143,11 +188,6 @@
     "name": "Kareadita/Kavita",
     "version": "v0.8.8.3",
     "date": "2025-10-23T12:31:49Z"
-  },
-  {
-    "name": "YunoHost/yunohost",
-    "version": "debian/12.1.32",
-    "date": "2025-10-23T12:30:33Z"
   },
   {
     "name": "YunoHost/yunohost",
@@ -310,11 +350,6 @@
     "date": "2025-10-20T22:10:56Z"
   },
   {
-    "name": "booklore-app/booklore",
-    "version": "v1.8.1",
-    "date": "2025-10-20T20:53:56Z"
-  },
-  {
     "name": "coder/code-server",
     "version": "v4.105.1",
     "date": "2025-10-20T20:19:23Z"
@@ -365,11 +400,6 @@
     "date": "2025-10-19T20:50:15Z"
   },
   {
-    "name": "verdaccio/verdaccio",
-    "version": "generator-verdaccio-plugin@6.0.0-next-8.24",
-    "date": "2025-10-19T19:43:46Z"
-  },
-  {
     "name": "Part-DB/Part-DB-server",
     "version": "v2.2.1",
     "date": "2025-10-19T14:30:11Z"
@@ -405,11 +435,6 @@
     "date": "2025-10-18T18:46:36Z"
   },
   {
-    "name": "homarr-labs/homarr",
-    "version": "v1.42.1",
-    "date": "2025-10-18T18:31:38Z"
-  },
-  {
     "name": "Notifiarr/notifiarr",
     "version": "v0.9.0",
     "date": "2025-10-18T17:03:56Z"
@@ -430,11 +455,6 @@
     "date": "2025-10-18T09:59:25Z"
   },
   {
-    "name": "runtipi/runtipi",
-    "version": "v4.5.1",
-    "date": "2025-10-18T08:12:19Z"
-  },
-  {
     "name": "nzbgetcom/nzbget",
     "version": "v25.4",
     "date": "2025-10-09T10:27:01Z"
@@ -443,11 +463,6 @@
     "name": "9001/copyparty",
     "version": "v1.19.17",
     "date": "2025-10-17T23:40:02Z"
-  },
-  {
-    "name": "home-assistant/core",
-    "version": "2025.10.3",
-    "date": "2025-10-17T21:15:07Z"
   },
   {
     "name": "forgejo/forgejo",
@@ -745,11 +760,6 @@
     "date": "2025-10-07T20:30:56Z"
   },
   {
-    "name": "pocket-id/pocket-id",
-    "version": "v1.13.1",
-    "date": "2025-10-07T06:32:50Z"
-  },
-  {
     "name": "sassanix/Warracker",
     "version": "0.10.1.14",
     "date": "2025-10-06T23:35:16Z"
@@ -843,11 +853,6 @@
     "name": "thomiceli/opengist",
     "version": "v1.11.1",
     "date": "2025-09-30T00:24:16Z"
-  },
-  {
-    "name": "influxdata/influxdb",
-    "version": "v2.7.12",
-    "date": "2025-05-29T17:08:26Z"
   },
   {
     "name": "MDeLuise/plant-it",
@@ -998,11 +1003,6 @@
     "name": "linuxserver/Heimdall",
     "version": "v2.7.6",
     "date": "2025-09-15T15:50:44Z"
-  },
-  {
-    "name": "usememos/memos",
-    "version": "v0.25.1",
-    "date": "2025-09-15T14:57:30Z"
   },
   {
     "name": "karakeep-app/karakeep",
