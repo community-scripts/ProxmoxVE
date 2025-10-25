@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-10-25
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - UrBackup Server: Fix install going interactive [@tremor021](https://github.com/tremor021) ([#8622](https://github.com/community-scripts/ProxmoxVE/pull/8622))
+
 ## 2025-10-24
 
 ### 🌐 Website
