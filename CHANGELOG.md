@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-10-26
 
+### 🆕 New Scripts
+
+  - ComfyUI ([#8633](https://github.com/community-scripts/ProxmoxVE/pull/8633))
+
 ### 🚀 Updated Scripts
 
   - #### 🔧 Refactor
