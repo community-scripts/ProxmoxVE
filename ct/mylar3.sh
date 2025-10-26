@@ -27,7 +27,7 @@ function update_script() {
   fi
 
   if check_for_gh_release "mylar3" "mylar3/mylar3"; then
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "mylar3" "mylar3/mylar3" "tarball"
+    fetch_and_deploy_gh_release "mylar3" "mylar3/mylar3" "tarball"
     systemctl restart mylar3
   fi
   exit
