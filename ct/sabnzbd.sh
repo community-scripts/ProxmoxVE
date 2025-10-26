@@ -24,6 +24,10 @@ function update_script() {
     check_container_storage
     check_container_resources
 
+    if par2 --version | grep -q "par2cmdline-turbo"; then
+        fetch_and_deploy_gh_release "par2cmdline-turbo" "animetosho/par2cmdline-turbo" "prebuild" "latest" "/usr/bin/" "*-linux-amd64.zip"
+    fi
+    
     if [[ ! -d /opt/sabnzbd ]]; then
         msg_error "No ${APP} Installation Found!"
         exit
