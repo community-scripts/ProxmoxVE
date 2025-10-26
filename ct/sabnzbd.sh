@@ -32,7 +32,6 @@ function update_script() {
         msg_error "No ${APP} Installation Found!"
         exit
     fi
-    setup_uv
     RELEASE=$(curl -fsSL https://api.github.com/repos/sabnzbd/sabnzbd/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
     if [[ -f /opt/${APP}_version.txt ]] && [[ "${RELEASE}" == "$(cat /opt/${APP}_version.txt)" ]]; then
         msg_ok "No update required. ${APP} is already at ${RELEASE}"
