@@ -18,6 +18,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - PiHole: Bump to Debian 12 [@MickLesk](https://github.com/MickLesk) ([#8649](https://github.com/community-scripts/ProxmoxVE/pull/8649))
+
   - #### 🔧 Refactor
 
     - Refactor: Mylar3 [@tremor021](https://github.com/tremor021) ([#8642](https://github.com/community-scripts/ProxmoxVE/pull/8642))
