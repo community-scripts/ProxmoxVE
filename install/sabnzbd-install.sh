@@ -19,9 +19,7 @@ $STD apt install -y \
     p7zip-full
 msg_ok "Installed Dependencies"
 
-msg_info "Setup uv"
 setup_uv
-msg_ok "Setup uv"
 
 msg_info "Setup Unrar"
 cat <<EOF >/etc/apt/sources.list.d/non-free.sources
