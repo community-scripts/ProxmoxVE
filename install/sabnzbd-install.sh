@@ -24,12 +24,15 @@ setup_uv
 msg_ok "Setup uv"
 
 msg_info "Setup Unrar"
-cat <<EOF >/etc/apt/sources.list.d/non-free.list
-deb http://deb.debian.org/debian bookworm main contrib non-free non-free-firmware
+cat <<EOF >/etc/apt/sources.list.d/non-free.sources
+Types: deb
+URIs: http://deb.debian.org/debian/
+Suites: trixie
+Components: non-free 
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 EOF
 $STD apt update
 $STD apt install -y unrar
-rm /etc/apt/sources.list.d/non-free.list
 msg_ok "Setup Unrar"
 
 msg_info "Installing SABnzbd"
