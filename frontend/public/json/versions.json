@@ -1,18 +1,63 @@
 [
   {
-    "name": "dgtlmoon/changedetection.io",
-    "version": "0.50.31",
-    "date": "2025-10-25T11:14:22Z"
+    "name": "TwiN/gatus",
+    "version": "v5.29.0",
+    "date": "2025-10-25T19:49:18Z"
   },
   {
-    "name": "pi-hole/pi-hole",
-    "version": "v6.2.1",
-    "date": "2025-10-25T10:39:32Z"
+    "name": "Prowlarr/Prowlarr",
+    "version": "v2.1.5.5216",
+    "date": "2025-10-25T19:41:59Z"
+  },
+  {
+    "name": "9001/copyparty",
+    "version": "v1.19.19",
+    "date": "2025-10-25T19:39:58Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.78.0-stable",
+    "date": "2025-10-25T18:30:23Z"
+  },
+  {
+    "name": "dgtlmoon/changedetection.io",
+    "version": "0.50.32",
+    "date": "2025-10-25T17:29:19Z"
+  },
+  {
+    "name": "cross-seed/cross-seed",
+    "version": "v6.13.5",
+    "date": "2025-09-27T01:10:59Z"
+  },
+  {
+    "name": "fuma-nama/fumadocs",
+    "version": "fumadocs-core@16.0.3",
+    "date": "2025-10-25T16:44:33Z"
+  },
+  {
+    "name": "sassanix/Warracker",
+    "version": "1.0.0",
+    "date": "2025-10-25T14:25:06Z"
+  },
+  {
+    "name": "danielbrendel/hortusfox-web",
+    "version": "v5.3",
+    "date": "2025-10-25T13:50:31Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "v4.5.3",
+    "date": "2025-10-25T13:27:34Z"
   },
   {
     "name": "firefly-iii/firefly-iii",
     "version": "v6.4.2",
     "date": "2025-10-07T08:11:58Z"
+  },
+  {
+    "name": "pi-hole/pi-hole",
+    "version": "v6.2.1",
+    "date": "2025-10-25T10:39:32Z"
   },
   {
     "name": "Jackett/Jackett",
@@ -43,11 +88,6 @@
     "name": "mongodb/mongo",
     "version": "r7.0.26-rc0",
     "date": "2025-10-24T22:33:52Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "v4.5.2",
-    "date": "2025-10-24T21:42:54Z"
   },
   {
     "name": "msgbyte/tianji",
@@ -108,11 +148,6 @@
     "name": "sabnzbd/sabnzbd",
     "version": "4.5.5",
     "date": "2025-10-24T11:12:22Z"
-  },
-  {
-    "name": "fuma-nama/fumadocs",
-    "version": "fumadocs-openapi@9.6.3",
-    "date": "2025-10-24T11:08:15Z"
   },
   {
     "name": "crowdsecurity/crowdsec",
@@ -180,11 +215,6 @@
     "date": "2025-10-16T07:20:34Z"
   },
   {
-    "name": "TwiN/gatus",
-    "version": "v5.28.0",
-    "date": "2025-10-23T16:16:04Z"
-  },
-  {
     "name": "juanfont/headscale",
     "version": "v0.26.1",
     "date": "2025-06-06T11:22:02Z"
@@ -213,11 +243,6 @@
     "name": "duplicati/duplicati",
     "version": "v2.2.0.0_stable_2025-10-23",
     "date": "2025-10-23T11:48:25Z"
-  },
-  {
-    "name": "BerriAI/litellm",
-    "version": "v1.78.7-nightly",
-    "date": "2025-10-22T22:33:31Z"
   },
   {
     "name": "jhuckaby/Cronicle",
@@ -420,11 +445,6 @@
     "date": "2025-10-19T10:03:18Z"
   },
   {
-    "name": "Prowlarr/Prowlarr",
-    "version": "v2.0.5.5160",
-    "date": "2025-08-23T21:23:11Z"
-  },
-  {
     "name": "Lidarr/Lidarr",
     "version": "v2.14.5.4836",
     "date": "2025-10-08T15:30:50Z"
@@ -470,11 +490,6 @@
     "date": "2025-10-09T10:27:01Z"
   },
   {
-    "name": "9001/copyparty",
-    "version": "v1.19.17",
-    "date": "2025-10-17T23:40:02Z"
-  },
-  {
     "name": "forgejo/forgejo",
     "version": "v13.0.1",
     "date": "2025-10-17T18:54:16Z"
@@ -516,8 +531,8 @@
   },
   {
     "name": "ollama/ollama",
-    "version": "v0.12.6-rc1",
-    "date": "2025-10-16T16:36:25Z"
+    "version": "v0.12.6",
+    "date": "2025-10-16T20:07:41Z"
   },
   {
     "name": "minio/minio",
@@ -770,11 +785,6 @@
     "date": "2025-10-07T20:30:56Z"
   },
   {
-    "name": "sassanix/Warracker",
-    "version": "0.10.1.14",
-    "date": "2025-10-06T23:35:16Z"
-  },
-  {
     "name": "Radarr/Radarr",
     "version": "v5.28.0.10274",
     "date": "2025-10-06T21:31:07Z"
@@ -898,11 +908,6 @@
     "name": "Dolibarr/dolibarr",
     "version": "22.0.2",
     "date": "2025-09-27T01:43:20Z"
-  },
-  {
-    "name": "cross-seed/cross-seed",
-    "version": "v6.13.5",
-    "date": "2025-09-27T01:10:59Z"
   },
   {
     "name": "traefik/traefik",
@@ -1183,11 +1188,6 @@
     "name": "Suwayomi/Suwayomi-Server",
     "version": "v2.1.1867",
     "date": "2025-07-31T18:08:43Z"
-  },
-  {
-    "name": "danielbrendel/hortusfox-web",
-    "version": "v5.2",
-    "date": "2025-07-30T10:40:00Z"
   },
   {
     "name": "dani-garcia/vaultwarden",
