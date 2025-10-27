@@ -20,10 +20,10 @@
       "script": "ct/dispatcharr.sh",
       "resources": {
         "cpu": 1,
-        "ram": 1024,
+        "ram": 2048,
         "hdd": 8,
         "os": "debian",
-        "version": "12"
+        "version": "13"
       }
     }
   ],
