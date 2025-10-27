@@ -61,6 +61,8 @@ cd /opt/browserless
 $STD npm install
 rm -rf src/routes/{chrome,edge,firefox,webkit}
 $STD node_modules/playwright-core/cli.js install --with-deps chromium
+$STD npm install typescript --save-dev
+$STD npm install esbuild --save-dev
 $STD npm run build
 $STD npm run build:function
 $STD npm prune production
