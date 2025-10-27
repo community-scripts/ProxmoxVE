@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
-# Author: ekke85
+# Author: ekke85 | MickLesk
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/Dispatcharr/Dispatcharr
 
 APP="Dispatcharr"
-APP_NAME=${APP,,}
 var_tags="${var_tags:-media;arr}"
 var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-2048}"
