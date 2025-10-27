@@ -16,7 +16,6 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt install -y \
   build-essential \
-  gcc \
   python3-dev \
   libpq-dev \
   nginx \
