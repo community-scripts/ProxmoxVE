@@ -1,8 +1,53 @@
 [
   {
+    "name": "mongodb/mongo",
+    "version": "r8.0.16-rc1",
+    "date": "2025-10-26T23:32:32Z"
+  },
+  {
+    "name": "Radarr/Radarr",
+    "version": "v5.28.0.10274",
+    "date": "2025-10-06T21:31:07Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.30.4",
+    "date": "2025-10-26T17:22:46Z"
+  },
+  {
     "name": "fuma-nama/fumadocs",
-    "version": "create-fumadocs-app@16.0.4",
-    "date": "2025-10-26T11:27:53Z"
+    "version": "fumapress@0.0.8",
+    "date": "2025-10-26T16:44:47Z"
+  },
+  {
+    "name": "outline/outline",
+    "version": "v1.0.0",
+    "date": "2025-10-26T16:27:19Z"
+  },
+  {
+    "name": "wizarrrr/wizarr",
+    "version": "v2025.10.7",
+    "date": "2025-10-26T15:31:18Z"
+  },
+  {
+    "name": "henrygd/beszel",
+    "version": "v0.15.0",
+    "date": "2025-10-26T15:20:23Z"
+  },
+  {
+    "name": "OliveTin/OliveTin",
+    "version": "3000.1.2",
+    "date": "2025-10-26T14:46:07Z"
+  },
+  {
+    "name": "openhab/openhab-core",
+    "version": "5.1.0.M2",
+    "date": "2025-10-26T14:38:02Z"
+  },
+  {
+    "name": "ErsatzTV/ErsatzTV",
+    "version": "v25.8.0",
+    "date": "2025-10-26T14:23:37Z"
   },
   {
     "name": "firefly-iii/firefly-iii",
@@ -28,11 +73,6 @@
     "name": "BerriAI/litellm",
     "version": "v1.79.0.rc.1",
     "date": "2025-10-26T01:36:16Z"
-  },
-  {
-    "name": "OliveTin/OliveTin",
-    "version": "3000.1.1",
-    "date": "2025-10-26T00:30:40Z"
   },
   {
     "name": "jeedom/core",
@@ -88,16 +128,6 @@
     "name": "go-gitea/gitea",
     "version": "v1.24.7",
     "date": "2025-10-25T01:23:46Z"
-  },
-  {
-    "name": "mongodb/mongo",
-    "version": "r7.0.26-rc0",
-    "date": "2025-10-24T22:33:52Z"
-  },
-  {
-    "name": "msgbyte/tianji",
-    "version": "v1.30.3",
-    "date": "2025-10-24T21:21:10Z"
   },
   {
     "name": "keycloak/keycloak",
@@ -193,11 +223,6 @@
     "name": "Cleanuparr/Cleanuparr",
     "version": "v2.4.0",
     "date": "2025-10-23T21:12:48Z"
-  },
-  {
-    "name": "wizarrrr/wizarr",
-    "version": "v2025.10.6",
-    "date": "2025-10-23T20:20:21Z"
   },
   {
     "name": "wazuh/wazuh",
@@ -390,11 +415,6 @@
     "date": "2025-10-21T00:37:47Z"
   },
   {
-    "name": "henrygd/beszel",
-    "version": "v0.14.1",
-    "date": "2025-10-20T22:10:56Z"
-  },
-  {
     "name": "coder/code-server",
     "version": "v4.105.1",
     "date": "2025-10-20T20:19:23Z"
@@ -525,11 +545,6 @@
     "date": "2025-10-16T23:14:45Z"
   },
   {
-    "name": "openhab/openhab-core",
-    "version": "5.0.2",
-    "date": "2025-10-16T21:27:35Z"
-  },
-  {
     "name": "ollama/ollama",
     "version": "v0.12.6-rc1",
     "date": "2025-10-16T16:36:25Z"
@@ -553,11 +568,6 @@
     "name": "cloudreve/cloudreve",
     "version": "4.9.2",
     "date": "2025-10-16T03:24:44Z"
-  },
-  {
-    "name": "outline/outline",
-    "version": "v1.0.0-test8",
-    "date": "2025-10-16T01:32:14Z"
   },
   {
     "name": "Ombi-app/Ombi",
@@ -725,11 +735,6 @@
     "date": "2025-10-09T19:05:48Z"
   },
   {
-    "name": "ErsatzTV/ErsatzTV",
-    "version": "v25.7.1",
-    "date": "2025-10-09T15:42:11Z"
-  },
-  {
     "name": "silverbulletmd/silverbullet",
     "version": "2.1.9",
     "date": "2025-10-09T13:57:14Z"
@@ -783,11 +788,6 @@
     "name": "C4illin/ConvertX",
     "version": "v0.15.1",
     "date": "2025-10-07T20:30:56Z"
-  },
-  {
-    "name": "Radarr/Radarr",
-    "version": "v5.28.0.10274",
-    "date": "2025-10-06T21:31:07Z"
   },
   {
     "name": "Kometa-Team/Kometa",
