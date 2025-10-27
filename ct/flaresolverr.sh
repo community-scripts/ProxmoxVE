@@ -28,6 +28,11 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  if [[ $(grep -E '^VERSION_ID=' /etc/os-release) == *"12"* ]]; then
+    msg_error "Wrong Debian version detected!"
+    msg_error "You must upgrade your LXC to Debian Trixie before updating."
+    exit
+  fi
   if check_for_gh_release "flaresolverr" "FlareSolverr/FlareSolverr"; then
     msg_info "Stopping service"
     systemctl stop flaresolverr
