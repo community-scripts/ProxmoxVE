@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 
 # Copyright (c) 2021-2025 community-scripts ORG
-# Author: Test Suite for tools.func
-# License: MIT
-# https://github.com/community-scripts/ProxmoxVED/raw/main/LICENSE
-# Purpose: Run comprehensive test suite for all setup_* functions from tools.func
+# Author: MickLesk (CanbiZ)
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://garagehq.deuxfleurs.fr/
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -59,7 +58,6 @@ admin_token = "${ADMIN_TOKEN}"
 metrics_token = "${METRICS_TOKEN}"
 EOF
 msg_ok "Set up Garage"
-
 
 motd_ssh
 customize
