@@ -20,8 +20,8 @@
       "script": "ct/garage.sh",
       "resources": {
         "cpu": 1,
-        "ram": 512,
-        "hdd": 3,
+        "ram": 1024,
+        "hdd": 5,
         "os": "debian",
         "version": "13"
       }
@@ -32,7 +32,7 @@
       "resources": {
         "cpu": 1,
         "ram": 512,
-        "hdd": 3,
+        "hdd": 5,
         "os": "alpine",
         "version": "3.22"
       }
