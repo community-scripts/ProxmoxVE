@@ -24,7 +24,6 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
-
   if [[ ! -d "/opt/dispatcharr" ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
@@ -46,7 +45,6 @@ function update_script() {
     if [[ -f /opt/dispatcharr/.env ]]; then
       cp /opt/dispatcharr/.env /tmp/dispatcharr.env.backup
     fi
-
     if [[ -f /opt/dispatcharr/start-gunicorn.sh ]]; then
       cp /opt/dispatcharr/start-gunicorn.sh /tmp/start-gunicorn.sh.backup
     fi
@@ -59,7 +57,6 @@ function update_script() {
     if [[ -f /opt/dispatcharr/start-daphne.sh ]]; then
       cp /opt/dispatcharr/start-daphne.sh /tmp/start-daphne.sh.backup
     fi
-
     if [[ -f /opt/dispatcharr/.env ]]; then
       set -o allexport
       source /opt/dispatcharr/.env
@@ -69,7 +66,7 @@ function update_script() {
         msg_info "Database backup created"
       fi
     fi
-    $STD tar -czf "$BACKUP_FILE" -C /opt dispatcharr /tmp/dispatcharr_db_*.sql 2>/dev/null || true
+    $STD tar -czf "$BACKUP_FILE" -C /opt dispatcharr /tmp/dispatcharr_db_*.sql
     msg_ok "Backup created: $BACKUP_FILE"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "dispatcharr" "Dispatcharr/Dispatcharr"
@@ -77,10 +74,7 @@ function update_script() {
     msg_info "Updating Dispatcharr Backend"
     if [[ -f /tmp/dispatcharr.env.backup ]]; then
       mv /tmp/dispatcharr.env.backup /opt/dispatcharr/.env
-      msg_info "Restored environment configuration"
     fi
-
-    # Restore service scripts
     if [[ -f /tmp/start-gunicorn.sh.backup ]]; then
       mv /tmp/start-gunicorn.sh.backup /opt/dispatcharr/start-gunicorn.sh
     fi
@@ -94,7 +88,7 @@ function update_script() {
       mv /tmp/start-daphne.sh.backup /opt/dispatcharr/start-daphne.sh
     fi
 
-    cd /opt/dispatcharr || exit
+    cd /opt/dispatcharr
     rm -rf .venv
     $STD uv venv
     $STD uv pip install -r requirements.txt --index-strategy unsafe-best-match
@@ -102,13 +96,13 @@ function update_script() {
     msg_ok "Updated Dispatcharr Backend"
 
     msg_info "Building Frontend"
-    cd /opt/dispatcharr/frontend || exit
+    cd /opt/dispatcharr/frontend
     $STD npm install --legacy-peer-deps
     $STD npm run build
     msg_ok "Built Frontend"
 
     msg_info "Running Django Migrations"
-    cd /opt/dispatcharr || exit
+    cd /opt/dispatcharr
     if [[ -f .env ]]; then
       set -o allexport
       source .env
