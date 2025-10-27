@@ -73,7 +73,7 @@ POSTGRES_PASSWORD=$DB_PASS
 POSTGRES_HOST=localhost
 CELERY_BROKER_URL=redis://localhost:6379/0
 EOF
-cd /opt/dispatcharr/frontend || exit
+cd /opt/dispatcharr/frontend
 $STD npm install --legacy-peer-deps
 $STD npm run build
 msg_ok "Configured Dispatcharr"
