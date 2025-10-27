@@ -66,6 +66,8 @@ function update_script() {
     $STD unzip "$brwsr_tmp"
     mv browserless-"$TAG"/ /opt/browserless
     cd /opt/browserless
+    $STD npm install typescript
+    $STD npm install esbuild
     $STD npm install
     rm -rf src/routes/{chrome,edge,firefox,webkit}
     $STD node_modules/playwright-core/cli.js install --with-deps chromium
