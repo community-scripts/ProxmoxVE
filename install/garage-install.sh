@@ -59,6 +59,32 @@ metrics_token = "${METRICS_TOKEN}"
 EOF
 msg_ok "Set up Garage"
 
+
+msg_info "Creating service"
+cat <<'EOF' >/etc/systemd/system/garage.service
+[Unit]
+Description=Garage Object Storage (Deuxfleurs)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/garage -c /etc/garage.toml server
+Restart=always
+RestartSec=5
+User=root
+WorkingDirectory=/var/lib/garage
+Environment=RUST_LOG=info
+StandardOutput=append:/var/log/garage.log
+StandardError=append:/var/log/garage.log
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target
+EOF
+$STD systemctl enable -q --now garage
+msg_ok "Created Service"
+
 motd_ssh
 customize
 
