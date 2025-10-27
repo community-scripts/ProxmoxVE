@@ -21,6 +21,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Add typescript and esbuild to browserless setup [@MickLesk](https://github.com/MickLesk) ([#8666](https://github.com/community-scripts/ProxmoxVE/pull/8666))
     - jellyfin: fix: intel deps [@CrazyWolf13](https://github.com/CrazyWolf13) ([#8657](https://github.com/community-scripts/ProxmoxVE/pull/8657))
 
 ## 2025-10-26
