@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-10-27
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - jellyfin: fix: intel deps [@CrazyWolf13](https://github.com/CrazyWolf13) ([#8657](https://github.com/community-scripts/ProxmoxVE/pull/8657))
+
 ## 2025-10-26
 
 ### 🆕 New Scripts
