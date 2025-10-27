@@ -14,7 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Garage | Alpine-Garage ([#8656](https://github.com/community-scripts/ProxmoxVE/pull/8656))
+  - Dispatcharr ([#8658](https://github.com/community-scripts/ProxmoxVE/pull/8658))
+- Garage | Alpine-Garage ([#8656](https://github.com/community-scripts/ProxmoxVE/pull/8656))
 
 ### 🚀 Updated Scripts
 
