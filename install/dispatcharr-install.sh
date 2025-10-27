@@ -130,7 +130,6 @@ server {
     }
 }
 EOF
-
 ln -sf /etc/nginx/sites-available/dispatcharr.conf /etc/nginx/sites-enabled/dispatcharr.conf
 rm -f /etc/nginx/sites-enabled/default
 systemctl restart nginx
