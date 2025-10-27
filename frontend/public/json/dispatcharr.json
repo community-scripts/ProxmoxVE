@@ -1,0 +1,35 @@
+{
+  "name": "Dispatcharr",
+  "slug": "dispatcharr",
+  "categories": [
+    14
+  ],
+  "date_created": "2025-07-01",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 9191,
+  "documentation": "https://dispatcharr.github.io/Dispatcharr-Docs/",
+  "website": "https://dispatcharr.github.io/Dispatcharr-Docs/",
+  "logo": "https://raw.githubusercontent.com/Dispatcharr/Dispatcharr/refs/heads/main/frontend/src/images/logo.png",
+  "config_path": "",
+  "description": "Dispatcharr is an open-source powerhouse for managing IPTV streams and EPG data with elegance and control. Born from necessity and built with passion, it started as a personal project by OkinawaBoss and evolved with contributions from legends like dekzter, SergeantPanda and Bucatini.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/dispatcharr.sh",
+      "resources": {
+        "cpu": 1,
+        "ram": 1024,
+        "hdd": 8,
+        "os": "debian",
+        "version": "12"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": []
+}
