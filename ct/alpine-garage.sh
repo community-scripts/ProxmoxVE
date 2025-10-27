@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://git.community-scripts.org/community-scripts/ProxmoxVED/raw/branch/main/misc/build.func)
-# Copyright (c) 2021-2025 tteck
-# Author: tteck (tteckster)
-# License: MIT | https://github.com/community-scripts/ProxmoxVED/raw/main/LICENSE
-# Source: https://alpinelinux.org/
+source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+# Copyright (c) 2021-2025 community-scripts ORG
+# Author: MickLesk (CanbiZ)
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://garagehq.deuxfleurs.fr/
 
 APP="Alpine-Garage"
 var_tags="${var_tags:-alpine;object-storage}"
