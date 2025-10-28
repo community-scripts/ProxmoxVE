@@ -19,7 +19,7 @@ $STD apt install -y \
     p7zip-full
 msg_ok "Installed Dependencies"
 
-setup_uv
+PYTHON_VERSION="3.13" setup_uv
 
 msg_info "Setup Unrar"
 cat <<EOF >/etc/apt/sources.list.d/non-free.sources
@@ -34,14 +34,9 @@ $STD apt install -y unrar
 msg_ok "Setup Unrar"
 
 msg_info "Installing SABnzbd"
-RELEASE=$(curl -fsSL https://api.github.com/repos/sabnzbd/sabnzbd/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-mkdir -p /opt/sabnzbd
+fetch_and_deploy_gh_release "sabnzbd-org" "sabnzbd/sabnzbd" "prebuild" "latest" "/opt/sabnzbd" "SABnzbd-*-src.tar.gz"
 $STD uv venv /opt/sabnzbd/venv
-temp_file=$(mktemp)
-curl -fsSL "https://github.com/sabnzbd/sabnzbd/releases/download/${RELEASE}/SABnzbd-${RELEASE}-src.tar.gz" -o "$temp_file"
-tar -xzf "$temp_file" -C /opt/sabnzbd --strip-components=1
 $STD uv pip install -r /opt/sabnzbd/requirements.txt --python=/opt/sabnzbd/venv/bin/python
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Installed SABnzbd"
 
 read -r -p "Would you like to install par2cmdline-turbo? <y/N> " prompt
@@ -72,7 +67,6 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -f "$temp_file"
 $STD apt -y autoremove
 $STD apt -y autoclean
 $STD apt -y clean
