@@ -33,8 +33,9 @@ $STD apt update
 $STD apt install -y unrar
 msg_ok "Setup Unrar"
 
-msg_info "Installing SABnzbd"
 fetch_and_deploy_gh_release "sabnzbd-org" "sabnzbd/sabnzbd" "prebuild" "latest" "/opt/sabnzbd" "SABnzbd-*-src.tar.gz"
+
+msg_info "Installing SABnzbd"
 $STD uv venv /opt/sabnzbd/venv
 $STD uv pip install -r /opt/sabnzbd/requirements.txt --python=/opt/sabnzbd/venv/bin/python
 msg_ok "Installed SABnzbd"
