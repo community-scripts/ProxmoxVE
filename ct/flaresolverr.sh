@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -28,13 +28,18 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  if check_for_gh_release "flaresolverr" "FlareSolverr/FlareSolverr" "3.3.25"; then
+  if [[ $(grep -E '^VERSION_ID=' /etc/os-release) == *"12"* ]]; then
+    msg_error "Wrong Debian version detected!"
+    msg_error "You must upgrade your LXC to Debian Trixie before updating."
+    exit
+  fi
+  if check_for_gh_release "flaresolverr" "FlareSolverr/FlareSolverr"; then
     msg_info "Stopping service"
     systemctl stop flaresolverr
     msg_ok "Stopped service"
 
     rm -rf /opt/flaresolverr
-    fetch_and_deploy_gh_release "flaresolverr" "FlareSolverr/FlareSolverr" "prebuild" "v3.3.25" "/opt/flaresolverr" "flaresolverr_linux_x64.tar.gz"
+    fetch_and_deploy_gh_release "flaresolverr" "FlareSolverr/FlareSolverr" "prebuild" "latest" "/opt/flaresolverr" "flaresolverr_linux_x64.tar.gz"
 
     msg_info "Starting service"
     systemctl start flaresolverr

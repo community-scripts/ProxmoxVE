@@ -23,7 +23,7 @@
         "ram": 2048,
         "hdd": 4,
         "os": "debian",
-        "version": "12"
+        "version": "13"
       }
     }
   ],
@@ -31,10 +31,5 @@
     "username": null,
     "password": null
   },
-  "notes": [
-    {
-      "text": "Flaresolverr is pinned to Version 3.3.25 because they add an breaking python package which doesn't work with debian 12.`",
-      "type": "info"
-    }
-  ]
+  "notes": []
 }
