@@ -113,6 +113,9 @@ EOF
       rm ./vchord.deb
       msg_ok "Upgraded VectorChord to v${VCHORD_RELEASE}"
     fi
+    if ! dpkg -l | grep -q ccache; then
+      $STD apt-get install -yqq ccache
+    fi
 
     INSTALL_DIR="/opt/${APP}"
     UPLOAD_DIR="$(sed -n '/^IMMICH_MEDIA_LOCATION/s/[^=]*=//p' /opt/immich/.env)"

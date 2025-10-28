@@ -64,7 +64,8 @@ $STD apt-get install --no-install-recommends -y \
   libdav1d-dev \
   libhwy-dev \
   libwebp-dev \
-  libaom-dev
+  libaom-dev \
+  ccache
 curl -fsSL https://repo.jellyfin.org/jellyfin_team.gpg.key | gpg --dearmor -o /etc/apt/keyrings/jellyfin.gpg
 DPKG_ARCHITECTURE="$(dpkg --print-architecture)"
 export DPKG_ARCHITECTURE
