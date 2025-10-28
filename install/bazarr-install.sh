@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-setup_uv
+PYTHON_VERSION="3.12" setup_uv
 fetch_and_deploy_gh_release "bazarr" "morpheus65535/bazarr" "prebuild" "latest" "/opt/bazarr" "bazarr.zip"
 
 msg_info "Installing Bazarr"
