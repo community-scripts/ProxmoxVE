@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - Bump bazarr to Debian 13 [@burgerga](https://github.com/burgerga) ([#8677](https://github.com/community-scripts/ProxmoxVE/pull/8677))
     - Update flaresolverr to Debian 13 [@burgerga](https://github.com/burgerga) ([#8672](https://github.com/community-scripts/ProxmoxVE/pull/8672))
 
 ## 2025-10-27
