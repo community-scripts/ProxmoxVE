@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - jotty: Add more ENV VARS (disabled) [@vhsdream](https://github.com/vhsdream) ([#8688](https://github.com/community-scripts/ProxmoxVE/pull/8688))
     - Bump bazarr to Debian 13 [@burgerga](https://github.com/burgerga) ([#8677](https://github.com/community-scripts/ProxmoxVE/pull/8677))
     - Update flaresolverr to Debian 13 [@burgerga](https://github.com/burgerga) ([#8672](https://github.com/community-scripts/ProxmoxVE/pull/8672))
 
