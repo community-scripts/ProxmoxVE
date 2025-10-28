@@ -14,6 +14,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Update alpine-komodo.sh fixing missing pull images command [@glopes](https://github.com/glopes) ([#8689](https://github.com/community-scripts/ProxmoxVE/pull/8689))
+
   - #### ✨ New Features
 
     - jotty: Add more ENV VARS (disabled) [@vhsdream](https://github.com/vhsdream) ([#8688](https://github.com/community-scripts/ProxmoxVE/pull/8688))
