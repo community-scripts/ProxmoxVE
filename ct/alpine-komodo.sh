@@ -52,6 +52,7 @@ function update_script() {
     mv "$BACKUP_FILE" "$COMPOSE_FILE"
     exit 1
   fi
+  $STD docker compose -p komodo -f "$COMPOSE_FILE" --env-file /opt/komodo/compose.env pull
   $STD docker compose -p komodo -f "$COMPOSE_FILE" --env-file /opt/komodo/compose.env up -d
   msg_ok "Updated ${APP}"
   exit
