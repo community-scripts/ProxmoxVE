@@ -14,7 +14,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
-  - Update flaresolverr to Debian 13 [@burgerga](https://github.com/burgerga) ([#8672](https://github.com/community-scripts/ProxmoxVE/pull/8672))
+  - #### ✨ New Features
+
+    - Update flaresolverr to Debian 13 [@burgerga](https://github.com/burgerga) ([#8672](https://github.com/community-scripts/ProxmoxVE/pull/8672))
 
 ## 2025-10-27
 
