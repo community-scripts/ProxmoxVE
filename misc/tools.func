@@ -905,7 +905,7 @@ check_for_gh_release() {
       return 0
     fi
 
-    msg_error "No update available: ${app} is not installed!"
+    msg_ok "Already up to date: ${app} (${current})"
     return 1
   fi
 
