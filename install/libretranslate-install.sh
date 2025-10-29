@@ -18,6 +18,8 @@ $STD apt install -y \
   pkg-config \
   build-essential \
   g++ \
+  cmake \
+  libsentencepiece-dev \
   libicu-dev
 msg_ok "Installed dependencies"
 
