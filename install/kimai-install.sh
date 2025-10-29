@@ -18,36 +18,21 @@ $STD apt-get install -y \
   apt-transport-https \
   apache2 \
   git \
-  expect \
-  composer \
-  lsb-release
+  expect
 msg_ok "Installed Dependencies"
 
-setup_mysql
-
-msg_info "Adding PHP8.4 Repository"
-$STD curl -sSLo /tmp/debsuryorg-archive-keyring.deb https://packages.sury.org/debsuryorg-archive-keyring.deb
-$STD dpkg -i /tmp/debsuryorg-archive-keyring.deb
-$STD sh -c 'echo "deb [signed-by=/usr/share/keyrings/deb.sury.org-php.gpg] https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list'
-$STD apt-get update
-msg_ok "Added PHP8.4 Repository"
-
-msg_info "Installing PHP"
-$STD apt-get remove -y php8.2*
-$STD apt-get install -y \
-  php8.4 \
-  php8.4-{gd,mysql,mbstring,bcmath,xml,curl,zip,intl} \
-  libapache2-mod-php8.4
-msg_ok "Installed PHP"
+setup_mariadb
+PHP_VERSION="8.4" PHP_MODULE="gd,mysql,mbstring,bcmath,xml,curl,zip,intl" PHP_APACHE="YES" setup_php
+setup_composer
 
 msg_info "Setting up database"
 DB_NAME=kimai_db
 DB_USER=kimai
 DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
-MYSQL_VERSION=$(mysql --version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
-$STD mysql -u root -e "CREATE DATABASE $DB_NAME;"
-$STD mysql -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
-$STD mysql -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
+MYSQL_VERSION=$(mariadb --version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+$STD mariadb -u root -e "CREATE DATABASE $DB_NAME;"
+$STD mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
+$STD mariadb -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
 {
   echo "Kimai-Credentials"
   echo "Kimai Database User: $DB_USER"
@@ -56,11 +41,9 @@ $STD mysql -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH 
 } >>~/kimai.creds
 msg_ok "Set up database"
 
-msg_info "Installing Kimai (Patience)"
-RELEASE=$(curl -fsSL https://api.github.com/repos/kimai/kimai/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-curl -fsSL "https://github.com/kimai/kimai/archive/refs/tags/${RELEASE}.zip" -o "${RELEASE}".zip
-$STD unzip "${RELEASE}".zip
-mv kimai-"${RELEASE}" /opt/kimai
+fetch_and_deploy_gh_release "Kimai" "kimai/kimai" "prebuild" "latest" "/opt/kimai" "kimai-release-*.zip"
+
+msg_info "Installing Kimai"
 cd /opt/kimai
 echo "export COMPOSER_ALLOW_SUPERUSER=1" >>~/.bashrc
 source ~/.bashrc
@@ -92,8 +75,6 @@ admin_lte:
     options:
         default_avatar: build/apple-touch-icon.png
 EOF
-
-echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Installed Kimai"
 
 msg_info "Creating Service"
@@ -130,7 +111,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -rf "${RELEASE}".zip
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

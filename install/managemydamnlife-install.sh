@@ -14,19 +14,19 @@ network_check
 update_os
 
 msg_info "Installing dependencies"
-$STD apt install --no-install-recommends -y build-essential
+$STD apt install -y build-essential
 msg_ok "Installed dependencies"
 
 NODE_VERSION="22" setup_nodejs
-MYSQL_VERSION="8.0" setup_mysql
+setup_mariadb
 
 msg_info "Setting up Database"
 DB_NAME="mmdl"
 DB_USER="mmdl"
 DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
-$STD mysql -u root -e "CREATE DATABASE $DB_NAME;"
-$STD mysql -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED by '$DB_PASS';"
-$STD mysql -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
+$STD mariadb -u root -e "CREATE DATABASE $DB_NAME;"
+$STD mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED by '$DB_PASS';"
+$STD mariadb -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
 {
   echo "Manage My Damn Life Credentials"
   echo "Database User: $DB_USER"
@@ -59,7 +59,7 @@ msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/mmdl.service
 [Unit]
 Description=${APPLICATION} Service
-After=network.target mysql.service
+After=network.target mariadb.service
 
 [Service]
 WorkingDirectory=/opt/mmdl
