@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Docker-VM: add workaround for libguestfs issue on Proxmox VE 9+ [@MickLesk](https://github.com/MickLesk) ([#8722](https://github.com/community-scripts/ProxmoxVE/pull/8722))
     - Dispatcharr: add folders in installer / add more build ressources [@MickLesk](https://github.com/MickLesk) ([#8708](https://github.com/community-scripts/ProxmoxVE/pull/8708))
     - LibreTranslate: bump torch version [@MickLesk](https://github.com/MickLesk) ([#8710](https://github.com/community-scripts/ProxmoxVE/pull/8710))
 
