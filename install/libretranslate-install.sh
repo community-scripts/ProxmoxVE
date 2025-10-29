@@ -14,9 +14,9 @@ network_check
 update_os
 
 msg_info "Installing dependencies"
-$STD apt install -y --no-install-recommends \
+$STD apt install -y \
   pkg-config \
-  gcc \
+  build-essentials \
   g++ \
   libicu-dev
 msg_ok "Installed dependencies"
@@ -32,13 +32,18 @@ setup_uv
 fetch_and_deploy_gh_release "libretranslate" "LibreTranslate/LibreTranslate"
 
 msg_info "Setup LibreTranslate (Patience)"
+TORCH_VERSION=$(grep -Eo '"torch ==[0-9]+\.[0-9]+\.[0-9]+' /opt/libretranslate/pyproject.toml | \
+  tail -n1 | sed 's/.*==//')
+if [[ -z "$TORCH_VERSION" ]]; then
+  TORCH_VERSION="2.5.0"
+fi
 cd /opt/libretranslate
 $STD uv venv .venv
 $STD source .venv/bin/activate
 $STD uv pip install --upgrade pip setuptools
 $STD uv pip install Babel==2.12.1
 $STD .venv/bin/python scripts/compile_locales.py
-$STD uv pip install torch==2.2.0 --extra-index-url https://download.pytorch.org/whl/cpu
+$STD uv pip install "torch==${TORCH_VERSION}" --extra-index-url https://download.pytorch.org/whl/cpu
 $STD uv pip install "numpy<2"
 $STD uv pip install .
 $STD uv pip install libretranslate
