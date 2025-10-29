@@ -1141,7 +1141,7 @@ function fetch_and_deploy_gh_release() {
       rm -rf "${target:?}/"*
     fi
 
-  tar --no-same-owner -xzf "$tmpdir/$filename" -C "$tmpdir" || {
+    tar --no-same-owner -xzf "$tmpdir/$filename" -C "$tmpdir" || {
       msg_error "Failed to extract tarball"
       rm -rf "$tmpdir"
       return 1
