@@ -60,4 +60,5 @@ customize
 msg_info "Cleaning up"
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
+$STD apt-get -y clean
 msg_ok "Cleaned"
