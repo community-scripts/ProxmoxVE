@@ -41,7 +41,7 @@ $STD mariadb -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUS
 } >>~/kimai.creds
 msg_ok "Set up database"
 
-fetch_and_deploy_gh_release "Kimai" "kimai/kimai"
+fetch_and_deploy_gh_release "kimai" "kimai/kimai"
 
 msg_info "Installing Kimai"
 cd /opt/kimai
