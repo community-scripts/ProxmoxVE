@@ -21,6 +21,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - tracktor: refactor envfile [@CrazyWolf13](https://github.com/CrazyWolf13) ([#8711](https://github.com/community-scripts/ProxmoxVE/pull/8711))
     - Kimai / Ghost / ManageMyDamnLife: Switch to MariaDB [@MickLesk](https://github.com/MickLesk) ([#8712](https://github.com/community-scripts/ProxmoxVE/pull/8712))
 
 ## 2025-10-28
