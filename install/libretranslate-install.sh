@@ -16,7 +16,7 @@ update_os
 msg_info "Installing dependencies"
 $STD apt install -y \
   pkg-config \
-  build-essentials \
+  build-essential \
   g++ \
   libicu-dev
 msg_ok "Installed dependencies"
