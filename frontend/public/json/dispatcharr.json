@@ -19,7 +19,7 @@
       "type": "default",
       "script": "ct/dispatcharr.sh",
       "resources": {
-        "cpu": 1,
+        "cpu": 2,
         "ram": 2048,
         "hdd": 8,
         "os": "debian",
