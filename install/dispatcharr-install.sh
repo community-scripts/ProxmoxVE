@@ -57,6 +57,11 @@ $STD uv pip install gunicorn gevent celery redis daphne
 msg_ok "Installed Python Dependencies"
 
 msg_info "Configuring Dispatcharr"
+install -d -m 755 \
+  /data/{logos,recordings,plugins,db} \
+  /data/uploads/{m3us,epgs} \
+  /data/{m3us,epgs}
+chown -R root:root /data
 export DATABASE_URL="postgresql://${DB_USER}:${DB_PASS}@localhost:5432/${DB_NAME}"
 export POSTGRES_DB=$DB_NAME
 export POSTGRES_USER=$DB_USER
