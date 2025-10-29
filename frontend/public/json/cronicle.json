@@ -28,8 +28,8 @@
     }
   ],
   "default_credentials": {
-    "username": null,
-    "password": null
+    "username": "admin",
+    "password": "admin"
   },
   "notes": [
     {
