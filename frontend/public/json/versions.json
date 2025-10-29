@@ -1,5 +1,85 @@
 [
   {
+    "name": "element-hq/synapse",
+    "version": "v1.141.0",
+    "date": "2025-10-29T11:45:43Z"
+  },
+  {
+    "name": "zitadel/zitadel",
+    "version": "v4.6.1",
+    "date": "2025-10-29T10:15:50Z"
+  },
+  {
+    "name": "cockpit-project/cockpit",
+    "version": "350",
+    "date": "2025-10-29T09:51:00Z"
+  },
+  {
+    "name": "pocket-id/pocket-id",
+    "version": "v1.14.2",
+    "date": "2025-10-29T08:37:03Z"
+  },
+  {
+    "name": "evcc-io/evcc",
+    "version": "0.209.4",
+    "date": "2025-10-29T08:06:31Z"
+  },
+  {
+    "name": "apache/cassandra",
+    "version": "cassandra-5.0.6",
+    "date": "2025-10-29T07:40:47Z"
+  },
+  {
+    "name": "fuma-nama/fumadocs",
+    "version": "create-fumadocs-app@16.0.7",
+    "date": "2025-10-29T06:44:29Z"
+  },
+  {
+    "name": "SigNoz/signoz",
+    "version": "v0.99.0",
+    "date": "2025-10-29T06:32:09Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.3",
+    "date": "2025-09-20T12:12:33Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.206",
+    "date": "2025-10-29T05:53:41Z"
+  },
+  {
+    "name": "henrygd/beszel",
+    "version": "v0.15.2",
+    "date": "2025-10-29T05:26:32Z"
+  },
+  {
+    "name": "openobserve/openobserve",
+    "version": "v0.15.3",
+    "date": "2025-10-29T05:15:45Z"
+  },
+  {
+    "name": "outline/outline",
+    "version": "v1.0.1",
+    "date": "2025-10-29T03:25:13Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.12.6-rc1",
+    "date": "2025-10-16T16:36:25Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-10-29T00:27:05Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.0.1",
+    "date": "2025-10-15T16:53:55Z"
+  },
+  {
     "name": "runtipi/runtipi",
     "version": "v4.5.5",
     "date": "2025-10-28T21:53:07Z"
@@ -35,9 +115,14 @@
     "date": "2025-04-05T19:12:57Z"
   },
   {
+    "name": "keycloak/keycloak",
+    "version": "26.4.2",
+    "date": "2025-10-23T06:59:32Z"
+  },
+  {
     "name": "javedh-dev/tracktor",
-    "version": "0.4.4",
-    "date": "2025-10-28T17:39:14Z"
+    "version": "0.4.3",
+    "date": "2025-10-28T17:32:48Z"
   },
   {
     "name": "pi-hole/pi-hole",
@@ -48,11 +133,6 @@
     "name": "AdguardTeam/AdGuardHome",
     "version": "v0.107.68",
     "date": "2025-10-23T14:26:29Z"
-  },
-  {
-    "name": "fuma-nama/fumadocs",
-    "version": "fumadocs-openapi@9.7.1",
-    "date": "2025-10-28T16:09:45Z"
   },
   {
     "name": "PrivateBin/PrivateBin",
@@ -88,11 +168,6 @@
     "name": "semaphoreui/semaphore",
     "version": "v2.16.36",
     "date": "2025-10-28T13:05:28Z"
-  },
-  {
-    "name": "element-hq/synapse",
-    "version": "v1.140.0",
-    "date": "2025-10-14T15:57:12Z"
   },
   {
     "name": "jenkinsci/jenkins",
@@ -135,24 +210,9 @@
     "date": "2025-10-28T08:07:33Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.200",
-    "date": "2025-10-28T05:55:30Z"
-  },
-  {
     "name": "gtsteffaniak/filebrowser",
     "version": "v0.8.11-beta",
     "date": "2025-10-28T01:15:42Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-10-28T00:27:04Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.0.1",
-    "date": "2025-10-15T16:53:55Z"
   },
   {
     "name": "OliveTin/OliveTin",
@@ -175,16 +235,6 @@
     "date": "2025-10-27T16:56:40Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "nightly",
-    "date": "2025-10-27T16:45:48Z"
-  },
-  {
-    "name": "pocket-id/pocket-id",
-    "version": "v1.14.1",
-    "date": "2025-10-27T13:19:13Z"
-  },
-  {
     "name": "Graylog2/graylog2-server",
     "version": "7.0.0-rc.2",
     "date": "2025-10-27T12:19:14Z"
@@ -203,11 +253,6 @@
     "name": "emqx/emqx",
     "version": "e6.0.1-alpha.2",
     "date": "2025-10-27T09:36:30Z"
-  },
-  {
-    "name": "zitadel/zitadel",
-    "version": "v4.5.0",
-    "date": "2025-10-27T08:29:32Z"
   },
   {
     "name": "syncthing/syncthing",
@@ -245,19 +290,9 @@
     "date": "2025-10-26T17:22:46Z"
   },
   {
-    "name": "outline/outline",
-    "version": "v1.0.0",
-    "date": "2025-10-26T16:27:19Z"
-  },
-  {
     "name": "wizarrrr/wizarr",
     "version": "v2025.10.7",
     "date": "2025-10-26T15:31:18Z"
-  },
-  {
-    "name": "henrygd/beszel",
-    "version": "v0.15.0",
-    "date": "2025-10-26T15:20:23Z"
   },
   {
     "name": "openhab/openhab-core",
@@ -435,16 +470,6 @@
     "date": "2025-10-22T10:28:00Z"
   },
   {
-    "name": "SigNoz/signoz",
-    "version": "v0.98.0",
-    "date": "2025-10-22T06:49:36Z"
-  },
-  {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.3",
-    "date": "2025-09-20T12:12:33Z"
-  },
-  {
     "name": "bluenviron/mediamtx",
     "version": "v1.15.3",
     "date": "2025-10-21T19:56:55Z"
@@ -475,24 +500,9 @@
     "date": "2025-10-21T12:53:58Z"
   },
   {
-    "name": "apache/cassandra",
-    "version": "5.0.6-tentative",
-    "date": "2025-10-21T11:42:35Z"
-  },
-  {
-    "name": "evcc-io/evcc",
-    "version": "0.209.3",
-    "date": "2025-10-21T10:53:07Z"
-  },
-  {
     "name": "VictoriaMetrics/VictoriaMetrics",
     "version": "pmm-6401-v1.128.0",
     "date": "2025-10-21T08:30:52Z"
-  },
-  {
-    "name": "openobserve/openobserve",
-    "version": "v0.16.0-rc1",
-    "date": "2025-10-21T00:37:47Z"
   },
   {
     "name": "coder/code-server",
@@ -610,11 +620,6 @@
     "date": "2025-10-16T23:14:45Z"
   },
   {
-    "name": "ollama/ollama",
-    "version": "v0.12.6",
-    "date": "2025-10-16T20:07:41Z"
-  },
-  {
     "name": "minio/minio",
     "version": "RELEASE.2025-10-15T17-29-55Z",
     "date": "2025-10-16T19:33:51Z"
@@ -658,11 +663,6 @@
     "name": "TandoorRecipes/recipes",
     "version": "2.3.3",
     "date": "2025-10-15T13:18:27Z"
-  },
-  {
-    "name": "cockpit-project/cockpit",
-    "version": "349",
-    "date": "2025-10-15T11:43:12Z"
   },
   {
     "name": "blakeblackshear/frigate",
