@@ -14,6 +14,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - LibreTranslate: bump torch version [@MickLesk](https://github.com/MickLesk) ([#8710](https://github.com/community-scripts/ProxmoxVE/pull/8710))
+
   - #### 🔧 Refactor
 
     - Kimai / Ghost / ManageMyDamnLife: Switch to MariaDB [@MickLesk](https://github.com/MickLesk) ([#8712](https://github.com/community-scripts/ProxmoxVE/pull/8712))
