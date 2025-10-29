@@ -497,6 +497,8 @@ if ! command -v virt-customize &>/dev/null; then
   msg_info "Installing Pre-Requisite libguestfs-tools onto Host"
   apt-get -qq update >/dev/null
   apt-get -qq install libguestfs-tools lsb-release -y >/dev/null
+  # Workaround for Proxmox VE 9.0 libguestfs issue
+  apt-get -qq install dhcpcd-base -y >/dev/null 2>&1 || true
   msg_ok "Installed libguestfs-tools successfully"
 fi
 
