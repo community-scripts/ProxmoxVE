@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-10-29
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - Kimai / Ghost / ManageMyDamnLife: Switch to MariaDB [@MickLesk](https://github.com/MickLesk) ([#8712](https://github.com/community-scripts/ProxmoxVE/pull/8712))
+
 ## 2025-10-28
 
 ### 🚀 Updated Scripts
