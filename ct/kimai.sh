@@ -35,7 +35,7 @@ function update_script() {
     msg_ok "Migrated PHP $CURRENT_PHP to 8.4"
   fi
 
-  if check_for_gh_release "Kimai" "kimai/kimai"; then
+  if check_for_gh_release "kimai" "kimai/kimai"; then
     BACKUP_DIR="/opt/kimai_backup"
 
     msg_info "Stopping Apache2"
@@ -49,7 +49,7 @@ function update_script() {
     [ -f /opt/kimai/config/packages/local.yaml ] && cp /opt/kimai/config/packages/local.yaml "$BACKUP_DIR/"
     msg_ok "Backup completed"
 
-    fetch_and_deploy_gh_release "Kimai" "kimai/kimai"
+    fetch_and_deploy_gh_release "kimai" "kimai/kimai"
 
     msg_info "Updating Kimai"
     [ -d "$BACKUP_DIR/var" ] && cp -r "$BACKUP_DIR/var" /opt/kimai/
