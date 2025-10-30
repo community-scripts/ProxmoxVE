@@ -26,6 +26,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - core: add function cleanup_lxc [@MickLesk](https://github.com/MickLesk) ([#8749](https://github.com/community-scripts/ProxmoxVE/pull/8749))
     - Asterisk: add interactive version selection to installer [@MickLesk](https://github.com/MickLesk) ([#8726](https://github.com/community-scripts/ProxmoxVE/pull/8726))
 
 ### 🌐 Website
