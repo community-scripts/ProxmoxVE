@@ -40,14 +40,14 @@ RestartSec=10
 WantedBy=multi-user.target
 EOF
 
-systemctl -q enable --now bentopdf
+systemctl enable -q --now bentopdf
 msg_ok "Created & started service"
 
 motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-$STD apt-get -y clean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"
