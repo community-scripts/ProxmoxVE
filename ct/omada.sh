@@ -30,7 +30,6 @@ function update_script() {
 
   msg_info "Updating MongoDB"
   if lscpu | grep -q 'avx'; then
-    MONGODB_VERSION="8.0"
     MONGO_VERSION="8.0" setup_mongodb
   else
     msg_warn "No AVX detected: Using older MongoDB 4.4"
