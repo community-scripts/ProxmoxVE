@@ -407,8 +407,8 @@ cleanup_lxc() {
   if command -v composer &>/dev/null; then composer clear-cache || true; fi
 
   if command -v journalctl &>/dev/null; then
-    journalctl --rotate
-    journalctl --vacuum-time=10m
+    $STD journalctl --rotate
+    $STD journalctl --vacuum-time=10m
   fi
   msg_ok "Cleaned"
 }
