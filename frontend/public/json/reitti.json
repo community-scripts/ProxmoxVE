@@ -9,7 +9,7 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 8080,
-  "documentation": "https://github.com/dedicatedcode/reitti",
+  "documentation": "https://www.dedicatedcode.com/projects/reitti/",
   "config_path": "/opt/reitti/.env",
   "website": "https://www.dedicatedcode.com/projects/reitti/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/reitti.webp",
