@@ -45,8 +45,11 @@ function update_script() {
     $STD mix escript.install hex livebook --force
 
     chown -R livebook:livebook /opt/livebook /data
+    
+    msg_info "Starting Service"
     systemctl start livebook
-    msg_ok "Updated Livebook"
+    msg_info "Started Service"
+
     msg_ok "Updated Successfully!"
   fi
   exit
