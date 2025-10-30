@@ -18,6 +18,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 - Reitti ([#8736](https://github.com/community-scripts/ProxmoxVE/pull/8736))
 - BentoPDF ([#8735](https://github.com/community-scripts/ProxmoxVE/pull/8735))
 
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - Asterisk: add interactive version selection to installer [@MickLesk](https://github.com/MickLesk) ([#8726](https://github.com/community-scripts/ProxmoxVE/pull/8726))
+
 ## 2025-10-29
 
 ### 🚀 Updated Scripts
