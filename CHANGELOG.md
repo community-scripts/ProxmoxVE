@@ -30,6 +30,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - Immich: Updates for v2.2.0 [@vhsdream](https://github.com/vhsdream) ([#8770](https://github.com/community-scripts/ProxmoxVE/pull/8770))
     - Standardize update success messages in scripts [@MickLesk](https://github.com/MickLesk) ([#8757](https://github.com/community-scripts/ProxmoxVE/pull/8757))
     - core: add function cleanup_lxc [@MickLesk](https://github.com/MickLesk) ([#8749](https://github.com/community-scripts/ProxmoxVE/pull/8749))
     - Asterisk: add interactive version selection to installer [@MickLesk](https://github.com/MickLesk) ([#8726](https://github.com/community-scripts/ProxmoxVE/pull/8726))
