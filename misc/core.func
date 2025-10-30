@@ -370,7 +370,6 @@ run_container_safe() {
 
 cleanup_lxc() {
   msg_info "Cleaning up"
-
   if is_alpine; then
     $STD apk cache clean || true
     rm -rf /var/cache/apk/*
@@ -411,7 +410,6 @@ cleanup_lxc() {
     journalctl --rotate
     journalctl --vacuum-time=10m
   fi
-
   msg_ok "Cleaned"
 }
 
