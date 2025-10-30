@@ -14,7 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - BentoPDF ([#8735](https://github.com/community-scripts/ProxmoxVE/pull/8735))
+  - Reitti ([#8736](https://github.com/community-scripts/ProxmoxVE/pull/8736))
+- BentoPDF ([#8735](https://github.com/community-scripts/ProxmoxVE/pull/8735))
 
 ## 2025-10-29
 
