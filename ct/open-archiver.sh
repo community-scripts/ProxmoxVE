@@ -40,7 +40,7 @@ function update_script() {
     msg_info "Updating Open Archiver"
     cd /opt/openarchiver
     $STD pnpm install --shamefully-hoist --frozen-lockfile --prod=false
-    $STD pnpm build
+    $STD pnpm run build:oss
     $STD pnpm db:migrate
     msg_ok "Updated Open Archiver"
 
