@@ -46,6 +46,7 @@ function update_script() {
 
     if grep -q '^ExecStart=/usr/bin/pnpm docker-start$' /etc/systemd/system/openarchiver.service; then
       sed -i 's|^ExecStart=/usr/bin/pnpm docker-start$|ExecStart=/usr/bin/pnpm docker-start:oss|' /etc/systemd/system/openarchiver.service
+      systemctl daemon-reload
     fi
 
     msg_info "Starting Services"
