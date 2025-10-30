@@ -28,6 +28,7 @@ function update_script() {
     exit
   fi
   msg_ok "${APP} updates itself automatically!"
+  exit
 }
 
 start

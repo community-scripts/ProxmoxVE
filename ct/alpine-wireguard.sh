@@ -36,7 +36,6 @@ function update_script() {
     $STD ./wgd.sh start
     msg_ok "WGDashboard updated"
   fi
-
   exit 0
 }
 

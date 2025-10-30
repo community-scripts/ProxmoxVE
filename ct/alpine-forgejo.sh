@@ -31,7 +31,6 @@ function update_script() {
   msg_info "Restarting Forgejo"
   $STD rc-service forgejo restart
   msg_ok "Restarted Forgejo"
-
   exit 0
 }
 

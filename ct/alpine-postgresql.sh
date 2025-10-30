@@ -31,7 +31,6 @@ function update_script() {
   msg_info "Restarting PostgreSQL"
   $STD rc-service postgresql restart
   msg_ok "Restarted PostgreSQL"
-
   exit 0
 }
 
