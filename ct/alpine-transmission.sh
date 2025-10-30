@@ -32,7 +32,7 @@ function update_script() {
   $STD rc-service transmission-daemon restart
   msg_ok "Restarted Transmission"
   msg_ok "Update successfully!"
-  exit
+  exit 0
 }
 
 start

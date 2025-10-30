@@ -33,7 +33,7 @@ function update_script() {
   rc-service gitea restart
   msg_ok "Restarted Gitea"
   msg_ok "Update successfully!"
-  exit
+  exit 0
 }
 
 start

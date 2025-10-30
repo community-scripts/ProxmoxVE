@@ -42,7 +42,7 @@ function update_script() {
   $STD rc-service redlib start
   msg_ok "Started Service"
   msg_ok "Update successfully!"
-  exit
+  exit 0
 }
 
 start

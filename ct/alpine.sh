@@ -30,7 +30,7 @@ function update_script() {
   if [ "$UPD" == "1" ]; then
     $STD apk -U upgrade
     msg_ok "Update successfully!"
-    exit
+    exit 0
   fi
 }
 

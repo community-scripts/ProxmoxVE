@@ -33,7 +33,7 @@ function update_script() {
   rc-service caddy restart
   msg_ok "Restarted Caddy"
   msg_ok "Update successfully!"
-  exit
+  exit 0
 }
 
 start
