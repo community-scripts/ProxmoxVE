@@ -20,6 +20,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - kimai: Set global SQL mode to empty in install script [@MickLesk](https://github.com/MickLesk) ([#8747](https://github.com/community-scripts/ProxmoxVE/pull/8747))
+
   - #### ✨ New Features
 
     - Asterisk: add interactive version selection to installer [@MickLesk](https://github.com/MickLesk) ([#8726](https://github.com/community-scripts/ProxmoxVE/pull/8726))
