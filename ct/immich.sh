@@ -37,7 +37,7 @@ function update_script() {
 
   setup_uv
   PNPM_VERSION="$(curl -fsSL "https://raw.githubusercontent.com/immich-app/immich/refs/heads/main/package.json" | jq -r '.packageManager | split("@")[1]')"
-  NODE_VERSION="22" NODE_MODULE="pnpm@${PNPM_VERSION}" setup_nodejs
+  NODE_VERSION="24" NODE_MODULE="pnpm@${PNPM_VERSION}" setup_nodejs
 
   if [[ ! -f /etc/apt/preferences.d/preferences ]]; then
     msg_info "Adding Debian Testing repo"
