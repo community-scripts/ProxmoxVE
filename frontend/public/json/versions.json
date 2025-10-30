@@ -1,13 +1,113 @@
 [
   {
-    "name": "element-hq/synapse",
-    "version": "v1.141.0",
-    "date": "2025-10-29T11:45:43Z"
+    "name": "BerriAI/litellm",
+    "version": "v1.77.7.dev3",
+    "date": "2025-10-29T23:40:01Z"
+  },
+  {
+    "name": "Sonarr/Sonarr",
+    "version": "v4.0.15.2941",
+    "date": "2025-06-20T17:20:54Z"
+  },
+  {
+    "name": "homebridge/homebridge",
+    "version": "v1.11.1",
+    "date": "2025-10-29T22:09:26Z"
+  },
+  {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.534",
+    "date": "2025-10-29T21:01:24Z"
+  },
+  {
+    "name": "chrisvel/tududi",
+    "version": "v0.85",
+    "date": "2025-10-29T20:40:57Z"
+  },
+  {
+    "name": "influxdata/influxdb",
+    "version": "v2.7.12",
+    "date": "2025-05-29T17:08:26Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "e2e",
+    "date": "2025-10-29T19:37:29Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.4.2",
+    "date": "2025-10-07T08:11:58Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.12.7-rc1",
+    "date": "2025-10-29T18:03:43Z"
+  },
+  {
+    "name": "paperless-ngx/paperless-ngx",
+    "version": "v2.19.3",
+    "date": "2025-10-29T17:58:16Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.10.4",
+    "date": "2025-10-24T20:03:03Z"
+  },
+  {
+    "name": "go-gitea/gitea",
+    "version": "v1.25.0",
+    "date": "2025-10-29T16:57:54Z"
+  },
+  {
+    "name": "zwave-js/zwave-js-ui",
+    "version": "v11.6.1",
+    "date": "2025-10-29T16:51:06Z"
+  },
+  {
+    "name": "dgtlmoon/changedetection.io",
+    "version": "0.50.35",
+    "date": "2025-10-29T16:31:56Z"
+  },
+  {
+    "name": "azukaar/Cosmos-Server",
+    "version": "v0.18.4",
+    "date": "2025-04-05T19:12:57Z"
+  },
+  {
+    "name": "laurent22/joplin",
+    "version": "server-v3.4.4",
+    "date": "2025-09-25T13:19:26Z"
+  },
+  {
+    "name": "heiher/hev-socks5-server",
+    "version": "2.11.0",
+    "date": "2025-10-29T14:26:23Z"
+  },
+  {
+    "name": "mongodb/mongo",
+    "version": "r7.0.27-alpha0",
+    "date": "2025-10-29T13:54:18Z"
   },
   {
     "name": "zitadel/zitadel",
     "version": "v4.6.1",
     "date": "2025-10-29T10:15:50Z"
+  },
+  {
+    "name": "element-hq/synapse",
+    "version": "v1.141.0",
+    "date": "2025-10-29T11:45:43Z"
+  },
+  {
+    "name": "zabbix/zabbix",
+    "version": "7.4.4",
+    "date": "2025-10-29T11:31:26Z"
+  },
+  {
+    "name": "wazuh/wazuh",
+    "version": "coverity-w44-4.14.1",
+    "date": "2025-10-29T11:28:37Z"
   },
   {
     "name": "cockpit-project/cockpit",
@@ -65,11 +165,6 @@
     "date": "2025-10-29T03:25:13Z"
   },
   {
-    "name": "ollama/ollama",
-    "version": "v0.12.6-rc1",
-    "date": "2025-10-16T16:36:25Z"
-  },
-  {
     "name": "jeedom/core",
     "version": "4.4.20",
     "date": "2025-10-29T00:27:05Z"
@@ -78,16 +173,6 @@
     "name": "steveiliop56/tinyauth",
     "version": "v4.0.1",
     "date": "2025-10-15T16:53:55Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "v4.5.5",
-    "date": "2025-10-28T21:53:07Z"
-  },
-  {
-    "name": "dgtlmoon/changedetection.io",
-    "version": "0.50.34",
-    "date": "2025-10-28T21:08:11Z"
   },
   {
     "name": "tailscale/tailscale",
@@ -110,19 +195,14 @@
     "date": "2025-10-28T18:35:47Z"
   },
   {
-    "name": "azukaar/Cosmos-Server",
-    "version": "v0.18.4",
-    "date": "2025-04-05T19:12:57Z"
-  },
-  {
     "name": "keycloak/keycloak",
     "version": "26.4.2",
     "date": "2025-10-23T06:59:32Z"
   },
   {
     "name": "javedh-dev/tracktor",
-    "version": "0.4.3",
-    "date": "2025-10-28T17:32:48Z"
+    "version": "0.4.4",
+    "date": "2025-10-28T17:39:14Z"
   },
   {
     "name": "pi-hole/pi-hole",
@@ -170,19 +250,9 @@
     "date": "2025-10-28T13:05:28Z"
   },
   {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.534",
-    "date": "2025-10-28T12:29:12Z"
-  },
-  {
     "name": "n8n-io/n8n",
     "version": "n8n@1.117.3",
     "date": "2025-10-28T12:00:42Z"
-  },
-  {
-    "name": "zabbix/zabbix",
-    "version": "7.2.14",
-    "date": "2025-10-28T11:41:57Z"
   },
   {
     "name": "YunoHost/yunohost",
@@ -198,11 +268,6 @@
     "name": "thecfu/scraparr",
     "version": "v3.0.0-beta.2",
     "date": "2025-10-28T10:16:29Z"
-  },
-  {
-    "name": "chrisvel/tududi",
-    "version": "v0.84.2",
-    "date": "2025-10-22T17:03:48Z"
   },
   {
     "name": "maxdorninger/MediaManager",
@@ -223,11 +288,6 @@
     "name": "goauthentik/authentik",
     "version": "version/2025.10.0",
     "date": "2025-10-27T19:58:39Z"
-  },
-  {
-    "name": "BerriAI/litellm",
-    "version": "v1.77.7.dev2",
-    "date": "2025-10-27T18:50:42Z"
   },
   {
     "name": "rabbitmq/rabbitmq-server",
@@ -260,11 +320,6 @@
     "date": "2025-09-24T08:33:37Z"
   },
   {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.4.2",
-    "date": "2025-10-07T08:11:58Z"
-  },
-  {
     "name": "jellyfin/jellyfin",
     "version": "v10.11.1",
     "date": "2025-10-27T02:02:13Z"
@@ -273,11 +328,6 @@
     "name": "sassanix/Warracker",
     "version": "1.0.1",
     "date": "2025-10-27T01:35:01Z"
-  },
-  {
-    "name": "mongodb/mongo",
-    "version": "r8.0.16-rc1",
-    "date": "2025-10-26T23:32:32Z"
   },
   {
     "name": "Radarr/Radarr",
@@ -335,24 +385,9 @@
     "date": "2025-10-25T13:50:31Z"
   },
   {
-    "name": "go-gitea/gitea",
-    "version": "v1.24.7",
-    "date": "2025-10-25T01:23:46Z"
-  },
-  {
-    "name": "home-assistant/core",
-    "version": "2025.10.4",
-    "date": "2025-10-24T20:03:03Z"
-  },
-  {
     "name": "homarr-labs/homarr",
     "version": "v1.43.0",
     "date": "2025-10-24T19:16:05Z"
-  },
-  {
-    "name": "influxdata/influxdb",
-    "version": "v2.7.12",
-    "date": "2025-05-29T17:08:26Z"
   },
   {
     "name": "verdaccio/verdaccio",
@@ -408,16 +443,6 @@
     "name": "Cleanuparr/Cleanuparr",
     "version": "v2.4.0",
     "date": "2025-10-23T21:12:48Z"
-  },
-  {
-    "name": "wazuh/wazuh",
-    "version": "v4.14.0",
-    "date": "2025-10-23T17:45:30Z"
-  },
-  {
-    "name": "paperless-ngx/paperless-ngx",
-    "version": "v2.19.2",
-    "date": "2025-10-23T17:23:27Z"
   },
   {
     "name": "drakkan/sftpgo",
@@ -483,11 +508,6 @@
     "name": "grafana/grafana",
     "version": "v12.2.1",
     "date": "2025-10-21T14:40:19Z"
-  },
-  {
-    "name": "laurent22/joplin",
-    "version": "server-v3.4.4",
-    "date": "2025-09-25T13:19:26Z"
   },
   {
     "name": "AlexxIT/go2rtc",
@@ -603,11 +623,6 @@
     "name": "neo4j/neo4j",
     "version": "5.26.14",
     "date": "2025-10-17T12:38:22Z"
-  },
-  {
-    "name": "zwave-js/zwave-js-ui",
-    "version": "v11.5.2",
-    "date": "2025-10-17T08:20:13Z"
   },
   {
     "name": "diced/zipline",
@@ -990,11 +1005,6 @@
     "date": "2025-09-17T18:21:45Z"
   },
   {
-    "name": "heiher/hev-socks5-server",
-    "version": "2.10.0",
-    "date": "2025-09-17T14:47:00Z"
-  },
-  {
     "name": "icereed/paperless-gpt",
     "version": "v0.23.0",
     "date": "2025-09-17T10:15:51Z"
@@ -1225,11 +1235,6 @@
     "date": "2025-07-15T22:38:01Z"
   },
   {
-    "name": "homebridge/homebridge",
-    "version": "v1.11.0",
-    "date": "2025-07-13T19:22:47Z"
-  },
-  {
     "name": "mayswind/AriaNg",
     "version": "1.3.11",
     "date": "2025-07-13T13:33:48Z"
@@ -1268,11 +1273,6 @@
     "name": "clusterzx/paperless-ai",
     "version": "v3.0.7",
     "date": "2025-06-22T17:49:29Z"
-  },
-  {
-    "name": "Sonarr/Sonarr",
-    "version": "v4.0.15.2941",
-    "date": "2025-06-20T17:20:54Z"
   },
   {
     "name": "prometheus-pve/prometheus-pve-exporter",
