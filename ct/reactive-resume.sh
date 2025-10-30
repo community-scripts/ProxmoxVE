@@ -85,7 +85,7 @@ function update_script() {
     rm -f /tmp/minio.deb
     rm -f "$brwsr_tmp"
     msg_ok "Cleanup Completed"
-    msg_ok "Update successfully!"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

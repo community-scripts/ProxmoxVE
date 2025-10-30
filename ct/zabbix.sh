@@ -103,7 +103,7 @@ function update_script() {
   $STD apt -y autoclean
   $STD apt -y clean
   msg_ok "Cleaned"
-  msg_ok "Update successfully!"
+  msg_ok "Updated successfully!"
   exit
 }
 

@@ -55,7 +55,7 @@ function update_script() {
   $STD docker compose -p komodo -f "$COMPOSE_FILE" --env-file /opt/komodo/compose.env pull
   $STD docker compose -p komodo -f "$COMPOSE_FILE" --env-file /opt/komodo/compose.env up -d
   msg_ok "Updated Alpine-Komodo"
-  msg_ok "Update successfully!"
+  msg_ok "Updated successfully!"
   exit 0
 }
 

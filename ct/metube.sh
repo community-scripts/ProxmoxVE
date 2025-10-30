@@ -108,7 +108,7 @@ EOF
     sleep 1
     msg_ok "Started Service"
 
-    msg_ok "Update successfully!"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

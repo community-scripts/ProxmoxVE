@@ -49,7 +49,7 @@ function update_script() {
     msg_info "Cleaning Up"
     rm -rf /opt/vikunja-"$RELEASE"-amd64.deb
     msg_ok "Cleaned"
-    msg_ok "Update successfully!"
+    msg_ok "Updated successfully!"
   else
     msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi

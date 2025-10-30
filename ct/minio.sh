@@ -66,7 +66,7 @@ function update_script() {
     rm -f /usr/local/bin/minio_bak
     msg_ok "Cleaned"
 
-    msg_ok "Update successfully!"
+    msg_ok "Updated successfully!"
   else
     msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi

@@ -53,7 +53,7 @@ function update_script() {
         $STD uv pip install -r /opt/sabnzbd/requirements.txt --python=/opt/sabnzbd/venv/bin/python
 
         systemctl start sabnzbd
-        msg_ok "Update successfully!"
+        msg_ok "Updated successfully!"
     fi
     exit
 }

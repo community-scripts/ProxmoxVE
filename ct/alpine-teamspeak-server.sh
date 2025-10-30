@@ -40,7 +40,7 @@ function update_script() {
     rm -rf teamspeak3-server_linux_amd64
     echo "${RELEASE}" >~/.teamspeak-server
     $STD service teamspeak start
-    msg_ok "Update successfully!"
+    msg_ok "Updated successfully!"
   else
     msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi

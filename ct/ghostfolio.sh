@@ -60,7 +60,7 @@ function update_script() {
     msg_info "Cleaning Up"
     $STD npm cache clean --force
     msg_ok "Cleanup Completed"
-    msg_ok "Update successfully!"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

@@ -78,7 +78,7 @@ function update_script() {
     msg_info "Cleaning up"
     rm -rf "/opt/pelican-panel/panel.tar.gz"
     msg_ok "Cleaned"
-    msg_ok "Update successfully!"
+    msg_ok "Updated successfully!"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi

@@ -42,7 +42,7 @@ function update_script() {
       msg_info "Updating Redis"
       apk update && apk upgrade redis
       rc-service redis restart
-      msg_ok "Update successfully!"
+      msg_ok "Updated successfully!"
       exit
       ;;
     2)

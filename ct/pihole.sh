@@ -33,7 +33,7 @@ function update_script() {
     $STD apt upgrade -y
     /usr/local/bin/pihole -up
     msg_ok "Updated PiHole"
-    msg_ok "Update successfully!"
+    msg_ok "Updated successfully!"
     exit
 }
 

@@ -49,7 +49,7 @@ function update_script() {
   $STD apt -y upgrade
   $STD apt -y --with-new-pkgs upgrade jellyfin jellyfin-server
   msg_ok "Updated Jellyfin"
-  msg_ok "Update successfully!"
+  msg_ok "Updated successfully!"
   exit
 }
 

@@ -46,7 +46,7 @@ function update_script() {
     msg_info "Starting service"
     systemctl start AgentDVR
     msg_ok "Service started"
-    msg_ok "Update successfully!"
+    msg_ok "Updated successfully!"
   else
     msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi

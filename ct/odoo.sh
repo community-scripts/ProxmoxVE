@@ -61,7 +61,7 @@ function update_script() {
     rm -f /opt/odoo.deb
     msg_ok "Cleaned"
 
-    msg_ok "Update successfully!"
+    msg_ok "Updated successfully!"
   else
     msg_ok "No update required. ${APP} is already at ${LATEST_VERSION}"
   fi

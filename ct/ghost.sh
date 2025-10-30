@@ -33,7 +33,7 @@ function update_script() {
     if [ "$current_version" != "$latest_version" ]; then
       msg_info "Updating ${APP} from version v${current_version} to v${latest_version}"
       $STD npm install -g ghost-cli@latest
-      msg_ok "Update successfully!"
+      msg_ok "Updated successfully!"
     else
       msg_ok "${APP} is already at v${current_version}"
     fi

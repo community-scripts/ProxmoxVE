@@ -81,7 +81,7 @@ EOF
   systemctl start prometheus-pve-exporter
   msg_ok "Started Service"
 
-  msg_ok "Update successfully!"
+  msg_ok "Updated successfully!"
   exit 0
 }
 

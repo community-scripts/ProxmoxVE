@@ -40,7 +40,7 @@ function update_script() {
   $STD omd cleanup
   rm -rf /opt/checkmk.deb
   msg_ok "Updated ${APP}"
-  msg_ok "Update successfully!"
+  msg_ok "Updated successfully!"
 
   exit
 }

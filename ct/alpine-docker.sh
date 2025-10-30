@@ -37,7 +37,7 @@ function update_script() {
     case $CHOICE in
     1)
       $STD apk -U upgrade
-      msg_ok "Update successfully!"
+      msg_ok "Updated successfully!"
       exit
       ;;
     esac

@@ -31,7 +31,7 @@ function update_script() {
   $STD apt update
   $STD apt -y upgrade
   msg_ok "Updated Whisparr"
-  msg_ok "Update successfully!"
+  msg_ok "Updated successfully!"
   exit
 }
 

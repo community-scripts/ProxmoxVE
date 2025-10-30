@@ -50,7 +50,7 @@ function update_script() {
     systemctl start livebook
     msg_info "Started Service"
 
-    msg_ok "Update successfully!"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

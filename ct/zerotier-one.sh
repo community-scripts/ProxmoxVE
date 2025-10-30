@@ -41,7 +41,7 @@ function update_script() {
   msg_info "Starting Service"
   systemctl start zerotier-one
   msg_ok "Started Service"
-  msg_ok "Update successfully!"
+  msg_ok "Updated successfully!"
   exit
 }
 

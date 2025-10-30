@@ -54,7 +54,7 @@ function update_script() {
     systemctl start victoriametrics
     [[ -f /etc/systemd/system/victoriametrics-logs.service ]] && systemctl start victoriametrics-logs
     msg_ok "Started Service"
-    msg_ok "Update successfully!"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

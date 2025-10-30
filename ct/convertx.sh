@@ -51,7 +51,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start convertx
     msg_ok "Started Service"
-    msg_ok "Update successfully!"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

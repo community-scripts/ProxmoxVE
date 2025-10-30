@@ -44,7 +44,7 @@ function update_script() {
     msg_info "Cleaning up"
     rm -r /opt/phpipam-backup
     msg_ok "Cleaned"
-    msg_ok "Update successfully!"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

@@ -48,7 +48,7 @@ function update_script() {
     msg_info "Starting PhotoPrism"
     systemctl start photoprism
     msg_ok "Started PhotoPrism"
-    msg_ok "Update successfully!"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

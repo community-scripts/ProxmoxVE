@@ -39,7 +39,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start reitti
     msg_ok "Started Service"
-    msg_ok "Update successfully!"
+    msg_ok "Updated successfully!"
   fi
   if check_for_gh_release "photon" "dedicatedcode/reitti"; then
     msg_info "Stopping Service"
@@ -53,7 +53,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start photon
     msg_ok "Started Service"
-    msg_ok "Update successfully!"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

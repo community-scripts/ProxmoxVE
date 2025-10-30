@@ -30,7 +30,7 @@ function update_script() {
   $STD apt update
   $STD apt upgrade -y
   NODE_VERSION="22" NODE_MODULE="matterbridge" setup_nodejs
-  msg_ok "Update successfully!"
+  msg_ok "Updated successfully!"
   exit
 }
 

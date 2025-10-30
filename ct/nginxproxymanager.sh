@@ -165,7 +165,7 @@ EOF
   rm -rf ~/nginx-proxy-manager-*
   msg_ok "Cleaned"
 
-  msg_ok "Update successfully!"
+  msg_ok "Updated successfully!"
   exit
 }
 

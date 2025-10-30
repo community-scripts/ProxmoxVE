@@ -31,7 +31,7 @@ function update_script() {
   $STD apt update
   $STD apt install --only-upgrade -y openproject
   msg_ok "Updated ${APP}"
-  msg_ok "Update successfully!"
+  msg_ok "Updated successfully!"
   exit
 }
 

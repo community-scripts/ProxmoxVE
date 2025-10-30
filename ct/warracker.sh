@@ -48,7 +48,7 @@ function update_script() {
         systemctl start warracker
         systemctl start nginx
         msg_ok "Started Services"
-        msg_ok "Update successfully!"
+        msg_ok "Updated successfully!"
     fi
     exit
 }

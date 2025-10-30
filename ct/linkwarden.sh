@@ -63,7 +63,7 @@ function update_script() {
     rm -rf /root/.cache/yarn
     rm -rf /opt/linkwarden/.next/cache
     msg_ok "Cleaned"
-    msg_ok "Update successfully!"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

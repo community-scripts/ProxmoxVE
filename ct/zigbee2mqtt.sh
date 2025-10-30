@@ -59,7 +59,7 @@ function update_script() {
     msg_info "Cleaning up"
     rm -rf /opt/z2m_backup
     msg_ok "Cleaned up"
-    msg_ok "Update successfully!"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

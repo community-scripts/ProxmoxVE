@@ -68,7 +68,7 @@ function update_script() {
   fi
 
   systemctl restart changedetection
-  msg_ok "Update successfully!"
+  msg_ok "Updated successfully!"
   exit
 }
 

@@ -72,7 +72,7 @@ function update_script() {
     chown -R www-data:www-data /opt/*
     chmod -R 777 /opt/*
     msg_ok "Setup Permissions"
-    msg_ok "Update successfully!"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

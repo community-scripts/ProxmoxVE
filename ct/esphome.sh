@@ -81,7 +81,7 @@ EOF
   msg_info "Starting Service"
   systemctl start esphomeDashboard
   msg_ok "Started Service"
-  msg_ok "Update successfully!"
+  msg_ok "Updated successfully!"
   exit
 }
 

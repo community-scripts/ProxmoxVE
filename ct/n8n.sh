@@ -44,7 +44,7 @@ EOF
   rm -rf /usr/lib/node_modules/.n8n-* /usr/lib/node_modules/n8n
   $STD npm install -g n8n --force
   systemctl restart n8n
-  msg_ok "Update successfully!"
+  msg_ok "Updated successfully!"
   exit
 }
 

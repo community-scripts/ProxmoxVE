@@ -66,7 +66,7 @@ function update_script() {
     systemctl reload nginx
     rm -rf /opt/booklore_bak
     msg_ok "Started Service"
-    msg_ok "Update successfully!"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

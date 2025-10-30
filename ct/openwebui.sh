@@ -73,7 +73,7 @@ function update_script() {
     $STD git stash pop
   fi
   systemctl start open-webui.service
-  msg_ok "Update successfully!"
+  msg_ok "Updated successfully!"
   exit
 }
 

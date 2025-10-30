@@ -77,7 +77,7 @@ EOF
     msg_info "Starting Service"
     systemctl start tracktor
     msg_ok "Started Service"
-    msg_ok "Update successfully!"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

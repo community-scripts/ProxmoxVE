@@ -120,7 +120,7 @@ function update_script() {
     systemctl start paperless-consumer paperless-webserver paperless-scheduler paperless-task-queue
     sleep 1
     msg_ok "Started all Paperless-ngx Services"
-    msg_ok "Update successfully!"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

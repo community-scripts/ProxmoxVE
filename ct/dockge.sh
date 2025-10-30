@@ -32,7 +32,7 @@ function update_script() {
   $STD docker compose pull
   $STD docker compose up -d
   msg_ok "Updated ${APP}"
-  msg_ok "Update successfully!"
+  msg_ok "Updated successfully!"
   exit
 }
 

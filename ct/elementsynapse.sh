@@ -71,7 +71,7 @@ function update_script() {
       systemctl start synapse-admin
       echo "${RELEASE}" >/opt/"${APP}"_version.txt
       rm -f "$temp_file"
-      msg_ok "Update successfully!"
+      msg_ok "Updated successfully!"
     else
       msg_ok "No update required. ${APP} is already at v${RELEASE}"
     fi

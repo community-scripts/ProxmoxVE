@@ -42,7 +42,7 @@ function update_script() {
   systemctl start graylog-datanode
   systemctl start graylog-server
   msg_ok "Started Service"
-  msg_ok "Update successfully!"
+  msg_ok "Updated successfully!"
   exit
 }
 

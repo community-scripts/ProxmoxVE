@@ -39,7 +39,7 @@ function update_script() {
     $STD systemctl restart onlyoffice-documentserver
     msg_ok "$APP restarted"
   fi
-  msg_ok "Update successfully!"
+  msg_ok "Updated successfully!"
   exit
 }
 

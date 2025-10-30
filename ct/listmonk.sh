@@ -51,7 +51,7 @@ function update_script() {
     msg_info "Cleaning up"
     rm -rf /opt/listmonk-backup/
     msg_ok "Cleaned"
-    msg_ok "Update successfully!"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

@@ -56,7 +56,7 @@ function update_script() {
     systemctl start grist
     msg_ok "Started Service"
 
-    msg_ok "Update successfully!"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

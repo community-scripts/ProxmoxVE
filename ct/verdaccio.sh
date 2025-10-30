@@ -35,7 +35,7 @@ function update_script() {
 
   NODE_VERSION="22" NODE_MODULE="verdaccio" setup_nodejs
   systemctl restart verdaccio
-  msg_ok "Update successfully!"
+  msg_ok "Updated successfully!"
   exit
 }
 

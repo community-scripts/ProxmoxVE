@@ -60,7 +60,7 @@ function update_script() {
     msg_info "Starting Services"
     systemctl start palmr-backend palmr-frontend
     msg_ok "Started Services"
-    msg_ok "Update successfully!"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

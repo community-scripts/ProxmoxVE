@@ -156,7 +156,7 @@ EOF
     msg_info "Starting Services"
     systemctl start homarr
     msg_ok "Started Services"
-    msg_ok "Update successfully!"
+    msg_ok "Updated successfully!"
     read -p "${TAB3}It's recommended to reboot the LXC after an update, would you like to reboot the LXC now ? (y/n): " choice
     if [[ "$choice" =~ ^[Yy]$ ]]; then
       reboot
