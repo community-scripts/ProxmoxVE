@@ -44,6 +44,10 @@ function update_script() {
     $STD pnpm db:migrate
     msg_ok "Updated Open Archiver"
 
+    if grep -q '^ExecStart=/usr/bin/pnpm docker-start$' /etc/systemd/system/openarchiver.service; then
+      sed -i 's|^ExecStart=/usr/bin/pnpm docker-start$|ExecStart=/usr/bin/pnpm docker-start:oss|' /etc/systemd/system/openarchiver.service
+    fi
+
     msg_info "Starting Services"
     systemctl start openarchiver
     msg_ok "Started Services"
