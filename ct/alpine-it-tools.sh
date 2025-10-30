@@ -24,7 +24,7 @@ function update_script() {
 
   if [ ! -d /usr/share/nginx/html ]; then
     msg_error "No ${APP} Installation Found!"
-    exit 1
+    exit
   fi
 
   RELEASE=$(curl -fsSL https://api.github.com/repos/sharevb/it-tools/releases/latest | grep '"tag_name":' | cut -d '"' -f4)

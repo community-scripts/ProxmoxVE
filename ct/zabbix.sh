@@ -32,7 +32,7 @@ function update_script() {
   . /etc/os-release
   if [ "$VERSION_CODENAME" != "trixie" ]; then
     msg_error "Unsupported Debian version: $VERSION_CODENAME – please upgrade to Debian 13 (Trixie) before updating Zabbix."
-    exit 1
+    exit
   fi
 
   if systemctl list-unit-files | grep -q zabbix-agent2.service; then

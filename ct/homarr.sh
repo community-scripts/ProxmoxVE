@@ -33,7 +33,7 @@ function update_script() {
     msg_error "Update not supported. Refer to:"
     msg_error " - https://github.com/community-scripts/ProxmoxVE/discussions/1551"
     msg_error " - https://homarr.dev/docs/getting-started/after-the-installation/#importing-a-zip-from-version-before-100"
-    exit 1
+    exit
   fi
   if [[ ! -f /opt/run_homarr.sh ]]; then
     msg_info "Detected outdated and missing service files"

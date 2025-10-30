@@ -52,7 +52,7 @@ function update_script() {
     msg_info "Old Installation Found, you need to migrate your data and recreate to a new container"
     msg_info "Please follow the instructions on the ${APP} website to migrate your data"
     msg_info "https://actualbudget.org/docs/backup-restore/backup"
-    exit 1
+    exit
   fi
   exit
 }

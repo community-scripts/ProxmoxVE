@@ -63,7 +63,7 @@ function update_script() {
       read -rp "Have you created a snapshot? [y/N]: " confirm
       if [[ ! "$confirm" =~ ^([yY]|[yY][eE][sS])$ ]]; then
         msg_error "Migration aborted. Please create a snapshot first."
-        exit 1
+        exit
       fi
       msg_info "Migrating old Paperless-ngx installation to uv"
       rm -rf /opt/paperless/venv

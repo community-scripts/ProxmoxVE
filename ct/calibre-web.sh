@@ -104,7 +104,7 @@ function update_script() {
         ;;
       *)
         echo "Unsupported item $CHOICE!" >&2
-        exit 1
+        exit
         ;;
       esac
     done

@@ -26,7 +26,7 @@ function update_script() {
 
   if [[ ! -f /etc/odoo/odoo.conf ]]; then
     msg_error "No ${APP} Installation Found!"
-    exit 1
+    exit
   fi
   if ! [[ $(dpkg -s python3-lxml-html-clean 2>/dev/null) ]]; then
     $STD apt install python3-lxml

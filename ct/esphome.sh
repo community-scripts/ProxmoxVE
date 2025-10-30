@@ -25,7 +25,7 @@ function update_script() {
   check_container_resources
   if [[ ! -f /etc/systemd/system/esphomeDashboard.service ]]; then
     msg_error "No ${APP} Installation Found!"
-    exit 1
+    exit
   fi
 
   msg_info "Stopping Service"

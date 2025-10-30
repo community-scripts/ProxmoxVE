@@ -25,7 +25,7 @@ function update_script() {
     check_container_resources
     if [[ ! -d /opt/paperless-gpt ]]; then
         msg_error "No Paperless-GPT installation found!"
-        exit 1
+        exit
     fi
     RELEASE=$(curl -fsSL https://api.github.com/repos/icereed/paperless-gpt/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
     if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
