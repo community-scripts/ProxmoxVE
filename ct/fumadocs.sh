@@ -60,8 +60,7 @@ function update_script() {
   msg_info "Starting service $SERVICE_NAME"
   systemctl start "$SERVICE_NAME"
   msg_ok "Started service $SERVICE_NAME"
-
-  msg_ok "Fumadocs successfully updated"
+  msg_ok "Update Successfully!"
   exit
 }
 

@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: MickLesk (CanbiZ)
@@ -29,9 +29,9 @@ function update_script() {
     exit
   fi
   if check_for_gh_release "booklore" "booklore-app/BookLore"; then
-    msg_info "Stopping $APP"
+    msg_info "Stopping Service"
     systemctl stop booklore
-    msg_ok "Stopped $APP"
+    msg_info "Stopped Service"
 
     msg_info "backup old install"
     mv /opt/booklore /opt/booklore_bak
@@ -61,12 +61,12 @@ function update_script() {
     cp "$JAR_PATH" /opt/booklore/dist/app.jar
     msg_ok "Built Backend"
 
-    msg_info "Starting $APP"
+    msg_info "Starting Service"
     systemctl start booklore
     systemctl reload nginx
     rm -rf /opt/booklore_bak
-    msg_ok "Started $APP"
-    msg_ok "Updated Successfully"
+    msg_ok "Started Service"
+    msg_ok "Update Successfully!"
   fi
   exit
 }

@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: Florianb63
@@ -32,7 +32,7 @@ function update_script() {
   msg_info "Updating ${APP} LXC"
   $STD apt-get update
   $STD apt-get -y upgrade
-  msg_ok "Updated Successfully"
+  msg_ok "Update Successfully!"
 
   exit
 }

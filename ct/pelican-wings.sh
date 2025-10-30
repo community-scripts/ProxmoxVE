@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: bvdberg01
@@ -43,7 +43,7 @@ curl -fsSL "https://github.com/pelican-dev/wings/releases/download/v${RELEASE}/w
     msg_info "Starting Service"
     systemctl start wings
     msg_ok "Started Service"
-    msg_ok "Updated Successfully"
+    msg_ok "Update Successfully!"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi

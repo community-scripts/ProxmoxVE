@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: Jonathan (jd-apprentice)
@@ -45,7 +45,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start opengist
     msg_ok "Started Service"
-    msg_ok "Updated Successfully"
+    msg_ok "Update Successfully!"
   fi
   exit
 }
@@ -58,3 +58,4 @@ msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:6157${CL}"
+

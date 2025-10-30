@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: twingate-andrewb
@@ -33,7 +33,7 @@ function update_script() {
   $STD apt update
   $STD apt install -yq twingate-connector
   $STD systemctl restart twingate-connector
-  msg_ok "Updated Successfully"
+  msg_ok "Update Successfully!"
   exit
 }
 
@@ -42,3 +42,4 @@ build_container
 description
 
 msg_ok "All Finished! If you need to update your access or refresh tokens, they can be found in /etc/twingate/connector.conf"
+

@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: MickLesk (CanbiZ)
@@ -57,7 +57,7 @@ curl -fsSL "https://github.com/icereed/paperless-gpt/archive/refs/tags/v${RELEAS
         msg_info "Cleaning Up"
         rm -f $temp_file
         msg_ok "Cleanup Completed"
-        msg_ok "Updated Successfully"
+        msg_ok "Update Successfully!"
     else
         msg_ok "No update required. ${APP} is already at ${RELEASE}"
     fi

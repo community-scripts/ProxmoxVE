@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 tteck
 # Author: tteck (tteckster)
@@ -38,7 +38,7 @@ function update_script() {
     msg_info "Starting service"
     systemctl start mediamtx
     msg_ok "Service started"
-    msg_ok "Updated successfully"
+    msg_ok "Update Successfully!"
   fi
   exit
 }
@@ -49,3 +49,4 @@ description
 
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
+

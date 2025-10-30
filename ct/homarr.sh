@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: CrazyWolf13
@@ -156,7 +156,7 @@ EOF
     msg_info "Starting Services"
     systemctl start homarr
     msg_ok "Started Services"
-    msg_ok "Updated Successfully"
+    msg_ok "Update Successfully!"
     read -p "${TAB3}It's recommended to reboot the LXC after an update, would you like to reboot the LXC now ? (y/n): " choice
     if [[ "$choice" =~ ^[Yy]$ ]]; then
       reboot

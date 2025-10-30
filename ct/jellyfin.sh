@@ -37,7 +37,7 @@ function update_script() {
     fetch_and_deploy_gh_release "intel-opencl-icd" "intel/compute-runtime" "binary" "latest" "" "intel-opencl-icd_*_amd64.deb"
     msg_ok "Updated Intel Dependencies"
   fi
-  
+
   msg_info "Updating Jellyfin"
   if ! dpkg -s libjemalloc2 >/dev/null 2>&1; then
     $STD apt install -y libjemalloc2

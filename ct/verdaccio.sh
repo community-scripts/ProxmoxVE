@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: BrynnJKnight
@@ -35,7 +35,7 @@ function update_script() {
 
   NODE_VERSION="22" NODE_MODULE="verdaccio" setup_nodejs
   systemctl restart verdaccio
-  msg_ok "Updated Successfully"
+  msg_ok "Update Successfully!"
   exit
 }
 
@@ -47,3 +47,4 @@ msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:4873${CL}"
+

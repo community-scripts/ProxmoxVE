@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 tteck
 # Author: tteck (tteckster)
@@ -44,7 +44,7 @@ EOF
   rm -rf /usr/lib/node_modules/.n8n-* /usr/lib/node_modules/n8n
   $STD npm install -g n8n --force
   systemctl restart n8n
-  msg_ok "Updated Successfully"
+  msg_ok "Update Successfully!"
   exit
 }
 
@@ -56,3 +56,4 @@ msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:5678${CL}"
+
