@@ -4,7 +4,7 @@
   "categories": [
     21
   ],
-  "date_created": "2025-10-28",
+  "date_created": "2025-10-30",
   "type": "ct",
   "updateable": true,
   "privileged": false,
@@ -19,9 +19,9 @@
       "type": "default",
       "script": "ct/reitti.sh",
       "resources": {
-        "cpu": 4,
-        "ram": 6144,
-        "hdd": 20,
+        "cpu": 2,
+        "ram": 4096,
+        "hdd": 15,
         "os": "debian",
         "version": "13"
       }
@@ -33,7 +33,7 @@
   },
   "notes": [
     {
-      "text": "Photon Geocoder must be running at http://127.0.0.1:2322. The installer sets this up Photon automatically, but without sample data. (filesize is big).",
+      "text": "Photon Geocoder running at http://127.0.0.1:2322. Photon is fully setup, but without sample data. (filesize is big) -> checkout our guide: ´https://github.com/community-scripts/ProxmoxVE/discussions/8737´.",
       "type": "info"
     }
   ]
