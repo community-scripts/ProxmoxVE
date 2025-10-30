@@ -63,9 +63,8 @@ WantedBy=multi-user.target
 EOF
     systemctl daemon-reexec
     systemctl restart jupyternotebook
-    msg_ok "Service updated and restarted"
+    msg_ok "Updated successfully!"
   fi
-
   exit
 }
 

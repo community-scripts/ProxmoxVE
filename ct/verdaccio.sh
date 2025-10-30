@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: BrynnJKnight
@@ -35,7 +35,7 @@ function update_script() {
 
   NODE_VERSION="22" NODE_MODULE="verdaccio" setup_nodejs
   systemctl restart verdaccio
-  msg_ok "Updated Successfully"
+  msg_ok "Updated successfully!"
   exit
 }
 

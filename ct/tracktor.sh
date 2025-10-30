@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: CrazyWolf13
@@ -35,16 +35,16 @@ function update_script() {
 
     msg_info "Correcting Services"
     if [ -f /opt/tracktor/app/backend/.env ]; then
-        mv /opt/tracktor/app/backend/.env /opt/tracktor.env
-        echo 'AUTH_PIN=123456' >> /opt/tracktor.env
-        sed -i 's|^EnvironmentFile=.*|EnvironmentFile=/opt/tracktor.env|' /etc/systemd/system/tracktor.service
-        systemctl daemon-reload
+      mv /opt/tracktor/app/backend/.env /opt/tracktor.env
+      echo 'AUTH_PIN=123456' >>/opt/tracktor.env
+      sed -i 's|^EnvironmentFile=.*|EnvironmentFile=/opt/tracktor.env|' /etc/systemd/system/tracktor.service
+      systemctl daemon-reload
     fi
     if [ ! -d "/opt/tracktor-data/uploads" ]; then
-        mkdir -p /opt/tracktor-data/{uploads,logs}
-        EXISTING_AUTH_PIN=$(grep '^AUTH_PIN=' /opt/tracktor.env 2>/dev/null | cut -d'=' -f2)
-        AUTH_PIN=${EXISTING_AUTH_PIN:-123456}
-        cat <<EOF >/opt/tracktor.env
+      mkdir -p /opt/tracktor-data/{uploads,logs}
+      EXISTING_AUTH_PIN=$(grep '^AUTH_PIN=' /opt/tracktor.env 2>/dev/null | cut -d'=' -f2)
+      AUTH_PIN=${EXISTING_AUTH_PIN:-123456}
+      cat <<EOF >/opt/tracktor.env
 NODE_ENV=production
 DB_PATH=/opt/tracktor-data/tracktor.db
 UPLOADS_DIR="/opt/tracktor-data/uploads"
@@ -77,7 +77,7 @@ EOF
     msg_info "Starting Service"
     systemctl start tracktor
     msg_ok "Started Service"
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

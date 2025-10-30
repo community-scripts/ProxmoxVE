@@ -29,19 +29,19 @@ function update_script() {
     exit
   fi
   if check_for_gh_release "seelf" "YuukanOO/seelf"; then
-    msg_info "Stopping $APP"
+    msg_info "Stopping Service"
     systemctl stop seelf
-    msg_ok "Stopped $APP"
+    msg_info "Stopped Service"
 
     msg_info "Updating $APP"
     cd /opt/seelf
     $STD make build
     msg_ok "Updated $APP"
 
-    msg_info "Starting $APP"
+    msg_info "Starting Service"
     systemctl start seelf
-    msg_ok "Started $APP"
-    msg_ok "Update Successfully"
+    msg_ok "Started Service"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

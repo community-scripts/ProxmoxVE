@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 tteck
 # Author: tteck (tteckster)
@@ -36,7 +36,7 @@ function update_script() {
       DB_RESTORE_PATH="/opt/trilium/assets/db"
     else
       msg_error "Database not found in either /opt/trilium/db or /opt/trilium/assets/db"
-      exit 1
+      exit
     fi
 
     msg_info "Stopping Service"
@@ -68,7 +68,7 @@ function update_script() {
     systemctl start trilium
     sleep 1
     msg_ok "Started Service"
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

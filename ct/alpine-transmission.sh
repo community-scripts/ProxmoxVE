@@ -31,6 +31,7 @@ function update_script() {
   msg_info "Restarting Transmission"
   $STD rc-service transmission-daemon restart
   msg_ok "Restarted Transmission"
+  msg_ok "Updated successfully!"
   exit 0
 }
 

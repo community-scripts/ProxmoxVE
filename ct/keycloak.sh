@@ -58,7 +58,7 @@ function update_script() {
     msg_info "Cleaning up"
     rm -rf keycloak.old
     msg_ok "Cleanup complete"
-    msg_ok "Update Successful"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

@@ -29,7 +29,8 @@ function update_script() {
   header_info
   if [ "$UPD" == "1" ]; then
     $STD apk -U upgrade
-    exit
+    msg_ok "Updated successfully!"
+    exit 0
   fi
 }
 

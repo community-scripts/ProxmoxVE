@@ -40,7 +40,7 @@ function update_script() {
     $STD apt-get -y autoremove
     $STD apt-get -y autoclean
     msg_ok "Cleanup Completed"
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

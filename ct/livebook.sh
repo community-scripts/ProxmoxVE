@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVED/refs/heads/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: dkuku
@@ -45,12 +45,12 @@ function update_script() {
     $STD mix escript.install hex livebook --force
 
     chown -R livebook:livebook /opt/livebook /data
-    
+
     msg_info "Starting Service"
     systemctl start livebook
     msg_info "Started Service"
 
-    msg_ok "Updated Successfully!"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

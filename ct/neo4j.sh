@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 tteck
 # Author: tteck | Co-Author: havardthom
@@ -33,7 +33,7 @@ function update_script() {
   msg_info "Updating ${APP}"
   $STD apt update
   $STD apt -y upgrade
-  msg_ok "Updated Successfully"
+  msg_ok "Updated successfully!"
   exit
 }
 

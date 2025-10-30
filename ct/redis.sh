@@ -20,15 +20,19 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -f /lib/systemd/system/redis-server.service ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    msg_error "Currently we don't provide an update function for this ${APP}."
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -f /lib/systemd/system/redis-server.service ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+  msg_info "Updating $APP LXC"
+  $STD apt update
+  $STD apt -y upgrade
+  msg_ok "Updated $APP LXC"
+  msg_ok "Updated successfully!"
+  exit
 }
 
 start

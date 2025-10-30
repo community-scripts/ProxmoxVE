@@ -20,19 +20,20 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
+  header_info
+  check_container_storage
+  check_container_resources
 
-    if [[ ! -d "/opt/inventree" ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    msg_info "Updating $APP"
-    $STD apt-get update
-    $STD apt-get install --only-upgrade inventree -y
-    msg_ok "Updated $APP"
+  if [[ ! -d "/opt/inventree" ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+  msg_info "Updating $APP"
+  $STD apt-get update
+  $STD apt-get install --only-upgrade inventree -y
+  msg_ok "Updated $APP"
+  msg_ok "Updated successfully!"
+  exit
 }
 
 start

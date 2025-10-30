@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 tteck
 # Author: havardthom | Co-Author: MickLesk (CanbiZ)
@@ -53,7 +53,7 @@ function update_script() {
     msg_info "Cleaning Up"
     rm -f "${TMP_TAR}"
     msg_ok "Cleaned"
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   else
     msg_ok "No update required. Ollama is already at ${RELEASE}"
   fi

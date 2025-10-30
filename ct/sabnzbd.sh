@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 tteck
 # Author: tteck (tteckster) | Co-Author: MickLesk (CanbiZ)
@@ -27,7 +27,7 @@ function update_script() {
     if par2 --version | grep -q "par2cmdline-turbo"; then
         fetch_and_deploy_gh_release "par2cmdline-turbo" "animetosho/par2cmdline-turbo" "prebuild" "latest" "/usr/bin/" "*-linux-amd64.zip"
     fi
-    
+
     if [[ ! -d /opt/sabnzbd ]]; then
         msg_error "No ${APP} Installation Found!"
         exit
@@ -37,7 +37,6 @@ function update_script() {
         systemctl stop sabnzbd
         cp -r /opt/sabnzbd /opt/sabnzbd_backup_$(date +%s)
         fetch_and_deploy_gh_release "sabnzbd-org" "sabnzbd/sabnzbd" "prebuild" "latest" "/opt/sabnzbd" "SABnzbd-*-src.tar.gz"
-
 
         if [[ ! -d /opt/sabnzbd/venv ]]; then
             msg_info "Migrating SABnzbd to uv virtual environment"
@@ -54,7 +53,7 @@ function update_script() {
         $STD uv pip install -r /opt/sabnzbd/requirements.txt --python=/opt/sabnzbd/venv/bin/python
 
         systemctl start sabnzbd
-        msg_ok "Updated Successfully"
+        msg_ok "Updated successfully!"
     fi
     exit
 }

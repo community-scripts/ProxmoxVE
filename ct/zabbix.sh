@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: MickLesk (CanbiZ)
@@ -32,7 +32,7 @@ function update_script() {
   . /etc/os-release
   if [ "$VERSION_CODENAME" != "trixie" ]; then
     msg_error "Unsupported Debian version: $VERSION_CODENAME – please upgrade to Debian 13 (Trixie) before updating Zabbix."
-    exit 1
+    exit
   fi
 
   if systemctl list-unit-files | grep -q zabbix-agent2.service; then
@@ -103,7 +103,7 @@ function update_script() {
   $STD apt -y autoclean
   $STD apt -y clean
   msg_ok "Cleaned"
-  msg_ok "Updated Successfully!"
+  msg_ok "Updated successfully!"
   exit
 }
 

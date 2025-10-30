@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 tteck
 # Author: tteck (tteckster)
@@ -25,7 +25,7 @@ function update_script() {
   check_container_resources
   if [[ ! -f /etc/systemd/system/esphomeDashboard.service ]]; then
     msg_error "No ${APP} Installation Found!"
-    exit 1
+    exit
   fi
 
   msg_info "Stopping Service"
@@ -81,7 +81,7 @@ EOF
   msg_info "Starting Service"
   systemctl start esphomeDashboard
   msg_ok "Started Service"
-  msg_ok "Updated Successfully"
+  msg_ok "Updated successfully!"
   exit
 }
 

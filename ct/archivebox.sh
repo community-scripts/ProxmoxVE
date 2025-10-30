@@ -55,7 +55,7 @@ function update_script() {
   msg_info "Starting Service"
   systemctl start archivebox
   msg_ok "Started Service"
-  msg_ok "Updated Successfully!"
+  msg_ok "Updated successfully!"
   exit
 }
 

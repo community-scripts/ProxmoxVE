@@ -42,7 +42,7 @@ function update_script() {
     chmod -R 0755 /opt/privatebin/data}
     systemctl reload nginx php8.2-fpm
     msg_ok "Configured ${APP}"
-    msg_ok "Successfully updated"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

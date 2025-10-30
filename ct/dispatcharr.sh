@@ -121,7 +121,7 @@ function update_script() {
     msg_info "Cleaning up"
     rm -f /tmp/dispatcharr_db_*.sql
     msg_ok "Cleanup completed"
-    msg_ok "Update Successfully!"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

@@ -42,7 +42,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start umlautadaptarr
     msg_ok "Started Service"
-    msg_ok "$APP has been updated to ${RELEASE}."
+    msg_ok "Updated successfully!"
   else
     msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi

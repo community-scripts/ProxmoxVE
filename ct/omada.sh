@@ -33,7 +33,7 @@ function update_script() {
   if ! lscpu | grep -q 'avx'; then
     MONGODB_VERSION="4.4"
     msg_error "No AVX detected: TP-Link Canceled Support for Old MongoDB for Debian 12\n https://www.tp-link.com/baltic/support/faq/4160/"
-    exit 1
+    exit
   fi
 
   curl -fsSL "https://www.mongodb.org/static/pgp/server-${MONGODB_VERSION}.asc" | gpg --dearmor >/usr/share/keyrings/mongodb-server-${MONGODB_VERSION}.gpg
@@ -59,14 +59,14 @@ function update_script() {
   OMADA_PKG=$(basename "$OMADA_URL")
   if [ -z "$OMADA_PKG" ]; then
     msg_error "Could not retrieve Omada package – server may be down."
-    exit 1
+    exit
   fi
   curl -fsSL "$OMADA_URL" -o "$OMADA_PKG"
   export DEBIAN_FRONTEND=noninteractive
   $STD dpkg -i "$OMADA_PKG"
   rm -f "$OMADA_PKG"
-  msg_ok "Updated Omada Controller"
-  exit 0
+  msg_ok "Updated successfully!"
+  exit
 }
 
 start

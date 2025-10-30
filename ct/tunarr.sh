@@ -44,7 +44,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start tunarr
     msg_ok "Started Service"
-    msg_ok "Update Successfully"
+    msg_ok "Updated successfully!"
   fi
 
   if check_for_gh_release "ersatztv-ffmpeg" "ErsatzTV/ErsatzTV-ffmpeg"; then
@@ -64,7 +64,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start tunarr
     msg_ok "Started Service"
-    msg_ok "Update Successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

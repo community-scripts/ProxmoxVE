@@ -20,31 +20,30 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
+  header_info
+  check_container_storage
+  check_container_resources
 
-    if [[ ! -d /etc/graylog ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    msg_info "Stopping $APP"
-    systemctl stop graylog-datanode
-    systemctl stop graylog-server
-    msg_ok "Stopped $APP"
-
-    msg_info "Updating $APP"
-    $STD apt-get update
-    $STD apt-get upgrade -y
-    msg_ok "Updated $APP"
-
-    msg_info "Starting $APP"
-    systemctl start graylog-datanode
-    systemctl start graylog-server
-    msg_ok "Started $APP"
-
-    msg_ok "Update Successful"
+  if [[ ! -d /etc/graylog ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+  msg_info "Stopping Service"
+  systemctl stop graylog-datanode
+  systemctl stop graylog-server
+  msg_info "Stopped Service"
+
+  msg_info "Updating $APP"
+  $STD apt-get update
+  $STD apt-get upgrade -y
+  msg_ok "Updated $APP"
+
+  msg_info "Starting Service"
+  systemctl start graylog-datanode
+  systemctl start graylog-server
+  msg_ok "Started Service"
+  msg_ok "Updated successfully!"
+  exit
 }
 
 start

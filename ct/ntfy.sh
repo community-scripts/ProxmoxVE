@@ -20,36 +20,37 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /etc/ntfy ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /etc/ntfy ]]; then
+    msg_error "No ${APP} Installation Found!"
+    exit
+  fi
 
-    if [ -f /etc/apt/keyrings/archive.heckel.io.gpg ]; then
-        msg_info "Correcting old Ntfy Repository"
-        rm -f /etc/apt/keyrings/archive.heckel.io.gpg
-        rm -f /etc/apt/sources.list.d/archive.heckel.io.list
-        rm -f /etc/apt/sources.list.d/archive.heckel.io.list.bak
-        rm -f /etc/apt/sources.list.d/archive.heckel.io.sources
-        curl -fsSL -o /etc/apt/keyrings/ntfy.gpg https://archive.ntfy.sh/apt/keyring.gpg
-        cat <<'EOF' >/etc/apt/sources.list.d/ntfy.sources 
+  if [ -f /etc/apt/keyrings/archive.heckel.io.gpg ]; then
+    msg_info "Correcting old Ntfy Repository"
+    rm -f /etc/apt/keyrings/archive.heckel.io.gpg
+    rm -f /etc/apt/sources.list.d/archive.heckel.io.list
+    rm -f /etc/apt/sources.list.d/archive.heckel.io.list.bak
+    rm -f /etc/apt/sources.list.d/archive.heckel.io.sources
+    curl -fsSL -o /etc/apt/keyrings/ntfy.gpg https://archive.ntfy.sh/apt/keyring.gpg
+    cat <<'EOF' >/etc/apt/sources.list.d/ntfy.sources
 Types: deb
 URIs: https://archive.ntfy.sh/apt/
 Suites: stable
 Components: main
 Signed-By: /etc/apt/keyrings/ntfy.gpg
 EOF
-        msg_ok "Corrected old Ntfy Repository"
-    fi
-    
-    msg_info "Updating $APP LXC"
-    $STD apt update
-    $STD apt -y upgrade
-    msg_ok "Updated $APP LXC"
-    exit
+    msg_ok "Corrected old Ntfy Repository"
+  fi
+
+  msg_info "Updating $APP LXC"
+  $STD apt update
+  $STD apt -y upgrade
+  msg_ok "Updated $APP LXC"
+  msg_ok "Updated successfully!"
+  exit
 }
 
 start

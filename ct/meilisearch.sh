@@ -40,7 +40,7 @@ function update_script() {
       msg_info "Starting Meilisearch"
       systemctl start meilisearch
       msg_ok "Started Meilisearch"
-      msg_ok "Update Successfully"
+      msg_ok "Updated successfully!"
     fi
     exit
   fi
@@ -69,7 +69,7 @@ function update_script() {
       msg_info "Starting Meilisearch-UI"
       systemctl start meilisearch-ui
       msg_ok "Started Meilisearch-UI"
-      msg_ok "Update Successfully"
+      msg_ok "Updated successfully!"
     fi
     exit
   fi

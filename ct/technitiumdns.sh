@@ -38,6 +38,7 @@ function update_script() {
     msg_info "Cleaning up"
     rm -f /opt/DnsServerPortable.tar.gz
     msg_ok "Cleaned up"
+    msg_ok "Updated successfully!"
   else
     msg_ok "No update required.  Technitium DNS is already at v${RELEASE}."
   fi

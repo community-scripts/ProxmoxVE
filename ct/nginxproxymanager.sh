@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 tteck
 # Author: tteck (tteckster)
@@ -27,8 +27,8 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  
-  if command -v node &> /dev/null; then
+
+  if command -v node &>/dev/null; then
     CURRENT_NODE_VERSION=$(node --version | cut -d'v' -f2 | cut -d'.' -f1)
     if [[ "$CURRENT_NODE_VERSION" != "22" ]]; then
       systemctl stop openresty
@@ -165,7 +165,7 @@ EOF
   rm -rf ~/nginx-proxy-manager-*
   msg_ok "Cleaned"
 
-  msg_ok "Updated Successfully"
+  msg_ok "Updated successfully!"
   exit
 }
 

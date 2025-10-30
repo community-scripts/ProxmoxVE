@@ -31,7 +31,7 @@ function update_script() {
   $STD apt update
   $STD apt -y upgrade
   msg_ok "Updated $APP LXC"
-  exit
+  msg_ok "Updated successfully!"
 }
 
 start
