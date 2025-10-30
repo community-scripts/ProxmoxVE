@@ -38,6 +38,7 @@ function update_script() {
     mv /opt/openarchiver.env /opt/openarchiver/.env
 
     msg_info "Updating Open Archiver"
+    cd /opt/openarchiver
     $STD pnpm install --shamefully-hoist --frozen-lockfile --prod=false
     $STD pnpm build
     $STD pnpm db:migrate
