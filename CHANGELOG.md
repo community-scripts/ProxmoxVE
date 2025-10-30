@@ -20,8 +20,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Add explicit exit calls to update_script functions [@MickLesk](https://github.com/MickLesk) ([#8752](https://github.com/community-scripts/ProxmoxVE/pull/8752))
+    - kimai: Set global SQL mode to empty in install script [@MickLesk](https://github.com/MickLesk) ([#8747](https://github.com/community-scripts/ProxmoxVE/pull/8747))
+
   - #### ✨ New Features
 
+    - core: add function cleanup_lxc [@MickLesk](https://github.com/MickLesk) ([#8749](https://github.com/community-scripts/ProxmoxVE/pull/8749))
     - Asterisk: add interactive version selection to installer [@MickLesk](https://github.com/MickLesk) ([#8726](https://github.com/community-scripts/ProxmoxVE/pull/8726))
 
 ### 🌐 Website

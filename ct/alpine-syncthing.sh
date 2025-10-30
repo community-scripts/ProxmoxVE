@@ -32,7 +32,7 @@ function update_script() {
   $STD rc-service syncthing restart
   msg_ok "Restarted Syncthing"
   msg_ok "Update Successfully!"
-  exit 1
+  exit 0
 }
 
 start

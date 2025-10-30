@@ -40,6 +40,7 @@ function update_script() {
   else
     msg_ok "${APP} is already up to date (${RELEASE})"
   fi
+  exit
 }
 
 start

@@ -1,5 +1,70 @@
 [
   {
+    "name": "OliveTin/OliveTin",
+    "version": "2025-10-30",
+    "date": "2025-10-30T10:02:40Z"
+  },
+  {
+    "name": "docker/compose",
+    "version": "v2.40.3",
+    "date": "2025-10-30T09:35:37Z"
+  },
+  {
+    "name": "prometheus/prometheus",
+    "version": "v0.307.3",
+    "date": "2025-10-30T08:13:40Z"
+  },
+  {
+    "name": "zabbix/zabbix",
+    "version": "8.0.0alpha1",
+    "date": "2025-10-30T07:59:41Z"
+  },
+  {
+    "name": "semaphoreui/semaphore",
+    "version": "v2.16.37",
+    "date": "2025-10-30T07:54:49Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "v10.5.14",
+    "date": "2025-10-30T06:43:58Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.3",
+    "date": "2025-09-20T12:12:33Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.222",
+    "date": "2025-10-30T05:55:32Z"
+  },
+  {
+    "name": "documenso/documenso",
+    "version": "v1.13.2",
+    "date": "2025-10-30T04:12:40Z"
+  },
+  {
+    "name": "ipfs/kubo",
+    "version": "v0.38.2",
+    "date": "2025-10-30T02:44:09Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-10-30T00:27:05Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.0.1",
+    "date": "2025-10-15T16:53:55Z"
+  },
+  {
+    "name": "gtsteffaniak/filebrowser",
+    "version": "v1.0.0-beta",
+    "date": "2025-10-30T00:09:23Z"
+  },
+  {
     "name": "BerriAI/litellm",
     "version": "v1.77.7.dev3",
     "date": "2025-10-29T23:40:01Z"
@@ -31,13 +96,18 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "e2e",
+    "version": "nightly",
     "date": "2025-10-29T19:37:29Z"
   },
   {
     "name": "firefly-iii/firefly-iii",
     "version": "v6.4.2",
     "date": "2025-10-07T08:11:58Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.4.2",
+    "date": "2025-10-23T06:59:32Z"
   },
   {
     "name": "ollama/ollama",
@@ -100,11 +170,6 @@
     "date": "2025-10-29T11:45:43Z"
   },
   {
-    "name": "zabbix/zabbix",
-    "version": "7.4.4",
-    "date": "2025-10-29T11:31:26Z"
-  },
-  {
     "name": "wazuh/wazuh",
     "version": "coverity-w44-4.14.1",
     "date": "2025-10-29T11:28:37Z"
@@ -140,16 +205,6 @@
     "date": "2025-10-29T06:32:09Z"
   },
   {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.3",
-    "date": "2025-09-20T12:12:33Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.206",
-    "date": "2025-10-29T05:53:41Z"
-  },
-  {
     "name": "henrygd/beszel",
     "version": "v0.15.2",
     "date": "2025-10-29T05:26:32Z"
@@ -163,16 +218,6 @@
     "name": "outline/outline",
     "version": "v1.0.1",
     "date": "2025-10-29T03:25:13Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-10-29T00:27:05Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.0.1",
-    "date": "2025-10-15T16:53:55Z"
   },
   {
     "name": "tailscale/tailscale",
@@ -195,14 +240,9 @@
     "date": "2025-10-28T18:35:47Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.4.2",
-    "date": "2025-10-23T06:59:32Z"
-  },
-  {
     "name": "javedh-dev/tracktor",
-    "version": "0.4.4",
-    "date": "2025-10-28T17:39:14Z"
+    "version": "0.4.3",
+    "date": "2025-10-28T17:32:48Z"
   },
   {
     "name": "pi-hole/pi-hole",
@@ -225,11 +265,6 @@
     "date": "2025-10-28T15:48:53Z"
   },
   {
-    "name": "mattermost/mattermost",
-    "version": "v10.5.13",
-    "date": "2025-10-28T15:48:37Z"
-  },
-  {
     "name": "traefik/traefik",
     "version": "v3.5.4",
     "date": "2025-10-28T11:09:25Z"
@@ -243,11 +278,6 @@
     "name": "nzbgetcom/nzbget",
     "version": "v25.4",
     "date": "2025-10-09T10:27:01Z"
-  },
-  {
-    "name": "semaphoreui/semaphore",
-    "version": "v2.16.36",
-    "date": "2025-10-28T13:05:28Z"
   },
   {
     "name": "n8n-io/n8n",
@@ -273,16 +303,6 @@
     "name": "maxdorninger/MediaManager",
     "version": "v1.8.1",
     "date": "2025-10-28T08:07:33Z"
-  },
-  {
-    "name": "gtsteffaniak/filebrowser",
-    "version": "v0.8.11-beta",
-    "date": "2025-10-28T01:15:42Z"
-  },
-  {
-    "name": "OliveTin/OliveTin",
-    "version": "3000.2.1",
-    "date": "2025-10-27T21:08:25Z"
   },
   {
     "name": "goauthentik/authentik",
@@ -435,11 +455,6 @@
     "date": "2025-10-24T01:08:22Z"
   },
   {
-    "name": "documenso/documenso",
-    "version": "v1.13.1",
-    "date": "2025-10-23T23:52:45Z"
-  },
-  {
     "name": "Cleanuparr/Cleanuparr",
     "version": "v2.4.0",
     "date": "2025-10-23T21:12:48Z"
@@ -475,19 +490,9 @@
     "date": "2025-10-22T19:48:56Z"
   },
   {
-    "name": "docker/compose",
-    "version": "v2.40.2",
-    "date": "2025-10-22T17:38:12Z"
-  },
-  {
     "name": "louislam/uptime-kuma",
     "version": "2.0.2",
     "date": "2025-10-22T17:03:54Z"
-  },
-  {
-    "name": "prometheus/prometheus",
-    "version": "v0.307.2",
-    "date": "2025-10-22T16:00:08Z"
   },
   {
     "name": "NLnetLabs/unbound",
@@ -793,11 +798,6 @@
     "name": "glpi-project/glpi",
     "version": "11.0.1",
     "date": "2025-10-09T12:34:15Z"
-  },
-  {
-    "name": "ipfs/kubo",
-    "version": "v0.38.1",
-    "date": "2025-10-08T21:34:07Z"
   },
   {
     "name": "autobrr/autobrr",

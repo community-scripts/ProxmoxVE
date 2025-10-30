@@ -57,6 +57,7 @@ function update_script() {
       ;;
     esac
   done
+  exit 0
 }
 
 start

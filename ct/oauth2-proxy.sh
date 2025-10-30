@@ -40,6 +40,7 @@ function update_script() {
     msg_ok "Started Service"
     msg_ok "Update Successfully!"
   fi
+  exit
 }
 
 start
