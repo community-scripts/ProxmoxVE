@@ -22,6 +22,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Open Archiver: Fix missing command in update procedure [@tremor021](https://github.com/tremor021) ([#8765](https://github.com/community-scripts/ProxmoxVE/pull/8765))
     - Kimai: Fix database connection string [@tremor021](https://github.com/tremor021) ([#8758](https://github.com/community-scripts/ProxmoxVE/pull/8758))
     - Add explicit exit calls to update_script functions [@MickLesk](https://github.com/MickLesk) ([#8752](https://github.com/community-scripts/ProxmoxVE/pull/8752))
     - kimai: Set global SQL mode to empty in install script [@MickLesk](https://github.com/MickLesk) ([#8747](https://github.com/community-scripts/ProxmoxVE/pull/8747))
