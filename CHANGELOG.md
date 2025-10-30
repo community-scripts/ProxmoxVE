@@ -24,6 +24,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Asterisk: add interactive version selection to installer [@MickLesk](https://github.com/MickLesk) ([#8726](https://github.com/community-scripts/ProxmoxVE/pull/8726))
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Cronicle: Update default credentials [@tremor021](https://github.com/tremor021) ([#8720](https://github.com/community-scripts/ProxmoxVE/pull/8720))
+
 ## 2025-10-29
 
 ### 🚀 Updated Scripts
