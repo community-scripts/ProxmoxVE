@@ -67,7 +67,7 @@ function update_script() {
     systemctl start habitica
     systemctl start habitica-client
     msg_ok "Started $APP"
-    msg_ok "Update Successful"
+  msg_ok "Update Successfully!"
   fi
   exit
 }

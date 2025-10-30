@@ -41,7 +41,7 @@ function update_script() {
     msg_info "Starting $APP"
     systemctl start suwayomi-server
     msg_ok "Started $APP"
-    msg_ok "Update Successful"
+  msg_ok "Update Successfully!"
   fi
   exit
 }

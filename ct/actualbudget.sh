@@ -44,6 +44,7 @@ function update_script() {
       msg_info "Starting Service"
       systemctl start actualbudget
       msg_ok "Started Service"
+      msg_ok "Updated Successfully!"
     else
       msg_info "${APP} is already up to date"
     fi

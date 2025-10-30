@@ -45,7 +45,7 @@ function update_script() {
     msg_info "Restarting Tinyauth"
     $STD service tinyauth start
     msg_ok "Restarted Tinyauth"
-    msg_ok "Updated Tinyauth"
+    msg_ok "Update Successfully!"
   else
     msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi

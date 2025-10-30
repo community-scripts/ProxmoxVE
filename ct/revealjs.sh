@@ -50,7 +50,7 @@ function update_script() {
     msg_info "Cleaning Up"
     rm -f /opt/index.html
     msg_ok "Cleanup Completed"
-    msg_ok "Update Successful"
+  msg_ok "Update Successfully!"
   fi
   exit
 }

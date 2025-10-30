@@ -76,7 +76,7 @@ EOF
     rm -rf /opt/v${RELEASE}.zip
     rm -rf /opt/paperless-ai_bak
     msg_ok "Cleanup Completed"
-    msg_ok "Update Successful"
+  msg_ok "Update Successfully!"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi

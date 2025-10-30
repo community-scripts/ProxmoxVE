@@ -39,7 +39,7 @@ function update_script() {
     msg_info "Starting $APP"
     systemctl start beszel-hub
     msg_ok "Successfully started $APP"
-    msg_ok "Update Successful"
+    msg_ok "Update Successfully!"
     exit
 }
 

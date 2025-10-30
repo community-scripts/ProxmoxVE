@@ -34,11 +34,10 @@ function update_script() {
     $STD unzip -o "$temp_file" '*/**' -d /opt/rclone
     rm -f "$temp_file"
     echo "${RELEASE}" >/opt/rclone_version.txt
-    msg_ok "Updated Successfully"
+    msg_ok "Update Successfully!"
   else
     msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
-
   exit 0
 }
 

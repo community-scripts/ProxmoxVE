@@ -44,7 +44,7 @@ function update_script() {
     rm -f "$temp_file"
     echo "${RELEASE}" >/opt/gatus_version.txt
     $STD service gatus start
-    msg_ok "Updated Successfully"
+    msg_ok "Update Successfully!"
   else
     msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
