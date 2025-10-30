@@ -27,7 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-   
+
   RELEASE=$(curl -fsSL https://api.github.com/repos/checkmk/checkmk/tags | grep "name" | awk '{print substr($2, 3, length($2)-4) }' | tr ' ' '\n' | grep -Ev 'rc|b' | sort -V | tail -n 1)
   msg_info "Updating ${APP} to v${RELEASE}"
   $STD omd stop monitoring
@@ -40,8 +40,8 @@ function update_script() {
   $STD omd cleanup
   rm -rf /opt/checkmk.deb
   msg_ok "Updated ${APP}"
-  msg_ok "Update Successfully!"
-  
+  msg_ok "Update successfully!"
+
   exit
 }
 
@@ -53,4 +53,3 @@ msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}/monitoring${CL}"
-

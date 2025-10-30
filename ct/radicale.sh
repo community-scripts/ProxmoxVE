@@ -37,7 +37,7 @@ function update_script() {
   msg_info "Starting Service"
   systemctl enable -q --now radicale
   msg_ok "Started Service"
-  msg_ok "Update Successfully!"
+  msg_ok "Update successfully!"
   exit
 }
 

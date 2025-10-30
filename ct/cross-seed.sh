@@ -31,7 +31,7 @@ function update_script() {
             msg_info "Updating ${APP} from version v${current_version} to v${latest_version}"
             $STD npm install -g cross-seed@latest
             systemctl restart cross-seed
-            msg_ok "Update Successfully!"
+            msg_ok "Update successfully!"
         else
             msg_ok "${APP} is already at v${current_version}"
         fi

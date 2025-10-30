@@ -29,7 +29,7 @@ function update_script() {
     fi
     msg_info "Updating ${APP} LXC"
     $STD pip install motioneye --upgrade
-    msg_ok "Update Successfully!"
+    msg_ok "Update successfully!"
     exit
 }
 

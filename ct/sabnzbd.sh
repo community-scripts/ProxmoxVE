@@ -27,7 +27,7 @@ function update_script() {
     if par2 --version | grep -q "par2cmdline-turbo"; then
         fetch_and_deploy_gh_release "par2cmdline-turbo" "animetosho/par2cmdline-turbo" "prebuild" "latest" "/usr/bin/" "*-linux-amd64.zip"
     fi
-    
+
     if [[ ! -d /opt/sabnzbd ]]; then
         msg_error "No ${APP} Installation Found!"
         exit
@@ -37,7 +37,6 @@ function update_script() {
         systemctl stop sabnzbd
         cp -r /opt/sabnzbd /opt/sabnzbd_backup_$(date +%s)
         fetch_and_deploy_gh_release "sabnzbd-org" "sabnzbd/sabnzbd" "prebuild" "latest" "/opt/sabnzbd" "SABnzbd-*-src.tar.gz"
-
 
         if [[ ! -d /opt/sabnzbd/venv ]]; then
             msg_info "Migrating SABnzbd to uv virtual environment"
@@ -54,7 +53,7 @@ function update_script() {
         $STD uv pip install -r /opt/sabnzbd/requirements.txt --python=/opt/sabnzbd/venv/bin/python
 
         systemctl start sabnzbd
-        msg_ok "Update Successfully!"
+        msg_ok "Update successfully!"
     fi
     exit
 }
@@ -67,4 +66,3 @@ msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:7777${CL}"
-

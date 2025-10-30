@@ -52,7 +52,7 @@ function update_script() {
 
     msg_info "Updating ${APP} to v${RELEASE}"
     cp -r /opt/pelican-panel/.env /opt/
-    SQLITE_INSTALL=$(ls /opt/pelican-panel/database/*.sqlite 1> /dev/null 2>&1 && echo "true" || echo "false")
+    SQLITE_INSTALL=$(ls /opt/pelican-panel/database/*.sqlite 1>/dev/null 2>&1 && echo "true" || echo "false")
     $SQLITE_INSTALL && cp -r /opt/pelican-panel/database/*.sqlite /opt/
     rm -rf * .*
     curl -fsSL "https://github.com/pelican-dev/panel/releases/download/v${RELEASE}/panel.tar.gz" -o $(basename "https://github.com/pelican-dev/panel/releases/download/v${RELEASE}/panel.tar.gz")
@@ -78,7 +78,7 @@ function update_script() {
     msg_info "Cleaning up"
     rm -rf "/opt/pelican-panel/panel.tar.gz"
     msg_ok "Cleaned"
-    msg_ok "Update Successfully!"
+    msg_ok "Update successfully!"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
@@ -93,4 +93,3 @@ msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}/installer${CL}"
-

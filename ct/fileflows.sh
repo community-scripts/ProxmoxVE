@@ -58,7 +58,7 @@ function update_script() {
     rm -rf "$temp_file"
     rm -rf "$backup_filename"
     msg_ok "Cleanup Completed"
-    msg_ok "Update Successfully!"
+    msg_ok "Update successfully!"
   else
     msg_ok "No update required. ${APP} is already at latest version"
   fi

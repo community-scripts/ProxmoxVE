@@ -31,7 +31,7 @@ function update_script() {
   msg_info "Restarting MariaDB"
   $STD rc-service mariadb restart
   msg_ok "Restarted MariaDB"
-  msg_ok "Update Successfully!"
+  msg_ok "Update successfully!"
   exit 0
 }
 

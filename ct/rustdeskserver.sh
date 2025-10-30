@@ -49,7 +49,7 @@ function update_script() {
     systemctl start -q rustdesk-* --all
     msg_ok "Services started"
 
-    msg_ok "Update Successfully!"
+    msg_ok "Update successfully!"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi

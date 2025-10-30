@@ -40,7 +40,7 @@ function update_script() {
   msg_info "Starting Service"
   systemctl start telegraf
   msg_ok "Started Service"
-  msg_ok "Update Successfully!"
+  msg_ok "Update successfully!"
   exit
 }
 
@@ -50,4 +50,3 @@ description
 
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-

@@ -81,7 +81,7 @@ EOF
   msg_info "Starting Service"
   systemctl start esphomeDashboard
   msg_ok "Started Service"
-  msg_ok "Update Successfully!"
+  msg_ok "Update successfully!"
   exit
 }
 
@@ -93,4 +93,3 @@ msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:6052${CL}"
-

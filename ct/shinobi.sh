@@ -34,7 +34,7 @@ function update_script() {
   $STD pm2 restart camera
   $STD pm2 restart cron
   msg_ok "Updated Shinobi"
-  msg_ok "Update Successfully!"
+  msg_ok "Update successfully!"
   exit
 }
 

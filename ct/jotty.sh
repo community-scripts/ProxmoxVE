@@ -59,7 +59,7 @@ function update_script() {
     systemctl start jotty
     msg_ok "Started Service"
     rm /opt/data_config.tar
-    msg_ok "Update Successfully!"
+    msg_ok "Update successfully!"
   fi
   exit
 }

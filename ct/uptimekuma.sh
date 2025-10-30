@@ -46,7 +46,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start uptime-kuma
     msg_ok "Started Service"
-    msg_ok "Update Successfully!"
+    msg_ok "Update successfully!"
   fi
   exit
 }
@@ -59,4 +59,3 @@ msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3001${CL}"
-

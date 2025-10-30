@@ -33,7 +33,7 @@ function update_script() {
   $STD apt update
   $STD apt install -yq twingate-connector
   $STD systemctl restart twingate-connector
-  msg_ok "Update Successfully!"
+  msg_ok "Update successfully!"
   exit
 }
 
@@ -42,4 +42,3 @@ build_container
 description
 
 msg_ok "All Finished! If you need to update your access or refresh tokens, they can be found in /etc/twingate/connector.conf"
-

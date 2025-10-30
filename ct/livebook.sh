@@ -45,12 +45,12 @@ function update_script() {
     $STD mix escript.install hex livebook --force
 
     chown -R livebook:livebook /opt/livebook /data
-    
+
     msg_info "Starting Service"
     systemctl start livebook
     msg_info "Started Service"
 
-    msg_ok "Update Successfully!"
+    msg_ok "Update successfully!"
   fi
   exit
 }
@@ -62,4 +62,3 @@ description
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:8080${CL}"
-

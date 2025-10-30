@@ -45,7 +45,7 @@ EOF
     msg_info "Starting Service"
     systemctl start jackett
     msg_ok "Started Service"
-    msg_ok "Update Successfully!"
+    msg_ok "Update successfully!"
   fi
   exit
 }

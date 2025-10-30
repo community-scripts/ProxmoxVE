@@ -27,8 +27,8 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  
-  if command -v node &> /dev/null; then
+
+  if command -v node &>/dev/null; then
     CURRENT_NODE_VERSION=$(node --version | cut -d'v' -f2 | cut -d'.' -f1)
     if [[ "$CURRENT_NODE_VERSION" != "22" ]]; then
       systemctl stop openresty
@@ -165,7 +165,7 @@ EOF
   rm -rf ~/nginx-proxy-manager-*
   msg_ok "Cleaned"
 
-  msg_ok "Update Successfully!"
+  msg_ok "Update successfully!"
   exit
 }
 
@@ -177,4 +177,3 @@ msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:81${CL}"
-

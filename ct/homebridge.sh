@@ -30,7 +30,7 @@ function update_script() {
     msg_info "Updating ${APP} LXC"
     $STD apt-get update
     $STD apt-get install -y homebridge
-    msg_ok "Update Successfully!"
+    msg_ok "Update successfully!"
     exit
 }
 

@@ -33,7 +33,7 @@ function update_script() {
   $STD tar zxvf <(curl -fsSL https://downloads.openobserve.ai/releases/openobserve/$LATEST/openobserve-$LATEST-linux-amd64.tar.gz) -C /opt/openobserve
   systemctl start openobserve
   msg_ok "Updated $APP"
-  msg_ok "Update Successfully!"
+  msg_ok "Update successfully!"
   exit
 }
 

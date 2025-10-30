@@ -37,7 +37,7 @@ function update_script() {
     msg_info "Starting service"
     systemctl start argus
     msg_ok "Service started"
-    msg_ok "Update Successfully!"
+    msg_ok "Update successfully!"
   fi
   exit
 }

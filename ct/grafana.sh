@@ -27,11 +27,11 @@ function update_script() {
       msg_error "No ${APP} Installation Found!"
       exit
    fi
-   
+
    msg_info "Updating ${APP}"
    $STD apt-get update
    $STD apt-get -y upgrade
-   msg_ok "Update Successfully!"
+   msg_ok "Update successfully!"
    exit
 }
 
@@ -43,4 +43,3 @@ msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"
-

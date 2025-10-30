@@ -37,7 +37,7 @@ function update_script() {
   $STD yunohost tools upgrade system
   $STD yunohost tools upgrade apps
   msg_ok "Updated $APP LXC"
-  msg_ok "Update Successfully!"
+  msg_ok "Update successfully!"
   exit
 }
 

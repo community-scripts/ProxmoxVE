@@ -46,11 +46,11 @@ function update_script() {
     sed -i.bak 's/--only-binary=Pillow//g' /opt/bazarr/requirements.txt
     $STD uv pip install -r /opt/bazarr/requirements.txt --python /opt/bazarr/venv/bin/python3
     msg_ok "Setup Bazarr"
-    
+
     msg_info "Starting Service"
     systemctl start bazarr
     msg_ok "Started Service"
-    msg_ok "Update Successfully!"
+    msg_ok "Update successfully!"
   fi
   exit
 }
@@ -62,4 +62,3 @@ msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:6767${CL}"
-

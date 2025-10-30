@@ -40,7 +40,7 @@ function update_script() {
     case $CHOICE in
     1)
       $STD apk -U upgrade
-      msg_ok "Update Successfully!"
+      msg_ok "Update successfully!"
       exit
       ;;
     2)

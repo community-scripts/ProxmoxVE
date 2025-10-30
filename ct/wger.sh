@@ -55,7 +55,7 @@ function update_script() {
     msg_info "Cleaning Up"
     rm -rf "$temp_file"
     msg_ok "Cleanup Completed"
-    msg_ok "Update Successfully!"
+    msg_ok "Update successfully!"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
@@ -70,4 +70,3 @@ msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"
-

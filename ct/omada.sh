@@ -65,7 +65,7 @@ function update_script() {
   export DEBIAN_FRONTEND=noninteractive
   $STD dpkg -i "$OMADA_PKG"
   rm -f "$OMADA_PKG"
-  msg_ok "Update Successfully!"
+  msg_ok "Update successfully!"
   exit
 }
 

@@ -49,7 +49,7 @@ function update_script() {
     echo "${gitVersionNumber}" >"/opt/${APP}_version.txt"
     rm -r /opt/fenrus-data-backup/
     msg_ok "Updated $APP"
-    msg_ok "Update Successfully!"
+    msg_ok "Update successfully!"
   else
     msg_ok "No update required. ${APP} is already up to date"
   fi

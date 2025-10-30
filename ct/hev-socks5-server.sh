@@ -46,7 +46,7 @@ function update_script() {
     msg_ok "Started Service"
 
     echo "${RELEASE}" >/opt/${APP}_version.txt
-    msg_ok "Update Successfully!"
+    msg_ok "Update successfully!"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi

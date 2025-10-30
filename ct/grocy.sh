@@ -34,7 +34,7 @@ function update_script() {
   if check_for_gh_release "grocy" "grocy/grocy"; then
     msg_info "Updating ${APP}"
     bash /var/www/html/update.sh
-    msg_ok "Update Successfully!"
+    msg_ok "Update successfully!"
   fi
   exit
 }
@@ -47,4 +47,3 @@ msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}${CL}"
-

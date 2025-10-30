@@ -35,16 +35,16 @@ function update_script() {
 
     msg_info "Correcting Services"
     if [ -f /opt/tracktor/app/backend/.env ]; then
-        mv /opt/tracktor/app/backend/.env /opt/tracktor.env
-        echo 'AUTH_PIN=123456' >> /opt/tracktor.env
-        sed -i 's|^EnvironmentFile=.*|EnvironmentFile=/opt/tracktor.env|' /etc/systemd/system/tracktor.service
-        systemctl daemon-reload
+      mv /opt/tracktor/app/backend/.env /opt/tracktor.env
+      echo 'AUTH_PIN=123456' >>/opt/tracktor.env
+      sed -i 's|^EnvironmentFile=.*|EnvironmentFile=/opt/tracktor.env|' /etc/systemd/system/tracktor.service
+      systemctl daemon-reload
     fi
     if [ ! -d "/opt/tracktor-data/uploads" ]; then
-        mkdir -p /opt/tracktor-data/{uploads,logs}
-        EXISTING_AUTH_PIN=$(grep '^AUTH_PIN=' /opt/tracktor.env 2>/dev/null | cut -d'=' -f2)
-        AUTH_PIN=${EXISTING_AUTH_PIN:-123456}
-        cat <<EOF >/opt/tracktor.env
+      mkdir -p /opt/tracktor-data/{uploads,logs}
+      EXISTING_AUTH_PIN=$(grep '^AUTH_PIN=' /opt/tracktor.env 2>/dev/null | cut -d'=' -f2)
+      AUTH_PIN=${EXISTING_AUTH_PIN:-123456}
+      cat <<EOF >/opt/tracktor.env
 NODE_ENV=production
 DB_PATH=/opt/tracktor-data/tracktor.db
 UPLOADS_DIR="/opt/tracktor-data/uploads"
@@ -77,7 +77,7 @@ EOF
     msg_info "Starting Service"
     systemctl start tracktor
     msg_ok "Started Service"
-    msg_ok "Update Successfully!"
+    msg_ok "Update successfully!"
   fi
   exit
 }
@@ -90,4 +90,3 @@ msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"
-

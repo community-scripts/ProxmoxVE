@@ -41,7 +41,7 @@ function update_script() {
   msg_info "Starting Service"
   systemctl start sonarr
   msg_ok "Started Service"
-  msg_ok "Update Successfully!"
+  msg_ok "Update successfully!"
   exit
 }
 

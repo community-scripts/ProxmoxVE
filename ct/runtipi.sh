@@ -28,7 +28,7 @@ function update_script() {
     exit
   fi
   cd /opt/runtipi && ./runtipi-cli update latest
-  msg_ok "Update Successfully!"
+  msg_ok "Update successfully!"
   exit
 }
 

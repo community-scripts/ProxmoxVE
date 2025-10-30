@@ -35,7 +35,7 @@ function update_script() {
 
   NODE_VERSION="22" NODE_MODULE="verdaccio" setup_nodejs
   systemctl restart verdaccio
-  msg_ok "Update Successfully!"
+  msg_ok "Update successfully!"
   exit
 }
 
@@ -47,4 +47,3 @@ msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:4873${CL}"
-

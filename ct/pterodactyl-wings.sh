@@ -43,7 +43,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start wings
     msg_ok "Started Service"
-    msg_ok "Update Successfully!"
+    msg_ok "Update successfully!"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
@@ -56,4 +56,3 @@ description
 
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-

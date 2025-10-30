@@ -49,7 +49,7 @@ EOF
   $STD apt update
   $STD apt -y upgrade
   msg_ok "Updated $APP LXC"
-  msg_ok "Update Successfully!"
+  msg_ok "Update successfully!"
   exit
 }
 

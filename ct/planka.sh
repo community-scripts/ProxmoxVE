@@ -64,7 +64,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start planka
     msg_ok "Started Service"
-    msg_ok "Update Successfully!"
+    msg_ok "Update successfully!"
   fi
   exit
 }

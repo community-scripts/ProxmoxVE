@@ -41,7 +41,7 @@ function update_script() {
   msg_info "Starting Service"
   systemctl start minarca-server
   msg_ok "Started Service"
-  msg_ok "Update Successfully!"
+  msg_ok "Update successfully!"
   exit
 }
 

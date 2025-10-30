@@ -38,7 +38,7 @@ function update_script() {
     msg_info "Starting service"
     systemctl start mediamtx
     msg_ok "Service started"
-    msg_ok "Update Successfully!"
+    msg_ok "Update successfully!"
   fi
   exit
 }
@@ -49,4 +49,3 @@ description
 
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-

@@ -61,7 +61,7 @@ function update_script() {
     systemctl start uwsgi
     systemctl start nginx
     msg_ok "Services Started"
-    msg_ok "Update Successfully!"
+    msg_ok "Update successfully!"
   fi
   exit
 }
