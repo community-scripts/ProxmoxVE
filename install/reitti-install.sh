@@ -150,7 +150,6 @@ TimeoutStopSec=20
 [Install]
 WantedBy=multi-user.target
 EOF
-
 systemctl enable -q --now photon
 systemctl enable -q --now reitti
 msg_ok "Created Services"
