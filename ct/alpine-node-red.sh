@@ -31,7 +31,6 @@ function update_script() {
   msg_info "Updating Node-RED"
   $STD npm install -g --unsafe-perm node-red
   msg_ok "Updated Node-RED"
-
   exit 0
 }
 

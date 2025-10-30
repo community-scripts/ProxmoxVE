@@ -28,7 +28,7 @@ function update_script() {
   msg_info "Upgrading traefik from edge"
   $STD apk add traefik --repository=https://dl-cdn.alpinelinux.org/alpine/edge/community
   msg_ok "Upgraded traefik"
-  exit
+  exit 0
 }
 
 start

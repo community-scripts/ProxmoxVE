@@ -32,7 +32,6 @@ function update_script() {
   msg_info "Restarting AdGuard Home"
   $STD rc-service adguardhome restart
   msg_ok "Restarted AdGuard Home"
-
   exit 0
 }
 

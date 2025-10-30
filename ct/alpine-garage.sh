@@ -50,7 +50,7 @@ function update_script() {
   else
     msg_ok "No update required. Garage is already at ${GITEA_RELEASE}"
   fi
-  exit
+  exit 0
 }
 
 start
