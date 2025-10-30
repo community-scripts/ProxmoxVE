@@ -56,6 +56,7 @@ function update_script() {
     fi
     msg_ok "Update successfully!"
   fi
+  exit
 }
 
 start
