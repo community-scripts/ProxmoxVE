@@ -29,8 +29,6 @@ function update_script() {
   fi
 
   NODE_VERSION="22" NODE_MODULE="pnpm@latest" setup_nodejs
-
-  # ensure that jq is installed
   if ! command -v jq &>/dev/null; then
     $STD msg_info "Installing jq..."
     $STD apt-get update -qq &>/dev/null
@@ -62,7 +60,7 @@ function update_script() {
     fi
     systemctl start homepage
     echo "${RELEASE}" >/opt/${APP}_version.txt
-    msg_ok "Updated Homepage to v${RELEASE}"
+    msg_ok "Updated successfully!"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi

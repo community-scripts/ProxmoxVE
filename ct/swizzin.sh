@@ -29,7 +29,7 @@ function update_script() {
   fi
   msg_info "Running 'sudo box update' inside the container"
   $STD sudo box update
-  msg_ok "Update finished"
+  msg_ok "Updated successfully!"
   exit
 }
 

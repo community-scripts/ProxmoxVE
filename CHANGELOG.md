@@ -10,14 +10,58 @@
 > [!CAUTION]
 Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit the project's popularity for potentially malicious purposes.
 
+## 2025-10-31
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Fix paths in grist.sh [@mrinaldi](https://github.com/mrinaldi) ([#8777](https://github.com/community-scripts/ProxmoxVE/pull/8777))
+
+## 2025-10-30
+
+### 🆕 New Scripts
+
+  - Livebook ([#8739](https://github.com/community-scripts/ProxmoxVE/pull/8739))
+- Reitti ([#8736](https://github.com/community-scripts/ProxmoxVE/pull/8736))
+- BentoPDF ([#8735](https://github.com/community-scripts/ProxmoxVE/pull/8735))
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Open Archiver: Fix missing daemon-reload [@tremor021](https://github.com/tremor021) ([#8768](https://github.com/community-scripts/ProxmoxVE/pull/8768))
+    - Open Archiver: Fix missing command in update procedure [@tremor021](https://github.com/tremor021) ([#8765](https://github.com/community-scripts/ProxmoxVE/pull/8765))
+    - Kimai: Fix database connection string [@tremor021](https://github.com/tremor021) ([#8758](https://github.com/community-scripts/ProxmoxVE/pull/8758))
+    - Add explicit exit calls to update_script functions [@MickLesk](https://github.com/MickLesk) ([#8752](https://github.com/community-scripts/ProxmoxVE/pull/8752))
+    - kimai: Set global SQL mode to empty in install script [@MickLesk](https://github.com/MickLesk) ([#8747](https://github.com/community-scripts/ProxmoxVE/pull/8747))
+
+  - #### ✨ New Features
+
+    - Immich: Updates for v2.2.0 [@vhsdream](https://github.com/vhsdream) ([#8770](https://github.com/community-scripts/ProxmoxVE/pull/8770))
+    - Standardize update success messages in scripts [@MickLesk](https://github.com/MickLesk) ([#8757](https://github.com/community-scripts/ProxmoxVE/pull/8757))
+    - core: add function cleanup_lxc [@MickLesk](https://github.com/MickLesk) ([#8749](https://github.com/community-scripts/ProxmoxVE/pull/8749))
+    - Asterisk: add interactive version selection to installer [@MickLesk](https://github.com/MickLesk) ([#8726](https://github.com/community-scripts/ProxmoxVE/pull/8726))
+
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Cronicle: Update default credentials [@tremor021](https://github.com/tremor021) ([#8720](https://github.com/community-scripts/ProxmoxVE/pull/8720))
+
 ## 2025-10-29
 
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
 
+    - Docker-VM: add workaround for libguestfs issue on Proxmox VE 9+ [@MickLesk](https://github.com/MickLesk) ([#8722](https://github.com/community-scripts/ProxmoxVE/pull/8722))
     - Dispatcharr: add folders in installer / add more build ressources [@MickLesk](https://github.com/MickLesk) ([#8708](https://github.com/community-scripts/ProxmoxVE/pull/8708))
     - LibreTranslate: bump torch version [@MickLesk](https://github.com/MickLesk) ([#8710](https://github.com/community-scripts/ProxmoxVE/pull/8710))
+
+  - #### ✨ New Features
+
+    - Archivebox: add Chromium and Node modules [@MickLesk](https://github.com/MickLesk) ([#8725](https://github.com/community-scripts/ProxmoxVE/pull/8725))
 
   - #### 🔧 Refactor
 

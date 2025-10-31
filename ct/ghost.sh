@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: fabrice1236
@@ -33,7 +33,7 @@ function update_script() {
     if [ "$current_version" != "$latest_version" ]; then
       msg_info "Updating ${APP} from version v${current_version} to v${latest_version}"
       $STD npm install -g ghost-cli@latest
-      msg_ok "Updated Successfully"
+      msg_ok "Updated successfully!"
     else
       msg_ok "${APP} is already at v${current_version}"
     fi

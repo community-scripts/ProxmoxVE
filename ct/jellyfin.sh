@@ -37,7 +37,7 @@ function update_script() {
     fetch_and_deploy_gh_release "intel-opencl-icd" "intel/compute-runtime" "binary" "latest" "" "intel-opencl-icd_*_amd64.deb"
     msg_ok "Updated Intel Dependencies"
   fi
-  
+
   msg_info "Updating Jellyfin"
   if ! dpkg -s libjemalloc2 >/dev/null 2>&1; then
     $STD apt install -y libjemalloc2
@@ -49,7 +49,7 @@ function update_script() {
   $STD apt -y upgrade
   $STD apt -y --with-new-pkgs upgrade jellyfin jellyfin-server
   msg_ok "Updated Jellyfin"
-  msg_ok "Update Successfully!"
+  msg_ok "Updated successfully!"
   exit
 }
 

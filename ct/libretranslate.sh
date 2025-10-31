@@ -28,9 +28,9 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  
+
   setup_uv
-  
+
   if check_for_gh_release "libretranslate" "LibreTranslate/LibreTranslate"; then
     msg_info "Stopping Service"
     systemctl stop libretranslate
@@ -45,7 +45,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start libretranslate
     msg_ok "Started Service"
-    msg_ok "Update Successfully!"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

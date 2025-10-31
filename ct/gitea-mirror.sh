@@ -47,10 +47,10 @@ function update_script() {
   fi
 
   if [[ ! -f /opt/gitea-mirror.env ]]; then
-      msg_info "Detected old Enviroment, updating files"
-      APP_SECRET=$(openssl rand -base64 32)
-      HOST_IP=$(hostname -I | awk '{print $1}')
-      cat <<EOF >/opt/gitea-mirror.env
+    msg_info "Detected old Enviroment, updating files"
+    APP_SECRET=$(openssl rand -base64 32)
+    HOST_IP=$(hostname -I | awk '{print $1}')
+    cat <<EOF >/opt/gitea-mirror.env
 # See here for config options: https://github.com/RayLabsHQ/gitea-mirror/blob/main/docs/ENVIRONMENT_VARIABLES.md
 NODE_ENV=production
 HOST=0.0.0.0
@@ -77,7 +77,7 @@ WantedBy=multi-user.target
 EOF
     systemctl daemon-reload
     msg_ok "Old Enviroment fixed"
-fi
+  fi
 
   if check_for_gh_release "gitea-mirror" "RayLabsHQ/gitea-mirror"; then
     msg_info "Stopping Services"
@@ -115,7 +115,7 @@ fi
     msg_info "Starting Service"
     systemctl start gitea-mirror
     msg_ok "Service Started"
-    msg_ok "Update Successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

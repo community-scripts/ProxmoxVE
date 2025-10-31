@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: vhsdream
@@ -43,23 +43,23 @@ function update_script() {
     NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "jotty" "fccview/jotty" "tarball" "latest" "/opt/jotty"
 
-    msg_info "Updating app"
+    msg_info "Updating jotty"
     cd /opt/jotty
     $STD yarn --frozen-lockfile
     $STD yarn next telemetry disable
     $STD yarn build
-    msg_ok "Updated app"
+    msg_ok "Updated jotty"
 
     msg_info "Restoring configuration & data"
     mv /opt/app.env /opt/jotty/.env
     $STD tar -xf /opt/data_config.tar
     msg_ok "Restored configuration & data"
 
-    msg_info "Restarting ${APP} service"
+    msg_info "Starting Service"
     systemctl start jotty
-    msg_ok "Restarted ${APP} service"
+    msg_ok "Started Service"
     rm /opt/data_config.tar
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

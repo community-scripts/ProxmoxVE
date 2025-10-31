@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 tteck
 # Author: tteck (tteckster)
@@ -63,7 +63,7 @@ function update_script() {
       read -rp "Have you created a snapshot? [y/N]: " confirm
       if [[ ! "$confirm" =~ ^([yY]|[yY][eE][sS])$ ]]; then
         msg_error "Migration aborted. Please create a snapshot first."
-        exit 1
+        exit
       fi
       msg_info "Migrating old Paperless-ngx installation to uv"
       rm -rf /opt/paperless/venv
@@ -120,7 +120,7 @@ function update_script() {
     systemctl start paperless-consumer paperless-webserver paperless-scheduler paperless-task-queue
     sleep 1
     msg_ok "Started all Paperless-ngx Services"
-    msg_ok "Updated Successfully!\n"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

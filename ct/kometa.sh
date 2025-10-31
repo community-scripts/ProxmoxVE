@@ -49,7 +49,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start kometa
     msg_ok "Started Service"
-    msg_ok "Update Successful"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

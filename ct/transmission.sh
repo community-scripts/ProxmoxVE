@@ -31,6 +31,7 @@ function update_script() {
   $STD apt update
   $STD apt -y upgrade
   msg_ok "Updated Transmission"
+  msg_ok "Updated successfully!"
   exit
 }
 

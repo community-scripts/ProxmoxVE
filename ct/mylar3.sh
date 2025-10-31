@@ -29,6 +29,7 @@ function update_script() {
   if check_for_gh_release "mylar3" "mylar3/mylar3"; then
     fetch_and_deploy_gh_release "mylar3" "mylar3/mylar3" "tarball"
     systemctl restart mylar3
+    msg_ok "Updated successfully!"
   fi
   exit
 }

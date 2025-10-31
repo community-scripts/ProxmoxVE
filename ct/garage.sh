@@ -47,7 +47,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start garage
     msg_ok "Started Service"
-    msg_ok "Update Successfully!"
+    msg_ok "Updated successfully!"
   else
     msg_ok "No update required. Garage is already at ${GITEA_RELEASE}"
   fi

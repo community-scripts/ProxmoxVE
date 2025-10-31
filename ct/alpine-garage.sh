@@ -46,11 +46,11 @@ function update_script() {
     msg_info "Starting Service"
     rc-service garage start || rc-service garage restart
     msg_ok "Started Service"
-    msg_ok "Update Successfully!"
+    msg_ok "Updated successfully!"
   else
     msg_ok "No update required. Garage is already at ${GITEA_RELEASE}"
   fi
-  exit
+  exit 0
 }
 
 start

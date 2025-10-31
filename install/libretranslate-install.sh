@@ -19,6 +19,8 @@ $STD apt install -y \
   build-essential \
   g++ \
   cmake \
+  libprotobuf-dev \
+  protobuf-compiler \
   libsentencepiece-dev \
   libicu-dev
 msg_ok "Installed dependencies"

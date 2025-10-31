@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: Florianb63
@@ -26,13 +26,13 @@ function update_script() {
 
   if [[ ! -f /etc/itsm-ng/config_db.php ]]; then
     msg_error "No ${APP} Installation Found!"
-    exit 1
+    exit
   fi
 
   msg_info "Updating ${APP} LXC"
   $STD apt-get update
   $STD apt-get -y upgrade
-  msg_ok "Updated Successfully"
+  msg_ok "Updated successfully!"
 
   exit
 }

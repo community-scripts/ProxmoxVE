@@ -50,7 +50,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start mafl
     msg_ok "Service started"
-    msg_ok "Update successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

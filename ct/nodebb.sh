@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: MickLesk (Canbiz)
@@ -44,7 +44,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start nodebb
     msg_ok "Started Service"
-    msg_ok "Updated Successfully\n"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

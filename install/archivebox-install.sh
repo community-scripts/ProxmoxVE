@@ -22,7 +22,8 @@ $STD apt-get install -y \
   libsasl2-dev \
   procps \
   dnsutils \
-  ripgrep
+  ripgrep \
+  chromium
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Python Dependencies"
@@ -32,7 +33,7 @@ $STD apt-get install -y \
   python3-regex
 msg_ok "Installed Python Dependencies"
 
-NODE_VERSION="22" setup_nodejs
+NODE_VERSION="22" NODE_MODULE="@postlight/parser@latest,single-file-cli@latest" setup_nodejs
 PYTHON_VERSION="3.13" setup_uv
 
 msg_info "Installing Playwright"
@@ -40,7 +41,7 @@ $STD uv pip install playwright --system
 $STD playwright install-deps chromium
 msg_ok "Installed Playwright"
 
-msg_info "Installing Chromium and ArchiveBox"
+msg_info "Installing ArchiveBox"
 mkdir -p /opt/archivebox/{data,.npm,.cache,.local}
 $STD adduser --system --shell /bin/bash --gecos 'Archive Box User' --group --disabled-password --home /home/archivebox archivebox
 chown -R archivebox:archivebox /opt/archivebox/{data,.npm,.cache,.local}
@@ -92,6 +93,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
+$STD apt -y autoremove
+$STD apt -y autoclean
+$STD apt -y clean
 msg_ok "Cleaned"

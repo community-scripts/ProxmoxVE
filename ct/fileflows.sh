@@ -35,9 +35,9 @@ function update_script() {
 
   update_available=$(curl -fsSL -X 'GET' "http://localhost:19200/api/status/update-available" -H 'accept: application/json' | jq .UpdateAvailable)
   if [[ "${update_available}" == "true" ]]; then
-    msg_info "Stopping $APP"
+    msg_info "Stopping Service"
     systemctl stop fileflows
-    msg_ok "Stopped $APP"
+    msg_info "Stopped Service"
 
     msg_info "Creating Backup"
     backup_filename="/opt/${APP}_backup_$(date +%F).tar.gz"
@@ -50,16 +50,15 @@ function update_script() {
     $STD unzip -o -d /opt/fileflows "$temp_file"
     msg_ok "Updated $APP to latest version"
 
-    msg_info "Starting $APP"
+    msg_info "Starting Service"
     systemctl start fileflows
-    msg_ok "Started $APP"
+    msg_ok "Started Service"
 
     msg_info "Cleaning Up"
     rm -rf "$temp_file"
     rm -rf "$backup_filename"
     msg_ok "Cleanup Completed"
-
-    msg_ok "Update Successful"
+    msg_ok "Updated successfully!"
   else
     msg_ok "No update required. ${APP} is already at latest version"
   fi

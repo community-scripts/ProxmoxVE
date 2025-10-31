@@ -27,15 +27,22 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  msg_info "Updating ${APP}"
+  msg_info "Stopping Service"
+  systemctl stop readeck
+  msg_ok "Stopped Service"
+
+  msg_info "Updating Readeck"
   LATEST=$(curl -fsSL https://codeberg.org/readeck/readeck/releases/ | grep -oP '/releases/tag/\K\d+\.\d+\.\d+' | head -1)
-  systemctl stop readeck.service
   rm -rf /opt/readeck/readeck
   cd /opt/readeck
   curl -fsSL "https://codeberg.org/readeck/readeck/releases/download/${LATEST}/readeck-${LATEST}-linux-amd64" -o "readeck"
   chmod a+x readeck
-  systemctl start readeck.service
-  msg_ok "Updated ${APP}"
+  msg_ok "Updated Readeck"
+
+  msg_info "Starting Service"
+  systemctl start readeck
+  msg_ok "Started Service"
+  msg_ok "Updated successfully!"
   exit
 }
 

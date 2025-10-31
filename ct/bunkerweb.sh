@@ -41,7 +41,7 @@ EOF
     apt-get install -y --allow-downgrades bunkerweb=${RELEASE}
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP} to ${RELEASE}"
-
+    msg_ok "Updated successfully!"
   else
     msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi

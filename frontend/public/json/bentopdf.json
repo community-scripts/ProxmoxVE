@@ -1,0 +1,35 @@
+{
+  "name": "BentoPDF",
+  "slug": "bentopdf",
+  "categories": [
+    12
+  ],
+  "date_created": "2025-10-30",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 8080,
+  "documentation": "https://github.com/alam00000/bentopdf",
+  "website": "https://www.bentopdf.com",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/bentopdf.webp",
+  "config_path": "",
+  "description": "A privacy-first, 100% client-side PDF Toolkit. No signups/accounts, works in the browser, online or offline.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/bentopdf.sh",
+      "resources": {
+        "cpu": 1,
+        "ram": 2048,
+        "hdd": 4,
+        "os": "debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": []
+}

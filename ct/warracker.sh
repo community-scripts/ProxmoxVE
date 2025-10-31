@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: BvdBerg01
@@ -48,7 +48,7 @@ function update_script() {
         systemctl start warracker
         systemctl start nginx
         msg_ok "Started Services"
-        msg_ok "Updated Successfully"
+        msg_ok "Updated successfully!"
     fi
     exit
 }

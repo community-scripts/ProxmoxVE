@@ -43,11 +43,11 @@ function update_script() {
     cp -r /opt/blackbox.yml /opt/blackbox-exporter
     rm -f /opt/blackbox.yml
     msg_ok "Backup restored"
-    
+
     msg_info "Starting Service"
     systemctl start blackbox-exporter
     msg_ok "Started Service"
-    msg_ok "Update Successfully!"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

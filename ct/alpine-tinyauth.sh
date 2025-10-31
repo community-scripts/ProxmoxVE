@@ -22,7 +22,7 @@ catch_errors
 function update_script() {
   if [[ ! -d /opt/tinyauth ]]; then
     msg_error "No ${APP} Installation Found!"
-    exit 1
+    exit
   fi
 
   msg_info "Updating packages"
@@ -45,7 +45,7 @@ function update_script() {
     msg_info "Restarting Tinyauth"
     $STD service tinyauth start
     msg_ok "Restarted Tinyauth"
-    msg_ok "Updated Tinyauth"
+    msg_ok "Updated successfully!"
   else
     msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi

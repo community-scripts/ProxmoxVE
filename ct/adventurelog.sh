@@ -73,7 +73,7 @@ function update_script() {
     msg_info "Cleaning Up"
     rm -rf /opt/adventurelog-backup
     msg_ok "Cleaned"
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

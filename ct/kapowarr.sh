@@ -32,9 +32,9 @@ function update_script() {
   setup_uv
 
   if check_for_gh_release "kapowarr" "Casvt/Kapowarr"; then
-    msg_info "Stopping $APP"
+    msg_info "Stopping Service"
     systemctl stop kapowarr
-    msg_ok "Stopped $APP"
+    msg_info "Stopped Service"
 
     msg_info "Creating Backup"
     mv /opt/kapowarr/db /opt/
@@ -42,14 +42,14 @@ function update_script() {
 
     fetch_and_deploy_gh_release "kapowarr" "Casvt/Kapowarr"
 
-    msg_info "Updating $APP"
+    msg_info "Updating Kapowarr"
     mv /opt/db /opt/kapowarr
-    msg_ok "Updated $APP"
+    msg_ok "Updated Kapowarr"
 
-    msg_info "Starting $APP"
+    msg_info "Starting Service"
     systemctl start kapowarr
-    msg_ok "Started $APP"
-    msg_ok "Update Successful"
+    msg_ok "Started Service"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

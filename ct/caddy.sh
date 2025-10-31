@@ -20,31 +20,33 @@ color
 catch_errors
 
 function update_script() {
-   header_info
-   check_container_storage
-   check_container_resources
-   if [[ ! -d /etc/caddy ]]; then
-      msg_error "No ${APP} Installation Found!"
-      exit
-   fi
-   msg_info "Updating $APP LXC"
-   $STD apt-get update
-   $STD apt-get -y upgrade
-   msg_ok "Updated $APP LXC"
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /etc/caddy ]]; then
+    msg_error "No ${APP} Installation Found!"
+    exit
+  fi
+  msg_info "Updating $APP LXC"
+  $STD apt-get update
+  $STD apt-get -y upgrade
+  msg_ok "Updated successfully!"
+  msg_ok "Updated $APP LXC"
 
-    if command -v xcaddy >/dev/null 2>&1; then
-      setup_go
-      msg_info "Updating xCaddy"
-      cd /opt
-      RELEASE=$(curl -fsSL https://api.github.com/repos/caddyserver/xcaddy/releases/latest | grep "tag_name" | awk -F '"' '{print $4}')
-      VERSION="${RELEASE#v}"
-      curl -fsSL "https://github.com/caddyserver/xcaddy/releases/download/${RELEASE}/xcaddy_${VERSION}_linux_amd64.deb" -o "xcaddy_${VERSION}_linux_amd64.deb"
-      $STD dpkg -i "xcaddy_${VERSION}_linux_amd64.deb"
-      rm -f "xcaddy_${VERSION}_linux_amd64.deb"
-      $STD xcaddy build
-      msg_ok "Updated xCaddy"
-   fi
-   exit
+  if command -v xcaddy >/dev/null 2>&1; then
+    setup_go
+    msg_info "Updating xCaddy"
+    cd /opt
+    RELEASE=$(curl -fsSL https://api.github.com/repos/caddyserver/xcaddy/releases/latest | grep "tag_name" | awk -F '"' '{print $4}')
+    VERSION="${RELEASE#v}"
+    curl -fsSL "https://github.com/caddyserver/xcaddy/releases/download/${RELEASE}/xcaddy_${VERSION}_linux_amd64.deb" -o "xcaddy_${VERSION}_linux_amd64.deb"
+    $STD dpkg -i "xcaddy_${VERSION}_linux_amd64.deb"
+    rm -f "xcaddy_${VERSION}_linux_amd64.deb"
+    $STD xcaddy build
+    msg_ok "Updated xCaddy"
+    msg_ok "Updated successfully!"
+  fi
+  exit
 }
 
 start

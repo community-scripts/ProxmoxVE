@@ -24,7 +24,7 @@ function update_script() {
 
   if [ ! -d /usr/share/nginx/html ]; then
     msg_error "No ${APP} Installation Found!"
-    exit 1
+    exit
   fi
 
   RELEASE=$(curl -fsSL https://api.github.com/repos/sharevb/it-tools/releases/latest | grep '"tag_name":' | cut -d '"' -f4)
@@ -37,11 +37,10 @@ function update_script() {
     cp -r /tmp/dist/* /usr/share/nginx/html
     rm -rf /tmp/dist
     rm -f it-tools.zip
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   else
     msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
-
   exit 0
 }
 

@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: TheRealVira
@@ -44,7 +44,7 @@ function update_script() {
     chown -R www-data: "/opt/${APP}"
     chmod -R 755 "/opt/${APP}"
     msg_ok "Updated ${APP}"
-    msg_ok "Updated successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
 # Copyright (c) 2021-2025 tteck
 # Author: tteck (tteckster)
@@ -46,11 +46,11 @@ function update_script() {
     sed -i.bak 's/--only-binary=Pillow//g' /opt/bazarr/requirements.txt
     $STD uv pip install -r /opt/bazarr/requirements.txt --python /opt/bazarr/venv/bin/python3
     msg_ok "Setup Bazarr"
-    
+
     msg_info "Starting Service"
     systemctl start bazarr
     msg_ok "Started Service"
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

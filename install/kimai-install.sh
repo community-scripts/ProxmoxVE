@@ -33,6 +33,7 @@ MYSQL_VERSION=$(mariadb --version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
 $STD mariadb -u root -e "CREATE DATABASE $DB_NAME;"
 $STD mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
 $STD mariadb -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
+$STD mariadb -u root -e "SET GLOBAL sql_mode='';"
 {
   echo "Kimai-Credentials"
   echo "Kimai Database User: $DB_USER"
@@ -41,7 +42,7 @@ $STD mariadb -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUS
 } >>~/kimai.creds
 msg_ok "Set up database"
 
-fetch_and_deploy_gh_release "Kimai" "kimai/kimai" "prebuild" "latest" "/opt/kimai" "kimai-release-*.zip"
+fetch_and_deploy_gh_release "kimai" "kimai/kimai"
 
 msg_info "Installing Kimai"
 cd /opt/kimai
@@ -49,7 +50,7 @@ echo "export COMPOSER_ALLOW_SUPERUSER=1" >>~/.bashrc
 source ~/.bashrc
 $STD composer install --no-dev --optimize-autoloader --no-interaction
 cp .env.dist .env
-sed -i "/^DATABASE_URL=/c\DATABASE_URL=mysql://$DB_USER:$DB_PASS@127.0.0.1:3306/$DB_NAME?charset=utf8mb4&serverVersion=$MYSQL_VERSION" /opt/kimai/.env
+sed -i "/^DATABASE_URL=/c\DATABASE_URL=mysql://$DB_USER:$DB_PASS@127.0.0.1:3306/$DB_NAME?charset=utf8mb4&serverVersion=mariadb-$MYSQL_VERSION" /opt/kimai/.env
 $STD bin/console kimai:install -n
 $STD expect <<EOF
 set timeout -1

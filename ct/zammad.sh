@@ -42,6 +42,7 @@ function update_script() {
   msg_info "Starting Service"
   systemctl start zammad
   msg_ok "Updated ${APP} LXC"
+  msg_ok "Updated successfully!"
   exit
 }
 
