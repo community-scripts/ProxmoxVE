@@ -30,7 +30,6 @@ function update_script() {
   if check_for_gh_release "AdGuardHome" "AdguardTeam/AdGuardHome"; then
     read -r -p "It is recommended to update AdGuard Home from the web interface. Would you like to continue with a manual update? <y/N> " prompt
     if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
-      # After stopping Adguard Home service, github.com might not resolve anymore -> first install into temp location
       msg_info "Installing AdGuard Home to temporary location"
       fetch_and_deploy_gh_release "AdGuardHome" "AdguardTeam/AdGuardHome" "prebuild" "latest" "/opt/AdGuardHome.temp" "AdGuardHome_linux_amd64.tar.gz"
       msg_ok "Installed AdGuard Home to temporary location"
