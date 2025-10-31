@@ -65,6 +65,7 @@ USE_ORIGINAL_FILENAME="true" fetch_and_deploy_gh_release "photon" "komoot/photon
 mv /opt/photon/photon-*.jar /opt/photon/photon.jar
 
 msg_info "Creating Reitti Configuration-File"
+mkdir -p /opt/reitti/data
 cat <<EOF >/opt/reitti/application.properties
 # Reitti Server Base URI
 reitti.server.advertise-uri=http://127.0.0.1:8080
