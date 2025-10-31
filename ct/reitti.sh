@@ -41,7 +41,7 @@ function update_script() {
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
   fi
-  if check_for_gh_release "photon" "dedicatedcode/reitti"; then
+  if check_for_gh_release "photon" "komoot/photon"; then
     msg_info "Stopping Service"
     systemctl stop photon
     msg_ok "Stopped Service"
