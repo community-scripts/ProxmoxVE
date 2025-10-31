@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-10-31
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Fix paths in grist.sh [@mrinaldi](https://github.com/mrinaldi) ([#8777](https://github.com/community-scripts/ProxmoxVE/pull/8777))
+
 ## 2025-10-30
 
 ### 🆕 New Scripts
