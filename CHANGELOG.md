@@ -21,6 +21,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Booklore: Fix port configuration for Nginx [@tremor021](https://github.com/tremor021) ([#8780](https://github.com/community-scripts/ProxmoxVE/pull/8780))
     - Fix paths in grist.sh [@mrinaldi](https://github.com/mrinaldi) ([#8777](https://github.com/community-scripts/ProxmoxVE/pull/8777))
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Removed errant ` from wireguard.json [@AndrewDragonCh](https://github.com/AndrewDragonCh) ([#8791](https://github.com/community-scripts/ProxmoxVE/pull/8791))
+
 ## 2025-10-30
 
 ### 🆕 New Scripts
