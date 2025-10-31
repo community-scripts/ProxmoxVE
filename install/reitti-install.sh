@@ -131,7 +131,7 @@ Restart=on-failure
 [Install]
 WantedBy=multi-user.target
 EOF
-u$()
+
 cat <<'EOF' >/etc/systemd/system/photon.service
 [Unit]
 Description=Photon Geocoding Service (Germany, OpenSearch)
