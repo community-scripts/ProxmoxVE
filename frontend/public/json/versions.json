@@ -1,8 +1,113 @@
 [
   {
+    "name": "ollama/ollama",
+    "version": "v0.12.7",
+    "date": "2025-10-29T18:50:56Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.79.1.dev1",
+    "date": "2025-10-30T22:18:35Z"
+  },
+  {
+    "name": "getumbrel/umbrel",
+    "version": "1.4.2",
+    "date": "2025-05-09T08:54:49Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.4.2",
+    "date": "2025-10-07T08:11:58Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.10.4",
+    "date": "2025-10-24T20:03:03Z"
+  },
+  {
+    "name": "gristlabs/grist-core",
+    "version": "v1.7.5",
+    "date": "2025-10-30T19:11:58Z"
+  },
+  {
+    "name": "pymedusa/Medusa",
+    "version": "v1.0.24",
+    "date": "2025-10-30T19:04:42Z"
+  },
+  {
+    "name": "maxdorninger/MediaManager",
+    "version": "v1.9.0",
+    "date": "2025-10-30T18:52:50Z"
+  },
+  {
+    "name": "mongodb/mongo",
+    "version": "r7.0.26",
+    "date": "2025-10-30T18:44:14Z"
+  },
+  {
+    "name": "cloudflare/cloudflared",
+    "version": "2025.10.1",
+    "date": "2025-10-30T18:40:07Z"
+  },
+  {
+    "name": "sassanix/Warracker",
+    "version": "1.0.2",
+    "date": "2025-10-30T18:23:23Z"
+  },
+  {
+    "name": "immich-app/immich",
+    "version": "v2.2.0",
+    "date": "2025-10-30T18:02:47Z"
+  },
+  {
+    "name": "tailscale/tailscale",
+    "version": "v1.90.5",
+    "date": "2025-10-30T17:39:20Z"
+  },
+  {
+    "name": "TwiN/gatus",
+    "version": "v5.30.0",
+    "date": "2025-10-30T16:52:58Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "mattermost-redux@11.0.4",
+    "date": "2025-10-30T16:44:14Z"
+  },
+  {
     "name": "OliveTin/OliveTin",
-    "version": "2025-10-30",
-    "date": "2025-10-30T10:02:40Z"
+    "version": "2025.10.30",
+    "date": "2025-10-30T16:22:45Z"
+  },
+  {
+    "name": "dgtlmoon/changedetection.io",
+    "version": "0.50.38",
+    "date": "2025-10-30T16:02:21Z"
+  },
+  {
+    "name": "AdguardTeam/AdGuardHome",
+    "version": "v0.107.69",
+    "date": "2025-10-30T15:31:50Z"
+  },
+  {
+    "name": "bunkerity/bunkerweb",
+    "version": "v1.6.5",
+    "date": "2025-10-06T15:25:17Z"
+  },
+  {
+    "name": "Lidarr/Lidarr",
+    "version": "v3.0.1.4866",
+    "date": "2025-10-30T14:29:25Z"
+  },
+  {
+    "name": "danielbrendel/hortusfox-web",
+    "version": "v5.4",
+    "date": "2025-10-30T14:25:23Z"
+  },
+  {
+    "name": "neo4j/neo4j",
+    "version": "5.26.15",
+    "date": "2025-10-30T11:17:14Z"
   },
   {
     "name": "docker/compose",
@@ -23,11 +128,6 @@
     "name": "semaphoreui/semaphore",
     "version": "v2.16.37",
     "date": "2025-10-30T07:54:49Z"
-  },
-  {
-    "name": "mattermost/mattermost",
-    "version": "v10.5.14",
-    "date": "2025-10-30T06:43:58Z"
   },
   {
     "name": "morpheus65535/bazarr",
@@ -65,11 +165,6 @@
     "date": "2025-10-30T00:09:23Z"
   },
   {
-    "name": "BerriAI/litellm",
-    "version": "v1.77.7.dev3",
-    "date": "2025-10-29T23:40:01Z"
-  },
-  {
     "name": "Sonarr/Sonarr",
     "version": "v4.0.15.2941",
     "date": "2025-06-20T17:20:54Z"
@@ -100,29 +195,14 @@
     "date": "2025-10-29T19:37:29Z"
   },
   {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.4.2",
-    "date": "2025-10-07T08:11:58Z"
-  },
-  {
     "name": "keycloak/keycloak",
     "version": "26.4.2",
     "date": "2025-10-23T06:59:32Z"
   },
   {
-    "name": "ollama/ollama",
-    "version": "v0.12.7-rc1",
-    "date": "2025-10-29T18:03:43Z"
-  },
-  {
     "name": "paperless-ngx/paperless-ngx",
     "version": "v2.19.3",
     "date": "2025-10-29T17:58:16Z"
-  },
-  {
-    "name": "home-assistant/core",
-    "version": "2025.10.4",
-    "date": "2025-10-24T20:03:03Z"
   },
   {
     "name": "go-gitea/gitea",
@@ -133,11 +213,6 @@
     "name": "zwave-js/zwave-js-ui",
     "version": "v11.6.1",
     "date": "2025-10-29T16:51:06Z"
-  },
-  {
-    "name": "dgtlmoon/changedetection.io",
-    "version": "0.50.35",
-    "date": "2025-10-29T16:31:56Z"
   },
   {
     "name": "azukaar/Cosmos-Server",
@@ -153,11 +228,6 @@
     "name": "heiher/hev-socks5-server",
     "version": "2.11.0",
     "date": "2025-10-29T14:26:23Z"
-  },
-  {
-    "name": "mongodb/mongo",
-    "version": "r7.0.27-alpha0",
-    "date": "2025-10-29T13:54:18Z"
   },
   {
     "name": "zitadel/zitadel",
@@ -220,11 +290,6 @@
     "date": "2025-10-29T03:25:13Z"
   },
   {
-    "name": "tailscale/tailscale",
-    "version": "v1.90.4",
-    "date": "2025-10-28T20:08:44Z"
-  },
-  {
     "name": "moghtech/komodo",
     "version": "v1.19.5",
     "date": "2025-09-27T20:59:46Z"
@@ -248,11 +313,6 @@
     "name": "pi-hole/pi-hole",
     "version": "v6.2.2",
     "date": "2025-10-28T17:07:47Z"
-  },
-  {
-    "name": "AdguardTeam/AdGuardHome",
-    "version": "v0.107.68",
-    "date": "2025-10-23T14:26:29Z"
   },
   {
     "name": "PrivateBin/PrivateBin",
@@ -300,11 +360,6 @@
     "date": "2025-10-28T10:16:29Z"
   },
   {
-    "name": "maxdorninger/MediaManager",
-    "version": "v1.8.1",
-    "date": "2025-10-28T08:07:33Z"
-  },
-  {
     "name": "goauthentik/authentik",
     "version": "version/2025.10.0",
     "date": "2025-10-27T19:58:39Z"
@@ -345,11 +400,6 @@
     "date": "2025-10-27T02:02:13Z"
   },
   {
-    "name": "sassanix/Warracker",
-    "version": "1.0.1",
-    "date": "2025-10-27T01:35:01Z"
-  },
-  {
     "name": "Radarr/Radarr",
     "version": "v5.28.0.10274",
     "date": "2025-10-06T21:31:07Z"
@@ -385,11 +435,6 @@
     "date": "2025-09-27T01:10:59Z"
   },
   {
-    "name": "TwiN/gatus",
-    "version": "v5.29.0",
-    "date": "2025-10-25T19:49:18Z"
-  },
-  {
     "name": "Prowlarr/Prowlarr",
     "version": "v2.1.5.5216",
     "date": "2025-10-25T19:41:59Z"
@@ -398,11 +443,6 @@
     "name": "9001/copyparty",
     "version": "v1.19.19",
     "date": "2025-10-25T19:39:58Z"
-  },
-  {
-    "name": "danielbrendel/hortusfox-web",
-    "version": "v5.3",
-    "date": "2025-10-25T13:50:31Z"
   },
   {
     "name": "homarr-labs/homarr",
@@ -535,11 +575,6 @@
     "date": "2025-10-20T20:19:23Z"
   },
   {
-    "name": "pymedusa/Medusa",
-    "version": "v1.0.23",
-    "date": "2025-10-20T19:51:33Z"
-  },
-  {
     "name": "MediaBrowser/Emby.Releases",
     "version": "4.9.1.80",
     "date": "2025-09-30T20:25:16Z"
@@ -573,11 +608,6 @@
     "name": "benzino77/tasmocompiler",
     "version": "v13.0.0",
     "date": "2025-10-19T10:03:18Z"
-  },
-  {
-    "name": "Lidarr/Lidarr",
-    "version": "v2.14.5.4836",
-    "date": "2025-10-08T15:30:50Z"
   },
   {
     "name": "ellite/Wallos",
@@ -625,11 +655,6 @@
     "date": "2025-10-17T15:21:59Z"
   },
   {
-    "name": "neo4j/neo4j",
-    "version": "5.26.14",
-    "date": "2025-10-17T12:38:22Z"
-  },
-  {
     "name": "diced/zipline",
     "version": "v4.3.2",
     "date": "2025-10-17T04:13:23Z"
@@ -665,11 +690,6 @@
     "date": "2025-01-05T21:14:23Z"
   },
   {
-    "name": "immich-app/immich",
-    "version": "v2.1.0",
-    "date": "2025-10-15T19:24:14Z"
-  },
-  {
     "name": "karlomikus/bar-assistant",
     "version": "v5.9.0",
     "date": "2025-10-15T18:27:56Z"
@@ -698,11 +718,6 @@
     "name": "seerr-team/seerr",
     "version": "preview-seerr",
     "date": "2025-10-14T22:21:33Z"
-  },
-  {
-    "name": "cloudflare/cloudflared",
-    "version": "2025.10.0",
-    "date": "2025-10-14T19:07:37Z"
   },
   {
     "name": "crafty-controller/crafty-4",
@@ -758,11 +773,6 @@
     "name": "0xERR0R/blocky",
     "version": "v0.27.0",
     "date": "2025-10-10T20:11:48Z"
-  },
-  {
-    "name": "getumbrel/umbrel",
-    "version": "1.4.2",
-    "date": "2025-05-09T08:54:49Z"
   },
   {
     "name": "Brandawg93/PeaNUT",
@@ -840,11 +850,6 @@
     "date": "2025-10-06T21:31:07Z"
   },
   {
-    "name": "bunkerity/bunkerweb",
-    "version": "v1.6.5",
-    "date": "2025-10-06T15:25:17Z"
-  },
-  {
     "name": "mysql/mysql-server",
     "version": "mysql-cluster-7.6.36",
     "date": "2025-10-06T15:19:49Z"
@@ -903,11 +908,6 @@
     "name": "MagicMirrorOrg/MagicMirror",
     "version": "v2.33.0",
     "date": "2025-09-30T16:18:10Z"
-  },
-  {
-    "name": "gristlabs/grist-core",
-    "version": "v1.7.4",
-    "date": "2025-09-30T13:34:30Z"
   },
   {
     "name": "thomiceli/opengist",
