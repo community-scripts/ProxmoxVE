@@ -1,5 +1,45 @@
 [
   {
+    "name": "chrisvel/tududi",
+    "version": "v0.85.1",
+    "date": "2025-10-31T10:45:26Z"
+  },
+  {
+    "name": "wazuh/wazuh",
+    "version": "coverity-w44-4.14.1",
+    "date": "2025-10-29T11:28:37Z"
+  },
+  {
+    "name": "bunkerity/bunkerweb",
+    "version": "v1.6.6-rc1",
+    "date": "2025-10-31T08:54:12Z"
+  },
+  {
+    "name": "garethgeorge/backrest",
+    "version": "v1.10.1",
+    "date": "2025-10-31T08:25:57Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.234",
+    "date": "2025-10-31T05:56:45Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "6.4.3",
+    "date": "2025-10-31T05:51:51Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-10-31T00:27:05Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.0.1",
+    "date": "2025-10-15T16:53:55Z"
+  },
+  {
     "name": "ollama/ollama",
     "version": "v0.12.7",
     "date": "2025-10-29T18:50:56Z"
@@ -10,14 +50,14 @@
     "date": "2025-10-30T22:18:35Z"
   },
   {
+    "name": "keycloak/keycloak",
+    "version": "26.4.2",
+    "date": "2025-10-23T06:59:32Z"
+  },
+  {
     "name": "getumbrel/umbrel",
     "version": "1.4.2",
     "date": "2025-05-09T08:54:49Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.4.2",
-    "date": "2025-10-07T08:11:58Z"
   },
   {
     "name": "home-assistant/core",
@@ -90,11 +130,6 @@
     "date": "2025-10-30T15:31:50Z"
   },
   {
-    "name": "bunkerity/bunkerweb",
-    "version": "v1.6.5",
-    "date": "2025-10-06T15:25:17Z"
-  },
-  {
     "name": "Lidarr/Lidarr",
     "version": "v3.0.1.4866",
     "date": "2025-10-30T14:29:25Z"
@@ -135,11 +170,6 @@
     "date": "2025-09-20T12:12:33Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.222",
-    "date": "2025-10-30T05:55:32Z"
-  },
-  {
     "name": "documenso/documenso",
     "version": "v1.13.2",
     "date": "2025-10-30T04:12:40Z"
@@ -148,16 +178,6 @@
     "name": "ipfs/kubo",
     "version": "v0.38.2",
     "date": "2025-10-30T02:44:09Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-10-30T00:27:05Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.0.1",
-    "date": "2025-10-15T16:53:55Z"
   },
   {
     "name": "gtsteffaniak/filebrowser",
@@ -180,11 +200,6 @@
     "date": "2025-10-29T21:01:24Z"
   },
   {
-    "name": "chrisvel/tududi",
-    "version": "v0.85",
-    "date": "2025-10-29T20:40:57Z"
-  },
-  {
     "name": "influxdata/influxdb",
     "version": "v2.7.12",
     "date": "2025-05-29T17:08:26Z"
@@ -193,11 +208,6 @@
     "name": "runtipi/runtipi",
     "version": "nightly",
     "date": "2025-10-29T19:37:29Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.4.2",
-    "date": "2025-10-23T06:59:32Z"
   },
   {
     "name": "paperless-ngx/paperless-ngx",
@@ -238,11 +248,6 @@
     "name": "element-hq/synapse",
     "version": "v1.141.0",
     "date": "2025-10-29T11:45:43Z"
-  },
-  {
-    "name": "wazuh/wazuh",
-    "version": "coverity-w44-4.14.1",
-    "date": "2025-10-29T11:28:37Z"
   },
   {
     "name": "cockpit-project/cockpit",
@@ -306,8 +311,8 @@
   },
   {
     "name": "javedh-dev/tracktor",
-    "version": "0.4.3",
-    "date": "2025-10-28T17:32:48Z"
+    "version": "0.4.4",
+    "date": "2025-10-28T17:39:14Z"
   },
   {
     "name": "pi-hole/pi-hole",
@@ -1098,11 +1103,6 @@
     "name": "benjaminjonard/koillection",
     "version": "1.7.0",
     "date": "2025-08-28T18:10:59Z"
-  },
-  {
-    "name": "garethgeorge/backrest",
-    "version": "v1.9.2",
-    "date": "2025-08-28T07:06:14Z"
   },
   {
     "name": "plexguide/Huntarr.io",
