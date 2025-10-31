@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - omada: fix update script with mongodb 8 [@MickLesk](https://github.com/MickLesk) ([#8724](https://github.com/community-scripts/ProxmoxVE/pull/8724))
     - Booklore: Fix port configuration for Nginx [@tremor021](https://github.com/tremor021) ([#8780](https://github.com/community-scripts/ProxmoxVE/pull/8780))
     - Fix paths in grist.sh [@mrinaldi](https://github.com/mrinaldi) ([#8777](https://github.com/community-scripts/ProxmoxVE/pull/8777))
 
