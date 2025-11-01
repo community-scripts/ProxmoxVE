@@ -78,6 +78,15 @@ flags:
 EOF
 $STD npm run db:sqlite:generate
 $STD npm run db:sqlite:push
+
+. /etc/os-release
+if [ "$VERSION_CODENAME" = "trixie" ]; then
+  echo "net.ipv4.ip_forward=1" >>/etc/sysctl.d/sysctl.conf
+  $STD sysctl -p /etc/sysctl.d/sysctl.conf
+else
+  echo "net.ipv4.ip_forward=1" >>/etc/sysctl.conf
+  $STD sysctl -p /etc/sysctl.conf
+fi
 msg_ok "Setup Pangolin"
 
 msg_info "Creating Services"
