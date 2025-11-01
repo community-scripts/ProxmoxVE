@@ -19,6 +19,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Immich: Pin version to 2.2.1 [@vhsdream](https://github.com/vhsdream) ([#8800](https://github.com/community-scripts/ProxmoxVE/pull/8800))
     - jellyfin: fix: initial update [@CrazyWolf13](https://github.com/CrazyWolf13) ([#8784](https://github.com/community-scripts/ProxmoxVE/pull/8784))
 
+### 🌐 Website
+
+  - frontend: chore: bump debian OS [@CrazyWolf13](https://github.com/CrazyWolf13) ([#8798](https://github.com/community-scripts/ProxmoxVE/pull/8798))
+
 ## 2025-10-31
 
 ### 🚀 Updated Scripts
