@@ -99,7 +99,7 @@ EOF
 systemctl enable -q --now pangolin
 msg_ok "Created pangolin Service"
 
-msg_info "Setting up gerbil"
+msg_info "Setting up gerbil Service"
 mkdir -p /var/config
 cat <<EOF >/etc/systemd/system/gerbil.service
 [Unit]
@@ -118,7 +118,7 @@ RestartSec=10
 WantedBy=multi-user.target
 EOF
 systemctl enable -q --now gerbil
-msg_ok "Set up gerbil"
+msg_ok "Set up gerbil Service"
 
 motd_ssh
 customize
