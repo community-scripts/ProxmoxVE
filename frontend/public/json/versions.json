@@ -1,5 +1,100 @@
 [
   {
+    "name": "ollama/ollama",
+    "version": "v0.12.8",
+    "date": "2025-10-30T23:22:27Z"
+  },
+  {
+    "name": "tailscale/tailscale",
+    "version": "v1.90.6",
+    "date": "2025-10-31T22:24:04Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "nightly",
+    "date": "2025-10-29T19:37:29Z"
+  },
+  {
+    "name": "evcc-io/evcc",
+    "version": "0.209.6",
+    "date": "2025-10-31T20:13:49Z"
+  },
+  {
+    "name": "chrisbenincasa/tunarr",
+    "version": "v0.23.0-alpha.19",
+    "date": "2025-10-31T20:10:28Z"
+  },
+  {
+    "name": "homarr-labs/homarr",
+    "version": "v1.43.1",
+    "date": "2025-10-31T19:15:02Z"
+  },
+  {
+    "name": "mealie-recipes/mealie",
+    "version": "v3.4.0",
+    "date": "2025-10-31T18:50:18Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.78.5.rc.4",
+    "date": "2025-10-31T18:44:14Z"
+  },
+  {
+    "name": "immich-app/immich",
+    "version": "v2.2.1",
+    "date": "2025-10-31T18:34:59Z"
+  },
+  {
+    "name": "YunoHost/yunohost",
+    "version": "debian/12.1.33",
+    "date": "2025-10-31T12:40:16Z"
+  },
+  {
+    "name": "leiweibau/Pi.Alert",
+    "version": "v2025-10-31",
+    "date": "2025-10-31T17:57:06Z"
+  },
+  {
+    "name": "pommee/goaway",
+    "version": "v0.62.12",
+    "date": "2025-10-31T17:30:55Z"
+  },
+  {
+    "name": "Cleanuparr/Cleanuparr",
+    "version": "v2.4.1",
+    "date": "2025-10-31T15:50:26Z"
+  },
+  {
+    "name": "zitadel/zitadel",
+    "version": "v4.6.2",
+    "date": "2025-10-31T15:41:19Z"
+  },
+  {
+    "name": "bunkerity/bunkerweb",
+    "version": "testing",
+    "date": "2025-10-30T14:33:36Z"
+  },
+  {
+    "name": "wizarrrr/wizarr",
+    "version": "v2025.10.8",
+    "date": "2025-10-31T14:47:28Z"
+  },
+  {
+    "name": "gristlabs/grist-core",
+    "version": "v1.7.5",
+    "date": "2025-10-31T13:42:36Z"
+  },
+  {
+    "name": "plankanban/planka",
+    "version": "planka-1.1.1",
+    "date": "2025-10-31T12:38:47Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "mattermost-redux@11.0.4",
+    "date": "2025-10-30T16:44:14Z"
+  },
+  {
     "name": "chrisvel/tududi",
     "version": "v0.85.1",
     "date": "2025-10-31T10:45:26Z"
@@ -8,11 +103,6 @@
     "name": "wazuh/wazuh",
     "version": "coverity-w44-4.14.1",
     "date": "2025-10-29T11:28:37Z"
-  },
-  {
-    "name": "bunkerity/bunkerweb",
-    "version": "v1.6.6-rc1",
-    "date": "2025-10-31T08:54:12Z"
   },
   {
     "name": "garethgeorge/backrest",
@@ -40,16 +130,6 @@
     "date": "2025-10-15T16:53:55Z"
   },
   {
-    "name": "ollama/ollama",
-    "version": "v0.12.7",
-    "date": "2025-10-29T18:50:56Z"
-  },
-  {
-    "name": "BerriAI/litellm",
-    "version": "v1.79.1.dev1",
-    "date": "2025-10-30T22:18:35Z"
-  },
-  {
     "name": "keycloak/keycloak",
     "version": "26.4.2",
     "date": "2025-10-23T06:59:32Z"
@@ -63,11 +143,6 @@
     "name": "home-assistant/core",
     "version": "2025.10.4",
     "date": "2025-10-24T20:03:03Z"
-  },
-  {
-    "name": "gristlabs/grist-core",
-    "version": "v1.7.5",
-    "date": "2025-10-30T19:11:58Z"
   },
   {
     "name": "pymedusa/Medusa",
@@ -95,24 +170,9 @@
     "date": "2025-10-30T18:23:23Z"
   },
   {
-    "name": "immich-app/immich",
-    "version": "v2.2.0",
-    "date": "2025-10-30T18:02:47Z"
-  },
-  {
-    "name": "tailscale/tailscale",
-    "version": "v1.90.5",
-    "date": "2025-10-30T17:39:20Z"
-  },
-  {
     "name": "TwiN/gatus",
     "version": "v5.30.0",
     "date": "2025-10-30T16:52:58Z"
-  },
-  {
-    "name": "mattermost/mattermost",
-    "version": "mattermost-redux@11.0.4",
-    "date": "2025-10-30T16:44:14Z"
   },
   {
     "name": "OliveTin/OliveTin",
@@ -205,11 +265,6 @@
     "date": "2025-05-29T17:08:26Z"
   },
   {
-    "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-10-29T19:37:29Z"
-  },
-  {
     "name": "paperless-ngx/paperless-ngx",
     "version": "v2.19.3",
     "date": "2025-10-29T17:58:16Z"
@@ -240,11 +295,6 @@
     "date": "2025-10-29T14:26:23Z"
   },
   {
-    "name": "zitadel/zitadel",
-    "version": "v4.6.1",
-    "date": "2025-10-29T10:15:50Z"
-  },
-  {
     "name": "element-hq/synapse",
     "version": "v1.141.0",
     "date": "2025-10-29T11:45:43Z"
@@ -258,11 +308,6 @@
     "name": "pocket-id/pocket-id",
     "version": "v1.14.2",
     "date": "2025-10-29T08:37:03Z"
-  },
-  {
-    "name": "evcc-io/evcc",
-    "version": "0.209.4",
-    "date": "2025-10-29T08:06:31Z"
   },
   {
     "name": "apache/cassandra",
@@ -325,11 +370,6 @@
     "date": "2025-10-28T15:51:35Z"
   },
   {
-    "name": "chrisbenincasa/tunarr",
-    "version": "v0.22.11",
-    "date": "2025-10-28T15:48:53Z"
-  },
-  {
     "name": "traefik/traefik",
     "version": "v3.5.4",
     "date": "2025-10-28T11:09:25Z"
@@ -348,11 +388,6 @@
     "name": "n8n-io/n8n",
     "version": "n8n@1.117.3",
     "date": "2025-10-28T12:00:42Z"
-  },
-  {
-    "name": "YunoHost/yunohost",
-    "version": "debian/12.1.32.1",
-    "date": "2025-10-28T11:37:10Z"
   },
   {
     "name": "FlareSolverr/FlareSolverr",
@@ -415,11 +450,6 @@
     "date": "2025-10-26T17:22:46Z"
   },
   {
-    "name": "wizarrrr/wizarr",
-    "version": "v2025.10.7",
-    "date": "2025-10-26T15:31:18Z"
-  },
-  {
     "name": "openhab/openhab-core",
     "version": "5.1.0.M2",
     "date": "2025-10-26T14:38:02Z"
@@ -448,11 +478,6 @@
     "name": "9001/copyparty",
     "version": "v1.19.19",
     "date": "2025-10-25T19:39:58Z"
-  },
-  {
-    "name": "homarr-labs/homarr",
-    "version": "v1.43.0",
-    "date": "2025-10-24T19:16:05Z"
   },
   {
     "name": "verdaccio/verdaccio",
@@ -498,11 +523,6 @@
     "name": "esphome/esphome",
     "version": "2025.10.3",
     "date": "2025-10-24T01:08:22Z"
-  },
-  {
-    "name": "Cleanuparr/Cleanuparr",
-    "version": "v2.4.0",
-    "date": "2025-10-23T21:12:48Z"
   },
   {
     "name": "drakkan/sftpgo",
@@ -620,11 +640,6 @@
     "date": "2025-10-18T22:00:50Z"
   },
   {
-    "name": "leiweibau/Pi.Alert",
-    "version": "v2025-10-18",
-    "date": "2025-10-18T20:35:54Z"
-  },
-  {
     "name": "project-zot/zot",
     "version": "v2.1.10",
     "date": "2025-10-18T18:46:36Z"
@@ -730,11 +745,6 @@
     "date": "2025-10-14T18:48:36Z"
   },
   {
-    "name": "plankanban/planka",
-    "version": "planka-1.1.0",
-    "date": "2025-10-14T16:51:22Z"
-  },
-  {
     "name": "home-assistant/operating-system",
     "version": "16.2",
     "date": "2025-09-08T14:03:25Z"
@@ -793,11 +803,6 @@
     "name": "apache/tomcat",
     "version": "10.1.48",
     "date": "2025-10-10T14:46:53Z"
-  },
-  {
-    "name": "mealie-recipes/mealie",
-    "version": "v3.3.2",
-    "date": "2025-10-10T03:45:06Z"
   },
   {
     "name": "projectsend/projectsend",
@@ -878,11 +883,6 @@
     "name": "BookStackApp/BookStack",
     "version": "v25.07.3",
     "date": "2025-10-05T14:47:20Z"
-  },
-  {
-    "name": "pommee/goaway",
-    "version": "v0.62.11",
-    "date": "2025-10-05T07:31:57Z"
   },
   {
     "name": "webmin/webmin",
