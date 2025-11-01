@@ -22,10 +22,10 @@ msg_ok "Installed Dependencies"
 NODE_VERSION="22" setup_nodejs
 fetch_and_deploy_gh_release "pangolin" "fosrl/pangolin" "tarball"
 fetch_and_deploy_gh_release "gerbil" "fosrl/gerbil" "singlefile" "latest" "/usr/bin" "gerbil_linux_amd64"
-IP_ADDR=$(hostname -I | awk '{print $1}')
-SECRET_KEY=$(openssl rand -base64 48 | tr -dc 'A-Za-z0-9' | head -c 32)
 
 msg_info "Setup Pangolin (Patience)"
+IP_ADDR=$(hostname -I | awk '{print $1}')
+SECRET_KEY=$(openssl rand -base64 48 | tr -dc 'A-Za-z0-9' | head -c 32)
 export BUILD=oss
 export DATABASE=sqlite
 cd /opt/pangolin
