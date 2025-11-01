@@ -79,7 +79,7 @@ $STD npm run db:sqlite:generate
 $STD npm run db:sqlite:push
 msg_ok "Setup Pangolin"
 
-msg_info "Creating Pangolin Service"
+msg_info "Creating Services"
 cat <<EOF >/etc/systemd/system/pangolin.service
 [Unit]
 Description=Pangolin Service
@@ -97,10 +97,8 @@ RestartSec=10
 WantedBy=multi-user.target
 EOF
 systemctl enable -q --now pangolin
-msg_ok "Created pangolin Service"
-
-msg_info "Setting up gerbil Service"
 mkdir -p /var/config
+
 cat <<EOF >/etc/systemd/system/gerbil.service
 [Unit]
 Description=Gerbil Service
@@ -118,7 +116,7 @@ RestartSec=10
 WantedBy=multi-user.target
 EOF
 systemctl enable -q --now gerbil
-msg_ok "Set up gerbil Service"
+msg_ok "Created Services"
 
 motd_ssh
 customize
