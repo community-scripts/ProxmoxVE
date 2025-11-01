@@ -44,7 +44,7 @@
   },
   "notes": [
     {
-      "text": "AdGuard Home can only be updated via the user interface.",
+      "text": "It is recommended to update AdGuard Home via its web interface. Use the update function only if this fails.",
       "type": "info"
     }
   ]
