@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Immich: Pin version to 2.2.1 [@vhsdream](https://github.com/vhsdream) ([#8800](https://github.com/community-scripts/ProxmoxVE/pull/8800))
     - jellyfin: fix: initial update [@CrazyWolf13](https://github.com/CrazyWolf13) ([#8784](https://github.com/community-scripts/ProxmoxVE/pull/8784))
 
 ## 2025-10-31
