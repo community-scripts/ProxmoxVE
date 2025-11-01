@@ -28,8 +28,14 @@ fetch_and_deploy_gh_release "vmutils" "VictoriaMetrics/VictoriaMetrics" "prebuil
 read -r -p "${TAB3}Would you like to add VictoriaLogs? <y/N> " prompt
 
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
-  fetch_and_deploy_gh_release "victorialogs" "VictoriaMetrics/VictoriaLogs" "prebuild" "latest" "/opt/victoriametrics" "victoria-logs-linux-amd64*.tar.gz"
-  fetch_and_deploy_gh_release "vlutils" "VictoriaMetrics/VictoriaLogs" "prebuild" "latest" "/opt/victoriametrics" "vlutils-linux-amd64*.tar.gz"
+  vmlogs_filename=$(curl -fsSL "https://api.github.com/repos/VictoriaMetrics/VictoriaLogs/releases/latest" |
+    jq -r '.assets[].name' |
+    grep -E '^victoria-logs-linux-amd64-v[0-9.]+\.tar\.gz$')  
+  vlutils_filename=$(curl -fsSL "https://api.github.com/repos/VictoriaMetrics/VictoriaLogs/releases/latest" |
+    jq -r '.assets[].name' |
+    grep -E '^vlutils-linux-amd64-v[0-9.]+\.tar\.gz$')
+  fetch_and_deploy_gh_release "victorialogs" "VictoriaMetrics/VictoriaLogs" "prebuild" "latest" "/opt/victoriametrics" "$vmlogs_filename"
+  fetch_and_deploy_gh_release "vlutils" "VictoriaMetrics/VictoriaLogs" "prebuild" "latest" "/opt/victoriametrics" "$vlutils_filename"
 fi
 
 msg_info "Setup VictoriaMetrics"
