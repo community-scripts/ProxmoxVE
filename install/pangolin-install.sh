@@ -47,6 +47,7 @@ cd /opt/pangolin
 EOF
 chmod +x /usr/local/bin/pangctl ./dist/cli.mjs
 cp server/db/names.json ./dist/names.json
+mkdir -p /var/config
 
 cat <<EOF >/opt/pangolin/config/config.yml
 app:
@@ -97,7 +98,6 @@ RestartSec=10
 WantedBy=multi-user.target
 EOF
 systemctl enable -q --now pangolin
-mkdir -p /var/config
 
 cat <<EOF >/etc/systemd/system/gerbil.service
 [Unit]
