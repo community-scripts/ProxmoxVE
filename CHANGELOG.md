@@ -20,6 +20,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - VictoriaMetrics: Fix release fetching for Victori Logs add-on [@tremor021](https://github.com/tremor021) ([#8807](https://github.com/community-scripts/ProxmoxVE/pull/8807))
     - Immich: Pin version to 2.2.1 [@vhsdream](https://github.com/vhsdream) ([#8800](https://github.com/community-scripts/ProxmoxVE/pull/8800))
     - jellyfin: fix: initial update [@CrazyWolf13](https://github.com/CrazyWolf13) ([#8784](https://github.com/community-scripts/ProxmoxVE/pull/8784))
 
