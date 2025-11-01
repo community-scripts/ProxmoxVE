@@ -1,5 +1,50 @@
 [
   {
+    "name": "chrisbenincasa/tunarr",
+    "version": "v0.23.0-alpha.20",
+    "date": "2025-11-01T11:42:54Z"
+  },
+  {
+    "name": "Luligu/matterbridge",
+    "version": "3.3.6",
+    "date": "2025-11-01T10:41:15Z"
+  },
+  {
+    "name": "Paymenter/Paymenter",
+    "version": "v1.4.0",
+    "date": "2025-11-01T09:51:45Z"
+  },
+  {
+    "name": "fuma-nama/fumadocs",
+    "version": "fumadocs-ui@16.0.7",
+    "date": "2025-11-01T09:43:37Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.241",
+    "date": "2025-11-01T05:57:29Z"
+  },
+  {
+    "name": "cross-seed/cross-seed",
+    "version": "v6.13.5",
+    "date": "2025-09-27T01:10:59Z"
+  },
+  {
+    "name": "theonedev/onedev",
+    "version": "v13.0.10",
+    "date": "2025-11-01T02:08:01Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-11-01T00:27:06Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.0.1",
+    "date": "2025-10-15T16:53:55Z"
+  },
+  {
     "name": "ollama/ollama",
     "version": "v0.12.8",
     "date": "2025-10-30T23:22:27Z"
@@ -11,18 +56,13 @@
   },
   {
     "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-10-29T19:37:29Z"
+    "version": "v4.5.5",
+    "date": "2025-10-28T21:53:07Z"
   },
   {
     "name": "evcc-io/evcc",
     "version": "0.209.6",
     "date": "2025-10-31T20:13:49Z"
-  },
-  {
-    "name": "chrisbenincasa/tunarr",
-    "version": "v0.23.0-alpha.19",
-    "date": "2025-10-31T20:10:28Z"
   },
   {
     "name": "homarr-labs/homarr",
@@ -58,6 +98,11 @@
     "name": "pommee/goaway",
     "version": "v0.62.12",
     "date": "2025-10-31T17:30:55Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.4.2",
+    "date": "2025-10-23T06:59:32Z"
   },
   {
     "name": "Cleanuparr/Cleanuparr",
@@ -110,29 +155,9 @@
     "date": "2025-10-31T08:25:57Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.234",
-    "date": "2025-10-31T05:56:45Z"
-  },
-  {
     "name": "firefly-iii/firefly-iii",
     "version": "6.4.3",
     "date": "2025-10-31T05:51:51Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-10-31T00:27:05Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.0.1",
-    "date": "2025-10-15T16:53:55Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.4.2",
-    "date": "2025-10-23T06:59:32Z"
   },
   {
     "name": "getumbrel/umbrel",
@@ -315,11 +340,6 @@
     "date": "2025-10-29T07:40:47Z"
   },
   {
-    "name": "fuma-nama/fumadocs",
-    "version": "create-fumadocs-app@16.0.7",
-    "date": "2025-10-29T06:44:29Z"
-  },
-  {
     "name": "SigNoz/signoz",
     "version": "v0.99.0",
     "date": "2025-10-29T06:32:09Z"
@@ -465,11 +485,6 @@
     "date": "2025-10-26T06:33:05Z"
   },
   {
-    "name": "cross-seed/cross-seed",
-    "version": "v6.13.5",
-    "date": "2025-09-27T01:10:59Z"
-  },
-  {
     "name": "Prowlarr/Prowlarr",
     "version": "v2.1.5.5216",
     "date": "2025-10-25T19:41:59Z"
@@ -503,11 +518,6 @@
     "name": "meilisearch/meilisearch",
     "version": "prototype-v1.24.0.s3-snapshots-3",
     "date": "2025-10-24T09:47:47Z"
-  },
-  {
-    "name": "Luligu/matterbridge",
-    "version": "3.3.4",
-    "date": "2025-10-24T06:43:49Z"
   },
   {
     "name": "inventree/InvenTree",
@@ -658,11 +668,6 @@
     "name": "readeck/readeck",
     "version": "0.20.4",
     "date": "2025-10-18T10:00:42Z"
-  },
-  {
-    "name": "theonedev/onedev",
-    "version": "v13.0.9",
-    "date": "2025-10-18T09:59:25Z"
   },
   {
     "name": "grokability/snipe-it",
@@ -1023,11 +1028,6 @@
     "name": "Checkmk/checkmk",
     "version": "v2.4.0p12",
     "date": "2025-09-16T12:53:03Z"
-  },
-  {
-    "name": "Paymenter/Paymenter",
-    "version": "v1.3.4",
-    "date": "2025-09-15T20:48:02Z"
   },
   {
     "name": "apache/tika",
