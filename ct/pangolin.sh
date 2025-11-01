@@ -29,7 +29,7 @@ function update_script() {
     fi
 
     if check_for_gh_release "pangolin" "fosrl/pangolin"; then
-        msg_info "Stopping ${APP}"
+        msg_info "Stopping Service"
         systemctl stop pangolin
         msg_info "Service stopped"
 
@@ -40,7 +40,7 @@ function update_script() {
         fetch_and_deploy_gh_release "pangolin" "fosrl/pangolin" "tarball"
         fetch_and_deploy_gh_release "gerbil" "fosrl/gerbil" "singlefile" "latest" "/usr/bin" "gerbil_linux_amd64"
 
-        msg_info "Updating ${APP}"
+        msg_info "Updating Pangolin"
         export BUILD=oss
         export DATABASE=sqlite
         cd /opt/pangolin
@@ -61,7 +61,7 @@ cd /opt/pangolin
 EOF
         chmod +x /usr/local/bin/pangctl ./dist/cli.mjs
         cp server/db/names.json ./dist/names.json
-        msg_ok "Updated ${APP}"
+        msg_ok "Updated Pangolin"
 
         msg_info "Restoring config"
         tar -xzf /opt/pangolin_config_backup.tar.gz -C /opt/pangolin --overwrite
