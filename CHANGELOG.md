@@ -14,6 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - Zigbee2MQTT: fix: pnpm workspace in update [@fkroeger](https://github.com/fkroeger) ([#8825](https://github.com/community-scripts/ProxmoxVE/pull/8825))
+
   - #### 🐞 Bug Fixes
 
     - MediaManager: fix BASE_PATH error preventing main page load [@vhsdream](https://github.com/vhsdream) ([#8821](https://github.com/community-scripts/ProxmoxVE/pull/8821))
