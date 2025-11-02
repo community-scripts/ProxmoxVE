@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-11-02
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - MediaManager: fix BASE_PATH error preventing main page load [@vhsdream](https://github.com/vhsdream) ([#8821](https://github.com/community-scripts/ProxmoxVE/pull/8821))
+
 ## 2025-11-01
 
 ### 🆕 New Scripts
