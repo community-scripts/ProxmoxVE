@@ -32,35 +32,26 @@ function update_script() {
     if check_for_gh_release "pangolin" "fosrl/pangolin"; then
         msg_info "Stopping Service"
         systemctl stop pangolin
+        systemctl stop gerbil
         msg_info "Service stopped"
 
         msg_info "Creating backup"
         tar -czf /opt/pangolin_config_backup.tar.gz -C /opt/pangolin config
         msg_ok "Created backup"
 
-        fetch_and_deploy_gh_release "pangolin" "fosrl/pangolin" "tarball"
-        fetch_and_deploy_gh_release "gerbil" "fosrl/gerbil" "singlefile" "latest" "/usr/bin" "gerbil_linux_amd64"
+        CLEAN_INSTALL=1 fetch_and_deploy_gh_release "pangolin" "fosrl/pangolin" "tarball"
+        CLEAN_INSTALL=1 fetch_and_deploy_gh_release "gerbil" "fosrl/gerbil" "singlefile" "latest" "/usr/bin" "gerbil_linux_amd64"
 
         msg_info "Updating Pangolin"
-        export BUILD=oss
-        export DATABASE=sqlite
         cd /opt/pangolin
         $STD npm ci
-        echo "export * from \"./$DATABASE\";" > server/db/index.ts
-        echo "export const build = \"$BUILD\" as any;" > server/build.ts
-        cp tsconfig.oss.json tsconfig.json
-        $STD npm run next:build
-        $STD node esbuild.mjs -e server/index.ts -o dist/server.mjs -b $BUILD
-        $STD node esbuild.mjs -e server/setup/migrationsSqlite.ts -o dist/migrations.mjs
+        $STD npm run set:sqlite
+        $STD npm run set:oss
+        rm -rf server/private
+        $STD npm run build:sqlite
         $STD npm run build:cli
         cp -R .next/standalone ./
-
-        cat <<EOF >/usr/local/bin/pangctl
-#!/bin/sh
-cd /opt/pangolin
-./dist/cli.mjs "$@"
-EOF
-        chmod +x /usr/local/bin/pangctl ./dist/cli.mjs
+        chmod +x ./dist/cli.mjs
         cp server/db/names.json ./dist/names.json
         msg_ok "Updated Pangolin"
 
@@ -68,6 +59,11 @@ EOF
         tar -xzf /opt/pangolin_config_backup.tar.gz -C /opt/pangolin --overwrite
         rm -f /opt/pangolin_config_backup.tar.gz
         msg_ok "Restored config"
+
+        msg_info "Starting Services"
+        systemctl start pangolin
+        systemctl start gerbil
+        msg_ok "Started Services"
         msg_ok "Updated successfully!"
     fi
     exit
