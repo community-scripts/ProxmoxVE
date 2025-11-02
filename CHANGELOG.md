@@ -18,6 +18,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Pangolin: Fix install and database migration [@tremor021](https://github.com/tremor021) ([#8828](https://github.com/community-scripts/ProxmoxVE/pull/8828))
     - MediaManager: fix BASE_PATH error preventing main page load [@vhsdream](https://github.com/vhsdream) ([#8821](https://github.com/community-scripts/ProxmoxVE/pull/8821))
 
 ## 2025-11-01
