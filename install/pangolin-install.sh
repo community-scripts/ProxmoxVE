@@ -26,17 +26,12 @@ fetch_and_deploy_gh_release "gerbil" "fosrl/gerbil" "singlefile" "latest" "/usr/
 msg_info "Setup Pangolin"
 IP_ADDR=$(hostname -I | awk '{print $1}')
 SECRET_KEY=$(openssl rand -base64 48 | tr -dc 'A-Za-z0-9' | head -c 32)
-export BUILD=oss
-export DATABASE=sqlite
 cd /opt/pangolin
 $STD npm ci
-echo "export * from \"./$DATABASE\";" > server/db/index.ts
-echo "export const build = \"$BUILD\" as any;" > server/build.ts
-cp tsconfig.oss.json tsconfig.json
-mkdir -p dist
-$STD npm run next:build
-$STD node esbuild.mjs -e server/index.ts -o dist/server.mjs -b $BUILD
-$STD node esbuild.mjs -e server/setup/migrationsSqlite.ts -o dist/migrations.mjs
+$STD npm run set:sqlite
+$STD npm run set:oss
+rm -rf server/private
+$STD npm run build:sqlite
 $STD npm run build:cli
 cp -R .next/standalone ./
 
@@ -98,8 +93,10 @@ After=network.target
 [Service]
 Type=simple
 User=root
+Environment=NODE_ENV=production
+Environment=ENVIRONMENT=prod
 WorkingDirectory=/opt/pangolin
-ExecStart=/usr/bin/npm start
+ExecStart=/usr/bin/node --enable-source-maps dist/server.mjs
 Restart=always
 RestartSec=10
 
