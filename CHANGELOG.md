@@ -22,6 +22,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Remove BOM from shebang lines in ct scripts [@MickLesk](https://github.com/MickLesk) ([#8833](https://github.com/community-scripts/ProxmoxVE/pull/8833))
 
+  - #### 💥 Breaking Changes
+
+    - Removed: MeTube [@MickLesk](https://github.com/MickLesk) ([#8830](https://github.com/community-scripts/ProxmoxVE/pull/8830))
+
 ## 2025-11-02
 
 ### 🚀 Updated Scripts
