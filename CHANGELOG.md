@@ -20,6 +20,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - linkstack: fix wrong directory installation [@omertahaoztop](https://github.com/omertahaoztop) ([#8814](https://github.com/community-scripts/ProxmoxVE/pull/8814))
     - Remove BOM from shebang lines in ct scripts [@MickLesk](https://github.com/MickLesk) ([#8833](https://github.com/community-scripts/ProxmoxVE/pull/8833))
 
   - #### 💥 Breaking Changes
