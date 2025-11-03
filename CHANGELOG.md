@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-11-03
 
+### 🆕 New Scripts
+
+  - Donetick ([#8835](https://github.com/community-scripts/ProxmoxVE/pull/8835))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
