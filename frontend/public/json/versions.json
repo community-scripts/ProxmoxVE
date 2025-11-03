@@ -1,8 +1,43 @@
 [
   {
+    "name": "immich-app/immich",
+    "version": "v2.2.2",
+    "date": "2025-11-02T21:56:36Z"
+  },
+  {
+    "name": "maxdorninger/MediaManager",
+    "version": "v1.9.1",
+    "date": "2025-11-02T21:14:50Z"
+  },
+  {
+    "name": "gtsteffaniak/filebrowser",
+    "version": "v1.0.1-beta",
+    "date": "2025-11-02T21:13:14Z"
+  },
+  {
+    "name": "karlomikus/bar-assistant",
+    "version": "v5.9.1",
+    "date": "2025-11-02T20:54:28Z"
+  },
+  {
+    "name": "nicolargo/glances",
+    "version": "v4.4.0",
+    "date": "2025-11-02T16:36:14Z"
+  },
+  {
+    "name": "Cleanuparr/Cleanuparr",
+    "version": "v2.4.2",
+    "date": "2025-11-02T15:58:46Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "nightly",
+    "date": "2025-11-01T20:00:45Z"
+  },
+  {
     "name": "redis/redis",
-    "version": "8.0.5",
-    "date": "2025-11-02T07:49:17Z"
+    "version": "8.2.3",
+    "date": "2025-11-02T13:46:10Z"
   },
   {
     "name": "Jackett/Jackett",
@@ -22,7 +57,7 @@
   {
     "name": "theonedev/onedev",
     "version": "v13.0.10",
-    "date": "2025-11-01T02:08:01Z"
+    "date": "2025-11-02T02:47:45Z"
   },
   {
     "name": "inventree/InvenTree",
@@ -58,11 +93,6 @@
     "name": "henrygd/beszel",
     "version": "v0.15.3",
     "date": "2025-11-01T20:13:33Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "v4.5.5",
-    "date": "2025-10-28T21:53:07Z"
   },
   {
     "name": "Paymenter/Paymenter",
@@ -125,11 +155,6 @@
     "date": "2025-10-31T18:50:18Z"
   },
   {
-    "name": "immich-app/immich",
-    "version": "v2.2.1",
-    "date": "2025-10-31T18:34:59Z"
-  },
-  {
     "name": "YunoHost/yunohost",
     "version": "debian/12.1.33",
     "date": "2025-10-31T12:40:16Z"
@@ -143,11 +168,6 @@
     "name": "pommee/goaway",
     "version": "v0.62.12",
     "date": "2025-10-31T17:30:55Z"
-  },
-  {
-    "name": "Cleanuparr/Cleanuparr",
-    "version": "v2.4.1",
-    "date": "2025-10-31T15:50:26Z"
   },
   {
     "name": "zitadel/zitadel",
@@ -208,11 +228,6 @@
     "name": "pymedusa/Medusa",
     "version": "v1.0.24",
     "date": "2025-10-30T19:04:42Z"
-  },
-  {
-    "name": "maxdorninger/MediaManager",
-    "version": "v1.9.0",
-    "date": "2025-10-30T18:52:50Z"
   },
   {
     "name": "mongodb/mongo",
@@ -298,11 +313,6 @@
     "name": "ipfs/kubo",
     "version": "v0.38.2",
     "date": "2025-10-30T02:44:09Z"
-  },
-  {
-    "name": "gtsteffaniak/filebrowser",
-    "version": "v1.0.0-beta",
-    "date": "2025-10-30T00:09:23Z"
   },
   {
     "name": "Sonarr/Sonarr",
@@ -725,11 +735,6 @@
     "date": "2025-01-05T21:14:23Z"
   },
   {
-    "name": "karlomikus/bar-assistant",
-    "version": "v5.9.0",
-    "date": "2025-10-15T18:27:56Z"
-  },
-  {
     "name": "linkwarden/linkwarden",
     "version": "v2.13.1",
     "date": "2025-10-15T13:29:37Z"
@@ -843,11 +848,6 @@
     "name": "advplyr/audiobookshelf",
     "version": "v2.30.0",
     "date": "2025-10-08T16:03:49Z"
-  },
-  {
-    "name": "nicolargo/glances",
-    "version": "v4.3.3",
-    "date": "2025-10-08T15:45:21Z"
   },
   {
     "name": "FlowiseAI/Flowise",
