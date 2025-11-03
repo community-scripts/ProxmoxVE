@@ -20,6 +20,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Immich: Pin version to 2.2.2 [@vhsdream](https://github.com/vhsdream) ([#8848](https://github.com/community-scripts/ProxmoxVE/pull/8848))
     - Asterisk: handle errors in version retrieval commands [@MickLesk](https://github.com/MickLesk) ([#8844](https://github.com/community-scripts/ProxmoxVE/pull/8844))
     - linkstack: fix wrong directory installation [@omertahaoztop](https://github.com/omertahaoztop) ([#8814](https://github.com/community-scripts/ProxmoxVE/pull/8814))
     - Remove BOM from shebang lines in ct scripts [@MickLesk](https://github.com/MickLesk) ([#8833](https://github.com/community-scripts/ProxmoxVE/pull/8833))
