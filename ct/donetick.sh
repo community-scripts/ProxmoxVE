@@ -5,7 +5,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/donetick/donetick
 
-APP="donetick"
+APP="Donetick"
 var_tags="${var_tags:-productivity;tasks}"
 var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-512}"
