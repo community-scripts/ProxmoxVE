@@ -19,11 +19,11 @@ msg_ok "Installed Dependencies"
 
 fetch_and_deploy_gh_release "donetick" "donetick/donetick" "prebuild" "latest" "/opt/donetick" "donetick_Linux_x86_64.tar.gz"
 
-msg_info "Setup donetick"
+msg_info "Setup Donetick"
 cd /opt/donetick
 TOKEN=$(openssl rand -hex 16)
 sed -i -e "s/change_this_to_a_secure_random_string_32_characters_long/${TOKEN}/g" config/selfhosted.yaml
-msg_ok "Setup donetick"
+msg_ok "Setup Donetick"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/donetick.service
