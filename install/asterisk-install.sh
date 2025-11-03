@@ -18,8 +18,8 @@ html=$(curl -fsSL "$ASTERISK_VERSIONS_URL")
 
 LTS_VERSION=""
 for major in 20 22 24 26; do
-  block=$(echo "$html" | awk "/Asterisk $major - LTS/,/<ul>/")
-  ver=$(echo "$block" | grep -oE 'Download Latest - [0-9]+\.[0-9]+(\.[0-9]+)?' | head -n1 | sed -E 's/.* - //')
+  block=$(echo "$html" | awk "/Asterisk $major - LTS/,/<ul>/" || true)
+  ver=$(echo "$block" | grep -oE 'Download Latest - [0-9]+\.[0-9]+(\.[0-9]+)?' | head -n1 | sed -E 's/.* - //' || true)
   if [ -n "$ver" ]; then
     LTS_VERSION="$LTS_VERSION $ver"
   fi
@@ -29,8 +29,8 @@ LTS_VERSION=$(echo "$LTS_VERSION" | xargs | tr ' ' '\n' | sort -V | tail -n1)
 
 STD_VERSION=""
 for major in 21 23 25 27; do
-  block=$(echo "$html" | awk "/Asterisk $major</,/<ul>/")
-  ver=$(echo "$block" | grep -oE 'Download (Latest - )?[0-9]+\.[0-9]+(\.[0-9]+)?' | head -n1 | sed -E 's/.* - //;s/Download //')
+  block=$(echo "$html" | grep -A 20 "Asterisk $major</h3>" | head -n 20 || true)
+  ver=$(echo "$block" | grep -oE 'Download (Latest - )?'"$major"'\.[0-9]+\.[0-9]+' | head -n1 | sed -E 's/Download (Latest - )?//' || true)
   if [ -n "$ver" ]; then
     STD_VERSION="$STD_VERSION $ver"
   fi
@@ -39,7 +39,7 @@ done
 STD_VERSION=$(echo "$STD_VERSION" | xargs | tr ' ' '\n' | sort -V | tail -n1)
 
 cert_block=$(echo "$html" | awk '/Certified Asterisk/,/<ul>/')
-CERT_VERSION=$(echo "$cert_block" | grep -oE 'Download Latest - [0-9]+\.[0-9]+-cert[0-9]+' | head -n1 | sed -E 's/.* - //')
+CERT_VERSION=$(echo "$cert_block" | grep -oE 'Download Latest - [0-9]+\.[0-9]+-cert[0-9]+' | head -n1 | sed -E 's/.* - //' || true)
 
 cat <<EOF
 Choose Asterisk version to install:
@@ -49,6 +49,7 @@ Choose Asterisk version to install:
 EOF
 read -rp "Enter choice [1-3]: " ASTERISK_CHOICE
 
+CERTIFIED=0
 case "$ASTERISK_CHOICE" in
 2)
   ASTERISK_VERSION="$LTS_VERSION"
