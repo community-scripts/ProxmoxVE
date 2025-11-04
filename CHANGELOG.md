@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-11-04
 
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - stirling-pdf: add native jbig2 dep to installation script [@MickLesk](https://github.com/MickLesk) ([#8858](https://github.com/community-scripts/ProxmoxVE/pull/8858))
+
 ## 2025-11-03
 
 ### 🆕 New Scripts
