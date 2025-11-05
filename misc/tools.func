@@ -4188,12 +4188,12 @@ function setup_uv() {
   local TMP_DIR=$(mktemp -d)
   local CACHED_VERSION
 
-  # Trap für TMP Cleanup
+  # trap for TMP Cleanup
   trap "rm -rf '$TMP_DIR'" EXIT
 
   CACHED_VERSION=$(get_cached_version "uv")
 
-  # Architektur-Detection
+  # Architecture Detection
   local ARCH=$(uname -m)
   local OS_TYPE=""
   local UV_TAR=""
