@@ -14,6 +14,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Zabbix: fix agent service recognition in update [@MickLesk](https://github.com/MickLesk) ([#8881](https://github.com/community-scripts/ProxmoxVE/pull/8881))
+
   - #### 💥 Breaking Changes
 
     - fix: npm: refactor for v2.13.x [@CrazyWolf13](https://github.com/CrazyWolf13) ([#8870](https://github.com/community-scripts/ProxmoxVE/pull/8870))
