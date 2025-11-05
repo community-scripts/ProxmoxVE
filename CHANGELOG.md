@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-11-05
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Update config_path in donetick.json [@fyxtro](https://github.com/fyxtro) ([#8872](https://github.com/community-scripts/ProxmoxVE/pull/8872))
+
 ## 2025-11-04
 
 ### 🚀 Updated Scripts
