@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: Open WebUI [@tremor021](https://github.com/tremor021) ([#8874](https://github.com/community-scripts/ProxmoxVE/pull/8874))
     - Refactor(tools.func): Add Retry Logic, OS-Upgrade Safety, Smart Version Detection + 10 Critical Bugfixes [@MickLesk](https://github.com/MickLesk) ([#8871](https://github.com/community-scripts/ProxmoxVE/pull/8871))
 
 ### 🌐 Website
