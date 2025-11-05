@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Immich: Pin version to 2.2.3 [@vhsdream](https://github.com/vhsdream) ([#8861](https://github.com/community-scripts/ProxmoxVE/pull/8861))
     - Jotty: increase RAM to 4GB [@vhsdream](https://github.com/vhsdream) ([#8887](https://github.com/community-scripts/ProxmoxVE/pull/8887))
     - Zabbix: fix agent service recognition in update [@MickLesk](https://github.com/MickLesk) ([#8881](https://github.com/community-scripts/ProxmoxVE/pull/8881))
 
