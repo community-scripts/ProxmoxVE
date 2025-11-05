@@ -1,5 +1,85 @@
 [
   {
+    "name": "getumbrel/umbrel",
+    "version": "1.5.0",
+    "date": "2025-11-05T11:10:20Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.10.4",
+    "date": "2025-10-24T20:03:03Z"
+  },
+  {
+    "name": "emqx/emqx",
+    "version": "e5.10.2-alpha.1",
+    "date": "2025-11-05T09:55:26Z"
+  },
+  {
+    "name": "glpi-project/glpi",
+    "version": "11.0.2",
+    "date": "2025-11-05T09:55:05Z"
+  },
+  {
+    "name": "zitadel/zitadel",
+    "version": "v4.6.3",
+    "date": "2025-11-05T09:16:08Z"
+  },
+  {
+    "name": "nicolargo/glances",
+    "version": "v4.4.1",
+    "date": "2025-11-05T09:08:23Z"
+  },
+  {
+    "name": "evcc-io/evcc",
+    "version": "0.209.7",
+    "date": "2025-11-05T08:32:08Z"
+  },
+  {
+    "name": "SigNoz/signoz",
+    "version": "v0.100.0",
+    "date": "2025-11-05T06:38:34Z"
+  },
+  {
+    "name": "NginxProxyManager/nginx-proxy-manager",
+    "version": "v2.13.1",
+    "date": "2025-11-05T06:06:08Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.250",
+    "date": "2025-11-05T05:55:30Z"
+  },
+  {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.535",
+    "date": "2025-11-05T05:30:07Z"
+  },
+  {
+    "name": "slskd/slskd",
+    "version": "0.24.0",
+    "date": "2025-11-05T02:17:00Z"
+  },
+  {
+    "name": "Sonarr/Sonarr",
+    "version": "v4.0.16.2944",
+    "date": "2025-11-05T01:56:48Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-11-05T00:27:06Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.0.1",
+    "date": "2025-10-15T16:53:55Z"
+  },
+  {
+    "name": "gethomepage/homepage",
+    "version": "v1.6.1",
+    "date": "2025-11-05T00:21:14Z"
+  },
+  {
     "name": "FlareSolverr/FlareSolverr",
     "version": "v3.4.4",
     "date": "2025-11-04T23:05:14Z"
@@ -25,14 +105,19 @@
     "date": "2025-11-04T20:01:09Z"
   },
   {
-    "name": "home-assistant/core",
-    "version": "2025.10.4",
-    "date": "2025-10-24T20:03:03Z"
+    "name": "runtipi/runtipi",
+    "version": "v4.6.2",
+    "date": "2025-11-03T19:45:24Z"
   },
   {
     "name": "element-hq/synapse",
     "version": "v1.142.0rc2",
     "date": "2025-11-04T16:22:11Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.0.17",
+    "date": "2025-11-03T15:30:01Z"
   },
   {
     "name": "jhuckaby/Cronicle",
@@ -45,19 +130,9 @@
     "date": "2025-11-04T17:41:01Z"
   },
   {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.0.1",
-    "date": "2025-10-15T16:53:55Z"
-  },
-  {
     "name": "meilisearch/meilisearch",
     "version": "prototype-v1.24.0-s3-snapshots-4",
     "date": "2025-11-04T16:46:01Z"
-  },
-  {
-    "name": "gethomepage/homepage",
-    "version": "v1.6.0",
-    "date": "2025-11-04T16:19:09Z"
   },
   {
     "name": "VictoriaMetrics/VictoriaMetrics",
@@ -78,11 +153,6 @@
     "name": "OctoPrint/OctoPrint",
     "version": "1.11.4",
     "date": "2025-11-04T12:43:30Z"
-  },
-  {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.535",
-    "date": "2025-11-04T12:31:36Z"
   },
   {
     "name": "home-assistant/operating-system",
@@ -110,19 +180,9 @@
     "date": "2025-11-04T07:28:45Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.247",
-    "date": "2025-11-04T05:53:52Z"
-  },
-  {
     "name": "firefly-iii/firefly-iii",
     "version": "v6.4.4",
     "date": "2025-11-01T19:48:08Z"
-  },
-  {
-    "name": "NginxProxyManager/nginx-proxy-manager",
-    "version": "v2.13.0",
-    "date": "2025-11-04T04:47:23Z"
   },
   {
     "name": "immich-app/immich",
@@ -150,11 +210,6 @@
     "date": "2025-11-04T00:32:21Z"
   },
   {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-11-04T00:27:08Z"
-  },
-  {
     "name": "inventree/InvenTree",
     "version": "1.1.2",
     "date": "2025-11-03T23:16:29Z"
@@ -178,11 +233,6 @@
     "name": "semaphoreui/semaphore",
     "version": "v2.16.37",
     "date": "2025-10-30T07:54:49Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "v4.6.2",
-    "date": "2025-11-03T19:45:24Z"
   },
   {
     "name": "jupyter/notebook",
@@ -215,24 +265,9 @@
     "date": "2025-11-03T16:42:07Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.0.17",
-    "date": "2025-11-03T15:30:01Z"
-  },
-  {
-    "name": "Sonarr/Sonarr",
-    "version": "v4.0.15.2941",
-    "date": "2025-06-20T17:20:54Z"
-  },
-  {
     "name": "n8n-io/n8n",
     "version": "n8n@1.117.3",
     "date": "2025-10-28T12:00:42Z"
-  },
-  {
-    "name": "nicolargo/glances",
-    "version": "v4.4.1",
-    "date": "2025-11-03T13:52:05Z"
   },
   {
     "name": "Graylog2/graylog2-server",
@@ -310,11 +345,6 @@
     "date": "2025-10-31T22:24:04Z"
   },
   {
-    "name": "evcc-io/evcc",
-    "version": "0.209.6",
-    "date": "2025-10-31T20:13:49Z"
-  },
-  {
     "name": "homarr-labs/homarr",
     "version": "v1.43.1",
     "date": "2025-10-31T19:15:02Z"
@@ -333,11 +363,6 @@
     "name": "pommee/goaway",
     "version": "v0.62.12",
     "date": "2025-10-31T17:30:55Z"
-  },
-  {
-    "name": "zitadel/zitadel",
-    "version": "v4.6.2",
-    "date": "2025-10-31T15:41:19Z"
   },
   {
     "name": "bunkerity/bunkerweb",
@@ -373,11 +398,6 @@
     "name": "garethgeorge/backrest",
     "version": "v1.10.1",
     "date": "2025-10-31T08:25:57Z"
-  },
-  {
-    "name": "getumbrel/umbrel",
-    "version": "1.4.2",
-    "date": "2025-05-09T08:54:49Z"
   },
   {
     "name": "pymedusa/Medusa",
@@ -490,11 +510,6 @@
     "date": "2025-10-29T07:40:47Z"
   },
   {
-    "name": "SigNoz/signoz",
-    "version": "v0.99.0",
-    "date": "2025-10-29T06:32:09Z"
-  },
-  {
     "name": "openobserve/openobserve",
     "version": "v0.15.3",
     "date": "2025-10-29T05:15:45Z"
@@ -563,11 +578,6 @@
     "name": "juanfont/headscale",
     "version": "v0.27.0",
     "date": "2025-10-27T11:16:35Z"
-  },
-  {
-    "name": "emqx/emqx",
-    "version": "e6.0.1-alpha.2",
-    "date": "2025-10-27T09:36:30Z"
   },
   {
     "name": "Radarr/Radarr",
@@ -863,11 +873,6 @@
     "name": "projectsend/projectsend",
     "version": "r1945",
     "date": "2025-10-10T02:30:05Z"
-  },
-  {
-    "name": "glpi-project/glpi",
-    "version": "11.0.1",
-    "date": "2025-10-09T12:34:15Z"
   },
   {
     "name": "autobrr/autobrr",
@@ -1183,11 +1188,6 @@
     "name": "requarks/wiki",
     "version": "v2.5.308",
     "date": "2025-08-13T07:09:29Z"
-  },
-  {
-    "name": "slskd/slskd",
-    "version": "0.23.2",
-    "date": "2025-08-10T23:35:07Z"
   },
   {
     "name": "ioBroker/ioBroker",
