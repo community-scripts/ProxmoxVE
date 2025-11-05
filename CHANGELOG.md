@@ -14,6 +14,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 💥 Breaking Changes
+
+    - fix: npm: refactor for v2.13.x [@CrazyWolf13](https://github.com/CrazyWolf13) ([#8870](https://github.com/community-scripts/ProxmoxVE/pull/8870))
+
   - #### 🔧 Refactor
 
     - Refactor: Open WebUI [@tremor021](https://github.com/tremor021) ([#8874](https://github.com/community-scripts/ProxmoxVE/pull/8874))
