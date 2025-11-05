@@ -27,6 +27,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 📝 Script Information
 
+    - npm: Increase RAM and HDD, update Certbot notes [@MickLesk](https://github.com/MickLesk) ([#8882](https://github.com/community-scripts/ProxmoxVE/pull/8882))
     - Update config_path in donetick.json [@fyxtro](https://github.com/fyxtro) ([#8872](https://github.com/community-scripts/ProxmoxVE/pull/8872))
 
 ## 2025-11-04
