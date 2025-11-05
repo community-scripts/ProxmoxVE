@@ -42,12 +42,8 @@ function update_script() {
   fi
 
   msg_info "Stopping Services"
-  $STD systemctl stop zabbix-server
-  if systemctl list-unit-files | grep -q zabbix-agent2; then
-    $STD systemctl stop zabbix-agent2
-  else
-    $STD systemctl stop zabbix-agent
-  fi
+  systemctl stop zabbix-server
+  systemctl stop "$AGENT_SERVICE"
   msg_ok "Stopped Services"
 
   msg_info "Updating Zabbix"
@@ -88,12 +84,8 @@ function update_script() {
   msg_ok "Updated Zabbix"
 
   msg_info "Starting Services"
-  $STD systemctl start zabbix-server
-  if systemctl list-unit-files | grep -q zabbix-agent2; then
-    $STD systemctl start zabbix-agent2
-  else
-    $STD systemctl start zabbix-agent
-  fi
+  systemctl start zabbix-server
+  systemctl start "$AGENT_SERVICE"
   systemctl restart apache2
   msg_ok "Started Services"
 
