@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-11-05
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - Refactor(tools.func): Add Retry Logic, OS-Upgrade Safety, Smart Version Detection + 10 Critical Bugfixes [@MickLesk](https://github.com/MickLesk) ([#8871](https://github.com/community-scripts/ProxmoxVE/pull/8871))
+
 ### 🌐 Website
 
   - #### 📝 Script Information
