@@ -34,7 +34,7 @@ function update_script() {
   PHP_VERSION="8.4" PHP_MODULE="mysql" PHP_APACHE="YES" setup_php
   setup_composer
 
-  if check_for_gh_release "koillection" "benjaminjonard/koillection"; then
+    if check_for_gh_release "kimai" "kimai/kimai"; then
     BACKUP_DIR="/opt/kimai_backup"
 
     msg_info "Stopping Apache2"
