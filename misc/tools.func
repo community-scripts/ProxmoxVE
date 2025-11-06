@@ -450,7 +450,51 @@ manage_tool_repository() {
     # Setup repository
     local distro_codename
     distro_codename=$(awk -F= '/^VERSION_CODENAME=/{print $2}' /etc/os-release)
-    suite=$(get_fallback_suite "$distro_id" "$distro_codename" "$repo_url")
+
+    # Suite mapping with fallback for newer releases not yet supported by upstream
+    if [[ "$distro_id" == "debian" ]]; then
+      case "$distro_codename" in
+      trixie | forky | sid)
+        # Testing/unstable releases fallback to latest stable suite
+        suite="bookworm"
+        ;;
+      bookworm)
+        suite="bookworm"
+        ;;
+      bullseye)
+        suite="bullseye"
+        ;;
+      *)
+        # Unknown release: fallback to latest stable suite
+        msg_warn "Unknown Debian release '${distro_codename}', using bookworm"
+        suite="bookworm"
+        ;;
+      esac
+    elif [[ "$distro_id" == "ubuntu" ]]; then
+      case "$distro_codename" in
+      oracular | plucky)
+        # Newer releases fallback to latest LTS
+        suite="noble"
+        ;;
+      noble)
+        suite="noble"
+        ;;
+      jammy)
+        suite="jammy"
+        ;;
+      focal)
+        suite="focal"
+        ;;
+      *)
+        # Unknown release: fallback to latest LTS
+        msg_warn "Unknown Ubuntu release '${distro_codename}', using noble"
+        suite="noble"
+        ;;
+      esac
+    else
+      # For other distros, try generic fallback
+      suite=$(get_fallback_suite "$distro_id" "$distro_codename" "$repo_url")
+    fi
 
     repo_component="main"
     [[ "$distro_id" == "ubuntu" ]] && repo_component="multiverse"
