@@ -42,7 +42,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl enable -q --now headscale
     msg_ok "Started Service"
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

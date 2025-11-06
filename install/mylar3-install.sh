@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Copyright (c) 2021-2025 community-scripts ORG
-# Author: davalanche
+# Author: davalanche | Co-Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/mylar3/mylar3
 
@@ -14,7 +14,6 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt install -y jq
 cat <<EOF >/etc/apt/sources.list.d/non-free.sources
 Types: deb
 URIs: http://deb.debian.org/debian
@@ -23,22 +22,17 @@ Components: non-free non-free-firmware
 EOF
 $STD apt update
 $STD apt install -y unrar
-rm /etc/apt/sources.list.d/non-free.sources
 msg_ok "Installed Dependencies"
 
-msg_info "Setup Python3"
-$STD apt install -y python3-pip
-rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
-$STD pip install -U --no-cache-dir pip
-msg_ok "Setup Python3"
+PYTHON_VERSION="3.12" setup_uv
+fetch_and_deploy_gh_release "mylar3" "mylar3/mylar3" "tarball"
 
 msg_info "Installing ${APPLICATION}"
-mkdir -p /opt/mylar3
 mkdir -p /opt/mylar3-data
-RELEASE=$(curl -fsSL https://api.github.com/repos/mylar3/mylar3/releases/latest | jq -r '.tag_name')
-curl -fsSL "https://github.com/mylar3/mylar3/archive/refs/tags/${RELEASE}.tar.gz" | tar -xz --strip-components=1 -C /opt/mylar3
-$STD pip install --no-cache-dir -r /opt/mylar3/requirements.txt
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
+$STD uv venv /opt/mylar3/.venv
+$STD /opt/mylar3/.venv/bin/python -m ensurepip --upgrade
+$STD /opt/mylar3/.venv/bin/python -m pip install --upgrade pip
+$STD /opt/mylar3/.venv/bin/python -m pip install --no-cache-dir -r /opt/mylar3/requirements.txt
 msg_ok "Installed ${APPLICATION}"
 
 msg_info "Creating Service"
@@ -48,7 +42,7 @@ Description=Mylar3 Service
 After=network-online.target
 
 [Service]
-ExecStart=/usr/bin/python3 /opt/mylar3/Mylar.py --daemon --nolaunch --datadir=/opt/mylar3-data
+ExecStart=/opt/mylar3/.venv/bin/python /opt/mylar3/Mylar.py --daemon --nolaunch --datadir=/opt/mylar3-data
 GuessMainPID=no
 Type=forking
 Restart=on-failure

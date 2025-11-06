@@ -74,7 +74,7 @@ EOF
     msg_info "Cleaning Up"
     rm -rf /opt/tandoor.bak
     msg_ok "Cleanup Completed"
-    msg_ok "Update Successfully!"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

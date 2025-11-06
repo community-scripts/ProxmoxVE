@@ -32,21 +32,21 @@ function update_script() {
   setup_uv
 
   if check_for_gh_release "huntarr" "plexguide/Huntarr.io"; then
-    msg_info "Stopping huntarr"
+    msg_info "Stopping Service"
     systemctl stop huntarr
-    msg_ok "Stopped huntarr"
+    msg_ok "Stopped Service"
 
     fetch_and_deploy_gh_release "huntarr" "plexguide/Huntarr.io"
 
-    msg_info "Configuring $APP"
+    msg_info "Updating Huntarr"
     cd /opt/huntarr
     $STD uv pip install -r requirements.txt --python /opt/huntarr/.venv/bin/python
-    msg_ok "Configured $APP"
+    msg_ok "Updated Huntarr"
 
-    msg_info "Starting $APP"
+    msg_info "Starting Service"
     systemctl start huntarr
-    msg_ok "Started $APP"
-    msg_ok "Updated $APP"
+    msg_ok "Started Service"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

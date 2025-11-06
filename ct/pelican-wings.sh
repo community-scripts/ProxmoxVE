@@ -35,7 +35,7 @@ function update_script() {
 
     msg_info "Updating ${APP} to v${RELEASE}"
     rm /usr/local/bin/wings
-curl -fsSL "https://github.com/pelican-dev/wings/releases/download/v${RELEASE}/wings_linux_amd64" -o "/usr/local/bin/wings"
+    curl -fsSL "https://github.com/pelican-dev/wings/releases/download/v${RELEASE}/wings_linux_amd64" -o "/usr/local/bin/wings"
     chmod u+x /usr/local/bin/wings
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated $APP to v${RELEASE}"
@@ -43,7 +43,7 @@ curl -fsSL "https://github.com/pelican-dev/wings/releases/download/v${RELEASE}/w
     msg_info "Starting Service"
     systemctl start wings
     msg_ok "Started Service"
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi

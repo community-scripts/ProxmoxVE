@@ -33,7 +33,7 @@ function update_script() {
   $STD apt update
   $STD apt install -yq twingate-connector
   $STD systemctl restart twingate-connector
-  msg_ok "Updated Successfully"
+  msg_ok "Updated successfully!"
   exit
 }
 

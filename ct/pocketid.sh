@@ -67,10 +67,10 @@ function update_script() {
     fetch_and_deploy_gh_release "pocket-id" "pocket-id/pocket-id" "singlefile" "latest" "/opt/pocket-id/" "pocket-id-linux-amd64"
     mv /opt/env /opt/pocket-id/.env
 
-    msg_info "Starting $APP"
+    msg_info "Starting Service"
     systemctl start pocketid
-    msg_ok "Started $APP"
-    msg_ok "Update Successful"
+    msg_ok "Started Service"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

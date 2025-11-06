@@ -31,6 +31,7 @@ function update_script() {
   $STD pip3 install -U unmanic
   $STD apt -y upgrade
   msg_ok "Updated $APP LXC"
+  msg_ok "Updated successfully!"
   exit
 }
 

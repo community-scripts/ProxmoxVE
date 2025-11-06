@@ -30,9 +30,9 @@ function update_script() {
   fi
 
   if check_for_gh_release "streamlink-webui" "CrazyWolf13/streamlink-webui"; then
-    msg_info "Stopping $APP"
+    msg_info "Stopping Service"
     systemctl stop ${APP}
-    msg_ok "Stopped $APP"
+    msg_info "Stopped Service"
 
     rm -rf /opt/${APP}
     NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
@@ -49,10 +49,10 @@ function update_script() {
     chmod +x /opt/"${APP}"/start.sh
     msg_ok "Updated $APP"
 
-    msg_info "Starting $APP"
+    msg_info "Starting Service"
     systemctl start ${APP}
-    msg_ok "Started $APP"
-    msg_ok "Update Successful"
+    msg_ok "Started Service"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

@@ -29,9 +29,9 @@ function update_script() {
     exit
   fi
   if check_for_gh_release "cryptpad" "cryptpad/cryptpad"; then
-    msg_info "Stopping $APP"
+    msg_info "Stopping Service"
     systemctl stop cryptpad
-    msg_ok "Stopped $APP"
+    msg_info "Stopped Service"
 
     msg_info "Backing up configuration"
     [ -f /opt/cryptpad/config/config.js ] && mv /opt/cryptpad/config/config.js /opt/
@@ -50,10 +50,10 @@ function update_script() {
     mv /opt/config.js /opt/cryptpad/config/
     msg_ok "Configuration restored"
 
-    msg_info "Starting $APP"
+    msg_info "Starting Service"
     systemctl start cryptpad
-    msg_ok "Started $APP"
-    msg_ok "Updated Successfully"
+    msg_ok "Started Service"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

@@ -20,54 +20,54 @@ color
 catch_errors
 
 function update_script() {
-header_info
-check_container_storage
-check_container_resources
+  header_info
+  check_container_storage
+  check_container_resources
 
-if [[ ! -d "/opt/guardian" ]] ; then
-  msg_error "No ${APP} Installation Found!"
+  if [[ ! -d "/opt/guardian" ]]; then
+    msg_error "No ${APP} Installation Found!"
+    exit
+  fi
+
+  if check_for_gh_release "guardian" "HydroshieldMKII/Guardian"; then
+    msg_info "Stopping Services"
+    systemctl stop guardian-backend guardian-frontend
+    msg_ok "Stopped Services"
+
+    if [[ -f "/opt/guardian/backend/plex-guard.db" ]]; then
+      msg_info "Backing up Database"
+      cp "/opt/guardian/backend/plex-guard.db" "/tmp/plex-guard.db.backup"
+      msg_ok "Backed up Database"
+    fi
+
+    [[ -f "/opt/guardian/.env" ]] && cp "/opt/guardian/.env" "/opt"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "guardian" "HydroshieldMKII/Guardian" "tarball" "latest" "/opt/guardian"
+    [[ -f "/opt/.env" ]] && mv "/opt/.env" "/opt/guardian"
+
+    if [[ -f "/tmp/plex-guard.db.backup" ]]; then
+      msg_info "Restoring Database"
+      cp "/tmp/plex-guard.db.backup" "/opt/guardian/backend/plex-guard.db"
+      rm "/tmp/plex-guard.db.backup"
+      msg_ok "Restored Database"
+    fi
+
+    msg_info "Updating Guardian"
+    cd /opt/guardian/backend
+    $STD npm ci
+    $STD npm run build
+
+    cd /opt/guardian/frontend
+    $STD npm ci
+    export DEPLOYMENT_MODE=standalone
+    $STD npm run build
+    msg_ok "Updated Guardian"
+
+    msg_info "Starting Services"
+    systemctl start guardian-backend guardian-frontend
+    msg_ok "Started Services"
+    msg_ok "Updated successfully!"
+  fi
   exit
-fi
-
-if check_for_gh_release "guardian" "HydroshieldMKII/Guardian" ; then
-  msg_info "Stopping Services"
-  systemctl stop guardian-backend guardian-frontend
-  msg_ok "Stopped Services"
-
-  if [[ -f "/opt/guardian/backend/plex-guard.db" ]] ; then
-    msg_info "Backing up Database"
-    cp "/opt/guardian/backend/plex-guard.db" "/tmp/plex-guard.db.backup"
-    msg_ok "Backed up Database"
-  fi
-
-  [[ -f "/opt/guardian/.env" ]] && cp "/opt/guardian/.env" "/opt"
-  CLEAN_INSTALL=1 fetch_and_deploy_gh_release "guardian" "HydroshieldMKII/Guardian" "tarball" "latest" "/opt/guardian"
-  [[ -f "/opt/.env" ]] && mv "/opt/.env" "/opt/guardian"
-
-  if [[ -f "/tmp/plex-guard.db.backup" ]] ; then
-    msg_info "Restoring Database"
-    cp "/tmp/plex-guard.db.backup" "/opt/guardian/backend/plex-guard.db"
-    rm "/tmp/plex-guard.db.backup"
-    msg_ok "Restored Database"
-  fi
-
-  msg_info "Updating Guardian"
-  cd /opt/guardian/backend
-  $STD npm ci
-  $STD npm run build
-
-  cd /opt/guardian/frontend
-  $STD npm ci
-  export DEPLOYMENT_MODE=standalone
-  $STD npm run build
-  msg_ok "Updated Guardian"
-
-  msg_info "Starting Services"
-  systemctl start guardian-backend guardian-frontend
-  msg_ok "Started Services"
-  msg_ok "Updated Successfully"
-fi
-exit
 }
 
 start

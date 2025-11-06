@@ -20,38 +20,38 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
+  header_info
+  check_container_storage
+  check_container_resources
 
-    if [[ ! -f /opt/ghostfolio/dist/apps/api/main.js ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
+  if [[ ! -f /opt/ghostfolio/dist/apps/api/main.js ]]; then
+    msg_error "No ${APP} Installation Found!"
+    exit
+  fi
 
-    if check_for_gh_release "ghostfolio" "ghostfolio/ghostfolio"; then
-      msg_info "Stopping Service"
-      systemctl stop ghostfolio
-      msg_ok "Stopped Service"
+  if check_for_gh_release "ghostfolio" "ghostfolio/ghostfolio"; then
+    msg_info "Stopping Service"
+    systemctl stop ghostfolio
+    msg_ok "Stopped Service"
 
-      msg_info "Creating Backup"
-      tar -czf "/opt/ghostfolio_backup_$(date +%F).tar.gz" \
-        -C /opt \
-        --exclude="ghostfolio/node_modules" \
-        --exclude="ghostfolio/dist" \
-        ghostfolio
-      mv /opt/ghostfolio/.env /opt/env.backup
-      msg_ok "Backup Created"
+    msg_info "Creating Backup"
+    tar -czf "/opt/ghostfolio_backup_$(date +%F).tar.gz" \
+      -C /opt \
+      --exclude="ghostfolio/node_modules" \
+      --exclude="ghostfolio/dist" \
+      ghostfolio
+    mv /opt/ghostfolio/.env /opt/env.backup
+    msg_ok "Backup Created"
 
-      CLEAN_INSTALL=1 fetch_and_deploy_gh_release "ghostfolio" "ghostfolio/ghostfolio" "tarball" "latest" "/opt/ghostfolio"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "ghostfolio" "ghostfolio/ghostfolio" "tarball" "latest" "/opt/ghostfolio"
 
-      msg_info "Updating Ghostfolio"
-      mv /opt/env.backup /opt/ghostfolio/.env
-      cd /opt/ghostfolio
-      $STD npm ci
-      $STD npm run build:production
-      $STD npx prisma migrate deploy
-      msg_ok "Updated Ghostfolio"
+    msg_info "Updating Ghostfolio"
+    mv /opt/env.backup /opt/ghostfolio/.env
+    cd /opt/ghostfolio
+    $STD npm ci
+    $STD npm run build:production
+    $STD npx prisma migrate deploy
+    msg_ok "Updated Ghostfolio"
 
     msg_info "Starting Service"
     systemctl start ghostfolio
@@ -60,9 +60,9 @@ function update_script() {
     msg_info "Cleaning Up"
     $STD npm cache clean --force
     msg_ok "Cleanup Completed"
-    msg_ok "Updated Successfully"
-    fi
-    exit
+    msg_ok "Updated successfully!"
+  fi
+  exit
 }
 
 start

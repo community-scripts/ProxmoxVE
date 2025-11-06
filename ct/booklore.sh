@@ -29,9 +29,9 @@ function update_script() {
     exit
   fi
   if check_for_gh_release "booklore" "booklore-app/BookLore"; then
-    msg_info "Stopping $APP"
+    msg_info "Stopping Service"
     systemctl stop booklore
-    msg_ok "Stopped $APP"
+    msg_info "Stopped Service"
 
     msg_info "backup old install"
     mv /opt/booklore /opt/booklore_bak
@@ -56,17 +56,17 @@ function update_script() {
     JAR_PATH=$(find /opt/booklore/booklore-api/build/libs -maxdepth 1 -type f -name "booklore-api-*.jar" ! -name "*plain*" | head -n1)
     if [[ -z "$JAR_PATH" ]]; then
       msg_error "Backend JAR not found"
-      exit 1
+      exit
     fi
     cp "$JAR_PATH" /opt/booklore/dist/app.jar
     msg_ok "Built Backend"
 
-    msg_info "Starting $APP"
+    msg_info "Starting Service"
     systemctl start booklore
     systemctl reload nginx
     rm -rf /opt/booklore_bak
-    msg_ok "Started $APP"
-    msg_ok "Updated Successfully"
+    msg_ok "Started Service"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

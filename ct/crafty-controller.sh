@@ -67,7 +67,7 @@ function update_script() {
     systemctl start crafty-controller
     msg_ok "Started Crafty-Controller"
 
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi

@@ -81,7 +81,7 @@ EOF
     msg_info "Cleaning up"
     rm -rf "/opt/pterodactyl-panel/panel.tar.gz"
     msg_ok "Cleaned"
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi

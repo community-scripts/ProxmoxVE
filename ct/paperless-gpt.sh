@@ -25,7 +25,7 @@ function update_script() {
     check_container_resources
     if [[ ! -d /opt/paperless-gpt ]]; then
         msg_error "No Paperless-GPT installation found!"
-        exit 1
+        exit
     fi
     RELEASE=$(curl -fsSL https://api.github.com/repos/icereed/paperless-gpt/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
     if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
@@ -35,7 +35,7 @@ function update_script() {
 
         msg_info "Updating Paperless-GPT to ${RELEASE}"
         temp_file=$(mktemp)
-curl -fsSL "https://github.com/icereed/paperless-gpt/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
+        curl -fsSL "https://github.com/icereed/paperless-gpt/archive/refs/tags/v${RELEASE}.tar.gz" -o "$temp_file"
         tar zxf $temp_file
         rm -rf /opt/paperless-gpt
         mv paperless-gpt-${RELEASE} /opt/paperless-gpt
@@ -57,7 +57,7 @@ curl -fsSL "https://github.com/icereed/paperless-gpt/archive/refs/tags/v${RELEAS
         msg_info "Cleaning Up"
         rm -f $temp_file
         msg_ok "Cleanup Completed"
-        msg_ok "Updated Successfully"
+        msg_ok "Updated successfully!"
     else
         msg_ok "No update required. ${APP} is already at ${RELEASE}"
     fi

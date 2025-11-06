@@ -38,7 +38,7 @@ function update_script() {
     msg_info "Starting service"
     systemctl start go2rtc
     msg_ok "Started service"
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

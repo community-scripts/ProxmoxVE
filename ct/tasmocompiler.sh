@@ -55,7 +55,7 @@ function update_script() {
     msg_info "Cleaning up"
     rm -r "/opt/v${RELEASE}.tar.gz"
     msg_ok "Cleaned"
-    msg_ok "Update Successfully!"
+    msg_ok "Updated successfully!"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi

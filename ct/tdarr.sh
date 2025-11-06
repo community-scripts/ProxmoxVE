@@ -42,7 +42,7 @@ function update_script() {
   msg_info "Cleaning up"
   rm -rf /opt/tdarr/Tdarr_Updater.zip
   msg_ok "Cleaned up"
-  msg_ok "Updated Successfully!"
+  msg_ok "Updated successfully!"
   exit
 }
 

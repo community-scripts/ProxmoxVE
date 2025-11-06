@@ -34,7 +34,7 @@ function update_script() {
   if check_for_gh_release "grocy" "grocy/grocy"; then
     msg_info "Updating ${APP}"
     bash /var/www/html/update.sh
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

@@ -39,7 +39,7 @@ function update_script() {
     systemctl start prometheus
     msg_ok "Started Service"
 
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

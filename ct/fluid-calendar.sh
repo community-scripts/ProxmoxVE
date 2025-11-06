@@ -29,9 +29,9 @@ function update_script() {
     exit
   fi
   if check_for_gh_release "fluid-calendar" "dotnetfactory/fluid-calendar"; then
-    msg_info "Stopping $APP"
+    msg_info "Stopping Service"
     systemctl stop fluid-calendar
-    msg_ok "Stopped $APP"
+    msg_info "Stopped Service"
 
     cp /opt/fluid-calendar/.env /opt/fluid.env
     rm -rf /opt/fluid-calendar
@@ -47,10 +47,10 @@ function update_script() {
     $STD npm run build:os
     msg_ok "Updated $APP"
 
-    msg_info "Starting $APP"
+    msg_info "Starting Service"
     systemctl start fluid-calendar
-    msg_ok "Started $APP"
-    msg_ok "Update Successful"
+    msg_ok "Started Service"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

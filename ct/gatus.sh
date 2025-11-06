@@ -29,9 +29,9 @@ function update_script() {
     exit
   fi
   if check_for_gh_release "gatus" "TwiN/gatus"; then
-    msg_info "Stopping $APP"
+    msg_info "Stopping Service"
     systemctl stop gatus
-    msg_ok "Stopped $APP"
+    msg_ok "Stopped Service"
 
     if [[ :$PATH: != *":/usr/local/bin:"* ]]; then
       echo 'export PATH="/usr/local/bin:$PATH"' >>~/.bashrc
@@ -42,18 +42,18 @@ function update_script() {
     rm -rf /opt/gatus
     fetch_and_deploy_gh_release "gatus" "TwiN/gatus"
 
-    msg_info "Updating $APP"
+    msg_info "Updating Gatus"
     cd /opt/gatus
     $STD go mod tidy
     CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o gatus .
     setcap CAP_NET_RAW+ep gatus
     mv /opt/config.yaml config
-    msg_ok "Updated $APP"
+    msg_ok "Updated Gatus"
 
-    msg_info "Starting $APP"
+    msg_info "Starting Service"
     systemctl start gatus
-    msg_ok "Started $APP"
-    msg_ok "Update Successful"
+    msg_ok "Started Service"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

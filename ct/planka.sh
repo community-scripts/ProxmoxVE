@@ -29,9 +29,9 @@ function update_script() {
     exit
   fi
   if check_for_gh_release "planka" "plankanban/planka"; then
-    msg_info "Stopping $APP"
+    msg_info "Stopping Service"
     systemctl stop planka
-    msg_ok "Stopped $APP"
+    msg_info "Stopped Service"
 
     msg_info "Backing up data"
     BK="/opt/planka-backup"
@@ -61,10 +61,10 @@ function update_script() {
     rm -rf "$BK"
     msg_ok "Restored data"
 
-    msg_info "Starting $APP"
+    msg_info "Starting Service"
     systemctl start planka
-    msg_ok "Started $APP"
-    msg_ok "Update Successful"
+    msg_ok "Started Service"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

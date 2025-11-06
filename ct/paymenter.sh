@@ -41,7 +41,7 @@ function update_script() {
     cd /opt/paymenter
     $STD php artisan app:upgrade --no-interaction
     echo "${CHECK_UPDATE_RELEASE}" >~/.paymenter
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

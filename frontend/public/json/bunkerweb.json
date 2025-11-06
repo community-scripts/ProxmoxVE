@@ -12,7 +12,7 @@
   "documentation": "https://docs.bunkerweb.io/latest/",
   "website": "https://www.bunkerweb.io/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/bunkerweb.webp",
-  "config_path": "/opt/bunkerweb/variables.env",
+  "config_path": "/etc/bunkerweb/variables.env",
   "description": "BunkerWeb is a security-focused web server that enhances web application protection. It guards against common web vulnerabilities like SQL injection, XSS, and CSRF. It features simple setup and configuration using a YAML file, customizable security rules, and provides detailed logs for traffic monitoring and threat detection.",
   "install_methods": [
     {

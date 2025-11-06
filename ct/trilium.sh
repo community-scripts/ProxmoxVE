@@ -36,7 +36,7 @@ function update_script() {
       DB_RESTORE_PATH="/opt/trilium/assets/db"
     else
       msg_error "Database not found in either /opt/trilium/db or /opt/trilium/assets/db"
-      exit 1
+      exit
     fi
 
     msg_info "Stopping Service"
@@ -68,7 +68,7 @@ function update_script() {
     systemctl start trilium
     sleep 1
     msg_ok "Started Service"
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

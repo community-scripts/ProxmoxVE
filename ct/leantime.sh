@@ -47,7 +47,7 @@ function update_script() {
     msg_info "Removing Backup"
     rm -rf /opt/leantime_bak
     msg_ok "Removed Backup"
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

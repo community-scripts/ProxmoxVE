@@ -62,7 +62,7 @@ function update_script() {
     msg_info "Cleaning up"
     rm -rf /tmp/lubeloggerData
     msg_ok "Cleaned"
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

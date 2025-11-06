@@ -58,8 +58,8 @@ export const OperatingSystems: OperatingSystem[] = [
   {
     name: "Debian",
     versions: [
-      { name: "11", slug: "bullseye" },
       { name: "12", slug: "bookworm" },
+      { name: "13", slug: "trixie" },
     ],
   },
   {

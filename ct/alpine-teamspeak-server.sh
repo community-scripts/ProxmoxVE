@@ -24,7 +24,7 @@ function update_script() {
 
   if [[ ! -d /opt/teamspeak-server ]]; then
     msg_error "No ${APP} Installation Found!"
-    exit 1
+    exit
   fi
 
   set +o pipefail && RELEASE=$(curl -fsSL https://teamspeak.com/en/downloads/#server | sed -n 's/.*teamspeak3-server_linux_amd64-\([0-9.]*[0-9]\).*/\1/p' | head -1) && set -o pipefail
@@ -40,11 +40,10 @@ function update_script() {
     rm -rf teamspeak3-server_linux_amd64
     echo "${RELEASE}" >~/.teamspeak-server
     $STD service teamspeak start
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   else
     msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
-
   exit 0
 }
 

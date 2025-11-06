@@ -47,9 +47,11 @@ function update_script() {
     $STD apt -y autoclean
     $STD apt -y clean
     msg_ok "Cleaned"
+    msg_ok "Updated successfully!"
   else
     msg_ok "$APP is already up to date (${RELEASE})"
   fi
+  exit
 }
 
 start

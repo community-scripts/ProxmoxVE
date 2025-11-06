@@ -25,7 +25,15 @@ mkdir -p data/{users,checklists,notes}
 
 cat <<EOF >/opt/jotty/.env
 NODE_ENV=production
+
+# --- Uncomment to enable
 # HTTPS=true
+# SERVE_PUBLIC_IMAGES=yes
+# SERVE_PUBLIC_FILES=yes
+# SERVE_PUBLIC_VIDEOS=yes
+# STOP_CHECK_UPDATES=yes
+# --- For troubleshooting
+# DEBUGGER=true
 
 # --- SSO with OIDC (optional)
 # SSO_MODE=oidc

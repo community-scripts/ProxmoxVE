@@ -90,7 +90,7 @@ sed -i "s|^ENCRYPTION_KEY=.*|ENCRYPTION_KEY=$SECRET_KEY|g" /opt/openarchiver/.en
 sed -i "s|^TIKA_URL=.*|TIKA_URL=|g" /opt/openarchiver/.env
 echo "ORIGIN=http://$IP_ADDR:3000" >> /opt/openarchiver/.env
 $STD pnpm install --shamefully-hoist --frozen-lockfile --prod=false
-$STD pnpm build
+$STD pnpm run build:oss
 $STD pnpm db:migrate
 msg_ok "Setup Open Archiver"
 
@@ -105,7 +105,7 @@ Type=simple
 User=root
 EnvironmentFile=/opt/openarchiver/.env
 WorkingDirectory=/opt/openarchiver
-ExecStart=/usr/bin/pnpm docker-start
+ExecStart=/usr/bin/pnpm docker-start:oss
 Restart=on-failure
 
 [Install]

@@ -1,0 +1,35 @@
+{
+  "name": "PatchMon",
+  "slug": "patchmon",
+  "categories": [
+    9
+  ],
+  "date_created": "2025-10-25",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 3399,
+  "documentation": "https://docs.patchmon.net",
+  "website": "https://patchmon.net",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/patchmon.webp",
+  "config_path": "/opt/patchmon/backend/.env, /opt/patchmon/frontend/.env",
+  "description": "Monitor Linux patches across all your hosts with real-time visibility, security update tracking, and comprehensive package management.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/patchmon.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 4,
+        "os": "debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": []
+}

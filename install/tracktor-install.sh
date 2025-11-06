@@ -20,18 +20,26 @@ msg_info "Configuring Tracktor"
 cd /opt/tracktor
 $STD npm install
 $STD npm run build
-mkdir /opt/tracktor-data
+mkdir -p /opt/tracktor-data/{uploads,logs}
 HOST_IP=$(hostname -I | awk '{print $1}')
 cat <<EOF >/opt/tracktor.env
 NODE_ENV=production
-PUBLIC_DEMO_MODE=false
 DB_PATH=/opt/tracktor-data/tracktor.db
-# Replace this URL if using behind reverse proxy for https traffic. Though it is optional and should work without changing
-PUBLIC_API_BASE_URL=http://$HOST_IP:3000
-# Here add the reverse proxy url as well to avoid cross errors from the app. 
-CORS_ORIGINS=http://$HOST_IP:3000 
+UPLOADS_DIR="/opt/tracktor-data/uploads"
+LOG_DIR="/opt/tracktor-data/logs"
+# If server host is not set by default it will run on all interfaces - 0.0.0.0
+# SERVER_HOST="" 
+SERVER_PORT=3000
 PORT=3000
+# Set this if you want to secure your endpoints otherwise default will be "*"
+# CORS_ORIGINS="*"
+# Set this if you are using backend and frontend separately. For lxc installation this is not needed
+# PUBLIC_API_BASE_URL=""
+LOG_REQUESTS=true
+LOG_LEVEL="info"
 AUTH_PIN=123456
+# PUBLIC_DEMO_MODE=false
+# FORCE_DATA_SEED=false
 EOF
 msg_ok "Configured Tracktor"
 

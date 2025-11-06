@@ -39,7 +39,7 @@ function update_script() {
     systemctl start ots
     systemctl start nginx
     msg_ok "Started Services"
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

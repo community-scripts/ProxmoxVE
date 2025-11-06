@@ -26,12 +26,12 @@ function update_script() {
 
   if [[ ! -d /opt/fumadocs ]]; then
     msg_error "No installation found in /opt/fumadocs!"
-    exit 1
+    exit
   fi
 
   if [[ ! -f /opt/fumadocs/.projectname ]]; then
     msg_error "Project name file not found: /opt/fumadocs/.projectname!"
-    exit 1
+    exit
   fi
 
   NODE_VERSION="22" NODE_MODULE="pnpm@latest" setup_nodejs
@@ -41,7 +41,7 @@ function update_script() {
 
   if [[ ! -d "$PROJECT_DIR" ]]; then
     msg_error "Project directory does not exist: $PROJECT_DIR"
-    exit 1
+    exit
   fi
   if ! command -v git &>/dev/null; then
     $STD apt-get install -y git
@@ -60,8 +60,7 @@ function update_script() {
   msg_info "Starting service $SERVICE_NAME"
   systemctl start "$SERVICE_NAME"
   msg_ok "Started service $SERVICE_NAME"
-
-  msg_ok "Fumadocs successfully updated"
+  msg_ok "Updated successfully!"
   exit
 }
 

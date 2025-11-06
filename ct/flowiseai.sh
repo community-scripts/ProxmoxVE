@@ -20,19 +20,20 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -f /etc/systemd/system/flowise.service ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    msg_info "Updating ${APP}"
-    systemctl stop flowise
-    npm install -g flowise --upgrade
-    systemctl start flowise
-    msg_ok "Updated ${APP}"
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -f /etc/systemd/system/flowise.service ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+  msg_info "Updating ${APP}"
+  systemctl stop flowise
+  npm install -g flowise --upgrade
+  systemctl start flowise
+  msg_ok "Updated ${APP}"
+  msg_ok "Updated successfully!"
+  exit
 }
 
 start

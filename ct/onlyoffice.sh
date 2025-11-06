@@ -26,7 +26,7 @@ function update_script() {
 
   if [[ ! -d /var/www/onlyoffice ]]; then
     msg_error "No valid ${APP} installation found!"
-    exit 1
+    exit
   fi
 
   msg_info "Updating $APP"
@@ -39,6 +39,7 @@ function update_script() {
     $STD systemctl restart onlyoffice-documentserver
     msg_ok "$APP restarted"
   fi
+  msg_ok "Updated successfully!"
   exit
 }
 

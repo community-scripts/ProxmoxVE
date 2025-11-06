@@ -29,16 +29,16 @@ function update_script() {
   fi
 
   if check_for_gh_release "duplicati" "duplicati/duplicati"; then
-    msg_info "Stopping $APP"
+    msg_info "Stopping Service"
     systemctl stop duplicati
-    msg_ok "Stopped $APP"
+    msg_info "Stopped Service"
 
     fetch_and_deploy_gh_release "duplicati" "duplicati/duplicati" "binary" "latest" "/opt/duplicati" "duplicati-*-linux-x64-gui.deb"
 
-    msg_info "Starting $APP"
+    msg_info "Starting Service"
     systemctl start duplicati
-    msg_ok "Started $APP"
-    msg_ok "Update Successful"
+    msg_ok "Started Service"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

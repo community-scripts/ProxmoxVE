@@ -25,10 +25,11 @@ function update_script() {
   $STD apk -U upgrade
   msg_ok "Updated Alpine Packages"
 
-  msg_info "Upgrading traefik from edge"
+  msg_info "Updating traefik from edge"
   $STD apk add traefik --repository=https://dl-cdn.alpinelinux.org/alpine/edge/community
-  msg_ok "Upgraded traefik"
-  exit
+  msg_ok "Updated traefik"
+  msg_ok "Updated successfully!"
+  exit 0
 }
 
 start

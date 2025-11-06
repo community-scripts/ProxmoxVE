@@ -62,7 +62,7 @@ function update_script() {
     msg_info "Starting Apache2"
     systemctl start apache2
     msg_ok "Started Apache2"
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

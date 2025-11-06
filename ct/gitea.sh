@@ -40,7 +40,7 @@ function update_script() {
     msg_info "Starting service"
     systemctl start gitea
     msg_ok "Started service"
-    msg_ok "Update Successful"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

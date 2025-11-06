@@ -38,7 +38,7 @@ function update_script() {
     msg_ok "$APP is already up to date."
     exit
   fi
-  msg_ok "Updated Successfully"
+  msg_ok "Updated successfully!"
 
   msg_info "Starting Service"
   systemctl start medusa

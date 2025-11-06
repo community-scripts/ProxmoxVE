@@ -57,7 +57,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start commafeed
     msg_ok "Started Service"
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

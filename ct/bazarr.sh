@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -28,16 +28,29 @@ function update_script() {
     exit
   fi
   if check_for_gh_release "bazarr" "morpheus65535/bazarr"; then
-    PYTHON_VERSION="3.13" setup_uv
+    msg_info "Stopping Service"
+    systemctl stop bazarr
+    msg_ok "Stopped Service"
+
+    PYTHON_VERSION="3.12" setup_uv
     fetch_and_deploy_gh_release "bazarr" "morpheus65535/bazarr" "prebuild" "latest" "/opt/bazarr" "bazarr.zip"
 
     msg_info "Setup Bazarr"
     mkdir -p /var/lib/bazarr/
     chmod 775 /opt/bazarr /var/lib/bazarr/
+    if [[ ! -d /opt/bazarr/venv/ ]]; then
+      $STD uv venv /opt/bazarr/venv --python 3.12
+      sed -i "s|ExecStart=/usr/bin/python3 /opt/bazarr/bazarr.py|ExecStart=/opt/bazarr/venv/bin/python3 /opt/bazarr/bazarr.py|g" /etc/systemd/system/bazarr.service
+      systemctl daemon-reload
+    fi
     sed -i.bak 's/--only-binary=Pillow//g' /opt/bazarr/requirements.txt
-    $STD uv pip install -r /opt/bazarr/requirements.txt --system
+    $STD uv pip install -r /opt/bazarr/requirements.txt --python /opt/bazarr/venv/bin/python3
     msg_ok "Setup Bazarr"
-    msg_ok "Updated Successfully"
+
+    msg_info "Starting Service"
+    systemctl start bazarr
+    msg_ok "Started Service"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

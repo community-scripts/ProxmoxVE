@@ -50,7 +50,7 @@ function update_script() {
     msg_info "Cleaning up"
     rm -rf /opt/teddycloud_bak
     msg_ok "Cleaned up"
-    msg_ok "Updated successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

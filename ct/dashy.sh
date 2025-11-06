@@ -62,7 +62,7 @@ function update_script() {
     msg_info "Starting Dashy"
     systemctl start dashy
     msg_ok "Started Dashy"
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

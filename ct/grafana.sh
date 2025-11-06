@@ -27,11 +27,11 @@ function update_script() {
       msg_error "No ${APP} Installation Found!"
       exit
    fi
-   
+
    msg_info "Updating ${APP}"
    $STD apt-get update
    $STD apt-get -y upgrade
-   msg_ok "Updated Successfully"
+   msg_ok "Updated successfully!"
    exit
 }
 

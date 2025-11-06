@@ -1,0 +1,40 @@
+{
+  "name": "Reitti",
+  "slug": "reitti",
+  "categories": [
+    21
+  ],
+  "date_created": "2025-10-30",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 8080,
+  "documentation": "https://www.dedicatedcode.com/projects/reitti/",
+  "config_path": "/opt/reitti/.env",
+  "website": "https://www.dedicatedcode.com/projects/reitti/",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/reitti.webp",
+  "description": "Reitti is a self-hosted location tracking and analysis platform that detects significant places, trip patterns, and integrates with OwnTracks, GPSLogger, and Immich. It uses PostgreSQL + PostGIS, RabbitMQ, Redis, and an optional Photon geocoder.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/reitti.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 4096,
+        "hdd": 15,
+        "os": "debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": "admin",
+    "password": "admin"
+  },
+  "notes": [
+    {
+      "text": "Photon Geocoder running at http://127.0.0.1:2322. Photon is fully setup, but without sample data. (filesize is big) -> checkout our guide: `https://github.com/community-scripts/ProxmoxVE/discussions/8737`.",
+      "type": "info"
+    }
+  ]
+}

@@ -37,7 +37,7 @@ function update_script() {
 
   setup_uv
   PNPM_VERSION="$(curl -fsSL "https://raw.githubusercontent.com/immich-app/immich/refs/heads/main/package.json" | jq -r '.packageManager | split("@")[1]')"
-  NODE_VERSION="22" NODE_MODULE="pnpm@${PNPM_VERSION}" setup_nodejs
+  NODE_VERSION="24" NODE_MODULE="pnpm@${PNPM_VERSION}" setup_nodejs
 
   if [[ ! -f /etc/apt/preferences.d/preferences ]]; then
     msg_info "Adding Debian Testing repo"
@@ -93,7 +93,7 @@ EOF
     msg_ok "Image-processing libraries up to date"
   fi
 
-  RELEASE="2.1.0"
+  RELEASE="2.2.3"
   if check_for_gh_release "immich" "immich-app/immich" "${RELEASE}"; then
     msg_info "Stopping Services"
     systemctl stop immich-web
@@ -112,6 +112,9 @@ EOF
       echo "$VCHORD_RELEASE" >~/.vchord_version
       rm ./vchord.deb
       msg_ok "Upgraded VectorChord to v${VCHORD_RELEASE}"
+    fi
+    if ! dpkg -l | grep -q ccache; then
+      $STD apt-get install -yqq ccache
     fi
 
     INSTALL_DIR="/opt/${APP}"

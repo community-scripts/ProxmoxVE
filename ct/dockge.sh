@@ -20,19 +20,20 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /opt/dockge ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    msg_info "Updating ${APP}"
-    cd /opt/dockge
-    docker compose pull
-    docker compose up -d
-    msg_ok "Updated ${APP}"
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /opt/dockge ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+  msg_info "Updating ${APP}"
+  cd /opt/dockge
+  $STD docker compose pull
+  $STD docker compose up -d
+  msg_ok "Updated ${APP}"
+  msg_ok "Updated successfully!"
+  exit
 }
 
 start

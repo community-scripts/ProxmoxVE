@@ -28,21 +28,24 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  if check_for_gh_release "libretranslate" "LibreTranslate/LibreTranslate"; then
-    msg_info "Stopping $APP"
-    systemctl stop libretranslate
-    msg_ok "Stopped $APP"
 
-    msg_info "Updating $APP"
+  setup_uv
+
+  if check_for_gh_release "libretranslate" "LibreTranslate/LibreTranslate"; then
+    msg_info "Stopping Service"
+    systemctl stop libretranslate
+    msg_ok "Stopped Service"
+
+    msg_info "Updating LibreTranslate"
     cd /opt/libretranslate
     source .venv/bin/activate
     $STD pip install -U libretranslate
-    msg_ok "Updated $APP"
+    msg_ok "Updated LibreTranslate"
 
-    msg_info "Starting $APP"
+    msg_info "Starting Service"
     systemctl start libretranslate
-    msg_ok "Started $APP"
-    msg_ok "Update Successful"
+    msg_ok "Started Service"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

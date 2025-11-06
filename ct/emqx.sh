@@ -57,7 +57,7 @@ function update_script() {
     msg_info "Cleaning Up"
     rm -f "$DEB_FILE"
     msg_ok "Cleanup Completed"
-    msg_ok "Update Successful"
+    msg_ok "Updated successfully!"
   else
     msg_ok "No update required. EMQX is already at v${RELEASE}"
   fi

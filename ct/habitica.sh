@@ -30,11 +30,11 @@ function update_script() {
   fi
   NODE_VERSION="20" NODE_MODULE="gulp-cli,mocha" setup_nodejs
   if check_for_gh_release "habitica" "HabitRPG/habitica"; then
-    msg_info "Stopping $APP"
+    msg_info "Stopping Service"
     systemctl stop habitica-mongodb
     systemctl stop habitica
     systemctl stop habitica-client
-    msg_ok "Stopped $APP"
+    msg_info "Stopped Service"
 
     msg_info "Save configuration"
     if [[ -f /opt/habitica/config.json ]]; then
@@ -62,12 +62,12 @@ function update_script() {
       msg_warn "No configuration file found to restore"
     fi
 
-    msg_info "Starting $APP"
+    msg_info "Starting Service"
     systemctl start habitica-mongodb
     systemctl start habitica
     systemctl start habitica-client
-    msg_ok "Started $APP"
-    msg_ok "Update Successful"
+    msg_ok "Started Service"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

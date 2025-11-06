@@ -32,7 +32,7 @@ function update_script() {
   . /etc/os-release
   if [ "$VERSION_CODENAME" != "trixie" ]; then
     msg_error "Unsupported Debian version: $VERSION_CODENAME – please upgrade to Debian 13 (Trixie) before updating Zabbix."
-    exit 1
+    exit
   fi
 
   if systemctl list-unit-files | grep -q zabbix-agent2.service; then
@@ -42,12 +42,8 @@ function update_script() {
   fi
 
   msg_info "Stopping Services"
-  $STD systemctl stop zabbix-server
-  if systemctl list-unit-files | grep -q zabbix-agent2; then
-    $STD systemctl stop zabbix-agent2
-  else
-    $STD systemctl stop zabbix-agent
-  fi
+  systemctl stop zabbix-server
+  systemctl stop "$AGENT_SERVICE"
   msg_ok "Stopped Services"
 
   msg_info "Updating Zabbix"
@@ -88,12 +84,8 @@ function update_script() {
   msg_ok "Updated Zabbix"
 
   msg_info "Starting Services"
-  $STD systemctl start zabbix-server
-  if systemctl list-unit-files | grep -q zabbix-agent2; then
-    $STD systemctl start zabbix-agent2
-  else
-    $STD systemctl start zabbix-agent
-  fi
+  systemctl start zabbix-server
+  systemctl start "$AGENT_SERVICE"
   systemctl restart apache2
   msg_ok "Started Services"
 
@@ -103,7 +95,7 @@ function update_script() {
   $STD apt -y autoclean
   $STD apt -y clean
   msg_ok "Cleaned"
-  msg_ok "Updated Successfully!"
+  msg_ok "Updated successfully!"
   exit
 }
 

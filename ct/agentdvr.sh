@@ -27,7 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  
+
   RELEASE=$(curl -fsSL "https://www.ispyconnect.com/api/Agent/DownloadLocation4?platform=Linux64&fromVersion=0" | grep -o 'https://.*\.zip')
   if [[ "${RELEASE}" != "$(cat ~/.agentdvr 2>/dev/null)" ]] || [[ ! -f ~/.agentdvr ]]; then
     msg_info "Stopping service"
@@ -39,15 +39,14 @@ function update_script() {
     curl -fsSL "$RELEASE" -o $(basename "$RELEASE")
     $STD unzip -o Agent_Linux64*.zip
     chmod +x ./Agent
-    echo $RELEASE > ~/.agentdvr
+    echo $RELEASE >~/.agentdvr
     rm -rf Agent_Linux64*.zip
     msg_ok "Updated $APP"
 
     msg_info "Starting service"
     systemctl start AgentDVR
     msg_ok "Service started"
-
-    msg_ok "Updated $APP successfully"
+    msg_ok "Updated successfully!"
   else
     msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi

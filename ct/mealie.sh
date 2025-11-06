@@ -32,9 +32,9 @@ function update_script() {
     PYTHON_VERSION="3.12" setup_uv
     NODE_MODULE="yarn" NODE_VERSION="20" setup_nodejs
 
-    msg_info "Stopping $APP"
+    msg_info "Stopping Service"
     systemctl stop mealie
-    msg_ok "Stopped $APP"
+    msg_info "Stopped Service"
 
     msg_info "Backing up .env and start.sh"
     cp -f /opt/mealie/mealie.env /opt/mealie/mealie.env.bak
@@ -73,9 +73,9 @@ function update_script() {
     chmod +x /opt/mealie/start.sh
     msg_ok "Configuration restored"
 
-    msg_info "Starting $APP"
+    msg_info "Starting Service"
     systemctl start mealie
-    msg_ok "Started $APP"
+    msg_ok "Started Service"
     msg_ok "Update Successful"
   fi
   exit

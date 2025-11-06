@@ -20,15 +20,16 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /opt/runtipi ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    cd /opt/runtipi && ./runtipi-cli update latest
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /opt/runtipi ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+  cd /opt/runtipi && ./runtipi-cli update latest
+  msg_ok "Updated successfully!"
+  exit
 }
 
 start

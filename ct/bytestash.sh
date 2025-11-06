@@ -54,8 +54,9 @@ function update_script() {
       msg_error "PLEASE MAKE A BACKUP FIRST!"
       exit
     fi
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   fi
+  exit
 }
 
 start

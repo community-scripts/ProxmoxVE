@@ -48,7 +48,7 @@ function update_script() {
     msg_info "Starting Services"
     systemctl start scraparr
     msg_ok "Services Started"
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

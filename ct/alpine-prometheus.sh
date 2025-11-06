@@ -31,7 +31,7 @@ function update_script() {
   msg_info "Restarting Prometheus"
   $STD rc-service prometheus restart
   msg_ok "Restarted Prometheus"
-
+  msg_ok "Updated successfully!"
   exit 0
 }
 

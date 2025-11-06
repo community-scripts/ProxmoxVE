@@ -30,7 +30,7 @@ function update_script() {
     msg_info "Updating ${APP} LXC"
     $STD apt-get update
     $STD apt-get -y upgrade
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
     exit
 }
 

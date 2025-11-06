@@ -102,7 +102,7 @@ function update_script() {
     msg_info "Starting Meilisearch"
     systemctl start meilisearch
     msg_ok "Started Meilisearch"
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }
