@@ -14,6 +14,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - npm: add Debian version check to update script [@MickLesk](https://github.com/MickLesk) ([#8901](https://github.com/community-scripts/ProxmoxVE/pull/8901))
+
   - #### ✨ New Features
 
     - MongoDB: install script now use setup_mongodb [@MickLesk](https://github.com/MickLesk) ([#8897](https://github.com/community-scripts/ProxmoxVE/pull/8897))
