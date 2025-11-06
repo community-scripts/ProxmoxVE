@@ -46,6 +46,7 @@ function update_script() {
     $STD dpkg -i graylog-7.0-repository_latest.deb
     $STD apt update
     $STD apt install -y graylog-server graylog-datanode
+    rm -f graylog-7.0-repository_latest.deb
     msg_ok "Updated Graylog"
   elif dpkg --compare-versions "$CURRENT_VERSION" ge "7.0"; then
     msg_info "Updating Graylog"
