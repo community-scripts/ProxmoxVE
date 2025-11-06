@@ -30,7 +30,7 @@ function update_script() {
 
   if [[ $(grep -E '^VERSION_ID=' /etc/os-release) == *"12"* ]]; then
     msg_error "Wrong Debian version detected!"
-    msg_error "You must upgrade your LXC to Debian Trixie before updating. Visit: https://github.com/community-scripts/ProxmoxVE/discussions/7489"
+    msg_error "Please create a snapshot first. You must upgrade your LXC to Debian Trixie before updating. Visit: https://github.com/community-scripts/ProxmoxVE/discussions/7489"
     exit
   fi
 
