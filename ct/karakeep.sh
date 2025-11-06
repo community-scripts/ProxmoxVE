@@ -88,12 +88,6 @@ function update_script() {
     msg_info "Starting Services"
     systemctl start karakeep-browser karakeep-workers karakeep-web
     msg_ok "Started Services"
-
-    msg_info "Cleaning up"
-    $STD apt autoremove -y
-    $STD apt autoclean -y
-    $STD apt clean -y
-    msg_ok "Cleaned"
     msg_ok "Updated Successfully!"
   fi
   exit

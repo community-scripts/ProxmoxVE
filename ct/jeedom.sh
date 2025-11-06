@@ -30,8 +30,8 @@ function update_script() {
   fi
 
   msg_info "Updating OS"
-  $STD apt-get update
-  $STD apt-get -y upgrade
+  $STD apt update
+  $STD apt -y upgrade
   msg_ok "OS updated, you can now update Jeedom from the Web UI."
   exit
 }
