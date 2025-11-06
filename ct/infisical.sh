@@ -29,7 +29,7 @@ function update_script() {
   fi
 
   msg_info "Stopping service"
-  $STD inisical-ctl stop
+  $STD infisical-ctl stop
   msg_ok "Service stopped"
 
   msg_info "Creating backup"
