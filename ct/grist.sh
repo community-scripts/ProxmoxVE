@@ -47,6 +47,7 @@ function update_script() {
     cp -r /opt/grist_bak/docs/* /opt/grist/docs/
     cp /opt/grist_bak/grist-sessions.db /opt/grist/grist-sessions.db
     cp /opt/grist_bak/landing.db /opt/grist/landing.db
+    cd /opt/grist
     $STD yarn install
     $STD yarn run build:prod
     $STD yarn run install:python
