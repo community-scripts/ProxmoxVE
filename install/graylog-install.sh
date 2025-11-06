@@ -13,12 +13,12 @@ setting_up_container
 network_check
 update_os
 
-MONGO_VERSION="7.0" setup_mongodb
+MONGO_VERSION="8.0" setup_mongodb
 
 msg_info "Setup Graylog Data Node"
 PASSWORD_SECRET=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c16)
-curl -fsSL "https://packages.graylog2.org/repo/packages/graylog-6.3-repository_latest.deb" -o "graylog-6.3-repository_latest.deb"
-$STD dpkg -i graylog-6.3-repository_latest.deb
+curl -fsSL "https://packages.graylog2.org/repo/packages/graylog-7.0-repository_latest.deb" -o "graylog-7.0-repository_latest.deb"
+$STD dpkg -i graylog-7.0-repository_latest.deb
 $STD apt-get update
 $STD apt-get install graylog-datanode -y
 sed -i "s/password_secret =/password_secret = $PASSWORD_SECRET/g" /etc/graylog/datanode/datanode.conf
@@ -42,9 +42,4 @@ msg_ok "Setup ${APPLICATION}"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -f graylog-*-repository_latest.deb
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc
