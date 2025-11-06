@@ -1,13 +1,103 @@
 [
   {
-    "name": "getumbrel/umbrel",
-    "version": "1.5.0",
-    "date": "2025-11-05T11:10:20Z"
+    "name": "transmission/transmission",
+    "version": "4.1.0-beta.3",
+    "date": "2025-11-05T23:54:17Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.12.10-rc0",
+    "date": "2025-11-05T19:58:03Z"
+  },
+  {
+    "name": "semaphoreui/semaphore",
+    "version": "v2.16.43",
+    "date": "2025-11-05T21:08:38Z"
+  },
+  {
+    "name": "neo4j/neo4j",
+    "version": "5.26.16",
+    "date": "2025-11-05T20:41:40Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.79.1.dev6",
+    "date": "2025-11-05T19:25:05Z"
   },
   {
     "name": "home-assistant/core",
-    "version": "2025.10.4",
-    "date": "2025-10-24T20:03:03Z"
+    "version": "2025.11.0",
+    "date": "2025-11-05T19:23:12Z"
+  },
+  {
+    "name": "apache/tomcat",
+    "version": "11.0.14",
+    "date": "2025-11-05T19:14:38Z"
+  },
+  {
+    "name": "leiweibau/Pi.Alert",
+    "version": "v2025-11-05",
+    "date": "2025-11-05T18:08:26Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.118.2",
+    "date": "2025-11-05T18:07:04Z"
+  },
+  {
+    "name": "bunkerity/bunkerweb",
+    "version": "v1.6.5",
+    "date": "2025-10-06T15:25:17Z"
+  },
+  {
+    "name": "wazuh/wazuh",
+    "version": "coverity-w45-4.14.1",
+    "date": "2025-11-05T16:56:57Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "v10.11.6",
+    "date": "2025-11-04T09:43:16Z"
+  },
+  {
+    "name": "javedh-dev/tracktor",
+    "version": "0.5.1",
+    "date": "2025-11-05T15:51:02Z"
+  },
+  {
+    "name": "zitadel/zitadel",
+    "version": "v4.6.4",
+    "date": "2025-11-05T15:57:00Z"
+  },
+  {
+    "name": "chrisvel/tududi",
+    "version": "v0.85.1",
+    "date": "2025-10-31T10:45:26Z"
+  },
+  {
+    "name": "Graylog2/graylog2-server",
+    "version": "6.2.9",
+    "date": "2025-11-05T13:55:39Z"
+  },
+  {
+    "name": "immich-app/immich",
+    "version": "v2.2.3",
+    "date": "2025-11-05T13:47:03Z"
+  },
+  {
+    "name": "duplicati/duplicati",
+    "version": "v2.2.0.100-2.2.0.100_canary_2025-11-05",
+    "date": "2025-11-05T13:01:37Z"
+  },
+  {
+    "name": "azukaar/Cosmos-Server",
+    "version": "v0.18.4",
+    "date": "2025-04-05T19:12:57Z"
+  },
+  {
+    "name": "getumbrel/umbrel",
+    "version": "1.5.0",
+    "date": "2025-11-05T11:10:20Z"
   },
   {
     "name": "emqx/emqx",
@@ -18,11 +108,6 @@
     "name": "glpi-project/glpi",
     "version": "11.0.2",
     "date": "2025-11-05T09:55:05Z"
-  },
-  {
-    "name": "zitadel/zitadel",
-    "version": "v4.6.3",
-    "date": "2025-11-05T09:16:08Z"
   },
   {
     "name": "nicolargo/glances",
@@ -131,7 +216,7 @@
   },
   {
     "name": "meilisearch/meilisearch",
-    "version": "prototype-v1.24.0-s3-snapshots-4",
+    "version": "prototype-v1.24.0.s3-snapshots-4",
     "date": "2025-11-04T16:46:01Z"
   },
   {
@@ -160,11 +245,6 @@
     "date": "2025-11-04T12:28:47Z"
   },
   {
-    "name": "mattermost/mattermost",
-    "version": "v10.11.6",
-    "date": "2025-11-04T09:43:16Z"
-  },
-  {
     "name": "syncthing/syncthing",
     "version": "v2.0.11",
     "date": "2025-11-04T08:51:05Z"
@@ -183,11 +263,6 @@
     "name": "firefly-iii/firefly-iii",
     "version": "v6.4.4",
     "date": "2025-11-01T19:48:08Z"
-  },
-  {
-    "name": "immich-app/immich",
-    "version": "v2.2.3",
-    "date": "2025-11-04T03:14:34Z"
   },
   {
     "name": "esphome/esphome",
@@ -215,24 +290,9 @@
     "date": "2025-11-03T23:16:29Z"
   },
   {
-    "name": "BerriAI/litellm",
-    "version": "v1.79.1.rc.2",
-    "date": "2025-11-03T23:14:45Z"
-  },
-  {
     "name": "gtsteffaniak/filebrowser",
     "version": "v1.0.0-stable",
     "date": "2025-11-03T22:24:23Z"
-  },
-  {
-    "name": "azukaar/Cosmos-Server",
-    "version": "v0.18.4",
-    "date": "2025-04-05T19:12:57Z"
-  },
-  {
-    "name": "semaphoreui/semaphore",
-    "version": "v2.16.37",
-    "date": "2025-10-30T07:54:49Z"
   },
   {
     "name": "jupyter/notebook",
@@ -263,16 +323,6 @@
     "name": "YunoHost/yunohost",
     "version": "debian/12.1.34",
     "date": "2025-11-03T16:42:07Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.117.3",
-    "date": "2025-10-28T12:00:42Z"
-  },
-  {
-    "name": "Graylog2/graylog2-server",
-    "version": "7.0.0",
-    "date": "2025-11-03T12:22:00Z"
   },
   {
     "name": "Paymenter/Paymenter",
@@ -335,11 +385,6 @@
     "date": "2025-11-01T10:41:15Z"
   },
   {
-    "name": "ollama/ollama",
-    "version": "v0.12.9",
-    "date": "2025-10-31T23:33:13Z"
-  },
-  {
     "name": "tailscale/tailscale",
     "version": "v1.90.6",
     "date": "2025-10-31T22:24:04Z"
@@ -355,19 +400,9 @@
     "date": "2025-10-31T18:50:18Z"
   },
   {
-    "name": "leiweibau/Pi.Alert",
-    "version": "v2025-10-31",
-    "date": "2025-10-31T17:57:06Z"
-  },
-  {
     "name": "pommee/goaway",
     "version": "v0.62.12",
     "date": "2025-10-31T17:30:55Z"
-  },
-  {
-    "name": "bunkerity/bunkerweb",
-    "version": "testing",
-    "date": "2025-10-30T14:33:36Z"
   },
   {
     "name": "zabbix/zabbix",
@@ -383,16 +418,6 @@
     "name": "plankanban/planka",
     "version": "planka-1.1.1",
     "date": "2025-10-31T12:38:47Z"
-  },
-  {
-    "name": "chrisvel/tududi",
-    "version": "v0.85.1",
-    "date": "2025-10-31T10:45:26Z"
-  },
-  {
-    "name": "wazuh/wazuh",
-    "version": "coverity-w44-4.14.1",
-    "date": "2025-10-29T11:28:37Z"
   },
   {
     "name": "garethgeorge/backrest",
@@ -438,11 +463,6 @@
     "name": "danielbrendel/hortusfox-web",
     "version": "v5.4",
     "date": "2025-10-30T14:25:23Z"
-  },
-  {
-    "name": "neo4j/neo4j",
-    "version": "5.26.15",
-    "date": "2025-10-30T11:17:14Z"
   },
   {
     "name": "docker/compose",
@@ -533,11 +553,6 @@
     "name": "netbox-community/netbox",
     "version": "v4.4.5",
     "date": "2025-10-28T18:35:47Z"
-  },
-  {
-    "name": "javedh-dev/tracktor",
-    "version": "0.4.4",
-    "date": "2025-10-28T17:39:14Z"
   },
   {
     "name": "pi-hole/pi-hole",
@@ -643,11 +658,6 @@
     "name": "Kareadita/Kavita",
     "version": "v0.8.8.3",
     "date": "2025-10-23T12:31:49Z"
-  },
-  {
-    "name": "duplicati/duplicati",
-    "version": "v2.2.0.0_stable_2025-10-23",
-    "date": "2025-10-23T11:48:25Z"
   },
   {
     "name": "rcourtman/Pulse",
@@ -863,11 +873,6 @@
     "name": "raydak-labs/configarr",
     "version": "v1.17.1",
     "date": "2025-10-10T16:12:41Z"
-  },
-  {
-    "name": "apache/tomcat",
-    "version": "10.1.48",
-    "date": "2025-10-10T14:46:53Z"
   },
   {
     "name": "projectsend/projectsend",
@@ -1413,11 +1418,6 @@
     "name": "Donkie/Spoolman",
     "version": "v0.22.1",
     "date": "2025-03-18T21:01:22Z"
-  },
-  {
-    "name": "transmission/transmission",
-    "version": "4.0.1-beta.1",
-    "date": "2024-12-13T00:16:24Z"
   },
   {
     "name": "excalidraw/excalidraw",
