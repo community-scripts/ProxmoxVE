@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - OpenProject: Remove duplicate server_path_prefix configuration [@tremor021](https://github.com/tremor021) ([#8919](https://github.com/community-scripts/ProxmoxVE/pull/8919))
     - Grist: Fix change directory to /opt/grist before build steps [@tremor021](https://github.com/tremor021) ([#8913](https://github.com/community-scripts/ProxmoxVE/pull/8913))
     - Jotty hotfix: SSO_FALLBACK_LOCAL value [@vhsdream](https://github.com/vhsdream) ([#8907](https://github.com/community-scripts/ProxmoxVE/pull/8907))
     - npm: add Debian version check to update script [@MickLesk](https://github.com/MickLesk) ([#8901](https://github.com/community-scripts/ProxmoxVE/pull/8901))
