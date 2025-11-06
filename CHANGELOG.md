@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-11-06
 
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - MongoDB: install script now use setup_mongodb [@MickLesk](https://github.com/MickLesk) ([#8897](https://github.com/community-scripts/ProxmoxVE/pull/8897))
+
 ## 2025-11-05
 
 ### 🚀 Updated Scripts
