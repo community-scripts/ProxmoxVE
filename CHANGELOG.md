@@ -25,6 +25,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - MongoDB: install script now use setup_mongodb [@MickLesk](https://github.com/MickLesk) ([#8897](https://github.com/community-scripts/ProxmoxVE/pull/8897))
 
+  - #### 🔧 Refactor
+
+    - Refactor: Graylog [@tremor021](https://github.com/tremor021) ([#8912](https://github.com/community-scripts/ProxmoxVE/pull/8912))
+
 ## 2025-11-05
 
 ### 🚀 Updated Scripts
