@@ -14,11 +14,11 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y apache2
+$STD apt install -y apache2
 msg_ok "Installed Dependencies"
 
-PHP_MODULE="exif,mysql" PHP_APACHE="YES" PHP_FPM="NO" PHP_VERSION="8.3" setup_php
 setup_mariadb
+PHP_MODULE="exif,mysql" PHP_APACHE="YES" PHP_FPM="NO" PHP_VERSION="8.3" setup_php
 setup_composer
 
 msg_info "Setting up database"
@@ -97,8 +97,4 @@ msg_ok "Apache configured"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

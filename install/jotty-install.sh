@@ -40,7 +40,7 @@ NODE_ENV=production
 # OIDC_ISSUER=<your-oidc-issuer-url>
 # OIDC_CLIENT_ID=<oidc-client-id>
 # APP_URL=<https://app.domain.tld>
-# SSO_FALLBACK_LOCAL=true # Allow both SSO and normal login
+# SSO_FALLBACK_LOCAL=yes # Allow both SSO and normal login
 # OIDC_CLIENT_SECRET=your_client_secret  # Enable confidential client mode with client authentication
 # OIDC_ADMIN_GROUPS=admins # Map provider groups to admin role
 EOF
@@ -66,9 +66,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

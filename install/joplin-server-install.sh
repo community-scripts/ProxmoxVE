@@ -14,13 +14,13 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   git \
   rsync
 msg_ok "Installed Dependencies"
 
 PG_VERSION="17" setup_postgresql
-NODE_VERSION=22 NODE_MODULE="yarn@latest,npm@latest,pm2@latest" setup_nodejs
+NODE_VERSION=22 NODE_MODULE="yarn,npm,pm2" setup_nodejs
 mkdir -p /opt/pm2
 export PM2_HOME=/opt/pm2
 $STD pm2 install pm2-logrotate
@@ -91,8 +91,4 @@ msg_ok "Service Setup"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

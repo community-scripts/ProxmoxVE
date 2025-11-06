@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   gcc \
   libpq-dev \
   libcurl4-openssl-dev \
@@ -22,7 +22,7 @@ $STD apt-get install -y \
   caddy
 msg_ok "Installed Dependencies"
 
-setup_uv
+PYTHON_VERSION="3.12" setup_python
 PG_VERSION=16 setup_postgresql
 
 msg_info "Setup Database"
@@ -32,7 +32,6 @@ DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)
 SECRET_KEY="$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | cut -c1-32)"
 ADMIN_EMAIL="admin@helper-scripts.local"
 ADMIN_PASSWORD="$DB_PASS"
-
 $STD sudo -u postgres psql -c "CREATE ROLE $DB_USER WITH LOGIN PASSWORD '$DB_PASS';"
 $STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER ENCODING 'UTF8' TEMPLATE template0;"
 $STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET client_encoding TO 'utf8';"
@@ -129,8 +128,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

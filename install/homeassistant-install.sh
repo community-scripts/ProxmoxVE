@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Setup Python3"
-$STD apt-get install -y \
+$STD apt install -y \
   python3 \
   python3-dev \
   python3-pip \
@@ -78,8 +78,4 @@ msg_ok "Installed Home Assistant $CORE_LATEST_VERSION"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

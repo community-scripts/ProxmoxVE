@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y ca-certificates
+$STD apt install -y ca-certificates
 msg_ok "Installed Dependencies"
 
 msg_info "Setup Docker Repository"
@@ -29,7 +29,7 @@ $STD apt-get update
 msg_ok "Setup Docker Repository"
 
 msg_info "Installing Docker"
-$STD apt-get install -y \
+$STD apt install -y \
   docker-ce \
   docker-ce-cli \
   containerd.io \
@@ -87,8 +87,4 @@ msg_ok "Initialized Komodo"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

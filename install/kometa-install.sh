@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-PYTHON_VERSION="3.12" setup_uv
+PYTHON_VERSION="3.13" setup_uv
 fetch_and_deploy_gh_release "kometa" "Kometa-Team/Kometa"
 
 msg_info "Setup Kometa"
@@ -51,8 +51,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc
