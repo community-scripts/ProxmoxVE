@@ -1,0 +1,69 @@
+name: inbox-zero-services
+services:
+  db:
+    image: postgres
+    restart: always
+    container_name: inbox-zero
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_DB=${POSTGRES_DB:-inboxzero}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password}
+    volumes:
+      - database-data:/var/lib/postgresql/data/
+    ports:
+      - ${POSTGRES_PORT:-5432}:5432
+    networks:
+      - inbox-zero-network
+
+  redis:
+    image: redis
+    ports:
+      - ${REDIS_PORT:-6380}:6379
+    volumes:
+      - database-data:/data
+    networks:
+      - inbox-zero-network
+
+  serverless-redis-http:
+    ports:
+      - "${REDIS_HTTP_PORT:-8079}:80"
+    image: hiett/serverless-redis-http:latest
+    env_file:
+      - ./apps/web/.env
+    environment:
+      SRH_MODE: env
+      SRH_TOKEN: ${UPSTASH_REDIS_TOKEN}
+      SRH_CONNECTION_STRING: "redis://redis:6379" # Using `redis` hostname since they're in the same Docker network.
+    networks:
+      - inbox-zero-network
+
+  web:
+    image: ghcr.io/elie222/inbox-zero:latest
+    pull_policy: if_not_present
+    # The pre-built image will be used by default. For local development,
+    # use 'docker compose build web' to build from source instead.
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.prod
+      args:
+        NEXT_PUBLIC_BASE_URL: ${NEXT_PUBLIC_BASE_URL:-http://localhost:3000}
+    env_file:
+      - ./apps/web/.env
+    depends_on:
+      - db
+      - redis
+    ports:
+      - ${WEB_PORT:-3000}:3000
+    networks:
+      - inbox-zero-network
+    environment:
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-password}@db:5432/${POSTGRES_DB:-inboxzero}?schema=public"
+      DIRECT_URL: "postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-password}@db:5432/${POSTGRES_DB:-inboxzero}?schema=public"
+      UPSTASH_REDIS_URL: "http://serverless-redis-http:80"
+      UPSTASH_REDIS_TOKEN: "${UPSTASH_REDIS_TOKEN}"
+
+volumes:
+  database-data:
+
+networks:
+  inbox-zero-network:

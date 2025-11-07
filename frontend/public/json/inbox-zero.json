@@ -1,0 +1,64 @@
+{
+  "name": "Inbox Zero",
+  "slug": "inbox-zero",
+  "categories": [
+    26
+  ],
+  "date_created": "2025-01-10",
+  "type": null,
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 2368,
+  "documentation": "https://ghost.org/docs/",
+  "website": "https://ghost.org",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/ghost.webp",
+  "config_path": "",
+  "description": "Ghost is a powerful app for professional publishers to create, share, and grow a business around their content. It comes with modern tools to build a website, publish content, send newsletters & offer paid subscriptions to members.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/ghost.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 1024,
+        "hdd": 5,
+        "os": "mac",
+        "version": "12"
+      },
+      "platform": {
+        "linux": true,
+        "windows": true,
+        "macos": true,
+        "android": true,
+        "ios": true,
+        "web_app": true,
+        "browser_extension": false,
+        "cli_only": false,
+        "self_hosted": true,
+        "saas": false,
+        "docker": true,
+        "docker_compose": true,
+        "helm": true,
+        "kubernetes": true
+      },
+      "ui": {
+        "cli": true,
+        "gui": true,
+        "web_ui": true,
+        "api": false,
+        "tui": false
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "To run Ghost-CLI commands, first set a password for the ghost-user by running `sudo passwd ghost-user`. Then, switch to the ghost-user with `sudo -su ghost-user`.",
+      "type": "info"
+    }
+  ],
+  "docker_compose_path": "docker-compose/inbox-zero.yaml"
+}

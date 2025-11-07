@@ -31,5 +31,6 @@
     "username": null,
     "password": null
   },
-  "notes": []
+  "notes": [],
+  "docker_compose_path": "docker-compose/wallos.yaml"
 }

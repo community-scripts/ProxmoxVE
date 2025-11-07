@@ -24,6 +24,8 @@ function formattedBadge(type: string) {
       return <Badge className="text-orange-500/75 border-orange-500/75 badge">PVE</Badge>;
     case "addon":
       return <Badge className="text-green-500/75 border-green-500/75 badge">ADDON</Badge>;
+    case "dc":
+      return <Badge className="text-green-500/75 border-green-500/75 badge">Docker Compose</Badge>;
   }
   return null;
 }

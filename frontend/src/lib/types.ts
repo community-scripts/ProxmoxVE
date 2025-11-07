@@ -5,7 +5,7 @@ export type Script = {
   slug: string;
   categories: number[];
   date_created: string;
-  type: "vm" | "ct" | "pve" | "addon";
+  type: "vm" | "ct" | "pve" | "addon" | "dc" | "helm";
   updateable: boolean;
   privileged: boolean;
   interface_port: number | null;
@@ -35,6 +35,7 @@ export type Script = {
       type: keyof typeof AlertColors;
     },
   ];
+  docker_compose_path?: string;
 };
 
 export type Category = {

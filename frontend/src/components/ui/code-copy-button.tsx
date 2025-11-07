@@ -1,65 +1,74 @@
 "use client";
+
 import { CheckIcon, ClipboardIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
 
 import { cn } from "@/lib/utils";
-
 import { Card } from "./card";
+import handleCopy from "../handle-copy";
+
+type CodeCopyButtonProps = {
+  children: React.ReactNode;  // YAML / command
+  label?: string;             // teks untuk toast, default "code"
+};
 
 export default function CodeCopyButton({
   children,
-}: {
-  children: React.ReactNode;
-}) {
+  label = "code",
+}: CodeCopyButtonProps) {
   const [hasCopied, setHasCopied] = useState(false);
-  const isMobile = window.innerWidth <= 640;
+  const [isMobile, setIsMobile] = useState(false);
 
+  // deteksi mobile di client
   useEffect(() => {
-    if (hasCopied) {
-      setTimeout(() => {
-        setHasCopied(false);
-      }, 2000);
+    if (typeof window !== "undefined") {
+      setIsMobile(window.innerWidth <= 640);
     }
+  }, []);
+
+  // reset icon setelah 2 detik
+  useEffect(() => {
+    if (!hasCopied) return;
+    const timer = setTimeout(() => setHasCopied(false), 2000);
+    return () => clearTimeout(timer);
   }, [hasCopied]);
 
-  const handleCopy = (type: string, value: any) => {
-    navigator.clipboard.writeText(value);
+  const onCopyClick = async () => {
+    const value =
+      typeof children === "string"
+        ? children
+        : Array.isArray(children)
+          ? children.join("")
+          : String(children ?? "");
 
+    await handleCopy(label, value);
     setHasCopied(true);
-
-    const warning = localStorage.getItem("warning");
-
-    if (warning === null) {
-      localStorage.setItem("warning", "1");
-      setTimeout(() => {
-        toast.error(
-          "Be careful when copying scripts from the internet. Always remember check the source!",
-          { duration: 8000 },
-        );
-      }, 500);
-    }
   };
 
   return (
-    <div className="mt-4 flex">
-      <Card className="flex items-center overflow-x-auto bg-primary-foreground pl-4 [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-muted-foreground/20">
-        <div className="overflow-x-auto whitespace-pre-wrap text-nowrap break-all pr-4 text-sm [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-muted-foreground/20">
-          {!isMobile && children ? children : "Copy install command"}
-        </div>
+    <div className="mt-4">
+      <Card className="relative w-full bg-primary-foreground">
+        {/* Tombol copy di kanan atas */}
         <button
-          onClick={() => handleCopy("install command", children)}
-          className={cn("bg-muted px-3 py-4")}
-          title="Copy"
+          type="button"
+          className={cn(
+            "absolute right-2 top-2 flex items-center justify-center",
+            "cursor-pointer rounded-md bg-muted px-2 py-1 text-xs"
+          )}
+          onClick={onCopyClick}
         >
-          {hasCopied
-            ? (
-                <CheckIcon className="h-4 w-4" />
-              )
-            : (
-                <ClipboardIcon className="h-4 w-4" />
-              )}
+          {hasCopied ? (
+            <CheckIcon className="h-3 w-3" />
+          ) : (
+            <ClipboardIcon className="h-3 w-3" />
+          )}
+          <span className="sr-only">Copy</span>
         </button>
+
+        {/* Area kode/YAML */}
+        <div className="overflow-x-auto whitespace-pre-wrap break-all text-sm p-4 pr-12">
+          {!isMobile && children ? children : "Copy Config File Path"}
+        </div>
       </Card>
     </div>
   );
