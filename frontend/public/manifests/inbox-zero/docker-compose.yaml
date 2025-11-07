@@ -1,0 +1,16 @@
+version: "3.9" # from manifests
+
+services:
+  inbox-zero:
+    image: image:tag          # ganti dengan image asli
+    container_name: inbox-zero
+    restart: unless-stopped
+    ports:
+      - "2368:2368"           # ganti port sesuai kebutuhan
+    environment:
+      NODE_ENV: production
+    volumes:
+      - inbox-zero-data:/var/lib/inbox-zero
+
+volumes:
+  inbox-zero-data:

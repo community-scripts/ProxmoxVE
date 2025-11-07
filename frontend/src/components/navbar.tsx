@@ -40,7 +40,7 @@ function Navbar() {
             className="cursor-pointer w-full justify-center sm:justify-start flex-row-reverse hidden sm:flex items-center gap-2 font-semibold sm:flex-row"
           >
             <Image height={18} unoptimized width={18} alt="logo" src="/ProxmoxVE/logo.png" className="" />
-            <span className="">Proxmox VE Helper-Scripts</span>
+            <span className="">Daily FOSS</span>
           </Link>
           <div className="flex items-center justify-between sm:justify-end gap-2 w-full">
             <div className="flex sm:hidden">

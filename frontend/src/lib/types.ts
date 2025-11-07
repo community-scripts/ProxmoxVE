@@ -11,6 +11,7 @@ export type Script = {
   interface_port: number | null;
   documentation: string | null;
   website: string | null;
+  github: string | null;
   logo: string | null;
   config_path: string;
   description: string;
@@ -24,6 +25,43 @@ export type Script = {
       os: string | null;
       version: string | null;
     };
+    platform: {
+      desktop: {
+        linux: boolean,
+        windows: boolean,
+        macos: boolean,
+      },
+      mobile: {
+        android: boolean,
+        ios: boolean,
+      }
+      web_app: boolean,
+      browser_extension: boolean,
+      cli_only: boolean,
+      hosting: {
+        self_hosted: boolean,
+        saas: boolean,
+        managed_cloud: boolean
+      },
+      deployment: {
+        binary: boolean,
+        docker: boolean,
+        docker_compose: boolean,
+        helm: {
+          oci_artifact: boolean,
+          helm_repository: boolean,
+        },
+        kubernetes: boolean,
+        terraform: boolean
+      },
+      ui: {
+        cli: boolean,
+        gui: boolean,
+        web_ui: boolean,
+        api: boolean,
+        tui: boolean
+      }
+    },
   }[];
   default_credentials: {
     username: string | null;
@@ -35,7 +73,13 @@ export type Script = {
       type: keyof typeof AlertColors;
     },
   ];
-  docker_compose_path?: string;
+  manifest_path?: {
+    binary?: string | null;
+    docker_compose?: string | null;
+    kubernetes?: string | null;
+    helm?: string | null;
+    terraform?: string | null;
+  };
 };
 
 export type Category = {

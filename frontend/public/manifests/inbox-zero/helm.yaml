@@ -1,0 +1,5 @@
+# from manifests
+
+helm repo add community-scripts https://charts.community-scripts.org
+helm repo update
+helm install inbox-zero community-scripts/inbox-zero -f values.yaml

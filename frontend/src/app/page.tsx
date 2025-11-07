@@ -60,7 +60,7 @@ export default function Page() {
                         `inline`,
                       )}
                     >
-                      Scripts by tteck
+                      Frontend by Proxmox VE Helper-Scripts
                     </span>
                   </AnimatedGradientText>
                 </div>
