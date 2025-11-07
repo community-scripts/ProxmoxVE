@@ -1,5 +1,65 @@
 [
   {
+    "name": "FlowiseAI/Flowise",
+    "version": "flowise@3.0.10",
+    "date": "2025-11-06T23:10:38Z"
+  },
+  {
+    "name": "Ombi-app/Ombi",
+    "version": "v4.52.0",
+    "date": "2025-11-06T22:39:26Z"
+  },
+  {
+    "name": "rcourtman/Pulse",
+    "version": "v4.26.4",
+    "date": "2025-11-06T22:38:52Z"
+  },
+  {
+    "name": "open-webui/open-webui",
+    "version": "v0.6.36",
+    "date": "2025-11-06T21:45:33Z"
+  },
+  {
+    "name": "paperless-ngx/paperless-ngx",
+    "version": "v2.19.5",
+    "date": "2025-11-06T20:20:13Z"
+  },
+  {
+    "name": "chrisbenincasa/tunarr",
+    "version": "v0.22.12",
+    "date": "2025-11-06T18:43:51Z"
+  },
+  {
+    "name": "MariaDB/server",
+    "version": "mariadb-11.8.4",
+    "date": "2025-11-06T17:24:30Z"
+  },
+  {
+    "name": "chrisvel/tududi",
+    "version": "v0.85.1",
+    "date": "2025-10-31T10:45:26Z"
+  },
+  {
+    "name": "HabitRPG/habitica",
+    "version": "v5.41.6",
+    "date": "2025-11-06T15:32:07Z"
+  },
+  {
+    "name": "pocket-id/pocket-id",
+    "version": "v1.15.0",
+    "date": "2025-11-06T15:03:22Z"
+  },
+  {
+    "name": "wizarrrr/wizarr",
+    "version": "v2025.11.2",
+    "date": "2025-11-06T12:08:24Z"
+  },
+  {
+    "name": "meilisearch/meilisearch",
+    "version": "prototype-v1.24.0.s3-snapshots-5",
+    "date": "2025-11-06T11:43:12Z"
+  },
+  {
     "name": "transmission/transmission",
     "version": "4.0.1-beta.1",
     "date": "2024-12-13T00:16:24Z"
@@ -8,11 +68,6 @@
     "name": "semaphoreui/semaphore",
     "version": "v2.17.0-beta20",
     "date": "2025-11-06T10:49:56Z"
-  },
-  {
-    "name": "FlowiseAI/Flowise",
-    "version": "flowise@3.0.9",
-    "date": "2025-11-06T10:27:13Z"
   },
   {
     "name": "keycloak/keycloak",
@@ -71,8 +126,8 @@
   },
   {
     "name": "ollama/ollama",
-    "version": "v0.12.10-rc0",
-    "date": "2025-11-05T19:58:03Z"
+    "version": "v0.12.10",
+    "date": "2025-11-05T21:41:21Z"
   },
   {
     "name": "neo4j/neo4j",
@@ -123,11 +178,6 @@
     "name": "zitadel/zitadel",
     "version": "v4.6.4",
     "date": "2025-11-05T15:57:00Z"
-  },
-  {
-    "name": "chrisvel/tududi",
-    "version": "v0.85.1",
-    "date": "2025-10-31T10:45:26Z"
   },
   {
     "name": "Graylog2/graylog2-server",
@@ -210,24 +260,14 @@
     "date": "2025-11-04T22:34:12Z"
   },
   {
-    "name": "chrisbenincasa/tunarr",
-    "version": "v0.23.0-alpha.21",
-    "date": "2025-11-04T22:05:17Z"
-  },
-  {
-    "name": "wizarrrr/wizarr",
-    "version": "v2025.11.1",
-    "date": "2025-11-04T20:55:51Z"
-  },
-  {
     "name": "go-gitea/gitea",
     "version": "v1.25.1",
     "date": "2025-11-04T20:01:09Z"
   },
   {
     "name": "runtipi/runtipi",
-    "version": "v4.6.2",
-    "date": "2025-11-03T19:45:24Z"
+    "version": "nightly",
+    "date": "2025-11-04T19:16:17Z"
   },
   {
     "name": "element-hq/synapse",
@@ -243,11 +283,6 @@
     "name": "msgbyte/tianji",
     "version": "v1.30.6",
     "date": "2025-11-04T17:41:01Z"
-  },
-  {
-    "name": "meilisearch/meilisearch",
-    "version": "prototype-v1.24.0.s3-snapshots-4",
-    "date": "2025-11-04T16:46:01Z"
   },
   {
     "name": "VictoriaMetrics/VictoriaMetrics",
@@ -293,11 +328,6 @@
     "name": "esphome/esphome",
     "version": "2025.10.4",
     "date": "2025-11-04T03:04:13Z"
-  },
-  {
-    "name": "paperless-ngx/paperless-ngx",
-    "version": "v2.19.4",
-    "date": "2025-11-04T01:34:35Z"
   },
   {
     "name": "hyperion-project/hyperion.ng",
@@ -540,11 +570,6 @@
     "date": "2025-10-29T09:51:00Z"
   },
   {
-    "name": "pocket-id/pocket-id",
-    "version": "v1.14.2",
-    "date": "2025-10-29T08:37:03Z"
-  },
-  {
     "name": "apache/cassandra",
     "version": "cassandra-5.0.6",
     "date": "2025-10-29T07:40:47Z"
@@ -670,19 +695,9 @@
     "date": "2025-10-23T17:15:07Z"
   },
   {
-    "name": "HabitRPG/habitica",
-    "version": "v5.41.5",
-    "date": "2025-10-23T15:12:42Z"
-  },
-  {
     "name": "Kareadita/Kavita",
     "version": "v0.8.8.3",
     "date": "2025-10-23T12:31:49Z"
-  },
-  {
-    "name": "rcourtman/Pulse",
-    "version": "issue-596",
-    "date": "2025-10-22T19:48:56Z"
   },
   {
     "name": "louislam/uptime-kuma",
@@ -800,19 +815,9 @@
     "date": "2025-10-16T19:33:51Z"
   },
   {
-    "name": "open-webui/open-webui",
-    "version": "v0.6.34",
-    "date": "2025-10-16T16:55:58Z"
-  },
-  {
     "name": "cloudreve/cloudreve",
     "version": "4.9.2",
     "date": "2025-10-16T03:24:44Z"
-  },
-  {
-    "name": "Ombi-app/Ombi",
-    "version": "v4.47.1",
-    "date": "2025-01-05T21:14:23Z"
   },
   {
     "name": "linkwarden/linkwarden",
@@ -1203,11 +1208,6 @@
     "name": "ioBroker/ioBroker",
     "version": "1012-08-09",
     "date": "2025-08-10T13:50:58Z"
-  },
-  {
-    "name": "MariaDB/server",
-    "version": "mariadb-12.0.2",
-    "date": "2025-08-07T21:23:15Z"
   },
   {
     "name": "TryGhost/Ghost-CLI",
