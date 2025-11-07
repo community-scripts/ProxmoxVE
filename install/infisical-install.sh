@@ -20,18 +20,15 @@ $STD apt install -y \
   redis
 msg_ok "Installed Dependencies"
 
-msg_info "Setting up Infisical repository"
-curl -fsSL "https://artifacts-infisical-core.infisical.com/infisical.gpg" | gpg --dearmor >/etc/apt/trusted.gpg.d/infisical.gpg
-cat <<EOF >/etc/apt/sources.list.d/infisical.sources
-Types: deb
-URIs: https://artifacts-infisical-core.infisical.com/deb
-Suites: stable
-Components: main
-Signed-By: /etc/apt/trusted.gpg.d/infisical.gpg
-EOF
-msg_ok "Setup Infisical repository"
-
 PG_VERSION="17" setup_postgresql
+
+msg_info "Setting up Infisical Repository"
+setup_deb822_repo \
+  "infisical" \
+  "https://artifacts-infisical-core.infisical.com/infisical.gpg" \
+  "https://artifacts-infisical-core.infisical.com/deb" \
+  "stable"
+msg_ok "Setup Infisical repository"
 
 msg_info "Configuring PostgreSQL"
 DB_NAME="infisical_db"
