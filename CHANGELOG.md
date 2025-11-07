@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-11-07
 
+### 🆕 New Scripts
+
+  - infisical ([#8926](https://github.com/community-scripts/ProxmoxVE/pull/8926))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
