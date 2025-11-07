@@ -78,6 +78,7 @@ JWT_SECRET_KEY=$JWT_SECRET_KEY
 NODE_ENV=production
 PORT=3333
 HOST=0.0.0.0
+TZ=Etc/UTC
 EOF
 
 if [[ -n "${COINGECKO_DEMO_KEY:-}" ]]; then
