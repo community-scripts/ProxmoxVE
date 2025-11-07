@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-11-07
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - flaresolverr: pin release to 3.4.3 [@CrazyWolf13](https://github.com/CrazyWolf13) ([#8937](https://github.com/community-scripts/ProxmoxVE/pull/8937))
+
 ## 2025-11-06
 
 ### 🚀 Updated Scripts
