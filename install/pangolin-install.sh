@@ -233,7 +233,7 @@ Description=Traefik is an open-source Edge Router that makes publishing your ser
 
 [Service]
 Type=notify
-ExecStart=/usr/bin/traefik --configFile=/opt/pangolin/config/traefik/traefik_config.yaml
+ExecStart=/usr/bin/traefik --configFile=/opt/pangolin/config/traefik/traefik_config.yml
 Restart=on-failure
 ExecReload=/bin/kill -USR1 \$MAINPID
 
