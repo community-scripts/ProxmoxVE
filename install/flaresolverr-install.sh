@@ -32,7 +32,7 @@ $STD apt install -y google-chrome-stable
 rm /etc/apt/sources.list.d/google-chrome.list
 msg_ok "Installed Chrome"
 
-fetch_and_deploy_gh_release "flaresolverr" "FlareSolverr/FlareSolverr" "prebuild" "latest" "/opt/flaresolverr" "flaresolverr_linux_x64.tar.gz"
+fetch_and_deploy_gh_release "flaresolverr" "FlareSolverr/FlareSolverr" "prebuild" "v3.4.3" "/opt/flaresolverr" "flaresolverr_linux_x64.tar.gz"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/flaresolverr.service
