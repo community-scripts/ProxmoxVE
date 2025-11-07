@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - ghostfolio: refactor CoinGecko key prompts in installer [@MickLesk](https://github.com/MickLesk) ([#8935](https://github.com/community-scripts/ProxmoxVE/pull/8935))
     - flaresolverr: pin release to 3.4.3 [@CrazyWolf13](https://github.com/CrazyWolf13) ([#8937](https://github.com/community-scripts/ProxmoxVE/pull/8937))
 
 ## 2025-11-06
