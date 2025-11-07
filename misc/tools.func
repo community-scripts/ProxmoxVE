@@ -427,7 +427,12 @@ manage_tool_repository() {
     suite=$(get_fallback_suite "$distro_id" "$distro_codename" "$repo_url/$distro_id")
 
     # Setup new repository using deb822 format
-    setup_deb822_repo "mariadb" "$gpg_key_url" "$repo_url/$distro_id" "$suite" "main" "amd64 arm64" || return 1
+    setup_deb822_repo \
+      "mariadb" \
+      "$gpg_key_url" \
+      "$repo_url/$distro_id" \
+      "$suite" \
+      "main"
     return 0
     ;;
 
@@ -504,7 +509,7 @@ Types: deb
 URIs: ${repo_url}
 Suites: ${suite}/mongodb-org/${version}
 Components: ${repo_component}
-Architectures: amd64 arm64
+Architectures: $(dpkg --print-architecture)
 Signed-By: /etc/apt/keyrings/mongodb-server-${version}.gpg
 EOF
     return 0
@@ -536,7 +541,7 @@ Types: deb
 URIs: $repo_url
 Suites: nodistro
 Components: main
-Architectures: amd64 arm64
+Architectures: $(dpkg --print-architecture)
 Signed-By: /etc/apt/keyrings/nodesource.gpg
 EOF
     return 0
@@ -570,7 +575,7 @@ Types: deb
 URIs: https://packages.sury.org/php
 Suites: $distro_codename
 Components: main
-Architectures: amd64 arm64
+Architectures: $(dpkg --print-architecture)
 Signed-By: /usr/share/keyrings/deb.sury.org-php.gpg
 EOF
     return 0
@@ -601,7 +606,7 @@ Types: deb
 URIs: http://apt.postgresql.org/pub/repos/apt
 Suites: $distro_codename-pgdg
 Components: main
-Architectures: amd64 arm64
+Architectures: $(dpkg --print-architecture)
 Signed-By: /etc/apt/keyrings/postgresql.gpg
 EOF
     return 0
@@ -1202,7 +1207,7 @@ setup_deb822_repo() {
   local repo_url="$3"
   local suite="$4"
   local component="${5:-main}"
-  local architectures="${6:-amd64 arm64}"
+  local architectures="${6:-$(dpkg --print-architecture)}"
 
   # Validate required parameters
   if [[ -z "$name" || -z "$gpg_url" || -z "$repo_url" || -z "$suite" ]]; then
@@ -2780,8 +2785,7 @@ function setup_java() {
       "https://packages.adoptium.net/artifactory/api/gpg/key/public" \
       "https://packages.adoptium.net/artifactory/deb" \
       "$SUITE" \
-      "main" \
-      "amd64 arm64"
+      "main"
   fi
 
   # Get currently installed version
@@ -3233,12 +3237,12 @@ function setup_mysql() {
       return 1
     fi
 
-    cat >/etc/apt/sources.list.d/mysql.sources <<'EOF'
+    cat >/etc/apt/sources.list.d/mysql.sources <<EOF
 Types: deb
 URIs: https://repo.mysql.com/apt/debian/
 Suites: bookworm
 Components: mysql-8.4-lts
-Architectures: amd64 arm64
+Architectures: $(dpkg --print-architecture)
 Signed-By: /etc/apt/keyrings/mysql.gpg
 EOF
 
@@ -3746,8 +3750,7 @@ function setup_postgresql() {
     "https://www.postgresql.org/media/keys/ACCC4CF8.asc" \
     "https://apt.postgresql.org/pub/repos/apt" \
     "$SUITE" \
-    "main" \
-    "amd64 arm64"
+    "main"
 
   if ! $STD apt update; then
     msg_error "APT update failed for PostgreSQL repository"
@@ -4096,8 +4099,7 @@ function setup_clickhouse() {
     "https://packages.clickhouse.com/rpm/lts/repodata/repomd.xml.key" \
     "https://packages.clickhouse.com/deb" \
     "stable" \
-    "main" \
-    "amd64 arm64"
+    "main"
 
   # Install packages with retry logic
   export DEBIAN_FRONTEND=noninteractive
