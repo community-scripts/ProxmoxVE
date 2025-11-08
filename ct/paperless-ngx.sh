@@ -48,6 +48,7 @@ function update_script() {
 
       msg_info "Updating Paperless-ngx"
       cp -r /opt/paperless/backup/* /opt/paperless/
+      rm -r /opt/paperless/backup/*
       cd /opt/paperless
       $STD uv sync --all-extras
       cd /opt/paperless/src
