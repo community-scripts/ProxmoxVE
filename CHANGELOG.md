@@ -24,6 +24,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - paperless: refactor - remove backup after update and enable clean install [@MickLesk](https://github.com/MickLesk) ([#8988](https://github.com/community-scripts/ProxmoxVE/pull/8988))
     - Refactor setup_deb822_repo for optional architectures [@MickLesk](https://github.com/MickLesk) ([#8983](https://github.com/community-scripts/ProxmoxVE/pull/8983))
 
 ## 2025-11-07
