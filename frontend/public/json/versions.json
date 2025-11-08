@@ -1,13 +1,68 @@
 [
   {
-    "name": "home-assistant/core",
-    "version": "2025.11.1",
-    "date": "2025-11-07T21:32:26Z"
+    "name": "TechnitiumSoftware/DnsServer",
+    "version": "v14.0.0",
+    "date": "2025-11-08T10:34:10Z"
   },
   {
     "name": "firefly-iii/firefly-iii",
-    "version": "v6.4.4",
-    "date": "2025-11-01T19:48:08Z"
+    "version": "v6.4.5",
+    "date": "2025-11-08T10:24:28Z"
+  },
+  {
+    "name": "runtipi/runtipi",
+    "version": "v4.6.3",
+    "date": "2025-11-08T10:06:18Z"
+  },
+  {
+    "name": "fuma-nama/fumadocs",
+    "version": "fumadocs-openapi@10.0.2",
+    "date": "2025-11-08T09:58:09Z"
+  },
+  {
+    "name": "pommee/goaway",
+    "version": "v0.62.14",
+    "date": "2025-11-08T09:46:33Z"
+  },
+  {
+    "name": "pocketbase/pocketbase",
+    "version": "v0.32.0",
+    "date": "2025-11-08T09:36:27Z"
+  },
+  {
+    "name": "chrisvel/tududi",
+    "version": "v0.85.1",
+    "date": "2025-10-31T10:45:26Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.262",
+    "date": "2025-11-08T05:54:55Z"
+  },
+  {
+    "name": "documenso/documenso",
+    "version": "v2.0.5",
+    "date": "2025-11-08T05:03:59Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-11-08T00:27:05Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.0.1",
+    "date": "2025-10-15T16:53:55Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.4.4",
+    "date": "2025-11-07T08:55:27Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.11.1",
+    "date": "2025-11-07T21:32:26Z"
   },
   {
     "name": "homarr-labs/homarr",
@@ -18,11 +73,6 @@
     "name": "semaphoreui/semaphore",
     "version": "v2.16.45",
     "date": "2025-11-07T19:08:05Z"
-  },
-  {
-    "name": "runtipi/runtipi",
-    "version": "nightly",
-    "date": "2025-11-04T19:16:17Z"
   },
   {
     "name": "rcourtman/Pulse",
@@ -40,24 +90,9 @@
     "date": "2025-11-07T15:34:35Z"
   },
   {
-    "name": "chrisvel/tududi",
-    "version": "v0.85.1",
-    "date": "2025-10-31T10:45:26Z"
-  },
-  {
     "name": "YunoHost/yunohost",
     "version": "debian/12.1.35",
     "date": "2025-11-07T14:35:24Z"
-  },
-  {
-    "name": "fuma-nama/fumadocs",
-    "version": "fumadocs-openapi@10.0.1",
-    "date": "2025-11-07T14:06:43Z"
-  },
-  {
-    "name": "documenso/documenso",
-    "version": "v2.0.2",
-    "date": "2025-11-07T13:48:31Z"
   },
   {
     "name": "nzbgetcom/nzbget",
@@ -95,11 +130,6 @@
     "date": "2025-11-05T16:56:57Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.4.4",
-    "date": "2025-11-07T08:55:27Z"
-  },
-  {
     "name": "mattermost/mattermost",
     "version": "v10.11.6",
     "date": "2025-11-04T09:43:16Z"
@@ -110,24 +140,9 @@
     "date": "2025-11-07T06:13:49Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.255",
-    "date": "2025-11-07T05:55:20Z"
-  },
-  {
     "name": "OliveTin/OliveTin",
     "version": "3000.3.2",
     "date": "2025-11-07T01:05:59Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-11-07T00:27:13Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.0.1",
-    "date": "2025-10-15T16:53:55Z"
   },
   {
     "name": "FlowiseAI/Flowise",
@@ -480,11 +495,6 @@
     "date": "2025-10-31T18:50:18Z"
   },
   {
-    "name": "pommee/goaway",
-    "version": "v0.62.12",
-    "date": "2025-10-31T17:30:55Z"
-  },
-  {
     "name": "zabbix/zabbix",
     "version": "7.4.5",
     "date": "2025-10-31T14:39:13Z"
@@ -688,11 +698,6 @@
     "name": "crowdsecurity/crowdsec",
     "version": "v1.7.3",
     "date": "2025-10-24T10:51:12Z"
-  },
-  {
-    "name": "pocketbase/pocketbase",
-    "version": "v0.31.0",
-    "date": "2025-10-24T04:07:27Z"
   },
   {
     "name": "drakkan/sftpgo",
@@ -1348,11 +1353,6 @@
     "name": "ZoeyVid/NPMplus",
     "version": "2025-05-07-r1",
     "date": "2025-05-07T12:18:42Z"
-  },
-  {
-    "name": "TechnitiumSoftware/DnsServer",
-    "version": "v13.6.0",
-    "date": "2025-04-26T10:21:12Z"
   },
   {
     "name": "dotnetfactory/fluid-calendar",
