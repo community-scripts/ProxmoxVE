@@ -33,8 +33,12 @@
   },
   "notes": [
     {
-      "text": "Set a root password if using autologin. This will be the Cockpit password.`sudo passwd root`",
+      "text": "Set a root password if using autologin. This will be the Cockpit password. To set root password run `sudo passwd root`",
       "type": "info"
+    },
+    {
+      "text": "If you plan on using 45Drives extension with NFS, you must setup LXC as privileged. Some features of 45Drives don't work on Debian 13, so Debian 12 must be used.",
+      "type": "warning"
     }
   ]
 }
