@@ -51,7 +51,7 @@ function update_script() {
     find /opt/firefly/storage -type f -exec chmod 664 {} \;
     mkdir -p /opt/firefly/storage/framework/{cache/data,sessions,views}
     $STD sudo -u www-data php /opt/firefly/artisan cache:clear
-
+    cd /opt/firefly
     $STD php artisan migrate --seed --force
     $STD php artisan cache:clear
     $STD php artisan view:clear
