@@ -20,13 +20,7 @@ else
   MONGO_VERSION="7.0" setup_mongodb
 fi
 sed -i 's/bindIp: 127.0.0.1/bindIp: 0.0.0.0/' /etc/mongod.conf
-msg_ok "Installed MongoDB $MONGO_VERSION"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc
