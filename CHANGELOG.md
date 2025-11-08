@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Technitium DNS: Fix update [@tremor021](https://github.com/tremor021) ([#8980](https://github.com/community-scripts/ProxmoxVE/pull/8980))
     - MediaManager: add LOG_FILE to start.sh script; fix BASE_PATH and PUBLIC_API_URL [@vhsdream](https://github.com/vhsdream) ([#8981](https://github.com/community-scripts/ProxmoxVE/pull/8981))
     - Firefly: Fix missing command in update script [@tremor021](https://github.com/tremor021) ([#8972](https://github.com/community-scripts/ProxmoxVE/pull/8972))
     - MongoDB: Remove unused message [@tremor021](https://github.com/tremor021) ([#8969](https://github.com/community-scripts/ProxmoxVE/pull/8969))
