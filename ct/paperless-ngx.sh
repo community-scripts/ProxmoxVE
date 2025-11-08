@@ -42,9 +42,15 @@ function update_script() {
       msg_ok "Backup completed"
 
       PYTHON_VERSION="3.13" setup_uv
-      fetch_and_deploy_gh_release "paperless" "paperless-ngx/paperless-ngx" "prebuild" "latest" "/opt/paperless" "paperless*tar.xz"
-      fetch_and_deploy_gh_release "jbig2enc" "ie13/jbig2enc" "tarball" "latest" "/opt/jbig2enc"
-      setup_gs
+      CLEAN_INSTALL=1 fetch_and_deploy_gh_release "paperless" "paperless-ngx/paperless-ngx" "prebuild" "latest" "/opt/paperless" "paperless*tar.xz"
+      CLEAN_INSTALL=1 fetch_and_deploy_gh_release "jbig2enc" "ie13/jbig2enc" "tarball" "latest" "/opt/jbig2enc"
+      
+      . /etc/os-release
+      if [ "$VERSION_CODENAME" = "bookworm" ]; then
+        setup_gs
+      else
+        $STD apt install -y ghostscript
+      fi
 
       msg_info "Updating Paperless-ngx"
       cp -r /opt/paperless/backup/* /opt/paperless/
@@ -53,6 +59,11 @@ function update_script() {
       cd /opt/paperless/src
       $STD uv run -- python manage.py migrate
       msg_ok "Updated Paperless-ngx"
+
+      if [[ -d /opt/paperless/backup ]]; then
+        rm -rf /opt/paperless/backup || msg_warn "Failed to remove /opt/paperless/backup"
+        msg_ok "Removed backup directory"
+      fi
     else
       msg_warn "You are about to migrate your Paperless-ngx installation to uv!"
       msg_custom "🔒" "It is strongly recommended to take a Proxmox snapshot first:"
@@ -103,9 +114,17 @@ function update_script() {
       msg_ok "Backup completed"
 
       PYTHON_VERSION="3.13" setup_uv
-      fetch_and_deploy_gh_release "paperless" "paperless-ngx/paperless-ngx" "prebuild" "latest" "/opt/paperless" "paperless*tar.xz"
-      fetch_and_deploy_gh_release "jbig2enc" "ie13/jbig2enc" "tarball" "latest" "/opt/jbig2enc"
-      setup_gs
+      CLEAN_INSTALL=1 fetch_and_deploy_gh_release "paperless" "paperless-ngx/paperless-ngx" "prebuild" "latest" "/opt/paperless" "paperless*tar.xz"
+      CLEAN_INSTALL=1 fetch_and_deploy_gh_release "jbig2enc" "ie13/jbig2enc" "tarball" "latest" "/opt/jbig2enc"
+      
+      . /etc/os-release
+      if [ "$VERSION_CODENAME" = "bookworm" ]; then
+        setup_gs
+      else
+        msg_info "Installing Ghostscript"
+        $STD apt install -y ghostscript
+        msg_ok "Installed Ghostscript"
+      fi
 
       msg_info "Updating Paperless-ngx"
       cp -r /opt/paperless/backup/* /opt/paperless/
@@ -114,6 +133,11 @@ function update_script() {
       cd /opt/paperless/src
       $STD uv run -- python manage.py migrate
       msg_ok "Paperless-ngx migration and update completed"
+
+      if [[ -d /opt/paperless/backup ]]; then
+        rm -rf /opt/paperless/backup || msg_warn "Failed to remove /opt/paperless/backup"
+        msg_ok "Removed backup directory"
+      fi
     fi
 
     msg_info "Starting all Paperless-ngx Services"
