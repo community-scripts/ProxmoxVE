@@ -26,6 +26,7 @@ msg_info "Installing Technitium DNS"
 mkdir -p /opt/technitium/dns
 curl -fsSL "https://download.technitium.com/dns/DnsServerPortable.tar.gz" -o /opt/DnsServerPortable.tar.gz
 $STD tar zxvf /opt/DnsServerPortable.tar.gz -C /opt/technitium/dns/
+rm -f /opt/DnsServerPortable.tar.gz
 echo "${RELEASE}" >~/.technitium
 msg_ok "Installed Technitium DNS"
 
