@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-11-08
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Set TZ=Etc/UTC in Ghostfolio installation script [@LuloDev](https://github.com/LuloDev) ([#8961](https://github.com/community-scripts/ProxmoxVE/pull/8961))
+
 ## 2025-11-07
 
 ### 🆕 New Scripts
