@@ -1207,7 +1207,7 @@ setup_deb822_repo() {
   local repo_url="$3"
   local suite="$4"
   local component="${5:-main}"
-  local architectures="$6"   # optional
+  local architectures="${6-}"   # optional
 
   # Validate required parameters
   if [[ -z "$name" || -z "$gpg_url" || -z "$repo_url" || -z "$suite" ]]; then
