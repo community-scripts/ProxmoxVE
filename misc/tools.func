@@ -1198,8 +1198,8 @@ ensure_apt_working() {
 }
 
 # ------------------------------------------------------------------------------
-# Standardized deb822 repository setup
-# Architecture optional (only written if param 6 given)
+# Standardized deb822 repository setup (with optional Architectures)
+# Always runs apt update after repo creation to ensure package availability
 # ------------------------------------------------------------------------------
 setup_deb822_repo() {
   local name="$1"
@@ -1207,49 +1207,40 @@ setup_deb822_repo() {
   local repo_url="$3"
   local suite="$4"
   local component="${5:-main}"
-  local architectures="${6:-}"   # optional
+  local architectures="$6"   # optional
 
+  # Validate required parameters
   if [[ -z "$name" || -z "$gpg_url" || -z "$repo_url" || -z "$suite" ]]; then
-    msg_error "setup_deb822_repo: missing required parameters (name=$name, gpg=$gpg_url, repo=$repo_url, suite=$suite)"
+    msg_error "setup_deb822_repo: missing required parameters (name=$name repo=$repo_url suite=$suite)"
     return 1
   fi
 
+  # Cleanup
   cleanup_old_repo_files "$name"
   cleanup_orphaned_sources
 
   mkdir -p /etc/apt/keyrings || {
-    msg_error "Failed to create /etc/apt/keyrings directory"
+    msg_error "Failed to create /etc/apt/keyrings"
     return 1
   }
 
+  # Import GPG
   curl -fsSL "$gpg_url" | gpg --dearmor --yes -o "/etc/apt/keyrings/${name}.gpg" || {
-    msg_error "Failed to download or import GPG key for ${name} from $gpg_url"
+    msg_error "Failed to import GPG key for ${name}"
     return 1
   }
 
+  # Write deb822
   {
     echo "Types: deb"
     echo "URIs: $repo_url"
     echo "Suites: $suite"
     echo "Components: $component"
+    [[ -n "$architectures" ]] && echo "Architectures: $architectures"
     echo "Signed-By: /etc/apt/keyrings/${name}.gpg"
-    if [[ -n "$architectures" ]]; then
-      echo "Architectures: $architectures"
-    fi
   } >/etc/apt/sources.list.d/${name}.sources
 
-  local apt_cache_file="/var/cache/apt-update-timestamp"
-  local current_time=$(date +%s)
-  local last_update=0
-
-  if [[ -f "$apt_cache_file" ]]; then
-    last_update=$(cat "$apt_cache_file" 2>/dev/null || echo 0)
-  fi
-
-  if ((current_time - last_update > 30)); then
-    $STD apt update
-    echo "$current_time" >"$apt_cache_file"
-  fi
+  $STD apt update
 }
 
 # ------------------------------------------------------------------------------
