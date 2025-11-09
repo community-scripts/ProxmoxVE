@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-11-09
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Paperless-NGX: Move config backup outside of app folder [@vhsdream](https://github.com/vhsdream) ([#8996](https://github.com/community-scripts/ProxmoxVE/pull/8996))
+
 ## 2025-11-08
 
 ### 🚀 Updated Scripts
