@@ -369,7 +369,6 @@ run_container_safe() {
 }
 
 cleanup_lxc() {
-  # Minimal, robust cleanup after install/update – no toggles, always runs.
   msg_info "Cleaning up"
 
   if is_alpine; then
