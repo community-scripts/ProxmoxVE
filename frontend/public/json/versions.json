@@ -1,13 +1,58 @@
 [
   {
-    "name": "TechnitiumSoftware/DnsServer",
-    "version": "v14.0.0",
-    "date": "2025-11-08T10:34:10Z"
+    "name": "BerriAI/litellm",
+    "version": "v1.79.1-stable",
+    "date": "2025-11-08T22:53:21Z"
+  },
+  {
+    "name": "raydak-labs/configarr",
+    "version": "v1.17.2",
+    "date": "2025-11-08T22:47:58Z"
   },
   {
     "name": "firefly-iii/firefly-iii",
-    "version": "v6.4.5",
-    "date": "2025-11-08T10:24:28Z"
+    "version": "v6.4.6",
+    "date": "2025-11-08T22:45:35Z"
+  },
+  {
+    "name": "TwiN/gatus",
+    "version": "v5.31.0",
+    "date": "2025-11-08T22:18:46Z"
+  },
+  {
+    "name": "karakeep-app/karakeep",
+    "version": "ios/v1.8.1-0",
+    "date": "2025-11-08T21:29:59Z"
+  },
+  {
+    "name": "hargata/lubelog",
+    "version": "v1.5.4",
+    "date": "2025-11-08T16:26:45Z"
+  },
+  {
+    "name": "Luligu/matterbridge",
+    "version": "3.3.7",
+    "date": "2025-11-08T15:47:24Z"
+  },
+  {
+    "name": "heiher/hev-socks5-server",
+    "version": "2.11.1",
+    "date": "2025-11-08T14:27:27Z"
+  },
+  {
+    "name": "oauth2-proxy/oauth2-proxy",
+    "version": "v7.13.0",
+    "date": "2025-11-08T13:36:25Z"
+  },
+  {
+    "name": "pommee/goaway",
+    "version": "v0.62.16",
+    "date": "2025-11-08T12:15:30Z"
+  },
+  {
+    "name": "TechnitiumSoftware/DnsServer",
+    "version": "v14.0.0",
+    "date": "2025-11-08T10:34:10Z"
   },
   {
     "name": "runtipi/runtipi",
@@ -18,11 +63,6 @@
     "name": "fuma-nama/fumadocs",
     "version": "fumadocs-openapi@10.0.2",
     "date": "2025-11-08T09:58:09Z"
-  },
-  {
-    "name": "pommee/goaway",
-    "version": "v0.62.14",
-    "date": "2025-11-08T09:46:33Z"
   },
   {
     "name": "pocketbase/pocketbase",
@@ -233,11 +273,6 @@
     "name": "neo4j/neo4j",
     "version": "5.26.16",
     "date": "2025-11-05T20:41:40Z"
-  },
-  {
-    "name": "BerriAI/litellm",
-    "version": "v1.79.1.dev6",
-    "date": "2025-11-05T19:25:05Z"
   },
   {
     "name": "leiweibau/Pi.Alert",
@@ -480,11 +515,6 @@
     "date": "2020-06-07T07:27:04Z"
   },
   {
-    "name": "Luligu/matterbridge",
-    "version": "3.3.6",
-    "date": "2025-11-01T10:41:15Z"
-  },
-  {
     "name": "tailscale/tailscale",
     "version": "v1.90.6",
     "date": "2025-10-31T22:24:04Z"
@@ -528,11 +558,6 @@
     "name": "sassanix/Warracker",
     "version": "1.0.2",
     "date": "2025-10-30T18:23:23Z"
-  },
-  {
-    "name": "TwiN/gatus",
-    "version": "v5.30.0",
-    "date": "2025-10-30T16:52:58Z"
   },
   {
     "name": "AdguardTeam/AdGuardHome",
@@ -588,11 +613,6 @@
     "name": "laurent22/joplin",
     "version": "server-v3.4.4",
     "date": "2025-09-25T13:19:26Z"
-  },
-  {
-    "name": "heiher/hev-socks5-server",
-    "version": "2.11.0",
-    "date": "2025-10-29T14:26:23Z"
   },
   {
     "name": "cockpit-project/cockpit",
@@ -865,11 +885,6 @@
     "date": "2025-10-13T23:15:11Z"
   },
   {
-    "name": "hargata/lubelog",
-    "version": "v1.5.3",
-    "date": "2025-10-13T19:59:30Z"
-  },
-  {
     "name": "node-red/node-red",
     "version": "4.1.1",
     "date": "2025-10-13T14:23:53Z"
@@ -898,11 +913,6 @@
     "name": "Brandawg93/PeaNUT",
     "version": "v5.16.0",
     "date": "2025-10-10T16:17:02Z"
-  },
-  {
-    "name": "raydak-labs/configarr",
-    "version": "v1.17.1",
-    "date": "2025-10-10T16:12:41Z"
   },
   {
     "name": "projectsend/projectsend",
@@ -1090,11 +1100,6 @@
     "date": "2025-09-15T15:50:44Z"
   },
   {
-    "name": "karakeep-app/karakeep",
-    "version": "cli/v0.27.1",
-    "date": "2025-09-14T14:48:48Z"
-  },
-  {
     "name": "intri-in/manage-my-damn-life-nextjs",
     "version": "v0.8.1",
     "date": "2025-09-14T06:45:23Z"
@@ -1168,11 +1173,6 @@
     "name": "caddyserver/caddy",
     "version": "v2.10.2",
     "date": "2025-08-23T03:10:31Z"
-  },
-  {
-    "name": "oauth2-proxy/oauth2-proxy",
-    "version": "v7.12.0",
-    "date": "2025-08-19T06:57:20Z"
   },
   {
     "name": "ventoy/Ventoy",
