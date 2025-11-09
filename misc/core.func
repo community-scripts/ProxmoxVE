@@ -370,6 +370,7 @@ run_container_safe() {
 
 cleanup_lxc() {
   msg_info "Cleaning up"
+
   if is_alpine; then
     $STD apk cache clean || true
     rm -rf /var/cache/apk/*
@@ -379,13 +380,15 @@ cleanup_lxc() {
     $STD apt -y clean || true
   fi
 
-  rm -rf /tmp/* /var/tmp/*
-
-  # Remove temp files created by mktemp/tempfile
+  # Clear temp artifacts (keep sockets/FIFOs; ignore errors)
   find /tmp /var/tmp -type f -name 'tmp*' -delete 2>/dev/null || true
   find /tmp /var/tmp -type f -name 'tempfile*' -delete 2>/dev/null || true
 
-  find /var/log -type f -exec truncate -s 0 {} +
+  # Truncate writable log files silently (permission errors ignored)
+  if command -v truncate >/dev/null 2>&1; then
+    find /var/log -type f -writable -print0 2>/dev/null | \
+      xargs -0 -n1 truncate -s 0 2>/dev/null || true
+  fi
 
   # Python pip
   if command -v pip &>/dev/null; then pip cache purge || true; fi
@@ -407,8 +410,8 @@ cleanup_lxc() {
   if command -v composer &>/dev/null; then composer clear-cache || true; fi
 
   if command -v journalctl &>/dev/null; then
-    $STD journalctl --rotate
-    $STD journalctl --vacuum-time=10m
+    $STD journalctl --rotate || true
+    $STD journalctl --vacuum-time=10m || true
   fi
   msg_ok "Cleaned"
 }
