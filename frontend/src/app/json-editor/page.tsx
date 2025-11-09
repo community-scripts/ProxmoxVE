@@ -15,9 +15,9 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Calendar } from "@/components/ui/calendar";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { fetchCategories } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
@@ -28,14 +28,20 @@ import { ScriptSchema } from "./_schemas/schemas";
 import Categories from "./_components/categories";
 import Note from "./_components/note";
 
+/**
+ * Updated:
+ * - Platform and Deployment returned into the main form area (structured).
+ * - Platform options are interactive and support Select all / Clear.
+ * - Deployment uses Switch controls instead of checkboxes.
+ * - Example files removed.
+ * - Manifest path inputs remain read-only and auto-generate from slug.
+ */
+
 const initialScript: Script = {
   name: "",
   slug: "",
   categories: [],
   date_created: "",
-  type: "ct",
-  updateable: false,
-  privileged: false,
   interface_port: null,
   documentation: null,
   config_path: "",
@@ -48,6 +54,31 @@ const initialScript: Script = {
     password: null,
   },
   notes: [],
+  // structured platform object (boolean flags)
+  platform: {
+    desktop: false,
+    mobile: false,
+    web_extensions: false,
+    hosting: false,
+    ui_interface: false,
+  } as any,
+  // deployment object (flags + paths)
+  deployment: {
+    script: false,
+    docker: false,
+    docker_compose: false,
+    helm: false,
+    kubernetes: false,
+    terraform: false,
+    paths: {
+      script: null,
+      docker: null,
+      docker_compose: null,
+      helm: null,
+      kubernetes: null,
+      terraform: null,
+    },
+  } as any,
 };
 
 export default function JSONGenerator() {
@@ -67,6 +98,7 @@ export default function JSONGenerator() {
     setScript((prev) => {
       const updated = { ...prev, [key]: value };
 
+      // keep install method script path behavior
       if (updated.slug && updated.type) {
         updated.install_methods = updated.install_methods.map((method) => {
           let scriptPath = "";
@@ -127,10 +159,16 @@ export default function JSONGenerator() {
     [updateScript],
   );
 
-  const formattedDate = useMemo(
-    () => (script.date_created ? format(script.date_created, "PPP") : undefined),
-    [script.date_created],
-  );
+  const formattedDate = useMemo(() => {
+    if (!script.date_created) return undefined;
+    try {
+      const d = new Date(script.date_created);
+      if (Number.isNaN(d.getTime())) return undefined;
+      return format(d, "PPP");
+    } catch {
+      return undefined;
+    }
+  }, [script.date_created]);
 
   const validationAlert = useMemo(
     () => (
@@ -158,11 +196,84 @@ export default function JSONGenerator() {
     [isValid, zodErrors],
   );
 
+  // Helpers
+  const normalizeUrl = useCallback((value: string) => {
+    const trimmed = value?.trim();
+    return trimmed ? trimmed : null;
+  }, []);
+
+  const clampPort = useCallback((val: number | null) => {
+    if (val === null) return null;
+    if (!Number.isFinite(val)) return null;
+    const n = Math.round(val);
+    if (n < 1 || n > 65535) return null;
+    return n;
+  }, []);
+
+  const manifestFileExamples: Record<string, string> = {
+    script: "script.sh",
+    docker: "Dockerfile",
+    docker_compose: "docker-compose.yaml",
+    helm: "helm.yaml",
+    kubernetes: "k8s-deployment.yaml",
+    terraform: "main.tf",
+  };
+
+  const buildExamplePath = (fileName: string) =>
+    `/public/manifest/${script.slug || "app-name"}/${fileName}`;
+
+  // PLATFORM helpers: keys and friendly labels
+  const platformKeys = [
+    { key: "desktop", label: "Desktop", desc: "Select desktop targets" },
+    { key: "mobile", label: "Mobile", desc: "Native mobile platforms" },
+    { key: "web_extensions", label: "Web & Extensions", desc: "Web app, browser extension, CLI-only" },
+    { key: "hosting", label: "Hosting", desc: "Self-hosted / SaaS / Managed Cloud" },
+    { key: "ui_interface", label: "UI / Interface", desc: "CLI, GUI, Web UI, API, TUI" },
+  ];
+
+  const selectAllPlatforms = () => {
+    const platformObj: any = {};
+    platformKeys.forEach(p => (platformObj[p.key] = true));
+    updateScript("platform" as keyof Script, platformObj as unknown as Script[keyof Script]);
+  };
+
+  const clearAllPlatforms = () => {
+    const platformObj: any = {};
+    platformKeys.forEach(p => (platformObj[p.key] = false));
+    updateScript("platform" as keyof Script, platformObj as unknown as Script[keyof Script]);
+  };
+
+  const togglePlatform = (key: string, checked: boolean) => {
+    const prev: any = (script as any).platform || {};
+    const next = { ...prev, [key]: checked };
+    updateScript("platform" as keyof Script, next as unknown as Script[keyof Script]);
+  };
+
+  // DEPLOYMENT toggle using Switch, no example files block
+  const toggleDeployment = (key: string, checked: boolean) => {
+    const prevDep: any = (script as any).deployment || {};
+    const prevPaths = prevDep.paths || {};
+    const nextDep = {
+      ...prevDep,
+      [key]: checked,
+      paths: {
+        ...prevPaths,
+        [key]: checked ? buildExamplePath(manifestFileExamples[key]) : null,
+      },
+    };
+    updateScript("deployment" as keyof Script, nextDep as unknown as Script[keyof Script]);
+  };
+
   return (
-    <div className="flex h-screen mt-20">
+    <div className="flex min-h-[calc(100vh-4rem)] mt-20">
+      {/* <div className="flex  mt-4"> */}
+
       <div className="w-1/2 p-4 overflow-y-auto">
         <h2 className="text-2xl font-bold mb-4">JSON Generator</h2>
+
+        {/* MAIN FORM BOX (Platform + Deployment are back here, structured) */}
         <form className="space-y-4">
+          {/* -- rest of your form fields (name, slug, logo...) -- */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label>
@@ -181,6 +292,7 @@ export default function JSONGenerator() {
               <Input placeholder="example" value={script.slug} onChange={e => updateScript("slug", e.target.value)} />
             </div>
           </div>
+
           <div>
             <Label>
               Logo
@@ -189,10 +301,13 @@ export default function JSONGenerator() {
             </Label>
             <Input
               placeholder="Full logo URL"
+              type="url"
               value={script.logo || ""}
-              onChange={e => updateScript("logo", e.target.value || null)}
+              onChange={e => updateScript("logo", normalizeUrl(e.target.value))}
+              onBlur={e => updateScript("logo", normalizeUrl(e.target.value))}
             />
           </div>
+
           <div>
             <Label>Config Path</Label>
             <Input
@@ -201,6 +316,7 @@ export default function JSONGenerator() {
               onChange={e => updateScript("config_path", e.target.value || null)}
             />
           </div>
+
           <div>
             <Label>
               Description
@@ -213,7 +329,9 @@ export default function JSONGenerator() {
               onChange={e => updateScript("description", e.target.value)}
             />
           </div>
+
           <Categories script={script} setScript={setScript} categories={categories} />
+
           <div className="flex gap-2">
             <div className="flex flex-col gap-2 w-full">
               <Label>Date Created</Label>
@@ -230,57 +348,119 @@ export default function JSONGenerator() {
                 <PopoverContent className="w-auto p-0" align="start">
                   <Calendar
                     mode="single"
-                    selected={new Date(script.date_created)}
+                    selected={script.date_created ? new Date(script.date_created) : undefined}
                     onSelect={handleDateSelect}
                     initialFocus
                   />
                 </PopoverContent>
               </Popover>
             </div>
-            <div className="flex flex-col gap-2 w-full">
-              <Label>Type</Label>
-              <Select value={script.type} onValueChange={value => updateScript("type", value)}>
-                <SelectTrigger className="flex-1">
-                  <SelectValue placeholder="Type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="ct">LXC Container</SelectItem>
-                  <SelectItem value="vm">Virtual Machine</SelectItem>
-                  <SelectItem value="pve">PVE-Tool</SelectItem>
-                  <SelectItem value="addon">Add-On</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
           </div>
-          <div className="w-full flex gap-5">
-            <div className="flex items-center space-x-2">
-              <Switch checked={script.updateable} onCheckedChange={checked => updateScript("updateable", checked)} />
-              <label>Updateable</label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Switch checked={script.privileged} onCheckedChange={checked => updateScript("privileged", checked)} />
-              <label>Privileged</label>
-            </div>
-          </div>
-          <Input
-            placeholder="Interface Port"
-            type="number"
-            value={script.interface_port || ""}
-            onChange={e => updateScript("interface_port", e.target.value ? Number(e.target.value) : null)}
-          />
-          <div className="flex gap-2">
+
+          {/* Interface Port */}
+          <div>
+            <Label>Interface Port</Label>
             <Input
-              placeholder="Website URL"
-              value={script.website || ""}
-              onChange={e => updateScript("website", e.target.value || null)}
+              placeholder="e.g. 8080 (1 - 65535)"
+              type="number"
+              min={1}
+              max={65535}
+              value={script.interface_port ?? ""}
+              onChange={e => {
+                const v = e.target.value ? Number(e.target.value) : null;
+                updateScript("interface_port", clampPort(v) as unknown as Script[keyof Script]);
+              }}
             />
-            <Input
-              placeholder="Documentation URL"
-              value={script.documentation || ""}
-              onChange={e => updateScript("documentation", e.target.value || null)}
-            />
+            <p className="text-sm text-muted-foreground mt-1">
+              Optional — numeric port number (1–65535). Leave empty for no port.
+            </p>
           </div>
+
+          {/* URL fields */}
+          <div className="space-y-2">
+            <div>
+              <Label>Website URL</Label>
+              <Input
+                placeholder="https://example.com"
+                type="url"
+                value={script.website || ""}
+                onChange={e => updateScript("website", e.target.value || null)}
+                onBlur={e => updateScript("website", normalizeUrl(e.target.value))}
+              />
+            </div>
+
+            <div>
+              <Label>Documentation URL</Label>
+              <Input
+                placeholder="https://example.com/docs"
+                type="url"
+                value={script.documentation || ""}
+                onChange={e => updateScript("documentation", e.target.value || null)}
+                onBlur={e => updateScript("documentation", normalizeUrl(e.target.value))}
+              />
+            </div>
+
+            <div>
+              <Label>Source Code URL</Label>
+              <Input
+                placeholder="https://github.com/your/repo"
+                type="url"
+                value={(script as any).github || ""}
+                onChange={e => updateScript("github" as keyof Script, e.target.value || null)}
+                onBlur={e => updateScript("github" as keyof Script, normalizeUrl(e.target.value))}
+              />
+            </div>
+          </div>
+
           <InstallMethod script={script} setScript={setScript} setIsValid={setIsValid} setZodErrors={setZodErrors} />
+
+            {/* Deployment section (Switch controls, read-only manifest path when enabled) */}
+            <div className="flex items-start justify-between mb-3">
+              <div>
+                <h3 className="text-lg font-semibold">Deployment</h3>
+                <p className="text-sm text-muted-foreground">Script / Docker / Docker Compose / Helm / Kubernetes / Terraform</p>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              {["script", "docker", "docker_compose", "helm", "kubernetes", "terraform"].map(key => {
+                const labelMap: Record<string, string> = {
+                  script: "Script",
+                  docker: "Docker",
+                  docker_compose: "Docker Compose",
+                  helm: "Helm",
+                  kubernetes: "Kubernetes",
+                  terraform: "Terraform",
+                };
+                // const isOn = Boolean((script as any).deployment?.[key]);
+                // const pathValue = (script as any).deployment?.paths?.[key] ?? buildExamplePath(manifestFileExamples[key]);
+
+                const isOn = Boolean((script as any).deployment?.[key]);
+                // always compute path from current slug (fallback "app-name")
+                const pathValue = buildExamplePath(manifestFileExamples[key]);
+
+
+                return (
+                  <div key={key} className="p-2 rounded border flex flex-col gap-2">
+                    <div className="flex items-center justify-between">
+                      <div className="font-medium">{labelMap[key]}</div>
+                      <Switch checked={isOn} onCheckedChange={(v) => toggleDeployment(key, Boolean(v))} />
+                    </div>
+
+                    {isOn && (
+                      <div className="space-y-1">
+                        <Label>Manifest path (read-only)</Label>
+                        <Input value={pathValue} readOnly disabled />
+                        <p className="text-xs text-muted-foreground">
+                          Please create the manifest under <code className="bg-muted px-1 rounded">/public/manifest/&lt;app-name&gt;/&lt;manifest-filename&gt;</code>.
+                        </p>
+                      </div>
+                    )}  
+                  </div>
+                );
+              })}
+            </div>
+
           <h3 className="text-xl font-semibold">Default Credentials</h3>
           <Input
             placeholder="Username"
@@ -289,7 +469,8 @@ export default function JSONGenerator() {
               updateScript("default_credentials", {
                 ...script.default_credentials,
                 username: e.target.value || null,
-              })}
+              })
+            }
           />
           <Input
             placeholder="Password"
@@ -298,11 +479,13 @@ export default function JSONGenerator() {
               updateScript("default_credentials", {
                 ...script.default_credentials,
                 password: e.target.value || null,
-              })}
+              })
+            }
           />
           <Note script={script} setScript={setScript} setIsValid={setIsValid} setZodErrors={setZodErrors} />
         </form>
       </div>
+
       <div className="w-1/2 p-4 bg-background overflow-y-auto">
         {validationAlert}
         <div className="relative">

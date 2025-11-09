@@ -1,16 +1,39 @@
 import { z } from "zod";
 
 export const InstallMethodSchema = z.object({
-  type: z.enum(["default", "alpine"], {
-    errorMap: () => ({ message: "Type must be either 'default' or 'alpine'" }),
-  }),
-  script: z.string().min(1, "Script content cannot be empty"),
-  resources: z.object({
-    cpu: z.number().nullable(),
-    ram: z.number().nullable(),
-    hdd: z.number().nullable(),
-    os: z.string().nullable(),
-    version: z.string().nullable(),
+  platform: z.object({
+    desktop: z.object({
+      linux: z.boolean(),
+      windows: z.boolean(),
+      macos: z.boolean(),
+    }),
+    mobile: z.object({
+      android: z.boolean(),
+      ios: z.boolean(),
+    }),
+    web_app: z.boolean(),
+    browser_extension: z.boolean(),
+    cli_only: z.boolean(),
+    hosting: z.object({
+      self_hosted: z.boolean(),
+      saas: z.boolean(),
+      managed_cloud: z.boolean(),
+    }),
+    deployment: z.object({
+      script: z.boolean(),
+      docker: z.boolean(),
+      docker_compose: z.boolean(),
+      helm: z.boolean(),
+      kubernetes: z.boolean(),
+      terraform: z.boolean(),
+    }),
+    ui: z.object({
+      cli: z.boolean(),
+      gui: z.boolean(),
+      web_ui: z.boolean(),
+      api: z.boolean(),
+      tui: z.boolean(),
+    }),
   }),
 });
 
