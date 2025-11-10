@@ -378,6 +378,10 @@ DB_VECTOR_EXTENSION=vectorchord
 REDIS_HOSTNAME=127.0.0.1
 IMMICH_MACHINE_LEARNING_URL=http://127.0.0.1:3003
 MACHINE_LEARNING_CACHE_FOLDER=${INSTALL_DIR}/cache
+## For OpenVINO only - uncomment below to increase
+## inference speed while reducing accuracy
+## Default is FP32
+# MACHINE_LEARNING_OPENVINO_PRECISION=FP16
 
 IMMICH_MEDIA_LOCATION=${UPLOAD_DIR}
 EOF
