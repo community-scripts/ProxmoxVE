@@ -1,5 +1,60 @@
 [
   {
+    "name": "navidrome/navidrome",
+    "version": "v0.58.5",
+    "date": "2025-11-09T19:12:41Z"
+  },
+  {
+    "name": "rcourtman/Pulse",
+    "version": "v4.27.2",
+    "date": "2025-11-09T18:39:30Z"
+  },
+  {
+    "name": "pelican-dev/panel",
+    "version": "v1.0.0-beta28",
+    "date": "2025-11-09T17:36:07Z"
+  },
+  {
+    "name": "pelican-dev/wings",
+    "version": "v1.0.0-beta19",
+    "date": "2025-11-09T17:26:30Z"
+  },
+  {
+    "name": "duplicati/duplicati",
+    "version": "v2.2.0.1_stable_2025-11-09",
+    "date": "2025-11-09T17:21:54Z"
+  },
+  {
+    "name": "Cleanuparr/Cleanuparr",
+    "version": "v2.4.5",
+    "date": "2025-11-09T17:14:01Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.30.7",
+    "date": "2025-11-09T16:20:57Z"
+  },
+  {
+    "name": "TechnitiumSoftware/DnsServer",
+    "version": "v14.0.1",
+    "date": "2025-11-09T13:03:18Z"
+  },
+  {
+    "name": "BookStackApp/BookStack",
+    "version": "v25.11",
+    "date": "2025-11-09T13:00:14Z"
+  },
+  {
+    "name": "karakeep-app/karakeep",
+    "version": "extension/v1.2.7",
+    "date": "2025-11-09T12:21:54Z"
+  },
+  {
+    "name": "NginxProxyManager/nginx-proxy-manager",
+    "version": "v2.13.2",
+    "date": "2025-11-09T11:56:25Z"
+  },
+  {
     "name": "firefly-iii/firefly-iii",
     "version": "v6.4.6",
     "date": "2025-11-08T22:45:35Z"
@@ -23,11 +78,6 @@
     "name": "BerriAI/litellm",
     "version": "v1.79.3.rc.1",
     "date": "2025-11-09T02:52:13Z"
-  },
-  {
-    "name": "rcourtman/Pulse",
-    "version": "v4.27.1",
-    "date": "2025-11-09T00:44:44Z"
   },
   {
     "name": "inventree/InvenTree",
@@ -55,11 +105,6 @@
     "date": "2025-11-08T22:18:46Z"
   },
   {
-    "name": "karakeep-app/karakeep",
-    "version": "ios/v1.8.1-0",
-    "date": "2025-11-08T21:29:59Z"
-  },
-  {
     "name": "hargata/lubelog",
     "version": "v1.5.4",
     "date": "2025-11-08T16:26:45Z"
@@ -83,11 +128,6 @@
     "name": "pommee/goaway",
     "version": "v0.62.16",
     "date": "2025-11-08T12:15:30Z"
-  },
-  {
-    "name": "TechnitiumSoftware/DnsServer",
-    "version": "v14.0.0",
-    "date": "2025-11-08T10:34:10Z"
   },
   {
     "name": "runtipi/runtipi",
@@ -315,11 +355,6 @@
     "date": "2025-11-05T13:47:03Z"
   },
   {
-    "name": "duplicati/duplicati",
-    "version": "v2.2.0.100-2.2.0.100_canary_2025-11-05",
-    "date": "2025-11-05T13:01:37Z"
-  },
-  {
     "name": "azukaar/Cosmos-Server",
     "version": "v0.18.4",
     "date": "2025-04-05T19:12:57Z"
@@ -348,11 +383,6 @@
     "name": "evcc-io/evcc",
     "version": "0.209.7",
     "date": "2025-11-05T08:32:08Z"
-  },
-  {
-    "name": "NginxProxyManager/nginx-proxy-manager",
-    "version": "v2.13.1",
-    "date": "2025-11-05T06:06:08Z"
   },
   {
     "name": "jenkinsci/jenkins",
@@ -393,11 +423,6 @@
     "name": "jhuckaby/Cronicle",
     "version": "v0.9.100",
     "date": "2025-11-04T17:44:39Z"
-  },
-  {
-    "name": "msgbyte/tianji",
-    "version": "v1.30.6",
-    "date": "2025-11-04T17:41:01Z"
   },
   {
     "name": "VictoriaMetrics/VictoriaMetrics",
@@ -468,11 +493,6 @@
     "name": "goauthentik/authentik",
     "version": "version/2025.10.1",
     "date": "2025-11-03T16:49:16Z"
-  },
-  {
-    "name": "Cleanuparr/Cleanuparr",
-    "version": "v2.4.3",
-    "date": "2025-11-03T16:49:03Z"
   },
   {
     "name": "silverbulletmd/silverbullet",
@@ -785,11 +805,6 @@
     "date": "2025-10-20T15:25:52Z"
   },
   {
-    "name": "pelican-dev/panel",
-    "version": "v1.0.0-beta27",
-    "date": "2025-10-20T00:38:13Z"
-  },
-  {
     "name": "seriousm4x/UpSnap",
     "version": "5.2.3",
     "date": "2025-10-19T20:50:15Z"
@@ -935,11 +950,6 @@
     "date": "2025-10-08T07:31:37Z"
   },
   {
-    "name": "pelican-dev/wings",
-    "version": "v1.0.0-beta18",
-    "date": "2025-10-07T21:05:57Z"
-  },
-  {
     "name": "C4illin/ConvertX",
     "version": "v0.15.1",
     "date": "2025-10-07T20:30:56Z"
@@ -963,11 +973,6 @@
     "name": "jordan-dalby/ByteStash",
     "version": "v1.5.9",
     "date": "2025-10-06T08:34:01Z"
-  },
-  {
-    "name": "BookStackApp/BookStack",
-    "version": "v25.07.3",
-    "date": "2025-10-05T14:47:20Z"
   },
   {
     "name": "webmin/webmin",
@@ -1248,11 +1253,6 @@
     "name": "caddyserver/xcaddy",
     "version": "v0.4.5",
     "date": "2025-07-29T16:39:18Z"
-  },
-  {
-    "name": "navidrome/navidrome",
-    "version": "v0.58.0",
-    "date": "2025-07-28T18:59:50Z"
   },
   {
     "name": "PCJones/UmlautAdaptarr",
