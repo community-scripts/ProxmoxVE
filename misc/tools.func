@@ -1399,7 +1399,7 @@ verify_gpg_fingerprint() {
 }
 
 # ==============================================================================
-# EXISTING FUNCTIONS
+# INSTALL FUNCTIONS
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
@@ -1501,7 +1501,7 @@ check_for_gh_release() {
       return 0
     fi
 
-    msg_error "No update available: ${app} is not installed!"
+    msg_ok "No update available: ${app} is already on pinned version (${current})"
     return 1
   fi
 
