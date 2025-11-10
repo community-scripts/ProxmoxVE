@@ -3053,6 +3053,85 @@ setup_mariadb() {
 }
 
 # ------------------------------------------------------------------------------
+# Creates MariaDB database with user, charset and optional extra grants/modes
+#
+# Description:
+#   - Generates password if empty
+#   - Creates database with utf8mb4_unicode_ci
+#   - Creates local user with password
+#   - Grants full access to this DB
+#   - Optional: apply extra GRANT statements (comma-separated)
+#   - Optional: apply custom GLOBAL sql_mode
+#   - Saves credentials to file
+#   - Exports variables for use in calling script
+#
+# Usage:
+#   MARIADB_DB_NAME="myapp_db" MARIADB_DB_USER="myapp_user" setup_mariadb_db
+#   MARIADB_DB_NAME="domain_monitor" MARIADB_DB_USER="domainmonitor" setup_mariadb_db
+#   MARIADB_DB_NAME="myapp" MARIADB_DB_USER="myapp" MARIADB_DB_EXTRA_GRANTS="GRANT SELECT ON \`mysql\`.\`time_zone_name\`" setup_mariadb_db
+#   MARIADB_DB_NAME="ghostfolio" MARIADB_DB_USER="ghostfolio" MARIADB_DB_SQL_MODE="" setup_mariadb_db
+#
+# Variables:
+#   MARIADB_DB_NAME         - Database name (required)
+#   MARIADB_DB_USER         - Database user (required)
+#   MARIADB_DB_PASS         - User password (optional, auto-generated if empty)
+#   MARIADB_DB_EXTRA_GRANTS - Comma-separated GRANT statements (optional)
+#                             Example: "GRANT SELECT ON \`mysql\`.\`time_zone_name\`"
+#   MARIADB_DB_SQL_MODE     - Optional global sql_mode override (e.g. "", "STRICT_TRANS_TABLES")
+#   MARIADB_DB_CREDS_FILE   - Credentials file path (optional, default: ~/${APPLICATION}.creds)
+#
+# Exports:
+#   MARIADB_DB_NAME, MARIADB_DB_USER, MARIADB_DB_PASS
+# ------------------------------------------------------------------------------
+
+function setup_mariadb_db() {
+  if [[ -z "${MARIADB_DB_NAME:-}" || -z "${MARIADB_DB_USER:-}" ]]; then
+    msg_error "MARIADB_DB_NAME and MARIADB_DB_USER must be set before calling setup_mariadb_db"
+    return 1
+  fi
+
+  if [[ -z "${MARIADB_DB_PASS:-}" ]]; then
+    MARIADB_DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
+  fi
+
+  msg_info "Setting up MariaDB Database"
+
+  $STD mariadb -u root -e "CREATE DATABASE \`$MARIADB_DB_NAME\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+  $STD mariadb -u root -e "CREATE USER '$MARIADB_DB_USER'@'localhost' IDENTIFIED BY '$MARIADB_DB_PASS';"
+  $STD mariadb -u root -e "GRANT ALL ON \`$MARIADB_DB_NAME\`.* TO '$MARIADB_DB_USER'@'localhost';"
+
+  # Optional extra grants
+  if [[ -n "${MARIADB_DB_EXTRA_GRANTS:-}" ]]; then
+    IFS=',' read -ra G_LIST <<<"${MARIADB_DB_EXTRA_GRANTS:-}"
+    for g in "${G_LIST[@]}"; do
+      g=$(echo "$g" | xargs)
+      $STD mariadb -u root -e "$g TO '$MARIADB_DB_USER'@'localhost';"
+    done
+  fi
+
+  # Optional sql_mode override
+  if [[ -n "${MARIADB_DB_SQL_MODE:-}" ]]; then
+    $STD mariadb -u root -e "SET GLOBAL sql_mode='${MARIADB_DB_SQL_MODE:-}';"
+  fi
+
+  $STD mariadb -u root -e "FLUSH PRIVILEGES;"
+
+  local CREDS_FILE="${MARIADB_DB_CREDS_FILE:-${HOME}/${APPLICATION}.creds}"
+  {
+    echo "MariaDB Credentials"
+    echo "Database: $MARIADB_DB_NAME"
+    echo "User: $MARIADB_DB_USER"
+    echo "Password: $MARIADB_DB_PASS"
+  } >>"$CREDS_FILE"
+
+  msg_ok "Set up MariaDB Database"
+
+  export MARIADB_DB_NAME
+  export MARIADB_DB_USER
+  export MARIADB_DB_PASS
+}
+
+# ------------------------------------------------------------------------------
 # Installs or updates MongoDB to specified major version.
 #
 # Description:
@@ -3809,6 +3888,103 @@ function setup_postgresql() {
       $STD apt install -y "postgresql-${PG_VERSION}-${module}" 2>/dev/null || true
     done
   fi
+}
+
+# ------------------------------------------------------------------------------
+# Creates PostgreSQL database with user and optional extensions
+#
+# Description:
+#   - Creates PostgreSQL role with login and password
+#   - Creates database with UTF8 encoding and template0
+#   - Installs optional extensions (postgis, pgvector, etc.)
+#   - Configures ALTER ROLE settings for Django/Rails compatibility
+#   - Saves credentials to file
+#   - Exports variables for use in calling script
+#
+# Usage:
+#   PG_DB_NAME="myapp_db" PG_DB_USER="myapp_user" setup_postgresql_db
+#   PG_DB_NAME="immich" PG_DB_USER="immich" PG_DB_EXTENSIONS="pgvector" setup_postgresql_db
+#   PG_DB_NAME="ghostfolio" PG_DB_USER="ghostfolio" PG_DB_GRANT_SUPERUSER="true" setup_postgresql_db
+#   PG_DB_NAME="adventurelog" PG_DB_USER="adventurelog" PG_DB_EXTENSIONS="postgis" setup_postgresql_db
+#
+# Variables:
+#   PG_DB_NAME             - Database name (required)
+#   PG_DB_USER             - Database user (required)
+#   PG_DB_PASS             - Database password (optional, auto-generated if empty)
+#   PG_DB_EXTENSIONS       - Comma-separated list of extensions (optional, e.g. "postgis,pgvector")
+#   PG_DB_GRANT_SUPERUSER  - Grant SUPERUSER privilege (optional, "true" to enable, security risk!)
+#   PG_DB_SCHEMA_PERMS     - Grant schema-level permissions (optional, "true" to enable)
+#   PG_DB_SKIP_ALTER_ROLE  - Skip ALTER ROLE settings (optional, "true" to skip)
+#   PG_DB_CREDS_FILE       - Credentials file path (optional, default: ~/${APPLICATION}.creds)
+#
+# Exports:
+#   PG_DB_NAME, PG_DB_USER, PG_DB_PASS - For use in calling script
+# ------------------------------------------------------------------------------
+
+function setup_postgresql_db() {
+  # Validation
+  if [[ -z "${PG_DB_NAME:-}" || -z "${PG_DB_USER:-}" ]]; then
+    msg_error "PG_DB_NAME and PG_DB_USER must be set before calling setup_postgresql_db"
+    return 1
+  fi
+
+  # Generate password if not provided
+  if [[ -z "${PG_DB_PASS:-}" ]]; then
+    PG_DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
+  fi
+
+  msg_info "Setting up PostgreSQL Database"
+  $STD sudo -u postgres psql -c "CREATE ROLE $PG_DB_USER WITH LOGIN PASSWORD '$PG_DB_PASS';"
+  $STD sudo -u postgres psql -c "CREATE DATABASE $PG_DB_NAME WITH OWNER $PG_DB_USER ENCODING 'UTF8' TEMPLATE template0;"
+
+  # Install extensions (comma-separated)
+  if [[ -n "${PG_DB_EXTENSIONS:-}" ]]; then
+    IFS=',' read -ra EXT_LIST <<<"${PG_DB_EXTENSIONS:-}"
+    for ext in "${EXT_LIST[@]}"; do
+      ext=$(echo "$ext" | xargs) # Trim whitespace
+      $STD sudo -u postgres psql -d "$PG_DB_NAME" -c "CREATE EXTENSION IF NOT EXISTS $ext;"
+    done
+  fi
+
+  # ALTER ROLE settings for Django/Rails compatibility (unless skipped)
+  if [[ "${PG_DB_SKIP_ALTER_ROLE:-}" != "true" ]]; then
+    $STD sudo -u postgres psql -c "ALTER ROLE $PG_DB_USER SET client_encoding TO 'utf8';"
+    $STD sudo -u postgres psql -c "ALTER ROLE $PG_DB_USER SET default_transaction_isolation TO 'read committed';"
+    $STD sudo -u postgres psql -c "ALTER ROLE $PG_DB_USER SET timezone TO 'UTC';"
+  fi
+
+  # Schema permissions (if requested)
+  if [[ "${PG_DB_SCHEMA_PERMS:-}" == "true" ]]; then
+    $STD sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE $PG_DB_NAME TO $PG_DB_USER;"
+    $STD sudo -u postgres psql -c "ALTER USER $PG_DB_USER CREATEDB;"
+    $STD sudo -u postgres psql -d "$PG_DB_NAME" -c "GRANT ALL ON SCHEMA public TO $PG_DB_USER;"
+    $STD sudo -u postgres psql -d "$PG_DB_NAME" -c "GRANT CREATE ON SCHEMA public TO $PG_DB_USER;"
+    $STD sudo -u postgres psql -d "$PG_DB_NAME" -c "ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO $PG_DB_USER;"
+    $STD sudo -u postgres psql -d "$PG_DB_NAME" -c "ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO $PG_DB_USER;"
+  fi
+
+  # Superuser grant (if requested - WARNING!)
+  if [[ "${PG_DB_GRANT_SUPERUSER:-}" == "true" ]]; then
+    msg_warn "Granting SUPERUSER privilege (security risk!)"
+    $STD sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE $PG_DB_NAME to $PG_DB_USER;"
+    $STD sudo -u postgres psql -c "ALTER USER $PG_DB_USER WITH SUPERUSER;"
+  fi
+
+  # Save credentials
+  local CREDS_FILE="${PG_DB_CREDS_FILE:-${HOME}/${APPLICATION}.creds}"
+  {
+    echo "PostgreSQL Credentials"
+    echo "Database: $PG_DB_NAME"
+    echo "User: $PG_DB_USER"
+    echo "Password: $PG_DB_PASS"
+  } >>"$CREDS_FILE"
+
+  msg_ok "Set up PostgreSQL Database"
+
+  # Export for use in calling script
+  export PG_DB_NAME
+  export PG_DB_USER
+  export PG_DB_PASS
 }
 
 # ------------------------------------------------------------------------------
