@@ -20,6 +20,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - core: update message for no available updates scenario (if pinned) [@MickLesk](https://github.com/MickLesk) ([#9021](https://github.com/community-scripts/ProxmoxVE/pull/9021))
     - Migrate Open WebUI to uv-based installation [@MickLesk](https://github.com/MickLesk) ([#9019](https://github.com/community-scripts/ProxmoxVE/pull/9019))
 
+  - #### 🔧 Refactor
+
+    - Refactor: phpIPAM [@MickLesk](https://github.com/MickLesk) ([#9027](https://github.com/community-scripts/ProxmoxVE/pull/9027))
+
 ## 2025-11-09
 
 ### 🚀 Updated Scripts
