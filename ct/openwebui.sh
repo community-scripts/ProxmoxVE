@@ -30,28 +30,28 @@ function update_script() {
     systemctl stop open-webui
     msg_ok "Stopped Service"
 
-    msg_info "Backup old data"
+    msg_info "Creating Backup"
     mkdir -p /opt/open-webui-backup
     cp -a /opt/open-webui/backend/data /opt/open-webui-backup/data || true
-    msg_ok "Backup created"
+    msg_ok "Created Backup"
 
-    msg_info "Remove legacy installation"
+    msg_info "Removing legacy installation"
     rm -rf /opt/open-webui
     rm -rf /root/.open-webui || true
-    msg_ok "Legacy removed"
+    msg_ok "Removed legacy installation"
 
-    msg_info "Install new uv based Open WebUI"
+    msg_info "Installing uv-based Open-WebUI"
     PYTHON_VERSION="3.12" setup_uv
-    $STD uv tool install --python 3.12 open-webui[all]
-    msg_ok "Installed new Open WebUI"
+    $STD uv tool install --python $PYTHON_VERSION open-webui[all]
+    msg_ok "Installed uv-based Open-WebUI"
 
-    msg_info "Restore data"
+    msg_info "Restoring data"
     mkdir -p /root/.open-webui
     cp -a /opt/open-webui-backup/data/* /root/.open-webui/ || true
     rm -rf /opt/open-webui-backup || true
-    msg_ok "Data restored"
+    msg_ok "Restored data"
 
-    msg_info "Recreate service"
+    msg_info "Recreating Service"
     cat <<EOF >/etc/systemd/system/open-webui.service
 [Unit]
 Description=Open WebUI Service
@@ -73,7 +73,7 @@ EOF
 
     $STD systemctl daemon-reload
     systemctl enable -q --now open-webui
-    msg_ok "Service active"
+    msg_ok "Recreated Service"
 
     msg_ok "Migration completed"
     exit 0
