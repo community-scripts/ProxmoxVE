@@ -1,5 +1,50 @@
 [
   {
+    "name": "dgtlmoon/changedetection.io",
+    "version": "0.50.41",
+    "date": "2025-11-10T11:00:46Z"
+  },
+  {
+    "name": "emqx/emqx",
+    "version": "e5.10.2",
+    "date": "2025-11-10T10:58:21Z"
+  },
+  {
+    "name": "autobrr/autobrr",
+    "version": "v1.69.0",
+    "date": "2025-11-10T10:57:40Z"
+  },
+  {
+    "name": "documenso/documenso",
+    "version": "v2.0.6",
+    "date": "2025-11-10T08:08:43Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "v10.11.6",
+    "date": "2025-11-04T09:43:16Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.270",
+    "date": "2025-11-10T05:57:22Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.4.6",
+    "date": "2025-11-08T22:45:35Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-11-10T00:27:05Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.0.1",
+    "date": "2025-10-15T16:53:55Z"
+  },
+  {
     "name": "navidrome/navidrome",
     "version": "v0.58.5",
     "date": "2025-11-09T19:12:41Z"
@@ -55,19 +100,14 @@
     "date": "2025-11-09T11:56:25Z"
   },
   {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.4.6",
-    "date": "2025-11-08T22:45:35Z"
+    "name": "keycloak/keycloak",
+    "version": "26.4.4",
+    "date": "2025-11-07T08:55:27Z"
   },
   {
     "name": "authelia/authelia",
     "version": "v4.39.14",
     "date": "2025-11-09T07:18:40Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.268",
-    "date": "2025-11-09T05:56:26Z"
   },
   {
     "name": "apache/couchdb",
@@ -83,16 +123,6 @@
     "name": "inventree/InvenTree",
     "version": "1.1.3",
     "date": "2025-11-09T00:28:21Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-11-09T00:27:05Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.0.1",
-    "date": "2025-10-15T16:53:55Z"
   },
   {
     "name": "raydak-labs/configarr",
@@ -150,16 +180,6 @@
     "date": "2025-10-31T10:45:26Z"
   },
   {
-    "name": "documenso/documenso",
-    "version": "v2.0.5",
-    "date": "2025-11-08T05:03:59Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.4.4",
-    "date": "2025-11-07T08:55:27Z"
-  },
-  {
     "name": "home-assistant/core",
     "version": "2025.11.1",
     "date": "2025-11-07T21:32:26Z"
@@ -205,11 +225,6 @@
     "date": "2025-11-07T12:52:42Z"
   },
   {
-    "name": "dgtlmoon/changedetection.io",
-    "version": "0.50.40",
-    "date": "2025-11-07T12:22:58Z"
-  },
-  {
     "name": "element-hq/synapse",
     "version": "v1.142.0rc2",
     "date": "2025-11-04T16:22:11Z"
@@ -223,11 +238,6 @@
     "name": "wazuh/wazuh",
     "version": "coverity-w45-4.14.1",
     "date": "2025-11-05T16:56:57Z"
-  },
-  {
-    "name": "mattermost/mattermost",
-    "version": "v10.11.6",
-    "date": "2025-11-04T09:43:16Z"
   },
   {
     "name": "umami-software/umami",
@@ -337,7 +347,7 @@
   {
     "name": "javedh-dev/tracktor",
     "version": "0.5.1",
-    "date": "2025-11-05T16:14:37Z"
+    "date": "2025-11-05T15:51:02Z"
   },
   {
     "name": "zitadel/zitadel",
@@ -363,11 +373,6 @@
     "name": "getumbrel/umbrel",
     "version": "1.5.0",
     "date": "2025-11-05T11:10:20Z"
-  },
-  {
-    "name": "emqx/emqx",
-    "version": "e5.10.2-alpha.1",
-    "date": "2025-11-05T09:55:26Z"
   },
   {
     "name": "glpi-project/glpi",
@@ -933,11 +938,6 @@
     "name": "projectsend/projectsend",
     "version": "r1945",
     "date": "2025-10-10T02:30:05Z"
-  },
-  {
-    "name": "autobrr/autobrr",
-    "version": "v1.68.0",
-    "date": "2025-10-08T18:33:12Z"
   },
   {
     "name": "advplyr/audiobookshelf",
