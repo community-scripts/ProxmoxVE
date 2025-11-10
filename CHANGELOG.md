@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-11-10
 
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - Migrate Open WebUI to uv-based installation [@MickLesk](https://github.com/MickLesk) ([#9019](https://github.com/community-scripts/ProxmoxVE/pull/9019))
+
 ## 2025-11-09
 
 ### 🚀 Updated Scripts
