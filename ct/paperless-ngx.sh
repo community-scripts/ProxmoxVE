@@ -54,8 +54,11 @@ function update_script() {
 
       msg_info "Updating Paperless-ngx"
       cp -r /opt/paperless_backup/* /opt/paperless/
-      CONSUME_DIR="$(sed -n '/^PAPERLESS_CONSUMPTION/s/[^=]=*//p' /opt/paperless/paperless.conf)"
-      mkdir -p "${CONSUME_DIR:-/opt/paperless/consume}"
+      CONSUME_DIR="$(sed -n 's/^PAPERLESS_CONSUMPTION_DIR=//p' /opt/paperless/paperless.conf)"
+      if [[ -z "$CONSUME_DIR" ]]; then
+        CONSUME_DIR="/opt/paperless/consume"
+      fi
+      mkdir -p "$CONSUME_DIR"
       cd /opt/paperless
       $STD uv sync --all-extras
       cd /opt/paperless/src
