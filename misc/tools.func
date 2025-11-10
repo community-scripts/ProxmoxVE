@@ -72,15 +72,23 @@ stop_all_services() {
   local service_patterns=("$@")
 
   for pattern in "${service_patterns[@]}"; do
-    # Find all matching services
-    systemctl list-units --type=service --all 2>/dev/null |
-      grep -oE "${pattern}[^ ]*\.service" |
-      sort -u |
-      while read -r service; do
+    # Find all matching services (use || true to avoid pipeline failures)
+    local services
+    services=$(systemctl list-units --type=service --all 2>/dev/null |
+      grep -oE "${pattern}[^ ]*\.service" 2>/dev/null |
+      sort -u 2>/dev/null || true)
+
+    # Only process if we found any services
+    if [[ -n "$services" ]]; then
+      while IFS= read -r service; do
+        [[ -z "$service" ]] && continue
         $STD systemctl stop "$service" 2>/dev/null || true
         $STD systemctl disable "$service" 2>/dev/null || true
-      done
+      done <<<"$services"
+    fi
   done
+
+  return 0
 }
 
 # ------------------------------------------------------------------------------
@@ -1207,7 +1215,7 @@ setup_deb822_repo() {
   local repo_url="$3"
   local suite="$4"
   local component="${5:-main}"
-  local architectures="${6-}"   # optional
+  local architectures="${6-}" # optional
 
   # Validate required parameters
   if [[ -z "$name" || -z "$gpg_url" || -z "$repo_url" || -z "$suite" ]]; then
