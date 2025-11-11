@@ -473,7 +473,7 @@ if ! command -v virt-customize &>/dev/null; then
 fi
 
 msg_info "Retrieving the URL for the Debian 13 Qcow2 Disk Image"
-URL="https://cloud.debian.org/images/cloud/bookworm/latest/debian-13-nocloud-$(dpkg --print-architecture).qcow2"
+URL="https://cloud.debian.org/images/cloud/trixie/latest/debian-13-nocloud-$(dpkg --print-architecture).qcow2"
 sleep 2
 msg_ok "${CL}${BL}${URL}${CL}"
 curl -f#SL -o "$(basename "$URL")" "$URL"
