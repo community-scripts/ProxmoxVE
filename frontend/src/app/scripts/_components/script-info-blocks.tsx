@@ -19,8 +19,6 @@ function AppIcon({ src, name, size = 64 }: { src?: string | null; name: string; 
   useEffect(() => setErrored(false), [src]);
 
   const fallbackClass = "h-11 w-11 object-contain rounded-md p-1";
-  const iconClass =
-    "h-11 w-11 min-w-[44px] min-h-[44px] rounded-md p-1 text-muted-foreground dark:text-muted text-opacity-90";
 
   const resolvedSrc = src && !errored ? src : undefined;
 
@@ -38,7 +36,7 @@ function AppIcon({ src, name, size = 64 }: { src?: string | null; name: string; 
         />
       ) : (
         <div className="flex h-16 w-16 min-w-16 items-center justify-center rounded-lg bg-accent/10 dark:bg-accent/20 p-1">
-          <LayoutGrid className={iconClass} aria-hidden />
+          <LayoutGrid className="h-11 w-11 text-muted-foreground" aria-hidden />
         </div>
       )}
     </>
