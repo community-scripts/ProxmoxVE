@@ -252,7 +252,7 @@ function ScriptHeader({ item }: { item: Script }) {
         <div className="flex-shrink-0">
           {item.logo && item.logo.trim() !== "" ? (
             <Image
-              className="h-32 w-32 rounded-xl bg-gradient-to-br from-accent/40 to-accent/60 object-contain p-3 shadow-lg transition-transform hover:scale-105 dark:brightness-0 dark:invert"
+              className="h-32 w-32 rounded-xl bg-gradient-to-br from-accent/40 to-accent/60 object-contain p-3 shadow-lg transition-transform hover:scale-105"
               src={item.logo}
               width={400}
               onError={(e) => {

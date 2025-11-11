@@ -508,7 +508,7 @@ export default function JSONGenerator() {
               <img
                 src={script.logo}
                 alt="Logo preview"
-                className="h-24 w-24 rounded-xl bg-gradient-to-br from-accent/40 to-accent/60 object-contain p-3 shadow-lg dark:brightness-0 dark:invert"
+                className="h-24 w-24 rounded-xl bg-gradient-to-br from-accent/40 to-accent/60 object-contain p-3 shadow-lg"
                 onError={(e) => {
                   e.currentTarget.style.display = 'none';
                   e.currentTarget.nextElementSibling?.classList.remove('hidden');
