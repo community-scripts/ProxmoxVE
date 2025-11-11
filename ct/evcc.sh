@@ -23,10 +23,22 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
-  if [[ ! -f /etc/apt/sources.list.d/evcc-stable.list ]]; then
+  if [[ ! -f /etc/apt/sources.list.d/evcc-stable.sources && ! -f /etc/apt/sources.list.d/evcc-stable.list ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
+  if [[ -f /etc/apt/sources.list.d/evcc-stable.list ]]; then
+    rm /etc/apt/sources.list.d/evcc-stable.list
+    cat <<EOF >/etc/apt/sources.list.d/evcc-stable.sources
+Types: deb
+URIs: https://dl.evcc.io/public/evcc/stable/deb/debian/
+Suites: bookworm
+Components: main
+Signed-By: /etc/apt/keyrings/evcc-stable.gpg
+EOF
+  fi
+
   msg_info "Updating evcc LXC"
   $STD apt update
   $STD apt --only-upgrade install -y evcc
