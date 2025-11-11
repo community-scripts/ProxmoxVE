@@ -33,13 +33,13 @@ function update_script() {
     msg_error "You must upgrade your LXC to Debian Trixie before updating."
     exit
   fi
-  if check_for_gh_release "flaresolverr" "FlareSolverr/FlareSolverr" "3.4.3"; then
+  if check_for_gh_release "flaresolverr" "FlareSolverr/FlareSolverr"; then
     msg_info "Stopping service"
     systemctl stop flaresolverr
     msg_ok "Stopped service"
 
     rm -rf /opt/flaresolverr
-    fetch_and_deploy_gh_release "flaresolverr" "FlareSolverr/FlareSolverr" "prebuild" "v3.4.3" "/opt/flaresolverr" "flaresolverr_linux_x64.tar.gz"
+    fetch_and_deploy_gh_release "flaresolverr" "FlareSolverr/FlareSolverr" "prebuild" "latest" "/opt/flaresolverr" "flaresolverr_linux_x64.tar.gz"
 
     msg_info "Starting service"
     systemctl start flaresolverr

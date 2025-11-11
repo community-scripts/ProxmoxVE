@@ -23,6 +23,62 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
+
+  if [[ -d /opt/open-webui ]]; then
+    msg_warn "Legacy installation detected — migrating to uv based install..."
+    msg_info "Stopping Service"
+    systemctl stop open-webui
+    msg_ok "Stopped Service"
+
+    msg_info "Creating Backup"
+    mkdir -p /opt/open-webui-backup
+    cp -a /opt/open-webui/backend/data /opt/open-webui-backup/data || true
+    msg_ok "Created Backup"
+
+    msg_info "Removing legacy installation"
+    rm -rf /opt/open-webui
+    rm -rf /root/.open-webui || true
+    msg_ok "Removed legacy installation"
+
+    msg_info "Installing uv-based Open-WebUI"
+    PYTHON_VERSION="3.12" setup_uv
+    $STD uv tool install --python $PYTHON_VERSION open-webui[all]
+    msg_ok "Installed uv-based Open-WebUI"
+
+    msg_info "Restoring data"
+    mkdir -p /root/.open-webui
+    cp -a /opt/open-webui-backup/data/* /root/.open-webui/ || true
+    rm -rf /opt/open-webui-backup || true
+    msg_ok "Restored data"
+
+    msg_info "Recreating Service"
+    cat <<EOF >/etc/systemd/system/open-webui.service
+[Unit]
+Description=Open WebUI Service
+After=network.target
+
+[Service]
+Type=simple
+Environment=DATA_DIR=/root/.open-webui
+EnvironmentFile=-/root/.env
+ExecStart=/root/.local/bin/open-webui serve
+WorkingDirectory=/root
+Restart=on-failure
+RestartSec=5
+User=root
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+    $STD systemctl daemon-reload
+    systemctl enable -q --now open-webui
+    msg_ok "Recreated Service"
+
+    msg_ok "Migration completed"
+    exit 0
+  fi
+
   if [[ ! -d /root/.open-webui ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
@@ -50,8 +106,11 @@ function update_script() {
     fi
   fi
 
-  msg_info "Restarting Open WebUI to initiate update"
+  msg_info "Updating Open WebUI via uv"
+  PYTHON_VERSION="3.12" setup_uv
+  $STD uv tool install --python 3.12 open-webui[all]
   systemctl restart open-webui
+  msg_ok "Updated Open WebUI"
   msg_ok "Updated successfully!"
   exit
 }

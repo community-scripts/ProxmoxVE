@@ -10,7 +10,32 @@
 > [!CAUTION]
 Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit the project's popularity for potentially malicious purposes.
 
+## 2025-11-11
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - flaresolverr: unpin - use latest version [@CrazyWolf13](https://github.com/CrazyWolf13) ([#9046](https://github.com/community-scripts/ProxmoxVE/pull/9046))
+    - Part-DB: Increase amount of RAM [@tremor021](https://github.com/tremor021) ([#9039](https://github.com/community-scripts/ProxmoxVE/pull/9039))
+
 ## 2025-11-10
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Plex: extend checking for deb822 source [@Matt17000](https://github.com/Matt17000) ([#9036](https://github.com/community-scripts/ProxmoxVE/pull/9036))
+
+  - #### ✨ New Features
+
+    - tools.func: add helper functions for MariaDB and PostgreSQL setup [@MickLesk](https://github.com/MickLesk) ([#9026](https://github.com/community-scripts/ProxmoxVE/pull/9026))
+    - core: update message for no available updates scenario (if pinned) [@MickLesk](https://github.com/MickLesk) ([#9021](https://github.com/community-scripts/ProxmoxVE/pull/9021))
+    - Migrate Open WebUI to uv-based installation [@MickLesk](https://github.com/MickLesk) ([#9019](https://github.com/community-scripts/ProxmoxVE/pull/9019))
+
+  - #### 🔧 Refactor
+
+    - Refactor: phpIPAM [@MickLesk](https://github.com/MickLesk) ([#9027](https://github.com/community-scripts/ProxmoxVE/pull/9027))
 
 ## 2025-11-09
 
