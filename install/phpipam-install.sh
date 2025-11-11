@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-PHP_VERSION="8.4" PHP_APACHE="YES" PHP_FPM="YES" PHP_MODULE="mysql,gmp,snmp,ldap,apcu" setup_php
+PHP_VERSION="8.3" PHP_APACHE="YES" PHP_FPM="YES" PHP_MODULE="mysql,gmp,snmp,ldap,apcu" setup_php
 
 msg_info "Installing PHP-PEAR"
 $STD apt install -y \
@@ -33,7 +33,7 @@ sed -i -e "s/\(\$disable_installer = \).*/\1true;/" \
   -e "s/\(\$db\['pass'\] = \).*/\1'$MARIADB_DB_PASS';/" \
   -e "s/\(\$db\['name'\] = \).*/\1'$MARIADB_DB_NAME';/" \
   /opt/phpipam/config.php
-sed -i '/max_execution_time/s/= .*/= 600/' /etc/php/8.4/apache2/php.ini
+sed -i '/max_execution_time/s/= .*/= 600/' /etc/php/8.3/apache2/php.ini
 msg_ok "Installed phpIPAM"
 
 msg_info "Creating Service"

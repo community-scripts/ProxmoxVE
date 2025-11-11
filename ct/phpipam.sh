@@ -33,7 +33,7 @@ function update_script() {
     systemctl stop apache2
     msg_ok "Stopped Service"
 
-    PHP_VERSION="8.4" PHP_APACHE="YES" PHP_FPM="YES" PHP_MODULE="mysql,gmp,snmp,ldap,apcu" setup_php
+    PHP_VERSION="8.3" PHP_APACHE="YES" PHP_FPM="YES" PHP_MODULE="mysql,gmp,snmp,ldap,apcu" setup_php
 
     msg_info "Installing PHP-PEAR"
     $STD apt install -y \
