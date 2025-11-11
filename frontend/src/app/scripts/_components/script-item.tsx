@@ -1,6 +1,6 @@
 "use client";
 
-import { X, Monitor, Smartphone, Cloud, Boxes, Terminal, MousePointerClick, CalendarDays, Globe, BookOpenText, Code, Stars } from "lucide-react";
+import { X, Monitor, Smartphone, Cloud, Boxes, Terminal, MousePointerClick, CalendarDays, Globe, BookOpenText, Code, Stars, LayoutGrid } from "lucide-react";
 import { motion } from "framer-motion";
 import { Suspense } from "react";
 import Image from "next/image";
@@ -250,15 +250,25 @@ function ScriptHeader({ item }: { item: Script }) {
     <div className="flex flex-col lg:flex-row gap-6 w-full">
       <div className="flex flex-col md:flex-row gap-6 flex-grow">
         <div className="flex-shrink-0">
-          <Image
-            className="h-32 w-32 rounded-xl bg-gradient-to-br from-accent/40 to-accent/60 object-contain p-3 shadow-lg transition-transform hover:scale-105"
-            src={item.logo || `/${basePath}/logo.png`}
-            width={400}
-            onError={(e) => ((e.currentTarget as HTMLImageElement).src = `/${basePath}/logo.png`)}
-            height={400}
-            alt={item.name}
-            unoptimized
-          />
+          {item.logo && item.logo.trim() !== "" ? (
+            <Image
+              className="h-32 w-32 rounded-xl bg-gradient-to-br from-accent/40 to-accent/60 object-contain p-3 shadow-lg transition-transform hover:scale-105"
+              src={item.logo}
+              width={400}
+              onError={(e) => {
+                const target = e.currentTarget as HTMLImageElement;
+                target.style.display = 'none';
+                const fallback = target.parentElement?.querySelector('.logo-fallback');
+                if (fallback) fallback.classList.remove('hidden');
+              }}
+              height={400}
+              alt={item.name}
+              unoptimized
+            />
+          ) : null}
+          <div className={`flex h-32 w-32 items-center justify-center rounded-xl bg-gradient-to-br from-accent/40 to-accent/60 shadow-lg transition-transform hover:scale-105 logo-fallback ${item.logo && item.logo.trim() !== "" ? 'hidden' : ''}`}>
+            <LayoutGrid className="h-16 w-16 text-muted-foreground" />
+          </div>
         </div>
         <div className="flex flex-col justify-between flex-grow space-y-4">
           <div className="space-y-2">

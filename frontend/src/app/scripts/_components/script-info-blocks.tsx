@@ -1,4 +1,4 @@
-import { CalendarPlus, Package } from "lucide-react";
+import { CalendarPlus, LayoutGrid } from "lucide-react";
 import { useMemo, useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -38,7 +38,7 @@ function AppIcon({ src, name, size = 64 }: { src?: string | null; name: string; 
         />
       ) : (
         <div className="flex h-16 w-16 min-w-16 items-center justify-center rounded-lg bg-accent/10 dark:bg-accent/20 p-1">
-          <Package className={iconClass} aria-hidden />
+          <LayoutGrid className={iconClass} aria-hidden />
         </div>
       )}
     </>

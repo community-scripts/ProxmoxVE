@@ -2,7 +2,7 @@
 
 import type { z } from "zod";
 
-import { CalendarIcon, Check, Clipboard, Download } from "lucide-react";
+import { CalendarIcon, Check, Clipboard, Download, LayoutGrid } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
 import { toast } from "sonner";
@@ -499,6 +499,31 @@ export default function JSONGenerator() {
 
       <div className="w-1/2 p-4 bg-background overflow-y-auto">
         {validationAlert}
+
+        {/* Logo Preview */}
+        <div className="mt-4 mb-4 flex items-center justify-center">
+          <div className="flex flex-col items-center gap-2">
+            <Label className="text-sm text-muted-foreground">Logo Preview</Label>
+            {script.logo && script.logo.trim() !== "" ? (
+              <img
+                src={script.logo}
+                alt="Logo preview"
+                className="h-24 w-24 rounded-xl bg-gradient-to-br from-accent/40 to-accent/60 object-contain p-3 shadow-lg"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                  e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                }}
+              />
+            ) : null}
+            <div className={cn(
+              "flex h-24 w-24 items-center justify-center rounded-xl bg-gradient-to-br from-accent/40 to-accent/60 shadow-lg",
+              script.logo && script.logo.trim() !== "" && "hidden"
+            )}>
+              <LayoutGrid className="h-12 w-12 text-muted-foreground" />
+            </div>
+          </div>
+        </div>
+
         <div className="relative">
           <div className="absolute right-2 top-2 flex gap-1">
             <Button size="icon" variant="outline" onClick={handleCopy}>
