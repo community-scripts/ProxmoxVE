@@ -28,15 +28,6 @@ import { ScriptSchema } from "./_schemas/schemas";
 import Categories from "./_components/categories";
 import Note from "./_components/note";
 
-/**
- * Updated:
- * - Platform and Deployment returned into the main form area (structured).
- * - Platform options are interactive and support Select all / Clear.
- * - Deployment uses Switch controls instead of checkboxes.
- * - Example files removed.
- * - Manifest path inputs remain read-only and auto-generate from slug.
- */
-
 const initialScript: Script = {
   name: "",
   slug: "",
@@ -44,7 +35,6 @@ const initialScript: Script = {
   date_created: "",
   interface_port: null,
   documentation: null,
-  // config_path removed
   website: null,
   logo: null,
   description: "",
@@ -54,7 +44,6 @@ const initialScript: Script = {
     password: null,
   },
   notes: [],
-  // structured platform object (boolean flags)
   platform: {
     desktop: false,
     mobile: false,
@@ -62,7 +51,6 @@ const initialScript: Script = {
     hosting: false,
     ui_interface: false,
   } as any,
-  // deployment object (flags + paths)
   deployment: {
     script: false,
     docker: false,
@@ -94,17 +82,9 @@ export default function JSONGenerator() {
       .catch(error => console.error("Error fetching categories:", error));
   }, []);
 
-  // replace your current updateScript with this
   const updateScript = useCallback(<K extends keyof Script>(key: K, value: Script[K]) => {
     setScript((prev) => {
-      // create a shallow updated object and assert it matches Script for TS
       const updated = { ...prev, [key]: value } as Script;
-
-      // If the caller explicitly updated slug OR install_methods, we don't auto-mut the methods.
-      // (you previously had special logic for `type`/`alpine`/`pve` — removed per your note)
-      //
-      // If you still want some install_methods normalization, do it at the call-site
-      // or add a small helper function invoked explicitly.
 
       const result = ScriptSchema.safeParse(updated);
       setIsValid(result.success);
@@ -243,7 +223,6 @@ export default function JSONGenerator() {
     [isValid, zodErrors],
   );
 
-  // Helpers
   const normalizeUrl = useCallback((value: string) => {
     const trimmed = value?.trim();
     return trimmed ? trimmed : null;
@@ -269,7 +248,6 @@ export default function JSONGenerator() {
   const buildExamplePath = (fileName: string) =>
     `/public/manifest/${script.slug || "app-name"}/${fileName}`;
 
-  // DEPLOYMENT toggle using Switch, no example files block
   const toggleDeployment = (key: string, checked: boolean) => {
     const prevDep: any = (script as any).deployment || {};
     const prevPaths = prevDep.paths || {};
@@ -286,14 +264,10 @@ export default function JSONGenerator() {
 
   return (
     <div className="flex min-h-[calc(100vh-4rem)] mt-20">
-      {/* <div className="flex  mt-4"> */}
-
       <div className="w-1/2 p-4 overflow-y-auto">
         <h2 className="text-2xl font-bold mb-4">JSON Generator</h2>
 
-        {/* MAIN FORM BOX (Platform + Deployment are back here, structured) */}
         <form className="space-y-4">
-          {/* -- rest of your form fields (name, slug, logo...) -- */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label>
@@ -323,8 +297,6 @@ export default function JSONGenerator() {
               onBlur={e => updateScript("logo", normalizeUrl(e.target.value))}
             />
           </div>
-
-          {/* Config Path input removed */}
 
           <div>
             <Label>
@@ -423,8 +395,7 @@ export default function JSONGenerator() {
 
           <InstallMethod script={script} setScript={setScript} setIsValid={setIsValid} setZodErrors={setZodErrors} />
 
-            {/* Deployment section (Switch controls, read-only manifest path when enabled) */}
-            <div className="flex items-start justify-between mb-3">
+          <div className="flex items-start justify-between mb-3">
               <div>
                 <h3 className="text-lg font-semibold">Deployment</h3>
                 <p className="text-sm text-muted-foreground">Script / Docker / Docker Compose / Helm / Kubernetes / Terraform</p>
