@@ -20,6 +20,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - flaresolverr: unpin - use latest version [@CrazyWolf13](https://github.com/CrazyWolf13) ([#9046](https://github.com/community-scripts/ProxmoxVE/pull/9046))
     - Part-DB: Increase amount of RAM [@tremor021](https://github.com/tremor021) ([#9039](https://github.com/community-scripts/ProxmoxVE/pull/9039))
 
+  - #### 🔧 Refactor
+
+    - Refactor: openHAB [@MickLesk](https://github.com/MickLesk) ([#9060](https://github.com/community-scripts/ProxmoxVE/pull/9060))
+
 ### 🧰 Maintenance
 
   - #### 📂 Github
