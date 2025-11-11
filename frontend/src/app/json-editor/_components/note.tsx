@@ -101,11 +101,15 @@ function Note({
   setZodErrors,
 }: NoteProps) {
   const addNote = useCallback(() => {
-    setScript({
+    const updated: Script = {
       ...script,
       notes: [...script.notes, { text: "", type: "" }],
-    });
-  }, [script, setScript]);
+    };
+    const result = ScriptSchema.safeParse(updated);
+    setIsValid(result.success);
+    setZodErrors(result.success ? null : result.error);
+    setScript(updated);
+  }, [script, setScript, setIsValid, setZodErrors]);
 
   const updateNote = useCallback((
     index: number,
@@ -125,11 +129,15 @@ function Note({
   }, [script, setScript, setIsValid, setZodErrors]);
 
   const removeNote = useCallback((index: number) => {
-    setScript({
+    const updated: Script = {
       ...script,
       notes: script.notes.filter((_, i) => i !== index),
-    });
-  }, [script, setScript]);
+    };
+    const result = ScriptSchema.safeParse(updated);
+    setIsValid(result.success);
+    setZodErrors(result.success ? null : result.error);
+    setScript(updated);
+  }, [script, setScript, setIsValid, setZodErrors]);
 
   return (
     <>
