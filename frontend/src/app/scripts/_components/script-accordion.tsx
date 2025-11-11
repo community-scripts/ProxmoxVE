@@ -147,7 +147,7 @@ export default function ScriptAccordion({
                             if (fallback) fallback.style.display = 'flex';
                           }}
                           alt={script.name}
-                          className="mr-1 w-4 h-4 rounded-full"
+                          className="mr-1 w-4 h-4 rounded-full dark:brightness-0 dark:invert"
                         />
                       ) : null}
                       <div

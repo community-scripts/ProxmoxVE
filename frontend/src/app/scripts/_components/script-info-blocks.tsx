@@ -34,7 +34,7 @@ function AppIcon({ src, name, size = 64 }: { src?: string | null; name: string; 
           width={size}
           alt={`${name} icon`}
           onError={() => setErrored(true)}
-          className={fallbackClass}
+          className={`${fallbackClass} dark:brightness-0 dark:invert`}
         />
       ) : (
         <div className="flex h-16 w-16 min-w-16 items-center justify-center rounded-lg bg-accent/10 dark:bg-accent/20 p-1">
