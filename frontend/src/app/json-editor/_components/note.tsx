@@ -1,7 +1,7 @@
 import type { z } from "zod";
 
 import { PlusCircle, Trash2 } from "lucide-react";
-import { memo, useCallback } from "react";
+import { memo, useCallback, useRef } from "react";
 
 import {
   Select,
