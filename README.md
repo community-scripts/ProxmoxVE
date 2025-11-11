@@ -52,6 +52,8 @@
 
 ## 🎯 Key Features
 
+<div align="center">
+
 <table>
   <tr>
     <td align="center" width="25%">
@@ -91,9 +93,13 @@
   </tr>
 </table>
 
+</div>
+
 ---
 
 ## 📋 Requirements
+
+<div align="center">
 
 <table>
   <tr>
@@ -111,6 +117,8 @@
     </td>
   </tr>
 </table>
+
+</div>
 
 ---
 
@@ -144,6 +152,8 @@ This adds a menu to your Proxmox interface for easy script access without visiti
 
 ## 💬 Join the Community
 
+<div align="center">
+
 <table>
   <tr>
     <td align="center" width="33%">
@@ -170,9 +180,13 @@ This adds a menu to your Proxmox interface for easy script access without visiti
   </tr>
 </table>
 
+</div>
+
 ---
 
 ## 🛠️ Contribute
+
+<div align="center">
 
 <table>
   <tr>
@@ -194,6 +208,8 @@ This adds a menu to your Proxmox interface for easy script access without visiti
     </td>
   </tr>
 </table>
+
+</div>
 
 <div align="center">
   <br />
