@@ -51,50 +51,33 @@
 
 ## 🎯 Key Features
 
-<table>
-  <tr>
-    <td align="center" width="33%">
-      <h3>🚀 Quick Setup</h3>
-      <p>One-command installations for popular services and containers</p>
-    </td>
-    <td align="center" width="33%">
-      <h3>⚙️ Flexible Config</h3>
-      <p>Simple mode for beginners, advanced options for power users</p>
-    </td>
-    <td align="center" width="33%">
-      <h3>🔄 Auto Updates</h3>
-      <p>Keep your installations current with built-in update mechanisms</p>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" width="33%">
-      <h3>🛠️ Easy Management</h3>
-      <p>Post-install scripts for configuration and troubleshooting</p>
-    </td>
-    <td align="center" width="33%">
-      <h3>👥 Community Driven</h3>
-      <p>Actively maintained with contributions from users worldwide</p>
-    </td>
-    <td align="center" width="33%">
-      <h3>📖 Well Documented</h3>
-      <p>Comprehensive guides and community support</p>
-    </td>
-  </tr>
-</table>
+<div align="center">
+
+| 🚀 Quick Setup | ⚙️ Flexible Config | 🔄 Auto Updates | 🛠️ Easy Management |
+|:---:|:---:|:---:|:---:|
+| One-command installations for popular services | Simple mode for beginners, advanced for experts | Built-in update mechanisms | Post-install configuration scripts |
+
+| 👥 Community Driven | 📖 Well Documented | 🔒 Secure | ⚡ Performance |
+|:---:|:---:|:---:|:---:|
+| Actively maintained worldwide | Comprehensive guides and support | Regular security updates | Optimized configurations |
+
+</div>
 
 ---
 
 ## 📋 Requirements
 
 <div align="center">
-  
-| Requirement | Details |
-|:-----------:|:-------:|
-| 🖥️ **Proxmox VE** | Version 8.3.x or 9.0.x |
-| 🐧 **Operating System** | Debian-based with Proxmox Tools |
-| 🌐 **Network** | Internet connection required |
 
-</div>
+| 🖥️ Proxmox VE | 🐧 Operating System | 🌐 Network |
+|:---:|:---:|:---:|
+| Version 8.3.x or 9.0.x | Debian-based with Proxmox Tools | Internet connection required |
+
+</div>3>
+      <p>Internet connection required</p>
+    </td>
+  </tr>
+</table>
 
 ---
 
