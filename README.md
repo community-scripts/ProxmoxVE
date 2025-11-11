@@ -51,29 +51,61 @@
 
 ## 🎯 Key Features
 
-<div align="center">
-
-| 🚀 Quick Setup | ⚙️ Flexible Config | 🔄 Auto Updates | 🛠️ Easy Management |
-|:---:|:---:|:---:|:---:|
-| One-command installations for popular services | Simple mode for beginners, advanced for experts | Built-in update mechanisms | Post-install configuration scripts |
-
-| 👥 Community Driven | 📖 Well Documented | 🔒 Secure | ⚡ Performance |
-|:---:|:---:|:---:|:---:|
-| Actively maintained worldwide | Comprehensive guides and support | Regular security updates | Optimized configurations |
-
-</div>
+<table>
+  <tr>
+    <td align="center" width="25%">
+      <h3>🚀 Quick Setup</h3>
+      <p>One-command installations for popular services and containers</p>
+    </td>
+    <td align="center" width="25%">
+      <h3>⚙️ Flexible Config</h3>
+      <p>Simple mode for beginners, advanced options for power users</p>
+    </td>
+    <td align="center" width="25%">
+      <h3>🔄 Auto Updates</h3>
+      <p>Keep your installations current with built-in update mechanisms</p>
+    </td>
+    <td align="center" width="25%">
+      <h3>🛠️ Easy Management</h3>
+      <p>Post-install scripts for configuration and troubleshooting</p>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="25%">
+      <h3>👥 Community Driven</h3>
+      <p>Actively maintained with contributions from users worldwide</p>
+    </td>
+    <td align="center" width="25%">
+      <h3>📖 Well Documented</h3>
+      <p>Comprehensive guides and community support</p>
+    </td>
+    <td align="center" width="25%">
+      <h3>🔒 Secure</h3>
+      <p>Regular security updates and best practices</p>
+    </td>
+    <td align="center" width="25%">
+      <h3>⚡ Performance</h3>
+      <p>Optimized configurations for best performance</p>
+    </td>
+  </tr>
+</table>
 
 ---
 
 ## 📋 Requirements
 
-<div align="center">
-
-| 🖥️ Proxmox VE | 🐧 Operating System | 🌐 Network |
-|:---:|:---:|:---:|
-| Version 8.3.x or 9.0.x | Debian-based with Proxmox Tools | Internet connection required |
-
-</div>3>
+<table>
+  <tr>
+    <td align="center" width="33%">
+      <h3>🖥️ Proxmox VE</h3>
+      <p>Version 8.3.x or 9.0.x</p>
+    </td>
+    <td align="center" width="33%">
+      <h3>🐧 Operating System</h3>
+      <p>Debian-based with Proxmox Tools</p>
+    </td>
+    <td align="center" width="33%">
+      <h3>🌐 Network</h3>
       <p>Internet connection required</p>
     </td>
   </tr>
