@@ -101,7 +101,6 @@ export default function InstallCommand({ item }: { item: Script }) {
       .finally(() => setLoading(false));
   }
 
-  // Load masing-masing manifest, hanya jika path ada
   useEffect(() => {
     loadTextFile(
       manifest.script,
@@ -222,7 +221,7 @@ export default function InstallCommand({ item }: { item: Script }) {
               <AlertDescription className="text-sm">
                 Helm-related manifest for <strong>{item.name}</strong>, loaded
                 from <code>{manifest.helm}</code>. Use it as needed in your
-                Helm workflow (values file, template, atau dokumentasi).
+                Helm workflow.
               </AlertDescription>
             </Alert>
             {helmLoading && (

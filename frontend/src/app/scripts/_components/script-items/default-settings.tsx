@@ -31,14 +31,11 @@ function PlatformRow({ label, items, icon }: PlatformRowProps) {
 }
 
 export default function DefaultSettings({ item }: { item: Script }) {
-  // Ambil install method default (atau pertama kalau nggak ada)
   const defaultMethod =
     item.install_methods.find((m) => m.type === "default") ?? item.install_methods[0];
 
-  // platform disimpan di dalam install_methods[].platform (lihat JSON yang kamu kirim)
   const platform = (defaultMethod as any)?.platform;
 
-  // Kalau belum didefinisikan, nggak usah render apa-apa
   if (!platform) return null;
 
   const desktop = [

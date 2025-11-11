@@ -13,7 +13,6 @@ import { useVersions } from "@/hooks/use-versions";
 import { basePath } from "@/config/site-config";
 import { extractDate } from "@/lib/time";
 
-// import { getDisplayValueFromType } from "./script-info-blocks";
 import DefaultPassword from "./script-items/default-password";
 import InstallCommand from "./script-items/install-command";
 import Description from "./script-items/description";
@@ -26,7 +25,6 @@ type ScriptItemProps = {
   setSelectedScript: (script: string | null) => void;
 };
 
-// ---- Helper Platform ----
 type PlatformInfo = {
   desktop?: { linux?: boolean; windows?: boolean; macos?: boolean };
   mobile?: { android?: boolean; ios?: boolean };
@@ -282,7 +280,6 @@ function ScriptHeader({ item }: { item: Script }) {
                   </span> */}
                 </h1>
 
-                {/* META: Added • homepage • github repo */}
                 <SecondaryMeta item={item} />
                 <hr className="border-border/40 my-2" />
               </div>
