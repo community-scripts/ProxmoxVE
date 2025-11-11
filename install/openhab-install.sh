@@ -22,7 +22,7 @@ setup_deb822_repo \
   "https://openhab.jfrog.io/artifactory/openhab-linuxpkg" \
   "stable" \
   "main"
-$STD apt -y install openhab
+$STD apt install -y openhab
 msg_ok "Installed openHAB"
 
 msg_info "Initializing openHAB directories"
