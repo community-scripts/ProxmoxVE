@@ -21,7 +21,13 @@ msg_ok "Installed Dependencies"
 
 msg_info "Setting up evcc Repository"
 curl -fsSL https://dl.evcc.io/public/evcc/stable/gpg.EAD5D0E07B0EC0FD.key | gpg --dearmor -o /etc/apt/keyrings/evcc-stable.gpg
-echo "deb [signed-by=/etc/apt/keyrings/evcc-stable.gpg] https://dl.evcc.io/public/evcc/stable/deb/debian $(lsb_release -cs) main" >/etc/apt/sources.list.d/evcc-stable.list
+cat <<EOF >/etc/apt/sources.list.d/evcc-stable.sources
+Types: deb
+URIs: https://dl.evcc.io/public/evcc/stable/deb/debian/
+Suites: bookworm
+Components: main
+Signed-By: /etc/apt/keyrings/evcc-stable.gpg
+EOF
 $STD apt update
 msg_ok "evcc Repository setup sucessfully"
 
