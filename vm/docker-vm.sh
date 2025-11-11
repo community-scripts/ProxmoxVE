@@ -5,6 +5,8 @@
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
 source /dev/stdin <<<$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func)
+# Load Cloud-Init library for VM configuration
+source /dev/stdin <<<$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/vm/cloud-init-lib.sh) 2>/dev/null || true
 
 function header_info() {
   clear
@@ -26,6 +28,10 @@ NSAPP="docker-vm"
 var_os="debian"
 var_version="13"
 DISK_SIZE="10G"
+USE_CLOUD_INIT="no"
+INSTALL_PORTAINER="no"
+OS_TYPE=""
+OS_VERSION=""
 
 YW=$(echo "\033[33m")
 BL=$(echo "\033[36m")
@@ -129,6 +135,21 @@ function msg_error() {
   echo -e "${BFR}${CROSS}${RD}${msg}${CL}"
 }
 
+function spinner() {
+  local pid=$1
+  local msg="$2"
+  local spin='⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏'
+  local i=0
+
+  echo -ne "${TAB}${YW}${msg} "
+  while kill -0 $pid 2>/dev/null; do
+    i=$(((i + 1) % 10))
+    echo -ne "\b${spin:$i:1}"
+    sleep 0.1
+  done
+  echo -ne "\b"
+}
+
 function check_root() {
   if [[ "$(id -u)" -ne 0 || $(ps -o comm= -p $PPID) == "sudo" ]]; then
     clear
@@ -153,6 +174,7 @@ pve_check() {
       msg_error "Supported: Proxmox VE version 8.0 – 8.9"
       exit 1
     fi
+    PVE_MAJOR=8
     return 0
   fi
 
@@ -164,6 +186,7 @@ pve_check() {
       msg_error "Supported: Proxmox VE version 9.0"
       exit 1
     fi
+    PVE_MAJOR=9
     return 0
   fi
 
@@ -202,14 +225,114 @@ function exit-script() {
   exit
 }
 
+function select_os() {
+  if OS_CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "SELECT OS" --radiolist \
+    "Choose Operating System for Docker VM" 14 68 4 \
+    "debian13" "Debian 13 (Trixie) - Latest" ON \
+    "debian12" "Debian 12 (Bookworm) - Stable" OFF \
+    "ubuntu2404" "Ubuntu 24.04 LTS (Noble)" OFF \
+    "ubuntu2204" "Ubuntu 22.04 LTS (Jammy)" OFF \
+    3>&1 1>&2 2>&3); then
+    case $OS_CHOICE in
+    debian13)
+      OS_TYPE="debian"
+      OS_VERSION="13"
+      OS_CODENAME="trixie"
+      OS_DISPLAY="Debian 13 (Trixie)"
+      ;;
+    debian12)
+      OS_TYPE="debian"
+      OS_VERSION="12"
+      OS_CODENAME="bookworm"
+      OS_DISPLAY="Debian 12 (Bookworm)"
+      ;;
+    ubuntu2404)
+      OS_TYPE="ubuntu"
+      OS_VERSION="24.04"
+      OS_CODENAME="noble"
+      OS_DISPLAY="Ubuntu 24.04 LTS"
+      ;;
+    ubuntu2204)
+      OS_TYPE="ubuntu"
+      OS_VERSION="22.04"
+      OS_CODENAME="jammy"
+      OS_DISPLAY="Ubuntu 22.04 LTS"
+      ;;
+    esac
+    echo -e "${OS}${BOLD}${DGN}Operating System: ${BGN}${OS_DISPLAY}${CL}"
+  else
+    exit-script
+  fi
+}
+
+function select_cloud_init() {
+  # Ubuntu only has cloudimg variant (always Cloud-Init), so no choice needed
+  if [ "$OS_TYPE" = "ubuntu" ]; then
+    USE_CLOUD_INIT="yes"
+    echo -e "${CLOUD}${BOLD}${DGN}Cloud-Init: ${BGN}yes (Ubuntu requires Cloud-Init)${CL}"
+    return
+  fi
+
+  # Debian has two image variants, so user can choose
+  if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "CLOUD-INIT" \
+    --yesno "Enable Cloud-Init for VM configuration?\n\nCloud-Init allows automatic configuration of:\n• User accounts and passwords\n• SSH keys\n• Network settings (DHCP/Static)\n• DNS configuration\n\nYou can also configure these settings later in Proxmox UI.\n\nNote: Debian without Cloud-Init will use nocloud image with console auto-login." 18 68); then
+    USE_CLOUD_INIT="yes"
+    echo -e "${CLOUD}${BOLD}${DGN}Cloud-Init: ${BGN}yes${CL}"
+  else
+    USE_CLOUD_INIT="no"
+    echo -e "${CLOUD}${BOLD}${DGN}Cloud-Init: ${BGN}no${CL}"
+  fi
+}
+
+function select_portainer() {
+  if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "PORTAINER" \
+    --yesno "Install Portainer for Docker management?\n\nPortainer is a lightweight management UI for Docker.\n\nAccess after installation:\n• HTTP:  http://<VM-IP>:9000\n• HTTPS: https://<VM-IP>:9443" 14 68); then
+    INSTALL_PORTAINER="yes"
+    echo -e "${ADVANCED}${BOLD}${DGN}Portainer: ${BGN}yes${CL}"
+  else
+    INSTALL_PORTAINER="no"
+    echo -e "${ADVANCED}${BOLD}${DGN}Portainer: ${BGN}no${CL}"
+  fi
+}
+
+function get_image_url() {
+  local arch=$(dpkg --print-architecture)
+  case $OS_TYPE in
+  debian)
+    # Debian has two variants:
+    # - generic: For Cloud-Init enabled VMs
+    # - nocloud: For VMs without Cloud-Init (has console auto-login)
+    if [ "$USE_CLOUD_INIT" = "yes" ]; then
+      echo "https://cloud.debian.org/images/cloud/${OS_CODENAME}/latest/debian-${OS_VERSION}-generic-${arch}.qcow2"
+    else
+      echo "https://cloud.debian.org/images/cloud/${OS_CODENAME}/latest/debian-${OS_VERSION}-nocloud-${arch}.qcow2"
+    fi
+    ;;
+  ubuntu)
+    # Ubuntu only has cloudimg variant (always with Cloud-Init support)
+    echo "https://cloud-images.ubuntu.com/${OS_CODENAME}/current/${OS_CODENAME}-server-cloudimg-${arch}.img"
+    ;;
+  esac
+}
+
 function default_settings() {
+  # OS Selection - ALWAYS ask
+  select_os
+
+  # Cloud-Init Selection - ALWAYS ask
+  select_cloud_init
+
+  # Portainer Selection - ALWAYS ask
+  select_portainer
+
+  # Set defaults for other settings
   VMID=$(get_valid_nextid)
-  FORMAT=",efitype=4m"
-  MACHINE=""
+  FORMAT=""
+  MACHINE=" -machine q35"
   DISK_CACHE=""
   DISK_SIZE="10G"
   HN="docker"
-  CPU_TYPE=""
+  CPU_TYPE=" -cpu host"
   CORE_COUNT="2"
   RAM_SIZE="4096"
   BRG="vmbr0"
@@ -218,12 +341,14 @@ function default_settings() {
   MTU=""
   START_VM="yes"
   METHOD="default"
+
+  # Display summary
   echo -e "${CONTAINERID}${BOLD}${DGN}Virtual Machine ID: ${BGN}${VMID}${CL}"
-  echo -e "${CONTAINERTYPE}${BOLD}${DGN}Machine Type: ${BGN}i440fx${CL}"
+  echo -e "${CONTAINERTYPE}${BOLD}${DGN}Machine Type: ${BGN}Q35 (Modern)${CL}"
   echo -e "${DISKSIZE}${BOLD}${DGN}Disk Size: ${BGN}${DISK_SIZE}${CL}"
   echo -e "${DISKSIZE}${BOLD}${DGN}Disk Cache: ${BGN}None${CL}"
   echo -e "${HOSTNAME}${BOLD}${DGN}Hostname: ${BGN}${HN}${CL}"
-  echo -e "${OS}${BOLD}${DGN}CPU Model: ${BGN}KVM64${CL}"
+  echo -e "${OS}${BOLD}${DGN}CPU Model: ${BGN}Host${CL}"
   echo -e "${CPUCORE}${BOLD}${DGN}CPU Cores: ${BGN}${CORE_COUNT}${CL}"
   echo -e "${RAMSIZE}${BOLD}${DGN}RAM Size: ${BGN}${RAM_SIZE}${CL}"
   echo -e "${BRIDGE}${BOLD}${DGN}Bridge: ${BGN}${BRG}${CL}"
@@ -231,10 +356,19 @@ function default_settings() {
   echo -e "${VLANTAG}${BOLD}${DGN}VLAN: ${BGN}Default${CL}"
   echo -e "${DEFAULT}${BOLD}${DGN}Interface MTU Size: ${BGN}Default${CL}"
   echo -e "${GATEWAY}${BOLD}${DGN}Start VM when completed: ${BGN}yes${CL}"
-  echo -e "${CREATING}${BOLD}${DGN}Creating a Docker VM using the above default settings${CL}"
+  echo -e "${CREATING}${BOLD}${DGN}Creating a Docker VM using the above settings${CL}"
 }
 
 function advanced_settings() {
+  # OS Selection - ALWAYS ask (at the beginning)
+  select_os
+
+  # Cloud-Init Selection - ALWAYS ask (at the beginning)
+  select_cloud_init
+
+  # Portainer Selection - ALWAYS ask (at the beginning)
+  select_portainer
+
   METHOD="advanced"
   [ -z "${VMID:-}" ] && VMID=$(get_valid_nextid)
   while true; do
@@ -255,15 +389,15 @@ function advanced_settings() {
   done
 
   if MACH=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "MACHINE TYPE" --radiolist --cancel-button Exit-Script "Choose Type" 10 58 2 \
-    "i440fx" "Machine i440fx" ON \
-    "q35" "Machine q35" OFF \
+    "q35" "Q35 (Modern, PCIe)" ON \
+    "i440fx" "i440fx (Legacy, PCI)" OFF \
     3>&1 1>&2 2>&3); then
     if [ $MACH = q35 ]; then
-      echo -e "${CONTAINERTYPE}${BOLD}${DGN}Machine Type: ${BGN}$MACH${CL}"
+      echo -e "${CONTAINERTYPE}${BOLD}${DGN}Machine Type: ${BGN}Q35 (Modern)${CL}"
       FORMAT=""
       MACHINE=" -machine q35"
     else
-      echo -e "${CONTAINERTYPE}${BOLD}${DGN}Machine Type: ${BGN}$MACH${CL}"
+      echo -e "${CONTAINERTYPE}${BOLD}${DGN}Machine Type: ${BGN}i440fx (Legacy)${CL}"
       FORMAT=",efitype=4m"
       MACHINE=""
     fi
@@ -314,8 +448,8 @@ function advanced_settings() {
   fi
 
   if CPU_TYPE1=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "CPU MODEL" --radiolist "Choose" --cancel-button Exit-Script 10 58 2 \
-    "0" "KVM64 (Default)" ON \
-    "1" "Host" OFF \
+    "1" "Host (Recommended)" ON \
+    "0" "KVM64" OFF \
     3>&1 1>&2 2>&3); then
     if [ $CPU_TYPE1 = "1" ]; then
       echo -e "${OS}${BOLD}${DGN}CPU Model: ${BGN}Host${CL}"
@@ -472,8 +606,8 @@ if ! command -v virt-customize &>/dev/null; then
   msg_ok "Installed libguestfs-tools successfully"
 fi
 
-msg_info "Retrieving the URL for the Debian 13 Qcow2 Disk Image"
-URL="https://cloud.debian.org/images/cloud/trixie/latest/debian-13-nocloud-$(dpkg --print-architecture).qcow2"
+msg_info "Retrieving the URL for the ${OS_DISPLAY} Qcow2 Disk Image"
+URL=$(get_image_url)
 sleep 2
 msg_ok "${CL}${BL}${URL}${CL}"
 curl -f#SL -o "$(basename "$URL")" "$URL"
@@ -503,23 +637,162 @@ for i in {0,1}; do
   eval DISK${i}_REF=${STORAGE}:${DISK_REF:-}${!disk}
 done
 
-msg_info "Adding Docker and Docker Compose Plugin to Debian 12 Qcow2 Disk Image"
-virt-customize -q -a "${FILE}" --install qemu-guest-agent,apt-transport-https,ca-certificates,curl,gnupg,software-properties-common,lsb-release >/dev/null &&
-  virt-customize -q -a "${FILE}" --run-command "mkdir -p /etc/apt/keyrings && curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg" >/dev/null &&
-  virt-customize -q -a "${FILE}" --run-command "echo 'deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian bookworm stable' > /etc/apt/sources.list.d/docker.list" >/dev/null &&
-  virt-customize -q -a "${FILE}" --run-command "apt-get update -qq && apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin" >/dev/null &&
-  virt-customize -q -a "${FILE}" --run-command "systemctl enable docker" >/dev/null &&
-  virt-customize -q -a "${FILE}" --hostname "${HN}" >/dev/null &&
-  virt-customize -q -a "${FILE}" --run-command "echo -n > /etc/machine-id" >/dev/null
-msg_ok "Added Docker and Docker Compose Plugin to Debian 12 Qcow2 Disk Image successfully"
+echo -e "${INFO}${BOLD}${GN}Preparing ${OS_DISPLAY} Qcow2 Disk Image${CL}"
+
+# Set DNS for libguestfs appliance environment (not the guest)
+export LIBGUESTFS_BACKEND_SETTINGS=dns=8.8.8.8,1.1.1.1
+
+# Always create first-boot installation script as fallback
+virt-customize -q -a "${FILE}" --run-command "cat > /root/install-docker.sh << 'INSTALLEOF'
+#!/bin/bash
+# Log output to file
+exec > /var/log/install-docker.log 2>&1
+echo \"[\\$(date)] Starting Docker installation on first boot\"
+
+# Check if Docker is already installed
+if command -v docker >/dev/null 2>&1; then
+  echo \"[\\$(date)] Docker already installed, checking if running\"
+  systemctl start docker 2>/dev/null || true
+  if docker info >/dev/null 2>&1; then
+    echo \"[\\$(date)] Docker is already working, exiting\"
+    exit 0
+  fi
+fi
+
+# Wait for network to be fully available
+for i in {1..30}; do
+  if ping -c 1 8.8.8.8 >/dev/null 2>&1; then
+    echo \"[\\$(date)] Network is available\"
+    break
+  fi
+  echo \"[\\$(date)] Waiting for network... attempt \\$i/30\"
+  sleep 2
+done
+
+# Configure DNS
+echo \"[\\$(date)] Configuring DNS\"
+mkdir -p /etc/systemd/resolved.conf.d
+cat > /etc/systemd/resolved.conf.d/dns.conf << DNSEOF
+[Resolve]
+DNS=8.8.8.8 1.1.1.1
+FallbackDNS=8.8.4.4 1.0.0.1
+DNSEOF
+systemctl restart systemd-resolved 2>/dev/null || true
+
+# Update package lists
+echo \"[\\$(date)] Updating package lists\"
+apt-get update
+
+# Install base packages if not already installed
+echo \"[\\$(date)] Installing base packages\"
+apt-get install -y qemu-guest-agent curl ca-certificates 2>/dev/null || true
+
+# Install Docker
+echo \"[\\$(date)] Installing Docker\"
+curl -fsSL https://get.docker.com | sh
+systemctl enable docker
+systemctl start docker
+
+# Wait for Docker to be ready
+for i in {1..10}; do
+  if docker info >/dev/null 2>&1; then
+    echo \"[\\$(date)] Docker is ready\"
+    break
+  fi
+  sleep 1
+done
+
+# Install Portainer if requested
+INSTALL_PORTAINER_PLACEHOLDER
+
+# Create completion flag
+echo \"[\\$(date)] Docker installation completed successfully\"
+touch /root/.docker-installed
+INSTALLEOF" >/dev/null
+
+# Replace Portainer placeholder based on user choice
+if [ "$INSTALL_PORTAINER" = "yes" ]; then
+  virt-customize -q -a "${FILE}" --run-command "sed -i 's|INSTALL_PORTAINER_PLACEHOLDER|echo \"[\\\\\\$(date)] Installing Portainer\"\\\ndocker volume create portainer_data\\\ndocker run -d -p 9000:9000 -p 9443:9443 --name=portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce:latest\\\necho \"[\\\\\\$(date)] Portainer installed and started\"|' /root/install-docker.sh" >/dev/null
+else
+  virt-customize -q -a "${FILE}" --run-command "sed -i 's|INSTALL_PORTAINER_PLACEHOLDER|echo \"[\\\\\\$(date)] Skipping Portainer installation\"|' /root/install-docker.sh" >/dev/null
+fi
+
+virt-customize -q -a "${FILE}" --run-command "chmod +x /root/install-docker.sh" >/dev/null
+
+virt-customize -q -a "${FILE}" --run-command "cat > /etc/systemd/system/install-docker.service << 'SERVICEEOF'
+[Unit]
+Description=Install Docker on First Boot
+After=network-online.target
+Wants=network-online.target
+ConditionPathExists=!/root/.docker-installed
+
+[Service]
+Type=oneshot
+ExecStart=/root/install-docker.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+SERVICEEOF" >/dev/null
+
+virt-customize -q -a "${FILE}" --run-command "systemctl enable install-docker.service" >/dev/null
+
+# Try to install packages and Docker during image customization
+DOCKER_INSTALLED_ON_FIRST_BOOT="yes" # Assume first-boot by default
+
+msg_info "Installing base packages (qemu-guest-agent, curl, ca-certificates)"
+if virt-customize -a "${FILE}" --install qemu-guest-agent,curl,ca-certificates >/dev/null 2>&1; then
+  msg_ok "Installed base packages"
+
+  msg_info "Installing Docker via get.docker.com"
+  if virt-customize -q -a "${FILE}" --run-command "curl -fsSL https://get.docker.com | sh" >/dev/null 2>&1 &&
+    virt-customize -q -a "${FILE}" --run-command "systemctl enable docker" >/dev/null 2>&1; then
+    msg_ok "Installed Docker"
+
+    # Optimize Docker daemon configuration
+    virt-customize -q -a "${FILE}" --run-command "mkdir -p /etc/docker" >/dev/null 2>&1
+    virt-customize -q -a "${FILE}" --run-command "cat > /etc/docker/daemon.json << 'DOCKEREOF'
+{
+  \"storage-driver\": \"overlay2\",
+  \"log-driver\": \"json-file\",
+  \"log-opts\": {
+    \"max-size\": \"10m\",
+    \"max-file\": \"3\"
+  }
+}
+DOCKEREOF" >/dev/null 2>&1
+
+    # Create completion flag to prevent first-boot script from running
+    virt-customize -q -a "${FILE}" --run-command "touch /root/.docker-installed" >/dev/null 2>&1
+
+    DOCKER_INSTALLED_ON_FIRST_BOOT="no"
+  else
+    msg_ok "Docker will be installed on first boot (installation failed during image preparation)"
+  fi
+else
+  msg_ok "Packages will be installed on first boot (network not available during image preparation)"
+fi
+
+# Set hostname and clean machine-id
+virt-customize -q -a "${FILE}" --hostname "${HN}" >/dev/null 2>&1
+virt-customize -q -a "${FILE}" --run-command "truncate -s 0 /etc/machine-id" >/dev/null 2>&1
+virt-customize -q -a "${FILE}" --run-command "rm -f /var/lib/dbus/machine-id" >/dev/null 2>&1
+
+# Configure SSH to allow root login with password when Cloud-Init is enabled
+# (Cloud-Init will set the password, but SSH needs to accept password authentication)
+if [ "$USE_CLOUD_INIT" = "yes" ]; then
+  virt-customize -q -a "${FILE}" --run-command "sed -i 's/^#*PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
+  virt-customize -q -a "${FILE}" --run-command "sed -i 's/^#*PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config" >/dev/null 2>&1 || true
+fi
 
 msg_info "Expanding root partition to use full disk space"
 qemu-img create -f qcow2 expanded.qcow2 ${DISK_SIZE} >/dev/null 2>&1
-virt-resize --expand /dev/sda1 ${FILE} expanded.qcow2 >/dev/null 2>&1
+virt-resize --quiet --expand /dev/sda1 ${FILE} expanded.qcow2 >/dev/null 2>&1
 mv expanded.qcow2 ${FILE} >/dev/null 2>&1
 msg_ok "Expanded image to full size"
 
 msg_info "Creating a Docker VM"
+
 qm create $VMID -agent 1${MACHINE} -tablet 0 -localtime 1 -bios ovmf${CPU_TYPE} -cores $CORE_COUNT -memory $RAM_SIZE \
   -name $HN -tags community-script -net0 virtio,bridge=$BRG,macaddr=$MAC$VLAN$MTU -onboot 1 -ostype l26 -scsihw virtio-scsi-pci
 pvesm alloc $STORAGE $VMID $DISK0 4M 1>&/dev/null
@@ -529,8 +802,21 @@ qm set $VMID \
   -scsi0 ${DISK1_REF},${DISK_CACHE}${THIN}size=${DISK_SIZE} \
   -boot order=scsi0 \
   -serial0 socket >/dev/null
-qm resize $VMID scsi0 8G >/dev/null
 qm set $VMID --agent enabled=1 >/dev/null
+
+# Proxmox 9: Enable I/O Thread for better disk performance
+if [ "${PVE_MAJOR:-8}" = "9" ]; then
+  qm set $VMID -iothread 1 >/dev/null 2>&1 || true
+fi
+
+msg_ok "Created a Docker VM ${CL}${BL}(${HN})${CL}"
+
+# Add Cloud-Init drive if requested
+if [ "$USE_CLOUD_INIT" = "yes" ]; then
+  msg_info "Configuring Cloud-Init"
+  setup_cloud_init "$VMID" "$STORAGE" "$HN" "yes" >/dev/null 2>&1
+  msg_ok "Cloud-Init configured"
+fi
 
 DESCRIPTION=$(
   cat <<EOF
@@ -564,11 +850,57 @@ EOF
 )
 qm set "$VMID" -description "$DESCRIPTION" >/dev/null
 
-msg_ok "Created a Docker VM ${CL}${BL}(${HN})"
 if [ "$START_VM" == "yes" ]; then
   msg_info "Starting Docker VM"
-  qm start $VMID
+  qm start $VMID >/dev/null 2>&1
   msg_ok "Started Docker VM"
 fi
+
+# Try to get VM IP address silently in background (max 10 seconds)
+VM_IP=""
+if [ "$START_VM" == "yes" ]; then
+  for i in {1..5}; do
+    VM_IP=$(qm guest cmd "$VMID" network-get-interfaces 2>/dev/null |
+      jq -r '.[] | select(.name != "lo") | ."ip-addresses"[]? | select(."ip-address-type" == "ipv4") | ."ip-address"' 2>/dev/null |
+      grep -v "^127\." | head -1)
+
+    if [ -n "$VM_IP" ]; then
+      break
+    fi
+    sleep 2
+  done
+fi
+
+# Display information about installed components
+echo -e "\n${INFO}${BOLD}${GN}VM Configuration Summary:${CL}"
+echo -e "${TAB}${DGN}VM ID: ${BGN}${VMID}${CL}"
+echo -e "${TAB}${DGN}Hostname: ${BGN}${HN}${CL}"
+echo -e "${TAB}${DGN}OS: ${BGN}${OS_DISPLAY}${CL}"
+
+if [ -n "$VM_IP" ]; then
+  echo -e "${TAB}${DGN}IP Address: ${BGN}${VM_IP}${CL}"
+fi
+
+if [ "$DOCKER_INSTALLED_ON_FIRST_BOOT" = "yes" ]; then
+  echo -e "${TAB}${DGN}Docker: ${BGN}Will be installed on first boot${CL}"
+  echo -e "${TAB}${YW}⚠️  Docker installation will happen automatically after VM starts${CL}"
+  echo -e "${TAB}${YW}⚠️  Wait 2-3 minutes after boot for installation to complete${CL}"
+  echo -e "${TAB}${YW}⚠️  Check installation progress: ${BL}cat /var/log/install-docker.log${CL}"
+else
+  echo -e "${TAB}${DGN}Docker: ${BGN}Latest (via get.docker.com)${CL}"
+fi
+
+if [ "$INSTALL_PORTAINER" = "yes" ]; then
+  if [ -n "$VM_IP" ]; then
+    echo -e "${TAB}${DGN}Portainer: ${BGN}https://${VM_IP}:9443${CL}"
+  else
+    echo -e "${TAB}${DGN}Portainer: ${BGN}Will be accessible at https://<VM-IP>:9443${CL}"
+    echo -e "${TAB}${YW}⚠️  Get IP with: ${BL}qm guest cmd ${VMID} network-get-interfaces${CL}"
+  fi
+fi
+if [ "$USE_CLOUD_INIT" = "yes" ]; then
+  display_cloud_init_info "$VMID" "$HN"
+fi
+
 post_update_to_api "done" "none"
 msg_ok "Completed Successfully!\n"
