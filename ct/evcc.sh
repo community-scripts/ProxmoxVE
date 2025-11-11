@@ -23,9 +23,9 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
-  if [[ ! -f /etc/apt/sources.list.d/evcc-stable.sources && ! -f /etc/apt/sources.list.d/evcc-stable.list ]]; then
+  if ! command -v evcc >/dev/null 2>&1; then
     msg_error "No ${APP} Installation Found!"
-    exit
+    exit 1
   fi
 
   if [[ -f /etc/apt/sources.list.d/evcc-stable.list ]]; then
