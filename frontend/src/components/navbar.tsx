@@ -2,6 +2,7 @@
 import { Suspense, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useTheme } from "next-themes";
 
 import { navbarLinks } from "@/config/site-config";
 
@@ -16,8 +17,12 @@ export const dynamic = "force-dynamic";
 
 function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const { resolvedTheme } = useTheme();
 
   useEffect(() => {
+    setMounted(true);
+
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 0);
     };
@@ -28,10 +33,19 @@ function Navbar() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  // Hindari hydration mismatch: sebelum mounted pakai default light
+  const logoSrc = !mounted
+    ? "/ProxmoxVE/logo_white.png"
+    : resolvedTheme === "dark"
+    ? "/ProxmoxVE/logo_dark.png"
+    : "/ProxmoxVE/logo_white.png";
+
   return (
     <>
       <div
-        className={`fixed left-0 top-0 z-50 flex w-screen justify-center px-4 xl:px-0 ${isScrolled ? "glass border-b bg-background/50" : ""
+        className={`fixed left-0 top-0 z-50 flex w-screen justify-center px-4 xl:px-0 ${
+          isScrolled ? "glass border-b bg-background/50" : ""
         }`}
       >
         <div className="flex h-20 w-full max-w-[1440px] items-center justify-between sm:flex-row">
@@ -39,7 +53,13 @@ function Navbar() {
             href="/"
             className="cursor-pointer w-full justify-center sm:justify-start flex-row-reverse hidden sm:flex items-center gap-2 font-semibold sm:flex-row"
           >
-            <Image height={18} unoptimized width={18} alt="logo" src="/ProxmoxVE/logo.png" className="" />
+            <Image
+              height={40}
+              width={40}
+              unoptimized
+              alt="DailyFOSS logo"
+              src={logoSrc}
+            />
             <span className="">Daily FOSS</span>
           </Link>
           <div className="flex items-center justify-between sm:justify-end gap-2 w-full">

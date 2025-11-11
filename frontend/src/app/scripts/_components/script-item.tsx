@@ -1,6 +1,6 @@
 "use client";
 
-import { X, Monitor, Smartphone, Cloud, Boxes, Terminal, MousePointerClick, CalendarDays, Globe, BookOpenText, Code } from "lucide-react";
+import { X, Monitor, Smartphone, Cloud, Boxes, Terminal, MousePointerClick, CalendarDays, Globe, BookOpenText, Code, Stars } from "lucide-react";
 import { motion } from "framer-motion";
 import { Suspense } from "react";
 import Image from "next/image";
@@ -13,14 +13,12 @@ import { useVersions } from "@/hooks/use-versions";
 import { basePath } from "@/config/site-config";
 import { extractDate } from "@/lib/time";
 
-import { getDisplayValueFromType } from "./script-info-blocks";
+// import { getDisplayValueFromType } from "./script-info-blocks";
 import DefaultPassword from "./script-items/default-password";
 import InstallCommand from "./script-items/install-command";
-// ⛔ ResourceDisplay sudah tidak dipakai, jadi dihapus import-nya
 import Description from "./script-items/description";
 import ConfigFile from "./script-items/config-file";
 import InterFaces from "./script-items/interfaces";
-import Tooltips from "./script-items/tool-tips";
 import Alerts from "./script-items/alerts";
 
 type ScriptItemProps = {
@@ -28,7 +26,7 @@ type ScriptItemProps = {
   setSelectedScript: (script: string | null) => void;
 };
 
-// ---- Helper type untuk platform di install_methods[0] ----
+// ---- Helper Platform ----
 type PlatformInfo = {
   desktop?: { linux?: boolean; windows?: boolean; macos?: boolean };
   mobile?: { android?: boolean; ios?: boolean };
@@ -37,10 +35,10 @@ type PlatformInfo = {
   cli_only?: boolean;
   hosting?: { self_hosted?: boolean; saas?: boolean; managed_cloud?: boolean };
   deployment?: {
-    binary?: boolean;
+    script?: boolean;
     docker?: boolean;
     docker_compose?: boolean;
-    helm?: { oci_artifact?: boolean; helm_repository?: boolean };
+    helm ?: boolean;
     kubernetes?: boolean;
     terraform?: boolean;
   };
@@ -87,6 +85,16 @@ function SecondaryMeta({ item }: { item: Script }) {
       label: "Source code",
       href: sourceCode,
       icon: <Code className="h-4 w-4 text-muted-foreground" />,
+    });
+  }
+
+  // ⭐ Github stars
+  const githubStars = (item as any).github_stars;
+  if (githubStars) {
+    parts.push({
+      label: githubStars,
+      href: "",
+      icon: <Stars className="h-4 w-4 text-muted-foreground" />,
     });
   }
 
@@ -179,11 +187,10 @@ function PlatformSummary({ method }: { method?: InstallMethodWithPlatform }) {
   ].filter(Boolean) as string[];
 
   const deployment = [
-    platform.deployment?.binary && "Script",
+    platform.deployment?.script && "Script",
     platform.deployment?.docker && "Docker",
     platform.deployment?.docker_compose && "Docker Compose",
-    (platform.deployment?.helm?.oci_artifact ||
-      platform.deployment?.helm?.helm_repository) && "Helm",
+    platform.deployment?.helm && "Helm",
     platform.deployment?.kubernetes && "Kubernetes",
     platform.deployment?.terraform && "Terraform",
   ].filter(Boolean) as string[];
@@ -202,7 +209,6 @@ function PlatformSummary({ method }: { method?: InstallMethodWithPlatform }) {
     <MousePointerClick className="h-3 w-3 shrink-0" />
   );
 
-  // Kalau semua kosong, nggak usah nampilin apa-apa
   if (!desktop.length && !mobile.length && !hosting.length && !deployment.length && !ui.length) {
     return null;
   }
@@ -261,9 +267,9 @@ function ScriptHeader({ item }: { item: Script }) {
                 <h1 className="text-2xl font-semibold tracking-tight flex items-center gap-2">
                   {item.name}
                   <VersionInfo item={item} />
-                  <span className="inline-flex items-center rounded-md bg-accent/30 px-2 py-1 text-sm">
+                  {/* <span className="inline-flex items-center rounded-md bg-accent/30 px-2 py-1 text-sm">
                     {getDisplayValueFromType(item.type)}
-                  </span>
+                  </span> */}
                 </h1>
 
                 {/* META: Added • homepage • github repo */}
@@ -272,16 +278,12 @@ function ScriptHeader({ item }: { item: Script }) {
               </div>
             </div>
 
-            {/* PLATFORM SUMMARY ganti blok Default 2 vCPU 1GB 5GB */}
             <PlatformSummary method={defaultInstallMethod} />
           </div>
         </div>
       </div>
       <div className="flex flex-col gap-4 justify-between">
         <InterFaces item={item} />
-        {/* <div className="flex justify-end"> */}
-          {/* <Buttons item={item} /> */}
-        {/* </div> */}
       </div>
     </div>
   );
@@ -337,14 +339,8 @@ export function ScriptItem({ item, setSelectedScript }: ScriptItemProps) {
             <div className="mt-4 rounded-lg border shadow-sm">
               <div className="flex gap-3 px-4 py-2 bg-accent/25">
                 <h2 className="text-lg font-semibold">
-                  How to{" "}
-                  {item.type === "pve"
-                    ? "use"
-                    : item.type === "addon"
-                      ? "apply"
-                      : "install"}
+                  How to Install
                 </h2>
-                <Tooltips item={item} />
               </div>
               <Separator />
               <div className="">

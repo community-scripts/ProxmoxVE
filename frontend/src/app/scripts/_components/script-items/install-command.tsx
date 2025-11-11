@@ -29,9 +29,9 @@ export default function InstallCommand({ item }: { item: Script }) {
   const manifest = item.manifest_path ?? {};
   const slug = item.slug ?? "my-app";
 
-  const [binaryContent, setBinaryContent] = useState<string | null>(null);
-  const [binaryLoading, setBinaryLoading] = useState(false);
-  const [binaryError, setBinaryError] = useState<string | null>(null);
+  const [scriptContent, setScriptContent] = useState<string | null>(null);
+  const [scriptLoading, setScriptLoading] = useState(false);
+  const [scriptError, setScriptError] = useState<string | null>(null);
 
   const [dockerComposeContent, setDockerComposeContent] = useState<
     string | null
@@ -53,19 +53,19 @@ export default function InstallCommand({ item }: { item: Script }) {
   const [tfLoading, setTfLoading] = useState(false);
   const [tfError, setTfError] = useState<string | null>(null);
 
-  const hasBinary = !!manifest.binary;
+  const hasScript = !!manifest.script;
   const hasDockerCompose = !!manifest.docker_compose;
   const hasKubernetes = !!manifest.kubernetes;
   const hasHelm = !!manifest.helm;
   const hasTerraform = !!manifest.terraform;
 
   const defaultTab =
-    (hasBinary && "binary") ||
+    (hasScript && "script") ||
     (hasDockerCompose && "docker_compose") ||
     (hasHelm && "helm") ||
     (hasKubernetes && "kubernetes") ||
     (hasTerraform && "terraform") ||
-    "binary";
+    "script";
 
   function loadTextFile(
     path: string | null | undefined,
@@ -104,12 +104,12 @@ export default function InstallCommand({ item }: { item: Script }) {
   // Load masing-masing manifest, hanya jika path ada
   useEffect(() => {
     loadTextFile(
-      manifest.binary,
-      setBinaryContent,
-      setBinaryLoading,
-      setBinaryError
+      manifest.script,
+      setScriptContent,
+      setScriptLoading,
+      setScriptError
     );
-  }, [manifest.binary]);
+  }, [manifest.script]);
 
   useEffect(() => {
     loadTextFile(
@@ -163,7 +163,7 @@ export default function InstallCommand({ item }: { item: Script }) {
     <div className="p-4">
       <Tabs defaultValue={defaultTab} className="w-full max-w-4xl">
         <TabsList>
-          {hasBinary && <TabsTrigger value="binary">Script</TabsTrigger>}
+          {hasScript && <TabsTrigger value="script">Script</TabsTrigger>}
           {hasDockerCompose && (
             <TabsTrigger value="docker_compose">Docker Compose</TabsTrigger>
           )}
@@ -176,19 +176,19 @@ export default function InstallCommand({ item }: { item: Script }) {
           )}
         </TabsList>
 
-        {hasBinary && (
-          <TabsContent value="binary">
+        {hasScript && (
+          <TabsContent value="script">
             <p className="text-sm mt-2">
               Installation script for <strong>{item.name}</strong>, loaded from{" "}
-              <code>{manifest.binary}</code>.
+              <code>{manifest.script}</code>.
             </p>
-            {binaryLoading && (
+            {scriptLoading && (
               <p className="text-sm mt-2">Loading script manifest...</p>
             )}
-            {binaryError && (
-              <p className="text-sm mt-2 text-red-500">{binaryError}</p>
+            {scriptError && (
+              <p className="text-sm mt-2 text-red-500">{scriptError}</p>
             )}
-            {binaryContent && <CodeCopyButton>{binaryContent}</CodeCopyButton>}
+            {scriptContent && <CodeCopyButton>{scriptContent}</CodeCopyButton>}
           </TabsContent>
         )}
 

@@ -44,7 +44,7 @@ const initialScript: Script = {
   date_created: "",
   interface_port: null,
   documentation: null,
-  config_path: "",
+  // config_path removed
   website: null,
   logo: null,
   description: "",
@@ -94,34 +94,17 @@ export default function JSONGenerator() {
       .catch(error => console.error("Error fetching categories:", error));
   }, []);
 
-  const updateScript = useCallback((key: keyof Script, value: Script[keyof Script]) => {
+  // replace your current updateScript with this
+  const updateScript = useCallback(<K extends keyof Script>(key: K, value: Script[K]) => {
     setScript((prev) => {
-      const updated = { ...prev, [key]: value };
+      // create a shallow updated object and assert it matches Script for TS
+      const updated = { ...prev, [key]: value } as Script;
 
-      // keep install method script path behavior
-      if (updated.slug && updated.type) {
-        updated.install_methods = updated.install_methods.map((method) => {
-          let scriptPath = "";
-
-          if (updated.type === "pve") {
-            scriptPath = `tools/pve/${updated.slug}.sh`;
-          }
-          else if (updated.type === "addon") {
-            scriptPath = `tools/addon/${updated.slug}.sh`;
-          }
-          else if (method.type === "alpine") {
-            scriptPath = `${updated.type}/alpine-${updated.slug}.sh`;
-          }
-          else {
-            scriptPath = `${updated.type}/${updated.slug}.sh`;
-          }
-
-          return {
-            ...method,
-            script: scriptPath,
-          };
-        });
-      }
+      // If the caller explicitly updated slug OR install_methods, we don't auto-mut the methods.
+      // (you previously had special logic for `type`/`alpine`/`pve` — removed per your note)
+      //
+      // If you still want some install_methods normalization, do it at the call-site
+      // or add a small helper function invoked explicitly.
 
       const result = ScriptSchema.safeParse(updated);
       setIsValid(result.success);
@@ -130,12 +113,76 @@ export default function JSONGenerator() {
     });
   }, []);
 
+
   const handleCopy = useCallback(() => {
-    navigator.clipboard.writeText(JSON.stringify(script, null, 2));
-    setIsCopied(true);
-    setTimeout(() => setIsCopied(false), 2000);
-    toast.success("Copied metadata to clipboard");
+    const jsonString = JSON.stringify(script, null, 2);
+
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard
+        .writeText(jsonString)
+        .then(() => {
+          setIsCopied(true);
+          setTimeout(() => setIsCopied(false), 2000);
+          toast.success("Copied metadata to clipboard");
+        })
+        .catch((err) => {
+          console.error("Clipboard write failed, fallback:", err);
+
+          const textArea = document.createElement("textarea");
+          textArea.value = jsonString;
+          textArea.style.position = "fixed";
+          textArea.style.top = "0";
+          textArea.style.left = "0";
+          textArea.style.opacity = "0";
+          document.body.appendChild(textArea);
+          textArea.focus();
+          textArea.select();
+
+          try {
+            const successful = document.execCommand("copy");
+            if (successful) {
+              toast.success("Copied metadata to clipboard");
+              setIsCopied(true);
+              setTimeout(() => setIsCopied(false), 2000);
+            } else {
+              toast.error("Unable to copy to clipboard");
+            }
+          } catch (err2) {
+            toast.error("Clipboard copy failed");
+            console.error("Fallback copy failed:", err2);
+          }
+
+          document.body.removeChild(textArea);
+        });
+    } else {
+      const textArea = document.createElement("textarea");
+      textArea.value = jsonString;
+      textArea.style.position = "fixed";
+      textArea.style.top = "0";
+      textArea.style.left = "0";
+      textArea.style.opacity = "0";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+
+      try {
+        const successful = document.execCommand("copy");
+        if (successful) {
+          toast.success("Copied metadata to clipboard");
+          setIsCopied(true);
+          setTimeout(() => setIsCopied(false), 2000);
+        } else {
+          toast.error("Unable to copy to clipboard");
+        }
+      } catch (err) {
+        toast.error("Clipboard copy failed");
+        console.error("Fallback copy failed:", err);
+      }
+
+      document.body.removeChild(textArea);
+    }
   }, [script]);
+
 
   const handleDownload = useCallback(() => {
     const jsonString = JSON.stringify(script, null, 2);
@@ -308,14 +355,7 @@ export default function JSONGenerator() {
             />
           </div>
 
-          <div>
-            <Label>Config Path</Label>
-            <Input
-              placeholder="Path to config file"
-              value={script.config_path || ""}
-              onChange={e => updateScript("config_path", e.target.value || null)}
-            />
-          </div>
+          {/* Config Path input removed */}
 
           <div>
             <Label>
@@ -432,8 +472,6 @@ export default function JSONGenerator() {
                   kubernetes: "Kubernetes",
                   terraform: "Terraform",
                 };
-                // const isOn = Boolean((script as any).deployment?.[key]);
-                // const pathValue = (script as any).deployment?.paths?.[key] ?? buildExamplePath(manifestFileExamples[key]);
 
                 const isOn = Boolean((script as any).deployment?.[key]);
                 // always compute path from current slug (fallback "app-name")

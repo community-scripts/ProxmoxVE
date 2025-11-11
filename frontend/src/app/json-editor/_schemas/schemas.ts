@@ -1,69 +1,101 @@
 import { z } from "zod";
 
+/** Deployment object (optional inside each install method now) */
+export const DeploymentSchema = z.object({
+  script: z.boolean().optional(),
+  docker: z.boolean().optional(),
+  docker_compose: z.boolean().optional(),
+  helm: z.boolean().optional(),
+  kubernetes: z.boolean().optional(),
+  terraform: z.boolean().optional(),
+}).partial();
+
+/** Hosting (flags) */
+export const HostingSchema = z
+  .object({
+    self_hosted: z.boolean().optional(),
+    saas: z.boolean().optional(),
+    managed_cloud: z.boolean().optional(),
+  })
+  .partial();
+
+/** UI (flags) */
+export const UiSchema = z
+  .object({
+    cli: z.boolean().optional(),
+    gui: z.boolean().optional(),
+    web_ui: z.boolean().optional(),
+    api: z.boolean().optional(),
+    tui: z.boolean().optional(),
+  })
+  .partial();
+
+/** Platform object: now includes hosting and ui nested (to match your UI code) */
+export const PlatformSchema = z
+  .object({
+    desktop: z
+      .object({
+        linux: z.boolean().optional(),
+        windows: z.boolean().optional(),
+        macos: z.boolean().optional(),
+      })
+      .optional(),
+    mobile: z
+      .object({
+        android: z.boolean().optional(),
+        ios: z.boolean().optional(),
+      })
+      .optional(),
+    web_app: z.boolean().optional(),
+    browser_extension: z.boolean().optional(),
+    cli_only: z.boolean().optional(),
+
+    // nested hosting + ui to match install-method.tsx usage (method.platform.hosting / method.platform.ui)
+    hosting: HostingSchema.optional(),
+    ui: UiSchema.optional(),
+  })
+  .partial();
+
+/** Single install method shape
+ *  platform is optional, deployment is optional (we keep top-level deployment optional
+ *  because your page.tsx also keeps a top-level script.deployment object)
+ */
 export const InstallMethodSchema = z.object({
-  platform: z.object({
-    desktop: z.object({
-      linux: z.boolean(),
-      windows: z.boolean(),
-      macos: z.boolean(),
-    }),
-    mobile: z.object({
-      android: z.boolean(),
-      ios: z.boolean(),
-    }),
-    web_app: z.boolean(),
-    browser_extension: z.boolean(),
-    cli_only: z.boolean(),
-    hosting: z.object({
-      self_hosted: z.boolean(),
-      saas: z.boolean(),
-      managed_cloud: z.boolean(),
-    }),
-    deployment: z.object({
-      script: z.boolean(),
-      docker: z.boolean(),
-      docker_compose: z.boolean(),
-      helm: z.boolean(),
-      kubernetes: z.boolean(),
-      terraform: z.boolean(),
-    }),
-    ui: z.object({
-      cli: z.boolean(),
-      gui: z.boolean(),
-      web_ui: z.boolean(),
-      api: z.boolean(),
-      tui: z.boolean(),
-    }),
-  }),
+  platform: PlatformSchema.optional(),
+  deployment: DeploymentSchema.optional(),
 });
 
-const NoteSchema = z.object({
-  text: z.string().min(1, "Note text cannot be empty"),
-  type: z.string().min(1, "Note type cannot be empty"),
-});
-
+/** Main Script schema */
 export const ScriptSchema = z.object({
   name: z.string().min(1, "Name is required"),
   slug: z.string().min(1, "Slug is required"),
-  categories: z.array(z.number()),
-  date_created: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be in YYYY-MM-DD format").min(1, "Date is required"),
-  type: z.enum(["vm", "ct", "pve", "addon", "turnkey"], {
-    errorMap: () => ({ message: "Type must be either 'vm', 'ct', 'pve', 'addon' or 'turnkey'" }),
-  }),
-  updateable: z.boolean(),
-  privileged: z.boolean(),
-  interface_port: z.number().nullable(),
-  documentation: z.string().nullable(),
-  website: z.string().url().nullable(),
-  logo: z.string().url().nullable(),
-  config_path: z.string(),
+  categories: z.array(z.number()).min(1, "At least one category is required"),
+  date_created: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be in YYYY-MM-DD format")
+    .min(1, "Date is required"),
+  interface_port: z.number().nullable().optional(),
+  documentation: z.string().nullable().optional(),
+  website: z.string().url().nullable().optional(),
+  logo: z.string().url().min(1, "Logo is required"),
+
   description: z.string().min(1, "Description is required"),
+
   install_methods: z.array(InstallMethodSchema).min(1, "At least one install method is required"),
-  default_credentials: z.object({
-    username: z.string().nullable(),
-    password: z.string().nullable(),
-  }),
-  notes: z.array(NoteSchema),
+
+  default_credentials: z
+    .object({
+      username: z.string().nullable(),
+      password: z.string().nullable(),
+    })
+    .optional(),
+
+  notes: z.array(
+    z.object({
+      text: z.string().min(1, "Note text cannot be empty"),
+      type: z.string().min(1, "Note type cannot be empty"),
+    }),
+  ).optional().default([]),
 });
 
 export type Script = z.infer<typeof ScriptSchema>;

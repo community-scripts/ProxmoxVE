@@ -1,5 +1,5 @@
-import { CalendarPlus } from "lucide-react";
-import { useMemo, useState } from "react";
+import { CalendarPlus, Package } from "lucide-react";
+import { useMemo, useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -12,32 +12,50 @@ import { extractDate } from "@/lib/time";
 
 const ITEMS_PER_PAGE = 3;
 
-export function getDisplayValueFromType(type: string) {
-  switch (type) {
-    case "ct":
-      return "LXC";
-    case "vm":
-      return "VM";
-    case "pve":
-    case "addon":
-      return "";
-    default:
-      return "";
-  }
+// ⬇️ Reusable icon loader with fallback
+function AppIcon({ src, name, size = 64 }: { src?: string | null; name: string; size?: number }) {
+  const [errored, setErrored] = useState(false);
+
+  useEffect(() => setErrored(false), [src]);
+
+  const fallbackClass = "h-11 w-11 object-contain rounded-md p-1";
+  const iconClass =
+    "h-11 w-11 min-w-[44px] min-h-[44px] rounded-md p-1 text-muted-foreground dark:text-muted text-opacity-90";
+
+  const resolvedSrc = src && !errored ? src : undefined;
+
+  return (
+    <>
+      {resolvedSrc ? (
+        <Image
+          src={resolvedSrc}
+          unoptimized
+          height={size}
+          width={size}
+          alt={`${name} icon`}
+          onError={() => setErrored(true)}
+          className={fallbackClass}
+        />
+      ) : (
+        <div className="flex h-16 w-16 min-w-16 items-center justify-center rounded-lg bg-accent/10 dark:bg-accent/20 p-1">
+          <Package className={iconClass} aria-hidden />
+        </div>
+      )}
+    </>
+  );
 }
 
 export function LatestScripts({ items }: { items: Category[] }) {
   const [page, setPage] = useState(1);
 
   const latestScripts = useMemo(() => {
-    if (!items)
-      return [];
+    if (!items) return [];
 
     const scripts = items.flatMap(category => category.scripts || []);
 
     // Filter out duplicates by slug
     const uniqueScriptsMap = new Map<string, Script>();
-    scripts.forEach((script) => {
+    scripts.forEach(script => {
       if (!uniqueScriptsMap.has(script.slug)) {
         uniqueScriptsMap.set(script.slug, script);
       }
@@ -48,20 +66,13 @@ export function LatestScripts({ items }: { items: Category[] }) {
     );
   }, [items]);
 
-  const goToNextPage = () => {
-    setPage(prevPage => prevPage + 1);
-  };
-
-  const goToPreviousPage = () => {
-    setPage(prevPage => prevPage - 1);
-  };
+  const goToNextPage = () => setPage(prev => prev + 1);
+  const goToPreviousPage = () => setPage(prev => prev - 1);
 
   const startIndex = (page - 1) * ITEMS_PER_PAGE;
   const endIndex = page * ITEMS_PER_PAGE;
 
-  if (!items) {
-    return null;
-  }
+  if (!items) return null;
 
   return (
     <div className="">
@@ -88,22 +99,9 @@ export function LatestScripts({ items }: { items: Category[] }) {
             <CardHeader>
               <CardTitle className="flex items-center gap-3">
                 <div className="flex h-16 w-16 min-w-16 items-center justify-center rounded-lg bg-accent p-1">
-                  <Image
-                    src={script.logo || `/${basePath}/logo.png`}
-                    unoptimized
-                    height={64}
-                    width={64}
-                    alt=""
-                    onError={e => ((e.currentTarget as HTMLImageElement).src = `/${basePath}/logo.png`)}
-                    className="h-11 w-11 object-contain"
-                  />
+                  <AppIcon src={script.logo || `/${basePath}/logo.svg`} name={script.name || script.slug} />
                 </div>
                 <div className="flex flex-col">
-                  <p className="text-lg line-clamp-1">
-                    {script.name}
-                    {" "}
-                    {getDisplayValueFromType(script.type)}
-                  </p>
                   <p className="text-sm text-muted-foreground flex items-center gap-1">
                     <CalendarPlus className="h-4 w-4" />
                     {extractDate(script.date_created)}
@@ -135,7 +133,7 @@ export function LatestScripts({ items }: { items: Category[] }) {
 
 export function MostViewedScripts({ items }: { items: Category[] }) {
   const mostViewedScripts = items.reduce((acc: Script[], category) => {
-    const foundScripts = category.scripts.filter(script => mostPopularScripts.includes(script.slug));
+    const foundScripts = (category.scripts || []).filter(script => mostPopularScripts.includes(script.slug));
     return acc.concat(foundScripts);
   }, []);
 
@@ -151,23 +149,10 @@ export function MostViewedScripts({ items }: { items: Category[] }) {
           <Card key={script.slug} className="min-w-[250px] flex-1 flex-grow bg-accent/30">
             <CardHeader>
               <CardTitle className="flex items-center gap-3">
-                <div className="flex size-16 min-w-16 items-center justify-center rounded-lg bg-accent p-1">
-                  <Image
-                    unoptimized
-                    src={script.logo || `/${basePath}/logo.png`}
-                    height={64}
-                    width={64}
-                    alt=""
-                    onError={e => ((e.currentTarget as HTMLImageElement).src = `/${basePath}/logo.png`)}
-                    className="h-11 w-11 object-contain"
-                  />
+                <div className="flex h-16 w-16 min-w-16 items-center justify-center rounded-lg bg-accent p-1">
+                  <AppIcon src={script.logo || `/${basePath}/logo.svg`} name={script.name || script.slug} />
                 </div>
                 <div className="flex flex-col">
-                  <p className="line-clamp-1 text-lg">
-                    {script.name}
-                    {" "}
-                    {getDisplayValueFromType(script.type)}
-                  </p>
                   <p className="flex items-center gap-1 text-sm text-muted-foreground">
                     <CalendarPlus className="h-4 w-4" />
                     {extractDate(script.date_created)}

@@ -12,19 +12,11 @@ export type Script = {
   documentation: string | null;
   website: string | null;
   github: string | null;
+  github_stars: string | null;
   logo: string | null;
   config_path: string;
   description: string;
   install_methods: {
-    type: "default" | "alpine";
-    script: string;
-    resources: {
-      cpu: number | null;
-      ram: number | null;
-      hdd: number | null;
-      os: string | null;
-      version: string | null;
-    };
     platform: {
       desktop: {
         linux: boolean,
@@ -44,13 +36,10 @@ export type Script = {
         managed_cloud: boolean
       },
       deployment: {
-        binary: boolean,
+        script: boolean,
         docker: boolean,
         docker_compose: boolean,
-        helm: {
-          oci_artifact: boolean,
-          helm_repository: boolean,
-        },
+        helm: boolean,
         kubernetes: boolean,
         terraform: boolean
       },
@@ -74,7 +63,7 @@ export type Script = {
     },
   ];
   manifest_path?: {
-    binary?: string | null;
+    script?: string | null;
     docker_compose?: string | null;
     kubernetes?: string | null;
     helm?: string | null;

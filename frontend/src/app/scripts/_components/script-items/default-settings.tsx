@@ -59,11 +59,10 @@ export default function DefaultSettings({ item }: { item: Script }) {
   ].filter(Boolean) as string[];
 
   const deployment = [
-    platform.deployment?.binary && "Script",
+    platform.deployment?.script && "Script",
     platform.deployment?.docker && "Docker",
     platform.deployment?.docker_compose && "Docker Compose",
-    (platform.deployment?.helm?.oci_artifact ||
-      platform.deployment?.helm?.helm_repository) && "Helm",
+    platform.deployment?.helm && "Helm",
     platform.deployment?.kubernetes && "Kubernetes",
     platform.deployment?.terraform && "Terraform",
   ].filter(Boolean) as string[];
