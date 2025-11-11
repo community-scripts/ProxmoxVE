@@ -38,7 +38,7 @@
 <br />
 
 <div align="center">
-  <sub>🤝 <strong>Spotlight on</strong></sub>
+  <sub>🙌 <strong>Shoutout to</strong></sub>
   <br />
   <br />
   <a href="https://selfh.st/">
@@ -142,48 +142,65 @@ This adds a menu to your Proxmox interface for easy script access without visiti
 
 ---
 
-## 🤝 Get Involved
-
-### 💬 Join the Community
+## 💬 Join the Community
 
 <table>
   <tr>
     <td align="center" width="33%">
+      <h3>💬 Discord</h3>
+      <p>Real-time chat, support, and discussions</p>
       <a href="https://discord.gg/3AnUqsXnmK">
-        <img src="https://img.shields.io/badge/Discord-Join_Chat-7289da?style=flat-square&logo=discord&logoColor=white" alt="Discord" />
+        <img src="https://img.shields.io/badge/Join-7289da?style=for-the-badge&logo=discord&logoColor=white" alt="Discord" />
       </a>
-      <br />
-      <sub>Real-time support & discussions</sub>
     </td>
     <td align="center" width="33%">
+      <h3>💭 Discussions</h3>
+      <p>Feature requests, Q&A, and ideas</p>
       <a href="https://github.com/community-scripts/ProxmoxVE/discussions">
-        <img src="https://img.shields.io/badge/Discussions-Share_Ideas-238636?style=flat-square&logo=github&logoColor=white" alt="Discussions" />
+        <img src="https://img.shields.io/badge/Discuss-238636?style=for-the-badge&logo=github&logoColor=white" alt="Discussions" />
       </a>
-      <br />
-      <sub>Feature requests & Q&A</sub>
     </td>
     <td align="center" width="33%">
+      <h3>🐛 Issues</h3>
+      <p>Bug reports and issue tracking</p>
       <a href="https://github.com/community-scripts/ProxmoxVE/issues">
-        <img src="https://img.shields.io/badge/Issues-Report_Bugs-d73a4a?style=flat-square&logo=github&logoColor=white" alt="Issues" />
+        <img src="https://img.shields.io/badge/Report-d73a4a?style=for-the-badge&logo=github&logoColor=white" alt="Issues" />
       </a>
-      <br />
-      <sub>Bug reports & tracking</sub>
     </td>
   </tr>
 </table>
 
-### 🛠️ Contribute
+---
 
-We welcome all types of contributions:
+## 🛠️ Contribute
 
-| Type | How to Help |
-|------|-------------|
-| 💻 **Code** | Add new scripts or improve existing ones |
-| 📝 **Documentation** | Write guides, improve READMEs, translate content |
-| 🧪 **Testing** | Test scripts and report compatibility issues |
-| 💡 **Ideas** | Suggest features or workflow improvements |
+<table>
+  <tr>
+    <td align="center" width="25%">
+      <h3>💻 Code</h3>
+      <p>Add new scripts or improve existing ones</p>
+    </td>
+    <td align="center" width="25%">
+      <h3>📝 Documentation</h3>
+      <p>Write guides, improve READMEs, translate content</p>
+    </td>
+    <td align="center" width="25%">
+      <h3>🧪 Testing</h3>
+      <p>Test scripts and report compatibility issues</p>
+    </td>
+    <td align="center" width="25%">
+      <h3>💡 Ideas</h3>
+      <p>Suggest features or workflow improvements</p>
+    </td>
+  </tr>
+</table>
 
-👉 Check our **[Contributing Guidelines](https://github.com/community-scripts/ProxmoxVE/blob/main/.github/CONTRIBUTOR_AND_GUIDES/CONTRIBUTING.md)** to get started.
+<div align="center">
+  <br />
+  
+  👉 Check our **[Contributing Guidelines](https://github.com/community-scripts/ProxmoxVE/blob/main/.github/CONTRIBUTOR_AND_GUIDES/CONTRIBUTING.md)** to get started
+  
+</div>
 
 ---
 
