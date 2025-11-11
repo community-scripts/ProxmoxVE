@@ -44,6 +44,7 @@ function update_script() {
     cd /opt/web-check
     $STD yarn install --frozen-lockfile --network-timeout 100000
     $STD yarn build --production
+    $STD npm cache clean --force
     msg_ok "Built Web-Check"
 
     msg_info "Restoring backup"
