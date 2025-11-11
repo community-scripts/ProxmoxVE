@@ -314,13 +314,9 @@ export default function JSONGenerator() {
           </div>
 
           <div>
-            <Label>
-              Logo
-              {" "}
-              <span className="text-red-500">*</span>
-            </Label>
+            <Label>Logo (optional)</Label>
             <Input
-              placeholder="Full logo URL"
+              placeholder="Full logo URL (leave blank to use default icon)"
               type="url"
               value={script.logo || ""}
               onChange={e => updateScript("logo", normalizeUrl(e.target.value))}
