@@ -95,7 +95,6 @@ msg_ok "Installed Web-Check"
 
 msg_info "Building Web-Check"
 $STD yarn build --production
-rm -rf /var/lib/apt/lists/* /app/node_modules/.cache
 msg_ok "Built Web-Check"
 
 msg_info "Creating Service"
