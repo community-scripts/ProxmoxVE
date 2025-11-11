@@ -1,18 +1,68 @@
 [
   {
-    "name": "dgtlmoon/changedetection.io",
-    "version": "0.50.41",
-    "date": "2025-11-10T11:00:46Z"
+    "name": "chrisvel/tududi",
+    "version": "v0.86",
+    "date": "2025-11-10T20:54:25Z"
   },
   {
-    "name": "emqx/emqx",
-    "version": "e5.10.2",
-    "date": "2025-11-10T10:58:21Z"
+    "name": "pommee/goaway",
+    "version": "v0.62.17",
+    "date": "2025-11-10T19:45:49Z"
+  },
+  {
+    "name": "chrisbenincasa/tunarr",
+    "version": "v0.22.13",
+    "date": "2025-11-10T18:12:24Z"
   },
   {
     "name": "autobrr/autobrr",
     "version": "v1.69.0",
-    "date": "2025-11-10T10:57:40Z"
+    "date": "2025-11-10T17:22:00Z"
+  },
+  {
+    "name": "meilisearch/meilisearch",
+    "version": "latest",
+    "date": "2025-11-10T17:01:21Z"
+  },
+  {
+    "name": "gtsteffaniak/filebrowser",
+    "version": "v1.0.1-stable",
+    "date": "2025-11-10T16:51:44Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.30.9",
+    "date": "2025-11-10T16:23:29Z"
+  },
+  {
+    "name": "fuma-nama/fumadocs",
+    "version": "fumadocs-mdx@13.0.6",
+    "date": "2025-11-10T14:43:06Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "v1.0.0",
+    "date": "2025-11-07T12:52:42Z"
+  },
+  {
+    "name": "grokability/snipe-it",
+    "version": "v8.3.5",
+    "date": "2025-11-10T14:12:12Z"
+  },
+  {
+    "name": "SigNoz/signoz",
+    "version": "v0.101.0-rc.1",
+    "date": "2025-11-10T13:08:55Z"
+  },
+  {
+    "name": "dgtlmoon/changedetection.io",
+    "version": "0.50.42",
+    "date": "2025-11-10T12:32:49Z"
+  },
+  {
+    "name": "emqx/emqx",
+    "version": "e6.0.1",
+    "date": "2025-11-10T11:58:39Z"
   },
   {
     "name": "documenso/documenso",
@@ -73,11 +123,6 @@
     "name": "Cleanuparr/Cleanuparr",
     "version": "v2.4.5",
     "date": "2025-11-09T17:14:01Z"
-  },
-  {
-    "name": "msgbyte/tianji",
-    "version": "v1.30.7",
-    "date": "2025-11-09T16:20:57Z"
   },
   {
     "name": "TechnitiumSoftware/DnsServer",
@@ -155,29 +200,14 @@
     "date": "2025-11-08T13:36:25Z"
   },
   {
-    "name": "pommee/goaway",
-    "version": "v0.62.16",
-    "date": "2025-11-08T12:15:30Z"
-  },
-  {
     "name": "runtipi/runtipi",
     "version": "v4.6.3",
     "date": "2025-11-08T10:06:18Z"
   },
   {
-    "name": "fuma-nama/fumadocs",
-    "version": "fumadocs-openapi@10.0.2",
-    "date": "2025-11-08T09:58:09Z"
-  },
-  {
     "name": "pocketbase/pocketbase",
     "version": "v0.32.0",
     "date": "2025-11-08T09:36:27Z"
-  },
-  {
-    "name": "chrisvel/tududi",
-    "version": "v0.85.1",
-    "date": "2025-10-31T10:45:26Z"
   },
   {
     "name": "home-assistant/core",
@@ -218,11 +248,6 @@
     "name": "openobserve/openobserve",
     "version": "v0.16.0",
     "date": "2025-11-07T12:55:42Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "v1.0.0",
-    "date": "2025-11-07T12:52:42Z"
   },
   {
     "name": "element-hq/synapse",
@@ -270,11 +295,6 @@
     "date": "2025-11-06T20:20:13Z"
   },
   {
-    "name": "chrisbenincasa/tunarr",
-    "version": "v0.22.12",
-    "date": "2025-11-06T18:43:51Z"
-  },
-  {
     "name": "MariaDB/server",
     "version": "mariadb-11.8.4",
     "date": "2025-11-06T17:24:30Z"
@@ -295,19 +315,9 @@
     "date": "2025-11-06T12:08:24Z"
   },
   {
-    "name": "meilisearch/meilisearch",
-    "version": "prototype-v1.24.0.s3-snapshots-5",
-    "date": "2025-11-06T11:43:12Z"
-  },
-  {
     "name": "transmission/transmission",
     "version": "4.0.1-beta.1",
     "date": "2024-12-13T00:16:24Z"
-  },
-  {
-    "name": "SigNoz/signoz",
-    "version": "v0.100.1",
-    "date": "2025-11-06T07:53:11Z"
   },
   {
     "name": "apache/tomcat",
@@ -347,7 +357,7 @@
   {
     "name": "javedh-dev/tracktor",
     "version": "0.5.1",
-    "date": "2025-11-05T15:51:02Z"
+    "date": "2025-11-05T16:14:37Z"
   },
   {
     "name": "zitadel/zitadel",
@@ -483,11 +493,6 @@
     "name": "actualbudget/actual",
     "version": "v25.11.0",
     "date": "2025-11-04T00:32:21Z"
-  },
-  {
-    "name": "gtsteffaniak/filebrowser",
-    "version": "v1.0.0-stable",
-    "date": "2025-11-03T22:24:23Z"
   },
   {
     "name": "jupyter/notebook",
@@ -843,11 +848,6 @@
     "name": "readeck/readeck",
     "version": "0.20.4",
     "date": "2025-10-18T10:00:42Z"
-  },
-  {
-    "name": "grokability/snipe-it",
-    "version": "v8.3.4",
-    "date": "2025-10-17T18:13:24Z"
   },
   {
     "name": "NodeBB/NodeBB",
