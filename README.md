@@ -38,7 +38,7 @@
 <br />
 
 <div align="center">
-  <sub>🤝 <strong>Proud Partner</strong></sub>
+  <sub>🤝 <strong>Spotlight on</strong></sub>
   <br />
   <br />
   <a href="https://selfh.st/">
