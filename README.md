@@ -206,14 +206,11 @@ This adds a menu to your Proxmox interface for easy script access without visiti
 
 ## ❤️ Support the Project
 
-<div align="center">
-
-This project is maintained by volunteers in memory of tteck.  
-Your support helps us maintain infrastructure, improve documentation, and give back to important causes.
+This project is maintained by volunteers in memory of tteck. Your support helps us maintain infrastructure, improve documentation, and give back to important causes.
 
 **🎗️ 30% of all donations go directly to cancer research and hospice care**
 
-<br />
+<div align="center">
 
 <a href="https://ko-fi.com/community_scripts">
   <img src="https://img.shields.io/badge/☕_Buy_us_a_coffee-Support_on_Ko--fi-FF5F5F?style=for-the-badge&labelColor=2d3748" alt="Support on Ko-fi" />
