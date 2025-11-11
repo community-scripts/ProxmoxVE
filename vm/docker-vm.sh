@@ -24,7 +24,7 @@ RANDOM_UUID="$(cat /proc/sys/kernel/random/uuid)"
 METHOD=""
 NSAPP="docker-vm"
 var_os="debian"
-var_version="12"
+var_version="13"
 DISK_SIZE="10G"
 
 YW=$(echo "\033[33m")
@@ -462,8 +462,18 @@ else
 fi
 msg_ok "Using ${CL}${BL}$STORAGE${CL} ${GN}for Storage Location."
 msg_ok "Virtual Machine ID is ${CL}${BL}$VMID${CL}."
-msg_info "Retrieving the URL for the Debian 12 Qcow2 Disk Image"
-URL="https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-nocloud-$(dpkg --print-architecture).qcow2"
+
+if ! command -v virt-customize &>/dev/null; then
+  msg_info "Installing Pre-Requisite libguestfs-tools onto Host"
+  apt-get -qq update >/dev/null
+  apt-get -qq install libguestfs-tools lsb-release -y >/dev/null
+  # Workaround for Proxmox VE 9.0 libguestfs issue
+  apt-get -qq install dhcpcd-base -y >/dev/null 2>&1 || true
+  msg_ok "Installed libguestfs-tools successfully"
+fi
+
+msg_info "Retrieving the URL for the Debian 13 Qcow2 Disk Image"
+URL="https://cloud.debian.org/images/cloud/bookworm/latest/debian-13-nocloud-$(dpkg --print-architecture).qcow2"
 sleep 2
 msg_ok "${CL}${BL}${URL}${CL}"
 curl -f#SL -o "$(basename "$URL")" "$URL"
@@ -492,15 +502,6 @@ for i in {0,1}; do
   eval DISK${i}=vm-${VMID}-disk-${i}${DISK_EXT:-}
   eval DISK${i}_REF=${STORAGE}:${DISK_REF:-}${!disk}
 done
-
-if ! command -v virt-customize &>/dev/null; then
-  msg_info "Installing Pre-Requisite libguestfs-tools onto Host"
-  apt-get -qq update >/dev/null
-  apt-get -qq install libguestfs-tools lsb-release -y >/dev/null
-  # Workaround for Proxmox VE 9.0 libguestfs issue
-  apt-get -qq install dhcpcd-base -y >/dev/null 2>&1 || true
-  msg_ok "Installed libguestfs-tools successfully"
-fi
 
 msg_info "Adding Docker and Docker Compose Plugin to Debian 12 Qcow2 Disk Image"
 virt-customize -q -a "${FILE}" --install qemu-guest-agent,apt-transport-https,ca-certificates,curl,gnupg,software-properties-common,lsb-release >/dev/null &&
