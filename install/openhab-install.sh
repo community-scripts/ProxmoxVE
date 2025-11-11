@@ -32,10 +32,10 @@ mkdir -p /var/log/openhab
 chown -R openhab:openhab /var/lib/openhab /etc/openhab /var/log/openhab
 msg_ok "Initialized openHAB directories"
 
-msg_info "Starting openHAB"
+msg_info "Starting Service"
 systemctl daemon-reload
 systemctl enable -q --now openhab
-msg_ok "Started openHAB"
+msg_ok "Started Service"
 
 motd_ssh
 customize
