@@ -20,14 +20,12 @@ $STD apt-get install -y \
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up evcc Repository"
-curl -fsSL https://dl.evcc.io/public/evcc/stable/gpg.EAD5D0E07B0EC0FD.key | gpg --dearmor -o /etc/apt/keyrings/evcc-stable.gpg
-cat <<EOF >/etc/apt/sources.list.d/evcc-stable.sources
-Types: deb
-URIs: https://dl.evcc.io/public/evcc/stable/deb/debian/
-Suites: $(lsb_release -cs)
-Components: main
-Signed-By: /etc/apt/keyrings/evcc-stable.gpg
-EOF
+setup_deb822_repo \
+  "evcc-stable" \
+  "https://dl.evcc.io/public/evcc/stable/gpg.EAD5D0E07B0EC0FD.key" \
+  "https://dl.evcc.io/public/evcc/stable/deb/debian/" \
+  "$VERSION_CODENAME" \
+  "main"
 $STD apt update
 msg_ok "evcc Repository setup sucessfully"
 
@@ -38,8 +36,4 @@ msg_ok "Installed evcc"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc
