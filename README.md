@@ -40,8 +40,9 @@
 <div align="center">
   <sub>🤝 <strong>Proud Partner</strong></sub>
   <br />
+  <br />
   <a href="https://selfh.st/">
-    <img src="https://img.shields.io/badge/selfh.st-Icons_for_Self--Hosted_Services-2563eb?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTIgMkM2LjQ4IDIgMiA2LjQ4IDIgMTJzNC40OCAxMCAxMCAxMCAxMC00LjQ4IDEwLTEwUzE3LjUyIDIgMTIgMnptMCAxOGMtNC40MSAwLTgtMy41OS04LThzMy41OS04IDgtOCA4IDMuNTkgOCA4LTMuNTkgOC04IDh6IiBmaWxsPSJ3aGl0ZSIvPjwvc3ZnPg==&labelColor=1e3a8a" alt="selfh.st Icons" />
+    <img src="https://img.shields.io/badge/selfh.st-Icons_for_Self--Hosted-2563eb?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTIgMkM2LjQ4IDIgMiA2LjQ4IDIgMTJzNC40OCAxMCAxMCAxMCAxMC00LjQ4IDEwLTEwUzE3LjUyIDIgMTIgMnptMCAxOGMtNC40MSAwLTgtMy41OS04LThzMy41OS04IDgtOCA4IDMuNTkgOCA4LTMuNTkgOC04IDh6IiBmaWxsPSJ3aGl0ZSIvPjwvc3ZnPg==&labelColor=1e3a8a" alt="selfh.st Icons" />
   </a>
   <br />
   <sub><a href="https://github.com/selfhst/icons">View on GitHub</a> • Consistent, beautiful icons for 400+ self-hosted apps</sub>
@@ -54,7 +55,7 @@
 <table>
   <tr>
     <td align="center" width="25%">
-      <h3>🚀 Quick Setup</h3>
+      <h3>⚡ Quick Setup</h3>
       <p>One-command installations for popular services and containers</p>
     </td>
     <td align="center" width="25%">
@@ -113,7 +114,7 @@
 
 ---
 
-## 🚀 Installation
+## 📥 Getting Started
 
 Choose your preferred installation method:
 
