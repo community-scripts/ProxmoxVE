@@ -6,7 +6,7 @@ import Link from "next/link";
 import type { Category, Script } from "@/lib/types";
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { basePath, mostPopularScripts } from "@/config/site-config";
+import { mostPopularScripts } from "@/config/site-config";
 import { Button } from "@/components/ui/button";
 import { extractDate } from "@/lib/time";
 
@@ -99,7 +99,7 @@ export function LatestScripts({ items }: { items: Category[] }) {
             <CardHeader>
               <CardTitle className="flex items-center gap-3">
                 <div className="flex h-16 w-16 min-w-16 items-center justify-center rounded-lg bg-accent p-1">
-                  <AppIcon src={script.logo || `/${basePath}/logo.svg`} name={script.name || script.slug} />
+                  <AppIcon src={script.logo} name={script.name || script.slug} />
                 </div>
                 <div className="flex flex-col">
                   <p className="text-sm text-muted-foreground flex items-center gap-1">
@@ -150,7 +150,7 @@ export function MostViewedScripts({ items }: { items: Category[] }) {
             <CardHeader>
               <CardTitle className="flex items-center gap-3">
                 <div className="flex h-16 w-16 min-w-16 items-center justify-center rounded-lg bg-accent p-1">
-                  <AppIcon src={script.logo || `/${basePath}/logo.svg`} name={script.name || script.slug} />
+                  <AppIcon src={script.logo} name={script.name || script.slug} />
                 </div>
                 <div className="flex flex-col">
                   <p className="flex items-center gap-1 text-sm text-muted-foreground">
