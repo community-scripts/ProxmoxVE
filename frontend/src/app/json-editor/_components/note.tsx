@@ -1,7 +1,7 @@
 import type { z } from "zod";
 
 import { PlusCircle, Trash2 } from "lucide-react";
-import { memo, useCallback, useRef } from "react";
+import { memo, useCallback } from "react";
 
 import {
   Select,
@@ -100,8 +100,6 @@ function Note({
   setIsValid,
   setZodErrors,
 }: NoteProps) {
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
-
   const addNote = useCallback(() => {
     setScript({
       ...script,
@@ -124,12 +122,6 @@ function Note({
     setIsValid(result.success);
     setZodErrors(result.success ? null : result.error);
     setScript(updated);
-    // Restore focus after state update
-    if (key === "text") {
-      setTimeout(() => {
-        inputRefs.current[index]?.focus();
-      }, 0);
-    }
   }, [script, setScript, setIsValid, setZodErrors]);
 
   const removeNote = useCallback((index: number) => {

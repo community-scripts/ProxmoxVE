@@ -269,33 +269,6 @@ export default function JSONGenerator() {
   const buildExamplePath = (fileName: string) =>
     `/public/manifest/${script.slug || "app-name"}/${fileName}`;
 
-  // PLATFORM helpers: keys and friendly labels
-  const platformKeys = [
-    { key: "desktop", label: "Desktop", desc: "Select desktop targets" },
-    { key: "mobile", label: "Mobile", desc: "Native mobile platforms" },
-    { key: "web_extensions", label: "Web & Extensions", desc: "Web app, browser extension, CLI-only" },
-    { key: "hosting", label: "Hosting", desc: "Self-hosted / SaaS / Managed Cloud" },
-    { key: "ui_interface", label: "UI / Interface", desc: "CLI, GUI, Web UI, API, TUI" },
-  ];
-
-  const selectAllPlatforms = () => {
-    const platformObj: any = {};
-    platformKeys.forEach(p => (platformObj[p.key] = true));
-    updateScript("platform" as keyof Script, platformObj as unknown as Script[keyof Script]);
-  };
-
-  const clearAllPlatforms = () => {
-    const platformObj: any = {};
-    platformKeys.forEach(p => (platformObj[p.key] = false));
-    updateScript("platform" as keyof Script, platformObj as unknown as Script[keyof Script]);
-  };
-
-  const togglePlatform = (key: string, checked: boolean) => {
-    const prev: any = (script as any).platform || {};
-    const next = { ...prev, [key]: checked };
-    updateScript("platform" as keyof Script, next as unknown as Script[keyof Script]);
-  };
-
   // DEPLOYMENT toggle using Switch, no example files block
   const toggleDeployment = (key: string, checked: boolean) => {
     const prevDep: any = (script as any).deployment || {};
