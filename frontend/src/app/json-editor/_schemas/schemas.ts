@@ -77,7 +77,7 @@ export const ScriptSchema = z.object({
   interface_port: z.number().nullable().optional(),
   documentation: z.string().nullable().optional(),
   website: z.string().url().nullable().optional(),
-  logo: z.string().url().min(1, "Logo is required"),
+  logo: z.string().url().nullable().optional(),
 
   description: z.string().min(1, "Description is required"),
 

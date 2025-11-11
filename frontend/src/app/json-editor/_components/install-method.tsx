@@ -1,6 +1,6 @@
 import React, { memo, useCallback, useEffect } from "react";
 import { Script } from "../_schemas/schemas";
-import { PlatformSchema, InstallMethodSchema, DeploymentSchema, HostingSchema, UiSchema, ScriptSchema } from "../_schemas/schemas";
+import { InstallMethodSchema, ScriptSchema } from "../_schemas/schemas";
 
 /**
  * Accessible compact checkbox-like toggle used across the UI.

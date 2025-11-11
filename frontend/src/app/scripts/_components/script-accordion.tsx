@@ -134,15 +134,28 @@ export default function ScriptAccordion({
                     }}
                   >
                     <div className="flex items-center">
-                      <Image
-                        src={script.logo || `/${basePath}/logo.png`}
-                        height={16}
-                        width={16}
-                        unoptimized
-                        onError={e => ((e.currentTarget as HTMLImageElement).src = `/${basePath}/logo.png`)}
-                        alt={script.name}
-                        className="mr-1 w-4 h-4 rounded-full"
-                      />
+                      {script.logo && script.logo.trim() !== "" ? (
+                        <Image
+                          src={script.logo}
+                          height={16}
+                          width={16}
+                          unoptimized
+                          onError={e => {
+                            const target = e.currentTarget as HTMLImageElement;
+                            target.style.display = 'none';
+                            const fallback = target.nextElementSibling as HTMLElement;
+                            if (fallback) fallback.style.display = 'flex';
+                          }}
+                          alt={script.name}
+                          className="mr-1 w-4 h-4 rounded-full"
+                        />
+                      ) : null}
+                      <div
+                        className="mr-1 w-4 h-4 rounded-full flex items-center justify-center bg-accent/20"
+                        style={{ display: script.logo && script.logo.trim() !== "" ? 'none' : 'flex' }}
+                      >
+                        <Icons.LayoutGrid className="w-3 h-3 text-muted-foreground" />
+                      </div>
                       <span className="flex items-center gap-2">{script.name}</span>
                     </div>
                     {formattedBadge(script.type)}

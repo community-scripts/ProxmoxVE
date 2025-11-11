@@ -1,4 +1,4 @@
-import { CalendarPlus, Package } from "lucide-react";
+import { CalendarPlus, LayoutGrid } from "lucide-react";
 import { useMemo, useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -6,7 +6,7 @@ import Link from "next/link";
 import type { Category, Script } from "@/lib/types";
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { basePath, mostPopularScripts } from "@/config/site-config";
+import { mostPopularScripts } from "@/config/site-config";
 import { Button } from "@/components/ui/button";
 import { extractDate } from "@/lib/time";
 
@@ -19,8 +19,6 @@ function AppIcon({ src, name, size = 64 }: { src?: string | null; name: string; 
   useEffect(() => setErrored(false), [src]);
 
   const fallbackClass = "h-11 w-11 object-contain rounded-md p-1";
-  const iconClass =
-    "h-11 w-11 min-w-[44px] min-h-[44px] rounded-md p-1 text-muted-foreground dark:text-muted text-opacity-90";
 
   const resolvedSrc = src && !errored ? src : undefined;
 
@@ -38,7 +36,7 @@ function AppIcon({ src, name, size = 64 }: { src?: string | null; name: string; 
         />
       ) : (
         <div className="flex h-16 w-16 min-w-16 items-center justify-center rounded-lg bg-accent/10 dark:bg-accent/20 p-1">
-          <Package className={iconClass} aria-hidden />
+          <LayoutGrid className="h-11 w-11 text-muted-foreground" aria-hidden />
         </div>
       )}
     </>
@@ -99,7 +97,7 @@ export function LatestScripts({ items }: { items: Category[] }) {
             <CardHeader>
               <CardTitle className="flex items-center gap-3">
                 <div className="flex h-16 w-16 min-w-16 items-center justify-center rounded-lg bg-accent p-1">
-                  <AppIcon src={script.logo || `/${basePath}/logo.svg`} name={script.name || script.slug} />
+                  <AppIcon src={script.logo} name={script.name || script.slug} />
                 </div>
                 <div className="flex flex-col">
                   <p className="text-sm text-muted-foreground flex items-center gap-1">
@@ -150,7 +148,7 @@ export function MostViewedScripts({ items }: { items: Category[] }) {
             <CardHeader>
               <CardTitle className="flex items-center gap-3">
                 <div className="flex h-16 w-16 min-w-16 items-center justify-center rounded-lg bg-accent p-1">
-                  <AppIcon src={script.logo || `/${basePath}/logo.svg`} name={script.name || script.slug} />
+                  <AppIcon src={script.logo} name={script.name || script.slug} />
                 </div>
                 <div className="flex flex-col">
                   <p className="flex items-center gap-1 text-sm text-muted-foreground">

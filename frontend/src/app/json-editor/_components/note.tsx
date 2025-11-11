@@ -100,14 +100,16 @@ function Note({
   setIsValid,
   setZodErrors,
 }: NoteProps) {
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
-
   const addNote = useCallback(() => {
-    setScript({
+    const updated: Script = {
       ...script,
       notes: [...script.notes, { text: "", type: "" }],
-    });
-  }, [script, setScript]);
+    };
+    const result = ScriptSchema.safeParse(updated);
+    setIsValid(result.success);
+    setZodErrors(result.success ? null : result.error);
+    setScript(updated);
+  }, [script, setScript, setIsValid, setZodErrors]);
 
   const updateNote = useCallback((
     index: number,
@@ -124,20 +126,18 @@ function Note({
     setIsValid(result.success);
     setZodErrors(result.success ? null : result.error);
     setScript(updated);
-    // Restore focus after state update
-    if (key === "text") {
-      setTimeout(() => {
-        inputRefs.current[index]?.focus();
-      }, 0);
-    }
   }, [script, setScript, setIsValid, setZodErrors]);
 
   const removeNote = useCallback((index: number) => {
-    setScript({
+    const updated: Script = {
       ...script,
       notes: script.notes.filter((_, i) => i !== index),
-    });
-  }, [script, setScript]);
+    };
+    const result = ScriptSchema.safeParse(updated);
+    setIsValid(result.success);
+    setZodErrors(result.success ? null : result.error);
+    setScript(updated);
+  }, [script, setScript, setIsValid, setZodErrors]);
 
   return (
     <>

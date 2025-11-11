@@ -2,7 +2,7 @@
 
 import type { z } from "zod";
 
-import { CalendarIcon, Check, Clipboard, Download } from "lucide-react";
+import { CalendarIcon, Check, Clipboard, Download, LayoutGrid } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
 import { toast } from "sonner";
@@ -28,15 +28,6 @@ import { ScriptSchema } from "./_schemas/schemas";
 import Categories from "./_components/categories";
 import Note from "./_components/note";
 
-/**
- * Updated:
- * - Platform and Deployment returned into the main form area (structured).
- * - Platform options are interactive and support Select all / Clear.
- * - Deployment uses Switch controls instead of checkboxes.
- * - Example files removed.
- * - Manifest path inputs remain read-only and auto-generate from slug.
- */
-
 const initialScript: Script = {
   name: "",
   slug: "",
@@ -44,7 +35,6 @@ const initialScript: Script = {
   date_created: "",
   interface_port: null,
   documentation: null,
-  // config_path removed
   website: null,
   logo: null,
   description: "",
@@ -54,7 +44,6 @@ const initialScript: Script = {
     password: null,
   },
   notes: [],
-  // structured platform object (boolean flags)
   platform: {
     desktop: false,
     mobile: false,
@@ -62,7 +51,6 @@ const initialScript: Script = {
     hosting: false,
     ui_interface: false,
   } as any,
-  // deployment object (flags + paths)
   deployment: {
     script: false,
     docker: false,
@@ -94,17 +82,9 @@ export default function JSONGenerator() {
       .catch(error => console.error("Error fetching categories:", error));
   }, []);
 
-  // replace your current updateScript with this
   const updateScript = useCallback(<K extends keyof Script>(key: K, value: Script[K]) => {
     setScript((prev) => {
-      // create a shallow updated object and assert it matches Script for TS
       const updated = { ...prev, [key]: value } as Script;
-
-      // If the caller explicitly updated slug OR install_methods, we don't auto-mut the methods.
-      // (you previously had special logic for `type`/`alpine`/`pve` — removed per your note)
-      //
-      // If you still want some install_methods normalization, do it at the call-site
-      // or add a small helper function invoked explicitly.
 
       const result = ScriptSchema.safeParse(updated);
       setIsValid(result.success);
@@ -243,7 +223,6 @@ export default function JSONGenerator() {
     [isValid, zodErrors],
   );
 
-  // Helpers
   const normalizeUrl = useCallback((value: string) => {
     const trimmed = value?.trim();
     return trimmed ? trimmed : null;
@@ -269,34 +248,6 @@ export default function JSONGenerator() {
   const buildExamplePath = (fileName: string) =>
     `/public/manifest/${script.slug || "app-name"}/${fileName}`;
 
-  // PLATFORM helpers: keys and friendly labels
-  const platformKeys = [
-    { key: "desktop", label: "Desktop", desc: "Select desktop targets" },
-    { key: "mobile", label: "Mobile", desc: "Native mobile platforms" },
-    { key: "web_extensions", label: "Web & Extensions", desc: "Web app, browser extension, CLI-only" },
-    { key: "hosting", label: "Hosting", desc: "Self-hosted / SaaS / Managed Cloud" },
-    { key: "ui_interface", label: "UI / Interface", desc: "CLI, GUI, Web UI, API, TUI" },
-  ];
-
-  const selectAllPlatforms = () => {
-    const platformObj: any = {};
-    platformKeys.forEach(p => (platformObj[p.key] = true));
-    updateScript("platform" as keyof Script, platformObj as unknown as Script[keyof Script]);
-  };
-
-  const clearAllPlatforms = () => {
-    const platformObj: any = {};
-    platformKeys.forEach(p => (platformObj[p.key] = false));
-    updateScript("platform" as keyof Script, platformObj as unknown as Script[keyof Script]);
-  };
-
-  const togglePlatform = (key: string, checked: boolean) => {
-    const prev: any = (script as any).platform || {};
-    const next = { ...prev, [key]: checked };
-    updateScript("platform" as keyof Script, next as unknown as Script[keyof Script]);
-  };
-
-  // DEPLOYMENT toggle using Switch, no example files block
   const toggleDeployment = (key: string, checked: boolean) => {
     const prevDep: any = (script as any).deployment || {};
     const prevPaths = prevDep.paths || {};
@@ -313,14 +264,10 @@ export default function JSONGenerator() {
 
   return (
     <div className="flex min-h-[calc(100vh-4rem)] mt-20">
-      {/* <div className="flex  mt-4"> */}
-
       <div className="w-1/2 p-4 overflow-y-auto">
         <h2 className="text-2xl font-bold mb-4">JSON Generator</h2>
 
-        {/* MAIN FORM BOX (Platform + Deployment are back here, structured) */}
         <form className="space-y-4">
-          {/* -- rest of your form fields (name, slug, logo...) -- */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label>
@@ -341,21 +288,15 @@ export default function JSONGenerator() {
           </div>
 
           <div>
-            <Label>
-              Logo
-              {" "}
-              <span className="text-red-500">*</span>
-            </Label>
+            <Label>Logo (optional)</Label>
             <Input
-              placeholder="Full logo URL"
+              placeholder="Full logo URL (leave blank to use default icon)"
               type="url"
               value={script.logo || ""}
               onChange={e => updateScript("logo", normalizeUrl(e.target.value))}
               onBlur={e => updateScript("logo", normalizeUrl(e.target.value))}
             />
           </div>
-
-          {/* Config Path input removed */}
 
           <div>
             <Label>
@@ -454,8 +395,7 @@ export default function JSONGenerator() {
 
           <InstallMethod script={script} setScript={setScript} setIsValid={setIsValid} setZodErrors={setZodErrors} />
 
-            {/* Deployment section (Switch controls, read-only manifest path when enabled) */}
-            <div className="flex items-start justify-between mb-3">
+          <div className="flex items-start justify-between mb-3">
               <div>
                 <h3 className="text-lg font-semibold">Deployment</h3>
                 <p className="text-sm text-muted-foreground">Script / Docker / Docker Compose / Helm / Kubernetes / Terraform</p>
@@ -526,6 +466,31 @@ export default function JSONGenerator() {
 
       <div className="w-1/2 p-4 bg-background overflow-y-auto">
         {validationAlert}
+
+        {/* Logo Preview */}
+        <div className="mt-4 mb-4 flex items-center justify-center">
+          <div className="flex flex-col items-center gap-2">
+            <Label className="text-sm text-muted-foreground">Logo Preview</Label>
+            {script.logo && script.logo.trim() !== "" ? (
+              <img
+                src={script.logo}
+                alt="Logo preview"
+                className="h-24 w-24 rounded-xl bg-gradient-to-br from-accent/40 to-accent/60 object-contain p-3 shadow-lg"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                  e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                }}
+              />
+            ) : null}
+            <div className={cn(
+              "flex h-24 w-24 items-center justify-center rounded-xl bg-gradient-to-br from-accent/40 to-accent/60 shadow-lg",
+              script.logo && script.logo.trim() !== "" && "hidden"
+            )}>
+              <LayoutGrid className="h-12 w-12 text-muted-foreground" />
+            </div>
+          </div>
+        </div>
+
         <div className="relative">
           <div className="absolute right-2 top-2 flex gap-1">
             <Button size="icon" variant="outline" onClick={handleCopy}>
