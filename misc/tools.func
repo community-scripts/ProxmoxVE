@@ -4522,7 +4522,9 @@ function setup_uv() {
 
   # Optional: Generate shell completions
   $STD uv generate-shell-completion bash >/etc/bash_completion.d/uv 2>/dev/null || true
-  $STD uv generate-shell-completion zsh >/usr/share/zsh/site-functions/_uv 2>/dev/null || true
+  if [[ -d /usr/share/zsh/site-functions ]]; then
+    $STD uv generate-shell-completion zsh >/usr/share/zsh/site-functions/_uv 2>/dev/null || true
+  fi
 
   # Optional: Install specific Python version if requested
   if [[ -n "${PYTHON_VERSION:-}" ]]; then

@@ -42,7 +42,7 @@ function update_script() {
 
     msg_info "Installing uv-based Open-WebUI"
     PYTHON_VERSION="3.12" setup_uv
-    $STD uv tool install --python $PYTHON_VERSION open-webui[all]
+    $STD uv tool install --python 3.12 open-webui[all]
     msg_ok "Installed uv-based Open-WebUI"
 
     msg_info "Restoring data"
