@@ -60,11 +60,10 @@ $STD npm ci
 $STD npm run build:production
 msg_ok "Built Ghostfolio"
 
-msg_ok "Optional CoinGecko API Configuration"
-echo
-echo -e "${YW}CoinGecko API keys are optional but provide better cryptocurrency data.${CL}"
-echo -e "${YW}You can skip this and add them later by editing /opt/ghostfolio/.env${CL}"
-echo
+echo -e ""
+msg_custom "🪙" "$YW" "CoinGecko API keys are optional but provide better cryptocurrency data."
+msg_custom "🪙" "$YW" "You can skip this and add them later by editing /opt/ghostfolio/.env"
+echo -e ""
 read -rp "${TAB3}CoinGecko Demo API key (press Enter to skip): " COINGECKO_DEMO_KEY
 read -rp "${TAB3}CoinGecko Pro API key (press Enter to skip): " COINGECKO_PRO_KEY
 
@@ -79,6 +78,7 @@ JWT_SECRET_KEY=$JWT_SECRET_KEY
 NODE_ENV=production
 PORT=3333
 HOST=0.0.0.0
+TZ=Etc/UTC
 EOF
 
 if [[ -n "${COINGECKO_DEMO_KEY:-}" ]]; then

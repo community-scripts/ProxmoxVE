@@ -16,7 +16,9 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt install -y \
   ca-certificates \
-  build-essential
+  build-essential \
+  python3 \
+  python3-setuptools
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" setup_nodejs

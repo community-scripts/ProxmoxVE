@@ -33,17 +33,22 @@ function update_script() {
     systemctl stop apache2
     msg_ok "Stopped Service"
 
+    PHP_VERSION="8.3" PHP_APACHE="YES" PHP_FPM="YES" PHP_MODULE="mysql,gmp,snmp,ldap,apcu" setup_php
+
+    msg_info "Installing PHP-PEAR"
+    $STD apt install -y \
+      php-pear \
+      php-dev
+    msg_ok "Installed PHP-PEAR"
+
     mv /opt/phpipam/ /opt/phpipam-backup
-    fetch_and_deploy_gh_release "phpipam" "phpipam/phpipam" "prebuild" "latest" "/opt/phpipam" "phpipam-v*.zip"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "phpipam" "phpipam/phpipam" "prebuild" "latest" "/opt/phpipam" "phpipam-v*.zip"
     cp /opt/phpipam-backup/config.php /opt/phpipam
+    rm -r /opt/phpipam-backup
 
     msg_info "Starting Service"
     systemctl start apache2
     msg_ok "Started Service"
-
-    msg_info "Cleaning up"
-    rm -r /opt/phpipam-backup
-    msg_ok "Cleaned"
     msg_ok "Updated successfully!"
   fi
   exit

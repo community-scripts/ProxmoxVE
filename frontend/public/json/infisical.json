@@ -1,0 +1,35 @@
+{
+  "name": "Infisical",
+  "slug": "infisical",
+  "categories": [
+    6
+  ],
+  "date_created": "2025-11-07",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 8080,
+  "documentation": "https://infisical.com/docs/documentation/getting-started/overview",
+  "config_path": "/etc/infisical/infisical.rb",
+  "website": "https://infisical.com/",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/infisical.webp",
+  "description": "Secrets, certificates, and access management on autopilot. All-in-one platform to securely manage application secrets, certificates, SSH keys, and configurations across your team and infrastructure.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/infisical.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 6,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": []
+}

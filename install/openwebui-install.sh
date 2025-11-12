@@ -17,7 +17,11 @@ msg_info "Installing Dependencies"
 $STD apt install -y ffmpeg
 msg_ok "Installed Dependencies"
 
-USE_UVX="YES" PYTHON_VERSION="3.12" setup_uv
+PYTHON_VERSION="3.12" setup_uv
+
+msg_info "Installing Open WebUI"
+$STD uv tool install --python 3.12 open-webui[all]
+msg_ok "Installed Open WebUI"
 
 read -r -p "${TAB3}Would you like to add Ollama? <y/N> " prompt
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
@@ -56,7 +60,7 @@ After=network.target
 Type=simple
 EnvironmentFile=-/root/.env
 Environment=DATA_DIR=/root/.open-webui
-ExecStart=/usr/local/bin/uvx --python 3.12 open-webui@latest serve
+ExecStart=/root/.local/bin/open-webui serve
 WorkingDirectory=/root
 Restart=on-failure
 RestartSec=5
@@ -70,9 +74,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

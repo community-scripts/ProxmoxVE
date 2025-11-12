@@ -370,6 +370,7 @@ run_container_safe() {
 
 cleanup_lxc() {
   msg_info "Cleaning up"
+
   if is_alpine; then
     $STD apk cache clean || true
     rm -rf /var/cache/apk/*
@@ -379,36 +380,38 @@ cleanup_lxc() {
     $STD apt -y clean || true
   fi
 
-  rm -rf /tmp/* /var/tmp/*
-
-  # Remove temp files created by mktemp/tempfile
+  # Clear temp artifacts (keep sockets/FIFOs; ignore errors)
   find /tmp /var/tmp -type f -name 'tmp*' -delete 2>/dev/null || true
   find /tmp /var/tmp -type f -name 'tempfile*' -delete 2>/dev/null || true
 
-  find /var/log -type f -exec truncate -s 0 {} +
+  # Truncate writable log files silently (permission errors ignored)
+  if command -v truncate >/dev/null 2>&1; then
+    find /var/log -type f -writable -print0 2>/dev/null |
+      xargs -0 -n1 truncate -s 0 2>/dev/null || true
+  fi
 
   # Python pip
-  if command -v pip &>/dev/null; then pip cache purge || true; fi
+  if command -v pip &>/dev/null; then $STD pip cache purge || true; fi
   # Python uv
-  if command -v uv &>/dev/null; then uv cache clear || true; fi
+  if command -v uv &>/dev/null; then $STD uv cache clear || true; fi
   # Node.js npm
-  if command -v npm &>/dev/null; then npm cache clean --force || true; fi
+  if command -v npm &>/dev/null; then $STD npm cache clean --force || true; fi
   # Node.js yarn
-  if command -v yarn &>/dev/null; then yarn cache clean || true; fi
+  if command -v yarn &>/dev/null; then $STD yarn cache clean || true; fi
   # Node.js pnpm
-  if command -v pnpm &>/dev/null; then pnpm store prune || true; fi
+  if command -v pnpm &>/dev/null; then $STD pnpm store prune || true; fi
   # Go
-  if command -v go &>/dev/null; then go clean -cache -modcache || true; fi
+  if command -v go &>/dev/null; then $STD go clean -cache -modcache || true; fi
   # Rust cargo
-  if command -v cargo &>/dev/null; then cargo clean || true; fi
+  if command -v cargo &>/dev/null; then $STD cargo clean || true; fi
   # Ruby gem
-  if command -v gem &>/dev/null; then gem cleanup || true; fi
+  if command -v gem &>/dev/null; then $STD gem cleanup || true; fi
   # Composer (PHP)
-  if command -v composer &>/dev/null; then composer clear-cache || true; fi
+  if command -v composer &>/dev/null; then $STD composer clear-cache || true; fi
 
   if command -v journalctl &>/dev/null; then
-    $STD journalctl --rotate
-    $STD journalctl --vacuum-time=10m
+    $STD journalctl --rotate || true
+    $STD journalctl --vacuum-time=10m || true
   fi
   msg_ok "Cleaned"
 }
