@@ -21,6 +21,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Tududi: Create new env file from example; fix installation & update [@vhsdream](https://github.com/vhsdream) ([#9097](https://github.com/community-scripts/ProxmoxVE/pull/9097))
     - PeaNUT: use clean install flag during update [@vhsdream](https://github.com/vhsdream) ([#9100](https://github.com/community-scripts/ProxmoxVE/pull/9100))
     - openwebui: Python version usage | core: zsh completion install [@MickLesk](https://github.com/MickLesk) ([#9079](https://github.com/community-scripts/ProxmoxVE/pull/9079))
     - Refactor: evcc [@CrazyWolf13](https://github.com/CrazyWolf13) ([#9057](https://github.com/community-scripts/ProxmoxVE/pull/9057))
