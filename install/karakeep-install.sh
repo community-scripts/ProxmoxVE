@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   build-essential \
   ca-certificates \
   chromium \
@@ -173,8 +173,4 @@ msg_ok "Created Services"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get autoremove -y
-$STD apt-get autoclean -y
-msg_ok "Cleaned"
+cleanup_lxc

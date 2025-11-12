@@ -13,10 +13,6 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt-get install -y jq
-msg_ok "Installed Dependencies"
-
 setup_uv
 fetch_and_deploy_gh_release "huntarr" "plexguide/Huntarr.io"
 
@@ -42,8 +38,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

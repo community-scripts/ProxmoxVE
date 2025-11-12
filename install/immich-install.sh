@@ -16,8 +16,7 @@ update_os
 setup_uv
 
 msg_info "Installing dependencies"
-$STD apt-get update
-$STD apt-get install --no-install-recommends -y \
+$STD apt install --no-install-recommends -y \
   git \
   redis \
   autoconf \
@@ -66,21 +65,16 @@ $STD apt-get install --no-install-recommends -y \
   libwebp-dev \
   libaom-dev \
   ccache
-curl -fsSL https://repo.jellyfin.org/jellyfin_team.gpg.key | gpg --dearmor -o /etc/apt/keyrings/jellyfin.gpg
-DPKG_ARCHITECTURE="$(dpkg --print-architecture)"
-export DPKG_ARCHITECTURE
-cat <<EOF >/etc/apt/sources.list.d/jellyfin.sources
-Types: deb
-URIs: https://repo.jellyfin.org/debian
-Suites: trixie
-Components: main
-Architectures: ${DPKG_ARCHITECTURE}
-Signed-By: /etc/apt/keyrings/jellyfin.gpg
-EOF
-$STD apt-get update
-$STD apt-get install -y jellyfin-ffmpeg7
-ln -s /usr/lib/jellyfin-ffmpeg/ffmpeg /usr/bin/ffmpeg
-ln -s /usr/lib/jellyfin-ffmpeg/ffprobe /usr/bin/ffprobe
+
+setup_deb822_repo \
+  "jellyfin" \
+  "https://repo.jellyfin.org/jellyfin_team.gpg.key" \
+  "https://repo.jellyfin.org/debian" \
+  "$(get_os_info codename)"
+$STD apt install -y jellyfin-ffmpeg7
+ln -sf /usr/lib/jellyfin-ffmpeg/ffmpeg /usr/bin/ffmpeg
+ln -sf /usr/lib/jellyfin-ffmpeg/ffprobe /usr/bin/ffprobe
+
 if [[ "$CTTYPE" == "0" && -d /dev/dri ]]; then
   chgrp video /dev/dri
   chmod 755 /dev/dri
@@ -94,7 +88,7 @@ read -r -p "${TAB3}Install OpenVINO dependencies for Intel HW-accelerated machin
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   msg_info "Installing OpenVINO dependencies"
   touch ~/.openvino
-  $STD apt-get install -y --no-install-recommends patchelf
+  $STD apt install -y --no-install-recommends patchelf
   tmp_dir=$(mktemp -d)
   $STD pushd "$tmp_dir"
   curl -fsSLO https://github.com/intel/intel-graphics-compiler/releases/download/igc-1.0.17384.11/intel-igc-core_1.0.17384.11_amd64.deb
@@ -120,10 +114,10 @@ Package: *
 Pin:release a=testing
 Pin-Priority: 450
 EOF
-$STD apt-get update
+$STD apt update
 msg_ok "Configured Debian Testing repo"
 msg_info "Installing libmimalloc3"
-$STD apt-get install -t testing --no-install-recommends -yqq libmimalloc3
+$STD apt install -t testing --no-install-recommends -yqq libmimalloc3
 msg_ok "Installed libmimalloc3"
 
 PNPM_VERSION="$(curl -fsSL "https://raw.githubusercontent.com/immich-app/immich/refs/heads/main/package.json" | jq -r '.packageManager | split("@")[1]')"
@@ -460,9 +454,4 @@ msg_ok "Modified user, created env file, scripts and services"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-$STD apt clean -y
-msg_ok "Cleaned"
+cleanup_lxc

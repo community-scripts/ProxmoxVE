@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -37,7 +37,7 @@ function update_script() {
     cp /opt/kometa/config/config.yml /opt
     msg_ok "Backup completed"
 
-    PYTHON_VERSION="3.12" setup_uv
+    PYTHON_VERSION="3.13" setup_uv
     fetch_and_deploy_gh_release "kometa" "Kometa-Team/Kometa"
 
     msg_info "Updating Kometa"
@@ -49,7 +49,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start kometa
     msg_ok "Started Service"
-    msg_ok "Updated successfully!"
+    msg_ok "Updated Successfully!"
   fi
   exit
 }

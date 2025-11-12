@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-10}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -38,14 +38,11 @@ function update_script() {
     msg_ok "Updated yt-dlp"
 
     msg_info "Prepare update"
-    if [[ -f /opt/${APP}_version.txt && "$(cat /opt/${APP}_version.txt)" < "0.23.0" ]]; then
-      $STD apt-get install -y graphicsmagick ghostscript
-    fi
+    $STD apt install -y graphicsmagick ghostscript
     if [[ -f /opt/karakeep/.env ]] && [[ ! -f /etc/karakeep/karakeep.env ]]; then
       mkdir -p /etc/karakeep
       mv /opt/karakeep/.env /etc/karakeep/karakeep.env
     fi
-    rm -rf /opt/karakeep
     msg_ok "Update prepared"
 
     if grep -q "start:prod" /etc/systemd/system/karakeep-workers.service; then
@@ -65,7 +62,7 @@ function update_script() {
     MODULE_VERSION="$(jq -r '.packageManager | split("@")[1]' /opt/karakeep/package.json)"
     NODE_VERSION="22" NODE_MODULE="pnpm@${MODULE_VERSION}" setup_nodejs
 
-    msg_info "Updating ${APP}"
+    msg_info "Updating Karakeep"
     corepack enable
     export PUPPETEER_SKIP_DOWNLOAD="true"
     export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD="true"
@@ -86,17 +83,12 @@ function update_script() {
     $STD pnpm migrate
     $STD pnpm store prune
     sed -i "s/^SERVER_VERSION=.*$/SERVER_VERSION=${CHECK_UPDATE_RELEASE}/" /etc/karakeep/karakeep.env
-    msg_ok "Updated ${APP}"
+    msg_ok "Updated Karakeep"
 
     msg_info "Starting Services"
     systemctl start karakeep-browser karakeep-workers karakeep-web
     msg_ok "Started Services"
-
-    msg_info "Cleaning up"
-    $STD apt-get autoremove -y
-    $STD apt-get autoclean -y
-    msg_ok "Cleaned"
-    msg_ok "Updated successfully!"
+    msg_ok "Updated Successfully!"
   fi
   exit
 }

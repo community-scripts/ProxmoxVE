@@ -39,7 +39,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start komga
     msg_ok "Started Service"
-    msg_ok "Updated successfully!"
+    msg_ok "Updated Successfully!"
   fi
   exit
 }

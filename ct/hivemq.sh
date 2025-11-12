@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -20,15 +20,15 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /var ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    msg_error "Currently we don't provide an update function for this ${APP}."
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /var ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+  msg_error "Currently we don't provide an update function for this ${APP}."
+  exit
 }
 
 start

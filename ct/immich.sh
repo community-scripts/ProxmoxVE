@@ -54,10 +54,10 @@ EOF
     if [[ -f /etc/apt/preferences.d/immich ]]; then
       rm /etc/apt/preferences.d/immich
     fi
-    $STD apt-get update
+    $STD apt update
     msg_ok "Added Debian Testing repo"
     msg_info "Installing libmimalloc3"
-    $STD apt-get install -t testing --no-install-recommends libmimalloc3
+    $STD apt install -t testing --no-install-recommends libmimalloc3
     msg_ok "Installed libmimalloc3"
   fi
 
@@ -114,7 +114,7 @@ EOF
       msg_ok "Upgraded VectorChord to v${VCHORD_RELEASE}"
     fi
     if ! dpkg -l | grep -q ccache; then
-      $STD apt-get install -yqq ccache
+      $STD apt install -yqq ccache
     fi
 
     INSTALL_DIR="/opt/${APP}"
@@ -213,12 +213,6 @@ EOF
 
     chown -R immich:immich "$INSTALL_DIR"
     msg_ok "Updated ${APP} to v${RELEASE}"
-
-    msg_info "Cleaning up"
-    $STD apt-get -y autoremove
-    $STD apt-get -y autoclean
-    $STD apt clean -y
-    msg_ok "Cleaned"
     systemctl restart immich-ml immich-web
   fi
   exit
@@ -272,7 +266,7 @@ function compile_libjxl() {
 function compile_libheif() {
   SOURCE=${SOURCE_DIR}/libheif
   if ! dpkg -l | grep -q libaom; then
-    $STD apt-get install -y libaom-dev
+    $STD apt install -y libaom-dev
     local update="required"
   fi
   : "${LIBHEIF_REVISION:=$(jq -cr '.revision' "$BASE_DIR"/server/sources/libheif.json)}"

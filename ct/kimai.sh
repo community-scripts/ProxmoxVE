@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-7}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -23,19 +23,18 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
+  if ! command -v lsb_release; then
+    apt install -y lsb-release
+  fi
   if [[ ! -d /opt/kimai ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
 
-  CURRENT_PHP=$(php -v 2>/dev/null | awk '/^PHP/{print $2}' | cut -d. -f1,2)
-  if [[ "$CURRENT_PHP" != "8.4" ]]; then
-    msg_info "Migrating PHP $CURRENT_PHP to 8.4"
-    PHP_VERSION="8.4" PHP_MODULE="gd,mysql,mbstring,bcmath,xml,curl,zip,intl,fpm" PHP_APACHE="YES" setup_php
-    msg_ok "Migrated PHP $CURRENT_PHP to 8.4"
-  fi
+  PHP_VERSION="8.4" PHP_MODULE="mysql" PHP_APACHE="YES" setup_php
+  setup_composer
 
-  if check_for_gh_release "kimai" "kimai/kimai"; then
+    if check_for_gh_release "kimai" "kimai/kimai"; then
     BACKUP_DIR="/opt/kimai_backup"
 
     msg_info "Stopping Apache2"
@@ -71,8 +70,9 @@ function update_script() {
     chmod -R g+rw /opt/*
     chown -R www-data:www-data /opt/*
     chmod -R 777 /opt/*
+    rm -rf "$BACKUP_DIR"
     msg_ok "Setup Permissions"
-    msg_ok "Updated successfully!"
+    msg_ok "Updated Successfully!"
   fi
   exit
 }
