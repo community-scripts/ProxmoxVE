@@ -14,35 +14,20 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y zip
+$STD apt install -y zip
 msg_ok "Installed Dependencies"
 
 PG_VERSION="17" setup_postgresql
 NODE_VERSION="20" setup_nodejs
-
-msg_info "Setting up Postgresql Database"
-DB_NAME="fluiddb"
-DB_USER="fluiduser"
-DB_PASS="$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)"
-NEXTAUTH_SECRET="$(openssl rand -base64 44 | tr -dc 'a-zA-Z0-9' | cut -c1-32)"
-$STD sudo -u postgres psql -c "CREATE USER $DB_USER WITH ENCRYPTED PASSWORD '$DB_PASS';"
-$STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER ENCODING 'UTF8' TEMPLATE template0;"
-$STD sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE $DB_NAME to $DB_USER;"
-$STD sudo -u postgres psql -c "ALTER USER $DB_USER WITH SUPERUSER;"
-{
-  echo "${APPLICATION} Credentials"
-  echo "Database User: $DB_USER"
-  echo "Database Password: $DB_PASS"
-  echo "Database Name: $DB_NAME"
-  echo "NextAuth Secret: $NEXTAUTH_SECRET"
-} >>~/$APPLICATION.creds
-msg_ok "Set up Postgresql Database"
+PG_DB_NAME="fluiddb" PG_DB_USER="fluiduser" PG_DB_GRANT_SUPERUSER="true" setup_postgresql_db
 
 fetch_and_deploy_gh_release "fluid-calendar" "dotnetfactory/fluid-calendar"
 
-msg_info "Configuring ${APPLICATION}"
+msg_info "Setup Fluid Calendar"
+NEXTAUTH_SECRET="$(openssl rand -base64 44 | tr -dc 'a-zA-Z0-9' | cut -c1-32)"
+echo "NextAuth Secret: $NEXTAUTH_SECRET" >>~/$APPLICATION.creds
 cat <<EOF >/opt/fluid-calendar/.env
-DATABASE_URL="postgresql://${DB_USER}:${DB_PASS}@localhost:5432/${DB_NAME}"
+DATABASE_URL="postgresql://${PG_DB_USER}:${PG_DB_PASS}@localhost:5432/${PG_DB_NAME}"
 
 # Change the URL below to your external URL
 NEXTAUTH_URL="http://localhost:3000"
@@ -61,7 +46,7 @@ $STD npm install --legacy-peer-deps
 $STD npm run prisma:generate
 $STD npx prisma migrate deploy
 $STD npm run build:os
-msg_ok "Configuring ${APPLICATION}"
+msg_ok "Setup Fluid Calendar"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/fluid-calendar.service
@@ -82,8 +67,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc
