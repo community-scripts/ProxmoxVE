@@ -35,14 +35,15 @@ function update_script() {
     systemctl stop tududi
     msg_ok "Stopped Service"
 
-    msg_info "Remove and backup Files"
-    DB="$(sed -n '/^DB_FILE/s/[^=]*=//p' /opt/tududi/backend/.env)"
-    export DB_FILE="$DB"
-    cp /opt/tududi/backend/.env /opt/tududi.env
-    rm -rf /opt/tududi/backend/dist
-    msg_ok "Backup and removed Files"
+    msg_info "Backing up env file"
+    if [[ -f /opt/tududi/backend/.env ]]; then
+      cp /opt/tududi/backend/.env /opt/tududi.env
+    else
+      cp /opt/tududi/.env /opt/tududi.env
+    fi
+    msg_ok "Backed up env file"
 
-    fetch_and_deploy_gh_release "tududi" "chrisvel/tududi" "tarball" "latest" "/opt/tududi"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "tududi" "chrisvel/tududi" "tarball" "latest" "/opt/tududi"
 
     msg_info "Updating Tududi"
     cd /opt/tududi
@@ -50,9 +51,9 @@ function update_script() {
     export NODE_ENV=production
     $STD npm run frontend:build
     mv ./dist ./backend
-    mv ./public/locales ./backend/dist
-    mv ./public/favicon.* ./backend/dist
-    mv /opt/tududi.env /opt/tududi/.env
+    mv /opt/tududi.env /opt/tududi/backend/.env
+    DB="$(sed -n '/^DB_FILE/s/[^=]*=//p' /opt/tududi/backend/.env)"
+    export DB_FILE="$DB"
     sed -i -e 's|/tududi$|/tududi/backend|' \
       -e 's|npm run start|bash /opt/tududi/backend/cmd/start.sh|' \
       /etc/systemd/system/tududi.service
