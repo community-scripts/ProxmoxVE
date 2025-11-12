@@ -13,17 +13,17 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Setup Hyperion repository"
+msg_info "Setting up Hyperion repository"
 setup_deb822_repo \
   "hyperion" \
   "https://releases.hyperion-project.org/hyperion.pub.key" \
   "https://apt.releases.hyperion-project.org" \
   "$(get_os_info codename)"
-msg_ok "Repository ready"
+msg_ok "Set up Hyperion repository"
 
 msg_info "Installing Hyperion"
 $STD apt install -y hyperion
-systemctl enable --now hyperion@root
+systemctl enable -q --now hyperion@root
 msg_ok "Installed Hyperion"
 
 motd_ssh
