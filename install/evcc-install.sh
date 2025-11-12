@@ -24,7 +24,7 @@ setup_deb822_repo \
   "evcc-stable" \
   "https://dl.evcc.io/public/evcc/stable/gpg.EAD5D0E07B0EC0FD.key" \
   "https://dl.evcc.io/public/evcc/stable/deb/debian/" \
-  "$VERSION_CODENAME" \
+  "$(get_os_info codename)" \
   "main"
 $STD apt update
 msg_ok "evcc Repository setup sucessfully"
