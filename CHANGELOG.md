@@ -18,7 +18,11 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
-    - chore: evcc: refactor [@CrazyWolf13](https://github.com/CrazyWolf13) ([#9057](https://github.com/community-scripts/ProxmoxVE/pull/9057))
+    - Refactor: evcc [@CrazyWolf13](https://github.com/CrazyWolf13) ([#9057](https://github.com/community-scripts/ProxmoxVE/pull/9057))
+
+  - #### 🔧 Refactor
+
+    - Refactor: web-check [@CrazyWolf13](https://github.com/CrazyWolf13) ([#9055](https://github.com/community-scripts/ProxmoxVE/pull/9055))
 
 ### 🌐 Website
 
