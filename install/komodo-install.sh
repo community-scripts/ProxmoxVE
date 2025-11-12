@@ -13,19 +13,14 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt install -y ca-certificates
-msg_ok "Installed Dependencies"
-
 msg_info "Setup Docker Repository"
-install -m 0755 -d /etc/apt/keyrings
-curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
-chmod a+r /etc/apt/keyrings/docker.asc
-echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
-  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" |
-  sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
-$STD apt-get update
+setup_deb822_repo \
+  "docker" \
+  "https://download.docker.com/linux/$(get_os_info id)/gpg" \
+  "https://download.docker.com/linux/$(get_os_info id)" \
+  "$(get_os_info codename)" \
+  "stable" \
+  "$(dpkg --print-architecture)"
 msg_ok "Setup Docker Repository"
 
 msg_info "Installing Docker"
