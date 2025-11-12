@@ -6,7 +6,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Source: https://github.com/Brandawg93/PeaNUT/
 
 APP="PeaNUT"
-var_tags="${var_tags:-network;ups;}"
+var_tags="${var_tags:-network;ups}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-7}"
@@ -35,7 +35,7 @@ function update_script() {
     systemctl stop peanut
     msg_info "Stopped Service"
 
-    fetch_and_deploy_gh_release "peanut" "Brandawg93/PeaNUT" "tarball" "latest" "/opt/peanut"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "peanut" "Brandawg93/PeaNUT" "tarball" "latest" "/opt/peanut"
 
     msg_info "Updating $APP"
     cd /opt/peanut
