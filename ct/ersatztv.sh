@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-5}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -27,23 +27,22 @@ function update_script() {
     exit
   fi
   if check_for_gh_release "ersatztv" "ErsatzTV/ErsatzTV"; then
-    msg_info "Stopping ErsatzTV"
+    msg_info "Stopping Service"
     systemctl stop ersatzTV
-    msg_ok "Stopped ErsatzTV"
+    msg_ok "Stopped Service"
 
     fetch_and_deploy_gh_release "ersatztv" "ErsatzTV/ErsatzTV" "prebuild" "latest" "/opt/ErsatzTV" "*linux-x64.tar.gz"
 
-    msg_info "Starting ErsatzTV"
+    msg_info "Starting Service"
     systemctl start ersatzTV
-    msg_ok "Started ErsatzTV"
-
-    msg_ok "Updated Successfully"
+    msg_ok "Started Service"
+    msg_ok "ErsatzTV Updated successfully"
   fi
 
   if check_for_gh_release "ersatztv-ffmpeg" "ErsatzTV/ErsatzTV-ffmpeg"; then
-    msg_info "Stopping ErsatzTV"
+    msg_info "Stopping Service"
     systemctl stop ersatzTV
-    msg_ok "Stopped ErsatzTV"
+    msg_ok "Stopped Service"
 
     fetch_and_deploy_gh_release "ersatztv-ffmpeg" "ErsatzTV/ErsatzTV-ffmpeg" "prebuild" "latest" "/opt/ErsatzTV-ffmpeg" "*-linux64-gpl-7.1.tar.xz"
 
@@ -54,10 +53,10 @@ function update_script() {
     ln -sf /opt/ErsatzTV-ffmpeg/bin/ffprobe /usr/local/bin/ffprobe
     msg_ok "ffmpeg links set"
 
-    msg_info "Starting ErsatzTV"
+    msg_info "Starting Service"
     systemctl start ersatzTV
-    msg_ok "Started ErsatzTV"
-    msg_ok "Updated Successfully"
+    msg_ok "Started Service"
+    msg_ok "ErsatzTV-ffmpeg Updated successfully"
   fi
   exit
 }

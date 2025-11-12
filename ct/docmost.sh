@@ -12,6 +12,7 @@ var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
 variables
@@ -44,18 +45,18 @@ function update_script() {
 
     fetch_and_deploy_gh_release "docmost" "docmost/docmost"
 
-    msg_info "Updating ${APP}"
+    msg_info "Updating Docmost"
     cd /opt/docmost
     mv /opt/.env /opt/docmost/.env
     mv /opt/data /opt/docmost/data
     $STD pnpm install --force
     $STD pnpm build
-    msg_ok "Updated ${APP}"
+    msg_ok "Updated Docmost"
 
     msg_info "Starting Service"
     systemctl start docmost
     msg_ok "Started Service"
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully"
   fi
   exit
 }

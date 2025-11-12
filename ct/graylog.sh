@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-8192}"
 var_disk="${var_disk:-30}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -20,31 +20,28 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
+  header_info
+  check_container_storage
+  check_container_resources
 
-    if [[ ! -d /etc/graylog ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    msg_info "Stopping $APP"
-    systemctl stop graylog-datanode
-    systemctl stop graylog-server
-    msg_ok "Stopped $APP"
-
-    msg_info "Updating $APP"
-    $STD apt-get update
-    $STD apt-get upgrade -y
-    msg_ok "Updated $APP"
-
-    msg_info "Starting $APP"
-    systemctl start graylog-datanode
-    systemctl start graylog-server
-    msg_ok "Started $APP"
-
-    msg_ok "Update Successful"
+  if [[ ! -d /etc/graylog ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+  msg_info "Stopping Services"
+  systemctl stop graylog-datanode graylog-server
+  msg_ok "Stopped Services"
+
+  msg_info "Updating Graylog"
+  $STD apt update
+  $STD apt upgrade -y
+  msg_ok "Updated Graylog"
+
+  msg_info "Starting Services"
+  systemctl start graylog-datanode graylog-server
+  msg_ok "Started Services"
+  msg_ok "Updated successfully"
+  exit
 }
 
 start

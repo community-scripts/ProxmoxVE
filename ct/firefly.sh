@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-2}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -41,7 +41,7 @@ function update_script() {
     fetch_and_deploy_gh_release "firefly" "firefly-iii/firefly-iii" "prebuild" "latest" "/opt/firefly" "FireflyIII-*.zip"
     setup_composer
 
-    msg_info "Updating ${APP}"
+    msg_info "Updating Firefly"
     rm -rf /opt/firefly/storage
     cp /opt/.env /opt/firefly/.env
     cp -r /opt/storage /opt/firefly/storage
@@ -57,12 +57,12 @@ function update_script() {
     $STD php artisan view:clear
     $STD php artisan firefly-iii:upgrade-database
     $STD php artisan firefly-iii:laravel-passport-keys
-    msg_ok "Updated ${APP}"
+    msg_ok "Updated Firefly"
 
     msg_info "Starting Apache2"
     systemctl start apache2
     msg_ok "Started Apache2"
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully"
   fi
   exit
 }

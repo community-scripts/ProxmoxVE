@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-3072}"
 var_disk="${var_disk:-10}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -29,22 +29,22 @@ function update_script() {
     exit
   fi
   if check_for_gh_release "excalidraw" "excalidraw/excalidraw"; then
-    msg_info "Stopping $APP"
+    msg_info "Stopping Service"
     systemctl stop excalidraw
-    msg_ok "Stopped $APP"
+    msg_ok "Stopped Service"
 
     rm -rf /opt/excalidraw
     fetch_and_deploy_gh_release "excalidraw" "excalidraw/excalidraw"
 
-    msg_info "Updating $APP"
+    msg_info "Updating Excalidraw"
     cd /opt/excalidraw
     $STD yarn
-    msg_ok "Updated $APP"
+    msg_ok "Updated Excalidraw"
 
-    msg_info "Starting $APP"
+    msg_info "Starting Service"
     systemctl start excalidraw
-    msg_ok "Started $APP"
-    msg_ok "Updated Successfully"
+    msg_ok "Started Service"
+    msg_ok "Updated successfully"
   fi
   exit
 }

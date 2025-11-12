@@ -11,7 +11,7 @@ var_disk="${var_disk:-10}"
 var_cpu="${var_cpu:-4}"
 var_ram="${var_ram:-4096}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -20,19 +20,19 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -f /etc/systemd/system/flowise.service ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    msg_info "Updating ${APP}"
-    systemctl stop flowise
-    npm install -g flowise --upgrade
-    systemctl start flowise
-    msg_ok "Updated ${APP}"
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -f /etc/systemd/system/flowise.service ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+  msg_info "Updating FlowiseAI"
+  systemctl stop flowise
+  npm install -g flowise --upgrade
+  systemctl start flowise
+  msg_ok "Updated FlowiseAI"
+  exit
 }
 
 start

@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-6}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -41,28 +41,24 @@ function update_script() {
     fi
     msg_ok "Backed up conf.yml"
 
-    rm -rf /opt/dashy
-    fetch_and_deploy_gh_release "dashy" "Lissy93/dashy"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "dashy" "Lissy93/dashy"
 
-    msg_info "Updating ${APP}"
+    msg_info "Updating Dashy"
     cd /opt/dashy
     npm install
     npm run build
-    msg_ok "Updated ${APP}"
+    msg_ok "Updated Dashy"
 
     msg_info "Restoring conf.yml"
     cd ~
     cp -R conf.yml /opt/dashy/user-data
+    rm -rf conf.yml /opt/dashy/public/conf.yml
     msg_ok "Restored conf.yml"
 
-    msg_info "Cleaning"
-    rm -rf conf.yml /opt/dashy/public/conf.yml
-    msg_ok "Cleaned"
-
-    msg_info "Starting Dashy"
+    msg_info "Starting Service"
     systemctl start dashy
-    msg_ok "Started Dashy"
-    msg_ok "Updated Successfully"
+    msg_ok "Started Service"
+    msg_ok "Updated successfully"
   fi
   exit
 }

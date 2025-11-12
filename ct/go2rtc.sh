@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -29,16 +29,16 @@ function update_script() {
   fi
 
   if check_for_gh_release "go2rtc" "AlexxIT/go2rtc"; then
-    msg_info "Stopping service"
+    msg_info "Stopping Service"
     systemctl stop go2rtc
-    msg_ok "Stopped service"
+    msg_ok "Stopped Service"
 
     fetch_and_deploy_gh_release "go2rtc" "AlexxIT/go2rtc" "singlefile" "latest" "/opt/go2rtc" "go2rtc_linux_amd64"
 
-    msg_info "Starting service"
+    msg_info "Starting Service"
     systemctl start go2rtc
-    msg_ok "Started service"
-    msg_ok "Updated Successfully"
+    msg_ok "Started Service"
+    msg_ok "Updated successfully"
   fi
   exit
 }

@@ -12,6 +12,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
+var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
 variables
@@ -27,10 +28,12 @@ function update_script() {
     exit
   fi
 
-  msg_info "Updating $APP LXC"
+  msg_info "Updating Globaleaks"
   $STD apt update
   $STD apt -y upgrade
-  msg_ok "Updated $APP LXC"
+  msg_ok "Updated Globaleaks"
+  msg_ok "Updated successfully"
+  exit
 }
 
 start

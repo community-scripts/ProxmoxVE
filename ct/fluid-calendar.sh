@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-3}"
 var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-7}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -29,15 +29,14 @@ function update_script() {
     exit
   fi
   if check_for_gh_release "fluid-calendar" "dotnetfactory/fluid-calendar"; then
-    msg_info "Stopping $APP"
+    msg_info "Stopping Service"
     systemctl stop fluid-calendar
-    msg_ok "Stopped $APP"
+    msg_ok "Stopped Service"
 
     cp /opt/fluid-calendar/.env /opt/fluid.env
-    rm -rf /opt/fluid-calendar
-    fetch_and_deploy_gh_release "fluid-calendar" "dotnetfactory/fluid-calendar"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "fluid-calendar" "dotnetfactory/fluid-calendar"
 
-    msg_info "Updating $APP"
+    msg_info "Updating Fluid Calendar"
     mv /opt/fluid.env /opt/fluid-calendar/.env
     cd /opt/fluid-calendar
     export NEXT_TELEMETRY_DISABLED=1
@@ -45,12 +44,12 @@ function update_script() {
     $STD npm run prisma:generate
     $STD npx prisma migrate deploy
     $STD npm run build:os
-    msg_ok "Updated $APP"
+    msg_ok "Updated Fluid Calendar"
 
-    msg_info "Starting $APP"
+    msg_info "Starting Service"
     systemctl start fluid-calendar
-    msg_ok "Started $APP"
-    msg_ok "Update Successful"
+    msg_ok "Started Service"
+    msg_ok "Updated successfully"
   fi
   exit
 }

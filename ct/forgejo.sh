@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-10}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -31,23 +31,20 @@ function update_script() {
   systemctl stop forgejo
   msg_ok "Stopped Service"
 
-  msg_info "Updating ${APP}"
+  msg_info "Updating Forgejo"
   RELEASE=$(curl -fsSL https://codeberg.org/api/v1/repos/forgejo/forgejo/releases/latest | grep -oP '"tag_name":\s*"\K[^"]+' | sed 's/^v//')
   curl -fsSL "https://codeberg.org/forgejo/forgejo/releases/download/v${RELEASE}/forgejo-${RELEASE}-linux-amd64" -o "forgejo-$RELEASE-linux-amd64"
   rm -rf /opt/forgejo/*
   cp -r forgejo-$RELEASE-linux-amd64 /opt/forgejo/forgejo-$RELEASE-linux-amd64
   chmod +x /opt/forgejo/forgejo-$RELEASE-linux-amd64
   ln -sf /opt/forgejo/forgejo-$RELEASE-linux-amd64 /usr/local/bin/forgejo
-  msg_ok "Updated ${APP}"
-
-  msg_info "Cleaning"
   rm -rf forgejo-$RELEASE-linux-amd64
-  msg_ok "Cleaned"
+  msg_ok "Updated Forgejo"
 
   msg_info "Starting Service"
   systemctl start forgejo
   msg_ok "Started Service"
-  msg_ok "Updated Successfully"
+  msg_ok "Updated successfully"
   exit
 }
 

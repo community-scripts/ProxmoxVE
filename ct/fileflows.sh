@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -28,42 +28,36 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  if ! [[ $(dpkg -s jq 2>/dev/null) ]]; then
-    $STD apt-get update
-    $STD apt-get install -y jq
-  fi
 
   update_available=$(curl -fsSL -X 'GET' "http://localhost:19200/api/status/update-available" -H 'accept: application/json' | jq .UpdateAvailable)
   if [[ "${update_available}" == "true" ]]; then
-    msg_info "Stopping $APP"
+    msg_info "Stopping Service"
     systemctl stop fileflows
-    msg_ok "Stopped $APP"
+    msg_ok "Stopped Service"
 
     msg_info "Creating Backup"
     backup_filename="/opt/${APP}_backup_$(date +%F).tar.gz"
     tar -czf "$backup_filename" -C /opt/fileflows Data
     msg_ok "Backup Created"
 
-    msg_info "Updating $APP to latest version"
+    msg_info "Updating FileFlows"
     temp_file=$(mktemp)
     curl -fsSL https://fileflows.com/downloads/zip -o "$temp_file"
     $STD unzip -o -d /opt/fileflows "$temp_file"
-    msg_ok "Updated $APP to latest version"
+    msg_ok "Updated FileFlows"
 
-    msg_info "Starting $APP"
+    msg_info "Starting Service"
     systemctl start fileflows
-    msg_ok "Started $APP"
+    msg_ok "Started Service"
 
     msg_info "Cleaning Up"
     rm -rf "$temp_file"
     rm -rf "$backup_filename"
     msg_ok "Cleanup Completed"
-
-    msg_ok "Update Successful"
+    msg_ok "Updated successfully"
   else
     msg_ok "No update required. ${APP} is already at latest version"
   fi
-
   exit
 }
 
