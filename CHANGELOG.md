@@ -14,6 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - openwebui: Python version usage | core: zsh completion install [@MickLesk](https://github.com/MickLesk) ([#9079](https://github.com/community-scripts/ProxmoxVE/pull/9079))
+
   - #### 🐞 Bug Fixes
 
     - chore: evcc: refactor [@CrazyWolf13](https://github.com/CrazyWolf13) ([#9057](https://github.com/community-scripts/ProxmoxVE/pull/9057))
