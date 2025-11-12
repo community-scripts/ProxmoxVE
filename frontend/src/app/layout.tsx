@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { Inter } from "next/font/google";
+import Script from "next/script";
 import React from "react";
 
 import { ThemeProvider } from "@/components/theme-provider";
@@ -95,12 +96,16 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <script defer src={`https://${analytics.url}/script.js`} data-website-id={analytics.token}></script>
         <link rel="canonical" href={metadata.metadataBase?.href} />
         <link rel="manifest" href="manifest.webmanifest" />
         <link rel="preconnect" href="https://api.github.com" />
       </head>
       <body className={inter.className}>
+        <Script
+          src={`https://${analytics.url}/api/script.js`}
+          data-site-id={analytics.token}
+          strategy="afterInteractive"
+        />
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
           <div className="flex w-full flex-col justify-center">
             <NuqsAdapter>
