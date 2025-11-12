@@ -35,6 +35,7 @@ function update_script() {
       "https://dl.evcc.io/public/evcc/stable/deb/debian/" \
       "$(get_os_info codename)" \
       "main"
+  fi
   msg_info "Updating evcc LXC"
   $STD apt update
   $STD apt --only-upgrade install -y evcc
