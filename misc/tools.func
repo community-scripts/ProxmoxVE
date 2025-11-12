@@ -622,7 +622,8 @@ setup_deb822_repo() {
   }
 
   # Create deb822 sources file
-  cat <<EOF >/etc/apt/sources.list.d/${name}.sources
+  if [[ -n "$component" ]]; then
+    cat <<EOF >/etc/apt/sources.list.d/${name}.sources
 Types: deb
 URIs: $repo_url
 Suites: $suite
@@ -630,6 +631,15 @@ Components: $component
 Architectures: $architectures
 Signed-By: /etc/apt/keyrings/${name}.gpg
 EOF
+  else
+    cat <<EOF >/etc/apt/sources.list.d/${name}.sources
+Types: deb
+URIs: $repo_url
+Suites: $suite
+Architectures: $architectures
+Signed-By: /etc/apt/keyrings/${name}.gpg
+EOF
+  fi
 
   # Use cached apt update
   local apt_cache_file="/var/cache/apt-update-timestamp"
@@ -1141,7 +1151,7 @@ function fetch_and_deploy_gh_release() {
       rm -rf "${target:?}/"*
     fi
 
-  tar --no-same-owner -xzf "$tmpdir/$filename" -C "$tmpdir" || {
+    tar --no-same-owner -xzf "$tmpdir/$filename" -C "$tmpdir" || {
       msg_error "Failed to extract tarball"
       rm -rf "$tmpdir"
       return 1

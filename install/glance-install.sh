@@ -39,8 +39,7 @@ EOF
 msg_ok "Configured Glance"
 
 msg_info "Creating Service"
-service_path="/etc/systemd/system/glance.service"
-echo "[Unit]
+cat <<EOF >/etc/systemd/system/glance.service
 Description=Glance Daemon
 After=network.target
 
@@ -53,15 +52,11 @@ KillMode=process
 Restart=on-failure
 
 [Install]
-WantedBy=multi-user.target" >$service_path
-
+WantedBy=multi-user.target
+EOF
 systemctl enable -q --now glance
 msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

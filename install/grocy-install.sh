@@ -13,10 +13,6 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt-get install -y apt-transport-https
-msg_ok "Installed Dependencies"
-
 PHP_VERSION="8.3" PHP_MODULE="sqlite3,bz2" PHP_APACHE="yes" setup_php
 fetch_and_deploy_gh_release "grocy" "grocy/grocy" "prebuild" "latest" "/var/www/html" "grocy*.zip"
 
@@ -47,8 +43,4 @@ msg_ok "Installed grocy"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc
