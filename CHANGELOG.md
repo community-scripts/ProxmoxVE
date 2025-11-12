@@ -12,12 +12,15 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-11-12
 
-### 🚀 Updated Scripts
+### 🆕 New Scripts
 
-  - openwebui: Python version usage | core: zsh completion install [@MickLesk](https://github.com/MickLesk) ([#9079](https://github.com/community-scripts/ProxmoxVE/pull/9079))
+  - Splunk Enterprise ([#9090](https://github.com/community-scripts/ProxmoxVE/pull/9090))
+
+### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
 
+    - openwebui: Python version usage | core: zsh completion install [@MickLesk](https://github.com/MickLesk) ([#9079](https://github.com/community-scripts/ProxmoxVE/pull/9079))
     - Refactor: evcc [@CrazyWolf13](https://github.com/CrazyWolf13) ([#9057](https://github.com/community-scripts/ProxmoxVE/pull/9057))
 
   - #### ✨ New Features
