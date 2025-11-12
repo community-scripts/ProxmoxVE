@@ -28,13 +28,20 @@ function update_script() {
     exit
   fi
 
-  msg_info "Updating ${APP} LXC"
+  msg_info "Stopping Service"
   $STD miniflux -flush-sessions -config-file /etc/miniflux.conf
-  $STD systemctl stop miniflux
+  systemctl stop miniflux
+  msg_ok "Service Stopped"
+
   fetch_and_deploy_gh_release "miniflux" "miniflux/v2" "binary" "latest"
+  
+  msg_info "Updating Miniflux"
   $STD miniflux -migrate -config-file /etc/miniflux.conf
+  msg_ok "Updated Miniflux"
+  msg_info "Starting Service"
   $STD systemctl start miniflux
-  msg_ok "Updated Successfully"
+  msg_ok "Started Service"
+  msg_ok "Updated successfully"
   exit
 }
 
