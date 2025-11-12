@@ -25,7 +25,7 @@ function update_script() {
   check_container_resources
   if [[ ! -f /etc/systemd/system/esphomeDashboard.service ]]; then
     msg_error "No ${APP} Installation Found!"
-    exit 1
+    exit
   fi
 
   msg_info "Stopping Service"
@@ -81,7 +81,11 @@ EOF
   msg_info "Starting Service"
   systemctl start esphomeDashboard
   msg_ok "Started Service"
+<<<<<<< HEAD
   msg_ok "Updated successfully"
+=======
+  msg_ok "Updated successfully!"
+>>>>>>> main
   exit
 }
 

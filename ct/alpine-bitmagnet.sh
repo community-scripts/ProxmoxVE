@@ -24,7 +24,7 @@ function update_script() {
 
   if [[ ! -d /opt/bitmagnet ]]; then
     msg_error "No ${APP} Installation Found!"
-    exit 1
+    exit
   fi
   RELEASE=$(curl -fsSL https://api.github.com/repos/bitmagnet-io/bitmagnet/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
   if [ "${RELEASE}" != "$(cat /opt/bitmagnet_version.txt)" ] || [ ! -f /opt/bitmagnet_version.txt ]; then
@@ -71,11 +71,10 @@ function update_script() {
     rm -f "$temp_file"
     echo "${RELEASE}" >/opt/bitmagnet_version.txt
     $STD service bitmagnet start
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   else
     msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
-
   exit 0
 }
 

@@ -25,16 +25,24 @@ mkdir -p data/{users,checklists,notes}
 
 cat <<EOF >/opt/jotty/.env
 NODE_ENV=production
+
+# --- Uncomment to enable
 # HTTPS=true
+# SERVE_PUBLIC_IMAGES=yes
+# SERVE_PUBLIC_FILES=yes
+# SERVE_PUBLIC_VIDEOS=yes
+# STOP_CHECK_UPDATES=yes
+# --- For troubleshooting
+# DEBUGGER=true
 
 # --- SSO with OIDC (optional)
 # SSO_MODE=oidc
 # OIDC_ISSUER=<your-oidc-issuer-url>
 # OIDC_CLIENT_ID=<oidc-client-id>
 # APP_URL=<https://app.domain.tld>
-# SSO_FALLBACK_LOCAL=true # Allow both SSO and normal login
-# OIDC_CLIENT_SECRET=your_client_secret  # Enable confidential client mode with client authentication
-# OIDC_ADMIN_GROUPS=admins # Map provider groups to admin role
+# SSO_FALLBACK_LOCAL=yes
+# OIDC_CLIENT_SECRET=your_client_secret
+# OIDC_ADMIN_GROUPS=admins
 EOF
 msg_ok "Installed ${APPLICATION}"
 
@@ -58,9 +66,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

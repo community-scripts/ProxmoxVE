@@ -28,12 +28,18 @@ function update_script() {
     exit
   fi
 
-  NODE_VERSION="22" setup_nodejs
+  NODE_VERSION="22" NODE_MODULE="@postlight/parser@latest,single-file-cli@latest" setup_nodejs
   PYTHON_VERSION="3.13" setup_uv
 
-  msg_info "Stopping ArchiveBox"
+  if ! dpkg -l | grep -q "^ii  chromium "; then
+    msg_info "Installing System Dependencies"
+    $STD apt-get install -y chromium
+    msg_ok "Installed System Dependencies"
+  fi
+
+  msg_info "Stopping Service"
   systemctl stop archivebox
-  msg_ok "Stopped ArchiveBox"
+  msg_ok "Stopped Service"
 
   msg_info "Upgrading Playwright"
   $STD uv pip install playwright --system
@@ -46,11 +52,10 @@ function update_script() {
   sudo -u archivebox archivebox init
   msg_ok "Updated ArchiveBox"
 
-  msg_info "Starting ArchiveBox"
+  msg_info "Starting Service"
   systemctl start archivebox
-  msg_ok "Started ArchiveBox"
-
-  msg_ok "Updated Successfully"
+  msg_ok "Started Service"
+  msg_ok "Updated successfully!"
   exit
 }
 

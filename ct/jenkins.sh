@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -20,18 +20,22 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /var/lib/jenkins ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    msg_info "Updating $APP LXC"
-    $STD apt-get update
-    $STD apt-get -y upgrade
-    msg_ok "Updated $APP LXC"
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /var/lib/jenkins ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+
+  JAVA_VERSION="21" setup_java
+
+  msg_info "Updating Jenkins"
+  $STD apt update
+  $STD apt -y upgrade
+  msg_ok "Updated Jenkins"
+  msg_ok "Update Successfully!"
+  exit
 }
 
 start

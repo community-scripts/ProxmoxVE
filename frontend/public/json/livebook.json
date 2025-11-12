@@ -1,0 +1,40 @@
+{
+  "name": "Livebook",
+  "slug": "livebook",
+  "categories": [
+    20
+  ],
+  "date_created": "2025-10-30",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 8080,
+  "documentation": "https://hexdocs.pm/livebook/readme.html",
+  "config_path": null,
+  "website": "https://livebook.dev",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/livebook.webp",
+  "description": "Elixir Livebook is an interactive, web-based notebook platform for Elixir that combines code, documentation, and visualizations in a single document. Similar to Jupyter notebooks, it allows developers to write and execute Elixir code in real-time, making it ideal for data exploration, prototyping, learning, and collaborative development. Livebook features rich markdown support, built-in charting capabilities, and seamless integration with the Elixir ecosystem.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/livebook.sh",
+      "resources": {
+        "cpu": 1,
+        "ram": 1024,
+        "hdd": 4,
+        "os": "Ubuntu",
+        "version": "24.04"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Show initial Livebook password: `cat /opt/livebook/livebook.creds`",
+      "type": "info"
+    }
+  ]
+}

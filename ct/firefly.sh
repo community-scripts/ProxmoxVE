@@ -51,7 +51,7 @@ function update_script() {
     find /opt/firefly/storage -type f -exec chmod 664 {} \;
     mkdir -p /opt/firefly/storage/framework/{cache/data,sessions,views}
     $STD sudo -u www-data php /opt/firefly/artisan cache:clear
-
+    cd /opt/firefly
     $STD php artisan migrate --seed --force
     $STD php artisan cache:clear
     $STD php artisan view:clear
@@ -62,7 +62,11 @@ function update_script() {
     msg_info "Starting Apache2"
     systemctl start apache2
     msg_ok "Started Apache2"
+<<<<<<< HEAD
     msg_ok "Updated successfully"
+=======
+    msg_ok "Updated successfully!"
+>>>>>>> main
   fi
   exit
 }

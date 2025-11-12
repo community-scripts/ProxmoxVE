@@ -38,15 +38,21 @@ function update_script() {
     mv /opt/openarchiver.env /opt/openarchiver/.env
 
     msg_info "Updating Open Archiver"
+    cd /opt/openarchiver
     $STD pnpm install --shamefully-hoist --frozen-lockfile --prod=false
-    $STD pnpm build
+    $STD pnpm run build:oss
     $STD pnpm db:migrate
     msg_ok "Updated Open Archiver"
+
+    if grep -q '^ExecStart=/usr/bin/pnpm docker-start$' /etc/systemd/system/openarchiver.service; then
+      sed -i 's|^ExecStart=/usr/bin/pnpm docker-start$|ExecStart=/usr/bin/pnpm docker-start:oss|' /etc/systemd/system/openarchiver.service
+      systemctl daemon-reload
+    fi
 
     msg_info "Starting Services"
     systemctl start openarchiver
     msg_ok "Started Services"
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

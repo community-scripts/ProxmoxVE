@@ -31,7 +31,7 @@ function update_script() {
     msg_info "Updating Typesense"
     $STD apt update
     $STD apt -y upgrade
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

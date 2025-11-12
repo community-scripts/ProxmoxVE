@@ -35,24 +35,38 @@ function update_script() {
     if grep -q "uv run" /etc/systemd/system/paperless-webserver.service; then
 
       msg_info "Backing up data"
-      mkdir -p /opt/paperless/backup
-      cp -r /opt/paperless/data /opt/paperless/backup/
-      cp -r /opt/paperless/media /opt/paperless/backup/
-      cp -r /opt/paperless/paperless.conf /opt/paperless/backup/
+      mkdir -p /opt/paperless_backup
+      cp -r /opt/paperless/data /opt/paperless_backup/
+      cp -r /opt/paperless/media /opt/paperless_backup/
+      cp -r /opt/paperless/paperless.conf /opt/paperless_backup/
       msg_ok "Backup completed"
 
       PYTHON_VERSION="3.13" setup_uv
-      fetch_and_deploy_gh_release "paperless" "paperless-ngx/paperless-ngx" "prebuild" "latest" "/opt/paperless" "paperless*tar.xz"
-      fetch_and_deploy_gh_release "jbig2enc" "ie13/jbig2enc" "tarball" "latest" "/opt/jbig2enc"
-      setup_gs
+      CLEAN_INSTALL=1 fetch_and_deploy_gh_release "paperless" "paperless-ngx/paperless-ngx" "prebuild" "latest" "/opt/paperless" "paperless*tar.xz"
+      CLEAN_INSTALL=1 fetch_and_deploy_gh_release "jbig2enc" "ie13/jbig2enc" "tarball" "latest" "/opt/jbig2enc"
+
+      . /etc/os-release
+      if [ "$VERSION_CODENAME" = "bookworm" ]; then
+        setup_gs
+      else
+        $STD apt install -y ghostscript
+      fi
 
       msg_info "Updating Paperless-ngx"
-      cp -r /opt/paperless/backup/* /opt/paperless/
+      cp -r /opt/paperless_backup/* /opt/paperless/
+      CONSUME_DIR="$(sed -n 's/^PAPERLESS_CONSUMPTION_DIR=//p' /opt/paperless/paperless.conf)"
+      if [[ -z "$CONSUME_DIR" ]]; then
+        CONSUME_DIR="/opt/paperless/consume"
+      fi
+      mkdir -p "$CONSUME_DIR"
       cd /opt/paperless
       $STD uv sync --all-extras
       cd /opt/paperless/src
       $STD uv run -- python manage.py migrate
       msg_ok "Updated Paperless-ngx"
+
+      rm -rf /opt/paperless_backup
+
     else
       msg_warn "You are about to migrate your Paperless-ngx installation to uv!"
       msg_custom "🔒" "It is strongly recommended to take a Proxmox snapshot first:"
@@ -63,7 +77,7 @@ function update_script() {
       read -rp "Have you created a snapshot? [y/N]: " confirm
       if [[ ! "$confirm" =~ ^([yY]|[yY][eE][sS])$ ]]; then
         msg_error "Migration aborted. Please create a snapshot first."
-        exit 1
+        exit
       fi
       msg_info "Migrating old Paperless-ngx installation to uv"
       rm -rf /opt/paperless/venv
@@ -96,31 +110,47 @@ function update_script() {
 
       $STD systemctl daemon-reload
       msg_info "Backing up data"
-      mkdir -p /opt/paperless/backup
-      cp -r /opt/paperless/data /opt/paperless/backup/
-      cp -r /opt/paperless/media /opt/paperless/backup/
-      cp -r /opt/paperless/paperless.conf /opt/paperless/backup/
+      mkdir -p /opt/paperless_backup
+      cp -r /opt/paperless/data /opt/paperless_backup/
+      cp -r /opt/paperless/media /opt/paperless_backup/
+      cp -r /opt/paperless/paperless.conf /opt/paperless_backup/
       msg_ok "Backup completed"
 
       PYTHON_VERSION="3.13" setup_uv
-      fetch_and_deploy_gh_release "paperless" "paperless-ngx/paperless-ngx" "prebuild" "latest" "/opt/paperless" "paperless*tar.xz"
-      fetch_and_deploy_gh_release "jbig2enc" "ie13/jbig2enc" "tarball" "latest" "/opt/jbig2enc"
-      setup_gs
+      CLEAN_INSTALL=1 fetch_and_deploy_gh_release "paperless" "paperless-ngx/paperless-ngx" "prebuild" "latest" "/opt/paperless" "paperless*tar.xz"
+      CLEAN_INSTALL=1 fetch_and_deploy_gh_release "jbig2enc" "ie13/jbig2enc" "tarball" "latest" "/opt/jbig2enc"
+
+      . /etc/os-release
+      if [ "$VERSION_CODENAME" = "bookworm" ]; then
+        setup_gs
+      else
+        msg_info "Installing Ghostscript"
+        $STD apt install -y ghostscript
+        msg_ok "Installed Ghostscript"
+      fi
 
       msg_info "Updating Paperless-ngx"
-      cp -r /opt/paperless/backup/* /opt/paperless/
+      cp -r /opt/paperless_backup/* /opt/paperless/
+      CONSUME_DIR="$(sed -n '/^PAPERLESS_CONSUMPTION/s/[^=]=*//p' /opt/paperless/paperless.conf)"
+      mkdir -p "${CONSUME_DIR:-/opt/paperless/consume}"
       cd /opt/paperless
       $STD uv sync --all-extras
       cd /opt/paperless/src
       $STD uv run -- python manage.py migrate
       msg_ok "Paperless-ngx migration and update completed"
+
+      rm -rf /opt/paperless_backup
+      if [[ -d /opt/paperless/backup ]]; then
+        rm -rf /opt/paperless/backup
+        msg_ok "Removed old backup directory"
+      fi
     fi
 
     msg_info "Starting all Paperless-ngx Services"
     systemctl start paperless-consumer paperless-webserver paperless-scheduler paperless-task-queue
     sleep 1
     msg_ok "Started all Paperless-ngx Services"
-    msg_ok "Updated Successfully!\n"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

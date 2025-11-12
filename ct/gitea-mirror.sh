@@ -112,8 +112,13 @@ EOF
 
     msg_info "Starting Service"
     systemctl start gitea-mirror
+<<<<<<< HEAD
     msg_ok "Started Service"
     msg_ok "Updated successfully"
+=======
+    msg_ok "Service Started"
+    msg_ok "Updated successfully!"
+>>>>>>> main
   fi
   exit
 }

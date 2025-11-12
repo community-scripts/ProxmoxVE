@@ -39,7 +39,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start kavita
     msg_ok "Service Started"
-    msg_ok "Update Successfully!"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

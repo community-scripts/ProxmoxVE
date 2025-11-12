@@ -16,8 +16,7 @@ update_os
 setup_uv
 
 msg_info "Installing dependencies"
-$STD apt-get update
-$STD apt-get install --no-install-recommends -y \
+$STD apt install --no-install-recommends -y \
   git \
   redis \
   autoconf \
@@ -64,22 +63,18 @@ $STD apt-get install --no-install-recommends -y \
   libdav1d-dev \
   libhwy-dev \
   libwebp-dev \
-  libaom-dev
-curl -fsSL https://repo.jellyfin.org/jellyfin_team.gpg.key | gpg --dearmor -o /etc/apt/keyrings/jellyfin.gpg
-DPKG_ARCHITECTURE="$(dpkg --print-architecture)"
-export DPKG_ARCHITECTURE
-cat <<EOF >/etc/apt/sources.list.d/jellyfin.sources
-Types: deb
-URIs: https://repo.jellyfin.org/debian
-Suites: trixie
-Components: main
-Architectures: ${DPKG_ARCHITECTURE}
-Signed-By: /etc/apt/keyrings/jellyfin.gpg
-EOF
-$STD apt-get update
-$STD apt-get install -y jellyfin-ffmpeg7
-ln -s /usr/lib/jellyfin-ffmpeg/ffmpeg /usr/bin/ffmpeg
-ln -s /usr/lib/jellyfin-ffmpeg/ffprobe /usr/bin/ffprobe
+  libaom-dev \
+  ccache
+
+setup_deb822_repo \
+  "jellyfin" \
+  "https://repo.jellyfin.org/jellyfin_team.gpg.key" \
+  "https://repo.jellyfin.org/debian" \
+  "$(get_os_info codename)"
+$STD apt install -y jellyfin-ffmpeg7
+ln -sf /usr/lib/jellyfin-ffmpeg/ffmpeg /usr/bin/ffmpeg
+ln -sf /usr/lib/jellyfin-ffmpeg/ffprobe /usr/bin/ffprobe
+
 if [[ "$CTTYPE" == "0" && -d /dev/dri ]]; then
   chgrp video /dev/dri
   chmod 755 /dev/dri
@@ -93,7 +88,7 @@ read -r -p "${TAB3}Install OpenVINO dependencies for Intel HW-accelerated machin
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   msg_info "Installing OpenVINO dependencies"
   touch ~/.openvino
-  $STD apt-get install -y --no-install-recommends patchelf
+  $STD apt install -y --no-install-recommends patchelf
   tmp_dir=$(mktemp -d)
   $STD pushd "$tmp_dir"
   curl -fsSLO https://github.com/intel/intel-graphics-compiler/releases/download/igc-1.0.17384.11/intel-igc-core_1.0.17384.11_amd64.deb
@@ -119,14 +114,14 @@ Package: *
 Pin:release a=testing
 Pin-Priority: 450
 EOF
-$STD apt-get update
+$STD apt update
 msg_ok "Configured Debian Testing repo"
 msg_info "Installing libmimalloc3"
-$STD apt-get install -t testing --no-install-recommends -yqq libmimalloc3
+$STD apt install -t testing --no-install-recommends -yqq libmimalloc3
 msg_ok "Installed libmimalloc3"
 
 PNPM_VERSION="$(curl -fsSL "https://raw.githubusercontent.com/immich-app/immich/refs/heads/main/package.json" | jq -r '.packageManager | split("@")[1]')"
-NODE_VERSION="22" NODE_MODULE="pnpm@${PNPM_VERSION}" setup_nodejs
+NODE_VERSION="24" NODE_MODULE="pnpm@${PNPM_VERSION}" setup_nodejs
 PG_VERSION="16" PG_MODULES="pgvector" setup_postgresql
 
 msg_info "Setting up Postgresql Database"
@@ -287,7 +282,7 @@ GEO_DIR="${INSTALL_DIR}/geodata"
 mkdir -p "$INSTALL_DIR"
 mkdir -p {"${APP_DIR}","${UPLOAD_DIR}","${GEO_DIR}","${INSTALL_DIR}"/cache}
 
-fetch_and_deploy_gh_release "immich" "immich-app/immich" "tarball" "v2.1.0" "$SRC_DIR"
+fetch_and_deploy_gh_release "immich" "immich-app/immich" "tarball" "v2.2.3" "$SRC_DIR"
 
 msg_info "Installing ${APPLICATION} (patience)"
 
@@ -351,15 +346,10 @@ ln -s "$UPLOAD_DIR" "$ML_DIR"/upload
 
 msg_info "Installing GeoNames data"
 cd "$GEO_DIR"
-URL_LIST=(
-  https://download.geonames.org/export/dump/admin1CodesASCII.txt
-  https://download.geonames.org/export/dump/admin2Codes.txt
-  https://download.geonames.org/export/dump/cities500.zip
-  https://raw.githubusercontent.com/nvkelso/natural-earth-vector/v5.1.2/geojson/ne_10m_admin_0_countries.geojson
-)
-for geo in "${URL_LIST[@]}"; do
-  curl -fsSLO "$geo"
-done
+curl -fsSLZ -O "https://download.geonames.org/export/dump/admin1CodesASCII.txt" \
+  -O "https://download.geonames.org/export/dump/admin2Codes.txt" \
+  -O "https://download.geonames.org/export/dump/cities500.zip" \
+  -O "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/v5.1.2/geojson/ne_10m_admin_0_countries.geojson"
 unzip -q cities500.zip
 date --iso-8601=seconds | tr -d "\n" >geodata-date.txt
 rm cities500.zip
@@ -464,9 +454,4 @@ msg_ok "Modified user, created env file, scripts and services"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-$STD apt clean -y
-msg_ok "Cleaned"
+cleanup_lxc

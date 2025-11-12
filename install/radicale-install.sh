@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt install -y \
   apache2-utils \
   python3-pip \
-  python3.11-venv
+  python3-venv
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up Radicale"

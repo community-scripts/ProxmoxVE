@@ -44,7 +44,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start nodebb
     msg_ok "Started Service"
-    msg_ok "Updated Successfully\n"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

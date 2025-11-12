@@ -66,7 +66,6 @@ server/hostname ${IP_ADDR}
 server/server_path_prefix /openproject
 server/ssl no
 server/variant apache2
-server/server_path_prefix
 repositories/api-key ${API_KEY}
 repositories/svn-install skip
 repositories/git-install install

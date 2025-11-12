@@ -27,7 +27,35 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  msg_error "Currently we don't provide an update function for this App."
+
+  if check_for_gh_release "web-check" "CrazyWolf13/web-check"; then
+    msg_info "Stopping Service"
+    systemctl stop web-check
+    msg_ok "Stopped Service"
+
+    msg_info "Creating backup"
+    mv /opt/web-check/.env /opt
+    msg_ok "Created backup"
+
+    NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "web-check" "CrazyWolf13/web-check"
+
+    msg_info "Restoring backup"
+    mv /opt/.env /opt/web-check
+    msg_ok "Restored backup"
+
+    msg_info "Building Web-Check"
+    cd /opt/web-check
+    $STD yarn install --frozen-lockfile --network-timeout 100000
+    $STD yarn build --production
+    $STD npm cache clean --force
+    msg_ok "Built Web-Check"
+
+    msg_info "Starting Service"
+    systemctl start web-check
+    msg_ok "Started Service"
+    msg_ok "Updated Successfully!"
+  fi
   exit
 }
 

@@ -44,7 +44,11 @@ function update_script() {
   msg_info "Starting Service"
   systemctl start forgejo
   msg_ok "Started Service"
+<<<<<<< HEAD
   msg_ok "Updated successfully"
+=======
+  msg_ok "Updated successfully!"
+>>>>>>> main
   exit
 }
 

@@ -47,7 +47,7 @@ function update_script() {
   msg_info "Starting Service"
   systemctl start litellm
   msg_ok "Started Service"
-  msg_ok "Updated Successfully"
+  msg_ok "Updated successfully!"
   exit
 }
 

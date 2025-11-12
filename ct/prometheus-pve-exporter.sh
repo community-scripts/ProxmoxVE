@@ -25,7 +25,7 @@ function update_script() {
   check_container_resources
   if [[ ! -f /etc/systemd/system/prometheus-pve-exporter.service ]]; then
     msg_error "No ${APP} Installation Found!"
-    exit 1
+    exit
   fi
 
   msg_info "Stopping Service"
@@ -81,7 +81,7 @@ EOF
   systemctl start prometheus-pve-exporter
   msg_ok "Started Service"
 
-  msg_ok "Updated Successfully"
+  msg_ok "Updated successfully!"
   exit 0
 }
 

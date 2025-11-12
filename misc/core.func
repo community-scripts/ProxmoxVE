@@ -368,6 +368,54 @@ run_container_safe() {
   " || __handle_general_error "lxc-attach to CT $ct"
 }
 
+cleanup_lxc() {
+  msg_info "Cleaning up"
+
+  if is_alpine; then
+    $STD apk cache clean || true
+    rm -rf /var/cache/apk/*
+  else
+    $STD apt -y autoremove || true
+    $STD apt -y autoclean || true
+    $STD apt -y clean || true
+  fi
+
+  # Clear temp artifacts (keep sockets/FIFOs; ignore errors)
+  find /tmp /var/tmp -type f -name 'tmp*' -delete 2>/dev/null || true
+  find /tmp /var/tmp -type f -name 'tempfile*' -delete 2>/dev/null || true
+
+  # Truncate writable log files silently (permission errors ignored)
+  if command -v truncate >/dev/null 2>&1; then
+    find /var/log -type f -writable -print0 2>/dev/null |
+      xargs -0 -n1 truncate -s 0 2>/dev/null || true
+  fi
+
+  # Python pip
+  if command -v pip &>/dev/null; then $STD pip cache purge || true; fi
+  # Python uv
+  if command -v uv &>/dev/null; then $STD uv cache clear || true; fi
+  # Node.js npm
+  if command -v npm &>/dev/null; then $STD npm cache clean --force || true; fi
+  # Node.js yarn
+  if command -v yarn &>/dev/null; then $STD yarn cache clean || true; fi
+  # Node.js pnpm
+  if command -v pnpm &>/dev/null; then $STD pnpm store prune || true; fi
+  # Go
+  if command -v go &>/dev/null; then $STD go clean -cache -modcache || true; fi
+  # Rust cargo
+  if command -v cargo &>/dev/null; then $STD cargo clean || true; fi
+  # Ruby gem
+  if command -v gem &>/dev/null; then $STD gem cleanup || true; fi
+  # Composer (PHP)
+  if command -v composer &>/dev/null; then $STD composer clear-cache || true; fi
+
+  if command -v journalctl &>/dev/null; then
+    $STD journalctl --rotate || true
+    $STD journalctl --vacuum-time=10m || true
+  fi
+  msg_ok "Cleaned"
+}
+
 check_or_create_swap() {
   msg_info "Checking for active swap"
 

@@ -31,9 +31,14 @@ function update_script() {
   msg_info "Updating Globaleaks"
   $STD apt update
   $STD apt -y upgrade
+<<<<<<< HEAD
   msg_ok "Updated Globaleaks"
   msg_ok "Updated successfully"
   exit
+=======
+  msg_ok "Updated $APP LXC"
+  msg_ok "Updated successfully!"
+>>>>>>> main
 }
 
 start

@@ -45,7 +45,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start teamspeak-server
     msg_ok "Started Service"
-    msg_ok "Updated Successfully!"
+    msg_ok "Updated successfully!"
   else
     msg_ok "Already up to date"
   fi

@@ -44,7 +44,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start umami
     msg_ok "Started Service"
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

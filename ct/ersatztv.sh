@@ -35,8 +35,14 @@ function update_script() {
 
     msg_info "Starting Service"
     systemctl start ersatzTV
+<<<<<<< HEAD
     msg_ok "Started Service"
     msg_ok "ErsatzTV Updated successfully"
+=======
+    msg_ok "Started ErsatzTV"
+
+    msg_ok "Updated successfully!"
+>>>>>>> main
   fi
 
   if check_for_gh_release "ersatztv-ffmpeg" "ErsatzTV/ErsatzTV-ffmpeg"; then
@@ -55,8 +61,13 @@ function update_script() {
 
     msg_info "Starting Service"
     systemctl start ersatzTV
+<<<<<<< HEAD
     msg_ok "Started Service"
     msg_ok "ErsatzTV-ffmpeg Updated successfully"
+=======
+    msg_ok "Started ErsatzTV"
+    msg_ok "Updated successfully!"
+>>>>>>> main
   fi
   exit
 }

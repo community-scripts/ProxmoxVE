@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
 # Copyright (c) 2021-2025 tteck
-# Author: tteck
-# Co-Author: havardthom
+# Author: tteck | Co-Author: havardthom | Co-Author: Slaviša Arežina (tremor021)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://openwebui.com/
 
@@ -15,35 +14,13 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt install -y \
-  git \
-  ffmpeg \
-  libpq-dev
+$STD apt install -y ffmpeg
 msg_ok "Installed Dependencies"
 
-msg_info "Setup Python3"
-$STD apt install -y --no-install-recommends \
-  python3 \
-  python3-pip
-msg_ok "Setup Python3"
+PYTHON_VERSION="3.12" setup_uv
 
-NODE_VERSION="22" setup_nodejs
-
-msg_info "Installing Open WebUI (Patience)"
-$STD git clone https://github.com/open-webui/open-webui.git /opt/open-webui
-cd /opt/open-webui/backend
-$STD pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
-$STD pip3 install -r requirements.txt -U
-cd /opt/open-webui
-cp .env.example .env
-cat <<EOF >/opt/open-webui/.env
-ENV=prod
-ENABLE_OLLAMA_API=false
-OLLAMA_BASE_URL=http://0.0.0.0:11434
-EOF
-$STD npm install --force
-export NODE_OPTIONS="--max-old-space-size=6000"
-$STD npm run build
+msg_info "Installing Open WebUI"
+$STD uv tool install --python 3.12 open-webui[all]
 msg_ok "Installed Open WebUI"
 
 read -r -p "${TAB3}Would you like to add Ollama? <y/N> " prompt
@@ -69,7 +46,7 @@ RestartSec=3
 WantedBy=multi-user.target
 EOF
   systemctl enable -q --now ollama
-  sed -i 's/ENABLE_OLLAMA_API=false/ENABLE_OLLAMA_API=true/g' /opt/open-webui/.env
+  echo "ENABLE_OLLAMA_API=true" >/root/.env
   msg_ok "Installed Ollama"
 fi
 
@@ -80,10 +57,14 @@ Description=Open WebUI Service
 After=network.target
 
 [Service]
-Type=exec
-WorkingDirectory=/opt/open-webui
-EnvironmentFile=/opt/open-webui/.env
-ExecStart=/opt/open-webui/backend/start.sh
+Type=simple
+EnvironmentFile=-/root/.env
+Environment=DATA_DIR=/root/.open-webui
+ExecStart=/root/.local/bin/open-webui serve
+WorkingDirectory=/root
+Restart=on-failure
+RestartSec=5
+User=root
 
 [Install]
 WantedBy=multi-user.target
@@ -93,9 +74,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

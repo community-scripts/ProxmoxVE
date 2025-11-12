@@ -47,12 +47,12 @@ EOF
 
   msg_info "Updating..."
   $STD apt install --only-upgrade rabbitmq-server
-  msg_ok "Update Successfully"
+  msg_ok "Updated successfully!"
 
   msg_info "Starting Service"
   systemctl start rabbitmq-server
   msg_ok "Started Service"
-  msg_ok "Updated Successfully"
+  msg_ok "Updated successfully!"
   exit
 }
 

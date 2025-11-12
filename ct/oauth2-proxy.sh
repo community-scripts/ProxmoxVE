@@ -38,8 +38,9 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start oauth2-proxy
     msg_ok "Started Service"
-    msg_ok "Updated successfully!\n"
+    msg_ok "Updated successfully!"
   fi
+  exit
 }
 
 start

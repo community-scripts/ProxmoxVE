@@ -42,7 +42,7 @@ function update_script() {
     ./wgd.sh update
     ./wgd.sh start
   fi
-  msg_ok "Updated Successfully!"
+  msg_ok "Updated successfully!"
   exit
 }
 

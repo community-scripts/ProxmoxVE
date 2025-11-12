@@ -31,14 +31,22 @@ function update_script() {
   if check_for_gh_release "duplicati" "duplicati/duplicati"; then
     msg_info "Stopping Service"
     systemctl stop duplicati
+<<<<<<< HEAD
     msg_ok "Stopped Service"
+=======
+    msg_info "Stopped Service"
+>>>>>>> main
 
     fetch_and_deploy_gh_release "duplicati" "duplicati/duplicati" "binary" "latest" "/opt/duplicati" "duplicati-*-linux-x64-gui.deb"
 
     msg_info "Starting Service"
     systemctl start duplicati
     msg_ok "Started Service"
+<<<<<<< HEAD
     msg_ok "Updated successfully"
+=======
+    msg_ok "Updated successfully!"
+>>>>>>> main
   fi
   exit
 }

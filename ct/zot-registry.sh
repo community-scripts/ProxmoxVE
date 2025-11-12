@@ -43,7 +43,7 @@ function update_script() {
     msg_info "Starting service"
     systemctl start zot
     msg_ok "Service started"
-    msg_ok "Updated successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

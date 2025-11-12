@@ -35,10 +35,33 @@ function update_script() {
 
     msg_info "Correcting Services"
     if [ -f /opt/tracktor/app/backend/.env ]; then
-        mv /opt/tracktor/app/backend/.env /opt/tracktor.env
-        echo 'AUTH_PIN=123456' >> /opt/tracktor.env
-        sed -i 's|^EnvironmentFile=.*|EnvironmentFile=/opt/tracktor.env|' /etc/systemd/system/tracktor.service
-        systemctl daemon-reload
+      mv /opt/tracktor/app/backend/.env /opt/tracktor.env
+      echo 'AUTH_PIN=123456' >>/opt/tracktor.env
+      sed -i 's|^EnvironmentFile=.*|EnvironmentFile=/opt/tracktor.env|' /etc/systemd/system/tracktor.service
+      systemctl daemon-reload
+    fi
+    if [ ! -d "/opt/tracktor-data/uploads" ]; then
+      mkdir -p /opt/tracktor-data/{uploads,logs}
+      EXISTING_AUTH_PIN=$(grep '^AUTH_PIN=' /opt/tracktor.env 2>/dev/null | cut -d'=' -f2)
+      AUTH_PIN=${EXISTING_AUTH_PIN:-123456}
+      cat <<EOF >/opt/tracktor.env
+NODE_ENV=production
+DB_PATH=/opt/tracktor-data/tracktor.db
+UPLOADS_DIR="/opt/tracktor-data/uploads"
+LOG_DIR="/opt/tracktor-data/logs"
+# If server host is not set by default it will run on all interfaces - 0.0.0.0
+# SERVER_HOST="" 
+SERVER_PORT=3000
+# Set this if you want to secure your endpoints otherwise default will be "*"
+CORS_ORIGINS="*"
+# Set this if you are using backend and frontend separately.
+# PUBLIC_API_BASE_URL=""
+LOG_REQUESTS=true
+LOG_LEVEL="info"
+AUTH_PIN=${AUTH_PIN}
+# PUBLIC_DEMO_MODE=false
+# FORCE_DATA_SEED=false
+EOF
     fi
     msg_ok "Corrected Services"
 
@@ -54,7 +77,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start tracktor
     msg_ok "Started Service"
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

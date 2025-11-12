@@ -8,7 +8,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 APP="Part-DB"
 var_tags="${var_tags:-inventory;parts}"
 var_cpu="${var_cpu:-2}"
-var_ram="${var_ram:-1024}"
+var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
@@ -63,7 +63,7 @@ function update_script() {
     rm -r "/opt/v${RELEASE}.zip"
     rm -r /opt/partdb-backup
     msg_ok "Cleaned"
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi

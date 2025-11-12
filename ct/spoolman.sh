@@ -54,7 +54,7 @@ function update_script() {
     rm -rf /opt/spoolman.zip
     msg_ok "Cleaned"
 
-    msg_ok "Updated Successfully!\n"
+    msg_ok "Updated successfully!"
   else
     msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi

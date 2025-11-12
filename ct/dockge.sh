@@ -27,12 +27,21 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+<<<<<<< HEAD
   msg_info "Updating Dockge"
   cd /opt/dockge
   $STD docker compose pull
   $STD docker compose up -d
   msg_ok "Updated Dockge"
   msg_ok "Updated successfully"
+=======
+  msg_info "Updating ${APP}"
+  cd /opt/dockge
+  $STD docker compose pull
+  $STD docker compose up -d
+  msg_ok "Updated ${APP}"
+  msg_ok "Updated successfully!"
+>>>>>>> main
   exit
 }
 

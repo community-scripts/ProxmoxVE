@@ -33,9 +33,11 @@ mariadb -u root -e "GRANT SELECT ON \`mysql\`.\`time_zone_name\` TO '$DB_USER'@'
 msg_ok "Set up database"
 
 msg_info "Setup ITSM-NG Repository"
-curl -fsSL http://deb.itsm-ng.org/pubkey.gpg | gpg --dearmor -o /etc/apt/trusted.gpg.d/itsm-ng-keyring.gpg
-echo "deb http://deb.itsm-ng.org/$(. /etc/os-release && echo "$ID")/ $(. /etc/os-release && echo "$VERSION_CODENAME") main" >/etc/apt/sources.list.d/itsm-ng.list
-$STD apt-get update
+setup_deb822_repo \
+  "itsm-ng" \
+  "http://deb.itsm-ng.org/pubkey.gpg" \
+  "http://deb.itsm-ng.org/$(get_os_info id)/" \
+  "$(get_os_info codename)"
 msg_ok "Setup ITSM-NG Repository"
 
 msg_info "Installing ITSM-NG"
@@ -56,13 +58,9 @@ sed -i 's/^[;]*max_input_vars *=.*/max_input_vars = 5000/' "$PHP_INI"
 sed -i 's/^memory_limit = .*/memory_limit = 256M/' $PHP_INI
 sed -i 's/^;\?\s*session.cookie_httponly\s*=.*/session.cookie_httponly = On/' $PHP_INI
 systemctl restart apache2
+rm -rf /usr/share/itsm-ng/install
 msg_ok "Configured PHP"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -rf /usr/share/itsm-ng/install
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

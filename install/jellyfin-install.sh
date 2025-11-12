@@ -19,9 +19,11 @@ if ! grep -qEi 'ubuntu' /etc/os-release; then
   fetch_and_deploy_gh_release "intel-igc-opencl-2" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-opencl-2_*_amd64.deb"
   fetch_and_deploy_gh_release "intel-libgdgmm12" "intel/compute-runtime" "binary" "latest" "" "libigdgmm12_*_amd64.deb"
   fetch_and_deploy_gh_release "intel-opencl-icd" "intel/compute-runtime" "binary" "latest" "" "intel-opencl-icd_*_amd64.deb"
+else
+  $STD apt -y install intel-opencl-icd
 fi
 
-$STD apt -y install {va-driver-all,ocl-icd-libopencl1,intel-opencl-icd,vainfo,intel-gpu-tools}
+$STD apt -y install {va-driver-all,ocl-icd-libopencl1,vainfo,intel-gpu-tools}
 if [[ "$CTTYPE" == "0" ]]; then
   chgrp video /dev/dri
   chmod 755 /dev/dri
@@ -68,9 +70,4 @@ msg_ok "Installed Jellyfin"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

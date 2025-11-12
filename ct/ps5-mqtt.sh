@@ -43,7 +43,7 @@ function update_script() {
     msg_info "Starting service"
     systemctl start ps5-mqtt
     msg_ok "Started service"
-    msg_ok "Updated successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

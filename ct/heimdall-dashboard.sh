@@ -63,7 +63,7 @@ function update_script() {
     systemctl start heimdall.service
     sleep 2
     msg_ok "Started Service"
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   else
     msg_ok "No update required.  ${APP} is already at ${RELEASE}."
   fi

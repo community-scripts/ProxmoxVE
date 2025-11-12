@@ -50,7 +50,7 @@ function update_script() {
     msg_info "Cleaning Up"
     rm -rf /opt/nextpvr-helper.deb
     msg_ok "Cleaned"
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
     exit
 }
 

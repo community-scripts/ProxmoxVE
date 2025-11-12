@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-3}"
 var_ram="${var_ram:-6144}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -33,7 +33,7 @@ function update_script() {
     msg_error "Update not supported. Refer to:"
     msg_error " - https://github.com/community-scripts/ProxmoxVE/discussions/1551"
     msg_error " - https://homarr.dev/docs/getting-started/after-the-installation/#importing-a-zip-from-version-before-100"
-    exit 1
+    exit
   fi
   if [[ ! -f /opt/run_homarr.sh ]]; then
     msg_info "Detected outdated and missing service files"
@@ -156,7 +156,7 @@ EOF
     msg_info "Starting Services"
     systemctl start homarr
     msg_ok "Started Services"
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
     read -p "${TAB3}It's recommended to reboot the LXC after an update, would you like to reboot the LXC now ? (y/n): " choice
     if [[ "$choice" =~ ^[Yy]$ ]]; then
       reboot

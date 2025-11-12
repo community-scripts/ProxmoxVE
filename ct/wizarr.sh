@@ -65,7 +65,7 @@ function update_script() {
     msg_info "Cleaning Up"
     rm -rf "$BACKUP_FILE"
     msg_ok "Cleanup Completed"
-    msg_ok "Updated Successfully!"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

@@ -52,7 +52,11 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start gatus
     msg_ok "Started Service"
+<<<<<<< HEAD
     msg_ok "Updated Successfully"
+=======
+    msg_ok "Updated successfully!"
+>>>>>>> main
   fi
   exit
 }

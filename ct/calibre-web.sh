@@ -104,7 +104,7 @@ function update_script() {
         ;;
       *)
         echo "Unsupported item $CHOICE!" >&2
-        exit 1
+        exit
         ;;
       esac
     done
@@ -124,7 +124,7 @@ function update_script() {
   msg_info "Starting Service"
   systemctl start cps
   msg_ok "Started Service"
-  msg_ok "Updated Successfully"
+  msg_ok "Updated successfully!"
   exit
 }
 

@@ -20,23 +20,29 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /var/lib/sonarr/ ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    msg_info "Updating $APP v4"
-    systemctl stop sonarr.service
-    curl -fsSL "https://services.sonarr.tv/v1/download/main/latest?version=4&os=linux&arch=x64" -o "SonarrV4.tar.gz"
-    tar -xzf SonarrV4.tar.gz
-    rm -rf /opt/Sonarr
-    mv Sonarr /opt
-    rm -rf SonarrV4.tar.gz
-    systemctl start sonarr.service
-    msg_ok "Updated $APP v4"
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /var/lib/sonarr/ ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+  msg_info "Stopping Service"
+  systemctl stop sonarr
+  msg_ok "Stopped Service"
+
+  msg_info "Updating Sonarr"
+  curl -fsSL "https://services.sonarr.tv/v1/download/main/latest?version=4&os=linux&arch=x64" -o "SonarrV4.tar.gz"
+  tar -xzf SonarrV4.tar.gz
+  rm -rf /opt/Sonarr
+  mv Sonarr /opt
+  rm -rf SonarrV4.tar.gz
+  msg_ok "Updated Sonarr"
+  msg_info "Starting Service"
+  systemctl start sonarr
+  msg_ok "Started Service"
+  msg_ok "Updated successfully!"
+  exit
 }
 
 start

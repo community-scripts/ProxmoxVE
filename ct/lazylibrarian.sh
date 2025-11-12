@@ -39,7 +39,7 @@ function update_script() {
     systemctl start lazylibrarian
     msg_ok "Started LazyLibrarian"
 
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
     exit
 }
 

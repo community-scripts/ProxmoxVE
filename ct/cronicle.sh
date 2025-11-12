@@ -62,7 +62,6 @@ function update_script() {
       sed -i "s/localhost:3012/${IP}:3012/g" /opt/cronicle/conf/config.json
       $STD /opt/cronicle/bin/control.sh start
       msg_ok "Installed Cronicle Worker"
-
       echo -e "\n Add Masters secret key to /opt/cronicle/conf/config.json \n"
       exit
     fi

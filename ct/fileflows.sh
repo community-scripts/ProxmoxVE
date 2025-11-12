@@ -33,7 +33,11 @@ function update_script() {
   if [[ "${update_available}" == "true" ]]; then
     msg_info "Stopping Service"
     systemctl stop fileflows
+<<<<<<< HEAD
     msg_ok "Stopped Service"
+=======
+    msg_info "Stopped Service"
+>>>>>>> main
 
     msg_info "Creating Backup"
     backup_filename="/opt/${APP}_backup_$(date +%F).tar.gz"
@@ -54,7 +58,11 @@ function update_script() {
     rm -rf "$temp_file"
     rm -rf "$backup_filename"
     msg_ok "Cleanup Completed"
+<<<<<<< HEAD
     msg_ok "Updated successfully"
+=======
+    msg_ok "Updated successfully!"
+>>>>>>> main
   else
     msg_ok "No update required. ${APP} is already at latest version"
   fi

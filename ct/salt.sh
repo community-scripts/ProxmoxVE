@@ -36,10 +36,11 @@ function update_script() {
     $STD apt update
     $STD apt upgrade -y
     echo "${RELEASE}" >/~.salt
-    msg_ok "Updated ${APP} to ${RELEASE}"
+    msg_ok "Updated successfully!"
   else
     msg_ok "${APP} is already up to date (${RELEASE})"
   fi
+  exit
 }
 
 start

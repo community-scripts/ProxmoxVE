@@ -1,0 +1,59 @@
+{
+  "name": "Garage",
+  "slug": "garage",
+  "categories": [
+    8
+  ],
+  "date_created": "2025-10-27",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 3900,
+  "documentation": "https://garagehq.deuxfleurs.fr/documentation/quick-start/",
+  "website": "https://garagehq.deuxfleurs.fr/",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/garage.webp",
+  "config_path": "/etc/garage.toml",
+  "description": "Garage is a lightweight, self-hosted, S3-compatible object storage service built for distributed environments. It is designed to be simple, efficient, and easy to deploy across multiple nodes.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/garage.sh",
+      "resources": {
+        "cpu": 1,
+        "ram": 1024,
+        "hdd": 5,
+        "os": "debian",
+        "version": "13"
+      }
+    },
+    {
+      "type": "alpine",
+      "script": "ct/alpine-garage.sh",
+      "resources": {
+        "cpu": 1,
+        "ram": 512,
+        "hdd": 5,
+        "os": "alpine",
+        "version": "3.22"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "The Garage configuration file is located at `/etc/garage.toml`. You can edit RPC and API bindings, tokens, and data directories there.",
+      "type": "info"
+    },
+    {
+      "text": "Admin API runs by default on port `3903`, S3 API on port `3900`, Web UI on `3902`. Adjust firewall rules accordingly.",
+      "type": "warning"
+    },
+    {
+      "text": "To view your generated tokens and RPC secret, check `~/garage.creds` after installation.",
+      "type": "info"
+    }
+  ]
+}

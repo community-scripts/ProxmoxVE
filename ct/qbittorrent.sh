@@ -43,7 +43,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start qbittorrent-nox
     msg_ok "Started Service"
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

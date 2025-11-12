@@ -45,12 +45,11 @@ MM_DIR="/opt/mm"
 MEDIA_DIR="${MM_DIR}/media"
 export CONFIG_DIR="${MM_DIR}/config"
 export FRONTEND_FILES_DIR="${MM_DIR}/web/build"
-export BASE_PATH=""
 export PUBLIC_VERSION=""
-export PUBLIC_API_URL="${BASE_PATH}/api/v1"
-export BASE_PATH="${BASE_PATH}/web"
+export PUBLIC_API_URL=""
+export BASE_PATH="/web"
 cd /opt/mediamanager/web
-$STD npm ci
+$STD npm ci --no-fund --no-audit
 $STD npm run build
 mkdir -p {"$MM_DIR"/web,"$MEDIA_DIR","$CONFIG_DIR"}
 cp -r build "$FRONTEND_FILES_DIR"
@@ -82,8 +81,9 @@ cat <<EOF >"$MM_DIR"/start.sh
 
 export CONFIG_DIR="$CONFIG_DIR"
 export FRONTEND_FILES_DIR="$FRONTEND_FILES_DIR"
+export LOG_FILE="$CONFIG_DIR/media_manager.log"
 export BASE_PATH=""
-cd "$MM_DIR"
+cd $MM_DIR
 source ./venv/bin/activate
 /usr/local/bin/uv run alembic upgrade head
 /usr/local/bin/uv run fastapi run ./media_manager/main.py --port 8000

@@ -49,7 +49,7 @@ function update_script() {
     msg_info "Cleaning up"
     rm -f "$temp_file"
     msg_ok "Cleaned up"
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   else
     msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi

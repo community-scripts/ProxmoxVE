@@ -20,16 +20,17 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /opt/pialert ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    bash -c "$(curl -fsSL https://github.com/leiweibau/Pi.Alert/raw/main/install/pialert_update.sh)" -s --lxc
-    msg_ok "Updated $APP"
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /opt/pialert ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+  bash -c "$(curl -fsSL https://github.com/leiweibau/Pi.Alert/raw/main/install/pialert_update.sh)" -s --lxc
+  msg_ok "Updated $APP"
+  msg_ok "Updated successfully!"
+  exit
 }
 
 start

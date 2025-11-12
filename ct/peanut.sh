@@ -31,9 +31,9 @@ function update_script() {
   NODE_VERSION="22" NODE_MODULE="pnpm" setup_nodejs
 
   if check_for_gh_release "peanut" "Brandawg93/PeaNUT"; then
-    msg_info "Stopping $APP"
+    msg_info "Stopping Service"
     systemctl stop peanut
-    msg_ok "Stopped $APP"
+    msg_info "Stopped Service"
 
     fetch_and_deploy_gh_release "peanut" "Brandawg93/PeaNUT" "tarball" "latest" "/opt/peanut"
 
@@ -46,10 +46,10 @@ function update_script() {
     ln -sf /etc/peanut/settings.yml /opt/peanut/.next/standalone/config/settings.yml
     msg_ok "Updated $APP"
 
-    msg_info "Starting $APP"
+    msg_info "Starting Service"
     systemctl start peanut
-    msg_ok "Started $APP"
-    msg_ok "Updated Successfully"
+    msg_ok "Started Service"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

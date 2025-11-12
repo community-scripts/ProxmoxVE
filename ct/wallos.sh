@@ -53,7 +53,7 @@ function update_script() {
     msg_info "Reload Apache2"
     systemctl reload apache2
     msg_ok "Apache2 Reloaded"
-    msg_ok "Updated Successfully!"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

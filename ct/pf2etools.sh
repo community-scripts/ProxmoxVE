@@ -44,7 +44,7 @@ function update_script() {
     chown -R www-data: "/opt/${APP}"
     chmod -R 755 "/opt/${APP}"
     msg_ok "Updated ${APP}"
-    msg_ok "Updated successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

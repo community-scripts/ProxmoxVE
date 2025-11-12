@@ -53,8 +53,18 @@ function update_script() {
 
     msg_info "Starting Service"
     systemctl start emqx
+<<<<<<< HEAD
     msg_ok "Started Service"
     msg_ok "Updated successfully"
+=======
+    echo "$RELEASE" >~/.emqx
+    msg_ok "Started EMQX"
+
+    msg_info "Cleaning Up"
+    rm -f "$DEB_FILE"
+    msg_ok "Cleanup Completed"
+    msg_ok "Updated successfully!"
+>>>>>>> main
   else
     msg_ok "No update required. EMQX is already at v${RELEASE}"
   fi

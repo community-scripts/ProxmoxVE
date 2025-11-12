@@ -23,7 +23,7 @@
         "ram": 256,
         "hdd": 2,
         "os": "debian",
-        "version": "12"
+        "version": "13"
       }
     }
   ],

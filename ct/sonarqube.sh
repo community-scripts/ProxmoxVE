@@ -39,6 +39,7 @@ function update_script() {
     msg_ok "Backup created"
 
     msg_info "Installing sonarqube"
+    temp_file=$(mktemp)
     RELEASE=$(curl -fsSL https://api.github.com/repos/SonarSource/sonarqube/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
     curl -fsSL "https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-${RELEASE}.zip" -o $temp_file
     unzip -q "$temp_file" -d /opt
@@ -56,7 +57,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start sonarqube
     msg_ok "Service started"
-    msg_ok "Updated Successfully!"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

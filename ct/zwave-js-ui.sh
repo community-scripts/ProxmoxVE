@@ -43,7 +43,7 @@ function update_script() {
     msg_info "Cleanup"
     rm -rf /opt/zwave-js-ui/store
     msg_ok "Cleaned"
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

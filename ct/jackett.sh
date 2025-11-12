@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-512}"
 var_disk="${var_disk:-2}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -28,24 +28,24 @@ function update_script() {
     exit
   fi
 
-  if [ ! -f /opt/.env ]; then
-    sed -i 's|^Environment="DisableRootWarning=true"$|EnvironmentFile="/opt/.env"|' /etc/systemd/system/jackett.service
-    cat <<EOF >/opt/.env
+  if check_for_gh_release "Jackett" "Jackett/Jackett"; then
+    if [ ! -f /opt/.env ]; then
+      sed -i 's|^Environment="DisableRootWarning=true"$|EnvironmentFile="/opt/.env"|' /etc/systemd/system/jackett.service
+      cat <<EOF >/opt/.env
 DisableRootWarning=true
 EOF
-  fi
-  if check_for_gh_release "Jackett" "Jackett/Jackett"; then
+    fi
+
     msg_info "Stopping Service"
     systemctl stop jackett
     msg_ok "Stopped Service"
 
-    rm -rf /opt/Jackett
-    fetch_and_deploy_gh_release "jackett" "Jackett/Jackett" "prebuild" "latest" "/opt/Jackett" "Jackett.Binaries.LinuxAMDx64.tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "jackett" "Jackett/Jackett" "prebuild" "latest" "/opt/Jackett" "Jackett.Binaries.LinuxAMDx64.tar.gz"
 
     msg_info "Starting Service"
     systemctl start jackett
     msg_ok "Started Service"
-    msg_ok "Updated Successfully"
+    msg_ok "Updated Successfully!"
   fi
   exit
 }

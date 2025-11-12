@@ -27,13 +27,14 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  msg_info "Updating Shinobi LXC"
+  msg_info "Updating Shinobi"
   cd /opt/Shinobi
-  sh UPDATE.sh
-  pm2 flush
-  pm2 restart camera
-  pm2 restart cron
-  msg_ok "Updated Shinobi LXC"
+  $STD sh UPDATE.sh
+  $STD pm2 flush
+  $STD pm2 restart camera
+  $STD pm2 restart cron
+  msg_ok "Updated Shinobi"
+  msg_ok "Updated successfully!"
   exit
 }
 

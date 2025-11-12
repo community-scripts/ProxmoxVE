@@ -53,7 +53,7 @@ function update_script() {
     msg_info "Cleaning Up"
     rm -f "${TMP_TAR}"
     msg_ok "Cleaned"
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   else
     msg_ok "No update required. Ollama is already at ${RELEASE}"
   fi

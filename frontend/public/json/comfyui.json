@@ -1,0 +1,44 @@
+{
+  "name": "ComfyUI",
+  "slug": "comfyui",
+  "categories": [
+    20
+  ],
+  "date_created": "2025-10-26",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "config_path": "/opt",
+  "interface_port": 8188,
+  "documentation": "https://github.com/comfyanonymous/ComfyUI",
+  "website": "https://www.comfy.org/",
+  "logo": "https://framerusercontent.com/images/3cNQMWKzIhIrQ5KErBm7dSmbd2w.png",
+  "description": "ComfyUI is a node-based interface and inference engine for generative AI. Users can combine various AI models and operations through nodes to achieve highly customizable and controllable content generation.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/comfyui.sh",
+      "resources": {
+        "cpu": 4,
+        "ram": 8192,
+        "hdd": 25,
+        "os": "debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Application takes long time to install. Please be patient!",
+      "type": "warning"
+    },
+    {
+      "text": "Please check that you have installed the drivers for your GPU.",
+      "type": "info"
+    }
+  ]
+}

@@ -31,7 +31,7 @@ function update_script() {
   $STD apt update
   $STD apt upgrade -y
   msg_ok "Updated Tautulli"
-  msg_ok "Updated Successfully!"
+  msg_ok "Updated successfully!"
   exit
 }
 

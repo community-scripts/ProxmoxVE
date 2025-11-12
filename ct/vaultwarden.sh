@@ -66,8 +66,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start vaultwarden
     msg_ok "Started Service"
-
-    msg_ok "$VAULT Update Successful"
+    msg_ok "Updated successfully!"
     exit
   fi
   if [ "$UPD" == "2" ]; then
@@ -87,7 +86,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start vaultwarden
     msg_ok "Started Service"
-    msg_ok "$WVRELEASE Update Successful"
+    msg_ok "Updated successfully!"
     exit
   fi
   if [ "$UPD" == "3" ]; then

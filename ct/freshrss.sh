@@ -33,6 +33,10 @@ function update_script() {
     chmod +x /opt/freshrss/cli/sensitive-log.sh
     systemctl restart apache2
     msg_ok "Fixed wrong permissions"
+<<<<<<< HEAD
+=======
+    exit
+>>>>>>> main
   else
     msg_error "FreshRSS should be updated via the user interface."
     exit

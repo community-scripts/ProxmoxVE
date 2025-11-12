@@ -43,7 +43,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start wings
     msg_ok "Started Service"
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi

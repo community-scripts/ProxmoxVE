@@ -31,7 +31,11 @@ function update_script() {
   if check_for_gh_release "fluid-calendar" "dotnetfactory/fluid-calendar"; then
     msg_info "Stopping Service"
     systemctl stop fluid-calendar
+<<<<<<< HEAD
     msg_ok "Stopped Service"
+=======
+    msg_info "Stopped Service"
+>>>>>>> main
 
     cp /opt/fluid-calendar/.env /opt/fluid.env
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "fluid-calendar" "dotnetfactory/fluid-calendar"
@@ -49,7 +53,11 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start fluid-calendar
     msg_ok "Started Service"
+<<<<<<< HEAD
     msg_ok "Updated successfully"
+=======
+    msg_ok "Updated successfully!"
+>>>>>>> main
   fi
   exit
 }

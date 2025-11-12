@@ -28,9 +28,9 @@ function update_script() {
     exit
   fi
   if check_for_gh_release "ConvertX" "C4illin/ConvertX"; then
-    msg_info "Stopping $APP"
+    msg_info "Stopping Service"
     systemctl stop convertx
-    msg_ok "Stopped $APP"
+    msg_info "Stopped Service"
 
     msg_info "Move data-Folder"
     if [[ -d /opt/convertx/data ]]; then
@@ -48,10 +48,10 @@ function update_script() {
     $STD bun install
     msg_ok "Updated $APP"
 
-    msg_info "Starting $APP"
+    msg_info "Starting Service"
     systemctl start convertx
-    msg_ok "Started $APP"
-    msg_ok "Updated Successfully"
+    msg_ok "Started Service"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

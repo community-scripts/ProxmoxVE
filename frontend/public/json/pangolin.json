@@ -1,0 +1,48 @@
+{
+  "name": "Pangolin",
+  "slug": "pangolin",
+  "categories": [
+    21
+  ],
+  "date_created": "2025-11-01",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 443,
+  "documentation": "https://docs.pangolin.net/",
+  "config_path": "/opt/pangolin/config/config.yml",
+  "website": "https://pangolin.net/",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/pangolin.webp",
+  "description": "Pangolin securely routes traffic over WireGuard tunnels to any private network. It works like a reverse proxy that spans multiple networks — no public IPs, DNS setup, or certificates required.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/pangolin.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 4096,
+        "hdd": 5,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Type `journalctl -u pangolin | grep -oP 'Token:\\s*\\K\\w+'` into LXC console to get admin token which you will use to create admin account.",
+      "type": "info"
+    },
+    {
+      "text": "LXC has 4GB of RAM set initially for the build stage. After installation finishes, you can decrease the RAM allocated to 1024MB or 512MB even.",
+      "type": "info"
+    },
+    {
+      "text": "Make sure you edit `/opt/pangolin/config/config.yml` and change it to match your needs",
+      "type": "warning"
+    }
+  ]
+}

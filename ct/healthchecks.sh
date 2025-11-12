@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-5}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -29,14 +29,14 @@ function update_script() {
     exit
   fi
   if check_for_gh_release "healthchecks" "healthchecks/healthchecks"; then
-    msg_info "Stopping $APP"
+    msg_info "Stopping Services"
     systemctl stop healthchecks
-    msg_ok "Stopped $APP"
+    msg_ok "Stopped Services"
 
-    setup_uv
+    PYTHON_VERSION="3.12" setup_uv
     fetch_and_deploy_gh_release "healthchecks" "healthchecks/healthchecks"
 
-    msg_info "Updating $APP"
+    msg_info "Updating healthchecks"
     cd /opt/healthchecks
     mkdir -p /opt/healthchecks/static-collected/
     $STD uv pip install wheel gunicorn -r requirements.txt --system
@@ -44,13 +44,12 @@ function update_script() {
     $STD uv run -- python manage.py migrate --noinput
     $STD uv run -- python manage.py collectstatic --noinput
     $STD uv run -- python manage.py compress
-    msg_ok "Updated $APP"
-
-    msg_info "Starting $APP"
+    msg_ok "Updated healthchecks"
+    msg_info "Starting Services"
     systemctl start healthchecks
     systemctl restart caddy
-    msg_ok "Started $APP"
-    msg_ok "Update Successful"
+    msg_ok "Started Services"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

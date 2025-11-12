@@ -68,7 +68,7 @@ function update_script() {
     systemctl start autocaliweb metadata-change-detector acw-ingest-service acw-auto-zipper
     msg_ok "Started Services"
 
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

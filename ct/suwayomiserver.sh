@@ -32,16 +32,16 @@ function update_script() {
   if check_for_gh_release "suwayomi-server" "Suwayomi/Suwayomi-Server"; then
     JAVA_VERSION=21 setup_java
 
-    msg_info "Stopping $APP"
+    msg_info "Stopping Service"
     systemctl stop suwayomi-server
-    msg_ok "Stopped $APP"
+    msg_info "Stopped Service"
 
     fetch_and_deploy_gh_release "suwayomi-server" "Suwayomi/Suwayomi-Server" "binary"
 
-    msg_info "Starting $APP"
+    msg_info "Starting Service"
     systemctl start suwayomi-server
-    msg_ok "Started $APP"
-    msg_ok "Update Successful"
+    msg_ok "Started Service"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

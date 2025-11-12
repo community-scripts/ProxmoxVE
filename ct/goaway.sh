@@ -38,7 +38,12 @@ function update_script() {
     msg_info "Starting Services"
     systemctl start goaway
     msg_ok "Started Services"
+<<<<<<< HEAD
     msg_ok "Updated successfully"
+=======
+
+    msg_ok "Updated successfully!"
+>>>>>>> main
   fi
   exit
 }

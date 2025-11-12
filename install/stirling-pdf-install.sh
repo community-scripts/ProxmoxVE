@@ -26,7 +26,8 @@ $STD apt install -y \
   unpaper \
   fonts-urw-base35 \
   qpdf \
-  poppler-utils
+  poppler-utils \
+  jbig2
 msg_ok "Installed Dependencies"
 
 PYTHON_VERSION="3.12" setup_uv
@@ -69,23 +70,11 @@ $STD uv pip install \
   ocrmypdf \
   pillow \
   pdf2image
-
 $STD apt install -y python3-uno python3-pip
-$STD pip3 install --break-system-packages unoserver
+$STD pip3 install --break-system-packages --timeout=120 unoserver
 ln -sf /opt/.venv/bin/python3 /usr/local/bin/python3
 ln -sf /opt/.venv/bin/pip /usr/local/bin/pip
 msg_ok "Installed Python Dependencies"
-
-msg_info "Installing JBIG2"
-$STD curl -fsSL -o /tmp/jbig2enc.tar.gz https://github.com/agl/jbig2enc/archive/refs/tags/0.30.tar.gz
-mkdir -p /opt/jbig2enc
-tar -xzf /tmp/jbig2enc.tar.gz -C /opt/jbig2enc --strip-components=1
-cd /opt/jbig2enc
-$STD bash ./autogen.sh
-$STD bash ./configure
-$STD make
-$STD make install
-msg_ok "Installed JBIG2"
 
 msg_info "Installing Language Packs (Patience)"
 $STD apt install -y 'tesseract-ocr-*'

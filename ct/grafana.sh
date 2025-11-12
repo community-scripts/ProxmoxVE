@@ -20,6 +20,7 @@ color
 catch_errors
 
 function update_script() {
+<<<<<<< HEAD
   header_info
   check_container_storage
   check_container_resources
@@ -34,6 +35,21 @@ function update_script() {
   msg_ok "Updated Grafana"
   msg_ok "Updated successfully"
   exit
+=======
+   header_info
+   check_container_storage
+   check_container_resources
+   if [[ ! -f /etc/apt/sources.list.d/grafana.list ]]; then
+      msg_error "No ${APP} Installation Found!"
+      exit
+   fi
+
+   msg_info "Updating ${APP}"
+   $STD apt-get update
+   $STD apt-get -y upgrade
+   msg_ok "Updated successfully!"
+   exit
+>>>>>>> main
 }
 
 start

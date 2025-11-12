@@ -52,7 +52,7 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start myspeed
     msg_ok "Started Service"
-    msg_ok "Updated Successfully!\n"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

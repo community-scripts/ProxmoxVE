@@ -27,11 +27,20 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+<<<<<<< HEAD
   msg_info "Updating FlowiseAI"
   systemctl stop flowise
   npm install -g flowise --upgrade
   systemctl start flowise
   msg_ok "Updated FlowiseAI"
+=======
+  msg_info "Updating ${APP}"
+  systemctl stop flowise
+  npm install -g flowise --upgrade
+  systemctl start flowise
+  msg_ok "Updated ${APP}"
+  msg_ok "Updated successfully!"
+>>>>>>> main
   exit
 }
 

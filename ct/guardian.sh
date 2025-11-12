@@ -55,6 +55,10 @@ function update_script() {
     cd /opt/guardian/backend
     $STD npm ci
     $STD npm run build
+<<<<<<< HEAD
+=======
+
+>>>>>>> main
     cd /opt/guardian/frontend
     $STD npm ci
     export DEPLOYMENT_MODE=standalone
@@ -64,7 +68,11 @@ function update_script() {
     msg_info "Starting Services"
     systemctl start guardian-backend guardian-frontend
     msg_ok "Started Services"
+<<<<<<< HEAD
     msg_ok "Updated Successfully"
+=======
+    msg_ok "Updated successfully!"
+>>>>>>> main
   fi
   exit
 }

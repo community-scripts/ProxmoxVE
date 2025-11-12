@@ -48,7 +48,7 @@ function update_script() {
     systemctl start signoz-otel-collector
     systemctl start signoz
     msg_ok "Started Services"
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
   fi
   exit
 }

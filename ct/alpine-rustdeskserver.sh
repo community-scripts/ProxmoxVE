@@ -23,7 +23,7 @@ function update_script() {
   header_info
   if [[ ! -d /opt/rustdesk-server ]]; then
     msg_error "No ${APP} Installation Found!"
-    exit 1
+    exit
   fi
 
   APIRELEASE=$(curl -s https://api.github.com/repos/lejianwen/rustdesk-api/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')

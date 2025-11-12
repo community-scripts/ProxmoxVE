@@ -40,20 +40,24 @@ function update_script() {
     case $CHOICE in
     1)
       $STD apk -U upgrade
+      msg_ok "Updated successfully!"
       exit
       ;;
     2)
       sed -i -e "s/cfg:server.http_addr=.*/cfg:server.http_addr=0.0.0.0/g" /etc/conf.d/grafana
       service grafana restart
+      msg_ok "Allowed listening on all interfaces!"
       exit
       ;;
     3)
       sed -i -e "s/cfg:server.http_addr=.*/cfg:server.http_addr=$LXCIP/g" /etc/conf.d/grafana
       service grafana restart
+      msg_ok "Allowed listening only on ${LXCIP}!"
       exit
       ;;
     esac
   done
+  exit 0
 }
 
 start

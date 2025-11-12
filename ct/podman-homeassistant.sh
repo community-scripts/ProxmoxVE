@@ -38,7 +38,7 @@ function update_script() {
     msg_info "Updating ${APP} LXC"
     $STD apt update
     $STD apt -y upgrade
-    msg_ok "Updated Successfully"
+    msg_ok "Updated successfully!"
 
     msg_info "Updating All Containers\n"
     CONTAINER_LIST="${1:-$(podman ps -q)}"
