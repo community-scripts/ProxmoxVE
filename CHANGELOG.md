@@ -14,7 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Splunk Enterprise ([#9090](https://github.com/community-scripts/ProxmoxVE/pull/9090))
+  - Miniflux ([#9091](https://github.com/community-scripts/ProxmoxVE/pull/9091))
+- Splunk Enterprise ([#9090](https://github.com/community-scripts/ProxmoxVE/pull/9090))
 
 ### 🚀 Updated Scripts
 
