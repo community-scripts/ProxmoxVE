@@ -33,7 +33,7 @@
   },
   "notes": [
     {
-      "text": "Show initial Livebook password: `cat ~/livebook.creds`",
+      "text": "Show initial Livebook password: `cat /opt/livebook/livebook.creds`",
       "type": "info"
     }
   ]
