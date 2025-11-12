@@ -33,7 +33,7 @@ function update_script() {
       "evcc-stable" \
       "https://dl.evcc.io/public/evcc/stable/gpg.EAD5D0E07B0EC0FD.key" \
       "https://dl.evcc.io/public/evcc/stable/deb/debian/" \
-      "$VERSION_CODENAME" \
+      "$(get_os_info codename)" \
       "main"
   msg_info "Updating evcc LXC"
   $STD apt update
