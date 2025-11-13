@@ -4326,7 +4326,7 @@ function setup_rust() {
   local RUST_CRATES="${RUST_CRATES:-}"
   local CARGO_BIN="${HOME}/.cargo/bin"
 
-  # Get currently installed version
+  # Get currently installed version (if any)
   local CURRENT_VERSION=""
   if command -v rustc &>/dev/null; then
     CURRENT_VERSION=$(rustc --version 2>/dev/null | awk '{print $2}')
@@ -4341,31 +4341,63 @@ function setup_rust() {
     }
     export PATH="$CARGO_BIN:$PATH"
     echo 'export PATH="$HOME/.cargo/bin:$PATH"' >>"$HOME/.profile"
+
+    # Verify installation
+    if ! command -v rustc >/dev/null 2>&1; then
+      msg_error "Rust binary not found after installation"
+      return 1
+    fi
+
     local RUST_VERSION=$(rustc --version 2>/dev/null | awk '{print $2}')
+    if [[ -z "$RUST_VERSION" ]]; then
+      msg_error "Failed to determine Rust version"
+      return 1
+    fi
+
     cache_installed_version "rust" "$RUST_VERSION"
     msg_ok "Setup Rust $RUST_VERSION"
   else
     # Scenario 2: Rustup already installed - update/maintain
     msg_info "Update Rust ($RUST_TOOLCHAIN)"
-    $STD rustup install "$RUST_TOOLCHAIN" || {
-      msg_error "Failed to install Rust toolchain $RUST_TOOLCHAIN"
-      return 1
+
+    # Ensure default toolchain is set (fixes issue with old installations)
+    $STD rustup default "$RUST_TOOLCHAIN" 2>/dev/null || {
+      # If default fails, install the toolchain first
+      $STD rustup install "$RUST_TOOLCHAIN" || {
+        msg_error "Failed to install Rust toolchain $RUST_TOOLCHAIN"
+        return 1
+      }
+      $STD rustup default "$RUST_TOOLCHAIN" || {
+        msg_error "Failed to set default Rust toolchain"
+        return 1
+      }
     }
-    $STD rustup default "$RUST_TOOLCHAIN" || {
-      msg_error "Failed to set default Rust toolchain"
-      return 1
-    }
+
+    # Update to latest patch version
     $STD rustup update "$RUST_TOOLCHAIN" || true
+
+    # Ensure PATH is updated for current shell session
+    export PATH="$CARGO_BIN:$PATH"
+
     local RUST_VERSION=$(rustc --version 2>/dev/null | awk '{print $2}')
+    if [[ -z "$RUST_VERSION" ]]; then
+      msg_error "Failed to determine Rust version after update"
+      return 1
+    fi
+
     cache_installed_version "rust" "$RUST_VERSION"
     msg_ok "Update Rust $RUST_VERSION"
   fi
 
   # Install global crates
   if [[ -n "$RUST_CRATES" ]]; then
+    msg_info "Processing Rust crates: $RUST_CRATES"
     IFS=',' read -ra CRATES <<<"$RUST_CRATES"
     for crate in "${CRATES[@]}"; do
-      local NAME VER INSTALLED_VER
+      crate=$(echo "$crate" | xargs) # trim whitespace
+      [[ -z "$crate" ]] && continue  # skip empty entries
+
+      local NAME VER INSTALLED_VER CRATE_LIST
       if [[ "$crate" == *"@"* ]]; then
         NAME="${crate%@*}"
         VER="${crate##*@}"
@@ -4374,18 +4406,50 @@ function setup_rust() {
         VER=""
       fi
 
-      INSTALLED_VER=$(cargo install --list 2>/dev/null | awk "/^$NAME v[0-9]/ {print \$2}" | tr -d 'v')
+      # Get list of installed crates once
+      CRATE_LIST=$(cargo install --list 2>/dev/null || echo "")
 
-      if [[ -n "$INSTALLED_VER" ]]; then
+      # Check if already installed
+      if echo "$CRATE_LIST" | grep -q "^${NAME} "; then
+        INSTALLED_VER=$(echo "$CRATE_LIST" | grep "^${NAME} " | head -1 | awk '{print $2}' | tr -d 'v:')
+
         if [[ -n "$VER" && "$VER" != "$INSTALLED_VER" ]]; then
-          $STD cargo install "$NAME" --version "$VER" --force
+          msg_info "Upgrading $NAME from v$INSTALLED_VER to v$VER"
+          $STD cargo install "$NAME" --version "$VER" --force || {
+            msg_error "Failed to install $NAME@$VER"
+            return 1
+          }
+          msg_ok "Upgraded $NAME to v$VER"
         elif [[ -z "$VER" ]]; then
-          $STD cargo install "$NAME" --force
+          msg_info "Upgrading $NAME to latest"
+          $STD cargo install "$NAME" --force || {
+            msg_error "Failed to upgrade $NAME"
+            return 1
+          }
+          local NEW_VER=$(cargo install --list 2>/dev/null | grep "^${NAME} " | head -1 | awk '{print $2}' | tr -d 'v:')
+          msg_ok "Upgraded $NAME to v$NEW_VER"
+        else
+          msg_ok "$NAME v$INSTALLED_VER already installed"
         fi
       else
-        $STD cargo install "$NAME" ${VER:+--version "$VER"}
+        msg_info "Installing $NAME${VER:+@$VER}"
+        if [[ -n "$VER" ]]; then
+          $STD cargo install "$NAME" --version "$VER" || {
+            msg_error "Failed to install $NAME@$VER"
+            return 1
+          }
+          msg_ok "Installed $NAME v$VER"
+        else
+          $STD cargo install "$NAME" || {
+            msg_error "Failed to install $NAME"
+            return 1
+          }
+          local NEW_VER=$(cargo install --list 2>/dev/null | grep "^${NAME} " | head -1 | awk '{print $2}' | tr -d 'v:')
+          msg_ok "Installed $NAME v$NEW_VER"
+        fi
       fi
     done
+    msg_ok "Processed Rust crates"
   fi
 }
 
