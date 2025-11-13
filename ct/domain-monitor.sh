@@ -20,41 +20,46 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /opt/domain-monitor ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-
-    if check_for_gh_release "domain-monitor" "Hosteroid/domain-monitor"; then
-        msg_info "Stopping Service"
-        systemctl stop apache2
-        msg_info "Service stopped"
-
-        msg_info "Creating backup"
-        mv /opt/domain-monitor/.env /opt
-        msg_ok "Created backup"
-
-        setup_composer
-        CLEAN_INSTALL=1 fetch_and_deploy_gh_release "domain-monitor" "Hosteroid/domain-monitor" "prebuild" "latest" "/opt/domain-monitor" "domain-monitor-v*.zip"
-
-        msg_info "Updating Domain Monitor"
-        cd /opt/domain-monitor
-        $STD composer install
-        msg_ok "Updated Domain Monitor"
-
-        msg_info "Restoring backup"
-        mv /opt/.env /opt/domain-monitor
-        msg_ok "Restored backup"
-
-        msg_info "Restarting Services"
-        systemctl reload apache2
-        msg_ok "Restarted Services"
-        msg_ok "Updated successfully!"
-    fi
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /opt/domain-monitor ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+
+  if ! grep -Fq "root /usr/bin/php /opt/domain-monitor/cron/check_domains.php" /etc/crontab; then
+    echo "0 0 * * * root /usr/bin/php /opt/domain-monitor/cron/check_domains.php" >>/etc/crontab
+  fi
+
+  if check_for_gh_release "domain-monitor" "Hosteroid/domain-monitor"; then
+    msg_info "Stopping Service"
+    systemctl stop apache2
+    msg_info "Service stopped"
+
+    msg_info "Creating backup"
+    mv /opt/domain-monitor/.env /opt
+    msg_ok "Created backup"
+
+    setup_composer
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "domain-monitor" "Hosteroid/domain-monitor" "prebuild" "latest" "/opt/domain-monitor" "domain-monitor-v*.zip"
+
+    msg_info "Updating Domain Monitor"
+    cd /opt/domain-monitor
+    $STD composer install
+
+    msg_ok "Updated Domain Monitor"
+
+    msg_info "Restoring backup"
+    mv /opt/.env /opt/domain-monitor
+    msg_ok "Restored backup"
+
+    msg_info "Restarting Services"
+    systemctl reload apache2
+    msg_ok "Restarted Services"
+    msg_ok "Updated successfully!"
+  fi
+  exit
 }
 
 start
