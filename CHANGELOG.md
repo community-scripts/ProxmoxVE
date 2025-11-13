@@ -20,6 +20,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Fix: filebrowser-quantum update [@MickLesk](https://github.com/MickLesk) ([#9115](https://github.com/community-scripts/ProxmoxVE/pull/9115))
     - tools.func: fix wrong output for setup_java (error token is "0") [@snow2k9](https://github.com/snow2k9) ([#9110](https://github.com/community-scripts/ProxmoxVE/pull/9110))
 
+  - #### ✨ New Features
+
+    - tools.func: improve Rust setup and crate installation logic [@MickLesk](https://github.com/MickLesk) ([#9120](https://github.com/community-scripts/ProxmoxVE/pull/9120))
+
   - #### 💥 Breaking Changes
 
     - Downgrade Swizzin to Debian 12 Bookworm [@MickLesk](https://github.com/MickLesk) ([#9116](https://github.com/community-scripts/ProxmoxVE/pull/9116))
