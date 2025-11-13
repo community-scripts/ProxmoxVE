@@ -1,5 +1,90 @@
 [
   {
+    "name": "rcourtman/Pulse",
+    "version": "issue-706",
+    "date": "2025-11-12T21:52:39Z"
+  },
+  {
+    "name": "henrygd/beszel",
+    "version": "v0.16.0",
+    "date": "2025-11-12T21:33:36Z"
+  },
+  {
+    "name": "NginxProxyManager/nginx-proxy-manager",
+    "version": "v2.13.4",
+    "date": "2025-11-12T21:27:04Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.79.3.dev5",
+    "date": "2025-11-12T20:59:51Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.12.11-rc0",
+    "date": "2025-11-12T16:40:38Z"
+  },
+  {
+    "name": "wazuh/wazuh",
+    "version": "v4.14.1",
+    "date": "2025-11-12T18:11:43Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.4.7",
+    "date": "2025-11-12T04:50:25Z"
+  },
+  {
+    "name": "pymedusa/Medusa",
+    "version": "v1.0.25",
+    "date": "2025-11-12T16:57:54Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.296",
+    "date": "2025-11-12T16:39:18Z"
+  },
+  {
+    "name": "docker/compose",
+    "version": "v2.40.3",
+    "date": "2025-10-30T09:35:37Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.4.5",
+    "date": "2025-11-12T15:24:23Z"
+  },
+  {
+    "name": "zitadel/zitadel",
+    "version": "v4.6.6",
+    "date": "2025-11-12T13:09:12Z"
+  },
+  {
+    "name": "kimai/kimai",
+    "version": "2.42.0",
+    "date": "2025-11-12T15:16:54Z"
+  },
+  {
+    "name": "zwave-js/zwave-js-ui",
+    "version": "v11.7.0",
+    "date": "2025-11-12T14:09:36Z"
+  },
+  {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.528.2",
+    "date": "2025-11-12T13:18:13Z"
+  },
+  {
+    "name": "dgtlmoon/changedetection.io",
+    "version": "0.50.43",
+    "date": "2025-11-12T12:03:21Z"
+  },
+  {
+    "name": "cockpit-project/cockpit",
+    "version": "351",
+    "date": "2025-11-12T11:28:06Z"
+  },
+  {
     "name": "0xERR0R/blocky",
     "version": "v0.28.0",
     "date": "2025-11-12T11:00:07Z"
@@ -40,19 +125,9 @@
     "date": "2025-09-20T12:12:33Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.294",
-    "date": "2025-11-12T05:56:42Z"
-  },
-  {
     "name": "webmin/webmin",
     "version": "2.600",
     "date": "2025-11-12T05:01:55Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.4.7",
-    "date": "2025-11-12T04:50:25Z"
   },
   {
     "name": "esphome/esphome",
@@ -80,24 +155,9 @@
     "date": "2025-09-27T20:59:46Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.4.4",
-    "date": "2025-11-07T08:55:27Z"
-  },
-  {
     "name": "Brandawg93/PeaNUT",
     "version": "v5.17.0",
     "date": "2025-11-11T20:15:54Z"
-  },
-  {
-    "name": "BerriAI/litellm",
-    "version": "v1.79.dev.1",
-    "date": "2025-11-11T20:13:32Z"
-  },
-  {
-    "name": "rcourtman/Pulse",
-    "version": "v4.29.0",
-    "date": "2025-11-11T19:45:56Z"
   },
   {
     "name": "juanfont/headscale",
@@ -125,19 +185,9 @@
     "date": "2025-11-11T17:15:00Z"
   },
   {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.536",
-    "date": "2025-11-11T17:03:28Z"
-  },
-  {
     "name": "msgbyte/tianji",
     "version": "v1.30.10",
     "date": "2025-11-11T16:26:27Z"
-  },
-  {
-    "name": "kimai/kimai",
-    "version": "2.41.0",
-    "date": "2025-11-11T15:17:21Z"
   },
   {
     "name": "netbox-community/netbox",
@@ -180,19 +230,9 @@
     "date": "2025-11-10T14:21:10Z"
   },
   {
-    "name": "zitadel/zitadel",
-    "version": "v4.6.5",
-    "date": "2025-11-11T09:55:47Z"
-  },
-  {
     "name": "emqx/emqx",
     "version": "e6.0.1",
     "date": "2025-11-11T09:46:06Z"
-  },
-  {
-    "name": "NginxProxyManager/nginx-proxy-manager",
-    "version": "v2.13.3",
-    "date": "2025-11-11T07:36:54Z"
   },
   {
     "name": "FlareSolverr/FlareSolverr",
@@ -248,11 +288,6 @@
     "name": "grokability/snipe-it",
     "version": "v8.3.5",
     "date": "2025-11-10T14:12:12Z"
-  },
-  {
-    "name": "dgtlmoon/changedetection.io",
-    "version": "0.50.42",
-    "date": "2025-11-10T12:32:49Z"
   },
   {
     "name": "navidrome/navidrome",
@@ -375,11 +410,6 @@
     "date": "2025-10-09T10:27:01Z"
   },
   {
-    "name": "wazuh/wazuh",
-    "version": "coverity-w46-4.14.1",
-    "date": "2025-11-07T08:46:03Z"
-  },
-  {
     "name": "umami-software/umami",
     "version": "v3.0.0",
     "date": "2025-11-07T06:13:49Z"
@@ -445,11 +475,6 @@
     "date": "2025-11-06T02:26:53Z"
   },
   {
-    "name": "ollama/ollama",
-    "version": "v0.12.10",
-    "date": "2025-11-05T21:41:21Z"
-  },
-  {
     "name": "neo4j/neo4j",
     "version": "5.26.16",
     "date": "2025-11-05T20:41:40Z"
@@ -513,11 +538,6 @@
     "name": "Sonarr/Sonarr",
     "version": "v4.0.16.2944",
     "date": "2025-11-05T01:56:48Z"
-  },
-  {
-    "name": "henrygd/beszel",
-    "version": "v0.15.4",
-    "date": "2025-11-04T22:34:12Z"
   },
   {
     "name": "go-gitea/gitea",
@@ -650,11 +670,6 @@
     "date": "2025-10-31T08:25:57Z"
   },
   {
-    "name": "pymedusa/Medusa",
-    "version": "v1.0.24",
-    "date": "2025-10-30T19:04:42Z"
-  },
-  {
     "name": "mongodb/mongo",
     "version": "r7.0.26",
     "date": "2025-10-30T18:44:14Z"
@@ -680,11 +695,6 @@
     "date": "2025-10-30T14:25:23Z"
   },
   {
-    "name": "docker/compose",
-    "version": "v2.40.3",
-    "date": "2025-10-30T09:35:37Z"
-  },
-  {
     "name": "prometheus/prometheus",
     "version": "v0.307.3",
     "date": "2025-10-30T08:13:40Z"
@@ -705,19 +715,9 @@
     "date": "2025-05-29T17:08:26Z"
   },
   {
-    "name": "zwave-js/zwave-js-ui",
-    "version": "v11.6.1",
-    "date": "2025-10-29T16:51:06Z"
-  },
-  {
     "name": "laurent22/joplin",
     "version": "server-v3.4.4",
     "date": "2025-09-25T13:19:26Z"
-  },
-  {
-    "name": "cockpit-project/cockpit",
-    "version": "350",
-    "date": "2025-10-29T09:51:00Z"
   },
   {
     "name": "apache/cassandra",
