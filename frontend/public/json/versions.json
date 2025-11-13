@@ -1,8 +1,83 @@
 [
   {
+    "name": "PrivateBin/PrivateBin",
+    "version": "1.7.9",
+    "date": "2025-11-13T10:26:37Z"
+  },
+  {
+    "name": "nzbgetcom/nzbget",
+    "version": "v25.4",
+    "date": "2025-10-09T10:27:01Z"
+  },
+  {
+    "name": "traefik/traefik",
+    "version": "v2.11.31",
+    "date": "2025-11-13T10:01:56Z"
+  },
+  {
+    "name": "meilisearch/meilisearch",
+    "version": "prototype-v1.25.0.improve-s3-multipart-upload-1",
+    "date": "2025-11-13T09:25:48Z"
+  },
+  {
+    "name": "docker/compose",
+    "version": "v2.40.3",
+    "date": "2025-10-30T09:35:37Z"
+  },
+  {
+    "name": "redis/redis",
+    "version": "8.4-int2",
+    "date": "2025-11-13T08:17:31Z"
+  },
+  {
+    "name": "evcc-io/evcc",
+    "version": "0.209.8",
+    "date": "2025-11-13T07:20:49Z"
+  },
+  {
+    "name": "fuma-nama/fumadocs",
+    "version": "create-fumadocs-app@16.0.14",
+    "date": "2025-11-13T06:36:08Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.301",
+    "date": "2025-11-13T05:56:54Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.4.8",
+    "date": "2025-11-13T04:42:27Z"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2025.10.5",
+    "date": "2025-11-12T01:09:44Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-11-13T00:27:05Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.0.1",
+    "date": "2025-10-15T16:53:55Z"
+  },
+  {
+    "name": "documenso/documenso",
+    "version": "v2.0.11",
+    "date": "2025-11-12T23:56:58Z"
+  },
+  {
     "name": "rcourtman/Pulse",
     "version": "issue-706",
     "date": "2025-11-12T21:52:39Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.4.5",
+    "date": "2025-11-12T15:24:23Z"
   },
   {
     "name": "henrygd/beszel",
@@ -30,29 +105,9 @@
     "date": "2025-11-12T18:11:43Z"
   },
   {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.4.7",
-    "date": "2025-11-12T04:50:25Z"
-  },
-  {
     "name": "pymedusa/Medusa",
     "version": "v1.0.25",
     "date": "2025-11-12T16:57:54Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.296",
-    "date": "2025-11-12T16:39:18Z"
-  },
-  {
-    "name": "docker/compose",
-    "version": "v2.40.3",
-    "date": "2025-10-30T09:35:37Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.4.5",
-    "date": "2025-11-12T15:24:23Z"
   },
   {
     "name": "zitadel/zitadel",
@@ -95,29 +150,9 @@
     "date": "2025-11-12T10:43:23Z"
   },
   {
-    "name": "redis/redis",
-    "version": "8.4-int",
-    "date": "2025-11-12T09:36:10Z"
-  },
-  {
-    "name": "meilisearch/meilisearch",
-    "version": "prototype-v1.25.0.improve-s3-multipart-upload",
-    "date": "2025-11-12T08:12:37Z"
-  },
-  {
-    "name": "documenso/documenso",
-    "version": "v2.0.10",
-    "date": "2025-11-12T07:57:24Z"
-  },
-  {
     "name": "SigNoz/signoz",
     "version": "v0.101.0",
     "date": "2025-11-12T07:13:22Z"
-  },
-  {
-    "name": "PrivateBin/PrivateBin",
-    "version": "2.0.3",
-    "date": "2025-11-12T07:10:14Z"
   },
   {
     "name": "morpheus65535/bazarr",
@@ -130,24 +165,9 @@
     "date": "2025-11-12T05:01:55Z"
   },
   {
-    "name": "esphome/esphome",
-    "version": "2025.10.5",
-    "date": "2025-11-12T01:09:44Z"
-  },
-  {
     "name": "hyperion-project/hyperion.ng",
     "version": "2.1.1",
     "date": "2025-06-14T17:45:06Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-11-12T00:27:04Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.0.1",
-    "date": "2025-10-15T16:53:55Z"
   },
   {
     "name": "moghtech/komodo",
@@ -203,11 +223,6 @@
     "name": "CrazyWolf13/web-check",
     "version": "1.1.0",
     "date": "2025-11-11T14:30:28Z"
-  },
-  {
-    "name": "fuma-nama/fumadocs",
-    "version": "create-fumadocs-app@16.0.13",
-    "date": "2025-11-11T14:04:06Z"
   },
   {
     "name": "openobserve/openobserve",
@@ -395,19 +410,9 @@
     "date": "2025-11-07T17:05:45Z"
   },
   {
-    "name": "traefik/traefik",
-    "version": "v3.6.0",
-    "date": "2025-11-07T15:34:35Z"
-  },
-  {
     "name": "YunoHost/yunohost",
     "version": "debian/12.1.35",
     "date": "2025-11-07T14:35:24Z"
-  },
-  {
-    "name": "nzbgetcom/nzbget",
-    "version": "v25.4",
-    "date": "2025-10-09T10:27:01Z"
   },
   {
     "name": "umami-software/umami",
@@ -523,11 +528,6 @@
     "name": "nicolargo/glances",
     "version": "v4.4.1",
     "date": "2025-11-05T09:08:23Z"
-  },
-  {
-    "name": "evcc-io/evcc",
-    "version": "0.209.7",
-    "date": "2025-11-05T08:32:08Z"
   },
   {
     "name": "slskd/slskd",
