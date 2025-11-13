@@ -20,22 +20,7 @@ msg_ok "Installed Dependencies"
 
 PG_VERSION=17 setup_postgresql
 NODE_VERSION="24" setup_nodejs
-
-msg_info "Setting up PostgreSQL Database"
-DB_NAME=netvisor_db
-DB_USER=netvisor
-DB_PASS="$(openssl rand -base64 18 | cut -c1-13)"
-$STD sudo -u postgres psql -c "CREATE ROLE $DB_USER WITH LOGIN PASSWORD '$DB_PASS';"
-$STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER ENCODING 'UTF8' TEMPLATE template0;"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET client_encoding TO 'utf8';"
-$STD sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE $DB_NAME to $DB_USER;"
-{
-  echo "Netvisor-Credentials"
-  echo "Netvisor Database User: $DB_USER"
-  echo "Netvisor Database Password: $DB_PASS"
-  echo "Netvisor Database Name: $DB_NAME"
-} >>~/netvisor.creds
-msg_ok "Set up PostgreSQL Database"
+PG_DB_NAME="netvisor_db" PG_DB_USER="netvisor" PG_DB_GRANT_SUPERUSER="true" setup_postgresql_db
 
 fetch_and_deploy_gh_release "netvisor" "mayanayza/netvisor" "tarball" "latest" "/opt/netvisor"
 
@@ -56,20 +41,19 @@ $STD cargo build --release --bin server
 mv ./target/release/server /usr/bin/netvisor-server
 msg_ok "Built Netvisor-server"
 
-msg_info "Building Netvisor-daemon (amd64 version)"
+msg_info "Building Netvisor-daemon"
 $STD cargo build --release --bin daemon
 cp ./target/release/daemon /usr/bin/netvisor-daemon
-msg_ok "Built Netvisor-daemon (amd64 version)"
+msg_ok "Built Netvisor-daemon"
 
 msg_info "Configuring server & daemon for first-run"
 cat <<EOF >/opt/netvisor/.env
 ### - UI
 PUBLIC_SERVER_HOSTNAME=default
-## - comment out below when using reverse proxy
 PUBLIC_SERVER_PORT=60072
 
 ### - SERVER
-NETVISOR_DATABASE_URL=postgresql://$DB_USER:$DB_PASS@localhost:5432/$DB_NAME
+NETVISOR_DATABASE_URL=postgresql://$PG_DB_USER:$PG_DB_PASS@localhost:5432/$PG_DB_NAME
 NETVISOR_WEB_EXTERNAL_PATH="/opt/netvisor/ui/build"
 NETVISOR_SERVER_PORT=60072
 NETVISOR_LOG_LEVEL=info
@@ -113,10 +97,10 @@ StandardError=journal
 WantedBy=multi-user.target
 EOF
 
-systemctl -q enable --now netvisor-server
+systemctl enable -q --now netvisor-server
 sleep 5
-NETWORK_ID="$(sudo -u postgres psql -1 -t -d $DB_NAME -c 'SELECT id FROM networks;')"
-API_KEY="$(sudo -u postgres psql -1 -t -d $DB_NAME -c 'SELECT key from api_keys;')"
+NETWORK_ID="$(sudo -u postgres psql -1 -t -d $PG_DB_NAME -c 'SELECT id FROM networks;')"
+API_KEY="$(sudo -u postgres psql -1 -t -d $PG_DB_NAME -c 'SELECT key from api_keys;')"
 
 cat <<EOF >/etc/systemd/system/netvisor-daemon.service
 [Unit]
@@ -135,15 +119,9 @@ StandardError=journal
 [Install]
 WantedBy=multi-user.target
 EOF
-
-systemctl -q enable --now netvisor-daemon
+systemctl  enable -q --now netvisor-daemon
 msg_ok "Netvisor server & daemon configured and running"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc
