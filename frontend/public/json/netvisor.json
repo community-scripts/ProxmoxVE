@@ -1,0 +1,40 @@
+{
+  "name": "NetVisor",
+  "slug": "netvisor",
+  "categories": [
+    9
+  ],
+  "date_created": "2025-11-09",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 60072,
+  "documentation": "https://github.com/mayanayza/netvisor",
+  "config_path": "/opt/netvisor/.env",
+  "website": "https://github.com/mayanayza/netvisor",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/png/netvisor.png",
+  "description": "Automatically discover and visually document network infrastructure",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/netvisor.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 6,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "The integrated daemon config is located at `/root/.config/daemon/config.json`",
+      "type": "info"
+    }
+  ]
+}
