@@ -47,7 +47,6 @@ function update_script() {
     msg_info "Updating Domain Monitor"
     cd /opt/domain-monitor
     $STD composer install
-
     msg_ok "Updated Domain Monitor"
 
     msg_info "Restoring backup"
