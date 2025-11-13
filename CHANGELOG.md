@@ -14,6 +14,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - tools.func: fix wrong output for setup_java (error token is "0") [@snow2k9](https://github.com/snow2k9) ([#9110](https://github.com/community-scripts/ProxmoxVE/pull/9110))
+
   - #### 💥 Breaking Changes
 
     - Downgrade Swizzin to Debian 12 Bookworm [@MickLesk](https://github.com/MickLesk) ([#9116](https://github.com/community-scripts/ProxmoxVE/pull/9116))
