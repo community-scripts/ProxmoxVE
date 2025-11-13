@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-11-13
 
+### 🆕 New Scripts
+
+  - Netvisor ([#9133](https://github.com/community-scripts/ProxmoxVE/pull/9133))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
