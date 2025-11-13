@@ -30,6 +30,7 @@ INSTALL_PATH="/usr/local/bin/filebrowser"
 CONFIG_PATH="/usr/local/community-scripts/fq-config.yaml"
 DEFAULT_PORT=8080
 SRC_DIR="/"
+TMP_BIN="/tmp/filebrowser.$$"
 
 # Get primary IP
 IFACE=$(ip -4 route | awk '/default/ {print $5; exit}')
@@ -109,7 +110,6 @@ if [[ -f "$INSTALL_PATH" ]]; then
   read -r update_prompt
   if [[ "${update_prompt,,}" =~ ^(y|yes)$ ]]; then
     msg_info "Updating ${APP}"
-    TMP_BIN="/tmp/filebrowser.$$"
     curl -fsSL https://github.com/gtsteffaniak/filebrowser/releases/latest/download/linux-amd64-filebrowser -o "$TMP_BIN"
     chmod +x "$TMP_BIN"
     mv -f "$TMP_BIN" /usr/local/bin/filebrowser
@@ -135,8 +135,9 @@ fi
 
 msg_info "Installing ${APP} on ${OS}"
 $PKG_MANAGER curl ffmpeg &>/dev/null
-curl -fsSL https://github.com/gtsteffaniak/filebrowser/releases/latest/download/linux-amd64-filebrowser -o "$INSTALL_PATH"
-chmod +x "$INSTALL_PATH"
+curl -fsSL https://github.com/gtsteffaniak/filebrowser/releases/latest/download/linux-amd64-filebrowser -o "$TMP_BIN"
+chmod +x "$TMP_BIN"
+mv -f "$TMP_BIN" /usr/local/bin/filebrowser
 msg_ok "Installed ${APP}"
 
 msg_info "Preparing configuration directory"
