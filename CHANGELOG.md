@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Domain Monitor: Add domain checking cron [@tremor021](https://github.com/tremor021) ([#9129](https://github.com/community-scripts/ProxmoxVE/pull/9129))
     - Kimai: Fix for MariaDB connection URL [@tremor021](https://github.com/tremor021) ([#9124](https://github.com/community-scripts/ProxmoxVE/pull/9124))
     - Fix: filebrowser-quantum update [@MickLesk](https://github.com/MickLesk) ([#9115](https://github.com/community-scripts/ProxmoxVE/pull/9115))
     - tools.func: fix wrong output for setup_java (error token is "0") [@snow2k9](https://github.com/snow2k9) ([#9110](https://github.com/community-scripts/ProxmoxVE/pull/9110))
