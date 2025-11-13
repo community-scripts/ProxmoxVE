@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-11-13
 
+### 🚀 Updated Scripts
+
+  - #### 💥 Breaking Changes
+
+    - Downgrade Swizzin to Debian 12 Bookworm [@MickLesk](https://github.com/MickLesk) ([#9116](https://github.com/community-scripts/ProxmoxVE/pull/9116))
+
 ## 2025-11-12
 
 ### 🆕 New Scripts
