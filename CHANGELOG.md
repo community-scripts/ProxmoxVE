@@ -31,6 +31,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 💥 Breaking Changes
 
+    - Remove Barcodebuddy [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#9135](https://github.com/community-scripts/ProxmoxVE/pull/9135))
     - Downgrade Swizzin to Debian 12 Bookworm [@MickLesk](https://github.com/MickLesk) ([#9116](https://github.com/community-scripts/ProxmoxVE/pull/9116))
 
 ## 2025-11-12
