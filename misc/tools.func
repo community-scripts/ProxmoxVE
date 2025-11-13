@@ -4360,7 +4360,7 @@ function setup_rust() {
     # Scenario 2: Rustup already installed - update/maintain
     msg_info "Update Rust ($RUST_TOOLCHAIN)"
 
-    # Ensure default toolchain is set (fixes issue with old installations)
+    # Ensure default toolchain is set
     $STD rustup default "$RUST_TOOLCHAIN" 2>/dev/null || {
       # If default fails, install the toolchain first
       $STD rustup install "$RUST_TOOLCHAIN" || {
