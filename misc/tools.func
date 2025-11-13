@@ -4326,7 +4326,7 @@ function setup_rust() {
   local RUST_CRATES="${RUST_CRATES:-}"
   local CARGO_BIN="${HOME}/.cargo/bin"
 
-  # Get currently installed version (if any)
+  # Get currently installed version
   local CURRENT_VERSION=""
   if command -v rustc &>/dev/null; then
     CURRENT_VERSION=$(rustc --version 2>/dev/null | awk '{print $2}')
