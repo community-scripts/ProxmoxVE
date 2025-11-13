@@ -109,8 +109,10 @@ if [[ -f "$INSTALL_PATH" ]]; then
   read -r update_prompt
   if [[ "${update_prompt,,}" =~ ^(y|yes)$ ]]; then
     msg_info "Updating ${APP}"
-    curl -fsSL https://github.com/gtsteffaniak/filebrowser/releases/latest/download/linux-amd64-filebrowser -o "$INSTALL_PATH"
-    chmod +x "$INSTALL_PATH"
+    TMP_BIN="/tmp/filebrowser.$$"
+    curl -fsSL https://github.com/gtsteffaniak/filebrowser/releases/latest/download/linux-amd64-filebrowser -o "$TMP_BIN"
+    chmod +x "$TMP_BIN"
+    mv -f "$TMP_BIN" /usr/local/bin/filebrowser
     msg_ok "Updated ${APP}"
     exit 0
   else
