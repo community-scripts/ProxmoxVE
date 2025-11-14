@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-11-14
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - karakeep: clean install after every update [@MickLesk](https://github.com/MickLesk) ([#9144](https://github.com/community-scripts/ProxmoxVE/pull/9144))
+
 ## 2025-11-13
 
 ### 🆕 New Scripts
