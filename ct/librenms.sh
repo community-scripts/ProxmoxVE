@@ -5,7 +5,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://librenms.org
 
-APP="Librenms"
+APP="LibreNMS"
 var_tags="${var_tags:-monitoring}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
@@ -27,12 +27,11 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  msg_info "Updating ${APP} Installation"
+  msg_info "Updating LibreNMS"
   su librenms
   cd /opt/librenms
   ./daily.sh
-  msg_ok "Updated ${APP} Installation"
-
+  msg_ok "Updated LibreNMS"
   exit
 }
 
