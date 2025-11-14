@@ -20,19 +20,29 @@ color
 catch_errors
 
 function update_script() {
-   header_info
-   check_container_storage
-   check_container_resources
-   if [[ ! -f /etc/apt/sources.list.d/grafana.list ]]; then
-      msg_error "No ${APP} Installation Found!"
-      exit
-   fi
+  header_info "$APP"
+  check_container_storage
+  check_container_resources
 
-   msg_info "Updating Grafana"
-   $STD apt update
-   $STD apt -y upgrade
-   msg_ok "Updated successfully!"
-   exit
+  if ! dpkg -s grafana >/dev/null 2>&1; then
+    msg_error "No ${APP} Installation Found!"
+    exit 1
+  fi
+
+  if [[ -f /etc/apt/sources.list.d/grafana.list ]] || [[ ! -f /etc/apt/sources.list.d/grafana.sources ]]; then
+    setup_deb822_repo \
+      "grafana" \
+      "https://apt.grafana.com/gpg.key" \
+      "https://apt.grafana.com" \
+      "stable" \
+      "main"
+  fi
+
+  msg_info "Updating Grafana LXC"
+  $STD apt update
+  $STD apt --only-upgrade install -y grafana
+  msg_ok "Updated successfully!"
+  exit
 }
 
 start
