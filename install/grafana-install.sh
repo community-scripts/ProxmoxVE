@@ -20,7 +20,10 @@ msg_ok "Installed Dependencies"
 msg_info "Setting up Grafana Repository"
 setup_deb822_repo \
   "grafana" \
-  "https://apt.grafana.com/gpg.key"
+  "https://apt.grafana.com/gpg.key" \
+  "https://apt.grafana.com" \
+  "stable" \
+  "main"
 msg_ok "Grafana Repository setup sucessfully"
 
 msg_info "Installing Grafana"
