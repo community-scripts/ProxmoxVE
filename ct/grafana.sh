@@ -28,7 +28,7 @@ function update_script() {
       exit
    fi
 
-   msg_info "Updating ${APP}"
+   msg_info "Updating Grafana"
    $STD apt update
    $STD apt -y upgrade
    msg_ok "Updated successfully!"
