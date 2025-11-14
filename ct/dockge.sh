@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-18}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -27,12 +27,21 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+<<<<<<< HEAD
+  msg_info "Updating Dockge"
+  cd /opt/dockge
+  $STD docker compose pull
+  $STD docker compose up -d
+  msg_ok "Updated Dockge"
+  msg_ok "Updated successfully"
+=======
   msg_info "Updating ${APP}"
   cd /opt/dockge
   $STD docker compose pull
   $STD docker compose up -d
   msg_ok "Updated ${APP}"
   msg_ok "Updated successfully!"
+>>>>>>> main
   exit
 }
 

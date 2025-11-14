@@ -13,22 +13,9 @@ setting_up_container
 network_check
 update_os
 
-PHP_VERSION="8.2" PHP_MODULE="curl,xml,mbstring,intl,zip,pgsql,gmp" PHP_APACHE="YES" setup_php
+PHP_VERSION="8.3" PHP_MODULE="curl,xml,mbstring,intl,zip,pgsql,gmp" PHP_APACHE="YES" setup_php
 PG_VERSION="16" setup_postgresql
-
-msg_info "Setting up PostgreSQL"
-DB_NAME=freshrss
-DB_USER=freshrss
-DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)
-$STD sudo -u postgres psql -c "CREATE ROLE $DB_USER WITH LOGIN PASSWORD '$DB_PASS';"
-$STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER TEMPLATE template0;"
-{
-  echo "FreshRSS Credentials"
-  echo "FreshRSS Database User: $DB_USER"
-  echo "FreshRSS Database Password: $DB_PASS"
-  echo "FreshRSS Database Name: $DB_NAME"
-} >>~/freshrss.creds
-msg_ok "Set up PostgreSQL"
+PG_DB_NAME="freshrss" PG_DB_USER="freshrss" setup_postgresql_db
 
 fetch_and_deploy_gh_release "freshrss" "FreshRSS/FreshRSS"
 

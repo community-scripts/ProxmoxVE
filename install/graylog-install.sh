@@ -25,11 +25,11 @@ sed -i "s/password_secret =/password_secret = $PASSWORD_SECRET/g" /etc/graylog/d
 systemctl enable -q --now graylog-datanode
 msg_ok "Setup Graylog Data Node"
 
-msg_info "Setup ${APPLICATION}"
-$STD apt-get install graylog-server
+msg_info "Setup Graylog"
+$STD apt install graylog-server
 ROOT_PASSWORD=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c16)
 {
-  echo "${APPLICATION} Credentials"
+  echo "Graylog Credentials"
   echo "Admin User: admin"
   echo "Admin Password: ${ROOT_PASSWORD}"
 } >>~/graylog.creds
@@ -38,7 +38,8 @@ sed -i "s/password_secret =/password_secret = $PASSWORD_SECRET/g" /etc/graylog/s
 sed -i "s/root_password_sha2 =/root_password_sha2 = $ROOT_PASSWORD/g" /etc/graylog/server/server.conf
 sed -i 's/#http_bind_address = 127.0.0.1.*/http_bind_address = 0.0.0.0:9000/g' /etc/graylog/server/server.conf
 systemctl enable -q --now graylog-server
-msg_ok "Setup ${APPLICATION}"
+rm -f graylog-*-repository_latest.deb
+msg_ok "Setup Graylog"
 
 motd_ssh
 customize

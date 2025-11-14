@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y net-tools
+$STD apt install -y net-tools
 msg_ok "Installed Dependencies"
 
 fetch_and_deploy_gh_release "goaway" "pommee/goaway" "prebuild" "latest" "/opt/goaway" "goaway_*_linux_amd64.tar.gz"
@@ -54,9 +54,4 @@ msg_ok "Service Created"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

@@ -14,8 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y git
-$STD apt-get install -y git-lfs
+$STD apt install -y git git-lfs
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Forgejo"
@@ -59,8 +58,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

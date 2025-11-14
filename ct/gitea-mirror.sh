@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-6}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -96,17 +96,15 @@ EOF
     ln -sf /opt/bun/bin/bun /usr/local/bin/bunx
     msg_ok "Installed Bun"
 
-    rm -rf /opt/gitea-mirror
-    fetch_and_deploy_gh_release "gitea-mirror" "RayLabsHQ/gitea-mirror"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "gitea-mirror" "RayLabsHQ/gitea-mirror"
 
-    msg_info "Updating and rebuilding ${APP}"
+    msg_info "Updating Gitea-Mirror"
     cd /opt/gitea-mirror
     $STD bun run setup
     $STD bun run build
     APP_VERSION=$(grep -o '"version": *"[^"]*"' package.json | cut -d'"' -f4)
-
     sudo sed -i.bak "s|^npm_package_version=.*|npm_package_version=${APP_VERSION}|" /opt/gitea-mirror.env
-    msg_ok "Updated and rebuilt ${APP}"
+    msg_ok "Updated Gitea-Mirror"
 
     msg_info "Restoring Data"
     cp /opt/gitea-mirror-backup/data/* /opt/gitea-mirror/data
@@ -114,8 +112,13 @@ EOF
 
     msg_info "Starting Service"
     systemctl start gitea-mirror
+<<<<<<< HEAD
+    msg_ok "Started Service"
+    msg_ok "Updated successfully"
+=======
     msg_ok "Service Started"
     msg_ok "Updated successfully!"
+>>>>>>> main
   fi
   exit
 }

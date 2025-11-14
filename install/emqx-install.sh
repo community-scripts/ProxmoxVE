@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing dependencies"
-$STD apt-get install -y ca-certificates
+$STD apt install -y ca-certificates
 msg_ok "Installed dependencies"
 
 msg_info "Fetching latest EMQX Enterprise version"
@@ -33,19 +33,12 @@ $STD curl -fsSL -o "$DEB_FILE" "$DOWNLOAD_URL"
 msg_ok "Downloaded EMQX"
 
 msg_info "Installing EMQX"
-$STD apt-get install -y "$DEB_FILE"
+$STD apt install -y "$DEB_FILE"
 echo "$LATEST_VERSION" >~/.emqx
-msg_ok "Installed EMQX"
-
-msg_info "Starting EMQX service"
+rm -f "$DEB_FILE"
 $STD systemctl enable -q --now emqx
-msg_ok "Enabled EMQX service"
+msg_ok "Installed EMQX"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -f "$DEB_FILE"
-$STD apt-get autoremove
-$STD apt-get autoclean
-msg_ok "Cleaned"
+cleanup_lxc

@@ -15,9 +15,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
-  apt-transport-https \
-  xvfb
+$STD apt install -y apt-transport-https xvfb
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Chrome"
@@ -28,7 +26,6 @@ setup_deb822_repo \
   "stable"
 $STD apt update
 $STD apt install -y google-chrome-stable
-# remove google-chrome.list added by google-chrome-stable
 rm /etc/apt/sources.list.d/google-chrome.list
 msg_ok "Installed Chrome"
 
@@ -57,8 +54,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

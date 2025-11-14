@@ -28,6 +28,21 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+<<<<<<< HEAD
+  msg_info "Stopping Services"
+  systemctl stop graylog-datanode graylog-server
+  msg_ok "Stopped Services"
+
+  msg_info "Updating Graylog"
+  $STD apt update
+  $STD apt upgrade -y
+  msg_ok "Updated Graylog"
+
+  msg_info "Starting Services"
+  systemctl start graylog-datanode graylog-server
+  msg_ok "Started Services"
+  msg_ok "Updated successfully"
+=======
 
   msg_info "Stopping Service"
   systemctl stop graylog-datanode
@@ -60,6 +75,7 @@ function update_script() {
   systemctl start graylog-server
   msg_ok "Started Service"
   msg_ok "Updated successfully!"
+>>>>>>> main
   exit
 }
 

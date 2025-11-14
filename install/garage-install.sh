@@ -23,10 +23,10 @@ RPC_SECRET=$(openssl rand -hex 32)
 ADMIN_TOKEN=$(openssl rand -base64 32)
 METRICS_TOKEN=$(openssl rand -base64 32)
 {
-    echo "Garage Tokens and Secrets"
-    echo "RPC Secret: $RPC_SECRET"
-    echo "Admin Token: $ADMIN_TOKEN"
-    echo "Metrics Token: $METRICS_TOKEN"
+  echo "Garage Tokens and Secrets"
+  echo "RPC Secret: $RPC_SECRET"
+  echo "Admin Token: $ADMIN_TOKEN"
+  echo "Metrics Token: $METRICS_TOKEN"
 } >>~/garage.creds
 echo $GITEA_RELEASE >>~/.garage
 cat <<EOF >/etc/garage.toml
@@ -59,7 +59,6 @@ metrics_token = "${METRICS_TOKEN}"
 EOF
 msg_ok "Set up Garage"
 
-
 msg_info "Creating service"
 cat <<'EOF' >/etc/systemd/system/garage.service
 [Unit]
@@ -87,9 +86,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

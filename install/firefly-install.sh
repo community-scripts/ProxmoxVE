@@ -16,32 +16,18 @@ update_os
 PHP_VERSION="8.4" PHP_APACHE="YES" PHP_MODULE="mysql" setup_php
 setup_composer
 setup_mariadb
-LOCAL_IP=$(hostname -I | awk '{print $1}')
-
-msg_info "Setting up database"
-DB_NAME=firefly
-DB_USER=firefly
-DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
-$STD mariadb -u root -e "CREATE DATABASE $DB_NAME;"
-$STD mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
-mariadb -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
-{
-  echo "Firefly-Credentials"
-  echo "Firefly Database User: $DB_USER"
-  echo "Firefly Database Password: $DB_PASS"
-  echo "Firefly Database Name: $DB_NAME"
-} >>~/firefly.creds
-msg_ok "Set up database"
+MARIADB_DB_NAME="firefly" MARIADB_DB_USER="firefly" setup_mariadb_db
 
 fetch_and_deploy_gh_release "firefly" "firefly-iii/firefly-iii" "prebuild" "latest" "/opt/firefly" "FireflyIII-*.zip"
 
 msg_info "Configuring Firefly III (Patience)"
+LOCAL_IP=$(hostname -I | awk '{print $1}')
 chown -R www-data:www-data /opt/firefly
 chmod -R 775 /opt/firefly/storage
 cd /opt/firefly
 cp .env.example .env
 sed -i "s/DB_HOST=.*/DB_HOST=localhost/" /opt/firefly/.env
-sed -i "s/DB_PASSWORD=.*/DB_PASSWORD=$DB_PASS/" /opt/firefly/.env
+sed -i "s/DB_PASSWORD=.*/DB_PASSWORD=$MARIADB_DB_PASS/" /opt/firefly/.env
 $STD composer install --no-dev --no-plugins --no-interaction
 $STD php artisan firefly:upgrade-database
 $STD php artisan firefly:correct-database
@@ -55,6 +41,7 @@ tar -xzf "DataImporter-v${IMPORTER_RELEASE}.tar.gz" -C /opt/firefly/dataimporter
 cp /opt/firefly/dataimporter/.env.example /opt/firefly/dataimporter/.env
 sed -i "s#FIREFLY_III_URL=#FIREFLY_III_URL=http://${LOCAL_IP}#g" /opt/firefly/dataimporter/.env
 chown -R www-data:www-data /opt/firefly
+rm -rf "/opt/DataImporter-v${IMPORTER_RELEASE}.tar.gz"
 msg_ok "Configured Firefly III"
 
 msg_info "Creating Service"
@@ -95,9 +82,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -rf "/opt/DataImporter-v${IMPORTER_RELEASE}.tar.gz"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

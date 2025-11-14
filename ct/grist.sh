@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-3072}"
 var_disk="${var_disk:-6}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -41,8 +41,13 @@ function update_script() {
 
     fetch_and_deploy_gh_release "grist" "gristlabs/grist-core" "tarball"
 
+<<<<<<< HEAD
+    msg_info "Updating Grist"
+    mkdir -p grist/docs
+=======
     msg_info "Updating ${APP}"
     mkdir -p /opt/grist/docs
+>>>>>>> main
     cp -n /opt/grist_bak/.env /opt/grist/.env
     cp -r /opt/grist_bak/docs/* /opt/grist/docs/
     cp /opt/grist_bak/grist-sessions.db /opt/grist/grist-sessions.db
@@ -51,13 +56,17 @@ function update_script() {
     $STD yarn install
     $STD yarn run build:prod
     $STD yarn run install:python
-    msg_ok "Updated ${APP}"
+    msg_ok "Updated Grist"
 
     msg_info "Starting Service"
     systemctl start grist
     msg_ok "Started Service"
+<<<<<<< HEAD
+    msg_ok "Updated Successfully"
+=======
 
     msg_ok "Updated successfully!"
+>>>>>>> main
   fi
   exit
 }

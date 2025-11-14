@@ -20,6 +20,13 @@ color
 catch_errors
 
 function update_script() {
+<<<<<<< HEAD
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /var/www ]]; then
+    msg_error "No ${APP} Installation Found!"
+=======
     header_info
     check_container_storage
     check_container_resources
@@ -31,7 +38,14 @@ function update_script() {
     $STD apt-get update
     $STD apt-get -y upgrade
     msg_ok "Updated successfully!"
+>>>>>>> main
     exit
+  fi
+  msg_info "Updating ${APP} LXC"
+  $STD apt update
+  $STD apt -y upgrade
+  msg_ok "Updated Successfully"
+  exit
 }
 
 start

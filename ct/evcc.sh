@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -26,6 +26,18 @@ function update_script() {
   if ! command -v evcc >/dev/null 2>&1; then
     msg_error "No ${APP} Installation Found!"
     exit 1
+<<<<<<< HEAD
+  fi
+
+  if [[ -f /etc/apt/sources.list.d/evcc-stable.list ]]; then
+    setup_deb822_repo \
+      "evcc-stable" \
+      "https://dl.evcc.io/public/evcc/stable/gpg.EAD5D0E07B0EC0FD.key" \
+      "https://dl.evcc.io/public/evcc/stable/deb/debian/" \
+      "$(get_os_info codename)" \
+      "main"
+=======
+>>>>>>> main
   fi
 
   if [[ -f /etc/apt/sources.list.d/evcc-stable.list ]]; then
