@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-11-14
 
+### 🆕 New Scripts
+
+  - LibreNMS ([#9148](https://github.com/community-scripts/ProxmoxVE/pull/9148))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
