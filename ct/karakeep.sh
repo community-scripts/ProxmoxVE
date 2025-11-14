@@ -55,7 +55,7 @@ function update_script() {
       systemctl daemon-reload
     fi
 
-    fetch_and_deploy_gh_release "karakeep" "karakeep-app/karakeep"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "karakeep" "karakeep-app/karakeep"
     if command -v corepack >/dev/null; then
       $STD corepack disable
     fi
