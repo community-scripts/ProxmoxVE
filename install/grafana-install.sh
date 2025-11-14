@@ -15,8 +15,7 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-  apt-transport-https \
-  software-properties-common
+  apt-transport-https
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up Grafana Repository"
