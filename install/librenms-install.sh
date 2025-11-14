@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: michelroegl-brunner
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://github.com/opf/openproject
+# Source: https://www.librenms.org/
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -28,11 +28,6 @@ $STD apt install -y \
   whois
 msg_ok "Installed Dependencies"
 
-PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="gmp,mysql,snmp" setup_php
-setup_mariadb
-setup_composer
-PYTHON_VERSION="3.13" setup_uv
-
 msg_info "Installing Python Dependencies"
 $STD apt install -y \
   python3-dotenv \
@@ -43,10 +38,11 @@ $STD apt install -y \
   python3-pip
 msg_ok "Installed Python Dependencies"
 
-
-
+PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="gmp,mysql,snmp" setup_php
+setup_mariadb
+setup_composer
+PYTHON_VERSION="3.13" setup_uv
 MARIADB_DB_NAME="librenms" MARIADB_DB_USER="librenms" MARIADB_DB_PASS="$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)" setup_mariadb_db
-
 fetch_and_deploy_gh_release "librenms" "librenms/librenms"
 
 msg_info "Configuring LibreNMS"
@@ -123,7 +119,6 @@ $STD su - librenms -s /bin/bash -c "cd /opt/librenms && php8.4 artisan key:gener
 $STD su - librenms -s /bin/bash -c "cd /opt/librenms && lnms db:seed --force"
 $STD su - librenms -s /bin/bash -c "cd /opt/librenms && lnms user:add -p admin -r admin admin"
 
-
 RANDOM_STRING=$(openssl rand -base64 16 | tr -dc 'a-zA-Z0-9')
 sed -i "s/RANDOMSTRINGHERE/$RANDOM_STRING/g" /etc/snmp/snmpd.conf
 echo "SNMP Community String: $RANDOM_STRING" >>~/librenms.creds
@@ -140,8 +135,4 @@ msg_ok "Configured Services"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt -y autoremove
-$STD apt -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc
