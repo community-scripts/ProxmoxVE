@@ -22,6 +22,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - karakeep: clean install after every update [@MickLesk](https://github.com/MickLesk) ([#9144](https://github.com/community-scripts/ProxmoxVE/pull/9144))
 
+  - #### ✨ New Features
+
+    - bump grafana to debian 13 [@mschabhuettl](https://github.com/mschabhuettl) ([#9141](https://github.com/community-scripts/ProxmoxVE/pull/9141))
+
 ## 2025-11-13
 
 ### 🆕 New Scripts
