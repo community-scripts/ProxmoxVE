@@ -19,7 +19,6 @@ variables
 color
 catch_errors
 
-
 function update_script() {
   header_info
   check_container_storage
