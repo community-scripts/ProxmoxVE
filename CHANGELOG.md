@@ -20,6 +20,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - changedetection: fix: increase ressources [@CrazyWolf13](https://github.com/CrazyWolf13) ([#9171](https://github.com/community-scripts/ProxmoxVE/pull/9171))
     - 2fauth: update composer command [@CrazyWolf13](https://github.com/CrazyWolf13) ([#9168](https://github.com/community-scripts/ProxmoxVE/pull/9168))
 
+  - #### 🔧 Refactor
+
+    - firefly: refactor update_script and add dataimporter update [@MickLesk](https://github.com/MickLesk) ([#9178](https://github.com/community-scripts/ProxmoxVE/pull/9178))
+
 ## 2025-11-14
 
 ### 🆕 New Scripts
