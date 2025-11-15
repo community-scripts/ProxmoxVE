@@ -13,6 +13,10 @@ setting_up_container
 network_check
 update_os
 
+msg_info "Installing Dependencies"
+$STD apt install -y fping
+msg_ok "Installed Dependencies"
+
 PHP_VERSION="8.3" PHP_APACHE="YES" PHP_FPM="YES" PHP_MODULE="mysql,gmp,snmp,ldap,apcu" setup_php
 
 msg_info "Installing PHP-PEAR"
@@ -26,6 +30,8 @@ MARIADB_DB_NAME="phpipam" MARIADB_DB_USER="phpipam" setup_mariadb_db
 fetch_and_deploy_gh_release "phpipam" "phpipam/phpipam" "prebuild" "latest" "/opt/phpipam" "phpipam-v*.zip"
 
 msg_info "Installing phpIPAM"
+# patch SCHEMA, during varchar l_name is to short in upstream (2025-11-15)
+sed -i -E 's/`l_name`\s+varchar\([0-9]+\)/`l_name` varchar(128)/' /opt/phpipam/db/SCHEMA.sql
 $STD mariadb -u root "${MARIADB_DB_NAME}" </opt/phpipam/db/SCHEMA.sql
 cp /opt/phpipam/config.dist.php /opt/phpipam/config.php
 sed -i -e "s/\(\$disable_installer = \).*/\1true;/" \
