@@ -1,8 +1,83 @@
 [
   {
+    "name": "henrygd/beszel",
+    "version": "v0.16.1",
+    "date": "2025-11-14T22:50:06Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.11.2",
+    "date": "2025-11-14T22:10:50Z"
+  },
+  {
+    "name": "homarr-labs/homarr",
+    "version": "v1.43.3",
+    "date": "2025-11-14T19:16:17Z"
+  },
+  {
+    "name": "kimai/kimai",
+    "version": "2.43.0",
+    "date": "2025-11-14T17:20:16Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.119.2",
+    "date": "2025-11-14T17:06:16Z"
+  },
+  {
+    "name": "mealie-recipes/mealie",
+    "version": "v3.5.0",
+    "date": "2025-11-14T16:23:33Z"
+  },
+  {
+    "name": "jupyter/notebook",
+    "version": "@jupyter-notebook/ui-components@7.5.0-rc.1",
+    "date": "2025-11-14T15:46:14Z"
+  },
+  {
+    "name": "influxdata/influxdb",
+    "version": "v2.7.12",
+    "date": "2025-05-29T17:08:26Z"
+  },
+  {
+    "name": "prometheus/prometheus",
+    "version": "v0.308.0-rc.0",
+    "date": "2025-11-14T15:20:35Z"
+  },
+  {
+    "name": "Dolibarr/dolibarr",
+    "version": "22.0.3",
+    "date": "2025-11-14T14:49:25Z"
+  },
+  {
+    "name": "grafana/grafana",
+    "version": "rrc_steady_12.4.0-19174562009.patch4",
+    "date": "2025-11-14T14:12:58Z"
+  },
+  {
+    "name": "documenso/documenso",
+    "version": "v2.0.12",
+    "date": "2025-11-14T13:48:27Z"
+  },
+  {
+    "name": "MariaDB/server",
+    "version": "mariadb-11.8.5",
+    "date": "2025-11-14T13:24:20Z"
+  },
+  {
+    "name": "emqx/emqx",
+    "version": "e5.9.2",
+    "date": "2025-11-14T12:20:13Z"
+  },
+  {
     "name": "openobserve/openobserve",
     "version": "v0.16.2",
-    "date": "2025-11-14T10:39:48Z"
+    "date": "2025-11-14T12:05:36Z"
+  },
+  {
+    "name": "outline/outline",
+    "version": "v1.1.0-0",
+    "date": "2025-11-14T11:41:10Z"
   },
   {
     "name": "karakeep-app/karakeep",
@@ -115,11 +190,6 @@
     "date": "2025-11-13T14:28:54Z"
   },
   {
-    "name": "emqx/emqx",
-    "version": "e5.9.2",
-    "date": "2025-11-13T14:24:59Z"
-  },
-  {
     "name": "pocketbase/pocketbase",
     "version": "v0.33.0",
     "date": "2025-11-13T14:09:14Z"
@@ -160,16 +230,6 @@
     "date": "2025-11-12T01:09:44Z"
   },
   {
-    "name": "documenso/documenso",
-    "version": "v2.0.11",
-    "date": "2025-11-12T23:56:58Z"
-  },
-  {
-    "name": "henrygd/beszel",
-    "version": "v0.16.0",
-    "date": "2025-11-12T21:33:36Z"
-  },
-  {
     "name": "NginxProxyManager/nginx-proxy-manager",
     "version": "v2.13.4",
     "date": "2025-11-12T21:27:04Z"
@@ -183,11 +243,6 @@
     "name": "pymedusa/Medusa",
     "version": "v1.0.25",
     "date": "2025-11-12T16:57:54Z"
-  },
-  {
-    "name": "kimai/kimai",
-    "version": "2.42.0",
-    "date": "2025-11-12T15:16:54Z"
   },
   {
     "name": "zwave-js/zwave-js-ui",
@@ -283,11 +338,6 @@
     "name": "element-hq/synapse",
     "version": "v1.142.0",
     "date": "2025-11-11T10:33:50Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.119.1",
-    "date": "2025-11-10T14:21:10Z"
   },
   {
     "name": "FlareSolverr/FlareSolverr",
@@ -405,16 +455,6 @@
     "date": "2025-11-08T13:36:25Z"
   },
   {
-    "name": "home-assistant/core",
-    "version": "2025.11.1",
-    "date": "2025-11-07T21:32:26Z"
-  },
-  {
-    "name": "homarr-labs/homarr",
-    "version": "v1.43.2",
-    "date": "2025-11-07T19:16:41Z"
-  },
-  {
     "name": "semaphoreui/semaphore",
     "version": "v2.16.45",
     "date": "2025-11-07T19:08:05Z"
@@ -453,11 +493,6 @@
     "name": "paperless-ngx/paperless-ngx",
     "version": "v2.19.5",
     "date": "2025-11-06T20:20:13Z"
-  },
-  {
-    "name": "MariaDB/server",
-    "version": "mariadb-11.8.4",
-    "date": "2025-11-06T17:24:30Z"
   },
   {
     "name": "HabitRPG/habitica",
@@ -605,11 +640,6 @@
     "date": "2025-11-04T00:32:21Z"
   },
   {
-    "name": "jupyter/notebook",
-    "version": "@jupyter-notebook/ui-components@7.5.0-rc.0",
-    "date": "2025-11-03T19:37:03Z"
-  },
-  {
     "name": "goauthentik/authentik",
     "version": "version/2025.10.1",
     "date": "2025-11-03T16:49:16Z"
@@ -660,11 +690,6 @@
     "date": "2025-10-31T22:24:04Z"
   },
   {
-    "name": "mealie-recipes/mealie",
-    "version": "v3.4.0",
-    "date": "2025-10-31T18:50:18Z"
-  },
-  {
     "name": "zabbix/zabbix",
     "version": "7.4.5",
     "date": "2025-10-31T14:39:13Z"
@@ -705,11 +730,6 @@
     "date": "2025-10-30T14:25:23Z"
   },
   {
-    "name": "prometheus/prometheus",
-    "version": "v0.307.3",
-    "date": "2025-10-30T08:13:40Z"
-  },
-  {
     "name": "ipfs/kubo",
     "version": "v0.38.2",
     "date": "2025-10-30T02:44:09Z"
@@ -720,11 +740,6 @@
     "date": "2025-10-29T22:09:26Z"
   },
   {
-    "name": "influxdata/influxdb",
-    "version": "v2.7.12",
-    "date": "2025-05-29T17:08:26Z"
-  },
-  {
     "name": "laurent22/joplin",
     "version": "server-v3.4.4",
     "date": "2025-09-25T13:19:26Z"
@@ -733,11 +748,6 @@
     "name": "apache/cassandra",
     "version": "cassandra-5.0.6",
     "date": "2025-10-29T07:40:47Z"
-  },
-  {
-    "name": "outline/outline",
-    "version": "v1.0.1",
-    "date": "2025-10-29T03:25:13Z"
   },
   {
     "name": "booklore-app/booklore",
@@ -833,11 +843,6 @@
     "name": "kyantech/Palmr",
     "version": "v3.2.5-beta",
     "date": "2025-10-21T16:49:14Z"
-  },
-  {
-    "name": "grafana/grafana",
-    "version": "v12.2.1",
-    "date": "2025-10-21T14:40:19Z"
   },
   {
     "name": "AlexxIT/go2rtc",
@@ -1033,11 +1038,6 @@
     "name": "FreshRSS/FreshRSS",
     "version": "1.27.1",
     "date": "2025-09-27T13:07:26Z"
-  },
-  {
-    "name": "Dolibarr/dolibarr",
-    "version": "22.0.2",
-    "date": "2025-09-27T01:43:20Z"
   },
   {
     "name": "Threadfin/Threadfin",
