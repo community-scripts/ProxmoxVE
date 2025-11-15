@@ -54,7 +54,7 @@ function update_script() {
     chown -R www-data: "/opt/2fauth"
     chmod -R 755 "/opt/2fauth"
     export COMPOSER_ALLOW_SUPERUSER=1
-    $STD composer install --no-dev --prefer-source
+    $STD composer install --no-dev --prefer-dist
     php artisan 2fauth:install
     $STD systemctl restart nginx
 
