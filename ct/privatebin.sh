@@ -28,18 +28,31 @@ function update_script() {
     exit
   fi
   if check_for_gh_release "privatebin" "PrivateBin/PrivateBin"; then
-    msg_info "Creating backup"
-    cp -f /opt/privatebin/cfg/conf.php /tmp/privatebin_conf.bak
-    msg_ok "Backup created"
+
+    # Only create a backup if the config file exists
+    if [[ -f /opt/privatebin/cfg/conf.php ]]; then
+        msg_info "Creating backup"
+        cp -f /opt/privatebin/cfg/conf.php /tmp/privatebin_conf.bak
+        msg_ok "Backup created"
+        BACKUP_CREATED=true
+    else
+        msg_info "No configuration file to backup"
+        BACKUP_CREATED=false
+    fi
 
     rm -rf /opt/privatebin/*
     fetch_and_deploy_gh_release "privatebin" "PrivateBin/PrivateBin" "tarball"
 
     msg_info "Configuring ${APP}"
     mkdir -p /opt/privatebin/data
-    mv /tmp/privatebin_conf.bak /opt/privatebin/cfg/conf.php
+
+    # Only restore the backup if it exists
+    if [[ "$BACKUP_CREATED" = true && -f /tmp/privatebin_conf.bak ]]; then
+        mv /tmp/privatebin_conf.bak /opt/privatebin/cfg/conf.php
+    fi
+
     chown -R www-data:www-data /opt/privatebin
-    chmod -R 0755 /opt/privatebin/data}
+    chmod -R 0755 /opt/privatebin/data
     systemctl reload nginx php8.2-fpm
     msg_ok "Configured ${APP}"
     msg_ok "Updated successfully!"
