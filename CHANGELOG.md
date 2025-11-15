@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - phpIPHAM: patch db and add fping [@MickLesk](https://github.com/MickLesk) ([#9177](https://github.com/community-scripts/ProxmoxVE/pull/9177))
     - changedetection: fix: increase ressources [@CrazyWolf13](https://github.com/CrazyWolf13) ([#9171](https://github.com/community-scripts/ProxmoxVE/pull/9171))
     - 2fauth: update composer command [@CrazyWolf13](https://github.com/CrazyWolf13) ([#9168](https://github.com/community-scripts/ProxmoxVE/pull/9168))
 
