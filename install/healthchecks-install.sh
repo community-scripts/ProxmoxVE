@@ -22,7 +22,7 @@ $STD apt install -y \
   caddy
 msg_ok "Installed Dependencies"
 
-PYTHON_VERSION="3.12" setup_uv
+PYTHON_VERSION="3.13" setup_uv
 PG_VERSION=16 setup_postgresql
 
 msg_info "Setup Database"

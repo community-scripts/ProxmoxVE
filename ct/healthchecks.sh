@@ -33,7 +33,7 @@ function update_script() {
     systemctl stop healthchecks
     msg_ok "Stopped Services"
 
-    PYTHON_VERSION="3.12" setup_uv
+    PYTHON_VERSION="3.13" setup_uv
     fetch_and_deploy_gh_release "healthchecks" "healthchecks/healthchecks"
 
     msg_info "Updating healthchecks"
