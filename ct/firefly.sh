@@ -42,6 +42,7 @@ function update_script() {
     fetch_and_deploy_gh_release "firefly" "firefly-iii/firefly-iii" "prebuild" "latest" "/opt/firefly" "FireflyIII-*.zip"
     setup_composer
 
+    msg_info "Updating Firefly"
     rm -rf /opt/firefly/storage
     cp -r /opt/storage /opt/firefly/storage
     cp /opt/.env /opt/firefly/.env
@@ -69,8 +70,10 @@ function update_script() {
 
     $STD runuser -u www-data -- php artisan storage:link || true
     $STD runuser -u www-data -- php artisan optimize
+    msg_ok "Updated Firefly"
 
     if [[ "${IMPORTER_INSTALLED:-0}" -eq 1 ]]; then
+      msg_info "Updating Firefly Importer"
       IMPORTER_RELEASE=$(curl -fsSL https://api.github.com/repos/firefly-iii/data-importer/releases/latest | grep tag_name | cut -d '"' -f 4 | sed 's/v//')
       rm -rf /opt/firefly/dataimporter
       mkdir -p /opt/firefly/dataimporter
@@ -81,11 +84,11 @@ function update_script() {
       fi
       chown -R www-data:www-data /opt/firefly/dataimporter
       rm -f /opt/DataImporter.tar.gz
+      msg_ok "Updated Firefly Importer"
     fi
     systemctl start apache2
     msg_ok "Updated successfully!"
   fi
-
   exit
 }
 
