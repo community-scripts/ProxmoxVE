@@ -30,7 +30,10 @@ Signed-By: /usr/share/keyrings/redis-archive-keyring.gpg
 EOF
 $STD apt update
 $STD apt install -y redis
+msg_info "Configuring Redis to listen on all interfaces"
 sed -i 's/^bind .*/bind 0.0.0.0/' /etc/redis/redis.conf
+msg_info "Configuring Redis to allow Remote Access"
+sed -i 's/^protected-mode .*/protected-mode no/' /etc/redis/redis.conf
 systemctl enable -q --now redis-server
 msg_ok "Installed Redis"
 
