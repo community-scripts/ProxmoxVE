@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-11-15
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - 2fauth: update composer command [@CrazyWolf13](https://github.com/CrazyWolf13) ([#9168](https://github.com/community-scripts/ProxmoxVE/pull/9168))
+
 ## 2025-11-14
 
 ### 🆕 New Scripts
