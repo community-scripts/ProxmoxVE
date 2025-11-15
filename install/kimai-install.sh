@@ -71,9 +71,6 @@ kimai:
                 begin: 15
                 end: 15
 
-admin_lte:
-    options:
-        default_avatar: build/apple-touch-icon.png
 EOF
 msg_ok "Installed Kimai"
 
