@@ -71,36 +71,48 @@ grep -q "lxc.mount.entry: /dev/net/tun" "$CTID_CONFIG_PATH" || echo "lxc.mount.e
 header_info
 msg_info "Installing Tailscale in CT $CTID"
 
-pct exec "$CTID" -- bash -c '
+pct exec "$CTID" -- sh -c '
 set -e
-export DEBIAN_FRONTEND=noninteractive
+export DEBIAN_FRONTEND=noninteractive || true
 
-ID=$(grep "^ID=" /etc/os-release | cut -d"=" -f2)
-VER=$(grep "^VERSION_CODENAME=" /etc/os-release | cut -d"=" -f2)
+ID=$(grep "^ID=" /etc/os-release | cut -d"=" -f2 || echo "")
+VER=$(grep "^VERSION_CODENAME=" /etc/os-release | cut -d"=" -f2 || echo "")
 
-# fallback if DNS is poisoned or blocked
-ORIG_RESOLV="/etc/resolv.conf"
-BACKUP_RESOLV="/tmp/resolv.conf.backup"
+if [ "$ID" = "debian" ] || [ "$ID" = "ubuntu" ]; then
+  ORIG_RESOLV="/etc/resolv.conf"
+  BACKUP_RESOLV="/tmp/resolv.conf.backup"
 
-if ! dig +short pkgs.tailscale.com | grep -qvE "^127\.|^0\.0\.0\.0$"; then
-  echo "[INFO] DNS resolution for pkgs.tailscale.com failed (blocked or redirected)."
-  echo "[INFO] Temporarily overriding /etc/resolv.conf with Cloudflare DNS (1.1.1.1)"
-  cp "$ORIG_RESOLV" "$BACKUP_RESOLV"
-  echo "nameserver 1.1.1.1" >"$ORIG_RESOLV"
-fi
+  if ! command -v dig >/dev/null 2>&1; then apt-get update -qq && apt-get install -y dnsutils >/dev/null; fi
 
-curl -fsSL https://pkgs.tailscale.com/stable/${ID}/${VER}.noarmor.gpg \
-  | tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null
+  if ! dig +short pkgs.tailscale.com | grep -qvE "^127\.|^0\.0\.0\.0$"; then
+    cp "$ORIG_RESOLV" "$BACKUP_RESOLV"
+    echo "nameserver 1.1.1.1" >"$ORIG_RESOLV"
+  fi
 
-echo "deb [signed-by=/usr/share/keyrings/tailscale-archive-keyring.gpg] https://pkgs.tailscale.com/stable/${ID} ${VER} main" \
-  >/etc/apt/sources.list.d/tailscale.list
+  curl -fsSL https://pkgs.tailscale.com/stable/${ID}/${VER}.noarmor.gpg \
+    | tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null
 
-apt-get update -qq
-apt-get install -y tailscale >/dev/null
+  echo "deb [signed-by=/usr/share/keyrings/tailscale-archive-keyring.gpg] https://pkgs.tailscale.com/stable/${ID} ${VER} main" \
+    >/etc/apt/sources.list.d/tailscale.list
 
-if [[ -f /tmp/resolv.conf.backup ]]; then
-  echo "[INFO] Restoring original /etc/resolv.conf"
-  mv /tmp/resolv.conf.backup /etc/resolv.conf
+  apt-get update -qq
+  apt-get install -y tailscale >/dev/null
+
+  if [ -f /tmp/resolv.conf.backup ]; then
+    mv /tmp/resolv.conf.backup /etc/resolv.conf
+  fi
+
+  nohup tailscaled >/dev/null 2>&1 &
+
+elif [ "$ID" = "alpine" ]; then
+  apk update
+  apk add tailscale-openrc
+  rc-update add tailscale default
+  rc-service tailscale start
+
+else
+  echo "Unsupported container OS"
+  exit 1
 fi
 '
 
