@@ -20,6 +20,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Change backup directory to /opt for paperless-ngx [@ProfDrYoMan](https://github.com/ProfDrYoMan) ([#9195](https://github.com/community-scripts/ProxmoxVE/pull/9195))
     - Kimai: remove deprecated admin_lte section [@MickLesk](https://github.com/MickLesk) ([#9182](https://github.com/community-scripts/ProxmoxVE/pull/9182))
     - healthchecks: bump python to 3.13 [@MickLesk](https://github.com/MickLesk) ([#9175](https://github.com/community-scripts/ProxmoxVE/pull/9175))
 
