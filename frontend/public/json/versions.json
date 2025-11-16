@@ -1,5 +1,45 @@
 [
   {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.3",
+    "date": "2025-09-20T12:12:33Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.314",
+    "date": "2025-11-16T05:56:46Z"
+  },
+  {
+    "name": "FlowiseAI/Flowise",
+    "version": "flowise@3.0.11",
+    "date": "2025-11-16T01:29:06Z"
+  },
+  {
+    "name": "OliveTin/OliveTin",
+    "version": "3000.4.0",
+    "date": "2025-11-16T01:02:49Z"
+  },
+  {
+    "name": "hyperion-project/hyperion.ng",
+    "version": "2.1.1",
+    "date": "2025-06-14T17:45:06Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-11-16T00:27:06Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.0.1",
+    "date": "2025-10-15T16:53:55Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.80.0.rc.1",
+    "date": "2025-11-16T00:22:41Z"
+  },
+  {
     "name": "paperless-ngx/paperless-ngx",
     "version": "v2.19.6",
     "date": "2025-11-15T22:56:45Z"
@@ -8,11 +48,6 @@
     "name": "seerr-team/seerr",
     "version": "preview-test-fix-subscriptions",
     "date": "2025-11-15T20:51:48Z"
-  },
-  {
-    "name": "BerriAI/litellm",
-    "version": "v1.79.3-stable",
-    "date": "2025-11-15T20:28:05Z"
   },
   {
     "name": "jenkinsci/jenkins",
@@ -30,24 +65,9 @@
     "date": "2025-11-15T13:18:41Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.311",
-    "date": "2025-11-15T05:55:28Z"
-  },
-  {
     "name": "cloudreve/cloudreve",
     "version": "4.10.1",
     "date": "2025-11-15T04:36:48Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-11-15T00:27:05Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.0.1",
-    "date": "2025-10-15T16:53:55Z"
   },
   {
     "name": "henrygd/beszel",
@@ -158,11 +178,6 @@
     "name": "runtipi/runtipi",
     "version": "v4.6.5",
     "date": "2025-11-14T06:59:44Z"
-  },
-  {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.3",
-    "date": "2025-09-20T12:12:33Z"
   },
   {
     "name": "chrisvel/tududi",
@@ -290,11 +305,6 @@
     "date": "2025-11-12T05:01:55Z"
   },
   {
-    "name": "hyperion-project/hyperion.ng",
-    "version": "2.1.1",
-    "date": "2025-06-14T17:45:06Z"
-  },
-  {
     "name": "moghtech/komodo",
     "version": "v1.19.5",
     "date": "2025-09-27T20:59:46Z"
@@ -358,11 +368,6 @@
     "name": "MediaBrowser/Emby.Releases",
     "version": "4.9.1.90",
     "date": "2025-11-11T01:00:32Z"
-  },
-  {
-    "name": "OliveTin/OliveTin",
-    "version": "2025.11.11",
-    "date": "2025-11-11T00:35:03Z"
   },
   {
     "name": "qbittorrent/qBittorrent",
@@ -483,11 +488,6 @@
     "name": "umami-software/umami",
     "version": "v3.0.0",
     "date": "2025-11-07T06:13:49Z"
-  },
-  {
-    "name": "FlowiseAI/Flowise",
-    "version": "flowise@3.0.10",
-    "date": "2025-11-06T23:10:38Z"
   },
   {
     "name": "Ombi-app/Ombi",
