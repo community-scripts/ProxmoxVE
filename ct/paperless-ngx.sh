@@ -122,7 +122,7 @@ function update_script() {
 
       $STD systemctl daemon-reload
       msg_info "Backing up user data and configuration"
-      BACKUP_DIR="/tmp/paperless_backup_$$"
+      BACKUP_DIR="/opt/paperless_backup_$$"
       mkdir -p "$BACKUP_DIR"
 
       for dir in /opt/paperless/*/; do
