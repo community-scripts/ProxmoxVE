@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-11-16
 
+### 🆕 New Scripts
+
+  - Metabase ([#9190](https://github.com/community-scripts/ProxmoxVE/pull/9190))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
