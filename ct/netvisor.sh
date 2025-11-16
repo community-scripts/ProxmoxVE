@@ -43,6 +43,9 @@ function update_script() {
     if ! dpkg -l | grep -q "pkg-config"; then
       $STD apt-get install -y pkg-config
     fi
+    if ! dpkg -l | grep -q "libssl-dev"; then
+      $STD apt-get install -y libssl-dev
+    fi
     TOOLCHAIN="$(grep "channel" /opt/netvisor/backend/rust-toolchain.toml | awk -F\" '{print $2}')"
     RUST_TOOLCHAIN=$TOOLCHAIN setup_rust
 

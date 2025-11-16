@@ -16,6 +16,7 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt install -y \
   build-essential \
+  libssl-dev \
   pkg-config
 msg_ok "Installed Dependencies"
 
