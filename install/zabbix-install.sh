@@ -108,7 +108,7 @@ else
   AGENT_SERVICE="zabbix-agent"
 fi
 
-systemctl restart zabbix-server
+systemctl restart zabbix-server apache2
 systemctl enable -q --now zabbix-server $AGENT_SERVICE apache2
 msg_ok "Started Services"
 
