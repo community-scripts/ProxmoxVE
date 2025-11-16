@@ -1,5 +1,35 @@
 [
   {
+    "name": "paperless-ngx/paperless-ngx",
+    "version": "v2.19.6",
+    "date": "2025-11-15T22:56:45Z"
+  },
+  {
+    "name": "seerr-team/seerr",
+    "version": "preview-test-fix-subscriptions",
+    "date": "2025-11-15T20:51:48Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.79.3-stable",
+    "date": "2025-11-15T20:28:05Z"
+  },
+  {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.528.2",
+    "date": "2025-11-15T20:15:39Z"
+  },
+  {
+    "name": "bunkerity/bunkerweb",
+    "version": "v1.6.5",
+    "date": "2025-10-06T15:25:17Z"
+  },
+  {
+    "name": "karakeep-app/karakeep",
+    "version": "android/v1.8.2-2",
+    "date": "2025-11-15T13:18:41Z"
+  },
+  {
     "name": "Jackett/Jackett",
     "version": "v0.24.311",
     "date": "2025-11-15T05:55:28Z"
@@ -8,11 +38,6 @@
     "name": "cloudreve/cloudreve",
     "version": "4.10.1",
     "date": "2025-11-15T04:36:48Z"
-  },
-  {
-    "name": "karakeep-app/karakeep",
-    "version": "android/v1.8.2-1",
-    "date": "2025-11-15T00:50:02Z"
   },
   {
     "name": "jeedom/core",
@@ -175,11 +200,6 @@
     "date": "2025-11-13T19:49:21Z"
   },
   {
-    "name": "BerriAI/litellm",
-    "version": "v1.79.1-stable-patch-1",
-    "date": "2025-11-13T17:47:31Z"
-  },
-  {
     "name": "fuma-nama/fumadocs",
     "version": "fumadocs-openapi@10.0.6",
     "date": "2025-11-13T16:37:11Z"
@@ -250,11 +270,6 @@
     "date": "2025-11-12T14:09:36Z"
   },
   {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.528.2",
-    "date": "2025-11-12T13:18:13Z"
-  },
-  {
     "name": "cockpit-project/cockpit",
     "version": "351",
     "date": "2025-11-12T11:28:06Z"
@@ -318,11 +333,6 @@
     "name": "netbox-community/netbox",
     "version": "v4.4.6",
     "date": "2025-11-11T14:59:23Z"
-  },
-  {
-    "name": "seerr-team/seerr",
-    "version": "preview-test-fix-subscriptions",
-    "date": "2025-11-11T14:38:10Z"
   },
   {
     "name": "CrazyWolf13/web-check",
@@ -490,11 +500,6 @@
     "date": "2025-11-06T21:45:33Z"
   },
   {
-    "name": "paperless-ngx/paperless-ngx",
-    "version": "v2.19.5",
-    "date": "2025-11-06T20:20:13Z"
-  },
-  {
     "name": "HabitRPG/habitica",
     "version": "v5.41.6",
     "date": "2025-11-06T15:32:07Z"
@@ -538,11 +543,6 @@
     "name": "leiweibau/Pi.Alert",
     "version": "v2025-11-05",
     "date": "2025-11-05T18:08:26Z"
-  },
-  {
-    "name": "bunkerity/bunkerweb",
-    "version": "v1.6.5",
-    "date": "2025-10-06T15:25:17Z"
   },
   {
     "name": "javedh-dev/tracktor",
