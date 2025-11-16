@@ -35,7 +35,7 @@ function update_script() {
     if grep -q "uv run" /etc/systemd/system/paperless-webserver.service; then
 
       msg_info "Backing up user data and configuration"
-      local BACKUP_DIR="/tmp/paperless_backup_$$"
+      local BACKUP_DIR="/opt/paperless_backup_$$"
       mkdir -p "$BACKUP_DIR"
       for dir in /opt/paperless/*/; do
         dir_name=$(basename "$dir")
@@ -84,7 +84,7 @@ function update_script() {
       find /opt/paperless -name "__pycache__" -type d -exec rm -rf {} +
 
       msg_info "Backing up user data and configuration"
-      local BACKUP_DIR="/tmp/paperless_backup_$$"
+      local BACKUP_DIR="/opt/paperless_backup_$$"
       mkdir -p "$BACKUP_DIR"
 
       for dir in /opt/paperless/*/; do
