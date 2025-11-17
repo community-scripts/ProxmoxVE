@@ -43,7 +43,6 @@ function update_script() {
         msg_ok "Installed Modules"
 
         msg_info "Building Domain-Locker (a lot of patience)"
-        npm install
         set -a
         source /opt/domain-locker.env
         set +a
