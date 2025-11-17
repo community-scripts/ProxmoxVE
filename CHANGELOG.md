@@ -12,10 +12,15 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-11-17
 
+### 🆕 New Scripts
+
+  - Domain-Locker ([#9214](https://github.com/community-scripts/ProxmoxVE/pull/9214))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
 
+    - NetVisor: add build deps, increase RAM [@vhsdream](https://github.com/vhsdream) ([#9205](https://github.com/community-scripts/ProxmoxVE/pull/9205))
     - fix: restart apache2 after installing zabbix config [@AlphaLawless](https://github.com/AlphaLawless) ([#9206](https://github.com/community-scripts/ProxmoxVE/pull/9206))
 
 ## 2025-11-16
