@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-11-17
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - fix: restart apache2 after installing zabbix config [@AlphaLawless](https://github.com/AlphaLawless) ([#9206](https://github.com/community-scripts/ProxmoxVE/pull/9206))
+
 ## 2025-11-16
 
 ### 🆕 New Scripts
