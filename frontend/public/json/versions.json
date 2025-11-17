@@ -1,5 +1,45 @@
 [
   {
+    "name": "meilisearch/meilisearch",
+    "version": "latest",
+    "date": "2025-11-17T09:29:20Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "v10.11.7",
+    "date": "2025-11-17T08:40:53Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.319",
+    "date": "2025-11-17T05:55:48Z"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2025.10.5",
+    "date": "2025-11-12T01:09:44Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.4.8",
+    "date": "2025-11-13T04:42:27Z"
+  },
+  {
+    "name": "rabbitmq/rabbitmq-server",
+    "version": "v4.2.1",
+    "date": "2025-11-17T02:47:15Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-11-17T00:27:09Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.0.1",
+    "date": "2025-10-15T16:53:55Z"
+  },
+  {
     "name": "Prowlarr/Prowlarr",
     "version": "v2.3.0.5236",
     "date": "2025-11-16T22:41:22Z"
@@ -85,11 +125,6 @@
     "date": "2025-09-20T12:12:33Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.314",
-    "date": "2025-11-16T05:56:46Z"
-  },
-  {
     "name": "FlowiseAI/Flowise",
     "version": "flowise@3.0.11",
     "date": "2025-11-16T01:29:06Z"
@@ -103,16 +138,6 @@
     "name": "hyperion-project/hyperion.ng",
     "version": "2.1.1",
     "date": "2025-06-14T17:45:06Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-11-16T00:27:06Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.0.1",
-    "date": "2025-10-15T16:53:55Z"
   },
   {
     "name": "BerriAI/litellm",
@@ -300,11 +325,6 @@
     "date": "2025-11-13T10:26:37Z"
   },
   {
-    "name": "meilisearch/meilisearch",
-    "version": "prototype-v1.25.0.improve-s3-multipart-upload-1",
-    "date": "2025-11-13T09:25:48Z"
-  },
-  {
     "name": "docker/compose",
     "version": "v2.40.3",
     "date": "2025-10-30T09:35:37Z"
@@ -318,16 +338,6 @@
     "name": "evcc-io/evcc",
     "version": "0.209.8",
     "date": "2025-11-13T07:20:49Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.4.8",
-    "date": "2025-11-13T04:42:27Z"
-  },
-  {
-    "name": "esphome/esphome",
-    "version": "2025.10.5",
-    "date": "2025-11-12T01:09:44Z"
   },
   {
     "name": "NginxProxyManager/nginx-proxy-manager",
@@ -393,11 +403,6 @@
     "name": "gethomepage/homepage",
     "version": "v1.7.0",
     "date": "2025-11-11T17:24:27Z"
-  },
-  {
-    "name": "mattermost/mattermost",
-    "version": "mattermost-redux@11.1.0",
-    "date": "2025-11-11T17:15:00Z"
   },
   {
     "name": "netbox-community/netbox",
@@ -808,11 +813,6 @@
     "name": "thecfu/scraparr",
     "version": "v3.0.0-beta.2",
     "date": "2025-10-28T10:16:29Z"
-  },
-  {
-    "name": "rabbitmq/rabbitmq-server",
-    "version": "v4.2.0",
-    "date": "2025-10-27T16:56:40Z"
   },
   {
     "name": "openhab/openhab-core",
