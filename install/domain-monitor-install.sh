@@ -33,7 +33,7 @@ MARIADB_DB_NAME="domain_monitor" MARIADB_DB_USER="domainmonitor" setup_mariadb_d
 fetch_and_deploy_gh_release "domain-monitor" "Hosteroid/domain-monitor" "prebuild" "latest" "/opt/domain-monitor" "domain-monitor-v*.zip"
 
 msg_info "Setting up Domain Monitor"
-ENC_KEY=$(openssl rand -base64 48 | tr -dc 'A-Za-z0-9' | head -c 32)
+ENC_KEY=$(openssl rand -base64 32 | tr -d '\n')
 cd /opt/domain-monitor
 $STD composer install
 cp env.example.txt .env
