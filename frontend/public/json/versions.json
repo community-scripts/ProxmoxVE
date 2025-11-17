@@ -1,5 +1,85 @@
 [
   {
+    "name": "Prowlarr/Prowlarr",
+    "version": "v2.3.0.5236",
+    "date": "2025-11-16T22:41:22Z"
+  },
+  {
+    "name": "Lidarr/Lidarr",
+    "version": "v3.1.0.4875",
+    "date": "2025-11-16T22:40:18Z"
+  },
+  {
+    "name": "jellyfin/jellyfin",
+    "version": "v10.11.3",
+    "date": "2025-11-16T22:40:10Z"
+  },
+  {
+    "name": "Radarr/Radarr",
+    "version": "v6.0.4.10291",
+    "date": "2025-11-16T22:39:01Z"
+  },
+  {
+    "name": "sysadminsmedia/homebox",
+    "version": "v0.21.0",
+    "date": "2025-08-23T18:33:53Z"
+  },
+  {
+    "name": "chrisbenincasa/tunarr",
+    "version": "v0.22.15",
+    "date": "2025-11-16T21:30:50Z"
+  },
+  {
+    "name": "TwiN/gatus",
+    "version": "v5.32.0",
+    "date": "2025-11-16T21:08:56Z"
+  },
+  {
+    "name": "binwiederhier/ntfy",
+    "version": "v2.15.0",
+    "date": "2025-11-16T18:53:49Z"
+  },
+  {
+    "name": "PCJones/UmlautAdaptarr",
+    "version": "v0.7.4",
+    "date": "2025-11-16T18:40:32Z"
+  },
+  {
+    "name": "Luligu/matterbridge",
+    "version": "3.3.8",
+    "date": "2025-11-16T17:04:37Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.30.11",
+    "date": "2025-11-16T16:21:04Z"
+  },
+  {
+    "name": "AlexxIT/go2rtc",
+    "version": "v1.9.12",
+    "date": "2025-11-16T16:14:55Z"
+  },
+  {
+    "name": "LibreTranslate/LibreTranslate",
+    "version": "v1.8.0",
+    "date": "2025-11-16T15:54:50Z"
+  },
+  {
+    "name": "outline/outline",
+    "version": "v1.1.0",
+    "date": "2025-11-16T15:07:09Z"
+  },
+  {
+    "name": "bastienwirtz/homer",
+    "version": "v25.11.1",
+    "date": "2025-11-16T13:04:21Z"
+  },
+  {
+    "name": "fuma-nama/fumadocs",
+    "version": "fumadocs-core@16.0.12",
+    "date": "2025-11-16T12:33:59Z"
+  },
+  {
     "name": "morpheus65535/bazarr",
     "version": "v1.5.3",
     "date": "2025-09-20T12:12:33Z"
@@ -150,11 +230,6 @@
     "date": "2025-11-14T12:05:36Z"
   },
   {
-    "name": "outline/outline",
-    "version": "v1.1.0-0",
-    "date": "2025-11-14T11:41:10Z"
-  },
-  {
     "name": "zitadel/zitadel",
     "version": "v4.7.0",
     "date": "2025-11-14T09:45:13Z"
@@ -190,11 +265,6 @@
     "date": "2025-11-14T00:18:50Z"
   },
   {
-    "name": "chrisbenincasa/tunarr",
-    "version": "v0.22.14",
-    "date": "2025-11-13T23:16:04Z"
-  },
-  {
     "name": "ollama/ollama",
     "version": "v0.12.11",
     "date": "2025-11-12T20:27:51Z"
@@ -213,11 +283,6 @@
     "name": "pommee/goaway",
     "version": "v0.62.18",
     "date": "2025-11-13T19:49:21Z"
-  },
-  {
-    "name": "fuma-nama/fumadocs",
-    "version": "fumadocs-openapi@10.0.6",
-    "date": "2025-11-13T16:37:11Z"
   },
   {
     "name": "traefik/traefik",
@@ -335,11 +400,6 @@
     "date": "2025-11-11T17:15:00Z"
   },
   {
-    "name": "msgbyte/tianji",
-    "version": "v1.30.10",
-    "date": "2025-11-11T16:26:27Z"
-  },
-  {
     "name": "netbox-community/netbox",
     "version": "v4.4.6",
     "date": "2025-11-11T14:59:23Z"
@@ -445,19 +505,9 @@
     "date": "2025-11-08T22:47:58Z"
   },
   {
-    "name": "TwiN/gatus",
-    "version": "v5.31.0",
-    "date": "2025-11-08T22:18:46Z"
-  },
-  {
     "name": "hargata/lubelog",
     "version": "v1.5.4",
     "date": "2025-11-08T16:26:45Z"
-  },
-  {
-    "name": "Luligu/matterbridge",
-    "version": "3.3.7",
-    "date": "2025-11-08T15:47:24Z"
   },
   {
     "name": "heiher/hev-socks5-server",
@@ -650,11 +700,6 @@
     "date": "2025-11-03T06:57:15Z"
   },
   {
-    "name": "jellyfin/jellyfin",
-    "version": "v10.11.2",
-    "date": "2025-11-03T02:29:00Z"
-  },
-  {
     "name": "maxdorninger/MediaManager",
     "version": "v1.9.1",
     "date": "2025-11-02T21:14:50Z"
@@ -720,11 +765,6 @@
     "date": "2025-10-30T15:31:50Z"
   },
   {
-    "name": "Lidarr/Lidarr",
-    "version": "v3.0.1.4866",
-    "date": "2025-10-30T14:29:25Z"
-  },
-  {
     "name": "danielbrendel/hortusfox-web",
     "version": "v5.4",
     "date": "2025-10-30T14:25:23Z"
@@ -775,11 +815,6 @@
     "date": "2025-10-27T16:56:40Z"
   },
   {
-    "name": "Radarr/Radarr",
-    "version": "v5.28.0.10274",
-    "date": "2025-10-06T21:31:07Z"
-  },
-  {
     "name": "openhab/openhab-core",
     "version": "5.1.0.M2",
     "date": "2025-10-26T14:38:02Z"
@@ -793,11 +828,6 @@
     "name": "forgejo/forgejo",
     "version": "v13.0.2",
     "date": "2025-10-26T06:33:05Z"
-  },
-  {
-    "name": "Prowlarr/Prowlarr",
-    "version": "v2.1.5.5216",
-    "date": "2025-10-25T19:41:59Z"
   },
   {
     "name": "usememos/memos",
@@ -843,11 +873,6 @@
     "name": "kyantech/Palmr",
     "version": "v3.2.5-beta",
     "date": "2025-10-21T16:49:14Z"
-  },
-  {
-    "name": "AlexxIT/go2rtc",
-    "version": "v1.9.11",
-    "date": "2025-10-21T13:21:02Z"
   },
   {
     "name": "influxdata/telegraf",
@@ -993,11 +1018,6 @@
     "name": "mysql/mysql-server",
     "version": "mysql-cluster-7.6.36",
     "date": "2025-10-06T15:19:49Z"
-  },
-  {
-    "name": "bastienwirtz/homer",
-    "version": "v25.10.1",
-    "date": "2025-10-06T14:23:20Z"
   },
   {
     "name": "jordan-dalby/ByteStash",
@@ -1155,11 +1175,6 @@
     "date": "2025-09-01T16:19:38Z"
   },
   {
-    "name": "LibreTranslate/LibreTranslate",
-    "version": "v1.7.3",
-    "date": "2025-08-31T15:59:43Z"
-  },
-  {
     "name": "Forceu/Gokapi",
     "version": "v2.1.0",
     "date": "2025-08-29T12:56:13Z"
@@ -1178,11 +1193,6 @@
     "name": "janeczku/calibre-web",
     "version": "0.6.25",
     "date": "2025-08-24T08:51:55Z"
-  },
-  {
-    "name": "sysadminsmedia/homebox",
-    "version": "v0.21.0",
-    "date": "2025-08-23T18:33:53Z"
   },
   {
     "name": "caddyserver/caddy",
@@ -1240,11 +1250,6 @@
     "date": "2025-08-06T12:32:02Z"
   },
   {
-    "name": "binwiederhier/ntfy",
-    "version": "v2.14.0",
-    "date": "2025-08-05T08:31:35Z"
-  },
-  {
     "name": "inspircd/inspircd",
     "version": "v4.8.0",
     "date": "2025-08-02T09:12:10Z"
@@ -1263,11 +1268,6 @@
     "name": "caddyserver/xcaddy",
     "version": "v0.4.5",
     "date": "2025-07-29T16:39:18Z"
-  },
-  {
-    "name": "PCJones/UmlautAdaptarr",
-    "version": "v0.7.3",
-    "date": "2025-07-22T14:39:54Z"
   },
   {
     "name": "sbondCo/Watcharr",
