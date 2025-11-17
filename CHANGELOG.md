@@ -14,7 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Domain-Locker ([#9214](https://github.com/community-scripts/ProxmoxVE/pull/9214))
+  - Passbolt ([#9226](https://github.com/community-scripts/ProxmoxVE/pull/9226))
+- Domain-Locker ([#9214](https://github.com/community-scripts/ProxmoxVE/pull/9214))
 
 ### 🚀 Updated Scripts
 
