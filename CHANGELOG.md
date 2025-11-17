@@ -32,6 +32,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Refactor: paperless-ngx (Breaking Change Inside) [@MickLesk](https://github.com/MickLesk) ([#9223](https://github.com/community-scripts/ProxmoxVE/pull/9223))
 
+### 🧰 Maintenance
+
+  - #### 📂 Github
+
+    - github: add verbose mode check to bug report template [@MickLesk](https://github.com/MickLesk) ([#9234](https://github.com/community-scripts/ProxmoxVE/pull/9234))
+
 ## 2025-11-16
 
 ### 🆕 New Scripts
