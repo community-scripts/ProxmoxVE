@@ -18,6 +18,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - [core]: harmonize app_name for creds [@MickLesk](https://github.com/MickLesk) ([#9224](https://github.com/community-scripts/ProxmoxVE/pull/9224))
+
   - #### 🐞 Bug Fixes
 
     - NetVisor: add build deps, increase RAM [@vhsdream](https://github.com/vhsdream) ([#9205](https://github.com/community-scripts/ProxmoxVE/pull/9205))
