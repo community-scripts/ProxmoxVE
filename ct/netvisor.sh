@@ -41,10 +41,10 @@ function update_script() {
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "netvisor" "mayanayza/netvisor" "tarball" "latest" "/opt/netvisor"
 
     if ! dpkg -l | grep -q "pkg-config"; then
-      $STD apt-get install -y pkg-config
+      $STD apt install -y pkg-config
     fi
     if ! dpkg -l | grep -q "libssl-dev"; then
-      $STD apt-get install -y libssl-dev
+      $STD apt install -y libssl-dev
     fi
     TOOLCHAIN="$(grep "channel" /opt/netvisor/backend/rust-toolchain.toml | awk -F\" '{print $2}')"
     RUST_TOOLCHAIN=$TOOLCHAIN setup_rust
