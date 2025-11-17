@@ -117,7 +117,7 @@ $STD su - librenms -s /bin/bash -c "cd /opt/librenms && COMPOSER_ALLOW_SUPERUSER
 $STD su - librenms -s /bin/bash -c "cd /opt/librenms && php8.4 artisan migrate --force"
 $STD su - librenms -s /bin/bash -c "cd /opt/librenms && php8.4 artisan key:generate --force"
 $STD su - librenms -s /bin/bash -c "cd /opt/librenms && lnms db:seed --force"
-$STD su - librenms -s /bin/bash -c "cd /opt/librenms && lnms user:add -p admin -r admin admin"
+$STD su - librenms -s /bin/bash -c "cd /opt/librenms && lnms user:add -p admin -r admin adminadmin!"
 
 RANDOM_STRING=$(openssl rand -base64 16 | tr -dc 'a-zA-Z0-9')
 sed -i "s/RANDOMSTRINGHERE/$RANDOM_STRING/g" /etc/snmp/snmpd.conf
