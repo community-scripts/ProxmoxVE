@@ -18,6 +18,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Huntarr: Downgrade Python to 3.12 [@MickLesk](https://github.com/MickLesk) ([#9246](https://github.com/community-scripts/ProxmoxVE/pull/9246))
     - kasm: fix release fetching [@MickLesk](https://github.com/MickLesk) ([#9244](https://github.com/community-scripts/ProxmoxVE/pull/9244))
 
 ## 2025-11-17
