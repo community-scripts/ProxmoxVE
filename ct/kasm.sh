@@ -58,7 +58,7 @@ function update_script() {
   chmod +x /tmp/kasm_release/install.sh
   rm -f /tmp/kasm_release_${KASM_VERSION}.tar.gz
   
-  $STD bash /tmp/kasm_release/upgrade.sh --proxy-port 443
+  bash /tmp/kasm_release/upgrade.sh --proxy-port 443
   rm -rf /tmp/kasm_release
   msg_ok "Updated Successfully"
   exit
