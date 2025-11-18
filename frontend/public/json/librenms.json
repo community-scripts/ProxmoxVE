@@ -28,8 +28,13 @@
     }
   ],
   "default_credentials": {
-    "username": "admin",
-    "password": "adminadmin!"
+    "username": null,
+    "password": null
   },
-  "notes": []
+  "notes": [
+    {
+      "text": "After installation, the admin user credentials are saved in the file ~/librenms.creds inside the container.",
+      "type": "info"
+    }
+  ]
 }
