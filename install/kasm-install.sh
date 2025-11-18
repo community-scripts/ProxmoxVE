@@ -15,7 +15,7 @@ update_os
 
 msg_info "Detecting latest Kasm Workspaces release"
 KASM_URL=$(
-  curl -fsSL "https://www.kasmweb.com/downloads" \
+  curl -fsSL "https://www.kasm.com/downloads" \
     | tr '\n' ' ' \
     | grep -oE 'https://kasm-static-content[^"]*kasm_release_[0-9]+\.[0-9]+\.[0-9]+\.[a-z0-9]+\.tar\.gz' \
     | head -n 1
