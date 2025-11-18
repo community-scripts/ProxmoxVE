@@ -29,10 +29,43 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  msg_info "Updating LXC"
-  $STD apt update
-  $STD apt -y upgrade
-  msg_ok "Updated LXC"
+  
+  msg_info "Updating Kasm"
+  msg_info "Downloading Update"
+  cd /tmp
+  KASM_URL=$(curl -fsSL "https://www.kasm.com/downloads" \
+    | tr '\n' ' ' \
+    | grep -oE 'https://kasm-static-content[^"]*kasm_release_[0-9]+\.[0-9]+\.[0-9]+\.[a-z0-9]+\.tar\.gz' \
+    | head -n 1
+  )
+  if [[ -z "$KASM_URL" ]]; then
+    msg_error "Unable to detect latest Kasm release URL."
+    exit 1
+  fi
+  KASM_VERSION=$(echo "$KASM_URL" | sed -E 's/.*kasm_release_([0-9]+\.[0-9]+\.[0-9]+).*/\1/')
+
+  msg_warn "WARNING: This script will run an external installer from a third-party source (https://www.kasmweb.com/)."
+  msg_warn "The following code is NOT maintained or audited by our repository."
+  msg_warn "If you have any doubts or concerns, please review the installer code before proceeding:"
+  msg_custom "${TAB3}${GATEWAY}${BGN}${CL}" "\e[1;34m" "→  install.sh inside tar.gz $KASM_URL"
+  echo
+  read -r -p "${TAB3}Do you want to continue? [y/N]: " CONFIRM
+  if [[ ! "$CONFIRM" =~ ^([yY][eE][sS]|[yY])$ ]]; then
+    msg_error "Aborted by user. No changes have been made."
+    exit 10
+  fi
+  
+  curl -fsSL -o "/opt/kasm_release_${KASM_VERSION}.tar.gz" "$KASM_URL"
+  cd /tmp
+  tar -xf "kasm_release_${KASM_VERSION}.tar.gz"
+  chmod +x /opt/kasm_release/install.sh
+  rm -f /opt/kasm_release_${KASM_VERSION}.tar.gz
+  msg_ok "Downloaded Update"
+
+  msg_info "Executing Update Script"
+  $STD bash kasm_release/upgrade.sh --proxy-port 443
+  msg_ok "Executed Update Script" 
+  msg_ok "Updated Successfully"
   exit
 }
 
