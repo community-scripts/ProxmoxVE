@@ -31,7 +31,6 @@ function update_script() {
   fi
   
   msg_info "Updating Kasm"
-  msg_info "Downloading Update"
   cd /tmp
   KASM_URL=$(curl -fsSL "https://www.kasm.com/downloads" \
     | tr '\n' ' ' \
@@ -47,24 +46,20 @@ function update_script() {
   msg_warn "WARNING: This script will run an external installer from a third-party source (https://www.kasmweb.com/)."
   msg_warn "The following code is NOT maintained or audited by our repository."
   msg_warn "If you have any doubts or concerns, please review the installer code before proceeding:"
-  msg_custom "${TAB3}${GATEWAY}${BGN}${CL}" "\e[1;34m" "→  install.sh inside tar.gz $KASM_URL"
+  msg_custom "${TAB3}${GATEWAY}${BGN}${CL}" "\e[1;34m" "→  upgrade.sh inside tar.gz $KASM_URL"
   echo
   read -r -p "${TAB3}Do you want to continue? [y/N]: " CONFIRM
   if [[ ! "$CONFIRM" =~ ^([yY][eE][sS]|[yY])$ ]]; then
     msg_error "Aborted by user. No changes have been made."
     exit 10
   fi
-  
-  curl -fsSL -o "/opt/kasm_release_${KASM_VERSION}.tar.gz" "$KASM_URL"
-  cd /tmp
+  curl -fsSL -o "/tmp/kasm_release_${KASM_VERSION}.tar.gz" "$KASM_URL"
   tar -xf "kasm_release_${KASM_VERSION}.tar.gz"
-  chmod +x /opt/kasm_release/install.sh
-  rm -f /opt/kasm_release_${KASM_VERSION}.tar.gz
-  msg_ok "Downloaded Update"
-
-  msg_info "Executing Update Script"
-  $STD bash kasm_release/upgrade.sh --proxy-port 443
-  msg_ok "Executed Update Script" 
+  chmod +x /tmp/kasm_release/install.sh
+  rm -f /tmp/kasm_release_${KASM_VERSION}.tar.gz
+  
+  $STD bash /tmp/kasm_release/upgrade.sh --proxy-port 443
+  rm -rf /tmp/kasm_release
   msg_ok "Updated Successfully"
   exit
 }
