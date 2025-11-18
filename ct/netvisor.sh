@@ -35,7 +35,7 @@ function update_script() {
     msg_ok "Stopped services"
 
     msg_info "Backing up configurations"
-    cp /opt/netvisor/.env /opt/netvisor.env
+    cp /opt/netvisor/.env /opt/netvisor.env.bak
     msg_ok "Backed up configurations"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "netvisor" "mayanayza/netvisor" "tarball" "latest" "/opt/netvisor"
@@ -49,10 +49,16 @@ function update_script() {
     TOOLCHAIN="$(grep "channel" /opt/netvisor/backend/rust-toolchain.toml | awk -F\" '{print $2}')"
     RUST_TOOLCHAIN=$TOOLCHAIN setup_rust
 
-    mv /opt/netvisor.env /opt/netvisor/.env
+    cp /opt/netvisor.env.bak /opt/netvisor/.env
+    LOCAL_IP="$(hostname -I | awk '{print $1}')"
+    if ! grep -q "PUBLIC_URL"; then
+      sed -i "\|_PATH=|a\NETVISOR_SERVER_PUBLIC_URL=http://${LOCAL_IP}:60072" /opt/netvisor/.env
+    fi
+    sed -i 's|_TARGET=.*$|_URL=http://127.0.0.1:60072|' /opt/netvisor/.env
+
     msg_info "Creating frontend UI"
     export PUBLIC_SERVER_HOSTNAME=default
-    export PUBLIC_SERVER_PORT=60072
+    export PUBLIC_SERVER_PORT=""
     cd /opt/netvisor/ui
     $STD npm ci --no-fund --no-audit
     $STD npm run build
@@ -64,10 +70,16 @@ function update_script() {
     mv ./target/release/server /usr/bin/netvisor-server
     msg_ok "Built Netvisor-server"
 
-    msg_info "Building Netvisor-daemon (amd64 version)"
+    msg_info "Building Netvisor-daemon"
     $STD cargo build --release --bin daemon
     cp ./target/release/daemon /usr/bin/netvisor-daemon
-    msg_ok "Built Netvisor-daemon (amd64 version)"
+    msg_ok "Built Netvisor-daemon"
+
+    sed -i -e 's|-target|-url|' \
+      -e 's| --server-port |:|' \
+      /etc/systemd/system/netvisor-daemon.service
+    sed -i '/^  \"server_target.*$/d' /root/.config/daemon/config.json
+    systemctl daemon-reload
 
     msg_info "Starting services"
     systemctl start netvisor-server netvisor-daemon

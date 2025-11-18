@@ -31,7 +31,7 @@ RUST_TOOLCHAIN=$TOOLCHAIN setup_rust
 
 msg_info "Creating frontend UI"
 export PUBLIC_SERVER_HOSTNAME=default
-export PUBLIC_SERVER_PORT=60072
+export PUBLIC_SERVER_PORT=""
 cd /opt/netvisor/ui
 $STD npm ci --no-fund --no-audit
 $STD npm run build
@@ -49,20 +49,18 @@ cp ./target/release/daemon /usr/bin/netvisor-daemon
 msg_ok "Built Netvisor-daemon"
 
 msg_info "Configuring server & daemon for first-run"
+LOCAL_IP="$(hostname -I | awk '{print $1}')"
 cat <<EOF >/opt/netvisor/.env
-### - UI
-PUBLIC_SERVER_HOSTNAME=default
-PUBLIC_SERVER_PORT=60072
-
 ### - SERVER
 NETVISOR_DATABASE_URL=postgresql://$PG_DB_USER:$PG_DB_PASS@localhost:5432/$PG_DB_NAME
 NETVISOR_WEB_EXTERNAL_PATH="/opt/netvisor/ui/build"
+NETVISOR_SERVER_PUBLIC_URL=http://${LOCAL_IP}:60072
 NETVISOR_SERVER_PORT=60072
 NETVISOR_LOG_LEVEL=info
 NETVISOR_INTEGRATED_DAEMON_URL=http://127.0.0.1:60073
 ## - uncomment to disable signups
 # NETVISOR_DISABLE_REGISTRATION=true
-## - uncomment when behind reverse proxy
+## - uncomment when using TLS
 # NETVISOR_USE_SECURE_SESSION_COOKIES=true
 
 ### - OIDC (optional)
@@ -74,8 +72,14 @@ NETVISOR_INTEGRATED_DAEMON_URL=http://127.0.0.1:60073
 ## - Callback URL for reference
 # http://your-netvisor-domain:60072/api/auth/oidc/callback
 
+### - SMTP (password reset and notifications - optional)
+# NETVISOR_SMTP_RELAY=smtp.gmail.com:587
+# NETVISOR_SMTP_USERNAME=your-email@gmail.com
+# NETVISOR_SMTP_PASSWORD=your-app-password
+# NETVISOR_SMTP_EMAIL=netvisor@yourdomain.tld
+
 ### - INTEGRATED DAEMON
-NETVISOR_SERVER_TARGET=127.0.0.1
+NETVISOR_SERVER_URL=http://127.0.0.1:60072
 NETVISOR_BIND_ADDRESS=0.0.0.0
 NETVISOR_NAME="netvisor-daemon"
 NETVISOR_HEARTBEAT_INTERVAL=30
@@ -112,7 +116,7 @@ After=network.target netvisor-server.service
 [Service]
 Type=simple
 EnvironmentFile=/opt/netvisor/.env
-ExecStart=/usr/bin/netvisor-daemon --server-target http://127.0.0.1 --server-port 60072 --network-id ${NETWORK_ID} --daemon-api-key ${API_KEY}
+ExecStart=/usr/bin/netvisor-daemon --server-url http://127.0.0.1:60072 --network-id ${NETWORK_ID} --daemon-api-key ${API_KEY}
 Restart=always
 RestartSec=10
 StandardOutput=journal
