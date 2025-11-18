@@ -10,6 +10,12 @@
 > [!CAUTION]
 Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit the project's popularity for potentially malicious purposes.
 
+## 2025-11-18
+
+### 🚀 Updated Scripts
+
+  - librenms: Fix password to short [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#9236](https://github.com/community-scripts/ProxmoxVE/pull/9236))
+
 ## 2025-11-17
 
 ### 🆕 New Scripts
