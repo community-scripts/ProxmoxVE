@@ -116,11 +116,11 @@ cp /opt/librenms/snmpd.conf.example /etc/snmp/snmpd.conf
 APP_PASSWORD=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
 APP_USER="admin"
 
-cat >~/librenms.creds <<'EOF'
-LibreNMS Admin User Credentials
-Username: ${APP_USER}
-Password: ${APP_PASSWORD}
-EOF
+{
+  echo "LibreNMS Credentials"
+  echo "Username: ${APP_USER}"
+  echo "Password: ${APP_PASSWORD}"
+} >>~/librenms.creds
 
 $STD su - librenms -s /bin/bash -c "cd /opt/librenms && COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev"
 $STD su - librenms -s /bin/bash -c "cd /opt/librenms && php8.4 artisan migrate --force"
