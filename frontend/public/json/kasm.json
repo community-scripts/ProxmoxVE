@@ -6,7 +6,7 @@
   ],
   "date_created": "2025-05-26",
   "type": "ct",
-  "updateable": false,
+  "updateable": true,
   "privileged": true,
   "config_path": "",
   "interface_port": 443,
