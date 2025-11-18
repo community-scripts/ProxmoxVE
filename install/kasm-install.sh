@@ -13,12 +13,26 @@ setting_up_container
 network_check
 update_os
 
-KASM_VERSION=$(curl -fsSL 'https://www.kasmweb.com/downloads' | grep -o 'https://kasm-static-content.s3.amazonaws.com/kasm_release_[^"]*\.tar\.gz' | head -n 1 | sed -E 's/.*release_(.*)\.tar\.gz/\1/')
+msg_info "Detecting latest Kasm Workspaces release"
+KASM_URL=$(
+  curl -fsSL "https://www.kasmweb.com/downloads" \
+    | tr '\n' ' ' \
+    | grep -oE 'https://kasm-static-content[^"]*kasm_release_[0-9]+\.[0-9]+\.[0-9]+\.[a-z0-9]+\.tar\.gz' \
+    | head -n 1
+)
+
+if [[ -z "$KASM_URL" ]]; then
+  msg_error "Unable to detect latest Kasm release URL."
+  exit 1
+fi
+
+KASM_VERSION=$(echo "$KASM_URL" | sed -E 's/.*kasm_release_([0-9]+\.[0-9]+\.[0-9]+).*/\1/')
+msg_ok "Detected Kasm Workspaces version $KASM_VERSION"
 
 msg_warn "WARNING: This script will run an external installer from a third-party source (https://www.kasmweb.com/)."
 msg_warn "The following code is NOT maintained or audited by our repository."
 msg_warn "If you have any doubts or concerns, please review the installer code before proceeding:"
-msg_custom "${TAB3}${GATEWAY}${BGN}${CL}" "\e[1;34m" "→  install.sh inside tar.gz https://kasm-static-content.s3.amazonaws.com/kasm_release_${KASM_VERSION}.tar.gz"
+msg_custom "${TAB3}${GATEWAY}${BGN}${CL}" "\e[1;34m" "→  install.sh inside tar.gz $KASM_URL"
 echo
 read -r -p "${TAB3}Do you want to continue? [y/N]: " CONFIRM
 if [[ ! "$CONFIRM" =~ ^([yY][eE][sS]|[yY])$ ]]; then
@@ -27,7 +41,7 @@ if [[ ! "$CONFIRM" =~ ^([yY][eE][sS]|[yY])$ ]]; then
 fi
 
 msg_info "Installing Kasm Workspaces"
-curl -fsSL -o "/opt/kasm_release_${KASM_VERSION}.tar.gz" "https://kasm-static-content.s3.amazonaws.com/kasm_release_${KASM_VERSION}.tar.gz"
+curl -fsSL -o "/opt/kasm_release_${KASM_VERSION}.tar.gz" "$KASM_URL"
 cd /opt
 tar -xf "kasm_release_${KASM_VERSION}.tar.gz"
 chmod +x /opt/kasm_release/install.sh
@@ -39,10 +53,10 @@ awk '
   in_token && /^-+$/ {dash_count++}
   in_token && dash_count==2 {exit}
 ' ~/kasm-install.output >~/kasm.creds
+rm -f /opt/kasm_release_${KASM_VERSION}.tar.gz
+rm -f ~/kasm-install.output
 msg_ok "Installed Kasm Workspaces"
 
 motd_ssh
 customize
-rm -f /opt/kasm_release_${KASM_VERSION}.tar.gz
-rm -f ~/kasm-install.output
 cleanup_lxc
