@@ -6,26 +6,27 @@ import type { Metadata, Script } from "@/lib/types";
 
 export const dynamic = "force-static";
 
-const jsonDir = "public/json";
 const metadataFileName = "metadata.json";
 const versionFileName = "version.json";
 const encoding = "utf-8";
 
 async function getMetadata() {
-  const filePath = path.resolve(jsonDir, metadataFileName);
+  const jsonDir = path.join(process.cwd(), "public", "json");
+  const filePath = path.join(jsonDir, metadataFileName);
   const fileContent = await fs.readFile(filePath, encoding);
   const metadata: Metadata = JSON.parse(fileContent);
   return metadata;
 }
 
 async function getScripts() {
+  const jsonDir = path.join(process.cwd(), "public", "json");
   const filePaths = (await fs.readdir(jsonDir))
     .filter(fileName =>
       fileName.endsWith(".json")
       && fileName !== metadataFileName
       && fileName !== versionFileName,
     )
-    .map(fileName => path.resolve(jsonDir, fileName));
+    .map(fileName => path.join(jsonDir, fileName));
 
   const scripts = await Promise.all(
     filePaths.map(async (filePath) => {

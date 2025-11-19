@@ -7,12 +7,12 @@ import type { AppVersion } from "@/lib/types";
 
 export const dynamic = "force-static";
 
-const jsonDir = "public/json";
 const versionsFileName = "versions.json";
 const encoding = "utf-8";
 
 async function getVersions() {
-  const filePath = path.resolve(jsonDir, versionsFileName);
+  const jsonDir = path.join(process.cwd(), "public", "json");
+  const filePath = path.join(jsonDir, versionsFileName);
   const fileContent = await fs.readFile(filePath, encoding);
   const versions: AppVersion[] = JSON.parse(fileContent);
 
