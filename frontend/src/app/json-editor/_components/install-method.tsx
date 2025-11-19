@@ -216,21 +216,21 @@ function InstallMethod({ script, setScript, setIsValid, setZodErrors }: InstallM
 
                 <div className="mt-3 flex gap-4 flex-wrap">
                   <ToggleCheckbox
-                    checked={!!method.platform.desktop.linux}
+                    checked={!!method.platform?.desktop?.linux}
                     onChange={(v: boolean) => updatePlatform(["desktop", "linux"], v)}
                   >
                     Linux
                   </ToggleCheckbox>
 
                   <ToggleCheckbox
-                    checked={!!method.platform.desktop.windows}
+                    checked={!!method.platform?.desktop?.windows}
                     onChange={(v: boolean) => updatePlatform(["desktop", "windows"], v)}
                   >
                     Windows
                   </ToggleCheckbox>
 
                   <ToggleCheckbox
-                    checked={!!method.platform.desktop.macos}
+                    checked={!!method.platform?.desktop?.macos}
                     onChange={(v: boolean) => updatePlatform(["desktop", "macos"], v)}
                   >
                     macOS
@@ -258,14 +258,14 @@ function InstallMethod({ script, setScript, setIsValid, setZodErrors }: InstallM
 
                 <div className="mt-3 flex gap-4">
                   <ToggleCheckbox
-                    checked={!!method.platform.mobile.android}
+                    checked={!!method.platform?.mobile?.android}
                     onChange={(v: boolean) => updatePlatform(["mobile", "android"], v)}
                   >
                     Android
                   </ToggleCheckbox>
 
                   <ToggleCheckbox
-                    checked={!!method.platform.mobile.ios}
+                    checked={!!method.platform?.mobile?.ios}
                     onChange={(v: boolean) => updatePlatform(["mobile", "ios"], v)}
                   >
                     iOS
@@ -293,21 +293,21 @@ function InstallMethod({ script, setScript, setIsValid, setZodErrors }: InstallM
 
                 <div className="mt-3 flex gap-4 flex-wrap">
                   <ToggleCheckbox
-                    checked={!!method.platform.web_app}
+                    checked={!!method.platform?.web_app}
                     onChange={(v: boolean) => updatePlatform(["web_app"], v)}
                   >
                     Web App
                   </ToggleCheckbox>
 
                   <ToggleCheckbox
-                    checked={!!method.platform.browser_extension}
+                    checked={!!method.platform?.browser_extension}
                     onChange={(v: boolean) => updatePlatform(["browser_extension"], v)}
                   >
                     Browser Extension
                   </ToggleCheckbox>
 
                   <ToggleCheckbox
-                    checked={!!method.platform.cli_only}
+                    checked={!!method.platform?.cli_only}
                     onChange={(v: boolean) => updatePlatform(["cli_only"], v)}
                   >
                     CLI Only
@@ -337,21 +337,21 @@ function InstallMethod({ script, setScript, setIsValid, setZodErrors }: InstallM
 
               <div className="mt-3 flex gap-4 flex-wrap">
                 <ToggleCheckbox
-                  checked={!!method.platform.hosting.self_hosted}
+                  checked={!!method.platform?.hosting?.self_hosted}
                   onChange={(v: boolean) => updatePlatform(["hosting", "self_hosted"], v)}
                 >
                   Self-hosted
                 </ToggleCheckbox>
 
                 <ToggleCheckbox
-                  checked={!!method.platform.hosting.saas}
+                  checked={!!method.platform?.hosting?.saas}
                   onChange={(v: boolean) => updatePlatform(["hosting", "saas"], v)}
                 >
                   SaaS
                 </ToggleCheckbox>
 
                 <ToggleCheckbox
-                  checked={!!method.platform.hosting.managed_cloud}
+                  checked={!!method.platform?.hosting?.managed_cloud}
                   onChange={(v: boolean) => updatePlatform(["hosting", "managed_cloud"], v)}
                 >
                   Managed Cloud
@@ -380,35 +380,35 @@ function InstallMethod({ script, setScript, setIsValid, setZodErrors }: InstallM
 
               <div className="mt-3 flex gap-4 flex-wrap">
                 <ToggleCheckbox
-                  checked={!!method.platform.ui.cli}
+                  checked={!!method.platform?.ui?.cli}
                   onChange={(v: boolean) => updatePlatform(["ui", "cli"], v)}
                 >
                   CLI
                 </ToggleCheckbox>
 
                 <ToggleCheckbox
-                  checked={!!method.platform.ui.gui}
+                  checked={!!method.platform?.ui?.gui}
                   onChange={(v: boolean) => updatePlatform(["ui", "gui"], v)}
                 >
                   GUI
                 </ToggleCheckbox>
 
                 <ToggleCheckbox
-                  checked={!!method.platform.ui.web_ui}
+                  checked={!!method.platform?.ui?.web_ui}
                   onChange={(v: boolean) => updatePlatform(["ui", "web_ui"], v)}
                 >
                   Web UI
                 </ToggleCheckbox>
 
                 <ToggleCheckbox
-                  checked={!!method.platform.ui.api}
+                  checked={!!method.platform?.ui?.api}
                   onChange={(v: boolean) => updatePlatform(["ui", "api"], v)}
                 >
                   API
                 </ToggleCheckbox>
 
                 <ToggleCheckbox
-                  checked={!!method.platform.ui.tui}
+                  checked={!!method.platform?.ui?.tui}
                   onChange={(v: boolean) => updatePlatform(["ui", "tui"], v)}
                 >
                   TUI
