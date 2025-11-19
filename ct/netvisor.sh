@@ -52,7 +52,7 @@ function update_script() {
     cp /opt/netvisor.env.bak /opt/netvisor/.env
     LOCAL_IP="$(hostname -I | awk '{print $1}')"
     if ! grep -q "PUBLIC_URL"; then
-      sed -i "\|_PATH=|a\NETVISOR_SERVER_PUBLIC_URL=http://${LOCAL_IP}:60072" /opt/netvisor/.env
+      sed -i "\|_PATH=|a\NETVISOR_PUBLIC_URL=http://${LOCAL_IP}:60072" /opt/netvisor/.env
     fi
     sed -i 's|_TARGET=.*$|_URL=http://127.0.0.1:60072|' /opt/netvisor/.env
 
