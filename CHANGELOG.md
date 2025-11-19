@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-11-19
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Nginx Proxy Manager: Pin version to v2.13.4 [@tremor021](https://github.com/tremor021) ([#9259](https://github.com/community-scripts/ProxmoxVE/pull/9259))
+
 ## 2025-11-18
 
 ### 🚀 Updated Scripts
