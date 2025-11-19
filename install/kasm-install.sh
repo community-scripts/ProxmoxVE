@@ -14,19 +14,12 @@ network_check
 update_os
 
 msg_info "Detecting latest Kasm Workspaces release"
-KASM_URL=$(
-  curl -fsSL "https://www.kasm.com/downloads" \
-    | tr '\n' ' ' \
-    | grep -oE 'https://kasm-static-content[^"]*kasm_release_[0-9]+\.[0-9]+\.[0-9]+\.[a-z0-9]+\.tar\.gz' \
-    | head -n 1
-)
-
-if [[ -z "$KASM_URL" ]]; then
-  msg_error "Unable to detect latest Kasm release URL."
-  exit 1
-fi
-
-KASM_VERSION=$(echo "$KASM_URL" | sed -E 's/.*kasm_release_([0-9]+\.[0-9]+\.[0-9]+).*/\1/')
+  KASM_URL=$(curl -fsSL "https://www.kasm.com/downloads" | tr '\n' ' ' | grep -oE 'https://kasm-static-content[^"]*kasm_release_[0-9]+\.[0-9]+\.[0-9]+\.[a-z0-9]+\.tar\.gz' | head -n 1)
+  if [[ -z "$KASM_URL" ]]; then
+    msg_error "Unable to detect latest Kasm release URL."
+    exit 1
+  fi
+  KASM_VERSION=$(echo "$KASM_URL" | sed -E 's/.*kasm_release_([0-9]+\.[0-9]+\.[0-9]+).*/\1/')
 msg_ok "Detected Kasm Workspaces version $KASM_VERSION"
 
 msg_warn "WARNING: This script will run an external installer from a third-party source (https://www.kasmweb.com/)."
