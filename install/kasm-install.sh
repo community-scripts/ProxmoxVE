@@ -13,6 +13,10 @@ setting_up_container
 network_check
 update_os
 
+msg_info "Installing Docker"
+$STD sh <(curl -fsSL https://get.docker.com/)
+msg_ok "Installed Docker"
+
 msg_info "Detecting latest Kasm Workspaces release"
 KASM_URL=$(curl -fsSL "https://www.kasm.com/downloads" | tr '\n' ' ' | grep -oE 'https://kasm-static-content[^"]*kasm_release_[0-9]+\.[0-9]+\.[0-9]+\.[a-z0-9]+\.tar\.gz' | head -n 1)
 if [[ -z "$KASM_URL" ]]; then
