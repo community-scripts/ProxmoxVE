@@ -1,5 +1,80 @@
 [
   {
+    "name": "bunkerity/bunkerweb",
+    "version": "testing",
+    "date": "2025-11-17T16:24:26Z"
+  },
+  {
+    "name": "chrisbenincasa/tunarr",
+    "version": "v0.23.0-alpha.23",
+    "date": "2025-11-18T21:36:15Z"
+  },
+  {
+    "name": "element-hq/synapse",
+    "version": "v1.142.1",
+    "date": "2025-11-18T20:00:26Z"
+  },
+  {
+    "name": "tailscale/tailscale",
+    "version": "v1.90.8",
+    "date": "2025-11-18T19:42:33Z"
+  },
+  {
+    "name": "umami-software/umami",
+    "version": "v3.0.1",
+    "date": "2025-11-18T18:50:35Z"
+  },
+  {
+    "name": "prometheus/prometheus",
+    "version": "v0.308.0-rc.0",
+    "date": "2025-11-18T18:04:20Z"
+  },
+  {
+    "name": "seerr-team/seerr",
+    "version": "preview-test-fix-subscriptions",
+    "date": "2025-11-18T17:42:54Z"
+  },
+  {
+    "name": "traefik/traefik",
+    "version": "v3.6.2",
+    "date": "2025-11-18T16:25:16Z"
+  },
+  {
+    "name": "MariaDB/server",
+    "version": "mariadb-12.1.2",
+    "date": "2025-11-18T15:16:21Z"
+  },
+  {
+    "name": "redis/redis",
+    "version": "8.4.0",
+    "date": "2025-11-18T15:06:37Z"
+  },
+  {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.537",
+    "date": "2025-11-18T14:59:53Z"
+  },
+  {
+    "name": "TandoorRecipes/recipes",
+    "version": "2.3.4",
+    "date": "2025-11-18T14:29:25Z"
+  },
+  {
+    "name": "fuma-nama/fumadocs",
+    "version": "create-fumadocs-app@16.0.17",
+    "date": "2025-11-18T12:28:43Z"
+  },
+  {
+    "name": "NginxProxyManager/nginx-proxy-manager",
+    "version": "v2.13.5",
+    "date": "2025-11-18T11:47:48Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.4.5",
+    "date": "2025-11-12T15:24:23Z"
+  },
+  {
     "name": "PCJones/UmlautAdaptarr",
     "version": "v0.7.5",
     "date": "2025-11-18T10:50:21Z"
@@ -18,6 +93,11 @@
     "name": "morpheus65535/bazarr",
     "version": "v1.5.3",
     "date": "2025-09-20T12:12:33Z"
+  },
+  {
+    "name": "documenso/documenso",
+    "version": "v2.0.13",
+    "date": "2025-11-18T05:59:02Z"
   },
   {
     "name": "Jackett/Jackett",
@@ -55,16 +135,6 @@
     "date": "2025-11-17T21:16:38Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.4.5",
-    "date": "2025-11-12T15:24:23Z"
-  },
-  {
-    "name": "redis/redis",
-    "version": "8.4-int3",
-    "date": "2025-11-17T18:49:11Z"
-  },
-  {
     "name": "firefly-iii/firefly-iii",
     "version": "v6.4.8",
     "date": "2025-11-13T04:42:27Z"
@@ -73,21 +143,6 @@
     "name": "influxdata/telegraf",
     "version": "v1.36.4",
     "date": "2025-11-17T17:15:29Z"
-  },
-  {
-    "name": "bunkerity/bunkerweb",
-    "version": "v1.6.5",
-    "date": "2025-10-06T15:25:17Z"
-  },
-  {
-    "name": "fuma-nama/fumadocs",
-    "version": "fumadocs-ui@16.0.13",
-    "date": "2025-11-17T16:13:38Z"
-  },
-  {
-    "name": "prometheus/prometheus",
-    "version": "v0.308.0-rc.0",
-    "date": "2025-11-17T15:41:29Z"
   },
   {
     "name": "Paymenter/Paymenter",
@@ -138,11 +193,6 @@
     "name": "sysadminsmedia/homebox",
     "version": "v0.21.0",
     "date": "2025-08-23T18:33:53Z"
-  },
-  {
-    "name": "chrisbenincasa/tunarr",
-    "version": "v0.22.15",
-    "date": "2025-11-16T21:30:50Z"
   },
   {
     "name": "TwiN/gatus",
@@ -210,16 +260,6 @@
     "date": "2025-11-15T22:56:45Z"
   },
   {
-    "name": "seerr-team/seerr",
-    "version": "preview-test-fix-subscriptions",
-    "date": "2025-11-15T20:51:48Z"
-  },
-  {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.528.2",
-    "date": "2025-11-15T20:15:39Z"
-  },
-  {
     "name": "karakeep-app/karakeep",
     "version": "android/v1.8.2-2",
     "date": "2025-11-15T13:18:41Z"
@@ -273,16 +313,6 @@
     "name": "grafana/grafana",
     "version": "rrc_steady_12.4.0-19174562009.patch4",
     "date": "2025-11-14T14:12:58Z"
-  },
-  {
-    "name": "documenso/documenso",
-    "version": "v2.0.12",
-    "date": "2025-11-14T13:48:27Z"
-  },
-  {
-    "name": "MariaDB/server",
-    "version": "mariadb-11.8.5",
-    "date": "2025-11-14T13:24:20Z"
   },
   {
     "name": "openobserve/openobserve",
@@ -340,11 +370,6 @@
     "date": "2025-11-13T19:49:21Z"
   },
   {
-    "name": "traefik/traefik",
-    "version": "v3.6.1",
-    "date": "2025-11-13T14:28:54Z"
-  },
-  {
     "name": "pocketbase/pocketbase",
     "version": "v0.33.0",
     "date": "2025-11-13T14:09:14Z"
@@ -363,11 +388,6 @@
     "name": "evcc-io/evcc",
     "version": "0.209.8",
     "date": "2025-11-13T07:20:49Z"
-  },
-  {
-    "name": "NginxProxyManager/nginx-proxy-manager",
-    "version": "v2.13.4",
-    "date": "2025-11-12T21:27:04Z"
   },
   {
     "name": "wazuh/wazuh",
@@ -438,11 +458,6 @@
     "name": "BookStackApp/BookStack",
     "version": "v25.11.1",
     "date": "2025-11-11T12:23:00Z"
-  },
-  {
-    "name": "element-hq/synapse",
-    "version": "v1.142.0",
-    "date": "2025-11-11T10:33:50Z"
   },
   {
     "name": "FlareSolverr/FlareSolverr",
@@ -558,11 +573,6 @@
     "name": "YunoHost/yunohost",
     "version": "debian/12.1.35",
     "date": "2025-11-07T14:35:24Z"
-  },
-  {
-    "name": "umami-software/umami",
-    "version": "v3.0.0",
-    "date": "2025-11-07T06:13:49Z"
   },
   {
     "name": "Ombi-app/Ombi",
@@ -743,11 +753,6 @@
     "name": "motioneye-project/motioneye",
     "version": "0.42.1",
     "date": "2020-06-07T07:27:04Z"
-  },
-  {
-    "name": "tailscale/tailscale",
-    "version": "v1.90.6",
-    "date": "2025-10-31T22:24:04Z"
   },
   {
     "name": "zabbix/zabbix",
@@ -948,11 +953,6 @@
     "name": "linkwarden/linkwarden",
     "version": "v2.13.1",
     "date": "2025-10-15T13:29:37Z"
-  },
-  {
-    "name": "TandoorRecipes/recipes",
-    "version": "2.3.3",
-    "date": "2025-10-15T13:18:27Z"
   },
   {
     "name": "blakeblackshear/frigate",
