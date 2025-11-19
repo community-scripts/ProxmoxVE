@@ -20,7 +20,7 @@
       "script": "ct/jotty.sh",
       "resources": {
         "cpu": 2,
-        "ram": 4096,
+        "ram": 3072,
         "hdd": 6,
         "os": "debian",
         "version": "13"
