@@ -33,7 +33,7 @@
   },
   "notes": [
     {
-      "text": "Type `cat ~/.Passbolt.creds` to see MariaDB database credentials. You will need those to setup Passbolt.",
+      "text": "Type `cat ~/passbolt.creds` to see MariaDB database credentials. You will need those to setup Passbolt.",
       "type": "info"
     },
     {
