@@ -1,18 +1,83 @@
 [
   {
+    "name": "grafana/grafana",
+    "version": "v12.2.1+security-01",
+    "date": "2025-11-19T11:29:05Z"
+  },
+  {
+    "name": "jupyter/notebook",
+    "version": "v7.5.0",
+    "date": "2025-11-19T08:36:29Z"
+  },
+  {
+    "name": "SigNoz/signoz",
+    "version": "v0.102.0",
+    "date": "2025-11-19T06:53:59Z"
+  },
+  {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.538",
+    "date": "2025-11-19T06:10:29Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.3",
+    "date": "2025-09-20T12:12:33Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.13.0-rc0",
+    "date": "2025-11-19T06:03:50Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.327",
+    "date": "2025-11-19T05:55:51Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.80.0.dev2",
+    "date": "2025-11-19T01:53:32Z"
+  },
+  {
+    "name": "element-hq/synapse",
+    "version": "v1.143.0rc1",
+    "date": "2025-11-19T00:09:31Z"
+  },
+  {
+    "name": "hyperion-project/hyperion.ng",
+    "version": "2.1.1",
+    "date": "2025-06-14T17:45:06Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-11-19T00:27:10Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.0.1",
+    "date": "2025-10-15T16:53:55Z"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2025.10.5",
+    "date": "2025-11-12T01:09:44Z"
+  },
+  {
+    "name": "gtsteffaniak/filebrowser",
+    "version": "v1.1.0-beta",
+    "date": "2025-11-19T00:20:32Z"
+  },
+  {
     "name": "bunkerity/bunkerweb",
-    "version": "testing",
-    "date": "2025-11-17T16:24:26Z"
+    "version": "v1.6.5",
+    "date": "2025-10-06T15:25:17Z"
   },
   {
     "name": "chrisbenincasa/tunarr",
     "version": "v0.23.0-alpha.23",
     "date": "2025-11-18T21:36:15Z"
-  },
-  {
-    "name": "element-hq/synapse",
-    "version": "v1.142.1",
-    "date": "2025-11-18T20:00:26Z"
   },
   {
     "name": "tailscale/tailscale",
@@ -28,6 +93,11 @@
     "name": "prometheus/prometheus",
     "version": "v0.308.0-rc.0",
     "date": "2025-11-18T18:04:20Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.4.5",
+    "date": "2025-11-12T15:24:23Z"
   },
   {
     "name": "seerr-team/seerr",
@@ -50,11 +120,6 @@
     "date": "2025-11-18T15:06:37Z"
   },
   {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.537",
-    "date": "2025-11-18T14:59:53Z"
-  },
-  {
     "name": "TandoorRecipes/recipes",
     "version": "2.3.4",
     "date": "2025-11-18T14:29:25Z"
@@ -68,11 +133,6 @@
     "name": "NginxProxyManager/nginx-proxy-manager",
     "version": "v2.13.5",
     "date": "2025-11-18T11:47:48Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.4.5",
-    "date": "2025-11-12T15:24:23Z"
   },
   {
     "name": "PCJones/UmlautAdaptarr",
@@ -90,9 +150,9 @@
     "date": "2025-11-14T17:06:16Z"
   },
   {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.3",
-    "date": "2025-09-20T12:12:33Z"
+    "name": "wazuh/wazuh",
+    "version": "coverity-w47-4.14.2",
+    "date": "2025-11-18T07:24:43Z"
   },
   {
     "name": "documenso/documenso",
@@ -100,24 +160,9 @@
     "date": "2025-11-18T05:59:02Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.324",
-    "date": "2025-11-18T05:55:29Z"
-  },
-  {
     "name": "0xERR0R/blocky",
     "version": "v0.28.2",
     "date": "2025-11-18T05:51:46Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-11-18T00:27:05Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.0.1",
-    "date": "2025-10-15T16:53:55Z"
   },
   {
     "name": "theonedev/onedev",
@@ -158,11 +203,6 @@
     "name": "mattermost/mattermost",
     "version": "v10.11.7",
     "date": "2025-11-17T08:40:53Z"
-  },
-  {
-    "name": "esphome/esphome",
-    "version": "2025.10.5",
-    "date": "2025-11-12T01:09:44Z"
   },
   {
     "name": "rabbitmq/rabbitmq-server",
@@ -235,6 +275,11 @@
     "date": "2025-11-16T13:04:21Z"
   },
   {
+    "name": "TechnitiumSoftware/DnsServer",
+    "version": "v14.1.0",
+    "date": "2025-11-16T11:32:10Z"
+  },
+  {
     "name": "FlowiseAI/Flowise",
     "version": "flowise@3.0.11",
     "date": "2025-11-16T01:29:06Z"
@@ -243,16 +288,6 @@
     "name": "OliveTin/OliveTin",
     "version": "3000.4.0",
     "date": "2025-11-16T01:02:49Z"
-  },
-  {
-    "name": "hyperion-project/hyperion.ng",
-    "version": "2.1.1",
-    "date": "2025-06-14T17:45:06Z"
-  },
-  {
-    "name": "BerriAI/litellm",
-    "version": "v1.80.0.rc.1",
-    "date": "2025-11-16T00:22:41Z"
   },
   {
     "name": "paperless-ngx/paperless-ngx",
@@ -295,11 +330,6 @@
     "date": "2025-11-14T16:23:33Z"
   },
   {
-    "name": "jupyter/notebook",
-    "version": "@jupyter-notebook/ui-components@7.5.0-rc.1",
-    "date": "2025-11-14T15:46:14Z"
-  },
-  {
     "name": "influxdata/influxdb",
     "version": "v2.7.12",
     "date": "2025-05-29T17:08:26Z"
@@ -308,11 +338,6 @@
     "name": "Dolibarr/dolibarr",
     "version": "22.0.3",
     "date": "2025-11-14T14:49:25Z"
-  },
-  {
-    "name": "grafana/grafana",
-    "version": "rrc_steady_12.4.0-19174562009.patch4",
-    "date": "2025-11-14T14:12:58Z"
   },
   {
     "name": "openobserve/openobserve",
@@ -355,11 +380,6 @@
     "date": "2025-11-14T00:18:50Z"
   },
   {
-    "name": "ollama/ollama",
-    "version": "v0.12.11",
-    "date": "2025-11-12T20:27:51Z"
-  },
-  {
     "name": "gristlabs/grist-core",
     "version": "v1.7.7",
     "date": "2025-11-13T21:28:44Z"
@@ -390,11 +410,6 @@
     "date": "2025-11-13T07:20:49Z"
   },
   {
-    "name": "wazuh/wazuh",
-    "version": "v4.14.1",
-    "date": "2025-11-12T18:11:43Z"
-  },
-  {
     "name": "pymedusa/Medusa",
     "version": "v1.0.25",
     "date": "2025-11-12T16:57:54Z"
@@ -408,11 +423,6 @@
     "name": "cockpit-project/cockpit",
     "version": "351",
     "date": "2025-11-12T11:28:06Z"
-  },
-  {
-    "name": "SigNoz/signoz",
-    "version": "v0.101.0",
-    "date": "2025-11-12T07:13:22Z"
   },
   {
     "name": "webmin/webmin",
@@ -485,11 +495,6 @@
     "date": "2025-11-10T17:22:00Z"
   },
   {
-    "name": "gtsteffaniak/filebrowser",
-    "version": "v1.0.1-stable",
-    "date": "2025-11-10T16:51:44Z"
-  },
-  {
     "name": "grokability/snipe-it",
     "version": "v8.3.5",
     "date": "2025-11-10T14:12:12Z"
@@ -518,11 +523,6 @@
     "name": "Cleanuparr/Cleanuparr",
     "version": "v2.4.5",
     "date": "2025-11-09T17:14:01Z"
-  },
-  {
-    "name": "TechnitiumSoftware/DnsServer",
-    "version": "v14.0.1",
-    "date": "2025-11-09T13:03:18Z"
   },
   {
     "name": "authelia/authelia",
