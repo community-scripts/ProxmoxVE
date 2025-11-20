@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt install -y jsvc
 msg_ok "Installed Dependencies"
 
-JAVA_VERSION=21 setup_java
+JAVA_VERSION="21" setup_java
 
 if lscpu | grep -q 'avx'; then
   MONGO_VERSION="8.0" setup_mongodb
@@ -25,7 +25,6 @@ else
   msg_error "No AVX detected (CPU-Flag)! We have discontinued support for this. You are welcome to try it manually with a Debian LXC, but due to the many issues with Omada, we currently only support AVX CPUs."
   exit 10
 fi
-
 
 if ! dpkg -l | grep -q 'libssl1.1'; then
   msg_info "Installing libssl (if needed)"

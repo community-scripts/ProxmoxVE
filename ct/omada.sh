@@ -36,7 +36,7 @@ function update_script() {
     exit 10
   fi
 
-  JAVA_VERSION=21 setup_java
+  JAVA_VERSION="21" setup_java
 
   msg_info "Updating Omada Controller"
   OMADA_URL=$(curl -fsSL "https://support.omadanetworks.com/en/download/software/omada-controller/" |
