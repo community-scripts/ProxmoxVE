@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-3072}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-13}"
+var_version="${var_version:-12}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -32,19 +32,11 @@ function update_script() {
   if lscpu | grep -q 'avx'; then
     MONGO_VERSION="8.0" setup_mongodb
   else
-    msg_warn "No AVX detected: Using older MongoDB 4.4"
-    MONGO_VERSION="4.4" setup_mongodb
+    msg_error "No AVX detected (CPU-Flag)! We have discontinued support for this. You are welcome to try it manually with a Debian LXC, but due to the many issues with Omada, we currently only support AVX CPUs."
+    exit 10
   fi
 
-  msg_info "Checking if right Azul Zulu Java is installed"
-  java_version=$(java -version 2>&1 | awk -F[\"_] '/version/ {print $2}')
-  if [[ "$java_version" =~ ^1\.8\.* ]]; then
-    $STD apt remove --purge -y zulu8-jdk
-    $STD apt -y install zulu21-jre-headless
-    msg_ok "Updated Azul Zulu Java to 21"
-  else
-    msg_ok "Azul Zulu Java 21 already installed"
-  fi
+  JAVA_VERSION=21 setup_java
 
   msg_info "Updating Omada Controller"
   OMADA_URL=$(curl -fsSL "https://support.omadanetworks.com/en/download/software/omada-controller/" |
