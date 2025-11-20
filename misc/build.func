@@ -1343,7 +1343,7 @@ EOF'
   fi
   msg_ok "Customized LXC Container"
 
-  lxc-attach -n "$CTID" -- bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/install/${var_install}.sh)"
+  lxc-attach -n "$CTID" -- bash -c "$(curl -fsSL https://raw.githubusercontent.com/jcisio/ProxmoxVE/immich-2.3.1/install/${var_install}.sh)"
 }
 
 # This function sets the description of the container.
