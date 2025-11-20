@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-11-20
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - core: change 'uv cache clear' to 'uv cache clean' [@MickLesk](https://github.com/MickLesk) ([#9299](https://github.com/community-scripts/ProxmoxVE/pull/9299))
+
 ## 2025-11-19
 
 ### 🚀 Updated Scripts
