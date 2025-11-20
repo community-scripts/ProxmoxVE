@@ -22,6 +22,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - tools/pve: expand PVE support to 9.0–9.1 (post-install & netdata) [@MickLesk](https://github.com/MickLesk) ([#9298](https://github.com/community-scripts/ProxmoxVE/pull/9298))
 
+  - #### 💥 Breaking Changes
+
+    - Omada - AVX-only support [@MickLesk](https://github.com/MickLesk) ([#9295](https://github.com/community-scripts/ProxmoxVE/pull/9295))
+
 ## 2025-11-19
 
 ### 🚀 Updated Scripts
