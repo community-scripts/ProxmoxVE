@@ -18,6 +18,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - core: change 'uv cache clear' to 'uv cache clean' [@MickLesk](https://github.com/MickLesk) ([#9299](https://github.com/community-scripts/ProxmoxVE/pull/9299))
 
+  - #### ✨ New Features
+
+    - tools/pve: expand PVE support to 9.0–9.1 (post-install & netdata) [@MickLesk](https://github.com/MickLesk) ([#9298](https://github.com/community-scripts/ProxmoxVE/pull/9298))
+
 ## 2025-11-19
 
 ### 🚀 Updated Scripts
