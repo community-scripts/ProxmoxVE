@@ -1,13 +1,78 @@
 [
   {
-    "name": "esphome/esphome",
-    "version": "2025.11.0",
-    "date": "2025-11-19T22:37:46Z"
+    "name": "kimai/kimai",
+    "version": "2.44.0",
+    "date": "2025-11-20T11:01:01Z"
+  },
+  {
+    "name": "itsmng/itsm-ng",
+    "version": "v2.1.1",
+    "date": "2025-11-20T10:54:07Z"
+  },
+  {
+    "name": "fuma-nama/fumadocs",
+    "version": "fumadocs-ui@16.0.15",
+    "date": "2025-11-20T10:52:04Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "v10.11.7",
+    "date": "2025-11-17T08:40:53Z"
+  },
+  {
+    "name": "Athou/commafeed",
+    "version": "5.12.0",
+    "date": "2025-11-20T06:18:58Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.336",
+    "date": "2025-11-20T05:55:54Z"
+  },
+  {
+    "name": "documenso/documenso",
+    "version": "v2.0.14",
+    "date": "2025-11-20T04:12:40Z"
   },
   {
     "name": "immich-app/immich",
-    "version": "v2.3.0",
-    "date": "2025-11-19T22:36:35Z"
+    "version": "v2.3.1",
+    "date": "2025-11-20T03:10:27Z"
+  },
+  {
+    "name": "nextcloud/nextcloudpi",
+    "version": "v1.56.0",
+    "date": "2025-11-20T02:28:35Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.80.0.dev6",
+    "date": "2025-11-20T02:03:21Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-11-20T00:27:04Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.0.1",
+    "date": "2025-10-15T16:53:55Z"
+  },
+  {
+    "name": "coder/code-server",
+    "version": "v4.106.2",
+    "date": "2025-11-20T00:23:05Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.4.5",
+    "date": "2025-11-12T15:24:23Z"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2025.11.0",
+    "date": "2025-11-19T22:37:46Z"
   },
   {
     "name": "TandoorRecipes/recipes",
@@ -28,16 +93,6 @@
     "name": "influxdata/influxdb",
     "version": "v2.7.12",
     "date": "2025-05-29T17:08:26Z"
-  },
-  {
-    "name": "BerriAI/litellm",
-    "version": "v1.77.3-stable-patch-2",
-    "date": "2025-11-19T19:00:37Z"
-  },
-  {
-    "name": "coder/code-server",
-    "version": "v4.106.0",
-    "date": "2025-11-19T18:01:23Z"
   },
   {
     "name": "tailscale/tailscale",
@@ -85,16 +140,6 @@
     "date": "2025-11-19T14:16:07Z"
   },
   {
-    "name": "nextcloud/nextcloudpi",
-    "version": "v1.56.0",
-    "date": "2025-11-19T14:11:24Z"
-  },
-  {
-    "name": "mattermost/mattermost",
-    "version": "v10.11.7",
-    "date": "2025-11-17T08:40:53Z"
-  },
-  {
     "name": "n8n-io/n8n",
     "version": "n8n@1.120.4",
     "date": "2025-11-19T12:57:55Z"
@@ -125,11 +170,6 @@
     "date": "2025-09-20T12:12:33Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.327",
-    "date": "2025-11-19T05:55:51Z"
-  },
-  {
     "name": "element-hq/synapse",
     "version": "v1.143.0rc1",
     "date": "2025-11-19T00:09:31Z"
@@ -138,16 +178,6 @@
     "name": "hyperion-project/hyperion.ng",
     "version": "2.1.1",
     "date": "2025-06-14T17:45:06Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-11-19T00:27:10Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.0.1",
-    "date": "2025-10-15T16:53:55Z"
   },
   {
     "name": "gtsteffaniak/filebrowser",
@@ -170,11 +200,6 @@
     "date": "2025-11-18T18:50:35Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.4.5",
-    "date": "2025-11-12T15:24:23Z"
-  },
-  {
     "name": "seerr-team/seerr",
     "version": "preview-test-fix-subscriptions",
     "date": "2025-11-18T17:42:54Z"
@@ -195,11 +220,6 @@
     "date": "2025-11-18T15:06:37Z"
   },
   {
-    "name": "fuma-nama/fumadocs",
-    "version": "create-fumadocs-app@16.0.17",
-    "date": "2025-11-18T12:28:43Z"
-  },
-  {
     "name": "NginxProxyManager/nginx-proxy-manager",
     "version": "v2.13.5",
     "date": "2025-11-18T11:47:48Z"
@@ -218,11 +238,6 @@
     "name": "wazuh/wazuh",
     "version": "coverity-w47-4.14.2",
     "date": "2025-11-18T07:24:43Z"
-  },
-  {
-    "name": "documenso/documenso",
-    "version": "v2.0.13",
-    "date": "2025-11-18T05:59:02Z"
   },
   {
     "name": "0xERR0R/blocky",
@@ -378,11 +393,6 @@
     "name": "homarr-labs/homarr",
     "version": "v1.43.3",
     "date": "2025-11-14T19:16:17Z"
-  },
-  {
-    "name": "kimai/kimai",
-    "version": "2.43.0",
-    "date": "2025-11-14T17:20:16Z"
   },
   {
     "name": "mealie-recipes/mealie",
@@ -1078,16 +1088,6 @@
     "name": "alexta69/metube",
     "version": "2025.09.24",
     "date": "2025-09-24T13:51:23Z"
-  },
-  {
-    "name": "itsmng/itsm-ng",
-    "version": "v2.1.0",
-    "date": "2025-09-22T09:23:37Z"
-  },
-  {
-    "name": "Athou/commafeed",
-    "version": "5.11.1",
-    "date": "2025-09-22T02:21:27Z"
   },
   {
     "name": "gotify/server",
