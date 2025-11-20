@@ -393,7 +393,7 @@ cleanup_lxc() {
   # Python pip
   if command -v pip &>/dev/null; then $STD pip cache purge || true; fi
   # Python uv
-  if command -v uv &>/dev/null; then $STD uv cache clear || true; fi
+  if command -v uv &>/dev/null; then $STD uv cache clean || true; fi
   # Node.js npm
   if command -v npm &>/dev/null; then $STD npm cache clean --force || true; fi
   # Node.js yarn
