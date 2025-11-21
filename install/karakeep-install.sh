@@ -64,7 +64,7 @@ export DATA_DIR=/opt/karakeep_data
 karakeep_SECRET=$(openssl rand -base64 36 | cut -c1-24)
 mkdir -p /etc/karakeep
 cat <<EOF >/etc/karakeep/karakeep.env
-SERVER_VERSION="$(cat ~/.karakeep)"
+SERVER_VERSION="$(sed 's/^v//' ~/.karakeep)"
 NEXTAUTH_SECRET="$karakeep_SECRET"
 NEXTAUTH_URL="http://localhost:3000"
 DATA_DIR=${DATA_DIR}
