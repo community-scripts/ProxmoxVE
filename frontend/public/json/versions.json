@@ -1,5 +1,60 @@
 [
   {
+    "name": "TasmoAdmin/TasmoAdmin",
+    "version": "v4.3.2",
+    "date": "2025-10-18T12:11:00Z"
+  },
+  {
+    "name": "rcourtman/Pulse",
+    "version": "v4.32.2",
+    "date": "2025-11-20T22:25:40Z"
+  },
+  {
+    "name": "project-zot/zot",
+    "version": "v2.1.11",
+    "date": "2025-11-20T20:14:44Z"
+  },
+  {
+    "name": "readeck/readeck",
+    "version": "0.21.0",
+    "date": "2025-11-20T18:35:59Z"
+  },
+  {
+    "name": "saltstack/salt",
+    "version": "v3007.9",
+    "date": "2025-11-20T17:58:32Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.30.12",
+    "date": "2025-11-20T16:13:19Z"
+  },
+  {
+    "name": "meilisearch/meilisearch",
+    "version": "prototype-v1.26.0.arm-native-docker-build-1",
+    "date": "2025-11-20T15:38:39Z"
+  },
+  {
+    "name": "duplicati/duplicati",
+    "version": "v2.2.0.101-2.2.0.101_canary_2025-11-20",
+    "date": "2025-11-20T14:50:45Z"
+  },
+  {
+    "name": "NodeBB/NodeBB",
+    "version": "v4.6.3",
+    "date": "2025-11-20T14:13:22Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.120.4",
+    "date": "2025-11-19T12:57:55Z"
+  },
+  {
+    "name": "SigNoz/signoz",
+    "version": "v0.102.1",
+    "date": "2025-11-20T12:20:18Z"
+  },
+  {
     "name": "kimai/kimai",
     "version": "2.44.0",
     "date": "2025-11-20T11:01:01Z"
@@ -105,11 +160,6 @@
     "date": "2025-11-19T15:45:28Z"
   },
   {
-    "name": "NodeBB/NodeBB",
-    "version": "v4.6.2",
-    "date": "2025-11-19T15:31:59Z"
-  },
-  {
     "name": "BookStackApp/BookStack",
     "version": "v25.11.2",
     "date": "2025-11-19T15:26:29Z"
@@ -140,11 +190,6 @@
     "date": "2025-11-19T14:16:07Z"
   },
   {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.120.4",
-    "date": "2025-11-19T12:57:55Z"
-  },
-  {
     "name": "AdguardTeam/AdGuardHome",
     "version": "v0.107.69",
     "date": "2025-10-30T15:31:50Z"
@@ -158,11 +203,6 @@
     "name": "jupyter/notebook",
     "version": "v7.5.0",
     "date": "2025-11-19T08:36:29Z"
-  },
-  {
-    "name": "SigNoz/signoz",
-    "version": "v0.102.0",
-    "date": "2025-11-19T06:53:59Z"
   },
   {
     "name": "morpheus65535/bazarr",
@@ -275,11 +315,6 @@
     "date": "2025-11-17T15:20:35Z"
   },
   {
-    "name": "meilisearch/meilisearch",
-    "version": "latest",
-    "date": "2025-11-17T09:29:20Z"
-  },
-  {
     "name": "rabbitmq/rabbitmq-server",
     "version": "v4.2.1",
     "date": "2025-11-17T02:47:15Z"
@@ -323,11 +358,6 @@
     "name": "Luligu/matterbridge",
     "version": "3.3.8",
     "date": "2025-11-16T17:04:37Z"
-  },
-  {
-    "name": "msgbyte/tianji",
-    "version": "v1.30.11",
-    "date": "2025-11-16T16:21:04Z"
   },
   {
     "name": "AlexxIT/go2rtc",
@@ -433,11 +463,6 @@
     "name": "chrisvel/tududi",
     "version": "v0.86.1",
     "date": "2025-11-14T05:05:44Z"
-  },
-  {
-    "name": "rcourtman/Pulse",
-    "version": "v4.31.0",
-    "date": "2025-11-14T00:18:50Z"
   },
   {
     "name": "gristlabs/grist-core",
@@ -563,11 +588,6 @@
     "name": "pelican-dev/wings",
     "version": "v1.0.0-beta19",
     "date": "2025-11-09T17:26:30Z"
-  },
-  {
-    "name": "duplicati/duplicati",
-    "version": "v2.2.0.1_stable_2025-11-09",
-    "date": "2025-11-09T17:21:54Z"
   },
   {
     "name": "Cleanuparr/Cleanuparr",
@@ -940,21 +960,6 @@
     "date": "2025-10-18T22:00:50Z"
   },
   {
-    "name": "project-zot/zot",
-    "version": "v2.1.10",
-    "date": "2025-10-18T18:46:36Z"
-  },
-  {
-    "name": "TasmoAdmin/TasmoAdmin",
-    "version": "v4.3.2",
-    "date": "2025-10-18T12:11:00Z"
-  },
-  {
-    "name": "readeck/readeck",
-    "version": "0.20.4",
-    "date": "2025-10-18T10:00:42Z"
-  },
-  {
     "name": "diced/zipline",
     "version": "v4.3.2",
     "date": "2025-10-17T04:13:23Z"
@@ -1103,11 +1108,6 @@
     "name": "mmastrac/stylus",
     "version": "v0.17.0",
     "date": "2025-09-19T22:23:28Z"
-  },
-  {
-    "name": "saltstack/salt",
-    "version": "v3007.8",
-    "date": "2025-09-18T18:19:04Z"
   },
   {
     "name": "docmost/docmost",
