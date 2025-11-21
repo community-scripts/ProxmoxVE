@@ -1,13 +1,68 @@
 [
   {
+    "name": "rcourtman/Pulse",
+    "version": "v4.32.3",
+    "date": "2025-11-21T11:16:25Z"
+  },
+  {
+    "name": "seriousm4x/UpSnap",
+    "version": "5.2.4",
+    "date": "2025-11-21T10:25:05Z"
+  },
+  {
+    "name": "emqx/emqx",
+    "version": "e6.0.2-beta.2",
+    "date": "2025-11-21T10:20:27Z"
+  },
+  {
+    "name": "sabnzbd/sabnzbd",
+    "version": "4.5.5",
+    "date": "2025-10-24T11:12:22Z"
+  },
+  {
+    "name": "openobserve/openobserve",
+    "version": "v0.16.3",
+    "date": "2025-11-21T08:54:06Z"
+  },
+  {
+    "name": "booklore-app/booklore",
+    "version": "v1.11.0",
+    "date": "2025-11-21T08:09:03Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "v10.11.7",
+    "date": "2025-11-17T08:40:53Z"
+  },
+  {
+    "name": "MariaDB/server",
+    "version": "mariadb-12.1.2",
+    "date": "2025-11-18T15:16:21Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.3",
+    "date": "2025-09-20T12:12:33Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.338",
+    "date": "2025-11-21T05:55:33Z"
+  },
+  {
+    "name": "bluenviron/mediamtx",
+    "version": "v1.15.4",
+    "date": "2025-11-21T01:21:03Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-11-21T00:27:06Z"
+  },
+  {
     "name": "TasmoAdmin/TasmoAdmin",
     "version": "v4.3.2",
     "date": "2025-10-18T12:11:00Z"
-  },
-  {
-    "name": "rcourtman/Pulse",
-    "version": "v4.32.2",
-    "date": "2025-11-20T22:25:40Z"
   },
   {
     "name": "project-zot/zot",
@@ -23,6 +78,11 @@
     "name": "saltstack/salt",
     "version": "v3007.9",
     "date": "2025-11-20T17:58:32Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.4.5",
+    "date": "2025-11-12T15:24:23Z"
   },
   {
     "name": "msgbyte/tianji",
@@ -70,19 +130,9 @@
     "date": "2025-11-20T10:52:04Z"
   },
   {
-    "name": "mattermost/mattermost",
-    "version": "v10.11.7",
-    "date": "2025-11-17T08:40:53Z"
-  },
-  {
     "name": "Athou/commafeed",
     "version": "5.12.0",
     "date": "2025-11-20T06:18:58Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.336",
-    "date": "2025-11-20T05:55:54Z"
   },
   {
     "name": "documenso/documenso",
@@ -105,11 +155,6 @@
     "date": "2025-11-20T02:03:21Z"
   },
   {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-11-20T00:27:04Z"
-  },
-  {
     "name": "steveiliop56/tinyauth",
     "version": "v4.0.1",
     "date": "2025-10-15T16:53:55Z"
@@ -118,11 +163,6 @@
     "name": "coder/code-server",
     "version": "v4.106.2",
     "date": "2025-11-20T00:23:05Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.4.5",
-    "date": "2025-11-12T15:24:23Z"
   },
   {
     "name": "esphome/esphome",
@@ -205,11 +245,6 @@
     "date": "2025-11-19T08:36:29Z"
   },
   {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.3",
-    "date": "2025-09-20T12:12:33Z"
-  },
-  {
     "name": "element-hq/synapse",
     "version": "v1.143.0rc1",
     "date": "2025-11-19T00:09:31Z"
@@ -250,11 +285,6 @@
     "date": "2025-11-18T16:25:16Z"
   },
   {
-    "name": "MariaDB/server",
-    "version": "mariadb-12.1.2",
-    "date": "2025-11-18T15:16:21Z"
-  },
-  {
     "name": "redis/redis",
     "version": "8.4.0",
     "date": "2025-11-18T15:06:37Z"
@@ -268,11 +298,6 @@
     "name": "PCJones/UmlautAdaptarr",
     "version": "v0.7.5",
     "date": "2025-11-18T10:50:21Z"
-  },
-  {
-    "name": "emqx/emqx",
-    "version": "e6.1.0-alpha.1",
-    "date": "2025-11-18T10:33:45Z"
   },
   {
     "name": "wazuh/wazuh",
@@ -433,11 +458,6 @@
     "name": "Dolibarr/dolibarr",
     "version": "22.0.3",
     "date": "2025-11-14T14:49:25Z"
-  },
-  {
-    "name": "openobserve/openobserve",
-    "version": "v0.16.2",
-    "date": "2025-11-14T12:05:36Z"
   },
   {
     "name": "zitadel/zitadel",
@@ -855,11 +875,6 @@
     "date": "2025-10-29T07:40:47Z"
   },
   {
-    "name": "booklore-app/booklore",
-    "version": "v1.10.0",
-    "date": "2025-10-28T19:04:35Z"
-  },
-  {
     "name": "pi-hole/pi-hole",
     "version": "v6.2.2",
     "date": "2025-10-28T17:07:47Z"
@@ -895,11 +910,6 @@
     "date": "2025-10-24T12:30:04Z"
   },
   {
-    "name": "sabnzbd/sabnzbd",
-    "version": "4.5.5",
-    "date": "2025-10-24T11:12:22Z"
-  },
-  {
     "name": "crowdsecurity/crowdsec",
     "version": "v1.7.3",
     "date": "2025-10-24T10:51:12Z"
@@ -925,11 +935,6 @@
     "date": "2025-10-22T10:28:00Z"
   },
   {
-    "name": "bluenviron/mediamtx",
-    "version": "v1.15.3",
-    "date": "2025-10-21T19:56:55Z"
-  },
-  {
     "name": "kyantech/Palmr",
     "version": "v3.2.5-beta",
     "date": "2025-10-21T16:49:14Z"
@@ -938,11 +943,6 @@
     "name": "rclone/rclone",
     "version": "v1.71.2",
     "date": "2025-10-20T15:25:52Z"
-  },
-  {
-    "name": "seriousm4x/UpSnap",
-    "version": "5.2.3",
-    "date": "2025-10-19T20:50:15Z"
   },
   {
     "name": "Part-DB/Part-DB-server",
