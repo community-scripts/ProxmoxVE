@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { basePath } from "@/config/site-config";
 
 export default function NotFoundPage() {
   return (
@@ -18,7 +19,7 @@ export default function NotFoundPage() {
             window.history.back();
           }
           else {
-            window.location.href = "/";
+            window.location.href = `/${basePath}`;
           }
         }}
         variant="secondary"

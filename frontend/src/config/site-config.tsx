@@ -5,7 +5,7 @@ import React from "react";
 import type { OperatingSystem } from "@/lib/types";
 
 // eslint-disable-next-line node/no-process-env
-export const basePath = process.env.BASE_PATH || "";
+export const basePath = process.env.BASE_PATH || "ProxmoxVE";
 
 export const navbarLinks = [
   {
