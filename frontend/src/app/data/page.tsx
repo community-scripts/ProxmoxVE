@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import "react-datepicker/dist/react-datepicker.css";
 
 import ApplicationChart from "../../components/application-chart";
 
