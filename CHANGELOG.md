@@ -14,6 +14,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Immich: pin correct version [@vhsdream](https://github.com/vhsdream) ([#9332](https://github.com/community-scripts/ProxmoxVE/pull/9332))
+
   - #### 🔧 Refactor
 
     - Refactor IPv6 disable logic and add 'disable' option [@MickLesk](https://github.com/MickLesk) ([#9326](https://github.com/community-scripts/ProxmoxVE/pull/9326))
