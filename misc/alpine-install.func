@@ -13,14 +13,17 @@ load_functions
 verb_ip6() {
   set_std_mode # Set STD mode based on VERBOSE
 
-  if [ "$IPV6_METHOD" == "none" ] || [ "$DISABLEIPV6" == "yes" ]; then
-    msg_info "Disabling IPv6"
+  if [ "$IPV6_METHOD" == "disable" ]; then
+    msg_info "Disabling IPv6 (this may affect some services)"
     $STD sysctl -w net.ipv6.conf.all.disable_ipv6=1
     $STD sysctl -w net.ipv6.conf.default.disable_ipv6=1
     $STD sysctl -w net.ipv6.conf.lo.disable_ipv6=1
-    echo "net.ipv6.conf.all.disable_ipv6 = 1" >>/etc/sysctl.conf
-    echo "net.ipv6.conf.default.disable_ipv6 = 1" >>/etc/sysctl.conf
-    echo "net.ipv6.conf.lo.disable_ipv6 = 1" >>/etc/sysctl.conf
+    mkdir -p /etc/sysctl.d
+    $STD tee /etc/sysctl.d/99-disable-ipv6.conf >/dev/null <<EOF
+net.ipv6.conf.all.disable_ipv6 = 1
+net.ipv6.conf.default.disable_ipv6 = 1
+net.ipv6.conf.lo.disable_ipv6 = 1
+EOF
     $STD rc-update add sysctl default
     msg_ok "Disabled IPv6"
   fi

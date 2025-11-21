@@ -627,11 +627,12 @@ advanced_settings() {
   # IPv6 Address Management selection
   while true; do
     IPV6_METHOD=$(whiptail --backtitle "Proxmox VE Helper Scripts" --menu \
-      "Select IPv6 Address Management Type:" 15 58 4 \
-      "auto" "SLAAC/AUTO (recommended, default)" \
-      "dhcp" "DHCPv6" \
-      "static" "Static (manual entry)" \
-      "none" "Disabled" \
+      "Select IPv6 Address Management Type:" 16 70 5 \
+      "auto" "SLAAC/AUTO (recommended) - Dynamic IPv6 from network" \
+      "dhcp" "DHCPv6 - DHCP-assigned IPv6 address" \
+      "static" "Static - Manual IPv6 address configuration" \
+      "none" "None - No IPv6 assignment (most containers)" \
+      "disable" "Fully Disabled - (breaks some services)" \
       --default-item "auto" 3>&1 1>&2 2>&3)
     [ $? -ne 0 ] && exit_script
 
@@ -680,7 +681,15 @@ advanced_settings() {
       break
       ;;
     none)
-      echo -e "${NETWORK}${BOLD}${DGN}IPv6: ${BGN}Disabled${CL}"
+      echo -e "${NETWORK}${BOLD}${DGN}IPv6: ${BGN}None${CL}"
+      IPV6_ADDR="none"
+      IPV6_GATE=""
+      break
+      ;;
+    disable)
+      whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox \
+        "⚠️  WARNING - FULLY DISABLE IPv6:\n\nThis will completely disable IPv6 inside the container via sysctl.\n\nSide Effects:\n  • Services requiring IPv6 will fail\n  • Localhost IPv6 (::1) will not work\n  • Some applications may not start\n\nOnly use if you have a specific reason to completely disable IPv6.\n\nFor most use cases, select 'None' instead." 14 70
+      echo -e "${NETWORK}${BOLD}${DGN}IPv6: ${BGN}Fully Disabled (IPv6 disabled via sysctl)${CL}"
       IPV6_ADDR="none"
       IPV6_GATE=""
       break
