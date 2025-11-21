@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-11-21
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - Refactor IPv6 disable logic and add 'disable' option [@MickLesk](https://github.com/MickLesk) ([#9326](https://github.com/community-scripts/ProxmoxVE/pull/9326))
+
 ## 2025-11-20
 
 ### 🚀 Updated Scripts
