@@ -14,6 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - Expand support to Proxmox VE 9.1 in VM scripts [@MickLesk](https://github.com/MickLesk) ([#9351](https://github.com/community-scripts/ProxmoxVE/pull/9351))
+
   - #### 🐞 Bug Fixes
 
     - glpi - allow migration of existing databases [@moodyblue](https://github.com/moodyblue) ([#9353](https://github.com/community-scripts/ProxmoxVE/pull/9353))
