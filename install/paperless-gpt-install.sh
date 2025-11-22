@@ -40,6 +40,7 @@ go mod download
 export CC=musl-gcc
 CGO_ENABLED=1 go build -tags musl -o /dev/null github.com/mattn/go-sqlite3
 CGO_ENABLED=1 go build -tags musl -o paperless-gpt .
+rm -f "$temp_file"
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Setup Paperless-GPT"
 
@@ -107,10 +108,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -f "$temp_file"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

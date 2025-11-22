@@ -24,10 +24,10 @@ $STD mariadb -u root -e "CREATE DATABASE $DB_NAME CHARACTER SET utf8mb4 COLLATE 
 $STD mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
 $STD mariadb -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
 {
-    echo "LimeSurvey-Credentials"
-    echo "LimeSurvey Database User: $DB_USER"
-    echo "LimeSurvey Database Password: $DB_PASS"
-    echo "LimeSurvey Database Name: $DB_NAME"
+  echo "LimeSurvey-Credentials"
+  echo "LimeSurvey Database User: $DB_USER"
+  echo "LimeSurvey Database Password: $DB_PASS"
+  echo "LimeSurvey Database Name: $DB_NAME"
 } >>~/limesurvey.creds
 msg_ok "Configured MariaDB Database"
 
@@ -61,14 +61,9 @@ EOF
 chown -R www-data:www-data "/opt/limesurvey"
 chmod -R 750 "/opt/limesurvey"
 systemctl reload apache2
+rm -rf "$temp_file"
 msg_ok "Set up LimeSurvey"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -rf "$temp_file"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

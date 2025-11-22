@@ -15,14 +15,14 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt install -y \
-  build-essential \
-  python3-dev \
-  libpq-dev \
-  nginx \
-  redis-server \
-  ffmpeg \
-  procps \
-  streamlink
+    build-essential \
+    python3-dev \
+    libpq-dev \
+    nginx \
+    redis-server \
+    ffmpeg \
+    procps \
+    streamlink
 msg_ok "Installed Dependencies"
 
 setup_uv
@@ -39,11 +39,11 @@ $STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET client_encoding TO 'utf8'
 $STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET default_transaction_isolation TO 'read committed';"
 $STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET timezone TO 'UTC';"
 {
-  echo "Dispatcharr Credentials"
-  echo "Database Name: $DB_NAME"
-  echo "Database User: $DB_USER"
-  echo "Database Password: $DB_PASS"
-  echo ""
+    echo "Dispatcharr Credentials"
+    echo "Database Name: $DB_NAME"
+    echo "Database User: $DB_USER"
+    echo "Database Password: $DB_PASS"
+    echo ""
 } >>~/dispatcharr.creds
 msg_ok "Created PostgreSQL Database"
 
@@ -58,9 +58,9 @@ msg_ok "Installed Python Dependencies"
 
 msg_info "Configuring Dispatcharr"
 install -d -m 755 \
-  /data/{logos,recordings,plugins,db} \
-  /data/uploads/{m3us,epgs} \
-  /data/{m3us,epgs}
+    /data/{logos,recordings,plugins,db} \
+    /data/uploads/{m3us,epgs} \
+    /data/{m3us,epgs}
 chown -R root:root /data
 export DATABASE_URL="postgresql://${DB_USER}:${DB_PASS}@localhost:5432/${DB_NAME}"
 export POSTGRES_DB=$DB_NAME
@@ -260,9 +260,4 @@ msg_ok "Created Services"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

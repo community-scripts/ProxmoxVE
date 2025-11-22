@@ -15,9 +15,9 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt install -y \
-    redis-server \
-    nginx \
-    openssl
+  redis-server \
+  nginx \
+  openssl
 msg_ok "Installed Dependencies"
 
 fetch_and_deploy_gh_release "ots" "Luzifer/ots" "prebuild" "latest" "/opt/ots" "ots_linux_amd64.tgz"
@@ -34,9 +34,9 @@ msg_ok "Setup OTS"
 msg_info "Generating Universal SSL Certificate"
 mkdir -p /etc/ssl/ots
 $STD openssl req -x509 -nodes -days 3650 -newkey rsa:2048 \
-    -keyout /etc/ssl/ots/key.pem \
-    -out /etc/ssl/ots/cert.pem \
-    -subj "/CN=ots"
+  -keyout /etc/ssl/ots/key.pem \
+  -out /etc/ssl/ots/cert.pem \
+  -subj "/CN=ots"
 msg_ok "Certificate Generated"
 
 msg_info "Setting up nginx"
@@ -96,9 +96,4 @@ msg_ok "Created Services"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

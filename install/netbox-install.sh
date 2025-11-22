@@ -86,7 +86,7 @@ mv /opt/netbox/contrib/gunicorn.py /opt/netbox/gunicorn.py
 mv /opt/netbox/contrib/*.service /etc/systemd/system/
 systemctl daemon-reload
 systemctl enable -q --now netbox netbox-rq
-
+rm "/opt/v${RELEASE}.zip"
 echo "${RELEASE}" >/opt/"${APPLICATION}"_version.txt
 echo -e "Netbox Secret: \e[32m$SECRET_KEY\e[0m" >>~/netbox.creds
 msg_ok "Installed NetBox"
@@ -114,10 +114,4 @@ msg_ok "Setup Django Admin"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm "/opt/v${RELEASE}.zip"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

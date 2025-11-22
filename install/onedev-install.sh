@@ -28,15 +28,10 @@ mv /opt/onedev-latest /opt/onedev
 $STD /opt/onedev/bin/server.sh install
 systemctl start onedev
 RELEASE=$(cat /opt/onedev/release.properties | grep "version" | cut -d'=' -f2)
+rm -rf /opt/onedev-latest.tar.gz
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Installed OneDev"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -rf /opt/onedev-latest.tar.gz
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

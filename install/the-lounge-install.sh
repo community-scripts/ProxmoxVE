@@ -17,9 +17,4 @@ fetch_and_deploy_gh_release "thelounge" "thelounge/thelounge-deb" "binary"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

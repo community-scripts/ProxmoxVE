@@ -20,6 +20,7 @@ cd /opt/lubelogger
 chmod 700 /opt/lubelogger/CarCareTracker
 cp /opt/lubelogger/appsettings.json /opt/lubelogger/appsettings_bak.json
 jq '.Kestrel = {"Endpoints": {"Http": {"Url": "http://0.0.0.0:5000"}}}' /opt/lubelogger/appsettings_bak.json >/opt/lubelogger/appsettings.json
+rm -rf /opt/lubelogger/appsettings_bak.json
 msg_ok "Configured LubeLogger"
 
 msg_info "Creating Service"
@@ -47,10 +48,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -rf /opt/lubelogger/appsettings_bak.json
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

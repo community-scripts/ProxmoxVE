@@ -17,6 +17,7 @@ msg_info "Installing Dependencies"
 temp_file=$(mktemp)
 curl -fsSL "http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2_amd64.deb" -o "$temp_file"
 $STD dpkg -i $temp_file
+rm -f $temp_file
 msg_ok "Installed Dependencies"
 
 msg_info "Setting up InvenTree Repository"
@@ -32,9 +33,4 @@ msg_ok "Setup ${APPLICATION}"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -f $temp_file
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

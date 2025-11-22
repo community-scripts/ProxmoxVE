@@ -25,10 +25,10 @@ DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)
 $STD sudo -u postgres psql -c "CREATE ROLE $DB_USER WITH LOGIN PASSWORD '$DB_PASS';"
 $STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER TEMPLATE template0;"
 {
-  echo "Baikal Credentials"
-  echo "Baikal Database User: $DB_USER"
-  echo "Baikal Database Password: $DB_PASS"
-  echo "Baikal Database Name: $DB_NAME"
+    echo "Baikal Credentials"
+    echo "Baikal Database User: $DB_USER"
+    echo "Baikal Database Password: $DB_PASS"
+    echo "Baikal Database Name: $DB_NAME"
 } >>~/baikal.creds
 msg_ok "Set up PostgreSQL Database"
 
@@ -81,8 +81,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

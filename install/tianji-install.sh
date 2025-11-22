@@ -64,6 +64,9 @@ JWT_SECRET="$TIANJI_SECRET"
 EOF
 cd /opt/tianji/src/server
 $STD pnpm db:migrate:apply
+rm -rf /opt/tianji/src/client
+rm -rf /opt/tianji/website
+rm -rf /opt/tianji/reporter
 msg_ok "Setup Tianji"
 
 msg_info "Setup AppRise"
@@ -92,12 +95,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -rf /opt/tianji/src/client
-rm -rf /opt/tianji/website
-rm -rf /opt/tianji/reporter
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

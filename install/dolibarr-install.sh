@@ -38,14 +38,10 @@ curl -fsSL "https://netcologne.dl.sourceforge.net/project/dolibarr/Dolibarr%20in
 echo "dolibarr dolibarr/reconfigure-webserver multiselect apache2" | debconf-set-selections
 $STD apt-get install ./$FILE -y
 $STD apt install -f
+rm -rf ~/$FILE
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Setup Dolibarr"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -rf ~/$FILE
-$STD apt-get autoremove
-$STD apt-get autoclean
-msg_ok "Cleaned"
+cleanup_lxc

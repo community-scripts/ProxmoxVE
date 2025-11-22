@@ -70,6 +70,7 @@ $STD php artisan p:environment:queue-service --no-interaction
 echo "* * * * * php /opt/pelican-panel/artisan schedule:run >> /dev/null 2>&1" | crontab -u www-data -
 chown -R www-data:www-data /opt/pelican-panel
 chmod -R 755 /opt/pelican-panel/storage /opt/pelican-panel/bootstrap/cache/
+rm -rf "/opt/pelican-panel/panel.tar.gz"
 echo "${RELEASE}" >/opt/"${APPLICATION}"_version.txt
 msg_ok "Installed Pelican Panel"
 
@@ -100,10 +101,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -rf "/opt/pelican-panel/panel.tar.gz"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

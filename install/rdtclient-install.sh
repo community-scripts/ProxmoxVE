@@ -26,6 +26,7 @@ msg_info "Configuring rdtclient"
 cd /opt/rdtc
 mkdir -p data/{db,downloads}
 sed -i 's#/data/db/#/opt/rdtc&#g' /opt/rdtc/appsettings.json
+rm -f ~/packages-microsoft-prod.deb
 msg_ok "Configured rdtclient"
 
 msg_info "Creating Service"
@@ -47,10 +48,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -f ~/packages-microsoft-prod.deb
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

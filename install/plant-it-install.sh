@@ -15,8 +15,8 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt install -y \
-  redis \
-  nginx
+    redis \
+    nginx
 msg_ok "Installed Dependencies"
 
 setup_mariadb
@@ -31,10 +31,10 @@ $STD mariadb -u root -e "CREATE DATABASE $DB_NAME;"
 $STD mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
 $STD mariadb -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
 {
-  echo "Plant-it Credentials"
-  echo "Plant-it Database User: $DB_USER"
-  echo "Plant-it Database Password: $DB_PASS"
-  echo "Plant-it Database Name: $DB_NAME"
+    echo "Plant-it Credentials"
+    echo "Plant-it Database User: $DB_USER"
+    echo "Plant-it Database Password: $DB_PASS"
+    echo "Plant-it Database Name: $DB_NAME"
 } >>~/plant-it.creds
 msg_ok "Set up MariaDB"
 
@@ -117,9 +117,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

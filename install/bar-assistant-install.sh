@@ -17,10 +17,10 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt-get install -y \
-  redis-server \
-  nginx \
-  lsb-release \
-  libvips
+    redis-server \
+    nginx \
+    lsb-release \
+    libvips
 #php-{ffi,opcache,redis,zip,pdo-sqlite,bcmath,pdo,curl,dom,fpm}
 msg_ok "Installed Dependencies"
 
@@ -41,14 +41,14 @@ msg_info "Configure MeiliSearch"
 curl -fsSL https://raw.githubusercontent.com/meilisearch/meilisearch/latest/config.toml -o /etc/meilisearch.toml
 MASTER_KEY=$(openssl rand -base64 12)
 sed -i \
-  -e 's|^env =.*|env = "production"|' \
-  -e "s|^# master_key =.*|master_key = \"$MASTER_KEY\"|" \
-  -e 's|^db_path =.*|db_path = "/var/lib/meilisearch/data"|' \
-  -e 's|^dump_dir =.*|dump_dir = "/var/lib/meilisearch/dumps"|' \
-  -e 's|^snapshot_dir =.*|snapshot_dir = "/var/lib/meilisearch/snapshots"|' \
-  -e 's|^# no_analytics = true|no_analytics = true|' \
-  -e 's|^http_addr =.*|http_addr = "127.0.0.1:7700"|' \
-  /etc/meilisearch.toml
+    -e 's|^env =.*|env = "production"|' \
+    -e "s|^# master_key =.*|master_key = \"$MASTER_KEY\"|" \
+    -e 's|^db_path =.*|db_path = "/var/lib/meilisearch/data"|' \
+    -e 's|^dump_dir =.*|dump_dir = "/var/lib/meilisearch/dumps"|' \
+    -e 's|^snapshot_dir =.*|snapshot_dir = "/var/lib/meilisearch/snapshots"|' \
+    -e 's|^# no_analytics = true|no_analytics = true|' \
+    -e 's|^http_addr =.*|http_addr = "127.0.0.1:7700"|' \
+    /etc/meilisearch.toml
 msg_ok "Configured MeiliSearch"
 
 msg_info "Creating MeiliSearch service"
@@ -77,11 +77,11 @@ MeiliSearch_API_KEY=$(curl -s -X GET 'http://127.0.0.1:7700/keys' -H "Authorizat
 MeiliSearch_API_KEY_UID=$(curl -s -X GET 'http://127.0.0.1:7700/keys' -H "Authorization: Bearer $MASTER_KEY" | grep -o '"uid":"[^"]*"' | head -n 1 | sed 's/"uid":"//;s/"//')
 LOCAL_IP=$(hostname -I | awk '{print $1}')
 sed -i -e "s|^APP_URL=|APP_URL=http://${LOCAL_IP}/bar/|" \
-  -e "s|^MEILISEARCH_HOST=|MEILISEARCH_HOST=http://127.0.0.1:7700|" \
-  -e "s|^MEILISEARCH_KEY=|MEILISEARCH_KEY=${MASTER_KEY}|" \
-  -e "s|^MEILISEARCH_API_KEY=|MEILISEARCH_API_KEY=${MeiliSearch_API_KEY}|" \
-  -e "s|^MEILISEARCH_API_KEY_UID=|MEILISEARCH_API_KEY_UID=${MeiliSearch_API_KEY_UID}|" \
-  /opt/bar-assistant/.env
+    -e "s|^MEILISEARCH_HOST=|MEILISEARCH_HOST=http://127.0.0.1:7700|" \
+    -e "s|^MEILISEARCH_KEY=|MEILISEARCH_KEY=${MASTER_KEY}|" \
+    -e "s|^MEILISEARCH_API_KEY=|MEILISEARCH_API_KEY=${MeiliSearch_API_KEY}|" \
+    -e "s|^MEILISEARCH_API_KEY_UID=|MEILISEARCH_API_KEY_UID=${MeiliSearch_API_KEY_UID}|" \
+    /opt/bar-assistant/.env
 $STD composer install --no-interaction
 $STD php artisan key:generate
 touch storage/bar-assistant/database.ba3.sqlite
@@ -190,8 +190,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

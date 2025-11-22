@@ -30,6 +30,7 @@ curl -fsSL "$RELEASE" -o $(basename "$RELEASE")
 $STD unzip Agent_Linux64*.zip
 chmod +x ./Agent
 echo $RELEASE >~/.agentdvr
+rm -rf Agent_Linux64*.zip
 msg_ok "Installed AgentDVR"
 
 msg_info "Creating Service"
@@ -53,10 +54,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -rf Agent_Linux64*.zip
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

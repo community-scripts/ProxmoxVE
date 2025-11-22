@@ -33,6 +33,7 @@ temp_file=$(mktemp)
 RELEASE=$(curl -s https://api.github.com/repos/PCJones/Umlautadaptarr/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}')
 curl -fsSL "https://github.com/PCJones/Umlautadaptarr/releases/download/${RELEASE}/linux-x64.zip" -o $temp_file
 $STD unzip -j $temp_file '*/**' -d /opt/UmlautAdaptarr
+rm -f $temp_file
 echo "${RELEASE}" >"/opt/UmlautAdaptarr_version.txt"
 msg_ok "Installation completed"
 
@@ -120,10 +121,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -f $temp_file
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

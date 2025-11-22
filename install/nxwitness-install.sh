@@ -33,15 +33,10 @@ DOWNLOAD_URL=$(echo "$DETAIL_PAGE" | grep -oP "https://updates.networkoptix.com/
 curl -fsSL "$DOWNLOAD_URL" -o ""nxwitness-server-$RELEASE-linux_x64.deb""
 export DEBIAN_FRONTEND=noninteractive
 $STD dpkg -i nxwitness-server-$RELEASE-linux_x64.deb
+rm -f /tmp/nxwitness-server-$RELEASE-linux_x64.deb
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Setup Nx Witness"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -f /tmp/nxwitness-server-$RELEASE-linux_x64.deb
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

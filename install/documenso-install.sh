@@ -103,13 +103,9 @@ EnvironmentFile=/opt/documenso/.env
 WantedBy=multi-user.target
 EOF
 systemctl enable -q --now documenso
+$STD turbo daemon stop
 msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD turbo daemon stop
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc
