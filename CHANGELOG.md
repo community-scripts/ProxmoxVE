@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-11-22
 
+### 🆕 New Scripts
+
+  - Upgopher ([#9360](https://github.com/community-scripts/ProxmoxVE/pull/9360))
+
 ### 🚀 Updated Scripts
 
   - Expand support to Proxmox VE 9.1 in VM scripts [@MickLesk](https://github.com/MickLesk) ([#9351](https://github.com/community-scripts/ProxmoxVE/pull/9351))
