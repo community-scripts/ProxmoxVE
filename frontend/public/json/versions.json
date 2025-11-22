@@ -1,5 +1,45 @@
 [
   {
+    "name": "pocketbase/pocketbase",
+    "version": "v0.34.0",
+    "date": "2025-11-22T09:18:14Z"
+  },
+  {
+    "name": "laurent22/joplin",
+    "version": "server-v3.4.4",
+    "date": "2025-09-25T13:19:26Z"
+  },
+  {
+    "name": "zwave-js/zwave-js-ui",
+    "version": "v11.8.0",
+    "date": "2025-11-22T07:54:42Z"
+  },
+  {
+    "name": "inventree/InvenTree",
+    "version": "1.1.5",
+    "date": "2025-11-22T07:02:52Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.339",
+    "date": "2025-11-22T06:05:53Z"
+  },
+  {
+    "name": "theonedev/onedev",
+    "version": "v13.1.0",
+    "date": "2025-11-22T04:29:25Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-11-22T00:27:05Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.0.1",
+    "date": "2025-10-15T16:53:55Z"
+  },
+  {
     "name": "TwiN/gatus",
     "version": "v5.33.0",
     "date": "2025-11-21T22:54:49Z"
@@ -8,11 +48,6 @@
     "name": "BerriAI/litellm",
     "version": "v1.78.5-stable-patch-1",
     "date": "2025-11-21T19:57:45Z"
-  },
-  {
-    "name": "laurent22/joplin",
-    "version": "server-v3.4.4",
-    "date": "2025-09-25T13:19:26Z"
   },
   {
     "name": "homarr-labs/homarr",
@@ -28,6 +63,11 @@
     "name": "rclone/rclone",
     "version": "v1.72.0",
     "date": "2025-11-21T18:20:58Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.4.5",
+    "date": "2025-11-12T15:24:23Z"
   },
   {
     "name": "readeck/readeck",
@@ -48,11 +88,6 @@
     "name": "Bubka/2FAuth",
     "version": "v5.6.1",
     "date": "2025-11-21T16:51:21Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.0.1",
-    "date": "2025-10-15T16:53:55Z"
   },
   {
     "name": "BookStackApp/BookStack",
@@ -125,24 +160,19 @@
     "date": "2025-09-20T12:12:33Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.338",
-    "date": "2025-11-21T05:55:33Z"
-  },
-  {
     "name": "bluenviron/mediamtx",
     "version": "v1.15.4",
     "date": "2025-11-21T01:21:03Z"
   },
   {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-11-21T00:27:06Z"
-  },
-  {
     "name": "TasmoAdmin/TasmoAdmin",
     "version": "v4.3.2",
     "date": "2025-10-18T12:11:00Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.13.1-rc0",
+    "date": "2025-11-20T21:30:35Z"
   },
   {
     "name": "project-zot/zot",
@@ -153,11 +183,6 @@
     "name": "saltstack/salt",
     "version": "v3007.9",
     "date": "2025-11-20T17:58:32Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.4.5",
-    "date": "2025-11-12T15:24:23Z"
   },
   {
     "name": "msgbyte/tianji",
@@ -285,11 +310,6 @@
     "date": "2025-11-19T14:48:47Z"
   },
   {
-    "name": "ollama/ollama",
-    "version": "v0.13.0",
-    "date": "2025-11-19T14:16:07Z"
-  },
-  {
     "name": "AdguardTeam/AdGuardHome",
     "version": "v0.107.69",
     "date": "2025-10-30T15:31:50Z"
@@ -358,11 +378,6 @@
     "name": "0xERR0R/blocky",
     "version": "v0.28.2",
     "date": "2025-11-18T05:51:46Z"
-  },
-  {
-    "name": "theonedev/onedev",
-    "version": "v13.1.0",
-    "date": "2025-11-18T00:06:49Z"
   },
   {
     "name": "ipfs/kubo",
@@ -525,11 +540,6 @@
     "date": "2025-11-13T21:28:44Z"
   },
   {
-    "name": "pocketbase/pocketbase",
-    "version": "v0.33.0",
-    "date": "2025-11-13T14:09:14Z"
-  },
-  {
     "name": "PrivateBin/PrivateBin",
     "version": "1.7.9",
     "date": "2025-11-13T10:26:37Z"
@@ -548,11 +558,6 @@
     "name": "pymedusa/Medusa",
     "version": "v1.0.25",
     "date": "2025-11-12T16:57:54Z"
-  },
-  {
-    "name": "zwave-js/zwave-js-ui",
-    "version": "v11.7.0",
-    "date": "2025-11-12T14:09:36Z"
   },
   {
     "name": "cockpit-project/cockpit",
@@ -653,11 +658,6 @@
     "name": "apache/couchdb",
     "version": "3.5.1",
     "date": "2025-11-09T05:09:28Z"
-  },
-  {
-    "name": "inventree/InvenTree",
-    "version": "1.1.3",
-    "date": "2025-11-09T00:28:21Z"
   },
   {
     "name": "raydak-labs/configarr",
