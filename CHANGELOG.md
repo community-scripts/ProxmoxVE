@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-11-22
 
+### 🌐 Website
+
+  - #### ✨ New Features
+
+    - Refactor /data page [@BramSuurdje](https://github.com/BramSuurdje) ([#9343](https://github.com/community-scripts/ProxmoxVE/pull/9343))
+
 ## 2025-11-21
 
 ### 🚀 Updated Scripts
