@@ -22,6 +22,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - fix: Snipe-IT install and update failure due to new repository url [@ruanmed](https://github.com/ruanmed) ([#9362](https://github.com/community-scripts/ProxmoxVE/pull/9362))
     - glpi - allow migration of existing databases [@moodyblue](https://github.com/moodyblue) ([#9353](https://github.com/community-scripts/ProxmoxVE/pull/9353))
 
   - #### ✨ New Features
