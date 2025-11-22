@@ -113,7 +113,7 @@ Example:
 $STD apt-get install -y \
   composer \
   git \
-  nginx 
+  nginx
 ```
 
 ### 3.2 **Collapse dependencies**
@@ -151,8 +151,8 @@ If possible install the app and all necessary files in `/opt/`
 Example for a git release:
 
 ```bash
-RELEASE=$(curl -fsSL https://api.github.com/repos/snipe/snipe-it/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-curl -fsSL "https://github.com/snipe/snipe-it/archive/refs/tags/v${RELEASE}.zip" -o "v${RELEASE}.zip"
+RELEASE=$(curl -fsSL https://api.github.com/repos/grokability/snipe-it/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+curl -fsSL "https://github.com/grokability/snipe-it/archive/refs/tags/v${RELEASE}.zip" -o "v${RELEASE}.zip"
 ```
 
 ### 5.2 **Save the version for update checks**
