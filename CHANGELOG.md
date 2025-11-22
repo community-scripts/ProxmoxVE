@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-11-22
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - glpi - allow migration of existing databases [@moodyblue](https://github.com/moodyblue) ([#9353](https://github.com/community-scripts/ProxmoxVE/pull/9353))
+
 ### 🌐 Website
 
   - #### ✨ New Features
