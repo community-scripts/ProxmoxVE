@@ -76,11 +76,6 @@ function update_script() {
       portainer/agent
     msg_ok "Updated Portainer Agent"
   fi
-
-  msg_info "Cleaning up"
-  $STD apt-get -y autoremove
-  $STD apt-get -y autoclean
-  msg_ok "Cleanup complete"
   msg_ok "Updated successfully!"
   exit
 }

@@ -48,16 +48,13 @@ function update_script() {
     temp_file=$(mktemp)
     curl -fsSL https://fileflows.com/downloads/zip -o "$temp_file"
     $STD unzip -o -d /opt/fileflows "$temp_file"
+    rm -rf "$temp_file"
+    rm -rf "$backup_filename"
     msg_ok "Updated $APP to latest version"
 
     msg_info "Starting Service"
     systemctl start fileflows
     msg_ok "Started Service"
-
-    msg_info "Cleaning Up"
-    rm -rf "$temp_file"
-    rm -rf "$backup_filename"
-    msg_ok "Cleanup Completed"
     msg_ok "Updated successfully!"
   else
     msg_ok "No update required. ${APP} is already at latest version"

@@ -47,15 +47,12 @@ function update_script() {
     chmod -R 755 /opt/baikal/
     cd /opt/baikal
     $STD composer install
+    rm -rf /opt/baikal-backup
     msg_ok "Configured Baikal"
 
     msg_info "Starting Service"
     systemctl start apache2
     msg_ok "Started Service"
-
-    msg_info "Cleaning up"
-    rm -rf /opt/baikal-backup
-    msg_ok "Cleaned"
     msg_ok "Updated successfully!"
   fi
   exit

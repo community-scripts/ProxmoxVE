@@ -64,16 +64,13 @@ EOF
     cd /opt/tandoor
     $STD /opt/tandoor/.venv/bin/python manage.py migrate
     $STD /opt/tandoor/.venv/bin/python manage.py collectstatic --no-input
+    rm -rf /opt/tandoor.bak
     msg_ok "Updated Trandoor"
 
     msg_info "Starting Service"
     systemctl start tandoor
     systemctl reload nginx
     msg_ok "Started Service"
-
-    msg_info "Cleaning Up"
-    rm -rf /opt/tandoor.bak
-    msg_ok "Cleanup Completed"
     msg_ok "Updated successfully!"
   fi
   exit

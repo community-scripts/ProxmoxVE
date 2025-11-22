@@ -53,15 +53,12 @@ function update_script() {
     msg_info "Configuring LubeLogger"
     chmod 700 /opt/lubelogger/CarCareTracker
     cp -rf /tmp/lubeloggerData/* /opt/lubelogger/
+    rm -rf /tmp/lubeloggerData
     msg_ok "Configured LubeLogger"
 
     msg_info "Starting Service"
     systemctl start lubelogger
     msg_ok "Started Service"
-
-    msg_info "Cleaning up"
-    rm -rf /tmp/lubeloggerData
-    msg_ok "Cleaned"
     msg_ok "Updated successfully!"
   fi
   exit

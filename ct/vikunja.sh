@@ -39,16 +39,13 @@ function update_script() {
     curl -fsSL "https://dl.vikunja.io/vikunja/$RELEASE/vikunja-$RELEASE-amd64.deb" -o $(basename "https://dl.vikunja.io/vikunja/$RELEASE/vikunja-$RELEASE-amd64.deb")
     export DEBIAN_FRONTEND=noninteractive
     $STD dpkg -i vikunja-"$RELEASE"-amd64.deb
+    rm -rf /opt/vikunja-"$RELEASE"-amd64.deb
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP}"
 
     msg_info "Starting Service"
     systemctl start vikunja
     msg_ok "Started Service"
-
-    msg_info "Cleaning Up"
-    rm -rf /opt/vikunja-"$RELEASE"-amd64.deb
-    msg_ok "Cleaned"
     msg_ok "Updated successfully!"
   else
     msg_ok "No update required. ${APP} is already at ${RELEASE}"

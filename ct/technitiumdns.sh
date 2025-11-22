@@ -38,11 +38,8 @@ function update_script() {
     msg_info "Updating Technitium DNS"
     curl -fsSL "https://download.technitium.com/dns/DnsServerPortable.tar.gz" -o /opt/DnsServerPortable.tar.gz
     $STD tar zxvf /opt/DnsServerPortable.tar.gz -C /opt/technitium/dns/
-    msg_ok "Updated Technitium DNS"
-
-    msg_info "Cleaning up"
     rm -f /opt/DnsServerPortable.tar.gz
-    msg_ok "Cleaned up"
+    msg_ok "Updated Technitium DNS"
     msg_ok "Updated successfully!"
   else
     msg_ok "No update required.  Technitium DNS is already at v${RELEASE}."

@@ -59,6 +59,7 @@ function update_script() {
     xargs -I{} echo "https://repo.zabbix.com/zabbix/{}/release/debian/pool/main/z/zabbix-release/zabbix-release_latest+debian13_all.deb")" \
     -o /tmp/zabbix-release_latest+debian13_all.deb
   $STD dpkg -i zabbix-release_latest+debian13_all.deb
+  rm -rf /tmp/zabbix-release_latest+debian13_all.deb
   $STD apt update
 
   $STD apt install --only-upgrade zabbix-server-pgsql zabbix-frontend-php php8.4-pgsql
@@ -88,13 +89,6 @@ function update_script() {
   systemctl start "$AGENT_SERVICE"
   systemctl restart apache2
   msg_ok "Started Services"
-
-  msg_info "Cleaning Up"
-  rm -rf /tmp/zabbix-release_latest+debian13_all.deb
-  $STD apt -y autoremove
-  $STD apt -y autoclean
-  $STD apt -y clean
-  msg_ok "Cleaned"
   msg_ok "Updated successfully!"
   exit
 }

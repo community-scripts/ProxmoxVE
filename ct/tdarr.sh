@@ -37,11 +37,8 @@ function update_script() {
   $STD unzip Tdarr_Updater.zip
   chmod +x Tdarr_Updater
   $STD ./Tdarr_Updater
-  msg_ok "Updated Tdarr"
-
-  msg_info "Cleaning up"
   rm -rf /opt/tdarr/Tdarr_Updater.zip
-  msg_ok "Cleaned up"
+  msg_ok "Updated Tdarr"
   msg_ok "Updated successfully!"
   exit
 }
