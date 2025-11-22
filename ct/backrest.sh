@@ -39,16 +39,13 @@ function update_script() {
     curl -fsSL "https://github.com/garethgeorge/backrest/releases/download/v${RELEASE}/backrest_Linux_x86_64.tar.gz" -o "$temp_file"
     tar xzf $temp_file -C /opt/backrest/bin
     chmod +x /opt/backrest/bin/backrest
+    rm -f "$temp_file"
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP} to ${RELEASE}"
 
     msg_info "Starting Service"
     systemctl start backrest
     msg_ok "Started Service"
-
-    msg_info "Cleaning up"
-    rm -f "$temp_file"
-    msg_ok "Cleaned up"
     msg_ok "Updated successfully!"
   else
     msg_ok "No update required. ${APP} is already at ${RELEASE}"

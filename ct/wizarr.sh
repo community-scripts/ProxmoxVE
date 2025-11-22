@@ -56,15 +56,12 @@ function update_script() {
     if ! grep -q 'frozen' /opt/wizarr/start.sh; then
       sed -i 's/run/& --frozen/' /opt/wizarr/start.sh
     fi
+    rm -rf "$BACKUP_FILE"
     msg_ok "Updated Wizarr"
 
     msg_info "Starting Service"
     systemctl start wizarr
     msg_ok "Started Service"
-
-    msg_info "Cleaning Up"
-    rm -rf "$BACKUP_FILE"
-    msg_ok "Cleanup Completed"
     msg_ok "Updated successfully!"
   fi
   exit

@@ -38,15 +38,13 @@ function update_script() {
     curl -fsSL -o tika-server-standard-${RELEASE}.jar "https://dlcdn.apache.org/tika/${RELEASE}/tika-server-standard-${RELEASE}.jar"
     mv --force tika-server-standard.jar tika-server-standard-prev-version.jar
     mv tika-server-standard-${RELEASE}.jar tika-server-standard.jar
+    rm -rf /opt/apache-tika/tika-server-standard-prev-version.jar
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP} to v${RELEASE}"
 
     msg_info "Starting Service"
     systemctl start apache-tika
     msg_ok "Started Service"
-    msg_info "Cleaning Up"
-    rm -rf /opt/apache-tika/tika-server-standard-prev-version.jar
-    msg_ok "Cleanup Completed"
     msg_ok "Updated successfully!"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}"

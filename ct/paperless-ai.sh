@@ -65,17 +65,14 @@ EOF
     $STD pip install --no-cache-dir -r requirements.txt
     mkdir -p data/chromadb
     $STD npm install
+    rm -rf /opt/v${RELEASE}.zip
+    rm -rf /opt/paperless-ai_bak
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated $APP to v${RELEASE}"
 
     msg_info "Starting Service"
     systemctl start paperless-ai
     msg_ok "Started Service"
-
-    msg_info "Cleaning Up"
-    rm -rf /opt/v${RELEASE}.zip
-    rm -rf /opt/paperless-ai_bak
-    msg_ok "Cleanup Completed"
     msg_ok "Updated successfully!"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}"

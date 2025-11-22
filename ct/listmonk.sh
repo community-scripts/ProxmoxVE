@@ -42,15 +42,12 @@ function update_script() {
     mv /opt/listmonk-backup/config.toml /opt/listmonk/config.toml
     mv /opt/listmonk-backup/uploads /opt/listmonk/uploads
     $STD /opt/listmonk/listmonk --upgrade --yes --config /opt/listmonk/config.toml
+    rm -rf /opt/listmonk-backup/
     msg_ok "Configured listmonk"
 
     msg_info "Starting Service"
     systemctl start listmonk
     msg_ok "Started Service"
-
-    msg_info "Cleaning up"
-    rm -rf /opt/listmonk-backup/
-    msg_ok "Cleaned"
     msg_ok "Updated successfully!"
   fi
   exit

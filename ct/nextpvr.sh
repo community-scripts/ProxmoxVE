@@ -21,37 +21,34 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /opt/nextpvr ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    msg_info "Stopping Service"
-    systemctl stop nextpvr-server
-    msg_ok "Stopped Service"
-
-    msg_info "Updating LXC packages"
-    $STD apt update
-    $STD apt -y upgrade
-    msg_ok "Updated LXC packages"
-
-    msg_info "Updating ${APP}"
-    cd /opt
-    curl -fsSL "https://nextpvr.com/nextpvr-helper.deb" -o $(basename "https://nextpvr.com/nextpvr-helper.deb")
-    $STD dpkg -i nextpvr-helper.deb
-    msg_ok "Updated ${APP}"
-
-    msg_info "Starting Service"
-    systemctl start nextpvr-server
-    msg_ok "Started Service"
-
-    msg_info "Cleaning Up"
-    rm -rf /opt/nextpvr-helper.deb
-    msg_ok "Cleaned"
-    msg_ok "Updated successfully!"
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /opt/nextpvr ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+  msg_info "Stopping Service"
+  systemctl stop nextpvr-server
+  msg_ok "Stopped Service"
+
+  msg_info "Updating LXC packages"
+  $STD apt update
+  $STD apt -y upgrade
+  msg_ok "Updated LXC packages"
+
+  msg_info "Updating ${APP}"
+  cd /opt
+  curl -fsSL "https://nextpvr.com/nextpvr-helper.deb" -o $(basename "https://nextpvr.com/nextpvr-helper.deb")
+  $STD dpkg -i nextpvr-helper.deb
+  rm -rf /opt/nextpvr-helper.deb
+  msg_ok "Updated ${APP}"
+
+  msg_info "Starting Service"
+  systemctl start nextpvr-server
+  msg_ok "Started Service"
+  msg_ok "Updated successfully!"
+  exit
 }
 
 start

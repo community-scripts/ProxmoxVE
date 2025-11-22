@@ -39,17 +39,14 @@ function update_script() {
     tar -xzf onedev-latest.tar.gz
     $STD /opt/onedev-latest/bin/upgrade.sh /opt/onedev
     RELEASE=$(cat /opt/onedev/release.properties | grep "version" | cut -d'=' -f2)
+    rm -rf /opt/onedev-latest
+    rm -rf /opt/onedev-latest.tar.gz
     echo "${RELEASE}" >"/opt/${APP}_version.txt"
     msg_ok "Updated ${APP} to v${RELEASE}"
 
     msg_info "Starting Service"
     systemctl start onedev
     msg_ok "Started Service"
-
-    msg_info "Cleaning up"
-    rm -rf /opt/onedev-latest
-    rm -rf /opt/onedev-latest.tar.gz
-    msg_ok "Cleaned"
     msg_ok "Updated successfully!"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}."

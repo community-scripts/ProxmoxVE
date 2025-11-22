@@ -52,15 +52,12 @@ function update_script() {
     $STD php artisan monica:update --force
     chown -R www-data:www-data /opt/monica
     chmod -R 775 /opt/monica/storage
+    rm -r /opt/monica-backup
     msg_ok "Configured monica"
 
     msg_info "Starting Service"
     systemctl start apache2
     msg_ok "Started Service"
-
-    msg_info "Cleaning up"
-    rm -r /opt/monica-backup
-    msg_ok "Cleaned"
     msg_ok "Updated successfully!"
   fi
   exit

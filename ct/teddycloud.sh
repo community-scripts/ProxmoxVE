@@ -41,15 +41,12 @@ function update_script() {
 
     msg_info "Restoring data"
     cp -R /opt/teddycloud_bak/certs /opt/teddycloud_bak/config /opt/teddycloud_bak/data /opt/teddycloud
+    rm -rf /opt/teddycloud_bak
     msg_ok "Data restored"
 
     msg_info "Starting Service"
     systemctl start teddycloud
     msg_ok "Started Service"
-
-    msg_info "Cleaning up"
-    rm -rf /opt/teddycloud_bak
-    msg_ok "Cleaned up"
     msg_ok "Updated successfully!"
   fi
   exit
