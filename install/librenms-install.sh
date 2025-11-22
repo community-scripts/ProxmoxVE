@@ -65,7 +65,7 @@ chmod -R ug=rwX /opt/librenms/bootstrap/cache /opt/librenms/storage /opt/librenm
 msg_ok "Configured LibreNMS"
 
 msg_info "Configure MariaDB"
-sed -i "/\[mysqld\]/a innodb_file_per_table=1\nlower_case_table_names=0" /etc/mysql/mariadb.conf.d/50-server.cnf
+sed -i "/\[mariadb\]/a innodb_file_per_table=1\nlower_case_table_names=0" /etc/mysql/mariadb.conf.d/50-server.cnf
 systemctl enable -q --now mariadb
 msg_ok "Configured MariaDB"
 
