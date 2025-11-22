@@ -154,7 +154,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
-rm -rf /opt/glpi/install
+rm -rf /opt/glpi/install/install.php
 rm -rf /opt/glpi-${RELEASE}.tgz
 $STD apt -y autoremove
 $STD apt -y autoclean
