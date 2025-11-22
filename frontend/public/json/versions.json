@@ -1,5 +1,90 @@
 [
   {
+    "name": "TwiN/gatus",
+    "version": "v5.33.0",
+    "date": "2025-11-21T22:54:49Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.78.5-stable-patch-1",
+    "date": "2025-11-21T19:57:45Z"
+  },
+  {
+    "name": "laurent22/joplin",
+    "version": "server-v3.4.4",
+    "date": "2025-09-25T13:19:26Z"
+  },
+  {
+    "name": "homarr-labs/homarr",
+    "version": "v1.44.0",
+    "date": "2025-11-21T19:17:09Z"
+  },
+  {
+    "name": "gelbphoenix/autocaliweb",
+    "version": "v0.11.0",
+    "date": "2025-11-21T18:42:15Z"
+  },
+  {
+    "name": "rclone/rclone",
+    "version": "v1.72.0",
+    "date": "2025-11-21T18:20:58Z"
+  },
+  {
+    "name": "readeck/readeck",
+    "version": "0.21.1",
+    "date": "2025-11-21T17:17:52Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "v10.11.8",
+    "date": "2025-11-21T17:06:07Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.11.3",
+    "date": "2025-11-21T17:03:22Z"
+  },
+  {
+    "name": "Bubka/2FAuth",
+    "version": "v5.6.1",
+    "date": "2025-11-21T16:51:21Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.0.1",
+    "date": "2025-10-15T16:53:55Z"
+  },
+  {
+    "name": "BookStackApp/BookStack",
+    "version": "v25.11.3",
+    "date": "2025-11-21T14:06:50Z"
+  },
+  {
+    "name": "pommee/goaway",
+    "version": "v0.62.19",
+    "date": "2025-11-21T13:24:09Z"
+  },
+  {
+    "name": "fuma-nama/fumadocs",
+    "version": "fumadocs-ui@16.1.0",
+    "date": "2025-11-21T13:02:57Z"
+  },
+  {
+    "name": "forgejo/forgejo",
+    "version": "v13.0.3",
+    "date": "2025-11-21T12:43:04Z"
+  },
+  {
+    "name": "bunkerity/bunkerweb",
+    "version": "v1.6.5",
+    "date": "2025-10-06T15:25:17Z"
+  },
+  {
+    "name": "chrisbenincasa/tunarr",
+    "version": "v0.23.0-alpha.24",
+    "date": "2025-11-21T12:16:39Z"
+  },
+  {
     "name": "rcourtman/Pulse",
     "version": "v4.32.3",
     "date": "2025-11-21T11:16:25Z"
@@ -28,11 +113,6 @@
     "name": "booklore-app/booklore",
     "version": "v1.11.0",
     "date": "2025-11-21T08:09:03Z"
-  },
-  {
-    "name": "mattermost/mattermost",
-    "version": "v10.11.7",
-    "date": "2025-11-17T08:40:53Z"
   },
   {
     "name": "MariaDB/server",
@@ -70,11 +150,6 @@
     "date": "2025-11-20T20:14:44Z"
   },
   {
-    "name": "readeck/readeck",
-    "version": "0.21.0",
-    "date": "2025-11-20T18:35:59Z"
-  },
-  {
     "name": "saltstack/salt",
     "version": "v3007.9",
     "date": "2025-11-20T17:58:32Z"
@@ -88,6 +163,11 @@
     "name": "msgbyte/tianji",
     "version": "v1.30.12",
     "date": "2025-11-20T16:13:19Z"
+  },
+  {
+    "name": "neo4j/neo4j",
+    "version": "5.26.17",
+    "date": "2025-11-20T16:09:28Z"
   },
   {
     "name": "meilisearch/meilisearch",
@@ -125,11 +205,6 @@
     "date": "2025-11-20T10:54:07Z"
   },
   {
-    "name": "fuma-nama/fumadocs",
-    "version": "fumadocs-ui@16.0.15",
-    "date": "2025-11-20T10:52:04Z"
-  },
-  {
     "name": "Athou/commafeed",
     "version": "5.12.0",
     "date": "2025-11-20T06:18:58Z"
@@ -148,16 +223,6 @@
     "name": "nextcloud/nextcloudpi",
     "version": "v1.56.0",
     "date": "2025-11-20T02:28:35Z"
-  },
-  {
-    "name": "BerriAI/litellm",
-    "version": "v1.80.0.dev6",
-    "date": "2025-11-20T02:03:21Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.0.1",
-    "date": "2025-10-15T16:53:55Z"
   },
   {
     "name": "coder/code-server",
@@ -198,11 +263,6 @@
     "name": "dgtlmoon/changedetection.io",
     "version": "0.51.3",
     "date": "2025-11-19T15:45:28Z"
-  },
-  {
-    "name": "BookStackApp/BookStack",
-    "version": "v25.11.2",
-    "date": "2025-11-19T15:26:29Z"
   },
   {
     "name": "grafana/grafana",
@@ -258,16 +318,6 @@
     "name": "gtsteffaniak/filebrowser",
     "version": "v1.0.1-stable",
     "date": "2025-11-10T16:51:44Z"
-  },
-  {
-    "name": "bunkerity/bunkerweb",
-    "version": "testing",
-    "date": "2025-11-17T16:24:26Z"
-  },
-  {
-    "name": "chrisbenincasa/tunarr",
-    "version": "v0.23.0-alpha.23",
-    "date": "2025-11-18T21:36:15Z"
   },
   {
     "name": "umami-software/umami",
@@ -370,11 +420,6 @@
     "date": "2025-08-23T18:33:53Z"
   },
   {
-    "name": "TwiN/gatus",
-    "version": "v5.32.0",
-    "date": "2025-11-16T21:08:56Z"
-  },
-  {
     "name": "binwiederhier/ntfy",
     "version": "v2.15.0",
     "date": "2025-11-16T18:53:49Z"
@@ -440,16 +485,6 @@
     "date": "2025-11-14T22:50:06Z"
   },
   {
-    "name": "home-assistant/core",
-    "version": "2025.11.2",
-    "date": "2025-11-14T22:10:50Z"
-  },
-  {
-    "name": "homarr-labs/homarr",
-    "version": "v1.43.3",
-    "date": "2025-11-14T19:16:17Z"
-  },
-  {
     "name": "mealie-recipes/mealie",
     "version": "v3.5.0",
     "date": "2025-11-14T16:23:33Z"
@@ -488,11 +523,6 @@
     "name": "gristlabs/grist-core",
     "version": "v1.7.7",
     "date": "2025-11-13T21:28:44Z"
-  },
-  {
-    "name": "pommee/goaway",
-    "version": "v0.62.18",
-    "date": "2025-11-13T19:49:21Z"
   },
   {
     "name": "pocketbase/pocketbase",
@@ -705,11 +735,6 @@
     "date": "2025-11-06T02:26:53Z"
   },
   {
-    "name": "neo4j/neo4j",
-    "version": "5.26.16",
-    "date": "2025-11-05T20:41:40Z"
-  },
-  {
     "name": "leiweibau/Pi.Alert",
     "version": "v2025-11-05",
     "date": "2025-11-05T18:08:26Z"
@@ -865,11 +890,6 @@
     "date": "2025-10-29T22:09:26Z"
   },
   {
-    "name": "laurent22/joplin",
-    "version": "server-v3.4.4",
-    "date": "2025-09-25T13:19:26Z"
-  },
-  {
     "name": "apache/cassandra",
     "version": "cassandra-5.0.6",
     "date": "2025-10-29T07:40:47Z"
@@ -898,11 +918,6 @@
     "name": "ErsatzTV/ErsatzTV",
     "version": "v25.8.0",
     "date": "2025-10-26T14:23:37Z"
-  },
-  {
-    "name": "forgejo/forgejo",
-    "version": "v13.0.2",
-    "date": "2025-10-26T06:33:05Z"
   },
   {
     "name": "usememos/memos",
@@ -938,11 +953,6 @@
     "name": "kyantech/Palmr",
     "version": "v3.2.5-beta",
     "date": "2025-10-21T16:49:14Z"
-  },
-  {
-    "name": "rclone/rclone",
-    "version": "v1.71.2",
-    "date": "2025-10-20T15:25:52Z"
   },
   {
     "name": "Part-DB/Part-DB-server",
@@ -1008,11 +1018,6 @@
     "name": "globaleaks/globaleaks-whistleblowing-software",
     "version": "v5.0.85",
     "date": "2025-10-12T19:55:18Z"
-  },
-  {
-    "name": "gelbphoenix/autocaliweb",
-    "version": "v0.10.4",
-    "date": "2025-10-11T19:53:39Z"
   },
   {
     "name": "projectsend/projectsend",
@@ -1313,11 +1318,6 @@
     "name": "pterodactyl/panel",
     "version": "v1.11.11",
     "date": "2025-06-18T18:04:50Z"
-  },
-  {
-    "name": "Bubka/2FAuth",
-    "version": "v5.6.0",
-    "date": "2025-06-18T12:19:54Z"
   },
   {
     "name": "TriliumNext/Notes",
