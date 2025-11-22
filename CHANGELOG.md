@@ -26,6 +26,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - Refactor cleanup steps to use cleanup_lxc function (install/ Folder) [@MickLesk](https://github.com/MickLesk) ([#9354](https://github.com/community-scripts/ProxmoxVE/pull/9354))
     - Remove redundant cleanup steps from update scripts (ct/ Folder)  [@MickLesk](https://github.com/MickLesk) ([#9359](https://github.com/community-scripts/ProxmoxVE/pull/9359))
 
 ### 🌐 Website
