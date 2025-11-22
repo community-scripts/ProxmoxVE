@@ -31,7 +31,7 @@ function update_script() {
     sed -i '/index index.php;/i \        client_max_body_size 100M;' /etc/nginx/conf.d/snipeit.conf
   fi
 
-  if check_for_gh_release "snipe-it" "snipe/snipe-it"; then
+  if check_for_gh_release "snipe-it" "grokability/snipe-it"; then
     msg_info "Stopping Services"
     systemctl stop nginx
     msg_ok "Services Stopped"
