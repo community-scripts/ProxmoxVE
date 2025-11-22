@@ -33,19 +33,11 @@
   },
   "notes": [
     {
-      "text": "Default: HTTP on port 9090, no authentication, uploads dir: /opt/upgopher/uploads",
+      "text": "Default uploads directory: `/opt/upgopher/uploads`",
       "type": "info"
     },
     {
-      "text": "To customize: edit /etc/systemd/system/upgopher.service and modify ExecStart line. Available flags: -user <user> -pass <pass> (authentication), -ssl (HTTPS with self-signed cert), -port <port> (custom port), -dir <path> (upload directory), -disable-hidden-files (hide hidden files)",
-      "type": "info"
-    },
-    {
-      "text": "Example with auth: ExecStart=/opt/upgopher/upgopher -port 9090 -dir /opt/upgopher/uploads -user admin -pass mysecret",
-      "type": "info"
-    },
-    {
-      "text": "After editing service file: systemctl daemon-reload && systemctl restart upgopher",
+      "text": "Set application startup options by editing `/etc/systemd/system/upgopher.service`. Read documentation for available options.",
       "type": "info"
     }
   ]
