@@ -160,7 +160,7 @@ export default function Page() {
           <div className="py-24" id="features">
             <div className="text-center mb-16">
               <h2 className="text-3xl font-bold tracking-tighter md:text-5xl mb-4">
-                Why Choose Daily FOSS?
+                What We Offer
               </h2>
               <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
                 Your complete platform for discovering and deploying free and open source software
@@ -253,7 +253,7 @@ export default function Page() {
                   href="https://linkedin.com/company/dailyfoss"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-6 py-3 rounded-lg border-2 border-primary/20 hover:border-primary/50 hover:bg-primary/5 transition-all group"
+                  className="flex items-center gap-2 px-6 py-3 rounded-lg hover:bg-primary/5 transition-all group"
                 >
                   <FaLinkedin className="h-5 w-5 text-[#0A66C2] group-hover:scale-110 transition-transform" />
                   <span className="font-medium">LinkedIn</span>
@@ -262,7 +262,7 @@ export default function Page() {
                   href="https://facebook.com/dailyfoss"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-6 py-3 rounded-lg border-2 border-primary/20 hover:border-primary/50 hover:bg-primary/5 transition-all group"
+                  className="flex items-center gap-2 px-6 py-3 rounded-lg hover:bg-primary/5 transition-all group"
                 >
                   <FaFacebook className="h-5 w-5 text-[#1877F2] group-hover:scale-110 transition-transform" />
                   <span className="font-medium">Facebook</span>
@@ -271,7 +271,7 @@ export default function Page() {
                   href="https://threads.net/@dailyfoss"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-6 py-3 rounded-lg border-2 border-primary/20 hover:border-primary/50 hover:bg-primary/5 transition-all group"
+                  className="flex items-center gap-2 px-6 py-3 rounded-lg hover:bg-primary/5 transition-all group"
                 >
                   <SiThreads className="h-5 w-5 group-hover:scale-110 transition-transform" />
                   <span className="font-medium">Threads</span>
@@ -280,7 +280,7 @@ export default function Page() {
                   href="https://x.com/dailyfoss"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-6 py-3 rounded-lg border-2 border-primary/20 hover:border-primary/50 hover:bg-primary/5 transition-all group"
+                  className="flex items-center gap-2 px-6 py-3 rounded-lg hover:bg-primary/5 transition-all group"
                 >
                   <FaXTwitter className="h-5 w-5 group-hover:scale-110 transition-transform" />
                   <span className="font-medium">X (Twitter)</span>
