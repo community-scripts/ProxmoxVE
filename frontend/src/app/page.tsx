@@ -19,7 +19,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import Particles from "@/components/ui/particles";
 import { Button } from "@/components/ui/button";
 import { basePath } from "@/config/site-config";
-import FAQ from "@/components/faq";
 import { cn } from "@/lib/utils";
 
 function CustomArrowRightIcon() {
@@ -239,21 +238,6 @@ export default function Page() {
                   </CardDescription>
                 </CardHeader>
               </Card>
-            </div>
-          </div>
-
-          {/* FAQ Section */}
-          <div className="py-24 border-t" id="faq">
-            <div className="max-w-4xl mx-auto">
-              <div className="text-center mb-12">
-                <h2 className="text-3xl font-bold tracking-tighter md:text-5xl mb-4">
-                  Frequently Asked Questions
-                </h2>
-                <p className="text-muted-foreground text-lg">
-                  Find answers to common questions about Daily FOSS
-                </p>
-              </div>
-              <FAQ />
             </div>
           </div>
 
