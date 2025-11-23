@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - core: remove journal log rotation [@MickLesk](https://github.com/MickLesk) ([#9392](https://github.com/community-scripts/ProxmoxVE/pull/9392))
     - [LibreNMS] Correcting mariadb sed string for Debian 13 default in install/librenms-install.sh, website config for Debian 13 #9369 [@htmlspinnr](https://github.com/htmlspinnr) ([#9370](https://github.com/community-scripts/ProxmoxVE/pull/9370))
     - fix: Snipe-IT update check failure [@ruanmed](https://github.com/ruanmed) ([#9371](https://github.com/community-scripts/ProxmoxVE/pull/9371))
 
