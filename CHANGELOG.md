@@ -19,6 +19,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - [LibreNMS] Correcting mariadb sed string for Debian 13 default in install/librenms-install.sh, website config for Debian 13 #9369 [@htmlspinnr](https://github.com/htmlspinnr) ([#9370](https://github.com/community-scripts/ProxmoxVE/pull/9370))
     - fix: Snipe-IT update check failure [@ruanmed](https://github.com/ruanmed) ([#9371](https://github.com/community-scripts/ProxmoxVE/pull/9371))
 
+  - #### ✨ New Features
+
+    - PVE Kernel Clean: Add info about currently running kernel [@tremor021](https://github.com/tremor021) ([#9388](https://github.com/community-scripts/ProxmoxVE/pull/9388))
+
   - #### 🔧 Refactor
 
     - Update glpi-install.sh to remove install.php [@CrazyWolf13](https://github.com/CrazyWolf13) ([#9378](https://github.com/community-scripts/ProxmoxVE/pull/9378))
