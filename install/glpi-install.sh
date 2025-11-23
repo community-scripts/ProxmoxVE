@@ -132,7 +132,7 @@ EOF
 $STD a2dissite 000-default.conf
 $STD a2enmod rewrite
 $STD a2ensite glpi.conf
-rm -rf /opt/glpi/install
+rm -rf /opt/glpi/install/install.php
 rm -rf /opt/glpi-${RELEASE}.tgz
 msg_ok "Setup Service"
 
