@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 
 import { LatestScripts, MostViewedScripts } from "./_components/script-info-blocks";
 import Sidebar from "./_components/sidebar";
+import { ScriptFilters, type FilterState } from "./_components/script-filters";
 
 export const dynamic = "force-static";
 
@@ -20,6 +21,12 @@ function ScriptContent() {
   const [links, setLinks] = useState<Category[]>([]);
   const [item, setItem] = useState<Script>();
   const [searchQuery, setSearchQuery] = useState("");
+  const [filters, setFilters] = useState<FilterState>({
+    platforms: new Set(),
+    deployments: new Set(),
+    hosting: new Set(),
+    ui: new Set(),
+  });
 
   useEffect(() => {
     if (selectedScript && links.length > 0) {
@@ -42,16 +49,83 @@ function ScriptContent() {
       .catch((error) => console.error(error));
   }, []);
 
+  const matchesFilters = (script: Script): boolean => {
+    if (!script.install_methods || script.install_methods.length === 0) {
+      return filters.platforms.size === 0 &&
+             filters.deployments.size === 0 &&
+             filters.hosting.size === 0 &&
+             filters.ui.size === 0;
+    }
+
+    const platform = script.install_methods[0]?.platform;
+    if (!platform) {
+      return filters.platforms.size === 0 &&
+             filters.deployments.size === 0 &&
+             filters.hosting.size === 0 &&
+             filters.ui.size === 0;
+    }
+
+    // Check platform filters
+    if (filters.platforms.size > 0) {
+      const platformMatches = Array.from(filters.platforms).some(filter => {
+        if (filter === "desktop-linux") return platform.desktop?.linux;
+        if (filter === "desktop-windows") return platform.desktop?.windows;
+        if (filter === "desktop-macos") return platform.desktop?.macos;
+        if (filter === "mobile-android") return platform.mobile?.android;
+        if (filter === "mobile-ios") return platform.mobile?.ios;
+        if (filter === "web_app") return platform.web_app;
+        if (filter === "browser_extension") return platform.browser_extension;
+        if (filter === "cli_only") return platform.cli_only;
+        return false;
+      });
+      if (!platformMatches) return false;
+    }
+
+    // Check deployment filters
+    if (filters.deployments.size > 0) {
+      const deploymentMatches = Array.from(filters.deployments).some(filter => {
+        return platform.deployment?.[filter as keyof typeof platform.deployment];
+      });
+      if (!deploymentMatches) return false;
+    }
+
+    // Check hosting filters
+    if (filters.hosting.size > 0) {
+      const hostingMatches = Array.from(filters.hosting).some(filter => {
+        return platform.hosting?.[filter as keyof typeof platform.hosting];
+      });
+      if (!hostingMatches) return false;
+    }
+
+    // Check UI filters
+    if (filters.ui.size > 0) {
+      const uiMatches = Array.from(filters.ui).some(filter => {
+        return platform.ui?.[filter as keyof typeof platform.ui];
+      });
+      if (!uiMatches) return false;
+    }
+
+    return true;
+  };
+
   const filteredLinks = links.map(category => ({
     ...category,
-    scripts: category.scripts.filter(script =>
-      script.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      script.description.toLowerCase().includes(searchQuery.toLowerCase())
-    )
+    scripts: category.scripts.filter(script => {
+      // First check search query
+      const matchesSearch = searchQuery === "" ||
+        script.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        script.description.toLowerCase().includes(searchQuery.toLowerCase());
+
+      // Then check filters
+      const matchesFilter = matchesFilters(script);
+
+      return matchesSearch && matchesFilter;
+    })
   })).filter(category => category.scripts.length > 0);
 
   const totalScripts = links.reduce((acc, category) => acc + category.scripts.length, 0);
   const uniqueScripts = new Set(links.flatMap(cat => cat.scripts.map(s => s.slug))).size;
+  const filteredScriptsCount = new Set(filteredLinks.flatMap(cat => cat.scripts.map(s => s.slug))).size;
 
   return (
     <div className="mb-3">
@@ -111,11 +185,29 @@ function ScriptContent() {
         </div>
       )}
 
+      {/* Filters Section - Only show when no script is selected */}
+      {!selectedScript && (
+        <div className="w-full border-b bg-background/50">
+          <div className="container mx-auto px-4 py-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
+              <h2 className="text-sm font-medium text-muted-foreground">
+                {filteredScriptsCount === uniqueScripts ? (
+                  `Showing all ${uniqueScripts} scripts`
+                ) : (
+                  `Showing ${filteredScriptsCount} of ${uniqueScripts} scripts`
+                )}
+              </h2>
+            </div>
+            <ScriptFilters filters={filters} onFilterChange={setFilters} />
+          </div>
+        </div>
+      )}
+
       <div className="mt-6 sm:mt-8 flex sm:px-4 xl:px-0">
         {/* Desktop Sidebar */}
         <div className="hidden sm:flex">
           <Sidebar
-            items={searchQuery ? filteredLinks : links}
+            items={filteredLinks}
             selectedScript={selectedScript}
             setSelectedScript={setSelectedScript}
             selectedCategory={selectedCategory}
@@ -128,8 +220,8 @@ function ScriptContent() {
             <ScriptItem item={item} setSelectedScript={setSelectedScript} />
           ) : (
             <div className="flex w-full flex-col gap-6">
-              <LatestScripts items={searchQuery ? filteredLinks : links} />
-              <MostViewedScripts items={searchQuery ? filteredLinks : links} />
+              <LatestScripts items={filteredLinks} />
+              <MostViewedScripts items={filteredLinks} />
             </div>
           )}
         </div>
