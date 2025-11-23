@@ -1,6 +1,6 @@
 "use client";
 import { Suspense, useEffect, useState } from "react";
-import { Loader2, Search, Menu } from "lucide-react";
+import { Loader2, Search } from "lucide-react";
 import { useQueryState } from "nuqs";
 
 import type { Category, Script } from "@/lib/types";
@@ -8,8 +8,6 @@ import type { Category, Script } from "@/lib/types";
 import { ScriptItem } from "@/app/scripts/_components/script-item";
 import { fetchCategories } from "@/lib/data";
 import { Input } from "@/components/ui/input";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
 
 import { LatestScripts, MostViewedScripts } from "./_components/script-info-blocks";
 import Sidebar from "./_components/sidebar";
@@ -22,7 +20,6 @@ function ScriptContent() {
   const [links, setLinks] = useState<Category[]>([]);
   const [item, setItem] = useState<Script>();
   const [searchQuery, setSearchQuery] = useState("");
-  const [isSheetOpen, setIsSheetOpen] = useState(false);
 
   useEffect(() => {
     if (selectedScript && links.length > 0) {
@@ -115,27 +112,6 @@ function ScriptContent() {
       )}
 
       <div className="mt-6 sm:mt-8 flex sm:px-4 xl:px-0">
-        {/* Mobile Menu Button */}
-        <div className="sm:hidden fixed bottom-6 right-6 z-50">
-          <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-            <SheetTrigger asChild>
-              <Button size="lg" className="rounded-full h-14 w-14 shadow-lg">
-                <Menu className="h-6 w-6" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="left" className="w-[300px] p-4">
-              <Sidebar
-                items={searchQuery ? filteredLinks : links}
-                selectedScript={selectedScript}
-                setSelectedScript={setSelectedScript}
-                selectedCategory={selectedCategory}
-                setSelectedCategory={setSelectedCategory}
-                onItemSelect={() => setIsSheetOpen(false)}
-              />
-            </SheetContent>
-          </Sheet>
-        </div>
-
         {/* Desktop Sidebar */}
         <div className="hidden sm:flex">
           <Sidebar
@@ -147,11 +123,11 @@ function ScriptContent() {
           />
         </div>
 
-        <div className="mx-4 w-full sm:mx-0 sm:ml-4">
+        <div className="mx-4 w-full sm:mx-0 sm:ml-4 pb-8">
           {selectedScript && item ? (
             <ScriptItem item={item} setSelectedScript={setSelectedScript} />
           ) : (
-            <div className="flex w-full flex-col gap-5">
+            <div className="flex w-full flex-col gap-6">
               <LatestScripts items={searchQuery ? filteredLinks : links} />
               <MostViewedScripts items={searchQuery ? filteredLinks : links} />
             </div>
