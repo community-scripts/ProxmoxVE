@@ -43,7 +43,7 @@ function update_script() {
 
     fetch_and_deploy_gh_release "tianji" "msgbyte/tianji"
 
-    msg_info "Updating ${APP}"
+    msg_info "Updating Tianji"
     cd /opt/tianji
     export NODE_OPTIONS="--max_old_space_size=4096"
     $STD pnpm install --filter @tianji/client... --config.dedupe-peer-dependents=false --frozen-lockfile
@@ -55,7 +55,11 @@ function update_script() {
     mv /opt/.env /opt/tianji/src/server/.env
     cd src/server
     $STD pnpm db:migrate:apply
-    msg_ok "Updated ${APP}"
+    rm -rf /opt/tianji_bak
+    rm -rf /opt/tianji/src/client
+    rm -rf /opt/tianji/website
+    rm -rf /opt/tianji/reporter
+    msg_ok "Updated Tianji"
 
     msg_info "Updating AppRise"
     $STD uv pip install apprise cryptography --system
@@ -64,13 +68,6 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start tianji
     msg_ok "Started Service"
-
-    msg_info "Cleaning up"
-    rm -rf /opt/tianji_bak
-    rm -rf /opt/tianji/src/client
-    rm -rf /opt/tianji/website
-    rm -rf /opt/tianji/reporter
-    msg_ok "Cleaned"
     msg_ok "Updated successfully!"
   fi
   exit

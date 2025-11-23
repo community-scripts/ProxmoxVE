@@ -43,17 +43,13 @@ function update_script() {
     cd spoolman
     $STD pip3 install -r requirements.txt
     curl -fsSL "https://raw.githubusercontent.com/Donkie/Spoolman/master/.env.example" -o ".env"
+    rm -rf /opt/spoolman.zip
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP} to ${RELEASE}"
 
     msg_info "Starting Service"
     systemctl start spoolman
     msg_ok "Started Service"
-
-    msg_info "Cleaning up"
-    rm -rf /opt/spoolman.zip
-    msg_ok "Cleaned"
-
     msg_ok "Updated successfully!"
   else
     msg_ok "No update required. ${APP} is already at ${RELEASE}"

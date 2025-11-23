@@ -44,6 +44,7 @@ LATEST_RELEASE_NO_V=${LATEST_RELEASE#v}
 mv /opt/cosmos/cosmos-cloud-${LATEST_RELEASE_NO_V}/* /opt/cosmos/
 rmdir /opt/cosmos/cosmos-cloud-${LATEST_RELEASE_NO_V}
 chmod +x /opt/cosmos/cosmos
+rm -f "/opt/cosmos/cosmos-cloud-${LATEST_RELEASE#v}-amd64.zip"
 msg_ok "Installed Cosmos"
 
 msg_info "Creating Service"
@@ -73,9 +74,4 @@ msg_info "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -f "/opt/cosmos/cosmos-cloud-${LATEST_RELEASE#v}-amd64.zip"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

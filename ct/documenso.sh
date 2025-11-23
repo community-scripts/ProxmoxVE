@@ -50,16 +50,13 @@ function update_script() {
     $STD turbo run build --filter=@documenso/remix
     $STD npm run prisma:migrate-deploy
     $STD turbo daemon stop
+    rm -rf /opt/v${RELEASE}.zip
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP}"
 
     msg_info "Starting Service"
     systemctl start documenso
     msg_ok "Started Service"
-
-    msg_info "Cleaning Up"
-    rm -rf /opt/v${RELEASE}.zip
-    msg_ok "Cleaned"
     msg_ok "Updated successfully!"
   else
     msg_ok "No update required. ${APP} is already at ${RELEASE}"

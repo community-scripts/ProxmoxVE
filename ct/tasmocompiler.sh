@@ -45,16 +45,13 @@ function update_script() {
     export NODE_OPTIONS=--openssl-legacy-provider
     $STD npm i
     $STD yarn build
+    rm -r "/opt/v${RELEASE}.tar.gz"
+    echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated TasmoCompiler"
 
     msg_info "Starting Service"
     systemctl start tasmocompiler
     msg_ok "Started Service"
-
-    echo "${RELEASE}" >/opt/${APP}_version.txt
-    msg_info "Cleaning up"
-    rm -r "/opt/v${RELEASE}.tar.gz"
-    msg_ok "Cleaned"
     msg_ok "Updated successfully!"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}"

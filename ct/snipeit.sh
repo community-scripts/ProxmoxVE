@@ -31,7 +31,7 @@ function update_script() {
     sed -i '/index index.php;/i \        client_max_body_size 100M;' /etc/nginx/conf.d/snipeit.conf
   fi
 
-  if check_for_gh_release "snipe-it" "snipe/snipe-it"; then
+  if check_for_gh_release "snipe-it" "grokability/snipe-it"; then
     msg_info "Stopping Services"
     systemctl stop nginx
     msg_ok "Services Stopped"
@@ -40,7 +40,7 @@ function update_script() {
     mv /opt/snipe-it /opt/snipe-it-backup
     msg_ok "Backup created"
 
-    fetch_and_deploy_gh_release "snipe-it" "snipe/snipe-it" "tarball"
+    fetch_and_deploy_gh_release "snipe-it" "grokability/snipe-it" "tarball"
     [[ "$(php -v 2>/dev/null)" == PHP\ 8.2* ]] && PHP_VERSION="8.3" PHP_MODULE="common,ctype,ldap,fileinfo,iconv,mysql,soap,xsl" PHP_FPM="YES" setup_php
     sed -i 's/php8.2/php8.3/g' /etc/nginx/conf.d/snipeit.conf
     setup_composer

@@ -43,16 +43,13 @@ function update_script() {
     mkdir -p /usr/local/lib/ollama
     tar -xzf "${TMP_TAR}" -C /usr/local/lib/ollama
     ln -sf /usr/local/lib/ollama/bin/ollama /usr/local/bin/ollama
+    rm -f "${TMP_TAR}"
     echo "${RELEASE}" >/opt/Ollama_version.txt
     msg_ok "Updated Ollama to ${RELEASE}"
 
     msg_info "Starting Services"
     systemctl start ollama
     msg_ok "Started Services"
-
-    msg_info "Cleaning Up"
-    rm -f "${TMP_TAR}"
-    msg_ok "Cleaned"
     msg_ok "Updated successfully!"
   else
     msg_ok "No update required. Ollama is already at ${RELEASE}"

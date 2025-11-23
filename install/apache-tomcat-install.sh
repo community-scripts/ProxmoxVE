@@ -119,7 +119,7 @@ curl -fsSL "$TOMCAT_URL" -o "/tmp/tomcat.tar.gz"
 mkdir -p /opt/tomcat-$TOMCAT_VERSION
 tar --strip-components=1 -xzf /tmp/tomcat.tar.gz -C /opt/tomcat-$TOMCAT_VERSION
 chown -R root:root /opt/tomcat-$TOMCAT_VERSION
-
+rm -f /tmp/tomcat.tar.gz
 cat <<EOF >/etc/systemd/system/tomcat.service
 [Unit]
 Description=Apache Tomcat Web Application Container
@@ -147,9 +147,4 @@ msg_ok "Tomcat $LATEST_VERSION installed and started"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -f /tmp/tomcat.tar.gz
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

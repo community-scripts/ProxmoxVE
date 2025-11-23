@@ -25,6 +25,7 @@ curl -fsSL "$RELEASE" -o Tdarr_Updater.zip
 $STD unzip Tdarr_Updater.zip
 chmod +x Tdarr_Updater
 $STD ./Tdarr_Updater
+rm -rf /opt/tdarr/Tdarr_Updater.zip
 msg_ok "Installed Tdarr"
 
 msg_info "Setting Up Hardware Acceleration"
@@ -101,10 +102,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -rf /opt/tdarr/Tdarr_Updater.zip
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

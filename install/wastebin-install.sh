@@ -35,6 +35,7 @@ WASTEBIN_HTTP_TIMEOUT=30
 WASTEBIN_SIGNING_KEY=$(openssl rand -hex 32)
 WASTEBIN_PASTE_EXPIRATIONS=0,600,3600=d,86400,604800,2419200,29030400
 EOF
+rm -f "$temp_file"
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 
 msg_ok "Installed Wastebin"
@@ -58,10 +59,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -f "$temp_file"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

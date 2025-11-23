@@ -44,6 +44,7 @@ sed -i -e "s|^define( 'DB_NAME', '.*' );|define( 'DB_NAME', '$DB_NAME' );|" \
   -e "s|^define( 'DB_USER', '.*' );|define( 'DB_USER', '$DB_USER' );|" \
   -e "s|^define( 'DB_PASSWORD', '.*' );|define( 'DB_PASSWORD', '$DB_PASS' );|" \
   /var/www/html/wordpress/wp-config.php
+rm -rf /var/www/html/latest.zip
 msg_ok "Installed Wordpress"
 
 msg_info "Setup Services"
@@ -68,10 +69,4 @@ msg_ok "Created Services"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -rf /var/www/html/latest.zip
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

@@ -49,15 +49,12 @@ function update_script() {
     cp -a keycloak.old/conf/. keycloak/conf/
     cp -a keycloak.old/providers/. keycloak/providers/ 2>/dev/null || true
     cp -a keycloak.old/themes/. keycloak/themes/ 2>/dev/null || true
+    rm -rf keycloak.old
     msg_ok "Updated Keycloak"
 
     msg_info "Restarting Service"
     systemctl restart keycloak
     msg_ok "Restarted Service"
-
-    msg_info "Cleaning up"
-    rm -rf keycloak.old
-    msg_ok "Cleanup complete"
     msg_ok "Updated successfully!"
   fi
   exit

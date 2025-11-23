@@ -31,13 +31,9 @@ msg_info "Setup NextPVR (Patience)"
 cd /opt
 curl -fsSL "https://nextpvr.com/nextpvr-helper.deb" -o "/opt/nextpvr-helper.deb"
 $STD dpkg -i nextpvr-helper.deb
+rm -rf /opt/nextpvr-helper.deb
 msg_ok "Installed NextPVR"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -rf /opt/nextpvr-helper.deb
-$STD apt autoremove
-$STD apt autoclean
-msg_ok "Cleaned"
+cleanup_lxc

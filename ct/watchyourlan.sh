@@ -37,10 +37,7 @@ function update_script() {
     fetch_and_deploy_gh_release "watchyourlan" "aceberg/WatchYourLAN" "binary"
     cp -R config.yaml /data/config.yaml
     sed -i 's|/etc/watchyourlan/config.yaml|/data/config.yaml|' /lib/systemd/system/watchyourlan.service
-
-    msg_info "Cleaning up"
     rm ~/config.yaml
-    msg_ok "Cleaned up"
 
     msg_info "Starting service"
     systemctl enable -q --now watchyourlan

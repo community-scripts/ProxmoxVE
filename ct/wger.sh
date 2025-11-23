@@ -45,16 +45,13 @@ function update_script() {
     $STD python3 manage.py collectstatic --no-input
     $STD yarn install
     $STD yarn build:css:sass
+    rm -rf "$temp_file"
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated $APP to v${RELEASE}"
 
     msg_info "Starting Service"
     systemctl start wger
     msg_ok "Started Service"
-
-    msg_info "Cleaning Up"
-    rm -rf "$temp_file"
-    msg_ok "Cleanup Completed"
     msg_ok "Updated successfully!"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}"

@@ -20,6 +20,7 @@ mkdir -p /opt/backrest/{bin,config,data}
 curl -fsSL "https://github.com/garethgeorge/backrest/releases/download/v${RELEASE}/backrest_Linux_x86_64.tar.gz" -o "$temp_file"
 tar xzf $temp_file -C /opt/backrest/bin
 chmod +x /opt/backrest/bin/backrest
+rm -f "$temp_file"
 echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
 msg_ok "Installed Backrest"
 
@@ -46,9 +47,5 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
+cleanup_lxc
 
-msg_info "Cleaning up"
-rm -f "$temp_file"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"

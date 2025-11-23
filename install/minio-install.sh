@@ -92,9 +92,4 @@ msg_ok "Service created"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleanup complete"
+cleanup_lxc

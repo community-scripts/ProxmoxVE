@@ -88,6 +88,7 @@ curl -fsSL "$DOWNLOAD_URL" -o "$temp_file"
 mkdir -p /opt/asterisk
 tar zxf "$temp_file" --strip-components=1 -C /opt/asterisk
 cd /opt/asterisk
+rm -f "$temp_file"
 msg_ok "Downloaded Asterisk ($RELEASE)"
 
 msg_info "Installing Asterisk"
@@ -105,10 +106,5 @@ msg_ok "Installed Asterisk"
 
 motd_ssh
 customize
+cleanup_lxc
 
-msg_info "Cleaning up"
-rm -f "$temp_file"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"

@@ -42,6 +42,7 @@ mkdir -p /usr/local/bin
 ln -s ~/.platformio/penv/bin/platformio /usr/local/bin/platformio
 ln -s ~/.platformio/penv/bin/pio /usr/local/bin/pio
 ln -s ~/.platformio/penv/bin/piodebuggdb /usr/local/bin/piodebuggdb
+rm -f /tmp/v${RELEASE}.tar.gz
 echo "${RELEASE}" >"/opt/tasmocompiler_version.txt"
 msg_ok "Setup TasmoCompiler"
 
@@ -64,10 +65,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -f /tmp/v${RELEASE}.tar.gz
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

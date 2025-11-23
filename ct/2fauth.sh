@@ -57,15 +57,6 @@ function update_script() {
     $STD composer install --no-dev --prefer-dist
     php artisan 2fauth:install
     $STD systemctl restart nginx
-
-    msg_info "Cleaning Up"
-    if dpkg -l | grep -q 'php8.2'; then
-      $STD apt remove --purge -y php8.2*
-    fi
-    $STD apt -y autoremove
-    $STD apt -y autoclean
-    $STD apt -y clean
-    msg_ok "Cleanup Completed"
     msg_ok "Updated successfully!"
   fi
   exit

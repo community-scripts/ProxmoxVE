@@ -41,15 +41,12 @@ function update_script() {
     $STD npm install
     cp -f /opt/index.html /opt/revealjs
     sed -i '25s/localhost/0.0.0.0/g' /opt/revealjs/gulpfile.js
+    rm -f /opt/index.html
     msg_ok "Updated $APP"
 
     msg_info "Starting Service"
     systemctl start revealjs
     msg_ok "Started Service"
-
-    msg_info "Cleaning Up"
-    rm -f /opt/index.html
-    msg_ok "Cleanup Completed"
     msg_ok "Updated successfully!"
   fi
   exit

@@ -61,6 +61,7 @@ CUSTOM_MODEL=
 RAG_SERVICE_URL=http://localhost:8000
 RAG_SERVICE_ENABLED=true
 EOF
+rm -rf v${RELEASE}.zip
 echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
 msg_ok "Setup Paperless-AI"
 
@@ -100,10 +101,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -rf /opt/v${RELEASE}.zip
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

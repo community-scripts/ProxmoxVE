@@ -50,15 +50,12 @@ function update_script() {
     $STD yarn install
     $STD yarn build
     chown -R www-data:www-data /opt/koillection/public/uploads
+    rm -r /opt/koillection-backup
     msg_ok "Updated Koillection"
 
     msg_info "Starting Service"
     systemctl start apache2
     msg_ok "Started Service"
-
-    msg_info "Cleaning up"
-    rm -r /opt/koillection-backup
-    msg_ok "Cleaned"
     msg_ok "Updated Successfully!"
   fi
   exit

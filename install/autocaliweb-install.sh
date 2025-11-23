@@ -15,34 +15,34 @@ update_os
 
 msg_info "Installing dependencies"
 $STD apt-get install -y --no-install-recommends \
-  python3-dev \
-  sqlite3 \
-  build-essential \
-  libldap2-dev \
-  libssl-dev \
-  libsasl2-dev \
-  imagemagick \
-  ghostscript \
-  libmagic1 \
-  libxi6 \
-  libxslt1.1 \
-  libxtst6 \
-  libxrandr2 \
-  libxkbfile1 \
-  libxcomposite1 \
-  libopengl0 \
-  libnss3 \
-  libxkbcommon0 \
-  libegl1 \
-  libxdamage1 \
-  libgl1 \
-  libglx-mesa0 \
-  xz-utils \
-  xdg-utils \
-  inotify-tools \
-  binutils \
-  unrar-free \
-  zip
+    python3-dev \
+    sqlite3 \
+    build-essential \
+    libldap2-dev \
+    libssl-dev \
+    libsasl2-dev \
+    imagemagick \
+    ghostscript \
+    libmagic1 \
+    libxi6 \
+    libxslt1.1 \
+    libxtst6 \
+    libxrandr2 \
+    libxkbfile1 \
+    libxcomposite1 \
+    libopengl0 \
+    libnss3 \
+    libxkbcommon0 \
+    libegl1 \
+    libxdamage1 \
+    libgl1 \
+    libglx-mesa0 \
+    xz-utils \
+    xdg-utils \
+    inotify-tools \
+    binutils \
+    unrar-free \
+    zip
 msg_ok "Installed dependencies"
 
 fetch_and_deploy_gh_release "kepubify" "pgaskin/kepubify" "singlefile" "latest" "/usr/bin" "kepubify-linux-64bit"
@@ -323,8 +323,4 @@ msg_ok "Created scripts and service files"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

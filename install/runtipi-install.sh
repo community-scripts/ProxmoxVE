@@ -33,14 +33,9 @@ curl -fsSL "https://raw.githubusercontent.com/runtipi/runtipi/master/scripts/ins
 chmod +x install.sh
 $STD ./install.sh
 chmod 666 /opt/runtipi/state/settings.json
+rm -f /opt/install.sh
 msg_ok "Installed Runtipi"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm /opt/install.sh
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

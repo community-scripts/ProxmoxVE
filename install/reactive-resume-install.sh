@@ -123,6 +123,8 @@ EOF
   echo "Database Name: $DB_NAME"
   echo "Minio Root Password: ${MINIO_PASS}"
 } >>~/"$APPLICATION".creds
+rm -f /tmp/v"$TAG".zip
+rm -f /tmp/minio.deb
 msg_ok "Configured applications"
 
 msg_info "Creating Services"
@@ -171,11 +173,4 @@ msg_ok "Created Services"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -f /tmp/v"$TAG".zip
-rm -f /tmp/minio.deb
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

@@ -87,7 +87,8 @@ chmod -R 755 /opt/pterodactyl-panel/storage/* /opt/pterodactyl-panel/bootstrap/c
   echo "pterodactyl Admin Email: $ADMIN_EMAIL"
   echo "pterodactyl Admin Password: $ADMIN_PASS"
 } >>~/pterodactyl-panel.creds
-
+rm -rf "/opt/pterodactyl-panel/panel.tar.gz"
+rm -rf "/tmp/debsuryorg-archive-keyring.deb"
 echo "${RELEASE}" >/opt/"${APPLICATION}"_version.txt
 msg_ok "Installed pterodactyl Panel"
 
@@ -138,11 +139,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -rf "/opt/pterodactyl-panel/panel.tar.gz"
-rm -rf "/tmp/debsuryorg-archive-keyring.deb"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

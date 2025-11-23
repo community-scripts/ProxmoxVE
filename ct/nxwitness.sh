@@ -42,17 +42,13 @@ function update_script() {
     export DEBIAN_FRONTEND=noninteractive
     export DEBCONF_NOWARNINGS=yes
     $STD dpkg -i nxwitness-server-$RELEASE-linux_x64.deb
+    rm -f /tmp/nxwitness-server-$RELEASE-linux_x64.deb
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP}"
 
     msg_info "Starting Service"
     systemctl start networkoptix-root-tool networkoptix-mediaserver
     msg_ok "Started Service"
-
-    msg_info "Cleaning up"
-    rm -f /tmp/nxwitness-server-$RELEASE-linux_x64.deb
-    msg_ok "Cleaned"
-
     msg_ok "Updated successfully!"
   else
     msg_ok "No update required. ${APP} is already at ${RELEASE}"

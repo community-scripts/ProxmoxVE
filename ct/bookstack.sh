@@ -57,15 +57,12 @@ function update_script() {
     chmod -R 755 /opt/bookstack /opt/bookstack/bootstrap/cache /opt/bookstack/public/uploads /opt/bookstack/storage
     chmod -R 775 /opt/bookstack/storage /opt/bookstack/bootstrap/cache /opt/bookstack/public/uploads
     chmod -R 640 /opt/bookstack/.env
+    rm -rf /opt/bookstack-backup
     msg_ok "Configured BookStack"
 
     msg_info "Starting Apache2"
     systemctl start apache2
     msg_ok "Started Apache2"
-
-    msg_info "Cleaning Up"
-    rm -rf /opt/bookstack-backup
-    msg_ok "Cleaned"
     msg_ok "Updated successfully!"
   fi
   exit

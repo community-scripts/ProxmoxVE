@@ -3628,59 +3628,57 @@ function setup_php() {
   local CURRENT_PHP=""
   CURRENT_PHP=$(is_tool_installed "php" 2>/dev/null) || true
 
-  # Scenario 1: Already at target version - just update packages
-  if [[ -n "$CURRENT_PHP" && "$CURRENT_PHP" == "$PHP_VERSION" ]]; then
-    msg_info "Update PHP $PHP_VERSION"
-
-    # Ensure Sury repo is available
-    if [[ ! -f /etc/apt/sources.list.d/php.sources ]]; then
-      manage_tool_repository "php" "$PHP_VERSION" "" "https://packages.sury.org/debsuryorg-archive-keyring.deb" || {
-        msg_error "Failed to setup PHP repository"
-        return 1
-      }
-    fi
-
-    ensure_apt_working || return 1
-
-    # Perform upgrade with retry logic (non-fatal if fails)
-    upgrade_packages_with_retry "php${PHP_VERSION}" || true
-
-    cache_installed_version "php" "$PHP_VERSION"
-    msg_ok "Update PHP $PHP_VERSION"
-  else
-    # Scenario 2: Different version installed - clean upgrade
-    if [[ -n "$CURRENT_PHP" && "$CURRENT_PHP" != "$PHP_VERSION" ]]; then
-      msg_info "Upgrade PHP from $CURRENT_PHP to $PHP_VERSION"
-      # Stop and disable ALL PHP-FPM versions
-      stop_all_services "php.*-fpm"
-      remove_old_tool_version "php"
-    else
-      msg_info "Setup PHP $PHP_VERSION"
-    fi
-
-    # Prepare repository (cleanup + validation)
-    prepare_repository_setup "php" "deb.sury.org-php" || {
-      msg_error "Failed to prepare PHP repository"
-      return 1
-    }
-
-    # Setup Sury repository
-    manage_tool_repository "php" "$PHP_VERSION" "" "https://packages.sury.org/debsuryorg-archive-keyring.deb" || {
-      msg_error "Failed to setup PHP repository"
-      return 1
-    }
-
-    ensure_apt_working || return 1
+  # CRITICAL: If wrong version is installed, remove it FIRST before any pinning
+  if [[ -n "$CURRENT_PHP" && "$CURRENT_PHP" != "$PHP_VERSION" ]]; then
+    msg_info "Removing conflicting PHP ${CURRENT_PHP} (need ${PHP_VERSION})"
+    stop_all_services "php.*-fpm"
+    $STD apt-get purge -y "php*" 2>/dev/null || true
+    $STD apt-get autoremove -y 2>/dev/null || true
   fi
 
-  # Build module list
+  # NOW create pinning for the desired version
+  mkdir -p /etc/apt/preferences.d
+  cat <<EOF >/etc/apt/preferences.d/php-pin
+Package: php${PHP_VERSION}*
+Pin: version ${PHP_VERSION}.*
+Pin-Priority: 1001
+
+Package: php[0-9].*
+Pin: release o=packages.sury.org-php
+Pin-Priority: -1
+EOF
+
+  # Setup repository
+  prepare_repository_setup "php" "deb.sury.org-php" || {
+    msg_error "Failed to prepare PHP repository"
+    return 1
+  }
+
+  manage_tool_repository "php" "$PHP_VERSION" "" "https://packages.sury.org/debsuryorg-archive-keyring.deb" || {
+    msg_error "Failed to setup PHP repository"
+    return 1
+  }
+
+  ensure_apt_working || return 1
+  $STD apt-get update
+
+  # Get available PHP version from repository
+  local AVAILABLE_PHP_VERSION=""
+  AVAILABLE_PHP_VERSION=$(apt-cache show "php${PHP_VERSION}" 2>/dev/null | grep -m1 "^Version:" | awk '{print $2}' | cut -d- -f1) || true
+
+  if [[ -z "$AVAILABLE_PHP_VERSION" ]]; then
+    msg_error "PHP ${PHP_VERSION} not found in configured repositories"
+    return 1
+  fi
+
+  # Build module list - without version pinning (preferences.d handles it)
   local MODULE_LIST="php${PHP_VERSION}"
+
   IFS=',' read -ra MODULES <<<"$COMBINED_MODULES"
   for mod in "${MODULES[@]}"; do
-    if apt-cache show "php${PHP_VERSION}-${mod}" >/dev/null 2>&1; then
-      MODULE_LIST+=" php${PHP_VERSION}-${mod}"
-    fi
+    MODULE_LIST+=" php${PHP_VERSION}-${mod}"
   done
+
   if [[ "$PHP_FPM" == "YES" ]]; then
     MODULE_LIST+=" php${PHP_VERSION}-fpm"
   fi
@@ -3688,18 +3686,52 @@ function setup_php() {
   # install apache2 with PHP support if requested
   if [[ "$PHP_APACHE" == "YES" ]]; then
     if ! dpkg -l 2>/dev/null | grep -q "libapache2-mod-php${PHP_VERSION}"; then
-      install_packages_with_retry "apache2" "libapache2-mod-php${PHP_VERSION}" || {
-        msg_error "Failed to install Apache with PHP module"
+      msg_info "Installing Apache with PHP ${PHP_VERSION} module"
+      install_packages_with_retry "apache2" || {
+        msg_error "Failed to install Apache"
         return 1
+      }
+      install_packages_with_retry "libapache2-mod-php${PHP_VERSION}" || {
+        msg_warn "Failed to install libapache2-mod-php${PHP_VERSION}, continuing without Apache module"
       }
     fi
   fi
 
-  # Install PHP packages with retry logic
-  install_packages_with_retry $MODULE_LIST || {
-    msg_error "Failed to install PHP packages"
-    return 1
-  }
+  # Install PHP packages (pinning via preferences.d ensures correct version)
+  msg_info "Installing PHP ${PHP_VERSION} packages"
+  if ! install_packages_with_retry $MODULE_LIST; then
+    msg_warn "Failed to install PHP packages, attempting individual installation"
+
+    # Install main package first (critical)
+    install_packages_with_retry "php${PHP_VERSION}" || {
+      msg_error "Failed to install php${PHP_VERSION}"
+      return 1
+    }
+
+    # Try to install Apache module individually if requested
+    if [[ "$PHP_APACHE" == "YES" ]]; then
+      install_packages_with_retry "libapache2-mod-php${PHP_VERSION}" || {
+        msg_warn "Could not install libapache2-mod-php${PHP_VERSION}"
+      }
+    fi
+
+    # Try to install modules individually - skip those that don't exist
+    for pkg in "${MODULES[@]}"; do
+      if apt-cache search "^php${PHP_VERSION}-${pkg}\$" 2>/dev/null | grep -q "^php${PHP_VERSION}-${pkg}"; then
+        install_packages_with_retry "php${PHP_VERSION}-${pkg}" || {
+          msg_warn "Could not install php${PHP_VERSION}-${pkg}"
+        }
+      fi
+    done
+
+    if [[ "$PHP_FPM" == "YES" ]]; then
+      if apt-cache search "^php${PHP_VERSION}-fpm\$" 2>/dev/null | grep -q "^php${PHP_VERSION}-fpm"; then
+        install_packages_with_retry "php${PHP_VERSION}-fpm" || {
+          msg_warn "Could not install php${PHP_VERSION}-fpm"
+        }
+      fi
+    fi
+  fi
   cache_installed_version "php" "$PHP_VERSION"
 
   # Patch all relevant php.ini files
@@ -3735,7 +3767,24 @@ function setup_php() {
     fi
   fi
 
-  msg_ok "Setup PHP $PHP_VERSION"
+  # Verify PHP installation - critical check
+  if ! command -v php >/dev/null 2>&1; then
+    msg_error "PHP installation verification failed - php command not found"
+    return 1
+  fi
+
+  local INSTALLED_VERSION=$(php -v 2>/dev/null | awk '/^PHP/{print $2}' | cut -d. -f1,2)
+
+  # Critical: if major.minor doesn't match, fail and cleanup
+  if [[ "$INSTALLED_VERSION" != "$PHP_VERSION" ]]; then
+    msg_error "PHP version mismatch: requested ${PHP_VERSION} but got ${INSTALLED_VERSION}"
+    msg_error "This indicates a critical package installation issue"
+    # Don't cache wrong version
+    return 1
+  fi
+
+  cache_installed_version "php" "$INSTALLED_VERSION"
+  msg_ok "Setup PHP ${INSTALLED_VERSION}"
 }
 
 # ------------------------------------------------------------------------------

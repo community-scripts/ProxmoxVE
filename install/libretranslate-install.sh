@@ -36,7 +36,7 @@ setup_uv
 fetch_and_deploy_gh_release "libretranslate" "LibreTranslate/LibreTranslate"
 
 msg_info "Setup LibreTranslate (Patience)"
-TORCH_VERSION=$(grep -Eo '"torch ==[0-9]+\.[0-9]+\.[0-9]+' /opt/libretranslate/pyproject.toml | \
+TORCH_VERSION=$(grep -Eo '"torch ==[0-9]+\.[0-9]+\.[0-9]+' /opt/libretranslate/pyproject.toml |
   tail -n1 | sed 's/.*==//')
 if [[ -z "$TORCH_VERSION" ]]; then
   TORCH_VERSION="2.5.0"
@@ -83,9 +83,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

@@ -62,6 +62,7 @@ function update_script() {
     cd /opt/adventurelog/frontend || exit
     $STD pnpm i
     $STD pnpm build
+    rm -rf /opt/adventurelog-backup
     msg_ok "Updated ${APP}"
 
     msg_info "Starting Services"
@@ -69,10 +70,6 @@ function update_script() {
     systemctl start adventurelog-backend
     systemctl start adventurelog-frontend
     msg_ok "Services Started"
-
-    msg_info "Cleaning Up"
-    rm -rf /opt/adventurelog-backup
-    msg_ok "Cleaned"
     msg_ok "Updated successfully!"
   fi
   exit

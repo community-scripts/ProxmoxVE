@@ -936,7 +936,12 @@ install_script() {
     systemctl -q stop ping-instances.service
   fi
   NEXTID=$(pvesh get /cluster/nextid)
-  timezone=$(cat /etc/timezone)
+  # Read timezone - fallback for Debian 13/Proxmox 9+ where /etc/timezone doesn't exist
+  if [[ -f /etc/timezone ]]; then
+    timezone=$(cat /etc/timezone)
+  else
+    timezone=$(timedatectl show --value --property=Timezone 2>/dev/null || echo "UTC")
+  fi
   header_info
   while true; do
 

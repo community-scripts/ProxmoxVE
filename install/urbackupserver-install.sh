@@ -19,7 +19,6 @@ $STD apt install -y \
   debconf-utils
 msg_ok "Installed Dependencies"
 
-
 msg_info "Installing UrBackup Server"
 curl -fsSL https://download.opensuse.org/repositories/home:uroni/Debian_12/Release.key | gpg --dearmor -o /usr/share/keyrings/home-uroni.gpg
 cat <<EOF | sudo tee /etc/apt/sources.list.d/home-uroni.sources >/dev/null
@@ -37,9 +36,4 @@ msg_ok "Installed UrBackup Server"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc
