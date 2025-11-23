@@ -25,6 +25,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🌐 Website
 
+  - #### 🐞 Bug Fixes
+
+    - fix: enhance back navigation in NotFoundPage component and remove unused deps [@BramSuurdje](https://github.com/BramSuurdje) ([#9341](https://github.com/community-scripts/ProxmoxVE/pull/9341))
+
   - #### ✨ New Features
 
     - feat(frontend): add script disable functionality with visual indicators [@AlphaLawless](https://github.com/AlphaLawless) ([#9374](https://github.com/community-scripts/ProxmoxVE/pull/9374))
