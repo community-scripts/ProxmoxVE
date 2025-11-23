@@ -1,5 +1,55 @@
 [
   {
+    "name": "rcourtman/Pulse",
+    "version": "v4.32.4",
+    "date": "2025-11-23T11:05:14Z"
+  },
+  {
+    "name": "readeck/readeck",
+    "version": "0.21.2",
+    "date": "2025-11-23T10:56:43Z"
+  },
+  {
+    "name": "verdaccio/verdaccio",
+    "version": "generator-verdaccio-plugin@6.0.0-next-8.26",
+    "date": "2025-11-23T07:46:06Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.3",
+    "date": "2025-09-20T12:12:33Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.340",
+    "date": "2025-11-23T06:00:18Z"
+  },
+  {
+    "name": "tobychui/zoraxy",
+    "version": "v3.3.0-rc1",
+    "date": "2025-11-23T05:42:35Z"
+  },
+  {
+    "name": "hyperion-project/hyperion.ng",
+    "version": "2.1.1",
+    "date": "2025-06-14T17:45:06Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.80.5.rc.2",
+    "date": "2025-11-23T00:31:24Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.0.1",
+    "date": "2025-10-15T16:53:55Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-11-23T00:27:04Z"
+  },
+  {
     "name": "paperless-ngx/paperless-ngx",
     "version": "v2.20.0",
     "date": "2025-11-22T21:56:00Z"
@@ -40,6 +90,11 @@
     "date": "2025-11-22T12:54:08Z"
   },
   {
+    "name": "keycloak/keycloak",
+    "version": "26.4.5",
+    "date": "2025-11-12T15:24:23Z"
+  },
+  {
     "name": "pocketbase/pocketbase",
     "version": "v0.34.0",
     "date": "2025-11-22T09:18:14Z"
@@ -60,34 +115,14 @@
     "date": "2025-11-22T07:02:52Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.339",
-    "date": "2025-11-22T06:05:53Z"
-  },
-  {
     "name": "theonedev/onedev",
     "version": "v13.1.0",
     "date": "2025-11-22T04:29:25Z"
   },
   {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-11-22T00:27:05Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.0.1",
-    "date": "2025-10-15T16:53:55Z"
-  },
-  {
     "name": "TwiN/gatus",
     "version": "v5.33.0",
     "date": "2025-11-21T22:54:49Z"
-  },
-  {
-    "name": "BerriAI/litellm",
-    "version": "v1.78.5-stable-patch-1",
-    "date": "2025-11-21T19:57:45Z"
   },
   {
     "name": "homarr-labs/homarr",
@@ -103,16 +138,6 @@
     "name": "rclone/rclone",
     "version": "v1.72.0",
     "date": "2025-11-21T18:20:58Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.4.5",
-    "date": "2025-11-12T15:24:23Z"
-  },
-  {
-    "name": "readeck/readeck",
-    "version": "0.21.1",
-    "date": "2025-11-21T17:17:52Z"
   },
   {
     "name": "mattermost/mattermost",
@@ -155,11 +180,6 @@
     "date": "2025-11-21T12:16:39Z"
   },
   {
-    "name": "rcourtman/Pulse",
-    "version": "v4.32.3",
-    "date": "2025-11-21T11:16:25Z"
-  },
-  {
     "name": "seriousm4x/UpSnap",
     "version": "5.2.4",
     "date": "2025-11-21T10:25:05Z"
@@ -188,11 +208,6 @@
     "name": "MariaDB/server",
     "version": "mariadb-12.1.2",
     "date": "2025-11-18T15:16:21Z"
-  },
-  {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.3",
-    "date": "2025-09-20T12:12:33Z"
   },
   {
     "name": "bluenviron/mediamtx",
@@ -360,11 +375,6 @@
     "date": "2025-11-19T00:09:31Z"
   },
   {
-    "name": "hyperion-project/hyperion.ng",
-    "version": "2.1.1",
-    "date": "2025-06-14T17:45:06Z"
-  },
-  {
     "name": "gtsteffaniak/filebrowser",
     "version": "v1.0.1-stable",
     "date": "2025-11-10T16:51:44Z"
@@ -528,11 +538,6 @@
     "name": "zitadel/zitadel",
     "version": "v4.7.0",
     "date": "2025-11-14T09:45:13Z"
-  },
-  {
-    "name": "verdaccio/verdaccio",
-    "version": "generator-verdaccio-plugin@6.0.0-next-8.25",
-    "date": "2025-11-14T08:14:55Z"
   },
   {
     "name": "runtipi/runtipi",
@@ -833,11 +838,6 @@
     "name": "maxdorninger/MediaManager",
     "version": "v1.9.1",
     "date": "2025-11-02T21:14:50Z"
-  },
-  {
-    "name": "tobychui/zoraxy",
-    "version": "v3.2.9",
-    "date": "2025-11-02T05:48:39Z"
   },
   {
     "name": "9001/copyparty",
