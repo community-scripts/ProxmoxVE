@@ -35,7 +35,6 @@
         "browser_extension": false,
         "cli_only": false,
         "self_hosted": true,
-        "saas": false,
         "docker": true,
         "docker_compose": true,
         "helm": true,

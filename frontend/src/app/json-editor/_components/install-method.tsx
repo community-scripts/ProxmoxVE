@@ -60,7 +60,7 @@ export const defaultInstallMethod = {
     web_app: false,
     browser_extension: false,
     cli_only: false,
-    hosting: { self_hosted: false, saas: false, managed_cloud: false },
+    hosting: { self_hosted: false, managed_cloud: false },
     ui: { cli: false, gui: false, web_ui: false, api: false, tui: false },
   },
 } as const;
@@ -321,7 +321,7 @@ function InstallMethod({ script, setScript, setIsValid, setZodErrors }: InstallM
               <div className="flex items-center justify-between">
                 <div>
                   <div className="font-medium text-base">Hosting</div>
-                  <div className="text-xs text-gray-500">Self-hosted / SaaS / Managed Cloud</div>
+                  <div className="text-xs text-gray-500">Self-hosted / Managed Cloud</div>
                 </div>
 
                 <div>
@@ -341,13 +341,6 @@ function InstallMethod({ script, setScript, setIsValid, setZodErrors }: InstallM
                   onChange={(v: boolean) => updatePlatform(["hosting", "self_hosted"], v)}
                 >
                   Self-hosted
-                </ToggleCheckbox>
-
-                <ToggleCheckbox
-                  checked={!!method.platform?.hosting?.saas}
-                  onChange={(v: boolean) => updatePlatform(["hosting", "saas"], v)}
-                >
-                  SaaS
                 </ToggleCheckbox>
 
                 <ToggleCheckbox

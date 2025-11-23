@@ -14,7 +14,6 @@ export const DeploymentSchema = z.object({
 export const HostingSchema = z
   .object({
     self_hosted: z.boolean().optional(),
-    saas: z.boolean().optional(),
     managed_cloud: z.boolean().optional(),
   })
   .partial();

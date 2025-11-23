@@ -32,7 +32,6 @@ export type Script = {
       cli_only: boolean,
       hosting: {
         self_hosted: boolean,
-        saas: boolean,
         managed_cloud: boolean
       },
       deployment: {
