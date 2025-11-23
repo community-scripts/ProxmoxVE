@@ -23,6 +23,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Update glpi-install.sh to remove install.php [@CrazyWolf13](https://github.com/CrazyWolf13) ([#9378](https://github.com/community-scripts/ProxmoxVE/pull/9378))
 
+### 🌐 Website
+
+  - #### ✨ New Features
+
+    - feat(frontend): add script disable functionality with visual indicators [@AlphaLawless](https://github.com/AlphaLawless) ([#9374](https://github.com/community-scripts/ProxmoxVE/pull/9374))
+
 ## 2025-11-22
 
 ### 🆕 New Scripts
