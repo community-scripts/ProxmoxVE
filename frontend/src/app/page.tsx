@@ -104,11 +104,11 @@ export default function Page() {
 
             <div className="flex flex-col gap-4">
               <h1 className="max-w-2xl text-center text-3xl font-semibold tracking-tighter md:text-7xl">
-                Discover and deploy open source everyday
+                Discover and deploy open source tools everyday
               </h1>
               <div className="max-w-2xl gap-2 flex flex-col text-center sm:text-lg text-sm leading-relaxed tracking-tight text-muted-foreground md:text-xl">
                 <p>
-                  Explore open source tools that make deployment effortless.
+                  Explore open source tools. Make deployment effortless.
                 </p>
                 {/* <p>
                   With 400+ scripts to help you manage your
