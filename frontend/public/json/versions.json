@@ -1,5 +1,45 @@
 [
   {
+    "name": "paperless-ngx/paperless-ngx",
+    "version": "v2.20.0",
+    "date": "2025-11-22T21:56:00Z"
+  },
+  {
+    "name": "OliveTin/OliveTin",
+    "version": "2025.11.25",
+    "date": "2025-11-22T21:00:52Z"
+  },
+  {
+    "name": "Cleanuparr/Cleanuparr",
+    "version": "v2.4.6",
+    "date": "2025-11-22T20:32:09Z"
+  },
+  {
+    "name": "go-gitea/gitea",
+    "version": "v1.25.2",
+    "date": "2025-11-22T19:37:02Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.30.13",
+    "date": "2025-11-22T18:22:32Z"
+  },
+  {
+    "name": "nzbgetcom/nzbget",
+    "version": "v25.4",
+    "date": "2025-10-09T10:27:01Z"
+  },
+  {
+    "name": "bunkerity/bunkerweb",
+    "version": "v1.6.6",
+    "date": "2025-11-22T16:10:29Z"
+  },
+  {
+    "name": "TechnitiumSoftware/DnsServer",
+    "version": "v14.2.0",
+    "date": "2025-11-22T12:54:08Z"
+  },
+  {
     "name": "pocketbase/pocketbase",
     "version": "v0.34.0",
     "date": "2025-11-22T09:18:14Z"
@@ -110,11 +150,6 @@
     "date": "2025-11-21T12:43:04Z"
   },
   {
-    "name": "bunkerity/bunkerweb",
-    "version": "v1.6.5",
-    "date": "2025-10-06T15:25:17Z"
-  },
-  {
     "name": "chrisbenincasa/tunarr",
     "version": "v0.23.0-alpha.24",
     "date": "2025-11-21T12:16:39Z"
@@ -183,11 +218,6 @@
     "name": "saltstack/salt",
     "version": "v3007.9",
     "date": "2025-11-20T17:58:32Z"
-  },
-  {
-    "name": "msgbyte/tianji",
-    "version": "v1.30.12",
-    "date": "2025-11-20T16:13:19Z"
   },
   {
     "name": "neo4j/neo4j",
@@ -465,24 +495,9 @@
     "date": "2025-11-16T13:04:21Z"
   },
   {
-    "name": "TechnitiumSoftware/DnsServer",
-    "version": "v14.1.0",
-    "date": "2025-11-16T11:32:10Z"
-  },
-  {
     "name": "FlowiseAI/Flowise",
     "version": "flowise@3.0.11",
     "date": "2025-11-16T01:29:06Z"
-  },
-  {
-    "name": "OliveTin/OliveTin",
-    "version": "3000.4.0",
-    "date": "2025-11-16T01:02:49Z"
-  },
-  {
-    "name": "paperless-ngx/paperless-ngx",
-    "version": "v2.19.6",
-    "date": "2025-11-15T22:56:45Z"
   },
   {
     "name": "karakeep-app/karakeep",
@@ -513,11 +528,6 @@
     "name": "zitadel/zitadel",
     "version": "v4.7.0",
     "date": "2025-11-14T09:45:13Z"
-  },
-  {
-    "name": "nzbgetcom/nzbget",
-    "version": "v25.4",
-    "date": "2025-10-09T10:27:01Z"
   },
   {
     "name": "verdaccio/verdaccio",
@@ -643,11 +653,6 @@
     "name": "pelican-dev/wings",
     "version": "v1.0.0-beta19",
     "date": "2025-11-09T17:26:30Z"
-  },
-  {
-    "name": "Cleanuparr/Cleanuparr",
-    "version": "v2.4.5",
-    "date": "2025-11-09T17:14:01Z"
   },
   {
     "name": "authelia/authelia",
@@ -778,11 +783,6 @@
     "name": "Sonarr/Sonarr",
     "version": "v4.0.16.2944",
     "date": "2025-11-05T01:56:48Z"
-  },
-  {
-    "name": "go-gitea/gitea",
-    "version": "v1.25.1",
-    "date": "2025-11-04T20:01:09Z"
   },
   {
     "name": "jhuckaby/Cronicle",
