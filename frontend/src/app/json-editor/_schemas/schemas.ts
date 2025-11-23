@@ -14,7 +14,6 @@ export const DeploymentSchema = z.object({
 export const HostingSchema = z
   .object({
     self_hosted: z.boolean().optional(),
-    saas: z.boolean().optional(),
     managed_cloud: z.boolean().optional(),
   })
   .partial();
@@ -77,6 +76,7 @@ export const ScriptSchema = z.object({
   interface_port: z.number().nullable().optional(),
   documentation: z.string().nullable().optional(),
   website: z.string().url().nullable().optional(),
+  source_code: z.string().url().nullable().optional(),
   logo: z.string().url().nullable().optional(),
 
   description: z.string().min(1, "Description is required"),

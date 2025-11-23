@@ -36,6 +36,7 @@ const initialScript: Script = {
   interface_port: null,
   documentation: null,
   website: null,
+  source_code: null,
   logo: null,
   description: "",
   install_methods: [],
@@ -386,9 +387,9 @@ export default function JSONGenerator() {
               <Input
                 placeholder="https://github.com/your/repo"
                 type="url"
-                value={(script as any).github || ""}
-                onChange={e => updateScript("github" as keyof Script, e.target.value || null)}
-                onBlur={e => updateScript("github" as keyof Script, normalizeUrl(e.target.value))}
+                value={script.source_code || ""}
+                onChange={e => updateScript("source_code", e.target.value || null)}
+                onBlur={e => updateScript("source_code", normalizeUrl(e.target.value))}
               />
             </div>
           </div>

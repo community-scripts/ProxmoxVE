@@ -31,7 +31,7 @@ type PlatformInfo = {
   web_app?: boolean;
   browser_extension?: boolean;
   cli_only?: boolean;
-  hosting?: { self_hosted?: boolean; saas?: boolean; managed_cloud?: boolean };
+  hosting?: { self_hosted?: boolean; managed_cloud?: boolean };
   deployment?: {
     script?: boolean;
     docker?: boolean;
@@ -179,7 +179,6 @@ function PlatformSummary({ method }: { method?: InstallMethodWithPlatform }) {
   ].filter(Boolean) as string[];
 
   const hosting = [
-    platform.hosting?.saas && "SaaS",
     platform.hosting?.self_hosted && "Self-hosted",
     platform.hosting?.managed_cloud && "Managed cloud",
   ].filter(Boolean) as string[];

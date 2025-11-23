@@ -50,7 +50,6 @@ export default function DefaultSettings({ item }: { item: Script }) {
   ].filter(Boolean) as string[];
 
   const hosting = [
-    platform.hosting?.saas && "SaaS",
     platform.hosting?.self_hosted && "Self-hosted",
     platform.hosting?.managed_cloud && "Managed cloud",
   ].filter(Boolean) as string[];
