@@ -48,6 +48,15 @@ type InstallMethodWithPlatform = Script["install_methods"][0] & {
 };
 
 function SecondaryMeta({ item }: { item: Script }) {
+  // Helper function to ensure URL has proper protocol
+  const ensureHttps = (url: string): string => {
+    if (!url) return url;
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      return url;
+    }
+    return `https://${url}`;
+  };
+
   const parts: { label: string; href?: string; icon: React.ReactNode }[] = [];
 
   // 🗓 Added
@@ -62,7 +71,7 @@ function SecondaryMeta({ item }: { item: Script }) {
   if (item.website) {
     parts.push({
       label: "Website",
-      href: item.website,
+      href: ensureHttps(item.website),
       icon: <Globe className="h-4 w-4 text-muted-foreground" />,
     });
   }
@@ -71,7 +80,7 @@ function SecondaryMeta({ item }: { item: Script }) {
   if (item.documentation) {
     parts.push({
       label: "Docs",
-      href: item.documentation,
+      href: ensureHttps(item.documentation),
       icon: <BookOpenText className="h-4 w-4 text-muted-foreground" />,
     });
   }
@@ -81,7 +90,7 @@ function SecondaryMeta({ item }: { item: Script }) {
   if (sourceCode) {
     parts.push({
       label: "Source code",
-      href: sourceCode,
+      href: ensureHttps(sourceCode),
       icon: <Code className="h-4 w-4 text-muted-foreground" />,
     });
   }

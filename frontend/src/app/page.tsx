@@ -1,7 +1,8 @@
 "use client";
 import { ArrowRightIcon, ExternalLink, Zap, Shield, Users, Code2, Rocket, BookOpen } from "lucide-react";
 import { useEffect, useState } from "react";
-import { FaGithub } from "react-icons/fa";
+import { FaGithub, FaLinkedin, FaFacebook, FaXTwitter } from "react-icons/fa6";
+import { SiThreads } from "react-icons/si";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 
@@ -238,6 +239,53 @@ export default function Page() {
                   </CardDescription>
                 </CardHeader>
               </Card>
+            </div>
+          </div>
+
+          {/* Social Media Section */}
+          <div className="py-16 border-t">
+            <div className="max-w-4xl mx-auto text-center">
+              <h2 className="text-2xl font-bold tracking-tighter md:text-3xl mb-6">
+                Connect With Us
+              </h2>
+              <div className="flex flex-wrap items-center justify-center gap-4">
+                <a
+                  href="https://linkedin.com/company/dailyfoss"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-6 py-3 rounded-lg border-2 border-primary/20 hover:border-primary/50 hover:bg-primary/5 transition-all group"
+                >
+                  <FaLinkedin className="h-5 w-5 text-[#0A66C2] group-hover:scale-110 transition-transform" />
+                  <span className="font-medium">LinkedIn</span>
+                </a>
+                <a
+                  href="https://facebook.com/dailyfoss"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-6 py-3 rounded-lg border-2 border-primary/20 hover:border-primary/50 hover:bg-primary/5 transition-all group"
+                >
+                  <FaFacebook className="h-5 w-5 text-[#1877F2] group-hover:scale-110 transition-transform" />
+                  <span className="font-medium">Facebook</span>
+                </a>
+                <a
+                  href="https://threads.net/@dailyfoss"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-6 py-3 rounded-lg border-2 border-primary/20 hover:border-primary/50 hover:bg-primary/5 transition-all group"
+                >
+                  <SiThreads className="h-5 w-5 group-hover:scale-110 transition-transform" />
+                  <span className="font-medium">Threads</span>
+                </a>
+                <a
+                  href="https://x.com/dailyfoss"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-6 py-3 rounded-lg border-2 border-primary/20 hover:border-primary/50 hover:bg-primary/5 transition-all group"
+                >
+                  <FaXTwitter className="h-5 w-5 group-hover:scale-110 transition-transform" />
+                  <span className="font-medium">X (Twitter)</span>
+                </a>
+              </div>
             </div>
           </div>
 
