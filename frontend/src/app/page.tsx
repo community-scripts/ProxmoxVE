@@ -61,32 +61,20 @@ export default function Page() {
                         `inline`,
                       )}
                     >
-                      Community-Driven Project
+                      Your Daily FOSS Discovery
                     </span>
                   </AnimatedGradientText>
                 </div>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Thank You!</DialogTitle>
+                  <DialogTitle>About Daily FOSS</DialogTitle>
                   <DialogDescription>
-                    A big thank you to tteck and the many contributors who have made this project possible. Your hard
-                    work is truly appreciated by the entire Proxmox community!
+                    Daily FOSS is your go-to platform for discovering and deploying free and open source software.
+                    We curate the best FOSS projects with easy deployment options across multiple platforms.
                   </DialogDescription>
                 </DialogHeader>
                 <CardFooter className="flex flex-col gap-2">
-                  <Button className="w-full" variant="outline" asChild>
-                    <a
-                      href="https://github.com/tteck"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center"
-                    >
-                      <FaGithub className="mr-2 h-4 w-4" />
-                      {" "}
-                      Tteck&apos;s GitHub
-                    </a>
-                  </Button>
                   <Button className="w-full" asChild>
                     <a
                       href={`https://github.com/community-scripts/${basePath}`}
@@ -94,9 +82,9 @@ export default function Page() {
                       rel="noopener noreferrer"
                       className="flex items-center justify-center"
                     >
-                      <ExternalLink className="mr-2 h-4 w-4" />
+                      <FaGithub className="mr-2 h-4 w-4" />
                       {" "}
-                      Proxmox Helper Scripts
+                      View on GitHub
                     </a>
                   </Button>
                 </CardFooter>
@@ -105,15 +93,17 @@ export default function Page() {
 
             <div className="flex flex-col gap-6 items-center">
               <h1 className="max-w-4xl text-center text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl">
-                Deploy Open Source Tools in
+                Discover & Deploy
                 {" "}
                 <span className="bg-gradient-to-r from-[#ffaa40] via-[#9c40ff] to-[#ffaa40] bg-clip-text text-transparent">
-                  Minutes
+                  Open Source
                 </span>
+                {" "}
+                Tools Daily
               </h1>
               <p className="max-w-2xl text-center text-lg leading-relaxed text-muted-foreground md:text-xl">
-                Streamline your Proxmox VE experience with 400+ community-maintained scripts.
-                From containers to VMs, we make deployment effortless.
+                Your curated platform for exploring and deploying free and open source software.
+                From self-hosted apps to cloud solutions, we make FOSS accessible to everyone.
               </p>
             </div>
 
@@ -126,7 +116,7 @@ export default function Page() {
                   iconPlacement="right"
                   className="text-base"
                 >
-                  Browse Scripts
+                  Explore Tools
                 </Button>
               </Link>
               <Button size="lg" variant="outline" asChild className="text-base">
@@ -147,21 +137,21 @@ export default function Page() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto text-center">
               <div className="flex flex-col items-center gap-2">
                 <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-[#ffaa40] to-[#9c40ff] bg-clip-text text-transparent">
-                  400+
+                  Curated
                 </div>
-                <div className="text-muted-foreground">Ready-to-use Scripts</div>
+                <div className="text-muted-foreground">FOSS Collection</div>
               </div>
               <div className="flex flex-col items-center gap-2">
                 <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-[#9c40ff] to-[#ffaa40] bg-clip-text text-transparent">
-                  Open Source
+                  Multi-Platform
                 </div>
-                <div className="text-muted-foreground">Community Driven</div>
+                <div className="text-muted-foreground">Deployment Options</div>
               </div>
               <div className="flex flex-col items-center gap-2">
                 <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-[#ffaa40] to-[#9c40ff] bg-clip-text text-transparent">
-                  Active
+                  Daily
                 </div>
-                <div className="text-muted-foreground">Regular Updates</div>
+                <div className="text-muted-foreground">New Discoveries</div>
               </div>
             </div>
           </div>
@@ -170,10 +160,10 @@ export default function Page() {
           <div className="py-24" id="features">
             <div className="text-center mb-16">
               <h2 className="text-3xl font-bold tracking-tighter md:text-5xl mb-4">
-                Why Choose Helper Scripts?
+                Why Choose Daily FOSS?
               </h2>
               <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-                Everything you need to manage and deploy applications on Proxmox VE
+                Your complete platform for discovering and deploying free and open source software
               </p>
             </div>
 
@@ -183,9 +173,9 @@ export default function Page() {
                   <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-[#ffaa40]/20 to-[#9c40ff]/20 flex items-center justify-center mb-4">
                     <Zap className="h-6 w-6 text-[#ffaa40]" />
                   </div>
-                  <CardTitle>Lightning Fast</CardTitle>
+                  <CardTitle>Quick Deployment</CardTitle>
                   <CardDescription>
-                    Deploy applications in minutes with automated installation scripts. No manual configuration needed.
+                    Deploy with scripts, Docker, Kubernetes, or Terraform. Choose the method that works best for you.
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -195,9 +185,9 @@ export default function Page() {
                   <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-[#9c40ff]/20 to-[#ffaa40]/20 flex items-center justify-center mb-4">
                     <Shield className="h-6 w-6 text-[#9c40ff]" />
                   </div>
-                  <CardTitle>Battle-Tested</CardTitle>
+                  <CardTitle>Trusted & Verified</CardTitle>
                   <CardDescription>
-                    Scripts are thoroughly tested and maintained by an active community of Proxmox users.
+                    Every tool is carefully curated and verified for security, reliability, and active maintenance.
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -207,9 +197,9 @@ export default function Page() {
                   <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-[#ffaa40]/20 to-[#9c40ff]/20 flex items-center justify-center mb-4">
                     <Users className="h-6 w-6 text-[#ffaa40]" />
                   </div>
-                  <CardTitle>Community Driven</CardTitle>
+                  <CardTitle>Community Powered</CardTitle>
                   <CardDescription>
-                    Built by the community, for the community. Contribute, suggest, and improve together.
+                    Built by the FOSS community. Contribute, suggest new tools, and help others discover great software.
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -219,9 +209,9 @@ export default function Page() {
                   <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-[#9c40ff]/20 to-[#ffaa40]/20 flex items-center justify-center mb-4">
                     <Code2 className="h-6 w-6 text-[#9c40ff]" />
                   </div>
-                  <CardTitle>Open Source</CardTitle>
+                  <CardTitle>Cross-Platform</CardTitle>
                   <CardDescription>
-                    Fully transparent and open source. Review, modify, and customize scripts to fit your needs.
+                    Find tools for Linux, Windows, macOS, web, mobile, and more. All in one place.
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -231,9 +221,9 @@ export default function Page() {
                   <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-[#ffaa40]/20 to-[#9c40ff]/20 flex items-center justify-center mb-4">
                     <Rocket className="h-6 w-6 text-[#ffaa40]" />
                   </div>
-                  <CardTitle>Wide Selection</CardTitle>
+                  <CardTitle>Rich Metadata</CardTitle>
                   <CardDescription>
-                    From databases to media servers, web apps to automation tools. Find what you need.
+                    Detailed information including platforms, deployment methods, documentation, and default credentials.
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -243,9 +233,9 @@ export default function Page() {
                   <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-[#9c40ff]/20 to-[#ffaa40]/20 flex items-center justify-center mb-4">
                     <BookOpen className="h-6 w-6 text-[#9c40ff]" />
                   </div>
-                  <CardTitle>Well Documented</CardTitle>
+                  <CardTitle>Always Updated</CardTitle>
                   <CardDescription>
-                    Clear documentation and examples help you get started quickly and troubleshoot easily.
+                    Daily updates with new tools, features, and improvements. Never miss out on the latest FOSS.
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -260,7 +250,7 @@ export default function Page() {
                   Frequently Asked Questions
                 </h2>
                 <p className="text-muted-foreground text-lg">
-                  Find answers to common questions about Proxmox VE Helper Scripts
+                  Find answers to common questions about Daily FOSS
                 </p>
               </div>
               <FAQ />
@@ -271,10 +261,10 @@ export default function Page() {
           <div className="py-24">
             <div className="max-w-4xl mx-auto text-center border rounded-2xl p-12 bg-gradient-to-br from-[#ffaa40]/5 to-[#9c40ff]/5">
               <h2 className="text-3xl font-bold tracking-tighter md:text-4xl mb-4">
-                Ready to Get Started?
+                Ready to Explore?
               </h2>
               <p className="text-muted-foreground text-lg mb-8 max-w-2xl mx-auto">
-                Browse our collection of scripts and start deploying applications on your Proxmox VE environment today.
+                Start discovering amazing free and open source software. Find the perfect tools for your next project.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link href="/scripts">
@@ -284,7 +274,7 @@ export default function Page() {
                     Icon={CustomArrowRightIcon}
                     iconPlacement="right"
                   >
-                    Explore All Scripts
+                    Browse All Tools
                   </Button>
                 </Link>
                 <Button size="lg" variant="outline" asChild>
