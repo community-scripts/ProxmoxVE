@@ -14,6 +14,8 @@ export type Script = {
   logo: string | null;
   config_path: string;
   description: string;
+  disable?: boolean;
+  disable_description?: string;
   install_methods: {
     type: "default" | "alpine";
     script: string;

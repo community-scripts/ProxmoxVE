@@ -42,6 +42,8 @@ const initialScript: Script = {
   website: null,
   logo: null,
   description: "",
+  disable: undefined,
+  disable_description: undefined,
   install_methods: [],
   default_credentials: {
     username: null,
@@ -261,7 +263,25 @@ export default function JSONGenerator() {
               <Switch checked={script.privileged} onCheckedChange={checked => updateScript("privileged", checked)} />
               <label>Privileged</label>
             </div>
+            <div className="flex items-center space-x-2">
+              <Switch checked={script.disable || false} onCheckedChange={checked => updateScript("disable", checked)} />
+              <label>Disabled</label>
+            </div>
           </div>
+          {script.disable && (
+            <div>
+              <Label>
+                Disable Description
+                {" "}
+                <span className="text-red-500">*</span>
+              </Label>
+              <Textarea
+                placeholder="Explain why this script is disabled..."
+                value={script.disable_description || ""}
+                onChange={e => updateScript("disable_description", e.target.value)}
+              />
+            </div>
+          )}
           <Input
             placeholder="Interface Port"
             type="number"
