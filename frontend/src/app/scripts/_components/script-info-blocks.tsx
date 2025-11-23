@@ -75,50 +75,51 @@ export function LatestScripts({ items }: { items: Category[] }) {
   return (
     <div className="">
       {latestScripts.length > 0 && (
-        <div className="flex w-full items-center justify-between">
-          <h2 className="text-lg font-semibold">Newest Scripts</h2>
-          <div className="flex items-center justify-end gap-1">
+        <div className="flex w-full items-center justify-between mb-4">
+          <h2 className="text-2xl font-bold tracking-tight">Newest Scripts</h2>
+          <div className="flex items-center justify-end gap-2">
             {page > 1 && (
-              <div className="cursor-pointer select-none p-2 text-sm font-semibold" onClick={goToPreviousPage}>
+              <div className="cursor-pointer select-none px-4 py-2 text-sm font-semibold rounded-lg hover:bg-accent transition-colors" onClick={goToPreviousPage}>
                 Previous
               </div>
             )}
             {endIndex < latestScripts.length && (
-              <div onClick={goToNextPage} className="cursor-pointer select-none p-2 text-sm font-semibold">
+              <div onClick={goToNextPage} className="cursor-pointer select-none px-4 py-2 text-sm font-semibold rounded-lg hover:bg-accent transition-colors">
                 {page === 1 ? "More.." : "Next"}
               </div>
             )}
           </div>
         </div>
       )}
-      <div className="min-w flex w-full flex-row flex-wrap gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {latestScripts.slice(startIndex, endIndex).map(script => (
-          <Card key={script.slug} className="min-w-[250px] flex-1 flex-grow bg-accent/30">
+          <Card key={script.slug} className="bg-accent/30 border-2 hover:border-primary/50 transition-all duration-300 hover:shadow-lg flex flex-col">
             <CardHeader>
-              <CardTitle className="flex items-center gap-3">
-                <div className="flex h-16 w-16 min-w-16 items-center justify-center rounded-lg bg-accent p-1">
+              <CardTitle className="flex items-start gap-3">
+                <div className="flex h-16 w-16 min-w-16 items-center justify-center rounded-xl bg-gradient-to-br from-accent/40 to-accent/60 p-1 shadow-md">
                   <AppIcon src={script.logo} name={script.name || script.slug} />
                 </div>
-                <div className="flex flex-col">
-                  <p className="text-sm text-muted-foreground flex items-center gap-1">
-                    <CalendarPlus className="h-4 w-4" />
+                <div className="flex flex-col flex-1 min-w-0">
+                  <h3 className="font-semibold text-base line-clamp-1 mb-1">{script.name}</h3>
+                  <p className="text-xs text-muted-foreground flex items-center gap-1">
+                    <CalendarPlus className="h-3 w-3" />
                     {extractDate(script.date_created)}
                   </p>
                 </div>
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <CardDescription className="line-clamp-3 text-card-foreground">{script.description}</CardDescription>
+            <CardContent className="flex-grow">
+              <CardDescription className="line-clamp-3 text-sm leading-relaxed">{script.description}</CardDescription>
             </CardContent>
-            <CardFooter className="">
-              <Button asChild variant="outline">
+            <CardFooter className="pt-2">
+              <Button asChild variant="outline" className="w-full">
                 <Link
                   href={{
                     pathname: "/scripts",
                     query: { id: script.slug },
                   }}
                 >
-                  View Script
+                  View Details
                 </Link>
               </Button>
             </CardFooter>
@@ -138,33 +139,34 @@ export function MostViewedScripts({ items }: { items: Category[] }) {
   return (
     <div className="">
       {mostViewedScripts.length > 0 && (
-        <>
-          <h2 className="text-lg font-semibold mb-1">Most Viewed Scripts</h2>
-        </>
+        <div className="flex w-full items-center justify-between mb-4">
+          <h2 className="text-2xl font-bold tracking-tight">Most Viewed Scripts</h2>
+        </div>
       )}
-      <div className="min-w flex w-full flex-row flex-wrap gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {mostViewedScripts.map(script => (
-          <Card key={script.slug} className="min-w-[250px] flex-1 flex-grow bg-accent/30">
+          <Card key={script.slug} className="bg-accent/30 border-2 hover:border-primary/50 transition-all duration-300 hover:shadow-lg flex flex-col">
             <CardHeader>
-              <CardTitle className="flex items-center gap-3">
-                <div className="flex h-16 w-16 min-w-16 items-center justify-center rounded-lg bg-accent p-1">
+              <CardTitle className="flex items-start gap-3">
+                <div className="flex h-16 w-16 min-w-16 items-center justify-center rounded-xl bg-gradient-to-br from-accent/40 to-accent/60 p-1 shadow-md">
                   <AppIcon src={script.logo} name={script.name || script.slug} />
                 </div>
-                <div className="flex flex-col">
-                  <p className="flex items-center gap-1 text-sm text-muted-foreground">
-                    <CalendarPlus className="h-4 w-4" />
+                <div className="flex flex-col flex-1 min-w-0">
+                  <h3 className="font-semibold text-base line-clamp-1 mb-1">{script.name}</h3>
+                  <p className="text-xs text-muted-foreground flex items-center gap-1">
+                    <CalendarPlus className="h-3 w-3" />
                     {extractDate(script.date_created)}
                   </p>
                 </div>
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <CardDescription className="line-clamp-3 text-card-foreground break-words">
+            <CardContent className="flex-grow">
+              <CardDescription className="line-clamp-3 text-sm leading-relaxed break-words">
                 {script.description}
               </CardDescription>
             </CardContent>
-            <CardFooter className="">
-              <Button asChild variant="outline">
+            <CardFooter className="pt-2">
+              <Button asChild variant="outline" className="w-full">
                 <Link
                   href={{
                     pathname: "/scripts",
@@ -172,7 +174,7 @@ export function MostViewedScripts({ items }: { items: Category[] }) {
                   }}
                   prefetch={false}
                 >
-                  View Script
+                  View Details
                 </Link>
               </Button>
             </CardFooter>
