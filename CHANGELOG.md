@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-11-23
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - fix: Snipe-IT update check failure [@ruanmed](https://github.com/ruanmed) ([#9371](https://github.com/community-scripts/ProxmoxVE/pull/9371))
+
 ## 2025-11-22
 
 ### 🆕 New Scripts
