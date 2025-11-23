@@ -36,6 +36,7 @@ const initialScript: Script = {
   interface_port: null,
   documentation: null,
   website: null,
+  github: null,
   logo: null,
   description: "",
   install_methods: [],
