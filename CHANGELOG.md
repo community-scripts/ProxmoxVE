@@ -18,6 +18,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - fix: Snipe-IT update check failure [@ruanmed](https://github.com/ruanmed) ([#9371](https://github.com/community-scripts/ProxmoxVE/pull/9371))
 
+  - #### 🔧 Refactor
+
+    - Update glpi-install.sh to remove install.php [@CrazyWolf13](https://github.com/CrazyWolf13) ([#9378](https://github.com/community-scripts/ProxmoxVE/pull/9378))
+
 ## 2025-11-22
 
 ### 🆕 New Scripts
