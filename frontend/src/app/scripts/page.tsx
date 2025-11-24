@@ -9,9 +9,10 @@ import { ScriptItem } from "@/app/scripts/_components/script-item";
 import { fetchCategories } from "@/lib/data";
 import { Input } from "@/components/ui/input";
 
-import { FeaturedScripts, LatestScripts, TrendingScripts, PopularScripts } from "./_components/script-info-blocks";
+import { LatestScripts, TrendingScripts, PopularScripts } from "./_components/script-info-blocks";
 import Sidebar from "./_components/sidebar";
 import { ScriptFilters, type FilterState } from "./_components/script-filters";
+import { SponsoredSidebar } from "./_components/sponsored-sidebar";
 
 export const dynamic = "force-static";
 
@@ -203,8 +204,8 @@ function ScriptContent() {
         </div>
       )}
 
-      <div className="mt-6 sm:mt-8 flex sm:px-4 xl:px-0">
-        {/* Desktop Sidebar */}
+      <div className="mt-6 sm:mt-8 flex sm:px-4 xl:px-0 gap-4">
+        {/* Left Sidebar - Categories */}
         <div className="hidden sm:flex">
           <Sidebar
             items={filteredLinks}
@@ -215,18 +216,21 @@ function ScriptContent() {
           />
         </div>
 
-        <div className="mx-4 w-full sm:mx-0 sm:ml-4 pb-8">
+        {/* Main Content */}
+        <div className="mx-4 w-full sm:mx-0 pb-8 flex-1 min-w-0">
           {selectedScript && item ? (
             <ScriptItem item={item} setSelectedScript={setSelectedScript} />
           ) : (
             <div className="flex w-full flex-col gap-8">
-              <FeaturedScripts items={filteredLinks} />
               <TrendingScripts items={filteredLinks} />
               <LatestScripts items={filteredLinks} />
               <PopularScripts items={filteredLinks} />
             </div>
           )}
         </div>
+
+        {/* Right Sidebar - Sponsored */}
+        <SponsoredSidebar items={filteredLinks} onScriptSelect={setSelectedScript} />
       </div>
     </div>
   );

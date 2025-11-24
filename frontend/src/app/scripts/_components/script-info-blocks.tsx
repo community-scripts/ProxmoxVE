@@ -87,7 +87,7 @@ export function FeaturedScripts({ items }: { items: Category[] }) {
     <div className="">
       <div className="flex w-full items-center gap-2 mb-4">
         <Crown className="h-5 w-5 text-amber-600 dark:text-amber-500" />
-        <h2 className="text-2xl font-bold tracking-tight">Highlighted Scripts</h2>
+        <h2 className="text-2xl font-bold tracking-tight">Sponsored Scripts</h2>
         <Badge variant="outline" className="ml-2 border-amber-500/40 text-amber-700 dark:text-amber-400 text-xs">
           Sponsored
         </Badge>
@@ -98,11 +98,11 @@ export function FeaturedScripts({ items }: { items: Category[] }) {
             key={script.slug}
             className="bg-accent/30 border-2 border-amber-500/60 hover:border-amber-500 transition-all duration-300 hover:shadow-lg flex flex-col relative overflow-hidden"
           >
-            {/* Highlight Badge */}
+            {/* Sponsored Badge */}
             <div className="absolute top-2 right-2 z-10">
               <Badge className="bg-amber-500 text-white border-0">
                 <Crown className="h-3 w-3 mr-1" />
-                Highlighted
+                Sponsored
               </Badge>
             </div>
 
