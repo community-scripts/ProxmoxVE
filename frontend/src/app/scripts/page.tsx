@@ -129,11 +129,11 @@ function ScriptContent() {
   const filteredScriptsCount = new Set(filteredLinks.flatMap(cat => cat.scripts.map(s => s.slug))).size;
 
   return (
-    <div className="mb-3">
+    <div className="mb-3 pt-6">
       {/* Hero Section - Only show when no script is selected */}
       {!selectedScript && (
         <div className="w-full border-b bg-gradient-to-br from-accent/20 to-accent/5">
-          <div className="container mx-auto px-4 py-8 sm:py-10">
+          <div className="w-full px-6 py-8 sm:py-10">
             <div className="max-w-3xl mx-auto text-center space-y-4">
               <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tighter">
                 Explore FOSS
@@ -189,7 +189,7 @@ function ScriptContent() {
       {/* Filters Section - Only show when no script is selected */}
       {!selectedScript && (
         <div className="w-full border-b bg-background/50">
-          <div className="container mx-auto px-4 py-4">
+          <div className="w-full px-6 py-4">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
               <h2 className="text-sm font-medium text-muted-foreground">
                 {filteredScriptsCount === uniqueScripts ? (
@@ -204,7 +204,7 @@ function ScriptContent() {
         </div>
       )}
 
-      <div className="mt-6 sm:mt-8 flex sm:px-4 xl:px-0 gap-4">
+      <div className="mt-6 sm:mt-8 flex w-full px-6 gap-6">
         {/* Left Sidebar - Categories */}
         <div className="hidden sm:flex">
           <Sidebar
@@ -217,7 +217,7 @@ function ScriptContent() {
         </div>
 
         {/* Main Content */}
-        <div className="mx-4 w-full sm:mx-0 pb-8 flex-1 min-w-0">
+        <div className="w-full sm:w-auto pb-8 flex-1">
           {selectedScript && item ? (
             <ScriptItem item={item} setSelectedScript={setSelectedScript} />
           ) : (
