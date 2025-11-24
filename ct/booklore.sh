@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://github.com/booklore-app/BookLore
+# Source: https://github.com/onionrings29/booklore
 
 APP="BookLore"
 var_tags="${var_tags:-books;library}"
@@ -28,7 +28,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  if check_for_gh_release "booklore" "booklore-app/BookLore"; then
+  if check_for_gh_release "booklore" "onionrings29/booklore"; then
     msg_info "Stopping Service"
     systemctl stop booklore
     msg_info "Stopped Service"
