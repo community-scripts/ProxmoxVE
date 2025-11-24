@@ -52,9 +52,14 @@ function update_script() {
     $STD npm --prefix app/static run build:css
     mkdir -p ./.cache
     $STD tar -xf "$BACKUP_FILE" --directory=/
-    $STD /usr/local/bin/uv run --frozen flask db upgrade
+    # $STD /usr/local/bin/uv run --frozen flask db upgrade
     if ! grep -q 'frozen' /opt/wizarr/start.sh; then
       sed -i 's/run/& --frozen/' /opt/wizarr/start.sh
+    fi
+    if ! grep -q 'VERSION' /opt/wizarr/.env; then
+      echo "APP_VERSION=$(sed 's/^20/v&/' ~/.wizarr)" >>/opt/wizarr/.env
+    else
+      sed -i "s/_VERSION=v.*$/_VERSION=v$(cat ~/.wizarr)/" /opt/wizarr/.env
     fi
     rm -rf "$BACKUP_FILE"
     msg_ok "Updated Wizarr"

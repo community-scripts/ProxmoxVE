@@ -28,13 +28,16 @@ $STD /usr/local/bin/uv run --frozen pybabel compile -d app/translations
 $STD npm --prefix app/static install
 $STD npm --prefix app/static run build:css
 mkdir -p ./.cache
-$STD /usr/local/bin/uv run --frozen flask db upgrade
+export FLASK_SKIP_SCHEDULER=true
+# $STD /usr/local/bin/uv run --frozen flask db upgrade
 
 LOCAL_IP="$(hostname -I | awk '{print $1}')"
+VERSION="$(sed 's/^20/v&/' ~/.wizarr)"
 cat <<EOF >/opt/wizarr/.env
 APP_URL=http://${LOCAL_IP}
 DISABLE_BUILTIN_AUTH=false
 LOG_LEVEL=INFO
+APP_VERSION="${VERSION}"
 EOF
 
 cat <<EOF >/opt/wizarr/start.sh
