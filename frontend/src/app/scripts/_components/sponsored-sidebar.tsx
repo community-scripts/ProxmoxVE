@@ -17,12 +17,13 @@ interface SponsoredSidebarProps {
 }
 
 // Icon loader with fallback
-function AppIcon({ src, name, size = 64 }: { src?: string | null; name: string; size?: number }) {
+function AppIcon({ src, name, size = 48 }: { src?: string | null; name: string; size?: number }) {
   const [errored, setErrored] = useState(false);
 
   useEffect(() => setErrored(false), [src]);
 
-  const fallbackClass = "h-11 w-11 object-contain rounded-md p-1";
+  const imgClass = size <= 48 ? "h-8 w-8 object-contain rounded-md p-0.5" : "h-11 w-11 object-contain rounded-md p-1";
+  const fallbackIconClass = size <= 48 ? "h-8 w-8" : "h-11 w-11";
 
   const resolvedSrc = src && !errored ? src : undefined;
 
@@ -36,12 +37,10 @@ function AppIcon({ src, name, size = 64 }: { src?: string | null; name: string; 
           width={size}
           alt={`${name} icon`}
           onError={() => setErrored(true)}
-          className={fallbackClass}
+          className={imgClass}
         />
       ) : (
-        <div className="flex h-16 w-16 min-w-16 items-center justify-center rounded-lg bg-accent/10 dark:bg-accent/20 p-1">
-          <LayoutGrid className="h-11 w-11 text-muted-foreground" aria-hidden />
-        </div>
+        <LayoutGrid className={`${fallbackIconClass} text-muted-foreground`} aria-hidden />
       )}
     </>
   );
@@ -67,16 +66,16 @@ export function SponsoredSidebar({ items, onScriptSelect }: SponsoredSidebarProp
   if (!items || sponsoredScripts.length === 0) return null;
 
   return (
-    <aside className="hidden lg:block lg:min-w-[380px] lg:max-w-[380px]">
-      <div className="sticky top-4 space-y-4">
+    <aside className="hidden lg:block lg:min-w-[300px] lg:max-w-[300px]">
+      <div className="sticky top-4 space-y-3">
         {/* Header */}
         <div className="flex items-center gap-2 px-1">
-          <Crown className="h-5 w-5 text-blue-600 dark:text-blue-500" />
-          <h2 className="text-lg font-bold">Sponsored</h2>
+          <Crown className="h-4 w-4 text-blue-600 dark:text-blue-500" />
+          <h2 className="text-base font-bold">Sponsored</h2>
         </div>
 
         {/* Sponsored Scripts */}
-        <div className="space-y-4">
+        <div className="space-y-3">
           {sponsoredScripts.map(script => (
             <Card
               key={script.slug}
@@ -84,38 +83,31 @@ export function SponsoredSidebar({ items, onScriptSelect }: SponsoredSidebarProp
             >
               {/* Sponsored Badge */}
               <div className="absolute top-2 right-2 z-10">
-                <Badge className="bg-blue-500 text-white border-0 text-xs">
-                  <span className="h-1.5 w-1.5 rounded-full bg-white mr-1.5" />
+                <Badge variant="secondary" className="text-[10px] px-1.5 py-0.5">
+                  <span className="h-1 w-1 rounded-full bg-blue-500 mr-1" />
                   SPONSORED
                 </Badge>
               </div>
 
-              {/* Blue accent bar */}
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-400" />
-
-              <CardHeader>
-                <CardTitle className="flex items-start gap-3">
-                  <div className="flex h-16 w-16 min-w-16 items-center justify-center rounded-xl bg-gradient-to-br from-accent/40 to-accent/60 p-1 shadow-md ring-1 ring-blue-500/30">
-                    <AppIcon src={script.logo} name={script.name || script.slug} />
+              <CardHeader className="pb-2">
+                <CardTitle className="flex items-start gap-2">
+                  <div className="flex h-12 w-12 min-w-12 items-center justify-center rounded-lg bg-gradient-to-br from-accent/40 to-accent/60 p-1 shadow-sm">
+                    <AppIcon src={script.logo} name={script.name || script.slug} size={48} />
                   </div>
                   <div className="flex flex-col flex-1 min-w-0">
-                    <h3 className="font-semibold text-base line-clamp-1 mb-1">{script.name}</h3>
-                    <p className="text-xs text-muted-foreground flex items-center gap-1">
-                      <CalendarPlus className="h-3 w-3" />
-                      {extractDate(script.date_created)}
-                    </p>
+                    <h3 className="font-semibold text-sm line-clamp-2 leading-tight">{script.name}</h3>
                   </div>
                 </CardTitle>
               </CardHeader>
 
-              <CardContent className="flex-grow">
-                <CardDescription className="line-clamp-3 text-sm leading-relaxed">
+              <CardContent className="flex-grow py-2">
+                <CardDescription className="line-clamp-2 text-xs leading-snug">
                   {script.description}
                 </CardDescription>
               </CardContent>
 
-              <CardFooter className="pt-2">
-                <Button asChild className="w-full bg-blue-500 hover:bg-blue-600 text-white">
+              <CardFooter className="pt-0">
+                <Button asChild variant="outline" className="w-full h-8 text-xs">
                   <Link
                     href={{
                       pathname: "/scripts",
@@ -131,39 +123,39 @@ export function SponsoredSidebar({ items, onScriptSelect }: SponsoredSidebarProp
         </div>
 
         {/* Advertise Here Card */}
-        <Card className="border-2 border-dashed border-blue-500/30 bg-blue-500/5">
-          <CardHeader className="text-center pb-3">
-            <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-blue-500/10">
-              <Crown className="h-6 w-6 text-blue-600 dark:text-blue-500" />
+        <Card className="border-2 border-dashed border-primary/20 bg-accent/10">
+          <CardHeader className="text-center pb-2">
+            <div className="mx-auto mb-1 flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+              <Crown className="h-5 w-5 text-primary" />
             </div>
-            <CardTitle className="text-lg">Advertise Here</CardTitle>
+            <CardTitle className="text-base">Advertise Here</CardTitle>
           </CardHeader>
-          <CardContent className="text-center space-y-3">
-            <CardDescription className="text-sm">
+          <CardContent className="text-center space-y-2">
+            <CardDescription className="text-xs">
               Reach VPS enthusiasts & developers
             </CardDescription>
-            <ul className="text-xs space-y-1.5 text-muted-foreground">
-              <li className="flex items-center justify-center gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
+            <ul className="text-[10px] space-y-1 text-muted-foreground">
+              <li className="flex items-center justify-center gap-1.5">
+                <span className="h-1 w-1 rounded-full bg-green-500" />
                 Highly engaged audience
               </li>
-              <li className="flex items-center justify-center gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
+              <li className="flex items-center justify-center gap-1.5">
+                <span className="h-1 w-1 rounded-full bg-green-500" />
                 Premium visibility
               </li>
-              <li className="flex items-center justify-center gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
+              <li className="flex items-center justify-center gap-1.5">
+                <span className="h-1 w-1 rounded-full bg-green-500" />
                 Flexible terms
               </li>
             </ul>
-            <Button asChild className="w-full bg-blue-500 hover:bg-blue-600 text-white" size="sm">
-              <a href="mailto:support@example.com" className="flex items-center gap-2">
-                <Mail className="h-3.5 w-3.5" />
+            <Button asChild variant="outline" className="w-full h-8" size="sm">
+              <a href="mailto:support@example.com" className="flex items-center gap-1.5 text-xs">
+                <Mail className="h-3 w-3" />
                 Get In Touch
               </a>
             </Button>
-            <p className="text-[10px] text-muted-foreground">
-              Starting at $99/month • Limited spots
+            <p className="text-[9px] text-muted-foreground pt-1">
+              Starting at $99/month
             </p>
           </CardContent>
         </Card>
