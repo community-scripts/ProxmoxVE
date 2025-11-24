@@ -133,8 +133,8 @@ function ScriptContent() {
       {/* Hero Section - Only show when no script is selected */}
       {!selectedScript && (
         <div className="w-full border-b bg-gradient-to-br from-accent/20 to-accent/5">
-          <div className="w-full px-4 py-8 sm:py-10">
-            <div className="max-w-3xl mx-auto text-center space-y-4">
+          <div className="w-full py-8 sm:py-10">
+            <div className="max-w-3xl mx-auto text-center space-y-4 px-4">
               <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tighter">
                 Explore FOSS
                 {" "}
@@ -189,8 +189,8 @@ function ScriptContent() {
       {/* Filters Section - Only show when no script is selected */}
       {!selectedScript && (
         <div className="w-full border-b bg-background/50">
-          <div className="w-full px-4 py-4">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
+          <div className="w-full py-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3 px-4">
               <h2 className="text-sm font-medium text-muted-foreground">
                 {filteredScriptsCount === uniqueScripts ? (
                   `Showing all ${uniqueScripts} scripts`
@@ -199,7 +199,9 @@ function ScriptContent() {
                 )}
               </h2>
             </div>
-            <ScriptFilters filters={filters} onFilterChange={setFilters} />
+            <div className="px-4">
+              <ScriptFilters filters={filters} onFilterChange={setFilters} />
+            </div>
           </div>
         </div>
       )}
