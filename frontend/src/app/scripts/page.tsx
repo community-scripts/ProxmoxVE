@@ -206,7 +206,7 @@ function ScriptContent() {
         </div>
       )}
 
-      <div className="mt-6 sm:mt-8 flex w-full gap-2">
+      <div className="mt-6 sm:mt-8 flex w-full gap-2 px-3">
         {/* Left Sidebar - Categories */}
         <div className="hidden sm:flex">
           <Sidebar
