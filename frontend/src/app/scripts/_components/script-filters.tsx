@@ -142,7 +142,7 @@ export function ScriptFilters({ filters, onFilterChange }: ScriptFiltersProps) {
               <ChevronDown className="h-3.5 w-3.5 ml-2" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-56">
+          <DropdownMenuContent align="start" className="w-56 bg-popover/95 backdrop-blur-sm border-2">
             <DropdownMenuLabel>Platform</DropdownMenuLabel>
             <DropdownMenuSeparator />
             {platformOptions.map(option => (
@@ -171,7 +171,7 @@ export function ScriptFilters({ filters, onFilterChange }: ScriptFiltersProps) {
               <ChevronDown className="h-3.5 w-3.5 ml-2" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-56">
+          <DropdownMenuContent align="start" className="w-56 bg-popover/95 backdrop-blur-sm border-2">
             <DropdownMenuLabel>Deployment Method</DropdownMenuLabel>
             <DropdownMenuSeparator />
             {deploymentOptions.map(option => (
@@ -200,7 +200,7 @@ export function ScriptFilters({ filters, onFilterChange }: ScriptFiltersProps) {
               <ChevronDown className="h-3.5 w-3.5 ml-2" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-56">
+          <DropdownMenuContent align="start" className="w-56 bg-popover/95 backdrop-blur-sm border-2">
             <DropdownMenuLabel>Hosting Type</DropdownMenuLabel>
             <DropdownMenuSeparator />
             {hostingOptions.map(option => (
@@ -229,7 +229,7 @@ export function ScriptFilters({ filters, onFilterChange }: ScriptFiltersProps) {
               <ChevronDown className="h-3.5 w-3.5 ml-2" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-56">
+          <DropdownMenuContent align="start" className="w-56 bg-popover/95 backdrop-blur-sm border-2">
             <DropdownMenuLabel>User Interface</DropdownMenuLabel>
             <DropdownMenuSeparator />
             {uiOptions.map(option => (
