@@ -132,21 +132,21 @@ function ScriptContent() {
       {/* Hero Section - Only show when no script is selected */}
       {!selectedScript && (
         <div className="w-full border-b bg-gradient-to-br from-accent/20 to-accent/5">
-          <div className="container mx-auto px-4 py-12 sm:py-16">
-            <div className="max-w-3xl mx-auto text-center space-y-6">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter">
+          <div className="container mx-auto px-4 py-8 sm:py-10">
+            <div className="max-w-3xl mx-auto text-center space-y-4">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tighter">
                 Explore FOSS
                 {" "}
                 <span className="bg-gradient-to-r from-[#ffaa40] via-[#9c40ff] to-[#ffaa40] bg-clip-text text-transparent">
                   Scripts & Tools
                 </span>
               </h1>
-              <p className="text-muted-foreground text-base sm:text-lg max-w-2xl mx-auto">
+              <p className="text-muted-foreground text-sm sm:text-base max-w-2xl mx-auto">
                 Browse our curated collection of {uniqueScripts}+ open source deployment scripts and tools
               </p>
 
               {/* Search Bar */}
-              <div className="max-w-xl mx-auto">
+              <div className="max-w-xl mx-auto pt-2">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
@@ -154,30 +154,30 @@ function ScriptContent() {
                     placeholder="Search scripts..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10 h-12 text-base"
+                    className="pl-10 h-11 text-base"
                   />
                 </div>
               </div>
 
               {/* Stats */}
-              <div className="grid grid-cols-3 gap-4 max-w-2xl mx-auto pt-4">
+              <div className="grid grid-cols-3 gap-3 max-w-2xl mx-auto pt-2">
                 <div className="flex flex-col items-center">
-                  <div className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-[#ffaa40] to-[#9c40ff] bg-clip-text text-transparent">
+                  <div className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-[#ffaa40] to-[#9c40ff] bg-clip-text text-transparent">
                     {uniqueScripts}
                   </div>
-                  <div className="text-xs sm:text-sm text-muted-foreground">Scripts</div>
+                  <div className="text-xs text-muted-foreground">Scripts</div>
                 </div>
                 <div className="flex flex-col items-center">
-                  <div className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-[#9c40ff] to-[#ffaa40] bg-clip-text text-transparent">
+                  <div className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-[#9c40ff] to-[#ffaa40] bg-clip-text text-transparent">
                     {links.length}
                   </div>
-                  <div className="text-xs sm:text-sm text-muted-foreground">Categories</div>
+                  <div className="text-xs text-muted-foreground">Categories</div>
                 </div>
                 <div className="flex flex-col items-center">
-                  <div className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-[#ffaa40] to-[#9c40ff] bg-clip-text text-transparent">
+                  <div className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-[#ffaa40] to-[#9c40ff] bg-clip-text text-transparent">
                     Daily
                   </div>
-                  <div className="text-xs sm:text-sm text-muted-foreground">Updates</div>
+                  <div className="text-xs text-muted-foreground">Updates</div>
                 </div>
               </div>
             </div>
