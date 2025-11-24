@@ -9,7 +9,7 @@ import { ScriptItem } from "@/app/scripts/_components/script-item";
 import { fetchCategories } from "@/lib/data";
 import { Input } from "@/components/ui/input";
 
-import { LatestScripts, MostViewedScripts } from "./_components/script-info-blocks";
+import { LatestScripts, TrendingScripts, PopularScripts } from "./_components/script-info-blocks";
 import Sidebar from "./_components/sidebar";
 import { ScriptFilters, type FilterState } from "./_components/script-filters";
 
@@ -219,9 +219,10 @@ function ScriptContent() {
           {selectedScript && item ? (
             <ScriptItem item={item} setSelectedScript={setSelectedScript} />
           ) : (
-            <div className="flex w-full flex-col gap-6">
+            <div className="flex w-full flex-col gap-8">
+              <TrendingScripts items={filteredLinks} />
               <LatestScripts items={filteredLinks} />
-              <MostViewedScripts items={filteredLinks} />
+              <PopularScripts items={filteredLinks} />
             </div>
           )}
         </div>
