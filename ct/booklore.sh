@@ -49,7 +49,7 @@ function update_script() {
 
     msg_info "Building Backend"
     cd /opt/booklore/booklore-api
-    APP_VERSION=$(curl -fsSL https://api.github.com/repos/booklore-app/BookLore/releases/latest | yq '.tag_name' | sed 's/^v//')
+    APP_VERSION=$(curl -fsSL https://api.github.com/repos/onionrings29/booklore/releases/latest | yq '.tag_name' | sed 's/^v//')
     yq eval ".app.version = \"${APP_VERSION}\"" -i src/main/resources/application.yaml
     $STD ./gradlew clean build --no-daemon
     mkdir -p /opt/booklore/dist
