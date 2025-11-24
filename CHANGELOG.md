@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-11-24
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Joplin-Server: Bump Node.js version from 22 to 24 [@tremor021](https://github.com/tremor021) ([#9405](https://github.com/community-scripts/ProxmoxVE/pull/9405))
+
 ## 2025-11-23
 
 ### 🚀 Updated Scripts
