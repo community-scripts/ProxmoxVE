@@ -19,6 +19,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - core: remove uv cache clean command [@MickLesk](https://github.com/MickLesk) ([#9413](https://github.com/community-scripts/ProxmoxVE/pull/9413))
     - Joplin-Server: Bump Node.js version from 22 to 24 [@tremor021](https://github.com/tremor021) ([#9405](https://github.com/community-scripts/ProxmoxVE/pull/9405))
 
+  - #### 🔧 Refactor
+
+    - [Fix]: Wizarr DB error during install [@vhsdream](https://github.com/vhsdream) ([#9415](https://github.com/community-scripts/ProxmoxVE/pull/9415))
+
 ### 🌐 Website
 
   - #### 📝 Script Information
