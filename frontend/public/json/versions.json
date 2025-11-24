@@ -1,18 +1,43 @@
 [
   {
     "name": "rcourtman/Pulse",
-    "version": "v4.32.4",
-    "date": "2025-11-23T11:05:14Z"
+    "version": "v4.32.5",
+    "date": "2025-11-23T22:53:33Z"
+  },
+  {
+    "name": "raydak-labs/configarr",
+    "version": "v1.18.0",
+    "date": "2025-11-23T17:42:53Z"
+  },
+  {
+    "name": "wavelog/wavelog",
+    "version": "2.2",
+    "date": "2025-11-23T17:32:38Z"
+  },
+  {
+    "name": "verdaccio/verdaccio",
+    "version": "v6.2.2",
+    "date": "2025-11-23T16:54:07Z"
+  },
+  {
+    "name": "crafty-controller/crafty-4",
+    "version": "v4.6.1",
+    "date": "2025-11-23T16:42:50Z"
+  },
+  {
+    "name": "openhab/openhab-core",
+    "version": "5.0.3",
+    "date": "2025-11-23T14:22:13Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
   },
   {
     "name": "readeck/readeck",
     "version": "0.21.2",
     "date": "2025-11-23T10:56:43Z"
-  },
-  {
-    "name": "verdaccio/verdaccio",
-    "version": "generator-verdaccio-plugin@6.0.0-next-8.26",
-    "date": "2025-11-23T07:46:06Z"
   },
   {
     "name": "morpheus65535/bazarr",
@@ -38,11 +63,6 @@
     "name": "BerriAI/litellm",
     "version": "v1.80.5.rc.2",
     "date": "2025-11-23T00:31:24Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.0.1",
-    "date": "2025-10-15T16:53:55Z"
   },
   {
     "name": "jeedom/core",
@@ -670,11 +690,6 @@
     "date": "2025-11-09T05:09:28Z"
   },
   {
-    "name": "raydak-labs/configarr",
-    "version": "v1.17.2",
-    "date": "2025-11-08T22:47:58Z"
-  },
-  {
     "name": "hargata/lubelog",
     "version": "v1.5.4",
     "date": "2025-11-08T16:26:45Z"
@@ -910,11 +925,6 @@
     "date": "2025-10-28T10:16:29Z"
   },
   {
-    "name": "openhab/openhab-core",
-    "version": "5.1.0.M2",
-    "date": "2025-10-26T14:38:02Z"
-  },
-  {
     "name": "ErsatzTV/ErsatzTV",
     "version": "v25.8.0",
     "date": "2025-10-26T14:23:37Z"
@@ -993,16 +1003,6 @@
     "name": "blakeblackshear/frigate",
     "version": "v0.14.1",
     "date": "2024-08-29T22:32:51Z"
-  },
-  {
-    "name": "wavelog/wavelog",
-    "version": "2.1.2",
-    "date": "2025-10-15T06:51:32Z"
-  },
-  {
-    "name": "crafty-controller/crafty-4",
-    "version": "v4.5.5",
-    "date": "2025-10-14T18:48:36Z"
   },
   {
     "name": "rogerfar/rdt-client",
