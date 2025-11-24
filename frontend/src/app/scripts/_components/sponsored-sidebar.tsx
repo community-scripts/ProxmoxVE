@@ -51,31 +51,55 @@ export function SponsoredSidebar({ items, onScriptSelect }: SponsoredSidebarProp
     if (!items) return [];
 
     const scripts = items.flatMap(category => category.scripts || []);
+    const now = new Date();
 
-    // Filter out duplicates and get only sponsored scripts
+    // Filter out duplicates and get only active sponsored scripts
     const uniqueScriptsMap = new Map<string, Script>();
     scripts.forEach(script => {
       if (!uniqueScriptsMap.has(script.slug) && script.sponsored) {
+        // Check if sponsored period has expired
+        if (script.sponsored_expired) {
+          const expirationDate = new Date(script.sponsored_expired);
+          if (expirationDate < now) {
+            return; // Skip expired sponsored scripts
+          }
+        }
         uniqueScriptsMap.set(script.slug, script);
       }
     });
 
-    return Array.from(uniqueScriptsMap.values()).slice(0, 3); // Max 3 sponsored scripts
+    return Array.from(uniqueScriptsMap.values()).slice(0, 5); // Max 5 sponsored scripts
   }, [items]);
 
-  if (!items || sponsoredScripts.length === 0) return null;
+  const MAX_SPOTS = 5;
+  const availableSpots = MAX_SPOTS - sponsoredScripts.length;
+  const isFull = sponsoredScripts.length >= MAX_SPOTS;
+
+  if (!items) return null;
 
   return (
     <aside className="hidden lg:block lg:min-w-[300px] lg:max-w-[300px]">
       <div className="sticky top-4 space-y-3">
         {/* Header */}
-        <div className="flex items-center gap-2 px-1">
-          <Crown className="h-4 w-4 text-blue-600 dark:text-blue-500" />
-          <h2 className="text-base font-bold">Sponsored</h2>
+        <div className="px-1">
+          <div className="flex items-center gap-2 mb-1">
+            <Crown className="h-4 w-4 text-blue-600 dark:text-blue-500" />
+            <h2 className="text-base font-bold">Sponsored</h2>
+          </div>
+          {sponsoredScripts.length > 0 && (
+            <p className="text-[10px] text-muted-foreground">
+              {isFull ? (
+                "All spots taken"
+              ) : (
+                `${availableSpots} spot${availableSpots !== 1 ? 's' : ''} available`
+              )}
+            </p>
+          )}
         </div>
 
         {/* Sponsored Scripts */}
-        <div className="space-y-3">
+        {sponsoredScripts.length > 0 ? (
+          <div className="space-y-3">
           {sponsoredScripts.map(script => (
             <Card
               key={script.slug}
@@ -121,6 +145,19 @@ export function SponsoredSidebar({ items, onScriptSelect }: SponsoredSidebarProp
             </Card>
           ))}
         </div>
+        ) : (
+          <Card className="border-2 border-dashed border-blue-500/30 bg-blue-500/5">
+            <CardContent className="text-center py-6 space-y-2">
+              <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-blue-500/10">
+                <Crown className="h-6 w-6 text-blue-600 dark:text-blue-500" />
+              </div>
+              <CardTitle className="text-base">5 Spots Available</CardTitle>
+              <CardDescription className="text-xs">
+                Be the first to sponsor and reach developers!
+              </CardDescription>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Advertise Here Card */}
         <Card className="border-2 border-dashed border-primary/20 bg-accent/10">
