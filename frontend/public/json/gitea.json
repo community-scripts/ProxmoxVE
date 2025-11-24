@@ -42,5 +42,10 @@
     "username": null,
     "password": null
   },
-  "notes": []
+  "notes": [
+    {
+      "text": "The script installs SQLite3 as default database provider. You will be asked to select database type when you initially open the application URL. Select SQLite3 or provide your own database.",
+      "type": "info"
+    }
+  ]
 }
