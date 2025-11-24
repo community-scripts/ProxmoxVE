@@ -16,7 +16,15 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - core: remove uv cache clean command [@MickLesk](https://github.com/MickLesk) ([#9413](https://github.com/community-scripts/ProxmoxVE/pull/9413))
     - Joplin-Server: Bump Node.js version from 22 to 24 [@tremor021](https://github.com/tremor021) ([#9405](https://github.com/community-scripts/ProxmoxVE/pull/9405))
+
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Gitea: Update website [@tremor021](https://github.com/tremor021) ([#9406](https://github.com/community-scripts/ProxmoxVE/pull/9406))
+    - huntarr: disable on website during install issues [@MickLesk](https://github.com/MickLesk) ([#9403](https://github.com/community-scripts/ProxmoxVE/pull/9403))
 
 ## 2025-11-23
 
