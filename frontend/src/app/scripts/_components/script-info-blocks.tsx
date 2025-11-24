@@ -86,9 +86,9 @@ export function FeaturedScripts({ items }: { items: Category[] }) {
   return (
     <div className="">
       <div className="flex w-full items-center gap-2 mb-4">
-        <Crown className="h-6 w-6 text-amber-500" />
-        <h2 className="text-2xl font-bold tracking-tight">Featured Scripts</h2>
-        <Badge variant="outline" className="ml-2 border-amber-500/50 text-amber-600 dark:text-amber-400">
+        <Crown className="h-5 w-5 text-amber-600 dark:text-amber-500" />
+        <h2 className="text-2xl font-bold tracking-tight">Highlighted Scripts</h2>
+        <Badge variant="outline" className="ml-2 border-amber-500/40 text-amber-700 dark:text-amber-400 text-xs">
           Sponsored
         </Badge>
       </div>
@@ -96,22 +96,22 @@ export function FeaturedScripts({ items }: { items: Category[] }) {
         {featuredScripts.map(script => (
           <Card
             key={script.slug}
-            className="bg-gradient-to-br from-amber-50/50 to-amber-100/30 dark:from-amber-950/20 dark:to-amber-900/10 border-2 border-amber-400/50 hover:border-amber-500 transition-all duration-300 hover:shadow-xl hover:shadow-amber-500/20 flex flex-col relative overflow-hidden"
+            className="bg-accent/30 border-2 border-amber-500/60 hover:border-amber-500 transition-all duration-300 hover:shadow-lg flex flex-col relative overflow-hidden"
           >
-            {/* Premium Badge */}
+            {/* Highlight Badge */}
             <div className="absolute top-2 right-2 z-10">
-              <Badge className="bg-gradient-to-r from-amber-500 to-amber-600 text-white border-0 shadow-lg shadow-amber-500/50">
+              <Badge className="bg-amber-500 text-white border-0">
                 <Crown className="h-3 w-3 mr-1" />
-                Featured
+                Highlighted
               </Badge>
             </div>
 
-            {/* Premium Glow Effect */}
-            <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent pointer-events-none" />
+            {/* Subtle highlight bar */}
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-400" />
 
             <CardHeader>
               <CardTitle className="flex items-start gap-3">
-                <div className="flex h-16 w-16 min-w-16 items-center justify-center rounded-xl bg-gradient-to-br from-amber-100 to-amber-200 dark:from-amber-900/40 dark:to-amber-800/40 p-1 shadow-lg shadow-amber-500/20 ring-2 ring-amber-400/30">
+                <div className="flex h-16 w-16 min-w-16 items-center justify-center rounded-xl bg-gradient-to-br from-accent/40 to-accent/60 p-1 shadow-md ring-1 ring-amber-500/30">
                   <AppIcon src={script.logo} name={script.name || script.slug} />
                 </div>
                 <div className="flex flex-col flex-1 min-w-0">
@@ -128,7 +128,7 @@ export function FeaturedScripts({ items }: { items: Category[] }) {
               {getDeploymentMethods(script).length > 0 && (
                 <div className="flex flex-wrap gap-1.5">
                   {getDeploymentMethods(script).map(method => (
-                    <Badge key={method} variant="secondary" className="text-xs border-amber-200 dark:border-amber-800">
+                    <Badge key={method} variant="secondary" className="text-xs">
                       {method}
                     </Badge>
                   ))}
@@ -136,7 +136,7 @@ export function FeaturedScripts({ items }: { items: Category[] }) {
               )}
             </CardContent>
             <CardFooter className="pt-2">
-              <Button asChild variant="default" className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white shadow-md shadow-amber-500/30">
+              <Button asChild className="w-full bg-amber-500 hover:bg-amber-600 text-white">
                 <Link
                   href={{
                     pathname: "/scripts",
