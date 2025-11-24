@@ -204,7 +204,7 @@ function ScriptContent() {
         </div>
       )}
 
-      <div className="mt-6 sm:mt-8 flex w-full px-2 gap-4">
+      <div className="mt-6 sm:mt-8 flex w-full gap-2">
         {/* Left Sidebar - Categories */}
         <div className="hidden sm:flex">
           <Sidebar
@@ -217,7 +217,7 @@ function ScriptContent() {
         </div>
 
         {/* Main Content */}
-        <div className="w-full px-2 sm:px-0 sm:w-auto pb-8 flex-1">
+        <div className="w-full px-2 sm:px-0 sm:w-auto pb-8 flex-1 min-w-0">
           {selectedScript && item ? (
             <ScriptItem item={item} setSelectedScript={setSelectedScript} />
           ) : (
