@@ -4,6 +4,7 @@ export type Script = {
   name: string;
   slug: string;
   categories: number[];
+  sponsored?: boolean;
   date_created: string;
   type: "vm" | "ct" | "pve" | "addon" | "dc" | "helm";
   updateable: boolean;

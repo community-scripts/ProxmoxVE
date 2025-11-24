@@ -1,4 +1,4 @@
-import { CalendarPlus, LayoutGrid, TrendingUp, Sparkles } from "lucide-react";
+import { CalendarPlus, LayoutGrid, TrendingUp, Sparkles, Crown } from "lucide-react";
 import { useMemo, useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -62,6 +62,96 @@ function getDeploymentMethods(script: Script): string[] {
   }
 
   return methods.slice(0, 3); // Limit to 3 badges
+}
+
+export function FeaturedScripts({ items }: { items: Category[] }) {
+  const featuredScripts = useMemo(() => {
+    if (!items) return [];
+
+    const scripts = items.flatMap(category => category.scripts || []);
+
+    // Filter out duplicates by slug and get only sponsored scripts
+    const uniqueScriptsMap = new Map<string, Script>();
+    scripts.forEach(script => {
+      if (!uniqueScriptsMap.has(script.slug) && script.sponsored) {
+        uniqueScriptsMap.set(script.slug, script);
+      }
+    });
+
+    return Array.from(uniqueScriptsMap.values()).slice(0, 6); // Max 6 featured scripts
+  }, [items]);
+
+  if (!items || featuredScripts.length === 0) return null;
+
+  return (
+    <div className="">
+      <div className="flex w-full items-center gap-2 mb-4">
+        <Crown className="h-6 w-6 text-amber-500" />
+        <h2 className="text-2xl font-bold tracking-tight">Featured Scripts</h2>
+        <Badge variant="outline" className="ml-2 border-amber-500/50 text-amber-600 dark:text-amber-400">
+          Sponsored
+        </Badge>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {featuredScripts.map(script => (
+          <Card
+            key={script.slug}
+            className="bg-gradient-to-br from-amber-50/50 to-amber-100/30 dark:from-amber-950/20 dark:to-amber-900/10 border-2 border-amber-400/50 hover:border-amber-500 transition-all duration-300 hover:shadow-xl hover:shadow-amber-500/20 flex flex-col relative overflow-hidden"
+          >
+            {/* Premium Badge */}
+            <div className="absolute top-2 right-2 z-10">
+              <Badge className="bg-gradient-to-r from-amber-500 to-amber-600 text-white border-0 shadow-lg shadow-amber-500/50">
+                <Crown className="h-3 w-3 mr-1" />
+                Featured
+              </Badge>
+            </div>
+
+            {/* Premium Glow Effect */}
+            <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent pointer-events-none" />
+
+            <CardHeader>
+              <CardTitle className="flex items-start gap-3">
+                <div className="flex h-16 w-16 min-w-16 items-center justify-center rounded-xl bg-gradient-to-br from-amber-100 to-amber-200 dark:from-amber-900/40 dark:to-amber-800/40 p-1 shadow-lg shadow-amber-500/20 ring-2 ring-amber-400/30">
+                  <AppIcon src={script.logo} name={script.name || script.slug} />
+                </div>
+                <div className="flex flex-col flex-1 min-w-0">
+                  <h3 className="font-semibold text-base line-clamp-1 mb-1">{script.name}</h3>
+                  <p className="text-xs text-muted-foreground flex items-center gap-1">
+                    <CalendarPlus className="h-3 w-3" />
+                    {extractDate(script.date_created)}
+                  </p>
+                </div>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="flex-grow space-y-3">
+              <CardDescription className="line-clamp-3 text-sm leading-relaxed">{script.description}</CardDescription>
+              {getDeploymentMethods(script).length > 0 && (
+                <div className="flex flex-wrap gap-1.5">
+                  {getDeploymentMethods(script).map(method => (
+                    <Badge key={method} variant="secondary" className="text-xs border-amber-200 dark:border-amber-800">
+                      {method}
+                    </Badge>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+            <CardFooter className="pt-2">
+              <Button asChild variant="default" className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white shadow-md shadow-amber-500/30">
+                <Link
+                  href={{
+                    pathname: "/scripts",
+                    query: { id: script.slug },
+                  }}
+                >
+                  View Details
+                </Link>
+              </Button>
+            </CardFooter>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 export function LatestScripts({ items }: { items: Category[] }) {
