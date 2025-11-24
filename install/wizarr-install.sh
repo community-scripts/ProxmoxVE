@@ -28,16 +28,16 @@ $STD /usr/local/bin/uv run --frozen pybabel compile -d app/translations
 $STD npm --prefix app/static install
 $STD npm --prefix app/static run build:css
 mkdir -p ./.cache
-export FLASK_SKIP_SCHEDULER=true
-# $STD /usr/local/bin/uv run --frozen flask db upgrade
 
 LOCAL_IP="$(hostname -I | awk '{print $1}')"
 VERSION="$(sed 's/^20/v&/' ~/.wizarr)"
 cat <<EOF >/opt/wizarr/.env
+FLASK_ENV=production
+GUNICORN_WORKERS=4
 APP_URL=http://${LOCAL_IP}
 DISABLE_BUILTIN_AUTH=false
 LOG_LEVEL=INFO
-APP_VERSION="${VERSION}"
+APP_VERSION=${VERSION}
 EOF
 
 cat <<EOF >/opt/wizarr/start.sh
@@ -46,7 +46,6 @@ cat <<EOF >/opt/wizarr/start.sh
 uv run --frozen gunicorn \
     --config gunicorn.conf.py \
     --preload \
-    --workers 4 \
     --bind 0.0.0.0:5690 \
     --umask 007 \
     run:app
@@ -70,8 +69,14 @@ Restart=on-abnormal
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now wizarr
 msg_ok "Created Service"
+
+msg_info "Running DB upgrade"
+export FLASK_SKIP_SCHEDULER=true
+$STD /usr/local/bin/uv run --frozen flask db upgrade
+msg_ok "DB upgrade complete"
+
+systemctl enable -q --now wizarr
 
 motd_ssh
 customize
