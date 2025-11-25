@@ -1,5 +1,70 @@
 [
   {
+    "name": "BerriAI/litellm",
+    "version": "v1.80.0-stable.1",
+    "date": "2025-11-24T23:05:30Z"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2025.11.1",
+    "date": "2025-11-24T22:29:56Z"
+  },
+  {
+    "name": "prometheus/prometheus",
+    "version": "v0.308.0-rc.1",
+    "date": "2025-11-24T19:46:25Z"
+  },
+  {
+    "name": "TandoorRecipes/recipes",
+    "version": "2.3.6",
+    "date": "2025-11-24T19:40:27Z"
+  },
+  {
+    "name": "gtsteffaniak/filebrowser",
+    "version": "v1.0.1-stable",
+    "date": "2025-11-10T16:51:44Z"
+  },
+  {
+    "name": "rcourtman/Pulse",
+    "version": "v4.32.7",
+    "date": "2025-11-24T18:45:58Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.120.4",
+    "date": "2025-11-19T12:57:55Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.30.15",
+    "date": "2025-11-24T16:52:52Z"
+  },
+  {
+    "name": "bunkerity/bunkerweb",
+    "version": "v1.6.6",
+    "date": "2025-11-24T15:30:21Z"
+  },
+  {
+    "name": "meilisearch/meilisearch",
+    "version": "latest",
+    "date": "2025-11-24T14:10:19Z"
+  },
+  {
+    "name": "grokability/snipe-it",
+    "version": "v8.3.6",
+    "date": "2025-11-24T13:02:52Z"
+  },
+  {
+    "name": "Graylog2/graylog2-server",
+    "version": "7.0.1",
+    "date": "2025-11-24T12:25:09Z"
+  },
+  {
+    "name": "open-webui/open-webui",
+    "version": "v0.6.38",
+    "date": "2025-11-24T12:00:43Z"
+  },
+  {
     "name": "silverbulletmd/silverbullet",
     "version": "2.3.0",
     "date": "2025-11-24T09:48:32Z"
@@ -30,11 +95,6 @@
     "date": "2025-11-13T04:42:27Z"
   },
   {
-    "name": "open-webui/open-webui",
-    "version": "v0.6.37",
-    "date": "2025-11-24T03:10:18Z"
-  },
-  {
     "name": "jeedom/core",
     "version": "4.4.20",
     "date": "2025-11-24T00:27:05Z"
@@ -43,11 +103,6 @@
     "name": "steveiliop56/tinyauth",
     "version": "v4.1.0",
     "date": "2025-11-23T12:13:34Z"
-  },
-  {
-    "name": "rcourtman/Pulse",
-    "version": "v4.32.5",
-    "date": "2025-11-23T22:53:33Z"
   },
   {
     "name": "raydak-labs/configarr",
@@ -90,11 +145,6 @@
     "date": "2025-06-14T17:45:06Z"
   },
   {
-    "name": "BerriAI/litellm",
-    "version": "v1.80.5.rc.2",
-    "date": "2025-11-23T00:31:24Z"
-  },
-  {
     "name": "paperless-ngx/paperless-ngx",
     "version": "v2.20.0",
     "date": "2025-11-22T21:56:00Z"
@@ -115,19 +165,9 @@
     "date": "2025-11-22T19:37:02Z"
   },
   {
-    "name": "msgbyte/tianji",
-    "version": "v1.30.13",
-    "date": "2025-11-22T18:22:32Z"
-  },
-  {
     "name": "nzbgetcom/nzbget",
     "version": "v25.4",
     "date": "2025-10-09T10:27:01Z"
-  },
-  {
-    "name": "bunkerity/bunkerweb",
-    "version": "v1.6.6",
-    "date": "2025-11-22T16:10:29Z"
   },
   {
     "name": "TechnitiumSoftware/DnsServer",
@@ -162,7 +202,7 @@
   {
     "name": "theonedev/onedev",
     "version": "v13.1.0",
-    "date": "2025-11-18T00:06:49Z"
+    "date": "2025-11-22T04:29:25Z"
   },
   {
     "name": "TwiN/gatus",
@@ -285,11 +325,6 @@
     "date": "2025-11-20T16:09:28Z"
   },
   {
-    "name": "meilisearch/meilisearch",
-    "version": "prototype-v1.26.0.arm-native-docker-build-1",
-    "date": "2025-11-20T15:38:39Z"
-  },
-  {
     "name": "duplicati/duplicati",
     "version": "v2.2.0.101-2.2.0.101_canary_2025-11-20",
     "date": "2025-11-20T14:50:45Z"
@@ -298,11 +333,6 @@
     "name": "NodeBB/NodeBB",
     "version": "v4.6.3",
     "date": "2025-11-20T14:13:22Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.120.4",
-    "date": "2025-11-19T12:57:55Z"
   },
   {
     "name": "SigNoz/signoz",
@@ -343,21 +373,6 @@
     "name": "coder/code-server",
     "version": "v4.106.2",
     "date": "2025-11-20T00:23:05Z"
-  },
-  {
-    "name": "esphome/esphome",
-    "version": "2025.11.0",
-    "date": "2025-11-19T22:37:46Z"
-  },
-  {
-    "name": "TandoorRecipes/recipes",
-    "version": "2.3.5",
-    "date": "2025-11-19T20:53:34Z"
-  },
-  {
-    "name": "prometheus/prometheus",
-    "version": "v0.308.0-rc.0",
-    "date": "2025-11-19T19:48:05Z"
   },
   {
     "name": "qbittorrent/qBittorrent",
@@ -418,11 +433,6 @@
     "name": "element-hq/synapse",
     "version": "v1.143.0rc1",
     "date": "2025-11-19T00:09:31Z"
-  },
-  {
-    "name": "gtsteffaniak/filebrowser",
-    "version": "v1.0.1-stable",
-    "date": "2025-11-10T16:51:44Z"
   },
   {
     "name": "umami-software/umami",
@@ -675,11 +685,6 @@
     "date": "2025-11-10T17:22:00Z"
   },
   {
-    "name": "grokability/snipe-it",
-    "version": "v8.3.5",
-    "date": "2025-11-10T14:12:12Z"
-  },
-  {
     "name": "navidrome/navidrome",
     "version": "v0.58.5",
     "date": "2025-11-09T19:12:41Z"
@@ -773,11 +778,6 @@
     "name": "javedh-dev/tracktor",
     "version": "0.5.1",
     "date": "2025-11-05T16:14:37Z"
-  },
-  {
-    "name": "Graylog2/graylog2-server",
-    "version": "6.2.9",
-    "date": "2025-11-05T13:55:39Z"
   },
   {
     "name": "azukaar/Cosmos-Server",
