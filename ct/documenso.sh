@@ -46,7 +46,13 @@ function update_script() {
     export NEXT_TELEMETRY_DISABLED=1
     export CYPRESS_INSTALL_BINARY=0
     export NODE_OPTIONS="--max-old-space-size=4096"
-    $STD npm ci
+    $STD turbo prune --scope=@documenso/remix --docker
+    cd out
+    $STD cp ../lingui.config.ts .
+    $STD cp ../turbo.json .
+    $STD cp -r json/* .
+    $STD npm install --legacy-peer-deps
+    $STD cp -r full/* .
     $STD turbo run build --filter=@documenso/remix
     $STD npm run prisma:migrate-deploy
     $STD turbo daemon stop

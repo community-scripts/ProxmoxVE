@@ -76,7 +76,7 @@ cd out
 $STD cp ../lingui.config.ts .
 $STD cp ../turbo.json .
 $STD cp -r json/* .
-$STD npm ci
+$STD npm install --legacy-peer-deps
 $STD cp -r full/* .
 $STD turbo run build --filter=@documenso/remix
 $STD npm run prisma:migrate-deploy
