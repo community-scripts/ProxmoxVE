@@ -105,6 +105,7 @@ function update_script() {
       msg_ok "Backup completed to $BACKUP_DIR"
 
       declare -A PATCHES=(
+        ["paperless-consumer.service"]="ExecStart=uv run -- python manage.py document_consumer"
         ["paperless-scheduler.service"]="ExecStart=uv run -- celery --app paperless beat --loglevel INFO"
         ["paperless-task-queue.service"]="ExecStart=uv run -- celery --app paperless worker --loglevel INFO"
         ["paperless-webserver.service"]="ExecStart=uv run -- granian --interface asgi --ws \"paperless.asgi:application\""
