@@ -16,6 +16,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Fix the mikrotik VM installer after they reformatted their downloads page [@paul-ridgway](https://github.com/paul-ridgway) ([#9434](https://github.com/community-scripts/ProxmoxVE/pull/9434))
 
+  - #### ✨ New Features
+
+    - add Zabbix version selection to install and update scripts [@MickLesk](https://github.com/MickLesk) ([#9430](https://github.com/community-scripts/ProxmoxVE/pull/9430))
+
 ### 🧰 Maintenance
 
   - #### 📝 Documentation
