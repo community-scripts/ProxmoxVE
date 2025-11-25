@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - core: set default LANG in locale configuration [@MickLesk](https://github.com/MickLesk) ([#9440](https://github.com/community-scripts/ProxmoxVE/pull/9440))
     - documenso: switch to npm peer-.deps to get build running [@MickLesk](https://github.com/MickLesk) ([#9441](https://github.com/community-scripts/ProxmoxVE/pull/9441))
     - Refactor Asterisk installation process [@MickLesk](https://github.com/MickLesk) ([#9429](https://github.com/community-scripts/ProxmoxVE/pull/9429))
     - Fix the mikrotik VM installer after they reformatted their downloads page [@paul-ridgway](https://github.com/paul-ridgway) ([#9434](https://github.com/community-scripts/ProxmoxVE/pull/9434))
@@ -27,7 +28,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🧰 Maintenance
 
-  - #### 📝 Documentation
+  - #### 📂 Github
 
     - gh: update supported PVE Version [@MickLesk](https://github.com/MickLesk) ([#9422](https://github.com/community-scripts/ProxmoxVE/pull/9422))
 
