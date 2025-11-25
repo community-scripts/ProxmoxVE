@@ -105,7 +105,7 @@
   <tr>
     <td align="center" width="33%">
       <h3>🖥️ Proxmox VE</h3>
-      <p>Version 8.4.x or 9.0.x</p>
+      <p>Version: 8.4.x | 9.0.x | 9.1.x</p>
     </td>
     <td align="center" width="33%">
       <h3>🐧 Operating System</h3>
