@@ -15,16 +15,27 @@ update_os
 
 PG_VERSION="17" setup_postgresql
 
-msg_info "Installing Zabbix"
+read -rp "Choose Zabbix version [1] 7.0 LTS  [2] 7.4 (Latest Stable)  [3] Latest available (default: 2): " ZABBIX_CHOICE
+ZABBIX_CHOICE=${ZABBIX_CHOICE:-2}
+case "$ZABBIX_CHOICE" in
+1) ZABBIX_VERSION="7.0" ;;
+2) ZABBIX_VERSION="7.4" ;;
+3) ZABBIX_VERSION=$(curl -fsSL https://repo.zabbix.com/zabbix/ |
+  grep -oP '(?<=href=")[0-9]+\.[0-9]+(?=/")' | sort -V | tail -n1) ;;
+*)
+  ZABBIX_VERSION="7.4"
+  echo "Invalid choice. Defaulting to 7.4."
+  ;;
+esac
+
+msg_info "Installing Zabbix $ZABBIX_VERSION"
 cd /tmp
-curl -fsSL "$(curl -fsSL https://repo.zabbix.com/zabbix/ |
-  grep -oP '(?<=href=")[0-9]+\.[0-9]+(?=/")' | sort -V | tail -n1 |
-  xargs -I{} echo "https://repo.zabbix.com/zabbix/{}/release/debian/pool/main/z/zabbix-release/zabbix-release_latest+debian13_all.deb")" \
-  -o /tmp/zabbix-release_latest+debian13_all.deb
+ZABBIX_DEB_URL="https://repo.zabbix.com/zabbix/${ZABBIX_VERSION}/release/debian/pool/main/z/zabbix-release/zabbix-release_latest+debian13_all.deb"
+curl -fsSL "$ZABBIX_DEB_URL" -o /tmp/zabbix-release_latest+debian13_all.deb
 $STD dpkg -i /tmp/zabbix-release_latest+debian13_all.deb
 $STD apt update
 $STD apt install -y zabbix-server-pgsql zabbix-frontend-php php8.4-pgsql zabbix-apache-conf zabbix-sql-scripts
-msg_ok "Installed Zabbix"
+msg_ok "Installed Zabbix $ZABBIX_VERSION"
 
 while true; do
   read -rp "Which agent do you want to install? [1=agent (classic), 2=agent2 (modern), default=1]: " AGENT_CHOICE
