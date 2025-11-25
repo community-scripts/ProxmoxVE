@@ -14,10 +14,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
-  - Fix the mikrotik VM installer after they reformatted their downloads page [@paul-ridgway](https://github.com/paul-ridgway) ([#9434](https://github.com/community-scripts/ProxmoxVE/pull/9434))
-
   - #### 🐞 Bug Fixes
 
+    - Refactor Asterisk installation process [@MickLesk](https://github.com/MickLesk) ([#9429](https://github.com/community-scripts/ProxmoxVE/pull/9429))
+    - Fix the mikrotik VM installer after they reformatted their downloads page [@paul-ridgway](https://github.com/paul-ridgway) ([#9434](https://github.com/community-scripts/ProxmoxVE/pull/9434))
     - paperless: patch consume to uv [@MickLesk](https://github.com/MickLesk) ([#9425](https://github.com/community-scripts/ProxmoxVE/pull/9425))
 
   - #### ✨ New Features
