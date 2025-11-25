@@ -6,6 +6,7 @@ This project currently supports the following versions of Proxmox VE (PVE):
 
 | Version | Supported          |
 | ------- | ------------------ |
+| 9.1.x   | :white_check_mark: |
 | 9.0.x   | :white_check_mark: |
 | 8.4.x   | :white_check_mark: |
 | 8.3.x   | Limited support* ❕ |
