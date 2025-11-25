@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Open WebUI: Change install command to upgrade for Open-WebUI [@tremor021](https://github.com/tremor021) ([#9448](https://github.com/community-scripts/ProxmoxVE/pull/9448))
     - core: set default LANG in locale configuration [@MickLesk](https://github.com/MickLesk) ([#9440](https://github.com/community-scripts/ProxmoxVE/pull/9440))
     - documenso: switch to npm peer-.deps to get build running [@MickLesk](https://github.com/MickLesk) ([#9441](https://github.com/community-scripts/ProxmoxVE/pull/9441))
     - Refactor Asterisk installation process [@MickLesk](https://github.com/MickLesk) ([#9429](https://github.com/community-scripts/ProxmoxVE/pull/9429))
