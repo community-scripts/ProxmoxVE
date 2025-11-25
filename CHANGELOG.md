@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-11-25
 
+### 🧰 Maintenance
+
+  - #### 📝 Documentation
+
+    - gh: update supported PVE Version [@MickLesk](https://github.com/MickLesk) ([#9422](https://github.com/community-scripts/ProxmoxVE/pull/9422))
+
 ## 2025-11-24
 
 ### 🚀 Updated Scripts
