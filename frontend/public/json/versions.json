@@ -1,5 +1,60 @@
 [
   {
+    "name": "open-webui/open-webui",
+    "version": "v0.6.40",
+    "date": "2025-11-25T11:01:46Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.122.1",
+    "date": "2025-11-24T17:33:59Z"
+  },
+  {
+    "name": "documenso/documenso",
+    "version": "v2.1.0",
+    "date": "2025-11-25T09:48:39Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "v10.11.8",
+    "date": "2025-11-21T17:06:07Z"
+  },
+  {
+    "name": "zwave-js/zwave-js-ui",
+    "version": "v11.8.1",
+    "date": "2025-11-25T08:43:56Z"
+  },
+  {
+    "name": "syncthing/syncthing",
+    "version": "v2.0.11",
+    "date": "2025-11-04T08:51:05Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.3",
+    "date": "2025-09-20T12:12:33Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.356",
+    "date": "2025-11-25T05:55:49Z"
+  },
+  {
+    "name": "chrisbenincasa/tunarr",
+    "version": "v0.22.16",
+    "date": "2025-11-25T03:05:54Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.4.20",
+    "date": "2025-11-25T00:27:08Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
     "name": "BerriAI/litellm",
     "version": "v1.80.0-stable.1",
     "date": "2025-11-24T23:05:30Z"
@@ -8,6 +63,11 @@
     "name": "esphome/esphome",
     "version": "2025.11.1",
     "date": "2025-11-24T22:29:56Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.4.5",
+    "date": "2025-11-12T15:24:23Z"
   },
   {
     "name": "prometheus/prometheus",
@@ -28,11 +88,6 @@
     "name": "rcourtman/Pulse",
     "version": "v4.32.7",
     "date": "2025-11-24T18:45:58Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.120.4",
-    "date": "2025-11-19T12:57:55Z"
   },
   {
     "name": "msgbyte/tianji",
@@ -60,29 +115,14 @@
     "date": "2025-11-24T12:25:09Z"
   },
   {
-    "name": "open-webui/open-webui",
-    "version": "v0.6.38",
-    "date": "2025-11-24T12:00:43Z"
-  },
-  {
     "name": "silverbulletmd/silverbullet",
     "version": "2.3.0",
     "date": "2025-11-24T09:48:32Z"
   },
   {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.3",
-    "date": "2025-09-20T12:12:33Z"
-  },
-  {
     "name": "semaphoreui/semaphore",
     "version": "v2.17.0-beta22",
     "date": "2025-11-24T06:07:49Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.348",
-    "date": "2025-11-24T05:56:06Z"
   },
   {
     "name": "webmin/webmin",
@@ -93,16 +133,6 @@
     "name": "firefly-iii/firefly-iii",
     "version": "v6.4.8",
     "date": "2025-11-13T04:42:27Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-11-24T00:27:05Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
   },
   {
     "name": "raydak-labs/configarr",
@@ -175,11 +205,6 @@
     "date": "2025-11-22T12:54:08Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.4.5",
-    "date": "2025-11-12T15:24:23Z"
-  },
-  {
     "name": "pocketbase/pocketbase",
     "version": "v0.34.0",
     "date": "2025-11-22T09:18:14Z"
@@ -188,11 +213,6 @@
     "name": "laurent22/joplin",
     "version": "server-v3.4.4",
     "date": "2025-09-25T13:19:26Z"
-  },
-  {
-    "name": "zwave-js/zwave-js-ui",
-    "version": "v11.8.0",
-    "date": "2025-11-22T07:54:42Z"
   },
   {
     "name": "inventree/InvenTree",
@@ -225,11 +245,6 @@
     "date": "2025-11-21T18:20:58Z"
   },
   {
-    "name": "mattermost/mattermost",
-    "version": "v10.11.8",
-    "date": "2025-11-21T17:06:07Z"
-  },
-  {
     "name": "home-assistant/core",
     "version": "2025.11.3",
     "date": "2025-11-21T17:03:22Z"
@@ -258,11 +273,6 @@
     "name": "forgejo/forgejo",
     "version": "v13.0.3",
     "date": "2025-11-21T12:43:04Z"
-  },
-  {
-    "name": "chrisbenincasa/tunarr",
-    "version": "v0.23.0-alpha.24",
-    "date": "2025-11-21T12:16:39Z"
   },
   {
     "name": "seriousm4x/UpSnap",
@@ -353,11 +363,6 @@
     "name": "Athou/commafeed",
     "version": "5.12.0",
     "date": "2025-11-20T06:18:58Z"
-  },
-  {
-    "name": "documenso/documenso",
-    "version": "v2.0.14",
-    "date": "2025-11-20T04:12:40Z"
   },
   {
     "name": "immich-app/immich",
@@ -833,11 +838,6 @@
     "name": "home-assistant/operating-system",
     "version": "16.3",
     "date": "2025-11-04T12:28:47Z"
-  },
-  {
-    "name": "syncthing/syncthing",
-    "version": "v2.0.11",
-    "date": "2025-11-04T08:51:05Z"
   },
   {
     "name": "clusterzx/paperless-ai",
