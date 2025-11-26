@@ -6,7 +6,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Source: https://github.com/qdrant/qdrant
 
 APP="Qdrant"
-var_tags="${var_tags:-}"
+var_tags="${var_tags:-database;vector}"
 var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-5}"
