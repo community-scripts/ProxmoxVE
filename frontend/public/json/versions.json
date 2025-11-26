@@ -1,5 +1,60 @@
 [
   {
+    "name": "inventree/InvenTree",
+    "version": "1.1.6",
+    "date": "2025-11-26T11:42:59Z"
+  },
+  {
+    "name": "Luligu/matterbridge",
+    "version": "3.4.0",
+    "date": "2025-11-26T11:41:16Z"
+  },
+  {
+    "name": "NLnetLabs/unbound",
+    "version": "release-1.24.2",
+    "date": "2025-11-26T11:22:30Z"
+  },
+  {
+    "name": "openobserve/openobserve",
+    "version": "v0.20.0-rc2",
+    "date": "2025-11-26T10:40:50Z"
+  },
+  {
+    "name": "evcc-io/evcc",
+    "version": "0.210.1",
+    "date": "2025-11-26T10:09:24Z"
+  },
+  {
+    "name": "SigNoz/signoz",
+    "version": "v0.103.0",
+    "date": "2025-11-26T06:51:12Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.360",
+    "date": "2025-11-26T05:55:45Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.4.8",
+    "date": "2025-11-13T04:42:27Z"
+  },
+  {
+    "name": "HabitRPG/habitica",
+    "version": "v5.42.0",
+    "date": "2025-11-26T02:01:01Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5",
+    "date": "2025-11-26T00:27:13Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
     "name": "Stirling-Tools/Stirling-PDF",
     "version": "v2.0.0",
     "date": "2025-11-25T23:19:38Z"
@@ -35,6 +90,11 @@
     "date": "2025-11-25T19:58:16Z"
   },
   {
+    "name": "keycloak/keycloak",
+    "version": "26.2.11",
+    "date": "2025-11-25T18:04:45Z"
+  },
+  {
     "name": "tailscale/tailscale",
     "version": "v1.90.9",
     "date": "2025-11-25T18:21:40Z"
@@ -43,11 +103,6 @@
     "name": "karlomikus/bar-assistant",
     "version": "v5.9.3",
     "date": "2025-11-25T18:18:34Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.2.11",
-    "date": "2025-11-25T18:04:45Z"
   },
   {
     "name": "gtsteffaniak/filebrowser",
@@ -73,11 +128,6 @@
     "name": "usememos/memos",
     "version": "v0.25.3",
     "date": "2025-11-25T15:40:41Z"
-  },
-  {
-    "name": "openobserve/openobserve",
-    "version": "v0.20.0-rc1",
-    "date": "2025-11-25T13:25:19Z"
   },
   {
     "name": "booklore-app/booklore",
@@ -123,21 +173,6 @@
     "name": "morpheus65535/bazarr",
     "version": "v1.5.3",
     "date": "2025-09-20T12:12:33Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.356",
-    "date": "2025-11-25T05:55:49Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.4.20",
-    "date": "2025-11-25T00:27:08Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
   },
   {
     "name": "esphome/esphome",
@@ -198,11 +233,6 @@
     "name": "webmin/webmin",
     "version": "2.610",
     "date": "2025-11-24T04:28:30Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.4.8",
-    "date": "2025-11-13T04:42:27Z"
   },
   {
     "name": "raydak-labs/configarr",
@@ -283,11 +313,6 @@
     "name": "laurent22/joplin",
     "version": "server-v3.4.4",
     "date": "2025-09-25T13:19:26Z"
-  },
-  {
-    "name": "inventree/InvenTree",
-    "version": "1.1.5",
-    "date": "2025-11-22T07:02:52Z"
   },
   {
     "name": "theonedev/onedev",
@@ -398,11 +423,6 @@
     "name": "NodeBB/NodeBB",
     "version": "v4.6.3",
     "date": "2025-11-20T14:13:22Z"
-  },
-  {
-    "name": "SigNoz/signoz",
-    "version": "v0.102.1",
-    "date": "2025-11-20T12:20:18Z"
   },
   {
     "name": "kimai/kimai",
@@ -565,11 +585,6 @@
     "date": "2025-11-16T18:53:49Z"
   },
   {
-    "name": "Luligu/matterbridge",
-    "version": "3.3.8",
-    "date": "2025-11-16T17:04:37Z"
-  },
-  {
     "name": "AlexxIT/go2rtc",
     "version": "v1.9.12",
     "date": "2025-11-16T16:14:55Z"
@@ -638,11 +653,6 @@
     "name": "docker/compose",
     "version": "v2.40.3",
     "date": "2025-10-30T09:35:37Z"
-  },
-  {
-    "name": "evcc-io/evcc",
-    "version": "0.209.8",
-    "date": "2025-11-13T07:20:49Z"
   },
   {
     "name": "pymedusa/Medusa",
@@ -753,11 +763,6 @@
     "name": "Ombi-app/Ombi",
     "version": "v4.52.0",
     "date": "2025-11-06T22:39:26Z"
-  },
-  {
-    "name": "HabitRPG/habitica",
-    "version": "v5.41.6",
-    "date": "2025-11-06T15:32:07Z"
   },
   {
     "name": "pocket-id/pocket-id",
@@ -958,11 +963,6 @@
     "name": "louislam/uptime-kuma",
     "version": "2.0.2",
     "date": "2025-10-22T17:03:54Z"
-  },
-  {
-    "name": "NLnetLabs/unbound",
-    "version": "release-1.24.1",
-    "date": "2025-10-22T10:28:00Z"
   },
   {
     "name": "kyantech/Palmr",
