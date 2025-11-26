@@ -16,6 +16,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Joplin Server: Increase RAM for LXC [@tremor021](https://github.com/tremor021) ([#9460](https://github.com/community-scripts/ProxmoxVE/pull/9460))
 
+  - #### 🐞 Bug Fixes
+
+    - Fix Open WebUI update logic (swap upgrade/install) [@camcop](https://github.com/camcop) ([#9461](https://github.com/community-scripts/ProxmoxVE/pull/9461))
+
 ## 2025-11-25
 
 ### 🚀 Updated Scripts
