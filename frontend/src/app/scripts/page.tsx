@@ -188,7 +188,7 @@ function ScriptContent() {
 
       {/* Filters Section - Only show when no script is selected */}
       {!selectedScript && (
-        <div className="w-full border-b bg-background/50 backdrop-blur-sm sticky top-0 z-10 shadow-sm">
+        <div className="w-full border-b bg-background/50 backdrop-blur-sm sticky top-20 z-10 shadow-sm">
           <div className="w-full py-4 px-2 sm:px-16">
             <div className="flex flex-col gap-4">
               {/* Results Count & Refine Label */}
