@@ -107,8 +107,8 @@ export default function RootLayout({
               <QueryProvider>
                 <Navbar />
                 <div className="flex min-h-screen flex-col justify-center">
-                  <div className="flex w-full justify-center">
-                    <div className="w-full max-w-[1440px] ">
+                  <div className="flex w-full">
+                    <div className="w-full">
                       {children}
                       <Toaster richColors />
                     </div>
