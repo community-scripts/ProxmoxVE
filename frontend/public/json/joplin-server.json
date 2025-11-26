@@ -20,7 +20,7 @@
       "script": "ct/joplin-server.sh",
       "resources": {
         "cpu": 2,
-        "ram": 4096,
+        "ram": 6144,
         "hdd": 20,
         "os": "Debian",
         "version": "13"
@@ -34,6 +34,10 @@
   "notes": [
     {
       "text": "Application can take some time to build, depending on your host speed. Please be patient.",
+      "type": "info"
+    },
+    {
+      "text": "Default RAM size for LXC is set to 6GB because of Node.js building process. You can lower it after application installs",
       "type": "info"
     }
   ]
