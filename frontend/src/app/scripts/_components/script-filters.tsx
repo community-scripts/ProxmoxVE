@@ -131,11 +131,15 @@ export function ScriptFilters({ filters, onFilterChange }: ScriptFiltersProps) {
         {/* Platform Filter */}
         <DropdownMenu open={openDropdown === "platforms"} onOpenChange={(open) => setOpenDropdown(open ? "platforms" : null)}>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="h-9">
+            <Button
+              variant={filters.platforms.size > 0 ? "default" : "outline"}
+              size="sm"
+              className={`h-9 ${filters.platforms.size > 0 ? 'ring-2 ring-primary/20 shadow-md font-semibold' : ''}`}
+            >
               <Filter className="h-3.5 w-3.5 mr-2" />
               Platform
               {filters.platforms.size > 0 && (
-                <Badge variant="secondary" className="ml-2 h-5 w-5 rounded-full p-0 flex items-center justify-center">
+                <Badge variant="secondary" className="ml-2 h-5 w-5 rounded-full p-0 flex items-center justify-center bg-background/90 text-foreground font-bold">
                   {filters.platforms.size}
                 </Badge>
               )}
@@ -160,11 +164,15 @@ export function ScriptFilters({ filters, onFilterChange }: ScriptFiltersProps) {
         {/* Deployment Filter */}
         <DropdownMenu open={openDropdown === "deployments"} onOpenChange={(open) => setOpenDropdown(open ? "deployments" : null)}>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="h-9">
+            <Button
+              variant={filters.deployments.size > 0 ? "default" : "outline"}
+              size="sm"
+              className={`h-9 ${filters.deployments.size > 0 ? 'ring-2 ring-primary/20 shadow-md font-semibold' : ''}`}
+            >
               <Filter className="h-3.5 w-3.5 mr-2" />
               Deployment
               {filters.deployments.size > 0 && (
-                <Badge variant="secondary" className="ml-2 h-5 w-5 rounded-full p-0 flex items-center justify-center">
+                <Badge variant="secondary" className="ml-2 h-5 w-5 rounded-full p-0 flex items-center justify-center bg-background/90 text-foreground font-bold">
                   {filters.deployments.size}
                 </Badge>
               )}
@@ -189,11 +197,15 @@ export function ScriptFilters({ filters, onFilterChange }: ScriptFiltersProps) {
         {/* Hosting Filter */}
         <DropdownMenu open={openDropdown === "hosting"} onOpenChange={(open) => setOpenDropdown(open ? "hosting" : null)}>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="h-9">
+            <Button
+              variant={filters.hosting.size > 0 ? "default" : "outline"}
+              size="sm"
+              className={`h-9 ${filters.hosting.size > 0 ? 'ring-2 ring-primary/20 shadow-md font-semibold' : ''}`}
+            >
               <Filter className="h-3.5 w-3.5 mr-2" />
               Hosting
               {filters.hosting.size > 0 && (
-                <Badge variant="secondary" className="ml-2 h-5 w-5 rounded-full p-0 flex items-center justify-center">
+                <Badge variant="secondary" className="ml-2 h-5 w-5 rounded-full p-0 flex items-center justify-center bg-background/90 text-foreground font-bold">
                   {filters.hosting.size}
                 </Badge>
               )}
@@ -218,11 +230,15 @@ export function ScriptFilters({ filters, onFilterChange }: ScriptFiltersProps) {
         {/* UI Filter */}
         <DropdownMenu open={openDropdown === "ui"} onOpenChange={(open) => setOpenDropdown(open ? "ui" : null)}>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="h-9">
+            <Button
+              variant={filters.ui.size > 0 ? "default" : "outline"}
+              size="sm"
+              className={`h-9 ${filters.ui.size > 0 ? 'ring-2 ring-primary/20 shadow-md font-semibold' : ''}`}
+            >
               <Filter className="h-3.5 w-3.5 mr-2" />
               Interface
               {filters.ui.size > 0 && (
-                <Badge variant="secondary" className="ml-2 h-5 w-5 rounded-full p-0 flex items-center justify-center">
+                <Badge variant="secondary" className="ml-2 h-5 w-5 rounded-full p-0 flex items-center justify-center bg-background/90 text-foreground font-bold">
                   {filters.ui.size}
                 </Badge>
               )}
@@ -263,13 +279,13 @@ export function ScriptFilters({ filters, onFilterChange }: ScriptFiltersProps) {
           {getActiveFilters().map(({ category, value, label }) => (
             <Badge
               key={`${category}-${value}`}
-              variant="secondary"
-              className="pl-2 pr-1 py-1 text-xs"
+              variant="default"
+              className="pl-3 pr-2 py-1.5 text-xs font-medium shadow-sm ring-1 ring-primary/10"
             >
               {label}
               <button
                 onClick={() => removeFilter(category, value)}
-                className="ml-1 rounded-full hover:bg-accent p-0.5"
+                className="ml-2 rounded-full hover:bg-background/20 p-0.5 transition-colors"
               >
                 <X className="h-3 w-3" />
               </button>

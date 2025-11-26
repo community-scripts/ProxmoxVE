@@ -147,15 +147,15 @@ function ScriptContent() {
               </p>
 
               {/* Search Bar */}
-              <div className="max-w-xl mx-auto pt-2">
+              <div className="max-w-2xl mx-auto pt-2">
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                   <Input
                     type="text"
                     placeholder="Search scripts..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10 h-11 text-base"
+                    className="pl-12 h-14 text-lg shadow-lg ring-2 ring-accent/20 focus-visible:ring-accent/40 transition-all"
                   />
                 </div>
               </div>
@@ -188,18 +188,25 @@ function ScriptContent() {
 
       {/* Filters Section - Only show when no script is selected */}
       {!selectedScript && (
-        <div className="w-full border-b bg-background/50">
-          <div className="w-full py-4">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3 px-2 sm:px-16">
-              <h2 className="text-sm font-medium text-muted-foreground">
-                {filteredScriptsCount === uniqueScripts ? (
-                  `Showing all ${uniqueScripts} scripts`
-                ) : (
-                  `Showing ${filteredScriptsCount} of ${uniqueScripts} scripts`
-                )}
-              </h2>
-            </div>
-            <div className="px-2 sm:px-16">
+        <div className="w-full border-b bg-background/50 backdrop-blur-sm sticky top-0 z-10 shadow-sm">
+          <div className="w-full py-4 px-2 sm:px-16">
+            <div className="flex flex-col gap-4">
+              {/* Results Count & Refine Label */}
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                <div className="flex items-center gap-3">
+                  <h2 className="text-base font-semibold">
+                    {filteredScriptsCount === uniqueScripts ? (
+                      `${uniqueScripts} Scripts`
+                    ) : (
+                      `${filteredScriptsCount} of ${uniqueScripts} Scripts`
+                    )}
+                  </h2>
+                  <span className="text-sm text-muted-foreground">•</span>
+                  <span className="text-sm font-medium text-muted-foreground">Refine results:</span>
+                </div>
+              </div>
+
+              {/* Filter Pills */}
               <ScriptFilters filters={filters} onFilterChange={setFilters} />
             </div>
           </div>
