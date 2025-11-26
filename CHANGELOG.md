@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-11-26
 
+### 🚀 Updated Scripts
+
+  - Joplin Server: Increase RAM for LXC [@tremor021](https://github.com/tremor021) ([#9460](https://github.com/community-scripts/ProxmoxVE/pull/9460))
+
 ## 2025-11-25
 
 ### 🚀 Updated Scripts
