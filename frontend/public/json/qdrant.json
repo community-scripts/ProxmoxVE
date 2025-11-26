@@ -2,11 +2,11 @@
   "name": "Qdrant",
   "slug": "qdrant",
   "categories": [
-    20
+    8
   ],
-  "date_created": "2025-11-25",
+  "date_created": "2025-11-26",
   "type": "ct",
-  "updateable": false,
+  "updateable": true,
   "privileged": false,
   "config_path": "/etc/qdrant/config.yaml",
   "interface_port": 6333,
