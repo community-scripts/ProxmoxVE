@@ -1,5 +1,95 @@
 [
   {
+    "name": "Stirling-Tools/Stirling-PDF",
+    "version": "v2.0.0",
+    "date": "2025-11-25T23:19:38Z"
+  },
+  {
+    "name": "BookStackApp/BookStack",
+    "version": "v25.11.4",
+    "date": "2025-11-25T22:26:51Z"
+  },
+  {
+    "name": "seerr-team/seerr",
+    "version": "preview-test-fix-subscriptions",
+    "date": "2025-11-25T22:11:46Z"
+  },
+  {
+    "name": "gristlabs/grist-core",
+    "version": "v1.7.8",
+    "date": "2025-11-25T20:50:33Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.80.5.dev1",
+    "date": "2025-11-25T20:23:57Z"
+  },
+  {
+    "name": "wizarrrr/wizarr",
+    "version": "v2025.11.3",
+    "date": "2025-11-25T20:20:38Z"
+  },
+  {
+    "name": "netbox-community/netbox",
+    "version": "v4.4.7",
+    "date": "2025-11-25T19:58:16Z"
+  },
+  {
+    "name": "tailscale/tailscale",
+    "version": "v1.90.9",
+    "date": "2025-11-25T18:21:40Z"
+  },
+  {
+    "name": "karlomikus/bar-assistant",
+    "version": "v5.9.3",
+    "date": "2025-11-25T18:18:34Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.2.11",
+    "date": "2025-11-25T18:04:45Z"
+  },
+  {
+    "name": "gtsteffaniak/filebrowser",
+    "version": "v1.0.2-stable",
+    "date": "2025-11-25T18:00:38Z"
+  },
+  {
+    "name": "Dolibarr/dolibarr",
+    "version": "22.0.3",
+    "date": "2025-11-25T17:25:41Z"
+  },
+  {
+    "name": "element-hq/synapse",
+    "version": "v1.143.0",
+    "date": "2025-11-25T16:49:54Z"
+  },
+  {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.539",
+    "date": "2025-11-25T16:05:32Z"
+  },
+  {
+    "name": "usememos/memos",
+    "version": "v0.25.3",
+    "date": "2025-11-25T15:40:41Z"
+  },
+  {
+    "name": "openobserve/openobserve",
+    "version": "v0.20.0-rc1",
+    "date": "2025-11-25T13:25:19Z"
+  },
+  {
+    "name": "booklore-app/booklore",
+    "version": "v1.12.0",
+    "date": "2025-11-25T13:17:08Z"
+  },
+  {
+    "name": "chrisbenincasa/tunarr",
+    "version": "v0.23.0-alpha.25",
+    "date": "2025-11-25T12:18:04Z"
+  },
+  {
     "name": "open-webui/open-webui",
     "version": "v0.6.40",
     "date": "2025-11-25T11:01:46Z"
@@ -40,11 +130,6 @@
     "date": "2025-11-25T05:55:49Z"
   },
   {
-    "name": "chrisbenincasa/tunarr",
-    "version": "v0.22.16",
-    "date": "2025-11-25T03:05:54Z"
-  },
-  {
     "name": "jeedom/core",
     "version": "4.4.20",
     "date": "2025-11-25T00:27:08Z"
@@ -55,19 +140,9 @@
     "date": "2025-11-23T12:13:34Z"
   },
   {
-    "name": "BerriAI/litellm",
-    "version": "v1.80.0-stable.1",
-    "date": "2025-11-24T23:05:30Z"
-  },
-  {
     "name": "esphome/esphome",
     "version": "2025.11.1",
     "date": "2025-11-24T22:29:56Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.4.5",
-    "date": "2025-11-12T15:24:23Z"
   },
   {
     "name": "prometheus/prometheus",
@@ -78,11 +153,6 @@
     "name": "TandoorRecipes/recipes",
     "version": "2.3.6",
     "date": "2025-11-24T19:40:27Z"
-  },
-  {
-    "name": "gtsteffaniak/filebrowser",
-    "version": "v1.0.1-stable",
-    "date": "2025-11-10T16:51:44Z"
   },
   {
     "name": "rcourtman/Pulse",
@@ -255,11 +325,6 @@
     "date": "2025-11-21T16:51:21Z"
   },
   {
-    "name": "BookStackApp/BookStack",
-    "version": "v25.11.3",
-    "date": "2025-11-21T14:06:50Z"
-  },
-  {
     "name": "pommee/goaway",
     "version": "v0.62.19",
     "date": "2025-11-21T13:24:09Z"
@@ -288,16 +353,6 @@
     "name": "sabnzbd/sabnzbd",
     "version": "4.5.5",
     "date": "2025-10-24T11:12:22Z"
-  },
-  {
-    "name": "openobserve/openobserve",
-    "version": "v0.16.3",
-    "date": "2025-11-21T08:54:06Z"
-  },
-  {
-    "name": "booklore-app/booklore",
-    "version": "v1.11.0",
-    "date": "2025-11-21T08:09:03Z"
   },
   {
     "name": "MariaDB/server",
@@ -390,11 +445,6 @@
     "date": "2025-05-29T17:08:26Z"
   },
   {
-    "name": "tailscale/tailscale",
-    "version": "v1.90.8",
-    "date": "2025-11-19T16:30:57Z"
-  },
-  {
     "name": "dgtlmoon/changedetection.io",
     "version": "0.51.3",
     "date": "2025-11-19T15:45:28Z"
@@ -410,11 +460,6 @@
     "date": "2025-11-19T15:08:41Z"
   },
   {
-    "name": "wizarrrr/wizarr",
-    "version": "v2025.11.3",
-    "date": "2025-11-19T14:57:27Z"
-  },
-  {
     "name": "hivemq/hivemq-community-edition",
     "version": "2025.5",
     "date": "2025-11-19T14:48:47Z"
@@ -425,29 +470,14 @@
     "date": "2025-10-30T15:31:50Z"
   },
   {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.538",
-    "date": "2025-11-19T12:09:00Z"
-  },
-  {
     "name": "jupyter/notebook",
     "version": "v7.5.0",
     "date": "2025-11-19T08:36:29Z"
   },
   {
-    "name": "element-hq/synapse",
-    "version": "v1.143.0rc1",
-    "date": "2025-11-19T00:09:31Z"
-  },
-  {
     "name": "umami-software/umami",
     "version": "v3.0.1",
     "date": "2025-11-18T18:50:35Z"
-  },
-  {
-    "name": "seerr-team/seerr",
-    "version": "preview-test-fix-subscriptions",
-    "date": "2025-11-18T17:42:54Z"
   },
   {
     "name": "traefik/traefik",
@@ -585,11 +615,6 @@
     "date": "2025-11-14T16:23:33Z"
   },
   {
-    "name": "Dolibarr/dolibarr",
-    "version": "22.0.3",
-    "date": "2025-11-14T14:49:25Z"
-  },
-  {
     "name": "zitadel/zitadel",
     "version": "v4.7.0",
     "date": "2025-11-14T09:45:13Z"
@@ -603,11 +628,6 @@
     "name": "chrisvel/tududi",
     "version": "v0.86.1",
     "date": "2025-11-14T05:05:44Z"
-  },
-  {
-    "name": "gristlabs/grist-core",
-    "version": "v1.7.7",
-    "date": "2025-11-13T21:28:44Z"
   },
   {
     "name": "PrivateBin/PrivateBin",
@@ -650,19 +670,9 @@
     "date": "2025-11-11T19:32:29Z"
   },
   {
-    "name": "karlomikus/bar-assistant",
-    "version": "v5.9.2",
-    "date": "2025-11-11T19:29:32Z"
-  },
-  {
     "name": "gethomepage/homepage",
     "version": "v1.7.0",
     "date": "2025-11-11T17:24:27Z"
-  },
-  {
-    "name": "netbox-community/netbox",
-    "version": "v4.4.6",
-    "date": "2025-11-11T14:59:23Z"
   },
   {
     "name": "CrazyWolf13/web-check",
@@ -930,11 +940,6 @@
     "date": "2025-10-26T14:23:37Z"
   },
   {
-    "name": "usememos/memos",
-    "version": "v0.25.2",
-    "date": "2025-10-24T12:30:04Z"
-  },
-  {
     "name": "crowdsecurity/crowdsec",
     "version": "v1.7.3",
     "date": "2025-10-24T10:51:12Z"
@@ -983,11 +988,6 @@
     "name": "diced/zipline",
     "version": "v4.3.2",
     "date": "2025-10-17T04:13:23Z"
-  },
-  {
-    "name": "Stirling-Tools/Stirling-PDF",
-    "version": "v1.5.0",
-    "date": "2025-10-16T23:14:45Z"
   },
   {
     "name": "minio/minio",
