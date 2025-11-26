@@ -139,7 +139,7 @@ export function ScriptFilters({ filters, onFilterChange }: ScriptFiltersProps) {
               <Filter className="h-3.5 w-3.5 mr-2" />
               Platform
               {filters.platforms.size > 0 && (
-                <Badge variant="secondary" className="ml-2 h-5 w-5 rounded-full p-0 flex items-center justify-center bg-background/90 text-foreground font-bold">
+                <Badge variant="secondary" className="ml-2 h-5 w-5 rounded-full p-0 flex items-center justify-center bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-bold border border-slate-200 dark:border-slate-700">
                   {filters.platforms.size}
                 </Badge>
               )}
@@ -172,7 +172,7 @@ export function ScriptFilters({ filters, onFilterChange }: ScriptFiltersProps) {
               <Filter className="h-3.5 w-3.5 mr-2" />
               Deployment
               {filters.deployments.size > 0 && (
-                <Badge variant="secondary" className="ml-2 h-5 w-5 rounded-full p-0 flex items-center justify-center bg-background/90 text-foreground font-bold">
+                <Badge variant="secondary" className="ml-2 h-5 w-5 rounded-full p-0 flex items-center justify-center bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-bold border border-slate-200 dark:border-slate-700">
                   {filters.deployments.size}
                 </Badge>
               )}
@@ -205,7 +205,7 @@ export function ScriptFilters({ filters, onFilterChange }: ScriptFiltersProps) {
               <Filter className="h-3.5 w-3.5 mr-2" />
               Hosting
               {filters.hosting.size > 0 && (
-                <Badge variant="secondary" className="ml-2 h-5 w-5 rounded-full p-0 flex items-center justify-center bg-background/90 text-foreground font-bold">
+                <Badge variant="secondary" className="ml-2 h-5 w-5 rounded-full p-0 flex items-center justify-center bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-bold border border-slate-200 dark:border-slate-700">
                   {filters.hosting.size}
                 </Badge>
               )}
@@ -238,7 +238,7 @@ export function ScriptFilters({ filters, onFilterChange }: ScriptFiltersProps) {
               <Filter className="h-3.5 w-3.5 mr-2" />
               Interface
               {filters.ui.size > 0 && (
-                <Badge variant="secondary" className="ml-2 h-5 w-5 rounded-full p-0 flex items-center justify-center bg-background/90 text-foreground font-bold">
+                <Badge variant="secondary" className="ml-2 h-5 w-5 rounded-full p-0 flex items-center justify-center bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-bold border border-slate-200 dark:border-slate-700">
                   {filters.ui.size}
                 </Badge>
               )}
@@ -279,13 +279,13 @@ export function ScriptFilters({ filters, onFilterChange }: ScriptFiltersProps) {
           {getActiveFilters().map(({ category, value, label }) => (
             <Badge
               key={`${category}-${value}`}
-              variant="default"
-              className="pl-3 pr-2 py-1.5 text-xs font-medium shadow-sm ring-1 ring-primary/10"
+              variant="secondary"
+              className="pl-3 pr-2 py-1.5 text-xs font-semibold shadow-md border-2 border-primary/30 bg-primary/10 hover:bg-primary/20 transition-colors"
             >
               {label}
               <button
                 onClick={() => removeFilter(category, value)}
-                className="ml-2 rounded-full hover:bg-background/20 p-0.5 transition-colors"
+                className="ml-2 rounded-full hover:bg-primary/30 p-0.5 transition-colors"
               >
                 <X className="h-3 w-3" />
               </button>
