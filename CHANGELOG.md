@@ -16,6 +16,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Qdrant ([#9465](https://github.com/community-scripts/ProxmoxVE/pull/9465))
 
+### 🚀 Updated Scripts
+
+  - #### 💥 Breaking Changes
+
+    - Upgrade pve-scripts-local to node 24 [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#9457](https://github.com/community-scripts/ProxmoxVE/pull/9457))
+
 ## 2025-11-26
 
 ### 🚀 Updated Scripts
