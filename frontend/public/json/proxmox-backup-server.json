@@ -37,7 +37,7 @@
             "type": "warning"
         },
         {
-            "text": "Advanced Install is only possible with IPV6 disabled! Otherwise, the installation may get stuck.",
+            "text": "Advanced Install is only possible with IPv6 disabled! Otherwise, the installation may get stuck.",
             "type": "warning"
         }
     ]
