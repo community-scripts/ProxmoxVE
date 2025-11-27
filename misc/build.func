@@ -1357,7 +1357,10 @@ EOF'
   fi
   msg_ok "Customized LXC Container"
 
-  lxc-attach -n "$CTID" -- bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/install/${var_install}.sh)"
+  # Support testing from forks/branches via environment variables
+  INSTALL_REPO="${INSTALL_REPO:-community-scripts/ProxmoxVE}"
+  INSTALL_BRANCH="${INSTALL_BRANCH:-main}"
+  lxc-attach -n "$CTID" -- bash -c "$(curl -fsSL https://raw.githubusercontent.com/${INSTALL_REPO}/${INSTALL_BRANCH}/install/${var_install}.sh)"
 }
 
 # This function sets the description of the container.
