@@ -1,8 +1,88 @@
 [
   {
+    "name": "home-assistant/core",
+    "version": "2025.11.3",
+    "date": "2025-11-21T17:03:22Z"
+  },
+  {
+    "name": "chrisvel/tududi",
+    "version": "v0.86.1",
+    "date": "2025-11-14T05:05:44Z"
+  },
+  {
+    "name": "crowdsecurity/crowdsec",
+    "version": "v1.7.3",
+    "date": "2025-10-24T10:51:12Z"
+  },
+  {
+    "name": "evcc-io/evcc",
+    "version": "0.210.2",
+    "date": "2025-11-27T09:18:22Z"
+  },
+  {
+    "name": "theonedev/onedev",
+    "version": "v13.1.1",
+    "date": "2025-11-27T08:09:31Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.80.5.dev32",
+    "date": "2025-11-27T06:42:55Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.3",
+    "date": "2025-09-20T12:12:33Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.361",
+    "date": "2025-11-27T05:59:03Z"
+  },
+  {
+    "name": "ipfs/kubo",
+    "version": "v0.39.0",
+    "date": "2025-11-27T03:47:38Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.13.0",
+    "date": "2025-11-19T14:16:07Z"
+  },
+  {
+    "name": "OliveTin/OliveTin",
+    "version": "3000.5.0",
+    "date": "2025-11-27T01:21:41Z"
+  },
+  {
+    "name": "gtsteffaniak/filebrowser",
+    "version": "v1.1.2-experimental-sqlite",
+    "date": "2025-11-27T00:54:40Z"
+  },
+  {
+    "name": "YunoHost/yunohost",
+    "version": "debian/12.1.36",
+    "date": "2025-11-27T00:33:48Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5",
+    "date": "2025-11-27T00:27:13Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
     "name": "jenkinsci/jenkins",
     "version": "jenkins-2.539",
     "date": "2025-11-25T16:05:32Z"
+  },
+  {
+    "name": "verdaccio/verdaccio",
+    "version": "generator-verdaccio-plugin@6.0.0-next-8.28",
+    "date": "2025-11-26T22:42:35Z"
   },
   {
     "name": "gristlabs/grist-core",
@@ -15,24 +95,19 @@
     "date": "2025-11-26T21:30:35Z"
   },
   {
-    "name": "BerriAI/litellm",
-    "version": "v1.80.5.dev2",
-    "date": "2025-11-26T21:37:55Z"
-  },
-  {
     "name": "tailscale/tailscale",
     "version": "v1.93.0-pre",
     "date": "2025-11-26T20:50:59Z"
   },
   {
+    "name": "keycloak/keycloak",
+    "version": "26.2.11",
+    "date": "2025-11-25T18:04:45Z"
+  },
+  {
     "name": "firefly-iii/firefly-iii",
     "version": "v6.4.8",
     "date": "2025-11-13T04:42:27Z"
-  },
-  {
-    "name": "home-assistant/core",
-    "version": "2025.11.3",
-    "date": "2025-11-21T17:03:22Z"
   },
   {
     "name": "Stirling-Tools/Stirling-PDF",
@@ -105,11 +180,6 @@
     "date": "2025-11-26T11:22:30Z"
   },
   {
-    "name": "evcc-io/evcc",
-    "version": "0.210.1",
-    "date": "2025-11-26T10:09:24Z"
-  },
-  {
     "name": "wazuh/wazuh",
     "version": "coverity-w48-4.14.2",
     "date": "2025-11-26T07:57:00Z"
@@ -120,24 +190,9 @@
     "date": "2025-11-26T06:51:12Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.360",
-    "date": "2025-11-26T05:55:45Z"
-  },
-  {
     "name": "HabitRPG/habitica",
     "version": "v5.42.0",
     "date": "2025-11-26T02:01:01Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.5",
-    "date": "2025-11-26T00:27:13Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
   },
   {
     "name": "BookStackApp/BookStack",
@@ -160,19 +215,9 @@
     "date": "2025-11-25T19:58:16Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.2.11",
-    "date": "2025-11-25T18:04:45Z"
-  },
-  {
     "name": "karlomikus/bar-assistant",
     "version": "v5.9.3",
     "date": "2025-11-25T18:18:34Z"
-  },
-  {
-    "name": "gtsteffaniak/filebrowser",
-    "version": "v1.0.2-stable",
-    "date": "2025-11-25T18:00:38Z"
   },
   {
     "name": "Dolibarr/dolibarr",
@@ -218,11 +263,6 @@
     "name": "syncthing/syncthing",
     "version": "v2.0.11",
     "date": "2025-11-04T08:51:05Z"
-  },
-  {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.3",
-    "date": "2025-09-20T12:12:33Z"
   },
   {
     "name": "esphome/esphome",
@@ -290,11 +330,6 @@
     "date": "2025-11-23T17:32:38Z"
   },
   {
-    "name": "verdaccio/verdaccio",
-    "version": "v6.2.2",
-    "date": "2025-11-23T16:54:07Z"
-  },
-  {
     "name": "crafty-controller/crafty-4",
     "version": "v4.6.1",
     "date": "2025-11-23T16:42:50Z"
@@ -313,11 +348,6 @@
     "name": "paperless-ngx/paperless-ngx",
     "version": "v2.20.0",
     "date": "2025-11-22T21:56:00Z"
-  },
-  {
-    "name": "OliveTin/OliveTin",
-    "version": "2025.11.25",
-    "date": "2025-11-22T21:00:52Z"
   },
   {
     "name": "Cleanuparr/Cleanuparr",
@@ -348,11 +378,6 @@
     "name": "laurent22/joplin",
     "version": "server-v3.4.4",
     "date": "2025-09-25T13:19:26Z"
-  },
-  {
-    "name": "theonedev/onedev",
-    "version": "v13.1.0",
-    "date": "2025-11-22T04:29:25Z"
   },
   {
     "name": "TwiN/gatus",
@@ -423,11 +448,6 @@
     "name": "TasmoAdmin/TasmoAdmin",
     "version": "v4.3.2",
     "date": "2025-10-18T12:11:00Z"
-  },
-  {
-    "name": "ollama/ollama",
-    "version": "v0.13.1-rc0",
-    "date": "2025-11-20T21:30:35Z"
   },
   {
     "name": "project-zot/zot",
@@ -545,11 +565,6 @@
     "date": "2025-11-18T05:51:46Z"
   },
   {
-    "name": "ipfs/kubo",
-    "version": "v0.38.2",
-    "date": "2025-10-30T02:44:09Z"
-  },
-  {
     "name": "VictoriaMetrics/VictoriaMetrics",
     "version": "pmm-6401-v1.130.0",
     "date": "2025-11-17T21:16:38Z"
@@ -655,11 +670,6 @@
     "date": "2025-11-14T06:59:44Z"
   },
   {
-    "name": "chrisvel/tududi",
-    "version": "v0.86.1",
-    "date": "2025-11-14T05:05:44Z"
-  },
-  {
     "name": "PrivateBin/PrivateBin",
     "version": "1.7.9",
     "date": "2025-11-13T10:26:37Z"
@@ -763,11 +773,6 @@
     "name": "cloudflare/cloudflared",
     "version": "2025.11.1",
     "date": "2025-11-07T17:05:45Z"
-  },
-  {
-    "name": "YunoHost/yunohost",
-    "version": "debian/12.1.35",
-    "date": "2025-11-07T14:35:24Z"
   },
   {
     "name": "Ombi-app/Ombi",
@@ -948,11 +953,6 @@
     "name": "ErsatzTV/ErsatzTV",
     "version": "v25.8.0",
     "date": "2025-10-26T14:23:37Z"
-  },
-  {
-    "name": "crowdsecurity/crowdsec",
-    "version": "v1.7.3",
-    "date": "2025-10-24T10:51:12Z"
   },
   {
     "name": "drakkan/sftpgo",
