@@ -29,23 +29,28 @@ function update_script() {
     exit
   fi
 
-  msg_info "Updating ${APP}"
+  msg_info "Stopping Service"
   systemctl stop romm
+  msg_ok "Stopped Service"
 
+  msg_info "Updating ${APP}"
   cd /opt/romm
   git pull origin main
+  msg_ok "Updated Repository"
 
-  msg_info "Updating Python dependencies"
+  msg_info "Updating Python Dependencies"
   /usr/local/bin/uv sync --all-extras
-  msg_ok "Updated Python dependencies"
+  msg_ok "Updated Python Dependencies"
 
-  msg_info "Updating Frontend"
+  msg_info "Updating Frontend Dependencies"
   cd /opt/romm/frontend
-  npm install
-  msg_ok "Updated Frontend"
+  $STD npm install
+  msg_ok "Updated Frontend Dependencies"
 
+  msg_info "Starting Service"
   systemctl start romm
-  msg_ok "Updated ${APP} successfully!"
+  msg_ok "Started Service"
+  msg_ok "Updated successfully!"
   exit
 }
 
