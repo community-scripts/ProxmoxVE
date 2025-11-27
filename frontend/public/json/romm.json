@@ -1,0 +1,49 @@
+{
+  "name": "ROMM",
+  "slug": "romm",
+  "categories": [
+    24,
+    13
+  ],
+  "date_created": "2025-11-27",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 8080,
+  "documentation": "https://github.com/rommapp/romm",
+  "website": "https://github.com/rommapp/romm",
+  "logo": "https://raw.githubusercontent.com/rommapp/romm/main/frontend/assets/isotipo.svg",
+  "config_path": "/opt/romm/.env",
+  "description": "ROMM is a beautiful, powerful, self-hosted ROM manager for organizing and managing your gaming ROMs. Features include scanning and organizing ROMs, metadata fetching, artwork management, and RetroAchievements integration for validating game hashes.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/romm.sh",
+      "resources": {
+        "cpu": 4,
+        "ram": 4096,
+        "hdd": 10,
+        "os": "debian",
+        "version": "12"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "ROMM may take a few minutes to fully start after installation. Please be patient.",
+      "type": "info"
+    },
+    {
+      "text": "Store your ROM files in /opt/romm_storage/library for ROMM to scan them.",
+      "type": "info"
+    },
+    {
+      "text": "RAHasher is included for RetroAchievements hash validation.",
+      "type": "info"
+    }
+  ]
+}
