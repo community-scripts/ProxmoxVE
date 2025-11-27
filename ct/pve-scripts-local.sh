@@ -28,7 +28,7 @@ function update_script() {
     exit
   fi
   
-  msg_custom "🚀" "${GN}" "The app offers a built-in updater. Please use this."
+  msg_custom "🚀" "${GN}" "The app offers a built-in updater. Please use it."
   
 }
 
