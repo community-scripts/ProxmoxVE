@@ -27,8 +27,8 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-
-  msg_error "This App gets updated in place with the help of the WebUI"
+  
+  msg_custom "🚀" "${GN}" "The app offers a built-in updater. Please use this."
   
 }
 
