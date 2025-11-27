@@ -22,6 +22,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Upgrade pve-scripts-local to node 24 [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#9457](https://github.com/community-scripts/ProxmoxVE/pull/9457))
 
+### 🌐 Website
+
+  - #### 🐞 Bug Fixes
+
+    - PBS: fix typo [@joshuaharmsen845](https://github.com/joshuaharmsen845) ([#9482](https://github.com/community-scripts/ProxmoxVE/pull/9482))
+
 ## 2025-11-26
 
 ### 🚀 Updated Scripts
