@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 # Copyright (c) 2021-2025 community-scripts ORG
-# Author: community-scripts
-# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Author: onionrings29
+# License: MIT | https://github.com/onionrings29/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/rommapp/romm
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"

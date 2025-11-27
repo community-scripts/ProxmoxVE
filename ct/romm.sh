@@ -2,14 +2,14 @@
 
 # For testing from fork/branch - set these environment variables before sourcing build.func
 export INSTALL_REPO="${INSTALL_REPO:-onionrings29/ProxmoxVE}"
-export INSTALL_BRANCH="${INSTALL_BRANCH:-claude/dockerfile-ubuntu-setup-01Abox2T6edmGTHazHrG3QFw}"
+export INSTALL_BRANCH="${INSTALL_BRANCH:-main}"
 
 # Source build.func from the same repo/branch for testing
 source <(curl -fsSL https://raw.githubusercontent.com/${INSTALL_REPO}/${INSTALL_BRANCH}/misc/build.func)
 
 # Copyright (c) 2021-2025 community-scripts ORG
-# Author: community-scripts
-# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Author: onionrings29
+# License: MIT | https://github.com/onionrings29/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/rommapp/romm
 
 APP="ROMM"
