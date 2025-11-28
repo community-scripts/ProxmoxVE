@@ -18,6 +18,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Apache-guacamole: fixed to early rm [@mtorazzi](https://github.com/mtorazzi) ([#9492](https://github.com/community-scripts/ProxmoxVE/pull/9492))
 
+  - #### 💥 Breaking Changes
+
+    - Remove: Habitica [@MickLesk](https://github.com/MickLesk) ([#9489](https://github.com/community-scripts/ProxmoxVE/pull/9489))
+
 ## 2025-11-27
 
 ### 🆕 New Scripts
