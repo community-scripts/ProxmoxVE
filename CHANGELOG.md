@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-11-28
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Apache-guacamole: fixed to early rm [@mtorazzi](https://github.com/mtorazzi) ([#9492](https://github.com/community-scripts/ProxmoxVE/pull/9492))
+
 ## 2025-11-27
 
 ### 🆕 New Scripts
