@@ -1,13 +1,48 @@
 [
   {
+    "name": "chrisvel/tududi",
+    "version": "v0.86.1",
+    "date": "2025-11-14T05:05:44Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.364",
+    "date": "2025-11-28T05:55:36Z"
+  },
+  {
+    "name": "gotson/komga",
+    "version": "1.23.6",
+    "date": "2025-11-28T03:52:50Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5",
+    "date": "2025-11-28T00:27:10Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
     "name": "BerriAI/litellm",
     "version": "v1.80.7-nightly",
     "date": "2025-11-27T23:19:40Z"
   },
   {
+    "name": "esphome/esphome",
+    "version": "2025.11.2",
+    "date": "2025-11-27T23:19:08Z"
+  },
+  {
     "name": "go-vikunja/vikunja",
     "version": "v1.0.0-rc0",
     "date": "2025-08-17T18:47:15Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.2.11",
+    "date": "2025-11-25T18:04:45Z"
   },
   {
     "name": "rcourtman/Pulse",
@@ -55,11 +90,6 @@
     "date": "2025-11-27T12:30:05Z"
   },
   {
-    "name": "chrisvel/tududi",
-    "version": "v0.86.1",
-    "date": "2025-11-14T05:05:44Z"
-  },
-  {
     "name": "crowdsecurity/crowdsec",
     "version": "v1.7.3",
     "date": "2025-10-24T10:51:12Z"
@@ -73,11 +103,6 @@
     "name": "morpheus65535/bazarr",
     "version": "v1.5.3",
     "date": "2025-09-20T12:12:33Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.361",
-    "date": "2025-11-27T05:59:03Z"
   },
   {
     "name": "ipfs/kubo",
@@ -105,16 +130,6 @@
     "date": "2025-11-27T00:33:48Z"
   },
   {
-    "name": "jeedom/core",
-    "version": "4.5",
-    "date": "2025-11-27T00:27:13Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
-  },
-  {
     "name": "jenkinsci/jenkins",
     "version": "jenkins-2.539",
     "date": "2025-11-25T16:05:32Z"
@@ -128,11 +143,6 @@
     "name": "tailscale/tailscale",
     "version": "v1.93.0-pre",
     "date": "2025-11-26T20:50:59Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.2.11",
-    "date": "2025-11-25T18:04:45Z"
   },
   {
     "name": "firefly-iii/firefly-iii",
@@ -283,11 +293,6 @@
     "name": "syncthing/syncthing",
     "version": "v2.0.11",
     "date": "2025-11-04T08:51:05Z"
-  },
-  {
-    "name": "esphome/esphome",
-    "version": "2025.11.1",
-    "date": "2025-11-24T22:29:56Z"
   },
   {
     "name": "prometheus/prometheus",
@@ -1043,11 +1048,6 @@
     "name": "advplyr/audiobookshelf",
     "version": "v2.30.0",
     "date": "2025-10-08T16:03:49Z"
-  },
-  {
-    "name": "gotson/komga",
-    "version": "1.23.5",
-    "date": "2025-10-08T07:31:37Z"
   },
   {
     "name": "C4illin/ConvertX",
