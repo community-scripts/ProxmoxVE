@@ -1,8 +1,18 @@
 [
   {
-    "name": "rcourtman/Pulse",
-    "version": "v4.34.1",
-    "date": "2025-11-28T21:18:50Z"
+    "name": "msgbyte/tianji",
+    "version": "v1.30.16",
+    "date": "2025-11-29T11:13:21Z"
+  },
+  {
+    "name": "fuma-nama/fumadocs",
+    "version": "fumadocs-openapi@10.1.0",
+    "date": "2025-11-29T09:08:28Z"
+  },
+  {
+    "name": "alexta69/metube",
+    "version": "2025.11.29",
+    "date": "2025-11-29T07:59:21Z"
   },
   {
     "name": "firefly-iii/firefly-iii",
@@ -10,9 +20,44 @@
     "date": "2025-11-28T20:36:20Z"
   },
   {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.372",
+    "date": "2025-11-29T06:12:18Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.3",
+    "date": "2025-09-20T12:12:33Z"
+  },
+  {
+    "name": "FlareSolverr/FlareSolverr",
+    "version": "v3.4.6",
+    "date": "2025-11-29T02:43:00Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5",
+    "date": "2025-11-29T00:27:12Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
+    "name": "rcourtman/Pulse",
+    "version": "v4.34.1",
+    "date": "2025-11-28T21:18:50Z"
+  },
+  {
     "name": "homarr-labs/homarr",
     "version": "v1.45.0",
     "date": "2025-11-28T19:15:52Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.2.11",
+    "date": "2025-11-25T18:04:45Z"
   },
   {
     "name": "gtsteffaniak/filebrowser",
@@ -40,24 +85,9 @@
     "date": "2025-11-14T05:05:44Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.364",
-    "date": "2025-11-28T05:55:36Z"
-  },
-  {
     "name": "gotson/komga",
     "version": "1.23.6",
     "date": "2025-11-28T03:52:50Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.5",
-    "date": "2025-11-28T00:27:10Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
   },
   {
     "name": "BerriAI/litellm",
@@ -73,11 +103,6 @@
     "name": "go-vikunja/vikunja",
     "version": "v1.0.0-rc0",
     "date": "2025-08-17T18:47:15Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.2.11",
-    "date": "2025-11-25T18:04:45Z"
   },
   {
     "name": "phpipam/phpipam",
@@ -128,11 +153,6 @@
     "name": "evcc-io/evcc",
     "version": "0.210.2",
     "date": "2025-11-27T09:18:22Z"
-  },
-  {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.3",
-    "date": "2025-09-20T12:12:33Z"
   },
   {
     "name": "ipfs/kubo",
@@ -320,11 +340,6 @@
     "date": "2025-11-24T19:40:27Z"
   },
   {
-    "name": "msgbyte/tianji",
-    "version": "v1.30.15",
-    "date": "2025-11-24T16:52:52Z"
-  },
-  {
     "name": "bunkerity/bunkerweb",
     "version": "v1.6.6",
     "date": "2025-11-24T15:30:21Z"
@@ -443,11 +458,6 @@
     "name": "pommee/goaway",
     "version": "v0.62.19",
     "date": "2025-11-21T13:24:09Z"
-  },
-  {
-    "name": "fuma-nama/fumadocs",
-    "version": "fumadocs-ui@16.1.0",
-    "date": "2025-11-21T13:02:57Z"
   },
   {
     "name": "forgejo/forgejo",
@@ -728,11 +738,6 @@
     "name": "CrazyWolf13/web-check",
     "version": "1.1.0",
     "date": "2025-11-11T14:30:28Z"
-  },
-  {
-    "name": "FlareSolverr/FlareSolverr",
-    "version": "v3.4.5",
-    "date": "2025-11-11T01:58:31Z"
   },
   {
     "name": "MediaBrowser/Emby.Releases",
@@ -1108,11 +1113,6 @@
     "name": "Threadfin/Threadfin",
     "version": "1.2.39",
     "date": "2025-09-25T15:57:02Z"
-  },
-  {
-    "name": "alexta69/metube",
-    "version": "2025.09.24",
-    "date": "2025-09-24T13:51:23Z"
   },
   {
     "name": "gotify/server",
