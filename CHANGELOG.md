@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-11-29
 
+### 🌐 Website
+
+  - Update Discord link on website [@tremor021](https://github.com/tremor021) ([#9499](https://github.com/community-scripts/ProxmoxVE/pull/9499))
+
 ## 2025-11-28
 
 ### 🚀 Updated Scripts
