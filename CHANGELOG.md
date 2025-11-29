@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-11-29
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Fix duplicate ORIGIN in .env for OpenArchiver install script [@Copilot](https://github.com/Copilot) ([#9503](https://github.com/community-scripts/ProxmoxVE/pull/9503))
+
 ### 🌐 Website
 
   - Update Discord link on website [@tremor021](https://github.com/tremor021) ([#9499](https://github.com/community-scripts/ProxmoxVE/pull/9499))
