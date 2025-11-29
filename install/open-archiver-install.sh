@@ -88,7 +88,7 @@ sed -i "s|^STORAGE_LOCAL_ROOT_PATH=.*|STORAGE_LOCAL_ROOT_PATH=/opt/openarchiver-
 sed -i "s|^JWT_SECRET=.*|JWT_SECRET=$JWT_KEY|g" /opt/openarchiver/.env
 sed -i "s|^ENCRYPTION_KEY=.*|ENCRYPTION_KEY=$SECRET_KEY|g" /opt/openarchiver/.env
 sed -i "s|^TIKA_URL=.*|TIKA_URL=|g" /opt/openarchiver/.env
-echo "ORIGIN=http://$IP_ADDR:3000" >>/opt/openarchiver/.env
+sed -i "s|^ORIGIN=.*|ORIGIN=http://$IP_ADDR:3000|g" /opt/openarchiver/.env
 $STD pnpm install --shamefully-hoist --frozen-lockfile --prod=false
 $STD pnpm run build:oss
 $STD pnpm db:migrate
