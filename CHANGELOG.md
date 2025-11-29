@@ -12,11 +12,19 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-11-29
 
+### 🆕 New Scripts
+
+  - Valkey ([#9510](https://github.com/community-scripts/ProxmoxVE/pull/9510))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
 
     - Fix duplicate ORIGIN in .env for OpenArchiver install script [@Copilot](https://github.com/Copilot) ([#9503](https://github.com/community-scripts/ProxmoxVE/pull/9503))
+
+  - #### 💥 Breaking Changes
+
+    - Remove: Documenso [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#9507](https://github.com/community-scripts/ProxmoxVE/pull/9507))
 
 ### 🌐 Website
 
