@@ -29,7 +29,6 @@ function update_script() {
     exit
   fi
 
-  [[ -f /opt/actualbudget_version.txt ]] && mv /opt/actualbudget_version.txt ~/.actualbudget
   NODE_VERSION="22" setup_nodejs
   RELEASE=$(get_latest_github_release "actualbudget/actual")
   if [[ -f /opt/actualbudget-data/config.json ]]; then
