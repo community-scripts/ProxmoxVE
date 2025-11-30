@@ -1,5 +1,50 @@
 [
   {
+    "name": "healthchecks/healthchecks",
+    "version": "v3.13",
+    "date": "2025-11-30T08:52:20Z"
+  },
+  {
+    "name": "zwave-js/zwave-js-ui",
+    "version": "v11.8.2",
+    "date": "2025-11-30T08:39:28Z"
+  },
+  {
+    "name": "openobserve/openobserve",
+    "version": "v0.20.0",
+    "date": "2025-11-30T08:08:00Z"
+  },
+  {
+    "name": "pommee/goaway",
+    "version": "v0.62.20",
+    "date": "2025-11-30T06:51:31Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.383",
+    "date": "2025-11-30T06:09:58Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.3",
+    "date": "2025-09-20T12:12:33Z"
+  },
+  {
+    "name": "recyclarr/recyclarr",
+    "version": "v7.5.1",
+    "date": "2025-11-30T05:06:12Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5",
+    "date": "2025-11-30T00:27:04Z"
+  },
+  {
     "name": "MediaBrowser/Emby.Releases",
     "version": "4.9.1.90",
     "date": "2025-11-11T01:00:32Z"
@@ -65,29 +110,9 @@
     "date": "2025-11-28T20:36:20Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.372",
-    "date": "2025-11-29T06:12:18Z"
-  },
-  {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.3",
-    "date": "2025-09-20T12:12:33Z"
-  },
-  {
     "name": "FlareSolverr/FlareSolverr",
     "version": "v3.4.6",
     "date": "2025-11-29T02:43:00Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.5",
-    "date": "2025-11-29T00:27:12Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
   },
   {
     "name": "rcourtman/Pulse",
@@ -255,16 +280,6 @@
     "date": "2025-11-26T14:20:54Z"
   },
   {
-    "name": "healthchecks/healthchecks",
-    "version": "v3.12",
-    "date": "2025-11-26T12:46:55Z"
-  },
-  {
-    "name": "openobserve/openobserve",
-    "version": "v0.20.0-rc2",
-    "date": "2025-11-26T12:15:42Z"
-  },
-  {
     "name": "inventree/InvenTree",
     "version": "1.1.6",
     "date": "2025-11-26T11:42:59Z"
@@ -358,11 +373,6 @@
     "name": "mattermost/mattermost",
     "version": "v10.11.8",
     "date": "2025-11-21T17:06:07Z"
-  },
-  {
-    "name": "zwave-js/zwave-js-ui",
-    "version": "v11.8.1",
-    "date": "2025-11-25T08:43:56Z"
   },
   {
     "name": "syncthing/syncthing",
@@ -488,11 +498,6 @@
     "name": "Bubka/2FAuth",
     "version": "v5.6.1",
     "date": "2025-11-21T16:51:21Z"
-  },
-  {
-    "name": "pommee/goaway",
-    "version": "v0.62.19",
-    "date": "2025-11-21T13:24:09Z"
   },
   {
     "name": "forgejo/forgejo",
@@ -1468,11 +1473,6 @@
     "name": "babybuddy/babybuddy",
     "version": "v2.7.1",
     "date": "2025-02-22T01:14:41Z"
-  },
-  {
-    "name": "recyclarr/recyclarr",
-    "version": "v7.4.1",
-    "date": "2025-02-15T20:54:00Z"
   },
   {
     "name": "actualbudget/actual-server",
