@@ -1,5 +1,50 @@
 [
   {
+    "name": "MediaBrowser/Emby.Releases",
+    "version": "4.9.1.90",
+    "date": "2025-11-11T01:00:32Z"
+  },
+  {
+    "name": "Stirling-Tools/Stirling-PDF",
+    "version": "v2.0.2",
+    "date": "2025-11-29T19:49:03Z"
+  },
+  {
+    "name": "karakeep-app/karakeep",
+    "version": "sdk/v0.29.0",
+    "date": "2025-11-29T18:53:44Z"
+  },
+  {
+    "name": "ErsatzTV/ErsatzTV",
+    "version": "v25.9.0",
+    "date": "2025-11-29T16:37:28Z"
+  },
+  {
+    "name": "autobrr/autobrr",
+    "version": "v1.70.0",
+    "date": "2025-11-29T14:44:38Z"
+  },
+  {
+    "name": "Kozea/Radicale",
+    "version": "v3.5.9",
+    "date": "2025-11-29T14:35:45Z"
+  },
+  {
+    "name": "sabre-io/Baikal",
+    "version": "0.11.0",
+    "date": "2025-11-29T14:19:36Z"
+  },
+  {
+    "name": "laurent22/joplin",
+    "version": "server-v3.4.4",
+    "date": "2025-09-25T13:19:26Z"
+  },
+  {
+    "name": "authelia/authelia",
+    "version": "v4.39.15",
+    "date": "2025-11-29T12:13:04Z"
+  },
+  {
     "name": "msgbyte/tianji",
     "version": "v1.30.16",
     "date": "2025-11-29T11:13:21Z"
@@ -188,11 +233,6 @@
     "name": "tailscale/tailscale",
     "version": "v1.93.0-pre",
     "date": "2025-11-26T20:50:59Z"
-  },
-  {
-    "name": "Stirling-Tools/Stirling-PDF",
-    "version": "v2.0.1",
-    "date": "2025-11-26T17:32:37Z"
   },
   {
     "name": "jhuckaby/Cronicle",
@@ -428,11 +468,6 @@
     "name": "pocketbase/pocketbase",
     "version": "v0.34.0",
     "date": "2025-11-22T09:18:14Z"
-  },
-  {
-    "name": "laurent22/joplin",
-    "version": "server-v3.4.4",
-    "date": "2025-09-25T13:19:26Z"
   },
   {
     "name": "TwiN/gatus",
@@ -675,11 +710,6 @@
     "date": "2025-11-16T01:29:06Z"
   },
   {
-    "name": "karakeep-app/karakeep",
-    "version": "android/v1.8.2-2",
-    "date": "2025-11-15T13:18:41Z"
-  },
-  {
     "name": "cloudreve/cloudreve",
     "version": "4.10.1",
     "date": "2025-11-15T04:36:48Z"
@@ -740,19 +770,9 @@
     "date": "2025-11-11T14:30:28Z"
   },
   {
-    "name": "MediaBrowser/Emby.Releases",
-    "version": "4.9.1.90",
-    "date": "2025-11-11T01:00:32Z"
-  },
-  {
     "name": "postgres/postgres",
     "version": "REL_13_23",
     "date": "2025-11-10T21:59:18Z"
-  },
-  {
-    "name": "autobrr/autobrr",
-    "version": "v1.69.0",
-    "date": "2025-11-10T17:22:00Z"
   },
   {
     "name": "navidrome/navidrome",
@@ -768,11 +788,6 @@
     "name": "pelican-dev/wings",
     "version": "v1.0.0-beta19",
     "date": "2025-11-09T17:26:30Z"
-  },
-  {
-    "name": "authelia/authelia",
-    "version": "v4.39.14",
-    "date": "2025-11-09T07:18:40Z"
   },
   {
     "name": "apache/couchdb",
@@ -818,11 +833,6 @@
     "name": "apache/tomcat",
     "version": "9.0.112",
     "date": "2025-11-06T07:49:59Z"
-  },
-  {
-    "name": "Kozea/Radicale",
-    "version": "v3.5.8",
-    "date": "2025-11-06T05:32:51Z"
   },
   {
     "name": "Notifiarr/notifiarr",
@@ -968,11 +978,6 @@
     "name": "thecfu/scraparr",
     "version": "v3.0.0-beta.2",
     "date": "2025-10-28T10:16:29Z"
-  },
-  {
-    "name": "ErsatzTV/ErsatzTV",
-    "version": "v25.8.0",
-    "date": "2025-10-26T14:23:37Z"
   },
   {
     "name": "drakkan/sftpgo",
@@ -1498,11 +1503,6 @@
     "name": "swizzin/swizzin",
     "version": "stable",
     "date": "2021-06-14T23:31:47Z"
-  },
-  {
-    "name": "sabre-io/Baikal",
-    "version": "0.10.1",
-    "date": "2024-11-10T10:25:45Z"
   },
   {
     "name": "CorentinTh/it-tools",
