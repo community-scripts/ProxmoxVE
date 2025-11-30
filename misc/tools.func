@@ -1551,7 +1551,8 @@ create_self_signed_cert() {
 
   mkdir -p "$CERT_DIR"
   $STD openssl req -new -newkey rsa:2048 -days 365 -nodes -x509 \
-    -subj "/C=US/ST=State/L=City/O=Organization/CN=${APP_NAME}" \
+    -subj "/CN=${APP_NAME}" \
+    -addext "subjectAltName=DNS:${APP_NAME}" \
     -keyout "$CERT_KEY" \
     -out "$CERT_CRT" || {
     msg_error "Failed to create self-signed certificate"
