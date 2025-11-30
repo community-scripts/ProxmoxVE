@@ -14,11 +14,13 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
-  - Refactor: Actual Budget [@tremor021](https://github.com/tremor021) ([#9518](https://github.com/community-scripts/ProxmoxVE/pull/9518))
-
   - #### 🐞 Bug Fixes
 
     - fix(recyclarr): remove update script systemctl commands [@vidonnus](https://github.com/vidonnus) ([#9522](https://github.com/community-scripts/ProxmoxVE/pull/9522))
+
+  - #### 🔧 Refactor
+
+    - Refactor: Actual Budget [@tremor021](https://github.com/tremor021) ([#9518](https://github.com/community-scripts/ProxmoxVE/pull/9518))
 
 ## 2025-11-29
 
