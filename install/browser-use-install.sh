@@ -21,6 +21,7 @@ msg_ok "Installed Dependencies"
 # pip install uv
 # uv venv --python 3.12
 PYTHON_VERSION="3.12" setup_uv
+uv python update-shell
 
 # msg_info "Downloading browser-use source"
 # fetch_and_deploy_gh_release "browser-use" "browser-use/browser-use" "tarball" "latest" "/opt/browser-use"
@@ -32,6 +33,7 @@ wget -qO .env https://raw.githubusercontent.com/browser-use/browser-use/refs/hea
 
 
 msg_info "Installing browser-use"
+mkdir -p /opt/browser-use
 cd /opt/browser-use
 $STD uv venv .venv
 #uv venv --python 3.12
