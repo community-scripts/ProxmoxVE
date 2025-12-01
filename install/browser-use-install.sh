@@ -15,7 +15,7 @@ update_os
 
 msg_info "Installing Dependencies (Patience)"
 #$STD apt-get install -y {git,python3.13,python3.13-dev,python3.13-venv,python3-pip,build-essential,libpq5,libz-dev,libssl-dev,postgresql-client}
-$STD apt install -y python3-pip
+$STD apt install -y {python3-pip,git}
 msg_ok "Installed Dependencies"
 
 # pip install uv
