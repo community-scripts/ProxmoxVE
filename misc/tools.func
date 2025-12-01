@@ -1535,9 +1535,10 @@ check_for_gh_release() {
 # ------------------------------------------------------------------------------
 create_self_signed_cert() {
   local APP_NAME="${1:-${APPLICATION}}"
-  local CERT_DIR="/etc/ssl/${APP_NAME}"
-  local CERT_KEY="${CERT_DIR}/${APP_NAME}.key"
-  local CERT_CRT="${CERT_DIR}/${APP_NAME}.crt"
+  local APP_NAME_LC=$(echo "${APP_NAME,,}" | tr -d ' ')
+  local CERT_DIR="/etc/ssl/${APP_NAME_LC}"
+  local CERT_KEY="${CERT_DIR}/${APP_NAME_LC}.key"
+  local CERT_CRT="${CERT_DIR}/${APP_NAME_LC}.crt"
 
   if [[ -f "$CERT_CRT" && -f "$CERT_KEY" ]]; then
     return 0
