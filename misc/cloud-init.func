@@ -1,0 +1,364 @@
+#!/usr/bin/env bash
+
+# ==============================================================================
+# Cloud-Init Library - Universal Helper for all Proxmox VM Scripts
+# ==============================================================================
+# Author: community-scripts ORG
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+#
+# Usage:
+#   1. Source this library in your VM script:
+#      source /dev/stdin <<<$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/cloud-init.func)
+#
+#   2. Call setup_cloud_init with parameters:
+#      setup_cloud_init "$VMID" "$STORAGE" "$HN" "$USE_CLOUD_INIT"
+#
+# Compatible with: Debian, Ubuntu, and all Cloud-Init enabled distributions
+# ==============================================================================
+
+# Configuration defaults (can be overridden before sourcing)
+CLOUDINIT_DEFAULT_USER="${CLOUDINIT_DEFAULT_USER:-root}"
+CLOUDINIT_DNS_SERVERS="${CLOUDINIT_DNS_SERVERS:-1.1.1.1 8.8.8.8}"
+CLOUDINIT_SEARCH_DOMAIN="${CLOUDINIT_SEARCH_DOMAIN:-local}"
+CLOUDINIT_SSH_KEYS="${CLOUDINIT_SSH_KEYS:-/root/.ssh/authorized_keys}"
+
+# ==============================================================================
+# Main Setup Function - Configures Proxmox Native Cloud-Init
+# ==============================================================================
+# Parameters:
+#   $1 - VMID (required)
+#   $2 - Storage name (required)
+#   $3 - Hostname (optional, default: vm-<vmid>)
+#   $4 - Enable Cloud-Init (yes/no, default: no)
+#   $5 - User (optional, default: root)
+#   $6 - Network mode (dhcp/static, default: dhcp)
+#   $7 - Static IP (optional, format: 192.168.1.100/24)
+#   $8 - Gateway (optional)
+#   $9 - Nameservers (optional, default: 1.1.1.1 8.8.8.8)
+#
+# Returns: 0 on success, 1 on failure
+# Exports: CLOUDINIT_USER, CLOUDINIT_PASSWORD, CLOUDINIT_CRED_FILE
+# ==============================================================================
+function setup_cloud_init() {
+  local vmid="$1"
+  local storage="$2"
+  local hostname="${3:-vm-${vmid}}"
+  local enable="${4:-no}"
+  local ciuser="${5:-$CLOUDINIT_DEFAULT_USER}"
+  local network_mode="${6:-dhcp}"
+  local static_ip="${7:-}"
+  local gateway="${8:-}"
+  local nameservers="${9:-$CLOUDINIT_DNS_SERVERS}"
+
+  # Skip if not enabled
+  if [ "$enable" != "yes" ]; then
+    return 0
+  fi
+
+  msg_info "Configuring Cloud-Init" 2>/dev/null || echo "[INFO] Configuring Cloud-Init"
+
+  # Create Cloud-Init drive (try ide2 first, then scsi1 as fallback)
+  if ! qm set "$vmid" --ide2 "${storage}:cloudinit" >/dev/null 2>&1; then
+    qm set "$vmid" --scsi1 "${storage}:cloudinit" >/dev/null 2>&1
+  fi
+
+  # Set user
+  qm set "$vmid" --ciuser "$ciuser" >/dev/null
+
+  # Generate and set secure random password
+  local cipassword=$(openssl rand -base64 16)
+  qm set "$vmid" --cipassword "$cipassword" >/dev/null
+
+  # Add SSH keys if available
+  if [ -f "$CLOUDINIT_SSH_KEYS" ]; then
+    qm set "$vmid" --sshkeys "$CLOUDINIT_SSH_KEYS" >/dev/null 2>&1 || true
+  fi
+
+  # Configure network
+  if [ "$network_mode" = "static" ] && [ -n "$static_ip" ] && [ -n "$gateway" ]; then
+    qm set "$vmid" --ipconfig0 "ip=${static_ip},gw=${gateway}" >/dev/null
+  else
+    qm set "$vmid" --ipconfig0 "ip=dhcp" >/dev/null
+  fi
+
+  # Set DNS servers
+  qm set "$vmid" --nameserver "$nameservers" >/dev/null
+
+  # Set search domain
+  qm set "$vmid" --searchdomain "$CLOUDINIT_SEARCH_DOMAIN" >/dev/null
+
+  # Enable package upgrades on first boot (if supported by Proxmox version)
+  qm set "$vmid" --ciupgrade 1 >/dev/null 2>&1 || true
+
+  # Save credentials to file
+  local cred_file="/tmp/${hostname}-${vmid}-cloud-init-credentials.txt"
+  cat >"$cred_file" <<EOF
+========================================
+Cloud-Init Credentials
+========================================
+VM ID:    ${vmid}
+Hostname: ${hostname}
+Created:  $(date)
+
+Username: ${ciuser}
+Password: ${cipassword}
+
+Network:  ${network_mode}$([ "$network_mode" = "static" ] && echo " (IP: ${static_ip}, GW: ${gateway})" || echo " (DHCP)")
+DNS:      ${nameservers}
+
+========================================
+SSH Access (if keys configured):
+ssh ${ciuser}@<vm-ip>
+
+Proxmox UI Configuration:
+VM ${vmid} > Cloud-Init > Edit
+- User, Password, SSH Keys
+- Network (IP Config)
+- DNS, Search Domain
+========================================
+EOF
+
+  msg_ok "Cloud-Init configured (User: ${ciuser})" 2>/dev/null || echo "[OK] Cloud-Init configured (User: ${ciuser})"
+
+  # Export for use in calling script (DO NOT display password here - will be shown in summary)
+  export CLOUDINIT_USER="$ciuser"
+  export CLOUDINIT_PASSWORD="$cipassword"
+  export CLOUDINIT_CRED_FILE="$cred_file"
+
+  return 0
+}
+
+# ==============================================================================
+# Interactive Cloud-Init Configuration (Whiptail/Dialog)
+# ==============================================================================
+# Prompts user for Cloud-Init configuration choices
+# Returns configuration via exported variables:
+#   - CLOUDINIT_ENABLE (yes/no)
+#   - CLOUDINIT_USER
+#   - CLOUDINIT_NETWORK_MODE (dhcp/static)
+#   - CLOUDINIT_IP (if static)
+#   - CLOUDINIT_GW (if static)
+#   - CLOUDINIT_DNS
+# ==============================================================================
+function configure_cloud_init_interactive() {
+  local default_user="${1:-root}"
+
+  # Check if whiptail is available
+  if ! command -v whiptail >/dev/null 2>&1; then
+    echo "Warning: whiptail not available, skipping interactive configuration"
+    export CLOUDINIT_ENABLE="no"
+    return 1
+  fi
+
+  # Ask if user wants to enable Cloud-Init
+  if ! (whiptail --backtitle "Proxmox VE Helper Scripts" --title "CLOUD-INIT" \
+    --yesno "Enable Cloud-Init for VM configuration?\n\nCloud-Init allows automatic configuration of:\n• User accounts and passwords\n• SSH keys\n• Network settings (DHCP/Static)\n• DNS configuration\n\nYou can also configure these settings later in Proxmox UI." 16 68); then
+    export CLOUDINIT_ENABLE="no"
+    return 0
+  fi
+
+  export CLOUDINIT_ENABLE="yes"
+
+  # Username
+  if CLOUDINIT_USER=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox \
+    "Cloud-Init Username" 8 58 "$default_user" --title "USERNAME" 3>&1 1>&2 2>&3); then
+    export CLOUDINIT_USER="${CLOUDINIT_USER:-$default_user}"
+  else
+    export CLOUDINIT_USER="$default_user"
+  fi
+
+  # Network configuration
+  if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "NETWORK MODE" \
+    --yesno "Use DHCP for network configuration?\n\nSelect 'No' for static IP configuration." 10 58); then
+    export CLOUDINIT_NETWORK_MODE="dhcp"
+  else
+    export CLOUDINIT_NETWORK_MODE="static"
+
+    # Static IP
+    if CLOUDINIT_IP=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox \
+      "Static IP Address (CIDR format)\nExample: 192.168.1.100/24" 9 58 "" --title "IP ADDRESS" 3>&1 1>&2 2>&3); then
+      export CLOUDINIT_IP
+    else
+      echo "Error: Static IP required for static network mode"
+      export CLOUDINIT_NETWORK_MODE="dhcp"
+    fi
+
+    # Gateway
+    if [ "$CLOUDINIT_NETWORK_MODE" = "static" ]; then
+      if CLOUDINIT_GW=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox \
+        "Gateway IP Address\nExample: 192.168.1.1" 8 58 "" --title "GATEWAY" 3>&1 1>&2 2>&3); then
+        export CLOUDINIT_GW
+      else
+        echo "Error: Gateway required for static network mode"
+        export CLOUDINIT_NETWORK_MODE="dhcp"
+      fi
+    fi
+  fi
+
+  # DNS Servers
+  if CLOUDINIT_DNS=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox \
+    "DNS Servers (space-separated)" 8 58 "1.1.1.1 8.8.8.8" --title "DNS SERVERS" 3>&1 1>&2 2>&3); then
+    export CLOUDINIT_DNS="${CLOUDINIT_DNS:-1.1.1.1 8.8.8.8}"
+  else
+    export CLOUDINIT_DNS="1.1.1.1 8.8.8.8"
+  fi
+
+  return 0
+}
+
+# ==============================================================================
+# Display Cloud-Init Summary Information
+# ==============================================================================
+function display_cloud_init_info() {
+  local vmid="$1"
+  local hostname="${2:-}"
+
+  if [ -n "$CLOUDINIT_CRED_FILE" ] && [ -f "$CLOUDINIT_CRED_FILE" ]; then
+    if [ -n "${INFO:-}" ]; then
+      echo -e "\n${INFO}${BOLD:-}${GN:-} Cloud-Init Configuration:${CL:-}"
+      echo -e "${TAB:-  }${DGN:-}User: ${BGN:-}${CLOUDINIT_USER:-root}${CL:-}"
+      echo -e "${TAB:-  }${DGN:-}Password: ${BGN:-}${CLOUDINIT_PASSWORD}${CL:-}"
+      echo -e "${TAB:-  }${DGN:-}Credentials: ${BL:-}${CLOUDINIT_CRED_FILE}${CL:-}"
+      echo -e "${TAB:-  }${YW:-}💡 You can configure Cloud-Init settings in Proxmox UI:${CL:-}"
+      echo -e "${TAB:-  }${YW:-}   VM ${vmid} > Cloud-Init > Edit (User, Password, SSH Keys, Network)${CL:-}"
+    else
+      echo ""
+      echo "[INFO] Cloud-Init Configuration:"
+      echo "  User: ${CLOUDINIT_USER:-root}"
+      echo "  Password: ${CLOUDINIT_PASSWORD}"
+      echo "  Credentials: ${CLOUDINIT_CRED_FILE}"
+      echo "  You can configure Cloud-Init settings in Proxmox UI:"
+      echo "  VM ${vmid} > Cloud-Init > Edit"
+    fi
+  fi
+}
+
+# ==============================================================================
+# Check if VM has Cloud-Init configured
+# ==============================================================================
+function has_cloud_init() {
+  local vmid="$1"
+  qm config "$vmid" 2>/dev/null | grep -qE "(ide2|scsi1):.*cloudinit"
+}
+
+# ==============================================================================
+# Regenerate Cloud-Init configuration
+# ==============================================================================
+function regenerate_cloud_init() {
+  local vmid="$1"
+
+  if has_cloud_init "$vmid"; then
+    msg_info "Regenerating Cloud-Init configuration" 2>/dev/null || echo "[INFO] Regenerating Cloud-Init"
+    qm cloudinit update "$vmid" >/dev/null 2>&1 || true
+    msg_ok "Cloud-Init configuration regenerated" 2>/dev/null || echo "[OK] Cloud-Init regenerated"
+    return 0
+  else
+    echo "Warning: VM $vmid does not have Cloud-Init configured"
+    return 1
+  fi
+}
+
+# ==============================================================================
+# Get VM IP address via qemu-guest-agent
+# ==============================================================================
+function get_vm_ip() {
+  local vmid="$1"
+  local timeout="${2:-30}"
+
+  local elapsed=0
+  while [ $elapsed -lt $timeout ]; do
+    local vm_ip=$(qm guest cmd "$vmid" network-get-interfaces 2>/dev/null |
+      jq -r '.[] | select(.name != "lo") | ."ip-addresses"[]? | select(."ip-address-type" == "ipv4") | ."ip-address"' 2>/dev/null | head -1)
+
+    if [ -n "$vm_ip" ]; then
+      echo "$vm_ip"
+      return 0
+    fi
+
+    sleep 2
+    elapsed=$((elapsed + 2))
+  done
+
+  return 1
+}
+
+# ==============================================================================
+# Wait for Cloud-Init to complete (requires SSH access)
+# ==============================================================================
+function wait_for_cloud_init() {
+  local vmid="$1"
+  local timeout="${2:-300}"
+  local vm_ip="${3:-}"
+
+  # Get IP if not provided
+  if [ -z "$vm_ip" ]; then
+    vm_ip=$(get_vm_ip "$vmid" 60)
+  fi
+
+  if [ -z "$vm_ip" ]; then
+    echo "Warning: Unable to determine VM IP address"
+    return 1
+  fi
+
+  msg_info "Waiting for Cloud-Init to complete on ${vm_ip}" 2>/dev/null || echo "[INFO] Waiting for Cloud-Init on ${vm_ip}"
+
+  local elapsed=0
+  while [ $elapsed -lt $timeout ]; do
+    if timeout 10 ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
+      "${CLOUDINIT_USER:-root}@${vm_ip}" "cloud-init status --wait" 2>/dev/null; then
+      msg_ok "Cloud-Init completed successfully" 2>/dev/null || echo "[OK] Cloud-Init completed"
+      return 0
+    fi
+    sleep 10
+    elapsed=$((elapsed + 10))
+  done
+
+  echo "Warning: Cloud-Init did not complete within ${timeout}s"
+  return 1
+}
+
+# ==============================================================================
+# Export all functions for use in other scripts
+# ==============================================================================
+export -f setup_cloud_init 2>/dev/null || true
+export -f configure_cloud_init_interactive 2>/dev/null || true
+export -f display_cloud_init_info 2>/dev/null || true
+export -f has_cloud_init 2>/dev/null || true
+export -f regenerate_cloud_init 2>/dev/null || true
+export -f get_vm_ip 2>/dev/null || true
+export -f wait_for_cloud_init 2>/dev/null || true
+
+# ==============================================================================
+# Quick Start Examples
+# ==============================================================================
+: <<'EXAMPLES'
+
+# Example 1: Simple DHCP setup (most common)
+setup_cloud_init "$VMID" "$STORAGE" "$HN" "yes"
+
+# Example 2: Static IP setup
+setup_cloud_init "$VMID" "$STORAGE" "myserver" "yes" "root" "static" "192.168.1.100/24" "192.168.1.1"
+
+# Example 3: Interactive configuration in advanced_settings()
+configure_cloud_init_interactive "admin"
+if [ "$CLOUDINIT_ENABLE" = "yes" ]; then
+  setup_cloud_init "$VMID" "$STORAGE" "$HN" "yes" "$CLOUDINIT_USER" \
+    "$CLOUDINIT_NETWORK_MODE" "$CLOUDINIT_IP" "$CLOUDINIT_GW" "$CLOUDINIT_DNS"
+fi
+
+# Example 4: Display info after VM creation
+display_cloud_init_info "$VMID" "$HN"
+
+# Example 5: Check if VM has Cloud-Init
+if has_cloud_init "$VMID"; then
+    echo "Cloud-Init is configured"
+fi
+
+# Example 6: Wait for Cloud-Init to complete after VM start
+if [ "$START_VM" = "yes" ]; then
+    qm start "$VMID"
+    sleep 30
+    wait_for_cloud_init "$VMID" 300
+fi
+
+EXAMPLES
