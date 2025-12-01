@@ -20,7 +20,11 @@ $STD apt install -y \
   libwebp-dev \
   libsasl2-dev \
   libldap2-dev \
-  libssl-dev
+  libldap-common \
+  libssl-dev \
+  libldap2 \
+  gosu \
+  iproute2
 msg_ok "Installed Dependencies"
 
 PYTHON_VERSION="3.12" setup_uv
@@ -35,8 +39,12 @@ $STD uv sync --frozen --extra pgsql
 msg_ok "Installed Python Dependencies"
 
 msg_info "Building Frontend"
+MEALIE_VERSION=$(<$HOME/.mealie)
+CONTAINER_IP=$(hostname -I | awk '{print $1}')
 export NUXT_TELEMETRY_DISABLED=1
 cd /opt/mealie/frontend
+$STD sed -i "s|value: data.buildId,|value: \"v${MEALIE_VERSION}\",|g" /opt/mealie/frontend/pages/admin/site-settings.vue
+$STD sed -i "s|value: data.production ? i18n.t(\"about.production\") : i18n.t(\"about.development\"),|value: \"bare-metal\",|g" /opt/mealie/frontend/pages/admin/site-settings.vue
 $STD yarn install --prefer-offline --frozen-lockfile --non-interactive --production=false --network-timeout 1000000
 $STD yarn generate
 msg_ok "Built Frontend"
@@ -70,6 +78,7 @@ POSTGRES_DB=${PG_DB_NAME}
 PRODUCTION=true
 HOST=0.0.0.0
 PORT=9000
+BASE_URL=http://${CONTAINER_IP}:9000
 EOF
 msg_ok "Wrote Environment File"
 
