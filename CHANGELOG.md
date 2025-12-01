@@ -14,7 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - core: add cloud-init.func library for VM configuration [@MickLesk](https://github.com/MickLesk) ([#9538](https://github.com/community-scripts/ProxmoxVE/pull/9538))
+  - Wanderer ([#9556](https://github.com/community-scripts/ProxmoxVE/pull/9556))
+- core: add cloud-init.func library for VM configuration [@MickLesk](https://github.com/MickLesk) ([#9538](https://github.com/community-scripts/ProxmoxVE/pull/9538))
 
 ### 🚀 Updated Scripts
 
