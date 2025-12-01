@@ -18,6 +18,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Fix Django superuser creation failing with ImproperlyConfigured error [@Copilot](https://github.com/Copilot) ([#9554](https://github.com/community-scripts/ProxmoxVE/pull/9554))
+
   - #### ✨ New Features
 
     - Bump Baikal to deb13 [@MickLesk](https://github.com/MickLesk) ([#9544](https://github.com/community-scripts/ProxmoxVE/pull/9544))
