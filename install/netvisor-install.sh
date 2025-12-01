@@ -62,15 +62,9 @@ NETVISOR_INTEGRATED_DAEMON_URL=http://127.0.0.1:60073
 # NETVISOR_DISABLE_REGISTRATION=true
 ## - uncomment when using TLS
 # NETVISOR_USE_SECURE_SESSION_COOKIES=true
-
-### - OIDC (optional)
-# NETVISOR_OIDC_ISSUER_URL=
-# NETVISOR_OIDC_CLIENT_ID=
-# NETVISOR_OIDC_CLIENT_SECRET=
-# NETVISOR_OIDC_PROVIDER_NAME=
-# NETVISOR_OIDC_REDIRECT_URL=
-## - Callback URL for reference
-# http://your-netvisor-domain:60072/api/auth/oidc/callback
+## - see https://github.com/imbolc/axum-client-ip?tab=readme-ov-file#configurable-vs-specific-extractors
+## - before uncommenting the below
+# NETVISOR_CLIENT_IP_SOURCE=
 
 ### - SMTP (password reset and notifications - optional)
 # NETVISOR_SMTP_RELAY=smtp.gmail.com:587
@@ -83,6 +77,8 @@ NETVISOR_SERVER_URL=http://127.0.0.1:60072
 NETVISOR_BIND_ADDRESS=0.0.0.0
 NETVISOR_NAME="netvisor-daemon"
 NETVISOR_HEARTBEAT_INTERVAL=30
+
+### - see https://github.com/mayanayza/netvisor/blob/main/docs/CONFIGURATION.md for more options
 EOF
 
 cat <<EOF >/etc/systemd/system/netvisor-server.service
@@ -92,6 +88,7 @@ After=network.target postgresql.service
 
 [Service]
 Type=simple
+WorkingDirectory=/opt/netvisor/backend
 EnvironmentFile=/opt/netvisor/.env
 ExecStart=/usr/bin/netvisor-server
 Restart=always

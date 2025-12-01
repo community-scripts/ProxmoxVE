@@ -79,6 +79,9 @@ function update_script() {
       -e 's| --server-port |:|' \
       /etc/systemd/system/netvisor-daemon.service
     sed -i '/^  \"server_target.*$/d' /root/.config/daemon/config.json
+    if ! grep -q "WorkingD" /etc/systemd/system/netvisor-server.service; then
+      sed -i '\|simple$|a\WorkingDirectory=/opt/netvisor/backend' /etc/systemd/system/netvisor-server.service
+    fi
     systemctl daemon-reload
 
     msg_info "Starting services"
