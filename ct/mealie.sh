@@ -8,7 +8,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 APP="Mealie"
 var_tags="${var_tags:-recipes}"
 var_cpu="${var_cpu:-2}"
-var_ram="${var_ram:-2048}"
+var_ram="${var_ram:-3072}"
 var_disk="${var_disk:-10}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
@@ -38,10 +38,9 @@ function update_script() {
 
     msg_info "Backing up Configuration"
     cp -f /opt/mealie/mealie.env /opt/mealie/mealie.env.bak
-    cp -f /opt/mealie/start.sh /opt/mealie/start.sh.bak
     msg_ok "Backup completed"
 
-    fetch_and_deploy_gh_release "mealie" "mealie-recipes/mealie" "tarball" "latest" "/opt/mealie"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "mealie" "mealie-recipes/mealie" "tarball" "latest" "/opt/mealie"
 
     msg_info "Installing Python Dependencies with uv"
     cd /opt/mealie
@@ -68,8 +67,6 @@ function update_script() {
 
     msg_info "Restoring Configuration"
     mv -f /opt/mealie/mealie.env.bak /opt/mealie/mealie.env
-    
-    # Update start.sh to use uv run instead of direct venv path
     cat <<'STARTEOF' >/opt/mealie/start.sh
 #!/bin/bash
 set -a
@@ -83,7 +80,7 @@ STARTEOF
     msg_info "Starting Service"
     systemctl start mealie
     msg_ok "Started Service"
-    msg_ok "Update Successful"
+    msg_ok "Updated successfully"
   fi
   exit
 }
@@ -96,3 +93,4 @@ msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:9000${CL}"
+
