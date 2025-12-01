@@ -1,0 +1,48 @@
+{
+  "name": "Documenso",
+  "slug": "documenso",
+  "categories": [
+    12
+  ],
+  "date_created": "2025-06-01",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 3000,
+  "documentation": "https://docs.documenso.com/developers/self-hosting",
+  "website": "https://documenso.com/",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/documenso.webp",
+  "config_path": "/opt/documenso/.env",
+  "description": "Documenso is the open-source DocuSign alternative. Sign documents digitally with legally binding signatures. Self-host for complete data sovereignty and customize to your needs.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/documenso.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 8,
+        "os": "debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Create your admin account at http://<IP>:3000/signup",
+      "type": "info"
+    },
+    {
+      "text": "Configure SMTP in /opt/documenso/.env for email functionality",
+      "type": "warning"
+    },
+    {
+      "text": "Credentials saved to ~/documenso.creds",
+      "type": "info"
+    }
+  ]
+}
