@@ -44,8 +44,8 @@ cat <<EOF >/opt/actualbudget-data/config.json
     "fc00::/7"
   ],
   "https": {
-    "key": "/etc/ssl/Actual Budget/Actual Budget.key",
-    "cert": "/etc/ssl/Actual Budget/Actual Budget.crt"
+    "key": "/etc/ssl/actualbudget/actualbudget.key",
+    "cert": "/etc/ssl/actualbudget/actualbudget.crt"
   }
 }
 EOF
