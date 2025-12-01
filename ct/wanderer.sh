@@ -6,7 +6,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Source: https://wanderer.to
 
 APP="Wanderer"
-var_tags="${var_tags:-traveling;sport}"
+var_tags="${var_tags:-travelling;sport}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-8}"
@@ -30,9 +30,9 @@ function update_script() {
     fi
 
     if check_for_gh_release "wanderer" "Flomp/wanderer"; then
-        msg_info "Stopping wanderer service"
+        msg_info "Stopping service"
         systemctl stop wanderer-web
-        msg_ok "Stopped wanderer service"
+        msg_ok "Stopped service"
         
 				fetch_and_deploy_gh_release "wanderer" "Flomp/wanderer"  "tarball" "latest" "/opt/wanderer/source"
 				
@@ -45,21 +45,21 @@ function update_script() {
         $STD npm run build
         msg_ok "Updated wanderer"
 
-        msg_info "Starting wanderer service"
+        msg_info "Starting service"
         systemctl start wanderer-web
-        msg_ok "Started wanderer service"
+        msg_ok "Started service"
         msg_ok "Update Successful"
     fi
     if check_for_gh_release "meilisearch" "meilisearch/meilisearch"; then
-        msg_info "Stopping wanderer service"
+        msg_info "Stopping service"
         systemctl stop wanderer-web
-        msg_ok "Stopped wanderer service"
+        msg_ok "Stopped service"
 
     		fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary" "latest" "/opt/wanderer/source/search"
 
-        msg_info "Starting wanderer service"
+        msg_info "Starting service"
         systemctl start wanderer-web
-        msg_ok "Started wanderer service"
+        msg_ok "Started service"
         msg_ok "Update Successful"
     fi
     exit
