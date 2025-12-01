@@ -20,6 +20,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - Bump Baikal to deb13 [@MickLesk](https://github.com/MickLesk) ([#9544](https://github.com/community-scripts/ProxmoxVE/pull/9544))
     - Enhance MariaDB version fallback logic [@MickLesk](https://github.com/MickLesk) ([#9545](https://github.com/community-scripts/ProxmoxVE/pull/9545))
 
   - #### 💥 Breaking Changes
