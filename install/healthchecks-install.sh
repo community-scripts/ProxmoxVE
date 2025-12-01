@@ -89,7 +89,7 @@ $STD python manage.py migrate --noinput
 $STD python manage.py collectstatic --noinput
 $STD python manage.py compress
 
-python manage.py shell <<EOF
+$STD python manage.py shell <<EOF
 from django.contrib.auth import get_user_model
 User = get_user_model()
 if not User.objects.filter(email="${ADMIN_EMAIL}").exists():
