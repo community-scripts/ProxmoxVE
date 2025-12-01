@@ -20,6 +20,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - core: sanitize appname for certificate generation [@tremor021](https://github.com/tremor021) ([#9552](https://github.com/community-scripts/ProxmoxVE/pull/9552))
     - Fix Django superuser creation failing with ImproperlyConfigured error [@Copilot](https://github.com/Copilot) ([#9554](https://github.com/community-scripts/ProxmoxVE/pull/9554))
 
   - #### ✨ New Features
