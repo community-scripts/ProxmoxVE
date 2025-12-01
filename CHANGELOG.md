@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-12-01
 
+### 🆕 New Scripts
+
+  - core: add cloud-init.func library for VM configuration [@MickLesk](https://github.com/MickLesk) ([#9538](https://github.com/community-scripts/ProxmoxVE/pull/9538))
+
 ## 2025-11-30
 
 ### 🚀 Updated Scripts
