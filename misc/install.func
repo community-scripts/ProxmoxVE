@@ -222,8 +222,6 @@ motd_ssh() {
 
   PROFILE_FILE="/etc/profile.d/00_lxc-details.sh"
   echo "echo -e \"\"" >"$PROFILE_FILE"
-  echo -e "echo -e \"${BOLD}${YW}${APPLICATION} LXC Container - DEV Repository${CL}\"" >>"$PROFILE_FILE"
-  echo -e "echo -e \"${RD}WARNING: This is a DEVELOPMENT version (ProxmoxVED). Do NOT use in production!${CL}\"" >>"$PROFILE_FILE"
   echo -e "echo -e \"${YW} OS: ${GN}${OS_NAME} - Version: ${OS_VERSION}${CL}\"" >>"$PROFILE_FILE"
   echo -e "echo -e \"${YW} Hostname: ${GN}\$(hostname)${CL}\"" >>"$PROFILE_FILE"
   echo -e "echo -e \"${YW} IP Address: ${GN}\$(hostname -I | awk '{print \$1}')${CL}\"" >>"$PROFILE_FILE"
