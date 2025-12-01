@@ -45,7 +45,7 @@ function update_script() {
     $STD npm run build --configuration=production
     msg_ok "Built Frontend"
 
-    JAVA_VERSION="25" setup_java
+    JAVA_VERSION="21" setup_java
 
     msg_info "Building Backend"
     cd /opt/booklore/booklore-api
