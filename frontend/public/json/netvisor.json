@@ -10,7 +10,7 @@
   "privileged": false,
   "interface_port": 60072,
   "documentation": "https://github.com/mayanayza/netvisor",
-  "config_path": "/opt/netvisor/.env",
+  "config_path": "/opt/netvisor/.env, OIDC: /opt/netvisor/oidc.toml",
   "website": "https://github.com/mayanayza/netvisor",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/png/netvisor.png",
   "description": "Automatically discover and visually document network infrastructure",
