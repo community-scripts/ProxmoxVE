@@ -11,7 +11,7 @@
   "interface_port": 9999,
   "documentation": null,
   "website": "https://github.com/TasmoAdmin/TasmoAdmin#readme",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/tasmoadmin.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/tasmoadmin.webp",
   "config_path": "",
   "description": "TasmoAdmin is an administrative platform for devices flashed with Tasmota.",
   "install_methods": [

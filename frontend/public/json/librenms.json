@@ -11,7 +11,7 @@
   "interface_port": 80,
   "documentation": "https://docs.librenms.org/",
   "website": "https://librenms.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/librenms.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/librenms.webp",
   "config_path": "/opt/librenms/config.php and /opt/librenms/.env",
   "description": "LibreNMS is an open-source, community-driven network monitoring system that provides automatic discovery, alerting, and performance tracking for network devices. It supports a wide range of hardware and integrates with various notification and logging platforms.",
   "install_methods": [

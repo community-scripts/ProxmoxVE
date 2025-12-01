@@ -11,7 +11,7 @@
   "interface_port": 443,
   "documentation": "https://documentation.wazuh.com/",
   "website": "https://wazuh.com/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/wazuh.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/wazuh.webp",
   "config_path": "",
   "description": "Wazuh is an open-source security monitoring solution that provides endpoint protection, network monitoring, and log analysis capabilities.",
   "install_methods": [

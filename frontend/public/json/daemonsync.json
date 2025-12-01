@@ -11,7 +11,7 @@
   "interface_port": 8084,
   "documentation": null,
   "website": "https://daemonsync.me/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/daemon-sync.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/daemon-sync.webp",
   "config_path": "",
   "description": "Sync files from app to server, share photos & videos, back up your data and stay secure inside local network.",
   "install_methods": [

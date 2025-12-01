@@ -11,7 +11,7 @@
   "interface_port": 80,
   "documentation": "https://wiki.casaos.io/en/home",
   "website": "https://www.casaos.io/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/casaos.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/casaos.webp",
   "config_path": "",
   "description": "CasaOS is a software that aims to make it easy for users to create a personal cloud system at home. It uses the Docker ecosystem to provide a simple, user-friendly experience for managing various applications and services.",
   "install_methods": [
