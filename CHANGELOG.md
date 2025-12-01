@@ -27,11 +27,21 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Refactor: Healthchecks [@MickLesk](https://github.com/MickLesk) ([#9188](https://github.com/community-scripts/ProxmoxVE/pull/9188))
 
+  - #### 🔧 Refactor
+
+    - Refactor: Mealie [@MickLesk](https://github.com/MickLesk) ([#9308](https://github.com/community-scripts/ProxmoxVE/pull/9308))
+
 ### 🧰 Maintenance
 
   - #### 📂 Github
 
     - add comprehensive documentation (core, develop, functions, technical guide, contributor guide) [@MickLesk](https://github.com/MickLesk) ([#9537](https://github.com/community-scripts/ProxmoxVE/pull/9537))
+
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - update selfhst icon-URLs to use @master path [@MickLesk](https://github.com/MickLesk) ([#9543](https://github.com/community-scripts/ProxmoxVE/pull/9543))
 
 ## 2025-11-30
 
