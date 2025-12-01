@@ -18,6 +18,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### ✨ New Features
+
+    - Enhance MariaDB version fallback logic [@MickLesk](https://github.com/MickLesk) ([#9545](https://github.com/community-scripts/ProxmoxVE/pull/9545))
+
   - #### 💥 Breaking Changes
 
     - Refactor: Healthchecks [@MickLesk](https://github.com/MickLesk) ([#9188](https://github.com/community-scripts/ProxmoxVE/pull/9188))
