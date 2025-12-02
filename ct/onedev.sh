@@ -29,7 +29,6 @@ function update_script() {
   fi
 
   if check_for_gh_release "onedev" "theonedev/onedev"; then
-
     JAVA_VERSION="21" setup_java
 
     msg_info "Stopping Service"
