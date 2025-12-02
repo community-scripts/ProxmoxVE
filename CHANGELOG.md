@@ -18,6 +18,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Booklore: Downgrad Java from 25 to 21 [@Pr0mises](https://github.com/Pr0mises) ([#9566](https://github.com/community-scripts/ProxmoxVE/pull/9566))
 
+  - #### 🔧 Refactor
+
+    - Cloudflared: Add repo via helper function [@tremor021](https://github.com/tremor021) ([#9565](https://github.com/community-scripts/ProxmoxVE/pull/9565))
+
 ## 2025-12-01
 
 ### 🆕 New Scripts
