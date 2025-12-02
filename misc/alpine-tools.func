@@ -112,7 +112,7 @@ check_for_gh_release() {
 }
 
 # ------------------------------
-# GitHub: get Release  & deployen (Alpine)
+# GitHub: get Release  & deploy (Alpine)
 # modes: tarball | prebuild | singlefile
 # ------------------------------
 fetch_and_deploy_gh() {
