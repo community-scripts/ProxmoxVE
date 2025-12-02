@@ -31,5 +31,5 @@
     "username": null,
     "password": null
   },
-  "notes": []
+  "notes": ["On first launch, a random password is set for the default user using `requirepass`; the generated password is stored in `/root/.valkey_pass.txt inside the container`." ]
 }
