@@ -15,21 +15,22 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt install -y \
-  default-jdk \
   git \
   git-lfs
 msg_ok "Installed Dependencies"
 
+JAVA_VERSION="21" setup_java
+
 msg_info "Installing OneDev"
+RELEASE=$(curl -fsSL https://api.github.com/repos/theonedev/onedev/releases/latest | grep '"tag_name":' | cut -d'"' -f4)
 cd /opt
-curl -fsSL "https://code.onedev.io/onedev/server/~site/onedev-latest.tar.gz" -o "/opt/onedev-latest.tar.gz"
+curl -fsSL "https://code.onedev.io/onedev/server/~site/onedev-latest.tar.gz" -o onedev-latest.tar.gz
 tar -xzf onedev-latest.tar.gz
 mv /opt/onedev-latest /opt/onedev
 $STD /opt/onedev/bin/server.sh install
 systemctl start onedev
-RELEASE=$(cat /opt/onedev/release.properties | grep "version" | cut -d'=' -f2)
 rm -rf /opt/onedev-latest.tar.gz
-echo "${RELEASE}" >"/opt/${APPLICATION}_version.txt"
+echo "${RELEASE}" >~/.onedev
 msg_ok "Installed OneDev"
 
 motd_ssh
