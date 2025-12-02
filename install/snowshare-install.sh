@@ -12,32 +12,16 @@ setting_up_container
 network_check
 update_os
 
-setup_nodejs
-setup_postgresql
+NODE_VERSION="22" setup_nodejs
+PG_VERSION="17" setup_postgresql
 fetch_and_deploy_gh_release "snowshare" "TuroYT/snowshare"
-
-msg_info "Setting up PostgreSQL Database"
-DB_NAME=snowshare
-DB_USER=snowshare
-DB_PASS="$(openssl rand -base64 18 | cut -c1-13)"
-$STD sudo -u postgres psql -c "CREATE ROLE $DB_USER WITH LOGIN PASSWORD '$DB_PASS';"
-$STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER ENCODING 'UTF8' TEMPLATE template0;"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET client_encoding TO 'utf8';"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET default_transaction_isolation TO 'read committed';"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET timezone TO 'UTC';"
-{
-  echo "SnowShare-Database-Credentials"
-  echo "Database Username: $DB_USER"
-  echo "Database Password: $DB_PASS"
-  echo "Database Name: $DB_NAME"
-} >>~/snowshare.creds
-msg_ok "Set up PostgreSQL Database"
+PG_DB_USER="snowshare" PG_DB_NAME="snowshare" setup_postgresql_db
 
 msg_info "Installing SnowShare"
 cd /opt/snowshare
 $STD npm ci
 cat <<EOF >/opt/snowshare.env
-DATABASE_URL="postgresql://$DB_USER:$DB_PASS@localhost:5432/$DB_NAME"
+DATABASE_URL="postgresql://$PG_DB_USER:$PG_DB_PASS@localhost:5432/$PG_DB_NAME"
 NEXTAUTH_URL="http://localhost:3000"
 NEXTAUTH_SECRET="$(openssl rand -base64 32)"
 ALLOW_SIGNUP=true
@@ -77,9 +61,4 @@ msg_ok "Set up Cleanup Cron Job"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc
