@@ -3418,12 +3418,12 @@ EOF
 #   - Optionally installs or updates global npm modules
 #
 # Variables:
-#   NODE_VERSION   - Node.js version to install (default: 22)
+#   NODE_VERSION   - Node.js version to install (default: 24 LTS)
 #   NODE_MODULE    - Comma-separated list of global modules (e.g. "yarn,@vue/cli@5.0.0")
 # ------------------------------------------------------------------------------
 
 function setup_nodejs() {
-  local NODE_VERSION="${NODE_VERSION:-22}"
+  local NODE_VERSION="${NODE_VERSION:-24}"
   local NODE_MODULE="${NODE_MODULE:-}"
 
   # ALWAYS clean up legacy installations first (nvm, etc.) to prevent conflicts
