@@ -14,9 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt install -y \
-  lsb-release \
-  nginx
+$STD apt install -y nginx
 msg_ok "Installed Dependencies"
 
 PHP_VERSION="8.3" PHP_MODULE="common,ctype,fileinfo,mysql,cli,tokenizer,dom,redis,session,openssl" PHP_FPM="YES" setup_php
