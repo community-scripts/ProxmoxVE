@@ -33,7 +33,7 @@ function update_script() {
     msg_info "Creating Backup"
     mkdir -p /opt/open-webui-backup
     cp -a /opt/open-webui/backend/data /opt/open-webui-backup/data || true
-    cp -a /opt/open-webui/.env /opt/open-webui-backup/.env
+    cp -a /opt/open-webui/.env /opt/open-webui-backup/.env || true
     msg_ok "Created Backup"
 
     msg_info "Removing legacy installation"
@@ -49,7 +49,7 @@ function update_script() {
     msg_info "Restoring data"
     mkdir -p /root/.open-webui
     cp -a /opt/open-webui-backup/data/* /root/.open-webui/ || true
-    cp -a /opt/open-webui-backup/.env /root/.env
+    cp -a /opt/open-webui-backup/.env /root/.env || true
     rm -rf /opt/open-webui-backup || true
     msg_ok "Restored data"
 
