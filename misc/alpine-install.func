@@ -15,10 +15,19 @@ catch_errors
 verb_ip6() {
   set_std_mode # Set STD mode based on VERBOSE
 
-  if [ "$DISABLEIPV6" == "yes" ]; then
+  if [ "$IPV6_METHOD" == "disable" ]; then
+    msg_info "Disabling IPv6 (this may affect some services)"
     $STD sysctl -w net.ipv6.conf.all.disable_ipv6=1
-    echo "net.ipv6.conf.all.disable_ipv6 = 1" >>/etc/sysctl.conf
+    $STD sysctl -w net.ipv6.conf.default.disable_ipv6=1
+    $STD sysctl -w net.ipv6.conf.lo.disable_ipv6=1
+    mkdir -p /etc/sysctl.d
+    $STD tee /etc/sysctl.d/99-disable-ipv6.conf >/dev/null <<EOF
+net.ipv6.conf.all.disable_ipv6 = 1
+net.ipv6.conf.default.disable_ipv6 = 1
+net.ipv6.conf.lo.disable_ipv6 = 1
+EOF
     $STD rc-update add sysctl default
+    msg_ok "Disabled IPv6"
   fi
 }
 
@@ -109,8 +118,8 @@ network_check() {
 # This function updates the Container OS by running apt-get update and upgrade
 update_os() {
   msg_info "Updating Container OS"
-  $STD apk update && $STD apk upgrade
-  source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/alpine-tools.func)
+  $STD apk -U upgrade
+  source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
   msg_ok "Updated Container OS"
 }
 
@@ -131,15 +140,18 @@ motd_ssh() {
   echo "echo -e \"\"" >"$PROFILE_FILE"
   echo -e "echo -e \"${BOLD}${APPLICATION} LXC Container${CL}"\" >>"$PROFILE_FILE"
   echo -e "echo -e \"${TAB}${GATEWAY}${YW} Provided by: ${GN}community-scripts ORG ${YW}| GitHub: ${GN}https://github.com/community-scripts/ProxmoxVE${CL}\"" >>"$PROFILE_FILE"
-  echo -e "echo -e \"${YW} OS: ${GN}${OS_NAME} - Version: ${OS_VERSION}${CL}\"" >>"$PROFILE_FILE"
-  echo -e "echo -e \"${YW} Hostname: ${GN}\$(hostname)${CL}\"" >>"$PROFILE_FILE"
-  echo -e "echo -e \"${YW} IP Address: ${GN}${IP}${CL}\"" >>"$PROFILE_FILE"
-  echo -e "echo -e \"${YW} Repository: ${GN}https://github.com/community-scripts/ProxmoxVE${CL}\"" >>"$PROFILE_FILE"
   echo "echo \"\"" >>"$PROFILE_FILE"
+  echo -e "echo -e \"${TAB}${OS}${YW} OS: ${GN}${OS_NAME} - Version: ${OS_VERSION}${CL}\"" >>"$PROFILE_FILE"
+  echo -e "echo -e \"${TAB}${HOSTNAME}${YW} Hostname: ${GN}\$(hostname)${CL}\"" >>"$PROFILE_FILE"
+  echo -e "echo -e \"${TAB}${INFO}${YW} IP Address: ${GN}\$(ip -4 addr show eth0 | awk '/inet / {print \$2}' | cut -d/ -f1 | head -n 1)${CL}\"" >>"$PROFILE_FILE"
 
+  # Configure SSH if enabled
   if [[ "${SSH_ROOT}" == "yes" ]]; then
+    # Enable sshd service
     $STD rc-update add sshd
+    # Allow root login via SSH
     sed -i "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
+    # Start the sshd service
     $STD /etc/init.d/sshd start
   fi
 }
@@ -178,4 +190,5 @@ EOF
 
   echo "bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/${app}.sh)\"" >/usr/bin/update
   chmod +x /usr/bin/update
+ 
 }
