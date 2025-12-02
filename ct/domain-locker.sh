@@ -34,7 +34,7 @@ function update_script() {
         msg_info "Service stopped"
 
         PG_VERSION="17" setup_postgresql
-        setup_nodejs
+        NODE_VERSION="22" setup_nodejs
         CLEAN_INSTALL=1 fetch_and_deploy_gh_release "domain-locker" "Lissy93/domain-locker"
 
         msg_info "Installing Modules (patience)"
