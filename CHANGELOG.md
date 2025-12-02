@@ -23,6 +23,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Matterbridge: Fix ExecStart command in service install script to allow childbridge mode [@jonalbr](https://github.com/jonalbr) ([#9603](https://github.com/community-scripts/ProxmoxVE/pull/9603))
     - Open-webui add .env backup and restore functionality from older versions [@DrDonoso](https://github.com/DrDonoso) ([#9592](https://github.com/community-scripts/ProxmoxVE/pull/9592))
     - Booklore: Downgrad Java from 25 to 21 [@Pr0mises](https://github.com/Pr0mises) ([#9566](https://github.com/community-scripts/ProxmoxVE/pull/9566))
 
