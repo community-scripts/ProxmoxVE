@@ -65,7 +65,7 @@ EOF
     fi
     msg_ok "Corrected Services"
 
-    setup_nodejs
+    NODE_VERSION="22" setup_nodejs
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "tracktor" "javedh-dev/tracktor" "tarball" "latest" "/opt/tracktor"
 
     msg_info "Updating tracktor"
