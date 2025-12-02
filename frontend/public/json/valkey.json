@@ -31,5 +31,10 @@
     "username": null,
     "password": null
   },
-  "notes": ["On first launch, a random password is set for the default user using `requirepass`; the generated password is stored in `/root/.valkey_pass.txt inside the container`." ]
+  "notes": [
+    {
+      "text": "Show Login Credentials, type `cat /root/.valkey_pass.txt` in the LXC console",
+      "type": "info"
+    },
+  ]
 }
