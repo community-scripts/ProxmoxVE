@@ -125,6 +125,7 @@ echo "OPENAI_API_KEY=your-key-here" >> /etc/browser-use/.env
 # #uvx browser-use install
 msg_ok "Installed browser-use"
 
+mkdir -p /opt/browser-use
 cat <<EOF >/opt/browser-use/test.py
 """
 Simple try of the agent.
