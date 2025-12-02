@@ -14,6 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - Refactor: BookStack [@tremor021](https://github.com/tremor021) ([#9567](https://github.com/community-scripts/ProxmoxVE/pull/9567))
+
   - #### 🐞 Bug Fixes
 
     - Booklore: Downgrad Java from 25 to 21 [@Pr0mises](https://github.com/Pr0mises) ([#9566](https://github.com/community-scripts/ProxmoxVE/pull/9566))
