@@ -8,6 +8,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 APP="Wanderer"
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 var_tags="${var_tags:-travelling;sport}"
 =======
 var_tags="${var_tags:-traveling;sport}"
@@ -15,6 +16,9 @@ var_tags="${var_tags:-traveling;sport}"
 =======
 var_tags="${var_tags:-travelling;sport}"
 >>>>>>> a516bb7f5 (refactor)
+=======
+var_tags="${var_tags:-travelling;sport}"
+>>>>>>> f5a3c3793275c0937fca7f8784b5a2b3ce83997f
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-8}"
@@ -40,6 +44,7 @@ function update_script() {
     if check_for_gh_release "wanderer" "Flomp/wanderer"; then
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         msg_info "Stopping service"
         systemctl stop wanderer-web
         msg_ok "Stopped service"
@@ -53,6 +58,11 @@ function update_script() {
         systemctl stop wanderer-web
         msg_ok "Stopped service"
 >>>>>>> a516bb7f5 (refactor)
+=======
+        msg_info "Stopping service"
+        systemctl stop wanderer-web
+        msg_ok "Stopped service"
+>>>>>>> f5a3c3793275c0937fca7f8784b5a2b3ce83997f
         
 				fetch_and_deploy_gh_release "wanderer" "Flomp/wanderer"  "tarball" "latest" "/opt/wanderer/source"
 				
@@ -67,6 +77,9 @@ function update_script() {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> f5a3c3793275c0937fca7f8784b5a2b3ce83997f
         msg_info "Starting service"
         systemctl start wanderer-web
         msg_ok "Started service"
@@ -82,6 +95,7 @@ function update_script() {
         msg_info "Starting service"
         systemctl start wanderer-web
         msg_ok "Started service"
+<<<<<<< HEAD
 =======
         msg_info "Starting wanderer service"
 =======
@@ -106,6 +120,8 @@ function update_script() {
 =======
         msg_ok "Started service"
 >>>>>>> a516bb7f5 (refactor)
+=======
+>>>>>>> f5a3c3793275c0937fca7f8784b5a2b3ce83997f
         msg_ok "Update Successful"
     fi
     exit

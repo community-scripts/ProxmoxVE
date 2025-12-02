@@ -1,5 +1,6 @@
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
   "name": "Wanderer",
   "slug": "wanderer",
   "categories": [
@@ -34,6 +35,8 @@
   },
   "notes": []
 =======
+=======
+>>>>>>> f5a3c3793275c0937fca7f8784b5a2b3ce83997f
     "name": "Wanderer",
     "slug": "wanderer",
     "categories": [
@@ -67,5 +70,8 @@
         "password": null
     },
     "notes": []
+<<<<<<< HEAD
 >>>>>>> 056b67a21 ('Add new script')
+=======
+>>>>>>> f5a3c3793275c0937fca7f8784b5a2b3ce83997f
 }
