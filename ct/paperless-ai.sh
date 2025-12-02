@@ -28,7 +28,7 @@ function update_script() {
     exit
   fi
 
-  if check_for_gh_release "paperless-ai" "fosrl/pangolin"; then
+  if check_for_gh_release "paperless-ai" "clusterzx/paperless-ai"; then
     msg_info "Stopping Services"
     systemctl stop paperless-ai paperless-rag
     msg_ok "Stopped Services"
