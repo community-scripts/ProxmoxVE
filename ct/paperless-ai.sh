@@ -29,9 +29,9 @@ function update_script() {
   fi
 
   if check_for_gh_release "paperless-ai" "clusterzx/paperless-ai"; then
-    msg_info "Stopping Services"
+    msg_info "Stopping Service"
     systemctl stop paperless-ai paperless-rag
-    msg_ok "Stopped Services"
+    msg_ok "Stopped Service"
 
     fetch_and_deploy_gh_release "paperless-ai" "clusterzx/paperless-ai"
 
@@ -44,11 +44,11 @@ function update_script() {
     $STD npm ci --only=production
     msg_ok "Updated Paperless-AI"
 
-    msg_info "Starting Services"
+    msg_info "Starting Service"
     systemctl start paperless-rag
     sleep 3
     systemctl start paperless-ai
-    msg_ok "Started Services"
+    msg_ok "Started Service"
     msg_ok "Updated successfully!"
   fi
   exit
