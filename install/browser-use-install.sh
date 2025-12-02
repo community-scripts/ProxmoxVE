@@ -40,7 +40,8 @@ $STD apt-get install -y \
   qpdf \
   xdg-utils \
   xvfb \
-  ca-certificates
+  ca-certificates \
+  python3-pip
 msg_ok "Installed Dependencies"
 
 # pip install uv
