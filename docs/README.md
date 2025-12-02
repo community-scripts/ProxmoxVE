@@ -22,7 +22,10 @@ Complete guide to all ProxmoxVE documentation - quickly find what you need.
 → See also: [misc/error_handler.func/](misc/error_handler.func/)
 
 **Configure system defaults**
-→ Read: [DEFAULTS_SYSTEM_GUIDE.md](DEFAULTS_SYSTEM_GUIDE.md)
+→ Read: [guides/DEFAULTS_SYSTEM_GUIDE.md](guides/DEFAULTS_SYSTEM_GUIDE.md)
+
+**Deploy containers automatically**
+→ Read: [guides/UNATTENDED_DEPLOYMENTS.md](guides/UNATTENDED_DEPLOYMENTS.md)
 
 **Develop a function library**
 → Study: [misc/](misc/) documentation
@@ -61,7 +64,8 @@ Complete guide to all ProxmoxVE documentation - quickly find what you need.
 
 **System Operator**
 → Start: [EXIT_CODES.md](EXIT_CODES.md)
-→ Then: [DEFAULTS_SYSTEM_GUIDE.md](DEFAULTS_SYSTEM_GUIDE.md)
+→ Then: [guides/DEFAULTS_SYSTEM_GUIDE.md](guides/DEFAULTS_SYSTEM_GUIDE.md)
+→ Automate: [guides/UNATTENDED_DEPLOYMENTS.md](guides/UNATTENDED_DEPLOYMENTS.md)
 → Debug: [DEV_MODE.md](DEV_MODE.md)
 
 **Architect**
@@ -83,7 +87,8 @@ ProxmoxVE/
 ├─ vm/                ↔ docs/vm/ (README.md)
 ├─ tools/            ↔ docs/tools/ (README.md)
 ├─ api/              ↔ docs/api/ (README.md)
-└─ misc/             ↔ docs/misc/ (9 function libraries)
+├─ misc/             ↔ docs/misc/ (9 function libraries)
+└─ [system-wide]     ↔ docs/guides/ (configuration & deployment guides)
 ```
 
 ### Core Documentation
@@ -94,7 +99,9 @@ ProxmoxVE/
 | [ct/DETAILED_GUIDE.md](ct/DETAILED_GUIDE.md) | Create ct scripts | Container developers |
 | [install/DETAILED_GUIDE.md](install/DETAILED_GUIDE.md) | Create install scripts | Installation developers |
 | [TECHNICAL_REFERENCE.md](TECHNICAL_REFERENCE.md) | Architecture deep-dive | Architects, advanced users |
-| [DEFAULTS_SYSTEM_GUIDE.md](DEFAULTS_SYSTEM_GUIDE.md) | Configuration system | Operators, power users |
+| [guides/DEFAULTS_SYSTEM_GUIDE.md](guides/DEFAULTS_SYSTEM_GUIDE.md) | Configuration system | Operators, power users |
+| [guides/CONFIGURATION_REFERENCE.md](guides/CONFIGURATION_REFERENCE.md) | Configuration options reference | Advanced users |
+| [guides/UNATTENDED_DEPLOYMENTS.md](guides/UNATTENDED_DEPLOYMENTS.md) | Automated deployments | DevOps, automation |
 | [EXIT_CODES.md](EXIT_CODES.md) | Exit code reference | Troubleshooters |
 | [DEV_MODE.md](DEV_MODE.md) | Debugging tools | Developers |
 
@@ -190,7 +197,7 @@ Documentation for `/misc` - 9 core function libraries with complete references.
 
 1. All of Intermediate Path
 2. Study all 9 function libraries in depth
-3. [DEFAULTS_SYSTEM_GUIDE.md](DEFAULTS_SYSTEM_GUIDE.md) - Configuration system
+3. [guides/DEFAULTS_SYSTEM_GUIDE.md](guides/DEFAULTS_SYSTEM_GUIDE.md) - Configuration system
 4. [DEV_MODE.md](DEV_MODE.md) - Debugging and development
 5. Design new features or function libraries
 
@@ -234,7 +241,8 @@ Documentation for `/misc` - 9 core function libraries with complete references.
 
 ### By Role
 - **Contributor** → [contribution/README.md](contribution/README.md)
-- **Operator** → [DEFAULTS_SYSTEM_GUIDE.md](DEFAULTS_SYSTEM_GUIDE.md)
+- **Operator** → [guides/DEFAULTS_SYSTEM_GUIDE.md](guides/DEFAULTS_SYSTEM_GUIDE.md)
+- **Automation** → [guides/UNATTENDED_DEPLOYMENTS.md](guides/UNATTENDED_DEPLOYMENTS.md)
 - **Developer** → [TECHNICAL_REFERENCE.md](TECHNICAL_REFERENCE.md)
 - **Architect** → [misc/README.md](misc/README.md)
 
