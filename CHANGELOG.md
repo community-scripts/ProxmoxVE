@@ -36,6 +36,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Refactor: Docmost [@tremor021](https://github.com/tremor021) ([#9563](https://github.com/community-scripts/ProxmoxVE/pull/9563))
     - Cloudflared: Add repo via helper function [@tremor021](https://github.com/tremor021) ([#9565](https://github.com/community-scripts/ProxmoxVE/pull/9565))
 
+### 🧰 Maintenance
+
+  - #### 📝 Documentation
+
+    - add configuration and deployment guides to docs [@MickLesk](https://github.com/MickLesk) ([#9591](https://github.com/community-scripts/ProxmoxVE/pull/9591))
+
 ## 2025-12-01
 
 ### 🆕 New Scripts
