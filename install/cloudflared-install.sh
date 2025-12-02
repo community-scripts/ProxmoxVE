@@ -15,12 +15,11 @@ update_os
 
 msg_info "Installing Cloudflared"
 setup_deb822_repo \
-      "cloudflared" \
-      "https://pkg.cloudflare.com/cloudflare-main.gpg" \
-      "https://pkg.cloudflare.com/cloudflared/" \
-      "any" \
-      "main"
-$STD apt update
+  "cloudflared" \
+  "https://pkg.cloudflare.com/cloudflare-main.gpg" \
+  "https://pkg.cloudflare.com/cloudflared/" \
+  "any" \
+  "main"
 $STD apt install -y cloudflared
 msg_ok "Installed Cloudflared"
 
