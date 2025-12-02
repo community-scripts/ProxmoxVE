@@ -31,6 +31,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: 2FAuth [@tremor021](https://github.com/tremor021) ([#9582](https://github.com/community-scripts/ProxmoxVE/pull/9582))
     - Refactor: Paperless-AI [@MickLesk](https://github.com/MickLesk) ([#9588](https://github.com/community-scripts/ProxmoxVE/pull/9588))
     - Refactor: AdventureLog [@tremor021](https://github.com/tremor021) ([#9583](https://github.com/community-scripts/ProxmoxVE/pull/9583))
     - CommaFeed: Bump Java and service file [@tremor021](https://github.com/tremor021) ([#9564](https://github.com/community-scripts/ProxmoxVE/pull/9564))
