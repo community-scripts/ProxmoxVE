@@ -29,6 +29,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - Set Valkey memory and eviction defaults [@pshankinclarke](https://github.com/pshankinclarke) ([#9602](https://github.com/community-scripts/ProxmoxVE/pull/9602))
     - Add auth via requirepass to Valkey [@pshankinclarke](https://github.com/pshankinclarke) ([#9570](https://github.com/community-scripts/ProxmoxVE/pull/9570))
 
   - #### 🔧 Refactor
