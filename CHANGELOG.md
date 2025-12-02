@@ -14,7 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
-  - Refactor: BookStack [@tremor021](https://github.com/tremor021) ([#9567](https://github.com/community-scripts/ProxmoxVE/pull/9567))
+  - NetVisor: patch systemd file to fix new OIDC config [@vhsdream](https://github.com/vhsdream) ([#9562](https://github.com/community-scripts/ProxmoxVE/pull/9562))
+- Refactor: BookStack [@tremor021](https://github.com/tremor021) ([#9567](https://github.com/community-scripts/ProxmoxVE/pull/9567))
 
   - #### 🐞 Bug Fixes
 
