@@ -24,7 +24,6 @@ chmod 600 /root/valkey_pass.txt
 systemctl enable -q --now valkey-server
 systemctl restart valkey-server
 msg_ok "Installed Valkey"
-msg_ok "Valkey password saved to /root/valkey_pass.txt"
 
 motd_ssh
 customize
