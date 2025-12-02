@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/pshankinclarke/ProxmoxVE/refs/heads/valkey-mem/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: pshankinclarke (lazarillo)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
