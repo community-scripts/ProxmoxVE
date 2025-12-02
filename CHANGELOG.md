@@ -47,6 +47,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - add configuration and deployment guides to docs [@MickLesk](https://github.com/MickLesk) ([#9591](https://github.com/community-scripts/ProxmoxVE/pull/9591))
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - Update category for "Wanderer" [@Lorondos](https://github.com/Lorondos) ([#9607](https://github.com/community-scripts/ProxmoxVE/pull/9607))
+
 ## 2025-12-01
 
 ### 🆕 New Scripts
