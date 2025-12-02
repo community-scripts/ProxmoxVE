@@ -14,8 +14,8 @@ update_os
 
 NODE_VERSION="22" setup_nodejs
 PG_VERSION="17" setup_postgresql
-fetch_and_deploy_gh_release "snowshare" "TuroYT/snowshare"
 PG_DB_USER="snowshare" PG_DB_NAME="snowshare" setup_postgresql_db
+fetch_and_deploy_gh_release "snowshare" "TuroYT/snowshare"
 
 msg_info "Installing SnowShare"
 cd /opt/snowshare
