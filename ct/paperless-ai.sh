@@ -33,7 +33,7 @@ function update_script() {
     systemctl stop paperless-ai paperless-rag
     msg_ok "Stopped Services"
 
-    fetch_and_deploy_gh_release "clusterzx/paperless-ai" "/opt/paperless-ai"
+    fetch_and_deploy_gh_release "paperless-ai" "clusterzx/paperless-ai"
 
     msg_info "Updating Paperless-AI"
     cd /opt/paperless-ai
