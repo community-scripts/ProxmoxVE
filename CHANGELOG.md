@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-12-02
 
+### 🆕 New Scripts
+
+  - Snowshare ([#9578](https://github.com/community-scripts/ProxmoxVE/pull/9578))
+
 ### 🚀 Updated Scripts
 
   - NetVisor: patch systemd file to fix new OIDC config [@vhsdream](https://github.com/vhsdream) ([#9562](https://github.com/community-scripts/ProxmoxVE/pull/9562))
