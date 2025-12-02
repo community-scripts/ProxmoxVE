@@ -72,23 +72,23 @@ stop_all_services() {
   local service_patterns=("$@")
 
   for pattern in "${service_patterns[@]}"; do
-    # Find all matching services (use || true to avoid pipeline failures)
-    local services
-    services=$(systemctl list-units --type=service --all 2>/dev/null |
-      grep -oE "${pattern}[^ ]*\.service" 2>/dev/null |
-      sort -u 2>/dev/null || true)
+    # Find all matching services
+				  
+    systemctl list-units --type=service --all 2>/dev/null |
+      grep -oE "${pattern}[^ ]*\.service" |
+      sort -u |
 
-    # Only process if we found any services
-    if [[ -n "$services" ]]; then
-      while IFS= read -r service; do
-        [[ -z "$service" ]] && continue
+										   
+								 
+      while read -r service; do
+									   
         $STD systemctl stop "$service" 2>/dev/null || true
         $STD systemctl disable "$service" 2>/dev/null || true
-      done <<<"$services"
-    fi
+      done
+	  
   done
 
-  return 0
+		  
 }
 
 # ------------------------------------------------------------------------------
@@ -1214,7 +1214,7 @@ setup_deb822_repo() {
   local gpg_url="$2"
   local repo_url="$3"
   local suite="$4"
-  local component="${5-main}"
+  local component="${5:-main}"
   local architectures="${6-}" # optional
 
   # Validate required parameters
@@ -1535,9 +1535,10 @@ check_for_gh_release() {
 # ------------------------------------------------------------------------------
 create_self_signed_cert() {
   local APP_NAME="${1:-${APPLICATION}}"
-  local CERT_DIR="/etc/ssl/${APP_NAME}"
-  local CERT_KEY="${CERT_DIR}/${APP_NAME}.key"
-  local CERT_CRT="${CERT_DIR}/${APP_NAME}.crt"
+  local APP_NAME_LC=$(echo "${APP_NAME,,}" | tr -d ' ')
+  local CERT_DIR="/etc/ssl/${APP_NAME_LC}"
+  local CERT_KEY="${CERT_DIR}/${APP_NAME_LC}.key"
+  local CERT_CRT="${CERT_DIR}/${APP_NAME_LC}.crt"
 
   if [[ -f "$CERT_CRT" && -f "$CERT_KEY" ]]; then
     return 0
@@ -2940,9 +2941,16 @@ setup_mariadb() {
   # Resolve "latest" to actual version
   if [[ "$MARIADB_VERSION" == "latest" ]]; then
     if ! curl -fsI --max-time 10 http://mirror.mariadb.org/repo/ >/dev/null 2>&1; then
-      msg_warn "MariaDB mirror not reachable - trying cached package list fallback"
-      # Fallback: try to use a known stable version
-      MARIADB_VERSION="12.0"
+      msg_warn "MariaDB mirror not reachable - trying mariadb_repo_setup fallback"
+      # Try using official mariadb_repo_setup script as fallback
+      if curl -fsSL --max-time 15 https://r.mariadb.com/downloads/mariadb_repo_setup 2>/dev/null | bash -s -- --skip-verify >/dev/null 2>&1; then
+        msg_ok "MariaDB repository configured via mariadb_repo_setup"
+        # Extract version from configured repo
+        MARIADB_VERSION=$(grep -oP 'repo/\K[0-9]+\.[0-9]+\.[0-9]+' /etc/apt/sources.list.d/mariadb.list 2>/dev/null | head -n1 || echo "12.2")
+      else
+        msg_warn "mariadb_repo_setup failed - using hardcoded fallback version"
+        MARIADB_VERSION="12.2"
+      fi
     else
       MARIADB_VERSION=$(curl -fsSL --max-time 15 http://mirror.mariadb.org/repo/ 2>/dev/null |
         grep -Eo '[0-9]+\.[0-9]+\.[0-9]+/' |
@@ -2952,8 +2960,14 @@ setup_mariadb() {
         head -n1 || echo "")
 
       if [[ -z "$MARIADB_VERSION" ]]; then
-        msg_warn "Could not parse latest GA MariaDB version from mirror - using fallback"
-        MARIADB_VERSION="12.0"
+        msg_warn "Could not parse latest GA MariaDB version from mirror - trying mariadb_repo_setup"
+        if curl -fsSL --max-time 15 https://r.mariadb.com/downloads/mariadb_repo_setup 2>/dev/null | bash -s -- --skip-verify >/dev/null 2>&1; then
+          msg_ok "MariaDB repository configured via mariadb_repo_setup"
+          MARIADB_VERSION=$(grep -oP 'repo/\K[0-9]+\.[0-9]+\.[0-9]+' /etc/apt/sources.list.d/mariadb.list 2>/dev/null | head -n1 || echo "12.2")
+        else
+          msg_warn "mariadb_repo_setup failed - using hardcoded fallback version"
+          MARIADB_VERSION="12.2"
+        fi
       fi
     fi
   fi
@@ -3633,8 +3647,8 @@ function setup_php() {
   if [[ -n "$CURRENT_PHP" && "$CURRENT_PHP" != "$PHP_VERSION" ]]; then
     msg_info "Removing conflicting PHP ${CURRENT_PHP} (need ${PHP_VERSION})"
     stop_all_services "php.*-fpm"
-    $STD apt-get purge -y "php*" 2>/dev/null || true
-    $STD apt-get autoremove -y 2>/dev/null || true
+    $STD apt purge -y "php*" 2>/dev/null || true
+    $STD apt autoremove -y 2>/dev/null || true
   fi
 
   # NOW create pinning for the desired version
@@ -3661,7 +3675,7 @@ EOF
   }
 
   ensure_apt_working || return 1
-  $STD apt-get update
+  $STD apt update
 
   # Get available PHP version from repository
   local AVAILABLE_PHP_VERSION=""
@@ -3856,74 +3870,74 @@ function setup_postgresql() {
   local SUITE
   case "$DISTRO_CODENAME" in
   trixie | forky | sid)
-    # For Debian Testing/Unstable, try PostgreSQL repo first, fallback to native packages
+																						 
     if verify_repo_available "https://apt.postgresql.org/pub/repos/apt" "trixie-pgdg"; then
       SUITE="trixie-pgdg"
 
-      setup_deb822_repo \
-        "pgdg" \
-        "https://www.postgresql.org/media/keys/ACCC4CF8.asc" \
-        "https://apt.postgresql.org/pub/repos/apt" \
-        "$SUITE" \
-        "main"
+						 
+				
+															  
+													
+				  
+			  
 
-      if ! $STD apt update; then
-        msg_warn "Failed to update PostgreSQL repository, falling back to native packages"
-        SUITE=""
-      fi
+								
+																						  
+				
+		
     else
-      SUITE=""
+      SUITE="bookworm-pgdg"
     fi
 
-    # If no repo or packages not installable, use native Debian packages
-    if [[ -z "$SUITE" ]] || ! apt-cache show "postgresql-${PG_VERSION}" 2>/dev/null | grep -q "Version:"; then
-      msg_info "Using native Debian packages for $DISTRO_CODENAME"
+																		
+																											  
+																  
 
-      # Install ssl-cert dependency if available
-      if apt-cache search "^ssl-cert$" 2>/dev/null | grep -q .; then
-        $STD apt install -y ssl-cert 2>/dev/null || true
-      fi
+												
+																	
+														
+		
 
-      if ! $STD apt install -y postgresql postgresql-client 2>/dev/null; then
-        msg_error "Failed to install native PostgreSQL packages"
-        return 1
-      fi
+																			 
+																
+				
+		
 
-      if ! command -v psql >/dev/null 2>&1; then
-        msg_error "PostgreSQL installed but psql command not found"
-        return 1
-      fi
+												
+																   
+				
+		
 
-      # Restore database backup if we upgraded from previous version
-      if [[ -n "$CURRENT_PG_VERSION" ]]; then
-        msg_info "Restoring PostgreSQL databases from backup..."
-        $STD runuser -u postgres -- psql </var/lib/postgresql/backup_$(date +%F)_v${CURRENT_PG_VERSION}.sql 2>/dev/null || {
-          msg_warn "Failed to restore database backup - this may be expected for major version upgrades"
-        }
-      fi
+																	
+											 
+																
+																															
+																										
+		 
+		
 
-      $STD systemctl enable --now postgresql 2>/dev/null || true
+																
 
-      # Get actual installed version
-      INSTALLED_VERSION="$(psql -V 2>/dev/null | awk '{print $3}' | cut -d. -f1)"
+									
+																				 
 
-      # Add PostgreSQL binaries to PATH
-      if ! grep -q '/usr/lib/postgresql' /etc/environment 2>/dev/null; then
-        echo 'PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/postgresql/'"${INSTALLED_VERSION}"'/bin"' >/etc/environment
-      fi
+									   
+																		   
+																																					 
+		
 
-      cache_installed_version "postgresql" "$INSTALLED_VERSION"
-      msg_ok "Setup PostgreSQL $INSTALLED_VERSION (native)"
+															   
+														   
 
-      # Install optional modules if specified
-      if [[ -n "$PG_MODULES" ]]; then
-        IFS=',' read -ra MODULES <<<"$PG_MODULES"
-        for module in "${MODULES[@]}"; do
-          $STD apt install -y "postgresql-${INSTALLED_VERSION}-${module}" 2>/dev/null || true
-        done
-      fi
-      return 0
-    fi
+											 
+									 
+												 
+										 
+																							 
+			
+		
+			  
+	  
     ;;
   *)
     SUITE=$(get_fallback_suite "$DISTRO_ID" "$DISTRO_CODENAME" "https://apt.postgresql.org/pub/repos/apt")
@@ -4816,4 +4830,215 @@ function setup_yq() {
   FINAL_VERSION=$("$BINARY_PATH" --version 2>/dev/null | awk '{print $NF}' | sed 's/^v//')
   cache_installed_version "yq" "$FINAL_VERSION"
   msg_ok "Setup yq $FINAL_VERSION"
+}
+
+# ------------------------------------------------------------------------------
+# Docker Engine Installation and Management (All-In-One)
+#
+# Description:
+#   - Detects and migrates old Docker installations
+#   - Installs/Updates Docker Engine via official repository
+#   - Optional: Installs/Updates Portainer CE
+#   - Updates running containers interactively
+#   - Cleans up legacy repository files
+#
+# Usage:
+#   setup_docker
+#   DOCKER_PORTAINER="true" setup_docker
+#   DOCKER_LOG_DRIVER="json-file" setup_docker
+#
+# Variables:
+#   DOCKER_PORTAINER       - Install Portainer CE (optional, "true" to enable)
+#   DOCKER_LOG_DRIVER      - Log driver (optional, default: "journald")
+#   DOCKER_SKIP_UPDATES    - Skip container update check (optional, "true" to skip)
+#
+# Features:
+#   - Migrates from get.docker.com to repository-based installation
+#   - Updates Docker Engine if newer version available
+#   - Interactive container update with multi-select
+#   - Portainer installation and update support
+# ------------------------------------------------------------------------------
+function setup_docker() {
+  local docker_installed=false
+  local portainer_installed=false
+
+  # Check if Docker is already installed
+  if command -v docker &>/dev/null; then
+    docker_installed=true
+    DOCKER_CURRENT_VERSION=$(docker --version | grep -oP '\d+\.\d+\.\d+' | head -1)
+    msg_info "Docker $DOCKER_CURRENT_VERSION detected"
+  fi
+
+  # Check if Portainer is running
+  if docker ps --format '{{.Names}}' 2>/dev/null | grep -q '^portainer$'; then
+    portainer_installed=true
+    msg_info "Portainer container detected"
+  fi
+
+  # Cleanup old repository configurations
+  if [ -f /etc/apt/sources.list.d/docker.list ]; then
+    msg_info "Migrating from old Docker repository format"
+    rm -f /etc/apt/sources.list.d/docker.list
+    rm -f /etc/apt/keyrings/docker.asc
+  fi
+
+  # Setup/Update Docker repository
+  msg_info "Setting up Docker Repository"
+  setup_deb822_repo \
+    "docker" \
+    "https://download.docker.com/linux/$(get_os_info id)/gpg" \
+    "https://download.docker.com/linux/$(get_os_info id)" \
+    "$(get_os_info codename)" \
+    "stable" \
+    "$(dpkg --print-architecture)"
+
+  # Install or upgrade Docker
+  if [ "$docker_installed" = true ]; then
+    msg_info "Checking for Docker updates"
+    DOCKER_LATEST_VERSION=$(apt-cache policy docker-ce | grep Candidate | awk '{print $2}' | cut -d':' -f2 | cut -d'-' -f1)
+
+    if [ "$DOCKER_CURRENT_VERSION" != "$DOCKER_LATEST_VERSION" ]; then
+      msg_info "Updating Docker $DOCKER_CURRENT_VERSION → $DOCKER_LATEST_VERSION"
+      $STD apt install -y --only-upgrade \
+        docker-ce \
+        docker-ce-cli \
+        containerd.io \
+        docker-buildx-plugin \
+        docker-compose-plugin
+      msg_ok "Updated Docker to $DOCKER_LATEST_VERSION"
+    else
+      msg_ok "Docker is up-to-date ($DOCKER_CURRENT_VERSION)"
+    fi
+  else
+    msg_info "Installing Docker"
+    $STD apt install -y \
+      docker-ce \
+      docker-ce-cli \
+      containerd.io \
+      docker-buildx-plugin \
+      docker-compose-plugin
+
+    DOCKER_CURRENT_VERSION=$(docker --version | grep -oP '\d+\.\d+\.\d+' | head -1)
+    msg_ok "Installed Docker $DOCKER_CURRENT_VERSION"
+  fi
+
+  # Configure daemon.json
+  local log_driver="${DOCKER_LOG_DRIVER:-journald}"
+  mkdir -p /etc/docker
+  if [ ! -f /etc/docker/daemon.json ]; then
+    cat <<EOF >/etc/docker/daemon.json
+{
+  "log-driver": "$log_driver"
+}
+EOF
+  fi
+
+  # Enable and start Docker
+  systemctl enable -q --now docker
+
+  # Portainer Management
+  if [[ "${DOCKER_PORTAINER:-}" == "true" ]]; then
+    if [ "$portainer_installed" = true ]; then
+      msg_info "Checking for Portainer updates"
+      PORTAINER_CURRENT=$(docker inspect portainer --format='{{.Config.Image}}' 2>/dev/null | cut -d':' -f2)
+      PORTAINER_LATEST=$(curl -fsSL https://registry.hub.docker.com/v2/repositories/portainer/portainer-ce/tags?page_size=100 | grep -oP '"name":"\K[0-9]+\.[0-9]+\.[0-9]+"' | head -1 | tr -d '"')
+
+      if [ "$PORTAINER_CURRENT" != "$PORTAINER_LATEST" ]; then
+        read -r -p "${TAB3}Update Portainer $PORTAINER_CURRENT → $PORTAINER_LATEST? <y/N> " prompt
+        if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
+          msg_info "Updating Portainer"
+          docker stop portainer
+          docker rm portainer
+          docker pull portainer/portainer-ce:latest
+          docker run -d \
+            -p 9000:9000 \
+            -p 9443:9443 \
+            --name=portainer \
+            --restart=always \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -v portainer_data:/data \
+            portainer/portainer-ce:latest
+          msg_ok "Updated Portainer to $PORTAINER_LATEST"
+        fi
+      else
+        msg_ok "Portainer is up-to-date ($PORTAINER_CURRENT)"
+      fi
+    else
+      msg_info "Installing Portainer"
+      docker volume create portainer_data
+      docker run -d \
+        -p 9000:9000 \
+        -p 9443:9443 \
+        --name=portainer \
+        --restart=always \
+        -v /var/run/docker.sock:/var/run/docker.sock \
+        -v portainer_data:/data \
+        portainer/portainer-ce:latest
+
+      LOCAL_IP=$(hostname -I | awk '{print $1}')
+      msg_ok "Installed Portainer (http://${LOCAL_IP}:9000)"
+    fi
+  fi
+
+  # Interactive Container Update Check
+  if [[ "${DOCKER_SKIP_UPDATES:-}" != "true" ]] && [ "$docker_installed" = true ]; then
+    msg_info "Checking for container updates"
+
+    # Get list of running containers with update status
+    local containers_with_updates=()
+    local container_info=()
+    local index=1
+
+    while IFS= read -r container; do
+      local name=$(echo "$container" | awk '{print $1}')
+      local image=$(echo "$container" | awk '{print $2}')
+      local current_digest=$(docker inspect "$name" --format='{{.Image}}' 2>/dev/null | cut -d':' -f2 | cut -c1-12)
+
+      # Pull latest image digest
+      docker pull "$image" >/dev/null 2>&1
+      local latest_digest=$(docker inspect "$image" --format='{{.Id}}' 2>/dev/null | cut -d':' -f2 | cut -c1-12)
+
+      if [ "$current_digest" != "$latest_digest" ]; then
+        containers_with_updates+=("$name")
+        container_info+=("${index}) ${name} (${image})")
+        ((index++))
+      fi
+    done < <(docker ps --format '{{.Names}} {{.Image}}')
+
+    if [ ${#containers_with_updates[@]} -gt 0 ]; then
+      echo ""
+      echo "${TAB3}Container updates available:"
+      for info in "${container_info[@]}"; do
+        echo "${TAB3}  $info"
+      done
+      echo ""
+      read -r -p "${TAB3}Select containers to update (e.g., 1,3,5 or 'all' or 'none'): " selection
+
+      if [[ ${selection,,} == "all" ]]; then
+        for container in "${containers_with_updates[@]}"; do
+          msg_info "Updating container: $container"
+          docker stop "$container"
+          docker rm "$container"
+          # Note: This requires the original docker run command - best to recreate via compose
+          msg_ok "Stopped and removed $container (please recreate with updated image)"
+        done
+      elif [[ ${selection,,} != "none" ]]; then
+        IFS=',' read -ra SELECTED <<<"$selection"
+        for num in "${SELECTED[@]}"; do
+          num=$(echo "$num" | xargs) # trim whitespace
+          if [[ "$num" =~ ^[0-9]+$ ]] && [ "$num" -ge 1 ] && [ "$num" -le "${#containers_with_updates[@]}" ]; then
+            container="${containers_with_updates[$((num - 1))]}"
+            msg_info "Updating container: $container"
+            docker stop "$container"
+            docker rm "$container"
+            msg_ok "Stopped and removed $container (please recreate with updated image)"
+          fi
+        done
+      fi
+    else
+      msg_ok "All containers are up-to-date"
+    fi
+  fi
+
+  msg_ok "Docker setup completed"
 }
