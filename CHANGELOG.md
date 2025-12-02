@@ -26,6 +26,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - CommaFeed: Bump Java and service file [@tremor021](https://github.com/tremor021) ([#9564](https://github.com/community-scripts/ProxmoxVE/pull/9564))
     - Refactor: Docmost [@tremor021](https://github.com/tremor021) ([#9563](https://github.com/community-scripts/ProxmoxVE/pull/9563))
     - Cloudflared: Add repo via helper function [@tremor021](https://github.com/tremor021) ([#9565](https://github.com/community-scripts/ProxmoxVE/pull/9565))
 
