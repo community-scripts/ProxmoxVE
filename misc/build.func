@@ -1,7 +1,9 @@
+
 #!/usr/bin/env bash
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: tteck (tteckster) | MickLesk | michelroegl-brunner
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/branch/main/LICENSE
+			 
 
 # ==============================================================================
 # BUILD.FUNC - LXC CONTAINER BUILD & CONFIGURATION
@@ -80,8 +82,110 @@ variables() {
   fi
 }
 
+																			   
+									
+										 
+													   
+												  
+																			   
 
+											  
+					  
+
+																								 
+								 
+						  
+
+															   
+												 
+										 
+		  
+   
+
+																		
+													
+
+																	  
+									   
+									  
+
+				  
+														   
+					
+			
+									 
+
+							
+						 
+																									
+											
+
+											  
+												 
+											
+				  
+		   
+									  
+		 
+
+								  
+										   
+								   
+			 
+		  
+			
+															   
+									  
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func)
+								
+
+														
+
+									   
+									   
+																		  
+			  
+														
+			
+
+							 
+			
+		  
+		
+													
+			 
+		  
+		  
+		
+	  
+									
+																			 
+	  
+	
+
+												  
+								  
+	
+							 
+
+																  
+							  
+									   
+							   
+
+																   
+						
+										
+
+																				
+																 
+ 
+											  
+												 
+										
+																				
+
+																												 
 
 if command -v curl >/dev/null 2>&1; then
   source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
@@ -1342,11 +1446,12 @@ advanced_settings() {
       if result=$(whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
         --title "IPv6 CONFIGURATION" \
         --ok-button "Next" --cancel-button "Back" \
-        --menu "\nSelect IPv6 Address Management:" 16 58 4 \
-        "auto" "SLAAC/AUTO (recommended)" \
-        "dhcp" "DHCPv6" \
-        "static" "Static (manual entry)" \
-        "none" "Disabled" \
+        --menu "\nSelect IPv6 Address Management:" 16 70 5 \
+        "auto" "SLAAC/AUTO (recommended) - Dynamic IPv6 from network" \
+        "dhcp" "DHCPv6 - DHCP-assigned IPv6 address" \
+        "static" "Static - Manual IPv6 address configuration" \
+        "none" "None - No IPv6 assignment (most containers)" \
+        "disable" "Fully Disabled - (breaks some services)" \
         3>&1 1>&2 2>&3); then
 
         _ipv6_method="$result"
@@ -1375,6 +1480,11 @@ advanced_settings() {
           _ipv6_gate=""
           ((STEP++))
           ;;
+				
+					   
+					   
+					
+			
         none)
           _ipv6_addr="none"
           _ipv6_gate=""
