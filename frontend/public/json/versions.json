@@ -1,5 +1,60 @@
 [
   {
+    "name": "docker/compose",
+    "version": "v5.0.0",
+    "date": "2025-12-02T10:33:31Z"
+  },
+  {
+    "name": "prometheus/prometheus",
+    "version": "v3.8.0",
+    "date": "2025-12-02T10:11:05Z"
+  },
+  {
+    "name": "syncthing/syncthing",
+    "version": "v2.0.12",
+    "date": "2025-12-02T08:11:24Z"
+  },
+  {
+    "name": "SigNoz/signoz",
+    "version": "v0.103.1",
+    "date": "2025-12-02T07:52:27Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.13.0",
+    "date": "2025-11-19T14:16:07Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.3",
+    "date": "2025-09-20T12:12:33Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.394",
+    "date": "2025-12-02T05:55:32Z"
+  },
+  {
+    "name": "mealie-recipes/mealie",
+    "version": "v3.6.0",
+    "date": "2025-12-02T05:01:25Z"
+  },
+  {
+    "name": "booklore-app/booklore",
+    "version": "v1.13.1",
+    "date": "2025-12-02T03:59:00Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5",
+    "date": "2025-12-02T00:27:05Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
     "name": "advplyr/audiobookshelf",
     "version": "v2.31.0",
     "date": "2025-12-01T23:49:11Z"
@@ -7,7 +62,7 @@
   {
     "name": "OliveTin/OliveTin",
     "version": "3000.7.0",
-    "date": "2025-12-01T23:18:20Z"
+    "date": "2025-12-01T23:29:47Z"
   },
   {
     "name": "rcourtman/Pulse",
@@ -30,9 +85,9 @@
     "date": "2025-12-01T21:35:19Z"
   },
   {
-    "name": "booklore-app/booklore",
-    "version": "v1.13.0",
-    "date": "2025-12-01T21:04:41Z"
+    "name": "keycloak/keycloak",
+    "version": "26.4.7",
+    "date": "2025-12-01T08:14:11Z"
   },
   {
     "name": "n8n-io/n8n",
@@ -105,21 +160,6 @@
     "date": "2025-12-01T09:04:51Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.4.7",
-    "date": "2025-12-01T08:14:11Z"
-  },
-  {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.3",
-    "date": "2025-09-20T12:12:33Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.387",
-    "date": "2025-12-01T05:55:41Z"
-  },
-  {
     "name": "photoprism/photoprism",
     "version": "251130-b3068414c",
     "date": "2025-12-01T05:07:31Z"
@@ -138,16 +178,6 @@
     "name": "jellyfin/jellyfin",
     "version": "v10.11.4",
     "date": "2025-12-01T02:33:37Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.5",
-    "date": "2025-12-01T00:27:05Z"
   },
   {
     "name": "recyclarr/recyclarr",
@@ -340,11 +370,6 @@
     "date": "2025-11-27T03:47:38Z"
   },
   {
-    "name": "ollama/ollama",
-    "version": "v0.13.0",
-    "date": "2025-11-19T14:16:07Z"
-  },
-  {
     "name": "YunoHost/yunohost",
     "version": "debian/12.1.36",
     "date": "2025-11-27T00:33:48Z"
@@ -405,11 +430,6 @@
     "date": "2025-11-26T07:57:00Z"
   },
   {
-    "name": "SigNoz/signoz",
-    "version": "v0.103.0",
-    "date": "2025-11-26T06:51:12Z"
-  },
-  {
     "name": "HabitRPG/habitica",
     "version": "v5.42.0",
     "date": "2025-11-26T02:01:01Z"
@@ -468,16 +488,6 @@
     "name": "mattermost/mattermost",
     "version": "v10.11.8",
     "date": "2025-11-21T17:06:07Z"
-  },
-  {
-    "name": "syncthing/syncthing",
-    "version": "v2.0.11",
-    "date": "2025-11-04T08:51:05Z"
-  },
-  {
-    "name": "prometheus/prometheus",
-    "version": "v0.308.0-rc.1",
-    "date": "2025-11-24T19:46:25Z"
   },
   {
     "name": "TandoorRecipes/recipes",
@@ -775,11 +785,6 @@
     "date": "2025-11-14T22:50:06Z"
   },
   {
-    "name": "mealie-recipes/mealie",
-    "version": "v3.5.0",
-    "date": "2025-11-14T16:23:33Z"
-  },
-  {
     "name": "zitadel/zitadel",
     "version": "v4.7.0",
     "date": "2025-11-14T09:45:13Z"
@@ -793,11 +798,6 @@
     "name": "PrivateBin/PrivateBin",
     "version": "1.7.9",
     "date": "2025-11-13T10:26:37Z"
-  },
-  {
-    "name": "docker/compose",
-    "version": "v2.40.3",
-    "date": "2025-10-30T09:35:37Z"
   },
   {
     "name": "pymedusa/Medusa",
