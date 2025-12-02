@@ -33,7 +33,7 @@
   },
   "notes": [
     {
-      "text": "Show Login Credentials, type `cat /root/.valkey_pass.txt` in the LXC console",
+      "text": "Show Login Credentials, type `cat ~/valkey.creds` in the LXC console",
       "type": "info"
     }
   ]
