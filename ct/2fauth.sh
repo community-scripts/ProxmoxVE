@@ -40,9 +40,6 @@ function update_script() {
     msg_ok "Backup Created"
 
     if ! dpkg -l | grep -q 'php8.3'; then
-      $STD apt-get install -y \
-        lsb-release \
-        gnupg2
       PHP_VERSION="8.3" PHP_MODULE="common,ctype,fileinfo,mysql,cli,tokenizer,dom,redis,session,openssl" PHP_FPM="YES" setup_php
       sed -i 's/php8.2/php8.3/g' /etc/nginx/conf.d/2fauth.conf
     fi
