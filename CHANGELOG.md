@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-12-02
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Booklore: Downgrad Java from 25 to 21 [@Pr0mises](https://github.com/Pr0mises) ([#9566](https://github.com/community-scripts/ProxmoxVE/pull/9566))
+
 ## 2025-12-01
 
 ### 🆕 New Scripts
