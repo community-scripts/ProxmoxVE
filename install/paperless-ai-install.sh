@@ -31,7 +31,7 @@ EOF
 msg_ok "Installed Python3"
 
 NODE_VERSION="22" setup_nodejs
-fetch_and_deploy_gh_release "/opt/paperless-ai" "clusterzx/paperless-ai"
+fetch_and_deploy_gh_release "paperless-ai" "clusterzx/paperless-ai"
 
 msg_info "Setup Paperless-AI"
 cd /opt/paperless-ai
