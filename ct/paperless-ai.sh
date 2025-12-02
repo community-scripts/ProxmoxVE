@@ -27,58 +27,33 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  if ! dpkg -s python3-pip >/dev/null 2>&1; then
-    $STD apt install -y python3-pip
-  fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/clusterzx/paperless-ai/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]] || [[ ! -f /opt/${APP}_version.txt ]]; then
-    msg_info "Stopping Service"
-    systemctl stop paperless-ai
-    msg_info "Stopped Service"
 
-    msg_info "Updating $APP to v${RELEASE}"
-    cd /opt
-    mv /opt/paperless-ai /opt/paperless-ai_bak
-    curl -fsSL "https://github.com/clusterzx/paperless-ai/archive/refs/tags/v${RELEASE}.zip" -o $(basename "https://github.com/clusterzx/paperless-ai/archive/refs/tags/v${RELEASE}.zip")
-    $STD unzip v${RELEASE}.zip
-    mv paperless-ai-${RELEASE} /opt/paperless-ai
-    mkdir -p /opt/paperless-ai/data
-    cp -a /opt/paperless-ai_bak/data/. /opt/paperless-ai/data/
+  if check_for_gh_release "paperless-ai" "fosrl/pangolin"; then
+    msg_info "Stopping Services"
+    systemctl stop paperless-ai paperless-rag
+    msg_ok "Stopped Services"
+
+    fetch_and_deploy_gh_release "clusterzx/paperless-ai" "/opt/paperless-ai"
+
+    msg_info "Updating Paperless-AI"
     cd /opt/paperless-ai
-    if [[ ! -f /etc/systemd/system/paperless-rag.service ]]; then
-      cat <<EOF >/etc/systemd/system/paperless-rag.service
-[Unit]
-Description=PaperlessAI-RAG Service
-After=network.target
-
-[Service]
-WorkingDirectory=/opt/paperless-ai
-ExecStart=/usr/bin/python3 main.py --host 0.0.0.0 --port 8000 --initialize
-Restart=always
-
-[Install]
-WantedBy=multi-user.target
-EOF
-      echo "RAG_SERVICE_URL=http://localhost:8000" >>/opt/paperless-ai/data/.env
-      echo "RAG_SERVICE_ENABLED=true" >>/opt/paperless-ai/data/.env
-    fi
+    source /opt/paperless-ai/venv/bin/activate
+    $STD pip install --upgrade pip
     $STD pip install --no-cache-dir -r requirements.txt
     mkdir -p data/chromadb
-    $STD npm install
-    rm -rf /opt/v${RELEASE}.zip
-    rm -rf /opt/paperless-ai_bak
-    echo "${RELEASE}" >/opt/${APP}_version.txt
-    msg_ok "Updated $APP to v${RELEASE}"
+    $STD npm ci --only=production
+    msg_ok "Updated Paperless-AI"
 
-    msg_info "Starting Service"
+    msg_info "Starting Services"
+    systemctl start paperless-rag
+    sleep 3
     systemctl start paperless-ai
-    msg_ok "Started Service"
+    msg_ok "Started Services"
     msg_ok "Updated successfully!"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }
+
 start
 build_container
 description
