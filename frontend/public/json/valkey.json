@@ -35,6 +35,6 @@
     {
       "text": "Show Login Credentials, type `cat /root/.valkey_pass.txt` in the LXC console",
       "type": "info"
-    },
+    }
   ]
 }
