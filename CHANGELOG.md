@@ -18,6 +18,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Booklore: Downgrad Java from 25 to 21 [@Pr0mises](https://github.com/Pr0mises) ([#9566](https://github.com/community-scripts/ProxmoxVE/pull/9566))
 
+  - #### ✨ New Features
+
+    - Add auth via requirepass to Valkey [@pshankinclarke](https://github.com/pshankinclarke) ([#9570](https://github.com/community-scripts/ProxmoxVE/pull/9570))
+
   - #### 🔧 Refactor
 
     - Refactor: Docmost [@tremor021](https://github.com/tremor021) ([#9563](https://github.com/community-scripts/ProxmoxVE/pull/9563))
