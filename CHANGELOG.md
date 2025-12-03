@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-12-03
 
+### 🚀 Updated Scripts
+
+  - fix(opnsense-vm): improve script  and add single-interface mode [@AlphaLawless](https://github.com/AlphaLawless) ([#9614](https://github.com/community-scripts/ProxmoxVE/pull/9614))
+
 ## 2025-12-02
 
 ### 🆕 New Scripts
