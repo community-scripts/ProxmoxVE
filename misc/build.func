@@ -903,7 +903,7 @@ maybe_offer_save_app_defaults() {
 
   # 1) if no file → offer to create
   if [[ ! -f "$app_vars_path" ]]; then
-    if whiptail --backtitle "[dev] Proxmox VE Helper Scripts" \
+    if whiptail --backtitle "Proxmox VE Helper Scripts" \
       --yesno "Save these advanced settings as defaults for ${APP}?\n\nThis will create:\n${app_vars_path}" 12 72; then
       mkdir -p "$(dirname "$app_vars_path")"
       install -m 0644 "$new_tmp" "$app_vars_path"
@@ -928,7 +928,7 @@ maybe_offer_save_app_defaults() {
 
   while true; do
     local sel
-    sel="$(whiptail --backtitle "[dev] Proxmox VE Helper Scripts" \
+    sel="$(whiptail --backtitle "Proxmox VE Helper Scripts" \
       --title "APP DEFAULTS – ${APP}" \
       --menu "Differences detected. What do you want to do?" 20 78 10 \
       "Update Defaults" "Write new values to ${app_vars_file}" \
@@ -949,7 +949,7 @@ maybe_offer_save_app_defaults() {
       break
       ;;
     "View Diff")
-      whiptail --backtitle "[dev] Proxmox VE Helper Scripts" \
+      whiptail --backtitle "Proxmox VE Helper Scripts" \
         --title "Diff – ${APP}" \
         --scrolltext --textbox "$diff_tmp" 25 100
       ;;
@@ -1639,7 +1639,7 @@ diagnostics_check() {
   fi
 
   if ! [ -f "/usr/local/community-scripts/diagnostics" ]; then
-    if (whiptail --backtitle "[dev] Proxmox VE Helper Scripts" --title "DIAGNOSTICS" --yesno "Send Diagnostics of LXC Installation?\n\n(This only transmits data without user data, just RAM, CPU, LXC name, ...)" 10 58); then
+    if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "DIAGNOSTICS" --yesno "Send Diagnostics of LXC Installation?\n\n(This only transmits data without user data, just RAM, CPU, LXC name, ...)" 10 58); then
       cat <<EOF >/usr/local/community-scripts/diagnostics
 DIAGNOSTICS=yes
 
@@ -1698,7 +1698,7 @@ EOF
 
 diagnostics_menu() {
   if [ "${DIAGNOSTICS:-no}" = "yes" ]; then
-    if whiptail --backtitle "[dev] Proxmox VE Helper Scripts" \
+    if whiptail --backtitle "Proxmox VE Helper Scripts" \
       --title "DIAGNOSTIC SETTINGS" \
       --yesno "Send Diagnostics?\n\nCurrent: ${DIAGNOSTICS}" 10 58 \
       --yes-button "No" --no-button "Back"; then
@@ -1707,7 +1707,7 @@ diagnostics_menu() {
       whiptail --msgbox "Diagnostics set to ${DIAGNOSTICS}." 8 58
     fi
   else
-    if whiptail --backtitle "[dev] Proxmox VE Helper Scripts" \
+    if whiptail --backtitle "Proxmox VE Helper Scripts" \
       --title "DIAGNOSTIC SETTINGS" \
       --yesno "Send Diagnostics?\n\nCurrent: ${DIAGNOSTICS}" 10 58 \
       --yes-button "Yes" --no-button "Back"; then
@@ -2086,14 +2086,14 @@ configure_ssh_settings() {
 
   local ssh_key_mode
   if [[ "$default_key_count" -gt 0 ]]; then
-    ssh_key_mode=$(whiptail --backtitle "[dev] Proxmox VE Helper Scripts" --title "SSH KEY SOURCE" --menu \
+    ssh_key_mode=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "SSH KEY SOURCE" --menu \
       "Provision SSH keys for root:" 14 72 4 \
       "found" "Select from detected keys (${default_key_count})" \
       "manual" "Paste a single public key" \
       "folder" "Scan another folder (path or glob)" \
       "none" "No keys" 3>&1 1>&2 2>&3) || exit_script
   else
-    ssh_key_mode=$(whiptail --backtitle "[dev] Proxmox VE Helper Scripts" --title "SSH KEY SOURCE" --menu \
+    ssh_key_mode=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "SSH KEY SOURCE" --menu \
       "No host keys detected; choose manual/none:" 12 72 2 \
       "manual" "Paste a single public key" \
       "none" "No keys" 3>&1 1>&2 2>&3) || exit_script
@@ -2102,7 +2102,7 @@ configure_ssh_settings() {
   case "$ssh_key_mode" in
   found)
     local selection
-    selection=$(whiptail --backtitle "[dev] Proxmox VE Helper Scripts" --title "SELECT HOST KEYS" \
+    selection=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "SELECT HOST KEYS" \
       --checklist "Select one or more keys to import:" 20 140 10 "${CHOICES[@]}" 3>&1 1>&2 2>&3) || exit_script
     for tag in $selection; do
       tag="${tag%\"}"
@@ -2113,13 +2113,13 @@ configure_ssh_settings() {
     done
     ;;
   manual)
-    SSH_AUTHORIZED_KEY="$(whiptail --backtitle "[dev] Proxmox VE Helper Scripts" \
+    SSH_AUTHORIZED_KEY="$(whiptail --backtitle "Proxmox VE Helper Scripts" \
       --inputbox "Paste one SSH public key line (ssh-ed25519/ssh-rsa/...)" 10 72 --title "SSH Public Key" 3>&1 1>&2 2>&3)"
     [[ -n "$SSH_AUTHORIZED_KEY" ]] && printf '%s\n' "$SSH_AUTHORIZED_KEY" >>"$SSH_KEYS_FILE"
     ;;
   folder)
     local glob_path
-    glob_path=$(whiptail --backtitle "[dev] Proxmox VE Helper Scripts" \
+    glob_path=$(whiptail --backtitle "Proxmox VE Helper Scripts" \
       --inputbox "Enter a folder or glob to scan (e.g. /root/.ssh/*.pub)" 10 72 --title "Scan Folder/Glob" 3>&1 1>&2 2>&3)
     if [[ -n "$glob_path" ]]; then
       shopt -s nullglob
@@ -2129,7 +2129,7 @@ configure_ssh_settings() {
         ssh_build_choices_from_files "${_scan_files[@]}"
         if [[ "$COUNT" -gt 0 ]]; then
           local folder_selection
-          folder_selection=$(whiptail --backtitle "[dev] Proxmox VE Helper Scripts" --title "SELECT FOLDER KEYS" \
+          folder_selection=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "SELECT FOLDER KEYS" \
             --checklist "Select key(s) to import:" 20 78 10 "${CHOICES[@]}" 3>&1 1>&2 2>&3) || exit_script
           for tag in $folder_selection; do
             tag="${tag%\"}"
@@ -2139,10 +2139,10 @@ configure_ssh_settings() {
             [[ -n "$line" ]] && printf '%s\n' "$line" >>"$SSH_KEYS_FILE"
           done
         else
-          whiptail --backtitle "[dev] Proxmox VE Helper Scripts" --msgbox "No keys found in: $glob_path" 8 60
+          whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox "No keys found in: $glob_path" 8 60
         fi
       else
-        whiptail --backtitle "[dev] Proxmox VE Helper Scripts" --msgbox "Path/glob returned no files." 8 60
+        whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox "Path/glob returned no files." 8 60
       fi
     fi
     ;;
@@ -2157,7 +2157,7 @@ configure_ssh_settings() {
   fi
 
   if [[ -s "$SSH_KEYS_FILE" || "$PW" == -password* ]]; then
-    if (whiptail --backtitle "[dev] Proxmox VE Helper Scripts" --defaultno --title "SSH ACCESS" --yesno "Enable root SSH access?" 10 58); then
+    if (whiptail --backtitle "Proxmox VE Helper Scripts" --defaultno --title "SSH ACCESS" --yesno "Enable root SSH access?" 10 58); then
       SSH="yes"
     else
       SSH="no"
@@ -2185,7 +2185,7 @@ start() {
     set_std_mode
     update_script
   else
-    CHOICE=$(whiptail --backtitle "[dev] Proxmox VE Helper Scripts" --title "${APP} LXC Update/Setting" --menu \
+    CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "${APP} LXC Update/Setting" --menu \
       "Support/Update functions for ${APP} LXC. Choose an option:" \
       12 60 3 \
       "1" "YES (Silent Mode)" \
@@ -3029,7 +3029,7 @@ select_storage() {
   local WIDTH=$((COL_WIDTH + 42))
   while true; do
     local DISPLAY_SELECTED
-    DISPLAY_SELECTED=$(whiptail --backtitle "[dev] Proxmox VE Helper Scripts" \
+    DISPLAY_SELECTED=$(whiptail --backtitle "Proxmox VE Helper Scripts" \
       --title "Storage Pools" \
       --radiolist "Which storage pool for ${CONTENT_LABEL,,}?\n(Spacebar to select)" \
       16 "$WIDTH" 6 "${MENU[@]}" 3>&1 1>&2 2>&3) || { exit_script; }
@@ -3229,7 +3229,7 @@ create_lxc_container() {
     msg_info "Checking cluster quorum"
     if ! pvecm status | awk -F':' '/^Quorate/ { exit ($2 ~ /Yes/) ? 0 : 1 }'; then
       msg_error "Cluster is not quorate. Start all nodes or configure quorum device (QDevice)."
-      exit 210
+      exit 201
     fi
     msg_ok "Cluster is quorate"
   fi
@@ -3549,7 +3549,7 @@ create_lxc_container() {
   }
   flock -w 60 9 || {
     msg_error "Timeout while waiting for template lock."
-    exit 211
+    exit 202
   }
 
   LOGFILE="/tmp/pct_create_${CTID}_$(date +%Y%m%d_%H%M%S)_${SESSION_ID}.log"
@@ -3599,11 +3599,11 @@ create_lxc_container() {
             2)
               echo "Upgrade was declined. Please update and re-run:
                 apt update && apt install --only-upgrade pve-container lxc-pve"
-              exit 231
+              exit 213
               ;;
             3)
               echo "Upgrade and/or retry failed. Please inspect: $LOGFILE"
-              exit 231
+              exit 213
               ;;
             esac
           else
@@ -3631,11 +3631,11 @@ create_lxc_container() {
           2)
             echo "Upgrade was declined. Please update and re-run:
               apt update && apt install --only-upgrade pve-container lxc-pve"
-            exit 231
+            exit 213
             ;;
           3)
             echo "Upgrade and/or retry failed. Please inspect: $LOGFILE"
-            exit 231
+            exit 213
             ;;
           esac
         else
