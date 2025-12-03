@@ -33,6 +33,13 @@ echo "maxmemory ${MAXMEMORY_MB}mb" >> /etc/valkey/valkey.conf
 echo "maxmemory-policy allkeys-lru" >> /etc/valkey/valkey.conf
 echo "maxmemory-samples 10" >> /etc/valkey/valkey.conf
 
+echo "" >> /etc/valkey/valkey.conf
+echo "# AOF/RDB persistence for CT backups" >> /etc/valkey/valkey.conf
+sed -i 's/^appendonly no/appendonly yes/' /etc/valkey/valkey.conf
+echo "save 900 1" >> /etc/valkey/valkey.conf
+echo "save 300 10" >> /etc/valkey/valkey.conf
+echo "save 60 10000" >> /etc/valkey/valkey.conf
+
 systemctl enable -q --now valkey-server
 systemctl restart valkey-server
 msg_ok "Installed Valkey"
