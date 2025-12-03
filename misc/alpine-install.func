@@ -15,7 +15,7 @@ catch_errors
 verb_ip6() {
   set_std_mode # Set STD mode based on VERBOSE
 
-  if [ "$IPV6_METHOD" == "disable" ]; then
+  if [ "${IPV6_METHOD:-}" = "disable" ]; then
     msg_info "Disabling IPv6 (this may affect some services)"
     $STD sysctl -w net.ipv6.conf.all.disable_ipv6=1
     $STD sysctl -w net.ipv6.conf.default.disable_ipv6=1
@@ -42,7 +42,6 @@ error_handler() {
   local line_number="$2"
   local command="$3"
 
-  # Exitcode 0 = kein Fehler → ignorieren
   if [[ "$exit_code" -eq 0 ]]; then
     return 0
   fi

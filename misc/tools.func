@@ -3238,7 +3238,6 @@ function setup_mongodb() {
     return 1
   }
 
-  # Verify MongoDB was installed correctly
   if ! command -v mongod >/dev/null 2>&1; then
     msg_error "MongoDB binary not found after installation"
     return 1
@@ -3481,14 +3480,11 @@ function setup_nodejs() {
       return 1
     }
 
-    # CRITICAL: Force APT cache refresh AFTER repository setup
-    # This ensures NodeSource is the only nodejs source in APT cache
+    # Force APT cache refresh after repository setup
     $STD apt update
 
-    # Install dependencies (NodeSource is now the only nodejs source)
     ensure_dependencies curl ca-certificates gnupg
 
-    # Install Node.js from NodeSource
     install_packages_with_retry "nodejs" || {
       msg_error "Failed to install Node.js ${NODE_VERSION} from NodeSource"
       return 1
@@ -3639,7 +3635,7 @@ function setup_php() {
   local CURRENT_PHP=""
   CURRENT_PHP=$(is_tool_installed "php" 2>/dev/null) || true
 
-  # CRITICAL: If wrong version is installed, remove it FIRST before any pinning
+  # Remove conflicting PHP version before pinning
   if [[ -n "$CURRENT_PHP" && "$CURRENT_PHP" != "$PHP_VERSION" ]]; then
     msg_info "Removing conflicting PHP ${CURRENT_PHP} (need ${PHP_VERSION})"
     stop_all_services "php.*-fpm"
@@ -3786,7 +3782,6 @@ EOF
 
   local INSTALLED_VERSION=$(php -v 2>/dev/null | awk '/^PHP/{print $2}' | cut -d. -f1,2)
 
-  # Critical: if major.minor doesn't match, fail and cleanup
   if [[ "$INSTALLED_VERSION" != "$PHP_VERSION" ]]; then
     msg_error "PHP version mismatch: requested ${PHP_VERSION} but got ${INSTALLED_VERSION}"
     msg_error "This indicates a critical package installation issue"

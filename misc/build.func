@@ -92,7 +92,6 @@ elif command -v wget >/dev/null 2>&1; then
   source <(wget -qO- https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
   load_functions
   catch_errors
-  #echo "(build.func) Loaded core.func via wget"
 fi
 
 # ==============================================================================
@@ -2279,7 +2278,7 @@ build_container() {
   none) ;;
   esac
 
-  # Build FEATURES string (simple working version)
+  # Build FEATURES string
   if [ "$CT_TYPE" == "1" ]; then
     FEATURES="keyctl=1,nesting=1"
   else
@@ -2290,9 +2289,7 @@ build_container() {
     FEATURES="$FEATURES,fuse=1"
   fi
 
-  # NEW IMPLEMENTATION (Fixed): Build PCT_OPTIONS properly
-  # Key insight: Bash cannot export arrays, so we build the options as a string
-
+  # Build PCT_OPTIONS as string for export
   TEMP_DIR=$(mktemp -d)
   pushd "$TEMP_DIR" >/dev/null
   if [ "$var_os" == "alpine" ]; then
@@ -2381,11 +2378,6 @@ build_container() {
   export PCT_OPTIONS="$PCT_OPTIONS_STRING"
   export TEMPLATE_STORAGE="${var_template_storage:-}"
   export CONTAINER_STORAGE="${var_container_storage:-}"
-
-  # # DEBUG: Show final PCT_OPTIONS being exported
-  # echo "[DEBUG] PCT_OPTIONS to be exported:"
-  # echo "$PCT_OPTIONS" | sed 's/^/  /'
-  # echo "[DEBUG] Calling create_lxc_container..."
 
   create_lxc_container || exit $?
 
@@ -2713,12 +2705,7 @@ EOF'
   install_ssh_keys_into_ct
 
   # Run application installer
-  # NOTE: We disable error handling here because:
-  # 1. Container errors are caught by error_handler INSIDE container
-  # 2. Container creates flag file with exit code
-  # 3. We read flag file and handle cleanup manually below
-  # 4. We DON'T want host error_handler to fire for lxc-attach command itself
-
+  # Disable error trap - container errors are handled internally via flag file
   set +Eeuo pipefail # Disable ALL error handling temporarily
   trap - ERR         # Remove ERR trap completely
 
@@ -2864,7 +2851,6 @@ destroy_lxc() {
 # ------------------------------------------------------------------------------
 # Storage discovery / selection helpers
 # ------------------------------------------------------------------------------
-# ===== Storage discovery / selection helpers (ported from create_lxc.sh) =====
 resolve_storage_preselect() {
   local class="$1" preselect="$2" required_content=""
   case "$class" in
@@ -3249,10 +3235,6 @@ create_lxc_container() {
   # Build regex patterns outside awk/grep for clarity
   SEARCH_PATTERN="^${TEMPLATE_SEARCH}"
 
-  #echo "[DEBUG] TEMPLATE_SEARCH='$TEMPLATE_SEARCH'"
-  #echo "[DEBUG] SEARCH_PATTERN='$SEARCH_PATTERN'"
-  #echo "[DEBUG] TEMPLATE_PATTERN='$TEMPLATE_PATTERN'"
-
   mapfile -t LOCAL_TEMPLATES < <(
     pveam list "$TEMPLATE_STORAGE" 2>/dev/null |
       awk -v search="${SEARCH_PATTERN}" -v pattern="${TEMPLATE_PATTERN}" '$1 ~ search && $1 ~ pattern {print $1}' |
@@ -3263,29 +3245,12 @@ create_lxc_container() {
 
   msg_ok "Template search completed"
 
-  #echo "[DEBUG] pveam available output (first 5 lines with .tar files):"
-  #pveam available -section system 2>/dev/null | grep -E '\.(tar\.zst|tar\.xz|tar\.gz)$' | head -5 | sed 's/^/  /'
-
   set +u
   mapfile -t ONLINE_TEMPLATES < <(pveam available -section system 2>/dev/null | grep -E '\.(tar\.zst|tar\.xz|tar\.gz)$' | awk '{print $2}' | grep -E "${SEARCH_PATTERN}.*${TEMPLATE_PATTERN}" | sort -t - -k 2 -V 2>/dev/null || true)
-  #echo "[DEBUG] After filtering: ${#ONLINE_TEMPLATES[@]} online templates found"
   set -u
 
   ONLINE_TEMPLATE=""
   [[ ${#ONLINE_TEMPLATES[@]} -gt 0 ]] && ONLINE_TEMPLATE="${ONLINE_TEMPLATES[-1]}"
-
-  #msg_debug "SEARCH_PATTERN='${SEARCH_PATTERN}' TEMPLATE_PATTERN='${TEMPLATE_PATTERN}'"
-  #msg_debug "Found ${#LOCAL_TEMPLATES[@]} local templates, ${#ONLINE_TEMPLATES[@]} online templates"
-  if [[ ${#ONLINE_TEMPLATES[@]} -gt 0 ]]; then
-    #msg_debug "First 3 online templates:"
-    count=0
-    for idx in "${!ONLINE_TEMPLATES[@]}"; do
-      #msg_debug "  [$idx]: ${ONLINE_TEMPLATES[$idx]}"
-      ((count++))
-      [[ $count -ge 3 ]] && break
-    done
-  fi
-  #msg_debug "ONLINE_TEMPLATE='$ONLINE_TEMPLATE'"
 
   if [[ ${#LOCAL_TEMPLATES[@]} -gt 0 ]]; then
     TEMPLATE="${LOCAL_TEMPLATES[-1]}"
@@ -3337,7 +3302,6 @@ create_lxc_container() {
         if [[ ${#ONLINE_TEMPLATES[@]} -gt 0 ]]; then
           TEMPLATE="${ONLINE_TEMPLATES[-1]}"
           TEMPLATE_SOURCE="online"
-          #echo "[DEBUG] Found alternative: $TEMPLATE"
         else
           msg_error "No templates available for ${PCT_OSTYPE} ${PCT_OSVERSION}"
           exit 225
@@ -3351,9 +3315,6 @@ create_lxc_container() {
       exit 225
     fi
   fi
-
-  #echo "[DEBUG] Selected TEMPLATE='$TEMPLATE' SOURCE='$TEMPLATE_SOURCE'"
-  #msg_debug "Selected TEMPLATE='$TEMPLATE' SOURCE='$TEMPLATE_SOURCE'"
 
   TEMPLATE_PATH="$(pvesm path $TEMPLATE_STORAGE:vztmpl/$TEMPLATE 2>/dev/null || true)"
   if [[ -z "$TEMPLATE_PATH" ]]; then

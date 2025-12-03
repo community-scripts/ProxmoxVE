@@ -51,7 +51,7 @@ catch_errors
 verb_ip6() {
   set_std_mode # Set STD mode based on VERBOSE
 
-  if [ "$IPV6_METHOD" == "disable" ]; then
+  if [ "${IPV6_METHOD:-}" = "disable" ]; then
     msg_info "Disabling IPv6 (this may affect some services)"
     mkdir -p /etc/sysctl.d
     $STD tee /etc/sysctl.d/99-disable-ipv6.conf >/dev/null <<EOF
