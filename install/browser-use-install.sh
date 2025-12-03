@@ -120,7 +120,7 @@ ln -s $DATA_DIR /home/$BROWSERUSE_USER/.config/browseruse
 
 
 # Install base apt dependencies (adding backports to access more recent apt updates)
-echo "[+] Installing APT base system dependencies for $TARGETPLATFORM..."
+echo "[+] Installing APT base system dependencies..."
 #     && echo 'deb https://deb.debian.org/debian bookworm-backports main contrib non-free' > /etc/apt/sources.list.d/backports.list \
 mkdir -p /etc/apt/keyrings
 apt-get update -qq
