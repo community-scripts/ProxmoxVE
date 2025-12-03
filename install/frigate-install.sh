@@ -123,6 +123,7 @@ msg_ok "Installed Pip"
 
 msg_info "Installing Frigate Dependencies"
 $STD update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1
+$STD sed -i '/^nvidia-pyindex/s/^/#/' /opt/frigate/docker/main/requirements.txt
 $STD pip3 install -r /opt/frigate/docker/main/requirements.txt
 msg_ok "Installed Frigate Dependencies"
 
