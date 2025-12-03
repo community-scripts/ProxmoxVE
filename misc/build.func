@@ -2002,9 +2002,9 @@ ssh_extract_keys_from_file() {
   tr -d '\r' <"$f" | awk '
     /^[[:space:]]*#/ {next}
     /^[[:space:]]*$/ {next}
-    # nackt: typ base64 [comment]
+    # bare format: type base64 [comment]
     /^(ssh-(rsa|ed25519)|ecdsa-sha2-nistp256|sk-(ssh-ed25519|ecdsa-sha2-nistp256))[[:space:]]+/ {print; next}
-    # mit Optionen: finde ab erstem Key-Typ
+    # with options: find from first key-type onward
     {
       match($0, /(ssh-(rsa|ed25519)|ecdsa-sha2-nistp256|sk-(ssh-ed25519|ecdsa-sha2-nistp256))[[:space:]]+/)
       if (RSTART>0) { print substr($0, RSTART) }
@@ -3520,7 +3520,7 @@ create_lxc_container() {
   if [[ "$PCT_OSTYPE" == "debian" ]]; then
     OSVER="$(parse_template_osver "$TEMPLATE")"
     if [[ -n "$OSVER" ]]; then
-      # Proactive, aber ohne Abbruch – nur Angebot
+      # Proactive, but without abort – only offer
       offer_lxc_stack_upgrade_and_maybe_retry "no" || true
     fi
   fi
