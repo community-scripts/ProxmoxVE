@@ -73,22 +73,18 @@ stop_all_services() {
 
   for pattern in "${service_patterns[@]}"; do
     # Find all matching services
-				  
+
     systemctl list-units --type=service --all 2>/dev/null |
       grep -oE "${pattern}[^ ]*\.service" |
       sort -u |
-
-										   
-								 
       while read -r service; do
-									   
+
         $STD systemctl stop "$service" 2>/dev/null || true
         $STD systemctl disable "$service" 2>/dev/null || true
       done
-	  
+
   done
 
-		  
 }
 
 # ------------------------------------------------------------------------------
@@ -3870,74 +3866,14 @@ function setup_postgresql() {
   local SUITE
   case "$DISTRO_CODENAME" in
   trixie | forky | sid)
-																						 
+
     if verify_repo_available "https://apt.postgresql.org/pub/repos/apt" "trixie-pgdg"; then
       SUITE="trixie-pgdg"
 
-						 
-				
-															  
-													
-				  
-			  
-
-								
-																						  
-				
-		
     else
       SUITE="bookworm-pgdg"
     fi
 
-																		
-																											  
-																  
-
-												
-																	
-														
-		
-
-																			 
-																
-				
-		
-
-												
-																   
-				
-		
-
-																	
-											 
-																
-																															
-																										
-		 
-		
-
-																
-
-									
-																				 
-
-									   
-																		   
-																																					 
-		
-
-															   
-														   
-
-											 
-									 
-												 
-										 
-																							 
-			
-		
-			  
-	  
     ;;
   *)
     SUITE=$(get_fallback_suite "$DISTRO_ID" "$DISTRO_CODENAME" "https://apt.postgresql.org/pub/repos/apt")

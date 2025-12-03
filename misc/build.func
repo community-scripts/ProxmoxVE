@@ -1,9 +1,7 @@
-
 #!/usr/bin/env bash
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: tteck (tteckster) | MickLesk | michelroegl-brunner
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/branch/main/LICENSE
-			 
 
 # ==============================================================================
 # BUILD.FUNC - LXC CONTAINER BUILD & CONFIGURATION
@@ -82,110 +80,7 @@ variables() {
   fi
 }
 
-																			   
-									
-										 
-													   
-												  
-																			   
-
-											  
-					  
-
-																								 
-								 
-						  
-
-															   
-												 
-										 
-		  
-   
-
-																		
-													
-
-																	  
-									   
-									  
-
-				  
-														   
-					
-			
-									 
-
-							
-						 
-																									
-											
-
-											  
-												 
-											
-				  
-		   
-									  
-		 
-
-								  
-										   
-								   
-			 
-		  
-			
-															   
-									  
 source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func)
-								
-
-														
-
-									   
-									   
-																		  
-			  
-														
-			
-
-							 
-			
-		  
-		
-													
-			 
-		  
-		  
-		
-	  
-									
-																			 
-	  
-	
-
-												  
-								  
-	
-							 
-
-																  
-							  
-									   
-							   
-
-																   
-						
-										
-
-																				
-																 
- 
-											  
-												 
-										
-																				
-
-																												 
 
 if command -v curl >/dev/null 2>&1; then
   source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
@@ -1480,11 +1375,7 @@ advanced_settings() {
           _ipv6_gate=""
           ((STEP++))
           ;;
-				
-					   
-					   
-					
-			
+
         none)
           _ipv6_addr="none"
           _ipv6_gate=""
