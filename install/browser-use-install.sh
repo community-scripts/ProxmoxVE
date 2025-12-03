@@ -157,6 +157,8 @@ chown -R "$BROWSERUSE_USER:$BROWSERUSE_USER" "/home/${BROWSERUSE_USER}/.config"
 
 # Copy the rest of the browser-use codebase
 #COPY . /app
+uv venv --python 3.12
+#source .venv/bin/activate
 uv pip install browser-use
 uvx browser-use install
 
