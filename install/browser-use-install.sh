@@ -152,8 +152,8 @@ chown -R "$BROWSERUSE_USER:$BROWSERUSE_USER" "/home/${BROWSERUSE_USER}/.config"
     # && echo -e '\n\n' \
 # ) | tee -a /VERSION.txt
 
-
-uv sync --all-extras --no-dev --no-install-project
+##### NOT WORKING, might need to git clone the repo...
+#uv sync --all-extras --no-dev --no-install-project
 
 # Copy the rest of the browser-use codebase
 #COPY . /app
