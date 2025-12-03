@@ -23,6 +23,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🌐 Website
 
+  - Bump next from 15.5.2 to 15.5.7 in /frontend in the npm_and_yarn group across 1 directory [@dependabot[bot]](https://github.com/dependabot[bot]) ([#9632](https://github.com/community-scripts/ProxmoxVE/pull/9632))
+
   - #### 📝 Script Information
 
     - Update logo URL in swizzin.json [@MickLesk](https://github.com/MickLesk) ([#9627](https://github.com/community-scripts/ProxmoxVE/pull/9627))
