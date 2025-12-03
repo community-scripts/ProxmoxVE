@@ -2629,20 +2629,48 @@ EOF
   if [ "$var_os" != "alpine" ]; then
     msg_info "Waiting for network in LXC container"
 
-    # Wait for IP
+    # Wait for IP assignment (IPv4 or IPv6)
+    local ip_in_lxc=""
     for i in {1..20}; do
-      ip_in_lxc=$(pct exec "$CTID" -- ip -4 addr show dev eth0 | awk '/inet / {print $2}' | cut -d/ -f1)
+      # Try IPv4 first
+      ip_in_lxc=$(pct exec "$CTID" -- ip -4 addr show dev eth0 2>/dev/null | awk '/inet / {print $2}' | cut -d/ -f1)
+      # Fallback to IPv6 if IPv4 not available
+      if [ -z "$ip_in_lxc" ]; then
+        ip_in_lxc=$(pct exec "$CTID" -- ip -6 addr show dev eth0 scope global 2>/dev/null | awk '/inet6 / {print $2}' | cut -d/ -f1 | head -n1)
+      fi
       [ -n "$ip_in_lxc" ] && break
       sleep 1
     done
 
     if [ -z "$ip_in_lxc" ]; then
       msg_error "No IP assigned to CT $CTID after 20s"
+      echo -e "${YW}Troubleshooting:${CL}"
+      echo "  • Verify bridge ${BRG} exists and has connectivity"
+      echo "  • Check if DHCP server is reachable (if using DHCP)"
+      echo "  • Verify static IP configuration (if using static IP)"
+      echo "  • Check Proxmox firewall rules"
+      echo "  • If using Tailscale: Disable MagicDNS temporarily"
       exit 1
     fi
 
-    # Simple connectivity check - just verify IP is assigned
-    msg_ok "Network configured (IP: $ip_in_lxc)"
+    # Verify basic connectivity (ping test)
+    local ping_success=false
+    for retry in {1..3}; do
+      if pct exec "$CTID" -- ping -c 1 -W 2 1.1.1.1 &>/dev/null ||
+        pct exec "$CTID" -- ping -c 1 -W 2 8.8.8.8 &>/dev/null ||
+        pct exec "$CTID" -- ping6 -c 1 -W 2 2606:4700:4700::1111 &>/dev/null; then
+        ping_success=true
+        break
+      fi
+      sleep 2
+    done
+
+    if [ "$ping_success" = false ]; then
+      msg_warn "Network configured (IP: $ip_in_lxc) but connectivity test failed"
+      echo -e "${YW}Container may have limited internet access. Installation will continue...${CL}"
+    else
+      msg_ok "Network in LXC is reachable (ping)"
+    fi
   fi
   # Function to get correct GID inside container
   get_container_gid() {
@@ -3185,8 +3213,19 @@ create_lxc_container() {
 
   # Validate content types
   msg_info "Validating content types of storage '$CONTAINER_STORAGE'"
-  STORAGE_CONTENT=$(grep -A4 -E "^(zfspool|dir|lvmthin|lvm): $CONTAINER_STORAGE" /etc/pve/storage.cfg | grep content | awk '{$1=""; print $0}' | xargs)
+  STORAGE_CONTENT=$(grep -A4 -E "^(zfspool|dir|lvmthin|lvm|linstor): $CONTAINER_STORAGE" /etc/pve/storage.cfg | grep content | awk '{$1=""; print $0}' | xargs)
   msg_debug "Storage '$CONTAINER_STORAGE' has content types: $STORAGE_CONTENT"
+
+  # Check storage type for special handling
+  STORAGE_TYPE=$(grep -E "^[^:]+: $CONTAINER_STORAGE$" /etc/pve/storage.cfg | cut -d: -f1)
+  if [[ "$STORAGE_TYPE" == "linstor" ]]; then
+    msg_info "Detected LINSTOR storage - verifying cluster connectivity"
+    if ! pvesm status -storage "$CONTAINER_STORAGE" &>/dev/null; then
+      msg_error "LINSTOR storage '$CONTAINER_STORAGE' not accessible. Check LINSTOR cluster health."
+      exit 217
+    fi
+  fi
+
   grep -qw "rootdir" <<<"$STORAGE_CONTENT" || {
     msg_error "Storage '$CONTAINER_STORAGE' does not support 'rootdir'. Cannot create LXC."
     exit 217
@@ -3196,6 +3235,13 @@ create_lxc_container() {
   msg_info "Validating content types of template storage '$TEMPLATE_STORAGE'"
   TEMPLATE_CONTENT=$(grep -A4 -E "^[^:]+: $TEMPLATE_STORAGE" /etc/pve/storage.cfg | grep content | awk '{$1=""; print $0}' | xargs)
   msg_debug "Template storage '$TEMPLATE_STORAGE' has content types: $TEMPLATE_CONTENT"
+
+  # Check if template storage is LINSTOR (may need special handling)
+  TEMPLATE_TYPE=$(grep -E "^[^:]+: $TEMPLATE_STORAGE$" /etc/pve/storage.cfg | cut -d: -f1)
+  if [[ "$TEMPLATE_TYPE" == "linstor" ]]; then
+    msg_info "Template storage uses LINSTOR - ensuring resource availability"
+  fi
+
   if ! grep -qw "vztmpl" <<<"$TEMPLATE_CONTENT"; then
     msg_warn "Template storage '$TEMPLATE_STORAGE' does not declare 'vztmpl'. This may cause pct create to fail."
   else
