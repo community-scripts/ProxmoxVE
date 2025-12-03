@@ -21,6 +21,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Fix Homebridge update detection for Debian 13 DEB822 format [@Copilot](https://github.com/Copilot) ([#9629](https://github.com/community-scripts/ProxmoxVE/pull/9629))
     - go2rtc: Add WorkingDirectory to go2rtc service configuration [@tremor021](https://github.com/tremor021) ([#9618](https://github.com/community-scripts/ProxmoxVE/pull/9618))
 
+  - #### 🔧 Refactor
+
+    - explicit node versions [@CrazyWolf13](https://github.com/CrazyWolf13) ([#9594](https://github.com/community-scripts/ProxmoxVE/pull/9594))
+
 ### 🌐 Website
 
   - Bump next from 15.5.2 to 15.5.7 in /frontend in the npm_and_yarn group across 1 directory [@dependabot[bot]](https://github.com/dependabot[bot]) ([#9632](https://github.com/community-scripts/ProxmoxVE/pull/9632))
