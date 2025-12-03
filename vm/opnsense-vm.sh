@@ -9,12 +9,12 @@ source /dev/stdin <<<$(curl -fsSL https://raw.githubusercontent.com/community-sc
 function header_info {
   clear
   cat <<"EOF"
-   ____  ____  _   __                        
-  / __ \/ __ \/ | / /_______  ____  ________ 
+   ____  ____  _   __
+  / __ \/ __ \/ | / /_______  ____  ________
  / / / / /_/ /  |/ / ___/ _ \/ __ \/ ___/ _ \
 / /_/ / ____/ /|  (__  )  __/ / / (__  )  __/
-\____/_/   /_/ |_/____/\___/_/ /_/____/\___/ 
-                                                                         
+\____/_/   /_/ |_/____/\___/_/ /_/____/\___/
+
 EOF
 }
 header_info
@@ -137,7 +137,7 @@ function send_line_to_vm() {
     "U") character="shift-u" ;;
     "V") character="shift-v" ;;
     "W") character="shift-w" ;;
-    "X") character="shift=x" ;;
+    "X") character="shift-x" ;;
     "Y") character="shift-y" ;;
     "Z") character="shift-z" ;;
     "!") character="shift-1" ;;
@@ -155,9 +155,6 @@ function send_line_to_vm() {
   done
   qm sendkey $VMID ret
 }
-
-TEMP_DIR=$(mktemp -d)
-pushd $TEMP_DIR >/dev/null
 
 if (whiptail --backtitle "Proxmox VE Helper Scripts" --title "OPNsense VM" --yesno "This will create a New OPNsense VM. Proceed?" 10 58); then
   :
@@ -278,12 +275,27 @@ function default_settings() {
   fi
   echo -e "${DGN}Using LAN VLAN: ${BGN}Default${CL}"
   echo -e "${DGN}Using LAN MAC Address: ${BGN}${MAC}${CL}"
-  echo -e "${DGN}Using WAN MAC Address: ${BGN}${WAN_MAC}${CL}"
-  if ! grep -q "^iface ${WAN_BRG}" /etc/network/interfaces; then
-    msg_error "Bridge '${WAN_BRG}' does not exist in /etc/network/interfaces"
-    exit
+
+  if NETWORK_MODE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "NETWORK CONFIGURATION" --radiolist --cancel-button Exit-Script \
+    "Choose network setup mode for OPNsense:\n" 14 70 2 \
+    "dual" "Dual Interface (Traditional Firewall/Router)" ON \
+    "single" "Single Interface (Proxy/VPN/IDS Server)" OFF \
+    3>&1 1>&2 2>&3); then
+    if [ "$NETWORK_MODE" = "dual" ]; then
+      echo -e "${DGN}Network Mode: ${BGN}Dual Interface (Firewall)${CL}"
+      echo -e "${DGN}Using WAN MAC Address: ${BGN}${WAN_MAC}${CL}"
+      if ! grep -q "^iface ${WAN_BRG}" /etc/network/interfaces; then
+        msg_error "Bridge '${WAN_BRG}' does not exist in /etc/network/interfaces"
+        exit
+      else
+        echo -e "${DGN}Using WAN Bridge: ${BGN}${WAN_BRG}${CL}"
+      fi
+    else
+      echo -e "${DGN}Network Mode: ${BGN}Single Interface (Proxy/VPN/IDS)${CL}"
+      WAN_BRG=""
+    fi
   else
-    echo -e "${DGN}Using WAN Bridge: ${BGN}${WAN_BRG}${CL}"
+    exit-script
   fi
   echo -e "${DGN}Using Interface MTU Size: ${BGN}Default${CL}"
   echo -e "${DGN}Start VM when completed: ${BGN}yes${CL}"
@@ -359,7 +371,7 @@ function advanced_settings() {
   fi
 
   if VM_NAME=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set Hostname" 8 58 OPNsense --title "HOSTNAME" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
-    if [ -z $VM_NAME ]; then
+    if [ -z "$VM_NAME" ]; then
       HN="OPNsense"
     else
       HN=$(echo ${VM_NAME,,} | tr -d ' ')
@@ -370,7 +382,7 @@ function advanced_settings() {
   fi
 
   if CORE_COUNT=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Allocate CPU Cores" 8 58 4 --title "CORE COUNT" --cancel-button Exit-Script 3>&1 1>&2 2>&3); then
-    if [ -z $CORE_COUNT ]; then
+    if [ -z "$CORE_COUNT" ]; then
       CORE_COUNT="2"
     fi
     echo -e "${DGN}Allocated Cores: ${BGN}$CORE_COUNT${CL}"
@@ -566,12 +578,11 @@ fi
 msg_ok "Using ${CL}${BL}$STORAGE${CL} ${GN}for Storage Location."
 msg_ok "Virtual Machine ID is ${CL}${BL}$VMID${CL}."
 msg_info "Retrieving the URL for the OPNsense Qcow2 Disk Image"
-URL=https://download.freebsd.org/releases/VM-IMAGES/14.2-RELEASE/amd64/Latest/FreeBSD-14.2-RELEASE-amd64.qcow2.xz
-sleep 2
-msg_ok "${CL}${BL}${URL}${CL}"
+URL="https://download.freebsd.org/releases/VM-IMAGES/14.2-RELEASE/amd64/Latest/FreeBSD-14.2-RELEASE-amd64.qcow2.xz"
+msg_ok "Download URL: ${CL}${BL}${URL}${CL}"
 curl -f#SL -o "$(basename "$URL")" "$URL"
 echo -en "\e[1A\e[0K"
-FILE=Fressbsd.qcow2
+FILE=FreeBSD.qcow2
 unxz -cv $(basename $URL) >${FILE}
 msg_ok "Downloaded ${CL}${BL}${FILE}${CL}"
 
@@ -623,7 +634,7 @@ DESCRIPTION=$(
       <img src='https://img.shields.io/badge/&#x2615;-Buy us a coffee-blue' alt='spend Coffee' />
     </a>
   </p>
-  
+
   <span style='margin: 0 10px;'>
     <i class="fa fa-github fa-fw" style="color: #f5f5f5;"></i>
     <a href='https://github.com/community-scripts/ProxmoxVE' target='_blank' rel='noopener noreferrer' style='text-decoration: none; color: #00617f;'>GitHub</a>
@@ -652,9 +663,13 @@ qm start $VMID
 sleep 90
 send_line_to_vm "root"
 send_line_to_vm "fetch https://raw.githubusercontent.com/opnsense/update/master/src/bootstrap/opnsense-bootstrap.sh.in"
-qm set $VMID \
-  -net1 virtio,bridge=${WAN_BRG},macaddr=${WAN_MAC} &>/dev/null
-sleep 10
+if [ -n "$WAN_BRG" ]; then
+  msg_info "Adding WAN interface"
+  qm set $VMID \
+    -net1 virtio,bridge=${WAN_BRG},macaddr=${WAN_MAC} &>/dev/null
+  msg_ok "WAN interface added"
+  sleep 5  # Brief pause after adding network interface
+fi
 send_line_to_vm "sh ./opnsense-bootstrap.sh.in -y -f -r 25.1"
 msg_ok "OPNsense VM is being installed, do not close the terminal, or the installation will fail."
 #We need to wait for the OPNsense build proccess to finish, this takes a few minutes
@@ -689,9 +704,9 @@ else
   send_line_to_vm "n"
   send_line_to_vm "n"
 fi
-#we need to wait for the Config changes to be saved
+#Wait for config changes to be saved
 sleep 20
-if [ "$WAN_IP_ADDR" != "" ]; then
+if [ -n "$WAN_BRG" ] && [ "$WAN_IP_ADDR" != "" ]; then
   send_line_to_vm "2"
   send_line_to_vm "2"
   send_line_to_vm "n"
