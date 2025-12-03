@@ -96,31 +96,7 @@ explain_exit_code() {
   204) echo "Custom: Missing PCT_OSTYPE variable" ;;
   205) echo "Custom: Invalid CTID (<100)" ;;
   206) echo "Custom: CTID already in use (check 'pct list' and /etc/pve/lxc/)" ;;
-  # --- Proxmox Custom Codes ---
-  200) echo "Custom: Failed to create lock file" ;;
-  203) echo "Custom: Missing CTID variable" ;;
-  204) echo "Custom: Missing PCT_OSTYPE variable" ;;
-  205) echo "Custom: Invalid CTID (<100)" ;;
-  206) echo "Custom: CTID already in use (check 'pct list' and /etc/pve/lxc/)" ;;
   207) echo "Custom: Password contains unescaped special characters (-, /, \\, *, etc.)" ;;
-  208) echo "Custom: Invalid configuration (DNS/MAC/Network format error)" ;;
-  209) echo "Custom: Container creation failed (check logs for pct create output)" ;;
-  210) echo "Custom: Cluster not quorate" ;;
-  211) echo "Custom: Timeout waiting for template lock (concurrent download in progress)" ;;
-  214) echo "Custom: Not enough storage space" ;;
-  215) echo "Custom: Container created but not listed (ghost state - check /etc/pve/lxc/)" ;;
-  216) echo "Custom: RootFS entry missing in config (incomplete creation)" ;;
-  217) echo "Custom: Storage does not support rootdir (check storage capabilities)" ;;
-  218) echo "Custom: Template file corrupted or incomplete download (size <1MB or invalid archive)" ;;
-  220) echo "Custom: Unable to resolve template path" ;;
-  221) echo "Custom: Template file exists but not readable (check file permissions)" ;;
-  222) echo "Custom: Template download failed after 3 attempts (network/storage issue)" ;;
-  223) echo "Custom: Template not available after download (storage sync issue)" ;;
-  225) echo "Custom: No template available for OS/Version (check 'pveam available')" ;;
-  231) echo "Custom: LXC stack upgrade/retry failed (outdated pve-container - check https://github.com/community-scripts/ProxmoxVE/discussions/8126)" ;;
-
-  # --- Default ---
-  *) echo "Unknown error" ;;
   208) echo "Custom: Invalid configuration (DNS/MAC/Network format error)" ;;
   209) echo "Custom: Container creation failed (check logs for pct create output)" ;;
   210) echo "Custom: Cluster not quorate" ;;

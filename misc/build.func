@@ -87,7 +87,6 @@ if command -v curl >/dev/null 2>&1; then
   source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
   load_functions
   catch_errors
-  #echo "(build.func) Loaded core.func via curl"
 elif command -v wget >/dev/null 2>&1; then
   source <(wget -qO- https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
   source <(wget -qO- https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
@@ -2242,7 +2241,7 @@ build_container() {
     esac
   fi
 
-  # IP (immer zwingend, Standard dhcp)
+  # IP (always required, default dhcp)
   NET_STRING+=",ip=${NET:-dhcp}"
 
   # Gateway
@@ -2834,12 +2833,12 @@ destroy_lxc() {
     return 1
   fi
 
-  # Abbruch bei Ctrl-C / Ctrl-D / ESC
+  # Abort on Ctrl-C / Ctrl-D / ESC
   trap 'echo; msg_error "Aborted by user (SIGINT/SIGQUIT)"; return 130' INT QUIT
 
   local prompt
   if ! read -rp "Remove this Container? <y/N> " prompt; then
-    # read gibt != 0 zurück bei Ctrl-D/ESC
+    # read returns non-zero on Ctrl-D/ESC
     msg_error "Aborted input (Ctrl-D/ESC)"
     return 130
   fi
@@ -3555,16 +3554,6 @@ create_lxc_container() {
 
   LOGFILE="/tmp/pct_create_${CTID}_$(date +%Y%m%d_%H%M%S)_${SESSION_ID}.log"
 
-  # # DEBUG: Show the actual command that will be executed
-  # echo "[DEBUG] ===== PCT CREATE COMMAND DETAILS ====="
-  # echo "[DEBUG] CTID: $CTID"
-  # echo "[DEBUG] Template: ${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE}"
-  # echo "[DEBUG] PCT_OPTIONS (will be word-split):"
-  # echo "$PCT_OPTIONS" | sed 's/^/  /'
-  # echo "[DEBUG] Full command line:"
-  # echo "  pct create $CTID ${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE} $PCT_OPTIONS"
-  # echo "[DEBUG] ========================================"
-
   msg_debug "pct create command: pct create $CTID ${TEMPLATE_STORAGE}:vztmpl/${TEMPLATE} $PCT_OPTIONS"
   msg_debug "Logfile: $LOGFILE"
 
@@ -3609,7 +3598,7 @@ create_lxc_container() {
             0) : ;; # success - container created, continue
             2)
               echo "Upgrade was declined. Please update and re-run:
-  apt update && apt install --only-upgrade pve-container lxc-pve"
+                apt update && apt install --only-upgrade pve-container lxc-pve"
               exit 231
               ;;
             3)
@@ -3641,7 +3630,7 @@ create_lxc_container() {
           0) : ;; # success - container created, continue
           2)
             echo "Upgrade was declined. Please update and re-run:
-  apt update && apt install --only-upgrade pve-container lxc-pve"
+              apt update && apt install --only-upgrade pve-container lxc-pve"
             exit 231
             ;;
           3)

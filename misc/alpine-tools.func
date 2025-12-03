@@ -1,7 +1,7 @@
 #!/bin/ash
 # shellcheck shell=ash
 
-# Erwartet vorhandene msg_* und optional $STD aus deinem Framework.
+# Expects existing msg_* functions and optional $STD from the framework.
 
 # ------------------------------
 # helpers
