@@ -18,6 +18,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Fix Homebridge update detection for Debian 13 DEB822 format [@Copilot](https://github.com/Copilot) ([#9629](https://github.com/community-scripts/ProxmoxVE/pull/9629))
     - go2rtc: Add WorkingDirectory to go2rtc service configuration [@tremor021](https://github.com/tremor021) ([#9618](https://github.com/community-scripts/ProxmoxVE/pull/9618))
 
 ## 2025-12-02
