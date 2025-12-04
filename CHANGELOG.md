@@ -22,6 +22,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Fix kimai.sh update script path typo for local.yaml [@Copilot](https://github.com/Copilot) ([#9645](https://github.com/community-scripts/ProxmoxVE/pull/9645))
 
+  - #### ✨ New Features
+
+    - core: extend storage type support (rbd, nfs, cifs) and validation (iscidirect, isci, zfs, cephfs, pbs) [@MickLesk](https://github.com/MickLesk) ([#9646](https://github.com/community-scripts/ProxmoxVE/pull/9646))
+
 ## 2025-12-03
 
 ### 🚀 Updated Scripts
