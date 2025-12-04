@@ -1,28 +1,128 @@
 [
   {
-    "name": "glpi-project/glpi",
-    "version": "11.0.3",
-    "date": "2025-12-03T10:54:58Z"
-  },
-  {
-    "name": "home-assistant/core",
-    "version": "2025.11.3",
-    "date": "2025-11-21T17:03:22Z"
+    "name": "LibreTranslate/LibreTranslate",
+    "version": "v1.8.1",
+    "date": "2025-12-03T22:46:51Z"
   },
   {
     "name": "rcourtman/Pulse",
-    "version": "v4.36.1",
-    "date": "2025-12-03T09:27:17Z"
+    "version": "v4.36.2",
+    "date": "2025-12-03T22:46:29Z"
   },
   {
-    "name": "Stirling-Tools/Stirling-PDF",
-    "version": "v2.0.3",
-    "date": "2025-12-03T08:10:28Z"
+    "name": "HabitRPG/habitica",
+    "version": "v5.42.1",
+    "date": "2025-12-03T22:42:22Z"
   },
   {
     "name": "BerriAI/litellm",
-    "version": "v1.80.7.dev.1",
-    "date": "2025-12-03T06:57:56Z"
+    "version": "v1.80.5-stable",
+    "date": "2025-12-03T22:09:03Z"
+  },
+  {
+    "name": "Stirling-Tools/Stirling-PDF",
+    "version": "v2.1.0",
+    "date": "2025-12-03T21:29:10Z"
+  },
+  {
+    "name": "danielbrendel/hortusfox-web",
+    "version": "v5.5",
+    "date": "2025-12-03T21:20:30Z"
+  },
+  {
+    "name": "chrisbenincasa/tunarr",
+    "version": "v0.23.0-alpha.28",
+    "date": "2025-12-03T20:32:43Z"
+  },
+  {
+    "name": "gelbphoenix/autocaliweb",
+    "version": "v0.11.1",
+    "date": "2025-12-03T18:24:51Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.12.0",
+    "date": "2025-12-03T18:07:51Z"
+  },
+  {
+    "name": "actualbudget/actual",
+    "version": "v25.12.0",
+    "date": "2025-12-03T17:45:09Z"
+  },
+  {
+    "name": "homarr-labs/homarr",
+    "version": "v1.45.1",
+    "date": "2025-12-03T17:43:51Z"
+  },
+  {
+    "name": "caddyserver/caddy",
+    "version": "v2.11.0-beta.1",
+    "date": "2025-12-03T17:23:02Z"
+  },
+  {
+    "name": "karakeep-app/karakeep",
+    "version": "v0.29.1",
+    "date": "2025-12-03T16:56:18Z"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2025.11.3",
+    "date": "2025-12-03T16:37:01Z"
+  },
+  {
+    "name": "AdguardTeam/AdGuardHome",
+    "version": "v0.107.70",
+    "date": "2025-12-03T16:12:15Z"
+  },
+  {
+    "name": "node-red/node-red",
+    "version": "4.1.2",
+    "date": "2025-12-03T16:12:05Z"
+  },
+  {
+    "name": "BookStackApp/BookStack",
+    "version": "v25.11.5",
+    "date": "2025-12-03T14:51:03Z"
+  },
+  {
+    "name": "meilisearch/meilisearch",
+    "version": "latest",
+    "date": "2025-12-03T14:19:01Z"
+  },
+  {
+    "name": "Graylog2/graylog2-server",
+    "version": "6.2.10",
+    "date": "2025-12-03T13:58:32Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.121.3",
+    "date": "2025-11-26T14:58:48Z"
+  },
+  {
+    "name": "documenso/documenso",
+    "version": "v2.2.0",
+    "date": "2025-12-03T13:31:11Z"
+  },
+  {
+    "name": "crowdsecurity/crowdsec",
+    "version": "v1.7.3",
+    "date": "2025-10-24T10:51:12Z"
+  },
+  {
+    "name": "kyantech/Palmr",
+    "version": "v3.3.0-beta",
+    "date": "2025-12-03T12:59:19Z"
+  },
+  {
+    "name": "glpi-project/glpi",
+    "version": "11.0.3",
+    "date": "2025-12-03T12:00:17Z"
+  },
+  {
+    "name": "laurent22/joplin",
+    "version": "server-v3.5.1",
+    "date": "2025-12-03T11:56:50Z"
   },
   {
     "name": "SigNoz/signoz",
@@ -67,7 +167,7 @@
   {
     "name": "mealie-recipes/mealie",
     "version": "v3.6.1",
-    "date": "2025-12-02T22:54:10Z"
+    "date": "2025-12-02T23:08:41Z"
   },
   {
     "name": "apache/tomcat",
@@ -143,11 +243,6 @@
     "name": "gtsteffaniak/filebrowser",
     "version": "v1.0.3-stable",
     "date": "2025-12-02T15:21:13Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.121.3",
-    "date": "2025-11-26T14:58:48Z"
   },
   {
     "name": "Brandawg93/PeaNUT",
@@ -245,16 +340,6 @@
     "date": "2025-11-24T15:30:21Z"
   },
   {
-    "name": "meilisearch/meilisearch",
-    "version": "latest",
-    "date": "2025-12-01T15:53:30Z"
-  },
-  {
-    "name": "Graylog2/graylog2-server",
-    "version": "7.1.0-alpha.1",
-    "date": "2025-12-01T13:04:18Z"
-  },
-  {
     "name": "OctoPrint/OctoPrint",
     "version": "1.11.5",
     "date": "2025-12-01T12:58:46Z"
@@ -300,11 +385,6 @@
     "date": "2025-11-30T20:59:51Z"
   },
   {
-    "name": "laurent22/joplin",
-    "version": "server-v3.4.4",
-    "date": "2025-09-25T13:19:26Z"
-  },
-  {
     "name": "juanfont/headscale",
     "version": "v0.27.1",
     "date": "2025-11-11T19:32:29Z"
@@ -330,11 +410,6 @@
     "date": "2025-11-30T14:36:37Z"
   },
   {
-    "name": "chrisbenincasa/tunarr",
-    "version": "v0.23.0-alpha.27",
-    "date": "2025-11-30T14:09:31Z"
-  },
-  {
     "name": "healthchecks/healthchecks",
     "version": "v3.13",
     "date": "2025-11-30T08:52:20Z"
@@ -353,11 +428,6 @@
     "name": "MediaBrowser/Emby.Releases",
     "version": "4.9.1.90",
     "date": "2025-11-11T01:00:32Z"
-  },
-  {
-    "name": "karakeep-app/karakeep",
-    "version": "sdk/v0.29.0",
-    "date": "2025-11-29T18:53:44Z"
   },
   {
     "name": "ErsatzTV/ErsatzTV",
@@ -390,11 +460,6 @@
     "date": "2025-11-29T02:43:00Z"
   },
   {
-    "name": "homarr-labs/homarr",
-    "version": "v1.45.0",
-    "date": "2025-11-28T19:15:52Z"
-  },
-  {
     "name": "Paymenter/Paymenter",
     "version": "v1.4.6",
     "date": "2025-11-28T15:12:24Z"
@@ -415,11 +480,6 @@
     "date": "2025-11-28T03:52:50Z"
   },
   {
-    "name": "esphome/esphome",
-    "version": "2025.11.2",
-    "date": "2025-11-27T23:19:08Z"
-  },
-  {
     "name": "go-vikunja/vikunja",
     "version": "v1.0.0-rc0",
     "date": "2025-08-17T18:47:15Z"
@@ -438,11 +498,6 @@
     "name": "theonedev/onedev",
     "version": "v13.1.2",
     "date": "2025-11-27T12:48:22Z"
-  },
-  {
-    "name": "crowdsecurity/crowdsec",
-    "version": "v1.7.3",
-    "date": "2025-10-24T10:51:12Z"
   },
   {
     "name": "ipfs/kubo",
@@ -495,16 +550,6 @@
     "date": "2025-11-26T11:22:30Z"
   },
   {
-    "name": "HabitRPG/habitica",
-    "version": "v5.42.0",
-    "date": "2025-11-26T02:01:01Z"
-  },
-  {
-    "name": "BookStackApp/BookStack",
-    "version": "v25.11.4",
-    "date": "2025-11-25T22:26:51Z"
-  },
-  {
     "name": "seerr-team/seerr",
     "version": "preview-test-fix-subscriptions",
     "date": "2025-11-25T22:11:46Z"
@@ -533,11 +578,6 @@
     "name": "usememos/memos",
     "version": "v0.25.3",
     "date": "2025-11-25T15:40:41Z"
-  },
-  {
-    "name": "documenso/documenso",
-    "version": "v2.1.0",
-    "date": "2025-11-25T09:48:39Z"
   },
   {
     "name": "TandoorRecipes/recipes",
@@ -593,11 +633,6 @@
     "name": "TwiN/gatus",
     "version": "v5.33.0",
     "date": "2025-11-21T22:54:49Z"
-  },
-  {
-    "name": "gelbphoenix/autocaliweb",
-    "version": "v0.11.0",
-    "date": "2025-11-21T18:42:15Z"
   },
   {
     "name": "rclone/rclone",
@@ -705,11 +740,6 @@
     "date": "2025-11-19T14:48:47Z"
   },
   {
-    "name": "AdguardTeam/AdGuardHome",
-    "version": "v0.107.69",
-    "date": "2025-10-30T15:31:50Z"
-  },
-  {
     "name": "jupyter/notebook",
     "version": "v7.5.0",
     "date": "2025-11-19T08:36:29Z"
@@ -783,11 +813,6 @@
     "name": "AlexxIT/go2rtc",
     "version": "v1.9.12",
     "date": "2025-11-16T16:14:55Z"
-  },
-  {
-    "name": "LibreTranslate/LibreTranslate",
-    "version": "v1.8.0",
-    "date": "2025-11-16T15:54:50Z"
   },
   {
     "name": "outline/outline",
@@ -950,11 +975,6 @@
     "date": "2025-11-04T07:28:45Z"
   },
   {
-    "name": "actualbudget/actual",
-    "version": "v25.11.0",
-    "date": "2025-11-04T00:32:21Z"
-  },
-  {
     "name": "maxdorninger/MediaManager",
     "version": "v1.9.1",
     "date": "2025-11-02T21:14:50Z"
@@ -990,11 +1010,6 @@
     "date": "2025-10-30T18:23:23Z"
   },
   {
-    "name": "danielbrendel/hortusfox-web",
-    "version": "v5.4",
-    "date": "2025-10-30T14:25:23Z"
-  },
-  {
     "name": "homebridge/homebridge",
     "version": "v1.11.1",
     "date": "2025-10-29T22:09:26Z"
@@ -1028,11 +1043,6 @@
     "name": "louislam/uptime-kuma",
     "version": "2.0.2",
     "date": "2025-10-22T17:03:54Z"
-  },
-  {
-    "name": "kyantech/Palmr",
-    "version": "v3.2.5-beta",
-    "date": "2025-10-21T16:49:14Z"
   },
   {
     "name": "Part-DB/Part-DB-server",
@@ -1073,11 +1083,6 @@
     "name": "rogerfar/rdt-client",
     "version": "v2.0.119",
     "date": "2025-10-13T23:15:11Z"
-  },
-  {
-    "name": "node-red/node-red",
-    "version": "4.1.1",
-    "date": "2025-10-13T14:23:53Z"
   },
   {
     "name": "projectsend/projectsend",
@@ -1233,11 +1238,6 @@
     "name": "janeczku/calibre-web",
     "version": "0.6.25",
     "date": "2025-08-24T08:51:55Z"
-  },
-  {
-    "name": "caddyserver/caddy",
-    "version": "v2.10.2",
-    "date": "2025-08-23T03:10:31Z"
   },
   {
     "name": "ventoy/Ventoy",
