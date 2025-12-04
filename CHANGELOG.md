@@ -12,12 +12,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-12-04
 
-### 🛠️ Core Overhaul
+### 🆕 New Scripts
 
-  - Major refactor of the entire `/misc` subsystem introducing a secure, modular and fully extensible foundation for all future scripts.  
-    Includes the new three-tier defaults architecture (ENV → App → User), strict variable whitelisting, safe `.vars` parsing without `source/eval`, centralized `error_handler.func`, structured logging, an improved 19-step advanced wizard, unified container creation, dedicated storage selector, updated sysctl handling, IPv6 disable mode, cloud-init library, SSH key auto-discovery, and a complete cleanup of legacy components.  
-    Documentation added under `/docs/guides`.  
-    [@MickLesk](https://github.com/MickLesk) ([#9540](https://github.com/community-scripts/ProxmoxVE/pull/9540))
+  - Three-tier defaults system | security improvements | error_handler | improved logging | improved container creation | improved architecture [@MickLesk](https://github.com/MickLesk) ([#9540](https://github.com/community-scripts/ProxmoxVE/pull/9540))
 
 ## 2025-12-03
 
