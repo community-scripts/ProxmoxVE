@@ -16,6 +16,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Three-tier defaults system | security improvements | error_handler | improved logging | improved container creation | improved architecture [@MickLesk](https://github.com/MickLesk) ([#9540](https://github.com/community-scripts/ProxmoxVE/pull/9540))
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Fix kimai.sh update script path typo for local.yaml [@Copilot](https://github.com/Copilot) ([#9645](https://github.com/community-scripts/ProxmoxVE/pull/9645))
+
 ## 2025-12-03
 
 ### 🚀 Updated Scripts
