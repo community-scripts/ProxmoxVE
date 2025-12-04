@@ -51,7 +51,7 @@ function update_script() {
     msg_info "Configuring BookStack"
     cd /opt/bookstack
     export COMPOSER_ALLOW_SUPERUSER=1
-    $STD composer install --no-dev
+    $STD /usr/local/bin/composer install --no-dev
     $STD php artisan migrate --force
     chown www-data:www-data -R /opt/bookstack /opt/bookstack/bootstrap/cache /opt/bookstack/public/uploads /opt/bookstack/storage
     chmod -R 755 /opt/bookstack /opt/bookstack/bootstrap/cache /opt/bookstack/public/uploads /opt/bookstack/storage
