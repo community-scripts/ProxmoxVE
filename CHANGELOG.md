@@ -26,6 +26,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - core: extend storage type support (rbd, nfs, cifs) and validation (iscidirect, isci, zfs, cephfs, pbs) [@MickLesk](https://github.com/MickLesk) ([#9646](https://github.com/community-scripts/ProxmoxVE/pull/9646))
 
+  - #### 🔧 Refactor
+
+    - update pdm repo to stable [@CrazyWolf13](https://github.com/CrazyWolf13) ([#9648](https://github.com/community-scripts/ProxmoxVE/pull/9648))
+
 ## 2025-12-03
 
 ### 🚀 Updated Scripts
