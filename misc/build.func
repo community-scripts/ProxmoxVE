@@ -3520,7 +3520,6 @@ create_lxc_container() {
   if [[ "$PCT_OSTYPE" == "debian" ]]; then
     OSVER="$(parse_template_osver "$TEMPLATE")"
     if [[ -n "$OSVER" ]]; then
-      # Proactive, aber ohne Abbruch – nur Angebot
       offer_lxc_stack_upgrade_and_maybe_retry "no" || true
     fi
   fi
