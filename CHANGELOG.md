@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-12-04
 
+### 🆕 New Scripts
+
+  - Three-tier defaults system | security improvements | error_handler | improved logging | improved container creation | improved architecture [@MickLesk](https://github.com/MickLesk) ([#9540](https://github.com/community-scripts/ProxmoxVE/pull/9540))
+
 ## 2025-12-03
 
 ### 🚀 Updated Scripts
