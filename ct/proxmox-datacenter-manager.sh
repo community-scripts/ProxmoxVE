@@ -37,6 +37,20 @@ function update_script() {
     msg_ok "Updated old sources"
   fi
 
+  if grep -q 'Debian GNU/Linux 13' /etc/os-release; then
+    if [ -f "/etc/apt/sources.list.d/pdm-test.sources" ]; then
+      if ! grep -qx "Enabled: false" "/etc/apt/sources.list.d/pdm-test.sources"; then
+          echo "Enabled: false" >> "/etc/apt/sources.list.d/pdm-test.sources"
+          setup_deb822_repo \
+            "pdm" \
+            "https://enterprise.proxmox.com/debian/proxmox-archive-keyring-trixie.gpg" \
+            "http://download.proxmox.com/debian/pdm" \
+            "trixie" \
+            "pdm-no-subscription"
+      fi
+    fi
+  fi
+
   msg_info "Updating $APP LXC"
   $STD apt update
   $STD apt -y upgrade
