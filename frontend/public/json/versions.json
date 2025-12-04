@@ -1,5 +1,80 @@
 [
   {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.121.3",
+    "date": "2025-11-26T14:58:48Z"
+  },
+  {
+    "name": "fuma-nama/fumadocs",
+    "version": "fumadocs-mdx@14.1.0",
+    "date": "2025-12-04T09:47:35Z"
+  },
+  {
+    "name": "glpi-project/glpi",
+    "version": "11.0.4",
+    "date": "2025-12-04T09:26:37Z"
+  },
+  {
+    "name": "bunkerity/bunkerweb",
+    "version": "v1.6.6",
+    "date": "2025-11-24T15:30:21Z"
+  },
+  {
+    "name": "umami-software/umami",
+    "version": "v3.0.2",
+    "date": "2025-12-04T08:12:43Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.3",
+    "date": "2025-09-20T12:12:33Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.402",
+    "date": "2025-12-04T05:56:18Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.80.7.dev.3",
+    "date": "2025-12-04T05:34:02Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.13.1-rc2",
+    "date": "2025-12-02T17:28:41Z"
+  },
+  {
+    "name": "documenso/documenso",
+    "version": "v2.2.2",
+    "date": "2025-12-04T03:50:09Z"
+  },
+  {
+    "name": "kyantech/Palmr",
+    "version": "v3.3.1-beta",
+    "date": "2025-12-04T03:33:38Z"
+  },
+  {
+    "name": "gtsteffaniak/filebrowser",
+    "version": "v1.2.0-experimental-sql-indexing",
+    "date": "2025-12-04T01:35:46Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5",
+    "date": "2025-12-04T00:27:05Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
+    "name": "transmission/transmission",
+    "version": "4.1.0-beta.4",
+    "date": "2025-12-03T23:04:08Z"
+  },
+  {
     "name": "LibreTranslate/LibreTranslate",
     "version": "v1.8.1",
     "date": "2025-12-03T22:46:51Z"
@@ -13,11 +88,6 @@
     "name": "HabitRPG/habitica",
     "version": "v5.42.1",
     "date": "2025-12-03T22:42:22Z"
-  },
-  {
-    "name": "BerriAI/litellm",
-    "version": "v1.80.5-stable",
-    "date": "2025-12-03T22:09:03Z"
   },
   {
     "name": "Stirling-Tools/Stirling-PDF",
@@ -60,6 +130,11 @@
     "date": "2025-12-03T17:23:02Z"
   },
   {
+    "name": "keycloak/keycloak",
+    "version": "26.4.7",
+    "date": "2025-12-01T08:14:11Z"
+  },
+  {
     "name": "karakeep-app/karakeep",
     "version": "v0.29.1",
     "date": "2025-12-03T16:56:18Z"
@@ -95,29 +170,9 @@
     "date": "2025-12-03T13:58:32Z"
   },
   {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.121.3",
-    "date": "2025-11-26T14:58:48Z"
-  },
-  {
-    "name": "documenso/documenso",
-    "version": "v2.2.0",
-    "date": "2025-12-03T13:31:11Z"
-  },
-  {
     "name": "crowdsecurity/crowdsec",
     "version": "v1.7.3",
     "date": "2025-10-24T10:51:12Z"
-  },
-  {
-    "name": "kyantech/Palmr",
-    "version": "v3.3.0-beta",
-    "date": "2025-12-03T12:59:19Z"
-  },
-  {
-    "name": "glpi-project/glpi",
-    "version": "11.0.3",
-    "date": "2025-12-03T12:00:17Z"
   },
   {
     "name": "laurent22/joplin",
@@ -135,11 +190,6 @@
     "date": "2025-11-21T17:06:07Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.399",
-    "date": "2025-12-03T05:55:33Z"
-  },
-  {
     "name": "openobserve/openobserve",
     "version": "v0.20.2",
     "date": "2025-12-03T02:20:57Z"
@@ -150,16 +200,6 @@
     "date": "2025-06-14T17:45:06Z"
   },
   {
-    "name": "jeedom/core",
-    "version": "4.5",
-    "date": "2025-12-03T00:27:06Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
-  },
-  {
     "name": "henrygd/beszel",
     "version": "v0.17.0",
     "date": "2025-12-03T00:15:51Z"
@@ -167,7 +207,7 @@
   {
     "name": "mealie-recipes/mealie",
     "version": "v3.6.1",
-    "date": "2025-12-02T23:08:41Z"
+    "date": "2025-12-02T22:54:10Z"
   },
   {
     "name": "apache/tomcat",
@@ -200,16 +240,6 @@
     "date": "2025-12-02T20:22:32Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.4.7",
-    "date": "2025-12-01T08:14:11Z"
-  },
-  {
-    "name": "ollama/ollama",
-    "version": "v0.13.1-rc2",
-    "date": "2025-12-02T17:28:41Z"
-  },
-  {
     "name": "pocketbase/pocketbase",
     "version": "v0.34.1",
     "date": "2025-12-02T18:43:50Z"
@@ -230,19 +260,9 @@
     "date": "2025-12-02T16:56:49Z"
   },
   {
-    "name": "fuma-nama/fumadocs",
-    "version": "fumadocs-ui@16.2.2",
-    "date": "2025-12-02T16:17:30Z"
-  },
-  {
     "name": "nzbgetcom/nzbget",
     "version": "v25.4",
     "date": "2025-10-09T10:27:01Z"
-  },
-  {
-    "name": "gtsteffaniak/filebrowser",
-    "version": "v1.0.3-stable",
-    "date": "2025-12-02T15:21:13Z"
   },
   {
     "name": "Brandawg93/PeaNUT",
@@ -273,11 +293,6 @@
     "name": "syncthing/syncthing",
     "version": "v2.0.12",
     "date": "2025-12-02T08:11:24Z"
-  },
-  {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.3",
-    "date": "2025-09-20T12:12:33Z"
   },
   {
     "name": "booklore-app/booklore",
@@ -333,11 +348,6 @@
     "name": "VictoriaMetrics/VictoriaMetrics",
     "version": "pmm-6401-v1.131.0",
     "date": "2025-12-01T17:18:24Z"
-  },
-  {
-    "name": "bunkerity/bunkerweb",
-    "version": "v1.6.6",
-    "date": "2025-11-24T15:30:21Z"
   },
   {
     "name": "OctoPrint/OctoPrint",
@@ -745,11 +755,6 @@
     "date": "2025-11-19T08:36:29Z"
   },
   {
-    "name": "umami-software/umami",
-    "version": "v3.0.1",
-    "date": "2025-11-18T18:50:35Z"
-  },
-  {
     "name": "traefik/traefik",
     "version": "v3.6.2",
     "date": "2025-11-18T16:25:16Z"
@@ -913,11 +918,6 @@
     "name": "Ombi-app/Ombi",
     "version": "v4.52.0",
     "date": "2025-11-06T22:39:26Z"
-  },
-  {
-    "name": "transmission/transmission",
-    "version": "4.0.1-beta.1",
-    "date": "2024-12-13T00:16:24Z"
   },
   {
     "name": "Notifiarr/notifiarr",
