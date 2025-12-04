@@ -3211,42 +3211,29 @@ create_lxc_container() {
     fi
   fi
 
-  # Validate content types
-  msg_info "Validating content types of storage '$CONTAINER_STORAGE'"
-  STORAGE_CONTENT=$(grep -A4 -E "^(zfspool|dir|lvmthin|lvm|linstor): $CONTAINER_STORAGE" /etc/pve/storage.cfg | grep content | awk '{$1=""; print $0}' | xargs)
-  msg_debug "Storage '$CONTAINER_STORAGE' has content types: $STORAGE_CONTENT"
+  msg_info "Validating storage '$CONTAINER_STORAGE'"
+  STORAGE_TYPE=$(grep -E "^[^:]+: $CONTAINER_STORAGE$" /etc/pve/storage.cfg | cut -d: -f1 | head -1)
 
-  # Check storage type for special handling
-  STORAGE_TYPE=$(grep -E "^[^:]+: $CONTAINER_STORAGE$" /etc/pve/storage.cfg | cut -d: -f1)
-  if [[ "$STORAGE_TYPE" == "linstor" ]]; then
-    msg_info "Detected LINSTOR storage - verifying cluster connectivity"
-    if ! pvesm status -storage "$CONTAINER_STORAGE" &>/dev/null; then
-      msg_error "LINSTOR storage '$CONTAINER_STORAGE' not accessible. Check LINSTOR cluster health."
-      exit 217
-    fi
-  fi
+  case "$STORAGE_TYPE" in
+  iscsidirect) exit 212 ;;
+  iscsi | zfs) exit 213 ;;
+  cephfs) exit 219 ;;
+  pbs) exit 224 ;;
+  linstor | rbd | nfs | cifs)
+    pvesm status -storage "$CONTAINER_STORAGE" &>/dev/null || exit 217
+    ;;
+  esac
 
-  grep -qw "rootdir" <<<"$STORAGE_CONTENT" || {
-    msg_error "Storage '$CONTAINER_STORAGE' does not support 'rootdir'. Cannot create LXC."
-    exit 217
-  }
-  $STD msg_ok "Storage '$CONTAINER_STORAGE' supports 'rootdir'"
+  pvesm status -content rootdir 2>/dev/null | awk 'NR>1{print $1}' | grep -qx "$CONTAINER_STORAGE" || exit 213
+  msg_ok "Storage '$CONTAINER_STORAGE' ($STORAGE_TYPE) validated"
 
-  msg_info "Validating content types of template storage '$TEMPLATE_STORAGE'"
-  TEMPLATE_CONTENT=$(grep -A4 -E "^[^:]+: $TEMPLATE_STORAGE" /etc/pve/storage.cfg | grep content | awk '{$1=""; print $0}' | xargs)
-  msg_debug "Template storage '$TEMPLATE_STORAGE' has content types: $TEMPLATE_CONTENT"
-
-  # Check if template storage is LINSTOR (may need special handling)
+  msg_info "Validating template storage '$TEMPLATE_STORAGE'"
   TEMPLATE_TYPE=$(grep -E "^[^:]+: $TEMPLATE_STORAGE$" /etc/pve/storage.cfg | cut -d: -f1)
-  if [[ "$TEMPLATE_TYPE" == "linstor" ]]; then
-    msg_info "Template storage uses LINSTOR - ensuring resource availability"
-  fi
 
-  if ! grep -qw "vztmpl" <<<"$TEMPLATE_CONTENT"; then
-    msg_warn "Template storage '$TEMPLATE_STORAGE' does not declare 'vztmpl'. This may cause pct create to fail."
-  else
-    $STD msg_ok "Template storage '$TEMPLATE_STORAGE' supports 'vztmpl'"
+  if ! pvesm status -content vztmpl 2>/dev/null | awk 'NR>1{print $1}' | grep -qx "$TEMPLATE_STORAGE"; then
+    msg_warn "Template storage '$TEMPLATE_STORAGE' may not support 'vztmpl'"
   fi
+  msg_ok "Template storage '$TEMPLATE_STORAGE' validated"
 
   # Free space check
   STORAGE_FREE=$(pvesm status | awk -v s="$CONTAINER_STORAGE" '$1 == s { print $6 }')
@@ -3261,7 +3248,7 @@ create_lxc_container() {
     msg_info "Checking cluster quorum"
     if ! pvecm status | awk -F':' '/^Quorate/ { exit ($2 ~ /Yes/) ? 0 : 1 }'; then
       msg_error "Cluster is not quorate. Start all nodes or configure quorum device (QDevice)."
-      exit 201
+      exit 210
     fi
     msg_ok "Cluster is quorate"
   fi
@@ -3297,6 +3284,14 @@ create_lxc_container() {
 
   ONLINE_TEMPLATE=""
   [[ ${#ONLINE_TEMPLATES[@]} -gt 0 ]] && ONLINE_TEMPLATE="${ONLINE_TEMPLATES[-1]}"
+
+  if [[ ${#ONLINE_TEMPLATES[@]} -gt 0 ]]; then
+    count=0
+    for idx in "${!ONLINE_TEMPLATES[@]}"; do
+      ((count++))
+      [[ $count -ge 3 ]] && break
+    done
+  fi
 
   if [[ ${#LOCAL_TEMPLATES[@]} -gt 0 ]]; then
     TEMPLATE="${LOCAL_TEMPLATES[-1]}"
@@ -3525,7 +3520,7 @@ create_lxc_container() {
   if [[ "$PCT_OSTYPE" == "debian" ]]; then
     OSVER="$(parse_template_osver "$TEMPLATE")"
     if [[ -n "$OSVER" ]]; then
-      # Proactive, but without abort – only offer
+      # Proactive, aber ohne Abbruch – nur Angebot
       offer_lxc_stack_upgrade_and_maybe_retry "no" || true
     fi
   fi
@@ -3554,7 +3549,7 @@ create_lxc_container() {
   }
   flock -w 60 9 || {
     msg_error "Timeout while waiting for template lock."
-    exit 202
+    exit 211
   }
 
   LOGFILE="/tmp/pct_create_${CTID}_$(date +%Y%m%d_%H%M%S)_${SESSION_ID}.log"
@@ -3603,12 +3598,12 @@ create_lxc_container() {
             0) : ;; # success - container created, continue
             2)
               echo "Upgrade was declined. Please update and re-run:
-                apt update && apt install --only-upgrade pve-container lxc-pve"
-              exit 213
+  apt update && apt install --only-upgrade pve-container lxc-pve"
+              exit 231
               ;;
             3)
               echo "Upgrade and/or retry failed. Please inspect: $LOGFILE"
-              exit 213
+              exit 231
               ;;
             esac
           else
@@ -3635,12 +3630,12 @@ create_lxc_container() {
           0) : ;; # success - container created, continue
           2)
             echo "Upgrade was declined. Please update and re-run:
-              apt update && apt install --only-upgrade pve-container lxc-pve"
-            exit 213
+  apt update && apt install --only-upgrade pve-container lxc-pve"
+            exit 231
             ;;
           3)
             echo "Upgrade and/or retry failed. Please inspect: $LOGFILE"
-            exit 213
+            exit 231
             ;;
           esac
         else

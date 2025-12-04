@@ -34,9 +34,9 @@
 #   * Node.js/npm errors (243-249, 254)
 #   * Python/pip/uv errors (210-212)
 #   * PostgreSQL errors (231-234)
-#   * MySQL/MariaDB errors (260-263)
-#   * MongoDB errors (251-253)
-#   * Proxmox custom codes (200-209, 213-223, 225)
+#   * MySQL/MariaDB errors (241-244)
+#   * MongoDB errors (251-254)
+#   * Proxmox custom codes (200-231)
 # - Returns description string for given exit code
 # ------------------------------------------------------------------------------
 explain_exit_code() {
@@ -79,38 +79,43 @@ explain_exit_code() {
   234) echo "PostgreSQL: Fatal error in query / syntax" ;;
 
   # --- MySQL / MariaDB ---
-  260) echo "MySQL/MariaDB: Connection failed (server not running / wrong socket)" ;;
-  261) echo "MySQL/MariaDB: Authentication failed (bad user/password)" ;;
-  262) echo "MySQL/MariaDB: Database does not exist" ;;
-  263) echo "MySQL/MariaDB: Fatal error in query / syntax" ;;
+  241) echo "MySQL/MariaDB: Connection failed (server not running / wrong socket)" ;;
+  242) echo "MySQL/MariaDB: Authentication failed (bad user/password)" ;;
+  243) echo "MySQL/MariaDB: Database does not exist" ;;
+  244) echo "MySQL/MariaDB: Fatal error in query / syntax" ;;
 
   # --- MongoDB ---
   251) echo "MongoDB: Connection failed (server not running)" ;;
   252) echo "MongoDB: Authentication failed (bad user/password)" ;;
   253) echo "MongoDB: Database not found" ;;
+  254) echo "MongoDB: Fatal query error" ;;
 
   # --- Proxmox Custom Codes ---
-  200) echo "Custom: Failed to create lock file" ;;
-  201) echo "Custom: Cluster not quorate" ;;
-  202) echo "Custom: Timeout waiting for template lock (concurrent download in progress)" ;;
-  203) echo "Custom: Missing CTID variable" ;;
-  204) echo "Custom: Missing PCT_OSTYPE variable" ;;
-  205) echo "Custom: Invalid CTID (<100)" ;;
-  206) echo "Custom: CTID already in use (check 'pct list' and /etc/pve/lxc/)" ;;
-  207) echo "Custom: Password contains unescaped special characters (-, /, \\, *, etc.)" ;;
-  208) echo "Custom: Invalid configuration (DNS/MAC/Network format error)" ;;
-  209) echo "Custom: Container creation failed (check logs for pct create output)" ;;
-  213) echo "Custom: LXC stack upgrade/retry failed (outdated pve-container - check https://github.com/community-scripts/ProxmoxVE/discussions/8126)" ;;
-  214) echo "Custom: Not enough storage space" ;;
-  215) echo "Custom: Container created but not listed (ghost state - check /etc/pve/lxc/)" ;;
-  216) echo "Custom: RootFS entry missing in config (incomplete creation)" ;;
-  217) echo "Custom: Storage does not support rootdir (check storage capabilities)" ;;
-  218) echo "Custom: Template file corrupted or incomplete download (size <1MB or invalid archive)" ;;
-  220) echo "Custom: Unable to resolve template path" ;;
-  221) echo "Custom: Template file exists but not readable (check file permissions)" ;;
-  222) echo "Custom: Template download failed after 3 attempts (network/storage issue)" ;;
-  223) echo "Custom: Template not available after download (storage sync issue)" ;;
-  225) echo "Custom: No template available for OS/Version (check 'pveam available')" ;;
+  200) echo "Proxmox: Failed to create lock file" ;;
+  203) echo "Proxmox: Missing CTID variable" ;;
+  204) echo "Proxmox: Missing PCT_OSTYPE variable" ;;
+  205) echo "Proxmox: Invalid CTID (<100)" ;;
+  206) echo "Proxmox: CTID already in use" ;;
+  207) echo "Proxmox: Password contains unescaped special characters" ;;
+  208) echo "Proxmox: Invalid configuration (DNS/MAC/Network format)" ;;
+  209) echo "Proxmox: Container creation failed" ;;
+  210) echo "Proxmox: Cluster not quorate" ;;
+  211) echo "Proxmox: Timeout waiting for template lock" ;;
+  212) echo "Proxmox: Storage type 'iscsidirect' does not support containers (VMs only)" ;;
+  213) echo "Proxmox: Storage type does not support 'rootdir' content" ;;
+  214) echo "Proxmox: Not enough storage space" ;;
+  215) echo "Proxmox: Container created but not listed (ghost state)" ;;
+  216) echo "Proxmox: RootFS entry missing in config" ;;
+  217) echo "Proxmox: Storage not accessible" ;;
+  219) echo "Proxmox: CephFS does not support containers - use RBD" ;;
+  224) echo "Proxmox: PBS storage is for backups only" ;;
+  218) echo "Proxmox: Template file corrupted or incomplete" ;;
+  220) echo "Proxmox: Unable to resolve template path" ;;
+  221) echo "Proxmox: Template file not readable" ;;
+  222) echo "Proxmox: Template download failed" ;;
+  223) echo "Proxmox: Template not available after download" ;;
+  225) echo "Proxmox: No template available for OS/Version" ;;
+  231) echo "Proxmox: LXC stack upgrade failed" ;;
 
   # --- Default ---
   *) echo "Unknown error" ;;
