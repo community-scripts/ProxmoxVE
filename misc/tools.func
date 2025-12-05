@@ -192,6 +192,8 @@ install_packages_with_retry() {
     if [[ $retry -le $max_retries ]]; then
       msg_warn "Package installation failed, retrying ($retry/$max_retries)..."
       sleep 2
+      # Fix any interrupted dpkg operations before retry
+      $STD dpkg --configure -a 2>/dev/null || true
       $STD apt update 2>/dev/null || true
     fi
   done
@@ -217,6 +219,8 @@ upgrade_packages_with_retry() {
     if [[ $retry -le $max_retries ]]; then
       msg_warn "Package upgrade failed, retrying ($retry/$max_retries)..."
       sleep 2
+      # Fix any interrupted dpkg operations before retry
+      $STD dpkg --configure -a 2>/dev/null || true
       $STD apt update 2>/dev/null || true
     fi
   done
@@ -1182,6 +1186,12 @@ cleanup_orphaned_sources() {
 # This should be called at the start of any setup function
 # ------------------------------------------------------------------------------
 ensure_apt_working() {
+  # Fix interrupted dpkg operations first
+  # This can happen if a previous installation was interrupted (e.g., by script error)
+  if [[ -f /var/lib/dpkg/lock-frontend ]] || dpkg --audit 2>&1 | grep -q "interrupted"; then
+    $STD dpkg --configure -a 2>/dev/null || true
+  fi
+
   # Clean up orphaned sources first
   cleanup_orphaned_sources
 
