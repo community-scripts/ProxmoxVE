@@ -1728,12 +1728,13 @@ function fetch_and_deploy_gh_release() {
 
   ### Tarball Mode ###
   if [[ "$mode" == "tarball" || "$mode" == "source" ]]; then
-    url=$(echo "$json" | jq -r '.tarball_url // empty')
-    [[ -z "$url" ]] && url="https://github.com/$repo/archive/refs/tags/v$version.tar.gz"
+    # GitHub API's tarball_url/zipball_url can return HTTP 300 Multiple Choices
+    # when a branch and tag share the same name. Use explicit refs/tags/ URL instead.
+    local direct_tarball_url="https://github.com/$repo/archive/refs/tags/$tag_name.tar.gz"
     filename="${app_lc}-${version}.tar.gz"
 
-    curl $download_timeout -fsSL -o "$tmpdir/$filename" "$url" || {
-      msg_error "Download failed: $url"
+    curl $download_timeout -fsSL -o "$tmpdir/$filename" "$direct_tarball_url" || {
+      msg_error "Download failed: $direct_tarball_url"
       rm -rf "$tmpdir"
       return 1
     }
