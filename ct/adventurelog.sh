@@ -45,6 +45,10 @@ function update_script() {
     fetch_and_deploy_gh_release "adventurelog" "seanmorley15/adventurelog"
     PYTHON_VERSION="3.13" setup_uv
 
+    msg_info "Ensuring PostgreSQL Extensions"
+    $STD sudo -u postgres psql -d adventurelog_db -c "CREATE EXTENSION IF NOT EXISTS postgis;"
+    msg_ok "PostgreSQL Extensions Ready"
+
     msg_info "Updating ${APP}"
     cp /opt/adventurelog-backup/backend/server/.env /opt/adventurelog/backend/server/.env
     cp -r /opt/adventurelog-backup/backend/server/media /opt/adventurelog/backend/server/media
