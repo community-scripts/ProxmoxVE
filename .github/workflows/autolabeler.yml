@@ -57,10 +57,10 @@ jobs:
 
               if (shouldAddLabel) {
                 labelsToAdd.add(label);
-                if (label === "update script") {
+                // Add specific sub-labels for tools
+                if (label === "tools") {
                   for (const prFile of prFiles) {
                     const filename = prFile.filename;
-                    if (filename.startsWith("vm/")) labelsToAdd.add("vm");
                     if (filename.startsWith("tools/addon/")) labelsToAdd.add("addon");
                     if (filename.startsWith("tools/pve/")) labelsToAdd.add("pve-tool");
                   }
@@ -75,7 +75,7 @@ jobs:
               "💥 **Breaking change**": "breaking change",
               "🆕 **New script**": "new script",
               "🔧 **Refactoring / Code Cleanup**": "refactor",
-              "📝 **Documentation update**": "maintenance"
+              "📝 **Documentation update**": "documentation"
             };
 
             for (const [checkbox, label] of Object.entries(templateLabelMappings)) {

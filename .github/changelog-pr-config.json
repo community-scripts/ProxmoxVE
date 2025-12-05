@@ -48,6 +48,54 @@
     ]
   },
   {
+    "title": "🆕 New VMs",
+    "labels": [
+      "new vm"
+    ]
+  },
+  {
+    "title": "🚀 Updated VMs",
+    "labels": [
+      "update vm"
+    ],
+    "subCategories": [
+      {
+        "title": "🐞 Bug Fixes",
+        "labels": [
+          "bugfix"
+        ],
+        "notes": []
+      },
+      {
+        "title": "✨ New Features",
+        "labels": [
+          "feature"
+        ],
+        "notes": []
+      },
+      {
+        "title": "💥 Breaking Changes",
+        "labels": [
+          "breaking change"
+        ],
+        "notes": []
+      },
+      {
+        "title": "🔧 Refactor",
+        "labels": [
+          "refactor"
+        ],
+        "notes": []
+      }
+    ]
+  },
+  {
+    "title": "🗑️ Deleted VMs",
+    "labels": [
+      "delete vm"
+    ]
+  },
+  {
     "title": "💾 Core",
     "labels": [
       "core"
@@ -84,9 +132,9 @@
     ]
   },
   {
-    "title": "🧰 Maintenance",
+    "title": "🧰 Tools",
     "labels": [
-      "maintenance"
+      "tools"
     ],
     "subCategories": [
       {
@@ -111,16 +159,96 @@
         "notes": []
       },
       {
-        "title": "📡 API",
+        "title": "🔧 Refactor",
         "labels": [
-          "api"
+          "refactor"
+        ],
+        "notes": []
+      }
+    ]
+  },
+  {
+    "title": "📚 Documentation",
+    "labels": [
+      "documentation"
+    ],
+    "subCategories": [
+      {
+        "title": "🐞 Bug Fixes",
+        "labels": [
+          "bugfix"
         ],
         "notes": []
       },
       {
-        "title": "📂 Github",
+        "title": "✨ New Features",
         "labels": [
-          "github"
+          "feature"
+        ],
+        "notes": []
+      },
+      {
+        "title": "🔧 Refactor",
+        "labels": [
+          "refactor"
+        ],
+        "notes": []
+      }
+    ]
+  },
+  {
+    "title": "📂 Github",
+    "labels": [
+      "github"
+    ],
+    "subCategories": [
+      {
+        "title": "🐞 Bug Fixes",
+        "labels": [
+          "bugfix"
+        ],
+        "notes": []
+      },
+      {
+        "title": "✨ New Features",
+        "labels": [
+          "feature"
+        ],
+        "notes": []
+      },
+      {
+        "title": "🔧 Refactor",
+        "labels": [
+          "refactor"
+        ],
+        "notes": []
+      }
+    ]
+  },
+  {
+    "title": "📡 API",
+    "labels": [
+      "api"
+    ],
+    "subCategories": [
+      {
+        "title": "🐞 Bug Fixes",
+        "labels": [
+          "bugfix"
+        ],
+        "notes": []
+      },
+      {
+        "title": "✨ New Features",
+        "labels": [
+          "feature"
+        ],
+        "notes": []
+      },
+      {
+        "title": "💥 Breaking Changes",
+        "labels": [
+          "breaking change"
         ],
         "notes": []
       },
