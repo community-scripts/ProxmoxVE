@@ -18,10 +18,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
-  - Improve NVIDIA device detection for container passthrough [@MickLesk](https://github.com/MickLesk) ([#9670](https://github.com/community-scripts/ProxmoxVE/pull/9670))
-
   - #### 🐞 Bug Fixes
 
+    - fix(librespeed-rs): use correct service name [@jniles](https://github.com/jniles) ([#9683](https://github.com/community-scripts/ProxmoxVE/pull/9683))
+    - Improve NVIDIA device detection for container passthrough [@MickLesk](https://github.com/MickLesk) ([#9670](https://github.com/community-scripts/ProxmoxVE/pull/9670))
     - Fix AdventureLog installation failure: missing postgis extension permissions [@Copilot](https://github.com/Copilot) ([#9674](https://github.com/community-scripts/ProxmoxVE/pull/9674))
     - paperless: ASGI interface typo [@MickLesk](https://github.com/MickLesk) ([#9668](https://github.com/community-scripts/ProxmoxVE/pull/9668))
     - var. core fixes (bash to sh in fix_gpu_gids ...)  [@MickLesk](https://github.com/MickLesk) ([#9666](https://github.com/community-scripts/ProxmoxVE/pull/9666))
