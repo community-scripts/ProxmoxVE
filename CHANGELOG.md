@@ -21,6 +21,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - libretranslate: pin uv python to 3.12 (pytorch fix) [@MickLesk](https://github.com/MickLesk) ([#9699](https://github.com/community-scripts/ProxmoxVE/pull/9699))
     - alpine: (mariadb/postgresql): correct php-cgi path for php83 (adminer) [@MickLesk](https://github.com/MickLesk) ([#9698](https://github.com/community-scripts/ProxmoxVE/pull/9698))
     - fix(librespeed-rs): use correct service name [@jniles](https://github.com/jniles) ([#9683](https://github.com/community-scripts/ProxmoxVE/pull/9683))
     - NetVisor: fix daemon auto-config [@vhsdream](https://github.com/vhsdream) ([#9682](https://github.com/community-scripts/ProxmoxVE/pull/9682))
