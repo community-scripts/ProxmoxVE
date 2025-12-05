@@ -28,12 +28,12 @@ function update_script() {
     exit
   fi
 
-  # Check for old data structure and prompt migration
+  # Check for old data structure and prompt migration (exclude symlinks)
   if [[ -f /opt/paperless/paperless.conf ]]; then
     local OLD_DIRS=()
-    [[ -d /opt/paperless/consume ]] && OLD_DIRS+=("consume")
-    [[ -d /opt/paperless/data ]] && OLD_DIRS+=("data")
-    [[ -d /opt/paperless/media ]] && OLD_DIRS+=("media")
+    [[ -d /opt/paperless/consume && ! -L /opt/paperless/consume ]] && OLD_DIRS+=("consume")
+    [[ -d /opt/paperless/data && ! -L /opt/paperless/data ]] && OLD_DIRS+=("data")
+    [[ -d /opt/paperless/media && ! -L /opt/paperless/media ]] && OLD_DIRS+=("media")
 
     if [[ ${#OLD_DIRS[@]} -gt 0 ]]; then
       msg_error "Old data structure detected in /opt/paperless/"
