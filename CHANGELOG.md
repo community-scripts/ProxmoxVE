@@ -32,6 +32,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Refactor: OneDev [@MickLesk](https://github.com/MickLesk) ([#9597](https://github.com/community-scripts/ProxmoxVE/pull/9597))
 
+### 📂 Github
+
+  - chore(github): improve PR template and cleanup obsolete references | move contribution guide [@MickLesk](https://github.com/MickLesk) ([#9700](https://github.com/community-scripts/ProxmoxVE/pull/9700))
+
 ## 2025-12-04
 
 ### 🛠️ Core Overhaul
