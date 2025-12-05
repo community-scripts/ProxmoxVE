@@ -48,7 +48,7 @@ $STD cargo build --release --bin daemon
 cp ./target/release/daemon /usr/bin/netvisor-daemon
 msg_ok "Built Netvisor-daemon"
 
-msg_info "Configuring server & daemon for first-run"
+msg_info "Configuring server for first-run"
 LOCAL_IP="$(hostname -I | awk '{print $1}')"
 cat <<EOF >/opt/netvisor/.env
 ### - SERVER
@@ -101,19 +101,26 @@ WantedBy=multi-user.target
 EOF
 
 systemctl enable -q --now netvisor-server
-sleep 5
-NETWORK_ID="$(sudo -u postgres psql -1 -t -d $PG_DB_NAME -c 'SELECT id FROM networks;')"
-API_KEY="$(sudo -u postgres psql -1 -t -d $PG_DB_NAME -c 'SELECT key from api_keys;')"
 
-cat <<EOF >/etc/systemd/system/netvisor-daemon.service
+# Creating short script to configure netvisor-daemon
+cat <<EOF >~/configure_daemon.sh
+#!/usr/bin/env bash
+
+echo "Auto-configuring integrated daemon..."
+
+NETWORK_ID="\$(sudo -u postgres psql -1 -t -d "${PG_DB_NAME}" -c 'SELECT id FROM networks;')"
+API_KEY="\$(sudo -u postgres psql -1 -t -d "${PG_DB_NAME}" -c 'SELECT key FROM api_keys;')"
+
+cat <<END >/etc/systemd/system/netvisor-daemon.service
 [Unit]
 Description=NetVisor Network Discovery Daemon
-After=network.target netvisor-server.service
+After=network-online.target
+Wants=network-online.target
 
 [Service]
 Type=simple
-EnvironmentFile=/opt/netvisor/.env
-ExecStart=/usr/bin/netvisor-daemon --server-url http://127.0.0.1:60072 --network-id ${NETWORK_ID} --daemon-api-key ${API_KEY}
+User=root
+ExecStart=/usr/bin/netvisor-daemon --server-url http://127.0.0.1:60072 --network-id \${NETWORK_ID} --daemon-api-key \${API_KEY} --mode push
 Restart=always
 RestartSec=10
 StandardOutput=journal
@@ -121,9 +128,14 @@ StandardError=journal
 
 [Install]
 WantedBy=multi-user.target
-EOF
+END
+
 systemctl enable -q --now netvisor-daemon
-msg_ok "Netvisor server & daemon configured and running"
+echo "NetVisor daemon configured and running"
+
+EOF
+chmod +x ~/configure_daemon.sh
+msg_ok "Netvisor server running - please create an account in the UI to continue."
 
 motd_ssh
 customize

@@ -33,11 +33,11 @@
   },
   "notes": [
     {
-      "text": "The integrated daemon config is located at `/root/.config/daemon/config.json`",
+      "text": "To configure the integrated daemon after install is complete, either use the `Create Daemon` menu in the UI, or run `/root/configure_daemon.sh` for automatic configuration",
       "type": "info"
     },
     {
-      "text": "When using a reverse proxy, edit `/opt/netvisor/ui/build/_app/env.js`: add 443 to `PUBLIC_SERVER_PORT` and remove 'default' from `PUBLIC_SERVER_HOSTNAME`.",
+      "text": "The integrated daemon config is located at `/root/.config/daemon/config.json`",
       "type": "info"
     }
   ]
