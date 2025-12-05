@@ -67,7 +67,7 @@ function update_script() {
     $STD uv sync
     msg_ok "Installed Backend"
 
-    msg_info "Restoring Environment File"
+    msg_info "Restoring .env"
     if [[ -f /opt/metube_bak/.env ]]; then
       cp /opt/metube_bak/.env /opt/metube/.env
     fi
