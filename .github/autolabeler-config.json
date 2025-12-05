@@ -5,7 +5,8 @@
       "includeGlobs": [
         "ct/**",
         "install/**",
-        "turnkey/**"
+        "turnkey/**",
+        "vm/**"
       ],
       "excludeGlobs": []
     }
@@ -16,7 +17,8 @@
       "includeGlobs": [
         "ct/**",
         "install/**",
-        "turnkey/**"
+        "turnkey/**",
+        "vm/**"
       ],
       "excludeGlobs": []
     }
@@ -27,32 +29,15 @@
       "includeGlobs": [
         "ct/**",
         "install/**",
-        "turnkey/**"
-      ],
-      "excludeGlobs": []
-    }
-  ],
-  "new vm": [
-    {
-      "fileStatus": "added",
-      "includeGlobs": [
+        "turnkey/**",
         "vm/**"
       ],
       "excludeGlobs": []
     }
   ],
-  "update vm": [
+  "vm": [
     {
-      "fileStatus": "modified",
-      "includeGlobs": [
-        "vm/**"
-      ],
-      "excludeGlobs": []
-    }
-  ],
-  "delete vm": [
-    {
-      "fileStatus": "removed",
+      "fileStatus": null,
       "includeGlobs": [
         "vm/**"
       ],
