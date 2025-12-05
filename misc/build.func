@@ -2442,9 +2442,16 @@ build_container() {
       msg_custom "🎮" "${GN}" "Detected NVIDIA GPU"
 
       # Simple passthrough - just bind /dev/nvidia* devices if they exist
-      for d in /dev/nvidia* /dev/nvidiactl /dev/nvidia-modeset /dev/nvidia-uvm /dev/nvidia-uvm-tools; do
-        [[ -e "$d" ]] && NVIDIA_DEVICES+=("$d")
+      # Only include character devices (-c), skip directories like /dev/nvidia-caps
+      for d in /dev/nvidia*; do
+        [[ -c "$d" ]] && NVIDIA_DEVICES+=("$d")
       done
+      # Also check for devices inside /dev/nvidia-caps/ directory
+      if [[ -d /dev/nvidia-caps ]]; then
+        for d in /dev/nvidia-caps/*; do
+          [[ -c "$d" ]] && NVIDIA_DEVICES+=("$d")
+        done
+      fi
 
       if [[ ${#NVIDIA_DEVICES[@]} -gt 0 ]]; then
         msg_custom "🎮" "${GN}" "Found ${#NVIDIA_DEVICES[@]} NVIDIA device(s) for passthrough"
