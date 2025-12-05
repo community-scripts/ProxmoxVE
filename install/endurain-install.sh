@@ -24,7 +24,7 @@ PYTHON_VERSION="3.13" setup_uv
 NODE_VERSION="24" setup_nodejs
 PG_VERSION="17" PG_MODULES="postgis" setup_postgresql
 PG_DB_NAME="enduraindb" PG_DB_USER="endurain" setup_postgresql_db
-
+import_local_ip
 fetch_and_deploy_gh_release "endurain" "joaovitoriasilva/endurain" "tarball" "latest" "/opt/endurain"
 
 msg_info "Setting up Endurain"
@@ -36,8 +36,7 @@ rm -rf \
 mkdir -p /opt/endurain_data/{data,logs}
 SECRET_KEY=$(openssl rand -hex 32)
 FERNET_KEY=$(openssl rand -base64 32)
-IP=$(hostname -I | awk '{print $1}')
-ENDURAIN_HOST=http://${IP}:8080
+ENDURAIN_HOST=http://${LOCAL_IP}:8080
 cat <<EOF >/opt/endurain/.env
 DB_PASSWORD=${PG_DB_PASS}
 
