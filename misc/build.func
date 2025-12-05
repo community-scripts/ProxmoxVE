@@ -2954,15 +2954,14 @@ fix_gpu_gids() {
 
   # For privileged containers: also fix permissions inside container
   if [[ "$CT_TYPE" == "0" ]]; then
-    pct exec "$CTID" -- bash -c "
+    pct exec "$CTID" -- sh -c "
       if [ -d /dev/dri ]; then
         for dev in /dev/dri/*; do
           if [ -e \"\$dev\" ]; then
-            if [[ \"\$dev\" =~ renderD ]]; then
-              chgrp ${render_gid} \"\$dev\" 2>/dev/null || true
-            else
-              chgrp ${video_gid} \"\$dev\" 2>/dev/null || true
-            fi
+            case \"\$dev\" in
+              *renderD*) chgrp ${render_gid} \"\$dev\" 2>/dev/null || true ;;
+              *)         chgrp ${video_gid} \"\$dev\" 2>/dev/null || true ;;
+            esac
             chmod 660 \"\$dev\" 2>/dev/null || true
           fi
         done
