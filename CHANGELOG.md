@@ -14,7 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - MeTube ([#9671](https://github.com/community-scripts/ProxmoxVE/pull/9671))
+  - Endurain ([#9681](https://github.com/community-scripts/ProxmoxVE/pull/9681))
+- MeTube ([#9671](https://github.com/community-scripts/ProxmoxVE/pull/9671))
 
 ### 🚀 Updated Scripts
 
