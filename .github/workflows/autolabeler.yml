@@ -91,7 +91,7 @@ jobs:
             const websiteCheckbox = "🌍 **Website update**";
             const escapedWebsite = websiteCheckbox.replace(/([.*+?^=!:${}()|[\]\/\\])/g, "\\$1");
             const websiteRegex = new RegExp(`- \\[(x|X)\\]\\s*${escapedWebsite}`, "i");
-            
+
             if (websiteRegex.test(prBody)) {
               const hasJson = prFiles.some((f) => f.filename.startsWith("frontend/public/json/"));
               const hasUpdateScript = labelsToAdd.has("update script");
