@@ -1,8 +1,43 @@
 [
   {
+    "name": "traefik/traefik",
+    "version": "v3.6.4",
+    "date": "2025-12-05T09:58:17Z"
+  },
+  {
+    "name": "alexta69/metube",
+    "version": "2025.12.05",
+    "date": "2025-12-05T09:45:02Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.404",
+    "date": "2025-12-05T05:55:24Z"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2025.11.4",
+    "date": "2025-12-05T03:54:58Z"
+  },
+  {
     "name": "documenso/documenso",
-    "version": "v2.2.3",
-    "date": "2025-12-04T22:53:40Z"
+    "version": "v2.2.4",
+    "date": "2025-12-05T01:23:23Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5",
+    "date": "2025-12-05T00:27:08Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.13.1-rc2",
+    "date": "2025-12-02T17:28:41Z"
   },
   {
     "name": "transmission/transmission",
@@ -30,6 +65,11 @@
     "date": "2025-12-03T16:12:15Z"
   },
   {
+    "name": "keycloak/keycloak",
+    "version": "26.4.7",
+    "date": "2025-12-01T08:14:11Z"
+  },
+  {
     "name": "chrisvel/tududi",
     "version": "v0.86.1",
     "date": "2025-11-14T05:05:44Z"
@@ -38,11 +78,6 @@
     "name": "emqx/emqx",
     "version": "e6.1.0-streams.2",
     "date": "2025-12-04T16:02:45Z"
-  },
-  {
-    "name": "traefik/traefik",
-    "version": "v3.6.3",
-    "date": "2025-12-04T16:02:05Z"
   },
   {
     "name": "wazuh/wazuh",
@@ -90,19 +125,9 @@
     "date": "2025-09-20T12:12:33Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.402",
-    "date": "2025-12-04T05:56:18Z"
-  },
-  {
     "name": "BerriAI/litellm",
     "version": "v1.80.7.dev.3",
     "date": "2025-12-04T05:34:02Z"
-  },
-  {
-    "name": "ollama/ollama",
-    "version": "v0.13.1",
-    "date": "2025-12-02T18:58:08Z"
   },
   {
     "name": "kyantech/Palmr",
@@ -113,16 +138,6 @@
     "name": "gtsteffaniak/filebrowser",
     "version": "v1.2.0-experimental-sql-indexing",
     "date": "2025-12-04T01:35:46Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.5",
-    "date": "2025-12-04T00:27:05Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
   },
   {
     "name": "rcourtman/Pulse",
@@ -170,19 +185,9 @@
     "date": "2025-12-03T17:43:51Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.4.7",
-    "date": "2025-12-01T08:14:11Z"
-  },
-  {
     "name": "karakeep-app/karakeep",
     "version": "v0.29.1",
     "date": "2025-12-03T16:56:18Z"
-  },
-  {
-    "name": "esphome/esphome",
-    "version": "2025.11.3",
-    "date": "2025-12-03T16:37:01Z"
   },
   {
     "name": "node-red/node-red",
@@ -237,7 +242,7 @@
   {
     "name": "mealie-recipes/mealie",
     "version": "v3.6.1",
-    "date": "2025-12-02T23:08:41Z"
+    "date": "2025-12-02T22:54:10Z"
   },
   {
     "name": "apache/tomcat",
@@ -478,11 +483,6 @@
     "name": "authelia/authelia",
     "version": "v4.39.15",
     "date": "2025-11-29T12:13:04Z"
-  },
-  {
-    "name": "alexta69/metube",
-    "version": "2025.11.29",
-    "date": "2025-11-29T07:59:21Z"
   },
   {
     "name": "FlareSolverr/FlareSolverr",
