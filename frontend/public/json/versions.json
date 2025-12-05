@@ -1,8 +1,68 @@
 [
   {
+    "name": "documenso/documenso",
+    "version": "v2.2.3",
+    "date": "2025-12-04T22:53:40Z"
+  },
+  {
+    "name": "transmission/transmission",
+    "version": "4.0.1-beta.1",
+    "date": "2024-12-13T00:16:24Z"
+  },
+  {
+    "name": "LibreTranslate/LibreTranslate",
+    "version": "v1.8.3",
+    "date": "2025-12-04T21:07:00Z"
+  },
+  {
+    "name": "caddyserver/caddy",
+    "version": "v2.10.2",
+    "date": "2025-08-23T03:10:31Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.30.20",
+    "date": "2025-12-04T18:17:47Z"
+  },
+  {
+    "name": "AdguardTeam/AdGuardHome",
+    "version": "v0.107.70",
+    "date": "2025-12-03T16:12:15Z"
+  },
+  {
+    "name": "chrisvel/tududi",
+    "version": "v0.86.1",
+    "date": "2025-11-14T05:05:44Z"
+  },
+  {
+    "name": "emqx/emqx",
+    "version": "e6.1.0-streams.2",
+    "date": "2025-12-04T16:02:45Z"
+  },
+  {
+    "name": "traefik/traefik",
+    "version": "v3.6.3",
+    "date": "2025-12-04T16:02:05Z"
+  },
+  {
+    "name": "wazuh/wazuh",
+    "version": "coverity-w49-4.14.2",
+    "date": "2025-12-02T14:01:48Z"
+  },
+  {
     "name": "n8n-io/n8n",
-    "version": "n8n@1.121.3",
-    "date": "2025-11-26T14:58:48Z"
+    "version": "n8n@1.122.5",
+    "date": "2025-12-04T14:09:39Z"
+  },
+  {
+    "name": "crowdsecurity/crowdsec",
+    "version": "v1.7.4",
+    "date": "2025-12-04T13:56:39Z"
+  },
+  {
+    "name": "pocketbase/pocketbase",
+    "version": "v0.34.2",
+    "date": "2025-12-04T13:08:18Z"
   },
   {
     "name": "fuma-nama/fumadocs",
@@ -41,13 +101,8 @@
   },
   {
     "name": "ollama/ollama",
-    "version": "v0.13.1-rc2",
-    "date": "2025-12-02T17:28:41Z"
-  },
-  {
-    "name": "documenso/documenso",
-    "version": "v2.2.2",
-    "date": "2025-12-04T03:50:09Z"
+    "version": "v0.13.1",
+    "date": "2025-12-02T18:58:08Z"
   },
   {
     "name": "kyantech/Palmr",
@@ -68,16 +123,6 @@
     "name": "steveiliop56/tinyauth",
     "version": "v4.1.0",
     "date": "2025-11-23T12:13:34Z"
-  },
-  {
-    "name": "transmission/transmission",
-    "version": "4.1.0-beta.4",
-    "date": "2025-12-03T23:04:08Z"
-  },
-  {
-    "name": "LibreTranslate/LibreTranslate",
-    "version": "v1.8.1",
-    "date": "2025-12-03T22:46:51Z"
   },
   {
     "name": "rcourtman/Pulse",
@@ -125,11 +170,6 @@
     "date": "2025-12-03T17:43:51Z"
   },
   {
-    "name": "caddyserver/caddy",
-    "version": "v2.11.0-beta.1",
-    "date": "2025-12-03T17:23:02Z"
-  },
-  {
     "name": "keycloak/keycloak",
     "version": "26.4.7",
     "date": "2025-12-01T08:14:11Z"
@@ -143,11 +183,6 @@
     "name": "esphome/esphome",
     "version": "2025.11.3",
     "date": "2025-12-03T16:37:01Z"
-  },
-  {
-    "name": "AdguardTeam/AdGuardHome",
-    "version": "v0.107.70",
-    "date": "2025-12-03T16:12:15Z"
   },
   {
     "name": "node-red/node-red",
@@ -168,11 +203,6 @@
     "name": "Graylog2/graylog2-server",
     "version": "6.2.10",
     "date": "2025-12-03T13:58:32Z"
-  },
-  {
-    "name": "crowdsecurity/crowdsec",
-    "version": "v1.7.3",
-    "date": "2025-10-24T10:51:12Z"
   },
   {
     "name": "laurent22/joplin",
@@ -207,7 +237,7 @@
   {
     "name": "mealie-recipes/mealie",
     "version": "v3.6.1",
-    "date": "2025-12-02T22:54:10Z"
+    "date": "2025-12-02T23:08:41Z"
   },
   {
     "name": "apache/tomcat",
@@ -240,11 +270,6 @@
     "date": "2025-12-02T20:22:32Z"
   },
   {
-    "name": "pocketbase/pocketbase",
-    "version": "v0.34.1",
-    "date": "2025-12-02T18:43:50Z"
-  },
-  {
     "name": "WordPress/WordPress",
     "version": "6.9",
     "date": "2025-12-02T18:36:17Z"
@@ -270,11 +295,6 @@
     "date": "2025-12-02T14:58:59Z"
   },
   {
-    "name": "wazuh/wazuh",
-    "version": "coverity-w49-4.14.2",
-    "date": "2025-12-02T14:01:48Z"
-  },
-  {
     "name": "tobychui/zoraxy",
     "version": "v3.3.0-rc3",
     "date": "2025-12-02T13:45:13Z"
@@ -288,6 +308,11 @@
     "name": "prometheus/prometheus",
     "version": "v3.8.0",
     "date": "2025-12-02T10:11:05Z"
+  },
+  {
+    "name": "neo4j/neo4j",
+    "version": "5.26.18",
+    "date": "2025-12-02T09:25:19Z"
   },
   {
     "name": "syncthing/syncthing",
@@ -338,11 +363,6 @@
     "name": "prometheus-pve/prometheus-pve-exporter",
     "version": "v3.6.0",
     "date": "2025-12-01T18:48:10Z"
-  },
-  {
-    "name": "msgbyte/tianji",
-    "version": "v1.30.18",
-    "date": "2025-12-01T17:57:43Z"
   },
   {
     "name": "VictoriaMetrics/VictoriaMetrics",
@@ -478,11 +498,6 @@
     "name": "dgtlmoon/changedetection.io",
     "version": "0.51.4",
     "date": "2025-11-28T12:26:59Z"
-  },
-  {
-    "name": "chrisvel/tududi",
-    "version": "v0.86.1",
-    "date": "2025-11-14T05:05:44Z"
   },
   {
     "name": "gotson/komga",
@@ -665,11 +680,6 @@
     "date": "2025-11-21T10:25:05Z"
   },
   {
-    "name": "emqx/emqx",
-    "version": "e6.0.2-beta.2",
-    "date": "2025-11-21T10:20:27Z"
-  },
-  {
     "name": "sabnzbd/sabnzbd",
     "version": "4.5.5",
     "date": "2025-10-24T11:12:22Z"
@@ -698,11 +708,6 @@
     "name": "saltstack/salt",
     "version": "v3007.9",
     "date": "2025-11-20T17:58:32Z"
-  },
-  {
-    "name": "neo4j/neo4j",
-    "version": "5.26.17",
-    "date": "2025-11-20T16:09:28Z"
   },
   {
     "name": "kimai/kimai",
@@ -753,11 +758,6 @@
     "name": "jupyter/notebook",
     "version": "v7.5.0",
     "date": "2025-11-19T08:36:29Z"
-  },
-  {
-    "name": "traefik/traefik",
-    "version": "v3.6.2",
-    "date": "2025-11-18T16:25:16Z"
   },
   {
     "name": "redis/redis",
