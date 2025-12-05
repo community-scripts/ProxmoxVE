@@ -30,13 +30,13 @@ function update_script() {
 
   if check_for_gh_release "librespeed-rust" "librespeed/speedtest-rust"; then
     msg_info "Stopping Services"
-    systemctl stop librespeed-rs
+    systemctl stop speedtest_rs
     msg_ok "Services Stopped"
 
     fetch_and_deploy_gh_release "librespeed-rust" "librespeed/speedtest-rust" "binary" "latest" "/opt/librespeed-rust" "librespeed-rs-x86_64-unknown-linux-gnu.deb"
 
     msg_info "Starting Service"
-    systemctl start librespeed-rs
+    systemctl start speedtest_rs
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
   fi
