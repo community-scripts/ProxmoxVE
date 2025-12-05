@@ -11,7 +11,7 @@
   "interface_port": 8080,
   "documentation": "https://docs.endurain.com/",
   "website": "https://github.com/joaovitoriasilva/endurain",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/endurain.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/endurain.webp",
   "config_path": "/opt/endurain/.env",
   "description": "Endurain is a self-hosted fitness tracking service designed to give users full control over their data and hosting environment. It's similar to Strava but focused on privacy and customization",
   "install_methods": [
