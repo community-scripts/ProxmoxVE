@@ -28,6 +28,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - paperless: ASGI interface typo [@MickLesk](https://github.com/MickLesk) ([#9668](https://github.com/community-scripts/ProxmoxVE/pull/9668))
     - var. core fixes (bash to sh in fix_gpu_gids ...)  [@MickLesk](https://github.com/MickLesk) ([#9666](https://github.com/community-scripts/ProxmoxVE/pull/9666))
 
+  - #### ✨ New Features
+
+    - tools.func: handle GitHub 300 Multiple Choices in tarball mode [@MickLesk](https://github.com/MickLesk) ([#9697](https://github.com/community-scripts/ProxmoxVE/pull/9697))
+
   - #### 🔧 Refactor
 
     - Refactor: OneDev [@MickLesk](https://github.com/MickLesk) ([#9597](https://github.com/community-scripts/ProxmoxVE/pull/9597))
