@@ -54,8 +54,7 @@
     {
       "fileStatus": null,
       "includeGlobs": [
-        "misc/*.func",
-        "misc/create_lxc.sh"
+        "misc/*.func"
       ],
       "excludeGlobs": [
         "misc/api.func"

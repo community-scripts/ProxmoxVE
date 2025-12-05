@@ -4,8 +4,10 @@ PRs without prior testing will be closed. -->
 
 
 
-## 🔗 Related PR / Issue  
-Link: #
+## 🔗 Related Issue
+<!-- Use "Fixes #123" to auto-close the issue when PR is merged -->
+<!-- Use "Relates to #123" if the issue should stay open -->
+Fixes #
 
 
 ## ✅ Prerequisites  (**X** in brackets) 
