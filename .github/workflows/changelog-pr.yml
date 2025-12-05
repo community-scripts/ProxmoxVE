@@ -176,6 +176,15 @@ jobs:
                     categorized = true;
                   }
                   }
+
+                  // Fallback: Add to Uncategorized if no category matched
+                  if (!categorized) {
+                    const uncategorized = categorizedPRs.find(category =>
+                      category.title.includes("Uncategorized") || category.labels.includes("needs triage"));
+                    if (uncategorized) {
+                      uncategorized.notes.push(prNote);
+                    }
+                  }
                 }
 
               }

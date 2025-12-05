@@ -30,8 +30,8 @@
 
   <br />
 
-  > **Simplify your Proxmox VE setup with community-driven automation scripts**  
-  > Originally created by tteck, now maintained and expanded by the community
+> **Simplify your Proxmox VE setup with community-driven automation scripts**  
+> Originally created by tteck, now maintained and expanded by the community
 
 </div>
 

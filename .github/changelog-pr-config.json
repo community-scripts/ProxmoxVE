@@ -42,6 +42,48 @@
     ]
   },
   {
+    "title": "🗑️ Deleted Scripts",
+    "labels": [
+      "delete script"
+    ]
+  },
+  {
+    "title": "💾 Core",
+    "labels": [
+      "core"
+    ],
+    "subCategories": [
+      {
+        "title": "🐞 Bug Fixes",
+        "labels": [
+          "bugfix"
+        ],
+        "notes": []
+      },
+      {
+        "title": "✨ New Features",
+        "labels": [
+          "feature"
+        ],
+        "notes": []
+      },
+      {
+        "title": "💥 Breaking Changes",
+        "labels": [
+          "breaking change"
+        ],
+        "notes": []
+      },
+      {
+        "title": "🔧 Refactor",
+        "labels": [
+          "refactor"
+        ],
+        "notes": []
+      }
+    ]
+  },
+  {
     "title": "🧰 Maintenance",
     "labels": [
       "maintenance"
@@ -76,23 +118,9 @@
         "notes": []
       },
       {
-        "title": "💾 Core",
-        "labels": [
-          "core"
-        ],
-        "notes": []
-      },
-      {
         "title": "📂 Github",
         "labels": [
           "github"
-        ],
-        "notes": []
-      },
-      {
-        "title": "📝 Documentation",
-        "labels": [
-          "maintenance"
         ],
         "notes": []
       },
@@ -142,7 +170,9 @@
     ]
   },
   {
-    "title": "❔ Unlabelled",
-    "labels": []
+    "title": "❔ Uncategorized",
+    "labels": [
+      "needs triage"
+    ]
   }
 ]
