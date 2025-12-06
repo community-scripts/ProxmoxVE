@@ -65,8 +65,8 @@ function update_script() {
         systemctl start wanderer-web
         msg_ok "Started service"
 
-        msg_info "Waiting for database migration to complete"
-        sleep 10
+        msg_info "Waiting for database migration to complete (this may take several minutes)"
+        sleep 30
         msg_ok "Database migration completed"
 
         msg_info "Stopping service"
