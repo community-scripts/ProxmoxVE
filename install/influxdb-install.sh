@@ -16,7 +16,7 @@ update_os
 msg_info "Setting up InfluxDB Repository"
 setup_deb822_repo \
   "influxdata" \
-  "https://repos.influxdata.com/influxdata-archive_compat.key" \
+  "https://repos.influxdata.com/influxdata-archive.key" \
   "https://repos.influxdata.com/$(get_os_info id)" \
   "stable"
 msg_ok "Set up InfluxDB Repository"
