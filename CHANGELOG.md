@@ -16,6 +16,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Update domain-locker-install.sh to enable auto-start after reboot [@alexindigo](https://github.com/alexindigo) ([#9715](https://github.com/community-scripts/ProxmoxVE/pull/9715))
 
+  - #### ✨ New Features
+
+    - pin Portainer Update to CE Version only [@sgaert](https://github.com/sgaert) ([#9710](https://github.com/community-scripts/ProxmoxVE/pull/9710))
+
 ## 2025-12-05
 
 ### 🆕 New Scripts
