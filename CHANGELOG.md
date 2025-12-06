@@ -16,6 +16,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Update domain-locker-install.sh to enable auto-start after reboot [@alexindigo](https://github.com/alexindigo) ([#9715](https://github.com/community-scripts/ProxmoxVE/pull/9715))
 
+  - #### 🐞 Bug Fixes
+
+    - InfluxDB: Update InfluxDB repository key URL [@tremor021](https://github.com/tremor021) ([#9720](https://github.com/community-scripts/ProxmoxVE/pull/9720))
+
   - #### ✨ New Features
 
     - pin Portainer Update to CE Version only [@sgaert](https://github.com/sgaert) ([#9710](https://github.com/community-scripts/ProxmoxVE/pull/9710))
