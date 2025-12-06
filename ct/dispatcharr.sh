@@ -91,7 +91,7 @@ function update_script() {
     if [[ -f /opt/dispatcharr/.env ]]; then
       if ! grep -q "DJANGO_SECRET_KEY" /opt/dispatcharr/.env; then
         msg_info "Adding DJANGO_SECRET_KEY to .env file"
-        DJANGO_SECRET=$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | cut -c1-50)
+        DJANGO_SECRET=$(openssl rand -base64 48 | tr -dc 'a-zA-Z0-9' | cut -c1-50)
         echo "DJANGO_SECRET_KEY=$DJANGO_SECRET" >> /opt/dispatcharr/.env
         msg_ok "Added DJANGO_SECRET_KEY"
       fi
