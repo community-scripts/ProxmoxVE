@@ -18,6 +18,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - InfluxDB: Remove InfluxData source list post-installation [@tremor021](https://github.com/tremor021) ([#9723](https://github.com/community-scripts/ProxmoxVE/pull/9723))
     - InfluxDB: Update InfluxDB repository key URL [@tremor021](https://github.com/tremor021) ([#9720](https://github.com/community-scripts/ProxmoxVE/pull/9720))
 
   - #### ✨ New Features
