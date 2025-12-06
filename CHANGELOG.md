@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-12-06
 
+### 🚀 Updated Scripts
+
+  - Update domain-locker-install.sh to enable auto-start after reboot [@alexindigo](https://github.com/alexindigo) ([#9715](https://github.com/community-scripts/ProxmoxVE/pull/9715))
+
 ## 2025-12-05
 
 ### 🆕 New Scripts
