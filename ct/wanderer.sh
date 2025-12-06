@@ -57,6 +57,26 @@ function update_script() {
 
     		fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary" "latest" "/opt/wanderer/source/search"
 
+        msg_info "Updating start script for database migration"
+        sed -i 's|meilisearch --master-key|meilisearch --experimental-dumpless-upgrade --master-key|g' /opt/wanderer/start.sh
+        msg_ok "Updated start script"
+
+        msg_info "Starting service with database migration"
+        systemctl start wanderer-web
+        msg_ok "Started service"
+
+        msg_info "Waiting for database migration to complete"
+        sleep 10
+        msg_ok "Database migration completed"
+
+        msg_info "Stopping service"
+        systemctl stop wanderer-web
+        msg_ok "Stopped service"
+
+        msg_info "Restoring start script to normal operation"
+        sed -i 's|meilisearch --experimental-dumpless-upgrade --master-key|meilisearch --master-key|g' /opt/wanderer/start.sh
+        msg_ok "Restored start script"
+
         msg_info "Starting service"
         systemctl start wanderer-web
         msg_ok "Started service"
