@@ -57,29 +57,49 @@ function update_script() {
 
     		fetch_and_deploy_gh_release "meilisearch" "meilisearch/meilisearch" "binary" "latest" "/opt/wanderer/source/search"
 
-        msg_info "Updating start script for database migration"
-        sed -i 's|meilisearch --master-key|meilisearch --experimental-dumpless-upgrade --master-key|g' /opt/wanderer/start.sh
-        msg_ok "Updated start script"
+        msg_info "Preparing start script for database migration"
+        if grep -q "meilisearch --master-key" /opt/wanderer/start.sh; then
+            sed -i 's|meilisearch --master-key|meilisearch --experimental-dumpless-upgrade --master-key|g' /opt/wanderer/start.sh
+            msg_ok "Prepared start script"
+        else
+            msg_error "Could not find expected meilisearch command in start script"
+            exit 1
+        fi
 
         msg_info "Starting service with database migration"
         systemctl start wanderer-web
-        msg_ok "Started service"
+        if systemctl is-active --quiet wanderer-web; then
+            msg_ok "Started service"
+        else
+            msg_error "Failed to start service"
+            exit 1
+        fi
 
-        msg_info "Waiting for database migration to complete (this may take several minutes)"
+        msg_info "Allowing time for database migration (30 seconds)"
         sleep 30
-        msg_ok "Database migration completed"
+        msg_ok "Migration time elapsed"
 
         msg_info "Stopping service"
         systemctl stop wanderer-web
         msg_ok "Stopped service"
 
         msg_info "Restoring start script to normal operation"
-        sed -i 's|meilisearch --experimental-dumpless-upgrade --master-key|meilisearch --master-key|g' /opt/wanderer/start.sh
-        msg_ok "Restored start script"
+        if grep -q "meilisearch --experimental-dumpless-upgrade --master-key" /opt/wanderer/start.sh; then
+            sed -i 's|meilisearch --experimental-dumpless-upgrade --master-key|meilisearch --master-key|g' /opt/wanderer/start.sh
+            msg_ok "Restored start script"
+        else
+            msg_error "Could not find experimental upgrade flag in start script"
+            exit 1
+        fi
 
         msg_info "Starting service"
         systemctl start wanderer-web
-        msg_ok "Started service"
+        if systemctl is-active --quiet wanderer-web; then
+            msg_ok "Started service"
+        else
+            msg_error "Failed to start service"
+            exit 1
+        fi
         msg_ok "Update Successful"
     fi
     exit
