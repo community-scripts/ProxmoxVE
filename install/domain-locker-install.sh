@@ -64,7 +64,7 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable --now -q domain-locker
+systemctl enable -q --now domain-locker
 msg_info "Created Service"
 
 motd_ssh
