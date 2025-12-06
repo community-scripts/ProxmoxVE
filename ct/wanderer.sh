@@ -76,12 +76,20 @@ function update_script() {
         fi
 
         msg_info "Allowing time for database migration (30 seconds)"
+        # Wait period allows meilisearch to complete database schema migration
+        # For most databases, 30 seconds is sufficient, but large databases may need more time
         sleep 30
         msg_ok "Migration time elapsed"
 
         msg_info "Stopping service"
         systemctl stop wanderer-web
-        msg_ok "Stopped service"
+        # Verify service stopped successfully
+        if ! systemctl is-active --quiet wanderer-web; then
+            msg_ok "Stopped service"
+        else
+            msg_error "Failed to stop service"
+            exit 1
+        fi
 
         msg_info "Restoring start script to normal operation"
         if grep -q "meilisearch --experimental-dumpless-upgrade --master-key" /opt/wanderer/start.sh; then
