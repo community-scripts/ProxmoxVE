@@ -38,6 +38,7 @@ else
   $STD dpkg -i chronograf_1.10.8_amd64.deb
   rm -rf /chronograf_1.10.8_amd64.deb
 fi
+rm /etc/apt/sources.list.d/influxdata.list
 $STD systemctl enable --now influxdb
 msg_ok "Installed InfluxDB"
 
