@@ -1,5 +1,75 @@
 [
   {
+    "name": "fuma-nama/fumadocs",
+    "version": "fumadocs-openapi@10.1.1",
+    "date": "2025-12-06T11:27:58Z"
+  },
+  {
+    "name": "YunoHost/yunohost",
+    "version": "debian/13.0.2",
+    "date": "2025-12-06T10:46:12Z"
+  },
+  {
+    "name": "toniebox-reverse-engineering/teddycloud",
+    "version": "tc_v0.6.5",
+    "date": "2025-12-06T10:32:07Z"
+  },
+  {
+    "name": "inspircd/inspircd",
+    "version": "v4.9.0",
+    "date": "2025-12-06T08:58:40Z"
+  },
+  {
+    "name": "chrisvel/tududi",
+    "version": "v0.87",
+    "date": "2025-12-06T07:36:26Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.4.9",
+    "date": "2025-11-28T20:36:20Z"
+  },
+  {
+    "name": "tobychui/zoraxy",
+    "version": "v3.3.0",
+    "date": "2025-12-06T06:18:23Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.3",
+    "date": "2025-09-20T12:12:33Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.408",
+    "date": "2025-12-06T06:00:34Z"
+  },
+  {
+    "name": "theonedev/onedev",
+    "version": "v13.1.3",
+    "date": "2025-12-06T04:40:09Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5",
+    "date": "2025-12-06T00:27:05Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.13.2-rc1",
+    "date": "2025-12-04T23:19:06Z"
+  },
+  {
+    "name": "umami-software/umami",
+    "version": "v2.20.0",
+    "date": "2025-12-05T23:51:38Z"
+  },
+  {
     "name": "Stirling-Tools/Stirling-PDF",
     "version": "v2.1.1",
     "date": "2025-12-05T23:48:08Z"
@@ -30,9 +100,9 @@
     "date": "2025-12-05T19:17:09Z"
   },
   {
-    "name": "umami-software/umami",
-    "version": "v2.20.0",
-    "date": "2025-12-05T18:06:01Z"
+    "name": "keycloak/keycloak",
+    "version": "26.4.7",
+    "date": "2025-12-01T08:14:11Z"
   },
   {
     "name": "booklore-app/booklore",
@@ -80,11 +150,6 @@
     "date": "2025-12-05T09:45:02Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.404",
-    "date": "2025-12-05T05:55:24Z"
-  },
-  {
     "name": "esphome/esphome",
     "version": "2025.11.4",
     "date": "2025-12-05T03:54:58Z"
@@ -93,21 +158,6 @@
     "name": "documenso/documenso",
     "version": "v2.2.4",
     "date": "2025-12-05T01:23:23Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.5",
-    "date": "2025-12-05T00:27:08Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
-  },
-  {
-    "name": "ollama/ollama",
-    "version": "v0.13.1-rc2",
-    "date": "2025-12-02T17:28:41Z"
   },
   {
     "name": "transmission/transmission",
@@ -135,16 +185,6 @@
     "date": "2025-12-03T16:12:15Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.4.7",
-    "date": "2025-12-01T08:14:11Z"
-  },
-  {
-    "name": "chrisvel/tududi",
-    "version": "v0.86.1",
-    "date": "2025-11-14T05:05:44Z"
-  },
-  {
     "name": "wazuh/wazuh",
     "version": "coverity-w49-4.14.2",
     "date": "2025-12-02T14:01:48Z"
@@ -160,11 +200,6 @@
     "date": "2025-12-04T13:08:18Z"
   },
   {
-    "name": "fuma-nama/fumadocs",
-    "version": "fumadocs-mdx@14.1.0",
-    "date": "2025-12-04T09:47:35Z"
-  },
-  {
     "name": "glpi-project/glpi",
     "version": "11.0.4",
     "date": "2025-12-04T09:26:37Z"
@@ -173,11 +208,6 @@
     "name": "bunkerity/bunkerweb",
     "version": "v1.6.6",
     "date": "2025-11-24T15:30:21Z"
-  },
-  {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.3",
-    "date": "2025-09-20T12:12:33Z"
   },
   {
     "name": "kyantech/Palmr",
@@ -267,7 +297,7 @@
   {
     "name": "mealie-recipes/mealie",
     "version": "v3.6.1",
-    "date": "2025-12-02T23:08:41Z"
+    "date": "2025-12-02T22:54:10Z"
   },
   {
     "name": "apache/tomcat",
@@ -318,11 +348,6 @@
     "name": "nzbgetcom/nzbget",
     "version": "v25.4",
     "date": "2025-10-09T10:27:01Z"
-  },
-  {
-    "name": "tobychui/zoraxy",
-    "version": "v3.3.0-rc3",
-    "date": "2025-12-02T13:45:13Z"
   },
   {
     "name": "docker/compose",
@@ -408,11 +433,6 @@
     "name": "photoprism/photoprism",
     "version": "251130-b3068414c",
     "date": "2025-12-01T05:07:31Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.4.9",
-    "date": "2025-11-28T20:36:20Z"
   },
   {
     "name": "jellyfin/jellyfin",
@@ -530,19 +550,9 @@
     "date": "2025-11-27T18:12:22Z"
   },
   {
-    "name": "theonedev/onedev",
-    "version": "v13.1.2",
-    "date": "2025-11-27T12:48:22Z"
-  },
-  {
     "name": "ipfs/kubo",
     "version": "v0.39.0",
     "date": "2025-11-27T03:47:38Z"
-  },
-  {
-    "name": "YunoHost/yunohost",
-    "version": "debian/12.1.36",
-    "date": "2025-11-27T00:33:48Z"
   },
   {
     "name": "gristlabs/grist-core",
@@ -1290,11 +1300,6 @@
     "date": "2025-08-06T12:32:02Z"
   },
   {
-    "name": "inspircd/inspircd",
-    "version": "v4.8.0",
-    "date": "2025-08-02T09:12:10Z"
-  },
-  {
     "name": "Suwayomi/Suwayomi-Server",
     "version": "v2.1.1867",
     "date": "2025-07-31T18:08:43Z"
@@ -1453,11 +1458,6 @@
     "name": "YuukanOO/seelf",
     "version": "v2.4.2",
     "date": "2025-03-08T10:49:04Z"
-  },
-  {
-    "name": "toniebox-reverse-engineering/teddycloud",
-    "version": "tc_v0.6.4",
-    "date": "2025-03-05T15:43:40Z"
   },
   {
     "name": "bitmagnet-io/bitmagnet",
