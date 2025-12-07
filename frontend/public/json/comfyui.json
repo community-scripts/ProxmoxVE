@@ -39,10 +39,6 @@
     {
       "text": "Please check that you have installed the drivers for your GPU.",
       "type": "info"
-    },
-    {
-      "text": "Application is updated via it's web UI.",
-      "type": "info"
     }
   ]
 }
