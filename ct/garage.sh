@@ -56,8 +56,8 @@ EOF
     msg_ok "Stopped Garage Service"
 
     msg_info "Backing Up Data"
-    cp /usr/local/bin/garage /usr/local/bin/garage.old 2>/dev/null || true
-    cp /etc/garage.toml /etc/garage.toml.bak 2>/dev/null || true
+    cp /usr/local/bin/garage /usr/local/bin/garage.old
+    cp /etc/garage.toml /etc/garage.toml.bak
     msg_ok "Backed Up Data"
 
     msg_info "Updating Garage"
