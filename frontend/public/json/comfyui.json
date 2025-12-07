@@ -6,7 +6,7 @@
   ],
   "date_created": "2025-10-26",
   "type": "ct",
-  "updateable": true,
+  "updateable": false,
   "privileged": false,
   "config_path": "/opt",
   "interface_port": 8188,
@@ -38,6 +38,10 @@
     },
     {
       "text": "Please check that you have installed the drivers for your GPU.",
+      "type": "info"
+    },
+    {
+      "text": "Application is updated via it's web UI.",
       "type": "info"
     }
   ]
