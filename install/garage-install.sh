@@ -103,7 +103,7 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now garage-webui
+  systemctl enable -q --now garage-webui
 fi
 msg_ok "Created Service"
 
