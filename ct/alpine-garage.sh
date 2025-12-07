@@ -25,16 +25,43 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  if [[ ! -d /opt/garage-webui ]]; then
+    read -rp "${TAB3}Do you wish to add Garage WebUI to existing installation? [y/N] " webui
+    if [[ "${webui}" =~ ^[Yy]$ ]]; then
+      RELEASE=$(curl -s https://api.github.com/repos/khairul169/garage-webui/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+      curl -fsSL "https://github.com/khairul169/garage-webui/releases/download/${RELEASE}/garage-webui-v${RELEASE}-linux-amd64" -o /opt/garage-webui/garage-webui
+      chmod +x /opt/garage-webui/garage-webui
+      cat <<'EOF' >/etc/init.d/garage-webui
+#!/sbin/openrc-run
+name="Garage WebUI"
+description="Garage WebUI"
+command="/opt/garage-webui/garage-webui"
+command_args=""
+command_background="yes"
+pidfile="/run/garage-webui.pid"
+depend() {
+    need net
+}
+
+start_pre() {
+    export CONFIG_PATH="/etc/garage.toml"
+}
+EOF
+      chmod +x /etc/init.d/garage-webui
+      $STD rc-update add garage-webui default
+      $STD rc-service garage-webui start
+    fi
+  fi
 
   GITEA_RELEASE=$(curl -fsSL https://api.github.com/repos/deuxfleurs-org/garage/tags | jq -r '.[0].name')
   if [[ "${GITEA_RELEASE}" != "$(cat ~/.garage 2>/dev/null)" ]] || [[ ! -f ~/.garage ]]; then
     msg_info "Stopping Service"
-    rc-service garage stop || true
+    rc-service garage stop
     msg_ok "Stopped Service"
 
     msg_info "Backing Up Data"
-    cp /usr/local/bin/garage /usr/local/bin/garage.old 2>/dev/null || true
-    cp /etc/garage.toml /etc/garage.toml.bak 2>/dev/null || true
+    cp /usr/local/bin/garage /usr/local/bin/garage.old 2>/dev/null
+    cp /etc/garage.toml /etc/garage.toml.bak 2>/dev/null
     msg_ok "Backed Up Data"
 
     msg_info "Updating Garage"
@@ -43,9 +70,28 @@ function update_script() {
     echo "${GITEA_RELEASE}" >~/.garage
     msg_ok "Updated Garage"
 
-    msg_info "Starting Service"
+    if [[ -f /etc/init.d/garage-webui ]]; then
+      msg_info "Stopping Garage WebUI Service"
+      rc-service garage-webui stop
+      msg_ok "Stopped Garage WebUI Service"
+
+      RELEASE=$(curl -s https://api.github.com/repos/khairul169/garage-webui/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+      if [[ "${RELEASE}" != "$(cat ~/.garage-webui 2>/dev/null)" ]] || [[ ! -f ~/.garage-webui ]]; then
+        msg_info "Updating Garage WebUI"
+        rm -f /opt/garage-webui/garage-webui
+        curl -fsSL "https://github.com/khairul169/garage-webui/releases/download/${RELEASE}/garage-webui-v${RELEASE}-linux-amd64" -o /opt/garage-webui/garage-webui
+        chmod +x /opt/garage-webui/garage-webui
+        echo "${RELEASE}" >~/.garage-webui
+        msg_ok "Updated Garage WebUI"
+    fi
+  fi
+
+    msg_info "Starting Services"
     rc-service garage start || rc-service garage restart
-    msg_ok "Started Service"
+    if [[ -f /etc/init.d/garage-webui ]]; then
+      rc-service garage-webui start
+    fi
+    msg_ok "Started Services"
     msg_ok "Updated successfully!"
   else
     msg_ok "No update required. Garage is already at ${GITEA_RELEASE}"

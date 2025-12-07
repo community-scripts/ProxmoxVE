@@ -62,6 +62,15 @@ metrics_token = "${METRICS_TOKEN}"
 EOF
 msg_ok "Configured Garage"
 
+read -rp "${TAB3}Do you wish to add Garage WebUI? [y/N] " webui
+if [[ "${webui}" =~ ^[Yy]$ ]]; then
+  mkdir -p /opt/garage-webui
+  RELEASE=$(curl -s https://api.github.com/repos/khairul169/garage-webui/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
+  curl -fsSL "https://github.com/khairul169/garage-webui/releases/download/${RELEASE}/garage-webui-v${RELEASE}-linux-amd64" -o /opt/garage-webui/garage-webui
+  chmod +x /opt/garage-webui/garage-webui 
+  echo "${RELEASE}" >~/.garage-webui
+fi
+
 msg_info "Creating Service"
 cat <<'EOF' >/etc/init.d/garage
 #!/sbin/openrc-run
@@ -74,11 +83,32 @@ depend() {
     need net
 }
 EOF
-
 chmod +x /etc/init.d/garage
 $STD rc-update add garage default
 $STD rc-service garage restart || rc-service garage start
-msg_ok "Service active"
+
+if [[ "${webui}" =~ ^[Yy]$ ]]; then
+  cat <<'EOF' >/etc/init.d/garage-webui
+#!/sbin/openrc-run
+name="Garage WebUI"
+description="Garage WebUI"
+command="/opt/garage-webui/garage-webui"
+command_args=""
+command_background="yes"
+pidfile="/run/garage-webui.pid"
+depend() {
+    need net
+}
+
+start_pre() {
+    export CONFIG_PATH="/etc/garage.toml"
+}
+EOF
+fi
+chmod +x /etc/init.d/garage-webui
+$STD rc-update add garage-webui default
+$STD rc-service garage-webui start
+msg_ok "Service Created"
 
 motd_ssh
 customize

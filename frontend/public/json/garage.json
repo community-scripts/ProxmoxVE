@@ -54,6 +54,10 @@
     {
       "text": "To view your generated tokens and RPC secret, check `~/garage.creds` after installation.",
       "type": "info"
+    },
+    {
+      "text": "If you installed Garage WebUI, you can access it using via port 3919`.",
+      "type": "info"
     }
   ]
 }

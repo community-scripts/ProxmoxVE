@@ -27,11 +27,33 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  if [[ ! -d /opt/garage-webui ]]; then
+    read -rp "${TAB3}Do you wish to add Garage WebUI to existing installation? [y/N] " webui
+    if [[ "${webui}" =~ ^[Yy]$ ]]; then
+      fetch_and_deploy_gh_release "garage-webui" "khairul169/garage-webui" "singlefile" "latest" "/opt/garage-webui" "garage-webui-*-linux-amd64"
+      cat <<EOF > /etc/systemd/system/garage-webui.service
+[Unit]
+Description=Garage WebUI
+After=network.target
+
+[Service]
+Environment="PORT=3919"
+Environment="CONFIG_PATH=/etc/garage.toml"
+ExecStart=/opt/garage-webui/garage-webui
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF
+      systemctl enable -q --now garage-webui
+    fi
+  fi
+
   GITEA_RELEASE=$(curl -fsSL https://api.github.com/repos/deuxfleurs-org/garage/tags | jq -r '.[0].name')
   if [[ "${GITEA_RELEASE}" != "$(cat ~/.garage 2>/dev/null)" ]] || [[ ! -f ~/.garage ]]; then
-    msg_info "Stopping Service"
+    msg_info "Stopping Garage Service"
     systemctl stop garage
-    msg_ok "Stopped Service"
+    msg_ok "Stopped Garage Service"
 
     msg_info "Backing Up Data"
     cp /usr/local/bin/garage /usr/local/bin/garage.old 2>/dev/null || true
@@ -44,9 +66,21 @@ function update_script() {
     echo "${GITEA_RELEASE}" >~/.garage
     msg_ok "Updated Garage"
 
-    msg_info "Starting Service"
+    if [[ -f /etc/systemd/system/garage-webui.service ]]; then
+      msg_info "Stopping WebUI Service"
+      systemctl stop garage-webui
+      msg_ok "Stopped WebUI Service"
+
+      CLEAN_INSTALL=1 fetch_and_deploy_gh_release "garage-webui" "khairul169/garage-webui" "singlefile" "latest" "/opt/garage-webui" "garage-webui-*-linux-amd64"
+
+      msg_info "Starting WebUI Service"
+      systemctl start garage-webui
+      msg_ok "Started WebUI Service"
+    fi
+    
+    msg_info "Starting Garage Service"
     systemctl start garage
-    msg_ok "Started Service"
+    msg_ok "Started Garage Service"
     msg_ok "Updated successfully!"
   else
     msg_ok "No update required. Garage is already at ${GITEA_RELEASE}"
