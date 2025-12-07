@@ -14,6 +14,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - wanderer: add meilisearch dumpless upgrade for database migration [@MickLesk](https://github.com/MickLesk) ([#9749](https://github.com/community-scripts/ProxmoxVE/pull/9749))
+
   - #### 💥 Breaking Changes
 
     - Revert Zammad: use Debian 12 and dynamic APT source version [@MickLesk](https://github.com/MickLesk) ([#9750](https://github.com/community-scripts/ProxmoxVE/pull/9750))
