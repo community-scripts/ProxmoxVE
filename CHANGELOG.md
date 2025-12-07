@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-12-07
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Update OPNsense version from 25.1 to 25.7 [@ltsch](https://github.com/ltsch) ([#9736](https://github.com/community-scripts/ProxmoxVE/pull/9736))
+
 ## 2025-12-06
 
 ### 🚀 Updated Scripts
