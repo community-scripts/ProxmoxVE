@@ -13,10 +13,6 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt-get install -y gpg
-msg_ok "Installed Dependencies"
-
 msg_info "Setting up InvenTree Repository"
 setup_deb822_repo \
   "inventree" \

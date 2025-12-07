@@ -28,11 +28,17 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
+  # Check for supported OS
+  if ! grep -qE "^ID=(ubuntu|debian)$" /etc/os-release; then
+    msg_error "Unsupported OS. InvenTree requires Ubuntu (20.04/22.04/24.04) or Debian (10/11/12)."
+    exit
+  fi
+
   msg_info "Updating $APP"
-  $STD apt update
-  $STD apt install --only-upgrade inventree -y
+  $STD apt-get update
+  $STD apt-get install --only-upgrade inventree -y
   msg_ok "Updated $APP"
-  msg_ok "Updated successfully!"
   exit
 }
 
