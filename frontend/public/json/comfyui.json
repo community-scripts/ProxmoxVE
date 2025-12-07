@@ -6,7 +6,7 @@
   ],
   "date_created": "2025-10-26",
   "type": "ct",
-  "updateable": false,
+  "updateable": true,
   "privileged": false,
   "config_path": "/opt",
   "interface_port": 8188,
