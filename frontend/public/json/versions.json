@@ -1,5 +1,45 @@
 [
   {
+    "name": "seerr-team/seerr",
+    "version": "preview-test-fix-subscriptions",
+    "date": "2025-12-06T22:36:36Z"
+  },
+  {
+    "name": "sysadminsmedia/homebox",
+    "version": "v0.22.0-rc.2",
+    "date": "2025-12-06T21:24:28Z"
+  },
+  {
+    "name": "Koenkk/zigbee2mqtt",
+    "version": "2.7.1",
+    "date": "2025-12-06T20:30:34Z"
+  },
+  {
+    "name": "blakeblackshear/frigate",
+    "version": "v0.14.1",
+    "date": "2024-08-29T22:32:51Z"
+  },
+  {
+    "name": "navidrome/navidrome",
+    "version": "v0.59.0",
+    "date": "2025-12-06T18:08:42Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.80.5-stable.1",
+    "date": "2025-12-06T17:52:19Z"
+  },
+  {
+    "name": "Brandawg93/PeaNUT",
+    "version": "v5.19.2",
+    "date": "2025-12-06T14:56:53Z"
+  },
+  {
+    "name": "openhab/openhab-core",
+    "version": "4.3.9",
+    "date": "2025-12-06T14:31:36Z"
+  },
+  {
     "name": "fuma-nama/fumadocs",
     "version": "fumadocs-openapi@10.1.1",
     "date": "2025-12-06T11:27:58Z"
@@ -75,11 +115,6 @@
     "date": "2025-12-05T23:48:08Z"
   },
   {
-    "name": "BerriAI/litellm",
-    "version": "v1.80.7.dev.4",
-    "date": "2025-12-05T23:26:08Z"
-  },
-  {
     "name": "chrisbenincasa/tunarr",
     "version": "v0.23.0-alpha.30",
     "date": "2025-12-05T21:23:38Z"
@@ -118,11 +153,6 @@
     "name": "FlowiseAI/Flowise",
     "version": "flowise@3.0.12",
     "date": "2025-12-05T15:02:01Z"
-  },
-  {
-    "name": "Brandawg93/PeaNUT",
-    "version": "v5.19.1",
-    "date": "2025-12-05T14:41:43Z"
   },
   {
     "name": "emqx/emqx",
@@ -395,11 +425,6 @@
     "date": "2025-12-01T21:35:19Z"
   },
   {
-    "name": "Koenkk/zigbee2mqtt",
-    "version": "2.7.0",
-    "date": "2025-12-01T20:26:49Z"
-  },
-  {
     "name": "slskd/slskd",
     "version": "0.24.1",
     "date": "2025-12-01T19:33:30Z"
@@ -468,11 +493,6 @@
     "name": "sabre-io/Baikal",
     "version": "0.11.1",
     "date": "2025-11-30T14:54:03Z"
-  },
-  {
-    "name": "openhab/openhab-core",
-    "version": "5.1.0.M3",
-    "date": "2025-11-30T14:36:37Z"
   },
   {
     "name": "healthchecks/healthchecks",
@@ -588,11 +608,6 @@
     "name": "NLnetLabs/unbound",
     "version": "release-1.24.2",
     "date": "2025-11-26T11:22:30Z"
-  },
-  {
-    "name": "seerr-team/seerr",
-    "version": "preview-test-fix-subscriptions",
-    "date": "2025-11-25T22:11:46Z"
   },
   {
     "name": "wizarrrr/wizarr",
@@ -820,11 +835,6 @@
     "date": "2025-11-16T22:39:01Z"
   },
   {
-    "name": "sysadminsmedia/homebox",
-    "version": "v0.21.0",
-    "date": "2025-08-23T18:33:53Z"
-  },
-  {
     "name": "binwiederhier/ntfy",
     "version": "v2.15.0",
     "date": "2025-11-16T18:53:49Z"
@@ -888,11 +898,6 @@
     "name": "postgres/postgres",
     "version": "REL_13_23",
     "date": "2025-11-10T21:59:18Z"
-  },
-  {
-    "name": "navidrome/navidrome",
-    "version": "v0.58.5",
-    "date": "2025-11-09T19:12:41Z"
   },
   {
     "name": "pelican-dev/panel",
@@ -1083,11 +1088,6 @@
     "name": "linkwarden/linkwarden",
     "version": "v2.13.1",
     "date": "2025-10-15T13:29:37Z"
-  },
-  {
-    "name": "blakeblackshear/frigate",
-    "version": "v0.14.1",
-    "date": "2024-08-29T22:32:51Z"
   },
   {
     "name": "rogerfar/rdt-client",
