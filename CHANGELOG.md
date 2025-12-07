@@ -20,6 +20,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 💥 Breaking Changes
 
+    - Refactor: Inventree (uses now ubuntu 24.04) [@MickLesk](https://github.com/MickLesk) ([#9752](https://github.com/community-scripts/ProxmoxVE/pull/9752))
     - Revert Zammad: use Debian 12 and dynamic APT source version [@MickLesk](https://github.com/MickLesk) ([#9750](https://github.com/community-scripts/ProxmoxVE/pull/9750))
 
 ### 💾 Core
