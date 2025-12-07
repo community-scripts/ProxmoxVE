@@ -34,10 +34,11 @@ function update_script() {
     exit
   fi
 
-  msg_info "Updating $APP"
+  msg_info "Updating InvenTree"
   $STD apt update
   $STD apt install --only-upgrade inventree -y
-  msg_ok "Updated $APP"
+  msg_ok "Updated InvenTree"
+  msg_ok "Updated successfully!"
   exit
 }
 
