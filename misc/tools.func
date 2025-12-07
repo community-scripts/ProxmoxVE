@@ -72,17 +72,17 @@ stop_all_services() {
   local service_patterns=("$@")
 
   for pattern in "${service_patterns[@]}"; do
-    # Find all matching services
+    # Find all matching services (grep || true to handle no matches)
+    local services
+    services=$(systemctl list-units --type=service --all 2>/dev/null |
+      grep -oE "${pattern}[^ ]*\.service" 2>/dev/null | sort -u) || true
 
-    systemctl list-units --type=service --all 2>/dev/null |
-      grep -oE "${pattern}[^ ]*\.service" |
-      sort -u |
+    if [[ -n "$services" ]]; then
       while read -r service; do
-
         $STD systemctl stop "$service" 2>/dev/null || true
         $STD systemctl disable "$service" 2>/dev/null || true
-      done
-
+      done <<<"$services"
+    fi
   done
 
 }
