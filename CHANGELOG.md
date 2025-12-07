@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-12-07
 
+### 🚀 Updated Scripts
+
+  - #### 💥 Breaking Changes
+
+    - Revert Zammad: use Debian 12 and dynamic APT source version [@MickLesk](https://github.com/MickLesk) ([#9750](https://github.com/community-scripts/ProxmoxVE/pull/9750))
+
 ### 💾 Core
 
   - #### 🐞 Bug Fixes
