@@ -26,6 +26,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - tools.func: handle empty grep results in stop_all_services [@MickLesk](https://github.com/MickLesk) ([#9748](https://github.com/community-scripts/ProxmoxVE/pull/9748))
     - Remove Debian from GPU passthrough [@MickLesk](https://github.com/MickLesk) ([#9754](https://github.com/community-scripts/ProxmoxVE/pull/9754))
 
   - #### ✨ New Features
