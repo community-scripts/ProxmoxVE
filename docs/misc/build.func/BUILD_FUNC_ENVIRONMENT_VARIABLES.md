@@ -8,103 +8,123 @@ This document provides a comprehensive reference of all environment variables us
 
 ### Core Container Variables
 
-| Variable | Description | Default | Set In | Used In |
-|----------|-------------|---------|---------|---------|
-| `APP` | Application name (e.g., "plex", "nextcloud") | - | Environment | Throughout |
-| `NSAPP` | Namespace application name | `$APP` | Environment | Throughout |
-| `CTID` | Container ID | - | Environment | Container creation |
-| `CT_TYPE` | Container type ("install" or "update") | "install" | Environment | Entry point |
-| `CT_NAME` | Container name | `$APP` | Environment | Container creation |
+| Variable  | Description                                  | Default   | Set In      | Used In            |
+| --------- | -------------------------------------------- | --------- | ----------- | ------------------ |
+| `APP`     | Application name (e.g., "plex", "nextcloud") | -         | Environment | Throughout         |
+| `NSAPP`   | Namespace application name                   | `$APP`    | Environment | Throughout         |
+| `CTID`    | Container ID                                 | -         | Environment | Container creation |
+| `CT_TYPE` | Container type ("install" or "update")       | "install" | Environment | Entry point        |
+| `CT_NAME` | Container name                               | `$APP`    | Environment | Container creation |
 
 ### Operating System Variables
 
-| Variable | Description | Default | Set In | Used In |
-|----------|-------------|---------|---------|---------|
-| `var_os` | Operating system selection | "debian" | base_settings() | OS selection |
-| `var_version` | OS version | "12" | base_settings() | Template selection |
-| `var_template` | Template name | Auto-generated | base_settings() | Template download |
+| Variable       | Description                | Default        | Set In          | Used In            |
+| -------------- | -------------------------- | -------------- | --------------- | ------------------ |
+| `var_os`       | Operating system selection | "debian"       | base_settings() | OS selection       |
+| `var_version`  | OS version                 | "12"           | base_settings() | Template selection |
+| `var_template` | Template name              | Auto-generated | base_settings() | Template download  |
 
 ### Resource Configuration Variables
 
-| Variable | Description | Default | Set In | Used In |
-|----------|-------------|---------|---------|---------|
-| `var_cpu` | CPU cores | "2" | base_settings() | Container creation |
-| `var_ram` | RAM in MB | "2048" | base_settings() | Container creation |
-| `var_disk` | Disk size in GB | "8" | base_settings() | Container creation |
-| `DISK_SIZE` | Disk size (alternative) | `$var_disk` | Environment | Container creation |
-| `CORE_COUNT` | CPU cores (alternative) | `$var_cpu` | Environment | Container creation |
-| `RAM_SIZE` | RAM size (alternative) | `$var_ram` | Environment | Container creation |
+| Variable     | Description             | Default     | Set In          | Used In            |
+| ------------ | ----------------------- | ----------- | --------------- | ------------------ |
+| `var_cpu`    | CPU cores               | "2"         | base_settings() | Container creation |
+| `var_ram`    | RAM in MB               | "2048"      | base_settings() | Container creation |
+| `var_disk`   | Disk size in GB         | "8"         | base_settings() | Container creation |
+| `DISK_SIZE`  | Disk size (alternative) | `$var_disk` | Environment     | Container creation |
+| `CORE_COUNT` | CPU cores (alternative) | `$var_cpu`  | Environment     | Container creation |
+| `RAM_SIZE`   | RAM size (alternative)  | `$var_ram`  | Environment     | Container creation |
 
 ### Network Configuration Variables
 
-| Variable | Description | Default | Set In | Used In |
-|----------|-------------|---------|---------|---------|
-| `var_net` | Network interface | "vmbr0" | base_settings() | Network config |
-| `var_bridge` | Bridge interface | "vmbr0" | base_settings() | Network config |
-| `var_gateway` | Gateway IP | "192.168.1.1" | base_settings() | Network config |
-| `var_ip` | Container IP address | - | User input | Network config |
-| `var_ipv6` | IPv6 address | - | User input | Network config |
-| `var_vlan` | VLAN ID | - | User input | Network config |
-| `var_mtu` | MTU size | "1500" | base_settings() | Network config |
-| `var_mac` | MAC address | Auto-generated | base_settings() | Network config |
-| `NET` | Network interface (alternative) | `$var_net` | Environment | Network config |
-| `BRG` | Bridge interface (alternative) | `$var_bridge` | Environment | Network config |
-| `GATE` | Gateway IP (alternative) | `$var_gateway` | Environment | Network config |
-| `IPV6_METHOD` | IPv6 configuration method | "none" | Environment | Network config |
-| `VLAN` | VLAN ID (alternative) | `$var_vlan` | Environment | Network config |
-| `MTU` | MTU size (alternative) | `$var_mtu` | Environment | Network config |
-| `MAC` | MAC address (alternative) | `$var_mac` | Environment | Network config |
+| Variable      | Description                     | Default        | Set In          | Used In        |
+| ------------- | ------------------------------- | -------------- | --------------- | -------------- |
+| `var_net`     | Network interface               | "vmbr0"        | base_settings() | Network config |
+| `var_bridge`  | Bridge interface                | "vmbr0"        | base_settings() | Network config |
+| `var_gateway` | Gateway IP                      | "192.168.1.1"  | base_settings() | Network config |
+| `var_ip`      | Container IP address            | -              | User input      | Network config |
+| `var_ipv6`    | IPv6 address                    | -              | User input      | Network config |
+| `var_vlan`    | VLAN ID                         | -              | User input      | Network config |
+| `var_mtu`     | MTU size                        | "1500"         | base_settings() | Network config |
+| `var_mac`     | MAC address                     | Auto-generated | base_settings() | Network config |
+| `NET`         | Network interface (alternative) | `$var_net`     | Environment     | Network config |
+| `BRG`         | Bridge interface (alternative)  | `$var_bridge`  | Environment     | Network config |
+| `GATE`        | Gateway IP (alternative)        | `$var_gateway` | Environment     | Network config |
+| `IPV6_METHOD` | IPv6 configuration method       | "none"         | Environment     | Network config |
+| `VLAN`        | VLAN ID (alternative)           | `$var_vlan`    | Environment     | Network config |
+| `MTU`         | MTU size (alternative)          | `$var_mtu`     | Environment     | Network config |
+| `MAC`         | MAC address (alternative)       | `$var_mac`     | Environment     | Network config |
 
 ### Storage Configuration Variables
 
-| Variable | Description | Default | Set In | Used In |
-|----------|-------------|---------|---------|---------|
-| `var_template_storage` | Storage for templates | - | select_storage() | Template storage |
-| `var_container_storage` | Storage for container disks | - | select_storage() | Container storage |
-| `TEMPLATE_STORAGE` | Template storage (alternative) | `$var_template_storage` | Environment | Template storage |
-| `CONTAINER_STORAGE` | Container storage (alternative) | `$var_container_storage` | Environment | Container storage |
+| Variable                | Description                     | Default                  | Set In           | Used In           |
+| ----------------------- | ------------------------------- | ------------------------ | ---------------- | ----------------- |
+| `var_template_storage`  | Storage for templates           | -                        | select_storage() | Template storage  |
+| `var_container_storage` | Storage for container disks     | -                        | select_storage() | Container storage |
+| `TEMPLATE_STORAGE`      | Template storage (alternative)  | `$var_template_storage`  | Environment      | Template storage  |
+| `CONTAINER_STORAGE`     | Container storage (alternative) | `$var_container_storage` | Environment      | Container storage |
 
 ### Feature Flags
 
-| Variable | Description | Default | Set In | Used In |
-|----------|-------------|---------|---------|---------|
-| `ENABLE_FUSE` | Enable FUSE support | "true" | base_settings() | Container features |
-| `ENABLE_TUN` | Enable TUN/TAP support | "true" | base_settings() | Container features |
-| `ENABLE_KEYCTL` | Enable keyctl support | "true" | base_settings() | Container features |
-| `ENABLE_MOUNT` | Enable mount support | "true" | base_settings() | Container features |
-| `ENABLE_NESTING` | Enable nesting support | "false" | base_settings() | Container features |
-| `ENABLE_PRIVILEGED` | Enable privileged mode | "false" | base_settings() | Container features |
-| `ENABLE_UNPRIVILEGED` | Enable unprivileged mode | "true" | base_settings() | Container features |
-| `VERBOSE` | Enable verbose output | "false" | Environment | Logging |
-| `SSH` | Enable SSH key provisioning | "true" | base_settings() | SSH setup |
+| Variable              | Description                 | Default | Set In          | Used In            |
+| --------------------- | --------------------------- | ------- | --------------- | ------------------ |
+| `ENABLE_FUSE`         | Enable FUSE support         | "true"  | base_settings() | Container features |
+| `ENABLE_TUN`          | Enable TUN/TAP support      | "true"  | base_settings() | Container features |
+| `ENABLE_KEYCTL`       | Enable keyctl support       | "true"  | base_settings() | Container features |
+| `ENABLE_MOUNT`        | Enable mount support        | "true"  | base_settings() | Container features |
+| `ENABLE_NESTING`      | Enable nesting support      | "false" | base_settings() | Container features |
+| `ENABLE_PRIVILEGED`   | Enable privileged mode      | "false" | base_settings() | Container features |
+| `ENABLE_UNPRIVILEGED` | Enable unprivileged mode    | "true"  | base_settings() | Container features |
+| `VERBOSE`             | Enable verbose output       | "false" | Environment     | Logging            |
+| `SSH`                 | Enable SSH key provisioning | "true"  | base_settings() | SSH setup          |
 
 ### GPU Passthrough Variables
 
-| Variable | Description | Default | Set In | Used In |
-|----------|-------------|---------|---------|---------|
-| `GPU_APPS` | List of apps that support GPU | - | Environment | GPU detection |
-| `var_gpu` | GPU selection | - | User input | GPU passthrough |
-| `var_gpu_type` | GPU type (intel/amd/nvidia) | - | detect_gpu_devices() | GPU passthrough |
-| `var_gpu_devices` | GPU device list | - | detect_gpu_devices() | GPU passthrough |
+| Variable     | Description                     | Default | Set In                                      | Used In            |
+| ------------ | ------------------------------- | ------- | ------------------------------------------- | ------------------ |
+| `var_gpu`    | Enable GPU passthrough          | "no"    | CT script / Environment / Advanced Settings | GPU passthrough    |
+| `ENABLE_GPU` | GPU passthrough flag (internal) | "no"    | Advanced Settings                           | Container creation |
+
+**Note**: GPU passthrough is controlled via `var_gpu`. Apps that benefit from GPU acceleration (media servers, AI/ML, transcoding) have `var_gpu=yes` as default in their CT scripts.
+
+**Apps with GPU enabled by default**:
+
+- Media: jellyfin, plex, emby, channels, ersatztv, tunarr, immich
+- Transcoding: tdarr, unmanic, fileflows
+- AI/ML: ollama, openwebui
+- NVR: frigate
+
+**Usage Examples**:
+
+```bash
+# Disable GPU for a specific installation
+var_gpu=no bash -c "$(curl -fsSL https://...jellyfin.sh)"
+
+# Enable GPU for apps without default GPU support
+var_gpu=yes bash -c "$(curl -fsSL https://...debian.sh)"
+
+# Set in default.vars for all apps
+echo "var_gpu=yes" >> /usr/local/community-scripts/default.vars
+```
 
 ### API and Diagnostics Variables
 
-| Variable | Description | Default | Set In | Used In |
-|----------|-------------|---------|---------|---------|
-| `DIAGNOSTICS` | Enable diagnostics mode | "false" | Environment | Diagnostics |
-| `METHOD` | Installation method | "install" | Environment | Installation flow |
-| `RANDOM_UUID` | Random UUID for tracking | - | Environment | Logging |
-| `API_TOKEN` | Proxmox API token | - | Environment | API calls |
-| `API_USER` | Proxmox API user | - | Environment | API calls |
+| Variable      | Description              | Default   | Set In      | Used In           |
+| ------------- | ------------------------ | --------- | ----------- | ----------------- |
+| `DIAGNOSTICS` | Enable diagnostics mode  | "false"   | Environment | Diagnostics       |
+| `METHOD`      | Installation method      | "install" | Environment | Installation flow |
+| `RANDOM_UUID` | Random UUID for tracking | -         | Environment | Logging           |
+| `API_TOKEN`   | Proxmox API token        | -         | Environment | API calls         |
+| `API_USER`    | Proxmox API user         | -         | Environment | API calls         |
 
 ### Settings Persistence Variables
 
-| Variable | Description | Default | Set In | Used In |
-|----------|-------------|---------|---------|---------|
-| `SAVE_DEFAULTS` | Save settings as defaults | "false" | User input | Settings persistence |
-| `SAVE_APP_DEFAULTS` | Save app-specific defaults | "false" | User input | Settings persistence |
-| `DEFAULT_VARS_FILE` | Path to default.vars | "/usr/local/community-scripts/default.vars" | Environment | Settings persistence |
-| `APP_DEFAULTS_FILE` | Path to app.vars | "/usr/local/community-scripts/defaults/$APP.vars" | Environment | Settings persistence |
+| Variable            | Description                | Default                                           | Set In      | Used In              |
+| ------------------- | -------------------------- | ------------------------------------------------- | ----------- | -------------------- |
+| `SAVE_DEFAULTS`     | Save settings as defaults  | "false"                                           | User input  | Settings persistence |
+| `SAVE_APP_DEFAULTS` | Save app-specific defaults | "false"                                           | User input  | Settings persistence |
+| `DEFAULT_VARS_FILE` | Path to default.vars       | "/usr/local/community-scripts/default.vars"       | Environment | Settings persistence |
+| `APP_DEFAULTS_FILE` | Path to app.vars           | "/usr/local/community-scripts/defaults/$APP.vars" | Environment | Settings persistence |
 
 ## Variable Precedence Chain
 
@@ -152,6 +172,7 @@ export SSH="true"
 ## Environment Variable Usage Patterns
 
 ### 1. Container Creation
+
 ```bash
 # Basic container creation
 export APP="nextcloud"
@@ -170,6 +191,7 @@ export var_container_storage="local"
 ```
 
 ### 2. GPU Passthrough
+
 ```bash
 # Enable GPU passthrough
 export GPU_APPS="plex,jellyfin,emby"
@@ -178,6 +200,7 @@ export ENABLE_PRIVILEGED="true"
 ```
 
 ### 3. Advanced Network Configuration
+
 ```bash
 # VLAN and IPv6 configuration
 export var_vlan="100"
@@ -187,6 +210,7 @@ export var_mtu="9000"
 ```
 
 ### 4. Storage Configuration
+
 ```bash
 # Custom storage locations
 export var_template_storage="nfs-storage"
@@ -206,6 +230,7 @@ The script validates variables at several points:
 ## Common Variable Combinations
 
 ### Development Container
+
 ```bash
 export APP="dev-container"
 export CTID="200"
@@ -220,6 +245,7 @@ export ENABLE_PRIVILEGED="true"
 ```
 
 ### Media Server with GPU
+
 ```bash
 export APP="plex"
 export CTID="300"
@@ -235,6 +261,7 @@ export ENABLE_PRIVILEGED="true"
 ```
 
 ### Lightweight Service
+
 ```bash
 export APP="nginx"
 export CTID="400"

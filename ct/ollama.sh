@@ -12,6 +12,7 @@ var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-35}"
 var_os="${var_os:-ubuntu}"
 var_version="${var_version:-24.04}"
+var_gpu="${var_gpu:-yes}"
 
 header_info "$APP"
 variables
