@@ -193,7 +193,14 @@ EOF
     chmod +x /usr/local/bin/apt-proxy-detect.sh
   fi
   $STD apt-get update
-  $STD apt-get -o Dpkg::Options::="--force-confold" -y dist-upgrade
+# $STD apt-get -o Dpkg::Options::="--force-confold" -y dist-upgrade
+# $STD apt-get -o Acquire::http::Pipeline-Depth=0 -o Dpkg::Options::="--force-confold" -y dist-upgrade
+$STD apt-get \
+    -o Acquire::http::Pipeline-Depth=0 \
+    -o Acquire::http::No-Cache=true \
+    -o Acquire::http::Max-Age=0 \
+    -o Dpkg::Options::="--force-confold" \
+    -y dist-upgrade
   rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
   msg_ok "Updated Container OS"
 
