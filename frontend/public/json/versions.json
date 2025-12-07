@@ -1,5 +1,35 @@
 [
   {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.3",
+    "date": "2025-09-20T12:12:33Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.415",
+    "date": "2025-12-07T05:56:32Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.80.8.rc.1",
+    "date": "2025-12-07T01:36:40Z"
+  },
+  {
+    "name": "umami-software/umami",
+    "version": "v2.20.1",
+    "date": "2025-12-07T01:14:23Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5",
+    "date": "2025-12-07T00:27:06Z"
+  },
+  {
     "name": "seerr-team/seerr",
     "version": "preview-test-fix-subscriptions",
     "date": "2025-12-06T22:36:36Z"
@@ -8,6 +38,11 @@
     "name": "sysadminsmedia/homebox",
     "version": "v0.22.0-rc.2",
     "date": "2025-12-06T21:24:28Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.4.7",
+    "date": "2025-12-01T08:14:11Z"
   },
   {
     "name": "Koenkk/zigbee2mqtt",
@@ -23,11 +58,6 @@
     "name": "navidrome/navidrome",
     "version": "v0.59.0",
     "date": "2025-12-06T18:08:42Z"
-  },
-  {
-    "name": "BerriAI/litellm",
-    "version": "v1.80.5-stable.1",
-    "date": "2025-12-06T17:52:19Z"
   },
   {
     "name": "Brandawg93/PeaNUT",
@@ -75,39 +105,14 @@
     "date": "2025-12-06T06:18:23Z"
   },
   {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.3",
-    "date": "2025-09-20T12:12:33Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.408",
-    "date": "2025-12-06T06:00:34Z"
-  },
-  {
     "name": "theonedev/onedev",
     "version": "v13.1.3",
     "date": "2025-12-06T04:40:09Z"
   },
   {
-    "name": "jeedom/core",
-    "version": "4.5",
-    "date": "2025-12-06T00:27:05Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
-  },
-  {
     "name": "ollama/ollama",
     "version": "v0.13.2-rc1",
     "date": "2025-12-04T23:19:06Z"
-  },
-  {
-    "name": "umami-software/umami",
-    "version": "v2.20.0",
-    "date": "2025-12-05T23:51:38Z"
   },
   {
     "name": "Stirling-Tools/Stirling-PDF",
@@ -133,11 +138,6 @@
     "name": "homarr-labs/homarr",
     "version": "v1.45.2",
     "date": "2025-12-05T19:17:09Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.4.7",
-    "date": "2025-12-01T08:14:11Z"
   },
   {
     "name": "booklore-app/booklore",
