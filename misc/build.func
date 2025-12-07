@@ -1491,7 +1491,7 @@ advanced_settings() {
     # STEP 17: SSH Settings
     # ═══════════════════════════════════════════════════════════════════════════
     17)
-      configure_ssh_settings
+      configure_ssh_settings "Step $STEP/$MAX_STEP"
       # configure_ssh_settings handles its own flow, always advance
       ((STEP++))
       ;;
@@ -2076,6 +2076,10 @@ ssh_discover_default_files() {
 }
 
 configure_ssh_settings() {
+  local step_info="${1:-}"
+  local backtitle="Proxmox VE Helper Scripts"
+  [[ -n "$step_info" ]] && backtitle="Proxmox VE Helper Scripts [${step_info}]"
+
   SSH_KEYS_FILE="$(mktemp)"
   : >"$SSH_KEYS_FILE"
 
@@ -2085,14 +2089,14 @@ configure_ssh_settings() {
 
   local ssh_key_mode
   if [[ "$default_key_count" -gt 0 ]]; then
-    ssh_key_mode=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "SSH KEY SOURCE" --menu \
+    ssh_key_mode=$(whiptail --backtitle "$backtitle" --title "SSH KEY SOURCE" --menu \
       "Provision SSH keys for root:" 14 72 4 \
       "found" "Select from detected keys (${default_key_count})" \
       "manual" "Paste a single public key" \
       "folder" "Scan another folder (path or glob)" \
       "none" "No keys" 3>&1 1>&2 2>&3) || exit_script
   else
-    ssh_key_mode=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "SSH KEY SOURCE" --menu \
+    ssh_key_mode=$(whiptail --backtitle "$backtitle" --title "SSH KEY SOURCE" --menu \
       "No host keys detected; choose manual/none:" 12 72 2 \
       "manual" "Paste a single public key" \
       "none" "No keys" 3>&1 1>&2 2>&3) || exit_script
@@ -2101,7 +2105,7 @@ configure_ssh_settings() {
   case "$ssh_key_mode" in
   found)
     local selection
-    selection=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "SELECT HOST KEYS" \
+    selection=$(whiptail --backtitle "$backtitle" --title "SELECT HOST KEYS" \
       --checklist "Select one or more keys to import:" 20 140 10 "${CHOICES[@]}" 3>&1 1>&2 2>&3) || exit_script
     for tag in $selection; do
       tag="${tag%\"}"
@@ -2112,13 +2116,13 @@ configure_ssh_settings() {
     done
     ;;
   manual)
-    SSH_AUTHORIZED_KEY="$(whiptail --backtitle "Proxmox VE Helper Scripts" \
+    SSH_AUTHORIZED_KEY="$(whiptail --backtitle "$backtitle" \
       --inputbox "Paste one SSH public key line (ssh-ed25519/ssh-rsa/...)" 10 72 --title "SSH Public Key" 3>&1 1>&2 2>&3)"
     [[ -n "$SSH_AUTHORIZED_KEY" ]] && printf '%s\n' "$SSH_AUTHORIZED_KEY" >>"$SSH_KEYS_FILE"
     ;;
   folder)
     local glob_path
-    glob_path=$(whiptail --backtitle "Proxmox VE Helper Scripts" \
+    glob_path=$(whiptail --backtitle "$backtitle" \
       --inputbox "Enter a folder or glob to scan (e.g. /root/.ssh/*.pub)" 10 72 --title "Scan Folder/Glob" 3>&1 1>&2 2>&3)
     if [[ -n "$glob_path" ]]; then
       shopt -s nullglob
@@ -2128,7 +2132,7 @@ configure_ssh_settings() {
         ssh_build_choices_from_files "${_scan_files[@]}"
         if [[ "$COUNT" -gt 0 ]]; then
           local folder_selection
-          folder_selection=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "SELECT FOLDER KEYS" \
+          folder_selection=$(whiptail --backtitle "$backtitle" --title "SELECT FOLDER KEYS" \
             --checklist "Select key(s) to import:" 20 78 10 "${CHOICES[@]}" 3>&1 1>&2 2>&3) || exit_script
           for tag in $folder_selection; do
             tag="${tag%\"}"
@@ -2138,10 +2142,10 @@ configure_ssh_settings() {
             [[ -n "$line" ]] && printf '%s\n' "$line" >>"$SSH_KEYS_FILE"
           done
         else
-          whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox "No keys found in: $glob_path" 8 60
+          whiptail --backtitle "$backtitle" --msgbox "No keys found in: $glob_path" 8 60
         fi
       else
-        whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox "Path/glob returned no files." 8 60
+        whiptail --backtitle "$backtitle" --msgbox "Path/glob returned no files." 8 60
       fi
     fi
     ;;
@@ -2155,12 +2159,9 @@ configure_ssh_settings() {
     printf '\n' >>"$SSH_KEYS_FILE"
   fi
 
-  if [[ -s "$SSH_KEYS_FILE" || "$PW" == -password* ]]; then
-    if (whiptail --backtitle "Proxmox VE Helper Scripts" --defaultno --title "SSH ACCESS" --yesno "Enable root SSH access?" 10 58); then
-      SSH="yes"
-    else
-      SSH="no"
-    fi
+  # Always show SSH access dialog - user should be able to enable SSH even without keys
+  if (whiptail --backtitle "$backtitle" --defaultno --title "SSH ACCESS" --yesno "Enable root SSH access?" 10 58); then
+    SSH="yes"
   else
     SSH="no"
   fi
