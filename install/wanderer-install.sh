@@ -52,7 +52,7 @@ cat <<EOF >/opt/wanderer/start.sh
 
 trap "kill 0" EXIT
 
-cd /opt/wanderer/source/search && meilisearch --master-key \$MEILI_MASTER_KEY &
+cd /opt/wanderer/source/search && meilisearch --experimental-dumpless-upgrade --master-key \$MEILI_MASTER_KEY &
 sleep 1
 cd /opt/wanderer/source/db && ./pocketbase serve --http=\$PB_URL --dir=\$PB_DB_LOCATION &
 cd /opt/wanderer/source/web && node build &
