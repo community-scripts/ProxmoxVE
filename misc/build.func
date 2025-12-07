@@ -2391,7 +2391,7 @@ build_container() {
   GPU_APPS=(
     "immich" "channels" "emby" "ersatztv" "frigate"
     "jellyfin" "plex" "scrypted" "tdarr" "unmanic"
-    "ollama" "fileflows" "open-webui" "tunarr" "debian"
+    "ollama" "fileflows" "open-webui" "tunarr"
     "handbrake" "sunshine" "moonlight" "kodi" "stremio"
     "viseron"
   )
