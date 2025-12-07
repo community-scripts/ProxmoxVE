@@ -33,6 +33,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - core: motd - dynamically read OS version on each login [@MickLesk](https://github.com/MickLesk) ([#9751](https://github.com/community-scripts/ProxmoxVE/pull/9751))
 
+### 🌐 Website
+
+  - FAQ update [@tremor021](https://github.com/tremor021) ([#9742](https://github.com/community-scripts/ProxmoxVE/pull/9742))
+
 ## 2025-12-06
 
 ### 🚀 Updated Scripts
