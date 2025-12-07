@@ -18,6 +18,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Remove Debian from GPU passthrough [@MickLesk](https://github.com/MickLesk) ([#9754](https://github.com/community-scripts/ProxmoxVE/pull/9754))
 
+  - #### ✨ New Features
+
+    - core: motd - dynamically read OS version on each login [@MickLesk](https://github.com/MickLesk) ([#9751](https://github.com/community-scripts/ProxmoxVE/pull/9751))
+
 ## 2025-12-06
 
 ### 🚀 Updated Scripts
