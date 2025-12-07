@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Add DJANGO_SECRET_KEY support for Dispatcharr v0.13.1+ [@Copilot](https://github.com/Copilot) ([#9730](https://github.com/community-scripts/ProxmoxVE/pull/9730))
     - Update OPNsense version from 25.1 to 25.7 [@ltsch](https://github.com/ltsch) ([#9736](https://github.com/community-scripts/ProxmoxVE/pull/9736))
 
 ## 2025-12-06
