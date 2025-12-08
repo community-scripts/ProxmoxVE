@@ -1630,6 +1630,10 @@ Options:
   export UDHCPC_FIX
   export SSH_KEYS_FILE
 
+  # Exit alternate screen buffer before showing summary (so output remains visible)
+  tput rmcup 2>/dev/null || true
+  trap - RETURN
+
   # Display final summary
   echo -e "\n${INFO}${BOLD}${DGN}PVE Version ${PVEVERSION} (Kernel: ${KERNEL_VERSION})${CL}"
   echo -e "${OS}${BOLD}${DGN}Operating System: ${BGN}$var_os${CL}"
@@ -1644,7 +1648,7 @@ Options:
   echo -e "${NETWORK}${BOLD}${DGN}IPv4: ${BGN}$NET${CL}"
   echo -e "${NETWORK}${BOLD}${DGN}IPv6: ${BGN}$IPV6_METHOD${CL}"
   echo -e "${FUSE}${BOLD}${DGN}FUSE Support: ${BGN}$ENABLE_FUSE${CL}"
-  echo -e "🎮${BOLD}${DGN} GPU Passthrough: ${BGN}$ENABLE_GPU${CL}"
+  echo -e "  🎮${BOLD}${DGN} GPU Passthrough: ${BGN}$ENABLE_GPU${CL}"
   echo -e "${SEARCH}${BOLD}${DGN}Verbose Mode: ${BGN}$VERBOSE${CL}"
   echo -e "${CREATING}${BOLD}${RD}Creating a ${APP} LXC using the above advanced settings${CL}"
 }
@@ -1767,6 +1771,9 @@ echo_default() {
   echo -e "${DISKSIZE}${BOLD}${DGN}Disk Size: ${BGN}${DISK_SIZE} GB${CL}"
   echo -e "${CPUCORE}${BOLD}${DGN}CPU Cores: ${BGN}${CORE_COUNT}${CL}"
   echo -e "${RAMSIZE}${BOLD}${DGN}RAM Size: ${BGN}${RAM_SIZE} MiB${CL}"
+  if [[ -n "${var_gpu:-}" && "${var_gpu}" == "yes" ]]; then
+    echo -e "  🎮${BOLD}${DGN} GPU Passthrough: ${BGN}Enabled${CL}"
+  fi
   if [ "$VERBOSE" == "yes" ]; then
     echo -e "${SEARCH}${BOLD}${DGN}Verbose Mode: ${BGN}Enabled${CL}"
   fi
