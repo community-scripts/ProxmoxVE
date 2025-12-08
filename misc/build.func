@@ -816,6 +816,7 @@ _build_current_app_vars_tmp() {
   _apt_cacher_ip="${APT_CACHER_IP:-}"
   _fuse="${ENABLE_FUSE:-no}"
   _tun="${ENABLE_TUN:-no}"
+  _gpu="${ENABLE_GPU:-no}"
   _nesting="${ENABLE_NESTING:-1}"
   _keyctl="${ENABLE_KEYCTL:-0}"
   _mknod="${ENABLE_MKNOD:-0}"
@@ -865,6 +866,7 @@ _build_current_app_vars_tmp() {
 
     [ -n "$_fuse" ] && echo "var_fuse=$(_sanitize_value "$_fuse")"
     [ -n "$_tun" ] && echo "var_tun=$(_sanitize_value "$_tun")"
+    [ -n "$_gpu" ] && echo "var_gpu=$(_sanitize_value "$_gpu")"
     [ -n "$_nesting" ] && echo "var_nesting=$(_sanitize_value "$_nesting")"
     [ -n "$_keyctl" ] && echo "var_keyctl=$(_sanitize_value "$_keyctl")"
     [ -n "$_mknod" ] && echo "var_mknod=$(_sanitize_value "$_mknod")"
@@ -1011,38 +1013,40 @@ advanced_settings() {
   # Initialize defaults
   TAGS="community-script;${var_tags:-}"
   local STEP=1
-  local MAX_STEP=20
+  local MAX_STEP=22
 
-  # Store values for back navigation
-  local _ct_type="${CT_TYPE:-1}"
+  # Store values for back navigation - inherit from var_* app defaults
+  local _ct_type="${var_unprivileged:-1}"
   local _pw=""
   local _pw_display="Automatic Login"
   local _ct_id="$NEXTID"
   local _hostname="$NSAPP"
-  local _disk_size="$var_disk"
-  local _core_count="$var_cpu"
-  local _ram_size="$var_ram"
-  local _bridge="vmbr0"
-  local _net="dhcp"
-  local _gate=""
-  local _ipv6_method="auto"
+  local _disk_size="${var_disk:-4}"
+  local _core_count="${var_cpu:-1}"
+  local _ram_size="${var_ram:-1024}"
+  local _bridge="${var_brg:-vmbr0}"
+  local _net="${var_net:-dhcp}"
+  local _gate="${var_gateway:-}"
+  local _ipv6_method="${var_ipv6_method:-auto}"
   local _ipv6_addr=""
   local _ipv6_gate=""
-  local _apt_cacher_ip=""
-  local _mtu=""
+  local _apt_cacher_ip="${var_apt_cacher_ip:-}"
+  local _mtu="${var_mtu:-}"
   local _sd=""
-  local _ns=""
-  local _mac=""
-  local _vlan=""
+  local _ns="${var_ns:-}"
+  local _mac="${var_mac:-}"
+  local _vlan="${var_vlan:-}"
   local _tags="$TAGS"
-  local _enable_fuse="no"
+  local _enable_fuse="${var_fuse:-no}"
+  local _enable_tun="${var_tun:-no}"
   local _enable_gpu="${var_gpu:-no}"
-  local _verbose="no"
-  local _enable_keyctl="0"
-  local _enable_mknod="0"
-  local _mount_fs=""
-  local _protect_ct="no"
-  local _ct_timezone=""
+  local _enable_nesting="${var_nesting:-1}"
+  local _verbose="${var_verbose:-no}"
+  local _enable_keyctl="${var_keyctl:-0}"
+  local _enable_mknod="${var_mknod:-0}"
+  local _mount_fs="${var_mount_fs:-}"
+  local _protect_ct="${var_protection:-no}"
+  local _ct_timezone="${var_timezone:-}"
 
   # Helper to show current progress
   show_progress() {
@@ -1498,14 +1502,17 @@ advanced_settings() {
       ;;
 
     # ═══════════════════════════════════════════════════════════════════════════
-    # STEP 18: FUSE & Verbose Mode
+    # STEP 18: FUSE Support
     # ═══════════════════════════════════════════════════════════════════════════
     18)
+      local fuse_default_flag="--defaultno"
+      [[ "$_enable_fuse" == "yes" || "$_enable_fuse" == "1" ]] && fuse_default_flag=""
+
       if whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
         --title "FUSE SUPPORT" \
         --ok-button "Next" --cancel-button "Back" \
-        --defaultno \
-        --yesno "\nEnable FUSE support?\n\nRequired for: rclone, mergerfs, AppImage, etc." 12 58; then
+        $fuse_default_flag \
+        --yesno "\nEnable FUSE support?\n\nRequired for: rclone, mergerfs, AppImage, etc.\n\n(App default: ${var_fuse:-no})" 14 58; then
         _enable_fuse="yes"
       else
         if [ $? -eq 1 ]; then
@@ -1515,30 +1522,69 @@ advanced_settings() {
           continue
         fi
       fi
+      ((STEP++))
+      ;;
+
+    # ═══════════════════════════════════════════════════════════════════════════
+    # STEP 19: TUN/TAP Support
+    # ═══════════════════════════════════════════════════════════════════════════
+    19)
+      local tun_default_flag="--defaultno"
+      [[ "$_enable_tun" == "yes" || "$_enable_tun" == "1" ]] && tun_default_flag=""
 
       if whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
-        --title "VERBOSE MODE" \
-        --defaultno \
-        --yesno "\nEnable Verbose Mode?\n\nShows detailed output during installation." 12 58; then
-        _verbose="yes"
+        --title "TUN/TAP SUPPORT" \
+        --ok-button "Next" --cancel-button "Back" \
+        $tun_default_flag \
+        --yesno "\nEnable TUN/TAP device support?\n\nRequired for: VPN apps (WireGuard, OpenVPN, Tailscale),\nnetwork tunneling, and containerized networking.\n\n(App default: ${var_tun:-no})" 14 62; then
+        _enable_tun="yes"
       else
-        _verbose="no"
+        if [ $? -eq 1 ]; then
+          _enable_tun="no"
+        else
+          ((STEP--))
+          continue
+        fi
       fi
       ((STEP++))
       ;;
 
     # ═══════════════════════════════════════════════════════════════════════════
-    # STEP 19: GPU Passthrough
+    # STEP 20: Nesting Support
     # ═══════════════════════════════════════════════════════════════════════════
-    19)
-      local gpu_default="OFF"
-      [[ "$_enable_gpu" == "yes" ]] && gpu_default="ON"
+    20)
+      local nesting_default_flag=""
+      [[ "$_enable_nesting" == "0" || "$_enable_nesting" == "no" ]] && nesting_default_flag="--defaultno"
+
+      if whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
+        --title "NESTING SUPPORT" \
+        --ok-button "Next" --cancel-button "Back" \
+        $nesting_default_flag \
+        --yesno "\nEnable Nesting?\n\nRequired for: Docker, LXC inside LXC, Podman,\nand other containerization tools.\n\n(App default: ${var_nesting:-1})" 14 58; then
+        _enable_nesting="1"
+      else
+        if [ $? -eq 1 ]; then
+          _enable_nesting="0"
+        else
+          ((STEP--))
+          continue
+        fi
+      fi
+      ((STEP++))
+      ;;
+
+    # ═══════════════════════════════════════════════════════════════════════════
+    # STEP 21: GPU Passthrough
+    # ═══════════════════════════════════════════════════════════════════════════
+    21)
+      local gpu_default_flag="--defaultno"
+      [[ "$_enable_gpu" == "yes" ]] && gpu_default_flag=""
 
       if whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
         --title "GPU PASSTHROUGH" \
         --ok-button "Next" --cancel-button "Back" \
-        --defaultno \
-        --yesno "\nEnable GPU Passthrough?\n\nAutomatically detects and passes through available GPUs\n(Intel/AMD/NVIDIA) for hardware acceleration.\n\nRecommended for: Media servers, AI/ML, Transcoding" 14 62; then
+        $gpu_default_flag \
+        --yesno "\nEnable GPU Passthrough?\n\nAutomatically detects and passes through available GPUs\n(Intel/AMD/NVIDIA) for hardware acceleration.\n\nRecommended for: Media servers, AI/ML, Transcoding\n\n(App default: ${var_gpu:-no})" 16 62; then
         _enable_gpu="yes"
       else
         if [ $? -eq 1 ]; then
@@ -1552,12 +1598,26 @@ advanced_settings() {
       ;;
 
     # ═══════════════════════════════════════════════════════════════════════════
-    # STEP 20: Confirmation
+    # STEP 22: Verbose Mode & Confirmation
     # ═══════════════════════════════════════════════════════════════════════════
-    20)
+    22)
+      local verbose_default_flag="--defaultno"
+      [[ "$_verbose" == "yes" ]] && verbose_default_flag=""
+
+      if whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
+        --title "VERBOSE MODE" \
+        $verbose_default_flag \
+        --yesno "\nEnable Verbose Mode?\n\nShows detailed output during installation." 12 58; then
+        _verbose="yes"
+      else
+        _verbose="no"
+      fi
       # Build summary
       local ct_type_desc="Unprivileged"
       [[ "$_ct_type" == "0" ]] && ct_type_desc="Privileged"
+
+      local nesting_desc="Disabled"
+      [[ "$_enable_nesting" == "1" ]] && nesting_desc="Enabled"
 
       local summary="Container Type: $ct_type_desc
 Container ID: $_ct_id
@@ -1573,8 +1633,10 @@ Network:
   IPv4: $_net
   IPv6: $_ipv6_method
 
-Options:
+Features:
   FUSE: $_enable_fuse
+  TUN/TAP: $_enable_tun
+  Nesting: $nesting_desc
   GPU Passthrough: $_enable_gpu
   Verbose: $_verbose"
 
@@ -1608,11 +1670,16 @@ Options:
   IPV6_GATE="$_ipv6_gate"
   TAGS="$_tags"
   ENABLE_FUSE="$_enable_fuse"
+  ENABLE_TUN="$_enable_tun"
   ENABLE_GPU="$_enable_gpu"
+  ENABLE_NESTING="$_enable_nesting"
   VERBOSE="$_verbose"
 
-  # Update var_gpu based on user choice (for is_gpu_app function)
+  # Update var_* based on user choice (for functions that check these)
   var_gpu="$_enable_gpu"
+  var_fuse="$_enable_fuse"
+  var_tun="$_enable_tun"
+  var_nesting="$_enable_nesting"
 
   # Format optional values
   [[ -n "$_mtu" ]] && MTU=",mtu=$_mtu" || MTU=""
@@ -1648,6 +1715,8 @@ Options:
   echo -e "${NETWORK}${BOLD}${DGN}IPv4: ${BGN}$NET${CL}"
   echo -e "${NETWORK}${BOLD}${DGN}IPv6: ${BGN}$IPV6_METHOD${CL}"
   echo -e "${FUSE}${BOLD}${DGN}FUSE Support: ${BGN}$ENABLE_FUSE${CL}"
+  [[ "$ENABLE_TUN" == "yes" ]] && echo -e "${NETWORK}${BOLD}${DGN}TUN/TAP Support: ${BGN}$ENABLE_TUN${CL}"
+  echo -e "${CONTAINERTYPE}${BOLD}${DGN}Nesting: ${BGN}$([ "$ENABLE_NESTING" == "1" ] && echo "Enabled" || echo "Disabled")${CL}"
   echo -e "${GPU}${BOLD}${DGN}GPU Passthrough: ${BGN}$ENABLE_GPU${CL}"
   echo -e "${SEARCH}${BOLD}${DGN}Verbose Mode: ${BGN}$VERBOSE${CL}"
   echo -e "${CREATING}${BOLD}${RD}Creating a ${APP} LXC using the above advanced settings${CL}"
@@ -2317,15 +2386,23 @@ build_container() {
   none) ;;
   esac
 
-  # Build FEATURES string
-  if [ "$CT_TYPE" == "1" ]; then
-    FEATURES="keyctl=1,nesting=1"
-  else
+  # Build FEATURES string based on container type and user choices
+  FEATURES=""
+
+  # Nesting support (user configurable, default enabled)
+  if [ "${ENABLE_NESTING:-1}" == "1" ]; then
     FEATURES="nesting=1"
   fi
 
+  # Keyctl for unprivileged containers (needed for Docker)
+  if [ "$CT_TYPE" == "1" ]; then
+    [ -n "$FEATURES" ] && FEATURES="$FEATURES,"
+    FEATURES="${FEATURES}keyctl=1"
+  fi
+
   if [ "$ENABLE_FUSE" == "yes" ]; then
-    FEATURES="$FEATURES,fuse=1"
+    [ -n "$FEATURES" ] && FEATURES="$FEATURES,"
+    FEATURES="${FEATURES}fuse=1"
   fi
 
   # Build PCT_OPTIONS as string for export
