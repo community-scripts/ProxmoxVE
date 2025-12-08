@@ -1013,7 +1013,7 @@ advanced_settings() {
   # Initialize defaults
   TAGS="community-script;${var_tags:-}"
   local STEP=1
-  local MAX_STEP=22
+  local MAX_STEP=28
 
   # Store values for back navigation - inherit from var_* app defaults
   local _ct_type="${var_unprivileged:-1}"
@@ -1030,9 +1030,10 @@ advanced_settings() {
   local _ipv6_method="${var_ipv6_method:-auto}"
   local _ipv6_addr=""
   local _ipv6_gate=""
+  local _apt_cacher="${var_apt_cacher:-no}"
   local _apt_cacher_ip="${var_apt_cacher_ip:-}"
   local _mtu="${var_mtu:-}"
-  local _sd=""
+  local _sd="${var_searchdomain:-}"
   local _ns="${var_ns:-}"
   local _mac="${var_mac:-}"
   local _vlan="${var_vlan:-}"
@@ -1598,9 +1599,151 @@ advanced_settings() {
       ;;
 
     # ═══════════════════════════════════════════════════════════════════════════
-    # STEP 22: Verbose Mode & Confirmation
+    # STEP 22: Keyctl Support (Docker/systemd)
     # ═══════════════════════════════════════════════════════════════════════════
     22)
+      local keyctl_default_flag="--defaultno"
+      [[ "$_enable_keyctl" == "1" ]] && keyctl_default_flag=""
+
+      if whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
+        --title "KEYCTL SUPPORT" \
+        --ok-button "Next" --cancel-button "Back" \
+        $keyctl_default_flag \
+        --yesno "\nEnable Keyctl support?\n\nRequired for: Docker containers, systemd-networkd,\nand kernel keyring operations.\n\nNote: Automatically enabled for unprivileged containers.\n\n(App default: ${var_keyctl:-0})" 16 62; then
+        _enable_keyctl="1"
+      else
+        if [ $? -eq 1 ]; then
+          _enable_keyctl="0"
+        else
+          ((STEP--))
+          continue
+        fi
+      fi
+      ((STEP++))
+      ;;
+
+    # ═══════════════════════════════════════════════════════════════════════════
+    # STEP 23: APT Cacher Proxy
+    # ═══════════════════════════════════════════════════════════════════════════
+    23)
+      local apt_cacher_default_flag="--defaultno"
+      [[ "$_apt_cacher" == "yes" ]] && apt_cacher_default_flag=""
+
+      if whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
+        --title "APT CACHER PROXY" \
+        --ok-button "Next" --cancel-button "Back" \
+        $apt_cacher_default_flag \
+        --yesno "\nUse APT Cacher-NG proxy?\n\nSpeeds up package downloads by caching them locally.\nRequires apt-cacher-ng running on your network.\n\n(App default: ${var_apt_cacher:-no})" 14 62; then
+        _apt_cacher="yes"
+        # Ask for IP if enabled
+        if result=$(whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
+          --title "APT CACHER IP" \
+          --inputbox "\nEnter APT Cacher-NG server IP address:" 10 58 "$_apt_cacher_ip" \
+          3>&1 1>&2 2>&3); then
+          _apt_cacher_ip="$result"
+        fi
+      else
+        if [ $? -eq 1 ]; then
+          _apt_cacher="no"
+          _apt_cacher_ip=""
+        else
+          ((STEP--))
+          continue
+        fi
+      fi
+      ((STEP++))
+      ;;
+
+    # ═══════════════════════════════════════════════════════════════════════════
+    # STEP 24: Container Timezone
+    # ═══════════════════════════════════════════════════════════════════════════
+    24)
+      local tz_hint=""
+      [[ -n "$_ct_timezone" ]] && tz_hint="$_ct_timezone" || tz_hint="(host timezone)"
+
+      if result=$(whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
+        --title "CONTAINER TIMEZONE" \
+        --ok-button "Next" --cancel-button "Back" \
+        --inputbox "\nSet container timezone (e.g., Europe/Berlin, America/New_York).\n\nLeave empty to use host timezone.\n\nCurrent: $tz_hint" 14 62 "$_ct_timezone" \
+        3>&1 1>&2 2>&3); then
+        _ct_timezone="$result"
+        ((STEP++))
+      else
+        ((STEP--))
+      fi
+      ;;
+
+    # ═══════════════════════════════════════════════════════════════════════════
+    # STEP 25: Container Protection
+    # ═══════════════════════════════════════════════════════════════════════════
+    25)
+      local protect_default_flag="--defaultno"
+      [[ "$_protect_ct" == "yes" || "$_protect_ct" == "1" ]] && protect_default_flag=""
+
+      if whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
+        --title "CONTAINER PROTECTION" \
+        --ok-button "Next" --cancel-button "Back" \
+        $protect_default_flag \
+        --yesno "\nEnable Container Protection?\n\nPrevents accidental deletion of this container.\nYou must disable protection before removing.\n\n(App default: ${var_protection:-no})" 14 62; then
+        _protect_ct="yes"
+      else
+        if [ $? -eq 1 ]; then
+          _protect_ct="no"
+        else
+          ((STEP--))
+          continue
+        fi
+      fi
+      ((STEP++))
+      ;;
+
+    # ═══════════════════════════════════════════════════════════════════════════
+    # STEP 26: Device Node Creation (mknod)
+    # ═══════════════════════════════════════════════════════════════════════════
+    26)
+      local mknod_default_flag="--defaultno"
+      [[ "$_enable_mknod" == "1" ]] && mknod_default_flag=""
+
+      if whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
+        --title "DEVICE NODE CREATION" \
+        --ok-button "Next" --cancel-button "Back" \
+        $mknod_default_flag \
+        --yesno "\nAllow device node creation (mknod)?\n\nRequired for: Creating device files inside container.\nExperimental feature (requires kernel 5.3+).\n\n(App default: ${var_mknod:-0})" 14 62; then
+        _enable_mknod="1"
+      else
+        if [ $? -eq 1 ]; then
+          _enable_mknod="0"
+        else
+          ((STEP--))
+          continue
+        fi
+      fi
+      ((STEP++))
+      ;;
+
+    # ═══════════════════════════════════════════════════════════════════════════
+    # STEP 27: Mount Filesystems
+    # ═══════════════════════════════════════════════════════════════════════════
+    27)
+      local mount_hint=""
+      [[ -n "$_mount_fs" ]] && mount_hint="$_mount_fs" || mount_hint="(none)"
+
+      if result=$(whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
+        --title "MOUNT FILESYSTEMS" \
+        --ok-button "Next" --cancel-button "Back" \
+        --inputbox "\nAllow specific filesystem mounts.\n\nComma-separated list: nfs, cifs, fuse, ext4, etc.\nLeave empty for defaults (none).\n\nCurrent: $mount_hint" 14 62 "$_mount_fs" \
+        3>&1 1>&2 2>&3); then
+        _mount_fs="$result"
+        ((STEP++))
+      else
+        ((STEP--))
+      fi
+      ;;
+
+    # ═══════════════════════════════════════════════════════════════════════════
+    # STEP 28: Verbose Mode & Confirmation
+    # ═══════════════════════════════════════════════════════════════════════════
+    28)
       local verbose_default_flag="--defaultno"
       [[ "$_verbose" == "yes" ]] && verbose_default_flag=""
 
@@ -1619,6 +1762,16 @@ advanced_settings() {
       local nesting_desc="Disabled"
       [[ "$_enable_nesting" == "1" ]] && nesting_desc="Enabled"
 
+      local keyctl_desc="Disabled"
+      [[ "$_enable_keyctl" == "1" ]] && keyctl_desc="Enabled"
+
+      local protect_desc="No"
+      [[ "$_protect_ct" == "yes" || "$_protect_ct" == "1" ]] && protect_desc="Yes"
+
+      local tz_display="${_ct_timezone:-Host TZ}"
+      local apt_display="${_apt_cacher:-no}"
+      [[ "$_apt_cacher" == "yes" && -n "$_apt_cacher_ip" ]] && apt_display="$_apt_cacher_ip"
+
       local summary="Container Type: $ct_type_desc
 Container ID: $_ct_id
 Hostname: $_hostname
@@ -1634,16 +1787,19 @@ Network:
   IPv6: $_ipv6_method
 
 Features:
-  FUSE: $_enable_fuse
-  TUN/TAP: $_enable_tun
-  Nesting: $nesting_desc
-  GPU Passthrough: $_enable_gpu
+  FUSE: $_enable_fuse | TUN: $_enable_tun
+  Nesting: $nesting_desc | Keyctl: $keyctl_desc
+  GPU: $_enable_gpu | Protection: $protect_desc
+
+Advanced:
+  Timezone: $tz_display
+  APT Cacher: $apt_display
   Verbose: $_verbose"
 
       if whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
         --title "CONFIRM SETTINGS" \
         --ok-button "Create LXC" --cancel-button "Back" \
-        --yesno "$summary\n\nCreate ${APP} LXC with these settings?" 28 58; then
+        --yesno "$summary\n\nCreate ${APP} LXC with these settings?" 32 62; then
         ((STEP++))
       else
         ((STEP--))
@@ -1673,6 +1829,13 @@ Features:
   ENABLE_TUN="$_enable_tun"
   ENABLE_GPU="$_enable_gpu"
   ENABLE_NESTING="$_enable_nesting"
+  ENABLE_KEYCTL="$_enable_keyctl"
+  ENABLE_MKNOD="$_enable_mknod"
+  ALLOW_MOUNT_FS="$_mount_fs"
+  PROTECT_CT="$_protect_ct"
+  CT_TIMEZONE="$_ct_timezone"
+  APT_CACHER="$_apt_cacher"
+  APT_CACHER_IP="$_apt_cacher_ip"
   VERBOSE="$_verbose"
 
   # Update var_* based on user choice (for functions that check these)
@@ -1680,6 +1843,13 @@ Features:
   var_fuse="$_enable_fuse"
   var_tun="$_enable_tun"
   var_nesting="$_enable_nesting"
+  var_keyctl="$_enable_keyctl"
+  var_mknod="$_enable_mknod"
+  var_mount_fs="$_mount_fs"
+  var_protection="$_protect_ct"
+  var_timezone="$_ct_timezone"
+  var_apt_cacher="$_apt_cacher"
+  var_apt_cacher_ip="$_apt_cacher_ip"
 
   # Format optional values
   [[ -n "$_mtu" ]] && MTU=",mtu=$_mtu" || MTU=""
@@ -1717,7 +1887,11 @@ Features:
   echo -e "${FUSE}${BOLD}${DGN}FUSE Support: ${BGN}$ENABLE_FUSE${CL}"
   [[ "$ENABLE_TUN" == "yes" ]] && echo -e "${NETWORK}${BOLD}${DGN}TUN/TAP Support: ${BGN}$ENABLE_TUN${CL}"
   echo -e "${CONTAINERTYPE}${BOLD}${DGN}Nesting: ${BGN}$([ "$ENABLE_NESTING" == "1" ] && echo "Enabled" || echo "Disabled")${CL}"
+  [[ "$ENABLE_KEYCTL" == "1" ]] && echo -e "${CONTAINERTYPE}${BOLD}${DGN}Keyctl: ${BGN}Enabled${CL}"
   echo -e "${GPU}${BOLD}${DGN}GPU Passthrough: ${BGN}$ENABLE_GPU${CL}"
+  [[ "$PROTECT_CT" == "yes" || "$PROTECT_CT" == "1" ]] && echo -e "${CONTAINERTYPE}${BOLD}${DGN}Protection: ${BGN}Enabled${CL}"
+  [[ -n "$CT_TIMEZONE" ]] && echo -e "${INFO}${BOLD}${DGN}Timezone: ${BGN}$CT_TIMEZONE${CL}"
+  [[ "$APT_CACHER" == "yes" ]] && echo -e "${INFO}${BOLD}${DGN}APT Cacher: ${BGN}$APT_CACHER_IP${CL}"
   echo -e "${SEARCH}${BOLD}${DGN}Verbose Mode: ${BGN}$VERBOSE${CL}"
   echo -e "${CREATING}${BOLD}${RD}Creating a ${APP} LXC using the above advanced settings${CL}"
 }

@@ -6,6 +6,16 @@ This directory contains comprehensive documentation for the `build.func` script,
 
 ## Documentation Files
 
+### 🎛️ [BUILD_FUNC_ADVANCED_SETTINGS.md](./BUILD_FUNC_ADVANCED_SETTINGS.md)
+Complete reference for the 28-step Advanced Settings wizard, including all configurable options and their inheritance behavior.
+
+**Contents:**
+- All 28 wizard steps explained
+- Default value inheritance
+- Feature matrix (when to enable each feature)
+- Confirmation summary format
+- Usage examples
+
 ### 📊 [BUILD_FUNC_FLOWCHART.md](./BUILD_FUNC_FLOWCHART.md)
 Visual ASCII flowchart showing the main execution flow, decision trees, and key decision points in the build.func script.
 

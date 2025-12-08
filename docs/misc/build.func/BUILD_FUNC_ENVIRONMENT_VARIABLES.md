@@ -66,17 +66,36 @@ This document provides a comprehensive reference of all environment variables us
 
 ### Feature Flags
 
-| Variable              | Description                 | Default | Set In          | Used In            |
-| --------------------- | --------------------------- | ------- | --------------- | ------------------ |
-| `ENABLE_FUSE`         | Enable FUSE support         | "true"  | base_settings() | Container features |
-| `ENABLE_TUN`          | Enable TUN/TAP support      | "true"  | base_settings() | Container features |
-| `ENABLE_KEYCTL`       | Enable keyctl support       | "true"  | base_settings() | Container features |
-| `ENABLE_MOUNT`        | Enable mount support        | "true"  | base_settings() | Container features |
-| `ENABLE_NESTING`      | Enable nesting support      | "false" | base_settings() | Container features |
-| `ENABLE_PRIVILEGED`   | Enable privileged mode      | "false" | base_settings() | Container features |
-| `ENABLE_UNPRIVILEGED` | Enable unprivileged mode    | "true"  | base_settings() | Container features |
-| `VERBOSE`             | Enable verbose output       | "false" | Environment     | Logging            |
-| `SSH`                 | Enable SSH key provisioning | "true"  | base_settings() | SSH setup          |
+| Variable         | Description                    | Default | Set In                          | Used In            |
+| ---------------- | ------------------------------ | ------- | ------------------------------- | ------------------ |
+| `var_fuse`       | Enable FUSE support            | "no"    | CT script / Advanced Settings   | Container features |
+| `var_tun`        | Enable TUN/TAP support         | "no"    | CT script / Advanced Settings   | Container features |
+| `var_nesting`    | Enable nesting support         | "1"     | CT script / Advanced Settings   | Container features |
+| `var_keyctl`     | Enable keyctl support          | "0"     | CT script / Advanced Settings   | Container features |
+| `var_mknod`      | Allow device node creation     | "0"     | CT script / Advanced Settings   | Container features |
+| `var_mount_fs`   | Allowed filesystem mounts      | ""      | CT script / Advanced Settings   | Container features |
+| `var_protection` | Enable container protection    | "no"    | CT script / Advanced Settings   | Container creation |
+| `var_timezone`   | Container timezone             | ""      | CT script / Advanced Settings   | Container creation |
+| `var_verbose`    | Enable verbose output          | "no"    | Environment / Advanced Settings | Logging            |
+| `var_ssh`        | Enable SSH key provisioning    | "no"    | CT script / Advanced Settings   | SSH setup          |
+| `ENABLE_FUSE`    | FUSE flag (internal)           | "no"    | Advanced Settings               | Container creation |
+| `ENABLE_TUN`     | TUN/TAP flag (internal)        | "no"    | Advanced Settings               | Container creation |
+| `ENABLE_NESTING` | Nesting flag (internal)        | "1"     | Advanced Settings               | Container creation |
+| `ENABLE_KEYCTL`  | Keyctl flag (internal)         | "0"     | Advanced Settings               | Container creation |
+| `ENABLE_MKNOD`   | Mknod flag (internal)          | "0"     | Advanced Settings               | Container creation |
+| `PROTECT_CT`     | Protection flag (internal)     | "no"    | Advanced Settings               | Container creation |
+| `CT_TIMEZONE`    | Timezone setting (internal)    | ""      | Advanced Settings               | Container creation |
+| `VERBOSE`        | Verbose mode flag              | "no"    | Environment                     | Logging            |
+| `SSH`            | SSH access flag                | "no"    | Advanced Settings               | SSH setup          |
+
+### APT Cacher Configuration
+
+| Variable           | Description              | Default | Set In                        | Used In             |
+| ------------------ | ------------------------ | ------- | ----------------------------- | ------------------- |
+| `var_apt_cacher`   | Enable APT cacher proxy  | "no"    | CT script / Advanced Settings | Package management  |
+| `var_apt_cacher_ip`| APT cacher server IP     | ""      | CT script / Advanced Settings | Package management  |
+| `APT_CACHER`       | APT cacher flag          | "no"    | Advanced Settings             | Container creation  |
+| `APT_CACHER_IP`    | APT cacher IP (internal) | ""      | Advanced Settings             | Container creation  |
 
 ### GPU Passthrough Variables
 
