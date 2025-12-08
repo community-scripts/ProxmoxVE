@@ -65,7 +65,7 @@ EOF
     $STD /opt/tandoor/.venv/bin/python manage.py migrate
     $STD /opt/tandoor/.venv/bin/python manage.py collectstatic --no-input
     rm -rf /opt/tandoor.bak
-    msg_ok "Updated Trandoor"
+    msg_ok "Updated Tandoor"
 
     msg_info "Starting Service"
     systemctl start tandoor
