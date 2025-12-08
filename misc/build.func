@@ -1047,7 +1047,15 @@ advanced_settings() {
   local _enable_mknod="${var_mknod:-0}"
   local _mount_fs="${var_mount_fs:-}"
   local _protect_ct="${var_protection:-no}"
-  local _ct_timezone="${var_timezone:-}"
+  
+  # Detect host timezone for default (if not set via var_timezone)
+  local _host_timezone=""
+  if command -v timedatectl >/dev/null 2>&1; then
+    _host_timezone=$(timedatectl show --value --property=Timezone 2>/dev/null || echo "")
+  elif [ -f /etc/timezone ]; then
+    _host_timezone=$(cat /etc/timezone 2>/dev/null || echo "")
+  fi
+  local _ct_timezone="${var_timezone:-$_host_timezone}"
 
   # Helper to show current progress
   show_progress() {
@@ -1658,13 +1666,13 @@ advanced_settings() {
     # STEP 24: Container Timezone
     # ═══════════════════════════════════════════════════════════════════════════
     24)
-      local tz_hint=""
-      [[ -n "$_ct_timezone" ]] && tz_hint="$_ct_timezone" || tz_hint="(host timezone)"
+      local tz_hint="$_ct_timezone"
+      [[ -z "$tz_hint" ]] && tz_hint="(empty - will use host timezone)"
 
       if result=$(whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
         --title "CONTAINER TIMEZONE" \
         --ok-button "Next" --cancel-button "Back" \
-        --inputbox "\nSet container timezone (e.g., Europe/Berlin, America/New_York).\n\nLeave empty to use host timezone.\n\nCurrent: $tz_hint" 14 62 "$_ct_timezone" \
+        --inputbox "\nSet container timezone.\n\nExamples: Europe/Berlin, America/New_York, Asia/Tokyo\n\nHost timezone: ${_host_timezone:-unknown}\n\nLeave empty to inherit from host." 16 62 "$_ct_timezone" \
         3>&1 1>&2 2>&3); then
         _ct_timezone="$result"
         ((STEP++))
