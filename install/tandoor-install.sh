@@ -60,7 +60,7 @@ STATIC_URL=/staticfiles/
 MEDIA_URL=/media/
 EOF
 
-TANDOOR_VERSION="$(curl -s https://api.github.com/repos/TandoorRecipes/recipes/releases/latest | jq -r .tag_name)"
+TANDOOR_VERSION=$(get_latest_github_release "TandoorRecipes/recipes")
 cat <<EOF >/opt/tandoor/cookbook/version_info.py
 TANDOOR_VERSION = "$TANDOOR_VERSION"
 TANDOOR_REF = "bare-metal"
