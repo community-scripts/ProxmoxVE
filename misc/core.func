@@ -123,6 +123,7 @@ icons() {
   CREATING="${TAB}🚀${TAB}${CL}"
   ADVANCED="${TAB}🧩${TAB}${CL}"
   FUSE="${TAB}🗂️${TAB}${CL}"
+  GPU="${TAB}🎮${TAB}${CL}"
   HOURGLASS="${TAB}⏳${TAB}"
 }
 
