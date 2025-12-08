@@ -20,6 +20,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - feat: Add var_gpu flag for GPU passthrough configuration [@MickLesk](https://github.com/MickLesk) ([#9764](https://github.com/community-scripts/ProxmoxVE/pull/9764))
 
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - fix: always show SSH access dialog in advanced settings [@MickLesk](https://github.com/MickLesk) ([#9765](https://github.com/community-scripts/ProxmoxVE/pull/9765))
+
 ## 2025-12-07
 
 ### 🚀 Updated Scripts
