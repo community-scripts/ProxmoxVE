@@ -16,6 +16,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - typo: tandoor instead of trandoor [@Neonize](https://github.com/Neonize) ([#9771](https://github.com/community-scripts/ProxmoxVE/pull/9771))
 
+  - #### 🐞 Bug Fixes
+
+    - Tandoor: Remove postgres17-contrib package [@tremor021](https://github.com/tremor021) ([#9781](https://github.com/community-scripts/ProxmoxVE/pull/9781))
+
   - #### ✨ New Features
 
     - feat: Add var_gpu flag for GPU passthrough configuration [@MickLesk](https://github.com/MickLesk) ([#9764](https://github.com/community-scripts/ProxmoxVE/pull/9764))
