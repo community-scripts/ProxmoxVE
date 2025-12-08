@@ -10,6 +10,16 @@
 > [!CAUTION]
 Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit the project's popularity for potentially malicious purposes.
 
+## 2025-12-08
+
+### 🚀 Updated Scripts
+
+  - typo: tandoor instead of trandoor [@Neonize](https://github.com/Neonize) ([#9771](https://github.com/community-scripts/ProxmoxVE/pull/9771))
+
+  - #### ✨ New Features
+
+    - feat: Add var_gpu flag for GPU passthrough configuration [@MickLesk](https://github.com/MickLesk) ([#9764](https://github.com/community-scripts/ProxmoxVE/pull/9764))
+
 ## 2025-12-07
 
 ### 🚀 Updated Scripts

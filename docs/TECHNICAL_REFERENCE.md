@@ -1,8 +1,8 @@
 # Technical Reference: Configuration System Architecture
 
 > **For Developers and Advanced Users**
-> 
-> *Deep dive into how the defaults and configuration system works*
+>
+> _Deep dive into how the defaults and configuration system works_
 
 ---
 
@@ -123,13 +123,13 @@ VAR_VALUE  := [^\n]*  # Any printable characters except newline
 
 **Constraints**:
 
-| Constraint | Value |
-|-----------|-------|
-| Max file size | 64 KB |
-| Max line length | 1024 bytes |
-| Max variables | 100 |
-| Allowed var names | `var_[a-z_]+` |
-| Value validation | Whitelist + Sanitization |
+| Constraint        | Value                    |
+| ----------------- | ------------------------ |
+| Max file size     | 64 KB                    |
+| Max line length   | 1024 bytes               |
+| Max variables     | 100                      |
+| Allowed var names | `var_[a-z_]+`            |
+| Value validation  | Whitelist + Sanitization |
 
 **Example Valid File**:
 
@@ -206,21 +206,24 @@ var_tags=dns,pihole
 **Purpose**: Safely load variables from .vars files without using `source` or `eval`
 
 **Signature**:
+
 ```bash
 load_vars_file(filepath)
 ```
 
 **Parameters**:
 
-| Param | Type | Required | Example |
-|-------|------|----------|---------|
-| filepath | String | Yes | `/usr/local/community-scripts/default.vars` |
+| Param    | Type   | Required | Example                                     |
+| -------- | ------ | -------- | ------------------------------------------- |
+| filepath | String | Yes      | `/usr/local/community-scripts/default.vars` |
 
 **Returns**:
+
 - `0` on success
 - `1` on error (file missing, parse error, etc.)
 
 **Environment Side Effects**:
+
 - Sets all parsed `var_*` variables as shell variables
 - Does NOT unset variables if file missing (safe)
 - Does NOT affect other variables
@@ -230,25 +233,25 @@ load_vars_file(filepath)
 ```bash
 load_vars_file() {
   local file="$1"
-  
+
   # File must exist
   [ -f "$file" ] || return 0
-  
+
   # Parse line by line (not with source/eval)
   local line key val
   while IFS='=' read -r key val || [ -n "$key" ]; do
     # Skip comments and empty lines
     [[ "$key" =~ ^[[:space:]]*# ]] && continue
     [[ -z "$key" ]] && continue
-    
+
     # Validate key is in whitelist
     _is_whitelisted_key "$key" || continue
-    
+
     # Sanitize and export value
     val="$(_sanitize_value "$val")"
     [ $? -eq 0 ] && export "$key=$val"
   done < "$file"
-  
+
   return 0
 }
 ```
@@ -281,6 +284,7 @@ echo "Allocating ${var_ram} MB RAM"
 **Purpose**: Get the full path for app-specific defaults file
 
 **Signature**:
+
 ```bash
 get_app_defaults_path()
 ```
@@ -288,6 +292,7 @@ get_app_defaults_path()
 **Parameters**: None
 
 **Returns**:
+
 - String: Full path to app defaults file
 
 **Implementation**:
@@ -322,6 +327,7 @@ load_vars_file "$(get_app_defaults_path)"
 **Purpose**: Load and display user global defaults
 
 **Signature**:
+
 ```bash
 default_var_settings()
 ```
@@ -329,6 +335,7 @@ default_var_settings()
 **Parameters**: None
 
 **Returns**:
+
 - `0` on success
 - `1` on error
 
@@ -337,15 +344,15 @@ default_var_settings()
 ```
 1. Find default.vars location
    (usually /usr/local/community-scripts/default.vars)
-   
+
 2. Create if missing
-   
+
 3. Load variables from file
-   
+
 4. Map var_verbose → VERBOSE variable
-   
+
 5. Call base_settings (apply to container config)
-   
+
 6. Call echo_default (display summary)
 ```
 
@@ -354,20 +361,20 @@ default_var_settings()
 ```bash
 default_var_settings() {
   local VAR_WHITELIST=(
-    var_apt_cacher var_apt_cacher_ip var_brg var_cpu var_disk var_fuse
+    var_apt_cacher var_apt_cacher_ip var_brg var_cpu var_disk var_fuse var_gpu
     var_gateway var_hostname var_ipv6_method var_mac var_mtu
     var_net var_ns var_pw var_ram var_tags var_tun var_unprivileged
     var_verbose var_vlan var_ssh var_ssh_authorized_key
     var_container_storage var_template_storage
   )
-  
+
   # Ensure file exists
   _ensure_default_vars
-  
+
   # Find and load
   local dv="$(_find_default_vars)"
   load_vars_file "$dv"
-  
+
   # Map verbose flag
   if [[ -n "${var_verbose:-}" ]]; then
     case "${var_verbose,,}" in
@@ -375,7 +382,7 @@ default_var_settings() {
       *) VERBOSE="${var_verbose}" ;;
     esac
   fi
-  
+
   # Apply and display
   base_settings "$VERBOSE"
   echo_default
@@ -389,6 +396,7 @@ default_var_settings() {
 **Purpose**: Offer to save current settings as app-specific defaults
 
 **Signature**:
+
 ```bash
 maybe_offer_save_app_defaults()
 ```
@@ -413,10 +421,10 @@ maybe_offer_save_app_defaults()
 ```bash
 maybe_offer_save_app_defaults() {
   local app_vars_path="$(get_app_defaults_path)"
-  
+
   # Build current settings from memory
   local new_tmp="$(_build_current_app_vars_tmp)"
-  
+
   # Check if already exists
   if [ -f "$app_vars_path" ]; then
     # Show diff and ask: Update? Keep? View Diff?
@@ -438,29 +446,31 @@ maybe_offer_save_app_defaults() {
 **Purpose**: Remove dangerous characters/patterns from configuration values
 
 **Signature**:
+
 ```bash
 _sanitize_value(value)
 ```
 
 **Parameters**:
 
-| Param | Type | Required |
-|-------|------|----------|
-| value | String | Yes |
+| Param | Type   | Required |
+| ----- | ------ | -------- |
+| value | String | Yes      |
 
 **Returns**:
+
 - `0` (success) + sanitized value on stdout
 - `1` (failure) + nothing if dangerous
 
 **Dangerous Patterns**:
 
-| Pattern | Threat | Example |
-|---------|--------|---------|
-| `$(...)` | Command substitution | `$(rm -rf /)` |
-| `` ` ` `` | Command substitution | `` `whoami` `` |
-| `;` | Command separator | `value; rm -rf /` |
-| `&` | Background execution | `value & malicious` |
-| `<(` | Process substitution | `<(cat /etc/passwd)` |
+| Pattern   | Threat               | Example              |
+| --------- | -------------------- | -------------------- |
+| `$(...)`  | Command substitution | `$(rm -rf /)`        |
+| `` ` ` `` | Command substitution | `` `whoami` ``       |
+| `;`       | Command separator    | `value; rm -rf /`    |
+| `&`       | Background execution | `value & malicious`  |
+| `<(`      | Process substitution | `<(cat /etc/passwd)` |
 
 **Implementation**:
 
@@ -501,17 +511,19 @@ fi
 **Purpose**: Check if variable name is in allowed whitelist
 
 **Signature**:
+
 ```bash
 _is_whitelisted_key(key)
 ```
 
 **Parameters**:
 
-| Param | Type | Required | Example |
-|-------|------|----------|---------|
-| key | String | Yes | `var_cpu` |
+| Param | Type   | Required | Example   |
+| ----- | ------ | -------- | --------- |
+| key   | String | Yes      | `var_cpu` |
 
 **Returns**:
+
 - `0` if key is whitelisted
 - `1` if key is NOT whitelisted
 
@@ -573,6 +585,7 @@ Step 4: Use BUILT-IN DEFAULTS
 ### Precedence Examples
 
 **Example 1: Environment Variable Wins**
+
 ```bash
 # Shell environment has highest priority
 $ export var_cpu=16
@@ -583,6 +596,7 @@ $ bash pihole-install.sh
 ```
 
 **Example 2: App Defaults Override User Defaults**
+
 ```bash
 # User Defaults: var_cpu=4
 # App Defaults: var_cpu=2
@@ -593,6 +607,7 @@ $ bash pihole-install.sh
 ```
 
 **Example 3: All Defaults Missing (Built-ins Used)**
+
 ```bash
 # No environment variables set
 # No app defaults file
@@ -611,21 +626,21 @@ $ bash pihole-install.sh
 base_settings() {
   # Priority 1: Environment variables (already set if export used)
   CT_TYPE=${var_unprivileged:-"1"}          # Use existing or default
-  
+
   # Priority 2: Load app defaults (may override above)
   if [ -f "$(get_app_defaults_path)" ]; then
     load_vars_file "$(get_app_defaults_path)"
   fi
-  
+
   # Priority 3: Load user defaults
   if [ -f "/usr/local/community-scripts/default.vars" ]; then
     load_vars_file "/usr/local/community-scripts/default.vars"
   fi
-  
+
   # Priority 4: Apply built-in defaults (lowest)
   CORE_COUNT=${var_cpu:-"${APP_CPU_DEFAULT:-2}"}
   RAM_SIZE=${var_ram:-"${APP_RAM_DEFAULT:-1024}"}
-  
+
   # Result: var_cpu has been set through precedence chain
 }
 ```
@@ -734,14 +749,14 @@ CONTAINER CREATION STARTED
 
 ### Threat Model
 
-| Threat | Mitigation |
-|--------|-----------|
-| **Arbitrary Code Execution** | No `source` or `eval`; manual parsing only |
-| **Variable Injection** | Whitelist of allowed variable names |
-| **Command Substitution** | `_sanitize_value()` blocks `$()`, backticks, etc. |
-| **Path Traversal** | Files locked to `/usr/local/community-scripts/` |
-| **Permission Escalation** | Files created with restricted permissions |
-| **Information Disclosure** | Sensitive variables not logged |
+| Threat                       | Mitigation                                        |
+| ---------------------------- | ------------------------------------------------- |
+| **Arbitrary Code Execution** | No `source` or `eval`; manual parsing only        |
+| **Variable Injection**       | Whitelist of allowed variable names               |
+| **Command Substitution**     | `_sanitize_value()` blocks `$()`, backticks, etc. |
+| **Path Traversal**           | Files locked to `/usr/local/community-scripts/`   |
+| **Permission Escalation**    | Files created with restricted permissions         |
+| **Information Disclosure**   | Sensitive variables not logged                    |
 
 ### Security Controls
 
@@ -798,6 +813,7 @@ fi
 ### Module: `build.func`
 
 **Load Order** (in actual scripts):
+
 1. `#!/usr/bin/env bash` - Shebang
 2. `source /dev/stdin <<<$(curl ... api.func)` - API functions
 3. `source /dev/stdin <<<$(curl ... build.func)` - Build functions
@@ -832,17 +848,17 @@ fi
 
 # Section 6: Installation Flow
 - install_script()         # Main entry point
-- advanced_settings()      # 19-step wizard
+- advanced_settings()      # 20-step wizard
 ```
 
 ### Regex Patterns Used
 
-| Pattern | Purpose | Example Match |
-|---------|---------|---|
-| `^[0-9]+([.][0-9]+)?$` | Integer validation | `4`, `192.168` |
-| `^var_[a-z_]+$` | Variable name | `var_cpu`, `var_ssh` |
-| `*'$('*` | Command substitution | `$(whoami)` |
-| `*\`*` | Backtick substitution | `` `cat /etc/passwd` `` |
+| Pattern                | Purpose               | Example Match           |
+| ---------------------- | --------------------- | ----------------------- |
+| `^[0-9]+([.][0-9]+)?$` | Integer validation    | `4`, `192.168`          |
+| `^var_[a-z_]+$`        | Variable name         | `var_cpu`, `var_ssh`    |
+| `*'$('*`               | Command substitution  | `$(whoami)`             |
+| `*\`\*`                | Backtick substitution | `` `cat /etc/passwd` `` |
 
 ---
 
@@ -869,12 +885,12 @@ fi
 
 ### Function Mapping
 
-| Old | New | Location |
-|-----|-----|----------|
-| `read_config()` | `load_vars_file()` | build.func |
-| `write_config()` | `_build_current_app_vars_tmp()` | build.func |
-| None | `maybe_offer_save_app_defaults()` | build.func |
-| None | `get_app_defaults_path()` | build.func |
+| Old              | New                               | Location   |
+| ---------------- | --------------------------------- | ---------- |
+| `read_config()`  | `load_vars_file()`                | build.func |
+| `write_config()` | `_build_current_app_vars_tmp()`   | build.func |
+| None             | `maybe_offer_save_app_defaults()` | build.func |
+| None             | `get_app_defaults_path()`         | build.func |
 
 ---
 

@@ -453,7 +453,7 @@ load_vars_file() {
 
   # Allowed var_* keys
   local VAR_WHITELIST=(
-    var_apt_cacher var_apt_cacher_ip var_brg var_cpu var_disk var_fuse var_keyctl
+    var_apt_cacher var_apt_cacher_ip var_brg var_cpu var_disk var_fuse var_gpu var_keyctl
     var_gateway var_hostname var_ipv6_method var_mac var_mknod var_mount_fs var_mtu
     var_net var_nesting var_ns var_protection var_pw var_ram var_tags var_timezone var_tun var_unprivileged
     var_verbose var_vlan var_ssh var_ssh_authorized_key var_container_storage var_template_storage
@@ -505,7 +505,7 @@ default_var_settings() {
   # Allowed var_* keys (alphabetically sorted)
   # Note: Removed var_ctid (can only exist once), var_ipv6_static (static IPs are unique)
   local VAR_WHITELIST=(
-    var_apt_cacher var_apt_cacher_ip var_brg var_cpu var_disk var_fuse var_keyctl
+    var_apt_cacher var_apt_cacher_ip var_brg var_cpu var_disk var_fuse var_gpu var_keyctl
     var_gateway var_hostname var_ipv6_method var_mac var_mknod var_mount_fs var_mtu
     var_net var_nesting var_ns var_protection var_pw var_ram var_tags var_timezone var_tun var_unprivileged
     var_verbose var_vlan var_ssh var_ssh_authorized_key var_container_storage var_template_storage
@@ -667,7 +667,7 @@ get_app_defaults_path() {
 if ! declare -p VAR_WHITELIST >/dev/null 2>&1; then
   # Note: Removed var_ctid (can only exist once), var_ipv6_static (static IPs are unique)
   declare -ag VAR_WHITELIST=(
-    var_apt_cacher var_apt_cacher_ip var_brg var_cpu var_disk var_fuse
+    var_apt_cacher var_apt_cacher_ip var_brg var_cpu var_disk var_fuse var_gpu
     var_gateway var_hostname var_ipv6_method var_mac var_mtu
     var_net var_ns var_pw var_ram var_tags var_tun var_unprivileged
     var_verbose var_vlan var_ssh var_ssh_authorized_key var_container_storage var_template_storage
@@ -1011,7 +1011,7 @@ advanced_settings() {
   # Initialize defaults
   TAGS="community-script;${var_tags:-}"
   local STEP=1
-  local MAX_STEP=19
+  local MAX_STEP=20
 
   # Store values for back navigation
   local _ct_type="${CT_TYPE:-1}"
@@ -1036,6 +1036,7 @@ advanced_settings() {
   local _vlan=""
   local _tags="$TAGS"
   local _enable_fuse="no"
+  local _enable_gpu="${var_gpu:-no}"
   local _verbose="no"
   local _enable_keyctl="0"
   local _enable_mknod="0"
@@ -1527,9 +1528,33 @@ advanced_settings() {
       ;;
 
     # ═══════════════════════════════════════════════════════════════════════════
-    # STEP 19: Confirmation
+    # STEP 19: GPU Passthrough
     # ═══════════════════════════════════════════════════════════════════════════
     19)
+      local gpu_default="OFF"
+      [[ "$_enable_gpu" == "yes" ]] && gpu_default="ON"
+
+      if whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
+        --title "GPU PASSTHROUGH" \
+        --ok-button "Next" --cancel-button "Back" \
+        --defaultno \
+        --yesno "\nEnable GPU Passthrough?\n\nAutomatically detects and passes through available GPUs\n(Intel/AMD/NVIDIA) for hardware acceleration.\n\nRecommended for: Media servers, AI/ML, Transcoding" 14 62; then
+        _enable_gpu="yes"
+      else
+        if [ $? -eq 1 ]; then
+          _enable_gpu="no"
+        else
+          ((STEP--))
+          continue
+        fi
+      fi
+      ((STEP++))
+      ;;
+
+    # ═══════════════════════════════════════════════════════════════════════════
+    # STEP 20: Confirmation
+    # ═══════════════════════════════════════════════════════════════════════════
+    20)
       # Build summary
       local ct_type_desc="Unprivileged"
       [[ "$_ct_type" == "0" ]] && ct_type_desc="Privileged"
@@ -1550,12 +1575,13 @@ Network:
 
 Options:
   FUSE: $_enable_fuse
+  GPU Passthrough: $_enable_gpu
   Verbose: $_verbose"
 
       if whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
         --title "CONFIRM SETTINGS" \
         --ok-button "Create LXC" --cancel-button "Back" \
-        --yesno "$summary\n\nCreate ${APP} LXC with these settings?" 26 58; then
+        --yesno "$summary\n\nCreate ${APP} LXC with these settings?" 28 58; then
         ((STEP++))
       else
         ((STEP--))
@@ -1582,7 +1608,11 @@ Options:
   IPV6_GATE="$_ipv6_gate"
   TAGS="$_tags"
   ENABLE_FUSE="$_enable_fuse"
+  ENABLE_GPU="$_enable_gpu"
   VERBOSE="$_verbose"
+
+  # Update var_gpu based on user choice (for is_gpu_app function)
+  var_gpu="$_enable_gpu"
 
   # Format optional values
   [[ -n "$_mtu" ]] && MTU=",mtu=$_mtu" || MTU=""
@@ -1600,6 +1630,10 @@ Options:
   export UDHCPC_FIX
   export SSH_KEYS_FILE
 
+  # Exit alternate screen buffer before showing summary (so output remains visible)
+  tput rmcup 2>/dev/null || true
+  trap - RETURN
+
   # Display final summary
   echo -e "\n${INFO}${BOLD}${DGN}PVE Version ${PVEVERSION} (Kernel: ${KERNEL_VERSION})${CL}"
   echo -e "${OS}${BOLD}${DGN}Operating System: ${BGN}$var_os${CL}"
@@ -1614,6 +1648,7 @@ Options:
   echo -e "${NETWORK}${BOLD}${DGN}IPv4: ${BGN}$NET${CL}"
   echo -e "${NETWORK}${BOLD}${DGN}IPv6: ${BGN}$IPV6_METHOD${CL}"
   echo -e "${FUSE}${BOLD}${DGN}FUSE Support: ${BGN}$ENABLE_FUSE${CL}"
+  echo -e "${GPU}${BOLD}${DGN}GPU Passthrough: ${BGN}$ENABLE_GPU${CL}"
   echo -e "${SEARCH}${BOLD}${DGN}Verbose Mode: ${BGN}$VERBOSE${CL}"
   echo -e "${CREATING}${BOLD}${RD}Creating a ${APP} LXC using the above advanced settings${CL}"
 }
@@ -1736,6 +1771,9 @@ echo_default() {
   echo -e "${DISKSIZE}${BOLD}${DGN}Disk Size: ${BGN}${DISK_SIZE} GB${CL}"
   echo -e "${CPUCORE}${BOLD}${DGN}CPU Cores: ${BGN}${CORE_COUNT}${CL}"
   echo -e "${RAMSIZE}${BOLD}${DGN}RAM Size: ${BGN}${RAM_SIZE} MiB${CL}"
+  if [[ -n "${var_gpu:-}" && "${var_gpu}" == "yes" ]]; then
+    echo -e "${GPU}${BOLD}${DGN}GPU Passthrough: ${BGN}Enabled${CL}"
+  fi
   if [ "$VERBOSE" == "yes" ]; then
     echo -e "${SEARCH}${BOLD}${DGN}Verbose Mode: ${BGN}Enabled${CL}"
   fi
@@ -2388,21 +2426,15 @@ build_container() {
   # GPU/USB PASSTHROUGH CONFIGURATION
   # ============================================================================
 
-  # List of applications that benefit from GPU acceleration
-  GPU_APPS=(
-    "immich" "channels" "emby" "ersatztv" "frigate"
-    "jellyfin" "plex" "scrypted" "tdarr" "unmanic"
-    "ollama" "fileflows" "open-webui" "tunarr"
-    "handbrake" "sunshine" "moonlight" "kodi" "stremio"
-    "viseron"
-  )
-
-  # Check if app needs GPU
+  # Check if GPU passthrough is enabled
+  # Returns true only if var_gpu is explicitly set to "yes"
+  # Can be set via:
+  #   - Environment variable: var_gpu=yes bash -c "..."
+  #   - CT script default: var_gpu="${var_gpu:-no}"
+  #   - Advanced settings wizard
+  #   - App defaults file: /usr/local/community-scripts/defaults/<app>.vars
   is_gpu_app() {
-    local app="${1,,}"
-    for gpu_app in "${GPU_APPS[@]}"; do
-      [[ "$app" == "${gpu_app,,}" ]] && return 0
-    done
+    [[ "${var_gpu:-no}" == "yes" ]] && return 0
     return 1
   }
 
@@ -2492,8 +2524,13 @@ EOF
 
   # Configure GPU passthrough
   configure_gpu_passthrough() {
-    # Skip if not a GPU app and not privileged
-    if [[ "$CT_TYPE" != "0" ]] && ! is_gpu_app "$APP"; then
+    # Skip if:
+    # GPU passthrough is enabled when var_gpu="yes":
+    # - Set via environment variable: var_gpu=yes bash -c "..."
+    # - Set in CT script: var_gpu="${var_gpu:-no}"
+    # - Enabled in advanced_settings wizard
+    # - Configured in app defaults file
+    if ! is_gpu_app "$APP"; then
       return 0
     fi
 

@@ -80,12 +80,32 @@ This document provides a comprehensive reference of all environment variables us
 
 ### GPU Passthrough Variables
 
-| Variable          | Description                   | Default | Set In               | Used In         |
-| ----------------- | ----------------------------- | ------- | -------------------- | --------------- |
-| `GPU_APPS`        | List of apps that support GPU | -       | Environment          | GPU detection   |
-| `var_gpu`         | GPU selection                 | -       | User input           | GPU passthrough |
-| `var_gpu_type`    | GPU type (intel/amd/nvidia)   | -       | detect_gpu_devices() | GPU passthrough |
-| `var_gpu_devices` | GPU device list               | -       | detect_gpu_devices() | GPU passthrough |
+| Variable     | Description                     | Default | Set In                                      | Used In            |
+| ------------ | ------------------------------- | ------- | ------------------------------------------- | ------------------ |
+| `var_gpu`    | Enable GPU passthrough          | "no"    | CT script / Environment / Advanced Settings | GPU passthrough    |
+| `ENABLE_GPU` | GPU passthrough flag (internal) | "no"    | Advanced Settings                           | Container creation |
+
+**Note**: GPU passthrough is controlled via `var_gpu`. Apps that benefit from GPU acceleration (media servers, AI/ML, transcoding) have `var_gpu=yes` as default in their CT scripts.
+
+**Apps with GPU enabled by default**:
+
+- Media: jellyfin, plex, emby, channels, ersatztv, tunarr, immich
+- Transcoding: tdarr, unmanic, fileflows
+- AI/ML: ollama, openwebui
+- NVR: frigate
+
+**Usage Examples**:
+
+```bash
+# Disable GPU for a specific installation
+var_gpu=no bash -c "$(curl -fsSL https://...jellyfin.sh)"
+
+# Enable GPU for apps without default GPU support
+var_gpu=yes bash -c "$(curl -fsSL https://...debian.sh)"
+
+# Set in default.vars for all apps
+echo "var_gpu=yes" >> /usr/local/community-scripts/default.vars
+```
 
 ### API and Diagnostics Variables
 
