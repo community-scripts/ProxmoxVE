@@ -19,25 +19,23 @@ msg_ok "Installed Dependencies"
 
 setup_uv
 NODE_VERSION="22" setup_nodejs
-fetch_and_deploy_gh_release "wizarr" "wizarrrr/wizarr"
+fetch_and_deploy_gh_release "wizarr" "wizarrrr/wizarr" "tarball"
+import_local_ip
 
 msg_info "Configure Wizarr"
-cd /opt/wizarr || exit
+cd /opt/wizarr
 $STD /usr/local/bin/uv sync --frozen
 $STD /usr/local/bin/uv run --frozen pybabel compile -d app/translations
 $STD npm --prefix app/static install
 $STD npm --prefix app/static run build:css
 mkdir -p ./.cache
-
-LOCAL_IP="$(hostname -I | awk '{print $1}')"
-VERSION="$(sed 's/^20/v&/' ~/.wizarr)"
 cat <<EOF >/opt/wizarr/.env
 FLASK_ENV=production
 GUNICORN_WORKERS=4
 APP_URL=http://${LOCAL_IP}
 DISABLE_BUILTIN_AUTH=false
 LOG_LEVEL=INFO
-APP_VERSION=${VERSION}
+APP_VERSION=v$(get_latest_github_release "wizarrrr/wizarr")
 EOF
 
 cat <<EOF >/opt/wizarr/start.sh
