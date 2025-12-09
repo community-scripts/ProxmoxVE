@@ -17,6 +17,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - Dokploy ([#9793](https://github.com/community-scripts/ProxmoxVE/pull/9793))
 - Coolify ([#9792](https://github.com/community-scripts/ProxmoxVE/pull/9792))
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - Refactor: Zipline [@tremor021](https://github.com/tremor021) ([#9801](https://github.com/community-scripts/ProxmoxVE/pull/9801))
+
 ### 💾 Core
 
   - website: fix/check updateable flags [@MickLesk](https://github.com/MickLesk) ([#9777](https://github.com/community-scripts/ProxmoxVE/pull/9777))
