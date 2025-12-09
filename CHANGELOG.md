@@ -14,7 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Coolify ([#9792](https://github.com/community-scripts/ProxmoxVE/pull/9792))
+  - Dokploy ([#9793](https://github.com/community-scripts/ProxmoxVE/pull/9793))
+- Coolify ([#9792](https://github.com/community-scripts/ProxmoxVE/pull/9792))
 
 ## 2025-12-08
 
