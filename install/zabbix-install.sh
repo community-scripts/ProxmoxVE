@@ -14,6 +14,7 @@ network_check
 update_os
 
 PG_VERSION="17" setup_postgresql
+PG_DB_NAME="zabbixdb" PG_DB_USER="zabbix" setup_postgresql_db
 
 read -rp "Choose Zabbix version [1] 7.0 LTS  [2] 7.4 (Latest Stable)  [3] Latest available (default: 2): " ZABBIX_CHOICE
 ZABBIX_CHOICE=${ZABBIX_CHOICE:-2}
@@ -35,6 +36,10 @@ curl -fsSL "$ZABBIX_DEB_URL" -o /tmp/zabbix-release_latest+debian13_all.deb
 $STD dpkg -i /tmp/zabbix-release_latest+debian13_all.deb
 $STD apt update
 $STD apt install -y zabbix-server-pgsql zabbix-frontend-php php8.4-pgsql zabbix-apache-conf zabbix-sql-scripts
+zcat /usr/share/zabbix/sql-scripts/postgresql/server.sql.gz | sudo -u "$PG_DB_USER" psql "$PG_DB_NAME" &>/dev/null
+sed -i "s/^DBName=.*/DBName=$PG_DB_NAME/" /etc/zabbix/zabbix_server.conf
+sed -i "s/^DBUser=.*/DBUser=$PG_DB_USER/" /etc/zabbix/zabbix_server.conf
+sed -i "s/^# DBPassword=.*/DBPassword=$PG_DB_PASS/" /etc/zabbix/zabbix_server.conf
 msg_ok "Installed Zabbix $ZABBIX_VERSION"
 
 while true; do
@@ -77,28 +82,6 @@ if [ "$AGENT_PKG" = "zabbix-agent2" ]; then
 else
   $STD apt install -y zabbix-agent
 fi
-
-msg_info "Setting up PostgreSQL"
-DB_NAME=zabbixdb
-DB_USER=zabbix
-DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)
-$STD sudo -u postgres psql -c "CREATE ROLE $DB_USER WITH LOGIN PASSWORD '$DB_PASS';"
-$STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER ENCODING 'UTF8' TEMPLATE template0;"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET client_encoding TO 'utf8';"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET default_transaction_isolation TO 'read committed';"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET timezone TO 'UTC'"
-{
-  echo "Zabbix-Credentials"
-  echo "Zabbix Database User: $DB_USER"
-  echo "Zabbix Database Password: $DB_PASS"
-  echo "Zabbix Database Name: $DB_NAME"
-} >>~/zabbix.creds
-
-zcat /usr/share/zabbix/sql-scripts/postgresql/server.sql.gz | sudo -u $DB_USER psql $DB_NAME &>/dev/null
-sed -i "s/^DBName=.*/DBName=$DB_NAME/" /etc/zabbix/zabbix_server.conf
-sed -i "s/^DBUser=.*/DBUser=$DB_USER/" /etc/zabbix/zabbix_server.conf
-sed -i "s/^# DBPassword=.*/DBPassword=$DB_PASS/" /etc/zabbix/zabbix_server.conf
-msg_ok "Set up PostgreSQL"
 
 msg_info "Configuring Fping"
 if command -v fping >/dev/null 2>&1; then

@@ -11,7 +11,7 @@
   "interface_port": null,
   "documentation": "https://www.zabbix.com/documentation/current/en/manual",
   "website": "https://www.zabbix.com/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/zabbix.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/zabbix.webp",
   "config_path": "/etc/zabbix/zabbix_server.conf",
   "description": "Zabbix is an all-in-one monitoring solution with a variety of enterprise-grade features available right out of the box.",
   "install_methods": [
