@@ -35,8 +35,6 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - website: fix/check updateable flags [@MickLesk](https://github.com/MickLesk) ([#9777](https://github.com/community-scripts/ProxmoxVE/pull/9777))
-
   - #### 🐞 Bug Fixes
 
     - fix(tools): handle repos with 30+ pre-releases in check_for_gh_release [@vidonnus](https://github.com/vidonnus) ([#9786](https://github.com/community-scripts/ProxmoxVE/pull/9786))
@@ -47,7 +45,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 📚 Documentation
 
-  - fixed grammar on alert that pops up when you copy the curl command [@Sarthak-Sidhant](https://github.com/Sarthak-Sidhant) ([#9799](https://github.com/community-scripts/ProxmoxVE/pull/9799))
+  - website: fix/check updateable flags [@MickLesk](https://github.com/MickLesk) ([#9777](https://github.com/community-scripts/ProxmoxVE/pull/9777))
+- fixed grammar on alert that pops up when you copy the curl command [@Sarthak-Sidhant](https://github.com/Sarthak-Sidhant) ([#9799](https://github.com/community-scripts/ProxmoxVE/pull/9799))
+
+### ❔ Uncategorized
+
+  - Website: Remove Palmr script [@tremor021](https://github.com/tremor021) ([#9824](https://github.com/community-scripts/ProxmoxVE/pull/9824))
 
 ## 2025-12-08
 
