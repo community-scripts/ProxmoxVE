@@ -20,6 +20,8 @@ $STD apt install -y \
   apt-transport-https
 msg_ok "Installed Dependencies"
 
+import_local_ip
+
 msg_info "Setting up Elasticsearch"
 setup_deb822_repo \
   "elasticsearch" \
@@ -27,7 +29,7 @@ setup_deb822_repo \
   "https://artifacts.elastic.co/packages/7.x/apt" \
   "stable" \
   "main"
-$STD apt -y install elasticsearch
+$STD apt install -y elasticsearch
 echo "-Xms2g" >>/etc/elasticsearch/jvm.options
 echo "-Xmx2g" >>/etc/elasticsearch/jvm.options
 $STD /usr/share/elasticsearch/bin/elasticsearch-plugin install ingest-attachment -b
@@ -42,15 +44,14 @@ setup_deb822_repo \
   "https://dl.packager.io/srv/deb/zammad/zammad/stable/debian" \
   "$(get_os_info version_id)" \
   "main"
-$STD apt -y install zammad
+$STD apt install -y zammad
 $STD zammad run rails r "Setting.set('es_url', 'http://localhost:9200')"
 $STD zammad run rake zammad:searchindex:rebuild
 msg_ok "Installed Zammad"
 
 msg_info "Setup Services"
 cp /opt/zammad/contrib/nginx/zammad.conf /etc/nginx/sites-available/zammad.conf
-IPADDRESS=$(hostname -I | awk '{print $1}')
-sed -i "s/server_name localhost;/server_name $IPADDRESS;/g" /etc/nginx/sites-available/zammad.conf
+sed -i "s/server_name localhost;/server_name $LOCAL_IP;/g" /etc/nginx/sites-available/zammad.conf
 $STD systemctl reload nginx
 msg_ok "Created Service"
 
