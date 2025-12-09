@@ -11,7 +11,7 @@
   "interface_port": 3443,
   "documentation": "https://docs.zerotier.com/",
   "website": "https://www.zerotier.com/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/zerotier.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/zerotier.webp",
   "config_path": "/opt/key-networks/ztncui/.env",
   "description": "ZeroTier is a secure network overlay that allows you to manage all of your network resources as if they were on the same LAN. The software-defined solution can be deployed in minutes from anywhere. No matter how many devices you need to connect, or where they are in the world, ZeroTier makes global networking simple.",
   "install_methods": [
