@@ -32,6 +32,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - fix(tools): handle repos with 30+ pre-releases in check_for_gh_release [@vidonnus](https://github.com/vidonnus) ([#9786](https://github.com/community-scripts/ProxmoxVE/pull/9786))
 
+  - #### ✨ New Features
+
+    - Feature: extend advanced settings with more options & inherit app defaults [@MickLesk](https://github.com/MickLesk) ([#9776](https://github.com/community-scripts/ProxmoxVE/pull/9776))
+
 ### 📚 Documentation
 
   - fixed grammar on alert that pops up when you copy the curl command [@Sarthak-Sidhant](https://github.com/Sarthak-Sidhant) ([#9799](https://github.com/community-scripts/ProxmoxVE/pull/9799))
