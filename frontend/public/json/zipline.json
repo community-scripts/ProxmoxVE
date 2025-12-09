@@ -11,7 +11,7 @@
   "interface_port": 3000,
   "documentation": "https://zipline.diced.sh/docs/get-started",
   "website": "https://zipline.diced.sh/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/zipline.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/zipline.webp",
   "config_path": "/opt/zipline/.env",
   "description": "Zipline is a file-sharing and URL-shortening server designed for easy setup and extensive features. It allows users to upload files, organize them into folders, create shortened URLs, and manage uploads through a user-friendly dashboard. Additional features include image compression, video thumbnails, password protection, 2FA, OAuth2 registration, and API access for custom control. It supports integrations with platforms like Discord.",
   "install_methods": [
