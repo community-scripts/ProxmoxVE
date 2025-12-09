@@ -21,6 +21,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: Wiki.js [@tremor021](https://github.com/tremor021) ([#9810](https://github.com/community-scripts/ProxmoxVE/pull/9810))
     - Zammad: Various fixes [@tremor021](https://github.com/tremor021) ([#9805](https://github.com/community-scripts/ProxmoxVE/pull/9805))
     - Refactor: Zipline [@tremor021](https://github.com/tremor021) ([#9801](https://github.com/community-scripts/ProxmoxVE/pull/9801))
 
