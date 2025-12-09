@@ -17,6 +17,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - Dokploy ([#9793](https://github.com/community-scripts/ProxmoxVE/pull/9793))
 - Coolify ([#9792](https://github.com/community-scripts/ProxmoxVE/pull/9792))
 
+### 💾 Core
+
+  - website: fix/check updateable flags [@MickLesk](https://github.com/MickLesk) ([#9777](https://github.com/community-scripts/ProxmoxVE/pull/9777))
+
 ### 📚 Documentation
 
   - fixed grammar on alert that pops up when you copy the curl command [@Sarthak-Sidhant](https://github.com/Sarthak-Sidhant) ([#9799](https://github.com/community-scripts/ProxmoxVE/pull/9799))
