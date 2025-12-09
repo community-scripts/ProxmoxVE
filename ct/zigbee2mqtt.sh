@@ -43,7 +43,7 @@ function update_script() {
 
     fetch_and_deploy_gh_release "Zigbee2MQTT" "Koenkk/zigbee2mqtt" "tarball" "latest" "/opt/zigbee2mqtt"
 
-    msg_info "Updating ${APP}"
+    msg_info "Updating Zigbee2MQTT"
     rm -rf /opt/zigbee2mqtt/data
     mv /opt/z2m_backup/data /opt/zigbee2mqtt
     cd /opt/zigbee2mqtt
