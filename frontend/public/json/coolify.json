@@ -12,7 +12,7 @@
     "documentation": "https://coolify.io/docs",
     "config_path": "/data/coolify",
     "website": "https://coolify.io/",
-    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/png/coolify.png",
+    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/coolify.webp",
     "description": "Coolify is an open-source & self-hostable alternative to Heroku, Netlify, and Vercel. It helps you manage your servers, applications, and databases on your own hardware with Docker. Deploy any application from Git repositories, Docker images, or use pre-built templates.",
     "install_methods": [
         {
