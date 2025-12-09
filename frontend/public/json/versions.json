@@ -1,8 +1,73 @@
 [
   {
+    "name": "sabnzbd/sabnzbd",
+    "version": "4.5.5",
+    "date": "2025-10-24T11:12:22Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.12.2",
+    "date": "2025-12-08T21:36:42Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.80.9-nightly",
+    "date": "2025-12-08T21:21:07Z"
+  },
+  {
+    "name": "seerr-team/seerr",
+    "version": "preview-test-fix-subscriptions",
+    "date": "2025-12-08T21:16:05Z"
+  },
+  {
+    "name": "hansmi/prometheus-paperless-exporter",
+    "version": "v0.0.9",
+    "date": "2025-12-08T20:37:45Z"
+  },
+  {
+    "name": "influxdata/telegraf",
+    "version": "v1.37.0",
+    "date": "2025-12-08T20:36:16Z"
+  },
+  {
+    "name": "pommee/goaway",
+    "version": "v0.62.23",
+    "date": "2025-12-08T20:30:54Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.123.4",
+    "date": "2025-12-08T13:30:40Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
+    "name": "homarr-labs/homarr",
+    "version": "v1.45.3",
+    "date": "2025-12-08T16:11:16Z"
+  },
+  {
+    "name": "AdguardTeam/AdGuardHome",
+    "version": "v0.107.71",
+    "date": "2025-12-08T14:34:55Z"
+  },
+  {
+    "name": "chrisbenincasa/tunarr",
+    "version": "v0.22.18",
+    "date": "2025-12-08T14:26:24Z"
+  },
+  {
     "name": "openobserve/openobserve",
     "version": "v0.30.0-rc1",
-    "date": "2025-12-08T11:46:24Z"
+    "date": "2025-12-08T13:29:14Z"
+  },
+  {
+    "name": "wavelog/wavelog",
+    "version": "2.2.1",
+    "date": "2025-12-08T12:01:34Z"
   },
   {
     "name": "ventoy/Ventoy",
@@ -45,6 +110,11 @@
     "date": "2025-12-08T05:55:34Z"
   },
   {
+    "name": "ollama/ollama",
+    "version": "v0.13.2-rc2",
+    "date": "2025-12-06T00:10:33Z"
+  },
+  {
     "name": "firefly-iii/firefly-iii",
     "version": "v6.4.9",
     "date": "2025-11-28T20:36:20Z"
@@ -55,19 +125,9 @@
     "date": "2025-12-08T03:33:34Z"
   },
   {
-    "name": "chrisbenincasa/tunarr",
-    "version": "v0.23.0-alpha.31",
-    "date": "2025-12-08T02:39:59Z"
-  },
-  {
     "name": "jeedom/core",
     "version": "4.5",
     "date": "2025-12-08T00:27:05Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
   },
   {
     "name": "maxdorninger/MediaManager",
@@ -90,19 +150,9 @@
     "date": "2025-12-01T08:14:11Z"
   },
   {
-    "name": "seerr-team/seerr",
-    "version": "preview-test-fix-subscriptions",
-    "date": "2025-12-07T14:31:55Z"
-  },
-  {
     "name": "bluenviron/mediamtx",
     "version": "v1.15.5",
     "date": "2025-12-07T12:24:21Z"
-  },
-  {
-    "name": "BerriAI/litellm",
-    "version": "v1.80.8.rc.1",
-    "date": "2025-12-07T01:36:40Z"
   },
   {
     "name": "umami-software/umami",
@@ -175,29 +225,9 @@
     "date": "2025-12-06T04:40:09Z"
   },
   {
-    "name": "ollama/ollama",
-    "version": "v0.13.2-rc1",
-    "date": "2025-12-04T23:19:06Z"
-  },
-  {
     "name": "Stirling-Tools/Stirling-PDF",
     "version": "v2.1.1",
     "date": "2025-12-05T23:48:08Z"
-  },
-  {
-    "name": "home-assistant/core",
-    "version": "2025.12.1",
-    "date": "2025-12-05T21:10:31Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.122.5",
-    "date": "2025-12-04T14:09:39Z"
-  },
-  {
-    "name": "homarr-labs/homarr",
-    "version": "v1.45.2",
-    "date": "2025-12-05T19:17:09Z"
   },
   {
     "name": "booklore-app/booklore",
@@ -263,11 +293,6 @@
     "name": "msgbyte/tianji",
     "version": "v1.30.20",
     "date": "2025-12-04T18:17:47Z"
-  },
-  {
-    "name": "AdguardTeam/AdGuardHome",
-    "version": "v0.107.70",
-    "date": "2025-12-03T16:12:15Z"
   },
   {
     "name": "wazuh/wazuh",
@@ -367,7 +392,7 @@
   {
     "name": "mealie-recipes/mealie",
     "version": "v3.6.1",
-    "date": "2025-12-02T22:54:10Z"
+    "date": "2025-12-02T23:08:41Z"
   },
   {
     "name": "apache/tomcat",
@@ -540,11 +565,6 @@
     "date": "2025-11-30T08:39:28Z"
   },
   {
-    "name": "pommee/goaway",
-    "version": "v0.62.20",
-    "date": "2025-11-30T06:51:31Z"
-  },
-  {
     "name": "MediaBrowser/Emby.Releases",
     "version": "4.9.1.90",
     "date": "2025-11-11T01:00:32Z"
@@ -700,11 +720,6 @@
     "date": "2025-11-23T17:42:53Z"
   },
   {
-    "name": "wavelog/wavelog",
-    "version": "2.2",
-    "date": "2025-11-23T17:32:38Z"
-  },
-  {
     "name": "crafty-controller/crafty-4",
     "version": "v4.6.1",
     "date": "2025-11-23T16:42:50Z"
@@ -743,11 +758,6 @@
     "name": "seriousm4x/UpSnap",
     "version": "5.2.4",
     "date": "2025-11-21T10:25:05Z"
-  },
-  {
-    "name": "sabnzbd/sabnzbd",
-    "version": "4.5.5",
-    "date": "2025-10-24T11:12:22Z"
   },
   {
     "name": "MariaDB/server",
@@ -838,11 +848,6 @@
     "name": "0xERR0R/blocky",
     "version": "v0.28.2",
     "date": "2025-11-18T05:51:46Z"
-  },
-  {
-    "name": "influxdata/telegraf",
-    "version": "v1.36.4",
-    "date": "2025-11-17T17:15:29Z"
   },
   {
     "name": "rabbitmq/rabbitmq-server",
@@ -1363,11 +1368,6 @@
     "name": "stonith404/pingvin-share",
     "version": "v1.13.0",
     "date": "2025-05-25T20:21:13Z"
-  },
-  {
-    "name": "hansmi/prometheus-paperless-exporter",
-    "version": "v0.0.8",
-    "date": "2025-05-18T11:37:31Z"
   },
   {
     "name": "stackblitz-labs/bolt.diy",
