@@ -38,20 +38,12 @@ read -r -p "${TAB3}Would you like to enable TLS for Valkey (Note: sentinel mode 
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
     read -r -p "${TAB3}Would you like Valkey to listen only on TLS (disable TCP port 6379)? [y/N]: " tls_only
     msg_info "Configuring TLS for Valkey..."
-    TLS_DIR="/etc/valkey/tls"
-    mkdir -p "$TLS_DIR"
-    chown valkey:valkey "$TLS_DIR"
-    chmod 750 "$TLS_DIR"
 
-    openssl req -x509 -nodes -newkey rsa:2048 -days 3650 \
-      -subj "/CN=$(hostname)" \
-      -keyout "$TLS_DIR/valkey.key" \
-      -out "$TLS_DIR/valkey.crt" \
-      >/dev/null 2>&1
-
-    chown valkey:valkey "$TLS_DIR"/valkey.{crt,key}
-    chmod 640 "$TLS_DIR/valkey.crt"
-    chmod 600 "$TLS_DIR/valkey.key"
+    create_self_signed_cert "Valkey"
+    TLS_DIR="/etc/ssl/valkey"
+    TLS_CERT="$TLS_DIR/valkey.crt"
+    TLS_KEY="$TLS_DIR/valkey.key"
+    chown valkey:valkey "$TLS_CERT" "$TLS_KEY"
 
     if [[ ${tls_only,,} =~ ^(y|yes)$ ]]; then
     {
