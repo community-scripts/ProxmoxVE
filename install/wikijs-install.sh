@@ -14,36 +14,18 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt install -y \
-  git
+$STD apt install -y git
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" NODE_MODULE="yarn,node-gyp" setup_nodejs
 PG_VERSION="17" setup_postgresql
+PG_DB_NAME="wiki" PG_DB_USER="wikijs_user" PG_DB_EXTENSIONS="pg_trgm" setup_postgresql_db
 fetch_and_deploy_gh_release "wikijs" "requarks/wiki" "prebuild" "latest" "/opt/wikijs" "wiki-js.tar.gz"
-
-msg_info "Set up PostgreSQL"
-DB_NAME="wiki"
-DB_USER="wikijs_user"
-DB_PASS="$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)"
-$STD sudo -u postgres psql -c "CREATE ROLE $DB_USER WITH LOGIN PASSWORD '$DB_PASS';"
-$STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER ENCODING 'UTF8' TEMPLATE template0;"
-$STD sudo -u postgres psql -c "CREATE EXTENSION IF NOT EXISTS pg_trgm;" $DB_NAME
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET client_encoding TO 'utf8';"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET default_transaction_isolation TO 'read committed';"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET timezone TO 'UTC';"
-{
-  echo "WikiJS-Credentials"
-  echo "WikiJS Database User: $DB_USER"
-  echo "WikiJS Database Password: $DB_PASS"
-  echo "WikiJS Database Name: $DB_NAME"
-} >>~/wikijs.creds
-msg_ok "Set up PostgreSQL"
 
 msg_info "Configuring Wiki.js"
 mv /opt/wikijs/config.sample.yml /opt/wikijs/config.yml
-sed -i -E 's|^( *user: ).*|\1'"$DB_USER"'|' /opt/wikijs/config.yml
-sed -i -E 's|^( *pass: ).*|\1'"$DB_PASS"'|' /opt/wikijs/config.yml
+sed -i -E 's|^( *user: ).*|\1'"$PG_DB_USER"'|' /opt/wikijs/config.yml
+sed -i -E 's|^( *pass: ).*|\1'"$PG_DB_PASS"'|' /opt/wikijs/config.yml
 msg_ok "Configured Wiki.js"
 
 msg_info "Creating Service"
