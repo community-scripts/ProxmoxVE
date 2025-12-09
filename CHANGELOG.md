@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-12-09
 
+### 🆕 New Scripts
+
+  - Coolify ([#9792](https://github.com/community-scripts/ProxmoxVE/pull/9792))
+
 ## 2025-12-08
 
 ### 🚀 Updated Scripts
