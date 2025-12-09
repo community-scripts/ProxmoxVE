@@ -23,7 +23,6 @@ PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="common,sqlite3,redis" setup_php
 setup_composer
 NODE_VERSION="22" setup_nodejs
 import_local_ip
-
 fetch_and_deploy_gh_release "speedtest-tracker" "alexjustesen/speedtest-tracker" "tarball" "latest" "/opt/speedtest-tracker"
 
 msg_info "Installing Speedtest CLI"
