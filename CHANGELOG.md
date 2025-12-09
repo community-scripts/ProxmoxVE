@@ -21,6 +21,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - Refactor: Zerotier-One [@tremor021](https://github.com/tremor021) ([#9804](https://github.com/community-scripts/ProxmoxVE/pull/9804))
     - Refactor: Zabbix [@tremor021](https://github.com/tremor021) ([#9807](https://github.com/community-scripts/ProxmoxVE/pull/9807))
 
   - #### 🔧 Refactor
