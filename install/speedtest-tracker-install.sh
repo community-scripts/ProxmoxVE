@@ -22,6 +22,7 @@ msg_ok "Installed Dependencies"
 PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="common,sqlite3,redis" setup_php
 setup_composer
 NODE_VERSION="22" setup_nodejs
+import_local_ip
 
 fetch_and_deploy_gh_release "speedtest-tracker" "alexjustesen/speedtest-tracker" "tarball" "latest" "/opt/speedtest-tracker"
 
@@ -46,7 +47,6 @@ msg_ok "Configured PHP-FPM runtime directory"
 
 msg_info "Setting up Speedtest Tracker"
 cd /opt/speedtest-tracker
-CONTAINER_IP=$(hostname -I | awk '{print $1}')
 APP_KEY=$(php -r "echo bin2hex(random_bytes(16));")
 TIMEZONE=$(timedatectl | grep "Time zone" | awk '{print $3}')
 cat <<EOF >/opt/speedtest-tracker/.env
@@ -55,7 +55,7 @@ APP_ENV=production
 APP_TIMEZONE=${TIMEZONE}
 APP_KEY=base64:$(echo -n $APP_KEY | base64)
 APP_DEBUG=false
-APP_URL=http://${CONTAINER_IP}
+APP_URL=http://${LOCAL_IP}
 
 LOG_CHANNEL=stack
 LOG_LEVEL=debug
