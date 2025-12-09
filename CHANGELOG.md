@@ -21,6 +21,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - website: fix/check updateable flags [@MickLesk](https://github.com/MickLesk) ([#9777](https://github.com/community-scripts/ProxmoxVE/pull/9777))
 
+  - #### 🐞 Bug Fixes
+
+    - fix(tools): handle repos with 30+ pre-releases in check_for_gh_release [@vidonnus](https://github.com/vidonnus) ([#9786](https://github.com/community-scripts/ProxmoxVE/pull/9786))
+
 ### 📚 Documentation
 
   - fixed grammar on alert that pops up when you copy the curl command [@Sarthak-Sidhant](https://github.com/Sarthak-Sidhant) ([#9799](https://github.com/community-scripts/ProxmoxVE/pull/9799))
