@@ -15,34 +15,20 @@ update_os
 
 PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="common,snmp,imap,mysql" PHP_APACHE="YES" setup_php
 setup_mariadb
-
-msg_info "Setting up Database"
-DB_NAME=wordpress_db
-DB_USER=wordpress
-DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
-$STD mariadb -u root -e "CREATE DATABASE $DB_NAME;"
-$STD mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
-$STD mariadb -u root -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
-{
-  echo "WordPress Credentials"
-  echo "Database User: $DB_USER"
-  echo "Database Password: $DB_PASS"
-  echo "Database Name: $DB_NAME"
-} >>~/wordpress.creds
-msg_ok "Set up Database"
+MARIADB_DB_NAME="wordpress_db" MARIADB_DB_USER="wordpress" setup_mariadb_db
 
 msg_info "Installing Wordpress (Patience)"
-cd /var/www/html || exit
+cd /var/www/html
 curl -fsSL "https://wordpress.org/latest.zip" -o "latest.zip"
 $STD unzip latest.zip
 chown -R www-data:www-data wordpress/
-cd /var/www/html/wordpress || exit
+cd /var/www/html/wordpress
 find . -type d -exec chmod 755 {} \;
 find . -type f -exec chmod 644 {} \;
 mv wp-config-sample.php wp-config.php
-sed -i -e "s|^define( 'DB_NAME', '.*' );|define( 'DB_NAME', '$DB_NAME' );|" \
-  -e "s|^define( 'DB_USER', '.*' );|define( 'DB_USER', '$DB_USER' );|" \
-  -e "s|^define( 'DB_PASSWORD', '.*' );|define( 'DB_PASSWORD', '$DB_PASS' );|" \
+sed -i -e "s|^define( 'DB_NAME', '.*' );|define( 'DB_NAME', '$MARIADB_DB_NAME' );|" \
+  -e "s|^define( 'DB_USER', '.*' );|define( 'DB_USER', '$MARIADB_DB_USER' );|" \
+  -e "s|^define( 'DB_PASSWORD', '.*' );|define( 'DB_PASSWORD', '$MARIADB_DB_PASS' );|" \
   /var/www/html/wordpress/wp-config.php
 rm -rf /var/www/html/latest.zip
 msg_ok "Installed Wordpress"
