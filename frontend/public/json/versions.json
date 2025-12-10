@@ -1,5 +1,85 @@
 [
   {
+    "name": "Stirling-Tools/Stirling-PDF",
+    "version": "v2.1.2",
+    "date": "2025-12-10T11:46:48Z"
+  },
+  {
+    "name": "WGDashboard/WGDashboard",
+    "version": "v4.3.0.3",
+    "date": "2025-12-10T11:13:43Z"
+  },
+  {
+    "name": "cockpit-project/cockpit",
+    "version": "353",
+    "date": "2025-12-10T10:55:50Z"
+  },
+  {
+    "name": "theonedev/onedev",
+    "version": "v13.1.4",
+    "date": "2025-12-10T10:24:13Z"
+  },
+  {
+    "name": "chrisvel/tududi",
+    "version": "v0.87",
+    "date": "2025-12-06T07:36:26Z"
+  },
+  {
+    "name": "mayanayza/netvisor",
+    "version": "v0.11.6",
+    "date": "2025-12-10T07:16:57Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "v10.11.8",
+    "date": "2025-11-21T17:06:07Z"
+  },
+  {
+    "name": "Dokploy/dokploy",
+    "version": "v0.26.1",
+    "date": "2025-12-10T06:53:36Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.3",
+    "date": "2025-09-20T12:12:33Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.429",
+    "date": "2025-12-10T05:56:09Z"
+  },
+  {
+    "name": "kyantech/Palmr",
+    "version": "v3.3.2-beta",
+    "date": "2025-12-10T05:42:43Z"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2025.11.5",
+    "date": "2025-12-09T17:54:33Z"
+  },
+  {
+    "name": "miniflux/v2",
+    "version": "2.2.15",
+    "date": "2025-12-10T01:52:14Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5",
+    "date": "2025-12-10T00:27:04Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
+    "name": "comfyanonymous/ComfyUI",
+    "version": "v0.4.0",
+    "date": "2025-12-10T00:11:48Z"
+  },
+  {
     "name": "pelican-dev/panel",
     "version": "v1.0.0-beta29",
     "date": "2025-12-09T23:07:15Z"
@@ -20,11 +100,6 @@
     "date": "2025-12-09T20:39:50Z"
   },
   {
-    "name": "mayanayza/netvisor",
-    "version": "v0.11.4",
-    "date": "2025-12-09T20:10:45Z"
-  },
-  {
     "name": "metabase/metabase",
     "version": "v0.56.x",
     "date": "2025-12-09T18:34:00Z"
@@ -33,11 +108,6 @@
     "name": "valkey-io/valkey",
     "version": "9.0.1",
     "date": "2025-12-09T18:13:25Z"
-  },
-  {
-    "name": "esphome/esphome",
-    "version": "2025.11.5",
-    "date": "2025-12-09T17:54:33Z"
   },
   {
     "name": "MediaBrowser/Emby.Releases",
@@ -90,6 +160,11 @@
     "date": "2025-12-09T14:23:34Z"
   },
   {
+    "name": "keycloak/keycloak",
+    "version": "26.4.7",
+    "date": "2025-12-01T08:14:11Z"
+  },
+  {
     "name": "home-assistant/operating-system",
     "version": "16.3",
     "date": "2025-11-04T12:28:47Z"
@@ -120,39 +195,19 @@
     "date": "2025-12-09T10:11:01Z"
   },
   {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.3",
-    "date": "2025-09-20T12:12:33Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.425",
-    "date": "2025-12-09T05:59:35Z"
-  },
-  {
     "name": "mongodb/mongo",
     "version": "r7.0.27-rc0",
     "date": "2025-12-09T04:34:48Z"
   },
   {
     "name": "ollama/ollama",
-    "version": "v0.13.2",
-    "date": "2025-12-08T05:49:52Z"
+    "version": "v0.13.2-rc2",
+    "date": "2025-12-06T00:10:33Z"
   },
   {
     "name": "BerriAI/litellm",
     "version": "v1.80.9.dev1",
     "date": "2025-12-09T01:38:18Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.5",
-    "date": "2025-12-09T00:27:10Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
   },
   {
     "name": "alexta69/metube",
@@ -170,11 +225,6 @@
     "date": "2025-12-08T23:15:30Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.4.7",
-    "date": "2025-12-01T08:14:11Z"
-  },
-  {
     "name": "sabnzbd/sabnzbd",
     "version": "4.5.5",
     "date": "2025-10-24T11:12:22Z"
@@ -188,11 +238,6 @@
     "name": "fosrl/pangolin",
     "version": "1.13.0-rc.0",
     "date": "2025-12-08T21:17:44Z"
-  },
-  {
-    "name": "Dokploy/dokploy",
-    "version": "v0.26.0",
-    "date": "2025-12-08T20:44:09Z"
   },
   {
     "name": "hansmi/prometheus-paperless-exporter",
@@ -263,16 +308,6 @@
     "name": "meilisearch/meilisearch",
     "version": "latest",
     "date": "2025-12-08T09:36:54Z"
-  },
-  {
-    "name": "WGDashboard/WGDashboard",
-    "version": "v4.3.0.2",
-    "date": "2025-12-08T09:01:37Z"
-  },
-  {
-    "name": "mattermost/mattermost",
-    "version": "v10.11.8",
-    "date": "2025-11-21T17:06:07Z"
   },
   {
     "name": "firefly-iii/firefly-iii",
@@ -370,24 +405,9 @@
     "date": "2025-12-06T08:58:40Z"
   },
   {
-    "name": "chrisvel/tududi",
-    "version": "v0.87",
-    "date": "2025-12-06T07:36:26Z"
-  },
-  {
     "name": "tobychui/zoraxy",
     "version": "v3.3.0",
     "date": "2025-12-06T06:18:23Z"
-  },
-  {
-    "name": "theonedev/onedev",
-    "version": "v13.1.3",
-    "date": "2025-12-06T04:40:09Z"
-  },
-  {
-    "name": "Stirling-Tools/Stirling-PDF",
-    "version": "v2.1.1",
-    "date": "2025-12-05T23:48:08Z"
   },
   {
     "name": "HydroshieldMKII/Guardian",
@@ -490,11 +510,6 @@
     "date": "2025-11-24T15:30:21Z"
   },
   {
-    "name": "kyantech/Palmr",
-    "version": "v3.3.1-beta",
-    "date": "2025-12-04T03:33:38Z"
-  },
-  {
     "name": "gtsteffaniak/filebrowser",
     "version": "v1.2.0-experimental-sql-indexing",
     "date": "2025-12-04T01:35:46Z"
@@ -540,11 +555,6 @@
     "date": "2025-12-03T06:48:38Z"
   },
   {
-    "name": "comfyanonymous/ComfyUI",
-    "version": "v0.3.77",
-    "date": "2025-12-03T05:02:09Z"
-  },
-  {
     "name": "hyperion-project/hyperion.ng",
     "version": "2.1.1",
     "date": "2025-06-14T17:45:06Z"
@@ -557,7 +567,7 @@
   {
     "name": "mealie-recipes/mealie",
     "version": "v3.6.1",
-    "date": "2025-12-02T23:08:41Z"
+    "date": "2025-12-02T22:54:10Z"
   },
   {
     "name": "apache/tomcat",
@@ -678,11 +688,6 @@
     "name": "opencloud-eu/opencloud",
     "version": "v4.0.0",
     "date": "2025-12-01T09:33:08Z"
-  },
-  {
-    "name": "cockpit-project/cockpit",
-    "version": "310.6",
-    "date": "2025-12-01T09:04:51Z"
   },
   {
     "name": "photoprism/photoprism",
@@ -1258,11 +1263,6 @@
     "name": "Kareadita/Kavita",
     "version": "v0.8.8.3",
     "date": "2025-10-23T12:31:49Z"
-  },
-  {
-    "name": "miniflux/v2",
-    "version": "2.2.14",
-    "date": "2025-10-23T02:12:05Z"
   },
   {
     "name": "louislam/uptime-kuma",
