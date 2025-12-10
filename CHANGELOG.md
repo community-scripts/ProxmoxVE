@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Verdaccio: Small fixes [@tremor021](https://github.com/tremor021) ([#9836](https://github.com/community-scripts/ProxmoxVE/pull/9836))
     - Refactor: WaveLog [@tremor021](https://github.com/tremor021) ([#9835](https://github.com/community-scripts/ProxmoxVE/pull/9835))
     - Refactor: Unifi Network Server [@tremor021](https://github.com/tremor021) ([#9838](https://github.com/community-scripts/ProxmoxVE/pull/9838))
     - Refactor: Umami [@tremor021](https://github.com/tremor021) ([#9840](https://github.com/community-scripts/ProxmoxVE/pull/9840))
