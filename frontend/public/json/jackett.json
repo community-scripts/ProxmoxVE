@@ -11,7 +11,7 @@
   "interface_port": 9117,
   "documentation": "https://github.com/Jackett/Jackett/wiki",
   "website": "https://github.com/Jackett/Jackett",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/jackett.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/jackett.webp",
   "config_path": "/opt/.env",
   "description": "Jackett supports a wide range of trackers, including popular ones like The Pirate Bay, RARBG, and Torrentz2, as well as many private trackers. It can be integrated with several BitTorrent clients, including qBittorrent, Deluge, and uTorrent, among others.",
   "install_methods": [

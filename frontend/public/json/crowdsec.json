@@ -11,7 +11,7 @@
   "interface_port": null,
   "documentation": "https://doc.crowdsec.net/",
   "website": "https://crowdsec.net/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/crowdsec.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/crowdsec.webp",
   "config_path": "",
   "description": "CrowdSec is a free and open-source intrusion prevention system (IPS) designed to provide network security against malicious traffic. It is a collaborative IPS that analyzes behaviors and responses to attacks by sharing signals across a community of users. CrowdSec leverages the collective intelligence of its users to detect and respond to security threats in real-time. With CrowdSec, network administrators can set up protection against a wide range of threats, including malicious traffic, bots, and denial-of-service (DoS) attacks. The software is designed to be easy to use and integrate with existing security systems, making it a valuable tool for enhancing the security of any network.",
   "install_methods": [

@@ -11,7 +11,7 @@
   "interface_port": null,
   "documentation": null,
   "website": null,
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/linuxcontainers.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/linuxcontainers.webp",
   "config_path": "",
   "description": "This script provides options to delete logs and cache, and repopulate apt lists for Ubuntu and Debian systems.",
   "install_methods": [

@@ -12,7 +12,7 @@
     "documentation": "https://github.com/community-scripts/ProxmoxVE/discussions/807",
     "website": "https://actualbudget.org/",
     "config_path": "/opt/actualbudget-data/config.json",
-    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/actual-budget.webp",
+    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/actual-budget.webp",
     "description": "Actual Budget is a super fast and privacy-focused app for managing your finances. At its heart is the well proven and much loved Envelope Budgeting methodology.",
     "install_methods": [
         {

@@ -11,7 +11,7 @@
   "interface_port": 9000,
   "documentation": "https://go2docs.graylog.org/current/home.htm",
   "website": "https://graylog.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/graylog.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/graylog.webp",
   "config_path": "/etc/graylog/server/server.conf",
   "description": "Graylog is an open-source log management and analysis platform that centralizes and processes log data from various sources, enabling real-time search, analysis, and alerting for IT infrastructure monitoring and troubleshooting.",
   "install_methods": [

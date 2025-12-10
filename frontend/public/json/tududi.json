@@ -12,7 +12,7 @@
   "documentation": "https://github.com/chrisvel/tududi#-getting-started",
   "config_path": "/opt/tududi/backend/.env",
   "website": "https://tududi.com/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/tududi.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/tududi.webp",
   "description": "Self-hosted task management with functional programming architecture, hierarchical organization, and multi-language support.",
   "install_methods": [
     {

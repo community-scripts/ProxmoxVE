@@ -11,7 +11,7 @@
   "interface_port": 3000,
   "documentation": "https://docs.cryptpad.org/",
   "website": "https://cryptpad.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/cryptpad.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/cryptpad.webp",
   "config_path": "/opt/cryptpad/config/config.js",
   "description": "CryptPad is a collaboration suite that is end-to-end encrypted and open-source. It is designed to facilitate collaboration by synchronizing changes to documents in real time. Since all the user data is encrypted, in the event of a breach, attackers have no way of accessing the stored content",
   "install_methods": [

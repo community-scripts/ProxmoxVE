@@ -11,7 +11,7 @@
   "interface_port": null,
   "documentation": null,
   "website": "https://www.debian.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/debian.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/debian.webp",
   "config_path": "",
   "description": "Debian 13 (Trixie) Linux is a distribution that emphasizes free software. It supports many hardware platforms",
   "install_methods": [

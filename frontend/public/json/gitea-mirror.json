@@ -12,7 +12,7 @@
   "documentation": "https://github.com/RayLabsHQ/gitea-mirror/",
   "config_path": "/etc/systemd/system/gitea-mirror.service",
   "website": "https://github.com/RayLabsHQ/gitea-mirror/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/gitea-mirror.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/gitea-mirror.webp",
   "description": "Gitea Mirror auto-syncs GitHub repos to your self-hosted Gitea, with a sleek Web UI and easy Docker deployment. ",
   "install_methods": [
     {

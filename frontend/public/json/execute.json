@@ -11,7 +11,7 @@
   "interface_port": null,
   "documentation": null,
   "website": null,
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/proxmox.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/proxmox.webp",
   "config_path": "",
   "description": "This script allows administrators to execute a custom command inside one or multiple LXC containers on a Proxmox VE node. Containers can be selectively excluded via an interactive checklist. If a container is stopped, the script will automatically start it, run the command, and then shut it down again. Only Debian and Ubuntu based containers are supported.",
   "install_methods": [

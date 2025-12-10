@@ -11,7 +11,7 @@
   "interface_port": 5252,
   "documentation": "https://github.com/redlib-org/redlib/blob/main/README.md",
   "website": "https://github.com/redlib-org/redlib",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/redlib.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/redlib.webp",
   "config_path": "/opt/redlib/redlib.conf",
   "description": "An alternative private front-end to Reddit. Redlib hopes to provide an easier way to browse Reddit, without the ads, trackers, and bloat.",
   "install_methods": [

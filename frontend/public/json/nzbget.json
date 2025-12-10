@@ -11,7 +11,7 @@
   "interface_port": 6789,
   "documentation": "https://nzbget.com/documentation/",
   "website": "https://nzbget.com/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/nzbget.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/nzbget.webp",
   "config_path": "/usr/share/nzbget/nzbget.conf",
   "description": "NZBGet is a Usenet downloader focused on efficiency and performance, designed to handle NZB files for downloading content from Usenet. It automates downloading, checking, repairing, and extracting files, optimizing resources to run well on lower-powered devices.",
   "install_methods": [

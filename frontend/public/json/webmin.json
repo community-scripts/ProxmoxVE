@@ -11,7 +11,7 @@
   "interface_port": 10000,
   "documentation": "https://webmin.com/docs/",
   "website": "https://webmin.com/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/webmin.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/webmin.webp",
   "config_path": "",
   "description": "Webmin provides a graphical user interface (GUI) for tasks such as user account management, package management, file system configuration, network configuration, and more.",
   "install_methods": [

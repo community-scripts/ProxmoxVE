@@ -11,7 +11,7 @@
   "interface_port": 8080,
   "documentation": "https://www.jenkins.io/doc/",
   "website": "https://www.jenkins.io/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/jenkins.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/jenkins.webp",
   "config_path": "",
   "description": "Jenkins provides hundreds of plugins to support building, deploying and automating any project. ",
   "install_methods": [

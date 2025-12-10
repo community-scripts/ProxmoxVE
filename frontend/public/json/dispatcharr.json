@@ -11,7 +11,7 @@
   "interface_port": 9191,
   "documentation": "https://dispatcharr.github.io/Dispatcharr-Docs/",
   "website": "https://github.com/Dispatcharr/Dispatcharr",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/dispatcharr.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/dispatcharr.webp",
   "config_path": "/opt/dispatcharr/.env",
   "description": "Dispatcharr is an open-source powerhouse for managing IPTV streams and EPG data with elegance and control. Born from necessity and built with passion, it started as a personal project by OkinawaBoss and evolved with contributions from legends like dekzter, SergeantPanda and Bucatini.",
   "install_methods": [

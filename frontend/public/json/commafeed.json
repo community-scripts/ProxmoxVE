@@ -11,7 +11,7 @@
   "interface_port": 8082,
   "documentation": "https://athou.github.io/commafeed/documentation/",
   "website": "https://www.commafeed.com/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/commafeed.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/commafeed.webp",
   "config_path": "",
   "description": "CommaFeed is a Google Reader inspired self-hosted RSS reader.",
   "install_methods": [

@@ -12,7 +12,7 @@
     "documentation": "https://www.phpmyadmin.net/docs/",
     "config_path": "Debian/Ubuntu: /var/www/html/phpMyAdmin | Alpine: /usr/share/phpmyadmin",
     "website": "https://www.phpmyadmin.net/",
-    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/phpmyadmin.webp",
+    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/phpmyadmin.webp",
     "description": "phpMyAdmin is a free software tool written in PHP, intended to handle the administration of MySQL over the Web. phpMyAdmin supports a wide range of operations on MySQL and MariaDB. Frequently used operations (managing databases, tables, columns, relations, indexes, users, permissions, etc) can be performed via the user interface, while you still have the ability to directly execute any SQL statement.",
     "install_methods": [
         {

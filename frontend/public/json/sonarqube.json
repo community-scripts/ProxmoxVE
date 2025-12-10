@@ -13,7 +13,7 @@
   "documentation": "https://docs.sonarsource.com/sonarqube-server",
   "config_path": "/opt/sonarqube/conf/sonar.properties",
   "website": "https://www.sonarsource.com/products/sonarqube/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/sonarqube.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/sonarqube.webp",
   "description": "SonarQube Server automates code quality and security reviews and provides actionable code intelligence so developers can focus on building better, faster.",
   "install_methods": [
     {

@@ -12,7 +12,7 @@
   "interface_port": 18966,
   "documentation": "https://github.com/jason5ng32/MyIP#-environment-variable",
   "website": "https://ipcheck.ing/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/myip.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/myip.webp",
   "description": "The best IP Toolbox. Easy to check what's your IPs, IP geolocation, check for DNS leaks, examine WebRTC connections, speed test, ping test, MTR test, check website availability, whois search and more!",
   "install_methods": [
     {

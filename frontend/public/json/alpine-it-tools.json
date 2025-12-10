@@ -11,7 +11,7 @@
   "interface_port": 80,
   "documentation": null,
   "website": "https://sharevb-it-tools.vercel.app/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/it-tools.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/it-tools.webp",
   "config_path": "",
   "description": "IT-Tools is a web-based suite of utilities designed to streamline and simplify various IT tasks, providing tools for developers and system administrators to manage their workflows efficiently.",
   "install_methods": [

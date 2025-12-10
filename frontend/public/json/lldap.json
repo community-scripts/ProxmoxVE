@@ -11,7 +11,7 @@
   "interface_port": 17170,
   "documentation": "https://github.com/lldap/lldap/blob/main/README.md",
   "website": "https://github.com/lldap/lldap",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/lldap.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/lldap.webp",
   "config_path": "",
   "description": "LLDAP is a lightweight LDAP server designed for simplicity and ease of use. It provides secure user authentication and authorization management through LDAP over TLS. Ideal for small to medium-sized environments, It aims to streamline identity management tasks with a minimalistic and straightforward setup.",
   "install_methods": [

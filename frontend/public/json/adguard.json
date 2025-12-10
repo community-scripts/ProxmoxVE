@@ -11,7 +11,7 @@
   "interface_port": 3000,
   "documentation": "https://github.com/AdguardTeam/AdGuardHome/wiki/Getting-Started",
   "website": "https://adguard.com/en/adguard-home/overview.html",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/adguard-home.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/adguard-home.webp",
   "config_path": "/opt/AdGuardHome/AdGuardHome.yaml",
   "description": "AdGuard Home is an open-source, self-hosted network-wide ad blocker. It blocks advertisements, trackers, phishing and malware websites, and provides protection against online threats. AdGuard Home is a DNS-based solution, which means it blocks ads and malicious content at the network level, before it even reaches your device. It runs on your home network and can be easily configured and managed through a web-based interface. It provides detailed statistics and logs, allowing you to see which websites are being blocked, and why. AdGuard Home is designed to be fast, lightweight, and easy to use, making it an ideal solution for home users who want to block ads, protect their privacy, and improve the speed and security of their online experience.",
   "install_methods": [

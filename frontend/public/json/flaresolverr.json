@@ -11,7 +11,7 @@
   "interface_port": 8191,
   "documentation": "https://github.com/FlareSolverr/FlareSolverr/blob/master/README.md",
   "website": "https://github.com/FlareSolverr/FlareSolverr",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/flaresolverr.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/flaresolverr.webp",
   "config_path": "",
   "description": "FlareSolverr is a proxy server to bypass Cloudflare and DDoS-GUARD protection.",
   "install_methods": [

@@ -11,7 +11,7 @@
   "interface_port": 3306,
   "documentation": "https://github.com/community-scripts/ProxmoxVE/discussions/192",
   "website": "https://mariadb.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/mariadb.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/mariadb.webp",
   "config_path": "",
   "description": "MariaDB is a fork of the popular MySQL database management system that is developed and maintained by the open-source community. It is also commercially supported, offering enterprise-level features and support for organizations that require them. MariaDB aims to maintain high compatibility with MySQL, ensuring a drop-in replacement capability.",
   "install_methods": [

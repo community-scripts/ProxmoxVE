@@ -11,7 +11,7 @@
   "interface_port": 80,
   "documentation": "https://docs.firefly-iii.org/",
   "website": "https://firefly-iii.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/firefly-iii.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/firefly-iii.webp",
   "config_path": "/opt/firefly/.env",
   "description": "Firefly III is a free, self-hosted tool for managing your finances. Track expenses, plan budgets, and get detailed reports.",
   "install_methods": [

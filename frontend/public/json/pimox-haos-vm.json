@@ -11,7 +11,7 @@
   "interface_port": 8123,
   "documentation": null,
   "website": "https://github.com/jiangcuo/Proxmox-Port",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/home-assistant.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/home-assistant.webp",
   "config_path": "",
   "description": "The script automates the manual process of finding, downloading and extracting the aarch64 (qcow2) disk image provided by the Home Assistant Team, creating a VM with user defined settings, importing and attaching the disk, setting the boot order and starting the VM.",
   "install_methods": [

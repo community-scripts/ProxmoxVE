@@ -11,7 +11,7 @@
   "interface_port": 80,
   "documentation": "https://docs.part-db.de/",
   "website": "https://github.com/Part-DB/Part-DB-server",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/part-db.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/part-db.webp",
   "config_path": "/opt/partdb/.env.local",
   "description": "Part-DB is an Open source inventory management system for your electronic components",
   "install_methods": [

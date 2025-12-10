@@ -11,7 +11,7 @@
   "interface_port": 80,
   "documentation": "https://docs.nextcloud.com/server/21/admin_manual/contents.html",
   "website": "https://www.turnkeylinux.org/nextcloud",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/nextcloud.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/nextcloud.webp",
   "config_path": "",
   "description": "TurnKey Nextcloud is an open-source file sharing server and collaboration platform that can store your personal content, like documents and pictures, in a centralized location.",
   "install_methods": [

@@ -11,7 +11,7 @@
   "interface_port": 8010,
   "documentation": "https://github.com/bastienwirtz/homer/blob/main/README.md#table-of-contents",
   "website": "https://github.com/bastienwirtz/homer",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/homer.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/homer.webp",
   "config_path": "/opt/homer/assets/config.yml",
   "description": "Homer is a simple and lightweight static homepage generator that allows you to create and manage a home page for your server. It uses a YAML configuration file to define the layout and content of your homepage, making it easy to set up and customize. The generated homepage is static, meaning it does not require any server-side processing, making it fast and efficient to serve. Homer is designed to be a flexible and low-maintenance solution for organizing and accessing your services and information from a single, centralized location.",
   "install_methods": [

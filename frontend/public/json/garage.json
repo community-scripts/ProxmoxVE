@@ -11,7 +11,7 @@
   "interface_port": 3900,
   "documentation": "https://garagehq.deuxfleurs.fr/documentation/quick-start/",
   "website": "https://garagehq.deuxfleurs.fr/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/garage.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/garage.webp",
   "config_path": "/etc/garage.toml",
   "description": "Garage is a lightweight, self-hosted, S3-compatible object storage service built for distributed environments. It is designed to be simple, efficient, and easy to deploy across multiple nodes.",
   "install_methods": [

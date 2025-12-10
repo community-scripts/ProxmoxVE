@@ -11,7 +11,7 @@
   "interface_port": null,
   "documentation": "https://kometa.wiki/en/latest/",
   "website": "https://github.com/Kometa-Team/Kometa",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/kometa.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/kometa.webp",
   "config_path": "/opt/kometa/config/config.yml",
   "description": "Kometa (formerly known as Plex Meta Manager) is a powerful tool designed to give you complete control over your media libraries",
   "install_methods": [

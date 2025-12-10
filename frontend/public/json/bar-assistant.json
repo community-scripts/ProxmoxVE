@@ -11,7 +11,7 @@
   "interface_port": 80,
   "documentation": "https://docs.barassistant.app/",
   "website": "https://barassistant.app/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/bar-assistant.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/bar-assistant.webp",
   "config_path": "/opt/bar-assistant",
   "description": "Bar Assistant is all-in-one solution for managing your home bar. Compared to other recipe management software that usually tries to be more for general use, Bar Assistant is made specifically for managing cocktail recipes. This means that there are a lot of cocktail-oriented features, like ingredient substitutes, first-class ingredients, ABV calculations, unit switching and more..",
   "install_methods": [

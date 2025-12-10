@@ -11,7 +11,7 @@
   "interface_port": 7745,
   "documentation": "https://homebox.software/en/quick-start.html",
   "website": "https://homebox.software/en/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/homebox.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/homebox.webp",
   "config_path": "/opt/homebox/.env",
   "description": "HomeBox is a simple, home-focused inventory management software. It allows users to organize and track household items by adding, updating, or deleting them. Features include optional details like warranty info, CSV import/export, custom labels, locations, and multi-tenant support for sharing with others. It\u2019s designed to be fast, easy to use, and portable.",
   "install_methods": [

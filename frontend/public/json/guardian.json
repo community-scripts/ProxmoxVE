@@ -12,7 +12,7 @@
   "documentation": "https://github.com/HydroshieldMKII/Guardian/blob/main/README.md",
   "config_path": "/opt/guardian/.env",
   "website": "https://github.com/HydroshieldMKII/Guardian",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/guardian-plex.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/guardian-plex.webp",
   "description": "Guardian is a lightweight companion app for Plex that lets you monitor, approve or block devices in real time. It helps you enforce per-user or global policies, stop unwanted sessions automatically and grant temporary access - all through a simple web interface.",
   "install_methods": [
     {

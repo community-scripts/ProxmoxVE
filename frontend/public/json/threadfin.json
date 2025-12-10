@@ -11,7 +11,7 @@
   "interface_port": 34400,
   "documentation": "https://github.com/xteve-project/xTeVe-Documentation/blob/master/en/configuration.md",
   "website": "https://github.com/Threadfin/Threadfin",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/threadfin.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/threadfin.webp",
   "config_path": "",
   "description": "Threadfin is a M3U proxy for Kernel, Plex, Jellyfin, or Emby, based on xTeVe.",
   "install_methods": [

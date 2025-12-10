@@ -11,7 +11,7 @@
   "interface_port": 8866,
   "documentation": "https://github.com/sub3/NextPVR/wiki",
   "website": "https://nextpvr.com/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/nextpvr.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/nextpvr.webp",
   "config_path": "/var/opt/nextpvr/config.xml",
   "description": "NextPVR is a personal video recorder application for Microsoft Windows, Linux, Mac and Docker. NextPVR makes it easy to watch or record live TV, and provides great features like series recordings, web scheduling, iPhone/iPad client application, Kodi/Emby integration etc.",
   "install_methods": [

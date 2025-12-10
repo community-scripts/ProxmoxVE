@@ -11,7 +11,7 @@
   "interface_port": 80,
   "documentation": "https://freshrss.github.io/FreshRSS/en/",
   "website": "https://freshrss.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/freshrss.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/freshrss.webp",
   "config_path": "/opt/freshrss/data/config.php",
   "description": "FreshRSS is a self-hosted RSS and Atom feed aggregator that lets users collect, organize, and read from multiple sources in one place. It is lightweight, easy to work with, powerful, and customizable.",
   "install_methods": [

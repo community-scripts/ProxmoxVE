@@ -11,7 +11,7 @@
   "interface_port": 5000,
   "documentation": "https://docs.octoprint.org/en/master/",
   "website": "https://octoprint.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/octoprint.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/octoprint.webp",
   "config_path": "",
   "description": "OctoPrint is a free and open-source web-based 3D printer control software that allows you to remotely control and monitor your 3D printer from a web interface. It was designed to be compatible with a wide range of 3D printers.",
   "install_methods": [

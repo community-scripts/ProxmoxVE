@@ -11,7 +11,7 @@
   "interface_port": 1883,
   "documentation": "https://github.com/hivemq/hivemq-community-edition/wiki",
   "website": "https://www.hivemq.com/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/hivemq.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/hivemq.webp",
   "config_path": "/opt/hivemq/conf/config.xml",
   "description": "HiveMQ CE is a Java-based open source MQTT broker that fully supports MQTT 3.x and MQTT 5.",
   "install_methods": [

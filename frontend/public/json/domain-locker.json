@@ -12,7 +12,7 @@
   "documentation": "https://domain-locker.com/about",
   "config_path": "/opt/domain-locker.env",
   "website": "https://github.com/Lissy93/domain-locker",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/domain-locker.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/domain-locker.webp",
   "description": "The all-in-one tool, for keeping track of your domain name portfolio. Got domain names? Get Domain Locker! ",
   "install_methods": [
     {

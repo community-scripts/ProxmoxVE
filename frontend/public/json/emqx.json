@@ -11,7 +11,7 @@
   "interface_port": 18083,
   "documentation": "https://docs.emqx.com/en/emqx/latest/",
   "website": "https://www.emqx.io/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/emqx.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/emqx.webp",
   "config_path": "/etc/emqx",
   "description": "EMQX is an open-source MQTT broker that features a high-performance, real-time message processing engine. It is designed to handle large-scale IoT deployments, providing fast and reliable message delivery for connected devices. EMQX is known for its scalability, reliability, and low latency, making it a popular choice for IoT and M2M applications. It also offers a wide range of features and plugins for enhanced security, monitoring, and management.",
   "install_methods": [

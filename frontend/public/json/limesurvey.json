@@ -12,7 +12,7 @@
   "documentation": "https://www.limesurvey.org/manual/LimeSurvey_Manual",
   "config_path": "",
   "website": "https://community.limesurvey.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/limesurvey.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/limesurvey.webp",
   "description": "LimeSurvey is the simple, quick and anonymous online survey tool that's bursting with juicy insights. Calling students, professionals and enterprises: design a survey and get the best insights, it’s free and as easy as squeezing a lime. Make a free online survey now!",
   "install_methods": [
     {

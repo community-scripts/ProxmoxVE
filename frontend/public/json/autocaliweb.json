@@ -12,7 +12,7 @@
   "documentation": "https://github.com/gelbphoenix/autocaliweb/wiki",
   "config_path": "/etc/autocaliweb",
   "website": "https://github.com/gelbphoenix/autocaliweb",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/autocaliweb.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/autocaliweb.webp",
   "description": "A modern web management system for eBooks, eComics and PDFs",
   "install_methods": [
     {

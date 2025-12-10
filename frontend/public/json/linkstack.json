@@ -12,7 +12,7 @@
   "interface_port": 80,
   "documentation": "https://docs.linkstack.org/",
   "website": "https://linkstack.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/linkstack.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/linkstack.webp",
   "description": "LinkStack is an open-source, self-hosted alternative to Linktree, allowing users to create a customizable profile page to share multiple links, hosted on their own server.",
   "install_methods": [
     {

@@ -11,7 +11,7 @@
   "interface_port": 80,
   "documentation": "https://snipe-it.readme.io/docs/overview",
   "website": "https://snipeitapp.com/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/snipe-it.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/snipe-it.webp",
   "config_path": "/opt/snipe-it/.env",
   "description": "This is a FOSS project for asset management in IT Operations. Knowing who has which laptop, when it was purchased in order to depreciate it correctly, handling software licenses, etc.",
   "install_methods": [

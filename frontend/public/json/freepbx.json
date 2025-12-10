@@ -11,7 +11,7 @@
   "interface_port": 80,
   "documentation": "https://sangomakb.atlassian.net/wiki/spaces/FP/overview?homepageId=8454359",
   "website": "https://www.freepbx.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/freepbx.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/freepbx.webp",
   "config_path": "",
   "description": "FreePBX is a web-based open-source graphical user interface that manages Asterisk, a voice over IP and telephony server.",
   "install_methods": [

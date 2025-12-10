@@ -12,7 +12,7 @@
   "documentation": "https://github.com/seriousm4x/UpSnap/wiki",
   "config_path": "",
   "website": "https://github.com/seriousm4x/UpSnap",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/upsnap.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/upsnap.webp",
   "description": "UpSnap is a self-hosted web app that lets you wake up, manage and monitor devices on your network with ease. Built with SvelteKit, Go and PocketBase, it offers a clean dashboard, scheduled wake-ups, device discovery and secure user management.",
   "install_methods": [
     {

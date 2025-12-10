@@ -12,7 +12,7 @@
   "documentation": "https://infisical.com/docs/documentation/getting-started/overview",
   "config_path": "/etc/infisical/infisical.rb",
   "website": "https://infisical.com/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/infisical.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/infisical.webp",
   "description": "Secrets, certificates, and access management on autopilot. All-in-one platform to securely manage application secrets, certificates, SSH keys, and configurations across your team and infrastructure.",
   "install_methods": [
     {

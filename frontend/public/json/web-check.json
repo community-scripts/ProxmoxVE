@@ -11,7 +11,7 @@
   "interface_port": 3000,
   "documentation": "https://github.com/Lissy93/web-check/blob/master/.github/README.md",
   "website": "https://github.com/lissy93/web-check",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/web-check.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/web-check.webp",
   "config_path": "/opt/web-check/.env",
   "description": "Get an insight into the inner-workings of a given website: uncover potential attack vectors, analyse server architecture, view security configurations, and learn what technologies a site is using.",
   "install_methods": [

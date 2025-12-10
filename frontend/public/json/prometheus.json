@@ -11,7 +11,7 @@
   "interface_port": 9090,
   "documentation": "https://prometheus.io/docs/introduction/overview/",
   "website": "https://prometheus.io/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/prometheus.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/prometheus.webp",
   "config_path": "/etc/prometheus/prometheus.yml",
   "description": "Prometheus is widely used to monitor the performance and health of various infrastructure components and applications, and trigger alerts based on predefined rules. It has a multi-dimensional data model and supports various data sources and exporters, making it an extremely flexible and scalable monitoring solution.",
   "install_methods": [

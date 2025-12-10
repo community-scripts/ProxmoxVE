@@ -12,7 +12,7 @@
   "documentation": "https://www.metabase.com/docs/latest/",
   "config_path": "/opt/metabase/.env",
   "website": "https://www.metabase.com/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/metabase.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/metabase.webp",
   "description": "Metabase is an open-source business intelligence platform. You can use Metabase to ask questions about your data, or embed Metabase in your app to let your customers explore their data on their own.",
   "install_methods": [
     {

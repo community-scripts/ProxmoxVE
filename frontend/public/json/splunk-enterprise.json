@@ -12,7 +12,7 @@
   "documentation": "https://help.splunk.com",
   "config_path": "",
   "website": "https://www.splunk.com/en_us/download/splunk-enterprise.html",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/splunk.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/splunk.webp",
   "description": "Platform for searching, monitoring, and analyzing machine-generated data at scale for operational intelligence and security.",
   "install_methods": [
     {

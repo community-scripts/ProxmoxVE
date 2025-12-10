@@ -11,7 +11,7 @@
   "interface_port": 8080,
   "documentation": "https://gatus.io/docs",
   "website": "https://gatus.io/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/gatus.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/gatus.webp",
   "config_path": "/opt/gatus/config/config.yaml",
   "description": "Gatus is a developer-oriented health dashboard that gives you the ability to monitor your services using HTTP, ICMP, TCP, and even DNS queries as well as evaluate the result of said queries by using a list of conditions on values like the status code, the response time, the certificate expiration, the body and many others. The icing on top is that each of these health checks can be paired with alerting via Slack, Teams, PagerDuty, Discord, Twilio and many more.",
   "install_methods": [

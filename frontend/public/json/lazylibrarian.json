@@ -11,7 +11,7 @@
   "interface_port": 5299,
   "documentation": "https://lazylibrarian.gitlab.io/lazylibrarian.gitlab.io/",
   "website": "https://gitlab.com/LazyLibrarian/LazyLibrarian",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/lazylibrarian.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/lazylibrarian.webp",
   "config_path": "/opt/LazyLibrarian/config.ini",
   "description": "LazyLibrarian is a SickBeard, CouchPotato, Headphones-like application for ebooks, audiobooks and magazines.",
   "install_methods": [

@@ -12,7 +12,7 @@
   "documentation": null,
   "config_path": "/opt/.env",
   "website": "https://warracker.com/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/warracker.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/warracker.webp",
   "description": "Warracker is an open source, self-hostable warranty tracker to monitor expirations, store receipts, files. You own the data, your rules!",
   "install_methods": [
     {

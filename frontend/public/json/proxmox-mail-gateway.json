@@ -11,7 +11,7 @@
     "interface_port": 8006,
     "documentation": "https://pmg.proxmox.com/pmg-docs/pmg-admin-guide.html",
     "website": "https://www.proxmox.com/en/products/proxmox-mail-gateway/overview",
-    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/proxmox.webp",
+    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/proxmox.webp",
     "config_path": "",
     "description": "Proxmox Mail Gateway is the leading open-source email security solution helping you to protect your mail server against all email threats from the moment they emerge.",
     "install_methods": [

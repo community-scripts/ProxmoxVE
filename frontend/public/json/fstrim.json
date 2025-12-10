@@ -11,7 +11,7 @@
   "interface_port": null,
   "documentation": "https://github.com/community-scripts/ProxmoxVE/discussions/805",
   "website": null,
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/linuxcontainers.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/linuxcontainers.webp",
   "config_path": "",
   "description": "This maintains SSD performance by managing unused blocks. Thin-provisioned storage systems also require management to prevent unnecessary storage use. VMs automate fstrim, while LXC containers need manual or automated fstrim processes for optimal performance.",
   "install_methods": [

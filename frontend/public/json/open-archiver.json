@@ -12,7 +12,7 @@
   "documentation": "https://docs.openarchiver.com/",
   "config_path": "/opt/openarchiver/.env",
   "website": "https://openarchiver.com/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/open-archiver.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/open-archiver.webp",
   "description": "Open Archiver is a secure, self-hosted email archiving solution, and it's completely open source. Get an email archiver that enables full-text search across email and attachments. Create a permanent, searchable, and compliant mail archive from Google Workspace, Microsoft 35, and any IMAP server.",
   "install_methods": [
     {

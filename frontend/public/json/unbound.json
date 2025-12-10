@@ -11,7 +11,7 @@
   "interface_port": 5335,
   "documentation": "https://unbound.docs.nlnetlabs.nl/en/latest/",
   "website": "https://www.nlnetlabs.nl/projects/unbound/about/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/unbound.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/unbound.webp",
   "config_path": "/etc/unbound/unbound.conf.d/unbound.conf",
   "description": "Unbound is a validating, recursive, caching DNS resolver. It is designed to be fast and lean and incorporates modern features based on open standards.",
   "install_methods": [

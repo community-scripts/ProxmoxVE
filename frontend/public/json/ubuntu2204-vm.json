@@ -11,7 +11,7 @@
   "interface_port": null,
   "documentation": null,
   "website": "https://ubuntu.com/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/ubuntu.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/ubuntu.webp",
   "config_path": "",
   "description": "Ubuntu is a distribution based on Debian, designed to have regular releases and a consistent user experience.",
   "install_methods": [

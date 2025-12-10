@@ -11,7 +11,7 @@
   "interface_port": 9000,
   "documentation": "https://listmonk.app/docs/",
   "website": "https://listmonk.app/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/listmonk.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/listmonk.webp",
   "config_path": "/opt/listmonk/config.toml",
   "description": "High performance, self-hosted, newsletter and mailing list manager with a modern dashboard.",
   "install_methods": [

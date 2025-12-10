@@ -11,7 +11,7 @@
   "interface_port": 81,
   "documentation": "https://github.com/ZoeyVid/NPMplus/blob/develop/README.md",
   "website": "https://github.com/ZoeyVid/NPMplus",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/nginx-proxy-manager.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/nginx-proxy-manager.webp",
   "config_path": "/opt/compose.yaml",
   "description": "NPMplus is an enhanced version of Nginx Proxy Manager. It simplifies the process of setting up reverse proxies with TLS termination through a user-friendly web interface. Key features include HTTP/3 support, integration with CrowdSec IPS, inclusion of GoAccess for real-time log analysis, and support for ModSecurity with the Core Rule Set.",
   "install_methods": [

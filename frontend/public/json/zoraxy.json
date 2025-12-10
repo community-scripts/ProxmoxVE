@@ -11,7 +11,7 @@
   "interface_port": 8000,
   "documentation": "https://github.com/tobychui/zoraxy/wiki",
   "website": "https://zoraxy.aroz.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/zoraxy.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/zoraxy.webp",
   "config_path": "",
   "description": "Zoraxy is an all in one homelab network routing solution.",
   "install_methods": [

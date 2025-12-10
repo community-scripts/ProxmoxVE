@@ -11,7 +11,7 @@
   "interface_port": null,
   "documentation": "https://mosquitto.org/documentation/",
   "website": "https://mosquitto.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/mqtt.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/mqtt.webp",
   "config_path": "/etc/mosquitto/conf.d/default.conf",
   "description": "Eclipse Mosquitto is an open-source message broker that implements the MQTT (Message Queuing Telemetry Transport) protocol. It is a lightweight and simple-to-use message broker that allows IoT devices and applications to communicate with each other by exchanging messages in real-time. Mosquitto is widely used in IoT applications, due to its low resource requirements and its compatibility with a wide range of devices and platforms",
   "install_methods": [

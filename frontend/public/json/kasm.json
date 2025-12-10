@@ -12,7 +12,7 @@
   "interface_port": 443,
   "documentation": "https://www.kasmweb.com/docs/",
   "website": "https://www.kasmweb.com/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/kasm-workspaces.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/kasm-workspaces.webp",
   "description": "Kasm Workspaces is a container streaming platform that delivers browser-based access to desktops, applications, and web services with enhanced security and scalability.",
   "install_methods": [
     {

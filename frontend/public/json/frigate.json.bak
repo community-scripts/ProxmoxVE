@@ -11,7 +11,7 @@
   "interface_port": 5000,
   "documentation": "https://docs.frigate.video/",
   "website": "https://frigate.video/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/frigate.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/frigate.webp",
   "config_path": "",
   "description": "Frigate is an open source NVR built around real-time AI object detection. All processing is performed locally on your own hardware, and your camera feeds never leave your home.",
   "install_methods": [

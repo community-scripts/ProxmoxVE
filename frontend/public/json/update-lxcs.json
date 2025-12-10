@@ -11,7 +11,7 @@
   "interface_port": null,
   "documentation": null,
   "website": null,
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/linuxcontainers.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/linuxcontainers.webp",
   "config_path": "",
   "description": "This script has been created to simplify and speed up the process of updating the operating system running inside LXC containers across various Linux distributions, such as Ubuntu, Debian, Devuan, Alpine Linux, CentOS-Rocky-Alma, Fedora, and ArchLinux. It's designed to automatically skip templates and specific containers during the update, enhancing its convenience and usability.",
   "install_methods": [

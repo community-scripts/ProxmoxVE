@@ -11,7 +11,7 @@
   "interface_port": 8409,
   "documentation": "https://ersatztv.org/docs/intro",
   "website": "https://ersatztv.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/ersatztv.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/ersatztv.webp",
   "config_path": "",
   "description": "ErsatzTV is software for configuring and streaming custom live channels using your media library.",
   "install_methods": [

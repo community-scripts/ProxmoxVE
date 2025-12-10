@@ -11,7 +11,7 @@
     "interface_port": 8081,
     "documentation": null,
     "website": "https://github.com/hansmi/prometheus-paperless-exporter",
-    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/paperless-ngx.webp",
+    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/paperless-ngx.webp",
     "config_path": "",
     "description": "Prometheus metrics exporter for Paperless-NGX, a document management system transforming physical documents into a searchable online archive. The exporter relies on Paperless' REST API.",
     "install_methods": [

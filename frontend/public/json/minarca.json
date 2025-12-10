@@ -12,7 +12,7 @@
   "documentation": "https://nexus.ikus-soft.com/repository/archive/minarca/6.0.3/doc/index.html",
   "config_path": "/etc/minarca/minarca-server.conf",
   "website": "https://minarca.org/en_CA",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/minarca.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/minarca.webp",
   "description": "Minarca is a self-hosted open source data backup software that allows you to manage your computer and server backups for free from a direct online accessible centralized view of your data with easy retrieval.",
   "install_methods": [
     {

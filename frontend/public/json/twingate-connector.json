@@ -12,7 +12,7 @@
   "documentation": "https://www.twingate.com/docs/",
   "config_path": "/etc/twingate/connector.conf",
   "website": "https://www.twingate.com",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/twingate.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/twingate.webp",
   "description": "Twingate Connectors are lightweight software components that establish secure, least-privileged access between private network resources and authorized users without exposing the network to the internet. They act as outbound-only bridges between your protected resources and the Twingate infrastructure, ensuring zero-trust access without the need for a VPN.",
   "install_methods": [
     {

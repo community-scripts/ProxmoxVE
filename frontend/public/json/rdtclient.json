@@ -11,7 +11,7 @@
   "interface_port": 6500,
   "documentation": "https://github.com/rogerfar/rdt-client/blob/main/README.md",
   "website": "https://github.com/rogerfar/rdt-client",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/real-debrid.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/real-debrid.webp",
   "config_path": "/opt/rdtc/appsettings.json",
   "description": "RDTClient is a web interface to manage your torrents on Real-Debrid, AllDebrid or Premiumize.",
   "install_methods": [

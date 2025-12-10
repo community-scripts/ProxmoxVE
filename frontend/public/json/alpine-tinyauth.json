@@ -12,7 +12,7 @@
   "documentation": "https://tinyauth.app",
   "config_path": "/opt/tinyauth/.env",
   "website": "https://tinyauth.app",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/tinyauth.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/tinyauth.webp",
   "description": "Tinyauth is a simple authentication middleware that adds simple username/password login or OAuth with Google, Github and any generic provider to all of your docker apps.",
   "install_methods": [
     {

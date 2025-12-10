@@ -11,7 +11,7 @@
   "interface_port": 8096,
   "documentation": "https://jellyfin.org/docs/",
   "website": "https://jellyfin.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/jellyfin.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/jellyfin.webp",
   "config_path": "/etc/jellyfin/",
   "description": "Jellyfin is a free and open-source media server and suite of multimedia applications designed to organize, manage, and share digital media files to networked devices.",
   "install_methods": [

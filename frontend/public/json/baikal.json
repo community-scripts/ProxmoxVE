@@ -11,7 +11,7 @@
   "interface_port": 80,
   "documentation": "https://sabre.io/dav/",
   "website": "https://sabre.io/baikal/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/baikal.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/baikal.webp",
   "config_path": "/opt/baikal/config/baikal.yaml",
   "description": "Baïkal is a lightweight CalDAV+CardDAV server. It offers an extensive web interface with easy management of users, address books and calendars.",
   "install_methods": [

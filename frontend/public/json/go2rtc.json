@@ -11,7 +11,7 @@
   "interface_port": 1984,
   "documentation": "https://github.com/AlexxIT/go2rtc/blob/master/README.md",
   "website": "https://github.com/AlexxIT/go2rtc",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/go2rtc.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/go2rtc.webp",
   "config_path": "/opt/go2rtc/go2rtc.yaml",
   "description": "go2rtc is the ultimate camera streaming application with support RTSP, WebRTC, HomeKit, FFmpeg, RTMP, etc.",
   "install_methods": [

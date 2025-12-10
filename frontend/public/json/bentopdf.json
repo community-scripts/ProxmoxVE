@@ -11,7 +11,7 @@
   "interface_port": 8080,
   "documentation": "https://github.com/alam00000/bentopdf",
   "website": "https://www.bentopdf.com",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/bentopdf.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/bentopdf.webp",
   "config_path": "",
   "description": "A privacy-first, 100% client-side PDF Toolkit. No signups/accounts, works in the browser, online or offline.",
   "install_methods": [

@@ -11,7 +11,7 @@
   "interface_port": 3000,
   "documentation": "https://silverbullet.md/Manual",
   "website": "https://silverbullet.md",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/silverbullet.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/silverbullet.webp",
   "config_path": "",
   "description": "SilverBullet is a note-taking application optimized for people with a hacker mindset.",
   "install_methods": [

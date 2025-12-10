@@ -11,7 +11,7 @@
   "interface_port": 25600,
   "documentation": "https://komga.org/docs/introduction",
   "website": "https://komga.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/komga.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/komga.webp",
   "config_path": "~/.komga/application.yml",
   "description": "A media server for your comics, mangas, BDs, magazines and eBooks. Organize your CBZ, CBR, PDF and EPUB files in different libraries, collections or reading lists. Use the integrated Webreader, the Mihon extension, any OPDS reader, or other integrations. Edit metadata for your series and books.",
   "install_methods": [

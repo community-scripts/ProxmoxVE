@@ -11,7 +11,7 @@
   "interface_port": 7100,
   "documentation": "https://github.com/thecfu/scraparr/blob/main/README.md",
   "website": "https://github.com/thecfu/scraparr",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/scraparr-dark.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/scraparr-dark.webp",
   "config_path": "/scraparr/config/config.yaml",
   "description": "Scraparr is a Prometheus exporter for the *arr suite (Sonarr, Radarr, Lidarr, etc.). It provides metrics that can be scraped by Prometheus to monitor and visualize the health and performance of your *arr applications.",
   "install_methods": [

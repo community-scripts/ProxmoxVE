@@ -11,7 +11,7 @@
   "interface_port": 9987,
   "documentation": "https://support.teamspeak.com/hc/en-us/categories/360000302017-TeamSpeak-3",
   "website": "https://teamspeak.com/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/teamspeak-light.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/teamspeak-light.webp",
   "config_path": "",
   "description": "TeamSpeak is a voice over IP (VoIP) application, primarily used by gamers and teams to chat in real time on dedicated servers. It delivers crystal‑clear, low‑latency voice communication.",
   "install_methods": [

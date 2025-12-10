@@ -11,7 +11,7 @@
   "interface_port": 7568,
   "documentation": "https://www.uhfapp.com/server",
   "website": "https://www.uhfapp.com/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/uhf.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/uhf.webp",
   "config_path": "/etc/uhf-server/",
   "description": "UHF Server is a powerful companion app that lets you seamlessly schedule and record your favorite shows from the UHF app.",
   "install_methods": [

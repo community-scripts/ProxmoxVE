@@ -11,7 +11,7 @@
   "interface_port": null,
   "documentation": "https://github.com/onethree7/proxmox-lxc-privilege-converter",
   "website": null,
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/proxmox.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/proxmox.webp",
   "config_path": "",
   "description": "This script allows converting Proxmox LXC containers between privileged and unprivileged modes using vzdump backup and restore. It guides you through container selection, backup storage, ID assignment, and privilege flipping via automated restore. Useful for applying changes that require different LXC modes.",
   "install_methods": [

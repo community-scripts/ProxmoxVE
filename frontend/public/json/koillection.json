@@ -11,7 +11,7 @@
   "interface_port": 80,
   "documentation": "https://github.com/benjaminjonard/koillection/wiki",
   "website": "https://koillection.github.io/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/koillection.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/koillection.webp",
   "config_path": "ct/koillection.sh",
   "description": "Koillection is a self-hosted collection manager created to keep track of physical (mostly) collections of any kind like books, DVDs, stamps, games... Koillection is meant to be used for any kind of collections and doesn't come with pre-built metadata download. But you can tailor your own HTML scraper, or you can add your own metadata freely.",
   "install_methods": [

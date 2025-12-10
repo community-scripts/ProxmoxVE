@@ -11,7 +11,7 @@
   "interface_port": 1880,
   "documentation": "https://nodered.org/docs/",
   "website": "https://nodered.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/node-red.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/node-red.webp",
   "config_path": "~/.node-red/settings.js",
   "description": "Node-RED is a visual programming tool that allows developers and non-developers alike to easily wire together hardware devices, APIs, and online services to create custom applications. It provides a visual interface for building workflows, making it easy to create and modify complex integrations without having to write any code. Node-RED is used in a wide range of applications, from simple automations to complex integrations, and is known for its simplicity, versatility, and ease of use.",
   "install_methods": [

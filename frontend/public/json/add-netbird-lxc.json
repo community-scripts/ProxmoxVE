@@ -11,7 +11,7 @@
   "interface_port": null,
   "documentation": "https://docs.netbird.io/",
   "website": "https://netbird.io/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/netbird.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/netbird.webp",
   "config_path": "",
   "description": "NetBird combines a configuration-free peer-to-peer private network and a centralized access control system in a single platform, making it easy to create secure private networks for your organization or home.",
   "install_methods": [

@@ -11,7 +11,7 @@
   "interface_port": 80,
   "documentation": "https://github.com/dresden-elektronik/deconz-rest-plugin/wiki",
   "website": "https://www.phoscon.de/en/conbee2/software#deconz",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/phoscon.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/phoscon.webp",
   "config_path": "",
   "description": "deCONZ is a software for managing and controlling Zigbee-based smart home devices. It allows for setting up, configuring and visualizing the status of connected devices, as well as for triggering actions and automations. It works as a bridge between the Zigbee network and other home automation systems and can be used as a standalone solution or integrated into existing setups.",
   "install_methods": [

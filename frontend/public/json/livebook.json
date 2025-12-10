@@ -12,7 +12,7 @@
   "documentation": "https://hexdocs.pm/livebook/readme.html",
   "config_path": null,
   "website": "https://livebook.dev",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/livebook.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/livebook.webp",
   "description": "Elixir Livebook is an interactive, web-based notebook platform for Elixir that combines code, documentation, and visualizations in a single document. Similar to Jupyter notebooks, it allows developers to write and execute Elixir code in real-time, making it ideal for data exploration, prototyping, learning, and collaborative development. Livebook features rich markdown support, built-in charting capabilities, and seamless integration with the Elixir ecosystem.",
   "install_methods": [
     {

@@ -12,7 +12,7 @@
   "documentation": "https://www.dedicatedcode.com/projects/reitti/",
   "config_path": "/opt/reitti/.env",
   "website": "https://www.dedicatedcode.com/projects/reitti/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/reitti.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/reitti.webp",
   "description": "Reitti is a self-hosted location tracking and analysis platform that detects significant places, trip patterns, and integrates with OwnTracks, GPSLogger, and Immich. It uses PostgreSQL + PostGIS, RabbitMQ, Redis, and an optional Photon geocoder.",
   "install_methods": [
     {

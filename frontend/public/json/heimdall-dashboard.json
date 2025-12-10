@@ -11,7 +11,7 @@
   "interface_port": 7990,
   "documentation": "https://github.com/linuxserver/Heimdall/blob/2.x/readme.md",
   "website": "https://heimdall.site/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/heimdall.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/heimdall.webp",
   "config_path": "/opt/Heimdall/.env",
   "description": "Heimdall Dashboard is a self-hosted, web-based dashboard for managing and monitoring the health of applications and servers. It allows you to keep track of the status of your systems from a single, centralized location, and receive notifications when things go wrong. With Heimdall Dashboard, you have full control over your data and can customize it to meet your specific needs. Self-hosting the dashboard gives you the flexibility to run it on your own infrastructure, making it a suitable solution for organizations that prioritize data security and privacy.",
   "install_methods": [

@@ -11,7 +11,7 @@
   "interface_port": 3000,
   "documentation": "https://github.com/Brandawg93/PeaNUT/blob/main/README.md",
   "website": "https://github.com/Brandawg93/PeaNUT/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/peanut.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/peanut.webp",
   "config_path": "/etc/peanut/settings.yml",
   "description": "PeaNUT is a small dashboard for Network UPS Tools (NUT). It provides a web interface to monitor and manage UPS devices. PeaNUT allows users to view device status, retrieve information, and manage UPS parameters through its API. It's customizable for different UPS devices and supports integration with the Homepage dashboard.",
   "install_methods": [

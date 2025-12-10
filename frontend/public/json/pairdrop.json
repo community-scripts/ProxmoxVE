@@ -11,7 +11,7 @@
   "interface_port": 3000,
   "documentation": "https://github.com/schlagmichdoch/PairDrop/blob/master/docs/host-your-own.md",
   "website": "https://github.com/schlagmichdoch/PairDrop",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/pairdrop.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/pairdrop.webp",
   "config_path": "",
   "description": "PairDrop: Local file sharing in your browser.",
   "install_methods": [

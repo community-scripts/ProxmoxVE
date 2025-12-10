@@ -12,7 +12,7 @@
   "interface_port": 8188,
   "documentation": "https://github.com/comfyanonymous/ComfyUI",
   "website": "https://www.comfy.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/comfyui.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/comfyui.webp",
   "description": "ComfyUI is a node-based interface and inference engine for generative AI. Users can combine various AI models and operations through nodes to achieve highly customizable and controllable content generation.",
   "install_methods": [
     {

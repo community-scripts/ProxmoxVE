@@ -11,7 +11,7 @@
   "interface_port": 8080,
   "documentation": "https://docs.nocodb.com/",
   "website": "https://www.nocodb.com/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/nocodb.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/nocodb.webp",
   "config_path": "",
   "description": "NocoDB is a document-oriented database management system. It uses the NoSQL (Not Only SQL) data model, which allows for more flexible and scalable data storage than traditional relational databases. NoCoDB stores data in JSON format, making it easier to manage and query complex data structures, and supports a range of data types, including strings, numbers, arrays, and objects. The software provides a web-based interface for managing and querying data, and includes features such as real-time data synchronization, auto-indexing, and full-text search. NoCoDB is designed to be scalable, and can be used for a range of applications, from small projects to large enterprise systems. The software is free and open-source, and is designed to be easy to use and integrate with other applications.",
   "install_methods": [

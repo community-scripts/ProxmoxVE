@@ -11,7 +11,7 @@
   "interface_port": 8091,
   "documentation": "https://zwave-js.github.io/zwave-js-ui/#/",
   "website": "https://github.com/zwave-js/zwave-js-ui#",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/z-wave-js-ui.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/z-wave-js-ui.webp",
   "config_path": "/opt/.env",
   "description": "Z-Wave JS UI is an open-source software that serves as a gateway between Z-Wave devices and MQTT (Message Queuing Telemetry Transport) protocol, allowing users to control and monitor their Z-Wave devices via a user interface. The software provides a configurable platform to manage Z-Wave networks and integrate with other smart home systems through MQTT.",
   "install_methods": [

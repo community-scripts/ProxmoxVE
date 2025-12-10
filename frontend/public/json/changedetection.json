@@ -11,7 +11,7 @@
   "interface_port": 5000,
   "documentation": "https://changedetection.io/tutorials",
   "website": "https://changedetection.io/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/changedetection.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/changedetection.webp",
   "config_path": "/opt/changedetection/url-watches.json",
   "description": "Change Detection is a service that allows you to monitor changes to web pages and receive notifications when changes occur. It can be used for a variety of purposes such as keeping track of online price changes, monitoring news websites for updates, or tracking changes to online forums.",
   "install_methods": [

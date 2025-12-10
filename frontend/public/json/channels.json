@@ -11,7 +11,7 @@
   "interface_port": 8089,
   "documentation": "https://getchannels.com/docs/getting-started/quick-start-guide/",
   "website": "https://getchannels.com/dvr-server/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/channels-dvr.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/channels-dvr.webp",
   "config_path": "",
   "description": "Channels DVR Server runs on your computer or NAS device at home. There's no cloud to worry about. Your tv shows and movies will always be available.",
   "install_methods": [

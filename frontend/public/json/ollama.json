@@ -12,7 +12,7 @@
   "documentation": "https://github.com/ollama/ollama/tree/main/docs",
   "config_path": "/usr/local/lib/ollama",
   "website": "https://ollama.com/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/ollama.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/ollama.webp",
   "description": "Ollama is a tool that allows you to run large language models locally on your own computer. This means you can experiment with and use these AI models without needing an internet connection or relying on cloud-based services. It simplifies the process of managing and running these models, offering a way to keep your data private and potentially work faster. 1  You can use Ollama to create local chatbots, conduct AI research, develop privacy-focused AI applications, and integrate AI into existing systems.",
   "install_methods": [
     {

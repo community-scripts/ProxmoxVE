@@ -11,7 +11,7 @@
   "interface_port": 3000,
   "documentation": "https://gethomepage.dev/configs/",
   "website": "https://gethomepage.dev",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/homepage.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/homepage.webp",
   "config_path": "/opt/homepage/config/",
   "description": "Homepage is a self-hosted dashboard solution for centralizing and organizing data and information.",
   "install_methods": [

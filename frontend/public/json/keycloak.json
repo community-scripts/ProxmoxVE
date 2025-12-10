@@ -11,7 +11,7 @@
   "interface_port": 8080,
   "documentation": "https://www.keycloak.org/documentation",
   "website": "https://www.keycloak.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/keycloak.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/keycloak.webp",
   "config_path": "/opt/keycloak/conf/keycloak.conf",
   "description": "Keycloak is an open-source identity and access management solution that provides centralized authentication and authorization for modern applications and services. It enables organizations to secure their applications and services with a single sign-on (SSO) solution, reducing the need for users to remember multiple login credentials. Keycloak supports various authentication protocols, including SAML, OAuth, and OpenID Connect, and integrates with a wide range of applications and services. With Keycloak, administrators can manage user identities, define security policies, and monitor access to their applications and services. The software is designed to be scalable, flexible, and easy to use, making it a valuable tool for enhancing the security and usability of modern applications and services.",
   "install_methods": [

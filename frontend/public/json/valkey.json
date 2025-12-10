@@ -12,7 +12,7 @@
   "documentation": "https://valkey.io/docs/",
   "config_path": "/etc/valkey/valkey.conf",
   "website": "https://valkey.io/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/valkey.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/valkey.webp",
   "description": "Valkey is an open source (BSD) high-performance key/value datastore that supports a variety of workloads such as caching, message queues, and can act as a primary database. The project is backed by the Linux Foundation, ensuring it will remain open source forever.",
   "install_methods": [
     {
