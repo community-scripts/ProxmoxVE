@@ -11,7 +11,7 @@
   "interface_port": 80,
   "documentation": "https://github.com/wavelog/wavelog/wiki",
   "website": "https://www.wavelog.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/wavelog.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/wavelog.webp",
   "config_path": "/opt/wavelog/application/config/config.php",
   "description": "Wavelog is a self-hosted PHP application that allows you to log your amateur radio contacts anywhere. All you need is a web browser and active internet connection.",
   "install_methods": [
