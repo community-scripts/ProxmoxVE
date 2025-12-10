@@ -39,6 +39,10 @@
     {
       "text": "Script installs English as default OCR language. To install additional languages, use `apt-get install tesseract-ocr-[lang]`, where [lang] is the language code (e.g. `apt-get install tesseract-ocr-deu`).",
       "type": "info"
+    },
+    {
+      "text": "Paperless-NGX use uv, so all calls need to start with `uv run` f.e. `uv run python3 manage.py document_exporter $path` instead `python3 manage.py`",
+      "type": "info"
     }
   ]
 }
