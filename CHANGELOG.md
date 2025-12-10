@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: Umami [@tremor021](https://github.com/tremor021) ([#9840](https://github.com/community-scripts/ProxmoxVE/pull/9840))
     - Refactor: UrBackup Server [@tremor021](https://github.com/tremor021) ([#9837](https://github.com/community-scripts/ProxmoxVE/pull/9837))
     - Refactor: Tianji [@tremor021](https://github.com/tremor021) ([#9842](https://github.com/community-scripts/ProxmoxVE/pull/9842))
     - Tracktor: Remove unused variable [@tremor021](https://github.com/tremor021) ([#9841](https://github.com/community-scripts/ProxmoxVE/pull/9841))
