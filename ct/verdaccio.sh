@@ -30,7 +30,7 @@ function update_script() {
 
   msg_info "Updating LXC Container"
   $STD apt update
-  $STD apt -y upgrade
+  $STD apt upgrade -y
   msg_ok "Updated LXC Container"
 
   NODE_VERSION="22" NODE_MODULE="verdaccio" setup_nodejs
