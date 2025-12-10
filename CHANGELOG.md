@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-12-10
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - Tracktor: Remove unused variable [@tremor021](https://github.com/tremor021) ([#9841](https://github.com/community-scripts/ProxmoxVE/pull/9841))
+
 ## 2025-12-09
 
 ### 🆕 New Scripts
