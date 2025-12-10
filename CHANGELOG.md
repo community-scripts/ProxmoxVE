@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-12-10
 
+### 🆕 New Scripts
+
+  - DiscoPanel ([#9847](https://github.com/community-scripts/ProxmoxVE/pull/9847))
+
 ### 🚀 Updated Scripts
 
   - #### 🔧 Refactor
