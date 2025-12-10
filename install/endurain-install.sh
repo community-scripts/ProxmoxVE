@@ -15,9 +15,7 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt install -y \
-  default-libmysqlclient-dev \
-  build-essential \
-  pkg-config
+  build-essential
 msg_ok "Installed Dependencies"
 
 PYTHON_VERSION="3.13" setup_uv
