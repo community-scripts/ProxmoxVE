@@ -43,7 +43,6 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 EOF
-
 systemctl enable -q --now discopanel
 msg_ok "Created Service"
 
