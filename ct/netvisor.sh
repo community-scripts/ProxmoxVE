@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: vhsdream
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://github.com/mayanayza/netvisor
+# Source: https://github.com/netvisor-io/netvisor
 
 APP="NetVisor"
 var_tags="${var_tags:-analytics}"
@@ -29,7 +29,7 @@ function update_script() {
     exit
   fi
 
-  if check_for_gh_release "netvisor" "mayanayza/netvisor"; then
+  if check_for_gh_release "netvisor" "netvisor-io/netvisor"; then
     msg_info "Stopping services"
     systemctl stop netvisor-daemon netvisor-server
     msg_ok "Stopped services"
@@ -38,7 +38,7 @@ function update_script() {
     cp /opt/netvisor/.env /opt/netvisor.env.bak
     msg_ok "Backed up configurations"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "netvisor" "mayanayza/netvisor" "tarball" "latest" "/opt/netvisor"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "netvisor" "netvisor-io/netvisor" "tarball" "latest" "/opt/netvisor"
 
     if ! dpkg -l | grep -q "pkg-config"; then
       $STD apt install -y pkg-config

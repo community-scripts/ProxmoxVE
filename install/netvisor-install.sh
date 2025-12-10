@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: vhsdream
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://github.com/mayanayza/netvisor
+# Source: https://github.com/netvisor-io/netvisor
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -24,7 +24,7 @@ PG_VERSION=17 setup_postgresql
 NODE_VERSION="24" setup_nodejs
 PG_DB_NAME="netvisor_db" PG_DB_USER="netvisor" PG_DB_GRANT_SUPERUSER="true" setup_postgresql_db
 
-fetch_and_deploy_gh_release "netvisor" "mayanayza/netvisor" "tarball" "latest" "/opt/netvisor"
+fetch_and_deploy_gh_release "netvisor" "netvisor-io/netvisor" "tarball" "latest" "/opt/netvisor"
 
 TOOLCHAIN="$(grep "channel" /opt/netvisor/backend/rust-toolchain.toml | awk -F\" '{print $2}')"
 RUST_TOOLCHAIN=$TOOLCHAIN setup_rust
@@ -78,7 +78,7 @@ NETVISOR_BIND_ADDRESS=0.0.0.0
 NETVISOR_NAME="netvisor-daemon"
 NETVISOR_HEARTBEAT_INTERVAL=30
 
-### - see https://github.com/mayanayza/netvisor/blob/main/docs/CONFIGURATION.md for more options
+### - see https://github.com/netvisor-io/netvisor/blob/main/docs/CONFIGURATION.md for more options
 EOF
 
 cat <<EOF >/etc/systemd/system/netvisor-server.service
