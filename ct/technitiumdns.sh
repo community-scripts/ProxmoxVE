@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-512}"
 var_disk="${var_disk:-2}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -30,6 +30,14 @@ function update_script() {
 
   if is_package_installed "aspnetcore-runtime-8.0"; then
     $STD apt remove -y aspnetcore-runtime-8.0
+    [ -f /etc/apt/sources.list.d/microsoft-prod.list ] && rm -f /etc/apt/sources.list.d/microsoft-prod.list
+    [ -f /usr/share/keyrings/microsoft-prod.gpg ] && rm -f /usr/share/keyrings/microsoft-prod.gpg
+    setup_deb822_repo \
+      "microsoft" \
+      "https://packages.microsoft.com/keys/microsoft-2025.asc" \
+      "https://packages.microsoft.com/debian/13/prod/" \
+      "trixie" \
+      "main"
     $STD apt install -y aspnetcore-runtime-9.0
   fi
 
