@@ -19,8 +19,8 @@ msg_ok "Installed Dependencies"
 
 setup_deb822_repo \
   "urbackup" \
-  "https://download.opensuse.org/repositories/home:uroni/Debian_12/Release.key" \
-  "http://download.opensuse.org/repositories/home:/uroni/Debian_12/" \
+  "https://download.opensuse.org/repositories/home:uroni/Debian_13/Release.key" \
+  "http://download.opensuse.org/repositories/home:/uroni/Debian_13/" \
   "./" \
   ""
 
