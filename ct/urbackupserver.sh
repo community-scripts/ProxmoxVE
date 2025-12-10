@@ -6,7 +6,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Source: https://www.urbackup.org/
 
 APP="UrBackup Server"
-var_tags="${var_tags:-web}"
+var_tags="${var_tags:-backup}"
 var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-16}"
@@ -29,7 +29,7 @@ function update_script() {
   fi
   msg_info "Updating ${APP} LXC"
   $STD apt update
-  $STD apt -y upgrade
+  $STD apt upgrade -y
   msg_ok "Updated successfully!"
   exit
 }
