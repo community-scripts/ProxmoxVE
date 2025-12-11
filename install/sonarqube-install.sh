@@ -16,8 +16,6 @@ JAVA_VERSION="21" setup_java
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="sonarqube" PG_DB_USER="sonarqube" setup_postgresql_db
 
-fetch_and_deploy_gh_release "sonarqube" "SonarSource/sonarqube" "prebuild" "latest" "/opt/sonarqube" "sonarqube-*.zip"
-
 msg_info "Setting up SonarQube"
 temp_file=$(mktemp)
 RELEASE=$(get_latest_github_release "SonarSource/sonarqube")
