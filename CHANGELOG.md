@@ -14,6 +14,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Update NetVisor repo information [@vhsdream](https://github.com/vhsdream) ([#9864](https://github.com/community-scripts/ProxmoxVE/pull/9864))
+
   - #### 🔧 Refactor
 
     - endurain: remove unneeded deps [@johanngrobe](https://github.com/johanngrobe) ([#9855](https://github.com/community-scripts/ProxmoxVE/pull/9855))
