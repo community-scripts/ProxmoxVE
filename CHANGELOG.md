@@ -34,6 +34,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - core: skip -features flag when empty [@MickLesk](https://github.com/MickLesk) ([#9871](https://github.com/community-scripts/ProxmoxVE/pull/9871))
 
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - paperless: add note on website (uv usage) [@MickLesk](https://github.com/MickLesk) ([#9833](https://github.com/community-scripts/ProxmoxVE/pull/9833))
+
 ## 2025-12-10
 
 ### 🆕 New Scripts
