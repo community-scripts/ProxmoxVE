@@ -102,7 +102,7 @@ if [ -x "/usr/bin/ollama" ]; then
       
       msg_info "Downloading Ollama v$RELEASE"
       # Removing -s (silent) and adding -# (progress bar), visual improvement because it might look like a 'system hang' leading to unnecessary user intervention
-      curl -fsSLO -C - -# https://ollama.com/download/ollama-linux-amd64.tgz
+      curl -fSLO -C - -# https://ollama.com/download/ollama-linux-amd64.tgz
       msg_ok "Download Complete"
       
       # basic integrity check -f
