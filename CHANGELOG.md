@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-12-11
 
+### 🆕 New Scripts
+
+  - Speedtest-Tracker ([#9802](https://github.com/community-scripts/ProxmoxVE/pull/9802))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
