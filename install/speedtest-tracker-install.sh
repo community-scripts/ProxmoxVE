@@ -37,7 +37,7 @@ msg_ok "Installed Speedtest CLI"
 
 msg_info "Configuring PHP-FPM runtime directory"
 mkdir -p /etc/systemd/system/php8.4-fpm.service.d/
-cat >/etc/systemd/system/php8.4-fpm.service.d/override.conf <<'EOF'
+cat <<EOF >/etc/systemd/system/php8.4-fpm.service.d/override.conf
 [Service]
 RuntimeDirectory=php
 RuntimeDirectoryMode=0755
