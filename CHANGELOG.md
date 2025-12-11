@@ -24,6 +24,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Sonarr: Fix standard [@tremor021](https://github.com/tremor021) ([#9874](https://github.com/community-scripts/ProxmoxVE/pull/9874))
     - Refactor: Snipe-IT [@tremor021](https://github.com/tremor021) ([#9876](https://github.com/community-scripts/ProxmoxVE/pull/9876))
     - Technitium DNS: Various fixes [@tremor021](https://github.com/tremor021) ([#9863](https://github.com/community-scripts/ProxmoxVE/pull/9863))
     - SonarQube: Fixes [@tremor021](https://github.com/tremor021) ([#9875](https://github.com/community-scripts/ProxmoxVE/pull/9875))
