@@ -5,6 +5,11 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://openwebui.com/
 
+# Co-Author: jobben2025
+# Updated: 2025-12-11 - curl removed silent, adding progress bar; 
+# changing order of stopping service to 2nd step for minimal downtime (first download ollama file); 
+# slow internet/ollama server speeds may cause extremely long downtimes;
+
 APP="Open WebUI"
 var_tags="${var_tags:-ai;interface}"
 var_cpu="${var_cpu:-4}"
@@ -87,23 +92,41 @@ EOF
     exit
   fi
 
-  if [ -x "/usr/bin/ollama" ]; then
-    msg_info "Updating Ollama"
+if [ -x "/usr/bin/ollama" ]; then
+    msg_info "Checking for Ollama Update"
     OLLAMA_VERSION=$(ollama -v | awk '{print $NF}')
     RELEASE=$(curl -s https://api.github.com/repos/ollama/ollama/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4)}')
+    
     if [ "$OLLAMA_VERSION" != "$RELEASE" ]; then
-      msg_info "Stopping Service"
-      systemctl stop ollama
-      msg_ok "Stopped Service"
-      curl -fsSLO -C - https://ollama.com/download/ollama-linux-amd64.tgz
-      rm -rf /usr/lib/ollama
-      rm -rf /usr/bin/ollama
-      tar -C /usr -xzf ollama-linux-amd64.tgz
-      rm -rf ollama-linux-amd64.tgz
-      msg_info "Starting Service"
-      systemctl start ollama
-      msg_info "Started Service"
-      msg_ok "Ollama updated to version $RELEASE"
+      msg_info "Ollama update available: v$OLLAMA_VERSION -> v$RELEASE"
+      
+      msg_info "Downloading Ollama v$RELEASE"
+      # Removing -s (silent) and adding -# (progress bar), visual improvement because it might look like a 'system hang' leading to unnecessary user intervention
+      curl -fsSLO -C - -# https://ollama.com/download/ollama-linux-amd64.tgz
+      msg_ok "Download Complete"
+      
+      # basic integrity check -f
+      if [ -f "ollama-linux-amd64.tgz" ]; then
+
+        msg_info "Stopping Ollama Service"
+        systemctl stop ollama
+        msg_ok "Stopped Service"
+        
+        msg_info "Installing Ollama"
+        rm -rf /usr/lib/ollama
+        rm -rf /usr/bin/ollama
+        tar -C /usr -xzf ollama-linux-amd64.tgz
+        rm -rf ollama-linux-amd64.tgz
+        msg_ok "Installed Ollama"
+
+        msg_info "Starting Ollama Service"
+        systemctl start ollama
+        msg_ok "Started Service"
+        
+        msg_ok "Ollama updated to version $RELEASE"
+      else
+        msg_error "Ollama download failed. Aborting update."
+      fi
     else
       msg_ok "Ollama is already up to date."
     fi
