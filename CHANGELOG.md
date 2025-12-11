@@ -24,6 +24,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Technitium DNS: Various fixes [@tremor021](https://github.com/tremor021) ([#9863](https://github.com/community-scripts/ProxmoxVE/pull/9863))
     - SonarQube: Fixes [@tremor021](https://github.com/tremor021) ([#9875](https://github.com/community-scripts/ProxmoxVE/pull/9875))
     - endurain: remove unneeded deps [@johanngrobe](https://github.com/johanngrobe) ([#9855](https://github.com/community-scripts/ProxmoxVE/pull/9855))
 
