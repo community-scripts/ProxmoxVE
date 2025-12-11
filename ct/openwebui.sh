@@ -96,22 +96,18 @@ if [ -x "/usr/bin/ollama" ]; then
     msg_info "Checking for Ollama Update"
     OLLAMA_VERSION=$(ollama -v | awk '{print $NF}')
     RELEASE=$(curl -s https://api.github.com/repos/ollama/ollama/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4)}')
-    
     if [ "$OLLAMA_VERSION" != "$RELEASE" ]; then
       msg_info "Ollama update available: v$OLLAMA_VERSION -> v$RELEASE"
-      
-      msg_info "Downloading Ollama v$RELEASE"
-      # Removing -s (silent) and adding -# (progress bar), visual improvement because it might look like a 'system hang' leading to unnecessary user intervention
-      curl -fSLO -C - -# https://ollama.com/download/ollama-linux-amd64.tgz
+      msg_info "Downloading Ollama v$RELEASE \n"
+      curl -fS#LO https://ollama.com/download/ollama-linux-amd64.tgz
       msg_ok "Download Complete"
-      
-      # basic integrity check -f
+
       if [ -f "ollama-linux-amd64.tgz" ]; then
 
         msg_info "Stopping Ollama Service"
         systemctl stop ollama
         msg_ok "Stopped Service"
-        
+
         msg_info "Installing Ollama"
         rm -rf /usr/lib/ollama
         rm -rf /usr/bin/ollama
@@ -122,7 +118,7 @@ if [ -x "/usr/bin/ollama" ]; then
         msg_info "Starting Ollama Service"
         systemctl start ollama
         msg_ok "Started Service"
-        
+
         msg_ok "Ollama updated to version $RELEASE"
       else
         msg_error "Ollama download failed. Aborting update."
