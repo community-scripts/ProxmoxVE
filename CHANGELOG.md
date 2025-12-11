@@ -26,6 +26,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - endurain: remove unneeded deps [@johanngrobe](https://github.com/johanngrobe) ([#9855](https://github.com/community-scripts/ProxmoxVE/pull/9855))
 
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - core: skip -features flag when empty [@MickLesk](https://github.com/MickLesk) ([#9871](https://github.com/community-scripts/ProxmoxVE/pull/9871))
+
 ## 2025-12-10
 
 ### 🆕 New Scripts
