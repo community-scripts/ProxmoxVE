@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-12-11
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - endurain: remove unneeded deps [@johanngrobe](https://github.com/johanngrobe) ([#9855](https://github.com/community-scripts/ProxmoxVE/pull/9855))
+
 ## 2025-12-10
 
 ### 🆕 New Scripts
