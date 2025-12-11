@@ -36,6 +36,9 @@ function update_script() {
 
     msg_info "Backing up configurations"
     cp /opt/netvisor/.env /opt/netvisor.env.bak
+    if [[ -f /opt/netvisor/oidc.toml ]]; then
+      cp /opt/netvisor/oidc.toml /opt/netvisor.oidc.toml
+    fi
     msg_ok "Backed up configurations"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "netvisor" "netvisor-io/netvisor" "tarball" "latest" "/opt/netvisor"
@@ -49,7 +52,10 @@ function update_script() {
     TOOLCHAIN="$(grep "channel" /opt/netvisor/backend/rust-toolchain.toml | awk -F\" '{print $2}')"
     RUST_TOOLCHAIN=$TOOLCHAIN setup_rust
 
-    cp /opt/netvisor.env.bak /opt/netvisor/.env
+    mv /opt/netvisor.env.bak /opt/netvisor/.env
+    if [[ -f /opt/netvisor.oidc.toml ]]; then
+      mv /opt/netvisor.oidc.toml /opt/netvisor/oidc.toml
+    fi
     LOCAL_IP="$(hostname -I | awk '{print $1}')"
     if ! grep -q "PUBLIC_URL" /opt/netvisor/.env; then
       sed -i "\|_PATH=|a\NETVISOR_PUBLIC_URL=http://${LOCAL_IP}:60072" /opt/netvisor/.env
