@@ -1047,7 +1047,7 @@ advanced_settings() {
   local _enable_mknod="${var_mknod:-0}"
   local _mount_fs="${var_mount_fs:-}"
   local _protect_ct="${var_protection:-no}"
-  
+
   # Detect host timezone for default (if not set via var_timezone)
   local _host_timezone=""
   if command -v timedatectl >/dev/null 2>&1; then
@@ -2630,9 +2630,14 @@ build_container() {
   export DEV_MODE_DRYRUN="${DEV_MODE_DRYRUN:-false}"
 
   # Build PCT_OPTIONS as multi-line string
-  PCT_OPTIONS_STRING="  -features $FEATURES
-  -hostname $HN
+  PCT_OPTIONS_STRING="  -hostname $HN
   -tags $TAGS"
+
+  # Only add -features if FEATURES is not empty
+  if [ -n "$FEATURES" ]; then
+    PCT_OPTIONS_STRING="  -features $FEATURES
+$PCT_OPTIONS_STRING"
+  fi
 
   # Add storage if specified
   if [ -n "$SD" ]; then
