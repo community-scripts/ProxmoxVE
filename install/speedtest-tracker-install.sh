@@ -108,7 +108,6 @@ WorkingDirectory=/opt/speedtest-tracker
 [Install]
 WantedBy=multi-user.target
 EOF
-
 systemctl enable -q --now speedtest-tracker
 msg_ok "Created Service"
 
