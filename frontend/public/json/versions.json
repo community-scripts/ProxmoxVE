@@ -1,8 +1,73 @@
 [
   {
+    "name": "joaovitoriasilva/endurain",
+    "version": "v0.16.1",
+    "date": "2025-12-11T10:55:29Z"
+  },
+  {
+    "name": "pommee/goaway",
+    "version": "v0.62.24",
+    "date": "2025-12-11T09:54:59Z"
+  },
+  {
+    "name": "zabbix/zabbix",
+    "version": "7.0.22rc2",
+    "date": "2025-12-11T08:28:48Z"
+  },
+  {
+    "name": "meilisearch/meilisearch",
+    "version": "prototype-v1.30.0-network-topology.0",
+    "date": "2025-12-11T08:10:17Z"
+  },
+  {
+    "name": "linkwarden/linkwarden",
+    "version": "v2.13.2",
+    "date": "2025-12-11T06:31:24Z"
+  },
+  {
+    "name": "moghtech/komodo",
+    "version": "v1.19.5",
+    "date": "2025-09-27T20:59:46Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.436",
+    "date": "2025-12-11T05:57:30Z"
+  },
+  {
+    "name": "TwiN/gatus",
+    "version": "v5.33.1",
+    "date": "2025-12-11T01:59:13Z"
+  },
+  {
+    "name": "netvisor-io/netvisor",
+    "version": "v0.11.6",
+    "date": "2025-12-11T00:42:08Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5",
+    "date": "2025-12-11T00:27:04Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.4.7",
+    "date": "2025-12-01T08:14:11Z"
+  },
+  {
     "name": "WGDashboard/WGDashboard",
     "version": "v4.3.0.3",
     "date": "2025-12-10T23:05:31Z"
+  },
+  {
+    "name": "metabase/metabase",
+    "version": "v0.57.x",
+    "date": "2025-12-10T22:36:29Z"
   },
   {
     "name": "chrisbenincasa/tunarr",
@@ -16,13 +81,8 @@
   },
   {
     "name": "ollama/ollama",
-    "version": "v0.13.3-rc1",
-    "date": "2025-12-10T20:59:27Z"
-  },
-  {
-    "name": "metabase/metabase",
-    "version": "v0.56.x",
-    "date": "2025-12-10T20:09:24Z"
+    "version": "v0.13.2-rc2",
+    "date": "2025-12-06T00:10:33Z"
   },
   {
     "name": "BerriAI/litellm",
@@ -33,11 +93,6 @@
     "name": "gethomepage/homepage",
     "version": "v1.8.0",
     "date": "2025-12-10T16:44:33Z"
-  },
-  {
-    "name": "netvisor-io/netvisor",
-    "version": "v0.11.6",
-    "date": "2025-12-10T16:40:51Z"
   },
   {
     "name": "n8n-io/n8n",
@@ -105,11 +160,6 @@
     "date": "2025-12-06T07:36:26Z"
   },
   {
-    "name": "zabbix/zabbix",
-    "version": "7.2.15rc1",
-    "date": "2025-12-10T10:20:02Z"
-  },
-  {
     "name": "mattermost/mattermost",
     "version": "v10.11.8",
     "date": "2025-11-21T17:06:07Z"
@@ -125,11 +175,6 @@
     "date": "2025-09-20T12:12:33Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.429",
-    "date": "2025-12-10T05:56:09Z"
-  },
-  {
     "name": "kyantech/Palmr",
     "version": "v3.3.2-beta",
     "date": "2025-12-10T05:42:43Z"
@@ -143,16 +188,6 @@
     "name": "miniflux/v2",
     "version": "2.2.15",
     "date": "2025-12-10T01:52:14Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.5",
-    "date": "2025-12-10T00:27:04Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
   },
   {
     "name": "comfyanonymous/ComfyUI",
@@ -225,11 +260,6 @@
     "date": "2025-12-09T14:30:23Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.4.7",
-    "date": "2025-12-01T08:14:11Z"
-  },
-  {
     "name": "home-assistant/operating-system",
     "version": "16.3",
     "date": "2025-11-04T12:28:47Z"
@@ -238,11 +268,6 @@
     "name": "LimeSurvey/LimeSurvey",
     "version": "6.16.1+251125",
     "date": "2025-12-09T12:27:31Z"
-  },
-  {
-    "name": "joaovitoriasilva/endurain",
-    "version": "v0.16.0",
-    "date": "2025-12-09T12:26:46Z"
   },
   {
     "name": "Paymenter/Paymenter",
@@ -295,11 +320,6 @@
     "date": "2025-12-08T20:36:16Z"
   },
   {
-    "name": "pommee/goaway",
-    "version": "v0.62.23",
-    "date": "2025-12-08T20:30:54Z"
-  },
-  {
     "name": "TuroYT/snowshare",
     "version": "v1.1.2",
     "date": "2025-12-08T20:29:51Z"
@@ -328,11 +348,6 @@
     "name": "ventoy/Ventoy",
     "version": "v1.1.08",
     "date": "2025-12-08T10:13:51Z"
-  },
-  {
-    "name": "meilisearch/meilisearch",
-    "version": "latest",
-    "date": "2025-12-08T09:36:54Z"
   },
   {
     "name": "firefly-iii/firefly-iii",
@@ -526,8 +541,8 @@
   },
   {
     "name": "bunkerity/bunkerweb",
-    "version": "testing",
-    "date": "2025-12-04T08:39:16Z"
+    "version": "v1.6.6",
+    "date": "2025-11-24T15:30:21Z"
   },
   {
     "name": "gtsteffaniak/filebrowser",
@@ -895,11 +910,6 @@
     "date": "2025-11-22T12:54:08Z"
   },
   {
-    "name": "TwiN/gatus",
-    "version": "v5.33.0",
-    "date": "2025-11-21T22:54:49Z"
-  },
-  {
     "name": "Bubka/2FAuth",
     "version": "v5.6.1",
     "date": "2025-11-21T16:51:21Z"
@@ -1095,11 +1105,6 @@
     "date": "2025-11-12T10:44:24Z"
   },
   {
-    "name": "moghtech/komodo",
-    "version": "v1.19.5",
-    "date": "2025-09-27T20:59:46Z"
-  },
-  {
     "name": "CrazyWolf13/web-check",
     "version": "1.1.0",
     "date": "2025-11-11T14:30:28Z"
@@ -1278,11 +1283,6 @@
     "name": "minio/minio",
     "version": "RELEASE.2025-10-15T17-29-55Z",
     "date": "2025-10-16T19:33:51Z"
-  },
-  {
-    "name": "linkwarden/linkwarden",
-    "version": "v2.13.1",
-    "date": "2025-10-15T13:29:37Z"
   },
   {
     "name": "rogerfar/rdt-client",
