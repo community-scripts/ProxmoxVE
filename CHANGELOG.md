@@ -20,6 +20,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - dokploy: require unprivileged LXC environment [@MickLesk](https://github.com/MickLesk) ([#9891](https://github.com/community-scripts/ProxmoxVE/pull/9891))
     - Update NetVisor repo information [@vhsdream](https://github.com/vhsdream) ([#9864](https://github.com/community-scripts/ProxmoxVE/pull/9864))
 
   - #### 🔧 Refactor
