@@ -90,8 +90,7 @@ cd /opt/wallabag
 $STD php bin/console wallabag:install --env=prod --no-interaction
 $STD php bin/console cache:clear --env=prod
 chown -R www-data:www-data /opt/wallabag
-chmod -R 755 /opt/wallabag/var
-chmod -R 755 /opt/wallabag/web/assets
+chmod -R 755 /opt/wallabag/{var,web/assets}
 msg_ok "Installed Wallabag"
 
 msg_info "Configuring Nginx"
