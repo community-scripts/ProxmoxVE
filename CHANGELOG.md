@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-12-12
 
+### 🆕 New Scripts
+
+  - InvoiceNinja ([#9905](https://github.com/community-scripts/ProxmoxVE/pull/9905))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
