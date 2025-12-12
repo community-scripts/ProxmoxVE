@@ -1,23 +1,73 @@
 [
   {
+    "name": "metabase/metabase",
+    "version": "v0.57.6",
+    "date": "2025-12-11T23:31:19Z"
+  },
+  {
+    "name": "karakeep-app/karakeep",
+    "version": "v0.29.2",
+    "date": "2025-12-11T23:12:06Z"
+  },
+  {
+    "name": "WGDashboard/WGDashboard",
+    "version": "v4.3.0.3",
+    "date": "2025-12-11T23:03:52Z"
+  },
+  {
+    "name": "motioneye-project/motioneye",
+    "version": "0.43.1",
+    "date": "2025-12-11T22:45:52Z"
+  },
+  {
+    "name": "coollabsio/coolify",
+    "version": "v4.0.0-beta.454",
+    "date": "2025-12-11T20:37:05Z"
+  },
+  {
+    "name": "chrisbenincasa/tunarr",
+    "version": "v0.23.0-alpha.35",
+    "date": "2025-12-11T18:20:45Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.30.22",
+    "date": "2025-12-11T18:02:06Z"
+  },
+  {
+    "name": "meilisearch/meilisearch",
+    "version": "prototype-v1.30.0-network-topology.2",
+    "date": "2025-12-11T16:47:51Z"
+  },
+  {
+    "name": "chrisvel/tududi",
+    "version": "v0.87",
+    "date": "2025-12-06T07:36:26Z"
+  },
+  {
     "name": "joaovitoriasilva/endurain",
-    "version": "v0.16.1",
-    "date": "2025-12-11T10:55:29Z"
+    "version": "v0.16.2",
+    "date": "2025-12-11T15:16:01Z"
+  },
+  {
+    "name": "alam00000/bentopdf",
+    "version": "v1.11.1",
+    "date": "2025-12-11T14:12:20Z"
+  },
+  {
+    "name": "Stirling-Tools/Stirling-PDF",
+    "version": "v2.1.3",
+    "date": "2025-12-11T13:31:56Z"
+  },
+  {
+    "name": "zabbix/zabbix",
+    "version": "7.4.6rc1",
+    "date": "2025-12-11T12:01:51Z"
   },
   {
     "name": "pommee/goaway",
     "version": "v0.62.24",
     "date": "2025-12-11T09:54:59Z"
-  },
-  {
-    "name": "zabbix/zabbix",
-    "version": "7.0.22rc2",
-    "date": "2025-12-11T08:28:48Z"
-  },
-  {
-    "name": "meilisearch/meilisearch",
-    "version": "prototype-v1.30.0-network-topology.0",
-    "date": "2025-12-11T08:10:17Z"
   },
   {
     "name": "linkwarden/linkwarden",
@@ -58,21 +108,6 @@
     "name": "keycloak/keycloak",
     "version": "26.4.7",
     "date": "2025-12-01T08:14:11Z"
-  },
-  {
-    "name": "WGDashboard/WGDashboard",
-    "version": "v4.3.0.3",
-    "date": "2025-12-10T23:05:31Z"
-  },
-  {
-    "name": "metabase/metabase",
-    "version": "v0.57.x",
-    "date": "2025-12-10T22:36:29Z"
-  },
-  {
-    "name": "chrisbenincasa/tunarr",
-    "version": "v0.23.0-alpha.32",
-    "date": "2025-12-10T21:26:24Z"
   },
   {
     "name": "tailscale/tailscale",
@@ -140,11 +175,6 @@
     "date": "2025-12-10T12:25:19Z"
   },
   {
-    "name": "Stirling-Tools/Stirling-PDF",
-    "version": "v2.1.2",
-    "date": "2025-12-10T11:46:48Z"
-  },
-  {
     "name": "cockpit-project/cockpit",
     "version": "353",
     "date": "2025-12-10T10:55:50Z"
@@ -153,11 +183,6 @@
     "name": "theonedev/onedev",
     "version": "v13.1.4",
     "date": "2025-12-10T10:24:13Z"
-  },
-  {
-    "name": "chrisvel/tududi",
-    "version": "v0.87",
-    "date": "2025-12-06T07:36:26Z"
   },
   {
     "name": "mattermost/mattermost",
@@ -325,11 +350,6 @@
     "date": "2025-12-08T20:29:51Z"
   },
   {
-    "name": "coollabsio/coolify",
-    "version": "v4.0.0-beta.453",
-    "date": "2025-12-08T20:23:48Z"
-  },
-  {
     "name": "homarr-labs/homarr",
     "version": "v1.45.3",
     "date": "2025-12-08T16:11:16Z"
@@ -490,11 +510,6 @@
     "date": "2025-12-05T09:58:17Z"
   },
   {
-    "name": "alam00000/bentopdf",
-    "version": "v1.10.5",
-    "date": "2025-12-05T09:28:50Z"
-  },
-  {
     "name": "transmission/transmission",
     "version": "4.0.1-beta.1",
     "date": "2024-12-13T00:16:24Z"
@@ -510,14 +525,9 @@
     "date": "2025-08-23T03:10:31Z"
   },
   {
-    "name": "msgbyte/tianji",
-    "version": "v1.30.20",
-    "date": "2025-12-04T18:17:47Z"
-  },
-  {
     "name": "wazuh/wazuh",
-    "version": "coverity-w49-4.14.2",
-    "date": "2025-12-02T14:01:48Z"
+    "version": "coverity-w50-4.14.2",
+    "date": "2025-12-04T15:06:55Z"
   },
   {
     "name": "crowdsecurity/crowdsec",
@@ -563,11 +573,6 @@
     "name": "actualbudget/actual",
     "version": "v25.12.0",
     "date": "2025-12-03T17:45:09Z"
-  },
-  {
-    "name": "karakeep-app/karakeep",
-    "version": "v0.29.1",
-    "date": "2025-12-03T16:56:18Z"
   },
   {
     "name": "Graylog2/graylog2-server",
@@ -1193,11 +1198,6 @@
     "name": "clusterzx/paperless-ai",
     "version": "v3.0.9",
     "date": "2025-11-04T07:28:45Z"
-  },
-  {
-    "name": "motioneye-project/motioneye",
-    "version": "0.42.1",
-    "date": "2020-06-07T07:27:04Z"
   },
   {
     "name": "wanetty/upgopher",
