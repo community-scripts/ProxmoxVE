@@ -1,13 +1,83 @@
 [
   {
+    "name": "BerriAI/litellm",
+    "version": "v1.80.9.dev6",
+    "date": "2025-12-12T11:00:12Z"
+  },
+  {
+    "name": "opencloud-eu/opencloud",
+    "version": "4.0.1-rc.1",
+    "date": "2025-12-12T10:52:28Z"
+  },
+  {
+    "name": "zitadel/zitadel",
+    "version": "v4.7.4",
+    "date": "2025-12-12T10:25:19Z"
+  },
+  {
+    "name": "netvisor-io/netvisor",
+    "version": "v0.11.7",
+    "date": "2025-12-12T09:22:44Z"
+  },
+  {
+    "name": "karakeep-app/karakeep",
+    "version": "v0.29.3",
+    "date": "2025-12-12T09:14:41Z"
+  },
+  {
+    "name": "grokability/snipe-it",
+    "version": "v8.3.7",
+    "date": "2025-12-12T09:13:40Z"
+  },
+  {
+    "name": "passbolt/passbolt_api",
+    "version": "v5.8.0-test.1",
+    "date": "2025-12-12T06:53:05Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.441",
+    "date": "2025-12-12T05:55:23Z"
+  },
+  {
+    "name": "coder/code-server",
+    "version": "v4.106.3",
+    "date": "2025-12-01T22:06:12Z"
+  },
+  {
+    "name": "theonedev/onedev",
+    "version": "v13.1.5",
+    "date": "2025-12-12T03:30:50Z"
+  },
+  {
+    "name": "umami-software/umami",
+    "version": "v3.0.3",
+    "date": "2025-12-12T02:39:27Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5",
+    "date": "2025-12-12T00:27:07Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.13.3-rc1",
+    "date": "2025-12-10T20:59:27Z"
+  },
+  {
     "name": "metabase/metabase",
     "version": "v0.57.6",
     "date": "2025-12-11T23:31:19Z"
   },
   {
-    "name": "karakeep-app/karakeep",
-    "version": "v0.29.2",
-    "date": "2025-12-11T23:12:06Z"
+    "name": "fosrl/pangolin",
+    "version": "1.13.0",
+    "date": "2025-12-11T23:19:41Z"
   },
   {
     "name": "WGDashboard/WGDashboard",
@@ -50,6 +120,11 @@
     "date": "2025-12-11T15:16:01Z"
   },
   {
+    "name": "keycloak/keycloak",
+    "version": "26.4.7",
+    "date": "2025-12-01T08:14:11Z"
+  },
+  {
     "name": "alam00000/bentopdf",
     "version": "v1.11.1",
     "date": "2025-12-11T14:12:20Z"
@@ -80,49 +155,14 @@
     "date": "2025-09-27T20:59:46Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.436",
-    "date": "2025-12-11T05:57:30Z"
-  },
-  {
     "name": "TwiN/gatus",
     "version": "v5.33.1",
     "date": "2025-12-11T01:59:13Z"
   },
   {
-    "name": "netvisor-io/netvisor",
-    "version": "v0.11.6",
-    "date": "2025-12-11T00:42:08Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.5",
-    "date": "2025-12-11T00:27:04Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.4.7",
-    "date": "2025-12-01T08:14:11Z"
-  },
-  {
     "name": "tailscale/tailscale",
     "version": "v1.92.2",
     "date": "2025-12-10T21:20:31Z"
-  },
-  {
-    "name": "ollama/ollama",
-    "version": "v0.13.2-rc2",
-    "date": "2025-12-06T00:10:33Z"
-  },
-  {
-    "name": "BerriAI/litellm",
-    "version": "v1.80.9.dev5",
-    "date": "2025-12-10T16:52:35Z"
   },
   {
     "name": "gethomepage/homepage",
@@ -138,11 +178,6 @@
     "name": "jenkinsci/jenkins",
     "version": "jenkins-2.541",
     "date": "2025-12-10T15:57:13Z"
-  },
-  {
-    "name": "zitadel/zitadel",
-    "version": "v4.7.2",
-    "date": "2025-12-10T12:52:31Z"
   },
   {
     "name": "prometheus/alertmanager",
@@ -178,11 +213,6 @@
     "name": "cockpit-project/cockpit",
     "version": "353",
     "date": "2025-12-10T10:55:50Z"
-  },
-  {
-    "name": "theonedev/onedev",
-    "version": "v13.1.4",
-    "date": "2025-12-10T10:24:13Z"
   },
   {
     "name": "mattermost/mattermost",
@@ -330,11 +360,6 @@
     "date": "2025-12-08T21:36:42Z"
   },
   {
-    "name": "fosrl/pangolin",
-    "version": "1.13.0-rc.0",
-    "date": "2025-12-08T21:17:44Z"
-  },
-  {
     "name": "hansmi/prometheus-paperless-exporter",
     "version": "v0.0.9",
     "date": "2025-12-08T20:37:45Z"
@@ -408,11 +433,6 @@
     "name": "ghostfolio/ghostfolio",
     "version": "2.222.0",
     "date": "2025-12-07T09:09:47Z"
-  },
-  {
-    "name": "umami-software/umami",
-    "version": "v2.20.1",
-    "date": "2025-12-07T01:14:23Z"
   },
   {
     "name": "sysadminsmedia/homebox",
@@ -675,11 +695,6 @@
     "date": "2025-12-01T22:45:34Z"
   },
   {
-    "name": "coder/code-server",
-    "version": "v4.106.3",
-    "date": "2025-12-01T22:06:12Z"
-  },
-  {
     "name": "C4illin/ConvertX",
     "version": "v0.16.0",
     "date": "2025-12-01T21:35:19Z"
@@ -708,11 +723,6 @@
     "name": "OctoPrint/OctoPrint",
     "version": "1.11.5",
     "date": "2025-12-01T12:58:46Z"
-  },
-  {
-    "name": "opencloud-eu/opencloud",
-    "version": "v4.0.0",
-    "date": "2025-12-01T09:33:08Z"
   },
   {
     "name": "photoprism/photoprism",
@@ -870,11 +880,6 @@
     "date": "2025-11-24T19:40:27Z"
   },
   {
-    "name": "grokability/snipe-it",
-    "version": "v8.3.6",
-    "date": "2025-11-24T13:02:52Z"
-  },
-  {
     "name": "silverbulletmd/silverbullet",
     "version": "2.3.0",
     "date": "2025-11-24T09:48:32Z"
@@ -1028,11 +1033,6 @@
     "name": "0xERR0R/blocky",
     "version": "v0.28.2",
     "date": "2025-11-18T05:51:46Z"
-  },
-  {
-    "name": "passbolt/passbolt_api",
-    "version": "v5.7.2",
-    "date": "2025-11-17T15:17:55Z"
   },
   {
     "name": "librenms/librenms",
