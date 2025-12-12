@@ -50,8 +50,7 @@ function update_script() {
     $STD php bin/console cache:clear --env=prod
     $STD php bin/console doctrine:migrations:migrate --env=prod --no-interaction
     chown -R www-data:www-data /opt/wallabag
-    chmod -R 755 /opt/wallabag/var
-    chmod -R 755 /opt/wallabag/web/assets
+    chmod -R 755 /opt/wallabag/{var,web/assets}
     msg_ok "Ran Migrations"
 
     msg_info "Starting Services"
