@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-12-12
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Pangolin: URL fixes [@tremor021](https://github.com/tremor021) ([#9902](https://github.com/community-scripts/ProxmoxVE/pull/9902))
+
 ## 2025-12-11
 
 ### 🆕 New Scripts
