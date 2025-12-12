@@ -14,7 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - InvoiceNinja ([#9905](https://github.com/community-scripts/ProxmoxVE/pull/9905))
+  - Wallabag ([#9904](https://github.com/community-scripts/ProxmoxVE/pull/9904))
+- InvoiceNinja ([#9905](https://github.com/community-scripts/ProxmoxVE/pull/9905))
 
 ### 🚀 Updated Scripts
 
