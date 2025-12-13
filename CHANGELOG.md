@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Tunarr: Switch to prebuild archive [@tremor021](https://github.com/tremor021) ([#9920](https://github.com/community-scripts/ProxmoxVE/pull/9920))
     - [HOTFIX] NetVisor: backup OIDC config before update [@vhsdream](https://github.com/vhsdream) ([#9895](https://github.com/community-scripts/ProxmoxVE/pull/9895))
     - Update OPNsense download URL to version 14.3 [@jaredcarling42-design](https://github.com/jaredcarling42-design) ([#9899](https://github.com/community-scripts/ProxmoxVE/pull/9899))
 
