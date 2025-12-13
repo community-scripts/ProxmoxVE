@@ -11,7 +11,7 @@
     "interface_port": 8080,
     "documentation": "https://github.com/bakito/adguardhome-sync",
     "website": "https://github.com/bakito/adguardhome-sync",
-    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/adguardhome-sync.webp",
+    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/adguardhome-sync.webp",
     "config_path": "/opt/adguardhome-sync/adguardhome-sync.yaml",
     "description": "Synchronize AdGuardHome config to one or multiple replica instances. Syncs General Settings, Filters, Rewrites, Services, Clients, DNS Config, DHCP Config and Theme.",
     "install_methods": [
