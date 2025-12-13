@@ -13,16 +13,16 @@ setting_up_container
 network_check
 update_os
 
-NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
+NODE_VERSION="22" NODE_MODULE="pnpm@latest" setup_nodejs
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="umamidb" PG_DB_USER="umami" setup_postgresql_db
 fetch_and_deploy_gh_release "umami" "umami-software/umami" "tarball"
 
 msg_info "Configuring Umami"
 cd /opt/umami
-$STD yarn install
+$STD pnpm install
 echo -e "DATABASE_URL=postgresql://$PG_DB_USER:$PG_DB_PASS@localhost:5432/$PG_DB_NAME" >>/opt/umami/.env
-$STD yarn run build
+$STD pnpm run build
 msg_ok "Configured Umami"
 
 msg_info "Creating Service"
@@ -35,7 +35,7 @@ Type=simple
 Restart=always
 User=root
 WorkingDirectory=/opt/umami
-ExecStart=/usr/bin/yarn run start
+ExecStart=/usr/bin/pnpm run start
 
 [Install]
 WantedBy=multi-user.target
