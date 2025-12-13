@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-12-13
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Update OPNsense download URL to version 14.3 [@jaredcarling42-design](https://github.com/jaredcarling42-design) ([#9899](https://github.com/community-scripts/ProxmoxVE/pull/9899))
+
 ## 2025-12-12
 
 ### 🆕 New Scripts
