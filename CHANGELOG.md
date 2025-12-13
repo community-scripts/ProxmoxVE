@@ -24,6 +24,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Add optional TLS setup to Valkey installer [@pshankinclarke](https://github.com/pshankinclarke) ([#9789](https://github.com/community-scripts/ProxmoxVE/pull/9789))
 
+  - #### 🔧 Refactor
+
+    - Refactor: Spoolman [@tremor021](https://github.com/tremor021) ([#9873](https://github.com/community-scripts/ProxmoxVE/pull/9873))
+
 ## 2025-12-12
 
 ### 🆕 New Scripts
