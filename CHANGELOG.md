@@ -32,6 +32,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - AdGuardHome-Sync ([#9783](https://github.com/community-scripts/ProxmoxVE/pull/9783))
 
+### ❔ Uncategorized
+
+  - Change category ID from 6 to 3 in coolify.json and dokploy.json [@Bensonheimer992](https://github.com/Bensonheimer992) ([#9930](https://github.com/community-scripts/ProxmoxVE/pull/9930))
+
 ## 2025-12-12
 
 ### 🆕 New Scripts
