@@ -28,6 +28,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Refactor: Spoolman [@tremor021](https://github.com/tremor021) ([#9873](https://github.com/community-scripts/ProxmoxVE/pull/9873))
 
+### 🧰 Tools
+
+  - AdGuardHome-Sync ([#9783](https://github.com/community-scripts/ProxmoxVE/pull/9783))
+
 ## 2025-12-12
 
 ### 🆕 New Scripts
