@@ -1,23 +1,73 @@
 [
   {
+    "name": "fuma-nama/fumadocs",
+    "version": "create-fumadocs-app@16.0.25",
+    "date": "2025-12-13T10:22:03Z"
+  },
+  {
+    "name": "chrisvel/tududi",
+    "version": "v0.88.0",
+    "date": "2025-12-13T09:36:24Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.13.4-rc0",
+    "date": "2025-12-13T00:29:01Z"
+  },
+  {
+    "name": "netvisor-io/netvisor",
+    "version": "v0.11.8",
+    "date": "2025-12-13T08:38:03Z"
+  },
+  {
+    "name": "Dokploy/dokploy",
+    "version": "v0.26.2",
+    "date": "2025-12-13T07:48:09Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.445",
+    "date": "2025-12-13T05:56:19Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.4.9",
+    "date": "2025-11-28T20:36:20Z"
+  },
+  {
+    "name": "release-argus/Argus",
+    "version": "0.28.0",
+    "date": "2025-12-13T04:44:37Z"
+  },
+  {
+    "name": "mealie-recipes/mealie",
+    "version": "v3.7.0",
+    "date": "2025-12-13T01:20:58Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5",
+    "date": "2025-12-13T00:27:05Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
     "name": "paperless-ngx/paperless-ngx",
     "version": "v2.20.2",
     "date": "2025-12-12T23:47:48Z"
   },
   {
-    "name": "netvisor-io/netvisor",
-    "version": "v0.11.8",
-    "date": "2025-12-12T22:41:59Z"
+    "name": "nickheyer/discopanel",
+    "version": "v1.0.13-dev",
+    "date": "2025-12-12T23:45:54Z"
   },
   {
     "name": "fccview/jotty",
     "version": "1.13.1",
     "date": "2025-12-12T21:34:22Z"
-  },
-  {
-    "name": "nickheyer/discopanel",
-    "version": "v1.0.13-dev",
-    "date": "2025-12-12T21:12:14Z"
   },
   {
     "name": "chrisbenincasa/tunarr",
@@ -68,6 +118,11 @@
     "name": "esphome/esphome",
     "version": "2025.11.5",
     "date": "2025-12-09T17:54:33Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.4.7",
+    "date": "2025-12-01T08:14:11Z"
   },
   {
     "name": "node-red/node-red",
@@ -140,11 +195,6 @@
     "date": "2025-12-12T09:13:40Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.441",
-    "date": "2025-12-12T05:55:23Z"
-  },
-  {
     "name": "coder/code-server",
     "version": "v4.106.3",
     "date": "2025-12-01T22:06:12Z"
@@ -158,21 +208,6 @@
     "name": "umami-software/umami",
     "version": "v3.0.3",
     "date": "2025-12-12T02:39:27Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.5",
-    "date": "2025-12-12T00:27:07Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
-  },
-  {
-    "name": "ollama/ollama",
-    "version": "v0.13.3-rc1",
-    "date": "2025-12-10T20:59:27Z"
   },
   {
     "name": "fosrl/pangolin",
@@ -205,19 +240,9 @@
     "date": "2025-12-11T16:47:51Z"
   },
   {
-    "name": "chrisvel/tududi",
-    "version": "v0.87",
-    "date": "2025-12-06T07:36:26Z"
-  },
-  {
     "name": "endurain-project/endurain",
     "version": "v0.16.2",
     "date": "2025-12-11T15:16:01Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.4.7",
-    "date": "2025-12-01T08:14:11Z"
   },
   {
     "name": "alam00000/bentopdf",
@@ -285,11 +310,6 @@
     "date": "2025-10-09T10:27:01Z"
   },
   {
-    "name": "fuma-nama/fumadocs",
-    "version": "fumadocs-openapi@10.1.2",
-    "date": "2025-12-10T13:59:19Z"
-  },
-  {
     "name": "evcc-io/evcc",
     "version": "0.211.1",
     "date": "2025-12-10T12:25:19Z"
@@ -298,11 +318,6 @@
     "name": "cockpit-project/cockpit",
     "version": "353",
     "date": "2025-12-10T10:55:50Z"
-  },
-  {
-    "name": "Dokploy/dokploy",
-    "version": "v0.26.1",
-    "date": "2025-12-10T06:53:36Z"
   },
   {
     "name": "morpheus65535/bazarr",
@@ -375,11 +390,6 @@
     "date": "2025-12-09T14:41:10Z"
   },
   {
-    "name": "release-argus/Argus",
-    "version": "0.27.0",
-    "date": "2025-12-09T14:33:38Z"
-  },
-  {
     "name": "wizarrrr/wizarr",
     "version": "v2025.12.0",
     "date": "2025-12-09T14:30:23Z"
@@ -438,11 +448,6 @@
     "name": "wavelog/wavelog",
     "version": "2.2.1",
     "date": "2025-12-08T12:01:34Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.4.9",
-    "date": "2025-11-28T20:36:20Z"
   },
   {
     "name": "maxdorninger/MediaManager",
@@ -638,11 +643,6 @@
     "name": "henrygd/beszel",
     "version": "v0.17.0",
     "date": "2025-12-03T00:15:51Z"
-  },
-  {
-    "name": "mealie-recipes/mealie",
-    "version": "v3.6.1",
-    "date": "2025-12-02T23:08:41Z"
   },
   {
     "name": "apache/tomcat",
