@@ -44,7 +44,7 @@ function update_script() {
         sed -i 's|^ExecStart=.*|ExecStart=/opt/homarr/run.sh|' /etc/systemd/system/homarr.service
         sed -i 's|^EnvironmentFile=.*|EnvironmentFile=-/opt/homarr.env|' /etc/systemd/system/homarr.service
         chown -R redis:redis /appdata/redis
-        chmod 755 /appdata/redis
+        chmod 744 /appdata/redis
         mkdir -p /etc/systemd/system/redis-server.service.d/
         cat <<EOF >/etc/systemd/system/redis-server.service.d/override.conf
 [Service]
