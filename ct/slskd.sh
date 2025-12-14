@@ -61,15 +61,12 @@ function update_script() {
   $STD pip install -r requirements.txt
   mv /opt/config.ini.bak /opt/soularr/config.ini
   mv /opt/run.sh.bak /opt/soularr/run.sh
+  rm -rf /tmp/main.zip
   msg_ok "Updated soularr"
 
   msg_info "Starting soularr timer"
   systemctl start soularr.timer
   msg_ok "Started soularr timer"
-
-  msg_info "Cleaning Up"
-  rm -rf /tmp/main.zip
-  msg_ok "Cleanup Completed"
   exit
 }
 

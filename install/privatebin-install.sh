@@ -15,8 +15,8 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt install -y \
-  nginx \
-  openssl
+    nginx \
+    openssl
 msg_ok "Installed Dependencies"
 
 PHP_VERSION="8.2" PHP_MODULE="common,fpm" setup_php
@@ -25,9 +25,9 @@ fetch_and_deploy_gh_release "privatebin" "PrivateBin/PrivateBin" "tarball"
 msg_info "Generating Universal SSL Certificate"
 mkdir -p /etc/ssl/privatebin
 $STD openssl req -x509 -nodes -days 3650 -newkey rsa:2048 \
-  -keyout /etc/ssl/privatebin/key.pem \
-  -out /etc/ssl/privatebin/cert.pem \
-  -subj "/CN=PrivateBin"
+    -keyout /etc/ssl/privatebin/key.pem \
+    -out /etc/ssl/privatebin/cert.pem \
+    -subj "/CN=PrivateBin"
 msg_ok "Certificate Generated"
 
 msg_info "Configuring Environment"
@@ -89,9 +89,4 @@ msg_ok "Nginx Configured"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

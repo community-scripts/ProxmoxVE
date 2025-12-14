@@ -55,7 +55,7 @@ function update_script() {
     cd /opt/tandoor/vue3
     $STD yarn install
     $STD yarn build
-    TANDOOR_VERSION="$(curl -fsSL https://api.github.com/repos/TandoorRecipes/recipes/releases/latest | jq -r .tag_name)"
+    TANDOOR_VERSION=$(get_latest_github_release "TandoorRecipes/recipes")
     cat <<EOF >/opt/tandoor/cookbook/version_info.py
 TANDOOR_VERSION = "$TANDOOR_VERSION"
 TANDOOR_REF = "bare-metal"
@@ -64,16 +64,13 @@ EOF
     cd /opt/tandoor
     $STD /opt/tandoor/.venv/bin/python manage.py migrate
     $STD /opt/tandoor/.venv/bin/python manage.py collectstatic --no-input
-    msg_ok "Updated Trandoor"
+    rm -rf /opt/tandoor.bak
+    msg_ok "Updated Tandoor"
 
     msg_info "Starting Service"
     systemctl start tandoor
     systemctl reload nginx
     msg_ok "Started Service"
-
-    msg_info "Cleaning Up"
-    rm -rf /opt/tandoor.bak
-    msg_ok "Cleanup Completed"
     msg_ok "Updated successfully!"
   fi
   exit

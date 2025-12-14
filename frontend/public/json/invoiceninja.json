@@ -1,0 +1,48 @@
+{
+  "name": "InvoiceNinja",
+  "slug": "invoiceninja",
+  "categories": [
+    3
+  ],
+  "date_created": "2025-12-12",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 8080,
+  "documentation": "https://invoiceninja.github.io/selfhost.html",
+  "config_path": "/opt/invoiceninja/.env",
+  "website": "https://invoiceninja.com/",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/invoice-ninja.webp",
+  "description": "Invoice Ninja is a free, open-source invoicing, quotes, expenses and time-tracking application for freelancers and businesses. Features include recurring invoices, online payments, client portal, and multi-company support.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/invoiceninja.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 8,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "First visit http://IP:8080/setup to complete the initial configuration",
+      "type": "info"
+    },
+    {
+      "text": "Database credentials are stored in ~/invoiceninja.creds",
+      "type": "info"
+    },
+    {
+      "text": "Configure SMTP settings in /opt/invoiceninja/.env for email functionality",
+      "type": "warning"
+    }
+  ]
+}

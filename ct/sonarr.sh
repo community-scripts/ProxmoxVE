@@ -27,6 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
   msg_info "Stopping Service"
   systemctl stop sonarr
   msg_ok "Stopped Service"
@@ -38,6 +39,7 @@ function update_script() {
   mv Sonarr /opt
   rm -rf SonarrV4.tar.gz
   msg_ok "Updated Sonarr"
+
   msg_info "Starting Service"
   systemctl start sonarr
   msg_ok "Started Service"

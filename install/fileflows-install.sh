@@ -59,13 +59,9 @@ curl -fsSL https://fileflows.com/downloads/zip -o "$temp_file"
 $STD unzip -d /opt/fileflows "$temp_file"
 (cd /opt/fileflows/Server && dotnet FileFlows.Server.dll --systemd install --root true)
 systemctl enable -q --now fileflows
+rm -f "$temp_file"
 msg_ok "Setup ${APPLICATION}"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -f "$temp_file"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

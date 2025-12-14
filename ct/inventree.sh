@@ -10,8 +10,8 @@ var_tags="${var_tags:-inventory}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-6}"
-var_os="${var_os:-debian}"
-var_version="${var_version:-13}"
+var_os="${var_os:-ubuntu}"
+var_version="${var_version:-24.04}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -28,10 +28,16 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  msg_info "Updating $APP"
+
+  if ! grep -qE "^ID=(ubuntu)$" /etc/os-release; then
+    msg_error "Unsupported OS. InvenTree requires Ubuntu (20.04/22.04/24.04)."
+    exit
+  fi
+
+  msg_info "Updating InvenTree"
   $STD apt update
   $STD apt install --only-upgrade inventree -y
-  msg_ok "Updated $APP"
+  msg_ok "Updated InvenTree"
   msg_ok "Updated successfully!"
   exit
 }

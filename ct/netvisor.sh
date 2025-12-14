@@ -3,7 +3,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: vhsdream
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://github.com/maynayza/netvisor
+# Source: https://github.com/netvisor-io/netvisor
 
 APP="NetVisor"
 var_tags="${var_tags:-analytics}"
@@ -29,16 +29,19 @@ function update_script() {
     exit
   fi
 
-  if check_for_gh_release "netvisor" "mayanayza/netvisor"; then
+  if check_for_gh_release "netvisor" "netvisor-io/netvisor"; then
     msg_info "Stopping services"
     systemctl stop netvisor-daemon netvisor-server
     msg_ok "Stopped services"
 
     msg_info "Backing up configurations"
     cp /opt/netvisor/.env /opt/netvisor.env.bak
+    if [[ -f /opt/netvisor/oidc.toml ]]; then
+      cp /opt/netvisor/oidc.toml /opt/netvisor.oidc.toml
+    fi
     msg_ok "Backed up configurations"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "netvisor" "mayanayza/netvisor" "tarball" "latest" "/opt/netvisor"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "netvisor" "netvisor-io/netvisor" "tarball" "latest" "/opt/netvisor"
 
     if ! dpkg -l | grep -q "pkg-config"; then
       $STD apt install -y pkg-config
@@ -49,7 +52,10 @@ function update_script() {
     TOOLCHAIN="$(grep "channel" /opt/netvisor/backend/rust-toolchain.toml | awk -F\" '{print $2}')"
     RUST_TOOLCHAIN=$TOOLCHAIN setup_rust
 
-    cp /opt/netvisor.env.bak /opt/netvisor/.env
+    mv /opt/netvisor.env.bak /opt/netvisor/.env
+    if [[ -f /opt/netvisor.oidc.toml ]]; then
+      mv /opt/netvisor.oidc.toml /opt/netvisor/oidc.toml
+    fi
     LOCAL_IP="$(hostname -I | awk '{print $1}')"
     if ! grep -q "PUBLIC_URL" /opt/netvisor/.env; then
       sed -i "\|_PATH=|a\NETVISOR_PUBLIC_URL=http://${LOCAL_IP}:60072" /opt/netvisor/.env
@@ -79,6 +85,9 @@ function update_script() {
       -e 's| --server-port |:|' \
       /etc/systemd/system/netvisor-daemon.service
     sed -i '/^  \"server_target.*$/d' /root/.config/daemon/config.json
+    if ! grep -q "WorkingD" /etc/systemd/system/netvisor-server.service; then
+      sed -i '\|simple$|a\WorkingDirectory=/opt/netvisor/backend' /etc/systemd/system/netvisor-server.service
+    fi
     systemctl daemon-reload
 
     msg_info "Starting services"
@@ -96,3 +105,4 @@ msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:60072${CL}"
+echo -e "${INFO}${YW} Then create your account, and run the 'configure_daemon.sh' script to setup the daemon.${CL}"

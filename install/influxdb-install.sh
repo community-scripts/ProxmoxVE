@@ -16,7 +16,7 @@ update_os
 msg_info "Setting up InfluxDB Repository"
 setup_deb822_repo \
   "influxdata" \
-  "https://repos.influxdata.com/influxdata-archive_compat.key" \
+  "https://repos.influxdata.com/influxdata-archive.key" \
   "https://repos.influxdata.com/$(get_os_info id)" \
   "stable"
 msg_ok "Set up InfluxDB Repository"
@@ -38,6 +38,7 @@ else
   $STD dpkg -i chronograf_1.10.8_amd64.deb
   rm -rf /chronograf_1.10.8_amd64.deb
 fi
+rm /etc/apt/sources.list.d/influxdata.list
 $STD systemctl enable --now influxdb
 msg_ok "Installed InfluxDB"
 

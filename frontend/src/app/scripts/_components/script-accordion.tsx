@@ -123,7 +123,7 @@ export default function ScriptAccordion({
                     className={`flex cursor-pointer items-center justify-between gap-1 px-1 py-1 text-muted-foreground hover:rounded-lg hover:bg-accent/60 hover:dark:bg-accent/20 ${selectedScript === script.slug
                       ? "rounded-lg bg-accent font-semibold dark:bg-accent/30 dark:text-white"
                       : ""
-                    }`}
+                    } ${script.disable ? "opacity-60" : ""}`}
                     onClick={() => {
                       handleSelected(script.slug);
                       setSelectedCategory(category.name);
@@ -143,7 +143,9 @@ export default function ScriptAccordion({
                         alt={script.name}
                         className="mr-1 w-4 h-4 rounded-full"
                       />
-                      <span className="flex items-center gap-2">{script.name}</span>
+                      <span className="flex items-center gap-2">
+                        {script.name}
+                      </span>
                     </div>
                     {formattedBadge(script.type)}
                   </Link>

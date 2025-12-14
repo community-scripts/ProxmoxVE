@@ -24,6 +24,7 @@ After=network.target
 [Service]
 Type=simple
 User=root
+WorkingDirectory=/opt/go2rtc
 ExecStart=/opt/go2rtc/go2rtc_linux_amd64
 
 [Install]
@@ -34,8 +35,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

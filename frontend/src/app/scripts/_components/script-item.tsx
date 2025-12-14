@@ -12,6 +12,7 @@ import { useVersions } from "@/hooks/use-versions";
 import { basePath } from "@/config/site-config";
 import { extractDate } from "@/lib/time";
 
+import DisableDescription from "./script-items/disable-description";
 import { getDisplayValueFromType } from "./script-info-blocks";
 import DefaultPassword from "./script-items/default-password";
 import InstallCommand from "./script-items/install-command";
@@ -146,37 +147,45 @@ export function ScriptItem({ item, setSelectedScript }: ScriptItemProps) {
               <ScriptHeader item={item} />
             </Suspense>
 
-            <Description item={item} />
-            <Alerts item={item} />
+            {item.disable && item.disable_description && (
+              <DisableDescription item={item} />
+            ) }
 
-            <div className="mt-4 rounded-lg border shadow-sm">
-              <div className="flex gap-3 px-4 py-2 bg-accent/25">
-                <h2 className="text-lg font-semibold">
-                  How to
-                  {" "}
-                  {item.type === "pve" ? "use" : item.type === "addon" ? "apply" : "install"}
-                </h2>
-                <Tooltips item={item} />
-              </div>
-              <Separator />
-              <div className="">
-                <InstallCommand item={item} />
-              </div>
-              {item.config_path && (
-                <>
-                  <Separator />
+            {!item.disable && (
+              <>
+                <Description item={item} />
+
+                <Alerts item={item} />
+                <div className="mt-4 rounded-lg border shadow-sm">
                   <div className="flex gap-3 px-4 py-2 bg-accent/25">
-                    <h2 className="text-lg font-semibold">Location of config file</h2>
+                    <h2 className="text-lg font-semibold">
+                      How to
+                      {" "}
+                      {item.type === "pve" ? "use" : item.type === "addon" ? "apply" : "install"}
+                    </h2>
+                    <Tooltips item={item} />
                   </div>
                   <Separator />
                   <div className="">
-                    <ConfigFile configPath={item.config_path} />
+                    <InstallCommand item={item} />
                   </div>
-                </>
-              )}
-            </div>
+                  {item.config_path && (
+                    <>
+                      <Separator />
+                      <div className="flex gap-3 px-4 py-2 bg-accent/25">
+                        <h2 className="text-lg font-semibold">Location of config file</h2>
+                      </div>
+                      <Separator />
+                      <div className="">
+                        <ConfigFile configPath={item.config_path} />
+                      </div>
+                    </>
+                  )}
+                </div>
 
-            <DefaultPassword item={item} />
+                <DefaultPassword item={item} />
+              </>
+            )}
           </div>
         </div>
       </div>

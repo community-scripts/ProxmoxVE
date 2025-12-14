@@ -56,10 +56,6 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start ghostfolio
     msg_ok "Started Service"
-
-    msg_info "Cleaning Up"
-    $STD npm cache clean --force
-    msg_ok "Cleanup Completed"
     msg_ok "Updated successfully!"
   fi
   exit

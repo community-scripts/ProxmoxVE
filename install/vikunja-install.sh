@@ -26,15 +26,10 @@ sed -i 's|^  timezone: .*|  timezone: UTC|' /etc/vikunja/config.yml
 sed -i 's|"./vikunja.db"|"/etc/vikunja/vikunja.db"|' /etc/vikunja/config.yml
 sed -i 's|./files|/etc/vikunja/files|' /etc/vikunja/config.yml
 systemctl start vikunja.service
+rm -rf /opt/vikunja-"$RELEASE"-amd64.deb
 echo "${RELEASE}" >/opt/"${APPLICATION}"_version.txt
 msg_ok "Installed Vikunja"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -rf /opt/vikunja-"$RELEASE"-amd64.deb
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

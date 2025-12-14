@@ -13,6 +13,7 @@ var_disk="${var_disk:-25}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
+var_gpu="${var_gpu:-yes}"
 
 header_info "$APP"
 variables
@@ -33,6 +34,7 @@ function update_script() {
     msg_info "Creating Backup"
     mkdir -p /opt/open-webui-backup
     cp -a /opt/open-webui/backend/data /opt/open-webui-backup/data || true
+    cp -a /opt/open-webui/.env /opt/open-webui-backup/.env || true
     msg_ok "Created Backup"
 
     msg_info "Removing legacy installation"
@@ -48,6 +50,7 @@ function update_script() {
     msg_info "Restoring data"
     mkdir -p /root/.open-webui
     cp -a /opt/open-webui-backup/data/* /root/.open-webui/ || true
+    cp -a /opt/open-webui-backup/.env /root/.env || true
     rm -rf /opt/open-webui-backup || true
     msg_ok "Restored data"
 
@@ -108,7 +111,7 @@ EOF
 
   msg_info "Updating Open WebUI via uv"
   PYTHON_VERSION="3.12" setup_uv
-  $STD uv tool install --python 3.12 open-webui[all]
+  $STD uv tool upgrade --python 3.12 open-webui[all]
   systemctl restart open-webui
   msg_ok "Updated Open WebUI"
   msg_ok "Updated successfully!"

@@ -1,0 +1,40 @@
+{
+  "name": "Endurain",
+  "slug": "endurain",
+  "categories": [
+    24
+  ],
+  "date_created": "2025-12-05",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 8080,
+  "documentation": "https://docs.endurain.com/",
+  "website": "https://github.com/joaovitoriasilva/endurain",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/endurain.webp",
+  "config_path": "/opt/endurain/.env",
+  "description": "Endurain is a self-hosted fitness tracking service designed to give users full control over their data and hosting environment. It's similar to Strava but focused on privacy and customization",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/endurain.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 2048,
+        "hdd": 5,
+        "os": "debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": "admin",
+    "password": "admin"
+  },
+  "notes": [
+    {
+      "text": "When using a reverse proxy, edit `/opt/endurain/frontend/app/dist/env.js`.",
+      "type": "info"
+    }
+  ]
+}

@@ -69,15 +69,15 @@ fi
 
 read -r -p "${TAB3}Expose Docker TCP socket (insecure) ? [n = No, l = Local only (127.0.0.1), a = All interfaces (0.0.0.0)] <n/l/a>: " socket_choice
 case "${socket_choice,,}" in
-  l)
-    socket="tcp://127.0.0.1:2375"
-    ;;
-  a)
-    socket="tcp://0.0.0.0:2375"
-    ;;
-  *)
-    socket=""
-    ;;
+l)
+  socket="tcp://127.0.0.1:2375"
+  ;;
+a)
+  socket="tcp://0.0.0.0:2375"
+  ;;
+*)
+  socket=""
+  ;;
 esac
 
 if [[ -n "$socket" ]]; then
@@ -85,10 +85,10 @@ if [[ -n "$socket" ]]; then
   $STD apt-get install -y jq
 
   tmpfile=$(mktemp)
-  jq --arg sock "$socket" '. + { "hosts": ["unix:///var/run/docker.sock", $sock] }' /etc/docker/daemon.json > "$tmpfile" && mv "$tmpfile" /etc/docker/daemon.json
+  jq --arg sock "$socket" '. + { "hosts": ["unix:///var/run/docker.sock", $sock] }' /etc/docker/daemon.json >"$tmpfile" && mv "$tmpfile" /etc/docker/daemon.json
 
   mkdir -p /etc/systemd/system/docker.service.d
-  cat <<EOF > /etc/systemd/system/docker.service.d/override.conf
+  cat <<EOF >/etc/systemd/system/docker.service.d/override.conf
 [Service]
 ExecStart=
 ExecStart=/usr/bin/dockerd
@@ -107,8 +107,4 @@ fi
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

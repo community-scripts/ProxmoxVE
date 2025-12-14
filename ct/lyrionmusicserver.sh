@@ -38,15 +38,9 @@ function update_script() {
     curl -fsSL -o "$DEB_FILE" "$DEB_URL"
     $STD apt install "$DEB_FILE" -y
     systemctl restart lyrion
+    $STD rm -f "$DEB_FILE"
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated $APP to ${RELEASE}"
-
-    msg_info "Cleaning up"
-    $STD rm -f "$DEB_FILE"
-    $STD apt -y autoremove
-    $STD apt -y autoclean
-    $STD apt -y clean
-    msg_ok "Cleaned"
     msg_ok "Updated successfully!"
   else
     msg_ok "$APP is already up to date (${RELEASE})"

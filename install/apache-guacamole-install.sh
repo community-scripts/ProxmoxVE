@@ -71,6 +71,7 @@ mv ~/mysql-connector-j-9.3.0/mysql-connector-j-9.3.0.jar /etc/guacamole/lib/
 curl -fsSL "https://downloads.apache.org/guacamole/${RELEASE_SERVER}/binary/guacamole-auth-jdbc-${RELEASE_SERVER}.tar.gz" -o "/root/guacamole-auth-jdbc-${RELEASE_SERVER}.tar.gz"
 $STD tar -xf ~/guacamole-auth-jdbc-$RELEASE_SERVER.tar.gz
 mv ~/guacamole-auth-jdbc-$RELEASE_SERVER/mysql/guacamole-auth-jdbc-mysql-$RELEASE_SERVER.jar /etc/guacamole/extensions/
+rm -rf ~/mysql-connector-j-9.3.0{,.tar.gz}
 msg_ok "Setup Apache Guacamole"
 
 msg_info "Setup Database"
@@ -96,6 +97,7 @@ cat *.sql | mariadb -u root ${DB_NAME}
   echo "mysql-password: $DB_PASS"
 
 } >>/etc/guacamole/guacamole.properties
+rm -rf ~/guacamole-auth-jdbc-$RELEASE_SERVER{,.tar.gz}
 msg_ok "Setup Database"
 
 msg_info "Setup Service"
@@ -146,10 +148,4 @@ msg_ok "Setup Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -rf ~/mysql-connector-j-9.3.0{,.tar.gz}
-rm -rf ~/guacamole-auth-jdbc-$RELEASE_SERVER{,.tar.gz}
-$STD apt -y autoremove
-$STD apt -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

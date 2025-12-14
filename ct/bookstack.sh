@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -51,21 +51,18 @@ function update_script() {
     msg_info "Configuring BookStack"
     cd /opt/bookstack
     export COMPOSER_ALLOW_SUPERUSER=1
-    $STD composer install --no-dev
+    $STD /usr/local/bin/composer install --no-dev
     $STD php artisan migrate --force
     chown www-data:www-data -R /opt/bookstack /opt/bookstack/bootstrap/cache /opt/bookstack/public/uploads /opt/bookstack/storage
     chmod -R 755 /opt/bookstack /opt/bookstack/bootstrap/cache /opt/bookstack/public/uploads /opt/bookstack/storage
     chmod -R 775 /opt/bookstack/storage /opt/bookstack/bootstrap/cache /opt/bookstack/public/uploads
     chmod -R 640 /opt/bookstack/.env
+    rm -rf /opt/bookstack-backup
     msg_ok "Configured BookStack"
 
     msg_info "Starting Apache2"
     systemctl start apache2
     msg_ok "Started Apache2"
-
-    msg_info "Cleaning Up"
-    rm -rf /opt/bookstack-backup
-    msg_ok "Cleaned"
     msg_ok "Updated successfully!"
   fi
   exit

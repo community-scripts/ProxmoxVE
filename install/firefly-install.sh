@@ -55,6 +55,7 @@ tar -xzf "DataImporter-v${IMPORTER_RELEASE}.tar.gz" -C /opt/firefly/dataimporter
 cp /opt/firefly/dataimporter/.env.example /opt/firefly/dataimporter/.env
 sed -i "s#FIREFLY_III_URL=#FIREFLY_III_URL=http://${LOCAL_IP}#g" /opt/firefly/dataimporter/.env
 chown -R www-data:www-data /opt/firefly
+rm -rf "/opt/DataImporter-v${IMPORTER_RELEASE}.tar.gz"
 msg_ok "Configured Firefly III"
 
 msg_info "Creating Service"
@@ -95,9 +96,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -rf "/opt/DataImporter-v${IMPORTER_RELEASE}.tar.gz"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

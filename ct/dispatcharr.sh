@@ -87,6 +87,11 @@ function update_script() {
       mv /tmp/start-daphne.sh.backup /opt/dispatcharr/start-daphne.sh
     fi
 
+    if ! grep -q "DJANGO_SECRET_KEY" /opt/dispatcharr/.env; then
+        DJANGO_SECRET=$(openssl rand -base64 48 | tr -dc 'a-zA-Z0-9' | cut -c1-50)
+        echo "DJANGO_SECRET_KEY=$DJANGO_SECRET" >> /opt/dispatcharr/.env
+    fi
+
     cd /opt/dispatcharr
     rm -rf .venv
     $STD uv venv
@@ -109,6 +114,7 @@ function update_script() {
     fi
     $STD uv run python manage.py migrate --noinput
     $STD uv run python manage.py collectstatic --noinput
+    rm -f /tmp/dispatcharr_db_*.sql
     msg_ok "Migrations Complete"
 
     msg_info "Starting Services"
@@ -117,10 +123,6 @@ function update_script() {
     systemctl start dispatcharr-celerybeat
     systemctl start dispatcharr-daphne
     msg_ok "Started Services"
-
-    msg_info "Cleaning up"
-    rm -f /tmp/dispatcharr_db_*.sql
-    msg_ok "Cleanup completed"
     msg_ok "Updated successfully!"
   fi
   exit

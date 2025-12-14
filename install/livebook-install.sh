@@ -98,9 +98,4 @@ msg_ok "Installed Livebook"
 
 motd_ssh
 customize
-
-msg_info "Cleaning Up"
-$STD apt autoremove -y
-$STD apt autoclean -y
-$STD apt clean -y
-msg_ok "Cleaned Up"
+cleanup_lxc

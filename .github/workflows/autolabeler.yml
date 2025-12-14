@@ -57,10 +57,10 @@ jobs:
 
               if (shouldAddLabel) {
                 labelsToAdd.add(label);
-                if (label === "update script") {
+                // Add specific sub-labels for tools
+                if (label === "tools") {
                   for (const prFile of prFiles) {
                     const filename = prFile.filename;
-                    if (filename.startsWith("vm/")) labelsToAdd.add("vm");
                     if (filename.startsWith("tools/addon/")) labelsToAdd.add("addon");
                     if (filename.startsWith("tools/pve/")) labelsToAdd.add("pve-tool");
                   }
@@ -68,38 +68,42 @@ jobs:
               }
             }
 
-            if (labelsToAdd.size < 2) {
-              const templateLabelMappings = {
-                "🐞 **Bug fix**": "bugfix",
-                "✨ **New feature**": "feature",
-                "💥 **Breaking change**": "breaking change",
-                "🆕 **New script**": "new script",
-                "🌍 **Website update**": "website", // handled special
-                "🔧 **Refactoring / Code Cleanup**": "refactor",
-                "📝 **Documentation update**": "documentation" // mapped to maintenance
-              };
+            // Always parse template checkboxes to add content-type labels (bugfix, feature, etc.)
+            const templateLabelMappings = {
+              "🐞 **Bug fix**": "bugfix",
+              "✨ **New feature**": "feature",
+              "💥 **Breaking change**": "breaking change",
+              "🆕 **New script**": "new script",
+              "🔧 **Refactoring / Code Cleanup**": "refactor",
+              "📝 **Documentation update**": "documentation"
+            };
 
-              for (const [checkbox, label] of Object.entries(templateLabelMappings)) {
-                const escapedCheckbox = checkbox.replace(/([.*+?^=!:${}()|[\]\/\\])/g, "\\$1");
-                const regex = new RegExp(`- \\[(x|X)\\]\\s*${escapedCheckbox}`, "i");
+            for (const [checkbox, label] of Object.entries(templateLabelMappings)) {
+              const escapedCheckbox = checkbox.replace(/([.*+?^=!:${}()|[\]\/\\])/g, "\\$1");
+              const regex = new RegExp(`- \\[(x|X)\\]\\s*${escapedCheckbox}`, "i");
 
-                if (regex.test(prBody)) {
-                  if (label === "website") {
-                    const hasJson = prFiles.some((f) => f.filename.startsWith("frontend/public/json/"));
-                    const hasUpdateScript = labelsToAdd.has("update script");
-                    const hasContentLabel = ["bugfix", "feature", "refactor"].some((l) => labelsToAdd.has(l));
-
-                    if (!(hasUpdateScript && hasContentLabel)) {
-                      labelsToAdd.add(hasJson ? "json" : "website");
-                    }
-                  } else if (label === "documentation") {
-                    labelsToAdd.add("maintenance");
-                  } else {
-                    labelsToAdd.add(label);
-                  }
-                }
+              if (regex.test(prBody)) {
+                labelsToAdd.add(label);
               }
             }
+
+            // Handle website checkbox specially - only add if not already an update script with content label
+            const websiteCheckbox = "🌍 **Website update**";
+            const escapedWebsite = websiteCheckbox.replace(/([.*+?^=!:${}()|[\]\/\\])/g, "\\$1");
+            const websiteRegex = new RegExp(`- \\[(x|X)\\]\\s*${escapedWebsite}`, "i");
+
+            if (websiteRegex.test(prBody)) {
+              const hasJson = prFiles.some((f) => f.filename.startsWith("frontend/public/json/"));
+              const hasUpdateScript = labelsToAdd.has("update script");
+              const hasContentLabel = ["bugfix", "feature", "refactor"].some((l) => labelsToAdd.has(l));
+
+              // If it's an update script PR with json changes and a content label, skip adding website/json
+              // The PR should be categorized as update script with the content label
+              if (!(hasUpdateScript && hasJson && hasContentLabel)) {
+                labelsToAdd.add(hasJson ? "json" : "website");
+              }
+            }
+
             if (labelsToAdd.size === 0) {
               labelsToAdd.add("needs triage");
             }

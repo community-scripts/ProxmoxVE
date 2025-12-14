@@ -35,14 +35,10 @@ else
   bash wazuh-install.sh -a | tee -a ~/wazuh-install.output
 fi
 cat ~/wazuh-install.output | grep -E "User|Password" | awk '{$1=$1};1' | sed '1i wazuh-credentials' >~/wazuh.creds
+rm -f wazuh-*.sh
+rm -f ~/wazuh-install.output
 msg_ok "Setup Wazuh"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -f wazuh-*.sh
-rm -f ~/wazuh-install.output
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

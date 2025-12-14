@@ -52,17 +52,14 @@ function update_script() {
     $STD yarn web:build
     $STD yarn prisma:deploy
     [ -d /opt/data.bak ] && mv /opt/data.bak /opt/linkwarden/data
+    rm -rf ~/.cargo/registry ~/.cargo/git ~/.cargo/.package-cache ~/.rustup
+    rm -rf /root/.cache/yarn
+    rm -rf /opt/linkwarden/.next/cache
     msg_ok "Updated ${APP}"
 
     msg_info "Starting Service"
     systemctl start linkwarden
     msg_ok "Started Service"
-
-    msg_info "Cleaning up"
-    rm -rf ~/.cargo/registry ~/.cargo/git ~/.cargo/.package-cache ~/.rustup
-    rm -rf /root/.cache/yarn
-    rm -rf /opt/linkwarden/.next/cache
-    msg_ok "Cleaned"
     msg_ok "Updated successfully!"
   fi
   exit

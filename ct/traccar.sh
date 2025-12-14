@@ -50,18 +50,12 @@ function update_script() {
     mv /opt/traccar.xml /opt/traccar/conf
     [[ -d /opt/data ]] && mv /opt/data /opt/traccar
     [[ -d /opt/media ]] && mv /opt/media /opt/traccar
+    [ -f README.txt ] || [ -f traccar.run ] && rm -f README.txt traccar.run
     msg_ok "Data restored"
 
     msg_info "Starting Service"
     systemctl start traccar
     msg_ok "Started Service"
-
-    msg_info "Cleaning up"
-    [ -f README.txt ] || [ -f traccar.run ] && rm -f README.txt traccar.run
-    $STD apt -y autoremove
-    $STD apt -y autoclean
-    $STD apt -y clean
-    msg_ok "Cleaned up"
     msg_ok "Updated successfully!"
   fi
   exit

@@ -32,17 +32,17 @@ $STD apt install -y \
   python3-icu
 msg_ok "Setup Python3"
 
-setup_uv
+PYTHON_VERSION="3.12" setup_uv
 fetch_and_deploy_gh_release "libretranslate" "LibreTranslate/LibreTranslate"
 
 msg_info "Setup LibreTranslate (Patience)"
-TORCH_VERSION=$(grep -Eo '"torch ==[0-9]+\.[0-9]+\.[0-9]+' /opt/libretranslate/pyproject.toml | \
+TORCH_VERSION=$(grep -Eo '"torch ==[0-9]+\.[0-9]+\.[0-9]+' /opt/libretranslate/pyproject.toml |
   tail -n1 | sed 's/.*==//')
 if [[ -z "$TORCH_VERSION" ]]; then
   TORCH_VERSION="2.5.0"
 fi
 cd /opt/libretranslate
-$STD uv venv .venv
+$STD uv venv .venv --python 3.12
 $STD source .venv/bin/activate
 $STD uv pip install --upgrade pip setuptools
 $STD uv pip install Babel==2.12.1
@@ -83,9 +83,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

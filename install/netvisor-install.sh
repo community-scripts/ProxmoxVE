@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: vhsdream
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://github.com/mayanayza/netvisor
+# Source: https://github.com/netvisor-io/netvisor
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -24,7 +24,7 @@ PG_VERSION=17 setup_postgresql
 NODE_VERSION="24" setup_nodejs
 PG_DB_NAME="netvisor_db" PG_DB_USER="netvisor" PG_DB_GRANT_SUPERUSER="true" setup_postgresql_db
 
-fetch_and_deploy_gh_release "netvisor" "mayanayza/netvisor" "tarball" "latest" "/opt/netvisor"
+fetch_and_deploy_gh_release "netvisor" "netvisor-io/netvisor" "tarball" "latest" "/opt/netvisor"
 
 TOOLCHAIN="$(grep "channel" /opt/netvisor/backend/rust-toolchain.toml | awk -F\" '{print $2}')"
 RUST_TOOLCHAIN=$TOOLCHAIN setup_rust
@@ -48,7 +48,7 @@ $STD cargo build --release --bin daemon
 cp ./target/release/daemon /usr/bin/netvisor-daemon
 msg_ok "Built Netvisor-daemon"
 
-msg_info "Configuring server & daemon for first-run"
+msg_info "Configuring server for first-run"
 LOCAL_IP="$(hostname -I | awk '{print $1}')"
 cat <<EOF >/opt/netvisor/.env
 ### - SERVER
@@ -62,15 +62,9 @@ NETVISOR_INTEGRATED_DAEMON_URL=http://127.0.0.1:60073
 # NETVISOR_DISABLE_REGISTRATION=true
 ## - uncomment when using TLS
 # NETVISOR_USE_SECURE_SESSION_COOKIES=true
-
-### - OIDC (optional)
-# NETVISOR_OIDC_ISSUER_URL=
-# NETVISOR_OIDC_CLIENT_ID=
-# NETVISOR_OIDC_CLIENT_SECRET=
-# NETVISOR_OIDC_PROVIDER_NAME=
-# NETVISOR_OIDC_REDIRECT_URL=
-## - Callback URL for reference
-# http://your-netvisor-domain:60072/api/auth/oidc/callback
+## - see https://github.com/imbolc/axum-client-ip?tab=readme-ov-file#configurable-vs-specific-extractors
+## - before uncommenting the below
+# NETVISOR_CLIENT_IP_SOURCE=
 
 ### - SMTP (password reset and notifications - optional)
 # NETVISOR_SMTP_RELAY=smtp.gmail.com:587
@@ -83,6 +77,8 @@ NETVISOR_SERVER_URL=http://127.0.0.1:60072
 NETVISOR_BIND_ADDRESS=0.0.0.0
 NETVISOR_NAME="netvisor-daemon"
 NETVISOR_HEARTBEAT_INTERVAL=30
+
+### - see https://github.com/netvisor-io/netvisor/blob/main/docs/CONFIGURATION.md for more options
 EOF
 
 cat <<EOF >/etc/systemd/system/netvisor-server.service
@@ -92,6 +88,7 @@ After=network.target postgresql.service
 
 [Service]
 Type=simple
+WorkingDirectory=/opt/netvisor/backend
 EnvironmentFile=/opt/netvisor/.env
 ExecStart=/usr/bin/netvisor-server
 Restart=always
@@ -104,19 +101,26 @@ WantedBy=multi-user.target
 EOF
 
 systemctl enable -q --now netvisor-server
-sleep 5
-NETWORK_ID="$(sudo -u postgres psql -1 -t -d $PG_DB_NAME -c 'SELECT id FROM networks;')"
-API_KEY="$(sudo -u postgres psql -1 -t -d $PG_DB_NAME -c 'SELECT key from api_keys;')"
 
-cat <<EOF >/etc/systemd/system/netvisor-daemon.service
+# Creating short script to configure netvisor-daemon
+cat <<EOF >~/configure_daemon.sh
+#!/usr/bin/env bash
+
+echo "Auto-configuring integrated daemon..."
+
+NETWORK_ID="\$(sudo -u postgres psql -1 -t -d "${PG_DB_NAME}" -c 'SELECT id FROM networks;')"
+API_KEY="\$(sudo -u postgres psql -1 -t -d "${PG_DB_NAME}" -c 'SELECT key FROM api_keys;')"
+
+cat <<END >/etc/systemd/system/netvisor-daemon.service
 [Unit]
 Description=NetVisor Network Discovery Daemon
-After=network.target netvisor-server.service
+After=network-online.target
+Wants=network-online.target
 
 [Service]
 Type=simple
-EnvironmentFile=/opt/netvisor/.env
-ExecStart=/usr/bin/netvisor-daemon --server-url http://127.0.0.1:60072 --network-id ${NETWORK_ID} --daemon-api-key ${API_KEY}
+User=root
+ExecStart=/usr/bin/netvisor-daemon --server-url http://127.0.0.1:60072 --network-id \${NETWORK_ID} --daemon-api-key \${API_KEY} --mode push
 Restart=always
 RestartSec=10
 StandardOutput=journal
@@ -124,9 +128,14 @@ StandardError=journal
 
 [Install]
 WantedBy=multi-user.target
-EOF
+END
+
 systemctl enable -q --now netvisor-daemon
-msg_ok "Netvisor server & daemon configured and running"
+echo "NetVisor daemon configured and running"
+
+EOF
+chmod +x ~/configure_daemon.sh
+msg_ok "Netvisor server running - please create an account in the UI to continue."
 
 motd_ssh
 customize

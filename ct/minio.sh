@@ -55,17 +55,13 @@ function update_script() {
     mv /usr/local/bin/minio /usr/local/bin/minio_bak
     curl -fsSL "https://dl.min.io/server/minio/release/linux-amd64/minio" -o /usr/local/bin/minio
     chmod +x /usr/local/bin/minio
+    rm -f /usr/local/bin/minio_bak
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated ${APP}"
 
     msg_info "Starting Service"
     systemctl start minio
     msg_ok "Started Service"
-
-    msg_info "Cleaning up"
-    rm -f /usr/local/bin/minio_bak
-    msg_ok "Cleaned"
-
     msg_ok "Updated successfully!"
   else
     msg_ok "No update required. ${APP} is already at ${RELEASE}"

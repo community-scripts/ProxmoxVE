@@ -16,7 +16,7 @@ update_os
 msg_info "Installing ntfy"
 mkdir -p /etc/apt/keyrings
 curl -fsSL -o /etc/apt/keyrings/ntfy.gpg https://archive.ntfy.sh/apt/keyring.gpg
-cat <<EOF >/etc/apt/sources.list.d/ntfy.sources 
+cat <<EOF >/etc/apt/sources.list.d/ntfy.sources
 Types: deb
 URIs: https://archive.ntfy.sh/apt/
 Suites: stable
@@ -31,9 +31,4 @@ msg_ok "Installed ntfy"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

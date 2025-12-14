@@ -35,12 +35,22 @@ export const ScriptSchema = z.object({
   logo: z.string().url().nullable(),
   config_path: z.string(),
   description: z.string().min(1, "Description is required"),
+  disable: z.boolean().optional(),
+  disable_description: z.string().optional(),
   install_methods: z.array(InstallMethodSchema).min(1, "At least one install method is required"),
   default_credentials: z.object({
     username: z.string().nullable(),
     password: z.string().nullable(),
   }),
   notes: z.array(NoteSchema),
+}).refine((data) => {
+  if (data.disable === true && !data.disable_description) {
+    return false;
+  }
+  return true;
+}, {
+  message: "disable_description is required when disable is true",
+  path: ["disable_description"],
 });
 
 export type Script = z.infer<typeof ScriptSchema>;

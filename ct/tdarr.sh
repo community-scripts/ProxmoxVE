@@ -13,6 +13,7 @@ var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
+var_gpu="${var_gpu:-yes}"
 
 header_info "$APP"
 variables
@@ -37,11 +38,8 @@ function update_script() {
   $STD unzip Tdarr_Updater.zip
   chmod +x Tdarr_Updater
   $STD ./Tdarr_Updater
-  msg_ok "Updated Tdarr"
-
-  msg_info "Cleaning up"
   rm -rf /opt/tdarr/Tdarr_Updater.zip
-  msg_ok "Cleaned up"
+  msg_ok "Updated Tdarr"
   msg_ok "Updated successfully!"
   exit
 }

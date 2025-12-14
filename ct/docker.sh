@@ -47,7 +47,7 @@ function update_script() {
     msg_ok "Docker Compose updated"
   fi
 
-  if docker ps -a --format '{{.Names}}' | grep -q '^portainer$'; then
+  if docker ps -a --format '{{.Image}}' | grep -q '^portainer/portainer-ce:latest$'; then
     msg_info "Updating Portainer"
     $STD docker pull portainer/portainer-ce:latest
     $STD docker stop portainer && docker rm portainer
@@ -76,11 +76,6 @@ function update_script() {
       portainer/agent
     msg_ok "Updated Portainer Agent"
   fi
-
-  msg_info "Cleaning up"
-  $STD apt-get -y autoremove
-  $STD apt-get -y autoclean
-  msg_ok "Cleanup complete"
   msg_ok "Updated successfully!"
   exit
 }

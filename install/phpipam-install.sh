@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt install -y fping
 msg_ok "Installed Dependencies"
 
-PHP_VERSION="8.3" PHP_APACHE="YES" PHP_FPM="YES" PHP_MODULE="mysql,gmp,snmp,ldap,apcu" setup_php
+PHP_VERSION="8.3" PHP_APACHE="YES" PHP_FPM="YES" PHP_MODULE="pdo,pdo-mysql,gmp,snmp,ldap,apcu" setup_php
 
 msg_info "Installing PHP-PEAR"
 $STD apt install -y \

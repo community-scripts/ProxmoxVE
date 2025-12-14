@@ -40,10 +40,7 @@ function update_script() {
     msg_ok "Backup Created"
 
     if ! dpkg -l | grep -q 'php8.3'; then
-      $STD apt-get install -y \
-        lsb-release \
-        gnupg2
-      PHP_VERSION="8.3" PHP_MODULE="common,ctype,fileinfo,mysql,cli" PHP_FPM="YES" setup_php
+      PHP_VERSION="8.3" PHP_MODULE="common,ctype,fileinfo,mysql,cli,tokenizer,dom,redis,session,openssl" PHP_FPM="YES" setup_php
       sed -i 's/php8.2/php8.3/g' /etc/nginx/conf.d/2fauth.conf
     fi
     fetch_and_deploy_gh_release "2fauth" "Bubka/2FAuth"
@@ -57,15 +54,6 @@ function update_script() {
     $STD composer install --no-dev --prefer-dist
     php artisan 2fauth:install
     $STD systemctl restart nginx
-
-    msg_info "Cleaning Up"
-    if dpkg -l | grep -q 'php8.2'; then
-      $STD apt remove --purge -y php8.2*
-    fi
-    $STD apt -y autoremove
-    $STD apt -y autoclean
-    $STD apt -y clean
-    msg_ok "Cleanup Completed"
     msg_ok "Updated successfully!"
   fi
   exit

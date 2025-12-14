@@ -52,19 +52,26 @@ function update_script() {
     $STD npm --prefix app/static run build:css
     mkdir -p ./.cache
     $STD tar -xf "$BACKUP_FILE" --directory=/
-    $STD /usr/local/bin/uv run --frozen flask db upgrade
-    if ! grep -q 'frozen' /opt/wizarr/start.sh; then
-      sed -i 's/run/& --frozen/' /opt/wizarr/start.sh
+    if grep -q 'workers' /opt/wizarr/start.sh; then
+      sed -i 's/--workers 4//' /opt/wizarr/start.sh
     fi
+    if ! grep -qE 'FLASK|WORKERS|VERSION' /opt/wizarr/.env; then
+      {
+        echo "FLASK_ENV=production"
+        echo "GUNICORN_WORKERS=4"
+        echo "APP_VERSION=$(sed 's/^20/v&/' ~/.wizarr)"
+      } >>/opt/wizarr/.env
+    else
+      sed -i "s/_VERSION=v.*$/_VERSION=v$(cat ~/.wizarr)/" /opt/wizarr/.env
+    fi
+    rm -rf "$BACKUP_FILE"
+    export FLASK_SKIP_SCHEDULER=true
+    $STD /usr/local/bin/uv run --frozen flask db upgrade
     msg_ok "Updated Wizarr"
 
     msg_info "Starting Service"
     systemctl start wizarr
     msg_ok "Started Service"
-
-    msg_info "Cleaning Up"
-    rm -rf "$BACKUP_FILE"
-    msg_ok "Cleanup Completed"
     msg_ok "Updated successfully!"
   fi
   exit

@@ -55,14 +55,8 @@ function update_script() {
     msg_info "Restoring Database"
     mkdir -p "$(dirname "${DB_RESTORE_PATH}")"
     cp -r /opt/trilium_backup/$(basename "${DB_PATH}") "${DB_RESTORE_PATH}"
-    msg_ok "Restored Database"
-
-    msg_info "Cleaning up"
     rm -rf /opt/trilium_backup
-    $STD apt -y autoremove
-    $STD apt -y autoclean
-    $STD apt -y clean
-    msg_ok "Cleaned"
+    msg_ok "Restored Database"
 
     msg_info "Starting Service"
     systemctl start trilium

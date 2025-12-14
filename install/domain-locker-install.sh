@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: CrazyWolf13
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://github.com/CrazyWolf13/domain-locker
+# Source: https://github.com/Lissy93/domain-locker
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -64,7 +64,7 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl start --now -q domain-locker
+systemctl enable -q --now domain-locker
 msg_info "Created Service"
 
 motd_ssh

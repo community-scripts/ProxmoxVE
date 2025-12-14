@@ -25,6 +25,7 @@ $STD curl -fsSL 'https://whisparr.servarr.com/v1/update/nightly/updatefile?os=li
 $STD tar -xvzf whisparr.tar.gz
 mv Whisparr /opt
 chmod 775 /opt/Whisparr
+rm -rf Whisparr.develop.*.tar.gz
 msg_ok "Installed Whisparr"
 
 msg_info "Creating Service"
@@ -47,10 +48,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -rf Whisparr.develop.*.tar.gz
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

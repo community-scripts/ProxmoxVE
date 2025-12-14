@@ -36,9 +36,10 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "date-fns": "^4.1.0",
+
     "framer-motion": "^11.18.2",
     "fuse.js": "^7.1.0",
-    "lucide-react": "^0.542.0",
+    "lucide-react": "^0.554.0",
     "mini-svg-data-uri": "^1.4.4",
     "motion": "^12.23.26",
     "next": "15.5.2",
@@ -51,10 +52,9 @@
     "react-day-picker": "^9.12.0",
     "react-dom": "19.0.0",
     "react-icons": "^5.5.0",
-    "react-simple-typewriter": "^5.0.1",
     "react-use-measure": "^2.1.7",
+    "recharts": "2.15.4",
     "sharp": "^0.33.5",
-    "simple-icons": "^13.21.0",
     "sonner": "^1.7.4",
     "tailwind-merge": "^2.6.0",
     "zod": "^3.25.76"

@@ -25,6 +25,7 @@ curl -fsSL "http://security.ubuntu.com/ubuntu/pool/main/o/openssl/$libssl" -o "$
 $STD dpkg -i "$libssl"
 $STD apt-get update
 $STD apt-get install -y deconz
+rm -rf "$libssl"
 msg_ok "Installed deConz"
 
 msg_info "Creating Service"
@@ -49,9 +50,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -rf "$libssl"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt-get install -y rsync
 msg_ok "Installed Dependencies"
 
-JAVA_VERSION="17" setup_java
+JAVA_VERSION="25" setup_java
 fetch_and_deploy_gh_release "commafeed" "Athou/commafeed" "prebuild" "latest" "/opt/commafeed" "commafeed-*-h2-jvm.zip"
 
 msg_info "Creating Service"
@@ -27,7 +27,7 @@ Description=CommaFeed Service
 After=network.target
 
 [Service]
-ExecStart=java -jar quarkus-run.jar
+ExecStart=java -Xminf0.05 -Xmaxf0.1 -jar quarkus-run.jar
 WorkingDirectory=/opt/commafeed/
 Restart=always
 
@@ -39,8 +39,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

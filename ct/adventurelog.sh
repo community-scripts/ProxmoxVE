@@ -45,10 +45,14 @@ function update_script() {
     fetch_and_deploy_gh_release "adventurelog" "seanmorley15/adventurelog"
     PYTHON_VERSION="3.13" setup_uv
 
+    msg_info "Ensuring PostgreSQL Extensions"
+    $STD sudo -u postgres psql -d adventurelog_db -c "CREATE EXTENSION IF NOT EXISTS postgis;"
+    msg_ok "PostgreSQL Extensions Ready"
+
     msg_info "Updating ${APP}"
     cp /opt/adventurelog-backup/backend/server/.env /opt/adventurelog/backend/server/.env
     cp -r /opt/adventurelog-backup/backend/server/media /opt/adventurelog/backend/server/media
-    cd /opt/adventurelog/backend/server || exit
+    cd /opt/adventurelog/backend/server
     if [[ ! -x .venv/bin/python ]]; then
       $STD uv venv .venv
       $STD .venv/bin/python -m ensurepip --upgrade
@@ -59,9 +63,10 @@ function update_script() {
     $STD .venv/bin/python -m manage migrate
 
     cp /opt/adventurelog-backup/frontend/.env /opt/adventurelog/frontend/.env
-    cd /opt/adventurelog/frontend || exit
+    cd /opt/adventurelog/frontend
     $STD pnpm i
     $STD pnpm build
+    rm -rf /opt/adventurelog-backup
     msg_ok "Updated ${APP}"
 
     msg_info "Starting Services"
@@ -69,10 +74,6 @@ function update_script() {
     systemctl start adventurelog-backend
     systemctl start adventurelog-frontend
     msg_ok "Services Started"
-
-    msg_info "Cleaning Up"
-    rm -rf /opt/adventurelog-backup
-    msg_ok "Cleaned"
     msg_ok "Updated successfully!"
   fi
   exit

@@ -15,9 +15,7 @@ update_os
 
 msg_info "Install Matterbridge"
 mkdir -p /root/Matterbridge
-NODE_VERSION="22"
-NODE_MODULE="matterbridge"
-setup_nodejs
+NODE_VERSION="22" NODE_MODULE="matterbridge" setup_nodejs
 msg_ok "Installed Matterbridge"
 
 msg_info "Creating Service"
@@ -28,7 +26,7 @@ After=network-online.target
 
 [Service]
 Type=simple
-ExecStart=matterbridge -bridge -service
+ExecStart=matterbridge -service
 WorkingDirectory=/root/Matterbridge
 StandardOutput=inherit
 StandardError=inherit
@@ -44,9 +42,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

@@ -20,7 +20,7 @@ $STD apt install -y \
   expect
 msg_ok "Dependencies installed."
 
-NODE_VERSION=22 setup_nodejs
+NODE_VERSION=24 setup_nodejs
 fetch_and_deploy_gh_release "ProxmoxVE-Local" "community-scripts/ProxmoxVE-Local"
 
 msg_info "Installing PVE Scripts local"
@@ -59,9 +59,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

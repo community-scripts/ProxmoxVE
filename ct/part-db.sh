@@ -52,17 +52,14 @@ function update_script() {
     $STD php bin/console cache:clear
     $STD php bin/console doctrine:migrations:migrate -n
     chown -R www-data:www-data /opt/partdb
+    rm -r "/opt/v${RELEASE}.zip"
+    rm -r /opt/partdb-backup
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated $APP to v${RELEASE}"
 
     msg_info "Starting Service"
     systemctl start apache2
     msg_ok "Started Service"
-
-    msg_info "Cleaning up"
-    rm -r "/opt/v${RELEASE}.zip"
-    rm -r /opt/partdb-backup
-    msg_ok "Cleaned"
     msg_ok "Updated successfully!"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}"

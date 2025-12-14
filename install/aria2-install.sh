@@ -24,6 +24,7 @@ if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   systemctl disable -q --now nginx
   curl -fsSL "$(curl -fsSL https://api.github.com/repos/mayswind/ariang/releases/latest | grep download | grep AllInOne.zip | cut -d\" -f4)" -o $(basename "$(curl -fsSL https://api.github.com/repos/mayswind/ariang/releases/latest | grep download | grep AllInOne.zip | cut -d\" -f4)")
   $STD unzip AriaNg-*-AllInOne.zip -d /var/www
+  rm AriaNg-*-AllInOne.zip
   rm /etc/nginx/sites-enabled/*
   cat <<EOF >/etc/nginx/conf.d/ariang.conf
 server {
@@ -84,9 +85,4 @@ msg_ok "Created Service"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm AriaNg-*-AllInOne.zip
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+cleanup_lxc

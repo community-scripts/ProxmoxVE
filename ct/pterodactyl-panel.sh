@@ -70,6 +70,7 @@ EOF
     $STD php artisan migrate --seed --force --no-interaction
     chown -R www-data:www-data /opt/pterodactyl-panel/*
     chmod -R 755 /opt/pterodactyl-panel/storage /opt/pterodactyl-panel/bootstrap/cache/
+    rm -rf "/opt/pterodactyl-panel/panel.tar.gz"
     echo "${RELEASE}" >/opt/${APP}_version.txt
     msg_ok "Updated $APP to v${RELEASE}"
 
@@ -77,10 +78,6 @@ EOF
     $STD php artisan queue:restart
     $STD php artisan up
     msg_ok "Started Service"
-
-    msg_info "Cleaning up"
-    rm -rf "/opt/pterodactyl-panel/panel.tar.gz"
-    msg_ok "Cleaned"
     msg_ok "Updated successfully!"
   else
     msg_ok "No update required. ${APP} is already at v${RELEASE}"

@@ -13,13 +13,15 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing ASP.NET Core Runtime"
-curl -fsSL "https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb" -o "packages-microsoft-prod.deb"
-$STD dpkg -i packages-microsoft-prod.deb
-rm -rf packages-microsoft-prod.deb
-$STD apt update
+msg_info "Installing Dependencies"
+setup_deb822_repo \
+  "microsoft" \
+  "https://packages.microsoft.com/keys/microsoft-2025.asc" \
+  "https://packages.microsoft.com/debian/13/prod/" \
+  "trixie" \
+  "main"
 $STD apt install -y aspnetcore-runtime-9.0
-msg_ok "Installed ASP.NET Core Runtime"
+msg_ok "Installed Dependencies"
 
 RELEASE=$(curl -fsSL https://technitium.com/dns/ | grep -oP 'Version \K[\d.]+')
 msg_info "Installing Technitium DNS"

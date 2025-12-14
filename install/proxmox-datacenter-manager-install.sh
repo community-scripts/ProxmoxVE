@@ -15,12 +15,20 @@ update_os
 
 msg_info "Installing Proxmox Datacenter Manager"
 curl -fsSL https://enterprise.proxmox.com/debian/proxmox-archive-keyring-trixie.gpg -o /usr/share/keyrings/proxmox-archive-keyring.gpg
+setup_deb822_repo \
+  "pdm" \
+  "https://enterprise.proxmox.com/debian/proxmox-archive-keyring-trixie.gpg" \
+  "http://download.proxmox.com/debian/pdm" \
+  "trixie" \
+  "pdm-no-subscription"
+  
 cat <<EOF >/etc/apt/sources.list.d/pdm-test.sources
 Types: deb
 URIs: http://download.proxmox.com/debian/pdm
 Suites: trixie
 Components: pdm-test
 Signed-By: /usr/share/keyrings/proxmox-archive-keyring.gpg
+Enabled: false
 EOF
 $STD apt update
 DEBIAN_FRONTEND=noninteractive
@@ -32,9 +40,4 @@ msg_ok "Installed Proxmox Datacenter Manager"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc

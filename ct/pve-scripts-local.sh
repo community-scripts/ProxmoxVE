@@ -27,42 +27,9 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-
-  if check_for_gh_release "ProxmoxVE-Local" "community-scripts/ProxmoxVE-Local"; then
-    msg_info "Stopping Services"
-    systemctl stop pvescriptslocal
-    msg_ok "Stopped Services"
-
-    msg_info "Backup Data"
-    cp /opt/ProxmoxVE-Local/.env /opt/.env.bak
-    cp -r /opt/ProxmoxVE-Local/data /opt/data.bak
-    msg_ok "Backed up Data"
-
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "ProxmoxVE-Local" "community-scripts/ProxmoxVE-Local"
-
-    msg_info "Restoring Data"
-    if [[ -f /opt/.env.bak ]]; then
-      mv /opt/.env.bak /opt/ProxmoxVE-Local/.env
-    fi
-    if [[ -d /opt/data.bak ]]; then
-      rm -rf /opt/ProxmoxVE-Local/data
-      mv /opt/data.bak /opt/ProxmoxVE-Local/data
-    fi
-    msg_ok "Restored Data"
-
-    msg_info "Updating PVE Scripts local"
-    cd /opt/ProxmoxVE-Local
-    chmod 755 data
-    $STD npm install
-    $STD npm run build
-    msg_ok "Updated PVE Scripts local"
-
-    msg_info "Starting Services"
-    systemctl start pvescriptslocal
-    msg_ok "Started Services"
-    msg_ok "Updated successfully!"
-  fi
-  exit
+  
+  msg_custom "🚀" "${GN}" "The app offers a built-in updater. Please use it."
+  
 }
 
 start

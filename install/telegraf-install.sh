@@ -32,14 +32,9 @@ msg_ok "Added Telegraf Repository"
 msg_info "Installing Telegraf"
 $STD apt update
 $STD apt install telegraf -y
+rm /influxdata-archive.key
 msg_ok "Installed Telegraf"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-rm /influxdata-archive.key
-msg_ok "Cleaned"
+cleanup_lxc

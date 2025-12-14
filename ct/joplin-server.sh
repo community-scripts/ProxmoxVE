@@ -8,7 +8,7 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 APP="Joplin-Server"
 var_tags="${var_tags:-notes}"
 var_cpu="${var_cpu:-2}"
-var_ram="${var_ram:-4096}"
+var_ram="${var_ram:-6144}"
 var_disk="${var_disk:-20}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
@@ -27,6 +27,8 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
+  NODE_VERSION=24 NODE_MODULE="yarn,npm,pm2" setup_nodejs
 
   if check_for_gh_release "joplin-server" "laurent22/joplin"; then
     msg_info "Stopping Services"

@@ -33,6 +33,7 @@ if [ -z "$available_kernels" ]; then
   exit 0
 fi
 
+echo -e "${GN}Currently running kernel: ${current_kernel}${CL}"
 echo -e "${YW}Available kernels for removal:${CL}"
 echo "$available_kernels" | nl -w 2 -s '. '
 

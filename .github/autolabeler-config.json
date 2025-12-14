@@ -4,9 +4,7 @@
       "fileStatus": "added",
       "includeGlobs": [
         "ct/**",
-        "tools/**",
         "install/**",
-        "misc/**",
         "turnkey/**",
         "vm/**"
       ],
@@ -18,9 +16,7 @@
       "fileStatus": "modified",
       "includeGlobs": [
         "ct/**",
-        "tools/**",
         "install/**",
-        "misc/**",
         "turnkey/**",
         "vm/**"
       ],
@@ -32,71 +28,27 @@
       "fileStatus": "removed",
       "includeGlobs": [
         "ct/**",
-        "tools/**",
         "install/**",
-        "misc/**",
         "turnkey/**",
         "vm/**"
       ],
       "excludeGlobs": []
     }
   ],
-  "maintenance": [
+  "vm": [
     {
       "fileStatus": null,
       "includeGlobs": [
-        "*.md"
+        "vm/**"
       ],
       "excludeGlobs": []
     }
   ],
-  "core": [
+  "tools": [
     {
       "fileStatus": null,
       "includeGlobs": [
-        "misc/*.func",
-        "misc/create_lxc.sh"
-      ],
-      "excludeGlobs": [
-        "misc/api.func"
-      ]
-    }
-  ],
-  "website": [
-    {
-      "fileStatus": null,
-      "includeGlobs": [
-        "frontend/**"
-      ],
-      "excludeGlobs": [
-        "frontend/public/json/**"
-      ]
-    }
-  ],
-  "api": [
-    {
-      "fileStatus": null,
-      "includeGlobs": [
-        "api/**",
-        "misc/api.func"
-      ],
-      "excludeGlobs": []
-    }
-  ],
-  "github": [
-    {
-      "fileStatus": null,
-      "includeGlobs": [
-        ".github/**"
-      ],
-      "excludeGlobs": []
-    }
-  ],
-  "json": [
-    {
-      "fileStatus": "modified",
-      "includeGlobs": [
-        "frontend/public/json/**"
+        "tools/**"
       ],
       "excludeGlobs": []
     }
@@ -119,11 +71,65 @@
       "excludeGlobs": []
     }
   ],
-  "vm": [
+  "core": [
     {
       "fileStatus": null,
       "includeGlobs": [
-        "vm/**"
+        "misc/*.func"
+      ],
+      "excludeGlobs": [
+        "misc/api.func"
+      ]
+    }
+  ],
+  "documentation": [
+    {
+      "fileStatus": null,
+      "includeGlobs": [
+        "docs/**"
+      ],
+      "excludeGlobs": []
+    }
+  ],
+  "github": [
+    {
+      "fileStatus": null,
+      "includeGlobs": [
+        ".github/**",
+        "README.md",
+        "SECURITY.md",
+        "LICENSE",
+        "CHANGELOG.md"
+      ],
+      "excludeGlobs": []
+    }
+  ],
+  "api": [
+    {
+      "fileStatus": null,
+      "includeGlobs": [
+        "api/**",
+        "misc/api.func"
+      ],
+      "excludeGlobs": []
+    }
+  ],
+  "website": [
+    {
+      "fileStatus": null,
+      "includeGlobs": [
+        "frontend/**"
+      ],
+      "excludeGlobs": [
+        "frontend/public/json/**"
+      ]
+    }
+  ],
+  "json": [
+    {
+      "fileStatus": "modified",
+      "includeGlobs": [
+        "frontend/public/json/**"
       ],
       "excludeGlobs": []
     }

@@ -108,15 +108,10 @@ WantedBy=multi-user.target
 EOF
 systemctl enable -q --now ${APPLICATION}
 systemctl enable -q soularr.timer
+rm -rf $tmp_file
+rm -rf /tmp/main.zip
 msg_ok "Created Services"
 
 motd_ssh
 customize
-
-msg_info "Cleaning up"
-rm -rf $tmp_file
-rm -rf /tmp/main.zip
-$STD apt -y autoremove
-$STD apt -y autoclean
-$STD apt -y clean
-msg_ok "Cleaned"
+cleanup_lxc
