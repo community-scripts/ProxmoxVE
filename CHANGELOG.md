@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-12-14
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - SonarQube: Fix database variables [@tremor021](https://github.com/tremor021) ([#9946](https://github.com/community-scripts/ProxmoxVE/pull/9946))
+
 ## 2025-12-13
 
 ### 🚀 Updated Scripts
