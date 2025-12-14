@@ -27,6 +27,7 @@ setup_nodejs
 fetch_and_deploy_gh_release "homarr" "homarr-labs/homarr" "prebuild" "latest" "/opt/homarr" "build-amd64.tar.gz"
 
 msg_info "Installing Homarr"
+# fix musl issues because homarr compiles on alpine not debian soure: https://github.com/alexander-akhmetov/python-telegram/issues/3
 ln -s /usr/lib/x86_64-linux-musl/libc.so /lib/libc.musl-x86_64.so.1
 mkdir -p /opt/homarr_db
 touch /opt/homarr_db/db.sqlite
