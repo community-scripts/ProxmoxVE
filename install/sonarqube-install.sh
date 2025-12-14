@@ -27,9 +27,9 @@ chown -R sonarqube:sonarqube /opt/sonarqube
 chmod -R 755 /opt/sonarqube
 mkdir -p /opt/sonarqube/conf
 cat <<EOF >/opt/sonarqube/conf/sonar.properties
-sonar.jdbc.username=${DB_USER}
-sonar.jdbc.password=${DB_PASS}
-sonar.jdbc.url=jdbc:postgresql://localhost/${DB_NAME}
+sonar.jdbc.username=${PG_DB_USER}
+sonar.jdbc.password=${PG_DB_PASS}
+sonar.jdbc.url=jdbc:postgresql://localhost/${PG_DB_NAME}
 sonar.web.host=0.0.0.0
 sonar.web.port=9000
 EOF
