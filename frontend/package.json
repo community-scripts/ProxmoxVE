@@ -81,12 +81,5 @@
     "tailwindcss-animate": "^1.0.7",
     "tailwindcss-animated": "^1.1.2",
     "typescript": "^5.9.3"
-  },
-  "overrides": {
-    "@types/react": "npm:types-react@19.0.0-rc.1",
-    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1",
-    "date-fns": "^4.1.0",
-    "react": "19.0.0",
-    "react-dom": "19.0.0"
   }
 }
