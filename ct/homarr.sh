@@ -36,6 +36,7 @@ function update_script() {
 
     if ! { grep -q '^REDIS_IS_EXTERNAL=' /opt/homarr/.env 2>/dev/null || grep -q '^REDIS_IS_EXTERNAL=' /opt/homarr.env 2>/dev/null; }; then
         msg_info "Fixing old structure"
+        # fix musl issues because homarr compiles on alpine not debian soure: https://github.com/alexander-akhmetov/python-telegram/issues/3
         $STD apt install -y musl-dev
         ln -s /usr/lib/x86_64-linux-musl/libc.so /lib/libc.musl-x86_64.so.1
         cp /opt/homarr/.env /opt/homarr.env
