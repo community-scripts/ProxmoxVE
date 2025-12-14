@@ -1,7 +1,9 @@
 {
   "name": "FreePBX",
   "slug": "freepbx",
-  "categories": [0],
+  "categories": [
+    0
+  ],
   "date_created": "2025-05-22",
   "type": "ct",
   "updateable": false,

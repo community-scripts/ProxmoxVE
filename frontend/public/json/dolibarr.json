@@ -1,7 +1,9 @@
 {
   "name": "Dolibarr",
   "slug": "dolibarr",
-  "categories": [25],
+  "categories": [
+    25
+  ],
   "date_created": "2025-02-20",
   "type": "ct",
   "updateable": true,

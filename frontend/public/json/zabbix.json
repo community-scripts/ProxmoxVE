@@ -1,7 +1,9 @@
 {
   "name": "Zabbix",
   "slug": "zabbix",
-  "categories": [9],
+  "categories": [
+    9
+  ],
   "date_created": "2024-06-12",
   "type": "ct",
   "updateable": true,

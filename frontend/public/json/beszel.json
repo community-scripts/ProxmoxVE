@@ -1,7 +1,9 @@
 {
   "name": "Beszel",
   "slug": "beszel",
-  "categories": [9],
+  "categories": [
+    9
+  ],
   "date_created": "2025-01-20",
   "type": "ct",
   "updateable": true,

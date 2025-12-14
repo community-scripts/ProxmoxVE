@@ -1,7 +1,9 @@
 {
   "name": "Wanderer",
   "slug": "wanderer",
-  "categories": [24],
+  "categories": [
+    24
+  ],
   "date_created": "2025-12-01",
   "type": "ct",
   "updateable": true,

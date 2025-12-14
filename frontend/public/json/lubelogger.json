@@ -1,7 +1,9 @@
 {
   "name": "LubeLogger",
   "slug": "lubelogger",
-  "categories": [24],
+  "categories": [
+    24
+  ],
   "date_created": "2024-11-29",
   "type": "ct",
   "updateable": true,

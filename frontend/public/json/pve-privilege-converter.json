@@ -1,7 +1,9 @@
 {
   "name": "PVE Privilege Converter",
   "slug": "pve-privilege-converter",
-  "categories": [1],
+  "categories": [
+    1
+  ],
   "date_created": "2025-06-02",
   "type": "pve",
   "updateable": false,

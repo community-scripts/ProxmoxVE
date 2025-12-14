@@ -1,7 +1,9 @@
 {
   "name": "RustDesk Server",
   "slug": "rustdeskserver",
-  "categories": [21],
+  "categories": [
+    21
+  ],
   "date_created": "2025-02-13",
   "type": "ct",
   "updateable": true,

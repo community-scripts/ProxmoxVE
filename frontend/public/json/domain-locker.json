@@ -1,7 +1,9 @@
 {
   "name": "Domain Locker",
   "slug": "domain-locker",
-  "categories": [9],
+  "categories": [
+    9
+  ],
   "date_created": "2025-11-17",
   "type": "ct",
   "updateable": true,

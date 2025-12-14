@@ -1,7 +1,10 @@
 {
   "name": "sonarqube",
   "slug": "sonarqube",
-  "categories": [20, 19],
+  "categories": [
+    20,
+    19
+  ],
   "date_created": "2025-10-10",
   "type": "ct",
   "updateable": true,

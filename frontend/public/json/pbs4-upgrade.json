@@ -1,7 +1,9 @@
 {
   "name": "PBS 4 Upgrade",
   "slug": "pbs4-upgrade",
-  "categories": [1],
+  "categories": [
+    1
+  ],
   "date_created": "2025-08-26",
   "type": "pve",
   "updateable": false,

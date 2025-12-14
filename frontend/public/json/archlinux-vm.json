@@ -1,7 +1,9 @@
 {
   "name": "Arch Linux",
   "slug": "archlinux-vm",
-  "categories": [2],
+  "categories": [
+    2
+  ],
   "date_created": "2025-01-27",
   "type": "vm",
   "updateable": true,

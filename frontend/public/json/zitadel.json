@@ -1,7 +1,9 @@
 {
   "name": "Zitadel",
   "slug": "zitadel",
-  "categories": [6],
+  "categories": [
+    6
+  ],
   "date_created": "2025-02-10",
   "type": "ct",
   "updateable": true,

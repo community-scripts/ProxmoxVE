@@ -1,7 +1,9 @@
 {
   "name": "Scraparr",
   "slug": "scraparr",
-  "categories": [14],
+  "categories": [
+    14
+  ],
   "date_created": "2025-09-15",
   "type": "ct",
   "updateable": true,

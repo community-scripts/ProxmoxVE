@@ -1,7 +1,9 @@
 {
   "name": "Swizzin",
   "slug": "swizzin",
-  "categories": [13],
+  "categories": [
+    13
+  ],
   "date_created": "2025-08-19",
   "type": "ct",
   "updateable": true,

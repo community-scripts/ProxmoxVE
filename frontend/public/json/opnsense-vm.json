@@ -1,7 +1,10 @@
 {
   "name": "OPNsense",
   "slug": "opnsense-vm",
-  "categories": [4, 2],
+  "categories": [
+    4,
+    2
+  ],
   "date_created": "2025-11-23",
   "type": "vm",
   "updateable": true,

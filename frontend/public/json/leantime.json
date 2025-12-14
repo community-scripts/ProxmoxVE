@@ -1,7 +1,9 @@
 {
   "name": "Leantime",
   "slug": "leantime",
-  "categories": [12],
+  "categories": [
+    12
+  ],
   "date_created": "2025-09-06",
   "type": "ct",
   "updateable": true,

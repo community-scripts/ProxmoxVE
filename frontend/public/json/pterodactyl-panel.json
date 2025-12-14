@@ -1,7 +1,9 @@
 {
   "name": "Pterodactyl Panel",
   "slug": "pterodactyl-panel",
-  "categories": [24],
+  "categories": [
+    24
+  ],
   "date_created": "2025-03-04",
   "type": "ct",
   "updateable": true,

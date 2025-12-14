@@ -1,7 +1,9 @@
 {
   "name": "Cloudreve",
   "slug": "cloudreve",
-  "categories": [12],
+  "categories": [
+    12
+  ],
   "date_created": "2025-07-17",
   "type": "ct",
   "updateable": true,

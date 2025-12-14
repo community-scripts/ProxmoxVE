@@ -1,7 +1,9 @@
 {
   "name": "Odoo",
   "slug": "odoo",
-  "categories": [25],
+  "categories": [
+    25
+  ],
   "date_created": "2025-05-14",
   "type": "ct",
   "updateable": true,

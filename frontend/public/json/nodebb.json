@@ -1,7 +1,10 @@
 {
   "name": "NodeBB",
   "slug": "nodebb",
-  "categories": [10, 25],
+  "categories": [
+    10,
+    25
+  ],
   "date_created": "2025-01-28",
   "type": "ct",
   "updateable": true,

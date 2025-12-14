@@ -1,7 +1,9 @@
 {
   "name": "HomeBox",
   "slug": "homebox",
-  "categories": [24],
+  "categories": [
+    24
+  ],
   "date_created": "2024-09-16",
   "type": "ct",
   "updateable": true,

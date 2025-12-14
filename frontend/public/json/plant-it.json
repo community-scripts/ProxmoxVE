@@ -1,7 +1,9 @@
 {
   "name": "Plant-it",
   "slug": "plant-it",
-  "categories": [24],
+  "categories": [
+    24
+  ],
   "date_created": "2025-03-11",
   "type": "ct",
   "updateable": true,

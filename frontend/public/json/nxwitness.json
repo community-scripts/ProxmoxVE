@@ -1,7 +1,9 @@
 {
   "name": "Nx Witness",
   "slug": "nxwitness",
-  "categories": [15],
+  "categories": [
+    15
+  ],
   "date_created": "2025-02-13",
   "type": "ct",
   "updateable": true,

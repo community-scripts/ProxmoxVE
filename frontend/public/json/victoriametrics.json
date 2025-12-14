@@ -1,7 +1,9 @@
 {
   "name": "VictoriaMetrics",
   "slug": "victoriametrics",
-  "categories": [8],
+  "categories": [
+    8
+  ],
   "date_created": "2025-02-24",
   "type": "ct",
   "updateable": true,

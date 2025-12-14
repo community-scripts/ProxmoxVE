@@ -1,7 +1,9 @@
 {
   "name": "LibreTranslate",
   "slug": "libretranslate",
-  "categories": [0],
+  "categories": [
+    0
+  ],
   "date_created": "2025-06-15",
   "type": "ct",
   "updateable": true,

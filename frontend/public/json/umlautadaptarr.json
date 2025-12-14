@@ -1,7 +1,9 @@
 {
   "name": "UmlautAdaptarr",
   "slug": "umlautadaptarr",
-  "categories": [14],
+  "categories": [
+    14
+  ],
   "date_created": "2025-04-28",
   "type": "ct",
   "updateable": true,

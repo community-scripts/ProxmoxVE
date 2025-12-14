@@ -1,7 +1,9 @@
 {
   "name": "slskd",
   "slug": "slskd",
-  "categories": [11],
+  "categories": [
+    11
+  ],
   "date_created": "2025-03-31",
   "type": "ct",
   "updateable": true,

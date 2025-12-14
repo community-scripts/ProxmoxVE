@@ -1,7 +1,9 @@
 {
   "name": "NetBox",
   "slug": "netbox",
-  "categories": [4],
+  "categories": [
+    4
+  ],
   "date_created": "2024-11-17",
   "type": "ct",
   "updateable": true,

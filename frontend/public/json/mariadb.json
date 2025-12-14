@@ -1,7 +1,9 @@
 {
   "name": "Mariadb",
   "slug": "mariadb",
-  "categories": [8],
+  "categories": [
+    8
+  ],
   "date_created": "2024-05-02",
   "type": "ct",
   "updateable": true,

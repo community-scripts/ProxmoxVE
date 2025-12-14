@@ -1,7 +1,9 @@
 {
   "name": "Part-DB",
   "slug": "part-db",
-  "categories": [25],
+  "categories": [
+    25
+  ],
   "date_created": "2024-12-18",
   "type": "ct",
   "updateable": true,

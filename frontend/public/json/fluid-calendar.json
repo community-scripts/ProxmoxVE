@@ -1,7 +1,10 @@
 {
   "name": "Fluid-Calendar",
   "slug": "fluid-calendar",
-  "categories": [19, 0],
+  "categories": [
+    19,
+    0
+  ],
   "date_created": "2025-03-12",
   "type": "ct",
   "updateable": true,

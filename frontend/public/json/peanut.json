@@ -1,7 +1,9 @@
 {
   "name": "PeaNUT",
   "slug": "peanut",
-  "categories": [4],
+  "categories": [
+    4
+  ],
   "date_created": "2024-06-14",
   "type": "ct",
   "updateable": true,

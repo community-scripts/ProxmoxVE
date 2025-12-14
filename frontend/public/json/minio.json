@@ -1,7 +1,9 @@
 {
   "name": "MinIO",
   "slug": "minio",
-  "categories": [8],
+  "categories": [
+    8
+  ],
   "date_created": "2025-02-13",
   "type": "ct",
   "updateable": true,

@@ -1,7 +1,9 @@
 {
   "name": "Healthchecks",
   "slug": "healthchecks",
-  "categories": [9],
+  "categories": [
+    9
+  ],
   "date_created": "2025-08-25",
   "type": "ct",
   "updateable": true,

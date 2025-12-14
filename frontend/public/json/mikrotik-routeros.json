@@ -1,7 +1,10 @@
 {
   "name": "Mikrotik RouterOS CHR",
   "slug": "mikrotik-routeros",
-  "categories": [2, 4],
+  "categories": [
+    2,
+    4
+  ],
   "date_created": "2024-05-02",
   "type": "vm",
   "updateable": true,

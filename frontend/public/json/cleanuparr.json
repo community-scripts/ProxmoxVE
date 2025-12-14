@@ -1,7 +1,9 @@
 {
   "name": "Cleanuparr",
   "slug": "cleanuparr",
-  "categories": [14],
+  "categories": [
+    14
+  ],
   "date_created": "2025-07-25",
   "type": "ct",
   "updateable": true,

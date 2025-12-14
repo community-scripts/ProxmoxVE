@@ -1,7 +1,9 @@
 {
   "name": "Alpine-IT-Tools",
   "slug": "alpine-it-tools",
-  "categories": [20],
+  "categories": [
+    20
+  ],
   "date_created": "2025-01-30",
   "type": "ct",
   "updateable": true,

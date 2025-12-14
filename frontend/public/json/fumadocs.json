@@ -1,7 +1,9 @@
 {
   "name": "Fumadocs",
   "slug": "fumadocs",
-  "categories": [10],
+  "categories": [
+    10
+  ],
   "date_created": "2025-05-06",
   "type": "ct",
   "updateable": true,

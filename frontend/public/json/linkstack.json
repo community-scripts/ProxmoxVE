@@ -1,7 +1,9 @@
 {
   "name": "LinkStack",
   "slug": "linkstack",
-  "categories": [9],
+  "categories": [
+    9
+  ],
   "date_created": "2025-07-22",
   "type": "ct",
   "updateable": true,

@@ -1,7 +1,9 @@
 {
   "name": "Pf2eTools",
   "slug": "pf2etools",
-  "categories": [24],
+  "categories": [
+    24
+  ],
   "date_created": "2025-02-13",
   "type": "ct",
   "updateable": true,

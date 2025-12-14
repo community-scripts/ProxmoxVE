@@ -1,7 +1,9 @@
 {
   "name": "NPMplus",
   "slug": "npmplus",
-  "categories": [21],
+  "categories": [
+    21
+  ],
   "date_created": "2025-03-13",
   "type": "ct",
   "updateable": true,

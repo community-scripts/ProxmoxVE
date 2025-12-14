@@ -1,7 +1,9 @@
 {
   "name": "Lyrion Music Server",
   "slug": "lyrionmusicserver",
-  "categories": [13],
+  "categories": [
+    13
+  ],
   "date_created": "2025-06-05",
   "type": "ct",
   "updateable": true,

@@ -1,7 +1,9 @@
 {
   "name": "Vikunja",
   "slug": "vikunja",
-  "categories": [12],
+  "categories": [
+    12
+  ],
   "date_created": "2024-11-05",
   "type": "ct",
   "updateable": true,

@@ -1,7 +1,9 @@
 {
   "name": "PBS Processor Microcode",
   "slug": "pbs-microcode",
-  "categories": [1],
+  "categories": [
+    1
+  ],
   "date_created": "2025-02-07",
   "type": "pve",
   "updateable": false,

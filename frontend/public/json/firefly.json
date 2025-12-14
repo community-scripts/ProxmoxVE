@@ -1,7 +1,9 @@
 {
   "name": "Firefly III",
   "slug": "firefly",
-  "categories": [23],
+  "categories": [
+    23
+  ],
   "date_created": "2025-01-01",
   "type": "ct",
   "updateable": true,

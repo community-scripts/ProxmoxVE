@@ -1,7 +1,9 @@
 {
   "name": "Crafty Controller",
   "slug": "crafty-controller",
-  "categories": [24],
+  "categories": [
+    24
+  ],
   "date_created": "2025-02-01",
   "type": "ct",
   "updateable": true,

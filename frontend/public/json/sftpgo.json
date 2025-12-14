@@ -1,7 +1,9 @@
 {
   "name": "SFTPGo",
   "slug": "sftpgo",
-  "categories": [11],
+  "categories": [
+    11
+  ],
   "date_created": "2024-05-02",
   "type": "ct",
   "updateable": true,

@@ -1,7 +1,9 @@
 {
   "name": "SigNoz",
   "slug": "signoz",
-  "categories": [9],
+  "categories": [
+    9
+  ],
   "date_created": "2025-09-15",
   "type": "ct",
   "updateable": true,

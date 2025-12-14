@@ -1,7 +1,9 @@
 {
   "name": "Passbolt",
   "slug": "passbolt",
-  "categories": [6],
+  "categories": [
+    6
+  ],
   "date_created": "2025-11-17",
   "type": "ct",
   "updateable": true,

@@ -1,7 +1,9 @@
 {
   "name": "EMQX",
   "slug": "emqx",
-  "categories": [18],
+  "categories": [
+    18
+  ],
   "date_created": "2024-05-02",
   "type": "ct",
   "updateable": true,

@@ -1,7 +1,9 @@
 {
   "name": "Alpine-Tinyauth",
   "slug": "alpine-tinyauth",
-  "categories": [6],
+  "categories": [
+    6
+  ],
   "date_created": "2025-05-06",
   "type": "ct",
   "updateable": true,

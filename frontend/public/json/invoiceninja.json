@@ -1,7 +1,9 @@
 {
   "name": "InvoiceNinja",
   "slug": "invoiceninja",
-  "categories": [3],
+  "categories": [
+    3
+  ],
   "date_created": "2025-12-12",
   "type": "ct",
   "updateable": true,

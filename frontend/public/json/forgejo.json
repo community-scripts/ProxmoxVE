@@ -1,7 +1,9 @@
 {
   "name": "Forgejo",
   "slug": "forgejo",
-  "categories": [20],
+  "categories": [
+    20
+  ],
   "date_created": "2024-06-12",
   "type": "ct",
   "updateable": true,

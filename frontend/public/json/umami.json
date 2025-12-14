@@ -1,7 +1,9 @@
 {
   "name": "Umami",
   "slug": "umami",
-  "categories": [9],
+  "categories": [
+    9
+  ],
   "date_created": "2024-05-09",
   "type": "ct",
   "updateable": true,

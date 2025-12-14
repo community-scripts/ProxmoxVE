@@ -1,7 +1,9 @@
 {
   "name": "HortusFox",
   "slug": "hortusfox",
-  "categories": [24],
+  "categories": [
+    24
+  ],
   "type": "ct",
   "updateable": true,
   "privileged": false,

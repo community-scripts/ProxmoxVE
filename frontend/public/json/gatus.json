@@ -1,7 +1,9 @@
 {
   "name": "gatus",
   "slug": "gatus",
-  "categories": [9],
+  "categories": [
+    9
+  ],
   "date_created": "2025-05-13",
   "type": "ct",
   "updateable": true,

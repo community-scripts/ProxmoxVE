@@ -1,7 +1,9 @@
 {
   "name": "TasmoCompiler",
   "slug": "tasmocompiler",
-  "categories": [16],
+  "categories": [
+    16
+  ],
   "date_created": "2025-02-10",
   "type": "ct",
   "updateable": true,

@@ -1,7 +1,9 @@
 {
   "name": "Opengist",
   "slug": "opengist",
-  "categories": [20],
+  "categories": [
+    20
+  ],
   "date_created": "2025-01-14",
   "type": "ct",
   "updateable": true,

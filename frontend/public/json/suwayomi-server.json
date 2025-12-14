@@ -1,7 +1,9 @@
 {
   "name": "Suwayomi-Server",
   "slug": "suwayomi-server",
-  "categories": [13],
+  "categories": [
+    13
+  ],
   "date_created": "2025-08-01",
   "type": "ct",
   "updateable": true,

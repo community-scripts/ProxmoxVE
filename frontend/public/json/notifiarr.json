@@ -1,7 +1,9 @@
 {
   "name": "Notifiarr",
   "slug": "notifiarr",
-  "categories": [14],
+  "categories": [
+    14
+  ],
   "date_created": "2024-06-12",
   "type": "ct",
   "updateable": true,

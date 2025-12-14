@@ -1,7 +1,9 @@
 {
   "name": "BentoPDF",
   "slug": "bentopdf",
-  "categories": [12],
+  "categories": [
+    12
+  ],
   "date_created": "2025-10-30",
   "type": "ct",
   "updateable": true,

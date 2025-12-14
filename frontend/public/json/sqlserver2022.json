@@ -1,7 +1,9 @@
 {
   "name": "SQL Server 2022",
   "slug": "sqlserver2022",
-  "categories": [8],
+  "categories": [
+    8
+  ],
   "date_created": "2025-01-14",
   "type": "ct",
   "updateable": true,

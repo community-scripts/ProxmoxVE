@@ -1,7 +1,9 @@
 {
   "name": "RevealJS",
   "slug": "revealjs",
-  "categories": [12],
+  "categories": [
+    12
+  ],
   "date_created": "2025-03-04",
   "type": "ct",
   "updateable": true,

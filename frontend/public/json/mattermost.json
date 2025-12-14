@@ -1,7 +1,9 @@
 {
   "name": "Mattermost",
   "slug": "mattermost",
-  "categories": [25],
+  "categories": [
+    25
+  ],
   "date_created": "2025-01-30",
   "type": "ct",
   "updateable": true,

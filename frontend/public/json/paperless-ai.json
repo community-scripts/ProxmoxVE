@@ -1,7 +1,9 @@
 {
   "name": "PaperlessAI",
   "slug": "paperless-ai",
-  "categories": [20],
+  "categories": [
+    20
+  ],
   "date_created": "2025-02-06",
   "type": "ct",
   "updateable": true,

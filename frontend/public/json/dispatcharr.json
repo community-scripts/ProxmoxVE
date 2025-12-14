@@ -1,7 +1,9 @@
 {
   "name": "Dispatcharr",
   "slug": "dispatcharr",
-  "categories": [14],
+  "categories": [
+    14
+  ],
   "date_created": "2025-10-27",
   "type": "ct",
   "updateable": true,

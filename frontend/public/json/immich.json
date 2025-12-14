@@ -1,7 +1,9 @@
 {
   "name": "Immich",
   "slug": "immich",
-  "categories": [13],
+  "categories": [
+    13
+  ],
   "date_created": "2025-06-01",
   "type": "ct",
   "updateable": true,

@@ -1,7 +1,9 @@
 {
   "name": "Mafl",
   "slug": "mafl",
-  "categories": [10],
+  "categories": [
+    10
+  ],
   "date_created": "2024-05-02",
   "type": "ct",
   "updateable": true,

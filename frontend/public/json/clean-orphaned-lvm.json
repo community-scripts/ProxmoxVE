@@ -1,7 +1,9 @@
 {
   "name": "PVE Clean Orphaned LVM",
   "slug": "clean-orphaned-lvm",
-  "categories": [1],
+  "categories": [
+    1
+  ],
   "date_created": "2025-01-29",
   "type": "pve",
   "updateable": false,

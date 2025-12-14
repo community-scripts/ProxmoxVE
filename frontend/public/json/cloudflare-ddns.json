@@ -1,7 +1,9 @@
 {
   "name": "Cloudflare-DDNS",
   "slug": "cloudflare-ddns",
-  "categories": [4],
+  "categories": [
+    4
+  ],
   "date_created": "2025-05-22",
   "type": "ct",
   "updateable": true,

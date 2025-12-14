@@ -1,7 +1,9 @@
 {
   "name": "Guardian",
   "slug": "guardian",
-  "categories": [13],
+  "categories": [
+    13
+  ],
   "date_created": "2025-10-15",
   "type": "ct",
   "updateable": true,

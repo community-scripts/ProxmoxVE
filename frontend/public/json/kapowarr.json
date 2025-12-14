@@ -1,7 +1,9 @@
 {
   "name": "Kapowarr",
   "slug": "kapowarr",
-  "categories": [14],
+  "categories": [
+    14
+  ],
   "date_created": "2025-06-30",
   "type": "ct",
   "updateable": true,

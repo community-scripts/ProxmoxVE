@@ -1,7 +1,9 @@
 {
   "name": "Dockge",
   "slug": "dockge",
-  "categories": [3],
+  "categories": [
+    3
+  ],
   "date_created": "2024-05-02",
   "type": "ct",
   "updateable": true,

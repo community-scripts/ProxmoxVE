@@ -1,7 +1,9 @@
 {
   "name": "Z-Wave JS UI",
   "slug": "zwave-js-ui",
-  "categories": [17],
+  "categories": [
+    17
+  ],
   "date_created": "2024-05-02",
   "type": "ct",
   "updateable": true,

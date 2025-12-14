@@ -1,7 +1,9 @@
 {
   "name": "PatchMon",
   "slug": "patchmon",
-  "categories": [9],
+  "categories": [
+    9
+  ],
   "date_created": "2025-10-25",
   "type": "ct",
   "updateable": true,

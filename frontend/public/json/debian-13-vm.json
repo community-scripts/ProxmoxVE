@@ -1,7 +1,9 @@
 {
   "name": "Debian 13",
   "slug": "debian-13-vm",
-  "categories": [2],
+  "categories": [
+    2
+  ],
   "date_created": "2025-08-19",
   "type": "vm",
   "updateable": true,

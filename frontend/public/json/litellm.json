@@ -1,7 +1,9 @@
 {
   "name": "LiteLLM",
   "slug": "litellm",
-  "categories": [20],
+  "categories": [
+    20
+  ],
   "date_created": "2025-08-21",
   "type": "ct",
   "updateable": true,

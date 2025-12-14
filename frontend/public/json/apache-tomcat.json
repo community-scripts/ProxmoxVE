@@ -1,7 +1,9 @@
 {
   "name": "Apache Tomcat",
   "slug": "apache-tomcat",
-  "categories": [10],
+  "categories": [
+    10
+  ],
   "date_created": "2025-03-04",
   "type": "ct",
   "updateable": false,

@@ -1,7 +1,9 @@
 {
   "name": "PVE Monitor-All",
   "slug": "monitor-all",
-  "categories": [1],
+  "categories": [
+    1
+  ],
   "date_created": "2024-04-29",
   "type": "pve",
   "updateable": false,

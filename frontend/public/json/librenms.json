@@ -1,7 +1,9 @@
 {
   "name": "LibreNMS",
   "slug": "librenms",
-  "categories": [9],
+  "categories": [
+    9
+  ],
   "date_created": "2025-11-14",
   "type": "ct",
   "updateable": true,
