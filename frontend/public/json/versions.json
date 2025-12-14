@@ -1,8 +1,73 @@
 [
   {
+    "name": "nickheyer/discopanel",
+    "version": "v1.0.14",
+    "date": "2025-12-14T00:04:18Z"
+  },
+  {
+    "name": "martabal/qbittorrent-exporter",
+    "version": "v1.13.2",
+    "date": "2025-12-13T22:59:03Z"
+  },
+  {
+    "name": "diced/zipline",
+    "version": "v4.4.0",
+    "date": "2025-12-13T22:49:07Z"
+  },
+  {
+    "name": "netvisor-io/netvisor",
+    "version": "v0.11.9",
+    "date": "2025-12-13T21:48:17Z"
+  },
+  {
+    "name": "karlomikus/bar-assistant",
+    "version": "v5.10.0",
+    "date": "2025-12-13T20:17:27Z"
+  },
+  {
+    "name": "fosrl/pangolin",
+    "version": "1.13.1",
+    "date": "2025-12-13T18:00:27Z"
+  },
+  {
+    "name": "leiweibau/Pi.Alert",
+    "version": "v2025-12-14",
+    "date": "2025-12-13T16:39:17Z"
+  },
+  {
+    "name": "gtsteffaniak/filebrowser",
+    "version": "v1.1.4-beta",
+    "date": "2025-12-13T15:59:06Z"
+  },
+  {
+    "name": "WGDashboard/WGDashboard",
+    "version": "v4.3.1",
+    "date": "2025-12-13T15:38:37Z"
+  },
+  {
+    "name": "alam00000/bentopdf",
+    "version": "v1.11.2",
+    "date": "2025-12-13T15:28:49Z"
+  },
+  {
+    "name": "autobrr/autobrr",
+    "version": "v1.71.0",
+    "date": "2025-12-13T14:38:09Z"
+  },
+  {
+    "name": "karakeep-app/karakeep",
+    "version": "cli/v0.29.1",
+    "date": "2025-12-13T13:55:51Z"
+  },
+  {
+    "name": "chrisbenincasa/tunarr",
+    "version": "v1.0.2",
+    "date": "2025-12-13T13:34:22Z"
+  },
+  {
     "name": "fuma-nama/fumadocs",
-    "version": "create-fumadocs-app@16.0.25",
-    "date": "2025-12-13T10:22:03Z"
+    "version": "fumadocs-openapi@10.1.4",
+    "date": "2025-12-13T12:01:58Z"
   },
   {
     "name": "chrisvel/tududi",
@@ -13,11 +78,6 @@
     "name": "ollama/ollama",
     "version": "v0.13.4-rc0",
     "date": "2025-12-13T00:29:01Z"
-  },
-  {
-    "name": "netvisor-io/netvisor",
-    "version": "v0.11.8",
-    "date": "2025-12-13T08:38:03Z"
   },
   {
     "name": "Dokploy/dokploy",
@@ -60,19 +120,9 @@
     "date": "2025-12-12T23:47:48Z"
   },
   {
-    "name": "nickheyer/discopanel",
-    "version": "v1.0.13-dev",
-    "date": "2025-12-12T23:45:54Z"
-  },
-  {
     "name": "fccview/jotty",
     "version": "1.13.1",
     "date": "2025-12-12T21:34:22Z"
-  },
-  {
-    "name": "chrisbenincasa/tunarr",
-    "version": "v1.0.1",
-    "date": "2025-12-12T21:09:19Z"
   },
   {
     "name": "mongodb/mongo",
@@ -185,11 +235,6 @@
     "date": "2025-12-12T10:52:28Z"
   },
   {
-    "name": "karakeep-app/karakeep",
-    "version": "v0.29.3",
-    "date": "2025-12-12T09:14:41Z"
-  },
-  {
     "name": "grokability/snipe-it",
     "version": "v8.3.7",
     "date": "2025-12-12T09:13:40Z"
@@ -208,16 +253,6 @@
     "name": "umami-software/umami",
     "version": "v3.0.3",
     "date": "2025-12-12T02:39:27Z"
-  },
-  {
-    "name": "fosrl/pangolin",
-    "version": "1.13.0",
-    "date": "2025-12-11T23:19:41Z"
-  },
-  {
-    "name": "WGDashboard/WGDashboard",
-    "version": "v4.3.0.3",
-    "date": "2025-12-11T23:03:52Z"
   },
   {
     "name": "motioneye-project/motioneye",
@@ -243,11 +278,6 @@
     "name": "endurain-project/endurain",
     "version": "v0.16.2",
     "date": "2025-12-11T15:16:01Z"
-  },
-  {
-    "name": "alam00000/bentopdf",
-    "version": "v1.11.1",
-    "date": "2025-12-11T14:12:20Z"
   },
   {
     "name": "Stirling-Tools/Stirling-PDF",
@@ -600,11 +630,6 @@
     "date": "2025-12-04T09:26:37Z"
   },
   {
-    "name": "gtsteffaniak/filebrowser",
-    "version": "v1.2.0-experimental-sql-indexing",
-    "date": "2025-12-04T01:35:46Z"
-  },
-  {
     "name": "rcourtman/Pulse",
     "version": "v4.36.2",
     "date": "2025-12-03T22:46:29Z"
@@ -710,11 +735,6 @@
     "date": "2025-12-01T21:35:19Z"
   },
   {
-    "name": "martabal/qbittorrent-exporter",
-    "version": "v1.13.0",
-    "date": "2025-12-01T21:06:38Z"
-  },
-  {
     "name": "slskd/slskd",
     "version": "0.24.1",
     "date": "2025-12-01T19:33:30Z"
@@ -790,11 +810,6 @@
     "date": "2025-11-29T16:37:28Z"
   },
   {
-    "name": "autobrr/autobrr",
-    "version": "v1.70.0",
-    "date": "2025-11-29T14:44:38Z"
-  },
-  {
     "name": "Kozea/Radicale",
     "version": "v3.5.9",
     "date": "2025-11-29T14:35:45Z"
@@ -863,11 +878,6 @@
     "name": "NLnetLabs/unbound",
     "version": "release-1.24.2",
     "date": "2025-11-26T11:22:30Z"
-  },
-  {
-    "name": "karlomikus/bar-assistant",
-    "version": "v5.9.3",
-    "date": "2025-11-25T18:18:34Z"
   },
   {
     "name": "Dolibarr/dolibarr",
@@ -1160,11 +1170,6 @@
     "date": "2025-11-06T02:26:53Z"
   },
   {
-    "name": "leiweibau/Pi.Alert",
-    "version": "v2025-11-05",
-    "date": "2025-11-05T18:08:26Z"
-  },
-  {
     "name": "javedh-dev/tracktor",
     "version": "0.5.1",
     "date": "2025-11-05T16:14:37Z"
@@ -1278,11 +1283,6 @@
     "name": "ellite/Wallos",
     "version": "v4.5.0",
     "date": "2025-10-18T22:00:50Z"
-  },
-  {
-    "name": "diced/zipline",
-    "version": "v4.3.2",
-    "date": "2025-10-17T04:13:23Z"
   },
   {
     "name": "minio/minio",
