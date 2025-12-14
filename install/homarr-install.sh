@@ -48,7 +48,7 @@ msg_ok "Installed Homarr"
 msg_info "Copying config files"
 mkdir -p /appdata/redis
 chown -R redis:redis /appdata/redis
-chmod 755 /appdata/redis
+chmod 744 /appdata/redis
 cp /opt/homarr/redis.conf /etc/redis/redis.conf
 rm /etc/nginx/nginx.conf
 mkdir -p /etc/nginx/templates
