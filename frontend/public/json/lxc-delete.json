@@ -1,9 +1,7 @@
 {
   "name": "PVE LXC Deletion",
   "slug": "lxc-delete",
-  "categories": [
-    1
-  ],
+  "categories": [1],
   "date_created": "2025-01-21",
   "type": "pve",
   "updateable": false,

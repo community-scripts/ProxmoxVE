@@ -11,7 +11,7 @@ export default function TextCopyBlock(description: string) {
       return (
         <span
           key={index}
-          className="bg-secondary py-1 px-2 rounded-lg inline-flex items-center gap-2"
+          className="inline-flex items-center gap-2 rounded-lg bg-secondary px-2 py-1"
         >
           {part}
           <ClipboardIcon
@@ -20,8 +20,7 @@ export default function TextCopyBlock(description: string) {
           />
         </span>
       );
-    }
-    else {
+    } else {
       return part;
     }
   });

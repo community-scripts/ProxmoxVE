@@ -1,9 +1,7 @@
 {
   "name": "LimeSurvey",
   "slug": "limesurvey",
-  "categories": [
-    25
-  ],
+  "categories": [25],
   "date_created": "2025-10-15",
   "type": "ct",
   "updateable": true,

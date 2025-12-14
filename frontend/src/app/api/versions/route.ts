@@ -29,16 +29,18 @@ export async function GET() {
   try {
     const versions = await getVersions();
     return NextResponse.json(versions);
-  }
-  catch (error) {
+  } catch (error) {
     console.error(error);
     const err = error as globalThis.Error;
-    return NextResponse.json({
-      name: err.name,
-      message: err.message || "An unexpected error occurred",
-      version: "No version found - Error",
-    }, {
-      status: 500,
-    });
+    return NextResponse.json(
+      {
+        name: err.name,
+        message: err.message || "An unexpected error occurred",
+        version: "No version found - Error",
+      },
+      {
+        status: 500,
+      }
+    );
   }
 }

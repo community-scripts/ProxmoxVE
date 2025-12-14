@@ -1,9 +1,7 @@
 {
   "name": "BookLore",
   "slug": "booklore",
-  "categories": [
-    13
-  ],
+  "categories": [13],
   "date_created": "2025-06-27",
   "type": "ct",
   "updateable": true,

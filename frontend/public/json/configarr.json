@@ -1,9 +1,7 @@
 {
   "name": "Configarr",
   "slug": "configarr",
-  "categories": [
-    14
-  ],
+  "categories": [14],
   "date_created": "2025-05-21",
   "type": "ct",
   "updateable": true,

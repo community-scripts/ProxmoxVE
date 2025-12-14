@@ -1,9 +1,7 @@
 {
   "name": "ByteStash",
   "slug": "bytestash",
-  "categories": [
-    20
-  ],
+  "categories": [20],
   "date_created": "2025-02-27",
   "type": "ct",
   "updateable": true,

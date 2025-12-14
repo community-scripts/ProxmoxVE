@@ -1,9 +1,7 @@
 {
   "name": "Wavelog",
   "slug": "wavelog",
-  "categories": [
-    24
-  ],
+  "categories": [24],
   "date_created": "2024-11-12",
   "type": "ct",
   "updateable": true,

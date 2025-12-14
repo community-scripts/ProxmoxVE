@@ -1,9 +1,7 @@
 {
   "name": "Memos",
   "slug": "memos",
-  "categories": [
-    12
-  ],
+  "categories": [12],
   "date_created": "2024-10-31",
   "type": "ct",
   "updateable": true,

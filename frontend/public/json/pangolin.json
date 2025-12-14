@@ -1,9 +1,7 @@
 {
   "name": "Pangolin",
   "slug": "pangolin",
-  "categories": [
-    21
-  ],
+  "categories": [21],
   "date_created": "2025-11-01",
   "type": "ct",
   "updateable": true,

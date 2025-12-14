@@ -1,10 +1,7 @@
 {
   "name": "FileBrowser Quantum",
   "slug": "filebrowser-quantum",
-  "categories": [
-    1,
-    11
-  ],
+  "categories": [1, 11],
   "date_created": "2025-06-18",
   "type": "addon",
   "updateable": true,

@@ -1,9 +1,7 @@
 {
   "name": "2FAuth",
   "slug": "2fauth",
-  "categories": [
-    6
-  ],
+  "categories": [6],
   "date_created": "2024-12-20",
   "type": "ct",
   "updateable": true,

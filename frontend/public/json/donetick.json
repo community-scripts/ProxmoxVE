@@ -1,9 +1,7 @@
 {
   "name": "Donetick",
   "slug": "donetick",
-  "categories": [
-    19
-  ],
+  "categories": [19],
   "date_created": "2025-11-03",
   "type": "ct",
   "updateable": true,

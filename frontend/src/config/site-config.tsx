@@ -1,10 +1,10 @@
+import type { ReactNode } from "react";
+
 import { MessagesSquare, Scroll } from "lucide-react";
 import { FaDiscord, FaGithub } from "react-icons/fa";
-import React from "react";
 
 import type { OperatingSystem } from "@/lib/types";
 
-// eslint-disable-next-line node/no-process-env
 export const basePath = process.env.BASE_PATH || "ProxmoxVE";
 
 export const navbarLinks = [
@@ -37,12 +37,16 @@ export const navbarLinks = [
 ].filter(Boolean) as {
   href: string;
   event: string;
-  icon: React.ReactNode;
+  icon: ReactNode;
   text: string;
   mobileHidden?: boolean;
 }[];
 
-export const mostPopularScripts = ["post-pve-install", "docker", "homeassistant"];
+export const mostPopularScripts = [
+  "post-pve-install",
+  "docker",
+  "homeassistant",
+];
 
 export const analytics = {
   url: "analytics.bramsuurd.nl",

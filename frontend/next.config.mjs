@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  turbopack: {},
   webpack: (config) => {
     config.resolve.alias.canvas = false;
 
@@ -16,10 +17,6 @@ const nextConfig = {
 
   env: {
     BASE_PATH: "ProxmoxVE",
-  },
-
-  eslint: {
-    ignoreDuringBuilds: true,
   },
 
   output: "export",

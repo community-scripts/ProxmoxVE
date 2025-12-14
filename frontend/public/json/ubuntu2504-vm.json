@@ -1,9 +1,7 @@
 {
   "name": "Ubuntu 25.04",
   "slug": "ubuntu2504-vm",
-  "categories": [
-    2
-  ],
+  "categories": [2],
   "date_created": "2025-06-19",
   "type": "vm",
   "updateable": true,

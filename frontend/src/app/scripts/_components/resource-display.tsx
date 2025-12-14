@@ -22,20 +22,26 @@ function IconText({ icon, label }: IconTextProps) {
   );
 }
 
-export function ResourceDisplay({ title, cpu, ram, hdd }: ResourceDisplayProps) {
+export function ResourceDisplay({
+  title,
+  cpu,
+  ram,
+  hdd,
+}: ResourceDisplayProps) {
   const hasCPU = typeof cpu === "number" && cpu > 0;
   const hasRAM = typeof ram === "number" && ram > 0;
   const hasHDD = typeof hdd === "number" && hdd > 0;
 
-  if (!hasCPU && !hasRAM && !hasHDD)
-    return null;
+  if (!hasCPU && !hasRAM && !hasHDD) return null;
 
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <span className="text-sm font-medium text-muted-foreground">{title}</span>
+      <span className="font-medium text-muted-foreground text-sm">{title}</span>
       <div className="flex flex-wrap gap-2">
         {hasCPU && <IconText icon={<CPUIcon />} label={`${cpu} vCPU`} />}
-        {hasRAM && <IconText icon={<RAMIcon />} label={getDisplayValueFromRAM(ram!)} />}
+        {hasRAM && (
+          <IconText icon={<RAMIcon />} label={getDisplayValueFromRAM(ram!)} />
+        )}
         {hasHDD && <IconText icon={<HDDIcon />} label={`${hdd} GB`} />}
       </div>
     </div>

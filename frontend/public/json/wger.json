@@ -1,9 +1,7 @@
 {
   "name": "wger",
   "slug": "wger",
-  "categories": [
-    24
-  ],
+  "categories": [24],
   "date_created": "2025-02-24",
   "type": "ct",
   "updateable": true,

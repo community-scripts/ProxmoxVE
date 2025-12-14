@@ -5,7 +5,14 @@ import Link from "next/link";
 
 import type { Category, Script } from "@/lib/types";
 
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { basePath, mostPopularScripts } from "@/config/site-config";
 import { Button } from "@/components/ui/button";
 import { extractDate } from "@/lib/time";
@@ -30,10 +37,9 @@ export function LatestScripts({ items }: { items: Category[] }) {
   const [page, setPage] = useState(1);
 
   const latestScripts = useMemo(() => {
-    if (!items)
-      return [];
+    if (!items) return [];
 
-    const scripts = items.flatMap(category => category.scripts || []);
+    const scripts = items.flatMap((category) => category.scripts || []);
 
     // Filter out duplicates by slug
     const uniqueScriptsMap = new Map<string, Script>();
@@ -44,16 +50,17 @@ export function LatestScripts({ items }: { items: Category[] }) {
     });
 
     return Array.from(uniqueScriptsMap.values()).sort(
-      (a, b) => new Date(b.date_created).getTime() - new Date(a.date_created).getTime(),
+      (a, b) =>
+        new Date(b.date_created).getTime() - new Date(a.date_created).getTime()
     );
   }, [items]);
 
   const goToNextPage = () => {
-    setPage(prevPage => prevPage + 1);
+    setPage((prevPage) => prevPage + 1);
   };
 
   const goToPreviousPage = () => {
-    setPage(prevPage => prevPage - 1);
+    setPage((prevPage) => prevPage - 1);
   };
 
   const startIndex = (page - 1) * ITEMS_PER_PAGE;
@@ -67,15 +74,21 @@ export function LatestScripts({ items }: { items: Category[] }) {
     <div className="">
       {latestScripts.length > 0 && (
         <div className="flex w-full items-center justify-between">
-          <h2 className="text-lg font-semibold">Newest Scripts</h2>
+          <h2 className="font-semibold text-lg">Newest Scripts</h2>
           <div className="flex items-center justify-end gap-1">
             {page > 1 && (
-              <div className="cursor-pointer select-none p-2 text-sm font-semibold" onClick={goToPreviousPage}>
+              <div
+                className="cursor-pointer select-none p-2 font-semibold text-sm"
+                onClick={goToPreviousPage}
+              >
                 Previous
               </div>
             )}
             {endIndex < latestScripts.length && (
-              <div onClick={goToNextPage} className="cursor-pointer select-none p-2 text-sm font-semibold">
+              <div
+                onClick={goToNextPage}
+                className="cursor-pointer select-none p-2 font-semibold text-sm"
+              >
                 {page === 1 ? "More.." : "Next"}
               </div>
             )}
@@ -83,8 +96,11 @@ export function LatestScripts({ items }: { items: Category[] }) {
         </div>
       )}
       <div className="min-w flex w-full flex-row flex-wrap gap-4">
-        {latestScripts.slice(startIndex, endIndex).map(script => (
-          <Card key={script.slug} className="min-w-[250px] flex-1 flex-grow bg-accent/30">
+        {latestScripts.slice(startIndex, endIndex).map((script) => (
+          <Card
+            key={script.slug}
+            className="min-w-[250px] flex-1 flex-grow bg-accent/30"
+          >
             <CardHeader>
               <CardTitle className="flex items-center gap-3">
                 <div className="flex h-16 w-16 min-w-16 items-center justify-center rounded-lg bg-accent p-1">
@@ -94,17 +110,18 @@ export function LatestScripts({ items }: { items: Category[] }) {
                     height={64}
                     width={64}
                     alt=""
-                    onError={e => ((e.currentTarget as HTMLImageElement).src = `/${basePath}/logo.png`)}
+                    onError={(e) =>
+                      ((e.currentTarget as HTMLImageElement).src =
+                        `/${basePath}/logo.png`)
+                    }
                     className="h-11 w-11 object-contain"
                   />
                 </div>
                 <div className="flex flex-col">
-                  <p className="text-lg line-clamp-1">
-                    {script.name}
-                    {" "}
-                    {getDisplayValueFromType(script.type)}
+                  <p className="line-clamp-1 text-lg">
+                    {script.name} {getDisplayValueFromType(script.type)}
                   </p>
-                  <p className="text-sm text-muted-foreground flex items-center gap-1">
+                  <p className="flex items-center gap-1 text-muted-foreground text-sm">
                     <CalendarPlus className="h-4 w-4" />
                     {extractDate(script.date_created)}
                   </p>
@@ -112,7 +129,9 @@ export function LatestScripts({ items }: { items: Category[] }) {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <CardDescription className="line-clamp-3 text-card-foreground">{script.description}</CardDescription>
+              <CardDescription className="line-clamp-3 text-card-foreground">
+                {script.description}
+              </CardDescription>
             </CardContent>
             <CardFooter className="">
               <Button asChild variant="outline">
@@ -135,20 +154,23 @@ export function LatestScripts({ items }: { items: Category[] }) {
 
 export function MostViewedScripts({ items }: { items: Category[] }) {
   const mostViewedScripts = items.reduce((acc: Script[], category) => {
-    const foundScripts = category.scripts.filter(script => mostPopularScripts.includes(script.slug));
+    const foundScripts = category.scripts.filter((script) =>
+      mostPopularScripts.includes(script.slug)
+    );
     return acc.concat(foundScripts);
   }, []);
 
   return (
     <div className="">
       {mostViewedScripts.length > 0 && (
-        <>
-          <h2 className="text-lg font-semibold mb-1">Most Viewed Scripts</h2>
-        </>
+        <h2 className="mb-1 font-semibold text-lg">Most Viewed Scripts</h2>
       )}
       <div className="min-w flex w-full flex-row flex-wrap gap-4">
-        {mostViewedScripts.map(script => (
-          <Card key={script.slug} className="min-w-[250px] flex-1 flex-grow bg-accent/30">
+        {mostViewedScripts.map((script) => (
+          <Card
+            key={script.slug}
+            className="min-w-[250px] flex-1 flex-grow bg-accent/30"
+          >
             <CardHeader>
               <CardTitle className="flex items-center gap-3">
                 <div className="flex size-16 min-w-16 items-center justify-center rounded-lg bg-accent p-1">
@@ -158,17 +180,18 @@ export function MostViewedScripts({ items }: { items: Category[] }) {
                     height={64}
                     width={64}
                     alt=""
-                    onError={e => ((e.currentTarget as HTMLImageElement).src = `/${basePath}/logo.png`)}
+                    onError={(e) =>
+                      ((e.currentTarget as HTMLImageElement).src =
+                        `/${basePath}/logo.png`)
+                    }
                     className="h-11 w-11 object-contain"
                   />
                 </div>
                 <div className="flex flex-col">
                   <p className="line-clamp-1 text-lg">
-                    {script.name}
-                    {" "}
-                    {getDisplayValueFromType(script.type)}
+                    {script.name} {getDisplayValueFromType(script.type)}
                   </p>
-                  <p className="flex items-center gap-1 text-sm text-muted-foreground">
+                  <p className="flex items-center gap-1 text-muted-foreground text-sm">
                     <CalendarPlus className="h-4 w-4" />
                     {extractDate(script.date_created)}
                   </p>
@@ -176,7 +199,7 @@ export function MostViewedScripts({ items }: { items: Category[] }) {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <CardDescription className="line-clamp-3 text-card-foreground break-words">
+              <CardDescription className="line-clamp-3 break-words text-card-foreground">
                 {script.description}
               </CardDescription>
             </CardContent>

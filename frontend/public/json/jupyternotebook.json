@@ -1,9 +1,7 @@
 {
   "name": "Jupyter Notebook",
   "slug": "jupyternotebook",
-  "categories": [
-    20
-  ],
+  "categories": [20],
   "date_created": "2025-02-24",
   "type": "ct",
   "updateable": true,

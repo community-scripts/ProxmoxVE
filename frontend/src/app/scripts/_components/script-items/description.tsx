@@ -5,8 +5,8 @@ import TextCopyBlock from "@/components/text-copy-block";
 export default function Description({ item }: { item: Script }) {
   return (
     <div className="p-2">
-      <h2 className="mb-2 max-w-prose text-lg font-semibold">Description</h2>
-      <p className="text-sm text-muted-foreground">
+      <h2 className="mb-2 max-w-prose font-semibold text-lg">Description</h2>
+      <p className="text-muted-foreground text-sm">
         {TextCopyBlock(item.description)}
       </p>
     </div>

@@ -1,9 +1,7 @@
 {
   "name": "Proxmox Datacenter Manager (PDM)",
   "slug": "proxmox-datacenter-manager",
-  "categories": [
-    1
-  ],
+  "categories": [1],
   "date_created": "2024-12-25",
   "type": "ct",
   "updateable": true,

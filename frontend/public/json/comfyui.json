@@ -1,9 +1,7 @@
 {
   "name": "ComfyUI",
   "slug": "comfyui",
-  "categories": [
-    20
-  ],
+  "categories": [20],
   "date_created": "2025-10-26",
   "type": "ct",
   "updateable": true,

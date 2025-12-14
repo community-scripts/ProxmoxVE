@@ -1,9 +1,7 @@
 {
   "name": "Umbrel OS",
   "slug": "umbrel-os-vm",
-  "categories": [
-    2
-  ],
+  "categories": [2],
   "date_created": "2025-05-28",
   "type": "vm",
   "updateable": true,

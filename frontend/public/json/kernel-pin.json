@@ -1,9 +1,7 @@
 {
   "name": "PVE Kernel Pin",
   "slug": "kernel-pin",
-  "categories": [
-    1
-  ],
+  "categories": [1],
   "date_created": "2024-05-08",
   "type": "pve",
   "updateable": false,

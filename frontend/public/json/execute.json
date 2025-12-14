@@ -1,9 +1,7 @@
 {
   "name": "PVE LXC Execute Command",
   "slug": "lxc-execute",
-  "categories": [
-    1
-  ],
+  "categories": [1],
   "date_created": "2025-09-18",
   "type": "pve",
   "updateable": false,

@@ -1,9 +1,7 @@
 {
   "name": "Huntarr",
   "slug": "huntarr",
-  "categories": [
-    14
-  ],
+  "categories": [14],
   "date_created": "2025-06-18",
   "type": "ct",
   "updateable": true,

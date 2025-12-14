@@ -1,9 +1,7 @@
 {
   "name": "Pelican Panel",
   "slug": "pelican-panel",
-  "categories": [
-    24
-  ],
+  "categories": [24],
   "date_created": "2025-02-27",
   "type": "ct",
   "updateable": true,

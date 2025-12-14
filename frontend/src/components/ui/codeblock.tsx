@@ -4,7 +4,6 @@ import type { VariantProps } from "class-variance-authority";
 
 import { cva } from "class-variance-authority";
 import { Clipboard, Copy } from "lucide-react";
-import * as React from "react";
 import { toast } from "sonner";
 import Link from "next/link";
 
@@ -13,9 +12,10 @@ import { cn } from "@/lib/utils";
 
 import { Separator } from "./separator";
 import { Button } from "./button";
+import { forwardRef } from "react";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center whitespace-nowrap rounded-md font-medium text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
@@ -23,9 +23,9 @@ const buttonVariants = cva(
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
-          "border border-input bg-background hover:bg-accent hover:border-primary hover:text-accent-foreground",
+          "border border-input bg-background hover:border-primary hover:bg-accent hover:text-accent-foreground",
         secondary:
-          "bg-secondary border-secondary text-secondary-foreground hover:bg-secondary/80 hover:border-primary",
+          "border-secondary bg-secondary text-secondary-foreground hover:border-primary hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
       },
@@ -34,14 +34,14 @@ const buttonVariants = cva(
         sm: "h-9 rounded-md px-3",
         lg: "h-11 rounded-md px-8",
         icon: "h-10 w-10",
-        null: "py-1 px-3 rouded-xs",
+        null: "rouded-xs px-3 py-1",
       },
     },
     defaultVariants: {
       variant: "default",
       size: "default",
     },
-  },
+  }
 );
 
 function handleCopy(type: string, value: string) {
@@ -51,17 +51,18 @@ function handleCopy(type: string, value: string) {
 
   if (amountOfScriptsCopied === null) {
     localStorage.setItem("amountOfScriptsCopied", "1");
-  }
-  else {
-    amountOfScriptsCopied = (Number.parseInt(amountOfScriptsCopied) + 1).toString();
+  } else {
+    amountOfScriptsCopied = (
+      Number.parseInt(amountOfScriptsCopied) + 1
+    ).toString();
     localStorage.setItem("amountOfScriptsCopied", amountOfScriptsCopied);
 
     if (
-      Number.parseInt(amountOfScriptsCopied) === 3
-      || Number.parseInt(amountOfScriptsCopied) === 10
-      || Number.parseInt(amountOfScriptsCopied) === 25
-      || Number.parseInt(amountOfScriptsCopied) === 50
-      || Number.parseInt(amountOfScriptsCopied) === 100
+      Number.parseInt(amountOfScriptsCopied) === 3 ||
+      Number.parseInt(amountOfScriptsCopied) === 10 ||
+      Number.parseInt(amountOfScriptsCopied) === 25 ||
+      Number.parseInt(amountOfScriptsCopied) === 50 ||
+      Number.parseInt(amountOfScriptsCopied) === 100
     ) {
       setTimeout(() => {
         toast.info(
@@ -82,7 +83,7 @@ function handleCopy(type: string, value: string) {
               </Button>
             </div>
           </div>,
-          { duration: 8000 },
+          { duration: 8000 }
         );
       }, 500);
     }
@@ -93,25 +94,20 @@ function handleCopy(type: string, value: string) {
       <Clipboard className="h-4 w-4" />
       <span>
         Copied
-        {type}
-        {" "}
-        to clipboard
+        {type} to clipboard
       </span>
-    </div>,
+    </div>
   );
 }
 
 export type CodeBlockProps = {
   asChild?: boolean;
   code: string;
-} & React.ButtonHTMLAttributes<HTMLButtonElement> & VariantProps<typeof buttonVariants>;
+} & React.ButtonHTMLAttributes<HTMLButtonElement> &
+  VariantProps<typeof buttonVariants>;
 
-const CodeBlock = React.forwardRef<HTMLDivElement, CodeBlockProps>(
-  ({ className, variant, size, asChild = false, code }, ref) => {
-    const copyToClipboard = () => {
-      navigator.clipboard.writeText(code);
-    };
-
+const CodeBlock = forwardRef<HTMLDivElement, CodeBlockProps>(
+  ({ className, variant, size, code }, ref) => {
     return (
       <div
         style={{
@@ -125,14 +121,11 @@ const CodeBlock = React.forwardRef<HTMLDivElement, CodeBlockProps>(
         <pre
           className={cn(
             buttonVariants({ variant, size, className }),
-            " flex flex-row p-4",
+            "flex flex-row p-4"
           )}
         >
           <p className="flex items-center gap-2">
-            {code}
-            {" "}
-            <Separator orientation="vertical" />
-            {" "}
+            {code} <Separator orientation="vertical" />{" "}
             <Copy
               className="cursor-pointer"
               size={16}
@@ -142,7 +135,7 @@ const CodeBlock = React.forwardRef<HTMLDivElement, CodeBlockProps>(
         </pre>
       </div>
     );
-  },
+  }
 );
 CodeBlock.displayName = "CodeBlock";
 

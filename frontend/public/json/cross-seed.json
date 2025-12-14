@@ -1,9 +1,7 @@
 {
   "name": "cross-seed",
   "slug": "cross-seed",
-  "categories": [
-    14
-  ],
+  "categories": [14],
   "date_created": "2025-02-07",
   "type": "ct",
   "updateable": true,

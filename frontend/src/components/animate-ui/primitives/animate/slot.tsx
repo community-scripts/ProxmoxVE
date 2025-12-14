@@ -3,7 +3,7 @@
 import type { HTMLMotionProps } from "motion/react";
 
 import { isMotionComponent, motion } from "motion/react";
-import * as React from "react";
+import { isValidElement, useMemo } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -14,9 +14,9 @@ type DOMMotionProps<T extends HTMLElement = HTMLElement> = Omit<
   "ref"
 > & { ref?: React.Ref<T> };
 
-type WithAsChild<Base extends object>
-  = | (Base & { asChild: true; children: React.ReactElement })
-    | (Base & { asChild?: false | undefined });
+type WithAsChild<Base extends object> =
+  | (Base & { asChild: true; children: React.ReactElement })
+  | (Base & { asChild?: false | undefined });
 
 type SlotProps<T extends HTMLElement = HTMLElement> = {
   children?: any;
@@ -27,12 +27,10 @@ function mergeRefs<T>(
 ): React.RefCallback<T> {
   return (node) => {
     refs.forEach((ref) => {
-      if (!ref)
-        return;
+      if (!ref) return;
       if (typeof ref === "function") {
         ref(node);
-      }
-      else {
+      } else {
         (ref as React.RefObject<T | null>).current = node;
       }
     });
@@ -41,14 +39,14 @@ function mergeRefs<T>(
 
 function mergeProps<T extends HTMLElement>(
   childProps: AnyProps,
-  slotProps: DOMMotionProps<T>,
+  slotProps: DOMMotionProps<T>
 ): AnyProps {
   const merged: AnyProps = { ...childProps, ...slotProps };
 
   if (childProps.className || slotProps.className) {
     merged.className = cn(
       childProps.className as string,
-      slotProps.className as string,
+      slotProps.className as string
     );
   }
 
@@ -67,21 +65,20 @@ function Slot<T extends HTMLElement = HTMLElement>({
   ref,
   ...props
 }: SlotProps<T>) {
-  const isAlreadyMotion
-    = typeof children.type === "object"
-      && children.type !== null
-      && isMotionComponent(children.type);
+  const isAlreadyMotion =
+    typeof children.type === "object" &&
+    children.type !== null &&
+    isMotionComponent(children.type);
 
-  const Base = React.useMemo(
+  const Base = useMemo(
     () =>
       isAlreadyMotion
         ? (children.type as React.ElementType)
         : motion.create(children.type as React.ElementType),
-    [isAlreadyMotion, children.type],
+    [isAlreadyMotion, children.type]
   );
 
-  if (!React.isValidElement(children))
-    return null;
+  if (!isValidElement(children)) return null;
 
   const { ref: childRef, ...childProps } = children.props as AnyProps;
 

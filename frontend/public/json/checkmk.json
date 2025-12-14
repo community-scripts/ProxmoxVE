@@ -1,9 +1,7 @@
 {
   "name": "Checkmk",
   "slug": "checkmk",
-  "categories": [
-    9
-  ],
+  "categories": [9],
   "date_created": "2024-12-19",
   "type": "ct",
   "updateable": true,

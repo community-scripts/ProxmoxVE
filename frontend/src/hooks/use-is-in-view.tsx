@@ -1,7 +1,7 @@
 import type { UseInViewOptions } from "motion/react";
 
+import { useImperativeHandle, useRef } from "react";
 import { useInView } from "motion/react";
-import * as React from "react";
 
 type UseIsInViewOptions = {
   inView?: boolean;
@@ -11,11 +11,11 @@ type UseIsInViewOptions = {
 
 function useIsInView<T extends HTMLElement = HTMLElement>(
   ref: React.Ref<T>,
-  options: UseIsInViewOptions = {},
+  options: UseIsInViewOptions = {}
 ) {
   const { inView, inViewOnce = false, inViewMargin = "0px" } = options;
-  const localRef = React.useRef<T>(null);
-  React.useImperativeHandle(ref, () => localRef.current as T);
+  const localRef = useRef<T>(null);
+  useImperativeHandle(ref, () => localRef.current as T);
   const inViewResult = useInView(localRef, {
     once: inViewOnce,
     margin: inViewMargin,

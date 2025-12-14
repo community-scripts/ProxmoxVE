@@ -1,9 +1,7 @@
 {
   "name": "Paperless-GPT",
   "slug": "paperless-gpt",
-  "categories": [
-    20
-  ],
+  "categories": [20],
   "date_created": "2025-03-10",
   "type": "ct",
   "updateable": true,

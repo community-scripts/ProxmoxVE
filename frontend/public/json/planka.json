@@ -1,9 +1,7 @@
 {
   "name": "PLANKA",
   "slug": "planka",
-  "categories": [
-    12
-  ],
+  "categories": [12],
   "date_created": "2025-06-19",
   "type": "ct",
   "updateable": true,

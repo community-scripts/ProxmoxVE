@@ -9,78 +9,63 @@ import { basePath } from "@/config/site-config";
 
 import { getDisplayValueFromType } from "../script-info-blocks";
 
-function getInstallCommand(scriptPath = "", isAlpine = false, useGitea = false) {
+function getInstallCommand(
+  scriptPath = "",
+  isAlpine = false,
+  useGitea = false
+) {
   const githubUrl = `https://raw.githubusercontent.com/community-scripts/${basePath}/main/${scriptPath}`;
   const giteaUrl = `https://git.community-scripts.org/community-scripts/${basePath}/raw/branch/main/${scriptPath}`;
   const url = useGitea ? giteaUrl : githubUrl;
-  return isAlpine ? `bash -c "$(curl -fsSL ${url})"` : `bash -c "$(curl -fsSL ${url})"`;
+  return isAlpine
+    ? `bash -c "$(curl -fsSL ${url})"`
+    : `bash -c "$(curl -fsSL ${url})"`;
 }
 
 export default function InstallCommand({ item }: { item: Script }) {
-  const alpineScript = item.install_methods.find(method => method.type === "alpine");
-  const defaultScript = item.install_methods.find(method => method.type === "default");
+  const alpineScript = item.install_methods.find(
+    (method) => method.type === "alpine"
+  );
+  const defaultScript = item.install_methods.find(
+    (method) => method.type === "default"
+  );
 
   const renderInstructions = (isAlpine = false) => (
     <>
-      <p className="text-sm mt-2">
-        {isAlpine
-          ? (
-              <>
-                As an alternative option, you can use Alpine Linux and the
-                {" "}
-                {item.name}
-                {" "}
-                package to create a
-                {" "}
-                {item.name}
-                {" "}
-                {getDisplayValueFromType(item.type)}
-                {" "}
-                container with faster creation time and minimal system resource usage.
-                You are also obliged to adhere to updates provided by the package maintainer.
-              </>
-            )
-          : item.type === "pve"
-            ? (
-                <>
-                  To use the
-                  {" "}
-                  {item.name}
-                  {" "}
-                  script, run the command below **only** in the Proxmox VE Shell. This script is
-                  intended for managing or enhancing the host system directly.
-                </>
-              )
-            : item.type === "addon"
-              ? (
-                  <>
-                    This script enhances an existing setup. You can use it inside a running LXC container or directly on the
-                    Proxmox VE host to extend functionality with
-                    {" "}
-                    {item.name}
-                    .
-                  </>
-                )
-              : (
-                  <>
-                    To create a new Proxmox VE
-                    {" "}
-                    {item.name}
-                    {" "}
-                    {getDisplayValueFromType(item.type)}
-                    , run the command below in the
-                    Proxmox VE Shell.
-                  </>
-                )}
+      <p className="mt-2 text-sm">
+        {isAlpine ? (
+          <>
+            As an alternative option, you can use Alpine Linux and the{" "}
+            {item.name} package to create a {item.name}{" "}
+            {getDisplayValueFromType(item.type)} container with faster creation
+            time and minimal system resource usage. You are also obliged to
+            adhere to updates provided by the package maintainer.
+          </>
+        ) : item.type === "pve" ? (
+          <>
+            To use the {item.name} script, run the command below **only** in the
+            Proxmox VE Shell. This script is intended for managing or enhancing
+            the host system directly.
+          </>
+        ) : item.type === "addon" ? (
+          <>
+            This script enhances an existing setup. You can use it inside a
+            running LXC container or directly on the Proxmox VE host to extend
+            functionality with {item.name}.
+          </>
+        ) : (
+          <>
+            To create a new Proxmox VE {item.name}{" "}
+            {getDisplayValueFromType(item.type)}, run the command below in the
+            Proxmox VE Shell.
+          </>
+        )}
       </p>
       {isAlpine && (
         <p className="mt-2 text-sm">
           To create a new Proxmox VE Alpine-
-          {item.name}
-          {" "}
-          {getDisplayValueFromType(item.type)}
-          , run the command below in
-          the Proxmox VE Shell.
+          {item.name} {getDisplayValueFromType(item.type)}, run the command
+          below in the Proxmox VE Shell.
         </p>
       )}
     </>
@@ -90,11 +75,10 @@ export default function InstallCommand({ item }: { item: Script }) {
     <Alert className="mt-3 mb-3">
       <Info className="h-4 w-4" />
       <AlertDescription className="text-sm">
-        <strong>When to use Gitea:</strong>
-        {" "}
-        GitHub may have issues including slow connections, delayed updates after bug
-        fixes, no IPv6 support, API rate limits (60/hour). Use our Gitea mirror as a reliable alternative when
-        experiencing these issues.
+        <strong>When to use Gitea:</strong> GitHub may have issues including
+        slow connections, delayed updates after bug fixes, no IPv6 support, API
+        rate limits (60/hour). Use our Gitea mirror as a reliable alternative
+        when experiencing these issues.
       </AlertDescription>
     </Alert>
   );
@@ -109,20 +93,25 @@ export default function InstallCommand({ item }: { item: Script }) {
           </TabsList>
           <TabsContent value="default">
             {renderInstructions()}
-            <CodeCopyButton>{getInstallCommand(defaultScript?.script, false, useGitea)}</CodeCopyButton>
+            <CodeCopyButton>
+              {getInstallCommand(defaultScript?.script, false, useGitea)}
+            </CodeCopyButton>
           </TabsContent>
           <TabsContent value="alpine">
             {renderInstructions(true)}
-            <CodeCopyButton>{getInstallCommand(alpineScript.script, true, useGitea)}</CodeCopyButton>
+            <CodeCopyButton>
+              {getInstallCommand(alpineScript.script, true, useGitea)}
+            </CodeCopyButton>
           </TabsContent>
         </Tabs>
       );
-    }
-    else if (defaultScript?.script) {
+    } else if (defaultScript?.script) {
       return (
         <>
           {renderInstructions()}
-          <CodeCopyButton>{getInstallCommand(defaultScript.script, false, useGitea)}</CodeCopyButton>
+          <CodeCopyButton>
+            {getInstallCommand(defaultScript.script, false, useGitea)}
+          </CodeCopyButton>
         </>
       );
     }
@@ -136,9 +125,7 @@ export default function InstallCommand({ item }: { item: Script }) {
           <TabsTrigger value="github">GitHub</TabsTrigger>
           <TabsTrigger value="gitea">Gitea</TabsTrigger>
         </TabsList>
-        <TabsContent value="github">
-          {renderScriptTabs(false)}
-        </TabsContent>
+        <TabsContent value="github">{renderScriptTabs(false)}</TabsContent>
         <TabsContent value="gitea">
           {renderGiteaInfo()}
           {renderScriptTabs(true)}

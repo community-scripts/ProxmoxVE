@@ -1,9 +1,7 @@
 {
   "name": "ProjectSend",
   "slug": "projectsend",
-  "categories": [
-    12
-  ],
+  "categories": [12],
   "date_created": "2025-01-20",
   "type": "ct",
   "updateable": true,

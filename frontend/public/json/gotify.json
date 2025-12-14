@@ -1,9 +1,7 @@
 {
   "name": "Gotify",
   "slug": "gotify",
-  "categories": [
-    19
-  ],
+  "categories": [19],
   "date_created": "2024-05-02",
   "type": "ct",
   "updateable": true,

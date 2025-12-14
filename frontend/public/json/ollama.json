@@ -1,9 +1,7 @@
 {
   "name": "Ollama",
   "slug": "ollama",
-  "categories": [
-    20
-  ],
+  "categories": [20],
   "date_created": "2025-04-30",
   "type": "ct",
   "updateable": true,

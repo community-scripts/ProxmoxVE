@@ -1,9 +1,7 @@
 {
   "name": "Garage",
   "slug": "garage",
-  "categories": [
-    8
-  ],
+  "categories": [8],
   "date_created": "2025-10-27",
   "type": "ct",
   "updateable": true,

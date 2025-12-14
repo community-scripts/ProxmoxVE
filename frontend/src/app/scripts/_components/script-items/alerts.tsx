@@ -14,22 +14,20 @@ type NoteProps = {
 export default function Alerts({ item }: { item: Script }) {
   return (
     <>
-      {item?.notes?.length > 0
-        && item.notes.map((note: NoteProps, index: number) => (
-          <div key={index} className="mt-4 flex flex-col shadow-sm gap-2">
+      {item?.notes?.length > 0 &&
+        item.notes.map((note: NoteProps, index: number) => (
+          <div key={index} className="mt-4 flex flex-col gap-2 shadow-sm">
             <p
               className={cn(
                 "inline-flex items-center gap-2 rounded-lg border p-2 pl-4 text-sm",
-                AlertColors[note.type],
+                AlertColors[note.type]
               )}
             >
-              {note.type === "info"
-                ? (
-                    <NotepadText className="h-4 min-h-4 w-4 min-w-4" />
-                  )
-                : (
-                    <AlertCircle className="h-4 min-h-4 w-4 min-w-4" />
-                  )}
+              {note.type === "info" ? (
+                <NotepadText className="h-4 min-h-4 w-4 min-w-4" />
+              ) : (
+                <AlertCircle className="h-4 min-h-4 w-4 min-w-4" />
+              )}
               <span>{TextCopyBlock(note.text)}</span>
             </p>
           </div>

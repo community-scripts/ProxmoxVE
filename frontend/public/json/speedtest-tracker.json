@@ -1,9 +1,7 @@
 {
   "name": "Speedtest-Tracker",
   "slug": "speedtest-tracker",
-  "categories": [
-    4
-  ],
+  "categories": [4],
   "date_created": "2025-12-11",
   "type": "ct",
   "updateable": true,

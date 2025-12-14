@@ -1,9 +1,7 @@
 {
   "name": "Reactive Resume",
   "slug": "reactive-resume",
-  "categories": [
-    12
-  ],
+  "categories": [12],
   "date_created": "2025-04-22",
   "type": "ct",
   "updateable": true,

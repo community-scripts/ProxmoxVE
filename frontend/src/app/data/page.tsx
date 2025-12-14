@@ -11,16 +11,11 @@ import {
   Trophy,
   XCircle,
 } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
 import { Bar, BarChart, CartesianGrid, Cell, LabelList, XAxis } from "recharts";
+import { useEffect, useMemo, useState } from "react";
 
 import type { ChartConfig } from "@/components/ui/chart";
 
-import { formattedBadge } from "@/components/command-menu";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import {
   Dialog,
   DialogContent,
@@ -29,10 +24,43 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+import { formattedBadge } from "@/components/command-menu";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 type DataModel = {
   id: number;
@@ -114,7 +142,7 @@ export default function DataPage() {
           fetch(
             `https://api.htl-braunau.at/data/paginated?page=${currentPage}&limit=${
               itemsPerPage === 0 ? "" : itemsPerPage
-            }`,
+            }`
           ),
         ]);
 
@@ -155,7 +183,11 @@ export default function DataPage() {
 
   const requestSort = (key: string) => {
     let direction: "ascending" | "descending" = "ascending";
-    if (sortConfig && sortConfig.key === key && sortConfig.direction === "ascending") {
+    if (
+      sortConfig &&
+      sortConfig.key === key &&
+      sortConfig.direction === "ascending"
+    ) {
       direction = "descending";
     }
     setSortConfig({ key, direction });
@@ -213,57 +245,80 @@ export default function DataPage() {
   return (
     <div className="mb-3">
       <div className="mt-20 flex sm:px-4 xl:px-0">
-        <div className="mx-4 w-full sm:mx-0 space-y-8">
+        <div className="mx-4 w-full space-y-8 sm:mx-0">
           {/* Header */}
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Analytics</h1>
-            <p className="text-muted-foreground">Overview of container installations and system statistics.</p>
+            <h1 className="font-bold text-3xl tracking-tight">Analytics</h1>
+            <p className="text-muted-foreground">
+              Overview of container installations and system statistics.
+            </p>
           </div>
 
           {/* Widgets */}
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Created</CardTitle>
+                <CardTitle className="font-medium text-sm">
+                  Total Created
+                </CardTitle>
                 <Box className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{nf.format(totalCount)}</div>
-                <p className="text-xs text-muted-foreground">Total LXC/VM entries found</p>
+                <div className="font-bold text-2xl">
+                  {nf.format(totalCount)}
+                </div>
+                <p className="text-muted-foreground text-xs">
+                  Total LXC/VM entries found
+                </p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Success Rate</CardTitle>
+                <CardTitle className="font-medium text-sm">
+                  Success Rate
+                </CardTitle>
                 <CheckCircle2 className="h-4 w-4 text-green-500" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{successRate.toFixed(1)}%</div>
-                <p className="text-xs text-muted-foreground">{nf.format(successCount)} successful installations</p>
+                <div className="font-bold text-2xl">
+                  {successRate.toFixed(1)}%
+                </div>
+                <p className="text-muted-foreground text-xs">
+                  {nf.format(successCount)} successful installations
+                </p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Failures</CardTitle>
+                <CardTitle className="font-medium text-sm">Failures</CardTitle>
                 <XCircle className="h-4 w-4 text-red-500" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{nf.format(failureCount)}</div>
-                <p className="text-xs text-muted-foreground">Installations encountered errors</p>
+                <div className="font-bold text-2xl">
+                  {nf.format(failureCount)}
+                </div>
+                <p className="text-muted-foreground text-xs">
+                  Installations encountered errors
+                </p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Most Popular</CardTitle>
+                <CardTitle className="font-medium text-sm">
+                  Most Popular
+                </CardTitle>
                 <Trophy className="h-4 w-4 text-yellow-500" />
               </CardHeader>
               <CardContent>
-                <div className="truncate text-2xl font-bold">{mostPopularApp ? mostPopularApp[0] : "N/A"}</div>
-                <p className="text-xs text-muted-foreground">
-                  {mostPopularApp ? nf.format(mostPopularApp[1]) : 0} installations
+                <div className="truncate font-bold text-2xl">
+                  {mostPopularApp ? mostPopularApp[0] : "N/A"}
+                </div>
+                <p className="text-muted-foreground text-xs">
+                  {mostPopularApp ? nf.format(mostPopularApp[1]) : 0}{" "}
+                  installations
                 </p>
               </CardContent>
             </Card>
@@ -274,7 +329,9 @@ export default function DataPage() {
             <CardHeader className="flex flex-row items-center justify-between">
               <div className="space-y-1.5">
                 <CardTitle>Top Applications</CardTitle>
-                <CardDescription>The most frequently installed applications.</CardDescription>
+                <CardDescription>
+                  The most frequently installed applications.
+                </CardDescription>
               </div>
               <Dialog>
                 <DialogTrigger asChild>
@@ -286,14 +343,22 @@ export default function DataPage() {
                 <DialogContent className="max-h-[80vh] sm:max-w-md">
                   <DialogHeader>
                     <DialogTitle>Application Statistics</DialogTitle>
-                    <DialogDescription>Installation counts for all {allApps.length} applications.</DialogDescription>
+                    <DialogDescription>
+                      Installation counts for all
+                      {allApps.length} applications.
+                    </DialogDescription>
                   </DialogHeader>
                   <ScrollArea className="h-[60vh] w-full rounded-md border p-4">
                     <div className="space-y-4">
                       {allApps.map(([name, count], index) => (
-                        <div key={name} className="flex items-center justify-between text-sm">
+                        <div
+                          key={name}
+                          className="flex items-center justify-between text-sm"
+                        >
                           <div className="flex items-center gap-2">
-                            <span className="w-8 font-mono text-muted-foreground">{index + 1}.</span>
+                            <span className="w-8 font-mono text-muted-foreground">
+                              {index + 1}.
+                            </span>
                             <span className="font-medium">{name}</span>
                           </div>
                           <span className="font-mono">{nf.format(count)}</span>
@@ -311,7 +376,10 @@ export default function DataPage() {
                     <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
                   </div>
                 ) : (
-                  <ChartContainer config={chartConfigApps} className="h-full w-full">
+                  <ChartContainer
+                    config={chartConfigApps}
+                    className="h-full w-full"
+                  >
                     <BarChart
                       accessibilityLayer
                       data={appsChartData}
@@ -325,14 +393,24 @@ export default function DataPage() {
                         tickLine={false}
                         tickMargin={10}
                         axisLine={false}
-                        tickFormatter={(value) => (value.length > 8 ? `${value.slice(0, 8)}...` : value)}
+                        tickFormatter={(value) =>
+                          value.length > 8 ? `${value.slice(0, 8)}...` : value
+                        }
                       />
-                      <ChartTooltip cursor={false} content={<ChartTooltipContent nameKey="app" />} />
+                      <ChartTooltip
+                        cursor={false}
+                        content={<ChartTooltipContent nameKey="app" />}
+                      />
                       <Bar dataKey="count" radius={8}>
                         {appsChartData.map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={entry.fill} />
                         ))}
-                        <LabelList position="top" offset={12} className="fill-foreground" fontSize={12} />
+                        <LabelList
+                          position="top"
+                          offset={12}
+                          className="fill-foreground"
+                          fontSize={12}
+                        />
                       </Bar>
                     </BarChart>
                   </ChartContainer>
@@ -346,10 +424,15 @@ export default function DataPage() {
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
                 <CardTitle>Installation Log</CardTitle>
-                <CardDescription>Detailed records of all container creation attempts.</CardDescription>
+                <CardDescription>
+                  Detailed records of all container creation attempts.
+                </CardDescription>
               </div>
               <div className="flex items-center gap-2">
-                <Select value={String(itemsPerPage)} onValueChange={(val) => setItemsPerPage(Number(val))}>
+                <Select
+                  value={String(itemsPerPage)}
+                  onValueChange={(val) => setItemsPerPage(Number(val))}
+                >
                   <SelectTrigger className="w-[80px]">
                     <SelectValue placeholder="Limit" />
                   </SelectTrigger>
@@ -367,46 +450,77 @@ export default function DataPage() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="w-[100px] cursor-pointer" onClick={() => requestSort("status")}>
+                      <TableHead
+                        className="w-[100px] cursor-pointer"
+                        onClick={() => requestSort("status")}
+                      >
                         Status
-                        {sortConfig?.key === "status" && <ArrowUpDown className="ml-2 inline h-4 w-4" />}
+                        {sortConfig?.key === "status" && (
+                          <ArrowUpDown className="ml-2 inline h-4 w-4" />
+                        )}
                       </TableHead>
-                      <TableHead className="cursor-pointer" onClick={() => requestSort("type")}>
+                      <TableHead
+                        className="cursor-pointer"
+                        onClick={() => requestSort("type")}
+                      >
                         Type
-                        {sortConfig?.key === "type" && <ArrowUpDown className="ml-2 inline h-4 w-4" />}
+                        {sortConfig?.key === "type" && (
+                          <ArrowUpDown className="ml-2 inline h-4 w-4" />
+                        )}
                       </TableHead>
-                      <TableHead className="cursor-pointer" onClick={() => requestSort("nsapp")}>
+                      <TableHead
+                        className="cursor-pointer"
+                        onClick={() => requestSort("nsapp")}
+                      >
                         Application
-                        {sortConfig?.key === "nsapp" && <ArrowUpDown className="ml-2 inline h-4 w-4" />}
+                        {sortConfig?.key === "nsapp" && (
+                          <ArrowUpDown className="ml-2 inline h-4 w-4" />
+                        )}
                       </TableHead>
-                      <TableHead className="hidden cursor-pointer md:table-cell" onClick={() => requestSort("os_type")}>
+                      <TableHead
+                        className="hidden cursor-pointer md:table-cell"
+                        onClick={() => requestSort("os_type")}
+                      >
                         OS
-                        {sortConfig?.key === "os_type" && <ArrowUpDown className="ml-2 inline h-4 w-4" />}
+                        {sortConfig?.key === "os_type" && (
+                          <ArrowUpDown className="ml-2 inline h-4 w-4" />
+                        )}
                       </TableHead>
                       <TableHead
                         className="hidden cursor-pointer md:table-cell"
                         onClick={() => requestSort("disk_size")}
                       >
                         Disk Size
-                        {sortConfig?.key === "disk_size" && <ArrowUpDown className="ml-2 inline h-4 w-4" />}
+                        {sortConfig?.key === "disk_size" && (
+                          <ArrowUpDown className="ml-2 inline h-4 w-4" />
+                        )}
                       </TableHead>
                       <TableHead
                         className="hidden cursor-pointer lg:table-cell"
                         onClick={() => requestSort("core_count")}
                       >
                         Core Count
-                        {sortConfig?.key === "core_count" && <ArrowUpDown className="ml-2 inline h-4 w-4" />}
+                        {sortConfig?.key === "core_count" && (
+                          <ArrowUpDown className="ml-2 inline h-4 w-4" />
+                        )}
                       </TableHead>
                       <TableHead
                         className="hidden cursor-pointer lg:table-cell"
                         onClick={() => requestSort("ram_size")}
                       >
                         RAM Size
-                        {sortConfig?.key === "ram_size" && <ArrowUpDown className="ml-2 inline h-4 w-4" />}
+                        {sortConfig?.key === "ram_size" && (
+                          <ArrowUpDown className="ml-2 inline h-4 w-4" />
+                        )}
                       </TableHead>
-                      <TableHead className="cursor-pointer text-right" onClick={() => requestSort("created_at")}>
+                      <TableHead
+                        className="cursor-pointer text-right"
+                        onClick={() => requestSort("created_at")}
+                      >
                         Created At
-                        {sortConfig?.key === "created_at" && <ArrowUpDown className="ml-2 inline h-4 w-4" />}
+                        {sortConfig?.key === "created_at" && (
+                          <ArrowUpDown className="ml-2 inline h-4 w-4" />
+                        )}
                       </TableHead>
                     </TableRow>
                   </TableHeader>
@@ -415,7 +529,8 @@ export default function DataPage() {
                       <TableRow>
                         <TableCell colSpan={8} className="h-24 text-center">
                           <div className="flex items-center justify-center gap-2">
-                            <Loader2 className="h-4 w-4 animate-spin" /> Loading data...
+                            <Loader2 className="h-4 w-4 animate-spin" /> Loading
+                            data...
                           </div>
                         </TableCell>
                       </TableRow>
@@ -424,29 +539,41 @@ export default function DataPage() {
                         <TableRow key={`${item.id}-${idx}`}>
                           <TableCell>
                             {item.status === "done" ? (
-                              <Badge className="text-green-500/75 border-green-500/75">Success</Badge>
+                              <Badge className="border-green-500/75 text-green-500/75">
+                                Success
+                              </Badge>
                             ) : item.status === "failed" ? (
                               <TooltipProvider>
                                 <Tooltip>
                                   <TooltipTrigger asChild>
-                                    <Badge className="text-red-500/75 border-red-500/75 cursor-help">Failed</Badge>
+                                    <Badge className="cursor-help border-red-500/75 text-red-500/75">
+                                      Failed
+                                    </Badge>
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-xs">
                                     <p className="font-semibold">Error:</p>
-                                    <p className="text-sm">{item.error || "Unknown error"}</p>
+                                    <p className="text-sm">
+                                      {item.error || "Unknown error"}
+                                    </p>
                                   </TooltipContent>
                                 </Tooltip>
                               </TooltipProvider>
                             ) : item.status === "installing" ? (
-                              <Badge className="text-blue-500/75 border-blue-500/75">Installing</Badge>
+                              <Badge className="border-blue-500/75 text-blue-500/75">
+                                Installing
+                              </Badge>
                             ) : (
                               <Badge variant="outline">{item.status}</Badge>
                             )}
                           </TableCell>
                           <TableCell>
-                            {getTypeBadge(item.type) || <Badge variant="outline">{item.type}</Badge>}
+                            {getTypeBadge(item.type) || (
+                              <Badge variant="outline">{item.type}</Badge>
+                            )}
                           </TableCell>
-                          <TableCell className="font-medium">{item.nsapp}</TableCell>
+                          <TableCell className="font-medium">
+                            {item.nsapp}
+                          </TableCell>
                           <TableCell className="hidden md:table-cell">
                             {item.os_type} {item.os_version}
                           </TableCell>
@@ -454,12 +581,16 @@ export default function DataPage() {
                             {item.disk_size}
                             GB
                           </TableCell>
-                          <TableCell className="hidden lg:table-cell">{item.core_count}</TableCell>
+                          <TableCell className="hidden lg:table-cell">
+                            {item.core_count}
+                          </TableCell>
                           <TableCell className="hidden lg:table-cell">
                             {item.ram_size}
                             MB
                           </TableCell>
-                          <TableCell className="text-right">{formatDate(item.created_at)}</TableCell>
+                          <TableCell className="text-right">
+                            {formatDate(item.created_at)}
+                          </TableCell>
                         </TableRow>
                       ))
                     ) : (
@@ -477,13 +608,18 @@ export default function DataPage() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.max(prev - 1, 1))
+                  }
                   disabled={currentPage === 1 || loading}
                 >
                   <ChevronLeft className="mr-2 h-4 w-4" />
                   Previous
                 </Button>
-                <div className="text-sm text-muted-foreground">Page {currentPage}</div>
+                <div className="text-muted-foreground text-sm">
+                  Page
+                  {currentPage}
+                </div>
                 <Button
                   variant="outline"
                   size="sm"

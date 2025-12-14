@@ -20,19 +20,20 @@ async function getMetadata() {
 
 async function getScripts() {
   const filePaths = (await fs.readdir(jsonDir))
-    .filter(fileName =>
-      fileName.endsWith(".json")
-      && fileName !== metadataFileName
-      && fileName !== versionFileName,
+    .filter(
+      (fileName) =>
+        fileName.endsWith(".json") &&
+        fileName !== metadataFileName &&
+        fileName !== versionFileName
     )
-    .map(fileName => path.resolve(jsonDir, fileName));
+    .map((fileName) => path.resolve(jsonDir, fileName));
 
   const scripts = await Promise.all(
     filePaths.map(async (filePath) => {
       const fileContent = await fs.readFile(filePath, encoding);
       const script: Script = JSON.parse(fileContent);
       return script;
-    }),
+    })
   );
   return scripts;
 }
@@ -44,20 +45,19 @@ export async function GET() {
 
     const categories = metadata.categories
       .map((category) => {
-        category.scripts = scripts.filter(script =>
-          script.categories?.includes(category.id),
+        category.scripts = scripts.filter((script) =>
+          script.categories?.includes(category.id)
         );
         return category;
       })
       .sort((a, b) => a.sort_order - b.sort_order);
 
     return NextResponse.json(categories);
-  }
-  catch (error) {
+  } catch (error) {
     console.error(error as Error);
     return NextResponse.json(
       { error: "Failed to fetch categories" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

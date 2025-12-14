@@ -1,9 +1,7 @@
 {
   "name": "Baby Buddy",
   "slug": "babybuddy",
-  "categories": [
-    23
-  ],
+  "categories": [23],
   "date_created": "2025-05-21",
   "type": "ct",
   "updateable": true,

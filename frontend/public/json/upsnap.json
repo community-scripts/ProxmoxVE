@@ -1,9 +1,7 @@
 {
   "name": "UpSnap",
   "slug": "upsnap",
-  "categories": [
-    4
-  ],
+  "categories": [4],
   "date_created": "2025-09-23",
   "type": "ct",
   "updateable": true,

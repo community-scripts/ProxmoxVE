@@ -1,9 +1,7 @@
 {
   "name": "Domain Monitor",
   "slug": "domain-monitor",
-  "categories": [
-    9
-  ],
+  "categories": [9],
   "date_created": "2025-11-11",
   "type": "ct",
   "updateable": true,

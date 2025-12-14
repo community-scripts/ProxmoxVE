@@ -1,9 +1,7 @@
 {
   "name": "Home Assistant Container",
   "slug": "homeassistant",
-  "categories": [
-    16
-  ],
+  "categories": [16],
   "date_created": "2024-04-29",
   "type": "ct",
   "updateable": true,

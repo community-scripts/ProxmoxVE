@@ -1,10 +1,7 @@
 {
   "name": "Prometheus Blackbox Exporter",
   "slug": "prometheus-blackbox-exporter",
-  "categories": [
-    1,
-    9
-  ],
+  "categories": [1, 9],
   "date_created": "2025-10-10",
   "type": "ct",
   "updateable": true,

@@ -1,9 +1,7 @@
 {
   "name": "Apache Tika",
   "slug": "apache-tika",
-  "categories": [
-    12
-  ],
+  "categories": [12],
   "date_created": "2025-02-05",
   "type": "ct",
   "updateable": true,

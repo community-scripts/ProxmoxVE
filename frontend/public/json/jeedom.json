@@ -1,9 +1,7 @@
 {
   "name": "Jeedom",
   "slug": "jeedom",
-  "categories": [
-    16
-  ],
+  "categories": [16],
   "date_created": "2025-07-29",
   "type": "ct",
   "updateable": true,

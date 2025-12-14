@@ -8,12 +8,11 @@ import { buttonVariants } from "./ui/button";
 
 export default function Footer() {
   return (
-    <div className="supports-backdrop-blur:bg-background/90 mt-auto border-t w-full flex justify-between border-border bg-background/40 py-4 backdrop-blur-lg">
-      <div className="mx-6 w-full flex justify-between text-xs sm:text-sm text-muted-foreground">
+    <div className="mt-auto flex w-full justify-between border-border border-t bg-background/40 py-4 backdrop-blur-lg supports-backdrop-blur:bg-background/90">
+      <div className="mx-6 flex w-full justify-between text-muted-foreground text-xs sm:text-sm">
         <div className="flex items-center">
           <p>
-            Website built by the community. The source code is available on
-            {" "}
+            Website built by the community. The source code is available on{" "}
             <Link
               href={`https://github.com/community-scripts/${basePath}/tree/main/frontend`}
               target="_blank"
@@ -26,22 +25,24 @@ export default function Footer() {
             .
           </p>
         </div>
-        <div className="sm:flex hidden">
+        <div className="hidden sm:flex">
           <Link
             href="/json-editor"
-            className={cn(buttonVariants({ variant: "link" }), "text-muted-foreground flex items-center gap-2")}
+            className={cn(
+              buttonVariants({ variant: "link" }),
+              "flex items-center gap-2 text-muted-foreground"
+            )}
           >
-            <FileJson className="h-4 w-4" />
-            {" "}
-            JSON Editor
+            <FileJson className="h-4 w-4" /> JSON Editor
           </Link>
           <Link
             href="/data"
-            className={cn(buttonVariants({ variant: "link" }), "text-muted-foreground flex items-center gap-2")}
+            className={cn(
+              buttonVariants({ variant: "link" }),
+              "flex items-center gap-2 text-muted-foreground"
+            )}
           >
-            <Server className="h-4 w-4" />
-            {" "}
-            API Data
+            <Server className="h-4 w-4" /> API Data
           </Link>
         </div>
       </div>

@@ -1,9 +1,7 @@
 {
   "name": "Mealie",
   "slug": "mealie",
-  "categories": [
-    13
-  ],
+  "categories": [13],
   "date_created": "2025-07-14",
   "type": "ct",
   "updateable": true,

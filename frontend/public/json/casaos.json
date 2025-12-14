@@ -1,9 +1,7 @@
 {
   "name": "CasaOS",
   "slug": "casaos",
-  "categories": [
-    2
-  ],
+  "categories": [2],
   "date_created": "2024-05-02",
   "type": "ct",
   "updateable": true,

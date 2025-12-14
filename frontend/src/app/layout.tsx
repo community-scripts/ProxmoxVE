@@ -1,9 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { Inter } from "next/font/google";
 import Script from "next/script";
-import React from "react";
 
 import { ThemeProvider } from "@/components/theme-provider";
 import { analytics, basePath } from "@/config/site-config";
@@ -14,6 +13,12 @@ import Navbar from "@/components/navbar";
 import "@/styles/globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+};
 
 export const metadata: Metadata = {
   title: "Proxmox VE Helper-Scripts",
@@ -44,11 +49,6 @@ export const metadata: Metadata = {
   metadataBase: new URL(`https://community-scripts.github.io/${basePath}/`),
   alternates: {
     canonical: `https://community-scripts.github.io/${basePath}/`,
-  },
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 5,
   },
   formatDetection: {
     email: false,
@@ -96,7 +96,6 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="canonical" href={metadata.metadataBase?.href} />
         <link rel="manifest" href="manifest.webmanifest" />
         <link rel="preconnect" href="https://api.github.com" />
       </head>
@@ -106,14 +105,19 @@ export default function RootLayout({
           data-site-id={analytics.token}
           strategy="afterInteractive"
         />
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
           <div className="flex w-full flex-col justify-center">
             <NuqsAdapter>
               <QueryProvider>
                 <Navbar />
                 <div className="flex min-h-screen flex-col justify-center">
                   <div className="flex w-full justify-center">
-                    <div className="w-full max-w-[1440px] ">
+                    <div className="w-full max-w-[1440px]">
                       {children}
                       <Toaster richColors />
                     </div>

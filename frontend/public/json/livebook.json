@@ -1,9 +1,7 @@
 {
   "name": "Livebook",
   "slug": "livebook",
-  "categories": [
-    20
-  ],
+  "categories": [20],
   "date_created": "2025-10-30",
   "type": "ct",
   "updateable": true,

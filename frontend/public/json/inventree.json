@@ -1,9 +1,7 @@
 {
   "name": "InvenTree",
   "slug": "inventree",
-  "categories": [
-    25
-  ],
+  "categories": [25],
   "date_created": "2025-03-06",
   "type": "ct",
   "updateable": true,

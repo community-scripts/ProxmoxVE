@@ -3,7 +3,6 @@
 import type { HTMLMotionProps } from "motion/react";
 
 import { motion } from "motion/react";
-import * as React from "react";
 
 import type { WithAsChild } from "@/components/animate-ui/primitives/animate/slot";
 

@@ -1,9 +1,7 @@
 {
   "name": "Mylar3",
   "slug": "mylar3",
-  "categories": [
-    14
-  ],
+  "categories": [14],
   "date_created": "2024-12-02",
   "type": "ct",
   "updateable": true,

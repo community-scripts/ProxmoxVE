@@ -25,9 +25,9 @@ export const FAQ_Items = [
       "Updates via our LXC scripts might not pull the absolute latest version for a few reasons:\n- A bug in the application's release naming on GitHub.\n- A bug in our update script.\n- We intentionally pinned the version. This happens if a newer version has breaking changes or serious bugs that could affect your data or LXC stability. We wait for fixes before allowing the update.",
   },
   {
-    title: "Why am I getting a \"502 Bad Gateway\" error?",
+    title: 'Why am I getting a "502 Bad Gateway" error?',
     content:
-      "A \"502 Bad Gateway\" error usually means the application inside the LXC is not running or responding correctly. Check the application's logs first. If you use a reverse proxy, check its logs too. If you still have problems after checking the logs, report the issue, providing details from the logs.",
+      'A "502 Bad Gateway" error usually means the application inside the LXC is not running or responding correctly. Check the application\'s logs first. If you use a reverse proxy, check its logs too. If you still have problems after checking the logs, report the issue, providing details from the logs.',
   },
   {
     title: "What should I do if a script fails during execution?",

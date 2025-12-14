@@ -23,7 +23,7 @@ export default function CodeCopyButton({
     }
   }, [hasCopied]);
 
-  const handleCopy = (type: string, value: any) => {
+  const handleCopy = (_type: string, value: any) => {
     navigator.clipboard.writeText(value);
 
     setHasCopied(true);
@@ -35,7 +35,7 @@ export default function CodeCopyButton({
       setTimeout(() => {
         toast.error(
           "Be careful when copying scripts from the internet. Always remember to check the source!",
-          { duration: 8000 },
+          { duration: 8000 }
         );
       }, 500);
     }
@@ -43,22 +43,21 @@ export default function CodeCopyButton({
 
   return (
     <div className="mt-4 flex">
-      <Card className="flex items-center overflow-x-auto bg-primary-foreground pl-4 [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-muted-foreground/20">
-        <div className="overflow-x-auto whitespace-pre-wrap text-nowrap break-all pr-4 text-sm [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-muted-foreground/20">
+      <Card className="flex items-center overflow-x-auto bg-primary-foreground pl-4 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-muted-foreground/20 [&::-webkit-scrollbar]:h-1.5">
+        <div className="overflow-x-auto whitespace-pre-wrap text-nowrap break-all pr-4 text-sm [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-muted-foreground/20 [&::-webkit-scrollbar]:h-1.5">
           {!isMobile && children ? children : "Copy install command"}
         </div>
         <button
+          type="button"
           onClick={() => handleCopy("install command", children)}
           className={cn("bg-muted px-3 py-4")}
           title="Copy"
         >
-          {hasCopied
-            ? (
-                <CheckIcon className="h-4 w-4" />
-              )
-            : (
-                <ClipboardIcon className="h-4 w-4" />
-              )}
+          {hasCopied ? (
+            <CheckIcon className="h-4 w-4" />
+          ) : (
+            <ClipboardIcon className="h-4 w-4" />
+          )}
         </button>
       </Card>
     </div>

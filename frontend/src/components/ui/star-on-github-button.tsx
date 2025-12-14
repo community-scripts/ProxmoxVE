@@ -18,15 +18,14 @@ export default function StarOnGithubButton() {
           `https://api.github.com/repos/community-scripts/${basePath}`,
           {
             next: { revalidate: 60 * 60 * 24 },
-          },
+          }
         );
 
         if (res.ok) {
           const data = await res.json();
           setStars(data.stargazers_count || stars);
         }
-      }
-      catch (error) {
+      } catch (error) {
         console.error("Error fetching stars:", error);
       }
     };
@@ -38,16 +37,15 @@ export default function StarOnGithubButton() {
       className={cn(
         buttonVariants(),
         "hidden h-9 min-w-[240px] gap-2 overflow-hidden whitespace-pre sm:flex lg:flex",
-        "group relative justify-center gap-2 rounded-md transition-all duration-300 ease-out hover:ring-2 hover:ring-primary hover:ring-offset-2",
+        "group relative justify-center gap-2 rounded-md transition-all duration-300 ease-out hover:ring-2 hover:ring-primary hover:ring-offset-2"
       )}
       target="_blank"
       href={`https://github.com/community-scripts/${basePath}`}
     >
-      <span className="absolute right-0 -mt-12 h-32 translate-x-12 rotate-12 bg-white opacity-10 transition-all duration-1000 ease-out group-hover:-translate-x-40" />
+      <span className="-mt-12 group-hover:-translate-x-40 absolute right-0 h-32 translate-x-12 rotate-12 bg-white opacity-10 transition-all duration-1000 ease-out" />
       <div className="flex items-center">
         <FaGithub className="size-4" />
-        <span className="ml-1">Star on GitHub</span>
-        {" "}
+        <span className="ml-1">Star on GitHub</span>{" "}
       </div>
       <div className="ml-2 flex items-center gap-1 text-sm md:flex">
         <FaStar className="size-4 text-gray-500 transition-all duration-300 group-hover:text-yellow-300" />

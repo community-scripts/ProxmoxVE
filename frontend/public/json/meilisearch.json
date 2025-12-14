@@ -1,9 +1,7 @@
 {
   "name": "Meilisearch",
   "slug": "meilisearch",
-  "categories": [
-    8
-  ],
+  "categories": [8],
   "date_created": "2025-04-04",
   "type": "ct",
   "updateable": true,

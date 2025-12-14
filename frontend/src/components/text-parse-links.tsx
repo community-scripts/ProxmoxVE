@@ -14,7 +14,7 @@ export default function TextParseLinks(text: string) {
       return (
         <span
           key={`code-${codeIndex}`}
-          className="bg-secondary py-1 px-2 rounded-lg inline-flex items-center gap-2"
+          className="inline-flex items-center gap-2 rounded-lg bg-secondary px-2 py-1"
         >
           {part}
           <ClipboardIcon
@@ -37,14 +37,18 @@ export default function TextParseLinks(text: string) {
                 href={urlPart}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:underline font-medium transition-colors"
+                className="inline-flex items-center gap-1 font-medium text-blue-600 transition-colors hover:underline dark:text-blue-400"
               >
                 {urlPart}
                 <ExternalLink className="size-3" />
               </a>
             );
           }
-          return <Fragment key={`plain-${codeIndex}-${urlIndex}`}>{urlPart}</Fragment>;
+          return (
+            <Fragment key={`plain-${codeIndex}-${urlIndex}`}>
+              {urlPart}
+            </Fragment>
+          );
         })}
       </Fragment>
     );

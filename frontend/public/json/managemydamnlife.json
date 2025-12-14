@@ -1,9 +1,7 @@
 {
   "name": "Manage My Damn Life",
   "slug": "managemydamnlife",
-  "categories": [
-    0
-  ],
+  "categories": [0],
   "date_created": "2025-06-12",
   "type": "ct",
   "updateable": true,

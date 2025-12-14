@@ -1,9 +1,7 @@
 {
   "name": "karakeep",
   "slug": "karakeep",
-  "categories": [
-    12
-  ],
+  "categories": [12],
   "date_created": "2025-04-07",
   "type": "ct",
   "updateable": true,

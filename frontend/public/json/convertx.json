@@ -1,9 +1,7 @@
 {
   "name": "ConvertX",
   "slug": "convertx",
-  "categories": [
-    9
-  ],
+  "categories": [9],
   "date_created": "2025-06-26",
   "type": "ct",
   "updateable": true,

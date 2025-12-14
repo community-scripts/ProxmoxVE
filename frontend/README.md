@@ -55,8 +55,7 @@ A comprehensive, user-friendly interface built with Next.js that provides access
 
 - **[Vitest 3.1.1](https://vitest.dev/)** - Fast unit testing framework
 - **[React Testing Library](https://testing-library.com/react)** - Simple testing utilities
-- **[ESLint](https://eslint.org/)** - Code linting and formatting
-- **[Prettier](https://prettier.io/)** - Code formatting
+- **[Biome](https://biomejs.dev/)** - Code linting and formatting
 
 ### Additional Libraries
 
@@ -132,7 +131,7 @@ npm run build        # Build for production
 npm run start        # Start production server (after build)
 
 # Code Quality
-npm run lint         # Run ESLint
+npm run lint         # Run Biome
 npm run typecheck    # Run TypeScript type checking
 npm run format:write # Format code with Prettier
 npm run format:check # Check code formatting

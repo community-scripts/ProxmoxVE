@@ -1,9 +1,7 @@
 {
   "name": "OTS",
   "slug": "ots",
-  "categories": [
-    6
-  ],
+  "categories": [6],
   "date_created": "2025-08-04",
   "type": "ct",
   "updateable": true,

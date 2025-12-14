@@ -22,7 +22,7 @@ export default function CodeCopyButton({
     }
   }, [hasCopied]);
 
-  const handleCopy = (type: string, value: any) => {
+  const handleCopy = (_type: string, value: any) => {
     navigator.clipboard.writeText(value);
 
     setHasCopied(true);
@@ -39,16 +39,14 @@ export default function CodeCopyButton({
           {!isMobile && children ? children : "Copy Config File Path"}
         </div>
         <div
-          className={cn(" right-0 cursor-pointer bg-muted px-3 py-4")}
+          className={cn("right-0 cursor-pointer bg-muted px-3 py-4")}
           onClick={() => handleCopy("install command", children)}
         >
-          {hasCopied
-            ? (
-                <CheckIcon className="h-4 w-4" />
-              )
-            : (
-                <ClipboardIcon className="h-4 w-4" />
-              )}
+          {hasCopied ? (
+            <CheckIcon className="h-4 w-4" />
+          ) : (
+            <ClipboardIcon className="h-4 w-4" />
+          )}
           <span className="sr-only">Copy</span>
         </div>
       </Card>

@@ -1,9 +1,7 @@
 {
   "name": "PVEScriptsLocal",
   "slug": "pve-scripts-local",
-  "categories": [
-    1
-  ],
+  "categories": [1],
   "date_created": "2025-10-03",
   "type": "ct",
   "updateable": true,

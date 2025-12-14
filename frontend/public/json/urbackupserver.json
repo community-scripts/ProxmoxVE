@@ -1,9 +1,7 @@
 {
   "name": "UrBackup Server",
   "slug": "urbackupserver",
-  "categories": [
-    7
-  ],
+  "categories": [7],
   "date_created": "2025-01-18",
   "type": "ct",
   "updateable": true,

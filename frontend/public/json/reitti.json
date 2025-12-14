@@ -1,9 +1,7 @@
 {
   "name": "Reitti",
   "slug": "reitti",
-  "categories": [
-    21
-  ],
+  "categories": [21],
   "date_created": "2025-10-30",
   "type": "ct",
   "updateable": true,

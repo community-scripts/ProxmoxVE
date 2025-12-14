@@ -1,9 +1,7 @@
 {
   "name": "FileFlows",
   "slug": "fileflows",
-  "categories": [
-    13
-  ],
+  "categories": [13],
   "date_created": "2025-03-24",
   "type": "ct",
   "updateable": true,

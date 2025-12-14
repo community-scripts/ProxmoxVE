@@ -1,9 +1,7 @@
 {
   "name": "Bar-Assistant",
   "slug": "bar-assistant",
-  "categories": [
-    24
-  ],
+  "categories": [24],
   "date_created": "2025-07-14",
   "type": "ct",
   "updateable": true,

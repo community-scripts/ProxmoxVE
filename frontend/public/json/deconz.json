@@ -1,9 +1,7 @@
 {
   "name": "deCONZ",
   "slug": "deconz",
-  "categories": [
-    17
-  ],
+  "categories": [17],
   "date_created": "2024-05-02",
   "type": "ct",
   "updateable": true,

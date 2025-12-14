@@ -1,9 +1,7 @@
 {
   "name": "Open-Archiver",
   "slug": "open-archiver",
-  "categories": [
-    7
-  ],
+  "categories": [7],
   "date_created": "2025-10-18",
   "type": "ct",
   "updateable": true,

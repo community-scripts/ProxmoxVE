@@ -1,9 +1,7 @@
 {
   "name": "Metabase",
   "slug": "metabase",
-  "categories": [
-    9
-  ],
+  "categories": [9],
   "date_created": "2025-11-16",
   "type": "ct",
   "updateable": true,

@@ -1,10 +1,7 @@
 {
   "name": "Prometheus Proxmox VE Exporter",
   "slug": "prometheus-pve-exporter",
-  "categories": [
-    1,
-    9
-  ],
+  "categories": [1, 9],
   "date_created": "2025-01-28",
   "type": "ct",
   "updateable": true,

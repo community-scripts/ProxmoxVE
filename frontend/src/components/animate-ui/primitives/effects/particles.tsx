@@ -3,17 +3,13 @@
 import type { HTMLMotionProps } from "motion/react";
 
 import { AnimatePresence, motion } from "motion/react";
-import * as React from "react";
 
 import type { WithAsChild } from "@/components/animate-ui/primitives/animate/slot";
 import type { UseIsInViewOptions } from "@/hooks/use-is-in-view";
 
 import { Slot } from "@/components/animate-ui/primitives/animate/slot";
 import { getStrictContext } from "@/lib/get-strict-context";
-import {
-  useIsInView,
-
-} from "@/hooks/use-is-in-view";
+import { useIsInView } from "@/hooks/use-is-in-view";
 
 type Side = "top" | "bottom" | "left" | "right";
 type Align = "start" | "center" | "end";
@@ -23,8 +19,8 @@ type ParticlesContextType = {
   isInView: boolean;
 };
 
-const [ParticlesProvider, useParticles]
-  = getStrictContext<ParticlesContextType>("ParticlesContext");
+const [ParticlesProvider, useParticles] =
+  getStrictContext<ParticlesContextType>("ParticlesContext");
 
 type ParticlesProps = WithAsChild<
   Omit<HTMLMotionProps<"div">, "children"> & {
@@ -46,7 +42,7 @@ function Particles({
 }: ParticlesProps) {
   const { ref: localRef, isInView } = useIsInView(
     ref as React.Ref<HTMLDivElement>,
-    { inView, inViewOnce, inViewMargin },
+    { inView, inViewOnce, inViewMargin }
   );
 
   const Component = asChild ? Slot : motion.div;
@@ -120,9 +116,9 @@ function ParticlesEffect({
 
   return (
     <AnimatePresence>
-      {animate
-        && isInView
-        && Array.from({ length: count }).map((_, i) => {
+      {animate &&
+        isInView &&
+        Array.from({ length: count }).map((_, i) => {
           const angle = i * angleStep;
           const x = Math.cos(angle) * radius;
           const y = Math.sin(angle) * radius;

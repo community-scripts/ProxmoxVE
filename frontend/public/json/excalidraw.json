@@ -1,9 +1,7 @@
 {
   "name": "Excalidraw",
   "slug": "excalidraw",
-  "categories": [
-    12
-  ],
+  "categories": [12],
   "date_created": "2025-02-12",
   "type": "ct",
   "updateable": true,

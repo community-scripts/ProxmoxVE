@@ -1,9 +1,7 @@
 {
   "name": "Tracktor",
   "slug": "tracktor",
-  "categories": [
-    9
-  ],
+  "categories": [9],
   "date_created": "2025-08-26",
   "type": "ct",
   "updateable": true,

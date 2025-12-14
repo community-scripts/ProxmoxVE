@@ -1,5 +1,3 @@
-/* eslint-disable ts/no-require-imports */
-//
 import type { Config } from "tailwindcss";
 
 const {
@@ -74,11 +72,11 @@ const config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-        "shine": {
+        shine: {
           from: { backgroundPosition: "200% 0" },
           to: { backgroundPosition: "-200% 0" },
         },
-        "gradient": {
+        gradient: {
           to: {
             backgroundPosition: "var(--bg-size) 0",
           },
@@ -90,11 +88,11 @@ const config = {
           "50%": {
             "background-position": "100% 100%",
           },
-          "to": {
+          to: {
             "background-position": "0% 0%",
           },
         },
-        "moveHorizontal": {
+        moveHorizontal: {
           "0%": {
             transform: "translateX(-50%) translateY(-10%)",
           },
@@ -105,7 +103,7 @@ const config = {
             transform: "translateX(-50%) translateY(-10%)",
           },
         },
-        "moveInCircle": {
+        moveInCircle: {
           "0%": {
             transform: "rotate(0deg)",
           },
@@ -116,7 +114,7 @@ const config = {
             transform: "rotate(360deg)",
           },
         },
-        "moveVertical": {
+        moveVertical: {
           "0%": {
             transform: "translateY(-50%)",
           },
@@ -131,8 +129,8 @@ const config = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "shine": "shine 8s ease-in-out infinite",
-        "gradient": "gradient 8s linear infinite",
+        shine: "shine 8s ease-in-out infinite",
+        gradient: "gradient 8s linear infinite",
       },
     },
   },
@@ -140,29 +138,29 @@ const config = {
     require(`tailwindcss-animated`),
     require("tailwindcss-animate"),
     addVariablesForColors,
-    function ({ matchUtilities, theme }: any) {
+    ({ matchUtilities, theme }: any) => {
       matchUtilities(
         {
           "bg-grid": (value: any) => ({
             backgroundImage: `url("${svgToDataUri(
-              `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" fill="none" stroke="${value}"><path d="M0 .5H31.5V32"/></svg>`,
+              `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" fill="none" stroke="${value}"><path d="M0 .5H31.5V32"/></svg>`
             )}")`,
           }),
           "bg-grid-small": (value: any) => ({
             backgroundImage: `url("${svgToDataUri(
-              `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="8" height="8" fill="none" stroke="${value}"><path d="M0 .5H31.5V32"/></svg>`,
+              `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="8" height="8" fill="none" stroke="${value}"><path d="M0 .5H31.5V32"/></svg>`
             )}")`,
           }),
           "bg-dot": (value: any) => ({
             backgroundImage: `url("${svgToDataUri(
-              `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="16" height="16" fill="none"><circle fill="${value}" id="pattern-circle" cx="10" cy="10" r="1.6257413380501518"></circle></svg>`,
+              `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="16" height="16" fill="none"><circle fill="${value}" id="pattern-circle" cx="10" cy="10" r="1.6257413380501518"></circle></svg>`
             )}")`,
           }),
         },
         {
           values: flattenColorPalette(theme("backgroundColor")),
           type: "color",
-        },
+        }
       );
     },
   ],
@@ -171,7 +169,7 @@ const config = {
 function addVariablesForColors({ addBase, theme }: any) {
   const allColors = flattenColorPalette(theme("colors"));
   const newVars = Object.fromEntries(
-    Object.entries(allColors).map(([key, val]) => [`--${key}`, val]),
+    Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
   );
   addBase({
     ":root": newVars,

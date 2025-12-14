@@ -1,9 +1,7 @@
 {
   "name": "Ghostfolio",
   "slug": "ghostfolio",
-  "categories": [
-    23
-  ],
+  "categories": [23],
   "date_created": "2025-09-29",
   "type": "ct",
   "updateable": true,

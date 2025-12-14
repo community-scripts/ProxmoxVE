@@ -1,10 +1,7 @@
 {
   "name": "Cosmos",
   "slug": "cosmos",
-  "categories": [
-    2,
-    3
-  ],
+  "categories": [2, 3],
   "date_created": "2025-02-07",
   "type": "ct",
   "updateable": true,

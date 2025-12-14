@@ -27,7 +27,7 @@ function Sidebar({
 }: SidebarProps) {
   const uniqueScripts = items.reduce((acc, category) => {
     for (const script of category.scripts) {
-      if (!acc.some(s => s.name === script.name)) {
+      if (!acc.some((s) => s.name === script.name)) {
         acc.push(script);
       }
     }
@@ -35,13 +35,16 @@ function Sidebar({
   }, [] as Script[]);
 
   return (
-    <div className={cn("flex w-full flex-col sm:min-w-[350px] sm:max-w-[350px]", className)}>
+    <div
+      className={cn(
+        "flex w-full flex-col sm:min-w-[350px] sm:max-w-[350px]",
+        className
+      )}
+    >
       <div className="flex items-end justify-between pb-4">
-        <h1 className="text-xl font-bold">Categories</h1>
-        <p className="text-xs italic text-muted-foreground">
-          {uniqueScripts.length}
-          {" "}
-          Total scripts
+        <h1 className="font-bold text-xl">Categories</h1>
+        <p className="text-muted-foreground text-xs italic">
+          {uniqueScripts.length} Total scripts
         </p>
       </div>
       <div className="rounded-lg">

@@ -1,9 +1,7 @@
 {
   "name": "twingate-connector",
   "slug": "twingate-connector",
-  "categories": [
-    4
-  ],
+  "categories": [4],
   "date_created": "2025-08-18",
   "type": "ct",
   "updateable": true,

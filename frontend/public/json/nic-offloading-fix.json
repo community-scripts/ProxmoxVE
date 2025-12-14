@@ -1,9 +1,7 @@
 {
   "name": "Intel e1000e NIC Offloading Fix",
   "slug": "nic-offloading-fix",
-  "categories": [
-    1
-  ],
+  "categories": [1],
   "date_created": "2025-05-25",
   "type": "pve",
   "updateable": false,

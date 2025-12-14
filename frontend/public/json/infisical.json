@@ -1,9 +1,7 @@
 {
   "name": "Infisical",
   "slug": "infisical",
-  "categories": [
-    6
-  ],
+  "categories": [6],
   "date_created": "2025-11-07",
   "type": "ct",
   "updateable": true,

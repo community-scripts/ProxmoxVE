@@ -1,9 +1,7 @@
 {
   "name": "Graylog",
   "slug": "graylog",
-  "categories": [
-    9
-  ],
+  "categories": [9],
   "date_created": "2025-02-12",
   "type": "ct",
   "updateable": true,
