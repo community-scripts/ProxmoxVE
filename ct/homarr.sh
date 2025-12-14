@@ -45,7 +45,7 @@ function update_script() {
         chown -R redis:redis /appdata/redis
         chmod 755 /appdata/redis
         mkdir -p /etc/systemd/system/redis-server.service.d/
-        cat > /etc/systemd/system/redis-server.service.d/override.conf << 'EOF'
+        cat <<EOF >/etc/systemd/system/redis-server.service.d/override.conf
 [Service]
 ReadWritePaths=-/appdata/redis -/var/lib/redis -/var/log/redis -/var/run/redis -/etc/redis
 EOF
