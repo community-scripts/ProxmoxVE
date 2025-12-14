@@ -18,6 +18,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - SonarQube: Fix database variables [@tremor021](https://github.com/tremor021) ([#9946](https://github.com/community-scripts/ProxmoxVE/pull/9946))
 
+  - #### 💥 Breaking Changes
+
+    - refactor: homarr  [@CrazyWolf13](https://github.com/CrazyWolf13) ([#9948](https://github.com/community-scripts/ProxmoxVE/pull/9948))
+
 ### 🌐 Website
 
   - Update dependencies and remove unused files [@BramSuurdje](https://github.com/BramSuurdje) ([#9945](https://github.com/community-scripts/ProxmoxVE/pull/9945))
