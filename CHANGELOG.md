@@ -38,6 +38,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - core: App Defaults force mode and prevent unbound variables [@MickLesk](https://github.com/MickLesk) ([#9971](https://github.com/community-scripts/ProxmoxVE/pull/9971))
     - core: load app defaults before applying base_settings / fix composer cleanup after install/update [@MickLesk](https://github.com/MickLesk) ([#9965](https://github.com/community-scripts/ProxmoxVE/pull/9965))
 
+  - #### ✨ New Features
+
+    - tools: handle flat repositories in setup_deb822_repo [@MickLesk](https://github.com/MickLesk) ([#9994](https://github.com/community-scripts/ProxmoxVE/pull/9994))
+
 ### 📚 Documentation
 
   - README; add project statistics / formatting [@MickLesk](https://github.com/MickLesk) ([#9967](https://github.com/community-scripts/ProxmoxVE/pull/9967))
