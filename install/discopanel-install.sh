@@ -22,6 +22,8 @@ fetch_and_deploy_gh_release "discopanel" "nickheyer/discopanel" "tarball" "lates
 setup_docker
 
 msg_info "Setting up DiscoPanel"
+cd /opt/discopanel
+$STD make gen
 cd /opt/discopanel/web/discopanel
 $STD npm install
 $STD npm run build
