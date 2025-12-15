@@ -28,7 +28,7 @@ function update_script() {
     exit
   fi
 
-  if check_for_gh_release "tt-rss" "HubOrg/tt-rss"; then
+  if check_for_gh_release "tt-rss" "tt-rss/tt-rss"; then
     msg_info "Stopping Services"
     systemctl stop apache2
     msg_ok "Stopped Services"
@@ -44,7 +44,7 @@ function update_script() {
     fi
 
     msg_info "Updating ${APP} to latest version"
-    fetch_and_deploy_gh_release "tt-rss" "HubOrg/tt-rss" "tarball" "latest" "/opt/tt-rss"
+    fetch_and_deploy_gh_release "tt-rss" "tt-rss/tt-rss" "tarball" "latest" "/opt/tt-rss"
 
     if [ -f /opt/tt-rss/config.php.backup ]; then
       cp /opt/tt-rss/config.php.backup /opt/tt-rss/config.php

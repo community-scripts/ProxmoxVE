@@ -30,7 +30,7 @@ $STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER TEMP
 } >>~/tinytinyrss.creds
 msg_ok "Set up PostgreSQL"
 
-fetch_and_deploy_gh_release "tt-rss" "HubOrg/tt-rss" "tarball"
+fetch_and_deploy_gh_release "tt-rss" "tt-rss/tt-rss" "tarball" "latest" "/opt/tt-rss"
 
 msg_info "Configuring TinyTinyRSS"
 cd /opt/tt-rss
