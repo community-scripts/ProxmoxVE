@@ -107,17 +107,18 @@ else
 fi
 
 msg_info "Configuring PostgreSQL for password authentication"
-# Ensure PostgreSQL accepts password authentication for 127.0.0.1 connections
-# Using 127.0.0.1 instead of localhost forces TCP/IP connection instead of Unix socket,
-# which avoids peer/ident authentication issues
+# Configure both TCP/IP (127.0.0.1) and Unix socket (local) connections to use md5
+# This ensures password authentication works regardless of connection method
 PG_HBA_CONF=$(find /etc/postgresql/*/main/pg_hba.conf 2>/dev/null | head -1)
 if [[ -n "$PG_HBA_CONF" ]]; then
-  # Check if md5 or scram-sha-256 authentication is already configured for 127.0.0.1
+  # Configure TCP/IP connections for 127.0.0.1
   if ! grep -qE "^host\s+all\s+all\s+127\.0\.0\.1/32\s+(md5|scram-sha-256)" "$PG_HBA_CONF" 2>/dev/null; then
-    # Add md5 authentication line after IPv4 local connections comment
     sed -i '/^# IPv4 local connections:/a host    all             all             127.0.0.1/32            md5' "$PG_HBA_CONF"
-    systemctl reload postgresql 2>/dev/null || true
   fi
+  # Configure Unix socket connections to use md5 instead of peer/ident
+  # Change "local all all peer/ident" to md5, but preserve "local all postgres peer"
+  sed -i '/^local\s\+all\s\+all\s\+\(peer\|ident\)/s/\(peer\|ident\)$/md5/' "$PG_HBA_CONF"
+  systemctl reload postgresql 2>/dev/null || true
 fi
 msg_ok "PostgreSQL authentication configured"
 
