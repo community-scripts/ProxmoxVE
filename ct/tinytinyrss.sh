@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# Force verbose mode for debugging
-set -x
-
 # Detectar automáticamente la URL base del repositorio (fork o repo principal)
 detect_repo_base_url() {
   local repo_owner="community-scripts"
@@ -40,14 +37,11 @@ detect_repo_base_url() {
 if [[ -n "${USE_UPSTREAM_BUILD_FUNC:-}" ]]; then
   REPO_BASE_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 else
-  echo "--- DEBUG: Raw detect_repo_base_url output: $(detect_repo_base_url) ---"
   REPO_BASE_URL="${REPO_BASE_URL:-$(detect_repo_base_url)}"
 fi
 
-echo "--- DEBUG: REPO_BASE_URL (before export): $REPO_BASE_URL ---"
 # Exportar para que build.func pueda usar esta variable si está disponible
 export REPO_BASE_URL
-echo "--- DEBUG: REPO_BASE_URL (after export): $REPO_BASE_URL ---"
 
 source <(curl -fsSL "${REPO_BASE_URL}/misc/build.func")
 # Copyright (c) 2021-2025 community-scripts ORG
