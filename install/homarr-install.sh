@@ -81,6 +81,7 @@ chmod +x /opt/homarr/run.sh
 systemctl daemon-reload
 systemctl enable -q --now redis-server && sleep 5
 systemctl enable -q --now homarr
+systemctl disable -q --now nginx 
 msg_ok "Created Services"
 
 motd_ssh
