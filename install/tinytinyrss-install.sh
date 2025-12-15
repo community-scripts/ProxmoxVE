@@ -102,11 +102,13 @@ EOF
   chown www-data:www-data /opt/tt-rss/config.php
   chmod 644 /opt/tt-rss/config.php
   msg_ok "Created initial config.php"
+  msg_debug "Content of /opt/tt-rss/config.php:"
+  msg_debug "$(cat /opt/tt-rss/config.php)"
 else
   msg_info "config.php already exists, skipping creation"
 fi
 
-msg_info "Configuring PostgreSQL for password authentication"
+msg_info "Configuring PostgreSQL for password authentication" 
 # Configure both TCP/IP (127.0.0.1) and Unix socket (local) connections to use md5
 # This ensures password authentication works regardless of connection method
 PG_HBA_CONF=$(find /etc/postgresql/*/main/pg_hba.conf 2>/dev/null | head -1)
@@ -118,9 +120,17 @@ if [[ -n "$PG_HBA_CONF" ]]; then
   # Configure Unix socket connections to use md5 instead of peer/ident
   # Change "local all all peer/ident" to md5, but preserve "local all postgres peer"
   sed -i '/^local\s\+all\s\+all\s\+\(peer\|ident\)/s/\(peer\|ident\)$/md5/' "$PG_HBA_CONF"
-  systemctl reload postgresql 2>/dev/null || true
+  msg_debug "Content of ${PG_HBA_CONF} after modification:"
+  msg_debug "$(cat "${PG_HBA_CONF}" | grep -E '127\.0\.0\.1|local\s+all')"
+  msg_info "Attempting to reload PostgreSQL service..."
+  if systemctl reload postgresql; then
+    msg_ok "PostgreSQL reloaded successfully."
+  else
+    msg_error "Failed to reload PostgreSQL service. Manual intervention may be required."
+    exit 1
+  fi
 fi
-msg_ok "PostgreSQL authentication configured"
+msg_ok "PostgreSQL authentication configured" 
 
 motd_ssh
 customize
