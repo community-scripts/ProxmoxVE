@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-set -x
-
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: mrosero
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -104,9 +102,6 @@ EOF
   chown www-data:www-data /opt/tt-rss/config.php
   chmod 644 /opt/tt-rss/config.php
   msg_ok "Created initial config.php"
-  echo "--- DEBUG: /opt/tt-rss/config.php content START ---"
-  cat /opt/tt-rss/config.php
-  echo "--- DEBUG: /opt/tt-rss/config.php content END ---"
 else
   msg_info "config.php already exists, skipping creation"
 fi
