@@ -230,6 +230,8 @@ systemctl enable -q --now gerbil
 cat <<'EOF' >/etc/systemd/system/traefik.service
 [Unit]
 Description=Traefik is an open-source Edge Router that makes publishing your services a fun and easy experience
+Wants=network-online.target
+After=network-online.target
 
 [Service]
 Type=notify
