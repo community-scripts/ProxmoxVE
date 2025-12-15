@@ -22,6 +22,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - fix(pangolin-install): add network-online dependency [@worried-networking](https://github.com/worried-networking) ([#9984](https://github.com/community-scripts/ProxmoxVE/pull/9984))
 
+  - #### ✨ New Features
+
+    - OPNsense: dynamic crawl latest stable FreeBSD [@austindsmith](https://github.com/austindsmith) ([#9831](https://github.com/community-scripts/ProxmoxVE/pull/9831))
+
   - #### 🔧 Refactor
 
     - Refactor: Heimdall Dashboard [@tremor021](https://github.com/tremor021) ([#9959](https://github.com/community-scripts/ProxmoxVE/pull/9959))
