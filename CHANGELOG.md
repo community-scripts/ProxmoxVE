@@ -44,7 +44,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 📚 Documentation
 
-  - README; add project statistics / formatting [@MickLesk](https://github.com/MickLesk) ([#9967](https://github.com/community-scripts/ProxmoxVE/pull/9967))
+  - (github) remove old files and assets [@MickLesk](https://github.com/MickLesk) ([#9991](https://github.com/community-scripts/ProxmoxVE/pull/9991))
+- README; add project statistics / formatting [@MickLesk](https://github.com/MickLesk) ([#9967](https://github.com/community-scripts/ProxmoxVE/pull/9967))
 
 ## 2025-12-14
 
