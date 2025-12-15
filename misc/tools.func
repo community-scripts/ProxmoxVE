@@ -1249,7 +1249,10 @@ setup_deb822_repo() {
     echo "Types: deb"
     echo "URIs: $repo_url"
     echo "Suites: $suite"
-    echo "Components: $component"
+    # Flat repositories (suite="./" or absolute path) must not have Components
+    if [[ "$suite" != "./" && -n "$component" ]]; then
+      echo "Components: $component"
+    fi
     [[ -n "$architectures" ]] && echo "Architectures: $architectures"
     echo "Signed-By: /etc/apt/keyrings/${name}.gpg"
   } >/etc/apt/sources.list.d/${name}.sources
