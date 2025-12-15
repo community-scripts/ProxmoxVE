@@ -86,7 +86,7 @@ if [ ! -f /opt/tt-rss/config.php ]; then
   cat <<EOF >/opt/tt-rss/config.php
 <?php
 define('DB_TYPE', 'pgsql');
-define('DB_HOST', 'localhost');
+define('DB_HOST', '127.0.0.1');
 define('DB_NAME', '${PG_DB_NAME}');
 define('DB_USER', '${PG_DB_USER}');
 define('DB_PASS', '${PG_DB_PASS}');
@@ -107,11 +107,13 @@ else
 fi
 
 msg_info "Configuring PostgreSQL for password authentication"
-# Ensure PostgreSQL accepts password authentication for localhost connections
+# Ensure PostgreSQL accepts password authentication for 127.0.0.1 connections
+# Using 127.0.0.1 instead of localhost forces TCP/IP connection instead of Unix socket,
+# which avoids peer/ident authentication issues
 PG_HBA_CONF=$(find /etc/postgresql/*/main/pg_hba.conf 2>/dev/null | head -1)
 if [[ -n "$PG_HBA_CONF" ]]; then
-  # Check if md5 authentication is already configured for localhost
-  if ! grep -qE "^host\s+all\s+all\s+127\.0\.0\.1/32\s+md5" "$PG_HBA_CONF" 2>/dev/null; then
+  # Check if md5 or scram-sha-256 authentication is already configured for 127.0.0.1
+  if ! grep -qE "^host\s+all\s+all\s+127\.0\.0\.1/32\s+(md5|scram-sha-256)" "$PG_HBA_CONF" 2>/dev/null; then
     # Add md5 authentication line after IPv4 local connections comment
     sed -i '/^# IPv4 local connections:/a host    all             all             127.0.0.1/32            md5' "$PG_HBA_CONF"
     systemctl reload postgresql 2>/dev/null || true
