@@ -5,11 +5,6 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://openwebui.com/
 
-# Co-Author: jobben2025
-# Updated: 2025-12-11 - curl removed silent, adding progress bar; 
-# changing order of stopping service to 2nd step for minimal downtime (first download ollama file); 
-# slow internet/ollama server speeds may cause extremely long downtimes;
-
 APP="Open WebUI"
 var_tags="${var_tags:-ai;interface}"
 var_cpu="${var_cpu:-4}"
