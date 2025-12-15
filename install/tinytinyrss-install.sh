@@ -15,20 +15,7 @@ update_os
 
 PHP_VERSION="8.2" PHP_MODULE="curl,xml,mbstring,intl,zip,pgsql,gmp" PHP_APACHE="YES" setup_php
 PG_VERSION="16" setup_postgresql
-
-msg_info "Setting up PostgreSQL"
-DB_NAME=ttrss
-DB_USER=ttrss
-DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)
-$STD sudo -u postgres psql -c "CREATE ROLE $DB_USER WITH LOGIN PASSWORD '$DB_PASS';"
-$STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER TEMPLATE template0;"
-{
-  echo "TinyTinyRSS Credentials"
-  echo "TinyTinyRSS Database User: $DB_USER"
-  echo "TinyTinyRSS Database Password: $DB_PASS"
-  echo "TinyTinyRSS Database Name: $DB_NAME"
-} >>~/tinytinyrss.creds
-msg_ok "Set up PostgreSQL"
+PG_DB_NAME="ttrss" PG_DB_USER="ttrss" setup_postgresql_db
 
 msg_info "Downloading TinyTinyRSS"
 mkdir -p /opt/tt-rss
@@ -84,9 +71,9 @@ if [ ! -f /opt/tt-rss/config.php ]; then
 <?php
 define('DB_TYPE', 'pgsql');
 define('DB_HOST', 'localhost');
-define('DB_NAME', '$DB_NAME');
-define('DB_USER', '$DB_USER');
-define('DB_PASS', '$DB_PASS');
+define('DB_NAME', '$PG_DB_NAME');
+define('DB_USER', '$PG_DB_USER');
+define('DB_PASS', '$PG_DB_PASS');
 define('DB_PORT', '5432');
 
 define('SELF_URL_PATH', 'http://localhost/');
