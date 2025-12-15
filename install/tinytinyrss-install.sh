@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -x
+
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: mrosero
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -102,13 +104,14 @@ EOF
   chown www-data:www-data /opt/tt-rss/config.php
   chmod 644 /opt/tt-rss/config.php
   msg_ok "Created initial config.php"
-  msg_debug "Content of /opt/tt-rss/config.php:"
-  msg_debug "$(cat /opt/tt-rss/config.php)"
+  echo "--- DEBUG: /opt/tt-rss/config.php content START ---"
+  cat /opt/tt-rss/config.php
+  echo "--- DEBUG: /opt/tt-rss/config.php content END ---"
 else
   msg_info "config.php already exists, skipping creation"
 fi
 
-msg_info "Configuring PostgreSQL for password authentication" 
+msg_info "Configuring PostgreSQL for password authentication"
 # Configure both TCP/IP (127.0.0.1) and Unix socket (local) connections to use md5
 # This ensures password authentication works regardless of connection method
 PG_HBA_CONF=$(find /etc/postgresql/*/main/pg_hba.conf 2>/dev/null | head -1)
@@ -130,7 +133,7 @@ if [[ -n "$PG_HBA_CONF" ]]; then
     exit 1
   fi
 fi
-msg_ok "PostgreSQL authentication configured" 
+msg_ok "PostgreSQL authentication configured"
 
 motd_ssh
 customize
