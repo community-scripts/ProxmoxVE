@@ -48,7 +48,7 @@
       "type": "info"
     },
     {
-      "text": "Access Adminer Web UI at `http://<CONTAINER_IP>/adminer.php`",
+      "text": "Access phpMyAdmin Web UI at `http://<CONTAINER_IP>/phpMyAdmin`",
       "type": "info"
     }
   ]
