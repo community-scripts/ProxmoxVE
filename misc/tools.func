@@ -4424,7 +4424,7 @@ function setup_rust() {
   # Get currently installed version
   local CURRENT_VERSION=""
   if command -v rustc &>/dev/null; then
-    CURRENT_VERSION=$(rustc --version 2>/dev/null | awk '{print $2}')
+    CURRENT_VERSION=$(rustc --version 2>/dev/null | awk '{print $2}' 2>/dev/null) || true
   fi
 
   # Scenario 1: Rustup not installed - fresh install
@@ -4443,7 +4443,8 @@ function setup_rust() {
       return 1
     fi
 
-    local RUST_VERSION=$(rustc --version 2>/dev/null | awk '{print $2}')
+    local RUST_VERSION
+    RUST_VERSION=$(rustc --version 2>/dev/null | awk '{print $2}' 2>/dev/null) || true
     if [[ -z "$RUST_VERSION" ]]; then
       msg_error "Failed to determine Rust version"
       return 1
@@ -4474,7 +4475,8 @@ function setup_rust() {
     # Ensure PATH is updated for current shell session
     export PATH="$CARGO_BIN:$PATH"
 
-    local RUST_VERSION=$(rustc --version 2>/dev/null | awk '{print $2}')
+    local RUST_VERSION
+    RUST_VERSION=$(rustc --version 2>/dev/null | awk '{print $2}' 2>/dev/null) || true
     if [[ -z "$RUST_VERSION" ]]; then
       msg_error "Failed to determine Rust version after update"
       return 1
