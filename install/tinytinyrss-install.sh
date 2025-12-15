@@ -36,11 +36,12 @@ curl -fsSL https://github.com/tt-rss/tt-rss/archive/refs/heads/main.tar.gz -o /t
 $STD tar -xzf /tmp/tt-rss.tar.gz -C /tmp
 $STD cp -r /tmp/tt-rss-main/* /opt/tt-rss/
 rm -rf /tmp/tt-rss.tar.gz /tmp/tt-rss-main
-echo "main" >"/opt/${APPLICATION}_version.txt"
+echo "main" >"/opt/TinyTinyRSS_version.txt"
 msg_ok "Downloaded TinyTinyRSS"
 
 msg_info "Configuring TinyTinyRSS"
 cd /opt/tt-rss
+mkdir -p /opt/tt-rss/feed-icons /opt/tt-rss/lock /opt/tt-rss/cache
 chown -R www-data:www-data /opt/tt-rss
 chmod -R g+rX /opt/tt-rss
 chmod -R g+w /opt/tt-rss/feed-icons /opt/tt-rss/lock /opt/tt-rss/cache
