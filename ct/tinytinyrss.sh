@@ -38,9 +38,7 @@ function update_script() {
       cp /opt/tt-rss/config.php /opt/tt-rss/config.php.backup
       msg_ok "Backed up Configuration"
     fi
-
     if [ -d /opt/tt-rss/feed-icons ]; then
-      msg_info "Backing up Feed Icons"
       mv /opt/tt-rss/feed-icons /opt/tt-rss/feed-icons.backup
       msg_ok "Backed up Feed Icons"
     fi
@@ -49,13 +47,10 @@ function update_script() {
     fetch_and_deploy_gh_release "tt-rss" "HubOrg/tt-rss" "tarball" "latest" "/opt/tt-rss"
 
     if [ -f /opt/tt-rss/config.php.backup ]; then
-      msg_info "Restoring Configuration"
       cp /opt/tt-rss/config.php.backup /opt/tt-rss/config.php
       msg_ok "Restored Configuration"
     fi
-
     if [ -d /opt/tt-rss/feed-icons.backup ]; then
-      msg_info "Restoring Feed Icons"
       mv /opt/tt-rss/feed-icons.backup /opt/tt-rss/feed-icons
       msg_ok "Restored Feed Icons"
     fi
@@ -82,4 +77,3 @@ msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW} Access it using the following URL:${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}http://${IP}${CL}"
-
