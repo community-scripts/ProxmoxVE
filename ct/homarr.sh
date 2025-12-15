@@ -34,6 +34,8 @@ function update_script() {
     systemctl stop redis-server
     msg_ok "Services Stopped"
 
+    { systemctl is-enabled nginx >/dev/null 2>&1 && sudo systemctl disable --now nginx >/dev/null 2>&1; } || true
+
     if ! { grep -q '^REDIS_IS_EXTERNAL=' /opt/homarr/.env 2>/dev/null || grep -q '^REDIS_IS_EXTERNAL=' /opt/homarr.env 2>/dev/null; }; then
       DEBIAN_VERSION=$(cat /etc/debian_version 2>/dev/null | cut -d'.' -f1)
       if [[ -n "$DEBIAN_VERSION" ]] && [[ "$DEBIAN_VERSION" -lt 13 ]]; then
@@ -46,6 +48,7 @@ function update_script() {
         exit
       fi
       msg_info "Fixing old structure"
+      systemctl disable nginx -q --now
       # fix musl issues because homarr compiles on alpine not debian soure: https://github.com/alexander-akhmetov/python-telegram/issues/3
       $STD apt install -y musl-dev
       ln -s /usr/lib/x86_64-linux-musl/libc.so /lib/libc.musl-x86_64.so.1
