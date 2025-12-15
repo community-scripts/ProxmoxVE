@@ -28,44 +28,47 @@ function update_script() {
     exit
   fi
 
-  if check_for_gh_release "tt-rss" "tt-rss/tt-rss"; then
-    msg_info "Stopping Services"
-    systemctl stop apache2
-    msg_ok "Stopped Services"
+  msg_info "Stopping Services"
+  systemctl stop apache2
+  msg_ok "Stopped Services"
 
-    msg_info "Backing up Configuration"
-    if [ -f /opt/tt-rss/config.php ]; then
-      cp /opt/tt-rss/config.php /opt/tt-rss/config.php.backup
-      msg_ok "Backed up Configuration"
-    fi
-    if [ -d /opt/tt-rss/feed-icons ]; then
-      mv /opt/tt-rss/feed-icons /opt/tt-rss/feed-icons.backup
-      msg_ok "Backed up Feed Icons"
-    fi
-
-    msg_info "Updating ${APP} to latest version"
-    fetch_and_deploy_gh_release "tt-rss" "tt-rss/tt-rss" "tarball" "latest" "/opt/tt-rss"
-
-    if [ -f /opt/tt-rss/config.php.backup ]; then
-      cp /opt/tt-rss/config.php.backup /opt/tt-rss/config.php
-      msg_ok "Restored Configuration"
-    fi
-    if [ -d /opt/tt-rss/feed-icons.backup ]; then
-      mv /opt/tt-rss/feed-icons.backup /opt/tt-rss/feed-icons
-      msg_ok "Restored Feed Icons"
-    fi
-
-    msg_info "Setting Permissions"
-    chown -R www-data:www-data /opt/tt-rss
-    chmod -R g+rX /opt/tt-rss
-    chmod -R g+w /opt/tt-rss/feed-icons /opt/tt-rss/lock /opt/tt-rss/cache
-    msg_ok "Set Permissions"
-
-    msg_info "Starting Services"
-    systemctl start apache2
-    msg_ok "Started Services"
-    msg_ok "Updated successfully!"
+  msg_info "Backing up Configuration"
+  if [ -f /opt/tt-rss/config.php ]; then
+    cp /opt/tt-rss/config.php /opt/tt-rss/config.php.backup
+    msg_ok "Backed up Configuration"
   fi
+  if [ -d /opt/tt-rss/feed-icons ]; then
+    mv /opt/tt-rss/feed-icons /opt/tt-rss/feed-icons.backup
+    msg_ok "Backed up Feed Icons"
+  fi
+
+  msg_info "Updating ${APP} to latest version"
+  curl -fsSL https://github.com/tt-rss/tt-rss/archive/refs/heads/main.tar.gz -o /tmp/tt-rss-update.tar.gz
+  $STD tar -xzf /tmp/tt-rss-update.tar.gz -C /tmp
+  $STD cp -r /tmp/tt-rss-main/* /opt/tt-rss/
+  rm -rf /tmp/tt-rss-update.tar.gz /tmp/tt-rss-main
+  echo "main" >"/opt/TinyTinyRSS_version.txt"
+  msg_ok "Downloaded latest version"
+
+  if [ -f /opt/tt-rss/config.php.backup ]; then
+    cp /opt/tt-rss/config.php.backup /opt/tt-rss/config.php
+    msg_ok "Restored Configuration"
+  fi
+  if [ -d /opt/tt-rss/feed-icons.backup ]; then
+    mv /opt/tt-rss/feed-icons.backup /opt/tt-rss/feed-icons
+    msg_ok "Restored Feed Icons"
+  fi
+
+  msg_info "Setting Permissions"
+  chown -R www-data:www-data /opt/tt-rss
+  chmod -R g+rX /opt/tt-rss
+  chmod -R g+w /opt/tt-rss/feed-icons /opt/tt-rss/lock /opt/tt-rss/cache
+  msg_ok "Set Permissions"
+
+  msg_info "Starting Services"
+  systemctl start apache2
+  msg_ok "Started Services"
+  msg_ok "Updated successfully!"
   exit
 }
 
