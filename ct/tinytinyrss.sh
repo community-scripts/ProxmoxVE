@@ -1,5 +1,41 @@
 #!/usr/bin/env bash
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+
+# Detectar automáticamente la URL base del repositorio (fork o repo principal)
+detect_repo_base_url() {
+  local repo_owner="community-scripts"
+  local repo_name="ProxmoxVE"
+  local branch="main"
+  local remote_url
+  local current_branch
+
+  # Intentar detectar desde git si estamos en un repo local
+  if command -v git &>/dev/null && git rev-parse --git-dir &>/dev/null 2>&1; then
+    if remote_url=$(git config --get remote.origin.url 2>/dev/null); then
+      if [[ $remote_url =~ git@github.com:([^/]+)/([^/]+) ]]; then
+        repo_owner="${BASH_REMATCH[1]}"
+        repo_name="${BASH_REMATCH[2]%.git}"
+      elif [[ $remote_url =~ github.com[:/]([^/]+)/([^/]+) ]]; then
+        repo_owner="${BASH_REMATCH[1]}"
+        repo_name="${BASH_REMATCH[2]%.git}"
+      fi
+      if current_branch=$(git branch --show-current 2>/dev/null); then
+        branch="$current_branch"
+      fi
+    fi
+  fi
+
+  # Permitir override con variables de entorno
+  repo_owner="${GITHUB_REPO_OWNER:-$repo_owner}"
+  repo_name="${GITHUB_REPO_NAME:-$repo_name}"
+  branch="${GITHUB_BRANCH:-$branch}"
+
+  echo "https://raw.githubusercontent.com/${repo_owner}/${repo_name}/refs/heads/${branch}"
+}
+
+# Obtener URL base del repo (se detecta automáticamente en desarrollo, usa defaults en producción)
+REPO_BASE_URL="${REPO_BASE_URL:-$(detect_repo_base_url)}"
+
+source <(curl -fsSL "${REPO_BASE_URL}/misc/build.func")
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: mrosero
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
