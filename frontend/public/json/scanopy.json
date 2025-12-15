@@ -1,6 +1,6 @@
 {
-  "name": "NetVisor",
-  "slug": "netvisor",
+  "name": "Scanopy",
+  "slug": "scanopy",
   "categories": [
     9
   ],
@@ -9,15 +9,15 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 60072,
-  "documentation": "https://github.com/netvisor-io/netvisor",
-  "config_path": "/opt/netvisor/.env, OIDC: /opt/netvisor/oidc.toml",
-  "website": "https://netvisor.io",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/png/netvisor.png",
+  "documentation": "https://github.com/scanopy/scanopy",
+  "config_path": "/opt/scanopy/.env, OIDC: /opt/scanopy/oidc.toml",
+  "website": "https://scanopy.net",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/scanopy.webp",
   "description": "Automatically discover and visually document network infrastructure",
   "install_methods": [
     {
       "type": "default",
-      "script": "ct/netvisor.sh",
+      "script": "ct/scanopy.sh",
       "resources": {
         "cpu": 2,
         "ram": 3072,
