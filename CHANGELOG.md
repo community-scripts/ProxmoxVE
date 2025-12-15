@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-12-15
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - Refactor: Heimdall Dashboard [@tremor021](https://github.com/tremor021) ([#9959](https://github.com/community-scripts/ProxmoxVE/pull/9959))
+
 ### 💾 Core
 
   - #### 🐞 Bug Fixes
