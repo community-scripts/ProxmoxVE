@@ -1,0 +1,424 @@
+# Reglas de Workflow de Contribución para ProxmoxVE Helper-Scripts
+
+## Objetivo
+
+Estas reglas definen cómo el asistente debe ayudar durante todo el proceso de contribución al proyecto ProxmoxVE Helper-Scripts, desde el setup inicial hasta la preparación del Pull Request.
+
+---
+
+## 1. Proceso de Fork Setup
+
+### 1.1 Verificación de Fork Configurado
+
+Cuando el usuario está configurando su fork por primera vez, el asistente debe:
+
+- Verificar que se ha ejecutado `bash docs/contribution/setup-fork.sh`
+- Confirmar que el remote `upstream` está configurado correctamente
+- Sugerir verificar la configuración con `git remote -v`
+
+**Comandos de verificación que puedo sugerir**:
+
+```bash
+# Verificar remotes configurados
+git remote -v
+
+# Debe mostrar:
+# origin    https://github.com/USERNAME/ProxmoxVE.git (fetch)
+# origin    https://github.com/USERNAME/ProxmoxVE.git (push)
+# upstream  https://github.com/community-scripts/ProxmoxVE.git (fetch)
+# upstream  https://github.com/community-scripts/ProxmoxVE.git (push)
+```
+
+Si `upstream` no está configurado, sugerir:
+
+```bash
+git remote add upstream https://github.com/community-scripts/ProxmoxVE.git
+```
+
+---
+
+## 2. Gestión de URLs
+
+### 2.1 Regla Crítica de URLs
+
+**OBLIGATORIO**: Las URLs en los scripts deben cambiar según la fase del desarrollo:
+
+- **Durante desarrollo local**: URLs deben apuntar al fork del usuario
+- **Antes de PR**: URLs DEBEN apuntar a `community-scripts/ProxmoxVE/main`
+
+### 2.2 Archivos Donde se Cambian URLs
+
+**IMPORTANTE**: Los siguientes archivos pueden contener URLs que deben verificarse según el contexto:
+
+**Para testing local (desarrollo)**:
+
+- `misc/build.func` - Modificar temporalmente para testing (NO commitear)
+- `misc/install.func` - Modificar temporalmente para testing (NO commitear)
+- `ct/AppName.sh` - Modificar para testing (SÍ commitear después de revertir a producción)
+
+**Para PR (producción)**:
+
+- Solo `ct/AppName.sh` debe tener URL de producción (community-scripts/ProxmoxVE/main)
+- `misc/build.func` y `misc/install.func` NO deben estar en commits (git checkout para revertir)
+
+### 2.3 Patrón de URLs a Buscar
+
+URLs que debo buscar y verificar:
+
+```bash
+# URL correcta para PR (producción):
+https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main
+
+# URL de desarrollo (fork personal):
+https://raw.githubusercontent.com/USERNAME/REPO/refs/heads/BRANCH
+```
+
+### 2.4 Verificación de URLs
+
+Antes de sugerir commit o PR, debo:
+
+1. Buscar URLs en archivos modificados/creados
+2. Identificar si apuntan a fork personal o a community-scripts
+3. Alertar si están en modo desarrollo cuando se va a hacer PR
+
+**Comando que puedo ejecutar para verificar**:
+
+```bash
+grep -r "raw.githubusercontent.com" --include="*.sh" --include="*.func" ct/ install/ misc/build.func misc/install.func 2>/dev/null | grep -v "community-scripts/ProxmoxVE/main"
+```
+
+Si este comando encuentra resultados antes de un PR, debo alertar al usuario.
+
+### 2.5 Cambio de URLs para Desarrollo
+
+Cuando se crea un nuevo script y el usuario necesita probarlo localmente:
+
+1. Identificar el username de GitHub del usuario (de git remote origin)
+2. **Cambiar URLs en 3 archivos para testing**:
+   - `misc/build.func` - Cambiar todas las URLs internas a tu fork (NO commitear)
+   - `misc/install.func` - Cambiar todas las URLs internas a tu fork (NO commitear)
+   - `ct/AppName.sh` - Cambiar la URL del source a tu fork (SÍ commitear después de revertir)
+3. **IMPORTANTE**: Los cambios en `misc/build.func` y `misc/install.func` son TEMPORALES para testing. NO deben commitearse.
+
+**Ejemplo de cambio sugerido**:
+
+```bash
+# En ct/miapp.sh, cambiar:
+# De:
+source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+# A:
+source <(curl -s https://raw.githubusercontent.com/USERNAME/ProxmoxVE/refs/heads/BRANCH/misc/build.func)
+```
+
+### 2.6 Revertir URLs Antes de PR
+
+**OBLIGATORIO**: ANTES de cualquier commit que vaya a un PR, debo:
+
+1. **Revertir cambios en `misc/build.func` y `misc/install.func`** (NO deben estar en commits):
+
+   ```bash
+   # Revertir cambios locales en archivos de misc/
+   git checkout HEAD -- misc/build.func misc/install.func
+   ```
+
+2. **Cambiar URL en `ct/AppName.sh` de fork a producción**:
+
+   ```bash
+   # Buscar y reemplazar URLs de fork a producción
+   sed -i 's|raw.githubusercontent.com/USERNAME/REPO/refs/heads/BRANCH|raw.githubusercontent.com/community-scripts/ProxmoxVE/main|g' ct/AppName.sh
+   ```
+
+3. **Verificar que solo `ct/AppName.sh` e `install/appname-install.sh` estén staged**:
+
+   ```bash
+   # Verificar archivos staged
+   git diff --cached --name-only
+   
+   # Debe mostrar SOLO:
+   # - ct/AppName.sh
+   # - install/appname-install.sh
+   # - json/appname.json (opcional)
+   
+   # NO debe mostrar:
+   # - misc/build.func
+   # - misc/install.func
+   ```
+
+**Comandos completos de verificación**:
+
+```bash
+# 1. Verificar URLs en ct/AppName.sh (debe ser producción)
+grep "raw.githubusercontent.com" ct/AppName.sh
+
+# 2. Verificar que misc/ no está staged
+git diff --cached --name-only | grep "^misc/"
+
+# 3. Si misc/ aparece, revertir:
+git reset HEAD misc/
+git checkout HEAD -- misc/build.func misc/install.func
+```
+
+---
+
+## 3. Gestión de Branches
+
+### 3.1 Verificación de Feature Branch
+
+**OBLIGATORIO**: El trabajo debe realizarse en un feature branch, NO en `main`.
+
+Antes de sugerir commits, debo:
+
+1. Verificar en qué branch está el usuario
+2. Alertar si está en `main` o `master`
+3. Sugerir crear feature branch
+
+**Comandos de verificación**:
+
+```bash
+# Verificar branch actual
+git branch --show-current
+
+# Debe mostrar algo como: feature/miapp, fix/issue, feat/new-feature
+```
+
+### 3.2 Convenciones de Nombres de Branches
+
+Las branches deben seguir estas convenciones:
+
+- `feature/nombre-aplicacion` - Para nuevas aplicaciones
+- `fix/descripcion` - Para correcciones
+- `feat/nueva-funcionalidad` - Para nuevas funcionalidades
+- `docs/descripcion` - Para documentación
+
+Si el nombre no sigue estas convenciones, debo sugerir uno apropiado.
+
+### 3.3 Sincronización con Upstream
+
+Antes de crear PR, debo recordar al usuario sincronizar con upstream:
+
+**Comandos a sugerir**:
+
+```bash
+# 1. Obtener últimos cambios de upstream
+git fetch upstream
+
+# 2. Rebase sobre main de upstream
+git rebase upstream/main
+
+# 3. Si hay conflictos, resolverlos y continuar
+# git add .
+# git rebase --continue
+
+# 4. Actualizar fork remoto
+git push -f origin feature/nombre-branch
+```
+
+---
+
+## 4. Archivos Permitidos en Pull Request
+
+### 4.1 Archivos REQUERIDOS en PR
+
+Un Pull Request debe incluir SOLO estos archivos:
+
+- `ct/AppName.sh` - Script de creación de contenedor (OBLIGATORIO)
+- `install/appname-install.sh` - Script de instalación (OBLIGATORIO)
+- `json/appname.json` - Configuración JSON para el website (OPCIONAL)
+
+### 4.2 Archivos PROHIBIDOS en PR
+
+**PROHIBIDO** incluir en commits que van a PR:
+
+- `misc/build.func` - Librería compartida, no modificar (puede modificarse temporalmente para testing local, pero NO debe commitearse)
+- `misc/install.func` - Librería compartida, no modificar (puede modificarse temporalmente para testing local, pero NO debe commitearse)
+- Cualquier archivo de `misc/` - Librerías compartidas
+- Archivos de configuración personal (`.gitconfig`, `.env`, etc.)
+
+**NOTA IMPORTANTE**: Durante desarrollo local, puedes modificar temporalmente `misc/build.func` y `misc/install.func` para cambiar URLs a tu fork para testing. ANTES de hacer commit, DEBES revertir estos cambios con `git checkout HEAD -- misc/build.func misc/install.func` y asegurarte de que NO estén staged.
+
+### 4.3 Verificación de Archivos en Staging
+
+Antes de sugerir commit, debo:
+
+1. Verificar qué archivos están staged o modificados
+2. Alertar si hay archivos prohibidos
+3. Sugerir usar `git reset` para des-staggear archivos prohibidos
+
+**Comandos de verificación que puedo ejecutar**:
+
+```bash
+# Ver archivos staged
+git diff --cached --name-only
+
+# Ver archivos modificados
+git status --short
+
+# Verificar si hay archivos de misc/ en staging
+git diff --cached --name-only | grep "^misc/"
+```
+
+Si encuentro archivos de `misc/` o archivos prohibidos, debo alertar inmediatamente.
+
+---
+
+## 5. Flujo de Trabajo por Fases
+
+### 5.1 Fase: Creación de Nuevo Script
+
+Cuando el usuario crea un nuevo script, debo:
+
+1. Verificar que se usaron templates correctos (`ct/example.sh`, `install/example-install.sh`)
+2. Verificar estructura según `BASH_SCRIPT_STANDARDS.mdc`
+3. **SUGERIR** cambiar URLs a fork para desarrollo (si necesita testing local)
+4. **RECORDAR** que URLs deben revertirse antes de PR
+
+### 5.2 Fase: Desarrollo y Testing
+
+Durante el desarrollo:
+
+- **URLs en modo desarrollo**: Si se cambiaron URLs en `misc/build.func`, `misc/install.func` y `ct/AppName.sh`, son cambios TEMPORALES para testing
+- **Testing local**: Sugerir probar el script en Proxmox VE usando las URLs del fork
+- **CRÍTICO**: NO hacer commit de `misc/build.func` ni `misc/install.func`
+- **Recordar**: Antes de commit, revertir cambios en `misc/` con `git checkout HEAD -- misc/`
+
+### 5.3 Fase: Preparación de Commit
+
+Antes de sugerir commit, debo verificar:
+
+1. **Archivos incluidos**: ¿Solo archivos permitidos?
+2. **URLs**: ¿Están en modo producción o desarrollo?
+3. **Branch**: ¿Está en feature branch?
+4. **Mensaje de commit**: ¿Sigue formato convencional?
+
+**Checklist pre-commit**:
+
+- [ ] Solo archivos permitidos en staging
+- [ ] URLs correctas según contexto (desarrollo vs PR)
+- [ ] Estamos en feature branch (no main)
+- [ ] Mensaje de commit descriptivo
+
+### 5.4 Fase: Preparación de Pull Request
+
+Cuando el usuario menciona "PR", "pull request", o "enviar cambios", debo ejecutar el checklist completo de `PR_VALIDATION.mdc`.
+
+**Checklist crítico antes de PR**:
+
+- [ ] URLs cambiadas a `community-scripts/ProxmoxVE/main`
+- [ ] Solo archivos permitidos en commits
+- [ ] Scripts probados localmente
+- [ ] Fork sincronizado con upstream
+- [ ] Sin conflictos de merge
+- [ ] Naming conventions correctos
+
+---
+
+## 6. Recordatorios Automáticos
+
+### 6.1 Antes de Commit
+
+Debo preguntar o recordar:
+
+- "¿Has verificado que solo incluyes archivos permitidos?"
+- "¿Las URLs están en modo producción (community-scripts) o desarrollo (tu fork)?"
+- "¿Estás en un feature branch?"
+
+### 6.2 Antes de Push
+
+Debo preguntar o recordar:
+
+- "¿Probaste el script en Proxmox VE?"
+- "¿Las URLs están correctas para el contexto?"
+
+### 6.3 Antes de Pull Request
+
+Debo ejecutar validación completa y recordar:
+
+- Ejecutar checklist de `PR_VALIDATION.mdc`
+- Verificar sincronización con upstream
+- Verificar que URLs están en modo producción
+
+---
+
+## 7. Comandos Útiles para el Usuario
+
+Proporcionar estos comandos cuando sean relevantes:
+
+### Verificar Estado del Repositorio
+
+```bash
+# Ver branch actual
+git branch --show-current
+
+# Ver estado de archivos
+git status
+
+# Ver archivos staged
+git diff --cached --name-only
+
+# Ver diferencias con upstream
+git fetch upstream
+git log HEAD..upstream/main --oneline
+```
+
+### Verificar URLs
+
+```bash
+# Buscar URLs en archivos específicos
+grep -r "raw.githubusercontent.com" ct/miapp.sh install/miapp-install.sh
+
+# Buscar URLs que NO son de community-scripts
+grep -r "raw.githubusercontent.com" --include="*.sh" --include="*.func" . | grep -v "community-scripts/ProxmoxVE/main"
+```
+
+### Sincronizar con Upstream
+
+```bash
+# Obtener últimos cambios
+git fetch upstream
+
+# Ver qué hay nuevo
+git log HEAD..upstream/main --oneline
+
+# Rebase sobre upstream/main
+git rebase upstream/main
+
+# Si hay conflictos, resolver y continuar
+# git add .
+# git rebase --continue
+```
+
+### Limpiar Archivos No Deseados
+
+```bash
+# Des-staggear archivos de misc/
+git reset HEAD misc/
+
+# Ver qué archivos están siendo rastreados (no deberían estar misc/*.func)
+git ls-files | grep "misc/.*\.func"
+```
+
+---
+
+## 8. Aplicación de las Reglas
+
+Estas reglas son **OBLIGATORIAS** y se aplican cuando:
+
+- Se está configurando un fork nuevo
+- Se está creando o modificando scripts
+- Se está preparando un commit
+- Se está preparando un Pull Request
+- Se menciona cualquier aspecto del workflow de contribución
+
+El asistente debe verificar el cumplimiento de estas reglas y alertar sobre cualquier desviación, proporcionando comandos específicos para corregir problemas.
+
+---
+
+## 9. Referencias
+
+Para más información:
+
+- Guía de contribución: `docs/contribution/README.md`
+- Setup de fork: `docs/contribution/FORK_SETUP.md`
+- Estándares de código: `docs/contribution/CONTRIBUTING.md`
+- Validación PR: `.cursor/rules/PR_VALIDATION.mdc`
+- Estándares Bash: `.cursor/rules/BASH_SCRIPT_STANDARDS.mdc`
