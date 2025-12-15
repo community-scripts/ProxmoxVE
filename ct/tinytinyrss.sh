@@ -35,6 +35,9 @@ detect_repo_base_url() {
 # Obtener URL base del repo (se detecta automáticamente en desarrollo, usa defaults en producción)
 REPO_BASE_URL="${REPO_BASE_URL:-$(detect_repo_base_url)}"
 
+# Exportar para que build.func pueda usar esta variable si está disponible
+export REPO_BASE_URL
+
 source <(curl -fsSL "${REPO_BASE_URL}/misc/build.func")
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: mrosero

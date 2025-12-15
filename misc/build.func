@@ -2756,9 +2756,11 @@ build_container() {
   TEMP_DIR=$(mktemp -d)
   pushd "$TEMP_DIR" >/dev/null
   if [ "$var_os" == "alpine" ]; then
-    export FUNCTIONS_FILE_PATH="$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/alpine-install.func)"
+    local install_func_url="${REPO_BASE_URL:-https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main}/misc/alpine-install.func"
+    export FUNCTIONS_FILE_PATH="$(curl -fsSL "${install_func_url}")"
   else
-    export FUNCTIONS_FILE_PATH="$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/install.func)"
+    local install_func_url="${REPO_BASE_URL:-https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main}/misc/install.func"
+    export FUNCTIONS_FILE_PATH="$(curl -fsSL "${install_func_url}")"
   fi
 
   # Core exports for install.func
@@ -3214,7 +3216,9 @@ EOF'
   set +Eeuo pipefail # Disable ALL error handling temporarily
   trap - ERR         # Remove ERR trap completely
 
-  lxc-attach -n "$CTID" -- bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/install/${var_install}.sh)"
+  # Use REPO_BASE_URL if available (for fork testing), otherwise use default
+  local install_url="${REPO_BASE_URL:-https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main}/install/${var_install}.sh"
+  lxc-attach -n "$CTID" -- bash -c "$(curl -fsSL "${install_url}")"
   local lxc_exit=$?
 
   set -Eeuo pipefail       # Re-enable error handling
