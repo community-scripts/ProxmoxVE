@@ -2687,7 +2687,11 @@ start() {
 # - Posts installation telemetry to API if diagnostics enabled
 # ------------------------------------------------------------------------------
 build_container() {
-  #  if [ "$VERBOSE" == "yes" ]; then set -x; fi
+  if [ "$VERBOSE" == "yes" ]; then set -x; fi
+
+  msg_debug "(build_container) Initial NET: $NET"
+  msg_debug "(build_container) Initial GATE: $GATE"
+  msg_debug "(build_container) Initial IPV6_STATIC: $IPV6_STATIC"
 
   NET_STRING="-net0 name=eth0,bridge=${BRG:-vmbr0}"
 
@@ -2709,6 +2713,8 @@ build_container() {
     *) NET_STRING+=",gw=$GATE" ;;
     esac
   fi
+
+  msg_debug "(build_container) NET_STRING after GATE: $NET_STRING"
 
   # VLAN
   if [[ -n "$VLAN" ]]; then
