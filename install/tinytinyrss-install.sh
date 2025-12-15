@@ -27,7 +27,7 @@ echo "main" >"/opt/TinyTinyRSS_version.txt"
 msg_ok "Downloaded TinyTinyRSS"
 
 msg_info "Configuring TinyTinyRSS"
-cd /opt/tt-rss
+cd /opt/tt-rss || exit
 mkdir -p /opt/tt-rss/feed-icons /opt/tt-rss/lock /opt/tt-rss/cache
 chown -R www-data:www-data /opt/tt-rss
 chmod -R g+rX /opt/tt-rss
