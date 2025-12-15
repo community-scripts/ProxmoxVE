@@ -20,6 +20,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - paperless-ai: backup data and recreate venv during update [@MickLesk](https://github.com/MickLesk) ([#9987](https://github.com/community-scripts/ProxmoxVE/pull/9987))
     - fix(booklore): add setup_yq to update script [@MickLesk](https://github.com/MickLesk) ([#9989](https://github.com/community-scripts/ProxmoxVE/pull/9989))
     - fix(pangolin-install): add network-online dependency [@worried-networking](https://github.com/worried-networking) ([#9984](https://github.com/community-scripts/ProxmoxVE/pull/9984))
 
