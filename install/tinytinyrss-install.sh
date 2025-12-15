@@ -77,13 +77,19 @@ msg_ok "Created Apache Configuration"
 
 msg_info "Creating initial config.php"
 if [ ! -f /opt/tt-rss/config.php ]; then
+  # Ensure variables are available (they should be exported by setup_postgresql_db)
+  if [[ -z "${PG_DB_NAME:-}" || -z "${PG_DB_USER:-}" || -z "${PG_DB_PASS:-}" ]]; then
+    msg_error "Database variables not set. PG_DB_NAME, PG_DB_USER, and PG_DB_PASS must be available."
+    exit 1
+  fi
+  
   cat <<EOF >/opt/tt-rss/config.php
 <?php
 define('DB_TYPE', 'pgsql');
 define('DB_HOST', 'localhost');
-define('DB_NAME', '$PG_DB_NAME');
-define('DB_USER', '$PG_DB_USER');
-define('DB_PASS', '$PG_DB_PASS');
+define('DB_NAME', '${PG_DB_NAME}');
+define('DB_USER', '${PG_DB_USER}');
+define('DB_PASS', '${PG_DB_PASS}');
 define('DB_PORT', '5432');
 
 define('SELF_URL_PATH', 'http://${LOCAL_IP}/');
@@ -99,6 +105,19 @@ EOF
 else
   msg_info "config.php already exists, skipping creation"
 fi
+
+msg_info "Configuring PostgreSQL for password authentication"
+# Ensure PostgreSQL accepts password authentication for localhost connections
+PG_HBA_CONF=$(find /etc/postgresql/*/main/pg_hba.conf 2>/dev/null | head -1)
+if [[ -n "$PG_HBA_CONF" ]]; then
+  # Check if md5 authentication is already configured for localhost
+  if ! grep -qE "^host\s+all\s+all\s+127\.0\.0\.1/32\s+md5" "$PG_HBA_CONF" 2>/dev/null; then
+    # Add md5 authentication line after IPv4 local connections comment
+    sed -i '/^# IPv4 local connections:/a host    all             all             127.0.0.1/32            md5' "$PG_HBA_CONF"
+    systemctl reload postgresql 2>/dev/null || true
+  fi
+fi
+msg_ok "PostgreSQL authentication configured"
 
 motd_ssh
 customize
