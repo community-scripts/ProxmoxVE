@@ -16,6 +16,7 @@ update_os
 PHP_VERSION="8.2" PHP_MODULE="curl,xml,mbstring,intl,zip,pgsql,gmp" PHP_APACHE="YES" setup_php
 PG_VERSION="16" setup_postgresql
 PG_DB_NAME="ttrss" PG_DB_USER="ttrss" setup_postgresql_db
+import_local_ip
 
 msg_info "Downloading TinyTinyRSS"
 mkdir -p /opt/tt-rss
@@ -76,7 +77,7 @@ define('DB_USER', '$PG_DB_USER');
 define('DB_PASS', '$PG_DB_PASS');
 define('DB_PORT', '5432');
 
-define('SELF_URL_PATH', 'http://localhost/');
+define('SELF_URL_PATH', 'http://${LOCAL_IP}/');
 
 define('FEED_CRYPT_KEY', '$(openssl rand -hex 32)');
 
