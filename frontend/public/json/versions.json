@@ -1,5 +1,80 @@
 [
   {
+    "name": "BerriAI/litellm",
+    "version": "v1.80.10.rc.2",
+    "date": "2025-12-14T22:47:12Z"
+  },
+  {
+    "name": "nickheyer/discopanel",
+    "version": "v1.0.15",
+    "date": "2025-12-14T21:49:36Z"
+  },
+  {
+    "name": "AlexxIT/go2rtc",
+    "version": "v1.9.13",
+    "date": "2025-12-14T20:18:28Z"
+  },
+  {
+    "name": "netvisor-io/netvisor",
+    "version": "v0.12.0",
+    "date": "2025-12-14T19:20:29Z"
+  },
+  {
+    "name": "alexta69/metube",
+    "version": "2025.12.14",
+    "date": "2025-12-14T18:24:33Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.4.10",
+    "date": "2025-12-14T18:13:34Z"
+  },
+  {
+    "name": "openhab/openhab-core",
+    "version": "5.1.0.M4",
+    "date": "2025-12-14T18:12:04Z"
+  },
+  {
+    "name": "rcourtman/Pulse",
+    "version": "v4.36.2",
+    "date": "2025-12-03T22:46:29Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.452",
+    "date": "2025-12-14T15:50:44Z"
+  },
+  {
+    "name": "semaphoreui/semaphore",
+    "version": "v2.17.0-beta24",
+    "date": "2025-12-14T14:04:23Z"
+  },
+  {
+    "name": "blakeblackshear/frigate",
+    "version": "v0.14.1",
+    "date": "2024-08-29T22:32:51Z"
+  },
+  {
+    "name": "docmost/docmost",
+    "version": "v0.24.1",
+    "date": "2025-12-14T13:49:16Z"
+  },
+  {
+    "name": "laurent22/joplin",
+    "version": "server-v3.5.1",
+    "date": "2025-12-03T11:56:50Z"
+  },
+  {
+    "name": "chrisbenincasa/tunarr",
+    "version": "v1.0.3",
+    "date": "2025-12-14T13:32:31Z"
+  },
+  {
+    "name": "C4illin/ConvertX",
+    "version": "v0.16.1",
+    "date": "2025-12-14T13:21:05Z"
+  },
+  {
     "name": "globaleaks/globaleaks-whistleblowing-software",
     "version": "v5.0.87",
     "date": "2025-12-14T08:35:11Z"
@@ -10,19 +85,9 @@
     "date": "2025-12-14T08:16:54Z"
   },
   {
-    "name": "netvisor-io/netvisor",
-    "version": "v0.12.0",
-    "date": "2025-12-14T06:08:25Z"
-  },
-  {
     "name": "morpheus65535/bazarr",
     "version": "v1.5.3",
     "date": "2025-09-20T12:12:33Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.448",
-    "date": "2025-12-14T05:55:44Z"
   },
   {
     "name": "release-argus/Argus",
@@ -33,16 +98,6 @@
     "name": "mayswind/AriaNg",
     "version": "1.3.12",
     "date": "2025-12-14T02:58:24Z"
-  },
-  {
-    "name": "BerriAI/litellm",
-    "version": "v1.80.10.rc.1",
-    "date": "2025-12-14T02:32:50Z"
-  },
-  {
-    "name": "nickheyer/discopanel",
-    "version": "v1.0.14",
-    "date": "2025-12-14T00:51:39Z"
   },
   {
     "name": "steveiliop56/tinyauth",
@@ -105,11 +160,6 @@
     "date": "2025-12-13T13:55:51Z"
   },
   {
-    "name": "chrisbenincasa/tunarr",
-    "version": "v1.0.2",
-    "date": "2025-12-13T13:34:22Z"
-  },
-  {
     "name": "fuma-nama/fumadocs",
     "version": "fumadocs-openapi@10.1.4",
     "date": "2025-12-13T12:01:58Z"
@@ -128,11 +178,6 @@
     "name": "Dokploy/dokploy",
     "version": "v0.26.2",
     "date": "2025-12-13T07:48:09Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.4.9",
-    "date": "2025-11-28T20:36:20Z"
   },
   {
     "name": "mealie-recipes/mealie",
@@ -178,11 +223,6 @@
     "name": "home-assistant/core",
     "version": "2025.12.3",
     "date": "2025-12-12T18:12:39Z"
-  },
-  {
-    "name": "docmost/docmost",
-    "version": "v0.24.0",
-    "date": "2025-12-12T18:05:49Z"
   },
   {
     "name": "booklore-app/booklore",
@@ -455,11 +495,6 @@
     "date": "2025-12-09T11:44:49Z"
   },
   {
-    "name": "alexta69/metube",
-    "version": "2025.12.09",
-    "date": "2025-12-09T00:16:11Z"
-  },
-  {
     "name": "Dispatcharr/Dispatcharr",
     "version": "v0.14.0",
     "date": "2025-12-09T00:04:09Z"
@@ -530,11 +565,6 @@
     "date": "2025-12-06T20:30:34Z"
   },
   {
-    "name": "blakeblackshear/frigate",
-    "version": "v0.14.1",
-    "date": "2024-08-29T22:32:51Z"
-  },
-  {
     "name": "navidrome/navidrome",
     "version": "v0.59.0",
     "date": "2025-12-06T18:08:42Z"
@@ -543,11 +573,6 @@
     "name": "Brandawg93/PeaNUT",
     "version": "v5.19.2",
     "date": "2025-12-06T14:56:53Z"
-  },
-  {
-    "name": "openhab/openhab-core",
-    "version": "4.3.9",
-    "date": "2025-12-06T14:31:36Z"
   },
   {
     "name": "prometheus/blackbox_exporter",
@@ -640,11 +665,6 @@
     "date": "2025-12-04T09:26:37Z"
   },
   {
-    "name": "rcourtman/Pulse",
-    "version": "v4.36.2",
-    "date": "2025-12-03T22:46:29Z"
-  },
-  {
     "name": "danielbrendel/hortusfox-web",
     "version": "v5.5",
     "date": "2025-12-03T21:20:30Z"
@@ -658,11 +678,6 @@
     "name": "Graylog2/graylog2-server",
     "version": "6.2.10",
     "date": "2025-12-03T13:58:32Z"
-  },
-  {
-    "name": "laurent22/joplin",
-    "version": "server-v3.5.1",
-    "date": "2025-12-03T11:56:50Z"
   },
   {
     "name": "SigNoz/signoz",
@@ -733,11 +748,6 @@
     "name": "OliveTin/OliveTin",
     "version": "3000.7.0",
     "date": "2025-12-01T23:29:47Z"
-  },
-  {
-    "name": "C4illin/ConvertX",
-    "version": "v0.16.0",
-    "date": "2025-12-01T21:35:19Z"
   },
   {
     "name": "slskd/slskd",
@@ -903,11 +913,6 @@
     "name": "silverbulletmd/silverbullet",
     "version": "2.3.0",
     "date": "2025-11-24T09:48:32Z"
-  },
-  {
-    "name": "semaphoreui/semaphore",
-    "version": "v2.17.0-beta22",
-    "date": "2025-11-24T06:07:49Z"
   },
   {
     "name": "webmin/webmin",
@@ -1083,11 +1088,6 @@
     "name": "binwiederhier/ntfy",
     "version": "v2.15.0",
     "date": "2025-11-16T18:53:49Z"
-  },
-  {
-    "name": "AlexxIT/go2rtc",
-    "version": "v1.9.12",
-    "date": "2025-11-16T16:14:55Z"
   },
   {
     "name": "outline/outline",
