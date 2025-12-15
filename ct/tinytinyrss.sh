@@ -33,7 +33,12 @@ detect_repo_base_url() {
 }
 
 # Obtener URL base del repo (se detecta automáticamente en desarrollo, usa defaults en producción)
-REPO_BASE_URL="${REPO_BASE_URL:-$(detect_repo_base_url)}"
+# Para testing con app defaults, usar upstream para evitar problemas con build.func del fork
+if [[ -n "${USE_UPSTREAM_BUILD_FUNC:-}" ]]; then
+  REPO_BASE_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
+else
+  REPO_BASE_URL="${REPO_BASE_URL:-$(detect_repo_base_url)}"
+fi
 
 # Exportar para que build.func pueda usar esta variable si está disponible
 export REPO_BASE_URL
