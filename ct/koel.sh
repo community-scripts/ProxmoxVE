@@ -66,7 +66,6 @@ function update_script() {
     msg_info "Starting Services"
     systemctl start php8.4-fpm nginx
     msg_ok "Started Services"
-
     msg_ok "Updated Successfully"
   fi
   exit
