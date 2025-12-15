@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-12-15
 
+### 🆕 New Scripts
+
+  - Koel ([#9972](https://github.com/community-scripts/ProxmoxVE/pull/9972))
+
 ### 🚀 Updated Scripts
 
   - #### 🔧 Refactor
