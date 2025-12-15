@@ -46,6 +46,7 @@ function update_script() {
     msg_ok "Built Frontend"
 
     JAVA_VERSION="21" setup_java
+    setup_yq
 
     msg_info "Building Backend"
     cd /opt/booklore/booklore-api
