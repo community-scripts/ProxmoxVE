@@ -40,7 +40,9 @@ function update_script() {
       msg_error "Backup failed: /usr/local/share/tunarr does not exist"
     fi
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "tunarr" "chrisbenincasa/tunarr" "singlefile" "latest" "/opt/tunarr" "*linux-x64"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "tunarr" "chrisbenincasa/tunarr" "prebuild" "latest" "/opt/tunarr" "*linux-x64.tar.gz"
+    cd /opt/tunarr
+    mv tunarr* tunarr
 
     msg_info "Starting Service"
     systemctl start tunarr

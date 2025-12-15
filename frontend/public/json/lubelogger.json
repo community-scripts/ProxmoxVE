@@ -11,7 +11,7 @@
   "interface_port": 5000,
   "documentation": "https://docs.lubelogger.com/",
   "website": "https://lubelogger.com/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/lubelogger.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/lubelogger.webp",
   "config_path": "/opt/lubelogger/appsettings.json",
   "description": "Web-Based Vehicle Maintenance and Fuel Mileage Tracker",
   "install_methods": [

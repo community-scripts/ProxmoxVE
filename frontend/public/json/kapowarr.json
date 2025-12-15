@@ -11,7 +11,7 @@
   "interface_port": 5656,
   "documentation": "https://casvt.github.io/Kapowarr/general_info/workings/",
   "website": "https://casvt.github.io/Kapowarr/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/kapowarr.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/kapowarr.webp",
   "config_path": "",
   "description": "Kapowarr allows you to build a digital library of comics. You can add volumes, map them to a folder and start managing! Download, rename, move and convert issues of the volume (including TPB's, One Shots, Hard Covers, and more). The whole process is automated and can be customised in the settings.",
   "install_methods": [

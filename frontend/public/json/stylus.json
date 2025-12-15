@@ -11,7 +11,7 @@
   "interface_port": 8000,
   "documentation": "https://mmastrac.github.io/stylus/",
   "website": "https://github.com/mmastrac/stylus",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/stylus.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/stylus.webp",
   "config_path": "/opt/stylus/config.yaml",
   "description": "Stylus (style + status) is a lightweight status page for infrastructure and networks. Configure a set of bash scripts that test the various parts of your infrastructure, set up visualizations with minimal configuration, and Stylus will generate you a dashboard for your system.",
   "install_methods": [

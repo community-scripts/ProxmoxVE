@@ -11,7 +11,7 @@
     "interface_port": 8043,
     "documentation": null,
     "website": "https://www.tp-link.com/us/support/download/omada-software-controller/",
-    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/omada.webp",
+    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/omada.webp",
     "config_path": "",
     "description": "Omada Controller is a software application used to manage TP-Link's Omada EAP (Enterprise Access Point) devices. It allows administrators to centrally manage a large number of EAPs, monitor network performance, and control user access to the network. The software provides an intuitive interface for network configuration, firmware upgrades, and network monitoring. By using the Omada Controller, administrators can streamline the management process, reduce manual intervention, and improve the overall security and reliability of the network.",
     "install_methods": [

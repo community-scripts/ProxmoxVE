@@ -11,7 +11,7 @@
   "interface_port": 5984,
   "documentation": "https://docs.couchdb.org/en/stable/",
   "website": "https://couchdb.apache.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/couchdb.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/couchdb.webp",
   "config_path": "etc/default.ini",
   "description": "Apache-CouchDB Seamless multi-master sync, that scales from Big Data to Mobile, with an Intuitive HTTP/JSON API and designed for Reliability.",
   "install_methods": [

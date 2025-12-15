@@ -11,7 +11,7 @@
   "interface_port": 9030,
   "documentation": "https://www.usememos.com/docs",
   "website": "https://www.usememos.com/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/memos.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/memos.webp",
   "config_path": "",
   "description": "Memos is an open-source, self-hosted platform designed for fast, privacy-focused note-taking. Users can create, organize, and format notes with Markdown, which are securely stored in a local database. It\u2019s lightweight and customizable, built for quick access and adaptability to individual or team needs.",
   "install_methods": [

@@ -11,7 +11,7 @@
   "interface_port": 6610,
   "documentation": "https://docs.onedev.io/",
   "website": "https://onedev.io/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/onedev.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/onedev.webp",
   "config_path": "/opt/onedev/conf",
   "description": "Git server with CI/CD, kanban, and packages.",
   "install_methods": [

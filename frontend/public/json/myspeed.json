@@ -11,7 +11,7 @@
   "interface_port": 5216,
   "documentation": "https://docs.myspeed.dev/",
   "website": "https://myspeed.dev/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/myspeed.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/myspeed.webp",
   "config_path": "",
   "description": "MySpeed is a speed test analysis tool that records and displays internet speed metrics for up to 30 days. It offers automated tests using Cron expressions and supports multiple speed test servers (Ookla, LibreSpeed, Cloudflare). MySpeed provides detailed statistics, health check notifications via email or messaging apps, and integrates with Prometheus and Grafana for advanced monitoring.",
   "install_methods": [

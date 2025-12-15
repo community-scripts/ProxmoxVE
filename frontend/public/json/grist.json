@@ -11,7 +11,7 @@
   "interface_port": 8484,
   "documentation": "https://support.getgrist.com/self-managed/#the-essentials",
   "website": "https://www.getgrist.com/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/grist.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/grist.webp",
   "config_path": "/opt/grist/.env",
   "description": "Grist is like a spreadsheet + database hybrid. It lets you store structured data, use relational links between tables, apply formulas (even with Python), build custom layouts (cards, forms, dashboards), set fine-grained access rules, and visualize data with charts or pivot-tables.",
   "install_methods": [

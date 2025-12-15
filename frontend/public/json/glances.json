@@ -11,7 +11,7 @@
   "interface_port": 61208,
   "documentation": "https://glances.readthedocs.io/en/latest/",
   "website": "https://nicolargo.github.io/glances/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/glances.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/glances.webp",
   "config_path": "/usr/local/share/doc/glances/glances.conf",
   "description": "Glances is an open-source system cross-platform monitoring tool. It allows real-time monitoring of various aspects of your system such as CPU, memory, disk, network usage etc.",
   "install_methods": [

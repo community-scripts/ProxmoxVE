@@ -11,7 +11,7 @@
   "interface_port": 8069,
   "documentation": "https://www.odoo.com/en_EN/page/docs",
   "website": "https://www.odoo.com/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/odoo.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/odoo.webp",
   "config_path": "/etc/odoo/odoo.conf",
   "description": "Odoo is a comprehensive open-source business platform made up of modular apps that cover key areas such as CRM, accounting, inventory, sales, project management, HR, helpdesk, and e-commerce. All modules are tightly integrated, allowing businesses to fully digitize and automate their workflows. Its modular design makes it suitable for both small companies and large enterprises, with flexibility to adapt to different industries. Odoo combines user-friendliness with powerful functionality, offering a unified solution for managing a wide range of business operations.",
   "install_methods": [

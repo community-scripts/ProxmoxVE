@@ -11,7 +11,7 @@
   "interface_port": 80,
   "documentation": "https://doc.yunohost.org/",
   "website": "https://yunohost.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/yunohost.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/yunohost.webp",
   "config_path": "",
   "description": "YunoHost is an operating system aiming for the simplest administration of a server, and therefore democratize self-hosting, while making sure it stays reliable, secure, ethical and lightweight.",
   "install_methods": [

@@ -11,7 +11,7 @@
   "interface_port": 6667,
   "documentation": "https://docs.inspircd.org/",
   "website": "https://www.inspircd.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/inspircd.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/inspircd.webp",
   "config_path": "/etc/inspircd/inspircd.conf",
   "description": "InspIRCd is a modular C++ Internet Relay Chat (IRC) server for UNIX-like and Windows systems.",
   "install_methods": [

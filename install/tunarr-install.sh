@@ -61,7 +61,9 @@ else
 fi
 msg_ok "Installed and Set Up Intel Hardware Acceleration"
 
-fetch_and_deploy_gh_release "tunarr" "chrisbenincasa/tunarr" "singlefile" "latest" "/opt/tunarr" "*linux-x64"
+fetch_and_deploy_gh_release "tunarr" "chrisbenincasa/tunarr" "prebuild" "latest" "/opt/tunarr" "*linux-x64.tar.gz"
+cd /opt/tunarr
+mv tunarr* tunarr
 fetch_and_deploy_gh_release "ersatztv-ffmpeg" "ErsatzTV/ErsatzTV-ffmpeg" "prebuild" "latest" "/opt/ErsatzTV-ffmpeg" "*-linux64-gpl-7.1.tar.xz"
 
 msg_info "Set ErsatzTV-ffmpeg links"

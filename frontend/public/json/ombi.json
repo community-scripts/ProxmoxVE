@@ -11,7 +11,7 @@
   "interface_port": 5000,
   "documentation": "https://docs.ombi.app/",
   "website": "https://ombi.io/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/ombi.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/ombi.webp",
   "config_path": "",
   "description": "Ombi is a self-hosted web application designed to empower shared Plex, Emby or Jellyfin users with automated content request capabilities. By integrating with various TV Show and Movie DVR tools, Ombi ensures a smooth and comprehensive experience for your users, allowing them to effortlessly request content on their own.",
   "install_methods": [

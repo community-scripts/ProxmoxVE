@@ -11,7 +11,7 @@
   "interface_port": 80,
   "documentation": "https://docs.2fauth.app/",
   "website": "https://2fauth.app/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/2fauth.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/2fauth.webp",
   "config_path": "cat /opt/2fauth/.env",
   "description": "2FAuth is a web based self-hosted alternative to One Time Passcode (OTP) generators like Google Authenticator, designed for both mobile and desktop. It aims to ease you perform your 2FA authentication steps whatever the device you handle, with a clean and suitable interface.",
   "install_methods": [

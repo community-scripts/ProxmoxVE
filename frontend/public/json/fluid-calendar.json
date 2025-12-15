@@ -12,7 +12,7 @@
   "interface_port": 3000,
   "documentation": "https://github.com/dotnetfactory/fluid-calendar/tree/main/docs",
   "website": "https://github.com/dotnetfactory/fluid-calendar",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/fluidcalendar.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/fluidcalendar.webp",
   "config_path": "/opt/fluid-calendar/.env",
   "description": "The open-source intelligent calendar that adapts to your workflow. Experience seamless task scheduling powered by AI, designed to make your time management effortless.",
   "install_methods": [

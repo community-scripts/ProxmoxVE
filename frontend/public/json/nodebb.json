@@ -12,7 +12,7 @@
   "interface_port": 4567,
   "documentation": "https://docs.nodebb.org/",
   "website": "https://nodebb.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/nodebb.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/nodebb.webp",
   "config_path": "",
   "description": "NodeBB Forum Software is powered by Node.js and supports either Redis, MongoDB, or a PostgreSQL database. It utilizes web sockets for instant interactions and real-time notifications. NodeBB takes the best of the modern web: real-time streaming discussions, mobile responsiveness, and rich RESTful read/write APIs, while staying true to the original bulletin board/forum format → categorical hierarchies, local user accounts, and asynchronous messaging.",
   "install_methods": [

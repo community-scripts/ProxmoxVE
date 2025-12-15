@@ -12,7 +12,7 @@
   "interface_port": 3000,
   "documentation": "https://wanderer.to/welcome",
   "website": "https://wanderer.to",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/wanderer-light.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/wanderer-light.webp",
   "description": "Wanderer is a decentralized, self-hosted trail database. You can upload your recorded GPS tracks or create new ones and add various metadata to build an easily searchable catalogue.",
   "install_methods": [
     {

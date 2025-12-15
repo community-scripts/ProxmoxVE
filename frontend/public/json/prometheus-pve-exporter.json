@@ -12,7 +12,7 @@
   "interface_port": 9221,
   "documentation": "https://github.com/prometheus-pve/prometheus-pve-exporter",
   "website": "https://github.com/prometheus-pve/prometheus-pve-exporter",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/proxmox.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/proxmox.webp",
   "config_path": "/opt/prometheus-pve-exporter/pve.yml",
   "description": "An exporter that exposes information gathered from Proxmox VE node for use by the Prometheus monitoring system.",
   "install_methods": [

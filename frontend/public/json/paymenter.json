@@ -11,7 +11,7 @@
   "interface_port": 80,
   "documentation": "https://paymenter.org/docs",
   "website": "https://paymenter.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/paymeter.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/paymeter.webp",
   "config_path": "/opt/paymenter/.env",
   "description": "Paymenter is an open source webshop solution for hosting companies. It's developed to provide an more easy way to manage your hosting company.",
   "install_methods": [

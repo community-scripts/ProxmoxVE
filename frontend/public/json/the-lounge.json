@@ -11,7 +11,7 @@
   "interface_port": 9000,
   "documentation": "https://thelounge.chat/docs",
   "website": "https://thelounge.chat/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/the-lounge.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/the-lounge.webp",
   "config_path": "/etc/thelounge/config.js",
   "description": "Modern web IRC client designed for self-hosting ",
   "install_methods": [

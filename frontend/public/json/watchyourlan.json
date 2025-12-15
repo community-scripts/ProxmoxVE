@@ -11,7 +11,7 @@
   "interface_port": 8840,
   "documentation": "https://github.com/aceberg/WatchYourLAN/blob/main/README.md",
   "website": "https://github.com/aceberg/WatchYourLAN",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/watchyourlan.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/watchyourlan.webp",
   "config_path": "/data/config.yaml",
   "description": "WatchYourLAN is a lightweight network IP scanner with web GUI.",
   "install_methods": [

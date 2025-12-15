@@ -11,7 +11,7 @@
   "interface_port": 3333,
   "documentation": "https://github.com/ghostfolio/ghostfolio?tab=readme-ov-file#self-hosting",
   "website": "https://ghostfol.io/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/ghostfolio.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/ghostfolio.webp",
   "config_path": "/opt/ghostfolio/.env",
   "description": "Ghostfolio is an open source wealth management software built with web technology. The application empowers busy people to keep track of stocks, ETFs or cryptocurrencies and make solid, data-driven investment decisions.",
   "install_methods": [

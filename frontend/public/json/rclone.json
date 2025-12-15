@@ -11,7 +11,7 @@
   "interface_port": 3000,
   "documentation": "https://rclone.org/docs/",
   "website": "https://rclone.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/rclone.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/rclone.webp",
   "config_path": "~/.config/rclone/rclone.conf",
   "description": "Rclone is a command-line program to manage files on cloud storage. It is a feature-rich alternative to cloud vendors' web storage interfaces",
   "install_methods": [

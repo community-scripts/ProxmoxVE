@@ -11,7 +11,7 @@
   "interface_port": null,
   "documentation": null,
   "website": null,
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/proxmox.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/proxmox.webp",
   "config_path": "",
   "description": "Kernel Pin is an essential tool for effortlessly managing kernel pinning and unpinning.",
   "install_methods": [

@@ -11,7 +11,7 @@
   "interface_port": 8000,
   "documentation": "https://readeck.org/en/docs/",
   "website": "https://readeck.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/readeck.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/readeck.webp",
   "config_path": "/opt/readeck/config.toml",
   "description": "Readeck helps you keep all that web content you want to revisit in an hour, tomorrow, or in 20 years.",
   "install_methods": [

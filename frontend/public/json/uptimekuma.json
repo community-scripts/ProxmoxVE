@@ -11,7 +11,7 @@
   "interface_port": 3001,
   "documentation": "https://github.com/louislam/uptime-kuma/wiki",
   "website": "https://github.com/louislam/uptime-kuma#uptime-kuma",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/uptime-kuma.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/uptime-kuma.webp",
   "config_path": "",
   "description": "Uptime Kuma is a monitoring and alerting system that tracks the availability and performance of servers, websites, and other internet-connected devices. It can be self-hosted and is open-source, offering a visually appealing interface for monitoring and receiving notifications about downtime events.",
   "install_methods": [

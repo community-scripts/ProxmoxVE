@@ -11,7 +11,7 @@
     "interface_port": 9093,
     "documentation": "https://prometheus.io/docs/alerting/latest/overview/",
     "website": "https://prometheus.io/",
-    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/prometheus.webp",
+    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/prometheus.webp",
     "config_path": "/etc/alertmanager/alertmanager.yml",
     "description": "Alerting with Prometheus is separated into two parts. Alerting rules in Prometheus servers send alerts to an Alertmanager. The Alertmanager then manages those alerts, including silencing, inhibition, aggregation and sending out notifications via methods such as email, on-call notification systems, and chat platforms.",
     "install_methods": [

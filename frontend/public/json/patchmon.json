@@ -11,7 +11,7 @@
   "interface_port": 3399,
   "documentation": "https://docs.patchmon.net",
   "website": "https://patchmon.net",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/patchmon.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/patchmon.webp",
   "config_path": "/opt/patchmon/backend/.env, /opt/patchmon/frontend/.env",
   "description": "Monitor Linux patches across all your hosts with real-time visibility, security update tracking, and comprehensive package management.",
   "install_methods": [

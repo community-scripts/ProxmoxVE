@@ -11,7 +11,7 @@
   "interface_port": 6157,
   "documentation": "https://opengist.io/docs/",
   "website": "https://opengist.io/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/opengist.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/opengist.webp",
   "config_path": "/opt/opengist/config.yml",
   "description": "Self-hosted pastebin powered by Git, open-source alternative to Github Gist.",
   "install_methods": [

@@ -11,7 +11,7 @@
   "interface_port": 80,
   "documentation": "https://docs.openmediavault.org/en/stable/",
   "website": "https://www.openmediavault.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/openmediavault.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/openmediavault.webp",
   "config_path": "",
   "description": "OpenMediaVault is a next-generation network-attached storage (NAS) solution based on Debian Linux. It provides a web-based interface for managing and storing digital data, making it easy to use and set up. OpenMediaVault supports various storage protocols, including SMB/CIFS, NFS, and FTP, and provides a wide range of features for data management, such as user and group management, disk quotas, and data backup and recovery. The software is designed to be flexible and scalable, making it a valuable solution for both personal and enterprise use. OpenMediaVault provides a stable and reliable platform for managing and storing digital data, making it a popular choice for those who want to host their own data and ensure its security and privacy. With OpenMediaVault, users can access their data from anywhere and easily share it with others, making it a valuable tool for collaboration and data management.",
   "install_methods": [

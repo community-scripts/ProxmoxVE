@@ -12,7 +12,7 @@
   "interface_port": null,
   "documentation": "https://openwrt.org/docs/start",
   "website": "https://openwrt.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/openwrt.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/openwrt.webp",
   "config_path": "",
   "description": "OpenWrt is a powerful open-source firmware that can transform a wide range of networking devices into highly customizable and feature-rich routers, providing users with greater control and flexibility over their network infrastructure.",
   "install_methods": [

@@ -11,7 +11,7 @@
   "interface_port": 3000,
   "documentation": "https://docs.linkwarden.app/",
   "website": "https://linkwarden.app/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/linkwarden.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/linkwarden.webp",
   "config_path": "/opt/linkwarden/.env",
   "description": "Linkwarden is a fully self-hostable, open-source collaborative bookmark manager to collect, organize and archive webpages.",
   "install_methods": [

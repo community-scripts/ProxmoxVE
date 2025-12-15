@@ -12,7 +12,7 @@
   "interface_port": 3000,
   "documentation": "https://healthchecks.io/docs/",
   "website": "https://healthchecks.io/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/healthchecks.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/healthchecks.webp",
   "description": "Healthchecks is a cron job monitoring service. It listens for HTTP requests and email messages (\"pings\") from your cron jobs and scheduled tasks (\"checks\"). When a ping does not arrive on time, Healthchecks sends out alerts. Healthchecks comes with a web dashboard, API, 25+ integrations for delivering notifications, monthly email reports, WebAuthn 2FA support, team management features: projects, team members, read-only access.",
   "install_methods": [
     {

@@ -11,7 +11,7 @@
   "interface_port": null,
   "documentation": "https://pocketbase.io/docs/",
   "website": "https://pocketbase.io/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/pocketbase.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/pocketbase.webp",
   "config_path": "",
   "description": "PocketBase is an open source backend consisting of embedded database (SQLite) with realtime subscriptions, built-in auth management, convenient dashboard UI and simple REST-ish API.",
   "install_methods": [

@@ -11,7 +11,7 @@
   "interface_port": null,
   "documentation": "https://headscale.net/",
   "website": "https://github.com/juanfont/headscale",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/headscale.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/headscale.webp",
   "config_path": "/etc/headscale/config.yaml",
   "description": "An open source, self-hosted implementation of the Tailscale control server",
   "install_methods": [

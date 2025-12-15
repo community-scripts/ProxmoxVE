@@ -205,7 +205,10 @@ update_motd_ip() {
 # - Falls back to warning if no keys provided
 # ------------------------------------------------------------------------------
 install_ssh_keys_into_ct() {
-  [[ "$SSH" != "yes" ]] && return 0
+  [[ "${SSH:-no}" != "yes" ]] && return 0
+
+  # Ensure SSH_KEYS_FILE is defined (may not be set if advanced_settings was skipped)
+  : "${SSH_KEYS_FILE:=}"
 
   if [[ -n "$SSH_KEYS_FILE" && -s "$SSH_KEYS_FILE" ]]; then
     msg_info "Installing selected SSH keys into CT ${CTID}"
@@ -430,6 +433,14 @@ base_settings() {
   ENABLE_FUSE=${var_fuse:-"${1:-no}"}
   ENABLE_TUN=${var_tun:-"${1:-no}"}
 
+  # Additional settings that may be skipped if advanced_settings is not run (e.g., App Defaults)
+  ENABLE_GPU=${var_gpu:-"no"}
+  ENABLE_NESTING=${var_nesting:-"1"}
+  ENABLE_KEYCTL=${var_keyctl:-"0"}
+  ENABLE_MKNOD=${var_mknod:-"0"}
+  PROTECT_CT=${var_protection:-"no"}
+  CT_TIMEZONE=${var_timezone:-"$timezone"}
+
   # Since these 2 are only defined outside of default_settings function, we add a temporary fallback. TODO: To align everything, we should add these as constant variables (e.g. OSTYPE and OSVERSION), but that would currently require updating the default_settings function for all existing scripts
   if [ -z "$var_os" ]; then
     var_os="debian"
@@ -445,9 +456,11 @@ base_settings() {
 # - Safe parser for KEY=VALUE lines from vars files
 # - Used by default_var_settings and app defaults loading
 # - Only loads whitelisted var_* keys
+# - Optional force parameter to override existing values (for app defaults)
 # ------------------------------------------------------------------------------
 load_vars_file() {
   local file="$1"
+  local force="${2:-no}" # If "yes", override existing variables
   [ -f "$file" ] || return 0
   msg_info "Loading defaults from ${file}"
 
@@ -485,8 +498,12 @@ load_vars_file() {
         var_val="${BASH_REMATCH[1]}"
       fi
 
-      # Set only if not already exported
-      [[ -z "${!var_key+x}" ]] && export "${var_key}=${var_val}"
+      # Set variable: force mode overrides existing, otherwise only set if empty
+      if [[ "$force" == "yes" ]]; then
+        export "${var_key}=${var_val}"
+      else
+        [[ -z "${!var_key+x}" ]] && export "${var_key}=${var_val}"
+      fi
     fi
   done <"$file"
   msg_ok "Loaded ${file}"
@@ -1047,7 +1064,7 @@ advanced_settings() {
   local _enable_mknod="${var_mknod:-0}"
   local _mount_fs="${var_mount_fs:-}"
   local _protect_ct="${var_protection:-no}"
-  
+
   # Detect host timezone for default (if not set via var_timezone)
   local _host_timezone=""
   if command -v timedatectl >/dev/null 2>&1; then
@@ -1892,13 +1909,13 @@ Advanced:
   echo -e "${BRIDGE}${BOLD}${DGN}Bridge: ${BGN}$BRG${CL}"
   echo -e "${NETWORK}${BOLD}${DGN}IPv4: ${BGN}$NET${CL}"
   echo -e "${NETWORK}${BOLD}${DGN}IPv6: ${BGN}$IPV6_METHOD${CL}"
-  echo -e "${FUSE}${BOLD}${DGN}FUSE Support: ${BGN}$ENABLE_FUSE${CL}"
-  [[ "$ENABLE_TUN" == "yes" ]] && echo -e "${NETWORK}${BOLD}${DGN}TUN/TAP Support: ${BGN}$ENABLE_TUN${CL}"
-  echo -e "${CONTAINERTYPE}${BOLD}${DGN}Nesting: ${BGN}$([ "$ENABLE_NESTING" == "1" ] && echo "Enabled" || echo "Disabled")${CL}"
-  [[ "$ENABLE_KEYCTL" == "1" ]] && echo -e "${CONTAINERTYPE}${BOLD}${DGN}Keyctl: ${BGN}Enabled${CL}"
-  echo -e "${GPU}${BOLD}${DGN}GPU Passthrough: ${BGN}$ENABLE_GPU${CL}"
-  [[ "$PROTECT_CT" == "yes" || "$PROTECT_CT" == "1" ]] && echo -e "${CONTAINERTYPE}${BOLD}${DGN}Protection: ${BGN}Enabled${CL}"
-  [[ -n "$CT_TIMEZONE" ]] && echo -e "${INFO}${BOLD}${DGN}Timezone: ${BGN}$CT_TIMEZONE${CL}"
+  echo -e "${FUSE}${BOLD}${DGN}FUSE Support: ${BGN}${ENABLE_FUSE:-no}${CL}"
+  [[ "${ENABLE_TUN:-no}" == "yes" ]] && echo -e "${NETWORK}${BOLD}${DGN}TUN/TAP Support: ${BGN}$ENABLE_TUN${CL}"
+  echo -e "${CONTAINERTYPE}${BOLD}${DGN}Nesting: ${BGN}$([ "${ENABLE_NESTING:-1}" == "1" ] && echo "Enabled" || echo "Disabled")${CL}"
+  [[ "${ENABLE_KEYCTL:-0}" == "1" ]] && echo -e "${CONTAINERTYPE}${BOLD}${DGN}Keyctl: ${BGN}Enabled${CL}"
+  echo -e "${GPU}${BOLD}${DGN}GPU Passthrough: ${BGN}${ENABLE_GPU:-no}${CL}"
+  [[ "${PROTECT_CT:-no}" == "yes" || "${PROTECT_CT:-no}" == "1" ]] && echo -e "${CONTAINERTYPE}${BOLD}${DGN}Protection: ${BGN}Enabled${CL}"
+  [[ -n "${CT_TIMEZONE:-}" ]] && echo -e "${INFO}${BOLD}${DGN}Timezone: ${BGN}$CT_TIMEZONE${CL}"
   [[ "$APT_CACHER" == "yes" ]] && echo -e "${INFO}${BOLD}${DGN}APT Cacher: ${BGN}$APT_CACHER_IP${CL}"
   echo -e "${SEARCH}${BOLD}${DGN}Verbose Mode: ${BGN}$VERBOSE${CL}"
   echo -e "${CREATING}${BOLD}${RD}Creating a ${APP} LXC using the above advanced settings${CL}"
@@ -2148,8 +2165,8 @@ install_script() {
         header_info
         echo -e "${DEFAULT}${BOLD}${BL}Using App Defaults for ${APP} on node $PVEHOST_NAME${CL}"
         METHOD="appdefaults"
+        load_vars_file "$(get_app_defaults_path)" "yes" # Force override script defaults
         base_settings
-        load_vars_file "$(get_app_defaults_path)"
         echo_default
         defaults_target="$(get_app_defaults_path)"
         break
@@ -2630,9 +2647,14 @@ build_container() {
   export DEV_MODE_DRYRUN="${DEV_MODE_DRYRUN:-false}"
 
   # Build PCT_OPTIONS as multi-line string
-  PCT_OPTIONS_STRING="  -features $FEATURES
-  -hostname $HN
+  PCT_OPTIONS_STRING="  -hostname $HN
   -tags $TAGS"
+
+  # Only add -features if FEATURES is not empty
+  if [ -n "$FEATURES" ]; then
+    PCT_OPTIONS_STRING="  -features $FEATURES
+$PCT_OPTIONS_STRING"
+  fi
 
   # Add storage if specified
   if [ -n "$SD" ]; then

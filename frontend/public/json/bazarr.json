@@ -11,7 +11,7 @@
   "interface_port": 6767,
   "documentation": "https://wiki.bazarr.media/",
   "website": "https://www.bazarr.media/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/bazarr.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/bazarr.webp",
   "config_path": "/opt/bazarr/data/config/config.yaml",
   "description": "Bazarr is a companion application to Sonarr and Radarr that manages and downloads subtitles based on your requirements.",
   "install_methods": [

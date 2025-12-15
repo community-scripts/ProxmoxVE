@@ -11,7 +11,7 @@
   "interface_port": null,
   "documentation": "https://dev.mysql.com/doc/",
   "website": "https://www.mysql.com/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/mysql.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/mysql.webp",
   "config_path": "",
   "description": "MySQL is an open-source relational database management system (RDBMS) that uses SQL for managing and manipulating data. It is known for its scalability, reliability, and high performance, making it suitable for small to large-scale applications. Key features include support for ACID transactions, data replication for high availability, and compatibility with various programming languages like Python, PHP, and Java.",
   "install_methods": [

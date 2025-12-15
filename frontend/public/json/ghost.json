@@ -11,7 +11,7 @@
   "interface_port": 2368,
   "documentation": "https://ghost.org/docs/",
   "website": "https://ghost.org",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/ghost.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/ghost.webp",
   "config_path": "",
   "description": "Ghost is a powerful app for professional publishers to create, share, and grow a business around their content. It comes with modern tools to build a website, publish content, send newsletters & offer paid subscriptions to members.",
   "install_methods": [

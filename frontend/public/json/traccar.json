@@ -11,7 +11,7 @@
   "interface_port": 8082,
   "documentation": "https://www.traccar.org/documentation/",
   "website": "https://www.traccar.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/traccar.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/traccar.webp",
   "config_path": "/opt/traccar/conf/traccar.xml",
   "description": "Traccar is an open source GPS tracking system. It supports more than 200 GPS protocols and more than 2000 models of GPS tracking devices.",
   "install_methods": [

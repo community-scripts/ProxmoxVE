@@ -11,7 +11,7 @@
   "interface_port": 5432,
   "documentation": "https://www.postgresql.org/docs/",
   "website": "https://www.postgresql.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/postgresql.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/postgresql.webp",
   "config_path": "",
   "description": "PostgreSQL (often referred to as Postgres) is an open-source relational database management system that is known for its extensibility and strict adherence to SQL standards. It is a free and powerful database solution, suitable for a wide range of applications, from small projects to large enterprise systems. PostgreSQL is widely used for its reliability, feature-richness, and robustness.",
   "install_methods": [

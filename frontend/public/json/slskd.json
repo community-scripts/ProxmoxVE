@@ -11,7 +11,7 @@
   "interface_port": 5030,
   "documentation": "https://github.com/slskd/slskd/tree/master/docs",
   "website": "https://github.com/slskd/slskd",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/slskd.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/slskd.webp",
   "config_path": "/opt/slskd/config/slskd.yml",
   "description": "A modern client-server application for the Soulseek file sharing network. ",
   "install_methods": [

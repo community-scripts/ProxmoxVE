@@ -11,7 +11,7 @@
   "interface_port": 80,
   "documentation": "https://www.openproject.org",
   "website": "https://www.openproject.org",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/openproject.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/openproject.webp",
   "config_path": "/etc/openproject/conf.d/env",
   "description": "OpenProject is a web-based project management software. Use OpenProject to manage your projects, tasks and goals. Collaborate via work packages and link them to your pull requests on Github. Read more about the OpenProject GitHub integration.",
   "install_methods": [

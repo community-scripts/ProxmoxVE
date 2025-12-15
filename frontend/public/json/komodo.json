@@ -11,7 +11,7 @@
   "interface_port": 9120,
   "documentation": "https://komo.do/docs/intro",
   "website": "https://komo.do",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/komodo.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/komodo.webp",
   "config_path": "/opt/komodo/compose.env",
   "description": "Komodo is a build and deployment system that automates the creation of versioned Docker images from Git repositories and facilitates the deployment of Docker containers and Docker Compose setups. It provides features such as build automation triggered by Git pushes, deployment management, and monitoring of uptime and logs across multiple servers. The core API and associated agent are developed in Rust.",
   "install_methods": [

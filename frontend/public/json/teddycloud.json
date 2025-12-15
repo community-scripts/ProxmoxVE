@@ -11,7 +11,7 @@
   "interface_port": 80,
   "documentation": "https://tonies-wiki.revvox.de/docs/tools/teddycloud/",
   "website": "https://tonies-wiki.revvox.de/docs/tools/teddycloud/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/teddycloud.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/teddycloud.webp",
   "config_path": "",
   "description": "TeddyCloud is an open source server replacement for the Boxine Cloud.",
   "install_methods": [

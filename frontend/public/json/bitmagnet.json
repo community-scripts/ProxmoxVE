@@ -11,7 +11,7 @@
   "interface_port": 3333,
   "documentation": "https://bitmagnet.io/setup.html",
   "website": "https://bitmagnet.io/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/bitmagnet.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/bitmagnet.webp",
   "config_path": "`/opt/bitmagnet/config.yml` or `/opt/bitmagnet/.env`",
   "description": "A self-hosted BitTorrent indexer, DHT crawler, content classifier and torrent search engine with web UI, GraphQL API and Servarr stack integration.",
   "install_methods": [

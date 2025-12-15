@@ -37,8 +37,8 @@ function update_script() {
 
     msg_info "Updating Umami"
     cd /opt/umami
-    $STD yarn install
-    $STD yarn run build
+    $STD pnpm install
+    $STD pnpm run build
     msg_ok "Updated Umami"
 
     msg_info "Starting Service"

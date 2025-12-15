@@ -11,7 +11,7 @@
   "interface_port": 3000,
   "documentation": "https://umami.is/docs",
   "website": "https://umami.is/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/umami.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/umami.webp",
   "config_path": "/opt/umami/.env",
   "description": "Umami makes it easy to collect, analyze, and understand your web data while maintaining visitor privacy and data ownership.",
   "install_methods": [

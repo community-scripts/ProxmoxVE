@@ -11,7 +11,7 @@
   "interface_port": 3456,
   "documentation": "https://vikunja.io/docs/",
   "website": "https://vikunja.io/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/vikunja.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/vikunja.webp",
   "config_path": "/etc/vikunja/config.yml",
   "description": "Vikunja is a powerful self-hosted todo app. It allows you to create and manage to-do lists. You can plan tasks, set priorities and collaborate with others. The best part is that your data is safe with you and you can customize the app to your liking. It's like a personal assistant that helps you stay organized.",
   "install_methods": [

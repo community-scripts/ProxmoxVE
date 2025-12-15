@@ -21,7 +21,6 @@ cd /opt/tracktor
 $STD npm install
 $STD npm run build
 mkdir -p /opt/tracktor-data/{uploads,logs}
-HOST_IP=$(hostname -I | awk '{print $1}')
 cat <<EOF >/opt/tracktor.env
 NODE_ENV=production
 DB_PATH=/opt/tracktor-data/tracktor.db

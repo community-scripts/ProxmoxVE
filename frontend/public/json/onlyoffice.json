@@ -11,7 +11,7 @@
   "interface_port": 80,
   "documentation": "https://helpcenter.onlyoffice.com/docs",
   "website": "https://onlyoffice.com/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/onlyoffice.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/onlyoffice.webp",
   "config_path": "/etc/onlyoffice/documentserver/local.json",
   "description": "ONLYOFFICE Docs is an open-source online office suite that provides collaborative editors for text documents, spreadsheets, and presentations, fully compatible with Microsoft Office formats (DOCX, XLSX, PPTX).",
   "install_methods": [

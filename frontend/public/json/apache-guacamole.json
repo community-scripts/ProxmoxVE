@@ -11,7 +11,7 @@
   "interface_port": 8080,
   "documentation": "https://guacamole.apache.org/doc/gug/",
   "website": "https://guacamole.apache.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/apache-guacamole.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/apache-guacamole.webp",
   "config_path": "/etc/guacamole/guacd.conf",
   "description": "Apache Guacamole is a clientless remote desktop gateway. It supports standard protocols like VNC, RDP, and SSH.",
   "install_methods": [

@@ -11,7 +11,7 @@
   "interface_port": 3080,
   "documentation": "https://watcharr.app/docs/introduction",
   "website": "https://watcharr.app/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/watcharr.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/watcharr.webp",
   "config_path": "",
   "description": "Open source, self-hostable watched list for all your content with user authentication, modern and clean UI and a very simple setup.",
   "install_methods": [

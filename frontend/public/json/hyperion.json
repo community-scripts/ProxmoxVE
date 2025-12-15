@@ -11,7 +11,7 @@
   "interface_port": 8090,
   "documentation": "https://docs.hyperion-project.org/",
   "website": "https://hyperion-project.org/forum/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/hyperion.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/hyperion.webp",
   "config_path": "",
   "description": "Hyperion is an opensource Ambient Lighting implementation. It supports many LED devices and video grabbers.",
   "install_methods": [

@@ -11,7 +11,7 @@
   "interface_port": 9090,
   "documentation": "https://cockpit-project.org/documentation.html",
   "website": "https://cockpit-project.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/cockpit.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/cockpit.webp",
   "config_path": "/etc/cockpit/cockpit.conf",
   "description": "Cockpit is a web-based graphical interface for managing Linux servers. It allows users to perform tasks like configuring networks, managing storage, and monitoring system performance directly through a web browser. It integrates with existing system tools, making it suitable for both beginners and experienced admins.",
   "install_methods": [

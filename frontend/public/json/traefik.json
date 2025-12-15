@@ -11,7 +11,7 @@
   "interface_port": 8080,
   "documentation": "https://doc.traefik.io/",
   "website": "https://traefik.io/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/traefik.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/traefik.webp",
   "config_path": "/etc/traefik/traefik.yaml",
   "description": "Traefik (pronounced traffic) is an open-source edge router and reverse proxy that simplifies managing microservices. It automatically discovers services, dynamically updates routing rules without downtime, provides load balancing, handles SSL termination, and supports various middleware for added functionality. Ideal for cloud-native environments, it integrates seamlessly with platforms like Docker and Kubernetes.",
   "install_methods": [

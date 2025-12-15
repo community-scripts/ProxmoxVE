@@ -11,7 +11,7 @@
   "interface_port": 3000,
   "documentation": "https://github.com/clusterzx/paperless-ai/wiki/1.-Home",
   "website": "https://github.com/clusterzx/paperless-ai",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/paperless-ai.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/paperless-ai.webp",
   "config_path": "/opt/paperless-ai/data/.env",
   "description": "An automated document analyzer for Paperless-ngx using OpenAI API, Ollama and all OpenAI API compatible Services to automatically analyze and tag your documents.It features: Automode, Manual Mode, Ollama and OpenAI, a Chat function to query your documents with AI, a modern and intuitive Webinterface.",
   "install_methods": [

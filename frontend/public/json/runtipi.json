@@ -11,7 +11,7 @@
   "interface_port": 80,
   "documentation": "https://runtipi.io/docs/introduction",
   "website": "https://runtipi.io/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/runtipi.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/runtipi.webp",
   "config_path": "opt/runtipi/state/settings.json",
   "description": "Runtipi lets you install all your favorite self-hosted apps without the hassle of configuring and managing each service. One-click installs and updates for more than 180 popular apps.",
   "install_methods": [

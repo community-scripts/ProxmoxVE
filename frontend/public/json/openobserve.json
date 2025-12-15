@@ -11,7 +11,7 @@
   "interface_port": 5080,
   "documentation": "https://openobserve.ai/docs/",
   "website": "https://openobserve.ai/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/openobserve.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/openobserve.webp",
   "config_path": "/opt/openobserve/data/.env",
   "description": "OpenObserve is a simple yet sophisticated log search, infrastructure monitoring, and APM solution.",
   "install_methods": [

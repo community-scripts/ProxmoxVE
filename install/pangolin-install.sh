@@ -62,7 +62,7 @@ server:
   secret: "$SECRET_KEY"
 
 gerbil:
-  base_endpoint: "$pango_url"
+  base_endpoint: "${pango_url#https://}"
 
 flags:
   require_email_verification: false
@@ -130,7 +130,7 @@ http:
   routers:
     # HTTP to HTTPS redirect router
     main-app-router-redirect:
-      rule: "Host(\`$pango_url\`)"
+      rule: "Host(\`${pango_url#https://}\`)"
       service: next-service
       entryPoints:
         - web
@@ -139,7 +139,7 @@ http:
 
     # Next.js router (handles everything except API and WebSocket paths)
     next-router:
-      rule: "Host(\`$pango_url\`) && !PathPrefix(\`/api/v1\`)"
+      rule: "Host(\`${pango_url#https://}\`) && !PathPrefix(\`/api/v1\`)"
       service: next-service
       entryPoints:
         - websecure
@@ -148,7 +148,7 @@ http:
 
     # API router (handles /api/v1 paths)
     api-router:
-      rule: "Host(\`$pango_url\`) && PathPrefix(\`/api/v1\`)"
+      rule: "Host(\`${pango_url#https://}\`) && PathPrefix(\`/api/v1\`)"
       service: api-service
       entryPoints:
         - websecure
@@ -157,7 +157,7 @@ http:
 
     # WebSocket router
     ws-router:
-      rule: "Host(\`$pango_url\`)"
+      rule: "Host(\`${pango_url#https://}\`)"
       service: api-service
       entryPoints:
         - websecure
@@ -230,6 +230,8 @@ systemctl enable -q --now gerbil
 cat <<'EOF' >/etc/systemd/system/traefik.service
 [Unit]
 Description=Traefik is an open-source Edge Router that makes publishing your services a fun and easy experience
+Wants=network-online.target
+After=network-online.target
 
 [Service]
 Type=notify

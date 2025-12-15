@@ -11,7 +11,7 @@
   "interface_port": 8443,
   "documentation": "https://www.openhab.org/docs/",
   "website": "https://www.openhab.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/openhab.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/openhab.webp",
   "config_path": "",
   "description": "openHAB is a popular open-source home automation platform that provides a vendor and technology agnostic solution for integrating and automating various smart home devices and services. It supports a wide range of devices and protocols, making it easy to bring together different systems and devices into a unified smart home ecosystem. With its user-friendly interface and powerful automation capabilities, openHAB makes it easy to create custom automations and monitor and control your smart home devices and systems, all from a single interface.",
   "install_methods": [

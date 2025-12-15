@@ -11,7 +11,7 @@
   "interface_port": 80,
   "documentation": "https://pterodactyl.io/panel/1.0/getting_started.html",
   "website": "https://pterodactyl.io",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/pterodactyl.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/pterodactyl.webp",
   "config_path": "/opt/pterodactyl-panel/.env",
   "description": "Pterodactyl Panel is a web-based control panel for managing game and application servers. It provides an intuitive interface to start, stop, configure, and monitor servers easily. It works alongside Pterodactyl Wings, a lightweight daemon that handles server deployments and resource management.",
   "install_methods": [

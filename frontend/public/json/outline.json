@@ -11,7 +11,7 @@
     "interface_port": 3000,
     "documentation": "https://docs.getoutline.com/s/hosting/",
     "website": "https://www.getoutline.com",
-    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/outline.webp",
+    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/outline.webp",
     "config_path": "/opt/outline/.env",
     "description": "The fastest knowledge base for growing teams. Beautiful, realtime collaborative, feature packed, and markdown compatible. It’s time to get your team’s knowledge organized.",
     "install_methods": [

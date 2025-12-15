@@ -12,7 +12,7 @@
   "interface_port": 6333,
   "documentation": "https://github.com/qdrant/qdrant",
   "website": "https://qdrant.tech/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/qdrant.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/qdrant.webp",
   "description": "Qdrant is a vector search engine and vector database that allows you to store, search, and manage high-dimensional vectors efficiently.",
   "install_methods": [
     {

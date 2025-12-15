@@ -12,7 +12,7 @@
   "interface_port": 443,
   "documentation": "https://docs.opnsense.org/",
   "website": "https://opnsense.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/opnsense.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/opnsense.webp",
   "config_path": "",
   "description": "OPNsense is an open-source firewall and routing platform based on FreeBSD. It provides advanced security features, including intrusion detection, VPN support, traffic shaping, and web filtering, with an intuitive web interface for easy management. Known for its reliability and regular updates, OPNsense is a popular choice for both businesses and home networks.",
   "disable": false,

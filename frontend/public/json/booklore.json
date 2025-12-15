@@ -11,7 +11,7 @@
   "interface_port": 6060,
   "documentation": "https://booklore-app.github.io/booklore-docs/docs/getting-started",
   "website": "https://github.com/booklore-app/booklore",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/booklore.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/booklore.webp",
   "config_path": "/opt/booklore_storage/.env",
   "description": "BookLore is a self-hosted digital library for managing and reading books, offering a beautiful interface and support for metadata management. Built with a modern tech stack, it provides support for importing, organizing, and reading EPUBs and PDFs, while also managing cover images and book metadata.",
   "install_methods": [

@@ -11,7 +11,7 @@
     "interface_port": 8081,
     "documentation": "https://github.com/alexta69/metube/blob/master/README.md",
     "website": "https://github.com/alexta69/metube",
-    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icon@master/webp/metube.webp",
+    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/metube.webp",
     "config_path": "/opt/metube/.env",
     "description": "MeTube allows you to download videos from YouTube and dozens of other sites.",
     "install_methods": [

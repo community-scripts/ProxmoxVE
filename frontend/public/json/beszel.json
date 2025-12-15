@@ -11,7 +11,7 @@
   "interface_port": 8090,
   "documentation": "https://beszel.dev/guide/what-is-beszel",
   "website": "https://beszel.dev/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/beszel.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/beszel.webp",
   "config_path": "",
   "description": "A lightweight server monitoring platform that provides Docker statistics, historical data, and alert functions\n    ",
   "install_methods": [

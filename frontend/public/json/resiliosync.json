@@ -12,7 +12,7 @@
   "interface_port": 8888,
   "documentation": "https://help.resilio.com/",
   "website": "https://www.resilio.com/sync",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/resilio-sync.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/resilio-sync.webp",
   "description": "Fast, reliable, and simple file sync and share solution, powered by P2P technology. Sync files across all your devices without storing them in the cloud.",
   "install_methods": [
     {

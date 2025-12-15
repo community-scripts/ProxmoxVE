@@ -11,7 +11,7 @@
   "interface_port": 3000,
   "documentation": "https://github.com/fccview/jotty/blob/main/README.md",
   "website": "https://github.com/fccview/jotty",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/jotty.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/jotty.webp",
   "config_path": "/opt/jotty/.env",
   "description": "A simple, self-hosted app for your checklists and notes. Tired of bloated, cloud-based to-do apps? jotty is a lightweight alternative for managing your personal checklists and notes. It's built with Next.js 14, is easy to deploy, and keeps all your data on your own server.",
   "install_methods": [

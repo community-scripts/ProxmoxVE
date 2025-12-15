@@ -10,7 +10,147 @@
 > [!CAUTION]
 Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit the project's popularity for potentially malicious purposes.
 
+## 2025-12-15
+
+### 🆕 New Scripts
+
+  - Koel ([#9972](https://github.com/community-scripts/ProxmoxVE/pull/9972))
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - fix(pangolin-install): add network-online dependency [@worried-networking](https://github.com/worried-networking) ([#9984](https://github.com/community-scripts/ProxmoxVE/pull/9984))
+
+  - #### 🔧 Refactor
+
+    - Refactor: Heimdall Dashboard [@tremor021](https://github.com/tremor021) ([#9959](https://github.com/community-scripts/ProxmoxVE/pull/9959))
+
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - tools: prevent awk errors in setup_rust on restricted containers [@MickLesk](https://github.com/MickLesk) ([#9985](https://github.com/community-scripts/ProxmoxVE/pull/9985))
+    - core: App Defaults force mode and prevent unbound variables [@MickLesk](https://github.com/MickLesk) ([#9971](https://github.com/community-scripts/ProxmoxVE/pull/9971))
+    - core: load app defaults before applying base_settings / fix composer cleanup after install/update [@MickLesk](https://github.com/MickLesk) ([#9965](https://github.com/community-scripts/ProxmoxVE/pull/9965))
+
+### 📚 Documentation
+
+  - README; add project statistics / formatting [@MickLesk](https://github.com/MickLesk) ([#9967](https://github.com/community-scripts/ProxmoxVE/pull/9967))
+
+## 2025-12-14
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - SonarQube: Fix database variables [@tremor021](https://github.com/tremor021) ([#9946](https://github.com/community-scripts/ProxmoxVE/pull/9946))
+
+  - #### 💥 Breaking Changes
+
+    - refactor: homarr  [@CrazyWolf13](https://github.com/CrazyWolf13) ([#9948](https://github.com/community-scripts/ProxmoxVE/pull/9948))
+
+### 🌐 Website
+
+  - Update dependencies and remove unused files [@BramSuurdje](https://github.com/BramSuurdje) ([#9945](https://github.com/community-scripts/ProxmoxVE/pull/9945))
+
+## 2025-12-13
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Umami: Use `pnpm` [@tremor021](https://github.com/tremor021) ([#9937](https://github.com/community-scripts/ProxmoxVE/pull/9937))
+    - Tunarr: Switch to prebuild archive [@tremor021](https://github.com/tremor021) ([#9920](https://github.com/community-scripts/ProxmoxVE/pull/9920))
+    - [HOTFIX] NetVisor: backup OIDC config before update [@vhsdream](https://github.com/vhsdream) ([#9895](https://github.com/community-scripts/ProxmoxVE/pull/9895))
+    - Update OPNsense download URL to version 14.3 [@jaredcarling42-design](https://github.com/jaredcarling42-design) ([#9899](https://github.com/community-scripts/ProxmoxVE/pull/9899))
+
+  - #### ✨ New Features
+
+    - Add optional TLS setup to Valkey installer [@pshankinclarke](https://github.com/pshankinclarke) ([#9789](https://github.com/community-scripts/ProxmoxVE/pull/9789))
+
+  - #### 🔧 Refactor
+
+    - Refactor: Spoolman [@tremor021](https://github.com/tremor021) ([#9873](https://github.com/community-scripts/ProxmoxVE/pull/9873))
+
+### 🧰 Tools
+
+  - AdGuardHome-Sync ([#9783](https://github.com/community-scripts/ProxmoxVE/pull/9783))
+
+### ❔ Uncategorized
+
+  - Update category value in glance.json and adguard-home.json [@Bensonheimer992](https://github.com/Bensonheimer992) ([#9932](https://github.com/community-scripts/ProxmoxVE/pull/9932))
+- Change category ID from 6 to 3 in coolify.json and dokploy.json [@Bensonheimer992](https://github.com/Bensonheimer992) ([#9930](https://github.com/community-scripts/ProxmoxVE/pull/9930))
+
+## 2025-12-12
+
+### 🆕 New Scripts
+
+  - Wallabag ([#9904](https://github.com/community-scripts/ProxmoxVE/pull/9904))
+- InvoiceNinja ([#9905](https://github.com/community-scripts/ProxmoxVE/pull/9905))
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Pangolin: URL fixes [@tremor021](https://github.com/tremor021) ([#9902](https://github.com/community-scripts/ProxmoxVE/pull/9902))
+
+## 2025-12-11
+
+### 🆕 New Scripts
+
+  - Speedtest-Tracker ([#9802](https://github.com/community-scripts/ProxmoxVE/pull/9802))
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - dokploy: require unprivileged LXC environment [@MickLesk](https://github.com/MickLesk) ([#9891](https://github.com/community-scripts/ProxmoxVE/pull/9891))
+    - Update NetVisor repo information [@vhsdream](https://github.com/vhsdream) ([#9864](https://github.com/community-scripts/ProxmoxVE/pull/9864))
+
+  - #### 🔧 Refactor
+
+    - Syncthing: Various fixes [@tremor021](https://github.com/tremor021) ([#9872](https://github.com/community-scripts/ProxmoxVE/pull/9872))
+    - Sonarr: Fix standard [@tremor021](https://github.com/tremor021) ([#9874](https://github.com/community-scripts/ProxmoxVE/pull/9874))
+    - Refactor: Snipe-IT [@tremor021](https://github.com/tremor021) ([#9876](https://github.com/community-scripts/ProxmoxVE/pull/9876))
+    - Technitium DNS: Various fixes [@tremor021](https://github.com/tremor021) ([#9863](https://github.com/community-scripts/ProxmoxVE/pull/9863))
+    - SonarQube: Fixes [@tremor021](https://github.com/tremor021) ([#9875](https://github.com/community-scripts/ProxmoxVE/pull/9875))
+    - endurain: remove unneeded deps [@johanngrobe](https://github.com/johanngrobe) ([#9855](https://github.com/community-scripts/ProxmoxVE/pull/9855))
+
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - core: skip -features flag when empty [@MickLesk](https://github.com/MickLesk) ([#9871](https://github.com/community-scripts/ProxmoxVE/pull/9871))
+
+### 🌐 Website
+
+  - #### 📝 Script Information
+
+    - paperless: add note on website (uv usage) [@MickLesk](https://github.com/MickLesk) ([#9833](https://github.com/community-scripts/ProxmoxVE/pull/9833))
+
 ## 2025-12-10
+
+### 🆕 New Scripts
+
+  - DiscoPanel ([#9847](https://github.com/community-scripts/ProxmoxVE/pull/9847))
+
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - Refactor: UmlautAdaptarr [@tremor021](https://github.com/tremor021) ([#9839](https://github.com/community-scripts/ProxmoxVE/pull/9839))
+    - Verdaccio: Small fixes [@tremor021](https://github.com/tremor021) ([#9836](https://github.com/community-scripts/ProxmoxVE/pull/9836))
+    - Refactor: WaveLog [@tremor021](https://github.com/tremor021) ([#9835](https://github.com/community-scripts/ProxmoxVE/pull/9835))
+    - Refactor: Unifi Network Server [@tremor021](https://github.com/tremor021) ([#9838](https://github.com/community-scripts/ProxmoxVE/pull/9838))
+    - Refactor: Umami [@tremor021](https://github.com/tremor021) ([#9840](https://github.com/community-scripts/ProxmoxVE/pull/9840))
+    - Refactor: UrBackup Server [@tremor021](https://github.com/tremor021) ([#9837](https://github.com/community-scripts/ProxmoxVE/pull/9837))
+    - Refactor: Tianji [@tremor021](https://github.com/tremor021) ([#9842](https://github.com/community-scripts/ProxmoxVE/pull/9842))
+    - Tracktor: Remove unused variable [@tremor021](https://github.com/tremor021) ([#9841](https://github.com/community-scripts/ProxmoxVE/pull/9841))
+
+### ❔ Uncategorized
+
+  - Update icon URLs from master to main branch [@MickLesk](https://github.com/MickLesk) ([#9834](https://github.com/community-scripts/ProxmoxVE/pull/9834))
 
 ## 2025-12-09
 

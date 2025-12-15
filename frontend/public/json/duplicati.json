@@ -11,7 +11,7 @@
     "interface_port": 8200,
     "documentation": "https://docs.duplicati.com/",
     "website": "https://duplicati.com/",
-    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/duplicati.webp",
+    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/duplicati.webp",
     "config_path": "",
     "description": "Duplicati is a free, open-source backup solution that offers zero-trust, fully encrypted backups for your data.",
     "install_methods": [

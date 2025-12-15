@@ -11,7 +11,7 @@
   "interface_port": 1433,
   "documentation": "https://learn.microsoft.com/en-us/sql/sql-server/?view=sql-server-ver16",
   "website": "https://www.microsoft.com/en-us/sql-server/sql-server-2022",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/microsoft-sql-server.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/microsoft-sql-server.webp",
   "config_path": "",
   "description": "Script to automatically set up a SQL Server 2022 installation.",
   "install_methods": [

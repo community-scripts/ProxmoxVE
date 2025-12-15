@@ -12,7 +12,7 @@
   "documentation": "https://manage-my-damn-life-nextjs.readthedocs.io/en/latest/",
   "config_path": "/opt/mmdl/.env",
   "website": "https://github.com/intri-in/manage-my-damn-life-nextjs",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/manage-my-damn-life.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/manage-my-damn-life.webp",
   "description": "Manage My Damn Life (MMDL) is a self-hosted front end for managing your CalDAV tasks and calendars.",
   "install_methods": [
     {

@@ -11,7 +11,7 @@
   "interface_port": 2468,
   "documentation": "https://www.cross-seed.org/docs/category/basics",
   "website": "https://www.cross-seed.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/cross-seed.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/cross-seed.webp",
   "config_path": "~/.cross-seed/config.js",
   "description": "cross-seed is an app designed to help you download torrents that you can cross seed based on your existing torrents. It is designed to match conservatively to minimize manual intervention.",
   "install_methods": [

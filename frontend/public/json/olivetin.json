@@ -11,7 +11,7 @@
   "interface_port": 1337,
   "documentation": "https://docs.olivetin.app/",
   "website": "https://www.olivetin.app/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/olivetin.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/olivetin.webp",
   "config_path": "/etc/OliveTin/config.yaml",
   "description": "OliveTin provides a secure and straightforward way to execute pre-determined shell commands through a web-based interface.",
   "install_methods": [

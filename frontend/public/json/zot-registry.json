@@ -11,7 +11,7 @@
   "interface_port": 8080,
   "documentation": "https://zotregistry.dev/docs/intro/",
   "website": "https://zotregistry.dev/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/zot-registry.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/zot-registry.webp",
   "config_path": "/etc/zot/config.json",
   "description": "Zot is a cloud-native OCI image registry focused on extensibility, maintainability, and performance. It supports advanced features such as Web UI, security scanning, authentication via htpasswd and OIDC, and more.",
   "install_methods": [

@@ -11,7 +11,7 @@
   "interface_port": 8080,
   "documentation": "https://github.com/TriliumNext/trilium/wiki",
   "website": "https://github.com/TriliumNext/trilium",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/trilium-notes.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/trilium-notes.webp",
   "config_path": "/root/trilium-data/config.ini",
   "description": "Trilium Notes is the latest and officially maintained version of the powerful, self-hosted note-taking and personal knowledge management application. It enables users to organize information in a hierarchical tree structure and supports rich text editing, internal linking, images, attachments, and powerful scripting capabilities. This version reflects the most current development efforts under the TriliumNext organization and replaces all prior forks or legacy variants. Trilium is ideal for building personal wikis, structured documentation, and long-term knowledge archives, giving users full local control and privacy.",
   "install_methods": [

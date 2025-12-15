@@ -12,7 +12,7 @@
   "documentation": "https://doc.jeedom.com",
   "config_path": "",
   "website": "https://jeedom.com/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/jeedom.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/jeedom.webp",
   "description": "Jeedom is a home automation system that is free, open, and cloudless. It allows users to manage and automate various aspects of their homes by creating objects, installing plugins for added functionalities, and connecting to a Market account for services. It also supports direct access URLs and user management.",
   "install_methods": [
     {

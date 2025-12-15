@@ -11,7 +11,7 @@
   "interface_port": 1411,
   "documentation": "https://pocket-id.org/docs/",
   "website": "https://github.com/pocket-id/pocket-id",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/pocket-id.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/pocket-id.webp",
   "config_path": "/opt/pocket-id/.env",
   "description": "Pocket ID is a simple OIDC provider that allows users to authenticate with their passkeys to your services.",
   "install_methods": [

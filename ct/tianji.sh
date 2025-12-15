@@ -28,7 +28,6 @@ function update_script() {
   fi
 
   setup_uv
-
   if check_for_gh_release "tianji" "msgbyte/tianji"; then
     NODE_VERSION="22" NODE_MODULE="pnpm@$(curl -s https://raw.githubusercontent.com/msgbyte/tianji/master/package.json | jq -r '.packageManager | split("@")[1]')" setup_nodejs
 

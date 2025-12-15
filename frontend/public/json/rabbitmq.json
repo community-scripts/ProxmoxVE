@@ -11,7 +11,7 @@
   "interface_port": 15672,
   "documentation": "https://www.rabbitmq.com/docs",
   "website": "https://www.rabbitmq.com/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/rabbitmq.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/rabbitmq.webp",
   "config_path": "/etc/rabbitmq/rabbitmq.conf",
   "description": "RabbitMQ is a robust messaging broker widely used for message queuing, streaming, and decoupling services. It supports multiple messaging protocols, ensures reliable message delivery, and offers features like routing, clustering, and federation. RabbitMQ is suitable for various use cases, including microservices communication, real-time data processing, and IoT applications.",
   "install_methods": [

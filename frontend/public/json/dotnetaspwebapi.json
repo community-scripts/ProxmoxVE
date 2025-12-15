@@ -11,7 +11,7 @@
   "interface_port": 80,
   "documentation": "https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/linux-nginx?view=aspnetcore-9.0&tabs=linux-ubuntu",
   "website": "https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/linux-nginx?view=aspnetcore-9.0&tabs=linux-ubuntu",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/asp-net-core.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/asp-net-core.webp",
   "config_path": "",
   "description": "Automatically setup a ASP.NET server up, as well as a FTP server so you can publish to this container from Visual Studio.",
   "install_methods": [

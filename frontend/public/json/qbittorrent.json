@@ -11,7 +11,7 @@
   "interface_port": 8090,
   "documentation": "https://github.com/qbittorrent/qBittorrent/wiki/",
   "website": "https://www.qbittorrent.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/qbittorrent.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/qbittorrent.webp",
   "config_path": "$HOME/.config/qBittorrent/qBittorrent.conf",
   "description": "qBittorrent offers a user-friendly interface that allows users to search for and download torrent files easily. It also supports magnet links, which allow users to start downloading files without the need for a torrent file.",
   "install_methods": [

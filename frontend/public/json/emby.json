@@ -11,7 +11,7 @@
   "interface_port": 8096,
   "documentation": "https://emby.media/support/articles/Home.html",
   "website": "https://emby.media/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/emby.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/emby.webp",
   "config_path": "/var/lib/emby/config/system.xml",
   "description": "Emby brings together your personal videos, music, photos, and live television.",
   "install_methods": [

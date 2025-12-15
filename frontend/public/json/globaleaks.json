@@ -11,7 +11,7 @@
   "interface_port": 443,
   "documentation": "https://docs.globaleaks.org",
   "website": "https://www.globaleaks.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/globaleaks.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/globaleaks.webp",
   "config_path": "",
   "description": "GlobaLeaks is a free and open-source whistleblowing software enabling anyone to easily set up and maintain a secure reporting platform.",
   "install_methods": [

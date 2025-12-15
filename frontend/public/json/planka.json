@@ -11,7 +11,7 @@
   "interface_port": 1337,
   "documentation": "https://docs.planka.cloud/",
   "website": "https://planka.app/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/planka.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/planka.webp",
   "config_path": "/opt/planka/.env",
   "description": "Planka is a powerful, project management platform that transforms how teams collaborate. Create projects with multiple boards, organize tasks with intuitive drag-and-drop cards, attach files, write rich markdown descriptions, set due dates, assign team members, and keep conversations flowing with comments and labels—all with seamless real-time updates and smart notifications.",
   "install_methods": [

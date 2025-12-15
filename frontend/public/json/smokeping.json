@@ -11,7 +11,7 @@
   "interface_port": null,
   "documentation": "https://oss.oetiker.ch/smokeping/doc/index.en.html",
   "website": "https://oss.oetiker.ch/smokeping/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/smokeping.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/smokeping.webp",
   "config_path": "/etc/smokeping/config.d/Targets",
   "description": "SmokePing is a deluxe latency measurement tool. It can measure, store and display latency, latency distribution and packet loss.",
   "install_methods": [

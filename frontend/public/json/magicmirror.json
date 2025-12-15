@@ -11,7 +11,7 @@
   "interface_port": 8080,
   "documentation": "https://docs.magicmirror.builders/configuration/introduction.html#configuring-your-magicmirror",
   "website": "https://docs.magicmirror.builders/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/magicmirror2.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/magicmirror2.webp",
   "config_path": "/opt/magicmirror/config/config.js",
   "description": "MagicMirror\u00b2 is a smart mirror software that allows you to build your own personal smart mirror. It uses modular components that you can customize to display information such as the weather, news, calendar, to-do list, and more. The platform is open source, allowing for community contributions and customization.",
   "install_methods": [

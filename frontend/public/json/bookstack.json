@@ -11,7 +11,7 @@
   "interface_port": 80,
   "documentation": "https://www.bookstackapp.com/docs/",
   "website": "https://www.bookstackapp.com/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/bookstack.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/bookstack.webp",
   "config_path": "/opt/bookstack/.env",
   "description": "BookStack is a user-friendly documentation platform that offers a simple and intuitive experience. New users should be able to create content with basic word-processing skills. While the platform provides advanced features, they do not interfere with the core simplicity of the user experience.",
   "install_methods": [

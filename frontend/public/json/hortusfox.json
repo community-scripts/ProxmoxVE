@@ -12,7 +12,7 @@
   "interface_port": 80,
   "documentation": "https://github.com/danielbrendel/hortusfox-web",
   "website": "https://www.hortusfox.com/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/hortusfox.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/hortusfox.webp",
   "description": "HortusFox is a collaborative plant management system for plant enthusiasts. Manage, document and track your entire plant collection – self-hosted and privacy-friendly.",
   "install_methods": [
     {

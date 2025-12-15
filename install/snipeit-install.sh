@@ -23,45 +23,29 @@ PHP_VERSION="8.3" PHP_MODULE="common,ctype,ldap,fileinfo,iconv,mysql,soap,xsl" P
 setup_composer
 fetch_and_deploy_gh_release "snipe-it" "grokability/snipe-it" "tarball"
 setup_mariadb
-
-msg_info "Setting up database"
-DB_NAME=snipeit_db
-DB_USER=snipeit
-DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
-$STD mariadb -u root -e "CREATE DATABASE $DB_NAME;"
-$STD mariadb -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
-$STD mariadb -u root -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; FLUSH PRIVILEGES;"
-{
-  echo "SnipeIT-Credentials"
-  echo "SnipeIT Database User: $DB_USER"
-  echo "SnipeIT Database Password: $DB_PASS"
-  echo "SnipeIT Database Name: $DB_NAME"
-} >>~/snipeit.creds
-msg_ok "Set up database"
+MARIADB_DB_NAME="snipeit_db" MARIADB_DB_USER="snipeit" setup_mariadb_db
+import_local_ip
 
 msg_info "Configuring Snipe-IT"
 cd /opt/snipe-it
 cp .env.example .env
-IPADDRESS=$(hostname -I | awk '{print $1}')
-
-sed -i -e "s|^APP_URL=.*|APP_URL=http://$IPADDRESS|" \
-  -e "s|^DB_DATABASE=.*|DB_DATABASE=$DB_NAME|" \
-  -e "s|^DB_USERNAME=.*|DB_USERNAME=$DB_USER|" \
-  -e "s|^DB_PASSWORD=.*|DB_PASSWORD=$DB_PASS|" .env
-
+sed -i -e "s|^APP_URL=.*|APP_URL=http://$LOCAL_IP|" \
+  -e "s|^DB_DATABASE=.*|DB_DATABASE=$MARIADB_DB_NAME|" \
+  -e "s|^DB_USERNAME=.*|DB_USERNAME=$MARIADB_DB_USER|" \
+  -e "s|^DB_PASSWORD=.*|DB_PASSWORD=$MARIADB_DB_PASS|" .env
 chown -R www-data: /opt/snipe-it
 chmod -R 755 /opt/snipe-it
 export COMPOSER_ALLOW_SUPERUSER=1
 $STD composer install --no-dev --optimize-autoloader --no-interaction
 $STD php artisan key:generate --force
-msg_ok "Configured SnipeIT"
+msg_ok "Configured Snipe-IT"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/nginx/conf.d/snipeit.conf
 server {
         listen 80;
         root /opt/snipe-it/public;
-        server_name $IPADDRESS;
+        server_name $LOCAL_IP;
         client_max_body_size 100M;
         index index.php;
 

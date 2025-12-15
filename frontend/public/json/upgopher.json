@@ -12,7 +12,7 @@
   "documentation": "https://github.com/wanetty/upgopher#readme",
   "config_path": "",
   "website": "https://github.com/wanetty/upgopher",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/upgopher.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/upgopher.webp",
   "description": "A simple Go web server for file upload, download, and browsing. Cross-platform alternative to Python-based file servers with no library dependencies. Features file upload via web interface, directory navigation, URL copying to clipboard, optional basic authentication, HTTPS support, and hidden files toggle.",
   "install_methods": [
     {

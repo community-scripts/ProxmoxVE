@@ -11,7 +11,7 @@
   "interface_port": null,
   "documentation": null,
   "website": "https://www.alpinelinux.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/alpine-linux.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/alpine-linux.webp",
   "config_path": "",
   "description": "A security-oriented, lightweight Linux distribution based on musl and BusyBox.\r\nBy default, the root password is set to alpine. If you choose to use advanced settings, you will need to define a password, autologin is currently unavailable.",
   "install_methods": [

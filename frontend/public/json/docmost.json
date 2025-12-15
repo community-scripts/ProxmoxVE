@@ -11,7 +11,7 @@
   "interface_port": 3000,
   "documentation": "https://docmost.com/docs/installation",
   "website": "https://docmost.com/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/docmost.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/docmost.webp",
   "config_path": "/opt/docmost/.env",
   "description": "Open-source collaborative wiki and documentation software. Create, collaborate, and share knowledge seamlessly with Docmost. Ideal for managing your wiki, knowledge-base, documentation and a lot more.",
   "install_methods": [

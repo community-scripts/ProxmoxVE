@@ -11,7 +11,7 @@
   "interface_port": 80,
   "documentation": "https://caddyserver.com/docs/",
   "website": "https://caddyserver.com/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/caddy.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/caddy.webp",
   "config_path": "/etc/caddy/Caddyfile",
   "description": "Caddy is a powerful, extensible platform to serve your sites, services, and apps, written in Go.",
   "install_methods": [

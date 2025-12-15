@@ -11,7 +11,7 @@
   "interface_port": 13378,
   "documentation": "https://www.audiobookshelf.org/guides/",
   "website": "https://www.audiobookshelf.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/audiobookshelf.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/audiobookshelf.webp",
   "config_path": "/usr/share/audiobookshelf/config",
   "description": "Audiobookshelf is a Self-hosted audiobook and podcast server.",
   "install_methods": [

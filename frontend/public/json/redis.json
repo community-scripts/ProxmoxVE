@@ -11,7 +11,7 @@
   "interface_port": null,
   "documentation": "https://redis.io/docs/latest/",
   "website": "https://redis.io/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/redis.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/redis.webp",
   "config_path": "Debian /etc/redis/redis.conf | Alpine: /etc/redis.conf",
   "description": "Redis is an open-source, in-memory data store used by millions of developers as a cache, vector database, document database, streaming engine, and message broker.",
   "install_methods": [

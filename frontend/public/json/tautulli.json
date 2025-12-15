@@ -11,7 +11,7 @@
   "interface_port": 8181,
   "documentation": "https://github.com/Tautulli/Tautulli/wiki",
   "website": "https://tautulli.com/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/tautulli.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/tautulli.webp",
   "config_path": "",
   "description": "Tautulli allows you to monitor and track your Plex Media Server usage, such as viewing statistics and analysis of your media library. It can be used to monitor user activity, get notifications about new media added to your library, and even generate reports on your media usage.",
   "install_methods": [

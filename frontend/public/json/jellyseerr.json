@@ -11,7 +11,7 @@
   "interface_port": 5055,
   "documentation": "https://docs.jellyseerr.dev/",
   "website": "https://github.com/Fallenbagel/jellyseerr",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/jellyseerr.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/jellyseerr.webp",
   "config_path": "/etc/jellyseerr/jellyseerr.conf",
   "description": "Jellyseerr is a free and open source software application for managing requests for your media library. It is a a fork of Overseerr built to bring support for Jellyfin & Emby media servers.",
   "install_methods": [

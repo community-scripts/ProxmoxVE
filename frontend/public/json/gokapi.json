@@ -11,7 +11,7 @@
   "interface_port": 53842,
   "documentation": "https://gokapi.readthedocs.io/en/latest/usage.html",
   "website": "https://github.com/Forceu/Gokapi",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/gokapi.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/gokapi.webp",
   "config_path": "/opt/gokapi/config",
   "description": "Gokapi is a lightweight server to share files, which expire after a set amount of downloads or days.",
   "install_methods": [

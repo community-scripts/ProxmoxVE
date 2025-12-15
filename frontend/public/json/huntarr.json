@@ -12,7 +12,7 @@
   "documentation": "https://github.com/plexguide/Huntarr.io/wiki",
   "config_path": "/opt/huntarr",
   "website": "https://github.com/plexguide/Huntarr.io",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/huntarr.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/huntarr.webp",
   "description": "Huntarr is a tool that automates the search for missing or low-quality media content in your collection. It works seamlessly with applications like Sonarr, Radarr, Lidarr, Readarr, and Whisparr, enhancing their functionality with continuous background scans to identify and update missed or outdated content. Through a user-friendly web interface accessible on port 9705, Huntarr provides real-time statistics, log views, and extensive configuration options. The software is especially useful for users who want to keep their media library up to date by automatically searching for missing episodes or higher-quality versions. Huntarr is well-suited for self-hosted environments and can easily run in LXC containers or Docker setups.",
   "disable": true,
   "disable_description": "This script has been temporarily disabled due to ongoing installation failures caused by incompatible Python and build dependencies. PyYAML 6.0 fails to build on Debian 13 and under Python 3.12/3.13, making Huntarr currently non-installable in a reliable way. This issue originates upstream and is under investigation. The script will be re-enabled once a stable solution is available. For details, see: https://github.com/community-scripts/ProxmoxVE/issues/9196 or https://github.com/plexguide/Huntarr.io/issues/747",

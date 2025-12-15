@@ -11,7 +11,7 @@
   "interface_port": 8123,
   "documentation": "https://www.home-assistant.io/docs/",
   "website": "https://www.home-assistant.io/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/home-assistant.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/home-assistant.webp",
   "config_path": "",
   "description": "This script automates the process of creating a Virtual Machine (VM) using the official KVM (qcow2) disk image provided by the Home Assistant Team. It involves finding, downloading, and extracting the image, defining user-defined settings, importing and attaching the disk, setting the boot order, and starting the VM. It supports various storage types, and does not involve any hidden installations. After the script completes, click on the VM, then on the Summary tab to find the VM IP.",
   "install_methods": [

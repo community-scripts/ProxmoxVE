@@ -12,7 +12,7 @@
   "interface_port": 9115,
   "documentation": "https://github.com/prometheus/blackbox_exporter",
   "website": "https://github.com/prometheus/blackbox_exporter",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/prometheus.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/prometheus.webp",
   "config_path": "/opt/blackbox-exporter/blackbox.yml",
   "description": "An exporter allows blackbox probing of endpoints over HTTP, HTTPS, DNS, TCP, ICMP and gRPC for use by the Prometheus monitoring system.",
   "install_methods": [

@@ -11,7 +11,7 @@
     "interface_port": 80,
     "documentation": "https://github.com/monicahq/monica/tree/4.x/docs",
     "website": "https://www.monicahq.com/",
-    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/monica.webp",
+    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/monica.webp",
     "config_path": "/opt/monica/.env",
     "description": "Monica is an open-source personal CRM designed to help you manage and strengthen your relationships. It allows you to store important details about your contacts, track interactions, set reminders for special dates, and log activities—all in one secure, private place. Perfect for busy individuals, Monica helps you stay organized, remember meaningful moments, and nurture your connections without ads or data mining. Install it on your own server for full control!",
     "install_methods": [

@@ -12,7 +12,7 @@
   "documentation": "https://signoz.io/docs/introduction/",
   "config_path": "/opt/signoz/conf/systemd.env",
   "website": "https://signoz.io/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/signoz.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/signoz.webp",
   "description": "SigNoz is an open-source Datadog or New Relic alternative. Get APM, logs, traces, metrics, exceptions, & alerts in a single tool.",
   "install_methods": [
     {

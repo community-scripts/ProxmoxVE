@@ -11,7 +11,7 @@
   "interface_port": 5000,
   "documentation": "https://wiki.kavitareader.com/getting-started/",
   "website": "https://www.kavitareader.com/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/kavita.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/kavita.webp",
   "config_path": "",
   "description": "Kavita is a fast, feature rich, cross platform reading server. Built with a focus for manga, and the goal of being a full solution for all your reading needs.",
   "install_methods": [

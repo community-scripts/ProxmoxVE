@@ -11,7 +11,7 @@
   "interface_port": 8888,
   "documentation": "https://jupyter-notebook.readthedocs.io/en/stable/",
   "website": "https://jupyter.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/jupyter.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/jupyter.webp",
   "config_path": "",
   "description": "The Jupyter Notebook is an open-source web application that allows you to create and share documents that contain live code, equations, visualizations and narrative text. Uses include: data cleaning and transformation, numerical simulation, statistical modeling, data visualization, machine learning, and much more.",
   "install_methods": [

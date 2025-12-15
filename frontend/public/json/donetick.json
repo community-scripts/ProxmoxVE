@@ -12,7 +12,7 @@
   "documentation": "https://docs.donetick.com/getting-started/",
   "config_path": "/opt/donetick/config/selfhosted.yaml",
   "website": "https://donetick.com",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/donetick.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/donetick.webp",
   "description": "Donetick an open-source, user-friendly app for managing tasks and chores, featuring customizable options to help you and others stay organized",
   "install_methods": [
     {

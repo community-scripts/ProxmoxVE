@@ -11,7 +11,7 @@
   "interface_port": 8080,
   "documentation": "https://owncast.online/docs/",
   "website": "https://owncast.online/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/owncast.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/owncast.webp",
   "config_path": "",
   "description": "Owncast is a free and open source live video and web chat server for use with existing popular broadcasting software.",
   "install_methods": [

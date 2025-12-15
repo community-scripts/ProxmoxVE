@@ -11,7 +11,7 @@
   "interface_port": null,
   "documentation": null,
   "website": "https://www.docker.com/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/docker.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/docker.webp",
   "config_path": "",
   "description": "Docker is an open-source project for automating the deployment of applications as portable, self-sufficient containers.",
   "install_methods": [

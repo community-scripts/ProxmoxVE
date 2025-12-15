@@ -11,7 +11,7 @@
   "interface_port": 3033,
   "documentation": "https://github.com/marcopiovanello/yt-dlp-web-ui",
   "website": "https://github.com/marcopiovanello/yt-dlp-web-ui",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/youtube-dl.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/youtube-dl.webp",
   "config_path": "/opt/yt-dlp-webui/config.conf",
   "description": "A not so terrible web ui for yt-dlp.\nHigh performance extendeable web ui and RPC server for yt-dlp with low impact on resources.\nCreated for the only purpose of fetching videos from my server/nas and monitor upcoming livestreams.",
   "install_methods": [

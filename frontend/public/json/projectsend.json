@@ -11,7 +11,7 @@
   "interface_port": 80,
   "documentation": "https://docs.projectsend.org/",
   "website": "https://projectsend.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/projectsend.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/projectsend.webp",
   "config_path": "/opt/projectsend/includes/sys.config.php",
   "description": "ProjectSend is a free, open source software that lets you share files with your clients, focused on ease of use and privacy. It supports clients groups, system users roles, statistics, multiple languages, detailed logs... and much more!",
   "install_methods": [

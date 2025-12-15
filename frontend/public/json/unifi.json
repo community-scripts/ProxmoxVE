@@ -9,9 +9,9 @@
   "updateable": true,
   "privileged": false,
   "interface_port": 8443,
-  "documentation": null,
+  "documentation": "https://help.ui.com/hc/en-us/articles/360012282453-Self-Hosting-a-UniFi-Network-Server",
   "website": "https://www.ui.com/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/ubiquiti-unifi.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/ubiquiti-unifi.webp",
   "config_path": "",
   "description": "UniFi Network Server is a software that helps manage and monitor UniFi networks (Wi-Fi, Ethernet, etc.) by providing an intuitive user interface and advanced features. It allows network administrators to configure, monitor, and upgrade network devices, as well as view network statistics, client devices, and historical events. The aim of the application is to make the management of UniFi networks easier and more efficient.",
   "install_methods": [

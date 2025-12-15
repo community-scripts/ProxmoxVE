@@ -11,7 +11,7 @@
   "interface_port": 27017,
   "documentation": "https://www.mongodb.com/docs/manual/",
   "website": "https://www.mongodb.com/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/mongodb.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/mongodb.webp",
   "config_path": "",
   "description": "MongoDB is a NoSQL database that uses a document-oriented data model, storing data in JSON-like documents with dynamic schemas. This design offers flexibility and scalability, making it ideal for handling large volumes of data. MongoDB supports indexing, replication, and load balancing, ensuring high performance and availability, and can distribute data across multiple servers, making it well-suited for big data applications.",
   "install_methods": [

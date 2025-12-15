@@ -11,7 +11,7 @@
   "interface_port": 80,
   "documentation": "https://github.com/Pf2eToolsOrg/Pf2eTools/wiki",
   "website": "https://pf2etools.com/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/pf2etools.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/pf2etools.webp",
   "config_path": "",
   "description": "Pf2eTools is an open-source website aiming to provide tools and information for Pathfinder 2nd Edition players and gamemasters. It's built using basic web technologies to ensure wide compatibility, and utilises client-side caching for speed, efficiency, and offline access.",
   "install_methods": [

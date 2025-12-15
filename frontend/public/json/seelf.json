@@ -11,7 +11,7 @@
     "interface_port": 8080,
     "documentation": "https://yuukanoo.github.io/seelf/guide/quickstart.html",
     "website": "https://yuukanoo.github.io/seelf/",
-    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@master/webp/seelf.webp",
+    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/seelf.webp",
     "config_path": "",
     "description": "seelf is a self-hosted software which makes it easy to deploy your own applications on your own hardware using an easy to use interface.",
     "install_methods": [
