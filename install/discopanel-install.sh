@@ -13,7 +13,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt install -y build-essential
+$STD apt install -y build-essential make
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" setup_nodejs
