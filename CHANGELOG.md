@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-12-15
 
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - core: load app defaults before applying base_settings / fix composer cleanup after install/update [@MickLesk](https://github.com/MickLesk) ([#9965](https://github.com/community-scripts/ProxmoxVE/pull/9965))
+
 ## 2025-12-14
 
 ### 🚀 Updated Scripts
