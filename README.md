@@ -30,8 +30,8 @@
 
   <br />
 
-> **Simplify your Proxmox VE setup with community-driven automation scripts**  
-> Originally created by tteck, now maintained and expanded by the community
+ **Simplify your Proxmox VE setup with community-driven automation scripts**  
+ Originally created by tteck, now maintained and expanded by the community
 
 </div>
 
@@ -239,17 +239,35 @@ This project is maintained by volunteers in memory of tteck. Your support helps 
 
 ---
 
-## 📈 Project Growth
+## 📈 Project Statistics
 
-<div align="center">
+<p align="center">
+  <img
+    src="https://repobeats.axiom.co/api/embed/c5cc834f4822cbef1745a4f3fb40d7c687a0e7e7.svg"
+    alt="Repobeats analytics"
+    width="650"
+  />
+</p>
+
+<p align="center">
   <a href="https://star-history.com/#community-scripts/ProxmoxVE&Date">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=community-scripts/ProxmoxVE&type=Date&theme=dark" />
-      <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=community-scripts/ProxmoxVE&type=Date" />
-      <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=community-scripts/ProxmoxVE&type=Date" />
+      <source
+        media="(prefers-color-scheme: dark)"
+        srcset="https://api.star-history.com/svg?repos=community-scripts/ProxmoxVE&type=Date&theme=dark"
+      />
+      <source
+        media="(prefers-color-scheme: light)"
+        srcset="https://api.star-history.com/svg?repos=community-scripts/ProxmoxVE&type=Date"
+      />
+      <img
+        alt="Star History Chart"
+        src="https://api.star-history.com/svg?repos=community-scripts/ProxmoxVE&type=Date"
+        width="650"
+      />
     </picture>
   </a>
-</div>
+</p>
 
 ---
 
