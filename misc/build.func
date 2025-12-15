@@ -3228,6 +3228,7 @@ EOF'
 
   # Use REPO_BASE_URL if available (for fork testing), otherwise use default
   local install_url="${REPO_BASE_URL:-https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main}/install/${var_install}.sh"
+  msg_debug "Attempting to download install script from: ${install_url}"
   lxc-attach -n "$CTID" -- bash -c "$(curl -fsSL "${install_url}")"
   local lxc_exit=$?
 
