@@ -35,24 +35,34 @@ function update_script() {
     msg_ok "Services Stopped"
 
     if ! { grep -q '^REDIS_IS_EXTERNAL=' /opt/homarr/.env 2>/dev/null || grep -q '^REDIS_IS_EXTERNAL=' /opt/homarr.env 2>/dev/null; }; then
-        msg_info "Fixing old structure"
-        # fix musl issues because homarr compiles on alpine not debian soure: https://github.com/alexander-akhmetov/python-telegram/issues/3
-        $STD apt install -y musl-dev
-        ln -s /usr/lib/x86_64-linux-musl/libc.so /lib/libc.musl-x86_64.so.1
-        cp /opt/homarr/.env /opt/homarr.env
-        echo "REDIS_IS_EXTERNAL='true'" >> /opt/homarr.env
-        sed -i 's|^ExecStart=.*|ExecStart=/opt/homarr/run.sh|' /etc/systemd/system/homarr.service
-        sed -i 's|^EnvironmentFile=.*|EnvironmentFile=-/opt/homarr.env|' /etc/systemd/system/homarr.service
-        chown -R redis:redis /appdata/redis
-        chmod 744 /appdata/redis
-        mkdir -p /etc/systemd/system/redis-server.service.d/
-        cat <<EOF >/etc/systemd/system/redis-server.service.d/override.conf
+      DEBIAN_VERSION=$(cat /etc/debian_version 2>/dev/null | cut -d'.' -f1)
+      if [[ -n "$DEBIAN_VERSION" ]] && [[ "$DEBIAN_VERSION" -lt 13 ]]; then
+        msg_warn "⚠️  COMPATIBILITY WARNING ⚠️"
+        msg_warn "You are running Debian ${DEBIAN_VERSION}. Homarr's requires Debian 13"
+        msg_warn ""
+        msg_warn "Please Upgrade to Debian 13:"
+        msg_warn "See: https://github.com/community-scripts/ProxmoxVE/discussions/7489"
+        msg_warn ""
+        exit
+      fi
+      msg_info "Fixing old structure"
+      # fix musl issues because homarr compiles on alpine not debian soure: https://github.com/alexander-akhmetov/python-telegram/issues/3
+      $STD apt install -y musl-dev
+      ln -s /usr/lib/x86_64-linux-musl/libc.so /lib/libc.musl-x86_64.so.1
+      cp /opt/homarr/.env /opt/homarr.env
+      echo "REDIS_IS_EXTERNAL='true'" >> /opt/homarr.env
+      sed -i 's|^ExecStart=.*|ExecStart=/opt/homarr/run.sh|' /etc/systemd/system/homarr.service
+      sed -i 's|^EnvironmentFile=.*|EnvironmentFile=-/opt/homarr.env|' /etc/systemd/system/homarr.service
+      chown -R redis:redis /appdata/redis
+      chmod 744 /appdata/redis
+      mkdir -p /etc/systemd/system/redis-server.service.d/
+      cat <<EOF >/etc/systemd/system/redis-server.service.d/override.conf
 [Service]
 ReadWritePaths=-/appdata/redis -/var/lib/redis -/var/log/redis -/var/run/redis -/etc/redis
 EOF
-        systemctl daemon-reload
-        rm /opt/run_homarr.sh
-        msg_ok "Fixed old structure"
+      systemctl daemon-reload
+      rm /opt/run_homarr.sh
+      msg_ok "Fixed old structure"
     fi
 
     msg_info "Updating Nodejs"
