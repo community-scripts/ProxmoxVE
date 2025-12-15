@@ -20,6 +20,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Fix DiscoPanel build [@PouletteMC](https://github.com/PouletteMC) ([#10009](https://github.com/community-scripts/ProxmoxVE/pull/10009))
     - fix:ct/openwebui.sh adding progressbar and minimize service downtime [@jobben-2025](https://github.com/jobben-2025) ([#9894](https://github.com/community-scripts/ProxmoxVE/pull/9894))
     - homarr: add: temp note aboute deb13 requirement [@CrazyWolf13](https://github.com/CrazyWolf13) ([#9992](https://github.com/community-scripts/ProxmoxVE/pull/9992))
     - paperless-ai: backup data and recreate venv during update [@MickLesk](https://github.com/MickLesk) ([#9987](https://github.com/community-scripts/ProxmoxVE/pull/9987))
