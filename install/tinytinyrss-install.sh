@@ -91,7 +91,7 @@ define('DB_PORT', '5432');
 
 define('SELF_URL_PATH', 'http://localhost/');
 
-define('FEED_CRYPT_KEY', '$(openssl rand -base64 32)');
+define('FEED_CRYPT_KEY', '$(openssl rand -hex 32)');
 
 define('SINGLE_USER_MODE', false);
 define('SIMPLE_UPDATE_MODE', false);
