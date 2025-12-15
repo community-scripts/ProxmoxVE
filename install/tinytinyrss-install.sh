@@ -16,7 +16,14 @@ update_os
 PHP_VERSION="8.2" PHP_MODULE="curl,xml,mbstring,intl,zip,pgsql,gmp" PHP_APACHE="YES" setup_php
 PG_VERSION="16" setup_postgresql
 PG_DB_NAME="ttrss" PG_DB_USER="ttrss" setup_postgresql_db
-import_local_ip
+import_local_ip || {
+  msg_error "Failed to determine LOCAL_IP"
+  exit 1
+}
+if [[ -z "${LOCAL_IP:-}" ]]; then
+  msg_error "LOCAL_IP is not set"
+  exit 1
+fi
 
 msg_info "Downloading TinyTinyRSS"
 mkdir -p /opt/tt-rss
