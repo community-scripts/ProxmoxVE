@@ -2687,11 +2687,11 @@ start() {
 # - Posts installation telemetry to API if diagnostics enabled
 # ------------------------------------------------------------------------------
 build_container() {
-  if [ "$VERBOSE" == "yes" ]; then set -x; fi
+  set -x # Force verbose mode for debugging
 
-  msg_debug "(build_container) Initial NET: $NET"
-  msg_debug "(build_container) Initial GATE: $GATE"
-  msg_debug "(build_container) Initial IPV6_STATIC: $IPV6_STATIC"
+  echo "--- DEBUG: (build_container) Initial NET: $NET ---"
+  echo "--- DEBUG: (build_container) Initial GATE: $GATE ---"
+  echo "--- DEBUG: (build_container) Initial IPV6_STATIC: $IPV6_STATIC ---"
 
   NET_STRING="-net0 name=eth0,bridge=${BRG:-vmbr0}"
 
@@ -3228,7 +3228,7 @@ EOF'
 
   # Use REPO_BASE_URL if available (for fork testing), otherwise use default
   local install_url="${REPO_BASE_URL:-https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main}/install/${var_install}.sh"
-  msg_debug "Attempting to download install script from: ${install_url}"
+  echo "--- DEBUG: Attempting to download install script from: ${install_url} ---"
   lxc-attach -n "$CTID" -- bash -c "$(curl -fsSL "${install_url}")"
   local lxc_exit=$?
 
