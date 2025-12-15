@@ -2825,7 +2825,7 @@ $PCT_OPTIONS_STRING"
   # Add nameserver if specified
   if [ -n "$NS" ]; then
     PCT_OPTIONS_STRING="$PCT_OPTIONS_STRING
-  $NS"
+  -nameserver $NS"
   fi
 
   # Network configuration
