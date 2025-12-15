@@ -22,6 +22,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - core: App Defaults force mode and prevent unbound variables [@MickLesk](https://github.com/MickLesk) ([#9971](https://github.com/community-scripts/ProxmoxVE/pull/9971))
     - core: load app defaults before applying base_settings / fix composer cleanup after install/update [@MickLesk](https://github.com/MickLesk) ([#9965](https://github.com/community-scripts/ProxmoxVE/pull/9965))
 
 ### 📚 Documentation
