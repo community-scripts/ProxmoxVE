@@ -18,6 +18,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - core: load app defaults before applying base_settings / fix composer cleanup after install/update [@MickLesk](https://github.com/MickLesk) ([#9965](https://github.com/community-scripts/ProxmoxVE/pull/9965))
 
+### 📚 Documentation
+
+  - README; add project statistics / formatting [@MickLesk](https://github.com/MickLesk) ([#9967](https://github.com/community-scripts/ProxmoxVE/pull/9967))
+
 ## 2025-12-14
 
 ### 🚀 Updated Scripts
