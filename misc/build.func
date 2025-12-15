@@ -2148,8 +2148,8 @@ install_script() {
         header_info
         echo -e "${DEFAULT}${BOLD}${BL}Using App Defaults for ${APP} on node $PVEHOST_NAME${CL}"
         METHOD="appdefaults"
-        base_settings
         load_vars_file "$(get_app_defaults_path)"
+        base_settings
         echo_default
         defaults_target="$(get_app_defaults_path)"
         break
