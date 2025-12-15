@@ -32,7 +32,7 @@ detect_repo_base_url() {
   repo_name="${GITHUB_REPO_NAME:-$repo_name}"
   branch="${GITHUB_BRANCH:-$branch}"
 
-  echo "https://raw.githubusercontent.com/${repo_owner}/${repo_name}/refs/heads/${branch}"
+  echo "https://raw.githubusercontent.com/${repo_owner}/${repo_name}/${branch}"
 }
 
 # Obtener URL base del repo (se detecta automáticamente en desarrollo, usa defaults en producción)
