@@ -1222,6 +1222,7 @@ setup_deb822_repo() {
   local suite="$4"
   local component="${5:-main}"
   local architectures="${6-}" # optional
+  local enabled="${7-}"       # optional: "true" or "false"
 
   # Validate required parameters
   if [[ -z "$name" || -z "$gpg_url" || -z "$repo_url" || -z "$suite" ]]; then
@@ -1255,6 +1256,7 @@ setup_deb822_repo() {
     fi
     [[ -n "$architectures" ]] && echo "Architectures: $architectures"
     echo "Signed-By: /etc/apt/keyrings/${name}.gpg"
+    [[ -n "$enabled" ]] && echo "Enabled: $enabled"
   } >/etc/apt/sources.list.d/${name}.sources
 
   $STD apt update
