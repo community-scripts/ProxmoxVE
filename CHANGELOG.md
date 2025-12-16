@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-12-16
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - 2fauth: bump to php8.4 [@MickLesk](https://github.com/MickLesk) ([#10019](https://github.com/community-scripts/ProxmoxVE/pull/10019))
+
 ## 2025-12-15
 
 ### 🆕 New Scripts
