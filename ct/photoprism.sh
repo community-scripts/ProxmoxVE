@@ -32,6 +32,14 @@ function update_script() {
     systemctl stop photoprism
     msg_ok "Stopped PhotoPrism"
 
+    # Ensure CLI tools have access to env variables (for existing installations)
+    if ! grep -q "photoprism/config/.env" ~/.bashrc 2>/dev/null; then
+      msg_info "Adding environment export for CLI tools"
+      echo '# Load PhotoPrism environment variables for CLI tools' >>~/.bashrc
+      echo 'export $(grep -v "^#" /opt/photoprism/config/.env | xargs)' >>~/.bashrc
+      msg_ok "Added environment export"
+    fi
+
     fetch_and_deploy_gh_release "photoprism" "photoprism/photoprism" "prebuild" "latest" "/opt/photoprism" "*linux-amd64.tar.gz"
 
     LIBHEIF_URL=$(curl -fsSL "https://dl.photoprism.app/dist/libheif/" | grep -oP "libheif-bookworm-amd64-v[0-9\.]+\.tar\.gz" | sort -V | tail -n 1)
