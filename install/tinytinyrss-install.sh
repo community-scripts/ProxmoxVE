@@ -196,7 +196,8 @@ msg_ok "Created initial config.php"
 # Initialize database schema
 msg_info "Initializing database schema"
 cd /opt/tt-rss
-$STD sudo -u www-data /usr/bin/php update.php --update-schema
+# Use --update-schema=force-yes to avoid interactive prompt
+$STD sudo -u www-data /usr/bin/php update.php --update-schema=force-yes
 msg_ok "Database schema initialized"
 
 # Restart Apache to ensure it picks up the new config.php
