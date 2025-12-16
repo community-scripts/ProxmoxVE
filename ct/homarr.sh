@@ -39,6 +39,7 @@ function update_script() {
       systemctl disable -q --now nginx
       cp /opt/homarr/.env /opt/homarr.env
       echo "REDIS_IS_EXTERNAL='true'" >> /opt/homarr.env
+      sed -i '/^\[Unit\]/a Requires=redis-server.service\nAfter=redis-server.service' /etc/systemd/system/homarr.service
       sed -i 's|^ExecStart=.*|ExecStart=/opt/homarr/run.sh|' /etc/systemd/system/homarr.service
       sed -i 's|^EnvironmentFile=.*|EnvironmentFile=-/opt/homarr.env|' /etc/systemd/system/homarr.service
       chown -R redis:redis /appdata/redis
