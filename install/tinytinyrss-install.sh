@@ -17,7 +17,21 @@ update_os
 
 PHP_VERSION="8.2" PHP_MODULE="curl,xml,mbstring,intl,zip,pgsql,gmp" PHP_APACHE="YES" setup_php
 PG_VERSION="16" setup_postgresql
-PG_DB_NAME="ttrss" PG_DB_USER="ttrss" setup_postgresql_db
+
+msg_info "Setting up PostgreSQL"
+DB_NAME=ttrss
+DB_USER=ttrss
+DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)
+$STD sudo -u postgres psql -c "CREATE ROLE $DB_USER WITH LOGIN PASSWORD '$DB_PASS';"
+$STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER TEMPLATE template0;"
+{
+  echo "TinyTinyRSS Credentials"
+  echo "TinyTinyRSS Database User: $DB_USER"
+  echo "TinyTinyRSS Database Password: $DB_PASS"
+  echo "TinyTinyRSS Database Name: $DB_NAME"
+} >>~/tinytinyrss.creds
+msg_ok "Set up PostgreSQL"
+
 import_local_ip || {
   msg_error "Failed to determine LOCAL_IP"
   exit 1
@@ -77,20 +91,13 @@ msg_ok "Created Apache Configuration"
 
 msg_info "Creating initial config.php"
 if [ ! -f /opt/tt-rss/config.php ]; then
-  # Ensure variables are available (they should be exported by setup_postgresql_db)
-  if [[ -z "${PG_DB_NAME:-}" || -z "${PG_DB_USER:-}" || -z "${PG_DB_PASS:-}" ]]; then
-    msg_error "Database variables not set. PG_DB_NAME, PG_DB_USER, and PG_DB_PASS must be available."
-    exit 1
-  fi
-  
   cat <<EOF >/opt/tt-rss/config.php
 <?php
 define('DB_TYPE', 'pgsql');
-// Use 127.0.0.1 instead of localhost to force TCP/IP connection (avoids Unix socket)
 define('DB_HOST', '127.0.0.1');
-define('DB_NAME', '${PG_DB_NAME}');
-define('DB_USER', '${PG_DB_USER}');
-define('DB_PASS', '${PG_DB_PASS}');
+define('DB_NAME', '${DB_NAME}');
+define('DB_USER', '${DB_USER}');
+define('DB_PASS', '${DB_PASS}');
 define('DB_PORT', '5432');
 
 define('SELF_URL_PATH', 'http://${LOCAL_IP}/');
@@ -106,49 +113,6 @@ EOF
 else
   msg_info "config.php already exists, skipping creation"
 fi
-
-msg_info "Configuring PostgreSQL for password authentication"
-# Configure both TCP/IP (127.0.0.1) and Unix socket (local) connections to use md5
-# This ensures password authentication works regardless of connection method
-PG_HBA_CONF=$(find /etc/postgresql/*/main/pg_hba.conf 2>/dev/null | head -1)
-if [[ -n "$PG_HBA_CONF" ]]; then
-  # Backup pg_hba.conf
-  cp "$PG_HBA_CONF" "${PG_HBA_CONF}.bak.$(date +%Y%m%d_%H%M%S)"
-  
-  # Configure TCP/IP connections for 127.0.0.1 - ensure it uses md5
-  if ! grep -qE "^host\s+all\s+all\s+127\.0\.0\.1/32\s+(md5|scram-sha-256)" "$PG_HBA_CONF" 2>/dev/null; then
-    sed -i '/^# IPv4 local connections:/a host    all             all             127.0.0.1/32            md5' "$PG_HBA_CONF"
-  else
-    # Update existing entry to use md5 if it doesn't already
-    sed -i '/^host\s\+all\s\+all\s\+127\.0\.0\.1\/32/s/\(md5\|scram-sha-256\|trust\|peer\|ident\)/md5/' "$PG_HBA_CONF"
-  fi
-  
-  # Configure Unix socket connections to use md5 instead of peer/ident
-  # Change "local all all peer/ident" to md5, but preserve "local all postgres peer"
-  # Handle lines that match "local all all" with peer or ident (but not postgres user)
-  sed -i '/^local\s\+all\s\+all\s\+\(peer\|ident\)/{
-    /postgres/!s/\(peer\|ident\)$/md5/
-  }' "$PG_HBA_CONF"
-  
-  # Also ensure there's a general local line with md5 if it doesn't exist
-  if ! grep -qE "^local\s+all\s+all\s+md5" "$PG_HBA_CONF" 2>/dev/null; then
-    # Add after the postgres line or after the first local line
-    if grep -q "^local\s\+all\s\+postgres" "$PG_HBA_CONF"; then
-      sed -i '/^local\s\+all\s\+postgres/a local   all             all                                     md5' "$PG_HBA_CONF"
-    else
-      sed -i '/^# "local" is for Unix domain socket connections only/a local   all             all                                     md5' "$PG_HBA_CONF"
-    fi
-  fi
-  
-  msg_info "Attempting to reload PostgreSQL service..."
-  if systemctl reload postgresql; then
-    msg_ok "PostgreSQL reloaded successfully."
-  else
-    msg_error "Failed to reload PostgreSQL service. Manual intervention may be required."
-    exit 1
-  fi
-fi
-msg_ok "PostgreSQL authentication configured"
 
 motd_ssh
 customize
