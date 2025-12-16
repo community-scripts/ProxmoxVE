@@ -118,8 +118,6 @@ if [[ -n "$PG_HBA_CONF" ]]; then
   # Configure Unix socket connections to use md5 instead of peer/ident
   # Change "local all all peer/ident" to md5, but preserve "local all postgres peer"
   sed -i '/^local\s\+all\s\+all\s\+\(peer\|ident\)/s/\(peer\|ident\)$/md5/' "$PG_HBA_CONF"
-  msg_debug "Content of ${PG_HBA_CONF} after modification:"
-  msg_debug "$(cat "${PG_HBA_CONF}" | grep -E '127\.0\.0\.1|local\s+all')"
   msg_info "Attempting to reload PostgreSQL service..."
   if systemctl reload postgresql; then
     msg_ok "PostgreSQL reloaded successfully."
