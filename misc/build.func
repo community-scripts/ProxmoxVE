@@ -2828,10 +2828,17 @@ $PCT_OPTIONS_STRING"
   fi
 
   # Add nameserver if specified
-  # NS is already formatted with -nameserver= prefix in base_settings()
+  # NS should be formatted with -nameserver= prefix, but double-check to be safe
   if [ -n "$NS" ]; then
+    # Ensure NS has the correct format
+    if [[ "$NS" =~ ^-nameserver= ]]; then
+      _ns_formatted="$NS"
+    else
+      # If NS doesn't have prefix, add it (defensive programming)
+      _ns_formatted="-nameserver=$NS"
+    fi
     PCT_OPTIONS_STRING="$PCT_OPTIONS_STRING
-  $NS"
+  $_ns_formatted"
   fi
 
   # Network configuration
