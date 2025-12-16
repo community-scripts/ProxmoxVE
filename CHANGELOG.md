@@ -36,6 +36,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - tools.func: add optional enabled parameter to setup_deb822_repo [@MickLesk](https://github.com/MickLesk) ([#10017](https://github.com/community-scripts/ProxmoxVE/pull/10017))
     - core: map Etc/* timezones to 'host' for pct compatibility [@MickLesk](https://github.com/MickLesk) ([#10020](https://github.com/community-scripts/ProxmoxVE/pull/10020))
 
+### 🌐 Website
+
+  - website: bump deps & prevent security issues [@MickLesk](https://github.com/MickLesk) ([#10045](https://github.com/community-scripts/ProxmoxVE/pull/10045))
+
 ## 2025-12-15
 
 ### 🆕 New Scripts
