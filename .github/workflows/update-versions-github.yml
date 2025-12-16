@@ -153,7 +153,72 @@ jobs:
           done
 
           echo ""
-          echo "=== Method 5: Special sources ==="
+          echo "=== Method 5: Manual GitHub mappings (apt-based apps) ==="
+          # Apps that install via apt but have GitHub releases for version tracking
+          declare -A manual_github_mappings=(
+            ["actualbudget"]="actualbudget/actual"
+            ["checkmk"]="Checkmk/checkmk"
+            ["cloudflared"]="cloudflare/cloudflared"
+            ["deconz"]="dresden-elektronik/deconz-rest-plugin"
+            ["emqx"]="emqx/emqx"
+            ["ghost"]="TryGhost/Ghost"
+            ["grafana"]="grafana/grafana"
+            ["graylog"]="Graylog2/graylog2-server"
+            ["homebridge"]="homebridge/homebridge"
+            ["hyperhdr"]="awawa-dev/HyperHDR"
+            ["hyperion"]="hyperion-project/hyperion.ng"
+            ["influxdb"]="influxdata/influxdb"
+            ["iobroker"]="ioBroker/ioBroker"
+            ["jenkins"]="jenkinsci/jenkins"
+            ["mariadb"]="MariaDB/server"
+            ["mattermost"]="mattermost/mattermost"
+            ["meshcentral"]="Ylianst/MeshCentral"
+            ["node-red"]="node-red/node-red"
+            ["ntfy"]="binwiederhier/ntfy"
+            ["nzbget"]="nzbgetcom/nzbget"
+            ["openhab"]="openhab/openhab-distro"
+            ["pihole"]="pi-hole/pi-hole"
+            ["postgresql"]="postgres/postgres"
+            ["readarr"]="Readarr/Readarr"
+            ["redis"]="redis/redis"
+            ["sftpgo"]="drakkan/sftpgo"
+            ["sonarr"]="Sonarr/Sonarr"
+            ["syncthing"]="syncthing/syncthing"
+            ["technitiumdns"]="TechnitiumSoftware/DnsServer"
+            ["transmission"]="transmission/transmission"
+            ["typesense"]="typesense/typesense"
+            ["valkey"]="valkey-io/valkey"
+            ["verdaccio"]="verdaccio/verdaccio"
+            ["vikunja"]="go-vikunja/vikunja"
+            ["zabbix"]="zabbix/zabbix"
+            ["zammad"]="zammad/zammad"
+          )
+
+          for slug in "${!manual_github_mappings[@]}"; do
+            repo="${manual_github_mappings[$slug]}"
+            if ! echo "$sources_json" | jq -e ".[] | select(.slug == \"$slug\")" > /dev/null 2>&1; then
+              add_source "$slug" "github" "$repo" "install/${slug}-install.sh"
+            fi
+          done
+
+          echo ""
+          echo "=== Method 6: Proxmox LXC templates ==="
+          # Base OS versions from Proxmox template index
+          declare -A pveam_mappings=(
+            ["debian"]="pveam:debian"
+            ["ubuntu"]="pveam:ubuntu"
+            ["alpine"]="pveam:alpine"
+          )
+
+          for slug in "${!pveam_mappings[@]}"; do
+            template="${pveam_mappings[$slug]}"
+            if ! echo "$sources_json" | jq -e ".[] | select(.slug == \"$slug\")" > /dev/null 2>&1; then
+              add_source "$slug" "pveam" "$template" "ct/${slug}.sh"
+            fi
+          done
+
+          echo ""
+          echo "=== Method 7: Special sources ==="
           # Home Assistant OS VM
           if ! echo "$sources_json" | jq -e ".[] | select(.slug == \"haos-vm\")" > /dev/null 2>&1; then
             add_source "haos-vm" "github" "home-assistant/operating-system" "vm/haos-vm.sh"
@@ -226,6 +291,16 @@ jobs:
                   version=$(curl -fsSL "https://hub.docker.com/v2/repositories/${source}/tags?page_size=10&ordering=last_updated" 2>/dev/null \
                     | jq -r '.results[] | select(.name != "latest") | .name' | head -1 || echo "")
                 fi
+                ;;
+
+              pveam)
+                # Proxmox LXC template versions from download.proxmox.com
+                os_name="${source#pveam:}"
+                # Fetch the template index and get latest version
+                version=$(curl -fsSL "http://download.proxmox.com/images/system/" 2>/dev/null \
+                  | grep -oE "${os_name}-[0-9]+\.[0-9]+-default_[0-9]+_amd64" \
+                  | sed "s/${os_name}-//" | sed 's/-default.*//' \
+                  | sort -V | tail -1 || echo "")
                 ;;
             esac
 
