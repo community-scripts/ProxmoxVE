@@ -33,14 +33,30 @@ $STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER TEMP
 
 # Configure pg_hba.conf to use md5 for local connections (instead of peer)
 # This ensures password authentication works even when using Unix sockets
+# PostgreSQL reads pg_hba.conf from top to bottom, so md5 must come before peer
 PG_HBA_CONF=$(find /etc/postgresql/*/main/pg_hba.conf 2>/dev/null | head -1)
 if [[ -n "$PG_HBA_CONF" ]]; then
   # Backup pg_hba.conf
   cp "$PG_HBA_CONF" "${PG_HBA_CONF}.bak.$(date +%Y%m%d_%H%M%S)"
   
-  # Change local connections from peer/ident to md5
+  # First, change all existing local peer/ident lines to md5
   sed -i '/^local\s\+all\s\+all\s\+peer/s/peer$/md5/' "$PG_HBA_CONF"
   sed -i '/^local\s\+all\s\+all\s\+ident/s/ident$/md5/' "$PG_HBA_CONF"
+  
+  # Ensure there's a local md5 line at the top (before any peer lines)
+  # This ensures md5 authentication is checked first
+  if ! grep -qE "^local\s+all\s+all\s+md5" "$PG_HBA_CONF" 2>/dev/null; then
+    # Insert at the beginning of local connection rules (after comments)
+    if grep -q "^# \"local\" is for Unix domain socket connections only" "$PG_HBA_CONF"; then
+      sed -i '/^# "local" is for Unix domain socket connections only/a local   all             all                                     md5' "$PG_HBA_CONF"
+    elif grep -q "^local\s\+all\s\+postgres" "$PG_HBA_CONF"; then
+      # Insert before the postgres peer line
+      sed -i '/^local\s\+all\s\+postgres/i local   all             all                                     md5' "$PG_HBA_CONF"
+    else
+      # Add at the beginning of the file after initial comments
+      sed -i '1a local   all             all                                     md5' "$PG_HBA_CONF"
+    fi
+  fi
   
   # Ensure TCP/IP connections use md5
   if ! grep -qE "^host\s+all\s+all\s+127\.0\.0\.1/32\s+(md5|scram-sha-256)" "$PG_HBA_CONF" 2>/dev/null; then
@@ -48,7 +64,9 @@ if [[ -n "$PG_HBA_CONF" ]]; then
   fi
   
   # Reload PostgreSQL to apply changes
+  msg_info "Reloading PostgreSQL to apply authentication changes"
   systemctl reload postgresql || systemctl restart postgresql
+  msg_ok "PostgreSQL reloaded"
 fi
 
 msg_ok "Set up PostgreSQL"
@@ -126,6 +144,7 @@ FEED_CRYPT_KEY=$(openssl rand -hex 32)
 {
   printf "<?php\n"
   printf "define('DB_TYPE', 'pgsql');\n"
+  # Use 127.0.0.1 to force TCP/IP connection (localhost might use Unix socket)
   printf "define('DB_HOST', '127.0.0.1');\n"
   printf "define('DB_NAME', '%s');\n" "$DB_NAME"
   printf "define('DB_USER', '%s');\n" "$DB_USER"
@@ -155,6 +174,11 @@ fi
 chown www-data:www-data /opt/tt-rss/config.php
 chmod 644 /opt/tt-rss/config.php
 msg_ok "Created initial config.php"
+
+# Restart Apache to ensure it picks up the new config.php
+msg_info "Restarting Apache to apply configuration"
+systemctl restart apache2
+msg_ok "Apache restarted"
 
 motd_ssh
 customize
