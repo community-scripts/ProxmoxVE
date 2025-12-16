@@ -231,11 +231,48 @@ jobs:
             ["zabbix"]="zabbix/zabbix"
             ["zammad"]="zammad/zammad"
             ["zerotier-one"]="zerotier/ZeroTierOne"
+            # Apps without known GitHub repos (use "-" as placeholder)
+            ["agentdvr"]="-"
+            ["apt-cacher-ng"]="-"
+            ["channels"]="-"
+            ["daemonsync"]="-"
+            ["dotnetaspwebapi"]="-"
+            ["fhem"]="-"
+            ["fileflows"]="-"
+            ["fumadocs"]="-"
+            ["infisical"]="-"
+            ["itsm-ng"]="-"
+            ["jupyternotebook"]="-"
+            ["kasm"]="-"
+            ["lyrionmusicserver"]="-"
+            ["minarca"]="-"
+            ["mqtt"]="-"
+            ["nextcloudpi"]="-"
+            ["nextpvr"]="-"
+            ["notifiarr"]="-"
+            ["nxwitness"]="-"
+            ["omada"]="-"
+            ["omv"]="-"
+            ["plex"]="-"
+            ["podman"]="-"
+            ["readeck"]="-"
+            ["resiliosync"]="-"
+            ["smokeping"]="-"
+            ["splunk-enterprise"]="-"
+            ["sqlserver2022"]="-"
+            ["swizzin"]="-"
+            ["teamspeak-server"]="-"
+            ["twingate-connector"]="-"
+            ["unifi"]="-"
+            ["urbackupserver"]="-"
+            ["yunohost"]="-"
           )
 
           for slug in "${!manual_github_mappings[@]}"; do
             repo="${manual_github_mappings[$slug]}"
             if ! echo "$sources_json" | jq -e ".[] | select(.slug == \"$slug\")" > /dev/null 2>&1; then
+              # Skip placeholder entries in extraction, they get added in Method 8
+              [[ "$repo" == "-" ]] && continue
               add_source "$slug" "github" "$repo" "install/${slug}-install.sh"
             fi
           done
@@ -263,6 +300,24 @@ jobs:
             add_source "haos-vm" "github" "home-assistant/operating-system" "vm/haos-vm.sh"
           fi
 
+          echo ""
+          echo "=== Method 8: Unknown/Manual apps ==="
+          # Apps without known version sources - add with type "manual" for manual updates
+          unknown_apps=(
+            "agentdvr" "apt-cacher-ng" "channels" "daemonsync" "dotnetaspwebapi"
+            "fhem" "fileflows" "fumadocs" "infisical" "itsm-ng" "jupyternotebook"
+            "kasm" "lyrionmusicserver" "minarca" "mqtt" "nextcloudpi" "nextpvr"
+            "notifiarr" "nxwitness" "omada" "omv" "plex" "podman" "readeck"
+            "resiliosync" "smokeping" "splunk-enterprise" "sqlserver2022" "swizzin"
+            "teamspeak-server" "twingate-connector" "unifi" "urbackupserver" "yunohost"
+          )
+
+          for slug in "${unknown_apps[@]}"; do
+            if ! echo "$sources_json" | jq -e ".[] | select(.slug == \"$slug\")" > /dev/null 2>&1; then
+              add_source "$slug" "manual" "-" "install/${slug}-install.sh"
+            fi
+          done
+
           # Save sources file
           echo "$sources_json" | jq --arg date "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
             '{generated: $date, sources: (. | sort_by(.slug))}' > "$SOURCES_FILE"
@@ -285,6 +340,7 @@ jobs:
 
           success=0
           failed=0
+          manual=0
           total=$(jq '.sources | length' "$SOURCES_FILE")
 
           # Process each source
@@ -341,6 +397,14 @@ jobs:
                   | sed "s/${os_name}-//" | sed 's/-default.*//' \
                   | sort -V | tail -1 || echo "")
                 ;;
+
+              manual)
+                # Manual entries - no automatic version fetching
+                # These need to be updated manually or have their source type changed
+                version="-"
+                ((manual++))
+                echo -n "(manual) "
+                ;;
             esac
 
             if [[ -n "$version" && "$version" != "null" ]]; then
@@ -360,7 +424,8 @@ jobs:
           echo "========================================="
           echo "           SUMMARY"
           echo "========================================="
-          echo "Success: $success"
+          echo "Success: $success (automated)"
+          echo "Manual:  $manual (placeholder)"
           echo "Failed:  $failed"
           echo "Total:   $total"
           echo "========================================="
