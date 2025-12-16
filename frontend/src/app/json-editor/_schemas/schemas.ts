@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const InstallMethodSchema = z.object({
   type: z.enum(["default", "alpine"], {
-    errorMap: () => ({ message: "Type must be either 'default' or 'alpine'" }),
+    message: "Type must be either 'default' or 'alpine'",
   }),
   script: z.string().min(1, "Script content cannot be empty"),
   resources: z.object({
@@ -25,7 +25,7 @@ export const ScriptSchema = z.object({
   categories: z.array(z.number()),
   date_created: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be in YYYY-MM-DD format").min(1, "Date is required"),
   type: z.enum(["vm", "ct", "pve", "addon", "turnkey"], {
-    errorMap: () => ({ message: "Type must be either 'vm', 'ct', 'pve', 'addon' or 'turnkey'" }),
+    message: "Type must be either 'vm', 'ct', 'pve', 'addon' or 'turnkey'",
   }),
   updateable: z.boolean(),
   privileged: z.boolean(),
