@@ -33,11 +33,21 @@ detect_repo_base_url() {
 }
 
 # Obtener URL base del repo (se detecta automáticamente en desarrollo, usa defaults en producción)
+# Para este script específico (tinytinyrss.sh), usar el fork del autor por defecto cuando no hay git local
 # Para testing con app defaults, usar upstream para evitar problemas con build.func del fork
 if [[ -n "${USE_UPSTREAM_BUILD_FUNC:-}" ]]; then
   REPO_BASE_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 else
-  REPO_BASE_URL="${REPO_BASE_URL:-$(detect_repo_base_url)}"
+  # Si no hay git local y no se especifica REPO_BASE_URL, usar el fork del autor por defecto
+  if [[ -z "${REPO_BASE_URL:-}" ]]; then
+    if ! command -v git &>/dev/null || ! git rev-parse --git-dir &>/dev/null 2>&1; then
+      # No hay git local, usar fork del autor por defecto para este script
+      REPO_BASE_URL="https://raw.githubusercontent.com/maurorosero/ProxmoxVE/feature/tinytinyrss"
+    else
+      # Hay git local, detectar automáticamente
+      REPO_BASE_URL="$(detect_repo_base_url)"
+    fi
+  fi
 fi
 
 # Exportar para que build.func pueda usar esta variable si está disponible
