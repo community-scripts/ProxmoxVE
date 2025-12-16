@@ -62,7 +62,7 @@ export default function JSONGenerator() {
   useEffect(() => {
     fetchCategories()
       .then(setCategories)
-      .catch(error => console.error("Error fetching categories:", error));
+      .catch((error) => console.error("Error fetching categories:", error));
   }, []);
 
   const updateScript = useCallback((key: keyof Script, value: Script[keyof Script]) => {
@@ -75,14 +75,11 @@ export default function JSONGenerator() {
 
           if (updated.type === "pve") {
             scriptPath = `tools/pve/${updated.slug}.sh`;
-          }
-          else if (updated.type === "addon") {
+          } else if (updated.type === "addon") {
             scriptPath = `tools/addon/${updated.slug}.sh`;
-          }
-          else if (method.type === "alpine") {
+          } else if (method.type === "alpine") {
             scriptPath = `${updated.type}/alpine-${updated.slug}.sh`;
-          }
-          else {
+          } else {
             scriptPath = `${updated.type}/${updated.slug}.sh`;
           }
 
@@ -145,12 +142,9 @@ export default function JSONGenerator() {
         </AlertDescription>
         {zodErrors && (
           <div className="mt-2 space-y-1">
-            {zodErrors.errors.map((error, index) => (
+            {zodErrors.issues.map((error, index) => (
               <AlertDescription key={index} className="p-1 text-red-500">
-                {error.path.join(".")}
-                {" "}
-                -
-                {error.message}
+                {error.path.join(".")} -{error.message}
               </AlertDescription>
             ))}
           </div>
@@ -168,31 +162,25 @@ export default function JSONGenerator() {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label>
-                Name
-                {" "}
-                <span className="text-red-500">*</span>
+                Name <span className="text-red-500">*</span>
               </Label>
-              <Input placeholder="Example" value={script.name} onChange={e => updateScript("name", e.target.value)} />
+              <Input placeholder="Example" value={script.name} onChange={(e) => updateScript("name", e.target.value)} />
             </div>
             <div>
               <Label>
-                Slug
-                {" "}
-                <span className="text-red-500">*</span>
+                Slug <span className="text-red-500">*</span>
               </Label>
-              <Input placeholder="example" value={script.slug} onChange={e => updateScript("slug", e.target.value)} />
+              <Input placeholder="example" value={script.slug} onChange={(e) => updateScript("slug", e.target.value)} />
             </div>
           </div>
           <div>
             <Label>
-              Logo
-              {" "}
-              <span className="text-red-500">*</span>
+              Logo <span className="text-red-500">*</span>
             </Label>
             <Input
               placeholder="Full logo URL"
               value={script.logo || ""}
-              onChange={e => updateScript("logo", e.target.value || null)}
+              onChange={(e) => updateScript("logo", e.target.value || null)}
             />
           </div>
           <div>
@@ -200,19 +188,17 @@ export default function JSONGenerator() {
             <Input
               placeholder="Path to config file"
               value={script.config_path || ""}
-              onChange={e => updateScript("config_path", e.target.value || null)}
+              onChange={(e) => updateScript("config_path", e.target.value || null)}
             />
           </div>
           <div>
             <Label>
-              Description
-              {" "}
-              <span className="text-red-500">*</span>
+              Description <span className="text-red-500">*</span>
             </Label>
             <Textarea
               placeholder="Example"
               value={script.description}
-              onChange={e => updateScript("description", e.target.value)}
+              onChange={(e) => updateScript("description", e.target.value)}
             />
           </div>
           <Categories script={script} setScript={setScript} categories={categories} />
@@ -241,7 +227,7 @@ export default function JSONGenerator() {
             </div>
             <div className="flex flex-col gap-2 w-full">
               <Label>Type</Label>
-              <Select value={script.type} onValueChange={value => updateScript("type", value)}>
+              <Select value={script.type} onValueChange={(value) => updateScript("type", value)}>
                 <SelectTrigger className="flex-1">
                   <SelectValue placeholder="Type" />
                 </SelectTrigger>
@@ -256,29 +242,30 @@ export default function JSONGenerator() {
           </div>
           <div className="w-full flex gap-5">
             <div className="flex items-center space-x-2">
-              <Switch checked={script.updateable} onCheckedChange={checked => updateScript("updateable", checked)} />
+              <Switch checked={script.updateable} onCheckedChange={(checked) => updateScript("updateable", checked)} />
               <label>Updateable</label>
             </div>
             <div className="flex items-center space-x-2">
-              <Switch checked={script.privileged} onCheckedChange={checked => updateScript("privileged", checked)} />
+              <Switch checked={script.privileged} onCheckedChange={(checked) => updateScript("privileged", checked)} />
               <label>Privileged</label>
             </div>
             <div className="flex items-center space-x-2">
-              <Switch checked={script.disable || false} onCheckedChange={checked => updateScript("disable", checked)} />
+              <Switch
+                checked={script.disable || false}
+                onCheckedChange={(checked) => updateScript("disable", checked)}
+              />
               <label>Disabled</label>
             </div>
           </div>
           {script.disable && (
             <div>
               <Label>
-                Disable Description
-                {" "}
-                <span className="text-red-500">*</span>
+                Disable Description <span className="text-red-500">*</span>
               </Label>
               <Textarea
                 placeholder="Explain why this script is disabled..."
                 value={script.disable_description || ""}
-                onChange={e => updateScript("disable_description", e.target.value)}
+                onChange={(e) => updateScript("disable_description", e.target.value)}
               />
             </div>
           )}
@@ -286,18 +273,18 @@ export default function JSONGenerator() {
             placeholder="Interface Port"
             type="number"
             value={script.interface_port || ""}
-            onChange={e => updateScript("interface_port", e.target.value ? Number(e.target.value) : null)}
+            onChange={(e) => updateScript("interface_port", e.target.value ? Number(e.target.value) : null)}
           />
           <div className="flex gap-2">
             <Input
               placeholder="Website URL"
               value={script.website || ""}
-              onChange={e => updateScript("website", e.target.value || null)}
+              onChange={(e) => updateScript("website", e.target.value || null)}
             />
             <Input
               placeholder="Documentation URL"
               value={script.documentation || ""}
-              onChange={e => updateScript("documentation", e.target.value || null)}
+              onChange={(e) => updateScript("documentation", e.target.value || null)}
             />
           </div>
           <InstallMethod script={script} setScript={setScript} setIsValid={setIsValid} setZodErrors={setZodErrors} />
@@ -305,20 +292,22 @@ export default function JSONGenerator() {
           <Input
             placeholder="Username"
             value={script.default_credentials.username || ""}
-            onChange={e =>
+            onChange={(e) =>
               updateScript("default_credentials", {
                 ...script.default_credentials,
                 username: e.target.value || null,
-              })}
+              })
+            }
           />
           <Input
             placeholder="Password"
             value={script.default_credentials.password || ""}
-            onChange={e =>
+            onChange={(e) =>
               updateScript("default_credentials", {
                 ...script.default_credentials,
                 password: e.target.value || null,
-              })}
+              })
+            }
           />
           <Note script={script} setScript={setScript} setIsValid={setIsValid} setZodErrors={setZodErrors} />
         </form>
