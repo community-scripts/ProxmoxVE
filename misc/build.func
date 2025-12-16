@@ -440,6 +440,7 @@ base_settings() {
   ENABLE_MKNOD=${var_mknod:-"0"}
   PROTECT_CT=${var_protection:-"no"}
   CT_TIMEZONE=${var_timezone:-"$timezone"}
+  [[ "${CT_TIMEZONE:-}" == Etc/* ]] && CT_TIMEZONE="host" # pct doesn't accept Etc/* zones
 
   # Since these 2 are only defined outside of default_settings function, we add a temporary fallback. TODO: To align everything, we should add these as constant variables (e.g. OSTYPE and OSVERSION), but that would currently require updating the default_settings function for all existing scripts
   if [ -z "$var_os" ]; then
@@ -1072,7 +1073,10 @@ advanced_settings() {
   elif [ -f /etc/timezone ]; then
     _host_timezone=$(cat /etc/timezone 2>/dev/null || echo "")
   fi
+  # Map Etc/* timezones to "host" (pct doesn't accept Etc/* zones)
+  [[ "${_host_timezone:-}" == Etc/* ]] && _host_timezone="host"
   local _ct_timezone="${var_timezone:-$_host_timezone}"
+  [[ "${_ct_timezone:-}" == Etc/* ]] && _ct_timezone="host"
 
   # Helper to show current progress
   show_progress() {
@@ -1692,6 +1696,7 @@ advanced_settings() {
         --inputbox "\nSet container timezone.\n\nExamples: Europe/Berlin, America/New_York, Asia/Tokyo\n\nHost timezone: ${_host_timezone:-unknown}\n\nLeave empty to inherit from host." 16 62 "$_ct_timezone" \
         3>&1 1>&2 2>&3); then
         _ct_timezone="$result"
+        [[ "${_ct_timezone:-}" == Etc/* ]] && _ct_timezone="host" # pct doesn't accept Etc/* zones
         ((STEP++))
       else
         ((STEP--))
@@ -2081,6 +2086,7 @@ install_script() {
   else
     timezone="UTC"
   fi
+  [[ "${timezone:-}" == Etc/* ]] && timezone="host" # pct doesn't accept Etc/* zones
 
   # Show APP Header
   header_info
@@ -2682,10 +2688,12 @@ $PCT_OPTIONS_STRING"
   -protection 1"
   fi
 
-  # Timezone flag (if var_timezone was set)
+  # Timezone (map Etc/* to "host" as pct doesn't accept them)
   if [ -n "${CT_TIMEZONE:-}" ]; then
+    local _pct_timezone="$CT_TIMEZONE"
+    [[ "$_pct_timezone" == Etc/* ]] && _pct_timezone="host"
     PCT_OPTIONS_STRING="$PCT_OPTIONS_STRING
-  -timezone $CT_TIMEZONE"
+  -timezone $_pct_timezone"
   fi
 
   # Password (already formatted)
@@ -3036,8 +3044,9 @@ EOF'
     export LANG=\$locale_line"
 
     if [[ -z "${tz:-}" ]]; then
-      tz=$(timedatectl show --property=Timezone --value 2>/dev/null || echo "Etc/UTC")
+      tz=$(timedatectl show --property=Timezone --value 2>/dev/null || echo "UTC")
     fi
+    [[ "${tz:-}" == Etc/* ]] && tz="UTC" # Normalize Etc/* to UTC for container setup
 
     if pct exec "$CTID" -- test -e "/usr/share/zoneinfo/$tz"; then
       # Set timezone using symlink (Debian 13+ compatible)
