@@ -519,7 +519,16 @@ base_settings() {
 
   MTU=${var_mtu:-""}
   SD=${var_storage:-""}
-  NS=${var_ns:-""}
+  # Format NS: if var_ns is provided, ensure it has -nameserver= prefix
+  if [[ -n "${var_ns:-}" ]]; then
+    if [[ "${var_ns}" =~ ^-nameserver= ]]; then
+      NS="${var_ns}"
+    else
+      NS="-nameserver=${var_ns}"
+    fi
+  else
+    NS=""
+  fi
   MAC=${var_mac:-""}
   VLAN=${var_vlan:-""}
   SSH=${var_ssh:-"no"}
@@ -2819,15 +2828,10 @@ $PCT_OPTIONS_STRING"
   fi
 
   # Add nameserver if specified
+  # NS is already formatted with -nameserver= prefix in base_settings()
   if [ -n "$NS" ]; then
-    # NS may already contain -nameserver= prefix, so check and format accordingly
-    if [[ "$NS" =~ ^-nameserver= ]]; then
-      PCT_OPTIONS_STRING="$PCT_OPTIONS_STRING
+    PCT_OPTIONS_STRING="$PCT_OPTIONS_STRING
   $NS"
-    else
-      PCT_OPTIONS_STRING="$PCT_OPTIONS_STRING
-  -nameserver $NS"
-    fi
   fi
 
   # Network configuration
