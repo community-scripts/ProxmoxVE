@@ -28,6 +28,8 @@ $STD apt install -y \
   lsb-release
 
 echo 'export PATH=/usr/local:$PATH' >>~/.bashrc
+echo '# Load PhotoPrism environment variables for CLI tools' >>~/.bashrc
+echo 'export $(grep -v "^#" /opt/photoprism/config/.env | xargs)' >>~/.bashrc
 export PATH=/usr/local:$PATH
 msg_ok "Installed Dependencies"
 
