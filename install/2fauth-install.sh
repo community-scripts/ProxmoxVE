@@ -14,11 +14,10 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y nginx
+$STD apt install -y nginx
 msg_ok "Installed Dependencies"
 
-PHP_MODULE="common,ctype,fileinfo,mysql,tokenizer,dom,redis" PHP_FPM="YES" setup_php
-PHP_VERSION="${PHP_VERSION:-8.4}"
+PHP_MODULE="common,ctype,fileinfo,mysql,tokenizer,dom,redis" PHP_VERSION="8.4" PHP_FPM="YES" setup_php
 setup_composer
 setup_mariadb
 MARIADB_DB_NAME="2fauth_db" MARIADB_DB_USER="2fauth" setup_mariadb_db
