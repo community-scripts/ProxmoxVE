@@ -53,6 +53,8 @@ msg_ok "Downloaded TinyTinyRSS"
 msg_info "Configuring TinyTinyRSS"
 cd /opt/tt-rss || exit
 mkdir -p /opt/tt-rss/feed-icons /opt/tt-rss/lock /opt/tt-rss/cache
+# Remove any existing config.php or config-dist.php to avoid conflicts
+rm -f /opt/tt-rss/config.php /opt/tt-rss/config-dist.php
 chown -R www-data:www-data /opt/tt-rss
 chmod -R g+rX /opt/tt-rss
 chmod -R g+w /opt/tt-rss/feed-icons /opt/tt-rss/lock /opt/tt-rss/cache
@@ -90,7 +92,17 @@ $STD systemctl reload apache2
 msg_ok "Created Apache Configuration"
 
 msg_info "Creating initial config.php"
-cat <<EOF >/opt/tt-rss/config.php
+# Ensure variables are set before creating config.php
+if [[ -z "${DB_NAME:-}" || -z "${DB_USER:-}" || -z "${DB_PASS:-}" ]]; then
+  msg_error "Database variables not set. DB_NAME, DB_USER, and DB_PASS must be available."
+  exit 1
+fi
+
+# Generate feed crypt key
+FEED_CRYPT_KEY=$(openssl rand -hex 32)
+
+# Create config.php with explicit variable expansion
+cat >/opt/tt-rss/config.php <<EOF
 <?php
 define('DB_TYPE', 'pgsql');
 define('DB_HOST', '127.0.0.1');
@@ -101,11 +113,18 @@ define('DB_PORT', '5432');
 
 define('SELF_URL_PATH', 'http://${LOCAL_IP}/');
 
-define('FEED_CRYPT_KEY', '$(openssl rand -hex 32)');
+define('FEED_CRYPT_KEY', '${FEED_CRYPT_KEY}');
 
 define('SINGLE_USER_MODE', false);
 define('SIMPLE_UPDATE_MODE', false);
 EOF
+
+# Verify config.php was created with correct values
+if ! grep -q "define('DB_USER', '${DB_USER}');" /opt/tt-rss/config.php; then
+  msg_error "Failed to create config.php with correct database credentials"
+  exit 1
+fi
+
 chown www-data:www-data /opt/tt-rss/config.php
 chmod 644 /opt/tt-rss/config.php
 msg_ok "Created initial config.php"
