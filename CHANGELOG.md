@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-12-16
 
+### 🆕 New Scripts
+
+  - [REFACTOR]: NetVisor => Scanopy [@vhsdream](https://github.com/vhsdream) ([#10011](https://github.com/community-scripts/ProxmoxVE/pull/10011))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
