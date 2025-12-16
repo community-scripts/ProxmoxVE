@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - PhotoPrism: export env variables for CLI tools [@MickLesk](https://github.com/MickLesk) ([#10023](https://github.com/community-scripts/ProxmoxVE/pull/10023))
     - 2fauth: bump to php8.4 [@MickLesk](https://github.com/MickLesk) ([#10019](https://github.com/community-scripts/ProxmoxVE/pull/10019))
 
 ### 💾 Core
