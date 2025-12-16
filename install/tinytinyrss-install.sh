@@ -200,6 +200,26 @@ cd /opt/tt-rss
 $STD sudo -u www-data /usr/bin/php update.php --update-schema=force-yes
 msg_ok "Database schema initialized"
 
+# Create or update admin user with secure password
+msg_info "Configuring admin user"
+ADMIN_USER="admin"
+ADMIN_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)
+# Check if admin user exists, if not create it, if yes update password
+if sudo -u www-data /usr/bin/php update.php --user-exists="$ADMIN_USER" >/dev/null 2>&1; then
+  # User exists, update password
+  $STD sudo -u www-data /usr/bin/php update.php --user-set-password="$ADMIN_USER:$ADMIN_PASS"
+else
+  # User doesn't exist, create it with admin access level (10)
+  $STD sudo -u www-data /usr/bin/php update.php --user-add="$ADMIN_USER:$ADMIN_PASS:10"
+fi
+{
+  echo ""
+  echo "TinyTinyRSS Admin Credentials"
+  echo "Admin Username: $ADMIN_USER"
+  echo "Admin Password: $ADMIN_PASS"
+} >>~/tinytinyrss.creds
+msg_ok "Admin user configured"
+
 # Restart Apache to ensure it picks up the new config.php
 msg_info "Restarting Apache to apply configuration"
 systemctl restart apache2
