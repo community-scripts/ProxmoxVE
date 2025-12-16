@@ -234,14 +234,13 @@ motd_ssh() {
   # Disable default MOTD scripts
   chmod -x /etc/update-motd.d/*
 
+  # Configure root password if PASSWORD is provided (regardless of SSH_ROOT setting)
+  if [[ -n "${PASSWORD:-}" ]]; then
+    echo "root:${PASSWORD}" | chpasswd
+  fi
+
   if [[ "${SSH_ROOT}" == "yes" ]]; then
     sed -i "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
-    
-    # Configure root password if PASSWORD is provided
-    if [[ -n "${PASSWORD:-}" ]]; then
-      echo "root:${PASSWORD}" | chpasswd
-    fi
-    
     systemctl restart sshd
   fi
 }

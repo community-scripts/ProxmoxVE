@@ -196,6 +196,16 @@ chown www-data:www-data /opt/tt-rss/config.php
 chmod 644 /opt/tt-rss/config.php
 msg_ok "Created initial config.php"
 
+# Create .pgpass file for www-data user to allow password authentication via Unix sockets
+# This is needed because PDO may use Unix sockets which don't send passwords correctly
+msg_info "Creating .pgpass file for www-data user"
+mkdir -p /var/www
+echo "127.0.0.1:5432:${DB_NAME}:${DB_USER}:${DB_PASS}" > /var/www/.pgpass
+echo "localhost:5432:${DB_NAME}:${DB_USER}:${DB_PASS}" >> /var/www/.pgpass
+chown www-data:www-data /var/www/.pgpass
+chmod 600 /var/www/.pgpass
+msg_ok "Created .pgpass file"
+
 # Restart Apache to ensure it picks up the new config.php
 msg_info "Restarting Apache to apply configuration"
 systemctl restart apache2
