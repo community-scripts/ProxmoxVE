@@ -322,9 +322,11 @@ int_to_ip() {
 resolve_ip_from_range() {
   local range="$1"
   local ip_cidr_regex='^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})/([0-9]{1,2})$'
+  local ip_start ip_end
 
   # Parse range: "10.0.0.1/24-10.0.0.10/24"
-  IFS="-" read -r ip_start ip_end <<<"$range"
+  ip_start="${range%%-*}"
+  ip_end="${range##*-}"
 
   if [[ ! "$ip_start" =~ $ip_cidr_regex ]] || [[ ! "$ip_end" =~ $ip_cidr_regex ]]; then
     NET_RESOLVED=""
@@ -361,9 +363,11 @@ resolve_ip_from_range() {
 # ------------------------------------------------------------------------------
 is_ip_range() {
   local value="$1"
+  local ip_start ip_end
   if [[ "$value" == *-* ]] && [[ "$value" != "dhcp" ]]; then
     local ip_cidr_regex='^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})/([0-9]{1,2})$'
-    IFS="-" read -r ip_start ip_end <<<"$value"
+    ip_start="${value%%-*}"
+    ip_end="${value##*-}"
     if [[ "$ip_start" =~ $ip_cidr_regex ]] && [[ "$ip_end" =~ $ip_cidr_regex ]]; then
       return 0
     fi
