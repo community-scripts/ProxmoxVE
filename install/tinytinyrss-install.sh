@@ -30,6 +30,27 @@ $STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER TEMP
   echo "TinyTinyRSS Database Password: $DB_PASS"
   echo "TinyTinyRSS Database Name: $DB_NAME"
 } >>~/tinytinyrss.creds
+
+# Configure pg_hba.conf to use md5 for local connections (instead of peer)
+# This ensures password authentication works even when using Unix sockets
+PG_HBA_CONF=$(find /etc/postgresql/*/main/pg_hba.conf 2>/dev/null | head -1)
+if [[ -n "$PG_HBA_CONF" ]]; then
+  # Backup pg_hba.conf
+  cp "$PG_HBA_CONF" "${PG_HBA_CONF}.bak.$(date +%Y%m%d_%H%M%S)"
+  
+  # Change local connections from peer/ident to md5
+  sed -i '/^local\s\+all\s\+all\s\+peer/s/peer$/md5/' "$PG_HBA_CONF"
+  sed -i '/^local\s\+all\s\+all\s\+ident/s/ident$/md5/' "$PG_HBA_CONF"
+  
+  # Ensure TCP/IP connections use md5
+  if ! grep -qE "^host\s+all\s+all\s+127\.0\.0\.1/32\s+(md5|scram-sha-256)" "$PG_HBA_CONF" 2>/dev/null; then
+    sed -i '/^# IPv4 local connections:/a host    all             all             127.0.0.1/32            md5' "$PG_HBA_CONF"
+  fi
+  
+  # Reload PostgreSQL to apply changes
+  systemctl reload postgresql || systemctl restart postgresql
+fi
+
 msg_ok "Set up PostgreSQL"
 
 import_local_ip || {
@@ -101,27 +122,33 @@ fi
 # Generate feed crypt key
 FEED_CRYPT_KEY=$(openssl rand -hex 32)
 
-# Create config.php with explicit variable expansion
-cat >/opt/tt-rss/config.php <<EOF
-<?php
-define('DB_TYPE', 'pgsql');
-define('DB_HOST', '127.0.0.1');
-define('DB_NAME', '${DB_NAME}');
-define('DB_USER', '${DB_USER}');
-define('DB_PASS', '${DB_PASS}');
-define('DB_PORT', '5432');
-
-define('SELF_URL_PATH', 'http://${LOCAL_IP}/');
-
-define('FEED_CRYPT_KEY', '${FEED_CRYPT_KEY}');
-
-define('SINGLE_USER_MODE', false);
-define('SIMPLE_UPDATE_MODE', false);
-EOF
+# Create config.php using printf to ensure proper variable expansion
+{
+  printf "<?php\n"
+  printf "define('DB_TYPE', 'pgsql');\n"
+  printf "define('DB_HOST', '127.0.0.1');\n"
+  printf "define('DB_NAME', '%s');\n" "$DB_NAME"
+  printf "define('DB_USER', '%s');\n" "$DB_USER"
+  printf "define('DB_PASS', '%s');\n" "$DB_PASS"
+  printf "define('DB_PORT', '5432');\n"
+  printf "\n"
+  printf "define('SELF_URL_PATH', 'http://%s/');\n" "$LOCAL_IP"
+  printf "\n"
+  printf "define('FEED_CRYPT_KEY', '%s');\n" "$FEED_CRYPT_KEY"
+  printf "\n"
+  printf "define('SINGLE_USER_MODE', false);\n"
+  printf "define('SIMPLE_UPDATE_MODE', false);\n"
+} >/opt/tt-rss/config.php
 
 # Verify config.php was created with correct values
 if ! grep -q "define('DB_USER', '${DB_USER}');" /opt/tt-rss/config.php; then
   msg_error "Failed to create config.php with correct database credentials"
+  exit 1
+fi
+
+# Double-check the file contents
+if ! grep -q "define('DB_NAME', 'ttrss');" /opt/tt-rss/config.php; then
+  msg_error "config.php does not contain expected database name"
   exit 1
 fi
 
