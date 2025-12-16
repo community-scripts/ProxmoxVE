@@ -1,5 +1,90 @@
 [
   {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.542",
+    "date": "2025-12-16T11:28:32Z"
+  },
+  {
+    "name": "zabbix/zabbix",
+    "version": "7.2.15rc2",
+    "date": "2025-12-16T10:23:14Z"
+  },
+  {
+    "name": "prometheus/prometheus",
+    "version": "v3.8.1",
+    "date": "2025-12-16T09:59:22Z"
+  },
+  {
+    "name": "rcourtman/Pulse",
+    "version": "v4.36.2",
+    "date": "2025-12-03T22:46:29Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.123.6",
+    "date": "2025-12-15T14:22:59Z"
+  },
+  {
+    "name": "sabnzbd/sabnzbd",
+    "version": "4.5.5",
+    "date": "2025-10-24T11:12:22Z"
+  },
+  {
+    "name": "mattermost/mattermost",
+    "version": "v11.2.1",
+    "date": "2025-12-16T07:40:44Z"
+  },
+  {
+    "name": "jupyter/notebook",
+    "version": "v7.5.1",
+    "date": "2025-12-16T07:39:08Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.3",
+    "date": "2025-09-20T12:12:33Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.457",
+    "date": "2025-12-16T05:57:07Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.4.14",
+    "date": "2025-12-16T05:42:34Z"
+  },
+  {
+    "name": "goauthentik/authentik",
+    "version": "version/2025.10.2",
+    "date": "2025-11-19T15:08:41Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.13.4-rc2",
+    "date": "2025-12-16T02:57:20Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5",
+    "date": "2025-12-16T00:27:09Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
+    "name": "Stirling-Tools/Stirling-PDF",
+    "version": "v2.1.4",
+    "date": "2025-12-16T00:02:18Z"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2025.11.5",
+    "date": "2025-12-09T17:54:33Z"
+  },
+  {
     "name": "scanopy/scanopy",
     "version": "v0.12.1",
     "date": "2025-12-15T22:21:36Z"
@@ -8,11 +93,6 @@
     "name": "semaphoreui/semaphore",
     "version": "v2.16.46",
     "date": "2025-12-15T22:07:08Z"
-  },
-  {
-    "name": "mattermost/mattermost",
-    "version": "mattermost-redux@11.2.0",
-    "date": "2025-12-15T20:37:15Z"
   },
   {
     "name": "metabase/metabase",
@@ -35,6 +115,11 @@
     "date": "2025-12-15T18:53:25Z"
   },
   {
+    "name": "keycloak/keycloak",
+    "version": "26.4.7",
+    "date": "2025-12-01T08:14:11Z"
+  },
+  {
     "name": "rabbitmq/rabbitmq-server",
     "version": "v4.2.2",
     "date": "2025-12-15T18:25:36Z"
@@ -50,16 +135,6 @@
     "date": "2025-12-15T17:23:59Z"
   },
   {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.123.6",
-    "date": "2025-12-15T14:22:59Z"
-  },
-  {
-    "name": "rcourtman/Pulse",
-    "version": "v4.36.2",
-    "date": "2025-12-03T22:46:29Z"
-  },
-  {
     "name": "danielbrendel/hortusfox-web",
     "version": "v5.6",
     "date": "2025-12-15T14:40:53Z"
@@ -68,11 +143,6 @@
     "name": "librenms/librenms",
     "version": "25.12.0",
     "date": "2025-12-15T14:06:00Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.4.11",
-    "date": "2025-12-15T08:01:35Z"
   },
   {
     "name": "tailscale/tailscale",
@@ -120,34 +190,9 @@
     "date": "2025-11-16T22:39:01Z"
   },
   {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.3",
-    "date": "2025-09-20T12:12:33Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.454",
-    "date": "2025-12-15T05:54:27Z"
-  },
-  {
     "name": "jellyfin/jellyfin",
     "version": "v10.11.5",
     "date": "2025-12-15T02:44:19Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.5",
-    "date": "2025-12-15T00:27:03Z"
-  },
-  {
-    "name": "esphome/esphome",
-    "version": "2025.11.5",
-    "date": "2025-12-09T17:54:33Z"
   },
   {
     "name": "9001/copyparty",
@@ -285,11 +330,6 @@
     "date": "2025-12-13T09:36:24Z"
   },
   {
-    "name": "ollama/ollama",
-    "version": "v0.13.4-rc0",
-    "date": "2025-12-13T00:29:01Z"
-  },
-  {
     "name": "Dokploy/dokploy",
     "version": "v0.26.2",
     "date": "2025-12-13T07:48:09Z"
@@ -338,11 +378,6 @@
     "name": "booklore-app/booklore",
     "version": "v1.14.1",
     "date": "2025-12-12T17:37:58Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.4.7",
-    "date": "2025-12-01T08:14:11Z"
   },
   {
     "name": "node-red/node-red",
@@ -420,16 +455,6 @@
     "date": "2025-12-11T18:02:06Z"
   },
   {
-    "name": "Stirling-Tools/Stirling-PDF",
-    "version": "v2.1.3",
-    "date": "2025-12-11T13:31:56Z"
-  },
-  {
-    "name": "zabbix/zabbix",
-    "version": "7.4.6rc1",
-    "date": "2025-12-11T12:01:51Z"
-  },
-  {
     "name": "pommee/goaway",
     "version": "v0.62.24",
     "date": "2025-12-11T09:54:59Z"
@@ -453,11 +478,6 @@
     "name": "gethomepage/homepage",
     "version": "v1.8.0",
     "date": "2025-12-10T16:44:33Z"
-  },
-  {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.541",
-    "date": "2025-12-10T15:57:13Z"
   },
   {
     "name": "rclone/rclone",
@@ -558,11 +578,6 @@
     "name": "seerr-team/seerr",
     "version": "preview-test-fix-subscriptions",
     "date": "2025-12-08T23:15:30Z"
-  },
-  {
-    "name": "sabnzbd/sabnzbd",
-    "version": "4.5.5",
-    "date": "2025-10-24T11:12:22Z"
   },
   {
     "name": "hansmi/prometheus-paperless-exporter",
@@ -763,11 +778,6 @@
     "name": "docker/compose",
     "version": "v5.0.0",
     "date": "2025-12-02T10:33:31Z"
-  },
-  {
-    "name": "prometheus/prometheus",
-    "version": "v3.8.0",
-    "date": "2025-12-02T10:11:05Z"
   },
   {
     "name": "neo4j/neo4j",
@@ -1045,19 +1055,9 @@
     "date": "2025-11-19T15:15:43Z"
   },
   {
-    "name": "goauthentik/authentik",
-    "version": "version/2025.10.2",
-    "date": "2025-11-19T15:08:41Z"
-  },
-  {
     "name": "hivemq/hivemq-community-edition",
     "version": "2025.5",
     "date": "2025-11-19T14:48:47Z"
-  },
-  {
-    "name": "jupyter/notebook",
-    "version": "v7.5.0",
-    "date": "2025-11-19T08:36:29Z"
   },
   {
     "name": "PatchMon/PatchMon",
