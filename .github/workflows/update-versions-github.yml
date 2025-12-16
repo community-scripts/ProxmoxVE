@@ -1,0 +1,161 @@
+name: Update Versions from GitHub
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Runs at 06:00 and 18:00 UTC
+    - cron: "0 6,18 * * *"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  VERSIONS_FILE: frontend/public/json/versions.json
+
+jobs:
+  update-versions:
+    if: github.repository == 'community-scripts/ProxmoxVE'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Generate GitHub App Token
+        id: generate-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
+      - name: Extract repos from install scripts and fetch versions
+        env:
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+        run: |
+          set -euo pipefail
+
+          # Extract all GitHub repos from fetch_and_deploy_gh_release calls
+          echo "Extracting GitHub repos from install scripts..."
+
+          declare -A repos
+          while IFS= read -r line; do
+            # Extract repo from: fetch_and_deploy_gh_release "app" "owner/repo" ...
+            if [[ "$line" =~ fetch_and_deploy_gh_release[[:space:]]+\"[^\"]*\"[[:space:]]+\"([^\"]+)\" ]]; then
+              repo="${BASH_REMATCH[1]}"
+              # Normalize to lowercase for deduplication
+              repos["${repo,,}"]="$repo"
+            fi
+          done < <(grep -rh 'fetch_and_deploy_gh_release' install/*.sh 2>/dev/null || true)
+
+          echo "Found ${#repos[@]} unique GitHub repos"
+
+          # Initialize output JSON
+          echo "[]" > "$VERSIONS_FILE"
+
+          # Fetch latest release for each repo
+          failed=0
+          success=0
+
+          for repo in "${repos[@]}"; do
+            echo "Fetching: $repo"
+
+            # Use GitHub CLI for authenticated requests (higher rate limit)
+            response=$(gh api "repos/${repo}/releases/latest" 2>/dev/null || echo '{"error": true}')
+
+            if echo "$response" | jq -e '.error' > /dev/null 2>&1; then
+              echo "  ⚠ Failed to fetch $repo (no releases or error)"
+              ((failed++))
+              continue
+            fi
+
+            tag_name=$(echo "$response" | jq -r '.tag_name // empty')
+            published_at=$(echo "$response" | jq -r '.published_at // empty')
+
+            if [[ -z "$tag_name" ]]; then
+              echo "  ⚠ No tag_name for $repo"
+              ((failed++))
+              continue
+            fi
+
+            # Add to versions.json
+            jq --arg name "$repo" \
+               --arg version "$tag_name" \
+               --arg date "$published_at" \
+               '. += [{"name": $name, "version": $version, "date": $date}]' \
+               "$VERSIONS_FILE" > "${VERSIONS_FILE}.tmp" && mv "${VERSIONS_FILE}.tmp" "$VERSIONS_FILE"
+
+            echo "  ✓ $repo: $tag_name"
+            ((success++))
+          done
+
+          # Sort by name for consistent output
+          jq 'sort_by(.name | ascii_downcase)' "$VERSIONS_FILE" > "${VERSIONS_FILE}.tmp" && mv "${VERSIONS_FILE}.tmp" "$VERSIONS_FILE"
+
+          echo ""
+          echo "=== Summary ==="
+          echo "Success: $success"
+          echo "Failed:  $failed"
+          echo "Total:   ${#repos[@]}"
+
+      - name: Check for changes
+        id: check-changes
+        run: |
+          if git diff --quiet "$VERSIONS_FILE"; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No changes detected in versions.json"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "Changes detected:"
+            git diff --stat "$VERSIONS_FILE"
+          fi
+
+      - name: Create Pull Request
+        if: steps.check-changes.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+        run: |
+          BRANCH_NAME="automated/update-versions-$(date +%Y%m%d)"
+
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "GitHub Actions[bot]"
+
+          # Check if branch exists and delete it
+          git push origin --delete "$BRANCH_NAME" 2>/dev/null || true
+
+          git checkout -b "$BRANCH_NAME"
+          git add "$VERSIONS_FILE"
+          git commit -m "chore: update versions.json from GitHub releases"
+          git push origin "$BRANCH_NAME" --force
+
+          # Check if PR already exists
+          existing_pr=$(gh pr list --head "$BRANCH_NAME" --state open --json number --jq '.[0].number // empty')
+
+          if [[ -n "$existing_pr" ]]; then
+            echo "PR #$existing_pr already exists, updating..."
+          else
+            gh pr create \
+              --title "[Automated] Update versions.json from GitHub" \
+              --body "This PR updates versions.json with the latest releases from GitHub.
+
+          **Source:** Direct GitHub API queries from install scripts
+          **Repos checked:** $(jq length "$VERSIONS_FILE")
+
+          This replaces the newreleases.io integration with direct GitHub queries." \
+              --base main \
+              --head "$BRANCH_NAME" \
+              --label "automated pr"
+          fi
+
+      - name: Auto-approve PR
+        if: steps.check-changes.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BRANCH_NAME="automated/update-versions-$(date +%Y%m%d)"
+          pr_number=$(gh pr list --head "$BRANCH_NAME" --state open --json number --jq '.[0].number')
+          if [[ -n "$pr_number" ]]; then
+            gh pr review "$pr_number" --approve
+          fi
