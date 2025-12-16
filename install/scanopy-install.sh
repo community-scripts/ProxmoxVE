@@ -23,7 +23,6 @@ msg_ok "Installed Dependencies"
 PG_VERSION=17 setup_postgresql
 NODE_VERSION="24" setup_nodejs
 PG_DB_NAME="scanopy_db" PG_DB_USER="scanopy" PG_DB_GRANT_SUPERUSER="true" setup_postgresql_db
-
 fetch_and_deploy_gh_release "scanopy" "scanopy/scanopy" "tarball" "latest" "/opt/scanopy"
 
 TOOLCHAIN="$(grep "channel" /opt/scanopy/backend/rust-toolchain.toml | awk -F\" '{print $2}')"
