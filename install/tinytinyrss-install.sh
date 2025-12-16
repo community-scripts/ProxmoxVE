@@ -53,35 +53,41 @@ if [[ -n "$PG_HBA_CONF" ]]; then
     fi
   fi
   
-  # Ensure TCP/IP connections use md5
-  if ! grep -qE "^host\s+all\s+all\s+127\.0\.0\.1/32\s+(md5|scram-sha-256)" "$PG_HBA_CONF" 2>/dev/null; then
+  # Change TCP/IP connections from scram-sha-256 to md5 for compatibility
+  # This ensures password authentication works correctly
+  sed -i '/^host\s\+all\s\+all\s\+127\.0\.0\.1\/32/s/scram-sha-256/md5/' "$PG_HBA_CONF"
+  sed -i '/^host\s\+all\s\+all\s\+::1\/128/s/scram-sha-256/md5/' "$PG_HBA_CONF"
+  
+  # Ensure TCP/IP connections use md5 if they don't exist
+  if ! grep -qE "^\s*host\s+all\s+all\s+127\.0\.0\.1/32\s+md5" "$PG_HBA_CONF" 2>/dev/null; then
     sed -i '/^# IPv4 local connections:/a host    all             all             127.0.0.1/32            md5' "$PG_HBA_CONF"
   fi
 fi
 
 # Disable Unix sockets in PostgreSQL to force TCP/IP connections
 # This ensures PDO always uses TCP/IP and sends passwords correctly
+# Note: unix_socket_directories requires a full restart, not just reload
 if [[ -n "$PG_CONF" ]]; then
   # Backup postgresql.conf
   cp "$PG_CONF" "${PG_CONF}.bak.$(date +%Y%m%d_%H%M%S)" 2>/dev/null || true
   
   # Comment out unix_socket_directories to disable Unix sockets
-  # This forces all connections to use TCP/IP
-  if grep -q "^unix_socket_directories" "$PG_CONF" 2>/dev/null; then
-    sed -i 's/^unix_socket_directories/#unix_socket_directories/' "$PG_CONF"
+  # Match lines that may have leading spaces
+  if grep -qE "^\s*unix_socket_directories" "$PG_CONF" 2>/dev/null; then
+    sed -i 's/^\s*unix_socket_directories/#unix_socket_directories/' "$PG_CONF"
   fi
-  # Add comment to disable Unix sockets
-  if ! grep -q "^#unix_socket_directories" "$PG_CONF" 2>/dev/null; then
+  # Add commented line if it doesn't exist
+  if ! grep -qE "^\s*#unix_socket_directories" "$PG_CONF" 2>/dev/null; then
     echo "# Unix sockets disabled to force TCP/IP connections" >> "$PG_CONF"
     echo "#unix_socket_directories = '/var/run/postgresql'" >> "$PG_CONF"
   fi
 fi
 
-# Reload PostgreSQL to apply changes
+# Restart PostgreSQL to apply changes (restart required for unix_socket_directories)
 if [[ -n "$PG_HBA_CONF" ]] || [[ -n "$PG_CONF" ]]; then
-  msg_info "Reloading PostgreSQL to apply configuration changes"
-  systemctl reload postgresql || systemctl restart postgresql
-  msg_ok "PostgreSQL reloaded"
+  msg_info "Restarting PostgreSQL to apply configuration changes"
+  systemctl restart postgresql
+  msg_ok "PostgreSQL restarted"
 fi
 
 msg_ok "Set up PostgreSQL"
