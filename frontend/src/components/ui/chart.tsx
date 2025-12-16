@@ -98,6 +98,7 @@ type TooltipPayloadItem = {
   payload?: Record<string, unknown>;
   color?: string;
   fill?: string;
+  type?: string;
 };
 
 const ChartTooltipContent = React.forwardRef<
