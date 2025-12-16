@@ -20,6 +20,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - 2fauth: update PHP version from 8.3 to 8.4 in update_script [@MickLesk](https://github.com/MickLesk) ([#10035](https://github.com/community-scripts/ProxmoxVE/pull/10035))
     - pdm: add rsyslog to fix /dev/log Connection refused errors [@MickLesk](https://github.com/MickLesk) ([#10018](https://github.com/community-scripts/ProxmoxVE/pull/10018))
     - 2fauth: bump to php8.4 [@MickLesk](https://github.com/MickLesk) ([#10019](https://github.com/community-scripts/ProxmoxVE/pull/10019))
     - Miniflux: use correct systemctl to check service instead of file path [@MickLesk](https://github.com/MickLesk) ([#10024](https://github.com/community-scripts/ProxmoxVE/pull/10024))
