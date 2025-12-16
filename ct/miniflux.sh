@@ -34,7 +34,7 @@ function update_script() {
   msg_ok "Service Stopped"
 
   fetch_and_deploy_gh_release "miniflux" "miniflux/v2" "binary" "latest"
-  
+
   msg_info "Updating Miniflux"
   $STD miniflux -migrate -config-file /etc/miniflux.conf
   msg_ok "Updated Miniflux"
