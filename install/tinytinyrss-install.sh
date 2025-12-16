@@ -193,6 +193,12 @@ chown www-data:www-data /opt/tt-rss/config.php
 chmod 644 /opt/tt-rss/config.php
 msg_ok "Created initial config.php"
 
+# Initialize database schema
+msg_info "Initializing database schema"
+cd /opt/tt-rss
+$STD sudo -u www-data /usr/bin/php update.php --update-schema
+msg_ok "Database schema initialized"
+
 # Restart Apache to ensure it picks up the new config.php
 msg_info "Restarting Apache to apply configuration"
 systemctl restart apache2
