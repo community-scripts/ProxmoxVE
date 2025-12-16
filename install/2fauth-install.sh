@@ -14,10 +14,11 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt install -y nginx
+$STD apt-get install -y nginx
 msg_ok "Installed Dependencies"
 
-PHP_VERSION="8.3" PHP_MODULE="common,ctype,fileinfo,mysql,cli,tokenizer,dom,redis,session,openssl" PHP_FPM="YES" setup_php
+PHP_MODULE="common,ctype,fileinfo,mysql,tokenizer,dom,redis" PHP_FPM="YES" setup_php
+PHP_VERSION="${PHP_VERSION:-8.4}"
 setup_composer
 setup_mariadb
 MARIADB_DB_NAME="2fauth_db" MARIADB_DB_USER="2fauth" setup_mariadb_db
@@ -65,7 +66,7 @@ server {
         error_page 404 /index.php;
 
         location ~ \.php\$ {
-                fastcgi_pass unix:/var/run/php/php8.3-fpm.sock;
+                fastcgi_pass unix:/var/run/php/php${PHP_VERSION}-fpm.sock;
                 fastcgi_param SCRIPT_FILENAME \$realpath_root\$fastcgi_script_name;
                 include fastcgi_params;
         }
