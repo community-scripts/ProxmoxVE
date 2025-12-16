@@ -31,7 +31,7 @@ esac
 
 msg_info "Installing Zabbix $ZABBIX_VERSION"
 cd /tmp
-ZABBIX_DEB_URL="https://repo.zabbix.com/zabbix/${ZABBIX_VERSION}/release/debian/pool/main/z/zabbix-release/zabbix-release_latest+debian13_all.deb"
+ZABBIX_DEB_URL="https://repo.zabbix.com/zabbix/${ZABBIX_VERSION}/debian/pool/main/z/zabbix-release/zabbix-release_latest+debian13_all.deb"
 curl -fsSL "$ZABBIX_DEB_URL" -o /tmp/zabbix-release_latest+debian13_all.deb
 $STD dpkg -i /tmp/zabbix-release_latest+debian13_all.deb
 $STD apt update
