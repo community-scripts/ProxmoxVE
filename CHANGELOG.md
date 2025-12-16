@@ -31,6 +31,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - core: IP-Range-Scan Support (app.vars / default.vars)  [@MickLesk](https://github.com/MickLesk) ([#10038](https://github.com/community-scripts/ProxmoxVE/pull/10038))
     - tools.func: add optional enabled parameter to setup_deb822_repo [@MickLesk](https://github.com/MickLesk) ([#10017](https://github.com/community-scripts/ProxmoxVE/pull/10017))
     - core: map Etc/* timezones to 'host' for pct compatibility [@MickLesk](https://github.com/MickLesk) ([#10020](https://github.com/community-scripts/ProxmoxVE/pull/10020))
 
