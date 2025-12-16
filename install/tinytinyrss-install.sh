@@ -86,6 +86,7 @@ if [ ! -f /opt/tt-rss/config.php ]; then
   cat <<EOF >/opt/tt-rss/config.php
 <?php
 define('DB_TYPE', 'pgsql');
+// Use 127.0.0.1 instead of localhost to force TCP/IP connection (avoids Unix socket)
 define('DB_HOST', '127.0.0.1');
 define('DB_NAME', '${PG_DB_NAME}');
 define('DB_USER', '${PG_DB_USER}');
@@ -111,13 +112,34 @@ msg_info "Configuring PostgreSQL for password authentication"
 # This ensures password authentication works regardless of connection method
 PG_HBA_CONF=$(find /etc/postgresql/*/main/pg_hba.conf 2>/dev/null | head -1)
 if [[ -n "$PG_HBA_CONF" ]]; then
-  # Configure TCP/IP connections for 127.0.0.1
+  # Backup pg_hba.conf
+  cp "$PG_HBA_CONF" "${PG_HBA_CONF}.bak.$(date +%Y%m%d_%H%M%S)"
+  
+  # Configure TCP/IP connections for 127.0.0.1 - ensure it uses md5
   if ! grep -qE "^host\s+all\s+all\s+127\.0\.0\.1/32\s+(md5|scram-sha-256)" "$PG_HBA_CONF" 2>/dev/null; then
     sed -i '/^# IPv4 local connections:/a host    all             all             127.0.0.1/32            md5' "$PG_HBA_CONF"
+  else
+    # Update existing entry to use md5 if it doesn't already
+    sed -i '/^host\s\+all\s\+all\s\+127\.0\.0\.1\/32/s/\(md5\|scram-sha-256\|trust\|peer\|ident\)/md5/' "$PG_HBA_CONF"
   fi
+  
   # Configure Unix socket connections to use md5 instead of peer/ident
   # Change "local all all peer/ident" to md5, but preserve "local all postgres peer"
-  sed -i '/^local\s\+all\s\+all\s\+\(peer\|ident\)/s/\(peer\|ident\)$/md5/' "$PG_HBA_CONF"
+  # Handle lines that match "local all all" with peer or ident (but not postgres user)
+  sed -i '/^local\s\+all\s\+all\s\+\(peer\|ident\)/{
+    /postgres/!s/\(peer\|ident\)$/md5/
+  }' "$PG_HBA_CONF"
+  
+  # Also ensure there's a general local line with md5 if it doesn't exist
+  if ! grep -qE "^local\s+all\s+all\s+md5" "$PG_HBA_CONF" 2>/dev/null; then
+    # Add after the postgres line or after the first local line
+    if grep -q "^local\s\+all\s\+postgres" "$PG_HBA_CONF"; then
+      sed -i '/^local\s\+all\s\+postgres/a local   all             all                                     md5' "$PG_HBA_CONF"
+    else
+      sed -i '/^# "local" is for Unix domain socket connections only/a local   all             all                                     md5' "$PG_HBA_CONF"
+    fi
+  fi
+  
   msg_info "Attempting to reload PostgreSQL service..."
   if systemctl reload postgresql; then
     msg_ok "PostgreSQL reloaded successfully."
