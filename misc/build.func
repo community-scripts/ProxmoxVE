@@ -292,6 +292,86 @@ find_host_ssh_keys() {
 }
 
 # ==============================================================================
+# SECTION 3B: IP RANGE SCANNING
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# ip_to_int() / int_to_ip()
+#
+# - Converts IP address to integer and vice versa for range iteration
+# ------------------------------------------------------------------------------
+ip_to_int() {
+  local IFS=.
+  read -r i1 i2 i3 i4 <<<"$1"
+  echo $(((i1 << 24) + (i2 << 16) + (i3 << 8) + i4))
+}
+
+int_to_ip() {
+  local ip=$1
+  echo "$(((ip >> 24) & 0xFF)).$(((ip >> 16) & 0xFF)).$(((ip >> 8) & 0xFF)).$((ip & 0xFF))"
+}
+
+# ------------------------------------------------------------------------------
+# resolve_ip_from_range()
+#
+# - Takes an IP range in format "10.0.0.1/24-10.0.0.10/24"
+# - Pings each IP in the range to find the first available one
+# - Returns the first free IP with CIDR notation
+# - Sets NET_RESOLVED to the resolved IP or empty on failure
+# ------------------------------------------------------------------------------
+resolve_ip_from_range() {
+  local range="$1"
+  local ip_cidr_regex='^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})/([0-9]{1,2})$'
+
+  # Parse range: "10.0.0.1/24-10.0.0.10/24"
+  IFS="-" read -r ip_start ip_end <<<"$range"
+
+  if [[ ! "$ip_start" =~ $ip_cidr_regex ]] || [[ ! "$ip_end" =~ $ip_cidr_regex ]]; then
+    NET_RESOLVED=""
+    return 1
+  fi
+
+  local ip1="${ip_start%%/*}"
+  local ip2="${ip_end%%/*}"
+  local cidr="${ip_start##*/}"
+
+  local start_int=$(ip_to_int "$ip1")
+  local end_int=$(ip_to_int "$ip2")
+
+  for ((ip_int = start_int; ip_int <= end_int; ip_int++)); do
+    local ip=$(int_to_ip $ip_int)
+    msg_info "Checking IP: $ip"
+    if ! ping -c 1 -W 1 "$ip" >/dev/null 2>&1; then
+      NET_RESOLVED="$ip/$cidr"
+      msg_ok "Found free IP: ${BGN}$NET_RESOLVED${CL}"
+      return 0
+    fi
+  done
+
+  NET_RESOLVED=""
+  msg_error "No free IP found in range $range"
+  return 1
+}
+
+# ------------------------------------------------------------------------------
+# is_ip_range()
+#
+# - Checks if a string is an IP range (contains - and looks like IP/CIDR)
+# - Returns 0 if it's a range, 1 otherwise
+# ------------------------------------------------------------------------------
+is_ip_range() {
+  local value="$1"
+  if [[ "$value" == *-* ]] && [[ "$value" != "dhcp" ]]; then
+    local ip_cidr_regex='^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})/([0-9]{1,2})$'
+    IFS="-" read -r ip_start ip_end <<<"$value"
+    if [[ "$ip_start" =~ $ip_cidr_regex ]] && [[ "$ip_end" =~ $ip_cidr_regex ]]; then
+      return 0
+    fi
+  fi
+  return 1
+}
+
+# ==============================================================================
 # SECTION 4: STORAGE & RESOURCE MANAGEMENT
 # ==============================================================================
 
@@ -403,6 +483,18 @@ base_settings() {
   HN=${var_hostname:-$NSAPP}
   BRG=${var_brg:-"vmbr0"}
   NET=${var_net:-"dhcp"}
+
+  # Resolve IP range if NET contains a range (e.g., 192.168.1.100/24-192.168.1.200/24)
+  if is_ip_range "$NET"; then
+    msg_info "Scanning IP range: $NET"
+    if resolve_ip_from_range "$NET"; then
+      NET="$NET_RESOLVED"
+    else
+      msg_error "Could not find free IP in range. Falling back to DHCP."
+      NET="dhcp"
+    fi
+  fi
+
   IPV6_METHOD=${var_ipv6_method:-"none"}
   IPV6_STATIC=${var_ipv6_static:-""}
   GATE=${var_gateway:-""}
@@ -1324,9 +1416,10 @@ advanced_settings() {
       if result=$(whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
         --title "IPv4 CONFIGURATION" \
         --ok-button "Next" --cancel-button "Back" \
-        --menu "\nSelect IPv4 Address Assignment:" 14 60 2 \
+        --menu "\nSelect IPv4 Address Assignment:" 16 65 3 \
         "dhcp" "Automatic (DHCP, recommended)" \
         "static" "Static (manual entry)" \
+        "range" "IP Range Scan (find first free IP)" \
         3>&1 1>&2 2>&3); then
 
         if [[ "$result" == "static" ]]; then
@@ -1355,6 +1448,42 @@ advanced_settings() {
               fi
             else
               whiptail --msgbox "Invalid IPv4 CIDR format.\nExample: 192.168.1.100/24" 8 58
+            fi
+          fi
+        elif [[ "$result" == "range" ]]; then
+          # IP Range Scan
+          local ip_range
+          if ip_range=$(whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
+            --title "IP RANGE SCAN" \
+            --ok-button "Scan" --cancel-button "Back" \
+            --inputbox "\nEnter IP range to scan for free address\n(e.g. 192.168.1.100/24-192.168.1.200/24)" 12 65 "" \
+            3>&1 1>&2 2>&3); then
+            if is_ip_range "$ip_range"; then
+              # Exit whiptail screen temporarily to show scan progress
+              clear
+              header_info
+              echo -e "${INFO}${BOLD}${DGN}Scanning IP range for free address...${CL}\n"
+              if resolve_ip_from_range "$ip_range"; then
+                # Get gateway
+                local gateway_ip
+                if gateway_ip=$(whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
+                  --title "GATEWAY IP" \
+                  --ok-button "Next" --cancel-button "Back" \
+                  --inputbox "\nFound free IP: $NET_RESOLVED\n\nEnter Gateway IP address" 12 58 "" \
+                  3>&1 1>&2 2>&3); then
+                  if [[ "$gateway_ip" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
+                    _net="$NET_RESOLVED"
+                    _gate=",gw=$gateway_ip"
+                    ((STEP++))
+                  else
+                    whiptail --msgbox "Invalid Gateway IP format." 8 58
+                  fi
+                fi
+              else
+                whiptail --msgbox "No free IP found in the specified range.\nAll IPs responded to ping." 10 58
+              fi
+            else
+              whiptail --msgbox "Invalid IP range format.\n\nExample: 192.168.1.100/24-192.168.1.200/24" 10 58
             fi
           fi
         else
