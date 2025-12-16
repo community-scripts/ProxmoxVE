@@ -37,20 +37,43 @@ jobs:
         run: |
           set -euo pipefail
 
-          # Extract all GitHub repos from fetch_and_deploy_gh_release calls
-          echo "Extracting GitHub repos from install scripts..."
-
           declare -A repos
+
+          echo "=== Method 1: fetch_and_deploy_gh_release calls ==="
           while IFS= read -r line; do
-            # Extract repo from: fetch_and_deploy_gh_release "app" "owner/repo" ...
             if [[ "$line" =~ fetch_and_deploy_gh_release[[:space:]]+\"[^\"]*\"[[:space:]]+\"([^\"]+)\" ]]; then
               repo="${BASH_REMATCH[1]}"
-              # Normalize to lowercase for deduplication
               repos["${repo,,}"]="$repo"
             fi
-          done < <(grep -rh 'fetch_and_deploy_gh_release' install/*.sh 2>/dev/null || true)
+          done < <(grep -rh 'fetch_and_deploy_gh_release' install/*.sh ct/*.sh 2>/dev/null || true)
+          echo "Found ${#repos[@]} repos from fetch_and_deploy_gh_release"
 
-          echo "Found ${#repos[@]} unique GitHub repos"
+          echo ""
+          echo "=== Method 2: GitHub URLs in scripts ==="
+          # Extract github.com/owner/repo patterns from all scripts
+          while IFS= read -r match; do
+            # Clean up: remove .git suffix, trailing slashes, etc.
+            repo=$(echo "$match" | sed -E 's/\.git$//' | sed 's|/$||')
+            # Skip community-scripts/ProxmoxVE (self-reference)
+            [[ "$repo" == "community-scripts/ProxmoxVE" ]] && continue
+            # Skip partial matches like "repos/owner" (from raw.githubusercontent URLs)
+            [[ "$repo" =~ ^repos/ ]] && continue
+            # Only add valid owner/repo format
+            if [[ "$repo" =~ ^[a-zA-Z0-9_-]+/[a-zA-Z0-9_.-]+$ ]]; then
+              repos["${repo,,}"]="$repo"
+            fi
+          done < <(grep -rohE 'github\.com/([a-zA-Z0-9_-]+/[a-zA-Z0-9_.-]+)' install/*.sh ct/*.sh vm/*.sh 2>/dev/null | sed 's|github\.com/||' || true)
+          echo "Total unique repos after URL extraction: ${#repos[@]}"
+
+          echo ""
+          echo "=== Method 3: VM image sources ==="
+          # Home Assistant OS
+          haos_version=$(curl -fsSL "https://raw.githubusercontent.com/home-assistant/version/master/stable.json" 2>/dev/null | jq -r '.ova // empty')
+          if [[ -n "$haos_version" ]]; then
+            repos["home-assistant/operating-system"]="home-assistant/operating-system"
+          fi
+
+          echo "Total repos to check: ${#repos[@]}"
 
           # Initialize output JSON
           echo "[]" > "$VERSIONS_FILE"
@@ -58,16 +81,33 @@ jobs:
           # Fetch latest release for each repo
           failed=0
           success=0
+          no_releases=0
 
           for repo in "${repos[@]}"; do
-            echo "Fetching: $repo"
+            echo -n "Fetching: $repo ... "
 
-            # Use GitHub CLI for authenticated requests (higher rate limit)
-            response=$(gh api "repos/${repo}/releases/latest" 2>/dev/null || echo '{"error": true}')
+            # Use GitHub CLI for authenticated requests (5000 req/h)
+            response=$(gh api "repos/${repo}/releases/latest" 2>/dev/null || echo '{"message": "Not Found"}')
 
-            if echo "$response" | jq -e '.error' > /dev/null 2>&1; then
-              echo "  ⚠ Failed to fetch $repo (no releases or error)"
-              ((failed++))
+            # Check for errors
+            if echo "$response" | jq -e '.message' > /dev/null 2>&1; then
+              message=$(echo "$response" | jq -r '.message')
+              if [[ "$message" == "Not Found" ]]; then
+                # Try tags instead (some repos use tags without releases)
+                tag_response=$(gh api "repos/${repo}/tags" --jq '.[0].name // empty' 2>/dev/null || echo "")
+                if [[ -n "$tag_response" ]]; then
+                  jq --arg name "$repo" \
+                     --arg version "$tag_response" \
+                     --arg date "" \
+                     '. += [{"name": $name, "version": $version, "date": $date}]' \
+                     "$VERSIONS_FILE" > "${VERSIONS_FILE}.tmp" && mv "${VERSIONS_FILE}.tmp" "$VERSIONS_FILE"
+                  echo "✓ (tag) $tag_response"
+                  ((success++))
+                  continue
+                fi
+              fi
+              echo "⚠ $message"
+              ((no_releases++))
               continue
             fi
 
@@ -75,7 +115,7 @@ jobs:
             published_at=$(echo "$response" | jq -r '.published_at // empty')
 
             if [[ -z "$tag_name" ]]; then
-              echo "  ⚠ No tag_name for $repo"
+              echo "⚠ No tag_name"
               ((failed++))
               continue
             fi
@@ -87,7 +127,7 @@ jobs:
                '. += [{"name": $name, "version": $version, "date": $date}]' \
                "$VERSIONS_FILE" > "${VERSIONS_FILE}.tmp" && mv "${VERSIONS_FILE}.tmp" "$VERSIONS_FILE"
 
-            echo "  ✓ $repo: $tag_name"
+            echo "✓ $tag_name"
             ((success++))
           done
 
@@ -95,10 +135,94 @@ jobs:
           jq 'sort_by(.name | ascii_downcase)' "$VERSIONS_FILE" > "${VERSIONS_FILE}.tmp" && mv "${VERSIONS_FILE}.tmp" "$VERSIONS_FILE"
 
           echo ""
-          echo "=== Summary ==="
-          echo "Success: $success"
-          echo "Failed:  $failed"
-          echo "Total:   ${#repos[@]}"
+          echo "========================================="
+          echo "      GITHUB SUMMARY"
+          echo "========================================="
+          echo "Success:     $success"
+          echo "No releases: $no_releases"
+          echo "Failed:      $failed"
+          echo "Total:       ${#repos[@]}"
+          echo "========================================="
+
+      - name: Fetch Docker Hub versions
+        env:
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+        run: |
+          set -euo pipefail
+
+          echo ""
+          echo "=== Docker Hub versions ==="
+
+          # Known Docker images used in scripts
+          declare -A docker_images=(
+            ["homeassistant"]="homeassistant/home-assistant"
+            ["portainer"]="portainer/portainer-ce"
+            ["dockge"]="louislam/dockge"
+            ["immich"]="ghcr.io/immich-app/immich-server"
+            ["audiobookshelf"]="ghcr.io/advplyr/audiobookshelf"
+          )
+
+          for app in "${!docker_images[@]}"; do
+            image="${docker_images[$app]}"
+            echo -n "Fetching Docker: $image ... "
+
+            # Docker Hub API
+            if [[ "$image" == ghcr.io/* ]]; then
+              # GitHub Container Registry - use GitHub API
+              ghcr_repo="${image#ghcr.io/}"
+              tag=$(gh api "users/${ghcr_repo%%/*}/packages/container/${ghcr_repo##*/}/versions" --jq '.[0].metadata.container.tags[0] // empty' 2>/dev/null || echo "")
+            else
+              # Docker Hub API
+              tag=$(curl -fsSL "https://hub.docker.com/v2/repositories/${image}/tags?page_size=1&ordering=last_updated" 2>/dev/null | jq -r '.results[0].name // empty' || echo "")
+            fi
+
+            if [[ -n "$tag" && "$tag" != "null" ]]; then
+              jq --arg name "docker:$image" \
+                 --arg version "$tag" \
+                 --arg date "" \
+                 '. += [{"name": $name, "version": $version, "date": $date}]' \
+                 "$VERSIONS_FILE" > "${VERSIONS_FILE}.tmp" && mv "${VERSIONS_FILE}.tmp" "$VERSIONS_FILE"
+              echo "✓ $tag"
+            else
+              echo "⚠ No version found"
+            fi
+          done
+
+      - name: Fetch npm versions
+        run: |
+          set -euo pipefail
+
+          echo ""
+          echo "=== npm Registry versions ==="
+
+          # Known npm packages
+          npm_packages=("n8n" "node-red" "homebridge")
+
+          for pkg in "${npm_packages[@]}"; do
+            echo -n "Fetching npm: $pkg ... "
+            version=$(curl -fsSL "https://registry.npmjs.org/${pkg}/latest" 2>/dev/null | jq -r '.version // empty' || echo "")
+
+            if [[ -n "$version" ]]; then
+              jq --arg name "npm:$pkg" \
+                 --arg version "$version" \
+                 --arg date "" \
+                 '. += [{"name": $name, "version": $version, "date": $date}]' \
+                 "$VERSIONS_FILE" > "${VERSIONS_FILE}.tmp" && mv "${VERSIONS_FILE}.tmp" "$VERSIONS_FILE"
+              echo "✓ $version"
+            else
+              echo "⚠ No version found"
+            fi
+          done
+
+          # Final sort
+          jq 'sort_by(.name | ascii_downcase)' "$VERSIONS_FILE" > "${VERSIONS_FILE}.tmp" && mv "${VERSIONS_FILE}.tmp" "$VERSIONS_FILE"
+
+          echo ""
+          echo "========================================="
+          echo "      FINAL STATS"
+          echo "========================================="
+          echo "Total entries: $(jq length "$VERSIONS_FILE")"
+          echo "========================================="
 
       - name: Check for changes
         id: check-changes
