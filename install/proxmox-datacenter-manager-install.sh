@@ -14,7 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y rsyslog
+$STD apt install -y rsyslog
 systemctl enable -q --now rsyslog
 msg_ok "Installed Dependencies"
 
