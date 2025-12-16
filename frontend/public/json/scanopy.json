@@ -12,7 +12,7 @@
   "documentation": "https://github.com/scanopy/scanopy",
   "config_path": "/opt/scanopy/.env, OIDC: /opt/scanopy/oidc.toml",
   "website": "https://scanopy.net",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/scanopy.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/scanopy.webp",
   "description": "Automatically discover and visually document network infrastructure",
   "install_methods": [
     {
