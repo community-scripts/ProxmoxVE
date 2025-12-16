@@ -20,6 +20,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - zabbix: fix repo url after change [@MickLesk](https://github.com/MickLesk) ([#10042](https://github.com/community-scripts/ProxmoxVE/pull/10042))
     - Fix: mariadb repo in update_scripts [@MickLesk](https://github.com/MickLesk) ([#10034](https://github.com/community-scripts/ProxmoxVE/pull/10034))
     - 2fauth: update PHP version from 8.3 to 8.4 in update_script [@MickLesk](https://github.com/MickLesk) ([#10035](https://github.com/community-scripts/ProxmoxVE/pull/10035))
     - pdm: add rsyslog to fix /dev/log Connection refused errors [@MickLesk](https://github.com/MickLesk) ([#10018](https://github.com/community-scripts/ProxmoxVE/pull/10018))
