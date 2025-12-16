@@ -31,30 +31,25 @@ $STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER TEMP
   echo "TinyTinyRSS Database Name: $DB_NAME"
 } >>~/tinytinyrss.creds
 
-# Configure pg_hba.conf to use md5 for local connections (instead of peer)
-# This ensures password authentication works even when using Unix sockets
-# PostgreSQL reads pg_hba.conf from top to bottom, so md5 must come before peer
+# Configure PostgreSQL to force TCP/IP connections and use md5 authentication
+# This prevents PDO from using Unix sockets which don't send passwords correctly
 PG_HBA_CONF=$(find /etc/postgresql/*/main/pg_hba.conf 2>/dev/null | head -1)
+PG_CONF=$(find /etc/postgresql/*/main/postgresql.conf 2>/dev/null | head -1)
+
 if [[ -n "$PG_HBA_CONF" ]]; then
   # Backup pg_hba.conf
   cp "$PG_HBA_CONF" "${PG_HBA_CONF}.bak.$(date +%Y%m%d_%H%M%S)"
   
-  # First, change all existing local peer/ident lines to md5
+  # Change all local peer/ident lines to md5 (for Unix sockets if they're used)
   sed -i '/^local\s\+all\s\+all\s\+peer/s/peer$/md5/' "$PG_HBA_CONF"
   sed -i '/^local\s\+all\s\+all\s\+ident/s/ident$/md5/' "$PG_HBA_CONF"
   
-  # Ensure there's a local md5 line at the top (before any peer lines)
-  # This ensures md5 authentication is checked first
+  # Ensure there's a local md5 line (before any peer lines)
   if ! grep -qE "^local\s+all\s+all\s+md5" "$PG_HBA_CONF" 2>/dev/null; then
-    # Insert at the beginning of local connection rules (after comments)
     if grep -q "^# \"local\" is for Unix domain socket connections only" "$PG_HBA_CONF"; then
       sed -i '/^# "local" is for Unix domain socket connections only/a local   all             all                                     md5' "$PG_HBA_CONF"
     elif grep -q "^local\s\+all\s\+postgres" "$PG_HBA_CONF"; then
-      # Insert before the postgres peer line
       sed -i '/^local\s\+all\s\+postgres/i local   all             all                                     md5' "$PG_HBA_CONF"
-    else
-      # Add at the beginning of the file after initial comments
-      sed -i '1a local   all             all                                     md5' "$PG_HBA_CONF"
     fi
   fi
   
@@ -62,9 +57,29 @@ if [[ -n "$PG_HBA_CONF" ]]; then
   if ! grep -qE "^host\s+all\s+all\s+127\.0\.0\.1/32\s+(md5|scram-sha-256)" "$PG_HBA_CONF" 2>/dev/null; then
     sed -i '/^# IPv4 local connections:/a host    all             all             127.0.0.1/32            md5' "$PG_HBA_CONF"
   fi
+fi
+
+# Disable Unix sockets in PostgreSQL to force TCP/IP connections
+# This ensures PDO always uses TCP/IP and sends passwords correctly
+if [[ -n "$PG_CONF" ]]; then
+  # Backup postgresql.conf
+  cp "$PG_CONF" "${PG_CONF}.bak.$(date +%Y%m%d_%H%M%S)" 2>/dev/null || true
   
-  # Reload PostgreSQL to apply changes
-  msg_info "Reloading PostgreSQL to apply authentication changes"
+  # Comment out unix_socket_directories to disable Unix sockets
+  # This forces all connections to use TCP/IP
+  if grep -q "^unix_socket_directories" "$PG_CONF" 2>/dev/null; then
+    sed -i 's/^unix_socket_directories/#unix_socket_directories/' "$PG_CONF"
+  fi
+  # Add comment to disable Unix sockets
+  if ! grep -q "^#unix_socket_directories" "$PG_CONF" 2>/dev/null; then
+    echo "# Unix sockets disabled to force TCP/IP connections" >> "$PG_CONF"
+    echo "#unix_socket_directories = '/var/run/postgresql'" >> "$PG_CONF"
+  fi
+fi
+
+# Reload PostgreSQL to apply changes
+if [[ -n "$PG_HBA_CONF" ]] || [[ -n "$PG_CONF" ]]; then
+  msg_info "Reloading PostgreSQL to apply configuration changes"
   systemctl reload postgresql || systemctl restart postgresql
   msg_ok "PostgreSQL reloaded"
 fi
