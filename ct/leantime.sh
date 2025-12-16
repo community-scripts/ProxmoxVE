@@ -28,7 +28,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-
+  setup_mariadb
   if check_for_gh_release "leantime" "Leantime/leantime"; then
     msg_info "Creating Backup"
     mariadb-dump leantime >"/opt/${APP}_db_backup_$(date +%F).sql"

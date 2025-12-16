@@ -27,6 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  setup_mariadb
   if check_for_gh_release "hortusfox" "danielbrendel/hortusfox-web"; then
     msg_info "Stopping Service"
     systemctl stop apache2

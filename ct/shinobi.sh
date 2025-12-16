@@ -27,6 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  setup_mariadb
   msg_info "Updating Shinobi"
   cd /opt/Shinobi
   $STD sh UPDATE.sh

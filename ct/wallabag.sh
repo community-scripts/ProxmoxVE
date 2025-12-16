@@ -28,7 +28,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-
+  setup_mariadb
   if check_for_gh_release "wallabag" "wallabag/wallabag"; then
     msg_info "Stopping Services"
     systemctl stop nginx php8.3-fpm

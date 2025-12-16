@@ -28,6 +28,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  setup_mariadb
   if check_for_gh_release "mmdl" "intri-in/manage-my-damn-life-nextjs"; then
     msg_info "Stopping service"
     systemctl stop mmdl

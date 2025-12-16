@@ -27,7 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-
+  setup_mariadb
   if check_for_gh_release "phpipam" "phpipam/phpipam"; then
     msg_info "Stopping Service"
     systemctl stop apache2

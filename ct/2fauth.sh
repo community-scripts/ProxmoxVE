@@ -28,6 +28,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  setup_mariadb
   if check_for_gh_release "2fauth" "Bubka/2FAuth"; then
     $STD apt update
     $STD apt -y upgrade
