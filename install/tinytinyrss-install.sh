@@ -161,33 +161,30 @@ fi
 # Generate feed crypt key
 FEED_CRYPT_KEY=$(openssl rand -hex 32)
 
-# Create config.php using printf to ensure proper variable expansion
+# Create config.php using putenv() with TTRSS_* variables (official method per documentation)
+# Use 127.0.0.1 to force TCP/IP connection (localhost might use Unix socket)
 {
   printf "<?php\n"
-  printf "define('DB_TYPE', 'pgsql');\n"
-  # Use 127.0.0.1 to force TCP/IP connection (localhost might use Unix socket)
-  printf "define('DB_HOST', '127.0.0.1');\n"
-  printf "define('DB_NAME', '%s');\n" "$DB_NAME"
-  printf "define('DB_USER', '%s');\n" "$DB_USER"
-  printf "define('DB_PASS', '%s');\n" "$DB_PASS"
-  printf "define('DB_PORT', '5432');\n"
+  printf "putenv('TTRSS_DB_TYPE=pgsql');\n"
+  printf "putenv('TTRSS_DB_HOST=127.0.0.1');\n"
+  printf "putenv('TTRSS_DB_NAME=%s');\n" "$DB_NAME"
+  printf "putenv('TTRSS_DB_USER=%s');\n" "$DB_USER"
+  printf "putenv('TTRSS_DB_PASS=%s');\n" "$DB_PASS"
+  printf "putenv('TTRSS_DB_PORT=5432');\n"
+  printf "putenv('TTRSS_SELF_URL_PATH=http://%s/');\n" "$LOCAL_IP"
   printf "\n"
-  printf "define('SELF_URL_PATH', 'http://%s/');\n" "$LOCAL_IP"
-  printf "\n"
+  printf "// Legacy plugin-required constants\n"
   printf "define('FEED_CRYPT_KEY', '%s');\n" "$FEED_CRYPT_KEY"
-  printf "\n"
-  printf "define('SINGLE_USER_MODE', false);\n"
-  printf "define('SIMPLE_UPDATE_MODE', false);\n"
 } >/opt/tt-rss/config.php
 
 # Verify config.php was created with correct values
-if ! grep -q "define('DB_USER', '${DB_USER}');" /opt/tt-rss/config.php; then
+if ! grep -q "putenv('TTRSS_DB_USER=${DB_USER}');" /opt/tt-rss/config.php; then
   msg_error "Failed to create config.php with correct database credentials"
   exit 1
 fi
 
 # Double-check the file contents
-if ! grep -q "define('DB_NAME', 'ttrss');" /opt/tt-rss/config.php; then
+if ! grep -q "putenv('TTRSS_DB_NAME=${DB_NAME}');" /opt/tt-rss/config.php; then
   msg_error "config.php does not contain expected database name"
   exit 1
 fi
@@ -195,16 +192,6 @@ fi
 chown www-data:www-data /opt/tt-rss/config.php
 chmod 644 /opt/tt-rss/config.php
 msg_ok "Created initial config.php"
-
-# Create .pgpass file for www-data user to allow password authentication via Unix sockets
-# This is needed because PDO may use Unix sockets which don't send passwords correctly
-msg_info "Creating .pgpass file for www-data user"
-mkdir -p /var/www
-echo "127.0.0.1:5432:${DB_NAME}:${DB_USER}:${DB_PASS}" > /var/www/.pgpass
-echo "localhost:5432:${DB_NAME}:${DB_USER}:${DB_PASS}" >> /var/www/.pgpass
-chown www-data:www-data /var/www/.pgpass
-chmod 600 /var/www/.pgpass
-msg_ok "Created .pgpass file"
 
 # Restart Apache to ensure it picks up the new config.php
 msg_info "Restarting Apache to apply configuration"
