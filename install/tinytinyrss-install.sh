@@ -90,8 +90,7 @@ $STD systemctl reload apache2
 msg_ok "Created Apache Configuration"
 
 msg_info "Creating initial config.php"
-if [ ! -f /opt/tt-rss/config.php ]; then
-  cat <<EOF >/opt/tt-rss/config.php
+cat <<EOF >/opt/tt-rss/config.php
 <?php
 define('DB_TYPE', 'pgsql');
 define('DB_HOST', '127.0.0.1');
@@ -107,12 +106,9 @@ define('FEED_CRYPT_KEY', '$(openssl rand -hex 32)');
 define('SINGLE_USER_MODE', false);
 define('SIMPLE_UPDATE_MODE', false);
 EOF
-  chown www-data:www-data /opt/tt-rss/config.php
-  chmod 644 /opt/tt-rss/config.php
-  msg_ok "Created initial config.php"
-else
-  msg_info "config.php already exists, skipping creation"
-fi
+chown www-data:www-data /opt/tt-rss/config.php
+chmod 644 /opt/tt-rss/config.php
+msg_ok "Created initial config.php"
 
 motd_ssh
 customize
