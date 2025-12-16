@@ -2820,8 +2820,14 @@ $PCT_OPTIONS_STRING"
 
   # Add nameserver if specified
   if [ -n "$NS" ]; then
-    PCT_OPTIONS_STRING="$PCT_OPTIONS_STRING
+    # NS may already contain -nameserver= prefix, so check and format accordingly
+    if [[ "$NS" =~ ^-nameserver= ]]; then
+      PCT_OPTIONS_STRING="$PCT_OPTIONS_STRING
+  $NS"
+    else
+      PCT_OPTIONS_STRING="$PCT_OPTIONS_STRING
   -nameserver $NS"
+    fi
   fi
 
   # Network configuration
