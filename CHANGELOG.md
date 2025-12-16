@@ -18,6 +18,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - 2fauth: bump to php8.4 [@MickLesk](https://github.com/MickLesk) ([#10019](https://github.com/community-scripts/ProxmoxVE/pull/10019))
 
+### 💾 Core
+
+  - #### ✨ New Features
+
+    - core: map Etc/* timezones to 'host' for pct compatibility [@MickLesk](https://github.com/MickLesk) ([#10020](https://github.com/community-scripts/ProxmoxVE/pull/10020))
+
 ## 2025-12-15
 
 ### 🆕 New Scripts
