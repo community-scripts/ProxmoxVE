@@ -17,6 +17,8 @@ msg_info "Installing Dependencies"
 $STD apt install -y ffmpeg
 msg_ok "Installed Dependencies"
 
+setup_hwaccel
+
 PYTHON_VERSION="3.12" setup_uv
 
 msg_info "Installing Open WebUI"
