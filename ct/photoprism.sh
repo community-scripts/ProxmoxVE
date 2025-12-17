@@ -32,7 +32,7 @@ function update_script() {
     msg_info "Stopping PhotoPrism"
     systemctl stop photoprism
     msg_ok "Stopped PhotoPrism"
-    
+
     if ! grep -q "photoprism/config/.env" ~/.bashrc 2>/dev/null; then
       msg_info "Adding environment export for CLI tools"
       echo '# Load PhotoPrism environment variables for CLI tools' >>~/.bashrc
