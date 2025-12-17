@@ -14,6 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - Tracktor: updated environment variables for latest release [@javedh-dev](https://github.com/javedh-dev) ([#10067](https://github.com/community-scripts/ProxmoxVE/pull/10067))
+
   - #### 🐞 Bug Fixes
 
     - update github repo for endurain [@johanngrobe](https://github.com/johanngrobe) ([#10074](https://github.com/community-scripts/ProxmoxVE/pull/10074))
