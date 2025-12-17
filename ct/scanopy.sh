@@ -29,7 +29,7 @@ function update_script() {
     exit
   fi
 
-  if check_for_gh_release "scanopy" "scanopy-io/scanopy"; then
+  if check_for_gh_release "scanopy" "scanopy/scanopy"; then
     msg_info "Stopping services"
     systemctl stop scanopy-daemon scanopy-server
     msg_ok "Stopped services"
