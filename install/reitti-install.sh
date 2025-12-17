@@ -23,25 +23,7 @@ msg_ok "Installed Dependencies"
 
 JAVA_VERSION="24" setup_java
 PG_VERSION="17" PG_MODULES="postgis" setup_postgresql
-
-msg_info "Setting up PostgreSQL"
-DB_NAME="reitti_db"
-DB_USER="reitti"
-DB_PASS="$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)"
-$STD sudo -u postgres psql -c "CREATE ROLE $DB_USER WITH LOGIN PASSWORD '$DB_PASS';"
-$STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER ENCODING 'UTF8' TEMPLATE template0;"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET client_encoding TO 'utf8';"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET default_transaction_isolation TO 'read committed';"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET timezone TO 'UTC';"
-$STD sudo -u postgres psql -d "$DB_NAME" -c "CREATE EXTENSION IF NOT EXISTS postgis;"
-$STD sudo -u postgres psql -d "$DB_NAME" -c "CREATE EXTENSION IF NOT EXISTS postgis_topology;"
-{
-  echo "Reitti Credentials"
-  echo "Database Name: $DB_NAME"
-  echo "Database User: $DB_USER"
-  echo "Database Password: $DB_PASS"
-} >>~/reitti.creds
-msg_ok "PostgreSQL Setup Completed"
+PG_DB_NAME="reitti_db" PG_DB_USER="reitti" setup_postgresql_db
 
 msg_info "Configuring RabbitMQ"
 RABBIT_USER="reitti"
@@ -71,9 +53,9 @@ cat <<EOF >/opt/reitti/application.properties
 reitti.server.advertise-uri=http://127.0.0.1:8080
 
 # PostgreSQL Database Connection
-spring.datasource.url=jdbc:postgresql://127.0.0.1:5432/$DB_NAME
-spring.datasource.username=$DB_USER
-spring.datasource.password=$DB_PASS
+spring.datasource.url=jdbc:postgresql://127.0.0.1:5432/$PG_DB_NAME
+spring.datasource.username=$PG_DB_USER
+spring.datasource.password=$PG_DB_PASS
 spring.datasource.driver-class-name=org.postgresql.Driver
 
 # Flyway Database Migrations
@@ -132,7 +114,7 @@ Restart=on-failure
 WantedBy=multi-user.target
 EOF
 
-cat <<'EOF' >/etc/systemd/system/photon.service
+cat <<EOF >/etc/systemd/system/photon.service
 [Unit]
 Description=Photon Geocoding Service (Germany, OpenSearch)
 After=network.target
