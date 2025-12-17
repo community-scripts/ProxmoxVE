@@ -19,21 +19,10 @@ $STD apt install -y \
   python3-pip
 msg_ok "Installed Dependencies"
 
-msg_info "Setting Up Hardware Acceleration"
-$STD apt -y install \
-  va-driver-all \
-  ocl-icd-libopencl1 \
-  vainfo \
-  intel-gpu-tools \
-  mesa-va-drivers \
-  mesa-vdpau-drivers \
-  intel-media-va-driver
+setup_hwaccel
+
+# Sync GID for video/render groups between host and container
 if [[ "$CTTYPE" == "0" ]]; then
-  chgrp video /dev/dri
-  chmod 755 /dev/dri
-  chmod 660 /dev/dri/*
-  $STD adduser $(id -u -n) video
-  $STD adduser $(id -u -n) render
   VIDEO_GID=$(getent group video | cut -d: -f3)
   RENDER_GID=$(getent group render | cut -d: -f3)
   if [[ -n "$VIDEO_GID" && -n "$RENDER_GID" ]]; then
@@ -44,7 +33,6 @@ else
   VIDEO_GID=$(getent group video | cut -d: -f3)
   RENDER_GID=$(getent group render | cut -d: -f3)
 fi
-msg_ok "Set Up Hardware Acceleration"
 
 msg_info "Installing Unmanic"
 $STD pip3 install unmanic

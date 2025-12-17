@@ -75,12 +75,13 @@ $STD apt install -y jellyfin-ffmpeg7
 ln -sf /usr/lib/jellyfin-ffmpeg/ffmpeg /usr/bin/ffmpeg
 ln -sf /usr/lib/jellyfin-ffmpeg/ffprobe /usr/bin/ffprobe
 
+# Set permissions for /dev/dri (only in privileged containers and if /dev/dri exists)
 if [[ "$CTTYPE" == "0" && -d /dev/dri ]]; then
-  chgrp video /dev/dri
-  chmod 755 /dev/dri
-  chmod 660 /dev/dri/*
-  $STD adduser "$(id -u -n)" video
-  $STD adduser "$(id -u -n)" render
+  chgrp video /dev/dri 2>/dev/null || true
+  chmod 755 /dev/dri 2>/dev/null || true
+  chmod 660 /dev/dri/* 2>/dev/null || true
+  $STD adduser "$(id -u -n)" video 2>/dev/null || true
+  $STD adduser "$(id -u -n)" render 2>/dev/null || true
 fi
 msg_ok "Dependencies Installed"
 

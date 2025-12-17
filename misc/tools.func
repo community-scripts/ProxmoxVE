@@ -2593,8 +2593,9 @@ function setup_hwaccel() {
   cpu_vendor=$(lscpu 2>/dev/null | grep -i 'Vendor ID' | awk '{print $3}' || echo "")
 
   if [[ -z "$gpu_vendor" && -z "$cpu_vendor" ]]; then
-    msg_error "No GPU or CPU vendor detected (missing lspci/lscpu output)"
-    return 1
+    msg_warn "No GPU or CPU vendor detected - skipping hardware acceleration setup"
+    msg_ok "Setup Hardware Acceleration (skipped - no GPU detected)"
+    return 0
   fi
 
   # Detect OS with fallbacks
@@ -2607,7 +2608,7 @@ function setup_hwaccel() {
     os_id="debian"
   fi
 
-  # Determine if we are on a VM or LXC
+  # Determine if we are on a VM or LXC (privileged)
   local in_ct="${CTTYPE:-0}"
 
   case "$gpu_vendor" in
@@ -2618,7 +2619,7 @@ function setup_hwaccel() {
         return 1
       }
     else
-      # For Debian: fetch Intel GPU drivers from GitHub
+      # For Debian: fetch Intel GPU drivers from GitHub (latest releases)
       fetch_and_deploy_gh_release "" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-core-2_*_amd64.deb" || {
         msg_warn "Failed to deploy Intel IGC core 2"
       }
@@ -2637,41 +2638,47 @@ function setup_hwaccel() {
       msg_error "Failed to install Intel GPU dependencies"
       return 1
     }
+    # Install intel-media-va-driver if available (for newer Intel GPUs)
+    $STD apt -y install intel-media-va-driver 2>/dev/null || true
     ;;
   AMD)
-    $STD apt -y install mesa-va-drivers mesa-vdpau-drivers mesa-opencl-icd vainfo clinfo || {
+    $STD apt -y install mesa-va-drivers mesa-vdpau-drivers vainfo || {
       msg_error "Failed to install AMD GPU dependencies"
       return 1
     }
+    # mesa-opencl-icd and clinfo may not be available on all systems
+    $STD apt -y install mesa-opencl-icd ocl-icd-libopencl1 clinfo 2>/dev/null || true
 
     # For AMD CPUs without discrete GPU (APUs)
-    if [[ "$cpu_vendor" == "AuthenticAMD" && -n "$gpu_vendor" ]]; then
-      $STD apt -y install libdrm-amdgpu1 firmware-amd-graphics || true
+    if [[ "$cpu_vendor" == "AuthenticAMD" ]]; then
+      $STD apt -y install libdrm-amdgpu1 2>/dev/null || true
+      $STD apt -y install firmware-amd-graphics 2>/dev/null || true
     fi
     ;;
   NVIDIA)
-    # NVIDIA needs manual driver setup - skip for now
-    msg_info "NVIDIA GPU detected - manual driver setup required"
+    # NVIDIA needs manual driver setup or use of nvidia-driver packages
+    msg_warn "NVIDIA GPU detected - driver must be installed manually or passed through from host"
+    # Install basic VA-API support for potential hybrid setups
+    $STD apt -y install va-driver-all vainfo 2>/dev/null || true
     ;;
   *)
-    # If no discrete GPU, but AMD CPU (e.g., Ryzen APU)
+    # If no discrete GPU, but AMD CPU (e.g., Ryzen APU with integrated graphics)
     if [[ "$cpu_vendor" == "AuthenticAMD" ]]; then
-      $STD apt -y install mesa-opencl-icd ocl-icd-libopencl1 clinfo || {
-        msg_error "Failed to install Mesa OpenCL stack"
-        return 1
-      }
+      $STD apt -y install mesa-va-drivers mesa-vdpau-drivers vainfo 2>/dev/null || true
+      $STD apt -y install mesa-opencl-icd ocl-icd-libopencl1 clinfo 2>/dev/null || true
     else
-      msg_warn "No supported GPU vendor detected - skipping GPU acceleration"
+      msg_warn "No supported GPU vendor detected - skipping GPU driver installation"
     fi
     ;;
   esac
 
-  if [[ "$in_ct" == "0" ]]; then
+  # Set permissions for /dev/dri (only in privileged containers and if /dev/dri exists)
+  if [[ "$in_ct" == "0" && -d /dev/dri ]]; then
     chgrp video /dev/dri 2>/dev/null || true
     chmod 755 /dev/dri 2>/dev/null || true
     chmod 660 /dev/dri/* 2>/dev/null || true
-    $STD adduser "$(id -u -n)" video
-    $STD adduser "$(id -u -n)" render
+    $STD adduser "$(id -u -n)" video 2>/dev/null || true
+    $STD adduser "$(id -u -n)" render 2>/dev/null || true
   fi
 
   cache_installed_version "hwaccel" "1.0"
