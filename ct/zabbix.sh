@@ -66,8 +66,9 @@ function update_script() {
   cp -R /usr/share/zabbix/ /opt/zabbix-backup/
 
   rm -Rf /etc/apt/sources.list.d/zabbix.list
+  [[ "$VAR" == "7.0" ]] && FIX_URL="" || FIX_URL="/release"
   cd /tmp
-  ZABBIX_DEB_URL="https://repo.zabbix.com/zabbix/${ZABBIX_VERSION}/debian/pool/main/z/zabbix-release/zabbix-release_latest+debian13_all.deb"
+  ZABBIX_DEB_URL="https://repo.zabbix.com/zabbix/${ZABBIX_VERSION}${FIX_URL}/debian/pool/main/z/zabbix-release/zabbix-release_latest+debian13_all.deb"
   curl -fsSL "$ZABBIX_DEB_URL" -o /tmp/zabbix-release_latest+debian13_all.deb
   $STD dpkg -i zabbix-release_latest+debian13_all.deb
   rm -rf /tmp/zabbix-release_latest+debian13_all.deb
