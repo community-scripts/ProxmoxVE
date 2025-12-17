@@ -27,6 +27,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: RDTClient [@tremor021](https://github.com/tremor021) ([#10064](https://github.com/community-scripts/ProxmoxVE/pull/10064))
+    - Refactor: RabbitMQ [@tremor021](https://github.com/tremor021) ([#10065](https://github.com/community-scripts/ProxmoxVE/pull/10065))
     - Qdrant: Code cleanup [@tremor021](https://github.com/tremor021) ([#10066](https://github.com/community-scripts/ProxmoxVE/pull/10066))
     - Refactor: Pterodactyl Wings [@tremor021](https://github.com/tremor021) ([#10069](https://github.com/community-scripts/ProxmoxVE/pull/10069))
 
