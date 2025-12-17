@@ -15,28 +15,6 @@ update_os
 
 setup_hwaccel
 
-read -r -p "${TAB3}Do you need the intel-media-va-driver-non-free driver for HW encoding (Debian 12 only)? <y/N> " prompt
-if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
-  msg_info "Installing Intel Hardware Acceleration (non-free)"
-  cat <<EOF >/etc/apt/sources.list.d/non-free.list
-
-deb http://deb.debian.org/debian bookworm non-free non-free-firmware
-deb-src http://deb.debian.org/debian bookworm non-free non-free-firmware
-
-deb http://deb.debian.org/debian-security bookworm-security non-free non-free-firmware
-deb-src http://deb.debian.org/debian-security bookworm-security non-free non-free-firmware
-
-deb http://deb.debian.org/debian bookworm-updates non-free non-free-firmware
-deb-src http://deb.debian.org/debian bookworm-updates non-free non-free-firmware
-EOF
-  $STD apt-get update
-  $STD apt-get -y install {intel-media-va-driver-non-free,ocl-icd-libopencl1,intel-opencl-icd,vainfo,intel-gpu-tools}
-else
-  msg_info "Installing Intel Hardware Acceleration"
-  $STD apt-get -y install {va-driver-all,ocl-icd-libopencl1,intel-opencl-icd,vainfo,intel-gpu-tools}
-fi
-msg_ok "Installed and Set Up Intel Hardware Acceleration"
-
 fetch_and_deploy_gh_release "ersatztv" "ErsatzTV/ErsatzTV" "prebuild" "latest" "/opt/ErsatzTV" "*linux-x64.tar.gz"
 fetch_and_deploy_gh_release "ersatztv-ffmpeg" "ErsatzTV/ErsatzTV-ffmpeg" "prebuild" "latest" "/opt/ErsatzTV-ffmpeg" "*-linux64-gpl-7.1.tar.xz"
 
