@@ -27,6 +27,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Telegraf: Small refactor [@tremor021](https://github.com/tremor021) ([#10056](https://github.com/community-scripts/ProxmoxVE/pull/10056))
+    - Refactor: Salt [@tremor021](https://github.com/tremor021) ([#10057](https://github.com/community-scripts/ProxmoxVE/pull/10057))
     - Refactor: Resilio Sync [@tremor021](https://github.com/tremor021) ([#10058](https://github.com/community-scripts/ProxmoxVE/pull/10058))
     - Refactor: Reitti [@tremor021](https://github.com/tremor021) ([#10059](https://github.com/community-scripts/ProxmoxVE/pull/10059))
     - Refactor: Redis [@tremor021](https://github.com/tremor021) ([#10060](https://github.com/community-scripts/ProxmoxVE/pull/10060))
