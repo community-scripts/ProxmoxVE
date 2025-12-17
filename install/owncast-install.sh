@@ -13,6 +13,8 @@ setting_up_container
 network_check
 update_os
 
+setup_hwaccel
+
 msg_info "Installing Dependencies (Patience)"
 $STD apt install -y ffmpeg
 msg_ok "Installed Dependencies"
