@@ -33,12 +33,11 @@ function update_script() {
     systemctl stop Reactive-Resume
     msg_ok "Stopped services"
 
-    cp /opt/"$APP"/.env /opt/rxresume.env
-
+    cp /opt/Reactive-Resume/.env /opt/rxresume.env
     fetch_and_deploy_gh_release "Reactive-Resume" "lazy-media/Reactive-Resume" "tarball" "latest" "/opt/Reactive-Resume"
 
-    msg_info "Updating $APP"
-    cd /opt/"$APP"
+    msg_info "Updating Reactive-Resume"
+    cd /opt/Reactive-Resume
     export PUPPETEER_SKIP_DOWNLOAD="true"
     export NEXT_TELEMETRY_DISABLED=1
     export CI="true"
@@ -46,8 +45,8 @@ function update_script() {
     $STD pnpm install --frozen-lockfile
     $STD pnpm run build
     $STD pnpm run prisma:generate
-    mv /opt/rxresume.env /opt/"$APP"/.env
-    msg_ok "Updated $APP"
+    mv /opt/rxresume.env /opt/Reactive-Resume/.env
+    msg_ok "Updated Reactive-Resume"
 
     msg_info "Updating Minio"
     systemctl stop minio
