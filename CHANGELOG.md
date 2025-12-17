@@ -18,6 +18,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Semaphore: Fix release binary package fetching [@tremor021](https://github.com/tremor021) ([#10055](https://github.com/community-scripts/ProxmoxVE/pull/10055))
     - update github repo for endurain [@johanngrobe](https://github.com/johanngrobe) ([#10074](https://github.com/community-scripts/ProxmoxVE/pull/10074))
 
   - #### ✨ New Features
