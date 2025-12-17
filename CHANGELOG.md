@@ -14,6 +14,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - update github repo for endurain [@johanngrobe](https://github.com/johanngrobe) ([#10074](https://github.com/community-scripts/ProxmoxVE/pull/10074))
+
   - #### ✨ New Features
 
     - use setup_hwaccel for robust hardware acceleration [@MickLesk](https://github.com/MickLesk) ([#10054](https://github.com/community-scripts/ProxmoxVE/pull/10054))
