@@ -36,9 +36,10 @@ function update_script() {
     msg_info "Correcting Services"
     if [ ! -d "/opt/tracktor-data/uploads" ]; then
       mkdir -p /opt/tracktor-data/{uploads,logs}
-      EXISTING_AUTH_PIN=$(grep '^AUTH_PIN=' /opt/tracktor.env 2>/dev/null | cut -d'=' -f2)
-      AUTH_PIN=${EXISTING_AUTH_PIN:-123456}
-      cat <<EOF >/opt/tracktor.env
+    fi
+    if ! grep -qxF 'BODY_SIZE_LIMIT=Infinity' /opt/tracktor.env; then
+      rm /opt/tracktor.env
+    cat <<EOF >/opt/tracktor.env
 cat <<EOF >/opt/tracktor.env
 NODE_ENV=production
 # Set this to the path of the database file. Default - ./tracktor.db
@@ -61,11 +62,8 @@ BODY_SIZE_LIMIT=Infinity
 #TRACKTOR_DEMO_MODE=false
 # Force reseeding of data on every startup. Default - false
 #FORCE_DATA_SEED=false
-# PIN for the app
-AUTH_PIN=${AUTH_PIN}
 EOF
     fi
-    grep -qxF 'BODY_SIZE_LIMIT=Infinity' /opt/tracktor.env || echo 'BODY_SIZE_LIMIT=Infinity' >> /opt/tracktor.env
     msg_ok "Corrected Services"
 
     NODE_VERSION="24" setup_nodejs
