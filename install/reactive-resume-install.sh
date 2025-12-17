@@ -21,7 +21,7 @@ msg_ok "Installed Dependencies"
 
 import_local_ip
 PG_VERSION="16" setup_postgresql
-PG_DB_NAME="rxresume" PG_DB_USER="rxresume" PG_DB_GRANT_SUPERUSER=true setup_postgresql_db
+PG_DB_NAME="rxresume" PG_DB_USER="rxresume" PG_DB_GRANT_SUPERUSER="true" setup_postgresql_db
 NODE_VERSION="24" NODE_MODULE="pnpm@latest" setup_nodejs
 fetch_and_deploy_gh_release "Reactive-Resume" "lazy-media/Reactive-Resume"
 
