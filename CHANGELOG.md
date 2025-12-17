@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - use setup_hwaccel for robust hardware acceleration [@MickLesk](https://github.com/MickLesk) ([#10054](https://github.com/community-scripts/ProxmoxVE/pull/10054))
     - add hardware acceleration support for 17 additional apps [@MickLesk](https://github.com/MickLesk) ([#10061](https://github.com/community-scripts/ProxmoxVE/pull/10061))
 
 ## 2025-12-16
