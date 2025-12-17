@@ -27,6 +27,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: Resilio Sync [@tremor021](https://github.com/tremor021) ([#10058](https://github.com/community-scripts/ProxmoxVE/pull/10058))
+    - Refactor: Reitti [@tremor021](https://github.com/tremor021) ([#10059](https://github.com/community-scripts/ProxmoxVE/pull/10059))
     - Refactor: Redis [@tremor021](https://github.com/tremor021) ([#10060](https://github.com/community-scripts/ProxmoxVE/pull/10060))
     - Refactor: Reactive-Resume [@tremor021](https://github.com/tremor021) ([#10062](https://github.com/community-scripts/ProxmoxVE/pull/10062))
     - Refactor: RDTClient [@tremor021](https://github.com/tremor021) ([#10064](https://github.com/community-scripts/ProxmoxVE/pull/10064))
