@@ -21,19 +21,6 @@ msg_ok "Installed Dependencies"
 
 setup_hwaccel
 
-# Sync GID for video/render groups between host and container
-if [[ "$CTTYPE" == "0" ]]; then
-  VIDEO_GID=$(getent group video | cut -d: -f3)
-  RENDER_GID=$(getent group render | cut -d: -f3)
-  if [[ -n "$VIDEO_GID" && -n "$RENDER_GID" ]]; then
-    sed -i "s/^video:x:[0-9]*:/video:x:$VIDEO_GID:/" /etc/group
-    sed -i "s/^render:x:[0-9]*:/render:x:$RENDER_GID:/" /etc/group
-  fi
-else
-  VIDEO_GID=$(getent group video | cut -d: -f3)
-  RENDER_GID=$(getent group render | cut -d: -f3)
-fi
-
 msg_info "Installing Unmanic"
 $STD pip3 install unmanic
 msg_ok "Installed Unmanic"

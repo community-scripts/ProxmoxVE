@@ -1460,19 +1460,19 @@ check_for_gh_release() {
 
   # Try /latest endpoint for non-pinned versions (most efficient)
   local releases_json=""
-  
+
   if [[ -z "$pinned_version_in" ]]; then
     releases_json=$(curl -fsSL --max-time 20 \
       -H 'Accept: application/vnd.github+json' \
       -H 'X-GitHub-Api-Version: 2022-11-28' \
       "https://api.github.com/repos/${source}/releases/latest" 2>/dev/null)
-    
+
     if [[ $? -eq 0 ]] && [[ -n "$releases_json" ]]; then
       # Wrap single release in array for consistent processing
       releases_json="[$releases_json]"
     fi
   fi
-  
+
   # If no releases yet (pinned version OR /latest failed), fetch up to 100
   if [[ -z "$releases_json" ]]; then
     # Fetch releases and exclude drafts/prereleases
@@ -2585,8 +2585,9 @@ function setup_hwaccel() {
   fi
 
   # Detect GPU vendor (Intel, AMD, NVIDIA)
-  local gpu_vendor
-  gpu_vendor=$(lspci 2>/dev/null | grep -Ei 'vga|3d|display' | grep -Eo 'Intel|AMD|NVIDIA' | head -n1 || echo "")
+  local gpu_vendor gpu_info
+  gpu_info=$(lspci 2>/dev/null | grep -Ei 'vga|3d|display' || echo "")
+  gpu_vendor=$(echo "$gpu_info" | grep -Eo 'Intel|AMD|NVIDIA' | head -n1 || echo "")
 
   # Detect CPU vendor (relevant for AMD APUs)
   local cpu_vendor
@@ -2599,73 +2600,163 @@ function setup_hwaccel() {
   fi
 
   # Detect OS with fallbacks
-  local os_id os_codename
-  os_id=$(grep -oP '(?<=^ID=).+' /etc/os-release 2>/dev/null | tr -d '"' || grep '^ID=' /etc/os-release 2>/dev/null | cut -d'=' -f2 | tr -d '"' || echo "debian")
-  os_codename=$(grep -oP '(?<=^VERSION_CODENAME=).+' /etc/os-release 2>/dev/null | tr -d '"' || grep '^VERSION_CODENAME=' /etc/os-release 2>/dev/null | cut -d'=' -f2 | tr -d '"' || echo "unknown")
+  local os_id os_codename os_version
+  os_id=$(grep -oP '(?<=^ID=).+' /etc/os-release 2>/dev/null | tr -d '"' || echo "debian")
+  os_codename=$(grep -oP '(?<=^VERSION_CODENAME=).+' /etc/os-release 2>/dev/null | tr -d '"' || echo "unknown")
+  os_version=$(grep -oP '(?<=^VERSION_ID=).+' /etc/os-release 2>/dev/null | tr -d '"' || echo "")
 
-  # Validate os_id
-  if [[ -z "$os_id" ]]; then
-    os_id="debian"
-  fi
+  [[ -z "$os_id" ]] && os_id="debian"
 
-  # Determine if we are on a VM or LXC (privileged)
+  # Determine if we are in a privileged LXC container
   local in_ct="${CTTYPE:-0}"
 
   case "$gpu_vendor" in
   Intel)
-    if [[ "$os_id" == "ubuntu" ]]; then
-      $STD apt -y install intel-opencl-icd || {
-        msg_error "Failed to install intel-opencl-icd"
-        return 1
-      }
-    else
-      # For Debian: fetch Intel GPU drivers from GitHub (latest releases)
-      fetch_and_deploy_gh_release "" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-core-2_*_amd64.deb" || {
-        msg_warn "Failed to deploy Intel IGC core 2"
-      }
-      fetch_and_deploy_gh_release "" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-opencl-2_*_amd64.deb" || {
-        msg_warn "Failed to deploy Intel IGC OpenCL 2"
-      }
-      fetch_and_deploy_gh_release "" "intel/compute-runtime" "binary" "latest" "" "libigdgmm12_*_amd64.deb" || {
-        msg_warn "Failed to deploy Intel GDGMM12"
-      }
-      fetch_and_deploy_gh_release "" "intel/compute-runtime" "binary" "latest" "" "intel-opencl-icd_*_amd64.deb" || {
-        msg_warn "Failed to deploy Intel OpenCL ICD"
-      }
+    # Detect Intel GPU generation for driver selection
+    # Gen 9+ (Skylake and newer) benefit from non-free drivers
+    local intel_gen=""
+    local needs_nonfree=false
+
+    # Check for specific Intel GPU models that need non-free drivers
+    if echo "$gpu_info" | grep -Ei 'HD Graphics [56][0-9]{2}|UHD Graphics|Iris|Arc|DG[12]' &>/dev/null; then
+      needs_nonfree=true
+      intel_gen="gen9+"
     fi
 
-    $STD apt -y install va-driver-all ocl-icd-libopencl1 vainfo intel-gpu-tools || {
-      msg_error "Failed to install Intel GPU dependencies"
-      return 1
-    }
-    # Install intel-media-va-driver if available (for newer Intel GPUs)
-    $STD apt -y install intel-media-va-driver 2>/dev/null || true
+    if [[ "$os_id" == "ubuntu" ]]; then
+      # Ubuntu: Use packages from Ubuntu repos
+      $STD apt -y install \
+        va-driver-all \
+        ocl-icd-libopencl1 \
+        intel-opencl-icd \
+        vainfo \
+        intel-gpu-tools || {
+        msg_error "Failed to install Intel GPU dependencies"
+        return 1
+      }
+      # Try to install intel-media-va-driver for newer GPUs
+      $STD apt -y install intel-media-va-driver 2>/dev/null || true
+
+    elif [[ "$os_id" == "debian" ]]; then
+      # Debian: Check version and install appropriate drivers
+      if [[ "$needs_nonfree" == true ]]; then
+        # Add non-free repo for intel-media-va-driver-non-free
+        if [[ "$os_codename" == "bookworm" ]]; then
+          # Debian 12 Bookworm
+          if [[ ! -f /etc/apt/sources.list.d/non-free.list && ! -f /etc/apt/sources.list.d/non-free.sources ]]; then
+            cat <<EOF >/etc/apt/sources.list.d/non-free.sources
+Types: deb
+URIs: http://deb.debian.org/debian
+Suites: bookworm bookworm-updates
+Components: non-free non-free-firmware
+EOF
+            $STD apt update
+          fi
+          $STD apt -y install \
+            intel-media-va-driver-non-free \
+            ocl-icd-libopencl1 \
+            intel-opencl-icd \
+            vainfo \
+            intel-gpu-tools || {
+            msg_warn "Non-free driver install failed, falling back to open drivers"
+            needs_nonfree=false
+          }
+
+        elif [[ "$os_codename" == "trixie" || "$os_codename" == "sid" ]]; then
+          # Debian 13 Trixie / Sid
+          if [[ ! -f /etc/apt/sources.list.d/non-free.sources ]]; then
+            cat <<'EOF' >/etc/apt/sources.list.d/non-free.sources
+Types: deb
+URIs: http://deb.debian.org/debian
+Suites: trixie trixie-updates
+Components: non-free non-free-firmware
+
+Types: deb
+URIs: http://deb.debian.org/debian-security
+Suites: trixie-security
+Components: non-free non-free-firmware
+EOF
+            $STD apt update
+          fi
+          $STD apt -y install \
+            intel-media-va-driver-non-free \
+            ocl-icd-libopencl1 \
+            mesa-opencl-icd \
+            mesa-va-drivers \
+            libvpl2 \
+            vainfo \
+            intel-gpu-tools 2>/dev/null || {
+            msg_warn "Non-free driver install failed, falling back to open drivers"
+            needs_nonfree=false
+          }
+        fi
+      fi
+
+      # Fallback to open drivers or older Intel GPUs
+      if [[ "$needs_nonfree" == false ]]; then
+        # Fetch latest Intel drivers from GitHub for Debian
+        fetch_and_deploy_gh_release "" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-core-2_*_amd64.deb" || {
+          msg_warn "Failed to deploy Intel IGC core 2"
+        }
+        fetch_and_deploy_gh_release "" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-opencl-2_*_amd64.deb" || {
+          msg_warn "Failed to deploy Intel IGC OpenCL 2"
+        }
+        fetch_and_deploy_gh_release "" "intel/compute-runtime" "binary" "latest" "" "libigdgmm12_*_amd64.deb" || {
+          msg_warn "Failed to deploy Intel GDGMM12"
+        }
+        fetch_and_deploy_gh_release "" "intel/compute-runtime" "binary" "latest" "" "intel-opencl-icd_*_amd64.deb" || {
+          msg_warn "Failed to deploy Intel OpenCL ICD"
+        }
+
+        $STD apt -y install \
+          va-driver-all \
+          ocl-icd-libopencl1 \
+          mesa-opencl-icd \
+          mesa-va-drivers \
+          vainfo \
+          intel-gpu-tools || {
+          msg_error "Failed to install Intel GPU dependencies"
+          return 1
+        }
+      fi
+    fi
     ;;
+
   AMD)
-    $STD apt -y install mesa-va-drivers mesa-vdpau-drivers vainfo || {
+    $STD apt -y install \
+      mesa-va-drivers \
+      mesa-vdpau-drivers \
+      mesa-opencl-icd \
+      ocl-icd-libopencl1 \
+      vainfo \
+      clinfo 2>/dev/null || {
       msg_error "Failed to install AMD GPU dependencies"
       return 1
     }
-    # mesa-opencl-icd and clinfo may not be available on all systems
-    $STD apt -y install mesa-opencl-icd ocl-icd-libopencl1 clinfo 2>/dev/null || true
 
-    # For AMD CPUs without discrete GPU (APUs)
-    if [[ "$cpu_vendor" == "AuthenticAMD" ]]; then
-      $STD apt -y install libdrm-amdgpu1 2>/dev/null || true
+    # AMD firmware for better GPU support
+    if [[ "$os_id" == "debian" ]]; then
       $STD apt -y install firmware-amd-graphics 2>/dev/null || true
     fi
+    $STD apt -y install libdrm-amdgpu1 2>/dev/null || true
     ;;
+
   NVIDIA)
-    # NVIDIA needs manual driver setup or use of nvidia-driver packages
+    # NVIDIA needs manual driver setup or passthrough from host
     msg_warn "NVIDIA GPU detected - driver must be installed manually or passed through from host"
     # Install basic VA-API support for potential hybrid setups
     $STD apt -y install va-driver-all vainfo 2>/dev/null || true
     ;;
+
   *)
-    # If no discrete GPU, but AMD CPU (e.g., Ryzen APU with integrated graphics)
+    # No discrete GPU detected - check for AMD APU
     if [[ "$cpu_vendor" == "AuthenticAMD" ]]; then
-      $STD apt -y install mesa-va-drivers mesa-vdpau-drivers vainfo 2>/dev/null || true
-      $STD apt -y install mesa-opencl-icd ocl-icd-libopencl1 clinfo 2>/dev/null || true
+      $STD apt -y install \
+        mesa-va-drivers \
+        mesa-vdpau-drivers \
+        mesa-opencl-icd \
+        ocl-icd-libopencl1 \
+        vainfo 2>/dev/null || true
     else
       msg_warn "No supported GPU vendor detected - skipping GPU driver installation"
     fi
@@ -2679,6 +2770,15 @@ function setup_hwaccel() {
     chmod 660 /dev/dri/* 2>/dev/null || true
     $STD adduser "$(id -u -n)" video 2>/dev/null || true
     $STD adduser "$(id -u -n)" render 2>/dev/null || true
+
+    # Sync GID for video/render groups between host and container
+    local host_video_gid host_render_gid
+    host_video_gid=$(getent group video | cut -d: -f3)
+    host_render_gid=$(getent group render | cut -d: -f3)
+    if [[ -n "$host_video_gid" && -n "$host_render_gid" ]]; then
+      sed -i "s/^video:x:[0-9]*:/video:x:$host_video_gid:/" /etc/group 2>/dev/null || true
+      sed -i "s/^render:x:[0-9]*:/render:x:$host_render_gid:/" /etc/group 2>/dev/null || true
+    fi
   fi
 
   cache_installed_version "hwaccel" "1.0"
