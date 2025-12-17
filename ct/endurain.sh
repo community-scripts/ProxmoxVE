@@ -28,7 +28,7 @@ function update_script() {
     msg_error "No ${APP} installation found!"
     exit 1
   fi
-  if check_for_gh_release "endurain" "joaovitoriasilva/endurain"; then
+  if check_for_gh_release "endurain" "endurain-project/endurain"; then
     msg_info "Stopping Service"
     systemctl stop endurain
     msg_ok "Stopped Service"
@@ -38,7 +38,7 @@ function update_script() {
     cp /opt/endurain/frontend/app/dist/env.js /opt/endurain.env.js
     msg_ok "Created Backup"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "endurain" "joaovitoriasilva/endurain" "tarball" "latest" "/opt/endurain"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "endurain" "endurain-project/endurain" "tarball" "latest" "/opt/endurain"
 
     msg_info "Preparing Update"
     cd /opt/endurain
