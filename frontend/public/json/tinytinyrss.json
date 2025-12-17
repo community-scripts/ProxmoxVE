@@ -1,0 +1,49 @@
+{
+  "name": "TinyTinyRSS",
+  "slug": "tinytinyrss",
+  "categories": [
+    12
+  ],
+  "date_created": "2025-01-15",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 80,
+  "documentation": "https://tt-rss.org/docs/Installation-Guide.html",
+  "website": "https://tt-rss.org/",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/tt-rss.webp",
+  "config_path": "/opt/tt-rss/config.php",
+  "description": "TinyTinyRSS (tt-rss) is a free, flexible, open-source, web-based news feed (RSS/Atom/other) reader and aggregator. It allows you to read feeds from multiple sources in one place, with features like article filtering, tagging, and sharing.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/tinytinyrss.sh",
+      "resources": {
+        "cpu": 2,
+        "ram": 1024,
+        "hdd": 4,
+        "os": "debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": "admin",
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "Admin and database credentials: `cat ~/tinytinyrss.creds`",
+      "type": "info"
+    },
+    {
+      "text": "A cron job to update feeds is configured at `/etc/cron.d/tt-rss-update-feeds` (runs every 15 minutes). This can be adjusted as needed.",
+      "type": "info"
+    },
+    {
+      "text": "The admin password is automatically generated during installation. Check the credentials file for the password.",
+      "type": "info"
+    }
+  ]
+}
+

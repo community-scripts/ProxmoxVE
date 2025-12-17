@@ -217,6 +217,11 @@ fi
   echo "TinyTinyRSS Admin Credentials"
   echo "Admin Username: $ADMIN_USER"
   echo "Admin Password: $ADMIN_PASS"
+  echo ""
+  echo "TinyTinyRSS Database Credentials"
+  echo "Database User: $DB_USER"
+  echo "Database Password: $DB_PASS"
+  echo "Database Name: $DB_NAME"
 } >>~/tinytinyrss.creds
 msg_ok "Admin user configured"
 
