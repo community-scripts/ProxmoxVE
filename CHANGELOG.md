@@ -24,6 +24,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Immich: v2.4.0 [@vhsdream](https://github.com/vhsdream) ([#10095](https://github.com/community-scripts/ProxmoxVE/pull/10095))
 
+### 💾 Core
+
+  - #### 🔧 Refactor
+
+    - tools.func: hardening/Improve error handling and cleanup in shell functions [@MickLesk](https://github.com/MickLesk) ([#10116](https://github.com/community-scripts/ProxmoxVE/pull/10116))
+
 ## 2025-12-17
 
 ### 🚀 Updated Scripts
