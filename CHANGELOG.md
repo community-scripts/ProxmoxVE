@@ -30,6 +30,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - tools.func: hardening/Improve error handling and cleanup in shell functions [@MickLesk](https://github.com/MickLesk) ([#10116](https://github.com/community-scripts/ProxmoxVE/pull/10116))
 
+### 🧰 Tools
+
+  - #### 🐞 Bug Fixes
+
+    - Improved error handling when a command does not exist [@wolle604](https://github.com/wolle604) ([#10089](https://github.com/community-scripts/ProxmoxVE/pull/10089))
+
 ## 2025-12-17
 
 ### 🚀 Updated Scripts
