@@ -25,7 +25,6 @@ INSTALL_PATH="/opt/qbittorrent-exporter"
 CONFIG_PATH="/opt/qbittorrent-exporter.env"
 header_info
 ensure_usr_local_bin_persist
-get_current_ip &>/dev/null
 
 # ==============================================================================
 # OS DETECTION
@@ -180,7 +179,7 @@ UPDATEEOF
 
   echo ""
   msg_ok "qBittorrent-Exporter installed successfully"
-  msg_ok "Metrics: ${BL}http://${CURRENT_IP}:8090/metrics${CL}"
+  msg_ok "Metrics: ${BL}http://${LOCAL_IP}:8090/metrics${CL}"
   msg_ok "Config: ${BL}${CONFIG_PATH}${CL}"
 }
 
@@ -189,7 +188,7 @@ UPDATEEOF
 # ==============================================================================
 header_info
 ensure_usr_local_bin_persist
-get_current_ip &>/dev/null
+import_local_ip
 
 # Handle type=update (called from update script)
 if [[ "${type:-}" == "update" ]]; then
