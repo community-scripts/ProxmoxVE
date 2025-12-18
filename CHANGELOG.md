@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-12-18
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - [HOTFIX] Fix Scanopy release check [@vhsdream](https://github.com/vhsdream) ([#10097](https://github.com/community-scripts/ProxmoxVE/pull/10097))
+
 ## 2025-12-17
 
 ### 🚀 Updated Scripts
