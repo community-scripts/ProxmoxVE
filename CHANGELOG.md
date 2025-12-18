@@ -22,6 +22,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - bump pihole to debian 13 [@mschabhuettl](https://github.com/mschabhuettl) ([#10118](https://github.com/community-scripts/ProxmoxVE/pull/10118))
     - Immich: v2.4.0 [@vhsdream](https://github.com/vhsdream) ([#10095](https://github.com/community-scripts/ProxmoxVE/pull/10095))
 
 ### 💾 Core
