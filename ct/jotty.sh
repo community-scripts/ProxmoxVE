@@ -59,6 +59,7 @@ function update_script() {
     systemctl start jotty
     msg_ok "Started Service"
     rm /opt/data_config.tar
+    cleanup_lxc
     msg_ok "Updated successfully!"
   fi
   exit
