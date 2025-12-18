@@ -815,12 +815,10 @@ cleanup_lxc() {
       xargs -0 -n1 truncate -s 0 2>/dev/null || true
   fi
 
-  # Node.js npm
+  # Node.js npm - directly remove cache directory
+  # npm cache clean/verify can fail with ENOTEMPTY errors, so we skip them
   if command -v npm &>/dev/null; then
-    npm cache verify &>/dev/null || true
-    # Directly remove cache directory instead of using npm cache clean
-    # which can fail with ENOTEMPTY errors
-    rm -rf /root/.npm/_cacache 2>/dev/null || true
+    rm -rf /root/.npm/_cacache /root/.npm/_logs 2>/dev/null || true
   fi
   # Node.js yarn
   if command -v yarn &>/dev/null; then $STD yarn cache clean || true; fi

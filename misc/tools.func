@@ -334,9 +334,9 @@ remove_old_tool_version() {
     $STD apt purge -y nodejs npm >/dev/null 2>&1 || true
     # Clean up npm global modules
     if command -v npm >/dev/null 2>&1; then
-      npm list -g 2>/dev/null | grep -oE '^  \S+' | awk '{print $1}' | while read -r module; do
+      npm list -g 2>/dev/null | grep -oE '^  \S+' | awk '{print $1}' 2>/dev/null | while read -r module; do
         npm uninstall -g "$module" >/dev/null 2>&1 || true
-      done
+      done || true
     fi
     cleanup_legacy_install "nodejs"
     cleanup_tool_keyrings "nodesource"
@@ -1167,7 +1167,7 @@ cleanup_orphaned_sources() {
 
     # Extract Signed-By path from .sources file
     local keyring_path
-    keyring_path=$(grep -E '^Signed-By:' "$sources_file" 2>/dev/null | awk '{print $2}')
+    keyring_path=$(grep -E '^Signed-By:' "$sources_file" 2>/dev/null | awk '{print $2}' 2>/dev/null || true)
 
     # If keyring doesn't exist, remove the .sources file
     if [[ -n "$keyring_path" ]] && [[ ! -f "$keyring_path" ]]; then
@@ -2073,7 +2073,7 @@ function setup_adminer() {
       return 1
     }
     local VERSION
-    VERSION=$(dpkg -s adminer 2>/dev/null | grep '^Version:' | awk '{print $2}')
+    VERSION=$(dpkg -s adminer 2>/dev/null | grep '^Version:' | awk '{print $2}' 2>/dev/null || echo 'unknown')
     cache_installed_version "adminer" "${VERSION:-unknown}"
     msg_ok "Setup Adminer (Debian/Ubuntu)"
   fi
@@ -2591,7 +2591,7 @@ function setup_hwaccel() {
 
   # Detect CPU vendor (relevant for AMD APUs)
   local cpu_vendor
-  cpu_vendor=$(lscpu 2>/dev/null | grep -i 'Vendor ID' | awk '{print $3}' || echo "")
+  cpu_vendor=$(lscpu 2>/dev/null | grep -i 'Vendor ID' | awk '{print $3}' 2>/dev/null || echo "")
 
   if [[ -z "$gpu_vendor" && -z "$cpu_vendor" ]]; then
     msg_warn "No GPU or CPU vendor detected - skipping hardware acceleration setup"
@@ -3699,7 +3699,7 @@ function setup_nodejs() {
 
       # Check if the module is already installed
       if $STD npm list -g --depth=0 "$MODULE_NAME" 2>&1 | grep -q "$MODULE_NAME@"; then
-        MODULE_INSTALLED_VERSION="$($STD npm list -g --depth=0 "$MODULE_NAME" 2>&1 | grep "$MODULE_NAME@" | awk -F@ '{print $2}' | tr -d '[:space:]')"
+        MODULE_INSTALLED_VERSION="$(npm list -g --depth=0 "$MODULE_NAME" 2>&1 | grep "$MODULE_NAME@" | awk -F@ '{print $2}' 2>/dev/null | tr -d '[:space:]' || echo '')"
         if [[ "$MODULE_REQ_VERSION" != "latest" && "$MODULE_REQ_VERSION" != "$MODULE_INSTALLED_VERSION" ]]; then
           msg_info "Updating $MODULE_NAME from v$MODULE_INSTALLED_VERSION to v$MODULE_REQ_VERSION"
           if ! $STD npm install -g "${MODULE_NAME}@${MODULE_REQ_VERSION}" 2>/dev/null; then
@@ -3818,7 +3818,7 @@ EOF
 
   # Get available PHP version from repository
   local AVAILABLE_PHP_VERSION=""
-  AVAILABLE_PHP_VERSION=$(apt-cache show "php${PHP_VERSION}" 2>/dev/null | grep -m1 "^Version:" | awk '{print $2}' | cut -d- -f1) || true
+  AVAILABLE_PHP_VERSION=$(apt-cache show "php${PHP_VERSION}" 2>/dev/null | grep -m1 "^Version:" | awk '{print $2}' 2>/dev/null | cut -d- -f1 || true)
 
   if [[ -z "$AVAILABLE_PHP_VERSION" ]]; then
     msg_error "PHP ${PHP_VERSION} not found in configured repositories"
@@ -4620,7 +4620,7 @@ function setup_rust() {
 
       # Check if already installed
       if echo "$CRATE_LIST" | grep -q "^${NAME} "; then
-        INSTALLED_VER=$(echo "$CRATE_LIST" | grep "^${NAME} " | head -1 | awk '{print $2}' | tr -d 'v:')
+        INSTALLED_VER=$(echo "$CRATE_LIST" | grep "^${NAME} " | head -1 | awk '{print $2}' 2>/dev/null | tr -d 'v:' || echo '')
 
         if [[ -n "$VER" && "$VER" != "$INSTALLED_VER" ]]; then
           msg_info "Upgrading $NAME from v$INSTALLED_VER to v$VER"
@@ -4635,7 +4635,7 @@ function setup_rust() {
             msg_error "Failed to upgrade $NAME"
             return 1
           }
-          local NEW_VER=$(cargo install --list 2>/dev/null | grep "^${NAME} " | head -1 | awk '{print $2}' | tr -d 'v:')
+          local NEW_VER=$(cargo install --list 2>/dev/null | grep "^${NAME} " | head -1 | awk '{print $2}' 2>/dev/null | tr -d 'v:' || echo 'unknown')
           msg_ok "Upgraded $NAME to v$NEW_VER"
         else
           msg_ok "$NAME v$INSTALLED_VER already installed"
@@ -4653,7 +4653,7 @@ function setup_rust() {
             msg_error "Failed to install $NAME"
             return 1
           }
-          local NEW_VER=$(cargo install --list 2>/dev/null | grep "^${NAME} " | head -1 | awk '{print $2}' | tr -d 'v:')
+          local NEW_VER=$(cargo install --list 2>/dev/null | grep "^${NAME} " | head -1 | awk '{print $2}' 2>/dev/null | tr -d 'v:' || echo 'unknown')
           msg_ok "Installed $NAME v$NEW_VER"
         fi
       fi
@@ -4975,7 +4975,7 @@ function setup_docker() {
   # Install or upgrade Docker
   if [ "$docker_installed" = true ]; then
     msg_info "Checking for Docker updates"
-    DOCKER_LATEST_VERSION=$(apt-cache policy docker-ce | grep Candidate | awk '{print $2}' | cut -d':' -f2 | cut -d'-' -f1)
+    DOCKER_LATEST_VERSION=$(apt-cache policy docker-ce | grep Candidate | awk '{print $2}' 2>/dev/null | cut -d':' -f2 | cut -d'-' -f1 || echo '')
 
     if [ "$DOCKER_CURRENT_VERSION" != "$DOCKER_LATEST_VERSION" ]; then
       msg_info "Updating Docker $DOCKER_CURRENT_VERSION → $DOCKER_LATEST_VERSION"
