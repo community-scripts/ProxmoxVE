@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Fix cleanup issues in npm cache and rustup toolchain [@MickLesk](https://github.com/MickLesk) ([#10107](https://github.com/community-scripts/ProxmoxVE/pull/10107))
     - Fix Zabbix 7.0 repository URL structure [@MickLesk](https://github.com/MickLesk) ([#10106](https://github.com/community-scripts/ProxmoxVE/pull/10106))
     - [HOTFIX] Fix Scanopy release check [@vhsdream](https://github.com/vhsdream) ([#10097](https://github.com/community-scripts/ProxmoxVE/pull/10097))
 
