@@ -1,13 +1,88 @@
 [
   {
-    "name": "javedh-dev/tracktor",
-    "version": "1.0.1",
-    "date": "2025-12-17T23:14:39Z"
+    "name": "juanfont/headscale",
+    "version": "v0.27.1",
+    "date": "2025-11-11T19:32:29Z"
+  },
+  {
+    "name": "docker/compose",
+    "version": "v5.0.1",
+    "date": "2025-12-18T10:35:33Z"
+  },
+  {
+    "name": "tailscale/tailscale",
+    "version": "v1.92.4",
+    "date": "2025-12-18T10:32:44Z"
+  },
+  {
+    "name": "TuroYT/snowshare",
+    "version": "v1.2.3",
+    "date": "2025-12-18T10:06:45Z"
+  },
+  {
+    "name": "coollabsio/coolify",
+    "version": "v4.0.0-beta.456",
+    "date": "2025-12-18T08:59:27Z"
+  },
+  {
+    "name": "Kozea/Radicale",
+    "version": "v3.5.10",
+    "date": "2025-12-18T07:14:13Z"
+  },
+  {
+    "name": "zabbix/zabbix",
+    "version": "7.4.6",
+    "date": "2025-12-18T07:00:26Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.478",
+    "date": "2025-12-18T05:55:21Z"
+  },
+  {
+    "name": "chrisvel/tududi",
+    "version": "v0.88.1",
+    "date": "2025-12-18T05:01:07Z"
+  },
+  {
+    "name": "comfyanonymous/ComfyUI",
+    "version": "v0.5.1",
+    "date": "2025-12-18T03:08:43Z"
+  },
+  {
+    "name": "scanopy/scanopy",
+    "version": "v0.12.3",
+    "date": "2025-12-18T02:48:06Z"
+  },
+  {
+    "name": "openobserve/openobserve",
+    "version": "v0.30.1",
+    "date": "2025-12-18T02:41:34Z"
+  },
+  {
+    "name": "chrisbenincasa/tunarr",
+    "version": "v1.0.6",
+    "date": "2025-12-18T01:28:04Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5.1",
+    "date": "2025-12-18T00:27:07Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
   },
   {
     "name": "goauthentik/authentik",
-    "version": "version/2025.12.0-rc2",
-    "date": "2025-12-17T22:03:04Z"
+    "version": "version/2025.10.3",
+    "date": "2025-12-16T18:00:53Z"
+  },
+  {
+    "name": "javedh-dev/tracktor",
+    "version": "1.0.1",
+    "date": "2025-12-17T11:31:03Z"
   },
   {
     "name": "ollama/ollama",
@@ -40,6 +115,11 @@
     "date": "2025-12-17T18:59:21Z"
   },
   {
+    "name": "neo4j/neo4j",
+    "version": "5.26.19",
+    "date": "2025-12-17T18:17:55Z"
+  },
+  {
     "name": "metabase/metabase",
     "version": "v0.57.7",
     "date": "2025-12-17T18:16:59Z"
@@ -55,19 +135,9 @@
     "date": "2025-12-17T17:43:28Z"
   },
   {
-    "name": "openobserve/openobserve",
-    "version": "v0.30.1",
-    "date": "2025-12-17T17:34:52Z"
-  },
-  {
-    "name": "comfyanonymous/ComfyUI",
-    "version": "v0.5.0",
-    "date": "2025-12-17T16:48:33Z"
-  },
-  {
-    "name": "scanopy/scanopy",
-    "version": "v0.12.2",
-    "date": "2025-12-17T16:01:43Z"
+    "name": "keycloak/keycloak",
+    "version": "26.4.7",
+    "date": "2025-12-01T08:14:11Z"
   },
   {
     "name": "semaphoreui/semaphore",
@@ -85,16 +155,6 @@
     "date": "2025-12-17T14:01:25Z"
   },
   {
-    "name": "zabbix/zabbix",
-    "version": "7.2.15",
-    "date": "2025-12-17T13:25:42Z"
-  },
-  {
-    "name": "chrisbenincasa/tunarr",
-    "version": "v1.0.5",
-    "date": "2025-12-17T12:48:30Z"
-  },
-  {
     "name": "bunkerity/bunkerweb",
     "version": "testing",
     "date": "2025-12-16T11:13:20Z"
@@ -108,16 +168,6 @@
     "name": "mattermost/mattermost",
     "version": "v11.1.2",
     "date": "2025-12-17T09:26:24Z"
-  },
-  {
-    "name": "coollabsio/coolify",
-    "version": "v4.0.0-beta.455",
-    "date": "2025-12-17T09:24:10Z"
-  },
-  {
-    "name": "TuroYT/snowshare",
-    "version": "v1.2.2",
-    "date": "2025-12-17T09:07:12Z"
   },
   {
     "name": "zitadel/zitadel",
@@ -160,11 +210,6 @@
     "date": "2025-10-09T10:27:01Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.468",
-    "date": "2025-12-17T05:55:30Z"
-  },
-  {
     "name": "nickheyer/discopanel",
     "version": "v1.0.16",
     "date": "2025-12-17T04:47:13Z"
@@ -173,16 +218,6 @@
     "name": "9001/copyparty",
     "version": "v1.19.23",
     "date": "2025-12-17T00:51:11Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.5",
-    "date": "2025-12-17T00:27:05Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
   },
   {
     "name": "esphome/esphome",
@@ -198,16 +233,6 @@
     "name": "inventree/InvenTree",
     "version": "1.1.7",
     "date": "2025-12-16T21:44:58Z"
-  },
-  {
-    "name": "tailscale/tailscale",
-    "version": "v1.92.3",
-    "date": "2025-12-16T21:19:10Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.4.7",
-    "date": "2025-12-01T08:14:11Z"
   },
   {
     "name": "prometheus-pve/prometheus-pve-exporter",
@@ -450,11 +475,6 @@
     "date": "2025-12-13T13:55:51Z"
   },
   {
-    "name": "chrisvel/tududi",
-    "version": "v0.88.0",
-    "date": "2025-12-13T09:36:24Z"
-  },
-  {
     "name": "Dokploy/dokploy",
     "version": "v0.26.2",
     "date": "2025-12-13T07:48:09Z"
@@ -462,7 +482,7 @@
   {
     "name": "mealie-recipes/mealie",
     "version": "v3.7.0",
-    "date": "2025-12-13T01:21:07Z"
+    "date": "2025-12-13T01:20:58Z"
   },
   {
     "name": "paperless-ngx/paperless-ngx",
@@ -815,16 +835,6 @@
     "date": "2025-12-02T17:47:52Z"
   },
   {
-    "name": "docker/compose",
-    "version": "v5.0.0",
-    "date": "2025-12-02T10:33:31Z"
-  },
-  {
-    "name": "neo4j/neo4j",
-    "version": "5.26.18",
-    "date": "2025-12-02T09:25:19Z"
-  },
-  {
     "name": "syncthing/syncthing",
     "version": "v2.0.12",
     "date": "2025-12-02T08:11:24Z"
@@ -865,11 +875,6 @@
     "date": "2025-11-30T20:59:51Z"
   },
   {
-    "name": "juanfont/headscale",
-    "version": "v0.27.1",
-    "date": "2025-11-11T19:32:29Z"
-  },
-  {
     "name": "hargata/lubelog",
     "version": "v1.5.5",
     "date": "2025-11-30T18:33:20Z"
@@ -893,11 +898,6 @@
     "name": "ErsatzTV/ErsatzTV",
     "version": "v25.9.0",
     "date": "2025-11-29T16:37:28Z"
-  },
-  {
-    "name": "Kozea/Radicale",
-    "version": "v3.5.9",
-    "date": "2025-11-29T14:35:45Z"
   },
   {
     "name": "authelia/authelia",
