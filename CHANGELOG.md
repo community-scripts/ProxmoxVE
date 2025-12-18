@@ -33,6 +33,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🧰 Tools
 
+  - qbittorrent-exporter ([#10090](https://github.com/community-scripts/ProxmoxVE/pull/10090))
+
   - #### 🐞 Bug Fixes
 
     - Improved error handling when a command does not exist [@wolle604](https://github.com/wolle604) ([#10089](https://github.com/community-scripts/ProxmoxVE/pull/10089))
