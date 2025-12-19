@@ -44,7 +44,14 @@ curl -fsSL "$ZABBIX_DEB_URL" -o /tmp/"$ZABBIX_DEB_FILE"
 $STD dpkg -i /tmp/"$ZABBIX_DEB_FILE"
 $STD apt update
 $STD apt install -y zabbix-server-pgsql zabbix-frontend-php php8.4-pgsql zabbix-apache-conf zabbix-sql-scripts
-zcat /usr/share/zabbix/sql-scripts/postgresql/server.sql.gz | sudo -u "$PG_DB_USER" psql "$PG_DB_NAME" &>/dev/null
+
+if [[ "$ZABBIX_VERSION" == "7.0" ]]; then
+  ZABBIX_SQL="/usr/share/zabbix-sql-scripts/postgresql/server.sql.gz"
+else
+  ZABBIX_SQL="/usr/share/zabbix/sql-scripts/postgresql/server.sql.gz"
+fi
+
+zcat "$ZABBIX_SQL" | sudo -u "$PG_DB_USER" psql "$PG_DB_NAME" &>/dev/null
 sed -i "s/^DBName=.*/DBName=$PG_DB_NAME/" /etc/zabbix/zabbix_server.conf
 sed -i "s/^DBUser=.*/DBUser=$PG_DB_USER/" /etc/zabbix/zabbix_server.conf
 sed -i "s/^# DBPassword=.*/DBPassword=$PG_DB_PASS/" /etc/zabbix/zabbix_server.conf
