@@ -35,6 +35,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - core: Auto-cleanup after all update_script executions [@MickLesk](https://github.com/MickLesk) ([#10141](https://github.com/community-scripts/ProxmoxVE/pull/10141))
 
+### 🧰 Tools
+
+  - #### 🔧 Refactor
+
+    - fix: removed verbose option to avoid unnecessary output [@wolle604](https://github.com/wolle604) ([#10144](https://github.com/community-scripts/ProxmoxVE/pull/10144))
+
 ### ❔ Uncategorized
 
   - Update paymenter.json(#10133) [@DragoQC](https://github.com/DragoQC) ([#10134](https://github.com/community-scripts/ProxmoxVE/pull/10134))
