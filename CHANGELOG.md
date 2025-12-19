@@ -20,6 +20,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: Cosmos: + Upgrade to Debian 13  [@MickLesk](https://github.com/MickLesk) ([#10147](https://github.com/community-scripts/ProxmoxVE/pull/10147))
     - Refactor: Proxmox-Mail-Gateway [@tremor021](https://github.com/tremor021) ([#10070](https://github.com/community-scripts/ProxmoxVE/pull/10070))
 
 ### ❔ Uncategorized
