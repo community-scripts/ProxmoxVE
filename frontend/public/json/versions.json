@@ -1,13 +1,103 @@
 [
   {
-    "name": "juanfont/headscale",
-    "version": "v0.27.1",
-    "date": "2025-11-11T19:32:29Z"
+    "name": "moghtech/komodo",
+    "version": "v1.19.5",
+    "date": "2025-09-27T20:59:46Z"
+  },
+  {
+    "name": "metabase/metabase",
+    "version": "v0.57.x",
+    "date": "2025-12-18T22:02:32Z"
+  },
+  {
+    "name": "chrisbenincasa/tunarr",
+    "version": "v1.0.7",
+    "date": "2025-12-18T21:27:26Z"
+  },
+  {
+    "name": "Stirling-Tools/Stirling-PDF",
+    "version": "v2.1.5",
+    "date": "2025-12-18T20:48:01Z"
+  },
+  {
+    "name": "scanopy/scanopy",
+    "version": "v0.12.4",
+    "date": "2025-12-18T19:25:47Z"
+  },
+  {
+    "name": "rcourtman/Pulse",
+    "version": "v4.36.2",
+    "date": "2025-12-03T22:46:29Z"
+  },
+  {
+    "name": "fccview/jotty",
+    "version": "1.14.1",
+    "date": "2025-12-18T19:07:58Z"
+  },
+  {
+    "name": "saltstack/salt",
+    "version": "v3007.10",
+    "date": "2025-12-18T18:14:16Z"
+  },
+  {
+    "name": "go-gitea/gitea",
+    "version": "v1.25.3",
+    "date": "2025-12-18T18:11:48Z"
+  },
+  {
+    "name": "karlomikus/bar-assistant",
+    "version": "v5.11.0",
+    "date": "2025-12-18T18:06:05Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.30.23",
+    "date": "2025-12-18T16:55:01Z"
+  },
+  {
+    "name": "YunoHost/yunohost",
+    "version": "debian/12.1.37",
+    "date": "2025-12-18T16:43:23Z"
+  },
+  {
+    "name": "ollama/ollama",
+    "version": "v0.13.5",
+    "date": "2025-12-18T16:39:08Z"
+  },
+  {
+    "name": "meilisearch/meilisearch",
+    "version": "latest",
+    "date": "2025-12-18T16:38:45Z"
+  },
+  {
+    "name": "paperless-ngx/paperless-ngx",
+    "version": "v2.20.3",
+    "date": "2025-12-18T16:10:13Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@1.123.7",
+    "date": "2025-12-17T14:01:25Z"
+  },
+  {
+    "name": "immich-app/immich",
+    "version": "v2.4.0",
+    "date": "2025-12-18T14:51:33Z"
   },
   {
     "name": "docker/compose",
     "version": "v5.0.1",
-    "date": "2025-12-18T10:35:33Z"
+    "date": "2025-12-18T14:22:38Z"
+  },
+  {
+    "name": "coollabsio/coolify",
+    "version": "v4.0.0-beta.458",
+    "date": "2025-12-18T12:23:23Z"
+  },
+  {
+    "name": "juanfont/headscale",
+    "version": "v0.27.1",
+    "date": "2025-11-11T19:32:29Z"
   },
   {
     "name": "tailscale/tailscale",
@@ -18,11 +108,6 @@
     "name": "TuroYT/snowshare",
     "version": "v1.2.3",
     "date": "2025-12-18T10:06:45Z"
-  },
-  {
-    "name": "coollabsio/coolify",
-    "version": "v4.0.0-beta.456",
-    "date": "2025-12-18T08:59:27Z"
   },
   {
     "name": "Kozea/Radicale",
@@ -50,19 +135,9 @@
     "date": "2025-12-18T03:08:43Z"
   },
   {
-    "name": "scanopy/scanopy",
-    "version": "v0.12.3",
-    "date": "2025-12-18T02:48:06Z"
-  },
-  {
     "name": "openobserve/openobserve",
     "version": "v0.30.1",
     "date": "2025-12-18T02:41:34Z"
-  },
-  {
-    "name": "chrisbenincasa/tunarr",
-    "version": "v1.0.6",
-    "date": "2025-12-18T01:28:04Z"
   },
   {
     "name": "jeedom/core",
@@ -83,16 +158,6 @@
     "name": "javedh-dev/tracktor",
     "version": "1.0.1",
     "date": "2025-12-17T11:31:03Z"
-  },
-  {
-    "name": "ollama/ollama",
-    "version": "v0.13.5-rc0",
-    "date": "2025-12-17T21:13:55Z"
-  },
-  {
-    "name": "fccview/jotty",
-    "version": "1.14.0",
-    "date": "2025-12-17T20:26:22Z"
   },
   {
     "name": "emqx/emqx",
@@ -120,16 +185,6 @@
     "date": "2025-12-17T18:17:55Z"
   },
   {
-    "name": "metabase/metabase",
-    "version": "v0.57.7",
-    "date": "2025-12-17T18:16:59Z"
-  },
-  {
-    "name": "immich-app/immich",
-    "version": "v2.4.0",
-    "date": "2025-12-17T17:44:24Z"
-  },
-  {
     "name": "BerriAI/litellm",
     "version": "v1.80.10.rc.4",
     "date": "2025-12-17T17:43:28Z"
@@ -148,11 +203,6 @@
     "name": "NodeBB/NodeBB",
     "version": "v4.7.1",
     "date": "2025-12-17T15:18:55Z"
-  },
-  {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.123.7",
-    "date": "2025-12-17T14:01:25Z"
   },
   {
     "name": "bunkerity/bunkerweb",
@@ -178,11 +228,6 @@
     "name": "SigNoz/signoz",
     "version": "v0.105.1",
     "date": "2025-12-17T08:48:52Z"
-  },
-  {
-    "name": "meilisearch/meilisearch",
-    "version": "prototype-v1.30.1-rebuild-hannoy-graph.0",
-    "date": "2025-12-17T08:38:38Z"
   },
   {
     "name": "passbolt/passbolt_api",
@@ -270,11 +315,6 @@
     "date": "2025-12-16T09:59:22Z"
   },
   {
-    "name": "rcourtman/Pulse",
-    "version": "v4.36.2",
-    "date": "2025-12-03T22:46:29Z"
-  },
-  {
     "name": "sabnzbd/sabnzbd",
     "version": "4.5.5",
     "date": "2025-10-24T11:12:22Z"
@@ -283,11 +323,6 @@
     "name": "morpheus65535/bazarr",
     "version": "v1.5.3",
     "date": "2025-09-20T12:12:33Z"
-  },
-  {
-    "name": "Stirling-Tools/Stirling-PDF",
-    "version": "v2.1.4",
-    "date": "2025-12-16T00:02:18Z"
   },
   {
     "name": "azukaar/Cosmos-Server",
@@ -435,11 +470,6 @@
     "date": "2025-12-13T22:49:07Z"
   },
   {
-    "name": "karlomikus/bar-assistant",
-    "version": "v5.10.0",
-    "date": "2025-12-13T20:17:27Z"
-  },
-  {
     "name": "fosrl/pangolin",
     "version": "1.13.1",
     "date": "2025-12-13T18:00:27Z"
@@ -482,12 +512,7 @@
   {
     "name": "mealie-recipes/mealie",
     "version": "v3.7.0",
-    "date": "2025-12-13T01:20:58Z"
-  },
-  {
-    "name": "paperless-ngx/paperless-ngx",
-    "version": "v2.20.2",
-    "date": "2025-12-12T23:47:48Z"
+    "date": "2025-12-13T01:21:07Z"
   },
   {
     "name": "mongodb/mongo",
@@ -550,11 +575,6 @@
     "date": "2025-12-11T22:45:52Z"
   },
   {
-    "name": "msgbyte/tianji",
-    "version": "v1.30.22",
-    "date": "2025-12-11T18:02:06Z"
-  },
-  {
     "name": "pommee/goaway",
     "version": "v0.62.24",
     "date": "2025-12-11T09:54:59Z"
@@ -563,11 +583,6 @@
     "name": "linkwarden/linkwarden",
     "version": "v2.13.2",
     "date": "2025-12-11T06:31:24Z"
-  },
-  {
-    "name": "moghtech/komodo",
-    "version": "v1.19.5",
-    "date": "2025-09-27T20:59:46Z"
   },
   {
     "name": "TwiN/gatus",
@@ -728,11 +743,6 @@
     "name": "prometheus/blackbox_exporter",
     "version": "v0.28.0",
     "date": "2025-12-06T13:32:18Z"
-  },
-  {
-    "name": "YunoHost/yunohost",
-    "version": "debian/13.0.2",
-    "date": "2025-12-06T10:46:12Z"
   },
   {
     "name": "toniebox-reverse-engineering/teddycloud",
@@ -990,11 +1000,6 @@
     "date": "2025-11-23T12:49:50Z"
   },
   {
-    "name": "go-gitea/gitea",
-    "version": "v1.25.2",
-    "date": "2025-11-22T19:37:02Z"
-  },
-  {
     "name": "TechnitiumSoftware/DnsServer",
     "version": "v14.2.0",
     "date": "2025-11-22T12:54:08Z"
@@ -1028,11 +1033,6 @@
     "name": "project-zot/zot",
     "version": "v2.1.11",
     "date": "2025-11-20T20:14:44Z"
-  },
-  {
-    "name": "saltstack/salt",
-    "version": "v3007.9",
-    "date": "2025-11-20T17:58:32Z"
   },
   {
     "name": "kimai/kimai",
