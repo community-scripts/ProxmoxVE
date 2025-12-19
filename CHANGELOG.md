@@ -29,6 +29,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Refactor: Cosmos: + Upgrade to Debian 13  [@MickLesk](https://github.com/MickLesk) ([#10147](https://github.com/community-scripts/ProxmoxVE/pull/10147))
     - Refactor: Proxmox-Mail-Gateway [@tremor021](https://github.com/tremor021) ([#10070](https://github.com/community-scripts/ProxmoxVE/pull/10070))
 
+### 💾 Core
+
+  - #### ✨ New Features
+
+    - core: Auto-cleanup after all update_script executions [@MickLesk](https://github.com/MickLesk) ([#10141](https://github.com/community-scripts/ProxmoxVE/pull/10141))
+
 ### ❔ Uncategorized
 
   - Update paymenter.json(#10133) [@DragoQC](https://github.com/DragoQC) ([#10134](https://github.com/community-scripts/ProxmoxVE/pull/10134))
