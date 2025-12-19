@@ -19,6 +19,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Zabbix: Add version-specific SQL script path for 7.0 LTS [@MickLesk](https://github.com/MickLesk) ([#10142](https://github.com/community-scripts/ProxmoxVE/pull/10142))
     - InfluxDB: Fix update function [@Liganic](https://github.com/Liganic) ([#10151](https://github.com/community-scripts/ProxmoxVE/pull/10151))
 
+  - #### ✨ New Features
+
+    - Bump Immich to v2.4.1 [@vhsdream](https://github.com/vhsdream) ([#10154](https://github.com/community-scripts/ProxmoxVE/pull/10154))
+
   - #### 🔧 Refactor
 
     - Refactor: Cosmos: + Upgrade to Debian 13  [@MickLesk](https://github.com/MickLesk) ([#10147](https://github.com/community-scripts/ProxmoxVE/pull/10147))
