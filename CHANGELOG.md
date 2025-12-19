@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Update Reitti to Java 25 for 3.0.0 compatibility [@Copilot](https://github.com/Copilot) ([#10164](https://github.com/community-scripts/ProxmoxVE/pull/10164))
     - Bump Bar-Assistant to php 8.4 [@MickLesk](https://github.com/MickLesk) ([#10138](https://github.com/community-scripts/ProxmoxVE/pull/10138))
     - Zabbix: Add version-specific SQL script path for 7.0 LTS [@MickLesk](https://github.com/MickLesk) ([#10142](https://github.com/community-scripts/ProxmoxVE/pull/10142))
     - InfluxDB: Fix update function [@Liganic](https://github.com/Liganic) ([#10151](https://github.com/community-scripts/ProxmoxVE/pull/10151))
