@@ -14,6 +14,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - InfluxDB: Fix update function [@Liganic](https://github.com/Liganic) ([#10151](https://github.com/community-scripts/ProxmoxVE/pull/10151))
+
   - #### 🔧 Refactor
 
     - Refactor: Proxmox-Mail-Gateway [@tremor021](https://github.com/tremor021) ([#10070](https://github.com/community-scripts/ProxmoxVE/pull/10070))
