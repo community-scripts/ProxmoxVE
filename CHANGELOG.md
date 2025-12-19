@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-12-19
 
+### ❔ Uncategorized
+
+  - Update paymenter.json(#10133) [@DragoQC](https://github.com/DragoQC) ([#10134](https://github.com/community-scripts/ProxmoxVE/pull/10134))
+
 ## 2025-12-18
 
 ### 🚀 Updated Scripts
