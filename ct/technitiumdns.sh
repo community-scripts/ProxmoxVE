@@ -49,7 +49,7 @@ function update_script() {
     rm -f /opt/DnsServerPortable.tar.gz
     echo "${RELEASE}" >~/.technitium
     $STD systemctl restart technitium.service
-    msg_ok "Updated ${APP}"
+    msg_ok "Updated Technitium DNS"
     msg_ok "Updated successfully!"
   else
     msg_ok "No update required.  Technitium DNS is already at v${RELEASE}."
