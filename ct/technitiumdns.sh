@@ -38,7 +38,6 @@ function update_script() {
       "https://packages.microsoft.com/debian/13/prod/" \
       "trixie" \
       "main"
-    $STD apt update
     $STD apt install -y aspnetcore-runtime-9.0
   fi
 
