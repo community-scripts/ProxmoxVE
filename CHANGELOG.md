@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Update Technitium DNS and Restart Service [@DrEVILish](https://github.com/DrEVILish) ([#10181](https://github.com/community-scripts/ProxmoxVE/pull/10181))
     - bump: ersatztv: deb13 [@CrazyWolf13](https://github.com/CrazyWolf13) ([#10174](https://github.com/community-scripts/ProxmoxVE/pull/10174))
 
 ## 2025-12-19
