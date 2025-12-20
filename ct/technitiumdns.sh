@@ -38,6 +38,7 @@ function update_script() {
       "https://packages.microsoft.com/debian/13/prod/" \
       "trixie" \
       "main"
+    $STD apt update
     $STD apt install -y aspnetcore-runtime-9.0
   fi
 
@@ -47,7 +48,9 @@ function update_script() {
     curl -fsSL "https://download.technitium.com/dns/DnsServerPortable.tar.gz" -o /opt/DnsServerPortable.tar.gz
     $STD tar zxvf /opt/DnsServerPortable.tar.gz -C /opt/technitium/dns/
     rm -f /opt/DnsServerPortable.tar.gz
-    msg_ok "Updated Technitium DNS"
+    echo "${RELEASE}" >~/.technitium
+    $STD systemctl restart technitium.service
+    msg_ok "Updated ${APP}"
     msg_ok "Updated successfully!"
   else
     msg_ok "No update required.  Technitium DNS is already at v${RELEASE}."
