@@ -236,7 +236,8 @@ EOF
     ln -s "${UPLOAD_DIR:-/opt/immich/upload}" "$ML_DIR"/upload
     ln -s "$GEO_DIR" "$APP_DIR"
 
-    chown -R immich:immich "$INSTALL_DIR"
+    #chown -R immich:immich "$INSTALL_DIR"
+    find "$INSTALL_DIR" -path "$INSTALL_DIR/lost+found" -prune -o -exec chown -R immich:immich {} +
     msg_ok "Updated ${APP} to v${RELEASE}"
     systemctl restart immich-ml immich-web
   fi
