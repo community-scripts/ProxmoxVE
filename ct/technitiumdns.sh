@@ -48,7 +48,7 @@ function update_script() {
     $STD tar zxvf /opt/DnsServerPortable.tar.gz -C /opt/technitium/dns/
     rm -f /opt/DnsServerPortable.tar.gz
     echo "${RELEASE}" >~/.technitium
-    $STD systemctl restart technitium
+    systemctl restart technitium
     msg_ok "Updated Technitium DNS"
     msg_ok "Updated successfully!"
   else
