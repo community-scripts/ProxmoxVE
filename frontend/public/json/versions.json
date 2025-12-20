@@ -1,5 +1,60 @@
 [
   {
+    "name": "ghostfolio/ghostfolio",
+    "version": "2.224.0",
+    "date": "2025-12-20T10:53:10Z"
+  },
+  {
+    "name": "fuma-nama/fumadocs",
+    "version": "create-fumadocs-app@16.0.30",
+    "date": "2025-12-20T10:47:00Z"
+  },
+  {
+    "name": "zwave-js/zwave-js-ui",
+    "version": "v11.9.1",
+    "date": "2025-12-20T09:14:25Z"
+  },
+  {
+    "name": "pommee/goaway",
+    "version": "v0.62.25",
+    "date": "2025-12-20T09:11:49Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.4.14",
+    "date": "2025-12-16T05:42:34Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.488",
+    "date": "2025-12-20T05:55:23Z"
+  },
+  {
+    "name": "louislam/uptime-kuma",
+    "version": "2.0.2",
+    "date": "2025-10-22T17:03:54Z"
+  },
+  {
+    "name": "hyperion-project/hyperion.ng",
+    "version": "2.1.1",
+    "date": "2025-06-14T17:45:06Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5.1",
+    "date": "2025-12-20T00:27:06Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
+    "name": "Dispatcharr/Dispatcharr",
+    "version": "v0.15.0",
+    "date": "2025-12-20T00:12:04Z"
+  },
+  {
     "name": "pelican-dev/panel",
     "version": "v1.0.0-beta30",
     "date": "2025-12-19T23:37:07Z"
@@ -50,6 +105,11 @@
     "date": "2025-12-18T16:43:23Z"
   },
   {
+    "name": "keycloak/keycloak",
+    "version": "26.4.7",
+    "date": "2025-12-01T08:14:11Z"
+  },
+  {
     "name": "home-assistant/core",
     "version": "2025.12.4",
     "date": "2025-12-19T17:55:13Z"
@@ -58,11 +118,6 @@
     "name": "qdrant/qdrant",
     "version": "v1.16.3",
     "date": "2025-12-19T17:45:42Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.4.14",
-    "date": "2025-12-16T05:42:34Z"
   },
   {
     "name": "esphome/esphome",
@@ -110,11 +165,6 @@
     "date": "2025-12-19T13:17:26Z"
   },
   {
-    "name": "fuma-nama/fumadocs",
-    "version": "@fumadocs/ui@16.3.1",
-    "date": "2025-12-19T13:11:34Z"
-  },
-  {
     "name": "readeck/readeck",
     "version": "0.21.5",
     "date": "2025-12-19T11:51:05Z"
@@ -150,11 +200,6 @@
     "date": "2025-09-20T12:12:33Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.487",
-    "date": "2025-12-19T05:55:55Z"
-  },
-  {
     "name": "jhuckaby/Cronicle",
     "version": "v0.9.102",
     "date": "2025-12-19T03:45:13Z"
@@ -168,16 +213,6 @@
     "name": "mealie-recipes/mealie",
     "version": "v3.8.0",
     "date": "2025-12-19T01:37:04Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.5.1",
-    "date": "2025-12-19T00:27:05Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
   },
   {
     "name": "moghtech/komodo",
@@ -233,11 +268,6 @@
     "name": "ollama/ollama",
     "version": "v0.13.5",
     "date": "2025-12-18T16:39:08Z"
-  },
-  {
-    "name": "keycloak/keycloak",
-    "version": "26.4.7",
-    "date": "2025-12-01T08:14:11Z"
   },
   {
     "name": "paperless-ngx/paperless-ngx",
@@ -348,11 +378,6 @@
     "name": "jupyter/notebook",
     "version": "@jupyter-notebook/ui-components@7.6.0-alpha.0",
     "date": "2025-12-17T08:35:55Z"
-  },
-  {
-    "name": "zwave-js/zwave-js-ui",
-    "version": "v11.9.0",
-    "date": "2025-12-17T08:26:50Z"
   },
   {
     "name": "nickheyer/discopanel",
@@ -515,11 +540,6 @@
     "date": "2025-12-14T08:35:11Z"
   },
   {
-    "name": "ghostfolio/ghostfolio",
-    "version": "2.223.0",
-    "date": "2025-12-14T08:16:54Z"
-  },
-  {
     "name": "mayswind/AriaNg",
     "version": "1.3.12",
     "date": "2025-12-14T02:58:24Z"
@@ -620,11 +640,6 @@
     "date": "2025-12-11T22:45:52Z"
   },
   {
-    "name": "pommee/goaway",
-    "version": "v0.62.24",
-    "date": "2025-12-11T09:54:59Z"
-  },
-  {
     "name": "linkwarden/linkwarden",
     "version": "v2.13.2",
     "date": "2025-12-11T06:31:24Z"
@@ -698,11 +713,6 @@
     "name": "Paymenter/Paymenter",
     "version": "v1.4.7",
     "date": "2025-12-09T11:44:49Z"
-  },
-  {
-    "name": "Dispatcharr/Dispatcharr",
-    "version": "v0.14.0",
-    "date": "2025-12-09T00:04:09Z"
   },
   {
     "name": "seerr-team/seerr",
@@ -838,11 +848,6 @@
     "name": "Graylog2/graylog2-server",
     "version": "6.2.10",
     "date": "2025-12-03T13:58:32Z"
-  },
-  {
-    "name": "hyperion-project/hyperion.ng",
-    "version": "2.1.1",
-    "date": "2025-06-14T17:45:06Z"
   },
   {
     "name": "henrygd/beszel",
@@ -1273,11 +1278,6 @@
     "name": "Kareadita/Kavita",
     "version": "v0.8.8.3",
     "date": "2025-10-23T12:31:49Z"
-  },
-  {
-    "name": "louislam/uptime-kuma",
-    "version": "2.0.2",
-    "date": "2025-10-22T17:03:54Z"
   },
   {
     "name": "benzino77/tasmocompiler",
