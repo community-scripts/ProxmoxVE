@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-12-20
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - bump: ersatztv: deb13 [@CrazyWolf13](https://github.com/CrazyWolf13) ([#10174](https://github.com/community-scripts/ProxmoxVE/pull/10174))
+
 ## 2025-12-19
 
 ### 🚀 Updated Scripts
