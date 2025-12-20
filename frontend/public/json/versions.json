@@ -1,28 +1,138 @@
 [
   {
-    "name": "forgejo/forgejo",
-    "version": "v15.0.0-dev",
-    "date": "2025-12-19T11:43:47Z"
+    "name": "pelican-dev/panel",
+    "version": "v1.0.0-beta30",
+    "date": "2025-12-19T23:37:07Z"
   },
   {
-    "name": "fccview/jotty",
-    "version": "1.14.2",
-    "date": "2025-12-19T11:25:29Z"
+    "name": "pelican-dev/wings",
+    "version": "v1.0.0-beta21",
+    "date": "2025-12-19T23:04:27Z"
   },
   {
-    "name": "readeck/readeck",
-    "version": "0.21.5",
-    "date": "2025-12-19T11:22:20Z"
+    "name": "laurent22/joplin",
+    "version": "server-v3.5.2",
+    "date": "2025-12-19T21:28:55Z"
   },
   {
-    "name": "release-argus/Argus",
-    "version": "0.28.3",
-    "date": "2025-12-19T11:05:10Z"
+    "name": "emqx/emqx",
+    "version": "e5.10.3-alpha.1",
+    "date": "2025-12-19T21:08:48Z"
+  },
+  {
+    "name": "openhab/openhab-core",
+    "version": "5.1.0.RC1",
+    "date": "2025-12-19T20:37:27Z"
+  },
+  {
+    "name": "metabase/metabase",
+    "version": "v0.58.x",
+    "date": "2025-12-19T20:05:58Z"
+  },
+  {
+    "name": "homarr-labs/homarr",
+    "version": "v1.47.0",
+    "date": "2025-12-19T19:42:50Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.80.10.dev.1",
+    "date": "2025-12-19T19:16:21Z"
+  },
+  {
+    "name": "booklore-app/booklore",
+    "version": "v1.15.0",
+    "date": "2025-12-19T18:57:42Z"
+  },
+  {
+    "name": "YunoHost/yunohost",
+    "version": "debian/12.1.37",
+    "date": "2025-12-18T16:43:23Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.12.4",
+    "date": "2025-12-19T17:55:13Z"
+  },
+  {
+    "name": "qdrant/qdrant",
+    "version": "v1.16.3",
+    "date": "2025-12-19T17:45:42Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.4.14",
+    "date": "2025-12-16T05:42:34Z"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2025.12.1",
+    "date": "2025-12-19T15:53:08Z"
+  },
+  {
+    "name": "immich-app/immich",
+    "version": "v2.4.1",
+    "date": "2025-12-19T15:50:12Z"
+  },
+  {
+    "name": "itsmng/itsm-ng",
+    "version": "v1.6.11",
+    "date": "2025-12-19T15:28:57Z"
+  },
+  {
+    "name": "openobserve/openobserve",
+    "version": "v0.30.2",
+    "date": "2025-12-19T15:18:53Z"
+  },
+  {
+    "name": "nzbgetcom/nzbget",
+    "version": "v25.4",
+    "date": "2025-10-09T10:27:01Z"
+  },
+  {
+    "name": "dedicatedcode/reitti",
+    "version": "v3.0.0",
+    "date": "2025-12-19T13:47:44Z"
+  },
+  {
+    "name": "raydak-labs/configarr",
+    "version": "v1.19.0",
+    "date": "2025-12-19T13:37:00Z"
   },
   {
     "name": "wazuh/wazuh",
     "version": "coverity-w51-4.14.2",
     "date": "2025-12-15T12:34:36Z"
+  },
+  {
+    "name": "fccview/jotty",
+    "version": "1.14.4",
+    "date": "2025-12-19T13:17:26Z"
+  },
+  {
+    "name": "fuma-nama/fumadocs",
+    "version": "@fumadocs/ui@16.3.1",
+    "date": "2025-12-19T13:11:34Z"
+  },
+  {
+    "name": "readeck/readeck",
+    "version": "0.21.5",
+    "date": "2025-12-19T11:51:05Z"
+  },
+  {
+    "name": "forgejo/forgejo",
+    "version": "v15.0.0-dev",
+    "date": "2025-12-19T11:43:47Z"
+  },
+  {
+    "name": "meilisearch/meilisearch",
+    "version": "prototype-v1.30.1-rebuild-hannoy-graph.1",
+    "date": "2025-12-19T11:14:05Z"
+  },
+  {
+    "name": "release-argus/Argus",
+    "version": "0.28.3",
+    "date": "2025-12-19T11:05:10Z"
   },
   {
     "name": "TuroYT/snowshare",
@@ -50,11 +160,6 @@
     "date": "2025-12-19T03:45:13Z"
   },
   {
-    "name": "BerriAI/litellm",
-    "version": "v1.80.10.rc.5",
-    "date": "2025-12-19T03:38:23Z"
-  },
-  {
     "name": "javedh-dev/tracktor",
     "version": "1.0.1",
     "date": "2025-12-17T23:14:39Z"
@@ -62,7 +167,7 @@
   {
     "name": "mealie-recipes/mealie",
     "version": "v3.8.0",
-    "date": "2025-12-19T01:37:16Z"
+    "date": "2025-12-19T01:37:04Z"
   },
   {
     "name": "jeedom/core",
@@ -78,11 +183,6 @@
     "name": "moghtech/komodo",
     "version": "v1.19.5",
     "date": "2025-09-27T20:59:46Z"
-  },
-  {
-    "name": "metabase/metabase",
-    "version": "v0.57.x",
-    "date": "2025-12-18T22:02:32Z"
   },
   {
     "name": "chrisbenincasa/tunarr",
@@ -120,24 +220,19 @@
     "date": "2025-12-18T18:06:05Z"
   },
   {
+    "name": "neo4j/neo4j",
+    "version": "2025.11.2",
+    "date": "2025-12-18T17:08:34Z"
+  },
+  {
     "name": "msgbyte/tianji",
     "version": "v1.30.23",
     "date": "2025-12-18T16:55:01Z"
   },
   {
-    "name": "YunoHost/yunohost",
-    "version": "debian/12.1.37",
-    "date": "2025-12-18T16:43:23Z"
-  },
-  {
     "name": "ollama/ollama",
     "version": "v0.13.5",
     "date": "2025-12-18T16:39:08Z"
-  },
-  {
-    "name": "meilisearch/meilisearch",
-    "version": "latest",
-    "date": "2025-12-18T16:38:45Z"
   },
   {
     "name": "keycloak/keycloak",
@@ -153,11 +248,6 @@
     "name": "n8n-io/n8n",
     "version": "n8n@1.123.7",
     "date": "2025-12-17T14:01:25Z"
-  },
-  {
-    "name": "immich-app/immich",
-    "version": "v2.4.0",
-    "date": "2025-12-18T14:51:33Z"
   },
   {
     "name": "docker/compose",
@@ -200,19 +290,9 @@
     "date": "2025-12-18T03:08:43Z"
   },
   {
-    "name": "openobserve/openobserve",
-    "version": "v0.30.1",
-    "date": "2025-12-18T02:41:34Z"
-  },
-  {
     "name": "goauthentik/authentik",
     "version": "version/2025.10.3",
     "date": "2025-12-16T18:00:53Z"
-  },
-  {
-    "name": "emqx/emqx",
-    "version": "6.1.0-alpha.2",
-    "date": "2025-12-17T20:15:23Z"
   },
   {
     "name": "influxdata/influxdb",
@@ -228,11 +308,6 @@
     "name": "coder/code-server",
     "version": "v4.107.0",
     "date": "2025-12-17T18:59:21Z"
-  },
-  {
-    "name": "neo4j/neo4j",
-    "version": "5.26.19",
-    "date": "2025-12-17T18:17:55Z"
   },
   {
     "name": "semaphoreui/semaphore",
@@ -280,16 +355,6 @@
     "date": "2025-12-17T08:26:50Z"
   },
   {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.4.14",
-    "date": "2025-12-16T05:42:34Z"
-  },
-  {
-    "name": "nzbgetcom/nzbget",
-    "version": "v25.4",
-    "date": "2025-10-09T10:27:01Z"
-  },
-  {
     "name": "nickheyer/discopanel",
     "version": "v1.0.16",
     "date": "2025-12-17T04:47:13Z"
@@ -298,11 +363,6 @@
     "name": "9001/copyparty",
     "version": "v1.19.23",
     "date": "2025-12-17T00:51:11Z"
-  },
-  {
-    "name": "esphome/esphome",
-    "version": "2025.12.0",
-    "date": "2025-12-16T23:57:23Z"
   },
   {
     "name": "grafana/grafana",
@@ -328,11 +388,6 @@
     "name": "crafty-controller/crafty-4",
     "version": "v4.6.2",
     "date": "2025-12-16T17:54:19Z"
-  },
-  {
-    "name": "fuma-nama/fumadocs",
-    "version": "fumadocs-mdx@14.1.1",
-    "date": "2025-12-16T15:32:59Z"
   },
   {
     "name": "jenkinsci/jenkins",
@@ -440,11 +495,6 @@
     "date": "2025-12-14T18:24:33Z"
   },
   {
-    "name": "openhab/openhab-core",
-    "version": "5.1.0.M4",
-    "date": "2025-12-14T18:12:04Z"
-  },
-  {
     "name": "blakeblackshear/frigate",
     "version": "v0.14.1",
     "date": "2024-08-29T22:32:51Z"
@@ -453,11 +503,6 @@
     "name": "docmost/docmost",
     "version": "v0.24.1",
     "date": "2025-12-14T13:49:16Z"
-  },
-  {
-    "name": "laurent22/joplin",
-    "version": "server-v3.5.1",
-    "date": "2025-12-03T11:56:50Z"
   },
   {
     "name": "C4illin/ConvertX",
@@ -533,21 +578,6 @@
     "name": "mongodb/mongo",
     "version": "r7.0.27",
     "date": "2025-12-12T20:54:32Z"
-  },
-  {
-    "name": "homarr-labs/homarr",
-    "version": "v1.46.0",
-    "date": "2025-12-12T19:23:36Z"
-  },
-  {
-    "name": "home-assistant/core",
-    "version": "2025.12.3",
-    "date": "2025-12-12T18:12:39Z"
-  },
-  {
-    "name": "booklore-app/booklore",
-    "version": "v1.14.1",
-    "date": "2025-12-12T17:37:58Z"
   },
   {
     "name": "node-red/node-red",
@@ -628,16 +658,6 @@
     "name": "miniflux/v2",
     "version": "2.2.15",
     "date": "2025-12-10T01:52:14Z"
-  },
-  {
-    "name": "pelican-dev/panel",
-    "version": "v1.0.0-beta29",
-    "date": "2025-12-09T23:07:15Z"
-  },
-  {
-    "name": "pelican-dev/wings",
-    "version": "v1.0.0-beta20",
-    "date": "2025-12-09T22:59:09Z"
   },
   {
     "name": "BookStackApp/BookStack",
@@ -803,11 +823,6 @@
     "name": "pocketbase/pocketbase",
     "version": "v0.34.2",
     "date": "2025-12-04T13:08:18Z"
-  },
-  {
-    "name": "qdrant/qdrant",
-    "version": "v1.16.2",
-    "date": "2025-12-04T11:03:49Z"
   },
   {
     "name": "glpi-project/glpi",
@@ -995,16 +1010,6 @@
     "date": "2025-11-24T04:28:30Z"
   },
   {
-    "name": "raydak-labs/configarr",
-    "version": "v1.18.0",
-    "date": "2025-11-23T17:42:53Z"
-  },
-  {
-    "name": "dedicatedcode/reitti",
-    "version": "v2.5.0",
-    "date": "2025-11-23T12:49:50Z"
-  },
-  {
     "name": "TechnitiumSoftware/DnsServer",
     "version": "v14.2.0",
     "date": "2025-11-22T12:54:08Z"
@@ -1038,11 +1043,6 @@
     "name": "kimai/kimai",
     "version": "2.44.0",
     "date": "2025-11-20T11:01:01Z"
-  },
-  {
-    "name": "itsmng/itsm-ng",
-    "version": "v2.1.1",
-    "date": "2025-11-20T10:54:07Z"
   },
   {
     "name": "Athou/commafeed",
