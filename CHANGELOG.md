@@ -20,6 +20,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Optimize Jotty installation with standalone mode [@MickLesk](https://github.com/MickLesk) ([#10207](https://github.com/community-scripts/ProxmoxVE/pull/10207))
     - unifi: remove mongodb 4.4 support | bump to java 21 [@MickLesk](https://github.com/MickLesk) ([#10206](https://github.com/community-scripts/ProxmoxVE/pull/10206))
     - Refactor: Backrest [@tremor021](https://github.com/tremor021) ([#10193](https://github.com/community-scripts/ProxmoxVE/pull/10193))
 
