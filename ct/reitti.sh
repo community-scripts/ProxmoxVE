@@ -27,6 +27,36 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
+  if [ ! -d /var/cache/nginx/tiles ]; then
+    msg_info "Installing Nginx Tile Cache"
+    mkdir -p /var/cache/nginx/tiles
+    $STD apt install -y nginx
+    cat >> /etc/nginx/nginx.conf << 'EOF'
+events {
+  worker_connections 1024;
+}
+http {
+  proxy_cache_path /var/cache/nginx/tiles levels=1:2 keys_zone=tiles:10m max_size=1g inactive=30d use_temp_path=off;
+  server {
+    listen 80;
+    location / {
+      proxy_pass https://tile.openstreetmap.org/;
+      proxy_set_header Host tile.openstreetmap.org;
+      proxy_set_header User-Agent "Reitti/1.0";
+      proxy_cache tiles;
+      proxy_cache_valid 200 30d;
+      proxy_cache_use_stale error timeout updating http_500 http_502 http_503 http_504;
+    }
+  }
+}
+EOF
+    systemctl restart nginx
+    echo "reitti.ui.tiles.cache.url=http://127.0.0.1" >> /opt/reitti/application.properties
+    systemctl restart reitti
+    msg_info "Installed Nginx Tile Cache"
+  fi
+  
   if check_for_gh_release "reitti" "dedicatedcode/reitti"; then
     msg_info "Stopping Service"
     systemctl stop reitti
