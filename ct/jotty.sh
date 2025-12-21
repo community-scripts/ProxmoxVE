@@ -48,6 +48,17 @@ function update_script() {
     $STD yarn --frozen-lockfile
     $STD yarn next telemetry disable
     $STD yarn build
+
+    [ -d "public" ] && cp -r public .next/standalone/
+    [ -d "howto" ] && cp -r howto .next/standalone/
+    mkdir -p .next/standalone/.next
+    cp -r .next/static .next/standalone/.next/
+
+    mv .next/standalone /tmp/jotty_standalone
+    rm -rf * .next .git .gitignore .yarn
+    mv /tmp/jotty_standalone/* .
+    mv /tmp/jotty_standalone/.[!.]* . 2>/dev/null || true
+    rm -rf /tmp/jotty_standalone
     msg_ok "Updated jotty"
 
     msg_info "Restoring configuration & data"
