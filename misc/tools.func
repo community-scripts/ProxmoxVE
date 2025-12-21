@@ -2734,11 +2734,46 @@ EOF
       return 1
     }
 
-    # AMD firmware for better GPU support
+    # For AMD GPUs, firmware-amd-graphics is needed but requires non-free repositories
     if [[ "$os_id" == "debian" ]]; then
-      $STD apt -y install firmware-amd-graphics 2>/dev/null || true
+      # Add non-free-firmware repository if not already present
+      if [[ ! -f /etc/apt/sources.list.d/non-free-firmware.sources ]]; then
+        if [[ "$os_codename" == "bookworm" ]]; then
+          cat <<EOF >/etc/apt/sources.list.d/non-free-firmware.sources
+Types: deb
+URIs: http://deb.debian.org/debian
+Suites: bookworm bookworm-updates
+Components: non-free-firmware
+
+Types: deb
+URIs: http://deb.debian.org/debian-security
+Suites: bookworm-security
+Components: non-free-firmware
+EOF
+        elif [[ "$os_codename" == "trixie" || "$os_codename" == "sid" ]]; then
+          cat <<EOF >/etc/apt/sources.list.d/non-free-firmware.sources
+Types: deb
+URIs: http://deb.debian.org/debian
+Suites: trixie trixie-updates
+Components: non-free-firmware
+
+Types: deb
+URIs: http://deb.debian.org/debian-security
+Suites: trixie-security
+Components: non-free-firmware
+EOF
+        fi
+        $STD apt update
+      fi
+
+      # Now install AMD firmware and libdrm
+      $STD apt -y install libdrm-amdgpu1 firmware-amd-graphics 2>/dev/null || {
+        msg_warn "Failed to install AMD firmware - may need manual installation"
+      }
+    else
+      # For non-Debian (Ubuntu, etc), try to install without adding repos
+      $STD apt -y install libdrm-amdgpu1 firmware-amd-graphics 2>/dev/null || true
     fi
-    $STD apt -y install libdrm-amdgpu1 2>/dev/null || true
     ;;
 
   NVIDIA)
