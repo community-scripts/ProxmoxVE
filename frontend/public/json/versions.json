@@ -1,8 +1,58 @@
 [
   {
+    "name": "msgbyte/tianji",
+    "version": "v1.30.24",
+    "date": "2025-12-21T10:26:35Z"
+  },
+  {
+    "name": "hyperion-project/hyperion.ng",
+    "version": "2.1.1",
+    "date": "2025-06-14T17:45:06Z"
+  },
+  {
+    "name": "pocketbase/pocketbase",
+    "version": "v0.35.0",
+    "date": "2025-12-21T07:44:15Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.3",
+    "date": "2025-09-20T12:12:33Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.498",
+    "date": "2025-12-21T05:55:52Z"
+  },
+  {
     "name": "scanopy/scanopy",
     "version": "v0.12.5",
-    "date": "2025-12-20T22:40:12Z"
+    "date": "2025-12-21T05:36:12Z"
+  },
+  {
+    "name": "fuma-nama/fumadocs",
+    "version": "fumadocs-ui@16.3.2",
+    "date": "2025-12-21T05:23:55Z"
+  },
+  {
+    "name": "dedicatedcode/reitti",
+    "version": "v3.0.1",
+    "date": "2025-12-21T04:35:21Z"
+  },
+  {
+    "name": "intri-in/manage-my-damn-life-nextjs",
+    "version": "v0.8.2",
+    "date": "2025-12-21T03:53:53Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5.1",
+    "date": "2025-12-21T00:27:04Z"
   },
   {
     "name": "Luligu/matterbridge",
@@ -40,11 +90,6 @@
     "date": "2025-12-20T13:16:37Z"
   },
   {
-    "name": "fuma-nama/fumadocs",
-    "version": "create-fumadocs-app@16.0.30",
-    "date": "2025-12-20T10:47:00Z"
-  },
-  {
     "name": "zwave-js/zwave-js-ui",
     "version": "v11.9.1",
     "date": "2025-12-20T09:14:25Z"
@@ -60,29 +105,9 @@
     "date": "2025-12-16T05:42:34Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.488",
-    "date": "2025-12-20T05:55:23Z"
-  },
-  {
     "name": "louislam/uptime-kuma",
     "version": "2.0.2",
     "date": "2025-10-22T17:03:54Z"
-  },
-  {
-    "name": "hyperion-project/hyperion.ng",
-    "version": "2.1.1",
-    "date": "2025-06-14T17:45:06Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.5.1",
-    "date": "2025-12-20T00:27:06Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
   },
   {
     "name": "Dispatcharr/Dispatcharr",
@@ -175,11 +200,6 @@
     "date": "2025-10-09T10:27:01Z"
   },
   {
-    "name": "dedicatedcode/reitti",
-    "version": "v3.0.0",
-    "date": "2025-12-19T13:47:44Z"
-  },
-  {
     "name": "raydak-labs/configarr",
     "version": "v1.19.0",
     "date": "2025-12-19T13:37:00Z"
@@ -225,11 +245,6 @@
     "date": "2025-12-17T09:26:24Z"
   },
   {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.3",
-    "date": "2025-09-20T12:12:33Z"
-  },
-  {
     "name": "jhuckaby/Cronicle",
     "version": "v0.9.102",
     "date": "2025-12-19T03:45:13Z"
@@ -242,7 +257,7 @@
   {
     "name": "mealie-recipes/mealie",
     "version": "v3.8.0",
-    "date": "2025-12-19T01:37:16Z"
+    "date": "2025-12-19T01:37:04Z"
   },
   {
     "name": "moghtech/komodo",
@@ -283,11 +298,6 @@
     "name": "neo4j/neo4j",
     "version": "2025.11.2",
     "date": "2025-12-18T17:08:34Z"
-  },
-  {
-    "name": "msgbyte/tianji",
-    "version": "v1.30.23",
-    "date": "2025-12-18T16:55:01Z"
   },
   {
     "name": "ollama/ollama",
@@ -845,11 +855,6 @@
     "date": "2025-12-04T13:56:39Z"
   },
   {
-    "name": "pocketbase/pocketbase",
-    "version": "v0.34.2",
-    "date": "2025-12-04T13:08:18Z"
-  },
-  {
     "name": "glpi-project/glpi",
     "version": "11.0.4",
     "date": "2025-12-04T09:26:37Z"
@@ -1403,11 +1408,6 @@
     "name": "linuxserver/Heimdall",
     "version": "v2.7.6",
     "date": "2025-09-15T15:50:44Z"
-  },
-  {
-    "name": "intri-in/manage-my-damn-life-nextjs",
-    "version": "v0.8.1",
-    "date": "2025-09-14T06:45:23Z"
   },
   {
     "name": "ThePhaseless/Byparr",
