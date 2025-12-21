@@ -66,6 +66,24 @@ function update_script() {
     $STD tar -xf /opt/data_config.tar
     msg_ok "Restored configuration & data"
 
+    msg_info "Updating Service"
+    cat <<EOF >/etc/systemd/system/jotty.service
+[Unit]
+Description=jotty server
+After=network.target
+
+[Service]
+WorkingDirectory=/opt/jotty
+EnvironmentFile=/opt/jotty/.env
+ExecStart=/usr/bin/node server.js
+Restart=on-abnormal
+
+[Install]
+WantedBy=multi-user.target
+EOF
+    systemctl daemon-reload
+    msg_ok "Updated Service"
+
     msg_info "Starting Service"
     systemctl start jotty
     msg_ok "Started Service"
