@@ -18,6 +18,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Typo fix in Heimdall install script [@Turcid-uwu](https://github.com/Turcid-uwu) ([#10187](https://github.com/community-scripts/ProxmoxVE/pull/10187))
 
+### 🧰 Tools
+
+  - pihole-exporter ([#10091](https://github.com/community-scripts/ProxmoxVE/pull/10091))
+
 ## 2025-12-20
 
 ### 🚀 Updated Scripts
