@@ -120,7 +120,7 @@ Installation Scripts
 - **Enable API reporting** → Built-in by default, no configuration needed
 - **Disable API** → Set `api_disable="yes"` before running
 - **View API data** → Visit https://community-scripts.org/stats
-- **Report API errors** → [GitHub Issues](https://github.com/community-scripts/ProxmoxVE/issues)
+- **Report API errors** → [GitHub Issues](https://github.com/Turcid-uwu/ProxmoxVE/issues)
 
 ## Debugging API Issues
 

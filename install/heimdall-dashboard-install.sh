@@ -43,7 +43,7 @@ ExecStart=/usr/bin/php artisan serve --port 7990 --host 0.0.0.0
 TimeoutStopSec=30
 
 [Install]
-WantedBy=multi-user.target"
+WantedBy=multi-user.target
 EOF
 systemctl enable -q --now heimdall
 cd /opt/Heimdall

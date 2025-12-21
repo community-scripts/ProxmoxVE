@@ -280,7 +280,7 @@ Documentation for `/misc` - 9 core function libraries with complete references.
 Found an error? Want to improve docs?
 
 1. See: [contribution/README.md](contribution/README.md) for full contribution guide
-2. Open issue: [GitHub Issues](https://github.com/community-scripts/ProxmoxVE/issues)
+2. Open issue: [GitHub Issues](https://github.com/Turcid-uwu/ProxmoxVE/issues)
 3. Or submit PR with improvements
 
 ---
