@@ -51,6 +51,9 @@ Description=n8n
 
 [Service]
 Type=simple
+User=n8n
+Group=n8n
+WorkingDirectory=/home/n8n
 EnvironmentFile=/opt/n8n.env
 ExecStart=n8n start
 
