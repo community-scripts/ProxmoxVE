@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-12-21
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Typo fix in Heimdall install script [@Turcid-uwu](https://github.com/Turcid-uwu) ([#10187](https://github.com/community-scripts/ProxmoxVE/pull/10187))
+
 ## 2025-12-20
 
 ### 🚀 Updated Scripts
