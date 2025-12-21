@@ -18,6 +18,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Typo fix in Heimdall install script [@Turcid-uwu](https://github.com/Turcid-uwu) ([#10187](https://github.com/community-scripts/ProxmoxVE/pull/10187))
 
+  - #### ✨ New Features
+
+    - recyclarr: add default daily cron job for recyclarr sync [@MickLesk](https://github.com/MickLesk) ([#10208](https://github.com/community-scripts/ProxmoxVE/pull/10208))
+
   - #### 🔧 Refactor
 
     - Optimize Jotty installation with standalone mode [@MickLesk](https://github.com/MickLesk) ([#10207](https://github.com/community-scripts/ProxmoxVE/pull/10207))
