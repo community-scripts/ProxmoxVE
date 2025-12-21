@@ -18,7 +18,8 @@ $STD apt install -y \
   ca-certificates \
   build-essential \
   python3 \
-  python3-setuptools
+  python3-setuptools \
+  git
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" setup_nodejs
