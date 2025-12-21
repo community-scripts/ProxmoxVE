@@ -21,6 +21,18 @@ cd /opt/jotty
 $STD yarn --frozen-lockfile
 $STD yarn next telemetry disable
 $STD yarn build
+
+[ -d "public" ] && cp -r public .next/standalone/
+[ -d "howto" ] && cp -r howto .next/standalone/
+mkdir -p .next/standalone/.next
+cp -r .next/static .next/standalone/.next/
+
+mv .next/standalone /tmp/jotty_standalone
+rm -rf * .next .git .gitignore .yarn
+mv /tmp/jotty_standalone/* .
+mv /tmp/jotty_standalone/.[!.]* . 2>/dev/null || true
+rm -rf /tmp/jotty_standalone
+
 mkdir -p data/{users,checklists,notes}
 
 cat <<EOF >/opt/jotty/.env
@@ -55,7 +67,7 @@ After=network.target
 [Service]
 WorkingDirectory=/opt/jotty
 EnvironmentFile=/opt/jotty/.env
-ExecStart=yarn start
+ExecStart=/usr/bin/node server.js
 Restart=on-abnormal
 
 [Install]
