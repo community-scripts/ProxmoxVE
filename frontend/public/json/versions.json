@@ -1,8 +1,43 @@
 [
   {
+    "name": "scanopy/scanopy",
+    "version": "v0.12.5",
+    "date": "2025-12-20T22:40:12Z"
+  },
+  {
+    "name": "Luligu/matterbridge",
+    "version": "3.4.4",
+    "date": "2025-12-20T22:12:02Z"
+  },
+  {
+    "name": "gtsteffaniak/filebrowser",
+    "version": "v1.2.0-experimental-sql-indexing-v3",
+    "date": "2025-12-20T21:57:53Z"
+  },
+  {
+    "name": "openhab/openhab-core",
+    "version": "5.1.0.RC2",
+    "date": "2025-12-20T20:17:29Z"
+  },
+  {
+    "name": "CyferShepard/Jellystat",
+    "version": "1.1.7",
+    "date": "2025-12-20T17:13:34Z"
+  },
+  {
     "name": "ghostfolio/ghostfolio",
-    "version": "2.224.0",
-    "date": "2025-12-20T10:53:10Z"
+    "version": "2.224.2",
+    "date": "2025-12-20T16:39:52Z"
+  },
+  {
+    "name": "ellite/Wallos",
+    "version": "v4.6.0",
+    "date": "2025-12-20T15:57:51Z"
+  },
+  {
+    "name": "TechnitiumSoftware/DnsServer",
+    "version": "v14.3.0",
+    "date": "2025-12-20T13:16:37Z"
   },
   {
     "name": "fuma-nama/fumadocs",
@@ -73,11 +108,6 @@
     "name": "emqx/emqx",
     "version": "e5.10.3-alpha.1",
     "date": "2025-12-19T21:08:48Z"
-  },
-  {
-    "name": "openhab/openhab-core",
-    "version": "5.1.0.RC1",
-    "date": "2025-12-19T20:37:27Z"
   },
   {
     "name": "metabase/metabase",
@@ -212,7 +242,7 @@
   {
     "name": "mealie-recipes/mealie",
     "version": "v3.8.0",
-    "date": "2025-12-19T01:37:04Z"
+    "date": "2025-12-19T01:37:16Z"
   },
   {
     "name": "moghtech/komodo",
@@ -228,11 +258,6 @@
     "name": "Stirling-Tools/Stirling-PDF",
     "version": "v2.1.5",
     "date": "2025-12-18T20:48:01Z"
-  },
-  {
-    "name": "scanopy/scanopy",
-    "version": "v0.12.4",
-    "date": "2025-12-18T19:25:47Z"
   },
   {
     "name": "rcourtman/Pulse",
@@ -565,11 +590,6 @@
     "date": "2025-12-13T16:39:17Z"
   },
   {
-    "name": "gtsteffaniak/filebrowser",
-    "version": "v1.1.4-beta",
-    "date": "2025-12-13T15:59:06Z"
-  },
-  {
     "name": "WGDashboard/WGDashboard",
     "version": "v4.3.1",
     "date": "2025-12-13T15:38:37Z"
@@ -613,11 +633,6 @@
     "name": "duplicati/duplicati",
     "version": "v2.2.0.102-2.2.0.102_canary_2025-12-12",
     "date": "2025-12-12T12:03:15Z"
-  },
-  {
-    "name": "Luligu/matterbridge",
-    "version": "3.4.3",
-    "date": "2025-12-12T11:35:00Z"
   },
   {
     "name": "grokability/snipe-it",
@@ -1015,11 +1030,6 @@
     "date": "2025-11-24T04:28:30Z"
   },
   {
-    "name": "TechnitiumSoftware/DnsServer",
-    "version": "v14.2.0",
-    "date": "2025-11-22T12:54:08Z"
-  },
-  {
     "name": "Bubka/2FAuth",
     "version": "v5.6.1",
     "date": "2025-11-21T16:51:21Z"
@@ -1283,11 +1293,6 @@
     "name": "benzino77/tasmocompiler",
     "version": "v13.0.0",
     "date": "2025-10-19T10:03:18Z"
-  },
-  {
-    "name": "ellite/Wallos",
-    "version": "v4.5.0",
-    "date": "2025-10-18T22:00:50Z"
   },
   {
     "name": "minio/minio",
@@ -1573,11 +1578,6 @@
     "name": "ZoeyVid/NPMplus",
     "version": "2025-05-07-r1",
     "date": "2025-05-07T12:18:42Z"
-  },
-  {
-    "name": "CyferShepard/Jellystat",
-    "version": "1.1.6",
-    "date": "2025-05-01T17:11:00Z"
   },
   {
     "name": "dotnetfactory/fluid-calendar",
