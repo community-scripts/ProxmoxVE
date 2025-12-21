@@ -22,6 +22,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Refactor: Backrest [@tremor021](https://github.com/tremor021) ([#10193](https://github.com/community-scripts/ProxmoxVE/pull/10193))
 
+### 💾 Core
+
+  - #### ✨ New Features
+
+    - Fix AMD GPU firmware installation by adding non-free repositories [@MickLesk](https://github.com/MickLesk) ([#10205](https://github.com/community-scripts/ProxmoxVE/pull/10205))
+
 ### 🧰 Tools
 
   - pihole-exporter ([#10091](https://github.com/community-scripts/ProxmoxVE/pull/10091))
