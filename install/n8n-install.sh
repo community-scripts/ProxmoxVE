@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Copyright (c) 2021-2025 tteck
-# Author: tteck (tteckster) | Co-Author: CrazyWolf13
+# Author: tteck (tteckster) | Co-Author: CrazyWolf13, Gregor-zbjk
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://n8n.io/
 
@@ -28,6 +28,12 @@ msg_info "Installing n8n (Patience)"
 $STD npm install --global patch-package
 $STD npm install --global n8n
 msg_ok "Installed n8n"
+
+msg_info "Creating n8n User"
+useradd -r -m -s /bin/bash -d /home/n8n n8n
+mkdir -p /home/n8n/.n8n
+chown -R n8n:n8n /home/n8n
+msg_ok "Created n8n User"
 
 msg_info "Creating Service"
 HOST_IP=$(hostname -I | awk '{print $1}')
