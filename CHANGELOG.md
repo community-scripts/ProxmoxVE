@@ -18,6 +18,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Kometa: Fix update procedure [@tremor021](https://github.com/tremor021) ([#10217](https://github.com/community-scripts/ProxmoxVE/pull/10217))
 
+### ❔ Uncategorized
+
+  - Invoice ninja [@DragoQC](https://github.com/DragoQC) ([#10223](https://github.com/community-scripts/ProxmoxVE/pull/10223))
+
 ## 2025-12-21
 
 ### 🚀 Updated Scripts
