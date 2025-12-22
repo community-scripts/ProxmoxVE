@@ -18,7 +18,6 @@ if [[ "$admin_email" ]]; then
   EMAIL="$admin_email"
 fi
 
-setup_yq
 NODE_VERSION="24" setup_nodejs
 setup_uv
 PG_VERSION="17" setup_postgresql
@@ -49,7 +48,7 @@ export PUBLIC_VERSION=""
 export PUBLIC_API_URL=""
 export BASE_PATH="/web"
 cd /opt/mediamanager/web
-$STD npm ci --no-fund --no-audit
+$STD npm install --no-fund --no-audit
 $STD npm run build
 mkdir -p {"$MM_DIR"/web,"$MEDIA_DIR","$CONFIG_DIR"}
 cp -r build "$FRONTEND_FILES_DIR"
