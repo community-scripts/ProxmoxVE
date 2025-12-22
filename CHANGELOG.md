@@ -16,6 +16,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - InvoiceNinja: add chromium dependencies for PDF generation [@MickLesk](https://github.com/MickLesk) ([#10230](https://github.com/community-scripts/ProxmoxVE/pull/10230))
+    - MediaManager) use npm install [@MickLesk](https://github.com/MickLesk) ([#10228](https://github.com/community-scripts/ProxmoxVE/pull/10228))
     - Kometa: Fix update procedure [@tremor021](https://github.com/tremor021) ([#10217](https://github.com/community-scripts/ProxmoxVE/pull/10217))
 
   - #### 💥 Breaking Changes
