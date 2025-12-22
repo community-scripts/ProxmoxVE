@@ -24,6 +24,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - refactor: reitti: v3.0.0 [@CrazyWolf13](https://github.com/CrazyWolf13) ([#10196](https://github.com/community-scripts/ProxmoxVE/pull/10196))
 
+### 💾 Core
+
+  - #### ✨ New Features
+
+    - tools.func - hwaccel: skip setup without GPU passthrough and fix Ubuntu AMD firmware [@MickLesk](https://github.com/MickLesk) ([#10225](https://github.com/community-scripts/ProxmoxVE/pull/10225))
+
 ### 📚 Documentation
 
   - contribution docs: update templates with modern patterns [@MickLesk](https://github.com/MickLesk) ([#10227](https://github.com/community-scripts/ProxmoxVE/pull/10227))
