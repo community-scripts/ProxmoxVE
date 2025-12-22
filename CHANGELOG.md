@@ -10,7 +10,86 @@
 > [!CAUTION]
 Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit the project's popularity for potentially malicious purposes.
 
+## 2025-12-22
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Kometa: Fix update procedure [@tremor021](https://github.com/tremor021) ([#10217](https://github.com/community-scripts/ProxmoxVE/pull/10217))
+
+## 2025-12-21
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Typo fix in Heimdall install script [@Turcid-uwu](https://github.com/Turcid-uwu) ([#10187](https://github.com/community-scripts/ProxmoxVE/pull/10187))
+
+  - #### ✨ New Features
+
+    - recyclarr: add default daily cron job for recyclarr sync [@MickLesk](https://github.com/MickLesk) ([#10208](https://github.com/community-scripts/ProxmoxVE/pull/10208))
+
+  - #### 🔧 Refactor
+
+    - Optimize Jotty installation with standalone mode [@MickLesk](https://github.com/MickLesk) ([#10207](https://github.com/community-scripts/ProxmoxVE/pull/10207))
+    - unifi: remove mongodb 4.4 support | bump to java 21 [@MickLesk](https://github.com/MickLesk) ([#10206](https://github.com/community-scripts/ProxmoxVE/pull/10206))
+    - Refactor: Backrest [@tremor021](https://github.com/tremor021) ([#10193](https://github.com/community-scripts/ProxmoxVE/pull/10193))
+
+### 💾 Core
+
+  - #### ✨ New Features
+
+    - Fix AMD GPU firmware installation by adding non-free repositories [@MickLesk](https://github.com/MickLesk) ([#10205](https://github.com/community-scripts/ProxmoxVE/pull/10205))
+
+### 🧰 Tools
+
+  - pihole-exporter ([#10091](https://github.com/community-scripts/ProxmoxVE/pull/10091))
+
+## 2025-12-20
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Update Technitium DNS and Restart Service [@DrEVILish](https://github.com/DrEVILish) ([#10181](https://github.com/community-scripts/ProxmoxVE/pull/10181))
+    - bump: ersatztv: deb13 [@CrazyWolf13](https://github.com/CrazyWolf13) ([#10174](https://github.com/community-scripts/ProxmoxVE/pull/10174))
+
 ## 2025-12-19
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Update Reitti to Java 25 for 3.0.0 compatibility [@Copilot](https://github.com/Copilot) ([#10164](https://github.com/community-scripts/ProxmoxVE/pull/10164))
+    - Bump Bar-Assistant to php 8.4 [@MickLesk](https://github.com/MickLesk) ([#10138](https://github.com/community-scripts/ProxmoxVE/pull/10138))
+    - Zabbix: Add version-specific SQL script path for 7.0 LTS [@MickLesk](https://github.com/MickLesk) ([#10142](https://github.com/community-scripts/ProxmoxVE/pull/10142))
+    - InfluxDB: Fix update function [@Liganic](https://github.com/Liganic) ([#10151](https://github.com/community-scripts/ProxmoxVE/pull/10151))
+
+  - #### ✨ New Features
+
+    - Bump Immich to v2.4.1 [@vhsdream](https://github.com/vhsdream) ([#10154](https://github.com/community-scripts/ProxmoxVE/pull/10154))
+
+  - #### 🔧 Refactor
+
+    - Refactor: Cosmos: + Upgrade to Debian 13  [@MickLesk](https://github.com/MickLesk) ([#10147](https://github.com/community-scripts/ProxmoxVE/pull/10147))
+    - Refactor: Proxmox-Mail-Gateway [@tremor021](https://github.com/tremor021) ([#10070](https://github.com/community-scripts/ProxmoxVE/pull/10070))
+
+### 💾 Core
+
+  - #### ✨ New Features
+
+    - core: Auto-cleanup after all update_script executions [@MickLesk](https://github.com/MickLesk) ([#10141](https://github.com/community-scripts/ProxmoxVE/pull/10141))
+
+### 🧰 Tools
+
+  - #### 🔧 Refactor
+
+    - fix: removed verbose option to avoid unnecessary output [@wolle604](https://github.com/wolle604) ([#10144](https://github.com/community-scripts/ProxmoxVE/pull/10144))
+
+### ❔ Uncategorized
+
+  - Update paymenter.json(#10133) [@DragoQC](https://github.com/DragoQC) ([#10134](https://github.com/community-scripts/ProxmoxVE/pull/10134))
 
 ## 2025-12-18
 

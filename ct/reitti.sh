@@ -32,6 +32,8 @@ function update_script() {
     systemctl stop reitti
     msg_ok "Stopped Service"
 
+    JAVA_VERSION="25" setup_java
+
     rm -f /opt/reitti/reitti.jar
     USE_ORIGINAL_FILENAME="true" fetch_and_deploy_gh_release "reitti" "dedicatedcode/reitti" "singlefile" "latest" "/opt/reitti" "reitti-app.jar"
     mv /opt/reitti/reitti-*.jar /opt/reitti/reitti.jar

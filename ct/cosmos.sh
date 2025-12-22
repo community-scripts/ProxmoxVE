@@ -5,14 +5,15 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://https://cosmos-cloud.io/
 
-APP="cosmos"
-var_tags="${var_tags:-os,docker}"
+APP="Cosmos"
+var_tags="${var_tags:-cloud;docker}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
+var_fuse="${var_fuse:-yes}"
 
 header_info "$APP"
 variables

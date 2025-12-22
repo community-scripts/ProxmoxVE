@@ -50,7 +50,7 @@ function execute_in() {
   container=$1
   name=$(pct exec "$container" hostname)
   echo -e "${BL}[Info]${GN} Execute inside${BL} ${name}${GN} with output: ${CL}"
-    if !   pct exec "$container" -- bash -c "command -v ${custom_command} >/dev/null 2>&1"
+    if !   pct exec "$container" -- bash -c "command ${custom_command} >/dev/null 2>&1"
       then
         echo -e "${BL}[Info]${GN} Skipping ${name} ${RD}$container has no command: ${custom_command}"
       else

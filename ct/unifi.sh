@@ -28,6 +28,8 @@ function update_script() {
     exit
   fi
 
+  JAVA_VERSION="21" setup_java
+
   msg_info "Updating ${APP}"
   $STD apt update --allow-releaseinfo-change
   $STD apt install -y unifi

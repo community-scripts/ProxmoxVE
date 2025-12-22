@@ -21,7 +21,7 @@ $STD apt install -y \
   zstd
 msg_ok "Installed Dependencies"
 
-JAVA_VERSION="24" setup_java
+JAVA_VERSION="25" setup_java
 PG_VERSION="17" PG_MODULES="postgis" setup_postgresql
 PG_DB_NAME="reitti_db" PG_DB_USER="reitti" setup_postgresql_db
 

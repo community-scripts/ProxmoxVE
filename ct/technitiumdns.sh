@@ -47,6 +47,8 @@ function update_script() {
     curl -fsSL "https://download.technitium.com/dns/DnsServerPortable.tar.gz" -o /opt/DnsServerPortable.tar.gz
     $STD tar zxvf /opt/DnsServerPortable.tar.gz -C /opt/technitium/dns/
     rm -f /opt/DnsServerPortable.tar.gz
+    echo "${RELEASE}" >~/.technitium
+    systemctl restart technitium
     msg_ok "Updated Technitium DNS"
     msg_ok "Updated successfully!"
   else

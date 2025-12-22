@@ -2626,8 +2626,8 @@ configure_ssh_settings() {
 #
 # - Entry point of script
 # - On Proxmox host: calls install_script
-# - In silent mode: runs update_script
-# - Otherwise: shows update/setting menu
+# - In silent mode: runs update_script with automatic cleanup
+# - Otherwise: shows update/setting menu and runs update_script with cleanup
 # ------------------------------------------------------------------------------
 start() {
   source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
@@ -2638,6 +2638,7 @@ start() {
     VERBOSE="no"
     set_std_mode
     update_script
+    cleanup_lxc
   else
     CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "${APP} LXC Update/Setting" --menu \
       "Support/Update functions for ${APP} LXC. Choose an option:" \
@@ -2662,6 +2663,7 @@ start() {
       ;;
     esac
     update_script
+    cleanup_lxc
   fi
 }
 
