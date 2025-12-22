@@ -1,5 +1,50 @@
 [
   {
+    "name": "advplyr/audiobookshelf",
+    "version": "v2.32.0",
+    "date": "2025-12-21T22:27:29Z"
+  },
+  {
+    "name": "open-webui/open-webui",
+    "version": "v0.6.42",
+    "date": "2025-12-21T21:09:09Z"
+  },
+  {
+    "name": "project-zot/zot",
+    "version": "v2.1.12",
+    "date": "2025-12-21T20:45:14Z"
+  },
+  {
+    "name": "openhab/openhab-core",
+    "version": "5.1.0.RC3",
+    "date": "2025-12-21T20:04:16Z"
+  },
+  {
+    "name": "maxdorninger/MediaManager",
+    "version": "v1.11.0",
+    "date": "2025-12-21T19:58:49Z"
+  },
+  {
+    "name": "scanopy/scanopy",
+    "version": "v0.12.5",
+    "date": "2025-12-21T19:24:42Z"
+  },
+  {
+    "name": "benjaminjonard/koillection",
+    "version": "1.7.1",
+    "date": "2025-12-21T17:06:17Z"
+  },
+  {
+    "name": "ventoy/Ventoy",
+    "version": "v1.1.10",
+    "date": "2025-12-21T13:13:01Z"
+  },
+  {
+    "name": "jason5ng32/MyIP",
+    "version": "v5.1.1",
+    "date": "2025-12-21T12:59:32Z"
+  },
+  {
     "name": "msgbyte/tianji",
     "version": "v1.30.24",
     "date": "2025-12-21T10:26:35Z"
@@ -23,11 +68,6 @@
     "name": "Jackett/Jackett",
     "version": "v0.24.498",
     "date": "2025-12-21T05:55:52Z"
-  },
-  {
-    "name": "scanopy/scanopy",
-    "version": "v0.12.5",
-    "date": "2025-12-21T05:36:12Z"
   },
   {
     "name": "fuma-nama/fumadocs",
@@ -63,11 +103,6 @@
     "name": "gtsteffaniak/filebrowser",
     "version": "v1.2.0-experimental-sql-indexing-v3",
     "date": "2025-12-20T21:57:53Z"
-  },
-  {
-    "name": "openhab/openhab-core",
-    "version": "5.1.0.RC2",
-    "date": "2025-12-20T20:17:29Z"
   },
   {
     "name": "CyferShepard/Jellystat",
@@ -251,8 +286,8 @@
   },
   {
     "name": "javedh-dev/tracktor",
-    "version": "1.0.1",
-    "date": "2025-12-17T23:14:39Z"
+    "version": "1.0.2",
+    "date": "2025-12-19T02:43:42Z"
   },
   {
     "name": "mealie-recipes/mealie",
@@ -635,11 +670,6 @@
     "date": "2025-12-03T16:12:05Z"
   },
   {
-    "name": "ventoy/Ventoy",
-    "version": "v1.1.09",
-    "date": "2025-12-12T13:06:36Z"
-  },
-  {
     "name": "duplicati/duplicati",
     "version": "v2.2.0.102-2.2.0.102_canary_2025-12-12",
     "date": "2025-12-12T12:03:15Z"
@@ -765,11 +795,6 @@
     "date": "2025-12-08T12:01:34Z"
   },
   {
-    "name": "maxdorninger/MediaManager",
-    "version": "v1.10.0",
-    "date": "2025-12-07T23:41:51Z"
-  },
-  {
     "name": "Part-DB/Part-DB-server",
     "version": "v2.3.0",
     "date": "2025-12-07T21:58:43Z"
@@ -880,11 +905,6 @@
     "date": "2025-12-02T22:59:59Z"
   },
   {
-    "name": "open-webui/open-webui",
-    "version": "v0.6.41",
-    "date": "2025-12-02T22:28:58Z"
-  },
-  {
     "name": "WordPress/WordPress",
     "version": "6.9",
     "date": "2025-12-02T18:36:17Z"
@@ -898,11 +918,6 @@
     "name": "syncthing/syncthing",
     "version": "v2.0.12",
     "date": "2025-12-02T08:11:24Z"
-  },
-  {
-    "name": "advplyr/audiobookshelf",
-    "version": "v2.31.0",
-    "date": "2025-12-01T23:49:11Z"
   },
   {
     "name": "OliveTin/OliveTin",
@@ -1055,11 +1070,6 @@
     "date": "2025-10-18T12:11:00Z"
   },
   {
-    "name": "project-zot/zot",
-    "version": "v2.1.11",
-    "date": "2025-11-20T20:14:44Z"
-  },
-  {
     "name": "kimai/kimai",
     "version": "2.44.0",
     "date": "2025-11-20T11:01:01Z"
@@ -1153,11 +1163,6 @@
     "name": "pymedusa/Medusa",
     "version": "v1.0.25",
     "date": "2025-11-12T16:57:54Z"
-  },
-  {
-    "name": "jason5ng32/MyIP",
-    "version": "v5.1.0",
-    "date": "2025-11-12T10:44:24Z"
   },
   {
     "name": "CrazyWolf13/web-check",
@@ -1443,11 +1448,6 @@
     "name": "Forceu/Gokapi",
     "version": "v2.1.0",
     "date": "2025-08-29T12:56:13Z"
-  },
-  {
-    "name": "benjaminjonard/koillection",
-    "version": "1.7.0",
-    "date": "2025-08-28T18:10:59Z"
   },
   {
     "name": "plexguide/Huntarr.io",
