@@ -24,6 +24,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - refactor: reitti: v3.0.0 [@CrazyWolf13](https://github.com/CrazyWolf13) ([#10196](https://github.com/community-scripts/ProxmoxVE/pull/10196))
 
+### 📚 Documentation
+
+  - contribution docs: update templates with modern patterns [@MickLesk](https://github.com/MickLesk) ([#10227](https://github.com/community-scripts/ProxmoxVE/pull/10227))
+
 ### ❔ Uncategorized
 
   - InvoiceNinja: switch category [@DragoQC](https://github.com/DragoQC) ([#10223](https://github.com/community-scripts/ProxmoxVE/pull/10223))
