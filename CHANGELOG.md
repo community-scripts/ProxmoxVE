@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-12-22
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Kometa: Fix update procedure [@tremor021](https://github.com/tremor021) ([#10217](https://github.com/community-scripts/ProxmoxVE/pull/10217))
+
 ## 2025-12-21
 
 ### 🚀 Updated Scripts
