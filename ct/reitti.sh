@@ -33,22 +33,54 @@ function update_script() {
     mkdir -p /var/cache/nginx/tiles
     $STD apt install -y nginx
     cat >> /etc/nginx/nginx.conf << 'EOF'
+user  www-data;
+worker_processes auto;
+pid /run/nginx.pid;
+include /usr/share/nginx/modules/*.conf;
+
 events {
-  worker_connections 1024;
+    worker_connections 1024;
 }
+
 http {
-  proxy_cache_path /var/cache/nginx/tiles levels=1:2 keys_zone=tiles:10m max_size=1g inactive=30d use_temp_path=off;
-  server {
-    listen 80;
-    location / {
-      proxy_pass https://tile.openstreetmap.org/;
-      proxy_set_header Host tile.openstreetmap.org;
-      proxy_set_header User-Agent "Reitti/1.0";
-      proxy_cache tiles;
-      proxy_cache_valid 200 30d;
-      proxy_cache_use_stale error timeout updating http_500 http_502 http_503 http_504;
+    ##
+    # Basic defaults
+    ##
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
+
+    sendfile        on;
+    keepalive_timeout  65;
+    types_hash_max_size 4096;
+
+    ##
+    # Logging
+    ##
+    access_log  /var/log/nginx/access.log;
+    error_log   /var/log/nginx/error.log;
+
+    ##
+    # Proxy cache for tiles
+    ##
+    proxy_cache_path /var/cache/nginx/tiles levels=1:2 keys_zone=tiles:10m max_size=1g inactive=30d use_temp_path=off;
+
+    server {
+        listen 80;
+
+        location / {
+            proxy_pass https://tile.openstreetmap.org/;
+            proxy_set_header Host tile.openstreetmap.org;
+            proxy_set_header User-Agent "Reitti/1.0";
+            proxy_cache tiles;
+            proxy_cache_valid 200 30d;
+            proxy_cache_use_stale error timeout updating http_500 http_502 http_503 http_504;
+        }
     }
-  }
+
+    ##
+    # Load additional configs
+    ##
+    include /etc/nginx/conf.d/*.conf;
 }
 EOF
     systemctl restart nginx
