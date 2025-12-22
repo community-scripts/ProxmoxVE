@@ -1,4 +1,10 @@
 <div align="center">
+  <blockquote>
+  <h3>⚠️ Maintenance Fork Notice ⚠️</h3>
+  This repository was used for a Pull Request that has been merged. <br>
+  <strong>Please refer to the main repository: <a href="https://github.com/community-scripts/ProxmoxVE">community-scripts/ProxmoxVE</a></strong>
+  </blockquote>
+  <br>
   <img src="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/images/logo-81x112.png" height="120px" alt="Proxmox VE Helper-Scripts Logo" />
   
   <h1>Proxmox VE Helper-Scripts</h1>
