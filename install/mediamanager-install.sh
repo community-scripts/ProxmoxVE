@@ -18,6 +18,7 @@ if [[ "$admin_email" ]]; then
   EMAIL="$admin_email"
 fi
 
+setup_yq
 NODE_VERSION="24" setup_nodejs
 setup_uv
 PG_VERSION="17" setup_postgresql
