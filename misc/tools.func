@@ -2571,6 +2571,15 @@ function setup_gs() {
 #   - Some things are fetched from intel repositories due to not being in debian repositories.
 # ------------------------------------------------------------------------------
 function setup_hwaccel() {
+  # Check if GPU passthrough is enabled (device nodes must exist)
+  # /dev/dri = Intel iGPU, AMD GPU (open-source drivers)
+  # /dev/nvidia* = NVIDIA proprietary drivers
+  # /dev/kfd = AMD ROCm compute
+  if [[ ! -d /dev/dri && ! -e /dev/nvidia0 && ! -e /dev/kfd ]]; then
+    msg_warn "No GPU passthrough detected (/dev/dri, /dev/nvidia*, /dev/kfd not found) - skipping hardware acceleration setup"
+    return 0
+  fi
+
   msg_info "Setup Hardware Acceleration"
 
   if ! command -v lspci &>/dev/null; then
@@ -2771,15 +2780,11 @@ EOF
         msg_warn "Failed to install AMD firmware - may need manual installation"
       }
     elif [[ "$os_id" == "ubuntu" ]]; then
-      # For Ubuntu, ensure multiverse is enabled (firmware-amd-graphics is in multiverse)
-      if ! grep -qE '^deb.*multiverse' /etc/apt/sources.list /etc/apt/sources.list.d/*.list 2>/dev/null; then
-        $STD add-apt-repository -y multiverse
-        $STD apt update
-      fi
-      
-      # Install AMD firmware and libdrm
-      $STD apt -y install libdrm-amdgpu1 firmware-amd-graphics 2>/dev/null || {
-        msg_warn "Failed to install AMD firmware - may need manual installation"
+      # For Ubuntu, firmware-amd-graphics does not exist (it's Debian-specific from non-free-firmware)
+      # Ubuntu includes AMD firmware in linux-firmware package which is installed by default
+      # Only install libdrm-amdgpu1 for userspace driver support
+      $STD apt -y install libdrm-amdgpu1 2>/dev/null || {
+        msg_warn "Failed to install libdrm-amdgpu1 - may need manual installation"
       }
     else
       # For other distributions, try without adding repositories
