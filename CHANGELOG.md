@@ -18,9 +18,13 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Kometa: Fix update procedure [@tremor021](https://github.com/tremor021) ([#10217](https://github.com/community-scripts/ProxmoxVE/pull/10217))
 
+  - #### 💥 Breaking Changes
+
+    - refactor: reitti: v3.0.0 [@CrazyWolf13](https://github.com/CrazyWolf13) ([#10196](https://github.com/community-scripts/ProxmoxVE/pull/10196))
+
 ### ❔ Uncategorized
 
-  - Invoice ninja [@DragoQC](https://github.com/DragoQC) ([#10223](https://github.com/community-scripts/ProxmoxVE/pull/10223))
+  - InvoiceNinja: switch category [@DragoQC](https://github.com/DragoQC) ([#10223](https://github.com/community-scripts/ProxmoxVE/pull/10223))
 
 ## 2025-12-21
 
