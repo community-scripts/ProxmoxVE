@@ -31,5 +31,10 @@
     "username": null,
     "password": null
   },
-  "notes": []
+  "notes": [
+    {
+      "text": "Type `/opt/pocketbase/pocketbase superuser create ADMIN EMAIL` to create your superuser account.",
+      "type": "info"
+    }
+  ]
 }
