@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-12-23
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Update forgejo to debian13 and fix env var [@burgerga](https://github.com/burgerga) ([#10242](https://github.com/community-scripts/ProxmoxVE/pull/10242))
+
 ## 2025-12-22
 
 ### 🚀 Updated Scripts
