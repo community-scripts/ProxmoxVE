@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Technitium DNS: Migrate service [@tremor021](https://github.com/tremor021) ([#10240](https://github.com/community-scripts/ProxmoxVE/pull/10240))
     - Update forgejo to debian13 and fix env var [@burgerga](https://github.com/burgerga) ([#10242](https://github.com/community-scripts/ProxmoxVE/pull/10242))
 
 ## 2025-12-22
