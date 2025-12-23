@@ -1,13 +1,68 @@
 [
   {
-    "name": "Dispatcharr/Dispatcharr",
-    "version": "v0.15.1",
-    "date": "2025-12-22T23:01:26Z"
+    "name": "itsmng/itsm-ng",
+    "version": "v1.6.11",
+    "date": "2025-12-23T10:40:42Z"
+  },
+  {
+    "name": "project-zot/zot",
+    "version": "v2.1.13",
+    "date": "2025-12-23T10:14:48Z"
+  },
+  {
+    "name": "pommee/goaway",
+    "version": "v0.63.2",
+    "date": "2025-12-23T09:32:55Z"
+  },
+  {
+    "name": "syncthing/syncthing",
+    "version": "v2.0.12",
+    "date": "2025-12-02T08:11:24Z"
+  },
+  {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.543",
+    "date": "2025-12-23T06:40:41Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.512",
+    "date": "2025-12-23T06:02:59Z"
   },
   {
     "name": "fosrl/pangolin",
     "version": "1.14.0",
-    "date": "2025-12-22T22:41:05Z"
+    "date": "2025-12-23T03:21:32Z"
+  },
+  {
+    "name": "theonedev/onedev",
+    "version": "v13.1.6",
+    "date": "2025-12-23T03:13:32Z"
+  },
+  {
+    "name": "linkwarden/linkwarden",
+    "version": "v2.13.3",
+    "date": "2025-12-23T01:18:58Z"
+  },
+  {
+    "name": "hyperion-project/hyperion.ng",
+    "version": "2.1.1",
+    "date": "2025-06-14T17:45:06Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5.1",
+    "date": "2025-12-23T00:27:04Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
+    "name": "Dispatcharr/Dispatcharr",
+    "version": "v0.15.1",
+    "date": "2025-12-22T23:01:26Z"
   },
   {
     "name": "sabnzbd/sabnzbd",
@@ -75,11 +130,6 @@
     "date": "2025-12-22T14:36:59Z"
   },
   {
-    "name": "pommee/goaway",
-    "version": "v0.63.1",
-    "date": "2025-12-22T13:19:01Z"
-  },
-  {
     "name": "nzbgetcom/nzbget",
     "version": "v25.4",
     "date": "2025-10-09T10:27:01Z"
@@ -88,11 +138,6 @@
     "name": "passbolt/passbolt_api",
     "version": "v5.8.0",
     "date": "2025-12-22T10:12:48Z"
-  },
-  {
-    "name": "itsmng/itsm-ng",
-    "version": "v1.6.11",
-    "date": "2025-12-22T09:14:20Z"
   },
   {
     "name": "morpheus65535/bazarr",
@@ -105,24 +150,9 @@
     "date": "2025-12-22T06:03:45Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.504",
-    "date": "2025-12-22T05:55:56Z"
-  },
-  {
     "name": "firefly-iii/firefly-iii",
     "version": "v6.4.14",
     "date": "2025-12-16T05:42:34Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.5.1",
-    "date": "2025-12-22T00:27:05Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
   },
   {
     "name": "advplyr/audiobookshelf",
@@ -133,11 +163,6 @@
     "name": "keycloak/keycloak",
     "version": "26.4.7",
     "date": "2025-12-01T08:14:11Z"
-  },
-  {
-    "name": "project-zot/zot",
-    "version": "v2.1.12",
-    "date": "2025-12-21T20:45:14Z"
   },
   {
     "name": "scanopy/scanopy",
@@ -158,11 +183,6 @@
     "name": "jason5ng32/MyIP",
     "version": "v5.1.1",
     "date": "2025-12-21T12:59:32Z"
-  },
-  {
-    "name": "hyperion-project/hyperion.ng",
-    "version": "2.1.1",
-    "date": "2025-06-14T17:45:06Z"
   },
   {
     "name": "pocketbase/pocketbase",
@@ -505,11 +525,6 @@
     "date": "2025-12-16T17:54:19Z"
   },
   {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.542",
-    "date": "2025-12-16T13:49:44Z"
-  },
-  {
     "name": "prometheus/prometheus",
     "version": "v3.8.1",
     "date": "2025-12-16T09:59:22Z"
@@ -685,11 +700,6 @@
     "date": "2025-12-12T09:13:40Z"
   },
   {
-    "name": "theonedev/onedev",
-    "version": "v13.1.5",
-    "date": "2025-12-12T03:30:50Z"
-  },
-  {
     "name": "umami-software/umami",
     "version": "v3.0.3",
     "date": "2025-12-12T02:39:27Z"
@@ -698,11 +708,6 @@
     "name": "motioneye-project/motioneye",
     "version": "0.43.1",
     "date": "2025-12-11T22:45:52Z"
-  },
-  {
-    "name": "linkwarden/linkwarden",
-    "version": "v2.13.2",
-    "date": "2025-12-11T06:31:24Z"
   },
   {
     "name": "TwiN/gatus",
@@ -918,11 +923,6 @@
     "name": "verdaccio/verdaccio",
     "version": "v6.2.4",
     "date": "2025-12-02T17:47:52Z"
-  },
-  {
-    "name": "syncthing/syncthing",
-    "version": "v2.0.12",
-    "date": "2025-12-02T08:11:24Z"
   },
   {
     "name": "OliveTin/OliveTin",
