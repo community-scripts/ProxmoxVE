@@ -23,6 +23,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Refactor: Beszel [@tremor021](https://github.com/tremor021) ([#10195](https://github.com/community-scripts/ProxmoxVE/pull/10195))
 
+### 🧰 Tools
+
+  - #### 🐞 Bug Fixes
+
+    - fix: pihole-exporter: unknown function [@CrazyWolf13](https://github.com/CrazyWolf13) ([#10249](https://github.com/community-scripts/ProxmoxVE/pull/10249))
+
 ## 2025-12-22
 
 ### 🚀 Updated Scripts
