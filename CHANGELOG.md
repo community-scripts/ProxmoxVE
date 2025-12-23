@@ -21,6 +21,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: ProjectSend [@tremor021](https://github.com/tremor021) ([#10255](https://github.com/community-scripts/ProxmoxVE/pull/10255))
     - Prometheus Paperless NGX Exporter: Small fix [@tremor021](https://github.com/tremor021) ([#10254](https://github.com/community-scripts/ProxmoxVE/pull/10254))
     - Podman: Fixes [@tremor021](https://github.com/tremor021) ([#10257](https://github.com/community-scripts/ProxmoxVE/pull/10257))
     - Refactor: Beszel [@tremor021](https://github.com/tremor021) ([#10195](https://github.com/community-scripts/ProxmoxVE/pull/10195))
