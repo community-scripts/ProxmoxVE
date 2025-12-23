@@ -30,6 +30,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - fix: pihole-exporter: unknown function [@CrazyWolf13](https://github.com/CrazyWolf13) ([#10249](https://github.com/community-scripts/ProxmoxVE/pull/10249))
 
+### ❔ Uncategorized
+
+  - Fix Recyclarr page TypeError: schema mismatch in notes field [@Copilot](https://github.com/Copilot) ([#10253](https://github.com/community-scripts/ProxmoxVE/pull/10253))
+
 ## 2025-12-22
 
 ### 🚀 Updated Scripts
