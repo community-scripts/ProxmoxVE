@@ -1,5 +1,90 @@
 [
   {
+    "name": "Dispatcharr/Dispatcharr",
+    "version": "v0.15.1",
+    "date": "2025-12-22T23:01:26Z"
+  },
+  {
+    "name": "fosrl/pangolin",
+    "version": "1.14.0",
+    "date": "2025-12-22T22:41:05Z"
+  },
+  {
+    "name": "sabnzbd/sabnzbd",
+    "version": "4.5.5",
+    "date": "2025-10-24T11:12:22Z"
+  },
+  {
+    "name": "Sonarr/Sonarr",
+    "version": "v4.0.16.2944",
+    "date": "2025-11-05T01:56:48Z"
+  },
+  {
+    "name": "gtsteffaniak/filebrowser",
+    "version": "v1.1.0-stable",
+    "date": "2025-12-22T20:30:40Z"
+  },
+  {
+    "name": "mongodb/mongo",
+    "version": "r8.0.17",
+    "date": "2025-12-22T20:23:56Z"
+  },
+  {
+    "name": "maxdorninger/MediaManager",
+    "version": "v1.11.1",
+    "date": "2025-12-22T18:15:40Z"
+  },
+  {
+    "name": "metabase/metabase",
+    "version": "v0.58.x",
+    "date": "2025-12-22T17:38:26Z"
+  },
+  {
+    "name": "BerriAI/litellm",
+    "version": "v1.80.11.rc.1",
+    "date": "2025-12-22T16:29:28Z"
+  },
+  {
+    "name": "meilisearch/meilisearch",
+    "version": "latest",
+    "date": "2025-12-22T16:21:19Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.30.25",
+    "date": "2025-12-22T16:03:19Z"
+  },
+  {
+    "name": "chrisbenincasa/tunarr",
+    "version": "v1.0.9",
+    "date": "2025-12-22T15:55:49Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@2.1.2",
+    "date": "2025-12-22T14:58:39Z"
+  },
+  {
+    "name": "openhab/openhab-core",
+    "version": "5.1.0",
+    "date": "2025-12-22T14:59:23Z"
+  },
+  {
+    "name": "chrisvel/tududi",
+    "version": "v0.88.2",
+    "date": "2025-12-22T14:36:59Z"
+  },
+  {
+    "name": "pommee/goaway",
+    "version": "v0.63.1",
+    "date": "2025-12-22T13:19:01Z"
+  },
+  {
+    "name": "nzbgetcom/nzbget",
+    "version": "v25.4",
+    "date": "2025-10-09T10:27:01Z"
+  },
+  {
     "name": "passbolt/passbolt_api",
     "version": "v5.8.0",
     "date": "2025-12-22T10:12:48Z"
@@ -30,16 +115,6 @@
     "date": "2025-12-16T05:42:34Z"
   },
   {
-    "name": "fosrl/pangolin",
-    "version": "1.14.0-rc.0",
-    "date": "2025-12-22T02:49:19Z"
-  },
-  {
-    "name": "pommee/goaway",
-    "version": "v0.63.0",
-    "date": "2025-12-22T02:24:44Z"
-  },
-  {
     "name": "jeedom/core",
     "version": "4.5.1",
     "date": "2025-12-22T00:27:05Z"
@@ -65,16 +140,6 @@
     "date": "2025-12-21T20:45:14Z"
   },
   {
-    "name": "openhab/openhab-core",
-    "version": "5.1.0.RC3",
-    "date": "2025-12-21T20:04:16Z"
-  },
-  {
-    "name": "maxdorninger/MediaManager",
-    "version": "v1.11.0",
-    "date": "2025-12-21T19:58:49Z"
-  },
-  {
     "name": "scanopy/scanopy",
     "version": "v0.12.5",
     "date": "2025-12-21T19:24:42Z"
@@ -93,11 +158,6 @@
     "name": "jason5ng32/MyIP",
     "version": "v5.1.1",
     "date": "2025-12-21T12:59:32Z"
-  },
-  {
-    "name": "msgbyte/tianji",
-    "version": "v1.30.24",
-    "date": "2025-12-21T10:26:35Z"
   },
   {
     "name": "hyperion-project/hyperion.ng",
@@ -130,11 +190,6 @@
     "date": "2025-12-20T22:12:02Z"
   },
   {
-    "name": "gtsteffaniak/filebrowser",
-    "version": "v1.2.0-experimental-sql-indexing-v3",
-    "date": "2025-12-20T21:57:53Z"
-  },
-  {
     "name": "CyferShepard/Jellystat",
     "version": "1.1.7",
     "date": "2025-12-20T17:13:34Z"
@@ -165,11 +220,6 @@
     "date": "2025-10-22T17:03:54Z"
   },
   {
-    "name": "Dispatcharr/Dispatcharr",
-    "version": "v0.15.0",
-    "date": "2025-12-20T00:12:04Z"
-  },
-  {
     "name": "pelican-dev/panel",
     "version": "v1.0.0-beta30",
     "date": "2025-12-19T23:37:07Z"
@@ -190,19 +240,9 @@
     "date": "2025-12-19T21:08:48Z"
   },
   {
-    "name": "metabase/metabase",
-    "version": "v0.58.x",
-    "date": "2025-12-19T20:05:58Z"
-  },
-  {
     "name": "homarr-labs/homarr",
     "version": "v1.47.0",
     "date": "2025-12-19T19:42:50Z"
-  },
-  {
-    "name": "BerriAI/litellm",
-    "version": "v1.80.10.dev.1",
-    "date": "2025-12-19T19:16:21Z"
   },
   {
     "name": "booklore-app/booklore",
@@ -240,11 +280,6 @@
     "date": "2025-12-19T15:18:53Z"
   },
   {
-    "name": "nzbgetcom/nzbget",
-    "version": "v25.4",
-    "date": "2025-10-09T10:27:01Z"
-  },
-  {
     "name": "raydak-labs/configarr",
     "version": "v1.19.0",
     "date": "2025-12-19T13:37:00Z"
@@ -270,11 +305,6 @@
     "date": "2025-12-19T11:43:47Z"
   },
   {
-    "name": "meilisearch/meilisearch",
-    "version": "prototype-v1.30.1-rebuild-hannoy-graph.1",
-    "date": "2025-12-19T11:14:05Z"
-  },
-  {
     "name": "release-argus/Argus",
     "version": "0.28.3",
     "date": "2025-12-19T11:05:10Z"
@@ -296,8 +326,8 @@
   },
   {
     "name": "javedh-dev/tracktor",
-    "version": "1.0.1",
-    "date": "2025-12-17T23:14:39Z"
+    "version": "1.0.2",
+    "date": "2025-12-19T02:43:42Z"
   },
   {
     "name": "mealie-recipes/mealie",
@@ -308,11 +338,6 @@
     "name": "moghtech/komodo",
     "version": "v1.19.5",
     "date": "2025-09-27T20:59:46Z"
-  },
-  {
-    "name": "chrisbenincasa/tunarr",
-    "version": "v1.0.7",
-    "date": "2025-12-18T21:27:26Z"
   },
   {
     "name": "Stirling-Tools/Stirling-PDF",
@@ -355,11 +380,6 @@
     "date": "2025-12-18T16:10:13Z"
   },
   {
-    "name": "n8n-io/n8n",
-    "version": "n8n@1.123.7",
-    "date": "2025-12-17T14:01:25Z"
-  },
-  {
     "name": "docker/compose",
     "version": "v5.0.1",
     "date": "2025-12-18T14:22:38Z"
@@ -388,11 +408,6 @@
     "name": "zabbix/zabbix",
     "version": "7.4.6",
     "date": "2025-12-18T07:00:26Z"
-  },
-  {
-    "name": "chrisvel/tududi",
-    "version": "v0.88.1",
-    "date": "2025-12-18T05:01:07Z"
   },
   {
     "name": "comfyanonymous/ComfyUI",
@@ -431,8 +446,8 @@
   },
   {
     "name": "bunkerity/bunkerweb",
-    "version": "v1.6.6",
-    "date": "2025-11-24T15:30:21Z"
+    "version": "testing",
+    "date": "2025-12-16T11:13:20Z"
   },
   {
     "name": "traefik/traefik",
@@ -498,11 +513,6 @@
     "name": "prometheus/prometheus",
     "version": "v3.8.1",
     "date": "2025-12-16T09:59:22Z"
-  },
-  {
-    "name": "sabnzbd/sabnzbd",
-    "version": "4.5.5",
-    "date": "2025-10-24T11:12:22Z"
   },
   {
     "name": "azukaar/Cosmos-Server",
@@ -658,11 +668,6 @@
     "name": "Dokploy/dokploy",
     "version": "v0.26.2",
     "date": "2025-12-13T07:48:09Z"
-  },
-  {
-    "name": "mongodb/mongo",
-    "version": "r7.0.27",
-    "date": "2025-12-12T20:54:32Z"
   },
   {
     "name": "node-red/node-red",
@@ -1223,11 +1228,6 @@
     "name": "nicolargo/glances",
     "version": "v4.4.1",
     "date": "2025-11-05T09:08:23Z"
-  },
-  {
-    "name": "Sonarr/Sonarr",
-    "version": "v4.0.16.2944",
-    "date": "2025-11-05T01:56:48Z"
   },
   {
     "name": "cross-seed/cross-seed",
