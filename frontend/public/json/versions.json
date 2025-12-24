@@ -1,5 +1,95 @@
 [
   {
+    "name": "advplyr/audiobookshelf",
+    "version": "v2.32.1",
+    "date": "2025-12-23T23:28:06Z"
+  },
+  {
+    "name": "rcourtman/Pulse",
+    "version": "v5.0.0",
+    "date": "2025-12-23T21:47:01Z"
+  },
+  {
+    "name": "laurent22/joplin",
+    "version": "server-v3.5.2",
+    "date": "2025-12-19T21:28:55Z"
+  },
+  {
+    "name": "n8n-io/n8n",
+    "version": "n8n@2.1.4",
+    "date": "2025-12-23T20:53:07Z"
+  },
+  {
+    "name": "fosrl/pangolin",
+    "version": "1.14.0-s.2",
+    "date": "2025-12-23T20:24:26Z"
+  },
+  {
+    "name": "scanopy/scanopy",
+    "version": "v0.12.6",
+    "date": "2025-12-23T19:24:15Z"
+  },
+  {
+    "name": "metabase/metabase",
+    "version": "v0.58.x",
+    "date": "2025-12-23T19:01:23Z"
+  },
+  {
+    "name": "prometheus-pve/prometheus-pve-exporter",
+    "version": "v3.8.0",
+    "date": "2025-12-23T18:20:46Z"
+  },
+  {
+    "name": "netbox-community/netbox",
+    "version": "v4.4.9",
+    "date": "2025-12-23T17:03:22Z"
+  },
+  {
+    "name": "mongodb/mongo",
+    "version": "r6.0.27",
+    "date": "2025-12-23T16:21:51Z"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2025.12.2",
+    "date": "2025-12-23T16:17:04Z"
+  },
+  {
+    "name": "SonarSource/sonarqube",
+    "version": "25.12.0.117093",
+    "date": "2025-12-23T15:00:10Z"
+  },
+  {
+    "name": "danielbrendel/hortusfox-web",
+    "version": "v5.7",
+    "date": "2025-12-23T14:53:51Z"
+  },
+  {
+    "name": "coollabsio/coolify",
+    "version": "v4.0.0-beta.459",
+    "date": "2025-12-23T14:40:52Z"
+  },
+  {
+    "name": "prometheus/prometheus",
+    "version": "v3.8.1",
+    "date": "2025-12-16T09:59:22Z"
+  },
+  {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.543",
+    "date": "2025-12-23T12:39:16Z"
+  },
+  {
+    "name": "nzbgetcom/nzbget",
+    "version": "v25.4",
+    "date": "2025-10-09T10:27:01Z"
+  },
+  {
+    "name": "endurain-project/endurain",
+    "version": "v0.16.4",
+    "date": "2025-12-23T12:08:24Z"
+  },
+  {
     "name": "itsmng/itsm-ng",
     "version": "v1.6.11",
     "date": "2025-12-23T10:40:42Z"
@@ -20,19 +110,9 @@
     "date": "2025-12-02T08:11:24Z"
   },
   {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.543",
-    "date": "2025-12-23T06:40:41Z"
-  },
-  {
     "name": "Jackett/Jackett",
     "version": "v0.24.512",
     "date": "2025-12-23T06:02:59Z"
-  },
-  {
-    "name": "fosrl/pangolin",
-    "version": "1.14.0",
-    "date": "2025-12-23T03:21:32Z"
   },
   {
     "name": "theonedev/onedev",
@@ -80,19 +160,9 @@
     "date": "2025-12-22T20:30:40Z"
   },
   {
-    "name": "mongodb/mongo",
-    "version": "r8.0.17",
-    "date": "2025-12-22T20:23:56Z"
-  },
-  {
     "name": "maxdorninger/MediaManager",
     "version": "v1.11.1",
     "date": "2025-12-22T18:15:40Z"
-  },
-  {
-    "name": "metabase/metabase",
-    "version": "v0.58.x",
-    "date": "2025-12-22T17:38:26Z"
   },
   {
     "name": "BerriAI/litellm",
@@ -115,11 +185,6 @@
     "date": "2025-12-22T15:55:49Z"
   },
   {
-    "name": "n8n-io/n8n",
-    "version": "n8n@2.1.2",
-    "date": "2025-12-22T14:58:39Z"
-  },
-  {
     "name": "openhab/openhab-core",
     "version": "5.1.0",
     "date": "2025-12-22T14:59:23Z"
@@ -128,11 +193,6 @@
     "name": "chrisvel/tududi",
     "version": "v0.88.2",
     "date": "2025-12-22T14:36:59Z"
-  },
-  {
-    "name": "nzbgetcom/nzbget",
-    "version": "v25.4",
-    "date": "2025-10-09T10:27:01Z"
   },
   {
     "name": "passbolt/passbolt_api",
@@ -155,19 +215,9 @@
     "date": "2025-12-16T05:42:34Z"
   },
   {
-    "name": "advplyr/audiobookshelf",
-    "version": "v2.32.0",
-    "date": "2025-12-21T22:27:29Z"
-  },
-  {
     "name": "keycloak/keycloak",
     "version": "26.4.7",
     "date": "2025-12-01T08:14:11Z"
-  },
-  {
-    "name": "scanopy/scanopy",
-    "version": "v0.12.5",
-    "date": "2025-12-21T19:24:42Z"
   },
   {
     "name": "benjaminjonard/koillection",
@@ -250,11 +300,6 @@
     "date": "2025-12-19T23:04:27Z"
   },
   {
-    "name": "laurent22/joplin",
-    "version": "server-v3.5.2",
-    "date": "2025-12-19T21:28:55Z"
-  },
-  {
     "name": "emqx/emqx",
     "version": "e5.10.3-alpha.1",
     "date": "2025-12-19T21:08:48Z"
@@ -285,11 +330,6 @@
     "date": "2025-12-19T17:45:42Z"
   },
   {
-    "name": "esphome/esphome",
-    "version": "2025.12.1",
-    "date": "2025-12-19T15:53:08Z"
-  },
-  {
     "name": "immich-app/immich",
     "version": "v2.4.1",
     "date": "2025-12-19T15:50:12Z"
@@ -306,8 +346,8 @@
   },
   {
     "name": "wazuh/wazuh",
-    "version": "coverity-w51-4.14.2",
-    "date": "2025-12-15T12:34:36Z"
+    "version": "coverity-w52-4.14.2",
+    "date": "2025-12-19T13:31:21Z"
   },
   {
     "name": "fccview/jotty",
@@ -352,7 +392,7 @@
   {
     "name": "mealie-recipes/mealie",
     "version": "v3.8.0",
-    "date": "2025-12-19T01:37:04Z"
+    "date": "2025-12-19T01:37:16Z"
   },
   {
     "name": "moghtech/komodo",
@@ -363,11 +403,6 @@
     "name": "Stirling-Tools/Stirling-PDF",
     "version": "v2.1.5",
     "date": "2025-12-18T20:48:01Z"
-  },
-  {
-    "name": "rcourtman/Pulse",
-    "version": "v4.36.2",
-    "date": "2025-12-03T22:46:29Z"
   },
   {
     "name": "saltstack/salt",
@@ -403,11 +438,6 @@
     "name": "docker/compose",
     "version": "v5.0.1",
     "date": "2025-12-18T14:22:38Z"
-  },
-  {
-    "name": "coollabsio/coolify",
-    "version": "v4.0.0-beta.458",
-    "date": "2025-12-18T12:23:23Z"
   },
   {
     "name": "juanfont/headscale",
@@ -510,24 +540,9 @@
     "date": "2025-12-16T21:44:58Z"
   },
   {
-    "name": "prometheus-pve/prometheus-pve-exporter",
-    "version": "v3.7.0",
-    "date": "2025-12-16T19:01:35Z"
-  },
-  {
-    "name": "netbox-community/netbox",
-    "version": "v4.4.8",
-    "date": "2025-12-09T16:29:50Z"
-  },
-  {
     "name": "crafty-controller/crafty-4",
     "version": "v4.6.2",
     "date": "2025-12-16T17:54:19Z"
-  },
-  {
-    "name": "prometheus/prometheus",
-    "version": "v3.8.1",
-    "date": "2025-12-16T09:59:22Z"
   },
   {
     "name": "azukaar/Cosmos-Server",
@@ -560,19 +575,9 @@
     "date": "2025-12-15T17:23:59Z"
   },
   {
-    "name": "danielbrendel/hortusfox-web",
-    "version": "v5.6",
-    "date": "2025-12-15T14:40:53Z"
-  },
-  {
     "name": "librenms/librenms",
     "version": "25.12.0",
     "date": "2025-12-15T14:06:00Z"
-  },
-  {
-    "name": "endurain-project/endurain",
-    "version": "v0.16.3",
-    "date": "2025-12-15T12:56:50Z"
   },
   {
     "name": "LimeSurvey/LimeSurvey",
@@ -1218,11 +1223,6 @@
     "name": "getumbrel/umbrel",
     "version": "1.5.0",
     "date": "2025-11-05T11:10:20Z"
-  },
-  {
-    "name": "SonarSource/sonarqube",
-    "version": "25.11.0.114957",
-    "date": "2025-11-05T10:26:59Z"
   },
   {
     "name": "nicolargo/glances",
