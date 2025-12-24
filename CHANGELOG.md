@@ -25,6 +25,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Refactor: PatchMon [@tremor021](https://github.com/tremor021) ([#10260](https://github.com/community-scripts/ProxmoxVE/pull/10260))
     - Refactor: Part-DB [@tremor021](https://github.com/tremor021) ([#10262](https://github.com/community-scripts/ProxmoxVE/pull/10262))
 
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - core: correct local template discovery regex pattern [@MickLesk](https://github.com/MickLesk) ([#10282](https://github.com/community-scripts/ProxmoxVE/pull/10282))
+
 ### ❔ Uncategorized
 
   - Pocketbase: Add note for superuser account creation [@tremor021](https://github.com/tremor021) ([#10245](https://github.com/community-scripts/ProxmoxVE/pull/10245))
