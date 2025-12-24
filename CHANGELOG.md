@@ -18,6 +18,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: PatchMon [@tremor021](https://github.com/tremor021) ([#10260](https://github.com/community-scripts/ProxmoxVE/pull/10260))
     - Refactor: Part-DB [@tremor021](https://github.com/tremor021) ([#10262](https://github.com/community-scripts/ProxmoxVE/pull/10262))
 
 ## 2025-12-23
