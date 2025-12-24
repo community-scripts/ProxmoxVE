@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-12-24
 
+### 🚀 Updated Scripts
+
+  - recyclarr: increase cron path [@Uncloak2](https://github.com/Uncloak2) ([#10272](https://github.com/community-scripts/ProxmoxVE/pull/10272))
+
 ## 2025-12-23
 
 ### 🚀 Updated Scripts
