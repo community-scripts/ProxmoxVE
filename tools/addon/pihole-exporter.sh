@@ -22,9 +22,6 @@ APP="pihole-exporter"
 APP_TYPE="tools"
 INSTALL_PATH="/opt/pihole-exporter"
 CONFIG_PATH="/opt/pihole-exporter.env"
-header_info
-ensure_usr_local_bin_persist
-import_local_ip
 
 # ==============================================================================
 # OS DETECTION
@@ -186,7 +183,7 @@ UPDATEEOF
 
   echo ""
   msg_ok "Pihole-Exporter installed successfully"
-  msg_ok "Metrics: ${BL}http://${CURRENT_IP}:9617/metrics${CL}"
+  msg_ok "Metrics: ${BL}http://${LOCAL_IP}:9617/metrics${CL}"
   msg_ok "Config: ${BL}${CONFIG_PATH}${CL}"
 }
 
