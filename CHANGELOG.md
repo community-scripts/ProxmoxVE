@@ -18,6 +18,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: Paperless-GPT [@tremor021](https://github.com/tremor021) ([#10274](https://github.com/community-scripts/ProxmoxVE/pull/10274))
     - Refactor: Outline [@tremor021](https://github.com/tremor021) ([#10276](https://github.com/community-scripts/ProxmoxVE/pull/10276))
     - Refactor: OTS [@tremor021](https://github.com/tremor021) ([#10277](https://github.com/community-scripts/ProxmoxVE/pull/10277))
     - Refactor: OpenProject [@tremor021](https://github.com/tremor021) ([#10278](https://github.com/community-scripts/ProxmoxVE/pull/10278))
