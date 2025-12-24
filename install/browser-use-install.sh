@@ -26,7 +26,7 @@ uv python update-shell
 
 NODE_VERSION="24" setup_nodejs
 
-apt install chromium
+apt install -y chromium
 
 msg_info "Installing Browserless & Playwright"
 mkdir /opt/browserless
