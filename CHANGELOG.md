@@ -41,6 +41,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - core: correct local template discovery regex pattern [@MickLesk](https://github.com/MickLesk) ([#10282](https://github.com/community-scripts/ProxmoxVE/pull/10282))
 
+### 🧰 Tools
+
+  - #### 🐞 Bug Fixes
+
+    - pihole-exporter fix: unbound var [@CrazyWolf13](https://github.com/CrazyWolf13) ([#10307](https://github.com/community-scripts/ProxmoxVE/pull/10307))
+
 ### ❔ Uncategorized
 
   - Pocketbase: Add note for superuser account creation [@tremor021](https://github.com/tremor021) ([#10245](https://github.com/community-scripts/ProxmoxVE/pull/10245))
