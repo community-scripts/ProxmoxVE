@@ -129,17 +129,29 @@ bash "$EXE_FILE" -q -a -n -s --dkms --allow-installation-with-running-driver
 #Installing in LXC
 #pct push 104 $EXE_FILE /tmp/$EXE_FILE
 
+#Pre-check containers that are configured with Nvidia GPU passthrough
+NVIDIA_CTIDS=$(grep -l "/dev/nvidia" /etc/pve/lxc/*.conf | sed 's/.*\/\([0-9]\+\)\.conf/\1/')
+
+echo "Detected Nvidia-enabled containers:"
+echo "$NVIDIA_CTIDS"
 
 whiptail --backtitle "Proxmox VE Helper Scripts" --title "Proxmox VE Nvidia Updater" --yesno "Do you want to install Nvidia drivers in selected LXC containers?" 10 58 || exit
 NODE=$(hostname)
-EXCLUDE_MENU=()
+INCLUDE_MENU=()
 MSG_MAX_LENGTH=0
+
 while read -r TAG ITEM; do
   OFFSET=2
+  # Default selection
+  STATE="OFF"
+  # If container ID is in Nvidia list, set to ON
+  if echo "$NVIDIA_CTIDS" | grep -qw "$TAG"; then
+    STATE="ON"
+  fi
   ((${#ITEM} + OFFSET > MSG_MAX_LENGTH)) && MSG_MAX_LENGTH=${#ITEM}+OFFSET
-  EXCLUDE_MENU+=("$TAG" "$ITEM " "OFF")
+  INCLUDE_MENU+=("$TAG" "$ITEM " "$STATE")
 done < <(pct list | awk 'NR>1')
-included_containers=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "Containers on $NODE" --checklist "\nSelect containers to install Nvidia drivers:\n" 16 $((MSG_MAX_LENGTH + 23)) 6 "${EXCLUDE_MENU[@]}" 3>&1 1>&2 2>&3 | tr -d '"') || exit
+included_containers=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "Containers on $NODE" --checklist "\nSelect containers to install Nvidia drivers:\n" 16 $((MSG_MAX_LENGTH + 23)) 6 "${INCLUDE_MENU[@]}" 3>&1 1>&2 2>&3 | tr -d '"') || exit
 
 for container in $(pct list | awk '{if(NR>1) print $1}'); do
   if [[ " ${included_containers[@]} " =~ " $container " ]]; then
