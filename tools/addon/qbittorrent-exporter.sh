@@ -12,8 +12,8 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Enable error handling
 set -Eeuo pipefail
 trap 'error_handler' ERR
-
 load_functions
+
 # ==============================================================================
 # CONFIGURATION
 # ==============================================================================
@@ -22,8 +22,6 @@ APP="qbittorrent-exporter"
 APP_TYPE="tools"
 INSTALL_PATH="/opt/qbittorrent-exporter"
 CONFIG_PATH="/opt/qbittorrent-exporter.env"
-header_info
-ensure_usr_local_bin_persist
 
 # ==============================================================================
 # OS DETECTION
