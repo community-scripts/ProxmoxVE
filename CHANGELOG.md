@@ -18,6 +18,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Overseerr: Update dependencies [@tremor021](https://github.com/tremor021) ([#10275](https://github.com/community-scripts/ProxmoxVE/pull/10275))
     - Refactor: Paperless-GPT [@tremor021](https://github.com/tremor021) ([#10274](https://github.com/community-scripts/ProxmoxVE/pull/10274))
     - Refactor: Outline [@tremor021](https://github.com/tremor021) ([#10276](https://github.com/community-scripts/ProxmoxVE/pull/10276))
     - Refactor: OTS [@tremor021](https://github.com/tremor021) ([#10277](https://github.com/community-scripts/ProxmoxVE/pull/10277))
