@@ -16,6 +16,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - recyclarr: increase cron path [@Uncloak2](https://github.com/Uncloak2) ([#10272](https://github.com/community-scripts/ProxmoxVE/pull/10272))
 
+  - #### 🐞 Bug Fixes
+
+    - fix: technitium: service migration [@CrazyWolf13](https://github.com/CrazyWolf13) ([#10300](https://github.com/community-scripts/ProxmoxVE/pull/10300))
+
   - #### 🔧 Refactor
 
     - Overseerr: Update dependencies [@tremor021](https://github.com/tremor021) ([#10275](https://github.com/community-scripts/ProxmoxVE/pull/10275))
