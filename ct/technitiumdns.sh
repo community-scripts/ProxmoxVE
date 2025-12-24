@@ -30,6 +30,7 @@ function update_script() {
   if [[ -f /etc/systemd/system/dns.service ]]; then
     mv /etc/systemd/system/dns.service /etc/systemd/system/technitium.service
     systemctl daemon-reload
+    systemctl enable -q --now technitium
   fi
   if is_package_installed "aspnetcore-runtime-8.0"; then
     $STD apt remove -y aspnetcore-runtime-8.0
