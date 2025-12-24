@@ -12,8 +12,8 @@ source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxV
 # Enable error handling
 set -Eeuo pipefail
 trap 'error_handler' ERR
-
 load_functions
+
 # ==============================================================================
 # CONFIGURATION
 # ==============================================================================
