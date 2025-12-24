@@ -1,13 +1,53 @@
 [
   {
-    "name": "advplyr/audiobookshelf",
-    "version": "v2.32.1",
-    "date": "2025-12-23T23:28:06Z"
+    "name": "fuma-nama/fumadocs",
+    "version": "fumadocs-ui@16.4.0",
+    "date": "2025-12-24T10:16:33Z"
   },
   {
     "name": "rcourtman/Pulse",
     "version": "v5.0.0",
     "date": "2025-12-23T21:47:01Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.521",
+    "date": "2025-12-24T05:52:23Z"
+  },
+  {
+    "name": "openobserve/openobserve",
+    "version": "v0.40.0-rc1",
+    "date": "2025-12-24T03:37:37Z"
+  },
+  {
+    "name": "comfyanonymous/ComfyUI",
+    "version": "v0.6.0",
+    "date": "2025-12-24T03:32:16Z"
+  },
+  {
+    "name": "hyperion-project/hyperion.ng",
+    "version": "2.1.1",
+    "date": "2025-06-14T17:45:06Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5.1",
+    "date": "2025-12-24T00:27:08Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
+    "name": "Dolibarr/dolibarr",
+    "version": "22.0.4",
+    "date": "2025-12-23T23:58:16Z"
+  },
+  {
+    "name": "advplyr/audiobookshelf",
+    "version": "v2.32.1",
+    "date": "2025-12-23T23:28:06Z"
   },
   {
     "name": "laurent22/joplin",
@@ -75,6 +115,11 @@
     "date": "2025-12-16T09:59:22Z"
   },
   {
+    "name": "keycloak/keycloak",
+    "version": "26.4.7",
+    "date": "2025-12-01T08:14:11Z"
+  },
+  {
     "name": "jenkinsci/jenkins",
     "version": "jenkins-2.543",
     "date": "2025-12-23T12:39:16Z"
@@ -110,11 +155,6 @@
     "date": "2025-12-02T08:11:24Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.512",
-    "date": "2025-12-23T06:02:59Z"
-  },
-  {
     "name": "theonedev/onedev",
     "version": "v13.1.6",
     "date": "2025-12-23T03:13:32Z"
@@ -123,21 +163,6 @@
     "name": "linkwarden/linkwarden",
     "version": "v2.13.3",
     "date": "2025-12-23T01:18:58Z"
-  },
-  {
-    "name": "hyperion-project/hyperion.ng",
-    "version": "2.1.1",
-    "date": "2025-06-14T17:45:06Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.5.1",
-    "date": "2025-12-23T00:27:04Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
   },
   {
     "name": "Dispatcharr/Dispatcharr",
@@ -215,11 +240,6 @@
     "date": "2025-12-16T05:42:34Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.4.7",
-    "date": "2025-12-01T08:14:11Z"
-  },
-  {
     "name": "benjaminjonard/koillection",
     "version": "1.7.1",
     "date": "2025-12-21T17:06:17Z"
@@ -238,11 +258,6 @@
     "name": "pocketbase/pocketbase",
     "version": "v0.35.0",
     "date": "2025-12-21T07:44:15Z"
-  },
-  {
-    "name": "fuma-nama/fumadocs",
-    "version": "fumadocs-ui@16.3.2",
-    "date": "2025-12-21T05:23:55Z"
   },
   {
     "name": "dedicatedcode/reitti",
@@ -335,11 +350,6 @@
     "date": "2025-12-19T15:50:12Z"
   },
   {
-    "name": "openobserve/openobserve",
-    "version": "v0.30.2",
-    "date": "2025-12-19T15:18:53Z"
-  },
-  {
     "name": "raydak-labs/configarr",
     "version": "v1.19.0",
     "date": "2025-12-19T13:37:00Z"
@@ -392,7 +402,7 @@
   {
     "name": "mealie-recipes/mealie",
     "version": "v3.8.0",
-    "date": "2025-12-19T01:37:16Z"
+    "date": "2025-12-19T01:37:04Z"
   },
   {
     "name": "moghtech/komodo",
@@ -458,11 +468,6 @@
     "name": "zabbix/zabbix",
     "version": "7.4.6",
     "date": "2025-12-18T07:00:26Z"
-  },
-  {
-    "name": "comfyanonymous/ComfyUI",
-    "version": "v0.5.1",
-    "date": "2025-12-18T03:08:43Z"
   },
   {
     "name": "goauthentik/authentik",
@@ -1033,11 +1038,6 @@
     "name": "NLnetLabs/unbound",
     "version": "release-1.24.2",
     "date": "2025-11-26T11:22:30Z"
-  },
-  {
-    "name": "Dolibarr/dolibarr",
-    "version": "22.0.3",
-    "date": "2025-11-25T17:25:41Z"
   },
   {
     "name": "usememos/memos",
