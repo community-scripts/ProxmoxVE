@@ -21,8 +21,11 @@ msg_ok "Installed Dependencies"
 
 # pip install uv
 # uv venv --python 3.12
-PYTHON_VERSION="3.12" setup_uv
+PYTHON_VERSION="3.12" USE_UVX="YES" setup_uv
 uv python update-shell
+
+#to fix missing uvx
+#pip install uv
 
 NODE_VERSION="24" setup_nodejs
 
@@ -160,6 +163,7 @@ uv sync
 #RUN --mount=type=cache,target=/root/.cache,sharing=locked,id=cache-$TARGETARCH$TARGETVARIANT \
 echo "[+] Installing browser-use pip library from source..."
 uv sync --all-extras --locked --no-dev
+source .venv/bin/activate
 python3 -c "import browser_use; print('browser-use installed successfully')"
 
 
