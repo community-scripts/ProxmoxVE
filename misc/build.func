@@ -3743,12 +3743,9 @@ create_lxc_container() {
 
   msg_info "Searching for template '$TEMPLATE_SEARCH'"
 
-  # Build regex patterns outside awk/grep for clarity
-  SEARCH_PATTERN="^${TEMPLATE_SEARCH}"
-
   mapfile -t LOCAL_TEMPLATES < <(
     pveam list "$TEMPLATE_STORAGE" 2>/dev/null |
-      awk -v search="${SEARCH_PATTERN}" -v pattern="${TEMPLATE_PATTERN}" '$1 ~ search && $1 ~ pattern {print $1}' |
+      awk -v search="${TEMPLATE_SEARCH}" -v pattern="${TEMPLATE_PATTERN}" '$1 ~ search && $1 ~ pattern {print $1}' |
       sed 's|.*/||' | sort -t - -k 2 -V
   )
 
@@ -3757,7 +3754,7 @@ create_lxc_container() {
   msg_ok "Template search completed"
 
   set +u
-  mapfile -t ONLINE_TEMPLATES < <(pveam available -section system 2>/dev/null | grep -E '\.(tar\.zst|tar\.xz|tar\.gz)$' | awk '{print $2}' | grep -E "${SEARCH_PATTERN}.*${TEMPLATE_PATTERN}" | sort -t - -k 2 -V 2>/dev/null || true)
+  mapfile -t ONLINE_TEMPLATES < <(pveam available -section system 2>/dev/null | grep -E '\.(tar\.zst|tar\.xz|tar\.gz)$' | awk '{print $2}' | grep -E "^${TEMPLATE_SEARCH}.*${TEMPLATE_PATTERN}" | sort -t - -k 2 -V 2>/dev/null || true)
   set -u
 
   ONLINE_TEMPLATE=""
@@ -3806,13 +3803,12 @@ create_lxc_container() {
       if [[ "$choice" =~ ^[0-9]+$ ]] && [[ "$choice" -ge 1 ]] && [[ "$choice" -le ${#AVAILABLE_VERSIONS[@]} ]]; then
         PCT_OSVERSION="${AVAILABLE_VERSIONS[$((choice - 1))]}"
         TEMPLATE_SEARCH="${PCT_OSTYPE}-${PCT_OSVERSION}"
-        SEARCH_PATTERN="^${TEMPLATE_SEARCH}-"
 
         mapfile -t ONLINE_TEMPLATES < <(
           pveam available -section system 2>/dev/null |
             grep -E '\.(tar\.zst|tar\.xz|tar\.gz)$' |
-            awk -F'\t' '{print $1}' |
-            grep -E "${SEARCH_PATTERN}.*${TEMPLATE_PATTERN}" |
+            awk '{print $2}' |
+            grep -E "^${TEMPLATE_SEARCH}-.*${TEMPLATE_PATTERN}" |
             sort -t - -k 2 -V 2>/dev/null || true
         )
 
@@ -3873,18 +3869,17 @@ create_lxc_container() {
 
           # Retry template search with new version
           TEMPLATE_SEARCH="${PCT_OSTYPE}-${PCT_OSVERSION:-}"
-          SEARCH_PATTERN="^${TEMPLATE_SEARCH}-"
 
           mapfile -t LOCAL_TEMPLATES < <(
             pveam list "$TEMPLATE_STORAGE" 2>/dev/null |
-              awk -v search="${SEARCH_PATTERN}" -v pattern="${TEMPLATE_PATTERN}" '$1 ~ search && $1 ~ pattern {print $1}' |
+              awk -v search="${TEMPLATE_SEARCH}-" -v pattern="${TEMPLATE_PATTERN}" '$1 ~ search && $1 ~ pattern {print $1}' |
               sed 's|.*/||' | sort -t - -k 2 -V
           )
           mapfile -t ONLINE_TEMPLATES < <(
             pveam available -section system 2>/dev/null |
               grep -E '\.(tar\.zst|tar\.xz|tar\.gz)$' |
-              awk -F'\t' '{print $1}' |
-              grep -E "${SEARCH_PATTERN}.*${TEMPLATE_PATTERN}" |
+              awk '{print $2}' |
+              grep -E "^${TEMPLATE_SEARCH}-.*${TEMPLATE_PATTERN}" |
               sort -t - -k 2 -V 2>/dev/null || true
           )
           ONLINE_TEMPLATE=""
