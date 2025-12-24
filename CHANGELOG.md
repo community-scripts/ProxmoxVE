@@ -18,11 +18,16 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: Tautulli [@tremor021](https://github.com/tremor021) ([#10241](https://github.com/community-scripts/ProxmoxVE/pull/10241))
     - Refactor: PrivateBin [@tremor021](https://github.com/tremor021) ([#10256](https://github.com/community-scripts/ProxmoxVE/pull/10256))
     - Refactor: Podman-Home Assistant [@tremor021](https://github.com/tremor021) ([#10258](https://github.com/community-scripts/ProxmoxVE/pull/10258))
     - Refactor: Plant-it [@tremor021](https://github.com/tremor021) ([#10259](https://github.com/community-scripts/ProxmoxVE/pull/10259))
     - Refactor: PatchMon [@tremor021](https://github.com/tremor021) ([#10260](https://github.com/community-scripts/ProxmoxVE/pull/10260))
     - Refactor: Part-DB [@tremor021](https://github.com/tremor021) ([#10262](https://github.com/community-scripts/ProxmoxVE/pull/10262))
+
+### ❔ Uncategorized
+
+  - Pocketbase: Add note for superuser account creation [@tremor021](https://github.com/tremor021) ([#10245](https://github.com/community-scripts/ProxmoxVE/pull/10245))
 
 ## 2025-12-23
 
