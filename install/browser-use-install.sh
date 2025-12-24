@@ -151,10 +151,7 @@ ln -s /usr/bin/chromium /opt/browser-use/chromium-browser
 # chown -R "$BROWSERUSE_USER:$BROWSERUSE_USER" "/home/${BROWSERUSE_USER}/.config"
 
 
-
-
 uv sync
-uv pip install --no-cache-dir -r requirements.txt
 
 #uvx browser-use install
 #----> download source directly
