@@ -79,6 +79,11 @@ NODE_VERSION="24" setup_nodejs
 # fetch_and_deploy_gh_release "browser-use" "browser-use/browser-use" "tarball" "latest" "/opt/browser-use"
 # msg_ok "Downloaded browser-use source"
 
+msg_info "Downloading browser-use source"
+fetch_and_deploy_gh_release "browser-use" "browser-use/browser-use" "tarball" "latest" "/opt/browser-use"
+msg_ok "Downloaded browser-use source"
+
+
 msg_info "Installing browser-use"
 
 mkdir -p /etc/browser-use
@@ -90,13 +95,13 @@ echo "OPENAI_API_KEY=your-key-here" >> /etc/browser-use/.env
 
 
 
-
 # User config
 BROWSERUSE_USER="browseruse"
 DEFAULT_PUID=911
 DEFAULT_PGID=911
 
 mkdir -p /opt/browser-use
+cd /opt/browser-use
 # Paths
 CODE_DIR=/opt/browser-use
 DATA_DIR=/data
@@ -152,15 +157,21 @@ chown -R "$BROWSERUSE_USER:$BROWSERUSE_USER" "/home/${BROWSERUSE_USER}/.config"
     # && echo -e '\n\n' \
 # ) | tee -a /VERSION.txt
 
+uv sync
+
+echo "DEBUG #1!!!!!!!!!"
+
 ##### NOT WORKING, might need to git clone the repo...
 #uv sync --all-extras --no-dev --no-install-project
 
 # Copy the rest of the browser-use codebase
 #COPY . /app
-uv venv --python 3.12
+#uv venv --python 3.12
 #source .venv/bin/activate
-uv pip install browser-use
-uvx browser-use install
+#uv pip install browser-use
+
+#uvx browser-use install
+#----> download source directly
 
 # Install the browser-use package and all of its optional dependencies
 #RUN --mount=type=cache,target=/root/.cache,sharing=locked,id=cache-$TARGETARCH$TARGETVARIANT \
