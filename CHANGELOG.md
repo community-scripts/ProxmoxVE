@@ -18,6 +18,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: OTS [@tremor021](https://github.com/tremor021) ([#10277](https://github.com/community-scripts/ProxmoxVE/pull/10277))
     - Refactor: OpenProject [@tremor021](https://github.com/tremor021) ([#10278](https://github.com/community-scripts/ProxmoxVE/pull/10278))
     - Refactor: Open Archiver [@tremor021](https://github.com/tremor021) ([#10280](https://github.com/community-scripts/ProxmoxVE/pull/10280))
     - Refactor: Tautulli [@tremor021](https://github.com/tremor021) ([#10241](https://github.com/community-scripts/ProxmoxVE/pull/10241))
