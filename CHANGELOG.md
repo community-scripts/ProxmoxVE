@@ -16,6 +16,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - recyclarr: increase cron path [@Uncloak2](https://github.com/Uncloak2) ([#10272](https://github.com/community-scripts/ProxmoxVE/pull/10272))
 
+  - #### 🔧 Refactor
+
+    - Refactor: Part-DB [@tremor021](https://github.com/tremor021) ([#10262](https://github.com/community-scripts/ProxmoxVE/pull/10262))
+
 ## 2025-12-23
 
 ### 🚀 Updated Scripts
