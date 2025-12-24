@@ -24,6 +24,9 @@ msg_ok "Installed Dependencies"
 PYTHON_VERSION="3.12" USE_UVX="YES" setup_uv
 uv python update-shell
 
+echo "Exit for manual testing"
+exit
+
 #to fix missing uvx
 #pip install uv
 
