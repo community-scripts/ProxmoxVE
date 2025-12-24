@@ -18,6 +18,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: Open Archiver [@tremor021](https://github.com/tremor021) ([#10280](https://github.com/community-scripts/ProxmoxVE/pull/10280))
     - Refactor: Tautulli [@tremor021](https://github.com/tremor021) ([#10241](https://github.com/community-scripts/ProxmoxVE/pull/10241))
     - Refactor: PrivateBin [@tremor021](https://github.com/tremor021) ([#10256](https://github.com/community-scripts/ProxmoxVE/pull/10256))
     - Refactor: Podman-Home Assistant [@tremor021](https://github.com/tremor021) ([#10258](https://github.com/community-scripts/ProxmoxVE/pull/10258))
