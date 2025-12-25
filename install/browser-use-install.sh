@@ -23,7 +23,7 @@ msg_ok "Installed Dependencies"
 # uv venv --python 3.12
 PYTHON_VERSION="3.12" USE_UVX="YES" setup_uv
 uv python update-shell
-$STD update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.12 1
+$STD update-alternatives --install /usr/bin/python3 python3 /root/.local/bin/python3.12 1
 
 msg_info "Downloading browser-use source"
 fetch_and_deploy_gh_release "browser-use" "browser-use/browser-use" "tarball" "latest" "/app"
