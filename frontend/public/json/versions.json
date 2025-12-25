@@ -1,13 +1,58 @@
 [
   {
+    "name": "fosrl/pangolin",
+    "version": "1.14.1",
+    "date": "2025-12-24T21:33:56Z"
+  },
+  {
+    "name": "booklore-app/booklore",
+    "version": "v1.16.0",
+    "date": "2025-12-24T19:57:11Z"
+  },
+  {
+    "name": "FreshRSS/FreshRSS",
+    "version": "1.28.0",
+    "date": "2025-12-24T19:27:21Z"
+  },
+  {
+    "name": "NodeBB/NodeBB",
+    "version": "v4.7.2",
+    "date": "2025-12-24T18:38:32Z"
+  },
+  {
+    "name": "rcourtman/Pulse",
+    "version": "v5.0.2",
+    "date": "2025-12-24T18:18:13Z"
+  },
+  {
+    "name": "metabase/metabase",
+    "version": "v0.58.x",
+    "date": "2025-12-24T16:39:27Z"
+  },
+  {
+    "name": "TuroYT/snowshare",
+    "version": "v1.2.6",
+    "date": "2025-12-24T14:05:56Z"
+  },
+  {
+    "name": "Dolibarr/dolibarr",
+    "version": "22.0.4",
+    "date": "2025-12-24T12:26:24Z"
+  },
+  {
+    "name": "BookStackApp/BookStack",
+    "version": "v25.12",
+    "date": "2025-12-24T12:19:42Z"
+  },
+  {
     "name": "fuma-nama/fumadocs",
     "version": "fumadocs-ui@16.4.0",
     "date": "2025-12-24T10:16:33Z"
   },
   {
-    "name": "rcourtman/Pulse",
-    "version": "v5.0.0",
-    "date": "2025-12-23T21:47:01Z"
+    "name": "emqx/emqx",
+    "version": "6.1.0-rc.1",
+    "date": "2025-12-24T09:46:02Z"
   },
   {
     "name": "Jackett/Jackett",
@@ -40,11 +85,6 @@
     "date": "2025-11-23T12:13:34Z"
   },
   {
-    "name": "Dolibarr/dolibarr",
-    "version": "22.0.4",
-    "date": "2025-12-23T23:58:16Z"
-  },
-  {
     "name": "advplyr/audiobookshelf",
     "version": "v2.32.1",
     "date": "2025-12-23T23:28:06Z"
@@ -60,19 +100,9 @@
     "date": "2025-12-23T20:53:07Z"
   },
   {
-    "name": "fosrl/pangolin",
-    "version": "1.14.0-s.2",
-    "date": "2025-12-23T20:24:26Z"
-  },
-  {
     "name": "scanopy/scanopy",
     "version": "v0.12.6",
     "date": "2025-12-23T19:24:15Z"
-  },
-  {
-    "name": "metabase/metabase",
-    "version": "v0.58.x",
-    "date": "2025-12-23T19:01:23Z"
   },
   {
     "name": "prometheus-pve/prometheus-pve-exporter",
@@ -315,19 +345,9 @@
     "date": "2025-12-19T23:04:27Z"
   },
   {
-    "name": "emqx/emqx",
-    "version": "e5.10.3-alpha.1",
-    "date": "2025-12-19T21:08:48Z"
-  },
-  {
     "name": "homarr-labs/homarr",
     "version": "v1.47.0",
     "date": "2025-12-19T19:42:50Z"
-  },
-  {
-    "name": "booklore-app/booklore",
-    "version": "v1.15.0",
-    "date": "2025-12-19T18:57:42Z"
   },
   {
     "name": "YunoHost/yunohost",
@@ -380,11 +400,6 @@
     "date": "2025-12-19T11:05:10Z"
   },
   {
-    "name": "TuroYT/snowshare",
-    "version": "v1.2.5",
-    "date": "2025-12-19T10:47:19Z"
-  },
-  {
     "name": "mattermost/mattermost",
     "version": "v11.1.2",
     "date": "2025-12-17T09:26:24Z"
@@ -402,7 +417,7 @@
   {
     "name": "mealie-recipes/mealie",
     "version": "v3.8.0",
-    "date": "2025-12-19T01:37:04Z"
+    "date": "2025-12-19T01:37:16Z"
   },
   {
     "name": "moghtech/komodo",
@@ -493,11 +508,6 @@
     "name": "semaphoreui/semaphore",
     "version": "v2.16.47",
     "date": "2025-12-17T15:36:28Z"
-  },
-  {
-    "name": "NodeBB/NodeBB",
-    "version": "v4.7.1",
-    "date": "2025-12-17T15:18:55Z"
   },
   {
     "name": "bunkerity/bunkerweb",
@@ -748,11 +758,6 @@
     "name": "miniflux/v2",
     "version": "2.2.15",
     "date": "2025-12-10T01:52:14Z"
-  },
-  {
-    "name": "BookStackApp/BookStack",
-    "version": "v25.11.6",
-    "date": "2025-12-09T21:08:17Z"
   },
   {
     "name": "valkey-io/valkey",
@@ -1363,11 +1368,6 @@
     "name": "Pf2eToolsOrg/Pf2eTools",
     "version": "v0.10.1",
     "date": "2025-09-28T08:55:44Z"
-  },
-  {
-    "name": "FreshRSS/FreshRSS",
-    "version": "1.27.1",
-    "date": "2025-09-27T13:07:26Z"
   },
   {
     "name": "Threadfin/Threadfin",
