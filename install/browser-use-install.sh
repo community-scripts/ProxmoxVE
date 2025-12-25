@@ -23,8 +23,39 @@ msg_ok "Installed Dependencies"
 # uv venv --python 3.12
 PYTHON_VERSION="3.12" USE_UVX="YES" setup_uv
 uv python update-shell
+$STD update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.12 1
 
-echo "Exit for manual testing"
+msg_info "Downloading browser-use source"
+fetch_and_deploy_gh_release "browser-use" "browser-use/browser-use" "tarball" "latest" "/app"
+msg_ok "Downloaded browser-use source"
+
+
+#From the fast dockerfile
+export BROWSERUSE_USER="browseruse"
+export DEFAULT_PUID=911
+export DEFAULT_PGID=911
+export DATA_DIR=/data
+
+# Create user and directories
+groupadd --system $BROWSERUSE_USER
+useradd --system --create-home --gid $BROWSERUSE_USER --groups audio,video $BROWSERUSE_USER
+usermod -u "$DEFAULT_PUID" "$BROWSERUSE_USER"
+groupmod -g "$DEFAULT_PGID" "$BROWSERUSE_USER"
+mkdir -p /data /home/$BROWSERUSE_USER/.config
+ln -s $DATA_DIR /home/$BROWSERUSE_USER/.config/browseruse
+mkdir -p "/home/$BROWSERUSE_USER/.config/chromium/Crash Reports/pending/"
+mkdir -p "$DATA_DIR/profiles/default"
+chown -R "$BROWSERUSE_USER:$BROWSERUSE_USER" "/home/$BROWSERUSE_USER" "$DATA_DIR"
+
+# Install browser-use
+uv sync --all-extras --locked --no-dev --compile-bytecode
+
+
+motd_ssh
+customize
+
+echo "DONE!"
+
 exit
 
 #to fix missing uvx
@@ -81,9 +112,9 @@ $STD apt-get install -y \
   libxtst6
 msg_ok "Installed X11 Packages"
 
-msg_info "Downloading browser-use source"
-fetch_and_deploy_gh_release "browser-use" "browser-use/browser-use" "tarball" "latest" "/opt/browser-use"
-msg_ok "Downloaded browser-use source"
+# msg_info "Downloading browser-use source"
+# fetch_and_deploy_gh_release "browser-use" "browser-use/browser-use" "tarball" "latest" "/opt/browser-use"
+# msg_ok "Downloaded browser-use source"
 
 
 msg_info "Installing browser-use"
