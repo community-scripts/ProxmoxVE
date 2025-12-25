@@ -48,7 +48,8 @@ mkdir -p "$DATA_DIR/profiles/default"
 chown -R "$BROWSERUSE_USER:$BROWSERUSE_USER" "/home/$BROWSERUSE_USER" "$DATA_DIR"
 
 # Install browser-use
-uv sync --all-extras --locked --no-dev --compile-bytecode
+cd /app
+uv sync --all-extras --no-dev --compile-bytecode
 
 
 motd_ssh
