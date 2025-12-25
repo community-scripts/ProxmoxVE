@@ -195,7 +195,7 @@ fi
 msg_warn "Nextcloud-Exporter is not installed."
 echo ""
 echo -e "${TAB}${INFO} This will install:"
-echo -e "${TAB}  - Nextcloud Exporter (Go binary)"
+echo -e "${TAB}  - Nextcloud Exporter (binary)"
 echo -e "${TAB}  - Systemd service"
 echo ""
 
