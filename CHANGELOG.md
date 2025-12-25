@@ -26,6 +26,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Refactor: ntfy [@tremor021](https://github.com/tremor021) ([#10303](https://github.com/community-scripts/ProxmoxVE/pull/10303))
     - Refactor: Notifiarr [@tremor021](https://github.com/tremor021) ([#10304](https://github.com/community-scripts/ProxmoxVE/pull/10304))
 
+### 🌐 Website
+
+  - Fix horizontal scroll on website [@mateossh](https://github.com/mateossh) ([#10317](https://github.com/community-scripts/ProxmoxVE/pull/10317))
+
 ## 2025-12-24
 
 ### 🚀 Updated Scripts
