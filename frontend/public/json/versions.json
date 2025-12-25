@@ -1,5 +1,40 @@
 [
   {
+    "name": "PatchMon/PatchMon",
+    "version": "v1.3.7",
+    "date": "2025-12-25T11:08:14Z"
+  },
+  {
+    "name": "openobserve/openobserve",
+    "version": "v0.40.0-rc2",
+    "date": "2025-12-25T09:23:24Z"
+  },
+  {
+    "name": "seriousm4x/UpSnap",
+    "version": "5.2.5",
+    "date": "2025-12-25T09:23:10Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.3",
+    "date": "2025-09-20T12:12:33Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.532",
+    "date": "2025-12-25T05:48:43Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5.1",
+    "date": "2025-12-25T00:27:04Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
     "name": "fosrl/pangolin",
     "version": "1.14.1",
     "date": "2025-12-24T21:33:56Z"
@@ -55,16 +90,6 @@
     "date": "2025-12-24T09:46:02Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.521",
-    "date": "2025-12-24T05:52:23Z"
-  },
-  {
-    "name": "openobserve/openobserve",
-    "version": "v0.40.0-rc1",
-    "date": "2025-12-24T03:37:37Z"
-  },
-  {
     "name": "comfyanonymous/ComfyUI",
     "version": "v0.6.0",
     "date": "2025-12-24T03:32:16Z"
@@ -73,16 +98,6 @@
     "name": "hyperion-project/hyperion.ng",
     "version": "2.1.1",
     "date": "2025-06-14T17:45:06Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.5.1",
-    "date": "2025-12-24T00:27:08Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
   },
   {
     "name": "advplyr/audiobookshelf",
@@ -255,11 +270,6 @@
     "date": "2025-12-22T10:12:48Z"
   },
   {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.3",
-    "date": "2025-09-20T12:12:33Z"
-  },
-  {
     "name": "open-webui/open-webui",
     "version": "v0.6.43",
     "date": "2025-12-22T06:03:45Z"
@@ -417,7 +427,7 @@
   {
     "name": "mealie-recipes/mealie",
     "version": "v3.8.0",
-    "date": "2025-12-19T01:37:16Z"
+    "date": "2025-12-19T01:37:04Z"
   },
   {
     "name": "moghtech/komodo",
@@ -1070,11 +1080,6 @@
     "date": "2025-11-21T16:51:21Z"
   },
   {
-    "name": "seriousm4x/UpSnap",
-    "version": "5.2.4",
-    "date": "2025-11-21T10:25:05Z"
-  },
-  {
     "name": "MariaDB/server",
     "version": "mariadb-12.1.2",
     "date": "2025-11-18T15:16:21Z"
@@ -1108,11 +1113,6 @@
     "name": "hivemq/hivemq-community-edition",
     "version": "2025.5",
     "date": "2025-11-19T14:48:47Z"
-  },
-  {
-    "name": "PatchMon/PatchMon",
-    "version": "v1.3.6",
-    "date": "2025-11-18T22:01:02Z"
   },
   {
     "name": "redis/redis",
