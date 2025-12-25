@@ -19,6 +19,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - InfluxDB: Fixes [@tremor021](https://github.com/tremor021) ([#10308](https://github.com/community-scripts/ProxmoxVE/pull/10308))
     - Increase Zot Default Memory, Recategorize [@chrismuzyn](https://github.com/chrismuzyn) ([#10311](https://github.com/community-scripts/ProxmoxVE/pull/10311))
 
+  - #### 🔧 Refactor
+
+    - Refactor: Notifiarr [@tremor021](https://github.com/tremor021) ([#10304](https://github.com/community-scripts/ProxmoxVE/pull/10304))
+
 ## 2025-12-24
 
 ### 🚀 Updated Scripts
