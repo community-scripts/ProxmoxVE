@@ -21,6 +21,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: OpenObserve [@tremor021](https://github.com/tremor021) ([#10279](https://github.com/community-scripts/ProxmoxVE/pull/10279))
     - Refactor: NZBGet [@tremor021](https://github.com/tremor021) ([#10302](https://github.com/community-scripts/ProxmoxVE/pull/10302))
     - Refactor: ntfy [@tremor021](https://github.com/tremor021) ([#10303](https://github.com/community-scripts/ProxmoxVE/pull/10303))
     - Refactor: Notifiarr [@tremor021](https://github.com/tremor021) ([#10304](https://github.com/community-scripts/ProxmoxVE/pull/10304))
