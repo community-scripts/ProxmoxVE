@@ -38,7 +38,8 @@ Description=Duplicati Service
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/duplicati-server --webservice-interface=any --webservice-password=$ADMINPASS --settings-encryption-key=$DECRYPTKEY
+EnvironmentFile=-/etc/default/duplicati
+ExecStart=/usr/bin/duplicati-server --webservice-interface=any --webservice-password=$ADMINPASS --settings-encryption-key=$DECRYPTKEY $DAEMON_OPTS
 Restart=always
 
 [Install]
