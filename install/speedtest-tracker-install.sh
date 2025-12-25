@@ -92,6 +92,8 @@ chmod -R 755 /opt/speedtest-tracker/bootstrap/cache
 msg_ok "Set up Speedtest Tracker"
 
 msg_info "Creating Service"
+# Fix Ping issues: https://github.com/alexjustesen/speedtest-tracker/issues/2525#issuecomment-3677992174
+setcap cap_net_raw+p /bin/ping
 cat <<EOF >/etc/systemd/system/speedtest-tracker.service
 [Unit]
 Description=Speedtest Tracker Queue Worker
