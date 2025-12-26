@@ -13,23 +13,27 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-temp_file=$(mktemp)
-curl -fsSL "http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2_amd64.deb" -o "$temp_file"
-$STD dpkg -i $temp_file
-rm -f $temp_file
-msg_ok "Installed Dependencies"
-
 msg_info "Setting up InvenTree Repository"
-mkdir -p /etc/apt/keyrings
-curl -fsSL https://dl.packager.io/srv/inventree/InvenTree/key | gpg --dearmor -o /etc/apt/keyrings/inventree.gpg
-echo "deb [signed-by=/etc/apt/keyrings/inventree.gpg] https://dl.packager.io/srv/deb/inventree/InvenTree/stable/ubuntu 20.04 main" >/etc/apt/sources.list.d/inventree.list
+setup_deb822_repo \
+  "inventree" \
+  "https://dl.packager.io/srv/inventree/InvenTree/key" \
+  "https://dl.packager.io/srv/deb/inventree/InvenTree/stable/$(get_os_info id)" \
+  "$(get_os_info version)" \
+  "main"
 msg_ok "Set up InvenTree Repository"
 
-msg_info "Setup ${APPLICATION} (Patience)"
-$STD apt-get update
-$STD apt-get install -y inventree
-msg_ok "Setup ${APPLICATION}"
+msg_info "Installing InvenTree (Patience)"
+export SETUP_NO_CALLS=true
+$STD apt install -y inventree
+msg_ok "Installed InvenTree"
+
+msg_info "Configuring InvenTree"
+LOCAL_IP="$(hostname -I | awk '{print $1}')"
+if [[ -f /etc/inventree/config.yaml ]]; then
+  sed -i "s|site_url:.*|site_url: http://${LOCAL_IP}|" /etc/inventree/config.yaml
+fi
+$STD inventree run invoke update
+msg_ok "Configured InvenTree"
 
 motd_ssh
 customize

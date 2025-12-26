@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-10}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -43,6 +43,14 @@ function update_script() {
   msg_info "Cleaning"
   rm -rf forgejo-$RELEASE-linux-amd64
   msg_ok "Cleaned"
+
+  # Fix env var from older version of community script
+  if grep -q "GITEA_WORK_DIR" /etc/systemd/system/forgejo.service; then
+    msg_info "Updating Service File"
+    sed -i "s/GITEA_WORK_DIR/FORGEJO_WORK_DIR/g" /etc/systemd/system/forgejo.service
+    systemctl daemon-reload
+    msg_ok "Updated Service File"
+  fi
 
   msg_info "Starting Service"
   systemctl start forgejo

@@ -14,30 +14,20 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o /usr/share/keyrings/microsoft-prod.gpg
-cat <<EOF | sudo tee /etc/apt/sources.list.d/microsoft-prod.sources >/dev/null
-Types: deb
-URIs: https://packages.microsoft.com/debian/12/prod/
-Suites: bookworm
-Components: main
-Signed-By: /usr/share/keyrings/microsoft-prod.gpg
-EOF
-$STD apt update
+setup_deb822_repo \
+  "microsoft" \
+  "https://packages.microsoft.com/keys/microsoft.asc" \
+  "https://packages.microsoft.com/debian/12/prod/" \
+  "bookworm" \
+  "main"
 $STD apt install -y \
   dotnet-sdk-8.0 \
   aspnetcore-runtime-8.0
 msg_ok "Installed Dependencies"
 
-msg_info "Installing Umlautadaptarr"
-temp_file=$(mktemp)
-RELEASE=$(curl -s https://api.github.com/repos/PCJones/Umlautadaptarr/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}')
-curl -fsSL "https://github.com/PCJones/Umlautadaptarr/releases/download/${RELEASE}/linux-x64.zip" -o $temp_file
-$STD unzip -j $temp_file '*/**' -d /opt/UmlautAdaptarr
-rm -f $temp_file
-echo "${RELEASE}" >"/opt/UmlautAdaptarr_version.txt"
-msg_ok "Installation completed"
+fetch_and_deploy_gh_release "UmlautAdaptarr" "PCJones/Umlautadaptarr" "prebuild" "latest" "/opt/UmlautAdaptarr" "linux-x64.zip"
 
-msg_info "Creating appsettings.json"
+msg_info "Setting up UmlautAdaptarr"
 cat <<EOF >/opt/UmlautAdaptarr/appsettings.json
 {
   "Logging": {
@@ -97,7 +87,7 @@ cat <<EOF >/opt/UmlautAdaptarr/appsettings.json
   }
 }
 EOF
-msg_ok "appsettings.json created"
+msg_ok "Setup UmlautAdaptarr"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/umlautadaptarr.service
@@ -116,7 +106,7 @@ Environment=ASPNETCORE_ENVIRONMENT=Production
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl -q --now enable umlautadaptarr
+systemctl enable -q --now umlautadaptarr
 msg_ok "Created Service"
 
 motd_ssh

@@ -11,7 +11,7 @@ var_cpu="${var_cpu:-1}"
 var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-4}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -28,6 +28,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  setup_mariadb
   if check_for_gh_release "bookstack" "BookStackApp/BookStack"; then
     msg_info "Stopping Apache2"
     systemctl stop apache2
@@ -51,7 +52,7 @@ function update_script() {
     msg_info "Configuring BookStack"
     cd /opt/bookstack
     export COMPOSER_ALLOW_SUPERUSER=1
-    $STD composer install --no-dev
+    $STD /usr/local/bin/composer install --no-dev
     $STD php artisan migrate --force
     chown www-data:www-data -R /opt/bookstack /opt/bookstack/bootstrap/cache /opt/bookstack/public/uploads /opt/bookstack/storage
     chmod -R 755 /opt/bookstack /opt/bookstack/bootstrap/cache /opt/bookstack/public/uploads /opt/bookstack/storage

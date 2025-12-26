@@ -28,6 +28,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  setup_mariadb
   if check_for_gh_release "booklore" "booklore-app/BookLore"; then
     msg_info "Stopping Service"
     systemctl stop booklore
@@ -45,7 +46,8 @@ function update_script() {
     $STD npm run build --configuration=production
     msg_ok "Built Frontend"
 
-    JAVA_VERSION="25" setup_java
+    JAVA_VERSION="21" setup_java
+    setup_yq
 
     msg_info "Building Backend"
     cd /opt/booklore/booklore-api

@@ -34,21 +34,18 @@ function update_script() {
     rm -f /etc/apt/sources.list.d/archive.heckel.io.list
     rm -f /etc/apt/sources.list.d/archive.heckel.io.list.bak
     rm -f /etc/apt/sources.list.d/archive.heckel.io.sources
-    curl -fsSL -o /etc/apt/keyrings/ntfy.gpg https://archive.ntfy.sh/apt/keyring.gpg
-    cat <<'EOF' >/etc/apt/sources.list.d/ntfy.sources
-Types: deb
-URIs: https://archive.ntfy.sh/apt/
-Suites: stable
-Components: main
-Signed-By: /etc/apt/keyrings/ntfy.gpg
-EOF
+    setup_deb822_repo \
+      "ntfy" \
+      "https://archive.ntfy.sh/apt/keyring.gpg" \
+      "https://archive.ntfy.sh/apt/" \
+      "stable"
     msg_ok "Corrected old Ntfy Repository"
   fi
 
-  msg_info "Updating $APP LXC"
+  msg_info "Updating ntfy"
   $STD apt update
-  $STD apt -y upgrade
-  msg_ok "Updated $APP LXC"
+  $STD apt upgrade -y
+  msg_ok "Updated ntfy"
   msg_ok "Updated successfully!"
   exit
 }

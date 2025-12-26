@@ -11,7 +11,7 @@
   "interface_port": 80,
   "documentation": "https://www.bookstackapp.com/docs/",
   "website": "https://www.bookstackapp.com/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/bookstack.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/bookstack.webp",
   "config_path": "/opt/bookstack/.env",
   "description": "BookStack is a user-friendly documentation platform that offers a simple and intuitive experience. New users should be able to create content with basic word-processing skills. While the platform provides advanced features, they do not interfere with the core simplicity of the user experience.",
   "install_methods": [
@@ -23,7 +23,7 @@
         "ram": 1024,
         "hdd": 4,
         "os": "debian",
-        "version": "12"
+        "version": "13"
       }
     }
   ],
@@ -33,8 +33,12 @@
   },
   "notes": [
     {
-      "text": "Bookstack works only with static ip. If you Change the IP of your LXC, you Need to edit the .env File `nano /opt/bookstack/.env`",
+      "text": "Bookstack works only with static IP. If you change the IP of your LXC, you need to edit the .env file",
       "type": "warning"
+    },
+    {
+      "text": "To see database credentials, type `cat ~/bookstack.creds` in LXC console",
+      "type": "info"
     }
   ]
 }

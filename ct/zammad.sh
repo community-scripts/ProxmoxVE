@@ -11,7 +11,7 @@ var_disk="${var_disk:-8}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-4096}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-13}"
+var_version="${var_version:-12}"
 var_unprivileged="${var_unprivileged:-1}"
 
 header_info "$APP"
@@ -27,21 +27,22 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
   msg_info "Stopping Service"
   systemctl stop zammad
   msg_ok "Stopped Service"
 
-  msg_info "Updating ${APP}"
+  msg_info "Updating Zammad"
   $STD apt update
   $STD apt-mark hold zammad
-  $STD apt -y upgrade
+  $STD apt upgrade -y
   $STD apt-mark unhold zammad
-  $STD apt -y upgrade
-  msg_ok "Updated ${APP}"
+  $STD apt upgrade -y
+  msg_ok "Updated Zammad"
 
   msg_info "Starting Service"
   systemctl start zammad
-  msg_ok "Updated ${APP} LXC"
+  msg_ok "Started Service"
   msg_ok "Updated successfully!"
   exit
 }

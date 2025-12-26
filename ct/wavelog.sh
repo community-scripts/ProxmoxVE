@@ -27,7 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-
+  setup_mariadb
   if check_for_gh_release "wavelog" "wavelog/wavelog"; then
     msg_info "Stopping Services"
     systemctl stop apache2

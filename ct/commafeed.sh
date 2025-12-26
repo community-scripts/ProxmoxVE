@@ -28,6 +28,9 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
+  JAVA_VERSION="25" setup_java
+
   if check_for_gh_release "commafeed" "Athou/commafeed"; then
     msg_info "Stopping Service"
     systemctl stop commafeed

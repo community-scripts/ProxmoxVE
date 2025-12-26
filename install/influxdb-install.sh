@@ -16,8 +16,8 @@ update_os
 msg_info "Setting up InfluxDB Repository"
 setup_deb822_repo \
   "influxdata" \
-  "https://repos.influxdata.com/influxdata-archive_compat.key" \
-  "https://repos.influxdata.com/$(get_os_info id)" \
+  "https://repos.influxdata.com/influxdata-archive.key" \
+  "https://repos.influxdata.com/debian" \
   "stable"
 msg_ok "Set up InfluxDB Repository"
 
@@ -29,16 +29,15 @@ else
 fi
 
 msg_info "Installing InfluxDB"
-$STD apt update
 if [[ $INFLUX == "2" ]]; then
   $STD apt install -y influxdb2
 else
   $STD apt install -y influxdb
-  curl -fsSL "https://dl.influxdata.com/chronograf/releases/chronograf_1.10.8_amd64.deb" -o "/chronograf_1.10.8_amd64.deb"
-  $STD dpkg -i chronograf_1.10.8_amd64.deb
-  rm -rf /chronograf_1.10.8_amd64.deb
+  download_file "https://dl.influxdata.com/chronograf/releases/chronograf_1.10.8_amd64.deb" "${HOME}/chronograf_1.10.8_amd64.deb"
+  $STD dpkg -i "${HOME}/chronograf_1.10.8_amd64.deb"
+  rm -rf "${HOME}/chronograf_1.10.8_amd64.deb"
 fi
-$STD systemctl enable --now influxdb
+systemctl enable -q --now influxdb
 msg_ok "Installed InfluxDB"
 
 read -r -p "${TAB3}Would you like to add Telegraf? <y/N> " prompt

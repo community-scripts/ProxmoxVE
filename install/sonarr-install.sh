@@ -24,7 +24,6 @@ curl -fsSL "https://services.sonarr.tv/v1/download/main/latest?version=4&os=linu
 tar -xzf SonarrV4.tar.gz
 mv Sonarr /opt
 rm -rf SonarrV4.tar.gz
-
 msg_ok "Installed Sonarr v4"
 
 msg_info "Creating Service"
@@ -32,12 +31,14 @@ cat <<EOF >/etc/systemd/system/sonarr.service
 [Unit]
 Description=Sonarr Daemon
 After=syslog.target network.target
+
 [Service]
 Type=simple
 ExecStart=/opt/Sonarr/Sonarr -nobrowser -data=/var/lib/sonarr/
 TimeoutStopSec=20
 KillMode=process
 Restart=on-failure
+
 [Install]
 WantedBy=multi-user.target
 EOF

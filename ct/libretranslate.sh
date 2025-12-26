@@ -13,6 +13,7 @@ var_disk="${var_disk:-20}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
+var_gpu="${var_gpu:-yes}"
 
 header_info "$APP"
 variables
@@ -29,7 +30,7 @@ function update_script() {
     exit
   fi
 
-  setup_uv
+  PYTHON_VERSION="3.12" setup_uv
 
   if check_for_gh_release "libretranslate" "LibreTranslate/LibreTranslate"; then
     msg_info "Stopping Service"
@@ -39,7 +40,7 @@ function update_script() {
     msg_info "Updating LibreTranslate"
     cd /opt/libretranslate
     source .venv/bin/activate
-    $STD pip install -U libretranslate
+    $STD uv pip install -U libretranslate
     msg_ok "Updated LibreTranslate"
 
     msg_info "Starting Service"

@@ -17,9 +17,7 @@ fetch_and_deploy_gh_release "prom-paperless-exp" "hansmi/prometheus-paperless-ex
 
 msg_info "Configuring Prometheus Paperless NGX Exporter"
 mkdir -p /etc/prometheus-paperless-ngx-exporter
-cat <<EOF >/etc/prometheus-paperless-ngx-exporter/paperless_auth_token_file
-SECRET_AUTH_TOKEN
-EOF
+echo "SECRET_AUTH_TOKEN" >/etc/prometheus-paperless-ngx-exporter/paperless_auth_token_file
 msg_ok "Configured Prometheus Paperless NGX Exporter"
 
 msg_info "Creating Service"

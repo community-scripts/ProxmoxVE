@@ -34,7 +34,7 @@ function update_script() {
     msg_ok "Stopped Services"
 
     cp /opt/openarchiver/.env /opt/openarchiver.env
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "openarchiver" "LogicLabs-OU/OpenArchiver" "tarball" "latest" "/opt/openarchiver"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "openarchiver" "LogicLabs-OU/OpenArchiver" "tarball"
     mv /opt/openarchiver.env /opt/openarchiver/.env
 
     msg_info "Updating Open Archiver"

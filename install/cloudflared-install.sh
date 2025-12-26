@@ -14,16 +14,12 @@ network_check
 update_os
 
 msg_info "Installing Cloudflared"
-mkdir -p --mode=0755 /usr/share/keyrings
-curl -fsSL https://pkg.cloudflare.com/cloudflare-main.gpg >/usr/share/keyrings/cloudflare-main.gpg
-cat <<EOF >/etc/apt/sources.list.d/cloudflared.sources
-Types: deb
-URIs: https://pkg.cloudflare.com/cloudflared/
-Suites: any
-Components: main
-Signed-By: /usr/share/keyrings/cloudflare-main.gpg
-EOF
-$STD apt update
+setup_deb822_repo \
+  "cloudflared" \
+  "https://pkg.cloudflare.com/cloudflare-main.gpg" \
+  "https://pkg.cloudflare.com/cloudflared/" \
+  "any" \
+  "main"
 $STD apt install -y cloudflared
 msg_ok "Installed Cloudflared"
 

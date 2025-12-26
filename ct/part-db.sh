@@ -27,8 +27,9 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/Part-DB/Part-DB-server/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+  
+  RELEASE=$(get_latest_github_release "Part-DB/Part-DB-server")
+  if check_for_gh_release "partdb" "Part-DB/Part-DB-server"; then
     msg_info "Stopping Service"
     systemctl stop apache2
     msg_ok "Stopped Service"
@@ -36,7 +37,7 @@ function update_script() {
     msg_info "Updating $APP to v${RELEASE}"
     cd /opt
     mv /opt/partdb/ /opt/partdb-backup
-    curl -fsSL "https://github.com/Part-DB/Part-DB-server/archive/refs/tags/v${RELEASE}.zip" -o $(basename "https://github.com/Part-DB/Part-DB-server/archive/refs/tags/v${RELEASE}.zip")
+    curl -fsSL "https://github.com/Part-DB/Part-DB-server/archive/refs/tags/v${RELEASE}.zip" -o "/opt/v${RELEASE}.zip"
     $STD unzip "v${RELEASE}.zip"
     mv /opt/Part-DB-server-${RELEASE}/ /opt/partdb
 
@@ -54,15 +55,13 @@ function update_script() {
     chown -R www-data:www-data /opt/partdb
     rm -r "/opt/v${RELEASE}.zip"
     rm -r /opt/partdb-backup
-    echo "${RELEASE}" >/opt/${APP}_version.txt
+    echo "${RELEASE}" >~/.partdb
     msg_ok "Updated $APP to v${RELEASE}"
 
     msg_info "Starting Service"
     systemctl start apache2
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
-  else
-    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }

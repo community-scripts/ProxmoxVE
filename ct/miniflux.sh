@@ -23,7 +23,7 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
-  if [[ ! -f /etc/systemd/system/miniflux.service ]]; then
+  if ! systemctl -q is-enabled miniflux 2>/dev/null; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
@@ -34,7 +34,7 @@ function update_script() {
   msg_ok "Service Stopped"
 
   fetch_and_deploy_gh_release "miniflux" "miniflux/v2" "binary" "latest"
-  
+
   msg_info "Updating Miniflux"
   $STD miniflux -migrate -config-file /etc/miniflux.conf
   msg_ok "Updated Miniflux"

@@ -12,6 +12,7 @@ catch_errors
 setting_up_container
 network_check
 update_os
+setup_hwaccel
 
 echo
 echo "${TAB3}Choose the GPU type for ComfyUI:"

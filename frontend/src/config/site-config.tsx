@@ -15,7 +15,7 @@ export const navbarLinks = [
     text: "GitHub",
   },
   {
-    href: `https://discord.gg/2wvnMDgdnU`,
+    href: `https://discord.gg/3AnUqsXnmK`,
     event: "Discord",
     icon: <FaDiscord className="h-4 w-4" />,
     text: "Discord",

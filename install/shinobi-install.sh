@@ -13,6 +13,8 @@ setting_up_container
 network_check
 update_os
 
+setup_hwaccel
+
 msg_info "Installing Dependencies"
 $STD apt-get install -y make zip net-tools git
 $STD apt-get install -y gcc g++ cmake

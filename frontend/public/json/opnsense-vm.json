@@ -12,10 +12,10 @@
   "interface_port": 443,
   "documentation": "https://docs.opnsense.org/",
   "website": "https://opnsense.org/",
-  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/webp/opnsense.webp",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/opnsense.webp",
   "config_path": "",
   "description": "OPNsense is an open-source firewall and routing platform based on FreeBSD. It provides advanced security features, including intrusion detection, VPN support, traffic shaping, and web filtering, with an intuitive web interface for easy management. Known for its reliability and regular updates, OPNsense is a popular choice for both businesses and home networks.",
-  "disable": true,
+  "disable": false,
   "disable_description": "This script has been temporarily disabled due to installation failures. The OPNsense bootstrap process was not completing successfully, resulting in a plain FreeBSD VM instead of a functional OPNsense installation. The issue is being investigated and the script will be re-enabled once resolved. For more details, see: https://github.com/community-scripts/ProxmoxVE/issues/6183",
   "install_methods": [
     {

@@ -27,6 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  setup_mariadb
   msg_error "Wordpress should be updated via the user interface."
   exit
 }

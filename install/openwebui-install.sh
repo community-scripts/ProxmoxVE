@@ -17,6 +17,8 @@ msg_info "Installing Dependencies"
 $STD apt install -y ffmpeg
 msg_ok "Installed Dependencies"
 
+setup_hwaccel
+
 PYTHON_VERSION="3.12" setup_uv
 
 msg_info "Installing Open WebUI"
@@ -25,6 +27,36 @@ msg_ok "Installed Open WebUI"
 
 read -r -p "${TAB3}Would you like to add Ollama? <y/N> " prompt
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
+  msg_info "Setting up Intel® Repositories"
+  mkdir -p /usr/share/keyrings
+  curl -fsSL https://repositories.intel.com/gpu/intel-graphics.key | gpg --dearmor -o /usr/share/keyrings/intel-graphics.gpg 2>/dev/null || true
+  cat <<EOF >/etc/apt/sources.list.d/intel-gpu.sources
+Types: deb
+URIs: https://repositories.intel.com/gpu/ubuntu
+Suites: jammy
+Components: client
+Architectures: amd64 i386
+Signed-By: /usr/share/keyrings/intel-graphics.gpg
+EOF
+  curl -fsSL https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB | gpg --dearmor -o /usr/share/keyrings/oneapi-archive-keyring.gpg 2>/dev/null || true
+  cat <<EOF >/etc/apt/sources.list.d/oneAPI.sources
+Types: deb
+URIs: https://apt.repos.intel.com/oneapi
+Suites: all
+Components: main
+Signed-By: /usr/share/keyrings/oneapi-archive-keyring.gpg
+EOF
+  $STD apt update
+  msg_ok "Set up Intel® Repositories"
+
+  msg_info "Installing Intel® Level Zero"
+  $STD apt -y install intel-level-zero-gpu level-zero level-zero-dev 2>/dev/null || true
+  msg_ok "Installed Intel® Level Zero"
+
+  msg_info "Installing Intel® oneAPI Base Toolkit (Patience)"
+  $STD apt install -y --no-install-recommends intel-basekit-2024.1 2>/dev/null || true
+  msg_ok "Installed Intel® oneAPI Base Toolkit"
+
   msg_info "Installing Ollama"
   curl -fsSLO -C - https://ollama.com/download/ollama-linux-amd64.tgz
   tar -C /usr -xzf ollama-linux-amd64.tgz

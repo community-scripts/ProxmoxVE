@@ -75,12 +75,13 @@ $STD apt install -y jellyfin-ffmpeg7
 ln -sf /usr/lib/jellyfin-ffmpeg/ffmpeg /usr/bin/ffmpeg
 ln -sf /usr/lib/jellyfin-ffmpeg/ffprobe /usr/bin/ffprobe
 
+# Set permissions for /dev/dri (only in privileged containers and if /dev/dri exists)
 if [[ "$CTTYPE" == "0" && -d /dev/dri ]]; then
-  chgrp video /dev/dri
-  chmod 755 /dev/dri
-  chmod 660 /dev/dri/*
-  $STD adduser "$(id -u -n)" video
-  $STD adduser "$(id -u -n)" render
+  chgrp video /dev/dri 2>/dev/null || true
+  chmod 755 /dev/dri 2>/dev/null || true
+  chmod 660 /dev/dri/* 2>/dev/null || true
+  $STD adduser "$(id -u -n)" video 2>/dev/null || true
+  $STD adduser "$(id -u -n)" render 2>/dev/null || true
 fi
 msg_ok "Dependencies Installed"
 
@@ -98,10 +99,15 @@ if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   $STD apt install -y --no-install-recommends patchelf
   tmp_dir=$(mktemp -d)
   $STD pushd "$tmp_dir"
-  curl -fsSLO https://github.com/intel/intel-graphics-compiler/releases/download/igc-1.0.17384.11/intel-igc-core_1.0.17384.11_amd64.deb
-  curl -fsSLO https://github.com/intel/intel-graphics-compiler/releases/download/igc-1.0.17384.11/intel-igc-opencl_1.0.17384.11_amd64.deb
-  curl -fsSLO https://github.com/intel/compute-runtime/releases/download/24.31.30508.7/intel-opencl-icd_24.31.30508.7_amd64.deb
-  curl -fsSLO https://github.com/intel/compute-runtime/releases/download/24.31.30508.7/libigdgmm12_22.4.1_amd64.deb
+  curl -fsSLZ -O "https://github.com/intel/intel-graphics-compiler/releases/download/igc-1.0.17537.24/intel-igc-core_1.0.17537.24_amd64.deb" \
+    -O "https://github.com/intel/intel-graphics-compiler/releases/download/igc-1.0.17537.24/intel-igc-opencl_1.0.17537.24_amd64.deb" \
+    -O "https://github.com/intel/compute-runtime/releases/download/24.35.30872.36/intel-opencl-icd-legacy1_24.35.30872.36_amd64.deb" \
+    -O "https://github.com/intel/intel-graphics-compiler/releases/download/v2.22.2/intel-igc-core-2_2.22.2+20121_amd64.deb" \
+    -O "https://github.com/intel/intel-graphics-compiler/releases/download/v2.22.2/intel-igc-opencl-2_2.22.2+20121_amd64.deb" \
+    -O "https://github.com/intel/compute-runtime/releases/download/25.44.36015.5/intel-opencl-icd_25.44.36015.5-0_amd64.deb" \
+    -O "https://github.com/intel/compute-runtime/releases/download/25.44.36015.5/libigdgmm12_22.8.2_amd64.deb"
+  $STD apt install -y ./libigdgmm12*.deb
+  rm ./libigdgmm12*.deb
   $STD apt install -y ./*.deb
   $STD apt-mark hold libigdgmm12
   $STD popd
@@ -290,7 +296,7 @@ GEO_DIR="${INSTALL_DIR}/geodata"
 mkdir -p "$INSTALL_DIR"
 mkdir -p {"${APP_DIR}","${UPLOAD_DIR}","${GEO_DIR}","${INSTALL_DIR}"/cache}
 
-fetch_and_deploy_gh_release "immich" "immich-app/immich" "tarball" "v2.3.1" "$SRC_DIR"
+fetch_and_deploy_gh_release "immich" "immich-app/immich" "tarball" "v2.4.1" "$SRC_DIR"
 
 msg_info "Installing ${APPLICATION} (patience)"
 

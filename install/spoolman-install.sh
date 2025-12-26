@@ -17,12 +17,10 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt install -y \
   build-essential \
-  make \
-  libpq-dev \
-  ca-certificates
+  libpq-dev
 msg_ok "Installed Dependencies"
 
-msg_info "Setup Python3"
+msg_info "Setting up Python3"
 $STD apt install -y \
   python3-dev \
   python3-setuptools \
@@ -30,17 +28,13 @@ $STD apt install -y \
   python3-pip
 msg_ok "Setup Python3"
 
-msg_info "Installing Spoolman"
-RELEASE=$(curl -fsSL https://github.com/Donkie/Spoolman/releases/latest | grep "title>Release" | cut -d " " -f 4)
-cd /opt
-curl -fsSL "https://github.com/Donkie/Spoolman/releases/download/$RELEASE/spoolman.zip" -o "spoolman.zip"
-$STD unzip spoolman.zip -d spoolman
-rm -rf spoolman.zip
-cd spoolman
+fetch_and_deploy_gh_release "spoolman" "Donkie/Spoolman" "prebuild" "latest" "/opt/spoolman" "spoolman.zip"
+
+msg_info "Setting up Spoolman"
+cd /opt/spoolman
 $STD pip3 install --upgrade --ignore-installed -r requirements.txt
-curl -fsSL "https://raw.githubusercontent.com/Donkie/Spoolman/master/.env.example" -o ".env"
-echo "${RELEASE}" >/opt/${APPLICATION}_version.txt
-msg_ok "Installed Spoolman"
+cp .env.example .env
+msg_ok "Setup Spoolman"
 
 msg_info "Creating Service"
 cat <<'EOF' >/etc/systemd/system/spoolman.service

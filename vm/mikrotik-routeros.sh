@@ -237,31 +237,62 @@ function default_settings() {
 
 function get_mikrotik_version() {
   local mode="$1"
+  local rss_url
   local tree_name
+
+  case "$mode" in
+  s) rss_url="https://cdn.mikrotik.com/routeros/latest-stable.rss" ;;
+  d) rss_url="https://cdn.mikrotik.com/routeros/latest-development.rss" ;;
+  l) rss_url="https://cdn.mikrotik.com/routeros/latest-long-term.rss" ;;
+  t) rss_url="https://cdn.mikrotik.com/routeros/latest-testing.rss" ;;
+  *) return 0 ;;
+  esac
+
+  local rss_content
+  rss_content=$(curl -fsSL $rss_url 2>/dev/null)
+  if [ -n "$rss_content" ]; then
+    local version
+    version=$(echo "$rss_content" | grep -oP '<title>RouterOS \K[0-9.]+(?= \[)' 2>/dev/null || echo "$rss_content" | sed -n 's/.*<title>RouterOS \([0-9.]\+\) \[.*/\1/p' 2>/dev/null)
+    if [[ "$version" =~ ^[0-9]+\.[0-9]+ ]]; then
+      echo "$version"
+      return 0
+    fi
+  fi
 
   case "$mode" in
   s) tree_name="Stable release tree" ;;
   d) tree_name="Development release tree" ;;
   l) tree_name="Long-term release tree" ;;
   t) tree_name="Testing release tree" ;;
-  *) return 0 ;; # not an error, just no-op
   esac
 
   local html
-  html=$(curl -fsSL "https://mikrotik.com/download/changelogs") || return 0
-  [ -z "$html" ] && return 0
+  html=$(curl -fsSL "https://mikrotik.com/download/changelogs" 2>/dev/null)
+  if [ -n "$html" ]; then
+    local start_line
+    start_line=$(echo "$html" | grep -n "$tree_name" | cut -d: -f1 | head -n1)
+    if [[ "$start_line" =~ ^[0-9]+$ ]]; then
+      local line
+      line=$(echo "$html" | tail -n +"$start_line" | grep -m 1 -E "c-(stable|longTerm|testing|development)-v|RouterOS [0-9]+\.[0-9]+" 2>/dev/null)
+      
+      local version
+      version=$(echo "$line" | sed -n 's/.*c-[^"]*-v\([0-9_.a-zA-Z-]\+\).*/\1/p' | tr '_' '.' 2>/dev/null)
+      [ -z "$version" ] && version=$(echo "$line" | grep -oP 'RouterOS \K[0-9]+\.[0-9]+(\.[0-9]+)?' 2>/dev/null)
+      
+      if [[ "$version" =~ ^[0-9]+\.[0-9]+ ]]; then
+        echo "$version"
+        return 0
+      fi
+    fi
+  fi
 
-  local start_line
-  start_line=$(echo "$html" | grep -n "$tree_name$" | cut -d: -f1 | head -n1)
-  [[ "$start_line" =~ ^[0-9]+$ ]] || return 0
-
-  local line
-  line=$( (echo "$html" | tail -n +"$start_line" | grep -m 1 "c-\(stable\|longTerm\|testing\|development\)-v") 2>/dev/null || true)
-
-  local version
-  version=$(echo "$line" | sed -n 's/.*c-[^"]*-v\([0-9_.a-zA-Z-]\+\).*/\1/p' | tr '_' '.')
-
-  [[ "$version" =~ ^[0-9]+\.[0-9]+.*$ ]] && echo "$version"
+  for minor in $(seq 50 -1 15); do
+    local test_version="7.${minor}"
+    if curl -fsSL -I "https://download.mikrotik.com/routeros/${test_version}/chr-${test_version}.img.zip" 2>/dev/null | grep -q "200 OK"; then
+      echo "$test_version"
+      return 0
+    fi
+  done
 
   return 0
 }
@@ -504,8 +535,8 @@ if [ -n "$MIK_VER" ]; then
   msg_ok "Latest stable version: ${CL}${BL}$MIK_VER${CL}."
 else
   msg_error "Could not get latest version"
-  msg_ok "Defaulting to version 7.19"
-  ver="7.19"
+  msg_ok "Defaulting to version 7.20"
+  MIK_VER="7.20"
 fi
 
 URL=https://download.mikrotik.com/routeros/$MIK_VER/chr-$MIK_VER.img.zip

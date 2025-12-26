@@ -27,6 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  setup_mariadb
 
   if check_for_gh_release "projectsend" "projectsend/projectsend"; then
     msg_info "Stopping Service"
@@ -47,7 +48,6 @@ function update_script() {
     msg_info "Starting Service"
     systemctl start apache2
     msg_ok "Started Service"
-
     msg_ok "Updated successfully!"
   fi
   exit

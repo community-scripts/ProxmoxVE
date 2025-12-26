@@ -1,0 +1,48 @@
+{
+    "name": "Dokploy",
+    "slug": "dokploy",
+    "categories": [
+        3
+    ],
+    "date_created": "2025-12-09",
+    "type": "ct",
+    "updateable": true,
+    "privileged": true,
+    "interface_port": 3000,
+    "documentation": "https://docs.dokploy.com/",
+    "config_path": "/etc/dokploy",
+    "website": "https://dokploy.com/",
+    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons/png/dokploy.png",
+    "description": "Dokploy is a free, self-hostable Platform as a Service (PaaS) that simplifies the deployment and management of applications and databases. Built with Docker and Traefik, it offers features like automatic SSL, Docker Compose support, database backups, and a real-time monitoring dashboard.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/dokploy.sh",
+            "resources": {
+                "cpu": 2,
+                "ram": 2048,
+                "hdd": 10,
+                "os": "Debian",
+                "version": "13"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": [
+        {
+            "text": "Initial setup will be done via the web interface on first access.",
+            "type": "info"
+        },
+        {
+            "text": "Dokploy has built-in auto-updates via the web interface.",
+            "type": "info"
+        },
+        {
+            "text": "This container uses Docker-in-Docker (nesting) for application deployments.",
+            "type": "warning"
+        }
+    ]
+}

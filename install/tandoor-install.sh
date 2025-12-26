@@ -32,28 +32,10 @@ msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
 fetch_and_deploy_gh_release "tandoor" "TandoorRecipes/recipes" "tarball" "latest" "/opt/tandoor"
-PG_VERSION="17" PG_MODULES="contrib" setup_postgresql
+PG_VERSION="17" setup_postgresql
 PYTHON_VERSION="3.13" setup_uv
-
-msg_info "Set up PostgreSQL Database"
-DB_NAME=db_recipes
-DB_USER=tandoor
+PG_DB_USER="tandoor" PG_DB_NAME="db_recipes" PG_DB_EXTENSIONS="unaccent,pg_trgm" setup_postgresql_db
 SECRET_KEY=$(openssl rand -base64 45 | sed 's/\//\\\//g')
-DB_PASS="$(openssl rand -base64 18 | cut -c1-13)"
-$STD sudo -u postgres psql -c "CREATE ROLE $DB_USER WITH LOGIN PASSWORD '$DB_PASS';"
-$STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER TEMPLATE template0;"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET client_encoding TO 'utf8';"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET default_transaction_isolation TO 'read committed';"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET timezone TO 'UTC'"
-$STD sudo -u postgres psql -d "$DB_NAME" -c "CREATE EXTENSION IF NOT EXISTS unaccent;"
-$STD sudo -u postgres psql -d "$DB_NAME" -c "CREATE EXTENSION IF NOT EXISTS pg_trgm;"
-{
-  echo "Tandoor-Credentials"
-  echo "Tandoor Database Name: $DB_NAME"
-  echo "Tandoor Database User: $DB_USER"
-  echo "Tandoor Database Password: $DB_PASS"
-} >>~/tandoor.creds
-msg_ok "Set up PostgreSQL Database"
 
 msg_info "Setup Tandoor"
 mkdir -p /opt/tandoor/{config,api,mediafiles,staticfiles}
@@ -69,16 +51,16 @@ TZ=Europe/Berlin
 
 DB_ENGINE=django.db.backends.postgresql
 POSTGRES_HOST=localhost
-POSTGRES_DB=$DB_NAME
+POSTGRES_DB=$PG_DB_NAME
 POSTGRES_PORT=5432
-POSTGRES_USER=$DB_USER
-POSTGRES_PASSWORD=$DB_PASS
+POSTGRES_USER=$PG_DB_USER
+POSTGRES_PASSWORD=$PG_DB_PASS
 
 STATIC_URL=/staticfiles/
 MEDIA_URL=/media/
 EOF
 
-TANDOOR_VERSION="$(curl -s https://api.github.com/repos/TandoorRecipes/recipes/releases/latest | jq -r .tag_name)"
+TANDOOR_VERSION=$(get_latest_github_release "TandoorRecipes/recipes")
 cat <<EOF >/opt/tandoor/cookbook/version_info.py
 TANDOOR_VERSION = "$TANDOOR_VERSION"
 TANDOOR_REF = "bare-metal"

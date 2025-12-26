@@ -34,7 +34,7 @@ function update_script() {
 
   msg_info "Updating Telegraf"
   $STD apt update
-  $STD apt upgrade telegraf -y
+  $STD apt upgrade -y telegraf
   msg_ok "Updated Telegraf"
 
   msg_info "Starting Service"

@@ -13,6 +13,7 @@ var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
+var_gpu="${var_gpu:-yes}"
 
 header_info "$APP"
 variables
@@ -85,6 +86,11 @@ function update_script() {
     fi
     if [[ -f /tmp/start-daphne.sh.backup ]]; then
       mv /tmp/start-daphne.sh.backup /opt/dispatcharr/start-daphne.sh
+    fi
+
+    if ! grep -q "DJANGO_SECRET_KEY" /opt/dispatcharr/.env; then
+      DJANGO_SECRET=$(openssl rand -base64 48 | tr -dc 'a-zA-Z0-9' | cut -c1-50)
+      echo "DJANGO_SECRET_KEY=$DJANGO_SECRET" >>/opt/dispatcharr/.env
     fi
 
     cd /opt/dispatcharr

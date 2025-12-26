@@ -34,6 +34,8 @@ function update_script() {
     systemctl stop nginx
     msg_ok "Stopped nginx"
 
+    PHP_VERSION="8.4" PHP_FPM=YES PHP_MODULE="ffi,opcache,redis,zip,pdo-sqlite,bcmath,pdo,curl,dom,fpm" setup_php
+
     msg_info "Backing up Bar Assistant"
     mv /opt/bar-assistant /opt/bar-assistant-backup
     msg_ok "Backed up Bar Assistant"

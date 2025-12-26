@@ -41,16 +41,11 @@ EOF
 $STD apt update
 msg_ok "Set up Intel® Repositories"
 
-msg_info "Setting Up Hardware Acceleration"
-$STD apt -y install {va-driver-all,ocl-icd-libopencl1,intel-opencl-icd,vainfo,intel-gpu-tools,intel-level-zero-gpu,level-zero,level-zero-dev}
-if [[ "$CTTYPE" == "0" ]]; then
-  chgrp video /dev/dri
-  chmod 755 /dev/dri
-  chmod 660 /dev/dri/*
-  $STD adduser $(id -u -n) video
-  $STD adduser $(id -u -n) render
-fi
-msg_ok "Set Up Hardware Acceleration"
+setup_hwaccel
+
+msg_info "Installing Intel® Level Zero"
+$STD apt -y install intel-level-zero-gpu level-zero level-zero-dev 2>/dev/null || true
+msg_ok "Installed Intel® Level Zero"
 
 msg_info "Installing Intel® oneAPI Base Toolkit (Patience)"
 $STD apt install -y --no-install-recommends intel-basekit-2024.1

@@ -33,7 +33,7 @@ function update_script() {
     systemctl stop semaphore
     msg_ok "Stopped Service"
 
-    fetch_and_deploy_gh_release "semaphore" "semaphoreui/semaphore" "binary"
+    fetch_and_deploy_gh_release "semaphore" "semaphoreui/semaphore" "binary" "latest" "/opt/semaphore" "semaphore_*_linux_amd64.deb"
 
     msg_info "Starting Service"
     systemctl start semaphore

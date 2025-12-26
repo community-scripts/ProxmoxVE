@@ -27,24 +27,18 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/PCJones/Umlautadaptarr/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3)}')
-  if [[ ! -f /opt/UmlautAdaptarr_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/UmlautAdaptarr_version.txt)" ]]; then
+
+  if check_for_gh_release "UmlautAdaptarr" "PCJones/Umlautadaptarr"; then
     msg_info "Stopping Service"
     systemctl stop umlautadaptarr
     msg_ok "Stopped Service"
 
-    msg_info "Updating ${APP}"
-    temp_file=$(mktemp)
-    curl -fsSL "https://github.com/PCJones/Umlautadaptarr/releases/download/${RELEASE}/linux-x64.zip" -o $temp_file
-    $STD unzip -u $temp_file '*/**' -d /opt/UmlautAdaptarr
-    msg_ok "Updated ${APP}"
+    fetch_and_deploy_gh_release "UmlautAdaptarr" "PCJones/Umlautadaptarr" "prebuild" "latest" "/opt/UmlautAdaptarr" "linux-x64.zip"
 
     msg_info "Starting Service"
     systemctl start umlautadaptarr
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
   exit
 }

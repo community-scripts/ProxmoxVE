@@ -50,7 +50,7 @@ Group=git
 WorkingDirectory=/var/lib/forgejo/ 
 ExecStart=/usr/local/bin/forgejo web --config /etc/forgejo/app.ini
 Restart=always
-Environment=USER=git HOME=/home/git GITEA_WORK_DIR=/var/lib/forgejo
+Environment=USER=git HOME=/home/git FORGEJO_WORK_DIR=/var/lib/forgejo
 [Install]
 WantedBy=multi-user.target
 EOF

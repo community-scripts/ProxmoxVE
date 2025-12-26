@@ -13,6 +13,7 @@ var_disk="${var_disk:-25}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
+var_gpu="${var_gpu:-yes}"
 
 header_info "$APP"
 variables
@@ -33,6 +34,7 @@ function update_script() {
     msg_info "Creating Backup"
     mkdir -p /opt/open-webui-backup
     cp -a /opt/open-webui/backend/data /opt/open-webui-backup/data || true
+    cp -a /opt/open-webui/.env /opt/open-webui-backup/.env || true
     msg_ok "Created Backup"
 
     msg_info "Removing legacy installation"
@@ -48,6 +50,7 @@ function update_script() {
     msg_info "Restoring data"
     mkdir -p /root/.open-webui
     cp -a /opt/open-webui-backup/data/* /root/.open-webui/ || true
+    cp -a /opt/open-webui-backup/.env /root/.env || true
     rm -rf /opt/open-webui-backup || true
     msg_ok "Restored data"
 
@@ -85,22 +88,36 @@ EOF
   fi
 
   if [ -x "/usr/bin/ollama" ]; then
-    msg_info "Updating Ollama"
+    msg_info "Checking for Ollama Update"
     OLLAMA_VERSION=$(ollama -v | awk '{print $NF}')
     RELEASE=$(curl -s https://api.github.com/repos/ollama/ollama/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4)}')
     if [ "$OLLAMA_VERSION" != "$RELEASE" ]; then
-      msg_info "Stopping Service"
-      systemctl stop ollama
-      msg_ok "Stopped Service"
-      curl -fsSLO -C - https://ollama.com/download/ollama-linux-amd64.tgz
-      rm -rf /usr/lib/ollama
-      rm -rf /usr/bin/ollama
-      tar -C /usr -xzf ollama-linux-amd64.tgz
-      rm -rf ollama-linux-amd64.tgz
-      msg_info "Starting Service"
-      systemctl start ollama
-      msg_info "Started Service"
-      msg_ok "Ollama updated to version $RELEASE"
+      msg_info "Ollama update available: v$OLLAMA_VERSION -> v$RELEASE"
+      msg_info "Downloading Ollama v$RELEASE \n"
+      curl -fS#LO https://ollama.com/download/ollama-linux-amd64.tgz
+      msg_ok "Download Complete"
+
+      if [ -f "ollama-linux-amd64.tgz" ]; then
+
+        msg_info "Stopping Ollama Service"
+        systemctl stop ollama
+        msg_ok "Stopped Service"
+
+        msg_info "Installing Ollama"
+        rm -rf /usr/lib/ollama
+        rm -rf /usr/bin/ollama
+        tar -C /usr -xzf ollama-linux-amd64.tgz
+        rm -rf ollama-linux-amd64.tgz
+        msg_ok "Installed Ollama"
+
+        msg_info "Starting Ollama Service"
+        systemctl start ollama
+        msg_ok "Started Service"
+
+        msg_ok "Ollama updated to version $RELEASE"
+      else
+        msg_error "Ollama download failed. Aborting update."
+      fi
     else
       msg_ok "Ollama is already up to date."
     fi
@@ -108,7 +125,7 @@ EOF
 
   msg_info "Updating Open WebUI via uv"
   PYTHON_VERSION="3.12" setup_uv
-  $STD uv tool install --python 3.12 open-webui[all]
+  $STD uv tool upgrade --python 3.12 open-webui[all]
   systemctl restart open-webui
   msg_ok "Updated Open WebUI"
   msg_ok "Updated successfully!"

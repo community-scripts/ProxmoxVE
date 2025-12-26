@@ -23,6 +23,7 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
+  setup_mariadb
 
   NODE_VERSION="22" setup_nodejs
 

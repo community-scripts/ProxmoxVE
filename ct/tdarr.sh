@@ -16,6 +16,7 @@ var_unprivileged="${var_unprivileged:-1}"
 var_shared_mount="${var_shared_mount:-yes}"
 var_postfix_sat="${var_postfix_sat:-yes}"
 var_nvidia_passthrough="${var_nvidia_passthrough:-yes}"
+var_gpu="${var_gpu:-yes}"
 
 header_info "$APP"
 variables

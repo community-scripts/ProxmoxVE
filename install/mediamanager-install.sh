@@ -49,7 +49,7 @@ export PUBLIC_VERSION=""
 export PUBLIC_API_URL=""
 export BASE_PATH="/web"
 cd /opt/mediamanager/web
-$STD npm ci --no-fund --no-audit
+$STD npm install --no-fund --no-audit
 $STD npm run build
 mkdir -p {"$MM_DIR"/web,"$MEDIA_DIR","$CONFIG_DIR"}
 cp -r build "$FRONTEND_FILES_DIR"

@@ -13,6 +13,7 @@ var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
+var_gpu="${var_gpu:-yes}"
 
 header_info "$APP"
 variables
@@ -31,6 +32,13 @@ function update_script() {
     msg_info "Stopping PhotoPrism"
     systemctl stop photoprism
     msg_ok "Stopped PhotoPrism"
+
+    if ! grep -q "photoprism/config/.env" ~/.bashrc 2>/dev/null; then
+      msg_info "Adding environment export for CLI tools"
+      echo '# Load PhotoPrism environment variables for CLI tools' >>~/.bashrc
+      echo 'export $(grep -v "^#" /opt/photoprism/config/.env | xargs)' >>~/.bashrc
+      msg_ok "Added environment export"
+    fi
 
     fetch_and_deploy_gh_release "photoprism" "photoprism/photoprism" "prebuild" "latest" "/opt/photoprism" "*linux-amd64.tar.gz"
 

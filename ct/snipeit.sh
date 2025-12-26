@@ -27,6 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  setup_mariadb
   if ! grep -q "client_max_body_size[[:space:]]\+100M;" /etc/nginx/conf.d/snipeit.conf; then
     sed -i '/index index.php;/i \        client_max_body_size 100M;' /etc/nginx/conf.d/snipeit.conf
   fi
@@ -36,16 +37,16 @@ function update_script() {
     systemctl stop nginx
     msg_ok "Services Stopped"
 
-    msg_info "Creating backup"
+    msg_info "Creating Backup"
     mv /opt/snipe-it /opt/snipe-it-backup
-    msg_ok "Backup created"
+    msg_ok "Created Backup"
 
     fetch_and_deploy_gh_release "snipe-it" "grokability/snipe-it" "tarball"
     [[ "$(php -v 2>/dev/null)" == PHP\ 8.2* ]] && PHP_VERSION="8.3" PHP_MODULE="common,ctype,ldap,fileinfo,iconv,mysql,soap,xsl" PHP_FPM="YES" setup_php
     sed -i 's/php8.2/php8.3/g' /etc/nginx/conf.d/snipeit.conf
     setup_composer
 
-    msg_info "Updating ${APP}"
+    msg_info "Updating Snipe-IT"
     $STD apt update
     $STD apt -y upgrade
     cp /opt/snipe-it-backup/.env /opt/snipe-it/.env
@@ -63,7 +64,7 @@ function update_script() {
     chown -R www-data: /opt/snipe-it
     chmod -R 755 /opt/snipe-it
     rm -rf /opt/snipe-it-backup
-    msg_ok "Updated ${APP}"
+    msg_ok "Updated Snipe-IT"
 
     msg_info "Starting Service"
     systemctl start nginx

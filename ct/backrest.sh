@@ -27,28 +27,18 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL https://api.github.com/repos/garethgeorge/backrest/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
-  if [[ ! -f /opt/${APP}_version.txt ]] || [[ "${RELEASE}" != "$(cat /opt/${APP}_version.txt)" ]]; then
+
+  if check_for_gh_release "backrest" "garethgeorge/backrest"; then
     msg_info "Stopping Service"
     systemctl stop backrest
     msg_ok "Stopped Service"
 
-    msg_info "Updating ${APP} to ${RELEASE}"
-    temp_file=$(mktemp)
-    rm -f /opt/backrest/bin/backrest
-    curl -fsSL "https://github.com/garethgeorge/backrest/releases/download/v${RELEASE}/backrest_Linux_x86_64.tar.gz" -o "$temp_file"
-    tar xzf $temp_file -C /opt/backrest/bin
-    chmod +x /opt/backrest/bin/backrest
-    rm -f "$temp_file"
-    echo "${RELEASE}" >/opt/${APP}_version.txt
-    msg_ok "Updated ${APP} to ${RELEASE}"
+    fetch_and_deploy_gh_release "backrest" "garethgeorge/backrest" "prebuild" "latest" "/opt/backrest/bin" "backrest_Linux_x86_64.tar.gz"
 
     msg_info "Starting Service"
     systemctl start backrest
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
-  else
-    msg_ok "No update required. ${APP} is already at ${RELEASE}"
   fi
   exit
 }

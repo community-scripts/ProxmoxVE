@@ -13,6 +13,7 @@ var_disk="${var_disk:-8}"
 var_os="${var_os:-ubuntu}"
 var_version="${var_version:-24.04}"
 var_unprivileged="${var_unprivileged:-0}"
+var_gpu="${var_gpu:-yes}"
 
 header_info "$APP"
 variables
@@ -27,6 +28,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  setup_mariadb
   msg_info "Updating Shinobi"
   cd /opt/Shinobi
   $STD sh UPDATE.sh

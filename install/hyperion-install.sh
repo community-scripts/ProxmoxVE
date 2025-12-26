@@ -12,6 +12,7 @@ catch_errors
 setting_up_container
 network_check
 update_os
+setup_hwaccel
 
 msg_info "Setting up Hyperion repository"
 setup_deb822_repo \

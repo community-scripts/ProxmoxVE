@@ -13,6 +13,7 @@ var_disk="${var_disk:-25}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 var_unprivileged="${var_unprivileged:-1}"
+var_gpu="${var_gpu:-yes}"
 
 header_info "$APP"
 variables
@@ -24,11 +25,11 @@ function update_script() {
   check_container_storage
   check_container_resources
 
-  if [[ ! -f /opt/${APP} ]]; then
+  if [[ ! -d /opt/ComfyUI ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  msg_error "To update use the ${APP} Manager."
+  msg_error "To update use the ComfyUI Manager."
   exit
 }
 

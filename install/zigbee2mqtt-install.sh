@@ -16,31 +16,26 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt install -y \
   git \
-  make \
-  g++ \
-  gcc \
-  ca-certificates \
-  jq
+  build-essential
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="24" NODE_MODULE="pnpm@$(curl -fsSL https://raw.githubusercontent.com/Koenkk/zigbee2mqtt/master/package.json | jq -r '.packageManager | split("@")[1]')" setup_nodejs
-
 fetch_and_deploy_gh_release "Zigbee2MQTT" "Koenkk/zigbee2mqtt" "tarball" "latest" "/opt/zigbee2mqtt"
 
 msg_info "Setting up Zigbee2MQTT"
-cd /opt/zigbee2mqtt/data || exit
-mv configuration.example.yaml configuration.yaml
-cd /opt/zigbee2mqtt || exit
+mv /opt/zigbee2mqtt/data/configuration.example.yaml /opt/zigbee2mqtt/data/configuration.yaml
+cd /opt/zigbee2mqtt
 echo "packageImportMethod: hardlink" >>./pnpm-workspace.yaml
 $STD pnpm install --no-frozen-lockfile
 $STD pnpm build
-msg_ok "Installed Zigbee2MQTT"
+msg_ok "Setup Zigbee2MQTT"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/zigbee2mqtt.service
 [Unit]
 Description=zigbee2mqtt
 After=network.target
+
 [Service]
 Environment=NODE_ENV=production
 ExecStart=/usr/bin/pnpm start
@@ -49,6 +44,7 @@ StandardOutput=inherit
 StandardError=inherit
 Restart=always
 User=root
+
 [Install]
 WantedBy=multi-user.target
 EOF

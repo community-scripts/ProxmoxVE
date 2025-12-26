@@ -20,15 +20,16 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /usr/share/dolibarr ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    msg_error "To update ${APP}, use the applications web interface."
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /usr/share/dolibarr ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+  setup_mariadb
+  msg_error "To update ${APP}, use the applications web interface."
+  exit
 }
 
 start

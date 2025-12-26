@@ -24,6 +24,14 @@ mkdir -p /root/.config/recyclarr
 $STD recyclarr config create
 msg_ok "Configured Recyclarr"
 
+msg_info "Setting up Daily Sync Cron"
+cat <<EOF >/etc/cron.d/recyclarr
+# Run recyclarr sync daily
+@daily root /usr/local/bin/recyclarr sync >> /root/.config/recyclarr/sync.log 2>&1
+EOF
+chmod 644 /etc/cron.d/recyclarr
+msg_ok "Setup Daily Sync Cron"
+
 motd_ssh
 customize
 cleanup_lxc

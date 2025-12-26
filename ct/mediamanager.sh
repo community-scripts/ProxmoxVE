@@ -44,7 +44,7 @@ function update_script() {
     export PUBLIC_API_URL=""
     export BASE_PATH="/web"
     cd /opt/mediamanager/web
-    $STD npm ci --no-fund --no-audit
+    $STD npm install --no-fund --no-audit
     $STD npm run build
     rm -rf "$FRONTEND_FILES_DIR"/build
     cp -r build "$FRONTEND_FILES_DIR"

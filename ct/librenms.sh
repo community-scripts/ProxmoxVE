@@ -27,6 +27,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  setup_mariadb
   msg_info "Updating LibreNMS"
   su librenms
   cd /opt/librenms

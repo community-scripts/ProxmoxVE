@@ -30,11 +30,12 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  setup_mariadb
 
   PHP_VERSION="8.4" PHP_MODULE="mysql" PHP_APACHE="YES" setup_php
   setup_composer
 
-    if check_for_gh_release "kimai" "kimai/kimai"; then
+  if check_for_gh_release "kimai" "kimai/kimai"; then
     BACKUP_DIR="/opt/kimai_backup"
 
     msg_info "Stopping Apache2"
@@ -56,7 +57,7 @@ function update_script() {
     [ -f "$BACKUP_DIR/local.yaml" ] && cp "$BACKUP_DIR/local.yaml" /opt/kimai/config/packages/
     rm -rf "$BACKUP_DIR"
     cd /opt/kimai
-    sed -i '/^admin_lte:/,/^[^[:space:]]/d' config/local.yaml
+    sed -i '/^admin_lte:/,/^[^[:space:]]/d' config/packages/local.yaml
     $STD composer install --no-dev --optimize-autoloader
     $STD bin/console kimai:update
     msg_ok "Updated Kimai"

@@ -1,0 +1,35 @@
+{
+    "name": "DiscoPanel",
+    "slug": "discopanel",
+    "categories": [
+        24
+    ],
+    "date_created": "2025-12-10",
+    "type": "ct",
+    "updateable": true,
+    "privileged": false,
+    "interface_port": 8080,
+    "documentation": "https://discopanel.app/docs/",
+    "config_path": "",
+    "website": "https://discopanel.app/",
+    "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/discopanel.webp",
+    "description": "The Minecraft Server Manager That *Actually* Works\nBuilt by someone who was done with bloated panels, endless menus, and tools that break the moment you need them most.\nSpin up servers in minutes, configure your proxy without headaches, and link your own DNS name effortlessly.\nFast setup, clean controls, zero nonsense—just a manager that gets out of your way and lets you play.",
+    "install_methods": [
+        {
+            "type": "default",
+            "script": "ct/discopanel.sh",
+            "resources": {
+                "cpu": 4,
+                "ram": 4096,
+                "hdd": 15,
+                "os": "Debian",
+                "version": "13"
+            }
+        }
+    ],
+    "default_credentials": {
+        "username": null,
+        "password": null
+    },
+    "notes": []
+}

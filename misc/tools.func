@@ -72,23 +72,19 @@ stop_all_services() {
   local service_patterns=("$@")
 
   for pattern in "${service_patterns[@]}"; do
-    # Find all matching services (use || true to avoid pipeline failures)
+    # Find all matching services (grep || true to handle no matches)
     local services
     services=$(systemctl list-units --type=service --all 2>/dev/null |
-      grep -oE "${pattern}[^ ]*\.service" 2>/dev/null |
-      sort -u 2>/dev/null || true)
+      grep -oE "${pattern}[^ ]*\.service" 2>/dev/null | sort -u) || true
 
-    # Only process if we found any services
     if [[ -n "$services" ]]; then
-      while IFS= read -r service; do
-        [[ -z "$service" ]] && continue
+      while read -r service; do
         $STD systemctl stop "$service" 2>/dev/null || true
         $STD systemctl disable "$service" 2>/dev/null || true
       done <<<"$services"
     fi
   done
 
-  return 0
 }
 
 # ------------------------------------------------------------------------------
@@ -196,6 +192,8 @@ install_packages_with_retry() {
     if [[ $retry -le $max_retries ]]; then
       msg_warn "Package installation failed, retrying ($retry/$max_retries)..."
       sleep 2
+      # Fix any interrupted dpkg operations before retry
+      $STD dpkg --configure -a 2>/dev/null || true
       $STD apt update 2>/dev/null || true
     fi
   done
@@ -221,6 +219,8 @@ upgrade_packages_with_retry() {
     if [[ $retry -le $max_retries ]]; then
       msg_warn "Package upgrade failed, retrying ($retry/$max_retries)..."
       sleep 2
+      # Fix any interrupted dpkg operations before retry
+      $STD dpkg --configure -a 2>/dev/null || true
       $STD apt update 2>/dev/null || true
     fi
   done
@@ -334,9 +334,9 @@ remove_old_tool_version() {
     $STD apt purge -y nodejs npm >/dev/null 2>&1 || true
     # Clean up npm global modules
     if command -v npm >/dev/null 2>&1; then
-      npm list -g 2>/dev/null | grep -oE '^  \S+' | awk '{print $1}' | while read -r module; do
+      npm list -g 2>/dev/null | grep -oE '^  \S+' | awk '{print $1}' 2>/dev/null | while read -r module; do
         npm uninstall -g "$module" >/dev/null 2>&1 || true
-      done
+      done || true
     fi
     cleanup_legacy_install "nodejs"
     cleanup_tool_keyrings "nodesource"
@@ -1167,7 +1167,7 @@ cleanup_orphaned_sources() {
 
     # Extract Signed-By path from .sources file
     local keyring_path
-    keyring_path=$(grep -E '^Signed-By:' "$sources_file" 2>/dev/null | awk '{print $2}')
+    keyring_path=$(grep -E '^Signed-By:' "$sources_file" 2>/dev/null | awk '{print $2}' 2>/dev/null || true)
 
     # If keyring doesn't exist, remove the .sources file
     if [[ -n "$keyring_path" ]] && [[ ! -f "$keyring_path" ]]; then
@@ -1186,6 +1186,12 @@ cleanup_orphaned_sources() {
 # This should be called at the start of any setup function
 # ------------------------------------------------------------------------------
 ensure_apt_working() {
+  # Fix interrupted dpkg operations first
+  # This can happen if a previous installation was interrupted (e.g., by script error)
+  if [[ -f /var/lib/dpkg/lock-frontend ]] || dpkg --audit 2>&1 | grep -q "interrupted"; then
+    $STD dpkg --configure -a 2>/dev/null || true
+  fi
+
   # Clean up orphaned sources first
   cleanup_orphaned_sources
 
@@ -1214,8 +1220,9 @@ setup_deb822_repo() {
   local gpg_url="$2"
   local repo_url="$3"
   local suite="$4"
-  local component="${5-main}"
+  local component="${5:-main}"
   local architectures="${6-}" # optional
+  local enabled="${7-}"       # optional: "true" or "false"
 
   # Validate required parameters
   if [[ -z "$name" || -z "$gpg_url" || -z "$repo_url" || -z "$suite" ]]; then
@@ -1243,9 +1250,13 @@ setup_deb822_repo() {
     echo "Types: deb"
     echo "URIs: $repo_url"
     echo "Suites: $suite"
-    echo "Components: $component"
+    # Flat repositories (suite="./" or absolute path) must not have Components
+    if [[ "$suite" != "./" && -n "$component" ]]; then
+      echo "Components: $component"
+    fi
     [[ -n "$architectures" ]] && echo "Architectures: $architectures"
     echo "Signed-By: /etc/apt/keyrings/${name}.gpg"
+    [[ -n "$enabled" ]] && echo "Enabled: $enabled"
   } >/etc/apt/sources.list.d/${name}.sources
 
   $STD apt update
@@ -1447,15 +1458,32 @@ check_for_gh_release() {
 
   ensure_dependencies jq
 
-  # Fetch releases and exclude drafts/prereleases
-  local releases_json
-  releases_json=$(curl -fsSL --max-time 20 \
-    -H 'Accept: application/vnd.github+json' \
-    -H 'X-GitHub-Api-Version: 2022-11-28' \
-    "https://api.github.com/repos/${source}/releases") || {
-    msg_error "Unable to fetch releases for ${app}"
-    return 1
-  }
+  # Try /latest endpoint for non-pinned versions (most efficient)
+  local releases_json=""
+
+  if [[ -z "$pinned_version_in" ]]; then
+    releases_json=$(curl -fsSL --max-time 20 \
+      -H 'Accept: application/vnd.github+json' \
+      -H 'X-GitHub-Api-Version: 2022-11-28' \
+      "https://api.github.com/repos/${source}/releases/latest" 2>/dev/null)
+
+    if [[ $? -eq 0 ]] && [[ -n "$releases_json" ]]; then
+      # Wrap single release in array for consistent processing
+      releases_json="[$releases_json]"
+    fi
+  fi
+
+  # If no releases yet (pinned version OR /latest failed), fetch up to 100
+  if [[ -z "$releases_json" ]]; then
+    # Fetch releases and exclude drafts/prereleases
+    releases_json=$(curl -fsSL --max-time 20 \
+      -H 'Accept: application/vnd.github+json' \
+      -H 'X-GitHub-Api-Version: 2022-11-28' \
+      "https://api.github.com/repos/${source}/releases?per_page=100") || {
+      msg_error "Unable to fetch releases for ${app}"
+      return 1
+    }
+  fi
 
   mapfile -t raw_tags < <(jq -r '.[] | select(.draft==false and .prerelease==false) | .tag_name' <<<"$releases_json")
   if ((${#raw_tags[@]} == 0)); then
@@ -1535,9 +1563,10 @@ check_for_gh_release() {
 # ------------------------------------------------------------------------------
 create_self_signed_cert() {
   local APP_NAME="${1:-${APPLICATION}}"
-  local CERT_DIR="/etc/ssl/${APP_NAME}"
-  local CERT_KEY="${CERT_DIR}/${APP_NAME}.key"
-  local CERT_CRT="${CERT_DIR}/${APP_NAME}.crt"
+  local APP_NAME_LC=$(echo "${APP_NAME,,}" | tr -d ' ')
+  local CERT_DIR="/etc/ssl/${APP_NAME_LC}"
+  local CERT_KEY="${CERT_DIR}/${APP_NAME_LC}.key"
+  local CERT_CRT="${CERT_DIR}/${APP_NAME_LC}.crt"
 
   if [[ -f "$CERT_CRT" && -f "$CERT_KEY" ]]; then
     return 0
@@ -1551,7 +1580,8 @@ create_self_signed_cert() {
 
   mkdir -p "$CERT_DIR"
   $STD openssl req -new -newkey rsa:2048 -days 365 -nodes -x509 \
-    -subj "/C=US/ST=State/L=City/O=Organization/CN=${APP_NAME}" \
+    -subj "/CN=${APP_NAME}" \
+    -addext "subjectAltName=DNS:${APP_NAME}" \
     -keyout "$CERT_KEY" \
     -out "$CERT_CRT" || {
     msg_error "Failed to create self-signed certificate"
@@ -1727,12 +1757,13 @@ function fetch_and_deploy_gh_release() {
 
   ### Tarball Mode ###
   if [[ "$mode" == "tarball" || "$mode" == "source" ]]; then
-    url=$(echo "$json" | jq -r '.tarball_url // empty')
-    [[ -z "$url" ]] && url="https://github.com/$repo/archive/refs/tags/v$version.tar.gz"
+    # GitHub API's tarball_url/zipball_url can return HTTP 300 Multiple Choices
+    # when a branch and tag share the same name. Use explicit refs/tags/ URL instead.
+    local direct_tarball_url="https://github.com/$repo/archive/refs/tags/$tag_name.tar.gz"
     filename="${app_lc}-${version}.tar.gz"
 
-    curl $download_timeout -fsSL -o "$tmpdir/$filename" "$url" || {
-      msg_error "Download failed: $url"
+    curl $download_timeout -fsSL -o "$tmpdir/$filename" "$direct_tarball_url" || {
+      msg_error "Download failed: $direct_tarball_url"
       rm -rf "$tmpdir"
       return 1
     }
@@ -2042,7 +2073,7 @@ function setup_adminer() {
       return 1
     }
     local VERSION
-    VERSION=$(dpkg -s adminer 2>/dev/null | grep '^Version:' | awk '{print $2}')
+    VERSION=$(dpkg -s adminer 2>/dev/null | grep '^Version:' | awk '{print $2}' 2>/dev/null || echo 'unknown')
     cache_installed_version "adminer" "${VERSION:-unknown}"
     msg_ok "Setup Adminer (Debian/Ubuntu)"
   fi
@@ -2540,6 +2571,15 @@ function setup_gs() {
 #   - Some things are fetched from intel repositories due to not being in debian repositories.
 # ------------------------------------------------------------------------------
 function setup_hwaccel() {
+  # Check if GPU passthrough is enabled (device nodes must exist)
+  # /dev/dri = Intel iGPU, AMD GPU (open-source drivers)
+  # /dev/nvidia* = NVIDIA proprietary drivers
+  # /dev/kfd = AMD ROCm compute
+  if [[ ! -d /dev/dri && ! -e /dev/nvidia0 && ! -e /dev/kfd ]]; then
+    msg_warn "No GPU passthrough detected (/dev/dri, /dev/nvidia*, /dev/kfd not found) - skipping hardware acceleration setup"
+    return 0
+  fi
+
   msg_info "Setup Hardware Acceleration"
 
   if ! command -v lspci &>/dev/null; then
@@ -2554,93 +2594,242 @@ function setup_hwaccel() {
   fi
 
   # Detect GPU vendor (Intel, AMD, NVIDIA)
-  local gpu_vendor
-  gpu_vendor=$(lspci 2>/dev/null | grep -Ei 'vga|3d|display' | grep -Eo 'Intel|AMD|NVIDIA' | head -n1 || echo "")
+  local gpu_vendor gpu_info
+  gpu_info=$(lspci 2>/dev/null | grep -Ei 'vga|3d|display' || echo "")
+  gpu_vendor=$(echo "$gpu_info" | grep -Eo 'Intel|AMD|NVIDIA' | head -n1 || echo "")
 
   # Detect CPU vendor (relevant for AMD APUs)
   local cpu_vendor
-  cpu_vendor=$(lscpu 2>/dev/null | grep -i 'Vendor ID' | awk '{print $3}' || echo "")
+  cpu_vendor=$(lscpu 2>/dev/null | grep -i 'Vendor ID' | awk '{print $3}' 2>/dev/null || echo "")
 
   if [[ -z "$gpu_vendor" && -z "$cpu_vendor" ]]; then
-    msg_error "No GPU or CPU vendor detected (missing lspci/lscpu output)"
-    return 1
+    msg_warn "No GPU or CPU vendor detected - skipping hardware acceleration setup"
+    msg_ok "Setup Hardware Acceleration (skipped - no GPU detected)"
+    return 0
   fi
 
   # Detect OS with fallbacks
-  local os_id os_codename
-  os_id=$(grep -oP '(?<=^ID=).+' /etc/os-release 2>/dev/null | tr -d '"' || grep '^ID=' /etc/os-release 2>/dev/null | cut -d'=' -f2 | tr -d '"' || echo "debian")
-  os_codename=$(grep -oP '(?<=^VERSION_CODENAME=).+' /etc/os-release 2>/dev/null | tr -d '"' || grep '^VERSION_CODENAME=' /etc/os-release 2>/dev/null | cut -d'=' -f2 | tr -d '"' || echo "unknown")
+  local os_id os_codename os_version
+  os_id=$(grep -oP '(?<=^ID=).+' /etc/os-release 2>/dev/null | tr -d '"' || echo "debian")
+  os_codename=$(grep -oP '(?<=^VERSION_CODENAME=).+' /etc/os-release 2>/dev/null | tr -d '"' || echo "unknown")
+  os_version=$(grep -oP '(?<=^VERSION_ID=).+' /etc/os-release 2>/dev/null | tr -d '"' || echo "")
 
-  # Validate os_id
-  if [[ -z "$os_id" ]]; then
-    os_id="debian"
-  fi
+  [[ -z "$os_id" ]] && os_id="debian"
 
-  # Determine if we are on a VM or LXC
+  # Determine if we are in a privileged LXC container
   local in_ct="${CTTYPE:-0}"
 
   case "$gpu_vendor" in
   Intel)
-    if [[ "$os_id" == "ubuntu" ]]; then
-      $STD apt -y install intel-opencl-icd || {
-        msg_error "Failed to install intel-opencl-icd"
-        return 1
-      }
-    else
-      # For Debian: fetch Intel GPU drivers from GitHub
-      fetch_and_deploy_gh_release "" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-core-2_*_amd64.deb" || {
-        msg_warn "Failed to deploy Intel IGC core 2"
-      }
-      fetch_and_deploy_gh_release "" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-opencl-2_*_amd64.deb" || {
-        msg_warn "Failed to deploy Intel IGC OpenCL 2"
-      }
-      fetch_and_deploy_gh_release "" "intel/compute-runtime" "binary" "latest" "" "libigdgmm12_*_amd64.deb" || {
-        msg_warn "Failed to deploy Intel GDGMM12"
-      }
-      fetch_and_deploy_gh_release "" "intel/compute-runtime" "binary" "latest" "" "intel-opencl-icd_*_amd64.deb" || {
-        msg_warn "Failed to deploy Intel OpenCL ICD"
-      }
+    # Detect Intel GPU generation for driver selection
+    # Gen 9+ (Skylake and newer) benefit from non-free drivers
+    local intel_gen=""
+    local needs_nonfree=false
+
+    # Check for specific Intel GPU models that need non-free drivers
+    if echo "$gpu_info" | grep -Ei 'HD Graphics [56][0-9]{2}|UHD Graphics|Iris|Arc|DG[12]' &>/dev/null; then
+      needs_nonfree=true
+      intel_gen="gen9+"
     fi
 
-    $STD apt -y install va-driver-all ocl-icd-libopencl1 vainfo intel-gpu-tools || {
-      msg_error "Failed to install Intel GPU dependencies"
-      return 1
-    }
+    if [[ "$os_id" == "ubuntu" ]]; then
+      # Ubuntu: Use packages from Ubuntu repos
+      $STD apt -y install \
+        va-driver-all \
+        ocl-icd-libopencl1 \
+        intel-opencl-icd \
+        vainfo \
+        intel-gpu-tools || {
+        msg_error "Failed to install Intel GPU dependencies"
+        return 1
+      }
+      # Try to install intel-media-va-driver for newer GPUs
+      $STD apt -y install intel-media-va-driver 2>/dev/null || true
+
+    elif [[ "$os_id" == "debian" ]]; then
+      # Debian: Check version and install appropriate drivers
+      if [[ "$needs_nonfree" == true ]]; then
+        # Add non-free repo for intel-media-va-driver-non-free
+        if [[ "$os_codename" == "bookworm" ]]; then
+          # Debian 12 Bookworm
+          if [[ ! -f /etc/apt/sources.list.d/non-free.list && ! -f /etc/apt/sources.list.d/non-free.sources ]]; then
+            cat <<EOF >/etc/apt/sources.list.d/non-free.sources
+Types: deb
+URIs: http://deb.debian.org/debian
+Suites: bookworm bookworm-updates
+Components: non-free non-free-firmware
+EOF
+            $STD apt update
+          fi
+          $STD apt -y install \
+            intel-media-va-driver-non-free \
+            ocl-icd-libopencl1 \
+            intel-opencl-icd \
+            vainfo \
+            intel-gpu-tools || {
+            msg_warn "Non-free driver install failed, falling back to open drivers"
+            needs_nonfree=false
+          }
+
+        elif [[ "$os_codename" == "trixie" || "$os_codename" == "sid" ]]; then
+          # Debian 13 Trixie / Sid
+          if [[ ! -f /etc/apt/sources.list.d/non-free.sources ]]; then
+            cat <<'EOF' >/etc/apt/sources.list.d/non-free.sources
+Types: deb
+URIs: http://deb.debian.org/debian
+Suites: trixie trixie-updates
+Components: non-free non-free-firmware
+
+Types: deb
+URIs: http://deb.debian.org/debian-security
+Suites: trixie-security
+Components: non-free non-free-firmware
+EOF
+            $STD apt update
+          fi
+          $STD apt -y install \
+            intel-media-va-driver-non-free \
+            ocl-icd-libopencl1 \
+            mesa-opencl-icd \
+            mesa-va-drivers \
+            libvpl2 \
+            vainfo \
+            intel-gpu-tools 2>/dev/null || {
+            msg_warn "Non-free driver install failed, falling back to open drivers"
+            needs_nonfree=false
+          }
+        fi
+      fi
+
+      # Fallback to open drivers or older Intel GPUs
+      if [[ "$needs_nonfree" == false ]]; then
+        # Fetch latest Intel drivers from GitHub for Debian
+        fetch_and_deploy_gh_release "intel-igc-core" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-core-2_*_amd64.deb" || {
+          msg_warn "Failed to deploy Intel IGC core 2"
+        }
+        fetch_and_deploy_gh_release "intel-igc-opencl" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-opencl-2_*_amd64.deb" || {
+          msg_warn "Failed to deploy Intel IGC OpenCL 2"
+        }
+        fetch_and_deploy_gh_release "libigdgmm12" "intel/compute-runtime" "binary" "latest" "" "libigdgmm12_*_amd64.deb" || {
+          msg_warn "Failed to deploy Intel GDGMM12"
+        }
+        fetch_and_deploy_gh_release "intel-opencl-icd" "intel/compute-runtime" "binary" "latest" "" "intel-opencl-icd_*_amd64.deb" || {
+          msg_warn "Failed to deploy Intel OpenCL ICD"
+        }
+
+        $STD apt -y install \
+          va-driver-all \
+          ocl-icd-libopencl1 \
+          mesa-opencl-icd \
+          mesa-va-drivers \
+          vainfo \
+          intel-gpu-tools || {
+          msg_error "Failed to install Intel GPU dependencies"
+          return 1
+        }
+      fi
+    fi
     ;;
+
   AMD)
-    $STD apt -y install mesa-va-drivers mesa-vdpau-drivers mesa-opencl-icd vainfo clinfo || {
+    $STD apt -y install \
+      mesa-va-drivers \
+      mesa-vdpau-drivers \
+      mesa-opencl-icd \
+      ocl-icd-libopencl1 \
+      vainfo \
+      clinfo 2>/dev/null || {
       msg_error "Failed to install AMD GPU dependencies"
       return 1
     }
 
-    # For AMD CPUs without discrete GPU (APUs)
-    if [[ "$cpu_vendor" == "AuthenticAMD" && -n "$gpu_vendor" ]]; then
-      $STD apt -y install libdrm-amdgpu1 firmware-amd-graphics || true
-    fi
-    ;;
-  NVIDIA)
-    # NVIDIA needs manual driver setup - skip for now
-    msg_info "NVIDIA GPU detected - manual driver setup required"
-    ;;
-  *)
-    # If no discrete GPU, but AMD CPU (e.g., Ryzen APU)
-    if [[ "$cpu_vendor" == "AuthenticAMD" ]]; then
-      $STD apt -y install mesa-opencl-icd ocl-icd-libopencl1 clinfo || {
-        msg_error "Failed to install Mesa OpenCL stack"
-        return 1
+    # For AMD GPUs, firmware-amd-graphics requires non-free repositories
+    if [[ "$os_id" == "debian" ]]; then
+      # Add non-free-firmware repository if not already present
+      if [[ ! -f /etc/apt/sources.list.d/non-free-firmware.sources ]]; then
+        if [[ "$os_codename" == "bookworm" ]]; then
+          cat <<EOF >/etc/apt/sources.list.d/non-free-firmware.sources
+Types: deb
+URIs: http://deb.debian.org/debian
+Suites: bookworm bookworm-updates
+Components: non-free-firmware
+
+Types: deb
+URIs: http://deb.debian.org/debian-security
+Suites: bookworm-security
+Components: non-free-firmware
+EOF
+        elif [[ "$os_codename" == "trixie" || "$os_codename" == "sid" ]]; then
+          cat <<EOF >/etc/apt/sources.list.d/non-free-firmware.sources
+Types: deb
+URIs: http://deb.debian.org/debian
+Suites: trixie trixie-updates
+Components: non-free-firmware
+
+Types: deb
+URIs: http://deb.debian.org/debian-security
+Suites: trixie-security
+Components: non-free-firmware
+EOF
+        fi
+        $STD apt update
+      fi
+
+      # Install AMD firmware and libdrm
+      $STD apt -y install libdrm-amdgpu1 firmware-amd-graphics 2>/dev/null || {
+        msg_warn "Failed to install AMD firmware - may need manual installation"
+      }
+    elif [[ "$os_id" == "ubuntu" ]]; then
+      # For Ubuntu, firmware-amd-graphics does not exist (it's Debian-specific from non-free-firmware)
+      # Ubuntu includes AMD firmware in linux-firmware package which is installed by default
+      # Only install libdrm-amdgpu1 for userspace driver support
+      $STD apt -y install libdrm-amdgpu1 2>/dev/null || {
+        msg_warn "Failed to install libdrm-amdgpu1 - may need manual installation"
       }
     else
-      msg_warn "No supported GPU vendor detected - skipping GPU acceleration"
+      # For other distributions, try without adding repositories
+      $STD apt -y install libdrm-amdgpu1 2>/dev/null || true
+    fi
+    ;;
+
+  NVIDIA)
+    # NVIDIA needs manual driver setup or passthrough from host
+    msg_warn "NVIDIA GPU detected - driver must be installed manually or passed through from host"
+    # Install basic VA-API support for potential hybrid setups
+    $STD apt -y install va-driver-all vainfo 2>/dev/null || true
+    ;;
+
+  *)
+    # No discrete GPU detected - check for AMD APU
+    if [[ "$cpu_vendor" == "AuthenticAMD" ]]; then
+      $STD apt -y install \
+        mesa-va-drivers \
+        mesa-vdpau-drivers \
+        mesa-opencl-icd \
+        ocl-icd-libopencl1 \
+        vainfo 2>/dev/null || true
+    else
+      msg_warn "No supported GPU vendor detected - skipping GPU driver installation"
     fi
     ;;
   esac
 
-  if [[ "$in_ct" == "0" ]]; then
+  # Set permissions for /dev/dri (only in privileged containers and if /dev/dri exists)
+  if [[ "$in_ct" == "0" && -d /dev/dri ]]; then
     chgrp video /dev/dri 2>/dev/null || true
     chmod 755 /dev/dri 2>/dev/null || true
     chmod 660 /dev/dri/* 2>/dev/null || true
-    $STD adduser "$(id -u -n)" video
-    $STD adduser "$(id -u -n)" render
+    $STD adduser "$(id -u -n)" video 2>/dev/null || true
+    $STD adduser "$(id -u -n)" render 2>/dev/null || true
+
+    # Sync GID for video/render groups between host and container
+    local host_video_gid host_render_gid
+    host_video_gid=$(getent group video | cut -d: -f3)
+    host_render_gid=$(getent group render | cut -d: -f3)
+    if [[ -n "$host_video_gid" && -n "$host_render_gid" ]]; then
+      sed -i "s/^video:x:[0-9]*:/video:x:$host_video_gid:/" /etc/group 2>/dev/null || true
+      sed -i "s/^render:x:[0-9]*:/render:x:$host_render_gid:/" /etc/group 2>/dev/null || true
+    fi
   fi
 
   cache_installed_version "hwaccel" "1.0"
@@ -2786,12 +2975,19 @@ function setup_java() {
     INSTALLED_VERSION=$(dpkg -l 2>/dev/null | awk '/temurin-.*-jdk/{print $2}' | grep -oP 'temurin-\K[0-9]+' | head -n1 || echo "")
   fi
 
-  # Validate INSTALLED_VERSION is not empty if matched
+  # Validate INSTALLED_VERSION is not empty if JDK package found
   local JDK_COUNT=0
   JDK_COUNT=$(dpkg -l 2>/dev/null | grep -c "temurin-.*-jdk" || true)
   if [[ -z "$INSTALLED_VERSION" && "${JDK_COUNT:-0}" -gt 0 ]]; then
-    msg_warn "Found Temurin JDK but cannot determine version"
-    INSTALLED_VERSION="0"
+    msg_warn "Found Temurin JDK but cannot determine version - attempting reinstall"
+    # Try to get actual package name for purge
+    local OLD_PACKAGE
+    OLD_PACKAGE=$(dpkg -l 2>/dev/null | awk '/temurin-.*-jdk/{print $2}' | head -n1 || echo "")
+    if [[ -n "$OLD_PACKAGE" ]]; then
+      msg_info "Removing existing package: $OLD_PACKAGE"
+      $STD apt purge -y "$OLD_PACKAGE" || true
+    fi
+    INSTALLED_VERSION="" # Reset to trigger fresh install
   fi
 
   # Scenario 1: Already at correct version
@@ -2939,9 +3135,16 @@ setup_mariadb() {
   # Resolve "latest" to actual version
   if [[ "$MARIADB_VERSION" == "latest" ]]; then
     if ! curl -fsI --max-time 10 http://mirror.mariadb.org/repo/ >/dev/null 2>&1; then
-      msg_warn "MariaDB mirror not reachable - trying cached package list fallback"
-      # Fallback: try to use a known stable version
-      MARIADB_VERSION="12.0"
+      msg_warn "MariaDB mirror not reachable - trying mariadb_repo_setup fallback"
+      # Try using official mariadb_repo_setup script as fallback
+      if curl -fsSL --max-time 15 https://r.mariadb.com/downloads/mariadb_repo_setup 2>/dev/null | bash -s -- --skip-verify >/dev/null 2>&1; then
+        msg_ok "MariaDB repository configured via mariadb_repo_setup"
+        # Extract version from configured repo
+        MARIADB_VERSION=$(grep -oP 'repo/\K[0-9]+\.[0-9]+\.[0-9]+' /etc/apt/sources.list.d/mariadb.list 2>/dev/null | head -n1 || echo "12.2")
+      else
+        msg_warn "mariadb_repo_setup failed - using hardcoded fallback version"
+        MARIADB_VERSION="12.2"
+      fi
     else
       MARIADB_VERSION=$(curl -fsSL --max-time 15 http://mirror.mariadb.org/repo/ 2>/dev/null |
         grep -Eo '[0-9]+\.[0-9]+\.[0-9]+/' |
@@ -2951,8 +3154,14 @@ setup_mariadb() {
         head -n1 || echo "")
 
       if [[ -z "$MARIADB_VERSION" ]]; then
-        msg_warn "Could not parse latest GA MariaDB version from mirror - using fallback"
-        MARIADB_VERSION="12.0"
+        msg_warn "Could not parse latest GA MariaDB version from mirror - trying mariadb_repo_setup"
+        if curl -fsSL --max-time 15 https://r.mariadb.com/downloads/mariadb_repo_setup 2>/dev/null | bash -s -- --skip-verify >/dev/null 2>&1; then
+          msg_ok "MariaDB repository configured via mariadb_repo_setup"
+          MARIADB_VERSION=$(grep -oP 'repo/\K[0-9]+\.[0-9]+\.[0-9]+' /etc/apt/sources.list.d/mariadb.list 2>/dev/null | head -n1 || echo "12.2")
+        else
+          msg_warn "mariadb_repo_setup failed - using hardcoded fallback version"
+          MARIADB_VERSION="12.2"
+        fi
       fi
     fi
   fi
@@ -3227,7 +3436,6 @@ function setup_mongodb() {
     return 1
   }
 
-  # Verify MongoDB was installed correctly
   if ! command -v mongod >/dev/null 2>&1; then
     msg_error "MongoDB binary not found after installation"
     return 1
@@ -3403,12 +3611,12 @@ EOF
 #   - Optionally installs or updates global npm modules
 #
 # Variables:
-#   NODE_VERSION   - Node.js version to install (default: 22)
+#   NODE_VERSION   - Node.js version to install (default: 24 LTS)
 #   NODE_MODULE    - Comma-separated list of global modules (e.g. "yarn,@vue/cli@5.0.0")
 # ------------------------------------------------------------------------------
 
 function setup_nodejs() {
-  local NODE_VERSION="${NODE_VERSION:-22}"
+  local NODE_VERSION="${NODE_VERSION:-24}"
   local NODE_MODULE="${NODE_MODULE:-}"
 
   # ALWAYS clean up legacy installations first (nvm, etc.) to prevent conflicts
@@ -3470,14 +3678,11 @@ function setup_nodejs() {
       return 1
     }
 
-    # CRITICAL: Force APT cache refresh AFTER repository setup
-    # This ensures NodeSource is the only nodejs source in APT cache
+    # Force APT cache refresh after repository setup
     $STD apt update
 
-    # Install dependencies (NodeSource is now the only nodejs source)
     ensure_dependencies curl ca-certificates gnupg
 
-    # Install Node.js from NodeSource
     install_packages_with_retry "nodejs" || {
       msg_error "Failed to install Node.js ${NODE_VERSION} from NodeSource"
       return 1
@@ -3545,7 +3750,7 @@ function setup_nodejs() {
 
       # Check if the module is already installed
       if $STD npm list -g --depth=0 "$MODULE_NAME" 2>&1 | grep -q "$MODULE_NAME@"; then
-        MODULE_INSTALLED_VERSION="$($STD npm list -g --depth=0 "$MODULE_NAME" 2>&1 | grep "$MODULE_NAME@" | awk -F@ '{print $2}' | tr -d '[:space:]')"
+        MODULE_INSTALLED_VERSION="$(npm list -g --depth=0 "$MODULE_NAME" 2>&1 | grep "$MODULE_NAME@" | awk -F@ '{print $2}' 2>/dev/null | tr -d '[:space:]' || echo '')"
         if [[ "$MODULE_REQ_VERSION" != "latest" && "$MODULE_REQ_VERSION" != "$MODULE_INSTALLED_VERSION" ]]; then
           msg_info "Updating $MODULE_NAME from v$MODULE_INSTALLED_VERSION to v$MODULE_REQ_VERSION"
           if ! $STD npm install -g "${MODULE_NAME}@${MODULE_REQ_VERSION}" 2>/dev/null; then
@@ -3628,12 +3833,12 @@ function setup_php() {
   local CURRENT_PHP=""
   CURRENT_PHP=$(is_tool_installed "php" 2>/dev/null) || true
 
-  # CRITICAL: If wrong version is installed, remove it FIRST before any pinning
+  # Remove conflicting PHP version before pinning
   if [[ -n "$CURRENT_PHP" && "$CURRENT_PHP" != "$PHP_VERSION" ]]; then
     msg_info "Removing conflicting PHP ${CURRENT_PHP} (need ${PHP_VERSION})"
     stop_all_services "php.*-fpm"
-    $STD apt-get purge -y "php*" 2>/dev/null || true
-    $STD apt-get autoremove -y 2>/dev/null || true
+    $STD apt purge -y "php*" 2>/dev/null || true
+    $STD apt autoremove -y 2>/dev/null || true
   fi
 
   # NOW create pinning for the desired version
@@ -3660,11 +3865,11 @@ EOF
   }
 
   ensure_apt_working || return 1
-  $STD apt-get update
+  $STD apt update
 
   # Get available PHP version from repository
   local AVAILABLE_PHP_VERSION=""
-  AVAILABLE_PHP_VERSION=$(apt-cache show "php${PHP_VERSION}" 2>/dev/null | grep -m1 "^Version:" | awk '{print $2}' | cut -d- -f1) || true
+  AVAILABLE_PHP_VERSION=$(apt-cache show "php${PHP_VERSION}" 2>/dev/null | grep -m1 "^Version:" | awk '{print $2}' 2>/dev/null | cut -d- -f1 || true)
 
   if [[ -z "$AVAILABLE_PHP_VERSION" ]]; then
     msg_error "PHP ${PHP_VERSION} not found in configured repositories"
@@ -3775,7 +3980,6 @@ EOF
 
   local INSTALLED_VERSION=$(php -v 2>/dev/null | awk '/^PHP/{print $2}' | cut -d. -f1,2)
 
-  # Critical: if major.minor doesn't match, fail and cleanup
   if [[ "$INSTALLED_VERSION" != "$PHP_VERSION" ]]; then
     msg_error "PHP version mismatch: requested ${PHP_VERSION} but got ${INSTALLED_VERSION}"
     msg_error "This indicates a critical package installation issue"
@@ -3855,74 +4059,14 @@ function setup_postgresql() {
   local SUITE
   case "$DISTRO_CODENAME" in
   trixie | forky | sid)
-    # For Debian Testing/Unstable, try PostgreSQL repo first, fallback to native packages
+
     if verify_repo_available "https://apt.postgresql.org/pub/repos/apt" "trixie-pgdg"; then
       SUITE="trixie-pgdg"
 
-      setup_deb822_repo \
-        "pgdg" \
-        "https://www.postgresql.org/media/keys/ACCC4CF8.asc" \
-        "https://apt.postgresql.org/pub/repos/apt" \
-        "$SUITE" \
-        "main"
-
-      if ! $STD apt update; then
-        msg_warn "Failed to update PostgreSQL repository, falling back to native packages"
-        SUITE=""
-      fi
     else
-      SUITE=""
+      SUITE="bookworm-pgdg"
     fi
 
-    # If no repo or packages not installable, use native Debian packages
-    if [[ -z "$SUITE" ]] || ! apt-cache show "postgresql-${PG_VERSION}" 2>/dev/null | grep -q "Version:"; then
-      msg_info "Using native Debian packages for $DISTRO_CODENAME"
-
-      # Install ssl-cert dependency if available
-      if apt-cache search "^ssl-cert$" 2>/dev/null | grep -q .; then
-        $STD apt install -y ssl-cert 2>/dev/null || true
-      fi
-
-      if ! $STD apt install -y postgresql postgresql-client 2>/dev/null; then
-        msg_error "Failed to install native PostgreSQL packages"
-        return 1
-      fi
-
-      if ! command -v psql >/dev/null 2>&1; then
-        msg_error "PostgreSQL installed but psql command not found"
-        return 1
-      fi
-
-      # Restore database backup if we upgraded from previous version
-      if [[ -n "$CURRENT_PG_VERSION" ]]; then
-        msg_info "Restoring PostgreSQL databases from backup..."
-        $STD runuser -u postgres -- psql </var/lib/postgresql/backup_$(date +%F)_v${CURRENT_PG_VERSION}.sql 2>/dev/null || {
-          msg_warn "Failed to restore database backup - this may be expected for major version upgrades"
-        }
-      fi
-
-      $STD systemctl enable --now postgresql 2>/dev/null || true
-
-      # Get actual installed version
-      INSTALLED_VERSION="$(psql -V 2>/dev/null | awk '{print $3}' | cut -d. -f1)"
-
-      # Add PostgreSQL binaries to PATH
-      if ! grep -q '/usr/lib/postgresql' /etc/environment 2>/dev/null; then
-        echo 'PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/postgresql/'"${INSTALLED_VERSION}"'/bin"' >/etc/environment
-      fi
-
-      cache_installed_version "postgresql" "$INSTALLED_VERSION"
-      msg_ok "Setup PostgreSQL $INSTALLED_VERSION (native)"
-
-      # Install optional modules if specified
-      if [[ -n "$PG_MODULES" ]]; then
-        IFS=',' read -ra MODULES <<<"$PG_MODULES"
-        for module in "${MODULES[@]}"; do
-          $STD apt install -y "postgresql-${INSTALLED_VERSION}-${module}" 2>/dev/null || true
-        done
-      fi
-      return 0
-    fi
     ;;
   *)
     SUITE=$(get_fallback_suite "$DISTRO_ID" "$DISTRO_CODENAME" "https://apt.postgresql.org/pub/repos/apt")
@@ -4443,7 +4587,7 @@ function setup_rust() {
   # Get currently installed version
   local CURRENT_VERSION=""
   if command -v rustc &>/dev/null; then
-    CURRENT_VERSION=$(rustc --version 2>/dev/null | awk '{print $2}')
+    CURRENT_VERSION=$(rustc --version 2>/dev/null | awk '{print $2}' 2>/dev/null) || true
   fi
 
   # Scenario 1: Rustup not installed - fresh install
@@ -4462,7 +4606,8 @@ function setup_rust() {
       return 1
     fi
 
-    local RUST_VERSION=$(rustc --version 2>/dev/null | awk '{print $2}')
+    local RUST_VERSION
+    RUST_VERSION=$(rustc --version 2>/dev/null | awk '{print $2}' 2>/dev/null) || true
     if [[ -z "$RUST_VERSION" ]]; then
       msg_error "Failed to determine Rust version"
       return 1
@@ -4493,7 +4638,8 @@ function setup_rust() {
     # Ensure PATH is updated for current shell session
     export PATH="$CARGO_BIN:$PATH"
 
-    local RUST_VERSION=$(rustc --version 2>/dev/null | awk '{print $2}')
+    local RUST_VERSION
+    RUST_VERSION=$(rustc --version 2>/dev/null | awk '{print $2}' 2>/dev/null) || true
     if [[ -z "$RUST_VERSION" ]]; then
       msg_error "Failed to determine Rust version after update"
       return 1
@@ -4525,7 +4671,7 @@ function setup_rust() {
 
       # Check if already installed
       if echo "$CRATE_LIST" | grep -q "^${NAME} "; then
-        INSTALLED_VER=$(echo "$CRATE_LIST" | grep "^${NAME} " | head -1 | awk '{print $2}' | tr -d 'v:')
+        INSTALLED_VER=$(echo "$CRATE_LIST" | grep "^${NAME} " | head -1 | awk '{print $2}' 2>/dev/null | tr -d 'v:' || echo '')
 
         if [[ -n "$VER" && "$VER" != "$INSTALLED_VER" ]]; then
           msg_info "Upgrading $NAME from v$INSTALLED_VER to v$VER"
@@ -4540,7 +4686,7 @@ function setup_rust() {
             msg_error "Failed to upgrade $NAME"
             return 1
           }
-          local NEW_VER=$(cargo install --list 2>/dev/null | grep "^${NAME} " | head -1 | awk '{print $2}' | tr -d 'v:')
+          local NEW_VER=$(cargo install --list 2>/dev/null | grep "^${NAME} " | head -1 | awk '{print $2}' 2>/dev/null | tr -d 'v:' || echo 'unknown')
           msg_ok "Upgraded $NAME to v$NEW_VER"
         else
           msg_ok "$NAME v$INSTALLED_VER already installed"
@@ -4558,7 +4704,7 @@ function setup_rust() {
             msg_error "Failed to install $NAME"
             return 1
           }
-          local NEW_VER=$(cargo install --list 2>/dev/null | grep "^${NAME} " | head -1 | awk '{print $2}' | tr -d 'v:')
+          local NEW_VER=$(cargo install --list 2>/dev/null | grep "^${NAME} " | head -1 | awk '{print $2}' 2>/dev/null | tr -d 'v:' || echo 'unknown')
           msg_ok "Installed $NAME v$NEW_VER"
         fi
       fi
@@ -4815,4 +4961,215 @@ function setup_yq() {
   FINAL_VERSION=$("$BINARY_PATH" --version 2>/dev/null | awk '{print $NF}' | sed 's/^v//')
   cache_installed_version "yq" "$FINAL_VERSION"
   msg_ok "Setup yq $FINAL_VERSION"
+}
+
+# ------------------------------------------------------------------------------
+# Docker Engine Installation and Management (All-In-One)
+#
+# Description:
+#   - Detects and migrates old Docker installations
+#   - Installs/Updates Docker Engine via official repository
+#   - Optional: Installs/Updates Portainer CE
+#   - Updates running containers interactively
+#   - Cleans up legacy repository files
+#
+# Usage:
+#   setup_docker
+#   DOCKER_PORTAINER="true" setup_docker
+#   DOCKER_LOG_DRIVER="json-file" setup_docker
+#
+# Variables:
+#   DOCKER_PORTAINER       - Install Portainer CE (optional, "true" to enable)
+#   DOCKER_LOG_DRIVER      - Log driver (optional, default: "journald")
+#   DOCKER_SKIP_UPDATES    - Skip container update check (optional, "true" to skip)
+#
+# Features:
+#   - Migrates from get.docker.com to repository-based installation
+#   - Updates Docker Engine if newer version available
+#   - Interactive container update with multi-select
+#   - Portainer installation and update support
+# ------------------------------------------------------------------------------
+function setup_docker() {
+  local docker_installed=false
+  local portainer_installed=false
+
+  # Check if Docker is already installed
+  if command -v docker &>/dev/null; then
+    docker_installed=true
+    DOCKER_CURRENT_VERSION=$(docker --version | grep -oP '\d+\.\d+\.\d+' | head -1)
+    msg_info "Docker $DOCKER_CURRENT_VERSION detected"
+  fi
+
+  # Check if Portainer is running
+  if docker ps --format '{{.Names}}' 2>/dev/null | grep -q '^portainer$'; then
+    portainer_installed=true
+    msg_info "Portainer container detected"
+  fi
+
+  # Cleanup old repository configurations
+  if [ -f /etc/apt/sources.list.d/docker.list ]; then
+    msg_info "Migrating from old Docker repository format"
+    rm -f /etc/apt/sources.list.d/docker.list
+    rm -f /etc/apt/keyrings/docker.asc
+  fi
+
+  # Setup/Update Docker repository
+  msg_info "Setting up Docker Repository"
+  setup_deb822_repo \
+    "docker" \
+    "https://download.docker.com/linux/$(get_os_info id)/gpg" \
+    "https://download.docker.com/linux/$(get_os_info id)" \
+    "$(get_os_info codename)" \
+    "stable" \
+    "$(dpkg --print-architecture)"
+
+  # Install or upgrade Docker
+  if [ "$docker_installed" = true ]; then
+    msg_info "Checking for Docker updates"
+    DOCKER_LATEST_VERSION=$(apt-cache policy docker-ce | grep Candidate | awk '{print $2}' 2>/dev/null | cut -d':' -f2 | cut -d'-' -f1 || echo '')
+
+    if [ "$DOCKER_CURRENT_VERSION" != "$DOCKER_LATEST_VERSION" ]; then
+      msg_info "Updating Docker $DOCKER_CURRENT_VERSION → $DOCKER_LATEST_VERSION"
+      $STD apt install -y --only-upgrade \
+        docker-ce \
+        docker-ce-cli \
+        containerd.io \
+        docker-buildx-plugin \
+        docker-compose-plugin
+      msg_ok "Updated Docker to $DOCKER_LATEST_VERSION"
+    else
+      msg_ok "Docker is up-to-date ($DOCKER_CURRENT_VERSION)"
+    fi
+  else
+    msg_info "Installing Docker"
+    $STD apt install -y \
+      docker-ce \
+      docker-ce-cli \
+      containerd.io \
+      docker-buildx-plugin \
+      docker-compose-plugin
+
+    DOCKER_CURRENT_VERSION=$(docker --version | grep -oP '\d+\.\d+\.\d+' | head -1)
+    msg_ok "Installed Docker $DOCKER_CURRENT_VERSION"
+  fi
+
+  # Configure daemon.json
+  local log_driver="${DOCKER_LOG_DRIVER:-journald}"
+  mkdir -p /etc/docker
+  if [ ! -f /etc/docker/daemon.json ]; then
+    cat <<EOF >/etc/docker/daemon.json
+{
+  "log-driver": "$log_driver"
+}
+EOF
+  fi
+
+  # Enable and start Docker
+  systemctl enable -q --now docker
+
+  # Portainer Management
+  if [[ "${DOCKER_PORTAINER:-}" == "true" ]]; then
+    if [ "$portainer_installed" = true ]; then
+      msg_info "Checking for Portainer updates"
+      PORTAINER_CURRENT=$(docker inspect portainer --format='{{.Config.Image}}' 2>/dev/null | cut -d':' -f2)
+      PORTAINER_LATEST=$(curl -fsSL https://registry.hub.docker.com/v2/repositories/portainer/portainer-ce/tags?page_size=100 | grep -oP '"name":"\K[0-9]+\.[0-9]+\.[0-9]+"' | head -1 | tr -d '"')
+
+      if [ "$PORTAINER_CURRENT" != "$PORTAINER_LATEST" ]; then
+        read -r -p "${TAB3}Update Portainer $PORTAINER_CURRENT → $PORTAINER_LATEST? <y/N> " prompt
+        if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
+          msg_info "Updating Portainer"
+          docker stop portainer
+          docker rm portainer
+          docker pull portainer/portainer-ce:latest
+          docker run -d \
+            -p 9000:9000 \
+            -p 9443:9443 \
+            --name=portainer \
+            --restart=always \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -v portainer_data:/data \
+            portainer/portainer-ce:latest
+          msg_ok "Updated Portainer to $PORTAINER_LATEST"
+        fi
+      else
+        msg_ok "Portainer is up-to-date ($PORTAINER_CURRENT)"
+      fi
+    else
+      msg_info "Installing Portainer"
+      docker volume create portainer_data
+      docker run -d \
+        -p 9000:9000 \
+        -p 9443:9443 \
+        --name=portainer \
+        --restart=always \
+        -v /var/run/docker.sock:/var/run/docker.sock \
+        -v portainer_data:/data \
+        portainer/portainer-ce:latest
+
+      LOCAL_IP=$(hostname -I | awk '{print $1}')
+      msg_ok "Installed Portainer (http://${LOCAL_IP}:9000)"
+    fi
+  fi
+
+  # Interactive Container Update Check
+  if [[ "${DOCKER_SKIP_UPDATES:-}" != "true" ]] && [ "$docker_installed" = true ]; then
+    msg_info "Checking for container updates"
+
+    # Get list of running containers with update status
+    local containers_with_updates=()
+    local container_info=()
+    local index=1
+
+    while IFS= read -r container; do
+      local name=$(echo "$container" | awk '{print $1}')
+      local image=$(echo "$container" | awk '{print $2}')
+      local current_digest=$(docker inspect "$name" --format='{{.Image}}' 2>/dev/null | cut -d':' -f2 | cut -c1-12)
+
+      # Pull latest image digest
+      docker pull "$image" >/dev/null 2>&1
+      local latest_digest=$(docker inspect "$image" --format='{{.Id}}' 2>/dev/null | cut -d':' -f2 | cut -c1-12)
+
+      if [ "$current_digest" != "$latest_digest" ]; then
+        containers_with_updates+=("$name")
+        container_info+=("${index}) ${name} (${image})")
+        ((index++))
+      fi
+    done < <(docker ps --format '{{.Names}} {{.Image}}')
+
+    if [ ${#containers_with_updates[@]} -gt 0 ]; then
+      echo ""
+      echo "${TAB3}Container updates available:"
+      for info in "${container_info[@]}"; do
+        echo "${TAB3}  $info"
+      done
+      echo ""
+      read -r -p "${TAB3}Select containers to update (e.g., 1,3,5 or 'all' or 'none'): " selection
+
+      if [[ ${selection,,} == "all" ]]; then
+        for container in "${containers_with_updates[@]}"; do
+          msg_info "Updating container: $container"
+          docker stop "$container"
+          docker rm "$container"
+          # Note: This requires the original docker run command - best to recreate via compose
+          msg_ok "Stopped and removed $container (please recreate with updated image)"
+        done
+      elif [[ ${selection,,} != "none" ]]; then
+        IFS=',' read -ra SELECTED <<<"$selection"
+        for num in "${SELECTED[@]}"; do
+          num=$(echo "$num" | xargs) # trim whitespace
+          if [[ "$num" =~ ^[0-9]+$ ]] && [ "$num" -ge 1 ] && [ "$num" -le "${#containers_with_updates[@]}" ]; then
+            container="${containers_with_updates[$((num - 1))]}"
+            msg_info "Updating container: $container"
+            docker stop "$container"
+            docker rm "$container"
+            msg_ok "Stopped and removed $container (please recreate with updated image)"
+          fi
+        done
+      fi
+    else
+      msg_ok "All containers are up-to-date"
+    fi
+  fi
+
+  msg_ok "Docker setup completed"
 }
