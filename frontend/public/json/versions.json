@@ -1,5 +1,35 @@
 [
   {
+    "name": "laurent22/joplin",
+    "version": "server-v3.5.2",
+    "date": "2025-12-19T21:28:55Z"
+  },
+  {
+    "name": "theonedev/onedev",
+    "version": "v13.1.7",
+    "date": "2025-12-26T07:59:41Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.545",
+    "date": "2025-12-26T05:55:25Z"
+  },
+  {
+    "name": "openobserve/openobserve",
+    "version": "v0.40.0-rc2",
+    "date": "2025-12-26T02:02:43Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5.1",
+    "date": "2025-12-26T00:27:05Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
     "name": "linkwarden/linkwarden",
     "version": "v2.13.4",
     "date": "2025-12-25T21:38:43Z"
@@ -40,11 +70,6 @@
     "date": "2025-12-25T11:08:14Z"
   },
   {
-    "name": "openobserve/openobserve",
-    "version": "v0.40.0-rc2",
-    "date": "2025-12-25T09:23:24Z"
-  },
-  {
     "name": "seriousm4x/UpSnap",
     "version": "5.2.5",
     "date": "2025-12-25T09:23:10Z"
@@ -53,21 +78,6 @@
     "name": "morpheus65535/bazarr",
     "version": "v1.5.3",
     "date": "2025-09-20T12:12:33Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.532",
-    "date": "2025-12-25T05:48:43Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.5.1",
-    "date": "2025-12-25T00:27:04Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
   },
   {
     "name": "fosrl/pangolin",
@@ -128,11 +138,6 @@
     "name": "advplyr/audiobookshelf",
     "version": "v2.32.1",
     "date": "2025-12-23T23:28:06Z"
-  },
-  {
-    "name": "laurent22/joplin",
-    "version": "server-v3.5.2",
-    "date": "2025-12-19T21:28:55Z"
   },
   {
     "name": "n8n-io/n8n",
@@ -223,11 +228,6 @@
     "name": "syncthing/syncthing",
     "version": "v2.0.12",
     "date": "2025-12-02T08:11:24Z"
-  },
-  {
-    "name": "theonedev/onedev",
-    "version": "v13.1.6",
-    "date": "2025-12-23T03:13:32Z"
   },
   {
     "name": "Dispatcharr/Dispatcharr",
