@@ -2244,11 +2244,10 @@ function setup_adminer() {
   if grep -qi alpine /etc/os-release; then
     msg_info "Setup Adminer (Alpine)"
     mkdir -p /var/www/localhost/htdocs/adminer
-    curl -fsSL https://github.com/vrana/adminer/releases/latest/download/adminer.php \
-      -o /var/www/localhost/htdocs/adminer/index.php || {
+    if ! curl_with_retry "https://github.com/vrana/adminer/releases/latest/download/adminer.php" "/var/www/localhost/htdocs/adminer/index.php"; then
       msg_error "Failed to download Adminer"
       return 1
-    }
+    fi
     cache_installed_version "adminer" "latest-alpine"
     msg_ok "Setup Adminer (Alpine)"
   else
@@ -2309,10 +2308,10 @@ function setup_composer() {
   ensure_usr_local_bin_persist
   export PATH="/usr/local/bin:$PATH"
 
-  curl -fsSL https://getcomposer.org/installer -o /tmp/composer-setup.php || {
+  if ! curl_with_retry "https://getcomposer.org/installer" "/tmp/composer-setup.php"; then
     msg_error "Failed to download Composer installer"
     return 1
-  }
+  fi
 
   $STD php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer || {
     msg_error "Failed to install Composer"
@@ -2370,11 +2369,11 @@ function setup_ffmpeg() {
 
   # Binary fallback mode
   if [[ "$TYPE" == "binary" ]]; then
-    curl -fsSL https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz -o "$TMP_DIR/ffmpeg.tar.xz" || {
+    if ! CURL_TIMEOUT=300 curl_with_retry "https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz" "$TMP_DIR/ffmpeg.tar.xz"; then
       msg_error "Failed to download FFmpeg binary"
       rm -rf "$TMP_DIR"
       return 1
-    }
+    fi
     tar -xf "$TMP_DIR/ffmpeg.tar.xz" -C "$TMP_DIR" || {
       msg_error "Failed to extract FFmpeg binary"
       rm -rf "$TMP_DIR"
@@ -2443,20 +2442,20 @@ function setup_ffmpeg() {
 
   # Try to download source if VERSION is set
   if [[ -n "$VERSION" ]]; then
-    curl -fsSL "https://github.com/${GITHUB_REPO}/archive/refs/tags/${VERSION}.tar.gz" -o "$TMP_DIR/ffmpeg.tar.gz" || {
+    if ! CURL_TIMEOUT=300 curl_with_retry "https://github.com/${GITHUB_REPO}/archive/refs/tags/${VERSION}.tar.gz" "$TMP_DIR/ffmpeg.tar.gz"; then
       msg_warn "Failed to download FFmpeg source ${VERSION}, falling back to pre-built binary"
       VERSION=""
-    }
+    fi
   fi
 
   # If no source download (either VERSION empty or download failed), use binary
   if [[ -z "$VERSION" ]]; then
     msg_info "Setup FFmpeg from pre-built binary"
-    curl -fsSL https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz -o "$TMP_DIR/ffmpeg.tar.xz" || {
+    if ! CURL_TIMEOUT=300 curl_with_retry "https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz" "$TMP_DIR/ffmpeg.tar.xz"; then
       msg_error "Failed to download FFmpeg pre-built binary"
       rm -rf "$TMP_DIR"
       return 1
-    }
+    fi
 
     tar -xJf "$TMP_DIR/ffmpeg.tar.xz" -C "$TMP_DIR" || {
       msg_error "Failed to extract FFmpeg binary archive"
@@ -2576,14 +2575,13 @@ function setup_go() {
   # Resolve "latest" version
   local GO_VERSION="${GO_VERSION:-latest}"
   if [[ "$GO_VERSION" == "latest" ]]; then
-    GO_VERSION=$(curl -fsSL https://go.dev/VERSION?m=text 2>/dev/null | head -n1 | sed 's/^go//') || {
+    local go_version_tmp
+    go_version_tmp=$(curl_with_retry "https://go.dev/VERSION?m=text" "-" 2>/dev/null | head -n1 | sed 's/^go//') || true
+    if [[ -z "$go_version_tmp" ]]; then
       msg_error "Could not determine latest Go version"
       return 1
-    }
-    [[ -z "$GO_VERSION" ]] && {
-      msg_error "Latest Go version is empty"
-      return 1
-    }
+    fi
+    GO_VERSION="$go_version_tmp"
   fi
 
   local GO_BIN="/usr/local/bin/go"
@@ -2613,11 +2611,11 @@ function setup_go() {
   local URL="https://go.dev/dl/${TARBALL}"
   local TMP_TAR=$(mktemp)
 
-  curl -fsSL "$URL" -o "$TMP_TAR" || {
+  if ! CURL_TIMEOUT=300 curl_with_retry "$URL" "$TMP_TAR"; then
     msg_error "Failed to download Go $GO_VERSION"
     rm -f "$TMP_TAR"
     return 1
-  }
+  fi
 
   $STD tar -C /usr/local -xzf "$TMP_TAR" || {
     msg_error "Failed to extract Go tarball"
@@ -2693,11 +2691,11 @@ function setup_gs() {
     msg_info "Setup Ghostscript $LATEST_VERSION_DOTTED"
   fi
 
-  curl -fsSL "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs${LATEST_VERSION}/ghostscript-${LATEST_VERSION_DOTTED}.tar.gz" -o "$TMP_DIR/ghostscript.tar.gz" || {
+  if ! CURL_TIMEOUT=180 curl_with_retry "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs${LATEST_VERSION}/ghostscript-${LATEST_VERSION_DOTTED}.tar.gz" "$TMP_DIR/ghostscript.tar.gz"; then
     msg_error "Failed to download Ghostscript"
     rm -rf "$TMP_DIR"
     return 1
-  }
+  fi
 
   if ! tar -xzf "$TMP_DIR/ghostscript.tar.gz" -C "$TMP_DIR"; then
     msg_error "Failed to extract Ghostscript archive"
@@ -3069,11 +3067,11 @@ function setup_imagemagick() {
     pkg-config \
     ghostscript
 
-  curl -fsSL https://imagemagick.org/archive/ImageMagick.tar.gz -o "$TMP_DIR/ImageMagick.tar.gz" || {
+  if ! CURL_TIMEOUT=180 curl_with_retry "https://imagemagick.org/archive/ImageMagick.tar.gz" "$TMP_DIR/ImageMagick.tar.gz"; then
     msg_error "Failed to download ImageMagick"
     rm -rf "$TMP_DIR"
     return 1
-  }
+  fi
 
   tar -xzf "$TMP_DIR/ImageMagick.tar.gz" -C "$TMP_DIR" || {
     msg_error "Failed to extract ImageMagick"
@@ -4744,11 +4742,11 @@ function setup_ruby() {
       return 1
     fi
 
-    curl -fsSL "https://github.com/rbenv/rbenv/archive/refs/tags/v${RBENV_RELEASE}.tar.gz" -o "$TMP_DIR/rbenv.tar.gz" || {
+    if ! curl_with_retry "https://github.com/rbenv/rbenv/archive/refs/tags/v${RBENV_RELEASE}.tar.gz" "$TMP_DIR/rbenv.tar.gz"; then
       msg_error "Failed to download rbenv"
       rm -rf "$TMP_DIR"
       return 1
-    }
+    fi
 
     tar -xzf "$TMP_DIR/rbenv.tar.gz" -C "$TMP_DIR" || {
       msg_error "Failed to extract rbenv"
@@ -4791,11 +4789,11 @@ function setup_ruby() {
       return 1
     fi
 
-    curl -fsSL "https://github.com/rbenv/ruby-build/archive/refs/tags/v${RUBY_BUILD_RELEASE}.tar.gz" -o "$TMP_DIR/ruby-build.tar.gz" || {
+    if ! curl_with_retry "https://github.com/rbenv/ruby-build/archive/refs/tags/v${RUBY_BUILD_RELEASE}.tar.gz" "$TMP_DIR/ruby-build.tar.gz"; then
       msg_error "Failed to download ruby-build"
       rm -rf "$TMP_DIR"
       return 1
-    }
+    fi
 
     tar -xzf "$TMP_DIR/ruby-build.tar.gz" -C "$TMP_DIR" || {
       msg_error "Failed to extract ruby-build"
@@ -5199,10 +5197,10 @@ function setup_uv() {
 
   local UV_URL="https://github.com/astral-sh/uv/releases/download/${LATEST_VERSION}/${UV_TAR}"
 
-  $STD curl -fsSL "$UV_URL" -o "$TMP_DIR/uv.tar.gz" || {
+  if ! curl_with_retry "$UV_URL" "$TMP_DIR/uv.tar.gz"; then
     msg_error "Failed to download uv from $UV_URL"
     return 1
-  }
+  fi
 
   # Extract
   $STD tar -xzf "$TMP_DIR/uv.tar.gz" -C "$TMP_DIR" || {
@@ -5332,11 +5330,11 @@ function setup_yq() {
     msg_info "Setup yq $LATEST_VERSION"
   fi
 
-  curl -fsSL "https://github.com/${GITHUB_REPO}/releases/download/v${LATEST_VERSION}/yq_linux_amd64" -o "$TMP_DIR/yq" || {
+  if ! curl_with_retry "https://github.com/${GITHUB_REPO}/releases/download/v${LATEST_VERSION}/yq_linux_amd64" "$TMP_DIR/yq"; then
     msg_error "Failed to download yq"
     rm -rf "$TMP_DIR"
     return 1
-  }
+  fi
 
   chmod +x "$TMP_DIR/yq"
   mv "$TMP_DIR/yq" "$BINARY_PATH" || {
