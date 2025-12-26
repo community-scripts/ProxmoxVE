@@ -1693,6 +1693,16 @@ function fetch_and_deploy_gh_release() {
   local target="${5:-/opt/$app}"
   local asset_pattern="${6:-}"
 
+  # Validate app name to prevent /root/. directory issues
+  if [[ -z "$app" ]]; then
+    # Derive app name from repo if not provided
+    app="${repo##*/}"
+    if [[ -z "$app" ]]; then
+      msg_error "fetch_and_deploy_gh_release requires app name or valid repo"
+      return 1
+    fi
+  fi
+
   local app_lc=$(echo "${app,,}" | tr -d ' ')
   local version_file="$HOME/.${app_lc}"
 
@@ -2704,16 +2714,16 @@ EOF
       # Fallback to open drivers or older Intel GPUs
       if [[ "$needs_nonfree" == false ]]; then
         # Fetch latest Intel drivers from GitHub for Debian
-        fetch_and_deploy_gh_release "" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-core-2_*_amd64.deb" || {
+        fetch_and_deploy_gh_release "intel-igc-core" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-core-2_*_amd64.deb" || {
           msg_warn "Failed to deploy Intel IGC core 2"
         }
-        fetch_and_deploy_gh_release "" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-opencl-2_*_amd64.deb" || {
+        fetch_and_deploy_gh_release "intel-igc-opencl" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-opencl-2_*_amd64.deb" || {
           msg_warn "Failed to deploy Intel IGC OpenCL 2"
         }
-        fetch_and_deploy_gh_release "" "intel/compute-runtime" "binary" "latest" "" "libigdgmm12_*_amd64.deb" || {
+        fetch_and_deploy_gh_release "libigdgmm12" "intel/compute-runtime" "binary" "latest" "" "libigdgmm12_*_amd64.deb" || {
           msg_warn "Failed to deploy Intel GDGMM12"
         }
-        fetch_and_deploy_gh_release "" "intel/compute-runtime" "binary" "latest" "" "intel-opencl-icd_*_amd64.deb" || {
+        fetch_and_deploy_gh_release "intel-opencl-icd" "intel/compute-runtime" "binary" "latest" "" "intel-opencl-icd_*_amd64.deb" || {
           msg_warn "Failed to deploy Intel OpenCL ICD"
         }
 
@@ -3118,32 +3128,93 @@ EOF
 }
 
 # ------------------------------------------------------------------------------
-# Installs or updates MariaDB from official repo.
+# Installs or updates MariaDB.
 #
 # Description:
+#   - By default uses distro repository (Debian/Ubuntu apt) for stability
+#   - Optionally uses official MariaDB repository for latest versions
 #   - Detects current MariaDB version and replaces it if necessary
 #   - Preserves existing database data
-#   - Dynamically determines latest GA version if "latest" is given
 #
 # Variables:
-#   MARIADB_VERSION - MariaDB version to install (e.g. 10.11, latest) (default: latest)
+#   USE_MARIADB_REPO - Set to "true" to use official MariaDB repository
+#                      (default: false, uses distro packages)
+#   MARIADB_VERSION  - MariaDB version to install when using official repo
+#                      (e.g. 11.4, latest) (default: latest)
+#
+# Examples:
+#   setup_mariadb                              # Uses distro package (recommended)
+#   USE_MARIADB_REPO=true setup_mariadb        # Uses latest from official repo
+#   USE_MARIADB_REPO=true MARIADB_VERSION="11.4" setup_mariadb  # Specific version
 # ------------------------------------------------------------------------------
 
 setup_mariadb() {
-  local MARIADB_VERSION="${MARIADB_VERSION:-latest}"
+  local MARIADB_VERSION="${MARIADB_VERSION:-}"
+  local USE_MARIADB_REPO="${USE_MARIADB_REPO:-false}"
 
-  # Resolve "latest" to actual version
-  if [[ "$MARIADB_VERSION" == "latest" ]]; then
+  # Get currently installed version
+  local CURRENT_VERSION=""
+  CURRENT_VERSION=$(is_tool_installed "mariadb" 2>/dev/null) || true
+
+  # Scenario 1: Use distro repository (default, most stable)
+  if [[ "$USE_MARIADB_REPO" != "true" && "$USE_MARIADB_REPO" != "TRUE" && "$USE_MARIADB_REPO" != "1" ]]; then
+    msg_info "Setup MariaDB (distro package)"
+
+    # If already installed, just update
+    if [[ -n "$CURRENT_VERSION" ]]; then
+      msg_info "Update MariaDB $CURRENT_VERSION"
+      ensure_apt_working || return 1
+      upgrade_packages_with_retry "mariadb-server" "mariadb-client" || {
+        msg_error "Failed to upgrade MariaDB packages"
+        return 1
+      }
+      cache_installed_version "mariadb" "$CURRENT_VERSION"
+      msg_ok "Update MariaDB $CURRENT_VERSION"
+      return 0
+    fi
+
+    # Fresh install from distro repo
+    ensure_apt_working || return 1
+
+    # Install required dependencies first
+    local mariadb_deps=()
+    for dep in gawk rsync socat libdbi-perl pv; do
+      if apt-cache search "^${dep}$" 2>/dev/null | grep -q .; then
+        mariadb_deps+=("$dep")
+      fi
+    done
+
+    if [[ ${#mariadb_deps[@]} -gt 0 ]]; then
+      $STD apt install -y "${mariadb_deps[@]}" 2>/dev/null || true
+    fi
+
+    export DEBIAN_FRONTEND=noninteractive
+    install_packages_with_retry "mariadb-server" "mariadb-client" || {
+      msg_error "Failed to install MariaDB packages from distro repository"
+      return 1
+    }
+
+    # Get installed version
+    local INSTALLED_VERSION=""
+    INSTALLED_VERSION=$(is_tool_installed "mariadb" 2>/dev/null) || true
+    cache_installed_version "mariadb" "${INSTALLED_VERSION:-distro}"
+    msg_ok "Setup MariaDB ${INSTALLED_VERSION:-from distro}"
+    return 0
+  fi
+
+  # Scenario 2: Use official MariaDB repository (USE_MARIADB_REPO=true)
+  # Resolve "latest" to actual version if not specified
+  if [[ -z "$MARIADB_VERSION" || "$MARIADB_VERSION" == "latest" ]]; then
     if ! curl -fsI --max-time 10 http://mirror.mariadb.org/repo/ >/dev/null 2>&1; then
       msg_warn "MariaDB mirror not reachable - trying mariadb_repo_setup fallback"
       # Try using official mariadb_repo_setup script as fallback
       if curl -fsSL --max-time 15 https://r.mariadb.com/downloads/mariadb_repo_setup 2>/dev/null | bash -s -- --skip-verify >/dev/null 2>&1; then
         msg_ok "MariaDB repository configured via mariadb_repo_setup"
         # Extract version from configured repo
-        MARIADB_VERSION=$(grep -oP 'repo/\K[0-9]+\.[0-9]+\.[0-9]+' /etc/apt/sources.list.d/mariadb.list 2>/dev/null | head -n1 || echo "12.2")
+        MARIADB_VERSION=$(grep -oP 'repo/\K[0-9]+\.[0-9]+\.[0-9]+' /etc/apt/sources.list.d/mariadb.list 2>/dev/null | head -n1 || echo "11.4")
       else
         msg_warn "mariadb_repo_setup failed - using hardcoded fallback version"
-        MARIADB_VERSION="12.2"
+        MARIADB_VERSION="11.4"
       fi
     else
       MARIADB_VERSION=$(curl -fsSL --max-time 15 http://mirror.mariadb.org/repo/ 2>/dev/null |
@@ -3157,20 +3228,16 @@ setup_mariadb() {
         msg_warn "Could not parse latest GA MariaDB version from mirror - trying mariadb_repo_setup"
         if curl -fsSL --max-time 15 https://r.mariadb.com/downloads/mariadb_repo_setup 2>/dev/null | bash -s -- --skip-verify >/dev/null 2>&1; then
           msg_ok "MariaDB repository configured via mariadb_repo_setup"
-          MARIADB_VERSION=$(grep -oP 'repo/\K[0-9]+\.[0-9]+\.[0-9]+' /etc/apt/sources.list.d/mariadb.list 2>/dev/null | head -n1 || echo "12.2")
+          MARIADB_VERSION=$(grep -oP 'repo/\K[0-9]+\.[0-9]+\.[0-9]+' /etc/apt/sources.list.d/mariadb.list 2>/dev/null | head -n1 || echo "11.4")
         else
           msg_warn "mariadb_repo_setup failed - using hardcoded fallback version"
-          MARIADB_VERSION="12.2"
+          MARIADB_VERSION="11.4"
         fi
       fi
     fi
   fi
 
-  # Get currently installed version
-  local CURRENT_VERSION=""
-  CURRENT_VERSION=$(is_tool_installed "mariadb" 2>/dev/null) || true
-
-  # Scenario 1: Already installed at target version - just update packages
+  # Scenario 2a: Already installed at target version - just update packages
   if [[ -n "$CURRENT_VERSION" && "$CURRENT_VERSION" == "$MARIADB_VERSION" ]]; then
     msg_info "Update MariaDB $MARIADB_VERSION"
 
@@ -3202,14 +3269,14 @@ setup_mariadb() {
     return 0
   fi
 
-  # Scenario 2: Different version installed - clean upgrade
+  # Scenario 2b: Different version installed - clean upgrade
   if [[ -n "$CURRENT_VERSION" && "$CURRENT_VERSION" != "$MARIADB_VERSION" ]]; then
     msg_info "Upgrade MariaDB from $CURRENT_VERSION to $MARIADB_VERSION"
     remove_old_tool_version "mariadb"
   fi
 
-  # Scenario 3: Fresh install or version change
-  msg_info "Setup MariaDB $MARIADB_VERSION"
+  # Scenario 2c: Fresh install or version change from official repo
+  msg_info "Setup MariaDB $MARIADB_VERSION (official repository)"
 
   # Prepare repository (cleanup + validation)
   prepare_repository_setup "mariadb" || {
@@ -3459,20 +3526,31 @@ function setup_mongodb() {
 }
 
 # ------------------------------------------------------------------------------
-# Installs or upgrades MySQL and configures APT repo.
+# Installs or upgrades MySQL.
 #
 # Description:
+#   - By default uses distro repository (Debian/Ubuntu apt) for stability
+#   - Optionally uses official MySQL repository for specific versions
 #   - Detects existing MySQL installation
 #   - Purges conflicting packages before installation
 #   - Supports clean upgrade
 #   - Handles Debian Trixie libaio1t64 transition
 #
 # Variables:
-#   MYSQL_VERSION  - MySQL version to install (e.g. 5.7, 8.0) (default: 8.0)
+#   USE_MYSQL_REPO - Set to "true" to use official MySQL repository
+#                    (default: false, uses distro packages)
+#   MYSQL_VERSION  - MySQL version to install when using official repo
+#                    (e.g. 8.0, 8.4) (default: 8.0)
+#
+# Examples:
+#   setup_mysql                              # Uses distro package (recommended)
+#   USE_MYSQL_REPO=true setup_mysql          # Uses official MySQL repo
+#   USE_MYSQL_REPO=true MYSQL_VERSION="8.4" setup_mysql  # Specific version
 # ------------------------------------------------------------------------------
 
 function setup_mysql() {
   local MYSQL_VERSION="${MYSQL_VERSION:-8.0}"
+  local USE_MYSQL_REPO="${USE_MYSQL_REPO:-false}"
   local DISTRO_ID DISTRO_CODENAME
   DISTRO_ID=$(awk -F= '/^ID=/{print $2}' /etc/os-release | tr -d '"')
   DISTRO_CODENAME=$(awk -F= '/^VERSION_CODENAME=/{print $2}' /etc/os-release)
@@ -3481,7 +3559,70 @@ function setup_mysql() {
   local CURRENT_VERSION=""
   CURRENT_VERSION=$(is_tool_installed "mysql" 2>/dev/null) || true
 
-  # Scenario 1: Already at target version - just update packages
+  # Scenario 1: Use distro repository (default, most stable)
+  if [[ "$USE_MYSQL_REPO" != "true" && "$USE_MYSQL_REPO" != "TRUE" && "$USE_MYSQL_REPO" != "1" ]]; then
+    msg_info "Setup MySQL (distro package)"
+
+    # If already installed, just update
+    if [[ -n "$CURRENT_VERSION" ]]; then
+      msg_info "Update MySQL $CURRENT_VERSION"
+      ensure_apt_working || return 1
+      upgrade_packages_with_retry "default-mysql-server" "default-mysql-client" || \
+        upgrade_packages_with_retry "mysql-server" "mysql-client" || \
+        upgrade_packages_with_retry "mariadb-server" "mariadb-client" || {
+        msg_error "Failed to upgrade MySQL/MariaDB packages"
+        return 1
+      }
+      cache_installed_version "mysql" "$CURRENT_VERSION"
+      msg_ok "Update MySQL $CURRENT_VERSION"
+      return 0
+    fi
+
+    # Fresh install from distro repo
+    ensure_apt_working || return 1
+
+    export DEBIAN_FRONTEND=noninteractive
+    # Try default-mysql-server first, fallback to mysql-server, then mariadb
+    if apt-cache search "^default-mysql-server$" 2>/dev/null | grep -q .; then
+      install_packages_with_retry "default-mysql-server" "default-mysql-client" || {
+        msg_warn "default-mysql-server failed, trying mysql-server"
+        install_packages_with_retry "mysql-server" "mysql-client" || {
+          msg_warn "mysql-server failed, trying mariadb as fallback"
+          install_packages_with_retry "mariadb-server" "mariadb-client" || {
+            msg_error "Failed to install any MySQL/MariaDB from distro repository"
+            return 1
+          }
+        }
+      }
+    elif apt-cache search "^mysql-server$" 2>/dev/null | grep -q .; then
+      install_packages_with_retry "mysql-server" "mysql-client" || {
+        msg_warn "mysql-server failed, trying mariadb as fallback"
+        install_packages_with_retry "mariadb-server" "mariadb-client" || {
+          msg_error "Failed to install any MySQL/MariaDB from distro repository"
+          return 1
+        }
+      }
+    else
+      # Distro doesn't have MySQL, use MariaDB
+      install_packages_with_retry "mariadb-server" "mariadb-client" || {
+        msg_error "Failed to install MariaDB from distro repository"
+        return 1
+      }
+    fi
+
+    # Get installed version
+    local INSTALLED_VERSION=""
+    INSTALLED_VERSION=$(is_tool_installed "mysql" 2>/dev/null) || true
+    if [[ -z "$INSTALLED_VERSION" ]]; then
+      INSTALLED_VERSION=$(is_tool_installed "mariadb" 2>/dev/null) || true
+    fi
+    cache_installed_version "mysql" "${INSTALLED_VERSION:-distro}"
+    msg_ok "Setup MySQL/MariaDB ${INSTALLED_VERSION:-from distro}"
+    return 0
+  fi
+
+  # Scenario 2: Use official MySQL repository (USE_MYSQL_REPO=true)
+  # Scenario 2a: Already at target version - just update packages
   if [[ -n "$CURRENT_VERSION" && "$CURRENT_VERSION" == "$MYSQL_VERSION" ]]; then
     msg_info "Update MySQL $MYSQL_VERSION"
 
@@ -3995,17 +4136,29 @@ EOF
 # Installs or upgrades PostgreSQL and optional extensions/modules.
 #
 # Description:
+#   - By default uses distro repository (Debian/Ubuntu apt) for stability
+#   - Optionally uses official PGDG repository for specific versions
 #   - Detects existing PostgreSQL version
 #   - Dumps all databases before upgrade
-#   - Adds PGDG repo and installs specified version
 #   - Installs optional PG_MODULES (e.g. postgis, contrib)
 #   - Restores dumped data post-upgrade
 #
 # Variables:
-#   PG_VERSION     - Major PostgreSQL version (e.g. 15, 16) (default: 16)
+#   USE_PGDG_REPO  - Set to "true" to use official PGDG repository
+#                    (default: false, uses distro packages)
+#   PG_VERSION    - Major PostgreSQL version (e.g. 15, 16) (default: 16)
+#   PG_MODULES    - Comma-separated list of modules (e.g. "postgis,contrib")
+#
+# Examples:
+#   setup_postgresql                              # Uses distro package (recommended)
+#   USE_PGDG_REPO=true setup_postgresql           # Uses official PGDG repo
+#   USE_PGDG_REPO=true PG_VERSION="17" setup_postgresql  # Specific version from PGDG
+# ------------------------------------------------------------------------------
+
 function setup_postgresql() {
   local PG_VERSION="${PG_VERSION:-16}"
   local PG_MODULES="${PG_MODULES:-}"
+  local USE_PGDG_REPO="${USE_PGDG_REPO:-false}"
   local DISTRO_ID DISTRO_CODENAME
   DISTRO_ID=$(awk -F= '/^ID=/{print $2}' /etc/os-release | tr -d '"')
   DISTRO_CODENAME=$(awk -F= '/^VERSION_CODENAME=/{print $2}' /etc/os-release)
@@ -4016,7 +4169,65 @@ function setup_postgresql() {
     CURRENT_PG_VERSION="$(psql -V 2>/dev/null | awk '{print $3}' | cut -d. -f1)"
   fi
 
-  # Scenario 1: Already at correct version
+  # Scenario 1: Use distro repository (default, most stable)
+  if [[ "$USE_PGDG_REPO" != "true" && "$USE_PGDG_REPO" != "TRUE" && "$USE_PGDG_REPO" != "1" ]]; then
+    msg_info "Setup PostgreSQL (distro package)"
+
+    # If already installed, just update
+    if [[ -n "$CURRENT_PG_VERSION" ]]; then
+      msg_info "Update PostgreSQL $CURRENT_PG_VERSION"
+      ensure_apt_working || return 1
+      upgrade_packages_with_retry "postgresql" "postgresql-client" || true
+      cache_installed_version "postgresql" "$CURRENT_PG_VERSION"
+      msg_ok "Update PostgreSQL $CURRENT_PG_VERSION"
+
+      # Still install modules if specified
+      if [[ -n "$PG_MODULES" ]]; then
+        IFS=',' read -ra MODULES <<<"$PG_MODULES"
+        for module in "${MODULES[@]}"; do
+          $STD apt install -y "postgresql-${CURRENT_PG_VERSION}-${module}" 2>/dev/null || true
+        done
+      fi
+      return 0
+    fi
+
+    # Fresh install from distro repo
+    ensure_apt_working || return 1
+
+    export DEBIAN_FRONTEND=noninteractive
+    install_packages_with_retry "postgresql" "postgresql-client" || {
+      msg_error "Failed to install PostgreSQL from distro repository"
+      return 1
+    }
+
+    # Get installed version
+    local INSTALLED_VERSION=""
+    if command -v psql >/dev/null; then
+      INSTALLED_VERSION="$(psql -V 2>/dev/null | awk '{print $3}' | cut -d. -f1)"
+    fi
+
+    $STD systemctl enable --now postgresql 2>/dev/null || true
+
+    # Add PostgreSQL binaries to PATH
+    if [[ -n "$INSTALLED_VERSION" ]] && ! grep -q '/usr/lib/postgresql' /etc/environment 2>/dev/null; then
+      echo 'PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/postgresql/'"${INSTALLED_VERSION}"'/bin"' >/etc/environment
+    fi
+
+    cache_installed_version "postgresql" "${INSTALLED_VERSION:-distro}"
+    msg_ok "Setup PostgreSQL ${INSTALLED_VERSION:-from distro}"
+
+    # Install optional modules
+    if [[ -n "$PG_MODULES" && -n "$INSTALLED_VERSION" ]]; then
+      IFS=',' read -ra MODULES <<<"$PG_MODULES"
+      for module in "${MODULES[@]}"; do
+        $STD apt install -y "postgresql-${INSTALLED_VERSION}-${module}" 2>/dev/null || true
+      done
+    fi
+    return 0
+  fi
+
+  # Scenario 2: Use official PGDG repository (USE_PGDG_REPO=true)
+  # Scenario 2a: Already at correct version
   if [[ "$CURRENT_PG_VERSION" == "$PG_VERSION" ]]; then
     msg_info "Update PostgreSQL $PG_VERSION"
     ensure_apt_working || return 1
@@ -4967,23 +5178,28 @@ function setup_yq() {
 # Docker Engine Installation and Management (All-In-One)
 #
 # Description:
+#   - By default uses distro repository (docker.io) for stability
+#   - Optionally uses official Docker repository for latest features
 #   - Detects and migrates old Docker installations
-#   - Installs/Updates Docker Engine via official repository
 #   - Optional: Installs/Updates Portainer CE
 #   - Updates running containers interactively
 #   - Cleans up legacy repository files
 #
 # Usage:
-#   setup_docker
+#   setup_docker                              # Uses distro package (recommended)
+#   USE_DOCKER_REPO=true setup_docker         # Uses official Docker repo
 #   DOCKER_PORTAINER="true" setup_docker
 #   DOCKER_LOG_DRIVER="json-file" setup_docker
 #
 # Variables:
+#   USE_DOCKER_REPO        - Set to "true" to use official Docker repository
+#                            (default: false, uses distro docker.io package)
 #   DOCKER_PORTAINER       - Install Portainer CE (optional, "true" to enable)
 #   DOCKER_LOG_DRIVER      - Log driver (optional, default: "journald")
 #   DOCKER_SKIP_UPDATES    - Skip container update check (optional, "true" to skip)
 #
 # Features:
+#   - Uses stable distro packages by default
 #   - Migrates from get.docker.com to repository-based installation
 #   - Updates Docker Engine if newer version available
 #   - Interactive container update with multi-select
@@ -4992,6 +5208,7 @@ function setup_yq() {
 function setup_docker() {
   local docker_installed=false
   local portainer_installed=false
+  local USE_DOCKER_REPO="${USE_DOCKER_REPO:-false}"
 
   # Check if Docker is already installed
   if command -v docker &>/dev/null; then
@@ -5006,68 +5223,113 @@ function setup_docker() {
     msg_info "Portainer container detected"
   fi
 
-  # Cleanup old repository configurations
-  if [ -f /etc/apt/sources.list.d/docker.list ]; then
-    msg_info "Migrating from old Docker repository format"
-    rm -f /etc/apt/sources.list.d/docker.list
-    rm -f /etc/apt/keyrings/docker.asc
-  fi
+  # Scenario 1: Use distro repository (default, most stable)
+  if [[ "$USE_DOCKER_REPO" != "true" && "$USE_DOCKER_REPO" != "TRUE" && "$USE_DOCKER_REPO" != "1" ]]; then
 
-  # Setup/Update Docker repository
-  msg_info "Setting up Docker Repository"
-  setup_deb822_repo \
-    "docker" \
-    "https://download.docker.com/linux/$(get_os_info id)/gpg" \
-    "https://download.docker.com/linux/$(get_os_info id)" \
-    "$(get_os_info codename)" \
-    "stable" \
-    "$(dpkg --print-architecture)"
+    # Install or upgrade Docker from distro repo
+    if [ "$docker_installed" = true ]; then
+      msg_info "Checking for Docker updates (distro package)"
+      ensure_apt_working || return 1
+      upgrade_packages_with_retry "docker.io" "docker-compose" || true
+      DOCKER_CURRENT_VERSION=$(docker --version | grep -oP '\d+\.\d+\.\d+' | head -1)
+      msg_ok "Docker is up-to-date ($DOCKER_CURRENT_VERSION)"
+    else
+      msg_info "Installing Docker (distro package)"
+      ensure_apt_working || return 1
 
-  # Install or upgrade Docker
-  if [ "$docker_installed" = true ]; then
-    msg_info "Checking for Docker updates"
-    DOCKER_LATEST_VERSION=$(apt-cache policy docker-ce | grep Candidate | awk '{print $2}' 2>/dev/null | cut -d':' -f2 | cut -d'-' -f1 || echo '')
+      # Install docker.io and docker-compose from distro
+      if ! install_packages_with_retry "docker.io"; then
+        msg_error "Failed to install docker.io from distro repository"
+        return 1
+      fi
+      # docker-compose is optional
+      $STD apt install -y docker-compose 2>/dev/null || true
 
-    if [ "$DOCKER_CURRENT_VERSION" != "$DOCKER_LATEST_VERSION" ]; then
-      msg_info "Updating Docker $DOCKER_CURRENT_VERSION → $DOCKER_LATEST_VERSION"
-      $STD apt install -y --only-upgrade \
+      DOCKER_CURRENT_VERSION=$(docker --version | grep -oP '\d+\.\d+\.\d+' | head -1)
+      msg_ok "Installed Docker $DOCKER_CURRENT_VERSION (distro package)"
+    fi
+
+    # Configure daemon.json
+    local log_driver="${DOCKER_LOG_DRIVER:-journald}"
+    mkdir -p /etc/docker
+    if [ ! -f /etc/docker/daemon.json ]; then
+      cat <<EOF >/etc/docker/daemon.json
+{
+  "log-driver": "$log_driver"
+}
+EOF
+    fi
+
+    # Enable and start Docker
+    systemctl enable -q --now docker
+
+    # Continue to Portainer section below
+  else
+    # Scenario 2: Use official Docker repository (USE_DOCKER_REPO=true)
+
+    # Cleanup old repository configurations
+    if [ -f /etc/apt/sources.list.d/docker.list ]; then
+      msg_info "Migrating from old Docker repository format"
+      rm -f /etc/apt/sources.list.d/docker.list
+      rm -f /etc/apt/keyrings/docker.asc
+    fi
+
+    # Setup/Update Docker repository
+    msg_info "Setting up Docker Repository"
+    setup_deb822_repo \
+      "docker" \
+      "https://download.docker.com/linux/$(get_os_info id)/gpg" \
+      "https://download.docker.com/linux/$(get_os_info id)" \
+      "$(get_os_info codename)" \
+      "stable" \
+      "$(dpkg --print-architecture)"
+
+    # Install or upgrade Docker
+    if [ "$docker_installed" = true ]; then
+      msg_info "Checking for Docker updates"
+      DOCKER_LATEST_VERSION=$(apt-cache policy docker-ce | grep Candidate | awk '{print $2}' 2>/dev/null | cut -d':' -f2 | cut -d'-' -f1 || echo '')
+
+      if [ "$DOCKER_CURRENT_VERSION" != "$DOCKER_LATEST_VERSION" ]; then
+        msg_info "Updating Docker $DOCKER_CURRENT_VERSION → $DOCKER_LATEST_VERSION"
+        $STD apt install -y --only-upgrade \
+          docker-ce \
+          docker-ce-cli \
+          containerd.io \
+          docker-buildx-plugin \
+          docker-compose-plugin
+        msg_ok "Updated Docker to $DOCKER_LATEST_VERSION"
+      else
+        msg_ok "Docker is up-to-date ($DOCKER_CURRENT_VERSION)"
+      fi
+    else
+      msg_info "Installing Docker"
+      $STD apt install -y \
         docker-ce \
         docker-ce-cli \
         containerd.io \
         docker-buildx-plugin \
         docker-compose-plugin
-      msg_ok "Updated Docker to $DOCKER_LATEST_VERSION"
-    else
-      msg_ok "Docker is up-to-date ($DOCKER_CURRENT_VERSION)"
+
+      DOCKER_CURRENT_VERSION=$(docker --version | grep -oP '\d+\.\d+\.\d+' | head -1)
+      msg_ok "Installed Docker $DOCKER_CURRENT_VERSION"
     fi
-  else
-    msg_info "Installing Docker"
-    $STD apt install -y \
-      docker-ce \
-      docker-ce-cli \
-      containerd.io \
-      docker-buildx-plugin \
-      docker-compose-plugin
 
-    DOCKER_CURRENT_VERSION=$(docker --version | grep -oP '\d+\.\d+\.\d+' | head -1)
-    msg_ok "Installed Docker $DOCKER_CURRENT_VERSION"
-  fi
-
-  # Configure daemon.json
-  local log_driver="${DOCKER_LOG_DRIVER:-journald}"
-  mkdir -p /etc/docker
-  if [ ! -f /etc/docker/daemon.json ]; then
-    cat <<EOF >/etc/docker/daemon.json
+    # Configure daemon.json
+    local log_driver="${DOCKER_LOG_DRIVER:-journald}"
+    mkdir -p /etc/docker
+    if [ ! -f /etc/docker/daemon.json ]; then
+      cat <<EOF >/etc/docker/daemon.json
 {
   "log-driver": "$log_driver"
 }
 EOF
+    fi
+
+    # Enable and start Docker
+    systemctl enable -q --now docker
   fi
 
-  # Enable and start Docker
-  systemctl enable -q --now docker
-
-  # Portainer Management
+  # Portainer Management (common for both modes)
   if [[ "${DOCKER_PORTAINER:-}" == "true" ]]; then
     if [ "$portainer_installed" = true ]; then
       msg_info "Checking for Portainer updates"
