@@ -2704,16 +2704,16 @@ EOF
       # Fallback to open drivers or older Intel GPUs
       if [[ "$needs_nonfree" == false ]]; then
         # Fetch latest Intel drivers from GitHub for Debian
-        fetch_and_deploy_gh_release "" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-core-2_*_amd64.deb" || {
+        fetch_and_deploy_gh_release "intel-igc-core" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-core-2_*_amd64.deb" || {
           msg_warn "Failed to deploy Intel IGC core 2"
         }
-        fetch_and_deploy_gh_release "" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-opencl-2_*_amd64.deb" || {
+        fetch_and_deploy_gh_release "intel-igc-opencl" "intel/intel-graphics-compiler" "binary" "latest" "" "intel-igc-opencl-2_*_amd64.deb" || {
           msg_warn "Failed to deploy Intel IGC OpenCL 2"
         }
-        fetch_and_deploy_gh_release "" "intel/compute-runtime" "binary" "latest" "" "libigdgmm12_*_amd64.deb" || {
+        fetch_and_deploy_gh_release "libigdgmm12" "intel/compute-runtime" "binary" "latest" "" "libigdgmm12_*_amd64.deb" || {
           msg_warn "Failed to deploy Intel GDGMM12"
         }
-        fetch_and_deploy_gh_release "" "intel/compute-runtime" "binary" "latest" "" "intel-opencl-icd_*_amd64.deb" || {
+        fetch_and_deploy_gh_release "intel-opencl-icd" "intel/compute-runtime" "binary" "latest" "" "intel-opencl-icd_*_amd64.deb" || {
           msg_warn "Failed to deploy Intel OpenCL ICD"
         }
 
