@@ -1,0 +1,4842 @@
+{
+  "summary": {
+    "total_files": 432,
+    "errors": 0,
+    "questionable": 1
+  },
+  "files": [
+    {
+      "file": "2fauth.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 6,
+          "mapped_to": "Authentication & Security"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "actualbudget.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 23,
+          "mapped_to": "Finance & Budgeting"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "add-iptag.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 1,
+          "mapped_to": "Proxmox & Virtualization"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "add-netbird-lxc.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 1,
+          "mapped_to": "Proxmox & Virtualization"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "add-tailscale-lxc.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 1,
+          "mapped_to": "Proxmox & Virtualization"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "adguard.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 5,
+          "mapped_to": "Adblock & DNS"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "adguardhome-sync.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 5,
+          "mapped_to": "Adblock & DNS"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "adventurelog.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 24,
+          "mapped_to": "Gaming & Leisure"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "agentdvr.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 15,
+          "mapped_to": "NVR & Cameras"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "all-templates.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 1,
+          "mapped_to": "Proxmox & Virtualization"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "alpine-it-tools.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 20,
+          "mapped_to": "AI / Coding & Dev-Tools"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "alpine-tinyauth.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 6,
+          "mapped_to": "Authentication & Security"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "alpine.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 2,
+          "mapped_to": "Operating Systems"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "apache-cassandra.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 8,
+          "mapped_to": "Databases"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "apache-couchdb.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 8,
+          "mapped_to": "Databases"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "apache-guacamole.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 0,
+          "mapped_to": "Miscellaneous"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "apache-tika.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 12,
+          "mapped_to": "Documents & Notes"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "apache-tomcat.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 10,
+          "mapped_to": "Dashboards & Frontends"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "apt-cacher-ng.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 4,
+          "mapped_to": "Network & Firewall"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "archivebox.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 12,
+          "mapped_to": "Documents & Notes"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "archlinux-vm.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 2,
+          "mapped_to": "Operating Systems"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "argus.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 11,
+          "mapped_to": "Files & Downloads"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "aria2.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 11,
+          "mapped_to": "Files & Downloads"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "asterisk.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 0,
+          "mapped_to": "Miscellaneous"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "audiobookshelf.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 13,
+          "mapped_to": "Media & Streaming"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "authelia.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 6,
+          "mapped_to": "Authentication & Security"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "autobrr.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 14,
+          "mapped_to": "*Arr Suite"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "autocaliweb.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 13,
+          "mapped_to": "Media & Streaming"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "babybuddy.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 23,
+          "mapped_to": "Finance & Budgeting"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "backrest.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 7,
+          "mapped_to": "Backup & Recovery"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "baikal.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 0,
+          "mapped_to": "Miscellaneous"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "bar-assistant.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 24,
+          "mapped_to": "Gaming & Leisure"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "bazarr.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 14,
+          "mapped_to": "*Arr Suite"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "bentopdf.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 12,
+          "mapped_to": "Documents & Notes"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "beszel.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 9,
+          "mapped_to": "Monitoring & Analytics"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "bitmagnet.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 11,
+          "mapped_to": "Files & Downloads"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "blocky.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 5,
+          "mapped_to": "Adblock & DNS"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "booklore.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 13,
+          "mapped_to": "Media & Streaming"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "bookstack.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 12,
+          "mapped_to": "Documents & Notes"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "bunkerweb.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 6,
+          "mapped_to": "Authentication & Security"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "bytestash.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 20,
+          "mapped_to": "AI / Coding & Dev-Tools"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "caddy.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 21,
+          "mapped_to": "Webservers & Proxies"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "casaos.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 2,
+          "mapped_to": "Operating Systems"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "changedetection.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 24,
+          "mapped_to": "Gaming & Leisure"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "channels.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 13,
+          "mapped_to": "Media & Streaming"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "checkmk.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 9,
+          "mapped_to": "Monitoring & Analytics"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "clean-lxcs.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 1,
+          "mapped_to": "Proxmox & Virtualization"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "clean-orphaned-lvm.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 1,
+          "mapped_to": "Proxmox & Virtualization"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "cleanuparr.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 14,
+          "mapped_to": "*Arr Suite"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "cloudflare-ddns.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 4,
+          "mapped_to": "Network & Firewall"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "cloudflared.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 4,
+          "mapped_to": "Network & Firewall"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "cloudreve.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 12,
+          "mapped_to": "Documents & Notes"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "cockpit.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 10,
+          "mapped_to": "Dashboards & Frontends"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "coder-code-server.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 1,
+          "mapped_to": "Proxmox & Virtualization"
+        },
+        {
+          "key": "categories",
+          "value": 20,
+          "mapped_to": "AI / Coding & Dev-Tools"
+        },
+        {
+          "key": "categories",
+          "value": 11,
+          "mapped_to": "Files & Downloads"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "comfyui.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 20,
+          "mapped_to": "AI / Coding & Dev-Tools"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "commafeed.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 12,
+          "mapped_to": "Documents & Notes"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "configarr.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 14,
+          "mapped_to": "*Arr Suite"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "convertx.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 9,
+          "mapped_to": "Monitoring & Analytics"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "coolify.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 3,
+          "mapped_to": "Containers & Docker"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "copyparty.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 11,
+          "mapped_to": "Files & Downloads"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "cosmos.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 2,
+          "mapped_to": "Operating Systems"
+        },
+        {
+          "key": "categories",
+          "value": 3,
+          "mapped_to": "Containers & Docker"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "crafty-controller.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 24,
+          "mapped_to": "Gaming & Leisure"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "cron-update-lxcs.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 1,
+          "mapped_to": "Proxmox & Virtualization"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "cronicle.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 19,
+          "mapped_to": "Automation & Scheduling"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "cross-seed.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 14,
+          "mapped_to": "*Arr Suite"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "crowdsec.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 6,
+          "mapped_to": "Authentication & Security"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "cryptpad.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 12,
+          "mapped_to": "Documents & Notes"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "daemonsync.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 19,
+          "mapped_to": "Automation & Scheduling"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "debian-13-vm.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 2,
+          "mapped_to": "Operating Systems"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "debian-vm.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 2,
+          "mapped_to": "Operating Systems"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "debian.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 2,
+          "mapped_to": "Operating Systems"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "deconz.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 17,
+          "mapped_to": "ZigBee, Z-Wave & Matter"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "deluge.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 11,
+          "mapped_to": "Files & Downloads"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "discopanel.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 24,
+          "mapped_to": "Gaming & Leisure"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "dispatcharr.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 14,
+          "mapped_to": "*Arr Suite"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "docker-vm.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 2,
+          "mapped_to": "Operating Systems"
+        },
+        {
+          "key": "categories",
+          "value": 3,
+          "mapped_to": "Containers & Docker"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "docker.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 3,
+          "mapped_to": "Containers & Docker"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "dockge.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 3,
+          "mapped_to": "Containers & Docker"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "docmost.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 12,
+          "mapped_to": "Documents & Notes"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "dokploy.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 3,
+          "mapped_to": "Containers & Docker"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "dolibarr.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 25,
+          "mapped_to": "Business & ERP"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "domain-locker.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 9,
+          "mapped_to": "Monitoring & Analytics"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "domain-monitor.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 9,
+          "mapped_to": "Monitoring & Analytics"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "donetick.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 19,
+          "mapped_to": "Automation & Scheduling"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "dotnetaspwebapi.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 20,
+          "mapped_to": "AI / Coding & Dev-Tools"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "duplicati.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 7,
+          "mapped_to": "Backup & Recovery"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "elementsynapse.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 4,
+          "mapped_to": "Network & Firewall"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "emby.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 13,
+          "mapped_to": "Media & Streaming"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "emqx.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 18,
+          "mapped_to": "MQTT & Messaging"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "endurain.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 24,
+          "mapped_to": "Gaming & Leisure"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "ersatztv.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 13,
+          "mapped_to": "Media & Streaming"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "esphome.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 16,
+          "mapped_to": "IoT & Smart Home"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "evcc.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 16,
+          "mapped_to": "IoT & Smart Home"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "excalidraw.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 12,
+          "mapped_to": "Documents & Notes"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "execute.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 1,
+          "mapped_to": "Proxmox & Virtualization"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "fhem.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 16,
+          "mapped_to": "IoT & Smart Home"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "filebrowser-quantum.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 1,
+          "mapped_to": "Proxmox & Virtualization"
+        },
+        {
+          "key": "categories",
+          "value": 11,
+          "mapped_to": "Files & Downloads"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "filebrowser.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 1,
+          "mapped_to": "Proxmox & Virtualization"
+        },
+        {
+          "key": "categories",
+          "value": 11,
+          "mapped_to": "Files & Downloads"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "fileflows.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 13,
+          "mapped_to": "Media & Streaming"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "firefly.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 23,
+          "mapped_to": "Finance & Budgeting"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "flaresolverr.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 14,
+          "mapped_to": "*Arr Suite"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "flowiseai.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 20,
+          "mapped_to": "AI / Coding & Dev-Tools"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "fluid-calendar.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 19,
+          "mapped_to": "Automation & Scheduling"
+        },
+        {
+          "key": "categories",
+          "value": 0,
+          "mapped_to": "Miscellaneous"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "forgejo.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 20,
+          "mapped_to": "AI / Coding & Dev-Tools"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "freepbx.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 0,
+          "mapped_to": "Miscellaneous"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "freshrss.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 12,
+          "mapped_to": "Documents & Notes"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "fstrim.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 1,
+          "mapped_to": "Proxmox & Virtualization"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "fumadocs.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 10,
+          "mapped_to": "Dashboards & Frontends"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "garage.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 8,
+          "mapped_to": "Databases"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "gatus.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 9,
+          "mapped_to": "Monitoring & Analytics"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "ghost.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 25,
+          "mapped_to": "Business & ERP"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "ghostfolio.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 23,
+          "mapped_to": "Finance & Budgeting"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "gitea-mirror.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 7,
+          "mapped_to": "Backup & Recovery"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "gitea.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 20,
+          "mapped_to": "AI / Coding & Dev-Tools"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "glance.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 10,
+          "mapped_to": "Dashboards & Frontends"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "glances.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 9,
+          "mapped_to": "Monitoring & Analytics"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "globaleaks.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 0,
+          "mapped_to": "Miscellaneous"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "glpi.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 25,
+          "mapped_to": "Business & ERP"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "go2rtc.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 15,
+          "mapped_to": "NVR & Cameras"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "goaway.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 5,
+          "mapped_to": "Adblock & DNS"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "gokapi.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 11,
+          "mapped_to": "Files & Downloads"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "gotify.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 19,
+          "mapped_to": "Automation & Scheduling"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "grafana.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 9,
+          "mapped_to": "Monitoring & Analytics"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "graylog.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 9,
+          "mapped_to": "Monitoring & Analytics"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "grist.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 12,
+          "mapped_to": "Documents & Notes"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "grocy.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 24,
+          "mapped_to": "Gaming & Leisure"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "guardian.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 13,
+          "mapped_to": "Media & Streaming"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "haos-vm.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 16,
+          "mapped_to": "IoT & Smart Home"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "headscale.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 4,
+          "mapped_to": "Network & Firewall"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "healthchecks.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 9,
+          "mapped_to": "Monitoring & Analytics"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "heimdall-dashboard.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 10,
+          "mapped_to": "Dashboards & Frontends"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "hev-socks5-server.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 4,
+          "mapped_to": "Network & Firewall"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "hivemq.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 18,
+          "mapped_to": "MQTT & Messaging"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "homarr.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 10,
+          "mapped_to": "Dashboards & Frontends"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "homeassistant.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 16,
+          "mapped_to": "IoT & Smart Home"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "homebox.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 24,
+          "mapped_to": "Gaming & Leisure"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "homebridge.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 16,
+          "mapped_to": "IoT & Smart Home"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "homepage.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 10,
+          "mapped_to": "Dashboards & Frontends"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "homer.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 10,
+          "mapped_to": "Dashboards & Frontends"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "hortusfox.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 24,
+          "mapped_to": "Gaming & Leisure"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "host-backup.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 1,
+          "mapped_to": "Proxmox & Virtualization"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "huntarr.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 14,
+          "mapped_to": "*Arr Suite"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "hyperhdr.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 13,
+          "mapped_to": "Media & Streaming"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "hyperion.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 13,
+          "mapped_to": "Media & Streaming"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "immich.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 13,
+          "mapped_to": "Media & Streaming"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "infisical.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 6,
+          "mapped_to": "Authentication & Security"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "influxdb.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 8,
+          "mapped_to": "Databases"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "inspircd.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 24,
+          "mapped_to": "Gaming & Leisure"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "inventree.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 25,
+          "mapped_to": "Business & ERP"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "invoiceninja.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 25,
+          "mapped_to": "Business & ERP"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "iobroker.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 16,
+          "mapped_to": "IoT & Smart Home"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "itsm-ng.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 25,
+          "mapped_to": "Business & ERP"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "iventoy.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 2,
+          "mapped_to": "Operating Systems"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "jackett.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 11,
+          "mapped_to": "Files & Downloads"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "jeedom.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 16,
+          "mapped_to": "IoT & Smart Home"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "jellyfin.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 13,
+          "mapped_to": "Media & Streaming"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "jellyseerr.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 14,
+          "mapped_to": "*Arr Suite"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "jenkins.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 20,
+          "mapped_to": "AI / Coding & Dev-Tools"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "joplin-server.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 12,
+          "mapped_to": "Documents & Notes"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "jotty.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 12,
+          "mapped_to": "Documents & Notes"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "jupyternotebook.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 20,
+          "mapped_to": "AI / Coding & Dev-Tools"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "kapowarr.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 14,
+          "mapped_to": "*Arr Suite"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "karakeep.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 12,
+          "mapped_to": "Documents & Notes"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "kasm.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 9,
+          "mapped_to": "Monitoring & Analytics"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "kavita.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 13,
+          "mapped_to": "Media & Streaming"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "kernel-clean.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 1,
+          "mapped_to": "Proxmox & Virtualization"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "kernel-pin.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 1,
+          "mapped_to": "Proxmox & Virtualization"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "keycloak.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 6,
+          "mapped_to": "Authentication & Security"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "kimai.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 25,
+          "mapped_to": "Business & ERP"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "koel.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 13,
+          "mapped_to": "Media & Streaming"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "koillection.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 24,
+          "mapped_to": "Gaming & Leisure"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "kometa.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 13,
+          "mapped_to": "Media & Streaming"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "komga.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 13,
+          "mapped_to": "Media & Streaming"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "komodo.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 3,
+          "mapped_to": "Containers & Docker"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "kubo.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 4,
+          "mapped_to": "Network & Firewall"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "lazylibrarian.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 13,
+          "mapped_to": "Media & Streaming"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "leantime.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 12,
+          "mapped_to": "Documents & Notes"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "librenms.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 9,
+          "mapped_to": "Monitoring & Analytics"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "librespeed-rust.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 4,
+          "mapped_to": "Network & Firewall"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "libretranslate.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 0,
+          "mapped_to": "Miscellaneous"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "lidarr.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 14,
+          "mapped_to": "*Arr Suite"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "limesurvey.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 25,
+          "mapped_to": "Business & ERP"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "linkstack.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 9,
+          "mapped_to": "Monitoring & Analytics"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "linkwarden.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 12,
+          "mapped_to": "Documents & Notes"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "listmonk.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 0,
+          "mapped_to": "Miscellaneous"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "litellm.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 20,
+          "mapped_to": "AI / Coding & Dev-Tools"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "livebook.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 20,
+          "mapped_to": "AI / Coding & Dev-Tools"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "lldap.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 6,
+          "mapped_to": "Authentication & Security"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "lubelogger.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 24,
+          "mapped_to": "Gaming & Leisure"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "lxc-delete.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 1,
+          "mapped_to": "Proxmox & Virtualization"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "lyrionmusicserver.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 13,
+          "mapped_to": "Media & Streaming"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "mafl.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 10,
+          "mapped_to": "Dashboards & Frontends"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "magicmirror.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 24,
+          "mapped_to": "Gaming & Leisure"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "managemydamnlife.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 0,
+          "mapped_to": "Miscellaneous"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "mariadb.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 8,
+          "mapped_to": "Databases"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "matterbridge.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 17,
+          "mapped_to": "ZigBee, Z-Wave & Matter"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "mattermost.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 25,
+          "mapped_to": "Business & ERP"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "mealie.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 13,
+          "mapped_to": "Media & Streaming"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "mediamanager.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 14,
+          "mapped_to": "*Arr Suite"
+        },
+        {
+          "key": "categories",
+          "value": 13,
+          "mapped_to": "Media & Streaming"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "mediamtx.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 13,
+          "mapped_to": "Media & Streaming"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "medusa.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 13,
+          "mapped_to": "Media & Streaming"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "meilisearch.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 8,
+          "mapped_to": "Databases"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "memos.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 12,
+          "mapped_to": "Documents & Notes"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "meshcentral.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 4,
+          "mapped_to": "Network & Firewall"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "metabase.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 9,
+          "mapped_to": "Monitoring & Analytics"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "metube.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 11,
+          "mapped_to": "Files & Downloads"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "microcode.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 1,
+          "mapped_to": "Proxmox & Virtualization"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "mikrotik-routeros.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 2,
+          "mapped_to": "Operating Systems"
+        },
+        {
+          "key": "categories",
+          "value": 4,
+          "mapped_to": "Network & Firewall"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "minarca.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 7,
+          "mapped_to": "Backup & Recovery"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "miniflux.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 13,
+          "mapped_to": "Media & Streaming"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "minio.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 8,
+          "mapped_to": "Databases"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "mongodb.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 8,
+          "mapped_to": "Databases"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "monica.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 24,
+          "mapped_to": "Gaming & Leisure"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "monitor-all.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 1,
+          "mapped_to": "Proxmox & Virtualization"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "motioneye.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 15,
+          "mapped_to": "NVR & Cameras"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "mqtt.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 18,
+          "mapped_to": "MQTT & Messaging"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "myip.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 4,
+          "mapped_to": "Network & Firewall"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "mylar3.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 14,
+          "mapped_to": "*Arr Suite"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "myspeed.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 4,
+          "mapped_to": "Network & Firewall"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "n8n.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 16,
+          "mapped_to": "IoT & Smart Home"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "navidrome.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 13,
+          "mapped_to": "Media & Streaming"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "neo4j.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 8,
+          "mapped_to": "Databases"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "netbox.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 4,
+          "mapped_to": "Network & Firewall"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "netdata.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 1,
+          "mapped_to": "Proxmox & Virtualization"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "nextcloud-vm.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 2,
+          "mapped_to": "Operating Systems"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "nextcloudpi.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 2,
+          "mapped_to": "Operating Systems"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "nextpvr.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 13,
+          "mapped_to": "Media & Streaming"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "nginxproxymanager.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 21,
+          "mapped_to": "Webservers & Proxies"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "nic-offloading-fix.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 1,
+          "mapped_to": "Proxmox & Virtualization"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "nocodb.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 25,
+          "mapped_to": "Business & ERP"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "node-red.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 16,
+          "mapped_to": "IoT & Smart Home"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "nodebb.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 10,
+          "mapped_to": "Dashboards & Frontends"
+        },
+        {
+          "key": "categories",
+          "value": 25,
+          "mapped_to": "Business & ERP"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "notifiarr.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 14,
+          "mapped_to": "*Arr Suite"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "npmplus.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 21,
+          "mapped_to": "Webservers & Proxies"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "ntfy.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 19,
+          "mapped_to": "Automation & Scheduling"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "nxwitness.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 15,
+          "mapped_to": "NVR & Cameras"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "nzbget.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 11,
+          "mapped_to": "Files & Downloads"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "oauth2-proxy.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 4,
+          "mapped_to": "Network & Firewall"
+        },
+        {
+          "key": "categories",
+          "value": 6,
+          "mapped_to": "Authentication & Security"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "octoprint.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 24,
+          "mapped_to": "Gaming & Leisure"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "odoo.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 25,
+          "mapped_to": "Business & ERP"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "olivetin.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 10,
+          "mapped_to": "Dashboards & Frontends"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "ollama.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 20,
+          "mapped_to": "AI / Coding & Dev-Tools"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "omada.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 4,
+          "mapped_to": "Network & Firewall"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "ombi.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 13,
+          "mapped_to": "Media & Streaming"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "omv.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 2,
+          "mapped_to": "Operating Systems"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "onedev.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 20,
+          "mapped_to": "AI / Coding & Dev-Tools"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "onlyoffice.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 12,
+          "mapped_to": "Documents & Notes"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "open-archiver.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 7,
+          "mapped_to": "Backup & Recovery"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "opengist.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 20,
+          "mapped_to": "AI / Coding & Dev-Tools"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "openhab.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 16,
+          "mapped_to": "IoT & Smart Home"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "openobserve.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 9,
+          "mapped_to": "Monitoring & Analytics"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "openproject.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 25,
+          "mapped_to": "Business & ERP"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "openwebui.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 20,
+          "mapped_to": "AI / Coding & Dev-Tools"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "openwrt-vm.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 4,
+          "mapped_to": "Network & Firewall"
+        },
+        {
+          "key": "categories",
+          "value": 2,
+          "mapped_to": "Operating Systems"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "openziti-controller.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 4,
+          "mapped_to": "Network & Firewall"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "openziti-tunnel.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 4,
+          "mapped_to": "Network & Firewall"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "opnsense-vm.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 4,
+          "mapped_to": "Network & Firewall"
+        },
+        {
+          "key": "categories",
+          "value": 2,
+          "mapped_to": "Operating Systems"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "ots.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 6,
+          "mapped_to": "Authentication & Security"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "outline.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 12,
+          "mapped_to": "Documents & Notes"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "overseerr.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 14,
+          "mapped_to": "*Arr Suite"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "owncast.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 13,
+          "mapped_to": "Media & Streaming"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "owncloud-vm.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 2,
+          "mapped_to": "Operating Systems"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "pairdrop.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 11,
+          "mapped_to": "Files & Downloads"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "palmr.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 11,
+          "mapped_to": "Files & Downloads"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "pangolin.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 21,
+          "mapped_to": "Webservers & Proxies"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "paperless-ai.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 20,
+          "mapped_to": "AI / Coding & Dev-Tools"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "paperless-gpt.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 20,
+          "mapped_to": "AI / Coding & Dev-Tools"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "paperless-ngx.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 12,
+          "mapped_to": "Documents & Notes"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "part-db.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 25,
+          "mapped_to": "Business & ERP"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "passbolt.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 6,
+          "mapped_to": "Authentication & Security"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "patchmon.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 9,
+          "mapped_to": "Monitoring & Analytics"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "paymenter.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 21,
+          "mapped_to": "Webservers & Proxies"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "pbs-microcode.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 1,
+          "mapped_to": "Proxmox & Virtualization"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "pbs4-upgrade.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 1,
+          "mapped_to": "Proxmox & Virtualization"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "peanut.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 4,
+          "mapped_to": "Network & Firewall"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "pelican-panel.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 24,
+          "mapped_to": "Gaming & Leisure"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "pelican-wings.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 24,
+          "mapped_to": "Gaming & Leisure"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "pf2etools.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 24,
+          "mapped_to": "Gaming & Leisure"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "photoprism.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 13,
+          "mapped_to": "Media & Streaming"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "phpipam.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 4,
+          "mapped_to": "Network & Firewall"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "phpmyadmin.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 8,
+          "mapped_to": "Databases"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "pialert.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 4,
+          "mapped_to": "Network & Firewall"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "pihole-exporter.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 9,
+          "mapped_to": "Monitoring & Analytics"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "pihole.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 5,
+          "mapped_to": "Adblock & DNS"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "pimox-haos-vm.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 16,
+          "mapped_to": "IoT & Smart Home"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "planka.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 12,
+          "mapped_to": "Documents & Notes"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "plant-it.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 24,
+          "mapped_to": "Gaming & Leisure"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "plex.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 13,
+          "mapped_to": "Media & Streaming"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "pocketbase.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 8,
+          "mapped_to": "Databases"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "pocketid.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 6,
+          "mapped_to": "Authentication & Security"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "podman-homeassistant.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 16,
+          "mapped_to": "IoT & Smart Home"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "podman.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 3,
+          "mapped_to": "Containers & Docker"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "post-pbs-install.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 1,
+          "mapped_to": "Proxmox & Virtualization"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "post-pmg-install.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 1,
+          "mapped_to": "Proxmox & Virtualization"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "post-pve-install.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 1,
+          "mapped_to": "Proxmox & Virtualization"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "postgresql.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 8,
+          "mapped_to": "Databases"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "privatebin.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 12,
+          "mapped_to": "Documents & Notes"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "projectsend.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 12,
+          "mapped_to": "Documents & Notes"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "prometheus-alertmanager.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 9,
+          "mapped_to": "Monitoring & Analytics"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "prometheus-blackbox-exporter.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 1,
+          "mapped_to": "Proxmox & Virtualization"
+        },
+        {
+          "key": "categories",
+          "value": 9,
+          "mapped_to": "Monitoring & Analytics"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "prometheus-paperless-ngx-exporter.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 9,
+          "mapped_to": "Monitoring & Analytics"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "prometheus-pve-exporter.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 1,
+          "mapped_to": "Proxmox & Virtualization"
+        },
+        {
+          "key": "categories",
+          "value": 9,
+          "mapped_to": "Monitoring & Analytics"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "prometheus.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 9,
+          "mapped_to": "Monitoring & Analytics"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "prowlarr.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 14,
+          "mapped_to": "*Arr Suite"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "proxmox-backup-server.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 1,
+          "mapped_to": "Proxmox & Virtualization"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "proxmox-datacenter-manager.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 1,
+          "mapped_to": "Proxmox & Virtualization"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "proxmox-mail-gateway.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 1,
+          "mapped_to": "Proxmox & Virtualization"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "ps5-mqtt.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 18,
+          "mapped_to": "MQTT & Messaging"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "pterodactyl-panel.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 24,
+          "mapped_to": "Gaming & Leisure"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "pterodactyl-wings.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 24,
+          "mapped_to": "Gaming & Leisure"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "pulse.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 9,
+          "mapped_to": "Monitoring & Analytics"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "pve-privilege-converter.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 1,
+          "mapped_to": "Proxmox & Virtualization"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "pve-scripts-local.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 1,
+          "mapped_to": "Proxmox & Virtualization"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "qbittorrent-exporter.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 9,
+          "mapped_to": "Monitoring & Analytics"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "qbittorrent.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 11,
+          "mapped_to": "Files & Downloads"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "qdrant.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 8,
+          "mapped_to": "Databases"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "rabbitmq.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 18,
+          "mapped_to": "MQTT & Messaging"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "radarr.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 14,
+          "mapped_to": "*Arr Suite"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "radicale.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 0,
+          "mapped_to": "Miscellaneous"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "rclone.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 11,
+          "mapped_to": "Files & Downloads"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "rdtclient.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 11,
+          "mapped_to": "Files & Downloads"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "reactive-resume.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 12,
+          "mapped_to": "Documents & Notes"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "readeck.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 12,
+          "mapped_to": "Documents & Notes"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "recyclarr.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 14,
+          "mapped_to": "*Arr Suite"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "redis.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 8,
+          "mapped_to": "Databases"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "redlib.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 10,
+          "mapped_to": "Dashboards & Frontends"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "reitti.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 21,
+          "mapped_to": "Webservers & Proxies"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "resiliosync.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 11,
+          "mapped_to": "Files & Downloads"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "revealjs.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 12,
+          "mapped_to": "Documents & Notes"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "runtipi.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 2,
+          "mapped_to": "Operating Systems"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "rustdeskserver.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 21,
+          "mapped_to": "Webservers & Proxies"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "sabnzbd.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 11,
+          "mapped_to": "Files & Downloads"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "salt.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 19,
+          "mapped_to": "Automation & Scheduling"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "scaling-governor.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 1,
+          "mapped_to": "Proxmox & Virtualization"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "scanopy.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 9,
+          "mapped_to": "Monitoring & Analytics"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "scraparr.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 14,
+          "mapped_to": "*Arr Suite"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "searxng.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 0,
+          "mapped_to": "Miscellaneous"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "seelf.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 4,
+          "mapped_to": "Network & Firewall"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "semaphore.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 19,
+          "mapped_to": "Automation & Scheduling"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "sftpgo.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 11,
+          "mapped_to": "Files & Downloads"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "shinobi.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 15,
+          "mapped_to": "NVR & Cameras"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "signoz.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 9,
+          "mapped_to": "Monitoring & Analytics"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "silverbullet.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 12,
+          "mapped_to": "Documents & Notes"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "slskd.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 11,
+          "mapped_to": "Files & Downloads"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "smokeping.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 4,
+          "mapped_to": "Network & Firewall"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "snipeit.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 25,
+          "mapped_to": "Business & ERP"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "snowshare.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 11,
+          "mapped_to": "Files & Downloads"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "sonarqube.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 20,
+          "mapped_to": "AI / Coding & Dev-Tools"
+        },
+        {
+          "key": "categories",
+          "value": 19,
+          "mapped_to": "Automation & Scheduling"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "sonarr.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 14,
+          "mapped_to": "*Arr Suite"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "speedtest-tracker.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 4,
+          "mapped_to": "Network & Firewall"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "splunk-enterprise.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 9,
+          "mapped_to": "Monitoring & Analytics"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "spoolman.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 24,
+          "mapped_to": "Gaming & Leisure"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "sqlserver2022.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 8,
+          "mapped_to": "Databases"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "stirling-pdf.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 12,
+          "mapped_to": "Documents & Notes"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "streamlink-webui.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 11,
+          "mapped_to": "Files & Downloads"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "stylus.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 4,
+          "mapped_to": "Network & Firewall"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "suwayomi-server.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 13,
+          "mapped_to": "Media & Streaming"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "swizzin.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 13,
+          "mapped_to": "Media & Streaming"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "syncthing.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 12,
+          "mapped_to": "Documents & Notes"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "tandoor.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 24,
+          "mapped_to": "Gaming & Leisure"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "tasmoadmin.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 16,
+          "mapped_to": "IoT & Smart Home"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "tasmocompiler.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 16,
+          "mapped_to": "IoT & Smart Home"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "tautulli.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 13,
+          "mapped_to": "Media & Streaming"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "tdarr.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 14,
+          "mapped_to": "*Arr Suite"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "teamspeak-server.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 24,
+          "mapped_to": "Gaming & Leisure"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "technitiumdns.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 5,
+          "mapped_to": "Adblock & DNS"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "teddycloud.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 13,
+          "mapped_to": "Media & Streaming"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "telegraf.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 9,
+          "mapped_to": "Monitoring & Analytics"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "the-lounge.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 22,
+          "mapped_to": "Bots & ChatOps"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "threadfin.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 13,
+          "mapped_to": "Media & Streaming"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "tianji.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 9,
+          "mapped_to": "Monitoring & Analytics"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "traccar.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 0,
+          "mapped_to": "Miscellaneous"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "tracktor.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 9,
+          "mapped_to": "Monitoring & Analytics"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "traefik.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 21,
+          "mapped_to": "Webservers & Proxies"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "transmission.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 11,
+          "mapped_to": "Files & Downloads"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "trilium.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 12,
+          "mapped_to": "Documents & Notes"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "tududi.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 12,
+          "mapped_to": "Documents & Notes"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "tunarr.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 13,
+          "mapped_to": "Media & Streaming"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "turnkey.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 2,
+          "mapped_to": "Operating Systems"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "twingate-connector.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 4,
+          "mapped_to": "Network & Firewall"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "typesense.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 20,
+          "mapped_to": "AI / Coding & Dev-Tools"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "ubuntu.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 2,
+          "mapped_to": "Operating Systems"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "ubuntu2204-vm.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 2,
+          "mapped_to": "Operating Systems"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "ubuntu2404-vm.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 2,
+          "mapped_to": "Operating Systems"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "ubuntu2504-vm.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 2,
+          "mapped_to": "Operating Systems"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "uhf.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 13,
+          "mapped_to": "Media & Streaming"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "umami.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 9,
+          "mapped_to": "Monitoring & Analytics"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "umbrel-os-vm.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 2,
+          "mapped_to": "Operating Systems"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "umlautadaptarr.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 14,
+          "mapped_to": "*Arr Suite"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "unbound.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 5,
+          "mapped_to": "Adblock & DNS"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "unifi.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 4,
+          "mapped_to": "Network & Firewall"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "unmanic.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 0,
+          "mapped_to": "Miscellaneous"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "update-lxcs.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 1,
+          "mapped_to": "Proxmox & Virtualization"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "update-repo.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 1,
+          "mapped_to": "Proxmox & Virtualization"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "upgopher.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 11,
+          "mapped_to": "Files & Downloads"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "upsnap.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 4,
+          "mapped_to": "Network & Firewall"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "uptimekuma.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 9,
+          "mapped_to": "Monitoring & Analytics"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "urbackupserver.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 7,
+          "mapped_to": "Backup & Recovery"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "valkey.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 8,
+          "mapped_to": "Databases"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "vaultwarden.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 6,
+          "mapped_to": "Authentication & Security"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "verdaccio.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 20,
+          "mapped_to": "AI / Coding & Dev-Tools"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "versions.json",
+      "found": [],
+      "notes": [
+        "no_category_field"
+      ]
+    },
+    {
+      "file": "victoriametrics.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 8,
+          "mapped_to": "Databases"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "vikunja.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 12,
+          "mapped_to": "Documents & Notes"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "wallabag.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 12,
+          "mapped_to": "Documents & Notes"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "wallos.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 23,
+          "mapped_to": "Finance & Budgeting"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "wanderer.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 24,
+          "mapped_to": "Gaming & Leisure"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "warracker.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 12,
+          "mapped_to": "Documents & Notes"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "wastebin.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 12,
+          "mapped_to": "Documents & Notes"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "watcharr.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 13,
+          "mapped_to": "Media & Streaming"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "watchyourlan.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 4,
+          "mapped_to": "Network & Firewall"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "wavelog.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 24,
+          "mapped_to": "Gaming & Leisure"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "wazuh.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 9,
+          "mapped_to": "Monitoring & Analytics"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "web-check.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 4,
+          "mapped_to": "Network & Firewall"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "webmin.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 1,
+          "mapped_to": "Proxmox & Virtualization"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "wger.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 24,
+          "mapped_to": "Gaming & Leisure"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "whisparr.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 14,
+          "mapped_to": "*Arr Suite"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "wikijs.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 12,
+          "mapped_to": "Documents & Notes"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "wireguard.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 4,
+          "mapped_to": "Network & Firewall"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "wizarr.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 14,
+          "mapped_to": "*Arr Suite"
+        },
+        {
+          "key": "categories",
+          "value": 13,
+          "mapped_to": "Media & Streaming"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "wordpress.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 21,
+          "mapped_to": "Webservers & Proxies"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "yt-dlp-webui.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 11,
+          "mapped_to": "Files & Downloads"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "yunohost.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 2,
+          "mapped_to": "Operating Systems"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "zabbix.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 9,
+          "mapped_to": "Monitoring & Analytics"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "zammad.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 25,
+          "mapped_to": "Business & ERP"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "zerotier-one.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 4,
+          "mapped_to": "Network & Firewall"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "zigbee2mqtt.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 17,
+          "mapped_to": "ZigBee, Z-Wave & Matter"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "zipline.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 11,
+          "mapped_to": "Files & Downloads"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "zitadel.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 6,
+          "mapped_to": "Authentication & Security"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "zoraxy.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 21,
+          "mapped_to": "Webservers & Proxies"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "zot-registry.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 3,
+          "mapped_to": "Containers & Docker"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "file": "zwave-js-ui.json",
+      "found": [
+        {
+          "key": "categories",
+          "value": 17,
+          "mapped_to": "ZigBee, Z-Wave & Matter"
+        }
+      ],
+      "notes": []
+    }
+  ]
+}
