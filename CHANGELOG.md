@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-12-26
 
+### ❔ Uncategorized
+
+  - categorize valkey as database [@pshankinclarke](https://github.com/pshankinclarke) ([#10331](https://github.com/community-scripts/ProxmoxVE/pull/10331))
+
 ## 2025-12-25
 
 ### 🚀 Updated Scripts
