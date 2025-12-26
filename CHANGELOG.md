@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - phpipam: use PHP 8.4 with correct mysql module for PDO support [@MickLesk](https://github.com/MickLesk) ([#10348](https://github.com/community-scripts/ProxmoxVE/pull/10348))
     - hyperion: increase disk to 4GB and tools.func: fix /root/. path error [@MickLesk](https://github.com/MickLesk) ([#10349](https://github.com/community-scripts/ProxmoxVE/pull/10349))
 
 ### ❔ Uncategorized
