@@ -2,7 +2,7 @@
   "name": "Debian 13",
   "slug": "debian-13-vm",
   "categories": [
-    2
+    0
   ],
   "date_created": "2025-08-19",
   "type": "vm",
@@ -37,11 +37,11 @@
       "type": "info"
     },
     {
-      "text": "After installation, checkout: ´https://github.com/community-scripts/ProxmoxVE/discussions/836´ for useful Debian commands",
+      "text": "After installation, checkout: \u00b4https://github.com/community-scripts/ProxmoxVE/discussions/836\u00b4 for useful Debian commands",
       "type": "info"
     },
     {
-      "text": "If you use Cloud-init, checkout after installation: ´https://github.com/community-scripts/ProxmoxVE/discussions/272´",
+      "text": "If you use Cloud-init, checkout after installation: \u00b4https://github.com/community-scripts/ProxmoxVE/discussions/272\u00b4",
       "type": "info"
     }
   ]

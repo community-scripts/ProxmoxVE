@@ -2,7 +2,7 @@
   "name": "Pangolin",
   "slug": "pangolin",
   "categories": [
-    21
+    5
   ],
   "date_created": "2025-11-01",
   "type": "ct",
@@ -13,7 +13,7 @@
   "config_path": "/opt/pangolin/config/config.yml",
   "website": "https://pangolin.net/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/pangolin.webp",
-  "description": "Pangolin securely routes traffic over WireGuard tunnels to any private network. It works like a reverse proxy that spans multiple networks — no public IPs, DNS setup, or certificates required.",
+  "description": "Pangolin securely routes traffic over WireGuard tunnels to any private network. It works like a reverse proxy that spans multiple networks \u2014 no public IPs, DNS setup, or certificates required.",
   "install_methods": [
     {
       "type": "default",

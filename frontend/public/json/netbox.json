@@ -2,7 +2,7 @@
   "name": "NetBox",
   "slug": "netbox",
   "categories": [
-    4
+    5
   ],
   "date_created": "2024-11-17",
   "type": "ct",
@@ -13,7 +13,7 @@
   "website": "https://netboxlabs.com/products/netbox/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/netbox.webp",
   "config_path": "/opt/netbox/netbox/netbox/configuration.py",
-  "description": "NetBox is the source of truth for everything on your network, from physical components like power systems and cabling to virtual assets like IP addresses and VLANs. Network automation and observability tools depend on NetBox’s authoritative data to roll out configurations, monitor changes, and accelerate operations across the enterprise",
+  "description": "NetBox is the source of truth for everything on your network, from physical components like power systems and cabling to virtual assets like IP addresses and VLANs. Network automation and observability tools depend on NetBox\u2019s authoritative data to roll out configurations, monitor changes, and accelerate operations across the enterprise",
   "install_methods": [
     {
       "type": "default",

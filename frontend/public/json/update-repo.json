@@ -2,7 +2,7 @@
   "name": "PVE Update Repositories",
   "slug": "update-repo",
   "categories": [
-    1
+    24
   ],
   "date_created": "2024-11-04",
   "type": "pve",

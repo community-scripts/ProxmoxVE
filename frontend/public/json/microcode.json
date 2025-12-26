@@ -2,7 +2,7 @@
   "name": "PVE Processor Microcode",
   "slug": "microcode",
   "categories": [
-    1
+    6
   ],
   "date_created": "2024-04-29",
   "type": "pve",

@@ -2,7 +2,7 @@
   "name": "Apache Tika",
   "slug": "apache-tika",
   "categories": [
-    12
+    11
   ],
   "date_created": "2025-02-05",
   "type": "ct",
@@ -13,7 +13,7 @@
   "website": "https://tika.apache.org/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/apache-tika.webp",
   "config_path": "/opt/apache-tika/tika-config.xml",
-  "description": "The Apache Tika™ toolkit detects and extracts metadata and text from over a thousand different file types (such as PPT, XLS, and PDF). All of these file types can be parsed through a single interface, making Tika useful for search engine indexing, content analysis, translation, and much more.",
+  "description": "The Apache Tika\u2122 toolkit detects and extracts metadata and text from over a thousand different file types (such as PPT, XLS, and PDF). All of these file types can be parsed through a single interface, making Tika useful for search engine indexing, content analysis, translation, and much more.",
   "install_methods": [
     {
       "type": "default",

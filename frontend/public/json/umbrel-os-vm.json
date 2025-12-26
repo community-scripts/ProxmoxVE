@@ -2,7 +2,7 @@
   "name": "Umbrel OS",
   "slug": "umbrel-os-vm",
   "categories": [
-    2
+    5
   ],
   "date_created": "2025-05-28",
   "type": "vm",
@@ -13,7 +13,7 @@
   "website": "https://umbrel.com/",
   "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/umbrelos.webp",
   "config_path": "",
-  "description": "Take control of your digital life with Umbrel — a private, personal server that lets you self-host powerful open source apps with ease. Whether you want to run a Bitcoin or Lightning node, manage your files with Nextcloud, stream media, block ads across your network, or explore self-hosted AI tools, Umbrel gives you full ownership and privacy. All through a beautiful, user-friendly interface — no cloud, no tracking, just your data under your control.",
+  "description": "Take control of your digital life with Umbrel \u2014 a private, personal server that lets you self-host powerful open source apps with ease. Whether you want to run a Bitcoin or Lightning node, manage your files with Nextcloud, stream media, block ads across your network, or explore self-hosted AI tools, Umbrel gives you full ownership and privacy. All through a beautiful, user-friendly interface \u2014 no cloud, no tracking, just your data under your control.",
   "install_methods": [
     {
       "type": "default",

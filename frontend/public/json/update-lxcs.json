@@ -2,7 +2,7 @@
   "name": "PVE LXC Updater",
   "slug": "update-lxcs",
   "categories": [
-    1
+    2
   ],
   "date_created": "2024-04-29",
   "type": "pve",

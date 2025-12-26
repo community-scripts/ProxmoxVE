@@ -2,7 +2,7 @@
   "name": "PBS Processor Microcode",
   "slug": "pbs-microcode",
   "categories": [
-    1
+    6
   ],
   "date_created": "2025-02-07",
   "type": "pve",
