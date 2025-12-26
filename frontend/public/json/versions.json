@@ -1,5 +1,40 @@
 [
   {
+    "name": "linkwarden/linkwarden",
+    "version": "v2.13.4",
+    "date": "2025-12-25T21:38:43Z"
+  },
+  {
+    "name": "HydroshieldMKII/Guardian",
+    "version": "v1.3.3",
+    "date": "2025-12-25T20:19:52Z"
+  },
+  {
+    "name": "alexta69/metube",
+    "version": "2025.12.25",
+    "date": "2025-12-25T19:34:19Z"
+  },
+  {
+    "name": "matze/wastebin",
+    "version": "3.4.0",
+    "date": "2025-12-25T16:00:55Z"
+  },
+  {
+    "name": "OliveTin/OliveTin",
+    "version": "3000.8.0",
+    "date": "2025-12-25T15:10:19Z"
+  },
+  {
+    "name": "metabase/metabase",
+    "version": "v0.58.x",
+    "date": "2025-12-25T15:06:53Z"
+  },
+  {
+    "name": "rcourtman/Pulse",
+    "version": "v5.0.3",
+    "date": "2025-12-25T13:51:42Z"
+  },
+  {
     "name": "PatchMon/PatchMon",
     "version": "v1.3.7",
     "date": "2025-12-25T11:08:14Z"
@@ -53,16 +88,6 @@
     "name": "NodeBB/NodeBB",
     "version": "v4.7.2",
     "date": "2025-12-24T18:38:32Z"
-  },
-  {
-    "name": "rcourtman/Pulse",
-    "version": "v5.0.2",
-    "date": "2025-12-24T18:18:13Z"
-  },
-  {
-    "name": "metabase/metabase",
-    "version": "v0.58.x",
-    "date": "2025-12-24T16:39:27Z"
   },
   {
     "name": "TuroYT/snowshare",
@@ -203,11 +228,6 @@
     "name": "theonedev/onedev",
     "version": "v13.1.6",
     "date": "2025-12-23T03:13:32Z"
-  },
-  {
-    "name": "linkwarden/linkwarden",
-    "version": "v2.13.3",
-    "date": "2025-12-23T01:18:58Z"
   },
   {
     "name": "Dispatcharr/Dispatcharr",
@@ -505,11 +525,6 @@
     "date": "2025-12-12T20:25:00Z"
   },
   {
-    "name": "HydroshieldMKII/Guardian",
-    "version": "v1.3.2",
-    "date": "2025-12-17T19:31:10Z"
-  },
-  {
     "name": "coder/code-server",
     "version": "v4.107.0",
     "date": "2025-12-17T18:59:21Z"
@@ -643,11 +658,6 @@
     "name": "AlexxIT/go2rtc",
     "version": "v1.9.13",
     "date": "2025-12-14T20:18:28Z"
-  },
-  {
-    "name": "alexta69/metube",
-    "version": "2025.12.14",
-    "date": "2025-12-14T18:24:33Z"
   },
   {
     "name": "blakeblackshear/frigate",
@@ -948,11 +958,6 @@
     "name": "verdaccio/verdaccio",
     "version": "v6.2.4",
     "date": "2025-12-02T17:47:52Z"
-  },
-  {
-    "name": "OliveTin/OliveTin",
-    "version": "3000.7.0",
-    "date": "2025-12-01T23:29:47Z"
   },
   {
     "name": "slskd/slskd",
@@ -1468,11 +1473,6 @@
     "name": "deluge-torrent/deluge",
     "version": "deluge-2.2.1.dev0",
     "date": "2025-08-17T20:22:28Z"
-  },
-  {
-    "name": "matze/wastebin",
-    "version": "3.3.0",
-    "date": "2025-08-17T19:57:11Z"
   },
   {
     "name": "mylar3/mylar3",
