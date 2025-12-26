@@ -13,6 +13,7 @@
 #   - Legacy installation cleanup (nvm, rbenv, rustup)
 #   - OS-upgrade-safe repository preparation
 #   - Service pattern matching for multi-version tools
+#   - Debug mode for troubleshooting (TOOLS_DEBUG=true)
 #
 # Usage in install scripts:
 #   source /dev/stdin <<< "$FUNCTIONS"  # Load from build.func
@@ -27,8 +28,194 @@
 #   prepare_repository_setup()       - Cleanup repos + keyrings + validate APT
 #   install_packages_with_retry()    - Install with 3 retries and APT refresh
 #   upgrade_packages_with_retry()    - Upgrade with 3 retries and APT refresh
+#   curl_with_retry()                - Curl with retry logic and timeouts
+#
+# Debug Mode:
+#   TOOLS_DEBUG=true ./script.sh     - Enable verbose output for troubleshooting
 #
 # ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Debug helper - outputs to stderr when TOOLS_DEBUG is enabled
+# Usage: debug_log "message"
+# ------------------------------------------------------------------------------
+debug_log() {
+  if [[ "${TOOLS_DEBUG:-false}" == "true" || "${TOOLS_DEBUG:-0}" == "1" ]]; then
+    echo "[DEBUG] $*" >&2
+  fi
+}
+
+# ------------------------------------------------------------------------------
+# Robust curl wrapper with retry logic, timeouts, and error handling
+#
+# Usage:
+#   curl_with_retry "https://example.com/file" "/tmp/output"
+#   curl_with_retry "https://api.github.com/..." "-" | jq .
+#   CURL_RETRIES=5 curl_with_retry "https://slow.server/file" "/tmp/out"
+#
+# Parameters:
+#   $1 - URL to download
+#   $2 - Output file path (use "-" for stdout)
+#   $3 - (optional) Additional curl options as string
+#
+# Variables:
+#   CURL_RETRIES     - Number of retries (default: 3)
+#   CURL_TIMEOUT     - Max time per attempt in seconds (default: 60)
+#   CURL_CONNECT_TO  - Connection timeout in seconds (default: 10)
+#
+# Returns: 0 on success, 1 on failure after all retries
+# ------------------------------------------------------------------------------
+curl_with_retry() {
+  local url="$1"
+  local output="${2:--}"
+  local extra_opts="${3:-}"
+  local retries="${CURL_RETRIES:-3}"
+  local timeout="${CURL_TIMEOUT:-60}"
+  local connect_timeout="${CURL_CONNECT_TO:-10}"
+
+  local attempt=1
+  local success=false
+
+  while [[ $attempt -le $retries ]]; do
+    debug_log "curl attempt $attempt/$retries: $url"
+
+    local curl_cmd="curl -fsSL --connect-timeout $connect_timeout --max-time $timeout"
+    [[ -n "$extra_opts" ]] && curl_cmd="$curl_cmd $extra_opts"
+
+    if [[ "$output" == "-" ]]; then
+      if $curl_cmd "$url"; then
+        success=true
+        break
+      fi
+    else
+      if $curl_cmd -o "$output" "$url"; then
+        success=true
+        break
+      fi
+    fi
+
+    debug_log "curl attempt $attempt failed, waiting ${attempt}s before retry..."
+    sleep "$attempt"
+    ((attempt++))
+  done
+
+  if [[ "$success" == "true" ]]; then
+    debug_log "curl successful: $url"
+    return 0
+  else
+    debug_log "curl FAILED after $retries attempts: $url"
+    return 1
+  fi
+}
+
+# ------------------------------------------------------------------------------
+# Robust curl wrapper for API calls (returns HTTP code + body)
+#
+# Usage:
+#   response=$(curl_api_with_retry "https://api.github.com/repos/owner/repo/releases/latest")
+#   http_code=$(curl_api_with_retry "https://api.github.com/..." "/tmp/body.json")
+#
+# Parameters:
+#   $1 - URL to call
+#   $2 - (optional) Output file for body (default: stdout)
+#   $3 - (optional) Additional curl options as string
+#
+# Returns: HTTP status code, body in file or stdout
+# ------------------------------------------------------------------------------
+curl_api_with_retry() {
+  local url="$1"
+  local body_file="${2:-}"
+  local extra_opts="${3:-}"
+  local retries="${CURL_RETRIES:-3}"
+  local timeout="${CURL_TIMEOUT:-60}"
+  local connect_timeout="${CURL_CONNECT_TO:-10}"
+
+  local attempt=1
+  local http_code=""
+
+  while [[ $attempt -le $retries ]]; do
+    debug_log "curl API attempt $attempt/$retries: $url"
+
+    local curl_cmd="curl -fsSL --connect-timeout $connect_timeout --max-time $timeout -w '%{http_code}'"
+    [[ -n "$extra_opts" ]] && curl_cmd="$curl_cmd $extra_opts"
+
+    if [[ -n "$body_file" ]]; then
+      http_code=$($curl_cmd -o "$body_file" "$url" 2>/dev/null) || true
+    else
+      # Capture body and http_code separately
+      local tmp_body="/tmp/curl_api_body_$$"
+      http_code=$($curl_cmd -o "$tmp_body" "$url" 2>/dev/null) || true
+      if [[ -f "$tmp_body" ]]; then
+        cat "$tmp_body"
+        rm -f "$tmp_body"
+      fi
+    fi
+
+    # Success on 2xx codes
+    if [[ "$http_code" =~ ^2[0-9]{2}$ ]]; then
+      debug_log "curl API successful: $url (HTTP $http_code)"
+      echo "$http_code"
+      return 0
+    fi
+
+    debug_log "curl API attempt $attempt failed (HTTP $http_code), waiting ${attempt}s..."
+    sleep "$attempt"
+    ((attempt++))
+  done
+
+  debug_log "curl API FAILED after $retries attempts: $url"
+  echo "$http_code"
+  return 1
+}
+
+# ------------------------------------------------------------------------------
+# Download and install GPG key with retry logic
+#
+# Usage:
+#   download_gpg_key "https://example.com/key.gpg" "/etc/apt/keyrings/example.gpg"
+#   download_gpg_key "https://example.com/key.asc" "/etc/apt/keyrings/example.gpg" "dearmor"
+#
+# Parameters:
+#   $1 - URL to GPG key
+#   $2 - Output path for keyring file
+#   $3 - (optional) "dearmor" to convert ASCII-armored key to binary
+#
+# Returns: 0 on success, 1 on failure
+# ------------------------------------------------------------------------------
+download_gpg_key() {
+  local url="$1"
+  local output="$2"
+  local mode="${3:-}"
+  local retries="${CURL_RETRIES:-3}"
+  local timeout="${CURL_TIMEOUT:-30}"
+
+  mkdir -p "$(dirname "$output")"
+
+  local attempt=1
+  while [[ $attempt -le $retries ]]; do
+    debug_log "GPG key download attempt $attempt/$retries: $url"
+
+    if [[ "$mode" == "dearmor" ]]; then
+      if curl -fsSL --connect-timeout 10 --max-time "$timeout" "$url" 2>/dev/null | \
+         gpg --dearmor --yes -o "$output" 2>/dev/null; then
+        debug_log "GPG key installed: $output"
+        return 0
+      fi
+    else
+      if curl -fsSL --connect-timeout 10 --max-time "$timeout" -o "$output" "$url" 2>/dev/null; then
+        debug_log "GPG key downloaded: $output"
+        return 0
+      fi
+    fi
+
+    debug_log "GPG key download attempt $attempt failed, waiting ${attempt}s..."
+    sleep "$attempt"
+    ((attempt++))
+  done
+
+  debug_log "GPG key download FAILED after $retries attempts: $url"
+  return 1
+}
 
 # ------------------------------------------------------------------------------
 # Cache installed version to avoid repeated checks
@@ -453,9 +640,8 @@ manage_tool_repository() {
     # Clean old repos first
     cleanup_old_repo_files "mongodb"
 
-    # Import GPG key
-    mkdir -p /etc/apt/keyrings
-    if ! curl -fsSL "$gpg_key_url" | gpg --dearmor --yes -o "/etc/apt/keyrings/mongodb-server-${version}.gpg" 2>/dev/null; then
+    # Import GPG key with retry logic
+    if ! download_gpg_key "$gpg_key_url" "/etc/apt/keyrings/mongodb-server-${version}.gpg" "dearmor"; then
       msg_error "Failed to download MongoDB GPG key"
       return 1
     fi
@@ -535,14 +721,11 @@ EOF
     local distro_codename
     distro_codename=$(awk -F= '/^VERSION_CODENAME=/{print $2}' /etc/os-release)
 
-    # Create keyring directory first
-    mkdir -p /etc/apt/keyrings
-
-    # Download GPG key from NodeSource
-    curl -fsSL "$gpg_key_url" | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg || {
+    # Download GPG key from NodeSource with retry logic
+    if ! download_gpg_key "$gpg_key_url" "/etc/apt/keyrings/nodesource.gpg" "dearmor"; then
       msg_error "Failed to import NodeSource GPG key"
       return 1
-    }
+    fi
 
     cat <<EOF >/etc/apt/sources.list.d/nodesource.sources
 Types: deb
@@ -563,11 +746,11 @@ EOF
 
     cleanup_old_repo_files "php"
 
-    # Download and install keyring
-    curl -fsSLo /tmp/debsuryorg-archive-keyring.deb "$gpg_key_url" || {
+    # Download and install keyring with retry logic
+    if ! curl_with_retry "$gpg_key_url" "/tmp/debsuryorg-archive-keyring.deb"; then
       msg_error "Failed to download PHP keyring"
       return 1
-    }
+    fi
     dpkg -i /tmp/debsuryorg-archive-keyring.deb >/dev/null 2>&1 || {
       msg_error "Failed to install PHP keyring"
       rm -f /tmp/debsuryorg-archive-keyring.deb
@@ -597,14 +780,11 @@ EOF
 
     cleanup_old_repo_files "postgresql"
 
-    # Create keyring directory first
-    mkdir -p /etc/apt/keyrings
-
-    # Import PostgreSQL key
-    curl -fsSL "$gpg_key_url" | gpg --dearmor -o /etc/apt/keyrings/postgresql.gpg || {
+    # Import PostgreSQL key with retry logic
+    if ! download_gpg_key "$gpg_key_url" "/etc/apt/keyrings/postgresql.gpg" "dearmor"; then
       msg_error "Failed to import PostgreSQL GPG key"
       return 1
-    }
+    fi
 
     # Setup repository
     local distro_codename
@@ -1239,11 +1419,11 @@ setup_deb822_repo() {
     return 1
   }
 
-  # Import GPG
-  curl -fsSL "$gpg_url" | gpg --dearmor --yes -o "/etc/apt/keyrings/${name}.gpg" || {
+  # Import GPG key with retry logic
+  if ! download_gpg_key "$gpg_url" "/etc/apt/keyrings/${name}.gpg" "dearmor"; then
     msg_error "Failed to import GPG key for ${name}"
     return 1
-  }
+  fi
 
   # Write deb822
   {
@@ -3654,7 +3834,7 @@ function setup_mysql() {
   if [[ "$DISTRO_ID" == "debian" && "$DISTRO_CODENAME" =~ ^(trixie|forky|sid)$ ]]; then
     msg_info "Debian ${DISTRO_CODENAME} detected → using MySQL 8.4 LTS (libaio1t64 compatible)"
 
-    if ! curl -fsSL https://repo.mysql.com/RPM-GPG-KEY-mysql-2023 | gpg --dearmor -o /etc/apt/keyrings/mysql.gpg 2>/dev/null; then
+    if ! download_gpg_key "https://repo.mysql.com/RPM-GPG-KEY-mysql-2023" "/etc/apt/keyrings/mysql.gpg" "dearmor"; then
       msg_error "Failed to import MySQL GPG key"
       return 1
     fi
