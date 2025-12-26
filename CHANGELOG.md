@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-12-26
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - hyperion: increase disk to 4GB and tools.func: fix /root/. path error [@MickLesk](https://github.com/MickLesk) ([#10349](https://github.com/community-scripts/ProxmoxVE/pull/10349))
+
 ### ❔ Uncategorized
 
   - fix: zoraxy: category [@CrazyWolf13](https://github.com/CrazyWolf13) ([#10344](https://github.com/community-scripts/ProxmoxVE/pull/10344))
