@@ -14,7 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### ❔ Uncategorized
 
-  - categorize valkey as database [@pshankinclarke](https://github.com/pshankinclarke) ([#10331](https://github.com/community-scripts/ProxmoxVE/pull/10331))
+  - fix: zoraxy: category [@CrazyWolf13](https://github.com/CrazyWolf13) ([#10344](https://github.com/community-scripts/ProxmoxVE/pull/10344))
+- categorize valkey as database [@pshankinclarke](https://github.com/pshankinclarke) ([#10331](https://github.com/community-scripts/ProxmoxVE/pull/10331))
 
 ## 2025-12-25
 
