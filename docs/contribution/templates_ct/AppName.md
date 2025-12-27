@@ -55,7 +55,7 @@ Final script:
 <<<<<<< HEAD:.github/CONTRIBUTOR_AND_GUIDES/ct/AppName.md
 source <(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/build.func)
 =======
-source <(curl -s https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/build.func)
+source <(curl -s https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/build.func)
 >>>>>>> origin/main:docs/contribution/templates_ct/AppName.md
 ```
 

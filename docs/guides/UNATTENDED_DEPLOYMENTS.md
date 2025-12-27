@@ -94,7 +94,7 @@ df -h
 
 **Simplest form:**
 ```bash
-var_hostname=myserver bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/debian.sh)"
+var_hostname=myserver bash -c "$(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/ct/debian.sh)"
 ```
 
 ### Complete Configuration Example
@@ -136,7 +136,7 @@ var_ram=4096 \
 var_hostname=web-server \
 var_net=192.168.1.100/24-192.168.1.150/24 \
 var_gateway=192.168.1.1 \
-  bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/debian.sh)"
+  bash -c "$(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/ct/debian.sh)"
 
 # The script will:
 # 1. Ping 192.168.1.100 - if responds, skip

@@ -511,7 +511,7 @@ DESCRIPTION=$(
   <h2 style='font-size: 24px; margin: 20px 0;'>ubuntu VM</h2>
 
   <p style='margin: 16px 0;'>
-    <a href='https://ko-fi.com/community_scripts' target='_blank' rel='noopener noreferrer'>
+    <a href='https://ko-fi.com/remz1337' target='_blank' rel='noopener noreferrer'>
       <img src='https://img.shields.io/badge/&#x2615;-Buy us a coffee-blue' alt='spend Coffee' />
     </a>
   </p>

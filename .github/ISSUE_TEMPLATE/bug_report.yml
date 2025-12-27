@@ -46,7 +46,7 @@ body:
     id: script_command
     attributes:
       label: 📂 What was the exact command used to execute the script?
-      placeholder: "e.g., bash -c \"$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/zigbee2mqtt.sh)\" or \"update\""
+      placeholder: "e.g., bash -c \"$(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/ct/zigbee2mqtt.sh)\" or \"update\""
     validations:
       required: true
 

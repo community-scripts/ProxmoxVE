@@ -7699,7 +7699,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 - **Automatic Update of Repository:** The update function now uses the new repository `remz1337/ProxmoxVE` for Debian/Ubuntu LXC containers.
   
   ```bash
-  bash -c "$(curl -fsSL https://github.com/community-scripts/ProxmoxVE/raw/main/misc/update-repo.sh)"
+  bash -c "$(curl -fsSL https://github.com/remz1337/ProxmoxVE/raw/remz/misc/update-repo.sh)"
 
 ## 2024-10-31
 

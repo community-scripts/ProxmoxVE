@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/images/logo-81x112.png" height="120px" alt="Proxmox VE Helper-Scripts Logo" />
+  <img src="https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/misc/images/logo-81x112.png" height="120px" alt="Proxmox VE Helper-Scripts Logo" />
   
   <h1>Proxmox VE Helper-Scripts</h1>
   <p><em>A Community Legacy in Memory of @tteck</em></p>
@@ -11,7 +11,7 @@
     <a href="https://discord.gg/3AnUqsXnmK">
       <img src="https://img.shields.io/badge/💬_Discord-Join-7289da?style=for-the-badge&labelColor=2d3748" alt="Discord" />
     </a>
-    <a href="https://ko-fi.com/community_scripts">
+    <a href="https://ko-fi.com/remz1337">
       <img src="https://img.shields.io/badge/❤️_Support-Donate-FF5F5F?style=for-the-badge&labelColor=2d3748" alt="Donate" />
     </a>
   </p>
@@ -141,7 +141,7 @@ The fastest way to get started:
 Install a convenient script manager directly in your Proxmox UI:
 
 ```bash
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/pve-scripts-local.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/remz1337/ProxmoxVE/remz/ct/pve-scripts-local.sh)"
 ```
 
 This adds a menu to your Proxmox interface for easy script access without visiting the website.
@@ -228,7 +228,7 @@ This project is maintained by volunteers in memory of tteck. Your support helps 
 
 <div align="center">
 
-<a href="https://ko-fi.com/community_scripts">
+<a href="https://ko-fi.com/remz1337">
   <img src="https://img.shields.io/badge/☕_Buy_us_a_coffee-Support_on_Ko--fi-FF5F5F?style=for-the-badge&labelColor=2d3748" alt="Support on Ko-fi" />
 </a>
 
