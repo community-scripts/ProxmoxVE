@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-12-27
 
+### 🆕 New Scripts
+
+  - nextcloud-exporter ([#10314](https://github.com/community-scripts/ProxmoxVE/pull/10314))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
