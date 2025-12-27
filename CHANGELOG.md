@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-12-27
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Outline: Fix for database connection string [@tremor021](https://github.com/tremor021) ([#10359](https://github.com/community-scripts/ProxmoxVE/pull/10359))
+
 ## 2025-12-26
 
 ### 🚀 Updated Scripts
