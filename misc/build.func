@@ -2234,6 +2234,10 @@ Advanced:
   [[ "${PROTECT_CT:-no}" == "yes" || "${PROTECT_CT:-no}" == "1" ]] && echo -e "${CONTAINERTYPE}${BOLD}${DGN}Protection: ${BGN}Enabled${CL}"
   [[ -n "${CT_TIMEZONE:-}" ]] && echo -e "${INFO}${BOLD}${DGN}Timezone: ${BGN}$CT_TIMEZONE${CL}"
   [[ "$APT_CACHER" == "yes" ]] && echo -e "${INFO}${BOLD}${DGN}APT Cacher: ${BGN}$APT_CACHER_IP${CL}"
+  [[ "$SHARED_MOUNT" == "yes" ]] && echo -e "${INFO}${BOLD}${DGN}Shared Folder: ${BGN}$SHARED_MOUNT_LOC${CL}"
+  [[ "$SHARED_MOUNT" == "yes" ]] && echo -e "${INFO}${BOLD}${DGN}Shared Folder User: ${BGN}$SHARED_MOUNT_USER${CL}"
+  [[ "$POSTFIX_SAT" == "yes" ]] && echo -e "${INFO}${BOLD}${DGN}Postfix Satellite: ${BGN}$POSTFIX_SAT_DOMAIN${CL}"
+  echo -e "${GPU}${BOLD}${DGN}NVIDIA GPU Passthrough: ${BGN}${NVIDIA_PASSTHROUGH:-no}${CL}"
   echo -e "${SEARCH}${BOLD}${DGN}Verbose Mode: ${BGN}$VERBOSE${CL}"
   echo -e "${CREATING}${BOLD}${RD}Creating a ${APP} LXC using the above advanced settings${CL}"
 }
