@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: tteck (tteckster) | MickLesk | michelroegl-brunner
+# Co-Author: DerDingsCS
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/branch/main/LICENSE
 
 # ==============================================================================
@@ -2640,23 +2641,27 @@ start() {
     update_script
     cleanup_lxc
   else
+# Use proper tags in whiptail menu to enable usage of the first letter as hot-key
+# - s/S for "Silent Mode" "YES (Silent Mode)"
+# - v/V for "Verbose Mode" "YES (Verbose Mode)"
+# - c/C for Cancel update/setting
     CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "${APP} LXC Update/Setting" --menu \
       "Support/Update functions for ${APP} LXC. Choose an option:" \
       12 60 3 \
-      "1" "YES (Silent Mode)" \
-      "2" "YES (Verbose Mode)" \
-      "3" "NO (Cancel Update)" --nocancel --default-item "1" 3>&1 1>&2 2>&3)
+      "Silent Mode" "YES (Silent Mode)" \
+      "Verbose Mode" "YES (Verbose Mode)" \
+      "Cancel" "NO (Cancel Update)" --nocancel --default-item "1" 3>&1 1>&2 2>&3)
 
     case "$CHOICE" in
-    1)
+    "Silent Mode")
       VERBOSE="no"
       set_std_mode
       ;;
-    2)
+  "Verbose Mode")
       VERBOSE="yes"
       set_std_mode
       ;;
-    3)
+  "Cancel")
       clear
       exit_script
       exit
