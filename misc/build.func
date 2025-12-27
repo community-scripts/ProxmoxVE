@@ -2384,7 +2384,6 @@ install_script() {
   ssh_check
   maxkeys_check
   diagnostics_check
-  read_proxmox_helper_scripts_env
 
   if systemctl is-active -q ping-instances.service; then
     systemctl -q stop ping-instances.service
