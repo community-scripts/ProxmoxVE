@@ -2470,6 +2470,7 @@ install_script() {
       echo -e "${ADVANCED}${BOLD}${RD}Using Advanced Install on node $PVEHOST_NAME${CL}"
       echo -e "${INFO}${BOLD}${DGN}PVE Version ${PVEVERSION} (Kernel: ${KERNEL_VERSION})${CL}"
       METHOD="advanced"
+      load_vars_file "$(get_app_defaults_path)"
       base_settings
       advanced_settings
       defaults_target="$(ensure_global_default_vars_file)"
