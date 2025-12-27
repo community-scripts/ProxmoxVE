@@ -1982,8 +1982,7 @@ advanced_settings() {
           local shared_mount_user
           if shared_mount_user=$(whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
             --title "SHARED FOLDER" \
-            --ok-button "Next" --cancel-button "Back" \
-            --inputbox "\nEnter shared user with write permission" 10 58 "" \
+            --inputbox "\nEnter shared user with write permission:" 10 58 "$_shared_mount_user" \
             3>&1 1>&2 2>&3); then
             _shared_mount_user="$shared_mount_user"
           fi
