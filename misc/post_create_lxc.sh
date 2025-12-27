@@ -32,10 +32,7 @@ echo -e "${BL}Customizing LXC creation${CL}"
 [[ "${PCT_OSVERSION:-}" ]] || exit "You need to set 'PCT_OSVERSION' variable."
 [[ "${app:-}" ]] || exit "You need to set 'app' variable."
 [[ "${SHARED_MOUNT:-}" ]] || exit "You need to set 'SHARED_MOUNT' variable."
-[[ "${SHARED_MOUNT_LOC:-}" ]] || exit "You need to set 'SHARED_MOUNT_LOC' variable."
-[[ "${SHARED_MOUNT_USER:-}" ]] || exit "You need to set 'SHARED_MOUNT_USER' variable."
 [[ "${POSTFIX_SAT:-}" ]] || exit "You need to set 'POSTFIX_SAT' variable."
-[[ "${POSTFIX_SAT_DOMAIN:-}" ]] || exit "You need to set 'POSTFIX_SAT_DOMAIN' variable."
 [[ "${NVIDIA_PASSTHROUGH:-}" ]] || exit "You need to set 'NVIDIA_PASSTHROUGH' variable."
 
 
@@ -69,6 +66,8 @@ if [ "$PCT_OSTYPE" == "debian" ]; then
 fi
 
 if [[ "${SHARED_MOUNT}" == "yes" ]]; then
+  [[ "${SHARED_MOUNT_LOC:-}" ]] || exit "You need to set 'SHARED_MOUNT_LOC' variable."
+  [[ "${SHARED_MOUNT_USER:-}" ]] || exit "You need to set 'SHARED_MOUNT_USER' variable."
   msg_info "Mounting shared directory"
   #Add user $SHARED_MOUNT_USER
   if user_exists "$SHARED_MOUNT_USER"; then
@@ -93,6 +92,7 @@ EOF
 fi
 
 if [[ "${POSTFIX_SAT}" == "yes" ]]; then
+  [[ "${POSTFIX_SAT_DOMAIN:-}" ]] || exit "You need to set 'POSTFIX_SAT_DOMAIN' variable."
   msg_info "Configuring Postfix Satellite"
   #Install deb-conf-utils to set parameters
   pct exec $CTID -- /bin/bash -c "apt install -qqy debconf-utils &>/dev/null"
