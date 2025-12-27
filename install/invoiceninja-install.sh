@@ -86,7 +86,8 @@ EOF
 mkdir -p /opt/invoiceninja/bootstrap/cache
 mkdir -p /opt/invoiceninja/storage/{app/public,framework/{cache/data,sessions,views},logs}
 chown -R www-data:www-data /opt/invoiceninja
-chmod -R 775 /opt/invoiceninja/storage /opt/invoiceninja/bootstrap/cache
+chown -R www-data:www-data /opt/invoiceninja/storage
+chown -R www-data:www-data /opt/invoiceninja/bootstrap/cache
 msg_ok "Configured InvoiceNinja"
 
 msg_info "Downloading Chromium for PDF Generation"
