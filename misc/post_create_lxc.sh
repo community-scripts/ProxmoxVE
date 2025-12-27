@@ -31,9 +31,11 @@ echo -e "${BL}Customizing LXC creation${CL}"
 [[ "${PCT_OSTYPE:-}" ]] || exit "You need to set 'PCT_OSTYPE' variable."
 [[ "${PCT_OSVERSION:-}" ]] || exit "You need to set 'PCT_OSVERSION' variable."
 [[ "${app:-}" ]] || exit "You need to set 'app' variable."
-[[ "${ADD_SSH_USER:-}" ]] || exit "You need to set 'ADD_SSH_USER' variable."
 [[ "${SHARED_MOUNT:-}" ]] || exit "You need to set 'SHARED_MOUNT' variable."
+[[ "${SHARED_MOUNT_LOC:-}" ]] || exit "You need to set 'SHARED_MOUNT_LOC' variable."
+[[ "${SHARED_MOUNT_USER:-}" ]] || exit "You need to set 'SHARED_MOUNT_USER' variable."
 [[ "${POSTFIX_SAT:-}" ]] || exit "You need to set 'POSTFIX_SAT' variable."
+[[ "${POSTFIX_SAT_DOMAIN:-}" ]] || exit "You need to set 'POSTFIX_SAT_DOMAIN' variable."
 [[ "${NVIDIA_PASSTHROUGH:-}" ]] || exit "You need to set 'NVIDIA_PASSTHROUGH' variable."
 
 
@@ -66,30 +68,17 @@ if [ "$PCT_OSTYPE" == "debian" ]; then
   msg_ok "Installed sudo"
 fi
 
-if [[ "${ADD_SSH_USER}" == "yes" ]]; then
-  #Add ssh sudo user SSH_USER
-  msg_info "Adding SSH user $SSH_USER (sudo)"
-  if user_exists "$SSH_USER"; then
-    msg_error 'User $SSH_USER already exists.'
-  else
-    pct exec $CTID -- /bin/bash -c "adduser $SSH_USER --disabled-password --gecos '' --uid 1000 &>/dev/null"
-    pct exec $CTID -- /bin/bash -c "echo '$SSH_USER:$SSH_PASSWORD' | chpasswd --encrypted"
-    pct exec $CTID -- /bin/bash -c "usermod -aG sudo $SSH_USER"
-  fi
-  msg_ok "Added SSH user $SSH_USER (sudo)"
-fi
-
 if [[ "${SHARED_MOUNT}" == "yes" ]]; then
   msg_info "Mounting shared directory"
-  #Add user $SHARE_USER
-  if user_exists "$SHARE_USER"; then
-    msg_error 'User $SHARE_USER already exists.'
+  #Add user $SHARED_MOUNT_USER
+  if user_exists "$SHARED_MOUNT_USER"; then
+    msg_error 'User $SHARED_MOUNT_USER already exists.'
   else
-    pct exec $CTID -- /bin/bash -c "adduser $SHARE_USER --disabled-password --no-create-home --gecos '' --uid 1001 &>/dev/null"
+    pct exec $CTID -- /bin/bash -c "adduser $SHARED_MOUNT_USER --disabled-password --no-create-home --gecos '' --uid 1001 &>/dev/null"
     # Add mount point and user mapping
-    # This assumes that we have a "share" drive mounted on host with directory 'public' (/mnt/pve/share/public) AND that $SHARE_USER user (and group) has been added on host with appropriate access to the "public" directory
+    # This assumes that we have a "share" drive mounted on host with directory 'public' (/mnt/pve/share/public) AND that $SHARED_MOUNT_USER user (and group) has been added on host with appropriate access to the "public" directory
     cat <<EOF >>/etc/pve/lxc/${CTID}.conf
-mp0: /mnt/pve/share2/public,mp=/mnt/pve/share
+mp0: ${SHARED_MOUNT_LOC},mp=/mnt/pve/share
 lxc.idmap: u 0 100000 1001
 lxc.idmap: g 0 100000 1001
 lxc.idmap: u 1001 1001 1
@@ -111,9 +100,9 @@ if [[ "${POSTFIX_SAT}" == "yes" ]]; then
   pct exec $CTID -- /bin/bash -c "mv /etc/postfix/main.cf /etc/postfix/main.cf.BAK"
   pct exec $CTID -- /bin/bash -c "echo postfix postfix/main_mailer_type        select  Satellite system | debconf-set-selections"
   pct exec $CTID -- /bin/bash -c "echo postfix postfix/destinations    string  $app.localdomain, localhost.localdomain, localhost | debconf-set-selections"
-  pct exec $CTID -- /bin/bash -c "echo postfix postfix/mailname        string  $app.$DOMAIN | debconf-set-selections"
+  pct exec $CTID -- /bin/bash -c "echo postfix postfix/mailname        string  $app.$POSTFIX_SAT_DOMAIN | debconf-set-selections"
   #This config assumes that the postfix relay host is already set up in another LXC with hostname "postfix" (using port 255)
-  pct exec $CTID -- /bin/bash -c "echo postfix postfix/relayhost       string  [postfix.$DOMAIN]:255 | debconf-set-selections"
+  pct exec $CTID -- /bin/bash -c "echo postfix postfix/relayhost       string  [postfix.$POSTFIX_SAT_DOMAIN]:255 | debconf-set-selections"
   pct exec $CTID -- /bin/bash -c "echo postfix postfix/mynetworks      string  127.0.0.0/8 | debconf-set-selections"
   pct exec $CTID -- /bin/bash -c "echo postfix postfix/mailbox_limit      string  0 | debconf-set-selections"
   pct exec $CTID -- /bin/bash -c "echo postfix postfix/protocols      select  all | debconf-set-selections"

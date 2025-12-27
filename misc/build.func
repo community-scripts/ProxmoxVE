@@ -539,11 +539,12 @@ base_settings() {
   [[ "${CT_TIMEZONE:-}" == Etc/* ]] && CT_TIMEZONE="host" # pct doesn't accept Etc/* zones
 
   #Custom variables for remz1337's fork
-  FW=${var_fw:-"1"}
   TAGS="remz1337;${var_tags:-}"
-  ADD_SSH_USER=${var_add_ssh_user:-"no"}
   SHARED_MOUNT=${var_shared_mount:-"no"}
+  SHARED_MOUNT_LOC=${var_shared_mount_loc:-""}
+  SHARED_MOUNT_USER=${var_shared_mount_user:-"share"}
   POSTFIX_SAT=${var_postfix_sat:-"no"}
+  POSTFIX_SAT_DOMAIN=${var_postfix_sat_domain:-""}
   NVIDIA_PASSTHROUGH=${var_nvidia_passthrough:-"no"}
 
   # Since these 2 are only defined outside of default_settings function, we add a temporary fallback. TODO: To align everything, we should add these as constant variables (e.g. OSTYPE and OSVERSION), but that would currently require updating the default_settings function for all existing scripts
@@ -573,7 +574,7 @@ load_vars_file() {
   local VAR_WHITELIST=(
     var_apt_cacher var_apt_cacher_ip var_brg var_cpu var_disk var_fuse var_gpu var_keyctl
     var_gateway var_hostname var_ipv6_method var_mac var_mknod var_mount_fs var_mtu
-    var_net var_nesting var_ns var_protection var_pw var_ram var_tags var_timezone var_tun var_unprivileged
+    var_net var_nesting var_ns var_nvidia_passthrough var_postfix_sat var_postfix_sat_domain var_protection var_pw var_ram var_shared_mount var_shared_mount_loc var_shared_mount_user var_tags var_timezone var_tun var_unprivileged
     var_verbose var_vlan var_ssh var_ssh_authorized_key var_container_storage var_template_storage
   )
 
@@ -638,7 +639,7 @@ default_var_settings() {
   local VAR_WHITELIST=(
     var_apt_cacher var_apt_cacher_ip var_brg var_cpu var_disk var_fuse var_gpu var_keyctl
     var_gateway var_hostname var_ipv6_method var_mac var_mknod var_mount_fs var_mtu
-    var_net var_nesting var_ns var_protection var_pw var_ram var_tags var_timezone var_tun var_unprivileged
+    var_net var_nesting var_ns var_nvidia_passthrough var_postfix_sat var_postfix_sat_domain var_protection var_pw var_ram var_shared_mount var_shared_mount_loc var_shared_mount_user var_tags var_timezone var_tun var_unprivileged
     var_verbose var_vlan var_ssh var_ssh_authorized_key var_container_storage var_template_storage
   )
 
@@ -729,6 +730,18 @@ var_verbose=no
 
 # Security (root PW) – empty => autologin
 # var_pw=
+
+# Shared folder (optional - with example)
+# var_shared_mount=yes
+# var_shared_mount_loc=/mnt/pve/share2/public
+# var_shared_mount_user=share
+
+# Postfix as satellite
+# var_postfix_sat=yes
+# var_postfix_sat_domain=example.com
+
+# Nvidia GPU passthrough
+# var_nvidia_passthrough=yes
 EOF
 
     # Now choose storages (always prompt unless just one exists)
@@ -800,7 +813,7 @@ if ! declare -p VAR_WHITELIST >/dev/null 2>&1; then
   declare -ag VAR_WHITELIST=(
     var_apt_cacher var_apt_cacher_ip var_brg var_cpu var_disk var_fuse var_gpu
     var_gateway var_hostname var_ipv6_method var_mac var_mtu
-    var_net var_ns var_pw var_ram var_tags var_tun var_unprivileged
+    var_net var_ns var_nvidia_passthrough var_postfix_sat var_postfix_sat_domain var_pw var_ram var_shared_mount var_shared_mount_loc var_shared_mount_user var_tags var_tun var_unprivileged
     var_verbose var_vlan var_ssh var_ssh_authorized_key var_container_storage var_template_storage
   )
 fi
@@ -968,6 +981,14 @@ _build_current_app_vars_tmp() {
   _tpl_storage="${TEMPLATE_STORAGE:-${var_template_storage:-}}"
   _ct_storage="${CONTAINER_STORAGE:-${var_container_storage:-}}"
 
+  # remz1337
+  _shared_mount="${SHARED_MOUNT:-${var_shared_mount:-no}}"
+  _shared_mount_loc="${SHARED_MOUNT_LOC:-}"
+  _shared_mount_user="${SHARED_MOUNT_USER:-share}"
+  _postfix_sat="${POSTFIX_SAT:-no}"
+  _postfix_sat_domain="${POSTFIX_SAT_DOMAIN:-example.com}"
+  _nvidia_passthrough="${NVIDIA_PASSTHROUGH:-no}"
+
   {
     echo "# App-specific defaults for ${APP} (${NSAPP})"
     echo "# Generated on $(date -u '+%Y-%m-%dT%H:%M:%SZ')"
@@ -1012,6 +1033,14 @@ _build_current_app_vars_tmp() {
 
     [ -n "$_tpl_storage" ] && echo "var_template_storage=$(_sanitize_value "$_tpl_storage")"
     [ -n "$_ct_storage" ] && echo "var_container_storage=$(_sanitize_value "$_ct_storage")"
+
+    # remz1337
+    [ -n "$_shared_mount" ] && echo "var_shared_mount=$(_sanitize_value "$_shared_mount")"
+    [ -n "$_shared_mount_loc" ] && echo "var_shared_mount_loc=$(_sanitize_value "$_shared_mount_loc")"
+    [ -n "$_shared_mount_user" ] && echo "var_shared_mount_user=$(_sanitize_value "$_shared_mount_user")"
+    [ -n "$_postfix_sat" ] && echo "var_postfix_sat=$(_sanitize_value "$_postfix_sat")"
+    [ -n "$_postfix_sat_domain" ] && echo "var_postfix_sat_domain=$(_sanitize_value "$_postfix_sat_domain")"
+    [ -n "$_nvidia_passthrough" ] && echo "var_nvidia_passthrough=$(_sanitize_value "$_nvidia_passthrough")"
   } >"$tmpf"
 
   echo "$tmpf"
@@ -1144,7 +1173,7 @@ advanced_settings() {
   # Initialize defaults
   TAGS="remz1337;${var_tags:-}"
   local STEP=1
-  local MAX_STEP=28
+  local MAX_STEP=31
 
   # Store values for back navigation - inherit from var_* app defaults
   local _ct_type="${var_unprivileged:-1}"
@@ -1178,6 +1207,14 @@ advanced_settings() {
   local _enable_mknod="${var_mknod:-0}"
   local _mount_fs="${var_mount_fs:-}"
   local _protect_ct="${var_protection:-no}"
+
+  # remz1337
+  local _shared_mount="${var_shared_mount:-no}"
+  local _shared_mount_loc="${var_shared_mount_loc:-}"
+  local _shared_mount_user="${var_shared_mount_user:-share}"
+  local _postfix_sat="${var_postfix_sat:-no}"
+  local _postfix_sat_domain="${var_postfix_sat_domain:-example.com}"
+  local _nvidia_passthrough="${var_nvidia_passthrough:-no}"
 
   # Detect host timezone for default (if not set via var_timezone)
   local _host_timezone=""
@@ -1920,10 +1957,113 @@ advanced_settings() {
       fi
       ;;
 
+
     # ═══════════════════════════════════════════════════════════════════════════
-    # STEP 28: Verbose Mode & Confirmation
+    # STEP 28: Add shared folder (mount point)
     # ═══════════════════════════════════════════════════════════════════════════
     28)
+      local shared_mount_default_flag="--defaultno"
+      [[ "$_shared_mount" == "yes" ]] && shared_mount_default_flag=""
+
+      if whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
+        --title "SHARED FOLDER" \
+        --ok-button "Next" --cancel-button "Back" \
+        $shared_mount_default_flag \
+        --yesno "\nAdd a shared folder (mount point)?\n\nShared folder, mostly useful for sharing files across services.\n\n(App default: ${var_shared_mount:-no})" 14 62; then
+        _shared_mount="yes"
+        # Ask for folder location if enabled
+        if result=$(whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
+          --title "SHARED FOLDER" \
+          --inputbox "\nEnter shared folder location on host:" 10 58 "$_shared_mount_loc" \
+          3>&1 1>&2 2>&3); then
+          _shared_mount_loc="$result"
+
+          # Get shared mount user
+          local shared_mount_user
+          if shared_mount_user=$(whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
+            --title "SHARED FOLDER" \
+            --ok-button "Next" --cancel-button "Back" \
+            --inputbox "\nEnter shared user with write permission" 10 58 "" \
+            3>&1 1>&2 2>&3); then
+            _shared_mount_user="$shared_mount_user"
+          fi
+        fi
+      else
+        if [ $? -eq 1 ]; then
+          _shared_mount="no"
+          _shared_mount_loc=""
+          _shared_mount_user=""
+        else
+          ((STEP--))
+          continue
+        fi
+      fi
+      ((STEP++))
+      ;;
+
+
+    # ═══════════════════════════════════════════════════════════════════════════
+    # STEP 29: Configure Postfix Satellite
+    # ═══════════════════════════════════════════════════════════════════════════
+    29)
+      local postfix_sat_default_flag="--defaultno"
+      [[ "$_postfix_sat" == "yes" || "$_postfix_sat" == "1" ]] && postfix_sat_default_flag=""
+
+      if whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
+        --title "POSTFIX SATELLITE" \
+        --ok-button "Next" --cancel-button "Back" \
+        $postfix_sat_default_flag \
+        --yesno "\nConfigure Postfix as satellite?\n\nAllows usings a single postfix relay.\n\n(App default: ${var_postfix_sat:-no})" 14 62; then
+        _postfix_sat="yes"
+        # Ask for domain if enabled
+        if result=$(whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
+          --title "POSTFIX SATELLITE" \
+          --inputbox "\nEnter Postfix Satellite domain (eg. example.com):" 10 58 "$_postfix_sat_domain" \
+          3>&1 1>&2 2>&3); then
+          _postfix_sat_domain="$result"
+        fi
+      else
+        if [ $? -eq 1 ]; then
+          _postfix_sat="no"
+          _postfix_sat_domain=""
+        else
+          ((STEP--))
+          continue
+        fi
+      fi
+      ((STEP++))
+      ;;
+
+
+    # ═══════════════════════════════════════════════════════════════════════════
+    # STEP 30: Configure Nvidia GPU Passthrough
+    # ═══════════════════════════════════════════════════════════════════════════
+    30)
+      local _nvidia_passthrough_default_flag="--defaultno"
+      [[ "$_nvidia_passthrough" == "yes" || "$_nvidia_passthrough" == "1" ]] && _nvidia_passthrough_default_flag=""
+
+      if whiptail --backtitle "Proxmox VE Helper Scripts [Step $STEP/$MAX_STEP]" \
+        --title "NVIDIA PASSTHROUGH" \
+        --ok-button "Next" --cancel-button "Back" \
+        $_nvidia_passthrough_default_flag \
+        --yesno "\nConfigure Nvidia GPU passthrough?\n\nSelect which gpu(s) to passthrough and downloads the same drivers as the host.\n\n(App default: ${var_nvidia_passthrough:-no})" 14 62; then
+        _nvidia_passthrough="yes"
+      else
+        if [ $? -eq 1 ]; then
+          _nvidia_passthrough="no"
+        else
+          ((STEP--))
+          continue
+        fi
+      fi
+      ((STEP++))
+      ;;
+
+
+    # ═══════════════════════════════════════════════════════════════════════════
+    # STEP 31: Verbose Mode & Confirmation
+    # ═══════════════════════════════════════════════════════════════════════════
+    31)
       local verbose_default_flag="--defaultno"
       [[ "$_verbose" == "yes" ]] && verbose_default_flag=""
 
@@ -1952,6 +2092,15 @@ advanced_settings() {
       local apt_display="${_apt_cacher:-no}"
       [[ "$_apt_cacher" == "yes" && -n "$_apt_cacher_ip" ]] && apt_display="$_apt_cacher_ip"
 
+      local shared_mount_display="${_shared_mount:-no}"
+      [[ "$_shared_mount" == "yes" && -n "$_shared_mount_loc" && -n "$_shared_mount_user" ]] && shared_mount_display="$_shared_mount_loc | User: $_shared_mount_user"
+
+      local postfix_sat_display="${_postfix_sat:-no}"
+      [[ "$_postfix_sat" == "yes" && -n "$_postfix_sat_domain" ]] && postfix_sat_display="$_postfix_sat_domain"
+
+      local nvidia_passthrough_desc="No"
+      [[ "$_nvidia_passthrough" == "yes" || "$_nvidia_passthrough" == "1" ]] && nvidia_passthrough_desc="Yes"
+
       local summary="Container Type: $ct_type_desc
 Container ID: $_ct_id
 Hostname: $_hostname
@@ -1970,6 +2119,11 @@ Features:
   FUSE: $_enable_fuse | TUN: $_enable_tun
   Nesting: $nesting_desc | Keyctl: $keyctl_desc
   GPU: $_enable_gpu | Protection: $protect_desc
+
+remz1337:
+  Shared mount: $shared_mount_display
+  Postfix satellite: $postfix_sat_display
+  Nvidia passthrough: $nvidia_passthrough_desc
 
 Advanced:
   Timezone: $tz_display
@@ -2017,6 +2171,14 @@ Advanced:
   APT_CACHER="$_apt_cacher"
   APT_CACHER_IP="$_apt_cacher_ip"
   VERBOSE="$_verbose"
+
+  # remz1337
+  SHARED_MOUNT="$_shared_mount"
+  SHARED_MOUNT_LOC="$_shared_mount_loc"
+  SHARED_MOUNT_USER="$_shared_mount_user"
+  POSTFIX_SAT="$_postfix_sat"
+  POSTFIX_SAT_DOMAIN="$_postfix_sat_domain"
+  NVIDIA_PASSTHROUGH="$_nvidia_passthrough"
 
   # Update var_* based on user choice (for functions that check these)
   var_gpu="$_enable_gpu"
@@ -4242,175 +4404,83 @@ api_exit_script() {
   fi
 }
 
-# Set a global variable for the PHS environment file
-PVE_ENV="/etc/pve-helper-scripts.conf"
+# # Set a global variable for the PHS environment file
+# PVE_ENV="/etc/pve-helper-scripts.conf"
 
-# This function loads the environment file for common configuration in Proxmox-Helper-Scripts
-function read_proxmox_helper_scripts_env(){
-  #Check if file exists
-  if [ ! -f "$PVE_ENV" ]; then
-    msg_info "${BL}Creating Proxmox-Helper-Scripts configuration file.${CL}"
-    touch "$PVE_ENV"
-    chown root:root "$PVE_ENV"
-    chmod 0600 "$PVE_ENV"
-    msg_ok "${BL}Created Proxmox-Helper-Scripts configuration file.${CL}"
-  else
-    source "$PVE_ENV"
-  fi
-}
+# # This function loads the environment file for common configuration in Proxmox-Helper-Scripts
+# function read_proxmox_helper_scripts_env(){
+  # #Check if file exists
+  # if [ ! -f "$PVE_ENV" ]; then
+    # msg_info "${BL}Creating Proxmox-Helper-Scripts configuration file.${CL}"
+    # touch "$PVE_ENV"
+    # chown root:root "$PVE_ENV"
+    # chmod 0600 "$PVE_ENV"
+    # msg_ok "${BL}Created Proxmox-Helper-Scripts configuration file.${CL}"
+  # else
+    # source "$PVE_ENV"
+  # fi
+# }
 
-# This function adds a variable to the Proxmox-Helper-Scripts config file
-function add_proxmox_helper_scripts_env(){
-  #check if first parameter was passed and it's an integer
-  if [ $# -ge 1 ] && [ ! -z "$1" ]; then
-    PHS_VAR_NAME=$1
-    DEFAULT_VALUE=""
-    if [ $# -ge 2 ] && [ ! -z "$2" ]; then
-      DEFAULT_VALUE=$2
-    fi
-    if PHS_VAR_VALUE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set value for environment variable $PHS_VAR_NAME" 8 58 $DEFAULT_VALUE --title "VALUE" 3>&1 1>&2 2>&3); then
-      if [ -z "$PHS_VAR_VALUE" ]; then
-        msg_error "Value cannot be empty!"
-        exit-script
-      fi
-      echo -e "${DGN}Setting Proxmox-Helper-Scripts Envrionment Variable $PHS_VAR_NAME: ${BGN}${PHS_VAR_VALUE}${CL}"
-      if [ $# -ge 3 ] && [ ! -z "$3" ] && [ "$3" == "PASSWORD" ]; then
-        PHS_VAR_VALUE=$(openssl passwd -1 ${PHS_VAR_VALUE})
-      fi
-      if grep -q "${PHS_VAR_NAME}=.*" "$PVE_ENV"; then
-        sed -i "s|${PHS_VAR_NAME}=.*|${PHS_VAR_NAME}='${PHS_VAR_VALUE}'|g" "$PVE_ENV"
-      else
-        echo "${PHS_VAR_NAME}='${PHS_VAR_VALUE}'" >> "$PVE_ENV"
-      fi
-    else
-      exit-script
-    fi
-  else
-    msg_error "You need to pass the variable name to set as the first parameter"
-    exit-script
-  fi
-  read_proxmox_helper_scripts_env
-}
+# # This function adds a variable to the Proxmox-Helper-Scripts config file
+# function add_proxmox_helper_scripts_env(){
+  # #check if first parameter was passed and it's an integer
+  # if [ $# -ge 1 ] && [ ! -z "$1" ]; then
+    # PHS_VAR_NAME=$1
+    # DEFAULT_VALUE=""
+    # if [ $# -ge 2 ] && [ ! -z "$2" ]; then
+      # DEFAULT_VALUE=$2
+    # fi
+    # if PHS_VAR_VALUE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set value for environment variable $PHS_VAR_NAME" 8 58 $DEFAULT_VALUE --title "VALUE" 3>&1 1>&2 2>&3); then
+      # if [ -z "$PHS_VAR_VALUE" ]; then
+        # msg_error "Value cannot be empty!"
+        # exit-script
+      # fi
+      # echo -e "${DGN}Setting Proxmox-Helper-Scripts Envrionment Variable $PHS_VAR_NAME: ${BGN}${PHS_VAR_VALUE}${CL}"
+      # if [ $# -ge 3 ] && [ ! -z "$3" ] && [ "$3" == "PASSWORD" ]; then
+        # PHS_VAR_VALUE=$(openssl passwd -1 ${PHS_VAR_VALUE})
+      # fi
+      # if grep -q "${PHS_VAR_NAME}=.*" "$PVE_ENV"; then
+        # sed -i "s|${PHS_VAR_NAME}=.*|${PHS_VAR_NAME}='${PHS_VAR_VALUE}'|g" "$PVE_ENV"
+      # else
+        # echo "${PHS_VAR_NAME}='${PHS_VAR_VALUE}'" >> "$PVE_ENV"
+      # fi
+    # else
+      # exit-script
+    # fi
+  # else
+    # msg_error "You need to pass the variable name to set as the first parameter"
+    # exit-script
+  # fi
+  # read_proxmox_helper_scripts_env
+# }
 
-# This function adds an encrypted variable to the Proxmox-Helper-Scripts config file by passing the right arguments to add_proxmox_helper_scripts_env()
-function add_proxmox_helper_scripts_env_password(){
-  if [ $# -ge 2 ] && [ ! -z "$1" ] && [ ! -z "$2" ]; then
-    add_proxmox_helper_scripts_env $1 $2 "PASSWORD"
-  elif [ $# -ge 1 ] && [ ! -z "$1" ]; then
-    add_proxmox_helper_scripts_env $1 "" "PASSWORD"
-  else
-    msg_error "You need to pass the variable name to set as the first parameter"
-    exit-script
-  fi
-}
+# # This function adds an encrypted variable to the Proxmox-Helper-Scripts config file by passing the right arguments to add_proxmox_helper_scripts_env()
+# function add_proxmox_helper_scripts_env_password(){
+  # if [ $# -ge 2 ] && [ ! -z "$1" ] && [ ! -z "$2" ]; then
+    # add_proxmox_helper_scripts_env $1 $2 "PASSWORD"
+  # elif [ $# -ge 1 ] && [ ! -z "$1" ]; then
+    # add_proxmox_helper_scripts_env $1 "" "PASSWORD"
+  # else
+    # msg_error "You need to pass the variable name to set as the first parameter"
+    # exit-script
+  # fi
+# }
 
-# This function tests all enabled Proxmox-Helper-Scripts environment variable needed to build the container and creates them if missing
-function phs_validate_required_config(){
-  if [ ! -z ${ADD_SSH_USER+x} ] && [[ "${ADD_SSH_USER}" == "yes" ]]; then
-    if [ -z ${SSH_USER+x} ] || [ -z ${SSH_PASSWORD+x} ]; then
-      msg_error "Missing proxmox-helper-scripts environment variables: SSH_USER, SSH_PASSWORD"
-      add_proxmox_helper_scripts_env "SSH_USER" "admin"
-      add_proxmox_helper_scripts_env_password "SSH_PASSWORD"
-    fi
-  fi
-  if [ ! -z ${SHARED_MOUNT+x} ] && [[ "${SHARED_MOUNT}" == "yes" ]]; then
-    if [ -z ${SHARE_USER+x} ]; then
-      msg_error "Missing proxmox-helper-scripts environment variable: SHARE_USER"
-      add_proxmox_helper_scripts_env "SHARE_USER" "share"
-    fi
-  fi
-  if [ ! -z ${POSTFIX_SAT+x} ] && [[ "${POSTFIX_SAT}" == "yes" ]]; then
-    if [ -z ${DOMAIN+x} ]; then
-      msg_error "Missing proxmox-helper-scripts environment variable: DOMAIN"
-      add_proxmox_helper_scripts_env "DOMAIN" "example.com"
-    fi
-  fi
-}
-
-# Set a global variable for the PHS environment file
-PVE_ENV="/etc/pve-helper-scripts.conf"
-
-# This function loads the environment file for common configuration in Proxmox-Helper-Scripts
-function read_proxmox_helper_scripts_env(){
-  #Check if file exists
-  if [ ! -f "$PVE_ENV" ]; then
-    msg_info "${BL}Creating Proxmox-Helper-Scripts configuration file.${CL}"
-    touch "$PVE_ENV"
-    chown root:root "$PVE_ENV"
-    chmod 0600 "$PVE_ENV"
-    msg_ok "${BL}Created Proxmox-Helper-Scripts configuration file.${CL}"
-  else
-    source "$PVE_ENV"
-  fi
-}
-
-# This function adds a variable to the Proxmox-Helper-Scripts config file
-function add_proxmox_helper_scripts_env(){
-  #check if first parameter was passed and it's an integer
-  if [ $# -ge 1 ] && [ ! -z "$1" ]; then
-    PHS_VAR_NAME=$1
-    DEFAULT_VALUE=""
-    if [ $# -ge 2 ] && [ ! -z "$2" ]; then
-      DEFAULT_VALUE=$2
-    fi
-    if PHS_VAR_VALUE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Set value for environment variable $PHS_VAR_NAME" 8 58 $DEFAULT_VALUE --title "VALUE" 3>&1 1>&2 2>&3); then
-      if [ -z "$PHS_VAR_VALUE" ]; then
-        msg_error "Value cannot be empty!"
-        exit-script
-      fi
-      echo -e "${DGN}Setting Proxmox-Helper-Scripts Envrionment Variable $PHS_VAR_NAME: ${BGN}${PHS_VAR_VALUE}${CL}"
-      if [ $# -ge 3 ] && [ ! -z "$3" ] && [ "$3" == "PASSWORD" ]; then
-        PHS_VAR_VALUE=$(openssl passwd -1 ${PHS_VAR_VALUE})
-      fi
-      if grep -q "${PHS_VAR_NAME}=.*" "$PVE_ENV"; then
-        sed -i "s|${PHS_VAR_NAME}=.*|${PHS_VAR_NAME}='${PHS_VAR_VALUE}'|g" "$PVE_ENV"
-      else
-        echo "${PHS_VAR_NAME}='${PHS_VAR_VALUE}'" >> "$PVE_ENV"
-      fi
-    else
-      exit-script
-    fi
-  else
-    msg_error "You need to pass the variable name to set as the first parameter"
-    exit-script
-  fi
-  read_proxmox_helper_scripts_env
-}
-
-# This function adds an encrypted variable to the Proxmox-Helper-Scripts config file by passing the right arguments to add_proxmox_helper_scripts_env()
-function add_proxmox_helper_scripts_env_password(){
-  if [ $# -ge 2 ] && [ ! -z "$1" ] && [ ! -z "$2" ]; then
-    add_proxmox_helper_scripts_env $1 $2 "PASSWORD"
-  elif [ $# -ge 1 ] && [ ! -z "$1" ]; then
-    add_proxmox_helper_scripts_env $1 "" "PASSWORD"
-  else
-    msg_error "You need to pass the variable name to set as the first parameter"
-    exit-script
-  fi
-}
-
-# This function tests all enabled Proxmox-Helper-Scripts environment variable needed to build the container and creates them if missing
-function phs_validate_required_config(){
-  if [ ! -z ${ADD_SSH_USER+x} ] && [[ "${ADD_SSH_USER}" == "yes" ]]; then
-    if [ -z ${SSH_USER+x} ] || [ -z ${SSH_PASSWORD+x} ]; then
-      msg_error "Missing proxmox-helper-scripts environment variables: SSH_USER, SSH_PASSWORD"
-      add_proxmox_helper_scripts_env "SSH_USER" "admin"
-      add_proxmox_helper_scripts_env_password "SSH_PASSWORD"
-    fi
-  fi
-  if [ ! -z ${SHARED_MOUNT+x} ] && [[ "${SHARED_MOUNT}" == "yes" ]]; then
-    if [ -z ${SHARE_USER+x} ]; then
-      msg_error "Missing proxmox-helper-scripts environment variable: SHARE_USER"
-      add_proxmox_helper_scripts_env "SHARE_USER" "share"
-    fi
-  fi
-  if [ ! -z ${POSTFIX_SAT+x} ] && [[ "${POSTFIX_SAT}" == "yes" ]]; then
-    if [ -z ${DOMAIN+x} ]; then
-      msg_error "Missing proxmox-helper-scripts environment variable: DOMAIN"
-      add_proxmox_helper_scripts_env "DOMAIN" "example.com"
-    fi
-  fi
-}
+# # This function tests all enabled Proxmox-Helper-Scripts environment variable needed to build the container and creates them if missing
+# function phs_validate_required_config(){
+  # if [ ! -z ${SHARED_MOUNT+x} ] && [[ "${SHARED_MOUNT}" == "yes" ]]; then
+    # if [ -z ${SHARE_USER+x} ]; then
+      # msg_error "Missing proxmox-helper-scripts environment variable: SHARE_USER"
+      # add_proxmox_helper_scripts_env "SHARE_USER" "share"
+    # fi
+  # fi
+  # if [ ! -z ${POSTFIX_SAT+x} ] && [[ "${POSTFIX_SAT}" == "yes" ]]; then
+    # if [ -z ${DOMAIN+x} ]; then
+      # msg_error "Missing proxmox-helper-scripts environment variable: DOMAIN"
+      # add_proxmox_helper_scripts_env "DOMAIN" "example.com"
+    # fi
+  # fi
+# }
 
 if command -v pveversion >/dev/null 2>&1; then
   trap 'api_exit_script' EXIT
