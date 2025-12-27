@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Npm: fix build for 2.13.5 [@durzo](https://github.com/durzo) ([#10340](https://github.com/community-scripts/ProxmoxVE/pull/10340))
     - Outline: Fix for database connection string [@tremor021](https://github.com/tremor021) ([#10359](https://github.com/community-scripts/ProxmoxVE/pull/10359))
 
 ## 2025-12-26
