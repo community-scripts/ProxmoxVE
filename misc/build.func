@@ -724,7 +724,7 @@ var_mknod=0            # Allow device node creation (requires kernel 5.3+, exper
 var_mount_fs=          # Allow specific filesystems: nfs,fuse,ext4,etc (leave empty for defaults)
 var_protection=no      # Prevent accidental deletion of container
 var_timezone=          # Container timezone (e.g. Europe/Berlin, leave empty for host timezone)
-var_tags=community-script
+var_tags=remz1337
 var_verbose=no
 
 # Security (root PW) – empty => autologin
@@ -1142,7 +1142,7 @@ advanced_settings() {
   trap 'tput rmcup 2>/dev/null || true' RETURN
 
   # Initialize defaults
-  TAGS="community-script;${var_tags:-}"
+  TAGS="remz1337;${var_tags:-}"
   local STEP=1
   local MAX_STEP=28
 
