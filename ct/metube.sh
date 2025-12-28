@@ -40,6 +40,8 @@ function update_script() {
     fi
   fi
 
+  NODE_VERSION="24" NODE_MODULE="pnpm" setup_nodejs
+
   if check_for_gh_release "metube" "alexta69/metube"; then
     msg_info "Stopping Service"
     systemctl stop metube
@@ -56,8 +58,12 @@ function update_script() {
 
     msg_info "Building Frontend"
     cd /opt/metube/ui
-    $STD npm install
-    $STD node_modules/.bin/ng build
+    if command -v corepack >/dev/null 2>&1; then
+      $STD corepack enable
+      $STD corepack prepare pnpm --activate || true
+    fi
+    $STD pnpm install --frozen-lockfile
+    $STD pnpm run build
     msg_ok "Built Frontend"
 
     PYTHON_VERSION="3.13" setup_uv
