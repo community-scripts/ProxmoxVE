@@ -50,6 +50,12 @@ fi
 msg_info "Installing Linkwarden (Patience)"
 fetch_and_deploy_gh_release "linkwarden" "linkwarden/linkwarden"
 cd /opt/linkwarden
+msg_info "Enabling Corepack and preparing Yarn v4"
+if command -v corepack >/dev/null 2>&1; then
+  $STD corepack enable
+  $STD corepack prepare yarn@4.12.0 --activate || true
+fi
+msg_ok "Corepack enabled"
 $STD yarn
 $STD npx playwright install-deps
 $STD yarn playwright install
