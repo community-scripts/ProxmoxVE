@@ -38,7 +38,7 @@ function update_script() {
       rm -f /opt/pulse/pulse
     fi
 
-    fetch_and_deploy_gh_release "pulse" "rcourtman/Pulse" "prebuild" "latest" "/opt/pulse" "*-linux-amd64.tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "pulse" "rcourtman/Pulse" "prebuild" "latest" "/opt/pulse" "pulse-v*-linux-amd64.tar.gz"
     ln -sf /opt/pulse/bin/pulse /usr/local/bin/pulse
     mkdir -p /etc/pulse
     chown pulse:pulse /etc/pulse
