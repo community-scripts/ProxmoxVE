@@ -42,9 +42,8 @@ function update_script() {
 
     fetch_and_deploy_gh_release "linkwarden" "linkwarden/linkwarden"
 
-    msg_info "Updating ${APP}"
+    msg_info "Updating Linkwarden"
     cd /opt/linkwarden
-    # Determine pinned Yarn version from package.json (e.g. "yarn@4.12.0+sha512...")
     yarn_ver="4.12.0"
     if [[ -f package.json ]]; then
       pkg_manager=$(jq -r '.packageManager // empty' package.json 2>/dev/null || true)
@@ -68,7 +67,7 @@ function update_script() {
     rm -rf ~/.cargo/registry ~/.cargo/git ~/.cargo/.package-cache
     rm -rf /root/.cache/yarn
     rm -rf /opt/linkwarden/.next/cache
-    msg_ok "Updated ${APP}"
+    msg_ok "Updated Linkwarden"
 
     msg_info "Starting Service"
     systemctl start linkwarden

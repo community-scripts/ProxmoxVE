@@ -54,7 +54,7 @@ IP=$(hostname -I | awk '{print $1}')
 cat <<EOF >/opt/linkwarden/.env
 NEXTAUTH_SECRET=${SECRET_KEY}
 NEXTAUTH_URL=http://${IP}:3000
-DATABASE_URL=postgresql://${DB_USER}:${DB_PASS}@localhost:5432/${DB_NAME}
+DATABASE_URL=postgresql://${PG_DB_USER}:${PG_DB_PASS}@localhost:5432/${PG_DB_NAME}
 EOF
 $STD yarn prisma:generate
 $STD yarn web:build
