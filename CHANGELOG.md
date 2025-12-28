@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-12-28
 
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - Set default LANG in locale configuration [@jamezpolley](https://github.com/jamezpolley) ([#10378](https://github.com/community-scripts/ProxmoxVE/pull/10378))
+
 ## 2025-12-27
 
 ### 🆕 New Scripts
