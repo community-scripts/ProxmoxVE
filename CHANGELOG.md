@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-12-28
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - fix pulse downloading incorrect tarball [@durzo](https://github.com/durzo) ([#10383](https://github.com/community-scripts/ProxmoxVE/pull/10383))
+
 ### 💾 Core
 
   - #### 🐞 Bug Fixes
