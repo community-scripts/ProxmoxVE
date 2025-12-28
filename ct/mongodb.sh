@@ -23,17 +23,14 @@ function update_script() {
     header_info
     check_container_storage
     check_container_resources
-    if [[ ! -f /etc/apt/sources.list.d/mongodb-org-7.0.list && \
-          ! -f /etc/apt/sources.list.d/mongodb-org-8.0.list && \
-          ! -f /etc/apt/sources.list.d/mongodb-org-7.0.sources && \
-          ! -f /etc/apt/sources.list.d/mongodb-org-8.0.sources ]]
-    then
-        msg_error "No ${APP} Installation Found!"
-        exit
+    if ! command -v mongod &>/dev/null; then
+      msg_error "No ${APP} Installation Found!"
+      exit
     fi
-    msg_info "Updating ${APP} LXC"
+    
+    msg_info "Updating MongoDB LXC"
     $STD apt update
-    $STD apt -y upgrade
+    $STD apt upgrade -y
     msg_ok "Updated successfully!"
     exit
 }
