@@ -19,18 +19,20 @@ $STD apt install -y \
   build-essential
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
+NODE_VERSION="22" setup_nodejs
 PG_VERSION="16" setup_postgresql
 RUST_CRATES="monolith" setup_rust
 
 msg_info "Setting up PostgreSQL DB"
-PG_DB_NAME="linkwardendb"
-PG_DB_USER="linkwarden"
-PG_DB_PASS="$(openssl rand -base64 18 | tr -d '/' | cut -c1-13)"
-PG_DB_CREDS_FILE="${HOME}/linkwarden.creds"
+# Use helper to create DB and user (simple one-liner, consistent with other installers)
+PG_DB_NAME="linkwardendb" PG_DB_USER="linkwarden" setup_postgresql_db
+# Export to legacy variables used later in this script
+DB_NAME="$PG_DB_NAME"
+DB_USER="$PG_DB_USER"
+DB_PASS="$PG_DB_PASS"
+# Generate application secret and save to creds file
 SECRET_KEY="$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32)"
-# Use helper to create DB and user
-PG_DB_NAME="$PG_DB_NAME" PG_DB_USER="$PG_DB_USER" PG_DB_PASS="$PG_DB_PASS" PG_DB_CREDS_FILE="$PG_DB_CREDS_FILE" setup_postgresql_db
+echo "Linkwarden Secret: $SECRET_KEY" >>"${HOME}/linkwarden.creds"
 msg_ok "Set up PostgreSQL DB"
 
 read -r -p "${TAB3}Would you like to add Adminer? <y/N> " prompt
@@ -38,8 +40,9 @@ if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
   setup_adminer
 fi
 
-msg_info "Installing Linkwarden (Patience)"
 fetch_and_deploy_gh_release "linkwarden" "linkwarden/linkwarden"
+
+msg_info "Installing Linkwarden (Patience)"
 cd /opt/linkwarden
 if command -v corepack >/dev/null 2>&1; then
   $STD corepack enable
