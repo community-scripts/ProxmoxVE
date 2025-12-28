@@ -24,22 +24,13 @@ PG_VERSION="16" setup_postgresql
 RUST_CRATES="monolith" setup_rust
 
 msg_info "Setting up PostgreSQL DB"
-DB_NAME=linkwardendb
-DB_USER=linkwarden
-DB_PASS="$(openssl rand -base64 18 | tr -d '/' | cut -c1-13)"
+PG_DB_NAME="linkwardendb"
+PG_DB_USER="linkwarden"
+PG_DB_PASS="$(openssl rand -base64 18 | tr -d '/' | cut -c1-13)"
+PG_DB_CREDS_FILE="${HOME}/linkwarden.creds"
 SECRET_KEY="$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32)"
-$STD sudo -u postgres psql -c "CREATE ROLE $DB_USER WITH LOGIN PASSWORD '$DB_PASS';"
-$STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER ENCODING 'UTF8' TEMPLATE template0;"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET client_encoding TO 'utf8';"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET default_transaction_isolation TO 'read committed';"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET timezone TO 'UTC';"
-{
-  echo "Linkwarden-Credentials"
-  echo "Linkwarden Database User: $DB_USER"
-  echo "Linkwarden Database Password: $DB_PASS"
-  echo "Linkwarden Database Name: $DB_NAME"
-  echo "Linkwarden Secret: $SECRET_KEY"
-} >>~/linkwarden.creds
+# Use helper to create DB and user
+PG_DB_NAME="$PG_DB_NAME" PG_DB_USER="$PG_DB_USER" PG_DB_PASS="$PG_DB_PASS" PG_DB_CREDS_FILE="$PG_DB_CREDS_FILE" setup_postgresql_db
 msg_ok "Set up PostgreSQL DB"
 
 read -r -p "${TAB3}Would you like to add Adminer? <y/N> " prompt
@@ -50,12 +41,10 @@ fi
 msg_info "Installing Linkwarden (Patience)"
 fetch_and_deploy_gh_release "linkwarden" "linkwarden/linkwarden"
 cd /opt/linkwarden
-msg_info "Enabling Corepack and preparing Yarn v4"
 if command -v corepack >/dev/null 2>&1; then
   $STD corepack enable
   $STD corepack prepare yarn@4.12.0 --activate || true
 fi
-msg_ok "Corepack enabled"
 $STD yarn
 $STD npx playwright install-deps
 $STD yarn playwright install
