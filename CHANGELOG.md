@@ -18,6 +18,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Set default LANG in locale configuration [@jamezpolley](https://github.com/jamezpolley) ([#10378](https://github.com/community-scripts/ProxmoxVE/pull/10378))
 
+### ❔ Uncategorized
+
+  - Updated Frontend Debian and Ubuntu VM notes so links can be copied quickly. [@mzb2xeo](https://github.com/mzb2xeo) ([#10379](https://github.com/community-scripts/ProxmoxVE/pull/10379))
+
 ## 2025-12-27
 
 ### 🆕 New Scripts
