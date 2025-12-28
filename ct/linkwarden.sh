@@ -44,9 +44,18 @@ function update_script() {
 
     msg_info "Updating ${APP}"
     cd /opt/linkwarden
+    # Determine pinned Yarn version from package.json (e.g. "yarn@4.12.0+sha512...")
+    yarn_ver="4.12.0"
+    if [[ -f package.json ]]; then
+      pkg_manager=$(jq -r '.packageManager // empty' package.json 2>/dev/null || true)
+      if [[ -n "$pkg_manager" && "$pkg_manager" == yarn@* ]]; then
+        yarn_spec="${pkg_manager#yarn@}"
+        yarn_ver="${yarn_spec%%+*}"
+      fi
+    fi
     if command -v corepack >/dev/null 2>&1; then
       $STD corepack enable
-      $STD corepack prepare yarn@4.12.0 --activate || true
+      $STD corepack prepare "yarn@${yarn_ver}" --activate || true
     fi
     $STD yarn
     $STD npx playwright install-deps

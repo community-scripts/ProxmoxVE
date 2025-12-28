@@ -22,18 +22,7 @@ msg_ok "Installed Dependencies"
 NODE_VERSION="22" setup_nodejs
 PG_VERSION="16" setup_postgresql
 RUST_CRATES="monolith" setup_rust
-
-msg_info "Setting up PostgreSQL DB"
-# Use helper to create DB and user (simple one-liner, consistent with other installers)
 PG_DB_NAME="linkwardendb" PG_DB_USER="linkwarden" setup_postgresql_db
-# Export to legacy variables used later in this script
-DB_NAME="$PG_DB_NAME"
-DB_USER="$PG_DB_USER"
-DB_PASS="$PG_DB_PASS"
-# Generate application secret and save to creds file
-SECRET_KEY="$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32)"
-echo "Linkwarden Secret: $SECRET_KEY" >>"${HOME}/linkwarden.creds"
-msg_ok "Set up PostgreSQL DB"
 
 read -r -p "${TAB3}Would you like to add Adminer? <y/N> " prompt
 if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
@@ -43,10 +32,20 @@ fi
 fetch_and_deploy_gh_release "linkwarden" "linkwarden/linkwarden"
 
 msg_info "Installing Linkwarden (Patience)"
+SECRET_KEY="$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32)"
+echo "Linkwarden Secret: $SECRET_KEY" >>"${HOME}/linkwarden.creds"
 cd /opt/linkwarden
+yarn_ver="4.12.0"
+if [[ -f package.json ]]; then
+  pkg_manager=$(jq -r '.packageManager // empty' package.json 2>/dev/null || true)
+  if [[ -n "$pkg_manager" && "$pkg_manager" == yarn@* ]]; then
+    yarn_spec="${pkg_manager#yarn@}"
+    yarn_ver="${yarn_spec%%+*}"
+  fi
+fi
 if command -v corepack >/dev/null 2>&1; then
   $STD corepack enable
-  $STD corepack prepare yarn@4.12.0 --activate || true
+  $STD corepack prepare "yarn@${yarn_ver}" --activate || true
 fi
 $STD yarn
 $STD npx playwright install-deps
