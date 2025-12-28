@@ -12,6 +12,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-12-28
 
+### 🆕 New Scripts
+
+  - Mail-Archiver ([#10393](https://github.com/community-scripts/ProxmoxVE/pull/10393))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
