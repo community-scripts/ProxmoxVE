@@ -1,5 +1,45 @@
 [
   {
+    "name": "pommee/goaway",
+    "version": "v0.63.3",
+    "date": "2025-12-28T10:17:20Z"
+  },
+  {
+    "name": "linkwarden/linkwarden",
+    "version": "v2.13.5",
+    "date": "2025-12-28T09:15:51Z"
+  },
+  {
+    "name": "kimai/kimai",
+    "version": "2.45.0",
+    "date": "2025-12-28T06:32:47Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "v6.4.14",
+    "date": "2025-12-16T05:42:34Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.590",
+    "date": "2025-12-28T05:55:38Z"
+  },
+  {
+    "name": "hyperion-project/hyperion.ng",
+    "version": "2.1.1",
+    "date": "2025-06-14T17:45:06Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5.1",
+    "date": "2025-12-28T00:27:09Z"
+  },
+  {
     "name": "dani-garcia/vaultwarden",
     "version": "1.35.0",
     "date": "2025-12-27T23:07:12Z"
@@ -25,6 +65,11 @@
     "date": "2025-12-27T19:40:14Z"
   },
   {
+    "name": "keycloak/keycloak",
+    "version": "26.4.7",
+    "date": "2025-12-01T08:14:11Z"
+  },
+  {
     "name": "alam00000/bentopdf",
     "version": "v1.15.1",
     "date": "2025-12-27T16:29:08Z"
@@ -33,11 +78,6 @@
     "name": "rcourtman/Pulse",
     "version": "v5.0.5",
     "date": "2025-12-27T11:47:48Z"
-  },
-  {
-    "name": "firefly-iii/firefly-iii",
-    "version": "v6.4.14",
-    "date": "2025-12-16T05:42:34Z"
   },
   {
     "name": "alexta69/metube",
@@ -53,21 +93,6 @@
     "name": "fuma-nama/fumadocs",
     "version": "fumadocs-ui@16.4.1",
     "date": "2025-12-27T09:40:37Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.569",
-    "date": "2025-12-27T05:55:57Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.5.1",
-    "date": "2025-12-27T00:27:04Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
   },
   {
     "name": "sysadminsmedia/homebox",
@@ -108,11 +133,6 @@
     "name": "theonedev/onedev",
     "version": "v13.1.7",
     "date": "2025-12-26T07:59:41Z"
-  },
-  {
-    "name": "linkwarden/linkwarden",
-    "version": "v2.13.4",
-    "date": "2025-12-25T21:38:43Z"
   },
   {
     "name": "HydroshieldMKII/Guardian",
@@ -190,11 +210,6 @@
     "date": "2025-12-24T03:32:16Z"
   },
   {
-    "name": "hyperion-project/hyperion.ng",
-    "version": "2.1.1",
-    "date": "2025-06-14T17:45:06Z"
-  },
-  {
     "name": "advplyr/audiobookshelf",
     "version": "v2.32.1",
     "date": "2025-12-23T23:28:06Z"
@@ -250,11 +265,6 @@
     "date": "2025-12-16T09:59:22Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.4.7",
-    "date": "2025-12-01T08:14:11Z"
-  },
-  {
     "name": "jenkinsci/jenkins",
     "version": "jenkins-2.543",
     "date": "2025-12-23T12:39:16Z"
@@ -278,11 +288,6 @@
     "name": "project-zot/zot",
     "version": "v2.1.13",
     "date": "2025-12-23T10:14:48Z"
-  },
-  {
-    "name": "pommee/goaway",
-    "version": "v0.63.2",
-    "date": "2025-12-23T09:32:55Z"
   },
   {
     "name": "syncthing/syncthing",
@@ -487,7 +492,7 @@
   {
     "name": "mealie-recipes/mealie",
     "version": "v3.8.0",
-    "date": "2025-12-19T01:37:16Z"
+    "date": "2025-12-19T01:37:04Z"
   },
   {
     "name": "moghtech/komodo",
@@ -1098,11 +1103,6 @@
     "name": "TasmoAdmin/TasmoAdmin",
     "version": "v4.3.2",
     "date": "2025-10-18T12:11:00Z"
-  },
-  {
-    "name": "kimai/kimai",
-    "version": "2.44.0",
-    "date": "2025-11-20T11:01:01Z"
   },
   {
     "name": "Athou/commafeed",
