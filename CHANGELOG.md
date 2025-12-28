@@ -16,6 +16,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Fix mongodb update logic [@durzo](https://github.com/durzo) ([#10388](https://github.com/community-scripts/ProxmoxVE/pull/10388))
     - fix pulse downloading incorrect tarball [@durzo](https://github.com/durzo) ([#10383](https://github.com/community-scripts/ProxmoxVE/pull/10383))
 
 ### 💾 Core
