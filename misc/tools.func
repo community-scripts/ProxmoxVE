@@ -196,8 +196,8 @@ download_gpg_key() {
     debug_log "GPG key download attempt $attempt/$retries: $url"
 
     if [[ "$mode" == "dearmor" ]]; then
-      if curl -fsSL --connect-timeout 10 --max-time "$timeout" "$url" 2>/dev/null | \
-         gpg --dearmor --yes -o "$output" 2>/dev/null; then
+      if curl -fsSL --connect-timeout 10 --max-time "$timeout" "$url" 2>/dev/null |
+        gpg --dearmor --yes -o "$output" 2>/dev/null; then
         debug_log "GPG key installed: $output"
         return 0
       fi
@@ -3745,8 +3745,8 @@ function setup_mysql() {
     if [[ -n "$CURRENT_VERSION" ]]; then
       msg_info "Update MySQL $CURRENT_VERSION"
       ensure_apt_working || return 1
-      upgrade_packages_with_retry "default-mysql-server" "default-mysql-client" || \
-        upgrade_packages_with_retry "mysql-server" "mysql-client" || \
+      upgrade_packages_with_retry "default-mysql-server" "default-mysql-client" ||
+        upgrade_packages_with_retry "mysql-server" "mysql-client" ||
         upgrade_packages_with_retry "mariadb-server" "mariadb-client" || {
         msg_error "Failed to upgrade MySQL/MariaDB packages"
         return 1
