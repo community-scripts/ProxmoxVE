@@ -2639,6 +2639,7 @@ function setup_hwaccel() {
         ocl-icd-libopencl1 \
         intel-opencl-icd \
         vainfo \
+        libmfx-gen1.2 \
         intel-gpu-tools || {
         msg_error "Failed to install Intel GPU dependencies"
         return 1
@@ -2666,6 +2667,7 @@ EOF
             ocl-icd-libopencl1 \
             intel-opencl-icd \
             vainfo \
+            libmfx-gen1.2 \
             intel-gpu-tools || {
             msg_warn "Non-free driver install failed, falling back to open drivers"
             needs_nonfree=false
@@ -2694,6 +2696,7 @@ EOF
             mesa-va-drivers \
             libvpl2 \
             vainfo \
+            libmfx-gen1.2 \
             intel-gpu-tools 2>/dev/null || {
             msg_warn "Non-free driver install failed, falling back to open drivers"
             needs_nonfree=false
