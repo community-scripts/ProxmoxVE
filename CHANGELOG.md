@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-12-29
 
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - add libmfx-gen1.2 for intel gpu hwaccel [@jcnix](https://github.com/jcnix) ([#10400](https://github.com/community-scripts/ProxmoxVE/pull/10400))
+
 ## 2025-12-28
 
 ### 🆕 New Scripts
