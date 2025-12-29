@@ -17,6 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt install -y \
   nginx \
   sqlite3
+setcap cap_net_raw+ep /bin/ping
 msg_ok "Installed Dependencies"
 
 PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="common,sqlite3,redis" setup_php
