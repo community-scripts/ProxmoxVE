@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-
-# Copyright (c) 2021-2026 bandogora
+# Copyright (c) 2021-2026 community-scripts ORG
 # Author: bandogora
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://almalinux.org/
