@@ -64,7 +64,7 @@ mkdir /opt/pelican-panel
 cd /opt/pelican-panel
 curl -fsSL "https://github.com/pelican-dev/panel/releases/download/v${RELEASE}/panel.tar.gz" -o "panel.tar.gz"
 tar -xzf "panel.tar.gz"
-$STD composer install --no-dev --optimize-autoloader --no-interaction
+COMPOSER_ALLOW_SUPERUSER=1 $STD composer install --no-dev --optimize-autoloader --no-interaction
 $STD php artisan p:environment:setup
 $STD php artisan p:environment:queue-service --no-interaction
 echo "* * * * * php /opt/pelican-panel/artisan schedule:run >> /dev/null 2>&1" | crontab -u www-data -

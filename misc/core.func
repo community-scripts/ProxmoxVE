@@ -831,7 +831,7 @@ cleanup_lxc() {
   # Ruby gem
   if command -v gem &>/dev/null; then $STD gem cleanup || true; fi
   # Composer (PHP)
-  if command -v composer &>/dev/null; then COMPOSER_ALLOW_SUPERUSER=1 && $STD composer clear-cache || true; fi
+  if command -v composer &>/dev/null; then COMPOSER_ALLOW_SUPERUSER=1 $STD composer clear-cache || true; fi
 
   if command -v journalctl &>/dev/null; then
     $STD journalctl --vacuum-time=10m || true
