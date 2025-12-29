@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-12-29
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Pelican-panel: prevent composer superuser prompt [@MickLesk](https://github.com/MickLesk) ([#10418](https://github.com/community-scripts/ProxmoxVE/pull/10418))
+
 ### 💾 Core
 
   - #### 🐞 Bug Fixes
