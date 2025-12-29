@@ -806,7 +806,7 @@ cleanup_lxc() {
     $STD apt -y autoclean || true
     $STD apt -y clean || true
     ;;
-  centos | rocky | almalinux | fedora | openeuler)
+  centos | rockylinux | almalinux | fedora | openeuler)
     $STD dnf -y autoremove || true
     $STD dnf -y clean all || true
     rm -rf ~/.cache /var/cache/yum /var/cache/dnf

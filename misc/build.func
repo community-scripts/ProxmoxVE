@@ -3199,7 +3199,7 @@ EOF
       exit 1
     }
     ;;
-  centos | rocky | almalinux | fedora | openeuler)
+  centos | rockylinux | almalinux | fedora | openeuler)
     sleep 3
 
     # pick LANG (fallback if empty)
@@ -3773,7 +3773,7 @@ create_lxc_container() {
   TEMPLATE_SEARCH="${PCT_OSTYPE}-${PCT_OSVERSION:-}"
   case "$PCT_OSTYPE" in
   debian | ubuntu | devuan) TEMPLATE_PATTERN="-standard_" ;;
-  alpine | almalinux | fedora | rocky | centos | openeuler) TEMPLATE_PATTERN="-default_" ;;
+  alpine | almalinux | fedora | rockylinux | centos | openeuler) TEMPLATE_PATTERN="-default_" ;;
   gentoo) TEMPLATE_PATTERN="-openrc_" ;;
   *) TEMPLATE_PATTERN="" ;;
   esac
