@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
+
 # Copyright (c) 2021-2025 community-scripts ORG
+# Author: MickLesk | bandogora
 # License: MIT | https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/LICENSE
 
 # ==============================================================================
@@ -420,7 +422,9 @@ silent() {
   if [[ $rc -ne 0 ]]; then
     # Source explain_exit_code if needed
     if ! declare -f explain_exit_code >/dev/null 2>&1; then
-      source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
+      # shellcheck source=misc/error_handler.func
+      source <(curl -fsSL https://raw.githubusercontent.com/bandogora/ProxmoxVE/feature/rpm-support/misc/error_handler.func)
+      # source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
     fi
 
     local explanation
@@ -788,7 +792,7 @@ is_verbose_mode() {
 # cleanup_lxc()
 #
 # - Comprehensive cleanup of package managers, caches, and logs
-# - Supports Alpine (apk), Debian/Ubuntu (apt), and language package managers
+# - Supports Alpine (apk), Debian/Ubuntu (apt), RPM (dnf) and language package managers
 # - Cleans: Python (pip/uv), Node.js (npm/yarn/pnpm), Go, Rust, Ruby, PHP
 # - Truncates log files and vacuums systemd journal
 # - Run at end of container creation to minimize disk usage
@@ -796,14 +800,23 @@ is_verbose_mode() {
 cleanup_lxc() {
   msg_info "Cleaning up"
 
-  if is_alpine; then
-    $STD apk cache clean || true
-    rm -rf /var/cache/apk/*
-  else
-    $STD apt -y autoremove || true
-    $STD apt -y autoclean || true
-    $STD apt -y clean || true
-  fi
+  case "$var_os" in
+    ubuntu|debian|devuan)
+      $STD apt -y autoremove || true
+      $STD apt -y autoclean || true
+      $STD apt -y clean || true
+      ;;
+    centos|rocky|almalinux|fedora|openeuler)
+      $STD dnf -y autoremove || true
+      $STD dnf -y clean all || true
+      rm -rf ~/.cache /var/cache/yum /var/cache/dnf
+      ;;
+    alpine)
+      $STD apk cache clean || true
+      rm -rf /var/cache/apk/*
+      ;;
+    # gentoo) ;;
+  esac
 
   # Clear temp artifacts (keep sockets/FIFOs; ignore errors)
   find /tmp /var/tmp -type f -name 'tmp*' -delete 2>/dev/null || true

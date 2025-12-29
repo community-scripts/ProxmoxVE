@@ -1,11 +1,15 @@
 {
-    "files.associations": {
-        "*.func": "shellscript"
-    },
-    "files.eol": "\n",
-    "files.insertFinalNewline": true,
-    "editor.formatOnSave": true,
-    "editor.codeActionsOnSave": {
-        "source.fixAll": "explicit"
-    }
+  "files.associations": {
+    "*.func": "shellscript"
+  },
+  "files.eol": "\n",
+  "files.insertFinalNewline": true,
+  "editor.formatOnSave": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "never"
+  },
+  "shellcheck.customArgs": [
+    "--external-sources",
+  ],
+  "shellcheck.useWorkspaceRootAsCwd": true,
 }

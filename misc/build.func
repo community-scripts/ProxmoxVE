@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
+
 # Copyright (c) 2021-2025 community-scripts ORG
-# Author: tteck (tteckster) | MickLesk | michelroegl-brunner
+# Author: tteck (tteckster) | MickLesk | michelroegl-brunner | bandogora
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/branch/main/LICENSE
 
 # ==============================================================================
@@ -80,15 +81,23 @@ variables() {
   fi
 }
 
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func)
+# shellcheck source=misc/api.func
+source <(curl -fsSL https://raw.githubusercontent.com/bandogora/ProxmoxVE/feature/rpm-support/misc/api.func)
+# source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func)
 
 if command -v curl >/dev/null 2>&1; then
-  source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
-  source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
+  # shellcheck source=misc/core.func
+  source <(curl -fsSL https://raw.githubusercontent.com/bandogora/ProxmoxVE/feature/rpm-support/misc/core.func)
+  # shellcheck source=misc/error_handler.func
+  source <(curl -fsSL https://raw.githubusercontent.com/bandogora/ProxmoxVE/feature/rpm-support/misc/error_handler.func)
+  # source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
+  # source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
   load_functions
   catch_errors
 elif command -v wget >/dev/null 2>&1; then
+  # shellcheck source=misc/core.func
   source <(wget -qO- https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
+  # shellcheck source=misc/error_handler.func
   source <(wget -qO- https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
   load_functions
   catch_errors
@@ -164,18 +173,7 @@ maxkeys_check() {
 # - Returns "Unknown" if OS type cannot be determined
 # ------------------------------------------------------------------------------
 get_current_ip() {
-  if [ -f /etc/os-release ]; then
-    # Check for Debian/Ubuntu (uses hostname -I)
-    if grep -qE 'ID=debian|ID=ubuntu' /etc/os-release; then
-      CURRENT_IP=$(hostname -I | awk '{print $1}')
-    # Check for Alpine (uses ip command)
-    elif grep -q 'ID=alpine' /etc/os-release; then
-      CURRENT_IP=$(ip -4 addr show eth0 | awk '/inet / {print $2}' | cut -d/ -f1 | head -n 1)
-    else
-      CURRENT_IP="Unknown"
-    fi
-  fi
-  echo "$CURRENT_IP"
+  ip -4 addr show eth0 | awk '/inet / {print $2}' | cut -d/ -f1 | head -n 1
 }
 
 # ------------------------------------------------------------------------------
@@ -2630,7 +2628,8 @@ configure_ssh_settings() {
 # - Otherwise: shows update/setting menu and runs update_script with cleanup
 # ------------------------------------------------------------------------------
 start() {
-  source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
+    source <(curl -fsSL https://raw.githubusercontent.com/bandogora/ProxmoxVE/feature/rpm-support/misc/tools.func)
+  # source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
   if command -v pveversion >/dev/null 2>&1; then
     install_script || return 0
     return 0
@@ -2760,7 +2759,8 @@ build_container() {
   if [ "$var_os" == "alpine" ]; then
     export FUNCTIONS_FILE_PATH="$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/alpine-install.func)"
   else
-    export FUNCTIONS_FILE_PATH="$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/install.func)"
+    # export FUNCTIONS_FILE_PATH="$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/install.func)"
+    export FUNCTIONS_FILE_PATH="$(curl -fsSL https://raw.githubusercontent.com/bandogora/ProxmoxVE/feature/rpm-support/misc/install.func)"
   fi
 
   # Core exports for install.func
@@ -3172,40 +3172,75 @@ EOF
   # fi
 
   # Continue with standard container setup
-  if [ "$var_os" == "alpine" ]; then
-    sleep 3
-    pct exec "$CTID" -- /bin/sh -c 'cat <<EOF >/etc/apk/repositories
-http://dl-cdn.alpinelinux.org/alpine/latest-stable/main
-http://dl-cdn.alpinelinux.org/alpine/latest-stable/community
-EOF'
-    pct exec "$CTID" -- ash -c "apk add bash newt curl openssh nano mc ncurses jq >/dev/null"
-  else
-    sleep 3
-    LANG=${LANG:-en_US.UTF-8}
-    pct exec "$CTID" -- bash -c "sed -i \"/$LANG/ s/^# //\" /etc/locale.gen"
-    pct exec "$CTID" -- bash -c "locale_line=\$(grep -v '^#' /etc/locale.gen | grep -E '^[a-zA-Z]' | awk '{print \$1}' | head -n 1) && \
-    echo LANG=\$locale_line >/etc/default/locale && \
-    locale-gen >/dev/null && \
-    export LANG=\$locale_line"
+  case "$var_os" in
+    ubuntu|debian|devuan)
+      sleep 3
+      pct exec "$CTID" -- bash -c "sed -i '/$LANG/ s/^# //' /etc/locale.gen"
+      pct exec "$CTID" -- bash -c "locale_line=\$(grep -v '^#' /etc/locale.gen | grep -E '^[a-zA-Z]' | awk '{print \$1}' | head -n 1) && \
+      echo LANG=\$locale_line >/etc/default/locale && \
+      locale-gen >/dev/null && \
+      export LANG=\$locale_line"
 
-    if [[ -z "${tz:-}" ]]; then
-      tz=$(timedatectl show --property=Timezone --value 2>/dev/null || echo "UTC")
-    fi
-    [[ "${tz:-}" == Etc/* ]] && tz="UTC" # Normalize Etc/* to UTC for container setup
+      if [[ -z "${tz:-}" ]]; then
+        tz=$(timedatectl show --property=Timezone --value 2>/dev/null || echo "UTC")
+      fi
+      [[ "${tz:-}" == Etc/* ]] && tz="UTC" # Normalize Etc/* to UTC for container setup
 
-    if pct exec "$CTID" -- test -e "/usr/share/zoneinfo/$tz"; then
-      # Set timezone using symlink (Debian 13+ compatible)
-      # Create /etc/timezone for backwards compatibility with older scripts
-      pct exec "$CTID" -- bash -c "tz='$tz'; ln -sf \"/usr/share/zoneinfo/\$tz\" /etc/localtime && echo \"\$tz\" >/etc/timezone || true"
-    else
-      msg_warn "Skipping timezone setup – zone '$tz' not found in container"
-    fi
+      if pct exec "$CTID" -- test -e "/usr/share/zoneinfo/$tz"; then
+        # Set timezone using symlink (Debian 13+ compatible)
+        # Create /etc/timezone for backwards compatibility with older scripts
+        pct exec "$CTID" -- bash -c "tz='$tz'; ln -sf \"/usr/share/zoneinfo/\$tz\" /etc/localtime && echo \"\$tz\" >/etc/timezone || true"
+      else
+        msg_warn "Skipping timezone setup – zone '$tz' not found in container"
+      fi
 
-    pct exec "$CTID" -- bash -c "apt-get update >/dev/null && apt-get install -y sudo curl mc gnupg2 jq >/dev/null" || {
-      msg_error "apt-get base packages installation failed"
-      exit 1
-    }
-  fi
+      pct exec "$CTID" -- bash -c "apt-get update >/dev/null && apt-get install -y sudo curl mc gnupg2 jq >/dev/null" || {
+        msg_error "apt-get base packages installation failed"
+        exit 1
+      }
+      ;;
+    centos|rocky|almalinux|fedora|openeuler)
+      sleep 3
+
+      # pick LANG (fallback if empty)
+      LANG="${LANG:-en_US.UTF-8}"
+
+      # generate locale
+      pct exec "$CTID" -- localedef -i "${LANG%%.*}" -f "${LANG#*.}" "$LANG"
+
+      # set system locale for runtime
+      pct exec "$CTID" -- sh -c "printf 'LANG=%s\n' $LANG > /etc/locale.conf"
+
+      if [[ -z "${tz:-}" ]]; then
+        # try timedatectl; fall back to UTC
+        tz=$(timedatectl show --property=Timezone --value 2>/dev/null || echo "UTC")
+      fi
+      [[ "${tz:-}" == Etc/* ]] && tz="UTC" # Normalize Etc/* to UTC for container setup
+
+      if pct exec "$CTID" -- test -e "/usr/share/zoneinfo/$tz"; then
+        # Set timezone using symlink
+        # Create /etc/timezone for backwards compatibility with older scripts
+        pct exec "$CTID" -- sh -c "tz='$tz'; ln -sf \"/usr/share/zoneinfo/\$tz\" /etc/localtime && echo \"\$tz\" >/etc/timezone || true"
+      else
+        msg_warn "Skipping timezone setup – zone '$tz' not found in container"
+      fi
+
+      # install base packages
+      pct exec "$CTID" -- sh -c "dnf upgrade -y >/dev/null && dnf install -y sudo curl mc ncurses gnupg2 gnupg jq >/dev/null" || {
+        msg_error "dnf base packages installation failed"
+        exit 1
+      }
+      ;;
+    alpine)
+      sleep 3
+      pct exec "$CTID" -- /bin/sh -c 'cat <<EOF >/etc/apk/repositories
+      http://dl-cdn.alpinelinux.org/alpine/latest-stable/main
+      http://dl-cdn.alpinelinux.org/alpine/latest-stable/community
+      EOF'
+      pct exec "$CTID" -- ash -c "apk add bash newt curl openssh nano mc ncurses jq >/dev/null"
+      ;;
+    # gentoo) ;;
+  esac
 
   msg_ok "Customized LXC Container"
 
@@ -3737,8 +3772,9 @@ create_lxc_container() {
   # ------------------------------------------------------------------------------
   TEMPLATE_SEARCH="${PCT_OSTYPE}-${PCT_OSVERSION:-}"
   case "$PCT_OSTYPE" in
-  debian | ubuntu) TEMPLATE_PATTERN="-standard_" ;;
-  alpine | fedora | rocky | centos) TEMPLATE_PATTERN="-default_" ;;
+  debian | ubuntu | devuan) TEMPLATE_PATTERN="-standard_" ;;
+  alpine | almalinux | fedora | rocky | centos | openeuler) TEMPLATE_PATTERN="-default_" ;;
+  gentoo) TEMPLATE_PATTERN="-openrc_" ;;
   *) TEMPLATE_PATTERN="" ;;
   esac
 
