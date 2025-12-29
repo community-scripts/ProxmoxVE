@@ -1,6 +1,8 @@
+#!/usr/bin/env bash
+
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: tteck (tteckster)
-# Co-Author: MickLesk
+# Co-Author: MickLesk | bandogora
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
 # ==============================================================================
@@ -27,13 +29,12 @@
 # SECTION 1: INITIALIZATION
 # ==============================================================================
 
-if ! command -v curl >/dev/null 2>&1; then
-  printf "\r\e[2K%b" '\033[93m Setup Source \033[m' >&2
-  apt update >/dev/null 2>&1
-  apt install -y curl >/dev/null 2>&1
-fi
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
+# shellcheck source=misc/core.func
+source <(curl -fsSL https://raw.githubusercontent.com/bandogora/ProxmoxVE/feature/rpm-support/misc/core.func)
+# source <(curl -fsSL https://raw.githubusercontent.com/bandogora/ProxmoxVE/feature/yugabytedb/misc/core.func)
+# shellcheck source=misc/error_handler.func
+source <(curl -fsSL https://raw.githubusercontent.com/bandogora/ProxmoxVE/feature/rpm-support/misc/error_handler.func)
+# source <(curl -fsSL https://raw.githubusercontent.com/bandogora/ProxmoxVE/feature/yugabytedb/misc/error_handler.func)
 load_functions
 catch_errors
 
@@ -180,9 +181,11 @@ network_check() {
 # ------------------------------------------------------------------------------
 update_os() {
   msg_info "Updating Container OS"
-  if [[ "$CACHER" == "yes" ]]; then
-    echo 'Acquire::http::Proxy-Auto-Detect "/usr/local/bin/apt-proxy-detect.sh";' >/etc/apt/apt.conf.d/00aptproxy
-    cat <<EOF >/usr/local/bin/apt-proxy-detect.sh
+  case "$var_os" in
+    ubuntu|debian|devuan)
+      if [[ "$CACHER" == "yes" ]]; then
+        echo 'Acquire::http::Proxy-Auto-Detect "/usr/local/bin/apt-proxy-detect.sh";' >/etc/apt/apt.conf.d/00aptproxy
+        cat <<EOF >/usr/local/bin/apt-proxy-detect.sh
 #!/bin/bash
 if nc -w1 -z "${CACHER_IP}" 3142; then
   echo -n "http://${CACHER_IP}:3142"
@@ -190,14 +193,25 @@ else
   echo -n "DIRECT"
 fi
 EOF
-    chmod +x /usr/local/bin/apt-proxy-detect.sh
-  fi
-  $STD apt-get update
-  $STD apt-get -o Dpkg::Options::="--force-confold" -y dist-upgrade
-  rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
+        chmod +x /usr/local/bin/apt-proxy-detect.sh
+      fi
+      $STD apt-get update
+      $STD apt-get -o Dpkg::Options::="--force-confold" -y dist-upgrade
+      rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
+      ;;
+    centos|rocky|almalinux|fedora|openeuler)
+      $STD dnf upgrade -y
+      ;;
+    alpine)
+      $STD apk -U upgrade
+      ;;
+    # gentoo) ;;
+  esac
   msg_ok "Updated Container OS"
 
-  source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
+  # shellcheck source=misc/tools.func
+  source <(curl -fsSL https://raw.githubusercontent.com/bandogora/ProxmoxVE/feature/rpm-support/misc/tools.func)
+  # source <(curl -fsSL https://raw.githubusercontent.com/bandogora/ProxmoxVE/feature/yugabytedb/misc/tools.func)
 }
 
 # ==============================================================================
