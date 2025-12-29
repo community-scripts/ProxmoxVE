@@ -2628,7 +2628,7 @@ configure_ssh_settings() {
 # - Otherwise: shows update/setting menu and runs update_script with cleanup
 # ------------------------------------------------------------------------------
 start() {
-    source <(curl -fsSL https://raw.githubusercontent.com/bandogora/ProxmoxVE/feature/rpm-support/misc/tools.func)
+  source <(curl -fsSL https://raw.githubusercontent.com/bandogora/ProxmoxVE/feature/rpm-support/misc/tools.func)
   # source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
   if command -v pveversion >/dev/null 2>&1; then
     install_script || return 0
@@ -3173,72 +3173,72 @@ EOF
 
   # Continue with standard container setup
   case "$var_os" in
-    ubuntu|debian|devuan)
-      sleep 3
-      pct exec "$CTID" -- bash -c "sed -i '/$LANG/ s/^# //' /etc/locale.gen"
-      pct exec "$CTID" -- bash -c "locale_line=\$(grep -v '^#' /etc/locale.gen | grep -E '^[a-zA-Z]' | awk '{print \$1}' | head -n 1) && \
+  ubuntu | debian | devuan)
+    sleep 3
+    pct exec "$CTID" -- bash -c "sed -i '/$LANG/ s/^# //' /etc/locale.gen"
+    pct exec "$CTID" -- bash -c "locale_line=\$(grep -v '^#' /etc/locale.gen | grep -E '^[a-zA-Z]' | awk '{print \$1}' | head -n 1) && \
       echo LANG=\$locale_line >/etc/default/locale && \
       locale-gen >/dev/null && \
       export LANG=\$locale_line"
 
-      if [[ -z "${tz:-}" ]]; then
-        tz=$(timedatectl show --property=Timezone --value 2>/dev/null || echo "UTC")
-      fi
-      [[ "${tz:-}" == Etc/* ]] && tz="UTC" # Normalize Etc/* to UTC for container setup
+    if [[ -z "${tz:-}" ]]; then
+      tz=$(timedatectl show --property=Timezone --value 2>/dev/null || echo "UTC")
+    fi
+    [[ "${tz:-}" == Etc/* ]] && tz="UTC" # Normalize Etc/* to UTC for container setup
 
-      if pct exec "$CTID" -- test -e "/usr/share/zoneinfo/$tz"; then
-        # Set timezone using symlink (Debian 13+ compatible)
-        # Create /etc/timezone for backwards compatibility with older scripts
-        pct exec "$CTID" -- bash -c "tz='$tz'; ln -sf \"/usr/share/zoneinfo/\$tz\" /etc/localtime && echo \"\$tz\" >/etc/timezone || true"
-      else
-        msg_warn "Skipping timezone setup – zone '$tz' not found in container"
-      fi
+    if pct exec "$CTID" -- test -e "/usr/share/zoneinfo/$tz"; then
+      # Set timezone using symlink (Debian 13+ compatible)
+      # Create /etc/timezone for backwards compatibility with older scripts
+      pct exec "$CTID" -- bash -c "tz='$tz'; ln -sf \"/usr/share/zoneinfo/\$tz\" /etc/localtime && echo \"\$tz\" >/etc/timezone || true"
+    else
+      msg_warn "Skipping timezone setup – zone '$tz' not found in container"
+    fi
 
-      pct exec "$CTID" -- bash -c "apt-get update >/dev/null && apt-get install -y sudo curl mc gnupg2 jq >/dev/null" || {
-        msg_error "apt-get base packages installation failed"
-        exit 1
-      }
-      ;;
-    centos|rocky|almalinux|fedora|openeuler)
-      sleep 3
+    pct exec "$CTID" -- bash -c "apt-get update >/dev/null && apt-get install -y sudo curl mc gnupg2 jq >/dev/null" || {
+      msg_error "apt-get base packages installation failed"
+      exit 1
+    }
+    ;;
+  centos | rocky | almalinux | fedora | openeuler)
+    sleep 3
 
-      # pick LANG (fallback if empty)
-      LANG="${LANG:-en_US.UTF-8}"
+    # pick LANG (fallback if empty)
+    LANG="${LANG:-en_US.UTF-8}"
 
-      # generate locale
-      pct exec "$CTID" -- localedef -i "${LANG%%.*}" -f "${LANG#*.}" "$LANG"
+    # generate locale
+    pct exec "$CTID" -- localedef -i "${LANG%%.*}" -f "${LANG#*.}" "$LANG"
 
-      # set system locale for runtime
-      pct exec "$CTID" -- sh -c "printf 'LANG=%s\n' $LANG > /etc/locale.conf"
+    # set system locale for runtime
+    pct exec "$CTID" -- sh -c "printf 'LANG=%s\n' $LANG > /etc/locale.conf"
 
-      if [[ -z "${tz:-}" ]]; then
-        # try timedatectl; fall back to UTC
-        tz=$(timedatectl show --property=Timezone --value 2>/dev/null || echo "UTC")
-      fi
-      [[ "${tz:-}" == Etc/* ]] && tz="UTC" # Normalize Etc/* to UTC for container setup
+    if [[ -z "${tz:-}" ]]; then
+      # try timedatectl; fall back to UTC
+      tz=$(timedatectl show --property=Timezone --value 2>/dev/null || echo "UTC")
+    fi
+    [[ "${tz:-}" == Etc/* ]] && tz="UTC" # Normalize Etc/* to UTC for container setup
 
-      if pct exec "$CTID" -- test -e "/usr/share/zoneinfo/$tz"; then
-        # Set timezone using symlink
-        # Create /etc/timezone for backwards compatibility with older scripts
-        pct exec "$CTID" -- sh -c "tz='$tz'; ln -sf \"/usr/share/zoneinfo/\$tz\" /etc/localtime && echo \"\$tz\" >/etc/timezone || true"
-      else
-        msg_warn "Skipping timezone setup – zone '$tz' not found in container"
-      fi
+    if pct exec "$CTID" -- test -e "/usr/share/zoneinfo/$tz"; then
+      # Set timezone using symlink
+      # Create /etc/timezone for backwards compatibility with older scripts
+      pct exec "$CTID" -- sh -c "tz='$tz'; ln -sf \"/usr/share/zoneinfo/\$tz\" /etc/localtime && echo \"\$tz\" >/etc/timezone || true"
+    else
+      msg_warn "Skipping timezone setup – zone '$tz' not found in container"
+    fi
 
-      # install base packages
-      pct exec "$CTID" -- sh -c "dnf upgrade -y >/dev/null && dnf install -y sudo curl mc ncurses gnupg2 gnupg jq >/dev/null" || {
-        msg_error "dnf base packages installation failed"
-        exit 1
-      }
-      ;;
-    alpine)
-      sleep 3
-      pct exec "$CTID" -- /bin/sh -c 'cat <<EOF >/etc/apk/repositories
+    # install base packages
+    pct exec "$CTID" -- sh -c "dnf upgrade -y >/dev/null && dnf install -y sudo curl mc ncurses gnupg2 gnupg jq >/dev/null" || {
+      msg_error "dnf base packages installation failed"
+      exit 1
+    }
+    ;;
+  alpine)
+    sleep 3
+    pct exec "$CTID" -- /bin/sh -c 'cat <<EOF >/etc/apk/repositories
       http://dl-cdn.alpinelinux.org/alpine/latest-stable/main
       http://dl-cdn.alpinelinux.org/alpine/latest-stable/community
       EOF'
-      pct exec "$CTID" -- ash -c "apk add bash newt curl openssh nano mc ncurses jq >/dev/null"
-      ;;
+    pct exec "$CTID" -- ash -c "apk add bash newt curl openssh nano mc ncurses jq >/dev/null"
+    ;;
     # gentoo) ;;
   esac
 

@@ -4,12 +4,13 @@
   },
   "files.eol": "\n",
   "files.insertFinalNewline": true,
-  "editor.formatOnSave": false,
+  "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
-    "source.fixAll": "never"
+    "source.fixAll": "explicit",
   },
   "shellcheck.customArgs": [
     "--external-sources",
   ],
   "shellcheck.useWorkspaceRootAsCwd": true,
+  "shellformat.useEditorConfig": true,
 }
