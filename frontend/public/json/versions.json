@@ -1,5 +1,40 @@
 [
   {
+    "name": "chrisbenincasa/tunarr",
+    "version": "v1.0.11",
+    "date": "2025-12-28T23:39:20Z"
+  },
+  {
+    "name": "Lidarr/Lidarr",
+    "version": "v3.1.0.4875",
+    "date": "2025-11-16T22:40:18Z"
+  },
+  {
+    "name": "Radarr/Radarr",
+    "version": "v6.0.4.10291",
+    "date": "2025-11-16T22:39:01Z"
+  },
+  {
+    "name": "scanopy/scanopy",
+    "version": "v0.12.7",
+    "date": "2025-12-28T16:51:10Z"
+  },
+  {
+    "name": "bluenviron/mediamtx",
+    "version": "v1.15.6",
+    "date": "2025-12-28T16:38:35Z"
+  },
+  {
+    "name": "release-argus/Argus",
+    "version": "0.29.0",
+    "date": "2025-12-28T14:32:36Z"
+  },
+  {
+    "name": "msgbyte/tianji",
+    "version": "v1.31.0",
+    "date": "2025-12-28T11:41:41Z"
+  },
+  {
     "name": "pommee/goaway",
     "version": "v0.63.3",
     "date": "2025-12-28T10:17:20Z"
@@ -220,11 +255,6 @@
     "date": "2025-12-23T20:53:07Z"
   },
   {
-    "name": "scanopy/scanopy",
-    "version": "v0.12.6",
-    "date": "2025-12-23T19:24:15Z"
-  },
-  {
     "name": "prometheus-pve/prometheus-pve-exporter",
     "version": "v3.8.0",
     "date": "2025-12-23T18:20:46Z"
@@ -328,16 +358,6 @@
     "name": "meilisearch/meilisearch",
     "version": "latest",
     "date": "2025-12-22T16:21:19Z"
-  },
-  {
-    "name": "msgbyte/tianji",
-    "version": "v1.30.25",
-    "date": "2025-12-22T16:03:19Z"
-  },
-  {
-    "name": "chrisbenincasa/tunarr",
-    "version": "v1.0.9",
-    "date": "2025-12-22T15:55:49Z"
   },
   {
     "name": "openhab/openhab-core",
@@ -468,11 +488,6 @@
     "name": "forgejo/forgejo",
     "version": "v15.0.0-dev",
     "date": "2025-12-19T11:43:47Z"
-  },
-  {
-    "name": "release-argus/Argus",
-    "version": "0.28.3",
-    "date": "2025-12-19T11:05:10Z"
   },
   {
     "name": "mattermost/mattermost",
@@ -675,16 +690,6 @@
     "date": "2025-11-16T22:41:22Z"
   },
   {
-    "name": "Lidarr/Lidarr",
-    "version": "v3.1.0.4875",
-    "date": "2025-11-16T22:40:18Z"
-  },
-  {
-    "name": "Radarr/Radarr",
-    "version": "v6.0.4.10291",
-    "date": "2025-11-16T22:39:01Z"
-  },
-  {
     "name": "jellyfin/jellyfin",
     "version": "v10.11.5",
     "date": "2025-12-15T02:44:19Z"
@@ -873,11 +878,6 @@
     "name": "traccar/traccar",
     "version": "v6.11.1",
     "date": "2025-12-07T19:19:08Z"
-  },
-  {
-    "name": "bluenviron/mediamtx",
-    "version": "v1.15.5",
-    "date": "2025-12-07T12:24:21Z"
   },
   {
     "name": "Koenkk/zigbee2mqtt",
