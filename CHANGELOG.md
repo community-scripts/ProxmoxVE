@@ -16,6 +16,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - syncthing: check for deb822 source [@MickLesk](https://github.com/MickLesk) ([#10414](https://github.com/community-scripts/ProxmoxVE/pull/10414))
+    - speedtest-tracker: add external IP URL and internet check hostname in .env [@MickLesk](https://github.com/MickLesk) ([#10078](https://github.com/community-scripts/ProxmoxVE/pull/10078))
     - Pelican-panel: prevent composer superuser prompt [@MickLesk](https://github.com/MickLesk) ([#10418](https://github.com/community-scripts/ProxmoxVE/pull/10418))
 
 ### 💾 Core
