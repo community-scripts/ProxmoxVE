@@ -14,6 +14,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### ✨ New Features
+
+    - Unlink default nginx config [@iLikeToCode](https://github.com/iLikeToCode) ([#10432](https://github.com/community-scripts/ProxmoxVE/pull/10432))
+
   - #### 🔧 Refactor
 
     - Refactor: Firefly [@tremor021](https://github.com/tremor021) ([#10421](https://github.com/community-scripts/ProxmoxVE/pull/10421))
