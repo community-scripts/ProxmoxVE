@@ -230,7 +230,7 @@ EOF
 #   * OS name and version
 #   * Hostname and IP address
 #   * GitHub repository link
-# - Disables executable flag on /etc/update-motd.d/* scripts
+# - Disables executable flag on /etc/update-motd.d/* scripts if present
 # - Enables root SSH access if SSH_ROOT=yes
 # - Configures TERM environment variable for better terminal support
 # ------------------------------------------------------------------------------
@@ -247,8 +247,10 @@ motd_ssh() {
   echo -e "echo -e \"${TAB}${HOSTNAME}${YW} Hostname: ${GN}\$(hostname)${CL}\"" >>"$PROFILE_FILE"
   echo -e "echo -e \"${TAB}${INFO}${YW} IP Address: ${GN}\$(hostname -I | awk '{print \$1}')${CL}\"" >>"$PROFILE_FILE"
 
-  # Disable default MOTD scripts
-  chmod -x /etc/update-motd.d/*
+  # Disable default MOTD scripts if they're present
+  if [ -d /etc/update-motd.d ]; then
+    chmod -x /etc/update-motd.d/*
+  fi
 
   if [[ "${SSH_ROOT}" == "yes" ]]; then
     sed -i "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
