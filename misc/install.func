@@ -73,6 +73,7 @@ EOF
 # - Retries up to RETRY_NUM times with RETRY_EVERY seconds delay
 # - Removes Python EXTERNALLY-MANAGED restrictions
 # - Disables systemd-networkd-wait-online.service for faster boot
+# - Disables NetworkManager-wait-online.service for faster boot
 # - Exits with error if network unavailable after retries
 # ------------------------------------------------------------------------------
 setting_up_container() {
@@ -90,7 +91,8 @@ setting_up_container() {
     exit 1
   fi
   rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
-  systemctl disable -q --now systemd-networkd-wait-online.service
+  systemctl disable -q --now systemd-networkd-wait-online.service || true
+  systemctl disable -q --now NetworkManager-wait-online.service || true
   msg_ok "Set up Container OS"
   #msg_custom "${CM}" "${GN}" "Network Connected: ${BL}$(hostname -I)"
   msg_ok "Network Connected: ${BL}$(hostname -I)"
