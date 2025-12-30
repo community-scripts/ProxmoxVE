@@ -801,7 +801,8 @@ is_verbose_mode() {
 cleanup_lxc() {
   msg_info "Cleaning up"
 
-  case "$var_os" in
+  msg_debug "PCT_OSTYPE: $PCT_OSTYPE"
+  case "$PCT_OSTYPE" in
   ubuntu | debian | devuan)
     $STD apt -y autoremove || true
     $STD apt -y autoclean || true

@@ -182,8 +182,10 @@ network_check() {
 # - Uses $STD wrapper to suppress output unless VERBOSE=yes
 # ------------------------------------------------------------------------------
 update_os() {
+  set_std_mode
   msg_info "Updating Container OS"
-  case "$var_os" in
+  msg_debug "PCT_OSTYPE: $PCT_OSTYPE"
+  case "$PCT_OSTYPE" in
   ubuntu | debian | devuan)
     if [[ "$CACHER" == "yes" ]]; then
       echo 'Acquire::http::Proxy-Auto-Detect "/usr/local/bin/apt-proxy-detect.sh";' >/etc/apt/apt.conf.d/00aptproxy
@@ -253,7 +255,8 @@ motd_ssh() {
   fi
 
   if [[ "${SSH_ROOT}" == "yes" ]]; then
-    case "$var_os" in
+    msg_debug "PCT_OSTYPE: $PCT_OSTYPE"
+    case "$PCT_OSTYPE" in
     ubuntu | debian | devuan)
       sed -i "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
       systemctl restart sshd
@@ -269,6 +272,10 @@ motd_ssh() {
       $STD /etc/init.d/sshd start
       ;;
     # gentoo) ;;
+    *)
+      sed -i "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
+      systemctl restart sshd
+      ;;
     esac
   fi
 }
@@ -299,7 +306,7 @@ EOF
     systemctl daemon-reload
     systemctl restart $(basename $(dirname $GETTY_OVERRIDE) | sed 's/\.d//')
   fi
-  msg_debug "Creating /usr/bin/update from https://raw.githubusercontent.com/bandogora/ProxmoxVE/feature/rpm-support/ct/${app}.sh)"
+  msg_debug "Creating /usr/bin/update from https://raw.githubusercontent.com/bandogora/ProxmoxVE/feature/rpm-support/ct/${app}.sh"
   echo "bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/bandogora/ProxmoxVE/feature/rpm-support/ct/${app}.sh)\"" >/usr/bin/update
   # echo "bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/${app}.sh)\"" >/usr/bin/update
   chmod +x /usr/bin/update

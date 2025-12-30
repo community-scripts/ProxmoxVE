@@ -2628,6 +2628,7 @@ configure_ssh_settings() {
 # - Otherwise: shows update/setting menu and runs update_script with cleanup
 # ------------------------------------------------------------------------------
 start() {
+  # shellcheck source=misc/tools.func
   source <(curl -fsSL https://raw.githubusercontent.com/bandogora/ProxmoxVE/feature/rpm-support/misc/tools.func)
   # source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
   if command -v pveversion >/dev/null 2>&1; then
@@ -2757,11 +2758,12 @@ build_container() {
   TEMP_DIR=$(mktemp -d)
   pushd "$TEMP_DIR" >/dev/null
   if [ "$var_os" == "alpine" ]; then
-    export FUNCTIONS_FILE_PATH="$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/alpine-install.func)"
+    FUNCTIONS_FILE_PATH="$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/alpine-install.func)"
   else
     # export FUNCTIONS_FILE_PATH="$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/install.func)"
-    export FUNCTIONS_FILE_PATH="$(curl -fsSL https://raw.githubusercontent.com/bandogora/ProxmoxVE/feature/rpm-support/misc/install.func)"
+    FUNCTIONS_FILE_PATH="$(curl -fsSL https://raw.githubusercontent.com/bandogora/ProxmoxVE/feature/rpm-support/misc/install.func)"
   fi
+  export FUNCTIONS_FILE_PATH
 
   # Core exports for install.func
   export DIAGNOSTICS="$DIAGNOSTICS"
