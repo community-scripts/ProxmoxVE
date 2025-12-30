@@ -18,6 +18,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Refactor: Firefly [@tremor021](https://github.com/tremor021) ([#10421](https://github.com/community-scripts/ProxmoxVE/pull/10421))
 
+### 🗑️ Deleted Scripts
+
+  - Remove: GoAway [@MickLesk](https://github.com/MickLesk) ([#10429](https://github.com/community-scripts/ProxmoxVE/pull/10429))
+
 ## 2025-12-29
 
 ### 🚀 Updated Scripts
