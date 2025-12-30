@@ -13,6 +13,8 @@ setting_up_container
 network_check
 update_os
 
+msg_debug "Hello from rockylinux-install.sh"
+
 motd_ssh
 customize
 cleanup_lxc
