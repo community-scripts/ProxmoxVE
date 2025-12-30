@@ -803,7 +803,7 @@ cleanup_lxc() {
 
   msg_debug "PCT_OSTYPE: $PCT_OSTYPE"
   case "$PCT_OSTYPE" in
-  ubuntu | debian | devuan)
+  ubuntu | debian)
     $STD apt -y autoremove || true
     $STD apt -y autoclean || true
     $STD apt -y clean || true

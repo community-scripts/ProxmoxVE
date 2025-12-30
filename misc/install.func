@@ -186,7 +186,7 @@ update_os() {
   msg_info "Updating Container OS"
   msg_debug "PCT_OSTYPE: $PCT_OSTYPE"
   case "$PCT_OSTYPE" in
-  ubuntu | debian | devuan)
+  ubuntu | debian)
     if [[ "$CACHER" == "yes" ]]; then
       echo 'Acquire::http::Proxy-Auto-Detect "/usr/local/bin/apt-proxy-detect.sh";' >/etc/apt/apt.conf.d/00aptproxy
       cat <<EOF >/usr/local/bin/apt-proxy-detect.sh
@@ -257,7 +257,7 @@ motd_ssh() {
   if [[ "${SSH_ROOT}" == "yes" ]]; then
     msg_debug "PCT_OSTYPE: $PCT_OSTYPE"
     case "$PCT_OSTYPE" in
-    ubuntu | debian | devuan)
+    ubuntu | debian)
       sed -i "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
       systemctl restart sshd
       ;;
