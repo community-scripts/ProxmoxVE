@@ -253,8 +253,23 @@ motd_ssh() {
   fi
 
   if [[ "${SSH_ROOT}" == "yes" ]]; then
-    sed -i "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
-    systemctl restart sshd
+    case "$var_os" in
+    ubuntu | debian | devuan)
+      sed -i "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
+      systemctl restart sshd
+      ;;
+    centos | rockylinux | almalinux | fedora | openeuler)
+      $STD dnf install -y openssh-server
+      sed -i "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
+      systemctl enable --now sshd
+      ;;
+    alpine)
+      $STD rc-update add sshd
+      sed -i "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
+      $STD /etc/init.d/sshd start
+      ;;
+    # gentoo) ;;
+    esac
   fi
 }
 
