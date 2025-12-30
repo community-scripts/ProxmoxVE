@@ -1,5 +1,65 @@
 [
   {
+    "name": "jenkinsci/jenkins",
+    "version": "jenkins-2.544",
+    "date": "2025-12-30T11:00:27Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.12.5",
+    "date": "2025-12-29T12:55:22Z"
+  },
+  {
+    "name": "livebook-dev/livebook",
+    "version": "nightly",
+    "date": "2025-12-30T08:37:13Z"
+  },
+  {
+    "name": "openobserve/openobserve",
+    "version": "v0.40.0",
+    "date": "2025-12-30T07:07:53Z"
+  },
+  {
+    "name": "morpheus65535/bazarr",
+    "version": "v1.5.3",
+    "date": "2025-09-20T12:12:33Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.622",
+    "date": "2025-12-30T05:55:22Z"
+  },
+  {
+    "name": "nickheyer/discopanel",
+    "version": "v1.0.18",
+    "date": "2025-12-30T05:52:02Z"
+  },
+  {
+    "name": "javedh-dev/tracktor",
+    "version": "1.1.0",
+    "date": "2025-12-30T04:42:18Z"
+  },
+  {
+    "name": "mealie-recipes/mealie",
+    "version": "v3.9.1",
+    "date": "2025-12-30T01:56:00Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5.1",
+    "date": "2025-12-30T00:27:04Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
+    "name": "ZoeyVid/NPMplus",
+    "version": "2025-05-07-r1",
+    "date": "2025-05-07T12:18:42Z"
+  },
+  {
     "name": "karlomikus/bar-assistant",
     "version": "v5.11.2",
     "date": "2025-12-29T21:09:41Z"
@@ -10,34 +70,14 @@
     "date": "2025-12-29T20:53:30Z"
   },
   {
-    "name": "mealie-recipes/mealie",
-    "version": "v3.9.0",
-    "date": "2025-12-29T20:46:08Z"
-  },
-  {
-    "name": "livebook-dev/livebook",
-    "version": "nightly",
-    "date": "2025-12-29T20:41:56Z"
-  },
-  {
     "name": "scanopy/scanopy",
     "version": "v0.12.8",
     "date": "2025-12-29T19:43:21Z"
   },
   {
-    "name": "home-assistant/core",
-    "version": "2025.12.5",
-    "date": "2025-12-29T12:55:22Z"
-  },
-  {
     "name": "metabase/metabase",
     "version": "v0.58.x",
     "date": "2025-12-29T19:09:12Z"
-  },
-  {
-    "name": "openobserve/openobserve",
-    "version": "v0.40.0-rc4",
-    "date": "2025-12-29T16:54:07Z"
   },
   {
     "name": "msgbyte/tianji",
@@ -53,6 +93,11 @@
     "name": "firefly-iii/firefly-iii",
     "version": "develop-20251228",
     "date": "2025-12-28T05:59:54Z"
+  },
+  {
+    "name": "keycloak/keycloak",
+    "version": "26.4.7",
+    "date": "2025-12-01T08:14:11Z"
   },
   {
     "name": "emqx/emqx",
@@ -78,21 +123,6 @@
     "name": "booklore-app/booklore",
     "version": "v1.16.1",
     "date": "2025-12-29T06:08:46Z"
-  },
-  {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.612",
-    "date": "2025-12-29T05:55:22Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.5.1",
-    "date": "2025-12-29T00:27:07Z"
   },
   {
     "name": "chrisbenincasa/tunarr",
@@ -165,11 +195,6 @@
     "date": "2025-12-27T19:40:14Z"
   },
   {
-    "name": "keycloak/keycloak",
-    "version": "26.4.7",
-    "date": "2025-12-01T08:14:11Z"
-  },
-  {
     "name": "alexta69/metube",
     "version": "2025.12.27",
     "date": "2025-12-27T10:24:02Z"
@@ -233,11 +258,6 @@
     "name": "seriousm4x/UpSnap",
     "version": "5.2.5",
     "date": "2025-12-25T09:23:10Z"
-  },
-  {
-    "name": "morpheus65535/bazarr",
-    "version": "v1.5.3",
-    "date": "2025-09-20T12:12:33Z"
   },
   {
     "name": "fosrl/pangolin",
@@ -323,11 +343,6 @@
     "name": "prometheus/prometheus",
     "version": "v3.8.1",
     "date": "2025-12-16T09:59:22Z"
-  },
-  {
-    "name": "jenkinsci/jenkins",
-    "version": "jenkins-2.543",
-    "date": "2025-12-23T12:39:16Z"
   },
   {
     "name": "nzbgetcom/nzbget",
@@ -525,11 +540,6 @@
     "date": "2025-12-19T03:45:13Z"
   },
   {
-    "name": "javedh-dev/tracktor",
-    "version": "1.0.2",
-    "date": "2025-12-19T02:43:42Z"
-  },
-  {
     "name": "moghtech/komodo",
     "version": "v1.19.5",
     "date": "2025-09-27T20:59:46Z"
@@ -628,11 +638,6 @@
     "name": "jupyter/notebook",
     "version": "@jupyter-notebook/ui-components@7.6.0-alpha.0",
     "date": "2025-12-17T08:35:55Z"
-  },
-  {
-    "name": "nickheyer/discopanel",
-    "version": "v1.0.16",
-    "date": "2025-12-17T04:47:13Z"
   },
   {
     "name": "9001/copyparty",
@@ -1578,11 +1583,6 @@
     "name": "owncast/owncast",
     "version": "v0.2.3",
     "date": "2025-05-10T21:14:45Z"
-  },
-  {
-    "name": "ZoeyVid/NPMplus",
-    "version": "2025-05-07-r1",
-    "date": "2025-05-07T12:18:42Z"
   },
   {
     "name": "dotnetfactory/fluid-calendar",
