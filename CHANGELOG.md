@@ -18,6 +18,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Increase BentoPDF RAM requirement from 2GB to 4GB [@Copilot](https://github.com/Copilot) ([#10449](https://github.com/community-scripts/ProxmoxVE/pull/10449))
     - fix(swizzin): Use HTTPS and add curl error handling [@fmcglinn](https://github.com/fmcglinn) ([#10440](https://github.com/community-scripts/ProxmoxVE/pull/10440))
 
 ## 2025-12-30
