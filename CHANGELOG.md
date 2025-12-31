@@ -14,6 +14,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - fix(wazuh): add LXC rootcheck exclusion to prevent false positives [@brettlyons](https://github.com/brettlyons) ([#10436](https://github.com/community-scripts/ProxmoxVE/pull/10436))
+
   - #### 🐞 Bug Fixes
 
     - fix(swizzin): Use HTTPS and add curl error handling [@fmcglinn](https://github.com/fmcglinn) ([#10440](https://github.com/community-scripts/ProxmoxVE/pull/10440))
