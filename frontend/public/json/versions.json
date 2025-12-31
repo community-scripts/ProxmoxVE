@@ -1,5 +1,55 @@
 [
   {
+    "name": "emqx/emqx",
+    "version": "v5.8.9",
+    "date": "2025-12-31T10:40:07Z"
+  },
+  {
+    "name": "evcc-io/evcc",
+    "version": "0.300.1",
+    "date": "2025-12-31T10:31:36Z"
+  },
+  {
+    "name": "Athou/commafeed",
+    "version": "5.12.1",
+    "date": "2025-12-31T08:23:37Z"
+  },
+  {
+    "name": "comfyanonymous/ComfyUI",
+    "version": "v0.7.0",
+    "date": "2025-12-31T07:50:53Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.645",
+    "date": "2025-12-31T05:52:26Z"
+  },
+  {
+    "name": "outline/outline",
+    "version": "v1.2.0-1",
+    "date": "2025-12-31T04:07:38Z"
+  },
+  {
+    "name": "booklore-app/booklore",
+    "version": "v1.16.2",
+    "date": "2025-12-31T00:37:08Z"
+  },
+  {
+    "name": "rcourtman/Pulse",
+    "version": "v5.0.7",
+    "date": "2025-12-31T00:14:52Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5.1",
+    "date": "2025-12-31T00:27:04Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
     "name": "livebook-dev/livebook",
     "version": "nightly",
     "date": "2025-12-30T23:27:09Z"
@@ -15,14 +65,14 @@
     "date": "2025-12-30T20:45:58Z"
   },
   {
-    "name": "emqx/emqx",
-    "version": "6.1.0",
-    "date": "2025-12-30T20:23:26Z"
-  },
-  {
     "name": "firefly-iii/firefly-iii",
     "version": "develop-20251228",
     "date": "2025-12-28T05:59:54Z"
+  },
+  {
+    "name": "meilisearch/meilisearch",
+    "version": "prototype-v1.31.0-support-protocol-negociation-http.0",
+    "date": "2025-12-30T17:56:00Z"
   },
   {
     "name": "metabase/metabase",
@@ -75,11 +125,6 @@
     "date": "2025-09-20T12:12:33Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.622",
-    "date": "2025-12-30T05:55:22Z"
-  },
-  {
     "name": "nickheyer/discopanel",
     "version": "v1.0.18",
     "date": "2025-12-30T05:52:02Z"
@@ -92,27 +137,12 @@
   {
     "name": "mealie-recipes/mealie",
     "version": "v3.9.1",
-    "date": "2025-12-30T01:56:10Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.5.1",
-    "date": "2025-12-30T00:27:04Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
+    "date": "2025-12-30T01:56:00Z"
   },
   {
     "name": "karlomikus/bar-assistant",
     "version": "v5.11.2",
     "date": "2025-12-29T21:09:41Z"
-  },
-  {
-    "name": "outline/outline",
-    "version": "v1.2.0-0",
-    "date": "2025-12-29T20:53:30Z"
   },
   {
     "name": "msgbyte/tianji",
@@ -135,19 +165,9 @@
     "date": "2025-12-29T10:58:49Z"
   },
   {
-    "name": "rcourtman/Pulse",
-    "version": "v5.0.6",
-    "date": "2025-12-29T10:39:08Z"
-  },
-  {
     "name": "alam00000/bentopdf",
     "version": "v1.15.3",
     "date": "2025-12-29T09:33:00Z"
-  },
-  {
-    "name": "booklore-app/booklore",
-    "version": "v1.16.1",
-    "date": "2025-12-29T06:08:46Z"
   },
   {
     "name": "chrisbenincasa/tunarr",
@@ -300,11 +320,6 @@
     "date": "2025-12-24T12:26:24Z"
   },
   {
-    "name": "comfyanonymous/ComfyUI",
-    "version": "v0.6.0",
-    "date": "2025-12-24T03:32:16Z"
-  },
-  {
     "name": "advplyr/audiobookshelf",
     "version": "v2.32.1",
     "date": "2025-12-23T23:28:06Z"
@@ -403,11 +418,6 @@
     "name": "BerriAI/litellm",
     "version": "v1.80.11.rc.1",
     "date": "2025-12-22T16:29:28Z"
-  },
-  {
-    "name": "meilisearch/meilisearch",
-    "version": "latest",
-    "date": "2025-12-22T16:21:19Z"
   },
   {
     "name": "openhab/openhab-core",
@@ -815,11 +825,6 @@
     "date": "2025-12-10T14:55:44Z"
   },
   {
-    "name": "evcc-io/evcc",
-    "version": "0.211.1",
-    "date": "2025-12-10T12:25:19Z"
-  },
-  {
     "name": "kyantech/Palmr",
     "version": "v3.3.2-beta",
     "date": "2025-12-10T05:42:43Z"
@@ -1118,11 +1123,6 @@
     "name": "TasmoAdmin/TasmoAdmin",
     "version": "v4.3.2",
     "date": "2025-10-18T12:11:00Z"
-  },
-  {
-    "name": "Athou/commafeed",
-    "version": "5.12.0",
-    "date": "2025-11-20T06:18:58Z"
   },
   {
     "name": "nextcloud/nextcloudpi",
