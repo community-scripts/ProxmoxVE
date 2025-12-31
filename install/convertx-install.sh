@@ -17,7 +17,7 @@ setup_hwaccel
 setup_imagemagick
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
+$STD apt install -y \
   assimp-utils \
   calibre \
   dcraw \
