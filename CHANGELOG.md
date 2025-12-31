@@ -12,6 +12,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2025-12-31
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - fix(swizzin): Use HTTPS and add curl error handling [@fmcglinn](https://github.com/fmcglinn) ([#10440](https://github.com/community-scripts/ProxmoxVE/pull/10440))
+
 ## 2025-12-30
 
 ### 🚀 Updated Scripts
