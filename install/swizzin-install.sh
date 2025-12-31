@@ -23,7 +23,7 @@ if [[ ! "$CONFIRM" =~ ^([yY][eE][sS]|[yY])$ ]]; then
   msg_error "Aborted by user. No changes have been made."
   exit 10
 fi
-bash <(curl -sL s5n.sh)
+bash <(curl -fsSL https://s5n.sh)
 
 motd_ssh
 customize
