@@ -1,5 +1,65 @@
 [
   {
+    "name": "livebook-dev/livebook",
+    "version": "nightly",
+    "date": "2025-12-30T23:27:09Z"
+  },
+  {
+    "name": "ZoeyVid/NPMplus",
+    "version": "2025-05-07-r1",
+    "date": "2025-05-07T12:18:42Z"
+  },
+  {
+    "name": "alexta69/metube",
+    "version": "2025.12.30",
+    "date": "2025-12-30T20:45:58Z"
+  },
+  {
+    "name": "emqx/emqx",
+    "version": "6.1.0",
+    "date": "2025-12-30T20:23:26Z"
+  },
+  {
+    "name": "firefly-iii/firefly-iii",
+    "version": "develop-20251228",
+    "date": "2025-12-28T05:59:54Z"
+  },
+  {
+    "name": "metabase/metabase",
+    "version": "v0.57.x",
+    "date": "2025-12-30T17:53:05Z"
+  },
+  {
+    "name": "BookStackApp/BookStack",
+    "version": "v25.12.1",
+    "date": "2025-12-30T17:25:57Z"
+  },
+  {
+    "name": "scanopy/scanopy",
+    "version": "v0.12.8",
+    "date": "2025-12-30T16:12:11Z"
+  },
+  {
+    "name": "esphome/esphome",
+    "version": "2025.12.3",
+    "date": "2025-12-30T14:31:34Z"
+  },
+  {
+    "name": "dani-garcia/vaultwarden",
+    "version": "1.35.1",
+    "date": "2025-12-30T14:21:05Z"
+  },
+  {
+    "name": "zitadel/zitadel",
+    "version": "v4.8.0",
+    "date": "2025-12-30T12:16:28Z"
+  },
+  {
+    "name": "openobserve/openobserve",
+    "version": "v0.40.0",
+    "date": "2025-12-30T11:45:10Z"
+  },
+  {
     "name": "jenkinsci/jenkins",
     "version": "jenkins-2.544",
     "date": "2025-12-30T11:00:27Z"
@@ -8,16 +68,6 @@
     "name": "home-assistant/core",
     "version": "2025.12.5",
     "date": "2025-12-29T12:55:22Z"
-  },
-  {
-    "name": "livebook-dev/livebook",
-    "version": "nightly",
-    "date": "2025-12-30T08:37:13Z"
-  },
-  {
-    "name": "openobserve/openobserve",
-    "version": "v0.40.0",
-    "date": "2025-12-30T07:07:53Z"
   },
   {
     "name": "morpheus65535/bazarr",
@@ -42,7 +92,7 @@
   {
     "name": "mealie-recipes/mealie",
     "version": "v3.9.1",
-    "date": "2025-12-30T01:56:00Z"
+    "date": "2025-12-30T01:56:10Z"
   },
   {
     "name": "jeedom/core",
@@ -55,11 +105,6 @@
     "date": "2025-11-23T12:13:34Z"
   },
   {
-    "name": "ZoeyVid/NPMplus",
-    "version": "2025-05-07-r1",
-    "date": "2025-05-07T12:18:42Z"
-  },
-  {
     "name": "karlomikus/bar-assistant",
     "version": "v5.11.2",
     "date": "2025-12-29T21:09:41Z"
@@ -68,16 +113,6 @@
     "name": "outline/outline",
     "version": "v1.2.0-0",
     "date": "2025-12-29T20:53:30Z"
-  },
-  {
-    "name": "scanopy/scanopy",
-    "version": "v0.12.8",
-    "date": "2025-12-29T19:43:21Z"
-  },
-  {
-    "name": "metabase/metabase",
-    "version": "v0.58.x",
-    "date": "2025-12-29T19:09:12Z"
   },
   {
     "name": "msgbyte/tianji",
@@ -90,19 +125,9 @@
     "date": "2025-12-29T15:56:09Z"
   },
   {
-    "name": "firefly-iii/firefly-iii",
-    "version": "develop-20251228",
-    "date": "2025-12-28T05:59:54Z"
-  },
-  {
     "name": "keycloak/keycloak",
     "version": "26.4.7",
     "date": "2025-12-01T08:14:11Z"
-  },
-  {
-    "name": "emqx/emqx",
-    "version": "6.1.0",
-    "date": "2025-12-29T13:59:25Z"
   },
   {
     "name": "ArchiveBox/ArchiveBox",
@@ -170,11 +195,6 @@
     "date": "2025-06-14T17:45:06Z"
   },
   {
-    "name": "dani-garcia/vaultwarden",
-    "version": "1.35.0",
-    "date": "2025-12-27T23:07:12Z"
-  },
-  {
     "name": "laurent22/joplin",
     "version": "server-v3.5.2",
     "date": "2025-12-19T21:28:55Z"
@@ -193,11 +213,6 @@
     "name": "Luligu/matterbridge",
     "version": "3.4.5",
     "date": "2025-12-27T19:40:14Z"
-  },
-  {
-    "name": "alexta69/metube",
-    "version": "2025.12.27",
-    "date": "2025-12-27T10:24:02Z"
   },
   {
     "name": "fuma-nama/fumadocs",
@@ -226,8 +241,8 @@
   },
   {
     "name": "wazuh/wazuh",
-    "version": "coverity-w52-4.14.2",
-    "date": "2025-12-19T13:31:21Z"
+    "version": "coverity-w53-4.14.2",
+    "date": "2025-12-26T10:03:35Z"
   },
   {
     "name": "theonedev/onedev",
@@ -285,11 +300,6 @@
     "date": "2025-12-24T12:26:24Z"
   },
   {
-    "name": "BookStackApp/BookStack",
-    "version": "v25.12",
-    "date": "2025-12-24T12:19:42Z"
-  },
-  {
     "name": "comfyanonymous/ComfyUI",
     "version": "v0.6.0",
     "date": "2025-12-24T03:32:16Z"
@@ -318,11 +328,6 @@
     "name": "mongodb/mongo",
     "version": "r6.0.27",
     "date": "2025-12-23T16:21:51Z"
-  },
-  {
-    "name": "esphome/esphome",
-    "version": "2025.12.2",
-    "date": "2025-12-23T16:17:04Z"
   },
   {
     "name": "SonarSource/sonarqube",
@@ -623,11 +628,6 @@
     "name": "bunkerity/bunkerweb",
     "version": "testing",
     "date": "2025-12-16T11:13:20Z"
-  },
-  {
-    "name": "zitadel/zitadel",
-    "version": "v4.7.6",
-    "date": "2025-12-17T08:56:54Z"
   },
   {
     "name": "SigNoz/signoz",
