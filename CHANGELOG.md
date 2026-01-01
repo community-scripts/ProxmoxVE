@@ -12,6 +12,13 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-01-01
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - fix #10453 broken sonarqube update [@Karlito83](https://github.com/Karlito83) ([#10456](https://github.com/community-scripts/ProxmoxVE/pull/10456))
+    - fix(bazarr): update script now migrates old service files to use venv Python [@vidonnus](https://github.com/vidonnus) ([#10459](https://github.com/community-scripts/ProxmoxVE/pull/10459))
+
 ## 2025-12-31
 
 ### 🚀 Updated Scripts
