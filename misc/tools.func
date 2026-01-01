@@ -3266,11 +3266,7 @@ setup_mariadb() {
   msg_info "Configuring MariaDB runtime directory persistence"
   
   # Create tmpfiles.d configuration with error handling
-  if ! cat > /etc/tmpfiles.d/mariadb.conf << 'EOF'
-# Ensure /run/mysqld directory exists with correct permissions for MariaDB
-d /run/mysqld 0755 mysql mysql -
-EOF
-  then
+  if ! printf '# Ensure /run/mysqld directory exists with correct permissions for MariaDB\nd /run/mysqld 0755 mysql mysql -\n' > /etc/tmpfiles.d/mariadb.conf; then
     msg_warn "Failed to create /etc/tmpfiles.d/mariadb.conf - runtime directory may not persist on reboot"
   fi
   
@@ -3278,12 +3274,14 @@ EOF
   # Verify mysql user exists before attempting ownership change
   if [[ ! -d /run/mysqld ]]; then
     mkdir -p /run/mysqld
+    # Set permissions first (works regardless of user existence)
+    chmod 755 /run/mysqld
+    # Set ownership only if mysql user exists
     if getent passwd mysql >/dev/null 2>&1; then
       chown mysql:mysql /run/mysqld
     else
-      msg_warn "mysql user not found - directory created but ownership not set"
+      msg_warn "mysql user not found - directory created with correct permissions but ownership not set"
     fi
-    chmod 755 /run/mysqld
   fi
   
   msg_ok "Configured MariaDB runtime directory persistence"
