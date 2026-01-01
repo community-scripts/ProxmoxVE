@@ -38,8 +38,13 @@ function update_script() {
     msg_info "Setup Bazarr"
     mkdir -p /var/lib/bazarr/
     chmod 775 /opt/bazarr /var/lib/bazarr/
+    # Always ensure venv exists
     if [[ ! -d /opt/bazarr/venv/ ]]; then
       $STD uv venv /opt/bazarr/venv --python 3.12
+    fi
+    
+    # Always check and fix service file if needed
+    if [[ -f /etc/systemd/system/bazarr.service ]] && grep -q "ExecStart=/usr/bin/python3" /etc/systemd/system/bazarr.service; then
       sed -i "s|ExecStart=/usr/bin/python3 /opt/bazarr/bazarr.py|ExecStart=/opt/bazarr/venv/bin/python3 /opt/bazarr/bazarr.py|g" /etc/systemd/system/bazarr.service
       systemctl daemon-reload
     fi
