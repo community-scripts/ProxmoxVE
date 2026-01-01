@@ -1,5 +1,35 @@
 [
   {
+    "name": "rcourtman/Pulse",
+    "version": "v5.0.8",
+    "date": "2026-01-01T10:59:55Z"
+  },
+  {
+    "name": "karakeep-app/karakeep",
+    "version": "v0.30.0",
+    "date": "2026-01-01T10:50:45Z"
+  },
+  {
+    "name": "fuma-nama/fumadocs",
+    "version": "fumadocs-obsidian@0.0.8",
+    "date": "2026-01-01T08:04:20Z"
+  },
+  {
+    "name": "Jackett/Jackett",
+    "version": "v0.24.652",
+    "date": "2026-01-01T05:55:36Z"
+  },
+  {
+    "name": "steveiliop56/tinyauth",
+    "version": "v4.1.0",
+    "date": "2025-11-23T12:13:34Z"
+  },
+  {
+    "name": "jeedom/core",
+    "version": "4.5.1",
+    "date": "2026-01-01T00:27:04Z"
+  },
+  {
     "name": "esphome/esphome",
     "version": "2025.12.4",
     "date": "2025-12-31T22:42:42Z"
@@ -65,11 +95,6 @@
     "date": "2025-12-31T12:16:38Z"
   },
   {
-    "name": "fuma-nama/fumadocs",
-    "version": "fumadocs-ui@16.4.2",
-    "date": "2025-12-31T11:34:26Z"
-  },
-  {
     "name": "coollabsio/coolify",
     "version": "v4.0.0-beta.460",
     "date": "2025-12-31T10:58:42Z"
@@ -85,11 +110,6 @@
     "date": "2025-12-31T07:50:53Z"
   },
   {
-    "name": "Jackett/Jackett",
-    "version": "v0.24.645",
-    "date": "2025-12-31T05:52:26Z"
-  },
-  {
     "name": "outline/outline",
     "version": "v1.2.0-1",
     "date": "2025-12-31T04:07:38Z"
@@ -103,21 +123,6 @@
     "name": "booklore-app/booklore",
     "version": "v1.16.2",
     "date": "2025-12-31T00:37:08Z"
-  },
-  {
-    "name": "rcourtman/Pulse",
-    "version": "v5.0.7",
-    "date": "2025-12-31T00:14:52Z"
-  },
-  {
-    "name": "jeedom/core",
-    "version": "4.5.1",
-    "date": "2025-12-31T00:27:04Z"
-  },
-  {
-    "name": "steveiliop56/tinyauth",
-    "version": "v4.1.0",
-    "date": "2025-11-23T12:13:34Z"
   },
   {
     "name": "livebook-dev/livebook",
@@ -778,11 +783,6 @@
     "name": "autobrr/autobrr",
     "version": "v1.71.0",
     "date": "2025-12-13T14:38:09Z"
-  },
-  {
-    "name": "karakeep-app/karakeep",
-    "version": "cli/v0.29.1",
-    "date": "2025-12-13T13:55:51Z"
   },
   {
     "name": "Dokploy/dokploy",
