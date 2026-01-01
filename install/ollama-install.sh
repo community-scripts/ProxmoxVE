@@ -48,6 +48,9 @@ msg_info "Installing Intel® Level Zero"
 DISTRO_ID=$(awk -F= '/^ID=/{print $2}' /etc/os-release | tr -d '"')
 DISTRO_VERSION=$(awk -F= '/^VERSION_ID=/{print $2}' /etc/os-release | tr -d '"' | cut -d. -f1)
 
+# Ensure DISTRO_VERSION is numeric, default to 0 if empty or non-numeric
+[[ "$DISTRO_VERSION" =~ ^[0-9]+$ ]] || DISTRO_VERSION=0
+
 # Debian 13+ has newer Level Zero packages in system repos that conflict with Intel repo packages
 if [[ "$DISTRO_ID" == "debian" && "$DISTRO_VERSION" -ge 13 ]]; then
   # Use system packages on Debian 13+ (avoid conflicts with libze1)
