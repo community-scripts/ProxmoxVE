@@ -44,15 +44,8 @@ msg_ok "Set up Intel® Repositories"
 setup_hwaccel
 
 msg_info "Installing Intel® Level Zero"
-# Detect OS to handle package conflicts
-DISTRO_ID=$(awk -F= '/^ID=/{print $2}' /etc/os-release | tr -d '"')
-DISTRO_VERSION=$(awk -F= '/^VERSION_ID=/{print $2}' /etc/os-release | tr -d '"' | cut -d. -f1)
-
-# Ensure DISTRO_VERSION is numeric, default to 0 if empty or non-numeric
-[[ "$DISTRO_VERSION" =~ ^[0-9]+$ ]] || DISTRO_VERSION=0
-
 # Debian 13+ has newer Level Zero packages in system repos that conflict with Intel repo packages
-if [[ "$DISTRO_ID" == "debian" && "$DISTRO_VERSION" -ge 13 ]]; then
+if is_debian && [[ "$(get_os_version_major)" -ge 13 ]]; then
   # Use system packages on Debian 13+ (avoid conflicts with libze1)
   $STD apt -y install libze1 libze-dev intel-level-zero-gpu 2>/dev/null || {
     msg_warn "Failed to install some Level Zero packages, continuing anyway"
