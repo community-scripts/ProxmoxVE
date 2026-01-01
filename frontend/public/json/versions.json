@@ -1,13 +1,78 @@
 [
   {
+    "name": "esphome/esphome",
+    "version": "2025.12.4",
+    "date": "2025-12-31T22:42:42Z"
+  },
+  {
+    "name": "ZoeyVid/NPMplus",
+    "version": "2025-05-07-r1",
+    "date": "2025-05-07T12:18:42Z"
+  },
+  {
+    "name": "scanopy/scanopy",
+    "version": "v0.12.10",
+    "date": "2025-12-31T20:19:18Z"
+  },
+  {
+    "name": "gtsteffaniak/filebrowser",
+    "version": "v1.1.5-beta",
+    "date": "2025-12-31T18:46:48Z"
+  },
+  {
+    "name": "metabase/metabase",
+    "version": "v0.57.x",
+    "date": "2025-12-31T17:35:26Z"
+  },
+  {
+    "name": "wavelog/wavelog",
+    "version": "2.2.2",
+    "date": "2025-12-31T16:53:34Z"
+  },
+  {
+    "name": "home-assistant/core",
+    "version": "2025.12.5",
+    "date": "2025-12-29T12:55:22Z"
+  },
+  {
     "name": "emqx/emqx",
-    "version": "v5.8.9",
-    "date": "2025-12-31T10:40:07Z"
+    "version": "e5.8.9",
+    "date": "2025-12-31T15:06:41Z"
   },
   {
     "name": "evcc-io/evcc",
-    "version": "0.300.1",
-    "date": "2025-12-31T10:31:36Z"
+    "version": "0.300.2",
+    "date": "2025-12-31T15:05:51Z"
+  },
+  {
+    "name": "fccview/jotty",
+    "version": "1.15.0",
+    "date": "2025-12-31T13:46:49Z"
+  },
+  {
+    "name": "YunoHost/yunohost",
+    "version": "debian/12.1.38",
+    "date": "2025-12-31T13:38:03Z"
+  },
+  {
+    "name": "pommee/goaway",
+    "version": "v0.63.4",
+    "date": "2025-12-31T12:40:07Z"
+  },
+  {
+    "name": "ghostfolio/ghostfolio",
+    "version": "2.225.0",
+    "date": "2025-12-31T12:16:38Z"
+  },
+  {
+    "name": "fuma-nama/fumadocs",
+    "version": "fumadocs-ui@16.4.2",
+    "date": "2025-12-31T11:34:26Z"
+  },
+  {
+    "name": "coollabsio/coolify",
+    "version": "v4.0.0-beta.460",
+    "date": "2025-12-31T10:58:42Z"
   },
   {
     "name": "Athou/commafeed",
@@ -28,6 +93,11 @@
     "name": "outline/outline",
     "version": "v1.2.0-1",
     "date": "2025-12-31T04:07:38Z"
+  },
+  {
+    "name": "wazuh/wazuh",
+    "version": "v5.0.0-alpha0",
+    "date": "2025-12-31T01:18:10Z"
   },
   {
     "name": "booklore-app/booklore",
@@ -55,11 +125,6 @@
     "date": "2025-12-30T23:27:09Z"
   },
   {
-    "name": "ZoeyVid/NPMplus",
-    "version": "2025-05-07-r1",
-    "date": "2025-05-07T12:18:42Z"
-  },
-  {
     "name": "alexta69/metube",
     "version": "2025.12.30",
     "date": "2025-12-30T20:45:58Z"
@@ -75,24 +140,9 @@
     "date": "2025-12-30T17:56:00Z"
   },
   {
-    "name": "metabase/metabase",
-    "version": "v0.57.x",
-    "date": "2025-12-30T17:53:05Z"
-  },
-  {
     "name": "BookStackApp/BookStack",
     "version": "v25.12.1",
     "date": "2025-12-30T17:25:57Z"
-  },
-  {
-    "name": "scanopy/scanopy",
-    "version": "v0.12.8",
-    "date": "2025-12-30T16:12:11Z"
-  },
-  {
-    "name": "esphome/esphome",
-    "version": "2025.12.3",
-    "date": "2025-12-30T14:31:34Z"
   },
   {
     "name": "dani-garcia/vaultwarden",
@@ -113,11 +163,6 @@
     "name": "jenkinsci/jenkins",
     "version": "jenkins-2.544",
     "date": "2025-12-30T11:00:27Z"
-  },
-  {
-    "name": "home-assistant/core",
-    "version": "2025.12.5",
-    "date": "2025-12-29T12:55:22Z"
   },
   {
     "name": "morpheus65535/bazarr",
@@ -195,11 +240,6 @@
     "date": "2025-12-28T14:32:36Z"
   },
   {
-    "name": "pommee/goaway",
-    "version": "v0.63.3",
-    "date": "2025-12-28T10:17:20Z"
-  },
-  {
     "name": "linkwarden/linkwarden",
     "version": "v2.13.5",
     "date": "2025-12-28T09:15:51Z"
@@ -235,11 +275,6 @@
     "date": "2025-12-27T19:40:14Z"
   },
   {
-    "name": "fuma-nama/fumadocs",
-    "version": "fumadocs-ui@16.4.1",
-    "date": "2025-12-27T09:40:37Z"
-  },
-  {
     "name": "sysadminsmedia/homebox",
     "version": "v0.22.3",
     "date": "2025-12-26T22:31:20Z"
@@ -258,11 +293,6 @@
     "name": "toniebox-reverse-engineering/teddycloud",
     "version": "tc_v0.6.6",
     "date": "2025-12-26T18:45:22Z"
-  },
-  {
-    "name": "wazuh/wazuh",
-    "version": "coverity-w53-4.14.2",
-    "date": "2025-12-26T10:03:35Z"
   },
   {
     "name": "theonedev/onedev",
@@ -355,11 +385,6 @@
     "date": "2025-12-23T14:53:51Z"
   },
   {
-    "name": "coollabsio/coolify",
-    "version": "v4.0.0-beta.459",
-    "date": "2025-12-23T14:40:52Z"
-  },
-  {
     "name": "prometheus/prometheus",
     "version": "v3.8.1",
     "date": "2025-12-16T09:59:22Z"
@@ -403,11 +428,6 @@
     "name": "Sonarr/Sonarr",
     "version": "v4.0.16.2944",
     "date": "2025-11-05T01:56:48Z"
-  },
-  {
-    "name": "gtsteffaniak/filebrowser",
-    "version": "v1.1.0-stable",
-    "date": "2025-12-22T20:30:40Z"
   },
   {
     "name": "maxdorninger/MediaManager",
@@ -475,11 +495,6 @@
     "date": "2025-12-20T17:13:34Z"
   },
   {
-    "name": "ghostfolio/ghostfolio",
-    "version": "2.224.2",
-    "date": "2025-12-20T16:39:52Z"
-  },
-  {
     "name": "ellite/Wallos",
     "version": "v4.6.0",
     "date": "2025-12-20T15:57:51Z"
@@ -510,11 +525,6 @@
     "date": "2025-12-19T23:04:27Z"
   },
   {
-    "name": "YunoHost/yunohost",
-    "version": "debian/12.1.37",
-    "date": "2025-12-18T16:43:23Z"
-  },
-  {
     "name": "qdrant/qdrant",
     "version": "v1.16.3",
     "date": "2025-12-19T17:45:42Z"
@@ -528,11 +538,6 @@
     "name": "raydak-labs/configarr",
     "version": "v1.19.0",
     "date": "2025-12-19T13:37:00Z"
-  },
-  {
-    "name": "fccview/jotty",
-    "version": "1.14.4",
-    "date": "2025-12-19T13:17:26Z"
   },
   {
     "name": "readeck/readeck",
@@ -883,11 +888,6 @@
     "name": "AdguardTeam/AdGuardHome",
     "version": "v0.107.71",
     "date": "2025-12-08T14:34:55Z"
-  },
-  {
-    "name": "wavelog/wavelog",
-    "version": "2.2.1",
-    "date": "2025-12-08T12:01:34Z"
   },
   {
     "name": "Part-DB/Part-DB-server",
