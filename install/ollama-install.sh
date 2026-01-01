@@ -44,7 +44,22 @@ msg_ok "Set up Intel® Repositories"
 setup_hwaccel
 
 msg_info "Installing Intel® Level Zero"
-$STD apt -y install intel-level-zero-gpu level-zero level-zero-dev 2>/dev/null || true
+# Detect OS to handle package conflicts
+DISTRO_ID=$(awk -F= '/^ID=/{print $2}' /etc/os-release | tr -d '"')
+DISTRO_VERSION=$(awk -F= '/^VERSION_ID=/{print $2}' /etc/os-release | tr -d '"' | cut -d. -f1)
+
+# Debian 13+ has newer Level Zero packages in system repos that conflict with Intel repo packages
+if [[ "$DISTRO_ID" == "debian" && "$DISTRO_VERSION" -ge 13 ]]; then
+  # Use system packages on Debian 13+ (avoid conflicts with libze1)
+  $STD apt -y install libze1 libze-dev intel-level-zero-gpu 2>/dev/null || {
+    msg_warn "Failed to install some Level Zero packages, continuing anyway"
+  }
+else
+  # Use Intel repository packages for older systems
+  $STD apt -y install intel-level-zero-gpu level-zero level-zero-dev 2>/dev/null || {
+    msg_warn "Failed to install Intel Level Zero packages, continuing anyway"
+  }
+fi
 msg_ok "Installed Intel® Level Zero"
 
 msg_info "Installing Intel® oneAPI Base Toolkit (Patience)"
