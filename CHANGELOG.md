@@ -20,6 +20,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - fix(bazarr): update script now migrates old service files to use venv Python [@vidonnus](https://github.com/vidonnus) ([#10459](https://github.com/community-scripts/ProxmoxVE/pull/10459))
     - fix #10453 broken sonarqube update [@Karlito83](https://github.com/Karlito83) ([#10456](https://github.com/community-scripts/ProxmoxVE/pull/10456))
 
+### 💾 Core
+
+  - #### 🐞 Bug Fixes
+
+    - Fix MariaDB runtime directory persistence on container reboot [@Copilot](https://github.com/Copilot) ([#10468](https://github.com/community-scripts/ProxmoxVE/pull/10468))
+
 ## 2025-12-31
 
 ### 🚀 Updated Scripts
