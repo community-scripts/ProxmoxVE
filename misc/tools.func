@@ -3261,6 +3261,23 @@ setup_mariadb() {
     }
   fi
 
+  # Configure tmpfiles.d to ensure /run/mysqld directory is created on boot
+  # This fixes the issue where MariaDB fails to start after container reboot
+  msg_info "Configuring MariaDB runtime directory persistence"
+  cat > /etc/tmpfiles.d/mariadb.conf << 'EOF'
+# Ensure /run/mysqld directory exists with correct permissions for MariaDB
+d /run/mysqld 0755 mysql mysql -
+EOF
+  
+  # Create the directory now if it doesn't exist
+  if [[ ! -d /run/mysqld ]]; then
+    mkdir -p /run/mysqld
+    chown mysql:mysql /run/mysqld
+    chmod 755 /run/mysqld
+  fi
+  
+  msg_ok "Configured MariaDB runtime directory persistence"
+
   cache_installed_version "mariadb" "$MARIADB_VERSION"
   msg_ok "Setup MariaDB $MARIADB_VERSION"
 }
