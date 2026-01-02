@@ -3208,6 +3208,7 @@ EOF
     LANG="${LANG:-en_US.UTF-8}"
 
     # install base packages
+    # centos & fedora need glibc-locale-source before running localedef
     pct exec "$CTID" -- sh -c "dnf upgrade -y >/dev/null && dnf install -y sudo curl mc ncurses gnupg2 gnupg jq glibc-locale-source >/dev/null" || {
       msg_error "dnf base packages installation failed"
       exit 1
@@ -3774,6 +3775,11 @@ create_lxc_container() {
   # Template discovery & validation
   # ------------------------------------------------------------------------------
   TEMPLATE_SEARCH="${PCT_OSTYPE}-${PCT_OSVERSION:-}"
+  # Similar to what this comment says https://github.com/community-scripts/ProxmoxVE/blob/12599f359f86f24eb4dbf6af6f24bf06afefac42/misc/build.func#L541
+  # `OSTYPE` should be used here instead of `PCT_OSTYPE`
+  # Template names are based on the ID from /etc/os-release
+  # `pct --ostype` does not have all supported os ids, see: https://github.com/proxmox/pve-docs/blob/master/pct.1-synopsis.adoc?plain=1#L195
+  # i.e. running `pct config "$container" | awk '/^ostype/ {print $2}'` for an almalinux container returns centos
   case "$PCT_OSTYPE" in
   debian | ubuntu | devuan) TEMPLATE_PATTERN="-standard_" ;;
   alpine | almalinux | fedora | rockylinux | openeuler | opensuse) TEMPLATE_PATTERN="-default_" ;;
